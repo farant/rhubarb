@@ -286,7 +286,7 @@ compile_gui_app() {
     # -Wno-overlength-strings: GUI apps may have long STML layout strings
     # seorsum ut probationes (dsymutil vitatur)
     if ! clang ${GCC_FLAGS[@]} -Wno-overlength-strings ${INCLUDE_FLAGS[@]} -c "$app_file" -o "build/$app_name.o" 2>&1 \
-       || ! clang ${GCC_FLAGS[@]} "build/$app_name.o" $obj_files -framework Cocoa -framework Security -framework WebKit -o "$output_binary" 2>&1; then
+       || ! clang ${GCC_FLAGS[@]} "build/$app_name.o" $obj_files -framework Cocoa -framework Security -framework WebKit -framework IOKit -o "$output_binary" 2>&1; then
         echo -e "${RED}✗ BUILD FAILED: $app_name${RESET}"
         GUI_APPS_FAILED=$((GUI_APPS_FAILED + 1))
         FAILED_GUI_APPS="$FAILED_GUI_APPS $app_name"
@@ -377,7 +377,7 @@ compile_and_run_test() {
     # probationem, CXLI probationes = XXV s); ex obiecto nexus eum
     # omittit, et lldb per tabulam depurationis obiecta tamen legit.
     if ! _cursor_compilare "$test_file" "$output_binary.o" 2>&1 \
-       || ! clang ${GCC_FLAGS[@]} "$output_binary.o" $obj_files -framework Cocoa -framework Security -framework WebKit -o "$output_binary" 2>&1; then
+       || ! clang ${GCC_FLAGS[@]} "$output_binary.o" $obj_files -framework Cocoa -framework Security -framework WebKit -framework IOKit -o "$output_binary" 2>&1; then
         echo -e "${RED}✗ COMPILATION FAILED: $test_name${RESET}"
         TESTS_FAILED=$((TESTS_FAILED + 1))
         FAILED_TESTS="$FAILED_TESTS $test_name"
@@ -437,7 +437,7 @@ compile_tool_if_needed() {
     obj_files=$(get_object_files)
 
     echo -e "  Compiling tool: $tool_source"
-    if ! clang ${GCC_FLAGS[@]} ${INCLUDE_FLAGS[@]} "$tool_source" $obj_files -framework Cocoa -framework Security -framework WebKit -o "$tool_binary" 2>&1; then
+    if ! clang ${GCC_FLAGS[@]} ${INCLUDE_FLAGS[@]} "$tool_source" $obj_files -framework Cocoa -framework Security -framework WebKit -framework IOKit -o "$tool_binary" 2>&1; then
         echo -e "${RED}✗ FAILED: $tool_source${RESET}"
         return 1
     fi
@@ -624,7 +624,7 @@ probatio_una() {
     printf '%s\t%s\n' "$output_binary.o" "${VEXILLA_C89[*]} ${INC[*]} -c $test_file" \
         >> "$CLAUSURAE_DIR/mandata.tsv"
     if ! "$COMPILATOR" "${VEXILLA_C89[@]}" "${INC[@]}" -c "$test_file" -o "$output_binary.o" > "$SINGULAE/$name.log" 2>&1 \
-       || ! clang "${VEXILLA_C89[@]}" "$output_binary.o" $obj_files -framework Cocoa -framework Security -framework WebKit -o "$output_binary" >> "$SINGULAE/$name.log" 2>&1; then
+       || ! clang "${VEXILLA_C89[@]}" "$output_binary.o" $obj_files -framework Cocoa -framework Security -framework WebKit -framework IOKit -o "$output_binary" >> "$SINGULAE/$name.log" 2>&1; then
         echo "2 0 0" > "$SINGULAE/$name.res"
         return 0
     fi

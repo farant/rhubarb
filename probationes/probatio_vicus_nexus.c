@@ -122,7 +122,7 @@ attributum (
 
     l = vicus_latus(vicus_activa(v), VICUS_SINISTRUM);
     r = insula_ramus(v->repo, "scriba", chorda_ut_cstr(l->id, piscina));
-    redde insula_ramus_attributum(&r, INSULA_EPHEMERA, titulus);
+    redde insula_ramus_attributum(&r, titulus);
 }
 
 interior b32

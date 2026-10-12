@@ -24,22 +24,12 @@
 #include "pictor_componentia.h"
 #include "pictor_actiones.h"
 #include "credo.h"
+#include "pictor_organum_probationis.h"
 #include <stdio.h>
 #include <string.h>
 
 hic_manens Piscina*             piscina;
 hic_manens InternamentumChorda* intern;
-
-interior Canon*
-canonem_legere (
-    constans character* via)
-{
-    chorda causa;
-
-    redde canon_legere(filum_legere_totum(via, piscina), piscina,
-        intern,
-                       &causa);
-}
 
 interior b32
 valor_est (
@@ -77,29 +67,26 @@ s32 principale (vacuum)
     doc = pictor_documentum_creare(piscina, intern, vol, "p1", XL, XXX,
                                    LXIV);
     repo = insula_repositorium_creare(piscina, intern,
-        "<hospes><pictor id=\"p1\" latitudo=\"40\" altitudo=\"30\"/>"
-        "<pictor id=\"p2\" latitudo=\"8\" altitudo=\"8\"/></hospes>",
-        "<hospes focus=\"tabula\">"
-        "<pictor id=\"p1\" instrumentum=\"nihil\" color_primus=\"3\""
-        " magnitudo_penicilli=\"1\" zoom=\"1\""
-        " superficies_latitudo=\"120\""
-        " superficies_altitudo=\"64\"/>"
-        "<pictor id=\"p2\" instrumentum=\"nihil\"/></hospes>");
+        "<hospes focus=\"tabula\"><pictor id=\"p1\""
+        " latitudo=\"40\" altitudo=\"30\" instrumentum=\"nihil\""
+        " color_primus=\"3\" magnitudo_penicilli=\"1\""
+        " zoom=\"1\" superficies_latitudo=\"120\""
+        " superficies_altitudo=\"64\"/><pictor id=\"p2\""
+        " latitudo=\"8\" altitudo=\"8\""
+        " instrumentum=\"nihil\"/></hospes>");
     CREDO_NON_NIHIL(repo);
     p1 = insula_ramus(repo, "pictor", "p1");
     p2 = insula_ramus(repo, "pictor", "p2");
-    insula_ramus_canonem_ponere(&p1, INSULA_DURABILIS,
-        canonem_legere("apps/pictor/canones/durabilis.canon"));
-    insula_ramus_canonem_ponere(&p1, INSULA_EPHEMERA,
-        canonem_legere("apps/pictor/canones/ephemera.canon"));
     {
-        StmlResultus res;
+            Canon* canon;
+        StmlNodus* domini;
 
-        res = stml_legere_ex_literis(chorda_ut_cstr(filum_legere_totum(
-            "apps/pictor/canones/domini.stml", piscina), piscina),
-            piscina, intern);
-        CREDO_VERUM(insula_ramus_dominos_legere(&p1, INSULA_EPHEMERA,
-            res.elementum_radix) > ZEPHYRUM);
+        CREDO_VERUM(pictor_organum_parare(piscina, intern, &canon,
+            &domini));
+        insula_ramus_canonem_ponere(&p1, canon);
+        insula_ramus_canonem_ponere(&p1, canon);
+        CREDO_VERUM(insula_ramus_dominos_legere(&p1,
+            domini) > ZEPHYRUM);
     }
     reg             = actio_registrum_creare(piscina, intern);
     memset(&actiones, ZEPHYRUM, magnitudo(actiones));
@@ -135,11 +122,11 @@ s32 principale (vacuum)
 
     imprimere("\n--- II: 'p' instrumentum in p1 solo ---\n");
     CREDO_VERUM(manus_ludus_clavem(m, 'p', ZEPHYRUM));
-    CREDO_VERUM(valor_est(insula_ramus_attributum(&p1, INSULA_EPHEMERA,
+    CREDO_VERUM(valor_est(insula_ramus_attributum(&p1,
         "instrumentum"), "penicillus"));
-    CREDO_VERUM(valor_est(insula_ramus_attributum(&p2, INSULA_EPHEMERA,
+    CREDO_VERUM(valor_est(insula_ramus_attributum(&p2,
         "instrumentum"), "nihil"));
-    CREDO_NIHIL(insula_attributum(repo, INSULA_EPHEMERA,
+    CREDO_NIHIL(insula_attributum(repo,
         "instrumentum"));
     CREDO_FALSUM(insula_mendacium(repo));
 

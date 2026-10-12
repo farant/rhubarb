@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>clonatio</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>clonatio</h1>
+<p class="subtitulus">clonatio copy-on-write plagulae aut arboris directorii</p>
+
+<p>A copy-on-write clone of a file or of a whole directory tree in one call: clonefile(2) on macOS, where APFS shares the blocks until one side writes, so a tree of any size costs no space and almost no time. One function; the destination must not exist and must be on the same volume, and on failure errno is left as the system set it. Written 2026-10-07 because of a profile: the commit machinery takes a snapshot of the tree for each shadow gate, and copying the ignored directories with cp -c -R, which clones file by file, took 13.4 s per snapshot for 71,934 files, against 2.6 s for clonefile on the directories. With the tool bin/clonare, which takes pairs so that one process serves a whole snapshot, the pythonica suite went from 422 s to 246 s. The profile also caught what no test had. git names both an ignored directory and a file inside it; creating the file&#x27;s parent first made the directory&#x27;s clone fail, and the fallback then skipped that directory: a silently incomplete snapshot. Only the macOS variant exists.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/clonatio.h"><code>include/clonatio.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/clonatio_macos.c"><code>lib/clonatio_macos.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-10-07 c4e53249</td></tr>
+<tr><td>Group</td><td><a href="greges.html#aedificatio">Build, binaries and tooling</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

@@ -175,7 +175,7 @@ paginam_indicare (
         redde FALSUM;
     }
     indicium.numerus = (s32)scriba_liber_numerus(m->liber);
-    a = insula_ramus_attributum(&m->ramus, INSULA_EPHEMERA,
+    a = insula_ramus_attributum(&m->ramus,
         "paginae_numerus");
     si (   !cogere && a && chorda_ut_s32(*a, &vetus)
         && vetus == indicium.numerus)
@@ -190,7 +190,7 @@ paginam_indicare (
     {
         indicium.positio = I;
     }
-    redde mutare_ramum(&m->ramus, INSULA_EPHEMERA, index_mutator,
+    redde mutare_ramum(&m->ramus, index_mutator,
         &indicium);
 }
 
@@ -266,10 +266,7 @@ scriba_montare (
                   : insula_ramus_radix(repo);
 
     /* canones PRIMUM: hospes elementum montatum numquam videt */
-    insula_ramus_canonem_ponere(&m->ramus, INSULA_DURABILIS,
-        canonem_legere(piscina, intern, _via(piscina, radix,
-        "apps/scriba/canones/durabilis.canon")));
-    insula_ramus_canonem_ponere(&m->ramus, INSULA_EPHEMERA,
+    insula_ramus_canonem_ponere(&m->ramus,
         canonem_legere(piscina, intern, _via(piscina, radix,
         "apps/scriba/canones/ephemera.canon")));
 
@@ -282,12 +279,11 @@ scriba_montare (
     attributa = chorda_concatenare(attributa,
         chorda_ex_s32((s32)folium->altitudo, piscina), piscina);
     attributa = chorda_concatenare(attributa,
-        chorda_ex_literis("\"", piscina), piscina);
-    si (   !insula_ramum_initiare(&m->ramus, INSULA_DURABILIS,
-               elementum(piscina, id, attributa))
-        || !insula_ramum_initiare(&m->ramus, INSULA_EPHEMERA,
-               elementum(piscina, id, chorda_ex_literis(
-                   " modus=\"normalis\" focus=\"pagina\"", piscina))))
+        chorda_ex_literis("\" modus=\"normalis\" focus=\"pagina\"",
+        piscina), piscina);
+    /* insula una (C2): dimensiones folii cum statu */
+    si (!insula_ramum_initiare(&m->ramus, elementum(piscina, id,
+            attributa)))
     {
         fprintf(stderr, "scriba: elementum initiale: %.*s\n",
                 (int)insula_causa(repo).mensura,
@@ -302,9 +298,7 @@ scriba_montare (
         piscina, intern);
     si (res.successus)
     {
-        (vacuum)insula_ramus_dominos_legere(&m->ramus, INSULA_EPHEMERA,
-            res.elementum_radix);
-        (vacuum)insula_ramus_dominos_legere(&m->ramus, INSULA_DURABILIS,
+        (vacuum)insula_ramus_dominos_legere(&m->ramus,
             res.elementum_radix);
     }
 
@@ -382,7 +376,7 @@ scriba_applicatio_aedificare (
     app->volumen  = volumen;
 
     /* repositorium cuius radix IPSA scriba est; montatio in radice */
-    app->repo = insula_repositorium_creare(piscina, intern, "<scriba/>",
+    app->repo = insula_repositorium_creare(piscina, intern,
         "<scriba focus=\"pagina\"/>");
     si (   !app->repo
         || !scriba_montare(&app->montatio, piscina, intern, volumen,

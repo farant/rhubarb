@@ -8,7 +8,9 @@
  * ("Friday, October 9th, 2026", ad dextrum), iterum horam. VI:
  * ordinalia (1st 2nd 3rd 11th 12th 13th 21st 22nd 31st). VII: ictus
  * in tabula aut spatio vacuo lineae non commutat. VIII: dies
- * mutatus (hora eadem) pingitur. */
+ * mutatus (hora eadem) pingitur. IX (S5): pila ficta - "87%" ad
+ * dextrum, horologium sinistrorsum; "87%+" cum oneratur; nulla pila
+ * nihil; mutatio pingitur; ictus in pila horologium non commutat. */
 #include "latina.h"
 #include "piscina.h"
 #include "internamentum.h"
@@ -35,6 +37,30 @@ horologium_fictum (
     VicusTempus* tempus)
 {
     *tempus = *(VicusTempus*)ctx;
+}
+
+/* pila ficta: centesimae < 0 = nulla */
+nomen structura {
+    s32 centesimae;
+    b32 oneratur;
+} PilaFicta;
+
+interior b32
+pila_ficta (
+    vacuum* ctx,
+       s32* centesimae,
+       b32* oneratur)
+{
+    PilaFicta* p;
+
+    p = (PilaFicta*)ctx;
+    si (p->centesimae < ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    *centesimae  = p->centesimae;
+    *oneratur    = p->oneratur;
+    redde VERUM;
 }
 
 /* ictus in linea tabularum ad x (y medio lineae) */
@@ -270,6 +296,47 @@ s32 principale (vacuum)
     CREDO_VERUM(vicus_pulsare(v));
     CREDO_VERUM(textus_x(d, v, "Saturday, October 10th, 2026")
         > ZEPHYRUM);
+
+    imprimere("\n--- IX: pila ---\n");
+    {
+        PilaFicta pf;
+
+        /* hora: "12:01 PM" (dies ostenditur - ictus redit) */
+        ictus_lineae(d, CDLXX);
+        CREDO_VERUM(textus_x(d, v, "12:01 PM") > ZEPHYRUM);
+        pf.centesimae  = LXXXVII;
+        pf.oneratur    = FALSUM;
+        vicus_pilam_ponere(v, pila_ficta, &pf);
+        /* "87%" ad dextrum: CDLXXX - VI - III x VI = CDLVI; hora
+         * sinistrorsum per II spatia: CDLVI - II x VI - VIII x VI */
+        CREDO_AEQUALIS_S32(textus_x(d, v, "87%"), CDLVI);
+        CREDO_AEQUALIS_S32(textus_x(d, v, "12:01 PM"),
+            CDLVI - XII - XLVIII);
+        /* oneratur: "87%+" */
+        pf.oneratur    = VERUM;
+        ficta.minutum  = II;
+        CREDO_VERUM(vicus_pulsare(v));
+        CREDO_VERUM(textus_x(d, v, "87%+") > ZEPHYRUM);
+        /* mutatio centesimarum pingitur (minuto proximo legitur) */
+        pf.centesimae = LXXXVI;
+        ficta.minutum = III;
+        CREDO_VERUM(vicus_pulsare(v));
+        CREDO_VERUM(textus_x(d, v, "86%+") > ZEPHYRUM);
+        /* ictus in pila: horologium non commutat */
+        ictus_lineae(d, CDLXX);
+        CREDO_VERUM(textus_x(d, v, "12:03 PM") > ZEPHYRUM);
+        /* ictus in hora: commutat */
+        ictus_lineae(d, CDXX);
+        CREDO_VERUM(textus_x(d, v, "Saturday, October 10th, 2026")
+            > ZEPHYRUM);
+        ictus_lineae(d, CDXX);
+        /* nulla pila: textus nullus, hora ad marginem */
+        pf.centesimae = -I;
+        ficta.minutum = IV;
+        CREDO_VERUM(vicus_pulsare(v));
+        CREDO_VERUM(textus_x(d, v, "86%+") < ZEPHYRUM);
+        CREDO_AEQUALIS_S32(textus_x(d, v, "12:04 PM"), CDXXVI);
+    }
 
     imprimere("\n");
     credo_imprimere_compendium();

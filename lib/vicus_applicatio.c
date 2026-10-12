@@ -112,6 +112,9 @@ nomen structura {
     /* L5: porta imaginis (applicatio ponit; NIHIL = nulla) */
       ImagoFructus (*porta)(vacuum* ctx, Piscina* piscina);
             vacuum* porta_ctx;
+    /* status-plan S3-S5: systemata status repositorii vici (una -
+     * actarius unus); latus primum ea creat */
+    StatusSystemata systemata;
 } ContextusPictoris;
 
 /* L5: porta lateris pictoris - ad portam communem (tempore vocationis
@@ -389,8 +392,20 @@ pictorem_montare (
 
     m   = (PictorMontatio*)sedes;
     cp  = (ContextusPictoris*)ctx;
+    /* S3: systema persistentiae repositorii vici - latus primum id
+     * creat (repositorium in vicus_aperire nascitur, ante montationes
+     * eius ab extra adiri non potest), cetera communicant */
+    si (cp && !cp->systemata.conservatio)
+    {
+        cp->systemata.conservatio = conservatio_creare(piscina, intern,
+            volumen, repo);
+        cp->systemata.relatio     = relatio_creare(piscina, intern,
+            repo);
+        cp->systemata.dimissio    = dimissio_creare(piscina, intern,
+            repo);
+    }
     si (!pictor_montare(m, piscina, intern, volumen, repo, id, radix,
-            latitudo, altitudo))
+            latitudo, altitudo, cp ? &cp->systemata : NIHIL))
     {
         redde FALSUM;
     }
@@ -811,6 +826,11 @@ vicus_applicatio_aedificare (
         cp->documenta  = tabula_dispersa_creare_chorda(piscina, XVI);
         cp->porta      = NIHIL;
         cp->porta_ctx  = NIHIL;
+        /* latus primum creat (repositorium in vicus_aperire
+         * nascitur) */
+        cp->systemata.conservatio  = NIHIL;
+        cp->systemata.relatio      = NIHIL;
+        cp->systemata.dimissio     = NIHIL;
     }
     app->pictoris = cp;
     cs = (ContextusScribae*)piscina_allocare(piscina,
@@ -866,5 +886,10 @@ vicus_applicatio_aedificare (
         redde FALSUM;
     }
     vicus_dispensatorem_ligare(app->vicus, app->d);
+    /* S5c: dimissio (si latus pictoris eam creavit) in via eventus */
+    si (cp && cp->systemata.dimissio)
+    {
+        dimissio_dispensatori_ligare(cp->systemata.dimissio, app->d);
+    }
     redde VERUM;
 }

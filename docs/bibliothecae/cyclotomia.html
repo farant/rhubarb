@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>cyclotomia</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>cyclotomia</h1>
+<p class="subtitulus">Integri cyclotomici EXACTI: Z[zeta_n] = Z[t]/Phi_n(t)</p>
+
+<p>Exact cyclotomic integers, Z[zeta_n] = Z[t]/Phi_n(t), for n up to 1000. Written 2026-10-07 because 57 knotapel demos carried cyclotomic arithmetic of their own (Z[zeta_8] alone 873 uses) with long coefficients, the overflow that had already broken demo 112. An element is a polynomial in zeta reduced below degree phi(n), with Magnus coefficients, in a unique form; since its second version it carries its ring, so that zeta_8 and zeta_16 no longer compare equal for both being the polynomial t, and mixing rings gives an invalid element that propagates like NaN. One routine does three jobs: substituting t -&gt; zeta^k through a table of powers reduces an element, evaluates a knot polynomial at a root of unity, and applies a Galois automorphism. Everything that decides is exact: equality, norm and trace, |a|^2 in the real subfield, and cyclotomicus_est_radix, which recognises +-zeta^k and so gives an exact angle. Floating point appears once, in cyclotomicus_ad_ostendendum, which returns text and not numbers so that it cannot enter a comparison; the header states its error bound and that cancellation is silent. Exact division goes through the norm. cyclotomia_anulus hands matrix a ring that is integral and not Euclidean, so determinants work and normal forms refuse. Its test joins two independent computations over all 12,966 table knots: Jones at i must equal (-1)^Arf, with Arf read from the determinant. One multiplication in Z[zeta_8] costs about 200 ns against under 1 ns for the demos&#x27; long: fine for audits, too slow for sweeps of 10^8.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/cyclotomia.h"><code>include/cyclotomia.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/cyclotomia.c"><code>lib/cyclotomia.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-10-08 559ae6fd</td></tr>
+<tr><td>Group</td><td><a href="greges.html#mathematica">Exact mathematics</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

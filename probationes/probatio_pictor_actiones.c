@@ -21,6 +21,7 @@
 #include "pictor_componentia.h"
 #include "pictor_actiones.h"
 #include "credo.h"
+#include "pictor_organum_probationis.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -67,8 +68,6 @@ s32 principale (vacuum)
                     Xar* acta;
            VolumenActum* a;
                     i32  versio_ante;
-                 chorda  causa;
-                 chorda  fons;
                   Canon* ephemera;
               character  nihil_instr[] = "nihil";
 
@@ -84,24 +83,17 @@ s32 principale (vacuum)
     doc = pictor_documentum_creare(piscina, intern, vol, "", CCCXX, CC,
         LXIV);
     repo = insula_repositorium_creare(piscina, intern,
-        "<pictor latitudo=\"320\" altitudo=\"200\"/>",
-        "<pictor instrumentum=\"penicillus\" color_primus=\"0\""
+        "<pictor latitudo=\"320\" altitudo=\"200\""
+        " instrumentum=\"penicillus\" color_primus=\"0\""
         " magnitudo_penicilli=\"1\" zoom=\"1\"/>");
-    fons = filum_legere_totum("apps/pictor/canones/ephemera.canon",
-        piscina);
-    ephemera = canon_legere(fons, piscina, intern, &causa);
-    CREDO_NON_NIHIL(ephemera);
-    insula_ponere_canonem(repo, INSULA_EPHEMERA, ephemera);
     {
-              chorda domini;
-        StmlResultus res;
-        domini = filum_legere_totum("apps/pictor/canones/domini.stml",
-                                    piscina);
-        res = stml_legere_ex_literis(chorda_ut_cstr(domini, piscina),
-                                     piscina, intern);
-        CREDO_VERUM(res.successus);
-        insula_dominos_legere(repo, INSULA_EPHEMERA,
-            res.elementum_radix);
+        StmlNodus* domini;
+
+        CREDO_VERUM(pictor_organum_parare(piscina, intern, &ephemera,
+            &domini));
+        CREDO_NON_NIHIL(ephemera);
+        insula_ponere_canonem(repo, ephemera);
+        insula_dominos_legere(repo, domini);
     }
     reg           = actio_registrum_creare(piscina, intern);
     memset(&actiones, ZEPHYRUM, magnitudo(actiones));
@@ -123,7 +115,7 @@ s32 principale (vacuum)
         dispensator_arbor(d), piscina)), ZEPHYRUM);          /* L10 */
 
     imprimere("\n--- Ictus scriptus: UNUM <ictus>, III puncta ---\n");
-    versio_ante      = insula_versio(repo, INSULA_EPHEMERA);
+    versio_ante      = insula_versio(repo);
     via[ZEPHYRUM].x  = X;
     via[ZEPHYRUM].y  = XX;
     via[I].x         = XV;
@@ -162,10 +154,10 @@ s32 principale (vacuum)
     CREDO_VERUM(chorda_vacua(dispensator_motus(d)->captura));
     CREDO_FALSUM(dispensator_motus(d)->sordida);
     /* ephemera: focus solus scriptus (versio + I), pan absens */
-    CREDO_AEQUALIS_I32(insula_versio(repo, INSULA_EPHEMERA), versio_ante
+    CREDO_AEQUALIS_I32(insula_versio(repo), versio_ante
         + I);
     CREDO_MANUS_LUDUS_FOCUS(m, "tabula");
-    CREDO_NIHIL(insula_attributum(repo, INSULA_EPHEMERA, "pan_x"));
+    CREDO_NIHIL(insula_attributum(repo, "pan_x"));
     CREDO_VERUM(insula_restituere(repo));
     /* proiectio: pixelum sub (15,25) nigrum */
     {
@@ -212,7 +204,7 @@ s32 principale (vacuum)
     /* instrumentum aliud sub domino suo, deinde 'p' per manum */
     insula_scriptorem_ponere(repo,
         chorda_ex_literis("instrumentum.eligere", piscina));
-    CREDO_VERUM(mutare_ephemera(repo, instrumentum_ponere,
+    CREDO_VERUM(insula_mutare(repo, instrumentum_ponere,
         nihil_instr));
     insula_scriptorem_ponere(repo, chorda_ex_literis("", piscina));
     dispensator_recomponere(d);
@@ -227,7 +219,7 @@ s32 principale (vacuum)
     CREDO_VERUM(manus_ludus_clavem(m, 'p', ZEPHYRUM));
     {
         chorda* a2;
-        a2 = insula_attributum(repo, INSULA_EPHEMERA, "instrumentum");
+        a2 = insula_attributum(repo, "instrumentum");
         CREDO_NON_NIHIL(a2);
         CREDO_CHORDA_AEQUALIS_LITERIS(*a2, "penicillus");
     }

@@ -146,6 +146,17 @@
     <forma textus="separatoribus" casus="ablativus" numerus="pluralis"/>
   </vocabulum>
 
+  <vocabulum lemma="observator" lingua="latina" classis="substantivum"
+    nota="Latinum classicum (Plinius; observare -> observator m.): vox domus status-plan S5b (historia_observatorem_addere, Historia.observatores) - WORDS solum formam verbi observo (imperativum futurum) novit">
+    <sensus>observer, watcher (callback notified of changes)</sensus>
+    <forma textus="observatoris" casus="genitivus" numerus="singularis"/>
+    <forma textus="observatorem" casus="accusativus" numerus="singularis"/>
+    <forma textus="observatore" casus="ablativus" numerus="singularis"/>
+    <forma textus="observatores" casus="nominativus" numerus="pluralis"/>
+    <forma textus="observatorum" casus="genitivus" numerus="pluralis"/>
+    <forma textus="observatoribus" casus="dativus" numerus="pluralis"/>
+  </vocabulum>
+
   <vocabulum lemma="recordum" lingua="latina" classis="substantivum"
     nota="vox domus (T7 census.recorda, T15a oratio_vocabularium_en_recordum): recordum n. = 'record'; WORDS 'recorda' ut formam verbi recordor solum novit - pinna identificatorum ideo rubra 2026-09-04">
     <sensus>record (of a table); entry, row</sensus>

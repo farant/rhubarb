@@ -26,7 +26,18 @@
 #include "pictor_componentia.h"
 #include "pictor_actiones.h"
 #include "pictor_figurae.h"
+#include "conservatio.h"
+#include "relatio.h"
+#include "dimissio.h"
 #include "tabula_dispersa.h"
+
+/* systemata status repositorii (status-plan S3-S5): NIHIL in campo =
+ * systema absens; NIHIL totum = nulla (probationes) */
+nomen structura {
+    Conservatio* conservatio;
+        Relatio* relatio;
+       Dimissio* dimissio;
+} StatusSystemata;
 
 /* MONTATIO (insula-rami-plan T1a): pictor in repositorio dato, ramo
  * <pictor id> (aut radice): documentum in spatio id, canones et
@@ -42,6 +53,8 @@ nomen structura {
        PictorCompositio  compositio;
          TabulaDispersa* documenta;   /* S3e: spatium -> documentum
                                        * (picturae iam ostensae) */
+        StatusSystemata systemata;   /* S5b: relatio ad ligationem
+                                       * novam (picturam_ponere) */
 } PictorMontatio;
 
 nomen structura {
@@ -79,7 +92,11 @@ pictor_picturam_condere (
  * Ordo: canones, elementum initiale, domini. radix = praefixum viarum
  * canonum. Tabula NOVA (vicus-latera S2c) magnitudine prospectus
  * superficiei minus margo cellulae utrimque (altitudo etiam minus
- * linea status; LXIV minimum); exstans suam servat. */
+ * linea status; LXIV minimum); exstans suam servat. systemata
+ * (status-plan S3-S5): conservatio - ramus registratur et status
+ * servatus restituitur post elementum initiale, ante dominos; relatio -
+ * post dominos ramus registratur et documentum ligatur (verificatio
+ * statim). NIHIL = nulla (probationes). */
 b32
 pictor_montare (
          PictorMontatio* m,
@@ -90,7 +107,8 @@ pictor_montare (
      constans character* id,
      constans character* radix,
                     i32  latitudo,
-                    i32  altitudo);
+                    i32  altitudo,
+        StatusSystemata* systemata);
 
 /* Argumenta communia: -fumus (volumen temporarium), -volumen <via>
  * (ordinarie "pictor.volumen"). Reddit volumen apertum aut NIHIL. */

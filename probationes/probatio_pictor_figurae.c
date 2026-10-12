@@ -90,8 +90,8 @@ s32 principale (vacuum)
         "<punctum x=\"39\" y=\"2\"/></ictus>",
         piscina));
     repo = insula_repositorium_creare(piscina, intern,
-        "<pictor latitudo=\"40\" altitudo=\"30\"/>",
-        "<pictor instrumentum=\"penicillus\" zoom=\"1\"/>");
+        "<pictor latitudo=\"40\" altitudo=\"30\""
+        " instrumentum=\"penicillus\" zoom=\"1\"/>");
     motus_initiare(&motus, piscina);
     /* ictus pendens = captura tabulae (ut penicillus in pressione):
      * compositor puncta sola tabulae capturae ostendit (L4) */

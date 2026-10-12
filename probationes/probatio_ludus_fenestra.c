@@ -59,7 +59,7 @@ s32 principale (vacuum)
     intern = internamentum_creare(piscina);
     thema_initiare();
     repo = insula_repositorium_creare(piscina, intern,
-        "<documentum/>", "<ephemera/>");
+        "<insula/>");
     reg  = actio_registrum_creare(piscina, intern);
     memset(&toy, ZEPHYRUM, magnitudo(ToyStatus));
     toy_registrare(reg, &toy);
@@ -85,15 +85,15 @@ s32 principale (vacuum)
      * otiosa exspectat, non perscrutatur in ansa */
     CREDO_AEQUALIS_S64(ludus_fenestra_mora(lf), CCC);
     /* 013 B1: magnitudo initialis nuntiata (tabula CC x C) */
-    CREDO_NON_NIHIL(insula_attributum(repo, INSULA_EPHEMERA,
+    CREDO_NON_NIHIL(insula_attributum(repo,
         "superficies_latitudo"));
-    si (insula_attributum(repo, INSULA_EPHEMERA,
+    si (insula_attributum(repo,
         "superficies_latitudo"))
     {
         CREDO_CHORDA_AEQUALIS_LITERIS(*insula_attributum(repo,
-            INSULA_EPHEMERA, "superficies_latitudo"), "200");
+            "superficies_latitudo"), "200");
         CREDO_CHORDA_AEQUALIS_LITERIS(*insula_attributum(repo,
-            INSULA_EPHEMERA, "superficies_altitudo"), "100");
+            "superficies_altitudo"), "100");
     }
     /* pulsus recomposuit */
     CREDO_VERUM(toy.compositiones > n0);
@@ -112,7 +112,7 @@ s32 principale (vacuum)
     e.datum.mus.x  = XXXV;
     e.datum.mus.y  = XX;
     ludus_fenestra_tractare(lf, &e, M + L);
-    CREDO_NON_NIHIL(insula_attributum(repo, INSULA_EPHEMERA,
+    CREDO_NON_NIHIL(insula_attributum(repo,
         "numerus"));
     ludus_quadrum(lf, M + C);
     CREDO_AEQUALIS_I32(lf->mensurae.quadra, II);
@@ -201,14 +201,14 @@ s32 principale (vacuum)
         ludus_fenestra_tractare(lf_aptata, &e, M + CC);
         CREDO_AEQUALIS_I32(t3->latitudo, CCL);
         CREDO_AEQUALIS_I32(t3->altitudo, CL);
-        a = insula_attributum(repo, INSULA_EPHEMERA,
+        a = insula_attributum(repo,
             "superficies_latitudo");
         CREDO_NON_NIHIL(a);
         si (a)
         {
             CREDO_CHORDA_AEQUALIS_LITERIS(*a, "250");
         }
-        a = insula_attributum(repo, INSULA_EPHEMERA,
+        a = insula_attributum(repo,
             "superficies_altitudo");
         CREDO_NON_NIHIL(a);
         si (a)

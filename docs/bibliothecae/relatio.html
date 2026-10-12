@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>relatio</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>relatio</h1>
+<p class="subtitulus">SYSTEMA RELATIONUM (status-plan S5b): campi cum</p>
+
+<p>The reference system: a field whose manifest says it refers to something in a bound document (the current layer of a drawing, say) is checked whenever that document changes, and repaired when what it points at is gone. Written 2026-10-10 (status plan S5b). The repair follows the policy the field declares: take the topmost remaining entity, remove the attribute, or leave it alone. It is written under the system&#x27;s own name, so the owner check that refuses anonymous writes still holds, and undo does not revert it (Fran&#x27;s choice for now). The checks run after every act, undo and redo of the document, through an observer on its historia that is registered once per history and walks every branch bound to it, so a layer deleted in one pane repairs another pane showing the same drawing. They also run at mount and at every rebinding, which covers a stale value that conservatio has just restored. The document library contributes only an ordered enumeration of ids per kind, so the widget never says what a layer is. pictor&#x27;s own delete already moved the selection; the orphans this catches are the ones pictor never saw: undo and redo, another pane, rebinding, restore. Used by pictor.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/relatio.h"><code>include/relatio.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/relatio.c"><code>lib/relatio.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-10-12 aa623c1b</td></tr>
+<tr><td>Group</td><td><a href="greges.html#ludus">Ludus: the second-generation UI</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

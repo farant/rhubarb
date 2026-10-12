@@ -1159,8 +1159,8 @@ ramum_probare (vacuum)
     /* repositorium hospitis: ramus t1 cum superficie sua (XX x X
      * cellulae); radix applicationis intacta */
     alter = insula_repositorium_creare(piscina, intern,
-        "<vicus><terminale id=\"t1\"/></vicus>",
-        "<vicus><terminale id=\"t1\" superficies_latitudo=\"120\""
+        "<vicus><terminale id=\"t1\""
+        " superficies_latitudo=\"120\""
         " superficies_altitudo=\"80\"/></vicus>");
     CREDO_NON_NIHIL(alter);
     mc.app.ramus = insula_ramus(alter, "terminale", "t1");
@@ -1229,19 +1229,19 @@ montationem_probare (vacuum)
 
     imprimere("\n--- XIV: montatio (vicus-latera S1b) ---\n");
     (vacuum)setenv("SHELL", "/bin/sh", I);
-    repo = insula_repositorium_creare(piscina, intern, "<vicus/>",
+    repo = insula_repositorium_creare(piscina, intern,
         "<vicus/>");
     CREDO_NON_NIHIL(repo);
-    insula_ponere_canonem(repo, INSULA_DURABILIS,
+    insula_ponere_canonem(repo,
         canonem_vici("apps/vicus/canones/durabilis.canon"));
-    insula_ponere_canonem(repo, INSULA_EPHEMERA,
+    insula_ponere_canonem(repo,
         canonem_vici("apps/vicus/canones/ephemera.canon"));
     CREDO_VERUM(terminale_montare(&app, piscina, intern, repo, "t1",
         CDLXXX, CXCII));
     /* ramus in utroque genere; dispensator nullus (hospitis est) */
     r = insula_ramus(repo, "terminale", "t1");
-    CREDO_NON_NIHIL(insula_ramus_nodus(&r, INSULA_DURABILIS));
-    CREDO_NON_NIHIL(insula_ramus_nodus(&r, INSULA_EPHEMERA));
+    CREDO_NON_NIHIL(insula_ramus_nodus(&r));
+    CREDO_NON_NIHIL(insula_ramus_nodus(&r));
     CREDO_NIHIL(app.d);
     CREDO_AEQUALIS_I32(aemulator_latitudo(
         aemulator_hospes_aemulator(app.hospes)), LXXX);
@@ -1250,7 +1250,7 @@ montationem_probare (vacuum)
         piscina));
     sp.latitudo = CXX;
     sp.altitudo = LXXX;
-    CREDO_VERUM(mutare_ramum(&r, INSULA_EPHEMERA, superficiem_ponere,
+    CREDO_VERUM(mutare_ramum(&r, superficiem_ponere,
         &sp));
     (vacuum)terminale_pulsare(&app, ZEPHYRUM);
     CREDO_AEQUALIS_I32(aemulator_latitudo(

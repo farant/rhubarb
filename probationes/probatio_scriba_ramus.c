@@ -46,14 +46,14 @@ ramum_parare (
 {
     StmlResultus res;
 
-    insula_ramus_canonem_ponere(ramus, INSULA_DURABILIS,
+    insula_ramus_canonem_ponere(ramus,
         canonem_legere("apps/scriba/canones/durabilis.canon"));
-    insula_ramus_canonem_ponere(ramus, INSULA_EPHEMERA,
+    insula_ramus_canonem_ponere(ramus,
         canonem_legere("apps/scriba/canones/ephemera.canon"));
     res = stml_legere_ex_literis(chorda_ut_cstr(filum_legere_totum(
         "apps/scriba/canones/domini.stml", piscina), piscina), piscina,
         intern);
-    (vacuum)insula_ramus_dominos_legere(ramus, INSULA_EPHEMERA,
+    (vacuum)insula_ramus_dominos_legere(ramus,
         res.elementum_radix);
 }
 
@@ -120,11 +120,10 @@ s32 principale (vacuum)
         "s2", XVI, VI,
                                     IV);
     repo = insula_repositorium_creare(piscina, intern,
-        "<hospes><scriba id=\"s1\" latitudo=\"16\" altitudo=\"6\"/>"
-        "<scriba id=\"s2\" latitudo=\"16\" altitudo=\"6\"/></hospes>",
-        "<hospes focus=\"pagina\">"
-        "<scriba id=\"s1\" modus=\"normalis\"/>"
-        "<scriba id=\"s2\" modus=\"normalis\"/></hospes>");
+        "<hospes focus=\"pagina\"><scriba id=\"s1\""
+        " latitudo=\"16\" altitudo=\"6\""
+        " modus=\"normalis\"/><scriba id=\"s2\" latitudo=\"16\""
+        " altitudo=\"6\" modus=\"normalis\"/></hospes>");
     CREDO_NON_NIHIL(repo);
     s1 = insula_ramus(repo, "scriba", "s1");
     s2 = insula_ramus(repo, "scriba", "s2");
@@ -170,9 +169,9 @@ s32 principale (vacuum)
     CREDO_VERUM(linea_est(scriba_documentum_tabula(documentum_secundum),
         ZEPHYRUM,
         ""));
-    CREDO_VERUM(valor_est(insula_ramus_attributum(&s1, INSULA_EPHEMERA,
+    CREDO_VERUM(valor_est(insula_ramus_attributum(&s1,
         "cursor_columna"), "5"));
-    CREDO_NIHIL(insula_ramus_attributum(&s2, INSULA_EPHEMERA,
+    CREDO_NIHIL(insula_ramus_attributum(&s2,
         "cursor_columna"));
     /* arbor d1 ex ramo s1 (cursor, linea status); d2 suum */
     {
@@ -199,7 +198,7 @@ s32 principale (vacuum)
         }
     }
     /* radix statum scribae non fert */
-    CREDO_NIHIL(insula_attributum(repo, INSULA_EPHEMERA,
+    CREDO_NIHIL(insula_attributum(repo,
         "cursor_columna"));
     CREDO_FALSUM(insula_mendacium(repo));
 

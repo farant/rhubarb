@@ -35,11 +35,14 @@ arbor (
                    i32  latitudo,
                    i32  altitudo)
 {
-    InsulaRepositorium* repo;
-      ScribaCompositio  cfg;
+     InsulaRepositorium* repo;
+       ScribaCompositio  cfg;
+              character  insula[DXII];
 
-    repo = insula_repositorium_creare(piscina, intern,
-        "<scriba latitudo=\"16\" altitudo=\"6\"/>", ephemera);
+    /* insula una (C2): dimensiones folii cum statu */
+    sprintf(insula, "<scriba latitudo=\"16\" altitudo=\"6\"%s",
+        ephemera + strlen("<scriba"));
+    repo = insula_repositorium_creare(piscina, intern, insula);
     memset(&cfg, ZEPHYRUM, magnitudo(cfg));
     cfg.fenestra_latitudo  = latitudo;
     cfg.fenestra_altitudo  = altitudo;

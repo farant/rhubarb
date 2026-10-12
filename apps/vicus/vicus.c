@@ -19,6 +19,7 @@
 #include "delineare_mandata.h"
 #include "ludus_fenestra.h"
 #include "vicus_applicatio.h"
+#include "energia.h"
 #include "clipboard_platform.h"
 #include <stdio.h>
 #include <string.h>
@@ -47,6 +48,25 @@ imaginem_glutinatam (
 {
     (vacuum)ctx;
     redde clipboard_capere_imaginem(piscina);
+}
+
+/* S5: porta pilae - energia_status systematis */
+interior b32
+pilam_systematis (
+    vacuum* ctx,
+       s32* centesimae,
+       b32* oneratur)
+{
+    EnergiaStatus s;
+
+    (vacuum)ctx;
+    si (!energia_status(&s))
+    {
+        redde FALSUM;
+    }
+    *centesimae  = s.centesimae;
+    *oneratur    = s.oneratur;
+    redde VERUM;
 }
 
 s32
@@ -134,6 +154,8 @@ principale (
     }
     /* S4: horologium locale in linea tabularum */
     vicus_horologium_ponere(app.vicus, vicus_horologium_locale, NIHIL);
+    /* S5: pila (IOKit; machina mensae: nulla) */
+    vicus_pilam_ponere(app.vicus, pilam_systematis, NIHIL);
     /* L5: Cmd+V in pictore: imago e clipboard in stratum novum */
     vicus_applicatio_imaginis_portam_ponere(&app, imaginem_glutinatam,
         NIHIL);

@@ -1,0 +1,132 @@
+<!--
+  organum.canon - canon dialecti ORGANI (manifestum organi / widget)
+  Specificatio: project-specs/status-plan.md S1; census
+  project-specs/status-genera-census.md IX-XI.
+
+  Manifestum organi statum eius classificat per campum (vita,
+  rhythmus, sedes, aspectus, referentia) et ligamina, portas,
+  actiones, basim, montationes declarat. Canon INSULAE ex campis
+  GENERATUR (lib/organum.c) - definitio una.
+
+  Hic canon formam iudicat; leges quae attributa plura simul aut
+  valorem fissum poscunt (sedes motus -> mobilis et transiens,
+  orbatus -> referentia, referentia -> ligamen declaratum, absens ->
+  typus) oneratoris sunt (organum_legere), non canonis.
+
+  Infixus in lib/organum_canon.c per tools/organum_canon_infigere.sh
+  (GENERATUM): onerator sine plagula vivit.
+-->
+<canon dialectus="organum" versio="1">
+
+  <elementum nomen="organum" radix="verum">
+    <attributum nomen="genus"  genus="nomen"   necessarium="verum"/>
+    <attributum nomen="versio" genus="numerus" necessarium="verum"/>
+    <liberum nomen="ligamina"    maximum="1"/>
+    <liberum nomen="portae"      maximum="1"/>
+    <liberum nomen="actiones"    maximum="1"/>
+    <liberum nomen="status"      minimum="1" maximum="1"/>
+    <liberum nomen="basis"       maximum="1"/>
+    <liberum nomen="montationes" maximum="1"/>
+  </elementum>
+
+  <!-- ligamina: entia quae organum ostendit (props); a="parens" =
+       valor a parente montante datur -->
+  <elementum nomen="ligamina">
+    <liberum nomen="ligamen"/>
+  </elementum>
+  <elementum nomen="ligamen">
+    <attributum nomen="nomen" genus="nomen"      necessarium="verum"/>
+    <attributum nomen="genus" genus="compositum" necessarium="verum"/>
+    <attributum nomen="a"     genus="electio">
+      <optio>parens</optio>
+    </attributum>
+  </elementum>
+
+  <!-- portae: mundus observatus, numquam conditus -->
+  <elementum nomen="portae">
+    <liberum nomen="porta"/>
+  </elementum>
+  <elementum nomen="porta">
+    <attributum nomen="nomen" genus="nomen"   necessarium="verum"/>
+    <attributum nomen="modus" genus="electio" necessarium="verum">
+      <optio>petitio</optio>
+      <optio>eventus</optio>
+    </attributum>
+    <attributum nomen="nota"  genus="textus"/>
+  </elementum>
+
+  <!-- actiones: quae scriptor= nominare potest -->
+  <elementum nomen="actiones">
+    <liberum nomen="actio"/>
+  </elementum>
+  <elementum nomen="actio">
+    <attributum nomen="nomen"   genus="textus" necessarium="verum"
+      nota="textus: nomina actionum punctum ferunt (penicillus.ictus)"/>
+    <attributum nomen="systema" genus="veritas"/>
+  </elementum>
+
+  <!-- status: campus unus per partem status -->
+  <elementum nomen="status">
+    <liberum nomen="campus"/>
+  </elementum>
+  <elementum nomen="campus">
+    <attributum nomen="nomen" genus="nomen" necessarium="verum"/>
+    <attributum nomen="typus" genus="electio" necessarium="verum">
+      <optio>textus</optio>
+      <optio>nomen</optio>
+      <optio>numerus</optio>
+      <optio>veritas</optio>
+      <optio>dies</optio>
+      <optio>electio</optio>
+      <optio>series</optio>
+    </attributum>
+    <attributum nomen="vita" genus="electio" necessarium="verum">
+      <optio>persistens</optio>
+      <optio>transiens</optio>
+      <optio>probatio</optio>
+    </attributum>
+    <attributum nomen="rhythmus" genus="electio">
+      <optio>discretus</optio>
+      <optio>mobilis</optio>
+    </attributum>
+    <attributum nomen="sedes" genus="electio">
+      <optio>insula</optio>
+      <optio>motus</optio>
+    </attributum>
+    <attributum nomen="absens"     genus="textus"/>
+    <attributum nomen="scriptor"   genus="textus"/>
+    <attributum nomen="aspectus"   genus="electio">
+      <optio>popover</optio>
+    </attributum>
+    <attributum nomen="referentia" genus="textus"
+      nota="'ligamen/genus' - pars prima ligamen declaratum"/>
+    <attributum nomen="orbatus"    genus="electio">
+      <optio>summum</optio>
+      <optio>nullum</optio>
+    </attributum>
+    <attributum nomen="nota"       genus="textus"/>
+    <liberum nomen="optio"/>
+  </elementum>
+  <elementum nomen="optio" textus="verum"/>
+
+  <!-- basis: campi communes omnium organorum (organum-commune) -->
+  <elementum nomen="basis">
+    <attributum nomen="genus" genus="compositum" necessarium="verum"/>
+  </elementum>
+
+  <!-- montationes: organa liberi quae hoc organum montat -->
+  <elementum nomen="montationes">
+    <liberum nomen="montatio"/>
+  </elementum>
+  <elementum nomen="montatio">
+    <attributum nomen="nomen" genus="nomen" necessarium="verum"/>
+    <attributum nomen="genus" genus="nomen" necessarium="verum"/>
+  </elementum>
+
+  <citatio  nomen="scriptor-actio" attributum="scriptor"
+    ad="actio/nomen" super="campus"/>
+  <unicitas nomen="campi"    attributum="nomen" super="campus"/>
+  <unicitas nomen="actiones" attributum="nomen" super="actio"/>
+  <unicitas nomen="ligamina" attributum="nomen" super="ligamen"/>
+
+</canon>

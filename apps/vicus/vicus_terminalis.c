@@ -18,6 +18,7 @@
 #include "ludus_tessera_pons.h"
 #include "ludus_tessera.h"
 #include "vicus_applicatio.h"
+#include "energia.h"
 #include "terminale.h"
 #include <stdio.h>
 
@@ -42,6 +43,25 @@ ornamenta_exstinguere (
         ((TerminaleApplicatio*)l->montatio)->ornamenta_pixelorum =
             FALSUM;
     }
+}
+
+/* S5: porta pilae - energia_status systematis */
+interior b32
+pilam_systematis (
+    vacuum* ctx,
+       s32* centesimae,
+       b32* oneratur)
+{
+    EnergiaStatus s;
+
+    (vacuum)ctx;
+    si (!energia_status(&s))
+    {
+        redde FALSUM;
+    }
+    *centesimae  = s.centesimae;
+    *oneratur    = s.oneratur;
+    redde VERUM;
 }
 
 s32
@@ -101,6 +121,8 @@ principale (
     }
     /* S4: horologium locale in linea tabularum */
     vicus_horologium_ponere(app.vicus, vicus_horologium_locale, NIHIL);
+    /* S5: pila (IOKit; machina mensae: nulla) */
+    vicus_pilam_ponere(app.vicus, pilam_systematis, NIHIL);
     /* terminalia montata: ornamenta ut cellulae, non pixela (ut
      * terminale_terminalis) - tessellatio lineas in cellulas
      * verteret */

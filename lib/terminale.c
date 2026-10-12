@@ -57,11 +57,6 @@ hic_manens constans character* constans ambitus_terminalis[] = {
  * declarat, ergo montatio canonem suum fert (insula rami: canon
  * radicis ramos cum canone proprio non videt). Infixi, non e filo:
  * terminale_montare radicem viarum non accipit, et parvi sunt. */
-#define CANON_DURABILIS \
-    "<canon dialectus=\"terminale-durabilis\" versio=\"1\">" \
-    "<elementum nomen=\"terminale\" radix=\"verum\">" \
-    "<attributum nomen=\"id\" genus=\"nomen\"/>" \
-    "</elementum></canon>"
 #define CANON_EPHEMERA \
     "<canon dialectus=\"terminale-ephemera\" versio=\"1\">" \
     "<elementum nomen=\"terminale\" radix=\"verum\">" \
@@ -1075,7 +1070,7 @@ superficies (
     chorda* v;
        s32  n;
 
-    v = insula_ramus_attributum(ramus, INSULA_EPHEMERA, titulus);
+    v = insula_ramus_attributum(ramus, titulus);
     si (!v || !chorda_ut_s32(*v, &n) || n < I)
     {
         redde ordinarium;
@@ -1279,19 +1274,15 @@ applicationem_struere (
         LXIV * MXXIV);
     si (repo)
     {
-        /* montatio: canones PRIMUM (radix hospitis eam non videt),
-         * deinde elementum initiale in utroque genere */
+        /* montatio: canon PRIMUM (radix hospitis eam non videt),
+         * deinde elementum initiale (insula una, C2) */
         app->repo   = repo;
         app->ramus  = insula_ramus(repo, "terminale", id);
-        insula_ramus_canonem_ponere(&app->ramus, INSULA_DURABILIS,
-            canonem_infixum(piscina, intern, CANON_DURABILIS));
-        insula_ramus_canonem_ponere(&app->ramus, INSULA_EPHEMERA,
+        insula_ramus_canonem_ponere(&app->ramus,
             canonem_infixum(piscina, intern, CANON_EPHEMERA));
-        si (   !insula_ramum_initiare(&app->ramus, INSULA_DURABILIS,
-                   elementum_montationis(piscina, id, ""))
-            || !insula_ramum_initiare(&app->ramus, INSULA_EPHEMERA,
-                   elementum_montationis(piscina, id,
-                       " focus=\"schirmum\"")))
+        si (!insula_ramum_initiare(&app->ramus,
+                elementum_montationis(piscina, id,
+                    " focus=\"schirmum\"")))
         {
             redde FALSUM;
         }
@@ -1299,7 +1290,7 @@ applicationem_struere (
     alioquin
     {
         app->repo = insula_repositorium_creare(piscina, intern,
-            "<terminale/>", "<terminale focus=\"schirmum\"/>");
+            "<terminale focus=\"schirmum\"/>");
         app->ramus = app->repo ? insula_ramus_radix(app->repo)
                                : app->ramus;
     }

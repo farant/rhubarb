@@ -45,6 +45,7 @@
 #include "internamentum.h"
 #include "volumen.h"
 #include "sigillum.h"
+#include "xar.h"
 
 
 /* ==================================================
@@ -72,7 +73,16 @@ nomen structura {
                b32 (*decodificare)(vacuum* ctx, chorda codex);
 } HistoriaProiectio;
 
-nomen structura {
+/* S5b (status-plan): observator - vocatur post omnem mutationem
+ * cursoris (actum, revocare, reficere successa); actum recusatum eum
+ * non vocat. Plures (documentum commune laterum plurium). */
+nomen structura Historia Historia;
+
+nomen vacuum (*HistoriaObservator)(
+    Historia* historia,
+      vacuum* ctx);
+
+structura Historia {
                 Volumen* volumen;
                 Piscina* piscina;
     InternamentumChorda* intern;
@@ -89,7 +99,8 @@ nomen structura {
                     s64  finis;            /* seq ultimum vivum */
                     i32  numerus_vivorum;  /* acta viva ad cursor */
                Sigillum  sigillum;         /* proiectionis currentis */
-} Historia;
+                    Xar* observatores;     /* S5b: NIHIL donec primus */
+};
 
 
 /* ==================================================
@@ -154,6 +165,15 @@ historia_revocare (
 b32
 historia_reficere (
     Historia* h);
+
+
+/* S5b: observatorem addere (ordine additionis vocantur); FALSUM si
+ * argumenta mala */
+b32
+historia_observatorem_addere (
+              Historia* h,
+    HistoriaObservator  fn,
+                vacuum* ctx);
 
 
 /* ==================================================

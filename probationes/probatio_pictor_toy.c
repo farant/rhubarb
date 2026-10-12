@@ -39,7 +39,7 @@ s32 principale (vacuum)
     credo_aperire(piscina);
     intern = internamentum_creare(piscina);
     repo = insula_repositorium_creare(piscina, intern,
-        "<documentum/>", "<ephemera/>");
+        "<insula/>");
     reg = actio_registrum_creare(piscina, intern);
     memset(&toy, ZEPHYRUM, magnitudo(ToyStatus));
     toy_registrare(reg, &toy);
@@ -64,22 +64,22 @@ s32 principale (vacuum)
     }
 
     /* asserta semantica - valent etiam sine exemplaribus */
-    a = insula_attributum(repo, INSULA_EPHEMERA, "numerus");
+    a = insula_attributum(repo, "numerus");
     CREDO_NON_NIHIL(a);
     CREDO_CHORDA_AEQUALIS_LITERIS(*a, "1");
-    a = insula_attributum(repo, INSULA_DURABILIS, "ictus_numerus");
+    a = insula_attributum(repo, "ictus_numerus");
     CREDO_NON_NIHIL(a);
     CREDO_CHORDA_AEQUALIS_LITERIS(*a, "1");
-    a = insula_attributum(repo, INSULA_DURABILIS, "puncta");
+    a = insula_attributum(repo, "puncta");
     CREDO_NON_NIHIL(a);
     CREDO_CHORDA_AEQUALIS_LITERIS(*a, "3");
-    a = insula_attributum(repo, INSULA_EPHEMERA, "fuga");
+    a = insula_attributum(repo, "fuga");
     CREDO_NON_NIHIL(a);
     CREDO_CHORDA_AEQUALIS_LITERIS(*a, "verum");
     CREDO_CHORDA_AEQUALIS_LITERIS(dispensator_focus(d), "tabula");
     CREDO_CHORDA_AEQUALIS_LITERIS(dispensator_super(d), "tabula");
     /* ictus finitus insulam ephemerarum non tetigit: pan absens */
-    CREDO_NIHIL(insula_attributum(repo, INSULA_EPHEMERA, "pan_x"));
+    CREDO_NIHIL(insula_attributum(repo, "pan_x"));
     /* quadrum 0 + unum per eventum SALTEM (limen T5: eventus cum
      * derivatis semel amplius componit) */
     CREDO_VERUM(dispensator_numerus_compositionum(d) >= n + I);
@@ -93,12 +93,9 @@ s32 principale (vacuum)
         "probationes/pictor/toy.arbor.stml", arbor_textus));
 
     imprimere("\n--- Imago insularum ---\n");
+    /* C2: insula una */
     insulae_textus = chorda_concatenare(
-        insula_scribere(repo, INSULA_DURABILIS, piscina),
-        chorda_ex_literis("\n", piscina), piscina);
-    insulae_textus = chorda_concatenare(insulae_textus,
-        insula_scribere(repo, INSULA_EPHEMERA, piscina), piscina);
-    insulae_textus = chorda_concatenare(insulae_textus,
+        insula_scribere(repo, piscina),
         chorda_ex_literis("\n", piscina), piscina);
     CREDO_CHORDA_NON_VACUA(insulae_textus);
     CREDO_VERUM(exemplar_conferre(piscina,

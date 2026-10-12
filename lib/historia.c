@@ -528,6 +528,52 @@ historia_aperire (
  * Acta, revocare, reficere
  * ================================================== */
 
+/* S5b: observator cum contextu */
+nomen structura {
+    HistoriaObservator  fn;
+                vacuum* ctx;
+} ObservatorHistoriae;
+
+/* observatores omnes, ordine additionis */
+interior vacuum
+observatores_vocare (
+    Historia* h)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; h->observatores
+         && i < xar_numerus(h->observatores); i++)
+    {
+        ObservatorHistoriae* o;
+
+        o = (ObservatorHistoriae*)xar_obtinere(h->observatores, i);
+        o->fn(h, o->ctx);
+    }
+}
+
+b32
+historia_observatorem_addere (
+              Historia* h,
+    HistoriaObservator  fn,
+                vacuum* ctx)
+{
+    ObservatorHistoriae* o;
+
+    si (!h || !fn)
+    {
+        redde FALSUM;
+    }
+    si (!h->observatores)
+    {
+        h->observatores = xar_creare(h->piscina,
+            (i32)magnitudo(ObservatorHistoriae));
+    }
+    o       = (ObservatorHistoriae*)xar_addere(h->observatores);
+    o->fn   = fn;
+    o->ctx  = ctx;
+    redde VERUM;
+}
+
 /* appendere: ramus si cursor < finis, nota coniunctionis si petita
  * et actum prius vivum exstat, deinde actum */
 interior s64
@@ -576,6 +622,7 @@ actum_appendere (
     {
         checkpoint_condere(h, seq);
     }
+    observatores_vocare(h);
     redde seq;
 }
 
@@ -644,6 +691,7 @@ historia_revocare (
     h->numerus_vivorum  = k;
     proicere_ad(h, ad, FALSUM);
     cursorem_notare(h);
+    observatores_vocare(h);
     redde VERUM;
 }
 
@@ -686,6 +734,7 @@ historia_reficere (
     {
         sigillum_renovare(h);
         cursorem_notare(h);
+        observatores_vocare(h);
     }
     redde applicatum;
 }

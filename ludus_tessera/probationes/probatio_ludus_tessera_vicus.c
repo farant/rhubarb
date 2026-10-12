@@ -93,9 +93,8 @@ _status (
 {
     chorda c;
 
-    c = chorda_concatenare(insula_scribere(app->vicus->repo,
-        INSULA_DURABILIS, piscina), insula_scribere(app->vicus->repo,
-        INSULA_EPHEMERA, piscina), piscina);
+    c = chorda_concatenare(insula_scribere(app->vicus->repo, piscina),
+        insula_scribere(app->vicus->repo, piscina), piscina);
     c = chorda_concatenare(c, scriba_documentum_sigillum_hex(
         scriba_s1(app)->doc, piscina), piscina);
     redde chorda_concatenare(c, pictor_documentum_sigillum_hex(

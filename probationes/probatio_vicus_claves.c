@@ -68,7 +68,7 @@ pictorem_montare (
     (vacuum)argumentum;
     (vacuum)ctx;
     redde pictor_montare((PictorMontatio*)sedes, p, in, v, r, id, radix,
-                         latitudo, altitudo);
+                         latitudo, altitudo, NIHIL);
 }
 
 interior vacuum
@@ -250,7 +250,7 @@ s32 principale (vacuum)
     CREDO_VERUM(manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));
     CREDO_VERUM(linea_est(scriba_documentum_tabula(s2->doc), ZEPHYRUM,
         "ny"));
-    CREDO_NIHIL(insula_attributum(v->repo, INSULA_EPHEMERA,
+    CREDO_NIHIL(insula_attributum(v->repo,
         "praefixum"));
 
     imprimere("\n--- VI: ictus in tabulam ---\n");

@@ -37,7 +37,8 @@ durabile (
 {
     chorda* a;
 
-    a = insula_attributum(app->repo, INSULA_DURABILIS, titulus);
+    /* status-plan C1: dimensiones in ephemera (insula una) */
+    a = insula_attributum(app->repo, titulus);
     redde a ? *a : chorda_ex_literis("", piscina);
 }
 

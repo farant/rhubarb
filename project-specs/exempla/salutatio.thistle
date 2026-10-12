@@ -78,7 +78,7 @@ principale (vacuum)
     intern  = internamentum_creare(piscina);
     thema_initiare();
     repo = insula_repositorium_creare(piscina, intern,
-        "<documentum/>", "<ephemera/>");
+        "<insula/>");
     actiones = actio_registrum_creare(piscina, intern);
     figurae  = figura_registrum_creare(piscina);
     figura_registrare(figurae, PARTES_TITULUS, ZEPHYRUM,
@@ -120,7 +120,7 @@ principale (vacuum)
     credo_aperire(piscina);
     intern = internamentum_creare(piscina);
     repo = insula_repositorium_creare(piscina, intern,
-        "<documentum/>", "<ephemera/>");
+        "<insula/>");
     arbor = componere_salutationis(repo, NIHIL, piscina, intern, NIHIL);
     CREDO_NON_NIHIL(arbor);
     c = componens_invenire_per_id(arbor,

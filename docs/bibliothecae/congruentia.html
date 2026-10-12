@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>congruentia</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>congruentia</h1>
+<p class="subtitulus">Arithmetica modularis EXACTA (Z/n, n &lt; 2^32)</p>
+
+<p>Exact modular arithmetic, Z/n for any modulus 2 &lt;= n &lt; 2^32; the name is Gauss&#x27;s (Disquisitiones Arithmeticae, art. 1). A residue is a bare i32 with the modulus passed explicitly, no struct, so hot loops pay nothing; products fit in 64 bits, which is why the modulus stops at 2^32 (C89 has no 128-bit type). The contract is deliberately unguarded on the hot path: arguments must already be reduced, and the header says what happens otherwise. Composite moduli are allowed, the inverse refusing when gcd(a, n) is not 1. Primality is Miller-Rabin with bases 2, 7 and 61, deterministic for every 32-bit number; the review ran it against a sieve of every n below 2^32 with no mismatch. congruentia_primus_infra walks down the primes to supply moduli for the Chinese remainder theorem, and congruentia_restitue rebuilds a Magnus from residues by Garner&#x27;s method, as the symmetric representative if asked. It backs the Z/n ring in anulus; multimodular determinants and normal forms are the consumer planned next (docs agenda, A8). Born 2026-10-06.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/congruentia.h"><code>include/congruentia.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/congruentia.c"><code>lib/congruentia.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-10-06 b589553d</td></tr>
+<tr><td>Group</td><td><a href="greges.html#mathematica">Exact mathematics</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

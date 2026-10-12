@@ -209,7 +209,7 @@ toy_numerare (
     {
         redde FALSUM;
     }
-    mutare_ephemera(r, toy_incrementare, toy_attr_numerus);
+    insula_mutare(r, toy_incrementare, toy_attr_numerus);
     redde VERUM;
 }
 
@@ -250,8 +250,8 @@ toy_ictus (
             }
             tp.titulus = "puncta";
             tp.valor   = xar_numerus(motus->ictus_pendens);
-            mutare_durabile(r, toy_ponere_numerum, &tp);
-            mutare_durabile(r, toy_incrementare,
+            insula_mutare(r, toy_ponere_numerum, &tp);
+            insula_mutare(r, toy_incrementare,
                 toy_attr_ictus_numerus);
             mutare_motum(motus, toy_puncta_vacare, NIHIL, e->tempus);
             /* ictus finitus insulam ephemerarum NON tangit */
@@ -292,7 +292,7 @@ toy_fugere (
         casus EVENTUS_CLAVIS_DEPRESSUS:
             si (e->datum.clavis.clavis == CLAVIS_EFFUGIUM)
             {
-                mutare_ephemera(r, toy_ponere_verum, toy_attr_fuga);
+                insula_mutare(r, toy_ponere_verum, toy_attr_fuga);
                 redde VERUM;
             }
             redde FALSUM;

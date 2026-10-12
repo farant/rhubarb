@@ -1,5 +1,7 @@
-/* probatio_pictor_canones.c - canones veri insularum pictoris et
- * tabula dominorum: leguntur, iudicant, refusant */
+/* probatio_pictor_canones.c - canon insularum pictoris et tabula
+ * dominorum, EX MANIFESTO generati (status-plan S2:
+ * apps/pictor/organum.stml + apps/organum_commune.stml): iudicant,
+ * refusant */
 #include "latina.h"
 #include "piscina.h"
 #include "internamentum.h"
@@ -9,31 +11,8 @@
 #include "canon.h"
 #include "insula.h"
 #include "credo.h"
+#include "pictor_organum_probationis.h"
 #include <stdio.h>
-
-interior Canon*
-canonem_legere (
-                Piscina* p,
-    InternamentumChorda* in,
-     constans character* via)
-{
-    chorda  fons;
-    chorda  causa;
-     Canon* c;
-
-    fons = filum_legere_totum(via, p);
-    si (fons.mensura == ZEPHYRUM)
-    {
-        redde NIHIL;
-    }
-    c = canon_legere(fons, p, in, &causa);
-    si (!c)
-    {
-        imprimere("canon %s: %.*s\n", via, (int)causa.mensura,
-                  causa.datum);
-    }
-    redde c;
-}
 
 interior vacuum
 ponere_ignotum (
@@ -44,6 +23,28 @@ ponere_ignotum (
 {
     (vacuum)ctx;
     insula_attributum_ponere(radix, p, in, "ignotissimum", "x");
+}
+
+interior vacuum
+ponere_paletta (
+              StmlNodus* radix,
+                Piscina* p,
+    InternamentumChorda* in,
+                 vacuum* ctx)
+{
+    (vacuum)ctx;
+    insula_attributum_ponere(radix, p, in, "paletta", "1,2,3");
+}
+
+interior vacuum
+ponere_palettam (
+              StmlNodus* radix,
+                Piscina* p,
+    InternamentumChorda* in,
+                 vacuum* ctx)
+{
+    (vacuum)ctx;
+    insula_attributum_ponere(radix, p, in, "palette", "color_primus");
 }
 
 interior vacuum
@@ -61,11 +62,9 @@ s32 principale (vacuum)
 {
                 Piscina* piscina;
     InternamentumChorda* intern;
-                  Canon* durabilis;
-                  Canon* ephemera;
+                  Canon* canon;
      InsulaRepositorium* repo;
-           StmlResultus  res;
-                 chorda  domini;
+              StmlNodus* domini;
 
     piscina = piscina_generare_dynamicum("probatio_pictor_canones",
         LXIV * M);
@@ -75,54 +74,55 @@ s32 principale (vacuum)
     credo_aperire(piscina);
     intern = internamentum_creare(piscina);
 
-    imprimere("\n--- Canones leguntur ---\n");
-    durabilis = canonem_legere(piscina, intern,
-                               "apps/pictor/canones/durabilis.canon");
-    ephemera  = canonem_legere(piscina, intern,
-                               "apps/pictor/canones/ephemera.canon");
-    CREDO_NON_NIHIL(durabilis);
-    CREDO_NON_NIHIL(ephemera);
+    imprimere("\n--- Canon et domini ex manifesto ---\n");
+    canon   = NIHIL;
+    domini  = NIHIL;
+    CREDO_VERUM(pictor_organum_parare(piscina, intern, &canon,
+        &domini));
+    CREDO_NON_NIHIL(canon);
+    CREDO_NON_NIHIL(domini);
+    si (!canon || !domini)
+    {
+        credo_imprimere_compendium();
+        redde I;
+    }
 
     imprimere("\n--- Insulae pictoris iudicantur ---\n");
     repo = insula_repositorium_creare(piscina, intern,
-        "<pictor latitudo=\"320\" altitudo=\"200\" paletta=\"\">"
-        "<stratum titulus=\"fundus\" visibilis=\"verum\" ordo=\"0\"/>"
-        "</pictor>",
-        "<pictor instrumentum=\"penicillus\" color_primus=\"0\""
+        "<pictor latitudo=\"320\" altitudo=\"200\""
+        " instrumentum=\"penicillus\" color_primus=\"0\""
         " color_secundus=\"5\" magnitudo_penicilli=\"1\""
-        " stratum_activum=\"0\""
-        " zoom=\"1\" focus=\"tabula\"/>");
+        " stratum_activum=\"0\" zoom=\"1\" focus=\"tabula\"/>");
     CREDO_NON_NIHIL(repo);
-    insula_ponere_canonem(repo, INSULA_DURABILIS, durabilis);
-    insula_ponere_canonem(repo, INSULA_EPHEMERA, ephemera);
+    insula_ponere_canonem(repo, canon);
+    insula_ponere_canonem(repo, canon);
     /* attributum non declaratum: recusatur */
-    CREDO_FALSUM(mutare_ephemera(repo, ponere_ignotum, NIHIL));
+    CREDO_FALSUM(insula_mutare(repo, ponere_ignotum, NIHIL));
     CREDO_CHORDA_CONTINET(insula_causa(repo),
                           chorda_ex_literis("canon", piscina));
+    /* declarationes mortuae (census IX inventum 7) iam ignotae */
+    CREDO_FALSUM(insula_mutare(repo, ponere_paletta, NIHIL));
 
     imprimere("\n--- Domini leguntur; motus solus zoom scribit ---\n");
-    domini = filum_legere_totum("apps/pictor/canones/domini.stml",
-                                piscina);
-    CREDO_CHORDA_NON_VACUA(domini);
-    res = stml_legere_ex_literis(chorda_ut_cstr(domini, piscina),
-                                 piscina, intern);
-    CREDO_VERUM(res.successus);
-    /* XVI: + superficies_latitudo/_altitudo, scriptor dispensator
-     * (modulus 013 B1); + semen, scriptor aspergillum.ictus; +
-     * exemplar, scriptor exemplar.ponere (P3); magnitudo ->
-     * magnitudo_penicilli + magnitudo_aspergilli (P4a); +
-     * magnitudo_lineae (linea); + stratum_activum (strata.agere,
-     * L3) */
-    CREDO_AEQUALIS_I32(insula_dominos_legere(repo, INSULA_EPHEMERA,
-                                             res.elementum_radix),
-                                             XVIII);
-    CREDO_AEQUALIS_I32(insula_dominos_legere(repo, INSULA_DURABILIS,
-                                             res.elementum_radix), I);
+    /* XVII: XII pictoris (scriptor, insula; S5c palette quoque) + semen
+     * (aspergillum.ictus, in insula usque ad migrationem) + IV basis
+     * (focus, focus_acervus, superficies_*: dispensator). Olim
+     * XVIII: cursus, gradus (mortui) abierunt. Durabilis: olim I
+     * (sigillum, numquam scriptum), nunc nullus. */
+    CREDO_AEQUALIS_I32(insula_dominos_legere(repo,
+                                             domini), XVII);
     insula_scriptorem_ponere(repo,
         chorda_ex_literis("zoom.ponere", piscina));
-    CREDO_FALSUM(mutare_ephemera(repo, ponere_zoom, NIHIL));
+    CREDO_FALSUM(insula_mutare(repo, ponere_zoom, NIHIL));
     insula_scriptorem_ponere(repo, chorda_ex_literis("motus", piscina));
-    CREDO_VERUM(mutare_ephemera(repo, ponere_zoom, NIHIL));
+    CREDO_VERUM(insula_mutare(repo, ponere_zoom, NIHIL));
+    /* S5c: palette - dominus aperiens et systema dimissio soli */
+    insula_scriptorem_ponere(repo,
+        chorda_ex_literis("quilibet", piscina));
+    CREDO_FALSUM(insula_mutare(repo, ponere_palettam, NIHIL));
+    insula_scriptorem_ponere(repo,
+        chorda_ex_literis("palette.aperire", piscina));
+    CREDO_VERUM(insula_mutare(repo, ponere_palettam, NIHIL));
     CREDO_VERUM(insula_restituere(repo));
 
     imprimere("\n");

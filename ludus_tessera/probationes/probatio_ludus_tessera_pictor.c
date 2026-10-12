@@ -65,8 +65,8 @@ _status (
 {
     chorda c;
 
-    c = chorda_concatenare(insula_scribere(app->repo, INSULA_DURABILIS,
-        piscina), insula_scribere(app->repo, INSULA_EPHEMERA, piscina),
+    c = chorda_concatenare(insula_scribere(app->repo,
+        piscina), insula_scribere(app->repo, piscina),
         piscina);
     redde chorda_concatenare(c, pictor_documentum_sigillum_hex(app->doc,
         piscina), piscina);
@@ -218,13 +218,13 @@ principale (vacuum)
     CREDO_VERUM (chorda_aequalis(_status(&t, piscina),
         _status(&f, piscina)));
     /* B1: canon pictoris superficiem accipit (aliter tacite recusat) */
-    CREDO_NON_NIHIL (insula_attributum(t.repo, INSULA_EPHEMERA,
+    CREDO_NON_NIHIL (insula_attributum(t.repo,
         "superficies_latitudo"));
-    si (insula_attributum(t.repo, INSULA_EPHEMERA,
+    si (insula_attributum(t.repo,
         "superficies_latitudo"))
     {
         CREDO_CHORDA_AEQUALIS_LITERIS (*insula_attributum(t.repo,
-            INSULA_EPHEMERA, "superficies_latitudo"), "480");
+            "superficies_latitudo"), "480");
     }
 
     imprimere("\n--- III. quadrum in cellulas ---\n");

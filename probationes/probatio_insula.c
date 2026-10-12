@@ -62,11 +62,9 @@ tollere_focum (
 /* Actarius: scripturas numerare */
 interior vacuum
 numerare (
-    InsulaGenus  genus,
-      StmlNodus* radix,
-         vacuum* ctx)
+    StmlNodus* radix,
+       vacuum* ctx)
 {
-    (vacuum)genus;
     (vacuum)radix;
     (*(i32*)ctx)++;
 }
@@ -95,133 +93,130 @@ s32 principale (vacuum)
     intern = internamentum_creare(piscina);
 
     imprimere("\n--- Probans creationem et lectionem ---\n");
+    /* C2: insula una - olim latitudo/altitudo in arbore durabili */
     repo = insula_repositorium_creare(piscina, intern,
-        "<documentum latitudo=\"320\" altitudo=\"200\"/>",
-        "<ephemera instrumentum=\"penicillus\" focus=\"tabula\"/>");
+        "<insula latitudo=\"320\" altitudo=\"200\""
+        " instrumentum=\"penicillus\" focus=\"tabula\"/>");
     CREDO_NON_NIHIL(repo);
-    a = insula_attributum(repo, INSULA_DURABILIS, "latitudo");
+    a = insula_attributum(repo, "latitudo");
     CREDO_NON_NIHIL(a);
     CREDO_CHORDA_AEQUALIS_LITERIS(*a, "320");
-    a = insula_attributum(repo, INSULA_EPHEMERA, "instrumentum");
+    a = insula_attributum(repo, "instrumentum");
     CREDO_NON_NIHIL(a);
     CREDO_CHORDA_AEQUALIS_LITERIS(*a, "penicillus");
-    CREDO_NIHIL(insula_attributum(repo, INSULA_EPHEMERA, "nemo"));
-    CREDO_AEQUALIS_I32(insula_versio(repo, INSULA_EPHEMERA), ZEPHYRUM);
+    CREDO_NIHIL(insula_attributum(repo, "nemo"));
+    CREDO_AEQUALIS_I32(insula_versio(repo), ZEPHYRUM);
     CREDO_FALSUM(insula_mendacium(repo));
 
-    imprimere("\n--- Probans portam ephemerae ---\n");
+    imprimere("\n--- Probans portam ---\n");
     acta = ZEPHYRUM;
     insula_ponere_actarium(repo, numerare, &acta);
-    CREDO_VERUM(mutare_ephemera(repo, ponere_instrumentum, impletio));
-    a = insula_attributum(repo, INSULA_EPHEMERA, "instrumentum");
+    CREDO_VERUM(insula_mutare(repo, ponere_instrumentum, impletio));
+    a = insula_attributum(repo, "instrumentum");
     CREDO_NON_NIHIL(a);
     CREDO_CHORDA_AEQUALIS_LITERIS(*a, "impletio");
-    CREDO_AEQUALIS_I32(insula_versio(repo, INSULA_EPHEMERA), I);
+    CREDO_AEQUALIS_I32(insula_versio(repo), I);
     CREDO_AEQUALIS_I32(acta, I);
-    CREDO_AEQUALIS_I32(insula_versio(repo, INSULA_DURABILIS), ZEPHYRUM);
-    /* ponere = substituere, non geminare: unum attributum manet */
+    /* ponere = substituere, non geminare: IV attributa manent */
     CREDO_AEQUALIS_I32(
-        xar_numerus(insula_radix(repo, INSULA_EPHEMERA)->attributa),
-        II);
+        xar_numerus(insula_radix(repo)->attributa),
+        IV);
 
     imprimere("\n--- Probans restitutionem HONESTAM ---\n");
     CREDO_VERUM(insula_restituere(repo));
     CREDO_FALSUM(insula_mendacium(repo));
-    a = insula_attributum(repo, INSULA_EPHEMERA, "instrumentum");
+    a = insula_attributum(repo, "instrumentum");
     CREDO_NON_NIHIL(a);
     CREDO_CHORDA_AEQUALIS_LITERIS(*a, "impletio");
-    a = insula_attributum(repo, INSULA_EPHEMERA, "focus");
+    a = insula_attributum(repo, "focus");
     CREDO_NON_NIHIL(a);
     CREDO_CHORDA_AEQUALIS_LITERIS(*a, "tabula");
-    CREDO_AEQUALIS_I32(insula_versio(repo, INSULA_EPHEMERA), I);
+    CREDO_AEQUALIS_I32(insula_versio(repo), I);
 
     imprimere("\n--- Probans scriptorem MENTIENTEM (lex rehydrationis)"
               " ---\n");
-    radix = insula_radix(repo, INSULA_EPHEMERA);
+    radix = insula_radix(repo);
     /* extra portam: pointer lectionis solae abusus */
     insula_attributum_ponere(radix, piscina, intern, "instrumentum",
                              furtivus);
-    a = insula_attributum(repo, INSULA_EPHEMERA, "instrumentum");
+    a = insula_attributum(repo, "instrumentum");
     CREDO_NON_NIHIL(a);
     CREDO_CHORDA_AEQUALIS_LITERIS(*a, "furtivus");
     CREDO_FALSUM(insula_restituere(repo));
     CREDO_VERUM(insula_mendacium(repo));
     CREDO_CHORDA_NON_VACUA(insula_causa(repo));
-    a = insula_attributum(repo, INSULA_EPHEMERA, "instrumentum");
+    a = insula_attributum(repo, "instrumentum");
     CREDO_NON_NIHIL(a);
     /* ex textu honesto refecta */
     CREDO_CHORDA_AEQUALIS_LITERIS(*a, "impletio");
     /* mendacium non est scriptura: versio immota */
-    CREDO_AEQUALIS_I32(insula_versio(repo, INSULA_EPHEMERA), I);
+    CREDO_AEQUALIS_I32(insula_versio(repo), I);
     CREDO_AEQUALIS_I32(acta, I);
 
     imprimere("\n--- Probans canonem: scriptura recusata ---\n");
     canon = canon_legere(chorda_ex_literis(
-        "<canon dialectus=\"ephemera\" versio=\"1\">"
-        "<elementum nomen=\"ephemera\" radix=\"verum\">"
+        "<canon dialectus=\"insula\" versio=\"1\">"
+        "<elementum nomen=\"insula\" radix=\"verum\">"
+        "<attributum nomen=\"latitudo\" genus=\"numerus\"/>"
+        "<attributum nomen=\"altitudo\" genus=\"numerus\"/>"
         "<attributum nomen=\"instrumentum\" genus=\"textus\"/>"
         "<attributum nomen=\"focus\" genus=\"textus\"/>"
         "</elementum>"
         "</canon>", piscina), piscina, intern, &causa);
     CREDO_NON_NIHIL(canon);
-    insula_ponere_canonem(repo, INSULA_EPHEMERA, canon);
-    CREDO_VERUM(mutare_ephemera(repo, ponere_instrumentum, linea));
+    insula_ponere_canonem(repo, canon);
+    CREDO_VERUM(insula_mutare(repo, ponere_instrumentum, linea));
     /* liberum non declaratum: canon recusat, arbor immota */
-    CREDO_FALSUM(mutare_ephemera(repo, addere_ignotum, NIHIL));
-    CREDO_AEQUALIS_I32(insula_versio(repo, INSULA_EPHEMERA), II);
+    CREDO_FALSUM(insula_mutare(repo, addere_ignotum, NIHIL));
+    CREDO_AEQUALIS_I32(insula_versio(repo), II);
     CREDO_AEQUALIS_I32(acta, II);
     CREDO_CHORDA_NON_VACUA(insula_causa(repo));
     CREDO_CHORDA_CONTINET(insula_causa(repo),
                           chorda_ex_literis("canon", piscina));
-    a = insula_attributum(repo, INSULA_EPHEMERA, "instrumentum");
+    a = insula_attributum(repo, "instrumentum");
     CREDO_NON_NIHIL(a);
     CREDO_CHORDA_AEQUALIS_LITERIS(*a, "linea");
     CREDO_AEQUALIS_I32(
-        stml_numerus_liberorum(insula_radix(repo, INSULA_EPHEMERA)),
+        stml_numerus_liberorum(insula_radix(repo)),
         ZEPHYRUM);
     /* post recusationem arbor manet honesta */
     CREDO_VERUM(insula_restituere(repo));
     CREDO_FALSUM(insula_mendacium(repo));
 
-    imprimere("\n--- Probans portam durabilem ---\n");
-    CREDO_VERUM(mutare_durabile(repo, ponere_instrumentum, linea));
-    CREDO_AEQUALIS_I32(insula_versio(repo, INSULA_DURABILIS), I);
-    CREDO_AEQUALIS_I32(insula_versio(repo, INSULA_EPHEMERA), II);
-    CREDO_AEQUALIS_I32(acta, III);
-
-        imprimere("\n--- Probans dominos: alienus recusatur ---\n");
-    CREDO_VERUM(insula_dominum_ponere(repo, INSULA_EPHEMERA, "focus",
+    imprimere("\n--- Probans dominos: alienus recusatur ---\n");
+    CREDO_VERUM(insula_dominum_ponere(repo, "focus",
                                       "dispensator"));
-    CREDO_FALSUM(insula_dominum_ponere(repo, INSULA_EPHEMERA, "", "x"));
+    CREDO_FALSUM(insula_dominum_ponere(repo, "", "x"));
     /* anonymus (scriptor vacuus) attributum possessum tangit:
      * recusatur */
     insula_scriptorem_ponere(repo, chorda_ex_literis("", piscina));
-    CREDO_FALSUM(mutare_ephemera(repo, ponere_focum, focus_b1));
+    CREDO_FALSUM(insula_mutare(repo, ponere_focum, focus_b1));
     CREDO_CHORDA_CONTINET(insula_causa(repo),
                           chorda_ex_literis("dominus", piscina));
     /* dominus ipse: licet */
     insula_scriptorem_ponere(repo, chorda_ex_literis("dispensator",
         piscina));
-    CREDO_VERUM(mutare_ephemera(repo, ponere_focum, focus_b1));
-    a = insula_attributum(repo, INSULA_EPHEMERA, "focus");
+    CREDO_VERUM(insula_mutare(repo, ponere_focum, focus_b1));
+    a = insula_attributum(repo, "focus");
     CREDO_NON_NIHIL(a);
     CREDO_CHORDA_AEQUALIS_LITERIS(*a, "b1");
     /* scriptor alienus attributum NON possessum tangit: licet */
     insula_scriptorem_ponere(repo, chorda_ex_literis("quisquis",
         piscina));
-    CREDO_VERUM(mutare_ephemera(repo, ponere_instrumentum, linea));
+    CREDO_VERUM(insula_mutare(repo, ponere_instrumentum, linea));
     /* scriptor alienus attributum possessum TOLLIT: recusatur */
-    CREDO_FALSUM(mutare_ephemera(repo, tollere_focum, NIHIL));
+    CREDO_FALSUM(insula_mutare(repo, tollere_focum, NIHIL));
     /* versio immota a recusationibus: III scripturae acceptae */
-    CREDO_AEQUALIS_I32(insula_versio(repo, INSULA_EPHEMERA), IV);
+    CREDO_AEQUALIS_I32(insula_versio(repo), IV);
     insula_scriptorem_ponere(repo, chorda_ex_literis("", piscina));
 
     imprimere("\n--- Probans scribere ---\n");
+    /* C2: arbor una - latitudo et instrumentum simul */
     CREDO_CHORDA_CONTINET(
-        insula_scribere(repo, INSULA_DURABILIS, piscina),
+        insula_scribere(repo, piscina),
         chorda_ex_literis("latitudo", piscina));
     CREDO_CHORDA_CONTINET(
-        insula_scribere(repo, INSULA_EPHEMERA, piscina),
+        insula_scribere(repo, piscina),
         chorda_ex_literis("linea", piscina));
 
     imprimere("\n");

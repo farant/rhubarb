@@ -367,7 +367,7 @@ latus_superficiem_scribere (
     sp.altitudo = altitudo;
     ramus = insula_ramus(v->repo, chorda_ut_cstr(l->genus, v->piscina),
         chorda_ut_cstr(l->id, v->piscina));
-    (vacuum)mutare_ramum(&ramus, INSULA_EPHEMERA, superficiem_mutator,
+    (vacuum)mutare_ramum(&ramus, superficiem_mutator,
         &sp);
 }
 
@@ -412,7 +412,7 @@ attributum_radicis (
     chorda* a;
        s32  n;
 
-    a = insula_attributum(repo, INSULA_EPHEMERA, titulus);
+    a = insula_attributum(repo, titulus);
     si (a && chorda_ut_s32(*a, &n))
     {
         redde n;
@@ -513,6 +513,47 @@ horologii_textus (
     redde VERUM;
 }
 
+/* S5: textus pilae ("87%", "87%+"); FALSUM si nulla. Exitus >= XVI */
+interior b32
+pilae_textus (
+    constans Vicus* v,
+         character* exitus)
+{
+    si (v->pila_centesimae < ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    sprintf(exitus, "%d%%%s", (integer)v->pila_centesimae,
+        v->pila_oneratur ? "+" : "");
+    redde VERUM;
+}
+
+/* S4/S5: fines horologii in linea (latitudine superficiei): ad
+ * dextrum, sinistrorsum pilae textu et II spatiis motum; FALSUM si
+ * nullum. x0 inclusum, x1 exclusum */
+interior b32
+horologii_fines (
+    constans Vicus* v,
+               s32  latitudo,
+               s32* x0,
+               s32* x1)
+{
+    character horae[LXIV];
+    character pila[XVI];
+
+    si (!horologii_textus(v, horae))
+    {
+        redde FALSUM;
+    }
+    *x1 = latitudo - VICUS_CELLULA_LATITUDO;
+    si (pilae_textus(v, pila))
+    {
+        *x1 -= ((s32)strlen(pila) + II) * VICUS_CELLULA_LATITUDO;
+    }
+    *x0 = *x1 - (s32)strlen(horae) * VICUS_CELLULA_LATITUDO;
+    redde VERUM;
+}
+
 /* tabula per numerum ('1'..'9', '0' = decima); absens aut non montata:
  * nihil */
 interior vacuum
@@ -591,15 +632,16 @@ radicem_tractare (
          * dextrum lineae): dies <-> hora */
         si (ev->datum.mus.y < VICUS_ALTITUDO_TABULARUM)
         {
-            character horae[LXIV];
                   s32 latitudo;
+                  s32 x0;
+                  s32 x1;
 
             latitudo = attributum_radicis(v->repo,
                 "superficies_latitudo",
                 (s32)v->latitudo);
-            si (   horologii_textus(v, horae)
-                && ev->datum.mus.x >= latitudo - VICUS_CELLULA_LATITUDO
-                       - (s32)strlen(horae) * VICUS_CELLULA_LATITUDO)
+            /* S5: area horologii sola (pila ad dextrum non commutat) */
+            si (   horologii_fines(v, latitudo, &x0, &x1)
+                && ev->datum.mus.x >= x0 && ev->datum.mus.x < x1)
             {
                 v->horologium_dies = !v->horologium_dies;
                 redde VERUM;
@@ -751,12 +793,24 @@ figura_tabularum (
         character horae[LXIV];
            chorda textus;
 
-        si (horologii_textus(v, horae))
+        character pila[XVI];
+              s32 x0;
+              s32 x1;
+
+        /* S5: pila ad marginem dextrum, horologium sinistrorsum */
+        si (pilae_textus(v, pila))
         {
-            textus = chorda_ex_literis(horae, m->piscina);
+            textus = chorda_ex_literis(pila, m->piscina);
             mandata_textus(m, c->fines.latitudo - VICUS_CELLULA_LATITUDO
                 - (s32)textus.mensura * VICUS_CELLULA_LATITUDO,
                 ZEPHYRUM, textus, ZEPHYRUM, color_thematis(COLOR_TEXT));
+        }
+        si (   horologii_textus(v, horae)
+            && horologii_fines(v, c->fines.latitudo, &x0, &x1))
+        {
+            textus = chorda_ex_literis(horae, m->piscina);
+            mandata_textus(m, x0, ZEPHYRUM, textus, ZEPHYRUM,
+                color_thematis(COLOR_TEXT));
         }
     }
 }
@@ -1087,8 +1141,9 @@ vicus_creare (
     v->tabulae   = xar_creare(piscina, (i32)magnitudo(VicusTabula));
     v->petitiones  = xar_creare(piscina,
         (i32)magnitudo(PetitioAcervi));
-    v->tempus.hora     = -I;
-    v->tempus.minutum  = -I;
+    v->tempus.hora      = -I;
+    v->tempus.minutum   = -I;
+    v->pila_centesimae  = -I;
     redde v;
 }
 
@@ -1114,6 +1169,52 @@ horam_legere (
     }
     v->tempus = t;
     redde VERUM;
+}
+
+/* S5: pilam legere; VERUM si mutata */
+interior b32
+pilam_legere (
+    Vicus* v)
+{
+    s32 centesimae;
+    b32 oneratur;
+
+    si (!v->pila)
+    {
+        redde FALSUM;
+    }
+    centesimae  = -I;
+    oneratur    = FALSUM;
+    si (!v->pila(v->pila_ctx, &centesimae, &oneratur))
+    {
+        centesimae  = -I;
+        oneratur    = FALSUM;
+    }
+    si (   centesimae == v->pila_centesimae
+        && oneratur   == v->pila_oneratur)
+    {
+        redde FALSUM;
+    }
+    v->pila_centesimae  = centesimae;
+    v->pila_oneratur    = oneratur;
+    redde VERUM;
+}
+
+vacuum
+vicus_pilam_ponere (
+          Vicus* v,
+      VicusPila  pila,
+         vacuum* ctx)
+{
+    si (!v)
+    {
+        redde;
+    }
+    v->pila             = pila;
+    v->pila_ctx         = ctx;
+    v->pila_centesimae  = -I;
+    v->pila_oneratur    = FALSUM;
+    (vacuum)pilam_legere(v);
 }
 
 vacuum
@@ -1209,14 +1310,12 @@ vicus_aperire (
     v->tabulae  = xar_creare(v->piscina, (i32)magnitudo(VicusTabula));
     v->causa    = chorda_nulla_vici();
     v->repo    = insula_repositorium_creare(v->piscina, v->intern,
-        "<vicus/>", "<vicus/>");
+        "<vicus/>");
     si (!v->repo)
     {
         redde FALSUM;
     }
-    insula_ponere_canonem(v->repo, INSULA_DURABILIS,
-        canonem_legere(v, "apps/vicus/canones/durabilis.canon"));
-    insula_ponere_canonem(v->repo, INSULA_EPHEMERA,
+    insula_ponere_canonem(v->repo,
         canonem_legere(v, "apps/vicus/canones/ephemera.canon"));
 
     /* dispositio: e volumine aut ordinaria (scribitur) */
@@ -1266,7 +1365,7 @@ vicus_aperire (
         ac.activa         = v->activa;
         ac.prior.mensura  = ZEPHYRUM;
         ac.prior.datum    = NIHIL;
-        (vacuum)mutare_ramum(&radix, INSULA_EPHEMERA, activam_mutator,
+        (vacuum)mutare_ramum(&radix, activam_mutator,
                              &ac);
     }
     /* latera quae focum in apertura petunt (terminale): sinistrum
@@ -1406,7 +1505,7 @@ vicus_activam_ponere (
     }
     v->activa  = t->id;
     radix      = insula_ramus_radix(v->repo);
-    si (!mutare_ramum(&radix, INSULA_EPHEMERA, activam_mutator, &a))
+    si (!mutare_ramum(&radix, activam_mutator, &a))
     {
         redde FALSUM;
     }
@@ -1877,6 +1976,8 @@ vicus_pulsare (
     /* S4: horologium - quadrum solum cum minutum mutatur */
     si (horam_legere(v))
     {
+        /* S5: pila cum minuto legitur */
+        (vacuum)pilam_legere(v);
         pingendum = VERUM;
     }
     /* S3c: aperitiones pendentes extra tractationem eventus */

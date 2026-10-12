@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>dispositio</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>dispositio</h1>
+<p class="subtitulus">Dispositio pura in CELLULIS (modulus 013, semita b;</p>
+
+<p>Pure layout in cells, after Clay. A node has a direction (row or column); on each axis a size that fits its content, grows into the remaining space, is fixed, or is a percentage of the parent, with a minimum and a maximum; padding, a gap between children, alignment and clipping. It knows nothing of components: a Componere function calls it to fill in bounds. Everything is an integer number of cells, and pixels are cells times the cell size at the very end, so alignment to the terminal grid holds by construction. Written 2026-10-03 as an integer translation of Clay at a pinned commit, read line by line, with Clay itself as oracle: a tool lays out the same STML tree with Clay, and every committed answer is re-checked against it. The C99 glue for that lives in a new directory, oracula, kept by name out of the house&#x27;s C89 judge and Latin lint. The divergences are named in the header: centring and percentages take the floor, and in a grow or shrink every edge is the floor of the exact edge. The plan had said &#x27;leftover cells to the earliest children&#x27;; worked through, that moves edges by up to a quarter of the number of children in a wide equal split, and it ended as a planted fault that the tests catch. One comparison rule covers every case: each edge equals the floor of Clay&#x27;s edge plus 0.02, because Clay&#x27;s equalising converges to within 0.01 and does not divide. Text is a virtual first child measured by the caller, with its longest word as minimum. Not yet: wrapping, floating positions, scroll offsets. Used by pictor_componentia and scriba_componentia.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/dispositio.h"><code>include/dispositio.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/dispositio.c"><code>lib/dispositio.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-10-03 9d26517d</td></tr>
+<tr><td>Group</td><td><a href="greges.html#ludus">Ludus: the second-generation UI</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>aemulator</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>aemulator</h1>
+<p class="subtitulus">nucleus emulatoris terminalis (aemulator-plan A1)</p>
+
+<p>The core of the house terminal emulator. A program&#x27;s bytes go in (aemulator_scribere); the screen comes out as cells, cursor and modes; replies to queries, the bell and the title leave through a table of effects. It is pure by decision: no I/O, no clock, no threads, no mutable statics, all memory from the caller&#x27;s arena, so it could be compiled to wasm. It is the mirror of tessera, which emits sparingly: the emulator accepts liberally, an unknown sequence being consumed and counted and never fatal, and every size a program controls is bounded. The parts are the house&#x27;s own (series_terminalis for tokens, stilus_terminalis for SGR, runae for width), with Ghostty at a pinned commit as reference and not as source: its tests became replayable vectors, 260 by now, the first of them written before any emulator code, with unfinished cases carried as debts by name that fail the suite once paid. Built 2026-10-06 and 07 in four phases: a loopback in which every cell must equal tessera&#x27;s own buffer (it found a tessera bug that tessera&#x27;s byte goldens had pinned); what a shell needs, with answers to its queries; scrollback in 64 KiB pages that own their styles, up to a byte limit (10 MB by default) after which the oldest page is recycled and output allocates nothing; and what full-screen programs need: a mode table that DECRQM reads, character sets, kitty keyboard flags, a live palette. An outside suite, esctest2, runs as a real child of the emulator: 296 of 567 tests pass and every failure carries a verdict (later, deliberate, or a gap). Named limits: no reflow on resize, multi-rune graphemes dropped, 512 styles per screen. Front ends reach it through aemulator_hospes.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/aemulator.h"><code>include/aemulator.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/aemulator.c"><code>lib/aemulator.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-10-07 12c8f851</td></tr>
+<tr><td>Group</td><td><a href="greges.html#fenestra">Window, input and drawing</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>
