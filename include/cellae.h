@@ -157,4 +157,38 @@ activatio_cella (
            i32  k,
          Cella* exitus);
 
+
+/* ==================================================
+ * Separabilitas functionis paritatis (XOR)
+ *
+ * Pondera n (indices catalogi), quisque binas ingressiones (+q, -q):
+ * summa larvae = sum c_i q_i, c_i in {-1, 0, +1}, paritas = numerus c_i
+ * non nullorum mod 2. Separat si nulla cella summas paritatis
+ * diversae continet. 3^n vectores, plicati per +-: s et -s eandem cellam
+ * et paritatem habent.
+ *   REGULA:     cellae regulae;
+ *   ROBUSTA:    omnis resolutio paritatum (cellae ligatae omnes);
+ *   POSSIBILIS: aliqua resolutio, per PUNCTUM exactum (idem punctum
+ *               eandem cellam; punctum paritatibus diversis numquam);
+ *               SAT (DPLL) cum limite decisionum;
+ *   FIXA(s, u): sector superior (s) aut inferior, axis ultima (u) aut
+ *               prima - FIXA(1, 0) = REGULA.
+ * ================================================== */
+
+#define CELLAE_REGULA          0
+#define CELLAE_ROBUSTA         1
+#define CELLAE_POSSIBILIS      2
+#define CELLAE_FIXA(s, u)      (III + II * (s) + (u))
+
+/* *exitus verdictum; FALSUM si n 0 aut > VII, index extra, k < 1, modus
+ * ignotus, aut limes decisionum SAT (indecisum: exitus non tangitur) */
+b32
+activatio_separat (
+       Activatio* activatio,
+    constans i32* pondera,
+             i32  n,
+             i32  k,
+             i32  modus,
+             b32* exitus);
+
 #endif /* CELLAE_H */

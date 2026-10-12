@@ -415,6 +415,8 @@ nomen structura {
             i32* axes;
             i32  numerus_k;
          CellaK  per_k[CELLAE_K_MAXIMA];
+            i32  signum_visitationis;  /* separatio: visitatio currens */
+            i32  paritas_visitationis;
 } Punctum;
 
 nomen structura {
@@ -432,6 +434,10 @@ structura Activatio {
                Termini  termini[CELLAE_K_MAXIMA];
                    i32  numerus_terminorum;
                Piscina* piscina;
+                    i8* visum_par;        /* cella: bit paritatis visae */
+                   i32* variabilis;       /* cella -> variabilis SAT + 1 */
+                   i32  capacitas_cellarum;
+                   i32  visitatio;        /* signum separationis currentis */
 };
 
 interior constans Algebraicus*
@@ -512,6 +518,10 @@ activatio_ex_catalogo (
     a->truncata            = FALSUM;
     a->numerus_terminorum  = ZEPHYRUM;
     a->piscina             = piscina;
+    a->visum_par           = NIHIL;
+    a->variabilis          = NIHIL;
+    a->capacitas_cellarum  = ZEPHYRUM;
+    a->visitatio           = ZEPHYRUM;
     per (i = ZEPHYRUM; i < catalogus->numerus; i++)
     {
         Quaternio q = catalogus->elementa[i];
@@ -668,28 +678,40 @@ _tangens (
     redde VERUM;
 }
 
-/* punctum (sine k): genus, tan^2 h, paritas axium */
+/* punctum (sine k): genus, tan^2 h, paritas axium. Clavis in opus
+ * (piscina temporaria vocantis) aut, opus NIHIL, in piscina
+ * activationis cum refectione si inventum: inventio nihil relinquit;
+ * solum punctum novum (clave transcripta) manet. */
 interior Punctum*
 _punctum (
     Activatio* a,
-    Quaternio  s)
+    Quaternio  s,
+      Piscina* opus)
 {
-    Piscina* piscina = a->piscina;
-     chorda  clavis;
-     vacuum* inventum = NIHIL;
-    Punctum* p;
-        b32  a_nulla;
-        b32  v_nulla;
+           Piscina* piscina  = a->piscina;
+    PiscinaNotatio  nota     = piscina_notare(piscina);
+            chorda  clavis;
+            vacuum* inventum = NIHIL;
+           Punctum* p;
+               b32  a_nulla;
+               b32  v_nulla;
 
-    si (!_clavis(s, piscina, &clavis))
+    si (!_clavis(s, opus != NIHIL ? opus : piscina, &clavis))
     {
         redde NIHIL;
     }
     si (tabula_dispersa_invenire(a->puncta, clavis, &inventum))
     {
+        si (opus == NIHIL)
+        {
+            piscina_reficere(piscina, nota);
+        }
         redde (Punctum*)inventum;
     }
+    clavis = chorda_transcribere(clavis, piscina);
     p = (Punctum*)piscina_allocare(piscina, magnitudo(Punctum));
+    p->signum_visitationis = ZEPHYRUM;
+    p->paritas_visitationis = ZEPHYRUM;
     p->numerus_k = ZEPHYRUM;
     p->numerus_axium = ZEPHYRUM;
     p->axes = NIHIL;
@@ -740,14 +762,14 @@ _punctum (
     redde p;
 }
 
-b32
-activatio_cella (
-     Activatio* activatio,
-     Quaternio  summa,
-           i32  k,
-         Cella* exitus)
+/* cella puncti ad k (memoria per k in puncto) */
+interior b32
+_cella_puncti (
+    Activatio* activatio,
+      Punctum* p,
+          i32  k,
+        Cella* exitus)
 {
-    Punctum* p;
      CellaK* ck;
         i32  nv = activatio->numerus_axium + I;
         i32  sectiones[II];
@@ -755,16 +777,6 @@ activatio_cella (
         i32  j;
         i32  m;
 
-    si (   k < I
-        || quaternio_anulus(summa) != activatio->catalogus->anulus)
-    {
-        redde FALSUM;
-    }
-    p = _punctum(activatio, summa);
-    si (p == NIHIL)
-    {
-        redde FALSUM;
-    }
     per (j = ZEPHYRUM; j < p->numerus_k; j++)
     {
         si (p->per_k[j].k == k)
@@ -851,4 +863,487 @@ activatio_cella (
     exitus->numerus  = ck->numerus;
     exitus->ligatae  = ck->ligatae;
     redde VERUM;
+}
+
+b32
+activatio_cella (
+     Activatio* activatio,
+     Quaternio  summa,
+           i32  k,
+         Cella* exitus)
+{
+    Punctum* p;
+
+    si (   k < I
+        || quaternio_anulus(summa) != activatio->catalogus->anulus)
+    {
+        redde FALSUM;
+    }
+    p = _punctum(activatio, summa, NIHIL);
+    si (p == NIHIL)
+    {
+        redde FALSUM;
+    }
+    redde _cella_puncti(activatio, p, k, exitus);
+}
+
+
+/* ==================================================
+ * Separabilitas
+ * ================================================== */
+
+#define CELLAE_LIMES_DECISIONUM 200000L
+
+/* alvei per cellam ad k (nulli; per indices tactos purgantur) */
+interior b32
+_alvei_cellarum (
+    Activatio* a,
+          i32  k)
+{
+    i32 opus = k * (a->numerus_axium + I);
+    i32 j;
+
+    si (opus <= a->capacitas_cellarum)
+    {
+        redde VERUM;
+    }
+    a->visum_par = (i8*)piscina_allocare(a->piscina,
+        (memoriae_index)opus);
+    a->variabilis = (i32*)piscina_allocare(a->piscina,
+        (memoriae_index)opus * magnitudo(i32));
+    si (a->visum_par == NIHIL || a->variabilis == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (j = ZEPHYRUM; j < opus; j++)
+    {
+        a->visum_par[j]   = ZEPHYRUM;
+        a->variabilis[j]  = ZEPHYRUM;
+    }
+    a->capacitas_cellarum = opus;
+    redde VERUM;
+}
+
+/* cella regulae fixae: sector superior/inferior, axis ultima/prima */
+interior i32
+_cella_fixa (
+    constans Cella* c,
+               i32  nv,
+               b32  superior,
+               b32  ultima)
+{
+    i32 sector  = c->ligatae[ZEPHYRUM] / nv;
+    i32 axis    = c->ligatae[ZEPHYRUM] % nv;
+    i32 j;
+
+    per (j = I; j < c->numerus; j++)
+    {
+        i32 s = c->ligatae[j] / nv;
+        i32 x = c->ligatae[j] % nv;
+
+        si (superior ? s > sector : s < sector) sector = s;
+        si (ultima ? x > axis : x < axis) axis = x;
+    }
+    redde sector * nv + axis;
+}
+
+/* SAT (D121/D124): variabilis = pars cellae (paritas assignata); clausula
+ * per punctum: aliqua cellarum eius paritatem puncti habet */
+nomen structura {
+             i32  numerus_clausularum;
+    constans i32* volitum;
+    constans i32* initium;
+    constans i32* longitudo;
+    constans i32* literae;
+             s32* valor;                  /* -1 incertum, 0, 1 */
+             i32* vestigium;
+             i32  altitudo;
+            long  decisiones;
+} Sat;
+
+interior b32
+_sat_propaga (
+    Sat* t)
+{
+    b32 mutatum = VERUM;
+
+    dum (mutatum)
+    {
+        i32 m;
+
+        mutatum = FALSUM;
+        per (m = ZEPHYRUM; m < t->numerus_clausularum; m++)
+        {
+            i32 volitum  = t->volitum[m];
+            s32 liber    = -(s32)I;
+            i32 liberi   = ZEPHYRUM;
+            b32 satis    = FALSUM;
+            i32 j;
+
+            per (j = ZEPHYRUM; j < t->longitudo[m] && !satis; j++)
+            {
+                i32 v = t->literae[t->initium[m] + j];
+
+                si (t->valor[v] == (s32)volitum)
+                {
+                    satis = VERUM;
+                } alioquin si (t->valor[v] < ZEPHYRUM)
+                {
+                    si (liber != (s32)v)
+                    {
+                        liberi++;
+                    }
+                    liber = (s32)v;
+                }
+            }
+            si (satis)
+            {
+                perge;
+            }
+            si (liberi == ZEPHYRUM)
+            {
+                redde FALSUM;
+            }
+            si (liberi == I)
+            {
+                t->valor[liber]              = (s32)volitum;
+                t->vestigium[t->altitudo++]  = (i32)liber;
+                mutatum                      = VERUM;
+            }
+        }
+    }
+    redde VERUM;
+}
+
+/* 1 satisfactum, 0 non, -1 limes decisionum */
+interior s32
+_sat_solve (
+    Sat* t)
+{
+    i32 nota       = t->altitudo;
+    s32 eligendus  = -(s32)I;
+    i32 volitum    = ZEPHYRUM;
+    s32 r;
+    i32 m;
+
+    si (!_sat_propaga(t))
+    {
+        r = ZEPHYRUM;
+        salta finis;
+    }
+    per (m = ZEPHYRUM; m < t->numerus_clausularum && eligendus < 0; m++)
+    {
+        b32 satis       = FALSUM;
+        s32 candidatus  = -(s32)I;
+        i32 j;
+
+        per (j = ZEPHYRUM; j < t->longitudo[m]; j++)
+        {
+            i32 v = t->literae[t->initium[m] + j];
+
+            si (t->valor[v] == (s32)t->volitum[m])
+            {
+                satis = VERUM;
+                frange;
+            }
+            si (t->valor[v] < ZEPHYRUM && candidatus < 0)
+            {
+                candidatus = (s32)v;
+            }
+        }
+        si (!satis)
+        {
+            eligendus  = candidatus;
+            volitum    = t->volitum[m];
+        }
+    }
+    si (eligendus < 0)
+    {
+        redde I;
+    }
+    si (++t->decisiones > CELLAE_LIMES_DECISIONUM)
+    {
+        r = -(s32)I;
+        salta finis;
+    }
+    t->valor[eligendus]          = (s32)volitum;
+    t->vestigium[t->altitudo++]  = (i32)eligendus;
+    r                            = _sat_solve(t);
+    si (r != ZEPHYRUM)
+    {
+        salta finis;
+    }
+    t->valor[eligendus]  = (s32)(I - volitum);
+    r                    = _sat_solve(t);
+finis:
+    si (r != I)
+    {
+        dum (t->altitudo > nota)
+        {
+            t->valor[t->vestigium[--t->altitudo]] = -(s32)I;
+        }
+    }
+    redde r;
+}
+
+interior b32
+_separat_intra (
+       Activatio* a,
+    constans i32* pondera,
+             i32  n,
+             i32  k,
+             i32  modus,
+         Piscina* opus,
+             b32* exitus)
+{
+          i32   nv        = a->numerus_axium + I;
+          i32   vectores  = I;
+          i32   numerus   = ZEPHYRUM;
+      Punctum** puncta;
+          i32*  paritates;
+          i32*  tacta;
+          i32   numerus_tactorum = ZEPHYRUM;
+          i32   v;
+          i32   j;
+          b32   separat = VERUM;
+    Quaternio   nullum;
+
+    per (j = ZEPHYRUM; j < n; j++)
+    {
+        vectores *= III;
+    }
+    puncta = (Punctum**)piscina_allocare(opus, (memoriae_index)vectores
+        * magnitudo(Punctum*));
+    paritates = (i32*)piscina_allocare(opus, (memoriae_index)vectores
+        * magnitudo(i32));
+    si (   puncta == NIHIL || paritates == NIHIL
+        || !quaternio_nullum(a->catalogus->anulus, opus, &nullum)
+        || !_alvei_cellarum(a, k))
+    {
+        redde FALSUM;
+    }
+    /* vectores plicati: coefficiens primus non nullus +1 (et nullus) */
+    per (v = ZEPHYRUM; v < vectores; v++)
+    {
+        Quaternio s        = nullum;
+              i32 x        = v;
+              i32 par      = ZEPHYRUM;
+              b32 primus   = VERUM;
+              b32 negatus  = FALSUM;
+
+        per (j = ZEPHYRUM; j < n && !negatus; j++)
+        {
+                  i32 digitus  = x % III;
+            Quaternio q        = a->catalogus->elementa[pondera[j]];
+
+            x /= III;
+            si (digitus == ZEPHYRUM)
+            {
+                perge;
+            }
+            si (primus && digitus == II)
+            {
+                negatus = VERUM;
+                perge;
+            }
+            primus  = FALSUM;
+            par     ^= I;
+            si (!(digitus == I ? quaternio_adde(s, q, opus, &s)
+                : quaternio_subtrahe(s, q, opus, &s)))
+            {
+                redde FALSUM;
+            }
+        }
+        si (negatus)
+        {
+            perge;
+        }
+        puncta[numerus] = _punctum(a, s, opus);
+        si (puncta[numerus] == NIHIL)
+        {
+            redde FALSUM;
+        }
+        paritates[numerus++] = par;
+    }
+    tacta = (i32*)piscina_allocare(opus, (memoriae_index)numerus
+        * (memoriae_index)II * (memoriae_index)nv * magnitudo(i32));
+    si (tacta == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (modus != CELLAE_POSSIBILIS)
+    {
+        per (v = ZEPHYRUM; v < numerus && separat; v++)
+        {
+                   Cella  c;
+                     i32  cellae[I];
+            constans i32* lista      = cellae;
+                     i32  longitudo  = I;
+
+            si (!_cella_puncti(a, puncta[v], k, &c))
+            {
+                redde FALSUM;
+            }
+            si (modus == CELLAE_REGULA)
+            {
+                cellae[ZEPHYRUM] = c.regula;
+            } alioquin si (modus == CELLAE_ROBUSTA)
+            {
+                lista      = c.ligatae;
+                longitudo  = c.numerus;
+            } alioquin
+            {
+                cellae[ZEPHYRUM] = _cella_fixa(&c, nv,
+                    (b32)((modus - III) / II), (b32)((modus - III)
+                        % II));
+            }
+            per (j = ZEPHYRUM; j < longitudo && separat; j++)
+            {
+                i32 cella = lista[j];
+
+                si (a->visum_par[cella] == ZEPHYRUM)
+                {
+                    tacta[numerus_tactorum++] = cella;
+                }
+                si (a->visum_par[cella] & (I << (I - paritates[v])))
+                {
+                    separat = FALSUM;
+                }
+                a->visum_par[cella] = (i8)(a->visum_par[cella]
+                    | (I << paritates[v]));
+            }
+        }
+        per (j = ZEPHYRUM; j < numerus_tactorum; j++)
+        {
+            a->visum_par[tacta[j]] = ZEPHYRUM;
+        }
+        *exitus = separat;
+        redde VERUM;
+    }
+    /* possibilis: puncta distincta, paritas una per punctum */
+    {
+        Sat  t;
+        i32* volitum = (i32*)piscina_allocare(opus,
+            (memoriae_index)numerus
+            * magnitudo(i32));
+        i32* initium = (i32*)piscina_allocare(opus,
+            (memoriae_index)numerus
+            * magnitudo(i32));
+        i32* longitudo = (i32*)piscina_allocare(opus,
+            (memoriae_index)numerus * magnitudo(i32));
+        i32* literae = (i32*)piscina_allocare(opus,
+            (memoriae_index)numerus
+            * (memoriae_index)II * (memoriae_index)nv * magnitudo(i32));
+        i32 clausulae          = ZEPHYRUM;
+        i32 numerus_literarum  = ZEPHYRUM;
+        i32 variabiles         = ZEPHYRUM;
+        s32 r                  = I;
+
+        a->visitatio++;
+        per (v = ZEPHYRUM; v < numerus && separat; v++)
+        {
+            Punctum* p = puncta[v];
+              Cella  c;
+
+            si (p->signum_visitationis == a->visitatio)
+            {
+                si (p->paritas_visitationis != paritates[v])
+                {
+                    separat = FALSUM;
+                }
+                perge;
+            }
+            p->signum_visitationis   = a->visitatio;
+            p->paritas_visitationis  = paritates[v];
+            si (!_cella_puncti(a, p, k, &c))
+            {
+                redde FALSUM;
+            }
+            volitum[clausulae]    = paritates[v];
+            initium[clausulae]    = numerus_literarum;
+            longitudo[clausulae]  = c.numerus;
+            per (j = ZEPHYRUM; j < c.numerus; j++)
+            {
+                i32 cella = c.ligatae[j];
+
+                si (a->variabilis[cella] == ZEPHYRUM)
+                {
+                    a->variabilis[cella]       = ++variabiles;
+                    tacta[numerus_tactorum++]  = cella;
+                }
+                literae[numerus_literarum++] = a->variabilis[cella] - I;
+            }
+            clausulae++;
+        }
+        si (separat)
+        {
+            t.numerus_clausularum  = clausulae;
+            t.volitum              = volitum;
+            t.initium              = initium;
+            t.longitudo            = longitudo;
+            t.literae              = literae;
+            t.valor = (s32*)piscina_allocare(opus, (memoriae_index)
+                (variabiles + I) * magnitudo(s32));
+            t.vestigium = (i32*)piscina_allocare(opus, (memoriae_index)
+                (variabiles + I) * magnitudo(i32));
+            t.altitudo    = ZEPHYRUM;
+            t.decisiones  = 0L;
+            per (j = ZEPHYRUM; j < variabiles; j++)
+            {
+                t.valor[j] = -(s32)I;
+            }
+            r = _sat_solve(&t);
+        }
+        per (j = ZEPHYRUM; j < numerus_tactorum; j++)
+        {
+            a->variabilis[tacta[j]] = ZEPHYRUM;
+        }
+        si (r < ZEPHYRUM)
+        {
+            redde FALSUM;              /* limes decisionum: indecisum */
+        }
+        *exitus = separat && r == I;
+        redde VERUM;
+    }
+}
+
+b32
+activatio_separat (
+       Activatio* activatio,
+    constans i32* pondera,
+             i32  n,
+             i32  k,
+             i32  modus,
+             b32* exitus)
+{
+    Piscina* opus;
+        b32  verdictum = FALSUM;
+        b32  bene;
+        i32  j;
+
+    si (n == ZEPHYRUM || n > VII || k < I || modus > CELLAE_FIXA(I, I))
+    {
+        redde FALSUM;
+    }
+    per (j = ZEPHYRUM; j < n; j++)
+    {
+        si (pondera[j] >= activatio->catalogus->numerus)
+        {
+            redde FALSUM;
+        }
+    }
+    opus = piscina_generare_dynamicum("cellae_separatio",
+        (memoriae_index)65536);
+    si (opus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    bene = _separat_intra(activatio, pondera, n, k, modus, opus,
+        &verdictum);
+    piscina_destruere(opus);
+    si (bene)
+    {
+        *exitus = verdictum;
+    }
+    redde bene;
 }

@@ -114,3 +114,52 @@ Lint: `activatio` (the approved API name) is a neo-Latin coinage, so it
 got a glossary entry modelled on `glossarium` (the oratio gate runs in
 the commit). Other renames: `sectores` became `sectiones`; the test's
 oracle names became Latin (`Binomium`, `binomium_*`, `o_axis`, ...).
+
+## 2026-10-12 - T4: separability (rule, robust, possible, fixed rules)
+
+`activatio_separat(activatio, weights, n, k, mode, &verdict)`:
+- **Vectors:** 3^n coefficient vectors, parity = number of nonzero
+  coefficients mod 2 (each weight's (+q, −q) input pair), folded by ±.
+  A vector whose first nonzero coefficient is −1 is skipped: s and −s
+  share a cell and a parity.
+- **Modes:**
+  - rule: the rule cell;
+  - robust: every tied cell;
+  - fixed rules FIXA(upper, last): the max/min sector and max/min axis
+    over the tie set, so FIXA(1, 0) = rule;
+  - possible: one parity per exact POINT (the cache's Punctum address is
+    the point identity, stamped per call; a point seen with both
+    parities fails at once), then D121/D124's DPLL over the cells'
+    variables. Over the decision budget (200,000) the call returns
+    FALSUM (undecided).
+- **Memory:** sums and lookup keys live in a per-call scratch piscina.
+  T3's `activatio_cella` leaked the lookup key on every cache HIT; now
+  `_punctum` resets to its mark on a hit (a scratch piscina is used
+  when one is given), and the key is transcribed only on insert. The
+  per-cell parity marks and SAT variable ids live in arrays sized
+  k·(nd + 1), cleared by touched lists.
+
+**Bug caught by examen before any test ran:** the SAT value array was
+declared i32 (unsigned in this house), so "unassigned (< 0)" was
+always false ("comparatio vana") and the solver could never see a free
+variable. It is now s32.
+
+Credo (83 in the suite, ~17 s):
+- **D124's exact XOR6 triple counts** at k = 1, 2, 4, 6, 8, reproduced
+  on the first run: full / non-null / null-only, each under rule,
+  robust and possible (45 numbers from an independent exact engine,
+  itself oracle-checked).
+- On all 12,144 (triple, k) pairs: FIXA(1, 0) equals the rule, and
+  robust ⇒ each fixed rule ⇒ possible always holds.
+- The D124 review's clash: q15 + q22 = q17 (all null). Every mode
+  refuses {15, 17, 22}, since q15 − q17 + q22 = 0 (odd parity) coincides
+  with the empty vector (even).
+- Refusals: n = 0 or > 7, k = 0, an unknown mode, an index out of range.
+
+Plants (7):
+- **Red (6):** parity counted only on +1; robust using the rule cell;
+  possible ignoring the same-point clash; SAT unit propagation inverted;
+  the fixed sector choice inverted; cell marks not cleared between
+  calls.
+- **Equivalent (1):** the ± fold dropped. Redundant work only, no
+  verdict can change.

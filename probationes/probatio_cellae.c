@@ -876,6 +876,224 @@ _probare_cellas_manu (
     }
 }
 
+
+/* ==================================================
+ * T4: separabilitas contra D124 (machina exacta independens)
+ * ================================================== */
+
+/* triplices separabiles subcatalogi ad k, modo */
+interior i32
+_triplices (
+    Activatio* act,
+          i32  n,
+          i32  k,
+          i32  modus)
+{
+    i32 a;
+    i32 b;
+    i32 c;
+    i32 numerus = ZEPHYRUM;
+
+    per (a = ZEPHYRUM; a < n; a++) per (b = a + I; b < n; b++) per (c =
+                                                                   b
+                                                                       + I; c
+                                                                       < n; c++)
+                                                               {
+        i32 w[III];
+        b32 verdictum = FALSUM;
+
+        w[0] = a; w[1] = b; w[2] = c;
+        si (!activatio_separat(act, w, III, k, modus, &verdictum))
+        {
+            redde (i32)999999;
+        }
+        si (verdictum) numerus++;
+                                                               }
+    redde numerus;
+}
+
+interior vacuum
+_probare_separationem (
+    CredoContextus* c)
+{
+                    Piscina* piscina       = c->piscina;
+    hic_manens constans i32  VALORES_K[V]  = { 1, 2, 4, 6, 8 };
+    /* D124 Pars F (oraculum D124 concordat): plenum, non nulla, nulla;
+     * regula, robusta, possibilis */
+    hic_manens constans i32 D124[III][III][V] = {
+        { { 36, 168, 180, 324, 484 }, { 36, 36, 36, 68, 176 },
+          { 60, 400, 540, 975, 903 } },
+        { { 0, 12, 14, 70, 46 }, { 0, 0, 0, 12, 44 },
+          { 0, 12, 28, 112, 76 } },
+        { { 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0 }, { 0, 80, 80, 80,
+            80 } } };
+    Quaternio  g[IV];
+    Catalogus* cat = NIHIL;
+    Catalogus* partes[III];
+          i32  indices_nn[XXIV];
+          i32  indices_n[XXIV];
+          i32  nn = ZEPHYRUM;
+          i32  nu = ZEPHYRUM;
+          i32  i;
+          i32  si_idx;
+          i32  index_k;
+          i32  modus;
+          b32  bene = VERUM;
+
+    imprimere("\n--- Separabilitas contra D124 ---\n");
+    _generatores(extensio_anulus(extensio_quadratica(II, piscina)),
+        "a/2",
+        "a/2", "-a/2", piscina, g);
+    CREDO_NECESSE (catalogus_clausura(g, TORSIONES, IV, ZEPHYRUM, XVI,
+        piscina, &cat));
+    per (i = ZEPHYRUM; i < catalogus_numerus(cat); i++)
+    {
+        si (catalogus_nullum(cat, i)) indices_n[nu++] = i;
+        alioquin indices_nn[nn++] = i;
+    }
+    partes[0] = cat;
+    CREDO_NECESSE (catalogus_pars(cat, indices_nn, nn, piscina,
+        &partes[1]));
+    CREDO_NECESSE (catalogus_pars(cat, indices_n, nu, piscina,
+        &partes[2]));
+    per (si_idx = ZEPHYRUM; si_idx < III; si_idx++)
+    {
+        Activatio* act  = NIHIL;
+              i32  n    = catalogus_numerus(partes[si_idx]);
+
+        CREDO_NECESSE (activatio_ex_catalogo(partes[si_idx], ZEPHYRUM,
+            piscina, &act));
+        per (modus = ZEPHYRUM; modus < III; modus++)
+        {
+            imprimere("    pars %d modus %d:", (int)si_idx, (int)modus);
+            per (index_k = ZEPHYRUM; index_k < V; index_k++)
+            {
+                i32 numerus = _triplices(act, n, VALORES_K[index_k],
+                    modus);
+
+                imprimere(" %d", (int)numerus);
+                bene = bene && numerus == D124[si_idx][modus][index_k];
+            }
+            imprimere("\n");
+        }
+    }
+    CREDO_VERUM (bene);
+}
+
+interior vacuum
+_probare_regulas_fixas (
+    CredoContextus* c)
+{
+                    Piscina* piscina        = c->piscina;
+    hic_manens constans i32  VALORES_K[VI]  = { 1, 4, 6, 8, 12, 24 };
+                  Quaternio  g[IV];
+                  Catalogus* cat = NIHIL;
+                  Activatio* act = NIHIL;
+                        i32  a;
+                        i32  b;
+                        i32  cc;
+                        i32  index_k;
+                        i32  fr;
+                        i64  regula_aequat      = 0;
+                        i64  implicatio_fracta  = 0;
+                        i64  probata            = 0;
+
+    imprimere("\n--- Regulae fixae: FIXA(1,0) = regula; robusta => fixa => "
+        "possibilis ---\n");
+    _generatores(extensio_anulus(extensio_quadratica(II, piscina)),
+        "a/2",
+        "a/2", "-a/2", piscina, g);
+    CREDO_NECESSE (catalogus_clausura(g, TORSIONES, IV, ZEPHYRUM, XVI,
+        piscina, &cat));
+    CREDO_NECESSE (activatio_ex_catalogo(cat, ZEPHYRUM, piscina, &act));
+    per (a = ZEPHYRUM; a < XXIV; a++) per (b = a + I; b
+                                          < XXIV; b++) per (cc = b
+                                                           + I; cc
+                                                           < XXIV; cc++) per (index_k =
+                                                                             ZEPHYRUM; index_k
+                                                                                 < VI; index_k++)
+                                                                         {
+        i32 w[III];
+        b32 v[VII];
+        i32 m;
+
+        w[0] = a; w[1] = b; w[2] = cc;
+        per (m = ZEPHYRUM; m < VII; m++)
+        {
+            v[m] = FALSUM;
+            (vacuum)activatio_separat(act, w, III, VALORES_K[index_k],
+                (i32)m,
+                &v[m]);
+        }
+        probata++;
+        si (v[CELLAE_FIXA(1, 0)] == v[CELLAE_REGULA]) regula_aequat++;
+        per (fr = ZEPHYRUM; fr < IV; fr++)
+        {
+            b32 fixa = v[III + fr];
+
+            si (v[CELLAE_ROBUSTA] && !fixa) implicatio_fracta++;
+            si (fixa && !v[CELLAE_POSSIBILIS]) implicatio_fracta++;
+        }
+                                                                         }
+    imprimere("    probata %ld, FIXA(1,0) = regula %ld, implicationes "
+        "fractae %ld\n", (long)probata, (long)regula_aequat,
+        (long)implicatio_fracta);
+    CREDO_VERUM (probata == 12144 && regula_aequat == probata
+        && implicatio_fracta == 0);
+}
+
+interior vacuum
+_probare_collisionem (
+    CredoContextus* c)
+{
+                    Piscina* piscina = c->piscina;
+                  Quaternio  g[IV];
+                  Catalogus* cat = NIHIL;
+                  Activatio* act = NIHIL;
+                  Quaternio  summa;
+    hic_manens constans i32  W[III] = { 15, 17, 22 };
+                        i32  modus;
+                        b32  nulla      = VERUM;
+                        b32  verdictum  = VERUM;
+
+    imprimere("\n--- Collisio: q15 + q22 = q17 (paritates diversae) ---\n");
+    _generatores(extensio_anulus(extensio_quadratica(II, piscina)),
+        "a/2",
+        "a/2", "-a/2", piscina, g);
+    CREDO_NECESSE (catalogus_clausura(g, TORSIONES, IV, ZEPHYRUM, XVI,
+        piscina, &cat));
+    CREDO_NECESSE (activatio_ex_catalogo(cat, ZEPHYRUM, piscina, &act));
+    CREDO_NECESSE (quaternio_adde(catalogus_elementum(cat, 15),
+        catalogus_elementum(cat, 22), piscina, &summa));
+    CREDO_VERUM (quaternio_aequalis(summa, catalogus_elementum(cat,
+        17)));
+    CREDO_VERUM (catalogus_nullum(cat, 15) && catalogus_nullum(cat, 17)
+        && catalogus_nullum(cat, 22));
+    /* summa q15 - q17 + q22 = 0 (paritas impar) et vector nullus (par):
+     * idem punctum, omni modo non separat */
+    per (modus = ZEPHYRUM; modus < VII; modus++)
+    {
+        verdictum = VERUM;
+        nulla = nulla && activatio_separat(act, W, III, VI, modus,
+            &verdictum) && !verdictum;
+    }
+    CREDO_VERUM (nulla);
+    /* refutationes */
+    CREDO_FALSUM (activatio_separat(act, W, ZEPHYRUM, VI, ZEPHYRUM,
+        &verdictum));
+    CREDO_FALSUM (activatio_separat(act, W, VIII, VI, ZEPHYRUM,
+        &verdictum));
+    CREDO_FALSUM (activatio_separat(act, W, III, ZEPHYRUM, ZEPHYRUM,
+        &verdictum));
+    CREDO_FALSUM (activatio_separat(act, W, III, VI, VII, &verdictum));
+    {
+        hic_manens constans i32 EXTRA[II] = { 3, 24 };
+
+        CREDO_FALSUM (activatio_separat(act, EXTRA, II, VI, ZEPHYRUM,
+            &verdictum));
+    }
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "zeta_8", _probare_zeta_octo, NIHIL, NIHIL, NIHIL, NIHIL },
     { "zeta_12", _probare_zeta_duodecim, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -884,6 +1102,12 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "cellae manu", _probare_cellas_manu, NIHIL, NIHIL, NIHIL, NIHIL },
     { "cellae contra oraculum", _probare_cellas, NIHIL, NIHIL, NIHIL,
       NIHIL },
+    { "separatio contra D124", _probare_separationem, NIHIL, NIHIL,
+        NIHIL,
+      NIHIL },
+    { "regulae fixae", _probare_regulas_fixas, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "collisio", _probare_collisionem, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 
