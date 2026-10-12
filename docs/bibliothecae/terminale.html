@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>terminale</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>terminale</h1>
+<p class="subtitulus">applicatio terminalis: aemulator_hospes in ludo</p>
+
+<p>The terminal as a ludus application: aemulator_hospes placed in the house UI. One library serves the window app, its terminal twin and, since 2026-10-08, a pane mounted in vicus (terminale_montare): an in-memory state repository, one focusable component that is the screen of cells, and a figure that draws the host&#x27;s view cell by cell. Keys are paired with their text and encoded by codificator_terminalis under the modes the program asked for (cursor keys, kitty, mouse, bracketed paste, focus, LNM); the wheel goes to the program if it tracks the mouse, becomes arrow keys on the alternate screen, and otherwise scrolls the history. Size follows the surface, in the pulse and not in composition, which stays pure. Colours come from the theme through the emulator&#x27;s live palette, so a program that sets them is seen; text too close to its background is pushed just far enough toward black or white to reach a contrast ratio of 3, a minimal nudge Fran chose over snapping, because programs assume a dark background. Underlines in five styles, strike, overline and a synthetic bold are drawn as pixels, and box, block and braille characters come from glyphae_ductae. Each main owns its loop and draws only on change. First run with a real login shell 2026-10-07; vim, less, tmux, btop and Claude Code followed the same day, and the bugs that mattered were found by Fran working in it and by looking at screenshots (one showed that a shared header documented the wrong byte order for colours, a belief the passing test had shared). Measured work on a full btop frame made it about 2.7 times faster. Installed as ~/.bin/terminale.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/terminale.h"><code>include/terminale.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/terminale.c"><code>lib/terminale.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-10-12 aa623c1b</td></tr>
+<tr><td>Group</td><td><a href="greges.html#ludus">Ludus: the second-generation UI</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

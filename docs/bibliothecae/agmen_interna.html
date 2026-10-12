@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>agmen_interna</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>agmen_interna</h1>
+<p class="subtitulus">INTERNA agminis: viae scalares RELATAE. NON API -</p>
+
+<p>The test-only side of agmen, not API: only lib/agmen.c, the tests and the benchmark tools/agmen_mensura.c include it. It declares the scalar reference of each public kernel: the same computation under the same contract, but with its loops marked so that clang does not vectorise them (at -O2 clang vectorised even the remainder loops until told not to). The tests compare the vectorised kernels with these element by element, bit for bit, beside congruentia&#x27;s plain remainder, and the benchmark uses them as its baseline. The vectorisation gate checks this direction too, that no loop outside the marked kernels is vectorised, so the reference stays scalar. Names carry the genitive prefix agminis_ and the suffix _scalaris.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/agmen_interna.h"><code>include/agmen_interna.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/agmen.c"><code>lib/agmen.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-10-09 00fa6b82</td></tr>
+<tr><td>Group</td><td><a href="greges.html#mathematica">Exact mathematics</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

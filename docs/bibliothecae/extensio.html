@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>extensio</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>extensio</h1>
+<p class="subtitulus">Corpora numerorum algebraicorum EXACTA: Q(alpha)</p>
+
+<p>Exact algebraic number fields, Q(alpha) = Q[t]/f with f monic and irreducible over Z. An Algebraicus is a numerator polynomial in alpha over a positive integer denominator, in a unique canonical form, and it carries its field: mixing two fields gives an invalid element that propagates like NaN, and fields are compared by pointer. Written 2026-10-08 because knotapel&#x27;s quaternion demos live in Q(sqrt 2), Q(sqrt 3) and Q(sqrt 5) and had done that arithmetic in doubles, deduplicating by tolerance. Named families: extensio_quadratica and extensio_cosinus, Q(cos 2 pi/n); extensio_ex_polynomio takes any f, checking what can be checked (monic, square-free, no rational root) and leaving irreducibility above degree 3 to the caller&#x27;s word. A field may carry a chosen real root, picked by index from the smallest, and then algebraicus_signum is exact: it bisects the root&#x27;s interval until zero is excluded, and a zero certificate from the norm (a non-zero value cannot be smaller than 1/M^(d-1)) turns a reducible f into a refusal and not an endless loop. algebraicus_ad_ostendendum prints decimals in which every digit is certified. There is no general compositum, which would need factoring over Q: every real abelian field lies in some Q(cos 2 pi/n) (Kronecker-Weber), so a square root arrives by a Gauss sum, verified before it is returned, and elements are embedded into one cosine field. The reviews found no wrong arithmetic but a series of cost problems, and a planted fault that ate 80 GB led to every loop being bounded by construction. extensio_anulus hands matrix a field.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/extensio.h"><code>include/extensio.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/extensio.c"><code>lib/extensio.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-10-08 36a644d1</td></tr>
+<tr><td>Group</td><td><a href="greges.html#mathematica">Exact mathematics</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

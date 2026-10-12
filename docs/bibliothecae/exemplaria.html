@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>exemplaria</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>exemplaria</h1>
+<p class="subtitulus">exemplaria classica Mac 8x8 (1 bit), communia</p>
+
+<p>The 38 classic Macintosh patterns, 8x8 and one bit deep (solid, dots, checkerboard, bricks, weave and the rest), as a shared table. It lived inside lib/delineare.c until 2026-10-09, when vicus needed a pattern for its focus indicator and the rasterisers of command lists had to reach it too; it was moved out verbatim, and delineare now reads it through this header. A pattern is eight bytes, one per row, the top bit being the leftmost pixel. exemplar_obtinere returns the bytes, and exemplar_punctum answers one pixel at any coordinates, tiling modulo 8 so that negative coordinates wrap correctly. Used by delineare and by the pictor and scriba libraries. The worklog leaves a note for the next extraction of this kind: three build lists outside the root suite are written or generated separately, and each needed the new file.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/exemplaria.h"><code>include/exemplaria.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/exemplaria.c"><code>lib/exemplaria.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-10-09 6b00d1e5</td></tr>
+<tr><td>Group</td><td><a href="greges.html#fenestra">Window, input and drawing</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

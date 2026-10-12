@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>agmen</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>agmen</h1>
+<p class="subtitulus">Arithmetica integra per agmina (SIMD), EXACTA</p>
+
+<p>Exact integer arithmetic over arrays, written so that the compiler turns it into vector instructions (SIMD; NEON on arm64). The name means a column on the march, a line advancing in step. Slice one (2026-10-09) is modular arithmetic for an odd modulus below 2^31: elementwise add, subtract and multiply, the elimination kernel exitus += c a, and the dot product, on canonical residues, with no allocation, and bit for bit equal to the scalar path, congruentia serving as oracle. Integers only: under vectorisation floating point would change its rounding. Multiplication is Montgomery&#x27;s with R = 2^32, which for p &lt; 2^31 fits in 64 bits (C89 has no 128-bit product), and its constants live in a handle, AgmenModulus, computed once. The first version had hand-written NEON; measured, it beat clang&#x27;s own vectorisation of the same plain C by only 1.0 to 1.2 times, so by the rule agreed beforehand (a kernel stays hand-written only if it beats plain C) Fran had the intrinsics removed, and the API, array-level from the start, did not change. Speed is then an invisible property, since every correctness test would stay green while it halved, so the gate agmen-vectorizatio compiles the file and goes red if a marked kernel loop stops being vectorised, or if any other loop is. Against congruentia&#x27;s remainder the kernels are about 2.4 times faster for multiplication and 5.8 times for the dot product (M2, 4096 elements). No library consumes it yet; it waits for a real modular workload such as a multimodular determinant.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/agmen.h"><code>include/agmen.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/agmen.c"><code>lib/agmen.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-10-09 00fa6b82</td></tr>
+<tr><td>Group</td><td><a href="greges.html#mathematica">Exact mathematics</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

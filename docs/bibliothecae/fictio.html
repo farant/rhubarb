@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>fictio</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>fictio</h1>
+<p class="subtitulus">valores ficti sine JSON (norma-spec par. IV)</p>
+
+<p>Fake values from a seed: names, email addresses, uuids, timestamps, numbers and text within bounds, and real Latin, never lorem ipsum. Every function takes the caller&#x27;s Sors, so the same seed gives the same bytes. Names are Roman (a praenomen and a gens name, or a feminine form such as Cornelia Tertia). Email addresses use only the reserved example domains of RFC 2606, so no generated address can be a real mailbox. The Latin is 48 sentences taken verbatim from Cicero&#x27;s speeches against Catiline in the Project Gutenberg text, each checked to occur in the file. There is also a drawer of difficult strings, all valid UTF-8, for tests that should not be easy: the empty string, combining marks, a character outside the basic plane, right-to-left text, quotes and backslashes, an embedded NUL, whitespace only, an emoji with a modifier, a byte-order mark, a string of 2000 characters. One function draws from the drawer at random and another walks it in order. Written 2026-10-08 on a header Fran approved, for the norma line of OptChat: norma_gignere, which generates sample documents from a schema, is its consumer. Nothing in it is about JSON, though, and mock interfaces, STML fixtures and C test data can use it as well.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/fictio.h"><code>include/fictio.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/fictio.c"><code>lib/fictio.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-10-08 405e0245</td></tr>
+<tr><td>Group</td><td><a href="greges.html#fundamenta">Foundation</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>situs</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>situs</h1>
+<p class="subtitulus">Praedicata geometrica EXACTA: orientatio, sectio, contactus</p>
+
+<p>Exact geometric predicates over rational coordinates (fractio): orientation in the plane and in space, contact between two segments and between a triangle and a segment, over and under at a crossing in a projection, reflection through a plane. Every decision is the sign of a determinant, with no floating point. Taken early in the math map because every knotapel construction-word failure was a predicate decided in floats or in overflowing integers. Degenerate cases get an answer of their own and never fall silently to one side: each contact test says DISIUNCTA, SECANT (a proper interior crossing) or TANGUNT (an endpoint on the other, collinear overlap, coplanar contact, a projection that is not generic), and the caller decides, by changing the direction of projection or refusing the move. Over and under are found without projected coordinates, through triple products with the viewing direction, so any non-zero direction serves. Adjacent polygon edges always touch at their shared vertex, so a second family (*_vicin*) asks whether they share anything else; the first header told knot code to skip neighbours, and a review showed that skipping is wrong, since neighbours can fold back on each other. A predicate leaves the piscina as it found it, so a loop over all pairs of segments does not grow memory. Checked against Python oracles that use different algorithms, the neighbour predicates exhaustively on the {-1, 0, 1} grid. Born 2026-10-05; laqueus stands on it.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/situs.h"><code>include/situs.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/situs.c"><code>lib/situs.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-10-07 b8bbc5dc</td></tr>
+<tr><td>Group</td><td><a href="greges.html#mathematica">Exact mathematics</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

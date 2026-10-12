@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>magnus</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>magnus</h1>
+<p class="subtitulus">Integri magni EXACTI (sine limite)</p>
+
+<p>Exact integers of any size, with no silent overflow. Born 2026-10-05 as the first of the house&#x27;s exact-math foundations, after a read-through of the knotapel demos found whole chapters of results (demos 110 to 112) resting on silent 64-bit overflow in a private rational type. A Magnus is an immutable value, like chorda: every operation returns a new one, memory comes from a piscina, and a result may share limbs with its arguments. A number that fits s64 always lives inside the struct and costs no allocation; anything larger is 32-bit limbs, and the form is canonical, one representation per number. Division is Euclidean (0 &lt;= remainder &lt; |divisor|): C89 leaves the sign of a negative remainder to the implementation, and the house defines it. Multi-limb division is Knuth&#x27;s algorithm D. No floating point anywhere, so the result is the same on every machine and at every optimisation level. The gcd gives Bezout witnesses on request, a certificate that can be checked without this library. Its worklog is where the review step for math libraries began: an independent reviewer found that replacing magnus_aequalis by &#x27;return true&#x27; passed the whole suite, because every property used it as the judge. magnus_apex_alternarum reports the scratch memory of the last large gcd, a deterministic cost counter that tests assert.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/magnus.h"><code>include/magnus.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/magnus.c"><code>lib/magnus.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-10-08 e576e9eb</td></tr>
+<tr><td>Group</td><td><a href="greges.html#mathematica">Exact mathematics</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>tabula_nodorum</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>tabula_nodorum</h1>
+<p class="subtitulus">Tabula nodorum primorum (usque ad XIII transitus,</p>
+
+<p>The table of prime knots up to 13 crossings, 12,966 of them, and recognition of a knot from its Alexander and Jones polynomials. Names, crossing numbers, symmetry types and PD codes come from KnotInfo (Livingston and Moore), through a pinned snapshot of database_knotinfo dated 2026.10.5; the polynomials are not copied but computed by laqueus from the PD codes, then collated against KnotInfo&#x27;s own columns: 12,966 of 12,966 equal, chirality included, which makes the table the strongest outside oracle laqueus has. A name means the table&#x27;s diagram and &#x27;K*&#x27; its mirror; the table&#x27;s 3_1 is the right-handed trefoil. tabula_nodorum_agnoscere returns every candidate whose two polynomials match, primes and sums of two table knots, in either chirality, and the header is plain that this is a match and not a proof of type: 5_1 and 10_132* share both polynomials, the Conway and Kinoshita-Terasaka knots both have Alexander 1, a review counted 95 primes that look like a sum (the smallest, 9_12, like 4_1 # 5_2), and a chiral knot with a symmetric Jones comes back twice. The data file is generated (lib/tabula_nodorum_data.c, compared byte for byte by the generata gate), and the house around it changed its shape twice: PD codes became strings when 657,484 integers passed silva&#x27;s cap of 2^20 tokens per file, and every string moved into a named array when macOS was found copying each test binary&#x27;s string literals into its log cache, 42 GB in a day. October 2026.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/tabula_nodorum.h"><code>include/tabula_nodorum.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/tabula_nodorum.c"><code>lib/tabula_nodorum.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-10-08 cd292cfb</td></tr>
+<tr><td>Group</td><td><a href="greges.html#mathematica">Exact mathematics</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

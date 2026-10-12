@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>anulus</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>anulus</h1>
+<p class="subtitulus">Descriptio anuli: operationes elementorum per tabulam</p>
+
+<p>A ring descriptor: a table of function pointers over opaque elements of a stated size, so that an algebra library is written once over any house ring (anulus is Latin for ring, literally). Fran chose this over three concrete matrix types, since fraction-free elimination is one algorithm over any integral domain with exact division. Ready-made rings: Z (magnus), Q (fractio), Z[t, t^-1] (polynomium), and anulus_residuorum(n) for Z/n over congruentia; cyclotomia, extensio and quaternio each hand out descriptors of their own. Every function takes the descriptor as its first argument, so that a ring with parameters (a modulus) uses the same table. Every operation returns b32 and leaves the output untouched on refusal. Optional hooks say what a ring can do: gcd, division with remainder and norm comparison for Euclidean rings (Z only today), signum for ordered ones, parvum for &#x27;this element owns no outside memory&#x27;. The integrum flag is there because of a wrong answer: over Z/6 a pivot that was a zero divisor silently killed a column and a determinant came out 0 where the truth is 3, so elimination now refuses a ring that is not an integral domain. Descriptors are compared by pointer: two calls for Z/7 make two different rings. Born 2026-10-06; tested through matrix&#x27;s suite.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/anulus.h"><code>include/anulus.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/anulus.c"><code>lib/anulus.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-10-08 559ae6fd</td></tr>
+<tr><td>Group</td><td><a href="greges.html#mathematica">Exact mathematics</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>
