@@ -23,6 +23,12 @@
 #include "thesaurus.h"
 #include "via.h"
 #include "aedilis.h"
+
+/* digestum extractoris (circulus commissionis P1): actio 'aedilis' in
+ * aedificatione bin/fabrica infixa (tools/fabrica_struere.sh:
+ * provenientia_scribere.sh extractor bin/aedilis aedilis) - clavis
+ * thesauri eadem ac bin/aedilis */
+/* <aedilis obiectum="build/fabrica/provenientia/extractor.c"/> */
 #include "aedilis_silva.h"
 #include "compilator.h"
 #include "fabrica_sutura.h"
@@ -53,14 +59,25 @@ hic_manens        AedilisSilva* _extractor_gradus    = NIHIL;
 hic_manens          Compilator* _compilator_gradus   = NIHIL;
 hic_manens              chorda  _causa_gradus;
 
+/* clavis thesauri extractoris (P1): digestum infixum, aliter
+ * binarium - UNA sedes pro extractore gradus et 'clavis-thesauri' */
+b32
+suturae_clavem_thesauri (
+               Piscina*  piscina,
+              Sigillum*  praefixum_out,
+    constans character** fons_out)
+{
+    redde aedilis_thesauri_praefixum(provenientia_extractor.ingressus,
+        suturae_via_binarii, "aedilis.stml", piscina, praefixum_out,
+        fons_out);
+}
+
 interior b32
 _gradus_parare (
     chorda* causa_out)
 {
-               chorda binarium;
-               chorda configuratio_octeti;
              Sigillum praefixum;
-    SigillumContextus contextus;
+                  b32 clavis_bona;
 
     si (_gradus_tentati)
     {
@@ -86,18 +103,14 @@ _gradus_parare (
         *causa_out = _causa_gradus;
         redde FALSUM;
     }
-    binarium = filum_legere_totum(suturae_via_binarii, _piscina_gradus);
-    configuratio_octeti = filum_legere_totum("aedilis.stml",
-        _piscina_gradus);
-    sigillum_incipere(&contextus);
-    sigillum_addere(&contextus, binarium.datum,
-        (memoriae_index)binarium.mensura);
-    sigillum_addere(&contextus, configuratio_octeti.datum,
-        (memoriae_index)configuratio_octeti.mensura);
-    praefixum = sigillum_finire(&contextus);
+    /* clavis thesauri: digestum extractoris infixum (P1); sine eo
+     * binarium ipsum - illegibile = sine thesauro (ut olim) */
+    clavis_bona = suturae_clavem_thesauri(_piscina_gradus, &praefixum,
+        NIHIL);
     _extractor_gradus = aedilis_silva_creare(_piscina_gradus,
-        _configuratio_gradus, binarium.mensura > ZEPHYRUM
-            ? "build/aedilis/obiecta" : NIHIL, &praefixum, NIHIL);
+        _configuratio_gradus,
+        clavis_bona ? "build/aedilis/obiecta" : NIHIL,
+        &praefixum, NIHIL);
     si (_extractor_gradus == NIHIL)
     {
         _causa_gradus = chorda_ex_literis("extractor aedilis parari "

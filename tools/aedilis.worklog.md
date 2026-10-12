@@ -823,3 +823,52 @@ output of all 199 tests byte-identical with and without the memo (153 s
 and must never outlive a run. Remaining: derivation runs twice per test
 (gate phase 1 and inside --differentia), and the loop is serial -
 parallelism collides with the shared object cache (slice 2).
+
+## 2026-10-12 - closure cache keyed by the EXTRACTOR's digest (circulus commissionis T5, P1)
+
+- **Before:** the key of the thesaurus `build/aedilis/obiecta` was
+  `sigillum(BINARY bytes ‖ aedilis.stml)` in both bin/aedilis and bin/fabrica.
+  Any rebuild of bin/fabrica (which now links crusta, materia, portae and
+  silva) made every closure cold. Measured: owed gates after a
+  comment-only edit to lib/portae.c took 41 s cold against 5.5 s warm.
+  The two tools also never shared a cache.
+- **Now:** key = `sigillum("extractor:" ‖ digest ‖ aedilis.stml)`, where
+  `digest` is the declared `aedilis` action's digest EMBEDDED AT BUILD
+  TIME:
+  - bin/aedilis uses its own provenance (`provenientia_aedilis`);
+  - bin/fabrica uses a new provenance record `extractor`, written by
+    tools/fabrica_struere.sh with `provenientia_scribere.sh extractor
+    bin/aedilis aedilis` on both passes and linked through
+    `<aedilis obiectum>` in tools/fabrica_ansae.c.
+- **Results:**
+  - both tools report the SAME key (`--clavis-thesauri` /
+    `clavis-thesauri`), so the cache is shared;
+  - an edit outside the extractor keeps the key: 4.8 s after the same
+    lib/portae.c rebuild;
+  - an edit to lib/aedilis_silva.c changes it, and restoring the file
+    brings the old key back.
+- **Why build time and not runtime:** a digest computed at runtime from
+  the SOURCES would describe code the binary may not contain yet (source
+  edited, judge not rebuilt). The cache would then store old-code results
+  under a new-code key. The embedded digest always matches the compiled
+  code.
+- **Why the `aedilis` action** and not a new `extractor_aedilis` action as
+  the spec said (Fran chose a declared action, option (a)):
+  - its digest already covers the extractor (lib/aedilis*.c, silva), and
+    over-covers only the small tools/aedilis.c front end;
+  - bin/aedilis already embeds it;
+  - a new generator writing a provenance file would have been judged
+    stale after every commit, because provenance carries the HEAD
+    commit.
+- **Where the helper lives:** `aedilis_thesauri_praefixum` is in
+  lib/aedilis.c, NOT lib/aedilis_silva.c, because the latter would have
+  pulled the silva amalgamation into every root test link (and into the
+  uuidtext log cache). Malformed or "ignotum" digests (bootstrap) fall
+  back to the old binary key, and the two kinds of key are domain-tagged
+  apart.
+- **Gates and plants:**
+  - probatio_aedilis_praefixum: 4 sections, 32 assertions;
+  - fabrica fumus XLV: the live bin/aedilis and bin/fabrica are
+    different binaries with the same digest-based key;
+  - plants III went red, then green: fabrica keyed by its binary again;
+    the digest key mixed with the binary; uppercase hex accepted.

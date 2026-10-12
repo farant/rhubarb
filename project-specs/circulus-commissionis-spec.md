@@ -93,3 +93,16 @@ Each item has a test that failed first, plus a plant; P1 is measured
 before and after (rebuild bin/fabrica, then time owed gates: cold before,
 warm after); P4's gate passes in quinta with no hand excuse; ledger
 01M46ER35 is closed.
+
+## IV. As built - P1 note (2026-10-12)
+
+Fran chose (a), a declared action. Implemented with the EXISTING action
+`aedilis`, not a new `extractor_aedilis`:
+- its digest already covers the extractor;
+- bin/aedilis already embeds it as its own provenance;
+- a new generator writing a provenance file (which carries the HEAD
+  commit) would have been judged stale after every commit.
+
+The digest is embedded at BUILD time, because a runtime digest of the
+sources could describe code the binary does not contain yet. Details are
+in tools/aedilis.worklog.md.

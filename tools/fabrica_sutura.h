@@ -20,6 +20,8 @@
 #include "processus.h"
 #include "chorda_aedificator.h"
 #include "fabrica.h"
+#include "provenientia.h"
+#include "sigillum.h"
 
 /* sanare: terminus unus per actum (briar ~3 min, obiecta radicis
  * frigida ~150 s); termini per actionem non in 1b */
@@ -120,6 +122,18 @@ suturae_radix_absoluta (
 
 /* ansae graduum (fabrica_ansae.c) */
 externus constans character* suturae_via_binarii;
+/* digestum extractoris infixum (build/fabrica/provenientia/extractor.c,
+ * circulus commissionis P1) */
+externus constans ProvenientiaRelatio provenientia_extractor;
+
+/* clavis thesauri extractoris (aedilis_thesauri_praefixum super
+ * digestum infixum) - sedes una: gradus et 'bin/fabrica
+ * clavis-thesauri' */
+b32
+suturae_clavem_thesauri (
+               Piscina*  piscina,
+              Sigillum*  praefixum_out,
+    constans character** fons_out);
 
 b32
 suturae_area_parare (

@@ -2,6 +2,7 @@
 #define AEDILIS_H
 
 #include "latina.h"
+#include "sigillum.h"
 #include "chorda.h"
 #include "piscina.h"
 #include "xar.h"
@@ -234,5 +235,26 @@ aedilis_scriptum_scribere (
                          Piscina* piscina,
                              b32  solitarius,
               constans character* commissum);
+
+/* CLAVIS THESAURI (circulus commissionis P1): praefixum quod
+ * aedilis_silva_creare accipit (hic, non in aedilis_silva: silvam
+ * non poscit - sigillum et filum sola). ingressus = digestum actionis
+ * 'aedilis' IN AEDIFICATIONE infixum (provenientia: bin/aedilis suum,
+ * bin/fabrica per provenientiam 'extractor') - LXIV hex minusculae:
+ * clavis = sigillum("extractor:" + ingressus + configuratio).
+ * Binaria ex fontibus extractoris iisdem clavem EANDEM habent
+ * (thesaurus communis), et editio extra extractorem (fabrica, crusta,
+ * portae) clavem non mutat. Aliter (NIHIL, 'ignotum' bootstrap, forma
+ * prava) = sigillum(binarium + configuratio) ut olim. FALSUM si
+ * configuratio aut (cum opus est) binarium legi nequit. *fons_out
+ * (NIHIL licet) = "digestum" aut "binarium". */
+b32
+aedilis_thesauri_praefixum (
+     constans character*  ingressus,
+     constans character*  via_binarii,
+     constans character*  via_configurationis,
+                Piscina*  piscina,
+               Sigillum*  praefixum_out,
+     constans character** fons_out);
 
 #endif /* AEDILIS_H */

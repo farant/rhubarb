@@ -48,13 +48,21 @@ The small items go first, so each one helps the next commit.
   ~/.bin; PATH not changed) red. Green in quinta without excuse.
 
 ### T5: P1 extractor-keyed closure cache
-- [ ] Fran picks (a) or (b). Digest of the extractor's inputs in build/,
+- [x] Fran picks (a) or (b). Digest of the extractor's inputs in build/,
   linked by bin/aedilis and bin/fabrica; key = digest ‖ aedilis.stml.
   Tests:
   - fabrica rebuilt with an edit OUTSIDE the extractor -> cache hit;
   - an edit INSIDE (lib/aedilis_silva.c) -> miss;
   - aedilis and fabrica share entries.
   Measured before/after. Commit.
+  As built (2026-10-12): (a) via the EXISTING declared action 'aedilis'
+  (its digest covers the extractor; bin/aedilis already embeds it), not a
+  new action. bin/fabrica embeds it as provenance `extractor`. Helper
+  `aedilis_thesauri_praefixum` in lib/aedilis.c (not aedilis_silva: no
+  silva in root test links); one function `suturae_clavem_thesauri` in
+  fabrica. Measured: 41 s cold -> 4.8 s after an unrelated fabrica
+  rebuild; an extractor edit changes the key. probatio_aedilis_praefixum
+  (4 sections, 32 assertions), fabrica fumus XLV, plants III red.
 
 ### T6: close
 - [ ] spec "As built", worklogs, MEMORY; merge.

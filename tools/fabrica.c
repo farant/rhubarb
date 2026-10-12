@@ -2241,6 +2241,26 @@ _purgare (
     redde ZEPHYRUM;
 }
 
+/* 'clavis-thesauri': clavis thesauri extractoris et fons ("digestum" |
+ * "binarium") - fumus XLV eam cum bin/aedilis comparat (P1) */
+interior s32
+_clavem_thesauri (
+    Piscina* piscina)
+{
+               Sigillum  praefixum;
+     constans character* fons = NIHIL;
+              character  hex[SIGILLUM_HEX_MENSURA];
+
+    si (!suturae_clavem_thesauri(piscina, &praefixum, &fons))
+    {
+        fprintf(stderr, "fabrica: clavis thesauri computari nequit\n");
+        redde II;
+    }
+    sigillum_hex(&praefixum, hex);
+    printf("%s\t%s\n", hex, fons);
+    redde ZEPHYRUM;
+}
+
 interior vacuum
 _usus (vacuum);
 
@@ -2513,6 +2533,10 @@ principale (
     alioquin si (strcmp(argv[1], "census") == 0)
     {
         exitus = _censum(piscina);
+    }
+    alioquin si (strcmp(argv[1], "clavis-thesauri") == 0)
+    {
+        exitus = _clavem_thesauri(piscina);
     }
     alioquin si (strcmp(argv[1], "portae") == 0)
     {
