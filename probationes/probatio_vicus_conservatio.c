@@ -141,10 +141,51 @@ _probare_dimissionem (
     volumen_claudere(vol);
 }
 
+/* S6b: latus scribae "1_sinistrum_scriba" cursorem servat (systemata
+ * repositorii communia), modus ut vim incipit */
+interior vacuum
+_probare_latus_scribae (
+    CredoContextus* c)
+{
+     InternamentumChorda* in;
+                 Volumen* vol;
+         VicusApplicatio  prima;
+         VicusApplicatio  altera;
+             InsulaRamus  r;
+               character  cursor[]  = "cursor_linea=3";
+               character  modus[]   = "modus=inserere";
+                  chorda* a;
+
+    in = internamentum_creare(c->piscina);
+    thema_initiare();
+    vol = volumen_temporarium(c->piscina, "probatio_vicus_conservatio");
+    CREDO_NECESSE_NON_NIHIL(vol);
+    CREDO_NECESSE(vicus_applicatio_aedificare(&prima, c->piscina, in,
+        vol, NIHIL, CM, DC));
+    r = insula_ramus(prima.vicus->repo, "scriba", "1_sinistrum_scriba");
+    CREDO_NECESSE(insula_ramus_nodus(&r) != NIHIL);
+    insula_scriptorem_ponere(prima.vicus->repo, chorda_ex_literis(
+        "pagina.clavis", c->piscina));
+    CREDO_VERUM(mutare_ramum(&r, ponere, cursor));
+    CREDO_VERUM(mutare_ramum(&r, ponere, modus));
+
+    CREDO_NECESSE(vicus_applicatio_aedificare(&altera, c->piscina, in,
+        vol, NIHIL, CM, DC));
+    r = insula_ramus(altera.vicus->repo, "scriba",
+        "1_sinistrum_scriba");
+    a = insula_ramus_attributum(&r, "cursor_linea");
+    CREDO_VERUM(a && chorda_aequalis_literis(*a, "3"));
+    a = insula_ramus_attributum(&r, "modus");
+    CREDO_VERUM(a && chorda_aequalis_literis(*a, "normalis"));
+    volumen_claudere(vol);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "latus_pictoris", _probare_latus_pictoris,
       NIHIL, NIHIL, NIHIL, NIHIL },
     { "dimissio", _probare_dimissionem,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "latus_scribae", _probare_latus_scribae,
       NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

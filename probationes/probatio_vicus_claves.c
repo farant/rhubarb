@@ -48,7 +48,7 @@ scribam_montare (
     (vacuum)argumentum;
     (vacuum)ctx;
     redde scriba_montare((ScribaMontatio*)sedes, p, in, v, r, id, radix,
-                         latitudo, altitudo, NIHIL);
+                         latitudo, altitudo, NIHIL, NIHIL);
 }
 
 interior b32

@@ -25,6 +25,7 @@
 #include "scriba_actiones.h"
 #include "scriba_componentia.h"
 #include "scriba_figurae.h"
+#include "organum_montatio.h"
 
 /* MONTATIO (insula-rami-plan T1a): scriba in repositorio dato, ramo
  * <scriba id> (aut radice): documentum in spatio id, canones et
@@ -64,7 +65,10 @@ nomen structura {
  * margines et linea status (XX x X minimum); exstans suum servat.
  * liber (S2b): visus paginae libri - pagina ex plagula
  * 'scriba/visus/<id>' (absens: prima), documentum libri (commune);
- * NIHIL = documentum proprium in spatio id (mos prior). */
+ * NIHIL = documentum proprium in spatio id (mos prior). systemata
+ * (status-plan S6b): canon, initium, domini ex manifesto
+ * apps/scriba/organum.stml per organum_ramum_parare; conservatio
+ * cursorem servat; NIHIL = nulla (probationes). */
 b32
 scriba_montare (
          ScribaMontatio* m,
@@ -76,7 +80,8 @@ scriba_montare (
      constans character* radix,
                     i32  latitudo,
                     i32  altitudo,
-            ScribaLiber* liber);
+            ScribaLiber* liber,
+        StatusSystemata* systemata);
 
 /* Visus stalus reficitur (vicus-latera S2b): si alius visus paginam
  * commisit (cursor documenti != cursor_laboris), folium laboris ex

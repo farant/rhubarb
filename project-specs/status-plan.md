@@ -77,6 +77,9 @@ widgets are migrated by hand.*
   (lib/organum.worklog.md). Fran: S6 split a/b/c; scriba persists cursor
   + page, mode/selection transient; yank register (capsa) per pane +
   transient in S6b, app-wide in S6c/S7.
+- **S6b** DONE 2026-10-12: scriba on its manifest; cursor persists;
+  pagina_positio/paginae_numerus kept as derived transient copies
+  (removal needs the book in ScribaCompositio).
 - **S6** scriba: `clavis_praecedens`, `fd_*`, `nuntius` -> transient;
   `paginae_numerus` read from the book; the yank register = first
   app-wide non-document state.

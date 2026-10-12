@@ -22,39 +22,29 @@
 #include "scriba_actiones.h"
 #include "scriba_componentia.h"
 #include "credo.h"
+#include "organum_probationis.h"
 #include <stdio.h>
 #include <string.h>
 
 hic_manens Piscina*             piscina;
 hic_manens InternamentumChorda* intern;
 
-interior Canon*
-canonem_legere (
-    constans character* via)
-{
-    chorda causa;
-
-    redde canon_legere(filum_legere_totum(via, piscina), piscina,
-        intern,
-                       &causa);
-}
-
 /* ramum ramum_parare: canones veri, domini (ephemera) */
 interior vacuum
 ramum_parare (
     constans InsulaRamus* ramus)
 {
-    StmlResultus res;
+        Canon* canon;
+    StmlNodus* domini;
 
-    insula_ramus_canonem_ponere(ramus,
-        canonem_legere("apps/scriba/canones/durabilis.canon"));
-    insula_ramus_canonem_ponere(ramus,
-        canonem_legere("apps/scriba/canones/ephemera.canon"));
-    res = stml_legere_ex_literis(chorda_ut_cstr(filum_legere_totum(
-        "apps/scriba/canones/domini.stml", piscina), piscina), piscina,
-        intern);
-    (vacuum)insula_ramus_dominos_legere(ramus,
-        res.elementum_radix);
+    /* S6b: ex manifesto scribae */
+    si (!organum_probationis_parare(piscina, intern,
+            "apps/scriba/organum.stml", &canon, &domini))
+    {
+        redde;
+    }
+    insula_ramus_canonem_ponere(ramus, canon);
+    (vacuum)insula_ramus_dominos_legere(ramus, domini);
 }
 
 /* linea l folii (spatiis finalibus omissis) == expectata */

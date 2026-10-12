@@ -16,6 +16,7 @@
 #include "canon.h"
 #include "organum.h"
 #include "organum_montatio.h"
+#include "organum_probationis.h"
 
 /* canon insulae et <domini> generati; FALSUM si manifestum deest aut
  * malum */
@@ -26,21 +27,8 @@ pictor_organum_parare (
                   Canon** canon,
               StmlNodus** domini)
 {
-    Organum* o;
-     chorda  causa;
-
-    /* S6a: lectio per modulum communem (organum_montatio) */
-    o = organum_legere_viam(piscina, intern, NIHIL,
-        "apps/pictor/organum.stml", "probatio");
-    si (!o)
-    {
-        redde FALSUM;
-    }
-    causa.mensura = ZEPHYRUM;
-    causa.datum = NIHIL;
-    *canon = organum_canonem_generare(o, piscina, intern, &causa);
-    *domini = organum_dominos_generare(o, piscina, intern);
-    redde *canon && *domini;
+    redde organum_probationis_parare(piscina, intern,
+        "apps/pictor/organum.stml", canon, domini);
 }
 
 #endif /* PICTOR_ORGANUM_PROBATIONIS_H */

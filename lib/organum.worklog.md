@@ -124,3 +124,38 @@ owner counts - organum_ramum_parare would also initiate the branch. It
 is now a thin wrapper over organum_legere_viam. No behaviour change: 21
 pictor, 13 vicus, ludus_tessera 8/8; plants 6/6 (dimissio registration
 proven through pictor's palette suite).
+
+## 2026-10-12 — S6b: scriba on its manifest
+
+apps/scriba/organum.stml; scriba_montare(..., StatusSystemata*) mounts
+through organum_ramum_parare (addita: page size + focus="pagina"; modus
+from its absens "normalis"). apps/scriba/canones/ deleted (ephemera.canon,
+domini.stml - frozen as probationes/fixa/organum/scriba_domini_ante_s6.stml;
+probatio_organum `scriba_viva`: generated owners == old table, 16/16).
+Types identical to the old canon (script diff).
+
+Classification (Fran): cursor persists; mode/selection/visual kind,
+pending chord (clavis_praecedens, fd_*), nuntius, capsa (S6b: per pane,
+transient; S6c app-wide) transient. First persisted scriba state ever.
+
+Finding: the page a pane shows was ALREADY persisted - volume plagula
+scriba/visus/<id> (vicus S2b). The island's pagina_positio and
+paginae_numerus are derived copies -> transient (like pictor's size).
+Removing paginae_numerus needs the book in ScribaCompositio (a header
+change not approved) - left as a derived copy; candidate for the
+"derived" category (census).
+
+Finding: probatio_scriba_actiones and _ramus still loaded
+apps/scriba/canones/durabilis.canon, deleted in C2 - canonem_legere
+returned NIHIL silently and the tests ran WITHOUT that canon since C2.
+A silent no-op the gates could not see. Now generic test helper
+probationes/organum_probationis.h (manifest path in);
+pictor_organum_probationis.h delegates to it.
+
+vicus: ONE StatusSystemata allocated in vicus_applicatio_aedificare,
+pointed to by both ContextusScribae and ContextusPictoris; whichever pane
+mounts first fills it (systemata_parare) from the repo its mount
+receives; dimissio bound to the dispatcher if created.
+Tests: probatio_scriba_conservatio (round trip; canon/owners in a real
+mount), probatio_vicus_conservatio latus_scribae; root 278/278,
+ludus_tessera 8/8; plants 4/4.
