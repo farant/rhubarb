@@ -191,4 +191,73 @@ activatio_separat (
              i32  modus,
              b32* exitus);
 
+
+/* ==================================================
+ * Quaestiones et capacitas
+ *
+ * NUMERUS VERUS a SERVATIS separatur (D84: MAX_WIN XXXII pro capacitate
+ * legebatur): numerus[n] = copiae n ponderum transeuntes (exhaustiva:
+ * omnes; avida: a quaestione inventae, ubi 'victores_maximi' pars
+ * SEMANTICAE quaestionis est, non numeri); servati usque ad
+ * limes_servandi, cum k quo transierunt. maximum = 2 n maxima cum
+ * numerus > 0, n >= III (XOR6 ad minimum, ut D82/D84), 0 si nulla.
+ * ================================================== */
+
+#define CELLAE_N_MAXIMUS  VII
+
+nomen structura {
+    i32 pondera[CELLAE_N_MAXIMUS];   /* indices catalogi, crescentes */
+    i32 n;
+    i32 k;                           /* k primus scalae qui transit */
+} Victor;
+
+nomen structura {
+        i64  numerus[CELLAE_N_MAXIMUS + I];   /* index n */
+        i32  servati[CELLAE_N_MAXIMUS + I];
+     Victor* victores[CELLAE_N_MAXIMUS + I];
+        i32  maximum;
+} Capacitas;
+
+nomen structura {
+    constans i32* scala_k;            /* ordine (avida: primus transiens) */
+             i32  numerus_k;
+             i32  modus;              /* CELLAE_REGULA, ... */
+             i32  n_maximum;          /* <= CELLAE_N_MAXIMUS */
+             i32  victores_maximi;    /* avida: sistit post tot per n
+                                       * (D82/D84 XXXII) */
+             i32 limes_triplicum;    /* avida: triplices ex primis tot
+                                       * indicibus (D82/D84 C) */
+             i32 cellae_maximae;     /* k omittitur si k (axes + 1) >
+                                       * hoc (D82/D84 MAX_ACT: XVI M
+                                       * CCCLXXXIV); 0 nullum */
+             i32  limes_servandi;     /* victores servati per n; 0 nulli */
+    constans i32* indices;            /* pondera permissa (crescentia);
+                                       * NIHIL = totus catalogus */
+             i32 numerus_indicum;
+} Quaestio;
+
+/* exhaustiva: omnes copiae n = 1 .. n_maximum ponderum permissorum, per
+ * gradus (separabilitas deorsum clausa ad k fixum), unio super scalam.
+ * Catalogus aut indices <= LXIV. FALSUM si refutatum aut SAT indecisum.
+ * Victores in piscina. */
+b32
+activatio_exhaustiva (
+             Activatio* activatio,
+     constans Quaestio* quaestio,
+               Piscina* piscina,
+             Capacitas* exitus);
+
+/* avida (D82/D84 find_capacity): n = 3 per triplices crescentes ex primis
+ * limes_triplicum ponderibus permissis, primus k scalae qui transit,
+ * sistit post victores_maximi; deinde n + 1: omnis victor gradus n
+ * ordine, omne pondus permissum ordine (non in victore, insertum
+ * ordine, non duplicatum), primus k qui transit; gradus solum si prior
+ * victores habet; usque ad n_maximum. */
+b32
+activatio_avida (
+             Activatio* activatio,
+     constans Quaestio* quaestio,
+               Piscina* piscina,
+             Capacitas* exitus);
+
 #endif /* CELLAE_H */

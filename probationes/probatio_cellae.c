@@ -1094,6 +1094,446 @@ _probare_collisionem (
     }
 }
 
+
+/* ==================================================
+ * T5: quaestiones contra D124
+ * ================================================== */
+
+hic_manens constans i32 SCALA_D84[VIII] = { 1, 6, 8, 10, 12, 16, 20,
+    24 };
+
+interior vacuum
+_quaestio (
+     Quaestio* q,
+          i32  modus)
+{
+    q->scala_k          = SCALA_D84;
+    q->numerus_k        = VIII;
+    q->modus            = modus;
+    q->n_maximum        = VII;
+    q->victores_maximi  = XXXII;
+    q->limes_triplicum  = C;
+    q->cellae_maximae   = (i32)16384;
+    q->limes_servandi   = (i32)4096;
+    q->indices          = NIHIL;
+    q->numerus_indicum  = ZEPHYRUM;
+}
+
+interior b32
+_numeri (
+    constans Capacitas* c,
+          constans i64* exspectati)
+{
+    i32 n;
+
+    per (n = III; n <= VII; n++)
+    {
+        si (c->numerus[n] != exspectati[n - III])
+        {
+            imprimere("    n %d: %ld contra %ld\n", (int)n,
+                (long)c->numerus[n], (long)exspectati[n - III]);
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+interior vacuum
+_probare_exhaustivam (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+    /* D124 Pars D: [pars][modus][n = 3..7] */
+    hic_manens constans i64 D124[III][III][V] = {
+        { { 1132, 402, 0, 0, 0 }, { 992, 218, 0, 0, 0 },
+          { 1785, 2589, 236, 25, 3 } },
+        { { 304, 106, 0, 0, 0 }, { 280, 36, 0, 0, 0 },
+          { 424, 353, 38, 1, 0 } },
+        { { 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0 },
+          { 80, 102, 72, 25, 3 } } };
+    hic_manens constans i32 MAXIMA[III][III] = {
+        { 8, 8, 14 }, { 8, 8, 12 }, { 0, 0, 14 } };
+    Quaternio  g[IV];
+    Catalogus* cat = NIHIL;
+    Catalogus* partes[III];
+          i32  indices_nn[XXIV];
+          i32  indices_n[XXIV];
+          i32  nn = ZEPHYRUM;
+          i32  nu = ZEPHYRUM;
+          i32  i;
+          i32  pi;
+          i32  modus;
+          b32  bene = VERUM;
+
+    imprimere("\n--- Quaestio exhaustiva contra D124 ---\n");
+    _generatores(extensio_anulus(extensio_quadratica(II, piscina)),
+        "a/2",
+        "a/2", "-a/2", piscina, g);
+    CREDO_NECESSE (catalogus_clausura(g, TORSIONES, IV, ZEPHYRUM, XVI,
+        piscina, &cat));
+    per (i = ZEPHYRUM; i < catalogus_numerus(cat); i++)
+    {
+        si (catalogus_nullum(cat, i)) indices_n[nu++] = i;
+        alioquin indices_nn[nn++] = i;
+    }
+    partes[0] = cat;
+    CREDO_NECESSE (catalogus_pars(cat, indices_nn, nn, piscina,
+        &partes[1]));
+    CREDO_NECESSE (catalogus_pars(cat, indices_n, nu, piscina,
+        &partes[2]));
+    per (pi = ZEPHYRUM; pi < III; pi++)
+    {
+        Activatio* act = NIHIL;
+
+        CREDO_NECESSE (activatio_ex_catalogo(partes[pi], ZEPHYRUM,
+            piscina,
+            &act));
+        per (modus = ZEPHYRUM; modus < III; modus++)
+        {
+             Quaestio q;
+            Capacitas cap;
+
+            _quaestio(&q, modus);
+            CREDO_NECESSE (activatio_exhaustiva(act, &q, piscina,
+                &cap));
+            imprimere("    pars %d modus %d: max XOR%d, %ld %ld %ld %ld %ld\n",
+                (int)pi, (int)modus, (int)cap.maximum,
+                (long)cap.numerus[3],
+                (long)cap.numerus[4], (long)cap.numerus[5],
+                (long)cap.numerus[6], (long)cap.numerus[7]);
+            bene = bene && _numeri(&cap, D124[pi][modus])
+                && cap.maximum == MAXIMA[pi][modus];
+            si (pi == 0 && modus == CELLAE_REGULA)
+            {
+                /* nulla inter victores omnes: 1056 et 300 (D124) */
+                i64 nulla[II] = { 0, 0 };
+                i32 n;
+                i32 w;
+                i32 t;
+
+                per (n = III; n <= IV; n++)
+                {
+                    bene = bene
+                        && cap.servati[n] == (i32)cap.numerus[n];
+                    per (w = ZEPHYRUM; w < cap.servati[n]; w++)
+                    {
+                        per (t = ZEPHYRUM; t < n; t++)
+                        {
+                            si (catalogus_nullum(cat,
+                                cap.victores[n][w].pondera[t]))
+                            {
+                                nulla[n - III]++;
+                            }
+                        }
+                    }
+                }
+                bene = bene && nulla[0] == 1056 && nulla[1] == 300;
+            }
+        }
+    }
+    CREDO_VERUM (bene);
+}
+
+/* D84 find_xor6 / find_recursive ad litteram (separabilitas per
+ * activatio_separat): referens ordinis victorum quaestionis avidae */
+#define REF_MAX XXXII
+
+hic_manens i32 ref_victor[VII][REF_MAX][VII];
+hic_manens i32 ref_k[VII][REF_MAX];
+hic_manens i32 ref_numerus[VII];
+
+interior i32
+_ref_primus_k (
+    Activatio* act,
+          i32* w,
+          i32  n)
+{
+    i32 index_k;
+
+    per (index_k = ZEPHYRUM; index_k < VIII; index_k++)
+    {
+        b32 verdictum = FALSUM;
+
+        si (   activatio_separat(act, w, n, SCALA_D84[index_k],
+            CELLAE_REGULA,
+                &verdictum) && verdictum)
+        {
+            redde SCALA_D84[index_k];
+        }
+    }
+    redde ZEPHYRUM;
+}
+
+interior vacuum
+_avida_referens (
+    Activatio* act,
+          i32  m)
+{
+    i32 a;
+    i32 b;
+    i32 cc;
+    i32 n;
+
+    per (n = ZEPHYRUM; n < VII; n++) ref_numerus[n] = ZEPHYRUM;
+    per (a = ZEPHYRUM; a < m
+        && ref_numerus[III] < REF_MAX; a++) per (b = a + I; b < m
+                                                && ref_numerus[III]
+                                                    < REF_MAX; b++) per (cc =
+                                                                        b
+                                                                            + I; cc
+                                                                            < m
+                                                                            && ref_numerus[III]
+                                                                                < REF_MAX; cc++)
+                                                                    {
+        i32 w[III];
+        i32 k;
+
+        w[0] = a; w[1] = b; w[2]  = cc;
+        k                         = _ref_primus_k(act, w, III);
+        si (k > ZEPHYRUM)
+        {
+            ref_victor[III][ref_numerus[III]][0]  = a;
+            ref_victor[III][ref_numerus[III]][1]  = b;
+            ref_victor[III][ref_numerus[III]][2]  = cc;
+            ref_k[III][ref_numerus[III]++]        = k;
+        }
+                                                                    }
+    per (n = IV; n <= VI; n++)
+    {
+        i32 prior = n - I;
+        i32 wi;
+        i32 ae;
+
+        si (ref_numerus[prior] == ZEPHYRUM) frange;
+        per (wi = ZEPHYRUM; wi < ref_numerus[prior]
+            && ref_numerus[n] < REF_MAX; wi++) per (ae = ZEPHYRUM; ae
+                                                   < m
+                                                   && ref_numerus[n]
+                                                       < REF_MAX; ae++)
+                                               {
+            i32 idx[VII];
+            i32 pos = prior;
+            i32 i;
+            i32 j;
+            b32 inest  = FALSUM;
+            b32 dup    = FALSUM;
+            i32 k;
+
+            per (i = ZEPHYRUM; i < prior; i++)
+            {
+                si (ref_victor[prior][wi][i] == ae) inest = VERUM;
+            }
+            si (inest) perge;
+            per (i = ZEPHYRUM; i < prior; i++)
+            {
+                si (ae < ref_victor[prior][wi][i])
+                { pos = i; frange;
+                }
+            }
+            per (i = ZEPHYRUM; i < pos; i++) idx[i] =
+                                                 ref_victor[prior][wi][i];
+            idx[pos] = ae;
+            per (i = pos; i < prior; i++) idx[i + I] =
+                                              ref_victor[prior][wi][i];
+            per (j = ZEPHYRUM; j < ref_numerus[n] && !dup; j++)
+            {
+                b32 par = VERUM;
+
+                per (i = ZEPHYRUM; i < n && par; i++)
+                {
+                    par = ref_victor[n][j][i] == idx[i];
+                }
+                dup = par;
+            }
+            si (dup) perge;
+            k = _ref_primus_k(act, idx, n);
+            si (k > ZEPHYRUM)
+            {
+                per (i = ZEPHYRUM; i < n; i++)
+                {
+                    ref_victor[n][ref_numerus[n]][i] = idx[i];
+                }
+                ref_k[n][ref_numerus[n]++] = k;
+            }
+                                               }
+    }
+}
+
+/* victores quaestionis avidae == referens D84: idem ordo, idem k */
+interior b32
+_avida_ut_d84 (
+             Activatio* act,
+                   i32  m,
+    constans Capacitas* cap)
+{
+    i32 n;
+    i32 w;
+    i32 t;
+
+    _avida_referens(act, m);
+    per (n = III; n <= VI; n++)
+    {
+        si (   cap->numerus[n] != (i64)ref_numerus[n]
+            || cap->servati[n] != ref_numerus[n])
+        {
+            redde FALSUM;
+        }
+        per (w = ZEPHYRUM; w < ref_numerus[n]; w++)
+        {
+            si (cap->victores[n][w].k != ref_k[n][w]) redde FALSUM;
+            per (t = ZEPHYRUM; t < n; t++)
+            {
+                si (cap->victores[n][w].pondera[t]
+                    != ref_victor[n][w][t])
+                {
+                    redde FALSUM;
+                }
+            }
+        }
+    }
+    redde VERUM;
+}
+
+interior vacuum
+_probare_quaestiones_alias (
+    CredoContextus* c)
+{
+                    Piscina* piscina = c->piscina;
+                  Quaternio  g[IV];
+                  Catalogus* cat = NIHIL;
+                  Catalogus* partes[III];
+                  Activatio* plena = NIHIL;
+                        i32  indices_nn[XXIV];
+                        i32  indices_n[XXIV];
+                        i32  nn = ZEPHYRUM;
+                        i32  nu = ZEPHYRUM;
+                        i32  i;
+                        i32  modus;
+                        i32  fr;
+                        i32  pi;
+                   Quaestio  q;
+                  Capacitas  cap;
+    hic_manens constans i64  TREDECIM[II][II][V] = {
+        { { 328, 184, 0, 0, 0 }, { 4, 0, 0, 0, 0 } },
+        { { 328, 88, 0, 0, 0 }, { 4, 0, 0, 0, 0 } } };
+    b32 bene = VERUM;
+
+    imprimere("\n--- Tabula XIII axium, regulae fixae, avida, servati ---\n");
+    _generatores(extensio_anulus(extensio_quadratica(II, piscina)),
+        "a/2",
+        "a/2", "-a/2", piscina, g);
+    CREDO_NECESSE (catalogus_clausura(g, TORSIONES, IV, ZEPHYRUM, XVI,
+        piscina, &cat));
+    per (i = ZEPHYRUM; i < catalogus_numerus(cat); i++)
+    {
+        si (catalogus_nullum(cat, i)) indices_n[nu++] = i;
+        alioquin indices_nn[nn++] = i;
+    }
+    CREDO_NECESSE (activatio_ex_catalogo(cat, ZEPHYRUM, piscina,
+        &plena));
+    /* pondera subcopiae, tabula plena (XIII axes): Quaestio.indices */
+    per (modus = ZEPHYRUM; modus < II; modus++)
+    {
+        _quaestio(&q, modus);
+        q.indices          = indices_nn;
+        q.numerus_indicum  = nn;
+        CREDO_NECESSE (activatio_exhaustiva(plena, &q, piscina, &cap));
+        bene               = bene && _numeri(&cap, TREDECIM[modus][0]);
+        q.indices          = indices_n;
+        q.numerus_indicum  = nu;
+        CREDO_NECESSE (activatio_exhaustiva(plena, &q, piscina, &cap));
+        bene = bene && _numeri(&cap, TREDECIM[modus][1]);
+    }
+    CREDO_VERUM (bene);
+    /* regulae fixae: maxima (8, 8, 0) omnes */
+    partes[0] = cat;
+    CREDO_NECESSE (catalogus_pars(cat, indices_nn, nn, piscina,
+        &partes[1]));
+    CREDO_NECESSE (catalogus_pars(cat, indices_n, nu, piscina,
+        &partes[2]));
+    bene = VERUM;
+    per (pi = ZEPHYRUM; pi < III; pi++)
+    {
+        Activatio* act = NIHIL;
+
+        CREDO_NECESSE (activatio_ex_catalogo(partes[pi], ZEPHYRUM,
+            piscina,
+            &act));
+        per (fr = ZEPHYRUM; fr < IV; fr++)
+        {
+            _quaestio(&q, III + fr);
+            CREDO_NECESSE (activatio_exhaustiva(act, &q, piscina,
+                &cap));
+            bene = bene && cap.maximum == (pi == II ? ZEPHYRUM : VIII);
+        }
+        /* avida D84 cum cellis exactis (regula): 8, 8, 0 */
+        _quaestio(&q, CELLAE_REGULA);
+        q.n_maximum = VI;
+        CREDO_NECESSE (activatio_avida(act, &q, piscina, &cap));
+        imprimere("    avida pars %d: max XOR%d, inventi %ld %ld %ld %ld\n",
+            (int)pi, (int)cap.maximum, (long)cap.numerus[3],
+            (long)cap.numerus[4], (long)cap.numerus[5],
+            (long)cap.numerus[6]);
+        bene = bene && cap.maximum == (pi == II ? ZEPHYRUM : VIII)
+            && cap.numerus[3] <= XXXII && cap.numerus[4] <= XXXII;
+        bene = bene && _avida_ut_d84(act, catalogus_numerus(partes[pi]),
+            &cap);
+        /* omnis victor servatus ad k suum separat */
+        {
+            i32 n;
+            i32 w;
+
+            per (n = III; n <= VI; n++)
+            {
+                per (w = ZEPHYRUM; w < cap.servati[n]; w++)
+                {
+                    b32 verdictum = FALSUM;
+                    i32 index_k;
+
+                    bene = bene && activatio_separat(act,
+                        cap.victores[n][w].pondera, n,
+                        cap.victores[n][w].k,
+                        CELLAE_REGULA, &verdictum) && verdictum;
+                    /* k servatus = primus scalae qui transit */
+                    per (index_k = ZEPHYRUM; SCALA_D84[index_k]
+                        != cap.victores[n][w].k; index_k++)
+                    {
+                        bene = bene && activatio_separat(act,
+                            cap.victores[n][w].pondera, n,
+                            SCALA_D84[index_k],
+                            CELLAE_REGULA, &verdictum) && !verdictum;
+                    }
+                }
+            }
+        }
+    }
+    CREDO_VERUM (bene);
+    /* numerus verus contra servatos: limes servandi V */
+    _quaestio(&q, CELLAE_REGULA);
+    q.limes_servandi = V;
+    CREDO_NECESSE (activatio_exhaustiva(plena, &q, piscina, &cap));
+    CREDO_VERUM (cap.numerus[III] == 1132 && cap.servati[III] == V
+        && cap.numerus[IV] == 402 && cap.servati[IV] == V);
+    q.limes_servandi = ZEPHYRUM;
+    CREDO_NECESSE (activatio_exhaustiva(plena, &q, piscina, &cap));
+    CREDO_VERUM (cap.numerus[III] == 1132
+        && cap.servati[III] == ZEPHYRUM);
+    /* refutationes */
+    q.n_maximum = VIII;
+    CREDO_FALSUM (activatio_exhaustiva(plena, &q, piscina, &cap));
+    _quaestio(&q, CELLAE_REGULA);
+    q.numerus_k = ZEPHYRUM;
+    CREDO_FALSUM (activatio_avida(plena, &q, piscina, &cap));
+    {
+        hic_manens constans i32 MALI[II] = { 5, 3 };
+
+        _quaestio(&q, CELLAE_REGULA);
+        q.indices          = MALI;
+        q.numerus_indicum  = II;
+        CREDO_FALSUM (activatio_exhaustiva(plena, &q, piscina, &cap));
+    }
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "zeta_8", _probare_zeta_octo, NIHIL, NIHIL, NIHIL, NIHIL },
     { "zeta_12", _probare_zeta_duodecim, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -1108,6 +1548,11 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "regulae fixae", _probare_regulas_fixas, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "collisio", _probare_collisionem, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "exhaustiva contra D124", _probare_exhaustivam, NIHIL, NIHIL,
+        NIHIL,
+      NIHIL },
+    { "quaestiones aliae", _probare_quaestiones_alias, NIHIL, NIHIL,
+      NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

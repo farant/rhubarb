@@ -1347,3 +1347,673 @@ activatio_separat (
     }
     redde bene;
 }
+
+
+/* ==================================================
+ * Quaestiones
+ * ================================================== */
+
+/* copia mascarum (u64, 0 vacuum) per apertam inscriptionem */
+nomen structura {
+    i64* claves;
+    i64  capacitas;
+    i64  numerus;
+} Larvae;
+
+interior b32
+_larvae_initium (
+       Larvae* m,
+          i64  capacitas,
+      Piscina* piscina)
+{
+    i64 j;
+
+    m->capacitas  = capacitas;
+    m->numerus    = 0;
+    m->claves = (i64*)piscina_allocare(piscina,
+        (memoriae_index)capacitas
+        * magnitudo(i64));
+    si (m->claves == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (j = 0; j < capacitas; j++)
+    {
+        m->claves[j] = 0;
+    }
+    redde VERUM;
+}
+
+interior i64
+_larvae_locus (
+    constans Larvae* m,
+                i64  x)
+{
+    i64 h = (i64)((x * (i64)0x9E3779B97F4A7C15ULL) >> 17)
+        % m->capacitas;
+
+    dum (m->claves[h] != 0 && m->claves[h] != x)
+    {
+        h = (h + 1) % m->capacitas;
+    }
+    redde h;
+}
+
+interior b32
+_larvae_continent (
+    constans Larvae* m,
+                i64  x)
+{
+    redde m->claves[_larvae_locus(m, x)] == x;
+}
+
+/* VERUM si novum additum */
+interior b32
+_larvae_adde (
+     Larvae* m,
+        i64  x,
+    Piscina* piscina)
+{
+    i64 h;
+
+    si (2 * (m->numerus + 1) > m->capacitas)
+    {
+        Larvae nova;
+           i64 j;
+
+        si (!_larvae_initium(&nova, 2 * m->capacitas + 16, piscina))
+        {
+            redde FALSUM;
+        }
+        per (j = 0; j < m->capacitas; j++)
+        {
+            si (m->claves[j] != 0)
+            {
+                nova.claves[_larvae_locus(&nova, m->claves[j])]
+                    = m->claves[j];
+                nova.numerus++;
+            }
+        }
+        *m = nova;
+    }
+    h = _larvae_locus(m, x);
+    si (m->claves[h] == x)
+    {
+        redde FALSUM;
+    }
+    m->claves[h] = x;
+    m->numerus++;
+    redde VERUM;
+}
+
+/* indices permissi */
+interior i32
+_permissi (
+    constans Activatio*  a,
+     constans Quaestio*  q,
+               Piscina*  piscina,
+                   i32** exitus)
+{
+    i32 n = q->indices != NIHIL ? q->numerus_indicum
+        : a->catalogus->numerus;
+    i32* x = (i32*)piscina_allocare(piscina, (memoriae_index)(n + I)
+        * magnitudo(i32));
+    i32 j;
+
+    per (j = ZEPHYRUM; j < n; j++)
+    {
+        x[j] = q->indices != NIHIL ? q->indices[j] : j;
+    }
+    *exitus = x;
+    redde n;
+}
+
+interior b32
+_k_permissus (
+    constans Activatio* a,
+     constans Quaestio* q,
+                   i32  k)
+{
+    redde q->cellae_maximae == ZEPHYRUM
+        || k * (a->numerus_axium + I) <= q->cellae_maximae;
+}
+
+/* victorem servare (alveus crescens per n) */
+interior b32
+_servare (
+       Capacitas* c,
+             i32* capacitates,
+             i32  n,
+    constans i32* pondera,
+             i32  k,
+             i32  limes,
+         Piscina* piscina)
+{
+     Victor* v;
+        i32  j;
+
+    si (c->servati[n] >= limes)
+    {
+        redde VERUM;
+    }
+    si (c->servati[n] >= capacitates[n])
+    {
+        i32 nova = capacitates[n] == ZEPHYRUM ? (i32)XVI
+            : capacitates[n] * II;
+        Victor* alveus = (Victor*)piscina_allocare(piscina,
+            (memoriae_index)nova * magnitudo(Victor));
+
+        si (alveus == NIHIL)
+        {
+            redde FALSUM;
+        }
+        per (j = ZEPHYRUM; j < c->servati[n]; j++)
+        {
+            alveus[j] = c->victores[n][j];
+        }
+        c->victores[n] = alveus;
+        capacitates[n] = nova;
+    }
+    v = &c->victores[n][c->servati[n]++];
+    per (j = ZEPHYRUM; j < CELLAE_N_MAXIMUS; j++)
+    {
+        v->pondera[j] = j < n ? pondera[j] : ZEPHYRUM;
+    }
+    v->n = n;
+    v->k = k;
+    redde VERUM;
+}
+
+interior vacuum
+_capacitas_initium (
+    Capacitas* c)
+{
+    i32 n;
+
+    per (n = ZEPHYRUM; n <= CELLAE_N_MAXIMUS; n++)
+    {
+        c->numerus[n]   = 0;
+        c->servati[n]   = ZEPHYRUM;
+        c->victores[n]  = NIHIL;
+    }
+    c->maximum = ZEPHYRUM;
+}
+
+interior vacuum
+_capacitas_maximum (
+    Capacitas* c)
+{
+    i32 n;
+
+    c->maximum = ZEPHYRUM;
+    per (n = III; n <= CELLAE_N_MAXIMUS; n++)
+    {
+        si (c->numerus[n] > 0)
+        {
+            c->maximum = II * n;
+        }
+    }
+}
+
+interior b32
+_quaestio_valida (
+    constans Activatio* a,
+    constans Quaestio*  q)
+{
+    i32 j;
+
+    si (   q->scala_k   == NIHIL || q->numerus_k == ZEPHYRUM
+        || q->n_maximum == ZEPHYRUM || q->n_maximum > CELLAE_N_MAXIMUS
+        || q->modus > CELLAE_FIXA(I, I))
+    {
+        redde FALSUM;
+    }
+    per (j = ZEPHYRUM; j < q->numerus_k; j++)
+    {
+        si (q->scala_k[j] < I)
+        {
+            redde FALSUM;
+        }
+    }
+    si (q->indices != NIHIL)
+    {
+        per (j = ZEPHYRUM; j < q->numerus_indicum; j++)
+        {
+            si (   q->indices[j] >= a->catalogus->numerus
+                || (j > ZEPHYRUM && q->indices[j] <= q->indices[j - I]))
+            {
+                redde FALSUM;
+            }
+        }
+    }
+    redde VERUM;
+}
+
+interior b32
+_exhaustiva_intra (
+             Activatio* a,
+     constans Quaestio* q,
+               Piscina* piscina,
+               Piscina* opus,
+             Capacitas* c)
+{
+        i32* indices;
+        i32  m = _permissi(a, q, opus, &indices);
+     Larvae  coniunctio[CELLAE_N_MAXIMUS + I];
+        i32  capacitates[CELLAE_N_MAXIMUS + I];
+        i32  index_k;
+        i32  n;
+
+    si (m > LXIV)
+    {
+        redde FALSUM;
+    }
+    per (n = ZEPHYRUM; n <= CELLAE_N_MAXIMUS; n++)
+    {
+        capacitates[n] = ZEPHYRUM;
+        si (!_larvae_initium(&coniunctio[n], (i64)64, opus))
+        {
+            redde FALSUM;
+        }
+    }
+    per (index_k = ZEPHYRUM; index_k < q->numerus_k; index_k++)
+    {
+           i32  k = q->scala_k[index_k];
+        Larvae  gradus[CELLAE_N_MAXIMUS + I];
+           i64* lista[CELLAE_N_MAXIMUS + I];
+           i64  numerus[CELLAE_N_MAXIMUS + I];
+           i64  capacitas_listae[CELLAE_N_MAXIMUS + I];
+
+        si (!_k_permissus(a, q, k))
+        {
+            perge;
+        }
+        per (n = I; n <= q->n_maximum; n++)
+        {
+            numerus[n]           = 0;
+            capacitas_listae[n]  = 64;
+            lista[n] = (i64*)piscina_allocare(opus, (memoriae_index)64
+                * magnitudo(i64));
+            si (   lista[n] == NIHIL
+                || !_larvae_initium(&gradus[n], (i64)64,
+                opus))
+            {
+                redde FALSUM;
+            }
+        }
+        per (n = I; n <= q->n_maximum; n++)
+        {
+            i64 b;
+            i64 fontes = n == I ? (i64)m : numerus[n - I];
+
+            per (b = 0; b < fontes; b++)
+            {
+                i64 basis   = n == I ? 0 : lista[n - I][b];
+                s32 summus  = -(s32)I;
+                i32 j;
+
+                si (n > I)
+                {
+                    per (j = ZEPHYRUM; j < m; j++)
+                    {
+                        si (basis & ((i64)1 << j))
+                        {
+                            summus = (s32)j;
+                        }
+                    }
+                }
+                per (j = (n == I ? (i32)b : (i32)(summus + I)); j
+                    < m; j++)
+                {
+                    i64 candidatus  = basis | ((i64)1 << j);
+                    b32 omnes       = VERUM;
+                    b32 verdictum   = FALSUM;
+                    i32 pondera[CELLAE_N_MAXIMUS];
+                    i32 np = ZEPHYRUM;
+                    i32 t;
+
+                    si (n > I)
+                    {
+                        per (t = ZEPHYRUM; t < m && omnes; t++)
+                        {
+                            si (   (basis & ((i64)1 << t))
+                                && !_larvae_continent(&gradus[n - I],
+                                candidatus & ~((i64)1 << t)))
+                            {
+                                omnes = FALSUM;
+                            }
+                        }
+                    }
+                    si (!omnes)
+                    {
+                        perge;
+                    }
+                    per (t = ZEPHYRUM; t < m; t++)
+                    {
+                        si (candidatus & ((i64)1 << t))
+                        {
+                            pondera[np++] = indices[t];
+                        }
+                    }
+                    si (!activatio_separat(a, pondera, n, k, q->modus,
+                        &verdictum))
+                    {
+                        redde FALSUM;
+                    }
+                    si (!verdictum)
+                    {
+                        perge;
+                    }
+                    si (numerus[n] >= capacitas_listae[n])
+                    {
+                        i64* nova = (i64*)piscina_allocare(opus,
+                            (memoriae_index)(2 * capacitas_listae[n])
+                            * magnitudo(i64));
+                        i64 u;
+
+                        si (nova == NIHIL)
+                        {
+                            redde FALSUM;
+                        }
+                        per (u = 0; u < numerus[n]; u++)
+                        {
+                            nova[u] = lista[n][u];
+                        }
+                        lista[n]             = nova;
+                        capacitas_listae[n]  *= 2;
+                    }
+                    lista[n][numerus[n]++] = candidatus;
+                    (vacuum)_larvae_adde(&gradus[n], candidatus, opus);
+                    si (_larvae_adde(&coniunctio[n], candidatus, opus))
+                    {
+                        c->numerus[n]++;
+                        si (!_servare(c, capacitates, n, pondera, k,
+                            q->limes_servandi, piscina))
+                        {
+                            redde FALSUM;
+                        }
+                    }
+                    si (n == I)
+                    {
+                        frange;        /* singulum: j = b solum */
+                    }
+                }
+            }
+        }
+    }
+    _capacitas_maximum(c);
+    redde VERUM;
+}
+
+b32
+activatio_exhaustiva (
+             Activatio* activatio,
+     constans Quaestio* quaestio,
+               Piscina* piscina,
+             Capacitas* exitus)
+{
+    Piscina* opus;
+  Capacitas  c;
+        b32  bene;
+
+    si (!_quaestio_valida(activatio, quaestio))
+    {
+        redde FALSUM;
+    }
+    opus = piscina_generare_dynamicum("cellae_quaestio",
+        (memoriae_index)65536);
+    si (opus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    _capacitas_initium(&c);
+    bene = _exhaustiva_intra(activatio, quaestio, piscina, opus, &c);
+    piscina_destruere(opus);
+    si (bene)
+    {
+        *exitus = c;
+    }
+    redde bene;
+}
+
+/* primus k scalae qui transit; *k 0 si nullus */
+interior b32
+_primus_k (
+             Activatio* a,
+     constans Quaestio* q,
+          constans i32* pondera,
+                   i32  n,
+                   i32* k)
+{
+    i32 index_k;
+
+    *k = ZEPHYRUM;
+    per (index_k = ZEPHYRUM; index_k < q->numerus_k; index_k++)
+    {
+        b32 verdictum = FALSUM;
+
+        si (!_k_permissus(a, q, q->scala_k[index_k]))
+        {
+            perge;
+        }
+        si (!activatio_separat(a, pondera, n, q->scala_k[index_k],
+            q->modus,
+            &verdictum))
+        {
+            redde FALSUM;
+        }
+        si (verdictum)
+        {
+            *k = q->scala_k[index_k];
+            redde VERUM;
+        }
+    }
+    redde VERUM;
+}
+
+interior b32
+_avida_intra (
+             Activatio* a,
+     constans Quaestio* q,
+               Piscina* piscina,
+               Piscina* opus,
+             Capacitas* c)
+{
+     i32* indices;
+     i32  m = _permissi(a, q, opus, &indices);
+     i32  limes = q->limes_triplicum == ZEPHYRUM
+         || q->limes_triplicum > m
+         ? m : q->limes_triplicum;
+     i32 maximi = q->victores_maximi == ZEPHYRUM ? (i32)0x7fffffff
+         : q->victores_maximi;
+     i32 capacitates[CELLAE_N_MAXIMUS + I];
+    /* victores omnes (positiones in indicibus), pro extensione */
+     i32* positiones[CELLAE_N_MAXIMUS + I];
+     i32  inventi[CELLAE_N_MAXIMUS + I];
+     i32  n;
+     i32  x;
+     i32  y;
+     i32  z;
+
+    per (n = ZEPHYRUM; n <= CELLAE_N_MAXIMUS; n++)
+    {
+        capacitates[n]  = ZEPHYRUM;
+        inventi[n]      = ZEPHYRUM;
+        positiones[n]   = NIHIL;
+    }
+    si (q->n_maximum < III)
+    {
+        redde FALSUM;
+    }
+    /* positiones: alveus (maximi vel quot possibile) per n */
+    per (n = III; n <= q->n_maximum; n++)
+    {
+        i32 spatium = maximi < (i32)4096 ? maximi : (i32)4096;
+
+        positiones[n] = (i32*)piscina_allocare(opus, (memoriae_index)
+            spatium * (memoriae_index)n * magnitudo(i32));
+        si (positiones[n] == NIHIL)
+        {
+            redde FALSUM;
+        }
+    }
+    per (x = ZEPHYRUM; x < limes
+        && inventi[III] < maximi; x++) per (y = x + I; y < limes
+                                           && inventi[III]
+                                               < maximi; y++) per (z = y
+                                                                  + I; z
+                                                                  < limes
+                                                                  && inventi[III]
+                                                                      < maximi; z++)
+                                                              {
+        i32 pondera[III];
+        i32 k = ZEPHYRUM;
+
+        pondera[0] = indices[x];
+        pondera[1] = indices[y];
+        pondera[2] = indices[z];
+        si (!_primus_k(a, q, pondera, III, &k))
+        {
+            redde FALSUM;
+        }
+        si (k > ZEPHYRUM)
+        {
+            si (inventi[III] >= (i32)4096)
+            {
+                redde FALSUM;
+            }
+            positiones[III][inventi[III] * III + 0] = x;
+            positiones[III][inventi[III] * III + 1] = y;
+            positiones[III][inventi[III] * III + 2] = z;
+            inventi[III]++;
+            c->numerus[III]++;
+            si (!_servare(c, capacitates, III, pondera, k,
+                q->limes_servandi, piscina))
+            {
+                redde FALSUM;
+            }
+        }
+                                                              }
+    per (n = IV; n <= q->n_maximum; n++)
+    {
+        i32 prior = n - I;
+        i32 w;
+
+        si (inventi[prior] == ZEPHYRUM)
+        {
+            frange;
+        }
+        per (w = ZEPHYRUM; w < inventi[prior]
+            && inventi[n] < maximi; w++)
+        {
+            constans i32* basis = &positiones[prior][w * prior];
+                     i32  e;
+
+            per (e = ZEPHYRUM; e < m && inventi[n] < maximi; e++)
+            {
+                i32 nova[CELLAE_N_MAXIMUS];
+                i32 pondera[CELLAE_N_MAXIMUS];
+                i32 locus = prior;
+                i32 t;
+                i32 u;
+                b32 inest            = FALSUM;
+                b32 duplex_inventum  = FALSUM;
+                i32 k                = ZEPHYRUM;
+
+                per (t = ZEPHYRUM; t < prior; t++)
+                {
+                    si (basis[t] == e) inest = VERUM;
+                }
+                si (inest)
+                {
+                    perge;
+                }
+                per (t = ZEPHYRUM; t < prior; t++)
+                {
+                    si (e < basis[t])
+                    {
+                        locus = t;
+                        frange;
+                    }
+                }
+                per (t = ZEPHYRUM; t < locus; t++) nova[t] = basis[t];
+                nova[locus] = e;
+                per (t = locus; t < prior; t++) nova[t + I] = basis[t];
+                per (u = ZEPHYRUM; u < inventi[n]
+                    && !duplex_inventum; u++)
+                {
+                    b32 par = VERUM;
+
+                    per (t = ZEPHYRUM; t < n && par; t++)
+                    {
+                        par = positiones[n][u * n + t] == nova[t];
+                    }
+                    duplex_inventum = par;
+                }
+                si (duplex_inventum)
+                {
+                    perge;
+                }
+                per (t = ZEPHYRUM; t < n; t++)
+                {
+                    pondera[t] = indices[nova[t]];
+                }
+                si (!_primus_k(a, q, pondera, n, &k))
+                {
+                    redde FALSUM;
+                }
+                si (k > ZEPHYRUM)
+                {
+                    si (inventi[n] >= (i32)4096)
+                    {
+                        redde FALSUM;
+                    }
+                    per (t = ZEPHYRUM; t < n; t++)
+                    {
+                        positiones[n][inventi[n] * n + t] = nova[t];
+                    }
+                    inventi[n]++;
+                    c->numerus[n]++;
+                    si (!_servare(c, capacitates, n, pondera, k,
+                        q->limes_servandi, piscina))
+                    {
+                        redde FALSUM;
+                    }
+                }
+            }
+        }
+    }
+    _capacitas_maximum(c);
+    redde VERUM;
+}
+
+b32
+activatio_avida (
+             Activatio* activatio,
+     constans Quaestio* quaestio,
+               Piscina* piscina,
+             Capacitas* exitus)
+{
+    Piscina* opus;
+  Capacitas  c;
+        b32  bene;
+
+    si (!_quaestio_valida(activatio, quaestio))
+    {
+        redde FALSUM;
+    }
+    opus = piscina_generare_dynamicum("cellae_quaestio",
+        (memoriae_index)65536);
+    si (opus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    _capacitas_initium(&c);
+    bene = _avida_intra(activatio, quaestio, piscina, opus, &c);
+    piscina_destruere(opus);
+    si (bene)
+    {
+        *exitus = c;
+    }
+    redde bene;
+}

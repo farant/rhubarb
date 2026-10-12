@@ -372,6 +372,12 @@
   <vocabulum lemma="horner" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: W. G. Horner (aestimatio polynomii per multiplicationes nidificatas; lib/extensio.c)"/>
   <vocabulum lemma="montgomery" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: P. L. Montgomery (reductio Montgomery, 1985; lib/agmen.c)"/>
   <vocabulum lemma="vectorizare" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="terminus technicus domus: ansam in instructiones vectoris (SIMD) vertere (lib/agmen.c, tools/agmen_vectorizatio.sh)"/>
+  <vocabulum lemma="exhaustivus" lingua="latina" classis="adiectivum"
+    nota="Latinitas nova (exhaurire): exhaustive - vox domus (cellae.h: activatio_exhaustiva, quaestio per omnes copias); WORDS caret">
+    <sensus>exhaustive; over all cases</sensus>
+    <forma textus="exhaustiva" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="exhaustivam" casus="accusativus" numerus="singularis" genus="femininum"/>
+  </vocabulum>
   <vocabulum lemma="activatio" lingua="latina" classis="substantivum"
     nota="Latinitas nova (activus + -tio): activation - vox domus (cellae.h: activatio sector x axis, functio activationis); WORDS caret">
     <sensus>activation; activation function</sensus>

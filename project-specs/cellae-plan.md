@@ -95,6 +95,9 @@ Each task follows the house cycle:
   non-null, null-only and the 13-axis variants under rule and robust;
   the k_sec sweep; the four fixed rules; D84's greedy search with exact
   cells (8, 8, 0).
+  *(2026-10-12: incremental extension moved out of T5 into T6/T7,
+  measured on zeta_12 next to the filter. T5 landed as 4 decisions: a
+  `Quaestio` parameter struct, exhaustive search for <= 64 entries.)*
 - **T6. Certified float filter and statistics.** A float cell with a
   proven margin to every boundary decides alone; anything inside the
   margin is decided exactly.

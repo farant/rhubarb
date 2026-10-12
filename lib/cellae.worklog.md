@@ -163,3 +163,60 @@ Plants (7):
   calls.
 - **Equivalent (1):** the ± fold dropped. Redundant work only, no
   verdict can change.
+
+## 2026-10-12 - T5: searches and Capacitas
+
+Approved decisions, implemented:
+- **True counts are separate from stored winners.** `numerus[n]` is the
+  true count (exhaustive: every set; greedy: what the search found).
+  `servati[n]` and `victores[n]` are kept up to `limes_servandi`, each
+  winner with the FIRST ladder k it passes at. Test: limit 5 gives
+  1132 counted, 5 stored; limit 0 gives 1132 counted, 0 stored.
+- **The greedy stop is search semantics, not a count:**
+  `Quaestio.victores_maximi` (D82/D84: 32).
+- **A fixed ladder, "first k that passes".**
+
+Refinements to the sketch:
+- the parameters live in a `Quaestio` struct, which adds the triple
+  limit (D82/D84: 100), `cellae_maximae` (D82/D84's MAX_ACT 16384,
+  which silently skips large k) and `indices` (allowed weights, so "a
+  subset's weights with the full table" is expressed directly);
+- the exhaustive search is for catalogs or index lists of <= 64 (u64
+  mask sets, `Larvae`), the only place it is feasible.
+
+Exhaustive: level-wise, downward closed per k (an n-set is tested only
+if every (n − 1)-subset passed at that k), then a union over the ladder.
+Greedy: D84's find_xor6 / find_recursive order exactly.
+
+Credo (134 in the suite, ~30 s):
+- every D124 exact table reproduced: exhaustive counts per level and
+  maxima for full / non-null / null-only under rule, robust and
+  possible; null members of all winners (1056, 300); the 13-axis
+  variants (via `Quaestio.indices`); all four fixed rules (8, 8, 0);
+- D84's greedy search with exact cells: (8, 8, 0), found 32 + 32;
+- **winner lists equal to a literal D84 find_xor6 / find_recursive
+  written in the test**, element by element, in order, with the same k;
+- every stored greedy winner separates at its k, and at no earlier
+  ladder k.
+
+Plants (9):
+- **Red (7):**
+  - the union not deduplicated across k;
+  - greedy keeping the last k (the first-k check);
+  - the maximum counted from n = 1;
+  - the storage limit ignored;
+  - the greedy stop ignored;
+  - the duplicate check dropped (first SURVIVED: counts and maxima
+    looked right; killed by the literal D84 reference).
+- **Equivalent (1):** skipping extension position 0. In D82/D84-shaped
+  searches every stored winner contains position 0 (the lexicographic
+  triples from position 0 fill the 32 slots), so position 0 is always
+  "already in the winner".
+
+Deferred from the plan: incremental extension (reusing a parent's
+sums). It moves to the performance tasks (T6/T7), measured on zeta_12
+next to the float filter.
+
+Lint: `Mascae` became `Larvae`, `ki` became `index_k`. The approved API
+name `activatio_exhaustiva` needed a glossary entry `exhaustivus`
+(neo-Latin; forms exhaustiva, exhaustivam).
