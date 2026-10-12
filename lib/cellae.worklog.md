@@ -372,3 +372,82 @@ Plants (5):
   The bound is pinned by the argument above (and the comment in the
   code), not by a test. Building a sum that is cancelling *and* tied,
   where width decides, is open.
+
+## 2026-10-12 - T8: review (recensor-extensio, c996526d) and fixes
+
+**Verdict:** no H or M. The reviewer rebuilt everything independently:
+- Python code with exact Q(sqrt3) Fractions and its own closure, axes,
+  cells, SAT and D82 greedy, sharing no cellae/radices/extensio code;
+- **Catalog:** all 4096 zeta_12 entries match, with depth and writhe.
+- **Cells:** 33,000 random deep sums agree on the rule cell and the
+  full tie set.
+- **Separability:** 2,300 sets through the filter path agree.
+- **D82 deep 564 greedy:** the same 117 winners, in the same order, with
+  the same first k.
+- ASan, UBSan and venenum runs are clean.
+- All eight attack points hold (the details are in the report).
+
+The report lives in the scratchpad (RECENSIO_CELLAE.md) and is not
+committed. Its findings and fixes:
+
+- **L1: no independent zeta_12 oracle.** Two fixes:
+  - **Section "cellae zeta_12 contra oraculum".** The test's integer
+    oracle is generalized from Z[sqrt2] to Z[sqrt d]:
+    - **Scale:** d = 3 at scale 32 (the reviewer measured catalog
+      denominators <= 32), with a check that the scale really clears
+      them.
+    - **Sign:** an exact mixed-sign test, a^2 vs d b^2 by a 128-bit
+      product built from 32-bit halves. Deep sums of 7 terms make p
+      about 2^48, so p^2 overflows s64.
+    - **Overflow guard:** any product over 2^60 raises `o_vitium`,
+      which the section asserts is false.
+    - **Exact boundaries per field:** the rationals {1/6, 1/4, 1/3}
+      everywhere; 3 -+ 2 sqrt2 at {1/8, 3/8}; 7 -+ 4 sqrt3 at
+      {1/12, 5/12}.
+    - The section runs 1000 random deep sums of 1-7 entries x 12 values
+      of k, including odd 5 and 7, which the zeta_8 oracle never
+      covered. Result: 12,000 compared, 0 disagreements, 678 tied.
+  - **Section "victores D82 profundi".** The reviewer's independent
+    greedy winner list is frozen as a fixture (117 sets with k). Each
+    must separate at its k and at no earlier ladder k, under the exact
+    rule through the filter. Counts 32/32/32/21, falsi 0.
+- **L2: `cellae_maximae` and `limes_triplicum` were never binding.**
+  Section "limites quaestionis" (zeta_8):
+  - **Cap.** A cap of 84 (= 6 x 14) must equal the ladder {1, 6}
+    exactly. The full ladder must find winners at k > 6.
+    - Measured: k = 24 alone adds nothing at zeta_8, so a cap that only
+      excludes 24 would not bind.
+  - **Triple limit.** `limes_triplicum` 5 allows <= 10 triples, all from
+    weights < 5; the unlimited run finds 32.
+- **L3** (the T7 width term is unpinned) is acknowledged; the bound is
+  re-derived sound. Sums of up to 3 deep entries have |v| >= 1/32, so
+  only cancelling sums of 6-7 terms make the width term carry the
+  margin.
+- **P2:**
+  - `activatio_separat` now refuses duplicate weights (the header
+    already said catalog indices); a test pins it.
+  - The combination key buffer gets 16 bytes of slack.
+
+  The literal D84 reference still omits the cap and triple-limit
+  branches; the new section covers them.
+- **P1 (not done; a proposal).** About 3.8 s of system time out of
+  17.5 s is arena churn, all per weight set:
+  - a dynamic piscina created and destroyed;
+  - per-vector axis arrays of size numerus_axium;
+  - `tacta` of n x 2 x nv per k.
+
+  The fix would be one scratch arena per search with notare/reficere,
+  a growable tacta, and axis arrays only for vectors that reach
+  stage 2.
+
+**Plants (4 red + 1 scratch):**
+- **Red (4):**
+  - cap ignored (K1, the reviewer's);
+  - triple limit ignored (K2);
+  - duplicates accepted;
+  - odd-k null sector + 1 (red through the k = 5 hand cell).
+- **Scratch-build check of the new oracle:** a plant that only touches
+  k = 7 (odd k > 5) is red ONLY in "cellae zeta_12 contra oraculum"
+  (13 disagreements); the zeta_8 oracle and the hand cells stay green.
+
+Suite: 182 checks, about 16 s.

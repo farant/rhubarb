@@ -1574,7 +1574,8 @@ _vector_punctum (
           Vector* x,
          Piscina* opus)
 {
-    character  clavis_textus[CELLAE_N_MAXIMUS * XII + II];
+    /* "#" + n x "+%u," (X digiti) + NUL = 12 n + 2; laxitas XVI */
+    character  clavis_textus[CELLAE_N_MAXIMUS * XII + II + XVI];
        chorda  clavis;
        vacuum* inventum = NIHIL;
           s32  primum;
@@ -1992,6 +1993,7 @@ _separat_validum (
                    i32  modus)
 {
     i32 j;
+    i32 l;
 
     si (n == ZEPHYRUM || n > VII || modus > CELLAE_FIXA(I, I))
     {
@@ -2002,6 +2004,14 @@ _separat_validum (
         si (pondera[j] >= a->catalogus->numerus)
         {
             redde FALSUM;
+        }
+        /* pondera distincta (indices catalogi; recensio P2) */
+        per (l = ZEPHYRUM; l < j; l++)
+        {
+            si (pondera[l] == pondera[j])
+            {
+                redde FALSUM;
+            }
         }
     }
     redde VERUM;

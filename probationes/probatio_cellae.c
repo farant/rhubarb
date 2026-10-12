@@ -364,7 +364,13 @@ _probare_limites (
  * T3: oraculum integrum Z[sqrt2] (sine cellis, sine radicibus)
  * ================================================== */
 
-nomen structura { s64 p; s64 q; } Binomium;     /* p + q sqrt2 */
+nomen structura { s64 p; s64 q; } Binomium;     /* p + q sqrt(o_d) */
+
+/* campus et scala oraculi: zeta_8 (II, II), zeta_12 (III, XXXII:
+ * denominatores catalogi MMMMXCVI <= XXXII, mensuratum a recensore) */
+hic_manens s64 o_d      = II;
+hic_manens s64 o_scala  = II;
+hic_manens b32 o_vitium = FALSUM;    /* exundatio aut scala falsa */
 
 interior Binomium
 binomium (
@@ -392,7 +398,17 @@ binomium_multiplica (
     Binomium x,
     Binomium y)
 {
-    redde binomium(x.p * y.p + II * x.q * y.q, x.p * y.q + x.q * y.p);
+    /* custodia: nullum productum > 2^60 (duplices, generose) */
+    duplex limes = 1152921504606846976.0;
+
+    si (   fabs((duplex)x.p) * fabs((duplex)y.p) > limes
+        || fabs((duplex)x.q) * fabs((duplex)y.q) * (duplex)o_d > limes
+        || fabs((duplex)x.p) * fabs((duplex)y.q) > limes
+        || fabs((duplex)x.q) * fabs((duplex)y.p) > limes)
+    {
+        o_vitium = VERUM;
+    }
+    redde binomium(x.p * y.p + o_d * x.q * y.q, x.p * y.q + x.q * y.p);
 }
 
 interior b32
@@ -401,24 +417,70 @@ binomium_nullum (
 { redde x.p == 0 && x.q == 0;
 }
 
+/* productum plenum 64 x 64 -> (alta, infima), per dimidia XXXII bitorum */
+interior vacuum
+_productum_latum (
+    i64  x,
+    i64  y,
+    i64* alta,
+    i64* infima)
+{
+    i64 larva   = 0xFFFFFFFFUL;
+    i64 p00     = (x & larva) * (y & larva);
+    i64 p01     = (x & larva) * (y >> 32);
+    i64 p10     = (x >> 32) * (y & larva);
+    i64 p11     = (x >> 32) * (y >> 32);
+    i64 medium  = (p00 >> 32) + (p01 & larva) + (p10 & larva);
+
+    *infima  = (medium << 32) | (p00 & larva);
+    *alta    = p11 + (p01 >> 32) + (p10 >> 32) + (medium >> 32);
+}
+
+/* signum(a^2 - d b^2) exacte (a, b < 2^62, d parvum) */
+interior s32
+_quadrata_comparare (
+    i64 a,
+    i64 b)
+{
+    i64 a_alta;
+    i64 a_infima;
+    i64 b_alta;
+    i64 b_infima;
+    i64 d_alta;
+    i64 d_infima;
+
+    _productum_latum(a, a, &a_alta, &a_infima);
+    _productum_latum(b, b, &b_alta, &b_infima);
+    _productum_latum(b_infima, (i64)o_d, &d_alta, &d_infima);
+    d_alta += b_alta * (i64)o_d;
+    si (a_alta != d_alta) redde a_alta > d_alta ? I : -(s32)I;
+    si (a_infima != d_infima) redde a_infima > d_infima ? I : -(s32)I;
+    redde ZEPHYRUM;
+}
+
 interior s32
 binomium_signum (
     Binomium x)
 {
+    i64 modulus_p = (i64)(x.p < 0 ? -x.p : x.p);
+    i64 modulus_q = (i64)(x.q < 0 ? -x.q : x.q);
+
     si (x.p >= 0 && x.q >= 0) redde (x.p != 0 || x.q != 0) ? I : 0;
     si (x.p <= 0 && x.q <= 0) redde -(s32)I;
-    si (x.p > 0) redde x.p * x.p > II * x.q * x.q ? I : -(s32)I;
-    redde II * x.q * x.q > x.p * x.p ? I : -(s32)I;
+    /* signa mixta: p + q sqrt d != 0 (d non quadratum); |p| vs |q| sqrt d */
+    si (x.p > 0) redde _quadrata_comparare(modulus_p, modulus_q)
+                     > 0 ? I : -(s32)I;
+    redde _quadrata_comparare(modulus_p, modulus_q) < 0 ? I : -(s32)I;
 }
 
 interior duplex
 binomium_valor (
     Binomium x)
-{ redde (duplex)x.p + (duplex)x.q * sqrt(2.0);
+{ redde (duplex)x.p + (duplex)x.q * sqrt((duplex)o_d);
 }
 
-/* pars exacta x 2 ut integrum Z[sqrt2] (catalogus zeta_8: (p + q
- * sqrt2)/2) */
+/* pars exacta x o_scala ut integrum Z[sqrt d] (zeta_8: (p + q sqrt2)/2;
+ * zeta_12: denominatores <= XXXII); scala falsa -> o_vitium */
 interior Binomium
 _binomium_ex (
     Quaternio  q,
@@ -428,19 +490,26 @@ _binomium_ex (
     constans Algebraicus* a = (constans Algebraicus*)quaternio_pars(q,
         k);
     Fractio f0 = fractio_multiplica(algebraicus_coefficiens(*a,
-        ZEPHYRUM,
-        piscina), fractio_ex_s64(II), piscina);
+        ZEPHYRUM, piscina), fractio_ex_s64(o_scala), piscina);
     Fractio f1 = fractio_multiplica(algebraicus_coefficiens(*a, I,
-        piscina), fractio_ex_s64(II), piscina);
-    s64 p = ZEPHYRUM;
-    s64 r = ZEPHYRUM;
+        piscina), fractio_ex_s64(o_scala), piscina);
+    s64 p   = ZEPHYRUM;
+    s64 r   = ZEPHYRUM;
+    s64 d0  = ZEPHYRUM;
+    s64 d1  = ZEPHYRUM;
 
-    (vacuum)magnus_ad_s64(fractio_numerator(f0), &p);
-    (vacuum)magnus_ad_s64(fractio_numerator(f1), &r);
+    si (   !magnus_ad_s64(fractio_numerator(f0), &p)
+        || !magnus_ad_s64(fractio_numerator(f1), &r)
+        || !magnus_ad_s64(fractio_denominator(f0), &d0)
+        || !magnus_ad_s64(fractio_denominator(f1), &d1)
+        || d0 != I || d1 != I)
+    {
+        o_vitium = VERUM;
+    }
     redde binomium(p, r);
 }
 
-#define O_MAX 64
+#define O_MAX 512
 hic_manens Binomium  o_axis[O_MAX][III];
 hic_manens Binomium  o_n2[O_MAX];
 hic_manens i32 o_nd;
@@ -477,6 +546,11 @@ _o_axes (
                 binomium_multiplica(v[0], o_axis[j][1]),
                 binomium_multiplica(v[1], o_axis[j][0])));
         }
+        si (!inventus && o_nd == O_MAX)
+        {
+            o_vitium = VERUM;
+            redde;
+        }
         si (!inventus)
         {
             o_axis[o_nd][0] = v[0]; o_axis[o_nd][1] =
@@ -492,7 +566,7 @@ _o_axes (
     }
 }
 
-/* tan^2(m pi/k) in Q(sqrt2)? (x + y sqrt2)/z */
+/* tan^2(m pi/k) in Q(sqrt d)? (x + y sqrt d)/z */
 interior b32
 _o_terminus_exactus (
     i32  m,
@@ -501,7 +575,8 @@ _o_terminus_exactus (
     s64* y,
     s64* z)
 {
-    /* m/k reducta in {1/8, 1/6, 1/4, 1/3, 3/8} */
+    /* m/k reducta: rationales {1/6, 1/4, 1/3} omni campo; Q(sqrt2):
+     * {1/8, 3/8} = 3 -+ 2 sqrt2; Q(sqrt3): {1/12, 5/12} = 7 -+ 4 sqrt3 */
     i32 a = m;
     i32 b = k;
     i32 g;
@@ -512,20 +587,22 @@ _o_terminus_exactus (
         { a /= g; b /= g; g = a + I;
         }
     }
-    si (a == I && b == VIII)
-    { *x = 3; *y = -2; *z = 1; redde VERUM;
-    }
+    *y = 0;
+    *z = 1;
     si (a == I && b == VI)
-    { *x = 1; *y = 0; *z = 3; redde VERUM;
+    { *x = 1; *z = 3; redde VERUM;
     }
     si (a == I && b == IV)
-    { *x = 1; *y = 0; *z = 1; redde VERUM;
+    { *x = 1; redde VERUM;
     }
     si (a == I && b == III)
-    { *x = 3; *y = 0; *z = 1; redde VERUM;
+    { *x = 3; redde VERUM;
     }
-    si (a == III && b == VIII)
-    { *x = 3; *y = 2; *z = 1; redde VERUM;
+    si (o_d == II && (a == I || a == III) && b == VIII)
+    { *x = 3; *y = a == I ? -2 : 2; redde VERUM;
+    }
+    si (o_d == III && (a == I || a == V) && b == XII)
+    { *x = 7; *y = a == I ? -4 : 4; redde VERUM;
     }
     redde FALSUM;
 }
@@ -716,6 +793,9 @@ _probare_cellas (
           i64  refutata   = 0;
 
     imprimere("\n--- Cellae contra oraculum Z[sqrt2] ---\n");
+    o_d       = II;
+    o_scala   = II;
+    o_vitium  = FALSUM;
     _generatores(extensio_anulus(extensio_quadratica(II, piscina)),
         "a/2",
         "a/2", "-a/2", piscina, g);
@@ -810,6 +890,7 @@ _probare_cellas (
     /* summae: singula, paria, triplices inter XII primos, X valores k */
     CREDO_VERUM (comparata == 90900 && discordes == 0 && refutata == 0);
     CREDO_VERUM (ligata == 28850 && nullae == 13620);
+    CREDO_FALSUM (o_vitium);
 }
 
 interior vacuum
@@ -1101,6 +1182,133 @@ _probare_collisionem (
 
 hic_manens constans i32 SCALA_D84[VIII] = { 1, 6, 8, 10, 12, 16, 20,
     24 };
+
+/* victores D82 profundi (DLXIV post MMMDXXXII, regula exacta, quaestio
+ * avida D82) ex codice INDEPENDENTI recensoris (Python, Q(sqrt3) per
+ * Fractiones, nec cellae nec radices nec extensio; recensio c996526d,
+ * 2026-10-12): n, primus k, pondera (indices partis). Ordo et k idem
+ * ac activatio_avida - hic singuli pinguntur: separat ad k, ad nullum k
+ * prius scalae. */
+hic_manens constans i32 VICTORES_D82[] = {
+    3, 1, 0, 1, 2,
+    3, 1, 0, 1, 3,
+    3, 1, 0, 1, 4,
+    3, 1, 0, 1, 5,
+    3, 1, 0, 1, 6,
+    3, 1, 0, 1, 7,
+    3, 1, 0, 1, 8,
+    3, 6, 0, 1, 10,
+    3, 1, 0, 1, 11,
+    3, 1, 0, 1, 12,
+    3, 8, 0, 1, 13,
+    3, 1, 0, 1, 14,
+    3, 1, 0, 1, 15,
+    3, 1, 0, 1, 16,
+    3, 6, 0, 1, 17,
+    3, 1, 0, 1, 18,
+    3, 1, 0, 1, 19,
+    3, 1, 0, 1, 20,
+    3, 1, 0, 1, 21,
+    3, 1, 0, 1, 22,
+    3, 1, 0, 1, 23,
+    3, 1, 0, 1, 24,
+    3, 1, 0, 1, 25,
+    3, 1, 0, 1, 26,
+    3, 8, 0, 1, 27,
+    3, 1, 0, 1, 28,
+    3, 1, 0, 1, 29,
+    3, 1, 0, 1, 30,
+    3, 1, 0, 1, 31,
+    3, 1, 0, 1, 32,
+    3, 1, 0, 1, 33,
+    3, 6, 0, 1, 34,
+    4, 1, 0, 1, 2, 3,
+    4, 8, 0, 1, 2, 4,
+    4, 10, 0, 1, 2, 5,
+    4, 8, 0, 1, 2, 7,
+    4, 1, 0, 1, 2, 8,
+    4, 6, 0, 1, 2, 10,
+    4, 1, 0, 1, 2, 11,
+    4, 10, 0, 1, 2, 12,
+    4, 24, 0, 1, 2, 13,
+    4, 12, 0, 1, 2, 14,
+    4, 1, 0, 1, 2, 16,
+    4, 6, 0, 1, 2, 17,
+    4, 1, 0, 1, 2, 18,
+    4, 1, 0, 1, 2, 19,
+    4, 1, 0, 1, 2, 20,
+    4, 1, 0, 1, 2, 21,
+    4, 8, 0, 1, 2, 22,
+    4, 6, 0, 1, 2, 23,
+    4, 8, 0, 1, 2, 24,
+    4, 8, 0, 1, 2, 25,
+    4, 1, 0, 1, 2, 26,
+    4, 8, 0, 1, 2, 27,
+    4, 6, 0, 1, 2, 28,
+    4, 12, 0, 1, 2, 29,
+    4, 6, 0, 1, 2, 30,
+    4, 8, 0, 1, 2, 32,
+    4, 1, 0, 1, 2, 33,
+    4, 6, 0, 1, 2, 34,
+    4, 1, 0, 1, 2, 35,
+    4, 8, 0, 1, 2, 36,
+    4, 10, 0, 1, 2, 37,
+    4, 20, 0, 1, 2, 38,
+    5, 8, 0, 1, 2, 3, 8,
+    5, 12, 0, 1, 2, 3, 10,
+    5, 12, 0, 1, 2, 3, 11,
+    5, 24, 0, 1, 2, 3, 12,
+    5, 12, 0, 1, 2, 3, 14,
+    5, 6, 0, 1, 2, 3, 16,
+    5, 8, 0, 1, 2, 3, 19,
+    5, 20, 0, 1, 2, 3, 20,
+    5, 6, 0, 1, 2, 3, 21,
+    5, 24, 0, 1, 2, 3, 22,
+    5, 16, 0, 1, 2, 3, 23,
+    5, 8, 0, 1, 2, 3, 24,
+    5, 8, 0, 1, 2, 3, 25,
+    5, 10, 0, 1, 2, 3, 26,
+    5, 10, 0, 1, 2, 3, 27,
+    5, 16, 0, 1, 2, 3, 28,
+    5, 20, 0, 1, 2, 3, 30,
+    5, 10, 0, 1, 2, 3, 32,
+    5, 10, 0, 1, 2, 3, 33,
+    5, 20, 0, 1, 2, 3, 34,
+    5, 10, 0, 1, 2, 3, 35,
+    5, 12, 0, 1, 2, 3, 36,
+    5, 12, 0, 1, 2, 3, 37,
+    5, 8, 0, 1, 2, 3, 39,
+    5, 8, 0, 1, 2, 3, 41,
+    5, 16, 0, 1, 2, 3, 42,
+    5, 6, 0, 1, 2, 3, 43,
+    5, 20, 0, 1, 2, 3, 44,
+    5, 10, 0, 1, 2, 3, 45,
+    5, 12, 0, 1, 2, 3, 46,
+    5, 16, 0, 1, 2, 3, 49,
+    5, 16, 0, 1, 2, 3, 52,
+    6, 20, 0, 1, 2, 3, 8, 33,
+    6, 20, 0, 1, 2, 3, 8, 81,
+    6, 24, 0, 1, 2, 3, 8, 129,
+    6, 24, 0, 1, 2, 3, 8, 170,
+    6, 24, 0, 1, 2, 3, 8, 176,
+    6, 20, 0, 1, 2, 3, 8, 272,
+    6, 24, 0, 1, 2, 3, 10, 81,
+    6, 24, 0, 1, 2, 3, 10, 461,
+    6, 24, 0, 1, 2, 3, 16, 105,
+    6, 24, 0, 1, 2, 3, 16, 203,
+    6, 20, 0, 1, 2, 3, 16, 241,
+    6, 24, 0, 1, 2, 3, 16, 282,
+    6, 20, 0, 1, 2, 3, 21, 340,
+    6, 16, 0, 1, 2, 3, 23, 394,
+    6, 24, 0, 1, 2, 3, 32, 312,
+    6, 20, 0, 1, 2, 3, 33, 238,
+    6, 16, 0, 1, 2, 3, 33, 315,
+    6, 24, 0, 1, 2, 3, 36, 94,
+    6, 20, 0, 1, 2, 3, 39, 343,
+    6, 24, 0, 1, 2, 3, 42, 238,
+    6, 20, 0, 1, 2, 3, 44, 196,
+    0
+};
 
 interior vacuum
 _quaestio (
@@ -1691,6 +1899,41 @@ _probare_filtrum_avidum (
     CREDO_VERUM (bene);
 }
 
+/* catalogus profundus D82: DLXIV elementa post MMMDXXXII clausurae
+ * zeta_12 ad MMMMXCVI truncatae (CDLXXVI axes) */
+interior Catalogus*
+_zeta_duodecim_profundus (
+    Piscina* piscina)
+{
+    Quaternio  g[IV];
+    Catalogus* cat   = NIHIL;
+    Catalogus* pars  = NIHIL;
+          i32* indices;
+          i32  t;
+
+    _generatores(extensio_anulus(extensio_quadratica(III, piscina)),
+        "a/2", "1/2", "-1/2", piscina, g);
+    si (   !catalogus_clausura(g, TORSIONES, IV, (i32)F_MAX, XVI,
+        piscina,
+        &cat)
+        || catalogus_numerus(cat) < MMMDXXXII + DLXIV)
+    {
+        redde NIHIL;
+    }
+    indices = (i32*)piscina_allocare(piscina,
+        (memoriae_index)DLXIV * magnitudo(i32));
+    si (indices == NIHIL)
+    {
+        redde NIHIL;
+    }
+    per (t = ZEPHYRUM; t < DLXIV; t++) indices[t] = MMMDXXXII + t;
+    si (!catalogus_pars(cat, indices, DLXIV, piscina, &pars))
+    {
+        redde NIHIL;
+    }
+    redde pars;
+}
+
 /* scrutinium axium in II gradibus (T7): catalogus profundus (DLXIV
  * elementa post MMMDXXXII, CDLXXVI axes) - gradus I axes certe inferiores
  * abicit; verdicta cum filtro (scrutinium binum) aequant verdicta sine
@@ -1702,13 +1945,10 @@ _probare_scrutinium (
 {
                      Piscina* piscina         = c->piscina;
      hic_manens constans i32  VALORES_K[III]  = { 6, 12, 24 };
-                   Quaternio  g[IV];
-                   Catalogus* cat   = NIHIL;
-                   Catalogus* pars  = NIHIL;
-                   Activatio* cum   = NIHIL;
-                   Activatio* sine  = NIHIL;
+                   Catalogus* pars            = NIHIL;
+                   Activatio* cum             = NIHIL;
+                   Activatio* sine            = NIHIL;
             CellaeStatistica  st_cum;
-                         i32* indices;
                          i32  numerus;
                          i32  t;
                          i32  index_k;
@@ -1719,19 +1959,9 @@ _probare_scrutinium (
 
     imprimere("\n--- Scrutinium axium: binum = lineare (zeta_12 profundus)"
         " ---\n");
-    _generatores(extensio_anulus(extensio_quadratica(III, piscina)),
-        "a/2", "1/2", "-1/2", piscina, g);
-    CREDO_NECESSE (catalogus_clausura(g, TORSIONES, IV, (i32)F_MAX, XVI,
-        piscina, &cat));
-    numerus = catalogus_numerus(cat) - MMMDXXXII;
-    CREDO_NECESSE (numerus >= DLXIV);
-    numerus = DLXIV;
-    indices = (i32*)piscina_allocare(piscina,
-        (memoriae_index)numerus * magnitudo(i32));
-    CREDO_NECESSE_NON_NIHIL (indices);
-    per (t = ZEPHYRUM; t < numerus; t++) indices[t] = MMMDXXXII + t;
-    CREDO_NECESSE (catalogus_pars(cat, indices, numerus, piscina,
-        &pars));
+    pars = _zeta_duodecim_profundus(piscina);
+    CREDO_NECESSE (pars != NIHIL);
+    numerus = catalogus_numerus(pars);
     CREDO_NECESSE (activatio_ex_catalogo(pars, ZEPHYRUM, piscina,
         &cum));
     CREDO_NECESSE (activatio_ex_catalogo(pars, ZEPHYRUM, piscina,
@@ -1780,6 +2010,260 @@ _probare_scrutinium (
     CREDO_VERUM (st_cum.filtro > ZEPHYRUM && st_cum.ligatae > ZEPHYRUM);
 }
 
+/* alea simplex deterministica (LCG XXXII bitorum) */
+hic_manens i32 o_status_aleae = I;
+
+interior i32
+_o_alea (
+    i32 modulus)
+{
+    o_status_aleae = o_status_aleae * 1103515245U + 12345U;
+    redde ((o_status_aleae >> 16) & 0x7FFFU) % modulus;
+}
+
+/* L1 recensionis: cellae zeta_12 contra oraculum Z[sqrt3] (scala XXXII)
+ * - summae fortuitae I-VII elementorum profundorum signis fortuitis,
+ * regula et ligaturae omnes per k */
+interior vacuum
+_probare_cellas_duodecim (
+    CredoContextus* c)
+{
+                    Piscina* piscina = c->piscina;
+    hic_manens constans i32  VALORES_K[XII] = { 1, 2, 4, 5, 6, 7, 8, 10,
+        12, 16, 20, 24 };
+                   Catalogus* pars  = NIHIL;
+                   Activatio* act   = NIHIL;
+                         i32  numerus;
+                         i32  t;
+                         i32  index_k;
+                         i64  comparata  = 0;
+                         i64  discordes  = 0;
+                         i64  ligata     = 0;
+                         i64  refutata   = 0;
+
+    imprimere("\n--- Cellae zeta_12 contra oraculum Z[sqrt3] ---\n");
+    o_d             = III;
+    o_scala         = XXXII;
+    o_vitium        = FALSUM;
+    o_status_aleae  = I;
+    pars            = _zeta_duodecim_profundus(piscina);
+    CREDO_NECESSE (pars != NIHIL);
+    CREDO_NECESSE (activatio_ex_catalogo(pars, ZEPHYRUM, piscina,
+        &act));
+    _o_axes(pars, piscina);
+    CREDO_AEQUALIS_I32 (o_nd, CDLXXVI);
+    CREDO_NECESSE (!o_vitium);
+    numerus = catalogus_numerus(pars);
+    per (t = ZEPHYRUM; t < M; t++)
+    {
+              i32 longitudo = I + _o_alea(VII);
+        Quaternio s;
+         Binomium so[IV];
+              i32 u;
+              i32 r;
+
+        (vacuum)quaternio_nullum(catalogus_elementum(pars, 0).anulus,
+            piscina, &s);
+        per (r = 0; r < IV; r++) so[r] = binomium(0, 0);
+        per (u = ZEPHYRUM; u < longitudo; u++)
+        {
+                  i32 index      = _o_alea(numerus);
+                  b32 positivum  = _o_alea(II) == ZEPHYRUM;
+            Quaternio q          = catalogus_elementum(pars, index);
+
+            si (positivum) (vacuum)quaternio_adde(s, q, piscina, &s);
+            alioquin (vacuum)quaternio_subtrahe(s, q, piscina, &s);
+            per (r = 0; r < IV; r++)
+            {
+                Binomium e = _binomium_ex(q, r, piscina);
+
+                so[r] = positivum ? binomium_adde(so[r], e)
+                    : binomium_subtrahe(so[r], e);
+            }
+        }
+        per (index_k = ZEPHYRUM; index_k < XII; index_k++)
+        {
+            Cella cella;
+              i32 o_regula = 0;
+              i32 o_ligatae[2 * O_MAX];
+              i32 on = 0;
+              i32 elig[2 * O_MAX];
+              b32 bene;
+
+            si (   !activatio_cella(act, s, VALORES_K[index_k], &cella)
+                || !_o_cella(so, VALORES_K[index_k], &o_regula,
+                o_ligatae,
+                &on))
+            {
+                refutata++;
+                perge;
+            }
+            bene = cella.regula == o_regula && cella.numerus == on;
+            si (bene)
+            {
+                per (u = 0; u < on; u++) elig[u] = cella.ligatae[u];
+                _ordina(elig, on);
+                _ordina(o_ligatae, on);
+                per (u = 0; u < on; u++) bene = bene
+                                             && elig[u] == o_ligatae[u];
+            }
+            comparata++;
+            si (!bene) discordes++;
+            si (on > 1) ligata++;
+        }
+    }
+    imprimere("    comparata %ld, discordes %ld, ligata %ld, refutata %ld\n",
+        (long)comparata, (long)discordes, (long)ligata, (long)refutata);
+    CREDO_FALSUM (o_vitium);
+    CREDO_VERUM (comparata == M * XII && discordes == 0
+        && refutata == 0);
+    CREDO_VERUM (ligata > 0);
+}
+
+/* L1 recensionis: victores D82 profundi (codex independens) - singuli
+ * separant ad suum k (regula exacta, per filtrum), ad nullum k prius */
+interior vacuum
+_probare_victores_d82 (
+    CredoContextus* c)
+{
+      Piscina* piscina  = c->piscina;
+    Catalogus* pars     = NIHIL;
+    Activatio* act      = NIHIL;
+          i32  numeri[VIII];
+          i32  positio  = ZEPHYRUM;
+          i32  falsi    = ZEPHYRUM;
+          i32  n;
+
+    imprimere("\n--- Victores D82 profundi (codex independens) ---\n");
+    pars = _zeta_duodecim_profundus(piscina);
+    CREDO_NECESSE (pars != NIHIL);
+    CREDO_NECESSE (activatio_ex_catalogo(pars, ZEPHYRUM, piscina,
+        &act));
+    per (n = ZEPHYRUM; n < VIII; n++) numeri[n] = ZEPHYRUM;
+    dum (VICTORES_D82[positio] != ZEPHYRUM)
+    {
+         constans i32* w = &VICTORES_D82[positio + II];
+                  i32  k = VICTORES_D82[positio + I];
+                  i32  index_k;
+
+        n = VICTORES_D82[positio];
+        numeri[n]++;
+        per (index_k = ZEPHYRUM; index_k < VIII; index_k++)
+        {
+            b32 verum = FALSUM;
+
+            si (SCALA_D84[index_k] > k) frange;
+            si (   !activatio_separat(act, w, n, SCALA_D84[index_k],
+                CELLAE_REGULA, &verum)
+                || verum != (SCALA_D84[index_k] == k))
+            {
+                falsi++;
+            }
+        }
+        positio += II + n;
+    }
+    imprimere("    victores %d %d %d %d, falsi %d\n", (int)numeri[3],
+        (int)numeri[4], (int)numeri[5], (int)numeri[6], (int)falsi);
+    CREDO_VERUM (numeri[3] == XXXII && numeri[4] == XXXII
+        && numeri[5] == XXXII && numeri[6] == XXI);
+    CREDO_AEQUALIS_I32 (falsi, ZEPHYRUM);
+}
+
+/* L2 recensionis: cellae_maximae (D82 MAX_ACT) et limes_triplicum (D82
+ * bf_limit) ligant - zeta_8 (XIII axes, XIV cellae per sectorem) */
+interior vacuum
+_probare_limites_quaestionis (
+    CredoContextus* c)
+{
+                     Piscina* piscina           = c->piscina;
+     hic_manens constans i32  SCALA_BREVIS[II]  = { 1, 6 };
+                   Quaternio  g[IV];
+                   Catalogus* cat = NIHIL;
+                   Activatio* act = NIHIL;
+                    Quaestio  q;
+                   Capacitas  plena;
+                   Capacitas  capta;
+                   Capacitas  sine;
+                   Capacitas  avida;
+                   Capacitas  angusta;
+                         i32  n;
+                         i32  w;
+                         i32  t;
+                         b32  aequales  = VERUM;
+                         b32  ultra     = FALSUM;
+                         b32  intra     = VERUM;
+
+    imprimere("\n--- Limites quaestionis (cellae_maximae, limes_triplicum)"
+        " ---\n");
+    _generatores(extensio_anulus(extensio_quadratica(II, piscina)),
+        "a/2", "a/2", "-a/2", piscina, g);
+    CREDO_NECESSE (catalogus_clausura(g, TORSIONES, IV, ZEPHYRUM, XVI,
+        piscina, &cat));
+    CREDO_NECESSE (activatio_ex_catalogo(cat, ZEPHYRUM, piscina, &act));
+    CREDO_NECESSE (activatio_axes(act) == XIII);
+    /* k >= VIII omittitur: VIII x XIV = CXII > LXXXIV = VI x XIV (k XXIV
+     * solus nihil novi in zeta_8 invenit - mensuratum) */
+    _quaestio(&q, CELLAE_ROBUSTA);
+    q.cellae_maximae = ZEPHYRUM;
+    CREDO_NECESSE (activatio_exhaustiva(act, &q, piscina, &plena));
+    q.cellae_maximae = LXXXIV;
+    CREDO_NECESSE (activatio_exhaustiva(act, &q, piscina, &capta));
+    q.cellae_maximae  = ZEPHYRUM;
+    q.scala_k         = SCALA_BREVIS;
+    q.numerus_k       = II;
+    CREDO_NECESSE (activatio_exhaustiva(act, &q, piscina, &sine));
+    per (n = III; n <= VII; n++)
+    {
+        aequales = aequales && capta.numerus[n] == sine.numerus[n]
+            && capta.servati[n] == sine.servati[n];
+        per (w = ZEPHYRUM; aequales && w < capta.servati[n]; w++)
+        {
+            aequales = aequales
+                && capta.victores[n][w].k == sine.victores[n][w].k;
+        }
+        per (w = ZEPHYRUM; w < plena.servati[n]; w++)
+        {
+            si (plena.victores[n][w].k > VI) ultra = VERUM;
+        }
+    }
+    imprimere("    plena max XOR%d (%ld %ld %ld), capta max XOR%d (%ld %ld "
+        "%ld), k > VI in plena: %d\n", (int)plena.maximum,
+        (long)plena.numerus[3], (long)plena.numerus[4],
+        (long)plena.numerus[5], (int)capta.maximum,
+        (long)capta.numerus[3], (long)capta.numerus[4],
+        (long)capta.numerus[5], (int)ultra);
+    CREDO_VERUM (aequales && capta.maximum == sine.maximum);
+    CREDO_VERUM (ultra);
+    /* limes_triplicum V: triplices ex primis V ponderibus (C(V,III) = X) */
+    _quaestio(&q, CELLAE_REGULA);
+    CREDO_NECESSE (activatio_avida(act, &q, piscina, &avida));
+    q.limes_triplicum = V;
+    CREDO_NECESSE (activatio_avida(act, &q, piscina, &angusta));
+    per (w = ZEPHYRUM; w < angusta.servati[3]; w++)
+    {
+        per (t = ZEPHYRUM; t < III; t++)
+        {
+            intra = intra && angusta.victores[3][w].pondera[t] < V;
+        }
+    }
+    imprimere("    avida triplices %ld, limes V triplices %ld\n",
+        (long)avida.numerus[3], (long)angusta.numerus[3]);
+    CREDO_VERUM (intra && angusta.numerus[3] <= X);
+    CREDO_VERUM (avida.numerus[3] > X);
+    /* pondera duplicata refutantur (recensio P2) */
+    {
+        i32 duplicata[III];
+        b32 verum = FALSUM;
+
+        duplicata[0] = I; duplicata[1] = IV; duplicata[2] = I;
+        CREDO_FALSUM (activatio_separat(act, duplicata, III, VI,
+            CELLAE_REGULA, &verum));
+        duplicata[2] = V;
+        CREDO_VERUM (activatio_separat(act, duplicata, III, VI,
+            CELLAE_REGULA, &verum));
+    }
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "zeta_8", _probare_zeta_octo, NIHIL, NIHIL, NIHIL, NIHIL },
     { "zeta_12", _probare_zeta_duodecim, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -1805,6 +2289,13 @@ hic_manens constans CredoSectio SECTIONES[] = {
       NIHIL },
     { "scrutinium axium", _probare_scrutinium, NIHIL, NIHIL, NIHIL,
       NIHIL },
+    { "cellae zeta_12 contra oraculum", _probare_cellas_duodecim, NIHIL,
+      NIHIL, NIHIL, NIHIL },
+    { "victores D82 profundi", _probare_victores_d82, NIHIL, NIHIL,
+        NIHIL,
+      NIHIL },
+    { "limites quaestionis", _probare_limites_quaestionis, NIHIL, NIHIL,
+      NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 
