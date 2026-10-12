@@ -344,3 +344,26 @@ Now `ad_nodum` converts clicks, drags and wheel events to the input
 node's space (`destinatio_ad_locale`, as pictor does) before encoding.
 Test: the terminal tree inside a parent at (243, 9) - a click at
 (243+13, 9+17) reports cell (3, 3) like (13, 17) standalone; wheel too.
+
+## 2026-10-12 — status-plan S7c-3: terminale on its manifest
+
+apps/terminale/organum.stml: no own fields - the base (id, focus,
+focus_acervus, superficies_*) + action terminale.clavis (never writes the
+island). Embedded via organa_infixa (S7c-1), so the installed
+~/.bin/terminale needs no tree. applicationem_struere: both paths (mount
+in vicus, standalone root) go through organum_legere_genus +
+organum_ramum_parare; terminale_montare gains `systemata` (vicus passes
+its shared StatusSystemata as the genus ctx). Standalone: canon + owners,
+systemata NIHIL (nothing durable, decision III). Deleted CANON_EPHEMERA
+(identical to the base fields), canonem_infixum, elementum_montationis.
+
+Test trap (bit me): the insula owner check judges only attributes that
+CHANGE (dominos_iudicare -> attributum_mutatum). A refused-write test
+that re-writes the value just written passes for the wrong reason - my
+first "red" for owners was exactly that (only the canon assertion was a
+true red). Tests now write new values (CC); proven by a plant that skips
+insula_ramus_dominos_legere in organum_ramum_parare -> XIV and XV owner
+assertions red, reverted -> green.
+
+TerminaleContextus classified in census XIV - nothing moves into the
+island (caches, observations, process data, configuration).

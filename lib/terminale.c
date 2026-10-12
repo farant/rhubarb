@@ -53,22 +53,6 @@ hic_manens constans character* constans ambitus_terminalis[] = {
     NIHIL
 };
 
-/* canones montationis (vicus-latera S1b): radix hospitis liberos non
- * declarat, ergo montatio canonem suum fert (insula rami: canon
- * radicis ramos cum canone proprio non videt). Infixi, non e filo:
- * terminale_montare radicem viarum non accipit, et parvi sunt. */
-#define CANON_EPHEMERA \
-    "<canon dialectus=\"terminale-ephemera\" versio=\"1\">" \
-    "<elementum nomen=\"terminale\" radix=\"verum\">" \
-    "<attributum nomen=\"id\" genus=\"nomen\"/>" \
-    "<attributum nomen=\"focus\" genus=\"textus\"/>" \
-    "<attributum nomen=\"focus_acervus\" genus=\"textus\"/>" \
-    "<attributum nomen=\"superficies_latitudo\"" \
-    " genus=\"numerus\"/>" \
-    "<attributum nomen=\"superficies_altitudo\"" \
-    " genus=\"numerus\"/>" \
-    "</elementum></canon>"
-
 /* SGR 2: littera ad fundum mixta (Ghostty faint-opacity 0.5) */
 #define OBSCURUM_OPACITAS   0.5
 
@@ -1176,43 +1160,11 @@ terminale_argumenta (
     redde v;
 }
 
-/* canonem infixum legere */
-interior Canon*
-canonem_infixum (
-                Piscina* piscina,
-    InternamentumChorda* intern,
-     constans character* fons)
-{
-    chorda causa;
-
-    redde canon_legere(chorda_ex_literis(fons, piscina), piscina,
-        intern, &causa);
-}
-
-/* elementum montationis: <terminale id="…" attributa/> */
-interior constans character*
-elementum_montationis (
-                Piscina* piscina,
-     constans character* id,
-     constans character* attributa)
-{
-    chorda c;
-
-    c = chorda_concatenare(chorda_ex_literis("<terminale id=\"",
-        piscina), chorda_ex_literis(id, piscina), piscina);
-    c = chorda_concatenare(c, chorda_ex_literis("\"", piscina),
-        piscina);
-    c = chorda_concatenare(c, chorda_ex_literis(attributa, piscina),
-        piscina);
-    c = chorda_concatenare(c, chorda_ex_literis("/>", piscina),
-        piscina);
-    redde chorda_ut_cstr(c, piscina);
-}
-
 /* aedificatio communis: repo NIHIL = applicatio sola (repositorium
  * proprium, ramus radicis, dispensator); aliter montatio in
- * repositorio hospitis (ramus <terminale id>, canones sui, nullus
- * dispensator) */
+ * repositorio hospitis (ramus <terminale id>, nullus dispensator).
+ * Utrimque organum (S7c-3): canon, domini, systemata ex manifesto
+ * infixo */
 interior b32
 applicationem_struere (
     TerminaleApplicatio* app,
@@ -1221,11 +1173,13 @@ applicationem_struere (
         Pseudoterminale* pt,
      InsulaRepositorium* repo,
      constans character* id,
+        StatusSystemata* systemata,
                     i32  latitudo,
                     i32  altitudo)
 {
      AemulatorHospesConfiguratio  cfg;
               TerminaleContextus* tc;
+                         Organum* organum;
 
     si (!app || !piscina || !intern || !pt || (repo && !id))
     {
@@ -1274,25 +1228,27 @@ applicationem_struere (
         LXIV * MXXIV);
     si (repo)
     {
-        /* montatio: canon PRIMUM (radix hospitis eam non videt),
-         * deinde elementum initiale (insula una, C2) */
         app->repo   = repo;
         app->ramus  = insula_ramus(repo, "terminale", id);
-        insula_ramus_canonem_ponere(&app->ramus,
-            canonem_infixum(piscina, intern, CANON_EPHEMERA));
-        si (!insula_ramum_initiare(&app->ramus,
-                elementum_montationis(piscina, id,
-                    " focus=\"schirmum\"")))
-        {
-            redde FALSUM;
-        }
     }
     alioquin
     {
+        /* repositorium cuius radix IPSA terminale est */
         app->repo = insula_repositorium_creare(piscina, intern,
             "<terminale focus=\"schirmum\"/>");
         app->ramus = app->repo ? insula_ramus_radix(app->repo)
                                : app->ramus;
+    }
+    /* S7c-3: organum per modulum communem - canon, initium, domini,
+     * (systemata) */
+    organum = organum_legere_genus(piscina, intern, "terminale",
+        "terminale");
+    si (   !app->repo || !organum
+        || !organum_ramum_parare(organum, &app->ramus, systemata,
+               " focus=\"schirmum\"", id ? id : "terminale", piscina,
+               intern))
+    {
+        redde FALSUM;
     }
     app->actiones  = actio_registrum_creare(piscina, intern);
     app->figurae   = figura_registrum_creare(piscina);
@@ -1324,7 +1280,7 @@ terminale_applicatio_aedificare (
                     i32  altitudo)
 {
     redde applicationem_struere(app, piscina, intern, pt, NIHIL, NIHIL,
-        latitudo, altitudo);
+        NIHIL, latitudo, altitudo);
 }
 
 constans character* constans*
@@ -1340,6 +1296,7 @@ terminale_montare (
     InternamentumChorda* intern,
      InsulaRepositorium* repo,
      constans character* id,
+        StatusSystemata* systemata,
                     i32  latitudo,
                     i32  altitudo)
 {
@@ -1365,7 +1322,7 @@ terminale_montare (
         redde FALSUM;
     }
     redde applicationem_struere(app, piscina, intern, pt, repo, id,
-        latitudo, altitudo);
+        systemata, latitudo, altitudo);
 }
 
 /* ?1004 modo novo posito relatio status currentis statim (Ghostty

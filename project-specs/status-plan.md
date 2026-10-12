@@ -118,11 +118,14 @@ widgets are migrated by hand.*
   removed - scriba_montare/_aedificare, pictor_montare/_aedificare,
   vicus_creare, vicus_applicatio_aedificare, VicusMontator, Vicus.radix;
   80 calls. pictor_montatio `sine_arbore` now builds from cwd "/".
-- **S7c-3** terminale: apps/terminale/organum.stml (base fields only,
-  action terminale.clavis), mount and standalone through
-  organum_ramum_parare, CANON_EPHEMERA deleted; TerminaleContextus
-  classified in the census (caches/observations/process data - nothing
-  moves into the island).
+- **S7c-3** DONE 2026-10-12 (lib/terminale.worklog.md; census XIV):
+  apps/terminale/organum.stml (base fields only, action
+  terminale.clavis); mount (vicus systems via ctx) and standalone
+  (canon + owners, no systems - ~/.bin/terminale reads the embedded
+  manifest) through organum_ramum_parare; CANON_EPHEMERA,
+  canonem_infixum, elementum_montationis deleted. Every pane kind in
+  vicus now mounts through organum_montatio - S8 has one path to
+  change.
 
 ### Arc III — depth
 

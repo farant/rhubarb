@@ -647,8 +647,8 @@ cyclum_registrare (
 }
 
 /* terminale (vicus-latera S1c): concha nova in omni apertura (decisio
- * aemulatoris: nihil durabile praeter ramum); volumen non legitur -
- * canones infixi */
+ * aemulatoris: nihil durabile praeter ramum); volumen non legitur.
+ * ctx = systemata vici (S7c-3: organum, ut scriba et pictor) */
 interior b32
 terminale_montare_in_vico (
                  vacuum* sedes,
@@ -662,11 +662,10 @@ terminale_montare_in_vico (
                     i32  altitudo,
                  vacuum* ctx)
 {
-    (vacuum)ctx;
     (vacuum)volumen;
     (vacuum)argumentum;
     redde terminale_montare((TerminaleApplicatio*)sedes, piscina,
-        intern, repo, id, latitudo, altitudo);
+        intern, repo, id, (StatusSystemata*)ctx, latitudo, altitudo);
 }
 
 /* pulsus sine mora: ansa hospitis XVI ms ipsa exspectat */
@@ -854,7 +853,8 @@ vicus_applicatio_aedificare (
                pictorem_describere, cp)
         || !vicus_genus_addere(app->vicus, "terminale",
                magnitudo(TerminaleApplicatio),
-               terminale_montare_in_vico, terminale_describere, NIHIL)
+               terminale_montare_in_vico, terminale_describere,
+               systemata)
         || !vicus_aperire(app->vicus, INDEX_ORDINARIUS))
     {
         causa = app->vicus ? vicus_causa(app->vicus)

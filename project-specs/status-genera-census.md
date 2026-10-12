@@ -412,3 +412,26 @@ Correct today, unguaranteed as systems multiply. Candidates: explicit
 system phases per event (before action / after write / at quiet), or
 game-style frame snapshots (read frame N, write N+1). Same family as
 the escape stack (thread 2). Decide when a 4th system needs ordering.
+
+## XIV. terminale (S7c-3, 2026-10-12)
+
+Not in the original census. Manifest apps/terminale/organum.stml declares
+NO fields of its own - only the base (id, focus, focus_acervus,
+superficies_*) and the action terminale.clavis, which never writes the
+island (events go to the child program). Classification of
+TerminaleContextus (lib/terminale.c), nothing moves into the island:
+
+| field | category | why |
+|---|---|---|
+| pendens, pendet | machinery cache | event held between frames |
+| rotula_residuum | cache (kinetic rhythm) | sub-line wheel remainder |
+| focus | observation | window focus from the host; a port once ports are formalised |
+| focus_relatus | protocol cache | what was last reported to the child (?1004) |
+| titulus, titulus_mensura, titulus_mutatus | process data (category 1) | written by the program (OSC 0/2); if vicus wants tab labels it becomes an observation written by a system |
+| littera/fundus/cursor_thematis | configuration | theme colours handed to the emulator |
+| scrutinium | scratch arena | |
+| screen, scrollback, viewport (aemulator) | document | the emulator owns them, like scriba's book |
+
+Persistence: in vicus the branch joins the host's systems (focus,
+focus_acervus persisted; the shell itself is new on every opening -
+emulator decision III). Standalone: canon + owners, no systems.
