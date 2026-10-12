@@ -39,7 +39,9 @@ organum_legere_viam (
 
 /* ramum parare: canon, initium (absentes + attributa_addita), status
  * servatus (clavis), domini, dimissio. FALSUM si canon aut
- * initiatio deficit. systemata NIHIL = nulla. */
+ * initiatio deficit. systemata NIHIL = nulla. Ramus radicis (elementum
+ * vacuum): canon radicis repositorii fit (montationes canonibus suis
+ * iudicantur), initium attributa absentia sola ponit. */
 b32
 organum_ramum_parare (
         constans Organum* organum,

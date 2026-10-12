@@ -483,3 +483,33 @@ Fran wrote it) right-aligned; clicking again returns to the time.
   space, which plant C5 needed.
 - Ordinals: 11th/12th/13th before the 1/2/3 rule (x % 100 in 11..13).
 - The toggle is session state (Vicus.horologium_dies), not saved.
+
+## 2026-10-12 - S7a: the host's root on its manifest (status-plan S7a)
+
+The root `<vicus>` is now prepared like any widget branch, from
+`apps/vicus/organum.stml` via `organum_ramum_parare` (no systems yet:
+every root field is transient). The hand canon
+apps/vicus/canones/ephemera.canon is gone.
+- Root vs branch canon: a canon attached as a BRANCH canon to the root
+  ramus judges the whole tree (ramum_invenire(root) = root) and rejects
+  every mounted pane. organum_ramum_parare now gives a root ramus
+  (empty elementum) the repository ROOT canon, which judges
+  visio_radicis - mounts delegated to their own canons. Plant P1
+  (branch canon on root) broke 12 of 13 vicus suites.
+- Owners: activa/prior/horologium_dies belong to `vicus.radix`
+  (the root tractator's action - the dispatcher already runs the
+  clock click under it); readings belong to the system `horologium`.
+  Host code writing on its own behalf goes through `radicem_mutare`
+  (scriptor set for the call, previous one restored) - same pattern
+  as superficies_scribere's "dispensator" bracket.
+- Readings: the Vicus struct no longer caches the clock/battery. Six
+  number fields tempus_* (one write per change, CampiRadicis) and
+  pila_centesimae/pila_oneratur; an absent field = no reading (replaces
+  the -1 sentinels). No port = reading "none" = fields removed, so
+  a stale reading cannot outlive its port. Change detection compares
+  the new reading with the island, not a struct copy.
+- v->activa remains as the host's working copy of the layout index
+  (the index file stays the truth; the island copy is derived).
+- probatio_terminale built its host root from vicus canons; the
+  durable one had been deleted in C2 and was silently NIHIL. Now it
+  prepares the root from the manifest like vicus does.

@@ -2,8 +2,8 @@
  * montationes
  * (insula-rami-plan T1b)
  *
- * Vicus (via Romana insularum) repositorium UNUM possidet: radices
- * <vicus> (durabilis, ephemera), liberi = montationes applicationum
+ * Vicus (via Romana insularum) repositorium UNUM possidet: radix
+ * <vicus> (apps/vicus/organum.stml), liberi = montationes applicationum
  * (rami, canonibus suis iudicati). Volumen UNUM: documenta montationum
  * in spatiis suis (id), dispositio in plagula 'vicus/latera'
  * (configuratio, non historia: superscribitur). Vicus nullam
@@ -159,7 +159,9 @@ nomen structura {
  * 2026"), iterum horam (Franus 2026-10-10). NIHIL (ordinarium) =
  * nullum horologium - probationes et specimina constant; applicationes
  * vicus_horologium_locale ponunt. vicus_pulsare tempus legit et VERUM
- * reddit cum mutatur (minutum aut dies). */
+ * reddit cum mutatur (minutum aut dies). S7a: lectio in ramo radicis
+ * vivit (tempus_*, pila_*; absens = nulla), systema 'horologium' eam
+ * scribit; horologium_dies ibidem (vicus.radix). */
 
 /* S4: tempus horologii (locale) */
 nomen structura {
@@ -197,13 +199,8 @@ nomen structura {
                                        * pendentes (vicus_pulsare) */
         VicusHorologium  horologium;  /* S4: NIHIL = nullum */
                  vacuum* horologium_ctx;
-            VicusTempus  tempus;          /* ultimum lectum; hora -1 =
-                                           * nullum */
-                    b32  horologium_dies; /* ictus: dies pro hora */
-              VicusPila  pila;            /* S5: NIHIL = nulla */
+              VicusPila  pila;        /* S5: NIHIL = nulla */
                  vacuum* pila_ctx;
-                    s32  pila_centesimae; /* -1 = nulla */
-                    b32  pila_oneratur;
 } Vicus;
 
 Vicus*
@@ -232,7 +229,8 @@ vicus_genus_addere (
  * S3c: latus 'id' et 'argumentum' optionalia (absens id = ordinarium
  * "<tabula>_<latus>_<genus>").
  * FALSUM si dispositio mala aut repositorium deficit; latus generis
- * ignoti praeteritur (causa). */
+ * ignoti praeteritur (causa). S7a: radix ex apps/vicus/organum.stml
+ * paratur (canon, domini). */
 b32
 vicus_aperire (
                   Vicus* v,

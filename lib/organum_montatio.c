@@ -120,7 +120,17 @@ organum_ramum_parare (
             (int)causa.mensura, (constans character*)causa.datum);
         redde FALSUM;
     }
-    insula_ramus_canonem_ponere(ramus, canon);
+    /* S7a: radix (hospes) canonem radicis repositorii accipit - visio
+     * radicis montationes delegat; canon rami arborem totam
+     * iudicaret */
+    si (chorda_vacua(ramus->elementum))
+    {
+        insula_ponere_canonem(ramus->repo, canon);
+    }
+    alioquin
+    {
+        insula_ramus_canonem_ponere(ramus, canon);
+    }
 
     /* elementum initiale: <genus [id] absentes addita/> (S4) */
     elementum = chorda_concatenare(chorda_ex_literis("<", piscina),

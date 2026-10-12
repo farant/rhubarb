@@ -85,7 +85,19 @@ widgets are migrated by hand.*
   app-wide non-document state.
 - **S7** vicus: `horologium_dies` into the island (transient);
   battery as an observation port; the layout index file migrated or
-  explicitly classified.
+  explicitly classified. Fran 10-12: S6c (app-wide yank register)
+  folded in; split a/b.
+- **S7a** DONE 2026-10-12: host manifest apps/vicus/organum.stml for the
+  root (activa/prior = transient copies of vicus/latera, owner
+  vicus.radix; horologium_dies transient; clock + battery readings
+  tempus_*/pila_* written by system `horologium`, absent = none).
+  Struct copies gone; hand canon deleted; organum_ramum_parare on the
+  root sets the repository root canon. Layout index stays the host's
+  persisted structure (classified, not migrated).
+- **S7b** next: app-wide `capsa` on the root; the parent hands scriba
+  a branch for it (`ramus_capsae`, scriba_actiones.h - header text to
+  Fran first); persisted (viminfo-like) - first persisted app-wide
+  state, needs host systems at vicus_aperire.
 
 ### Arc III — depth
 
