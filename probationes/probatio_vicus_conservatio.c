@@ -2,7 +2,7 @@
  * (status-plan S3): compositio VERA (vicus_applicatio); latus pictoris
  * "2_dextrum_pictor" statum suum in volumine vici servat et sessio
  * altera (applicatio recens, idem volumen) eum restituit. S7b:
- * registrum vim (capsa) unum applicationis in radice - deletum in
+ * registrum vim (capsa) unum applicationis in radice - copiatum in
  * tabula III, insertum in IV, sessionem alteram supervivit. */
 #include "postulata_posix.h"
 #include "latina.h"
@@ -216,12 +216,11 @@ _probare_capsam (
         vol, NIHIL, CM, DC));
     m = manus_ludus_creare(c->piscina, prima.d);
     CREDO_NECESSE_NON_NIHIL(m);
-    /* tabula III: scriba focata; "abc" scribitur et deletur (dd -
-     * registrum; vim nostrum 'y' non habet) */
+    /* tabula III: scriba focata; "abc" scribitur et copiatur (yy) */
     CREDO_VERUM(manus_ludus_clavem(m, '3', MOD_SUPER));
     CREDO_VERUM(manus_ludus_scribere(m, "iabc"));
     CREDO_VERUM(manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));
-    CREDO_VERUM(manus_ludus_scribere(m, "dd"));
+    CREDO_VERUM(manus_ludus_scribere(m, "yy"));
     /* registrum in radice, non in latere */
     a = insula_attributum(prima.vicus->repo, "capsa_lineae");
     CREDO_VERUM(a && chorda_aequalis_literis(*a, "1"));

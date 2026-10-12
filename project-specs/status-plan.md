@@ -103,8 +103,8 @@ widgets are migrated by hand.*
   `pagina.clavis` as the register's owner (manifest checker requires
   declared writers) - a second pane kind wanting the register makes
   the owner a list or a system. The register is written only when it
-  changes. Found: our vim has no `y` - only `dd`/visual delete fill
-  the register.
+  changes. Found: our vim had no `y` - added right after (yy, Y,
+  visual y; lib/vim.worklog.md).
 
 ### Arc III — depth
 
