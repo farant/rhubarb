@@ -1568,10 +1568,17 @@ try:
     # apparens intra ~0,5 s legitur, non post II s
     _rv = os.path.join(silva.PORTAE_DIR, 'probatio-exspectata.0.json')
     import threading as _fila
-    _fila.Timer(0.3, lambda: open(_rv, 'w').write(json.dumps({
-        'nomen': 'probatio', 'filtrum': None, 'sana': True, 'cucurrit': True,
-        'compendium': 'x', 'rc': 0, 'sigillum': '', 'rancida': False,
-        'finis': 0}))).start()
+    # scriptura ATOMICA ut scriptor verus (.tmp deinde rename): scriptura
+    # in loco plagulam vacuam momento ostendebat - exspectare eam legebat
+    # (JSONDecodeError, fluctuatio 2026-10-12)
+    def _rv_scribere():
+        with open(_rv + '.tmp', 'w') as _f:
+            _f.write(json.dumps({
+                'nomen': 'probatio', 'filtrum': None, 'sana': True,
+                'cucurrit': True, 'compendium': 'x', 'rc': 0, 'sigillum': '',
+                'rancida': False, 'finis': 0}))
+        os.rename(_rv + '.tmp', _rv)
+    _fila.Timer(0.3, _rv_scribere).start()
     _t0 = _tempus.time()
     silva.exspectare(_rv, tectum=10)
     _dt = _tempus.time() - _t0
@@ -2266,12 +2273,14 @@ import io
 _cd = tempfile.mkdtemp(prefix='silva_commissio_debitae_')
 _signum = os.path.join(_cd, 'cursa')
 _umbra_signum = os.path.join(_cd, 'cursa_umbra')
+_altera_signum = os.path.join(_cd, 'cursa_altera')
 _viridis = os.path.join(_cd, 'viridis.sh')
 open(_viridis, 'w').write('#!/bin/sh\ntouch "${1:-%s}"\necho "fictum: sanum"\n' % _signum)
 os.chmod(_viridis, 0o755)
 os.environ['PYTHONICA_PORTAE_FICTAE'] = json.dumps({
     'ficta-debita': [[_viridis], r'fictum: (sanum|FRACTUM)', 'generica'],
-    'ficta-petita': [[_viridis, _umbra_signum], r'fictum: (sanum|FRACTUM)', 'generica']})
+    'ficta-petita': [[_viridis, _umbra_signum], r'fictum: (sanum|FRACTUM)', 'generica'],
+    'ficta-altera': [[_viridis, _altera_signum], r'fictum: (sanum|FRACTUM)', 'generica']})
 silva._portae_fictae()
 _pd_vera = silva.portae_debitae
 _debita_ficta = [silva.Debitum('ficta-debita', 'x.c in clausura probatio_y.c', False),
@@ -2336,6 +2345,44 @@ try:
     credo([n for n, _, _ in cursae] == ['ficta-petita', 'ficta-debita'],
           'commissio_umbra: debita post petitas addita et cursa')
     credo('porta debita addita: ficta-debita' in buf.getvalue(), 'commissio_umbra: linea additionis')
+    # VII. EXCUSATAE (circulus commissionis T1, P5): porta debita UNA
+    # excusatur causa nominata; ceterae debitae adhuc adduntur et currunt
+    _debita_duo = [silva.Debitum('ficta-debita', 'x.c in clausura probatio_y.c', False),
+                   silva.Debitum('ficta-altera', 'w.c in clausura probatio_v.c', False)]
+    silva.portae_debitae = lambda viae, *a, **k: (list(_debita_duo), [])
+    _signum_tollere()
+    for _f in (_altera_signum,):
+        if os.path.exists(_f):
+            os.remove(_f)
+    eff, err = _commissio_capta(portae=[], excusatae={'ficta-debita': 'probatio: arbor discors'})
+    credo('porta debita EXCUSATA: ficta-debita - probatio: arbor discors' in eff and not os.path.exists(_signum),
+          'excusatae: debita excusata nominatur, NON cursa', causa=eff[-400:])
+    credo('porta debita addita: ficta-altera' in eff and os.path.exists(_altera_signum),
+          'excusatae: debita altera adhuc addita et CURSA')
+    credo(err is not None and 'nec in disco' in err, 'excusatae: commissio pergit (via absens refutata)')
+    # VIII. refutationes ANTE portas: causa vacua, porta ignota, petita et
+    # excusata simul, cum sine_debitis, excusata non debita
+    for k, verba in (({'excusatae': {'ficta-debita': ' '}}, 'causam'),
+                     ({'excusatae': {'porta-nusquam': 'x'}}, 'ignota'),
+                     ({'portae': ['ficta-debita'], 'excusatae': {'ficta-debita': 'x'}}, 'petita'),
+                     ({'excusatae': {'ficta-debita': 'x'}, 'sine_debitis': 'y'}, 'sine_debitis'),
+                     ({'excusatae': {'ficta-petita': 'x'}}, 'non debita')):
+        _signum_tollere()
+        if os.path.exists(_altera_signum):
+            os.remove(_altera_signum)
+        k.setdefault('portae', [])
+        eff, err = _commissio_capta(**k)
+        credo(err is not None and 'excusat' in err and verba in err
+              and not os.path.exists(_signum) and not os.path.exists(_altera_signum),
+              'excusatae refutatur (%s): nihil cursum' % verba, causa=repr(err))
+    # IX. commissio_umbra: excusata non additur, altera additur
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        h, cursae = silva.commissio_umbra('nihil', ['pythonica/README.md'], ['ficta-petita'], siccum=True,
+                                          excusatae={'ficta-debita': 'probatio: umbra'})
+    credo([n for n, _, _ in cursae] == ['ficta-petita', 'ficta-altera'],
+          'commissio_umbra: excusata omissa, altera addita', causa=repr(cursae))
+    silva.portae_debitae = lambda viae, *a, **k: (list(_debita_ficta), [])
 except (AttributeError, TypeError) as ex:
     credo(False, 'portae debitae in commissione absunt: %s' % ex)
 finally:

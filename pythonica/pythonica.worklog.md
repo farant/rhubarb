@@ -1071,3 +1071,24 @@ principle …RBA4W73). Test in the fake-inventory section (css has no row,
 radix/gesta/pythonica/crusta/html do); hand plant (always []) red. Live:
 []. The deeper question - coverage in the repo instead of the ledger - is
 the open ledger question (…GGMGY94).
+
+## 2026-10-12 - circulus commissionis T1: excusatae (P5)
+
+- `commissio(..., excusatae={'porta': 'causa'})` and the same in
+  commissio_umbra: excuses ONE owed gate, and the others are still added
+  and run. Before this, `sine_debitis` was all or nothing, so excusing
+  briar-fumus in portae-declaratae T4 meant hand-listing 43 gates, twice.
+- **Checked before anything runs** (`_excusatas_praeiudicare`): empty
+  cause, name not in PORTAE, gate both requested and excused, or combined
+  with `sine_debitis`.
+- **Checked once owed gates are known:** an excused gate that is not
+  actually owed is refused ("nihil excusandum"), so an excuse cannot
+  silently outlive its reason.
+- **Found on the way:** the `exspectare` test wrote its receipt IN PLACE
+  from a timer thread, so the waiter sometimes read an empty file
+  (JSONDecodeError, ABORT of the whole pythonica gate; seen once,
+  passed on rerun). Production writers use `.tmp` + rename, so the test
+  now does too. A flaky gate on every silva.py commit is exactly this
+  slice's kind of pain.
+- Plants II (hand, .py): excused gate still added → red; not-owed check
+  removed → red; restored → green.

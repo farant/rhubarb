@@ -6,10 +6,13 @@ green -> plant -> commit via silva.commissio. Work in `../rhubarb-quinta`.
 The small items go first, so each one helps the next commit.
 
 ### T1: P5 excusatae (per-gate excuse)
-- [ ] pythonica test with fake gates and debita (the existing commissio
+- [x] pythonica test with fake gates and debita (the existing commissio
   section): the excused gate is not run and its line is printed; the other
   owed gates are still added and run; empty cause or not-owed name
   refused, nothing run; same for commissio_umbra. Docs in README. Commit.
+  As built (2026-10-12): `_excusatas_praeiudicare` (prechecks) + adder
+  (not owed = refused); README; exspectare test flake fixed (atomic receipt
+  write in the test). Plants II red.
 
 ### T2: P3 stale judge healed
 - [ ] pythonica test with a fake fabrica returning "NON IUDICATUM ... iudex

@@ -31,7 +31,7 @@ and linked into both bin/aedilis and bin/fabrica. Consequences:
 **Design question for Fran:** compute the digest (a) through a fabrica
 action `extractor_aedilis` (`bin/fabrica digestum` over its inputs - one
 source of truth, declared), or (b) directly in the build script over
-`bin/aedilis --partes lib/aedilis_silva.c`. **Recommend (a)**: it is
+`bin/aedilis --partes lib/aedilis_silva.c`. **Fran 2026-10-12: (a)**: it is
 declared, judged and tested like every other digest, and stays correct
 when the extractor's closure changes.
 
