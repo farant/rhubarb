@@ -2395,6 +2395,10 @@ finally:
 # ---- fabrica ante portas (plan 1a T8 gradus III) ----
 print('\n--- fabrica: artificia generata tacta ante portas ---')
 _fb_verum = silva.FABRICA_BIN
+# iudices sanabiles (circulus commissionis T2): nulli nisi casus ipse
+# fictos ponat - numquam struere.sh VERUM ex probatione
+_iudices_veri = getattr(silva, 'IUDICES_STRUERE', None)
+silva.IUDICES_STRUERE = {}
 _commissae_verae = silva.VIAE_COMMISSAE
 # viae probationum fictae (g/x.c): commissae ponuntur, nisi ubi casus
 # NON commissorum probatur (1b T7)
@@ -2436,6 +2440,53 @@ try:
         silva.VIAE_COMMISSAE = _vc_vera
     credo(err is not None and 'sana compilator prius' in err,
           'fabrica: iudex stalus (non commissus) obstat - artificia tacta NON IUDICATA')
+    # IUDEX STALUS SANATUR (circulus commissionis T2, P3): iudex solus
+    # stalus et sanabilis -> struere.sh suum, iudicium ITERUM semel
+    _status = os.path.join(T, 'iudex_sanus')
+    _vocatae = os.path.join(T, 'struere_vocata')
+    _fs = os.path.join(T, 'fabrica_status')
+    with open(_fs, 'w') as f:
+        f.write('#!/bin/bash\nif [ -f %s ]; then printf "SUMMA\\t1\\t0\\t0\\t0\\t0\\tplenus\\n"; exit 0; fi\n'
+                'printf "IUDICIUM\\tSTALUM\\tbin/fabrica\\tingressus mutati\\n'
+                'IUDICIUM\\tNON IUDICATUM\\tg/x.c\\tiudex fabrica non recens - sana fabrica prius\\n"; exit 1\n' % _status)
+    os.chmod(_fs, 0o755)
+
+    def _struere_fictum(exitus, sanat):
+        via = os.path.join(T, 'struere_%d_%d.sh' % (exitus, sanat))
+        with open(via, 'w') as f:
+            f.write('#!/bin/bash\necho x >> %s\n%secho struere fictum\nexit %d\n'
+                    % (_vocatae, ('touch %s\n' % _status) if sanat else '', exitus))
+        os.chmod(via, 0o755)
+        return [via]
+
+    def _iudex_casus(iudices):
+        for _f in (_status, _vocatae):
+            if os.path.exists(_f):
+                os.remove(_f)
+        silva.IUDICES_STRUERE = iudices
+        buf = io.StringIO()
+        err = None
+        try:
+            with contextlib.redirect_stdout(buf):
+                silva._fabricam_exigere(['g/x.c'])
+        except silva.SilvaError as ex:
+            err = str(ex)
+        n = len(open(_vocatae).read().split()) if os.path.exists(_vocatae) else 0
+        return buf.getvalue(), err, n
+    silva.FABRICA_BIN = _fs
+    eff, err, n = _iudex_casus({'fabrica': _struere_fictum(0, True)})
+    credo(err is None and 'iudex sanatus: fabrica' in eff and n == 1,
+          'iudex stalus: sanatur (struere semel), iudicium iterum, pergit', causa=repr((eff[-300:], err, n)))
+    eff, err, n = _iudex_casus({'fabrica': _struere_fictum(1, False)})
+    credo(err is not None and 'sanari non potuit' in err and 'struere fictum' in err and n == 1,
+          'iudex stalus: struere fractum obstat, effusionem nominans', causa=repr(err))
+    eff, err, n = _iudex_casus({'fabrica': _struere_fictum(0, False)})
+    credo(err is not None and 'sana fabrica prius' in err and n == 1,
+          'iudex stalus: post sanationem adhuc stalus -> obstat, sanatio SEMEL', causa=repr((err, n)))
+    eff, err, n = _iudex_casus({})
+    credo(err is not None and 'sana fabrica prius' in err and n == 0,
+          'iudex stalus: iudex sine struere noto -> obstat ut antea', causa=repr((err, n)))
+    silva.IUDICES_STRUERE = {}
     # exitus 2: iudicare nequit (sera) - obstat
     silva.FABRICA_BIN = _fabrica_ficta(2, 'fabrica: iudex plenus alius currit\n')
     err = None
@@ -2495,6 +2546,7 @@ try:
 finally:
     silva.VIAE_COMMISSAE = _commissae_verae
     silva.FABRICA_BIN = _fb_verum
+    silva.IUDICES_STRUERE = _iudices_veri
 
 # FORMA ANTE IUDICIUM (parcum …QGT1): commissio plagulas .c/.h per
 # tools/formare_viae.sh format ANTE fabricam (uncus olim POST formabat:

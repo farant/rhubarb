@@ -399,3 +399,11 @@ Spec `project-specs/portae-debitae-spec.md`, planum `-plan.md`.
   ANTE umbras addit (ut in umbra currant), eodem `sine_debitis`.
   Sumptus: ~II s calide (clausurae aedilis per thesaurum extractoris),
   ~XXX s primum post bin/fabrica novum.
+- **Iudicium fabricae ante portas** (`_fabricam_exigere`, post lint):
+  `bin/fabrica iudicare -plenus -tacta` super viae commissionis; stala
+  commissa obstant, `sine_fabrica='<causa>'` omittit. IUDEX stalus
+  (bin/fabrica, bin/compilator, bin/aedilis - tabula `IUDICES_STRUERE`,
+  numquam recipe impressa) SANATUR per struere.sh suum (bin/ arboris,
+  nulla institutio): `iudex sanatus: X`, iudicium SEMEL iteratur;
+  struere fractum aut iudex adhuc stalus = `SilvaError` (circulus
+  commissionis P3).

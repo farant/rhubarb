@@ -1092,3 +1092,21 @@ the open ledger question (…GGMGY94).
   slice's kind of pain.
 - Plants II (hand, .py): excused gate still added → red; not-owed check
   removed → red; restored → green.
+
+## 2026-10-12 - circulus commissionis T2: stale judge healed (P3)
+
+- `_fabricam_exigere` used to refuse with "iudex fabrica non recens - sana
+  fabrica prius" whenever a house judge was stale, and the fix was always
+  the same tree-local build (portae T4 attempt 1). Now, if EVERY refusing
+  row names a judge in `IUDICES_STRUERE`, commissio runs that judge's
+  struere.sh, prints `iudex sanatus: X`, and judges ONCE more
+  (`_iudex_sanatus`).
+- The commands come from the table, never from the SANANDA recipe that
+  fabrica prints: commissio runs nothing that output text tells it to.
+- Tests set `IUDICES_STRUERE = {}` for the whole fabrica section and use
+  fake builders per case, so a test can never run a real struere.sh. The
+  pre-existing "stale compilator refuses" case would otherwise have
+  rebuilt bin/compilator for real.
+- Live check: one comment appended to lib/portae.c made bin/fabrica stale;
+  the precheck rebuilt it (~40 s) and passed on the second judgement.
+- Plants II (hand): heal disabled → red; a failed rebuild ignored → red.

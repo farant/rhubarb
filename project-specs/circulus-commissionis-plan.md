@@ -15,10 +15,16 @@ The small items go first, so each one helps the next commit.
   write in the test). Plants II red.
 
 ### T2: P3 stale judge healed
-- [ ] pythonica test with a fake fabrica returning "NON IUDICATUM ... iudex
+- [x] pythonica test with a fake fabrica returning "NON IUDICATUM ... iudex
   fabrica non recens" once and then clean: commissio rebuilds (fake
   struere), judges again, proceeds; a different refusal, or a failed
   rebuild, still refuses. Commit.
+  As built (2026-10-12): `IUDICES_STRUERE` table (fabrica, compilator,
+  aedilis -> their struere.sh; never the printed SANANDA recipe);
+  `_fabricam_exigere(_iudex_sanatus)` heals then judges once more. Four
+  cases (healed, rebuild fails, still stale = one attempt, unknown judge).
+  Live check: a comment in lib/portae.c made bin/fabrica stale, and the
+  precheck rebuilt it and passed. Plants II red.
 
 ### T3: P2 -nova refreshes the index
 - [ ] oratio/vocabula.sh -nova runs the incremental sweep first; test: add
