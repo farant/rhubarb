@@ -71,7 +71,7 @@ nomen structura {
 
 /* S3e: picturam spatii (exsistentem) in montatione ostendere -
  * documentum ex memoria aut apertum; contextus actionum et figurarum
- * et dimensiones durabiles (latitudo, altitudo) aptantur. FALSUM si
+ * et dimensiones in insula (latitudo, altitudo) aptantur. FALSUM si
  * nullum documentum ibi. */
 b32
 pictor_picturam_ponere (

@@ -60,7 +60,7 @@ pictor_aspergillum_ictus (
                 vacuum* ctx);
 
 /* <tractator/> strata (pictor-strata L3): ictus in palette stratorum -
- * 'stratum.<id>' eligit (ephemera stratum_activum), 'oculus.<id>'
+ * 'stratum.<id>' eligit (campus stratum_activum), 'oculus.<id>'
  * visibilitatem in actis mutat, 'strata.novum' stratum novum supra
  * currens (fit currens), 'strata.deletum' currens delet (inferius fit
  * currens; ultimum numquam). Dominus 'stratum_activum'. Palette
@@ -100,7 +100,7 @@ pictor_spongia_ictus (
                 vacuum* ctx);
 
 /* <tractator/> quadratum lineae status ictum: palettam suam aperit
- * (ephemera 'palette' = instrumentum / color_primus / color_secundus
+ * (campus 'palette' = instrumentum / color_primus / color_secundus
  * / exemplar / magnitudo);
  * eadem iterum: claudit */
 b32
