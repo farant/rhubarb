@@ -164,3 +164,67 @@ formatting with `%C`, sorted glob, atomic write, `recens(out, in...)`
 (tools/instrumentum_nectere.sh is today's shell `recens`). If the core
 needs `git ls-files` + line splitting, a minimal scriba slice is the
 candidate first step, not a workaround.
+
+## VII. As built (2026-10-12, T1-T6: 06a2c6e5 ac01588b 9cc16083 8a603900 def78408)
+
+- **The annotation is as approved, plus two forms decided during the build.**
+  - `instrumentum="bin/x"` (Fran's decision (B), T4) means this gate OWNS
+    the build tool. Other gates that run it inherit none of its sources;
+    an explicit `currit` still counts. Owners: aedilis, fabrica-fumus,
+    compilator, mensor-suitae.
+  - `titulus` + `manu` means a registered gate run by hand
+    (aequivalentia).
+  - 52 declarations in 51 runners, generated ONCE from the ledger in T4.
+- **C core** (`include/portae.h`, `lib/portae.c`): reader → derivation
+  (`PortaeOpertura`: exemplaria, fontes_c, ignota, notae) → `tactus`
+  (every reason per path/gate pair) → `debita` → writers. The TSV contract
+  and the human form both live in the library, and their exact bytes are
+  tested.
+- **The sutura has five callbacks:** enumerate, read, effectus, test
+  literals, closure. The CLI wires them in tools/fabrica_portae.c, plus
+  tools/fabrica_litterae.c, because silva/amalgama/silva.h clashes with
+  stml.h in a single translation unit.
+- **What the derivation counts as coverage** (each rule was found by the
+  shadow comparison):
+  - only CONTENT sites (lectio/exsecutio/fontatio); test probes and
+    listings only inspect mtime or existence;
+  - nothing guarded by `custodia`;
+  - house-tool executions and test-launched binaries map to their entry
+    source, with a `tools/` preference and ownership applied;
+  - any tracked path a test names is a dependency;
+  - untracked `.c` files get no closure.
+- **Unknowns:**
+  - blind (effectus or literals unreadable): owed for every path, but
+    covering none;
+  - unknown closure: owed and covering (Python parity);
+  - ambiguous name: all candidates;
+  - binary with no source: NOTA.
+- **CLI:** `bin/fabrica portae debitae|tactus|declaratae [-machina]
+  -portae TSV`. Measured: 2.4 s warm / 30 s cold after a rebuild of
+  bin/fabrica (the closure extraction cache is keyed by the binary's
+  digest); 4.6 s for a whole commit's owed gates, against 22-26 s in
+  Python.
+- **Wrapper:** `silva.portae_debitae` ≈ 60 lines; silva.py is net -265
+  lines; tools/inventarium_suitarum.py and the shadow comparison script
+  are deleted. The ledger inventory 'suitae probationum' is REMOVED
+  (Fran, all 50 rows, cause recorded). The ledger is never read; a fresh
+  clone computes owed gates (gate `portae-declaratae` II).
+- **Shadow comparison result** (T4): over 9815 paths, 0 pairs were owed
+  only by the old answer. Of 11973 pairs owed only by the new answer,
+  2021 remain, all real dependencies the ledger never recorded.
+- **Gate `portae-declaratae`** (3 s): no refusal over the real registry,
+  and owed gates without the annals. It is owed by every `.sh`,
+  silva.py, and the C core.
+- **Departures from the spec:**
+  - `portae_sine_ordine` was not turned into a C check: the gate makes
+    it unnecessary, because every key must have an annotated runner.
+  - `PortaeDebitum` carries `porta`/`causa`/`manu` as specified;
+    `PortaeTactus` is new.
+  - `-I` dirs remain a named gap, carried by `tegit`.
+- **Open** (ledger parks, natum-de …PXC):
+  - plumbing ownership at script level (excubitor via silva/nexus.sh),
+    …SRFSD9;
+  - hand-kept `-I` lists (compile_tests.sh, silva/haruspex.sh) should
+    derive from aedilis.stml, …W5W01;
+  - a path-glob home outside iter_directoria (three implementations
+    today), …H5021.

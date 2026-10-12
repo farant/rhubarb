@@ -93,4 +93,7 @@ calls, prints, and - for migration scaffolding - compares temporarily.
   probationum': REMOVED (Fran) after the commit.
 
 ### T6: close
-- [ ] spec "As built", worklogs, MEMORY, ledger …GGMGY94 closed; merge.
+- [x] spec "As built", worklogs, MEMORY, ledger …GGMGY94 closed; merge.
+  As built (2026-10-12): spec §VII; ledger 01M4GGMGY94G3FVM4EPNMTMXPC
+  clausum; three parks filed (script-level ownership, -I lists derived
+  from aedilis.stml, path-glob home); merge main -> quinta, ritual, ff.

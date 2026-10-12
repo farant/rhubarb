@@ -280,3 +280,12 @@ Dogfooding (principle …Z2Y555, checklist lapide FR-008 "scriba"):
   inventory is being removed (Fran 2026-10-12).
 - **Measured on this commit's own diff** (10 paths, now computed in C):
   4.6 s end to end. Python's "portae debitae" commit phase was 22-26 s.
+
+## 2026-10-12 - T6 close
+
+Slice closed. Spec §VII "As built". Ledger question 01M4GGMGY94G3FVM4EPNMTMXPC
+is closed with the answer recorded. Three parks were filed (natum-de):
+script-level plumbing ownership …SRFSD9, `-I` lists derived from
+aedilis.stml …W5W01, path-glob home …H5021. Next: merge main into
+quinta (that brings in insula C2 aa623c1b, which unbreaks briar-fumus),
+run the ritual, then ff main.
