@@ -11,7 +11,7 @@
 
 <p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
 <h1>volumen</h1>
-<p class="subtitulus">volumen (rotulus documentorum): documentum = plagula</p>
+<p class="subtitulus">volumen (rotulus documentorum): documentum = plagula sqlite una, veritas eventilis intra</p>
 
 <p>A whole document in one SQLite file, so copying the file copies the document. Inside: acta, the truth, an append-only event log stamped in SQL; massae, contents addressed by SHA-256 so the same content is stored once; and plagulae, a manifest of paths to hashes that is only a projection, rebuildable from the log and the blobs, so corrupting it never loses data. Create (refused if the file exists), open, or open-or-create; plus a scratch volume under /tmp, deleted on close, for integration tests. That last one has its reason written down: a smoke test of laboratorium once used the app&#x27;s fixed path and left 42 greetings and 21 experiments in Fran&#x27;s real volume, written by no one and wanted by no one, and made the test unrepeatable. Name not yet sealed; first consumer silex; grows only by pull (August 2026). pictor_documentum and mensa keep their documents in it.</p>
 

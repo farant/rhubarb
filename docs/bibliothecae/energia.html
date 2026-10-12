@@ -11,7 +11,7 @@
 
 <p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
 <h1>energia</h1>
-<p class="subtitulus">status pilae systematis post stratum suggestus: macOS</p>
+<p class="subtitulus">status pilae systematis post stratum suggestus: macOS per IOKit (lib/energia_macos.m), ceteri nullam pilam (lib/energia_posix.c) - variantes aedilis (macos posix).</p>
 
 <p>The battery, behind the platform layer: whether there is one, its charge in percent, whether it is charging. One function and one struct. On macOS it reads the power sources through IOKit; elsewhere it reports no battery. Written 2026-10-10 because Fran wanted the charge in vicus&#x27;s tab bar, which reads it through a port once a minute, with the clock. The macOS body is Objective-C and not C, because the CoreFoundation headers are not C89 and the house&#x27;s latina.h macros corrupt them, so the system headers are included first. The oracle was the machine itself: the first reading, 7% and charging, matched pmset. Its arrival exposed a debt. Several scripts link every object in build/ against a hard-coded list of frameworks, each needed IOKit added by hand, and one that was missed broke the healing of installed binaries in main two days later; those lists ought to be derived from aedilis.stml, the one place that already knows.</p>
 

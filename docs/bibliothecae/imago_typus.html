@@ -11,7 +11,7 @@
 
 <p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
 <h1>imago_typus</h1>
-<p class="subtitulus"></p>
+<p class="subtitulus">Typus imaginis SOLUS (sine implemento)</p>
 
 <p>Just the Imago type (RGBA pixels, width, height; not premultiplied; memory in an arena) and nothing else. Its reason is written in the header: while the type lived in imago.h, anything that only WROTE or COMPARED images (imago_png, imago_collatio) still pulled in the decoder, and vitrea, by including imago_png, dragged lib/imago.c and vendor stb_image into the build closure of every application. Measured on 2026-08-13 with bin/aedilis --partes on forum; after the split, forum&#x27;s vendored code went from one to none. A header with no implementation file pulls nothing: &#x27;that is the whole design&#x27;.</p>
 

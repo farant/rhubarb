@@ -11,7 +11,7 @@
 
 <p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
 <h1>norma_ad_c</h1>
-<p class="subtitulus">normae nominatae -&gt; fons C qui easdem aedificat</p>
+<p class="subtitulus">normae nominatae -&gt; fons C qui easdem aedificat (norma-spec-2 §III.3).</p>
 
 <p>Named norma schemas turned into C source that builds the same schemas: the emitter behind bin/norma c. For a prefix such as vates_norma_ it writes one public function per named schema, in a header and a body marked GENERATUM that fabrica judges against regeneration. A schema referenced from several places is built once per call, so the sharing in the file survives into C (pointer equality is asserted). A generator named in the file becomes a prototype in the generated header, so the consumer must define it, and a missing definition is a link error and not a silent default. Literals are written for C89 under the house flags: strings escaped, including &#x27;?&#x27; against trigraphs, and refused beyond 509 bytes; 64-bit bounds spelled so that the minimum compiles; floats in the shortest form that reads back exactly; non-finite values refused. The oracle compares the loader with the generated C: the same JSON Schema export, the same judgments on values generated from both, float bounds equal bit for bit, and committed files equal to what today&#x27;s emitter writes. Written 2026-10-08 (norma plan 3). Its first use moved vates&#x27;s response schema out of builder calls and into a file.</p>
 

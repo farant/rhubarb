@@ -11,7 +11,7 @@
 
 <p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
 <h1>aemulator_hospes</h1>
-<p class="subtitulus">hospes emulatoris: nucleus + infans + ansa</p>
+<p class="subtitulus">hospes emulatoris: nucleus + infans + ansa (aemulator-plan B4)</p>
 
 <p>The host of the emulator: the one place where the core (aemulator) and the child (pseudoterminale) touch. It was made its own library on purpose, so that every front end stays thin: the headless tests, the window, later vitrea each read the screen, send bytes, own their loop and call one function per turn. That function, aemulator_hospes_pulsare, sends what is queued for the child, reads what the child has produced (waiting for the first byte if asked, then taking what is ready up to a cap, so that cat /dev/urandom cannot starve the loop), writes it into the core, and queues the core&#x27;s replies. The queue to the child keeps its last part reserved for replies, so a large paste can never make an answer disappear; accepted input also brings the scrollback view back to the bottom. The pulse reports the child finished only when it has exited and all its output has been drawn. Everything is allocated at creation, and the child is touched only through its table of functions, so the host is as pure as the core. That seam paid in the tests: besides the scripted child and a real shell, a child defined in the test itself (write quotas, endless output, dead but not drained) turned every property of the queue and the loop into an exact assertion. examen found an unsigned underflow in the queue&#x27;s clip before any test did. Written 2026-10-06; used by terminale and by the esctest and vttest drivers.</p>
 
