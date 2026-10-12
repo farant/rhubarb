@@ -35,6 +35,7 @@
 #
 # Exitus: 0 factum; 1 defectio; 2 NIHIL CURSUM (praerequisita
 #         desunt - numquam cum silentio viridi confundendum).
+# <porta titulus="silex-semen" tegit="tools/silex_assets/* tools/silex_struere.sh"/>
 
 set -u
 

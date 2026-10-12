@@ -16,6 +16,7 @@
 #        (silva_lexicon.h/.c) examen renectunt
 #
 # Exitus 0 sanum | 1 FRACTUM | 2 nihil actum.
+# <porta titulus="nexus-instrumentorum" tegit="officina/cursor.sh officina/fusor.sh officina/interpretare.sh silva/ambigua.sh silva/arbor.sh silva/censor.sh silva/computus.sh silva/differre.sh silva/emendare.sh silva/emitte.sh silva/formator.sh silva/impressor.sh silva/infidelis.sh silva/origo.sh silva/percursus.sh silva/quaestio.sh silva/renominare.sh silva/selecta.sh" currit="silva/instrumenta/principalia/selecta.c"/>
 set -u
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$RADIX" || exit 2

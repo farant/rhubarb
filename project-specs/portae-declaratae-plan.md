@@ -58,10 +58,22 @@ calls, prints, and - for migration scaffolding - compares temporarily.
   sections / 147 assertions; fabrica fumus XLIV; plants VII red.
 
 ### T4: shadow comparison + annotations
-- [ ] temporary comparison script (old Python answer vs new C answer over
+- [x] temporary comparison script (old Python answer vs new C answer over
   all tracked paths); annotations generated ONCE from the ledger's
   judgement cells, reviewed as a diff, committed; differences zero or
   explained in the commit. Commit.
+  As built (2026-10-12): 52 declarations in 51 runners (generator in
+  the scratchpad, run once): of 320 ledger entries, 116 derived (not
+  written), 203 kept as tegit/currit, 1 dropped (empty glob). Comparison over
+  9815 paths: old-only 0; new-only 11973 -> 2021 after five derivation
+  fixes (house-tool exec -> source; any named tracked path; untracked .c
+  gets no closure; tools/ preference; content sites only) and Fran's (B)
+  instrument ownership (`instrumentum=`, owners aedilis/fabrica-fumus/
+  compilator/mensor-suitae). The remaining 2021 = real dependencies
+  (gate runs another runner or tool wrapper, product tools, named
+  fixtures) - categories in lib/portae.worklog.md. Also: titulus+manu
+  = registered gate run by hand; `bin/fabrica portae tactus [-omnes]`
+  (all reasons per path); silva.portae_tabula() (registry TSV).
 
 ### T5: cutover
 - [ ] silva.portae_debitae = wrapper over the CLI (~40 lines; registry TSV

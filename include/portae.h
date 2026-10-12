@@ -17,6 +17,11 @@
  *   manu     porta quam HOMO currit (sine PORTAE); causa necessaria
  *   tegit    exemplaria viarum (exemplar.h) ultra derivationem
  *   currit   programmata quae probationes lancant, derivationi caeca
+ *   instrumentum  binaria domus quae haec porta POSSIDET
+ *            ('bin/aedilis'): portae aliae quae ea currunt fontes
+ *            eorum non hereditant (infrastructura aedificandi, non
+ *            subiectum); possessor et 'currit' expressum hereditant.
+ *            Possessio bina = recusatio
  * Vocabulum CLAUSUM: attributum aliud = recusatio (error scribae).
  *
  * MACHINA PURA: ingressus et egressus per suturam (exemplar
@@ -56,12 +61,13 @@ nomen structura {
      * 'effectus'); NIHIL = ignotum (lacuna nominata, non recusatio) */
       StmlNodus* (*effectus) (vacuum* datum, chorda cursor,
                               Piscina* piscina);
-    /* litterae chordarum probationis (fons C) quae programmata vocat
-     * (system, processus_*): contentum sine '"', Xar de chorda, vacua =
-     * nihil vocat; NIHIL = ignotum. CLI: lexator silvae (commenta
+    /* litterae chordarum probationis (fons C): contentum sine '"', Xar
+     * de chorda; verbum primum viam arboris aut binarium domus nominans
+     * dependentia est (programma vocatum, fixum lectum); NIHIL =
+     * ignotum. CLI: lexator silvae (commenta
      * absunt, macrones NON expansi - mensuratum 2026-10-12: superset
      * responsi pythonici per arbor.sh -nudum) */
-            Xar* (*litterae_vocationum) (vacuum* datum, chorda fons,
+            Xar* (*litterae_probationis) (vacuum* datum, chorda fons,
                                          Piscina* piscina);
     /* clausura fontis C (aedilis): fontes et capita, viae radici
      * relativae, Xar de chorda; NIHIL = ignota (aedilis fractus) */
@@ -80,6 +86,7 @@ nomen structura {
     chorda  causa;      /* manu: cur homo currit; vacua aliter */
        Xar* tegit;      /* chorda: exemplaria viarum */
        Xar* currit;     /* chorda: programmata */
+       Xar* instrumenta; /* chorda: binaria domus possessa */
 } PortaDeclarata;
 
 /* recusatio una: locus (via vacua = registrum aut fundamentum; linea
@@ -95,7 +102,7 @@ nomen structura {
  * causas OMNES nominat (linea una per causam, 'via:linea: ...') et
  * *recusationes_out (NIHIL licet) easdem structas (Xar de
  * PortaeRecusatio): annotatio <porta> illegibilis, attributum ignotum,
- * titulus et manu simul aut neuter, manu sine causa, titulus extra
+ * nec titulus nec manu, manu sine causa, titulus extra
  * registrum, cursor alienus (registrum clavem alii scripto dat),
  * titulus bis declaratus, clavis registri sine cursore annotato. */
 Xar*
@@ -125,8 +132,9 @@ nomen structura {
 } PortaeExemplar;
 
 /* opertura portae declaratae unius. exemplaria = viae quas porta
- * DIRECTE tegit: cursor ipse; situs effectuum (lectio exsecutio
- * fontatio probatio enumeratio; classis arbor, resolutio plena;
+ * DIRECTE tegit: cursor ipse; situs effectuum CONTENTI (lectio
+ * exsecutio fontatio - probatio et enumeratio tempus/existentiam
+ * solum inspiciunt; classis arbor, resolutio plena;
  * custoditi praetereuntur - aedificatores '[ -x P ] || S' extra
  * catenam verdicti); scripta quae probationes vocant; tegit
  * annotationis. fontes_c = fontes C quorum CLAUSURAE (aedilis, T3)
@@ -171,6 +179,28 @@ nomen structura {
        b32 manu;
 } PortaeDebitum;
 
+/* tactus unus: via mutata portam tangit, rationes OMNES (Xar de
+ * chorda). porta = titulus, aut via cursoris (manu sine registro) */
+nomen structura {
+                     chorda  via;
+                     chorda  porta;
+                        b32  manu;
+                        Xar* rationes;
+    constans PortaeOpertura* opertura;
+} PortaeTactus;
+
+/* Tactus viarum mutatarum (Xar de PortaeTactus, ordine operturarum
+ * deinde viarum) - quaestio 'quid haec mutatio tangit et cur', et
+ * fundamentum debitorum (portae_debita_computare eos colligit).
+ * *intecta_out ut infra. NIHIL = memoria deficit. */
+Xar*
+portae_tactus_computare (
+    constans PortaeSutura*  sutura,
+             constans Xar*  operturae,
+             constans Xar*  viae,
+                      Xar** intecta_out,
+                  Piscina*  piscina);
+
 /* Debita viarum mutatarum (Xar de chorda, radici relativae). Ordo:
  * portae registri ordine registri, deinde manu ordine operturarum.
  * Via debet si exemplar eam tegit, si fons_c est, si (via .c .h .m)
@@ -197,8 +227,13 @@ portae_debita_computare (
  *     DEBITUM    <porta>  <0|1 manu>  <causa>
  *     INTECTUM   <via>
  *     RECUSATIO  <via>    <linea|0>   <causa>
+ *   portae tactus:
+ *     TANGIT     <via>    <porta>     <0|1 manu>  <ratio>   (una per
+ *                rationem)
+ *     INTECTUM   <via>
  *   portae declaratae:
  *     PORTA      <porta>  <0|1 manu>  <via>  <linea>  <causa manu>
+ *     INSTRUMENTUM <porta> <binarium possessum>
  *     TEGIT      <porta>  <via|globus|praefixum>  <exemplar>  <ratio>
  *     CLAUSURA   <porta>  <fons>      <ratio>
  *     IGNOTUM    <porta>  <textus>
@@ -223,6 +258,14 @@ portae_debita_scribere (
     constans Xar* intecta,
     constans Xar* recusationes,
              i32  viae_numerus,
+             b32  machina,
+         Piscina* piscina);
+
+/* tactus: lineae TANGIT (rationes omnes) et INTECTUM; homo per viam */
+chorda
+portae_tactus_scribere (
+    constans Xar* tactus,
+    constans Xar* intecta,
              b32  machina,
          Piscina* piscina);
 

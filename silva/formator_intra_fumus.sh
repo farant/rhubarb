@@ -14,6 +14,7 @@
 #       'extra extenta', plagula intacta, exitus 0
 # Machina ipsa in probatio_silva_formator probatur; hic CLI sola.
 # Usage: ./silva/formator_intra_fumus.sh      exit 0 sanum | 1 fractum
+# <porta titulus="formator-intra" currit="silva/instrumenta/principalia/formator.c"/>
 
 set -u
 RADIX="$(git rev-parse --show-toplevel)" || exit 2

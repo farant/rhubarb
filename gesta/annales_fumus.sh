@@ -21,6 +21,7 @@
 #        residens RECUSAT (non incipit vacuum)
 #
 # Exitus 0 sanum | 1 FRACTUM | 2 nihil actum.
+# <porta titulus="annales" tegit="gesta/fontes/annales_sedes.*"/>
 set -u
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$RADIX" || exit 2

@@ -45,6 +45,12 @@ with `materia_annotationes` through the crusta client, like `<tolera>`):
   built by hand): owed edits name it under MANU, never run it.
 - `tegit` - paths/globs (exemplar syntax) covered BEYOND derivation.
 - `currit` - programs its tests launch that derivation cannot see.
+- `instrumentum` - house binaries this gate OWNS (Fran 2026-10-12, T4):
+  other gates that run them inherit nothing (build infrastructure, not
+  their subject); an explicit `currit` still counts. Owned twice =
+  refusal.
+- `titulus` + `manu` - a registered gate a human runs (owed edits name
+  it, never run it), e.g. aequivalentia.
 An annotated script IS a gate row - no filename heuristic. Prose stays
 plain comments.
 

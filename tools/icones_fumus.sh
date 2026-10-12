@@ -35,6 +35,7 @@
 # Area SEMPER servatur: homo spectare debet.
 # Exitus: 0 factum; 1 defectio; 2 NIHIL CURSUM (praerequisita desunt).
 # Linea ultima: 'fumus icones: sanum' | 'fumus icones: FRACTUM'.
+# <porta manu causa="an Finder iconem pingat: oculus hominis iudicat"/>
 
 set -u
 

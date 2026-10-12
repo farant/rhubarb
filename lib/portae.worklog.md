@@ -142,3 +142,99 @@ Dogfooding (principle …Z2Y555, checklist lapide FR-008 "scriba"):
   red, then green: blind-covers, closure memo, reason dedupe, tab escape,
   closure for a non-C path, CLI closure blind, refusal exit code. The CLI
   plants ran via a function gate that rebuilds bin/fabrica around the plant.
+
+## 2026-10-12 - T4 annotations + shadow comparison
+
+- **What was annotated:** 51 runners carry 52 `<porta>` declarations,
+  generated ONCE from the ledger by a scratchpad script that is not kept:
+  - 45 PORTAE keys;
+  - `aequivalentia` as registered-but-manual;
+  - 6 manual rows;
+  - rete_fumus and vates_fumus, which had no row.
+
+  Each annotation sits at the end of the first header comment block. All
+  51 runners pass `bash -n`, and every runner diff is pure insertion.
+- **Ledger cells → annotation:** 320 entries in total.
+  - 116 are already derived and NOT written (73 tegit viae, 12 tegit
+    fontes, 31 currit binaria).
+  - 203 are kept as `tegit`/`currit`: family globs (`crusta/fontes/*`,
+    `*/probationes/*` - fixtures, grammars, worklogs in a directory),
+    guarded builders, runtime inputs of binaries (fabrica.stml, canons),
+    and lists effectus cannot resolve (venenum's `${fontes[@]}`,
+    nexus-instrumentorum's wrapper list).
+  - 1 is dropped: `lib/*.h` matches nothing.
+  - A `tegit` entry that duplicates `currit` is dropped, because a currit
+    `.c` covers itself.
+- **Shadow comparison** (tools/portae_comparare.py, temporary, deleted in
+  T5): old answer = silva.portae_debitae per path (inventory + closures,
+  pinned for the run); new answer = `bin/fabrica portae tactus -omnes`.
+  Over 9815 tracked paths:
+  - SOLI VETERI (owed only by the old answer) = 0, so the new answer covers
+    everything the ledger did;
+  - SOLI NOVO started at 11973 and is now 2021.
+- **Derivation fixes the comparison found** (each one had a failing test
+  first, and a plant):
+  1. A house tool executed by a runner (`classis="instrumentum_domus"`)
+     maps to its entry source, like test-launched binaries. Builder chains
+     execute bin/fabrica, bin/compilator and so on.
+  2. A test literal naming ANY tracked path is a dependency (verb
+     `nominat`: fixtures read, tables). Every suite test is lexed; the
+     system/processus_ prefilter is gone.
+  3. A `.c` site that is NOT tracked (written by the script itself, e.g.
+     `tools/unci-git/.fumus_generatum.c`, `culpa.c`) gets no closure.
+     Before this fix the unknown closure owed the gate on every C edit:
+     ~1900 paths each for unci, scribe and saltuarius.
+  4. Preference for ambiguous names: for `bin/x`, a unique candidate under
+     `tools/` wins; for `sub/build/x`, a unique one under `sub/` wins.
+     bin/fabrica matched three fabrica.c files, and briar/instrumenta/
+     fabrica.c dragged all of briar in.
+  5. **Only CONTENT sites count** (lectio, exsecutio, fontatio). `probatio`
+     and `enumeratio` only inspect mtime or existence. The header
+     staleness loop in silva/materia_substratum.sh
+     (`[ obj -nt include/<caput>.h ]`) alone made 2070 false pairs, and
+     `ls include/<caput>.h` in silva/examen.sh made more. The actual reads
+     are separate lectio sites.
+- **Fran decision (B), 2026-10-12: instrument ownership.**
+  `<porta titulus="aedilis" instrumentum="bin/aedilis"/>`: the gate that
+  tests a build tool OWNS its binary, and other gates that run it inherit
+  nothing (a NOTA names the owner). An explicit `currit` still wins.
+  Owners:
+  - aedilis → bin/aedilis
+  - fabrica-fumus → bin/fabrica
+  - compilator → bin/compilator
+  - mensor-suitae → bin/mensor (suite timing - same infrastructure
+    pattern)
+
+  This removed exactly the 1086 infrastructure-only pairs, plus 241 for
+  mensor. Owning the same binary twice is a refusal.
+- **Also:** `titulus` + `manu` together is now allowed. It means a
+  registered gate that a human runs (aequivalentia needs a basis built by
+  hand). T1's "titulus et manu simul" refusal is gone.
+- **What the remaining 2021 new-only pairs are:** real dependencies the
+  ledger never recorded.
+  - A gate runs another suite's runner or a tool wrapper:
+    `silva/compile_probationes.sh` from oraculum-silvae/silva-m3 (325),
+    `oratio/compile_probationes.sh` from the git hooks (256),
+    gesta/tabulariumd.sh (127), silva/formator.sh, arbor.sh, differre.sh,
+    examen.sh and nexus.sh (~320), tools/diagnostica.sh (49),
+    briar/compile_probationes.sh (49).
+  - Tools whose output becomes part of the product, such as
+    bin/capsula_generare (apps, 96).
+  - Named fixtures, e.g. probatio_silva_exemplaria_obsoleta.c naming 47
+    lib files.
+  - 326 pairs with mixed origins.
+- **Not done here (noted):** excubitor.sh/fabrica.tsv appear for many gates
+  through silva/nexus.sh index maintenance. That is plumbing at SCRIPT
+  level, which binary ownership cannot express. It's a candidate for a
+  later script-level form.
+- **Cost:** the new answer computes more coverage, so a commit touching
+  silva/oratio/gesta sources will owe more gates than before. That is the
+  price of the dependencies being real.
+- **Commit trap (T4):** the silva-m3 gate (`haruspex` TU check) compiles
+  EVERY lib/*.c with its own hand-written `-I` list (silva/haruspex.sh
+  TU_FLAGS). lib/portae.c has included crusta headers since T1, but
+  silva-m3 was not owed until the runners were annotated, so the break
+  hid for three commits. Added `-I$RADIX_DIR/crusta/fontes`. This is the
+  second hand-kept subset of aedilis.stml's include roots, after
+  compile_tests.sh; a lib that includes a subsystem header breaks every
+  such copy.

@@ -12,6 +12,7 @@
 # numerus linearum annalium ante et post ASSERITUR idem.
 #
 # Exitus 0 sanum | 1 FRACTUM | 2 nihil actum.
+# <porta titulus="frigida"/>
 set -u
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$RADIX" || exit 2

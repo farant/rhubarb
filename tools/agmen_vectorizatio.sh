@@ -17,6 +17,7 @@
 #
 # In defectu remarcae 'missed'/'analysis' ansae nominantur (causa).
 # Exitus 0 sana | 1 FRACTA | 2 nihil actum.
+# <porta titulus="agmen-vectorizatio"/>
 set -u
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$RADIX" || exit 2

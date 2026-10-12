@@ -122,6 +122,7 @@
 #
 # Exitus: 0 factum; 1 defectio; 2 NIHIL CURSUM (praerequisita desunt).
 # Linea ultima: 'fumus briar: sanum' | 'fumus briar: FRACTUM'.
+# <porta titulus="briar-fumus" tegit="tools/briar_struere.sh" currit="tools/briar.c"/>
 
 set -u
 

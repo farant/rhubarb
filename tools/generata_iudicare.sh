@@ -22,6 +22,7 @@
 # Exitus: 0 omnia commissa recentia · 1 aliquod non recens (nominatur)
 #         · 2 iudicare nequit (bin/fabrica deest, declarationes fractae,
 #         sera tenta).
+# <porta titulus="generata" tegit="*/aedificatio.stml aedificatio.canon aedificatio.stml fabrica.canon fabrica.stml" currit="tools/fabrica.c"/>
 set -u
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$RADIX" || exit 2

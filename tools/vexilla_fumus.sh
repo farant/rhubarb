@@ -7,6 +7,7 @@
 #      lineis) - copiae nominantur;
 # III. omne scriptum quod GCC_FLAGS adhibet vexilla.sh fontat.
 # Exitus 0 sanum | 1 FRACTUM | 2 nihil actum.
+# <porta titulus="vexilla" tegit="*.sh"/>
 set -u
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$RADIX" || exit 2

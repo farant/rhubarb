@@ -4,6 +4,9 @@
  * Usus (ex radice repositorii):
  *   bin/fabrica portae debitae [-machina] -portae TSV VIA...
  *       quae portae viis mutatis debentur (et quae viae intectae)
+ *   bin/fabrica portae tactus [-machina] -portae TSV (-omnes | VIA...)
+ *       quas portas quaeque via tangit, rationibus OMNIBUS (-omnes =
+ *       viae omnes arboris; comparatio T4)
  *   bin/fabrica portae declaratae [-machina] -portae TSV
  *       tabula portarum declaratarum et opertura derivata
  *
@@ -227,6 +230,8 @@ _usus (vacuum)
     fprintf(stderr,
         "usus: bin/fabrica portae debitae [-machina] -portae TSV "
         "VIA...\n"
+        "      bin/fabrica portae tactus [-machina] -portae TSV "
+        "(-omnes | VIA...)\n"
         "      bin/fabrica portae declaratae [-machina] -portae TSV\n");
 }
 
@@ -248,6 +253,8 @@ suturae_portae (
          constans character* via_registri  = NIHIL;
                         b32  machina       = FALSUM;
                         b32  debitae;
+                        b32  tactus;
+                        b32  omnes         = FALSUM;
                         Xar* viae;
                         Xar* declaratae;
                         Xar* recusationes = NIHIL;
@@ -259,12 +266,14 @@ suturae_portae (
                         s32  a;
 
     si (   argc < III || (strcmp(argv[2], "debitae") != 0
+        && strcmp(argv[2], "tactus") != 0
         && strcmp(argv[2], "declaratae") != 0))
     {
         _usus();
         redde II;
     }
     debitae  = strcmp(argv[2], "debitae") == 0;
+    tactus   = strcmp(argv[2], "tactus") == 0;
     viae     = xar_creare(piscina, (i32)magnitudo(chorda));
     per (a = III; a < argc; a++)
     {
@@ -276,7 +285,11 @@ suturae_portae (
         {
             via_registri = argv[++a];
         }
-        alioquin si (debitae && argv[a][0] != '-')
+        alioquin si (tactus && strcmp(argv[a], "-omnes") == 0)
+        {
+            omnes = VERUM;
+        }
+        alioquin si ((debitae || tactus) && argv[a][0] != '-')
         {
             *(chorda*)xar_addere(viae) = chorda_ex_literis(argv[a],
                 piscina);
@@ -305,12 +318,12 @@ suturae_portae (
 
         mundus.mandata = r.successus ? r.elementum_radix : NIHIL;
     }
-    sutura.datum                = &mundus;
-    sutura.plagulas_enumerare   = _enumerare;
-    sutura.plagulam_legere      = _legere;
-    sutura.effectus             = _effectus;
-    sutura.litterae_vocationum  = _litterae;
-    sutura.clausura_c           = _clausura;
+    sutura.datum                 = &mundus;
+    sutura.plagulas_enumerare    = _enumerare;
+    sutura.plagulam_legere       = _legere;
+    sutura.effectus              = _effectus;
+    sutura.litterae_probationis  = _litterae;
+    sutura.clausura_c            = _clausura;
     sutura.tabula_portarum      = _registrum_legere(via_registri,
         piscina);
     si (sutura.tabula_portarum == NIHIL)
@@ -322,7 +335,8 @@ suturae_portae (
         &recusationes);
     si (declaratae == NIHIL)
     {
-        _scribere(debitae ? portae_debita_scribere(NIHIL, NIHIL,
+        _scribere(debitae
+            || tactus ? portae_debita_scribere(NIHIL, NIHIL,
             recusationes, ZEPHYRUM, machina, piscina)
             : portae_declaratas_scribere(NIHIL, recusationes, machina,
                 piscina));
@@ -335,9 +349,32 @@ suturae_portae (
             "'git ls-files' aut memoria)\n");
         redde II;
     }
-    si (!debitae)
+    si (!debitae && !tactus)
     {
         _scribere(portae_declaratas_scribere(operturae, NIHIL, machina,
+            piscina));
+        redde ZEPHYRUM;
+    }
+    si (omnes)
+    {
+        viae = _enumerare(&mundus, piscina);
+        si (viae == NIHIL)
+        {
+            fprintf(stderr, "fabrica portae: 'git ls-files' fractum\n");
+            redde II;
+        }
+    }
+    si (tactus)
+    {
+        debita = portae_tactus_computare(&sutura, operturae, viae,
+            &intecta, piscina);
+        si (debita == NIHIL)
+        {
+            fprintf(stderr, "fabrica portae: tactus computari "
+                "nequeunt\n");
+            redde II;
+        }
+        _scribere(portae_tactus_scribere(debita, intecta, machina,
             piscina));
         redde ZEPHYRUM;
     }

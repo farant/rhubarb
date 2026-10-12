@@ -3,6 +3,7 @@
 # tempora HTTPS, API Anthropic. NON PORTA: rete poscit, manu curritur.
 # Usus: ./tools/rete_fumus.sh [-tls] [-badssl] [-mora] [-anthropic]
 #       (AEDIFICARE_SOLUM=1: struere sine cursu)
+# <porta manu causa="rete poscit (TLS, API vera)"/>
 set -u
 cd "$(dirname "${BASH_SOURCE[0]}")/.." || exit 1
 [ -x bin/aedilis ] || ./tools/aedilis_struere.sh >&2 || exit 1

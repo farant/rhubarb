@@ -21,6 +21,7 @@
 # edita in clausura omnium plagularum sunt, et differentia allocatoris
 # a differentia inputus distingui non potest nisi textus capitum idem
 # sit utrobique.
+# <porta titulus="aequivalentia" manu causa="in PORTAE (curri potest), sed -conferre basim prius conditam (silva/aequivalentia.sh -basis, ante mutationem) exigit - sine ea exitus 2; porta optimizationis parsatoris (RP 5.1), non commissionis" tegit="silva/aequivalentia.sh"/>
 set -u
 SILVA_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 RADIX_DIR="$(cd "$SILVA_DIR/.." && pwd)"

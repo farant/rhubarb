@@ -205,19 +205,19 @@ _suturam_parare (
     constans PlagulaFicta* plagulae,
     constans character* constans* paria)
 {
-    mundus->plagulae             = plagulae;
-    mundus->tabula_portarum      = _registrum(c->piscina, paria);
-    mundus->effectus             = NIHIL;
-    mundus->litterae             = NIHIL;
-    mundus->clausurae            = NIHIL;
-    mundus->clausurae_vocatae    = ZEPHYRUM;
-    sutura->datum                = mundus;
-    sutura->plagulas_enumerare   = _enumerare;
-    sutura->plagulam_legere      = _legere;
-    sutura->effectus             = _effectus;
-    sutura->litterae_vocationum  = _litterae;
-    sutura->clausura_c           = _clausura;
-    sutura->tabula_portarum      = mundus->tabula_portarum;
+    mundus->plagulae              = plagulae;
+    mundus->tabula_portarum       = _registrum(c->piscina, paria);
+    mundus->effectus              = NIHIL;
+    mundus->litterae              = NIHIL;
+    mundus->clausurae             = NIHIL;
+    mundus->clausurae_vocatae     = ZEPHYRUM;
+    sutura->datum                 = mundus;
+    sutura->plagulas_enumerare    = _enumerare;
+    sutura->plagulam_legere       = _legere;
+    sutura->effectus              = _effectus;
+    sutura->litterae_probationis  = _litterae;
+    sutura->clausura_c            = _clausura;
+    sutura->tabula_portarum       = mundus->tabula_portarum;
 }
 
 /* lectio una: Xar declarationum aut NIHIL cum causa */
@@ -517,9 +517,6 @@ _sectio_recusationes (
     _recusatio_probare(c, "# <porta titulus=\"credo\" tegti=\"x\"/>\n",
         credo_solum,
         "tools/credo_fumus.sh:1: attributum ignotum 'tegti'");
-    _recusatio_probare(c,
-        "# <porta titulus=\"credo\" manu causa=\"x\"/>\n",
-        credo_solum, "titulus et manu simul");
     _recusatio_probare(c, "# <porta tegit=\"x\"/>\n", credo_solum,
         "nec titulus nec manu");
     _recusatio_probare(c,
@@ -600,6 +597,7 @@ _sectio_derivatio_cursoris (
           "# <porta titulus=\"credo\" tegit=\"tools/credo_*.py\"/>\n" },
         { "tools/credo_convertere.py", "" },
         { "lib/credo.c", "" },
+        { "tools/fabrica.c", "" },
         { NIHIL, NIHIL }
     };
     hic_manens constans character* constans paria[] = {
@@ -618,6 +616,10 @@ _sectio_derivatio_cursoris (
           "<lectio via=\"lib/credo.c\" forma=\"via\""
           " resolutio=\"plena\" classis=\"arbor\" mandatum=\"clang\""
           " plagula=\"tools/credo_fumus.sh\"/>"
+          "<lectio via=\"tools/.fumus_generatum.c\" forma=\"via\""
+          " resolutio=\"plena\" classis=\"arbor\" mandatum=\"clang\""
+          " scripta_in_ambitu=\"verum\""
+          " plagula=\"tools/credo_fumus.sh\"/>"
           "<fontatio via=\"tools/vexilla.sh\" forma=\"via\""
           " resolutio=\"plena\" classis=\"arbor\""
           " plagula=\"tools/credo_fumus.sh\"/>"
@@ -632,6 +634,18 @@ _sectio_derivatio_cursoris (
           " plagula=\"tools/credo_fumus.sh\"/>"
           "<exsecutio via=\"tools/aedificator.sh\" forma=\"via\""
           " resolutio=\"plena\" classis=\"arbor\" custodia=\"bin/x\""
+          " plagula=\"tools/credo_fumus.sh\"/>"
+          "<exsecutio via=\"bin/fabrica\" forma=\"via\""
+          " resolutio=\"plena\" classis=\"instrumentum_domus\""
+          " plagula=\"tools/credo_fumus.sh\"/>"
+          "<probatio via=\"include/credo.h\" forma=\"via\""
+          " resolutio=\"plena\" classis=\"arbor\" operator=\"-nt\""
+          " plagula=\"tools/credo_fumus.sh\"/>"
+          "<enumeratio via=\"include/*.h\" forma=\"globus\""
+          " resolutio=\"plena\" classis=\"arbor\" mandatum=\"ls\""
+          " plagula=\"tools/credo_fumus.sh\"/>"
+          "<probatio via=\"bin/aedilis\" forma=\"via\""
+          " resolutio=\"plena\" classis=\"instrumentum_domus\""
           " plagula=\"tools/credo_fumus.sh\"/>"
           "<ambitus_lectio titulus=\"TMPDIR\" assignatum=\"falsum\""
           " plagula=\"tools/credo_fumus.sh\"/>"
@@ -673,7 +687,11 @@ _sectio_derivatio_cursoris (
     CREDO_AEQUALIS_I32((i32)e->genus, (i32)PORTAE_EXEMPLAR_GLOBUS);
     CREDO_VERUM(chorda_continet(e->ratio, _ch(c,
         "tegit (tools/credo_fumus.sh:1)")));
-    /* exclusa: scriptura, partialis, build, custoditi */
+    /* exclusa: probatio et enumeratio (tempus aut existentia, non
+     * contentum - custodia capitum '[ obj -nt caput ]'), scriptura,
+     * partialis, build, custoditi */
+    CREDO_VERUM(_exemplar(p->exemplaria, "include/credo.h") == NIHIL);
+    CREDO_VERUM(_exemplar(p->exemplaria, "include/*.h") == NIHIL);
     CREDO_VERUM(_exemplar(p->exemplaria, "tools/scriptum.txt")
         == NIHIL);
     CREDO_VERUM(_exemplar(p->exemplaria, "lib/") == NIHIL);
@@ -683,7 +701,16 @@ _sectio_derivatio_cursoris (
     CREDO_VERUM(_exemplar(p->exemplaria, "tools/secretum.c") == NIHIL);
     /* fons compilatus: clausura eius T3 tegit */
     CREDO_NON_NIHIL(_exemplar(p->fontes_c, "lib/credo.c"));
-    CREDO_AEQUALIS_I32(xar_numerus(p->fontes_c), I);
+    /* instrumentum domus exsecutum -> fons introitus (probatio '-x'
+     * non) */
+    e = _exemplar(p->fontes_c, "tools/fabrica.c");
+    CREDO_NECESSE_NON_NIHIL(e);
+    CREDO_VERUM(chorda_continet(e->ratio, _ch(c,
+        "tools/credo_fumus.sh currit bin/fabrica")));
+    /* fons non tractus (scriptum ipsum eum scribit): clausura nulla */
+    CREDO_VERUM(_exemplar(p->fontes_c, "tools/.fumus_generatum.c")
+        == NIHIL);
+    CREDO_AEQUALIS_I32(xar_numerus(p->fontes_c), II);
     CREDO_AEQUALIS_I32(xar_numerus(p->ignota), ZEPHYRUM);
 }
 
@@ -709,9 +736,13 @@ _sectio_derivatio_suitae (
         { "gesta/fontes/b.c", "" },
         { "gesta/fontes/c.h", "" },
         { "tools/folium_principale.c", "" },
+        { "tools/acies.c", "" },
+        { "lib/acies.c", "" },
+        { "briar/instrumenta/acies.c", "" },
         { "tools/probationes/folium.c", "" },
         { "apps/x/musivum.c", "" },
         { "apps/y/musivum.c", "" },
+        { "tessera/fixa/tabula.txt", "" },
         { NIHIL, NIHIL }
     };
     hic_manens constans character* constans paria[] = {
@@ -731,9 +762,10 @@ _sectio_derivatio_suitae (
     hic_manens constans PlagulaFicta litterae[] = {
         { "tessera/probationes/probatio_folium.c",
           "./gesta/tabulariumd.sh -sanum\nbin/folium -v\nsalve mundus\n"
-          "bin/probatio_folium\nbin/folium\n" },
+          "bin/probatio_folium\nbin/folium\n"
+          "tessera/fixa/tabula.txt\n" },
         { "tessera/probationes/probatio_musivum.c",
-          "bin/musivum\nbin/nusquam -x\n" },
+          "bin/musivum\nbin/nusquam -x\nbin/acies\n" },
         { NIHIL, NIHIL }
     };
                         Xar* o;
@@ -766,6 +798,11 @@ _sectio_derivatio_suitae (
     CREDO_NECESSE_NON_NIHIL(e);
     CREDO_VERUM(chorda_continet(e->ratio, _ch(c,
         "tessera/probationes/probatio_folium.c currit")));
+    /* fixum nominatum: dependentia, verbum 'nominat' */
+    e = _exemplar(p->exemplaria, "tessera/fixa/tabula.txt");
+    CREDO_NECESSE_NON_NIHIL(e);
+    CREDO_VERUM(chorda_continet(e->ratio, _ch(c,
+        "probatio_folium.c nominat tessera/fixa/tabula.txt")));
     /* binarium -> fons introitus (probationes/ omissae), semel */
     e = _exemplar(p->fontes_c, "tools/folium_principale.c");
     CREDO_NECESSE_NON_NIHIL(e);
@@ -779,6 +816,11 @@ _sectio_derivatio_suitae (
     CREDO_NECESSE_NON_NIHIL(e);
     CREDO_VERUM(chorda_continet(e->ratio, _ch(c, "ambiguum")));
     CREDO_NON_NIHIL(_exemplar(p->fontes_c, "apps/y/musivum.c"));
+    /* bin/x: candidatus unicus in tools/ praefertur */
+    CREDO_NON_NIHIL(_exemplar(p->fontes_c, "tools/acies.c"));
+    CREDO_VERUM(_exemplar(p->fontes_c, "lib/acies.c") == NIHIL);
+    CREDO_VERUM(_exemplar(p->fontes_c, "briar/instrumenta/acies.c")
+        == NIHIL);
     /* binarium sine fonte: nota, non caecum */
     CREDO_VERUM(_ignotum_habet(c, p->notae, "bin/nusquam"));
     CREDO_AEQUALIS_I32(xar_numerus(p->ignota), ZEPHYRUM);
@@ -850,12 +892,15 @@ hic_manens constans PlagulaFicta _plagulae_debitorum[] = {
     { "tools/rete_fumus.sh",
       "# <porta manu causa=\"rete poscit\"/>\n" },
     { "docs/x.md", "" },
+    { "silva/aeq.sh",
+      "# <porta titulus=\"aeq\" manu"
+      " causa=\"basis manu condita\"/>\n" },
     { NIHIL, NIHIL }
 };
 
 hic_manens constans character* constans _paria_debitorum[] = {
     "tessera=tessera/compile_probationes.sh|tessera/probationes",
-    "credo=tools/credo_fumus.sh", NIHIL
+    "credo=tools/credo_fumus.sh", "aeq=silva/aeq.sh", NIHIL
 };
 
 hic_manens constans PlagulaFicta _effectus_debitorum[] = {
@@ -870,6 +915,7 @@ hic_manens constans PlagulaFicta _effectus_debitorum[] = {
       "</processus></effectus>" },
     { "tessera/compile_probationes.sh", "<effectus/>" },
     { "tools/rete_fumus.sh", "<effectus/>" },
+    { "silva/aeq.sh", "<effectus/>" },
     { NIHIL, NIHIL }
 };
 
@@ -888,7 +934,8 @@ _debita_mundi (
     constans PlagulaFicta*  clausurae,
        constans character*  viae_lineis,
                       Xar** intecta,
-                      i32*  vocatae)
+                      i32*  vocatae,
+                      b32   tactus)
 {
     MundusPortarum  mundus;
       PortaeSutura  sutura;
@@ -918,7 +965,8 @@ _debita_mundi (
     viae_fictae.textus        = viae_lineis;
     viae                      = _lineae(&viae_fictae, c->piscina);
     mundus.clausurae_vocatae  = ZEPHYRUM;
-    debita = portae_debita_computare(&sutura, o, viae, intecta,
+    debita = tactus ? portae_tactus_computare(&sutura, o, viae, intecta,
+        c->piscina) : portae_debita_computare(&sutura, o, viae, intecta,
         c->piscina);
     *vocatae = mundus.clausurae_vocatae;
     redde debita;
@@ -964,7 +1012,8 @@ _chordam_habet (
 
 /* IX. debita: via exemplari tecta, clausura fontis, manu nominata,
  * intecta; ordo registri deinde manu; clausurae solum si via C mutata
- * et semel per fontem; causae plures '(+N aliae)' */
+ * et semel per fontem; causae plures '(+N aliae)'; tactus: rationes
+ * OMNES per (viam, portam) */
 interior vacuum
 _sectio_debita (
     CredoContextus* c)
@@ -985,7 +1034,7 @@ _sectio_debita (
     /* nulla via C: clausurae non rogantur */
     debita = _debita_mundi(c, _effectus_debitorum, clausurae,
         "tools/credo_convertere.py\ntools/rete_fumus.sh\ndocs/x.md\n",
-        &intecta, &vocatae);
+        &intecta, &vocatae, FALSUM);
     CREDO_NECESSE_NON_NIHIL(debita);
     CREDO_AEQUALIS_I32(vocatae, ZEPHYRUM);
     CREDO_AEQUALIS_I32(xar_numerus(debita), II);
@@ -1006,7 +1055,7 @@ _sectio_debita (
     /* caput C: clausurae fontium (semel quisque); ordo registri
      * (tessera ante credo); causae plures */
     debita = _debita_mundi(c, _effectus_debitorum, clausurae,
-        "include/credo.h\nlib/credo.c\n", &intecta, &vocatae);
+        "include/credo.h\nlib/credo.c\n", &intecta, &vocatae, FALSUM);
     CREDO_NECESSE_NON_NIHIL(debita);
     CREDO_AEQUALIS_I32(vocatae, III);
     CREDO_AEQUALIS_I32(xar_numerus(debita), II);
@@ -1021,9 +1070,46 @@ _sectio_debita (
         "include/credo.h in clausura lib/credo.c (lectio (clang) in"
         " tools/credo_fumus.sh) (+1 aliae)"));
     CREDO_AEQUALIS_I32(xar_numerus(intecta), ZEPHYRUM);
+    /* tactus: par (via, porta) cum rationibus omnibus; lineae TANGIT */
+    debita = _debita_mundi(c, _effectus_debitorum, clausurae,
+        "include/credo.h\nlib/credo.c\n", &intecta, &vocatae, VERUM);
+    CREDO_NECESSE_NON_NIHIL(debita);
+    CREDO_AEQUALIS_I32(xar_numerus(debita), III);
+    {
+        constans PortaeTactus* t = NIHIL;
+                          i32  k;
+
+        per (k = ZEPHYRUM; k < xar_numerus(debita); k++)
+        {
+            constans PortaeTactus* u = (constans PortaeTactus*)
+                xar_obtinere(debita, k);
+
+            si (   chorda_aequalis_literis(u->via, "lib/credo.c")
+                && chorda_aequalis_literis(u->porta, "credo"))
+            {
+                t = u;
+            }
+        }
+        CREDO_NECESSE_NON_NIHIL(t);
+        /* exemplar et fons_c eandem rationem dant: semel */
+        CREDO_AEQUALIS_I32(xar_numerus(t->rationes), I);
+    }
+    CREDO_VERUM(chorda_continet(portae_tactus_scribere(debita, intecta,
+        VERUM, c->piscina), _ch(c,
+        "TANGIT\tinclude/credo.h\tcredo\t0\tinclude/credo.h in clausura"
+        " lib/credo.c (lectio (clang) in tools/credo_fumus.sh)\n")));
+    /* porta registrata manu (titulus + manu): debitum MANU nomine
+     * registri */
+    debita = _debita_mundi(c, _effectus_debitorum, clausurae,
+        "silva/aeq.sh\n", &intecta, &vocatae, FALSUM);
+    CREDO_NECESSE_NON_NIHIL(debita);
+    CREDO_AEQUALIS_I32(xar_numerus(debita), I);
+    p = (constans PortaeDebitum*)xar_obtinere(debita, ZEPHYRUM);
+    CREDO_VERUM(chorda_aequalis_literis(p->porta, "aeq"));
+    CREDO_VERUM(p->manu);
     /* tegit annotationis */
     debita = _debita_mundi(c, _effectus_debitorum, clausurae,
-        "tessera/fixa/a.txt\n", &intecta, &vocatae);
+        "tessera/fixa/a.txt\n", &intecta, &vocatae, FALSUM);
     p = _debitum(debita, "tessera");
     CREDO_NECESSE_NON_NIHIL(p);
     CREDO_VERUM(chorda_aequalis_literis(p->causa,
@@ -1052,7 +1138,7 @@ _sectio_debita_caeca (
     constans PortaeDebitum* p;
 
     debita = _debita_mundi(c, _effectus_debitorum, clausurae,
-        "include/alia.h\n", &intecta, &vocatae);
+        "include/alia.h\n", &intecta, &vocatae, FALSUM);
     CREDO_NECESSE_NON_NIHIL(debita);
     p = _debitum(debita, "tessera");
     CREDO_NECESSE_NON_NIHIL(p);
@@ -1062,7 +1148,7 @@ _sectio_debita_caeca (
     CREDO_VERUM(_debitum(debita, "credo") == NIHIL);
     /* effectus credo ignotum: caeca */
     debita = _debita_mundi(c, effectus_sine_credo, clausurae,
-        "docs/x.md\n", &intecta, &vocatae);
+        "docs/x.md\n", &intecta, &vocatae, FALSUM);
     CREDO_NECESSE_NON_NIHIL(debita);
     p = _debitum(debita, "credo");
     CREDO_NECESSE_NON_NIHIL(p);
@@ -1145,6 +1231,8 @@ _sectio_contractus (
     CREDO_VERUM(chorda_continet(t, _ch(c,
         "PORTA\ttools/rete_fumus.sh\t1\ttools/rete_fumus.sh\t1\trete"
         " poscit\n")));
+    CREDO_VERUM(chorda_continet(t, _ch(c,
+        "PORTA\taeq\t1\tsilva/aeq.sh\t1\tbasis manu condita\n")));
     /* recusationes structae: locus et causa separati */
     _suturam_parare(c, &mundus, &sutura, plagulae, paria);
     recusationes = NIHIL;
@@ -1160,6 +1248,100 @@ _sectio_contractus (
         " sine annotatione <porta titulus=\"...\"/>\n"
         "RECUSATIO\t\t0\tporta 'sera' (cursor tools/sera_fumus.sh)"
         " sine annotatione <porta titulus=\"...\"/>\n"));
+}
+
+/* XII. possessio instrumentorum (instrumentum="bin/x"): porta quae
+ * instrumentum alienum currit fontes eius NON hereditat (nota
+ * nominat possessorem); possessor ipse hereditat; 'currit' expressum
+ * semper valet; possessio duplex recusatur */
+interior vacuum
+_sectio_possessio (
+    CredoContextus* c)
+{
+    hic_manens constans PlagulaFicta plagulae[] = {
+        { "tools/aedilis_porta.sh",
+          "# <porta titulus=\"aedilis\""
+          " instrumentum=\"bin/acies\"/>\n" },
+        { "tools/vates_fumus.sh", "# <porta titulus=\"vates\"/>\n" },
+        { "tools/credo_fumus.sh",
+          "# <porta titulus=\"credo\" currit=\"bin/acies\"/>\n" },
+        { "tools/acies.c", "" },
+        { "tools/folium.c", "" },
+        { NIHIL, NIHIL }
+    };
+    hic_manens constans character* constans paria[] = {
+        "aedilis=tools/aedilis_porta.sh", "vates=tools/vates_fumus.sh",
+        "credo=tools/credo_fumus.sh", NIHIL
+    };
+    hic_manens constans PlagulaFicta effectus[] = {
+        { "tools/aedilis_porta.sh",
+          "<effectus><processus radix=\"tools/aedilis_porta.sh\">"
+          "<exsecutio via=\"bin/acies\" forma=\"via\""
+          " resolutio=\"plena\""
+          " classis=\"instrumentum_domus\""
+          " plagula=\"tools/aedilis_porta.sh\"/>"
+          "</processus></effectus>" },
+        { "tools/vates_fumus.sh",
+          "<effectus><processus radix=\"tools/vates_fumus.sh\">"
+          "<exsecutio via=\"bin/acies\" forma=\"via\""
+          " resolutio=\"plena\""
+          " classis=\"instrumentum_domus\""
+          " plagula=\"tools/vates_fumus.sh\"/>"
+          "<exsecutio via=\"bin/folium\" forma=\"via\""
+          " resolutio=\"plena\" classis=\"instrumentum_domus\""
+          " plagula=\"tools/vates_fumus.sh\"/>"
+          "</processus></effectus>" },
+        { "tools/credo_fumus.sh", "<effectus/>" },
+        { NIHIL, NIHIL }
+    };
+    hic_manens constans PlagulaFicta bina[] = {
+        { "tools/aedilis_porta.sh",
+          "# <porta titulus=\"aedilis\""
+          " instrumentum=\"bin/acies\"/>\n" },
+        { "tools/vates_fumus.sh",
+          "# <porta titulus=\"vates\" instrumentum=\"bin/acies\"/>\n" },
+        { NIHIL, NIHIL }
+    };
+    hic_manens constans character* constans paria_bina[] = {
+        "aedilis=tools/aedilis_porta.sh", "vates=tools/vates_fumus.sh",
+        NIHIL
+    };
+                         Xar* o;
+                         Xar* d;
+     constans PortaeOpertura* p;
+                      chorda  causa;
+
+    d = _legere_mundum(c, plagulae, paria, &causa);
+    CREDO_NECESSE_NON_NIHIL(d);
+    CREDO_AEQUALIS_I32(xar_numerus(_declaratio(d,
+        "aedilis")->instrumenta),
+        I);
+    o = _derivare_mundum(c, plagulae, paria, effectus, NIHIL);
+    CREDO_NECESSE_NON_NIHIL(o);
+    /* possessor hereditat */
+    p = _opertura(o, "aedilis");
+    CREDO_NECESSE_NON_NIHIL(p);
+    CREDO_NON_NIHIL(_exemplar(p->fontes_c, "tools/acies.c"));
+    /* alienus non hereditat; nota possessorem nominat */
+    p = _opertura(o, "vates");
+    CREDO_NECESSE_NON_NIHIL(p);
+    CREDO_VERUM(_exemplar(p->fontes_c, "tools/acies.c") == NIHIL);
+    CREDO_VERUM(_ignotum_habet(c, p->notae,
+        "currit bin/acies: instrumentum portae 'aedilis'"));
+    CREDO_NON_NIHIL(_exemplar(p->fontes_c, "tools/folium.c"));
+    CREDO_AEQUALIS_I32(xar_numerus(p->ignota), ZEPHYRUM);
+    /* 'currit' expressum valet */
+    p = _opertura(o, "credo");
+    CREDO_NECESSE_NON_NIHIL(p);
+    CREDO_NON_NIHIL(_exemplar(p->fontes_c, "tools/acies.c"));
+    CREDO_VERUM(chorda_continet(portae_declaratas_scribere(o, NIHIL,
+        VERUM,
+        c->piscina), _ch(c, "INSTRUMENTUM\taedilis\tbin/acies\n")));
+    /* possessio bina */
+    CREDO_VERUM(_legere_mundum(c, bina, paria_bina, &causa) == NIHIL);
+    CREDO_VERUM(chorda_continet(causa, _ch(c,
+        "tools/vates_fumus.sh:1: instrumentum 'bin/acies' bis possessum"
+        " (prior: aedilis)")));
 }
 
 hic_manens constans CredoSectio SECTIONES[] = {
@@ -1182,6 +1364,9 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "debita caeca", _sectio_debita_caeca, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "contractus machinae", _sectio_contractus, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { "possessio instrumentorum", _sectio_possessio, NIHIL, NIHIL,
+        NIHIL,
       NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

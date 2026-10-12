@@ -2,6 +2,7 @@
 
 # Effusio cursus ultimi semper in build/test_logs/html.log
 # radicis (stdout + stderr; codex exitus per PIPESTATUS servatus).
+# <porta titulus="html" tegit="html/fontes/* html/grammatica/* html/probationes/* materia/fontes/* md/fontes/*"/>
 if [ -z "${HTML_PROBATIONES_EFFUSIO:-}" ]; then
     export HTML_PROBATIONES_EFFUSIO=1
     mkdir -p "$(dirname "$0")/../build/test_logs"

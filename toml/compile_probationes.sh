@@ -2,6 +2,7 @@
 
 # Effusio cursus ultimi semper in build/test_logs/toml.log
 # radicis (stdout + stderr; codex exitus per PIPESTATUS servatus).
+# <porta titulus="toml" tegit="materia/fontes/* toml/*.sh toml/aedificatio.stml toml/fontes/* toml/grammatica/* toml/instrumenta/* toml/probationes/*" currit="tools/aedilis.c tools/compilator.c tools/fabrica.c"/>
 if [ -z "${TOML_PROBATIONES_EFFUSIO:-}" ]; then
     export TOML_PROBATIONES_EFFUSIO=1
     mkdir -p "$(dirname "$0")/../build/test_logs"

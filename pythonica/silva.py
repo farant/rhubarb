@@ -2586,6 +2586,21 @@ def portae_debitae(viae, inventarium_res=INVENTARIUM_SUITARUM):
     return debita, [v for v in viae if v not in tecta]
 
 
+def portae_tabula():
+    """registrum PORTAE pro bin/fabrica portae (-portae TSV; portae-
+    declaratae T4): 'clavis<TAB>cursor[<TAB>directorium probationum]'
+    per portam, ordine PORTAE; cursor = verbum primum argv sine './',
+    probationes ex SUITAE. Involucrum solum - C Pythonem non parsat."""
+    lineae = []
+    for clavis, (argv, _signum) in PORTAE.items():
+        cursor = argv[0][2:] if argv[0].startswith('./') else argv[0]
+        campi = [clavis, cursor]
+        if clavis in SUITAE:
+            campi.append(SUITAE[clavis][0])
+        lineae.append('\t'.join(campi))
+    return '\n'.join(lineae) + '\n'
+
+
 def portae_sine_ordine(inventarium_res=INVENTARIUM_SUITARUM):
     """portae PORTAE quarum cursor (argumentum primum) ordinem NULLUM in
     inventario habet - debitum earum per 'tegit viae' / 'currit binaria'

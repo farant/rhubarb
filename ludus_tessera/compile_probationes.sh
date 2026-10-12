@@ -3,6 +3,7 @@
 # Effusio cursus ultimi semper in build/test_logs/ludus_tessera.log
 # radicis (stdout + stderr; codex exitus per PIPESTATUS servatus).
 # Ratio plena: compile_tests.sh radicis.
+# <porta titulus="ludus_tessera"/>
 if [ -z "${LUDUS_TESSERA_PROBATIONES_EFFUSIO:-}" ]; then
     export LUDUS_TESSERA_PROBATIONES_EFFUSIO=1
     mkdir -p "$(dirname "$0")/../build/test_logs"

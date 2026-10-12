@@ -3,6 +3,7 @@
 # Effusio cursus ultimi semper in build/test_logs/silva.log
 # radicis (stdout + stderr; codex exitus per PIPESTATUS
 # servatus). Ratio plena: compile_tests.sh radicis.
+# <porta titulus="silva" tegit="materia/fontes/* silva/*_fontes_generata.sh silva/fontes/* silva/grammatica/* silva/instrumenta/* silva/probationes/* silva/quaestiones.stml"/>
 if [ -z "${SILVA_PROBATIONES_EFFUSIO:-}" ]; then
     export SILVA_PROBATIONES_EFFUSIO=1
     mkdir -p "$(dirname "$0")/../build/test_logs"
