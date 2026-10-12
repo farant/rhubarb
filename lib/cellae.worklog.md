@@ -220,3 +220,89 @@ next to the float filter.
 Lint: `Mascae` became `Larvae`, `ki` became `index_k`. The approved API
 name `activatio_exhaustiva` needed a glossary entry `exhaustivus`
 (neo-Latin; forms exhaustiva, exhaustivam).
+
+## 2026-10-12 - correction to the T5 entry: the plant count
+
+The T5 entry and commit (b509e3bf) say "Plants (9), Red (7)". The real
+count is **7 plants: 6 red** (union not deduplicated, last k, maximum
+from n = 1, storage limit ignored, greedy stop ignored, duplicate check
+dropped) **and 1 equivalent** (extension position 0).
+
+## 2026-10-12 - T6: certified float filter, one ladder pass, combination cache
+
+**Measured first** (scratch benchmark, D82 shallow 127, zeta_12, exact
+rule, D82's greedy search): 21.8 s, almost all in extensio arithmetic
+(gcd normalization) on exact sums and their text keys.
+
+Three lossless changes:
+1. **Certified float filter.**
+   - Catalog entries and sector boundaries become correctly rounded
+     doubles (extensio's and radices' certified 20-digit decimals,
+     converted lazily).
+   - Per sum, interval arithmetic gives a, v, tan²h and every axis
+     score. Each operation's interval is widened past its rounding
+     error (4.5e-16 relative + 1e-300).
+   - The cell is decided only when a ≠ 0, v ≠ 0, tan²h lies strictly
+     between boundaries, and one axis score is strictly highest.
+   - A decided cell cannot be a tie (an interval never excludes an
+     exact equality), so its tie set is that single cell.
+   - Otherwise the exact path runs, comparing exact axes only among the
+     float candidates (the others are certainly lower).
+2. **One pass per weight set over the ladder.**
+   - The greedy search used to call separat once per k, recomputing
+     everything.
+   - `_separat_scala` builds each folded vector's k-independent part
+     once (coefficients, parity, intervals, axis decision or candidates,
+     tan²h); per k it decides only the sector, stopping at the first k
+     that separates.
+   - The axis intervals and norms are precomputed per activation.
+   - This was the big win.
+3. **Combination cache.** A canonical (catalog index, ±1) key, sorted by
+   index with the first sign positive, maps straight to the Punctum, so
+   a repeated combination skips all extensio arithmetic. The empty
+   vector needed a non-empty key ("#").
+
+Timings (D82 greedy, exact rule):
+
+| subset | before | after |
+|---|---|---|
+| shallow 127 (46 axes) | 21.8 s | **0.50 s** (44x) |
+| deep 564 (476 axes) | — | 80 s |
+| shallow 564 (239 axes) | — | 37 s |
+
+On deep 564: 14.2M decisions filtered, 1.78M exact, of which **1.63M
+genuine ties**.
+
+**Preview of D125:** deep 564 under the exact rule reaches XOR12 with
+21 XOR12 winners (D82's float: 19, under the cap of 32, so
+tie-dependent). Shallow 564 reaches XOR10 (as D82).
+
+Credo (150 in the suite, ~20 s):
+- every earlier check passes with the filter on: all D124 tables, the
+  literal-D84 greedy reference, the integer oracle;
+- **filter on vs off** on zeta_12 (first 30 entries): all 36,540 (triple
+  × k in 6/12/24 × rule/robust/possible) verdicts equal;
+- the greedy search on zeta_12's first 51 entries (rule and robust):
+  identical winner lists and k;
+- statistics: off gives filtered = 0; on gives filtered > exact and
+  ties <= exact. Decision COUNTS may differ between on and off. In
+  possible mode a filtered vector does not mark its point identity, so
+  a later same-point clash is found by the SAT solver instead of the
+  early check: same verdict, a few more vectors evaluated.
+
+Plants (7):
+- **Red (6):**
+  - axis decided with several candidates;
+  - a = 0 not sent exact;
+  - candidates not mapped back;
+  - filtered decisions not counted;
+  - combination key ignoring the sign;
+  - **no interval widening.** The margins are load-bearing: without
+    them float decides some exact ties wrongly.
+- **Equivalent (1):** boundary touching allowed (`>=` relaxed to `>`).
+  With widening, a true tie's interval never ends exactly on the
+  boundary; `>=` stays as the conservative choice.
+
+Open for T7: deep 564's 80 s is the linear interval scan over 476 axes
+per vector plus 1.6M tied (exact) decisions. Next to measure: an axis
+index (bucketed by region of S²) and incremental extension.

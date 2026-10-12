@@ -1534,6 +1534,163 @@ _probare_quaestiones_alias (
     }
 }
 
+
+/* ==================================================
+ * T6: filtrum sine iactura (zeta_12)
+ * ================================================== */
+
+interior Catalogus*
+_zeta_duodecim (
+     Piscina* piscina,
+         i32  primi)
+{
+    Quaternio  g[IV];
+    Catalogus* cat   = NIHIL;
+    Catalogus* pars  = NIHIL;
+          i32  indices[C];
+          i32  i;
+
+    _generatores(extensio_anulus(extensio_quadratica(III, piscina)),
+        "a/2", "1/2", "-1/2", piscina, g);
+    si (!catalogus_clausura(g, TORSIONES, IV, (i32)F_MAX, XVI, piscina,
+        &cat))
+    {
+        redde NIHIL;
+    }
+    per (i = ZEPHYRUM; i < primi; i++) indices[i] = i;
+    si (!catalogus_pars(cat, indices, primi, piscina, &pars))
+    {
+        redde NIHIL;
+    }
+    redde pars;
+}
+
+interior vacuum
+_probare_filtrum (
+    CredoContextus* c)
+{
+                    Piscina* piscina = c->piscina;
+    hic_manens constans i32  VALORES_K[III] = { 6, 12, 24 };
+                  Catalogus* cat = _zeta_duodecim(piscina, XXX);
+                  Activatio* cum = NIHIL;
+                  Activatio* sine = NIHIL;
+           CellaeStatistica  st_cum;
+           CellaeStatistica  st_sine;
+                        i32  a;
+                        i32  b;
+                        i32  cc;
+                        i32  index_k;
+                        i32  modus;
+                        i64  comparata  = 0;
+                        i64  discordes  = 0;
+                        i64  verae      = 0;
+
+    imprimere("\n--- Filtrum: verdicta eadem cum et sine (zeta_12, XXX) ---\n");
+    CREDO_NECESSE (cat != NIHIL);
+    CREDO_NECESSE (activatio_ex_catalogo(cat, ZEPHYRUM, piscina, &cum));
+    CREDO_NECESSE (activatio_ex_catalogo(cat, ZEPHYRUM, piscina,
+        &sine));
+    activatio_filtrum(sine, FALSUM);
+    per (a = ZEPHYRUM; a < XXX; a++) per (b = a + I; b
+                                         < XXX; b++) per (cc = b + I; cc
+                                                         < XXX; cc++) per (index_k =
+                                                                          ZEPHYRUM; index_k
+                                                                              < III; index_k++) per (modus =
+                                                                                                    ZEPHYRUM; modus
+                                                                                                        < III; modus++)
+                                                                                                {
+        i32 w[III];
+        b32 v1 = FALSUM;
+        b32 v2 = FALSUM;
+        b32 b1;
+        b32 b2;
+
+        w[0] = a; w[1] = b; w[2] = cc;
+        b1 = activatio_separat(cum, w, III, VALORES_K[index_k], modus,
+            &v1);
+        b2 = activatio_separat(sine, w, III, VALORES_K[index_k], modus,
+            &v2);
+        comparata++;
+        si (b1 != b2 || v1 != v2) discordes++;
+        si (v1) verae++;
+                                                                                                }
+    activatio_statistica(cum, &st_cum);
+    activatio_statistica(sine, &st_sine);
+    imprimere("    comparata %ld, discordes %ld, verae %ld\n",
+        (long)comparata,
+        (long)discordes, (long)verae);
+    imprimere("    cum filtro: filtro %ld exacte %ld ligatae %ld; sine: filtro "
+        "%ld exacte %ld ligatae %ld\n", (long)st_cum.filtro,
+        (long)st_cum.exacte, (long)st_cum.ligatae, (long)st_sine.filtro,
+        (long)st_sine.exacte, (long)st_sine.ligatae);
+    /* C(XXX, III) x III k x III modi */
+    CREDO_VERUM (comparata == 36540 && discordes == 0 && verae > 0);
+    /* sine filtro nihil filtratum; cum filtro pars maior; paritates solae
+     * viae exactae (filtrum paritatem numquam decidit) */
+    CREDO_VERUM (st_sine.filtro == 0 && st_sine.exacte > 0);
+    CREDO_VERUM (st_cum.filtro > st_cum.exacte && st_cum.ligatae
+        <= st_cum.exacte);
+    /* numeri decisionum differre possunt (ordo terminationis in modo
+     * possibili: punctum filtratum identitatem non notat, SAT eandem
+     * contradictionem postea invenit) - verdicta non */
+}
+
+interior vacuum
+_probare_filtrum_avidum (
+    CredoContextus* c)
+{
+      Piscina* piscina  = c->piscina;
+    Catalogus* cat      = _zeta_duodecim(piscina, LI);
+    Activatio* cum      = NIHIL;
+    Activatio* sine     = NIHIL;
+    Capacitas  c1;
+    Capacitas  c2;
+     Quaestio  q;
+          i32  modus;
+          b32  bene = VERUM;
+
+    imprimere("\n--- Filtrum: quaestio avida eadem (zeta_12, LI) ---\n");
+    CREDO_NECESSE (cat != NIHIL);
+    per (modus = ZEPHYRUM; modus < II; modus++)
+    {
+        i32 n;
+
+        CREDO_NECESSE (activatio_ex_catalogo(cat, ZEPHYRUM, piscina,
+            &cum));
+        CREDO_NECESSE (activatio_ex_catalogo(cat, ZEPHYRUM, piscina,
+            &sine));
+        activatio_filtrum(sine, FALSUM);
+        _quaestio(&q, modus);
+        q.n_maximum = VI;
+        CREDO_NECESSE (activatio_avida(cum, &q, piscina, &c1));
+        CREDO_NECESSE (activatio_avida(sine, &q, piscina, &c2));
+        imprimere("    modus %d: max XOR%d, inventi %ld %ld %ld %ld\n",
+            (int)modus, (int)c1.maximum, (long)c1.numerus[3],
+            (long)c1.numerus[4], (long)c1.numerus[5],
+            (long)c1.numerus[6]);
+        bene = bene && c1.maximum == c2.maximum;
+        per (n = III; n <= VI; n++)
+        {
+            i32 w;
+            i32 t;
+
+            bene = bene && c1.numerus[n] == c2.numerus[n]
+                && c1.servati[n] == c2.servati[n];
+            per (w = ZEPHYRUM; bene && w < c1.servati[n]; w++)
+            {
+                bene = bene
+                    && c1.victores[n][w].k == c2.victores[n][w].k;
+                per (t = ZEPHYRUM; t < n; t++)
+                {
+                    bene = bene && c1.victores[n][w].pondera[t]
+                        == c2.victores[n][w].pondera[t];
+                }
+            }
+        }
+    }
+    CREDO_VERUM (bene);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "zeta_8", _probare_zeta_octo, NIHIL, NIHIL, NIHIL, NIHIL },
     { "zeta_12", _probare_zeta_duodecim, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -1553,6 +1710,10 @@ hic_manens constans CredoSectio SECTIONES[] = {
       NIHIL },
     { "quaestiones aliae", _probare_quaestiones_alias, NIHIL, NIHIL,
       NIHIL, NIHIL },
+    { "filtrum sine iactura", _probare_filtrum, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { "filtrum avidum", _probare_filtrum_avidum, NIHIL, NIHIL, NIHIL,
+      NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

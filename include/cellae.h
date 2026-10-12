@@ -260,4 +260,35 @@ activatio_avida (
                Piscina* piscina,
              Capacitas* exitus);
 
+
+/* ==================================================
+ * Filtrum fluitans certum et statistica
+ *
+ * In activatio_separat (et quaestionibus) summa primum per intervalla
+ * duplicium aestimatur (elementa et termini correcte rotundati, omnis
+ * operatio ultra errorem suum dilatata): si intervalla a != 0, v != 0,
+ * tan^2 h inter terminos STRICTE et axem unum STRICTE maximum
+ * probant, cella decisa est et sine paritate (paritas aequalitas exacta
+ * est, quam intervallum numquam excludit). Aliter via exacta (axes
+ * candidatae solae si filtrum eas angustavit). Sine iactura: verdicta
+ * eadem ac sine filtro (probatur).
+ * ================================================== */
+
+nomen structura {
+    i64 filtro;      /* cellae a filtro decisae */
+    i64 exacte;      /* cellae per viam exactam */
+    i64 ligatae;     /* exactae cum paritate (plus quam una cella) */
+} CellaeStatistica;
+
+/* filtrum (ordinarie VERUM) */
+vacuum
+activatio_filtrum (
+     Activatio* activatio,
+           b32  utere);
+
+vacuum
+activatio_statistica (
+    constans Activatio* activatio,
+      CellaeStatistica* exitus);
+
 #endif /* CELLAE_H */
