@@ -2170,146 +2170,77 @@ _n3 = silva._nuntium_cum_trailer('titulus: de Co-Authored-By: in media linea loq
 credo(_n3.count('\nCo-Authored-By:') == 1, 'mentio in MEDIA linea non est linea auctoris')
 
 
-print('--- portae debitae: quae portae mutationi debentur (inventarium FICTUM) ---')
-# Via frigida SUBSTITUITUR: '-inventarium X' plagulam TSV ex ambitu
-# reddit (FICTA_INV), aut rc FICTA_INV_RC. Clausurae aedilis VERAE
-# (arbor viva: invariantes, non numeri). Acceptio = replay dcd516c7.
-_pd = tempfile.mkdtemp(prefix='silva_debitae_')
-_pstip = os.path.join(_pd, 'frigida_ficta.sh')
-_pinv = os.path.join(_pd, 'inv.tsv')
-open(_pstip, 'w').write(
-    '#!/bin/bash\n'
-    'if [ "$1" = "-inventarium" ]; then\n'
-    '  [ -n "${FICTA_INV_RC:-}" ] && { echo "res ignota" >&2; exit "$FICTA_INV_RC"; }\n'
-    '  echo "  [nexus] strepitus launcheri"\n'
-    '  cat "$FICTA_INV"; exit 0\n'
-    'fi\n'
-    'exit 2\n')
-os.chmod(_pstip, 0o755)
+print('--- portae debitae: involucrum bin/fabrica portae (portae-declaratae T5) ---')
+# Calculus in C (probatio_portae, fumus fabricae XLIV); hic solum
+# involucrum: contractus machinae legitur, effugia solvuntur, RECUSATIO
+# et fabrica absens = SilvaError nominatus; deinde arbor VIVA.
+_fb_portae = silva.FABRICA_BIN
+_portae_seposita = {}
 
 
-def _inv_scribere(currit_radix):
-    lineae = [
-        'compile_tests.sh\tporta\ttextus\tradix',
-        'compile_tests.sh\tmanu tantum\tita-non\tnon',
-        'gesta/compile_probationes.sh\tporta\ttextus\tgesta',
-        'pythonica/probare.sh\tporta\ttextus\tpythonica',
-        'pythonica/probare.sh\ttegit viae\ttextus\tpythonica/*, tools/inventarium_*.py',
-        'apps/forum/fumus.sh\tporta\tnon-applicabile\textra PORTAE',
-        'apps/forum/fumus.sh\tmanu tantum\tita-non\tita',
-        'apps/forum/fumus.sh\ttegit viae\ttextus\tapps/forum/*',
-        'tools/claves_codices_probare.sh\tcur extra PORTAE\ttextus\tuna\\tduae\\\\tres\\nquattuor',
-        'crusta/compile_probationes.sh\tporta\ttextus\tcrusta',
-        'crusta/compile_probationes.sh\ttegit fontes\ttextus\tcrusta/fontes/*, materia/fontes/*',
-        'html/compile_probationes.sh\tporta\ttextus\thtml',
-        'html/compile_probationes.sh\ttegit fontes\ttextus\thtml/fontes/*',
-    ]
-    if currit_radix:
-        lineae.append('compile_tests.sh\tcurrit binaria\ttextus\t'
-                      'gesta/instrumenta/tabulariumd_principale.c, gesta/tabulariumd.sh')
-    open(_pinv, 'w').write('\n'.join(lineae) + '\n')
+def _portae_ficta(rc, octeti):
+    """bin/fabrica fictus portarum: argv in portae_argv.txt, effusio
+    OCTETIS EXACTIS (effugia contractus intacta), exitus rc"""
+    via = os.path.join(T, 'portae_ficta_%d' % rc)
+    open(via + '.effusio', 'w').write(octeti)
+    with open(via, 'w') as f:
+        f.write('#!/bin/bash\nprintf "%%s\\n" "$@" > %s\ncat %s\nexit %d\n'
+                % (os.path.join(T, 'portae_argv.txt'), via + '.effusio', rc))
+    os.chmod(via, 0o755)
+    return via
 
 
-_dcd = ['gesta/fontes/tabularium.c', 'gesta/gesta.worklog.md',
-        'gesta/probationes/probatio_tabularium.c']
-_fr_vera2 = silva.FRIGIDA_IMPERIUM
-silva.FRIGIDA_IMPERIUM = [_pstip]
-os.environ['FICTA_INV'] = _pinv
 try:
-    # lectio: strepitus launcheri praetermittitur; effugia solvuntur
-    _inv_scribere(False)
-    inv = silva.inventarium('suitae probationum')
-    credo(inv.ordines[0] == 'compile_tests.sh' and 'porta' in inv.lentes,
-          'inventarium: ordines et lentes ordine tabulae')
-    credo(inv.cellae['tools/claves_codices_probare.sh']['cur extra PORTAE']
-          == ('textus', 'una\tduae\\tres\nquattuor'),
-          'inventarium: \\t \\\\ \\n in valore soluta (tabulatio, vectis, linea nova)')
-
-    # ACCEPTIO I (nata rubra): sine cella 'currit binaria' radix DEEST
-    debita, intecta = silva.portae_debitae(_dcd)
-    nomina = [d.porta for d in debita]
-    credo('gesta' in nomina, 'dcd516c7 sine cella: gesta debetur (clausura compilandi)')
-    credo('radix' not in nomina, 'dcd516c7 sine cella: radix NON debetur (graphus eam non videt)')
-    credo('gesta/gesta.worklog.md' in intecta, 'worklog nullius portae: intectum')
-    g = [d for d in debita if d.porta == 'gesta'][0]
-    credo('gesta/fontes/tabularium.c' in g.causa and 'probatio_' in g.causa and not g.manu,
-          'causa gestae plagulam et probationem nominat')
-
-    # ACCEPTIO II: cum cella radix debetur, causa per tabulariumd_principale.c
-    _inv_scribere(True)
-    debita, intecta = silva.portae_debitae(_dcd)
-    r = [d for d in debita if d.porta == 'radix']
-    credo(len(r) == 1, 'dcd516c7 cum cella: radix debetur')
-    credo(r and 'tabulariumd_principale.c' in r[0].causa and 'gesta/fontes/tabularium.c' in r[0].causa,
-          'causa radicis catenam nominat (plagula -> tabulariumd_principale.c)')
-    credo([d.porta for d in debita if not d.manu] == [p for p in silva.PORTAE if p in ('gesta', 'radix')],
-          'ordo = ordo PORTAE')
-
-    # tegit viae (fnmatch), cursor ipse, manu, intecta
-    debita, intecta = silva.portae_debitae(['pythonica/silva.py', 'tools/inventarium_suitarum.py'])
-    credo([d.porta for d in debita] == ['pythonica'] and intecta == [],
-          'tegit viae: pythonica/* et tools/inventarium_*.py -> pythonica')
-    debita, intecta = silva.portae_debitae(['gesta/compile_probationes.sh'])
-    credo([d.porta for d in debita] == ['gesta'], 'cursor ipse mutatus: porta sua debetur')
-    debita, intecta = silva.portae_debitae(['apps/forum/fumus.sh', 'README.md'])
-    m = [d for d in debita if d.manu]
-    credo(len(m) == 1 and m[0].porta == 'apps/forum/fumus.sh',
-          'porta extra PORTAE (manu tantum): scriptum ipsum ut debitum MANU')
-    credo(intecta == ['README.md'], 'README.md nullius portae: intectum')
-    credo(silva.portae_debitae(['./gesta/../gesta/compile_probationes.sh'])[0][0].porta == 'gesta',
-          'viae normalizantur')
-
-    # PORTAE SINE ORDINE (…K0KX): porta cuius cursor ordinem nullum habet
-    # numquam debetur per 'tegit viae'/'currit binaria' (venenum: nec
-    # lib/piscina.c nec scriptum suum eam debebant) - nota, non porta
-    sine = silva.portae_sine_ordine()
-    credo('css' in sine and not ({'radix', 'gesta', 'pythonica', 'crusta', 'html'} & set(sine)),
-          'portae sine ordine: css (cursor sine ordine) nominatur, portae cum ordine non',
-          causa=repr(sine))
-    credo(sine == sorted(sine), 'portae sine ordine: ordine litterarum (nota stabilis)')
-
-    # relatio (T4): sectiones PORTAE DEBITAE / MANU / INTECTA, causa sub porta
-    rel = silva.portae_debitae_relatio(['pythonica/silva.py', 'apps/forum/fumus.sh', 'README.md'])
-    credo(rel.startswith('PORTAE DEBITAE (3 viae):\n  pythonica\n      pythonica/silva.py congruit'),
-          'relatio: caput cum numero viarum, porta, causa indentata')
-    credo('\nMANU (homo currit):\n  apps/forum/fumus.sh\n' in rel, 'relatio: sectio MANU')
-    credo(rel.endswith('\nINTECTA (nulla porta):\n  README.md\n'), 'relatio: sectio INTECTA ultima')
-    rel = silva.portae_debitae_relatio(['README.md'])
-    credo(rel.startswith('PORTAE DEBITAE (1 via):\n  (nulla)\n'), 'relatio: nulla porta debita dicitur, non tacetur')
-
-    # TEGIT FONTES (lens derivata ex scripto cursoris): capita subsystematis
-    # aedili ignota ('S') - clausura fontes suos non videt; lens eos tegit.
-    # html/fontes radix aedilis NON est (crusta/fontes est ex migratione
-    # ad compilatorem 8a84c35c: crusta nunc per clausuram debetur)
-    debita, intecta = silva.portae_debitae(['html/fontes/html_arbor.c'])
-    c = [d for d in debita if d.porta == 'html']
-    credo(len(c) == 1 and 'tegit fontes' in c[0].causa,
-          'tegit fontes: html/fontes/*.c -> html (clausura aedilis eum non videt)')
-    debita, intecta = silva.portae_debitae(['crusta/fontes/crusta_arbor.c'])
-    c = [d for d in debita if d.porta == 'crusta']
-    credo(len(c) == 1 and 'in clausura' in c[0].causa,
-          'crusta/fontes radix aedilis: crusta per clausuram debetur')
-    debita, intecta = silva.portae_debitae(['materia/fontes/materia_nodus.h'])
-    credo('crusta' in [d.porta for d in debita], 'tegit fontes: caput materiae -> cliens crusta')
-
-    # lectio fracta: SilvaError rc nominans
-    os.environ['FICTA_INV_RC'] = '1'
+    silva.FABRICA_BIN = _portae_ficta(0, 'DEBITUM\tgesta\t0\tx.c in a\\tb\n'
+                                      'DEBITUM\ttools/z.sh\t1\tz.sh (cursor ipse)\n'
+                                      'INTECTUM\tdocs/n\\\\o.md\n')
+    debita, intecta = silva.portae_debitae(['./gesta/../gesta/x.c', 'docs/n.md'])
+    credo(debita == [silva.Debitum('gesta', 'x.c in a\tb', False), silva.Debitum('tools/z.sh', 'z.sh (cursor ipse)', True)],
+          'involucrum: DEBITUM -> Debitum (manu, effugium \\t solutum)', causa=repr(debita))
+    credo(intecta == ['docs/n\\o.md'], 'involucrum: INTECTUM, effugium \\\\ solutum', causa=repr(intecta))
+    _argv = open(os.path.join(T, 'portae_argv.txt')).read().split('\n')
+    credo(_argv[:3] == ['portae', 'debitae', '-machina'] and _argv[3] == '-portae' and 'gesta/x.c' in _argv,
+          'involucrum: argv = portae debitae -machina -portae <registrum> viae normatae', causa=repr(_argv))
+    silva.FABRICA_BIN = _portae_ficta(0, 'DEBITUM\tgesta\n')
     try:
-        silva.inventarium('nusquam')
-        credo(False, 'inventarium ignotum')
+        silva.portae_debitae(['x.c'])
+        credo(False, 'involucrum: linea extra contractum refutanda')
     except silva.SilvaError as ex:
-        credo('res ignota' in str(ex) and 'nusquam' in str(ex), 'inventarium ignotum: causa machinae transit')
-    del os.environ['FICTA_INV_RC']
-except AttributeError as ex:
-    credo(False, 'portae debitae absunt: %s' % ex)
+        credo('extra contractum' in str(ex), 'involucrum: linea extra contractum = SilvaError')
+    silva.FABRICA_BIN = _portae_ficta(2, "RECUSATIO\ttools/x.sh\t3\tattributum ignotum 'tegti'\n")
+    try:
+        silva.portae_debitae(['x.c'])
+        credo(False, 'involucrum: recusatio refutanda')
+    except silva.SilvaError as ex:
+        credo('rc=2' in str(ex) and "attributum ignotum 'tegti'" in str(ex),
+              'involucrum: RECUSATIO (exitus 2) = SilvaError causam nominans')
+    silva.FABRICA_BIN = os.path.join(T, 'fabrica_nusquam')
+    try:
+        silva.portae_debitae(['x.c'])
+        credo(False, 'involucrum: fabrica absens refutanda')
+    except silva.SilvaError as ex:
+        credo('fabrica_struere' in str(ex), 'involucrum: bin/fabrica absens = SilvaError cum remedio')
+    # arbor VIVA (invariantes): cursor ipse, manu, intectum, normatio.
+    # portae FICTAE probationum priorum (cursores extra arborem, sine
+    # annotatione) seponuntur - registrum verum solum
+    silva.FABRICA_BIN = os.path.join(RADIX, 'bin', 'fabrica')
+    for _k in [k for k in silva.PORTAE if k.startswith('ficta')]:
+        _portae_seposita[_k] = silva.PORTAE.pop(_k)
+    debita, intecta = silva.portae_debitae(['gesta/compile_probationes.sh', 'README.md',
+                                            './tools/../apps/forum/fumus.sh'])
+    credo(silva.Debitum('gesta', 'gesta/compile_probationes.sh (cursor ipse)', False) in debita,
+          'VIVUM: cursor mutatus -> porta sua', causa=repr(debita))
+    credo([d.porta for d in debita if d.manu] == ['apps/forum/fumus.sh'],
+          'VIVUM: porta manu nominatur (via cursoris)', causa=repr(debita))
+    credo(intecta == ['README.md'], 'VIVUM: README.md nullius portae', causa=repr(intecta))
+    rel = silva.portae_debitae_relatio(['README.md'])
+    credo(rel == 'PORTAE DEBITAE (1 via):\n  (nulla)\nINTECTA (nulla porta):\n  README.md\n',
+          'VIVUM: relatio hominis forma fabricae', causa=repr(rel))
 finally:
-    silva.FRIGIDA_IMPERIUM = _fr_vera2
-    for _k in ('FICTA_INV', 'FICTA_INV_RC'):
-        os.environ.pop(_k, None)
-    import shutil
-    shutil.rmtree(_pd, ignore_errors=True)
+    silva.FABRICA_BIN = _fb_portae
+    silva.PORTAE.update(_portae_seposita)
 
-print('--- portae debitae: tools/portae_debitae.sh (arbor et inventarium VIVA) ---')
+print('--- portae debitae: tools/portae_debitae.sh (arbor VIVA) ---')
 _pdcli = os.path.join(RADIX, 'tools', 'portae_debitae.sh')
 credo(os.access(_pdcli, os.X_OK), 'tools/portae_debitae.sh exsistit et exsecutabilis')
 if os.access(_pdcli, os.X_OK):
@@ -2317,13 +2248,15 @@ if os.access(_pdcli, os.X_OK):
                        capture_output=True, text=True)
     credo(r.returncode == 0, 'CLI: exitus 0 cum iudicavit (erat %d)' % r.returncode)
     credo('\n  radix\n' in r.stdout and '\n  gesta\n' in r.stdout
-          and 'tabulariumd_principale.c' in r.stdout,
+          and 'tabulariumd' in r.stdout,
           'CLI VIVUM: tabularium.c -> radix (per tabulariumd) et gesta')
     credo('INTECTA (nulla porta):\n  README.md' in r.stdout, 'CLI VIVUM: README.md intectum')
-    e = dict(os.environ, PORTAE_DEBITAE_INVENTARIUM='inventarium nullum hic')
-    r = subprocess.run([_pdcli, 'README.md'], cwd=RADIX, capture_output=True, text=True, env=e)
-    credo(r.returncode == 2 and 'inventarium nullum hic' in r.stderr,
-          'CLI: inventarium illegibile -> exitus 2, causa nominata')
+    # TABULARIUM NON LEGITUR: annales absentes nihil mutant (clone frigidus)
+    e = dict(os.environ, RHUBARB_ANNALES=os.path.join(T, 'annales_nusquam'))
+    r2 = subprocess.run([_pdcli, 'gesta/fontes/tabularium.c', 'README.md'], cwd=RADIX,
+                        capture_output=True, text=True, env=e)
+    credo(r2.returncode == 0 and r2.stdout == r.stdout,
+          'CLI: sine annalibus idem responsum (tabularium non legitur)')
 
 print('--- portae debitae: commissio addit et currit (portae et debita FICTA) ---')
 # commissio NUMQUAM committit hic: via absens post portas refutatur ('via
@@ -2386,7 +2319,8 @@ try:
     eff, err = _commissio_capta(portae=[], sine_debitis='  ')
     credo(err is not None and 'sine_debitis' in err and 'nihil cursum' in err and not os.path.exists(_signum),
           'commissio: sine_debitis vacua refutatur ante portas')
-    # V. inventarium illegibile: MONITUM, commissio pergit cum petitis
+    # V. debita computari nequeunt (bin/fabrica fractum): MONITUM,
+    # commissio pergit cum petitis
     def _fracta(viae, *a, **k):
         raise silva.SilvaError("inventarium 'x' legi non potuit")
     silva.portae_debitae = _fracta
@@ -2635,81 +2569,6 @@ try:
           causa=err[:300])
 finally:
     silva.FORMA_BIN, silva.FABRICA_BIN, silva.VIAE_COMMISSAE = _custos_verae
-
-# _clausurae (parcum fabricae …AR15): --corpus pro directorio dimidia
-# parte petito, singuli ceteri; clausura ignota (None = porta debetur)
-# si fons recusatus, si processus corporis RUIT (sectiones incompletae)
-_CL = os.path.join(T, 'clausurae')
-os.makedirs(_CL, exist_ok=True)
-for _n in ('a.c', 'b.c', 'mala.c'):
-    open(os.path.join(_CL, _n), 'w').write('int x;\n')
-_cl = os.path.relpath(_CL, RADIX)
-
-
-def _aedilis_fictus(titulus, ruina):
-    via = os.path.join(T, titulus)
-    with open(via, 'w') as f:
-        f.write('#!/bin/bash\n'
-                'if [ "$1" = "--corpus" ]; then\n'
-                '  for f in "$2"/*.c; do printf "F\\t%s\\n" "$f"\n'
-                '    case "$f" in *mala.c) printf "RECUSAT\\tficta\\n";;\n'
-                '      *) printf "O\\t%s\\nC\\tx.h\\n" "$f";; esac; done\n'
-                + ('  exit 139\n' if ruina else '  exit 1\n') +
-                'fi\n'
-                'case "$1" in *mala.c) exit 1;; esac\n'
-                'printf "O\\t%s\\nC\\tx.h\\n" "$1"\n')
-    os.chmod(via, 0o755)
-    return via
-
-
-_ab_verum = silva.AEDILIS_BIN
-try:
-    _fa, _fb, _fm = (os.path.join(_cl, n) for n in ('a.c', 'b.c', 'mala.c'))
-    silva.AEDILIS_BIN = _aedilis_fictus('aedilis_fictus', False)
-    _r = silva._clausurae([_fa, _fb, _fm])
-    credo(_r[_fa] == {_fa, 'x.h'} and _r[_fb] == {_fb, 'x.h'} and _r[_fm] is None,
-          '_clausurae --corpus: sectiones per fontem; fons recusatus solus ignotus', causa=repr(_r))
-    _r = silva._clausurae([_fa])
-    credo(_r[_fa] == {_fa, 'x.h'}, '_clausurae: fons unus ex tribus = aedilis singulus', causa=repr(_r))
-    _r = silva._clausurae([_fm])
-    credo(_r[_fm] is None, '_clausurae: fons singulus recusatus = ignotus', causa=repr(_r))
-    silva.AEDILIS_BIN = _aedilis_fictus('aedilis_ruens', True)
-    _r = silva._clausurae([_fa, _fb, _fm])
-    credo(all(v is None for v in _r.values()),
-          '_clausurae: corpus RUENS (exitus CXXXIX) = omnes ignoti, numquam sectiones incompletae', causa=repr(_r))
-    # MEMORIA (pythonica S2, profilum T9: XXIV aedilis 63 s - eaedem
-    # clausurae in quinque probationibus): clavis = fontes + aedilis
-    # (via, mtime, magnitudo, inodus) + sigillum_arboris; redditum copia
-    _numerus = os.path.join(T, 'aedilis_numerus')
-    open(_numerus, 'w').close()
-
-    def _numeratus():
-        return len(open(_numerus).read().splitlines())
-    _vn = _aedilis_fictus('aedilis_numerans', False)
-    _textus = open(_vn).read().replace('#!/bin/bash\n', '#!/bin/bash\necho x >> %s\n' % _numerus)
-    open(_vn, 'w').write(_textus)
-    silva.AEDILIS_BIN = _vn
-    _r1 = silva._clausurae([_fa, _fb, _fm])
-    _n1 = _numeratus()
-    _r1[_fa].add('corruptum')
-    _r2 = silva._clausurae([_fa, _fb, _fm])
-    credo(_numeratus() == _n1 and _r2[_fa] == {_fa, 'x.h'},
-          '_clausurae memoria: arbor eadem -> nullus aedilis iterum, copia (mutatio vocantis non inficit)',
-          causa='aedilis %d -> %d; %r' % (_n1, _numeratus(), _r2))
-    import time as _t
-    _t.sleep(0.01)
-    open(_vn, 'w').write(_textus + '# mutatum\n')
-    silva._clausurae([_fa, _fb, _fm])
-    credo(_numeratus() == _n1 + 1, '_clausurae memoria: aedilis mutatus -> iterum computat')
-    _nova = os.path.join(RADIX, 'pythonica', 'probatio_clausurae_nova.txt')
-    try:
-        open(_nova, 'w').write('nova\n')
-        silva._clausurae([_fa, _fb, _fm])
-        credo(_numeratus() == _n1 + 2, '_clausurae memoria: arbor mutata (plagula nova) -> iterum computat')
-    finally:
-        os.unlink(_nova)
-finally:
-    silva.AEDILIS_BIN = _ab_verum
 
 # ARGV RADICIS DECLARATA (effectus-plan-3 T5, A1): <argumenta> ingressus
 # 'effectus' in aedificatio.stml = argv quam PORTAE radici dat

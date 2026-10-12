@@ -9,9 +9,9 @@
  * nominantur.
  *
  * Derivatio interpretatur quae sutura dat (summarium effectuum,
- * litterae probationum) - I/O nulla hic; regulae portationis ex
- * tools/inventarium_suitarum.py ('currit', 'fontes') et
- * silva.portae_debitae.
+ * litterae probationum) - I/O nulla hic; regulae portatae ex
+ * pythonica (inventarium_suitarum.py 'currit'/'fontes' et
+ * silva.portae_debitae veteri, deleta T5).
  */
 #include "portae.h"
 #include "chorda_aedificator.h"

@@ -1559,7 +1559,7 @@ PORTAE = {
     # exclusiones pinnatas, ~CLX s): ante 2026-09-25 manu solum -
     # exclusiones a ~09-14 staluerant (codex 90 novus plagulas domus
     # REICE fecit, #line ignota plagulas a briar genitas). Debita cum
-    # IUDEX mutatur (inventarium: tegit viae), non per editionem
+    # IUDEX mutatur (annotatio <porta> tegit), non per editionem
     # quamque - examen plagulas mutatas ad commissionem iam iudicat
     # (silva-migratio T19a)
     'examen-corpus': (['./silva/examen_vectis.sh', '-corpus'],
@@ -1646,6 +1646,10 @@ PORTAE = {
     # nectebat, vocationes concurrentes inter se frangebant)
     'nexus-instrumentorum': (['./tools/instrumenta_nexus_fumus.sh'],
                              r'fumus nexus: (sanum|FRACTUM)'),
+    # portae declaratae (T5): omnis clavis PORTAE cursorem annotatum
+    # unum habet; debita sine annalibus computantur (clone frigidus)
+    'portae-declaratae': (['./tools/portae_declaratae_fumus.sh'],
+                          r'fumus portae declaratae: (sanum|FRACTUM)'),
 }
 _ANSI = re.compile(r'\x1b\[[0-9;]*m')
 
@@ -2334,21 +2338,21 @@ def _sigilla_viarum(viae):
 
 
 # ------------------------------------------------------ portae debitae
-# Quae portae mutationi debentur (project-specs/portae-debitae-spec.md).
-# Tegumentum DERIVATUR, numquam per plagulam servatur: clausurae aedilis
-# probationum cuiusque suitae + inventarii lentes duae quas graphus non
-# videt ('currit binaria', 'tegit viae'). Inventarium per viam frigidam
-# legitur (forma machinae) - Python eventa numquam replicat.
+# Quae portae mutationi debentur: CALCULUS IN C (bin/fabrica portae,
+# lib/portae.c; spec portae-declaratae) ex declarationibus <porta> in
+# cursoribus et derivatione - numquam ex tabulario (…RBA4W73). Hic
+# involucrum TENUE (…Z2Y555): registrum PORTAE tradere, contractum
+# machinae legere (include/portae.h), relationem hominis transmittere.
 
-INVENTARIUM_SUITARUM = 'suitae probationum'
-Inventarium = namedtuple('Inventarium', 'ordines lentes cellae')
 Debitum = namedtuple('Debitum', 'porta causa manu')
-_EFFUGIA = {'\\': '\\', 't': '\t', 'n': '\n'}
+_EFFUGIA = {'\\': '\\', 't': '\t', 'n': '\n', 'r': '\r'}
 _SUFFIXA_C = ('.c', '.h', '.m')
+# bin/fabrica: FABRICA_BIN (infra, cum fabrica ante portas) - idem
+# binarium, probationibus substituibile
 
 
 def _ineffugere(textus):
-    """'\\\\' '\\t' '\\n' formae machinae solvere (tabula frigida)"""
+    """'\\\\' '\\t' '\\n' formae machinae solvere (contractus include/portae.h)"""
     fructus, k = [], 0
     while k < len(textus):
         if textus[k] == '\\' and k + 1 < len(textus) \
@@ -2361,229 +2365,11 @@ def _ineffugere(textus):
     return ''.join(fructus)
 
 
-def inventarium(res=INVENTARIUM_SUITARUM):
-    """cellae inventarii per './gesta/frigida.sh -inventarium' (LECTIO).
-    Inventarium(ordines, lentes, cellae{ordo: {lens: (genus, valor)}});
-    ordines cellam nullam habentes non apparent. Lineae sine tabulatione
-    (strepitus launcheri) praetermittuntur; linea tabulationem ferens
-    sed non quattuor campos = SilvaError (numquam tacite omissa)."""
-    r = _curre(list(FRIGIDA_IMPERIUM) + ['-inventarium', res])
-    if r.returncode != 0:
-        causa = (r.stderr or r.stdout).strip()
-        raise SilvaError("inventarium '%s' legi non potuit (via frigida"
-                         " rc=%d): %s" % (res, r.returncode,
-                                          causa.splitlines()[-1]
-                                          if causa else '-'))
-    ordines, lentes, cellae = [], [], {}
-    for linea in r.stdout.split('\n'):
-        if '\t' not in linea:
-            continue
-        partes = linea.split('\t')
-        if len(partes) != 4:
-            raise SilvaError("inventarium '%s': linea non quattuor"
-                             " campos habet: %r" % (res, linea))
-        ordo, lens, genus, valor = (_ineffugere(x) for x in partes)
-        if ordo not in cellae:
-            ordines.append(ordo)
-            cellae[ordo] = {}
-        if lens not in lentes:
-            lentes.append(lens)
-        cellae[ordo][lens] = (genus, valor)
-    return Inventarium(ordines, lentes, cellae)
-
-
-def _textus_cellae(cellae_ordinis, lens):
-    """valor cellae textus, aut '' (absens, n.a., aliud genus)"""
-    genus, valor = cellae_ordinis.get(lens, ('', ''))
-    return valor if genus == 'textus' else ''
-
-
-def _index(valor):
-    return [x.strip() for x in valor.split(',') if x.strip()]
-
-
-# substituibilis in probationibus (aedilis fictus: recusatio, ruina)
-AEDILIS_BIN = os.path.join(RADIX, 'bin', 'aedilis')
-
-
-# MEMORIA CLAUSURARUM (pythonica S2; profilum T9: XXIV aedilis 63,4 s -
-# eaedem clausurae suitarum in quinque probationibus portarum debitarum):
-# per processum solum - clavis = fontes + aedilis (via, mtime, magnitudo,
-# inodus) + sigillum_arboris (HEAD, differentia tractarum, novae non
-# ignoratae). Ignorata (build/) clavem non intrant: memoria in disco
-# capita generata stala ignoraret (debitum omissum = porta omissa).
-_MEMORIA_CLAUSURARUM = {}
-
-
-def _clausurae(fontes, fila=4):
-    """memoria per processum (vide supra), deinde _clausurae_computare;
-    redditum copia (vocans sectiones mutare potest)"""
-    try:
-        st = os.stat(AEDILIS_BIN)
-        identitas = (AEDILIS_BIN, st.st_mtime_ns, st.st_size, st.st_ino)
-    except OSError:
-        identitas = (AEDILIS_BIN, None)
-    clavis = (tuple(fontes), identitas, sigillum_arboris())
-    if clavis not in _MEMORIA_CLAUSURARUM:
-        _MEMORIA_CLAUSURARUM[clavis] = _clausurae_computare(fontes, fila)
-    return dict((f, set(v) if v is not None else None)
-                for f, v in _MEMORIA_CLAUSURARUM[clavis].items())
-
-
-def _clausurae_computare(fontes, fila=4):
-    """{fons: set(viarum) | None} per bin/aedilis (lineae O fontes, C
-    capita, V vendor). Directorium cuius fontes .c petuntur dimidia
-    parte saltem: 'aedilis --corpus <dir> --partes' (processus UNUS,
-    capita semel parsata per memoriam extractoris); ceteri: 'aedilis
-    <fons> --partes' singuli. Mensuratum 2026-10-02 (parcum fabricae
-    …AR15): CDXXXVII processus per fontem LXXVIII s, hoc modo XX s,
-    clausurae aequales omnes. Fila IV per Popen (domus filis caret).
-    None = clausura ignota (= porta debetur): fons recusatus (RECUSAT
-    in sectione sua), sectio absens, aut processus corporis non 0/1
-    exiens (ruina - sectiones eius incompletae esse possunt)."""
-    aedilis = AEDILIS_BIN
-    per_dir = {}
-    for f in fontes:
-        per_dir.setdefault(os.path.dirname(f), []).append(f)
-    opera = []
-    for d in sorted(per_dir):
-        omnes = glob.glob(os.path.join(RADIX, d or '.', '*.c'))
-        if d and 2 * len(per_dir[d]) >= len(omnes):
-            opera.append((per_dir[d], [aedilis, '--corpus', d, '--partes']))
-        else:
-            opera.extend(([f], [aedilis, f, '--partes']) for f in per_dir[d])
-    fructus = dict((f, None) for f in fontes)
-
-    def metere(petiti, pr):
-        out, _ = pr.communicate()
-        if len(petiti) == 1 and pr.returncode != 0:
-            return                       # fons singulus recusatus
-        if pr.returncode not in (0, 1):
-            return                       # corpus ruit: omnes ignoti
-        sectiones, recusati = {}, set()
-        cur = petiti[0] if '--corpus' not in pr.args else None
-        if cur is not None:
-            sectiones[cur] = set()
-        for l in out.splitlines():
-            if l.startswith('F\t'):
-                cur = l[2:]
-                sectiones[cur] = set()
-            elif l.startswith('RECUSAT'):
-                recusati.add(cur)
-            elif cur is not None and l[:2] in ('O\t', 'C\t', 'V\t'):
-                sectiones[cur].add(l.split('\t', 1)[1])
-        for f in petiti:
-            if f in sectiones and f not in recusati:
-                fructus[f] = sectiones[f]
-
-    cursus, restant = [], list(opera)
-    while restant or cursus:
-        while restant and len(cursus) < fila:
-            petiti, imperium = restant.pop(0)
-            cursus.append((petiti, subprocess.Popen(
-                imperium, cwd=RADIX, text=True, errors='replace',
-                stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)))
-        petiti, pr = cursus.pop(0)
-        metere(petiti, pr)
-    return fructus
-
-
 def _via_normata(via):
     v = os.path.normpath(via)
     if os.path.isabs(v):
         v = os.path.relpath(v, RADIX)
     return v
-
-
-def portae_debitae(viae, inventarium_res=INVENTARIUM_SUITARUM):
-    """(debita, intecta): portae quas viae mutatae debent, et viae quas
-    nulla porta tegit. Debitum(porta, causa, manu): porta = nomen in
-    PORTAE, aut via scripti cum ordo NULLAM portam habet (manu=True:
-    homo currit - GUI aut consulto seorsum). Ordo: PORTAE, deinde manu ordine tabulae. Causa prima
-    nominatur (+N aliae). Clausura ignota (aedilis fractus) = DEBETUR
-    (tutius plus currere quam caecum esse)."""
-    viae = [_via_normata(v) for v in viae]
-    inv = inventarium(inventarium_res)
-    ordines = []
-    for ordo in inv.ordines:
-        c = inv.cellae[ordo]
-        portae = [p for p in _index(_textus_cellae(c, 'porta'))
-                  if p in PORTAE]
-        # tegit viae (manu) + tegit fontes (derivata ex scripto cursoris:
-        # directoria -I et fontes compilati, quae aedilis non videt)
-        tegit = ([(f, 'tegit viae') for f in
-                  _index(_textus_cellae(c, 'tegit viae'))]
-                 + [(f, 'tegit fontes') for f in
-                    _index(_textus_cellae(c, 'tegit fontes'))])
-        ordines.append((ordo, portae, not portae,
-                        _index(_textus_cellae(c, 'currit binaria')),
-                        tegit))
-
-    probationes = {}
-    if any(v.endswith(_SUFFIXA_C) for v in viae):
-        for ordo, portae, _m, binaria, _t in ordines:
-            for p in portae:
-                if p in SUITAE:
-                    probationes[p] = sorted(
-                        os.path.relpath(f, RADIX) for f in glob.glob(
-                            os.path.join(RADIX, SUITAE[p][0],
-                                         'probatio_*.c')))
-    fontes = set(f for fl in probationes.values() for f in fl)
-    fontes |= set(b for o in ordines for b in o[3] if b.endswith('.c')) \
-        if any(v.endswith(_SUFFIXA_C) for v in viae) else set()
-    clausurae = _clausurae(sorted(fontes)) if fontes else {}
-
-    causae = {}   # clavis (porta aut via scripti) -> [causa]
-    tecta = set()
-
-    def notare(clavis, via, causa):
-        causae.setdefault(clavis, []).append(causa)
-        tecta.add(via)
-
-    for ordo, portae, manu, binaria, tegit in ordines:
-        claves = portae if portae else [ordo]
-        for v in viae:
-            rationes = []
-            if v == ordo:
-                rationes.append('%s est cursor ipse' % v)
-            for p in portae:
-                for t in probationes.get(p, []):
-                    cl = clausurae.get(t)
-                    if v == t:
-                        rationes.append('%s est probatio suitae' % v)
-                    elif cl is None:
-                        rationes.append('%s: clausura %s ignota'
-                                        ' (aedilis fractus) - debetur'
-                                        % (v, t))
-                    elif v in cl:
-                        rationes.append('%s in clausura %s' % (v, t))
-            for b in binaria:
-                if v == b:
-                    rationes.append('%s: currit %s' % (ordo, v))
-                elif b.endswith('.c') and v.endswith(_SUFFIXA_C):
-                    cl = clausurae.get(b)
-                    if cl is None or v in cl:
-                        rationes.append('%s currit %s, cuius clausura %s'
-                                        ' %s' % (ordo, b, v,
-                                                 'tenet' if cl is not None
-                                                 else 'ignota est'))
-            for forma, lens in tegit:
-                if fnmatch.fnmatch(v, forma):
-                    rationes.append("%s congruit '%s' (%s %s)"
-                                    % (v, forma, lens, ordo))
-            for clavis in claves:
-                for ratio in rationes:
-                    notare((clavis, manu), v, ratio)
-
-    def causa(lista):
-        return lista[0] + (' (+%d aliae)' % (len(lista) - 1)
-                           if len(lista) > 1 else '')
-
-    debita = [Debitum(p, causa(causae[(p, False)]), False)
-              for p in PORTAE if (p, False) in causae]
-    debita += [Debitum(o[0], causa(causae[(o[0], True)]), True)
-               for o in ordines if (o[0], True) in causae]
-    return debita, [v for v in viae if v not in tecta]
 
 
 def portae_tabula():
@@ -2601,16 +2387,50 @@ def portae_tabula():
     return '\n'.join(lineae) + '\n'
 
 
-def portae_sine_ordine(inventarium_res=INVENTARIUM_SUITARUM):
-    """portae PORTAE quarum cursor (argumentum primum) ordinem NULLUM in
-    inventario habet - debitum earum per 'tegit viae' / 'currit binaria'
-    numquam computatur (…K0KX: venenum nec a lib/piscina.c nec a scripto
-    suo debebatur). NOTA sola, numquam obstaculum: tabula exitum non
-    decernit (principium …RBA4W73)."""
-    inv = inventarium(inventarium_res)
-    ordines = {_via_normata(o) for o in inv.ordines}
-    return sorted(n for n, v in PORTAE.items()
-                  if _via_normata(v[0][0]) not in ordines)
+def _portae_fabricae(modus, viae, machina):
+    """bin/fabrica portae <modus> [-machina] -portae <registrum> <viae>
+    -> effusio; exitus non 0 (RECUSATIO declarationum, fabrica absens aut
+    fracta) = SilvaError cum effusione tota"""
+    with tempfile.NamedTemporaryFile('w', prefix='portae_', suffix='.tsv',
+                                     delete=False) as t:
+        t.write(portae_tabula())
+    try:
+        argv = ([FABRICA_BIN, 'portae', modus]
+                + (['-machina'] if machina else [])
+                + ['-portae', t.name] + [_via_normata(v) for v in viae])
+        try:
+            r = _curre(argv)
+        except OSError as ex:
+            raise SilvaError('bin/fabrica portae vocari non potuit (%s) -'
+                             ' ./tools/fabrica_struere.sh' % ex)
+    finally:
+        os.unlink(t.name)
+    if r.returncode != 0:
+        raise SilvaError('bin/fabrica portae %s rc=%d:\n%s' % (
+            modus, r.returncode, (r.stdout + r.stderr).strip()))
+    return r.stdout
+
+
+def portae_debitae(viae):
+    """(debita, intecta): Debitum(porta, causa, manu) ex lineis DEBITUM,
+    viae nullius portae ex INTECTUM - ordine fabricae (registrum, deinde
+    manu). Linea extra contractum = SilvaError (numquam tacite)."""
+    debita, intecta = [], []
+    for linea in _portae_fabricae('debitae', viae, True).splitlines():
+        f = [_ineffugere(x) for x in linea.split('\t')]
+        if f[0] == 'DEBITUM' and len(f) == 4:
+            debita.append(Debitum(f[1], f[3], f[2] == '1'))
+        elif f[0] == 'INTECTUM' and len(f) == 2:
+            intecta.append(f[1])
+        else:
+            raise SilvaError('bin/fabrica portae: linea extra contractum:'
+                             ' %r' % linea)
+    return debita, intecta
+
+
+def portae_debitae_relatio(viae):
+    """relatio hominis (tools/portae_debitae.sh): forma fabricae ipsa"""
+    return _portae_fabricae('debitae', viae, False)
 
 
 def viae_mutatae():
@@ -2623,34 +2443,12 @@ def viae_mutatae():
     return sorted(set(v for v in mut + novae if v))
 
 
-def portae_debitae_relatio(viae, inventarium_res=INVENTARIUM_SUITARUM):
-    """relatio legibilis portarum debitarum (tools/portae_debitae.sh):
-    PORTAE DEBITAE (porta, causa indentata), MANU (homo currit),
-    INTECTA (nulla porta). Porta nulla debita DICITUR '(nulla)'."""
-    debita, intecta = portae_debitae(viae, inventarium_res)
-    n = len(viae)
-    lineae = ['PORTAE DEBITAE (%d %s):' % (n, 'via' if n == 1 else 'viae')]
-    currendae = [d for d in debita if not d.manu]
-    manu = [d for d in debita if d.manu]
-    for d in currendae:
-        lineae += ['  ' + d.porta, '      ' + d.causa]
-    if not currendae:
-        lineae.append('  (nulla)')
-    if manu:
-        lineae.append('MANU (homo currit):')
-        for d in manu:
-            lineae += ['  ' + d.porta, '      ' + d.causa]
-    if intecta:
-        lineae.append('INTECTA (nulla porta):')
-        lineae += ['  ' + v for v in intecta]
-    return '\n'.join(lineae) + '\n'
-
-
 def _portae_debitas_addere(viae, portae):
     """portae petitae + DEBITAE absentes (portae_debitae), ordine: petitae,
     deinde additae ordine PORTAE. Linea una per additam cum causa sua;
-    debitae manu nominantur, numquam curruntur. Inventarium illegibile =
-    MONITUM et petitae solae (v1 monet, numquam obstat: machina haec
+    debitae manu nominantur, numquam curruntur. Debita incomputabilia
+    (RECUSATIO, bin/fabrica fractum) = MONITUM et petitae solae (monet,
+    numquam obstat: machina haec
     commissionem nunquam impedit). Decretum 01M38VGAK8."""
     try:
         debita, _ = portae_debitae(viae)
@@ -2951,9 +2749,6 @@ def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
         _tempus_notare('phasis', 'lint', initium)
         for nota in notae_convertibilium(viae):
             print(nota)
-        for porta_nuda in portae_sine_ordine():
-            print('nota: porta %s sine ordine inventarii - debita eius non'
-                  ' computantur (…K0KX)' % porta_nuda)
     if not _fabrica_facta:
         initium = time.time()
         _fabricam_exigere(viae, sine_fabrica)
@@ -3716,9 +3511,6 @@ def commissio_umbra(nuntius, viae, portae, verificare=True, tectum=1800,
         _lint_praevium_exigere(viae)
         for nota in notae_convertibilium(viae):
             print(nota)
-        for porta_nuda in portae_sine_ordine():
-            print('nota: porta %s sine ordine inventarii - debita eius non'
-                  ' computantur (…K0KX)' % porta_nuda)
     _fabricam_exigere(viae, sine_fabrica)
     if sine_debitis is not None:
         if not str(sine_debitis).strip():

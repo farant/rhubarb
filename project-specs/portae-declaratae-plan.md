@@ -76,13 +76,21 @@ calls, prints, and - for migration scaffolding - compares temporarily.
   (all reasons per path); silva.portae_tabula() (registry TSV).
 
 ### T5: cutover
-- [ ] silva.portae_debitae = wrapper over the CLI (~40 lines; registry TSV
+- [x] silva.portae_debitae = wrapper over the CLI (~40 lines; registry TSV
   from PORTAE); DELETE inventarium-based coverage, _clausurae*, matching,
   portae_sine_ordine, tools/inventarium_suitarum.py, the comparison
   script; pythonica tests shrink to the wrapper; gate `portae-declaratae`
   (every PORTAE key has exactly one annotated runner) born red by a plant;
   fresh clone without ~/.rhubarb computes owed gates. Ledger inventory:
   removed (or generated view - Fran). Commit.
+  As built (2026-10-12): wrapper over `bin/fabrica portae debitae
+  -machina` (+ `_portae_fabricae`, `portae_debitae_relatio` = human form
+  passed through); silva.py net -265 lines; inventarium_suitarum.py and
+  portae_comparare.py deleted; gate `portae-declaratae` (3 s: no
+  refusal over the real registry; owed gates without annals), owed by
+  every .sh, silva.py and the C core; plants III red. frigida fumus VI
+  moved to inventory 'bibliothecae (include)'. Ledger inventory 'suitae
+  probationum': REMOVED (Fran) after the commit.
 
 ### T6: close
 - [ ] spec "As built", worklogs, MEMORY, ledger …GGMGY94 closed; merge.

@@ -238,3 +238,45 @@ Dogfooding (principle …Z2Y555, checklist lapide FR-008 "scriba"):
   second hand-kept subset of aedilis.stml's include roots, after
   compile_tests.sh; a lib that includes a subsystem header breaks every
   such copy.
+
+## 2026-10-12 - T5 cutover
+
+- **silva.portae_debitae is now a thin wrapper** (≈60 lines including
+  docstrings) over `bin/fabrica portae debitae -machina -portae <tsv>`.
+  It writes the registry TSV with `portae_tabula()`, reads the
+  DEBITUM/INTECTUM contract, and unescapes `\\ \t \n \r`.
+  - A RECUSATIO, a line outside the contract, or a missing bin/fabrica is
+    a SilvaError, which commissio prints as MONITUM, as before.
+  - `portae_debitae_relatio` passes the human form straight through.
+  - Deleted: `inventarium()`, `_textus_cellae`, `_index`, `_clausurae`,
+    `_clausurae_computare`, the in-process closure memory, `AEDILIS_BIN`,
+    the Python matching, `portae_sine_ordine` and its commissio notes,
+    tools/inventarium_suitarum.py and tools/portae_comparare.py.
+  - silva.py is net -265 lines.
+  - Node/ruby check: a new wrapper would need "write a TSV, run, split
+    4 columns" and nothing else.
+- **Test trap:** probatio_silva swaps `silva.FABRICA_BIN` for a fake
+  GLOBALLY, and earlier sections inject `ficta-*` PORTAE entries whose
+  runners have no annotation. The live section points FABRICA_BIN at the
+  real binary and sets the `ficta*` keys aside, restoring both. The C
+  side refuses unannotated registry keys, which is correct behaviour.
+  The existing `_fabrica_ficta` helper mangles backslashes (repr
+  round-trip), so the contract tests use a stub that cats exact bytes.
+- **New gate `portae-declaratae`** (tools/portae_declaratae_fumus.sh, 3 s):
+  - I: `declaratae` over the real registry has no refusal (53 gates);
+  - II: with `RHUBARB_ANNALES` pointing nowhere, portae_debitae.sh still
+    owes radix for compile_tests.sh (the fresh-clone property).
+  - It is owed by `*.sh`, pythonica/silva.py, and (via
+    `currit=tools/fabrica.c`) the C core. Commissio itself only WARNS on
+    refusals, so this gate is what blocks.
+  - Plants III went red, then green: annotation deleted, unknown
+    attribute, wrapper made to depend on the annals directory.
+- **New runners need `git add -N` before they count:** the enumerator is
+  `git ls-files`, so an untracked new runner reads as "key without
+  annotation". Commit staging covers it; a dry run before staging doesn't.
+- **frigida fumus stage VI** read the LIVE inventory 'suitae probationum'
+  to test `frigida -inventarium`. It now reads 'bibliothecae (include)'
+  (known row include/piscina.h → lib/piscina.c), since the old
+  inventory is being removed (Fran 2026-10-12).
+- **Measured on this commit's own diff** (10 paths, now computed in C):
+  4.6 s end to end. Python's "portae debitae" commit phase was 22-26 s.
