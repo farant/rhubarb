@@ -13,13 +13,13 @@
 <h1>componens</h1>
 <p class="subtitulus">Arbor componentium: nodus LOGICUS (mores, non formae)</p>
 
-<p>The logical tree of a ludus UI: each node says what something IS and how it behaves (id, action name, accessible title, kind (partes: button, field, option, list, item, dialog, title, image, table), bounds in its parent&#x27;s space, focusable, clip, translation and scale, children) and nothing about how it looks. The hit predicate escalates from rectangle to polygon to mask to the component&#x27;s own test. One of two trees that are never fused: componens says WHAT, figura says HOW IT IS DRAWN, and targeting, focus and capture walk only this tree. Strings are interned, so callers pass any literal. Serializes to and from STML and compares structurally, which is how tests pin a tree. Built each frame by a Componere function from the program&#x27;s state (see dispensator); used by pictor (pictor_componentia) and the test toy.</p>
+<p>The logical tree of a ludus UI: each node says what something IS and how it behaves (id, action name, accessible title, kind (partes: button, field, option, list, item, dialog, title, image, table, viewport), bounds in its parent&#x27;s space, focusable, clip, translation and scale, children) and nothing about how it looks. The hit predicate escalates from rectangle to polygon to mask to the component&#x27;s own test. One of two trees that are never fused: componens says WHAT, figura says HOW IT IS DRAWN, and targeting, focus and capture walk only this tree. Strings are interned, so callers pass any literal. Serializes to and from STML and compares structurally, which is how tests pin a tree. Three additions from October 2026. A node can be the root of a scope: an application mounted twice has the same ids, actions and figures in both mounts, so the host marks each mount&#x27;s root, and ids, actions and figures resolve inside the nearest such root. A node can be marked as closing: a successful action on it closes its branch&#x27;s popovers (dimissio). And the viewport kind is a window onto content, a page or a canvas, with a desk around it. Built each frame by a Componere function from the program&#x27;s state (see dispensator); used by pictor, scriba, terminale and vicus.</p>
 
 <table>
 <tbody>
 <tr><td>Header</td><td><a href="../../include/componens.h"><code>include/componens.h</code></a></td></tr>
 <tr><td>Implementation</td><td><a href="../../lib/componens.c"><code>lib/componens.c</code></a></td></tr>
-<tr><td>Last change</td><td>2026-09-05 87fc5b5e</td></tr>
+<tr><td>Last change</td><td>2026-10-10 0aa96e8a</td></tr>
 <tr><td>Group</td><td><a href="greges.html#ludus">Ludus: the second-generation UI</a></td></tr>
 </tbody>
 </table>

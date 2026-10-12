@@ -13,13 +13,13 @@
 <h1>vim</h1>
 <p class="subtitulus"></p>
 
-<p>A vim command interpreter as a pure function: give it the editor state and a key, get the new state back, with no window and no drawing, so it can be tested on a grid built from a string. Normal, insert and visual modes, special keys as negative codes, a clipboard of up to 32 lines shared between editors, and an undo stack of 32 operations that covers line operations only (dd, o, O, p, P, dG); character edits are deliberately not undoable. The state records whether the text changed and whether ESC in normal mode asked to close. The first generation&#x27;s clearest example of separating logic from display (2025-11-28).</p>
+<p>A vim command interpreter as a pure function: give it the editor state and a key, get the new state back, with no window and no drawing, so it can be tested on a grid built from a string. Normal, insert and visual modes (visual is line-wise only), special keys as negative codes, a clipboard of up to 32 lines shared between editors, and an undo stack of 32 operations that covers line operations only (dd, o, O, p, P, dG); character edits are deliberately not undoable. The state records whether the text changed and whether ESC in normal mode asked to close. Until 2026-10-12 it could not yank: only deletion filled the clipboard, so copying meant deleting, and nobody had noticed until scriba&#x27;s panes came to share one register. yy, Y and y in visual mode now copy lines without touching the text, marking no change and pushing no undo, so a consumer records nothing for them. It is not real vim in other small ways too (g alone goes to the top, Esc does not step the cursor back, G goes to the last line of the fixed sheet). The first generation&#x27;s clearest example of separating logic from display (2025-11-28), and still in use: scriba_actiones drives it on a working sheet, keeping undo in the document&#x27;s history instead of this stack.</p>
 
 <table>
 <tbody>
 <tr><td>Header</td><td><a href="../../include/vim.h"><code>include/vim.h</code></a></td></tr>
 <tr><td>Implementation</td><td><a href="../../lib/vim.c"><code>lib/vim.c</code></a></td></tr>
-<tr><td>Last change</td><td>2026-08-19 f683e78a</td></tr>
+<tr><td>Last change</td><td>2026-10-12 cebc75ea</td></tr>
 <tr><td>Group</td><td><a href="greges.html#prima">The first generation</a></td></tr>
 </tbody>
 </table>

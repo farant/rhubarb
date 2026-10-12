@@ -13,13 +13,13 @@
 <h1>pictor_componentia</h1>
 <p class="subtitulus">componere pictoris (P3: prospectus, tabula, status).</p>
 
-<p>pictor&#x27;s view, as a Componere function for the dispensator: reads the islands and motus and returns the component tree (toolbar, canvas, status line) into the arena it is given, writing nothing. Kinds are data, so there is no type per component; the canvas&#x27;s action name is computed from state (the current tool &#x27;penicillus&#x27; gives &#x27;penicillus.ictus&#x27;), which means handlers never branch on the tool. The pending stroke&#x27;s points are copied into the canvas component so that painting reads only the tree. The concrete case of &#x27;the component is a pure projection of its islands&#x27;.</p>
+<p>pictor&#x27;s view, as a Componere function for the dispensator: it reads the island, motus and the document&#x27;s list of layers, and returns the component tree into the arena it is given, writing nothing. Kinds are data, so there is no type per component; the canvas&#x27;s action name is computed from state (the current tool &#x27;penicillus&#x27; gives &#x27;penicillus.ictus&#x27;), which means handlers never branch on the tool. The pending stroke&#x27;s points are copied into the canvas component so that painting reads only the tree. In October 2026 the tree grew from four nodes into an application. Layout is in cells, by dispositio, and the canvas sits one cell in from the viewport so that its border shows. The status line became a tool bar three cells high: squares for the tool, the two colours, the pattern and the size, each titled with what it should show (&#x27;color:0&#x27;, &#x27;instrumentum:aspergillum&#x27;), which is data for the figure just as the points are, and at the right end a button for the layers. A click on a square opens its palette, a dialog node added as the root&#x27;s last child so that it is drawn over the canvas and hit first; its options are squares, each carrying the action that owns the attribute it sets. The layers panel is one more palette, its rows top layer first, with an insertion bar while a row is dragged. One bug it kept: the composer copied the pending points into the canvas preview whatever held the capture, so dragging a layer row drew a stray line; it now copies them only when the canvas holds it. The concrete case of &#x27;the component is a pure projection of its state&#x27;.</p>
 
 <table>
 <tbody>
 <tr><td>Header</td><td><a href="../../include/pictor_componentia.h"><code>include/pictor_componentia.h</code></a></td></tr>
 <tr><td>Implementation</td><td><a href="../../lib/pictor_componentia.c"><code>lib/pictor_componentia.c</code></a></td></tr>
-<tr><td>Last change</td><td>2026-09-05 1fc9bb10</td></tr>
+<tr><td>Last change</td><td>2026-10-12 80de03e6</td></tr>
 <tr><td>Group</td><td><a href="greges.html#ludus">Ludus: the second-generation UI</a></td></tr>
 </tbody>
 </table>

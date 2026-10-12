@@ -13,13 +13,13 @@
 <h1>pictor_figurae</h1>
 <p class="subtitulus">figurae pictoris (P3: tabula, titulus)</p>
 
-<p>pictor&#x27;s figures: how its canvas and title are drawn, registered per theme with figura. The canvas is ONE image whose identity is the content hash of the current projection, plus the pending stroke drawn as lines between the component&#x27;s points, plus the cursor; pictor_imago_fons resolves that hash back to the document&#x27;s bitmap when the rasterizer asks for the image by name. So the command list stays plain data (no pixel pointers), and two frames with the same document produce the same commands. Pure, like every figure.</p>
+<p>pictor&#x27;s figures: how its viewport, canvas, tool bar and palettes are drawn, registered per theme with figura. The canvas is ONE image whose identity is the content hash of the current projection, plus a preview of the stroke in progress, plus the cursor; pictor_imago_fons resolves that hash back to the document&#x27;s bitmap when the rasterizer asks for the image by name. So the command list stays plain data (no pixel pointers), and two frames with the same document produce the same commands. The preview follows the tool. The brush&#x27;s sweep is drawn in the real colour, stamped every few steps, since a 64-pixel brush swept pixel by pixel would be some 25,000 rectangles a frame. The spray&#x27;s dots come from the same generator and seed as the document&#x27;s, so that what is previewed is what will be drawn. The sponge&#x27;s squares follow the same walk as the document, and the test counts them exactly so that the two copies cannot drift apart. The line shows as a rubber band. figura_quadrati draws every square of the tool bar and every palette option from its title alone: a 16x16 one-bit icon for a tool, a swatch for a colour or a cross for none, a pattern in the two chosen colours, a disc, dots or a bar for a size, with an accent border on the option that is selected. The page border sits a whole cell outside the canvas, the fix that came from scriba when a frame one pixel out landed on the page&#x27;s own cells in the terminal. Pure, like every figure.</p>
 
 <table>
 <tbody>
 <tr><td>Header</td><td><a href="../../include/pictor_figurae.h"><code>include/pictor_figurae.h</code></a></td></tr>
 <tr><td>Implementation</td><td><a href="../../lib/pictor_figurae.c"><code>lib/pictor_figurae.c</code></a></td></tr>
-<tr><td>Last change</td><td>2026-09-05 38a7b841</td></tr>
+<tr><td>Last change</td><td>2026-10-10 33c56a29</td></tr>
 <tr><td>Group</td><td><a href="greges.html#ludus">Ludus: the second-generation UI</a></td></tr>
 </tbody>
 </table>
