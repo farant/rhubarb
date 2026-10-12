@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>norma_ad_c</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>norma_ad_c</h1>
+<p class="subtitulus">normae nominatae -&gt; fons C qui easdem aedificat</p>
+
+<p>Named norma schemas turned into C source that builds the same schemas: the emitter behind bin/norma c. For a prefix such as vates_norma_ it writes one public function per named schema, in a header and a body marked GENERATUM that fabrica judges against regeneration. A schema referenced from several places is built once per call, so the sharing in the file survives into C (pointer equality is asserted). A generator named in the file becomes a prototype in the generated header, so the consumer must define it, and a missing definition is a link error and not a silent default. Literals are written for C89 under the house flags: strings escaped, including &#x27;?&#x27; against trigraphs, and refused beyond 509 bytes; 64-bit bounds spelled so that the minimum compiles; floats in the shortest form that reads back exactly; non-finite values refused. The oracle compares the loader with the generated C: the same JSON Schema export, the same judgments on values generated from both, float bounds equal bit for bit, and committed files equal to what today&#x27;s emitter writes. Written 2026-10-08 (norma plan 3). Its first use moved vates&#x27;s response schema out of builder calls and into a file.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/norma_ad_c.h"><code>include/norma_ad_c.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/norma_ad_c.c"><code>lib/norma_ad_c.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-10-08 5f1dbb25</td></tr>
+<tr><td>Group</td><td><a href="greges.html#vates">Language models and JSON schemas</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>norma_stml</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>norma_stml</h1>
+<p class="subtitulus">facies STML normae: plagulae .norma legere et</p>
+
+<p>The file form of norma: reading and writing .norma files, an STML dialect in which named schemas can refer to one another. Judgment is in two layers. The dialect&#x27;s canon, embedded through norma_canon, goes first: vocabulary, cardinality, kinds of attribute, references that resolve, unique names. The reader then checks only what a canon cannot say: exactly one type child, bounds in pairs that parse and are not inverted, cycles of references (named as a chain, a -&gt; b -&gt; a), generators against a registry. All faults are returned, each with line and column, and the result is all or nothing. The writer&#x27;s canonical form is the STML formatter&#x27;s form byte for byte, so a written file is already formatted. Names are plain and carry no &#x27;#&#x27;: the spec had sketched a sigil, and canon refused it under an earlier decree about what &#x27;#&#x27; means in STML. Written 2026-10-08 on a header Fran approved. Its own final review found two silent corruptions, a newline in text folding to a space and an empty attribute value reading back as &#x27;true&#x27;; an outside reviewer with 47 hostile inputs then found six more faults, among them a cycle between two named schemas that the emitter would have turned into C that overflows the stack. All were fixed with tests seen red first. A hook lets a caller put a comment before each node, which norma_inferre uses to write its evidence into a draft.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/norma_stml.h"><code>include/norma_stml.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/norma_stml.c"><code>lib/norma_stml.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-10-09 f9bc606b</td></tr>
+<tr><td>Group</td><td><a href="greges.html#vates">Language models and JSON schemas</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>
