@@ -36,9 +36,16 @@ The small items go first, so each one helps the next commit.
   XXI (red today, green after; plant red); manual -nova takes 1.8 s.
 
 ### T4: P4 briar-fumus tree-local in worktrees
-- [ ] worktree detection; uses bin/briar + PATH; main unchanged; the gate
+- [x] worktree detection; uses bin/briar + PATH; main unchanged; the gate
   passes in quinta without excuse; a plant (forced ~/.bin path in a
   worktree) turns it red against a skewed fixture. Commit.
+  As built (2026-10-12): git-dir != common-dir -> tree's bin/briar (and
+  bin/briar-spectator), required RECENS by `bin/fabrica iudicare` (recipe:
+  `bin/fabrica sanare bin/briar bin/briar-spectator` - tree-local, heals
+  the capsules too, never installs); link dir first on PATH, real ~/.bin
+  removed (shebangs and `command -v briar-spectator` are tree-local too);
+  new stage 0 asserts the binary under test. Plants II (BRIAR forced to
+  ~/.bin; PATH not changed) red. Green in quinta without excuse.
 
 ### T5: P1 extractor-keyed closure cache
 - [ ] Fran picks (a) or (b). Digest of the extractor's inputs in build/,
