@@ -253,7 +253,7 @@ _applicationem_parare (
     ms->vol = volumen_temporarium(piscina, "probatio_vicus_iussa");
     CREDO_NECESSE_NON_NIHIL(ms->vol);
     CREDO_NECESSE(vicus_applicatio_aedificare(&ms->app, piscina, intern,
-        ms->vol, NIHIL, CDLXXX, CDLXXX + VICUS_ALTITUDO_TABULARUM));
+        ms->vol, CDLXXX, CDLXXX + VICUS_ALTITUDO_TABULARUM));
     ms->v = ms->app.vicus;
     ms->m = manus_ludus_creare(piscina, ms->app.d);
     CREDO_NECESSE(vicus_activam_ponere(ms->v, "3"));

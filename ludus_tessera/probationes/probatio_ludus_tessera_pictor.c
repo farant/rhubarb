@@ -33,7 +33,6 @@
 #include "pictor_applicatio.h"
 #include "credo.h"
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
 #define COLUMNAE  LXXX
@@ -128,7 +127,6 @@ principale (vacuum)
                     b32  praeteritus;
                 Piscina* piscina;
     InternamentumChorda* intern;
-     constans character* radix;
        PictorApplicatio  f;
        PictorApplicatio  t;
                     Xar* notata;
@@ -153,11 +151,10 @@ principale (vacuum)
     credo_aperire(piscina);
     intern = internamentum_creare(piscina);
     thema_initiare();
-    radix = getenv("RHUBARB_RADIX");
 
     imprimere("\n--- I. sessio fenestrae: ictus notatus ---\n");
     CREDO_VERUM (pictor_applicatio_aedificare(&f, piscina, intern,
-        volumen_temporarium(piscina, "lt_pictor_f"), radix,
+        volumen_temporarium(piscina, "lt_pictor_f"),
         COLUMNAE * VI, LINEAE * VIII));
     notata = xar_creare(piscina, (i32)magnitudo(EventusNotatum));
     dispensator_notarium_ponere(f.d, notata);
@@ -194,7 +191,7 @@ principale (vacuum)
 
     imprimere("\n--- II. eadem per terminalem (glutinum) ---\n");
     CREDO_VERUM (pictor_applicatio_aedificare(&t, piscina, intern,
-        volumen_temporarium(piscina, "lt_pictor_t"), radix,
+        volumen_temporarium(piscina, "lt_pictor_t"),
         COLUMNAE * VI, LINEAE * VIII));
     pm    = tessera_pons_memoriae_creare(piscina, COLUMNAE, LINEAE);
     opus  = tessera_aperire(piscina, &pm->pons);

@@ -201,3 +201,29 @@ New lib file -> ./tools/compile_tests_fontes_generare.sh (link list).
 Second link list: ludus_tessera/compile_probationes.sh keeps a HAND list
 of lib objects - a new lib file must be added there too (commissio's
 ludus_tessera gate went 0/8 on link errors until it was).
+
+## 2026-10-12 — S7c-2: the dead `radix` parameter removed
+
+After S7c-1 `radix` ("praefixum viarum canonum") only located manifests;
+every app passed NIHIL. Removed from scriba_montare,
+scriba_applicatio_aedificare, pictor_montare, pictor_applicatio_aedificare,
+vicus_creare, vicus_applicatio_aedificare, the VicusMontator type (and
+its 3 lib + 10 test implementations), and the Vicus struct. 80 call
+sites by a paren-balanced script (arg at a fixed index, asserted to be
+NIHIL / radix / v->radix / getenv("RHUBARB_RADIX") / "/via/nulla" -
+anything else stops the run). ludus_tessera tests had passed
+getenv("RHUBARB_RADIX") because that suite does not run from the root:
+the reason is gone with the manifests embedded (RHUBARB_RADIX itself is
+a general house variable - toml, css, diagnostica - untouched).
+
+pictor_montatio `sine_arbore` could no longer say "no tree" through a
+bad radix: it now chdir("/") around pictor_applicatio_aedificare (back
+BEFORE asserting - later sections read the tree). Plant: organum_legere_genus
+reading apps/pictor/organum.stml from disk -> red "manifestum abest"; reverted
+-> green (silva.planta with a function gate; the gate's Porta must have
+fracturae=[] or objects with .nomen, not strings - planta's summary crashes).
+
+Tool candidate (not built): silva has renominare for renames but nothing
+for "remove argument k from every call of F + the parameter from its
+definitions/prototype/function-pointer type". This slice did it by
+script; a silva-aware `argumentum_tollere` would make it one command.

@@ -147,7 +147,7 @@ principale (
         }
         plena = VERUM;
     }
-    si (!vicus_applicatio_aedificare(&app, piscina, intern, vol, NIHIL,
+    si (!vicus_applicatio_aedificare(&app, piscina, intern, vol,
             latitudo, altitudo))
     {
         redde I;

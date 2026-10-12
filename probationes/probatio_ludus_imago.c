@@ -100,7 +100,7 @@ pictorem_probare (vacuum)
     vol = volumen_temporarium(piscina, "probatio_ludus_imago");
     CREDO_NON_NIHIL(vol);
     CREDO_VERUM(pictor_applicatio_aedificare(&app, piscina, intern, vol,
-        NIHIL, DC + XL, CDLXXX));
+        DC + XL, CDLXXX));
     tabula = tabula_pixelorum_creare_nuda(piscina, DC + XL, CDLXXX);
     lf = ludus_fenestra_creare(piscina, app.d, app.figurae, ZEPHYRUM,
         pictor_imago_fons, &app.montatio.figurae_ctx, tabula);

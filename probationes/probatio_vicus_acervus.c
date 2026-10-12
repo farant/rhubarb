@@ -124,7 +124,7 @@ s32 principale (vacuum)
     (vacuum)setenv("SHELL", "/bin/sh", I);
     vol = volumen_temporarium(piscina, "probatio_vicus_acervus");
     CREDO_VERUM(vicus_applicatio_aedificare(&app, piscina, intern, vol,
-        NIHIL, CDLXXX, CDLXXX + VICUS_ALTITUDO_TABULARUM));
+        CDLXXX, CDLXXX + VICUS_ALTITUDO_TABULARUM));
     v = app.vicus;
     m = manus_ludus_creare(piscina, app.d);
     CREDO_VERUM(vicus_activam_ponere(v, "3"));
@@ -221,7 +221,7 @@ s32 principale (vacuum)
     imprimere("\n--- VII: reapertura ---\n");
     CREDO_VERUM(vicus_applicatio_aedificare(&app_altera, piscina,
         intern,
-        vol, NIHIL, CDLXXX, CDLXXX + VICUS_ALTITUDO_TABULARUM));
+        vol, CDLXXX, CDLXXX + VICUS_ALTITUDO_TABULARUM));
     v = app_altera.vicus;
     CREDO_VERUM(vicus_activam_ponere(v, "3"));
     CREDO_AEQUALIS_I32(numerus_acervi(v), IV);

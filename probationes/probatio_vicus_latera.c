@@ -211,7 +211,7 @@ s32 principale (vacuum)
     (vacuum)setenv("SHELL", "/bin/sh", I);
     vol = volumen_temporarium(piscina, "probatio_vicus_latera");
     CREDO_VERUM(vicus_applicatio_aedificare(&app, piscina, intern, vol,
-        NIHIL, CDLXXX, CDLXXX + VICUS_ALTITUDO_TABULARUM));
+        CDLXXX, CDLXXX + VICUS_ALTITUDO_TABULARUM));
     v      = app.vicus;
     m      = manus_ludus_creare(piscina, app.d);
     motus  = dispensator_motus(app.d);

@@ -61,7 +61,6 @@ nomen b32 (*VicusMontator)(
      InsulaRepositorium* repo,
      constans character* id,
      constans character* argumentum,
-     constans character* radix,
                     i32  latitudo,
                     i32  altitudo,
                  vacuum* ctx);
@@ -185,7 +184,6 @@ nomen structura {
                 Piscina* piscina;
     InternamentumChorda* intern;
                 Volumen* volumen;
-     constans character* radix;       /* praefixum viarum (manifesta) */
                     i32  latitudo;
                     i32  altitudo;
      InsulaRepositorium* repo;
@@ -210,7 +208,6 @@ vicus_creare (
                 Piscina* piscina,
     InternamentumChorda* intern,
                 Volumen* volumen,
-     constans character* radix,
                     i32  latitudo,
                     i32  altitudo);
 
@@ -240,8 +237,8 @@ vicus_systemata_ponere (
  * S3c: latus 'id' et 'argumentum' optionalia (absens id = ordinarium
  * "<tabula>_<latus>_<genus>").
  * FALSUM si dispositio mala aut repositorium deficit; latus generis
- * ignoti praeteritur (causa). S7a: radix ex apps/vicus/organum.stml
- * paratur (canon, domini). */
+ * ignoti praeteritur (causa). S7a: radix ex manifesto infixo (genus
+ * vicus) paratur (canon, domini). */
 b32
 vicus_aperire (
                   Vicus* v,

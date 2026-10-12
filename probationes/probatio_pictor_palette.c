@@ -90,7 +90,7 @@ s32 principale (vacuum)
     thema_initiare();
     vol = volumen_temporarium(piscina, "probatio_pictor_palette");
     CREDO_VERUM(pictor_applicatio_aedificare(&app, piscina, intern, vol,
-        NIHIL, CDLXXX, CDLXXX));
+        CDLXXX, CDLXXX));
     m = manus_ludus_creare(piscina, app.d);
     dispensator_recomponere(app.d);
     CREDO_NIHIL(nodus_arboris(&app, "palette"));

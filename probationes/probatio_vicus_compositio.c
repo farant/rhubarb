@@ -43,14 +43,13 @@ scribam_montare (
      InsulaRepositorium* r,
      constans character* id,
      constans character* argumentum,
-     constans character* radix,
                     i32  latitudo,
                     i32  altitudo,
                  vacuum* ctx)
 {
     (vacuum)argumentum;
     (vacuum)ctx;
-    redde scriba_montare((ScribaMontatio*)sedes, p, in, v, r, id, radix,
+    redde scriba_montare((ScribaMontatio*)sedes, p, in, v, r, id,
                          latitudo, altitudo, NIHIL, NIHIL);
 }
 
@@ -63,14 +62,13 @@ pictorem_montare (
      InsulaRepositorium* r,
      constans character* id,
      constans character* argumentum,
-     constans character* radix,
                     i32  latitudo,
                     i32  altitudo,
                  vacuum* ctx)
 {
     (vacuum)argumentum;
     (vacuum)ctx;
-    redde pictor_montare((PictorMontatio*)sedes, p, in, v, r, id, radix,
+    redde pictor_montare((PictorMontatio*)sedes, p, in, v, r, id,
                          latitudo, altitudo, NIHIL);
 }
 
@@ -210,7 +208,7 @@ s32 principale (vacuum)
     thema_initiare();
     vol = volumen_temporarium(piscina, "probatio_vicus_compositio");
 
-    v = vicus_creare(piscina, intern, vol, NIHIL, CDLXXX, CDLXXX);
+    v = vicus_creare(piscina, intern, vol, CDLXXX, CDLXXX);
     CREDO_NON_NIHIL(v);
     CREDO_VERUM(vicus_genus_addere(v, "scriba",
         magnitudo(ScribaMontatio),

@@ -79,14 +79,14 @@ pictor_picturam_condere (
 
 /* pictorem montare: id NIHIL = radix repositorii (elementum radicis
  * 'pictor' iam exstat); aliter liberum <pictor id> creatur si abest.
- * Ordo: canones, elementum initiale, domini. radix = praefixum viarum
- * canonum. Tabula NOVA (vicus-latera S2c) magnitudine prospectus
- * superficiei minus margo cellulae utrimque (altitudo etiam minus
- * linea status; LXIV minimum); exstans suam servat. systemata
- * (status-plan S3-S5): conservatio - ramus registratur et status
- * servatus restituitur post elementum initiale, ante dominos; relatio -
- * post dominos ramus registratur et documentum ligatur (verificatio
- * statim). NIHIL = nulla (probationes). */
+ * Ordo: canones (manifestum infixum, genus pictor), elementum
+ * initiale, domini. Tabula NOVA (vicus-latera S2c) magnitudine
+ * prospectus superficiei minus margo cellulae utrimque (altitudo
+ * etiam minus linea status; LXIV minimum); exstans suam servat.
+ * systemata (status-plan S3-S5): conservatio - ramus registratur et
+ * status servatus restituitur post elementum initiale, ante dominos;
+ * relatio - post dominos ramus registratur et documentum ligatur
+ * (verificatio statim). NIHIL = nulla (probationes). */
 b32
 pictor_montare (
          PictorMontatio* m,
@@ -95,7 +95,6 @@ pictor_montare (
                 Volumen* volumen,
      InsulaRepositorium* repo,
      constans character* id,
-     constans character* radix,
                     i32  latitudo,
                     i32  altitudo,
         StatusSystemata* systemata);
@@ -109,8 +108,7 @@ pictor_volumen_aperire (
      character** argv,
            b32*  fumus);
 
-/* Compositio tota super volumen apertum. radix = praefixum viarum
- * canonum (NIHIL = directorium currens); latitudo/altitudo superficiei
+/* Compositio tota super volumen apertum; latitudo/altitudo superficiei
  * in pixelis nostris (compositio pictoris). FALSUM si pars deficit
  * (causa in stderr). */
 b32
@@ -119,7 +117,6 @@ pictor_applicatio_aedificare (
                 Piscina* piscina,
     InternamentumChorda* intern,
                 Volumen* volumen,
-     constans character* radix,
                     i32  latitudo,
                     i32  altitudo);
 

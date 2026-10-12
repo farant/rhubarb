@@ -255,7 +255,6 @@ principale (vacuum)
                     b32  praeteritus;
                 Piscina* piscina;
     InternamentumChorda* intern;
-     constans character* radix;
         VicusApplicatio  f;
         VicusApplicatio  t;
                 Volumen* vol_f;
@@ -282,7 +281,6 @@ principale (vacuum)
     credo_aperire(piscina);
     intern = internamentum_creare(piscina);
     thema_initiare();
-    radix = getenv("RHUBARB_RADIX");
     /* tabula t1 ordinaria = terminale: concha brevis, non initialis
      * cum ambitu probantis (vicus-latera S1c) */
     (vacuum)setenv("SHELL", "/bin/sh", I);
@@ -290,7 +288,7 @@ principale (vacuum)
     imprimere("\n--- I. sessio fenestrae: scriba, pictor, reditus\n");
     vol_f = volumen_temporarium(piscina, "lt_vicus_f");
     CREDO_VERUM (vicus_applicatio_aedificare(&f, piscina, intern, vol_f,
-        radix, COLUMNAE * VI, LINEAE * VIII));
+        COLUMNAE * VI, LINEAE * VIII));
     notata = xar_creare(piscina, (i32)magnitudo(EventusNotatum));
     dispensator_notarium_ponere(f.d, notata);
     {
@@ -346,7 +344,7 @@ principale (vacuum)
     imprimere("\n--- II. eadem per terminalem (glutinum) ---\n");
     vol_t = volumen_temporarium(piscina, "lt_vicus_t");
     CREDO_VERUM (vicus_applicatio_aedificare(&t, piscina, intern, vol_t,
-        radix, COLUMNAE * VI, LINEAE * VIII));
+        COLUMNAE * VI, LINEAE * VIII));
     pm    = tessera_pons_memoriae_creare(piscina, COLUMNAE, LINEAE);
     opus  = tessera_aperire(piscina, &pm->pons);
     lt    = ludus_tessera_creare(piscina, t.d, vicus_figurae(t.vicus),

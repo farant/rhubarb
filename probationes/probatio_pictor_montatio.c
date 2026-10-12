@@ -1,8 +1,9 @@
 /* probatio_pictor_montatio.c - montatio vera pictoris (status-plan
  * S2): canon et domini EX MANIFESTO in ramo montato vigent (via
  * pictor_applicatio_aedificare -> pictor_montare, non insulae manu
- * structae); manifestum absens = montatio recusatur; S3: status
- * persistens per sessiones servatur. */
+ * structae); S7c: manifestum infixum - extra arborem quoque; S3:
+ * status persistens per sessiones servatur. */
+#include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"
@@ -16,6 +17,7 @@
 #include "credo.h"
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 
 interior vacuum
 ponere_ignotum (
@@ -76,8 +78,7 @@ _probare_montationem (
     CREDO_NECESSE_NON_NIHIL(vol);
     memset(&app, ZEPHYRUM, magnitudo(app));
     CREDO_NECESSE(pictor_applicatio_aedificare(&app, c->piscina, in,
-        vol,
-        NIHIL, CDLXXX, CDLXXX));
+        vol, CDLXXX, CDLXXX));
 
     /* canon generatus in utraque insula */
     insula_scriptorem_ponere(app.repo, chorda_ex_literis("quilibet",
@@ -116,9 +117,10 @@ _probare_montationem (
     volumen_claudere(vol);
 }
 
-/* S7c-1: manifestum infixum - radix viarum nulla (fenestra extra
- * arborem) applicationem non impedit; canon tamen adest (manifestum
- * absens = genus ignotum: probatio_organum_montatio legere_genus) */
+/* S7c: manifestum infixum - extra arborem (directorium currens "/",
+ * ut fenestra in ~/.bin) applicatio aedificatur, canon et domini
+ * adsunt (manifestum absens = genus ignotum: probatio_organum_montatio
+ * legere_genus) */
 interior vacuum
 _probare_sine_arbore (
     CredoContextus* c)
@@ -126,14 +128,21 @@ _probare_sine_arbore (
      InternamentumChorda* in;
                  Volumen* vol;
         PictorApplicatio  app;
+               character  directorium[MXXIV];
+                     b32  aedificata;
 
     in = internamentum_creare(c->piscina);
     thema_initiare();
     vol = volumen_temporarium(c->piscina, "probatio_pictor_montatio");
     CREDO_NECESSE_NON_NIHIL(vol);
     memset(&app, ZEPHYRUM, magnitudo(app));
-    CREDO_NECESSE(pictor_applicatio_aedificare(&app, c->piscina, in,
-        vol, "/via/nulla", CDLXXX, CDLXXX));
+    CREDO_NECESSE(getcwd(directorium, magnitudo(directorium)) != NIHIL);
+    CREDO_NECESSE(chdir("/") == ZEPHYRUM);
+    aedificata = pictor_applicatio_aedificare(&app, c->piscina, in, vol,
+        CDLXXX, CDLXXX);
+    /* redire ANTE assertiones (sectiones sequentes radicem legunt) */
+    CREDO_NECESSE(chdir(directorium) == ZEPHYRUM);
+    CREDO_NECESSE(aedificata);
     /* canon et domini ex manifesto infixo */
     CREDO_FALSUM(scribere(&app, "motus", "ignotissimum=1"));
     CREDO_FALSUM(scribere(&app, "quilibet", "zoom=2"));
@@ -176,7 +185,7 @@ _probare_conservationem (
     CREDO_NECESSE_NON_NIHIL(vol);
     memset(&prima, ZEPHYRUM, magnitudo(prima));
     CREDO_NECESSE(pictor_applicatio_aedificare(&prima, c->piscina, in,
-        vol, NIHIL, CDLXXX, CDLXXX));
+        vol, CDLXXX, CDLXXX));
     CREDO_VERUM(valor_est(&prima, "instrumentum", "penicillus"));
     CREDO_VERUM(scribere(&prima,
         "instrumentum.eligere",
@@ -189,7 +198,7 @@ _probare_conservationem (
 
     memset(&altera, ZEPHYRUM, magnitudo(altera));
     CREDO_NECESSE(pictor_applicatio_aedificare(&altera, c->piscina, in,
-        vol, NIHIL, CDLXXX, CDLXXX));
+        vol, CDLXXX, CDLXXX));
     CREDO_VERUM(valor_est(&altera, "instrumentum", "linea"));
     CREDO_VERUM(valor_est(&altera, "color_primus", "5"));
     CREDO_VERUM(valor_est(&altera, "zoom", "2"));
@@ -224,8 +233,7 @@ _probare_initium (
     CREDO_NECESSE_NON_NIHIL(vol);
     memset(&app, ZEPHYRUM, magnitudo(app));
     CREDO_NECESSE(pictor_applicatio_aedificare(&app, c->piscina, in,
-        vol,
-        NIHIL, CDLXXX, CDLXXX));
+        vol, CDLXXX, CDLXXX));
     numerati = ZEPHYRUM;
     per (i = ZEPHYRUM; i < organum_numerus_camporum(o); i++)
     {

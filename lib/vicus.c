@@ -281,7 +281,6 @@ latus_montare (
         v->volumen, v->repo, chorda_ut_cstr(l->id, v->piscina),
         l->argumentum.mensura > ZEPHYRUM
             ? chorda_ut_cstr(l->argumentum, v->piscina) : NIHIL,
-        v->radix,
         (i32)latitudo, (i32)altitudo, l->descriptio->ctx);
     si (!l->montata)
     {
@@ -1195,7 +1194,6 @@ vicus_creare (
                 Piscina* piscina,
     InternamentumChorda* intern,
                 Volumen* volumen,
-     constans character* radix,
                     i32  latitudo,
                     i32  altitudo)
 {
@@ -1214,7 +1212,6 @@ vicus_creare (
     v->piscina   = piscina;
     v->intern    = intern;
     v->volumen   = volumen;
-    v->radix     = radix;
     v->latitudo  = latitudo;
     v->altitudo  = altitudo;
     v->genera    = xar_creare(piscina, (i32)magnitudo(VicusGenus));
@@ -1465,8 +1462,8 @@ vicus_aperire (
         v->systemata->dimissio  = dimissio_creare(v->piscina, v->intern,
             v->repo);
     }
-    /* S7a: radix ex manifesto hospitis (canon, domini); S7c-1:
-     * manifestum infixum */
+    /* S7a: radix ex manifesto hospitis (canon, domini), infixo
+     * (S7c-1) */
     organum = organum_legere_genus(v->piscina, v->intern, "vicus",
         "vicus");
     radix = insula_ramus_radix(v->repo);

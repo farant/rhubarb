@@ -65,7 +65,7 @@ principale (
         fprintf(stderr, "scriba: volumen aperiri non potuit\n");
         redde I;
     }
-    si (!scriba_applicatio_aedificare(&app, piscina, intern, vol, NIHIL,
+    si (!scriba_applicatio_aedificare(&app, piscina, intern, vol,
             SCRIBA_LATITUDO, SCRIBA_ALTITUDO))
     {
         redde I;

@@ -419,8 +419,8 @@ principale (vacuum)
          * non initialis cum ambitu probantis (vicus-latera S1c) */
         (vacuum)setenv("SHELL", "/bin/sh", I);
         CREDO_VERUM(vicus_applicatio_aedificare(&app, piscina, intern,
-            volumen_temporarium(piscina, "lt_reditus"),
-            getenv("RHUBARB_RADIX"), LXXX * VI, XXX * VIII));
+            volumen_temporarium(piscina, "lt_reditus"), LXXX * VI,
+            XXX * VIII));
         lt = ludus_tessera_creare(piscina, app.d,
             vicus_figurae(app.vicus), ZEPHYRUM, vicus_imago_fons,
             app.vicus, r.opus, VI, VIII);

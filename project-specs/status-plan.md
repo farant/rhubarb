@@ -114,8 +114,10 @@ widgets are migrated by hand.*
   action organa_infixa); `organum_legere_genus`; pictor/scriba/vicus
   read the embedded copy only; freshness guard in
   probatio_organum_montatio (infixa_fontes).
-- **S7c-2** remove the dead `radix` parameter (scriba/pictor/vicus
-  headers, montare callback, apps, tests).
+- **S7c-2** DONE 2026-10-12 (lib/organum.worklog.md): dead `radix`
+  removed - scriba_montare/_aedificare, pictor_montare/_aedificare,
+  vicus_creare, vicus_applicatio_aedificare, VicusMontator, Vicus.radix;
+  80 calls. pictor_montatio `sine_arbore` now builds from cwd "/".
 - **S7c-3** terminale: apps/terminale/organum.stml (base fields only,
   action terminale.clavis), mount and standalone through
   organum_ramum_parare, CANON_EPHEMERA deleted; TerminaleContextus

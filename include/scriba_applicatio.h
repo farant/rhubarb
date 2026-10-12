@@ -60,15 +60,14 @@ nomen structura {
 /* scribam montare: id NIHIL = radix repositorii (elementum radicis
  * 'scriba' iam exstat); aliter liberum <scriba id> creatur si abest.
  * Ordo: canones, elementum initiale, domini (scriptura initialis
- * anonyma ne recusetur). radix = praefixum viarum canonum. Folium
- * NOVUM (vicus-latera S2c) magnitudine superficiei: cellulae minus
- * margines et linea status (XX x X minimum); exstans suum servat.
- * liber (S2b): visus paginae libri - pagina ex plagula
- * 'scriba/visus/<id>' (absens: prima), documentum libri (commune);
- * NIHIL = documentum proprium in spatio id (mos prior). systemata
- * (status-plan S6b): canon, initium, domini ex manifesto
- * apps/scriba/organum.stml per organum_ramum_parare; conservatio
- * cursorem servat; NIHIL = nulla (probationes). */
+ * anonyma ne recusetur). Folium NOVUM (vicus-latera S2c) magnitudine
+ * superficiei: cellulae minus margines et linea status (XX x X
+ * minimum); exstans suum servat. liber (S2b): visus paginae libri -
+ * pagina ex plagula 'scriba/visus/<id>' (absens: prima), documentum
+ * libri (commune); NIHIL = documentum proprium in spatio id (mos
+ * prior). systemata (status-plan S6b): canon, initium, domini ex
+ * manifesto infixo (genus scriba) per organum_ramum_parare;
+ * conservatio cursorem servat; NIHIL = nulla (probationes). */
 b32
 scriba_montare (
          ScribaMontatio* m,
@@ -77,7 +76,6 @@ scriba_montare (
                 Volumen* volumen,
      InsulaRepositorium* repo,
      constans character* id,
-     constans character* radix,
                     i32  latitudo,
                     i32  altitudo,
             ScribaLiber* liber,
@@ -102,8 +100,7 @@ scriba_volumen_aperire (
      character** argv,
            b32*  fumus);
 
-/* Compositio tota super volumen apertum. radix = praefixum viarum
- * canonum (NIHIL = directorium currens); latitudo/altitudo superficiei
+/* Compositio tota super volumen apertum; latitudo/altitudo superficiei
  * in pixelis nostris. FALSUM si pars deficit (causa in stderr). */
 b32
 scriba_applicatio_aedificare (
@@ -111,7 +108,6 @@ scriba_applicatio_aedificare (
                 Piscina* piscina,
     InternamentumChorda* intern,
                 Volumen* volumen,
-     constans character* radix,
                     i32  latitudo,
                     i32  altitudo);
 

@@ -119,7 +119,7 @@ _probare_revocare (
     CREDO_NECESSE_NON_NIHIL(vol);
     CREDO_NECESSE(mundum_creare(&w, c->piscina, in, vol, FALSUM));
     CREDO_NECESSE(pictor_montare(&m, c->piscina, in, vol, w.repo, "p1",
-        NIHIL, CDLXXX, CDLXXX, &w.systemata));
+        CDLXXX, CDLXXX, &w.systemata));
     actum(&m, "<stratum actio=\"novum\" id=\"2\" supra=\"1\"/>");
     CREDO_VERUM(activum_ponere(w.repo, &m, "2", c->piscina));
     CREDO_VERUM(activum_est(&m, "2"));
@@ -150,9 +150,9 @@ _probare_ramos_communes (
     CREDO_NECESSE_NON_NIHIL(vol);
     CREDO_NECESSE(mundum_creare(&w, c->piscina, in, vol, FALSUM));
     CREDO_NECESSE(pictor_montare(&m1, c->piscina, in, vol, w.repo, "p1",
-        NIHIL, CDLXXX, CDLXXX, &w.systemata));
+        CDLXXX, CDLXXX, &w.systemata));
     CREDO_NECESSE(pictor_montare(&m2, c->piscina, in, vol, w.repo, "p2",
-        NIHIL, CDLXXX, CDLXXX, &w.systemata));
+        CDLXXX, CDLXXX, &w.systemata));
     /* m2 picturam p1 ostendit - documento EODEM (memoria communis) */
     m2.documenta = m1.documenta;
     CREDO_NECESSE(pictor_picturam_ponere(&m2, "p1"));
@@ -184,7 +184,7 @@ _probare_ligationem_novam (
     CREDO_NECESSE_NON_NIHIL(vol);
     CREDO_NECESSE(mundum_creare(&w, c->piscina, in, vol, FALSUM));
     CREDO_NECESSE(pictor_montare(&m, c->piscina, in, vol, w.repo, "p1",
-        NIHIL, CDLXXX, CDLXXX, &w.systemata));
+        CDLXXX, CDLXXX, &w.systemata));
     actum(&m, "<stratum actio=\"novum\" id=\"2\" supra=\"1\"/>");
     actum(&m, "<stratum actio=\"novum\" id=\"3\" supra=\"2\"/>");
     CREDO_VERUM(activum_ponere(w.repo, &m, "3", c->piscina));
@@ -216,7 +216,7 @@ _probare_restitutionem (
         c->piscina), "probatio"));
     CREDO_NECESSE(mundum_creare(&w, c->piscina, in, vol, VERUM));
     CREDO_NECESSE(pictor_montare(&m, c->piscina, in, vol, w.repo, "p1",
-        NIHIL, CDLXXX, CDLXXX, &w.systemata));
+        CDLXXX, CDLXXX, &w.systemata));
     /* zoom restitutus, stratum 7 (nullum) reparatum */
     CREDO_VERUM(chorda_aequalis_literis(*insula_ramus_attributum(
         &m.ramus, "zoom"), "2"));

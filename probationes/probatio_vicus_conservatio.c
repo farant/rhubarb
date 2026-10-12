@@ -88,7 +88,7 @@ _probare_latus_pictoris (
     vol = volumen_temporarium(c->piscina, "probatio_vicus_conservatio");
     CREDO_NECESSE_NON_NIHIL(vol);
     CREDO_NECESSE(vicus_applicatio_aedificare(&prima, c->piscina, in,
-        vol, NIHIL, CM, DC));
+        vol, CM, DC));
     CREDO_NECESSE(valor_est(&prima, "instrumentum", "penicillus"));
     CREDO_VERUM(scribere(&prima, "instrumentum.eligere",
         "instrumentum=spongia"));
@@ -97,7 +97,7 @@ _probare_latus_pictoris (
         "palette=color_primus"));
 
     CREDO_NECESSE(vicus_applicatio_aedificare(&altera, c->piscina, in,
-        vol, NIHIL, CM, DC));
+        vol, CM, DC));
     CREDO_VERUM(valor_est(&altera, "instrumentum", "spongia"));
     CREDO_VERUM(valor_est(&altera, "zoom", "4"));
     CREDO_VERUM(valor_est(&altera, "palette", NIHIL));
@@ -123,7 +123,7 @@ _probare_dimissionem (
     vol = volumen_temporarium(c->piscina, "probatio_vicus_conservatio");
     CREDO_NECESSE_NON_NIHIL(vol);
     CREDO_NECESSE(vicus_applicatio_aedificare(&app, c->piscina, in, vol,
-        NIHIL, CM, DC));
+        CM, DC));
     CREDO_NECESSE(vicus_acervo_aperire(app.vicus, "pictor", ""));
     (vacuum)vicus_pulsare(app.vicus);
     dispensator_recomponere(app.d);
@@ -165,7 +165,7 @@ _probare_latus_scribae (
     vol = volumen_temporarium(c->piscina, "probatio_vicus_conservatio");
     CREDO_NECESSE_NON_NIHIL(vol);
     CREDO_NECESSE(vicus_applicatio_aedificare(&prima, c->piscina, in,
-        vol, NIHIL, CM, DC));
+        vol, CM, DC));
     r = insula_ramus(prima.vicus->repo, "scriba", "1_sinistrum_scriba");
     CREDO_NECESSE(insula_ramus_nodus(&r) != NIHIL);
     insula_scriptorem_ponere(prima.vicus->repo, chorda_ex_literis(
@@ -174,7 +174,7 @@ _probare_latus_scribae (
     CREDO_VERUM(mutare_ramum(&r, ponere, modus));
 
     CREDO_NECESSE(vicus_applicatio_aedificare(&altera, c->piscina, in,
-        vol, NIHIL, CM, DC));
+        vol, CM, DC));
     r = insula_ramus(altera.vicus->repo, "scriba",
         "1_sinistrum_scriba");
     a = insula_ramus_attributum(&r, "cursor_linea");
@@ -213,7 +213,7 @@ _probare_capsam (
     vol = volumen_temporarium(c->piscina, "probatio_vicus_conservatio");
     CREDO_NECESSE_NON_NIHIL(vol);
     CREDO_NECESSE(vicus_applicatio_aedificare(&prima, c->piscina, in,
-        vol, NIHIL, CM, DC));
+        vol, CM, DC));
     m = manus_ludus_creare(c->piscina, prima.d);
     CREDO_NECESSE_NON_NIHIL(m);
     /* tabula III: scriba focata; "abc" scribitur et copiatur (yy) */
@@ -243,7 +243,7 @@ _probare_capsam (
 
     /* sessio altera: registrum restitutum */
     CREDO_NECESSE(vicus_applicatio_aedificare(&altera, c->piscina, in,
-        vol, NIHIL, CM, DC));
+        vol, CM, DC));
     a = insula_attributum(altera.vicus->repo, "capsa");
     CREDO_VERUM(a && chorda_aequalis_literis(*a, "abc"));
     a = insula_attributum(altera.vicus->repo, "capsa_lineae");

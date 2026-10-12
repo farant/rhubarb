@@ -196,7 +196,7 @@ s32 principale (vacuum)
     thema_initiare();
     vol = volumen_temporarium(piscina, "probatio_pictor_magnitudo");
     CREDO_VERUM(pictor_applicatio_aedificare(&app, piscina, intern, vol,
-        NIHIL, CDLXXX, CDLXXX));
+        CDLXXX, CDLXXX));
     m           = manus_ludus_creare(piscina, app.d);
     doc         = app.doc;
     fundus      = (i32)color_ad_pixelum(thema_color(COLOR_BACKGROUND));

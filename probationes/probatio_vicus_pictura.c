@@ -186,7 +186,7 @@ s32 principale (vacuum)
         redde I;
     }
     CREDO_VERUM(vicus_applicatio_aedificare(&app, piscina, intern, vol,
-        NIHIL, CDLXXX, CDLXXX + VICUS_ALTITUDO_TABULARUM));
+        CDLXXX, CDLXXX + VICUS_ALTITUDO_TABULARUM));
     v = app.vicus;
     m = manus_ludus_creare(piscina, app.d);
     CREDO_VERUM(vicus_activam_ponere(v, "3"));
@@ -258,7 +258,7 @@ s32 principale (vacuum)
     CREDO_VERUM(index_continet(vol,
         "id=\"3_dextrum_pictor\" argumentum=\"x2\""));
     CREDO_VERUM(vicus_applicatio_aedificare(&app_altera, piscina,
-        intern, vol, NIHIL, CDLXXX, CDLXXX + VICUS_ALTITUDO_TABULARUM));
+        intern, vol, CDLXXX, CDLXXX + VICUS_ALTITUDO_TABULARUM));
     CREDO_VERUM(vicus_activam_ponere(app_altera.vicus, "3"));
     CREDO_VERUM(argumentum_est(app_altera.vicus, "x2"));
     CREDO_VERUM(pictura_frontis(app_altera.vicus)
@@ -285,7 +285,7 @@ s32 principale (vacuum)
     vol_solus = volumen_temporarium(piscina,
         "probatio_vicus_pictura_s");
     CREDO_VERUM(vicus_applicatio_aedificare(&app_sola, piscina, intern,
-        vol_solus, NIHIL, CDLXXX, CDLXXX + VICUS_ALTITUDO_TABULARUM));
+        vol_solus, CDLXXX, CDLXXX + VICUS_ALTITUDO_TABULARUM));
     m = manus_ludus_creare(piscina, app_sola.d);
     CREDO_VERUM(vicus_activam_ponere(app_sola.vicus, "2"));
     dispensator_recomponere(app_sola.d);

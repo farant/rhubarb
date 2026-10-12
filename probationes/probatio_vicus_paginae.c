@@ -142,7 +142,7 @@ s32 principale (vacuum)
     (vacuum)setenv("SHELL", "/bin/sh", I);
     vol = volumen_temporarium(piscina, "probatio_vicus_paginae");
     CREDO_VERUM(vicus_applicatio_aedificare(&app, piscina, intern, vol,
-        NIHIL, CDLXXX, CDLXXX + VICUS_ALTITUDO_TABULARUM));
+        CDLXXX, CDLXXX + VICUS_ALTITUDO_TABULARUM));
     v = app.vicus;
     m = manus_ludus_creare(piscina, app.d);
     CREDO_VERUM(vicus_activam_ponere(v, "3"));
@@ -272,7 +272,7 @@ s32 principale (vacuum)
 
     imprimere("\n--- VII: pagina visus per reaperturam servatur ---\n");
     CREDO_VERUM(vicus_applicatio_aedificare(&app_altera, piscina,
-        intern, vol, NIHIL, CDLXXX,
+        intern, vol, CDLXXX,
         CDLXXX + VICUS_ALTITUDO_TABULARUM));
     sin = visus(app_altera.vicus, II, VICUS_SINISTRUM);
     dex = visus(app_altera.vicus, II, VICUS_DEXTRUM);

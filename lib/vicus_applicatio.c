@@ -238,7 +238,6 @@ scribam_montare (
      InsulaRepositorium* repo,
      constans character* id,
      constans character* argumentum,
-     constans character* radix,
                     i32  latitudo,
                     i32  altitudo,
                  vacuum* ctx)
@@ -272,7 +271,7 @@ scribam_montare (
                 chorda_ex_literis(argumentum, piscina), "scriba:visus");
         }
     }
-    si (!scriba_montare(m, piscina, intern, volumen, repo, id, radix,
+    si (!scriba_montare(m, piscina, intern, volumen, repo, id,
             latitudo, altitudo, cs->liber, cs->systemata))
     {
         redde FALSUM;
@@ -385,7 +384,6 @@ pictorem_montare (
      InsulaRepositorium* repo,
      constans character* id,
      constans character* argumentum,
-     constans character* radix,
                     i32  latitudo,
                     i32  altitudo,
                  vacuum* ctx)
@@ -397,7 +395,7 @@ pictorem_montare (
 
     m   = (PictorMontatio*)sedes;
     cp  = (ContextusPictoris*)ctx;
-    si (!pictor_montare(m, piscina, intern, volumen, repo, id, radix,
+    si (!pictor_montare(m, piscina, intern, volumen, repo, id,
             latitudo, altitudo, cp ? cp->systemata : NIHIL))
     {
         redde FALSUM;
@@ -649,8 +647,8 @@ cyclum_registrare (
 }
 
 /* terminale (vicus-latera S1c): concha nova in omni apertura (decisio
- * aemulatoris: nihil durabile praeter ramum); volumen et radix
- * viarum non leguntur - canones infixi */
+ * aemulatoris: nihil durabile praeter ramum); volumen non legitur -
+ * canones infixi */
 interior b32
 terminale_montare_in_vico (
                  vacuum* sedes,
@@ -660,14 +658,12 @@ terminale_montare_in_vico (
      InsulaRepositorium* repo,
      constans character* id,
      constans character* argumentum,
-     constans character* radix,
                     i32  latitudo,
                     i32  altitudo,
                  vacuum* ctx)
 {
     (vacuum)ctx;
     (vacuum)volumen;
-    (vacuum)radix;
     (vacuum)argumentum;
     redde terminale_montare((TerminaleApplicatio*)sedes, piscina,
         intern, repo, id, latitudo, altitudo);
@@ -790,7 +786,6 @@ vicus_applicatio_aedificare (
                 Piscina* piscina,
     InternamentumChorda* intern,
                 Volumen* volumen,
-     constans character* radix,
                     i32  latitudo,
                     i32  altitudo)
 {
@@ -807,7 +802,7 @@ vicus_applicatio_aedificare (
     app->piscina  = piscina;
     app->intern   = intern;
     app->volumen  = volumen;
-    app->vicus    = vicus_creare(piscina, intern, volumen, radix,
+    app->vicus    = vicus_creare(piscina, intern, volumen,
         latitudo, altitudo);
     /* S6b: systemata repositorii, communia radici et omnibus
      * lateribus; S7b: vicus_aperire ea creat */
