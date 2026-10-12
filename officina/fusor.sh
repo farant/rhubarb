@@ -60,10 +60,14 @@ for src in "$OFF_DIR"/fontes/*.c; do
     obj_files="$obj_files $obj"
 done
 
-# Semper renectere (obiecta mutata aliter in binario vetusto latent)
 FUSOR_SRC="$OFF_DIR/instrumenta/principalia/fusor.c"
 FUSOR_BIN="$BUILD_DIR/fusor"
-clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$FUSOR_SRC" $obj_files \
-    -o "$FUSOR_BIN" || exit 1
+# nexus solum si stalum, atomice (tools/instrumentum_nectere.sh,
+# …WB6Q3H): fontes, obiecta, capita instrumentorum = ingressus -
+# binarium vetustum mutationem celare non potest
+source "$RADIX_DIR/tools/instrumentum_nectere.sh"
+instrumentum_nectere "$FUSOR_BIN" "$FUSOR_SRC" $obj_files \
+    "$OFF_DIR"/instrumenta/*.h "$OFF_DIR"/instrumenta/principalia/*.h -- \
+    "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$FUSOR_SRC" $obj_files || exit 1
 
 exec "$FUSOR_BIN" "$@"

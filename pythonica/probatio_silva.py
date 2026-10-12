@@ -2259,6 +2259,15 @@ try:
     credo(silva.portae_debitae(['./gesta/../gesta/compile_probationes.sh'])[0][0].porta == 'gesta',
           'viae normalizantur')
 
+    # PORTAE SINE ORDINE (…K0KX): porta cuius cursor ordinem nullum habet
+    # numquam debetur per 'tegit viae'/'currit binaria' (venenum: nec
+    # lib/piscina.c nec scriptum suum eam debebant) - nota, non porta
+    sine = silva.portae_sine_ordine()
+    credo('css' in sine and not ({'radix', 'gesta', 'pythonica', 'crusta', 'html'} & set(sine)),
+          'portae sine ordine: css (cursor sine ordine) nominatur, portae cum ordine non',
+          causa=repr(sine))
+    credo(sine == sorted(sine), 'portae sine ordine: ordine litterarum (nota stabilis)')
+
     # relatio (T4): sectiones PORTAE DEBITAE / MANU / INTECTA, causa sub porta
     rel = silva.portae_debitae_relatio(['pythonica/silva.py', 'apps/forum/fumus.sh', 'README.md'])
     credo(rel.startswith('PORTAE DEBITAE (3 viae):\n  pythonica\n      pythonica/silva.py congruit'),

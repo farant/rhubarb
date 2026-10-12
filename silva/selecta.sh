@@ -60,8 +60,10 @@ obj_files="$obj_files $MATERIA_OBIECTA"
 
 SELECTA_SRC="$SILVA_DIR/instrumenta/principalia/selecta.c"
 SELECTA_BIN="$BUILD_DIR/selecta"
-clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$SELECTA_SRC" $obj_files \
-    -o "$SELECTA_BIN" || exit 1
+# nexus solum si stalum, atomice (…WB6Q3H: olim in OMNI vocatione)
+source "$RADIX_DIR/tools/instrumentum_nectere.sh"
+instrumentum_nectere "$SELECTA_BIN" "$SELECTA_SRC" $obj_files -- \
+    "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$SELECTA_SRC" $obj_files || exit 1
 
 cd "$RADIX_DIR"
 exec "$SELECTA_BIN" "$@"

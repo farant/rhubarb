@@ -1,5 +1,11 @@
 ## Demo 87: Null Indispensability at zeta_12
 
+> **Correction (2026-10-10, Demo 124).** The ζ₈ baseline does not show "removing nulls destroys XOR8".
+> - The non-null subset's XOR8 = 4 is greater than 0, and the full catalog's 32 is the MAX_WIN cap.
+> - Exactly, non-null reaches max XOR8, as the full catalog does; only the number of winners drops (D124).
+>
+> So the "regime transition" has no ζ₈ side: nulls are dispensable at ζ₈ too. The ζ₁₂ comparison here (32 = 32 at every level) compares MAX_WIN-capped counts. It has not yet been audited exactly (planned with the D82 / ζ₁₂ audit); D117 corrected its axis counts. See `demo_124_exact_null_states/findings.md`.
+
 - **Status**: COMPLETE
 - **File**: `demo_87_null_indispensability/main.c` (~907 lines)
 - **Tests**: 14/14 pass

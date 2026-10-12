@@ -93,7 +93,7 @@ DKC's core thesis is exact arithmetic in Z[zeta_8] — zero floating-point error
 | 81 | GEOMETRIC | Quaternion group closure in FP; eigenvector extraction (sqrt/atan2/acos); Voronoi cell assignment; log/pow for scaling law analysis; entire computation path is continuous geometry |
 | 82 | MIXED (geom+stat) | Same quaternion/geometric engine as D81; depth analysis adds mean-depth statistics (sum_d/(double)cnt) and percentage display across winner tuples; atan2 for per-depth angle vocabulary |
 | 83 | MIXED (geom+stat) | Quaternion group closure (cos/sin generators, qmul) + Jones normalization (FP phase rotation per writhe unit); Pearson depth-writhe correlation, mean/mean-abs writhe per depth level, information-loss percentages; acos/atan2 sector in combined_cell |
-| 84 | MIXED (geom+val+stat) | Same quaternion/S2 geometric engine as D83; FP threshold (fabs(qa)<1e-10) classifies null states; Part B gap theorem validates min non-null |Re| > 0.4; Part D null-prevalence ratio (mean null vs 9/24 expected) and Part C random-control means are statistical |
+| 84 | MIXED (geom+val+stat) | Same quaternion/S2 geometric engine as D83; FP threshold (fabs(qa)<1e-10) classifies null states; Part B gap theorem validates min non-null |Re| > 0.4; Part D null-prevalence ratio (mean null vs 9/24 expected) and Part C random-control means are statistical **Correction (2026-10-10, D124):** its sector/Voronoi decisions are tie-decided (12.8% exact ties); its capacity claims are false exactly (see section below). |
 | 85 | VALIDATION | Integer TL algebra (link states, Hamiltonian); FP only for Gaussian elimination (rank, null spaces) and Gram matrix analysis to extract Jordan structure. Same pattern as D51-52: exact integer objects, FP linear algebra to determine structural properties |
 | 86 | EXACT-CORE | b-parameter computed in double precision with irrational eigenvalues (sqrt2, sqrt3, sqrt3+-1); double-precision RREF for null spaces at non-zero lambda; all b_loop/b_trace results are FP values. Eigenvalues are inherently irrational, computation cannot be exact integer |
 | 87 | MIXED (geom+stat) | Quaternion group closure (cos/sin zeta_12 generators); eigenvector extraction (sqrt/acos); Voronoi cell + combined_cell (sector via acos/atan2); spherical harmonics (Y_lm); Jacobi eigenvalue solver; simulated annealing perturbation. Statistics: null/non-null direction partition percentages, mean angle comparisons, XOR capacity loss percentages |
@@ -159,6 +159,33 @@ The activation functions in D45-D65 use atan2 to determine which angular sector 
 
 ### Hard: Exact S2 geometry
 Quaternion products are algebraic (polynomial multiplication). Eigenvector extraction from 2x2 unitary matrices is algebraic. Voronoi cell assignment is a finite set of dot-product comparisons. In principle all of D66-D92 could be done in exact algebraic arithmetic. In practice the expressions are complex and the code would be significantly more verbose. D87-D92 add further FP-geometric layers (spherical harmonics, simulated annealing, coherence matrices, sum-angle analysis, activation resolution sweeps, multi-function scaling) that would all need algebraic reformulation.
+
+## Results decided by float ties (exact audits, 2026-10)
+
+The categories above say where floats *appear*. Exact audits show where
+they *decide*. A float sector or Voronoi decision is only as good as the
+distance to its boundary. In these lattices many sums sit exactly ON a
+boundary: a sum with Re = 0 has a half-angle of exactly 90°, and the
+cuboctahedral axes give equal |dot| products. Rounding of noise of order
+10⁻¹⁷ then picks the side: deterministically, but not by the exact rule.
+
+- **D84 (audited by D124):**
+  - 12.8% of its 21M cell decisions are exact ties. Every float decision
+    lies in the exact tie set, so no float error proper.
+  - The recorded capacity claims (non-null XOR6, null-only XOR6, "worse
+    than random") are not reproduced even by D84's own code here, and are
+    false exactly: non-null max XOR8, null-only 0.
+  - None of four fixed tie rules gives them. Where the recorded figures
+    came from is unknown; every build tried agrees with this machine, so
+    it is not platform noise.
+- **D95–D97 (audited by D121–D123):** rule / robust / possible
+  separated the readings. D97's "35° resonance" is a band, and its 90°
+  collapse is real.
+
+Lesson: an EXACT-CORE or GEOMETRIC classification is not enough. Ask
+whether results move under tie resolution: compare robust (every
+resolution) with possible (some resolution), and check a few fixed tie
+rules.
 
 ## Update Process
 

@@ -124,11 +124,15 @@ for src in "$OFF_DIR"/fontes/*.c; do
     obj_files="$obj_files $obj"
 done
 
-# Semper renectere (obiecta mutata aliter in binario vetusto latent)
 INTERPRETARE_SRC="$OFF_DIR/instrumenta/principalia/interpretare.c"
 INTERPRETARE_BIN="$BUILD_DIR/interpretare"
-clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$INTERPRETARE_SRC" $obj_files \
-    -o "$INTERPRETARE_BIN" || exit 1
+# nexus solum si stalum, atomice (tools/instrumentum_nectere.sh,
+# …WB6Q3H): fontes, obiecta, capita instrumentorum = ingressus -
+# binarium vetustum mutationem celare non potest
+source "$RADIX_DIR/tools/instrumentum_nectere.sh"
+instrumentum_nectere "$INTERPRETARE_BIN" "$INTERPRETARE_SRC" $obj_files \
+    "$OFF_DIR"/instrumenta/*.h "$OFF_DIR"/instrumenta/principalia/*.h -- \
+    "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$INTERPRETARE_SRC" $obj_files || exit 1
 
 cd "$RADIX_DIR"
 if [ -n "$DERIVATA_PLAGULAE" ]; then

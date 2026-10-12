@@ -66,11 +66,16 @@ EXAMEN_BIN="$BUILD_DIR/examen"
 # silva_lexicon.c in linea nectendi explicite (exemplar amalgamare:71
 # pro silva_amalgama.c) - modulus instrumentorum communis, extra
 # fontes/ quia instrumentum est, non substratum amalgamandum
-clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
+# nexus solum si stalum, atomice (tools/instrumentum_nectere.sh,
+# …WB6Q3H): fontes, obiecta, capita instrumentorum = ingressus -
+# binarium vetustum mutationem celare non potest
+source "$RADIX_DIR/tools/instrumentum_nectere.sh"
+instrumentum_nectere "$EXAMEN_BIN" "$EXAMEN_SRC" "$SILVA_DIR/instrumenta/silva_lexicon.c" $obj_files \
+    "$SILVA_DIR"/instrumenta/*.h "$SILVA_DIR"/instrumenta/principalia/*.h -- \
+    "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
     -I"$SILVA_DIR/instrumenta" \
     "$EXAMEN_SRC" \
-    "$SILVA_DIR/instrumenta/silva_lexicon.c" $obj_files \
-    -o "$EXAMEN_BIN" || exit 1
+    "$SILVA_DIR/instrumenta/silva_lexicon.c" $obj_files || exit 1
 
 # manifestum vigiliae (invarians: aedificator indicem VERUM scribit -
 # binarium directe vocatum contra hunc fontes suos vigilat)

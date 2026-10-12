@@ -86,8 +86,13 @@ done
 
 FORMATOR_SRC="$SILVA_DIR/instrumenta/principalia/formator.c"
 FORMATOR_BIN="$BUILD_DIR/formator"
-clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$FORMATOR_SRC" $obj_files \
-    -o "$FORMATOR_BIN" || exit 1
+# nexus solum si stalum, atomice (tools/instrumentum_nectere.sh,
+# …WB6Q3H): fontes, obiecta, capita instrumentorum = ingressus -
+# binarium vetustum mutationem celare non potest
+source "$RADIX_DIR/tools/instrumentum_nectere.sh"
+instrumentum_nectere "$FORMATOR_BIN" "$FORMATOR_SRC" $obj_files \
+    "$SILVA_DIR"/instrumenta/*.h "$SILVA_DIR"/instrumenta/principalia/*.h -- \
+    "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$FORMATOR_SRC" $obj_files || exit 1
 
 cd "$RADIX_DIR"
 # ---------------- -delta / -contra ----------------

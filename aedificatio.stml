@@ -987,12 +987,6 @@
     <debitum_scripturae membrum="probatio_vigilia" via="build/probatio_vigilia_commissum" causa="vigilia: artificia ficta probationis"/>
     <debitum_scripturae membrum="probatio_vigilia" via="build/probatio_vigilia_fons.c" causa="vigilia: artificia ficta probationis"/>
     <debitum_scripturae membrum="probatio_vigilia" via="build/probatio_vigilia_manifestum" causa="vigilia: artificia ficta probationis"/>
-    <debitum_scripturae membrum="probatio_cliens_tabularii" via="build/probatio_ct.db" causa="tabulariumd probationis (scrinium, annales, portus)"/>
-    <debitum_scripturae membrum="probatio_cliens_tabularii" via="build/probatio_ct.db-shm" causa="tabulariumd probationis (scrinium, annales, portus)"/>
-    <debitum_scripturae membrum="probatio_cliens_tabularii" via="build/probatio_ct.db-wal" causa="tabulariumd probationis (scrinium, annales, portus)"/>
-    <debitum_scripturae membrum="probatio_cliens_tabularii" via="build/probatio_ct.jsonl" causa="tabulariumd probationis (scrinium, annales, portus)"/>
-    <debitum_scripturae membrum="probatio_cliens_tabularii" via="build/probatio_ct_pid.txt" causa="tabulariumd probationis (scrinium, annales, portus)"/>
-    <debitum_scripturae membrum="probatio_cliens_tabularii" via="build/probatio_ct_portus.txt" causa="tabulariumd probationis (scrinium, annales, portus)"/>
   </actio>
 
   <!-- INSTITUTIONES (1b T5, Q42): copia ~/.bin actio sua - fasciculus

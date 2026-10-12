@@ -65,12 +65,17 @@ obj_files="$obj_files $MATERIA_OBIECTA"
 
 EMENDARE_SRC="$SILVA_DIR/instrumenta/principalia/emendare.c"
 EMENDARE_BIN="$BUILD_DIR/emendare"
-clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
+# nexus solum si stalum, atomice (tools/instrumentum_nectere.sh,
+# …WB6Q3H): fontes, obiecta, capita instrumentorum = ingressus -
+# binarium vetustum mutationem celare non potest
+source "$RADIX_DIR/tools/instrumentum_nectere.sh"
+instrumentum_nectere "$EMENDARE_BIN" "$EMENDARE_SRC" "$SILVA_DIR/instrumenta/silva_iudicium.c" "$SILVA_DIR/instrumenta/silva_lexicon.c" $obj_files \
+    "$SILVA_DIR"/instrumenta/*.h "$SILVA_DIR"/instrumenta/principalia/*.h -- \
+    "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
     -I"$SILVA_DIR/instrumenta" \
     "$EMENDARE_SRC" \
     "$SILVA_DIR/instrumenta/silva_iudicium.c" \
-    "$SILVA_DIR/instrumenta/silva_lexicon.c" $obj_files \
-    -o "$EMENDARE_BIN" || exit 2
+    "$SILVA_DIR/instrumenta/silva_lexicon.c" $obj_files || exit 2
 
 cd "$RADIX_DIR"
 

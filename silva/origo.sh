@@ -62,8 +62,13 @@ obj_files="$obj_files $MATERIA_OBIECTA"
 
 ORIGO_SRC="$SILVA_DIR/instrumenta/principalia/origo.c"
 ORIGO_BIN="$BUILD_DIR/origo"
-clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$ORIGO_SRC" $obj_files \
-    -o "$ORIGO_BIN" || exit 1
+# nexus solum si stalum, atomice (tools/instrumentum_nectere.sh,
+# …WB6Q3H): fontes, obiecta, capita instrumentorum = ingressus -
+# binarium vetustum mutationem celare non potest
+source "$RADIX_DIR/tools/instrumentum_nectere.sh"
+instrumentum_nectere "$ORIGO_BIN" "$ORIGO_SRC" $obj_files \
+    "$SILVA_DIR"/instrumenta/*.h "$SILVA_DIR"/instrumenta/principalia/*.h -- \
+    "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$ORIGO_SRC" $obj_files || exit 1
 
 cd "$RADIX_DIR"
 exec "$ORIGO_BIN" "$@"
