@@ -146,9 +146,10 @@ pictor_montare (
                   : insula_ramus_radix(repo);
 
     /* status-plan S6a: organum per modulum communem - manifestum cum
-     * basi, canon, initium, restitutio, domini, dimissio */
-    organum = organum_legere_viam(piscina, intern, radix,
-        "apps/pictor/organum.stml", "pictor");
+     * basi, canon, initium, restitutio, domini, dimissio. S7c-1:
+     * manifestum infixum (radix viarum mortua, S7c-2 tollet) */
+    (vacuum)radix;
+    organum = organum_legere_genus(piscina, intern, "pictor", "pictor");
     si (!organum)
     {
         redde FALSUM;

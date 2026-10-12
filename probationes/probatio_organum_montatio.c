@@ -11,6 +11,9 @@
 #include "insula.h"
 #include "organum.h"
 #include "organum_montatio.h"
+#include "organa_infixa.h"
+#include "filum.h"
+#include "iter_directoria.h"
 #include "credo.h"
 #include <stdio.h>
 #include <string.h>
@@ -91,6 +94,106 @@ _probare_legere_viam (
     /* via absens */
     CREDO_NIHIL(organum_legere_viam(c->piscina, in, NIHIL,
         "apps/nullum/organum.stml", "probatio"));
+}
+
+/* S7c-1: manifestum infixum per genus (applicationes sine arbore) */
+interior vacuum
+_probare_legere_genus (
+    CredoContextus* c)
+{
+    InternamentumChorda* in;
+                Organum* o;
+
+    in  = internamentum_creare(c->piscina);
+    o   = organum_legere_genus(c->piscina, in, "pictor", "probatio");
+    CREDO_NECESSE_NON_NIHIL(o);
+    CREDO_CHORDA_AEQUALIS_LITERIS(organum_genus(o), "pictor");
+    CREDO_NON_NIHIL(organum_campus(o, chorda_ex_literis("zoom",
+        c->piscina)));
+    /* basis communis (infixa et ipsa) addita */
+    CREDO_NON_NIHIL(organum_campus(o, chorda_ex_literis("focus",
+        c->piscina)));
+    /* genus ignotum */
+    CREDO_NIHIL(organum_legere_genus(c->piscina, in, "nullum",
+        "probatio"));
+}
+
+/* manifestum infixum = fons in disco; stalum nominatur */
+interior b32
+infixum_congruit (
+                Piscina* p,
+    InternamentumChorda* in,
+     constans character* genus,
+     constans character* via)
+{
+     chorda  fons;
+     chorda  infixum;
+    Organum* o;
+
+    fons     = filum_legere_totum(via, p);
+    infixum  = organum_infixum_textus(genus, p);
+    si (fons.mensura == ZEPHYRUM || !chorda_aequalis(fons, infixum))
+    {
+        fprintf(stderr, "infixum stalum: %s (genus %s) - "
+            "./tools/organa_infigere.sh\n", via, genus);
+        redde FALSUM;
+    }
+    /* clavis tabulae = genus manifesti */
+    si (chorda_aequalis_literis(chorda_ex_literis(genus, p),
+            "organum_commune"))
+    {
+        redde VERUM;
+    }
+    o = organum_legere_genus(p, in, genus, "probatio");
+    si (!o || !chorda_aequalis_literis(organum_genus(o), genus))
+    {
+        fprintf(stderr, "infixum: %s genus non %s\n", via, genus);
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
+/* S7c-1: omne apps/<genus>/organum.stml infixum et recens (porta
+ * generata idem in commissione iudicat; hic in probatione statim) */
+interior vacuum
+_probare_infixa_fontes (
+    CredoContextus* c)
+{
+     InternamentumChorda* in;
+     DirectoriumIterator* it;
+    DirectoriumIntroitus* introitus;
+                  chorda  via;
+      constans character* genus;
+                     i32  numerus;
+
+    in  = internamentum_creare(c->piscina);
+    CREDO_VERUM(infixum_congruit(c->piscina, in, "organum_commune",
+        "apps/organum_commune.stml"));
+    it  = directorium_iterator_aperire("apps", c->piscina);
+    CREDO_NECESSE_NON_NIHIL(it);
+    numerus = ZEPHYRUM;
+    dum ((introitus = directorium_iterator_proximum(it)) != NIHIL)
+    {
+        si (introitus->genus != INTROITUS_DIRECTORIUM)
+        {
+            perge;
+        }
+        genus = chorda_ut_cstr(introitus->titulus, c->piscina);
+        via = chorda_concatenare(chorda_ex_literis("apps/", c->piscina),
+            introitus->titulus, c->piscina);
+        via = chorda_concatenare(via, chorda_ex_literis(
+            "/organum.stml", c->piscina), c->piscina);
+        si (!filum_existit(chorda_ut_cstr(via, c->piscina)))
+        {
+            perge;
+        }
+        numerus++;
+        CREDO_VERUM(infixum_congruit(c->piscina, in, genus,
+            chorda_ut_cstr(via, c->piscina)));
+    }
+    directorium_iterator_claudere(it);
+    /* pictor, scriba, vicus saltem */
+    CREDO_VERUM(numerus >= III);
 }
 
 interior vacuum
@@ -192,6 +295,10 @@ _probare_restitutionem (
 
 hic_manens constans CredoSectio SECTIONES[] = {
     { "legere_viam",  _probare_legere_viam,  NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "legere_genus", _probare_legere_genus, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "infixa_fontes", _probare_infixa_fontes, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "radix",        _probare_radicem,      NIHIL, NIHIL, NIHIL,
         NIHIL },

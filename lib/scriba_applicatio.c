@@ -197,9 +197,10 @@ scriba_montare (
                   : insula_ramus_radix(repo);
 
     /* status-plan S6b: organum per modulum communem (manifestum cum
-     * basi, canon, initium, restitutio, domini) */
-    organum = organum_legere_viam(piscina, intern, radix,
-        "apps/scriba/organum.stml", "scriba");
+     * basi, canon, initium, restitutio, domini). S7c-1: manifestum
+     * infixum (radix viarum mortua, S7c-2 tollet) */
+    (vacuum)radix;
+    organum = organum_legere_genus(piscina, intern, "scriba", "scriba");
     si (!organum)
     {
         redde FALSUM;

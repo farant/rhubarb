@@ -159,3 +159,45 @@ receives; dimissio bound to the dispatcher if created.
 Tests: probatio_scriba_conservatio (round trip; canon/owners in a real
 mount), probatio_vicus_conservatio latus_scribae; root 278/278,
 ludus_tessera 8/8; plants 4/4.
+
+## 2026-10-12 — S7c-1: manifests embedded in the library
+
+Trigger: terminale is the one widget installed to ~/.bin, run from any
+directory - reading apps/terminale/organum.stml at runtime would break it
+(pictor/scriba only got away with disk reads because they run from the
+tree via .sh). Fran: embed for ALL consumers.
+
+Mos organum_canon/norma_canon, not capsula (capsula = big assets,
+compressed, gitignored build/ output, per-binary build step - every
+consumer incl. compile_tests would need the step; fresh clone breaks).
+tools/organa_infigere.sh -> lib/organa_infixa.c (GENERATUM, committed):
+one named array per manifest (apps/organum_commune.stml + every
+apps/<genus>/organum.stml, C order; key = directory name) + a table;
+`organum_infixum_textus(genus, p)`. fabrica action `organa_infixa`
+(ingressus `plagulae via="apps" suffixa=".stml"` - a new manifest is
+covered without editing the action; verified stale on change).
+
+organum_montatio: `organum_legere_genus(p, in, genus, praefixum)` =
+embedded manifest + embedded base; `organum_legere_viam` stays for tests
+and tools reading from disk. One parser path (manifestum_ex_fonte).
+pictor, scriba, vicus switched; their `radix` parameter is now dead
+(`(vacuum)radix`), removed in S7c-2.
+
+Embedded ONLY at runtime, no disk fallback (two truths = an installed
+binary silently differing from the tree). Dev-loop cost: edit a manifest
+without regenerating -> the app runs the old one. Guarded three ways:
+probatio_organum_montatio `infixa_fontes` walks apps/ and compares each
+manifest byte-for-byte with its embedded copy, naming the stale file
+(plant: comment added to apps/pictor/organum.stml -> red "infixum
+stalum: apps/pictor/organum.stml"; restored -> green); generata gate at
+commit; session hook STALUM.
+
+probatio_pictor_montatio `manifestum_absens` (bad radix -> mount refused)
+asserted exactly the removed behaviour; became `sine_arbore` (radix
+"/via/nulla" -> mount succeeds, canon + owners present). Absent manifest
+= unknown genus, covered by `legere_genus`.
+
+New lib file -> ./tools/compile_tests_fontes_generare.sh (link list).
+Second link list: ludus_tessera/compile_probationes.sh keeps a HAND list
+of lib objects - a new lib file must be added there too (commissio's
+ludus_tessera gate went 0/8 on link errors until it was).

@@ -3,6 +3,7 @@
  * generalizatum, consumptor secundus scriba (S6). */
 
 #include "organum_montatio.h"
+#include "organa_infixa.h"
 #include "filum.h"
 
 #include <stdio.h>
@@ -27,24 +28,23 @@ via_plena (
     redde chorda_ut_cstr(c, p);
 }
 
-/* manifestum unum; NIHIL si deest aut malum (vitia in stderr) */
+/* manifestum ex fonte; NIHIL si abest (mensura nulla) aut malum
+ * (vitia in stderr; origo = via aut genus) */
 interior Organum*
-manifestum_legere (
-                Piscina* p,
-    InternamentumChorda* in,
-     constans character* radix,
-     constans character* via,
-     constans character* praefixum)
+manifestum_ex_fonte (
+                 Piscina* p,
+     InternamentumChorda* in,
+                  chorda  fons,
+      constans character* origo,
+      constans character* praefixum)
 {
-     chorda  fons;
     Organum* o;
         Xar* vitia;
         i32  i;
 
-    fons = filum_legere_totum(via_plena(p, radix, via), p);
     si (fons.mensura == ZEPHYRUM)
     {
-        fprintf(stderr, "%s: manifestum abest: %s\n", praefixum, via);
+        fprintf(stderr, "%s: manifestum abest: %s\n", praefixum, origo);
         redde NIHIL;
     }
     o = organum_legere(fons, p, in, &vitia);
@@ -53,11 +53,37 @@ manifestum_legere (
         chorda* v;
 
         v = (chorda*)xar_obtinere(vitia, i);
-        fprintf(stderr, "%s: %s: %.*s\n", praefixum, via,
+        fprintf(stderr, "%s: %s: %.*s\n", praefixum, origo,
             (int)v->mensura,
                 (constans character*)v->datum);
     }
     redde o;
+}
+
+/* manifestum unum e disco */
+interior Organum*
+manifestum_legere (
+                Piscina* p,
+    InternamentumChorda* in,
+     constans character* radix,
+     constans character* via,
+     constans character* praefixum)
+{
+    redde manifestum_ex_fonte(p, in,
+        filum_legere_totum(via_plena(p, radix, via), p), via,
+        praefixum);
+}
+
+/* manifestum unum infixum */
+interior Organum*
+manifestum_infixum (
+                Piscina* p,
+    InternamentumChorda* in,
+     constans character* genus,
+     constans character* praefixum)
+{
+    redde manifestum_ex_fonte(p, in, organum_infixum_textus(genus, p),
+        genus, praefixum);
 }
 
 Organum*
@@ -82,6 +108,34 @@ organum_legere_viam (
     o     = manifestum_legere(piscina, intern, radix, via, praefixum);
     basis = o ? manifestum_legere(piscina, intern, radix,
         "apps/organum_commune.stml", praefixum) : NIHIL;
+    si (!o || !basis || !organum_basim_addere(o, basis))
+    {
+        redde NIHIL;
+    }
+    redde o;
+}
+
+Organum*
+organum_legere_genus (
+                Piscina* piscina,
+    InternamentumChorda* intern,
+     constans character* genus,
+     constans character* praefixum)
+{
+    Organum* o;
+    Organum* basis;
+
+    si (!piscina || !intern || !genus)
+    {
+        redde NIHIL;
+    }
+    si (!praefixum)
+    {
+        praefixum = "organum";
+    }
+    o     = manifestum_infixum(piscina, intern, genus, praefixum);
+    basis = o ? manifestum_infixum(piscina, intern, "organum_commune",
+        praefixum) : NIHIL;
     si (!o || !basis || !organum_basim_addere(o, basis))
     {
         redde NIHIL;

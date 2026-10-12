@@ -106,6 +106,22 @@ widgets are migrated by hand.*
   changes. Found: our vim had no `y` - added right after (yy, Y,
   visual y; lib/vim.worklog.md).
 
+- **S7c** terminale onto its manifest (Fran 10-12; split 1/2/3).
+  Terminale is installed to ~/.bin, so manifests cannot be read from
+  disk at runtime - Fran: embed them for all consumers.
+- **S7c-1** DONE 2026-10-12 (lib/organum.worklog.md): manifests embedded
+  (tools/organa_infigere.sh -> lib/organa_infixa.c, GENERATUM, fabrica
+  action organa_infixa); `organum_legere_genus`; pictor/scriba/vicus
+  read the embedded copy only; freshness guard in
+  probatio_organum_montatio (infixa_fontes).
+- **S7c-2** remove the dead `radix` parameter (scriba/pictor/vicus
+  headers, montare callback, apps, tests).
+- **S7c-3** terminale: apps/terminale/organum.stml (base fields only,
+  action terminale.clavis), mount and standalone through
+  organum_ramum_parare, CANON_EPHEMERA deleted; TerminaleContextus
+  classified in the census (caches/observations/process data - nothing
+  moves into the island).
+
 ### Arc III — depth
 
 - **S8** branches as paths at any depth; focus, dispatcher, kinetic

@@ -116,9 +116,11 @@ _probare_montationem (
     volumen_claudere(vol);
 }
 
-/* manifestum absens: montatio recusatur, non tacite sine canone */
+/* S7c-1: manifestum infixum - radix viarum nulla (fenestra extra
+ * arborem) applicationem non impedit; canon tamen adest (manifestum
+ * absens = genus ignotum: probatio_organum_montatio legere_genus) */
 interior vacuum
-_probare_manifestum_absens (
+_probare_sine_arbore (
     CredoContextus* c)
 {
      InternamentumChorda* in;
@@ -130,8 +132,12 @@ _probare_manifestum_absens (
     vol = volumen_temporarium(c->piscina, "probatio_pictor_montatio");
     CREDO_NECESSE_NON_NIHIL(vol);
     memset(&app, ZEPHYRUM, magnitudo(app));
-    CREDO_FALSUM(pictor_applicatio_aedificare(&app, c->piscina, in, vol,
-        "/via/nulla", CDLXXX, CDLXXX));
+    CREDO_NECESSE(pictor_applicatio_aedificare(&app, c->piscina, in,
+        vol, "/via/nulla", CDLXXX, CDLXXX));
+    /* canon et domini ex manifesto infixo */
+    CREDO_FALSUM(scribere(&app, "motus", "ignotissimum=1"));
+    CREDO_FALSUM(scribere(&app, "quilibet", "zoom=2"));
+    CREDO_VERUM(scribere(&app, "motus", "zoom=2"));
     volumen_claudere(vol);
 }
 
@@ -243,7 +249,7 @@ _probare_initium (
 hic_manens constans CredoSectio SECTIONES[] = {
     { "montatio",         _probare_montationem,
       NIHIL, NIHIL, NIHIL, NIHIL },
-    { "manifestum_absens", _probare_manifestum_absens,
+    { "sine_arbore", _probare_sine_arbore,
       NIHIL, NIHIL, NIHIL, NIHIL },
     { "conservatio",      _probare_conservationem,
       NIHIL, NIHIL, NIHIL, NIHIL },

@@ -1465,9 +1465,10 @@ vicus_aperire (
         v->systemata->dimissio  = dimissio_creare(v->piscina, v->intern,
             v->repo);
     }
-    /* S7a: radix ex manifesto hospitis (canon, domini) */
-    organum = organum_legere_viam(v->piscina, v->intern, v->radix,
-        "apps/vicus/organum.stml", "vicus");
+    /* S7a: radix ex manifesto hospitis (canon, domini); S7c-1:
+     * manifestum infixum */
+    organum = organum_legere_genus(v->piscina, v->intern, "vicus",
+        "vicus");
     radix = insula_ramus_radix(v->repo);
     si (   !organum
         || !organum_ramum_parare(organum, &radix, v->systemata, NIHIL,

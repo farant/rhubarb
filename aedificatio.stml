@@ -458,6 +458,17 @@
     <ingressus genus="fasciculus" via="organum.canon"/>
     <exitus via="lib/organum_canon.c" provenientia="regeneratio"/>
   </actio>
+  <!-- manifesta organorum infixa (status-plan S7c-1, mos organum_canon):
+       apps/<genus>/organum.stml + basis -> lib/organa_infixa.c;
+       applicationes (etiam ~/.bin) sine arbore legunt -->
+  <actio titulus="organa_infixa" genus="generator">
+    <mandatum>
+      <verbum! (>./tools/organa_infigere.sh
+    </mandatum>
+    <ingressus genus="fasciculus" via="tools/organa_infigere.sh"/>
+    <ingressus genus="plagulae" via="apps" suffixa=".stml"/>
+    <exitus via="lib/organa_infixa.c" provenientia="regeneratio"/>
+  </actio>
   <!-- normae fixae -> C generatum (norma-plan-3 A5, oraculum III):
        bin/norma c per aedilis structum (regula R8) -->
   <actio titulus="normae_fixae" genus="generator">
