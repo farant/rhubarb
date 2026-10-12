@@ -1691,6 +1691,95 @@ _probare_filtrum_avidum (
     CREDO_VERUM (bene);
 }
 
+/* scrutinium axium in II gradibus (T7): catalogus profundus (DLXIV
+ * elementa post MMMDXXXII, CDLXXVI axes) - gradus I axes certe inferiores
+ * abicit; verdicta cum filtro (scrutinium binum) aequant verdicta sine
+ * (quaternio_proximi super omnes axes) in omnibus modis, ligaturis
+ * axium inclusis (modus robustus omnes maximas videt) */
+interior vacuum
+_probare_scrutinium (
+    CredoContextus* c)
+{
+                     Piscina* piscina         = c->piscina;
+     hic_manens constans i32  VALORES_K[III]  = { 6, 12, 24 };
+                   Quaternio  g[IV];
+                   Catalogus* cat   = NIHIL;
+                   Catalogus* pars  = NIHIL;
+                   Activatio* cum   = NIHIL;
+                   Activatio* sine  = NIHIL;
+            CellaeStatistica  st_cum;
+                         i32* indices;
+                         i32  numerus;
+                         i32  t;
+                         i32  index_k;
+                         i32  modus;
+                         i64  comparata  = 0;
+                         i64  discordes  = 0;
+                         i64  verae      = 0;
+
+    imprimere("\n--- Scrutinium axium: binum = lineare (zeta_12 profundus)"
+        " ---\n");
+    _generatores(extensio_anulus(extensio_quadratica(III, piscina)),
+        "a/2", "1/2", "-1/2", piscina, g);
+    CREDO_NECESSE (catalogus_clausura(g, TORSIONES, IV, (i32)F_MAX, XVI,
+        piscina, &cat));
+    numerus = catalogus_numerus(cat) - MMMDXXXII;
+    CREDO_NECESSE (numerus >= DLXIV);
+    numerus = DLXIV;
+    indices = (i32*)piscina_allocare(piscina,
+        (memoriae_index)numerus * magnitudo(i32));
+    CREDO_NECESSE_NON_NIHIL (indices);
+    per (t = ZEPHYRUM; t < numerus; t++) indices[t] = MMMDXXXII + t;
+    CREDO_NECESSE (catalogus_pars(cat, indices, numerus, piscina,
+        &pars));
+    CREDO_NECESSE (activatio_ex_catalogo(pars, ZEPHYRUM, piscina,
+        &cum));
+    CREDO_NECESSE (activatio_ex_catalogo(pars, ZEPHYRUM, piscina,
+        &sine));
+    activatio_filtrum(sine, FALSUM);
+    imprimere("    axes %d\n", (int)activatio_axes(cum));
+    CREDO_VERUM (activatio_axes(cum) == CDLXXVI);
+    /* triplices per gradus primos (deterministice) */
+    per (t = ZEPHYRUM; t < CC; t++)
+    {
+        i32 w[III];
+
+        w[0] = (t * VII) % (i32)numerus;
+        w[1] = (w[0] + I + (t * XIII) % (i32)(numerus - II))
+            % (i32)numerus;
+        w[2] = (w[1] + I + (t * XXIX) % (i32)(numerus - III))
+            % (i32)numerus;
+        si (w[0] == w[1] || w[1] == w[2] || w[0] == w[2])
+        {
+            perge;
+        }
+        per (index_k = ZEPHYRUM; index_k < III; index_k++)
+        {
+            per (modus = ZEPHYRUM; modus < III; modus++)
+            {
+                b32 v1 = FALSUM;
+                b32 v2 = FALSUM;
+                b32 b1 = activatio_separat(cum, w, III,
+                    VALORES_K[index_k], modus, &v1);
+                b32 b2 = activatio_separat(sine, w, III,
+                    VALORES_K[index_k], modus, &v2);
+
+                comparata++;
+                si (b1 != b2 || v1 != v2) discordes++;
+                si (v1) verae++;
+            }
+        }
+    }
+    activatio_statistica(cum, &st_cum);
+    imprimere("    comparata %ld, discordes %ld, verae %ld; filtro %ld "
+        "exacte %ld ligatae %ld\n", (long)comparata, (long)discordes,
+        (long)verae, (long)st_cum.filtro, (long)st_cum.exacte,
+        (long)st_cum.ligatae);
+    CREDO_VERUM (comparata > D && discordes == 0 && verae > 0
+        && verae < comparata);
+    CREDO_VERUM (st_cum.filtro > ZEPHYRUM && st_cum.ligatae > ZEPHYRUM);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "zeta_8", _probare_zeta_octo, NIHIL, NIHIL, NIHIL, NIHIL },
     { "zeta_12", _probare_zeta_duodecim, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -1713,6 +1802,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "filtrum sine iactura", _probare_filtrum, NIHIL, NIHIL, NIHIL,
       NIHIL },
     { "filtrum avidum", _probare_filtrum_avidum, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { "scrutinium axium", _probare_scrutinium, NIHIL, NIHIL, NIHIL,
       NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

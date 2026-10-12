@@ -455,6 +455,7 @@ structura Activatio {
                    b32  filtrum;
         TabulaDispersa* combinationes;   /* (index, +-1)... -> Punctum* */
             Intervallum* axes_intervalla;  /* (u, |u|^2) per axem */
+                 duplex* axes_unitae;      /* u / |u| (gradus I scrutinii) */
                    i64  numerus_filtro;
                    i64  numerus_exacte;
                    i64  numerus_ligatae;
@@ -546,6 +547,7 @@ activatio_ex_catalogo (
     a->combinationes = tabula_dispersa_creare_chorda(piscina,
         (i32)MMXLVIII);
     a->axes_intervalla  = NIHIL;
+    a->axes_unitae      = NIHIL;
     a->numerus_filtro   = 0;
     a->numerus_exacte   = 0;
     a->numerus_ligatae  = 0;
@@ -1375,7 +1377,9 @@ _axes_intervalla (
     }
     a->axes_intervalla = (Intervallum*)piscina_allocare(a->piscina,
         (memoriae_index)a->numerus_axium * IV * magnitudo(Intervallum));
-    si (a->axes_intervalla == NIHIL)
+    a->axes_unitae = (duplex*)piscina_allocare(a->piscina,
+        (memoriae_index)a->numerus_axium * III * magnitudo(duplex));
+    si (a->axes_intervalla == NIHIL || a->axes_unitae == NIHIL)
     {
         redde FALSUM;
     }
@@ -1393,6 +1397,14 @@ _axes_intervalla (
         x[II]        = _iv_elementi(u[III]);
         x[III]      = _iv_adde(_iv_adde(_iv_quadratum(x[ZEPHYRUM]),
             _iv_quadratum(x[I])), _iv_quadratum(x[II]));
+        {
+            duplex norma = sqrt(u[I] * u[I] + u[II] * u[II]
+                + u[III] * u[III]);
+
+            a->axes_unitae[j * III]       = u[I] / norma;
+            a->axes_unitae[j * III + I]   = u[II] / norma;
+            a->axes_unitae[j * III + II]  = u[III] / norma;
+        }
     }
     redde VERUM;
 }
@@ -1465,27 +1477,79 @@ _vector_parare (
     {
         redde FALSUM;
     }
-    per (j = ZEPHYRUM; j < a->numerus_axium; j++)
     {
-        constans Intervallum* u = &a->axes_intervalla[j * IV];
-                 Intervallum  scalare =
-                     _iv_adde(_iv_adde(_iv_multiplica(partes[I],
-                     u[ZEPHYRUM]), _iv_multiplica(partes[II], u[I])),
-                     _iv_multiplica(partes[III], u[II]));
+        /* gradus I: duplices simplices f_j = (v . u_j/|u_j|)^2 (v medium);
+         * |f_j - verum_j| <= delta/2 certe, ergo axis cum f_j < F - delta
+         * certe infra maximum verum (F = max f). Gradus II: intervalla
+         * solis reliquis. */
+        duplex  medium[III];
+        duplex  latitudo = 0.0;
+        duplex  norma_v;
+        duplex  maximum_f = -1.0;
+        duplex  delta;
+           i32* reliquae            = x->candidatae;
+           i32  numerus_reliquarum  = ZEPHYRUM;
 
-        valores[j] = _iv_divide_positivo(_iv_quadratum(scalare),
-            u[III]);
-        si (valores[j].infra > optimum_infra)
+        per (m = ZEPHYRUM; m < III; m++)
         {
-            optimum_infra  = valores[j].infra;
-            optimus        = (s32)j;
+            duplex dimidia = 0.5 * (partes[m + I].supra - partes[m
+                + I].infra);
+
+            medium[m] = 0.5 * (partes[m + I].infra + partes[m
+                + I].supra);
+            si (dimidia > latitudo) latitudo = dimidia;
         }
-    }
-    per (j = ZEPHYRUM; j < a->numerus_axium; j++)
-    {
-        si (valores[j].supra >= optimum_infra)
+        norma_v = sqrt(medium[0] * medium[0] + medium[1] * medium[1]
+            + medium[2] * medium[2]) + 1.8 * latitudo;
+        /* error scalaris <= sqrt3 latitudo + 1e-15 |v|; quadrati <= 2 |v|
+         * error + error^2; dilatatum generose */
+        delta = 4.0 * (1.8 * latitudo
+            + 1e-15 * norma_v) * (2.0 * norma_v
+            + 1.8 * latitudo + 1e-15 * norma_v)
+            + 1e-12 * norma_v * norma_v
+            + 1e-300;
+        per (j = ZEPHYRUM; j < a->numerus_axium; j++)
         {
-            x->candidatae[x->numerus_candidatarum++] = j;
+            constans duplex* u = &a->axes_unitae[j * III];
+                     duplex  d = medium[0] * u[0] + medium[1] * u[1]
+                         + medium[2] * u[2];
+
+            valores[j].infra = d * d;
+            si (valores[j].infra > maximum_f) maximum_f =
+                                                  valores[j].infra;
+        }
+        per (j = ZEPHYRUM; j < a->numerus_axium; j++)
+        {
+            si (valores[j].infra >= maximum_f - delta)
+            {
+                reliquae[numerus_reliquarum++] = j;
+            }
+        }
+        per (m = ZEPHYRUM; m < numerus_reliquarum; m++)
+        {
+            constans Intervallum* u =
+                &a->axes_intervalla[reliquae[m] * IV];
+            Intervallum scalare = _iv_adde(_iv_adde(_iv_multiplica(
+                partes[I], u[ZEPHYRUM]), _iv_multiplica(partes[II],
+                u[I])),
+                _iv_multiplica(partes[III], u[II]));
+
+            valores[reliquae[m]] = _iv_divide_positivo(_iv_quadratum(
+                scalare), u[III]);
+            si (valores[reliquae[m]].infra > optimum_infra)
+            {
+                optimum_infra  = valores[reliquae[m]].infra;
+                optimus        = (s32)reliquae[m];
+            }
+        }
+        /* candidatae crescentes: reliquae (crescentes) quarum supra >=
+         * infra optimi; in loco compactantur */
+        per (m = ZEPHYRUM; m < numerus_reliquarum; m++)
+        {
+            si (valores[reliquae[m]].supra >= optimum_infra)
+            {
+                x->candidatae[x->numerus_candidatarum++] = reliquae[m];
+            }
         }
     }
     x->tangens = _iv_divide_positivo(_iv_adde(_iv_adde(_iv_quadratum(

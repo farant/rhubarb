@@ -111,6 +111,10 @@ Each task follows the house cycle:
   Credo: equal to the linear scan on all ζ₁₂ sums of a sample, with
   timing reported. Measured first: if the scan is not the bottleneck
   after T5–T6, T7 is dropped.
+  *(2026-10-12: the scan was 86% of the deep D82 run. A lossless
+  two-stage scan replaced the index: stage 1 prunes with plain doubles
+  under a proven margin, stage 2 uses intervals. 75 s -> 17 s. The
+  bucketed index is deferred; see the worklog.)*
 - **T8. Review** (recensor-extensio), then fixes.
 - **T9. D125:** D82's depth law and matched-size control, plus D87's ζ₁₂
   claim, on `cellae`. Separate sketch, already approved in outline: the

@@ -306,3 +306,69 @@ Plants (7):
 Open for T7: deep 564's 80 s is the linear interval scan over 476 axes
 per vector plus 1.6M tied (exact) decisions. Next to measure: an axis
 index (bucketed by region of S²) and incremental extension.
+
+## 2026-10-12 - T7: two-stage axis scan (instead of a bucketed index)
+
+**Measured first.** Deep D82 run (zeta_12, 564 entries from 3532, 476
+axes, exact rule, D82 greedy): 75-80 s, about 86% of samples in
+`_separat_scala` itself, i.e. the interval scan over every axis for
+every vector. The plan's bucketed S^2 index was not needed. A cheaper
+lossless change came first:
+
+- **Stage 1 (plain doubles):** f_j = (m . u_j/|u_j|)^2, with m the
+  midpoint of v's interval and the unit axes precomputed once
+  (`axes_unitae`).
+- **Bound:** |f_j - g_j| <= delta/2, where g_j is the true value.
+  - |m - v| <= sqrt3 w, with w the max half-width.
+  - The unit-vector and dot-product rounding is <= 1e-15 |v|.
+  - So the squared error is <= e(2|v| + e).
+  - delta is that, doubled, plus 1e-12 |v|^2 + 1e-300.
+- **Pruning is sound:** an axis with f_j < F - delta (F = max f) is
+  strictly below the true maximum. It can be neither the rule axis nor
+  a tied axis.
+- **Stage 2:** intervals only for the axes that remain, then the same
+  candidate rule as before (supra >= the optimum's infra), compacted in
+  place. The order stays ascending, so the "first maximum" is
+  unchanged.
+- **The exact tie set is unchanged.** `quaternio_proximi` over the
+  candidates sees every true maximum.
+
+**Results** (identical output):
+- deep 564: 75.4 s -> 17.3 s, still XOR12 with 32 32 32 21;
+- shallow 127: 0.45 s -> 0.14 s.
+
+The statistics shift: fewer exact decisions, because pruned near-misses
+no longer reach the exact path. Verdicts do not shift.
+
+**Profile after the change** (deep 564):
+- `_separat_scala` self is about 36%;
+- `madvise` is about 25%. The arena returns pages; this is worth a
+  look before a bucketed index;
+- the rest is exact arithmetic (magnus divide and gcd).
+
+The bucketed index stays unbuilt until a run needs it.
+
+**Credo, section "scrutinium axium":**
+- the deep catalog (476 axes), 200 deterministic triples x k {6, 12,
+  24} x the rule, robust and possible modes;
+- filter on (two-stage) vs. filter off (`quaternio_proximi` over every
+  axis);
+- 1800 comparisons, 0 disagreements, 1729 tied decisions exercised;
+- 4.7 s.
+
+Plants (5):
+- **Red (3):**
+  - margin dropped (`>= F`);
+  - wrong unit-axis component;
+  - midpoint taken from the wrong parts (off by one).
+- **Survived (2): margin size, not margin presence.**
+  - **Half-width term ignored.** The 1e-12 |v|^2 term covers it on
+    every sampled sum. It becomes load-bearing only for strongly
+    cancelling sums (small |v| from depth-16 entries), where w/|v|
+    passes 1e-12.
+  - **delta shrunk to 1e-15 |v|^2.** Rounding in the sample stays below
+    that.
+
+  The bound is pinned by the argument above (and the comment in the
+  code), not by a test. Building a sum that is cancelling *and* tied,
+  where width decides, is open.
