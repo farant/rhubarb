@@ -1,7 +1,8 @@
 /* pictor_organum_probationis.h - canon et domini pictoris EX
  * MANIFESTO (status-plan S2) pro probationibus quae insulas suas
- * ipsae struunt: apps/pictor/organum.stml + basis
- * apps/organum_commune.stml, ut pictor_montare. Viae relativae ad
+ * ipsae struunt (numeros dominorum asserunt - organum_ramum_parare
+ * ramum quoque initiat): manifestum per organum_legere_viam (S6a),
+ * ut pictor_montare. Viae relativae ad
  * radicem repositorii (probationes inde currunt). */
 #ifndef PICTOR_ORGANUM_PROBATIONIS_H
 #define PICTOR_ORGANUM_PROBATIONIS_H
@@ -14,6 +15,7 @@
 #include "stml.h"
 #include "canon.h"
 #include "organum.h"
+#include "organum_montatio.h"
 
 /* canon insulae et <domini> generati; FALSUM si manifestum deest aut
  * malum */
@@ -25,15 +27,12 @@ pictor_organum_parare (
               StmlNodus** domini)
 {
     Organum* o;
-    Organum* basis;
-        Xar* vitia;
      chorda  causa;
 
-    o = organum_legere(filum_legere_totum("apps/pictor/organum.stml",
-        piscina), piscina, intern, &vitia);
-    basis = organum_legere(filum_legere_totum(
-        "apps/organum_commune.stml", piscina), piscina, intern, &vitia);
-    si (!o || !basis || !organum_basim_addere(o, basis))
+    /* S6a: lectio per modulum communem (organum_montatio) */
+    o = organum_legere_viam(piscina, intern, NIHIL,
+        "apps/pictor/organum.stml", "probatio");
+    si (!o)
     {
         redde FALSUM;
     }

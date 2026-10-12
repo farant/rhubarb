@@ -105,3 +105,22 @@ they are unreachable (every defaulted field present from mount). Test
 manifest absens (10 fields). Plant note: "edit a manifest default" is
 NOT a meaningful plant - mount and expectation both follow the
 manifest; the real plant is "mount ignores the manifest" (caught).
+
+## 2026-10-12 — S6a: shared mount module (organum_montatio)
+
+Rule of two (scriba is the second consumer): pictor's mount steps moved
+into include/organum_montatio.h - `organum_legere_viam` (manifest +
+common base, errors prefixed) and `organum_ramum_parare` (generated
+canon, starting element `<genus [id] absentes addita/>`, restore,
+owners, dimissio registration). `StatusSystemata` moved here from
+pictor_applicatio.h. Pictor keeps only what is pictor's: the drawing
+size + `focus="tabula"` as `attributa_addita`, and binding its drawing
+for relatio (only it knows the document). Dead pictor helpers deleted
+(manifestum_legere, organum_pictoris, elementum, _via).
+
+The test helper pictor_organum_probationis.h was NOT deleted (as first
+proposed): three suites build bare islands by hand and assert exact
+owner counts - organum_ramum_parare would also initiate the branch. It
+is now a thin wrapper over organum_legere_viam. No behaviour change: 21
+pictor, 13 vicus, ludus_tessera 8/8; plants 6/6 (dimissio registration
+proven through pictor's palette suite).

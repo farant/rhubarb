@@ -32,57 +32,6 @@ tabulae_dimensio (
     redde (i32)(n < DOC_MINIMUM ? DOC_MINIMUM : n);
 }
 
-/* radix + "/" + via (radix NIHIL aut vacua: via sola) */
-interior constans character*
-_via (
-               Piscina* p,
-    constans character* radix,
-    constans character* via)
-{
-    chorda c;
-
-    si (!radix || radix[ZEPHYRUM] == '\0')
-    {
-        redde via;
-    }
-    c = chorda_concatenare(chorda_ex_literis(radix, p),
-        chorda_ex_literis("/", p), p);
-    c = chorda_concatenare(c, chorda_ex_literis(via, p), p);
-    redde chorda_ut_cstr(c, p);
-}
-
-/* manifestum legere (radix + via); NIHIL si deest aut malum - vitia
- * in stderr */
-interior Organum*
-manifestum_legere (
-                Piscina* p,
-    InternamentumChorda* in,
-     constans character* radix,
-     constans character* via)
-{
-     chorda  fons;
-    Organum* o;
-        Xar* vitia;
-        i32  i;
-
-    fons = filum_legere_totum(_via(p, radix, via), p);
-    si (fons.mensura == ZEPHYRUM)
-    {
-        fprintf(stderr, "pictor: manifestum abest: %s\n", via);
-        redde NIHIL;
-    }
-    o = organum_legere(fons, p, in, &vitia);
-    per (i = ZEPHYRUM; i < xar_numerus(vitia); i++)
-    {
-        chorda* v;
-
-        v = (chorda*)xar_obtinere(vitia, i);
-        fprintf(stderr, "pictor: %s: %.*s\n", via, (int)v->mensura,
-                (constans character*)v->datum);
-    }
-    redde o;
-}
-
 /* S5b: enumerator stratorum (relatio) - ordine imum primum */
 interior i32
 strata_numerus (
@@ -100,26 +49,6 @@ strati_id (
 {
     redde chorda_ex_s32(pictor_documentum_stratum(
         (constans PictorDocumentum*)documentum, index)->id, piscina);
-}
-
-/* status-plan S2: manifestum pictoris cum basi communi */
-interior Organum*
-organum_pictoris (
-                Piscina* p,
-    InternamentumChorda* in,
-     constans character* radix)
-{
-    Organum* o;
-    Organum* basis;
-
-    o = manifestum_legere(p, in, radix, "apps/pictor/organum.stml");
-    basis = manifestum_legere(p, in, radix,
-        "apps/organum_commune.stml");
-    si (!o || !basis || !organum_basim_addere(o, basis))
-    {
-        redde NIHIL;
-    }
-    redde o;
 }
 
 Volumen*
@@ -166,32 +95,6 @@ clavis_memoriae (
         p);
 }
 
-/* elementum initiale: <pictor [id="…"] attributa/> */
-interior constans character*
-elementum (
-               Piscina* piscina,
-    constans character* id,
-    constans character* attributa)
-{
-    chorda c;
-
-    c = chorda_ex_literis("<pictor", piscina);
-    si (id)
-    {
-        c = chorda_concatenare(c, chorda_ex_literis(" id=\"", piscina),
-                               piscina);
-        c = chorda_concatenare(c, chorda_ex_literis(id, piscina),
-            piscina);
-        c = chorda_concatenare(c, chorda_ex_literis("\"", piscina),
-                               piscina);
-    }
-    c = chorda_concatenare(c, chorda_ex_literis(attributa, piscina),
-                           piscina);
-    c = chorda_concatenare(c, chorda_ex_literis("/>", piscina),
-        piscina);
-    redde chorda_ut_cstr(c, piscina);
-}
-
 b32
 pictor_montare (
          PictorMontatio* m,
@@ -208,9 +111,6 @@ pictor_montare (
                  chorda  initium;
      constans character* spatium;
                 Organum* organum;
-                  Canon* canon;
-                 chorda  causa;
-              StmlNodus* domini;
 
     si (!m || !piscina || !intern || !volumen || !repo)
     {
@@ -245,27 +145,19 @@ pictor_montare (
     m->ramus = id ? insula_ramus(repo, "pictor", id)
                   : insula_ramus_radix(repo);
 
-    /* canones PRIMUM (hospes elementum montatum numquam videt): ex
-     * manifesto GENERATI (status-plan S2), idem utrique insulae dum
-     * divisio manet */
-    organum = organum_pictoris(piscina, intern, radix);
+    /* status-plan S6a: organum per modulum communem - manifestum cum
+     * basi, canon, initium, restitutio, domini, dimissio */
+    organum = organum_legere_viam(piscina, intern, radix,
+        "apps/pictor/organum.stml", "pictor");
     si (!organum)
     {
         redde FALSUM;
     }
-    causa.mensura = ZEPHYRUM;
-    causa.datum = NIHIL;
-    canon = organum_canonem_generare(organum, piscina, intern, &causa);
-    si (!canon)
+    si (systemata)
     {
-        fprintf(stderr, "pictor: canon generatus: %.*s\n",
-                (int)causa.mensura, (constans character*)causa.datum);
-        redde FALSUM;
+        m->systemata = *systemata;
     }
-    insula_ramus_canonem_ponere(&m->ramus, canon);
-
-    /* elementum initiale (insula una, C2): dimensiones documenti
-     * (derivatae) + absentes manifesti (S4) + focus pictoris (id
+    /* addita: dimensiones documenti (derivatae) + focus pictoris (id
      * componentis - basis communis eum scire nequit) */
     initium = chorda_ex_literis(" latitudo=\"", piscina);
     initium = chorda_concatenare(initium,
@@ -275,37 +167,14 @@ pictor_montare (
     initium = chorda_concatenare(initium,
         chorda_ex_s32((s32)m->doc->altitudo, piscina), piscina);
     initium = chorda_concatenare(initium,
-        chorda_ex_literis("\"", piscina), piscina);
-    initium = chorda_concatenare(initium,
-        organum_initium(organum, piscina), piscina);
-    initium = chorda_concatenare(initium,
-        chorda_ex_literis(" focus=\"tabula\"", piscina), piscina);
-    si (!insula_ramum_initiare(&m->ramus, elementum(piscina, id,
-            chorda_ut_cstr(initium, piscina))))
+        chorda_ex_literis("\" focus=\"tabula\"", piscina), piscina);
+    si (!organum_ramum_parare(organum, &m->ramus,
+            systemata ? &m->systemata : NIHIL,
+            chorda_ut_cstr(initium, piscina), id ? id : "pictor",
+            piscina,
+            intern))
     {
-        fprintf(stderr, "pictor: elementum initiale: %.*s\n",
-                (int)insula_causa(repo).mensura,
-                insula_causa(repo).datum);
         redde FALSUM;
-    }
-
-    /* S3: status servatus restituitur (post initiationem, ante
-     * dominos - scriptura anonyma), ramus deinde servatur */
-    si (systemata)
-    {
-        m->systemata = *systemata;
-    }
-    si (m->systemata.conservatio)
-    {
-        (vacuum)conservatio_ramum_addere(m->systemata.conservatio,
-            &m->ramus, organum, id ? id : "pictor");
-    }
-
-    /* domini POST initiationem, ex manifesto generati */
-    domini = organum_dominos_generare(organum, piscina, intern);
-    si (domini)
-    {
-        (vacuum)insula_ramus_dominos_legere(&m->ramus, domini);
     }
 
     /* S5b: relatio - strata documenti enumerantur, ramus registratur,
@@ -322,13 +191,6 @@ pictor_montare (
             organum);
         (vacuum)relatio_ligare(m->systemata.relatio, &m->ramus,
             "documentum", m->doc, m->doc->historia);
-    }
-
-    /* S5c: dimissio - campi popover rami (palette) */
-    si (m->systemata.dimissio)
-    {
-        (vacuum)dimissio_ramum_addere(m->systemata.dimissio, &m->ramus,
-            organum);
     }
 
     /* contextus et registra propria */

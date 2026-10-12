@@ -73,6 +73,10 @@ widgets are migrated by hand.*
 
 ### Arc II — scriba and vicus
 
+- **S6a** DONE 2026-10-12: shared mount module organum_montatio
+  (lib/organum.worklog.md). Fran: S6 split a/b/c; scriba persists cursor
+  + page, mode/selection transient; yank register (capsa) per pane +
+  transient in S6b, app-wide in S6c/S7.
 - **S6** scriba: `clavis_praecedens`, `fd_*`, `nuntius` -> transient;
   `paginae_numerus` read from the book; the yank register = first
   app-wide non-document state.
