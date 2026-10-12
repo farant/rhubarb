@@ -11,7 +11,7 @@
 
 <p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
 <h1>specimen</h1>
-<p class="subtitulus"></p>
+<p class="subtitulus">Regressio visualis: captura contra EXEMPLAR servatum</p>
 
 <p>Visual regression testing: compare a capture (one element, by selector, or a whole window, through manus) with a stored reference image. Two rules are built in, because a visual test that always shouts is worse than none, since it fakes trust: test an element, not the whole window, so that noise and unrelated changes stay out; and a missing reference fails, so a test can never create its reference silently and pass forever. On a mismatch it writes the candidate and a difference picture next to the reference; accepting a change means moving the candidate over the reference with mv, a deliberate act that git sees. A size mismatch gets its own verdict, since it almost always means another machine or screen scale rather than a regression. CREDO_SPECIMEN plugs it into the test framework.</p>
 

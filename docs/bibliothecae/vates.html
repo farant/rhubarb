@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>vates</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>vates</h1>
+<p class="subtitulus">provisor neuter exemplarium linguae (LLM)</p>
+
+<p>The provider-neutral client for hosted language models; the name is the Latin for a seer. A neutral request (system text, tools, messages made of blocks) goes to a provider, Anthropic first, and a neutral response comes back, with usage and price accounted in one place for every caller. Four principles from its spec. Nothing is discarded: a block the library does not understand becomes opaque and is sent back verbatim, which is how a thinking block and its signature survive into the next turn. The request&#x27;s bytes are deterministic, because prompt caching matches a prefix. The API key is handed in by the caller, never read from the environment, and is proven absent from every file the library writes. And configuration speaks the provider&#x27;s language while code speaks none, so changing provider or model is a change of configuration. vates_mittere is one blocking call with retries (network errors always, a timeout only once since a ten-minute call is costly to repeat, a hostile retry-after capped), each attempt its own line in a ledger, with its cost in micro-dollars from prices the caller supplies. The pure halves, building the request body and reading a response, are public for tests, and a scripted provider (fictus) runs the real Anthropic code over a fake transport, offline and free. What the response schema does not know is not an error but a novelty, pressed by herbarium before the caller sees it; on the first live call that caught two top-level fields the hand-kept key list did not have. Header approved by Fran 2026-10-07 and built the next day for OptChat, a C89 build of Victor Taelin&#x27;s design for an endless chat, which lives outside this repository. The first live run cost three quarters of a cent and showed a cache read at a tenth of the price of the write.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/vates.h"><code>include/vates.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/vates.c"><code>lib/vates.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-10-08 4b18fa1c</td></tr>
+<tr><td>Group</td><td><a href="greges.html#vates">Language models and JSON schemas</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

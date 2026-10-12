@@ -11,7 +11,7 @@
 
 <p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
 <h1>mensura</h1>
-<p class="subtitulus"></p>
+<p class="subtitulus">Mensurae nidificatae, per cursum ligatae</p>
 
 <p>Nested measurements tied to a run, answering Fran&#x27;s question of 2026-08-13: timings of tests, compilation and single modules, with the machine and commit attached, so they can be charted over time. Deliberately not a time-series store (that is Metrum, parked): measurements are discrete, lossless, bound to one run and nested, so the time for a whole build CONTAINS each module&#x27;s and the parts can be checked against the total. Nesting crosses processes for free through environment variables (session, parent). The hot path appends one line to a plain journal; the whole batch is committed to a volumen in one transaction when the run ends, because ten milliseconds of SQLite per file would change the very build being measured. Used by the mensor tool.</p>
 

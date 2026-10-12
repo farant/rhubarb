@@ -11,7 +11,7 @@
 
 <p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
 <h1>surdus_interna</h1>
-<p class="subtitulus">INTERNA surdi: signum cum gradu decernente. NON</p>
+<p class="subtitulus">INTERNA surdi: signum cum gradu decernente.</p>
 
 <p>The test-only side of surdus, not API: only lib/surdus.c and the tests include it. It holds one function, surdi_signum_gradu, which is the sign with two additions: a switch that turns the double filter off, and a report of which tier decided (1 zero or rational, 2 the filter, 3 squaring; the deepest reached in the recursion). The tests need it because ordinary inputs rarely reach the third tier, the filter settling nearly everything first; with the filter off, squaring is driven directly against the oracle, and every sign is computed both ways and compared. In the first suite that was 2172 cases, 61 of them decided in the third tier, with no disagreement. The genitive prefix surdi_ marks internal names (the public surdi_spatium is the one exception, a natural genitive).</p>
 

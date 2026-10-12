@@ -11,7 +11,7 @@
 
 <p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
 <h1>fabrica_interna</h1>
-<p class="subtitulus">INTERNA fabricae (fabrica-6 H2): auxilia quae</p>
+<p class="subtitulus">INTERNA fabricae (fabrica-6 H2): auxilia quae plagulae bibliothecae fabrica inter se communicant.</p>
 
 <p>The inside of fabrica, not API: the helpers that the files of the fabrica library share with one another. It exists since the housekeeping of 2026-10-08, when lib/fabrica.c was split into parts (declarations, judgment, input kinds, ordering and waves, healing, steps: about ten thousand lines in seven files) and functions that had been local to one file had to be called across files. They carry the genitive prefix fabricae_, the middle of three naming tiers (fabrica_ for the API, fabricae_ for inside the library, a bare underscore for inside one file), which also keeps them from colliding with other libraries in the suite that links everything. The cut was decided by measuring the static call graph across candidate files and not by the section banners. The first map, with read traces in a file of their own, crossed 29 names, because the judging strategies lean on five trace helpers; keeping judgment and traces together brought it to 24, and the banners turned out to mislead about what lay beneath them. What it declares: string and cause helpers, sealing an action and its read trace, collecting and comparing input particles, places and the glob match, the dependency test between two actions, and the working area of a step member. Consumers of fabrica include fabrica.h alone; the table of files stands at the head of lib/fabrica.c.</p>
 

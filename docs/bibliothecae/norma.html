@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>norma</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>norma</h1>
+<p class="subtitulus">schema valoris JSON: iudicare, exportare (norma-spec)</p>
+
+<p>A schema for JSON values: state the shape once, in C, and from that one statement judge real values, export JSON Schema and, through norma_gignere, generate fake ones. Fran asked for it on 2026-10-08 in the middle of the vates work, as something like zod or ArkType whose definition doubles as a generator of mock data. His decisions: the C builder API is the source of truth, there are three modes for undeclared keys with closed as the default, and discriminated unions and nullable values are in from the first version. Nodes are built by small functions that return the node so that they nest (object and field, array, union on a tag, bounds, length in characters, choice, format), and a node may be shared between parents. Judging reports every issue and not the first, each with a named cause and a path such as $.content[2].input.n, and never quotes the value itself. The third mode, NOTANDUM, lets an undeclared key or an unknown variant pass and returns it as a note; that is what vates uses to notice that an API has grown. Misuse of the builders marks the node and is reported as a bad schema before anything is judged, and after 256 issues judging stops with a named limit. The export has a deterministic key order and no $schema key, as a tool&#x27;s input schema wants. The stance is canon&#x27;s, applied to JSON: closed by default, named issues, no expression language. Recursive schemas are not yet possible. Used by vates and by bin/norma.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/norma.h"><code>include/norma.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/norma.c"><code>lib/norma.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-10-08 70ba755a</td></tr>
+<tr><td>Group</td><td><a href="greges.html#vates">Language models and JSON schemas</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

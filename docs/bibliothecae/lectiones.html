@@ -11,7 +11,7 @@
 
 <p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
 <h1>lectiones</h1>
-<p class="subtitulus">liber lectionum: quod processus legit, quaesivit,</p>
+<p class="subtitulus">liber lectionum: quod processus legit, quaesivit, exstare confirmavit, enumeravit, scripsit (fabrica slice 2).</p>
 
 <p>The read log: when FABRICA_LECTIONES names a file, every read, existence check, directory listing, write and environment lookup the house&#x27;s own file functions perform is appended as one line (&#x27;&lt;letter&gt;\	&lt;path&gt;&#x27;), with a single O_APPEND write so parallel children keep whole lines. Unset, it does nothing at all. fabrica turns these logs into verified footprints, so an action declared lectiones=&quot;verum&quot; is judged by what it really read rather than what someone listed, and can then safely run in parallel. This module alone writes the log; filum, via_existit, iter_directoria and aedilis&#x27;s directory walks call it, and tools/lectiones_lint.sh finds calls that bypass it. Fabrica plan 2, October 2026.</p>
 

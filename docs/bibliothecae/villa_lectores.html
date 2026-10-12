@@ -11,7 +11,7 @@
 
 <p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
 <h1>villa_lectores</h1>
-<p class="subtitulus">Lectores villae: aedificator mandati ssh +</p>
+<p class="subtitulus">Lectores villae: aedificator mandati ssh + parsatores PURI effusionum servi remoti.</p>
 
 <p>Pure readers for villa: an ssh command builder and parsers for what remote servers print (systemctl states, unit lists, nginx server blocks, sectioned output, disk, memory, uptime). Nothing here touches the network: a string goes in, a struct comes out. The fixtures are the specification: real captures from a Debian droplet, taken twice and compared byte for byte, are what each parser must handle, and the remote flags each parser depends on are named beside it. Exit codes are told apart, because ssh uses 255 for its own failures: unknown host key, refused connection, denied permission and a missing remote command each get a named cause instead of &#x27;ssh failed&#x27;. A control-socket path longer than macOS allows is refused, since ssh would otherwise silently fall back to full handshakes. Every returned string is copied into the caller&#x27;s arena.</p>
 

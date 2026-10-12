@@ -11,7 +11,7 @@
 
 <p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
 <h1>destinatio</h1>
-<p class="subtitulus">Destinatio: STRATEGIA una, permutabilis,</p>
+<p class="subtitulus">Destinatio: STRATEGIA una, permutabilis, componentibus ignota</p>
 
 <p>Decides which component an event goes to, as one swappable strategy that components never see. The default, destinatio_geometrica, walks the LAST composed tree innermost-first and topmost-first (painter&#x27;s order is z-order), honouring clips and inverting each group&#x27;s translation and scale; an active capture (a press in progress) beats geometry for pointer events; keys and the wheel, which carry no point, go to the focus. The result is the target plus its ascent to the root, so an action can be handled by an ancestor. Also: converting a screen point into a component&#x27;s local space with the same arithmetic (destinatio_ad_locale), synthetic targets for derived events, and focus order (next/previous focusable, depth-first, wrapping). It reads only the logical tree, never the commands. Marked nexus purus.</p>
 

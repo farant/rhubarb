@@ -11,7 +11,7 @@
 
 <p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
 <h1>aedilis_silva</h1>
-<p class="subtitulus">extractor aedilis per silvam, ut bibliotheca</p>
+<p class="subtitulus">extractor aedilis per silvam, ut bibliotheca (fabrica-6 T6; olim in tools/aedilis.c solum; caput Franus probavit)</p>
 
 <p>The real extractor behind aedilis, as a library. aedilis is pure and takes whatever reads files through a seam; this is the one that does the reading. silva parses a .c or .h for its include directives and its aedilis annotations, clang -MM answers for Objective-C files, a memo keeps each header parsed once per run, and a content store keeps records across runs. The store&#x27;s key is a hash of a prefix and the file&#x27;s bytes, the prefix being the hash of the aedilis binary itself and of aedilis.stml: silva&#x27;s parse does no file I/O, so an extraction is a function of the bytes and of the extractor&#x27;s code, and taking the binary&#x27;s digest as the version means there is no constant to bump by hand and forget. It lived inside tools/aedilis.c until 2026-10-07 (fabrica slice 6), when fabrica learned to link and run C tests itself and needed the same closures in-process. It was moved out verbatim on a header Fran approved, and old and new bin/aedilis were compared byte for byte over all 307 test closures. With the store, regenerating the root suite&#x27;s source list went from about 64 s to 17 s cold and 11 s warm; the cold gain comes from sharing header parses across some 200 separate aedilis processes, which the per-run memo could not do. bin/aedilis and bin/fabrica use the same extractor.</p>
 

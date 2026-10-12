@@ -11,7 +11,7 @@
 
 <p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
 <h1>Bibliothecae per greges</h1>
-<p class="subtitulus">The 253 libraries in include/, in 14 groups</p>
+<p class="subtitulus">The 262 libraries in include/, in 15 groups</p>
 
 <p>The same libraries as the <a href="index.html">table</a>, clustered by
 area, each group with a paragraph on what it is and how its libraries
@@ -35,6 +35,7 @@ bibliothecarum</em>), not in this page.</p>
 <li><a href="#prima">The first generation</a> <span class="nota">(34)</span></li>
 <li><a href="#res">Calendar and scripture</a> <span class="nota">(3)</span></li>
 <li><a href="#mathematica">Exact mathematics</a> <span class="nota">(18)</span></li>
+<li><a href="#vates">Language models and JSON schemas</a> <span class="nota">(9)</span></li>
 </ul>
 
 <h2 id="fundamenta">I. Foundation</h2>
@@ -413,6 +414,24 @@ bibliothecarum</em>), not in this page.</p>
 <tr class="descripta"><td><a href="surdus.html">surdus</a></td><td>Sums of square roots with an exact sign, fast.</td></tr>
 <tr class="descripta"><td><a href="surdus_interna.html">surdus_interna</a></td><td>The test-only side of surdus, not API: only lib/surdus.c and the tests include it.</td></tr>
 <tr class="descripta"><td><a href="tabula_nodorum.html">tabula_nodorum</a></td><td>The table of prime knots up to 13 crossings, 12,966 of them, and recognition of a knot from its Alexander and Jones polynomials.</td></tr>
+</tbody>
+</table>
+
+<h2 id="vates">XV. Language models and JSON schemas</h2>
+<p class="nota">9 libraries, 9 described</p>
+<p>The libraries written in October 2026 for OptChat, a C89 build of Victor Taelin&#x27;s design for an endless chat whose memory is its own history. The application lives outside this repository; what it needed from the house is here. vates is the provider-neutral client for hosted language models, Anthropic first: a neutral request in, a neutral response out, usage and cost accounted in one place, nothing the provider sends ever discarded. herbarium presses unexpected API responses to disk before anyone uses them and replays them in tests. norma states the shape of a JSON value once and from that judges values and exports JSON Schema; norma_gignere generates plausible and hostile values from the same statement; norma_stml is its file form, norma_ad_c turns such a file into C, norma_inferre drafts a schema from examples and reports drift, and norma_canon and vates_responsum_norma are generated. The three meet in one loop. The schema of the provider&#x27;s response is a .norma file; what that schema does not know is pressed as a specimen; and the pile of specimens is what the schema is next compared against. Every header was approved by Fran before its implementation, and the specs are in project-specs (vates, herbarium, norma).</p>
+<table class="bibliothecae">
+<thead><tr><th>Library</th><th>In one sentence <span class="nota">(or the header's own gloss)</span></th></tr></thead>
+<tbody>
+<tr class="descripta"><td><a href="herbarium.html">herbarium</a></td><td>Pressed specimens of API responses: capture and replay.</td></tr>
+<tr class="descripta"><td><a href="norma.html">norma</a></td><td>A schema for JSON values: state the shape once, in C, and from that one statement judge real values, export JSON Schema and, through norma_gignere, generate fake ones.</td></tr>
+<tr class="descripta"><td><a href="norma_ad_c.html">norma_ad_c</a></td><td>Named norma schemas turned into C source that builds the same schemas: the emitter behind bin/norma c.</td></tr>
+<tr class="descripta"><td><a href="norma_canon.html">norma_canon</a></td><td>The text of norma.canon, the schema of the .norma dialect, embedded in the binary so that the reader needs no file.</td></tr>
+<tr class="descripta"><td><a href="norma_gignere.html">norma_gignere</a></td><td>Fake JSON values from a norma schema, in three modes: typical (plausible), limits (every bounded node at an edge) and invalid (a typical value with exactly one planted …</td></tr>
+<tr class="descripta"><td><a href="norma_inferre.html">norma_inferre</a></td><td>A schema drafted from examples of JSON: a sketch for review, the header insists, and not the truth.</td></tr>
+<tr class="descripta"><td><a href="norma_stml.html">norma_stml</a></td><td>The file form of norma: reading and writing .norma files, an STML dialect in which named schemas can refer to one another.</td></tr>
+<tr class="descripta"><td><a href="vates.html">vates</a></td><td>The provider-neutral client for hosted language models; the name is the Latin for a seer.</td></tr>
+<tr class="descripta"><td><a href="vates_responsum_norma.html">vates_responsum_norma</a></td><td>Generated: the schema of an Anthropic message response, as C.</td></tr>
 </tbody>
 </table>
 
