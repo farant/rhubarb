@@ -28,6 +28,9 @@
 #       octeti generatoris commissi (fabrica P2, via B, 2026-09-29)
 #   XX  knotapel/ EXCLUSA TOTA (2026-10-03): planta C99 male formata et
 #       .sh malformata ibi -> nec obstat nec formatur
+#   XXI vocabula.sh -nova SOLUM (sine unco, circulus commissionis P2):
+#       plagula modo scripta cum verbo ignoto -> index renovatur ANTE
+#       iudicium, NOVA 1 (olim index stalus: 'NOVA 0' mendax)
 # Planta = declaratio in 'per' (C99): examen 'nodi erroris' REICE
 # (mensuratum 2026-09-01; '//' et declaratio post sententiam ACCIPE -
 # lacunae examinis, non plantae).
@@ -194,6 +197,17 @@ UNCUS_LINT_VIAE="lib/piscina.c" bash -c '. tools/unci-git/lint_latinus.sh && lin
 if [ "$rc" -eq 0 ] && grep -q 'nihil novi' "$T/lint_aliena.out"; then echo "  XVIII lint: non tracta NON nominata -> 0  OK"; else echo "  XVIII FRACTUM (rc=$rc)"; tail -12 "$T/lint_aliena.out"; fracta=1; fi
 rm -f "$NONTR"
 
+# XXI - VOCABULA -NOVA RENOVAT INDICEM (circulus commissionis P2,
+# desideratum 01M46ER35): plagula SCRIPTA post percursum ultimum, -nova
+# vocatum statim (ut lint manu ante commissionem). Olim build/nexus.tsv
+# ut stabat legebatur - verbum novum invisibile, 'NOVA 0' mendax.
+NOVAF="tools/unci-git/fumus_nova_stalum.c"
+printf '#include "latina.h"\n\ninterior integer\nxyzzyquux_nova (vacuum)\n{\n    redde ZEPHYRUM;\n}\n' > "$NOVAF"
+VOCABULA_VIAE_ADDITAE="$NOVAF" ./oratio/vocabula.sh -nova > "$T/nova_stalum.out" 2>&1; rc=$?
+rm -f "$NOVAF"
+./silva/nexus.sh -renovare > /dev/null 2>&1
+if [ "$rc" -eq 1 ] && grep -q 'xyzzyquux' "$T/nova_stalum.out"; then echo "  XXI  -nova: index renovatus, verbum novum visum OK"; else echo "  XXI  FRACTUM (rc=$rc)"; tail -8 "$T/nova_stalum.out"; fracta=1; fi
+
 # XX - knotapel/ EXCLUSA TOTA (decisio Frani 2026-10-03): nec examen,
 # nec diagnostica materiae, nec formator. Planta in knotapel/: C99
 # (declaratio in 'per' = REICE extra) male formata + .sh malformata.
@@ -229,5 +243,5 @@ rm -f "$KC" "$KS" "$KF" "$KD" "$T/index_knotapel"
 ./silva/nexus.sh -renovare > /dev/null 2>&1
 
 if [ "$fracta" -ne 0 ]; then echo "fumus unci: FRACTUM"; exit 1; fi
-echo "fumus unci: sanum (XX/XX)"
+echo "fumus unci: sanum (XXI/XXI)"
 exit 0

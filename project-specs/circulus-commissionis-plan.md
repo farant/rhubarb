@@ -27,9 +27,13 @@ The small items go first, so each one helps the next commit.
   precheck rebuilt it and passed. Plants II red.
 
 ### T3: P2 -nova refreshes the index
-- [ ] oratio/vocabula.sh -nova runs the incremental sweep first; test: add
+- [x] oratio/vocabula.sh -nova runs the incremental sweep first; test: add
   an identifier with an unknown word, run -nova immediately -> NOVA 1 (red
   today). Ledger 01M46ER35 closed. Commit.
+  As built (2026-10-12): every identifier-reading mode refreshes the index
+  (`nexus.sh -renovare`, ~1 s; failure = exit 2);
+  VOCABULA_INDEX_RENOVATUS=1 from the hook (no double sweep); unci fumus
+  XXI (red today, green after; plant red); manual -nova takes 1.8 s.
 
 ### T4: P4 briar-fumus tree-local in worktrees
 - [ ] worktree detection; uses bin/briar + PATH; main unchanged; the gate
