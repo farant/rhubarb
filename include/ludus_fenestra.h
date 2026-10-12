@@ -9,8 +9,9 @@
  * XVI §3): si delineare quadrum dominatur, rasterizare quadrum N dum
  * quadrum N+1 dispensatur.
  *
- * Rotula: fenestra_macos.m scrollWheel VACUUS est (2026-09-05) -
- * tractio P4 (zoom ad cursorem).
+ * Rotula: EVENTUS_MUS_ROTULA ex ansa perscrutandi fenestrae venit
+ * (fenestra_macos.m, NSEventTypeScrollWheel). Methodus scrollWheel:
+ * ibi vacua manet - eventus non inde oriuntur.
  */
 
 #ifndef LUDUS_FENESTRA_H
@@ -53,7 +54,7 @@ nomen structura {
       LudusPulsator  pulsator;            /* S1c: NIHIL = nullus */
              vacuum* pulsator_ctx;
                 i32  versio_picta;        /* S1c: repositorii, quadro
-                                           * ultimo (summa generum) */
+                                           * ultimo */
 } LudusFenestra;
 
 LudusFenestra*

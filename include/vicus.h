@@ -2,8 +2,8 @@
  * montationes
  * (insula-rami-plan T1b)
  *
- * Vicus (via Romana insularum) repositorium UNUM possidet: radices
- * <vicus> (durabilis, ephemera), liberi = montationes applicationum
+ * Vicus (via Romana insularum) repositorium UNUM possidet: radix
+ * <vicus>, liberi = montationes applicationum
  * (rami, canonibus suis iudicati). Volumen UNUM: documenta montationum
  * in spatiis suis (id), dispositio in plagula 'vicus/latera'
  * (configuratio, non historia: superscribitur). Vicus nullam
@@ -272,7 +272,7 @@ vicus_focum_ponere (
     Vicus* v,
       i32  latus);
 
-/* activam ponere (insula ephemera et index servatus); FALSUM si id
+/* activam ponere (insula et index servatus); FALSUM si id
  * ignotum */
 b32
 vicus_activam_ponere (

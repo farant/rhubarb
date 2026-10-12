@@ -7,10 +7,10 @@
  * scribitur (transientes numquam; mobiles semel per quietem, quia
  * motus insulam solum in quiete tangit).
  *
- * Forma plagulae:
- *   <status versio="1" genus="pictor">
- *     <durabilis .../><ephemera instrumentum="linea" zoom="2"/>
- *   </status>
+ * Forma plagulae (versio 2, C2 - insula una: campi ut attributa):
+ *   <status versio="2" genus="pictor" instrumentum="linea" zoom="2"/>
+ * Versio 1 (<status><durabilis/><ephemera/></status>) legitur et
+ * MIGRATUR (ambae fusae, ephemera vincit); ignota praeteritur.
  *
  * Restitutio = migratio (census XII): campi manifesto ignoti aut non
  * persistentes abiciuntur, absentes valorem initialem retinent;

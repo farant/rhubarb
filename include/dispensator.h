@@ -1,7 +1,7 @@
 /* dispensator.h - Ansa: derivare -> destinatio -> actio -> componere
  *
  * Possidet Motus, Derivator, arborem componentium ultimam (piscinae
- * ping-pong), focum (in insula ephemerarum: attributa 'focus' et
+ * ping-pong), focum (in insula, ramo activo: attributa 'focus' et
  * 'focus_acervus' - restitutio ea restituit), super (id sub mure).
  * REGULA STALENESS: componere post OMNEM eventum dispensatum currit;
  * pingere/rasterizare semel per quadrum (extra hanc bibliothecam).
@@ -37,7 +37,7 @@
  * Typi
  * ================================================== */
 
-/* <componens/>: arborem logicam ex insulis et motu componit, in
+/* <componens/>: arborem logicam ex insula et motu componit, in
  * piscinam datam; nihil scribit. */
 nomen Componens* (*Componere)(
      InsulaRepositorium* repo,
