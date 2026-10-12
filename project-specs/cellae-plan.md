@@ -118,7 +118,10 @@ Each task follows the house cycle:
 - **T8. Review** (recensor-extensio), then fixes.
   *(2026-10-12: no H/M. L1 (zeta_12 oracle + independent D82 winner
   fixture) and L2 (cap / triple limit binding) are fixed with tests. P1
-  arena churn is proposed, not done.)*
+  arena churn is proposed, not done.)* *(P1 done the same day, after
+  Fran's go-ahead: one arena per search, tacta / literals / scan scratch
+  in the activation. Deep 564: 20.2 -> 14.3 s, sys 4.7 -> 0.08 s, peak
+  149 -> 76 MB, identical output.)*
 - **T9. D125:** D82's depth law and matched-size control, plus D87's ζ₁₂
   claim, on `cellae`. Separate sketch, already approved in outline: the
   replica, exact rule / robust, the 512 cap and uncapped.

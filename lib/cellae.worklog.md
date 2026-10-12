@@ -451,3 +451,52 @@ committed. Its findings and fixes:
   (13 disagreements); the zeta_8 oracle and the hand cells stay green.
 
 Suite: 182 checks, about 16 s.
+
+## 2026-10-12 - P1 (review): arena churn removed
+
+**Measured first** (deep 564, D82 greedy, exact rule; this machine):
+- 20.2 s wall: 14.5 user + **4.7 sys**;
+- 149 MB peak.
+
+The system time was the churn the reviewer found: macOS returning
+pages (`madvise`) for memory allocated per weight set.
+
+**Changes (all lossless):**
+- **Searches reuse their arena.**
+  - `_primus_k` (greedy) and the new `_separat_unum` (exhaustive) take
+    the search's arena and notare/reficere around the separation.
+  - `piscina_reficere` keeps its blocks (offsets go to zero; nothing is
+    freed), so nothing is returned to the OS per set.
+  - `activatio_separat` (public, single call) still creates and destroys
+    one arena per call, but now allocates little inside it.
+- **`tacta` lives in the activation**, allocated with `visum_par` at
+  capacity k x nv.
+  - **Bound:** a cell enters `tacta` only while its `visum_par` /
+    `variabilis` is zero and is then marked. So it enters at most once,
+    and the count is at most the number of cells at k.
+  - Before: numerus x 2 x nv per k (about 1.4 MB at n = 6).
+- **The SAT literal buffer grows by doubling** in the activation
+  (`_literae_capere`). Since the arena never frees, the total stays
+  <= 2 x the peak need.
+  - The starting size is 64 on purpose: small enough that the suite
+    exercises growth.
+  - Before: numerus x 2 x nv per k (about 4 MB at n = 7).
+- **The axis-scan scratch belongs to the activation:**
+  - `valores_axium` and `reliquae`, used within one `_vector_parare`
+    call only (there is no re-entrancy);
+  - the final candidates are copied into the work arena at exact size,
+    usually 1-3 axes instead of 476.
+
+**Result:**
+- 14.3 s wall: 13.7 user + **0.08 sys**; 76 MB peak.
+- Same output (XOR12, 32 32 32 21) and identical statistics (filtro /
+  exacte / ligatae), so the decision paths are unchanged.
+- Shallow 127 is unchanged at 0.14 s.
+
+**Plants (4 red):**
+- growth drops the old literals (the suite crashes, exit 138);
+- capacity check off by one (crashes, exit 139);
+- candidates not copied;
+- verdict lost after the arena reset.
+
+The two crashes show the growth path now runs in the suite.

@@ -448,6 +448,9 @@ structura Activatio {
                     i8* visum_par;        /* cella: bit paritatis visae */
                    i32* variabilis;       /* cella -> variabilis SAT + 1 */
                    i32  capacitas_cellarum;
+                   i32* tacta;            /* cellae tactae (<= capacitas) */
+                   i32* literae;          /* SAT: literae clausularum */
+                   i32  capacitas_literarum;
                    i32  visitatio;        /* signum separationis currentis */
                 duplex* fluitantia;       /* elementa ut duplices (IV) */
                     i8* fluitantia_parata;
@@ -456,6 +459,8 @@ structura Activatio {
         TabulaDispersa* combinationes;   /* (index, +-1)... -> Punctum* */
             Intervallum* axes_intervalla;  /* (u, |u|^2) per axem */
                  duplex* axes_unitae;      /* u / |u| (gradus I scrutinii) */
+            Intervallum* valores_axium;    /* scrutinium: valor per axem */
+                    i32* reliquae;         /* scrutinium: axes reliquae */
                    i64  numerus_filtro;
                    i64  numerus_exacte;
                    i64  numerus_ligatae;
@@ -534,20 +539,25 @@ activatio_ex_catalogo (
     a->puncta = tabula_dispersa_creare_chorda(piscina, (i32)MMXLVIII);
     a->axes = (Quaternio*)piscina_allocare(piscina,
         (memoriae_index)catalogus->numerus * magnitudo(Quaternio));
-    a->catalogus           = catalogus;
-    a->numerus_axium       = ZEPHYRUM;
-    a->truncata            = FALSUM;
-    a->numerus_terminorum  = ZEPHYRUM;
-    a->piscina             = piscina;
-    a->visum_par           = NIHIL;
-    a->variabilis          = NIHIL;
-    a->capacitas_cellarum  = ZEPHYRUM;
-    a->visitatio           = ZEPHYRUM;
-    a->filtrum             = VERUM;
+    a->catalogus            = catalogus;
+    a->numerus_axium        = ZEPHYRUM;
+    a->truncata             = FALSUM;
+    a->numerus_terminorum   = ZEPHYRUM;
+    a->piscina              = piscina;
+    a->visum_par            = NIHIL;
+    a->variabilis           = NIHIL;
+    a->capacitas_cellarum   = ZEPHYRUM;
+    a->tacta                = NIHIL;
+    a->literae              = NIHIL;
+    a->capacitas_literarum  = ZEPHYRUM;
+    a->visitatio            = ZEPHYRUM;
+    a->filtrum              = VERUM;
     a->combinationes = tabula_dispersa_creare_chorda(piscina,
         (i32)MMXLVIII);
     a->axes_intervalla  = NIHIL;
     a->axes_unitae      = NIHIL;
+    a->valores_axium    = NIHIL;
+    a->reliquae         = NIHIL;
     a->numerus_filtro   = 0;
     a->numerus_exacte   = 0;
     a->numerus_ligatae  = 0;
@@ -1176,7 +1186,12 @@ _alvei_cellarum (
         (memoriae_index)opus);
     a->variabilis = (i32*)piscina_allocare(a->piscina,
         (memoriae_index)opus * magnitudo(i32));
-    si (a->visum_par == NIHIL || a->variabilis == NIHIL)
+    /* cella in tacta semel tantum (cum visum_par/variabilis nullum),
+     * ergo numerus tactorum <= cellae ad k */
+    a->tacta = (i32*)piscina_allocare(a->piscina,
+        (memoriae_index)opus * magnitudo(i32));
+    si (   a->visum_par == NIHIL || a->variabilis == NIHIL
+        || a->tacta     == NIHIL)
     {
         redde FALSUM;
     }
@@ -1379,7 +1394,12 @@ _axes_intervalla (
         (memoriae_index)a->numerus_axium * IV * magnitudo(Intervallum));
     a->axes_unitae = (duplex*)piscina_allocare(a->piscina,
         (memoriae_index)a->numerus_axium * III * magnitudo(duplex));
-    si (a->axes_intervalla == NIHIL || a->axes_unitae == NIHIL)
+    a->valores_axium = (Intervallum*)piscina_allocare(a->piscina,
+        (memoriae_index)a->numerus_axium * magnitudo(Intervallum));
+    a->reliquae = (i32*)piscina_allocare(a->piscina,
+        (memoriae_index)a->numerus_axium * magnitudo(i32));
+    si (   a->axes_intervalla == NIHIL || a->axes_unitae == NIHIL
+        || a->valores_axium   == NIHIL || a->reliquae == NIHIL)
     {
         redde FALSUM;
     }
@@ -1469,14 +1489,8 @@ _vector_parare (
     {
         redde FALSUM;
     }
-    valores = (Intervallum*)piscina_allocare(opus,
-        (memoriae_index)a->numerus_axium * magnitudo(Intervallum));
-    x->candidatae = (i32*)piscina_allocare(opus,
-        (memoriae_index)a->numerus_axium * magnitudo(i32));
-    si (valores == NIHIL || x->candidatae == NIHIL)
-    {
-        redde FALSUM;
-    }
+    /* alvei activationis (intra vocationem solum; nulla reentrantia) */
+    valores = a->valores_axium;
     {
         /* gradus I: duplices simplices f_j = (v . u_j/|u_j|)^2 (v medium);
          * |f_j - verum_j| <= delta/2 certe, ergo axis cum f_j < F - delta
@@ -1487,7 +1501,7 @@ _vector_parare (
         duplex  norma_v;
         duplex  maximum_f = -1.0;
         duplex  delta;
-           i32* reliquae            = x->candidatae;
+           i32* reliquae            = a->reliquae;
            i32  numerus_reliquarum  = ZEPHYRUM;
 
         per (m = ZEPHYRUM; m < III; m++)
@@ -1543,13 +1557,25 @@ _vector_parare (
             }
         }
         /* candidatae crescentes: reliquae (crescentes) quarum supra >=
-         * infra optimi; in loco compactantur */
+         * infra optimi; in loco compactantur, deinde in opus magnitudine
+         * exacta transcribuntur (vector eas post vocationem tenet) */
         per (m = ZEPHYRUM; m < numerus_reliquarum; m++)
         {
             si (valores[reliquae[m]].supra >= optimum_infra)
             {
-                x->candidatae[x->numerus_candidatarum++] = reliquae[m];
+                reliquae[x->numerus_candidatarum++] = reliquae[m];
             }
+        }
+        si (x->numerus_candidatarum > ZEPHYRUM)
+        {
+            x->candidatae = (i32*)piscina_allocare(opus,
+                (memoriae_index)x->numerus_candidatarum * magnitudo(i32));
+            si (x->candidatae == NIHIL)
+            {
+                redde FALSUM;
+            }
+            memcpy(x->candidatae, reliquae, (memoriae_index)
+                x->numerus_candidatarum * magnitudo(i32));
         }
     }
     x->tangens = _iv_divide_positivo(_iv_adde(_iv_adde(_iv_quadratum(
@@ -1721,6 +1747,39 @@ _vector_cella (
 }
 
 /* separabilitas ad unum k (vectores parati) */
+/* literae SAT in alveo activationis crescente (duplicatur; piscina non
+ * liberat, ergo summa <= II x maxima necessitas) */
+interior b32
+_literae_capere (
+    Activatio* a,
+          i32  necessitas)
+{
+    i32  capacitas;
+    i32* nova;
+
+    si (necessitas <= a->capacitas_literarum)
+    {
+        redde VERUM;
+    }
+    capacitas = a->capacitas_literarum * II;
+    si (capacitas < necessitas) capacitas = necessitas;
+    si (capacitas < LXIV) capacitas = LXIV;    /* parvum: crescentia probatur */
+    nova = (i32*)piscina_allocare(a->piscina, (memoriae_index)capacitas
+        * magnitudo(i32));
+    si (nova == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (a->capacitas_literarum > ZEPHYRUM)
+    {
+        memcpy(nova, a->literae, (memoriae_index)a->capacitas_literarum
+            * magnitudo(i32));
+    }
+    a->literae              = nova;
+    a->capacitas_literarum  = capacitas;
+    redde VERUM;
+}
+
 interior b32
 _separat_ad_k (
        Activatio* a,
@@ -1747,9 +1806,8 @@ _separat_ad_k (
     }
     cellae = (Cella*)piscina_allocare(opus, (memoriae_index)numerus
         * magnitudo(Cella));
-    tacta = (i32*)piscina_allocare(opus, (memoriae_index)numerus
-        * (memoriae_index)II * (memoriae_index)nv * magnitudo(i32));
-    si (cellae == NIHIL || tacta == NIHIL)
+    tacta = a->tacta;
+    si (cellae == NIHIL)
     {
         redde FALSUM;
     }
@@ -1813,9 +1871,6 @@ _separat_ad_k (
             (memoriae_index)numerus * magnitudo(i32));
         i32* longitudo = (i32*)piscina_allocare(opus,
             (memoriae_index)numerus * magnitudo(i32));
-        i32* literae = (i32*)piscina_allocare(opus,
-            (memoriae_index)numerus * (memoriae_index)II
-            * (memoriae_index)nv * magnitudo(i32));
         i32 clausulae          = ZEPHYRUM;
         i32 numerus_literarum  = ZEPHYRUM;
         i32 variabiles         = ZEPHYRUM;
@@ -1850,6 +1905,10 @@ _separat_ad_k (
                     p->paritas_visitationis  = vectores[v].paritas;
                 }
             }
+            si (!_literae_capere(a, numerus_literarum + c.numerus))
+            {
+                redde FALSUM;
+            }
             volitum[clausulae]    = vectores[v].paritas;
             initium[clausulae]    = numerus_literarum;
             longitudo[clausulae]  = c.numerus;
@@ -1862,7 +1921,8 @@ _separat_ad_k (
                     a->variabilis[cella]       = ++variabiles;
                     tacta[numerus_tactorum++]  = cella;
                 }
-                literae[numerus_literarum++] = a->variabilis[cella] - I;
+                a->literae[numerus_literarum++] = a->variabilis[cella]
+                    - I;
             }
             clausulae++;
         }
@@ -1872,7 +1932,7 @@ _separat_ad_k (
             t.volitum              = volitum;
             t.initium              = initium;
             t.longitudo            = longitudo;
-            t.literae              = literae;
+            t.literae              = a->literae;
             t.valor = (s32*)piscina_allocare(opus, (memoriae_index)
                 (variabiles + I) * magnitudo(s32));
             t.vestigium = (i32*)piscina_allocare(opus, (memoriae_index)
@@ -2017,6 +2077,34 @@ _separat_validum (
     redde VERUM;
 }
 
+/* separatio ad k unum in opere dato (notatur, reficitur) */
+interior b32
+_separat_unum (
+       Activatio* a,
+    constans i32* pondera,
+             i32  n,
+             i32  k,
+             i32  modus,
+         Piscina* opus,
+             b32* exitus)
+{
+    PiscinaNotatio nota      = piscina_notare(opus);
+               i32 k_primus  = ZEPHYRUM;
+               b32 bene;
+
+    si (k < I || !_separat_validum(a, pondera, n, modus))
+    {
+        redde FALSUM;
+    }
+    bene = _separat_scala(a, pondera, n, &k, I, modus, opus, &k_primus);
+    piscina_reficere(opus, nota);
+    si (bene)
+    {
+        *exitus = k_primus != ZEPHYRUM;
+    }
+    redde bene;
+}
+
 b32
 activatio_separat (
        Activatio* activatio,
@@ -2027,7 +2115,6 @@ activatio_separat (
              b32* exitus)
 {
     Piscina* opus;
-        i32  k_primus = ZEPHYRUM;
         b32  bene;
 
     si (k < I || !_separat_validum(activatio, pondera, n, modus))
@@ -2040,13 +2127,8 @@ activatio_separat (
     {
         redde FALSUM;
     }
-    bene = _separat_scala(activatio, pondera, n, &k, I, modus, opus,
-        &k_primus);
+    bene = _separat_unum(activatio, pondera, n, k, modus, opus, exitus);
     piscina_destruere(opus);
-    si (bene)
-    {
-        *exitus = k_primus != ZEPHYRUM;
-    }
     redde bene;
 }
 
@@ -2397,7 +2479,7 @@ _exhaustiva_intra (
                             pondera[np++] = indices[t];
                         }
                     }
-                    si (!activatio_separat(a, pondera, n, k, q->modus,
+                    si (!_separat_unum(a, pondera, n, k, q->modus, opus,
                         &verdictum))
                     {
                         redde FALSUM;
@@ -2485,13 +2567,14 @@ _primus_k (
      constans Quaestio* q,
           constans i32* pondera,
                    i32  n,
+               Piscina* opus,
                    i32* k)
 {
-        i32  scala[CELLAE_K_MAXIMA];
-        i32  numerus = ZEPHYRUM;
-        i32  index_k;
-    Piscina* opus;
-        b32  bene;
+               i32 scala[CELLAE_K_MAXIMA];
+               i32 numerus = ZEPHYRUM;
+               i32 index_k;
+    PiscinaNotatio nota;
+               b32 bene;
 
     *k = ZEPHYRUM;
     si (!_separat_validum(a, pondera, n, q->modus))
@@ -2510,15 +2593,12 @@ _primus_k (
     {
         redde VERUM;
     }
-    opus = piscina_generare_dynamicum("cellae_separatio",
-        (memoriae_index)65536);
-    si (opus == NIHIL)
-    {
-        redde FALSUM;
-    }
+    /* opus quaestionis reficitur (alvei manent: nulla liberatio per
+     * copiam) */
+    nota = piscina_notare(opus);
     bene = _separat_scala(a, pondera, n, scala, numerus, q->modus, opus,
         k);
-    piscina_destruere(opus);
+    piscina_reficere(opus, nota);
     redde bene;
 }
 
@@ -2583,7 +2663,7 @@ _avida_intra (
         pondera[0] = indices[x];
         pondera[1] = indices[y];
         pondera[2] = indices[z];
-        si (!_primus_k(a, q, pondera, III, &k))
+        si (!_primus_k(a, q, pondera, III, opus, &k))
         {
             redde FALSUM;
         }
@@ -2669,7 +2749,7 @@ _avida_intra (
                 {
                     pondera[t] = indices[nova[t]];
                 }
-                si (!_primus_k(a, q, pondera, n, &k))
+                si (!_primus_k(a, q, pondera, n, opus, &k))
                 {
                     redde FALSUM;
                 }
