@@ -2,6 +2,7 @@
 
 # Effusio cursus ultimi semper in build/test_logs/crusta.log
 # radicis (stdout + stderr; codex exitus per PIPESTATUS servatus).
+# <porta titulus="crusta" tegit="crusta/fontes/* crusta/grammatica/* crusta/lintrum/* crusta/probationes/* materia/fontes/* probationes/fixa/crusta/*" currit="tools/aedilis.c tools/compilator.c"/>
 if [ -z "${CRUSTA_PROBATIONES_EFFUSIO:-}" ]; then
     export CRUSTA_PROBATIONES_EFFUSIO=1
     mkdir -p "$(dirname "$0")/../build/test_logs"

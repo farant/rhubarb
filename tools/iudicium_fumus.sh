@@ -43,6 +43,7 @@
 # (instrumentum_domus).
 #
 # Exitus: 0 sanum · 1 fractum · 2 instrumenta desunt.
+# <porta titulus="iudicium-fumus" tegit="crusta/effectus.sh crusta/effectus_mandata.stml crusta/fontes/crusta_effectus.c crusta/fontes/crusta_effectus.h" currit="crusta/instrumenta/effectus.c tools/compilator.c tools/fabrica.c"/>
 set -u
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 F="$RADIX/bin/fabrica"

@@ -16,6 +16,7 @@
 # Praesupponit: bin/aedilis paratum (./tools/aedilis_struere.sh)
 # et artificia generata recentia (suite semel cursa - capsulae
 # speculi, schemata, etc.).
+# <porta titulus="aedilis" instrumentum="bin/aedilis" tegit="include/* lib/*.c lib/*.m probationes/probatio_*.c tools/aedilis_struere.sh"/>
 
 set -u
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

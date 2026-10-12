@@ -3,6 +3,7 @@
 # cache lectum in secunda, reditus cogitationis. NON PORTA: API vera
 # (centesimae). Usus: ./tools/vates_fumus.sh [-exemplar ID]
 #       (AEDIFICARE_SOLUM=1: struere sine cursu)
+# <porta manu causa="API vera (centesimae)"/>
 set -u
 cd "$(dirname "${BASH_SOURCE[0]}")/.." || exit 1
 [ -x bin/aedilis ] || ./tools/aedilis_struere.sh >&2 || exit 1

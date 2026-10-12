@@ -7,6 +7,7 @@
 #   IV  idem             -> cosmetica (nulla differentia), exitus 0
 #   V   functio addita   -> substantiva (ADDITA), exitus 1
 # Usage: ./silva/differre_fumus.sh     exit 0 sanum | 1 fractum
+# <porta titulus="differre" tegit="silva/differre_git.sh" currit="silva/instrumenta/principalia/differre.c"/>
 set -u
 RADIX="$(git rev-parse --show-toplevel)" || exit 2
 cd "$RADIX" || exit 2

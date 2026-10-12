@@ -21,6 +21,7 @@
 #     quodque opus et quamque bisectionem refectum), sub veneno et
 #     sanitatoribus.
 # Exitus 0 sana | 1 FRACTA | 2 nihil actum.
+# <porta titulus="venenum" tegit="probationes/probatio_extensio.c probationes/probatio_fractio.c probationes/probatio_laqueus.c probationes/probatio_magnus.c probationes/probatio_matrix.c probationes/probatio_piscina.c probationes/probatio_polynomium.c probationes/probatio_quaternio.c probationes/probatio_radices.c probationes/probatio_situs.c" currit="lib/anulus.c lib/congruentia.c lib/cyclotomia.c lib/extensio.c lib/fractio.c lib/laqueus.c lib/magnus.c lib/matrix.c lib/polynomium.c lib/quaternio.c lib/radices.c lib/situs.c"/>
 set -u
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$RADIX" || exit 2

@@ -185,13 +185,13 @@ nomen structura {
                 Piscina* piscina;
     InternamentumChorda* intern;
                 Volumen* volumen;
-     constans character* radix;       /* praefixum viarum canonum */
+     constans character* radix;       /* praefixum viarum (manifesta) */
                     i32  latitudo;
                     i32  altitudo;
      InsulaRepositorium* repo;
                     Xar* genera;      /* Xar de VicusGenus */
                     Xar* tabulae;     /* Xar de VicusTabula */
-                 chorda  activa;
+                 chorda  activa;      /* copia indicis (vicus/latera) */
                  chorda  causa;
          ActioRegistrum* actiones;    /* hospitis + activae (T2a) */
         FiguraRegistrum* figurae;
@@ -223,6 +223,15 @@ vicus_genus_addere (
         VicusDescriptor  describere,
                  vacuum* ctx);
 
+/* S7b: systemata status (organum_montatio.h) - vicus_aperire ea creat
+ * (conservatio, relatio, dimissio) post repositorium et radicem cum eis
+ * parat (clavis "vicus"); latera eadem a hospite accipiunt. ANTE
+ * vicus_aperire vocandum; NIHIL (ordinarium) = nulla (probationes). */
+vacuum
+vicus_systemata_ponere (
+               Vicus* v,
+     StatusSystemata* systemata);
+
 /* repositorium creatur, dispositio e volumine legitur (absens:
  * ordinaria, quae scribitur), latera montantur. Forma:
  * <tabulae activa="1"><tabula id="1" focus="sinistrum"><latus
@@ -233,15 +242,6 @@ vicus_genus_addere (
  * FALSUM si dispositio mala aut repositorium deficit; latus generis
  * ignoti praeteritur (causa). S7a: radix ex apps/vicus/organum.stml
  * paratur (canon, domini). */
-/* S7b: systemata status (organum_montatio.h) - vicus_aperire ea creat
- * (conservatio, relatio, dimissio) post repositorium et radicem cum eis
- * parat (clavis "vicus"); latera eadem a hospite accipiunt. ANTE
- * vicus_aperire vocandum; NIHIL (ordinarium) = nulla (probationes). */
-vacuum
-vicus_systemata_ponere (
-               Vicus* v,
-     StatusSystemata* systemata);
-
 b32
 vicus_aperire (
                   Vicus* v,
@@ -281,7 +281,7 @@ vicus_focum_ponere (
     Vicus* v,
       i32  latus);
 
-/* activam ponere (insula ephemera et index servatus); FALSUM si id
+/* activam ponere (insula et index servatus); FALSUM si id
  * ignotum */
 b32
 vicus_activam_ponere (
@@ -341,7 +341,7 @@ vicus_dispensatorem_ligare (
  * aliae) solum si vivit_in_fundo (decisio VI: in fundo legitur, non
  * pingitur); finita numquam. VERUM si quadrum pingendum: latus
  * visibile mutatum, aut latus nunc finitum (titulus in linea
- * mutatur). Dispositio durabilis non tangitur. */
+ * mutatur). Dispositio servata (vicus/latera) non tangitur. */
 b32
 vicus_pulsare (
     Vicus* v);

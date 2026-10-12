@@ -28,6 +28,7 @@
 # cursorem silvae STRUUNTUR (filtrum nulli probationi congruens:
 # gradus I-II compilant, nulla probatio currit) - porta quae obiecta
 # rancida iudicat codicem heri, non hodie, iudicat.
+# <porta titulus="oraculum-silvae" tegit="materia/fontes/* silva/fontes/* silva/grammatica/*"/>
 
 set -u
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"

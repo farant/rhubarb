@@ -10,6 +10,7 @@
 # effusio), quae binarium verum postulat.
 #
 # ssh VERUS numquam vocatur: VILLA_SSH ad stipitem ponitur.
+# <porta titulus="villa" tegit="apps/villa/* probationes/fixa/villa/*"/>
 
 set -u
 cd "$(dirname "${BASH_SOURCE[0]}")/../.." || exit 1

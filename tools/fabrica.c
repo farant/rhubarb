@@ -11,6 +11,9 @@
  *       numquam "recentia"). Nihil aedificat.
  *   bin/fabrica digestum TITULUS
  *       sigillum copiae ingressuum actionis (LXIV hex).
+ *   bin/fabrica portae debitae|declaratae [-machina] -portae TSV ...
+ *       portae debitae ex declarationibus <porta>
+ *       (tools/fabrica_portae.c, lib/portae.c).
  *
  * Exitus: 0 nihil stalum aut ignotum · 1 stalum aut ignotum
  * aliquod · 2 nihil iudicatum (declarationes absentes/fractae,
@@ -2433,6 +2436,9 @@ _usus (vacuum)
         "      bin/fabrica purgare [-verificare]\n"
         "      bin/fabrica causae [titulus]  (cur actae sunt)\n"
         "      bin/fabrica census  (genera chassis et proprietates)\n"
+        "      bin/fabrica portae debitae [-machina] -portae TSV "
+        "VIA...\n"
+        "      bin/fabrica portae declaratae [-machina] -portae TSV\n"
         "(ex radice repositorii; exitus 0 sanum, 1 stalum/ignotum, "
         "2 nihil iudicatum)\n");
 }
@@ -2507,6 +2513,10 @@ principale (
     alioquin si (strcmp(argv[1], "census") == 0)
     {
         exitus = _censum(piscina);
+    }
+    alioquin si (strcmp(argv[1], "portae") == 0)
+    {
+        exitus = suturae_portae(argc, argv, piscina);
     }
     alioquin
     {

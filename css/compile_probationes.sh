@@ -2,6 +2,7 @@
 
 # Effusio cursus ultimi semper in build/test_logs/css.log
 # radicis (stdout + stderr; codex exitus per PIPESTATUS servatus).
+# <porta titulus="css" tegit="css/fontes/* css/grammatica/* css/probationes/* materia/fontes/*" currit="tools/aedilis.c tools/compilator.c"/>
 if [ -z "${CSS_PROBATIONES_EFFUSIO:-}" ]; then
     export CSS_PROBATIONES_EFFUSIO=1
     mkdir -p "$(dirname "$0")/../build/test_logs"

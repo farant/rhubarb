@@ -3,6 +3,7 @@
 # Effusio cursus ultimi semper in build/test_logs/saltuarius.log
 # radicis (stdout + stderr; codex exitus per PIPESTATUS
 # servatus). Ratio plena: compile_tests.sh radicis.
+# <porta titulus="saltuarius" tegit="saltuarius/*_fontes_generata.sh"/>
 if [ -z "${SALTUARIUS_PROBATIONES_EFFUSIO:-}" ]; then
     export SALTUARIUS_PROBATIONES_EFFUSIO=1
     mkdir -p "$(dirname "$0")/../build/test_logs"

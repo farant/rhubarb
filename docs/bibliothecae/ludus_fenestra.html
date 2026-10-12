@@ -13,13 +13,13 @@
 <h1>ludus_fenestra</h1>
 <p class="subtitulus">glutinum fenestrae: eventus -&gt; dispensator, quadrum -&gt; pingere -&gt; delineare -&gt; praesentare</p>
 
-<p>The glue between a ludus program and a real window, and on purpose the only place ludus touches the clock (fenestra_tempus_ms) or sees a window. Events go into the dispensator; each frame is a pulse, then pingere of the last tree into a per-frame arena, then delineare_mandata into the window&#x27;s pixel table, then present. It measures each frame (composition, painting, rasterizing, worst frame) and prints the measurements, because the brainstorm left one optimisation conditional on them: if rasterizing dominates, rasterize frame N while frame N+1 is dispatched. ludus_fenestra_currere is the whole run loop, ending on close or after a frame count (for smoke tests). Used by pictor. Small by design: everything that can be pure lives below it.</p>
+<p>The glue between a ludus program and a real window, and on purpose the only place ludus touches the clock (fenestra_tempus_ms) or sees a window. Events go into the dispensator; each frame is a pulse, then pingere of the last tree into a per-frame arena, then delineare_mandata into the window&#x27;s pixel table, then present. It measures each frame (composition, painting, rasterizing, worst frame) and prints the measurements, because the brainstorm left one optimisation conditional on them: if rasterizing dominates, rasterize frame N while frame N+1 is dispatched. ludus_fenestra_currere is the whole run loop, ending on close or after a frame count (for smoke tests) and flushing what is pending at exit. Three things changed in October 2026. The loop now waits for events when idle: it had spun without a wait since it was written, which was found when a stray pictor window sat at 100% CPU for ten minutes. A frame can be written out as a PNG (ludus_fenestra_imaginem_scribere, and -imago on the apps): the frame is a software pixel buffer, so a screenshot needs no permission and no visible window, and a frame rendered with no window at all was shown to be byte-identical to the real window&#x27;s. And for living applications such as a terminal a pulse hook can be installed: the loop then waits at most 16 ms and draws only when there were events, the pulse reported a change, or the island&#x27;s version has moved since the last frame drawn. A window resize is passed on in the buffer&#x27;s own pixels with the scale kept. Used by pictor, scriba, terminale and vicus. Small by design: everything that can be pure lives below it.</p>
 
 <table>
 <tbody>
 <tr><td>Header</td><td><a href="../../include/ludus_fenestra.h"><code>include/ludus_fenestra.h</code></a></td></tr>
 <tr><td>Implementation</td><td><a href="../../lib/ludus_fenestra.c"><code>lib/ludus_fenestra.c</code></a></td></tr>
-<tr><td>Last change</td><td>2026-09-05 2cea97b6</td></tr>
+<tr><td>Last change</td><td>2026-10-12 80de03e6</td></tr>
 <tr><td>Group</td><td><a href="greges.html#ludus">Ludus: the second-generation UI</a></td></tr>
 </tbody>
 </table>

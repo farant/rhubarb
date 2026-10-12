@@ -68,8 +68,13 @@
 #        linea ingressus binarii in clave membri, commissum non
 #   XLIII debita scripturae (fabrica-7 T3): membrum debitum suum extra
 #        aream scribit; alienum ibi recusatur; census scriptum/stalum
+#   XLIV portae (portae-declaratae T3): usus, registrum absens/malum ->
+#        2; clavis sine annotatione -> RECUSATIO nominata, 2; debita in
+#        repositorio git: caput -> clausura vera fontis quem cursor legit,
+#        MANU, INTECTUM
 #
 # Exitus: 0 sanum · 1 fractum · 2 bin/fabrica deest.
+# <porta titulus="fabrica-fumus" instrumentum="bin/fabrica" tegit="*/aedificatio.stml aedificatio.canon fabrica.canon tools/fabrica_struere.sh"/>
 set -u
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$RADIX" || exit 2
@@ -589,6 +594,34 @@ if [ "$rc1" -eq 0 ] && grep -q "^debitum	probationes_t	probatio_a	build/a.db	scr
    && [ "$rc3" -eq 0 ] && grep -q "^debitum	probationes_t	probatio_a	build/a.db	stalum	" "$T/c2" \
    && grep -q '^census: debita 1 (actiones 1, stala 1, ignota 0)$' "$T/c2"; then echo "  XLIII debita scripturae: suum scribit, alienum recusatur, stalum nominatur OK"; else echo "  XLIII FRACTUM (rc=$rc1 $rc2 $rc3)"; cat "$T/o" "$T/c1" "$T/o2" "$T/o3" "$T/c2" | grep -v '^genus' | sed 's/^/      /' | head -24; fracta=1; fi
 
+# XLIV (portae-declaratae T3): bin/fabrica portae - CLI super lib/portae.c
+# in repositorio git temporario (clausura per aedilis verum, tabula
+# effectus crustae copiata)
+radix_c
+mkdir -p "$T/r/crusta"
+cp "$RADIX/crusta/effectus_mandata.stml" "$T/r/crusta/"
+printf '#!/bin/bash\n# <porta titulus="a"/>\ncat lib/bib.c\n' > "$T/r/a.sh"
+printf '#!/bin/bash\necho b\n' > "$T/r/b.sh"
+printf '#!/bin/bash\n# <porta manu causa="homo videt"/>\necho m\n' > "$T/r/m.sh"
+: > "$T/r/z.txt"
+(cd "$T/r" && git init -q . && git add -A) > /dev/null 2>&1
+printf 'a\ta.sh\n' > "$T/p1.tsv"
+printf 'a\ta.sh\nb\tb.sh\n' > "$T/p2.tsv"
+printf 'a\n' > "$T/p3.tsv"
+(cd "$T/r" && "$F" portae) > "$T/o1" 2>&1; rc1=$?
+(cd "$T/r" && "$F" portae declaratae -portae "$T/absens.tsv") > "$T/o2" 2>&1; rc2=$?
+(cd "$T/r" && "$F" portae declaratae -machina -portae "$T/p3.tsv") > "$T/o3" 2>&1; rc3=$?
+(cd "$T/r" && "$F" portae declaratae -machina -portae "$T/p2.tsv") > "$T/o4" 2>&1; rc4=$?
+(cd "$T/r" && "$F" portae debitae -machina -portae "$T/p1.tsv" include/bib.h m.sh z.txt) > "$T/o5" 2>&1; rc5=$?
+if [ "$rc1" -eq 2 ] && grep -q '^usus: bin/fabrica portae debitae' "$T/o1" \
+   && [ "$rc2" -eq 2 ] && grep -q 'registrum absens' "$T/o2" \
+   && [ "$rc3" -eq 2 ] && grep -q 'p3.tsv:1: linea registri mala' "$T/o3" \
+   && [ "$rc4" -eq 2 ] && grep -qx "RECUSATIO		0	porta 'b' (cursor b.sh) sine annotatione <porta titulus=\"...\"/>" "$T/o4" \
+   && [ "$rc5" -eq 0 ] \
+   && grep -qx 'DEBITUM	a	0	include/bib.h in clausura lib/bib.c (lectio (cat) in a.sh)' "$T/o5" \
+   && grep -qx 'DEBITUM	m.sh	1	m.sh (cursor ipse)' "$T/o5" \
+   && grep -qx 'INTECTUM	z.txt' "$T/o5" && [ "$(wc -l < "$T/o5")" -eq 3 ]; then echo "  XLIV portae: usus, registrum, recusatio, debita per clausuram veram OK"; else echo "  XLIV FRACTUM (rc=$rc1 $rc2 $rc3 $rc4 $rc5)"; cat "$T/o1" "$T/o2" "$T/o3" "$T/o4" "$T/o5" | sed 's/^/      /' | head -24; fracta=1; fi
+
 if [ "$fracta" -ne 0 ]; then echo "fumus fabricae: FRACTUM"; exit 1; fi
-echo "fumus fabricae: sanum (XLIII/XLIII)"
+echo "fumus fabricae: sanum (XLIV/XLIV)"
 exit 0

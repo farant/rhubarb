@@ -37,6 +37,7 @@
 #
 # Exitus: 0 factum; 1 defectio; 2 NIHIL CURSUM (praerequisita desunt).
 # Linea ultima: 'fumus fasciculum: sanum' | 'fumus fasciculum: FRACTUM'.
+# <porta manu causa="an Finder .app aperiat; LaunchServices usoris mutat, homo spectat"/>
 
 set -u
 

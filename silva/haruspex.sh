@@ -77,6 +77,7 @@ declare -a TU_FLAGS=(
     "-I$RADIX_DIR/book_assets"
     "-I$SILVA_DIR/fontes"
     "-I$RADIX_DIR/materia/fontes"
+    "-I$RADIX_DIR/crusta/fontes"
     "-I$SILVA_DIR/instrumenta"
     "-I$RADIX_DIR/tessera/fontes"
     "-I$RADIX_DIR/saltuarius/fontes"

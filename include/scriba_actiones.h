@@ -2,7 +2,7 @@
  *
  * Una actio, "pagina.clavis": claves et textum commissum in vim
  * vertit super FOLIUM LABORIS (gestus applicationis in Motus).
- * Status vim inter claves in insula ephemerarum (cursor, modus,
+ * Status vim inter claves in insula (cursor, modus,
  * selectio, clavis praecedens, fd, capsa); documentum in cauda
  * (scriba_documentum) - per effusionem gestus solam scribitur.
  *
