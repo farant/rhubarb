@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>surdus_interna</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>surdus_interna</h1>
+<p class="subtitulus">INTERNA surdi: signum cum gradu decernente.</p>
+
+<p>The test-only side of surdus, not API: only lib/surdus.c and the tests include it. It holds one function, surdi_signum_gradu, which is the sign with two additions: a switch that turns the double filter off, and a report of which tier decided (1 zero or rational, 2 the filter, 3 squaring; the deepest reached in the recursion). The tests need it because ordinary inputs rarely reach the third tier, the filter settling nearly everything first; with the filter off, squaring is driven directly against the oracle, and every sign is computed both ways and compared. In the first suite that was 2172 cases, 61 of them decided in the third tier, with no disagreement. The genitive prefix surdi_ marks internal names (the public surdi_spatium is the one exception, a natural genitive).</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/surdus_interna.h"><code>include/surdus_interna.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/surdus.c"><code>lib/surdus.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-10-09 4a9c5fbe</td></tr>
+<tr><td>Group</td><td><a href="greges.html#mathematica">Exact mathematics</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

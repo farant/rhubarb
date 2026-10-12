@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>scriba_figurae</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>scriba_figurae</h1>
+<p class="subtitulus">figurae scribae (scriba-plan S2)</p>
+
+<p>scriba&#x27;s figures: how the desk, the sheet and the status line are drawn, pure like every figure. The sheet is paper on a desk inside a frame, with its text, the selection as whole lines, and a steady block cursor (no blinking: there is one clock, and blinking from wall time would be forbidden) under which the character is redrawn in the paper colour. The text comes through the figure&#x27;s context, the working sheet, so an insert in progress is visible before it is saved. Known $commands are redrawn in one accent colour and, when there is a page book, #tags in the other. The status line shows the mode word in its colour and the position, and to the right the page indicator and a message in the error colour. Two findings from 2026-10-05. A planted fault that ignored the mode in the cursor&#x27;s colour survived, because in the theme the two colours were the same gold; the cursor now takes its mode&#x27;s status colour and the test asserts that they differ. And Fran saw that in the terminal the frame could be typed over: the cell rasteriser rounds a rectangle to the nearest cell, so a frame one pixel outside the paper landed on the paper&#x27;s own cells. The frame now sits a whole cell out, in the margin, and pictor received the same fix.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/scriba_figurae.h"><code>include/scriba_figurae.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/scriba_figurae.c"><code>lib/scriba_figurae.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-10-09 4ebd17d8</td></tr>
+<tr><td>Group</td><td><a href="greges.html#ludus">Ludus: the second-generation UI</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

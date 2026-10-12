@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>quaternio</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>quaternio</h1>
+<p class="subtitulus">Quaterniones super quemlibet anulum (commutativum)</p>
+
+<p>Quaternions over any commutative ring, q = a + b i + c j + d k with Hamilton&#x27;s rules, written once over an anulus descriptor exactly as matrix is: over Z they are the Lipschitz quaternions, over Q(sqrt 5) from extensio the icosians. Written 2026-10-08 because knotapel demos 66 to 97 had done their quaternion geometry in doubles, deduplicating group elements and rotation axes by tolerance and choosing nearest cells by comparing rounded dot products. Two ideas keep everything exact. Rotation stays inside the ring: q v conj(q) equals N(q) times the rotated vector, so an integer quaternion gives an integer matrix with no division, and quaternio_matrix returns N(q) R and not R; only the inverse divides, and only over a field. And geometry is decided without square roots: same rotation is the vanishing of 2x2 minors, same axis a zero cross product, while the comparison of rotation angles and the nearest of a list of directions (a Voronoi cell, with a flag for axes without direction) compare squares, which needs the ring&#x27;s order and is why anulus gained its signum hook. Those four answer-only functions restore the caller&#x27;s arena before returning, after the review measured 390 KB left behind per nearest-direction call over 118 icosian directions. The test oracle is group closure: i and (1 + i + j + k)/2 generate exactly 24 elements over Q, and the icosian generators exactly 120 over Q(sqrt 5), counts that are classical and owe nothing to this code. Consumed by knotapel demos 118 to 121.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/quaternio.h"><code>include/quaternio.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/quaternio.c"><code>lib/quaternio.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-10-08 eb2acf5c</td></tr>
+<tr><td>Group</td><td><a href="greges.html#mathematica">Exact mathematics</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

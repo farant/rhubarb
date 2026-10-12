@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>conservatio</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>conservatio</h1>
+<p class="subtitulus">SYSTEMA PERSISTENTIAE (status-plan S3): campi vita persistens ramorum registratorum in volumine applicationis servantur (plagula &quot;status/&lt;clavis&gt;&quot;) et ad montationem restituuntur.</p>
+
+<p>The persistence system: fields that a widget&#x27;s manifest (organum) marks as persistent are saved in the application&#x27;s volumen and restored when the widget is mounted. Written 2026-10-10 (status plan S3), and the first time any island state reached disk at all. It works by owning the repository&#x27;s after-write hook: after every successful write through the gate, each registered branch whose persistent part changed is saved to a record &#x27;status/&lt;key&gt;&#x27;. Transient fields therefore cost nothing, fields in motion are saved once per quiet point, and a crash loses nothing. Restore is a migration: fields the manifest no longer knows or no longer persists are dropped, missing ones keep their initial value, and the write goes through the gate, so the canon judges it; a refused or unreadable state is skipped with a message and the mount never fails. Since the single-island work of 10-12 the record is at version 2, the fields being attributes of one element, and version 1 records are migrated on reading. Two findings from building it. The restore first parsed into a scratch arena that the hook itself reset halfway through, so hand-written state restored and real round trips did not. And window size, and sizes copied from the drawing, were reclassified as transient, since restoring them could only be stale. Used by pictor, standalone and as a pane in vicus.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/conservatio.h"><code>include/conservatio.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/conservatio.c"><code>lib/conservatio.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-10-12 aa623c1b</td></tr>
+<tr><td>Group</td><td><a href="greges.html#ludus">Ludus: the second-generation UI</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

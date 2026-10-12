@@ -11,7 +11,7 @@
 
 <p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
 <h1>imago_collatio</h1>
-<p class="subtitulus"></p>
+<p class="subtitulus">Collatio imaginum: differentia MENSURATA</p>
 
 <p>Comparing two images and returning a verdict, a count and optionally a picture of the difference, touching no file (&#x27;a test that does not touch the environment cannot lie about it&#x27;). A pixel differs when its largest channel difference exceeds the tolerance. Anti-aliased edge pixels, which legitimately vary between runs, can be detected and not counted (Kotsarenko and Ramos, the method pixelmatch uses) and are shown yellow. The header records a measurement on real text moved 0.3 of a point: 518 differing pixels, 211 after ignoring anti-aliasing, and a maximum delta of 115, so no tolerance could hide them without hiding real changes; hence a separate allowance for the NUMBER of differing pixels, which grows with edge length, not area. Different sizes are a verdict of their own (the window changed), not an error, and a bounding box names WHERE the change is. Used by specimen for screenshot regression tests.</p>
 

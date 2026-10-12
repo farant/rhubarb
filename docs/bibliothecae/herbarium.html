@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>herbarium</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>herbarium</h1>
+<p class="subtitulus">specimina pressa responsorum API: captura et redditio</p>
+
+<p>Pressed specimens of API responses: capture and replay. It wraps an HTTP transport; a response that is unexpected (a status at or above a threshold, or anything a judge supplied by the consumer flags) is written to disk the first time its kind is seen, and later sightings of that kind are only counted. Replay is the other half: a transport that returns stored specimens in order, so that tests run against real responses with no network. The kind of a response is its status and the skeleton of its JSON body, keys and types without values, independent of order, an array being the union of the shapes of its elements. That is Fran&#x27;s rule, made after a deliberate capture showed that keying on the first element collapsed every reply beginning with a text block into one kind. Within a kind a variant is new when its body differs after digits and id-like runs are masked. What is kept is deliberately little: an allowlist of headers, never the request&#x27;s headers or body, only method, host, path and the fields the caller names. Since 10-09 the guard runs before use (Fran&#x27;s floor: &#x27;is this an outlier payload that I need to save as a specimen before I do anything else&#x27;): the judge is called inside the transport wrapper, so the specimen is on disk before the consumer sees a byte. Before that, a 200 whose body was not JSON was never saved at all. Capture is on by default, under ~/.rhubarb/herbarium by API host, and a failure to capture never breaks the request. herbarium itself knows no schema and no provider. Written 2026-10-08 for vates; specimens promoted by hand, after being read, live among the test fixtures, and every one is replayed.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/herbarium.h"><code>include/herbarium.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/herbarium.c"><code>lib/herbarium.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-10-09 11eeb68e</td></tr>
+<tr><td>Group</td><td><a href="greges.html#vates">Language models and JSON schemas</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

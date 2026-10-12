@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>historia</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>historia</h1>
+<p class="subtitulus">cauda actorum cum proiectione: revocare, reficere, rami</p>
+
+<p>The document engine: a log of acts with a projection, undo, redo and branches. The truth of a document is an append-only series of acts in a volumen; the projection, a block of memory the client owns, is derived from the nearest live checkpoint and the live acts after it. Extracted 2026-10-05 from pictor_documentum when scriba needed the same machine for text, and held to a golden record of a pictor session written before the cut; the client supplies only how to empty its projection and how to apply one act. The laws came with it. Undo and redo move a cursor; a new act after an undo first appends a branch marker, the acts it abandons are dead, and the log is never truncated. Every so many live acts the projection is stored content-addressed as a checkpoint, and a checkpoint inside a dead span is never a base (pictor&#x27;s own suite had passed with that rule broken; only the golden caught it). Verifying replays from nothing and compares hashes. Added since: joined acts, so that a change saved in several chunks is one undo step; a namespace, so that several documents share one volume and each reads only its own acts; the undo position kept as a marker in the log, once a test showed that undo, quit and reopen brought undone work back and Fran chose to persist it; observers called after every act, undo and redo, to which relatio listens; and, for pictor&#x27;s layers, checkpoints that the client encodes itself. Clients: pictor_documentum and scriba_documentum.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/historia.h"><code>include/historia.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/historia.c"><code>lib/historia.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-10-10 dd6339f2</td></tr>
+<tr><td>Group</td><td><a href="greges.html#ludus">Ludus: the second-generation UI</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

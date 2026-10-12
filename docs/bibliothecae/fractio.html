@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>fractio</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>fractio</h1>
+<p class="subtitulus">Numeri rationales EXACTI</p>
+
+<p>Exact rational numbers over magnus. A Fractio is a numerator and a denominator in canonical form (denominator &gt; 0, gcd 1, zero is 0/1), so equality is equality of parts. Addition and multiplication use Henrici&#x27;s reduction (Knuth, TAOCP II, 4.5.1): common divisors are removed before multiplying, so intermediates stay small and the result needs no final reduction. Comparison never divides (a*d against c*b). Rounding to an integer is half to even, the IEEE rule, because exact rationals land on exact halves often and the schoolbook rule drifts away from zero over many roundings; floor and ceiling are there to compose the other. Powers take a signed exponent, the rationals being a field. One trap is written into the header: a zero-filled Fractio is 0/0, not zero, and it propagates silently, so values must always be made by fractio_ex_*; Fran chose to document that, not to change the representation. Checked against Python&#x27;s fractions.Fraction. Born 2026-10-05; situs, laqueus, radices, extensio and polynomium&#x27;s evaluation stand on it.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/fractio.h"><code>include/fractio.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/fractio.c"><code>lib/fractio.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-10-06 76fd3523</td></tr>
+<tr><td>Group</td><td><a href="greges.html#mathematica">Exact mathematics</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>
