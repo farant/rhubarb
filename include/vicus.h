@@ -36,6 +36,7 @@
 #include "figura.h"
 #include "dispensator.h"
 #include "delineare_mandata.h"
+#include "organum_montatio.h"
 
 /* tabulae fixae (vicus-latera decisio IX): index ordinarius tot
  * dat; vicus plures non legit */
@@ -201,6 +202,7 @@ nomen structura {
                  vacuum* horologium_ctx;
               VicusPila  pila;        /* S5: NIHIL = nulla */
                  vacuum* pila_ctx;
+        StatusSystemata* systemata;   /* S7b: NIHIL = nulla */
 } Vicus;
 
 Vicus*
@@ -231,6 +233,15 @@ vicus_genus_addere (
  * FALSUM si dispositio mala aut repositorium deficit; latus generis
  * ignoti praeteritur (causa). S7a: radix ex apps/vicus/organum.stml
  * paratur (canon, domini). */
+/* S7b: systemata status (organum_montatio.h) - vicus_aperire ea creat
+ * (conservatio, relatio, dimissio) post repositorium et radicem cum eis
+ * parat (clavis "vicus"); latera eadem a hospite accipiunt. ANTE
+ * vicus_aperire vocandum; NIHIL (ordinarium) = nulla (probationes). */
+vacuum
+vicus_systemata_ponere (
+               Vicus* v,
+     StatusSystemata* systemata);
+
 b32
 vicus_aperire (
                   Vicus* v,

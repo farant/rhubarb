@@ -209,7 +209,8 @@ s32 principale (vacuum)
         "selectio_linea"));
     CREDO_NON_NIHIL(insula_attributum(repo,
         "fd_exspectans"));
-    CREDO_NON_NIHIL(insula_attributum(repo,
+    /* S7b: registrum solum mutatum scribitur - vacuum numquam */
+    CREDO_NIHIL(insula_attributum(repo,
         "capsa_lineae"));
     /* nullus valor vacuus: capsa et clavis praecedens ABSUNT - in
      * textu scripto quaeritur (a="" capere NIHIL reddit ut absentia;

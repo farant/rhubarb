@@ -6,8 +6,9 @@
      ut vim incipiunt (transientes). Pagina visa ipsa in volumine vivit
      (plagula scriba/visus/<id>, vicus S2b) - pagina_positio et
      paginae_numerus COPIAE derivatae sunt (transientes; ex libro legendi
-     postea). capsa (registrum vim) per latus et transiens in S6b;
-     communis applicationis in S6c. Typi = canon manu scriptus ante S6b
+     postea). capsa (registrum vim): scriba sola per ramum suum et
+     transiens; in vico radix eam tenet (S7b, ramus_capsae) - campi hic
+     tunc vacui manent. Typi = canon manu scriptus ante S6b
      (apps/scriba/canones/ephemera.canon, deletus). -->
 <organum genus="scriba" versio="1">
 
@@ -58,7 +59,7 @@
     <campus nomen="capsa" typus="textus" vita="transiens"
             scriptor="pagina.clavis"
             nota="registrum vim: lineae iunctae per '\n', effugitae;
-                  S6c: communis applicationis"/>
+                  in vico radix tenet (S7b)"/>
     <campus nomen="capsa_lineae" typus="numerus" vita="transiens"
             scriptor="pagina.clavis"/>
 

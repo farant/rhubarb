@@ -94,10 +94,17 @@ widgets are migrated by hand.*
   Struct copies gone; hand canon deleted; organum_ramum_parare on the
   root sets the repository root canon. Layout index stays the host's
   persisted structure (classified, not migrated).
-- **S7b** next: app-wide `capsa` on the root; the parent hands scriba
-  a branch for it (`ramus_capsae`, scriba_actiones.h - header text to
-  Fran first); persisted (viminfo-like) - first persisted app-wide
-  state, needs host systems at vicus_aperire.
+- **S7b** DONE 2026-10-12: app-wide `capsa` on the root, persisted
+  (viminfo-like) - first persisted app-wide state. The parent hands
+  scriba a branch (`ScribaActiones.ramus_capsae`, NIHIL repo = own
+  branch); vicus owns its systems (`vicus_systemata_ponere`, created
+  in vicus_aperire, root restored under clavis "vicus");
+  systemata_parare deleted. Host manifest declares the child's action
+  `pagina.clavis` as the register's owner (manifest checker requires
+  declared writers) - a second pane kind wanting the register makes
+  the owner a list or a system. The register is written only when it
+  changes. Found: our vim has no `y` - only `dd`/visual delete fill
+  the register.
 
 ### Arc III — depth
 

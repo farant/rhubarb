@@ -1416,6 +1416,17 @@ vicus_genus_addere (
     redde VERUM;
 }
 
+vacuum
+vicus_systemata_ponere (
+               Vicus* v,
+     StatusSystemata* systemata)
+{
+    si (v)
+    {
+        v->systemata = systemata;
+    }
+}
+
 b32
 vicus_aperire (
                   Vicus* v,
@@ -1443,13 +1454,24 @@ vicus_aperire (
     {
         redde FALSUM;
     }
+    /* S7b: systemata status hic creantur (actarius unus), ante radicem
+     * - status radicis (capsa) servatur et restituitur */
+    si (v->systemata && !v->systemata->conservatio)
+    {
+        v->systemata->conservatio = conservatio_creare(v->piscina,
+            v->intern, v->volumen, v->repo);
+        v->systemata->relatio   = relatio_creare(v->piscina, v->intern,
+            v->repo);
+        v->systemata->dimissio  = dimissio_creare(v->piscina, v->intern,
+            v->repo);
+    }
     /* S7a: radix ex manifesto hospitis (canon, domini) */
     organum = organum_legere_viam(v->piscina, v->intern, v->radix,
         "apps/vicus/organum.stml", "vicus");
     radix = insula_ramus_radix(v->repo);
     si (   !organum
-        || !organum_ramum_parare(organum, &radix, NIHIL, NIHIL, NIHIL,
-               v->piscina, v->intern))
+        || !organum_ramum_parare(organum, &radix, v->systemata, NIHIL,
+               "vicus", v->piscina, v->intern))
     {
         v->causa = chorda_ex_literis("manifestum hospitis malum",
             v->piscina);
