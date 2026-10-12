@@ -818,8 +818,6 @@ organum_dominos_generare (
             perge;
         }
         d = stml_elementum_creare(piscina, intern, "dominus");
-        (vacuum)stml_attributum_addere(d, piscina, intern, "genus",
-            "ephemera");
         (vacuum)stml_attributum_addere_chorda(d, piscina, intern,
             "attributum", k->titulus);
         (vacuum)stml_attributum_addere_chorda(d, piscina, intern,

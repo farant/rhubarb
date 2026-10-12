@@ -161,3 +161,37 @@ Pre-existing finding (not fixed here): apps/scriba and apps/vicus canons
 fail `bin/canon_examen` - dialectus "scriba-ephemera" has a hyphen, the
 canon-of-canons types dialectus as nomen. Runtime loading accepts them.
 They disappear in C2 (durable) and S6/S7 (manifests).
+
+## 2026-10-12 — C2: one island (genera removed) + saved-state v2
+
+`InsulaGenus` (DURABILIS/EPHEMERA) removed from the API: one tree per
+repository. `insula_repositorium_creare(p, in, stml)`; single gate
+`insula_mutare` (was mutare_durabile/_ephemera); every reader/writer
+lost its genus argument; `InsulaActarius(radix, ctx)`. Owner lines:
+`genus` attribute now IGNORED (old domini.stml files still read).
+Lifetime lives in the manifest (vita per field), not in trees.
+
+Callers: pictor/scriba/terminale/vicus mount with one canon, one
+initiation, one owner read; durable canons deleted (scriba, vicus,
+terminale's infixed one); ludus_fenestra uses one version; motus flush
+and dispensator unchanged except the argument. relatio lost its
+per-island loop. conservatio writes versio 2 (`<status versio="2"
+genus=... field="..."/>`) and MIGRATES versio 1 by merging
+<durabilis> then <ephemera> (ephemera wins a conflict) - tested on a
+real two-child v1 save; unknown versions still skipped. (C3 folded in:
+removing genera forces the format change in the same commit.)
+
+Tests: mechanical pass (regex: drop the genus argument; merge the two
+creation strings by root+children union - ElementTree, ids as keys) +
+hand rewrites where tests asserted two-tree semantics: probatio_insula
+(one root carries all four attributes; durable-gate section removed -
+counts after it unchanged), probatio_insula_ramus (root canon now
+judges the initiation that used to go to the canon-less second tree:
+canon gains `nova`, and "activa unchanged" is asserted - the real
+point), dispensator ("not yet written" = version unchanged since the
+mouse-down), toy snapshot (union of the two old trees, identical
+values). 10 toy fixtures used "<documentum/>","<ephemera/>" - two
+different roots, refused by the auto-merge as they should be;
+collapsed to "<insula/>". 276/276 root tests, ludus_tessera 8/8, plants
+5/5. briar's smoke builds project-specs/exempla/salutatio.thistle -
+updated too.

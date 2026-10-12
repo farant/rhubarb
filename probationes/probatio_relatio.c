@@ -132,7 +132,7 @@ mundum_creare (
     memset(m, ZEPHYRUM, magnitudo(*m));
     m->organum = organum_legere(chorda_ex_literis(manifestum, p), p, in,
         &vitia);
-    m->repo = insula_repositorium_creare(p, in, "<h/>",
+    m->repo = insula_repositorium_creare(p, in,
         "<h><ludus id=\"r1\"/><ludus id=\"r2\"/></h>");
     si (!m->organum || !m->repo)
     {
@@ -144,11 +144,11 @@ mundum_creare (
     domini = organum_dominos_generare(m->organum, p, in);
     m->r1 = insula_ramus(m->repo, "ludus", "r1");
     m->r2 = insula_ramus(m->repo, "ludus", "r2");
-    insula_ramus_canonem_ponere(&m->r1, INSULA_EPHEMERA, canon);
-    insula_ramus_canonem_ponere(&m->r2, INSULA_EPHEMERA, canon);
-    (vacuum)insula_ramus_dominos_legere(&m->r1, INSULA_EPHEMERA,
+    insula_ramus_canonem_ponere(&m->r1, canon);
+    insula_ramus_canonem_ponere(&m->r2, canon);
+    (vacuum)insula_ramus_dominos_legere(&m->r1,
         domini);
-    (vacuum)insula_ramus_dominos_legere(&m->r2, INSULA_EPHEMERA,
+    (vacuum)insula_ramus_dominos_legere(&m->r2,
         domini);
 
     memset(&pr, ZEPHYRUM, magnitudo(pr));
@@ -198,7 +198,7 @@ scribere (
 
     strcpy(copia, par);
     insula_scriptorem_ponere(m->repo, chorda_ex_literis("a.b", p));
-    redde mutare_ramum(ramus, INSULA_EPHEMERA, ponere, copia);
+    redde mutare_ramum(ramus, ponere, copia);
 }
 
 interior b32
@@ -209,7 +209,7 @@ valor_est (
 {
     chorda* a;
 
-    a = insula_ramus_attributum(ramus, INSULA_EPHEMERA, titulus);
+    a = insula_ramus_attributum(ramus, titulus);
     redde valor ? (a
         && chorda_aequalis_literis(*a, valor)) : a == NIHIL;
 }
@@ -261,7 +261,7 @@ _probare_orbatos (
         insula_scriptorem_ponere(m.repo,
             chorda_ex_literis("tertium.scr",
             c->piscina));
-        CREDO_VERUM(mutare_ramum(&m.r1, INSULA_EPHEMERA, ponere, par));
+        CREDO_VERUM(mutare_ramum(&m.r1, ponere, par));
     }
 
     /* revocatio ens 5 tollit */

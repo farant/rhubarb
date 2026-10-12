@@ -51,7 +51,6 @@ ponere (
 interior b32
 scribere (
         PictorApplicatio* app,
-             InsulaGenus  genus,
       constans character* scriptor,
       constans character* par)
 {
@@ -60,7 +59,7 @@ scribere (
     strcpy(copia, par);
     insula_scriptorem_ponere(app->repo, chorda_ex_literis(scriptor,
         app->piscina));
-    redde mutare_ramum(&app->montatio.ramus, genus, ponere, copia);
+    redde mutare_ramum(&app->montatio.ramus, ponere, copia);
 }
 
 interior vacuum
@@ -83,36 +82,36 @@ _probare_montationem (
     /* canon generatus in utraque insula */
     insula_scriptorem_ponere(app.repo, chorda_ex_literis("quilibet",
         c->piscina));
-    CREDO_FALSUM(mutare_ramum(&app.montatio.ramus, INSULA_EPHEMERA,
+    CREDO_FALSUM(mutare_ramum(&app.montatio.ramus,
         ponere_ignotum, NIHIL));
-    CREDO_FALSUM(mutare_ramum(&app.montatio.ramus, INSULA_DURABILIS,
+    CREDO_FALSUM(mutare_ramum(&app.montatio.ramus,
         ponere_ignotum, NIHIL));
     /* typus: zoom numerus */
-    CREDO_FALSUM(scribere(&app, INSULA_EPHEMERA, "motus",
+    CREDO_FALSUM(scribere(&app, "motus",
         "zoom=magnus"));
 
     /* domini generati: zoom solius motus */
-    CREDO_FALSUM(scribere(&app, INSULA_EPHEMERA, "zoom.ponere",
+    CREDO_FALSUM(scribere(&app, "zoom.ponere",
         "zoom=2"));
-    CREDO_VERUM(scribere(&app, INSULA_EPHEMERA, "motus", "zoom=2"));
+    CREDO_VERUM(scribere(&app, "motus", "zoom=2"));
     /* basis: focus solius dispensatoris */
-    CREDO_FALSUM(scribere(&app, INSULA_EPHEMERA, "quilibet",
+    CREDO_FALSUM(scribere(&app, "quilibet",
         "focus=quadratum"));
-    CREDO_VERUM(scribere(&app, INSULA_EPHEMERA, "dispensator",
+    CREDO_VERUM(scribere(&app, "dispensator",
         "focus=quadratum"));
     /* S5c: popover - dominus aperiens et systema dimissio soli */
-    CREDO_FALSUM(scribere(&app, INSULA_EPHEMERA, "quilibet",
+    CREDO_FALSUM(scribere(&app, "quilibet",
         "palette=color_primus"));
-    CREDO_VERUM(scribere(&app, INSULA_EPHEMERA, "palette.aperire",
+    CREDO_VERUM(scribere(&app, "palette.aperire",
         "palette=color_primus"));
-    CREDO_VERUM(scribere(&app, INSULA_EPHEMERA, "dimissio",
+    CREDO_VERUM(scribere(&app, "dimissio",
         "palette=exemplar"));
     /* S5a: systema relatio referentiam scribit, nihil aliud */
-    CREDO_VERUM(scribere(&app, INSULA_EPHEMERA, "relatio",
+    CREDO_VERUM(scribere(&app, "relatio",
         "stratum_activum=9"));
-    CREDO_FALSUM(scribere(&app, INSULA_EPHEMERA, "quilibet",
+    CREDO_FALSUM(scribere(&app, "quilibet",
         "stratum_activum=8"));
-    CREDO_FALSUM(scribere(&app, INSULA_EPHEMERA, "relatio", "zoom=5"));
+    CREDO_FALSUM(scribere(&app, "relatio", "zoom=5"));
 
     volumen_claudere(vol);
 }
@@ -145,7 +144,7 @@ valor_est (
 {
     chorda* a;
 
-    a = insula_ramus_attributum(&app->montatio.ramus, INSULA_EPHEMERA,
+    a = insula_ramus_attributum(&app->montatio.ramus,
         titulus);
     si (!valor)
     {
@@ -173,13 +172,13 @@ _probare_conservationem (
     CREDO_NECESSE(pictor_applicatio_aedificare(&prima, c->piscina, in,
         vol, NIHIL, CDLXXX, CDLXXX));
     CREDO_VERUM(valor_est(&prima, "instrumentum", "penicillus"));
-    CREDO_VERUM(scribere(&prima, INSULA_EPHEMERA,
+    CREDO_VERUM(scribere(&prima,
         "instrumentum.eligere",
         "instrumentum=linea"));
-    CREDO_VERUM(scribere(&prima, INSULA_EPHEMERA, "color_primus.ponere",
+    CREDO_VERUM(scribere(&prima, "color_primus.ponere",
         "color_primus=5"));
-    CREDO_VERUM(scribere(&prima, INSULA_EPHEMERA, "motus", "zoom=2"));
-    CREDO_VERUM(scribere(&prima, INSULA_EPHEMERA, "palette.aperire",
+    CREDO_VERUM(scribere(&prima, "motus", "zoom=2"));
+    CREDO_VERUM(scribere(&prima, "palette.aperire",
         "palette=color_primus"));
 
     memset(&altera, ZEPHYRUM, magnitudo(altera));
@@ -191,7 +190,7 @@ _probare_conservationem (
     /* transiens: palette clausa */
     CREDO_VERUM(valor_est(&altera, "palette", NIHIL));
     /* domini post restitutionem vigent */
-    CREDO_FALSUM(scribere(&altera, INSULA_EPHEMERA, "zoom.ponere",
+    CREDO_FALSUM(scribere(&altera, "zoom.ponere",
         "zoom=3"));
     volumen_claudere(vol);
 }

@@ -36,7 +36,7 @@ s32 principale (vacuum)
     credo_aperire(piscina);
     intern = internamentum_creare(piscina);
     repo = insula_repositorium_creare(piscina, intern,
-        "<documentum/>", "<ephemera/>");
+        "<insula/>");
     reg = actio_registrum_creare(piscina, intern);
     memset(&toy, ZEPHYRUM, magnitudo(ToyStatus));
     toy_registrare(reg, &toy);
@@ -101,7 +101,7 @@ s32 principale (vacuum)
 
     imprimere("\n--- premere ---\n");
     CREDO_VERUM(manus_ludus_premere(m, "[titulus=Numerare]"));
-    a = insula_attributum(repo, INSULA_EPHEMERA, "numerus");
+    a = insula_attributum(repo, "numerus");
     CREDO_NON_NIHIL(a);
     CREDO_CHORDA_AEQUALIS_LITERIS(*a, "1");
     CREDO_MANUS_LUDUS_FOCUS(m, "b1");
@@ -121,7 +121,7 @@ s32 principale (vacuum)
     via[II].x        = XV;
     via[II].y        = XV;
     CREDO_VERUM(manus_ludus_trahere(m, "#tabula", via, III));
-    a = insula_attributum(repo, INSULA_DURABILIS, "puncta");
+    a = insula_attributum(repo, "puncta");
     CREDO_NON_NIHIL(a);
     CREDO_CHORDA_AEQUALIS_LITERIS(*a, "3");
     CREDO_MANUS_LUDUS_FOCUS(m, "tabula");
@@ -130,7 +130,7 @@ s32 principale (vacuum)
 
     imprimere("\n--- clavem ---\n");
     CREDO_VERUM(manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));
-    a = insula_attributum(repo, INSULA_EPHEMERA, "fuga");
+    a = insula_attributum(repo, "fuga");
     CREDO_NON_NIHIL(a);
     CREDO_VERUM(manus_ludus_clavem(m, '\t', ZEPHYRUM));
     CREDO_MANUS_LUDUS_FOCUS(m, "b1");
@@ -170,11 +170,11 @@ s32 principale (vacuum)
     dispensator_motus(d)->pan.x                      = III;
     dispensator_motus(d)->sordida                    = VERUM;
     dispensator_motus(d)->tempus_ultimae_mutationis  = m->tempus;
-    CREDO_NIHIL(insula_attributum(repo, INSULA_EPHEMERA, "pan_x"));
+    CREDO_NIHIL(insula_attributum(repo, "pan_x"));
     manus_ludus_exspectare(m, C);
-    CREDO_NIHIL(insula_attributum(repo, INSULA_EPHEMERA, "pan_x"));
+    CREDO_NIHIL(insula_attributum(repo, "pan_x"));
     manus_ludus_exspectare(m, D);
-    a = insula_attributum(repo, INSULA_EPHEMERA, "pan_x");
+    a = insula_attributum(repo, "pan_x");
     CREDO_NON_NIHIL(a);
     CREDO_CHORDA_AEQUALIS_LITERIS(*a, "3");
 

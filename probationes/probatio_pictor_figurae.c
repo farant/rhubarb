@@ -90,7 +90,6 @@ s32 principale (vacuum)
         "<punctum x=\"39\" y=\"2\"/></ictus>",
         piscina));
     repo = insula_repositorium_creare(piscina, intern,
-        "<pictor/>",
         "<pictor latitudo=\"40\" altitudo=\"30\""
         " instrumentum=\"penicillus\" zoom=\"1\"/>");
     motus_initiare(&motus, piscina);

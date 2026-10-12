@@ -69,8 +69,8 @@ _status (
 {
     chorda c;
 
-    c = chorda_concatenare(insula_scribere(app->repo, INSULA_DURABILIS,
-        piscina), insula_scribere(app->repo, INSULA_EPHEMERA, piscina),
+    c = chorda_concatenare(insula_scribere(app->repo,
+        piscina), insula_scribere(app->repo, piscina),
         piscina);
     redde chorda_concatenare(c, scriba_documentum_sigillum_hex(app->doc,
         piscina), piscina);

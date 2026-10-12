@@ -93,6 +93,7 @@ s32 principale (vacuum)
            GestusLudicer  g;
                   chorda  vacua_focus;
                      i32  n0;
+                     i32  versio_ictus;
 
     piscina = piscina_generare_dynamicum("probatio_dispensator",
         LXIV * M);
@@ -102,7 +103,7 @@ s32 principale (vacuum)
     credo_aperire(piscina);
     intern = internamentum_creare(piscina);
     repo = insula_repositorium_creare(piscina, intern,
-        "<documentum/>", "<ephemera/>");
+        "<insula/>");
     reg = actio_registrum_creare(piscina, intern);
     memset(&toy, ZEPHYRUM, magnitudo(ToyStatus));
     toy_registrare(reg, &toy);
@@ -124,7 +125,7 @@ s32 principale (vacuum)
      * arborem novam: compositiones in traditione > ante (T5) */
     CREDO_AEQUALIS_I32(toy.derivata, I);
     CREDO_VERUM(toy.compositiones_in_traditione > n0);
-    a = insula_attributum(repo, INSULA_EPHEMERA, "numerus");
+    a = insula_attributum(repo, "numerus");
     CREDO_NON_NIHIL(a);
     CREDO_CHORDA_AEQUALIS_LITERIS(*a, "1");
     CREDO_CHORDA_AEQUALIS_LITERIS(dispensator_focus(d), "b1");
@@ -135,7 +136,7 @@ s32 principale (vacuum)
     /* alter ictus: incrementare SUBSTITUIT, non geminat */
     e = mus(EVENTUS_MUS_DEPRESSUS, M + DC, XXXV, XX);
     dispensator_tractare(d, &e);
-    a = insula_attributum(repo, INSULA_EPHEMERA, "numerus");
+    a = insula_attributum(repo, "numerus");
     CREDO_NON_NIHIL(a);
     CREDO_CHORDA_AEQUALIS_LITERIS(*a, "2");
     e = mus(EVENTUS_MUS_LIBERATUS, M + DC + L, XXXV, XX);
@@ -155,6 +156,7 @@ s32 principale (vacuum)
               " durabilis ---\n");
     e = mus(EVENTUS_MUS_DEPRESSUS, II * M, CXX, L);
     dispensator_tractare(d, &e);
+    versio_ictus = insula_versio(repo);
     CREDO_CHORDA_AEQUALIS_LITERIS(dispensator_motus(d)->captura,
                                   "tabula");
     CREDO_CHORDA_AEQUALIS_LITERIS(dispensator_focus(d), "tabula");
@@ -164,24 +166,25 @@ s32 principale (vacuum)
     dispensator_tractare(d, &e);
     CREDO_AEQUALIS_I32(xar_numerus(dispensator_motus(d)->ictus_pendens),
                        III);
-    /* nondum scriptum */
-    CREDO_AEQUALIS_I32(insula_versio(repo, INSULA_DURABILIS), ZEPHYRUM);
+    /* nondum scriptum (C2: insula una - versio post depressionem
+     * immota per motus) */
+    CREDO_AEQUALIS_I32(insula_versio(repo), versio_ictus);
     e = mus(EVENTUS_MUS_LIBERATUS, II * M + C, CXXX, LX);
     dispensator_tractare(d, &e);
     CREDO_VERUM(chorda_vacua(dispensator_motus(d)->captura));
-    a = insula_attributum(repo, INSULA_DURABILIS, "ictus_numerus");
+    a = insula_attributum(repo, "ictus_numerus");
     CREDO_NON_NIHIL(a);
     CREDO_CHORDA_AEQUALIS_LITERIS(*a, "1");
-    a = insula_attributum(repo, INSULA_DURABILIS, "puncta");
+    a = insula_attributum(repo, "puncta");
     CREDO_NON_NIHIL(a);
     CREDO_CHORDA_AEQUALIS_LITERIS(*a, "3");
     /* ephemera intacta ab ictu */
-    CREDO_NIHIL(insula_attributum(repo, INSULA_EPHEMERA, "pan_x"));
+    CREDO_NIHIL(insula_attributum(repo, "pan_x"));
 
     imprimere("\n--- Clavis ESC ascendit ad radicem ---\n");
     e = clavis(II * M + CC, (character)XXVII);
     dispensator_tractare(d, &e);
-    a = insula_attributum(repo, INSULA_EPHEMERA, "fuga");
+    a = insula_attributum(repo, "fuga");
     CREDO_NON_NIHIL(a);
     CREDO_CHORDA_AEQUALIS_LITERIS(*a, "verum");
 
@@ -241,9 +244,9 @@ s32 principale (vacuum)
     dispensator_motus(d)->sordida                    = VERUM;
     dispensator_motus(d)->tempus_ultimae_mutationis  = III * M;
     dispensator_pulsare(d, III * M + CC);
-    CREDO_NIHIL(insula_attributum(repo, INSULA_EPHEMERA, "pan_x"));
+    CREDO_NIHIL(insula_attributum(repo, "pan_x"));
     dispensator_pulsare(d, III * M + CD);
-    a = insula_attributum(repo, INSULA_EPHEMERA, "pan_x");
+    a = insula_attributum(repo, "pan_x");
     CREDO_NON_NIHIL(a);
     CREDO_CHORDA_AEQUALIS_LITERIS(*a, "7");
     CREDO_FALSUM(dispensator_motus(d)->sordida);
@@ -262,14 +265,14 @@ s32 principale (vacuum)
     e.datum.mutare_magnitudinem.latitudo  = CCXL;
     e.datum.mutare_magnitudinem.altitudo  = CIV;
     dispensator_tractare(d, &e);
-    a = insula_attributum(repo, INSULA_EPHEMERA,
+    a = insula_attributum(repo,
         "superficies_latitudo");
     CREDO_NON_NIHIL(a);
     si (a)
     {
         CREDO_CHORDA_AEQUALIS_LITERIS(*a, "240");
     }
-    a = insula_attributum(repo, INSULA_EPHEMERA,
+    a = insula_attributum(repo,
         "superficies_altitudo");
     CREDO_NON_NIHIL(a);
     si (a)
@@ -280,14 +283,14 @@ s32 principale (vacuum)
     e.datum.mutare_magnitudinem.latitudo  = CCC;
     e.datum.mutare_magnitudinem.altitudo  = LXXX;
     dispensator_tractare(d, &e);
-    a = insula_attributum(repo, INSULA_EPHEMERA,
+    a = insula_attributum(repo,
         "superficies_latitudo");
     CREDO_NON_NIHIL(a);
     si (a)
     {
         CREDO_CHORDA_AEQUALIS_LITERIS(*a, "300");
     }
-    a = insula_attributum(repo, INSULA_EPHEMERA,
+    a = insula_attributum(repo,
         "superficies_altitudo");
     CREDO_NON_NIHIL(a);
     si (a)
@@ -323,7 +326,7 @@ s32 principale (vacuum)
     dispensator_motus(d)->sordida                    = VERUM;
     dispensator_motus(d)->tempus_ultimae_mutationis  = IX * M;
     dispensator_finire(d);
-    a = insula_attributum(repo, INSULA_EPHEMERA, "pan_x");
+    a = insula_attributum(repo, "pan_x");
     CREDO_NON_NIHIL(a);
     si (a)
     {

@@ -76,7 +76,7 @@ s32 principale (vacuum)
     intern = internamentum_creare(piscina);
     thema_initiare();
     vol  = volumen_temporarium(piscina, "probatio_montatio");
-    repo = insula_repositorium_creare(piscina, intern, "<schirmata/>",
+    repo = insula_repositorium_creare(piscina, intern,
         "<schirmata focus=\"pagina\"/>");
     CREDO_NON_NIHIL(repo);
 
@@ -89,59 +89,51 @@ s32 principale (vacuum)
     CREDO_VERUM(scriba_montare(&m2, piscina, intern, vol,
         repo, "s2",
         NIHIL, CDLXXX, CDLXXX, NIHIL));
-    CREDO_AEQUALIS_I32(stml_numerus_liberorum(insula_radix(repo,
-        INSULA_DURABILIS)), III);
-    /* status-plan C1: insula durabilis exhausta - rami solum id ferunt
-     * (dimensiones in ephemera) */
-    CREDO_AEQUALIS_I32(xar_numerus(insula_ramus_nodus(&pm.ramus,
-        INSULA_DURABILIS)->attributa), I);
-    CREDO_AEQUALIS_I32(xar_numerus(insula_ramus_nodus(&m1.ramus,
-        INSULA_DURABILIS)->attributa), I);
-    CREDO_AEQUALIS_I32(xar_numerus(insula_ramus_nodus(&m2.ramus,
-        INSULA_DURABILIS)->attributa), I);
+    CREDO_AEQUALIS_I32(stml_numerus_liberorum(insula_radix(repo)), III);
+    /* C2: insula una - ramus quisque semel (latitudo cum statu) */
     /* S2c: documentum novum magnitudine superficiei - pictor:
      * superficies minus linea status (P1a: III cellulae, XXIV) et
      * margo cellulae utrimque (CDLXXX - XII x CDLXXX - XXIV - XVI) */
     CREDO_VERUM(valor_est(insula_ramus_attributum(&pm.ramus,
-        INSULA_EPHEMERA, "latitudo"), "468"));
+        "latitudo"), "468"));
     CREDO_VERUM(valor_est(insula_ramus_attributum(&pm.ramus,
-        INSULA_EPHEMERA, "altitudo"), "440"));
+        "altitudo"), "440"));
     CREDO_VERUM(valor_est(insula_ramus_attributum(&pm.ramus,
-        INSULA_EPHEMERA, "instrumentum"), "penicillus"));
+        "instrumentum"), "penicillus"));
     /* scriba: cellulae VI x VIII minus margines (II) et status (I) -
      * LXXX - II x LX - III */
     CREDO_VERUM(valor_est(insula_ramus_attributum(&m1.ramus,
-        INSULA_EPHEMERA, "latitudo"), "78"));
+        "latitudo"), "78"));
     CREDO_VERUM(valor_est(insula_ramus_attributum(&m1.ramus,
-        INSULA_EPHEMERA, "altitudo"), "57"));
-    CREDO_VERUM(valor_est(insula_ramus_attributum(&m2.ramus,
-        INSULA_EPHEMERA, "modus"), "normalis"));
+        "altitudo"), "57"));
+    CREDO_VERUM(valor_est(insula_ramus_attributum(&m2.ramus, "modus"),
+        "normalis"));
     CREDO_VERUM(plagula_exstat(vol, "p1/documentum"));
     /* sine libro (documentum proprium): nullus index paginae */
-    CREDO_NIHIL(insula_ramus_attributum(&m1.ramus, INSULA_EPHEMERA,
+    CREDO_NIHIL(insula_ramus_attributum(&m1.ramus,
         "pagina_positio"));
     CREDO_VERUM(plagula_exstat(vol, "s1/documentum"));
     CREDO_VERUM(plagula_exstat(vol, "s2/documentum"));
     CREDO_FALSUM(plagula_exstat(vol, "documentum"));
     /* radix statum applicationum non fert */
-    CREDO_NIHIL(insula_attributum(repo, INSULA_EPHEMERA, "modus"));
+    CREDO_NIHIL(insula_attributum(repo, "modus"));
 
     imprimere("\n--- II: canones et domini in ramis ---\n");
     insula_scriptorem_ponere(repo, chorda_ex_literis("pagina.clavis",
         piscina));
-    CREDO_FALSUM(mutare_ramum(&m1.ramus, INSULA_EPHEMERA,
+    CREDO_FALSUM(mutare_ramum(&m1.ramus,
         modum_ponere,
         modus_malus));                                  /* electio */
-    CREDO_VERUM(mutare_ramum(&m1.ramus, INSULA_EPHEMERA,
+    CREDO_VERUM(mutare_ramum(&m1.ramus,
         modum_ponere,
         modus_visualis));
     insula_scriptorem_ponere(repo, chorda_ex_literis("alius", piscina));
-    CREDO_FALSUM(mutare_ramum(&m2.ramus, INSULA_EPHEMERA,
+    CREDO_FALSUM(mutare_ramum(&m2.ramus,
         modum_ponere,
         modus_visualis));                               /* dominus */
     insula_scriptorem_ponere(repo, chorda_ex_literis("", piscina));
-    CREDO_VERUM(valor_est(insula_ramus_attributum(&m2.ramus,
-        INSULA_EPHEMERA, "modus"), "normalis"));
+    CREDO_VERUM(valor_est(insula_ramus_attributum(&m2.ramus, "modus"),
+        "normalis"));
 
     imprimere("\n--- III: componere ex ramo ---\n");
     arbor = scriba_componere(repo, NIHIL, piscina, intern,
@@ -168,7 +160,7 @@ s32 principale (vacuum)
             &m1.actiones_ctx.laboris) > ZEPHYRUM);
         vivi = scriba_documentum_numerus_vivorum(m1.doc);
         repo2 = insula_repositorium_creare(piscina, intern,
-            "<schirmata/>", "<schirmata/>");
+            "<schirmata/>");
         /* superficies alia (S2c): documentum exstans magnitudinem
          * suam servat */
         CREDO_VERUM(scriba_montare(&r1, piscina, intern, vol, repo2,
@@ -189,7 +181,7 @@ s32 principale (vacuum)
             PictorMontatio  pp;
 
         repo_parvum = insula_repositorium_creare(piscina, intern,
-            "<schirmata/>", "<schirmata/>");
+            "<schirmata/>");
         CREDO_VERUM(scriba_montare(&sp, piscina, intern, vol,
             repo_parvum,
             "s9", NIHIL, LX, XL, NIHIL));
@@ -201,9 +193,9 @@ s32 principale (vacuum)
             repo_parvum,
             "p9", NIHIL, LX, XL, NIHIL));
         CREDO_VERUM(valor_est(insula_ramus_attributum(&pp.ramus,
-            INSULA_EPHEMERA, "latitudo"), "64"));
+            "latitudo"), "64"));
         CREDO_VERUM(valor_est(insula_ramus_attributum(&pp.ramus,
-            INSULA_EPHEMERA, "altitudo"), "64"));
+            "altitudo"), "64"));
     }
 
     imprimere("\n");

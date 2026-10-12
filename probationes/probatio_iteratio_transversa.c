@@ -56,7 +56,7 @@ sessio_creare (
         s->toy.modulus_altitudo = CELLULA_ALTITUDO;
     }
     s->repo = insula_repositorium_creare(piscina, intern,
-        "<documentum/>", "<ephemera/>");
+        "<insula/>");
     reg = actio_registrum_creare(piscina, intern);
     toy_registrare(reg, &s->toy);
     s->d = dispensator_creare(piscina, intern, s->repo, reg,
@@ -72,8 +72,8 @@ status (
     chorda c;
 
     c = chorda_concatenare(
-        insula_scribere(s->repo, INSULA_DURABILIS, piscina),
-        insula_scribere(s->repo, INSULA_EPHEMERA, piscina), piscina);
+        insula_scribere(s->repo, piscina),
+        insula_scribere(s->repo, piscina), piscina);
     redde chorda_concatenare(c, dispensator_focus(s->d), piscina);
 }
 
@@ -213,11 +213,11 @@ s32 principale (vacuum)
         }
     }
     status_t = status(&t, piscina);
-    CREDO_NON_NIHIL(insula_attributum(t.repo, INSULA_EPHEMERA,
+    CREDO_NON_NIHIL(insula_attributum(t.repo,
         "numerus"));
-    CREDO_NON_NIHIL(insula_attributum(t.repo, INSULA_EPHEMERA, "fuga"));
-    CREDO_CHORDA_AEQUALIS_LITERIS(*insula_attributum(t.repo,
-        INSULA_DURABILIS, "puncta"), "3");
+    CREDO_NON_NIHIL(insula_attributum(t.repo, "fuga"));
+    CREDO_CHORDA_AEQUALIS_LITERIS(*insula_attributum(t.repo, "puncta"),
+        "3");
 
     imprimere("\n--- B. semantica in fenestra: status idem ---\n");
     sessio_creare(&b, piscina, intern, FALSUM, FALSUM);
@@ -231,7 +231,7 @@ s32 principale (vacuum)
     sessio_creare(&b, piscina, intern, FALSUM, FALSUM);
     (vacuum)manus_ludus_iterare(b.m, notata_t, MANUS_ITERATIO_CRUDA,
         NIHIL);
-    CREDO_NIHIL(insula_attributum(b.repo, INSULA_EPHEMERA, "numerus"));
+    CREDO_NIHIL(insula_attributum(b.repo, "numerus"));
     CREDO_FALSUM(chorda_aequalis(status(&b, piscina), status_t));
 
     imprimere("\n--- D. sessio fenestrae notata (pixela) ---\n");
@@ -271,7 +271,7 @@ s32 principale (vacuum)
         }
     }
     status_f = status(&f, piscina);
-    CREDO_NON_NIHIL(insula_attributum(f.repo, INSULA_EPHEMERA,
+    CREDO_NON_NIHIL(insula_attributum(f.repo,
         "numerus"));
 
     imprimere("\n--- E. per terminalem, ad cellulas: idem ---\n");
@@ -280,7 +280,7 @@ s32 principale (vacuum)
     (vacuum)manus_ludus_iterare_per(b.m, notata_f,
         MANUS_ITERATIO_SEMANTICA, NIHIL, _transire, &tr);
     CREDO_VERUM(chorda_aequalis(status(&b, piscina), status_f));
-    CREDO_NON_NIHIL(insula_attributum(b.repo, INSULA_EPHEMERA,
+    CREDO_NON_NIHIL(insula_attributum(b.repo,
         "numerus"));
 
     imprimere("\n--- F. NON ad cellulas: margo amissus ---\n");
@@ -289,7 +289,7 @@ s32 principale (vacuum)
     _transitum_creare(&tr, piscina, CELLULA_LATITUDO);
     (vacuum)manus_ludus_iterare_per(b.m, notata_f,
         MANUS_ITERATIO_SEMANTICA, NIHIL, _transire, &tr);
-    CREDO_NIHIL(insula_attributum(b.repo, INSULA_EPHEMERA, "numerus"));
+    CREDO_NIHIL(insula_attributum(b.repo, "numerus"));
     CREDO_FALSUM(chorda_aequalis(status(&b, piscina), status_f));
 
     imprimere("\n--- G. traditio NIHIL = iterare ---\n");

@@ -198,8 +198,8 @@ s32 principale (vacuum)
     CREDO_VERUM(vicus_latus_focatum(v)
         == vicus_latus(vicus_tabula(v, ZEPHYRUM), VICUS_SINISTRUM));
     /* rami: quattuor montationes */
-    CREDO_AEQUALIS_I32(stml_numerus_liberorum(insula_radix(v->repo,
-        INSULA_DURABILIS)), IV);
+    CREDO_AEQUALIS_I32(stml_numerus_liberorum(insula_radix(v->repo)),
+        IV);
     /* dispositio scripta, forma nova (S3c: id cuiusque lateris) */
     index = volumen_plagulam_promere(vol, lit("vicus/latera"), piscina,
         &inventum);
@@ -223,7 +223,7 @@ s32 principale (vacuum)
 
     imprimere("\n--- III: canon hospitis ---\n");
     radix = insula_ramus_radix(v->repo);
-    CREDO_FALSUM(mutare_ramum(&radix, INSULA_EPHEMERA, ignotum_ponere,
+    CREDO_FALSUM(mutare_ramum(&radix, ignotum_ponere,
         NIHIL));
 
     imprimere("\n--- IV: reapertio - dispositio, focus, documenta\n");

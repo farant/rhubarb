@@ -59,10 +59,8 @@ mundum_creare (
         redde FALSUM;
     }
     m->repo = insula_repositorium_creare(p, in,
-        "<hospes><ludus id=\"t1\" lat=\"5\"/>"
-        "<ludus id=\"t2\"/></hospes>",
-        "<hospes><ludus id=\"t1\" color=\"1\"/>"
-        "<ludus id=\"t2\" color=\"1\"/></hospes>");
+        "<hospes><ludus id=\"t1\" lat=\"5\" color=\"1\"/><ludus"
+        " id=\"t2\" color=\"1\"/></hospes>");
     si (!m->repo)
     {
         redde FALSUM;
@@ -72,10 +70,10 @@ mundum_creare (
     canon = organum_canonem_generare(m->organum, p, in, &causa);
     m->t1 = insula_ramus(m->repo, "ludus", "t1");
     m->t2 = insula_ramus(m->repo, "ludus", "t2");
-    insula_ramus_canonem_ponere(&m->t1, INSULA_DURABILIS, canon);
-    insula_ramus_canonem_ponere(&m->t1, INSULA_EPHEMERA, canon);
-    insula_ramus_canonem_ponere(&m->t2, INSULA_DURABILIS, canon);
-    insula_ramus_canonem_ponere(&m->t2, INSULA_EPHEMERA, canon);
+    insula_ramus_canonem_ponere(&m->t1, canon);
+    insula_ramus_canonem_ponere(&m->t1, canon);
+    insula_ramus_canonem_ponere(&m->t2, canon);
+    insula_ramus_canonem_ponere(&m->t2, canon);
     m->conservatio = conservatio_creare(p, in, vol, m->repo);
     redde m->conservatio != NIHIL;
 }
@@ -102,26 +100,24 @@ ponere (
 interior b32
 scribere (
     constans InsulaRamus* ramus,
-             InsulaGenus  genus,
       constans character* par)
 {
     character copia[CXXVIII];
 
     strcpy(copia, par);
-    redde mutare_ramum(ramus, genus, ponere, copia);
+    redde mutare_ramum(ramus, ponere, copia);
 }
 
 /* valor attributi rami aequat literas? (NIHIL literae = abest) */
 interior b32
 valor_est (
     constans InsulaRamus* ramus,
-             InsulaGenus  genus,
       constans character* titulus,
       constans character* valor)
 {
     chorda* a;
 
-    a = insula_ramus_attributum(ramus, genus, titulus);
+    a = insula_ramus_attributum(ramus, titulus);
     si (!valor)
     {
         redde a == NIHIL;
@@ -157,23 +153,23 @@ _probare_circuitum (
     CREDO_NECESSE(mundum_creare(&a, c->piscina, in, vol));
     CREDO_AEQUALIS_I32(conservatio_ramum_addere(a.conservatio, &a.t1,
         a.organum, "t1"), ZEPHYRUM);
-    CREDO_VERUM(scribere(&a.t1, INSULA_EPHEMERA, "color=7"));
-    CREDO_VERUM(scribere(&a.t1, INSULA_EPHEMERA, "zoom=3"));
-    CREDO_VERUM(scribere(&a.t1, INSULA_DURABILIS, "lat=9"));
-    CREDO_VERUM(scribere(&a.t1, INSULA_EPHEMERA, "palette=colores"));
-    CREDO_VERUM(scribere(&a.t1, INSULA_EPHEMERA, "fuga=x"));
+    CREDO_VERUM(scribere(&a.t1, "color=7"));
+    CREDO_VERUM(scribere(&a.t1, "zoom=3"));
+    CREDO_VERUM(scribere(&a.t1, "lat=9"));
+    CREDO_VERUM(scribere(&a.t1, "palette=colores"));
+    CREDO_VERUM(scribere(&a.t1, "fuga=x"));
 
     /* sessio nova: repositorium recens, idem volumen */
     CREDO_NECESSE(mundum_creare(&b, c->piscina, in, vol));
-    CREDO_VERUM(valor_est(&b.t1, INSULA_EPHEMERA, "color", "1"));
+    CREDO_VERUM(valor_est(&b.t1, "color", "1"));
     CREDO_AEQUALIS_I32(conservatio_ramum_addere(b.conservatio, &b.t1,
         b.organum, "t1"), III);  /* color, zoom, lat (id idem) */
-    CREDO_VERUM(valor_est(&b.t1, INSULA_EPHEMERA, "color", "7"));
-    CREDO_VERUM(valor_est(&b.t1, INSULA_EPHEMERA, "zoom", "3"));
-    CREDO_VERUM(valor_est(&b.t1, INSULA_DURABILIS, "lat", "9"));
+    CREDO_VERUM(valor_est(&b.t1, "color", "7"));
+    CREDO_VERUM(valor_est(&b.t1, "zoom", "3"));
+    CREDO_VERUM(valor_est(&b.t1, "lat", "9"));
     /* transiens et probatio numquam servantur */
-    CREDO_VERUM(valor_est(&b.t1, INSULA_EPHEMERA, "palette", NIHIL));
-    CREDO_VERUM(valor_est(&b.t1, INSULA_EPHEMERA, "fuga", NIHIL));
+    CREDO_VERUM(valor_est(&b.t1, "palette", NIHIL));
+    CREDO_VERUM(valor_est(&b.t1, "fuga", NIHIL));
     volumen_claudere(vol);
 }
 
@@ -201,17 +197,17 @@ _probare_parsimoniam (
 
     ante = numerus_actorum(vol, c->piscina);
     /* transiens solum: nihil */
-    CREDO_VERUM(scribere(&a.t1, INSULA_EPHEMERA, "palette=colores"));
+    CREDO_VERUM(scribere(&a.t1, "palette=colores"));
     CREDO_AEQUALIS_I32(numerus_actorum(vol, c->piscina), ante);
     /* idem valor: nihil */
-    CREDO_VERUM(scribere(&a.t1, INSULA_EPHEMERA, "color=1"));
+    CREDO_VERUM(scribere(&a.t1, "color=1"));
     CREDO_AEQUALIS_I32(numerus_actorum(vol, c->piscina), ante);
     /* persistens mutatus: scribitur */
-    CREDO_VERUM(scribere(&a.t1, INSULA_EPHEMERA, "color=4"));
+    CREDO_VERUM(scribere(&a.t1, "color=4"));
     CREDO_MAIOR_I32(numerus_actorum(vol, c->piscina), ante);
     /* ramus non registratus: nihil */
     ante = numerus_actorum(vol, c->piscina);
-    CREDO_VERUM(scribere(&a.t2, INSULA_EPHEMERA, "color=6"));
+    CREDO_VERUM(scribere(&a.t2, "color=6"));
     CREDO_AEQUALIS_I32(numerus_actorum(vol, c->piscina), ante);
 
     /* restitutio ipsa non iterum scribit */
@@ -245,16 +241,16 @@ _probare_ramos (
         "t1");
     (vacuum)conservatio_ramum_addere(a.conservatio, &a.t2, a.organum,
         "t2");
-    CREDO_VERUM(scribere(&a.t1, INSULA_EPHEMERA, "color=2"));
-    CREDO_VERUM(scribere(&a.t2, INSULA_EPHEMERA, "color=8"));
+    CREDO_VERUM(scribere(&a.t1, "color=2"));
+    CREDO_VERUM(scribere(&a.t2, "color=8"));
 
     CREDO_NECESSE(mundum_creare(&b, c->piscina, in, vol));
     (vacuum)conservatio_ramum_addere(b.conservatio, &b.t1, b.organum,
         "t1");
     (vacuum)conservatio_ramum_addere(b.conservatio, &b.t2, b.organum,
         "t2");
-    CREDO_VERUM(valor_est(&b.t1, INSULA_EPHEMERA, "color", "2"));
-    CREDO_VERUM(valor_est(&b.t2, INSULA_EPHEMERA, "color", "8"));
+    CREDO_VERUM(valor_est(&b.t1, "color", "2"));
+    CREDO_VERUM(valor_est(&b.t2, "color", "8"));
     volumen_claudere(vol);
 }
 
@@ -282,10 +278,10 @@ _probare_migrationem (
     CREDO_NECESSE(mundum_creare(&a, c->piscina, in, vol));
     CREDO_AEQUALIS_I32(conservatio_ramum_addere(a.conservatio, &a.t1,
         a.organum, "t1"), I);
-    CREDO_VERUM(valor_est(&a.t1, INSULA_EPHEMERA, "color", "5"));
-    CREDO_VERUM(valor_est(&a.t1, INSULA_EPHEMERA, "ignotum", NIHIL));
-    CREDO_VERUM(valor_est(&a.t1, INSULA_EPHEMERA, "palette", NIHIL));
-    CREDO_VERUM(valor_est(&a.t1, INSULA_EPHEMERA, "fuga", NIHIL));
+    CREDO_VERUM(valor_est(&a.t1, "color", "5"));
+    CREDO_VERUM(valor_est(&a.t1, "ignotum", NIHIL));
+    CREDO_VERUM(valor_est(&a.t1, "palette", NIHIL));
+    CREDO_VERUM(valor_est(&a.t1, "fuga", NIHIL));
 
     /* versio ignota: totus praeteritur */
     CREDO_NECESSE(volumen_plagulam_condere(vol, chorda_ex_literis(
@@ -294,7 +290,7 @@ _probare_migrationem (
         "</status>", c->piscina), "probatio") > ZEPHYRUM);
     CREDO_AEQUALIS_I32(conservatio_ramum_addere(a.conservatio, &a.t2,
         a.organum, "t2"), ZEPHYRUM);
-    CREDO_VERUM(valor_est(&a.t2, INSULA_EPHEMERA, "color", "1"));
+    CREDO_VERUM(valor_est(&a.t2, "color", "1"));
     volumen_claudere(vol);
 }
 
@@ -322,10 +318,10 @@ _probare_typum_malum (
     CREDO_NECESSE(mundum_creare(&a, c->piscina, in, vol));
     CREDO_AEQUALIS_I32(conservatio_ramum_addere(a.conservatio, &a.t1,
         a.organum, "t1"), ZEPHYRUM);
-    CREDO_VERUM(valor_est(&a.t1, INSULA_EPHEMERA, "color", "1"));
-    CREDO_VERUM(valor_est(&a.t1, INSULA_EPHEMERA, "zoom", NIHIL));
+    CREDO_VERUM(valor_est(&a.t1, "color", "1"));
+    CREDO_VERUM(valor_est(&a.t1, "zoom", NIHIL));
     /* ramus vivit: scriptura sequens servatur */
-    CREDO_VERUM(scribere(&a.t1, INSULA_EPHEMERA, "color=3"));
+    CREDO_VERUM(scribere(&a.t1, "color=3"));
     volumen_claudere(vol);
 }
 
@@ -336,11 +332,9 @@ _probare_typum_malum (
 
 interior vacuum
 actarius_alius (
-    InsulaGenus  genus,
-      StmlNodus* radix,
-         vacuum* ctx)
+    StmlNodus* radix,
+       vacuum* ctx)
 {
-    (vacuum)genus;
     (vacuum)radix;
     (vacuum)ctx;
 }
@@ -356,11 +350,63 @@ _probare_actarium_alium (
     in   = internamentum_creare(c->piscina);
     vol  = volumen_temporarium(c->piscina, "probatio_conservatio");
     CREDO_NECESSE_NON_NIHIL(vol);
-    repo = insula_repositorium_creare(c->piscina, in, "<hospes/>",
+    repo = insula_repositorium_creare(c->piscina, in,
         "<hospes/>");
     CREDO_NECESSE_NON_NIHIL(repo);
     insula_ponere_actarium(repo, actarius_alius, NIHIL);
     CREDO_NIHIL(conservatio_creare(c->piscina, in, vol, repo));
+    volumen_claudere(vol);
+}
+
+
+/* ==================================================
+ * VII. C2: forma versionis 2; migratio versionis 1 (insulae duae)
+ * ================================================== */
+
+interior vacuum
+_probare_versiones (
+    CredoContextus* c)
+{
+    InternamentumChorda* in;
+                Volumen* vol;
+                 Mundus  a;
+                 Mundus  b;
+                 chorda  status;
+                    b32  inventum;
+
+    in   = internamentum_creare(c->piscina);
+    vol  = volumen_temporarium(c->piscina, "probatio_conservatio");
+    CREDO_NECESSE_NON_NIHIL(vol);
+
+    /* scriptura nova: versio 2, campi ut attributa radicis */
+    CREDO_NECESSE(mundum_creare(&a, c->piscina, in, vol));
+    (vacuum)conservatio_ramum_addere(a.conservatio, &a.t1, a.organum,
+        "t1");
+    CREDO_VERUM(scribere(&a.t1, "color=6"));
+    status = volumen_plagulam_promere(vol,
+        chorda_ex_literis("status/t1",
+        c->piscina), c->piscina, &inventum);
+    CREDO_NECESSE(inventum);
+    CREDO_VERUM(chorda_continet(status, chorda_ex_literis(
+        "<status versio=\"2\" genus=\"ludus\"", c->piscina)));
+    CREDO_VERUM(chorda_continet(status, chorda_ex_literis("color=\"6\"",
+        c->piscina)));
+    CREDO_FALSUM(chorda_continet(status, chorda_ex_literis("ephemera",
+        c->piscina)));
+
+    /* versio 1 cum insulis duabus: fusio, ephemera vincit */
+    CREDO_NECESSE(volumen_plagulam_condere(vol, chorda_ex_literis(
+        "status/t2", c->piscina), chorda_ex_literis(
+        "<status versio=\"1\" genus=\"ludus\">"
+        "<durabilis lat=\"9\" color=\"2\"/>"
+        "<ephemera color=\"7\" zoom=\"3\"/></status>",
+        c->piscina), "probatio") > ZEPHYRUM);
+    CREDO_NECESSE(mundum_creare(&b, c->piscina, in, vol));
+    CREDO_AEQUALIS_I32(conservatio_ramum_addere(b.conservatio, &b.t2,
+        b.organum, "t2"), III);   /* lat, color, zoom */
+    CREDO_VERUM(valor_est(&b.t2, "lat", "9"));
+    CREDO_VERUM(valor_est(&b.t2, "color", "7"));
+    CREDO_VERUM(valor_est(&b.t2, "zoom", "3"));
     volumen_claudere(vol);
 }
 
@@ -371,6 +417,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "parsimonia",     _probare_parsimoniam,
       NIHIL, NIHIL, NIHIL, NIHIL },
     { "rami",           _probare_ramos,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "versiones",      _probare_versiones,
       NIHIL, NIHIL, NIHIL, NIHIL },
     { "migratio",       _probare_migrationem,
       NIHIL, NIHIL, NIHIL, NIHIL },

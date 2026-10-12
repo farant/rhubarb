@@ -128,8 +128,7 @@ store; re-measure park 010). The one-island collapse makes it simpler
 Decided after Arc I. Reordered on contact (canon merging avoided):
 - **C1** DONE 2026-10-10: durable island drained - pictor/scriba sizes
   moved to ephemera; durable branches carry only `id`.
-- **C2** remove the durable genus from insula (API without genus;
-  callers ~100, tests ~43, durable canons deleted, ludus_fenestra
-  version sum).
-- **C3** saved-state versio 2 (one child), migration from versio 1
-  tested on a real v1 save.
+- **C2** DONE 2026-10-12 (lib/insula.worklog.md): genera removed
+  from insula (one tree, `insula_mutare`); durable canons deleted.
+- **C3** folded into C2 (forced): saved state versio 2 (fields on
+  <status>), versio 1 migrated by merging its two children.

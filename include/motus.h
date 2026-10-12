@@ -99,7 +99,7 @@ motus_quies (
                s64  quies_ms);
 
 /* <quies/> - scriptura UNA camporum persistendorum (pan, zoom) in
- * insulam ephemerarum per mutare_ephemera; sordida tollitur si
+ * insulam per insula_mutare (C2: insula una); sordida tollitur si
  * porta accepit. */
 b32
 motus_effundere (

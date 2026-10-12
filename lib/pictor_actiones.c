@@ -142,7 +142,7 @@ interior b32
 palettam_claudere (
     constans InsulaRamus* ramus)
 {
-    redde mutare_ramum(ramus, INSULA_EPHEMERA, palettam_mutator, NIHIL);
+    redde mutare_ramum(ramus, palettam_mutator, NIHIL);
 }
 
 /* id nodi post praefixum ('optio.color_primus.' -> '7'); vacua si
@@ -176,7 +176,7 @@ attributum_s32 (
     chorda* a;
        s32  v;
 
-    a = insula_ramus_attributum(ramus, INSULA_EPHEMERA, titulus);
+    a = insula_ramus_attributum(ramus, titulus);
     si (a && chorda_ut_s32(*a, &v))
     {
         redde v;
@@ -197,7 +197,7 @@ stratum_currens (
        i32  n;
 
     n = pictor_documentum_numerus_stratorum(doc);
-    a = insula_ramus_attributum(ramus, INSULA_EPHEMERA,
+    a = insula_ramus_attributum(ramus,
         "stratum_activum");
     si (a && chorda_ut_s32(*a, &id))
     {
@@ -383,7 +383,7 @@ ictum_tractare (
                 }
                 tempus_addere(pa, ev->tempus);
                 ramus = ramus_pictoris(repo, ctx);
-                (vacuum)mutare_ramum(&ramus, INSULA_EPHEMERA,
+                (vacuum)mutare_ramum(&ramus,
                     semen_ponere, &pa->semen);
             }
             redde VERUM;
@@ -615,7 +615,7 @@ imaginem_glutinare (
     prior          = repo->scriptor;
     insula_scriptorem_ponere(repo, chorda_ex_literis("strata.agere",
         pa->doc->piscina));
-    scriptum = mutare_ramum(&ramus, INSULA_EPHEMERA, colorem_mutator,
+    scriptum = mutare_ramum(&ramus, colorem_mutator,
         &cp);
     insula_scriptorem_ponere(repo, prior);
     redde scriptum;
@@ -670,7 +670,7 @@ pictor_instrumentum_eligere (
         {
             lineam_abicere(motus, ev->tempus);
         }
-        redde mutare_ramum(&ramus, INSULA_EPHEMERA, instrumentum_ponere,
+        redde mutare_ramum(&ramus, instrumentum_ponere,
             litterae_instrumenti(nomen_instrumenti));
     }
     si (ev->genus != EVENTUS_CLAVIS_DEPRESSUS)
@@ -731,7 +731,7 @@ pictor_instrumentum_eligere (
         {
             lineam_abicere(motus, ev->tempus);
         }
-        redde mutare_ramum(&ramus, INSULA_EPHEMERA, instrumentum_ponere,
+        redde mutare_ramum(&ramus, instrumentum_ponere,
             ev->datum.clavis.runa == 'p' ? litterae_penicillus
             : ev->datum.clavis.runa == 'a' ? litterae_aspergillum
             : ev->datum.clavis.runa == 'l' ? litterae_linea
@@ -766,13 +766,13 @@ pictor_palettam_aperire (
         redde FALSUM;
     }
     ramus = ramus_pictoris(repo, ctx);
-    aperta = insula_ramus_attributum(&ramus, INSULA_EPHEMERA,
+    aperta = insula_ramus_attributum(&ramus,
         "palette");
     si (aperta && chorda_aequalis(*aperta, genus))
     {
         redde palettam_claudere(&ramus);
     }
-    redde mutare_ramum(&ramus, INSULA_EPHEMERA, palettam_mutator,
+    redde mutare_ramum(&ramus, palettam_mutator,
         (vacuum*)chorda_ut_cstr(genus, ((PictorActiones*)ctx)->doc
             ->piscina));
 }
@@ -810,7 +810,7 @@ pictor_colorem_ponere (
         redde FALSUM;
     }
     ramus = ramus_pictoris(repo, ctx);
-    redde mutare_ramum(&ramus, INSULA_EPHEMERA, colorem_mutator, &cp);
+    redde mutare_ramum(&ramus, colorem_mutator, &cp);
 }
 
 /* <tractator/> */
@@ -841,7 +841,7 @@ pictor_exemplar_ponere (
         redde FALSUM;
     }
     ramus = ramus_pictoris(repo, ctx);
-    redde mutare_ramum(&ramus, INSULA_EPHEMERA, colorem_mutator, &cp);
+    redde mutare_ramum(&ramus, colorem_mutator, &cp);
 }
 
 /* P4a: magnitudines optionum (pixela penicilli) */
@@ -892,7 +892,7 @@ pictor_magnitudinem_ponere (
     /* P4b: instrumentum currens - penicillus diametrum, aspergillum
      * multiplicem; ceteri (spongia) nihil */
     ramus         = ramus_pictoris(repo, ctx);
-    instrumentum  = insula_ramus_attributum(&ramus, INSULA_EPHEMERA,
+    instrumentum  = insula_ramus_attributum(&ramus,
         "instrumentum");
     si (   instrumentum && chorda_aequalis_literis(*instrumentum,
         "aspergillum"))
@@ -931,7 +931,7 @@ pictor_magnitudinem_ponere (
     {
         redde FALSUM;
     }
-    redde mutare_ramum(&ramus, INSULA_EPHEMERA, colorem_mutator, &cp);
+    redde mutare_ramum(&ramus, colorem_mutator, &cp);
 }
 
 /* L4: ordo trahendi - ordo destinatus (summo primo) strati tracti ex
@@ -1109,7 +1109,7 @@ pictor_strata_agere (
             mutare_motum(motus, puncta_vacare, NIHIL, ev->tempus);
             mutare_motum(motus, punctum_addere, &q, ev->tempus);
             cp.valor = id;
-            redde mutare_ramum(&ramus, INSULA_EPHEMERA, colorem_mutator,
+            redde mutare_ramum(&ramus, colorem_mutator,
                 &cp);
         }
         si (chorda_vacua(motus->captura))
@@ -1169,7 +1169,7 @@ pictor_strata_agere (
         pictor_documentum_actum(pa->doc, chorda_ex_literis(actum,
             pa->doc->piscina));
         cp.valor = maximum + I;
-        redde mutare_ramum(&ramus, INSULA_EPHEMERA, colorem_mutator,
+        redde mutare_ramum(&ramus, colorem_mutator,
             &cp);
     }
     si (nodus && chorda_aequalis_literis(nodus->id, "strata.deletum"))
@@ -1194,7 +1194,7 @@ pictor_strata_agere (
             (integer)currens);
         pictor_documentum_actum(pa->doc, chorda_ex_literis(actum,
             pa->doc->piscina));
-        redde mutare_ramum(&ramus, INSULA_EPHEMERA, colorem_mutator,
+        redde mutare_ramum(&ramus, colorem_mutator,
             &cp);
     }
     redde FALSUM;

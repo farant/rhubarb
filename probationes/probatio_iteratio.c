@@ -34,7 +34,7 @@ sessio_creare (
     memset(s, ZEPHYRUM, magnitudo(Sessio));
     s->toy.translatio_y = translatio_y;
     s->repo = insula_repositorium_creare(piscina, intern,
-        "<documentum/>", "<ephemera/>");
+        "<insula/>");
     reg = actio_registrum_creare(piscina, intern);
     toy_registrare(reg, &s->toy);
     s->d = dispensator_creare(piscina, intern, s->repo, reg,
@@ -51,8 +51,8 @@ status (
     chorda c;
 
     c = chorda_concatenare(
-        insula_scribere(s->repo, INSULA_DURABILIS, piscina),
-        insula_scribere(s->repo, INSULA_EPHEMERA, piscina), piscina);
+        insula_scribere(s->repo, piscina),
+        insula_scribere(s->repo, piscina), piscina);
     redde chorda_concatenare(c, dispensator_focus(s->d), piscina);
 }
 
@@ -101,7 +101,7 @@ s32 principale (vacuum)
             (constans Eventus*)xar_obtinere(eventus, i));
     }
     status_a = status(&a, piscina);
-    CREDO_NON_NIHIL(insula_attributum(a.repo, INSULA_EPHEMERA,
+    CREDO_NON_NIHIL(insula_attributum(a.repo,
         "numerus"));
 
     imprimere("\n--- B. semantica, eadem dispositio ---\n");
@@ -124,7 +124,7 @@ s32 principale (vacuum)
         ->scopus_crudus, "radix");
     CREDO_AEQUALIS_I32(divergentia(div, I)->index, I);
     /* ictus in b1 periit: numerus abest - status differt */
-    CREDO_NIHIL(insula_attributum(b.repo, INSULA_EPHEMERA, "numerus"));
+    CREDO_NIHIL(insula_attributum(b.repo, "numerus"));
     CREDO_FALSUM(chorda_aequalis(status(&b, piscina), status_a));
 
     imprimere("\n--- D. semantica, mota XV: status idem ---\n");
@@ -134,7 +134,7 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_I32(manus_ludus_iterare(b.m, notata,
         MANUS_ITERATIO_SEMANTICA, div), II);
     CREDO_VERUM(chorda_aequalis(status(&b, piscina), status_a));
-    CREDO_NON_NIHIL(insula_attributum(b.repo, INSULA_EPHEMERA,
+    CREDO_NON_NIHIL(insula_attributum(b.repo,
         "numerus"));
 
     imprimere("\n--- E. divergentiae NIHIL licet ---\n");

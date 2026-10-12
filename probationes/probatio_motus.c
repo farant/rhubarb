@@ -108,7 +108,7 @@ s32 principale (vacuum)
     credo_aperire(piscina);
     intern = internamentum_creare(piscina);
     repo = insula_repositorium_creare(piscina, intern,
-        "<documentum/>", "<ephemera/>");
+        "<insula/>");
     CREDO_NON_NIHIL(repo);
     motus_initiare(&motus, piscina);
     CREDO_VERUM(chorda_vacua(motus.captura));
@@ -120,8 +120,8 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_S32(motus.pan.x, XL);
     CREDO_AEQUALIS_S32(motus.pan.y, XX);
     CREDO_VERUM(motus.sordida);
-    CREDO_AEQUALIS_I32(insula_versio(repo, INSULA_EPHEMERA), ZEPHYRUM);
-    CREDO_NIHIL(insula_attributum(repo, INSULA_EPHEMERA, "pan_x"));
+    CREDO_AEQUALIS_I32(insula_versio(repo), ZEPHYRUM);
+    CREDO_NIHIL(insula_attributum(repo, "pan_x"));
 
     imprimere("\n--- Quies iudicatur ex tempore ---\n");
     CREDO_FALSUM(motus_quies(&motus, M + CC, CCC));
@@ -136,14 +136,14 @@ s32 principale (vacuum)
 
     imprimere("\n--- Effusio in quiete scribit insulam SEMEL ---\n");
     CREDO_VERUM(motus_effundere(&motus, repo));
-    CREDO_AEQUALIS_I32(insula_versio(repo, INSULA_EPHEMERA), I);
-    a = insula_attributum(repo, INSULA_EPHEMERA, "pan_x");
+    CREDO_AEQUALIS_I32(insula_versio(repo), I);
+    a = insula_attributum(repo, "pan_x");
     CREDO_NON_NIHIL(a);
     CREDO_CHORDA_AEQUALIS_LITERIS(*a, "40");
-    a = insula_attributum(repo, INSULA_EPHEMERA, "pan_y");
+    a = insula_attributum(repo, "pan_y");
     CREDO_NON_NIHIL(a);
     CREDO_CHORDA_AEQUALIS_LITERIS(*a, "20");
-    a = insula_attributum(repo, INSULA_EPHEMERA, "zoom");
+    a = insula_attributum(repo, "zoom");
     CREDO_NON_NIHIL(a);
     CREDO_CHORDA_AEQUALIS_LITERIS(*a, "1");
     CREDO_FALSUM(motus.sordida);
@@ -156,12 +156,12 @@ s32 principale (vacuum)
     mutare_motum(&motus, pan_movere, NIHIL, II * M);
     CREDO_VERUM(motus_quies(&motus, III * M, CCC));
     CREDO_VERUM(motus_effundere(&motus, repo));
-    CREDO_AEQUALIS_I32(insula_versio(repo, INSULA_EPHEMERA), II);
-    a = insula_attributum(repo, INSULA_EPHEMERA, "pan_x");
+    CREDO_AEQUALIS_I32(insula_versio(repo), II);
+    a = insula_attributum(repo, "pan_x");
     CREDO_NON_NIHIL(a);
     CREDO_CHORDA_AEQUALIS_LITERIS(*a, "50");
     CREDO_AEQUALIS_I32(
-        xar_numerus(insula_radix(repo, INSULA_EPHEMERA)->attributa),
+        xar_numerus(insula_radix(repo)->attributa),
         III);
     CREDO_VERUM(insula_restituere(repo));
     CREDO_FALSUM(insula_mendacium(repo));
@@ -171,10 +171,10 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_S32(motus.pan.x, -XL);
     CREDO_VERUM(motus_quies(&motus, V * M, CCC));
     CREDO_VERUM(motus_effundere(&motus, repo));
-    a = insula_attributum(repo, INSULA_EPHEMERA, "pan_x");
+    a = insula_attributum(repo, "pan_x");
     CREDO_NON_NIHIL(a);
     CREDO_CHORDA_AEQUALIS_LITERIS(*a, "-40");
-    a = insula_attributum(repo, INSULA_EPHEMERA, "pan_y");
+    a = insula_attributum(repo, "pan_y");
     CREDO_NON_NIHIL(a);
     CREDO_CHORDA_AEQUALIS_LITERIS(*a, "-10");
 
@@ -192,13 +192,13 @@ s32 principale (vacuum)
     /* non sordidus: nihil effunditur */
     CREDO_FALSUM(motus_gestum_effundere(&motus, repo));
     CREDO_AEQUALIS_I32(g.effusiones, ZEPHYRUM);
-    versio = insula_versio(repo, INSULA_EPHEMERA);
+    versio = insula_versio(repo);
     mutare_gestum(&motus, littera_addere, NIHIL, XX * M);
     CREDO_AEQUALIS_I32(g.litterae, I);
     CREDO_VERUM(motus.gestus.sordidus);
     /* gestus nec insulam nec sordiditatem pan/zoom tangit */
     CREDO_FALSUM(motus.sordida);
-    CREDO_AEQUALIS_I32(insula_versio(repo, INSULA_EPHEMERA), versio);
+    CREDO_AEQUALIS_I32(insula_versio(repo), versio);
     CREDO_FALSUM(motus_gestus_quies(&motus, XX * M + CM));
     CREDO_VERUM(motus_gestus_quies(&motus, XXI * M));
     CREDO_VERUM(motus_gestum_effundere(&motus, repo));

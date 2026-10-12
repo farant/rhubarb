@@ -51,7 +51,7 @@ scribere (
     insula_scriptorem_ponere(app->vicus->repo,
         chorda_ex_literis(scriptor,
         app->piscina));
-    redde mutare_ramum(&ramus, INSULA_EPHEMERA, ponere, copia);
+    redde mutare_ramum(&ramus, ponere, copia);
 }
 
 interior b32
@@ -65,7 +65,7 @@ valor_est (
 
     ramus = insula_ramus(app->vicus->repo, "pictor",
         "2_dextrum_pictor");
-    a = insula_ramus_attributum(&ramus, INSULA_EPHEMERA, titulus);
+    a = insula_ramus_attributum(&ramus, titulus);
     redde valor ? (a
         && chorda_aequalis_literis(*a, valor)) : a == NIHIL;
 }
@@ -124,10 +124,10 @@ _probare_dimissionem (
     (vacuum)vicus_pulsare(app.vicus);
     dispensator_recomponere(app.d);
     ramus = insula_ramus(app.vicus->repo, "pictor", "1_dextrum_pictor");
-    CREDO_NECESSE(insula_ramus_nodus(&ramus, INSULA_EPHEMERA) != NIHIL);
+    CREDO_NECESSE(insula_ramus_nodus(&ramus) != NIHIL);
     insula_scriptorem_ponere(app.vicus->repo, chorda_ex_literis(
         "palette.aperire", c->piscina));
-    CREDO_NECESSE(mutare_ramum(&ramus, INSULA_EPHEMERA, ponere, par));
+    CREDO_NECESSE(mutare_ramum(&ramus, ponere, par));
     dispensator_recomponere(app.d);
     app.d->motus.spatium = chorda_ex_literis("1_dextrum_pictor",
         c->piscina);
@@ -136,7 +136,7 @@ _probare_dimissionem (
     e.datum.clavis.clavis    = CLAVIS_EFFUGIUM;
     e.datum.clavis.producta  = XXVII;
     dispensator_tractare(app.d, &e);
-    a = insula_ramus_attributum(&ramus, INSULA_EPHEMERA, "palette");
+    a = insula_ramus_attributum(&ramus, "palette");
     CREDO_VERUM(a == NIHIL);
     volumen_claudere(vol);
 }

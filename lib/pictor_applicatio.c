@@ -205,7 +205,7 @@ pictor_montare (
                     i32  altitudo,
         StatusSystemata* systemata)
 {
-                 chorda  durabilis;
+                 chorda  initium;
      constans character* spatium;
                 Organum* organum;
                   Canon* canon;
@@ -262,32 +262,26 @@ pictor_montare (
                 (int)causa.mensura, (constans character*)causa.datum);
         redde FALSUM;
     }
-    insula_ramus_canonem_ponere(&m->ramus, INSULA_DURABILIS, canon);
-    insula_ramus_canonem_ponere(&m->ramus, INSULA_EPHEMERA, canon);
+    insula_ramus_canonem_ponere(&m->ramus, canon);
 
-    /* elementum initiale: durabilis VACUUM (status-plan C1 - insula
-     * una; ramus solum, donec genus durabile tollitur); ephemera =
-     * dimensiones documenti (derivatae) + absentes manifesti (S4) +
-     * focus pictoris (id componentis - basis communis eum scire
-     * nequit) */
-    durabilis = chorda_ex_literis(" latitudo=\"", piscina);
-    durabilis = chorda_concatenare(durabilis,
+    /* elementum initiale (insula una, C2): dimensiones documenti
+     * (derivatae) + absentes manifesti (S4) + focus pictoris (id
+     * componentis - basis communis eum scire nequit) */
+    initium = chorda_ex_literis(" latitudo=\"", piscina);
+    initium = chorda_concatenare(initium,
         chorda_ex_s32((s32)m->doc->latitudo, piscina), piscina);
-    durabilis = chorda_concatenare(durabilis,
+    initium = chorda_concatenare(initium,
         chorda_ex_literis("\" altitudo=\"", piscina), piscina);
-    durabilis = chorda_concatenare(durabilis,
+    initium = chorda_concatenare(initium,
         chorda_ex_s32((s32)m->doc->altitudo, piscina), piscina);
-    durabilis = chorda_concatenare(durabilis,
+    initium = chorda_concatenare(initium,
         chorda_ex_literis("\"", piscina), piscina);
-    durabilis = chorda_concatenare(durabilis,
+    initium = chorda_concatenare(initium,
         organum_initium(organum, piscina), piscina);
-    durabilis = chorda_concatenare(durabilis,
+    initium = chorda_concatenare(initium,
         chorda_ex_literis(" focus=\"tabula\"", piscina), piscina);
-    si (   !insula_ramum_initiare(&m->ramus, INSULA_DURABILIS,
-               elementum(piscina, id, ""))
-        || !insula_ramum_initiare(&m->ramus, INSULA_EPHEMERA,
-               elementum(piscina, id, chorda_ut_cstr(durabilis,
-               piscina))))
+    si (!insula_ramum_initiare(&m->ramus, elementum(piscina, id,
+            chorda_ut_cstr(initium, piscina))))
     {
         fprintf(stderr, "pictor: elementum initiale: %.*s\n",
                 (int)insula_causa(repo).mensura,
@@ -311,10 +305,7 @@ pictor_montare (
     domini = organum_dominos_generare(organum, piscina, intern);
     si (domini)
     {
-        (vacuum)insula_ramus_dominos_legere(&m->ramus, INSULA_EPHEMERA,
-            domini);
-        (vacuum)insula_ramus_dominos_legere(&m->ramus, INSULA_DURABILIS,
-            domini);
+        (vacuum)insula_ramus_dominos_legere(&m->ramus, domini);
     }
 
     /* S5b: relatio - strata documenti enumerantur, ramus registratur,
@@ -450,7 +441,7 @@ pictor_picturam_ponere (
         (vacuum)relatio_ligare(m->systemata.relatio, &m->ramus,
             "documentum", doc, doc->historia);
     }
-    redde mutare_ramum(&m->ramus, INSULA_EPHEMERA, dimensiones_mutator,
+    redde mutare_ramum(&m->ramus, dimensiones_mutator,
         doc);
 }
 
@@ -514,7 +505,7 @@ pictor_applicatio_aedificare (
     app->volumen  = volumen;
 
     /* repositorium cuius radix IPSA pictor est; montatio in radice */
-    app->repo = insula_repositorium_creare(piscina, intern, "<pictor/>",
+    app->repo = insula_repositorium_creare(piscina, intern,
         "<pictor focus=\"tabula\"/>");
     si (app->repo)
     {

@@ -67,7 +67,6 @@ s32 principale (vacuum)
     credo_aperire(piscina);
     intern = internamentum_creare(piscina);
     repo = insula_repositorium_creare(piscina, intern,
-        "<pictor/>",
         "<pictor latitudo=\"320\" altitudo=\"200\""
         " instrumentum=\"penicillus\" zoom=\"2\""
         " focus=\"tabula\"/>");
@@ -143,7 +142,7 @@ s32 principale (vacuum)
 
     imprimere("\n--- Instrumentum ignotum: tabula sine actione; zoom"
               " absens: scala I ---\n");
-    CREDO_VERUM(mutare_ephemera(repo, instrumentum_ponere, ignotum));
+    CREDO_VERUM(insula_mutare(repo, instrumentum_ponere, ignotum));
     arbor2 = pictor_componere(repo, &motus, piscina, intern, &ctx);
     c = componens_invenire_per_id(arbor2, chorda_ex_literis("tabula",
                                                             piscina));
@@ -154,7 +153,6 @@ s32 principale (vacuum)
     {
         InsulaRepositorium* repo2;
         repo2 = insula_repositorium_creare(piscina, intern,
-            "<pictor/>",
             "<pictor latitudo=\"16\" altitudo=\"8\"/>");
         arbor2 = pictor_componere(repo2, &motus, piscina, intern, &ctx);
         c = componens_invenire_per_id(arbor2,
@@ -170,7 +168,6 @@ s32 principale (vacuum)
     {
         InsulaRepositorium* repo_superficiei;
         repo_superficiei = insula_repositorium_creare(piscina, intern,
-            "<pictor/>",
             "<pictor latitudo=\"320\" altitudo=\"200\""
             " instrumentum=\"penicillus\""
             " superficies_latitudo=\"480\""
@@ -197,7 +194,7 @@ s32 principale (vacuum)
     arbor2 = pictor_componere(repo, &motus, piscina, intern, &ctx);
     /* instrumentum mutatum: arbor alia */
     CREDO_FALSUM(componens_aequalis(arbor, arbor2));
-    CREDO_VERUM(mutare_ephemera(repo, instrumentum_ponere, penicillus));
+    CREDO_VERUM(insula_mutare(repo, instrumentum_ponere, penicillus));
     arbor2 = pictor_componere(repo, &motus, piscina, intern, &ctx);
     CREDO_VERUM(componens_aequalis(arbor, arbor2));    /* puritas */
     CREDO_VERUM(exemplar_conferre(piscina,

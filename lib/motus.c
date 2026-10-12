@@ -122,7 +122,7 @@ motus_effundere (
     nulla.datum = NIHIL;
     insula_scriptorem_ponere(repo, chorda_ex_literis("motus",
         motus->piscina));
-    ok = mutare_ramum(&ramus, INSULA_EPHEMERA, effusio_mutator, motus);
+    ok = mutare_ramum(&ramus, effusio_mutator, motus);
     insula_scriptorem_ponere(repo, nulla);
     si (ok)
     {

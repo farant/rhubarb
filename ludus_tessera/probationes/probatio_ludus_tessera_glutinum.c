@@ -136,9 +136,8 @@ TesseraPonsMemoriae* pm;
     credo_aperire(piscina);
     intern = internamentum_creare(piscina);
     thema_initiare();
-    repo = insula_repositorium_creare(piscina, intern, "<documentum/>",
-        "<ephemera/>");
-    reg = actio_registrum_creare(piscina, intern);
+    repo  = insula_repositorium_creare(piscina, intern, "<insula/>");
+    reg   = actio_registrum_creare(piscina, intern);
     memset(&toy, ZEPHYRUM, magnitudo(ToyStatus));
     toy_registrare(reg, &toy);
     d = dispensator_creare(piscina, intern, repo, reg, toy_componere,
@@ -203,7 +202,7 @@ TesseraPonsMemoriae* pm;
         CREDO_VERUM (n->eventus.tempus == DCCLXXVII);
     }
     dispensator_notarium_ponere(d, NIHIL);
-    CREDO_NON_NIHIL (insula_attributum(repo, INSULA_EPHEMERA,
+    CREDO_NON_NIHIL (insula_attributum(repo,
         "numerus"));
 
     imprimere("\n--- IV. quadrum ---\n");
@@ -214,15 +213,15 @@ TesseraPonsMemoriae* pm;
         ludus_tessera_quadrum(lt, M + CC);
         CREDO_AEQUALIS_I32 (lt->mensurae.quadra, I);
         /* B1: magnitudo initialis nuntiata (cellulae x modulus) */
-        CREDO_NON_NIHIL (insula_attributum(repo, INSULA_EPHEMERA,
+        CREDO_NON_NIHIL (insula_attributum(repo,
             "superficies_latitudo"));
-        si (insula_attributum(repo, INSULA_EPHEMERA,
+        si (insula_attributum(repo,
                 "superficies_latitudo"))
         {
             CREDO_CHORDA_AEQUALIS_LITERIS (*insula_attributum(repo,
-                INSULA_EPHEMERA, "superficies_latitudo"), "240");
+                "superficies_latitudo"), "240");
             CREDO_CHORDA_AEQUALIS_LITERIS (*insula_attributum(repo,
-                INSULA_EPHEMERA, "superficies_altitudo"), "104");
+                "superficies_altitudo"), "104");
         }
         CREDO_VERUM (toy.compositiones > n0);
         CREDO_VERUM (mandata_numerus(lt->mandata) >= III);

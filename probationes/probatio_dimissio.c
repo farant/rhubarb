@@ -118,7 +118,7 @@ actio_aperire (
         redde FALSUM;
     }
     r = ramus_nodi(repo, nodus);
-    redde mutare_ramum(&r, INSULA_EPHEMERA, commutare_palettam, NIHIL);
+    redde mutare_ramum(&r, commutare_palettam, NIHIL);
 }
 
 interior b32
@@ -138,7 +138,7 @@ actio_ictus (
         redde FALSUM;
     }
     r = ramus_nodi(repo, nodus);
-    redde mutare_ramum(&r, INSULA_EPHEMERA, incrementare, attr_ictus);
+    redde mutare_ramum(&r, incrementare, attr_ictus);
 }
 
 interior b32
@@ -158,7 +158,7 @@ actio_eligere (
         redde FALSUM;
     }
     r = ramus_nodi(repo, nodus);
-    redde mutare_ramum(&r, INSULA_EPHEMERA, eligere_a, NIHIL);
+    redde mutare_ramum(&r, eligere_a, NIHIL);
 }
 
 interior b32
@@ -178,7 +178,7 @@ actio_agere (
         redde FALSUM;
     }
     r = ramus_nodi(repo, nodus);
-    redde mutare_ramum(&r, INSULA_EPHEMERA, incrementare, attr_agere);
+    redde mutare_ramum(&r, incrementare, attr_agere);
 }
 
 interior b32
@@ -210,7 +210,7 @@ actio_clavis (
     {
         redde FALSUM;
     }
-    redde mutare_ephemera(repo, incrementare, attr_claves);
+    redde insula_mutare(repo, incrementare, attr_claves);
 }
 
 
@@ -263,7 +263,7 @@ organum_ludicrum (
     componens_addere_liberum(w, nodus(p, in, "pictura", PARTES_TABULA,
         L, X, CXL, LXXX, "pop.ictus"));
     r = insula_ramus(repo, "pop", spatium);
-    si (insula_ramus_attributum(&r, INSULA_EPHEMERA, attr_palette))
+    si (insula_ramus_attributum(&r, attr_palette))
     {
         pal = nodus(p, in, "palette", PARTES_DIALOGUS, LX, XX, LXXX, LX,
             NIHIL);
@@ -347,7 +347,7 @@ mundum_creare (
           StmlNodus* domini;
 
     memset(m, ZEPHYRUM, magnitudo(*m));
-    m->repo = insula_repositorium_creare(p, in, "<hospes/>",
+    m->repo = insula_repositorium_creare(p, in,
         "<hospes><pop id=\"w1\"/><pop id=\"w2\"/></hospes>");
     o = organum_legere(chorda_ex_literis(manifestum, p), p, in, &vitia);
     si (!m->repo || !o)
@@ -357,9 +357,9 @@ mundum_creare (
     m->w1   = insula_ramus(m->repo, "pop", "w1");
     m->w2   = insula_ramus(m->repo, "pop", "w2");
     domini  = organum_dominos_generare(o, p, in);
-    (vacuum)insula_ramus_dominos_legere(&m->w1, INSULA_EPHEMERA,
+    (vacuum)insula_ramus_dominos_legere(&m->w1,
         domini);
-    (vacuum)insula_ramus_dominos_legere(&m->w2, INSULA_EPHEMERA,
+    (vacuum)insula_ramus_dominos_legere(&m->w2,
         domini);
     reg = actio_registrum_creare(p, in);
     (vacuum)actio_registrare(reg, "hospes.clavis", actio_clavis, NIHIL);
@@ -425,7 +425,7 @@ valor_est (
 {
     chorda* a;
 
-    a = insula_ramus_attributum(r, INSULA_EPHEMERA, titulus);
+    a = insula_ramus_attributum(r, titulus);
     redde valor ? (a
         && chorda_aequalis_literis(*a, valor)) : a == NIHIL;
 }
@@ -437,7 +437,7 @@ claves_sunt (
 {
     chorda* a;
 
-    a = insula_attributum(m->repo, INSULA_EPHEMERA, attr_claves);
+    a = insula_attributum(m->repo, attr_claves);
     redde valor ? (a
         && chorda_aequalis_literis(*a, valor)) : a == NIHIL;
 }
@@ -634,12 +634,12 @@ _probare_dominos (
     CREDO_NECESSE(mundum_creare(&m, c->piscina, in, VERUM));
     insula_scriptorem_ponere(m.repo, chorda_ex_literis("pop.ictus",
         c->piscina));
-    CREDO_FALSUM(mutare_ramum(&m.w1, INSULA_EPHEMERA,
+    CREDO_FALSUM(mutare_ramum(&m.w1,
         commutare_palettam,
         par));
     insula_scriptorem_ponere(m.repo, chorda_ex_literis("dimissio",
         c->piscina));
-    CREDO_VERUM(mutare_ramum(&m.w1, INSULA_EPHEMERA, commutare_palettam,
+    CREDO_VERUM(mutare_ramum(&m.w1, commutare_palettam,
         par));
 }
 

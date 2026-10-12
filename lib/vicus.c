@@ -367,7 +367,7 @@ latus_superficiem_scribere (
     sp.altitudo = altitudo;
     ramus = insula_ramus(v->repo, chorda_ut_cstr(l->genus, v->piscina),
         chorda_ut_cstr(l->id, v->piscina));
-    (vacuum)mutare_ramum(&ramus, INSULA_EPHEMERA, superficiem_mutator,
+    (vacuum)mutare_ramum(&ramus, superficiem_mutator,
         &sp);
 }
 
@@ -412,7 +412,7 @@ attributum_radicis (
     chorda* a;
        s32  n;
 
-    a = insula_attributum(repo, INSULA_EPHEMERA, titulus);
+    a = insula_attributum(repo, titulus);
     si (a && chorda_ut_s32(*a, &n))
     {
         redde n;
@@ -1310,14 +1310,12 @@ vicus_aperire (
     v->tabulae  = xar_creare(v->piscina, (i32)magnitudo(VicusTabula));
     v->causa    = chorda_nulla_vici();
     v->repo    = insula_repositorium_creare(v->piscina, v->intern,
-        "<vicus/>", "<vicus/>");
+        "<vicus/>");
     si (!v->repo)
     {
         redde FALSUM;
     }
-    insula_ponere_canonem(v->repo, INSULA_DURABILIS,
-        canonem_legere(v, "apps/vicus/canones/durabilis.canon"));
-    insula_ponere_canonem(v->repo, INSULA_EPHEMERA,
+    insula_ponere_canonem(v->repo,
         canonem_legere(v, "apps/vicus/canones/ephemera.canon"));
 
     /* dispositio: e volumine aut ordinaria (scribitur) */
@@ -1367,7 +1365,7 @@ vicus_aperire (
         ac.activa         = v->activa;
         ac.prior.mensura  = ZEPHYRUM;
         ac.prior.datum    = NIHIL;
-        (vacuum)mutare_ramum(&radix, INSULA_EPHEMERA, activam_mutator,
+        (vacuum)mutare_ramum(&radix, activam_mutator,
                              &ac);
     }
     /* latera quae focum in apertura petunt (terminale): sinistrum
@@ -1507,7 +1505,7 @@ vicus_activam_ponere (
     }
     v->activa  = t->id;
     radix      = insula_ramus_radix(v->repo);
-    si (!mutare_ramum(&radix, INSULA_EPHEMERA, activam_mutator, &a))
+    si (!mutare_ramum(&radix, activam_mutator, &a))
     {
         redde FALSUM;
     }

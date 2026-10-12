@@ -144,13 +144,12 @@ reparare_mutator (
     }
 }
 
-/* campus unus in insula una: valor inter entia? aliter reparatur */
+/* campus unus: valor inter entia? aliter reparatur */
 interior vacuum
 campum_verificare (
                    Relatio* r,
            RamusRelationis* rr,
-    constans OrganumCampus* k,
-               InsulaGenus  genus)
+    constans OrganumCampus* k)
 {
     constans RelatioEnumerator* en;
                    LigamenRami* l;
@@ -163,7 +162,7 @@ campum_verificare (
                            i32  n;
                            i32  lineola;
 
-    valor = insula_ramus_attributum(&rr->ramus, genus,
+    valor = insula_ramus_attributum(&rr->ramus,
         chorda_ut_cstr(k->titulus, r->scheda));
     si (!valor || k->orbatus.mensura == ZEPHYRUM)
     {
@@ -210,7 +209,7 @@ campum_verificare (
     prior = r->repo->scriptor;
     insula_scriptorem_ponere(r->repo, chorda_ex_literis(
         scriptor_relationis, r->scheda));
-    si (!mutare_ramum(&rr->ramus, genus, reparare_mutator, &rep))
+    si (!mutare_ramum(&rr->ramus, reparare_mutator, &rep))
     {
         fprintf(stderr, "relatio: %s non reparatum: %.*s\n",
             rep.titulus,
@@ -226,7 +225,6 @@ ramum_verificare (
      RamusRelationis* rr)
 {
     i32 i;
-    i32 g;
 
     per (i = ZEPHYRUM; i < organum_numerus_camporum(rr->organum); i++)
     {
@@ -238,10 +236,7 @@ ramum_verificare (
         {
             perge;
         }
-        per (g = ZEPHYRUM; g < INSULA_GENUS_NUMERUS; g++)
-        {
-            campum_verificare(r, rr, k, (InsulaGenus)g);
-        }
+        campum_verificare(r, rr, k);
     }
 }
 

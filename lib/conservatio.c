@@ -26,7 +26,8 @@ structura Conservatio {
                     Xar* rami;       /* Xar de RamusConservatus */
 };
 
-hic_manens constans character* genera_titulus[INSULA_GENUS_NUMERUS] = {
+/* versio 1 (ante C2): <status><durabilis/><ephemera/></status> */
+hic_manens constans character* tituli_versionis_primae[II] = {
     "durabilis", "ephemera"
 };
 
@@ -60,51 +61,44 @@ habet_quotam (
     redde FALSUM;
 }
 
+/* versio 2 (C2, insula una): campi ut attributa ipsius <status> */
 interior chorda
 statum_scribere (
     constans RamusConservatus* rc,
                       Piscina* p)
 {
     ChordaAedificator* a;
-                  i32  g;
                   i32  i;
 
     a = chorda_aedificator_creare(p, (memoriae_index)CCLVI);
     chorda_aedificator_appendere_literis(a,
-        "<status versio=\"1\" genus=\"");
+        "<status versio=\"2\" genus=\"");
     chorda_aedificator_appendere_chorda(a, organum_genus(rc->organum));
-    chorda_aedificator_appendere_literis(a, "\">");
-    per (g = ZEPHYRUM; g < INSULA_GENUS_NUMERUS; g++)
+    chorda_aedificator_appendere_literis(a, "\"");
+    per (i = ZEPHYRUM; i < organum_numerus_camporum(rc->organum); i++)
     {
-        chorda_aedificator_appendere_literis(a, "<");
-        chorda_aedificator_appendere_literis(a, genera_titulus[g]);
-        per (i = ZEPHYRUM; i
-            < organum_numerus_camporum(rc->organum); i++)
-        {
-            constans OrganumCampus* k;
-                            chorda* v;
+        constans OrganumCampus* k;
+                        chorda* v;
 
-            k = organum_campus_index(rc->organum, i);
-            si (!servandus(k))
-            {
-                perge;
-            }
-            v = insula_ramus_attributum(&rc->ramus, (InsulaGenus)g,
-                chorda_ut_cstr(k->titulus, p));
-            si (!v || habet_quotam(*v))
-            {
-                /* quota duplex in attributo irrepraesentabilis */
-                perge;
-            }
-            chorda_aedificator_appendere_literis(a, " ");
-            chorda_aedificator_appendere_chorda(a, k->titulus);
-            chorda_aedificator_appendere_literis(a, "=\"");
-            chorda_aedificator_appendere_chorda(a, *v);
-            chorda_aedificator_appendere_literis(a, "\"");
+        k = organum_campus_index(rc->organum, i);
+        si (!servandus(k))
+        {
+            perge;
         }
-        chorda_aedificator_appendere_literis(a, "/>");
+        v = insula_ramus_attributum(&rc->ramus,
+            chorda_ut_cstr(k->titulus, p));
+        si (!v || habet_quotam(*v))
+        {
+            /* quota duplex in attributo irrepraesentabilis */
+            perge;
+        }
+        chorda_aedificator_appendere_literis(a, " ");
+        chorda_aedificator_appendere_chorda(a, k->titulus);
+        chorda_aedificator_appendere_literis(a, "=\"");
+        chorda_aedificator_appendere_chorda(a, *v);
+        chorda_aedificator_appendere_literis(a, "\"");
     }
-    chorda_aedificator_appendere_literis(a, "</status>");
+    chorda_aedificator_appendere_literis(a, "/>");
     redde chorda_aedificator_finire(a);
 }
 
@@ -124,14 +118,12 @@ via_status (
 
 interior vacuum
 actarius_conservationis (
-    InsulaGenus  genus,
-      StmlNodus* radix,
-         vacuum* ctx)
+    StmlNodus* radix,
+       vacuum* ctx)
 {
     Conservatio* c;
             i32  i;
 
-    (vacuum)genus;
     (vacuum)radix;
     c = (Conservatio*)ctx;
     piscina_vacare(c->scheda);
@@ -223,13 +215,12 @@ restituere_mutator (
     }
 }
 
-/* attributa servata insulae unius in ramum (per portam); numerus
+/* attributa servata (nodus fusus) in ramum (per portam); numerus
  * mutatorum, aut 0 si recusatum */
 interior i32
-insulam_restituere (
+attributa_restituere (
                   Conservatio* c,
     constans RamusConservatus* rc,
-                  InsulaGenus  genus,
                     StmlNodus* nodus,
                       Piscina* p)
 {
@@ -260,7 +251,7 @@ insulam_restituere (
         }
         r.paria[r.numerus].titulus  = chorda_ut_cstr(*at->titulus, p);
         r.paria[r.numerus].valor    = chorda_ut_cstr(*at->valor, p);
-        hodie = insula_ramus_attributum(&rc->ramus, genus,
+        hodie = insula_ramus_attributum(&rc->ramus,
             r.paria[r.numerus].titulus);
         si (!hodie || !chorda_aequalis(*hodie, *at->valor))
         {
@@ -272,17 +263,81 @@ insulam_restituere (
     {
         redde ZEPHYRUM;
     }
-    si (!mutare_ramum(&rc->ramus, genus, restituere_mutator, &r))
+    si (!mutare_ramum(&rc->ramus, restituere_mutator, &r))
     {
-        fprintf(stderr, "conservatio: status servatus %.*s (%s) "
+        fprintf(stderr, "conservatio: status servatus %.*s "
             "recusatus: %.*s\n", (int)rc->clavis.mensura,
             (constans character*)rc->clavis.datum,
-            genera_titulus[genus],
             (int)insula_causa(c->repo).mensura,
             (constans character*)insula_causa(c->repo).datum);
         redde ZEPHYRUM;
     }
     redde mutati;
+}
+
+/* attributa nodi in fusionem (insula_attributum_ponere: substituit
+ * si adest); praetermittit versio et genus radicis */
+interior vacuum
+attributa_fundere (
+               StmlNodus* fusio,
+               StmlNodus* fons,
+                 Piscina* p,
+     InternamentumChorda* in)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; fons && fons->attributa
+         && i < xar_numerus(fons->attributa); i++)
+    {
+        StmlAttributum* at;
+
+        at = (StmlAttributum*)xar_obtinere(fons->attributa, i);
+        si (   !at->titulus || !at->valor
+            || chorda_aequalis_literis(*at->titulus, "versio")
+            || chorda_aequalis_literis(*at->titulus, "genus"))
+        {
+            perge;
+        }
+        (vacuum)insula_attributum_ponere(fusio, p, in,
+            chorda_ut_cstr(*at->titulus, p),
+            chorda_ut_cstr(*at->valor, p));
+    }
+}
+
+/* status servatus -> nodus fusus attributorum; NIHIL si versio
+ * ignota. versio 2: attributa radicis; versio 1 (MIGRATIO, ante C2):
+ * <durabilis/> deinde <ephemera/> - ephemera vincit si idem campus */
+interior StmlNodus*
+statum_fundere (
+               StmlNodus* radix,
+                 Piscina* p,
+     InternamentumChorda* in)
+{
+    StmlNodus* fusio;
+       chorda* versio;
+          i32  g;
+
+    versio = stml_attributum_capere(radix, "versio");
+    si (!versio)
+    {
+        redde NIHIL;
+    }
+    fusio = stml_elementum_creare(p, in, "status");
+    si (chorda_aequalis_literis(*versio, "2"))
+    {
+        attributa_fundere(fusio, radix, p, in);
+        redde fusio;
+    }
+    si (chorda_aequalis_literis(*versio, "1"))
+    {
+        per (g = ZEPHYRUM; g < II; g++)
+        {
+            attributa_fundere(fusio, stml_invenire_liberum(radix,
+                tituli_versionis_primae[g]), p, in);
+        }
+        redde fusio;
+    }
+    redde NIHIL;
 }
 
 i32
@@ -298,7 +353,7 @@ conservatio_ramum_addere (
                  b32  inventum;
         StmlResultus  res;
                  i32  restituti;
-                 i32  g;
+           StmlNodus* fusio;
 
     si (!conservatio || !ramus || !organum || !clavis)
     {
@@ -325,29 +380,20 @@ conservatio_ramum_addere (
         via_status(rc.clavis, p), p, &inventum);
     si (inventum)
     {
-        res = stml_legere(fons, p, conservatio->intern);
-        si (   !res.successus || !res.elementum_radix
-            || !stml_attributum_capere(res.elementum_radix, "versio")
-            || !chorda_aequalis_literis(*stml_attributum_capere(
-                   res.elementum_radix, "versio"), "1"))
+        res    = stml_legere(fons, p, conservatio->intern);
+        fusio  = (res.successus && res.elementum_radix)
+            ? statum_fundere(res.elementum_radix, p,
+            conservatio->intern)
+            : NIHIL;
+        si (!fusio)
         {
             fprintf(stderr, "conservatio: status servatus %s "
                 "praeteritus (forma aut versio ignota)\n", clavis);
         }
         alioquin
         {
-            per (g = ZEPHYRUM; g < INSULA_GENUS_NUMERUS; g++)
-            {
-                StmlNodus* n;
-
-                n = stml_invenire_liberum(res.elementum_radix,
-                    genera_titulus[g]);
-                si (n)
-                {
-                    restituti += insulam_restituere(conservatio, &rc,
-                        (InsulaGenus)g, n, p);
-                }
-            }
+            restituti = attributa_restituere(conservatio, &rc, fusio,
+                p);
         }
     }
 

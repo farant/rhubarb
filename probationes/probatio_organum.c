@@ -499,8 +499,9 @@ _probare_dominos (
             perge;
         }
         numerus++;
+        /* C2: insula una - linea sine 'genus' */
         g = stml_attributum_capere(d, "genus");
-        CREDO_VERUM(g && chorda_aequalis_literis(*g, "ephemera"));
+        CREDO_NIHIL(g);
     }
     /* XII campi insulae cum scriptore (S5c: palette quoque) */
     CREDO_AEQUALIS_S32((s32)numerus, XII);

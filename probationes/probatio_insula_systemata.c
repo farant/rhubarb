@@ -43,8 +43,8 @@ scribere (
 
     strcpy(copia, par);
     insula_scriptorem_ponere(repo, chorda_ex_literis(scriptor, p));
-    redde ramus ? mutare_ramum(ramus, INSULA_EPHEMERA, ponere, copia)
-                : mutare_ephemera(repo, ponere, copia);
+    redde ramus ? mutare_ramum(ramus, ponere, copia)
+                : insula_mutare(repo, ponere, copia);
 }
 
 hic_manens constans character domini_textus[] =
@@ -71,10 +71,10 @@ _probare_radicem (
      InsulaRepositorium* repo;
 
     in   = internamentum_creare(c->piscina);
-    repo = insula_repositorium_creare(c->piscina, in, "<r/>",
+    repo = insula_repositorium_creare(c->piscina, in,
         "<r stratum=\"1\" zoom=\"1\"/>");
     CREDO_NECESSE_NON_NIHIL(repo);
-    CREDO_AEQUALIS_I32(insula_dominos_legere(repo, INSULA_EPHEMERA,
+    CREDO_AEQUALIS_I32(insula_dominos_legere(repo,
         domini(c->piscina, in)), II);
 
     CREDO_VERUM(scribere(repo, NIHIL, "strata.agere", "stratum=2",
@@ -110,12 +110,12 @@ _probare_ramum (
              InsulaRamus  ramus;
 
     in   = internamentum_creare(c->piscina);
-    repo = insula_repositorium_creare(c->piscina, in, "<h/>",
+    repo = insula_repositorium_creare(c->piscina, in,
         "<h><w id=\"a\" stratum=\"1\" zoom=\"1\"/></h>");
     CREDO_NECESSE_NON_NIHIL(repo);
     ramus = insula_ramus(repo, "w", "a");
     CREDO_AEQUALIS_I32(insula_ramus_dominos_legere(&ramus,
-        INSULA_EPHEMERA, domini(c->piscina, in)), II);
+        domini(c->piscina, in)), II);
     CREDO_VERUM(scribere(repo, &ramus, "relatio", "stratum=7",
         c->piscina));
     CREDO_FALSUM(scribere(repo, &ramus, "quilibet", "stratum=8",

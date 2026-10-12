@@ -101,7 +101,7 @@ ephemera_legere (
 {
     chorda* a;
 
-    a = insula_attributum(app->repo, INSULA_EPHEMERA, titulus);
+    a = insula_attributum(app->repo, titulus);
     redde a ? *a : chorda_ex_literis("", piscina);
 }
 
@@ -172,7 +172,7 @@ ponere (
     r             = insula_ramus_radix(app->repo);
     insula_scriptorem_ponere(app->repo, chorda_ex_literis(scriptor,
         piscina));
-    (vacuum)mutare_ramum(&r, INSULA_EPHEMERA, ponendum_mutator, &q);
+    (vacuum)mutare_ramum(&r, ponendum_mutator, &q);
     insula_scriptorem_ponere(app->repo, chorda_ex_literis("", piscina));
 }
 

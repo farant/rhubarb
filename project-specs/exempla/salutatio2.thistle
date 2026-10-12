@@ -162,7 +162,7 @@ not two copies that can drift apart.
 
 <c! id="repositorium">
 repo = insula_repositorium_creare(piscina, intern,
-    "<documentum/>", "<ephemera/>");
+    "<insula/>");
 </c>
 
 ## Figura registrata: where the two halves meet

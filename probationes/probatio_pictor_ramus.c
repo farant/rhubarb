@@ -67,14 +67,12 @@ s32 principale (vacuum)
     doc = pictor_documentum_creare(piscina, intern, vol, "p1", XL, XXX,
                                    LXIV);
     repo = insula_repositorium_creare(piscina, intern,
-        "<hospes><pictor id=\"p1\"/><pictor id=\"p2\"/></hospes>",
-        "<hospes focus=\"tabula\">"
-        "<pictor id=\"p1\" latitudo=\"40\" altitudo=\"30\""
-        " instrumentum=\"nihil\" color_primus=\"3\""
-        " magnitudo_penicilli=\"1\" zoom=\"1\""
-        " superficies_latitudo=\"120\""
-        " superficies_altitudo=\"64\"/>"
-        "<pictor id=\"p2\" latitudo=\"8\" altitudo=\"8\""
+        "<hospes focus=\"tabula\"><pictor id=\"p1\""
+        " latitudo=\"40\" altitudo=\"30\" instrumentum=\"nihil\""
+        " color_primus=\"3\" magnitudo_penicilli=\"1\""
+        " zoom=\"1\" superficies_latitudo=\"120\""
+        " superficies_altitudo=\"64\"/><pictor id=\"p2\""
+        " latitudo=\"8\" altitudo=\"8\""
         " instrumentum=\"nihil\"/></hospes>");
     CREDO_NON_NIHIL(repo);
     p1 = insula_ramus(repo, "pictor", "p1");
@@ -85,9 +83,9 @@ s32 principale (vacuum)
 
         CREDO_VERUM(pictor_organum_parare(piscina, intern, &canon,
             &domini));
-        insula_ramus_canonem_ponere(&p1, INSULA_DURABILIS, canon);
-        insula_ramus_canonem_ponere(&p1, INSULA_EPHEMERA, canon);
-        CREDO_VERUM(insula_ramus_dominos_legere(&p1, INSULA_EPHEMERA,
+        insula_ramus_canonem_ponere(&p1, canon);
+        insula_ramus_canonem_ponere(&p1, canon);
+        CREDO_VERUM(insula_ramus_dominos_legere(&p1,
             domini) > ZEPHYRUM);
     }
     reg             = actio_registrum_creare(piscina, intern);
@@ -124,11 +122,11 @@ s32 principale (vacuum)
 
     imprimere("\n--- II: 'p' instrumentum in p1 solo ---\n");
     CREDO_VERUM(manus_ludus_clavem(m, 'p', ZEPHYRUM));
-    CREDO_VERUM(valor_est(insula_ramus_attributum(&p1, INSULA_EPHEMERA,
+    CREDO_VERUM(valor_est(insula_ramus_attributum(&p1,
         "instrumentum"), "penicillus"));
-    CREDO_VERUM(valor_est(insula_ramus_attributum(&p2, INSULA_EPHEMERA,
+    CREDO_VERUM(valor_est(insula_ramus_attributum(&p2,
         "instrumentum"), "nihil"));
-    CREDO_NIHIL(insula_attributum(repo, INSULA_EPHEMERA,
+    CREDO_NIHIL(insula_attributum(repo,
         "instrumentum"));
     CREDO_FALSUM(insula_mendacium(repo));
 

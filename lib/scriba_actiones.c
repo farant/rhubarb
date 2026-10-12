@@ -26,7 +26,7 @@ attributum_s32 (
     chorda* a;
        s32  v;
 
-    a = insula_ramus_attributum(ramus, INSULA_EPHEMERA, titulus);
+    a = insula_ramus_attributum(ramus, titulus);
     si (a && chorda_ut_s32(*a, &v))
     {
         redde v;
@@ -43,7 +43,7 @@ attributum_s64 (
     chorda* a;
        s64  v;
 
-    a = insula_ramus_attributum(ramus, INSULA_EPHEMERA, titulus);
+    a = insula_ramus_attributum(ramus, titulus);
     si (a && chorda_ut_s64(*a, &v))
     {
         redde v;
@@ -59,7 +59,7 @@ attributum_est (
 {
     chorda* a;
 
-    a = insula_ramus_attributum(ramus, INSULA_EPHEMERA, titulus);
+    a = insula_ramus_attributum(ramus, titulus);
     redde a ? chorda_aequalis_literis(*a, valor) : FALSUM;
 }
 
@@ -136,7 +136,7 @@ capsam_legere (
     {
         n = VIM_CLIPBOARD_LINEAE_MAXIMAE;
     }
-    a = insula_ramus_attributum(ramus, INSULA_EPHEMERA, "capsa");
+    a = insula_ramus_attributum(ramus, "capsa");
     longitudo = a ? scriba_solvere(*a, octeti, CAPSA_OCTETI) : ZEPHYRUM;
     si (longitudo < ZEPHYRUM)
     {
@@ -225,7 +225,7 @@ status_legere (
         -I);
     st.selectio_initium_columna  = attributum_s32(ramus,
         "selectio_columna", ZEPHYRUM);
-    a = insula_ramus_attributum(ramus, INSULA_EPHEMERA,
+    a = insula_ramus_attributum(ramus,
         "clavis_praecedens");
     si (a && scriba_solvere(*a, &c, I) == I)
     {
@@ -329,7 +329,7 @@ status_scribere (
         c             = st.clavis_praecedens;
         s.praecedens  = scriba_effugere(&c, I, sa->doc->piscina);
     }
-    (vacuum)mutare_ramum(ramus, INSULA_EPHEMERA,
+    (vacuum)mutare_ramum(ramus,
         status_scribere_mutator, &s);
 }
 
@@ -557,7 +557,7 @@ paginam_ponere (
     st.clavis_praecedens         = '\0';
     st.esperans_fd               = FALSUM;
     status_scribere(ramus, sa, st, &capsa);
-    (vacuum)mutare_ramum(ramus, INSULA_EPHEMERA, dimensiones_mutator,
+    (vacuum)mutare_ramum(ramus, dimensiones_mutator,
         doc);
     redde VERUM;
 }
@@ -681,7 +681,7 @@ nuntium_ponere (
     constans InsulaRamus* ramus,
                   chorda  nuntius)
 {
-    (vacuum)mutare_ramum(ramus, INSULA_EPHEMERA, nuntius_mutator,
+    (vacuum)mutare_ramum(ramus, nuntius_mutator,
         &nuntius);
 }
 
@@ -692,7 +692,7 @@ nuntium_tollere (
 {
     chorda vacua;
 
-    si (insula_ramus_attributum(ramus, INSULA_EPHEMERA, "nuntius"))
+    si (insula_ramus_attributum(ramus, "nuntius"))
     {
         vacua.datum    = NIHIL;
         vacua.mensura  = ZEPHYRUM;
@@ -1052,7 +1052,7 @@ scriba_pagina_clavis (
         && ev->datum.clavis.runa == 'r')
     {
         si (   !attributum_est(&ramus, "modus", "normalis")
-            && insula_ramus_attributum(&ramus, INSULA_EPHEMERA,
+            && insula_ramus_attributum(&ramus,
             "modus"))
         {
             redde FALSUM;

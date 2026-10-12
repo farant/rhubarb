@@ -125,9 +125,9 @@ superficies_est (
     InsulaRamus ramus;
 
     ramus = insula_ramus(v->repo, genus, id);
-    redde valor_est(insula_ramus_attributum(&ramus, INSULA_EPHEMERA,
+    redde valor_est(insula_ramus_attributum(&ramus,
         "superficies_latitudo"), latitudo)
-        && valor_est(insula_ramus_attributum(&ramus, INSULA_EPHEMERA,
+        && valor_est(insula_ramus_attributum(&ramus,
         "superficies_altitudo"), altitudo);
 }
 
@@ -289,7 +289,7 @@ s32 principale (vacuum)
         e = magnitudo_nova(CCC, CCCXX);
         dispensator_tractare(d, &e);
     }
-    CREDO_VERUM(valor_est(insula_attributum(v->repo, INSULA_EPHEMERA,
+    CREDO_VERUM(valor_est(insula_attributum(v->repo,
         "superficies_altitudo"), "320"));
     /* dimidium CL (cellulis rotundatum), reliquum CL */
     CREDO_VERUM(superficies_est(v, "scriba", "s1_sinistrum_scriba",

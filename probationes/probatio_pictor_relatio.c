@@ -49,7 +49,7 @@ activum_ponere (
     sprintf(par, "stratum_activum=%s", id);
     insula_scriptorem_ponere(repo, chorda_ex_literis("strata.agere",
         p));
-    redde mutare_ramum(&m->ramus, INSULA_EPHEMERA, ponere, par);
+    redde mutare_ramum(&m->ramus, ponere, par);
 }
 
 interior b32
@@ -59,7 +59,7 @@ activum_est (
 {
     chorda* a;
 
-    a = insula_ramus_attributum(&m->ramus, INSULA_EPHEMERA,
+    a = insula_ramus_attributum(&m->ramus,
         "stratum_activum");
     redde id ? (a && chorda_aequalis_literis(*a, id)) : a == NIHIL;
 }
@@ -87,7 +87,7 @@ mundum_creare (
                     b32  cum_conservatione)
 {
     memset(w, ZEPHYRUM, magnitudo(*w));
-    w->repo = insula_repositorium_creare(p, in, "<hospes/>",
+    w->repo = insula_repositorium_creare(p, in,
         "<hospes focus=\"tabula\"/>");
     si (!w->repo)
     {
@@ -219,7 +219,7 @@ _probare_restitutionem (
         NIHIL, CDLXXX, CDLXXX, &w.systemata));
     /* zoom restitutus, stratum 7 (nullum) reparatum */
     CREDO_VERUM(chorda_aequalis_literis(*insula_ramus_attributum(
-        &m.ramus, INSULA_EPHEMERA, "zoom"), "2"));
+        &m.ramus, "zoom"), "2"));
     CREDO_VERUM(activum_est(&m, "1"));
     volumen_claudere(vol);
 }

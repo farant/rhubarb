@@ -420,11 +420,10 @@ dispensatorem_probare (vacuum)
     imprimere("\n--- IV: dispensator - focus et actiones ---\n");
     memset(&sinistra, ZEPHYRUM, magnitudo(Ludicra));
     memset(&dextra, ZEPHYRUM, magnitudo(Ludicra));
-    repo = insula_repositorium_creare(piscina, intern, "<documentum/>",
-        "<ephemera/>");
-    reg  = actio_registrum_creare(piscina, intern);
-    fa   = actio_registrum_creare(piscina, intern);
-    fb   = actio_registrum_creare(piscina, intern);
+    repo  = insula_repositorium_creare(piscina, intern, "<insula/>");
+    reg   = actio_registrum_creare(piscina, intern);
+    fa    = actio_registrum_creare(piscina, intern);
+    fb    = actio_registrum_creare(piscina, intern);
     (vacuum)actio_registrare(fa, "pagina.clavis", paginam_tractare,
         &sinistra);
     (vacuum)actio_registrare(fb, "pagina.clavis", paginam_tractare,

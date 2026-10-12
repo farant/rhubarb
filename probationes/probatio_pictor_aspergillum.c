@@ -143,7 +143,7 @@ ephemera_legere (
 {
     chorda* a;
 
-    a = insula_attributum(app->repo, INSULA_EPHEMERA, titulus);
+    a = insula_attributum(app->repo, titulus);
     redde a ? *a : chorda_ex_literis("", piscina);
 }
 
@@ -232,7 +232,7 @@ colorem_primum_ponere (
     r = insula_ramus_radix(app->repo);
     insula_scriptorem_ponere(app->repo, chorda_ex_literis(
         "color_primus.ponere", piscina));
-    (vacuum)mutare_ramum(&r, INSULA_EPHEMERA, color_mutator, &color);
+    (vacuum)mutare_ramum(&r, color_mutator, &color);
     insula_scriptorem_ponere(app->repo, chorda_ex_literis("", piscina));
 }
 
@@ -258,7 +258,7 @@ magnitudinem_ponere (
     r = insula_ramus_radix(app->repo);
     insula_scriptorem_ponere(app->repo, chorda_ex_literis(
         "magnitudo.ponere", piscina));
-    (vacuum)mutare_ramum(&r, INSULA_EPHEMERA, magnitudo_mutator, &m);
+    (vacuum)mutare_ramum(&r, magnitudo_mutator, &m);
     insula_scriptorem_ponere(app->repo, chorda_ex_literis("", piscina));
 }
 

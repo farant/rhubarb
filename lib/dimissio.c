@@ -33,7 +33,7 @@ apertus (
 {
     chorda* a;
 
-    a = insula_ramus_attributum(&rd->ramus, INSULA_EPHEMERA,
+    a = insula_ramus_attributum(&rd->ramus,
         chorda_ut_cstr(k->titulus, rd->ramus.repo->piscina));
     redde a && a->mensura > ZEPHYRUM;
 }
@@ -63,7 +63,7 @@ claudere (
     prior = dim->repo->scriptor;
     insula_scriptorem_ponere(dim->repo, chorda_ex_literis(
         scriptor_dimissionis, dim->piscina));
-    bene = mutare_ramum(&rd->ramus, INSULA_EPHEMERA, tollere_mutator,
+    bene = mutare_ramum(&rd->ramus, tollere_mutator,
         (vacuum*)chorda_ut_cstr(k->titulus, dim->piscina));
     insula_scriptorem_ponere(dim->repo, prior);
     redde bene;

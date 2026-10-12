@@ -17,14 +17,13 @@
 interior s32
 attributum_s32 (
     constans InsulaRamus* ramus,
-             InsulaGenus  genus,
       constans character* titulus,
                      s32  praestitutum)
 {
     chorda* a;
        s32  v;
 
-    a = insula_ramus_attributum(ramus, genus, titulus);
+    a = insula_ramus_attributum(ramus, titulus);
     si (a && chorda_ut_s32(*a, &v))
     {
         redde v;
@@ -35,13 +34,12 @@ attributum_s32 (
 interior chorda
 attributum_chorda (
     constans InsulaRamus* ramus,
-             InsulaGenus  genus,
       constans character* titulus)
 {
     chorda* a;
     chorda  vacua;
 
-    a = insula_ramus_attributum(ramus, genus, titulus);
+    a = insula_ramus_attributum(ramus, titulus);
     si (a)
     {
         redde *a;
@@ -304,7 +302,7 @@ stratum_currens_compositum (
        i32  n;
 
     n = pictor_documentum_numerus_stratorum(doc);
-    a = insula_ramus_attributum(ramus, INSULA_EPHEMERA,
+    a = insula_ramus_attributum(ramus,
         "stratum_activum");
     si (a && chorda_ut_s32(*a, &id))
     {
@@ -524,10 +522,10 @@ pictor_componere (
     ramus = cfg->ramus.repo ? cfg->ramus : insula_ramus_radix(repo);
     /* 013 B3: superficies STATUS est (dispensator scribit); ante
      * nuntium primum magnitudo configurata */
-    latitudo = attributum_s32(&ramus, INSULA_EPHEMERA,
+    latitudo = attributum_s32(&ramus,
         "superficies_latitudo",
         (s32)cfg->fenestra_latitudo);
-    altitudo = attributum_s32(&ramus, INSULA_EPHEMERA,
+    altitudo = attributum_s32(&ramus,
         "superficies_altitudo",
         (s32)cfg->fenestra_altitudo);
     cw = (cfg->cellula_latitudo > ZEPHYRUM) ? (s32)cfg->cellula_latitudo
@@ -565,13 +563,13 @@ pictor_componere (
     fs = _ad_pixela(dispositio_fines(dispositio, d_status), latitudo
         / cw,
         altitudo / ch, latitudo, altitudo, cw, ch);
-    instrumentum = attributum_chorda(&ramus, INSULA_EPHEMERA,
+    instrumentum = attributum_chorda(&ramus,
         "instrumentum");
-    doc_latitudo = attributum_s32(&ramus, INSULA_EPHEMERA, "latitudo",
+    doc_latitudo = attributum_s32(&ramus, "latitudo",
         I);
-    doc_altitudo = attributum_s32(&ramus, INSULA_EPHEMERA, "altitudo",
+    doc_altitudo = attributum_s32(&ramus, "altitudo",
         I);
-    zoom = attributum_s32(&ramus, INSULA_EPHEMERA, "zoom", I);
+    zoom = attributum_s32(&ramus, "zoom", I);
     si (zoom < I)
     {
         zoom = I;
@@ -627,16 +625,16 @@ pictor_componere (
             /* "semen radius color color_secundus exemplar" (Franus:
              * praevisio colore vero, non accentus; P3 exemplar) */
             sprintf(titulus_guttarum, "%ld %d %d %d %d",
-                (longus)attributum_s32(&ramus, INSULA_EPHEMERA, "semen",
+                (longus)attributum_s32(&ramus, "semen",
                     ZEPHYRUM),
                 (integer)(PICTOR_ASPERGILLI_RADIUS
-                          * attributum_s32(&ramus, INSULA_EPHEMERA,
+                          * attributum_s32(&ramus,
                                 "magnitudo_aspergilli", I)),
-                (integer)attributum_s32(&ramus, INSULA_EPHEMERA,
+                (integer)attributum_s32(&ramus,
                     "color_primus", ZEPHYRUM),
-                (integer)attributum_s32(&ramus, INSULA_EPHEMERA,
+                (integer)attributum_s32(&ramus,
                     "color_secundus", -I),
-                (integer)attributum_s32(&ramus, INSULA_EPHEMERA,
+                (integer)attributum_s32(&ramus,
                     "exemplar", ZEPHYRUM));
             componens_ponere_titulum(tabula, titulus_guttarum);
         }
@@ -662,17 +660,17 @@ pictor_componere (
                   s32 secundus;
                   s32 color;
 
-            primus    = attributum_s32(&ramus, INSULA_EPHEMERA,
+            primus    = attributum_s32(&ramus,
                 "color_primus", ZEPHYRUM);
-            secundus  = attributum_s32(&ramus, INSULA_EPHEMERA,
+            secundus  = attributum_s32(&ramus,
                 "color_secundus", -I);
             color     = (primus >= ZEPHYRUM && primus < XVI) ? primus
-                : (attributum_s32(&ramus, INSULA_EPHEMERA, "exemplar",
+                : (attributum_s32(&ramus, "exemplar",
                        ZEPHYRUM) != ZEPHYRUM
                    && secundus >= ZEPHYRUM && secundus < XVI) ? secundus
                 : -I;
             sprintf(titulus_penicilli, "%d %d", (integer)attributum_s32(
-                &ramus, INSULA_EPHEMERA,
+                &ramus,
                 chorda_aequalis_literis(instrumentum, "linea")
                 ? "magnitudo_lineae" : "magnitudo_penicilli", I),
                 (integer)color);
@@ -702,20 +700,20 @@ pictor_componere (
         quadratum_addere(piscina, intern, status,
             "quadratum.instrumentum", cw, y, t);
         sprintf(t, "color:%d", (integer)attributum_s32(&ramus,
-            INSULA_EPHEMERA, "color_primus", ZEPHYRUM));
+            "color_primus", ZEPHYRUM));
         quadratum_addere(piscina, intern, status,
             "quadratum.color_primus", II * cw + XX, y, t);
         sprintf(t, "color:%d", (integer)attributum_s32(&ramus,
-            INSULA_EPHEMERA, "color_secundus", -I));
+            "color_secundus", -I));
         quadratum_addere(piscina, intern, status,
             "quadratum.color_secundus", III * cw + II * XX, y, t);
         /* P3: exemplar coloribus veris - "exemplar:<n>:<primus>:
          * <secundus>" */
         sprintf(t, "exemplar:%d:%d:%d", (integer)attributum_s32(&ramus,
-            INSULA_EPHEMERA, "exemplar", ZEPHYRUM),
-            (integer)attributum_s32(&ramus, INSULA_EPHEMERA,
+            "exemplar", ZEPHYRUM),
+            (integer)attributum_s32(&ramus,
                 "color_primus", ZEPHYRUM),
-            (integer)attributum_s32(&ramus, INSULA_EPHEMERA,
+            (integer)attributum_s32(&ramus,
                 "color_secundus", -I));
         quadratum_addere(piscina, intern, status, "quadratum.exemplar",
             IV * cw + III * XX, y, t);
@@ -724,13 +722,13 @@ pictor_componere (
         si (chorda_aequalis_literis(instrumentum, "aspergillum"))
         {
             sprintf(t, "magnitudo:aspergillum:%d", (integer)
-                attributum_s32(&ramus, INSULA_EPHEMERA,
+                attributum_s32(&ramus,
                     "magnitudo_aspergilli", I));
         }
         alioquin si (chorda_aequalis_literis(instrumentum, "linea"))
         {
             sprintf(t, "magnitudo:linea:%d", (integer)attributum_s32(
-                &ramus, INSULA_EPHEMERA, "magnitudo_lineae", I));
+                &ramus, "magnitudo_lineae", I));
         }
         alioquin si (chorda_aequalis_literis(instrumentum, "spongia"))
         {
@@ -740,7 +738,7 @@ pictor_componere (
         alioquin
         {
             sprintf(t, "magnitudo:%d", (integer)attributum_s32(&ramus,
-                INSULA_EPHEMERA, "magnitudo_penicilli", I));
+                "magnitudo_penicilli", I));
         }
         q = quadratum_addere(piscina, intern, status,
             "quadratum.magnitudo", V * cw + IV * XX, y, t);
@@ -781,7 +779,7 @@ pictor_componere (
            s32 qx;
            s32 qy;
 
-        palette = attributum_chorda(&ramus, INSULA_EPHEMERA, "palette");
+        palette = attributum_chorda(&ramus, "palette");
         qy = fs.y + (fs.altitudo > XX ? (fs.altitudo - XX) / II
                                       : ZEPHYRUM);
         qx = chorda_aequalis_literis(palette, "color_primus")
@@ -812,7 +810,7 @@ pictor_componere (
         {
             componens_addere_liberum(radix, palettam_componere(piscina,
                 intern, palette, fs.x + qx, qy, instrumentum,
-                attributum_s32(&ramus, INSULA_EPHEMERA,
+                attributum_s32(&ramus,
                     chorda_aequalis_literis(palette, "magnitudo")
                     ? (chorda_aequalis_literis(instrumentum,
                     "aspergillum")
@@ -823,9 +821,9 @@ pictor_componere (
                     chorda_aequalis_literis(palette, "color_secundus")
                     ? -I : chorda_aequalis_literis(palette, "magnitudo")
                     ? I : ZEPHYRUM),
-                attributum_s32(&ramus, INSULA_EPHEMERA, "color_primus",
+                attributum_s32(&ramus, "color_primus",
                     ZEPHYRUM),
-                attributum_s32(&ramus, INSULA_EPHEMERA,
+                attributum_s32(&ramus,
                 "color_secundus",
                     -I)));
         }

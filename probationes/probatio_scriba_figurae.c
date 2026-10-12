@@ -39,11 +39,10 @@ arbor (
        ScribaCompositio  cfg;
               character  insula[DXII];
 
-    /* status-plan C1: dimensiones folii in ephemera (insula una) */
+    /* insula una (C2): dimensiones folii cum statu */
     sprintf(insula, "<scriba latitudo=\"16\" altitudo=\"6\"%s",
         ephemera + strlen("<scriba"));
-    repo = insula_repositorium_creare(piscina, intern, "<scriba/>",
-        insula);
+    repo = insula_repositorium_creare(piscina, intern, insula);
     memset(&cfg, ZEPHYRUM, magnitudo(cfg));
     cfg.fenestra_latitudo  = latitudo;
     cfg.fenestra_altitudo  = altitudo;

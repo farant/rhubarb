@@ -181,10 +181,10 @@ organum_canonem_generare (
                  chorda* causa);
 
 /* <domini> generatus pro insula_ramus_dominos_legere: campi sedis
- * INSULAE cum scriptore; genus="ephemera" (S2 divisionem insularum
- * servat). S5a: campus cum referentia systemata="relatio" fert
- * (systema relationum reparat); S5c: aspectus popover
- * systemata="dimissio" (scriptor = aperiens, systema claudit). */
+ * INSULAE cum scriptore (C2: sine 'genus' - insula una). S5a: campus
+ * cum referentia systemata="relatio" fert (systema relationum
+ * reparat); S5c: aspectus popover systemata="dimissio" (scriptor =
+ * aperiens, systema claudit). */
 StmlNodus*
 organum_dominos_generare (
        constans Organum* organum,

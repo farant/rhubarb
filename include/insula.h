@@ -1,12 +1,14 @@
-/* insula.h - Insulae: status in tribus generibus, porta una per genus
+/* insula.h - Insula: status organorum in arbore UNA, porta una
  *
  * Veritas est ARBOR STML in piscina, per hoc repositorium sola
- * accessa (ludus-brainstorm.md XIII, DECISUS). Genera: DURABILIS
- * (quod basis datorum teneret) et EPHEMERA (quod restitutiones
- * supervivit). MOTUS non est insula - structura in memoria
- * (motus.h), in quiete huc effusa.
+ * accessa (ludus-brainstorm.md XIII, DECISUS). C2 (status-plan,
+ * 2026-10-12): genera DURABILIS / EPHEMERA sublata - vita per campum
+ * in manifesto (organum: persistens, transiens, probatio), non per
+ * arborem; documenta (quod basis datorum teneret) in voluminibus
+ * (historia). MOTUS non est insula - structura in memoria (motus.h),
+ * in quiete huc effusa.
  *
- * PORTA UNICA: mutare_durabile / mutare_ephemera. Mutator in
+ * PORTA UNICA: insula_mutare (et mutare_ramum). Mutator in
  * DUPLICATO currit (scribere+legere in piscinam alteram), canon
  * iudicat, deinde permutatio - scriptura aut tota aut nulla.
  *
@@ -36,12 +38,6 @@
  * Typi
  * ================================================== */
 
-nomen enumeratio {
-    INSULA_DURABILIS = ZEPHYRUM,
-    INSULA_EPHEMERA,
-    INSULA_GENUS_NUMERUS
-} InsulaGenus;
-
 /* Mutator: in DUPLICATO radicis currit; piscina et intern eius
  * sunt in quibus nodi novi nascantur. */
 nomen vacuum (*InsulaMutator)(
@@ -53,9 +49,8 @@ nomen vacuum (*InsulaMutator)(
 /* Vocatur post omnem scripturam per portam successam - pictor P3
  * hic acta appendit. */
 nomen vacuum (*InsulaActarius)(
-    InsulaGenus  genus,
-     StmlNodus*  radix,
-        vacuum*  ctx);
+    StmlNodus*  radix,
+       vacuum*  ctx);
 
 nomen structura {
     chorda attributum;
@@ -69,20 +64,19 @@ nomen structura {
 nomen structura {
                 Piscina* piscina;      /* repositorii ipsius */
     InternamentumChorda* intern;
-                         /* ping-pong per genus */
-                Piscina* piscinae[INSULA_GENUS_NUMERUS][II];
-                    i32  activa[INSULA_GENUS_NUMERUS];
-              StmlNodus* radices[INSULA_GENUS_NUMERUS];
-                 chorda  textus_ultimus[INSULA_GENUS_NUMERUS];
-                    i32  versio[INSULA_GENUS_NUMERUS];
-                  Canon* canones[INSULA_GENUS_NUMERUS];
+                Piscina* piscinae[II];      /* alternae (scriptura) */
+                    i32  activa;
+              StmlNodus* radix;
+                 chorda  textus_ultimus;
+                    i32  versio;
+                  Canon* canon;
          InsulaActarius  actarius;
                  vacuum* actarius_ctx;
                     b32  mendacium;
                  chorda  causa;
-                    Xar* domini[INSULA_GENUS_NUMERUS];
+                    Xar* domini;
                  chorda  scriptor;      /* currens; vacuus = anonymus */
-                    Xar* canones_ramorum[INSULA_GENUS_NUMERUS]; /* R1 */
+                    Xar* canones_ramorum; /* R1 */
 } InsulaRepositorium;
 
 /* RAMUS (insula-rami-plan R1): repositorium + liberum radicis per
@@ -106,31 +100,26 @@ InsulaRepositorium*
 insula_repositorium_creare (
                 Piscina* piscina,
     InternamentumChorda* intern,
-     constans character* durabilis_stml,
-     constans character* ephemera_stml);
+     constans character* stml);
 
 /* LECTIO SOLA. Mutare per hunc pointer = mendacium. */
 StmlNodus*
 insula_radix (
-    InsulaRepositorium* repo,
-           InsulaGenus  genus);
+    InsulaRepositorium* repo);
 
 /* Attributum radicis; NIHIL si abest. Pointer in internamentum. */
 chorda*
 insula_attributum (
     InsulaRepositorium* repo,
-           InsulaGenus  genus,
     constans character* titulus);
 
 i32
 insula_versio (
-    constans InsulaRepositorium* repo,
-                    InsulaGenus  genus);
+    constans InsulaRepositorium* repo);
 
 chorda
 insula_scribere (
     InsulaRepositorium* repo,
-           InsulaGenus  genus,
                Piscina* piscina);
 
 
@@ -149,16 +138,14 @@ insula_ramus (
     constans character* elementum,
     constans character* id);
 
-/* LECTIO SOLA; NIHIL si ramus in genere abest */
+/* LECTIO SOLA; NIHIL si ramus abest */
 StmlNodus*
 insula_ramus_nodus (
-    constans InsulaRamus* ramus,
-             InsulaGenus  genus);
+    constans InsulaRamus* ramus);
 
 chorda*
 insula_ramus_attributum (
     constans InsulaRamus* ramus,
-             InsulaGenus  genus,
       constans character* titulus);
 
 /* porta rami: mutator NODUM RAMI in duplicato radicis accipit; domini
@@ -167,14 +154,12 @@ insula_ramus_attributum (
 b32
 mutare_ramum (
     constans InsulaRamus* ramus,
-             InsulaGenus  genus,
            InsulaMutator  fn,
                   vacuum* ctx);
 
 b32
 insula_ramus_dominum_ponere (
     constans InsulaRamus* ramus,
-             InsulaGenus  genus,
       constans character* attributum,
       constans character* dominus);
 
@@ -182,7 +167,6 @@ insula_ramus_dominum_ponere (
 i32
 insula_ramus_dominos_legere (
     constans InsulaRamus* ramus,
-             InsulaGenus  genus,
                StmlNodus* domini);
 
 /* ramum initiare (T1a): ramus liberi - elementum (STML) radici
@@ -193,7 +177,6 @@ insula_ramus_dominos_legere (
 b32
 insula_ramum_initiare (
     constans InsulaRamus* ramus,
-             InsulaGenus  genus,
       constans character* elementum_stml);
 
 /* canon nodum rami iudicat (radix eius = elementum rami); canon
@@ -201,7 +184,6 @@ insula_ramum_initiare (
 vacuum
 insula_ramus_canonem_ponere (
     constans InsulaRamus* ramus,
-             InsulaGenus  genus,
                    Canon* canon);
 
 
@@ -209,14 +191,10 @@ insula_ramus_canonem_ponere (
  * Portae
  * ================================================== */
 
+/* porta UNA (olim mutare_durabile / mutare_ephemera): mutator RADICEM
+ * in duplicato accipit */
 b32
-mutare_durabile (
-    InsulaRepositorium* repo,
-         InsulaMutator  fn,
-                vacuum* ctx);
-
-b32
-mutare_ephemera (
+insula_mutare (
     InsulaRepositorium* repo,
          InsulaMutator  fn,
                 vacuum* ctx);
@@ -255,7 +233,6 @@ insula_causa (
 vacuum
 insula_ponere_canonem (
     InsulaRepositorium* repo,
-           InsulaGenus  genus,
                  Canon* canon);
 
 vacuum
@@ -276,24 +253,23 @@ insula_scriptorem_ponere (
     InsulaRepositorium* repo,
                 chorda  scriptor);
 
-/* Attributum radicis generis dato uni scriptori addicere. FALSUM si
- * attributum vacuum. */
+/* Attributum radicis uni scriptori addicere. FALSUM si attributum
+ * vacuum. */
 b32
 insula_dominum_ponere (
     InsulaRepositorium* repo,
-           InsulaGenus  genus,
     constans character* attributum,
     constans character* dominus);
 
-/* <domini><dominus genus attributum scriptor [systemata]/>...</domini>:
- * lineae generis dati leguntur; redde numerum lectarum. systemata
+/* <domini><dominus attributum scriptor [systemata]/>...</domini>:
+ * omnes lineae leguntur - 'genus' (forma vetus, ante C2) IGNORATUR;
+ * redde numerum lectarum. systemata
  * (S5a, status-plan): nomina systematum quae attributum quoque
  * scribere licet - possessio pro valoribus, systemata pro aspectibus
  * transversis (census X). */
 i32
 insula_dominos_legere (
     InsulaRepositorium* repo,
-           InsulaGenus  genus,
              StmlNodus* domini);
 
 /* Attributum radicis tollere (par insula_attributum_ponere). */

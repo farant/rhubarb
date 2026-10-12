@@ -102,7 +102,7 @@ nuntius_est (
 
     l = vicus_latus(vicus_activa(v), VICUS_SINISTRUM);
     r = insula_ramus(v->repo, "scriba", chorda_ut_cstr(l->id, piscina));
-    a = insula_ramus_attributum(&r, INSULA_EPHEMERA, "nuntius");
+    a = insula_ramus_attributum(&r, "nuntius");
     redde a && chorda_aequalis_literis(*a, textus);
 }
 

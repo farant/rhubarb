@@ -137,7 +137,7 @@ attr_legere (
     /* T3a: focus in ramo activo (Motus; nullus = radix) */
     ramus = d->motus.ramus.repo ? d->motus.ramus
                                 : insula_ramus_radix(d->repo);
-    c = insula_ramus_attributum(&ramus, INSULA_EPHEMERA, titulus);
+    c = insula_ramus_attributum(&ramus, titulus);
     si (c)
     {
         redde *c;
@@ -161,7 +161,7 @@ attr_scribere (
         insula_scriptorem_ponere(d->repo,
                              chorda_ex_literis("dispensator",
                              d->piscina));
-    (vacuum)mutare_ramum(&ramus, INSULA_EPHEMERA, attr_ponere, &a);
+    (vacuum)mutare_ramum(&ramus, attr_ponere, &a);
     insula_scriptorem_ponere(d->repo, chorda_nulla());
 }
 
@@ -203,7 +203,7 @@ superficiem_scribere (
     insula_scriptorem_ponere(d->repo,
                              chorda_ex_literis("dispensator",
                              d->piscina));
-    mutare_ephemera(d->repo, superficiem_ponere, &s);
+    insula_mutare(d->repo, superficiem_ponere, &s);
     insula_scriptorem_ponere(d->repo, chorda_nulla());
 }
 
