@@ -1,7 +1,9 @@
 /* probatio_portae.c - PORTAE DECLARATAE (plan portae-declaratae T1,
- * T2): lector declarationum <porta> in capitibus cursorum et derivatio
- * operturae per suturam fictam (plagulae in memoria, registrum PORTAE
- * fictum, summaria effectuum ut litterae STML, litterae probationum).
+ * T2, T3): lector declarationum <porta> in capitibus cursorum,
+ * derivatio operturae, debita viarum mutatarum et contractus machinae
+ * per suturam fictam (plagulae in memoria, registrum PORTAE fictum,
+ * summaria effectuum ut litterae STML, litterae probationum,
+ * clausurae fictae cum numero vocationum).
  */
 #include "latina.h"
 #include "piscina.h"
@@ -26,6 +28,9 @@ nomen structura {
     constans PlagulaFicta* effectus;
     /* fons probationis -> litterae lineis divisae; absens = ignotum */
     constans PlagulaFicta* litterae;
+    /* fons C -> clausura lineis divisa; absens = ignota */
+    constans PlagulaFicta* clausurae;
+                      i32  clausurae_vocatae;
 } MundusPortarum;
 
 interior Xar*
@@ -107,13 +112,10 @@ _effectus (
 }
 
 interior Xar*
-_litterae (
-      vacuum* datum,
-      chorda  fons,
-     Piscina* piscina)
+_lineae (
+    constans PlagulaFicta* f,
+                  Piscina* piscina)
 {
-    constans MundusPortarum* m = (constans MundusPortarum*)datum;
-      constans PlagulaFicta* f = _fictam_invenire(m->litterae, fons);
                         Xar* fructus;
          constans character* initium;
          constans character* finis;
@@ -140,6 +142,29 @@ _litterae (
         }
     }
     redde fructus;
+}
+
+interior Xar*
+_litterae (
+      vacuum* datum,
+      chorda  fons,
+     Piscina* piscina)
+{
+    constans MundusPortarum* m = (constans MundusPortarum*)datum;
+
+    redde _lineae(_fictam_invenire(m->litterae, fons), piscina);
+}
+
+interior Xar*
+_clausura (
+      vacuum* datum,
+      chorda  fons,
+     Piscina* piscina)
+{
+    MundusPortarum* m = (MundusPortarum*)datum;
+
+    m->clausurae_vocatae++;
+    redde _lineae(_fictam_invenire(m->clausurae, fons), piscina);
 }
 
 /* registrum: "clavis=cursor" aut "clavis=cursor|probationes" ...
@@ -184,11 +209,14 @@ _suturam_parare (
     mundus->tabula_portarum      = _registrum(c->piscina, paria);
     mundus->effectus             = NIHIL;
     mundus->litterae             = NIHIL;
+    mundus->clausurae            = NIHIL;
+    mundus->clausurae_vocatae    = ZEPHYRUM;
     sutura->datum                = mundus;
     sutura->plagulas_enumerare   = _enumerare;
     sutura->plagulam_legere      = _legere;
     sutura->effectus             = _effectus;
     sutura->litterae_vocationum  = _litterae;
+    sutura->clausura_c           = _clausura;
     sutura->tabula_portarum      = mundus->tabula_portarum;
 }
 
@@ -205,7 +233,7 @@ _legere_mundum (
 
     _suturam_parare(c, &mundus, &sutura, plagulae, paria);
     *causa = chorda_ex_literis("", c->piscina);
-    redde portae_declaratas_legere(&sutura, c->piscina, causa);
+    redde portae_declaratas_legere(&sutura, c->piscina, causa, NIHIL);
 }
 
 /* lectio + derivatio: operturae (declarationes sanae necessariae) */
@@ -225,7 +253,7 @@ _derivare_mundum (
     _suturam_parare(c, &mundus, &sutura, plagulae, paria);
     mundus.effectus = effectus;
     mundus.litterae = litterae;
-    d = portae_declaratas_legere(&sutura, c->piscina, &causa);
+    d = portae_declaratas_legere(&sutura, c->piscina, &causa, NIHIL);
     si (d == NIHIL)
     {
         redde NIHIL;
@@ -704,7 +732,8 @@ _sectio_derivatio_suitae (
         { "tessera/probationes/probatio_folium.c",
           "./gesta/tabulariumd.sh -sanum\nbin/folium -v\nsalve mundus\n"
           "bin/probatio_folium\nbin/folium\n" },
-        { "tessera/probationes/probatio_musivum.c", "bin/musivum\n" },
+        { "tessera/probationes/probatio_musivum.c",
+          "bin/musivum\nbin/nusquam -x\n" },
         { NIHIL, NIHIL }
     };
                         Xar* o;
@@ -745,10 +774,14 @@ _sectio_derivatio_suitae (
         "tools/folium_principale.c"), I);
     CREDO_VERUM(_exemplar(p->fontes_c, "tools/probationes/folium.c")
         == NIHIL);
-    /* ambiguum nominatum, numquam electum */
-    CREDO_VERUM(_ignotum_habet(c, p->ignota, "bin/musivum"));
-    CREDO_VERUM(_exemplar(p->fontes_c, "apps/x/musivum.c") == NIHIL);
-    CREDO_AEQUALIS_I32(xar_numerus(p->ignota), I);
+    /* ambiguum: candidati OMNES tecti (tutius), ratio id dicit */
+    e = _exemplar(p->fontes_c, "apps/x/musivum.c");
+    CREDO_NECESSE_NON_NIHIL(e);
+    CREDO_VERUM(chorda_continet(e->ratio, _ch(c, "ambiguum")));
+    CREDO_NON_NIHIL(_exemplar(p->fontes_c, "apps/y/musivum.c"));
+    /* binarium sine fonte: nota, non caecum */
+    CREDO_VERUM(_ignotum_habet(c, p->notae, "bin/nusquam"));
+    CREDO_AEQUALIS_I32(xar_numerus(p->ignota), ZEPHYRUM);
 }
 
 /* VIII. ignota et annotatio 'currit': effectus ignotum, litterae
@@ -803,6 +836,332 @@ _sectio_derivatio_ignota (
     CREDO_NON_NIHIL(_exemplar(p->exemplaria, "tools/rete_fumus.sh"));
 }
 
+/* mundus debitorum communis: credo (cursor + fons compilatus), tessera
+ * (suita), rete (manu) */
+hic_manens constans PlagulaFicta _plagulae_debitorum[] = {
+    { "tools/credo_fumus.sh", "# <porta titulus=\"credo\"/>\n" },
+    { "tools/credo_convertere.py", "" },
+    { "lib/credo.c", "" },
+    { "include/credo.h", "" },
+    { "tessera/compile_probationes.sh",
+      "# <porta titulus=\"tessera\" tegit=\"tessera/fixa/*\"/>\n" },
+    { "tessera/probationes/probatio_a.c", "" },
+    { "tessera/probationes/probatio_b.c", "" },
+    { "tools/rete_fumus.sh",
+      "# <porta manu causa=\"rete poscit\"/>\n" },
+    { "docs/x.md", "" },
+    { NIHIL, NIHIL }
+};
+
+hic_manens constans character* constans _paria_debitorum[] = {
+    "tessera=tessera/compile_probationes.sh|tessera/probationes",
+    "credo=tools/credo_fumus.sh", NIHIL
+};
+
+hic_manens constans PlagulaFicta _effectus_debitorum[] = {
+    { "tools/credo_fumus.sh",
+      "<effectus><processus radix=\"tools/credo_fumus.sh\">"
+      "<exsecutio via=\"tools/credo_convertere.py\" forma=\"via\""
+      " resolutio=\"plena\" classis=\"arbor\""
+      " plagula=\"tools/credo_fumus.sh\"/>"
+      "<lectio via=\"lib/credo.c\" forma=\"via\" resolutio=\"plena\""
+      " classis=\"arbor\" mandatum=\"clang\""
+      " plagula=\"tools/credo_fumus.sh\"/>"
+      "</processus></effectus>" },
+    { "tessera/compile_probationes.sh", "<effectus/>" },
+    { "tools/rete_fumus.sh", "<effectus/>" },
+    { NIHIL, NIHIL }
+};
+
+hic_manens constans PlagulaFicta _litterae_debitorum[] = {
+    { "tessera/probationes/probatio_a.c", "" },
+    { "tessera/probationes/probatio_b.c", "" },
+    { NIHIL, NIHIL }
+};
+
+/* lectio + derivatio + debita viarum (lineis divisae) in mundo dato;
+ * *vocatae = clausurae rogatae */
+interior Xar*
+_debita_mundi (
+           CredoContextus*  c,
+    constans PlagulaFicta*  effectus,
+    constans PlagulaFicta*  clausurae,
+       constans character*  viae_lineis,
+                      Xar** intecta,
+                      i32*  vocatae)
+{
+    MundusPortarum  mundus;
+      PortaeSutura  sutura;
+            chorda  causa;
+               Xar* d;
+               Xar* o;
+               Xar* viae;
+      PlagulaFicta  viae_fictae;
+               Xar* debita;
+
+    _suturam_parare(c, &mundus, &sutura, _plagulae_debitorum,
+        _paria_debitorum);
+    mundus.effectus = effectus;
+    mundus.litterae = _litterae_debitorum;
+    mundus.clausurae = clausurae;
+    d = portae_declaratas_legere(&sutura, c->piscina, &causa, NIHIL);
+    si (d == NIHIL)
+    {
+        redde NIHIL;
+    }
+    o = portae_operturas_derivare(&sutura, d, c->piscina);
+    si (o == NIHIL)
+    {
+        redde NIHIL;
+    }
+    viae_fictae.via           = "viae";
+    viae_fictae.textus        = viae_lineis;
+    viae                      = _lineae(&viae_fictae, c->piscina);
+    mundus.clausurae_vocatae  = ZEPHYRUM;
+    debita = portae_debita_computare(&sutura, o, viae, intecta,
+        c->piscina);
+    *vocatae = mundus.clausurae_vocatae;
+    redde debita;
+}
+
+interior constans PortaeDebitum*
+_debitum (
+                   Xar* debita,
+    constans character* porta)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; debita != NIHIL && i < xar_numerus(debita); i++)
+    {
+        constans PortaeDebitum* p = (constans PortaeDebitum*)
+            xar_obtinere(debita, i);
+
+        si (chorda_aequalis_literis(p->porta, porta))
+        {
+            redde p;
+        }
+    }
+    redde NIHIL;
+}
+
+interior b32
+_chordam_habet (
+                   Xar* x,
+    constans character* valor)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; x != NIHIL && i < xar_numerus(x); i++)
+    {
+        si (chorda_aequalis_literis(*(chorda*)xar_obtinere(x, i),
+            valor))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* IX. debita: via exemplari tecta, clausura fontis, manu nominata,
+ * intecta; ordo registri deinde manu; clausurae solum si via C mutata
+ * et semel per fontem; causae plures '(+N aliae)' */
+interior vacuum
+_sectio_debita (
+    CredoContextus* c)
+{
+    hic_manens constans PlagulaFicta clausurae[] = {
+        { "lib/credo.c", "lib/credo.c\ninclude/credo.h\n" },
+        { "tessera/probationes/probatio_a.c",
+          "tessera/probationes/probatio_a.c\ninclude/credo.h\n" },
+        { "tessera/probationes/probatio_b.c",
+          "tessera/probationes/probatio_b.c\n" },
+        { NIHIL, NIHIL }
+    };
+                       Xar* debita;
+                       Xar* intecta;
+                       i32  vocatae;
+    constans PortaeDebitum* p;
+
+    /* nulla via C: clausurae non rogantur */
+    debita = _debita_mundi(c, _effectus_debitorum, clausurae,
+        "tools/credo_convertere.py\ntools/rete_fumus.sh\ndocs/x.md\n",
+        &intecta, &vocatae);
+    CREDO_NECESSE_NON_NIHIL(debita);
+    CREDO_AEQUALIS_I32(vocatae, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(xar_numerus(debita), II);
+    p = (constans PortaeDebitum*)xar_obtinere(debita, ZEPHYRUM);
+    CREDO_VERUM(chorda_aequalis_literis(p->porta, "credo"));
+    CREDO_FALSUM(p->manu);
+    CREDO_VERUM(chorda_aequalis_literis(p->causa,
+        "tools/credo_convertere.py (exsecutio in"
+        " tools/credo_fumus.sh)"));
+    p = (constans PortaeDebitum*)xar_obtinere(debita, I);
+    CREDO_VERUM(chorda_aequalis_literis(p->porta,
+        "tools/rete_fumus.sh"));
+    CREDO_VERUM(p->manu);
+    CREDO_VERUM(chorda_aequalis_literis(p->causa,
+        "tools/rete_fumus.sh (cursor ipse)"));
+    CREDO_AEQUALIS_I32(xar_numerus(intecta), I);
+    CREDO_VERUM(_chordam_habet(intecta, "docs/x.md"));
+    /* caput C: clausurae fontium (semel quisque); ordo registri
+     * (tessera ante credo); causae plures */
+    debita = _debita_mundi(c, _effectus_debitorum, clausurae,
+        "include/credo.h\nlib/credo.c\n", &intecta, &vocatae);
+    CREDO_NECESSE_NON_NIHIL(debita);
+    CREDO_AEQUALIS_I32(vocatae, III);
+    CREDO_AEQUALIS_I32(xar_numerus(debita), II);
+    p = (constans PortaeDebitum*)xar_obtinere(debita, ZEPHYRUM);
+    CREDO_VERUM(chorda_aequalis_literis(p->porta, "tessera"));
+    CREDO_VERUM(chorda_aequalis_literis(p->causa,
+        "include/credo.h in clausura tessera/probationes/probatio_a.c"
+        " (probatio suitae tessera/probationes)"));
+    p = _debitum(debita, "credo");
+    CREDO_NECESSE_NON_NIHIL(p);
+    CREDO_VERUM(chorda_aequalis_literis(p->causa,
+        "include/credo.h in clausura lib/credo.c (lectio (clang) in"
+        " tools/credo_fumus.sh) (+1 aliae)"));
+    CREDO_AEQUALIS_I32(xar_numerus(intecta), ZEPHYRUM);
+    /* tegit annotationis */
+    debita = _debita_mundi(c, _effectus_debitorum, clausurae,
+        "tessera/fixa/a.txt\n", &intecta, &vocatae);
+    p = _debitum(debita, "tessera");
+    CREDO_NECESSE_NON_NIHIL(p);
+    CREDO_VERUM(chorda_aequalis_literis(p->causa,
+        "tessera/fixa/a.txt congruit 'tessera/fixa/*' (tegit"
+        " (tessera/compile_probationes.sh:1))"));
+}
+
+/* X. clausura ignota DEBETUR; opertura caeca omni viae debetur sed
+ * viam non tegit (INTECTUM manet) */
+interior vacuum
+_sectio_debita_caeca (
+    CredoContextus* c)
+{
+    hic_manens constans PlagulaFicta clausurae[] = {
+        { "lib/credo.c", "lib/credo.c\n" },
+        { NIHIL, NIHIL }
+    };
+    hic_manens constans PlagulaFicta effectus_sine_credo[] = {
+        { "tessera/compile_probationes.sh", "<effectus/>" },
+        { "tools/rete_fumus.sh", "<effectus/>" },
+        { NIHIL, NIHIL }
+    };
+                       Xar* debita;
+                       Xar* intecta;
+                       i32  vocatae;
+    constans PortaeDebitum* p;
+
+    debita = _debita_mundi(c, _effectus_debitorum, clausurae,
+        "include/alia.h\n", &intecta, &vocatae);
+    CREDO_NECESSE_NON_NIHIL(debita);
+    p = _debitum(debita, "tessera");
+    CREDO_NECESSE_NON_NIHIL(p);
+    CREDO_VERUM(chorda_continet(p->causa, _ch(c,
+        "include/alia.h: clausura tessera/probationes/probatio_a.c"
+        " ignota - debetur")));
+    CREDO_VERUM(_debitum(debita, "credo") == NIHIL);
+    /* effectus credo ignotum: caeca */
+    debita = _debita_mundi(c, effectus_sine_credo, clausurae,
+        "docs/x.md\n", &intecta, &vocatae);
+    CREDO_NECESSE_NON_NIHIL(debita);
+    p = _debitum(debita, "credo");
+    CREDO_NECESSE_NON_NIHIL(p);
+    CREDO_VERUM(chorda_aequalis_literis(p->causa,
+        "docs/x.md: effectus tools/credo_fumus.sh ignotum (quae cursor"
+        " legit et exsequitur caeca) - debetur"));
+    CREDO_VERUM(_chordam_habet(intecta, "docs/x.md"));
+}
+
+/* XI. contractus machinae: effugium, lineae TSV exactae, forma
+ * hominis, recusationes structae */
+interior vacuum
+_sectio_contractus (
+    CredoContextus* c)
+{
+    hic_manens constans PlagulaFicta plagulae[] = {
+        { "tools/credo_fumus.sh",
+          "#!/bin/bash\n# <porta titulus=\"credo\" tegti=\"x\"/>\n" },
+        { NIHIL, NIHIL }
+    };
+    hic_manens constans character* constans paria[] = {
+        "credo=tools/credo_fumus.sh", "sera=tools/sera_fumus.sh", NIHIL
+    };
+               Xar* debita;
+               Xar* intecta;
+               Xar* recusationes;
+     PortaeDebitum* d;
+    MundusPortarum  mundus;
+      PortaeSutura  sutura;
+            chorda  causa;
+            chorda  t;
+
+    CREDO_VERUM(chorda_aequalis_literis(portae_campum_effugere(_ch(c,
+        "a\tb\nc\\d\re"), c->piscina), "a\\tb\\nc\\\\d\\re"));
+    debita = xar_creare(c->piscina, (i32)magnitudo(PortaeDebitum));
+    intecta = xar_creare(c->piscina, (i32)magnitudo(chorda));
+    d = (PortaeDebitum*)xar_addere(debita);
+    d->porta = _ch(c, "credo");
+    d->causa = _ch(c, "x.c (a\tb)");
+    d->manu = FALSUM;
+    d = (PortaeDebitum*)xar_addere(debita);
+    d->porta = _ch(c, "tools/rete_fumus.sh");
+    d->causa = _ch(c, "y");
+    d->manu = VERUM;
+    *(chorda*)xar_addere(intecta) = _ch(c, "docs/x.md");
+    CREDO_VERUM(chorda_aequalis_literis(portae_debita_scribere(debita,
+        intecta, NIHIL, III, VERUM, c->piscina),
+        "DEBITUM\tcredo\t0\tx.c (a\\tb)\n"
+        "DEBITUM\ttools/rete_fumus.sh\t1\ty\n"
+        "INTECTUM\tdocs/x.md\n"));
+    CREDO_VERUM(chorda_aequalis_literis(portae_debita_scribere(debita,
+        intecta, NIHIL, III, FALSUM, c->piscina),
+        "PORTAE DEBITAE (3 viae):\n"
+        "  credo\n"
+        "      x.c (a\tb)\n"
+        "MANU (homo currit):\n"
+        "  tools/rete_fumus.sh\n"
+        "      y\n"
+        "INTECTA (nulla porta):\n"
+        "  docs/x.md\n"));
+    xar_vacare(debita);
+    CREDO_VERUM(chorda_aequalis_literis(portae_debita_scribere(debita,
+        NIHIL, NIHIL, I, FALSUM, c->piscina),
+        "PORTAE DEBITAE (1 via):\n  (nulla)\n"));
+    /* declaratae: PORTA, TEGIT, CLAUSURA */
+    t = portae_declaratas_scribere(_derivare_mundum(c,
+        _plagulae_debitorum, _paria_debitorum, _effectus_debitorum,
+        _litterae_debitorum), NIHIL, VERUM, c->piscina);
+    CREDO_VERUM(chorda_continet(t, _ch(c,
+        "PORTA\ttessera\t0\ttessera/compile_probationes.sh\t1\t\n")));
+    CREDO_VERUM(chorda_continet(t, _ch(c,
+        "TEGIT\tcredo\tvia\ttools/credo_convertere.py\texsecutio in"
+        " tools/credo_fumus.sh\n")));
+    CREDO_VERUM(chorda_continet(t, _ch(c,
+        "TEGIT\ttessera\tglobus\ttessera/fixa/*\ttegit"
+        " (tessera/compile_probationes.sh:1)\n")));
+    CREDO_VERUM(chorda_continet(t, _ch(c,
+        "CLAUSURA\tcredo\tlib/credo.c\tlectio (clang) in"
+        " tools/credo_fumus.sh\n")));
+    CREDO_VERUM(chorda_continet(t, _ch(c,
+        "PORTA\ttools/rete_fumus.sh\t1\ttools/rete_fumus.sh\t1\trete"
+        " poscit\n")));
+    /* recusationes structae: locus et causa separati */
+    _suturam_parare(c, &mundus, &sutura, plagulae, paria);
+    recusationes = NIHIL;
+    CREDO_VERUM(portae_declaratas_legere(&sutura, c->piscina, &causa,
+        &recusationes) == NIHIL);
+    CREDO_NECESSE_NON_NIHIL(recusationes);
+    CREDO_AEQUALIS_I32(xar_numerus(recusationes), III);
+    CREDO_VERUM(chorda_aequalis_literis(portae_debita_scribere(NIHIL,
+        NIHIL, recusationes, ZEPHYRUM, VERUM, c->piscina),
+        "RECUSATIO\ttools/credo_fumus.sh\t2\tattributum ignotum"
+        " 'tegti' in <porta> (titulus manu causa tegit currit)\n"
+        "RECUSATIO\t\t0\tporta 'credo' (cursor tools/credo_fumus.sh)"
+        " sine annotatione <porta titulus=\"...\"/>\n"
+        "RECUSATIO\t\t0\tporta 'sera' (cursor tools/sera_fumus.sh)"
+        " sine annotatione <porta titulus=\"...\"/>\n"));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "lectio sana", _sectio_lectio, NIHIL, NIHIL, NIHIL, NIHIL },
     { "chordae et annotationes aliae", _sectio_non_commentaria, NIHIL,
@@ -818,6 +1177,11 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "derivatio suitae", _sectio_derivatio_suitae, NIHIL, NIHIL, NIHIL,
       NIHIL },
     { "derivatio ignota", _sectio_derivatio_ignota, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { "debita", _sectio_debita, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "debita caeca", _sectio_debita_caeca, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "contractus machinae", _sectio_contractus, NIHIL, NIHIL, NIHIL,
       NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

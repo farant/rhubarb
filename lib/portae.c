@@ -99,22 +99,37 @@ _verba (
     redde verba;
 }
 
-/* linea causae: "via:linea: textus" (linea ZEPHYRUM = sine linea) */
+/* causae recusationis: textus hominis (linea una per causam) et
+ * eaedem structae (Xar de PortaeRecusatio) */
+nomen structura {
+    ChordaAedificator* textus;
+                  i32  numerus;
+                  Xar* recusationes;
+              Piscina* piscina;
+} PortaeCausae;
+
+/* causa nova: "via:linea: ante medium post" (linea ZEPHYRUM = sine
+ * linea, via vacua = sine loco) */
 interior vacuum
 _causa (
-     ChordaAedificator* a,
-                   i32* numerus,
+          PortaeCausae* k,
                 chorda  via,
                    i32  linea,
     constans character* ante,
                 chorda  medium,
     constans character* post)
 {
-    si (*numerus > ZEPHYRUM)
+       ChordaAedificator* a = k->textus;
+       ChordaAedificator* c = chorda_aedificator_creare(k->piscina,
+           (memoriae_index)LXIV);
+         PortaeRecusatio* r = (PortaeRecusatio*)xar_addere(
+             k->recusationes);
+
+    si (k->numerus > ZEPHYRUM)
     {
         chorda_aedificator_appendere_character(a, '\n');
     }
-    (*numerus)++;
+    k->numerus++;
     si (via.mensura > ZEPHYRUM)
     {
         chorda_aedificator_appendere_chorda(a, via);
@@ -125,9 +140,33 @@ _causa (
         }
         chorda_aedificator_appendere_literis(a, ": ");
     }
-    chorda_aedificator_appendere_literis(a, ante);
-    chorda_aedificator_appendere_chorda(a, medium);
-    chorda_aedificator_appendere_literis(a, post);
+    chorda_aedificator_appendere_literis(c, ante);
+    chorda_aedificator_appendere_chorda(c, medium);
+    chorda_aedificator_appendere_literis(c, post);
+    r->via    = via;
+    r->linea  = via.mensura > ZEPHYRUM ? linea : ZEPHYRUM;
+    r->causa  = chorda_aedificator_finire(c);
+    chorda_aedificator_appendere_chorda(a, r->causa);
+}
+
+/* causa ultima producitur: "... pars post" */
+interior vacuum
+_causam_extendere (
+          PortaeCausae* k,
+                chorda  pars,
+    constans character* post)
+{
+       PortaeRecusatio* r = (PortaeRecusatio*)xar_obtinere(
+           k->recusationes, xar_numerus(k->recusationes) - I);
+     ChordaAedificator* c = chorda_aedificator_creare(k->piscina,
+         (memoriae_index)LXIV);
+
+    chorda_aedificator_appendere_chorda(k->textus, pars);
+    chorda_aedificator_appendere_literis(k->textus, post);
+    chorda_aedificator_appendere_chorda(c, r->causa);
+    chorda_aedificator_appendere_chorda(c, pars);
+    chorda_aedificator_appendere_literis(c, post);
+    r->causa = chorda_aedificator_finire(c);
 }
 
 interior chorda
@@ -150,13 +189,12 @@ _valor (
 /* elementum <porta> unum -> declaratio (VERUM) aut causae (FALSUM) */
 interior b32
 _portam_legere (
-            StmlNodus* elementum,
-               chorda  via,
-                  i32  linea,
-              Piscina* piscina,
-    ChordaAedificator* causae,
-                  i32* numerus,
-       PortaDeclarata* d)
+             StmlNodus* elementum,
+                chorda  via,
+                   i32  linea,
+               Piscina* piscina,
+          PortaeCausae* causae,
+        PortaDeclarata* d)
 {
     b32 bene = VERUM;
     i32 k;
@@ -177,7 +215,7 @@ _portam_legere (
         }
         si (!notum)
         {
-            _causa(causae, numerus, via, linea, "attributum ignotum '",
+            _causa(causae, via, linea, "attributum ignotum '",
                 at->titulus != NIHIL ? *at->titulus : _valor(elementum,
                 ""), "' in <porta> (titulus manu causa tegit currit)");
             bene = FALSUM;
@@ -195,20 +233,20 @@ _portam_legere (
         piscina);
     si (d->titulus.mensura > ZEPHYRUM && d->manu)
     {
-        _causa(causae, numerus, via, linea,
+        _causa(causae, via, linea,
             "titulus et manu simul (porta"
             " aut in PORTAE aut manu)", d->titulus, "");
         bene = FALSUM;
     }
     alioquin si (d->titulus.mensura == ZEPHYRUM && !d->manu)
     {
-        _causa(causae, numerus, via, linea, "nec titulus nec manu in"
+        _causa(causae, via, linea, "nec titulus nec manu in"
             " <porta>", d->titulus, "");
         bene = FALSUM;
     }
     si (d->manu && d->causa.mensura == ZEPHYRUM)
     {
-        _causa(causae, numerus, via, linea, "manu sine causa (cur homo"
+        _causa(causae, via, linea, "manu sine causa (cur homo"
             " currit?)", d->causa, "");
         bene = FALSUM;
     }
@@ -224,8 +262,7 @@ _plagulam_legere (
              InternamentumChorda* intern,
                          Piscina* piscina,
                              Xar* declaratae,
-               ChordaAedificator* causae,
-                             i32* numerus)
+                    PortaeCausae* causae)
 {
     CrustaParsura relatio;
      MateriaNodus* radix;
@@ -241,7 +278,7 @@ _plagulam_legere (
         textus.mensura, &CRUSTA_BASH, &relatio);
     si (radix == NIHIL)
     {
-        _causa(causae, numerus, via, ZEPHYRUM, "crusta parsare nequit",
+        _causa(causae, via, ZEPHYRUM, "crusta parsare nequit",
             via, "");
         redde;
     }
@@ -260,7 +297,7 @@ _plagulam_legere (
             si (chorda_continet(a->crudum, chorda_ex_literis("<porta",
                     piscina)))
             {
-                _causa(causae, numerus, via, a->commentarium.linea,
+                _causa(causae, via, a->commentarium.linea,
                     "annotatio porta illegibilis: ", a->error, "");
             }
             perge;
@@ -285,7 +322,7 @@ _plagulam_legere (
                 perge;
             }
             si (_portam_legere(e, via, a->commentarium.linea, piscina,
-                    causae, numerus, &d))
+                    causae, &d))
             {
                 *(PortaDeclarata*)xar_addere(declaratae) = d;
             }
@@ -295,35 +332,41 @@ _plagulam_legere (
 
 Xar*
 portae_declaratas_legere (
-    constans PortaeSutura* sutura,
-                  Piscina* piscina,
-                   chorda* causa_out)
+    constans PortaeSutura*  sutura,
+                  Piscina*  piscina,
+                   chorda*  causa_out,
+                      Xar** recusationes_out)
 {
     MateriaLexiconRatum  ratum;
      MateriaLexIudicium  iudicium;
     InternamentumChorda* intern;
-      ChordaAedificator* causae;
+           PortaeCausae  causae;
                     Xar* viae;
                     Xar* declaratae;
-                    i32  numerus            = ZEPHYRUM;
                     b32  fundamentum_bonum  = VERUM;
                     i32  i;
                     i32  j;
                  chorda  vacua;
 
     vacua = chorda_ex_literis("", piscina);
-    causae = chorda_aedificator_creare(piscina, (memoriae_index)CCLVI);
+    causae.textus = chorda_aedificator_creare(piscina,
+        (memoriae_index)CCLVI);
+    causae.numerus = ZEPHYRUM;
+    causae.recusationes = xar_creare(piscina,
+        (i32)magnitudo(PortaeRecusatio));
+    causae.piscina = piscina;
     declaratae = xar_creare(piscina, (i32)magnitudo(PortaDeclarata));
     intern = internamentum_creare(piscina);
-    si (   sutura == NIHIL || causae == NIHIL || declaratae == NIHIL
-        || intern == NIHIL)
+    si (   sutura              == NIHIL || causae.textus == NIHIL
+        || causae.recusationes == NIHIL || declaratae == NIHIL
+        || intern              == NIHIL)
     {
         redde NIHIL;
     }
     si (!materia_lexicon_ratum_facere(&ratum, &CRUSTA_LEXICON,
         &iudicium))
     {
-        _causa(causae, &numerus, vacua, ZEPHYRUM,
+        _causa(&causae, vacua, ZEPHYRUM,
             "lexicon crustae ratum"
             " fieri non potest", vacua, "");
         fundamentum_bonum = FALSUM;
@@ -331,7 +374,7 @@ portae_declaratas_legere (
     viae = sutura->plagulas_enumerare(sutura->datum, piscina);
     si (viae == NIHIL)
     {
-        _causa(causae, &numerus, vacua, ZEPHYRUM,
+        _causa(&causae, vacua, ZEPHYRUM,
             "enumeratio plagularum"
             " fracta", vacua, "");
         fundamentum_bonum = FALSUM;
@@ -351,14 +394,13 @@ portae_declaratas_legere (
         si (!sutura->plagulam_legere(sutura->datum, via, piscina,
                 &textus))
         {
-            _causa(causae, &numerus, via, ZEPHYRUM, "legi nequit",
+            _causa(&causae, via, ZEPHYRUM, "legi nequit",
                 vacua,
                 "");
             perge;
         }
         _plagulam_legere(via, textus, &ratum, intern, piscina,
-            declaratae,
-            causae, &numerus);
+            declaratae, &causae);
     }
     /* registrum contra declarationes */
     per (i = ZEPHYRUM; i < xar_numerus(declaratae); i++)
@@ -384,16 +426,16 @@ portae_declaratas_legere (
         }
         si (ingressus == NIHIL)
         {
-            _causa(causae, &numerus, d->via, d->linea, "titulus '",
+            _causa(&causae, d->via, d->linea, "titulus '",
                 d->titulus, "' extra registrum PORTAE");
         }
         alioquin si (!chorda_aequalis(_via_norma(ingressus->cursor),
                          d->via))
         {
-            _causa(causae, &numerus, d->via, d->linea, "cursor alienus:"
+            _causa(&causae, d->via, d->linea, "cursor alienus:"
                 " registrum '", d->titulus, "' dat ");
-            chorda_aedificator_appendere_chorda(causae,
-                _via_norma(ingressus->cursor));
+            _causam_extendere(&causae, _via_norma(ingressus->cursor),
+                "");
         }
         per (j = ZEPHYRUM; j < i; j++)
         {
@@ -403,7 +445,7 @@ portae_declaratas_legere (
             si (   !prior->manu
                 && chorda_aequalis(prior->titulus, d->titulus))
             {
-                _causa(causae, &numerus, d->via, d->linea, "titulus '",
+                _causa(&causae, d->via, d->linea, "titulus '",
                     d->titulus, "' bis declaratus");
                 frange;
             }
@@ -426,21 +468,22 @@ portae_declaratas_legere (
         }
         si (!inventa)
         {
-            _causa(causae, &numerus, vacua, ZEPHYRUM, "porta '",
+            _causa(&causae, vacua, ZEPHYRUM, "porta '",
                 p->clavis,
                 "' (cursor ");
-            chorda_aedificator_appendere_chorda(causae,
-                _via_norma(p->cursor));
-            chorda_aedificator_appendere_literis(causae,
-                ") sine annotatione"
-                " <porta titulus=\"...\"/>");
+            _causam_extendere(&causae, _via_norma(p->cursor),
+                ") sine annotatione <porta titulus=\"...\"/>");
         }
     }
-    si (numerus > ZEPHYRUM)
+    si (causae.numerus > ZEPHYRUM)
     {
         si (causa_out != NIHIL)
         {
-            *causa_out = chorda_aedificator_finire(causae);
+            *causa_out = chorda_aedificator_finire(causae.textus);
+        }
+        si (recusationes_out != NIHIL)
+        {
+            *recusationes_out = causae.recusationes;
         }
         redde NIHIL;
     }
@@ -729,8 +772,9 @@ _binarium_est (
 /* programma vocatum (verbum primum litterae, aut verbum 'currit'):
  * fons C in arbore -> fontes_c; scriptum -> exemplaria; binarium ->
  * fons introitus per nomen (<b>_principale.c aut <b>.c, extra
- * probationes/; unicus); aliter litterae ignorantur, verbum 'currit'
- * ignotum nominatur */
+ * probationes/; ambiguus = candidati OMNES; nullus = nota, aut
+ * caecum si annotatio id nominat); litterae aliae ignorantur, verbum
+ * 'currit' ignotum caecum est */
 interior vacuum
 _vocatum_tractare (
     PortaeDerivatio* der,
@@ -738,12 +782,11 @@ _vocatum_tractare (
              chorda  origo,
                 b32  annotatio)
 {
-    chorda v = _via_norma(verbum);
-    chorda ratio;
-    chorda b;
-    chorda inventus;
-       i32 numerus = ZEPHYRUM;
-       i32 i;
+    chorda  v = _via_norma(verbum);
+    chorda  ratio;
+    chorda  b;
+       Xar* candidati;
+       i32  i;
 
     ratio = annotatio ? _ratio(der->piscina, "currit ", v, " (", origo,
         ")")
@@ -773,8 +816,8 @@ _vocatum_tractare (
         }
         redde;
     }
-    b         = _titulus_viae(v);
-    inventus  = _vacua();
+    b          = _titulus_viae(v);
+    candidati  = xar_creare(der->piscina, (i32)magnitudo(chorda));
     per (i = ZEPHYRUM; i < xar_numerus(der->viae); i++)
     {
         chorda f = *(chorda*)xar_obtinere(der->viae, i);
@@ -793,24 +836,33 @@ _vocatum_tractare (
                 || chorda_aequalis(t, _ratio(der->piscina, "", b, ".c",
                        _vacua(), ""))))
         {
-            numerus++;
-            si (numerus == I)
-            {
-                inventus = f;
-            }
+            *(chorda*)xar_addere(candidati) = f;
         }
     }
-    si (numerus == I)
+    si (xar_numerus(candidati) == ZEPHYRUM)
     {
-        _exemplar_addere(der->o->fontes_c, inventus,
-            PORTAE_EXEMPLAR_VIA,
-            ratio);
+        *(chorda*)xar_addere(annotatio ? der->o->ignota : der->o->notae)
+            = _ratio(der->piscina, "", ratio,
+            ": fons introitus ignotus",
+                _vacua(), "");
+        redde;
     }
-    alioquin
+    si (xar_numerus(candidati) > I)
     {
-        *(chorda*)xar_addere(der->o->ignota) = _ratio(der->piscina, "",
-            ratio, numerus == ZEPHYRUM ? ": fons introitus ignotus"
-            : ": fons introitus ambiguus", _vacua(), "");
+        ChordaAedificator* r = chorda_aedificator_creare(der->piscina,
+            (memoriae_index)LXIV);
+
+        chorda_aedificator_appendere_chorda(r, ratio);
+        chorda_aedificator_appendere_literis(r,
+            " (nomen ambiguum: unus ex ");
+        chorda_aedificator_appendere_i32(r, xar_numerus(candidati));
+        chorda_aedificator_appendere_character(r, ')');
+        ratio = chorda_aedificator_finire(r);
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(candidati); i++)
+    {
+        _exemplar_addere(der->o->fontes_c, *(chorda*)xar_obtinere(
+            candidati, i), PORTAE_EXEMPLAR_VIA, ratio);
     }
 }
 
@@ -941,6 +993,7 @@ portae_operturas_derivare (
         o->fontes_c      = xar_creare(piscina,
             (i32)magnitudo(PortaeExemplar));
         o->ignota  = xar_creare(piscina, (i32)magnitudo(chorda));
+        o->notae   = xar_creare(piscina, (i32)magnitudo(chorda));
         der.o      = o;
         _exemplar_addere(o->exemplaria, d->via, PORTAE_EXEMPLAR_VIA,
             _ratio(piscina, "cursor ipse", vacua, "", vacua, ""));
@@ -987,4 +1040,662 @@ portae_operturas_derivare (
         }
     }
     redde operturae;
+}
+
+
+/* ==================================================
+ * DEBITA (plan T3)
+ * ================================================== */
+
+/* clausura in memoria: semel per fontem (NIHIL = ignota) */
+nomen structura {
+    chorda  fons;
+       Xar* clausura;
+} PortaeClausura;
+
+interior b32
+_via_c (
+    chorda via)
+{
+    redde _finit(via, ".c") || _finit(via, ".h") || _finit(via, ".m");
+}
+
+interior Xar*
+_clausuram_obtinere (
+    constans PortaeSutura* sutura,
+                      Xar* memoria,
+                   chorda  fons,
+                  Piscina* piscina)
+{
+    PortaeClausura* c;
+               i32  i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(memoria); i++)
+    {
+        c = (PortaeClausura*)xar_obtinere(memoria, i);
+        si (chorda_aequalis(c->fons, fons))
+        {
+            redde c->clausura;
+        }
+    }
+    c        = (PortaeClausura*)xar_addere(memoria);
+    c->fons  = fons;
+    c->clausura  = sutura->clausura_c != NIHIL
+        ? sutura->clausura_c(sutura->datum, fons, piscina) : NIHIL;
+    redde c->clausura;
+}
+
+interior b32
+_chorda_in (
+    constans Xar* x,
+          chorda  valor)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; x != NIHIL && i < xar_numerus(x); i++)
+    {
+        si (chorda_aequalis(*(constans chorda*)xar_obtinere(x, i),
+            valor))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* ratio addita nisi eadem iam adsit (cursor qui et fons_c est) */
+interior vacuum
+_rationem_addere (
+       Xar* rationes,
+    chorda  ratio)
+{
+    si (!_chorda_in(rationes, ratio))
+    {
+        *(chorda*)xar_addere(rationes) = ratio;
+    }
+}
+
+interior b32
+_exemplar_congruit (
+    constans PortaeExemplar* e,
+                     chorda  via)
+{
+    si (e->genus == PORTAE_EXEMPLAR_GLOBUS)
+    {
+        redde directorium_titulus_congruit(via, e->exemplar);
+    }
+    si (e->genus == PORTAE_EXEMPLAR_PRAEFIXUM)
+    {
+        redde chorda_incipit(via, e->exemplar);
+    }
+    redde chorda_aequalis(via, e->exemplar);
+}
+
+/* rationes operturae unius pro via una; *tegit si via tecta */
+interior vacuum
+_viam_iudicare (
+      constans PortaeSutura* sutura,
+    constans PortaeOpertura* o,
+                     chorda  v,
+                        Xar* memoria,
+                        Xar* rationes,
+                        b32* tegit,
+                    Piscina* piscina)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(o->exemplaria); i++)
+    {
+        constans PortaeExemplar* e = (constans PortaeExemplar*)
+            xar_obtinere(o->exemplaria, i);
+
+        si (!_exemplar_congruit(e, v))
+        {
+            perge;
+        }
+        *tegit = VERUM;
+        _rationem_addere(rationes, e->genus == PORTAE_EXEMPLAR_VIA
+            ? _ratio(piscina, "", v, " (", e->ratio, ")")
+            : _ratio(piscina, "", v, "", _ratio(piscina, " congruit '",
+                e->exemplar, "' (", e->ratio, ")"), ""));
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(o->fontes_c); i++)
+    {
+        constans PortaeExemplar* f = (constans PortaeExemplar*)
+            xar_obtinere(o->fontes_c, i);
+                            Xar* clausura;
+
+        si (chorda_aequalis(v, f->exemplar))
+        {
+            *tegit = VERUM;
+            _rationem_addere(rationes, _ratio(piscina, "", v, " (",
+                f->ratio, ")"));
+            perge;
+        }
+        si (!_via_c(v))
+        {
+            perge;
+        }
+        clausura = _clausuram_obtinere(sutura, memoria, f->exemplar,
+            piscina);
+        si (clausura == NIHIL)
+        {
+            *tegit = VERUM;
+            _rationem_addere(rationes, _ratio(piscina, "", v,
+                ": clausura ", f->exemplar, " ignota - debetur"));
+        }
+        alioquin si (_chorda_in(clausura, v))
+        {
+            *tegit = VERUM;
+            _rationem_addere(rationes, _ratio(piscina, "", v, "",
+                _ratio(piscina, " in clausura ", f->exemplar, " (",
+                f->ratio, ")"), ""));
+        }
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(o->ignota); i++)
+    {
+        _rationem_addere(rationes, _ratio(piscina, "", v, ": ",
+            *(constans chorda*)xar_obtinere(o->ignota, i),
+            " - debetur"));
+    }
+}
+
+/* "ratio prima (+N aliae)" */
+interior chorda
+_causam_debiti (
+    constans Xar* rationes,
+         Piscina* piscina)
+{
+    ChordaAedificator* a = chorda_aedificator_creare(piscina,
+        (memoriae_index)LXIV);
+
+    chorda_aedificator_appendere_chorda(a, *(constans chorda*)
+        xar_obtinere(rationes, ZEPHYRUM));
+    si (xar_numerus(rationes) > I)
+    {
+        chorda_aedificator_appendere_literis(a, " (+");
+        chorda_aedificator_appendere_i32(a, xar_numerus(rationes) - I);
+        chorda_aedificator_appendere_literis(a, " aliae)");
+    }
+    redde chorda_aedificator_finire(a);
+}
+
+Xar*
+portae_debita_computare (
+    constans PortaeSutura*  sutura,
+             constans Xar*  operturae,
+             constans Xar*  viae,
+                      Xar** intecta_out,
+                  Piscina*  piscina)
+{
+    Xar* debita;
+    Xar* memoria;
+    Xar* rationes_omnes;   /* Xar* per operturam */
+    Xar* mutatae;
+    Xar* tecta;            /* b32 per viam */
+    i32  i;
+    i32  j;
+    i32  k;
+
+    si (sutura == NIHIL || operturae == NIHIL || viae == NIHIL)
+    {
+        redde NIHIL;
+    }
+    debita = xar_creare(piscina,
+        (i32)magnitudo(PortaeDebitum));
+    memoria = xar_creare(piscina,
+        (i32)magnitudo(PortaeClausura));
+    rationes_omnes  = xar_creare(piscina, (i32)magnitudo(Xar*));
+    mutatae         = xar_creare(piscina, (i32)magnitudo(chorda));
+    tecta           = xar_creare(piscina, (i32)magnitudo(b32));
+    si (   debita         == NIHIL || memoria == NIHIL
+        || rationes_omnes == NIHIL
+        || mutatae        == NIHIL || tecta == NIHIL)
+    {
+        redde NIHIL;
+    }
+    per (j = ZEPHYRUM; j < xar_numerus(viae); j++)
+    {
+        *(chorda*)xar_addere(mutatae) = _via_norma(*(constans chorda*)
+            xar_obtinere(viae, j));
+        *(b32*)xar_addere(tecta) = FALSUM;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(operturae); i++)
+    {
+        constans PortaeOpertura* o = (constans PortaeOpertura*)
+            xar_obtinere(operturae, i);
+                            Xar* rationes = xar_creare(piscina,
+                                (i32)magnitudo(chorda));
+
+        per (j = ZEPHYRUM; j < xar_numerus(mutatae); j++)
+        {
+            _viam_iudicare(sutura, o, *(chorda*)xar_obtinere(mutatae,
+                j),
+                memoria, rationes, (b32*)xar_obtinere(tecta, j),
+                piscina);
+        }
+        *(Xar**)xar_addere(rationes_omnes) = rationes;
+    }
+    /* ordo: registrum, deinde manu ordine operturarum */
+    per (k = ZEPHYRUM; sutura->tabula_portarum != NIHIL
+         && k < xar_numerus(sutura->tabula_portarum); k++)
+    {
+        constans PortaeIngressus* p = (constans PortaeIngressus*)
+            xar_obtinere(sutura->tabula_portarum, k);
+
+        per (i = ZEPHYRUM; i < xar_numerus(operturae); i++)
+        {
+            constans PortaeOpertura* o = (constans PortaeOpertura*)
+                xar_obtinere(operturae, i);
+                                Xar* rationes = *(Xar**)xar_obtinere(
+                                    rationes_omnes, i);
+                      PortaeDebitum* d;
+
+            si (   o->declaratio->manu
+                || xar_numerus(rationes) == ZEPHYRUM
+                || !chorda_aequalis(o->declaratio->titulus, p->clavis))
+            {
+                perge;
+            }
+            d         = (PortaeDebitum*)xar_addere(debita);
+            d->porta  = p->clavis;
+            d->causa  = _causam_debiti(rationes, piscina);
+            d->manu   = FALSUM;
+            frange;
+        }
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(operturae); i++)
+    {
+        constans PortaeOpertura* o = (constans PortaeOpertura*)
+            xar_obtinere(operturae, i);
+                            Xar* rationes = *(Xar**)xar_obtinere(
+                                rationes_omnes, i);
+                  PortaeDebitum* d;
+
+        si (!o->declaratio->manu || xar_numerus(rationes) == ZEPHYRUM)
+        {
+            perge;
+        }
+        d         = (PortaeDebitum*)xar_addere(debita);
+        d->porta  = o->declaratio->via;
+        d->causa  = _causam_debiti(rationes, piscina);
+        d->manu   = VERUM;
+    }
+    si (intecta_out != NIHIL)
+    {
+        *intecta_out = xar_creare(piscina, (i32)magnitudo(chorda));
+        per (j = ZEPHYRUM; j < xar_numerus(mutatae); j++)
+        {
+            si (!*(b32*)xar_obtinere(tecta, j))
+            {
+                *(chorda*)xar_addere(*intecta_out) = *(chorda*)
+                    xar_obtinere(mutatae, j);
+            }
+        }
+    }
+    redde debita;
+}
+
+
+/* ==================================================
+ * EFFUSIO (plan T3)
+ * ================================================== */
+
+interior vacuum
+_campum_appendere (
+     ChordaAedificator* a,
+                chorda  campus)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < campus.mensura; i++)
+    {
+        character c = (character)campus.datum[i];
+
+        si (c == '\\')
+        {
+            chorda_aedificator_appendere_literis(a, "\\\\");
+        }
+        alioquin si (c == '\t')
+        {
+            chorda_aedificator_appendere_literis(a, "\\t");
+        }
+        alioquin si (c == '\n')
+        {
+            chorda_aedificator_appendere_literis(a, "\\n");
+        }
+        alioquin si (c == '\r')
+        {
+            chorda_aedificator_appendere_literis(a, "\\r");
+        }
+        alioquin
+        {
+            chorda_aedificator_appendere_character(a, c);
+        }
+    }
+}
+
+chorda
+portae_campum_effugere (
+      chorda  campus,
+     Piscina* piscina)
+{
+    ChordaAedificator* a = chorda_aedificator_creare(piscina,
+        (memoriae_index)LXIV);
+
+    _campum_appendere(a, campus);
+    redde chorda_aedificator_finire(a);
+}
+
+/* "\t<campus>" */
+interior vacuum
+_campus (
+     ChordaAedificator* a,
+                chorda  campus)
+{
+    chorda_aedificator_appendere_character(a, '\t');
+    _campum_appendere(a, campus);
+}
+
+interior vacuum
+_campus_numerus (
+     ChordaAedificator* a,
+                   i32  n)
+{
+    chorda_aedificator_appendere_character(a, '\t');
+    chorda_aedificator_appendere_i32(a, n);
+}
+
+/* recusationes: machina RECUSATIO, homo 'via:linea: causa' */
+interior vacuum
+_recusationes_scribere (
+    ChordaAedificator* a,
+         constans Xar* recusationes,
+                  b32  machina)
+{
+    i32 i;
+
+    si (!machina)
+    {
+        chorda_aedificator_appendere_literis(a,
+            "RECUSATIO (declarationes portarum):\n");
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(recusationes); i++)
+    {
+        constans PortaeRecusatio* r = (constans PortaeRecusatio*)
+            xar_obtinere(recusationes, i);
+
+        si (machina)
+        {
+            chorda_aedificator_appendere_literis(a, "RECUSATIO");
+            _campus(a, r->via);
+            _campus_numerus(a, r->linea);
+            _campus(a, r->causa);
+        }
+        alioquin
+        {
+            chorda_aedificator_appendere_literis(a, "  ");
+            si (r->via.mensura > ZEPHYRUM)
+            {
+                chorda_aedificator_appendere_chorda(a, r->via);
+                si (r->linea > ZEPHYRUM)
+                {
+                    chorda_aedificator_appendere_character(a, ':');
+                    chorda_aedificator_appendere_i32(a, r->linea);
+                }
+                chorda_aedificator_appendere_literis(a, ": ");
+            }
+            chorda_aedificator_appendere_chorda(a, r->causa);
+        }
+        chorda_aedificator_appendere_character(a, '\n');
+    }
+}
+
+/* homo: debita manu aut non, cum titulo sectionis */
+interior b32
+_debita_hominis (
+    ChordaAedificator* a,
+         constans Xar* debita,
+                  b32  manu)
+{
+    b32 ullum = FALSUM;
+    i32 i;
+
+    per (i = ZEPHYRUM; debita != NIHIL && i < xar_numerus(debita); i++)
+    {
+        constans PortaeDebitum* d = (constans PortaeDebitum*)
+            xar_obtinere(debita, i);
+
+        si (d->manu != manu)
+        {
+            perge;
+        }
+        si (manu && !ullum)
+        {
+            chorda_aedificator_appendere_literis(a,
+                "MANU (homo currit):\n");
+        }
+        ullum = VERUM;
+        chorda_aedificator_appendere_literis(a, "  ");
+        chorda_aedificator_appendere_chorda(a, d->porta);
+        chorda_aedificator_appendere_literis(a, "\n      ");
+        chorda_aedificator_appendere_chorda(a, d->causa);
+        chorda_aedificator_appendere_character(a, '\n');
+    }
+    redde ullum;
+}
+
+chorda
+portae_debita_scribere (
+    constans Xar* debita,
+    constans Xar* intecta,
+    constans Xar* recusationes,
+             i32  viae_numerus,
+             b32  machina,
+         Piscina* piscina)
+{
+    ChordaAedificator* a = chorda_aedificator_creare(piscina,
+        (memoriae_index)CCLVI);
+                   i32 i;
+
+    si (recusationes != NIHIL && xar_numerus(recusationes) > ZEPHYRUM)
+    {
+        _recusationes_scribere(a, recusationes, machina);
+        redde chorda_aedificator_finire(a);
+    }
+    si (machina)
+    {
+        per (i = ZEPHYRUM; debita != NIHIL && i < xar_numerus(debita);
+             i++)
+        {
+            constans PortaeDebitum* d = (constans PortaeDebitum*)
+                xar_obtinere(debita, i);
+
+            chorda_aedificator_appendere_literis(a, "DEBITUM");
+            _campus(a, d->porta);
+            _campus_numerus(a, d->manu ? I : ZEPHYRUM);
+            _campus(a, d->causa);
+            chorda_aedificator_appendere_character(a, '\n');
+        }
+    }
+    alioquin
+    {
+        chorda_aedificator_appendere_literis(a, "PORTAE DEBITAE (");
+        chorda_aedificator_appendere_i32(a, viae_numerus);
+        chorda_aedificator_appendere_literis(a, viae_numerus == I
+            ? " via):\n" : " viae):\n");
+        si (!_debita_hominis(a, debita, FALSUM))
+        {
+            chorda_aedificator_appendere_literis(a, "  (nulla)\n");
+        }
+        (vacuum)_debita_hominis(a, debita, VERUM);
+        si (intecta != NIHIL && xar_numerus(intecta) > ZEPHYRUM)
+        {
+            chorda_aedificator_appendere_literis(a,
+                "INTECTA (nulla porta):\n");
+        }
+    }
+    per (i = ZEPHYRUM; intecta != NIHIL
+        && i < xar_numerus(intecta); i++)
+    {
+        chorda_aedificator_appendere_literis(a, machina ? "INTECTUM\t"
+            : "  ");
+        si (machina)
+        {
+            _campum_appendere(a,
+                *(constans chorda*)xar_obtinere(intecta,
+                i));
+        }
+        alioquin
+        {
+            chorda_aedificator_appendere_chorda(a, *(constans chorda*)
+                xar_obtinere(intecta, i));
+        }
+        chorda_aedificator_appendere_character(a, '\n');
+    }
+    redde chorda_aedificator_finire(a);
+}
+
+interior constans character*
+_genus_nomen (
+    PortaeExemplarGenus genus)
+{
+    redde genus == PORTAE_EXEMPLAR_GLOBUS ? "globus"
+        : genus == PORTAE_EXEMPLAR_PRAEFIXUM ? "praefixum" : "via";
+}
+
+/* lineae 'GENUS clavis textus' pro Xar de chorda */
+interior vacuum
+_lineas_textuum (
+      ChordaAedificator* a,
+     constans character* genus,
+                 chorda  clavis,
+           constans Xar* textus,
+                    b32  machina)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(textus); i++)
+    {
+        chorda t = *(constans chorda*)xar_obtinere(textus, i);
+
+        si (machina)
+        {
+            chorda_aedificator_appendere_literis(a, genus);
+            _campus(a, clavis);
+            _campus(a, t);
+        }
+        alioquin
+        {
+            chorda_aedificator_appendere_literis(a, "    ");
+            chorda_aedificator_appendere_literis(a, genus);
+            chorda_aedificator_appendere_literis(a, "  ");
+            chorda_aedificator_appendere_chorda(a, t);
+        }
+        chorda_aedificator_appendere_character(a, '\n');
+    }
+}
+
+chorda
+portae_declaratas_scribere (
+    constans Xar* operturae,
+    constans Xar* recusationes,
+             b32  machina,
+         Piscina* piscina)
+{
+    ChordaAedificator* a = chorda_aedificator_creare(piscina,
+        (memoriae_index)CCLVI);
+                   i32 i;
+                   i32 j;
+
+    si (recusationes != NIHIL && xar_numerus(recusationes) > ZEPHYRUM)
+    {
+        _recusationes_scribere(a, recusationes, machina);
+        redde chorda_aedificator_finire(a);
+    }
+    per (i = ZEPHYRUM; operturae != NIHIL && i < xar_numerus(operturae);
+         i++)
+    {
+        constans PortaeOpertura* o = (constans PortaeOpertura*)
+            xar_obtinere(operturae, i);
+         constans PortaDeclarata* d = o->declaratio;
+                          chorda  clavis;
+
+        clavis = d->manu ? d->via : d->titulus;
+        si (machina)
+        {
+            chorda_aedificator_appendere_literis(a, "PORTA");
+            _campus(a, clavis);
+            _campus_numerus(a, d->manu ? I : ZEPHYRUM);
+            _campus(a, d->via);
+            _campus_numerus(a, d->linea);
+            _campus(a, d->causa);
+        }
+        alioquin
+        {
+            chorda_aedificator_appendere_chorda(a, clavis);
+            chorda_aedificator_appendere_literis(a, "  ");
+            chorda_aedificator_appendere_chorda(a, _locus(piscina, d));
+            si (d->manu)
+            {
+                chorda_aedificator_appendere_literis(a, "  MANU: ");
+                chorda_aedificator_appendere_chorda(a, d->causa);
+            }
+        }
+        chorda_aedificator_appendere_character(a, '\n');
+        per (j = ZEPHYRUM; j < xar_numerus(o->exemplaria); j++)
+        {
+            constans PortaeExemplar* e = (constans PortaeExemplar*)
+                xar_obtinere(o->exemplaria, j);
+
+            si (machina)
+            {
+                chorda_aedificator_appendere_literis(a, "TEGIT");
+                _campus(a, clavis);
+                chorda_aedificator_appendere_character(a, '\t');
+                chorda_aedificator_appendere_literis(a,
+                    _genus_nomen(e->genus));
+                _campus(a, e->exemplar);
+                _campus(a, e->ratio);
+            }
+            alioquin
+            {
+                chorda_aedificator_appendere_literis(a,
+                    "    tegit     ");
+                chorda_aedificator_appendere_chorda(a, e->exemplar);
+                chorda_aedificator_appendere_literis(a, "  (");
+                chorda_aedificator_appendere_chorda(a, e->ratio);
+                chorda_aedificator_appendere_character(a, ')');
+            }
+            chorda_aedificator_appendere_character(a, '\n');
+        }
+        per (j = ZEPHYRUM; j < xar_numerus(o->fontes_c); j++)
+        {
+            constans PortaeExemplar* f = (constans PortaeExemplar*)
+                xar_obtinere(o->fontes_c, j);
+
+            si (machina)
+            {
+                chorda_aedificator_appendere_literis(a, "CLAUSURA");
+                _campus(a, clavis);
+                _campus(a, f->exemplar);
+                _campus(a, f->ratio);
+            }
+            alioquin
+            {
+                chorda_aedificator_appendere_literis(a,
+                    "    clausura  ");
+                chorda_aedificator_appendere_chorda(a, f->exemplar);
+                chorda_aedificator_appendere_literis(a, "  (");
+                chorda_aedificator_appendere_chorda(a, f->ratio);
+                chorda_aedificator_appendere_character(a, ')');
+            }
+            chorda_aedificator_appendere_character(a, '\n');
+        }
+        _lineas_textuum(a, machina ? "IGNOTUM" : "IGNOTUM ", clavis,
+            o->ignota, machina);
+        _lineas_textuum(a, machina ? "NOTA" : "nota    ", clavis,
+            o->notae, machina);
+    }
+    redde chorda_aedificator_finire(a);
 }

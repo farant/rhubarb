@@ -43,10 +43,19 @@ calls, prints, and - for migration scaffolding - compares temporarily.
   VI red (P5 exposed a fixture that never exercised its rule).
 
 ### T3: owed gates + CLI
-- [ ] portae_debita_computare (derived + `tegit`/`currit`, exemplar globs,
+- [x] portae_debita_computare (derived + `tegit`/`currit`, exemplar globs,
   INTECTUM for uncovered paths, MANU for manual gates); `bin/fabrica
   portae debitae|declaratae`; TSV contract tested (columns, escaping).
   Commit.
+  As built (2026-10-12): blind unknowns owe every path but cover none;
+  unknown closure owes + covers (Python parity); ambiguous binary = all
+  candidates; sourceless binary = NOTA. Structured PortaeRecusatio.
+  Writers (TSV contract + human form = silva relatio) in the library,
+  exact bytes tested. CLI tools/fabrica_portae.c (+ fabrica_litterae.c:
+  amalgama silva.h clashes with stml.h in one TU). Literal scan without
+  macro expansion measured as a superset of Python's. Real tree: debitae
+  2.4 s warm / 30 s cold (vs Python phase 22 s). probatio_portae 11
+  sections / 147 assertions; fabrica fumus XLIV; plants VII red.
 
 ### T4: shadow comparison + annotations
 - [ ] temporary comparison script (old Python answer vs new C answer over

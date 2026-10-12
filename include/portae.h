@@ -57,10 +57,16 @@ nomen structura {
       StmlNodus* (*effectus) (vacuum* datum, chorda cursor,
                               Piscina* piscina);
     /* litterae chordarum probationis (fons C) quae programmata vocat
-     * (system, processus_*; lexemata silvae - commenta absunt, macrones
-     * expansi): Xar de chorda, vacua = nihil vocat; NIHIL = ignotum */
+     * (system, processus_*): contentum sine '"', Xar de chorda, vacua =
+     * nihil vocat; NIHIL = ignotum. CLI: lexator silvae (commenta
+     * absunt, macrones NON expansi - mensuratum 2026-10-12: superset
+     * responsi pythonici per arbor.sh -nudum) */
             Xar* (*litterae_vocationum) (vacuum* datum, chorda fons,
                                          Piscina* piscina);
+    /* clausura fontis C (aedilis): fontes et capita, viae radici
+     * relativae, Xar de chorda; NIHIL = ignota (aedilis fractus) */
+            Xar* (*clausura_c) (vacuum* datum, chorda fons,
+                                Piscina* piscina);
     /* Xar de PortaeIngressus */
     constans Xar* tabula_portarum;
 } PortaeSutura;
@@ -76,18 +82,28 @@ nomen structura {
        Xar* currit;     /* chorda: programmata */
 } PortaDeclarata;
 
+/* recusatio una: locus (via vacua = registrum aut fundamentum; linea
+ * ZEPHYRUM = sine linea) et causa */
+nomen structura {
+    chorda via;
+       i32 linea;
+    chorda causa;
+} PortaeRecusatio;
+
 /* Declarationes omnium cursorum. Xar de PortaDeclarata (ordine viarum
  * enumeratarum, deinde commentariorum). NIHIL = RECUSATIO: *causa_out
- * causas OMNES nominat (linea una per causam, 'via:linea: ...'):
- * annotatio <porta> illegibilis, attributum ignotum, titulus et manu
- * simul aut neuter, manu sine causa, titulus extra registrum, cursor
- * alienus (registrum clavem alii scripto dat), titulus bis declaratus,
- * clavis registri sine cursore annotato. */
+ * causas OMNES nominat (linea una per causam, 'via:linea: ...') et
+ * *recusationes_out (NIHIL licet) easdem structas (Xar de
+ * PortaeRecusatio): annotatio <porta> illegibilis, attributum ignotum,
+ * titulus et manu simul aut neuter, manu sine causa, titulus extra
+ * registrum, cursor alienus (registrum clavem alii scripto dat),
+ * titulus bis declaratus, clavis registri sine cursore annotato. */
 Xar*
 portae_declaratas_legere (
-    constans PortaeSutura* sutura,
-                  Piscina* piscina,
-                   chorda* causa_out);
+    constans PortaeSutura*  sutura,
+                  Piscina*  piscina,
+                   chorda*  causa_out,
+                      Xar** recusationes_out);
 
 
 /* ==================================================
@@ -117,15 +133,19 @@ nomen structura {
  * tegunt - fons ipse et quae includit: probationes suitae, fontes quos
  * cursor compilat (situs .c, globi .c in viis arboris expansi), fontes
  * introitus programmatum quae probationes aut annotatio 'currit'
- * vocant. ignota = lacunae nominatae (effectus ignotum, litterae
- * ignotae, fons introitus ambiguus) - nihil tegunt; T3 eas nominat.
- * LACUNA NOTA: '-I' directoria (tabula mandatorum effectus ea non
- * notat) - 'tegit' annotationis ea portat. */
+ * vocant (nomen ambiguum = candidati OMNES). ignota = CAECA (effectus
+ * ignotum, litterae ignotae, 'currit' irresolutum): porta omni viae
+ * mutatae DEBETUR, viam tamen non tegit (INTECTUM manet). notae =
+ * informationes (binarium vocatum sine fonte in arbore, e.g. fixa
+ * probationum 'bin/inst') - nihil debent. LACUNA NOTA: '-I'
+ * directoria (tabula mandatorum effectus ea non notat) - 'tegit'
+ * annotationis ea portat. */
 nomen structura {
     constans PortaDeclarata* declaratio;
                         Xar* exemplaria;  /* PortaeExemplar */
                         Xar* fontes_c;    /* PortaeExemplar (VIA) */
-                        Xar* ignota;      /* chorda */
+                        Xar* ignota;      /* chorda: caeca */
+                        Xar* notae;       /* chorda */
 } PortaeOpertura;
 
 /* Operturae declarationum omnium (Xar de PortaeOpertura, ordine
@@ -136,5 +156,83 @@ portae_operturas_derivare (
     constans PortaeSutura* sutura,
              constans Xar* declaratae,
                   Piscina* piscina);
+
+
+/* ==================================================
+ * DEBITA (plan T3): quae portae viis mutatis debentur
+ * ================================================== */
+
+/* debitum unum. porta = titulus, aut via cursoris si manu (homo
+ * currit: nominatur, numquam curritur). causa = ratio prima, '(+N
+ * aliae)' si plures */
+nomen structura {
+    chorda porta;
+    chorda causa;
+       b32 manu;
+} PortaeDebitum;
+
+/* Debita viarum mutatarum (Xar de chorda, radici relativae). Ordo:
+ * portae registri ordine registri, deinde manu ordine operturarum.
+ * Via debet si exemplar eam tegit, si fons_c est, si (via .c .h .m)
+ * in clausura fontis_c est - clausura ignota = DEBETUR - aut si
+ * opertura caeca est (ignota: debetur, non tegitur). *intecta_out
+ * (NIHIL licet): viae quas nulla porta tegit. Clausurae solum si via
+ * mutata C est, semel per fontem. NIHIL = memoria deficit. */
+Xar*
+portae_debita_computare (
+    constans PortaeSutura*  sutura,
+             constans Xar*  operturae,
+             constans Xar*  viae,
+                      Xar** intecta_out,
+                  Piscina*  piscina);
+
+
+/* ==================================================
+ * EFFUSIO (plan T3) - CONTRACTUS MACHINAE DECLARATUS
+ *
+ * Lineae TSV, genus in campo primo; campi effugiuntur: '\' -> '\\',
+ * tabula -> '\t', linea nova -> '\n', CR -> '\r' (nihil aliud):
+ *
+ *   portae debitae:
+ *     DEBITUM    <porta>  <0|1 manu>  <causa>
+ *     INTECTUM   <via>
+ *     RECUSATIO  <via>    <linea|0>   <causa>
+ *   portae declaratae:
+ *     PORTA      <porta>  <0|1 manu>  <via>  <linea>  <causa manu>
+ *     TEGIT      <porta>  <via|globus|praefixum>  <exemplar>  <ratio>
+ *     CLAUSURA   <porta>  <fons>      <ratio>
+ *     IGNOTUM    <porta>  <textus>
+ *     NOTA       <porta>  <textus>
+ *     RECUSATIO  <via>    <linea|0>   <causa>
+ *
+ * Forma hominis (machina FALSUM): PORTAE DEBITAE (N viae) / MANU (homo
+ * currit) / INTECTA (nulla porta) - forma silva.portae_debitae_relatio.
+ * ================================================== */
+
+/* campus TSV effugitus (contractus supra) */
+chorda
+portae_campum_effugere (
+      chorda  campus,
+     Piscina* piscina);
+
+/* debitae: debita, intecta (NIHIL licet), recusationes (non NIHIL =
+ * solae scribuntur); viae_numerus pro titulo hominis */
+chorda
+portae_debita_scribere (
+    constans Xar* debita,
+    constans Xar* intecta,
+    constans Xar* recusationes,
+             i32  viae_numerus,
+             b32  machina,
+         Piscina* piscina);
+
+/* declaratae: operturae (NIHIL licet si recusationes) et recusationes
+ * (NIHIL licet) */
+chorda
+portae_declaratas_scribere (
+    constans Xar* operturae,
+    constans Xar* recusationes,
+             b32  machina,
+         Piscina* piscina);
 
 #endif /* PORTAE_H */

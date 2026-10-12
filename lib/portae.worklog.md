@@ -83,3 +83,62 @@ Dogfooding (principle …Z2Y555, checklist lapide FR-008 "scriba"):
   suite test and leaves the cost (prefiltering) to the CLI.
 - **Not yet run on the real tree.** Fixtures mirror the census shapes. The first
   real run is the T3 CLI, and the full comparison is T4.
+
+## 2026-10-12 - T3 owed gates + CLI
+
+- **What "unknown" means (Fran said go ahead with my recommendation):**
+  - **Blind** (`ignota`: effectus unknown, test literals unknown, `currit`
+    entry that doesn't resolve): the gate is owed for EVERY changed path,
+    with the named reason, but the gate does NOT cover the path. A blind
+    gate would otherwise hide every INTECTUM.
+  - **Unknown closure:** owed AND covering. This is Python parity, because
+    Python also counted the path as covered.
+  - **Binary whose name is ambiguous:** covers ALL candidates, and the reason
+    says "nomen ambiguum: unus ex N". It never picks one, and it no longer
+    lands in `ignota`, because two sources is not a blind spot.
+  - **Binary with no source in the tree:** a NOTA. These are test fixtures
+    such as `bin/inst`, and they owe nothing.
+- **Refusals are structured** (PortaeRecusatio {via, linea, causa}), built
+  once in `_causa` and rendered both as human text and as `RECUSATIO` TSV.
+  Before this, the text was the only record, and machine output would have
+  meant re-parsing our own messages.
+- **TSV contract and human form live in the library**
+  (`portae_debita_scribere`, `portae_declaratas_scribere`,
+  `portae_campum_effugere`), so probatio_portae tests the exact bytes. The
+  human form copies `silva.portae_debitae_relatio`, so
+  tools/portae_debitae.sh can switch over in T5 without any reader noticing.
+- **The CLI lives in tools/fabrica_portae.c**, with
+  `<aedilis corpus>` in fabrica_sutura.h. The real sutura uses:
+  - `git ls-files` through processus_exsequi + chorda_fissio (painless:
+    FR-008 `capere` + `per_lineas` are basically these two calls);
+  - effectus with the mandata table read once;
+  - closures through `suturae_clausura_c` (fontes + capita).
+- **TRAP: silva/amalgama/silva.h redefines the STML enums** (STML_ERROR_*),
+  so it cannot share a translation unit with house stml.h, which portae.h
+  pulls in. The lexer call therefore lives alone in tools/fabrica_litterae.c
+  behind a house-typed header. Including silva/fontes/silva_lexema.h
+  instead links a SECOND silva next to the amalgamation (40 duplicate
+  symbols).
+- **Measured: no macro expansion is needed for test literals.** A plain lexical
+  scan of all suite tests finds a superset of Python's `arbor.sh -nudum`
+  answer. The extras are silva/amalgamare.sh,
+  compile_tests_fontes_generata.sh and lib/manus.c; nothing was missing. In
+  the C version, test literals naming a tracked `.c` also go into fontes_c
+  (Python kept only `.sh`), for example the formator roundtrip fixtures and
+  lib/utf8.c read by probatio_silex. This over-covers, and T4 will show by
+  how much.
+- **Timings** on the real tree (3 runners temporarily annotated, then
+  restored):
+  - `declaratae`: 0.6 s, including effectus of compile_tests.sh with its 16
+    processes.
+  - `debitae` with include/credo.h changed (~350 closures): 30 s cold, 2.4 s
+    warm. Python's "portae debitae" commit phase is 22 s.
+  - "Cold" means the first run after every `bin/fabrica` rebuild: the
+    extraction cache's key includes the binary's digest. Worth remembering
+    when a commit right after a fabrica edit feels slow.
+- **Gates:** probatio_portae has 11 sections / 147 assertions. fabrica fumus
+  XLIV is a temporary git root with a real aedilis closure: the runner
+  `cat`s lib/bib.c, so editing include/bib.h owes it. Plants VII all went
+  red, then green: blind-covers, closure memo, reason dedupe, tab escape,
+  closure for a non-C path, CLI closure blind, refusal exit code. The CLI
+  plants ran via a function gate that rebuilds bin/fabrica around the plant.
