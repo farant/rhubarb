@@ -1,0 +1,119 @@
+# credo plan 2
+
+Spec: `project-specs/credo-spec-2.md`. Interview:
+`project-specs/credo-2-interview.md`. Rhythm as always: one task per
+turn, Fran approves; each task = failing test -> red -> implement ->
+green -> plant -> commit through silva.commissio with owed gates. Work
+in `../rhubarb-quinta`; merges by the ritual.
+
+### T0: headers (APPROVED by Fran 2026-10-10)
+
+- [x] `signa` and `exspectata_fracta` semantics; `CredoContextus.suita`;
+  `credo_suitam_currere_cum`; `CREDO_GRADUS` / `credo_gradum_ponere`;
+  `credo_area`; `CREDO_SIGNA_OMITTE`, `CREDO_ORDO`; SECTIO 11th field.
+
+### T1: signa and OMISSA
+- [x] credo_fumus stage: unknown signum -> suite FRACTA naming it;
+  `CREDO_SIGNA_OMITTE` -> OMISSA in record and output; all omitted ->
+  VACUA. Plant: omission silent (no record) -> red. Commit.
+  As built (2026-10-10): unknown words refused in the table AND in
+  CREDO_SIGNA_OMITTE; fabrica pass note counts omissions apart.
+
+### T2: known failures
+- [x] stage: failing section with reason -> NOTA_FRACTA, suite exit 0;
+  passing one -> INOPINATA, suite exit 1; empty reason -> refused.
+  Fabrica: member note counts NOTA_FRACTA. Silva census query + report
+  tool (ledger cross-check, never a gate). Plants. Commit.
+  As built (2026-10-10): census = tools/credo_fracturae_notae.py (silva
+  rows; -tabularium report); compendium names expected fractures; 0
+  known failures in the repo today.
+
+### T3: suite fixture
+- [x] stage: parare_suitae once, c->suita in every section,
+  purgare_suitae always (also after an aborted section). Convert
+  cliens_tabularii to one suite daemon; record time vs per-section.
+  Plant: purgare_suitae skipped after abort -> red. Commit.
+  As built (2026-10-10): cliens 0.96 s vs 1.81 s (-47%; start-up wait
+  paid once); sections build their own client from c->suita; the section
+  that kills a daemon keeps a private one.
+
+### T4: steps
+- [x] stage: CREDO_GRADUS in the fracture and as the 11th field;
+  fabrica reader accepts 10/11, tail names the step. vicus_iussa names
+  I-VIII. Plants. Commit.
+  As built (2026-10-10): fracture line "... at f:12 (in gradu VI: ...)",
+  field 11 = step of the FIRST fracture; fabrica appends "[gradus ...]"
+  to the fractura; step reset at each section start/end and in
+  aperire/claudere (old-style suites may use it too). Found on the way:
+  Speratus/Receptus printed NULL via %s for empty values - fixed.
+
+### T5: area
+- [x] stage: credo_area created lazily, removed after purgare (also
+  after NECESSE); two sections get different dirs. Replace the four
+  hand helpers (sententiae_horreum, villa_agens, git, cliens). Commit.
+  As built (2026-10-10): suite context has an area too
+  (`<suite>.suita.<pid>`, removed after purgare_suitae); removal is by
+  PATH, so an area a CREDO_NON_RUIT child created is removed as well.
+  credo does its own mkdir/tree removal (subsystem builds link credo
+  without filum). Three of the four helpers lived in OLD-style suites,
+  so T5 converted them: git (suite fixture + 9 sections), villa_agens
+  (suite fixture = cfg + 12 sections), sententiae_horreum (one scenario
+  section, steps I-VIII via CREDO_GRADUS) - 13 converted suites now.
+
+### T6: order
+- [x] stage: CREDO_ORDO=mixtus:<seed> reproducible order, seed recorded;
+  run over the 10 converted suites, record what it finds. Commit.
+  As built (2026-10-10): seed printed + `ORDO` record line (fabrica
+  reader ignores it); bare `mixtus` picks and names a seed; unknown
+  value refuses the suite. Tool `tools/credo_ordo_mixtus.sh [-semina N]
+  [-initium S] [suita...]` (baseline in table order first; names the
+  seed and the failing sections). FIRST RUN FOUND REAL HIDDEN STATE:
+  probatio_fabrica_gradus failed under 5/5 seeds - ten file-scope
+  counters/"last" buffers never reset by purgare (adoption test 1 reset
+  the 14 pointer fakes, missed the counters). Fixed; then 13/13 suites
+  clean over seeds 1-5 and 100-114.
+
+### T7: lint
+- [x] silva checks 1-4 (spec II), each born red by a plant that
+  compiles; wired into the existing lint/hook path. Commit.
+  As built (2026-10-10, DECISUM Fran: examen house codes, not a separate
+  instrument - ledger …P81256): examen codes 92 CREDO_STATUS_NON_PURGATUS,
+  93 CREDO_SECTIO_SINE_ASSERTIONE, 94 CREDO_SUITA_MUTATA (VIOLATIO domus,
+  like 91) and 95 CREDO_TITULUS_IMPRESSUS (DOMESTICUM); all <tolera>-able.
+  Writes come from a SECOND data-flow build under a credo policy (file-scope
+  and static variables tracked instead of locals); calls/values via the
+  semantic nexus; 94 via conversion types. Path: examen-custos post-edit,
+  examen at commit, examen_vectis section VII, examen-corpus. First run
+  found 7 real leaks in genera/iudicium (fake world, no purgare) + 2 stml
+  titles; 2 false positives (static initialisers, 2D const arrays) fixed
+  with regression cases. Plant R1 (revert a T6 reset) first stayed GREEN:
+  fakes are installed as function pointers in parare and called by the
+  library during probare - fixed with value-reference edges (functions
+  used as values count as section body; resets count only via calls).
+  Cross-file resets parked (…JSV0E9: <reponit> contract on helpers).
+
+### T8: converter
+- [x] silva-based converter + the commit-time "convertible" note (lint
+  5); reproduces xar/stml conversions, refuses other shapes. Commit.
+  As built (2026-10-10): tools/credo_convertere.py [-probare] [-ad V]
+  [-suita T] - structure by silva selectors (principale > corpus > *,
+  blocks, titles by their literal, redde/salta, identifier uses), text
+  copied by line ranges; names '_sectio_<ordinal>' (prima ... CXCIX; Roman
+  numerals are NEW words for the lint, ordinals are not). xar: byte-equal
+  to the scratch output. stml: equal except TWO deliberate fixes - the
+  two-line title the scratch regex missed is its own section (68, not 67),
+  and a title nested in a block becomes CREDO_GRADUS. Refused (real
+  history): git (redde in section), villa/sententiae/cliens/vicus (no
+  'Probans' titles). Note: silva.notae_convertibilium in commissio(_umbra)
+  after the lint pre-pass, never blocks. Fixtures probationes/fixa/
+  credo_convertere/*.vetus/.exspectata (non-.c: no lint/corpus). Plants by
+  HAND (planta mangles .py indentation, …6DP7RG). Found: selecta.sh relinks
+  on every call - concurrent calls break each other (…WB6Q3H).
+
+### T9: close
+- [x] spec "As built", worklogs, MEMORY; merge.
+  As built (2026-10-10): spec §VI; ledger note on …42JH9 (slice II
+  complete, rest named); census of the 246 old root suites (50 mechanically
+  convertible) in lib/credo.worklog.md; parked: runner split
+  (…W51P785, credo_suitam_currere_cum 340 lines). Merge by the quinta
+  ritual.

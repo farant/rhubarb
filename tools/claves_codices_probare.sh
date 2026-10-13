@@ -14,6 +14,7 @@
 # evanescet, hoc scriptum solum perit - tabula manet.
 #
 # Usus: ./tools/claves_codices_probare.sh   (0 = congruunt)
+# <porta manu causa="consulto SEORSUM: contra Carbon deprecatum probat (caput)"/>
 
 set -e
 cd "$(dirname "$0")/.."

@@ -6,6 +6,7 @@
 # probationes singulae sub cursu/compilatione); MENSOR_TACET tacet;
 # sessio sine finire nihil condit. Exitus 0 sanum | 1 FRACTUM | 2
 # nihil actum.
+# <porta titulus="mensor-suitae" instrumentum="bin/mensor"/>
 set -u
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$RADIX" || exit 2

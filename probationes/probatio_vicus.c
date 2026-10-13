@@ -7,7 +7,8 @@
  * iteratum), latera montata, dispositio scripta; focus et documentum
  * per reapertionem servantur; registra in spatiis laterum; latus
  * generis ignoti praeteritur cum causa; plures quam X tabulae non
- * leguntur. */
+ * leguntur. S7a: radix ex manifesto apps/vicus/organum.stml - canon et
+ * domini (activa: vicus.radix; lectiones: horologium). */
 #include "latina.h"
 #include "piscina.h"
 #include "internamentum.h"
@@ -43,7 +44,7 @@ scribam_montare (
     (vacuum)argumentum;
     (vacuum)ctx;
     redde scriba_montare((ScribaMontatio*)sedes, p, in, v, r, id, radix,
-                         latitudo, altitudo, NIHIL);
+                         latitudo, altitudo, NIHIL, NIHIL);
 }
 
 interior b32
@@ -63,7 +64,7 @@ pictorem_montare (
     (vacuum)argumentum;
     (vacuum)ctx;
     redde pictor_montare((PictorMontatio*)sedes, p, in, v, r, id, radix,
-                         latitudo, altitudo);
+                         latitudo, altitudo, NIHIL);
 }
 
 interior vacuum
@@ -152,6 +153,25 @@ ignotum_ponere (
     insula_attributum_ponere(nodus, p, in, "ignotum", "1");
 }
 
+/* S7a: campum radicis ponere */
+nomen structura {
+    constans character* titulus;
+    constans character* valor;
+} CampusPonendus;
+
+interior vacuum
+campum_ponere (
+              StmlNodus* nodus,
+                Piscina* p,
+    InternamentumChorda* in,
+                 vacuum* ctx)
+{
+    constans CampusPonendus* c;
+
+    c = (constans CampusPonendus*)ctx;
+    insula_attributum_ponere(nodus, p, in, c->titulus, c->valor);
+}
+
 interior chorda
 lit (
     constans character* s)
@@ -198,8 +218,8 @@ s32 principale (vacuum)
     CREDO_VERUM(vicus_latus_focatum(v)
         == vicus_latus(vicus_tabula(v, ZEPHYRUM), VICUS_SINISTRUM));
     /* rami: quattuor montationes */
-    CREDO_AEQUALIS_I32(stml_numerus_liberorum(insula_radix(v->repo,
-        INSULA_DURABILIS)), IV);
+    CREDO_AEQUALIS_I32(stml_numerus_liberorum(insula_radix(v->repo)),
+        IV);
     /* dispositio scripta, forma nova (S3c: id cuiusque lateris) */
     index = volumen_plagulam_promere(vol, lit("vicus/latera"), piscina,
         &inventum);
@@ -223,8 +243,35 @@ s32 principale (vacuum)
 
     imprimere("\n--- III: canon hospitis ---\n");
     radix = insula_ramus_radix(v->repo);
-    CREDO_FALSUM(mutare_ramum(&radix, INSULA_EPHEMERA, ignotum_ponere,
+    CREDO_FALSUM(mutare_ramum(&radix, ignotum_ponere,
         NIHIL));
+    /* S7a: domini radicis ex manifesto (apps/vicus/organum.stml) */
+    {
+        CampusPonendus  c;
+                chorda* a;
+
+        c.titulus  = "activa";
+        c.valor    = "p1";
+        CREDO_FALSUM(mutare_ramum(&radix, campum_ponere, &c));
+        insula_scriptorem_ponere(v->repo, lit("horologium"));
+        CREDO_FALSUM(mutare_ramum(&radix, campum_ponere, &c));
+        c.titulus  = "tempus_hora";
+        c.valor    = "7";
+        insula_scriptorem_ponere(v->repo, lit("vicus.radix"));
+        CREDO_FALSUM(mutare_ramum(&radix, campum_ponere, &c));
+        insula_scriptorem_ponere(v->repo, lit("horologium"));
+        CREDO_VERUM(mutare_ramum(&radix, campum_ponere, &c));
+        insula_scriptorem_ponere(v->repo, lit(""));
+        /* hospes ipse ut dominus scribit */
+        CREDO_VERUM(vicus_activam_ponere(v, "p1"));
+        a = insula_attributum(v->repo, "activa");
+        CREDO_NON_NIHIL(a);
+        CREDO_CHORDA_AEQUALIS_LITERIS(*a, "p1");
+        a = insula_attributum(v->repo, "prior");
+        CREDO_NON_NIHIL(a);
+        CREDO_CHORDA_AEQUALIS_LITERIS(*a, "s1");
+        CREDO_VERUM(vicus_activam_ponere(v, "s1"));
+    }
 
     imprimere("\n--- IV: reapertio - dispositio, focus, documenta\n");
     v = vicum_aperire(vol);

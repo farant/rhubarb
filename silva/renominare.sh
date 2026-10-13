@@ -64,28 +64,19 @@ obj_files="$obj_files $MATERIA_OBIECTA"
 
 RENOMINARE_SRC="$SILVA_DIR/instrumenta/principalia/renominare.c"
 RENOMINARE_BIN="$BUILD_DIR/renominare"
-# Obiectum quodlibet non antiquius binario -> nexus iterum. Sine hoc
-# (ante 2026-09-25) fons silvae mutatus obiectum recompilabat sed
-# binarium NON renectebat: renominare silvam hesternam currebat.
-# Inventum phasis V T6a (substratum materiae additum, binarium sine eo).
-_obiectum_recentius () {   # <binarium> -> 0 si obiectum non antiquius
-    local o
-    for o in $obj_files; do
-        if ! [ "$1" -nt "$o" ]; then
-            return 0
-        fi
-    done
-    return 1
-}
-if [ ! -f "$RENOMINARE_BIN" ] || ! [ "$RENOMINARE_BIN" -nt "$RENOMINARE_SRC" ] \
-   || [ -n "$(newest_header "$RENOMINARE_BIN")" ] \
-   || _obiectum_recentius "$RENOMINARE_BIN"; then
-    echo "  [renominare] renominare.c" >&2
-    clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
-        -I"$SILVA_DIR/instrumenta" "$RENOMINARE_SRC" \
-        "$SILVA_DIR/instrumenta/silva_lexicon.c" $obj_files \
-        -o "$RENOMINARE_BIN" || exit 2
-fi
+# Obiectum recentius binario -> nexus iterum (ante 2026-09-25 fons
+# silvae mutatus obiectum recompilabat sed binarium NON renectebat:
+# renominare silvam hesternam currebat - phasis V T6a). Custodia propria
+# hic olim; nunc communis (tools/instrumentum_nectere.sh, …WB6Q3H) et
+# plenior: silva_lexicon.c et capita instrumentorum quoque ingressus,
+# nexus atomicus
+source "$RADIX_DIR/tools/instrumentum_nectere.sh"
+instrumentum_nectere "$RENOMINARE_BIN" "$RENOMINARE_SRC" \
+    "$SILVA_DIR/instrumenta/silva_lexicon.c" $obj_files \
+    "$SILVA_DIR"/instrumenta/*.h "$SILVA_DIR"/instrumenta/principalia/*.h -- \
+    "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
+    -I"$SILVA_DIR/instrumenta" "$RENOMINARE_SRC" \
+    "$SILVA_DIR/instrumenta/silva_lexicon.c" $obj_files || exit 2
 
 cd "$RADIX_DIR"
 

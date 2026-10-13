@@ -45,7 +45,7 @@ scribam_montare (
     (vacuum)argumentum;
     (vacuum)ctx;
     redde scriba_montare((ScribaMontatio*)sedes, p, in, v, r, id, radix,
-                         latitudo, altitudo, NIHIL);
+                         latitudo, altitudo, NIHIL, NIHIL);
 }
 
 interior b32
@@ -65,7 +65,7 @@ pictorem_montare (
     (vacuum)argumentum;
     (vacuum)ctx;
     redde pictor_montare((PictorMontatio*)sedes, p, in, v, r, id, radix,
-                         latitudo, altitudo);
+                         latitudo, altitudo, NIHIL);
 }
 
 interior vacuum
@@ -128,7 +128,7 @@ rami_attributum (
     InsulaRamus ramus;
 
     ramus = insula_ramus(v->repo, genus, id);
-    redde insula_ramus_attributum(&ramus, INSULA_EPHEMERA, titulus);
+    redde insula_ramus_attributum(&ramus, titulus);
 }
 
 /* linea l folii (spatiis finalibus omissis) == expectata */
@@ -237,7 +237,7 @@ s32 principale (vacuum)
 
     imprimere("\n--- I: ligatio - focus ex ramo activo ---\n");
     CREDO_VERUM(focus_est(d, "pagina"));
-    CREDO_NIHIL(insula_attributum(v->repo, INSULA_EPHEMERA, "focus"));
+    CREDO_NIHIL(insula_attributum(v->repo, "focus"));
     CREDO_VERUM(motus->gestus.status == (vacuum*)&sm->actiones_ctx);
 
     imprimere("\n--- II: commutatio insertionem effundit ---\n");
@@ -264,7 +264,7 @@ s32 principale (vacuum)
     CREDO_VERUM(valor_est(rami_attributum(v, "pictor",
         "p1_sinistrum_pictor", "pan_x"),
         "0"));
-    CREDO_NIHIL(insula_attributum(v->repo, INSULA_EPHEMERA, "pan_x"));
+    CREDO_NIHIL(insula_attributum(v->repo, "pan_x"));
     murem_mittere(d, m, EVENTUS_MUS_LIBERATUS, XV, C * M + M + XX);
     CREDO_VERUM(pictor_documentum_cursor(pm->doc) > ZEPHYRUM);
 
@@ -282,7 +282,7 @@ s32 principale (vacuum)
     CREDO_VERUM(valor_est(rami_attributum(v, "scriba",
         "s1_sinistrum_scriba", "focus"),
         "status"));
-    CREDO_NIHIL(insula_attributum(v->repo, INSULA_EPHEMERA, "focus"));
+    CREDO_NIHIL(insula_attributum(v->repo, "focus"));
     dispensator_focus_ponere(d, chorda_ex_literis("pagina", piscina));
 
     imprimere("\n--- VI: captura et ictus pendens abiciuntur ---\n");

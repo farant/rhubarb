@@ -1,0 +1,1625 @@
+/* probatio_xar.c - Probationes Tabulae Exponentialis */
+#include "latina.h"
+#include "xar.h"
+#include "piscina.h"
+#include "credo.h"
+#include <stdio.h>
+#include <string.h>
+
+/* Comparator pro i32 */
+interior integer
+comparare_i32 (
+    constans vacuum* a,
+    constans vacuum* b)
+{
+    i32 aa = *(constans i32*)a;
+    i32 bb = *(constans i32*)b;
+    redde (aa < bb) ? -I : (aa > bb) ? I : ZEPHYRUM;
+}
+
+/* Paria pro stabilitate xar_ordinare: clavis comparatur, ordo
+ * (index insertionis) testis est. Gravis: > CCLVI octeti (mutatio
+ * per buffer acervi non capit integra) */
+nomen structura ParClavis {
+    i32 clavis;
+    i32 ordo;
+} ParClavis;
+
+nomen structura ParGravis {
+          i32 clavis;
+          i32 ordo;
+    character pondus[CCXCII];
+} ParGravis;
+
+interior integer
+comparare_clavem (
+    constans vacuum* a,
+    constans vacuum* b)
+{
+    i32 aa = ((constans ParClavis*)a)->clavis;
+    i32 bb = ((constans ParClavis*)b)->clavis;
+    redde (aa < bb) ? -I : (aa > bb) ? I : ZEPHYRUM;
+}
+
+interior integer
+comparare_clavem_gravem (
+    constans vacuum* a,
+    constans vacuum* b)
+{
+    i32 aa = ((constans ParGravis*)a)->clavis;
+    i32 bb = ((constans ParGravis*)b)->clavis;
+    redde (aa < bb) ? -I : (aa > bb) ? I : ZEPHYRUM;
+}
+
+/* violationes ordinis stabilis: par k ante par k+1 nisi clavis
+ * minor, aut aequalis cum ordine minore. Campi primi duo communes
+ * (ParClavis, ParGravis); 'gravis' magnitudinem elementi eligit. */
+interior i32
+violationes_numerare (
+    Xar* xar,
+    b32  gravis)
+{
+    i32 k;
+    i32 violationes;
+
+    violationes = ZEPHYRUM;
+    per (k = I; k < xar_numerus(xar); k++)
+    {
+        i32 clavis_prior;
+        i32 ordo_prior;
+        i32 clavis;
+        i32 ordo;
+
+        si (gravis)
+        {
+            clavis_prior = ((ParGravis*)xar_obtinere(xar, k
+                - I))->clavis;
+            ordo_prior  = ((ParGravis*)xar_obtinere(xar, k - I))->ordo;
+            clavis      = ((ParGravis*)xar_obtinere(xar, k))->clavis;
+            ordo        = ((ParGravis*)xar_obtinere(xar, k))->ordo;
+        }
+        alioquin
+        {
+            clavis_prior = ((ParClavis*)xar_obtinere(xar, k
+                - I))->clavis;
+            ordo_prior  = ((ParClavis*)xar_obtinere(xar, k - I))->ordo;
+            clavis      = ((ParClavis*)xar_obtinere(xar, k))->clavis;
+            ordo        = ((ParClavis*)xar_obtinere(xar, k))->ordo;
+        }
+        si (   clavis_prior > clavis
+            || (clavis_prior == clavis && ordo_prior > ordo))
+        {
+            violationes++;
+        }
+    }
+    redde violationes;
+}
+
+    /* ==================================================
+	 * Probare xar_creare
+	 * ================================================== */
+
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
+    {
+        Xar* xar;
+
+        xar = xar_creare(piscina, sizeof(i32));
+        CREDO_NON_NIHIL(xar);
+        CREDO_AEQUALIS_I32((i32)xar_numerus(xar), ZEPHYRUM);
+        CREDO_AEQUALIS_I32((i32)xar_capacitas(xar), ZEPHYRUM);
+        CREDO_VERUM(xar_vacuum_est(xar));
+    }
+}
+
+    /* ==================================================
+	 * Probare xar_addere et xar_obtinere
+	 * ================================================== */
+
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
+    {
+        Xar* xar;
+        i32* elem;
+        i32* receptus;
+
+        xar = xar_creare(piscina, sizeof(i32));
+
+        /* Addere primum elementum */
+        elem = (i32*)xar_addere(xar);
+        CREDO_NON_NIHIL(elem);
+        *elem = XLII;
+
+        CREDO_AEQUALIS_I32((i32)xar_numerus(xar), I);
+
+        /* Recuperare elementum */
+        receptus = (i32*)xar_obtinere(xar, ZEPHYRUM);
+        CREDO_NON_NIHIL(receptus);
+        CREDO_AEQUALIS_I32(*receptus, XLII);
+
+        /* Addere secundum elementum */
+        elem   = (i32*)xar_addere(xar);
+        *elem  = XCIX;
+
+        receptus = (i32*)xar_obtinere(xar, I);
+        CREDO_AEQUALIS_I32(*receptus, XCIX);
+    }
+}
+
+    /* ==================================================
+	 * Probare crescentia automatica
+	 * ================================================== */
+
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
+    {
+        Xar* xar;
+        i32* elem;
+        i32  i;
+
+        xar = xar_creare_cum_magnitudine(piscina, sizeof(i32), VIII);
+
+        /* Addere elementa satis ad coactiones crescentiae multiplices */
+        per (i = ZEPHYRUM; i < C; i++)
+        {
+            elem = (i32*)xar_addere(xar);
+            CREDO_NON_NIHIL(elem);
+            *elem = i;
+        }
+
+        CREDO_AEQUALIS_I32((i32)xar_numerus(xar), C);
+
+        /* Verificare omnia elementa */
+        per (i = ZEPHYRUM; i < C; i++)
+        {
+            elem = (i32*)xar_obtinere(xar, (i32)i);
+            CREDO_NON_NIHIL(elem);
+            CREDO_AEQUALIS_I32(*elem, i);
+        }
+    }
+}
+
+    /* ==================================================
+	 * Probare xar_obtinere_vel_creare (dispersus)
+	 * ================================================== */
+
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
+    {
+        Xar* xar;
+        i32* elem;
+
+        xar = xar_creare_cum_magnitudine(piscina, sizeof(i32), XVI);
+
+        /* Creare elementum ad indicem remotum */
+        elem = (i32*)xar_obtinere_vel_creare(xar, L);
+        CREDO_NON_NIHIL(elem);
+        *elem = XLII;
+
+        /* Numerus debet esse 51 nunc */
+        CREDO_AEQUALIS_I32((i32)xar_numerus(xar), LI);
+
+        /* Verificare elementum remotum */
+        elem = (i32*)xar_obtinere(xar, L);
+        CREDO_NON_NIHIL(elem);
+        CREDO_AEQUALIS_I32(*elem, XLII);
+    }
+}
+
+    /* ==================================================
+	 * Probare xar_ponere
+	 * ================================================== */
+
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
+    {
+        Xar* xar;
+        i32  valor;
+        i32* receptus;
+
+        xar = xar_creare(piscina, sizeof(i32));
+
+        valor = CXXIII;
+        CREDO_VERUM(xar_ponere(xar, X, &valor));
+
+        receptus = (i32*)xar_obtinere(xar, X);
+        CREDO_NON_NIHIL(receptus);
+        CREDO_AEQUALIS_I32(*receptus, CXXIII);
+    }
+}
+
+    /* ==================================================
+	 * Probare xar_addere_multos
+	 * ================================================== */
+
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
+    {
+        Xar* xar;
+        i32  numeri[X];
+        i32  i;
+        i32* receptus;
+        i32  additi;
+
+        xar = xar_creare(piscina, sizeof(i32));
+
+        /* Parare tabulam numerorum */
+        per (i = ZEPHYRUM; i < X; i++)
+        {
+            numeri[i] = i * II;
+        }
+
+        /* Addere omnes simul */
+        additi = xar_addere_multos(xar, numeri, X);
+        CREDO_AEQUALIS_I32((i32)additi, X);
+        CREDO_AEQUALIS_I32((i32)xar_numerus(xar), X);
+
+        /* Verificare omnes */
+        per (i = ZEPHYRUM; i < X; i++)
+        {
+            receptus = (i32*)xar_obtinere(xar, (i32)i);
+            CREDO_NON_NIHIL(receptus);
+            CREDO_AEQUALIS_I32(*receptus, i * II);
+        }
+    }
+}
+
+    /* ==================================================
+	 * Probare xar_addere_multos trans segmenta
+	 * ================================================== */
+
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
+    {
+        Xar* xar;
+        i32  numeri[XXXII];
+        i32  i;
+        i32* receptus;
+        i32  additi;
+
+        xar = xar_creare_cum_magnitudine(piscina, sizeof(i32), VIII);
+
+        /* Parare XXXII numeros */
+        per (i = ZEPHYRUM; i < XXXII; i++)
+        {
+            numeri[i] = i + C;
+        }
+
+        /* Addere omnes - debent transire per segmenta multa */
+        additi = xar_addere_multos(xar, numeri, XXXII);
+        CREDO_AEQUALIS_I32((i32)additi, XXXII);
+
+        /* Verificare omnia correcta */
+        per (i = ZEPHYRUM; i < XXXII; i++)
+        {
+            receptus = (i32*)xar_obtinere(xar, (i32)i);
+            CREDO_AEQUALIS_I32(*receptus, i + C);
+        }
+    }
+}
+
+    /* ==================================================
+	 * Probare xar_addere_multos cum xar partim pleno
+	 * ================================================== */
+
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
+    {
+        Xar* xar;
+        i32  numeri[L];
+        i32* elem;
+        i32* receptus;
+        i32  i;
+        i32  additi;
+
+        xar = xar_creare_cum_magnitudine(piscina, sizeof(i32), VIII);
+
+        /* Primo, addere X elementa individue ad partim plenum facere */
+        per (i = ZEPHYRUM; i < X; i++)
+        {
+            elem   = (i32*)xar_addere(xar);
+            *elem  = i;
+        }
+
+        CREDO_AEQUALIS_I32((i32)xar_numerus(xar), X);
+
+        /* Nunc parare L numeros pro addere_multos */
+        per (i = ZEPHYRUM; i < L; i++)
+        {
+            numeri[i] = i + C;
+        }
+
+        /* Addere multos ad xar iam partim plenum */
+        additi = xar_addere_multos(xar, numeri, L);
+        CREDO_AEQUALIS_I32((i32)additi, L);
+        CREDO_AEQUALIS_I32((i32)xar_numerus(xar), X + L);
+
+        /* Verificare elementa originalia */
+        per (i = ZEPHYRUM; i < X; i++)
+        {
+            receptus = (i32*)xar_obtinere(xar, (i32)i);
+            CREDO_NON_NIHIL(receptus);
+            CREDO_AEQUALIS_I32(*receptus, i);
+        }
+
+        /* Verificare elementa nova */
+        per (i = ZEPHYRUM; i < L; i++)
+        {
+            receptus = (i32*)xar_obtinere(xar, (i32)(X + i));
+            CREDO_NON_NIHIL(receptus);
+            CREDO_AEQUALIS_I32(*receptus, i + C);
+        }
+    }
+}
+
+    /* ==================================================
+	 * Probare xar_addere_multos magnum numerum
+	 * ================================================== */
+
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
+    {
+        Xar* xar;
+        i32  numeri[CC];  /* 200 */
+        i32* elem;
+        i32* receptus;
+        i32  i;
+        i32  additi;
+
+        xar = xar_creare_cum_magnitudine(piscina, sizeof(i32), VIII);
+
+        /* Addere V elementa primo */
+        per (i = ZEPHYRUM; i < V; i++)
+        {
+            elem   = (i32*)xar_addere(xar);
+            *elem  = i * II;
+        }
+
+        /* Parare CC (200) numeros */
+        per (i = ZEPHYRUM; i < CC; i++)
+        {
+            numeri[i] = i + M;  /* 1000, 1001, 1002, ... */
+        }
+
+        /* Addere CC elementa - transit per segmenta multa */
+        additi = xar_addere_multos(xar, numeri, CC);
+        CREDO_AEQUALIS_I32((i32)additi, CC);
+        CREDO_AEQUALIS_I32((i32)xar_numerus(xar), V + CC);
+
+        /* Verificare elementa originalia */
+        per (i = ZEPHYRUM; i < V; i++)
+        {
+            receptus = (i32*)xar_obtinere(xar, (i32)i);
+            CREDO_AEQUALIS_I32(*receptus, i * II);
+        }
+
+        /* Verificare elementa nova (tantum aliqua, non omnia) */
+        receptus = (i32*)xar_obtinere(xar, V);  /* Primum novum */
+        CREDO_AEQUALIS_I32(*receptus, M);
+
+        receptus = (i32*)xar_obtinere(xar, V + L);  /* Medium */
+        CREDO_AEQUALIS_I32(*receptus, M + L);
+
+        receptus = (i32*)xar_obtinere(xar, V + CC - I);  /* Ultimum */
+        CREDO_AEQUALIS_I32(*receptus, M + CC - I);
+    }
+}
+
+    /* ==================================================
+	 * Probare iterator cum xar vacuo
+	 * ================================================== */
+
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
+    {
+                Xar* xar;
+        XarIterator  iter;
+                i32* elem;
+
+        xar = xar_creare(piscina, sizeof(i32));
+
+        /* Iterator debet esse finis immediate */
+        iter = xar_iterator_initium(xar);
+        CREDO_VERUM(xar_iterator_finis(&iter));
+
+        /* Proximum debet reddere NIHIL */
+        elem = (i32*)xar_iterator_proximum(&iter);
+        CREDO_NIHIL(elem);
+    }
+}
+
+    /* ==================================================
+	 * Probare iterator
+	 * ================================================== */
+
+interior vacuum
+_sectio_decima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
+    {
+                Xar* xar;
+        XarIterator  iter;
+                i32* elem;
+                i32  numeratio;
+                i32  summa;
+
+        xar = xar_creare(piscina, sizeof(i32));
+
+        /* Addere elementa */
+        per (numeratio = ZEPHYRUM; numeratio < X; numeratio++)
+        {
+            elem   = (i32*)xar_addere(xar);
+            *elem  = numeratio;
+        }
+
+        /* Iterare et summare */
+        iter       = xar_iterator_initium(xar);
+        summa      = ZEPHYRUM;
+        numeratio  = ZEPHYRUM;
+
+        dum (!xar_iterator_finis(&iter))
+        {
+            elem = (i32*)xar_iterator_proximum(&iter);
+            CREDO_NON_NIHIL(elem);
+            summa += *elem;
+            numeratio++;
+        }
+
+        CREDO_AEQUALIS_I32(numeratio, X);
+        CREDO_AEQUALIS_I32(summa, XLV);  /* 0+1+2+...+9 = 45 */
+    }
+}
+
+    /* ==================================================
+	 * Probare iterator trans segmenta multa
+	 * ================================================== */
+
+interior vacuum
+_sectio_decima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
+    {
+                Xar* xar;
+        XarIterator  iter;
+                i32* elem;
+                i32  numeratio;
+
+        xar = xar_creare_cum_magnitudine(piscina, sizeof(i32), VIII);
+
+        /* Addere L elementa - transit per segmenta multa */
+        per (numeratio = ZEPHYRUM; numeratio < L; numeratio++)
+        {
+            elem   = (i32*)xar_addere(xar);
+            *elem  = numeratio * III;
+        }
+
+        /* Iterare et verificare */
+        iter       = xar_iterator_initium(xar);
+        numeratio  = ZEPHYRUM;
+
+        dum (!xar_iterator_finis(&iter))
+        {
+            elem = (i32*)xar_iterator_proximum(&iter);
+            CREDO_NON_NIHIL(elem);
+            CREDO_AEQUALIS_I32(*elem, numeratio * III);
+            numeratio++;
+        }
+
+        CREDO_AEQUALIS_I32(numeratio, L);
+    }
+}
+
+    /* ==================================================
+	 * Probare xar_invenire (reddere indicem ad elementum)
+	 * ================================================== */
+
+interior vacuum
+_sectio_decima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
+    {
+        Xar* xar;
+        i32* elem;
+        i32* resultus;
+        i32  i;
+        i32  clavis;
+
+        xar = xar_creare(piscina, sizeof(i32));
+
+        /* Addere elementa */
+        per (i = ZEPHYRUM; i < X; i++)
+        {
+            elem   = (i32*)xar_addere(xar);
+            *elem  = i * V;
+        }
+
+        /* Quaerere elementum existens */
+        clavis    = XV;
+        resultus  = (i32*)xar_invenire(xar, &clavis, comparare_i32);
+        CREDO_NON_NIHIL(resultus);
+        CREDO_AEQUALIS_I32(*resultus, XV);
+
+        /* Quaerere non existens */
+        clavis    = VII;
+        resultus  = (i32*)xar_invenire(xar, &clavis, comparare_i32);
+        CREDO_NIHIL(resultus);
+    }
+}
+
+    /* ==================================================
+	 * Probare xar_invenire_index (reddere indicem)
+	 * ================================================== */
+
+interior vacuum
+_sectio_decima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
+    {
+        Xar* xar;
+        i32* elem;
+        i32  i;
+        i32  clavis;
+        s32  index;
+
+        xar = xar_creare(piscina, sizeof(i32));
+
+        /* Addere elementa */
+        per (i = ZEPHYRUM; i < X; i++)
+        {
+            elem   = (i32*)xar_addere(xar);
+            *elem  = i * V;
+        }
+
+        /* Quaerere elementum existens */
+        clavis  = XV;
+        index   = xar_invenire_index(xar, &clavis, comparare_i32);
+        CREDO_AEQUALIS_S32(index, III);  /* 15 = 3 * 5 */
+
+        /* Quaerere non existens */
+        clavis  = VII;
+        index   = xar_invenire_index(xar, &clavis, comparare_i32);
+        CREDO_AEQUALIS_S32(index, -I);
+    }
+}
+
+    /* ==================================================
+	 * Probare xar_quaerere_binarie
+	 * ================================================== */
+
+interior vacuum
+_sectio_decima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
+    {
+        Xar* xar;
+        i32* elem;
+        i32* resultus;
+        i32  i;
+        i32  clavis;
+
+        xar = xar_creare(piscina, sizeof(i32));
+
+        /* Addere elementa ordinata */
+        per (i = ZEPHYRUM; i < XX; i++)
+        {
+            elem   = (i32*)xar_addere(xar);
+            *elem  = i * V;  /* 0, 5, 10, 15, 20, ... 95 */
+        }
+
+        /* Quaerere elementum in medio */
+        clavis = XXX;  /* 30 */
+        resultus = (i32*)xar_quaerere_binarie(xar, &clavis,
+            comparare_i32);
+        CREDO_NON_NIHIL(resultus);
+        CREDO_AEQUALIS_I32(*resultus, XXX);
+
+        /* Quaerere primum elementum */
+        clavis = ZEPHYRUM;
+        resultus = (i32*)xar_quaerere_binarie(xar, &clavis,
+            comparare_i32);
+        CREDO_NON_NIHIL(resultus);
+        CREDO_AEQUALIS_I32(*resultus, ZEPHYRUM);
+
+        /* Quaerere ultimum elementum */
+        clavis = XCV;  /* 95 */
+        resultus = (i32*)xar_quaerere_binarie(xar, &clavis,
+            comparare_i32);
+        CREDO_NON_NIHIL(resultus);
+        CREDO_AEQUALIS_I32(*resultus, XCV);
+
+        /* Quaerere non existens */
+        clavis = VII;  /* 7, non in tabula */
+        resultus = (i32*)xar_quaerere_binarie(xar, &clavis,
+            comparare_i32);
+        CREDO_NIHIL(resultus);
+
+        /* Quaerere in xar vacuo */
+        xar_vacare(xar);
+        clavis = X;
+        resultus = (i32*)xar_quaerere_binarie(xar, &clavis,
+            comparare_i32);
+        CREDO_NIHIL(resultus);
+    }
+}
+
+    /* ==================================================
+	 * Probare xar_quaerere_binarie_index
+	 * ================================================== */
+
+interior vacuum
+_sectio_decima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
+    {
+        Xar* xar;
+        i32* elem;
+        i32  i;
+        i32  clavis;
+        s32  index;
+
+        xar = xar_creare(piscina, sizeof(i32));
+
+        /* Addere elementa ordinata */
+        per (i = ZEPHYRUM; i < XX; i++)
+        {
+            elem   = (i32*)xar_addere(xar);
+            *elem  = i * V;  /* 0, 5, 10, 15, 20, ... 95 */
+        }
+
+        /* Quaerere elementum in medio */
+        clavis = XXX;  /* 30 */
+        index = xar_quaerere_binarie_index(xar, &clavis,
+            comparare_i32);
+        CREDO_AEQUALIS_S32(index, VI);  /* 30 = index 6 */
+
+        /* Quaerere primum elementum */
+        clavis = ZEPHYRUM;
+        index = xar_quaerere_binarie_index(xar, &clavis,
+            comparare_i32);
+        CREDO_AEQUALIS_S32(index, ZEPHYRUM);
+
+        /* Quaerere ultimum elementum */
+        clavis = XCV;  /* 95 */
+        index = xar_quaerere_binarie_index(xar, &clavis,
+            comparare_i32);
+        CREDO_AEQUALIS_S32(index, XIX);  /* index 19 */
+
+        /* Quaerere non existens */
+        clavis = VII;  /* 7, non in tabula */
+        index = xar_quaerere_binarie_index(xar, &clavis,
+            comparare_i32);
+        CREDO_AEQUALIS_S32(index, -I);
+
+        /* Quaerere in xar vacuo */
+        xar_vacare(xar);
+        clavis = X;
+        index = xar_quaerere_binarie_index(xar, &clavis,
+            comparare_i32);
+        CREDO_AEQUALIS_S32(index, -I);
+    }
+}
+
+    /* ==================================================
+	 * Probare xar_vacare
+	 * ================================================== */
+
+interior vacuum
+_sectio_decima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
+    {
+        Xar* xar;
+        i32* elem;
+        i32  i;
+
+        xar = xar_creare(piscina, sizeof(i32));
+
+        /* Addere elementa */
+        per (i = ZEPHYRUM; i < XX; i++)
+        {
+            elem   = (i32*)xar_addere(xar);
+            *elem  = i;
+        }
+
+        CREDO_AEQUALIS_I32((i32)xar_numerus(xar), XX);
+
+        /* Vacare */
+        xar_vacare(xar);
+
+        CREDO_AEQUALIS_I32((i32)xar_numerus(xar), ZEPHYRUM);
+        CREDO_VERUM(xar_vacuum_est(xar));
+
+        /* Segmenta adhuc allocata */
+        CREDO_VERUM(xar_capacitas(xar) > ZEPHYRUM);
+    }
+}
+
+    /* ==================================================
+	 * Probare xar_truncare
+	 * ================================================== */
+
+interior vacuum
+_sectio_decima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
+    {
+        Xar* xar;
+        i32* elem;
+        i32  i;
+
+        xar = xar_creare(piscina, sizeof(i32));
+
+        /* Addere elementa */
+        per (i = ZEPHYRUM; i < XX; i++)
+        {
+            elem   = (i32*)xar_addere(xar);
+            *elem  = i;
+        }
+
+        CREDO_AEQUALIS_I32((i32)xar_numerus(xar), XX);
+
+        /* Truncare ad X */
+        xar_truncare(xar, X);
+
+        CREDO_AEQUALIS_I32((i32)xar_numerus(xar), X);
+
+        /* Prima X elementa adhuc accessibilia */
+        per (i = ZEPHYRUM; i < X; i++)
+        {
+            elem = (i32*)xar_obtinere(xar, (i32)i);
+            CREDO_AEQUALIS_I32(*elem, i);
+        }
+    }
+}
+
+    /* ==================================================
+	 * Probare xar_copiare_ad_tabulam
+	 * ================================================== */
+
+interior vacuum
+_sectio_decima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
+    {
+        Xar* xar;
+        i32* elem;
+        i32  destinatio[X];
+        i32  i;
+        i32  copiati;
+
+        xar = xar_creare(piscina, sizeof(i32));
+
+        /* Addere elementa */
+        per (i = ZEPHYRUM; i < XX; i++)
+        {
+            elem   = (i32*)xar_addere(xar);
+            *elem  = i * II;
+        }
+
+        /* Copiare X elementa ab indice V */
+        copiati = xar_copiare_ad_tabulam(xar, destinatio, V, X);
+
+        CREDO_AEQUALIS_I32((i32)copiati, X);
+
+        /* Verificare */
+        per (i = ZEPHYRUM; i < X; i++)
+        {
+            CREDO_AEQUALIS_I32(destinatio[i], (V + i) * II);
+        }
+    }
+}
+
+    /* ==================================================
+	 * Probare vexilla
+	 * ================================================== */
+
+interior vacuum
+_sectio_vicesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
+    {
+        Xar* xar;
+        i32* elem;
+
+        /* Creare cum vexillo SINE_ZEPHYRUM */
+        xar = xar_creare_cum_vexillis(piscina, sizeof(i32),
+                                       XVI, XAR_VEXILLUM_SINE_ZEPHYRUM);
+        CREDO_NON_NIHIL(xar);
+
+        /* Ponere vexillum ordinarium */
+        xar_ponere_vexilla(xar, XAR_VEXILLUM_ORDINARIUS);
+
+        /* Addere debet operari */
+        elem = (i32*)xar_addere(xar);
+        CREDO_NON_NIHIL(elem);
+    }
+}
+
+    /* ==================================================
+	 * Probare accessus invalidos
+	 * ================================================== */
+
+interior vacuum
+_sectio_vicesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
+    {
+        Xar* xar;
+        i32* elem;
+
+        xar = xar_creare(piscina, sizeof(i32));
+
+        /* Addere unum elementum */
+        elem   = (i32*)xar_addere(xar);
+        *elem  = XLII;
+
+        /* Tentare obtinere extra limites */
+        elem = (i32*)xar_obtinere(xar, C);
+        CREDO_NIHIL(elem);
+
+        /* Tentare obtinere cum xar NIHIL */
+        elem = (i32*)xar_obtinere(NIHIL, ZEPHYRUM);
+        CREDO_NIHIL(elem);
+    }
+}
+
+    /* ==================================================
+	 * Probare magnam tabulam
+	 * ================================================== */
+
+interior vacuum
+_sectio_vicesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
+    {
+        Xar* xar;
+        i32* elem;
+        i32  i;
+
+        xar = xar_creare_cum_magnitudine(piscina, sizeof(i32), XVI);
+
+        /* Addere D elementa */
+        per (i = ZEPHYRUM; i < D; i++)
+        {
+            elem = (i32*)xar_addere(xar);
+            CREDO_NON_NIHIL(elem);
+            *elem = i;
+        }
+
+        CREDO_AEQUALIS_I32((i32)xar_numerus(xar), D);
+
+        /* Verificare aliqua elementa */
+        elem = (i32*)xar_obtinere(xar, ZEPHYRUM);
+        CREDO_AEQUALIS_I32(*elem, ZEPHYRUM);
+
+        elem = (i32*)xar_obtinere(xar, CCL);
+        CREDO_AEQUALIS_I32(*elem, CCL);
+
+        elem = (i32*)xar_obtinere(xar, D - I);
+        CREDO_AEQUALIS_I32(*elem, D - I);
+    }
+}
+
+    /* ==================================================
+	 * Probare status imprimere
+	 * ================================================== */
+
+interior vacuum
+_sectio_vicesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
+    {
+        Xar* xar;
+        i32* elem;
+        i32  i;
+
+        xar = xar_creare_cum_magnitudine(piscina, sizeof(i32), VIII);
+
+        per (i = ZEPHYRUM; i < L; i++)
+        {
+            elem   = (i32*)xar_addere(xar);
+            *elem  = i;
+        }
+
+        xar_status_imprimere(xar);   /* sine titulo (RP §8, 2026-09-02) */
+    }
+}
+
+    /* ==================================================
+	 * Probare xar_removere_ultimum
+	 * ================================================== */
+
+interior vacuum
+_sectio_vicesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
+    {
+        Xar* xar;
+        i32* elem;
+        b32  successus;
+
+        xar = xar_creare(piscina, sizeof(i32));
+
+        /* Addere elementa */
+        elem = (i32*)xar_addere(xar); *elem = X;
+        elem = (i32*)xar_addere(xar); *elem = XX;
+        elem = (i32*)xar_addere(xar); *elem = XXX;
+
+        CREDO_AEQUALIS_I32((i32)xar_numerus(xar), III);
+
+        /* Removere ultimum */
+        successus = xar_removere_ultimum(xar);
+        CREDO_VERUM(successus);
+        CREDO_AEQUALIS_I32((i32)xar_numerus(xar), II);
+
+        /* Verificare quod elementa priora adhuc existunt */
+        elem = (i32*)xar_obtinere(xar, ZEPHYRUM);
+        CREDO_AEQUALIS_I32(*elem, X);
+        elem = (i32*)xar_obtinere(xar, I);
+        CREDO_AEQUALIS_I32(*elem, XX);
+
+        /* Removere de xar vacuo */
+        xar_vacare(xar);
+        successus = xar_removere_ultimum(xar);
+        CREDO_FALSUM(successus);
+    }
+}
+
+    /* ==================================================
+	 * Probare xar_removere_cum_ultimo
+	 * ================================================== */
+
+interior vacuum
+_sectio_vicesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
+    {
+        Xar* xar;
+        i32* elem;
+        b32  successus;
+
+        xar = xar_creare(piscina, sizeof(i32));
+
+        /* Addere elementa: 10, 20, 30, 40, 50 */
+        elem = (i32*)xar_addere(xar); *elem = X;
+        elem = (i32*)xar_addere(xar); *elem = XX;
+        elem = (i32*)xar_addere(xar); *elem = XXX;
+        elem = (i32*)xar_addere(xar); *elem = XL;
+        elem = (i32*)xar_addere(xar); *elem = L;
+
+        CREDO_AEQUALIS_I32((i32)xar_numerus(xar), V);
+
+        /* Removere elementum ad index I (20) - 50 movebitur ad I */
+        successus = xar_removere_cum_ultimo(xar, I);
+        CREDO_VERUM(successus);
+        CREDO_AEQUALIS_I32((i32)xar_numerus(xar), IV);
+
+        /* Verificare: [10, 50, 30, 40] */
+        elem = (i32*)xar_obtinere(xar, ZEPHYRUM);
+        CREDO_AEQUALIS_I32(*elem, X);
+        elem = (i32*)xar_obtinere(xar, I);
+        CREDO_AEQUALIS_I32(*elem, L);
+        elem = (i32*)xar_obtinere(xar, II);
+        CREDO_AEQUALIS_I32(*elem, XXX);
+        elem = (i32*)xar_obtinere(xar, III);
+        CREDO_AEQUALIS_I32(*elem, XL);
+
+        /* Removere ultimum elementum (index III) - special case */
+        successus = xar_removere_cum_ultimo(xar, III);
+        CREDO_VERUM(successus);
+        CREDO_AEQUALIS_I32((i32)xar_numerus(xar), III);
+
+        /* Index invalidus */
+        successus = xar_removere_cum_ultimo(xar, C);
+        CREDO_FALSUM(successus);
+    }
+}
+
+    /* ==================================================
+	 * Probare xar_tollere
+	 * ================================================== */
+
+interior vacuum
+_sectio_vicesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
+    {
+        Xar* xar;
+        i32* elem;
+        i32  receptus;
+        b32  successus;
+
+        xar = xar_creare(piscina, sizeof(i32));
+
+        /* Addere elementa */
+        elem = (i32*)xar_addere(xar); *elem = X;
+        elem = (i32*)xar_addere(xar); *elem = XX;
+        elem = (i32*)xar_addere(xar); *elem = XXX;
+
+        /* Tollere ultimum */
+        successus = xar_tollere(xar, &receptus);
+        CREDO_VERUM(successus);
+        CREDO_AEQUALIS_I32(receptus, XXX);
+        CREDO_AEQUALIS_I32((i32)xar_numerus(xar), II);
+
+        /* Tollere iterum */
+        successus = xar_tollere(xar, &receptus);
+        CREDO_VERUM(successus);
+        CREDO_AEQUALIS_I32(receptus, XX);
+        CREDO_AEQUALIS_I32((i32)xar_numerus(xar), I);
+
+        /* Tollere ultimum */
+        successus = xar_tollere(xar, &receptus);
+        CREDO_VERUM(successus);
+        CREDO_AEQUALIS_I32(receptus, X);
+        CREDO_AEQUALIS_I32((i32)xar_numerus(xar), ZEPHYRUM);
+
+        /* Tollere de vacuo */
+        successus = xar_tollere(xar, &receptus);
+        CREDO_FALSUM(successus);
+    }
+}
+
+    /* ==================================================
+	 * Probare xar_mutare
+	 * ================================================== */
+
+interior vacuum
+_sectio_vicesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
+    {
+        Xar* xar;
+        i32* elem;
+        b32  successus;
+
+        xar = xar_creare(piscina, sizeof(i32));
+
+        /* Addere elementa */
+        elem = (i32*)xar_addere(xar); *elem = X;
+        elem = (i32*)xar_addere(xar); *elem = XX;
+        elem = (i32*)xar_addere(xar); *elem = XXX;
+
+        /* Mutare 0 et 2 */
+        successus = xar_mutare(xar, ZEPHYRUM, II);
+        CREDO_VERUM(successus);
+
+        elem = (i32*)xar_obtinere(xar, ZEPHYRUM);
+        CREDO_AEQUALIS_I32(*elem, XXX);
+        elem = (i32*)xar_obtinere(xar, II);
+        CREDO_AEQUALIS_I32(*elem, X);
+
+        /* Mutare idem index - nihil agendum */
+        successus = xar_mutare(xar, I, I);
+        CREDO_VERUM(successus);
+
+        /* Index invalidus */
+        successus = xar_mutare(xar, ZEPHYRUM, C);
+        CREDO_FALSUM(successus);
+    }
+}
+
+    /* ==================================================
+	 * Probare xar_invertere
+	 * ================================================== */
+
+interior vacuum
+_sectio_vicesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
+    {
+        Xar* xar;
+        i32* elem;
+
+        xar = xar_creare(piscina, sizeof(i32));
+
+        /* Addere elementa: 1, 2, 3, 4, 5 */
+        elem = (i32*)xar_addere(xar); *elem = I;
+        elem = (i32*)xar_addere(xar); *elem = II;
+        elem = (i32*)xar_addere(xar); *elem = III;
+        elem = (i32*)xar_addere(xar); *elem = IV;
+        elem = (i32*)xar_addere(xar); *elem = V;
+
+        /* Invertere */
+        xar_invertere(xar);
+
+        /* Verificare: 5, 4, 3, 2, 1 */
+        elem = (i32*)xar_obtinere(xar, ZEPHYRUM);
+        CREDO_AEQUALIS_I32(*elem, V);
+        elem = (i32*)xar_obtinere(xar, I);
+        CREDO_AEQUALIS_I32(*elem, IV);
+        elem = (i32*)xar_obtinere(xar, II);
+        CREDO_AEQUALIS_I32(*elem, III);
+        elem = (i32*)xar_obtinere(xar, III);
+        CREDO_AEQUALIS_I32(*elem, II);
+        elem = (i32*)xar_obtinere(xar, IV);
+        CREDO_AEQUALIS_I32(*elem, I);
+
+        /* Probare invertere tabula cum elementis paribus */
+        xar_vacare(xar);
+        elem = (i32*)xar_addere(xar); *elem = I;
+        elem = (i32*)xar_addere(xar); *elem = II;
+        elem = (i32*)xar_addere(xar); *elem = III;
+        elem = (i32*)xar_addere(xar); *elem = IV;
+
+        xar_invertere(xar);
+
+        elem = (i32*)xar_obtinere(xar, ZEPHYRUM);
+        CREDO_AEQUALIS_I32(*elem, IV);
+        elem = (i32*)xar_obtinere(xar, III);
+        CREDO_AEQUALIS_I32(*elem, I);
+    }
+}
+
+    /* ==================================================
+	 * Probare xar_ordinare
+	 * ================================================== */
+
+interior vacuum
+_sectio_vicesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
+    {
+        Xar* xar;
+        i32* elem;
+
+        xar = xar_creare(piscina, sizeof(i32));
+
+        /* Addere elementa in ordine inverso: 50, 40, 30, 20, 10 */
+        elem = (i32*)xar_addere(xar); *elem = L;
+        elem = (i32*)xar_addere(xar); *elem = XL;
+        elem = (i32*)xar_addere(xar); *elem = XXX;
+        elem = (i32*)xar_addere(xar); *elem = XX;
+        elem = (i32*)xar_addere(xar); *elem = X;
+
+        /* Ordinare */
+        xar_ordinare(xar, comparare_i32);
+
+        /* Verificare ordo: 10, 20, 30, 40, 50 */
+        elem = (i32*)xar_obtinere(xar, ZEPHYRUM);
+        CREDO_AEQUALIS_I32(*elem, X);
+        elem = (i32*)xar_obtinere(xar, I);
+        CREDO_AEQUALIS_I32(*elem, XX);
+        elem = (i32*)xar_obtinere(xar, II);
+        CREDO_AEQUALIS_I32(*elem, XXX);
+        elem = (i32*)xar_obtinere(xar, III);
+        CREDO_AEQUALIS_I32(*elem, XL);
+        elem = (i32*)xar_obtinere(xar, IV);
+        CREDO_AEQUALIS_I32(*elem, L);
+
+        /* Probare cum ordine iam correcto */
+        xar_ordinare(xar, comparare_i32);
+        elem = (i32*)xar_obtinere(xar, ZEPHYRUM);
+        CREDO_AEQUALIS_I32(*elem, X);
+    }
+}
+
+    /* ==================================================
+     * Probare xar_ordinare: STABILITAS et MAGNITUDO (fabrica …AR15:
+     * photographia arboris ~VIII s per ordinationem O(n^2))
+     * ================================================== */
+
+interior vacuum
+_sectio_tricesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
+    {
+                   Xar* xar;
+             ParClavis* par;
+                   i32  k;
+                   i32  semen;
+                   i32  summa_ordinum;
+                   i32  summa_clavium;
+                   i32  summa_post;
+                   i32  ordines_post;
+        memoriae_index  usus_ante;
+        memoriae_index  usus_post;
+
+        /* MMM paria, XVII claves solae (aequalia multa), ordo
+         * insertionis testis */
+        xar            = xar_creare(piscina, magnitudo(ParClavis));
+        semen          = XLII;
+        summa_ordinum  = ZEPHYRUM;
+        summa_clavium  = ZEPHYRUM;
+        per (k = ZEPHYRUM; k < MMM; k++)
+        {
+            semen          = semen * 1103515245u + 12345u;
+            par            = (ParClavis*)xar_addere(xar);
+            par->clavis    = (semen >> XVI) % XVII;
+            par->ordo      = k;
+            summa_ordinum  += k;
+            summa_clavium  += par->clavis;
+        }
+        /* usus statim post ordinationem: CREDO ipsum in piscina
+         * scribit */
+        usus_ante = piscina_summa_usus(piscina);
+        xar_ordinare(xar, comparare_clavem);
+        usus_post = piscina_summa_usus(piscina);
+
+        CREDO_AEQUALIS_I32(xar_numerus(xar), MMM);
+        CREDO_AEQUALIS_I32(violationes_numerare(xar, FALSUM), ZEPHYRUM);
+        /* nihil amissum, nihil duplicatum */
+        summa_post    = ZEPHYRUM;
+        ordines_post  = ZEPHYRUM;
+        per (k = ZEPHYRUM; k < MMM; k++)
+        {
+            par           = (ParClavis*)xar_obtinere(xar, k);
+            summa_post    += par->clavis;
+            ordines_post  += par->ordo;
+        }
+        CREDO_AEQUALIS_I32(summa_post, summa_clavium);
+        CREDO_AEQUALIS_I32(ordines_post, summa_ordinum);
+        /* scriptura temporaria piscinae reddita (notatio) */
+        CREDO_VERUM(usus_post == usus_ante);
+    }
+}
+
+    /* ==================================================
+     * Probare xar_ordinare: PISCINA ANGUSTA (scriptura temporaria non
+     * capit -> insertio stabilis in loco, sine allocatione), elementa
+     * GRAVIA (> CCLVI octeti)
+     * ================================================== */
+
+interior vacuum
+_sectio_tricesima_prima (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    {
+          Piscina* angusta;
+              Xar* xar;
+        ParGravis* par;
+              i32  k;
+
+        angusta = piscina_generare_certae_magnitudinis("angusta",
+            XXVI * M);
+        CREDO_NON_NIHIL(angusta);
+        si (angusta != NIHIL)
+        {
+            xar = xar_creare(angusta, magnitudo(ParGravis));
+            per (k = ZEPHYRUM; k < XL; k++)
+            {
+                par                    = (ParGravis*)xar_addere(xar);
+                par->clavis            = (XL - k) % V;
+                par->ordo              = k;
+                par->pondus[ZEPHYRUM]  = (character)'p';
+            }
+            CREDO_AEQUALIS_I32(xar_numerus(xar), XL);
+            /* praemissa probationis: scriptura non capit */
+            CREDO_FALSUM(piscina_potesne_allocare(angusta,
+                (memoriae_index)XL * magnitudo(ParGravis)));
+            xar_ordinare(xar, comparare_clavem_gravem);
+            CREDO_AEQUALIS_I32(violationes_numerare(xar, VERUM),
+                ZEPHYRUM);
+            par = (ParGravis*)xar_obtinere(xar, ZEPHYRUM);
+            CREDO_AEQUALIS_I32(par->clavis, ZEPHYRUM);
+            CREDO_AEQUALIS_I32((i32)par->pondus[ZEPHYRUM], (i32)'p');
+            piscina_destruere(angusta);
+        }
+    }
+}
+
+    /* ==================================================
+	 * Probare xar_continet
+	 * ================================================== */
+
+interior vacuum
+_sectio_tricesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
+    {
+        Xar* xar;
+        i32* elem;
+        i32  clavis;
+        b32  continet;
+
+        xar = xar_creare(piscina, sizeof(i32));
+
+        /* Addere elementa */
+        elem = (i32*)xar_addere(xar); *elem = X;
+        elem = (i32*)xar_addere(xar); *elem = XX;
+        elem = (i32*)xar_addere(xar); *elem = XXX;
+
+        /* Quaerere existens */
+        clavis    = XX;
+        continet  = xar_continet(xar, &clavis, comparare_i32);
+        CREDO_VERUM(continet);
+
+        /* Quaerere non existens */
+        clavis    = XL;
+        continet  = xar_continet(xar, &clavis, comparare_i32);
+        CREDO_FALSUM(continet);
+
+        /* Quaerere in xar vacuo */
+        xar_vacare(xar);
+        clavis    = X;
+        continet  = xar_continet(xar, &clavis, comparare_i32);
+        CREDO_FALSUM(continet);
+    }
+}
+
+
+interior vacuum
+_sectio_tricesima_tertia (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    {
+        Piscina* p_seg;
+            Xar* parvus;
+            Xar* magnus;
+            i32  i;
+            i32  capacitas_ordinaria;
+             i8* ultimum;
+
+        p_seg = piscina_generare_dynamicum("probatio_segmenta",
+            IV * MXXIV * CCLVI);
+        CREDO_NON_NIHIL (p_seg);
+
+        capacitas_ordinaria = (i32)(1u << (XAR_SEGMENTA_ORDINARIA - I));
+        parvus = xar_creare_cum_magnitudine(p_seg, I, I);
+        CREDO_NON_NIHIL (parvus);
+        ultimum = NIHIL;
+        per (i = ZEPHYRUM; i < capacitas_ordinaria; i++)
+        {
+            ultimum = (i8*)xar_addere(parvus);
+            si (ultimum == NIHIL) frange;
+        }
+        CREDO_NON_NIHIL (ultimum);
+        CREDO_AEQUALIS_I32 (xar_numerus(parvus), capacitas_ordinaria);
+        /* unum ultra: REFUSIO (NIHIL, nuntius in stderr), numerus manet */
+        CREDO_NIHIL (xar_addere(parvus));
+        CREDO_AEQUALIS_I32 (xar_numerus(parvus), capacitas_ordinaria);
+
+        /* magnus: idem elementum, idem primum, tabula LXIV - ultra
+         * fines ordinarios pergit, et elementum ultimum legibile */
+        magnus = xar_creare_magnum(p_seg, I, I);
+        CREDO_NON_NIHIL (magnus);
+        per (i = ZEPHYRUM; i < capacitas_ordinaria + X; i++)
+        {
+            ultimum = (i8*)xar_addere(magnus);
+            si (ultimum == NIHIL) frange;
+        }
+        CREDO_NON_NIHIL (ultimum);
+        CREDO_AEQUALIS_I32 (xar_numerus(magnus), capacitas_ordinaria
+            + X);
+        si (ultimum != NIHIL)
+        {
+            *ultimum = (i8)XLII;
+            CREDO_AEQUALIS_I32 ((i32)*(i8*)xar_obtinere(magnus,
+                (i32)(capacitas_ordinaria + X - I)), XLII);
+        }
+
+        piscina_destruere(p_seg);
+    }
+}
+
+        /* ========================================================
+     * PROBARE: fines segmentorum contra referentiam (gyrus duplicandi
+     * vetus, 2026-09-02 forma clausa): pro primis variis (etiam non
+     * potentiis binariis) numerus segmentorum et capacitas post N
+     * additiones eaedem ac referentia, valores circumeunt.
+     * ======================================================== */
+
+interior vacuum
+_sectio_tricesima_quarta (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    {
+         Piscina* p_fin;
+             i32  prima[VI];
+             i32  pi;
+
+        prima[0] = I; prima[I] = III; prima[II]  = IV;
+        prima[III]                               = VII; prima[IV] =
+                                                                              VIII; prima[V] =
+                                                                                        XVI;
+        p_fin = piscina_generare_dynamicum("probatio_fines",
+            IV * MXXIV * XVI);
+        CREDO_NON_NIHIL (p_fin);
+        per (pi = ZEPHYRUM; pi < VI; pi++)
+        {
+            Xar* x;
+            i32  primum = prima[pi];
+            i32  n;
+            i32  seg_ref;
+            i32  cap_ref;
+            i32  mag;
+            b32  circuitus_sanus;
+            i32* e;
+
+            x = xar_creare_cum_magnitudine(p_fin, (i32)sizeof(i32),
+                primum);
+            CREDO_NON_NIHIL (x);
+            circuitus_sanus = VERUM;
+            per (n = ZEPHYRUM; n < IV * MXXIV + CCLVI; n++)
+            {
+                e = (i32*)xar_addere(x);
+                si (e == NIHIL)
+                { circuitus_sanus = FALSUM; frange;
+                }
+                *e = n * VII + primum;
+            }
+            per (n = ZEPHYRUM; n < xar_numerus(x); n++)
+            {
+                e = (i32*)xar_obtinere(x, n);
+                si (e == NIHIL || *e != n * VII + primum)
+                { circuitus_sanus = FALSUM; frange;
+                }
+            }
+            CREDO_VERUM (circuitus_sanus);
+            /* referentia: segmenta 0 et I primum tenent, k >= II primum x
+             * 2^(k-1); segmentum k allocatum cum index primus eius
+             * (primum x 2^(k-1)) additus */
+            seg_ref = ZEPHYRUM; cap_ref = ZEPHYRUM; mag = primum;
+            n = xar_numerus(x);
+            dum (cap_ref < n)
+            {
+                cap_ref += mag;
+                seg_ref++;
+                si (seg_ref >= II) mag <<= I;
+            }
+            CREDO_AEQUALIS_I32 (x->numerus_segmentorum, seg_ref);
+            CREDO_AEQUALIS_I32 (xar_capacitas(x), cap_ref);
+        }
+        piscina_destruere(p_fin);
+    }
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "xar_creare", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "xar_addere et xar_obtinere", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "crescentia_automatica", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "xar_obtinere_vel_creare", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "xar_ponere", _sectio_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "xar_addere_multos", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "xar_addere_multos trans segmenta", _sectio_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "xar_addere_multos cum xar partim pleno", _sectio_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "xar_addere_multos magnum numerum", _sectio_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "iterator cum xar vacuo", _sectio_decima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "iterator", _sectio_decima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "iterator trans segmenta", _sectio_decima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "xar_invenire", _sectio_decima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "xar_invenire_index", _sectio_decima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "xar_quaerere_binarie", _sectio_decima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "xar_quaerere_binarie_index", _sectio_decima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "xar_vacare", _sectio_decima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "xar_truncare", _sectio_decima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "xar_copiare_ad_tabulam", _sectio_decima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "vexilla", _sectio_vicesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "accessus_invalidos", _sectio_vicesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "magna_tabula", _sectio_vicesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "status_imprimere", _sectio_vicesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "xar_removere_ultimum", _sectio_vicesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "xar_removere_cum_ultimo", _sectio_vicesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "xar_tollere", _sectio_vicesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "xar_mutare", _sectio_vicesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "xar_invertere", _sectio_vicesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "xar_ordinare", _sectio_vicesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "xar_ordinare stabilitatem", _sectio_tricesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "xar_ordinare in piscina angusta", _sectio_tricesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "xar_continet", _sectio_tricesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "segmenta ordinaria / magna", _sectio_tricesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "fines segmentorum (forma clausa)", _sectio_tricesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("xar", SECTIONES);
+}

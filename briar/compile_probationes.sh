@@ -2,6 +2,7 @@
 
 # Effusio cursus ultimi semper in build/test_logs/briar.log
 # radicis (stdout + stderr; codex exitus per PIPESTATUS servatus).
+# <porta titulus="briar" tegit="briar/facies/* briar/fontes/* briar/grammatica/* briar/probationes/* materia/fontes/* md/fontes/*"/>
 if [ -z "${BRIAR_PROBATIONES_EFFUSIO:-}" ]; then
     export BRIAR_PROBATIONES_EFFUSIO=1
     mkdir -p "$(dirname "$0")/../build/test_logs"

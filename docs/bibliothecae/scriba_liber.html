@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>scriba_liber</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>scriba_liber</h1>
+<p class="subtitulus">liber paginarum scribae (vicus-latera S2b)</p>
+
+<p>The book of pages: named pages in one volumen, written 2026-10-08 so that vicus could show the same page in more than one pane. An index record lists the names in navigation order, and each page&#x27;s text is a scriba_documentum in its own namespace. The rule that shapes it is one document object per name per book: a page is opened or created on first ask and the same object is handed out ever after, because two instances of one history in one volume would write diverging logs. A new page takes the next unused number as its name; scriba_liber_paginam_condere finds or creates a page by a given name, which is what a &#x27;$scriba(name)&#x27; command inside a page calls. There is no limit on the number of pages. The legacy libro_paginarum, which stopped at 100, is left untouched. Used by scriba_actiones for navigation and links, and by vicus.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/scriba_liber.h"><code>include/scriba_liber.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/scriba_liber.c"><code>lib/scriba_liber.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-10-09 8fdbb7f9</td></tr>
+<tr><td>Group</td><td><a href="greges.html#ludus">Ludus: the second-generation UI</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

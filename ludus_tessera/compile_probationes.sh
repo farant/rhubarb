@@ -3,6 +3,7 @@
 # Effusio cursus ultimi semper in build/test_logs/ludus_tessera.log
 # radicis (stdout + stderr; codex exitus per PIPESTATUS servatus).
 # Ratio plena: compile_tests.sh radicis.
+# <porta titulus="ludus_tessera"/>
 if [ -z "${LUDUS_TESSERA_PROBATIONES_EFFUSIO:-}" ]; then
     export LUDUS_TESSERA_PROBATIONES_EFFUSIO=1
     mkdir -p "$(dirname "$0")/../build/test_logs"
@@ -109,6 +110,12 @@ declare -a RADIX_FONTES=(
     "pictor_componentia"
     "pictor_documentum"
     "flatura"          # pictor-strata L2: checkpoints deflati
+    "organum"          # status S2: canon et domini ex manifesto
+    "organum_canon"
+    "conservatio"      # status S3: systema persistentiae
+    "relatio"          # status S5b: systema relationum
+    "dimissio"         # status S5c: systema dimissionis
+    "organum_montatio" # status S6: organum in ramo montare
     # scriba H2: cauda documenti per historia
     "historia"
     "pictor_figurae"

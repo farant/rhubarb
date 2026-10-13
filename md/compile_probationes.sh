@@ -2,6 +2,7 @@
 
 # Effusio cursus ultimi semper in build/test_logs/md.log
 # radicis (stdout + stderr; codex exitus per PIPESTATUS servatus).
+# <porta titulus="md" tegit="materia/fontes/* md/fontes/* md/grammatica/* md/html/* md/probationes/*"/>
 if [ -z "${MD_PROBATIONES_EFFUSIO:-}" ]; then
     export MD_PROBATIONES_EFFUSIO=1
     mkdir -p "$(dirname "$0")/../build/test_logs"

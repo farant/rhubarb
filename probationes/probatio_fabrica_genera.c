@@ -1680,49 +1680,66 @@ _probare_fixa_conformitatis_generum (
     }
 }
 
+/* PURGARE omnium sectionum (credo II T7, codex examinis 92): mundus
+ * fictus communis (fabrica_mundus_fictus.c) et ficta huius plagulae ad
+ * valores initiales - 'genus effectus' et 'chassis' eos mutabant nec
+ * reponebant; ordo tabulae id celabat. Valores = initiatores
+ * declarationum. */
+interior vacuum
+_mundum_reponere (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    mundi_ambitus_ficti[0]  = NIHIL;
+    mundi_via_absens_ficta  = NIHIL;
+    mundi_effectus_effusio  = "";
+    mundi_identitas_ficta   = "clang I";
+    _caput_fictum           = "commissum I";
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "sigillum copiae",
       _probare_sigillum_copiae,
-      NIHIL, NIHIL, NIHIL, NIHIL },
+      NIHIL, _mundum_reponere, NIHIL, NIHIL },
     { "manifestum",
       _probare_manifestum,
-      NIHIL, NIHIL, NIHIL, NIHIL },
+      NIHIL, _mundum_reponere, NIHIL, NIHIL },
     { "directorium",
       _probare_directorium,
-      NIHIL, NIHIL, NIHIL, NIHIL },
+      NIHIL, _mundum_reponere, NIHIL, NIHIL },
     { "provenientiam exclusam",
       _probare_provenientia_exclusa,
-      NIHIL, NIHIL, NIHIL, NIHIL },
+      NIHIL, _mundum_reponere, NIHIL, NIHIL },
     { "memoriam sigillorum",
       _probare_memoriam_sigillorum,
-      NIHIL, NIHIL, NIHIL, NIHIL },
+      NIHIL, _mundum_reponere, NIHIL, NIHIL },
     { "plagulas directorii",
       _probare_plagulas_directorii,
-      NIHIL, NIHIL, NIHIL, NIHIL },
+      NIHIL, _mundum_reponere, NIHIL, NIHIL },
     { "manifesta",
       _probare_manifesta,
-      NIHIL, NIHIL, NIHIL, NIHIL },
+      NIHIL, _mundum_reponere, NIHIL, NIHIL },
     { "radices",
       _probare_radices,
-      NIHIL, NIHIL, NIHIL, NIHIL },
+      NIHIL, _mundum_reponere, NIHIL, NIHIL },
     { "actionem tactam",
       _probare_actionem_tactam,
-      NIHIL, NIHIL, NIHIL, NIHIL },
+      NIHIL, _mundum_reponere, NIHIL, NIHIL },
     { "genera et strategias",
       _probare_genera_et_strategias,
-      NIHIL, NIHIL, NIHIL, NIHIL },
+      NIHIL, _mundum_reponere, NIHIL, NIHIL },
     { "instrumentum domus (provenientia)",
       _probare_instrumentum_domus,
-      NIHIL, NIHIL, NIHIL, NIHIL },
+      NIHIL, _mundum_reponere, NIHIL, NIHIL },
     { "genus effectus",
       _probare_genus_effectus,
-      NIHIL, NIHIL, NIHIL, NIHIL },
+      NIHIL, _mundum_reponere, NIHIL, NIHIL },
     { "axes duo (res x clavis)",
       _probare_axes_duo,
-      NIHIL, NIHIL, NIHIL, NIHIL },
+      NIHIL, _mundum_reponere, NIHIL, NIHIL },
     { "chassis: fixa conformitatis generum",
       _probare_fixa_conformitatis_generum,
-      NIHIL, NIHIL, NIHIL, NIHIL },
+      NIHIL, _mundum_reponere, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

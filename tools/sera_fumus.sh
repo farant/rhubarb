@@ -30,6 +30,7 @@
 #       sera cum pid mortuo relicta: inventum eodem die), verba.sh
 #       vivum cursum sine reliquia
 # Exitus 0 sanum | 1 FRACTUM | 2 nihil actum.
+# <porta titulus="sera"/>
 set -u
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$RADIX" || exit 2

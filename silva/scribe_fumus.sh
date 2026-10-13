@@ -5,6 +5,7 @@
 # plagula munda -> ACCIPE exitu 0; .md -> scriptum, non iudicatum
 # exitu IV; parens absens -> exitu II sine plagula. Effusus:
 # 'fumus scribe: sanum' | 'fumus scribe: FRACTUM'. Exitus 0/1.
+# <porta titulus="scribe" currit="silva/instrumenta/principalia/examen.c"/>
 set -u
 SILVA_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 RADIX_DIR="$(cd "$SILVA_DIR/.." && pwd)"

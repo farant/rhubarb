@@ -11,15 +11,15 @@
 
 <p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
 <h1>codificator_terminalis</h1>
-<p class="subtitulus">Eventus -&gt; octeti terminalis (eventus B6a;</p>
+<p class="subtitulus">Eventus -&gt; octeti terminalis (eventus B6a; latus codificandi moduli 003)</p>
 
-<p>The inverse of the decoder: given an Eventus and the modes the program asked for, the bytes a terminal would send it (legacy with xterm modifiers, SS3, modifyOtherKeys and fixterms forms; kitty with flags, alternate keys, associated text and event kinds; SGR mouse and paste). The oracle is Ghostty&#x27;s key encoder (pinned commit), its canonical forms followed exactly; what a mode cannot express is consumed and writes nothing. Pure: modes are an argument, since the emulator will own them. With it, a recorded session can be replayed through a terminal: encode, decode, dispatch (manus_ludus_iterare_per). Eventus B6a, October 2026.</p>
+<p>The inverse of the decoder: given an Eventus and the modes the program asked for, the bytes a terminal would send it (legacy with xterm modifiers, SS3, modifyOtherKeys and fixterms forms; kitty with flags, alternate keys, associated text and event kinds; mouse and paste). The oracle is Ghostty&#x27;s key encoder (pinned commit), its canonical forms followed exactly; what a mode cannot express is consumed and writes nothing. Pure: modes are an argument, and since 2026-10-07 they come from the emulator, which added application cursor keys, the old X10 mouse mode, the four mouse report formats beside SGR, and LNM. With it a recorded session can be replayed through a terminal: encode, decode, dispatch (manus_ludus_iterare_per). Using it in terminale found what vectors could not. Under kitty&#x27;s disambiguate flag a shifted key went out as a code with a modifier even when shift had only produced the character, so &#x27;:&#x27; arrived in nvim as &#x27;;&#x27;; shift now counts as consumed when the text differs from the unshifted key. And in legacy mode Ctrl-[, Ctrl-I and Ctrl-M sent nothing at all, a gap copied with Ghostty&#x27;s table, which leaves those keys to its platform layer; they now go out as Escape, Tab and Return, a named divergence. Not yet: the application keypad, since an Eventus cannot tell keypad keys apart. Eventus B6a, October 2026.</p>
 
 <table>
 <tbody>
 <tr><td>Header</td><td><a href="../../include/codificator_terminalis.h"><code>include/codificator_terminalis.h</code></a></td></tr>
 <tr><td>Implementation</td><td><a href="../../lib/codificator_terminalis.c"><code>lib/codificator_terminalis.c</code></a></td></tr>
-<tr><td>Last change</td><td>2026-10-03 53f421b0</td></tr>
+<tr><td>Last change</td><td>2026-10-07 a7577310</td></tr>
 <tr><td>Group</td><td><a href="greges.html#fenestra">Window, input and drawing</a></td></tr>
 </tbody>
 </table>

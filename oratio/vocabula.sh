@@ -53,6 +53,22 @@ for v in ${VOCABULA_VIAE_ADDITAE:-}; do
     printf '%s\n' "${v#./}" >> "$BUILD_DIR/corpus_tractatae.txt"
 done
 git -C "$RADIX_DIR" ls-files "*.md" > "$BUILD_DIR/corpus_md.txt"
+# INDEX RENOVATUR ANTE IUDICIUM (circulus commissionis P2, desideratum
+# 01M46ER35): modi qui identificatores legunt (omnes praeter -commenta
+# et -prosa) build/nexus.tsv per percursum incrementalem (~I s) primum
+# sanant - olim index stalus 'NOVA 0' mendax post editionem dabat.
+# VOCABULA_INDEX_RENOVATUS=1: vocans (uncus) id modo fecit.
+renovandum=1
+for a in "$@"; do
+    case "$a" in -commenta|-prosa) renovandum=0 ;; esac
+done
+if [ "$renovandum" = 1 ] && [ "${VOCABULA_INDEX_RENOVATUS:-0}" != 1 ]; then
+    mkdir -p "$RADIX_DIR/build"
+    if ! "$RADIX_DIR/silva/nexus.sh" -renovare > "$RADIX_DIR/build/vocabula_nexus.log" 2>&1; then
+        echo "vocabula: index symbolorum NON renovatus (build/vocabula_nexus.log) - iudicium staleo indice mentiretur" >&2
+        exit 2
+    fi
+fi
 # non exec: crusta manet ut sera suitae usque ad finem instrumenti
 # teneatur et in exitu dimittatur (exec trap EXIT praeterit -
 # sera cum pid mortuo relicta, 2026-09-07)

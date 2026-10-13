@@ -13,7 +13,18 @@
 # ~/.bin/briar non renovatur (praerequisitum: ./tools/briar_struere.sh
 # prius - corpus vetus VIRIDE MENTITUR).
 #
+# ARBOR OPERIS (circulus commissionis P4, 2026-10-12): in arbore
+# operis (git-dir != git-common-dir) binarium ARBORIS probatur - bin/briar
+# (et bin/briar-spectator si adest), RECENS per bin/fabrica - non
+# ~/.bin/briar, quod ex MAIN institutum est: mutatio API in main (insula
+# C2) fixa arboris contra binarium alienum rubebat (portae-declaratae
+# T4). PATH: directorium vinculorum primum, ~/.bin verum remotum - etiam
+# '#!/usr/bin/env briar' et 'command -v briar-spectator' arboris sunt.
+# In main ~/.bin/briar institutum probatur ut antea (propositum portae).
+#
 # QUID PROBAT
+#   0.   binarium probatum: in arbore operis 'briar' in PATH et $BRIAR
+#        bin/briar ARBORIS sunt (ne ~/.bin tacite redeat)
 #   I.   ./salve.thistle extra arborem -> 'salve, munde' (corpus INFIXUM:
 #        briar -versio ibi '(discus)' dicere NON debet)
 #   II.  ./salve.thistle -probatio -> exitus 0, OMNIA PRAETERIERUNT
@@ -122,6 +133,7 @@
 #
 # Exitus: 0 factum; 1 defectio; 2 NIHIL CURSUM (praerequisita desunt).
 # Linea ultima: 'fumus briar: sanum' | 'fumus briar: FRACTUM'.
+# <porta titulus="briar-fumus" tegit="tools/briar_struere.sh" currit="tools/briar.c"/>
 
 set -u
 
@@ -142,10 +154,25 @@ for arg in "$@"; do
     esac
 done
 
-BRIAR="$HOME/.bin/briar"
-if [ ! -x "$BRIAR" ]; then
-    echo "FUMUS: ~/.bin/briar abest - ./tools/briar_struere.sh prius" >&2
-    exit 2
+HOME_VERUM="$HOME"
+GIT_DIR_ABS="$(cd "$RADIX" && cd "$(git rev-parse --git-dir)" && pwd -P)"
+GIT_COMMUNE="$(cd "$RADIX" && cd "$(git rev-parse --git-common-dir)" && pwd -P)"
+ARBOR_OPERIS=0
+[ "$GIT_DIR_ABS" != "$GIT_COMMUNE" ] && ARBOR_OPERIS=1
+if [ "$ARBOR_OPERIS" = 1 ]; then
+    BRIAR="$RADIX/bin/briar"
+    tegenda="bin/briar"
+    [ -x "$RADIX/bin/briar-spectator" ] && tegenda="$tegenda bin/briar-spectator"
+    if [ ! -x "$BRIAR" ] || ! ( cd "$RADIX" && bin/fabrica iudicare $tegenda ) > /dev/null 2>&1; then
+        echo "FUMUS: arbor operis - bin/briar arboris abest aut non RECENS (probatur binarium ARBORIS, non ~/.bin): bin/fabrica sanare bin/briar bin/briar-spectator prius" >&2
+        exit 2
+    fi
+else
+    BRIAR="$HOME/.bin/briar"
+    if [ ! -x "$BRIAR" ]; then
+        echo "FUMUS: ~/.bin/briar abest - ./tools/briar_struere.sh prius" >&2
+        exit 2
+    fi
 fi
 if [ "$AGERE" = 1 ] && [ ! -x bin/manus ]; then
     echo "FUMUS: bin/manus abest - ./tools/manus_struere.sh prius" >&2
@@ -182,6 +209,14 @@ AREA="$(mktemp -d /tmp/briar_fumus.XXXXXX)" || exit 2
 DOMUS="$AREA/domus"
 mkdir -p "$DOMUS/.rhubarb" || exit 2
 export HOME="$DOMUS"
+if [ "$ARBOR_OPERIS" = 1 ]; then
+    VIA="$AREA/via"
+    mkdir -p "$VIA" || exit 2
+    ln -s "$BRIAR" "$VIA/briar" || exit 2
+    [ -x "$RADIX/bin/briar-spectator" ] && ln -s "$RADIX/bin/briar-spectator" "$VIA/briar-spectator"
+    PATH="$VIA:$(printf '%s' "$PATH" | tr ':' '\n' | grep -vx "$HOME_VERUM/.bin" | paste -sd: -)"
+    export PATH
+fi
 
 purgare () {
     if [ "$SERVARE" = 1 ]; then
@@ -220,6 +255,18 @@ cp "$BIBL"/radix.thistle "$BIBL"/folium.thistle "$BIBL"/media.thistle \
 cp "$BIBL/sub/ramus.thistle" "$AREA/bibliotheca/sub/" || exit 2
 chmod +x "$AREA"/*.thistle "$AREA"/bibliotheca/*.thistle
 echo "FUMUS: area $AREA"
+# 0. binarium probatum (arbor operis): 'briar' in PATH et $BRIAR ad
+#    bin/briar ARBORIS ducunt - ~/.bin numquam tacite redit
+if [ "$ARBOR_OPERIS" = 1 ]; then
+    ARBOR_BRIAR="$(cd "$RADIX/bin" && pwd -P)/briar"
+    VIA_BRIAR="$(command -v briar)"
+    if [ "$(readlink -f "$VIA_BRIAR")" != "$ARBOR_BRIAR" ] || [ "$(readlink -f "$BRIAR")" != "$ARBOR_BRIAR" ]; then
+        deficere "0. arbor operis: briar non arboris (PATH: $VIA_BRIAR -> $(readlink -f "$VIA_BRIAR"); BRIAR: $BRIAR)"
+    fi
+    echo "FUMUS: 0. binarium ARBORIS: $ARBOR_BRIAR (arbor operis)"
+else
+    echo "FUMUS: 0. binarium institutum: $BRIAR"
+fi
 echo "FUMUS: $( cd "$AREA" && "$BRIAR" -versio | tr '\n' ' ' )"
 
 # ---- 0. corpus INFIXUM adhibitum esse PROBANDUM ----

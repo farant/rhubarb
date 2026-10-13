@@ -6,6 +6,7 @@
 # -fumus-plenus: IS pipat in onere, C respondet via daemonis (via
 # MCP simulata), IS filium in tabula videt -> FUMUS PLENUS + exitus
 # 0. Fractura quaevis = exitus non-zerus aut tempus excessum.
+# <porta manu causa="fenestra vera + daemon effimerus: focum rapit, Fran ante cursum interrogandus" tegit="apps/forum/*"/>
 
 set -u
 cd "$(dirname "${BASH_SOURCE[0]}")/../.." || exit 1

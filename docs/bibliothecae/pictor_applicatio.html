@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>pictor_applicatio</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>pictor_applicatio</h1>
+<p class="subtitulus">pictor sine scopo: volumen, documentum, insulae (canones + domini e disco), registra, dispensator (modulus 013 A4; Franus: compositio una, principalia duo)</p>
+
+<p>pictor assembled with no window: the volumen, the document, the island with its canon and owners, the registries, the dispatcher. The shape is Fran&#x27;s, one composition and two mains: the window app and its terminal twin call it and add only their glue, &#x27;an application in both targets without #ifdef&#x27;, and the replay test calls the same function, so it tests the real app and not a copy. Written 2026-10-03 (module 013, A4). Since the branch work of 10-05 it is in two parts: pictor_montare mounts a pictor into a given state repository on a branch of its own, with its document in a namespace of the same id, and the standalone app is a mount at the root plus a dispatcher. The mount was where the state machinery was first wired in: reading the manifest, generating canon and owner table, restoring saved state before the owners are set. Since 10-12 those steps, common to every widget, are in organum_montatio, and pictor keeps only what is pictor&#x27;s: the size of the drawing and its starting focus, and binding its drawing for the reference system, since only it knows the document. It refuses to mount without its manifest, and a new canvas takes its size from the pane. For vicus, a pane can show another drawing from the volume&#x27;s library or create a new one, over a cache that keeps one document object per drawing, because two objects on one history would fork its log. scriba_applicatio follows this model.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/pictor_applicatio.h"><code>include/pictor_applicatio.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/pictor_applicatio.c"><code>lib/pictor_applicatio.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-10-12 1b3758ea</td></tr>
+<tr><td>Group</td><td><a href="greges.html#ludus">Ludus: the second-generation UI</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

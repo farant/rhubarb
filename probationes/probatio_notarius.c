@@ -66,7 +66,7 @@ s32 principale (vacuum)
     credo_aperire(piscina);
     intern = internamentum_creare(piscina);
     repo = insula_repositorium_creare(piscina, intern,
-        "<documentum/>", "<ephemera/>");
+        "<insula/>");
     reg = actio_registrum_creare(piscina, intern);
     memset(&toy, ZEPHYRUM, magnitudo(ToyStatus));
     toy_registrare(reg, &toy);

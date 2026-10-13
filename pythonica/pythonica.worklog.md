@@ -1046,3 +1046,67 @@ directories are cloned before loose files' parents are made.
 MEASURED (final profile): suite 421.8 -> 246.3 s; _clonare_ignorata
 102.5 -> 23.8 s (8 snapshots, ~3 s each); cp 102 -> 0 s; children
 351 -> 231 s. With S2 (closures, ~40 s) this is the gain; S1 none.
+
+## 2026-10-10 - gates without an inventory row (ledger …K0KX)
+
+portae_debitae computes owed gates from the 'suitae probationum' inventory
+('tegit viae', 'tegit fontes', 'currit binaria'). Three PORTAE had NO row
+and so were never owed by any edit - measured before the fix:
+- venenum (ASan/UBSan + PISCINA_VENENUM over the temp-pool suites): not
+  owed by lib/piscina.c, the math tier, their tests, or its own script;
+- ludus_tessera: its fontes/ and probationes/ were INTECTA (no gate);
+- aequivalentia: only the shell-flags lint.
+Rows added from what each gate actually runs (venenum: BASIS + the per
+suite source lists in tools/venenum_probare.sh). aequivalentia modelled
+MANUAL (porta n.a., manu tantum): -conferre needs a basis built by hand
+before a parser optimisation (exit 2 without), so an automatic debt would
+refuse commits; and NO 'currit binaria' (arbor.c's closure is nearly all
+of silva+lib - every edit would print a manual debt). Re-measured after:
+each path owes its gate.
+
+Guard: silva.portae_sine_ordine() - PORTAE whose runner has no row; printed
+as a 'nota:' line in commissio/commissio_umbra after the lint pre-pass,
+NEVER blocking (a gate reading the ledger to decide red/green would break
+principle …RBA4W73). Test in the fake-inventory section (css has no row,
+radix/gesta/pythonica/crusta/html do); hand plant (always []) red. Live:
+[]. The deeper question - coverage in the repo instead of the ledger - is
+the open ledger question (…GGMGY94).
+
+## 2026-10-12 - circulus commissionis T1: excusatae (P5)
+
+- `commissio(..., excusatae={'porta': 'causa'})` and the same in
+  commissio_umbra: excuses ONE owed gate, and the others are still added
+  and run. Before this, `sine_debitis` was all or nothing, so excusing
+  briar-fumus in portae-declaratae T4 meant hand-listing 43 gates, twice.
+- **Checked before anything runs** (`_excusatas_praeiudicare`): empty
+  cause, name not in PORTAE, gate both requested and excused, or combined
+  with `sine_debitis`.
+- **Checked once owed gates are known:** an excused gate that is not
+  actually owed is refused ("nihil excusandum"), so an excuse cannot
+  silently outlive its reason.
+- **Found on the way:** the `exspectare` test wrote its receipt IN PLACE
+  from a timer thread, so the waiter sometimes read an empty file
+  (JSONDecodeError, ABORT of the whole pythonica gate; seen once,
+  passed on rerun). Production writers use `.tmp` + rename, so the test
+  now does too. A flaky gate on every silva.py commit is exactly this
+  slice's kind of pain.
+- Plants II (hand, .py): excused gate still added → red; not-owed check
+  removed → red; restored → green.
+
+## 2026-10-12 - circulus commissionis T2: stale judge healed (P3)
+
+- `_fabricam_exigere` used to refuse with "iudex fabrica non recens - sana
+  fabrica prius" whenever a house judge was stale, and the fix was always
+  the same tree-local build (portae T4 attempt 1). Now, if EVERY refusing
+  row names a judge in `IUDICES_STRUERE`, commissio runs that judge's
+  struere.sh, prints `iudex sanatus: X`, and judges ONCE more
+  (`_iudex_sanatus`).
+- The commands come from the table, never from the SANANDA recipe that
+  fabrica prints: commissio runs nothing that output text tells it to.
+- Tests set `IUDICES_STRUERE = {}` for the whole fabrica section and use
+  fake builders per case, so a test can never run a real struere.sh. The
+  pre-existing "stale compilator refuses" case would otherwise have
+  rebuilt bin/compilator for real.
+- Live check: one comment appended to lib/portae.c made bin/fabrica stale;
+  the precheck rebuilt it (~40 s) and passed on the second judgement.
+- Plants II (hand): heal disabled → red; a failed rebuild ignored → red.

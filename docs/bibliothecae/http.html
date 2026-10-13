@@ -13,13 +13,13 @@
 <h1>http</h1>
 <p class="subtitulus">Bibliotheca HTTP Client</p>
 
-<p>HTTP/1.1 in both directions. Client: build a request (method, URL, headers, body, timeout), execute it over tcp or tls, optionally following redirects, and read status, headers and body. Server side: a one-shot or incremental request parser with limits (1 MB request, 8 KB URI by default; exceeding them suggests 413 or 414), keep-alive and chunked detection, leftover bytes reported for pipelining, and a response serializer that owns framing (Content-Length always, except where the status forbids a body; the caller&#x27;s Content-Length and Connection headers are ignored). Since 2026-09-26 a body shorter than its Content-Length is an ERROR, never a short success, reversing a July decision with RFC 9112 6.3 and the house&#x27;s own words: &#x27;a lying body is worse than an honest error&#x27;. Chunk sizes are guarded before multiplying (a hostile size used to wrap into a valid-looking body). Used by hospitium and manus; lapide&#x27;s reports drove its last hardening.</p>
+<p>HTTP/1.1 in both directions. Client: build a request (method, URL, headers, body, timeout), execute it over tcp or tls, optionally following redirects, and read status, headers and body. Server side: a one-shot or incremental request parser with limits (1 MB request, 8 KB URI by default; exceeding them suggests 413 or 414), keep-alive and chunked detection, leftover bytes reported for pipelining, and a response serializer that owns framing (Content-Length always, except where the status forbids a body; the caller&#x27;s Content-Length and Connection headers are ignored). Since 2026-09-26 a body shorter than its Content-Length is an ERROR, never a short success, reversing a July decision with RFC 9112 6.3 and the house&#x27;s own words: &#x27;a lying body is worse than an honest error&#x27;. Chunk sizes are guarded before multiplying (a hostile size used to wrap into a valid-looking body). Two changes of 2026-10-07 came from the model client. The caller&#x27;s timeout now reaches https connections too: it had applied only to plain HTTP, so every TLS call ran under a fixed 30 seconds, and a live probe showed a 3-second timeout being ignored. And requests can go through a transport seam, HttpVectura, which herbarium wraps to capture responses and tests replace with a scripted one, with a read-only view of the otherwise opaque request. Used by hospitium, manus and vates; lapide&#x27;s reports drove the hardening before that.</p>
 
 <table>
 <tbody>
 <tr><td>Header</td><td><a href="../../include/http.h"><code>include/http.h</code></a></td></tr>
 <tr><td>Implementation</td><td><a href="../../lib/http.c"><code>lib/http.c</code></a></td></tr>
-<tr><td>Last change</td><td>2026-09-28 e1e01751</td></tr>
+<tr><td>Last change</td><td>2026-10-07 62e525ae</td></tr>
 <tr><td>Group</td><td><a href="greges.html#rete">Network</a></td></tr>
 </tbody>
 </table>

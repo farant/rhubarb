@@ -24,6 +24,7 @@
 #include "scriba_documentum.h"
 #include "scriba_actiones.h"
 #include "credo.h"
+#include "organum_probationis.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -54,25 +55,6 @@ componere_minimum (
     componens_ponere_focusabilis(pagina, VERUM);
     componens_addere_liberum(radix, pagina);
     redde radix;
-}
-
-interior Canon*
-canonem_legere (
-    constans character* via)
-{
-    chorda  fons;
-    chorda  causa;
-     Canon* c;
-
-    fons  = filum_legere_totum(via, piscina);
-    c     = canon_legere(fons, piscina, intern, &causa);
-    si (!c)
-    {
-        imprimere("  canon malus %s: %.*s\n", via,
-            (integer)causa.mensura,
-                  causa.datum ? (constans character*)causa.datum : "");
-    }
-    redde c;
 }
 
 /* linea l folii (spatiis finalibus omissis) == expectata */
@@ -133,7 +115,7 @@ ephemera_est (
 {
     chorda* a;
 
-    a = insula_attributum(repo, INSULA_EPHEMERA, titulus);
+    a = insula_attributum(repo, titulus);
     si (!a || !chorda_aequalis_literis(*a, valor))
     {
         imprimere("  %s = '%.*s' (expectatum '%s')\n", titulus,
@@ -185,23 +167,17 @@ s32 principale (vacuum)
     CREDO_NON_NIHIL(doc);
     t    = scriba_documentum_tabula(doc);
     repo = insula_repositorium_creare(piscina, intern,
-        "<scriba latitudo=\"16\" altitudo=\"6\"/>",
-        "<scriba focus=\"pagina\"/>");
-    insula_ponere_canonem(repo, INSULA_DURABILIS,
-        canonem_legere("apps/scriba/canones/durabilis.canon"));
-    insula_ponere_canonem(repo, INSULA_EPHEMERA,
-        canonem_legere("apps/scriba/canones/ephemera.canon"));
+        "<scriba latitudo=\"16\" altitudo=\"6\""
+        " focus=\"pagina\"/>");
     {
-              chorda domini;
-        StmlResultus res;
+            Canon* canon;
+        StmlNodus* domini;
 
-        domini = filum_legere_totum("apps/scriba/canones/domini.stml",
-                                    piscina);
-        res = stml_legere_ex_literis(chorda_ut_cstr(domini, piscina),
-                                     piscina, intern);
-        CREDO_VERUM(res.successus);
-        CREDO_VERUM(insula_dominos_legere(repo, INSULA_EPHEMERA,
-            res.elementum_radix) > ZEPHYRUM);
+        /* S6b: ex manifesto scribae */
+        CREDO_VERUM(organum_probationis_parare(piscina, intern,
+            "apps/scriba/organum.stml", &canon, &domini));
+        insula_ponere_canonem(repo, canon);
+        CREDO_VERUM(insula_dominos_legere(repo, domini) > ZEPHYRUM);
     }
     reg = actio_registrum_creare(piscina, intern);
     scriba_actiones_initiare(&sa, doc, piscina);
@@ -225,22 +201,23 @@ s32 principale (vacuum)
     /* vim domus: Esc cursorem non retrahit (folium 2D) */
     CREDO_VERUM(ephemera_est(repo, "cursor_columna", "5"));
     /* canon omnia accepit (canones tacite recusant) */
-    CREDO_NON_NIHIL(insula_attributum(repo, INSULA_EPHEMERA,
+    CREDO_NON_NIHIL(insula_attributum(repo,
         "cursor_linea"));
-    CREDO_NON_NIHIL(insula_attributum(repo, INSULA_EPHEMERA,
+    CREDO_NON_NIHIL(insula_attributum(repo,
         "visualis_genus"));
-    CREDO_NON_NIHIL(insula_attributum(repo, INSULA_EPHEMERA,
+    CREDO_NON_NIHIL(insula_attributum(repo,
         "selectio_linea"));
-    CREDO_NON_NIHIL(insula_attributum(repo, INSULA_EPHEMERA,
+    CREDO_NON_NIHIL(insula_attributum(repo,
         "fd_exspectans"));
-    CREDO_NON_NIHIL(insula_attributum(repo, INSULA_EPHEMERA,
+    /* S7b: registrum solum mutatum scribitur - vacuum numquam */
+    CREDO_NIHIL(insula_attributum(repo,
         "capsa_lineae"));
     /* nullus valor vacuus: capsa et clavis praecedens ABSUNT - in
      * textu scripto quaeritur (a="" capere NIHIL reddit ut absentia;
      * scriptor pulcher a="" ut a nudum scribit, relectum "true") */
-    CREDO_FALSUM(textus_habet(insula_scribere(repo, INSULA_EPHEMERA,
+    CREDO_FALSUM(textus_habet(insula_scribere(repo,
         piscina), "capsa="));
-    CREDO_FALSUM(textus_habet(insula_scribere(repo, INSULA_EPHEMERA,
+    CREDO_FALSUM(textus_habet(insula_scribere(repo,
         piscina), "clavis_praecedens"));
 
     imprimere("\n--- II: pausa = frusta coniuncta; 'u' insertionem"
@@ -269,10 +246,10 @@ s32 principale (vacuum)
     CREDO_VERUM(linea_est(t, I, "foo"));
     mutationes = acta_generis(vol, "mutatio");
     CREDO_VERUM(manus_ludus_scribere(m, "d"));
-    CREDO_NON_NIHIL(insula_attributum(repo, INSULA_EPHEMERA,
+    CREDO_NON_NIHIL(insula_attributum(repo,
         "clavis_praecedens"));
     CREDO_VERUM(manus_ludus_scribere(m, "d"));
-    CREDO_NIHIL(insula_attributum(repo, INSULA_EPHEMERA,
+    CREDO_NIHIL(insula_attributum(repo,
         "clavis_praecedens"));
     CREDO_VERUM(linea_est(t, I, ""));
     CREDO_AEQUALIS_I32(acta_generis(vol, "mutatio"), mutationes + I);

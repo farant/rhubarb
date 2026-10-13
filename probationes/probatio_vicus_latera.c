@@ -62,7 +62,7 @@ cursor_columna (
 
     l = vicus_latus(vicus_activa(v), quod);
     r = insula_ramus(v->repo, "scriba", chorda_ut_cstr(l->id, piscina));
-    a = insula_ramus_attributum(&r, INSULA_EPHEMERA, "cursor_columna");
+    a = insula_ramus_attributum(&r, "cursor_columna");
     si (!a || !chorda_ut_s32(*a, &n))
     {
         redde ZEPHYRUM;
@@ -82,7 +82,7 @@ cursor_linea (
 
     l = vicus_latus(vicus_activa(v), quod);
     r = insula_ramus(v->repo, "scriba", chorda_ut_cstr(l->id, piscina));
-    a = insula_ramus_attributum(&r, INSULA_EPHEMERA, "cursor_linea");
+    a = insula_ramus_attributum(&r, "cursor_linea");
     si (!a || !chorda_ut_s32(*a, &n))
     {
         redde -I;
@@ -101,7 +101,7 @@ modus_est (
 
     l = vicus_latus(vicus_activa(v), VICUS_SINISTRUM);
     r = insula_ramus(v->repo, "scriba", chorda_ut_cstr(l->id, piscina));
-    a = insula_ramus_attributum(&r, INSULA_EPHEMERA, "modus");
+    a = insula_ramus_attributum(&r, "modus");
     redde a && chorda_aequalis_literis(*a, modus);
 }
 
@@ -337,7 +337,7 @@ s32 principale (vacuum)
                 s32  n;
 
         r = insula_ramus(v->repo, "scriba", "3_sinistrum_scriba");
-        a = insula_ramus_attributum(&r, INSULA_EPHEMERA,
+        a = insula_ramus_attributum(&r,
             "selectio_linea");
         CREDO_VERUM(a && chorda_ut_s32(*a, &n) && n == -I);
     }

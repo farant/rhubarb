@@ -41,6 +41,9 @@
 nomen structura {
         ScribaLiber* liber;
     IussumRegistrum* iussa;
+    /* status-plan S6b: systemata repositorii vici, communia cum
+     * contextu pictoris (S7b: vicus_aperire ea creat) */
+    StatusSystemata* systemata;
 } ContextusScribae;
 
 /* S3b: '$dies' -> dies hodiernus "MM/DD/YYYY" (forma concha vetus;
@@ -112,6 +115,9 @@ nomen structura {
     /* L5: porta imaginis (applicatio ponit; NIHIL = nulla) */
       ImagoFructus (*porta)(vacuum* ctx, Piscina* piscina);
             vacuum* porta_ctx;
+    /* status-plan S3-S6: systemata repositorii vici, communia cum
+     * contextu scribae (S7b: vicus_aperire ea creat) */
+    StatusSystemata* systemata;
 } ContextusPictoris;
 
 /* L5: porta lateris pictoris - ad portam communem (tempore vocationis
@@ -267,11 +273,13 @@ scribam_montare (
         }
     }
     si (!scriba_montare(m, piscina, intern, volumen, repo, id, radix,
-            latitudo, altitudo, cs->liber))
+            latitudo, altitudo, cs->liber, cs->systemata))
     {
         redde FALSUM;
     }
     m->actiones_ctx.iussa = cs->iussa;
+    /* S7b: registrum vim unum applicationis - radix hospitis */
+    m->actiones_ctx.ramus_capsae = insula_ramus_radix(repo);
     redde VERUM;
 }
 
@@ -390,7 +398,7 @@ pictorem_montare (
     m   = (PictorMontatio*)sedes;
     cp  = (ContextusPictoris*)ctx;
     si (!pictor_montare(m, piscina, intern, volumen, repo, id, radix,
-            latitudo, altitudo))
+            latitudo, altitudo, cp ? cp->systemata : NIHIL))
     {
         redde FALSUM;
     }
@@ -789,6 +797,7 @@ vicus_applicatio_aedificare (
               chorda  causa;
     ContextusScribae* cs;
    ContextusPictoris* cp;
+     StatusSystemata* systemata;
 
     si (!app || !piscina || !intern || !volumen)
     {
@@ -800,6 +809,12 @@ vicus_applicatio_aedificare (
     app->volumen  = volumen;
     app->vicus    = vicus_creare(piscina, intern, volumen, radix,
         latitudo, altitudo);
+    /* S6b: systemata repositorii, communia radici et omnibus
+     * lateribus; S7b: vicus_aperire ea creat */
+    systemata = (StatusSystemata*)piscina_allocare(piscina,
+        magnitudo(StatusSystemata));
+    memset(systemata, ZEPHYRUM, magnitudo(StatusSystemata));
+    vicus_systemata_ponere(app->vicus, systemata);
     /* S2b: liber paginarum UNUS pro omnibus visibus scribae; paginae
      * novae magnitudine lateris (dimidium cellulis rotundatum, minus
      * margines et status - ut folium S2c) */
@@ -811,10 +826,12 @@ vicus_applicatio_aedificare (
         cp->documenta  = tabula_dispersa_creare_chorda(piscina, XVI);
         cp->porta      = NIHIL;
         cp->porta_ctx  = NIHIL;
+        cp->systemata  = systemata;
     }
     app->pictoris = cp;
     cs = (ContextusScribae*)piscina_allocare(piscina,
         magnitudo(ContextusScribae));
+    cs->systemata = systemata;
     cs->liber = scriba_liber_aperire(piscina, intern, volumen,
         folii_columnae(latitudo), folii_lineae(altitudo));
     /* S3b: iussa omnium visuum scribae */
@@ -866,5 +883,10 @@ vicus_applicatio_aedificare (
         redde FALSUM;
     }
     vicus_dispensatorem_ligare(app->vicus, app->d);
+    /* S5c: dimissio in via eventus */
+    si (systemata->dimissio)
+    {
+        dimissio_dispensatori_ligare(systemata->dimissio, app->d);
+    }
     redde VERUM;
 }

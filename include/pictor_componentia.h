@@ -3,16 +3,16 @@
  * cellularum: quadrata 'quadratum.instrumentum',
  * 'quadratum.color_primus', 'quadratum.color_secundus' (titulus = quid
  * pingatur, figura_quadrati), deinde nomen instrumenti. P1b: quadrata
- * actionem 'palette.aperire' ferunt; ephemera 'palette' posita:
+ * actionem 'palette.aperire' ferunt; campo 'palette' posito:
  * nodus 'palette' (PARTES_DIALOGUS, radicis filius ULTIMUS - super
  * tabulam pingitur et ictus primum capit) supra quadratum suum, cum
  * optionibus 'optio.<genus>.<valor>' (quadrata, actio domini
  * attributi), electa ':electum'.
  *
- * <componens/> <purus/>: arbor logica ex insulis (lectio) et motu
+ * <componens/> <purus/>: arbor logica ex insula (lectio) et motu
  * (lectio) in piscinam datam; nihil scribit. Partes sunt DATA
  * (brainstorm XVI §5): nullus typus per componens, actio nominata
- * ex statu (tabula: ex ephemera.instrumentum - nomen functio pura
+ * ex statu (tabula: ex campo 'instrumentum' - nomen functio pura
  * status, tractator numquam de instrumento ramificat, spec §5.1).
  * Ictus pendens in tabula.puncta COPIATUR ut pingere arborem solam
  * legat (decisum 2026-09-05).

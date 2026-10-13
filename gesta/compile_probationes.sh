@@ -3,6 +3,7 @@
 # Effusio cursus ultimi semper in build/test_logs/gesta.log
 # radicis (stdout + stderr; codex exitus per PIPESTATUS
 # servatus). Ratio plena: compile_tests.sh radicis.
+# <porta titulus="gesta" tegit="gesta/*_fontes_generata.sh gesta/fontes/*"/>
 if [ -z "${GESTA_PROBATIONES_EFFUSIO:-}" ]; then
     export GESTA_PROBATIONES_EFFUSIO=1
     mkdir -p "$(dirname "$0")/../build/test_logs"

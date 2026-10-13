@@ -16,11 +16,22 @@ via_greges = sys.argv[3] if len(sys.argv) > 3 else None
 NOTA_GENERATUM = '<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->'
 dir_folii = os.path.join(radix, 'docs', 'bibliothecae')
 
+EFFUGIA = {'\\\\': '\\', '\\t': '\t', '\\n': ' '}
+
+
+def effugia_solvere(textus):
+    """Forma machinae inventarii (gesta: _inventarii_effugere) soluta:
+    '\\\\' -> '\\', '\\t' -> tabulatio, '\\n' -> spatium (linea nova in
+    pagina spatium est). Uno transitu - duo 'replace' seriati '\\\\t'
+    (obliqua effugita + 't') in obliquam et tabulationem verterent."""
+    return re.sub(r'\\[\\tn]', lambda m: EFFUGIA[m.group(0)], textus)
+
+
 cellae = {}
 for linea in open(via_tsv):
     partes = linea.rstrip('\n').split('\t')
     if len(partes) == 4:
-        cellae.setdefault(partes[0], {})[partes[1]] = partes[3].replace('\\t', '\t').replace('\\n', ' ')
+        cellae.setdefault(partes[0], {})[partes[1]] = effugia_solvere(partes[3])
 
 
 ROMANI = {'I': 1, 'V': 5, 'X': 10, 'L': 50, 'C': 100}
@@ -46,7 +57,7 @@ if via_greges:
     for linea in open(via_greges):
         partes = linea.rstrip('\n').split('\t')
         if len(partes) == 4:
-            greges.setdefault(partes[0], {})[partes[1]] = partes[3].replace('\\t', '\t').replace('\\n', ' ')
+            greges.setdefault(partes[0], {})[partes[1]] = effugia_solvere(partes[3])
 
 
 def sententia_prima(textus, maxima=170):
@@ -56,14 +67,88 @@ def sententia_prima(textus, maxima=170):
     return prima if len(prima) <= maxima else prima[:maxima].rsplit(' ', 1)[0] + ' …'
 
 
-def glossa_capitis(via):
-    """Linea prima commentarii capitis: '/* nomen.h - glossa */' -> 'glossa'."""
+GLOSSA_MAXIMA = 220
+ABBREVIATIONES = ('e.g', 'i.e', 'cf', 'etc', 'vs', 'par', 'ca', 'sc', 'viz')
+GLOSSAE = {}
+
+
+def lineae_commentarii(via):
+    """Lineae logicae commentarii QUI CAPUT APERIT (sine '/*', ' *', '*/');
+    [] si plagula a commentario non incipit."""
     try:
-        prima = open(os.path.join(radix, via)).readline()
+        crudae = open(os.path.join(radix, via)).read().split('\n')[:60]
     except OSError:
-        return ''
-    m = re.match(r'/\*\s*\S+\.h\s*-+\s*(.*?)\s*(\*/)?\s*$', prima)
-    return m.group(1) if m else ''
+        return []
+    if not crudae or not crudae[0].startswith('/*'):
+        return []
+    lineae = []
+    for i, cruda in enumerate(crudae):
+        textus = cruda[2:] if i == 0 else re.sub(r'^\s*\*(?!/) ?', '', cruda)
+        finis = '*/' in textus
+        lineae.append(textus.split('*/')[0].strip())
+        if finis:
+            break
+    return lineae
+
+
+def finis_sententiae(textus):
+    """Index post punctum primum quod sententiam claudit (extra parentheses,
+    ante spatium aut finem, non post abbreviationem); -1 si nullum."""
+    profunditas = 0
+    for i, c in enumerate(textus):
+        if c in '([':
+            profunditas += 1
+        elif c in ')]':
+            profunditas = max(0, profunditas - 1)
+        elif c == '.' and profunditas == 0 and (i + 1 == len(textus) or textus[i + 1] == ' '):
+            verbum = textus[:i].rsplit(' ', 1)[-1].lower()
+            if verbum in ABBREVIATIONES or len(verbum) == 1:
+                continue
+            return i + 1
+    return -1
+
+
+def linea_perfecta(textus):
+    """Linea glossae quae per se stat: puncto clauditur, aut parenthesi
+    clausa cum omnibus parenthesibus paribus."""
+    if textus.endswith('.'):
+        return True
+    return textus.endswith(')') and textus.count('(') == textus.count(')')
+
+
+def glossa_capitis(via):
+    """Glossa capitis: sententia prima commentarii aperientis.
+
+    '/* nomen.h - glossa' (in linea prima aut, post '/*' nudum, secunda).
+    Linea quae per se stat tota redditur, ut olim; linea IMPERFECTA (glossa
+    in lineas sequentes fluit) ad finem sententiae suae continuatur - aut,
+    si sententiam perfectam iam continet, ad eam praeciditur. Caput
+    GENERATUM (sine 'nomen.h -'): linea GENERATUM ipsa glossa est."""
+    if via in GLOSSAE:
+        return GLOSSAE[via]
+    lineae = lineae_commentarii(via)
+    while lineae and not lineae[0]:
+        lineae = lineae[1:]
+    glossa = ''
+    if lineae:
+        m = re.match(r'\S+\.h\s*-+\s*(.*)$', lineae[0])
+        if m:
+            glossa = m.group(1)
+        elif 'GENERATUM' in lineae[0]:
+            glossa = lineae[0]
+    if glossa and not linea_perfecta(glossa) and len(lineae) > 1 and lineae[1]:
+        finis = finis_sententiae(glossa)
+        for sequens in lineae[1:]:
+            if finis >= 0 or not sequens:
+                break
+            glossa += ('' if glossa.endswith('/') else ' ') + sequens
+            finis = finis_sententiae(glossa)
+        if finis >= 0:
+            glossa = glossa[:finis]
+    if len(glossa) > GLOSSA_MAXIMA:
+        glossa = glossa[:GLOSSA_MAXIMA].rsplit(' ', 1)[0] + ' …'
+    GLOSSAE[via] = glossa
+    return glossa
 
 
 def plagulae_reddere(textus, gradus):
@@ -179,9 +264,9 @@ open(os.path.join(dir_folii, 'index.html'), 'w').write('''<!doctype html>
 
 <p>One row per header in <code>include/</code> (the subsystems with folders
 of their own, such as toml, crusta, silva and tessera, are not listed
-here). The gloss is the header's own first line, and %(sine)d headers
-have none, opening straight into their include guard; a linked name has a
-page. Last change and implementation files are derived (git, and the
+here). The gloss is the first sentence of the header's opening comment,
+and %(sine)d headers have none, most of them opening straight into their
+include guard; a linked name has a page. Last change and implementation files are derived (git, and the
 symbol index: a file is listed when it defines a function the header
 declares). Every header has a one-paragraph description, written in
 batches from 2026-10-02 and kept current after each merge of main. Source: the ledger

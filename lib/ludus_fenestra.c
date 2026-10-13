@@ -11,13 +11,12 @@
 /* S1c: exspectatio maxima cum applicatione viva (ut terminale) */
 #define MORA_PULSUS  XVI
 
-/* summa versionum repositorii (durabilis + ephemera) */
+/* versio repositorii (insula una, C2) */
 interior i32
 versionem_summare (
     constans LudusFenestra* lf)
 {
-    redde insula_versio(lf->d->repo, INSULA_DURABILIS)
-        + insula_versio(lf->d->repo, INSULA_EPHEMERA);
+    redde insula_versio(lf->d->repo);
 }
 
 LudusFenestra*

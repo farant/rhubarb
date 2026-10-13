@@ -153,8 +153,8 @@ interior i32
 versionem_summare (
     constans LudusTessera* lt)
 {
-    redde insula_versio(lt->d->repo, INSULA_DURABILIS)
-        + insula_versio(lt->d->repo, INSULA_EPHEMERA);
+    redde insula_versio(lt->d->repo)
+        + insula_versio(lt->d->repo);
 }
 
 vacuum

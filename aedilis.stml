@@ -72,6 +72,10 @@
     <regula obiectum="clipboard_platform_macos">
       <vexillum! (>-framework Cocoa
     </regula>
+    <regula obiectum="energia_macos">
+      <vexillum! (>-framework IOKit
+      <vexillum! (>-framework CoreFoundation
+    </regula>
   </nexus>
   <vendor>
     <fons via="vendor/sqlite3.c">

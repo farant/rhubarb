@@ -29,44 +29,16 @@
 #include "processus.h"
 
 #include <stdio.h>
-#include <stdlib.h>   /* getenv */
-#include <unistd.h>   /* getpid */
 #include <string.h>
 
-/* SCRATCH (fabrica-7 T4): directorium UNICUM sub TMPDIR (per pid) - sub
- * fabrica area membri ipsa (TMPDIR = <area>tmp; debitum
- * build/probatio_git_arbores/ soluta), sub compile_tests.sh directorium
- * systematis. Nomen unicum: arbores duae non concurrunt. Scriptura
- * TRANSIENS in build/ photographiam fabricae fallebat (census debitum
- * 'stalum' falso nominabat). */
-hic_manens character _scratch[DXII];
-
-interior b32
-_scratch_parare (vacuum)
-{
-    constans character* tmp = getenv("TMPDIR");
-        memoriae_index  n;
-
-    si (tmp == NIHIL || tmp[0] == '\0')
-    {
-        tmp = "/tmp";
-    }
-    /* '/' finalis (TMPDIR macOS) demitur: via '//' a git normalizata
-     * cum via probationis non congruebat */
-    n = strlen(tmp);
-    dum (n > I && tmp[n - I] == '/')
-    {
-        n--;
-    }
-    /* unicum per processum (getpid): processus concurrentes numquam
-     * idem; reliquiae pid iterati prius deletae */
-    sprintf(_scratch, "%.*s/probatio_git_arbores.%d", (integer)(n
-        > CD ? CD : n), tmp,
-        (integer)getpid());
-    (vacuum)filum_arborem_delere(_scratch);
-    redde filum_directorium_creare_cum_parentibus(_scratch);
-}
-
+/* MUNDUS SUITAE (credo II): repositorium VERUM semel apertum, CAPUT
+ * semel resolutum - sectiones LEGUNT (c->suita), numquam mutant.
+ * Repositorium in piscina SUITAE vivit (git_aperire allocationes suas
+ * in piscina creationis facit, numquam in piscina sectionis). */
+nomen structura {
+     GitRepositorium* repositorium;
+           character  caput[GIT_SHA_HEX_MENSURA];
+} MundusGit;
 
 interior b32
 _est_sha_hex (
@@ -133,42 +105,48 @@ _est_sha_hex (
     redde sha[40] == '\0';
 }
 
-s32 principale (vacuum)
+
+/* ==================================================
+ * FIXURA SUITAE: repositorium et CAPUT. Repositorium absens (arbor
+ * operis frigida, 2026-09-28, quaestio …QY4: reliqua SIGSEGV ruebant)
+ * -> '(parare suitae)' ABORTA, nulla sectio currit - rubrum clarum
+ * ================================================== */
+
+interior vacuum
+_mundum_parare (
+    CredoContextus* c)
 {
-                b32  praeteritus;
-            Piscina* piscina;
-    GitRepositorium* repositorium;
-          character  caput[GIT_SHA_HEX_MENSURA];
+    MundusGit* m;
 
-    piscina = piscina_generare_dynamicum("probatio_git", 1048576);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
+    m = (MundusGit*)piscina_allocare(c->piscina, magnitudo(MundusGit));
+    CREDO_NECESSE_NON_NIHIL(m);
+    m->repositorium = git_aperire(c->piscina, ".");
+    CREDO_NECESSE_NON_NIHIL(m->repositorium);
+    CREDO_NECESSE(git_ref_resolvere(m->repositorium, "HEAD", m->caput));
+    c->datum = m;
+}
 
-    imprimere("\n--- Probans apertionem ---\n");
+interior vacuum
+_sectio_apertio (
+    CredoContextus* c)
+{
+    constans MundusGit* m = (constans MundusGit*)c->suita;
 
-    repositorium = git_aperire(piscina, ".");
-    CREDO_NON_NIHIL(repositorium);
-    si (repositorium == NIHIL)
-    {
-        /* reliqua sine repositorio ruerent (SIGSEGV in arbore operis
-         * frigida, 2026-09-28, quaestio …QY4) - rubrum clarum */
-        credo_imprimere_compendium();
-        credo_claudere();
-        piscina_destruere(piscina);
-        redde I;
-    }
-    CREDO_VERUM(xar_numerus(repositorium->sarcinae) >= (i32)1);
+    CREDO_VERUM(xar_numerus(m->repositorium->sarcinae) >= (i32)1);
 
     /* non repositorium -> NIHIL */
-    CREDO_NIHIL(git_aperire(piscina, "/tmp"));
+    CREDO_NIHIL(git_aperire(c->piscina, "/tmp"));
+}
 
-    imprimere("\n--- Probans resolutionem refum ---\n");
+interior vacuum
+_sectio_resolutio (
+    CredoContextus* c)
+{
+    constans MundusGit* m             = (constans MundusGit*)c->suita;
+       GitRepositorium* repositorium  = m->repositorium;
+    constans character* caput         = m->caput;
+               Piscina* piscina       = c->piscina;
 
-    CREDO_VERUM(git_ref_resolvere(repositorium, "HEAD", caput));
     CREDO_VERUM(_est_sha_hex(caput));
 
     /* sha plenum per se ipsum */
@@ -178,71 +156,6 @@ s32 principale (vacuum)
         CREDO_VERUM(git_ref_resolvere(repositorium, caput,
             idem_sha));
         CREDO_VERUM(strcmp(caput, idem_sha) == 0);
-    }
-
-    /* ARBOR OPERIS (git worktree add; quaestio …QY4, desideratum
-     * …JF8ZMD): '.git' ibi PLAGULA est ('gitdir: <via>'), gitdir HEAD
-     * proprium tenet et 'commondir' ad directorium commune (objects,
-     * refs, packed-refs) monstrat. Structura synthetica in scratch sub
-     * TMPDIR (fabrica-7 T4; olim build/), git ipso non vocato.
-     * git_aperire directoria parentum ascendit: sine
-     * '.git' plagula intellecta repositorium VERUM supra inveniret,
-     * ergo via_git == gitdir syntheticum asseritur, non apertio
-     * sola. */
-    {
-        constans character* radix_arborum = _scratch_parare()
-            ? _scratch : "";
-        constans character* communis   = repositorium->via_communis;
-        constans character* gitdir     = _serere(piscina, radix_arborum,
-            "/duo/gitdir", "");
-        constans character* arbor_duo  = _serere(piscina, radix_arborum,
-            "/duo/arbor", "");
-        constans character* arbor_unus = _serere(piscina, radix_arborum,
-            "/unus", "");
-        constans character* arbores[II];
-           GitRepositorium* r;
-                 character  sha[GIT_SHA_HEX_MENSURA];
-                       i32  k;
-
-        imprimere("\n--- Probans arborem operis ('.git' plagula, "
-            "commondir) ---\n");
-        CREDO_VERUM(radix_arborum[0] != '\0');
-        (vacuum)filum_arborem_delere(radix_arborum);
-        CREDO_VERUM(filum_directorium_creare_cum_parentibus(gitdir));
-        CREDO_VERUM(filum_directorium_creare_cum_parentibus(arbor_duo));
-        CREDO_VERUM(filum_directorium_creare_cum_parentibus(
-            arbor_unus));
-        /* gitdir: HEAD idem ac arboris huius, commondir absolutum */
-        CREDO_VERUM(filum_scribere(_serere(piscina, gitdir, "/HEAD",
-            ""),
-            filum_legere_totum(_serere(piscina, repositorium->via_git,
-                "/HEAD", ""), piscina)));
-        CREDO_VERUM(filum_scribere_literis(_serere(piscina, gitdir,
-            "/commondir", ""), _serere(piscina, communis, "\n", "")));
-        /* forma I: gitdir RELATIVUS (ad arborem); forma II:
-         * absolutus */
-        CREDO_VERUM(filum_scribere_literis(_serere(piscina, arbor_unus,
-            "/.git", ""), "gitdir: ../duo/gitdir\n"));
-        CREDO_VERUM(filum_scribere_literis(_serere(piscina, arbor_duo,
-            "/.git", ""), _serere(piscina, "gitdir: ", gitdir, "\n")));
-        arbores[ZEPHYRUM]  = arbor_unus;
-        arbores[I]         = arbor_duo;
-        per (k = ZEPHYRUM; k < II; k++)
-        {
-            r = git_aperire(piscina, arbores[k]);
-            CREDO_NON_NIHIL(r);
-            si (r == NIHIL)
-            {
-                perge;
-            }
-            CREDO_VERUM(strcmp(r->via_git, gitdir) == ZEPHYRUM);
-            CREDO_VERUM(strcmp(r->via_communis, communis) == ZEPHYRUM);
-            CREDO_AEQUALIS_I32(xar_numerus(r->sarcinae),
-                xar_numerus(repositorium->sarcinae));
-            CREDO_VERUM(git_ref_resolvere(r, "HEAD", sha));
-            CREDO_VERUM(strcmp(sha, caput) == ZEPHYRUM);
-        }
-        (vacuum)filum_arborem_delere(radix_arborum);
     }
 
     /* CAPUT ramo alligatum, et ramus ille == CAPUT. Olim 'main' hic
@@ -321,68 +234,148 @@ s32 principale (vacuum)
         CREDO_FALSUM(git_ref_resolvere(repositorium, breve,
             resolutum));
     }
+}
 
-    imprimere("\n--- Probans commissum ---\n");
+/* ARBOR OPERIS (git worktree add; quaestio …QY4, desideratum
+ * …JF8ZMD): '.git' ibi PLAGULA est ('gitdir: <via>'), gitdir HEAD
+ * proprium tenet et 'commondir' ad directorium commune (objects,
+ * refs, packed-refs) monstrat. Structura synthetica in credo_area
+ * (credo II T5; olim scratch manu sub TMPDIR, ante build/), git ipso
+ * non vocato. git_aperire directoria parentum ascendit: sine '.git'
+ * plagula intellecta repositorium VERUM supra inveniret, ergo via_git
+ * == gitdir syntheticum asseritur, non apertio sola. */
+interior vacuum
+_sectio_arbor_operis (
+    CredoContextus* c)
+{
+    constans MundusGit* m             = (constans MundusGit*)c->suita;
+       GitRepositorium* repositorium  = m->repositorium;
+               Piscina* piscina       = c->piscina;
+    constans character* radix_arborum;
+    constans character* communis;
+    constans character* gitdir;
+    constans character* arbor_duo;
+    constans character* arbor_unus;
+    constans character* arbores[II];
+       GitRepositorium* r;
+             character  sha[GIT_SHA_HEX_MENSURA];
+                   i32  k;
 
+    radix_arborum = credo_area(c);
+    CREDO_NECESSE_NON_NIHIL(radix_arborum);
+    communis    = repositorium->via_communis;
+    gitdir      = _serere(piscina, radix_arborum, "/duo/gitdir", "");
+    arbor_duo   = _serere(piscina, radix_arborum, "/duo/arbor", "");
+    arbor_unus  = _serere(piscina, radix_arborum, "/unus", "");
+    CREDO_VERUM(filum_directorium_creare_cum_parentibus(gitdir));
+    CREDO_VERUM(filum_directorium_creare_cum_parentibus(arbor_duo));
+    CREDO_VERUM(filum_directorium_creare_cum_parentibus(arbor_unus));
+    /* gitdir: HEAD idem ac arboris huius, commondir absolutum */
+    CREDO_VERUM(filum_scribere(_serere(piscina, gitdir, "/HEAD", ""),
+        filum_legere_totum(_serere(piscina, repositorium->via_git,
+            "/HEAD", ""), piscina)));
+    CREDO_VERUM(filum_scribere_literis(_serere(piscina, gitdir,
+        "/commondir", ""), _serere(piscina, communis, "\n", "")));
+    /* forma I: gitdir RELATIVUS (ad arborem); forma II: absolutus */
+    CREDO_VERUM(filum_scribere_literis(_serere(piscina, arbor_unus,
+        "/.git", ""), "gitdir: ../duo/gitdir\n"));
+    CREDO_VERUM(filum_scribere_literis(_serere(piscina, arbor_duo,
+        "/.git", ""), _serere(piscina, "gitdir: ", gitdir, "\n")));
+    arbores[ZEPHYRUM]  = arbor_unus;
+    arbores[I]         = arbor_duo;
+    per (k = ZEPHYRUM; k < II; k++)
     {
-        GitCommissum commissum = git_commissum_legere(repositorium,
-            caput, piscina);
-
-        CREDO_VERUM(commissum.successus);
-        CREDO_AEQUALIS_I32(commissum.arbor.mensura, (i32)40);
-        CREDO_VERUM(xar_numerus(commissum.parentes) >= (i32)1);
-        CREDO_VERUM(commissum.nuntius.mensura > (i32)0);
-        /* epocha post MMXX (sanitas temporis) */
-        CREDO_VERUM(commissum.tempus > (s64)1577836800);
-        CREDO_CHORDA_CONTINET(commissum.auctor,
-            chorda_ex_literis("@", piscina));
-
-        imprimere("\n--- Probans arborem ---\n");
-
+        r = git_aperire(piscina, arbores[k]);
+        CREDO_NON_NIHIL(r);
+        si (r == NIHIL)
         {
-            Xar* introitus = git_arborem_legere(repositorium,
-                chorda_ut_cstr(commissum.arbor, piscina), piscina);
-            b32 lib_arbor      = FALSUM;
-            b32 include_arbor  = FALSUM;
-            b32 claude_massa   = FALSUM;
-            i32 i;
+            perge;
+        }
+        CREDO_VERUM(strcmp(r->via_git, gitdir) == ZEPHYRUM);
+        CREDO_VERUM(strcmp(r->via_communis, communis) == ZEPHYRUM);
+        CREDO_AEQUALIS_I32(xar_numerus(r->sarcinae),
+            xar_numerus(repositorium->sarcinae));
+        CREDO_VERUM(git_ref_resolvere(r, "HEAD", sha));
+        CREDO_VERUM(strcmp(sha, m->caput) == ZEPHYRUM);
+    }
+}
 
-            CREDO_NON_NIHIL(introitus);
-            CREDO_VERUM(xar_numerus(introitus) > (i32)10);
-            per (i = 0; i < xar_numerus(introitus); i = i + 1)
-            {
-                GitArborIntroitus* e = (GitArborIntroitus*)
-                    xar_obtinere(introitus, i);
+interior vacuum
+_sectio_commissum (
+    CredoContextus* c)
+{
+    constans MundusGit* m = (constans MundusGit*)c->suita;
+          GitCommissum  commissum;
 
-                si (   chorda_aequalis_literis(e->titulus, "lib")
-                    && e->est_arbor)
-                {
-                    lib_arbor = VERUM;
-                }
-                si (   chorda_aequalis_literis(e->titulus, "include")
-                    && e->est_arbor)
-                {
-                    include_arbor = VERUM;
-                }
-                si (   chorda_aequalis_literis(e->titulus,
-                        "CLAUDE.md") && !e->est_arbor)
-                {
-                    claude_massa = VERUM;
-                }
-            }
-            CREDO_VERUM(lib_arbor);
-            CREDO_VERUM(include_arbor);
-            CREDO_VERUM(claude_massa);
+    commissum = git_commissum_legere(m->repositorium, m->caput,
+        c->piscina);
+    CREDO_VERUM(commissum.successus);
+    CREDO_AEQUALIS_I32(commissum.arbor.mensura, (i32)40);
+    CREDO_VERUM(xar_numerus(commissum.parentes) >= (i32)1);
+    CREDO_VERUM(commissum.nuntius.mensura > (i32)0);
+    /* epocha post MMXX (sanitas temporis) */
+    CREDO_VERUM(commissum.tempus > (s64)1577836800);
+    CREDO_CHORDA_CONTINET(commissum.auctor,
+        chorda_ex_literis("@", c->piscina));
+}
+
+interior vacuum
+_sectio_arbor (
+    CredoContextus* c)
+{
+    constans MundusGit* m        = (constans MundusGit*)c->suita;
+               Piscina* piscina  = c->piscina;
+          GitCommissum  commissum;
+                   Xar* introitus;
+                   b32  lib_arbor      = FALSUM;
+                   b32  include_arbor  = FALSUM;
+                   b32  claude_massa   = FALSUM;
+                   i32  i;
+
+    commissum = git_commissum_legere(m->repositorium, m->caput,
+        piscina);
+    CREDO_NECESSE(commissum.successus);
+    introitus = git_arborem_legere(m->repositorium,
+        chorda_ut_cstr(commissum.arbor, piscina), piscina);
+    CREDO_NECESSE_NON_NIHIL(introitus);
+    CREDO_VERUM(xar_numerus(introitus) > (i32)10);
+    per (i = 0; i < xar_numerus(introitus); i = i + 1)
+    {
+        GitArborIntroitus* e = (GitArborIntroitus*)
+            xar_obtinere(introitus, i);
+
+        si (   chorda_aequalis_literis(e->titulus, "lib")
+            && e->est_arbor)
+        {
+            lib_arbor = VERUM;
+        }
+        si (   chorda_aequalis_literis(e->titulus, "include")
+            && e->est_arbor)
+        {
+            include_arbor = VERUM;
+        }
+        si (   chorda_aequalis_literis(e->titulus,
+                "CLAUDE.md") && !e->est_arbor)
+        {
+            claude_massa = VERUM;
         }
     }
+    CREDO_VERUM(lib_arbor);
+    CREDO_VERUM(include_arbor);
+    CREDO_VERUM(claude_massa);
+}
 
-    imprimere("\n--- Probans massam per viam (oraculum disci) ---\n");
+interior vacuum
+_sectio_massa (
+    CredoContextus* c)
+{
+    constans MundusGit* m = (constans MundusGit*)c->suita;
 
     {
            b32 inventum = FALSUM;
-        chorda massa = git_massam_per_viam(repositorium, caput,
-            "include/latina.h", piscina, &inventum);
-        chorda discus = _massa_per_git(piscina);
+        chorda massa = git_massam_per_viam(m->repositorium, m->caput,
+            "include/latina.h", c->piscina, &inventum);
+        chorda discus = _massa_per_git(c->piscina);
 
         CREDO_VERUM(inventum);
         CREDO_VERUM(massa.mensura > (i32)0);
@@ -396,177 +389,183 @@ s32 principale (vacuum)
     {
         b32 inventum = VERUM;
 
-        (vacuum)git_massam_per_viam(repositorium, caput,
-            "non/exsistit.c", piscina, &inventum);
+        (vacuum)git_massam_per_viam(m->repositorium, m->caput,
+            "non/exsistit.c", c->piscina, &inventum);
         CREDO_FALSUM(inventum);
     }
+}
 
-    imprimere("\n--- Probans historiam profundam (sarcinae) ---\n");
+/* HEAD~20: obiecta fere certe in sarcinis (deltae exercitae); omnis
+ * lectio sha-verificata - transitus = probatio SHA-1 */
+interior vacuum
+_sectio_historia (
+    CredoContextus* c)
+{
+    constans MundusGit* m = (constans MundusGit*)c->suita;
+             character  vetus[GIT_SHA_HEX_MENSURA];
+                   b32  inventum = FALSUM;
+                chorda  massa;
 
-    /* HEAD~20: obiecta fere certe in sarcinis (deltae exercitae);
-     * omnis lectio sha-verificata - transitus = probatio SHA-1 */
-    {
-        character vetus[GIT_SHA_HEX_MENSURA];
-              b32 inventum = FALSUM;
-           chorda massa;
+    CREDO_VERUM(git_ref_resolvere(m->repositorium, "HEAD~20", vetus));
+    massa = git_massam_per_viam(m->repositorium, vetus,
+        "include/latina.h", c->piscina, &inventum);
+    CREDO_VERUM(inventum);
+    CREDO_VERUM(massa.mensura > (i32)1000);
 
-        CREDO_VERUM(git_ref_resolvere(repositorium, "HEAD~20",
-            vetus));
-        massa = git_massam_per_viam(repositorium, vetus,
-            "include/latina.h", piscina, &inventum);
-        CREDO_VERUM(inventum);
-        CREDO_VERUM(massa.mensura > (i32)1000);
+    /* et profundius: catena parentum XL gradus */
+    CREDO_VERUM(git_ref_resolvere(m->repositorium, "HEAD~40", vetus));
+    massa = git_massam_per_viam(m->repositorium, vetus, "CLAUDE.md",
+        c->piscina, &inventum);
+    CREDO_VERUM(inventum);
+    CREDO_VERUM(massa.mensura > (i32)1000);
+}
 
-        /* et profundius: catena parentum XL gradus */
-        CREDO_VERUM(git_ref_resolvere(repositorium, "HEAD~40",
-            vetus));
-        massa = git_massam_per_viam(repositorium, vetus,
-            "CLAUDE.md", piscina, &inventum);
-        CREDO_VERUM(inventum);
-        CREDO_VERUM(massa.mensura > (i32)1000);
-    }
+/* catena probationis completa sine sha transcripto: sha promptum ->
+ * obiectum eo sha lectum (lectio se ipsam contra sha verificat!) ->
+ * octeti == discus. Sha falsum catenam alicubi frangeret. */
+interior vacuum
+_sectio_sha_per_viam (
+    CredoContextus* c)
+{
+    constans MundusGit* m = (constans MundusGit*)c->suita;
+             character  sha_massae[GIT_SHA_HEX_MENSURA];
+                   b32  est_arbor = VERUM;
+           GitObiectum  obiectum;
+                chorda  discus;
 
-    imprimere("\n--- Probans sha per viam (cribrum sine contento) ---\n");
+    CREDO_VERUM(git_sha_per_viam(m->repositorium, m->caput,
+        "include/latina.h", c->piscina, sha_massae, &est_arbor));
+    CREDO_FALSUM(est_arbor);
+    CREDO_VERUM(_est_sha_hex(sha_massae));
+    obiectum = git_obiectum_legere(m->repositorium, sha_massae,
+        c->piscina);
+    CREDO_VERUM(obiectum.successus);
+    CREDO_VERUM(obiectum.genus == GIT_OBIECTUM_MASSA);
+    discus = _massa_per_git(c->piscina);
+    CREDO_AEQUALIS_I32(obiectum.datum.mensura, discus.mensura);
+    CREDO_VERUM(obiectum.datum.mensura == discus.mensura
+        && memcmp(obiectum.datum.datum, discus.datum,
+               (memoriae_index)discus.mensura) == 0);
 
-    /* catena probationis completa sine sha transcripto: sha
-     * promptum -> obiectum eo sha lectum (lectio se ipsam contra
-     * sha verificat!) -> octeti == discus. Sha falsum catenam
-     * alicubi frangeret. */
-    {
-          character sha_massae[GIT_SHA_HEX_MENSURA];
-                b32 est_arbor = VERUM;
-        GitObiectum obiectum;
-             chorda discus;
+    /* directorium: sha redditur, est_arbor VERUM */
+    CREDO_VERUM(git_sha_per_viam(m->repositorium, m->caput, "lib",
+        c->piscina, sha_massae, &est_arbor));
+    CREDO_VERUM(est_arbor);
 
-        CREDO_VERUM(git_sha_per_viam(repositorium, caput,
-            "include/latina.h", piscina, sha_massae, &est_arbor));
-        CREDO_FALSUM(est_arbor);
-        CREDO_VERUM(_est_sha_hex(sha_massae));
-        obiectum = git_obiectum_legere(repositorium, sha_massae,
-            piscina);
-        CREDO_VERUM(obiectum.successus);
-        CREDO_VERUM(obiectum.genus == GIT_OBIECTUM_MASSA);
-        discus = _massa_per_git(piscina);
-        CREDO_AEQUALIS_I32(obiectum.datum.mensura, discus.mensura);
-        CREDO_VERUM(obiectum.datum.mensura == discus.mensura
-            && memcmp(obiectum.datum.datum, discus.datum,
-                   (memoriae_index)discus.mensura) == 0);
+    /* via ignota */
+    CREDO_FALSUM(git_sha_per_viam(m->repositorium, m->caput,
+        "non/exsistit.c", c->piscina, sha_massae, &est_arbor));
+}
 
-        /* directorium: sha redditur, est_arbor VERUM */
-        CREDO_VERUM(git_sha_per_viam(repositorium, caput, "lib",
-            piscina, sha_massae, &est_arbor));
-        CREDO_VERUM(est_arbor);
+/* historia congelata = oraculum immutabile: commissum 4aafde9
+ * (bibliotheca git ipsa nata) contra parentem d4a89dd.
+ * Exspectata transcripta ex 'git show --name-status 4aafde9':
+ *   M  compile_tests_fontes_generata.sh
+ *   A  include/git.h
+ *   A  lib/git.c
+ *   A  lib/git.worklog.md
+ *   A  probationes/probatio_git.c
+ * (ordo idem: viae ordinatae chorda_comparare) */
+interior vacuum
+_sectio_differentia (
+    CredoContextus* c)
+{
+    constans MundusGit* m             = (constans MundusGit*)c->suita;
+       GitRepositorium* repositorium  = m->repositorium;
+               Piscina* piscina       = c->piscina;
+             character  sha_parentis[GIT_SHA_HEX_MENSURA];
+             character  sha_nati[GIT_SHA_HEX_MENSURA];
+          GitCommissum  parens;
+          GitCommissum  natus;
+                   Xar* mutatae;
+          GitViaMutata* via_mutata;
 
-        /* via ignota */
-        CREDO_FALSUM(git_sha_per_viam(repositorium, caput,
-            "non/exsistit.c", piscina, sha_massae, &est_arbor));
-    }
+    CREDO_VERUM(git_ref_resolvere(repositorium, "d4a89dd",
+        sha_parentis));
+    CREDO_VERUM(git_ref_resolvere(repositorium, "4aafde9", sha_nati));
+    parens  = git_commissum_legere(repositorium, sha_parentis, piscina);
+    natus   = git_commissum_legere(repositorium, sha_nati, piscina);
+    CREDO_NECESSE(parens.successus);
+    CREDO_NECESSE(natus.successus);
 
-    imprimere("\n--- Probans differentiam arborum ---\n");
+    /* arbor contra se ipsam - differentia nulla */
+    mutatae = git_arbores_differre(repositorium,
+        chorda_ut_cstr(parens.arbor, piscina),
+        chorda_ut_cstr(parens.arbor, piscina), piscina);
+    CREDO_NECESSE_NON_NIHIL(mutatae);
+    CREDO_AEQUALIS_I32(xar_numerus(mutatae), (i32)0);
 
-    /* historia congelata = oraculum immutabile: commissum 4aafde9
-     * (bibliotheca git ipsa nata) contra parentem d4a89dd.
-     * Exspectata transcripta ex 'git show --name-status 4aafde9':
-     *   M  compile_tests_fontes_generata.sh
-     *   A  include/git.h
-     *   A  lib/git.c
-     *   A  lib/git.worklog.md
-     *   A  probationes/probatio_git.c
-     * (ordo idem: viae ordinatae chorda_comparare) */
-    {
-           character  sha_parentis[GIT_SHA_HEX_MENSURA];
-           character  sha_nati[GIT_SHA_HEX_MENSURA];
-        GitCommissum  parens;
-        GitCommissum  natus;
-                 Xar* mutatae;
+    mutatae = git_arbores_differre(repositorium,
+        chorda_ut_cstr(parens.arbor, piscina),
+        chorda_ut_cstr(natus.arbor, piscina), piscina);
+    CREDO_NECESSE_NON_NIHIL(mutatae);
+    CREDO_NECESSE(xar_numerus(mutatae) == (i32)5);
 
-        CREDO_VERUM(git_ref_resolvere(repositorium, "d4a89dd",
-            sha_parentis));
-        CREDO_VERUM(git_ref_resolvere(repositorium, "4aafde9",
-            sha_nati));
-        parens = git_commissum_legere(repositorium, sha_parentis,
-            piscina);
-        natus = git_commissum_legere(repositorium, sha_nati,
-            piscina);
-        CREDO_VERUM(parens.successus);
-        CREDO_VERUM(natus.successus);
+    via_mutata = (GitViaMutata*)xar_obtinere(mutatae, 0);
+    CREDO_VERUM(chorda_aequalis_literis(via_mutata->via,
+        "compile_tests_fontes_generata.sh"));
+    CREDO_VERUM(via_mutata->genus == GIT_VIA_MUTATA);
+    CREDO_AEQUALIS_I32(via_mutata->sha_vetus.mensura, (i32)40);
+    CREDO_AEQUALIS_I32(via_mutata->sha_novus.mensura, (i32)40);
 
-        /* arbor contra se ipsam - differentia nulla */
-        mutatae = git_arbores_differre(repositorium,
-            chorda_ut_cstr(parens.arbor, piscina),
-            chorda_ut_cstr(parens.arbor, piscina), piscina);
-        CREDO_NON_NIHIL(mutatae);
-        CREDO_AEQUALIS_I32(xar_numerus(mutatae), (i32)0);
+    via_mutata = (GitViaMutata*)xar_obtinere(mutatae, 1);
+    CREDO_VERUM(chorda_aequalis_literis(via_mutata->via,
+        "include/git.h"));
+    CREDO_VERUM(via_mutata->genus == GIT_VIA_ADDITA);
+    CREDO_AEQUALIS_I32(via_mutata->sha_vetus.mensura, (i32)0);
+    CREDO_AEQUALIS_I32(via_mutata->sha_novus.mensura, (i32)40);
 
-        mutatae = git_arbores_differre(repositorium,
-            chorda_ut_cstr(parens.arbor, piscina),
-            chorda_ut_cstr(natus.arbor, piscina), piscina);
-        CREDO_NON_NIHIL(mutatae);
-        CREDO_AEQUALIS_I32(xar_numerus(mutatae), (i32)5);
-        {
-            GitViaMutata* m = (GitViaMutata*)xar_obtinere(mutatae,
-                0);
+    via_mutata = (GitViaMutata*)xar_obtinere(mutatae, 2);
+    CREDO_VERUM(chorda_aequalis_literis(via_mutata->via, "lib/git.c"));
+    CREDO_VERUM(via_mutata->genus == GIT_VIA_ADDITA);
 
-            CREDO_VERUM(chorda_aequalis_literis(m->via,
-                "compile_tests_fontes_generata.sh"));
-            CREDO_VERUM(m->genus == GIT_VIA_MUTATA);
-            CREDO_AEQUALIS_I32(m->sha_vetus.mensura, (i32)40);
-            CREDO_AEQUALIS_I32(m->sha_novus.mensura, (i32)40);
+    via_mutata = (GitViaMutata*)xar_obtinere(mutatae, 3);
+    CREDO_VERUM(chorda_aequalis_literis(via_mutata->via,
+        "lib/git.worklog.md"));
+    CREDO_VERUM(via_mutata->genus == GIT_VIA_ADDITA);
 
-            m = (GitViaMutata*)xar_obtinere(mutatae, 1);
-            CREDO_VERUM(chorda_aequalis_literis(m->via,
-                "include/git.h"));
-            CREDO_VERUM(m->genus == GIT_VIA_ADDITA);
-            CREDO_AEQUALIS_I32(m->sha_vetus.mensura, (i32)0);
-            CREDO_AEQUALIS_I32(m->sha_novus.mensura, (i32)40);
+    via_mutata = (GitViaMutata*)xar_obtinere(mutatae, 4);
+    CREDO_VERUM(chorda_aequalis_literis(via_mutata->via,
+        "probationes/probatio_git.c"));
+    CREDO_VERUM(via_mutata->genus == GIT_VIA_ADDITA);
 
-            m = (GitViaMutata*)xar_obtinere(mutatae, 2);
-            CREDO_VERUM(chorda_aequalis_literis(m->via,
-                "lib/git.c"));
-            CREDO_VERUM(m->genus == GIT_VIA_ADDITA);
+    /* directio inversa: ADDITA fiunt REMOTA, symmetria */
+    mutatae = git_arbores_differre(repositorium,
+        chorda_ut_cstr(natus.arbor, piscina),
+        chorda_ut_cstr(parens.arbor, piscina), piscina);
+    CREDO_NECESSE_NON_NIHIL(mutatae);
+    CREDO_NECESSE(xar_numerus(mutatae) == (i32)5);
+    via_mutata = (GitViaMutata*)xar_obtinere(mutatae, 1);
+    CREDO_VERUM(chorda_aequalis_literis(via_mutata->via,
+        "include/git.h"));
+    CREDO_VERUM(via_mutata->genus == GIT_VIA_REMOTA);
+    CREDO_AEQUALIS_I32(via_mutata->sha_vetus.mensura, (i32)40);
+    CREDO_AEQUALIS_I32(via_mutata->sha_novus.mensura, (i32)0);
+}
 
-            m = (GitViaMutata*)xar_obtinere(mutatae, 3);
-            CREDO_VERUM(chorda_aequalis_literis(m->via,
-                "lib/git.worklog.md"));
-            CREDO_VERUM(m->genus == GIT_VIA_ADDITA);
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "apertionem", _sectio_apertio, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "resolutionem refum", _sectio_resolutio, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { "arborem operis ('.git' plagula, commondir)",
+        _sectio_arbor_operis,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "commissum", _sectio_commissum, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "arborem", _sectio_arbor, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "massam per viam (oraculum disci)", _sectio_massa, NIHIL, NIHIL,
+      NIHIL, NIHIL },
+    { "historiam profundam (sarcinae)", _sectio_historia, NIHIL, NIHIL,
+      NIHIL, NIHIL },
+    { "sha per viam (cribrum sine contento)", _sectio_sha_per_viam,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "differentiam arborum", _sectio_differentia, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-            m = (GitViaMutata*)xar_obtinere(mutatae, 4);
-            CREDO_VERUM(chorda_aequalis_literis(m->via,
-                "probationes/probatio_git.c"));
-            CREDO_VERUM(m->genus == GIT_VIA_ADDITA);
-        }
-
-        /* directio inversa: ADDITA fiunt REMOTA, symmetria */
-        mutatae = git_arbores_differre(repositorium,
-            chorda_ut_cstr(natus.arbor, piscina),
-            chorda_ut_cstr(parens.arbor, piscina), piscina);
-        CREDO_NON_NIHIL(mutatae);
-        CREDO_AEQUALIS_I32(xar_numerus(mutatae), (i32)5);
-        {
-            GitViaMutata* m = (GitViaMutata*)xar_obtinere(mutatae,
-                1);
-
-            CREDO_VERUM(chorda_aequalis_literis(m->via,
-                "include/git.h"));
-            CREDO_VERUM(m->genus == GIT_VIA_REMOTA);
-            CREDO_AEQUALIS_I32(m->sha_vetus.mensura, (i32)40);
-            CREDO_AEQUALIS_I32(m->sha_novus.mensura, (i32)0);
-        }
-    }
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-    credo_claudere();
-    piscina_destruere(piscina);
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("git", SECTIONES, _mundum_parare,
+        NIHIL);
 }

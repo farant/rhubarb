@@ -1,7 +1,7 @@
 /* dispensator.h - Ansa: derivare -> destinatio -> actio -> componere
  *
  * Possidet Motus, Derivator, arborem componentium ultimam (piscinae
- * ping-pong), focum (in insula ephemerarum: attributa 'focus' et
+ * ping-pong), focum (in insula, ramo activo: attributa 'focus' et
  * 'focus_acervus' - restitutio ea restituit), super (id sub mure).
  * REGULA STALENESS: componere post OMNEM eventum dispensatum currit;
  * pingere/rasterizare semel per quadrum (extra hanc bibliothecam).
@@ -37,7 +37,7 @@
  * Typi
  * ================================================== */
 
-/* <componens/>: arborem logicam ex insulis et motu componit, in
+/* <componens/>: arborem logicam ex insula et motu componit, in
  * piscinam datam; nihil scribit. */
 nomen Componens* (*Componere)(
      InsulaRepositorium* repo,
@@ -46,7 +46,25 @@ nomen Componens* (*Componere)(
     InternamentumChorda* intern,
                 vacuum* ctx);
 
-nomen structura {
+/* S5c (status-plan): systema medians in via eventus. ante: ante
+ * mittere - VERUM = eventus consumptus, actio nulla vocatur. post: post
+ * actionem quae consumpsit (actor = componens eius). Par unum
+ * (dimissio); acervus effugii postea fortasse (census XIII). */
+nomen structura Dispensator Dispensator;
+
+nomen b32 (*DispensatorAnte)(
+                 vacuum* ctx,
+            Dispensator* d,
+    constans Destinatio* des,
+       constans Eventus* e);
+
+nomen vacuum (*DispensatorPost)(
+                 vacuum* ctx,
+            Dispensator* d,
+     constans Componens* actor,
+       constans Eventus* e);
+
+structura Dispensator {
                 Piscina* piscina;
     InternamentumChorda* intern;
                 Piscina* piscinae_arboris[II];   /* ping-pong */
@@ -68,8 +86,11 @@ nomen structura {
                     Xar* differenda;             /* ad limen */
                     Xar* notata;   /* notarius: Xar de EventusNotatum;
                                     * NIHIL = non notatur (A6) */
-                    i32 compositiones;
-} Dispensator;
+                    i32  compositiones;
+        DispensatorAnte  ante;     /* S5c: NIHIL = nullum */
+        DispensatorPost  post;
+                 vacuum* medium_ctx;
+};
 
 
 /* ==================================================
@@ -107,6 +128,14 @@ dispensator_tractare (
 vacuum
 dispensator_finire (
     Dispensator* d);
+
+/* S5c: hamos medios ponere (NIHIL = tollere) */
+vacuum
+dispensator_medium_ponere (
+        Dispensator* d,
+    DispensatorAnte  ante,
+    DispensatorPost  post,
+             vacuum* ctx);
 
 /* EVENTUS_NIHIL cum tempore: sedes quietis + recompositio */
 vacuum

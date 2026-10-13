@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>iussum</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>iussum</h1>
+<p class="subtitulus">iussa in textu, stilo acme (vicus-latera S3a)</p>
+
+<p>Commands in text, in the manner of the acme editor: a word on a page that acts when it is clicked. The form is &#x27;$verb&#x27; or &#x27;$verb(arg, arg)&#x27; in a sheet of characters, the verb in lowercase letters, digits, &#x27;_&#x27; and inner &#x27;-&#x27;, the &#x27;$&#x27; at the start of a line or after a non-word character. Only verbs the host knows are commands, an idea taken from prunifex, and that removes the need for any escape syntax: &#x27;$5.00&#x27; and a half-typed &#x27;$foo(&#x27; stay prose, and an unclosed parenthesis makes the token no command at all, so half a command never runs. The reader is pure: it finds the command that covers a cell, or the next one on a line for colouring. A registry maps verbs to functions that return text to insert or an error to show, and a verb is either consumed by its click (creators such as $dies) or stays in place like a button (openers such as $terminale). The second form is the link, &#x27;#word&#x27;: every such word is a link, either a tag cycled through the pages that carry it, a page by number, or #next, #prev, #first and #last. Written 2026-10-08 for vicus&#x27;s side panes. scriba_actiones runs the commands and follows the links, scriba_figurae colours them, and vicus registers the verbs.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/iussum.h"><code>include/iussum.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/iussum.c"><code>lib/iussum.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-10-09 e29ecf6a</td></tr>
+<tr><td>Group</td><td><a href="greges.html#ludus">Ludus: the second-generation UI</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

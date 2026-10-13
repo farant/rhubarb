@@ -2,8 +2,8 @@
  * montationes
  * (insula-rami-plan T1b)
  *
- * Vicus (via Romana insularum) repositorium UNUM possidet: radices
- * <vicus> (durabilis, ephemera), liberi = montationes applicationum
+ * Vicus (via Romana insularum) repositorium UNUM possidet: radix
+ * <vicus> (apps/vicus/organum.stml), liberi = montationes applicationum
  * (rami, canonibus suis iudicati). Volumen UNUM: documenta montationum
  * in spatiis suis (id), dispositio in plagula 'vicus/latera'
  * (configuratio, non historia: superscribitur). Vicus nullam
@@ -36,6 +36,7 @@
 #include "figura.h"
 #include "dispensator.h"
 #include "delineare_mandata.h"
+#include "organum_montatio.h"
 
 /* tabulae fixae (vicus-latera decisio IX): index ordinarius tot
  * dat; vicus plures non legit */
@@ -159,7 +160,9 @@ nomen structura {
  * 2026"), iterum horam (Franus 2026-10-10). NIHIL (ordinarium) =
  * nullum horologium - probationes et specimina constant; applicationes
  * vicus_horologium_locale ponunt. vicus_pulsare tempus legit et VERUM
- * reddit cum mutatur (minutum aut dies). */
+ * reddit cum mutatur (minutum aut dies). S7a: lectio in ramo radicis
+ * vivit (tempus_*, pila_*; absens = nulla), systema 'horologium' eam
+ * scribit; horologium_dies ibidem (vicus.radix). */
 
 /* S4: tempus horologii (locale) */
 nomen structura {
@@ -173,17 +176,22 @@ nomen structura {
 
 nomen vacuum (*VicusHorologium) (vacuum* ctx, VicusTempus* tempus);
 
+/* S5: pila in linea tabularum, ad dextrum horologii ("87%", "87%+"
+ * cum oneratur). NIHIL = nulla (probationes); applicationes portam
+ * per energia_status ponunt. Legitur cum horologio (minuto). */
+nomen b32 (*VicusPila) (vacuum* ctx, s32* centesimae, b32* oneratur);
+
 nomen structura {
                 Piscina* piscina;
     InternamentumChorda* intern;
                 Volumen* volumen;
-     constans character* radix;       /* praefixum viarum canonum */
+     constans character* radix;       /* praefixum viarum (manifesta) */
                     i32  latitudo;
                     i32  altitudo;
      InsulaRepositorium* repo;
                     Xar* genera;      /* Xar de VicusGenus */
                     Xar* tabulae;     /* Xar de VicusTabula */
-                 chorda  activa;
+                 chorda  activa;      /* copia indicis (vicus/latera) */
                  chorda  causa;
          ActioRegistrum* actiones;    /* hospitis + activae (T2a) */
         FiguraRegistrum* figurae;
@@ -192,9 +200,9 @@ nomen structura {
                                        * pendentes (vicus_pulsare) */
         VicusHorologium  horologium;  /* S4: NIHIL = nullum */
                  vacuum* horologium_ctx;
-            VicusTempus  tempus;          /* ultimum lectum; hora -1 =
-                                           * nullum */
-                    b32 horologium_dies; /* ictus: dies pro hora */
+              VicusPila  pila;        /* S5: NIHIL = nulla */
+                 vacuum* pila_ctx;
+        StatusSystemata* systemata;   /* S7b: NIHIL = nulla */
 } Vicus;
 
 Vicus*
@@ -215,6 +223,15 @@ vicus_genus_addere (
         VicusDescriptor  describere,
                  vacuum* ctx);
 
+/* S7b: systemata status (organum_montatio.h) - vicus_aperire ea creat
+ * (conservatio, relatio, dimissio) post repositorium et radicem cum eis
+ * parat (clavis "vicus"); latera eadem a hospite accipiunt. ANTE
+ * vicus_aperire vocandum; NIHIL (ordinarium) = nulla (probationes). */
+vacuum
+vicus_systemata_ponere (
+               Vicus* v,
+     StatusSystemata* systemata);
+
 /* repositorium creatur, dispositio e volumine legitur (absens:
  * ordinaria, quae scribitur), latera montantur. Forma:
  * <tabulae activa="1"><tabula id="1" focus="sinistrum"><latus
@@ -223,7 +240,8 @@ vicus_genus_addere (
  * S3c: latus 'id' et 'argumentum' optionalia (absens id = ordinarium
  * "<tabula>_<latus>_<genus>").
  * FALSUM si dispositio mala aut repositorium deficit; latus generis
- * ignoti praeteritur (causa). */
+ * ignoti praeteritur (causa). S7a: radix ex apps/vicus/organum.stml
+ * paratur (canon, domini). */
 b32
 vicus_aperire (
                   Vicus* v,
@@ -263,7 +281,7 @@ vicus_focum_ponere (
     Vicus* v,
       i32  latus);
 
-/* activam ponere (insula ephemera et index servatus); FALSUM si id
+/* activam ponere (insula et index servatus); FALSUM si id
  * ignotum */
 b32
 vicus_activam_ponere (
@@ -323,7 +341,7 @@ vicus_dispensatorem_ligare (
  * aliae) solum si vivit_in_fundo (decisio VI: in fundo legitur, non
  * pingitur); finita numquam. VERUM si quadrum pingendum: latus
  * visibile mutatum, aut latus nunc finitum (titulus in linea
- * mutatur). Dispositio durabilis non tangitur. */
+ * mutatur). Dispositio servata (vicus/latera) non tangitur. */
 b32
 vicus_pulsare (
     Vicus* v);
@@ -333,6 +351,12 @@ vicus_horologium_ponere (
               Vicus* v,
     VicusHorologium  horologium,
              vacuum* ctx);
+
+vacuum
+vicus_pilam_ponere (
+          Vicus* v,
+      VicusPila  pila,
+         vacuum* ctx);
 
 /* hora locali systematis (time.h: time, localtime) */
 vacuum

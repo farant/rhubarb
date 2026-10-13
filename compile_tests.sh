@@ -9,6 +9,7 @@
 # quaevis plagulam obruit - cursus ultimus vincit. Schema:
 # build/test_logs/<cursor>.log, cursor quisque suam (radix,
 # silva, officina, gesta, saltuarius, tessera, linux).
+# <porta titulus="radix" tegit="aedificatio.stml probationes/* tools/compile_tests_fontes_generare.sh" currit="tools/compilator.c tools/fabrica.c"/>
 if [ -z "${COMPILE_TESTS_EFFUSIO:-}" ]; then
     export COMPILE_TESTS_EFFUSIO=1
     mkdir -p "$(dirname "$0")/build/test_logs"
@@ -24,11 +25,14 @@ declare -a GCC_FLAGS=("${VEXILLA_C89[@]}")
 # Include paths
 # materia/fontes et toml/fontes: instrumenta capsulae et librarii
 # clientem toml (materiae) trahunt ex 2026-09-28 (toml Q12; lib/toml.c
-# deleta). Indices idem ac aedilis.stml <inclusa>.
+# deleta). crusta/fontes: lib/portae.c commentaria cursorum per crustam
+# legit (portae-declaratae T1, 2026-10-10). Indices SUBSET aedilis.stml
+# <inclusa> (manu - drift nominata in worklog portae).
 declare -a INCLUDE_FLAGS=(
     "-Iinclude"
     "-Imateria/fontes"
     "-Itoml/fontes"
+    "-Icrusta/fontes"
     "-Iprobationes"
     "-Ibook_assets"
     "-Iprobationes/vitrea_assets"
@@ -282,7 +286,7 @@ compile_gui_app() {
     # -Wno-overlength-strings: GUI apps may have long STML layout strings
     # seorsum ut probationes (dsymutil vitatur)
     if ! clang ${GCC_FLAGS[@]} -Wno-overlength-strings ${INCLUDE_FLAGS[@]} -c "$app_file" -o "build/$app_name.o" 2>&1 \
-       || ! clang ${GCC_FLAGS[@]} "build/$app_name.o" $obj_files -framework Cocoa -framework Security -framework WebKit -o "$output_binary" 2>&1; then
+       || ! clang ${GCC_FLAGS[@]} "build/$app_name.o" $obj_files -framework Cocoa -framework Security -framework WebKit -framework IOKit -o "$output_binary" 2>&1; then
         echo -e "${RED}✗ BUILD FAILED: $app_name${RESET}"
         GUI_APPS_FAILED=$((GUI_APPS_FAILED + 1))
         FAILED_GUI_APPS="$FAILED_GUI_APPS $app_name"
@@ -373,7 +377,7 @@ compile_and_run_test() {
     # probationem, CXLI probationes = XXV s); ex obiecto nexus eum
     # omittit, et lldb per tabulam depurationis obiecta tamen legit.
     if ! _cursor_compilare "$test_file" "$output_binary.o" 2>&1 \
-       || ! clang ${GCC_FLAGS[@]} "$output_binary.o" $obj_files -framework Cocoa -framework Security -framework WebKit -o "$output_binary" 2>&1; then
+       || ! clang ${GCC_FLAGS[@]} "$output_binary.o" $obj_files -framework Cocoa -framework Security -framework WebKit -framework IOKit -o "$output_binary" 2>&1; then
         echo -e "${RED}✗ COMPILATION FAILED: $test_name${RESET}"
         TESTS_FAILED=$((TESTS_FAILED + 1))
         FAILED_TESTS="$FAILED_TESTS $test_name"
@@ -433,7 +437,7 @@ compile_tool_if_needed() {
     obj_files=$(get_object_files)
 
     echo -e "  Compiling tool: $tool_source"
-    if ! clang ${GCC_FLAGS[@]} ${INCLUDE_FLAGS[@]} "$tool_source" $obj_files -framework Cocoa -framework Security -framework WebKit -o "$tool_binary" 2>&1; then
+    if ! clang ${GCC_FLAGS[@]} ${INCLUDE_FLAGS[@]} "$tool_source" $obj_files -framework Cocoa -framework Security -framework WebKit -framework IOKit -o "$tool_binary" 2>&1; then
         echo -e "${RED}✗ FAILED: $tool_source${RESET}"
         return 1
     fi
@@ -608,7 +612,7 @@ probatio_una() {
     local obj_files t0 t1 tc tr rc
     local -a INC
     source "$(dirname "$0")/tools/vexilla.sh" 2>/dev/null || source tools/vexilla.sh
-    INC=("-Iinclude" "-Imateria/fontes" "-Itoml/fontes" "-Iprobationes" "-Ibook_assets" "-Iprobationes/vitrea_assets" "-Iprobationes/tabella_assets")
+    INC=("-Iinclude" "-Imateria/fontes" "-Itoml/fontes" "-Icrusta/fontes" "-Iprobationes" "-Ibook_assets" "-Iprobationes/vitrea_assets" "-Iprobationes/tabella_assets")
     obj_files="$(cat "$OBIECTA")"
     case "$name" in
         probatio_speculum_fontium|probatio_speculum)
@@ -620,7 +624,7 @@ probatio_una() {
     printf '%s\t%s\n' "$output_binary.o" "${VEXILLA_C89[*]} ${INC[*]} -c $test_file" \
         >> "$CLAUSURAE_DIR/mandata.tsv"
     if ! "$COMPILATOR" "${VEXILLA_C89[@]}" "${INC[@]}" -c "$test_file" -o "$output_binary.o" > "$SINGULAE/$name.log" 2>&1 \
-       || ! clang "${VEXILLA_C89[@]}" "$output_binary.o" $obj_files -framework Cocoa -framework Security -framework WebKit -o "$output_binary" >> "$SINGULAE/$name.log" 2>&1; then
+       || ! clang "${VEXILLA_C89[@]}" "$output_binary.o" $obj_files -framework Cocoa -framework Security -framework WebKit -framework IOKit -o "$output_binary" >> "$SINGULAE/$name.log" 2>&1; then
         echo "2 0 0" > "$SINGULAE/$name.res"
         return 0
     fi

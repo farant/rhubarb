@@ -26,6 +26,7 @@
 #        non sigillat; verdicta caput novum non tangit)
 #
 # Exitus: 0 sanum · 1 fractum · 2 bin/compilator deest.
+# <porta titulus="compilator" instrumentum="bin/compilator" tegit="tools/compilator_struere.sh"/>
 set -u
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$RADIX" || exit 2

@@ -1,5 +1,4 @@
 <!doctype html>
-<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -11,21 +10,185 @@
 
 <p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
 <h1>volumen</h1>
-<p class="subtitulus">volumen (rotulus documentorum): documentum = plagula</p>
+<p class="subtitulus">volumen (rotulus documentorum): a whole document in one SQLite file, with an event log as its truth</p>
 
-<p>A whole document in one SQLite file, so copying the file copies the document. Inside: acta, the truth, an append-only event log stamped in SQL; massae, contents addressed by SHA-256 so the same content is stored once; and plagulae, a manifest of paths to hashes that is only a projection, rebuildable from the log and the blobs, so corrupting it never loses data. Create (refused if the file exists), open, or open-or-create; plus a scratch volume under /tmp, deleted on close, for integration tests. That last one has its reason written down: a smoke test of laboratorium once used the app&#x27;s fixed path and left 42 greetings and 21 experiments in Fran&#x27;s real volume, written by no one and wanted by no one, and made the test unrepeatable. Name not yet sealed; first consumer silex; grows only by pull (August 2026). pictor_documentum and mensa keep their documents in it.</p>
+<p>A <em>volumen</em> (a scroll of documents) is one SQLite file that
+holds a whole document, so copying the file copies the document. Inside
+it the truth is an append-only log of events; file contents are stored
+once each, addressed by their hash; and the list of "which path holds
+which content" is only a projection, which can be rebuilt from the other
+two. Corrupting the projection therefore never loses data. It began in
+August 2026 as the store for silex projects and has since become the
+place where every house application keeps its state: one volume per
+application.</p>
 
+<p class="nota">Files: <code>include/volumen.h</code> (226 lines),
+<code>lib/volumen.c</code> (840), <code>lib/volumen.worklog.md</code>,
+tests in <code>probationes/probatio_volumen.c</code>. It sits on
+<a href="scrinium.html">scrinium</a> (the house's SQLite wrapper) and
+<a href="sigillum.html">sigillum</a> (SHA-256). Group:
+<a href="greges.html#acta">Records and storage</a>. The header still
+says the name is not sealed.</p>
+
+<h2>How it works</h2>
+
+<h3>Three tables</h3>
 <table>
+<thead><tr><th>Table</th><th>Holds</th><th>Role</th></tr></thead>
 <tbody>
-<tr><td>Header</td><td><a href="../../include/volumen.h"><code>include/volumen.h</code></a></td></tr>
-<tr><td>Implementation</td><td><a href="../../lib/volumen.c"><code>lib/volumen.c</code></a></td></tr>
-<tr><td>Last change</td><td>2026-08-19 f683e78a</td></tr>
-<tr><td>Group</td><td><a href="greges.html#acta">Records and storage</a></td></tr>
+<tr><td><code>acta</code></td><td>sequence number, time, kind
+(<code>genus</code>), data (text)</td><td><strong>The truth.</strong>
+Rows are only ever appended. The sequence number is SQLite's own
+autoincrement, and the time is stamped by SQL when the row is inserted,
+so the library calls no clock.</td></tr>
+<tr><td><code>massae</code></td><td>SHA-256 hash (hex), content
+(blob)</td><td><strong>Contents, stored once.</strong> The hash is the
+primary key and inserts are "insert or ignore", so the same bytes written
+twice occupy one row. Nothing here is ever deleted.</td></tr>
+<tr><td><code>plagulae</code></td><td>path, hash, origin, time</td>
+<td><strong>The manifest, a projection.</strong> One row per path,
+pointing at a row of <code>massae</code>. It is what a reader consults,
+and it can be reconstructed from <code>acta</code>.</td></tr>
 </tbody>
 </table>
-<p class="nota">A stub: one paragraph so far. Generated from the ledger
-inventory <em>bibliothecae (include)</em>; edit the inventory, not this
-page.</p>
+
+<h3>Writing and removing a file</h3>
+<p><code>volumen_plagulam_condere(vol, path, content, origin)</code>
+hashes the content and then does three things in <strong>one
+transaction</strong>: stores the blob if it is not there already,
+appends an act of kind <code>plagula-condita</code> whose data is a
+small JSON object (path, hash, origin), and writes the manifest row,
+replacing any earlier row for that path. If any step fails the whole
+transaction is rolled back, so the log and the manifest cannot disagree.
+The origin is a free label saying where the content came from
+(<code>vendicata:lib/chorda.c</code> for a vendored file,
+<code>genita</code> for a generated one).</p>
+<p><code>volumen_plagulam_removere</code> appends a
+<code>plagula-remota</code> act and deletes the manifest row. The blob
+stays, because earlier points in the history still refer to it. Removing
+a path that is already absent succeeds.</p>
+
+<h3>Reading</h3>
+<p><code>volumen_plagulam_promere</code> looks the path up in the
+manifest and returns the blob it points at. It reports "not found"
+through a separate flag, because an empty file is a legitimate content
+and must not look like a missing one.
+<code>volumen_plagulas_enumerare</code> returns the whole manifest in
+path order.</p>
+
+<h3>The log, and travelling back along it</h3>
+<p>A client can append acts of its own with
+<code>volumen_actum_appendere(vol, kind, data)</code> and read them back
+with <code>volumen_acta_legere(vol, after_seq)</code>, which returns
+every act after a given sequence number. That "after N" shape was chosen
+because it serves two readers at once: a program folding the log into
+its state, and a future replication that asks for what it has not seen.
+One consequence to know: the volume's own acts and every client's acts
+share one sequence, so a client's sequence numbers are not contiguous,
+and its first act is not number 1.</p>
+<p><code>volumen_plicam_ad(vol, seq)</code> rebuilds the manifest as it
+stood at any point, by replaying the <code>plagula-condita</code> and
+<code>plagula-remota</code> acts up to that sequence number. A file
+removed later reappears in an earlier fold. The test suite pins the
+property that makes the design honest: the fold of the whole log must
+equal the stored manifest, which is the proof that the manifest really
+is a projection and could be thrown away.</p>
+
+<h3>Blobs without a path</h3>
+<p><code>volumen_massam_condere</code> stores bare content and returns
+its hash; <code>volumen_massam_promere</code> fetches it by hash. The
+doctrine in the worklog is that a blob is <em>content</em>, not an
+event: what the content is used for is recorded in an act that names
+the hash. This is how large things are kept out of the log: a pasted
+image in pictor, a checkpoint of a drawing, an image card in mensa.</p>
+
+<h3>Transactions</h3>
+<p>Each operation normally runs in its own transaction. To commit
+several files atomically, a caller opens one itself
+(<code>volumen_transactionem_incipere</code>, <code>_committere</code>,
+<code>_revolvere</code>); while it is open the file operations skip
+their own, since SQLite does not nest transactions. The database is
+opened through scrinium with write-ahead logging, a five-second busy
+timeout and foreign keys on. The schema is a list of migrations that is
+only ever appended to.</p>
+
+<h3>Scratch volumes</h3>
+<p><code>volumen_temporarium(piscina, prefix)</code> creates a volume
+under <code>/tmp</code> that is deleted when it is closed. It exists
+because of a measured accident (2026-08-13): a smoke test of the
+laboratorium app used the app's fixed path, and after one day Fran's
+real volume held 42 greetings and 21 experiments that nobody had
+written. Worse than the litter, such a test is not repeatable, because
+its counts grow with every run.</p>
+<p>The file is named <code>/tmp/&lt;prefix&gt;-N.volumen</code> with the
+first free N from 1 to 100, deliberately not a random name: a test that
+forgets to close leaves its file behind under a name that says whose it
+is, and the leftovers can be counted. The other side of that choice
+showed in October, when two tests that never closed their volumes used
+up all hundred names and turned a gate red on code nobody had touched.
+A test must close what it opens.</p>
+
+<h2>What lives in a volume today</h2>
+<p>The library gives paths and kinds no meaning; the conventions belong
+to its clients. An application's volume typically holds:</p>
+<table>
+<thead><tr><th>Client</th><th>What it keeps</th><th>Where</th></tr></thead>
+<tbody>
+<tr><td><a href="silex.html">silex</a></td><td>the files of a project,
+vendored or generated, and its commits as points in the log</td>
+<td>manifest paths; acts</td></tr>
+<tr><td><a href="historia.html">historia</a></td><td>a document as a
+log of acts with branches, an undo cursor and checkpoints (pictor's
+drawings, scriba's pages)</td><td>acts of kind
+<code>&lt;namespace&gt;/&lt;kind&gt;</code>; a manifest entry
+<code>&lt;namespace&gt;/documentum</code>; checkpoints at
+<code>&lt;namespace&gt;/checkpoint/&lt;seq&gt;</code>, their bytes as
+blobs</td></tr>
+<tr><td><a href="conservatio.html">conservatio</a></td><td>the
+persistent fields of each mounted widget</td><td>manifest paths
+<code>status/&lt;key&gt;</code></td></tr>
+<tr><td><a href="vicus.html">vicus</a></td><td>the layout of tabs and
+panes (configuration, overwritten)</td><td>manifest path
+<code>vicus/latera</code></td></tr>
+<tr><td><a href="scriba_liber.html">scriba_liber</a></td><td>the index
+of pages and which page each view shows</td><td><code>scriba/paginae</code>,
+<code>scriba/visus/&lt;id&gt;</code></td></tr>
+<tr><td><a href="mensa.html">mensa</a></td><td>thinkboards: cards as
+acts, pasted images as blobs</td><td>acts; blobs</td></tr>
+<tr><td><a href="mensura.html">mensura</a></td><td>a run's measurements,
+moved in from a plain journal at the end</td><td>acts</td></tr>
+</tbody>
+</table>
+<p>Namespaces are what let several documents share one file: historia
+prefixes its kinds and paths with the document's name and reads only its
+own. That was added on 2026-10-05 when Fran chose one volume for the
+whole of vicus, so that every tab's document, the layout and the widget
+state travel together in a single file.</p>
+
+<h2>What it does not do</h2>
+<ul>
+<li><strong>No garbage collection.</strong> A blob is never deleted,
+even when no manifest row points at it, because the history may. A
+volume only grows.</li>
+<li><strong>No replication yet.</strong> The log reads were shaped for
+it, but nothing ships acts between two volumes.</li>
+<li><strong>No kinds, custody or persons.</strong> The header names
+these as what will live here one day, and says the library grows only
+when something pulls on it.</li>
+<li><strong>No meaning for paths or acts.</strong> It cannot tell a
+drawing from a page; a client that opens the wrong namespace gets what
+it asked for.</li>
+</ul>
+
+<h2>Timeline</h2>
+<ul class="tempus">
+<li><span class="dies">2026-08-03/04</span> Born as the smallest true slice of a larger design, with silex as first consumer: the three tables, storing and reading files, timestamps in SQL (d3a2dc4e, 5c99d236).</li>
+<li><span class="dies">2026-08-04</span> Grew in a day, each addition on a real need: reading the log after a sequence number, bare blobs for image cards, caller-owned transactions, removal, and open-or-create, which a tutorial had promised and no function delivered (37cf05e7).</li>
+<li><span class="dies">2026-08-04</span> <code>volumen_plicam_ad</code>: the manifest at any point in the log, with no schema change (deb0e1f7).</li>
+<li><span class="dies">2026-08-13</span> Scratch volumes, after the test that wrote into Fran's real volume. The same change found that the struct was filled field by field with no clearing, so a new field would have held garbage in an ordinary volume and could have deleted a real file on close; the guard against that poisons the arena first, since repeating the test only proved that fresh memory is zero (d5df4b0a).</li>
+<li><span class="dies">2026-10-05</span> historia, the document engine extracted from pictor, runs on it, with namespaces so that several documents share one volume.</li>
+<li><span class="dies">2026-10-10/12</span> Widget state persists in it (conservatio), and vicus keeps its layout and shared registers there.</li>
+</ul>
 
 </body>
 </html>

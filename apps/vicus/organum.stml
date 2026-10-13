@@ -1,0 +1,56 @@
+<!-- organum.stml - manifestum hospitis (status-plan S7a): radix
+     repositorii. Liberi = montationes, canonibus suis iudicatae
+     (visio radicis eas delegat). Dispositio tabularum (plagula
+     vicus/latera) structura hospitis persistens est, non hic:
+     activa et prior copiae eius. Observationes (census V) numquam
+     servantur; absens = nulla lectio. S7b: capsa (registrum vim) hic
+     persistit, communis omnibus lateribus scribae. Typi = canon manu
+     scriptus ante S7a (apps/vicus/canones/ephemera.canon, deletus). -->
+<organum genus="vicus" versio="1">
+
+  <actiones>
+    <actio nomen="vicus.radix"/>
+    <actio nomen="horologium" systema="verum"/>
+    <!-- S7b: actio lateris scribae - capsam radicis scribit -->
+    <actio nomen="pagina.clavis"/>
+  </actiones>
+
+  <status>
+    <campus nomen="activa" typus="nomen" vita="transiens"
+            scriptor="vicus.radix" nota="copia: veritas in vicus/latera"/>
+    <campus nomen="prior" typus="nomen" vita="transiens"
+            scriptor="vicus.radix" nota="tabula ante activam"/>
+    <campus nomen="horologium_dies" typus="veritas" vita="transiens"
+            scriptor="vicus.radix" nota="ictus in horologio: dies pro hora"/>
+
+    <!-- S7b: registrum vim unum applicationis, persistens (ut viminfo).
+         Latera scribae per ramum_capsae scribunt: dominus = actio
+         scribae (status a parente datus, filio scribendus) -->
+    <campus nomen="capsa" typus="textus" vita="persistens"
+            scriptor="pagina.clavis"
+            nota="lineae iunctae per '\n', effugitae"/>
+    <campus nomen="capsa_lineae" typus="numerus" vita="persistens"
+            scriptor="pagina.clavis"/>
+
+    <!-- observationes: systema horologium in pulsu scribit -->
+    <campus nomen="tempus_annus" typus="numerus" vita="transiens"
+            scriptor="horologium"/>
+    <campus nomen="tempus_mensis" typus="numerus" vita="transiens"
+            scriptor="horologium" nota="1-12"/>
+    <campus nomen="tempus_dies" typus="numerus" vita="transiens"
+            scriptor="horologium" nota="1-31"/>
+    <campus nomen="tempus_dies_hebdomadis" typus="numerus" vita="transiens"
+            scriptor="horologium" nota="0 dominica - 6 sabbatum"/>
+    <campus nomen="tempus_hora" typus="numerus" vita="transiens"
+            scriptor="horologium"/>
+    <campus nomen="tempus_minutum" typus="numerus" vita="transiens"
+            scriptor="horologium"/>
+    <campus nomen="pila_centesimae" typus="numerus" vita="transiens"
+            scriptor="horologium"/>
+    <campus nomen="pila_oneratur" typus="veritas" vita="transiens"
+            scriptor="horologium"/>
+  </status>
+
+  <basis genus="organum_commune"/>
+  <montationes/>
+</organum>

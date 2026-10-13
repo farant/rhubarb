@@ -66,6 +66,7 @@ clang "${GCC_FLAGS[@]}" -Iinclude -Imateria/fontes -Imd/fontes \
     build/capsula_corpus_silicis.c \
     $OBJ $ADDITA \
     -framework Cocoa -framework Security -framework WebKit \
+    -framework IOKit -framework CoreFoundation \
     -o bin/briar-spectator || exit 1
 echo "aedificatum: bin/briar-spectator"
 

@@ -11,7 +11,7 @@
 
 <p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
 <h1>thesaurus</h1>
-<p class="subtitulus">THESAURUS contentorum (fabrica plan 2 T3, spec 2</p>
+<p class="subtitulus">THESAURUS contentorum (fabrica plan 2 T3, spec 2 par. III): blobi per sigillum contentorum, actiones per clavem, generationes ad purgationem.</p>
 
 <p>A content store for the build (fabrica plan 2): blobs by SHA-256 of their contents, actions mapping a key to the seals of their outputs, and generations recording which keys a run used, so old ones can be purged. Files and seals only, no SQLite, so any house tool can use it. Writes are atomic (temporary name, then rename), an existing blob or action is never rewritten (&#x27;never rewrite the unchanged&#x27;), and reads are verified by sampling, a broken blob being deleted rather than trusted. Purging is unsafe while a writer runs, so it happens under bin/fabrica&#x27;s lock. It backs aedilis&#x27;s extraction records and bin/compilator&#x27;s object cache; building it found a real race in mkdir -p under two concurrent writers. October 2026.</p>
 

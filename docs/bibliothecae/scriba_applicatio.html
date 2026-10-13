@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>scriba_applicatio</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>scriba_applicatio</h1>
+<p class="subtitulus">scriba sine scopo: volumen, documentum, insulae (canones + domini e disco), registra, dispensator, gestus (scriba-plan S3; exemplar pictor_applicatio, modulus 013 A4)</p>
+
+<p>scriba assembled with no window: the volumen, the document, the island with its canon and owners, the action and figure registries, the dispatcher and the gesture slot. Both mains (the window app and its terminal twin, in apps/scriba) call this one assembly and add only their glue, and the replay test calls it too, so what is tested is the real app. A new sheet is 68x56; an existing volume brings its own. The assembly is in two parts. scriba_montare mounts a scriba into a given state repository on a branch of its own, with its document in a namespace of the same id and its own registries; the standalone app is a mount at the root plus a dispatcher. Since 2026-10-12 the branch is prepared from scriba&#x27;s manifest through organum_montatio (canon, starting values and owners generated; the hand-written canon files are deleted), and the mount takes the state systems: the cursor is persistent, the first scriba state ever saved, while mode, selection and the pending key are transient. That is how vicus holds scriba panes over a shared page book, and scriba_reficere re-copies a view&#x27;s working sheet when another view has committed to the same page. The replay proof: a window session (an insert, a pause that saves a chunk, more text, Esc, undo, redo) recorded and replayed through the terminal path arrives at the same document hash, cursor, acts and island. Written 2026-10-05 after the model of pictor_applicatio.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/scriba_applicatio.h"><code>include/scriba_applicatio.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/scriba_applicatio.c"><code>lib/scriba_applicatio.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-10-12 61500c93</td></tr>
+<tr><td>Group</td><td><a href="greges.html#ludus">Ludus: the second-generation UI</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

@@ -55,7 +55,7 @@ lint_latinus () {
     fi
     # viae commissionis tractatae numerantur etiam si nondum tractae
     # (lint praevium silva.commissio: plagulae novae, ...HYDS)
-    out=$(VOCABULA_VIAE_ADDITAE="$viae" ./oratio/vocabula.sh -nova 2>&1); rc=$?
+    out=$(VOCABULA_INDEX_RENOVATUS=1 VOCABULA_VIAE_ADDITAE="$viae" ./oratio/vocabula.sh -nova 2>&1); rc=$?
     case "$rc" in
         0)
             echo "lint latinus (uncus): nihil novi - $(printf '%s\n' "$out" | tail -1 | sed 's/^ *//')" >&2

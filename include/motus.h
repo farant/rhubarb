@@ -1,11 +1,11 @@
 /* motus.h - Genus MOBILE: structura in memoria, effusa in quiete
  *
  * "Pictura per eventum, scriptura IN QUIETE" (laboratorium
- * 0007/0015). Scripturae per eventum HUC veniunt (vili); insula
- * ephemerarum solum in quiete tangitur (motus_effundere, sedes
- * <quies/>) aut a scriptura durabili in liberatione superatur.
- * Ictus pendens insulam ephemerarum NUMQUAM tangit - finitus per
- * scripturam durabilem exit.
+ * 0007/0015). Scripturae per eventum HUC veniunt (vili); insula (C2,
+ * 2026-10-12: una - olim "ephemerarum") solum in quiete tangitur
+ * (motus_effundere, sedes <quies/>) aut ab acto documenti in
+ * liberatione superatur. Ictus pendens insulam NUMQUAM tangit -
+ * finitus per actum documenti (historia) exit.
  *
  * Lint L4: scripturae insulae camporum mobilium solum ex <quies/>.
  *
@@ -99,7 +99,7 @@ motus_quies (
                s64  quies_ms);
 
 /* <quies/> - scriptura UNA camporum persistendorum (pan, zoom) in
- * insulam ephemerarum per mutare_ephemera; sordida tollitur si
+ * insulam per insula_mutare (C2: insula una); sordida tollitur si
  * porta accepit. */
 b32
 motus_effundere (

@@ -2,6 +2,7 @@
 # apps/pictor/fumus.sh - fumus pictoris: fenestra vera, XXX quadra,
 # volumen temporarium, exitus 0, linea mensurarum. Nullus cursor hoc
 # verrit (apps/ extra probationes/); vocatur manu et a T11.
+# <porta manu causa="fenestra vera, XXX quadra; caput: vocatur manu" tegit="apps/pictor/*"/>
 set -u
 cd "$(dirname "${BASH_SOURCE[0]}")/../.." || exit 1
 echo "=== FUMUS PICTORIS ==="

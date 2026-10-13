@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>scriba_actiones</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>scriba_actiones</h1>
+<p class="subtitulus">tractator paginae scribae (scriba-plan S1c)</p>
+
+<p>scriba&#x27;s one action handler, pagina.clavis: keys and committed text become vim on a working sheet, the view&#x27;s private copy of the page, held as a gesture in motus. vim&#x27;s state between keys (cursor, mode, selection, previous key, yank register) lives in the island, and the document is written only when the gesture is flushed. The saving rule is Fran&#x27;s: in normal and visual mode a change is complete when its key is and is committed at once; in insert mode the sheet is committed after about a second without a key, and Esc commits and closes the insert. The first chunk of an insert is a plain act and later chunks are joined to it, so one u takes back the whole insert; u and Ctrl-R go to the document&#x27;s history and not to vim&#x27;s own undo. Printable characters are taken only from committed text, because real sources send a key-down as well and each letter would otherwise arrive twice. Written 2026-10-05. Since 10-08 a view may share its page with other views (its sheet is re-copied when the history has moved without it), a click places the cursor and starts a new undo unit, Ctrl+Shift+arrows move between the pages of a scriba_liber, and words in the text can act: a known $command under a click runs as one undoable change, and a #tag is a link to the next other page that carries it, Shift going backwards. Since 10-12 the yank register can live outside the view: a host hands the handler a branch to keep it on, and in vicus that is the root, so what is yanked in one pane can be put in another and survives a restart; the register is written only when it changes. Making it shared is what showed that the house vim had no yank at all, only deletion into the register; yy, Y and visual y were added the same day. Limits: bytes above 0x7F are ignored, and visual mode is line-wise only.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/scriba_actiones.h"><code>include/scriba_actiones.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/scriba_actiones.c"><code>lib/scriba_actiones.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-10-12 1b3758ea</td></tr>
+<tr><td>Group</td><td><a href="greges.html#ludus">Ludus: the second-generation UI</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

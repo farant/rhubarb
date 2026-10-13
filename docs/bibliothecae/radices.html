@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>radices</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>radices</h1>
+<p class="subtitulus">Radices reales polynomiorum integrorum, EXACTE</p>
+
+<p>Real roots of integer polynomials, exactly. A RadixRealis is a square-free primitive polynomial together with an interval that holds exactly one of its roots, or a single point when the root is found to be rational; radices_reales returns all distinct real roots in ascending order. Isolation is Descartes&#x27; rule of signs with bisection (the Vincent-Collins-Akritas method) starting from the Cauchy bound, and a root that falls exactly on a midpoint is returned as that rational. Its reason to exist is comparison across different polynomials: extensio already isolates roots for its own ordered fields but refuses to mix fields, while radix_compara decides the sign of a - b for any two roots, settling equality by a greatest common divisor and never by interval width. radix_signum_polynomii gives the sign of another polynomial at a root, radix_angusta narrows an interval, and radix_ad_chordam prints decimals truncated toward zero in which every digit is certain. Written 2026-10-09. The first review found one wrong answer: an exact point had been taken to mean a linear polynomial, so sqrt 2 compared equal to the rational root 1 of (t - 1)(t^2 - 2); an exact point says only that the root is rational. The first consumer (knotapel demo 123, a polynomial of degree 89) then exposed the cost, and three changes followed: signs at rational points by an integer Horner scheme with no gcds, an in-place Taylor shift in polynomium, and private scratch arenas so that only results reach the caller&#x27;s arena. That took the demo from 4.8 s and 3.1 GB to 1.4 s and 33 MB. Every limit refuses and never guesses. Oracle: Python decimals at 120 digits. Consumed by knotapel demos 123 and 124.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/radices.h"><code>include/radices.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/radices.c"><code>lib/radices.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-10-10 7c4d6cea</td></tr>
+<tr><td>Group</td><td><a href="greges.html#mathematica">Exact mathematics</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

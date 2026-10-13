@@ -2,7 +2,7 @@
  *
  * Una actio, "pagina.clavis": claves et textum commissum in vim
  * vertit super FOLIUM LABORIS (gestus applicationis in Motus).
- * Status vim inter claves in insula ephemerarum (cursor, modus,
+ * Status vim inter claves in insula (cursor, modus,
  * selectio, clavis praecedens, fd, capsa); documentum in cauda
  * (scriba_documentum) - per effusionem gestus solam scribitur.
  *
@@ -64,6 +64,10 @@ nomen structura {
      * ponit). Hospes post montationem ponit (ut liber); verba nota
      * colorantur, ictus in iussum id currit */
       IussumRegistrum* iussa;
+    /* S7b: ramus registri vim (capsa, capsa_lineae); repo NIHIL =
+     * ramus proprius (scriba sola). Hospes post montationem ponit, ut
+     * liber et iussa (vicus: radix - registrum unum applicationis) */
+          InsulaRamus ramus_capsae;
 } ScribaActiones;
 
 /* folium laboris = copia proiectionis documenti */

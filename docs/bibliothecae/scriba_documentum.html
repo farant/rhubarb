@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>scriba_documentum</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>scriba_documentum</h1>
+<p class="subtitulus">documentum scribae = cauda mutationum</p>
+
+<p>scriba&#x27;s document is its log of changes: the second client of historia, the act-log engine extracted from pictor. The page is a fixed sheet of character cells (68x56 by default) whose truth is an append-only series of mutatio acts in a volumen; the sheet is a projection, and undo and redo move a cursor in the log. An act records the effect of a change and never its keys: the sheets before and after are compared, trailing blank lines trimmed, the common prefix and suffix taken, and the replaced lines written down. That is exact for any pair of sheets, whatever the editor did, so replay splices lines and never runs vim, and old documents stay readable whatever vim.c becomes. Lines are stored in an attribute and not as text (STML keeps attribute values raw, and leading spaces are content here) under a small escape codec. Applying an act validates everything first and leaves the sheet untouched on refusal. A second commit function appends an act joined to the one before, so that an insert saved in several chunks is a single undo step. Written 2026-10-05. The work found that the sheet&#x27;s own header was wrong about what a blank cell is (a space with indentation -1, not a NUL), and that decides what counts as content.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/scriba_documentum.h"><code>include/scriba_documentum.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/scriba_documentum.c"><code>lib/scriba_documentum.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-10-09 3f6c5721</td></tr>
+<tr><td>Group</td><td><a href="greges.html#ludus">Ludus: the second-generation UI</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

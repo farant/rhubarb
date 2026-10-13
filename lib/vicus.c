@@ -9,6 +9,7 @@
 #include "thema.h"
 #include "mandatum.h"
 #include "componens.h"
+#include "organum_montatio.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -44,37 +45,6 @@ chorda_nulla_vici (vacuum)
     c.datum    = NIHIL;
     c.mensura  = ZEPHYRUM;
     redde c;
-}
-
-/* radix + "/" + via (radix NIHIL aut vacua: via sola) */
-interior constans character*
-via_plena (
-               Piscina* p,
-    constans character* radix,
-    constans character* via)
-{
-    chorda c;
-
-    si (!radix || radix[ZEPHYRUM] == '\0')
-    {
-        redde via;
-    }
-    c = chorda_concatenare(chorda_ex_literis(radix, p),
-        chorda_ex_literis("/", p), p);
-    c = chorda_concatenare(c, chorda_ex_literis(via, p), p);
-    redde chorda_ut_cstr(c, p);
-}
-
-interior Canon*
-canonem_legere (
-                  Vicus* v,
-     constans character* via)
-{
-    chorda causa;
-
-    redde canon_legere(filum_legere_totum(via_plena(v->piscina,
-        v->radix,
-        via), v->piscina), v->piscina, v->intern, &causa);
 }
 
 interior constans VicusGenus*
@@ -367,7 +337,7 @@ latus_superficiem_scribere (
     sp.altitudo = altitudo;
     ramus = insula_ramus(v->repo, chorda_ut_cstr(l->genus, v->piscina),
         chorda_ut_cstr(l->id, v->piscina));
-    (vacuum)mutare_ramum(&ramus, INSULA_EPHEMERA, superficiem_mutator,
+    (vacuum)mutare_ramum(&ramus, superficiem_mutator,
         &sp);
 }
 
@@ -412,12 +382,112 @@ attributum_radicis (
     chorda* a;
        s32  n;
 
-    a = insula_attributum(repo, INSULA_EPHEMERA, titulus);
+    a = insula_attributum(repo, titulus);
     si (a && chorda_ut_s32(*a, &n))
     {
         redde n;
     }
     redde praestitutum;
+}
+
+/* S7a: veritas radicis; absens = FALSUM */
+interior b32
+veritas_radicis (
+    InsulaRepositorium* repo,
+    constans character* titulus)
+{
+    chorda* a;
+
+    a = insula_attributum(repo, titulus);
+    redde a && chorda_aequalis_literis(*a, "verum");
+}
+
+/* S7a: campi radicis una scriptura; valor NIHIL = campus tollitur */
+nomen structura {
+    constans character* tituli[VI];
+    constans character* valores[VI];
+                   i32  numerus;
+} CampiRadicis;
+
+interior vacuum
+campos_mutator (
+              StmlNodus* radix,
+                Piscina* p,
+    InternamentumChorda* in,
+                 vacuum* ctx)
+{
+    constans CampiRadicis* c;
+                      i32  i;
+
+    c = (constans CampiRadicis*)ctx;
+    per (i = ZEPHYRUM; i < c->numerus; i++)
+    {
+        si (c->valores[i])
+        {
+            insula_attributum_ponere(radix, p, in, c->tituli[i],
+                c->valores[i]);
+        }
+        alioquin
+        {
+            (vacuum)insula_attributum_tollere(radix, c->tituli[i]);
+        }
+    }
+}
+
+/* S7a: radicem ut scriptor datus mutare (actio aut systema; domini ex
+ * manifesto); scriptor prior restituitur */
+interior b32
+radicem_mutare (
+                  Vicus* v,
+     constans character* scriptor,
+          InsulaMutator  fn,
+                 vacuum* ctx)
+{
+    InsulaRamus radix;
+         chorda prior;
+            b32 bene;
+
+    radix = insula_ramus_radix(v->repo);
+    prior = v->repo->scriptor;
+    insula_scriptorem_ponere(v->repo, internare(v, scriptor));
+    bene   = mutare_ramum(&radix, fn, ctx);
+    insula_scriptorem_ponere(v->repo, prior);
+    redde bene;
+}
+
+/* S7a: campi temporis in ramo radicis, ordine partium VicusTempus */
+hic_manens constans character* campi_temporis[VI] = {
+    "tempus_annus", "tempus_mensis", "tempus_dies",
+    "tempus_dies_hebdomadis", "tempus_hora", "tempus_minutum"
+};
+
+interior vacuum
+partes_temporis (
+    VicusTempus*  t,
+            s32** partes)
+{
+    partes[ZEPHYRUM]  = &t->annus;
+    partes[I]         = &t->mensis;
+    partes[II]        = &t->dies;
+    partes[III]       = &t->dies_hebdomadis;
+    partes[IV]        = &t->hora;
+    partes[V]         = &t->minutum;
+}
+
+/* S7a: tempus ex ramo radicis; campus absens = -1 (hora -1 = nullum) */
+interior vacuum
+tempus_insulae (
+    constans Vicus* v,
+       VicusTempus* t)
+{
+    s32* partes[VI];
+    i32  i;
+
+    partes_temporis(t, partes);
+    per (i = ZEPHYRUM; i < VI; i++)
+    {
+        *partes[i] = attributum_radicis(v->repo, campi_temporis[i], -I);
+    }
 }
 
 
@@ -487,15 +557,18 @@ horologii_textus (
         "January", "February", "March", "April", "May", "June", "July",
         "August", "September", "October", "November", "December"
     };
+             VicusTempus  tempus;
     constans VicusTempus* t;
       constans character* ordo;
 
-    t = &v->tempus;
+    tempus_insulae(v, &tempus);
+    t = &tempus;
     si (t->hora < ZEPHYRUM || t->minutum < ZEPHYRUM)
     {
         redde FALSUM;
     }
-    si (   !v->horologium_dies || t->mensis < I || t->mensis > XII
+    si (   !veritas_radicis(v->repo, "horologium_dies")
+        || t->mensis < I || t->mensis > XII
         || t->dies_hebdomadis < ZEPHYRUM || t->dies_hebdomadis > VI)
     {
         sprintf(exitus, "%d:%02d %s",
@@ -510,6 +583,50 @@ horologii_textus (
     sprintf(exitus, "%s, %s %d%s, %d", dies_nomina[t->dies_hebdomadis],
         menses[t->mensis - I], (integer)t->dies, ordo,
         (integer)t->annus);
+    redde VERUM;
+}
+
+/* S5: textus pilae ("87%", "87%+"); FALSUM si nulla. Exitus >= XVI */
+interior b32
+pilae_textus (
+    constans Vicus* v,
+         character* exitus)
+{
+    s32 centesimae;
+
+    centesimae = attributum_radicis(v->repo, "pila_centesimae", -I);
+    si (centesimae < ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    sprintf(exitus, "%d%%%s", (integer)centesimae,
+        veritas_radicis(v->repo, "pila_oneratur") ? "+" : "");
+    redde VERUM;
+}
+
+/* S4/S5: fines horologii in linea (latitudine superficiei): ad
+ * dextrum, sinistrorsum pilae textu et II spatiis motum; FALSUM si
+ * nullum. x0 inclusum, x1 exclusum */
+interior b32
+horologii_fines (
+    constans Vicus* v,
+               s32  latitudo,
+               s32* x0,
+               s32* x1)
+{
+    character horae[LXIV];
+    character pila[XVI];
+
+    si (!horologii_textus(v, horae))
+    {
+        redde FALSUM;
+    }
+    *x1 = latitudo - VICUS_CELLULA_LATITUDO;
+    si (pilae_textus(v, pila))
+    {
+        *x1 -= ((s32)strlen(pila) + II) * VICUS_CELLULA_LATITUDO;
+    }
+    *x0 = *x1 - (s32)strlen(horae) * VICUS_CELLULA_LATITUDO;
     redde VERUM;
 }
 
@@ -591,17 +708,24 @@ radicem_tractare (
          * dextrum lineae): dies <-> hora */
         si (ev->datum.mus.y < VICUS_ALTITUDO_TABULARUM)
         {
-            character horae[LXIV];
                   s32 latitudo;
+                  s32 x0;
+                  s32 x1;
+         CampiRadicis c;
 
             latitudo = attributum_radicis(v->repo,
                 "superficies_latitudo",
                 (s32)v->latitudo);
-            si (   horologii_textus(v, horae)
-                && ev->datum.mus.x >= latitudo - VICUS_CELLULA_LATITUDO
-                       - (s32)strlen(horae) * VICUS_CELLULA_LATITUDO)
+            /* S5: area horologii sola (pila ad dextrum non commutat) */
+            si (   horologii_fines(v, latitudo, &x0, &x1)
+                && ev->datum.mus.x >= x0 && ev->datum.mus.x < x1)
             {
-                v->horologium_dies = !v->horologium_dies;
+                c.tituli[ZEPHYRUM]   = "horologium_dies";
+                c.valores[ZEPHYRUM]  = veritas_radicis(v->repo,
+                    "horologium_dies") ? "falsum" : "verum";
+                c.numerus            = I;
+                (vacuum)radicem_mutare(v, "vicus.radix",
+                    campos_mutator, &c);
                 redde VERUM;
             }
         }
@@ -751,12 +875,24 @@ figura_tabularum (
         character horae[LXIV];
            chorda textus;
 
-        si (horologii_textus(v, horae))
+        character pila[XVI];
+              s32 x0;
+              s32 x1;
+
+        /* S5: pila ad marginem dextrum, horologium sinistrorsum */
+        si (pilae_textus(v, pila))
         {
-            textus = chorda_ex_literis(horae, m->piscina);
+            textus = chorda_ex_literis(pila, m->piscina);
             mandata_textus(m, c->fines.latitudo - VICUS_CELLULA_LATITUDO
                 - (s32)textus.mensura * VICUS_CELLULA_LATITUDO,
                 ZEPHYRUM, textus, ZEPHYRUM, color_thematis(COLOR_TEXT));
+        }
+        si (   horologii_textus(v, horae)
+            && horologii_fines(v, c->fines.latitudo, &x0, &x1))
+        {
+            textus = chorda_ex_literis(horae, m->piscina);
+            mandata_textus(m, x0, ZEPHYRUM, textus, ZEPHYRUM,
+                color_thematis(COLOR_TEXT));
         }
     }
 }
@@ -1087,33 +1223,128 @@ vicus_creare (
     v->tabulae   = xar_creare(piscina, (i32)magnitudo(VicusTabula));
     v->petitiones  = xar_creare(piscina,
         (i32)magnitudo(PetitioAcervi));
-    v->tempus.hora     = -I;
-    v->tempus.minutum  = -I;
     redde v;
 }
 
-/* S4: horam legere; VERUM si mutata (aut prima) */
+/* S4: horam legere; VERUM si mutata (aut prima). S7a: lectio in ramo
+ * radicis, systema 'horologium' scribit; nullum horologium = campi
+ * absentes */
 interior b32
 horam_legere (
     Vicus* v)
 {
-    VicusTempus t;
+     VicusTempus  t;
+     VicusTempus  ante;
+             s32* partes[VI];
+             s32* priora[VI];
+       character  numeri[VI][XVI];
+    CampiRadicis  c;
+             b32  mutatum;
+             i32  i;
 
-    si (!v->horologium)
+    si (!v->repo)
     {
         redde FALSUM;
     }
     memset(&t, ZEPHYRUM, magnitudo(t));
     t.hora     = -I;
     t.minutum  = -I;
-    v->horologium(v->horologium_ctx, &t);
+    si (v->horologium)
+    {
+        v->horologium(v->horologium_ctx, &t);
+    }
+    partes_temporis(&t, partes);
+    si (t.hora < ZEPHYRUM || t.minutum < ZEPHYRUM)
+    {
+        per (i = ZEPHYRUM; i < VI; i++)
+        {
+            *partes[i] = -I;
+        }
+    }
     /* tempus totum: minutum aut dies (medianocte) mutatum */
-    si (memcmp(&t, &v->tempus, magnitudo(t)) == ZEPHYRUM)
+    tempus_insulae(v, &ante);
+    partes_temporis(&ante, priora);
+    mutatum = FALSUM;
+    per (i = ZEPHYRUM; i < VI; i++)
+    {
+        si (*partes[i] != *priora[i])
+        {
+            mutatum = VERUM;
+        }
+    }
+    si (!mutatum)
     {
         redde FALSUM;
     }
-    v->tempus = t;
-    redde VERUM;
+    per (i = ZEPHYRUM; i < VI; i++)
+    {
+        c.tituli[i]   = campi_temporis[i];
+        c.valores[i]  = NIHIL;
+        si (*partes[i] >= ZEPHYRUM)
+        {
+            sprintf(numeri[i], "%d", (integer)*partes[i]);
+            c.valores[i] = numeri[i];
+        }
+    }
+    c.numerus = VI;
+    redde radicem_mutare(v, "horologium", campos_mutator, &c);
+}
+
+/* S5: pilam legere; VERUM si mutata. S7a: in ramo radicis (systema
+ * 'horologium'); nulla = campi absentes */
+interior b32
+pilam_legere (
+    Vicus* v)
+{
+             s32 centesimae;
+             b32 oneratur;
+       character numerus[XVI];
+    CampiRadicis c;
+
+    si (!v->repo)
+    {
+        redde FALSUM;
+    }
+    centesimae  = -I;
+    oneratur    = FALSUM;
+    si (v->pila && !v->pila(v->pila_ctx, &centesimae, &oneratur))
+    {
+        centesimae = -I;
+    }
+    oneratur = (centesimae >= ZEPHYRUM && oneratur) ? VERUM : FALSUM;
+    si (   centesimae == attributum_radicis(v->repo, "pila_centesimae",
+               -I)
+        && oneratur == veritas_radicis(v->repo, "pila_oneratur"))
+    {
+        redde FALSUM;
+    }
+    c.tituli[ZEPHYRUM]   = "pila_centesimae";
+    c.tituli[I]          = "pila_oneratur";
+    c.valores[ZEPHYRUM]  = NIHIL;
+    c.valores[I]         = NIHIL;
+    si (centesimae >= ZEPHYRUM)
+    {
+        sprintf(numerus, "%d", (integer)centesimae);
+        c.valores[ZEPHYRUM]  = numerus;
+        c.valores[I]         = oneratur ? "verum" : "falsum";
+    }
+    c.numerus = II;
+    redde radicem_mutare(v, "horologium", campos_mutator, &c);
+}
+
+vacuum
+vicus_pilam_ponere (
+          Vicus* v,
+      VicusPila  pila,
+         vacuum* ctx)
+{
+    si (!v)
+    {
+        redde;
+    }
+    v->pila      = pila;
+    v->pila_ctx  = ctx;
+    (vacuum)pilam_legere(v);
 }
 
 vacuum
@@ -1128,9 +1359,6 @@ vicus_horologium_ponere (
     }
     v->horologium      = horologium;
     v->horologium_ctx  = ctx;
-    memset(&v->tempus, ZEPHYRUM, magnitudo(v->tempus));
-    v->tempus.hora     = -I;
-    v->tempus.minutum  = -I;
     (vacuum)horam_legere(v);
 }
 
@@ -1188,6 +1416,17 @@ vicus_genus_addere (
     redde VERUM;
 }
 
+vacuum
+vicus_systemata_ponere (
+               Vicus* v,
+     StatusSystemata* systemata)
+{
+    si (v)
+    {
+        v->systemata = systemata;
+    }
+}
+
 b32
 vicus_aperire (
                   Vicus* v,
@@ -1201,6 +1440,7 @@ vicus_aperire (
           chorda* a;
              i32  i;
      InsulaRamus  radix;
+         Organum* organum;
 
     si (!v || !index_ordinarius)
     {
@@ -1209,15 +1449,34 @@ vicus_aperire (
     v->tabulae  = xar_creare(v->piscina, (i32)magnitudo(VicusTabula));
     v->causa    = chorda_nulla_vici();
     v->repo    = insula_repositorium_creare(v->piscina, v->intern,
-        "<vicus/>", "<vicus/>");
+        "<vicus/>");
     si (!v->repo)
     {
         redde FALSUM;
     }
-    insula_ponere_canonem(v->repo, INSULA_DURABILIS,
-        canonem_legere(v, "apps/vicus/canones/durabilis.canon"));
-    insula_ponere_canonem(v->repo, INSULA_EPHEMERA,
-        canonem_legere(v, "apps/vicus/canones/ephemera.canon"));
+    /* S7b: systemata status hic creantur (actarius unus), ante radicem
+     * - status radicis (capsa) servatur et restituitur */
+    si (v->systemata && !v->systemata->conservatio)
+    {
+        v->systemata->conservatio = conservatio_creare(v->piscina,
+            v->intern, v->volumen, v->repo);
+        v->systemata->relatio   = relatio_creare(v->piscina, v->intern,
+            v->repo);
+        v->systemata->dimissio  = dimissio_creare(v->piscina, v->intern,
+            v->repo);
+    }
+    /* S7a: radix ex manifesto hospitis (canon, domini) */
+    organum = organum_legere_viam(v->piscina, v->intern, v->radix,
+        "apps/vicus/organum.stml", "vicus");
+    radix = insula_ramus_radix(v->repo);
+    si (   !organum
+        || !organum_ramum_parare(organum, &radix, v->systemata, NIHIL,
+               "vicus", v->piscina, v->intern))
+    {
+        v->causa = chorda_ex_literis("manifestum hospitis malum",
+            v->piscina);
+        redde FALSUM;
+    }
 
     /* dispositio: e volumine aut ordinaria (scribitur) */
     index = volumen_plagulam_promere(v->volumen,
@@ -1258,7 +1517,6 @@ vicus_aperire (
         v->activa = ((VicusTabula*)xar_obtinere(v->tabulae,
             ZEPHYRUM))->id;
     }
-    radix = insula_ramus_radix(v->repo);
     si (!chorda_vacua(v->activa))
     {
         Activa ac;
@@ -1266,8 +1524,8 @@ vicus_aperire (
         ac.activa         = v->activa;
         ac.prior.mensura  = ZEPHYRUM;
         ac.prior.datum    = NIHIL;
-        (vacuum)mutare_ramum(&radix, INSULA_EPHEMERA, activam_mutator,
-                             &ac);
+        (vacuum)radicem_mutare(v, "vicus.radix", activam_mutator,
+            &ac);
     }
     /* latera quae focum in apertura petunt (terminale): sinistrum
      * prius, deinde frons acervi */
@@ -1381,7 +1639,6 @@ vicus_activam_ponere (
      constans character* id)
 {
     VicusTabula* t;
-    InsulaRamus  radix;
          Activa  a;
 
     si (!v || !v->repo || !id)
@@ -1405,8 +1662,7 @@ vicus_activam_ponere (
         a.prior = v->activa;
     }
     v->activa  = t->id;
-    radix      = insula_ramus_radix(v->repo);
-    si (!mutare_ramum(&radix, INSULA_EPHEMERA, activam_mutator, &a))
+    si (!radicem_mutare(v, "vicus.radix", activam_mutator, &a))
     {
         redde FALSUM;
     }
@@ -1877,6 +2133,8 @@ vicus_pulsare (
     /* S4: horologium - quadrum solum cum minutum mutatur */
     si (horam_legere(v))
     {
+        /* S5: pila cum minuto legitur */
+        (vacuum)pilam_legere(v);
         pingendum = VERUM;
     }
     /* S3c: aperitiones pendentes extra tractationem eventus */

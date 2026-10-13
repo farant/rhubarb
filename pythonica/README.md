@@ -370,29 +370,40 @@ Spec `project-specs/portae-debitae-spec.md`, planum `-plan.md`.
   sine viis viae mutatae contra HEAD + novae non ignoratae. Sectiones
   `PORTAE DEBITAE` (porta + causa prima indentata), `MANU (homo currit)`
   (scripta sine porta: GUI, consulto seorsum), `INTECTA (nulla porta)`.
-  Exitus 0 iudicatum, 2 nihil iudicatum (nulla via, inventarium
-  illegibile). `PORTAE_DEBITAE_INVENTARIUM=<titulus>` inventarium alterum.
+  Exitus 0 iudicatum, 2 nihil iudicatum (nulla via, declarationes
+  recusatae, bin/fabrica fractum).
 - **`silva.portae_debitae(viae)`** → `(debita, intecta)`,
-  `Debitum(porta, causa, manu)` ordine PORTAE. Tegumentum DERIVATUR:
-  clausurae `bin/aedilis --partes` probationum suitarum `SUITAE` (IV
-  Popen; sine suffixo C nulla verritio, ~18 s cum C), et lentes
-  inventarii 'suitae probationum' quas graphus non videt — `currit
-  binaria` (`.c` = fons introitus per clausuram, cetera ad litteram) et
-  `tegit viae` (fnmatch; `*` etiam `/` transit). Clausura ignota =
-  DEBETUR. `portae_debitae_relatio(viae)` = textus interrogationis;
-  `viae_mutatae()` = viae sine argumentis.
-- **`silva.inventarium(res)`** → `Inventarium(ordines, lentes, cellae)`
-  per `./gesta/frigida.sh -inventarium` (forma machinae; Python eventa
-  numquam replicat). Strepitus launcheri praetermittitur; linea
-  tabulationem ferens sine quattuor campis = `SilvaError`.
+  `Debitum(porta, causa, manu)`: involucrum TENUE (portae-declaratae
+  T5) super `bin/fabrica portae debitae -machina -portae <registrum>`
+  - calculus in C (lib/portae.c) ex annotationibus `<porta>` cursorum
+  et derivatione; tabularium NON legitur. Registrum ex
+  `silva.portae_tabula()` (PORTAE + SUITAE). Contractus lineae
+  DEBITUM/INTECTUM (include/portae.h); linea extra contractum,
+  RECUSATIO aut bin/fabrica absens = `SilvaError`.
+  `portae_debitae_relatio(viae)` = forma hominis fabricae;
+  `viae_mutatae()` = viae sine argumentis. Rationes omnes per viam:
+  `bin/fabrica portae tactus`.
 - **`silva.commissio(..., sine_debitis=None)`** — portae DEBITAE viarum
   petitis ADDUNTUR et CURRUNT (petitae primum, additae ordine PORTAE):
   linea una `porta debita addita: <porta> - <causa>`; portae sine PORTAE
   `manu debita: <scriptum> - <causa>` (numquam curruntur). Debita iam
   petita (etiam cum filtro) non iteratur. `sine_debitis='<causa>'`
   omittit (causa impressa `portae debitae OMISSAE: ...`; vacua = causa
-  praevia, nihil cursum). Inventarium illegibile = `MONITUM` et petitae
+  praevia, nihil cursum). `excusatae={'porta': '<causa>'}` (circulus
+  commissionis P5) omittit SINGULAS: `porta debita EXCUSATA: X - causa`,
+  ceterae debitae adhuc adduntur et currunt; causa vacua, porta ignota,
+  petita simul, cum sine_debitis, aut excusata non debita = recusatio
+  ante portas. Debita incomputabilia (RECUSATIO, bin/fabrica
+  fractum) = `MONITUM` et petitae
   solae — v1 monet, commissionem numquam impedit. `commissio_umbra` eas
   ANTE umbras addit (ut in umbra currant), eodem `sine_debitis`.
-  Sumptus: lectio inventarii ~3 s (nota_frigida aperiendo), verritio
-  clausurarum ~18 s si via C adest.
+  Sumptus: ~II s calide (clausurae aedilis per thesaurum extractoris),
+  ~XXX s primum post bin/fabrica novum.
+- **Iudicium fabricae ante portas** (`_fabricam_exigere`, post lint):
+  `bin/fabrica iudicare -plenus -tacta` super viae commissionis; stala
+  commissa obstant, `sine_fabrica='<causa>'` omittit. IUDEX stalus
+  (bin/fabrica, bin/compilator, bin/aedilis - tabula `IUDICES_STRUERE`,
+  numquam recipe impressa) SANATUR per struere.sh suum (bin/ arboris,
+  nulla institutio): `iudex sanatus: X`, iudicium SEMEL iteratur;
+  struere fractum aut iudex adhuc stalus = `SilvaError` (circulus
+  commissionis P3).

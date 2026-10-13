@@ -1144,3 +1144,27 @@ the full key does not produce a wrong answer, it silently finds no
 binary and falls back to the slow path - key identity stays green,
 only the trace check goes red. That's the failure mode worth gating.
 
+
+## 2026-10-12 - briar-fumus in a worktree tests the TREE's binary (circulus commissionis T4, P4)
+
+- **Problem:** in a worktree the fumus ran `~/.bin/briar`, which is
+  installed from MAIN. When main changed the insula API (aa623c1b), the
+  worktree's fixtures (salutatio.thistle) and main's binary disagreed,
+  and the gate went red on a commit that touched neither. It was excused
+  by hand in portae-declaratae T4.
+- **Detection:** `git rev-parse --git-dir` != `--git-common-dir`, both
+  resolved with `pwd -P`.
+- **What a worktree uses:** the tree's `bin/briar` (and `bin/briar-spectator`
+  if present), required to be RECENS according to `bin/fabrica iudicare`.
+  Otherwise the exit is 2 with the recipe
+  `bin/fabrica sanare bin/briar bin/briar-spectator`. That recipe is
+  tree-local, heals the corpus capsules too, and never installs.
+  (`FABRICA_AGIT=1 ./tools/briar_struere.sh` alone links WITHOUT
+  regenerating the capsules, so it would test an old corpus.)
+- **PATH:** the shebang stages resolve `briar` through PATH, and the
+  spectator stages use `command -v briar-spectator`. So a link directory
+  goes first on PATH and the real `~/.bin` is removed from it.
+- **New stage 0** asserts which binary actually answers, so ~/.bin can
+  never silently come back. Main is unchanged: it tests the INSTALLED
+  binary, which is the point of the gate there.
+- Plants II: `$BRIAR` forced to ~/.bin → red; PATH not changed → red.

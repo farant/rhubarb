@@ -892,3 +892,64 @@ by a declared `<tolera codex="EXTENSIO_COMPILATORIS" (>causa>`.
 - The hand-written amalgam silva.h carries its own ExamenCodex enum
   (like 89/90): 91 added there, or the amalgam's excludenda harvest
   fails ('undeclared identifier').
+
+## 2026-10-10 - mores credo (codes 92-95, credo II T7)
+
+House rules for credo v2 section suites live here (Fran: libraries are an
+ecosystem; workflow-specific patterns are an intended application). Only
+files with a `CredoSectio` table with an initializer are judged; old-style
+suites are silent. Pass `_mores_credo_examinare` runs post-walk, BEFORE
+the TOLERA-irrita pass (so suppressions register as used).
+
+How it gets its facts (reuse, not new parsing):
+- table rows: declarations whose specifiers name `CredoSectio`, outer
+  congeries -> rows -> fields 1..3 = probare/parare/purgare identifiers;
+- per function (from `sem->fluxus_functionum`): call edges (callee symbol
+  via nexus), VALUE references (FOLIUM_IDENTIFICATOR of a FUNCTIO not in
+  callee position - `sutura.f = _fictum`), assertion calls
+  (`_credo_notare*`, `_credo_necesse`, `credo_processus_iudicare`),
+  hand-printed `--- ` titles (printf + decoded literal), c->suita uses;
+- writes: `silva_c89_fluxus_datorum_aedificare` run a SECOND time with a
+  credo policy (`_credo_symbolum_ligamen`: localis_automata := variable
+  that persists - file scope or static, non-const at every array level,
+  not from the system). All write forms come for free: ++, +=, member,
+  &x / array decay to a non-const parameter (the T6 `sprintf(_ultima)`).
+  Initializer events of a static's own declaration (DECLARATOR_INITIATUS
+  node) are skipped: loaded once, not a per-section write.
+
+Rule 92 per section: BODY = closure from probare over calls AND value
+edges, plus everything parare/purgare install as values; RESET = closure
+from parare/purgare over CALLS ONLY. Flag body-written persistent vars not
+written by RESET. The value edge was not in v1: plant R1 (delete one T6
+reset in probatio_fabrica_gradus) stayed GREEN because the counter is
+incremented in a fake that parare installs into a sutura and fabrica's
+library calls during probare - no call edge exists. Installing a fake is
+not running it, hence "resets via calls only". Unit case added.
+
+94: the access `x->suita` flagged when assigned, explicitly cast to a
+pointer-to-non-const, or carrying an implicit conversion (init /
+assignment / argument) to one. Cast operands ALSO carry the implicit
+conversion, so the cast branch records the inner access and the access
+branch skips recorded nodes (one violation = one diagnostic).
+
+Gate coverage: unit cases in probatio_silva_examen (fire + silence each),
+examen_vectis section VII (REICE at exact sites, clang ACCEPTS = rule
+above the compiler, tolera, old suite silent, TOLERA_IRRITUM). Fixtures
+there must INLINE their prelude: examen resolves only repository headers
+(a local "praeludium.h" gave code 4 and hid 94). Plants: J1-J4 on the
+judge, R1/R2 on real suites via examen-corpus - all red then green.
+
+Limits (parked …JSV0E9): writes/resets in OTHER translation units are
+invisible (fake world in fabrica_mundus_fictus.c - suites reset by direct
+assignment for now; a `<reponit>` contract on a shared reset helper is the
+fix); state set by parare that purgare never restores is not judged;
+"fully assigned before any read" is not excused.
+
+Adding an examen code (re-learned 2026-10-10, already in 85bce977's
+message): `silva/amalgama/silva.h` is HAND-WRITTEN vanilla C89 and carries
+its own copy of `ExamenCodex`. Add the code there too, THEN
+`./tools/amalgama_excludenda_generare.sh silva` and `./silva/amalgamare.sh`.
+Without the silva.h edit the excludenda harvest compiles the new .c against
+the old enum ("use of undeclared identifier EXAMEN_CODEX_..." plus the
+_assertum_codicum negative-size assert) and amalgamare refuses at porta 0.
+Commissio's fabrica precheck names both steps but not the hand edit.

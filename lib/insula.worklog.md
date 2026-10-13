@@ -128,3 +128,70 @@ matters, now in the header: register the branch canon BEFORE (the host
 canon never sees an undelegated mount), owners AFTER (scriba's `modus`
 is owned by `pagina.clavis`; an anonymous initial write would be
 refused - a plant moving owners first makes `scriba_montare` fail).
+
+## 2026-10-10 — S5a: system writers in the owner table (status-plan)
+
+`InsulaDominus.systemata`: an owner entry may also list SYSTEMS allowed
+to write that field (space-separated, whole-word match - a prefix like
+"rel" or the whole list as one writer is refused). Read from
+`<dominus ... systemata="relatio"/>`; the refusal message names the
+systems. Census X: owners for value fields, systems for cross-cutting
+aspects - this replaces the "set repo->scriptor to the owner's name"
+workaround (domini-scriptor-silent-refusal memory), which lied in the
+log about who wrote. organum generates systemata="relatio" for fields
+with a `referentia` (S5b's reference system will repair them).
+Popover fields stay ownerless until S5c moves closing into the system
+(an owner now would refuse the seven closing actions).
+
+## 2026-10-10 — C1: durable island drained (status-plan, one-island collapse)
+
+Plan reordered on contact: "one tree inside insula, API unchanged" would
+need MERGING canons (scriba and vicus still have two hand canons with
+closed vocabularies - each would refuse the other's attributes in one
+tree). Instead: drain first. The only durable contents were pictor's and
+scriba's latitudo/altitudo (copies of drawing/page size); terminale and
+vicus durable trees were empty. Both moved to the ephemera island (init,
+writer, reader; scriba's two canon attributes folded into
+ephemera.canon). Durable branches now carry only `id`
+(probatio_montatio asserts it; 3 plants caught). 10 test fixtures that
+built islands by hand with sizes in the durable string were updated.
+Next: C2 removes the durable genus from the API; C3 saved-state v2.
+
+Pre-existing finding (not fixed here): apps/scriba and apps/vicus canons
+fail `bin/canon_examen` - dialectus "scriba-ephemera" has a hyphen, the
+canon-of-canons types dialectus as nomen. Runtime loading accepts them.
+They disappear in C2 (durable) and S6/S7 (manifests).
+
+## 2026-10-12 — C2: one island (genera removed) + saved-state v2
+
+`InsulaGenus` (DURABILIS/EPHEMERA) removed from the API: one tree per
+repository. `insula_repositorium_creare(p, in, stml)`; single gate
+`insula_mutare` (was mutare_durabile/_ephemera); every reader/writer
+lost its genus argument; `InsulaActarius(radix, ctx)`. Owner lines:
+`genus` attribute now IGNORED (old domini.stml files still read).
+Lifetime lives in the manifest (vita per field), not in trees.
+
+Callers: pictor/scriba/terminale/vicus mount with one canon, one
+initiation, one owner read; durable canons deleted (scriba, vicus,
+terminale's infixed one); ludus_fenestra uses one version; motus flush
+and dispensator unchanged except the argument. relatio lost its
+per-island loop. conservatio writes versio 2 (`<status versio="2"
+genus=... field="..."/>`) and MIGRATES versio 1 by merging
+<durabilis> then <ephemera> (ephemera wins a conflict) - tested on a
+real two-child v1 save; unknown versions still skipped. (C3 folded in:
+removing genera forces the format change in the same commit.)
+
+Tests: mechanical pass (regex: drop the genus argument; merge the two
+creation strings by root+children union - ElementTree, ids as keys) +
+hand rewrites where tests asserted two-tree semantics: probatio_insula
+(one root carries all four attributes; durable-gate section removed -
+counts after it unchanged), probatio_insula_ramus (root canon now
+judges the initiation that used to go to the canon-less second tree:
+canon gains `nova`, and "activa unchanged" is asserted - the real
+point), dispensator ("not yet written" = version unchanged since the
+mouse-down), toy snapshot (union of the two old trees, identical
+values). 10 toy fixtures used "<documentum/>","<ephemera/>" - two
+different roots, refused by the auto-merge as they should be;
+collapsed to "<insula/>". 276/276 root tests, ludus_tessera 8/8, plants
+5/5. briar's smoke builds project-specs/exempla/salutatio.thistle -
+updated too.

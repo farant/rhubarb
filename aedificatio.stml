@@ -447,6 +447,17 @@
     <ingressus genus="fasciculus" via="norma.canon"/>
     <exitus via="lib/norma_canon.c" provenientia="regeneratio"/>
   </actio>
+  <!-- canon organi infixus (status-plan S1, mos norma_canon):
+       organum.canon -> lib/organum_canon.c, onerator manifestorum
+       sine plagula vivit -->
+  <actio titulus="organum_canon" genus="generator">
+    <mandatum>
+      <verbum! (>./tools/organum_canon_infigere.sh
+    </mandatum>
+    <ingressus genus="fasciculus" via="tools/organum_canon_infigere.sh"/>
+    <ingressus genus="fasciculus" via="organum.canon"/>
+    <exitus via="lib/organum_canon.c" provenientia="regeneratio"/>
+  </actio>
   <!-- normae fixae -> C generatum (norma-plan-3 A5, oraculum III):
        bin/norma c per aedilis structum (regula R8) -->
   <actio titulus="normae_fixae" genus="generator">
@@ -976,12 +987,6 @@
     <debitum_scripturae membrum="probatio_vigilia" via="build/probatio_vigilia_commissum" causa="vigilia: artificia ficta probationis"/>
     <debitum_scripturae membrum="probatio_vigilia" via="build/probatio_vigilia_fons.c" causa="vigilia: artificia ficta probationis"/>
     <debitum_scripturae membrum="probatio_vigilia" via="build/probatio_vigilia_manifestum" causa="vigilia: artificia ficta probationis"/>
-    <debitum_scripturae membrum="probatio_cliens_tabularii" via="build/probatio_ct.db" causa="tabulariumd probationis (scrinium, annales, portus)"/>
-    <debitum_scripturae membrum="probatio_cliens_tabularii" via="build/probatio_ct.db-shm" causa="tabulariumd probationis (scrinium, annales, portus)"/>
-    <debitum_scripturae membrum="probatio_cliens_tabularii" via="build/probatio_ct.db-wal" causa="tabulariumd probationis (scrinium, annales, portus)"/>
-    <debitum_scripturae membrum="probatio_cliens_tabularii" via="build/probatio_ct.jsonl" causa="tabulariumd probationis (scrinium, annales, portus)"/>
-    <debitum_scripturae membrum="probatio_cliens_tabularii" via="build/probatio_ct_pid.txt" causa="tabulariumd probationis (scrinium, annales, portus)"/>
-    <debitum_scripturae membrum="probatio_cliens_tabularii" via="build/probatio_ct_portus.txt" causa="tabulariumd probationis (scrinium, annales, portus)"/>
   </actio>
 
   <!-- INSTITUTIONES (1b T5, Q42): copia ~/.bin actio sua - fasciculus

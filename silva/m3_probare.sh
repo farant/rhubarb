@@ -42,6 +42,7 @@
 # amalgamare.sh, quod silva/amalgama/silva.c REGENERAT (artefactum
 # commissum). Obiecta hic non in silva/build: glob oraculi (struere)
 # obiectum alienum ibi nectere conaretur.
+# <porta titulus="silva-m3" tegit="materia/fontes/* silva/fontes/*"/>
 
 set -u
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"

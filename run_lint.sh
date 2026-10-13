@@ -19,7 +19,7 @@ clang "${GCC_FLAGS[@]}" \
     -Iinclude -Ilib \
     lint/lint_probatio.c \
     build/*.o \
-    -framework Cocoa -framework Security \
+    -framework Cocoa -framework Security -framework IOKit \
     -o bin/lint_probatio 2>&1
 
 if [ $? -ne 0 ]; then

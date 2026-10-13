@@ -23,6 +23,8 @@
 #
 # Chorda oraculi SIGILLATA (officina-m4a-spec.md §V); versio clang
 # scribitur (linea acceptationis inter versiones movetur!).
+# <porta titulus="examen-vectis" tegit="silva/fontes/* silva/grammatica/* silva/probationes/fixa/examinis/*" currit="silva/instrumenta/principalia/examen.c"/>
+# <porta titulus="examen-corpus" tegit="silva/fontes/systema_c89.h silva/fontes/systema_posix.h silva/grammatica/*" currit="silva/instrumenta/principalia/examen.c"/>
 
 set -u
 SILVA_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -424,6 +426,86 @@ _loca "extensio: tolerata - ordo nullus (nec irritum)" \
     "0" "$(awk -F'\t' '$1!="VERDICTUM" && $1!~/^#/' "$SILVA_DIR/$LOCA/tolerata.tsv" | wc -l | tr -d ' ')"
 _loca "extensio: tolera sine invento -> TOLERA_IRRITUM" \
     "1:$CODEX_IRR" \
+    "$(awk -F'\t' '$1!="VERDICTUM" && $1!~/^#/{print $2":"$5}' "$SILVA_DIR/$LOCA/irrita.tsv")"
+rm -rf "$SILVA_DIR/$LOCA"
+
+# ⑦ MORES CREDO (credo II T7; codices 92-95): regulae domus suitarum
+#    sectionum - VIOLATIO domus (92-94) ut 91: clang ACCIPIT (proprietas:
+#    regula supra compilatorem), examen REICE ad sedes exactas; 95
+#    domesticum (monitum, ACCIPE manet). Tolera per lineam absorbet;
+#    tolera sine invento TOLERA_IRRITUM. Plagula SINE tabula CredoSectio
+#    eadem corpora habens tacet (suitae veteres).
+echo "--- mores credo (92-95) ---"
+mkdir -p "$SILVA_DIR/$LOCA"
+cat > "$SILVA_DIR/$LOCA/praeludium.h" <<'FIXA'
+typedef struct { void* piscina; void* datum; const char* titulus; void* suita; } CredoContextus;
+typedef void (*CredoFunctio)(CredoContextus* c);
+typedef struct { const char* titulus; CredoFunctio probare; CredoFunctio parare; CredoFunctio purgare; const char* signa; const char* exspectata_fracta; } CredoSectio;
+void _credo_notare(int v);
+int printf(const char* f, ...);
+int credo_suitam_currere(const char* t, const CredoSectio* s);
+FIXA
+cat > "$SILVA_DIR/$LOCA/mores.c" <<'FIXA'
+#include "praeludium.h"
+static int numerator = 0;
+static void manens(CredoContextus* c) { (void)c; numerator++; _credo_notare(numerator > 0); }
+static void vacua(CredoContextus* c) { (void)c; printf("nihil\n"); }
+static void mutans(CredoContextus* c) { int* m = c->suita; _credo_notare(m != 0); }
+static void titulans(CredoContextus* c) { (void)c; printf("\n--- Probans x ---\n"); _credo_notare(1); }
+static const CredoSectio S[] = {
+    { "manens", manens, 0, 0, 0, 0 }, { "vacua", vacua, 0, 0, 0, 0 },
+    { "mutans", mutans, 0, 0, 0, 0 }, { "titulans", titulans, 0, 0, 0, 0 },
+    { 0, 0, 0, 0, 0, 0 } };
+int main(void) { return credo_suitam_currere("mores", S); }
+FIXA
+cat > "$SILVA_DIR/$LOCA/tolerata.c" <<'FIXA'
+#include "praeludium.h"
+static int numerator = 0;
+static void manens(CredoContextus* c) { (void)c;
+    numerator++; /* <tolera codex="CREDO_STATUS_NON_PURGATUS" (>consulto communis */
+    _credo_notare(numerator > 0); }
+static const CredoSectio S[] = { { "manens", manens, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0 } };
+int main(void) { return credo_suitam_currere("tolerata", S); }
+FIXA
+cat > "$SILVA_DIR/$LOCA/vetus.c" <<'FIXA'
+#include "praeludium.h"
+static int numerator = 0;
+int main(void) { numerator++; printf("\n--- Probans x ---\n"); _credo_notare(numerator > 0); return 0; }
+FIXA
+cat > "$SILVA_DIR/$LOCA/irrita.c" <<'FIXA'
+#include "praeludium.h"
+static void a(CredoContextus* c) { (void)c; /* <tolera codex="CREDO_SUITA_MUTATA" (>nihil hic */
+    _credo_notare(1); }
+static const CredoSectio S[] = { { "a", a, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0 } };
+int main(void) { return credo_suitam_currere("irrita", S); }
+FIXA
+# praeludium INLINEATUM (examen capita repositorii solum resolvit -
+# '#include "praeludium.h"' localis typos ignotos (codex 4) faciebat);
+# lineae fixarum ergo post VI lineas praeludii numerantur
+for f in mores tolerata vetus irrita; do
+    grep -v '^#include "praeludium.h"$' "$SILVA_DIR/$LOCA/$f.c" \
+        | cat "$SILVA_DIR/$LOCA/praeludium.h" - > "$SILVA_DIR/$LOCA/$f.i.c"
+    mv "$SILVA_DIR/$LOCA/$f.i.c" "$SILVA_DIR/$LOCA/$f.c"
+    ( cd "$RADIX_DIR" && ./silva/examen.sh "silva/$LOCA/$f.c" -machina ) \
+        > "$SILVA_DIR/$LOCA/$f.tsv" 2>/dev/null
+done
+_codex () { awk -F'\t' -v n="EXAMEN_CODEX_$1" '$2==n{print $1}' "$MAPPA"; }
+C92="$(_codex CREDO_STATUS_NON_PURGATUS)"; C93="$(_codex CREDO_SECTIO_SINE_ASSERTIONE)"
+C94="$(_codex CREDO_SUITA_MUTATA)"; C95="$(_codex CREDO_TITULUS_IMPRESSUS)"
+CIRR="$(_codex TOLERA_IRRITUM)"
+_loca "mores: verdictum REICE" \
+    "REICE" "$(awk -F'\t' '$1=="VERDICTUM"{print $2}' "$SILVA_DIR/$LOCA/mores.tsv")"
+_loca "mores: sedes (92 scriptio, 93 sectio, 94 suita, 95 titulus)" \
+    "8:$C92:violatio 9:$C93:violatio 10:$C94:violatio 11:$C95:domesticum" \
+    "$(awk -F'\t' -v a="$C92" -v b="$C93" -v c="$C94" -v d="$C95" '$5==a||$5==b||$5==c||$5==d{print $2":"$5":"$4}' "$SILVA_DIR/$LOCA/mores.tsv" | sort -n | tr '\n' ' ' | sed 's/ $//')"
+_loca "mores: oraculum (clang) ACCIPIT - regula supra compilatorem" \
+    "0" "$("${ORACULUM[@]}" "$SILVA_DIR/$LOCA/mores.c" >/dev/null 2>&1; echo $?)"
+_loca "mores: tolera per lineam - ACCIPE, ordo nullus" \
+    "ACCIPE 0" "$(awk -F'\t' '$1=="VERDICTUM"{v=$2} $1!="VERDICTUM" && $1!~/^#/{n++} END{print v" "n+0}' "$SILVA_DIR/$LOCA/tolerata.tsv")"
+_loca "mores: suita vetus (sine tabula) tacet" \
+    "ACCIPE 0" "$(awk -F'\t' '$1=="VERDICTUM"{v=$2} $1!="VERDICTUM" && $1!~/^#/{n++} END{print v" "n+0}' "$SILVA_DIR/$LOCA/vetus.tsv")"
+_loca "mores: tolera sine invento -> TOLERA_IRRITUM" \
+    "7:$CIRR" \
     "$(awk -F'\t' '$1!="VERDICTUM" && $1!~/^#/{print $2":"$5}' "$SILVA_DIR/$LOCA/irrita.tsv")"
 rm -rf "$SILVA_DIR/$LOCA"
 

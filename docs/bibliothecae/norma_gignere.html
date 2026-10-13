@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>norma_gignere</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>norma_gignere</h1>
+<p class="subtitulus">valores JSON ficti ex schemate (norma-spec par. IV)</p>
+
+<p>Fake JSON values from a norma schema, in three modes: typical (plausible), limits (every bounded node at an edge) and invalid (a typical value with exactly one planted violation, whose path and cause are returned). Seeding is per path: each node draws from a stream derived from the hash of its path, and a field&#x27;s presence from a stream of its own, so adding a field never changes its siblings&#x27; values or whether later fields appear. The values come from fictio (names, dates, uuids, real Latin; the limits mode takes its text from the drawer of difficult strings), and a field may name its own generating function. The proof is a mutual oracle between generator and judge. Over 300 seeds and two schemas every typical and limit value, written out and read back, must validate, and every invalid one must produce exactly one issue at the stated path with the stated cause. Coverage is asserted as well: all ten kinds of violation must actually have been exercised, because a green that could mean &#x27;never tried&#x27; is not accepted. Written 2026-10-08. Its users so far are tests: the equivalence proofs for norma_stml and norma_ad_c generate values from both sides and compare the judgments.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/norma_gignere.h"><code>include/norma_gignere.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/norma_gignere.c"><code>lib/norma_gignere.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-10-08 8f5d875a</td></tr>
+<tr><td>Group</td><td><a href="greges.html#vates">Language models and JSON schemas</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

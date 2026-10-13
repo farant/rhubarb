@@ -93,3 +93,7 @@ PORTABILE_VIOLATUM	A file meant to be portable includes a platform-specific head
 STANDARDUM_ALIENUM	A construct from another standard (C99 or GNU): C89 only.
 DECLARATIO_POST_SENTENTIAM	A declaration after a statement in a block (C99); declarations go at the start.
 EXTENSIO_COMPILATORIS	A compiler extension (__attribute__): not C89; tolerate it with a reason if deliberate.
+CREDO_STATUS_NON_PURGATUS	credo suites: file-scope state written by a section (or a fake it installs) that neither its parare nor its purgare resets - the table order hides the leak.
+CREDO_SECTIO_SINE_ASSERTIONE	credo suites: a section whose probare reaches no assertion - it would run VACUA.
+CREDO_SUITA_MUTATA	credo suites: c->suita written or converted to a non-const pointer - sections read suite state, never change it.
+CREDO_TITULUS_IMPRESSUS	credo suites: a hand-printed '--- ... ---' title inside a section - credo prints section titles; name steps with CREDO_GRADUS.

@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>pseudoterminale</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>pseudoterminale</h1>
+<p class="subtitulus">infans in pseudo-terminali (aemulator-plan B3, terminal-planning modulus 008)</p>
+
+<p>A child process on a pseudo-terminal: a program started from an argument vector (no shell, the house rule) on the slave side, in a new session with the pty as its controlling terminal, while the host reads and writes the master. It is a sibling of processus and not an extension of it, because a pty is one mixed stream, a long-lived child, its own size and its own signals. The library is a table of functions, which is also the test seam: read with a timeout, a write that never blocks and reports how much was taken, the window size, reaping without waiting, the master descriptor for an event loop to wait on, and a close that never leaves a zombie or an open descriptor (hang-up first, kill after a short grace). Two bridges fill the table. The posix one (openpty, fork, a reset of signal dispositions, exec) is the only file that touches system headers, and it reports a failed exec as its own error through a close-on-exec pipe, distinct from a real child exiting 127. The memory one is a scripted child with no process: it plays back given output and captures what the host writes. Written 2026-10-06 for the emulator, the header approved by Fran, who chose openpty and independence from processus. Two faults planted in it survived until the tests were fixed: /bin/sh quietly acquires a controlling terminal, so a shell-based check passed with the ioctl removed, and &#x27;lowest free descriptor&#x27; cannot see a leak above a hole. The rule kept from it: test a child&#x27;s environment with no shell in between. Owned by aemulator_hospes; terminale and the two apps create it.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/pseudoterminale.h"><code>include/pseudoterminale.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/pseudoterminale.c"><code>lib/pseudoterminale.c</code></a> <span class="nota">(5 functions)</span>, <a href="../../lib/pseudoterminale_posix.c"><code>lib/pseudoterminale_posix.c</code></a> <span class="nota">(1 functions)</span></td></tr>
+<tr><td>Last change</td><td>2026-10-06 59e042b6</td></tr>
+<tr><td>Group</td><td><a href="greges.html#fenestra">Window, input and drawing</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

@@ -37,6 +37,7 @@ hic_manens constans character canon_hospitis[] =
     "<canon dialectus=\"hospes\" versio=\"1\">"
     "<elementum nomen=\"hospes\" radix=\"verum\">"
     "<attributum nomen=\"activa\" genus=\"nomen\"/>"
+    "<attributum nomen=\"nova\" genus=\"numerus\"/>"
     "</elementum></canon>";
 
 interior Canon*
@@ -113,9 +114,8 @@ s32 principale (vacuum)
     credo_aperire(piscina);
     intern = internamentum_creare(piscina);
     repo = insula_repositorium_creare(piscina, intern,
-        "<hospes activa=\"a\"><libellus id=\"a\" n=\"1\"/>"
-        "<libellus id=\"b\" n=\"1\"/></hospes>",
-        "<hospes/>");
+        "<hospes activa=\"a\"><libellus id=\"a\""
+        " n=\"1\"/><libellus id=\"b\" n=\"1\"/></hospes>");
     CREDO_NON_NIHIL(repo);
     radix  = insula_ramus_radix(repo);
     a      = insula_ramus(repo, "libellus", "a");
@@ -123,79 +123,78 @@ s32 principale (vacuum)
     c      = insula_ramus(repo, "libellus", "c");
 
     imprimere("\n--- I: ramus radicis == API vetus ---\n");
-    CREDO_VERUM(insula_ramus_nodus(&radix, INSULA_DURABILIS)
-                == insula_radix(repo, INSULA_DURABILIS));
-    CREDO_VERUM(valor_est(insula_ramus_attributum(&radix,
-        INSULA_DURABILIS, "activa"), "a"));
-    CREDO_VERUM(mutare_ramum(&radix, INSULA_DURABILIS, activam_ponere,
+    CREDO_VERUM(insula_ramus_nodus(&radix)
+                == insula_radix(repo));
+    CREDO_VERUM(valor_est(insula_ramus_attributum(&radix, "activa"),
+        "a"));
+    CREDO_VERUM(mutare_ramum(&radix, activam_ponere,
         littera_b));
-    CREDO_VERUM(valor_est(insula_attributum(repo, INSULA_DURABILIS,
+    CREDO_VERUM(valor_est(insula_attributum(repo,
         "activa"), "b"));
 
     imprimere("\n--- II: ramus - lectio et scriptura relativae ---\n");
-    CREDO_VERUM(valor_est(insula_ramus_attributum(&a, INSULA_DURABILIS,
+    CREDO_VERUM(valor_est(insula_ramus_attributum(&a,
         "n"), "1"));
-    CREDO_VERUM(mutare_ramum(&a, INSULA_DURABILIS, n_ponere,
+    CREDO_VERUM(mutare_ramum(&a, n_ponere,
         numerus_duo));
-    CREDO_VERUM(valor_est(insula_ramus_attributum(&a, INSULA_DURABILIS,
+    CREDO_VERUM(valor_est(insula_ramus_attributum(&a,
         "n"), "2"));
-    CREDO_VERUM(valor_est(insula_ramus_attributum(&b, INSULA_DURABILIS,
+    CREDO_VERUM(valor_est(insula_ramus_attributum(&b,
         "n"), "1"));
     /* radix ipsa n non accepit (mutator nodum rami accepit) */
-    CREDO_NIHIL(insula_attributum(repo, INSULA_DURABILIS, "n"));
+    CREDO_NIHIL(insula_attributum(repo, "n"));
 
     imprimere("\n--- III: ramus absens ---\n");
-    CREDO_NIHIL(insula_ramus_nodus(&c, INSULA_DURABILIS));
-    CREDO_NIHIL(insula_ramus_attributum(&c, INSULA_DURABILIS, "n"));
-    versio = insula_versio(repo, INSULA_DURABILIS);
-    CREDO_FALSUM(mutare_ramum(&c, INSULA_DURABILIS, n_ponere,
+    CREDO_NIHIL(insula_ramus_nodus(&c));
+    CREDO_NIHIL(insula_ramus_attributum(&c, "n"));
+    versio = insula_versio(repo);
+    CREDO_FALSUM(mutare_ramum(&c, n_ponere,
         numerus_novem));
-    CREDO_AEQUALIS_I32(insula_versio(repo, INSULA_DURABILIS), versio);
+    CREDO_AEQUALIS_I32(insula_versio(repo), versio);
     CREDO_VERUM(insula_causa(repo).mensura > ZEPHYRUM);
 
     imprimere("\n--- IV: domini per ramum ---\n");
-    CREDO_VERUM(insula_ramus_dominum_ponere(&a, INSULA_DURABILIS, "n",
+    CREDO_VERUM(insula_ramus_dominum_ponere(&a, "n",
         "scriptor_a"));
     insula_scriptorem_ponere(repo, chorda_ex_literis("alius", piscina));
-    CREDO_FALSUM(mutare_ramum(&a, INSULA_DURABILIS, n_ponere,
+    CREDO_FALSUM(mutare_ramum(&a, n_ponere,
         numerus_tres));
-    CREDO_VERUM(valor_est(insula_ramus_attributum(&a, INSULA_DURABILIS,
+    CREDO_VERUM(valor_est(insula_ramus_attributum(&a,
         "n"), "2"));
     /* b non possessus: alius scribere potest */
-    CREDO_VERUM(mutare_ramum(&b, INSULA_DURABILIS, n_ponere,
+    CREDO_VERUM(mutare_ramum(&b, n_ponere,
         numerus_tres));
     insula_scriptorem_ponere(repo, chorda_ex_literis("scriptor_a",
         piscina));
-    CREDO_VERUM(mutare_ramum(&a, INSULA_DURABILIS, n_ponere,
+    CREDO_VERUM(mutare_ramum(&a, n_ponere,
         numerus_tres));
     insula_scriptorem_ponere(repo, chorda_ex_literis("", piscina));
 
     imprimere("\n--- V: canones per ramum; radix delegatos ignorat\n");
-    insula_ramus_canonem_ponere(&a, INSULA_DURABILIS,
+    insula_ramus_canonem_ponere(&a,
         canon_ex(canon_libelli));
-    insula_ramus_canonem_ponere(&b, INSULA_DURABILIS,
+    insula_ramus_canonem_ponere(&b,
         canon_ex(canon_libelli));
-    insula_ponere_canonem(repo, INSULA_DURABILIS,
+    insula_ponere_canonem(repo,
         canon_ex(canon_hospitis));
     insula_scriptorem_ponere(repo, chorda_ex_literis("scriptor_a",
         piscina));
     /* canon rami a numerum exigit */
-    CREDO_FALSUM(mutare_ramum(&a, INSULA_DURABILIS, n_ponere,
+    CREDO_FALSUM(mutare_ramum(&a, n_ponere,
         non_numerus));
-    CREDO_VERUM(valor_est(insula_ramus_attributum(&a, INSULA_DURABILIS,
+    CREDO_VERUM(valor_est(insula_ramus_attributum(&a,
         "n"), "3"));
-    CREDO_VERUM(mutare_ramum(&a, INSULA_DURABILIS, n_ponere,
+    CREDO_VERUM(mutare_ramum(&a, n_ponere,
         numerus_quattuor));
     insula_scriptorem_ponere(repo, chorda_ex_literis("", piscina));
     /* canon hospitis libellos (delegatos) non videt */
-    CREDO_VERUM(mutare_ramum(&radix, INSULA_DURABILIS, activam_ponere,
+    CREDO_VERUM(mutare_ramum(&radix, activam_ponere,
         littera_a));
     /* sed liberum ignotum radicis iudicat */
-    CREDO_FALSUM(mutare_ramum(&radix, INSULA_DURABILIS, ignotum_addere,
+    CREDO_FALSUM(mutare_ramum(&radix, ignotum_addere,
         NIHIL));
     /* arbor vera libellos servat (visio canonis sola eos omittit) */
-    CREDO_AEQUALIS_I32(stml_numerus_liberorum(insula_radix(repo,
-        INSULA_DURABILIS)), II);
+    CREDO_AEQUALIS_I32(stml_numerus_liberorum(insula_radix(repo)), II);
 
     imprimere("\n--- VI: domini e plagula in ramum ---\n");
     {
@@ -205,10 +204,9 @@ s32 principale (vacuum)
             stml_legere_ex_literis("<domini><dominus genus=\"ephemera\""
             " attributum=\"n\" scriptor=\"scriptor_b\"/></domini>",
             piscina, intern);
+        /* C2: 'genus' lineae ignoratur - linea legitur */
         CREDO_AEQUALIS_I32(insula_ramus_dominos_legere(&b,
-            INSULA_DURABILIS, res.elementum_radix), ZEPHYRUM);
-        CREDO_AEQUALIS_I32(insula_ramus_dominos_legere(&b,
-            INSULA_EPHEMERA, res.elementum_radix), I);
+            res.elementum_radix), I);
     }
 
     imprimere("\n--- VII: ramum initiare (T1a) ---\n");
@@ -217,45 +215,45 @@ s32 principale (vacuum)
                 i32 liberi;
 
         d = insula_ramus(repo, "libellus", "d");
-        insula_ramus_canonem_ponere(&d, INSULA_DURABILIS,
+        insula_ramus_canonem_ponere(&d,
             canon_ex(canon_libelli));
-        CREDO_NIHIL(insula_ramus_nodus(&d, INSULA_DURABILIS));
-        liberi = stml_numerus_liberorum(insula_radix(repo,
-            INSULA_DURABILIS));
+        CREDO_NIHIL(insula_ramus_nodus(&d));
+        liberi = stml_numerus_liberorum(insula_radix(repo));
         /* liberum novum, canone suo iudicatum (hospes eum non videt) */
-        CREDO_VERUM(insula_ramum_initiare(&d, INSULA_DURABILIS,
+        CREDO_VERUM(insula_ramum_initiare(&d,
             "<libellus id=\"d\" n=\"7\"/>"));
-        CREDO_VERUM(valor_est(insula_ramus_attributum(&d,
-            INSULA_DURABILIS, "n"), "7"));
+        CREDO_VERUM(valor_est(insula_ramus_attributum(&d, "n"), "7"));
         /* iterum: nihil mutat (exstat) */
-        CREDO_VERUM(insula_ramum_initiare(&d, INSULA_DURABILIS,
+        CREDO_VERUM(insula_ramum_initiare(&d,
             "<libellus id=\"d\" n=\"8\"/>"));
-        CREDO_VERUM(valor_est(insula_ramus_attributum(&d,
-            INSULA_DURABILIS, "n"), "7"));
-        CREDO_AEQUALIS_I32(stml_numerus_liberorum(insula_radix(repo,
-            INSULA_DURABILIS)), liberi + I);
+        CREDO_VERUM(valor_est(insula_ramus_attributum(&d, "n"), "7"));
+        CREDO_AEQUALIS_I32(stml_numerus_liberorum(insula_radix(repo)),
+            liberi + I);
         /* canon rami elementum malum recusat */
         {
             InsulaRamus e;
 
             e = insula_ramus(repo, "libellus", "e");
-            insula_ramus_canonem_ponere(&e, INSULA_DURABILIS,
+            insula_ramus_canonem_ponere(&e,
                 canon_ex(canon_libelli));
-            CREDO_FALSUM(insula_ramum_initiare(&e, INSULA_DURABILIS,
+            CREDO_FALSUM(insula_ramum_initiare(&e,
                 "<libellus id=\"e\" n=\"abc\"/>"));
-            CREDO_NIHIL(insula_ramus_nodus(&e, INSULA_DURABILIS));
+            CREDO_NIHIL(insula_ramus_nodus(&e));
         }
         /* ramus radicis: attributa absentia SOLA radici adduntur */
-        CREDO_VERUM(insula_ramum_initiare(&radix, INSULA_EPHEMERA,
+        CREDO_VERUM(insula_ramum_initiare(&radix,
             "<hospes activa=\"zz\" nova=\"1\"/>"));
-        CREDO_VERUM(valor_est(insula_ramus_attributum(&radix,
-            INSULA_EPHEMERA, "nova"), "1"));
+        CREDO_VERUM(valor_est(insula_ramus_attributum(&radix, "nova"),
+            "1"));
+        /* exstans intactum (activa ex V manet) */
+        CREDO_VERUM(valor_est(insula_ramus_attributum(&radix, "activa"),
+            "a"));
     }
 
     imprimere("\n--- VII: restitutio honesta ---\n");
     CREDO_VERUM(insula_restituere(repo));
     CREDO_FALSUM(insula_mendacium(repo));
-    CREDO_VERUM(valor_est(insula_ramus_attributum(&a, INSULA_DURABILIS,
+    CREDO_VERUM(valor_est(insula_ramus_attributum(&a,
         "n"), "4"));
 
     imprimere("\n");

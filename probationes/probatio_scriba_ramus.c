@@ -22,39 +22,29 @@
 #include "scriba_actiones.h"
 #include "scriba_componentia.h"
 #include "credo.h"
+#include "organum_probationis.h"
 #include <stdio.h>
 #include <string.h>
 
 hic_manens Piscina*             piscina;
 hic_manens InternamentumChorda* intern;
 
-interior Canon*
-canonem_legere (
-    constans character* via)
-{
-    chorda causa;
-
-    redde canon_legere(filum_legere_totum(via, piscina), piscina,
-        intern,
-                       &causa);
-}
-
 /* ramum ramum_parare: canones veri, domini (ephemera) */
 interior vacuum
 ramum_parare (
     constans InsulaRamus* ramus)
 {
-    StmlResultus res;
+        Canon* canon;
+    StmlNodus* domini;
 
-    insula_ramus_canonem_ponere(ramus, INSULA_DURABILIS,
-        canonem_legere("apps/scriba/canones/durabilis.canon"));
-    insula_ramus_canonem_ponere(ramus, INSULA_EPHEMERA,
-        canonem_legere("apps/scriba/canones/ephemera.canon"));
-    res = stml_legere_ex_literis(chorda_ut_cstr(filum_legere_totum(
-        "apps/scriba/canones/domini.stml", piscina), piscina), piscina,
-        intern);
-    (vacuum)insula_ramus_dominos_legere(ramus, INSULA_EPHEMERA,
-        res.elementum_radix);
+    /* S6b: ex manifesto scribae */
+    si (!organum_probationis_parare(piscina, intern,
+            "apps/scriba/organum.stml", &canon, &domini))
+    {
+        redde;
+    }
+    insula_ramus_canonem_ponere(ramus, canon);
+    (vacuum)insula_ramus_dominos_legere(ramus, domini);
 }
 
 /* linea l folii (spatiis finalibus omissis) == expectata */
@@ -120,11 +110,10 @@ s32 principale (vacuum)
         "s2", XVI, VI,
                                     IV);
     repo = insula_repositorium_creare(piscina, intern,
-        "<hospes><scriba id=\"s1\" latitudo=\"16\" altitudo=\"6\"/>"
-        "<scriba id=\"s2\" latitudo=\"16\" altitudo=\"6\"/></hospes>",
-        "<hospes focus=\"pagina\">"
-        "<scriba id=\"s1\" modus=\"normalis\"/>"
-        "<scriba id=\"s2\" modus=\"normalis\"/></hospes>");
+        "<hospes focus=\"pagina\"><scriba id=\"s1\""
+        " latitudo=\"16\" altitudo=\"6\""
+        " modus=\"normalis\"/><scriba id=\"s2\" latitudo=\"16\""
+        " altitudo=\"6\" modus=\"normalis\"/></hospes>");
     CREDO_NON_NIHIL(repo);
     s1 = insula_ramus(repo, "scriba", "s1");
     s2 = insula_ramus(repo, "scriba", "s2");
@@ -170,9 +159,9 @@ s32 principale (vacuum)
     CREDO_VERUM(linea_est(scriba_documentum_tabula(documentum_secundum),
         ZEPHYRUM,
         ""));
-    CREDO_VERUM(valor_est(insula_ramus_attributum(&s1, INSULA_EPHEMERA,
+    CREDO_VERUM(valor_est(insula_ramus_attributum(&s1,
         "cursor_columna"), "5"));
-    CREDO_NIHIL(insula_ramus_attributum(&s2, INSULA_EPHEMERA,
+    CREDO_NIHIL(insula_ramus_attributum(&s2,
         "cursor_columna"));
     /* arbor d1 ex ramo s1 (cursor, linea status); d2 suum */
     {
@@ -199,7 +188,7 @@ s32 principale (vacuum)
         }
     }
     /* radix statum scribae non fert */
-    CREDO_NIHIL(insula_attributum(repo, INSULA_EPHEMERA,
+    CREDO_NIHIL(insula_attributum(repo,
         "cursor_columna"));
     CREDO_FALSUM(insula_mendacium(repo));
 

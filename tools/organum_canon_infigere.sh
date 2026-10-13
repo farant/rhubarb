@@ -1,0 +1,26 @@
+#!/bin/bash
+# tools/organum_canon_infigere.sh - organum.canon -> lib/organum_canon.c
+# (GENERATUM; status-plan S1 - mos norma_canon_infigere.sh). Sub FABRICA_SCRIPTURA exitus in
+# scripturam iudicis scribitur (viae eaedem), arbor intacta.
+#
+# Usus: ./tools/organum_canon_infigere.sh
+set -u
+cd "$(dirname "${BASH_SOURCE[0]}")/.." || exit 2
+FONS=organum.canon
+RADIX="${FABRICA_SCRIPTURA:-.}"
+EXITUS="$RADIX/lib/organum_canon.c"
+[ -f "$FONS" ] || { echo "organum_canon_infigere: $FONS deest" >&2; exit 2; }
+mkdir -p "$RADIX/lib" || exit 2
+{
+    printf '/* GENERATUM a tools/organum_canon_infigere.sh ex organum.canon - noli manu mutare */\n'
+    printf '#include "organum_canon.h"\n\n#include <string.h>\n\n'
+    printf 'interior constans insignatus character _octeti[] = {\n'
+    od -An -v -tx1 "$FONS" | awk '{ s = "   "; for (i = 1; i <= NF; i++) s = s " 0x" $i ","; print s }'
+    printf '};\n\n'
+    printf 'chorda\norganum_canon_textus (\n    Piscina* piscina)\n{\n'
+    printf '    chorda c;\n\n'
+    printf '    c.mensura  = (i32)magnitudo(_octeti);\n'
+    printf '    c.datum    = (i8*)piscina_allocare(piscina, (memoriae_index)c.mensura);\n'
+    printf '    memcpy(c.datum, _octeti, (size_t)c.mensura);\n'
+    printf '    redde c;\n}\n'
+} > "$EXITUS.tmp" && mv "$EXITUS.tmp" "$EXITUS"

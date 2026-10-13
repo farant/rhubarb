@@ -2301,3 +2301,73 @@ aedilis_nexum_purum_probare (
     }
     redde VERUM;
 }
+
+/* digestum validum: LXIV hex MINUSCULAE (forma sigillum_hex) */
+interior b32
+_digestum_validum (
+    constans character* ingressus)
+{
+    i32 i;
+
+    si (ingressus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < LXIV; i++)
+    {
+        character x = ingressus[i];
+
+        si (!((x >= '0' && x <= '9') || (x >= 'a' && x <= 'f')))
+        {
+            redde FALSUM;
+        }
+    }
+    redde ingressus[LXIV] == '\0';
+}
+
+b32
+aedilis_thesauri_praefixum (
+     constans character*  ingressus,
+     constans character*  via_binarii,
+     constans character*  via_configurationis,
+                Piscina*  piscina,
+               Sigillum*  praefixum_out,
+     constans character** fons_out)
+{
+                chorda configuratio;
+                chorda binarium;
+     SigillumContextus contextus;
+                   b32 digestum = _digestum_validum(ingressus);
+
+    configuratio = filum_legere_totum(via_configurationis, piscina);
+    si (configuratio.mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    sigillum_incipere(&contextus);
+    si (digestum)
+    {
+        /* titulus "extractor:" clavem ex digesto a clave ex binario
+         * semper separat */
+        sigillum_addere(&contextus, "extractor:", (memoriae_index)X);
+        sigillum_addere(&contextus, ingressus, (memoriae_index)LXIV);
+    }
+    alioquin
+    {
+        binarium = filum_legere_totum(via_binarii, piscina);
+        si (binarium.mensura == ZEPHYRUM)
+        {
+            redde FALSUM;
+        }
+        sigillum_addere(&contextus, binarium.datum,
+            (memoriae_index)binarium.mensura);
+    }
+    sigillum_addere(&contextus, configuratio.datum,
+        (memoriae_index)configuratio.mensura);
+    *praefixum_out = sigillum_finire(&contextus);
+    si (fons_out != NIHIL)
+    {
+        *fons_out = digestum ? "digestum" : "binarium";
+    }
+    redde VERUM;
+}

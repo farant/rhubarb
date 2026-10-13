@@ -34,50 +34,6 @@ folii_dimensio (
     redde (i32)(n < minimum ? minimum : n);
 }
 
-/* radix + "/" + via (radix NIHIL aut vacua: via sola) */
-interior constans character*
-_via (
-               Piscina* p,
-    constans character* radix,
-    constans character* via)
-{
-    chorda c;
-
-    si (!radix || radix[ZEPHYRUM] == '\0')
-    {
-        redde via;
-    }
-    c = chorda_concatenare(chorda_ex_literis(radix, p),
-        chorda_ex_literis("/", p), p);
-    c = chorda_concatenare(c, chorda_ex_literis(via, p), p);
-    redde chorda_ut_cstr(c, p);
-}
-
-interior Canon*
-canonem_legere (
-                Piscina* p,
-    InternamentumChorda* in,
-     constans character* via)
-{
-    chorda  fons;
-    chorda  causa;
-     Canon* c;
-
-    fons = filum_legere_totum(via, p);
-    si (fons.mensura == ZEPHYRUM)
-    {
-        fprintf(stderr, "scriba: canon abest: %s\n", via);
-        redde NIHIL;
-    }
-    c = canon_legere(fons, p, in, &causa);
-    si (!c)
-    {
-        fprintf(stderr, "scriba: canon malus %s: %.*s\n", via,
-                (int)causa.mensura, causa.datum);
-    }
-    redde c;
-}
-
 Volumen*
 scriba_volumen_aperire (
        Piscina*  piscina,
@@ -108,31 +64,6 @@ scriba_volumen_aperire (
     }
     redde volumen_aperire_aut_creare(piscina,
         via_voluminis ? via_voluminis : "scriba.volumen");
-}
-
-/* elementum initiale: <scriba [id="…"] attributa/> */
-interior constans character*
-elementum (
-                Piscina* piscina,
-     constans character* id,
-                 chorda  attributa)
-{
-    chorda c;
-
-    c = chorda_ex_literis("<scriba", piscina);
-    si (id)
-    {
-        c = chorda_concatenare(c, chorda_ex_literis(" id=\"", piscina),
-                               piscina);
-        c = chorda_concatenare(c, chorda_ex_literis(id, piscina),
-            piscina);
-        c = chorda_concatenare(c, chorda_ex_literis("\"", piscina),
-                               piscina);
-    }
-    c = chorda_concatenare(c, attributa, piscina);
-    c = chorda_concatenare(c, chorda_ex_literis("/>", piscina),
-        piscina);
-    redde chorda_ut_cstr(c, piscina);
 }
 
 nomen structura {
@@ -175,7 +106,7 @@ paginam_indicare (
         redde FALSUM;
     }
     indicium.numerus = (s32)scriba_liber_numerus(m->liber);
-    a = insula_ramus_attributum(&m->ramus, INSULA_EPHEMERA,
+    a = insula_ramus_attributum(&m->ramus,
         "paginae_numerus");
     si (   !cogere && a && chorda_ut_s32(*a, &vetus)
         && vetus == indicium.numerus)
@@ -190,7 +121,7 @@ paginam_indicare (
     {
         indicium.positio = I;
     }
-    redde mutare_ramum(&m->ramus, INSULA_EPHEMERA, index_mutator,
+    redde mutare_ramum(&m->ramus, index_mutator,
         &indicium);
 }
 
@@ -205,11 +136,11 @@ scriba_montare (
      constans character* radix,
                     i32  latitudo,
                     i32  altitudo,
-            ScribaLiber* liber)
+            ScribaLiber* liber,
+        StatusSystemata* systemata)
 {
-                        chorda  domini;
-                  StmlResultus  res;
                         chorda  attributa;
+                       Organum* organum;
                         chorda  visus;
                         chorda  pagina;
                            b32  inventum;
@@ -265,15 +196,16 @@ scriba_montare (
     m->ramus = id ? insula_ramus(repo, "scriba", id)
                   : insula_ramus_radix(repo);
 
-    /* canones PRIMUM: hospes elementum montatum numquam videt */
-    insula_ramus_canonem_ponere(&m->ramus, INSULA_DURABILIS,
-        canonem_legere(piscina, intern, _via(piscina, radix,
-        "apps/scriba/canones/durabilis.canon")));
-    insula_ramus_canonem_ponere(&m->ramus, INSULA_EPHEMERA,
-        canonem_legere(piscina, intern, _via(piscina, radix,
-        "apps/scriba/canones/ephemera.canon")));
-
-    /* elementum initiale */
+    /* status-plan S6b: organum per modulum communem (manifestum cum
+     * basi, canon, initium, restitutio, domini) */
+    organum = organum_legere_viam(piscina, intern, radix,
+        "apps/scriba/organum.stml", "scriba");
+    si (!organum)
+    {
+        redde FALSUM;
+    }
+    /* addita: dimensiones folii (derivatae) + focus scribae (id
+     * componentis); modus ex absente manifesti */
     attributa = chorda_ex_literis(" latitudo=\"", piscina);
     attributa = chorda_concatenare(attributa,
         chorda_ex_s32((s32)folium->latitudo, piscina), piscina);
@@ -282,30 +214,12 @@ scriba_montare (
     attributa = chorda_concatenare(attributa,
         chorda_ex_s32((s32)folium->altitudo, piscina), piscina);
     attributa = chorda_concatenare(attributa,
-        chorda_ex_literis("\"", piscina), piscina);
-    si (   !insula_ramum_initiare(&m->ramus, INSULA_DURABILIS,
-               elementum(piscina, id, attributa))
-        || !insula_ramum_initiare(&m->ramus, INSULA_EPHEMERA,
-               elementum(piscina, id, chorda_ex_literis(
-                   " modus=\"normalis\" focus=\"pagina\"", piscina))))
+        chorda_ex_literis("\" focus=\"pagina\"", piscina), piscina);
+    si (!organum_ramum_parare(organum, &m->ramus, systemata,
+            chorda_ut_cstr(attributa, piscina), id ? id : "scriba",
+            piscina, intern))
     {
-        fprintf(stderr, "scriba: elementum initiale: %.*s\n",
-                (int)insula_causa(repo).mensura,
-                insula_causa(repo).datum);
         redde FALSUM;
-    }
-
-    /* domini POST initiationem */
-    domini = filum_legere_totum(_via(piscina, radix,
-        "apps/scriba/canones/domini.stml"), piscina);
-    res = stml_legere_ex_literis(chorda_ut_cstr(domini, piscina),
-        piscina, intern);
-    si (res.successus)
-    {
-        (vacuum)insula_ramus_dominos_legere(&m->ramus, INSULA_EPHEMERA,
-            res.elementum_radix);
-        (vacuum)insula_ramus_dominos_legere(&m->ramus, INSULA_DURABILIS,
-            res.elementum_radix);
     }
 
     /* contextus et registra propria */
@@ -372,6 +286,9 @@ scriba_applicatio_aedificare (
                     i32  latitudo,
                     i32  altitudo)
 {
+    StatusSystemata systemata;
+
+    memset(&systemata, ZEPHYRUM, magnitudo(systemata));
     si (!app || !piscina || !intern || !volumen)
     {
         redde FALSUM;
@@ -382,11 +299,19 @@ scriba_applicatio_aedificare (
     app->volumen  = volumen;
 
     /* repositorium cuius radix IPSA scriba est; montatio in radice */
-    app->repo = insula_repositorium_creare(piscina, intern, "<scriba/>",
+    app->repo = insula_repositorium_creare(piscina, intern,
         "<scriba focus=\"pagina\"/>");
+    /* S6b: persistentia (cursor) - scriba nullum popover nec
+     * referentiam habet */
+    si (app->repo)
+    {
+        systemata.conservatio = conservatio_creare(piscina, intern,
+            volumen, app->repo);
+    }
     si (   !app->repo
         || !scriba_montare(&app->montatio, piscina, intern, volumen,
-               app->repo, NIHIL, radix, latitudo, altitudo, NIHIL))
+               app->repo, NIHIL, radix, latitudo, altitudo, NIHIL,
+               &systemata))
     {
         redde FALSUM;
     }

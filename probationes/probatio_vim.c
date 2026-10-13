@@ -1533,6 +1533,114 @@ probans_p_paste_multi(vacuum)
 }
 
 
+/* yy / Y: lineam in clipboard copiare - tabula intacta, nihil
+ * retexendum; p glutinat */
+hic_manens vacuum
+probans_y_lineam_copiare(vacuum)
+{
+    TabulaCharacterum  tabula;
+         VimClipboard  clipboard;
+       VimUndoAcervus* undo;
+            VimStatus  status;
+
+    vim_clipboard_initiare(&clipboard);
+    undo = vim_undo_creare(g_piscina);
+    tabula_ex_literis(&tabula, g_piscina, "abc\ndef\nghi");
+    status = vim_initiare_cum_contextu(&tabula, &clipboard, undo);
+
+    status = vim_tractare_clavem(status, 'y');
+    status = vim_tractare_clavem(status, 'y');
+    CREDO_AEQUALIS_I32(clipboard.numerus_linearum, I);
+    CREDO_AEQUALIS_I32((i32)clipboard.lineae[ZEPHYRUM][ZEPHYRUM],
+        (i32)'a');
+    CREDO_AEQUALIS_I32((i32)clipboard.lineae[ZEPHYRUM][II], (i32)'c');
+    /* tabula intacta, cursor manet, nihil in acervo retexendi */
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM),
+        (i32)'a');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM),
+        (i32)'d');
+    CREDO_AEQUALIS_I32(status.cursor_linea, ZEPHYRUM);
+    CREDO_FALSUM(status.mutatus);
+    CREDO_VERUM(vim_undo_est_vacuus(undo));
+    CREDO_AEQUALIS_I32((i32)status.clavis_praecedens, (i32)'\0');
+
+    /* p: "abc" post lineam currentem */
+    status = vim_tractare_clavem(status, 'p');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM),
+        (i32)'a');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, II, ZEPHYRUM),
+        (i32)'d');
+
+    /* Y = yy: linea "def" (nunc II) */
+    status = vim_tractare_clavem(status, 'j');
+    CREDO_AEQUALIS_I32(status.cursor_linea, II);
+    status = vim_tractare_clavem(status, 'Y');
+    CREDO_AEQUALIS_I32(clipboard.numerus_linearum, I);
+    CREDO_AEQUALIS_I32((i32)clipboard.lineae[ZEPHYRUM][ZEPHYRUM],
+        (i32)'d');
+
+    /* y + clavis ignota: nihil, clavis consumitur */
+    status = vim_tractare_clavem(status, 'y');
+    status = vim_tractare_clavem(status, 'q');
+    CREDO_AEQUALIS_I32((i32)status.clavis_praecedens, (i32)'\0');
+    CREDO_AEQUALIS_I32((i32)clipboard.lineae[ZEPHYRUM][ZEPHYRUM],
+        (i32)'d');
+}
+
+/* V ... y: lineas selectas copiare; modus normalis, cursor ad initium
+ * selectionis, tabula intacta */
+hic_manens vacuum
+probans_V_y_copiare_multi(vacuum)
+{
+    TabulaCharacterum  tabula;
+         VimClipboard  clipboard;
+       VimUndoAcervus* undo;
+            VimStatus  status;
+
+    vim_clipboard_initiare(&clipboard);
+    undo = vim_undo_creare(g_piscina);
+    tabula_ex_literis(&tabula, g_piscina, "aaa\nbbb\nccc");
+    status = vim_initiare_cum_contextu(&tabula, &clipboard, undo);
+
+    status = vim_tractare_clavem(status, 'j');
+    status = vim_tractare_clavem(status, 'V');
+    status = vim_tractare_clavem(status, 'j');
+    status = vim_tractare_clavem(status, 'y');
+    CREDO_AEQUALIS_I32(clipboard.numerus_linearum, II);
+    CREDO_AEQUALIS_I32((i32)clipboard.lineae[ZEPHYRUM][ZEPHYRUM],
+        (i32)'b');
+    CREDO_AEQUALIS_I32((i32)clipboard.lineae[I][ZEPHYRUM], (i32)'c');
+    CREDO_AEQUALIS_I32((i32)status.modo, (i32)MODO_VIM_NORMALIS);
+    CREDO_AEQUALIS_I32(status.cursor_linea, I);
+    CREDO_AEQUALIS_S32(status.selectio_initium_linea, -I);
+    CREDO_FALSUM(status.mutatus);
+    CREDO_VERUM(vim_undo_est_vacuus(undo));
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM),
+        (i32)'b');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, II, ZEPHYRUM),
+        (i32)'c');
+
+    /* selectio sursum (cursor supra initium): cursor ad lineam minimam
+     * (G ad finem folii iret, non textus) */
+    status = vim_tractare_clavem(status, 'j');
+    CREDO_AEQUALIS_I32(status.cursor_linea, II);
+    status = vim_tractare_clavem(status, 'V');
+    status = vim_tractare_clavem(status, 'k');
+    status = vim_tractare_clavem(status, 'k');
+    status = vim_tractare_clavem(status, 'y');
+    CREDO_AEQUALIS_I32(clipboard.numerus_linearum, III);
+    CREDO_AEQUALIS_I32(status.cursor_linea, ZEPHYRUM);
+
+    /* P: tres lineae ante "aaa" */
+    status = vim_tractare_clavem(status, 'P');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM),
+        (i32)'a');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, II, ZEPHYRUM),
+        (i32)'c');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, III, ZEPHYRUM),
+        (i32)'a');
+}
+
 hic_manens vacuum
 probans_J_jungere_lineas(vacuum)
 {
@@ -1776,6 +1884,12 @@ principale (vacuum)
 
     printf("--- Probans J jungere lineas ---\n");
     probans_J_jungere_lineas();
+
+    printf("--- Probans yy copiare ---\n");
+    probans_y_lineam_copiare();
+
+    printf("--- Probans V y copiare multi ---\n");
+    probans_V_y_copiare_multi();
 
     printf("\n");
     credo_imprimere_compendium();

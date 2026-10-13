@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>surdus</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>surdus</h1>
+<p class="subtitulus">Surdi: summae radicum quadratarum, signum EXACTUM, celeriter</p>
+
+<p>Sums of square roots with an exact sign, fast. A Surdus is a sum of integer coefficients times the square roots of products of up to three distinct primes, that is an element of Z[sqrt p1, sqrt p2, sqrt p3] in its natural basis, held as eight s64 values. The name is the medieval one: the Latin translators of al-Khwarizmi called an irrational root surdus, &#x27;deaf&#x27;, after the Arabic asamm, whence English surd. It is a value type with no arena and no allocation, written 2026-10-09 because knotapel demo 119 took 46 minutes, about 70% of it in extensio&#x27;s big-number arithmetic, over decisions that mostly fit in machine words. The sign is decided in three tiers, each exact: zero if and only if every coefficient is zero (the basis is linearly independent over Q); then a double-precision filter that answers only when the computed value exceeds an error bound proved in the source; then recursive squaring in checked s64, writing x = a + b sqrt p and taking sign(a) sign(a^2 - p b^2) when a and b have opposite signs. What does not fit in 64 bits it refuses, and it never guesses: the caller chooses the fallback (extensio), so the hot path never allocates and refusals can be counted. The oracle is extensio in Q(cos 2 pi/120), which contains all three roots and reaches them by an unrelated algorithm; Pell units, tiny values with large coefficients, force the third tier on purpose. A planted fault that moved the stored roots by 1e-12 made the filter return a wrong sign, which is the evidence that the bound is what keeps the filter honest. Consumed by knotapel demos 120 to 123.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/surdus.h"><code>include/surdus.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/surdus.c"><code>lib/surdus.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-10-09 4a9c5fbe</td></tr>
+<tr><td>Group</td><td><a href="greges.html#mathematica">Exact mathematics</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

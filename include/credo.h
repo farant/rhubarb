@@ -21,6 +21,8 @@ nomen structura CredoNotatio {
                                                b32 praeteritus;
                                     memoriae_index ordo;
     structura CredoNotatio* sequens;
+    /* credo II: CREDO_GRADUS currens (vacua si nullus) */
+                                            chorda gradus;
 } CredoNotatio;
 
 
@@ -636,7 +638,10 @@ nomen structura CredoContextus {
                 Piscina* piscina;   /* sectionis propria */
                  vacuum* datum;     /* parare ponit, probare/purgare
                                      * legunt */
-    constans character* titulus;   /* sectio currens */
+     constans character* titulus;   /* sectio currens */
+                 vacuum* suita;     /* (II) datum parare_suitae;
+                                     * sectiones LEGUNT, numquam mutant
+                                     * (lint); NIHIL sine fixura */
 } CredoContextus;
 
 nomen vacuum (*CredoFunctio)(CredoContextus* c);
@@ -648,30 +653,58 @@ nomen structura CredoSectio {
            CredoFunctio parare;            /* NIHIL = nihil */
            CredoFunctio purgare;           /* NIHIL = nihil; SEMPER
                                             * vocatur */
-    constans character* signa;             /* RESERVATUM (gradus II):
-                                            * "lentus rete" */
-    constans character* exspectata_fracta; /* RESERVATUM (gradus II):
-                                            * id tabularii */
+    constans character* signa;             /* (II) verba spatio separata
+                                            * ex vocabulario CLAUSO:
+                                            * lentus rete fenestra
+                                            * repositorium; ignotum ->
+                                            * suita FRACTA nominans.
+                                            * CREDO_SIGNA_OMITTE="rete"
+                                            * -> sectio OMISSA (in
+                                            * plagula, nominata) */
+    constans character* exspectata_fracta; /* (II) CAUSA in fonte
+                                            * scripta (non vacua; id
+                                            * tabularii intra licet,
+                                            * numquam legitur): fracta
+                                            * -> NOTA_FRACTA (suita
+                                            * transit), transiens ->
+                                            * INOPINATA (suita FRACTA:
+                                            * linea delenda). Census:
+                                            * tools/credo_fracturae_
+                                            * notae.py */
 } CredoSectio;
 
 /* Suitam currere: sectiones ordine usque ad titulum NIHIL. Ambitus:
  *   CREDO_SECTIO=<titulus>  sectio sola (ceterae non currunt, non
  *                           numerantur); titulus ignotus = I, nihil
  *                           cursum, nominatum
+ *   CREDO_SIGNA_OMITTE=<verba>  sectiones cum signo quovis horum
+ *                           OMISSAE (credo II); verbum ignotum = I,
+ *                           nihil cursum, nominatum
+ *   CREDO_ORDO=mixtus[:<semen>]  ordo sectionum permutatus (credo
+ *                           II; Fisher-Yates, semen IX cifrarum ad
+ *                           summum; sine semine ex tempore electum) -
+ *                           semen NOMINATUR ("=== ORDO mixtus semen N
+ *                           ===", linea ORDO) ut cursus iteretur;
+ *                           instrumentum status communis occulti, non
+ *                           ordinarium. "tabula"/vacuum = ordo tabulae;
+ *                           valor alius = I, nihil cursum, nominatum
  *   CREDO_VERDICTA=<via>    plagula verdictorum (TSV) scribitur
  * Plagula: linea per sectionem STATIM post eam (effluxa), deinde linea
  * SUITA - linea SUITA absens = suita ruit (sectiones priores tamen
  * notae). Campi tabulatione separati; '\t' '\n' '\\' in valoribus
  * effugiuntur:
  *   SECTIO  suita  titulus  exitus  praeteriti  totales  ms
- *           filum:versus  genus  expressio      (fractura prima; vacua
- *                                                si transiit)
+ *           filum:versus  genus  expressio  gradus  (fractura prima;
+ *           vacua si transiit; gradus = CREDO_GRADUS currens, credo II)
  *   SUITA   suita  exitus  transeuntes  sectiones  praeteriti  totales
  *           ms
+ *   ORDO    suita  mixtus  semen          (credo II; ante sectiones,
+ *                                         solum si CREDO_ORDO mixtus)
  * exitus sectionis: TRANSIIT | FRACTA | VACUA (nulla assertio = non
- * transiit, ut NIHIL PROBATUM) | ABORTA (NECESSE fractum); RESERVATA
- * (gradus II): OMISSA, NOTA_FRACTA, INOPINATA. exitus suitae: TRANSIIT
- * | FRACTA.
+ * transiit, ut NIHIL PROBATUM) | ABORTA (NECESSE fractum) | OMISSA
+ * (signum omissum, credo II) | NOTA_FRACTA (fractura exspectata, suita
+ * transit) | INOPINATA (exspectata fracta transiit - suita FRACTA).
+ * exitus suitae: TRANSIIT | FRACTA | VACUA (nulla sectio cursa).
  * Effusio humana ut olim (--- Probans <titulus> ---, puncta, FRACTA,
  * compendium). Redde ZEPHYRUM si omnes sectiones cursae transierunt, I
  * aliter. */
@@ -679,6 +712,43 @@ s32
 credo_suitam_currere (
       constans character* titulus_suitae,
     constans CredoSectio* sectiones);
+
+/* GRADUS intra sectionem (credo II): nomen gradus currentis; fractura
+ * prima eum fert ("... at f:12 (in gradu VI: nuntius)", campus XI
+ * plagulae SECTIO) - nominatio sola, nulla isolatio. Gradus ad initium
+ * cuiusque sectionis vacatur; titulus durare debet (litterae). */
+#define CREDO_GRADUS(titulus) credo_gradum_ponere(titulus)
+
+vacuum
+credo_gradum_ponere (
+    constans character* titulus);
+
+/* AREA (credo II): directorium proprium contextus sub TMPDIR -
+ * sectionis '<TMPDIR>/<suita>.<n>.<pid>' (n = ordo in tabula, ab I),
+ * suitae (in parare_suitae/purgare_suitae) '<suita>.suita.<pid>';
+ * titulus suitae sanatur (praeter [A-Za-z0-9_-] -> '_'). Creatur PIGRE
+ * ad vocationem primam (eadem via deinde), deletur tota post purgare
+ * (etiam post NECESSE, etiam si filius CREDO_NON_RUIT eam creavit).
+ * Sub fabrica TMPDIR = area membri. NIHIL si creari non potest aut c
+ * contextus currens non est. Via usque ad deletionem valet. */
+constans character*
+credo_area (
+    CredoContextus* c);
+
+/* SUITA CUM FIXURA COMMUNI (credo II): parare_suitae SEMEL ante
+ * sectiones (contextus suitae: piscina sua; datum eius -> c->suita
+ * omnium sectionum), purgare_suitae SEMPER post ultimam - etiam post
+ * sectionem abortam aut parare_suitae fractum. parare_suitae fractum
+ * (assertio aut NECESSE) -> nulla sectio currit, '(parare suitae)' in
+ * plagula notatur, suita FRACTA. NIHIL licet (= credo_suitam_currere).
+ * Fixura cara (daemon, applicatio) semel aedificatur; sectiones tamen
+ * ordine liberae manent quia statum suitae non mutant. */
+s32
+credo_suitam_currere_cum (
+      constans character* titulus_suitae,
+    constans CredoSectio* sectiones,
+            CredoFunctio  parare_suitae,
+            CredoFunctio  purgare_suitae);
 
 /* NECESSE: assertio FATALIS - fracta sectionem finit (longjmp ad
  * cursorem; purgare tamen vocatur), loco custodiarum

@@ -11,6 +11,9 @@
 #include <setjmp.h>
 #include <sys/time.h>
 #include <sys/wait.h>
+#include <sys/stat.h>
+#include <dirent.h>
+#include <errno.h>
 
 
 /* ======================================================
@@ -21,6 +24,14 @@ universalis        Piscina* _credo_piscina  = NIHIL;
 universalis   CredoNotatio* _credo_primus   = NIHIL;
 universalis   CredoNotatio* _credo_nunc     = NIHIL;
 universalis memoriae_index  _credo_numerus  = ZEPHYRUM;
+
+/* GRADUS (credo II): CREDO_GRADUS currens - notationibus additur */
+hic_manens constans character* _credo_gradus = NIHIL;
+
+/* FRACTURAE EXSPECTATAE (credo II): assertiones fractae sectionum quae
+ * 'exspectata_fracta' ferunt (NOTA_FRACTA) - suitam non frangunt;
+ * suitae veteres numquam ponunt (ZEPHYRUM) */
+hic_manens memoriae_index _credo_fracti_exspectati = ZEPHYRUM;
 
 /* sectiones (credo v2): punctum saltus NECESSE, et num cursor sectionem
  * currit / num in filio furcato sumus (ibi saltus vetitus) */
@@ -86,10 +97,12 @@ vacuum
 credo_aperire (
     Piscina* piscina)
 {
-    _credo_piscina  = piscina;
-    _credo_primus   = NIHIL;
-    _credo_nunc     = NIHIL;
-    _credo_numerus  = ZEPHYRUM;
+    _credo_piscina            = piscina;
+    _credo_primus             = NIHIL;
+    _credo_nunc               = NIHIL;
+    _credo_numerus            = ZEPHYRUM;
+    _credo_fracti_exspectati  = ZEPHYRUM;
+    _credo_gradus             = NIHIL;
 }
 
 vacuum
@@ -97,10 +110,12 @@ credo_claudere (
     vacuum)
 {
     /* Piscina manet; conditio solum reficitur */
-    _credo_piscina  = NIHIL;
-    _credo_primus   = NIHIL;
-    _credo_nunc     = NIHIL;
-    _credo_numerus  = ZEPHYRUM;
+    _credo_piscina            = NIHIL;
+    _credo_primus             = NIHIL;
+    _credo_nunc               = NIHIL;
+    _credo_numerus            = ZEPHYRUM;
+    _credo_fracti_exspectati  = ZEPHYRUM;
+    _credo_gradus             = NIHIL;
 }
 
 
@@ -154,7 +169,7 @@ credo_omnia_praeterierunt (
     {
         redde FALSUM;
     }
-    redde credo_numerus_fracti() == ZEPHYRUM;
+    redde credo_numerus_fracti() == _credo_fracti_exspectati;
 }
 
 /* Fractas invenire. COPIAS reddit, non catenam filtratam: 'sequens'
@@ -229,6 +244,11 @@ credo_imprimere_compendium (
     imprimere("Totalis:    %lu\n", (insignatus longus)totalis);
     imprimere("Praeteriti: %lu\n", (insignatus longus)praeteriti);
     imprimere("Fracti:     %lu\n", (insignatus longus)fracti);
+    si (_credo_fracti_exspectati > ZEPHYRUM)
+    {
+        imprimere("Exspectati: %lu (NOTA_FRACTA - causa in fonte)\n",
+            (insignatus longus)_credo_fracti_exspectati);
+    }
 
     si (totalis == ZEPHYRUM)
     {
@@ -236,9 +256,14 @@ credo_imprimere_compendium (
          * credo_omnia_praeterierunt FALSUM reddit */
         imprimere("\nConditio: NIHIL PROBATUM\n");
     }
-    alioquin si (fracti > ZEPHYRUM)
+    alioquin si (fracti > _credo_fracti_exspectati)
     {
         imprimere("\nConditio: FRACTA\n");
+    }
+    alioquin si (fracti > ZEPHYRUM)
+    {
+        imprimere("\nConditio: OMNIA PRAETERIERUNT (fracturis "
+            "exspectatis exceptis)\n");
     }
     alioquin
     {
@@ -277,6 +302,8 @@ _credo_notare (
     notatio->versus = versus;
     notatio->praeteritus = praeteritus;
     notatio->ordo = _credo_numerus;
+    notatio->gradus = chorda_ex_literis(_credo_gradus != NIHIL
+        ? _credo_gradus : "", _credo_piscina);
 
     _credo_concatenare(notatio);
 
@@ -288,17 +315,24 @@ _credo_notare (
     alioquin
     {
         imprimere("F");
-        imprimere("\n FRACTA (%s): %s at %s:%d\n",
+        imprimere("\n FRACTA (%s): %s at %s:%d",
                   chorda_ut_cstr(notatio->genus, _credo_piscina),
                   chorda_ut_cstr(notatio->expressio, _credo_piscina),
                   chorda_ut_cstr(notatio->filum, _credo_piscina),
                   versus);
-        imprimere("  Speratus: %s\n",
-                  chorda_ut_cstr(notatio->valor_secundus,
-                  _credo_piscina));
-        imprimere("  Receptus: %s\n",
-                  chorda_ut_cstr(notatio->valor_primus,
-                  _credo_piscina));
+        si (_credo_gradus != NIHIL)
+        {
+            imprimere(" (in gradu %s)", _credo_gradus);
+        }
+        imprimere("\n");
+        /* chorda vacua: chorda_ut_cstr NIHIL reddit - "%.*s" cum
+         * mensura numquam NIHIL ad "%s" dat (NECESSE, furca) */
+        imprimere("  Speratus: %.*s\n",
+                  (integer)notatio->valor_secundus.mensura,
+                  (constans character*)notatio->valor_secundus.datum);
+        imprimere("  Receptus: %.*s\n",
+                  (integer)notatio->valor_primus.mensura,
+                  (constans character*)notatio->valor_primus.datum);
         /* effluere statim: probatio post fracturam saepe NIHIL
          * dereferens cadit, et per fistulam buffer plenus cum
          * relatione perit - segfault relationem absorbebat
@@ -1047,13 +1081,425 @@ _credo_sectionem_scribere (
         _credo_chordam_scribere(plagula, summa.fractura->genus);
         fputc('\t', plagula);
         _credo_chordam_scribere(plagula, summa.fractura->expressio);
+        /* campus XI (credo II): gradus fracturae primae */
+        fputc('\t', plagula);
+        _credo_chordam_scribere(plagula, summa.fractura->gradus);
     }
     alioquin
     {
-        fputs("\t\t", plagula);
+        fputs("\t\t\t", plagula);
     }
     fputc('\n', plagula);
     (vacuum)fflush(plagula);
+}
+
+vacuum
+credo_gradum_ponere (
+    constans character* titulus)
+{
+    _credo_gradus = titulus;
+    si (titulus != NIHIL)
+    {
+        imprimere("\n  -- gradus %s --\n", titulus);
+    }
+}
+
+
+/* ==================================================
+ * AREA (credo II): via contextus ANTE cursum eius computatur,
+ * directorium in credo_area PIGRE creatur, post purgare deletur
+ * quidquid ibi stat (filius CREDO_NON_RUIT aream creare potest - parens
+ * nescit, via tamen eadem). credo filum.c NON vocat: suitae
+ * subsystematum credo sine filo ligant (silva, materia, ...).
+ * ================================================== */
+
+nomen structura {
+     constans CredoContextus* contextus;   /* NIHIL = nulla area */
+                   character  via[DXII];
+                         b32  creata;
+} CredoArea;
+
+hic_manens CredoArea _credo_area_sectionis;
+hic_manens CredoArea _credo_area_suitae;
+
+/* arbor deleta (nexus ipse removetur, numquam destinatio); absens =
+ * VERUM */
+interior b32
+_credo_arborem_delere (
+    constans character* via)
+{
+    structura stat    st;
+              DIR*    d;
+    structura dirent* e;
+         character    filius[DXII];
+               b32    bene;
+
+    si (lstat(via, &st) != ZEPHYRUM)
+    {
+        redde errno == ENOENT;
+    }
+    si (!S_ISDIR(st.st_mode))
+    {
+        redde unlink(via) == ZEPHYRUM;
+    }
+    d = opendir(via);
+    si (d == NIHIL)
+    {
+        redde FALSUM;
+    }
+    bene = VERUM;
+    dum ((e = readdir(d)) != NIHIL)
+    {
+        si (   strcmp(e->d_name, ".")  == ZEPHYRUM
+            || strcmp(e->d_name, "..") == ZEPHYRUM)
+        {
+            perge;
+        }
+        si (strlen(via) + strlen(e->d_name) + II > magnitudo(filius))
+        {
+            bene = FALSUM;
+            perge;
+        }
+        sprintf(filius, "%s/%s", via, e->d_name);
+        si (!_credo_arborem_delere(filius))
+        {
+            bene = FALSUM;
+        }
+    }
+    (vacuum)closedir(d);
+    redde bene && rmdir(via) == ZEPHYRUM;
+}
+
+/* '<TMPDIR>/<suita sanata>.<signum>.<pid>' - '/' finalis TMPDIR
+ * (macOS) demitur; nihil creatur */
+interior vacuum
+_credo_aream_ponere (
+                  CredoArea* area,
+    constans CredoContextus* contextus,
+         constans character* titulus_suitae,
+         constans character* signum)
+{
+     constans character* tmp;
+         memoriae_index  n;
+         memoriae_index  i;
+              character  ch;
+
+    tmp = getenv("TMPDIR");
+    si (tmp == NIHIL || tmp[0] == '\0')
+    {
+        tmp = "/tmp";
+    }
+    n = strlen(tmp);
+    dum (n > I && tmp[n - I] == '/')
+    {
+        n--;
+    }
+    si (n > CD)
+    {
+        n = CD;
+    }
+    memcpy(area->via, tmp, n);
+    area->via[n] = '/';
+    n++;
+    per (i = ZEPHYRUM; titulus_suitae[i] != '\0' && i < LXIV; i++)
+    {
+        ch = titulus_suitae[i];
+        si (!(   (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z')
+              || (ch >= '0' && ch <= '9') || ch == '_' || ch == '-'))
+        {
+            ch = '_';
+        }
+        area->via[n] = ch;
+        n++;
+    }
+    si (i == ZEPHYRUM)
+    {
+        area->via[n] = '_';
+        n++;
+    }
+    sprintf(area->via + n, ".%s.%ld", signum, (longus)getpid());
+    area->contextus  = contextus;
+    area->creata     = FALSUM;
+}
+
+/* post purgare: quidquid in via stat deletur; deletio fracta
+ * nominatur (reliquiae sub TMPDIR) */
+interior vacuum
+_credo_aream_delere (
+    CredoArea* area)
+{
+    si (area->contextus == NIHIL)
+    {
+        redde;
+    }
+    si (!_credo_arborem_delere(area->via))
+    {
+        imprimere("\n  credo: area non deleta: %s\n", area->via);
+    }
+    area->contextus  = NIHIL;
+    area->creata     = FALSUM;
+}
+
+constans character*
+credo_area (
+    CredoContextus* c)
+{
+    CredoArea* area;
+
+    area = NIHIL;
+    si (c != NIHIL && c == _credo_area_sectionis.contextus)
+    {
+        area = &_credo_area_sectionis;
+    }
+    alioquin si (c != NIHIL && c == _credo_area_suitae.contextus)
+    {
+        area = &_credo_area_suitae;
+    }
+    si (area == NIHIL)
+    {
+        redde NIHIL;
+    }
+    si (!area->creata)
+    {
+        /* reliquiae pid iterati prius deletae */
+        si (   !_credo_arborem_delere(area->via)
+            || mkdir(area->via, 0700) != ZEPHYRUM)
+        {
+            redde NIHIL;
+        }
+        area->creata = VERUM;
+    }
+    redde area->via;
+}
+
+
+/* ==================================================
+ * ORDO (credo II): CREDO_ORDO=mixtus[:semen] - permutatio sectionum
+ * reproducibilis (Fisher-Yates super xorshift32). Instrumentum quod
+ * statum communem occultum invenit, non ordinarium, non porta.
+ * Generator proprius: subsystemata credo sine 'sors' ligant.
+ * ================================================== */
+
+/* VERUM si valor notus: NIHIL/""/"tabula" -> ordo tabulae; "mixtus"
+ * -> semen ex tempore et pid; "mixtus:<cifrae, IX ad summum>" */
+interior b32
+_credo_ordinem_legere (
+     constans character* valor,
+                    b32* mixtus,
+      insignatus longus* semen)
+{
+    i32 i;
+
+    *mixtus  = FALSUM;
+    *semen   = ZEPHYRUM;
+    si (   valor                   == NIHIL || valor[0] == '\0'
+        || strcmp(valor, "tabula") == ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    si (strncmp(valor, "mixtus", VI) != ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    *mixtus = VERUM;
+    si (valor[VI] == '\0')
+    {
+        *semen = ((insignatus longus)time(NIHIL)
+            ^ ((insignatus longus)getpid() << XVI)) % 1000000000UL;
+        redde VERUM;
+    }
+    si (valor[VI] != ':' || valor[VII] == '\0')
+    {
+        redde FALSUM;
+    }
+    per (i = VII; valor[i] != '\0'; i++)
+    {
+        si (valor[i] < '0' || valor[i] > '9' || i >= VII + IX)
+        {
+            redde FALSUM;
+        }
+        *semen = *semen * X + (insignatus longus)(valor[i] - '0');
+    }
+    redde VERUM;
+}
+
+/* xorshift32 (status numquam ZEPHYRUM) */
+interior insignatus longus
+_credo_fortuitum (
+    insignatus longus* status)
+{
+    insignatus longus x = *status;
+
+    x        ^= (x << XIII) & 0xFFFFFFFFUL;
+    x        ^= x >> XVII;
+    x        ^= (x << V) & 0xFFFFFFFFUL;
+    *status  = x;
+    redde x;
+}
+
+/* ordo[] = 0..n-1, permutatus si mixtus (semen mixtum: semina parva
+ * vicina ordines dissimiles dant) */
+interior vacuum
+_credo_ordinem_parare (
+                  i32* ordo,
+                  i32  n,
+                  b32  mixtus,
+    insignatus longus  semen)
+{
+    insignatus longus status;
+                  i32 k;
+                  i32 j;
+                  i32 t;
+
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        ordo[k] = k;
+    }
+    si (!mixtus)
+    {
+        redde;
+    }
+    status = (semen * 2654435761UL + 0x9E3779B9UL) & 0xFFFFFFFFUL;
+    si (status == ZEPHYRUM)
+    {
+        status = I;
+    }
+    per (k = ZEPHYRUM; k < VIII; k++)
+    {
+        (vacuum)_credo_fortuitum(&status);
+    }
+    per (k = n - I; k > ZEPHYRUM; k--)
+    {
+        j        = (i32)(_credo_fortuitum(&status)
+            % (insignatus longus)(k + I));
+        t        = ordo[k];
+        ordo[k]  = ordo[j];
+        ordo[j]  = t;
+    }
+}
+
+/* SIGNA (credo II): vocabulum CLAUSUM - facultates domus (fabrica-7
+ * annotatio 'facultas') et 'lentus'. Verbum ignotum = vitium scribae,
+ * non signum novum tacitum */
+hic_manens constans character* constans _credo_signa_nota[] = {
+    "lentus", "rete", "fenestra", "repositorium", NIHIL
+};
+
+interior b32
+_credo_signum_notum (
+     constans character* verbum,
+         memoriae_index  mensura)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; _credo_signa_nota[i] != NIHIL; i++)
+    {
+        si (   strlen(_credo_signa_nota[i]) == mensura
+            && strncmp(_credo_signa_nota[i], verbum, mensura)
+                == ZEPHYRUM)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* signa (verba spatio separata) omnia nota? primum ignotum in 'ignotum'
+ * (capacitas XXXII) */
+interior b32
+_credo_signa_probare (
+    constans character* signa,
+             character* ignotum)
+{
+    constans character* p = signa;
+
+    dum (p != NIHIL && *p != '\0')
+    {
+        memoriae_index n;
+
+        dum (*p == ' ')
+        {
+            p++;
+        }
+        n = ZEPHYRUM;
+        dum (p[n] != '\0' && p[n] != ' ')
+        {
+            n++;
+        }
+        si (n > ZEPHYRUM && !_credo_signum_notum(p, n))
+        {
+            sprintf(ignotum, "%.*s", (integer)(n > XXXI ? XXXI : n), p);
+            redde FALSUM;
+        }
+        p += n;
+    }
+    redde VERUM;
+}
+
+/* signum commune 'signa' et 'omittenda'? id in 'commune' (capacitas
+ * XXXII) */
+interior b32
+_credo_signum_commune (
+    constans character* signa,
+    constans character* omittenda,
+             character* commune)
+{
+    constans character* p = signa;
+
+    dum (p != NIHIL && omittenda != NIHIL && *p != '\0')
+    {
+            memoriae_index  n;
+        constans character* q = omittenda;
+
+        dum (*p == ' ')
+        {
+            p++;
+        }
+        n = ZEPHYRUM;
+        dum (p[n] != '\0' && p[n] != ' ')
+        {
+            n++;
+        }
+        dum (n > ZEPHYRUM && *q != '\0')
+        {
+            memoriae_index m;
+
+            dum (*q == ' ')
+            {
+                q++;
+            }
+            m = ZEPHYRUM;
+            dum (q[m] != '\0' && q[m] != ' ')
+            {
+                m++;
+            }
+            si (m == n && strncmp(p, q, n) == ZEPHYRUM)
+            {
+                sprintf(commune, "%.*s", (integer)(n > XXXI ? XXXI : n),
+                    p);
+                redde VERUM;
+            }
+            q += m;
+        }
+        p += n;
+    }
+    redde FALSUM;
+}
+
+/* suita recusata ante cursum (filtrum, signum ignotum): SUITA FRACTA
+ * 0/0, plagula clausa */
+interior vacuum
+_credo_suitam_recusare (
+                  FILE* plagula,
+    constans character* titulus_suitae)
+{
+    si (plagula != NIHIL)
+    {
+        fputs("SUITA\t", plagula);
+        _credo_literas_scribere(plagula, titulus_suitae);
+        fputs("\tFRACTA\t0\t0\t0\t0\t0\n", plagula);
+        fclose(plagula);
+    }
 }
 
 s32
@@ -1061,14 +1507,53 @@ credo_suitam_currere (
       constans character* titulus_suitae,
     constans CredoSectio* sectiones)
 {
-    constans character* filtrum;
-    constans character* via_verdictorum;
+    redde credo_suitam_currere_cum(titulus_suitae, sectiones, NIHIL,
+        NIHIL);
+}
+
+/* purgare_suitae (si data) et piscina suitae destruitur - SEMEL, in
+ * omni exitu post parare_suitae */
+interior vacuum
+_credo_suitam_purgare (
+      CredoFunctio  purgare_suitae,
+    CredoContextus* suitae)
+{
+    si (purgare_suitae != NIHIL)
+    {
+        purgare_suitae(suitae);
+    }
+    _credo_aream_delere(&_credo_area_suitae);
+    si (suitae->piscina != NIHIL)
+    {
+        piscina_destruere(suitae->piscina);
+        suitae->piscina = NIHIL;
+    }
+}
+
+s32
+credo_suitam_currere_cum (
+      constans character* titulus_suitae,
+    constans CredoSectio* sectiones,
+            CredoFunctio  parare_suitae,
+            CredoFunctio  purgare_suitae)
+{
+         CredoContextus  suitae;
+     constans character* filtrum;
+     constans character* via_verdictorum;
+     constans character* omittenda;
                   FILE* plagula;
          memoriae_index  cursae;
          memoriae_index  transeuntes;
+         memoriae_index  omissae;
                     b32  inventa;
+              character  signum[XXXII];
                     f64  initium_suitae;
                     i32  i;
+                    i32  k;
+                    i32  numerus_sectionum;
+                   i32* ordo;
+                    b32  mixtus;
+      insignatus longus  semen;
 
     si (_credo_piscina == NIHIL)
     {
@@ -1108,19 +1593,136 @@ credo_suitam_currere (
     {
         imprimere("FRACTA: CREDO_SECTIO '%s' - sectio nulla in suita"
             " %s\n", filtrum, titulus_suitae);
+        _credo_suitam_recusare(plagula, titulus_suitae);
+        redde I;
+    }
+    /* SIGNA (credo II): vocabulum clausum in tabula et in ambitu ANTE
+     * cursum - verbum ignotum nihil omitteret tacite */
+    omittenda = getenv("CREDO_SIGNA_OMITTE");
+    si (omittenda != NIHIL && !_credo_signa_probare(omittenda, signum))
+    {
+        imprimere("FRACTA: CREDO_SIGNA_OMITTE: signum ignotum '%s'"
+            " (lentus rete fenestra repositorium)\n", signum);
+        _credo_suitam_recusare(plagula, titulus_suitae);
+        redde I;
+    }
+    per (i = ZEPHYRUM; sectiones[i].titulus != NIHIL; i++)
+    {
+        si (!_credo_signa_probare(sectiones[i].signa, signum))
+        {
+            imprimere("FRACTA: signum ignotum '%s' in sectione %s"
+                " (lentus rete fenestra repositorium)\n", signum,
+                sectiones[i].titulus);
+            _credo_suitam_recusare(plagula, titulus_suitae);
+            redde I;
+        }
+        /* fractura exspectata sine causa = vitium scribae (credo II):
+         * causa in fonte est TOTA memoria fracturae */
+        si (   sectiones[i].exspectata_fracta    != NIHIL
+            && sectiones[i].exspectata_fracta[0] == '\0')
+        {
+            imprimere("FRACTA: exspectata_fracta vacua in sectione %s"
+                " (causa scribenda)\n", sectiones[i].titulus);
+            _credo_suitam_recusare(plagula, titulus_suitae);
+            redde I;
+        }
+    }
+    /* ORDO (credo II): valor ignotus ordinem tacite non mutaret */
+    si (!_credo_ordinem_legere(getenv("CREDO_ORDO"), &mixtus, &semen))
+    {
+        imprimere("FRACTA: CREDO_ORDO ignotus '%s' (tabula | mixtus |"
+            " mixtus:<semen>)\n", getenv("CREDO_ORDO"));
+        _credo_suitam_recusare(plagula, titulus_suitae);
+        redde I;
+    }
+    numerus_sectionum = ZEPHYRUM;
+    dum (sectiones[numerus_sectionum].titulus != NIHIL)
+    {
+        numerus_sectionum++;
+    }
+    ordo = (i32*)piscina_allocare(_credo_piscina, (memoriae_index)(
+        numerus_sectionum + I) * magnitudo(i32));
+    si (ordo == NIHIL)
+    {
+        imprimere("FATALE: credo ordo sectionum\n");
+        _credo_suitam_recusare(plagula, titulus_suitae);
+        redde I;
+    }
+    _credo_ordinem_parare(ordo, numerus_sectionum, mixtus, semen);
+    si (mixtus)
+    {
+        /* semen NOMINATUM: cursus fractus eodem semine iteratur */
+        imprimere("\n=== ORDO mixtus semen %lu ===\n", semen);
         si (plagula != NIHIL)
         {
-            fputs("SUITA\t", plagula);
+            fputs("ORDO\t", plagula);
             _credo_literas_scribere(plagula, titulus_suitae);
-            fputs("\tFRACTA\t0\t0\t0\t0\t0\n", plagula);
-            fclose(plagula);
+            fprintf(plagula, "\tmixtus\t%lu\n", semen);
         }
-        redde I;
     }
     cursae          = ZEPHYRUM;
     transeuntes     = ZEPHYRUM;
+    omissae         = ZEPHYRUM;
     initium_suitae  = _credo_ms_nunc();
-    per (i = ZEPHYRUM; sectiones[i].titulus != NIHIL; i++)
+    /* FIXURA SUITAE (credo II): parare_suitae per viam sectionis
+     * (NECESSE capitur); fractum -> nulla sectio, '(parare suitae)'
+     * notatur, purgare_suitae tamen */
+    memset(&suitae, ZEPHYRUM, magnitudo(suitae));
+    suitae.titulus = titulus_suitae;
+    _credo_aream_ponere(&_credo_area_suitae, &suitae, titulus_suitae,
+        "suita");
+    si (parare_suitae != NIHIL || purgare_suitae != NIHIL)
+    {
+        suitae.piscina = piscina_generare_dynamicum(titulus_suitae,
+            1048576);
+        si (suitae.piscina == NIHIL)
+        {
+            imprimere("FATALE: piscina suitae %s fracta\n",
+                titulus_suitae);
+            redde I;
+        }
+    }
+    si (parare_suitae != NIHIL)
+    {
+                 CredoSectio  pseudo;
+                CredoNotatio* ante;
+         CredoSectionisSumma  summa;
+                         b32  aborta;
+
+        memset(&pseudo, ZEPHYRUM, magnitudo(pseudo));
+        pseudo.titulus = "(parare suitae)";
+        pseudo.probare = parare_suitae;
+        imprimere("\n--- Parans suitam %s ---\n", titulus_suitae);
+        ante    = _credo_nunc;
+        aborta  = _credo_sectionem_agere(&pseudo, &suitae);
+        summa   = _credo_sectionem_summare(ante, aborta);
+        si (   strcmp(summa.exitus, "FRACTA") == ZEPHYRUM
+            || strcmp(summa.exitus, "ABORTA") == ZEPHYRUM)
+        {
+            imprimere("\n  parare suitae: %s - nulla sectio currit\n",
+                summa.exitus);
+            si (plagula != NIHIL)
+            {
+                _credo_sectionem_scribere(plagula, titulus_suitae,
+                    pseudo.titulus, summa, _credo_ms_nunc()
+                    - initium_suitae);
+            }
+            _credo_suitam_purgare(purgare_suitae, &suitae);
+            credo_imprimere_compendium();
+            si (plagula != NIHIL)
+            {
+                fputs("SUITA\t", plagula);
+                _credo_literas_scribere(plagula, titulus_suitae);
+                fprintf(plagula, "\tFRACTA\t0\t0\t%lu\t%lu\t%.0f\n",
+                    (insignatus longus)credo_numerus_praeteriti(),
+                    (insignatus longus)credo_numerus_totalis(),
+                    _credo_ms_nunc() - initium_suitae);
+                fclose(plagula);
+            }
+            redde I;
+        }
+    }
+    per (k = ZEPHYRUM; k < numerus_sectionum; k++)
     {
         constans CredoSectio* sectio;
               CredoContextus  contextus;
@@ -1129,10 +1731,32 @@ credo_suitam_currere (
                          b32  aborta;
                          f64  initium;
 
-        sectio = &sectiones[i];
+        /* i = sedes in tabula (area '<suita>.<i+1>.<pid>' stabilis) */
+        i       = ordo[k];
+        sectio  = &sectiones[i];
         si (   filtrum != NIHIL && strcmp(sectio->titulus, filtrum)
                 != ZEPHYRUM)
         {
+            perge;
+        }
+        /* OMISSA (credo II): signum in CREDO_SIGNA_OMITTE - nominata in
+         * effusione et plagula, numquam tacita, numquam numerata ut
+         * cursa */
+        si (_credo_signum_commune(sectio->signa, omittenda, signum))
+        {
+            imprimere("\n--- OMISSA %s (signum %s) ---\n",
+                sectio->titulus,
+                signum);
+            omissae++;
+            si (plagula != NIHIL)
+            {
+                summa.exitus      = "OMISSA";
+                summa.praeteriti  = ZEPHYRUM;
+                summa.totales     = ZEPHYRUM;
+                summa.fractura    = NIHIL;
+                _credo_sectionem_scribere(plagula, titulus_suitae,
+                    sectio->titulus, summa, 0.0);
+            }
             perge;
         }
         imprimere("\n--- Probans %s ---\n", sectio->titulus);
@@ -1140,25 +1764,65 @@ credo_suitam_currere (
             262144);
         contextus.datum    = NIHIL;
         contextus.titulus  = sectio->titulus;
+        contextus.suita    = suitae.datum;
         si (contextus.piscina == NIHIL)
         {
             imprimere("FATALE: piscina sectionis %s fracta\n",
                 sectio->titulus);
+            _credo_suitam_purgare(purgare_suitae, &suitae);
             redde I;
         }
-        ante     = _credo_nunc;
-        initium  = _credo_ms_nunc();
-        aborta   = _credo_sectionem_agere(sectio, &contextus);
+        sprintf(signum, "%lu", (insignatus longus)(i + I));
+        _credo_aream_ponere(&_credo_area_sectionis, &contextus,
+            titulus_suitae, signum);
+        ante           = _credo_nunc;
+        initium        = _credo_ms_nunc();
+        _credo_gradus  = NIHIL;
+        aborta         = _credo_sectionem_agere(sectio, &contextus);
+        _credo_gradus  = NIHIL;
         si (sectio->purgare != NIHIL)
         {
             sectio->purgare(&contextus);
         }
+        _credo_aream_delere(&_credo_area_sectionis);
         summa = _credo_sectionem_summare(ante, aborta);
         piscina_destruere(contextus.piscina);
         cursae++;
+        /* FRACTURA EXSPECTATA (credo II): fracta -> NOTA_FRACTA (suita
+         * transit, fractura servata); transiens -> INOPINATA (suita
+         * frangitur: fractura sanata, linea delenda); VACUA manet */
+        si (sectio->exspectata_fracta != NIHIL)
+        {
+            si (   strcmp(summa.exitus, "FRACTA") == ZEPHYRUM
+                || strcmp(summa.exitus, "ABORTA") == ZEPHYRUM)
+            {
+                _credo_fracti_exspectati += summa.totales
+                    - summa.praeteriti;
+                summa.exitus = "NOTA_FRACTA";
+            }
+            alioquin si (strcmp(summa.exitus, "TRANSIIT") == ZEPHYRUM)
+            {
+                summa.exitus = "INOPINATA";
+            }
+        }
         si (strcmp(summa.exitus, "TRANSIIT") == ZEPHYRUM)
         {
             transeuntes++;
+        }
+        alioquin si (strcmp(summa.exitus, "NOTA_FRACTA") == ZEPHYRUM)
+        {
+            transeuntes++;
+            imprimere("\n  sectio %s: NOTA_FRACTA (%lu/%lu) - causa:"
+                " %s\n",
+                sectio->titulus, (insignatus longus)summa.praeteriti,
+                (insignatus longus)summa.totales,
+                sectio->exspectata_fracta);
+        }
+        alioquin si (strcmp(summa.exitus, "INOPINATA") == ZEPHYRUM)
+        {
+            imprimere("\n  sectio %s: INOPINATA - fractura exspectata "
+                "sanata ('%s'): linea exspectata_fracta delenda\n",
+                sectio->titulus, sectio->exspectata_fracta);
         }
         alioquin
         {
@@ -1173,16 +1837,30 @@ credo_suitam_currere (
         }
         (vacuum)fflush(stdout);
     }
-    imprimere("\n=== SECTIONES: %lu/%lu transierunt ===\n",
-        (insignatus longus)transeuntes, (insignatus longus)cursae);
+    _credo_suitam_purgare(purgare_suitae, &suitae);
+    si (omissae > ZEPHYRUM)
+    {
+        imprimere("\n=== SECTIONES: %lu/%lu transierunt (%lu omissae)"
+            " ===\n",
+            (insignatus longus)transeuntes, (insignatus longus)cursae,
+            (insignatus longus)omissae);
+    }
+    alioquin
+    {
+        imprimere("\n=== SECTIONES: %lu/%lu transierunt ===\n",
+            (insignatus longus)transeuntes, (insignatus longus)cursae);
+    }
     credo_imprimere_compendium();
     si (plagula != NIHIL)
     {
         fputs("SUITA\t", plagula);
         _credo_literas_scribere(plagula, titulus_suitae);
+        /* VACUA (credo II): nulla sectio cursa (omnes omissae) - non
+         * transitus */
         fprintf(plagula, "\t%s\t%lu\t%lu\t%lu\t%lu\t%.0f\n",
-            (transeuntes == cursae && cursae > ZEPHYRUM
-                && credo_numerus_fracti() == ZEPHYRUM)
+            cursae == ZEPHYRUM ? "VACUA"
+            : (transeuntes == cursae
+                && credo_numerus_fracti() == _credo_fracti_exspectati)
                 ? "TRANSIIT" : "FRACTA",
             (insignatus longus)transeuntes, (insignatus longus)cursae,
             (insignatus longus)credo_numerus_praeteriti(),
@@ -1191,5 +1869,6 @@ credo_suitam_currere (
         fclose(plagula);
     }
     redde (transeuntes == cursae && cursae > ZEPHYRUM
-           && credo_numerus_fracti() == ZEPHYRUM) ? ZEPHYRUM : I;
+           && credo_numerus_fracti()
+               == _credo_fracti_exspectati) ? ZEPHYRUM : I;
 }

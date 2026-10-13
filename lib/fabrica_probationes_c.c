@@ -286,7 +286,10 @@ _obiectum_nominare (
  * SECTIONES (fabrica-7 T1): plagula CREDO_VERDICTA (<area>credo.tsv)
  * legitur post cursum; suita non conversa (plagula absens) -> plagula
  * SYNTHETICA a gradu scripta, sectio una 'totum' (exitus ex codice,
- * numeri ex compendio effusionis) - lector unus, forma una
+ * numeri ex compendio effusionis) - lector unus, forma una. Linea
+ * SECTIO: campi X (credo I) aut XI (credo II: gradus fracturae, in
+ * fractura "[gradus ...]" fit); lineae aliae (ORDO credo II)
+ * praetereuntur
  * ================================================== */
 
 hic_manens constans character* constans _exitus_sectionis[] = {
@@ -475,11 +478,12 @@ fabrica_sectiones_legere (
         {
             FabricaSectio* sectio;
 
-            si (n != X)
+            /* X campi (credo I) aut XI (credo II: + gradus) */
+            si (n != X && n != XI)
             {
                 *causa_out = _lineam_recusare(via, linea,
                     "linea SECTIO "
-                    "deformis (campi X exspectati)", piscina);
+                    "deformis (campi X aut XI exspectati)", piscina);
                 redde FALSUM;
             }
             sectio =
@@ -510,6 +514,13 @@ fabrica_sectiones_legere (
                     " "), piscina);
                 sectio->fractura = chorda_concatenare(sectio->fractura,
                     _campum_solvere(campi[IX], piscina), piscina);
+                si (n == XI && campi[X].mensura > ZEPHYRUM)
+                {
+                    sectio->fractura = chorda_concatenare(
+                        sectio->fractura, fabricae_iungere(piscina,
+                        " [gradus ", _campum_solvere(campi[X], piscina),
+                        "]"), piscina);
+                }
             }
         }
     }
@@ -625,6 +636,8 @@ _sectiones_explicare (
               chorda nota;
                  i32 transeuntes;
                  i32 fractae;
+                 i32 omissae;
+                 i32 notae;
                  i32 i;
 
     via = fabricae_iungere(piscina, "", area_c, "credo.tsv");
@@ -676,6 +689,8 @@ _sectiones_explicare (
     }
     transeuntes  = ZEPHYRUM;
     fractae      = ZEPHYRUM;
+    omissae      = ZEPHYRUM;
+    notae        = ZEPHYRUM;
     nota         = chorda_ex_literis("", piscina);
     per (i = ZEPHYRUM; i < xar_numerus(sectiones.sectiones); i++)
     {
@@ -686,6 +701,20 @@ _sectiones_explicare (
         si (chorda_aequalis_literis(s->exitus, "TRANSIIT"))
         {
             transeuntes++;
+            perge;
+        }
+        /* OMISSA (credo II): signo omissa - nec cursa nec fracta */
+        si (chorda_aequalis_literis(s->exitus, "OMISSA"))
+        {
+            omissae++;
+            perge;
+        }
+        /* NOTA_FRACTA (credo II): fractura exspectata, causa in fonte -
+         * transiens numeratur, in nota nominatur */
+        si (chorda_aequalis_literis(s->exitus, "NOTA_FRACTA"))
+        {
+            transeuntes++;
+            notae++;
             perge;
         }
         fractae++;
@@ -728,9 +757,21 @@ _sectiones_explicare (
     {
         character numeri[LXIV];
 
+        /* 'sectiones T/N' (N = cursae), deinde omissae et notae
+         * fractae si adsunt - deterministica (sine ms) */
         sprintf(numeri, "sectiones %u/%u", (insignatus integer)
-            transeuntes, (insignatus integer)xar_numerus(
-            sectiones.sectiones));
+            transeuntes, (insignatus integer)(xar_numerus(
+            sectiones.sectiones) - omissae));
+        si (omissae > ZEPHYRUM)
+        {
+            sprintf(numeri + strlen(numeri), ", omissae %u",
+                (insignatus integer)omissae);
+        }
+        si (notae > ZEPHYRUM)
+        {
+            sprintf(numeri + strlen(numeri), ", notae fractae %u",
+                (insignatus integer)notae);
+        }
         actum_out->cauda = chorda_ex_literis(numeri, piscina);
         redde;
     }

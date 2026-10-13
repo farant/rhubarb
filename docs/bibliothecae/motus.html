@@ -13,13 +13,13 @@
 <h1>motus</h1>
 <p class="subtitulus">Genus MOBILE: structura in memoria, effusa in quiete</p>
 
-<p>The third kind of state, kept out of the islands on purpose: motion. Pointer capture, the pending brush stroke, pan, zoom, time of the last change, a dirty flag, in a plain struct with its own one gate (mutare_motum). The rule is &#x27;paint per event, write in quiet&#x27;: continuous input updates this struct cheaply, the screen redraws from it every frame, and the islands are touched only when motion stops (motus_quies: dirty and quies_ms elapsed since the last change), in one write by motus_effundere, which the dispensator calls at its quiet point. A stroke in progress never touches the ephemeral island at all: it leaves as one durable write on release. That is also the undo granularity: one stroke, one entry. Used by pictor and the ludus test toy.</p>
+<p>The state kept out of the island on purpose: motion. Pointer capture, the pending brush stroke, pan, zoom, time of the last change, a dirty flag, in a plain struct with its own one gate (mutare_motum). The rule is &#x27;paint per event, write in quiet&#x27;: continuous input updates this struct cheaply, the screen redraws from it every frame, and the island is touched only when motion stops (motus_quies: dirty and quies_ms elapsed since the last change), in one write by motus_effundere, which the dispensator calls at its quiet point. A stroke in progress never touches the island at all: it leaves as one act of the document on release, and that is also the undo granularity, one stroke, one entry. Since 2026-10-05 it carries three more things. A gesture slot: the opaque state of an application&#x27;s gesture in progress (scriba&#x27;s working sheet while text is being inserted), with its own gate, its own quiet interval and the application&#x27;s flush function, called in quiet and at exit so that nothing pending is lost; the flush restores the previous writer afterwards, because it can run from inside an action. The active branch: pan and zoom are flushed into the focused application&#x27;s branch of the island and not into the root. And the active scope, within which focus and capture are looked up. Those two are what a host moves when focus passes from one mounted application to another. Used by the dispensator, pictor, scriba, vicus and the dismissal system.</p>
 
 <table>
 <tbody>
 <tr><td>Header</td><td><a href="../../include/motus.h"><code>include/motus.h</code></a></td></tr>
 <tr><td>Implementation</td><td><a href="../../lib/motus.c"><code>lib/motus.c</code></a></td></tr>
-<tr><td>Last change</td><td>2026-09-05 92b4e430</td></tr>
+<tr><td>Last change</td><td>2026-10-12 80de03e6</td></tr>
 <tr><td>Group</td><td><a href="greges.html#ludus">Ludus: the second-generation UI</a></td></tr>
 </tbody>
 </table>

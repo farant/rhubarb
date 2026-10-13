@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>radices_interna</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>radices_interna</h1>
+<p class="subtitulus">INTERNA radicum: apices piscinarum temporariarum.</p>
+
+<p>The test-only side of radices, not API: only lib/radices.c and the tests include it, and its names carry the genitive prefix radicum_ to set them apart from the public radix_ and radices_. It exposes the high-water marks of the library&#x27;s private scratch arenas since the last reset, one for the isolation stack and one for the working arenas. It exists because of a review finding: the memory test measured only the caller&#x27;s arena, where the gain from resetting the scratch arenas is invisible, and three planted faults that each removed a reset stayed green, one of them raising a degree-89 isolation from 38 MB to 1.05 GB. With the marks the test bounds the scratch memory of a degree-59 isolation tightly (byte counts are deterministic), and all three plants are red.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/radices_interna.h"><code>include/radices_interna.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/radices.c"><code>lib/radices.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-10-10 7c4d6cea</td></tr>
+<tr><td>Group</td><td><a href="greges.html#mathematica">Exact mathematics</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

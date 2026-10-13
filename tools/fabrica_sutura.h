@@ -7,6 +7,7 @@
 /* <aedilis corpus="tools/fabrica_sutura.c"/> */
 /* <aedilis corpus="tools/fabrica_memoria.c"/> */
 /* <aedilis corpus="tools/fabrica_ansae.c"/> */
+/* <aedilis corpus="tools/fabrica_portae.c"/> */
 
 #ifndef FABRICA_SUTURA_H
 #define FABRICA_SUTURA_H
@@ -19,6 +20,8 @@
 #include "processus.h"
 #include "chorda_aedificator.h"
 #include "fabrica.h"
+#include "provenientia.h"
+#include "sigillum.h"
 
 /* sanare: terminus unus per actum (briar ~3 min, obiecta radicis
  * frigida ~150 s); termini per actionem non in 1b */
@@ -119,6 +122,18 @@ suturae_radix_absoluta (
 
 /* ansae graduum (fabrica_ansae.c) */
 externus constans character* suturae_via_binarii;
+/* digestum extractoris infixum (build/fabrica/provenientia/extractor.c,
+ * circulus commissionis P1) */
+externus constans ProvenientiaRelatio provenientia_extractor;
+
+/* clavis thesauri extractoris (aedilis_thesauri_praefixum super
+ * digestum infixum) - sedes una: gradus et 'bin/fabrica
+ * clavis-thesauri' */
+b32
+suturae_clavem_thesauri (
+               Piscina*  piscina,
+              Sigillum*  praefixum_out,
+    constans character** fons_out);
 
 b32
 suturae_area_parare (
@@ -140,6 +155,13 @@ suturae_compilare_gradus (
     constans character* obiectum,
                Piscina* piscina,
                 chorda* erratum_out);
+
+/* bin/fabrica portae debitae|declaratae (tools/fabrica_portae.c) */
+s32
+suturae_portae (
+          s32   argc,
+    character** argv,
+      Piscina*  piscina);
 
 b32
 suturae_in_area_currere (

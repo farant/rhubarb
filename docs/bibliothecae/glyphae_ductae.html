@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>glyphae_ductae</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>glyphae_ductae</h1>
+<p class="subtitulus">characteres capsarum, quadrorum et braille ut figurae ductae ad magnitudinem cellulae, non ex fonte (aemulator-plan D7c; Ghostty font/sprite/draw: box.zig, block.zig, braille.zig)</p>
+
+<p>Characters drawn as shapes at the size of the cell and not taken from a font: box drawing (U+2500 to 257F), block elements (U+2580 to 259F) and braille (U+2800 to 28FF). The house 6x8 font has 256 slots, so these appeared as blanks in terminale: Claude Code&#x27;s rounded boxes, tmux borders, btop&#x27;s graphs. Ghostty draws them procedurally so that lines meet exactly across neighbouring cells, and this is a port of that code (its sprite font) with Ghostty&#x27;s names kept: four arms per line character in light, heavy or double weight, dashes, arcs, diagonals, eighths and quadrants, shades as partial opacity. It is pure and allocates nothing: the result is an opacity mask, one byte per pixel, which the caller turns into drawing commands. The tests are ASCII pictures derived by hand from Ghostty&#x27;s arithmetic, plus a law over the whole table: each edge of a line character is either empty or exactly a plain line&#x27;s edge, at five cell sizes. Written 2026-10-07 at Fran&#x27;s request after the vttest walk. A second round added 57 symbols as hand-drawn 6x8 pictures scaled by nearest neighbour, chosen by a census of the strings in Claude Code&#x27;s binary and not by guess (arrows, check marks, spinner stars, key symbols); a third (10-08) added Greek letters, superscript and subscript digits and a few mathematical signs from a list of blanks Fran had seen, 118 pictures in all. terminale asks it before the font; scriba and pictor draw text through the font alone and do not see these yet.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/glyphae_ductae.h"><code>include/glyphae_ductae.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/glyphae_ductae.c"><code>lib/glyphae_ductae.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-10-08 99f28653</td></tr>
+<tr><td>Group</td><td><a href="greges.html#fenestra">Window, input and drawing</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

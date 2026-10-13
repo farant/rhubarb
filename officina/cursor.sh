@@ -75,10 +75,14 @@ for src in "$OFF_DIR"/fontes/*.c; do
     obj_files="$obj_files $obj"
 done
 
-# Semper renectere (obiecta mutata aliter in binario vetusto latent)
 CURSOR_SRC="$OFF_DIR/instrumenta/principalia/cursor.c"
 CURSOR_BIN="$BUILD_DIR/cursor"
-clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$CURSOR_SRC" $obj_files \
-    -o "$CURSOR_BIN" || exit 1
+# nexus solum si stalum, atomice (tools/instrumentum_nectere.sh,
+# …WB6Q3H): fontes, obiecta, capita instrumentorum = ingressus -
+# binarium vetustum mutationem celare non potest
+source "$RADIX_DIR/tools/instrumentum_nectere.sh"
+instrumentum_nectere "$CURSOR_BIN" "$CURSOR_SRC" $obj_files \
+    "$OFF_DIR"/instrumenta/*.h "$OFF_DIR"/instrumenta/principalia/*.h -- \
+    "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$CURSOR_SRC" $obj_files || exit 1
 
 exec "$CURSOR_BIN" "$@"

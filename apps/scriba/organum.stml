@@ -1,0 +1,75 @@
+<!-- organum.stml - manifestum scribae (status-plan S6b). Ex eo
+     generantur canon insulae et domini (organum_montatio); basis
+     apps/organum_commune.stml ante campos proprios.
+
+     Franus (S6): post restitutionem cursor redit; modus et selectio
+     ut vim incipiunt (transientes). Pagina visa ipsa in volumine vivit
+     (plagula scriba/visus/<id>, vicus S2b) - pagina_positio et
+     paginae_numerus COPIAE derivatae sunt (transientes; ex libro legendi
+     postea). capsa (registrum vim): scriba sola per ramum suum et
+     transiens; in vico radix eam tenet (S7b, ramus_capsae) - campi hic
+     tunc vacui manent. Typi = canon manu scriptus ante S6b
+     (apps/scriba/canones/ephemera.canon, deletus). -->
+<organum genus="scriba" versio="1">
+
+  <actiones>
+    <actio nomen="pagina.clavis"/>
+  </actiones>
+
+  <status>
+    <!-- dimensiones folii (derivatae) -->
+    <campus nomen="latitudo" typus="numerus" vita="transiens"
+            nota="copia latitudinis folii"/>
+    <campus nomen="altitudo" typus="numerus" vita="transiens"
+            nota="copia altitudinis folii"/>
+
+    <!-- persistens: cursor redit -->
+    <campus nomen="cursor_linea"   typus="numerus" vita="persistens"
+            scriptor="pagina.clavis"/>
+    <campus nomen="cursor_columna" typus="numerus" vita="persistens"
+            scriptor="pagina.clavis"/>
+
+    <!-- transiens: status vim ut vim incipit -->
+    <campus nomen="modus" typus="electio" vita="transiens"
+            absens="normalis" scriptor="pagina.clavis">
+      <optio>normalis</optio>
+      <optio>inserere</optio>
+      <optio>visualis</optio>
+    </campus>
+    <campus nomen="visualis_genus" typus="electio" vita="transiens"
+            scriptor="pagina.clavis">
+      <optio>linea</optio>
+      <optio>character</optio>
+    </campus>
+    <campus nomen="selectio_linea"   typus="numerus" vita="transiens"
+            scriptor="pagina.clavis" nota="-1 = nulla"/>
+    <campus nomen="selectio_columna" typus="numerus" vita="transiens"
+            scriptor="pagina.clavis"/>
+    <campus nomen="clavis_praecedens" typus="textus" vita="transiens"
+            scriptor="pagina.clavis"
+            nota="effugitus (codex mutationis); absens = nulla"/>
+    <campus nomen="fd_exspectans" typus="veritas" vita="transiens"
+            scriptor="pagina.clavis"/>
+    <campus nomen="fd_tempus" typus="numerus" vita="transiens"
+            scriptor="pagina.clavis"
+            nota="ms, tempore eventus (horologium unum)"/>
+    <campus nomen="nuntius" typus="textus" vita="transiens"
+            scriptor="pagina.clavis"
+            nota="S3b-2: nuntius lineae status usque ad clavem proximam"/>
+    <campus nomen="capsa" typus="textus" vita="transiens"
+            scriptor="pagina.clavis"
+            nota="registrum vim: lineae iunctae per '\n', effugitae;
+                  in vico radix tenet (S7b)"/>
+    <campus nomen="capsa_lineae" typus="numerus" vita="transiens"
+            scriptor="pagina.clavis"/>
+
+    <!-- copiae libri (derivatae; scriba_applicatio scribit) -->
+    <campus nomen="pagina_positio" typus="numerus" vita="transiens"
+            nota="pagina visa 1..n (veritas: plagula scriba/visus/id)"/>
+    <campus nomen="paginae_numerus" typus="numerus" vita="transiens"
+            nota="paginae libri (veritas: liber)"/>
+  </status>
+
+  <basis genus="organum_commune"/>
+  <montationes/>
+</organum>
