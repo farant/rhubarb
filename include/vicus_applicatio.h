@@ -43,8 +43,7 @@ vicus_volumen_aperire (
      character** argv,
            b32*  fumus);
 
-/* Compositio tota super volumen apertum. radix = praefixum viarum
- * canonum (NIHIL = directorium currens); latitudo/altitudo fenestrae
+/* Compositio tota super volumen apertum; latitudo/altitudo fenestrae
  * in pixelis nostris. FALSUM si pars deficit (causa in stderr). */
 b32
 vicus_applicatio_aedificare (
@@ -52,7 +51,6 @@ vicus_applicatio_aedificare (
                 Piscina* piscina,
     InternamentumChorda* intern,
                 Volumen* volumen,
-     constans character* radix,
                     i32  latitudo,
                     i32  altitudo);
 

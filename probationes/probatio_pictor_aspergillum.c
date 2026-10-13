@@ -346,7 +346,7 @@ s32 principale (vacuum)
 
     vol = volumen_temporarium(piscina, "probatio_pictor_aspergillum");
     CREDO_VERUM(pictor_applicatio_aedificare(&app, piscina, intern, vol,
-        NIHIL, CDLXXX, CDLXXX));
+        CDLXXX, CDLXXX));
     m    = manus_ludus_creare(piscina, app.d);
     doc  = app.doc;
 

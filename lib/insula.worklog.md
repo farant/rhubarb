@@ -195,3 +195,146 @@ different roots, refused by the auto-merge as they should be;
 collapsed to "<insula/>". 276/276 root tests, ludus_tessera 8/8, plants
 5/5. briar's smoke builds project-specs/exempla/salutatio.thistle -
 updated too.
+
+## 2026-10-12 — status-plan S8a: branches at any depth
+
+`InsulaRamus` gained `via`: the interned path from the root, segments
+`elementum:id` joined by '/' ("" = root; canon `nomen` allows only
+[A-Za-z0-9_*], so ':' and '/' are safe). `elementum`/`id` stay = the
+last segment (pictor/scriba/dimissio/organum_montatio read them). Value
+type, so a branch still copies by assignment; interning makes equal
+paths share a pointer and keeps the per-event `insula_ramus` calls from
+growing the arena (paths are built in a stack buffer, copied only when
+new). `insula_ramus_liberi(parens, e, id)`: a widget mounting children
+hands over ITS branch; `insula_ramus` = liberi of the root.
+
+Depth-1 was in four places, all in insula.c: ramum_invenire (now walks
+the path), the root canon's view (visio_radicis -> visio_nodi), owners
+(InsulaDominus.via) and initiation (adds under the PARENT node; an
+absent parent is refused BEFORE the gate with a named cause - nothing
+written). Branch canons (CanonRami.via) are judged on a view too now:
+every canon judges its node minus descendant branches that have their
+own canon, nearest wins. The view copies only nodes on the way to an
+excluded branch (shallow copies with a new child list); untouched
+subtrees are shared pointers. With no branch canons it is the node
+itself (old fast path).
+
+Cost note for S8d: the view is rebuilt per canon per write (relative
+suffixes of the canon paths below it, matched segment by segment) -
+same order as before at depth 1, but now also for branch canons.
+
+Plants (silva.planta, function gate on probatio_insula_profunda): view
+recursion off (depth-1 behaviour) -> `canones` red 6/9; initiation to
+the root instead of the parent -> tree cannot be built (parent check of
+c fails). Both reverted -> green. Existing insula, organum, pictor,
+scriba, vicus, terminale, conservatio, relatio, dimissio, motus,
+dispensator suites and ludus_tessera 8/8 unchanged.
+
+## 2026-10-13 — status-plan S8d: write cost measured (park 010 again)
+
+Tool: `tools/insula_mensura.c` (build: `./bin/aedilis
+tools/insula_mensura.c && bash build/aedilis/insula_mensura/struere.sh`;
+`-ansa <genus> <n>` loops 20 s for `sample`). Per-write cost, min of 3
+runs x 2000 writes, Apple silicon, default flags:
+
+| case | n | branches | store B | per write |
+|---|---|---|---|---|
+| vicus (focus via dispatcher) | 2 | 4 | 1666 | 58 us |
+| | 3 | 6 | 2488 | 76 us |
+| | 6 | 12 | 4954 | 149 us |
+| | 10 | 20 | 8244 | 284 us |
+| toy chain, write at the bottom | 1 | 1 | 43 | 1.8 us |
+| | 6 | 6 | 215 | 14 us |
+| | 11 | 11 | 394 | 36 us |
+| | 22 | 22 | 999 | 114 us |
+| toy parent + k rows, write one row | 11 | 12 | 437 | 35 us |
+| | 50 | 51 | 1850 | 415 us |
+| | 100 | 101 | 3651 | 1.5 ms |
+| | 200 | 201 | 7351 | 5.1 ms |
+
+vicus opens at most 10 tabs (Cmd+1..0) - park 010's "11 tabs" row was
+10 too. vicus at 10 tabs is 5x T5 (52.7 -> 284 us): the store is 8x
+bigger (one island: every pane's whole state, not just ephemera) and
+every write now also persists.
+
+Profiles (`sample`):
+- 200 rows: ~85% `ramum_invenire` from `mutare` - `dominos_iudicare`
+  does TWO path lookups (before/after) per owner entry, every branch
+  has several entries, each lookup scans siblings linearly: quadratic.
+  `visio_nodi` 8% (the parent's view excludes 200 children, each
+  matched against 200 paths), `reliqua_sub` 3%, canon judging and the
+  text copy under 2% each. Park 010 suspected canon judging; at size
+  it is the lookups.
+- vicus 10 tabs: lookups ~38%; persistence actarius ~29%
+  (`statum_scribere` re-serializes EVERY registered branch's state on
+  every write, 19%; `volumen_plagulam_condere` pwrite+fsync of the
+  changed one, 10%); text copy (scribere + legere) ~12%; canon judging
+  ~7%.
+
+So the dominant costs are all "the whole store, every write" in the
+JUDGING and PERSISTING layers, not the copy. Options for S8e are in
+status-plan (S8d).
+
+## 2026-10-13 — S8e-1: path index (no API change)
+
+`mutare` now resolves branches through an `IndexViarum` per tree
+(old root and the copy), allocated in the write's arena:
+- `ramum_per_viam`: lazy `tabula_dispersa` path -> node. The first
+  query under a parent indexes ALL its children in one pass; a key is
+  inserted only if absent (first match wins, like `ramum_invenire`).
+  Children `ramum_invenire` could never match are skipped (title with
+  ':' or '/', id with '/') - same results, no key collisions.
+- `ramum_quaerere`: a pointer-keyed memo in front (`friatio_sedis`
+  hashes `via.datum`, compares pointer + length). Owner, canon and
+  target paths are interned, so a branch's several owner entries hit
+  the memo. Without it the chain case REGRESSED (22 levels 114 -> 183
+  us): `friatio_fnv1a` over ~300-byte paths, once per lookup, was the
+  top of the profile. Non-interned paths just miss the memo.
+- `visio_nodi`: excluded paths grouped by first segment in a table
+  (`GrexReliquorum`) - one probe per child instead of children x
+  excluded.
+
+`insula_ramus_nodus` and initiation still use `ramum_invenire` (reads
+on the live tree, one lookup each); conservatio's `statum_scribere`
+lookups are S8e-3's job.
+
+| case | S8d | S8e-1 |
+|---|---|---|
+| vicus 2 / 10 tabs | 58 / 284 us | 60 / 194 us |
+| chain 1 / 22 | 1.8 / 114 us | 2.8 / 113 us |
+| rows 50 / 100 / 200 | 415 us / 1.5 ms / 5.1 ms | 84 / 192 / 482 us |
+
+## 2026-10-13 — S8e-2: scoped judging + guard
+
+`mutare(repo, via, ...)` with a non-empty path now:
+- **Guard first.** The copy is parsed from `textus`, so the target
+  node's `positus_initium/finis` are its span in the OLD text; the new
+  text comes from `stml_scribere_sedibus`, whose entry for the same
+  node is its span in the NEW text. Bytes before and after must match
+  (two memcmp). Escape -> "mutatio extra ramum: ...". The new text is
+  reused as `textus_ultimus` (no second serialization). Root writes
+  skip the guard (no sedes collected).
+- **Owners** only where `insula_via_continet(via, d->via)`.
+- **Canons**: the nearest `CanonRami` whose path contains `via`
+  (longest), else the root canon; plus every branch canon strictly
+  below `via`. Nothing between the nearest canon and `via` has a
+  canon, so it sees the change; ancestors above it exclude it from
+  their view (`visio_nodi`), so they cannot see it.
+- `InsulaActarius` gets `via` (conservatio ignores it until S8e-3).
+
+Behaviour change, deliberate: state made invalid OUTSIDE the gate's
+view (a canon installed after the node already broke it) no longer
+blocks writes elsewhere - only writes that canon can see. Tests in
+probatio_insula_profunda: custodia (plant: guard off -> red),
+actarius, scopus_canonum (invalid sibling ignored; invalid root
+ignored under a branch canon but still judging a canon-less branch;
+canon on level 1 judges a write at level 3). Test bug on the way:
+b's canon does not allow child c, so c needs its own canon for the
+root-skip case (cause printed, not guessed).
+
+Numbers: rows 50/100/200 = 52/103/184 us (S8e-1: 84/192/482), chain
+22 = 86 us (113). vicus barely moved (10 tabs 195 us) and its small
+rows got noisier: `sample` at 2 tabs shows 72% in
+`actarius_conservationis` -> `volumen_plagulam_condere` -> SQLite
+commit (WAL pwrite) - every focus write is a transaction. The gate
+itself is ~11%.

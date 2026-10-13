@@ -281,7 +281,6 @@ latus_montare (
         v->volumen, v->repo, chorda_ut_cstr(l->id, v->piscina),
         l->argumentum.mensura > ZEPHYRUM
             ? chorda_ut_cstr(l->argumentum, v->piscina) : NIHIL,
-        v->radix,
         (i32)latitudo, (i32)altitudo, l->descriptio->ctx);
     si (!l->montata)
     {
@@ -317,6 +316,18 @@ superficiem_mutator (
         chorda_ut_cstr(chorda_ex_s32(sp->latitudo, p), p));
     insula_attributum_ponere(nodus, p, in, "superficies_altitudo",
         chorda_ut_cstr(chorda_ex_s32(sp->altitudo, p), p));
+}
+
+/* via rami lateris (status-plan S8c): spatium arboris, registrorum,
+ * Motus */
+interior chorda
+via_lateris (
+       InsulaRepositorium* repo,
+      constans VicusLatus* l,
+                  Piscina* piscina)
+{
+    redde insula_ramus(repo, chorda_ut_cstr(l->genus, piscina),
+        chorda_ut_cstr(l->id, piscina)).via;
 }
 
 interior vacuum
@@ -509,7 +520,8 @@ est_imperium_tabulae (
 }
 
 /* DestinatioStrategia hospitis: Cmd+numerus ad radicem; ictus in
- * latus NON focatum (spatium destinati ab activo Motus.spatium differt)
+ * latus NON focatum (spatium destinati non sub Motus.spatium - S8c:
+ * organum nidificatum in latere focato idem latus est)
  * ad radicem - radix latus focat (S2a; ictus primus lateris, si vult,
  * etiam agit); cetera geometrica (Ctrl-A ad latus focatum) */
 interior Destinatio
@@ -534,7 +546,8 @@ destinare (
     {
         c   = destinatio_componens(&d);
         sp  = c ? componens_spatium(c) : chorda_nulla_vici();
-        si (!chorda_vacua(sp) && !chorda_aequalis(sp, motus->spatium))
+        si (   !chorda_vacua(sp)
+            && !insula_via_continet(motus->spatium, sp))
         {
             redde destinatio_ex_componente(arbor, piscina);
         }
@@ -945,7 +958,7 @@ motum_aptare (
     v->motus->ramus = insula_ramus(v->repo,
         chorda_ut_cstr(l->genus, v->piscina),
         chorda_ut_cstr(l->id, v->piscina));
-    v->motus->spatium = l->id;
+    v->motus->spatium = v->motus->ramus.via;
     si (l->facies.gestum_ponere)
     {
         l->facies.gestum_ponere(v->motus, l->facies.gestum_ctx);
@@ -995,12 +1008,12 @@ registra_lateris_miscere (
     si (l->facies.actiones)
     {
         (vacuum)actio_registrum_miscere_in_spatio(v->actiones,
-            l->facies.actiones, l->id);
+            l->facies.actiones, via_lateris(v->repo, l, v->piscina));
     }
     si (l->facies.figurae)
     {
         (vacuum)figura_registrum_miscere_in_spatio(v->figurae,
-            l->facies.figurae, l->id);
+            l->facies.figurae, via_lateris(v->repo, l, v->piscina));
     }
 }
 
@@ -1195,7 +1208,6 @@ vicus_creare (
                 Piscina* piscina,
     InternamentumChorda* intern,
                 Volumen* volumen,
-     constans character* radix,
                     i32  latitudo,
                     i32  altitudo)
 {
@@ -1214,7 +1226,6 @@ vicus_creare (
     v->piscina   = piscina;
     v->intern    = intern;
     v->volumen   = volumen;
-    v->radix     = radix;
     v->latitudo  = latitudo;
     v->altitudo  = altitudo;
     v->genera    = xar_creare(piscina, (i32)magnitudo(VicusGenus));
@@ -1465,9 +1476,10 @@ vicus_aperire (
         v->systemata->dimissio  = dimissio_creare(v->piscina, v->intern,
             v->repo);
     }
-    /* S7a: radix ex manifesto hospitis (canon, domini) */
-    organum = organum_legere_viam(v->piscina, v->intern, v->radix,
-        "apps/vicus/organum.stml", "vicus");
+    /* S7a: radix ex manifesto hospitis (canon, domini), infixo
+     * (S7c-1) */
+    organum = organum_legere_genus(v->piscina, v->intern, "vicus",
+        "vicus");
     radix = insula_ramus_radix(v->repo);
     si (   !organum
         || !organum_ramum_parare(organum, &radix, v->systemata, NIHIL,
@@ -1773,7 +1785,8 @@ latus_componere (
     f.x  += x;
     f.y  += VICUS_ALTITUDO_TABULARUM;
     componens_ponere_fines(app, f);
-    componens_ponere_spatium(app, chorda_ut_cstr(l->id, piscina));
+    componens_ponere_spatium(app, chorda_ut_cstr(via_lateris(repo, l,
+        piscina), piscina));
     componens_addere_liberum(radix, app);
 }
 

@@ -76,7 +76,7 @@ principale (
         fprintf(stderr, "pictor: volumen aperiri non potuit\n");
         redde I;
     }
-    si (!pictor_applicatio_aedificare(&app, piscina, intern, vol, NIHIL,
+    si (!pictor_applicatio_aedificare(&app, piscina, intern, vol,
             PICTOR_LATITUDO, PICTOR_ALTITUDO))
     {
         redde I;

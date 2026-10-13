@@ -106,11 +106,107 @@ widgets are migrated by hand.*
   changes. Found: our vim had no `y` - added right after (yy, Y,
   visual y; lib/vim.worklog.md).
 
+- **S7c** terminale onto its manifest (Fran 10-12; split 1/2/3).
+  Terminale is installed to ~/.bin, so manifests cannot be read from
+  disk at runtime - Fran: embed them for all consumers.
+- **S7c-1** DONE 2026-10-12 (lib/organum.worklog.md): manifests embedded
+  (tools/organa_infigere.sh -> lib/organa_infixa.c, GENERATUM, fabrica
+  action organa_infixa); `organum_legere_genus`; pictor/scriba/vicus
+  read the embedded copy only; freshness guard in
+  probatio_organum_montatio (infixa_fontes).
+- **S7c-2** DONE 2026-10-12 (lib/organum.worklog.md): dead `radix`
+  removed - scriba_montare/_aedificare, pictor_montare/_aedificare,
+  vicus_creare, vicus_applicatio_aedificare, VicusMontator, Vicus.radix;
+  80 calls. pictor_montatio `sine_arbore` now builds from cwd "/".
+- **S7c-3** DONE 2026-10-12 (lib/terminale.worklog.md; census XIV):
+  apps/terminale/organum.stml (base fields only, action
+  terminale.clavis); mount (vicus systems via ctx) and standalone
+  (canon + owners, no systems - ~/.bin/terminale reads the embedded
+  manifest) through organum_ramum_parare; CANON_EPHEMERA,
+  canonem_infixum, elementum_montationis deleted. Every pane kind in
+  vicus now mounts through organum_montatio - S8 has one path to
+  change.
+
 ### Arc III — depth
 
 - **S8** branches as paths at any depth; focus, dispatcher, kinetic
   slot and registry route by path. Test: a toy widget three levels
   deep. Re-measure the store-copy cost (terminal-planning park 010).
+  Fran 10-12: split a/b/c/d. Findings: depth-1 lives only in insula
+  (find, root-canon view, owners, initiation); the dispatcher routes by
+  `spatium` and `motus.ramus` names the one active pane (pictor/scriba
+  compare spatium == ramus.id); no persistent-tree substrate in materia
+  or stml-visio; park 010 suspects canon judging, not the text copy.
+- **S8a** DONE 2026-10-12 (lib/insula.worklog.md): InsulaRamus.via =
+  interned path "elementum:id/..."; `insula_ramus_liberi(parens, e,
+  id)`; owners and branch canons keyed by path; every canon judges its
+  node minus descendant branches with their own canon (nearest wins,
+  any depth); initiation under the parent (absent parent refused,
+  named). probatio_insula_profunda (3 levels).
+- **S8b** DONE 2026-10-12 (lib/organum.worklog.md): toy widget
+  `ludibrium` (probationes/fixa/organum/ludibrium.stml) mounts itself
+  three deep, id "liber" at every level; start values, canon, owners
+  per level; persistence keyed by the path (caller passes `via` as
+  clavis); relatio branch identity = path. dimissio (spatium = id)
+  waits for S8c.
+- **S8c** routing by path, split in two (Fran 2026-10-12):
+  - **S8c-1** DONE 2026-10-12 (lib/vicus.worklog.md): one address. A
+    pane's spatium (component subtree, registry merge, Motus.spatium,
+    dimissio) is its branch path "pictor:1_dextrum_pictor", no longer
+    the bare id; pictor/scriba `focatum_est` and scriba's page lookup
+    compare with `ramus.via`. Behaviour unchanged at depth 1; tests
+    that hard-coded ids as namespaces now say the path.
+  - **S8c-2** DONE 2026-10-13 (lib/dispensator.worklog.md): nested
+    routing. Registry merge stamps only entries without a spatium
+    (nested ones keep their absolute path). Focus chain: a branch's
+    `focus` is a component id or a child segment "elementum:id";
+    the dispatcher follows segments from `Motus.ramus` (host-set
+    head) to `Motus.ramus_intimus`/`spatium_intimum`, where focus,
+    focus_acervus, Tab, capture, pan/zoom effusion and dimissio's
+    Esc act. A click in a nested spatium writes the chain; a click
+    higher cuts it (lower focus kept). `insula_ramus_ex_via`,
+    `insula_via_continet`; vicus counts a nested click as the same
+    pane. probatio_catena_foci (toy three deep under a real
+    dispatcher). Deferred, named: Tab between levels (keyboard into
+    or out of a nested widget) - when a real widget needs it; a
+    nested widget's OWN gesture slot (host's gesture stays) - A6,
+    calendar day view embedding scriba.
+- **S8d** DONE 2026-10-13 (lib/insula.worklog.md; tool
+  `tools/insula_mensura.c`): measured. vicus 10 tabs 284 us/write (T5:
+  52.7); toy 200 rows 5.1 ms/write, quadratic. Profiles: path lookups
+  dominate (owners do two lookups per entry, linear sibling scans;
+  85% at 200 rows, 38% in vicus), then persistence (every write
+  re-serializes every branch's state + fsync, 29% in vicus); text copy
+  12% in vicus, under 2% at 200 rows; canon judging 7% / under 2%.
+  Verdict: the persistent-tree arc is NOT what the numbers ask for
+  yet; scope the judging and persisting to the written branch first
+  (S8e, design to Fran).
+- **S8e** (Fran 2026-10-13, design + header text approved): judge and
+  persist only what a write can have changed.
+  - **S8e-1** DONE 2026-10-13 (lib/insula.worklog.md): path index.
+    `mutare` builds a lazy `tabula_dispersa` per tree (first query
+    under a parent indexes all its children; first match wins, as
+    `ramum_invenire`), with a pointer-keyed memo in front (vias are
+    interned); `visio_nodi` groups excluded paths by first segment.
+    200 rows 5.1 ms -> 482 us, vicus 10 tabs 284 -> 194 us; small
+    cases flat.
+  - **S8e-2** DONE 2026-10-13 (lib/insula.worklog.md): `mutare_ramum`
+    judges only owners under the written path, the nearest canon at
+    or above it (else the root canon) and canons below it; guard:
+    text outside the target's span compared before/after (parser
+    positions vs `stml_scribere_sedibus`), escape refused by name;
+    `InsulaActarius(radix, via, ctx)`. 200 rows 482 -> 184 us
+    (linear), chain 22 113 -> 86 us. vicus is now ~72% SQLite commit
+    in the persistence hook (2 tabs) - S8e-3 + the quiet question.
+  - **S8e-3** DONE 2026-10-13 (lib/conservatio.worklog.md): the
+    persistence hook skips registered branches outside the written
+    path (`insula_via_continet(via, rc->ramus.via)`). vicus 10 tabs
+    195 -> 93 us (S8d 284). Remaining at 10 tabs: text copy ~46%
+    (persistent-tree arc territory), persistence ~41% (almost all the
+    per-write SQLite commit), lookups 5%, canons 1%. Commit at quiet
+    instead of per write: PARKED by Fran 2026-10-13 (ledger parcum
+    ...QNVSR) - revisit when persistent state is written per mouse
+    move.
 
 ### Arc IV — generation and lints (after three hand migrations)
 

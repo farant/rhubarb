@@ -72,7 +72,7 @@ s32 principale (vacuum)
     thema_initiare();
     vol = volumen_temporarium(piscina, "probatio_pictor_bibliotheca");
     CREDO_VERUM(pictor_applicatio_aedificare(&app, piscina, intern, vol,
-        NIHIL, CDLXXX, CDLXXX));
+        CDLXXX, CDLXXX));
     m      = manus_ludus_creare(piscina, app.d);
     radix  = app.montatio.doc;
     b      = pictor_documentum_creare(piscina, intern, vol, "b", C, LX,

@@ -58,7 +58,6 @@ vivum_montare (
      InsulaRepositorium* r,
      constans character* id,
      constans character* argumentum,
-     constans character* radix,
                     i32  latitudo,
                     i32  altitudo,
                  vacuum* ctx)
@@ -70,7 +69,6 @@ vivum_montare (
     (vacuum)vol;
     (vacuum)r;
     (vacuum)id;
-    (vacuum)radix;
     (vacuum)latitudo;
     (vacuum)altitudo;
     redde VERUM;
@@ -126,7 +124,7 @@ vicum_aperire (
 {
     Vicus* v;
 
-    v = vicus_creare(piscina, intern, vol, NIHIL, CDLXXX, CDLXXX);
+    v = vicus_creare(piscina, intern, vol, CDLXXX, CDLXXX);
     CREDO_NON_NIHIL(v);
     CREDO_VERUM(vicus_genus_addere(v, "vivus", magnitudo(Vivens),
         vivum_montare, vivum_describere, &signum_generis));
@@ -273,7 +271,7 @@ TerminaleApplicatio* ta;
     (vacuum)setenv("SHELL", "/bin/sh", I);
     vol = volumen_temporarium(piscina, "probatio_vicus_pulsus_verum");
     CREDO_VERUM(vicus_applicatio_aedificare(&app, piscina, intern, vol,
-        NIHIL, CDLXXX, CDLXXX));
+        CDLXXX, CDLXXX));
     /* decem tabulae; terminale = latus dextrum tabulae 1 */
     CREDO_AEQUALIS_I32(vicus_numerus_tabularum(app.vicus),
         VICUS_TABULAE);

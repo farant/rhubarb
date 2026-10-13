@@ -103,7 +103,6 @@ pictor_montare (
                 Volumen* volumen,
      InsulaRepositorium* repo,
      constans character* id,
-     constans character* radix,
                     i32  latitudo,
                     i32  altitudo,
         StatusSystemata* systemata)
@@ -146,9 +145,9 @@ pictor_montare (
                   : insula_ramus_radix(repo);
 
     /* status-plan S6a: organum per modulum communem - manifestum cum
-     * basi, canon, initium, restitutio, domini, dimissio */
-    organum = organum_legere_viam(piscina, intern, radix,
-        "apps/pictor/organum.stml", "pictor");
+     * basi, canon, initium, restitutio, domini, dimissio; manifestum
+     * infixum (S7c-1) */
+    organum = organum_legere_genus(piscina, intern, "pictor", "pictor");
     si (!organum)
     {
         redde FALSUM;
@@ -350,7 +349,6 @@ pictor_applicatio_aedificare (
                 Piscina* piscina,
     InternamentumChorda* intern,
                 Volumen* volumen,
-     constans character* radix,
                     i32  latitudo,
                     i32  altitudo)
 {
@@ -380,7 +378,7 @@ pictor_applicatio_aedificare (
     }
     si (   !app->repo
         || !pictor_montare(&app->montatio, piscina, intern, volumen,
-               app->repo, NIHIL, radix, latitudo, altitudo, &systemata))
+               app->repo, NIHIL, latitudo, altitudo, &systemata))
     {
         redde FALSUM;
     }

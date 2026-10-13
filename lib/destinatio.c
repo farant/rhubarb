@@ -90,6 +90,16 @@ invenire (
     redde NIHIL;
 }
 
+/* S8c: spatium intimum (dispensator catenam foci sequitur); sine
+ * ramo intimo = spatium capitis */
+interior chorda
+spatium_activum (
+    constans Motus* motus)
+{
+    redde motus->ramus_intimus.repo ? motus->spatium_intimum
+                                    : motus->spatium;
+}
+
 /* p schirmi in spatium LIBERORUM a (ut invenire descendit) */
 interior Punctum
 _in_spatium_liberorum (
@@ -190,9 +200,9 @@ destinatio_geometrica (
         si (motus && !chorda_vacua(motus->captura))
         {
             d.id_captum = motus->captura;
-            /* S2a: captura intra spatium activum */
+            /* S2a, S8c: captura intra spatium intimum */
             destinatum  = componens_invenire_in_spatio(arbor,
-                motus->spatium, motus->captura);
+                spatium_activum(motus), motus->captura);
             si (!destinatum)
             {
                 destinatum = geo ? geo : arbor;
@@ -201,10 +211,12 @@ destinatio_geometrica (
     }
     alioquin si (est_focalis(ev->genus) && !chorda_vacua(focus))
     {
-        /* S2a: focus intra spatium activum (motus NIHIL = arbor
+        /* S2a, S8c: focus intra spatium intimum (motus NIHIL = arbor
          * tota) */
         destinatum = motus
-            ? componens_invenire_in_spatio(arbor, motus->spatium, focus)
+            ? componens_invenire_in_spatio(arbor,
+            spatium_activum(motus),
+                focus)
             : componens_invenire_per_id(arbor, focus);
         si (!destinatum)
         {

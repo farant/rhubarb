@@ -12,9 +12,10 @@
  *
  * vicus-latera S2a: tabula = par laterum. SINISTRUM = editor (genus non
  * fixum), DEXTRUM = acervus cuius ultimus in fronte. Latus montatio
- * una est; id eius = via "<tabula>_<latus>_<genus>" = id rami = spatium
- * arboris (actiones, figurae, ids intra resolvuntur). Ictus in latus
- * non focatum id focat (ictus primus solum focat).
+ * una est; id eius = "<tabula>_<latus>_<genus>" = id rami; spatium
+ * arboris (actiones, figurae, ids intra resolvuntur) = via rami
+ * "<genus>:<id>" (status-plan S8c). Ictus in latus non focatum id
+ * focat (ictus primus solum focat).
  *
  * Genus ignotum in indice (volumen ab hospite recentiore): tabula
  * servatur, non montatur, causa nominatur. Addere generis ignoti
@@ -61,7 +62,6 @@ nomen b32 (*VicusMontator)(
      InsulaRepositorium* repo,
      constans character* id,
      constans character* argumentum,
-     constans character* radix,
                     i32  latitudo,
                     i32  altitudo,
                  vacuum* ctx);
@@ -129,9 +129,10 @@ nomen structura {
              vacuum* ctx;        /* montatori datur (S2b) */
 } VicusGenus;
 
-/* latus (S2a): montatio una. id = via "<tabula>_<latus>_<genus>"
+/* latus (S2a): montatio una. id = "<tabula>_<latus>_<genus>"
  * ("3_sinistrum_scriba"; canon 'nomen' puncta non admittit) = id rami
- * repositorii = spatium arboris */
+ * repositorii; spatium arboris = via rami ("scriba:3_sinistrum_scriba",
+ * status-plan S8c) */
 nomen structura {
                  chorda id;
                  chorda genus;
@@ -185,7 +186,6 @@ nomen structura {
                 Piscina* piscina;
     InternamentumChorda* intern;
                 Volumen* volumen;
-     constans character* radix;       /* praefixum viarum (manifesta) */
                     i32  latitudo;
                     i32  altitudo;
      InsulaRepositorium* repo;
@@ -210,7 +210,6 @@ vicus_creare (
                 Piscina* piscina,
     InternamentumChorda* intern,
                 Volumen* volumen,
-     constans character* radix,
                     i32  latitudo,
                     i32  altitudo);
 
@@ -240,8 +239,8 @@ vicus_systemata_ponere (
  * S3c: latus 'id' et 'argumentum' optionalia (absens id = ordinarium
  * "<tabula>_<latus>_<genus>").
  * FALSUM si dispositio mala aut repositorium deficit; latus generis
- * ignoti praeteritur (causa). S7a: radix ex apps/vicus/organum.stml
- * paratur (canon, domini). */
+ * ignoti praeteritur (causa). S7a: radix ex manifesto infixo (genus
+ * vicus) paratur (canon, domini). */
 b32
 vicus_aperire (
                   Vicus* v,

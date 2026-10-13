@@ -1,0 +1,19 @@
+<!-- organum.stml - manifestum terminalis (status-plan S7c-3). Campi
+     soli basis (organum_commune): id, focus, focus_acervus,
+     superficies_*. terminale.clavis insulam non scribit - eventus ad
+     programma eunt. Status terminalis in aemulatore vivit (schirmum,
+     historia, visus, titulus) aut in contextu (cachea, observationes):
+     census XIV. Infixum in bibliotheca (organa_infixa, S7c-1): fenestra
+     in ~/.bin sine arbore legit. Canon manu scriptus ante S7c-3
+     (CANON_EPHEMERA in lib/terminale.c, deletus). -->
+<organum genus="terminale" versio="1">
+
+  <actiones>
+    <actio nomen="terminale.clavis"/>
+  </actiones>
+
+  <status/>
+
+  <basis genus="organum_commune"/>
+  <montationes/>
+</organum>

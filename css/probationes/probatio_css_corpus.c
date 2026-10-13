@@ -28,7 +28,7 @@ hic_manens constans character* CORPUS[] = {
     "probationes/fixa/css/adversarius.css",
     "probationes/fixa/css/adversarius_2.css",
     "lib/speculum_assets/speculum.css",
-    "knotapel/atlas/web/style.css"
+    "probationes/fixa/css/knotapel_atlas_2026-02-26.css"
 };
 
 interior character*

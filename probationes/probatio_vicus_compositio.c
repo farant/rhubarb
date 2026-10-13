@@ -43,14 +43,13 @@ scribam_montare (
      InsulaRepositorium* r,
      constans character* id,
      constans character* argumentum,
-     constans character* radix,
                     i32  latitudo,
                     i32  altitudo,
                  vacuum* ctx)
 {
     (vacuum)argumentum;
     (vacuum)ctx;
-    redde scriba_montare((ScribaMontatio*)sedes, p, in, v, r, id, radix,
+    redde scriba_montare((ScribaMontatio*)sedes, p, in, v, r, id,
                          latitudo, altitudo, NIHIL, NIHIL);
 }
 
@@ -63,14 +62,13 @@ pictorem_montare (
      InsulaRepositorium* r,
      constans character* id,
      constans character* argumentum,
-     constans character* radix,
                     i32  latitudo,
                     i32  altitudo,
                  vacuum* ctx)
 {
     (vacuum)argumentum;
     (vacuum)ctx;
-    redde pictor_montare((PictorMontatio*)sedes, p, in, v, r, id, radix,
+    redde pictor_montare((PictorMontatio*)sedes, p, in, v, r, id,
                          latitudo, altitudo, NIHIL);
 }
 
@@ -210,7 +208,7 @@ s32 principale (vacuum)
     thema_initiare();
     vol = volumen_temporarium(piscina, "probatio_vicus_compositio");
 
-    v = vicus_creare(piscina, intern, vol, NIHIL, CDLXXX, CDLXXX);
+    v = vicus_creare(piscina, intern, vol, CDLXXX, CDLXXX);
     CREDO_NON_NIHIL(v);
     CREDO_VERUM(vicus_genus_addere(v, "scriba",
         magnitudo(ScribaMontatio),
@@ -262,14 +260,15 @@ s32 principale (vacuum)
     }
     /* latus dextrum: radix pictoris in spatio suo, x CCXL */
     c = componens_invenire_in_spatio(dispensator_arbor(d),
-        chorda_ex_literis("s1_dextrum_pictor", piscina),
+        chorda_ex_literis("pictor:s1_dextrum_pictor", piscina),
         chorda_ex_literis("radix", piscina));
     CREDO_NON_NIHIL(c);
     si (c)
     {
         CREDO_AEQUALIS_S32(c->fines.x, CCXL);
         CREDO_AEQUALIS_S32(c->fines.y, VIII);
-        CREDO_CHORDA_AEQUALIS_LITERIS(c->spatium, "s1_dextrum_pictor");
+        CREDO_CHORDA_AEQUALIS_LITERIS(c->spatium,
+            "pictor:s1_dextrum_pictor");
     }
     CREDO_NON_NIHIL(liberum(d, "vicus.divisor"));
 

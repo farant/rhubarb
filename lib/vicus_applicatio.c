@@ -238,7 +238,6 @@ scribam_montare (
      InsulaRepositorium* repo,
      constans character* id,
      constans character* argumentum,
-     constans character* radix,
                     i32  latitudo,
                     i32  altitudo,
                  vacuum* ctx)
@@ -272,7 +271,7 @@ scribam_montare (
                 chorda_ex_literis(argumentum, piscina), "scriba:visus");
         }
     }
-    si (!scriba_montare(m, piscina, intern, volumen, repo, id, radix,
+    si (!scriba_montare(m, piscina, intern, volumen, repo, id,
             latitudo, altitudo, cs->liber, cs->systemata))
     {
         redde FALSUM;
@@ -334,7 +333,7 @@ scribae_ictus_primus (
     {
         redde FALSUM;
     }
-    pagina = componens_invenire_in_spatio(arbor, m->ramus.id,
+    pagina = componens_invenire_in_spatio(arbor, m->ramus.via,
         chorda_ex_literis("pagina", m->actiones_ctx.doc->piscina));
     p.x = ev->datum.mus.x;
     p.y = ev->datum.mus.y;
@@ -385,7 +384,6 @@ pictorem_montare (
      InsulaRepositorium* repo,
      constans character* id,
      constans character* argumentum,
-     constans character* radix,
                     i32  latitudo,
                     i32  altitudo,
                  vacuum* ctx)
@@ -397,7 +395,7 @@ pictorem_montare (
 
     m   = (PictorMontatio*)sedes;
     cp  = (ContextusPictoris*)ctx;
-    si (!pictor_montare(m, piscina, intern, volumen, repo, id, radix,
+    si (!pictor_montare(m, piscina, intern, volumen, repo, id,
             latitudo, altitudo, cp ? cp->systemata : NIHIL))
     {
         redde FALSUM;
@@ -649,8 +647,8 @@ cyclum_registrare (
 }
 
 /* terminale (vicus-latera S1c): concha nova in omni apertura (decisio
- * aemulatoris: nihil durabile praeter ramum); volumen et radix
- * viarum non leguntur - canones infixi */
+ * aemulatoris: nihil durabile praeter ramum); volumen non legitur.
+ * ctx = systemata vici (S7c-3: organum, ut scriba et pictor) */
 interior b32
 terminale_montare_in_vico (
                  vacuum* sedes,
@@ -660,17 +658,14 @@ terminale_montare_in_vico (
      InsulaRepositorium* repo,
      constans character* id,
      constans character* argumentum,
-     constans character* radix,
                     i32  latitudo,
                     i32  altitudo,
                  vacuum* ctx)
 {
-    (vacuum)ctx;
     (vacuum)volumen;
-    (vacuum)radix;
     (vacuum)argumentum;
     redde terminale_montare((TerminaleApplicatio*)sedes, piscina,
-        intern, repo, id, latitudo, altitudo);
+        intern, repo, id, (StatusSystemata*)ctx, latitudo, altitudo);
 }
 
 /* pulsus sine mora: ansa hospitis XVI ms ipsa exspectat */
@@ -790,7 +785,6 @@ vicus_applicatio_aedificare (
                 Piscina* piscina,
     InternamentumChorda* intern,
                 Volumen* volumen,
-     constans character* radix,
                     i32  latitudo,
                     i32  altitudo)
 {
@@ -807,7 +801,7 @@ vicus_applicatio_aedificare (
     app->piscina  = piscina;
     app->intern   = intern;
     app->volumen  = volumen;
-    app->vicus    = vicus_creare(piscina, intern, volumen, radix,
+    app->vicus    = vicus_creare(piscina, intern, volumen,
         latitudo, altitudo);
     /* S6b: systemata repositorii, communia radici et omnibus
      * lateribus; S7b: vicus_aperire ea creat */
@@ -859,7 +853,8 @@ vicus_applicatio_aedificare (
                pictorem_describere, cp)
         || !vicus_genus_addere(app->vicus, "terminale",
                magnitudo(TerminaleApplicatio),
-               terminale_montare_in_vico, terminale_describere, NIHIL)
+               terminale_montare_in_vico, terminale_describere,
+               systemata)
         || !vicus_aperire(app->vicus, INDEX_ORDINARIUS))
     {
         causa = app->vicus ? vicus_causa(app->vicus)

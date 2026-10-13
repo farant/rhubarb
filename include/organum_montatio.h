@@ -27,14 +27,25 @@ nomen structura {
        Dimissio* dimissio;
 } StatusSystemata;
 
-/* manifestum ex radice+via cum basi apps/organum_commune.stml;
- * NIHIL si deest aut malum (vitia in stderr, praefixo dato) */
+/* manifestum ex radice+via cum basi apps/organum_commune.stml (e
+ * disco: probationes, instrumenta); NIHIL si deest aut malum (vitia
+ * in stderr, praefixo dato) */
 Organum*
 organum_legere_viam (
                 Piscina* piscina,
     InternamentumChorda* intern,
      constans character* radix,
      constans character* via,
+     constans character* praefixum);
+
+/* manifestum generis infixum (organa_infixa.h) cum basi
+ * organum_commune - via applicationum; NIHIL si genus ignotum aut
+ * manifestum malum (vitia in stderr, praefixo dato) */
+Organum*
+organum_legere_genus (
+                Piscina* piscina,
+    InternamentumChorda* intern,
+     constans character* genus,
      constans character* praefixum);
 
 /* ramum parare: canon, initium (absentes + attributa_addita), status

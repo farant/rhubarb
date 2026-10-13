@@ -136,7 +136,7 @@ miscere (
     per (i = ZEPHYRUM; i < k; i++)
     {
         f = (FiguraIntroitus*)xar_obtinere(fons->introitus, i);
-        s = spatium ? *spatium : f->spatium;
+        s = spatium && chorda_vacua(f->spatium) ? *spatium : f->spatium;
         si (introitus_invenire(reg, s, f->partes, f->thema))
         {
             redde FALSUM;
@@ -147,7 +147,8 @@ miscere (
         f       = (FiguraIntroitus*)xar_obtinere(fons->introitus, i);
         novus   = (FiguraIntroitus*)xar_addere(reg->introitus);
         *novus  = *f;
-        si (spatium)
+        /* S8c: spatium datum solum introitibus sine spatio */
+        si (spatium && chorda_vacua(f->spatium))
         {
             novus->spatium = *spatium;
         }

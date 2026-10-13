@@ -211,7 +211,7 @@ s32 principale (vacuum)
     (vacuum)setenv("SHELL", "/bin/sh", I);
     vol = volumen_temporarium(piscina, "probatio_vicus_latera");
     CREDO_VERUM(vicus_applicatio_aedificare(&app, piscina, intern, vol,
-        NIHIL, CDLXXX, CDLXXX + VICUS_ALTITUDO_TABULARUM));
+        CDLXXX, CDLXXX + VICUS_ALTITUDO_TABULARUM));
     v      = app.vicus;
     m      = manus_ludus_creare(piscina, app.d);
     motus  = dispensator_motus(app.d);
@@ -220,12 +220,14 @@ s32 principale (vacuum)
     /* Franus: 'tmux a' statim post aperturam ad concham */
     CREDO_AEQUALIS_I32(vicus_tabula(v, ZEPHYRUM)->focus, VICUS_DEXTRUM);
     CREDO_AEQUALIS_I32(vicus_tabula(v, II)->focus, VICUS_SINISTRUM);
-    CREDO_VERUM(spatium_est(motus->spatium, "1_dextrum_terminale"));
+    CREDO_VERUM(spatium_est(motus->spatium,
+        "terminale:1_dextrum_terminale"));
 
     imprimere("\n--- I: scriba | scriba - claves ad sinistrum ---\n");
     CREDO_VERUM(vicus_activam_ponere(v, "3"));
     dispensator_recomponere(app.d);
-    CREDO_VERUM(spatium_est(motus->spatium, "3_sinistrum_scriba"));
+    CREDO_VERUM(spatium_est(motus->spatium,
+        "scriba:3_sinistrum_scriba"));
     /* sine Esc: insertio in GESTU pendet usque ad commutationem */
     CREDO_VERUM(manus_ludus_scribere(m, "iuno"));
     CREDO_FALSUM(linea_prima(scriba(v, VICUS_SINISTRUM), "uno"));
@@ -235,7 +237,7 @@ s32 principale (vacuum)
     CREDO_VERUM(manus_ludus_premere_ad(m, CCLV, XX));
     CREDO_VERUM(vicus_latus_focatum(v)
         == vicus_latus(vicus_activa(v), VICUS_DEXTRUM));
-    CREDO_VERUM(spatium_est(motus->spatium, "3_dextrum_scriba"));
+    CREDO_VERUM(spatium_est(motus->spatium, "scriba:3_dextrum_scriba"));
     /* gestus relinquentis effusus: textus sinistri commissus */
     CREDO_VERUM(linea_prima(scriba(v, VICUS_SINISTRUM), "uno"));
     CREDO_VERUM(manus_ludus_scribere(m, "iabcdef"));
@@ -260,7 +262,7 @@ s32 principale (vacuum)
     CREDO_VERUM(manus_ludus_premere_ad(m, CCCLX, CC));
     CREDO_VERUM(vicus_latus_focatum(v)
         == vicus_latus(vicus_activa(v), VICUS_DEXTRUM));
-    CREDO_VERUM(spatium_est(motus->spatium, "2_dextrum_pictor"));
+    CREDO_VERUM(spatium_est(motus->spatium, "pictor:2_dextrum_pictor"));
     /* primus: focus solum, nullus ictus pictus */
     CREDO_AEQUALIS_S64(pictor_documentum_cursor(pm->doc), ZEPHYRUM);
     CREDO_VERUM(manus_ludus_premere_ad(m, CCCLX, CC));
@@ -277,10 +279,11 @@ s32 principale (vacuum)
     CREDO_VERUM(manus_ludus_movere(m, XV, XX));
     CREDO_CHORDA_AEQUALIS_LITERIS(dispensator_super(app.d), "pagina");
     CREDO_VERUM(spatium_est(app.d->super_spatium,
-        "3_sinistrum_scriba"));
+        "scriba:3_sinistrum_scriba"));
     CREDO_VERUM(manus_ludus_movere(m, CCLV, XX));
     CREDO_CHORDA_AEQUALIS_LITERIS(dispensator_super(app.d), "pagina");
-    CREDO_VERUM(spatium_est(app.d->super_spatium, "3_dextrum_scriba"));
+    CREDO_VERUM(spatium_est(app.d->super_spatium,
+        "scriba:3_dextrum_scriba"));
 
     imprimere("\n--- V: Cmd+0 = tabula decima ---\n");
     CREDO_VERUM(manus_ludus_clavem(m, '0', MOD_SUPER));
@@ -291,7 +294,8 @@ s32 principale (vacuum)
      * hospes Cmd+numerus ANTE eum capit */
     CREDO_VERUM(vicus_focum_ponere(v, VICUS_DEXTRUM));
     dispensator_recomponere(app.d);
-    CREDO_VERUM(spatium_est(motus->spatium, "1_dextrum_terminale"));
+    CREDO_VERUM(spatium_est(motus->spatium,
+        "terminale:1_dextrum_terminale"));
     CREDO_VERUM(manus_ludus_clavem(m, '2', MOD_SUPER));
     CREDO_CHORDA_AEQUALIS_LITERIS(v->activa, "2");
     CREDO_VERUM(manus_ludus_clavem(m, '1', MOD_SUPER));

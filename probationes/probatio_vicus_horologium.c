@@ -93,7 +93,6 @@ quietum_montare (
      InsulaRepositorium* r,
      constans character* id,
      constans character* argumentum,
-     constans character* radix,
                     i32  latitudo,
                     i32  altitudo,
                  vacuum* ctx)
@@ -105,7 +104,6 @@ quietum_montare (
     (vacuum)r;
     (vacuum)id;
     (vacuum)argumentum;
-    (vacuum)radix;
     (vacuum)latitudo;
     (vacuum)altitudo;
     (vacuum)ctx;
@@ -194,7 +192,7 @@ s32 principale (vacuum)
     intern = internamentum_creare(piscina);
     thema_initiare();
     vol  = volumen_temporarium(piscina, "probatio_vicus_horologium");
-    v    = vicus_creare(piscina, intern, vol, NIHIL, CDLXXX, CDLXXX);
+    v    = vicus_creare(piscina, intern, vol, CDLXXX, CDLXXX);
     CREDO_NON_NIHIL(v);
     si (!v)
     {

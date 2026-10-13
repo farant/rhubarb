@@ -118,8 +118,9 @@ via_status (
 
 interior vacuum
 actarius_conservationis (
-    StmlNodus* radix,
-       vacuum* ctx)
+     StmlNodus* radix,
+        chorda  via,
+        vacuum* ctx)
 {
     Conservatio* c;
             i32  i;
@@ -132,8 +133,14 @@ actarius_conservationis (
         RamusConservatus* rc;
                   chorda  status;
 
-        rc      = (RamusConservatus*)xar_obtinere(c->rami, i);
-        status  = statum_scribere(rc, c->scheda);
+        rc = (RamusConservatus*)xar_obtinere(c->rami, i);
+        /* S8e: extra viam scriptam nihil mutatum (porta custodit) -
+         * status rami sunt attributa nodi sui */
+        si (!insula_via_continet(via, rc->ramus.via))
+        {
+            perge;
+        }
+        status = statum_scribere(rc, c->scheda);
         si (chorda_aequalis(status, rc->ultimum))
         {
             perge;

@@ -29,7 +29,12 @@
 /* receptor ordinis unius (species = "sedes" | "usus"; via CRUDA ut
  * a silva_fons_via - praefixum "./" ambulationis NON detractum,
  * consumptor tractat; linea/columna 1-basatae ex radice originis;
- * profunditas = scopus symboli, 0 = plagula) */
+ * profunditas = scopus symboli, 0 = plagula; repositio = classis
+ * repositionis symboli: "externus" | "staticus" | "-" (nulla scripta,
+ * aut macro). "externus" = declaratio obiecti ALIBI definiti (extern
+ * char **environ in lib/processus_posix.c): sedes declarationis, non
+ * definitionis, et numquam plagulae propria - tools/corpus_infixum.sh
+ * eam inter statica non numerat, ne conflatio eam renominet) */
 typedef void (*NexusOrdinesReceptor)(
     void*              datum,
     const SilvaChorda* titulus,
@@ -38,7 +43,8 @@ typedef void (*NexusOrdinesReceptor)(
     const SilvaChorda* via,
     unsigned int       linea,
     unsigned int       columna,
-    unsigned int       profunditas);
+    unsigned int       profunditas,
+    const char*        repositio);
 
 /* Sedes + usus TU unius fundere. effimera = piscina vocantis pro
  * serie ambulationis (vita = haec vocatio). Systema exclusum;
@@ -61,6 +67,12 @@ nexus_ordines_fundere (
 const char*
 nexus_ordines_genus_titulus (
     int genus);
+
+/* REPOSITIO_* vexilla -> titulus tabulae ("externus" / "staticus" /
+ * "-") */
+const char*
+nexus_ordines_repositio_titulus (
+    unsigned int repositio);
 
 /* titulus macronis EXTIMI (in fonte scripti) lexematis expansi:
  * catenam originis ascendit; NULL si lexema FONS purum aut catena

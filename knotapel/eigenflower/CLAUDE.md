@@ -1,5 +1,7 @@
 ## Vision
 
+> **Correction (2026-10-12, Demo 125):** D82's "linear depth law" (max_xor ≈ depth + 6) is not supported above depth 6: the D81/D82 search never went past XOR12, and extended one level under the exact rule (from its first 32 XOR12 winners; robust not extended) it finds no XOR14 at depths 7–8 — a statement about that search, not the catalog. D82's "algebraic coherence beats vocabulary" / "deep entries 2× more efficient" does not survive a change of entry order: in other seeded orders strided 564 reaches XOR12 as often as deep 564 (robustly 8/10 vs 7/10), and so do 9/10 random 564-entry samples (mostly rounds 6–8). D87's ζ₁₂ result holds exactly, as far as its search reaches (both catalogs at the XOR12 ceiling). Statements here that rely on the depth law or on coherence are superseded; the D89–D93 "mechanisms" are not yet audited. See `knotapel/demo_125_exact_crossing_depth/findings.md`.
+
 Eigenflower is the applied AI / engineering department of the knotapel project. Knotapel is the pure mathematics research department (DKC — 109 demos, 4 formal proofs, novel results at the intersection of topology, algebra, neural computation, and information theory). Eigenflower takes those results and builds a system.
 
 ### Goals
@@ -31,8 +33,8 @@ See `notes/` for detailed architecture notes:
 - Eigenflower references knotapel results but doesn't duplicate them
 - DKC proves the core mechanism (exact algebraic weights compute Boolean functions)
 - Eigenflower's job is scaling from 3-5 input Boolean functions to propositional complexity
-- The atlas (`knotapel/atlas/`) is the reference for DKC results, theorems, and proofs
-- Key knotapel results for eigenflower: parity-lock theorem (D92), depth law (D82), dual-channel theorem (D108-109), axis-alignment theorem (D107), forward DKC (D29), five-pillar synthesis
+- The atlas (archived 2026-10-13 at `knotapel/archived-analysis/atlas/`) was the reference for DKC results, theorems, and proofs. It predates the exact audits (knotapel demos 114-125), which corrected or overturned many claims; check a result against its demo's findings.md and the 2026-10-13 synthesis at the end of `knotapel/explorers-log.md` before relying on it
+- Key knotapel results for eigenflower: parity-lock theorem (D92), depth law (D82), dual-channel theorem (D108-109), axis-alignment theorem (D107), forward DKC (D29), five-pillar synthesis. Status after the audits: D29's brackets survive exactly (D117); D82's depth law has no support above depth 6 (D125); the others are not yet audited
 
 ### Key Papers (from extractions)
 - **Tensor Logic** (Domingos): SP[s,p] = H(SM[s,m] * MP[m,p]) — syllogism = matrix multiply + step function

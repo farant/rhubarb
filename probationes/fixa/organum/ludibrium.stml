@@ -1,0 +1,18 @@
+<!-- ludibrium.stml - organum ludicrum probationum (status-plan S8b):
+     idem genus se ipsum montat - tres gradus. Persistens et transiens
+     ut organa vera; dimissio (popover) S8c exspectat. -->
+<organum genus="ludibrium" versio="1">
+  <actiones>
+    <actio nomen="ludibrium.agere"/>
+  </actiones>
+  <status>
+    <campus nomen="valor" typus="numerus" vita="persistens" absens="0"
+            scriptor="ludibrium.agere"/>
+    <campus nomen="nota" typus="textus" vita="transiens"
+            scriptor="ludibrium.agere"/>
+  </status>
+  <basis genus="organum_commune"/>
+  <montationes>
+    <montatio nomen="liber" genus="ludibrium"/>
+  </montationes>
+</organum>

@@ -111,3 +111,14 @@ error.
 Note: aedilis names its output dir after the root's stem, so every demo's
 live build lands in build/aedilis/main/ — fine sequentially, would collide
 if two archives ran at once.
+
+## 2026-10-12 — extern declarations were renamed as statics (D125)
+
+D125's snapshot failed to link: `_environ_processus_posix` undefined.
+The statics table (`corpus.symbola.tsv`) counted `extern char
+**environ;` in lib/processus_posix.c as file-private, so the conflator
+emitted `#define environ environ_processus_posix`. Fixed at the source:
+nexus.tsv column 8 = storage class, and corpus_infixum skips `externus`
+(see silva/nexus.worklog.md). Any library that declares an external
+object locally would have hit this in any amalgam (briar, silex,
+archive).

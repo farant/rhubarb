@@ -540,3 +540,36 @@ every scriba pane.
   register is NOT written (plant P2 caught there).
 - Our vim has no `y`; `dd` (and visual delete) fill the register. The
   vicus test uses `dd` in tab 3 and `p` in tab 4.
+
+## 2026-10-12 — status-plan S8c-1: spatium = branch path
+
+A pane used to have two addresses: its id ("1_dextrum_pictor") was the
+component/registry namespace, its branch path ("pictor:1_dextrum_pictor",
+S8a) addressed state. Now there is one: `via_lateris` gives the path
+and vicus stamps it on the pane subtree (`latus_componere`), the
+registry merge and `Motus.spatium` (`motum_aptare` uses
+`motus->ramus.via`). Readers that compared the namespace with
+`ramus.id` (dimissio registration, pictor/scriba `focatum_est`, scriba
+page click in vicus_applicatio) compare with `ramus.via`.
+
+Persisted names are NOT namespaces and did not move: the vicus index
+keeps `id`, pictor's document key in the volume is still the id
+(`clavis_memoriae`), scriba's `scriba/visus/<id>` likewise. Namespaces
+are runtime only, so no migration.
+
+Tests that hard-coded the namespace changed with it (vicus, latera,
+acervus, compositio, conservatio, dimissio). The dimissio test's
+`ramus_nodi` turns a namespace back into a branch by stripping "pop:";
+S8c-2's `insula_ramus_ex_via` is the real answer to that.
+
+Commit side-trip: touching probatio_dimissio.c made the pre-commit
+examen judge it, and credo rule 92 (credo II) rejected four
+`hic_manens character attr_*[]` statics that predate the rule - non-
+const statics passed to non-const params count as section writes. They
+are now `constans`; the three actions that hand one to a mutator
+(`vacuum* ctx`) pass a local copy (`strcpy` into `titulus`), same idiom
+as probatio_organum_profundum's `scribere`. Also seen: one `generata`
+gate run said the vates_responsum generator "wrote nothing" while
+the generator's output was byte-identical and the gate passed alone
+right after - transient, likely bin/norma rebuilt mid-gate by a
+parallel gate. Not chased.

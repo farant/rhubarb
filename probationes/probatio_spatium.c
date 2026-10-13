@@ -510,6 +510,70 @@ dispensatorem_probare (vacuum)
     CREDO_AEQUALIS_I32(sinistra.ictus, ZEPHYRUM);
 }
 
+/* S8c: registrum organi nidificati a parente mixtum - introitus cum
+ * spatio (via absoluta liberi) suum servant, sine spatio parentis
+ * accipiunt; via absoluta bis = collisio */
+interior vacuum
+nidificata_probare (vacuum)
+{
+     ActioRegistrum* reg;
+     ActioRegistrum* parens;
+     ActioRegistrum* filius;
+    FiguraRegistrum* figurae;
+    FiguraRegistrum* figurae_parentis;
+    FiguraRegistrum* figurae_filii;
+            ActioFn  fn;
+             vacuum* ctx;
+           FiguraFn  ff;
+
+    imprimere("\n--- VII: registra nidificata (S8c) ---\n");
+    reg     = actio_registrum_creare(piscina, intern);
+    parens  = actio_registrum_creare(piscina, intern);
+    filius  = actio_registrum_creare(piscina, intern);
+    (vacuum)actio_registrare(parens, "ludibrium.agere",
+        paginam_tractare,
+        &sinistra);
+    (vacuum)actio_registrare(filius, "ludibrium.agere",
+        paginam_tractare,
+        &dextra);
+    CREDO_VERUM(actio_registrum_miscere_in_spatio(parens, filius,
+        chorda_internata("p:1/f:1")));
+    CREDO_VERUM(actio_registrum_miscere_in_spatio(reg, parens,
+        chorda_internata("p:1")));
+    CREDO_VERUM(actio_invenire_in_spatio(reg, chorda_internata("p:1"),
+        chorda_internata("ludibrium.agere"), &fn, &ctx));
+    CREDO_VERUM(ctx == &sinistra);
+    CREDO_VERUM(actio_invenire_in_spatio(reg, chorda_internata(
+        "p:1/f:1"), chorda_internata("ludibrium.agere"), &fn, &ctx));
+    CREDO_VERUM(ctx == &dextra);
+    /* parens alibi: via liberi eadem -> collisio, nihil additur */
+    CREDO_FALSUM(actio_registrum_miscere_in_spatio(reg, parens,
+        chorda_internata("q:1")));
+    CREDO_FALSUM(actio_invenire_in_spatio(reg, chorda_internata("q:1"),
+        chorda_internata("ludibrium.agere"), &fn, &ctx));
+
+    figurae           = figura_registrum_creare(piscina);
+    figurae_parentis  = figura_registrum_creare(piscina);
+    figurae_filii     = figura_registrum_creare(piscina);
+    (vacuum)figura_registrare(figurae_parentis, PARTES_CAMPUS, ZEPHYRUM,
+        figuram_numerare, &sinistra);
+    (vacuum)figura_registrare(figurae_filii, PARTES_CAMPUS, ZEPHYRUM,
+        figuram_numerare, &dextra);
+    CREDO_VERUM(figura_registrum_miscere_in_spatio(figurae_parentis,
+        figurae_filii,
+        chorda_internata("p:1/f:1")));
+    CREDO_VERUM(figura_registrum_miscere_in_spatio(figurae,
+        figurae_parentis,
+        chorda_internata("p:1")));
+    CREDO_VERUM(figura_invenire_in_spatio(figurae,
+        chorda_internata("p:1"),
+        PARTES_CAMPUS, ZEPHYRUM, &ff, &ctx));
+    CREDO_VERUM(ctx == &sinistra);
+    CREDO_VERUM(figura_invenire_in_spatio(figurae, chorda_internata(
+        "p:1/f:1"), PARTES_CAMPUS, ZEPHYRUM, &ff, &ctx));
+    CREDO_VERUM(ctx == &dextra);
+}
+
 s32
 principale (vacuum)
 {
@@ -524,6 +588,7 @@ principale (vacuum)
     actiones_probare();
     figurae_probare();
     dispensatorem_probare();
+    nidificata_probare();
 
     imprimere("\n");
     credo_imprimere_compendium();

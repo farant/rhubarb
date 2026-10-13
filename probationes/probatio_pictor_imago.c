@@ -266,7 +266,7 @@ s32 principale (vacuum)
 
     vol = volumen_temporarium(piscina, "probatio_pictor_imago");
     CREDO_VERUM(pictor_applicatio_aedificare(&app, piscina, intern, vol,
-        NIHIL, CDLXXX, CDLXXX));
+        CDLXXX, CDLXXX));
     doc = app.doc;
 
     imprimere("\n--- IV: sine porta, porta vacua - nihil ---\n");

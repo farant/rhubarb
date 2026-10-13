@@ -54,3 +54,24 @@ Wiring: pictor_montare(..., Conservatio*) - NIHIL = no persistence
 (tests). Standalone pictor creates one in pictor_applicatio_aedificare;
 vicus as above. Scriba not wired until S6 (then the vicus-level holder
 moves out of ContextusPictoris to app level).
+
+## 2026-10-13 — status-plan S8e-3: persist only under the written path
+
+`actarius_conservationis` now receives the written path (S8e-2's
+`InsulaActarius(radix, via, ctx)`) and skips every registered branch
+whose path is not at or under it. A branch's saved state is its own
+node's attributes; the gate's guard proves nothing outside the written
+subtree changed, so the skipped `statum_scribere` calls could only
+have reproduced `rc->ultimum`. Root writes (`via` "") still visit all.
+
+No behaviour change, so no red test is possible; coverage checked with
+a plant instead (skip every branch write -> probatio_conservatio and
+probatio_vicus_conservatio both red, reverted green).
+
+vicus focus write, 10 tabs: 195 -> 93 us (S8d: 284). `sample` of the
+remainder: text copy ~46% (stml_legere + stml_scribere +
+stml_scribere_sedibus), persistence ~41% - nearly all
+`volumen_plagulam_condere` -> SQLite commit (WAL pwrite) for the one
+changed branch, every write - path lookups 5%, canon judging 1%.
+Moving the commit to quiet would cut ~40% at the price of losing the
+last writes before a crash (decision is Fran's).

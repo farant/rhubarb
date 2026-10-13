@@ -35,10 +35,12 @@ hic_manens constans character manifestum[] =
     "<campus nomen=\"electum\" typus=\"nomen\" vita=\"persistens\"/>"
     "</status></organum>";
 
-hic_manens character attr_palette[] = "palette";
-hic_manens character attr_ictus[]   = "ictus";
-hic_manens character attr_agere[]   = "agere";
-hic_manens character attr_claves[]  = "claves";
+/* constans (status inter sectiones non manet, credo examen 92); ctx
+ * mutatoris (vacuum*) copiam localem accipit */
+hic_manens constans character attr_palette[] = "palette";
+hic_manens constans character attr_ictus[]   = "ictus";
+hic_manens constans character attr_agere[]   = "agere";
+hic_manens constans character attr_claves[]  = "claves";
 
 
 /* ==================================================
@@ -97,8 +99,8 @@ ramus_nodi (
     InsulaRepositorium* repo,
              Componens* nodus)
 {
-    redde insula_ramus(repo, "pop", chorda_ut_cstr(
-        componens_spatium(nodus), repo->piscina));
+    /* spatium = via rami (status-plan S8c) */
+    redde insula_ramus_ex_via(repo, componens_spatium(nodus));
 }
 
 interior b32
@@ -131,6 +133,7 @@ actio_ictus (
                  vacuum* ctx)
 {
     InsulaRamus r;
+      character titulus[VIII];
 
     (vacuum)motus; (vacuum)des; (vacuum)ctx;
     si (ev->genus != EVENTUS_MUS_DEPRESSUS)
@@ -138,7 +141,8 @@ actio_ictus (
         redde FALSUM;
     }
     r = ramus_nodi(repo, nodus);
-    redde mutare_ramum(&r, incrementare, attr_ictus);
+    strcpy(titulus, attr_ictus);
+    redde mutare_ramum(&r, incrementare, titulus);
 }
 
 interior b32
@@ -171,6 +175,7 @@ actio_agere (
                  vacuum* ctx)
 {
     InsulaRamus r;
+      character titulus[VIII];
 
     (vacuum)motus; (vacuum)des; (vacuum)ctx;
     si (ev->genus != EVENTUS_MUS_DEPRESSUS)
@@ -178,7 +183,8 @@ actio_agere (
         redde FALSUM;
     }
     r = ramus_nodi(repo, nodus);
-    redde mutare_ramum(&r, incrementare, attr_agere);
+    strcpy(titulus, attr_agere);
+    redde mutare_ramum(&r, incrementare, titulus);
 }
 
 interior b32
@@ -205,12 +211,15 @@ actio_clavis (
        constans Eventus* ev,
                  vacuum* ctx)
 {
+    character titulus[VIII];
+
     (vacuum)motus; (vacuum)des; (vacuum)nodus; (vacuum)ctx;
     si (ev->genus != EVENTUS_CLAVIS_DEPRESSUS)
     {
         redde FALSUM;
     }
-    redde insula_mutare(repo, incrementare, attr_claves);
+    strcpy(titulus, attr_claves);
+    redde insula_mutare(repo, incrementare, titulus);
 }
 
 
@@ -248,7 +257,7 @@ organum_ludicrum (
      InsulaRepositorium* repo,
                 Piscina* p,
     InternamentumChorda* in,
-     constans character* spatium,
+     constans character* id,
                     s32  x)
 {
      Componens* w;
@@ -257,12 +266,12 @@ organum_ludicrum (
    InsulaRamus  r;
 
     w = nodus(p, in, "w", PARTES_NULLUM, x, ZEPHYRUM, CC, C, NIHIL);
-    componens_ponere_spatium(w, spatium);
+    r = insula_ramus(repo, "pop", id);
+    componens_ponere_spatium(w, chorda_ut_cstr(r.via, p));
     componens_addere_liberum(w, nodus(p, in, "aperire", PARTES_BOTTONE,
         X, X, XX, XX, "pop.aperire"));
     componens_addere_liberum(w, nodus(p, in, "pictura", PARTES_TABULA,
         L, X, CXL, LXXX, "pop.ictus"));
-    r = insula_ramus(repo, "pop", spatium);
     si (insula_ramus_attributum(&r, attr_palette))
     {
         pal = nodus(p, in, "palette", PARTES_DIALOGUS, LX, XX, LXXX, LX,
@@ -364,9 +373,9 @@ mundum_creare (
     reg = actio_registrum_creare(p, in);
     (vacuum)actio_registrare(reg, "hospes.clavis", actio_clavis, NIHIL);
     (vacuum)actio_registrum_miscere_in_spatio(reg, registrum_organi(p,
-        in), chorda_ex_literis("w1", p));
+        in), m->w1.via);
     (vacuum)actio_registrum_miscere_in_spatio(reg, registrum_organi(p,
-        in), chorda_ex_literis("w2", p));
+        in), m->w2.via);
     m->d = dispensator_creare(p, in, m->repo, reg, componere, NIHIL,
         CCC);
     si (!m->d)
@@ -524,7 +533,7 @@ _probare_effugium (
 
     in = internamentum_creare(c->piscina);
     CREDO_NECESSE(mundum_creare(&m, c->piscina, in, VERUM));
-    m.d->motus.spatium = chorda_ex_literis("w1", c->piscina);
+    m.d->motus.spatium = m.w1.via;
     /* nihil apertum: Esc transit ad hospitem */
     effugium(&m);
     CREDO_VERUM(claves_sunt(&m, "1"));

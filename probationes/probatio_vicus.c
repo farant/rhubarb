@@ -7,7 +7,7 @@
  * iteratum), latera montata, dispositio scripta; focus et documentum
  * per reapertionem servantur; registra in spatiis laterum; latus
  * generis ignoti praeteritur cum causa; plures quam X tabulae non
- * leguntur. S7a: radix ex manifesto apps/vicus/organum.stml - canon et
+ * leguntur. S7a: radix ex manifesto infixo (genus vicus) - canon et
  * domini (activa: vicus.radix; lectiones: horologium). */
 #include "latina.h"
 #include "piscina.h"
@@ -36,14 +36,13 @@ scribam_montare (
      InsulaRepositorium* r,
      constans character* id,
      constans character* argumentum,
-     constans character* radix,
                     i32  latitudo,
                     i32  altitudo,
                  vacuum* ctx)
 {
     (vacuum)argumentum;
     (vacuum)ctx;
-    redde scriba_montare((ScribaMontatio*)sedes, p, in, v, r, id, radix,
+    redde scriba_montare((ScribaMontatio*)sedes, p, in, v, r, id,
                          latitudo, altitudo, NIHIL, NIHIL);
 }
 
@@ -56,14 +55,13 @@ pictorem_montare (
      InsulaRepositorium* r,
      constans character* id,
      constans character* argumentum,
-     constans character* radix,
                     i32  latitudo,
                     i32  altitudo,
                  vacuum* ctx)
 {
     (vacuum)argumentum;
     (vacuum)ctx;
-    redde pictor_montare((PictorMontatio*)sedes, p, in, v, r, id, radix,
+    redde pictor_montare((PictorMontatio*)sedes, p, in, v, r, id,
                          latitudo, altitudo, NIHIL);
 }
 
@@ -113,7 +111,7 @@ vicum_aperire_cum (
 {
     Vicus* v;
 
-    v = vicus_creare(piscina, intern, vol, NIHIL, CDLXXX, CDLXXX);
+    v = vicus_creare(piscina, intern, vol, CDLXXX, CDLXXX);
     CREDO_NON_NIHIL(v);
     CREDO_VERUM(vicus_genus_addere(v, "scriba",
         magnitudo(ScribaMontatio),
@@ -291,20 +289,24 @@ s32 principale (vacuum)
         PictorMontatio* pm;
 
         CREDO_VERUM(actio_invenire_in_spatio(vicus_actiones(v),
-            lit("s1_sinistrum_scriba"), lit("pagina.clavis"), &fn,
+            lit("scriba:s1_sinistrum_scriba"), lit("pagina.clavis"),
+            &fn,
             &ctx));
         CREDO_VERUM(ctx == &sm->actiones_ctx);
         CREDO_VERUM(actio_invenire_in_spatio(vicus_actiones(v),
-            lit("s1_dextrum_pictor"), lit("penicillus.ictus"), &fn,
+            lit("pictor:s1_dextrum_pictor"), lit("penicillus.ictus"),
+            &fn,
             &ctx));
         /* nomen nudum (hospes) applicationes non videt */
         CREDO_FALSUM(actio_invenire(vicus_actiones(v),
             lit("pagina.clavis"), &fn, &ctx));
         CREDO_VERUM(figura_invenire_in_spatio(vicus_figurae(v),
-            lit("s1_sinistrum_scriba"), PARTES_CAMPUS, ZEPHYRUM, &ff,
+            lit("scriba:s1_sinistrum_scriba"), PARTES_CAMPUS, ZEPHYRUM,
+            &ff,
             &fc));
         CREDO_FALSUM(figura_invenire_in_spatio(vicus_figurae(v),
-            lit("s1_sinistrum_scriba"), PARTES_TABULA, ZEPHYRUM, &ff,
+            lit("scriba:s1_sinistrum_scriba"), PARTES_TABULA, ZEPHYRUM,
+            &ff,
             &fc));
         /* fons imaginum: latus dextrum (pictor) respondet */
         pm = (PictorMontatio*)vicus_latus(vicus_tabula(v, ZEPHYRUM),
@@ -315,10 +317,12 @@ s32 principale (vacuum)
         /* commutatio: registra sequuntur */
         CREDO_VERUM(vicus_activam_ponere(v, "p1"));
         CREDO_VERUM(actio_invenire_in_spatio(vicus_actiones(v),
-            lit("p1_sinistrum_pictor"), lit("penicillus.ictus"), &fn,
+            lit("pictor:p1_sinistrum_pictor"), lit("penicillus.ictus"),
+            &fn,
             &ctx));
         CREDO_FALSUM(actio_invenire_in_spatio(vicus_actiones(v),
-            lit("s1_sinistrum_scriba"), lit("pagina.clavis"), &fn,
+            lit("scriba:s1_sinistrum_scriba"), lit("pagina.clavis"),
+            &fn,
             &ctx));
         CREDO_VERUM(vicus_activam_ponere(v, "s1"));
     }

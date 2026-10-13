@@ -278,3 +278,15 @@ Directions are capped at `MAX_DIR 512` without a message; uncapped (`demo_117_cy
 - **Section 3 falls.** New directions at depths 7 and 8 are **468 and 1,068**, not 5 and 0 (cumulative 975 and 2,043). Depth 8 is truncated by `MAX_QCAT` 4,096 (1,804 of its 2,304 elements); the full round adds 1,124 new directions and depth 9 adds 2,156 (D117 review). There is no direction saturation, so "Depths 7-8: Angle refinement" and "the transition from XOR10 to XOR12 requires not more directions but finer angles" have no support from this table.
 - **The matched-size control survives.** Strided 564 has 517 directions and 43 angles, deep 564 has 476 and 19, shallow 564 239 and 16; only the deep set reaches XOR12. Finding 3 holds with the true counts.
 - The individual XOR12 winners change (mean depth 1.98 → 1.68); max XOR per subset is unchanged.
+
+## Audit (Demo 125, 2026-10-12)
+
+D125 reran D82's search (`find_capacity`) with exact cells (`cellae`, Q(√3)): rule (= this demo's floor sector, first maximal axis) and robust (every tie resolution), each with the 512-direction cap and uncapped. It also reran it in other entry orders. This demo's float numbers reproduce bit for bit on this machine.
+
+- **Section 7 (depth law) does not hold above depth 6.** "max_xor ≈ depth + 6" fits only rounds 0, 2, 4, 6. Rounds 7–8 are XOR12 because `find_capacity` stops at 6 weights. Extended one level under the exact rule (from its first 32 XOR12 winners; robust not extended), the search finds **no XOR14** at round 7 or 8, with 512 directions and with all 975 / 2,043. That is a statement about this search, not the catalog.
+- **Finding 3 does not survive a change of order.** Strided 564 reaches XOR12 in 8 of 10 seeded orders (rule and robust), deep 564 in 10 of 10 under the rule but 7 of 10 robustly (robust takes no axis-tie choice, so it isolates the order), shallow 564 in 1 of 10, and 9 of 10 random 564-entry samples (81–88% from rounds 6–8). In this demo's order the Part D table holds under every exact semantics. What it shows is that the first 564 entries rarely reach XOR12; it does not single out "algebraic coherence" of deep entries.
+- **Finding 2 ("2x more efficient")** compares against the shallow prefix: most 564-entry sets from deeper rounds reach XOR12.
+- **Section 2 observation 4** ("XOR12 is the first level to use depth-8 entries") holds only with the 512-direction cap: uncapped, no XOR12 winner uses depth 8. Observations 1–2 and section 5 (depth-0 core in every winner) follow from the search order: triples from the first 100 entries, then extension of the first winners.
+- **Counts at ties:** the exact rule finds 21 deep-564 XOR12 winners (robust 13), 22 strided-127 XOR10 (robust 20). First k's differ from the float run because generator sums lie exactly on sector boundaries.
+
+See `../demo_125_exact_crossing_depth/findings.md`.

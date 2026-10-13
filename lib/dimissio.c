@@ -8,7 +8,7 @@
 /* ramus registratus cum campis suis aspectus popover */
 nomen structura {
     InsulaRamus  ramus;
-         chorda  spatium;     /* = id rami (spatium componentium) */
+         chorda  spatium;     /* = via rami (spatium componentium) */
             Xar* campi;       /* Xar de constans OrganumCampus* */
 } RamusDimissionis;
 
@@ -163,7 +163,7 @@ ante (
         {
             redde FALSUM;
         }
-        redde spatium_claudere(dim, d->motus.spatium);
+        redde spatium_claudere(dim, d->motus.spatium_intimum);
     }
     si (e->genus != EVENTUS_MUS_DEPRESSUS)
     {
@@ -173,7 +173,7 @@ ante (
                      > ZEPHYRUM)
         ? componens_spatium(*(Componens**)xar_obtinere(des->ascensus,
               ZEPHYRUM))
-        : d->motus.spatium;
+        : d->motus.spatium_intimum;
     consumptus = FALSUM;
     per (i = ZEPHYRUM; i < xar_numerus(dim->rami); i++)
     {
@@ -286,7 +286,7 @@ dimissio_ramum_addere (
     }
     rd           = (RamusDimissionis*)xar_addere(dimissio->rami);
     rd->ramus    = *ramus;
-    rd->spatium  = ramus->id;
+    rd->spatium  = ramus->via;
     rd->campi   = xar_creare(dimissio->piscina,
         (i32)magnitudo(constans OrganumCampus*));
     per (i = ZEPHYRUM; i < organum_numerus_camporum(organum); i++)

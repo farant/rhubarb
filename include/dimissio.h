@@ -31,7 +31,7 @@ dimissio_creare (
      InsulaRepositorium* repo);
 
 /* ramum registrare (campi aspectus popover ex organo); spatium
- * componentium = id rami */
+ * componentium = via rami (status-plan S8c) */
 b32
 dimissio_ramum_addere (
                 Dimissio* dimissio,

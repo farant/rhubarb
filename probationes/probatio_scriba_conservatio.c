@@ -76,8 +76,7 @@ _probare_circuitum (
     CREDO_NECESSE_NON_NIHIL(vol);
     memset(&prima, ZEPHYRUM, magnitudo(prima));
     CREDO_NECESSE(scriba_applicatio_aedificare(&prima, c->piscina, in,
-        vol,
-        NIHIL, CDLXXX, CDLXXX));
+        vol, CDLXXX, CDLXXX));
     CREDO_VERUM(valor_est(&prima, "modus", "normalis"));
     CREDO_VERUM(scribere(&prima, "pagina.clavis", "cursor_linea=2"));
     CREDO_VERUM(scribere(&prima, "pagina.clavis", "cursor_columna=3"));
@@ -88,7 +87,7 @@ _probare_circuitum (
 
     memset(&altera, ZEPHYRUM, magnitudo(altera));
     CREDO_NECESSE(scriba_applicatio_aedificare(&altera, c->piscina, in,
-        vol, NIHIL, CDLXXX, CDLXXX));
+        vol, CDLXXX, CDLXXX));
     /* persistens redit */
     CREDO_VERUM(valor_est(&altera, "cursor_linea", "2"));
     CREDO_VERUM(valor_est(&altera, "cursor_columna", "3"));
@@ -114,8 +113,7 @@ _probare_canonem_dominos (
     CREDO_NECESSE_NON_NIHIL(vol);
     memset(&app, ZEPHYRUM, magnitudo(app));
     CREDO_NECESSE(scriba_applicatio_aedificare(&app, c->piscina, in,
-        vol,
-        NIHIL, CDLXXX, CDLXXX));
+        vol, CDLXXX, CDLXXX));
     /* canon: ignotum et electio mala recusantur */
     CREDO_FALSUM(scribere(&app, "pagina.clavis", "ignotissimum=1"));
     CREDO_FALSUM(scribere(&app, "pagina.clavis", "modus=volans"));

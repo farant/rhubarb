@@ -47,9 +47,12 @@ nomen vacuum (*InsulaMutator)(
                  vacuum* ctx);
 
 /* Vocatur post omnem scripturam per portam successam - pictor P3
- * hic acta appendit. */
+ * hic acta appendit. via = ramus scriptus (S8e; vacua = radix, tota
+ * arbor mutari potuit): extra viam nihil mutatum est (porta custodit),
+ * actarius partes alias praeterire potest. */
 nomen vacuum (*InsulaActarius)(
     StmlNodus*  radix,
+        chorda  via,
        vacuum*  ctx);
 
 nomen structura {
@@ -57,8 +60,7 @@ nomen structura {
     chorda dominus;     /* scriptor solus qui attributum mutat */
     chorda systemata;   /* S5a: systemata quoque licita, spatiis
                          * separata ("relatio"); vacua = nulla */
-    chorda elementum;   /* ramus (R1): vacua = radix */
-    chorda id;
+    chorda via;         /* S8: ramus domini; vacua = radix */
 } InsulaDominus;
 
 nomen structura {
@@ -79,15 +81,18 @@ nomen structura {
                     Xar* canones_ramorum; /* R1 */
 } InsulaRepositorium;
 
-/* RAMUS (insula-rami-plan R1): repositorium + liberum radicis per
- * elementum et id (vacua = radix ipsa). Lectio et scriptura relativae
- * ad nodum rami - applicatio locum suum ignorat; duo rami eiusdem
- * generis duae instantiae. Domini et canones per ramum; canon radicis
- * ramos canonem proprium habentes non videt (iudicium suum habent).
+/* RAMUS (insula-rami-plan R1; status-plan S8: quavis profunditate):
+ * repositorium + via a radice - segmenta "elementum:id" per '/'
+ * iuncta, internata (vacua = radix). elementum et id = segmentum
+ * ultimum. Lectio et scriptura relativae ad nodum rami - applicatio
+ * locum suum ignorat; duo rami eiusdem generis duae instantiae.
+ * Domini et canones per ramum; canon nodum suum iudicat sine ramis
+ * descendentibus qui canonem proprium habent (proximus vincit).
  * Ramus radicis == API vetus. */
 nomen structura {
      InsulaRepositorium* repo;
-                 chorda  elementum;   /* vacua = radix */
+                 chorda  via;         /* S8: internata; vacua = radix */
+                 chorda  elementum;   /* segmentum ultimum */
                  chorda  id;
 } InsulaRamus;
 
@@ -138,6 +143,31 @@ insula_ramus (
     constans character* elementum,
     constans character* id);
 
+/* S8: ramus liberi - <elementum id="id"/> inter liberos nodi rami
+ * parentis. Organum quod liberos montat ramum SUUM dat; insula_ramus
+ * = insula_ramus_liberi radicis. */
+InsulaRamus
+insula_ramus_liberi (
+    constans InsulaRamus* parens,
+      constans character* elementum,
+      constans character* id);
+
+/* S8c: ramus ex via ("a:a1/b:b1"; vacua = radix) - inversum
+ * insula_ramus_liberi (via internatur). Via mala (segmentum sine ':'
+ * aut vacuum) = ramus cum repo NIHIL. Nodus non quaeritur: ramus
+ * absens validus est (ut insula_ramus). */
+InsulaRamus
+insula_ramus_ex_via (
+    InsulaRepositorium* repo,
+                chorda  via);
+
+/* S8c: VERUM si descendens = via aut sub ea - "a:1" continet "a:1"
+ * et "a:1/b:2", non "a:10". Via vacua (radix) omnia continet. */
+b32
+insula_via_continet (
+    chorda via,
+    chorda descendens);
+
 /* LECTIO SOLA; NIHIL si ramus abest */
 StmlNodus*
 insula_ramus_nodus (
@@ -148,9 +178,13 @@ insula_ramus_attributum (
     constans InsulaRamus* ramus,
       constans character* titulus);
 
-/* porta rami: mutator NODUM RAMI in duplicato radicis accipit; domini
- * et canones (radicis et ramorum) iudicant ut semper. FALSUM si ramus
- * abest (causa nominata). */
+/* porta rami: mutator NODUM RAMI in duplicato radicis accipit et
+ * SOLUM subarborem eius mutat (S8e). Iudicant soli qui eam videre
+ * possunt: domini rami et descendentium; canon proximus supra (ramus
+ * ipse, ramus superior, aut radix) et canones descendentium. CUSTODIA:
+ * textus extra subarborem ante et post conferuntur - mutatio extra
+ * (per 'parens') recusatur, causa nominata. FALSUM et si ramus abest
+ * (causa nominata). */
 b32
 mutare_ramum (
     constans InsulaRamus* ramus,
@@ -169,18 +203,20 @@ insula_ramus_dominos_legere (
     constans InsulaRamus* ramus,
                StmlNodus* domini);
 
-/* ramum initiare (T1a): ramus liberi - elementum (STML) radici
- * additur si abest (exstans intactum); ramus radicis - attributa
- * elementi quae radici absunt adduntur. Per portam: canones et domini
- * iudicant (canonem rami ANTE initiationem ponere; dominos POST, ne
- * scriptura initialis anonyma recusetur). */
+/* ramum initiare (T1a): ramus liberi - elementum (STML) nodo
+ * PARENTIS additur si abest (exstans intactum); parens absens =
+ * FALSUM (causa nominata, S8); ramus radicis - attributa elementi quae
+ * radici absunt adduntur. Per portam: canones et domini iudicant
+ * (canonem rami ANTE initiationem ponere; dominos POST, ne scriptura
+ * initialis anonyma recusetur). */
 b32
 insula_ramum_initiare (
     constans InsulaRamus* ramus,
       constans character* elementum_stml);
 
-/* canon nodum rami iudicat (radix eius = elementum rami); canon
- * radicis eum non videt */
+/* canon nodum rami iudicat (radix eius = elementum rami); rami
+ * descendentes cum canone proprio ei absunt (quavis profunditate,
+ * S8), et canonibus superioribus hic ramus */
 vacuum
 insula_ramus_canonem_ponere (
     constans InsulaRamus* ramus,

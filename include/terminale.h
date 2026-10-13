@@ -4,7 +4,8 @@
  * Compositio communis fenestrae (apps/terminale/terminale.c) et
  * terminalis (terminale_terminalis.c), ut pictor et scriba - sed
  * bibliotheca UNA (frustum tenue): repositorium in memoria (nihil
- * durabile, decisio III), componens unus focusabilis (schirmum
+ * durabile, decisio III; canon et domini ex manifesto infixo,
+ * status-plan S7c), componens unus focusabilis (schirmum
  * cellularum, actio "terminale.clavis"), figura quae VISUM hospitis
  * legit (cellulae, stili, cursor), actiones, applicatio.
  *
@@ -45,6 +46,7 @@
 #include "actio.h"
 #include "pseudoterminale.h"
 #include "aemulator_hospes.h"
+#include "organum_montatio.h"
 
 nomen structura {
                 Piscina* piscina;
@@ -98,12 +100,13 @@ terminale_applicatio_aedificare (
                     i32  latitudo,
                     i32  altitudo);
 
-/* vicus-latera S1b: montare in repositorium hospitis (vicus): ramus
- * <terminale id=…> cum canonibus suis (radix hospitis liberos non
- * declarat); concha nova ($SHELL -l, ambitus TERM/COLORTERM/
- * TERM_PROGRAM ex bibliotheca); dispensator NULLUS - hospes suum
- * habet. latitudo/altitudo in pixelis nostris. FALSUM si concha non
- * generatur aut ramus recusatur. */
+/* vicus-latera S1b, status-plan S7c: montare in repositorium hospitis
+ * (vicus): ramus <terminale id=…> per organum (manifestum infixum,
+ * genus terminale: canon generatus, domini, status servatus); concha
+ * nova ($SHELL -l, ambitus TERM/COLORTERM/TERM_PROGRAM ex
+ * bibliotheca); dispensator NULLUS - hospes suum habet. systemata
+ * NIHIL = nulla. latitudo/altitudo in pixelis nostris. FALSUM si
+ * concha non generatur aut ramus recusatur. */
 b32
 terminale_montare (
     TerminaleApplicatio* app,
@@ -111,6 +114,7 @@ terminale_montare (
     InternamentumChorda* intern,
      InsulaRepositorium* repo,
      constans character* id,
+        StatusSystemata* systemata,
                     i32  latitudo,
                     i32  altitudo);
 

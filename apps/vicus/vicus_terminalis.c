@@ -113,7 +113,7 @@ principale (
     tessera_colores_ponere(opus, tessera_colores_ambitus());
     tessera_politicam_ponere(opus, tessera_politica_ambitus());
 
-    si (!vicus_applicatio_aedificare(&app, piscina, intern, vol, NIHIL,
+    si (!vicus_applicatio_aedificare(&app, piscina, intern, vol,
             (i32)tessera_latitudo(opus) * VICUS_CELLULA_LATITUDO,
             (i32)tessera_altitudo(opus) * VICUS_CELLULA_ALTITUDO))
     {

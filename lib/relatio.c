@@ -42,14 +42,14 @@ hic_manens constans character scriptor_relationis[] = "relatio";
  * Auxilia
  * ================================================== */
 
+/* S8: identitas = via tota (segmentum ultimum sub parentibus diversis
+ * idem esse potest) */
 interior b32
 rami_aequales (
     constans InsulaRamus* a,
     constans InsulaRamus* b)
 {
-    redde a->repo == b->repo
-        && chorda_aequalis(a->elementum, b->elementum)
-        && chorda_aequalis(a->id, b->id);
+    redde a->repo == b->repo && chorda_aequalis(a->via, b->via);
 }
 
 interior RamusRelationis*

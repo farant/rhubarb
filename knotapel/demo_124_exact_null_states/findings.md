@@ -57,6 +57,14 @@ Definitions:
 
 ## One float decision in eight is a tie
 
+> **Correction (2026-10-13, review of `knotapel/claims.md`).** The
+> heading and the sentence "one decision in eight is a tie" below
+> misread the table: 2,686,124 (12.8%) are the ties that the floats
+> resolve *differently from the exact rule*. Ties overall are more:
+> the three sources listed below (3,977,481 null-sum, 1,395,665 axis,
+> 4,285,855 non-null sector ties) make at least a fifth of all
+> decisions. See KC 22.5.
+
 **Part C** replays every cell decision D84's float search makes, all
 20,965,173 of them, against the exact cell of the same sum:
 

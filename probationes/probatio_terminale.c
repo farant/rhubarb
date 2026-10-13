@@ -1203,7 +1203,7 @@ superficiem_ponere (
         chorda_ut_cstr(chorda_ex_s32(sp->altitudo, p), p));
 }
 
-/* S7a: radix ut vicus eam parat - ex manifesto hospitis */
+/* S7a: radix ut vicus eam parat - ex manifesto hospitis (infixo) */
 interior b32
 radicem_vici_parare (
     InsulaRepositorium* repo)
@@ -1211,8 +1211,8 @@ radicem_vici_parare (
         Organum* organum;
     InsulaRamus  radix;
 
-    organum = organum_legere_viam(piscina, intern, NIHIL,
-        "apps/vicus/organum.stml", "probatio_terminale");
+    organum = organum_legere_genus(piscina, intern, "vicus",
+        "probatio_terminale");
     radix = insula_ramus_radix(repo);
     redde organum && organum_ramum_parare(organum, &radix, NIHIL, NIHIL,
         NIHIL, piscina, intern);
@@ -1240,7 +1240,7 @@ montationem_probare (vacuum)
     CREDO_NON_NIHIL(repo);
     CREDO_VERUM(radicem_vici_parare(repo));
     CREDO_VERUM(terminale_montare(&app, piscina, intern, repo, "t1",
-        CDLXXX, CXCII));
+        NIHIL, CDLXXX, CXCII));
     /* ramus in utroque genere; dispensator nullus (hospitis est) */
     r = insula_ramus(repo, "terminale", "t1");
     CREDO_NON_NIHIL(insula_ramus_nodus(&r));
@@ -1255,6 +1255,13 @@ montationem_probare (vacuum)
     sp.altitudo = LXXX;
     CREDO_VERUM(mutare_ramum(&r, superficiem_ponere,
         &sp));
+    /* S7c-3: domini ex manifesto - superficies dispensatoris est
+     * (iudicium solum si valor mutatur: valores novi) */
+    insula_scriptorem_ponere(repo, chorda_ex_literis("terminale.clavis",
+        piscina));
+    sp.latitudo = CC;
+    CREDO_FALSUM(mutare_ramum(&r, superficiem_ponere, &sp));
+    sp.latitudo = CXX;
     (vacuum)terminale_pulsare(&app, ZEPHYRUM);
     CREDO_AEQUALIS_I32(aemulator_latitudo(
         aemulator_hospes_aemulator(app.hospes)), XX);
@@ -1297,6 +1304,46 @@ montationem_probare (vacuum)
     terminale_claudere(&app);
 }
 
+/* attributum ignotum ponere (canon recusare debet) */
+interior vacuum
+ignotum_ponere (
+              StmlNodus* nodus,
+                Piscina* p,
+    InternamentumChorda* in,
+                 vacuum* ctx)
+{
+    (vacuum)ctx;
+    insula_attributum_ponere(nodus, p, in, "ignotissimum", "1");
+}
+
+/* XV: organum (status-plan S7c-3) - applicatio sola (fenestra in
+ * ~/.bin) radicem ex manifesto infixo parat: canon et domini */
+interior vacuum
+organum_probare (vacuum)
+{
+                Machina mc;
+            InsulaRamus r;
+    SuperficiesProbanda sp;
+
+    imprimere("\n--- XV: organum (status-plan S7c-3) ---\n");
+    CREDO_VERUM(machinam_struere(&mc, pseudoterminale_memoriae_creare(
+        piscina, (constans i8*)"", ZEPHYRUM, ZEPHYRUM)));
+    r            = insula_ramus_radix(mc.app.repo);
+    sp.latitudo  = CXX;
+    sp.altitudo  = LXXX;
+    /* canon generatus */
+    insula_scriptorem_ponere(mc.app.repo, chorda_ex_literis(
+        "dispensator", piscina));
+    CREDO_FALSUM(mutare_ramum(&r, ignotum_ponere, NIHIL));
+    CREDO_VERUM(mutare_ramum(&r, superficiem_ponere, &sp));
+    /* domini (iudicium solum si valor mutatur: valores novi) */
+    insula_scriptorem_ponere(mc.app.repo, chorda_ex_literis(
+        "terminale.clavis", piscina));
+    sp.latitudo = CC;
+    CREDO_FALSUM(mutare_ramum(&r, superficiem_ponere, &sp));
+    terminale_claudere(&mc.app);
+}
+
 s32
 principale (vacuum)
 {
@@ -1320,6 +1367,7 @@ principale (vacuum)
     memoriam_contrastus_probare();
     ramum_probare();
     montationem_probare();
+    organum_probare();
 
     imprimere("\n");
     credo_imprimere_compendium();
