@@ -512,6 +512,11 @@ nomen structura {
     b32 (*compilare)(vacuum* datum, constans character* fons,
                      constans character* obiectum, Piscina* piscina,
                      chorda* erratum_out);
+    /* GRADUS SOLUS (cursores ad gradus T3b): titulus actionis gradus
+     * cuius SOLIUS membra fabrica_gradus_explicare facit (clausurae
+     * ceterorum non computantur); ceterae actiones gradus parentes
+     * manent sine membris. Vacua (mensura 0, ordinarium) = omnes. */
+    chorda gradus_solus;
 } FabricaSutura;
 
 /* species viae (sutura->species) */

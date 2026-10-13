@@ -50,6 +50,18 @@ Mechanism first, then the pilots in rising difficulty (gen 3 -> 2 -> 1
   whole graph: ordering ~3.2 s, composite expansion ~1.6 s) - raised
   with Fran. Expedition row deferred to T6 (rubric v3).
 
+### T3b: the fixed cost of a fabrica call (inserted, Fran 2026-10-13)
+- [x] css showed warm probare 6.6 s vs the old runner's 4.2 s. Profile
+  (sample), then fix and re-measure, red-first test per fix.
+  As built (2026-10-13): warm css 6.6 -> 3.5 s (memoria indices VII-IX:
+  lectiones had none, ~340 full scans of 90k rows per call) -> 1.8 s
+  (`gradus_solus`: probare explains only the composite it names) -> 1.2 s
+  (numeri_latinae memorabilis: upstream of every C member, regenerated
+  on every full judgement). Warm toml 7 -> 2.3 s. Forced css 18.5 ->
+  13.5 s (clang identity once per process, compilator + sutura). Tests:
+  gradus unit section; fumus XLVII-XLIX; plants V red. Parked: whole-tree
+  snapshot per wave (~7 s of forced css) and scoped ordering (~0.6 s).
+
 ### T4: md (gen 1 -> steps)
 - [ ] same as T3 for md (first jump straight from excubitor/mtime: hand
   RADIX_FONTES and `-I` deleted). Commit.

@@ -50,7 +50,7 @@
 /* migratio II (plan 1b T7): cursus - omne actum sanationis (tempus,
  * duratio, eventus, causa); -siccum ex eo aestimat, lens 'tempus'
  * inventarii impletur */
-hic_manens constans character* constans MIGRATIONES_MEMORIAE[VI] = {
+hic_manens constans character* constans MIGRATIONES_MEMORIAE[IX] = {
     "CREATE TABLE verificationes ("
     " titulus TEXT NOT NULL, clavis TEXT NOT NULL,"
     " artificium TEXT NOT NULL, tempus INTEGER NOT NULL,"
@@ -75,7 +75,15 @@ hic_manens constans character* constans MIGRATIONES_MEMORIAE[VI] = {
      * (titulus, exitus) - quis ingressus transitum mutavit */
     "CREATE TABLE particulae ("
     " titulus TEXT NOT NULL, exitus TEXT NOT NULL,"
-    " via TEXT NOT NULL, sigillum BLOB NOT NULL)"
+    " via TEXT NOT NULL, sigillum BLOB NOT NULL)",
+    /* migrationes VII-IX (cursores ad gradus T3b): INDICES. Quaestiones
+     * omnes per titulum (et exitum) tabulam totam legebant - lectiones
+     * XC milia ordinum, semel per actionem lectionum in ordine per
+     * locos: ~2.5 s ex ~6.4 s cursus calidi 'probare' (sample
+     * mensuratum, fumus XLVII) */
+    "CREATE INDEX lectiones_per_titulum ON lectiones (titulus, exitus)",
+    "CREATE INDEX particulae_per_titulum ON particulae (titulus, exitus)",
+    "CREATE INDEX cursus_per_titulum ON cursus (titulus)"
 };
 
 interior vacuum

@@ -2297,6 +2297,112 @@ _probare_debita (
 
 
 /* ==================================================
+ * GRADUS SOLUS (cursores ad gradus T3b): sutura->gradus_solus = titulus
+ * actionis gradus unius -> eius SOLIUS membra explicantur (clausurae
+ * ceterorum non computantur: ~1 s ex 'probare' calido); parentes
+ * ceterarum manent sine membris. Declaratio putrida alieni (debitum
+ * membri ignoti) probare alterius non obstat; ipsa nominata recusatur
+ * cum ipsa eligitur aut nihil eligitur.
+ * ================================================== */
+
+/* actio gradus ludicra (exemplar dir/) */
+interior FabricaActio
+_parentem_ludicrum (
+    constans character* titulus,
+    constans character* exemplar,
+               Piscina* piscina)
+{
+         FabricaActio  parens;
+    FabricaAttributum* attributum;
+
+    memset(&parens, ZEPHYRUM, magnitudo(parens));
+    parens.titulus   = chorda_ex_literis(titulus, piscina);
+    parens.genus     = FABRICA_ACTIO_IUDICIUM;
+    parens.sedes     = chorda_ex_literis("t.stml:3", piscina);
+    parens.mandatum  = xar_creare(piscina, (i32)magnitudo(chorda));
+    parens.ingressus  = xar_creare(piscina,
+        (i32)magnitudo(FabricaIngressus));
+    parens.exitus = xar_creare(piscina,
+        (i32)magnitudo(FabricaExitus));
+    parens.gradus = &_gradus_ludicrum;
+    parens.attributa  = xar_creare(piscina,
+        (i32)magnitudo(FabricaAttributum));
+    attributum = (FabricaAttributum*)xar_addere(parens.attributa);
+    attributum->titulus = chorda_ex_literis("exemplar", piscina);
+    attributum->valor = chorda_ex_literis(exemplar, piscina);
+    redde parens;
+}
+
+interior vacuum
+_probare_gradum_solum (
+    CredoContextus* c)
+{
+           Piscina* piscina  = c->piscina;
+      DiscusFictus* discus   = &((MundusSectionis*)c->datum)->discus;
+     FabricaSutura* sutura   = &((MundusSectionis*)c->datum)->sutura;
+      FabricaActio  t;
+      FabricaActio  u;
+               Xar* actiones;
+               Xar* explicata;
+            chorda  causa;
+               i32  membra_u = ZEPHYRUM;
+               i32  i;
+constans character* nomina_t[] = { "a.c", "b.c" };
+constans character* nomina_u[] = { "x.c" };
+
+    mundi_ponere(discus, "t/a.c", "a I\n");
+    mundi_ponere(discus, "t/b.c", "b I\n");
+    mundi_ponere(discus, "u/x.c", "x I\n");
+    mundi_directorium_ponere(discus, "t/", nomina_t, II);
+    mundi_directorium_ponere(discus, "u/", nomina_u, I);
+    t         = _parentem_ludicrum("probationes_t", "t/", piscina);
+    u         = _parentem_ludicrum("probationes_u", "u/", piscina);
+    u.debita  = xar_creare(piscina, (i32)magnitudo(FabricaDebitum));
+    (vacuum)_debitum_addere(u.debita, "zeta", "build/z.db", piscina);
+    actiones = xar_creare(piscina, (i32)magnitudo(FabricaActio));
+    *(FabricaActio*)xar_addere(actiones) = t;
+    *(FabricaActio*)xar_addere(actiones) = u;
+
+    /* I. sine gradu solo: omnes explicantur - u putridus recusatur */
+    causa = chorda_ex_literis("", piscina);
+    CREDO_NIHIL(fabrica_gradus_explicare(sutura, actiones, piscina,
+        &causa));
+    CREDO_VERUM(mundi_continet(causa, "membrum ignotum 'zeta'",
+        piscina));
+
+    /* II. gradus solus t: t + t/a + t/b + u (parens sine membris) */
+    sutura->gradus_solus  = chorda_ex_literis("probationes_t", piscina);
+    causa                 = chorda_ex_literis("", piscina);
+    explicata = fabrica_gradus_explicare(sutura, actiones, piscina,
+        &causa);
+    CREDO_NECESSE_NON_NIHIL(explicata);
+    CREDO_AEQUALIS_I32(xar_numerus(explicata), IV);
+    CREDO_NON_NIHIL(_actio_explicata(explicata, "probationes_t/a"));
+    CREDO_NON_NIHIL(_actio_explicata(explicata, "probationes_t/b"));
+    CREDO_NON_NIHIL(_actio_explicata(explicata, "probationes_u"));
+    per (i = ZEPHYRUM; i < xar_numerus(explicata); i++)
+    {
+        si (chorda_incipit(((FabricaActio*)xar_obtinere(explicata,
+                i))->titulus, chorda_ex_literis("probationes_u/",
+                piscina)))
+        {
+            membra_u++;
+        }
+    }
+    CREDO_AEQUALIS_I32(membra_u, ZEPHYRUM);
+
+    /* III. gradus solus u: ipse putridus -> recusatio nominata */
+    sutura->gradus_solus  = chorda_ex_literis("probationes_u", piscina);
+    causa                 = chorda_ex_literis("", piscina);
+    CREDO_NIHIL(fabrica_gradus_explicare(sutura, actiones, piscina,
+        &causa));
+    CREDO_VERUM(mundi_continet(causa, "membrum ignotum 'zeta'",
+        piscina));
+    sutura->gradus_solus = chorda_ex_literis("", piscina);
+}
+
+
+/* ==================================================
  * CHASSIS GRADUUM (fabrica-6 T5): omne genus gradus registratum
  * fixum conformitatis habet (T6: probationes_c)
  * ================================================== */
@@ -2449,6 +2555,9 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "facultas repositorium currit (fabrica-7 T5)",
       _probare_facultatem_repositorii,
       _mundum_c_parare, _mundum_purgare, NIHIL, NIHIL },
+    { "gradus solus (cursores ad gradus T3b)",
+      _probare_gradum_solum,
+      _mundum_ludicrum_parare, _mundum_purgare, NIHIL, NIHIL },
     { "chassis: registrum graduum",
       _probare_registrum_graduum,
       NIHIL, NIHIL, NIHIL, NIHIL },

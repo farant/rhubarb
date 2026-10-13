@@ -483,6 +483,14 @@ fabrica_gradus_explicare (
         {
             perge;
         }
+        /* GRADUS SOLUS (cursores ad gradus T3b): ceterae actiones gradus
+         * parentes manent sine membris - clausurae eorum non computantur
+         * neque declarationes membrorum (debita) iudicantur */
+        si (   sutura->gradus_solus.mensura > ZEPHYRUM
+            && !chorda_aequalis(sutura->gradus_solus, actio->titulus))
+        {
+            perge;
+        }
         membra  = xar_creare(piscina, (i32)magnitudo(FabricaMembrum));
         causa   = chorda_ex_literis("", piscina);
         si (   membra == NIHIL || actio->gradus->membra == NIHIL

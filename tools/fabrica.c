@@ -140,11 +140,14 @@ _campus_numerus (
 
 /* Omnes actiones ex fabrica.stml et aedificatio.stml subsystematum.
  * NIHIL (causa impressa) si quid deest aut fractum est - declaratio
- * fracta numquam tacite omittitur. */
+ * fracta numquam tacite omittitur. gradus_solus (NIHIL = omnes): actio
+ * gradus cuius SOLIUS membra explicantur (probare, cursores ad gradus
+ * T3b) - ceterarum clausurae non computantur. */
 interior Xar*
 _declarationes_colligere (
-    Piscina*  piscina,
-        Xar** composita_out)
+               Piscina*  piscina,
+                   Xar** composita_out,
+    constans character*  gradus_solus)
 {
     InternamentumChorda* intern;
                  chorda  radix;
@@ -160,9 +163,14 @@ _declarationes_colligere (
     /* gradus (fabrica-6 T6c-2): membra clausuram suam in clave
      * ferunt */
     enumerans.clausura_c  = suturae_clausura_c;
-    intern                = internamentum_creare(piscina);
-    causa                 = chorda_ex_literis("", piscina);
-    radix                 = filum_legere_totum("fabrica.stml", piscina);
+    si (gradus_solus != NIHIL)
+    {
+        enumerans.gradus_solus = chorda_ex_literis(gradus_solus,
+            piscina);
+    }
+    intern  = internamentum_creare(piscina);
+    causa   = chorda_ex_literis("", piscina);
+    radix   = filum_legere_totum("fabrica.stml", piscina);
     subsystemata = fabrica_subsystemata_legere(radix, piscina, intern,
         &causa);
     si (subsystemata == NIHIL)
@@ -792,17 +800,20 @@ nomen structura {
 } CursusFabricae;
 
 /* declarationes, memoria aperta, ordo per locos. FALSUM = exitus II
- * (causa iam nuntiata; _cursum_finire tamen vocandum) */
+ * (causa iam nuntiata; _cursum_finire tamen vocandum). gradus_solus:
+ * vide _declarationes_colligere (NIHIL = omnes) */
 interior b32
 _cursum_parare (
-    CursusFabricae* c,
-           Piscina* piscina)
+         CursusFabricae* c,
+                Piscina* piscina,
+     constans character* gradus_solus)
 {
     memset(c, ZEPHYRUM, magnitudo(CursusFabricae));
     c->piscina   = piscina;
     c->nominata  = xar_creare(piscina,
         (i32)magnitudo(FabricaCompositum*));
-    c->actiones  = _declarationes_colligere(piscina, &c->composita);
+    c->actiones  = _declarationes_colligere(piscina, &c->composita,
+        gradus_solus);
     si (c->actiones == NIHIL)
     {
         redde FALSUM;
@@ -1472,7 +1483,7 @@ _iudicare (
     {
         redde II;
     }
-    si (!_cursum_parare(&t.cursus, piscina))
+    si (!_cursum_parare(&t.cursus, piscina, NIHIL))
     {
         _cursum_finire(&t.cursus);
         redde II;
@@ -2105,7 +2116,7 @@ _sanare (
     {
         redde II;
     }
-    si (!_cursum_parare(&m.cursus, piscina))
+    si (!_cursum_parare(&m.cursus, piscina, NIHIL))
     {
         _cursum_finire(&m.cursus);
         redde II;
@@ -2569,6 +2580,28 @@ _probare_summam (
     }
 }
 
+/* compositum titulo dato inter composita cursus; NIHIL si nullum */
+interior FabricaCompositum*
+_compositum_invenire (
+          CursusFabricae* c,
+      constans character* titulus)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(c->composita); i++)
+    {
+        FabricaCompositum* compositum =
+            (FabricaCompositum*)xar_obtinere(
+            c->composita, i);
+
+        si (chorda_aequalis_literis(compositum->titulus, titulus))
+        {
+            redde compositum;
+        }
+    }
+    redde NIHIL;
+}
+
 /* PROBARE: membra stala compositi (et producentes per post) currunt,
  * fresca reutuntur et ut 'servata' cum causa iudicis dicuntur; acta
  * cursorum imprimuntur. Porta (silva.py) et homo
@@ -2591,21 +2624,24 @@ _probare (
     {
         redde II;
     }
-    si (!_cursum_parare(c, piscina))
+    /* GRADUS SOLUS (T3b): compositum gradus nominatum - ceterorum
+     * clausurae non computantur (~1 s calidus). Non inventum sub ambitu
+     * (compositum declaratum, non gradus) -> declarationes plenae */
+    si (!_cursum_parare(c, piscina, p.titulus))
     {
         _cursum_finire(c);
         redde II;
     }
-    per (i = ZEPHYRUM; i < xar_numerus(c->composita); i++)
+    p.compositum = _compositum_invenire(c, p.titulus);
+    si (p.compositum == NIHIL)
     {
-        FabricaCompositum* compositum =
-            (FabricaCompositum*)xar_obtinere(
-            c->composita, i);
-
-        si (chorda_aequalis_literis(compositum->titulus, p.titulus))
+        _cursum_finire(c);
+        si (!_cursum_parare(c, piscina, NIHIL))
         {
-            p.compositum = compositum;
+            _cursum_finire(c);
+            redde II;
         }
+        p.compositum = _compositum_invenire(c, p.titulus);
     }
     si (p.compositum == NIHIL)
     {
@@ -2666,7 +2702,7 @@ _digestum (
            chorda  causa;
               i32  i;
 
-    actiones = _declarationes_colligere(piscina, NIHIL);
+    actiones = _declarationes_colligere(piscina, NIHIL, NIHIL);
     si (actiones == NIHIL)
     {
         redde II;
@@ -2818,7 +2854,7 @@ _debita_censere (
               i32  i;
               i32  j;
 
-    actiones = _declarationes_colligere(piscina, &composita);
+    actiones = _declarationes_colligere(piscina, &composita, NIHIL);
     si (actiones == NIHIL)
     {
         printf("census: debita nescita (declarationes non lectae)\n");

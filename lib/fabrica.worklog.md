@@ -2809,3 +2809,47 @@ it is now one C command used by both the gate (T2) and humans.
   cannot tell fresh from stale, the path assertion can. silva.planta
   reported "porta cum planta non cucurrit (signum absens)" for this
   plant twice, not explained; the by-hand run is the evidence.
+
+## 2026-10-13 - cursores ad gradus T3b: what a warm fabrica call spent
+
+Fran asked what the 6.6 s of a warm `probare probationes_css` (old
+runner 4.2 s) was made of. `sample` over the whole run (~6.4 s of
+samples), then fix-and-remeasure:
+
+| step | warm css | what |
+|---|---|---|
+| start | 6.6 s | |
+| 1. indices (memoria migrations VII-IX) | 3.5 s | `lectiones` (90 504 rows, 30 MB db) had NO index: `WHERE titulus = ?` scanned the table once per traced action in the ordering (~340 times) - ~2.5 s. Same pattern on particulae, cursus |
+| 2. gradus solus | 1.8 s | probare explains only the composite it names (sutura->gradus_solus): radix's 256 member closures (aedilis derivations, uncached clang -MM for .m, stats) no longer computed |
+| 3. numeri_latinae memorabilis | 1.2 s | the latina.h numerals generator is upstream of EVERY C member and was regenerated (~0.54 s) on every full judgement - now judged from memoria |
+
+Forced (`-vis`) css was 18.5 s: ~7 s whole-tree snapshot (write check
+before/after each wave), ~3.3 s `clang -print-prog-name` spawned on
+every compile AND every action keyed on identitas_clang (31 spawns in
+one run; desideratum …HHD43). Both identities now memoized per process
+(compilator: content digest via store; sutura: metadata digest - two
+different facts, so 2 spawns per process, constant): 13.5 s.
+
+Also: with gradus solus, a broken declaration in an UNRELATED suite
+(debt naming an unknown member) no longer blocks probare of another;
+probare of the broken suite, and full sanare/iudicare, still refuse
+naming it (fumus XLVIII). A composite named but not found under the
+scope (a declared composite, not a gradus) -> full declarations.
+
+Left on the table (not done, parked): (a) the whole-tree snapshot per
+wave (~7 s of forced css) - a hermeticity design question, not tuning;
+(b) ordering over all ~600 actions, now ~0.6 s mostly SHA-256 of every
+action's particles - scoping it to the selection's upstream closure
+needs care (producers, preconditions) and is no longer worth the risk
+for 0.6 s.
+
+Tests: probatio_fabrica_gradus section 'gradus solus' (red first:
+explicata NIHIL); fumus XLVII (query plans use an index; red first),
+XLVIII (alien rot does not block), XLIX (identity spawns constant, red
+first at 13).
+- Plants V, each red at its own stage then green: index migration ->
+  XLVII; lib gradus_solus check -> XLVIII; probare not passing the scope
+  -> XLVIII; sutura identity memo off -> XLIX (10); compilator memo off
+  -> XLIX (5). Parks: 01M4SZQX0DM0K9E8QT267CH1CJ (whole-tree snapshot),
+  01M4SZQZYZ47C9WV5JM78WMEC7 (scoped ordering); …HHD43 noted (in-process
+  part done, bin/compilator CLI still one spawn per process).

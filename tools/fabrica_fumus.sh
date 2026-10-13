@@ -80,6 +80,15 @@
 #        'servatae N/M'), summa, exitus 1 si fracta; FILTRUM, -vis,
 #        filtrum sine paribus -> 2, compositum ignotum -> 2, -machina;
 #        filtrum ut via ('t/probatio_a.c' -> probatio_a; cursores veteres)
+#   XLVII indices memoriae (cursores ad gradus T3b): quaestiones per
+#        titulum (lectiones, particulae, cursus) INDICEM utuntur - sine eo
+#        quaeque tabulam totam legit (ordo per locos ~2.5 s calidus)
+#   XLVIII gradus solus (T3b): probare compositum unum explicat - alienum
+#        putridum (debitum membri ignoti) probare alterius non obstat;
+#        ipsum nominatum et sanare plenum recusant (2, causa nominata)
+#   XLIX identitas compilatoris semel per processum (T3b): 'clang
+#        -print-prog-name' olim omni compilatione et actione (XIII in
+#        mundo III membrorum; ~3 s in -vis css); nunc II constantes
 #
 # Exitus: 0 sanum · 1 fractum · 2 bin/fabrica deest.
 # <porta titulus="fabrica-fumus" instrumentum="bin/fabrica" tegit="*/aedificatio.stml aedificatio.canon fabrica.canon tools/fabrica_struere.sh"/>
@@ -680,6 +689,52 @@ if [ "$rc1" -eq 1 ] && grep -qx 'a dicit salve' "$T/p1" && grep -qx 'b dicit vae
    && grep -qx 'PROBARE	probationes_t	2	3	1	2' "$T/p7" \
    && [ "$rc8" -eq 0 ] && grep -qx 'probationes_t: 1/1 praeteritae \[cursae 0, servatae 1\]' "$T/p8"; then echo "  XLVI probare: acta, servatae cum causa, filtrum, -vis, -machina OK"; else echo "  XLVI FRACTUM (rc=$rc1 $rc2 $rc3 $rc4 $rc5 $rc6 $rc7 $rc8)"; cat "$T/p1" "$T/p2" "$T/p3" "$T/p7" "$T/p8" | sed 's/^/      /' | head -40; fracta=1; fi
 
+# XLVII (cursores ad gradus T3b): INDICES MEMORIAE - radix XLVI (memoria
+# a probare creata) et memoria viva (migratio in apertura): consilium
+# quaestionis sqlite 'USING ... INDEX' pro quaestionibus per titulum
+indices_ok=1; indices_mala=""
+for db in "$T/r/build/fabrica.db" "$RADIX/build/fabrica.db"; do
+    [ -f "$db" ] || { indices_ok=0; indices_mala="$indices_mala absens:$db"; continue; }
+    for q in "SELECT DISTINCT genus, via FROM lectiones WHERE titulus = 'x'" \
+             "SELECT genus, via, sigillum FROM lectiones WHERE titulus = 'x'" \
+             "SELECT via, sigillum FROM particulae WHERE titulus = 'x'" \
+             "SELECT duratio_ms FROM cursus WHERE titulus = 'x'"; do
+        if ! sqlite3 "$db" "EXPLAIN QUERY PLAN $q" 2>/dev/null | grep -q 'USING .*INDEX'; then
+            indices_ok=0; indices_mala="$indices_mala [${db##*/r/}: ${q%% WHERE*}]"
+        fi
+    done
+done
+if [ "$indices_ok" -eq 1 ]; then echo "  XLVII indices memoriae (lectiones, particulae, cursus) OK"; else echo "  XLVII FRACTUM (sine indice:$indices_mala)"; fracta=1; fi
+
+# XLVIII (cursores ad gradus T3b): GRADUS SOLUS - radix XXXVII cum
+# composito altero probationes_u cuius debitum membrum ignotum nominat
+radix_c
+mkdir -p "$T/r/u"
+printf 'int main(void) { return 0; }\n' > "$T/r/u/probatio_x.c"
+printf '<aedificatio>\n  <actio titulus="probationes_t" genus="iudicium">\n    <probationes_c exemplar="t/probatio_*.c"/>\n  </actio>\n  <actio titulus="probationes_u" genus="iudicium">\n    <probationes_c exemplar="u/probatio_*.c"/>\n    <debitum_scripturae membrum="probatio_zeta" via="build/z.db" causa="putridum"/>\n  </actio>\n</aedificatio>\n' > "$T/r/aedificatio.stml"
+(cd "$T/r" && "$F" probare probationes_t) > "$T/g1" 2>&1; rc1=$?
+(cd "$T/r" && "$F" probare probationes_u) > "$T/g2" 2>&1; rc2=$?
+(cd "$T/r" && "$F" sanare probationes_t) > "$T/g3" 2>&1; rc3=$?
+if [ "$rc1" -eq 0 ] && grep -qx 'probationes_t: 3/3 praeteritae \[cursae 3, servatae 0\]' "$T/g1" \
+   && [ "$rc2" -eq 2 ] && grep -q "membrum ignotum 'probatio_zeta'" "$T/g2" \
+   && [ "$rc3" -eq 2 ] && grep -q "membrum ignotum 'probatio_zeta'" "$T/g3"; then echo "  XLVIII gradus solus: alienum putridum non obstat, ipsum recusat OK"; else echo "  XLVIII FRACTUM (rc=$rc1 $rc2 $rc3)"; cat "$T/g1" "$T/g2" "$T/g3" | sed 's/^/      /' | head -20; fracta=1; fi
+
+# XLIX (cursores ad gradus T3b): IDENTITAS COMPILATORIS SEMEL - radix
+# XXXVII, clang fictus primus in PATH (vocationem '-print-prog-name'
+# notat, deinde clang verum exsequitur); probare -vis: compilationes et
+# actiones plures, identitates DUAE constantes (olim XIII): sutura
+# (clavis actionis: metadata binarii) et compilator (contentum per
+# thesaurum) - semel quaeque per processum, non per compilationem
+radix_c
+mkdir -p "$T/via"
+CLANG_VERUM="$(command -v clang)"
+printf '#!/bin/sh\ncase "$*" in *-print-prog-name*) echo x >> "%s/identitates";; esac\nexec "%s" "$@"\n' "$T" "$CLANG_VERUM" > "$T/via/clang"
+chmod +x "$T/via/clang"
+: > "$T/identitates"
+(cd "$T/r" && PATH="$T/via:$PATH" "$F" probare -vis probationes_t) > "$T/i1" 2>&1; rc1=$?
+ni=$(wc -l < "$T/identitates" | tr -d ' ')
+if [ "$rc1" -eq 0 ] && [ "$ni" -le 2 ] && grep -qx 'probationes_t: 3/3 praeteritae \[cursae 3, servatae 0\]' "$T/i1"; then echo "  XLIX identitas compilatoris semel per processum OK"; else echo "  XLIX FRACTUM (rc=$rc1, identitates $ni)"; sed 's/^/      /' "$T/i1" | tail -5; fracta=1; fi
+
 if [ "$fracta" -ne 0 ]; then echo "fumus fabricae: FRACTUM"; exit 1; fi
-echo "fumus fabricae: sanum (XLVI/XLVI)"
+echo "fumus fabricae: sanum (XLIX/XLIX)"
 exit 0

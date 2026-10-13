@@ -357,8 +357,12 @@
     <ingressus genus="fasciculus" via="build/capsula_corpus_silicis.h"/>
     <exitus via="bin/silex" provenientia="relatio"/>
   </actio>
-  <!-- plan 1a T5: generata radicis -->
-  <actio titulus="numeri_latinae" genus="generator">
+  <!-- plan 1a T5: generata radicis. MEMORABILIS (cursores ad gradus
+       T3b): omnis probatio C latina.h includit, ergo actio haec supra
+       omne membrum stat - sine memoria omni iudicio pleno regenerabatur
+       (~0.54 s calidus per 'probare'); generator determinatus, sui ipsius
+       ingressus (pars manu scripta) declaratus -->
+  <actio titulus="numeri_latinae" genus="generator" memorabilis="verum">
     <mandatum>
       <verbum! (>./tools/latina_numeri.sh
     </mandatum>
