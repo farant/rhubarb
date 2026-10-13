@@ -216,6 +216,20 @@ quaternio_proximus (
                Piscina* piscina,
                    i32* index);
 
+/* omnes directiones proximae (paritas exacta, non index primus solum):
+ * indices ordine crescente in indices[0 .. *numerus_proximorum - 1];
+ * indices capacitatem numerus habere debet. indices[0] = index
+ * quaternio_proximus. Contractus idem ac quaternio_proximus. */
+b32
+quaternio_proximi (
+             Quaternio  v,
+    constans Quaternio* directiones,
+                   i32  numerus,
+                   b32  antipodes_idem,
+               Piscina* piscina,
+                   i32* indices,
+                   i32* numerus_proximorum);
+
 
 /* ==================================================
  * Textus

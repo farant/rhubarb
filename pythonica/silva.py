@@ -2443,10 +2443,36 @@ def viae_mutatae():
     return sorted(set(v for v in mut + novae if v))
 
 
-def _portae_debitas_addere(viae, portae):
+def _excusatas_praeiudicare(excusatae, portae, sine_debitis):
+    """causae praeviae excusatarum (ANTE omnia): causa vacua, porta
+    ignota, petita simul, sine_debitis simul - [] = sanum"""
+    causae = []
+    if not excusatae:
+        return causae
+    if sine_debitis is not None:
+        causae.append('excusatae cum sine_debitis: contraria (sine_debitis'
+                      ' omnes omittit, excusatae singulas) - elige unum')
+    petitae = set(p if isinstance(p, str) else p[0] for p in portae)
+    for nomen, causa in sorted(excusatae.items()):
+        if not str(causa or '').strip():
+            causae.append('excusatae %s causam poscit: cur porta debita'
+                          ' omittitur?' % nomen)
+        if nomen not in PORTAE:
+            causae.append('excusatae %s: porta ignota (non in PORTAE)'
+                          % nomen)
+        if nomen in petitae:
+            causae.append('excusatae %s: porta petita et excusata simul'
+                          % nomen)
+    return causae
+
+
+def _portae_debitas_addere(viae, portae, excusatae=None):
     """portae petitae + DEBITAE absentes (portae_debitae), ordine: petitae,
     deinde additae ordine PORTAE. Linea una per additam cum causa sua;
-    debitae manu nominantur, numquam curruntur. Debita incomputabilia
+    debitae manu nominantur, numquam curruntur. excusatae {porta: causa}
+    (circulus commissionis P5): debitae nominatae NON adduntur, linea
+    'porta debita EXCUSATA'; excusata quae debita non est = SilvaError
+    (nihil excusandum - numquam tacite). Debita incomputabilia
     (RECUSATIO, bin/fabrica fractum) = MONITUM et petitae solae (monet,
     numquam obstat: machina haec
     commissionem nunquam impedit). Decretum 01M38VGAK8."""
@@ -2455,7 +2481,16 @@ def _portae_debitas_addere(viae, portae):
     except SilvaError as ex:
         print('MONITUM: portae debitae computari non potuerunt (%s) -'
               ' portae petitae solae' % ex)
+        if excusatae:
+            print('MONITUM: excusatae sine effectu (%s)'
+                  % ', '.join(sorted(excusatae)))
         return list(portae)
+    excusatae = excusatae or {}
+    debitae = set(d.porta for d in debita if not d.manu)
+    vanae = sorted(n for n in excusatae if n not in debitae)
+    if vanae:
+        raise SilvaError('excusatae non debitae (nihil excusandum): %s -'
+                         ' nihil cursum' % ', '.join(vanae))
     petitae = set()
     for p in portae:
         if isinstance(p, str) and not p.endswith('.json'):
@@ -2466,6 +2501,9 @@ def _portae_debitas_addere(viae, portae):
     for d in debita:
         if d.manu:
             print('manu debita: %s - %s' % (d.porta, d.causa))
+        elif d.porta in excusatae:
+            print('porta debita EXCUSATA: %s - %s' % (d.porta,
+                                                      excusatae[d.porta]))
         elif d.porta not in petitae:
             print('porta debita addita: %s - %s' % (d.porta, d.causa))
             fructus.append(d.porta)
@@ -2585,13 +2623,26 @@ def _viae_commissae(viae):
 VIAE_COMMISSAE = _viae_commissae
 
 
-def _fabricam_exigere(viae, sine_fabrica=None):
+# IUDICES SANABILES (circulus commissionis P3): iudex stalus fabricae
+# (binarium domus quod iudicat) per struere.sh SUUM sanatur - aedificatio
+# in bin/ arboris, numquam institutio. Tabula hic, non recipe impressa
+# (SANANDA): commissio nihil currit quod effusio ei dicat.
+IUDICES_STRUERE = {
+    'fabrica': ['./tools/fabrica_struere.sh'],
+    'compilator': ['./tools/compilator_struere.sh'],
+    'aedilis': ['./tools/aedilis_struere.sh'],
+}
+
+
+def _fabricam_exigere(viae, sine_fabrica=None, _iudex_sanatus=False):
     """bin/fabrica iudicare -plenus -tacta VIAE ante portas. exitus 0 =
     pergit; 1 = artificium generatum tactum STALUM/IGNOTUM - SilvaError
     cum lineis et sanatione; 2 = iudicare nequit (sera tenetur,
     declarationes fractae) - SilvaError. bin/fabrica deest = MONITUM
     (clonus recens), non obstat. sine_fabrica='<causa>' omittit (causa
-    impressa); vacua = SilvaError."""
+    impressa); vacua = SilvaError. Iudex SOLUS stalus et sanabilis
+    (IUDICES_STRUERE) sanatur ('iudex sanatus: X') et iudicium SEMEL
+    iteratur; struere fractum aut iudex adhuc stalus = SilvaError."""
     if sine_fabrica is not None:
         if not str(sine_fabrica).strip():
             raise SilvaError('sine_fabrica causam poscit: cur iudicium'
@@ -2623,6 +2674,21 @@ def _fabricam_exigere(viae, sine_fabrica=None):
     recusata = [o for o in ordines
                 if o[0] == 'IUDICIUM' and len(o) >= 4
                 and o[1] == 'NON IUDICATUM' and o[3].startswith('iudex ')]
+    iudices = sorted(set(
+        m.group(1) for m in (re.match(r'iudex (\S+) non recens', o[3])
+                             for o in recusata) if m))
+    if (recusata and not _iudex_sanatus and iudices
+            and all(i in IUDICES_STRUERE for i in iudices)):
+        for i in iudices:
+            r2 = _curre(list(IUDICES_STRUERE[i]))
+            if r2.returncode != 0:
+                raise SilvaError(
+                    'FABRICA (ante portas): iudex %s sanari non potuit (%s'
+                    ' rc=%d) - nihil cursum, nihil commissum:\n%s'
+                    % (i, ' '.join(IUDICES_STRUERE[i]), r2.returncode,
+                       (r2.stdout + r2.stderr).strip()[-2000:]))
+            print('iudex sanatus: %s (%s)' % (i, ' '.join(IUDICES_STRUERE[i])))
+        return _fabricam_exigere(viae, sine_fabrica, _iudex_sanatus=True)
     if recusata:
         raise SilvaError(
             'FABRICA (ante portas): stadium iudicum - artificia tacta NON'
@@ -2691,7 +2757,7 @@ def _lint_praevium_exigere(viae):
 
 def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
               opus=None, actor='claude', sine_debitis=None,
-              sine_fabrica=None, _debitae_additae=False,
+              sine_fabrica=None, excusatae=None, _debitae_additae=False,
               _fabrica_facta=False):
     """gate, deinde commissio - uno vocamine, in Pythone (crusta 'set -e'
     non honorat; pipestatus fallit). portae: nomina aut (nomen,
@@ -2717,7 +2783,8 @@ def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
     PORTAE DEBITAE (project-specs/portae-debitae-spec.md): portae quas
     viae debent (portae_debitae) petitis ADDUNTUR et CURRUNT, linea una
     cum causa; manu debitae nominantur. sine_debitis='<causa>' eas
-    omittit (causa impressa; vacua = causa praevia). _debitae_additae:
+    omittit (causa impressa; vacua = causa praevia); excusatae={porta:
+    causa} singulas omittit, ceterae adduntur. _debitae_additae:
     commissio_umbra eas iam addidit. FABRICA (T8): post lint, ante
     portas, bin/fabrica iudicat artificia generata a viis tacta
     (_fabricam_exigere); sine_fabrica='<causa>' omittit;
@@ -2734,6 +2801,7 @@ def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
     if sine_debitis is not None and not str(sine_debitis).strip():
         causae.append('sine_debitis causam poscit (ut --no-verify): cur'
                       ' portae debitae omittuntur? - nihil cursum')
+    causae.extend(_excusatas_praeiudicare(excusatae, portae, sine_debitis))
     if causae:
         raise SilvaError(
             causae[0] if len(causae) == 1 else
@@ -2757,7 +2825,7 @@ def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
         print('portae debitae OMISSAE: %s' % sine_debitis)
     elif not _debitae_additae:
         initium = time.time()
-        portae = _portae_debitas_addere(viae, portae)
+        portae = _portae_debitas_addere(viae, portae, excusatae)
         _tempus_notare('phasis', 'portae debitae', initium)
     ante = _sigilla_viarum(viae)
     for p in portae:
@@ -3493,7 +3561,8 @@ def _totum_actorum(acta):
 
 
 def commissio_umbra(nuntius, viae, portae, verificare=True, tectum=1800,
-                    siccum=False, sine_debitis=None, sine_fabrica=None):
+                    siccum=False, sine_debitis=None, sine_fabrica=None,
+                    excusatae=None):
     """Portae umbrae SERIATIM (tempora non contendunt - mensurae suitae
     fidae manent), quaeque in clone photographiae suae (editio pergit),
     deinde commissio contra recepta OMNIA (plagulae viae contra blobs
@@ -3503,9 +3572,14 @@ def commissio_umbra(nuntius, viae, portae, verificare=True, tectum=1800,
     receptum_delere; umbrae_purgare orphanos). siccum: portae solae,
     nihil commissum. Reddit (hash | None, [(nomen, compendium,
     totum_secunda)]). Portae DEBITAE (vide commissio) hic ante umbras
-    adduntur, ut in umbra quoque currant; sine_debitis ut in commissio.
+    adduntur, ut in umbra quoque currant; sine_debitis et excusatae ut in
+    commissio.
     Lint latinus praevius et iudicium fabricae ANTE umbras (ut in
     commissio; sine_fabrica idem). Forma ANTE omnia (…QGT1)."""
+    causae = _excusatas_praeiudicare(excusatae, portae, sine_debitis)
+    if causae:
+        raise SilvaError('commissio_umbra RECUSATA - nihil cursum:\n  %s'
+                         % '\n  '.join(causae))
     if verificare:
         _formam_praeparare(viae)
         _lint_praevium_exigere(viae)
@@ -3519,7 +3593,7 @@ def commissio_umbra(nuntius, viae, portae, verificare=True, tectum=1800,
                              ' cursum')
         print('portae debitae OMISSAE: %s' % sine_debitis)
     else:
-        portae = _portae_debitas_addere(viae, portae)
+        portae = _portae_debitas_addere(viae, portae, excusatae)
     recepta = []
     for p in portae:
         nomen, filtrum = (p, None) if isinstance(p, str) else p

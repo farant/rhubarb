@@ -13,13 +13,13 @@
 <h1>fons_6x8</h1>
 <p class="subtitulus"></p>
 
-<p>The house&#x27;s bitmap font: 256 characters of 6x8 pixels, one byte per row with the left pixel in the high bit, merged from the HP 100LX palmtop&#x27;s font and one called Alcuin (which supplies the control symbols and the 0x80-0x9F range), so the window&#x27;s text has the look of an early palmtop. The cell it defines is the window&#x27;s modulus (6 x 8), which is why tessellatio&#x27;s terminal cells default to the same size.</p>
+<p>The house&#x27;s bitmap font: 256 characters of 6x8 pixels, one byte per row with the left pixel in the high bit, merged from the HP 100LX palmtop&#x27;s font and one called Alcuin (which supplies the control symbols and the 0x80-0x9F range), so the window&#x27;s text has the look of an early palmtop. The cell it defines is the window&#x27;s modulus (6 x 8), which is why tessellatio&#x27;s terminal cells default to the same size. Until 2026-10-09 forty of its Latin-1 slots were all zeros: characters such as the multiplication sign and most accented capitals drew as nothing at all, not even the box for a missing glyph, so nobody had noticed. They were drawn that day (accented capitals with a two-row accent over a five-row body, to match the lowercase), using a contact-sheet script that renders glyphs written as strings at four times their size, which is the way to design any further ones. What the font still lacks is drawn elsewhere: box, block and braille characters, symbols and Greek come from glyphae_ductae in the terminal.</p>
 
 <table>
 <tbody>
 <tr><td>Header</td><td><a href="../../include/fons_6x8.h"><code>include/fons_6x8.h</code></a></td></tr>
 <tr><td>Implementation</td><td><span class="nota">(header only)</span></td></tr>
-<tr><td>Last change</td><td>2025-12-23 c8c658e4</td></tr>
+<tr><td>Last change</td><td>2026-10-09 a11400ef</td></tr>
 <tr><td>Group</td><td><a href="greges.html#fenestra">Window, input and drawing</a></td></tr>
 </tbody>
 </table>

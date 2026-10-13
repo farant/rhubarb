@@ -72,6 +72,9 @@
 #        2; clavis sine annotatione -> RECUSATIO nominata, 2; debita in
 #        repositorio git: caput -> clausura vera fontis quem cursor legit,
 #        MANU, INTECTUM
+#   XLV  clavis thesauri extractoris (circulus commissionis P1): bin/aedilis
+#        et bin/fabrica (binaria DIVERSA) clavem EANDEM ex digesto infixo
+#        habent - editio extra extractorem thesaurum non refrigerat
 #
 # Exitus: 0 sanum · 1 fractum · 2 bin/fabrica deest.
 # <porta titulus="fabrica-fumus" instrumentum="bin/fabrica" tegit="*/aedificatio.stml aedificatio.canon fabrica.canon tools/fabrica_struere.sh"/>
@@ -622,6 +625,17 @@ if [ "$rc1" -eq 2 ] && grep -q '^usus: bin/fabrica portae debitae' "$T/o1" \
    && grep -qx 'DEBITUM	m.sh	1	m.sh (cursor ipse)' "$T/o5" \
    && grep -qx 'INTECTUM	z.txt' "$T/o5" && [ "$(wc -l < "$T/o5")" -eq 3 ]; then echo "  XLIV portae: usus, registrum, recusatio, debita per clausuram veram OK"; else echo "  XLIV FRACTUM (rc=$rc1 $rc2 $rc3 $rc4 $rc5)"; cat "$T/o1" "$T/o2" "$T/o3" "$T/o4" "$T/o5" | sed 's/^/      /' | head -24; fracta=1; fi
 
+# XLV (circulus commissionis P1): CLAVIS THESAURI EXTRACTORIS in arbore
+# viva - bin/aedilis et bin/fabrica binaria diversa sunt, clavis tamen
+# eadem (digestum actionis 'aedilis' infixum, non binarium): thesaurus
+# communis, et fabrica nova ex editione extra extractorem eum non
+# refrigerat (mensuratum: XLI s -> IV.VIII s)
+KA="$("$RADIX/bin/aedilis" --clavis-thesauri 2>&1)"; rca=$?
+KF="$("$F" clavis-thesauri 2>&1)"; rcf=$?
+if [ "$rca" -eq 0 ] && [ "$rcf" -eq 0 ] && [ "$KA" = "$KF" ] \
+   && printf '%s' "$KF" | grep -q '	digestum$' \
+   && ! cmp -s "$RADIX/bin/aedilis" "$F"; then echo "  XLV  clavis thesauri: aedilis == fabrica, ex digesto OK"; else echo "  XLV  FRACTUM (aedilis: $KA rc=$rca | fabrica: $KF rc=$rcf)"; fracta=1; fi
+
 if [ "$fracta" -ne 0 ]; then echo "fumus fabricae: FRACTUM"; exit 1; fi
-echo "fumus fabricae: sanum (XLIV/XLIV)"
+echo "fumus fabricae: sanum (XLV/XLV)"
 exit 0

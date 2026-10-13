@@ -181,3 +181,7 @@ cc -std=c89 -pedantic -Wall -Wextra -Werror -Wconversion -Wsign-conversion \
 ## Audit (Demo 117, 2026-10-07)
 
 "After round 7, directions saturate at 512" is `MAX_DIR 512`, not the group. Uncapped (`demo_117_cyclotomic_audit/audit_cap_impact.sh`, with `MAX_ACT` raised too, since more directions push k × cells past the 16,384-cell budget) round 7 has 975 directions and round 8 has 2,043. Round 8 is itself cut short by `MAX_QCAT` 4,096 (1,804 of its 2,304 elements), so the last ladder point is a partial round. Nothing else changes: the max-XOR ladder (6, 6, 8, 8, 10, 10, 12, 12, 12), the angle counts and the fit are identical, and 14/14 tests pass. The direction thresholds in section 4 lie below the cap and are unaffected; the reading that angles take over from directions after round 7 rests on the cap.
+
+## Audit (Demo 125, 2026-10-12)
+
+With exact cells (`cellae`, Q(√3)), the max-XOR ladder is reproduced under robust semantics. The exact rule reaches XOR8 at round 1 through ties only (3 winners; robust 0). The search stops at 6 weights, so rounds 7–8 = XOR12 is its ceiling. Extended one level under the exact rule (from its first 32 XOR12 winners; robust not extended), it finds **no XOR14** at round 7 or 8, with 512 directions and with all of them. That is a statement about this search, not the catalog. The logarithmic fit, the shrinking transition gaps and the predictions table (XOR14 at about 38,000 entries) all rest on capped points. See `../demo_125_exact_crossing_depth/findings.md`.

@@ -29,6 +29,21 @@ nexus_ordines_genus_titulus (
     }
 }
 
+constans character*
+nexus_ordines_repositio_titulus (
+    insignatus integer repositio)
+{
+    si (repositio & REPOSITIO_EXTERNA)
+    {
+        redde "externus";
+    }
+    si (repositio & REPOSITIO_STATICA)
+    {
+        redde "staticus";
+    }
+    redde "-";
+}
+
 /* positio lexematis per radicem originis; viae sine '/' (copiae
  * basename capitum praebitorum) reiectae */
 interior b32
@@ -121,7 +136,8 @@ _symbola_fundere (
         }
         receptor(datum, &symbolum->titulus, "sedes",
             nexus_ordines_genus_titulus(symbolum->genus), via,
-            linea, columna, symbolum->profunditas);
+            linea, columna, symbolum->profunditas,
+            nexus_ordines_repositio_titulus(symbolum->repositio));
     }
 }
 
@@ -253,7 +269,9 @@ _usus_fundere (
                                 nexus_ordines_genus_titulus(
                                     symbolum->genus),
                                 via, linea, columna,
-                                symbolum->profunditas);
+                                symbolum->profunditas,
+                                nexus_ordines_repositio_titulus(
+                                    symbolum->repositio));
                         }
                     }
                 }
@@ -436,7 +454,7 @@ _macros_fundere (
             }
         }
         receptor(datum, vista.titulus, "sedes", "macro", via,
-            vista.linea, I, ZEPHYRUM);
+            vista.linea, I, ZEPHYRUM, "-");
     }
 
     /* II. usus expansionum: lexema non-FONS = expansum; radix =
@@ -524,7 +542,7 @@ _macros_fundere (
                     chorda_transcribere(clavis, effimera), NIHIL);
             }
             receptor(datum, titulus, "usus", "macro", via, linea,
-                columna, ZEPHYRUM);
+                columna, ZEPHYRUM, "-");
         }
     }
 }
@@ -566,7 +584,7 @@ _lexema_retentum_fundere (
         titulus.datum    = tok->valor.datum;
         titulus.mensura  = tok->valor.mensura;
         receptor(datum, &titulus, "usus", genus, via, linea,
-            columna, ZEPHYRUM);
+            columna, ZEPHYRUM, "-");
     }
 }
 

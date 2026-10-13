@@ -2589,6 +2589,8 @@ Which roots of unity generate finite vs infinite SU(2) subgroups?
 
 ## Demo 81: Capacity Scaling Law — COMPLETE (2026-02-21)
 
+> **Correction (2026-10-12, Demo 125).** The search stops at 6 weights, so the XOR12 at rounds 7–8 is its ceiling. Extended one level under the exact rule (from its first 32 XOR12 winners; robust not extended), it finds no XOR14 at round 7 or 8, with 512 and with all directions. The logarithmic fit and the XOR14-at-38K extrapolation rest on capped points. See `demo_125_exact_crossing_depth/findings.md`.
+
 **File:** `knotapel/demo_81_capacity_scaling/main.c`
 **Tests:** 14/14 pass
 
@@ -2631,6 +2633,13 @@ For ζ₁₂ (infinite group), how does computational capacity scale with catalo
 - **Infinite groups (ζ₁₂, etc.)**: Logarithmic scaling. Catalog size = exponential function of desired XOR level. Tractable but expensive.
 
 ## Demo 82: Crossing Depth and Computational Role — 17/17 pass
+
+> **Correction (2026-10-12, Demo 125).** All of this is one greedy search; D125 reran it with exact cells and in other entry orders.
+> - "max_xor ≈ depth + 6" fits only rounds 0, 2, 4, 6. Extended one level under the exact rule (from its first 32 XOR12 winners; robust not extended), the search finds no XOR14 at depth 7 or 8: as far as it reaches, max XOR is 12 at depths 6–8.
+> - Part D holds in D82's order under every exact semantics. But in other orders strided 564 reaches XOR12 in 8 of 10 (rule and robust), deep 564 in 10 of 10 under the rule but 7 of 10 robustly, shallow in 1 of 10, and 9 of 10 random 564-entry samples (mostly rounds 6–8) reach it. "Algebraic coherence beats vocabulary" and "2× more efficient" do not survive.
+> - "XOR12 first uses depth-8 entries" needs the 512-direction cap. The depth-0 core of every winner comes from the search order.
+> 
+> See `demo_125_exact_crossing_depth/findings.md`.
 
 **File:** `knotapel/demo_82_crossing_depth/main.c`
 
@@ -2720,6 +2729,8 @@ A tool to **visualize higher-dimensional manifolds as decorated 3D knot diagrams
 - Test whether different decompositions of the same dimension give different DKC capacities
 
 ## Conceptual Developments (Post-Demo 82)
+
+> **Note (2026-10-12, Demo 125).** The "algebraic coherence" and depth-vs-width readings below rest on D82's Part D. In other entry orders, strided and random 564-entry samples reach XOR12 too (8/10, 9/10), so coherence is not shown. See `demo_125_exact_crossing_depth/findings.md`.
 
 ### Neural Network Depth Analogy
 Crossing depth = synaptic graph wiring, catalog breadth = number of neurons. You can't replace depth with width — same principle as deep learning theory. Deep entries have "algebraic coherence" (shared generator factors) = coherent wiring patterns. Strided/random samples destroy this coherence = random wiring, can't compute higher-order functions. This is the DKC version of the depth-vs-width theorem in neural network theory.
@@ -3439,7 +3450,9 @@ Demo 86 is a **clean negative result** (15/15 tests pass) that advances understa
 > - The non-null subset's XOR8 = 4 is greater than 0, and the full catalog's 32 is the MAX_WIN cap.
 > - Exactly, non-null reaches max XOR8, as the full catalog does; only the number of winners drops (D124).
 >
-> So the "regime transition" has no ζ₈ side: nulls are dispensable at ζ₈ too. The ζ₁₂ comparison here (32 = 32 at every level) compares MAX_WIN-capped counts. It has not yet been audited exactly (planned with the D82 / ζ₁₂ audit); D117 corrected its axis counts. See `demo_124_exact_null_states/findings.md`.
+> So the "regime transition" has no ζ₈ side: nulls are dispensable at ζ₈ too. The ζ₁₂ comparison here (32 = 32 at every level) compares MAX_WIN-capped counts. D117 corrected its axis counts. See `demo_124_exact_null_states/findings.md`.
+>
+> **Exact audit (2026-10-12, Demo 125).** The ζ₁₂ result holds exactly: non-null reaches XOR12 under the exact rule and robustly. "32 = 32" is the search's stop at 32 winners; both catalogs sit at its XOR12 ceiling, so "dispensable" holds as far as this search reaches. With D124, no regime transition is shown. See `demo_125_exact_crossing_depth/findings.md`.
 
 Date: 2026-02-23
 
@@ -3570,6 +3583,8 @@ D72 uses `vor_cell_ext` (pure Voronoi nearest-direction by |dot|, no sectors). D
 
 ## Demo 89: Depth Law Mechanism — PRELIMINARY
 
+> **Note (2026-10-12, Demo 125).** This demo builds on D82's linear depth law and its "algebraic coherence". D125 found the law unsupported above depth 6 (D82's search, extended one level under the rule, finds no XOR14 at depths 7–8), and "coherence" not to survive a change of entry order. This demo's own data are not yet audited. See `demo_125_exact_crossing_depth/findings.md`.
+
 Date: 2026-02-23
 
 ### Motivation
@@ -3670,6 +3685,8 @@ Key insight: at ζ₈ (24 entries, 13 dirs), paired extension is 100% because th
 
 ## Demo 90: Sum-Angle Structure — Why Deep Entries Compose Better
 
+> **Note (2026-10-12, Demo 125).** This demo builds on D82's linear depth law and its "algebraic coherence". D125 found the law unsupported above depth 6 (D82's search, extended one level under the rule, finds no XOR14 at depths 7–8), and "coherence" not to survive a change of entry order. This demo's own data are not yet audited. See `demo_125_exact_crossing_depth/findings.md`.
+
 Date: 2026-02-23
 
 **Status: RESULT (mechanism) / PRELIMINARY (linearity explanation)**
@@ -3730,6 +3747,8 @@ Demo 90 answers the "algebraic coherence" question from D89: it's **axis cancell
 ---
 
 ## Demo 91: Activation Bottleneck Test — RESULT
+
+> **Note (2026-10-12, Demo 125).** This demo builds on D82's linear depth law and its "algebraic coherence". D125 found the law unsupported above depth 6 (D82's search, extended one level under the rule, finds no XOR14 at depths 7–8), and "coherence" not to survive a change of entry order. This demo's own data are not yet audited. See `demo_125_exact_crossing_depth/findings.md`.
 
 Date: 2026-02-23
 
@@ -3801,6 +3820,8 @@ Demo 91 completes the depth law investigation arc. The linear depth law max_xor 
 
 ## Demo 92: Function Scaling — The Parity-Lock Theorem
 
+> **Note (2026-10-12, Demo 125).** This demo builds on D82's linear depth law and its "algebraic coherence". D125 found the law unsupported above depth 6 (D82's search, extended one level under the rule, finds no XOR14 at depths 7–8), and "coherence" not to survive a change of entry order. This demo's own data are not yet audited. See `demo_125_exact_crossing_depth/findings.md`.
+
 **Date:** 2026-02-24
 **Status:** THEOREM (proved + computationally verified, gap closed)
 **Tests:** 13 pass, 3 fail (informative — AND/OR/MAJ impossible, not just hard)
@@ -3861,6 +3882,8 @@ D89-D91 established that the depth law max_xor ≈ depth+6 describes parity scal
 ---
 
 ## Demo 93: Function Scaling (1wpi) — LANDMARK
+
+> **Note (2026-10-12, Demo 125).** This demo builds on D82's linear depth law and its "algebraic coherence". D125 found the law unsupported above depth 6 (D82's search, extended one level under the rule, finds no XOR14 at depths 7–8), and "coherence" not to survive a change of entry order. This demo's own data are not yet audited. See `demo_125_exact_crossing_depth/findings.md`.
 
 **Date:** 2026-02-24
 **Status:** RESULT (circuit complexity hierarchy) + THEOREM (complement-blindness)

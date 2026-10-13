@@ -572,6 +572,32 @@ _corpus_currere (
 
 externus constans ProvenientiaRelatio provenientia_aedilis;
 
+/* '--clavis-thesauri': clavis thesauri extractoris et fons eius
+ * ("digestum" | "binarium") - fumus fabricae XLV binaria duo
+ * comparat */
+interior s32
+_clavem_thesauri_imprimere (
+    constans character* via_binarii)
+{
+                Piscina* piscina = piscina_generare_dynamicum("clavis",
+                    65536);
+               Sigillum  praefixum;
+     constans character* fons = NIHIL;
+              character  hex[SIGILLUM_HEX_MENSURA];
+
+    si (   piscina == NIHIL
+        || !aedilis_thesauri_praefixum(provenientia_aedilis.ingressus,
+               via_binarii, "aedilis.stml", piscina, &praefixum, &fons))
+    {
+        fprintf(stderr, "AEDILIS RECUSAT: clavis thesauri computari "
+            "nequit (aedilis.stml aut binarium)\n");
+        redde 1;
+    }
+    sigillum_hex(&praefixum, hex);
+    printf("%s\t%s\n", hex, fons);
+    piscina_destruere(piscina);
+    redde ZEPHYRUM;
+}
 
 s32
 principale (
@@ -599,6 +625,11 @@ principale (
             &provenientia_aedilis))
     {
         redde ZEPHYRUM;
+    }
+    si (   numerus_argumentorum                            == II
+        && strcmp(argumenta_cruda[1], "--clavis-thesauri") == 0)
+    {
+        redde _clavem_thesauri_imprimere(argumenta_cruda[0]);
     }
     piscina = piscina_generare_dynamicum("aedilis", 16777216);
     si (piscina == NIHIL)
@@ -734,18 +765,14 @@ principale (
         memset(&praefixum, ZEPHYRUM, magnitudo(praefixum));
         si (radix_thesauri.mensura > 0)
         {
-            /* versio extractoris = binarium ipsum (argv[0]): quaevis
-             * mutatio codicis aut silvae clavem mutat. Binarium
-             * illegibile (PATH sine '/') = thesaurus RECUSATUR. */
-                       chorda binarium;
-                       chorda configuratio_octeti;
-            SigillumContextus contextus;
-
-            binarium = filum_legere_totum(argumenta_cruda[0], piscina);
-            configuratio_octeti = filum_legere_totum("aedilis.stml",
-                piscina);
-            si (   binarium.mensura            == ZEPHYRUM
-                || configuratio_octeti.mensura == ZEPHYRUM)
+            /* versio extractoris = digestum actionis 'aedilis' in
+             * aedificatione infixum (provenientia sua; circulus
+             * commissionis P1) - bin/fabrica eandem clavem habet; sine
+             * digesto (bootstrap) binarium ipsum (argv[0]) ut olim.
+             * Illegibile = thesaurus RECUSATUR. */
+            si (!aedilis_thesauri_praefixum(
+                    provenientia_aedilis.ingressus, argumenta_cruda[0],
+                    "aedilis.stml", piscina, &praefixum, NIHIL))
             {
                 fprintf(stderr,
                     "AEDILIS RECUSAT: --thesaurus: binarium "
@@ -753,12 +780,6 @@ principale (
                     argumenta_cruda[0]);
                 redde 1;
             }
-            sigillum_incipere(&contextus);
-            sigillum_addere(&contextus, binarium.datum,
-                (memoriae_index)binarium.mensura);
-            sigillum_addere(&contextus, configuratio_octeti.datum,
-                (memoriae_index)configuratio_octeti.mensura);
-            praefixum   = sigillum_finire(&contextus);
             radix_cstr  = chorda_ut_cstr(radix_thesauri, piscina);
         }
         /* extractor (lib/aedilis_silva.c, fabrica-6 T6): silva, -MM,

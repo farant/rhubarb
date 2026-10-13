@@ -1,5 +1,14 @@
 ## Demo 82: Crossing Depth and Computational Role
 
+> **Correction (2026-10-12, Demo 125).** Every claim here is the output of one greedy search: triples from the first 100 entries, 32 winners per level, never past XOR12. D125 reran that search with exact cells (rule, robust, capped and uncapped) and changed the entry order.
+> - **Depth law:** "depth + 6" fits only rounds 0, 2, 4, 6. At rounds 7 and 8 the recorded XOR12 is the search's ceiling. Extended one level under the exact rule (from its first 32 XOR12 winners; robust not extended), the search finds no XOR14 at round 7 or 8, with 512 axes and with all axes: as far as this search reaches, max XOR is 12 at depths 6, 7 and 8. A statement about the search, not the catalog.
+> - **"Algebraic coherence beats vocabulary" does not survive.** In other seeded orders, strided 564 reaches XOR12 in 8 of 10 (rule and robust), deep 564 in 10 of 10 under the rule but 7 of 10 robustly, shallow 564 in 1 of 10, and 9 of 10 random 564-entry samples (81–88% from rounds 6–8) reach it. What remains is that the first 564 entries rarely reach XOR12; depth and vocabulary are not separated.
+> - **"2x more efficient"** compares deep 564 with the shallow prefix, so it measures how poor the first 564 entries are.
+> - **"XOR12 is the first level to use depth-8 entries"** depends on the 512-direction cap. Uncapped, no XOR12 winner uses depth 8. The depth-0 "core" of every winner is built in by the search's order.
+> - In D82's own order the Part D table holds exactly. Counts move at ties: deep 564 XOR12 is 21 under the rule and 13 robust.
+>
+> See `demo_125_exact_crossing_depth/findings.md`.
+
 - **Status**: COMPLETE
 - **File**: `demo_82_crossing_depth/main.c` (~930 lines)
 - **Tests**: 17/17 pass

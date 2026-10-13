@@ -389,9 +389,21 @@ Spec `project-specs/portae-debitae-spec.md`, planum `-plan.md`.
   `manu debita: <scriptum> - <causa>` (numquam curruntur). Debita iam
   petita (etiam cum filtro) non iteratur. `sine_debitis='<causa>'`
   omittit (causa impressa `portae debitae OMISSAE: ...`; vacua = causa
-  praevia, nihil cursum). Debita incomputabilia (RECUSATIO, bin/fabrica
+  praevia, nihil cursum). `excusatae={'porta': '<causa>'}` (circulus
+  commissionis P5) omittit SINGULAS: `porta debita EXCUSATA: X - causa`,
+  ceterae debitae adhuc adduntur et currunt; causa vacua, porta ignota,
+  petita simul, cum sine_debitis, aut excusata non debita = recusatio
+  ante portas. Debita incomputabilia (RECUSATIO, bin/fabrica
   fractum) = `MONITUM` et petitae
   solae — v1 monet, commissionem numquam impedit. `commissio_umbra` eas
   ANTE umbras addit (ut in umbra currant), eodem `sine_debitis`.
   Sumptus: ~II s calide (clausurae aedilis per thesaurum extractoris),
   ~XXX s primum post bin/fabrica novum.
+- **Iudicium fabricae ante portas** (`_fabricam_exigere`, post lint):
+  `bin/fabrica iudicare -plenus -tacta` super viae commissionis; stala
+  commissa obstant, `sine_fabrica='<causa>'` omittit. IUDEX stalus
+  (bin/fabrica, bin/compilator, bin/aedilis - tabula `IUDICES_STRUERE`,
+  numquam recipe impressa) SANATUR per struere.sh suum (bin/ arboris,
+  nulla institutio): `iudex sanatus: X`, iudicium SEMEL iteratur;
+  struere fractum aut iudex adhuc stalus = `SilvaError` (circulus
+  commissionis P3).

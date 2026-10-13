@@ -1568,10 +1568,17 @@ try:
     # apparens intra ~0,5 s legitur, non post II s
     _rv = os.path.join(silva.PORTAE_DIR, 'probatio-exspectata.0.json')
     import threading as _fila
-    _fila.Timer(0.3, lambda: open(_rv, 'w').write(json.dumps({
-        'nomen': 'probatio', 'filtrum': None, 'sana': True, 'cucurrit': True,
-        'compendium': 'x', 'rc': 0, 'sigillum': '', 'rancida': False,
-        'finis': 0}))).start()
+    # scriptura ATOMICA ut scriptor verus (.tmp deinde rename): scriptura
+    # in loco plagulam vacuam momento ostendebat - exspectare eam legebat
+    # (JSONDecodeError, fluctuatio 2026-10-12)
+    def _rv_scribere():
+        with open(_rv + '.tmp', 'w') as _f:
+            _f.write(json.dumps({
+                'nomen': 'probatio', 'filtrum': None, 'sana': True,
+                'cucurrit': True, 'compendium': 'x', 'rc': 0, 'sigillum': '',
+                'rancida': False, 'finis': 0}))
+        os.rename(_rv + '.tmp', _rv)
+    _fila.Timer(0.3, _rv_scribere).start()
     _t0 = _tempus.time()
     silva.exspectare(_rv, tectum=10)
     _dt = _tempus.time() - _t0
@@ -2266,12 +2273,14 @@ import io
 _cd = tempfile.mkdtemp(prefix='silva_commissio_debitae_')
 _signum = os.path.join(_cd, 'cursa')
 _umbra_signum = os.path.join(_cd, 'cursa_umbra')
+_altera_signum = os.path.join(_cd, 'cursa_altera')
 _viridis = os.path.join(_cd, 'viridis.sh')
 open(_viridis, 'w').write('#!/bin/sh\ntouch "${1:-%s}"\necho "fictum: sanum"\n' % _signum)
 os.chmod(_viridis, 0o755)
 os.environ['PYTHONICA_PORTAE_FICTAE'] = json.dumps({
     'ficta-debita': [[_viridis], r'fictum: (sanum|FRACTUM)', 'generica'],
-    'ficta-petita': [[_viridis, _umbra_signum], r'fictum: (sanum|FRACTUM)', 'generica']})
+    'ficta-petita': [[_viridis, _umbra_signum], r'fictum: (sanum|FRACTUM)', 'generica'],
+    'ficta-altera': [[_viridis, _altera_signum], r'fictum: (sanum|FRACTUM)', 'generica']})
 silva._portae_fictae()
 _pd_vera = silva.portae_debitae
 _debita_ficta = [silva.Debitum('ficta-debita', 'x.c in clausura probatio_y.c', False),
@@ -2336,6 +2345,44 @@ try:
     credo([n for n, _, _ in cursae] == ['ficta-petita', 'ficta-debita'],
           'commissio_umbra: debita post petitas addita et cursa')
     credo('porta debita addita: ficta-debita' in buf.getvalue(), 'commissio_umbra: linea additionis')
+    # VII. EXCUSATAE (circulus commissionis T1, P5): porta debita UNA
+    # excusatur causa nominata; ceterae debitae adhuc adduntur et currunt
+    _debita_duo = [silva.Debitum('ficta-debita', 'x.c in clausura probatio_y.c', False),
+                   silva.Debitum('ficta-altera', 'w.c in clausura probatio_v.c', False)]
+    silva.portae_debitae = lambda viae, *a, **k: (list(_debita_duo), [])
+    _signum_tollere()
+    for _f in (_altera_signum,):
+        if os.path.exists(_f):
+            os.remove(_f)
+    eff, err = _commissio_capta(portae=[], excusatae={'ficta-debita': 'probatio: arbor discors'})
+    credo('porta debita EXCUSATA: ficta-debita - probatio: arbor discors' in eff and not os.path.exists(_signum),
+          'excusatae: debita excusata nominatur, NON cursa', causa=eff[-400:])
+    credo('porta debita addita: ficta-altera' in eff and os.path.exists(_altera_signum),
+          'excusatae: debita altera adhuc addita et CURSA')
+    credo(err is not None and 'nec in disco' in err, 'excusatae: commissio pergit (via absens refutata)')
+    # VIII. refutationes ANTE portas: causa vacua, porta ignota, petita et
+    # excusata simul, cum sine_debitis, excusata non debita
+    for k, verba in (({'excusatae': {'ficta-debita': ' '}}, 'causam'),
+                     ({'excusatae': {'porta-nusquam': 'x'}}, 'ignota'),
+                     ({'portae': ['ficta-debita'], 'excusatae': {'ficta-debita': 'x'}}, 'petita'),
+                     ({'excusatae': {'ficta-debita': 'x'}, 'sine_debitis': 'y'}, 'sine_debitis'),
+                     ({'excusatae': {'ficta-petita': 'x'}}, 'non debita')):
+        _signum_tollere()
+        if os.path.exists(_altera_signum):
+            os.remove(_altera_signum)
+        k.setdefault('portae', [])
+        eff, err = _commissio_capta(**k)
+        credo(err is not None and 'excusat' in err and verba in err
+              and not os.path.exists(_signum) and not os.path.exists(_altera_signum),
+              'excusatae refutatur (%s): nihil cursum' % verba, causa=repr(err))
+    # IX. commissio_umbra: excusata non additur, altera additur
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        h, cursae = silva.commissio_umbra('nihil', ['pythonica/README.md'], ['ficta-petita'], siccum=True,
+                                          excusatae={'ficta-debita': 'probatio: umbra'})
+    credo([n for n, _, _ in cursae] == ['ficta-petita', 'ficta-altera'],
+          'commissio_umbra: excusata omissa, altera addita', causa=repr(cursae))
+    silva.portae_debitae = lambda viae, *a, **k: (list(_debita_ficta), [])
 except (AttributeError, TypeError) as ex:
     credo(False, 'portae debitae in commissione absunt: %s' % ex)
 finally:
@@ -2348,6 +2395,10 @@ finally:
 # ---- fabrica ante portas (plan 1a T8 gradus III) ----
 print('\n--- fabrica: artificia generata tacta ante portas ---')
 _fb_verum = silva.FABRICA_BIN
+# iudices sanabiles (circulus commissionis T2): nulli nisi casus ipse
+# fictos ponat - numquam struere.sh VERUM ex probatione
+_iudices_veri = getattr(silva, 'IUDICES_STRUERE', None)
+silva.IUDICES_STRUERE = {}
 _commissae_verae = silva.VIAE_COMMISSAE
 # viae probationum fictae (g/x.c): commissae ponuntur, nisi ubi casus
 # NON commissorum probatur (1b T7)
@@ -2389,6 +2440,53 @@ try:
         silva.VIAE_COMMISSAE = _vc_vera
     credo(err is not None and 'sana compilator prius' in err,
           'fabrica: iudex stalus (non commissus) obstat - artificia tacta NON IUDICATA')
+    # IUDEX STALUS SANATUR (circulus commissionis T2, P3): iudex solus
+    # stalus et sanabilis -> struere.sh suum, iudicium ITERUM semel
+    _status = os.path.join(T, 'iudex_sanus')
+    _vocatae = os.path.join(T, 'struere_vocata')
+    _fs = os.path.join(T, 'fabrica_status')
+    with open(_fs, 'w') as f:
+        f.write('#!/bin/bash\nif [ -f %s ]; then printf "SUMMA\\t1\\t0\\t0\\t0\\t0\\tplenus\\n"; exit 0; fi\n'
+                'printf "IUDICIUM\\tSTALUM\\tbin/fabrica\\tingressus mutati\\n'
+                'IUDICIUM\\tNON IUDICATUM\\tg/x.c\\tiudex fabrica non recens - sana fabrica prius\\n"; exit 1\n' % _status)
+    os.chmod(_fs, 0o755)
+
+    def _struere_fictum(exitus, sanat):
+        via = os.path.join(T, 'struere_%d_%d.sh' % (exitus, sanat))
+        with open(via, 'w') as f:
+            f.write('#!/bin/bash\necho x >> %s\n%secho struere fictum\nexit %d\n'
+                    % (_vocatae, ('touch %s\n' % _status) if sanat else '', exitus))
+        os.chmod(via, 0o755)
+        return [via]
+
+    def _iudex_casus(iudices):
+        for _f in (_status, _vocatae):
+            if os.path.exists(_f):
+                os.remove(_f)
+        silva.IUDICES_STRUERE = iudices
+        buf = io.StringIO()
+        err = None
+        try:
+            with contextlib.redirect_stdout(buf):
+                silva._fabricam_exigere(['g/x.c'])
+        except silva.SilvaError as ex:
+            err = str(ex)
+        n = len(open(_vocatae).read().split()) if os.path.exists(_vocatae) else 0
+        return buf.getvalue(), err, n
+    silva.FABRICA_BIN = _fs
+    eff, err, n = _iudex_casus({'fabrica': _struere_fictum(0, True)})
+    credo(err is None and 'iudex sanatus: fabrica' in eff and n == 1,
+          'iudex stalus: sanatur (struere semel), iudicium iterum, pergit', causa=repr((eff[-300:], err, n)))
+    eff, err, n = _iudex_casus({'fabrica': _struere_fictum(1, False)})
+    credo(err is not None and 'sanari non potuit' in err and 'struere fictum' in err and n == 1,
+          'iudex stalus: struere fractum obstat, effusionem nominans', causa=repr(err))
+    eff, err, n = _iudex_casus({'fabrica': _struere_fictum(0, False)})
+    credo(err is not None and 'sana fabrica prius' in err and n == 1,
+          'iudex stalus: post sanationem adhuc stalus -> obstat, sanatio SEMEL', causa=repr((err, n)))
+    eff, err, n = _iudex_casus({})
+    credo(err is not None and 'sana fabrica prius' in err and n == 0,
+          'iudex stalus: iudex sine struere noto -> obstat ut antea', causa=repr((err, n)))
+    silva.IUDICES_STRUERE = {}
     # exitus 2: iudicare nequit (sera) - obstat
     silva.FABRICA_BIN = _fabrica_ficta(2, 'fabrica: iudex plenus alius currit\n')
     err = None
@@ -2448,6 +2546,7 @@ try:
 finally:
     silva.VIAE_COMMISSAE = _commissae_verae
     silva.FABRICA_BIN = _fb_verum
+    silva.IUDICES_STRUERE = _iudices_veri
 
 # FORMA ANTE IUDICIUM (parcum …QGT1): commissio plagulas .c/.h per
 # tools/formare_viae.sh format ANTE fabricam (uncus olim POST formabat:

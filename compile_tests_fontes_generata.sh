@@ -42,6 +42,7 @@ declare -a SOURCE_FILES=(
     "lib/capitula.c"
     "lib/capsula.c"
     "lib/capsula_caudae.c"
+    "lib/cellae.c"
     "lib/chorda.c"
     "lib/chorda_aedificator.c"
     "lib/claves_physicae.c"

@@ -13,13 +13,13 @@
 <h1>thema</h1>
 <p class="subtitulus"></p>
 
-<p>The colours. A fixed palette of 16, indexed, with semantic names (background, text, selection, accent, the syntax-colouring roles) mapped onto palette indices, so a view asks for thema_color(&quot;what this is&quot;) and never names an RGB value. The palette can be swapped as a whole; the default is named Aquinas. Sixteen fixed colours is the same constraint as the dithering in delineare: the house&#x27;s look is a small fixed palette, the way early terminals and the Mac had it, chosen rather than inherited. The most called function of the stack (thema_color: about 150 calls in 29 files); thema_visus is the view for inspecting and switching themes.</p>
+<p>The colours. A fixed palette of 16, indexed, with semantic names (background, text, selection, accent, the syntax-colouring roles) mapped onto palette indices, so a view asks for thema_color(&quot;what this is&quot;) and never names an RGB value. The palette can be swapped as a whole; the default is named Aquinas. Sixteen fixed colours is the same constraint as the dithering in delineare: the house&#x27;s look is a small fixed palette, the way early terminals and the Mac had it, chosen rather than inherited. One semantic name was added in October 2026, COLOR_SUPERFICIES: the desk around a page inside a viewport, used by scriba and pictor. The same work showed a trap in the naming: the colouring roles are a map, not a palette, and pictor, drawing its strokes through that map, showed repeated colours until it used the palette itself. The most called function of the stack (thema_color: about 150 calls in 29 files); thema_visus is the view for inspecting and switching themes.</p>
 
 <table>
 <tbody>
 <tr><td>Header</td><td><a href="../../include/thema.h"><code>include/thema.h</code></a></td></tr>
 <tr><td>Implementation</td><td><a href="../../lib/thema.c"><code>lib/thema.c</code></a></td></tr>
-<tr><td>Last change</td><td>2026-08-19 f683e78a</td></tr>
+<tr><td>Last change</td><td>2026-10-05 fd11af94</td></tr>
 <tr><td>Group</td><td><a href="greges.html#fenestra">Window, input and drawing</a></td></tr>
 </tbody>
 </table>

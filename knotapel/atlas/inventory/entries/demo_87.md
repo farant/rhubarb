@@ -4,7 +4,9 @@
 > - The non-null subset's XOR8 = 4 is greater than 0, and the full catalog's 32 is the MAX_WIN cap.
 > - Exactly, non-null reaches max XOR8, as the full catalog does; only the number of winners drops (D124).
 >
-> So the "regime transition" has no ζ₈ side: nulls are dispensable at ζ₈ too. The ζ₁₂ comparison here (32 = 32 at every level) compares MAX_WIN-capped counts. It has not yet been audited exactly (planned with the D82 / ζ₁₂ audit); D117 corrected its axis counts. See `demo_124_exact_null_states/findings.md`.
+> So the "regime transition" has no ζ₈ side: nulls are dispensable at ζ₈ too. The ζ₁₂ comparison here (32 = 32 at every level) compares MAX_WIN-capped counts. D117 corrected its axis counts; D125 audits it exactly (below). See `demo_124_exact_null_states/findings.md`.
+
+> **Exact audit (2026-10-12, Demo 125).** The ζ₁₂ comparison holds exactly. Non-null (3,975 entries, 1,976 axes) reaches XOR12 under the exact rule and robustly, as the full catalog does. D87's caps (2,048 / 65,536) do not bind. "32 = 32" is the search's stop at 32 winners per level, not a count of capacity. Both catalogs sit at the search's ceiling (XOR12, 32 winners per level, 6 weights; XOR14 not tried for non-null), so "dispensable" holds as far as this search reaches. With D124 voiding the ζ₈ side, no regime transition is shown. See `demo_125_exact_crossing_depth/findings.md`.
 
 - **Status**: COMPLETE
 - **File**: `demo_87_null_indispensability/main.c` (~907 lines)
