@@ -27,6 +27,14 @@
  * vacua = perfectae; IV summum, deinde '+'), dies electa margine
  * activo.
  *
+ * FIGURAE (visus diei, A3c): titulus = dies plena Anglice ("Wednesday,
+ * October 14, 2026"), deinde quadratum coloris et celebratio
+ * principalis (titulus plenus), deinde tempus liturgicum; ordo = "[ ]"
+ * aut "[x]" et titulus (res alibi assignata obscura, cum die sua),
+ * notae infra ("Oct 13  textus"), ordo electus fundo selectionis;
+ * prompta (PARTES_CAMPUS) = genus ("new:", "note:", "title:",
+ * "date:"), textus et cursor.
+ *
  * VISUS DIEI (A3; visus="dies"): radix "kalendarium" (PARTES_TABULA)
  * > "titulus" (PARTES_TITULUS: dies plena, celebratio, tempus) +
  * ordines rerum (PARTES_ITEM, id "r<id>"; ictus eligit): primum res

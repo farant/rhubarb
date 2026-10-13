@@ -948,6 +948,142 @@ _probare_promptam (
     CREDO_VERUM(campus_est(x, "visus", "dies"));
 }
 
+/* textus in finibus (puncto initii) qui partem continet */
+interior b32
+textus_in_continet (
+                 Mandata* md,
+                   Fines  f,
+      constans character* pars)
+{
+    constans Mandatum* x;
+                  i32  i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        x = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   x->genus == MANDATUM_TEXTUS && punctum_intra(x->fines, f)
+            && chorda_continet(x->textus, chorda_ex_literis(pars,
+                   md->piscina)))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* textus partem continens in finibus colore thematis dato? */
+interior b32
+textus_coloris_est (
+                 Mandata* md,
+                   Fines  f,
+      constans character* pars,
+                     i32  signum)
+{
+    constans Mandatum* x;
+                  i32  i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        x = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   x->genus == MANDATUM_TEXTUS && punctum_intra(x->fines, f)
+            && chorda_continet(x->textus, chorda_ex_literis(pars,
+                   md->piscina)))
+        {
+            redde color_thematis_est(x->color, signum);
+        }
+    }
+    redde FALSUM;
+}
+
+interior Fines
+fines_componentis (
+                 Mundus* x,
+     constans character* id,
+                Piscina* p)
+{
+     Componens* c;
+         Fines  f;
+
+    memset(&f, ZEPHYRUM, magnitudo(f));
+    c = componens_invenire_per_id(dispensator_arbor(x->d),
+        chorda_ex_literis(id, p));
+    si (c)
+    {
+        f = c->fines;
+    }
+    redde f;
+}
+
+interior Mandata*
+reddere (
+     Mundus* x,
+    Piscina* p)
+{
+    Mandata* md;
+
+    md = mandata_creare(p, x->intern);
+    pingere(dispensator_arbor(x->d), x->m.figurae, ZEPHYRUM, md);
+    redde md;
+}
+
+/* figurae visus diei: titulus, ordines (capsa, electio), notae,
+ * prompta */
+interior vacuum
+_probare_figuras_diei (
+    CredoContextus* c)
+{
+     Mundus* x;
+    Mandata* md;
+      Fines  f;
+        i32  i;
+        b32  electus;
+
+    x = (Mundus*)c->datum;
+    thema_initiare();
+    CREDO_NECESSE(agendam_parare(x, c));
+    (vacuum)agenda_notam_addere(x->documentum, I, fasti_dies(MMXXVI, X,
+        XIII), chorda_ex_literis("panem emere", c->piscina));
+    reditus(x);
+    md = reddere(x, c->piscina);
+    CREDO_VERUM(textus_ullus_continet(md,
+        "Wednesday, October 14, 2026"));
+    f = fines_componentis(x, "r1", c->piscina);
+    CREDO_VERUM(textus_in_continet(md, f, "[ ]"));
+    CREDO_VERUM(textus_in_continet(md, f, "panem emere"));
+    CREDO_VERUM(textus_in_continet(md, f, "Oct 13"));
+    /* ordo electus: nota colore textus pleno (non obscuro - in fundo
+     * selectionis legi non poterat, imago A3c) */
+    CREDO_VERUM(textus_coloris_est(md, f, "panem emere", COLOR_TEXT));
+    CREDO_VERUM(textus_in_continet(md, fines_componentis(x, "r2",
+        c->piscina), "[x]"));
+    /* r3: alibi assignata - dies sua */
+    CREDO_VERUM(textus_in_continet(md, fines_componentis(x, "r3",
+        c->piscina), "Oct 20"));
+    /* ordo electus (r1): fundus selectionis */
+    electus = FALSUM;
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        constans Mandatum* y;
+
+        y = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   y->genus   == MANDATUM_RECTANGULUM && y->impletum
+            && y->fines.y == f.y && y->fines.altitudo == f.altitudo
+            && color_thematis_est(y->color, COLOR_SELECTION))
+        {
+            electus = VERUM;
+        }
+    }
+    CREDO_VERUM(electus);
+    /* prompta: genus, textus, cursor */
+    clavis(x, 'a');
+    typare(x, "abc");
+    md = reddere(x, c->piscina);
+    /* figura promptae in spatio componentis sui pingit */
+    CREDO_NON_NIHIL(componens_invenire_per_id(dispensator_arbor(x->d),
+        chorda_ex_literis("prompta", c->piscina)));
+    CREDO_VERUM(textus_ullus_continet(md, "note: abc"));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "montatio",     _probare_montationem,   mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
@@ -968,6 +1104,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "acta_diei",    _probare_acta_diei,     mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { "prompta",      _probare_promptam,      mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "figurae_diei", _probare_figuras_diei,  mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

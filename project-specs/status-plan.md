@@ -220,7 +220,8 @@ widgets are migrated by hand.*
 
 - **A1** (agenda library) independent - any time. A1 DONE 2026-10-13 (A1a document,
   acts, projection; A1b queries + seal cost). A2 DONE (A2a month pane
-  structure + vicus genus; A2b drawing). A3 (day view) next.
+  structure + vicus genus; A2b drawing). A3 DONE (day view: acts, prompt,
+  drawing). A4 (todo view) next.
 - **A2-A5** (views) after Arc I.
 - **A6** (embedded day scriba) after Arc III - the depth-2 consumer.
 

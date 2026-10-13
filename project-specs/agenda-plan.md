@@ -166,7 +166,9 @@ State-model question to settle before A2 (A1 is content only).
   - **A3b** DONE 2026-10-13: one-line prompt on vim.h (insert mode;
     text stored escaped via scriba's codec), n/a/c/D, Enter commits,
     Esc cancels, bad date refused.
-  - **A3c** drawing + screenshot.
+  - **A3c** DONE 2026-10-13: header (date, celebration, season), rows
+    (checkbox, title, notes, selection), prompt line; screenshot
+    checked.
 - **A4 — todo view/editor** `$agenda`: all incomplete items (whatever
   their day) + unscheduled, grouped by category.
 - **A5 — year view.**

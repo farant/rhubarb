@@ -163,3 +163,23 @@ the key, reads line 0 back. Since vim state is rebuilt per key, vim's
 
 The tree gets a "prompta" component (PARTES_CAMPUS) on the pane's last
 line while a prompt is open - drawing is A3c.
+
+## 2026-10-13 — A3c: drawing the day view
+
+Header (title figure, day branch): "Wednesday, October 14, 2026"; the
+principal celebration's full title after its colour square; the season
+dimmed. Rows (board figure, day branch, walking the "r<id>" children):
+selection background, "[ ]" / "[x]" + title, items assigned elsewhere
+dimmed with their own date ("(Oct 20)", or "unscheduled"), notes below
+as "Oct 13  text". Prompt (new PARTES_CAMPUS figure): kind label
+("new:", "note:", "title:", "date:"), the decoded text copied into the
+mandata pool, a 1 px cursor bar.
+
+Screenshot finding: notes in the SELECTED row were invisible - drawn in
+the dimmed text colour, which nearly matches the selection background.
+Now the selected row uses the full text colour (`color_notae`); test
+`textus_coloris_est` + plant (always dim -> red). Test note: a figure
+draws in its own component's space, so the prompt text is at local
+y 1, not at the component's pane position - the check looks for the
+text anywhere. A leftover temp volume from the A3b crash plant (purgare
+never ran on the crash) was found in /tmp and removed.
