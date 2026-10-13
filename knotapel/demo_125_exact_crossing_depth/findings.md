@@ -42,32 +42,42 @@ order. It never says what "the capacity" is.
   the rule, 13 robustly, 19 in float.
 - **The depth law's top is the search's ceiling.** "depth + 6" fits
   only the even rounds 0, 2, 4, 6. At rounds 7 and 8 it predicts XOR13
-  to XOR14, but D81/D82 never searched past XOR12. Extended one level,
-  the search finds **no XOR14 at round 7 or 8**: exact rule, with D82's
-  512 axes and with all axes (975 / 2,043). On the search's own
-  evidence, max XOR is 12 at depths 6, 7 and 8.
-- **"Algebraic coherence" is an ordering effect.** In D82's order, Part
-  D holds under every semantics. Shuffle the entries and it falls apart:
-  - strided 564 reaches XOR12 in **8 of 10** seeded orders;
-  - **9 of 10** random 564-entry samples from all depths reach it;
-  - deep 564 reaches it in 10 of 10, shallow 564 (rounds 0–5) in 1 of
-    10.
+  to XOR14, but D81/D82 never searched past XOR12. Extended one level
+  under the exact rule (from its first 32 XOR12 winners; robust mode was
+  not extended), the search finds **no XOR14 at round 7 or 8**, with
+  D82's 512 axes and with all axes (975 / 2,043). As far as this search
+  reaches, max XOR is 12 at depths 6, 7 and 8; that is a statement about
+  the search, not about the catalog.
+- **"Algebraic coherence" does not survive a change of entry order.**
+  In D82's order, Part D holds under every semantics. In 10 seeded
+  orders each:
+  - strided 564 reaches XOR12 in **8 of 10**, under the rule and
+    robustly;
+  - deep 564 in 10 of 10 under the rule but **7 of 10 robustly** (robust
+    takes no axis-tie choice, so it isolates the order; the rule's extra
+    three are tie decisions);
+  - shallow 564 (rounds 0–5) in 1 of 10;
+  - **9 of 10** random 564-entry samples reach it (81–88% of their
+    entries from rounds 6–8).
 
   What survives is that the first 564 entries (239 axes) rarely reach
-  XOR12, and most 564-entry sets drawn from deeper rounds do.
+  XOR12 and most sets drawn from deeper rounds do. Deep is not better
+  than strided.
 - **"XOR12 is the first level to use depth-8 entries" comes from the
   512-axis cap.** Without the cap no XOR12 winner uses a depth-8 entry,
   under rule or robust. The depth-0 "core" of every winner comes from
   the search: triples from the first 100 entries, then extension in
   order.
-- **D87's ζ₁₂ result holds exactly.** Non-null reaches XOR12 under the
-  rule and robustly. "32 = 32" is the search's stop at 32 winners per
-  level, not a count of capacity.
+- **D87's ζ₁₂ result holds exactly, as far as its search reaches.**
+  Non-null reaches XOR12 under the rule and robustly. Both catalogs sit
+  at the search's ceiling (XOR12, 32 winners per level, 6 weights; XOR14
+  not tried for non-null). "32 = 32" is that stop, not a count of
+  capacity.
 
 Run: `./bin/aedilis knotapel/demo_125_exact_crossing_depth/main.c &&
 bash build/aedilis/main/struere.sh && ./build/aedilis/main/main`.
-It takes about 11 min on 8 cores and runs 26 checks.
-The 109 searches run as child processes of the demo's own binary
+It takes about 14 min on 8 cores and runs 28 checks.
+The 149 searches run as child processes of the demo's own binary
 (`--opus N`, `processus`), at most 8 at once, longest first. Output is
 printed afterwards from the collected results, so it is byte-identical
 to the one-process run (`D125_SERIAL=1`, about 32 min), checked on the
@@ -104,7 +114,12 @@ The same search was run with `cellae`'s exact cells under each semantics:
 - **robust** = every tie resolution must separate;
 - **capped** = D82's first 512 axes, with k skipped when k (axes + 1)
   > 16,384;
-- **uncapped** = all axes, all k.
+- **uncapped** = all axes, all k. This lifts BOTH caps: it is not D82
+  with only `MAX_DIR` removed, which at 2,043 axes would still skip
+  every k ≥ 10 (k · 2,044 > 16,384).
+
+With 512 axes the cell cap never binds (24 · 513 = 12,312 < 16,384), so
+"capped" differs from "uncapped" only through the axis table.
 
 Max XOR:
 
@@ -167,10 +182,16 @@ rounds 7 and 8 the recorded 12 is the search's own ceiling, since
 The one direct test of the law here searches one level further, at the
 two depths where it predicts more. It finds XOR12 winners at both
 depths (32 each) but **no XOR14**, under the exact rule, with D82's 512
-axes and with every axis. That is a statement about this greedy search:
+axes and with every axis. Robust mode was not extended. That is a
+statement about this greedy search, and a narrow one:
 - triples from the first 100 entries;
-- 32 winners per level;
+- 32 winners per level, and the XOR14 level extends only the first 32
+  XOR12 winners, all [0, 1, 3, 6, …] or [0, 1, 4, …] (Part D): one small
+  neighbourhood of the catalog;
 - 3⁷ sums per candidate.
+
+(The reviewer's spot check: 2,000 random 7-weight extensions of those
+winners at each of rounds 7 and 8, none separates.)
 
 It is not a proof that no XOR14 set exists. But the law's only support
 above depth 6 was a number the search could not exceed, and extending
@@ -189,24 +210,32 @@ In D82's own order, Part D holds under every semantics:
 But the greedy search depends on entry order, through the triples from
 the first 100 entries and the first winners extended. Part E reruns the
 three 564 subsets in 10 seeded orders each, plus 10 random 564-entry
-samples kept in catalog order. All runs use the exact rule, uncapped, up
-to XOR12:
+samples kept in catalog order, uncapped, up to XOR12.
 
-| subset | axes | max XOR per order | XOR12 winners per order | reach XOR12 |
-|---|---|---|---|---|
-| shallow 564 (rounds 0–5) | 239 | 10 10 12 10 10 10 10 10 10 10 | 0 0 1 0 0 0 0 0 0 0 | 1/10 |
-| strided 564 | 517 | 12 12 12 12 12 10 12 12 12 10 | 20 1 27 4 1 0 7 1 17 0 | 8/10 |
-| deep 564 | 476 | 12 (all) | 3 2 2 1 7 7 4 9 3 8 | 10/10 |
-| random 564 samples | 496–525 | 12 12 12 12 12 10 12 12 12 12 | 4 18 12 23 20 0 6 32 7 5 | 9/10 |
+A shuffle also reorders the axis table, and the rule breaks axis ties
+by first maximum, so under the rule a new order changes the search AND
+the cells. Robust mode takes no tie choice: every tie resolution must
+separate. Its rows therefore isolate the effect of the order.
 
-The random samples have mean depth 6.7–7.0, with 217–268 depth-8
-entries.
+| subset | axes | XOR12 winners per order (rule) | reach (rule) | XOR12 winners per order (robust) | reach (robust) |
+|---|---|---|---|---|---|
+| shallow 564 (rounds 0–5) | 239 | 0 0 1 0 0 0 0 0 0 0 | 1/10 | 0 0 1 0 0 0 0 0 0 0 | 1/10 |
+| strided 564 | 517 | 20 1 27 4 1 0 7 1 17 0 | 8/10 | 20 1 27 3 2 0 6 1 16 0 | 8/10 |
+| deep 564 | 476 | 3 2 2 1 7 7 4 9 3 8 | 10/10 | 0 0 0 1 3 2 1 7 2 4 | 7/10 |
+| random 564 samples | 496–525 | 4 18 12 23 20 0 6 32 7 5 | 9/10 | 1 11 12 22 12 0 6 32 5 1 | 9/10 |
+
+The random samples are mostly deep: 81–88% of their entries come from
+rounds 6–8 (mean depth 6.7–7.0, 217–268 depth-8 entries). They refute
+the deep-versus-strided contrast; they do not show that depth is
+irrelevant.
 
 - **Finding 3 ("algebraic coherence beats vocabulary") does not
   survive.** The strided set's failure to reach XOR12 is a property of
-  its order: 8 of 10 orders reach it, and so do 9 of 10 random samples
-  that mix all depths. Nothing here distinguishes "coherent" deep
-  entries from a random draw of the catalog.
+  its order: 8 of 10 orders reach it, under the rule and robustly. Deep
+  564 reaches it robustly in only 7 of 10. Its 10 of 10 under the rule
+  includes three orders that pass only through axis-tie decisions.
+  Nothing here distinguishes "coherent" deep entries from a strided or
+  random draw.
 - **Finding 1 survives in a weaker form.** Shallow 564 (the first five
   rounds, 239 axes) reaches XOR12 once in 10 orders, and the sets from
   deeper rounds almost always do. This demo does not separate depth from
@@ -215,8 +244,8 @@ entries.
   shallow prefix. Most 564-entry sets from deeper rounds reach XOR12,
   so the comparison measures how poor the first 564 entries are, not
   something special about depth 8.
-- D82's 19 deep XOR12 winners (21 exact) are high for that subset:
-  other orders find 1–9.
+- D82's 19 deep XOR12 winners (21 exact rule, 13 robust) are high for
+  that subset: other orders find 1–9 under the rule and 0–7 robustly.
 
 ## Winner depths (Part D)
 
@@ -253,7 +282,10 @@ with no generator reach XOR12.
 
 D87's caps (2,048 directions, 65,536 cells) do not bind, so its float
 run is the uncapped semantics. Its ζ₁₂ result holds exactly: the search
-reaches XOR12 without nulls under the rule and robustly.
+reaches XOR12 without nulls under the rule and robustly. Both catalogs
+sit at the search's ceiling (XOR12, 32 winners per level, 6 weights),
+and XOR14 was not tried for non-null, so "nulls are dispensable" holds
+as far as this search reaches.
 - "32 = 32" is the stop at 32 winners per level, the D84 MAX_WIN
   pattern, so it says nothing about how many winners exist.
 - The other half of D87's "regime transition", nulls indispensable at
@@ -279,8 +311,11 @@ Sectors use exact boundaries where tan²(mπ/k) lies in Q(√3), and
 shortlists axes within a relative 1e-6 of the float maximum; the choice
 among them is exact.
 
-Result on the full run: census OK; **4,950 winners re-decided in 83
-searches, 0 wrong** (about 20 s with 6 processes).
+Result on the full run: census OK; **every winner re-decided, 0 wrong**
+(5,149 winners in 107 searches, the robust order control included).
+
+With 512 axes the cell cap never binds, so the oracle's branch that
+skips k when k (axes + 1) > 16,384 is never exercised on this data.
 
 ## Checks
 
@@ -290,11 +325,13 @@ searches, 0 wrong** (about 20 s with 6 processes).
   full and non-null, and the pinned float table (15 searches).
 - Part C (4): the pinned exact tables (13 + 14 + 13 + 14 searches).
 - Part D (2): D82's histograms, "first depth-8 level" in float.
-- Part E (1): the pinned order control (40 searches).
-- Part G (7): XOR14 absent at rounds 7–8, max XOR 12 at rounds 6–8
-  under every semantics, round-1 XOR8 tie-only, Part D in D82's order
-  under every semantics, the order-control counts, the depth-8 claim
-  with and without the cap, D87.
+- Part E (2): the pinned order control, rule and robust (40 + 40
+  searches).
+- Part G (8): no XOR14 at rounds 7–8 (rule, one level); the search's
+  max XOR is 12 at rounds 6–8 under every semantics; round-1 XOR8 is
+  tie-only; Part D holds in D82's order under every semantics; the
+  order-control counts (rule, robust); the depth-8 claim with and
+  without the cap; D87.
 
 Every search is pinned: n found per level, max XOR, axes, and a checksum
 of every winner set with its k. A live rerun against changed libraries
@@ -325,6 +362,35 @@ on its winner dump. The tree is never touched.
 
 The two library plants leave the robust tables green, as they should:
 robust mode already ranges over every tie resolution.
+
+## Review (2026-10-13, recensor-extensio)
+
+No high-severity finding. The reviewer reran everything in scratch from
+the snapshot:
+- the full demo, 26/26;
+- `oracle.py`, 0 wrong;
+- parallel against serial, identical;
+- its own independent exact greedy search, which reproduced the pins,
+  checksums included, on 14 searches;
+- 2,000 random XOR14 candidates at each of rounds 7 and 8, none of
+  which separates.
+
+It also checked the float replica line by line against D81/D82/D87.
+
+Fixed after the review:
+- **M1:** the correction notes stated "no XOR14 at depths 7–8" and "max
+  XOR is 12 under every semantics" as facts about the catalog. The XOR14
+  probe ran under the rule only, extending the first 32 XOR12 winners.
+  The notes and the Part G check now say so.
+- **L1:** under the rule, a shuffle changes the axis tie order too, so
+  the order control mixed search order with cell semantics. Part E now
+  also runs in robust mode: deep 564 drops from 10/10 to 7/10, below
+  strided's 8/10. The random samples' composition (mostly rounds 6–8)
+  is stated next to them.
+- **L2:** D87's "dispensable" is qualified "as far as this search
+  reaches".
+- **L3:** the cap sentence ("uncapped" lifts both caps; the cell cap
+  never binds at 512 axes).
 
 ## Not covered
 

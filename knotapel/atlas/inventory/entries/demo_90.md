@@ -1,6 +1,6 @@
 ## Demo 90: Sum-Angle Structure — Why Deep Entries Compose Better
 
-> **Note (2026-10-12, Demo 125).** This demo builds on D82's linear depth law and its "algebraic coherence". D125 found the law unsupported above depth 6 (no XOR14 at depths 7–8), and coherence to be an entry-order effect. This demo's own data are not yet audited. See `demo_125_exact_crossing_depth/findings.md`.
+> **Note (2026-10-12, Demo 125).** This demo builds on D82's linear depth law and its "algebraic coherence". D125 found the law unsupported above depth 6 (D82's search, extended one level under the rule, finds no XOR14 at depths 7–8), and "coherence" not to survive a change of entry order. This demo's own data are not yet audited. See `demo_125_exact_crossing_depth/findings.md`.
 
 - **Status**: COMPLETE
 - **File**: `demo_90_sum_angle_structure/main.c` (~1713 lines)

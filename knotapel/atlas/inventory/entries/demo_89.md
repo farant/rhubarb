@@ -1,6 +1,6 @@
 ## Demo 89: Depth Law Mechanism
 
-> **Note (2026-10-12, Demo 125).** This demo builds on D82's linear depth law and its "algebraic coherence". D125 found the law unsupported above depth 6 (no XOR14 at depths 7–8), and coherence to be an entry-order effect. This demo's own data are not yet audited. See `demo_125_exact_crossing_depth/findings.md`.
+> **Note (2026-10-12, Demo 125).** This demo builds on D82's linear depth law and its "algebraic coherence". D125 found the law unsupported above depth 6 (D82's search, extended one level under the rule, finds no XOR14 at depths 7–8), and "coherence" not to survive a change of entry order. This demo's own data are not yet audited. See `demo_125_exact_crossing_depth/findings.md`.
 
 > **Correction (2026-10-10, Demo 124):** D84's "null indispensability" at ζ₈ does not hold exactly. Removing the nulls keeps max XOR8, null-only computes nothing, and nulls are under-represented among winners; the recorded figures are not reproduced by D84's own code on any build tried (cause unknown). D87's "regime transition" therefore has no ζ₈ side. Statements here that rely on either are superseded; see `knotapel/demo_124_exact_null_states/findings.md`.
 

@@ -4150,7 +4150,7 @@ Only ζ₄ and ζ₈ generate finite SU(2) subgroups under the standard two-gene
 
 ## Demo 81: Capacity Scaling Law
 
-> **Correction (2026-10-12, Demo 125).** The search stops at 6 weights, so the XOR12 at rounds 7–8 is its ceiling. Extended one level, it finds no XOR14 at round 7 or 8 (exact rule, 512 and all directions). The logarithmic fit and its extrapolations rest on capped points. See `demo_125_exact_crossing_depth/findings.md`.
+> **Correction (2026-10-12, Demo 125).** The search stops at 6 weights, so the XOR12 at rounds 7–8 is its ceiling. Extended one level under the exact rule (from its first 32 XOR12 winners; robust not extended), it finds no XOR14 at round 7 or 8 (512 and all directions). The logarithmic fit and its extrapolations rest on capped points. See `demo_125_exact_crossing_depth/findings.md`.
 
 - **Status**: COMPLETE
 - **File**: `demo_81_capacity_scaling/main.c` (~604 lines)
@@ -4212,8 +4212,8 @@ For ζ₁₂ (infinite group), XOR capacity scales logarithmically with catalog 
 ## Demo 82: Crossing Depth and Computational Role
 
 > **Correction (2026-10-12, Demo 125).** All of D82 is one greedy search; D125 reran it with exact cells and in other entry orders.
-> - "max_xor ≈ depth + 6" fits only rounds 0, 2, 4, 6. Extended one level, the search finds no XOR14 at depth 7 or 8; max XOR is 12 at depths 6–8.
-> - Part D holds in D82's order under every exact semantics. But in other orders strided 564 reaches XOR12 in 8 of 10, and 9 of 10 random 564-entry samples reach it (deep 10/10, shallow 1/10). "Algebraic coherence beats vocabulary" and "2× more efficient" do not survive.
+> - "max_xor ≈ depth + 6" fits only rounds 0, 2, 4, 6. Extended one level under the exact rule (from its first 32 XOR12 winners; robust not extended), the search finds no XOR14 at depth 7 or 8: as far as it reaches, max XOR is 12 at depths 6–8.
+> - Part D holds in D82's order under every exact semantics. But in other orders strided 564 reaches XOR12 in 8 of 10 (rule and robust), deep 564 in 10 of 10 under the rule but 7 of 10 robustly, shallow in 1 of 10, and 9 of 10 random 564-entry samples (mostly rounds 6–8) reach it. "Algebraic coherence beats vocabulary" and "2× more efficient" do not survive.
 > - "XOR12 first uses depth-8 entries" needs the 512-direction cap; the depth-0 core of every winner comes from the search order.
 > 
 > See `demo_125_exact_crossing_depth/findings.md`.
@@ -4627,7 +4627,7 @@ The delta-parameterized Gram matrix approach universally diverges on a single pr
 >
 > So the "regime transition" has no ζ₈ side: nulls are dispensable at ζ₈ too. The ζ₁₂ comparison here (32 = 32 at every level) compares MAX_WIN-capped counts. D117 corrected its axis counts; D125 audits it exactly (below). See `demo_124_exact_null_states/findings.md`.
 
-> **Exact audit (2026-10-12, Demo 125).** The ζ₁₂ result holds exactly: non-null reaches XOR12 under the exact rule and robustly. "32 = 32" is the search's stop at 32 winners. With D124, there is no regime transition. See `demo_125_exact_crossing_depth/findings.md`.
+> **Exact audit (2026-10-12, Demo 125).** The ζ₁₂ result holds exactly: non-null reaches XOR12 under the exact rule and robustly. "32 = 32" is the search's stop at 32 winners; both catalogs sit at its XOR12 ceiling, so "dispensable" holds as far as this search reaches. With D124, no regime transition is shown. See `demo_125_exact_crossing_depth/findings.md`.
 
 - **Status**: COMPLETE
 - **File**: `demo_87_null_indispensability/main.c` (~907 lines)
@@ -4782,7 +4782,7 @@ The algebraic directions that are worst for spherical integration are best for D
 
 ## Demo 89: Depth Law Mechanism
 
-> **Note (2026-10-12, Demo 125).** This demo builds on D82's linear depth law and its "algebraic coherence". D125 found the law unsupported above depth 6 (no XOR14 at depths 7–8), and coherence to be an entry-order effect. This demo's own data are not yet audited. See `demo_125_exact_crossing_depth/findings.md`.
+> **Note (2026-10-12, Demo 125).** This demo builds on D82's linear depth law and its "algebraic coherence". D125 found the law unsupported above depth 6 (D82's search, extended one level under the rule, finds no XOR14 at depths 7–8), and "coherence" not to survive a change of entry order. This demo's own data are not yet audited. See `demo_125_exact_crossing_depth/findings.md`.
 
 - **Status**: PRELIMINARY
 - **File**: `demo_89_depth_law_mechanism/main.c` (~1964 lines)
@@ -4873,7 +4873,7 @@ Systematic investigation of WHY the depth law holds, testing 8 mechanistic hypot
 
 ## Demo 90: Sum-Angle Structure — Why Deep Entries Compose Better
 
-> **Note (2026-10-12, Demo 125).** This demo builds on D82's linear depth law and its "algebraic coherence". D125 found the law unsupported above depth 6 (no XOR14 at depths 7–8), and coherence to be an entry-order effect. This demo's own data are not yet audited. See `demo_125_exact_crossing_depth/findings.md`.
+> **Note (2026-10-12, Demo 125).** This demo builds on D82's linear depth law and its "algebraic coherence". D125 found the law unsupported above depth 6 (D82's search, extended one level under the rule, finds no XOR14 at depths 7–8), and "coherence" not to survive a change of entry order. This demo's own data are not yet audited. See `demo_125_exact_crossing_depth/findings.md`.
 
 - **Status**: COMPLETE
 - **File**: `demo_90_sum_angle_structure/main.c` (~1713 lines)
@@ -4959,7 +4959,7 @@ The depth law mechanism is **axis cancellation** (anti-aligned rotation axes pro
 
 ## Demo 91: Activation Bottleneck Test
 
-> **Note (2026-10-12, Demo 125).** This demo builds on D82's linear depth law and its "algebraic coherence". D125 found the law unsupported above depth 6 (no XOR14 at depths 7–8), and coherence to be an entry-order effect. This demo's own data are not yet audited. See `demo_125_exact_crossing_depth/findings.md`.
+> **Note (2026-10-12, Demo 125).** This demo builds on D82's linear depth law and its "algebraic coherence". D125 found the law unsupported above depth 6 (D82's search, extended one level under the rule, finds no XOR14 at depths 7–8), and "coherence" not to survive a change of entry order. This demo's own data are not yet audited. See `demo_125_exact_crossing_depth/findings.md`.
 
 - **Status**: COMPLETE
 - **File**: `demo_91_activation_bottleneck/main.c` (~769 lines)
@@ -5026,7 +5026,7 @@ The combined_cell activation is NOT the bottleneck for the linear depth law — 
 
 ## Demo 92: Function Scaling — The Parity-Lock Theorem
 
-> **Note (2026-10-12, Demo 125).** This demo builds on D82's linear depth law and its "algebraic coherence". D125 found the law unsupported above depth 6 (no XOR14 at depths 7–8), and coherence to be an entry-order effect. This demo's own data are not yet audited. See `demo_125_exact_crossing_depth/findings.md`.
+> **Note (2026-10-12, Demo 125).** This demo builds on D82's linear depth law and its "algebraic coherence". D125 found the law unsupported above depth 6 (D82's search, extended one level under the rule, finds no XOR14 at depths 7–8), and "coherence" not to survive a change of entry order. This demo's own data are not yet audited. See `demo_125_exact_crossing_depth/findings.md`.
 
 - **Status**: COMPLETE
 - **File**: `demo_92_function_scaling/main.c` (~1399 lines)
@@ -5102,7 +5102,7 @@ The +/-q input encoding is structurally parity-locked — only XOR/XNOR are comp
 
 ## Demo 93: Function Scaling — 1-Weight-Per-Input Encoding
 
-> **Note (2026-10-12, Demo 125).** This demo builds on D82's linear depth law and its "algebraic coherence". D125 found the law unsupported above depth 6 (no XOR14 at depths 7–8), and coherence to be an entry-order effect. This demo's own data are not yet audited. See `demo_125_exact_crossing_depth/findings.md`.
+> **Note (2026-10-12, Demo 125).** This demo builds on D82's linear depth law and its "algebraic coherence". D125 found the law unsupported above depth 6 (D82's search, extended one level under the rule, finds no XOR14 at depths 7–8), and "coherence" not to survive a change of entry order. This demo's own data are not yet audited. See `demo_125_exact_crossing_depth/findings.md`.
 
 - **Status**: COMPLETE (LANDMARK)
 - **File**: `demo_93_function_scaling_1wpi/main.c` (~1636 lines)

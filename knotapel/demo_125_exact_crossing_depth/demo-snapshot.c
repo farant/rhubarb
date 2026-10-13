@@ -7,7 +7,7 @@
  *
  *   clang -std=c89 -pedantic -Wall -Wextra -Werror -Wconversion -Wsign-conversion -Wcast-qual -Wstrict-prototypes -Wmissing-prototypes -Wwrite-strings -Wno-long-long -Wno-overlength-strings -fbracket-depth=512 -O2 -g demo-snapshot.c -o demo-snapshot
  *
- * Commit (library closure clean): c6fb55233528a48c2fb51e3d62324427bf8ab642
+ * Commit (library closure clean): 84eae9d3362cabcf326c2c4a6e7c020a7c8949a9
  * Regenerate: ./knotapel/archive.sh knotapel/demo_125_exact_crossing_depth/main.c
  * Verified: live build and snapshot gave byte-identical output.
  * Sources (git blob hashes):
@@ -50,7 +50,7 @@
  *   3ff5d14a1ae470bce4da7fe3a6e8e37a1e028184  lib/quaternio.c
  *   85567c63931bd36cd7ea3eb8fb64ee169ab9ac2e  lib/radices.c
  *   6e44361a1994d098128748844d6efe84c00624a6  lib/tabula_dispersa.c
- *   74c6ebf5001e39a0cf0eb756dd1e1849f2b87149  knotapel/demo_125_exact_crossing_depth/main.c (uncommitted, embedded verbatim)
+ *   d73e7b67e9df50d10df8e7a092f4d2c0a77daa35  knotapel/demo_125_exact_crossing_depth/main.c (uncommitted, embedded verbatim)
  */
 
 #line 1 "include/postulata_posix.h"
@@ -31799,6 +31799,46 @@ static const Pin PINS[] = {
     { "order", "random 564 sample 7", { 32, 32, 32, 32, 0, 12, 507, 1687805824 } },
     { "order", "random 564 sample 8", { 32, 32, 32, 7, 0, 12, 523, 861346651 } },
     { "order", "random 564 sample 9", { 32, 32, 32, 5, 0, 12, 515, 790471608 } },
+    { "order robust", "shallow 564 order 0", { 32, 32, 32, 0, 0, 10, 239, 1744783872 } },
+    { "order robust", "shallow 564 order 1", { 32, 32, 32, 0, 0, 10, 239, 1326559143 } },
+    { "order robust", "shallow 564 order 2", { 32, 32, 32, 1, 0, 12, 239, 1578285104 } },
+    { "order robust", "shallow 564 order 3", { 32, 32, 32, 0, 0, 10, 239, 1249222658 } },
+    { "order robust", "shallow 564 order 4", { 32, 32, 32, 0, 0, 10, 239, 1111326942 } },
+    { "order robust", "shallow 564 order 5", { 32, 32, 32, 0, 0, 10, 239, 1861868352 } },
+    { "order robust", "shallow 564 order 6", { 32, 32, 32, 0, 0, 10, 239, 1312609162 } },
+    { "order robust", "shallow 564 order 7", { 32, 32, 32, 0, 0, 10, 239, 2057842101 } },
+    { "order robust", "shallow 564 order 8", { 32, 32, 32, 0, 0, 10, 239, 366185903 } },
+    { "order robust", "shallow 564 order 9", { 32, 32, 32, 0, 0, 10, 239, 1846215458 } },
+    { "order robust", "strided 564 order 0", { 32, 32, 32, 20, 0, 12, 517, 1224366754 } },
+    { "order robust", "strided 564 order 1", { 32, 32, 32, 1, 0, 12, 517, 1633315448 } },
+    { "order robust", "strided 564 order 2", { 32, 32, 32, 27, 0, 12, 517, 1958517209 } },
+    { "order robust", "strided 564 order 3", { 32, 32, 32, 3, 0, 12, 517, 741859757 } },
+    { "order robust", "strided 564 order 4", { 32, 32, 32, 2, 0, 12, 517, 952887019 } },
+    { "order robust", "strided 564 order 5", { 32, 32, 32, 0, 0, 10, 517, 679117882 } },
+    { "order robust", "strided 564 order 6", { 32, 32, 32, 6, 0, 12, 517, 1839610055 } },
+    { "order robust", "strided 564 order 7", { 32, 32, 32, 1, 0, 12, 517, 750063431 } },
+    { "order robust", "strided 564 order 8", { 32, 32, 32, 16, 0, 12, 517, 1046173647 } },
+    { "order robust", "strided 564 order 9", { 32, 32, 32, 0, 0, 10, 517, 2054605076 } },
+    { "order robust", "deep 564 order 0", { 32, 32, 32, 0, 0, 10, 476, 833435149 } },
+    { "order robust", "deep 564 order 1", { 32, 32, 32, 0, 0, 10, 476, 1546876503 } },
+    { "order robust", "deep 564 order 2", { 32, 32, 32, 0, 0, 10, 476, 1198045669 } },
+    { "order robust", "deep 564 order 3", { 32, 32, 32, 1, 0, 12, 476, 695588473 } },
+    { "order robust", "deep 564 order 4", { 32, 32, 32, 3, 0, 12, 476, 951715697 } },
+    { "order robust", "deep 564 order 5", { 32, 32, 32, 2, 0, 12, 476, 315270401 } },
+    { "order robust", "deep 564 order 6", { 32, 32, 32, 1, 0, 12, 476, 641504798 } },
+    { "order robust", "deep 564 order 7", { 32, 32, 32, 7, 0, 12, 476, 510543549 } },
+    { "order robust", "deep 564 order 8", { 32, 32, 32, 2, 0, 12, 476, 984146484 } },
+    { "order robust", "deep 564 order 9", { 32, 32, 32, 4, 0, 12, 476, 249685518 } },
+    { "order robust", "random 564 sample 0", { 32, 32, 32, 1, 0, 12, 525, 983195755 } },
+    { "order robust", "random 564 sample 1", { 32, 32, 32, 11, 0, 12, 512, 1609335378 } },
+    { "order robust", "random 564 sample 2", { 32, 32, 32, 12, 0, 12, 508, 1247185189 } },
+    { "order robust", "random 564 sample 3", { 32, 32, 32, 22, 0, 12, 520, 765604702 } },
+    { "order robust", "random 564 sample 4", { 32, 32, 32, 12, 0, 12, 525, 356465794 } },
+    { "order robust", "random 564 sample 5", { 32, 32, 32, 0, 0, 10, 496, 1545870161 } },
+    { "order robust", "random 564 sample 6", { 32, 32, 32, 6, 0, 12, 518, 1134683351 } },
+    { "order robust", "random 564 sample 7", { 32, 32, 32, 32, 0, 12, 507, 357012084 } },
+    { "order robust", "random 564 sample 8", { 32, 32, 32, 5, 0, 12, 523, 1548331935 } },
+    { "order robust", "random 564 sample 9", { 32, 32, 32, 1, 0, 12, 515, 598157249 } },
 /* PINS END */
     { NULL, NULL, { 0, 0, 0, 0, 0, 0, 0, 0 } }
 };
@@ -32041,8 +32081,8 @@ sample_sorted (
 static Run f_runs[MAX_CONF];
 static Run f_d87_full;                 /* full catalog, D87 caps */
 static Run e_runs[MAX_CONF][2][2];     /* [conf][mode][capped] */
-static Run o_runs[3][N_ORDERS];
-static Run s_runs[N_ORDERS];
+static Run o_runs[2][3][N_ORDERS];      /* [mode][subset][order] */
+static Run s_runs[2][N_ORDERS];         /* [mode][sample] */
 
 static const char *const order_base[3] = { "round 5", "strided 564",
     "deep 564" };
@@ -32143,18 +32183,22 @@ jobs_build (
             }
         }
     }
-    for (s = 0; s < 3; s++) {
-        for (o = 0; o < (celer ? 2 : N_ORDERS); o++) {
-            Job *j = job_new(J_ORDER, 564L);
+    for (m = 0; m < 2; m++) {
+        for (s = 0; s < 3; s++) {
+            for (o = 0; o < (celer ? 2 : N_ORDERS); o++) {
+                Job *j = job_new(J_ORDER, 564L);
 
-            j->s = s;
+                j->mode = m;
+                j->s = s;
+                j->o = o;
+            }
+        }
+        for (o = 0; o < (celer ? 2 : N_ORDERS); o++) {
+            Job *j = job_new(J_SAMPLE, 564L);
+
+            j->mode = m;
             j->o = o;
         }
-    }
-    for (o = 0; o < (celer ? 2 : N_ORDERS); o++) {
-        Job *j = job_new(J_SAMPLE, 564L);
-
-        j->o = o;
     }
 }
 
@@ -32166,8 +32210,8 @@ job_run (
     case J_FLOAT:     return &f_runs[j->conf];
     case J_FLOAT_D87: return &f_d87_full;
     case J_EXACT:     return &e_runs[j->conf][j->mode][j->capped];
-    case J_ORDER:     return &o_runs[j->s][j->o];
-    default:          return &s_runs[j->o];
+    case J_ORDER:     return &o_runs[j->mode][j->s][j->o];
+    default:          return &s_runs[j->mode][j->o];
     }
 }
 
@@ -32199,11 +32243,11 @@ job_execute (
         break;
     case J_ORDER:
         order_indices(j->s, j->o, tmp);
-        e_capacity(tmp, conf_find(order_base[j->s])->n, MODE_RULE, 0, 6, r);
+        e_capacity(tmp, conf_find(order_base[j->s])->n, j->mode, 0, 6, r);
         break;
     default:
         sample_indices(j->o, tmp);
-        e_capacity(tmp, 564, MODE_RULE, 0, 6, r);
+        e_capacity(tmp, 564, j->mode, 0, 6, r);
         break;
     }
 }
@@ -32705,71 +32749,87 @@ main (
     /* ============================================================
      * Part E: order control
      * ============================================================ */
-    printf("\n=== Part E: order control (exact rule, uncapped, to XOR12) ===\n\n");
+    printf("\n=== Part E: order control (exact rule and robust, uncapped,"
+        " to XOR12) ===\n\n");
     printf("  D82's greedy takes triples from the first 100 entries and"
         " extends the first\n  32 winners of each level, so its result"
         " depends on entry order. Each 564\n  subset in %d seeded orders;"
         " then %d random 564-entry samples (ascending\n  catalog order)"
-        " from all depths.\n\n", celer ? 2 : N_ORDERS,
-        celer ? 2 : N_ORDERS);
+        " from all depths.\n", celer ? 2 : N_ORDERS, celer ? 2 : N_ORDERS);
+    printf("  A shuffle also reorders the axis table, and the rule breaks"
+        " axis ties by\n  first maximum: under the rule, search order and"
+        " cell semantics change\n  together. Robust mode takes no tie"
+        " choice, so its rows isolate the order.\n");
     {
-        static const char *const base[3] = { "round 5", "strided 564",
-            "deep 564" };
         static const char *const label[3] = { "shallow 564", "strided 564",
             "deep 564" };
+        static const char *const order_sec[2] = { "order", "order robust" };
         static int tmp[F_QCAT];
         int        n_ord = celer ? 2 : N_ORDERS;
         int        s;
         int        o;
 
-        printf("  %-13s | max XOR per order          | XOR12 winners per"
-            " order\n", "Subset");
-        for (s = 0; s < 3; s++) {
-            const Conf *b = conf_find(base[s]);
-            int         reach = 0;
+        for (m = 0; m < 2; m++) {
+            printf("\n  --- %s ---\n\n", mode_name[m]);
+            printf("  %-13s | max XOR per order          | XOR12 winners"
+                " per order\n", "Subset");
+            for (s = 0; s < 3; s++) {
+                const Conf *b = conf_find(order_base[s]);
+                int         reach = 0;
 
+                for (o = 0; o < n_ord; o++) {
+                    Conf tc;
+                    Run *r = &o_runs[m][s][o];
+
+                    order_indices(s, o, tmp);
+                    sprintf(tc.name, "%s order %d", label[s], o);
+                    tc.n = b->n;
+                    tc.idx = tmp;
+                    victores_write(&tc, mode_name[m], "uncapped", r, 6);
+                    tempus(tc.name, r);
+                    pin(order_sec[m], tc.name, r);
+                    if (r->max_xor == 12) reach++;
+                }
+                printf("  %-13s | ", label[s]);
+                for (o = 0; o < n_ord; o++) {
+                    printf("%d ", o_runs[m][s][o].max_xor);
+                }
+                printf("| ");
+                for (o = 0; o < n_ord; o++) {
+                    printf("%ld ", o_runs[m][s][o].num[6]);
+                }
+                printf("(%d/%d reach XOR12)\n", reach, n_ord);
+            }
+            printf("\n  random 564 | max XOR | XOR12 | mean depth | depth 6-8"
+                " | depth-8 entries\n");
             for (o = 0; o < n_ord; o++) {
-                Conf tc;
+                Conf   tc;
+                Run   *r = &s_runs[m][o];
+                double md = 0.0;
+                int    d8 = 0;
+                int    d68 = 0;
 
-                order_indices(s, o, tmp);
-                sprintf(tc.name, "%s order %d", label[s], o);
-                tc.n = b->n;
+                sample_indices(o, tmp);
+                for (j = 0; j < 564; j++) {
+                    md += (double)f_full_depth[tmp[j]];
+                    if (f_full_depth[tmp[j]] == 8) d8++;
+                    if (f_full_depth[tmp[j]] >= 6) d68++;
+                }
+                sprintf(tc.name, "random 564 sample %d", o);
+                tc.n = 564;
                 tc.idx = tmp;
-                victores_write(&tc, "rule", "uncapped", &o_runs[s][o], 6);
-                tempus(tc.name, &o_runs[s][o]);
-                pin("order", tc.name, &o_runs[s][o]);
-                if (o_runs[s][o].max_xor == 12) reach++;
+                victores_write(&tc, mode_name[m], "uncapped", r, 6);
+                tempus(tc.name, r);
+                pin(order_sec[m], tc.name, r);
+                printf("  sample %-3d | %7d | %5ld | %10.2f | %8.0f%% | %d\n",
+                    o, r->max_xor, r->num[6], md / 564.0,
+                    100.0 * (double)d68 / 564.0, d8);
             }
-            printf("  %-13s | ", label[s]);
-            for (o = 0; o < n_ord; o++) printf("%d ", o_runs[s][o].max_xor);
-            printf("| ");
-            for (o = 0; o < n_ord; o++) printf("%ld ", o_runs[s][o].num[6]);
-            printf("(%d/%d reach XOR12)\n", reach, n_ord);
-        }
-        printf("\n  random 564 | max XOR | XOR12 | mean depth | depth-8"
-            " entries\n");
-        for (o = 0; o < n_ord; o++) {
-            Conf   tc;
-            double md = 0.0;
-            int    d8 = 0;
-
-            sample_indices(o, tmp);
-            for (j = 0; j < 564; j++) {
-                md += (double)f_full_depth[tmp[j]];
-                if (f_full_depth[tmp[j]] == 8) d8++;
-            }
-            sprintf(tc.name, "random 564 sample %d", o);
-            tc.n = 564;
-            tc.idx = tmp;
-            victores_write(&tc, "rule", "uncapped", &s_runs[o], 6);
-            tempus(tc.name, &s_runs[o]);
-            pin("order", tc.name, &s_runs[o]);
-            printf("  sample %-3d | %7d | %5ld | %10.2f | %d\n", o,
-                s_runs[o].max_xor, s_runs[o].num[6], md / 564.0, d8);
         }
     }
 
-    pin_check("order", "Part E order control");
+    pin_check("order", "Part E order control (rule)");
+    pin_check("order robust", "Part E order control (robust)");
 
     /* ============================================================
      * Part F: D87, full vs non-null
@@ -32883,8 +32943,10 @@ main (
                     && e_runs[i][MODE_RULE][t].num[7] == 0;
             }
         }
-        check("depth law, rounds 7-8: the search extended one level finds"
-            " XOR12 winners but no XOR14 (rule, 512 axes and all axes)", ok);
+        check("depth law, rounds 7-8: D82's search, extended one level"
+            " under the RULE only (from its first 32 XOR12 winners), finds"
+            " XOR12 winners but no XOR14 (512 axes and all axes); robust"
+            " not extended", ok);
         ok = 1;
         for (sem = 0; sem < 5; sem++) {
             for (i = 7; i <= 8; i++) {
@@ -32894,8 +32956,9 @@ main (
                 ok = ok && x->max_xor == 12;
             }
         }
-        check("depth law: max XOR is 12 at rounds 6, 7 and 8 under every"
-            " semantics (depth + 6 = 13, 14 at rounds 7, 8)", ok
+        check("depth law: D82's search finds max XOR 12 at rounds 6, 7 and"
+            " 8 under every semantics (searched to XOR12; XOR14 under the"
+            " rule only); depth + 6 would be 13, 14 at rounds 7, 8", ok
             && f_runs[6].max_xor == 12);
         check("round 1 reaches XOR8 under the exact rule (3 winners) but not"
             " robustly: decided by exact ties",
@@ -32923,21 +32986,29 @@ main (
         check("D82 Part D in D82's own order holds under every semantics:"
             " deep 127 / 564 reach XOR10 / XOR12, shallow XOR8 / XOR10,"
             " strided 564 XOR10", ok);
-        for (s = 0; s < 3; s++) {
-            reach[s] = 0;
-            for (o = 0; o < N_ORDERS; o++) {
-                if (o_runs[s][o].max_xor == 12) reach[s]++;
+        for (m = 0; m < 2; m++) {
+            static const int EXPECT[2][4] = {
+                { 1, 8, 10, 9 },          /* rule */
+                { 1, 8, 7, 9 }            /* robust */
+            };
+
+            for (s = 0; s < 3; s++) {
+                reach[s] = 0;
+                for (o = 0; o < N_ORDERS; o++) {
+                    if (o_runs[m][s][o].max_xor == 12) reach[s]++;
+                }
             }
+            reach[3] = 0;
+            for (o = 0; o < N_ORDERS; o++) {
+                if (s_runs[m][o].max_xor == 12) reach[3]++;
+            }
+            sprintf(msg, "order control (%s): XOR12 reached by deep 564 in"
+                " %d/10 orders, strided 564 in %d/10, shallow 564 in %d/10,"
+                " random 564 samples (mostly rounds 6-8) in %d/10",
+                mode_name[m], reach[2], reach[1], reach[0], reach[3]);
+            check(msg, reach[0] == EXPECT[m][0] && reach[1] == EXPECT[m][1]
+                && reach[2] == EXPECT[m][2] && reach[3] == EXPECT[m][3]);
         }
-        reach[3] = 0;
-        for (o = 0; o < N_ORDERS; o++) {
-            if (s_runs[o].max_xor == 12) reach[3]++;
-        }
-        sprintf(msg, "order control: XOR12 reached by deep 564 in %d/10"
-            " orders, strided 564 in %d/10, shallow 564 in %d/10, random"
-            " 564 samples in %d/10", reach[2], reach[1], reach[0], reach[3]);
-        check(msg, reach[2] == 10 && reach[1] == 8 && reach[0] == 1
-            && reach[3] == 9);
         ok = 1;
         for (m = 0; m < 2; m++) {
             int hist[F_ROUNDS];

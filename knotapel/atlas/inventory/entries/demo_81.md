@@ -1,6 +1,6 @@
 ## Demo 81: Capacity Scaling Law
 
-> **Correction (2026-10-12, Demo 125).** The ladder 6 6 8 8 10 10 12 12 12 is reproduced exactly (rule and robust), except that round 1 reaches XOR8 under the exact rule, through ties only. But `find_capacity` never searches past 6 weights, so the 12 at rounds 7 and 8 is the search's ceiling. Extended one level, the same search finds no XOR14 at round 7 or 8 (exact rule, 512 and all axes). The logarithmic fit and its extrapolations (XOR14 at about 38K entries) rest on capped points. See `demo_125_exact_crossing_depth/findings.md`.
+> **Correction (2026-10-12, Demo 125).** The ladder 6 6 8 8 10 10 12 12 12 is reproduced exactly (rule and robust), except that round 1 reaches XOR8 under the exact rule, through ties only. But `find_capacity` never searches past 6 weights, so the 12 at rounds 7 and 8 is the search's ceiling. Extended one level under the exact rule (from its first 32 XOR12 winners; robust not extended), the same search finds no XOR14 at round 7 or 8 (512 and all axes). The logarithmic fit and its extrapolations (XOR14 at about 38K entries) rest on capped points. See `demo_125_exact_crossing_depth/findings.md`.
 
 - **Status**: COMPLETE
 - **File**: `demo_81_capacity_scaling/main.c` (~604 lines)
