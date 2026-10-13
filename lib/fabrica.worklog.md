@@ -2699,3 +2699,40 @@ in the kept fresh tree:
 Result: fresh tree + bootstrap step 2 (natura_struere, canon_struere),
 member areas / bin/generare / speculum capsule deleted -> porta radix
 SANA 256/256, prae and post sana, 6 min 44 s cold.
+
+## 2026-10-12 - cursores ad gradus T1: `bin/fabrica probare`
+
+The composite-as-gate logic lived in pythonica (`_porta_per_gradum`,
+~90 lines: delete verdicts for vis, sanare -machina, find VERDICTUM,
+list members run). The thin entry points the slice needs
+(`<sub>/compile_probationes.sh`) would have had to reimplement it, so
+it is now one C command used by both the gate (T2) and humans.
+
+- `probare` reuses sanare whole: `_sanare_suturam` (sutura agens, judge
+  itself, lock) and `_sanare_agere` (judge stage, then the electa) were
+  extracted from `_sanare`, so the two cannot drift.
+- REUSED members are the composite's parts with NO sanatio:
+  `fabrica_sanare` does not report actions whose outputs are all RECENS
+  (include/fabrica.h:984). Re-judging them (celer, sigilla memoized)
+  returns the judge's own reason - "transitus: lectiones congruunt
+  (vestigium)" - which is grouped and counted into the line
+  `servatae K/M: ingressus immutati post transitum ultimum (<causa>)`
+  (Fran's request: never let "not run" read as "ran and passed").
+- Members that RAN print their acta log (build/fabrica/acta/<id>.log:
+  command, effusio, erratum) between `=== m ===` and `--- m praeteriit
+  (x s)` / `--- m FRACTA`, the old runners' line shapes, so oracles
+  that parse old runner output can parse this too.
+- FILTRUM = substring of the member title (old runners' contract);
+  no match = "NULLA PROBATIO CURSA" exit 2. `-vis` deletes the selected
+  verdicts first (what pythonica did). Producers reached through post /
+  praecondicio print sanare's lines; a failed one makes exit 1.
+- Machine lines: MEMBRUM (titulus, transiit|fracta|omissa|servata|non
+  iudicata, ms, causa), SERVATAE (K, M, causa), PROBARE (c, N, M, cursae,
+  servatae).
+- Live: probationes_toml warm = 13/13 servatae in ~9 s; `-vis
+  probationes_toml lector` re-runs one member with its full output.
+- Fumus XLVI (red first: usage, rc=2 x7). Plants: servatae line, -vis,
+  acta printing, filtra.
+- Editio refuses a multi-line anchor whose replacement has a different
+  line count unless `tolerans='spatia'` (verbatim) - the first plant
+  batch hit it before planting anything.

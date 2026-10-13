@@ -75,6 +75,10 @@
 #   XLV  clavis thesauri extractoris (circulus commissionis P1): bin/aedilis
 #        et bin/fabrica (binaria DIVERSA) clavem EANDEM ex digesto infixo
 #        habent - editio extra extractorem thesaurum non refrigerat
+#   XLVI probare (cursores ad gradus T1): membra cursa acta sua
+#        imprimunt, fresca 'servata' cum causa iudicis (linea
+#        'servatae N/M'), summa, exitus 1 si fracta; FILTRUM, -vis,
+#        filtrum sine paribus -> 2, compositum ignotum -> 2, -machina
 #
 # Exitus: 0 sanum · 1 fractum · 2 bin/fabrica deest.
 # <porta titulus="fabrica-fumus" instrumentum="bin/fabrica" tegit="*/aedificatio.stml aedificatio.canon fabrica.canon tools/fabrica_struere.sh"/>
@@ -636,6 +640,42 @@ if [ "$rca" -eq 0 ] && [ "$rcf" -eq 0 ] && [ "$KA" = "$KF" ] \
    && printf '%s' "$KF" | grep -q '	digestum$' \
    && ! cmp -s "$RADIX/bin/aedilis" "$F"; then echo "  XLV  clavis thesauri: aedilis == fabrica, ex digesto OK"; else echo "  XLV  FRACTUM (aedilis: $KA rc=$rca | fabrica: $KF rc=$rcf)"; fracta=1; fi
 
+# XLVI (cursores ad gradus T1): PROBARE - compositum ut porta et ut homo.
+# Radix XXXVII: a (bibliotheca) et c transeunt, b exitu 4 frangitur;
+# quaeque probatio lineam suam dicit. Cursus I: omnes currunt (acta
+# impressa), 2/3, exitus 1. Cursus II idem: a et c SERVATAE (acta non
+# impressa, causa iudicis in linea 'servatae 2/3'), b iterum currit.
+# Filtrum 'probatio_a' -> 1/1 servata, exitus 0; -vis -> a iterum currit;
+# filtrum sine paribus -> 2; compositum ignotum -> 2; -machina: MEMBRUM
+# per membrum et PROBARE summa
+radix_c
+printf '#include <stdio.h>\n#include "bib.h"\nint main(void) { printf("a dicit salve\\n"); return bib() == 3 ? 0 : 1; }\n' > "$T/r/t/probatio_a.c"
+printf '#include <stdio.h>\nint main(void) { printf("b dicit vae\\n"); return 4; }\n' > "$T/r/t/probatio_b.c"
+printf '#include <stdio.h>\nint main(void) { printf("c dicit salve\\n"); return 0; }\n' > "$T/r/t/probatio_c.c"
+(cd "$T/r" && "$F" probare probationes_t) > "$T/p1" 2>&1; rc1=$?
+(cd "$T/r" && "$F" probare probationes_t) > "$T/p2" 2>&1; rc2=$?
+(cd "$T/r" && "$F" probare probationes_t probatio_a) > "$T/p3" 2>&1; rc3=$?
+(cd "$T/r" && "$F" probare -vis probationes_t probatio_a) > "$T/p4" 2>&1; rc4=$?
+(cd "$T/r" && "$F" probare probationes_t zzz) > "$T/p5" 2>&1; rc5=$?
+(cd "$T/r" && "$F" probare probationes_nulla) > "$T/p6" 2>&1; rc6=$?
+(cd "$T/r" && "$F" probare -machina probationes_t) > "$T/p7" 2>/dev/null; rc7=$?
+if [ "$rc1" -eq 1 ] && grep -qx 'a dicit salve' "$T/p1" && grep -qx 'b dicit vae' "$T/p1" \
+   && grep -q '^--- probatio_a praeteriit' "$T/p1" && grep -q '^--- probatio_b FRACTA' "$T/p1" \
+   && grep -qx 'probationes_t: 2/3 praeteritae \[cursae 3, servatae 0\]' "$T/p1" \
+   && grep -qx 'FRACTAE: probatio_b' "$T/p1" \
+   && [ "$rc2" -eq 1 ] && ! grep -q 'a dicit salve' "$T/p2" && grep -qx 'b dicit vae' "$T/p2" \
+   && grep -q '^--- probatio_a servata' "$T/p2" \
+   && grep -q '^servatae 2/3: .*lectiones congruunt' "$T/p2" \
+   && grep -qx 'probationes_t: 2/3 praeteritae \[cursae 1, servatae 2\]' "$T/p2" \
+   && [ "$rc3" -eq 0 ] && grep -qx 'probationes_t: 1/1 praeteritae \[cursae 0, servatae 1\]' "$T/p3" \
+   && [ "$rc4" -eq 0 ] && grep -qx 'a dicit salve' "$T/p4" \
+   && grep -qx 'probationes_t: 1/1 praeteritae \[cursae 1, servatae 0\]' "$T/p4" \
+   && [ "$rc5" -eq 2 ] && grep -q 'NULLA PROBATIO CURSA' "$T/p5" \
+   && [ "$rc6" -eq 2 ] && grep -q "compositum ignotum 'probationes_nulla'" "$T/p6" \
+   && [ "$rc7" -eq 1 ] && grep -q '^MEMBRUM	probatio_a	servata	' "$T/p7" \
+   && grep -q '^MEMBRUM	probatio_b	fracta	' "$T/p7" \
+   && grep -qx 'PROBARE	probationes_t	2	3	1	2' "$T/p7"; then echo "  XLVI probare: acta, servatae cum causa, filtrum, -vis, -machina OK"; else echo "  XLVI FRACTUM (rc=$rc1 $rc2 $rc3 $rc4 $rc5 $rc6 $rc7)"; cat "$T/p1" "$T/p2" "$T/p3" "$T/p7" | sed 's/^/      /' | head -40; fracta=1; fi
+
 if [ "$fracta" -ne 0 ]; then echo "fumus fabricae: FRACTUM"; exit 1; fi
-echo "fumus fabricae: sanum (XLV/XLV)"
+echo "fumus fabricae: sanum (XLVI/XLVI)"
 exit 0

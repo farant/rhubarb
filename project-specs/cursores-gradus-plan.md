@@ -7,13 +7,20 @@ Mechanism first, then the pilots in rising difficulty (gen 3 -> 2 -> 1
 -> the big one).
 
 ### T1: `bin/fabrica probare` (D1)
-- [ ] fabrica fumus stage over a fictional world: composite with a
+- [x] fabrica fumus stage over a fictional world: composite with a
   passing, a failing and a fresh member -> lines transiit/FRACTA/
   servatum, the reuse line ("servatae 1/3: ingressus immutati ..."),
   summary, exit 1; FILTRUM selecting one member; no match ->
   exit 2; `-vis` re-runs the fresh one; `-machina` TSV. Red first.
   Implement in tools/fabrica.c (+ fabrica_ansae), worklog. Plants.
   Commit.
+  As built (2026-10-12): all in tools/fabrica.c; `_sanare_suturam` +
+  `_sanare_agere` extracted so sanare and probare share one path. Reused
+  = parts without a sanatio, re-judged for the judge's own reason
+  (grouped into `servatae K/M: ...`). Human lines keep the old runners'
+  shapes (`=== m ===`, acta, `--- m praeteriit|FRACTA|servata`).
+  Machine: MEMBRUM / SERVATAE / PROBARE. Fumus XLVI; plants IV red
+  (servatae line, -vis, acta, filtra). Live toml: 13/13 servatae ~9 s.
 
 ### T2: porta via probare; toml becomes an entry point (D1, D2, D3)
 - [ ] `_porta_per_gradum` parses `probare -machina` (pythonica test with
