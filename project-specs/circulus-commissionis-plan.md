@@ -65,4 +65,6 @@ The small items go first, so each one helps the next commit.
   (4 sections, 32 assertions), fabrica fumus XLV, plants III red.
 
 ### T6: close
-- [ ] spec "As built", worklogs, MEMORY; merge.
+- [x] spec "As built", worklogs, MEMORY; merge.
+  As built (2026-10-12): spec §V; MEMORY index (excusatae, judge heal,
+  shared cache key); merge per ritual.
