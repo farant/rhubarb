@@ -163,4 +163,39 @@ agenda_res (
     constans AgendaDocumentum* doc,
                           s32  id);
 
+/* A1b: quaestiones vistarum (A2 mensis, A3 dies). Xar de
+ * (constans AgendaRes*) in piscina vocantis, ordine id; indicia
+ * valent usque ad mutationem proximam. */
+
+/* res vivae diei assignatae (dies_posita et dies == dies) */
+Xar*
+agenda_res_diei (
+    constans AgendaDocumentum* doc,
+                         Dies  dies,
+                      Piscina* piscina);
+
+/* res vivae die perfectae (dies_perfectionis == dies), ubicumque
+ * assignatae - "calendarium perfectionem ostendit" (decisio 4) */
+Xar*
+agenda_perfectae_die (
+    constans AgendaDocumentum* doc,
+                         Dies  dies,
+                      Piscina* piscina);
+
+/* signum diei in craticula mensis */
+nomen structura {
+    i32 assignatae;   /* res diei assignatae (perfectae incluse) */
+    i32 apertae;      /* earum nondum perfectae */
+    i32 perfectae;    /* res eo die perfectae */
+} AgendaSignum;
+
+/* signa mensis: signa[d - 1] pro die d; dies ultra mensem nulli.
+ * Transitus unus super res. FALSUM si mensis malus. */
+b32
+agenda_signa_mensis (
+    constans AgendaDocumentum* doc,
+                          s32  annus,
+                          s32  mensis,
+                 AgendaSignum  signa[XXXI]);
+
 #endif /* AGENDA_H */

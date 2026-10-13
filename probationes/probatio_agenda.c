@@ -359,6 +359,109 @@ _probare_aperitionem (
         c->piscina)), XI);
 }
 
+/* ids rerum in Xar (constans AgendaRes*) = "1 2 ..." ? */
+interior b32
+ids_sunt (
+                   Xar* l,
+    constans character* exspectati)
+{
+    character buffer[CXXVIII];
+          i32 i;
+          i32 k;
+
+    si (!l)
+    {
+        redde FALSUM;
+    }
+    k                 = ZEPHYRUM;
+    buffer[ZEPHYRUM]  = '\0';
+    per (i = ZEPHYRUM; i < xar_numerus(l); i++)
+    {
+        k += (i32)sprintf(buffer + k, i > ZEPHYRUM ? " %d" : "%d",
+            (integer)(*(constans AgendaRes**)xar_obtinere(l, i))->id);
+    }
+    redde strcmp(buffer, exspectati) == ZEPHYRUM;
+}
+
+interior b32
+signum_est (
+     constans AgendaSignum* s,
+                       i32  assignatae,
+                       i32  apertae,
+                       i32  perfectae)
+{
+    redde s->assignatae == assignatae && s->apertae == apertae
+        && s->perfectae == perfectae;
+}
+
+/* res diei, perfectae die (etiam alibi assignatae), signa mensis;
+ * deletae absunt; dies ultra mensem nulli; bissextilis */
+interior vacuum
+_probare_quaestiones (
+    CredoContextus* c)
+{
+           Mundus* m;
+     AgendaSignum  signa[XXXI];
+             Dies  d;
+             Dies  hodie;
+              s32  id;
+              i32  i;
+
+    m = (Mundus*)c->datum;
+    CREDO_NECESSE(m && m->doc);
+    hodie = fasti_dies(MMXXVI, X, XIV);
+    /* 1: hodie; 2: hodie, perfecta hodie; 3: die XX, perfecta hodie;
+     * 4: hodie, deleta; 5: sine die, perfecta XV; 6: mense alio */
+    per (i = I; i <= VI; i++)
+    {
+        id = agenda_rem_creare(m->doc, lit("res", c->piscina));
+        CREDO_NECESSE(id == (s32)i);
+    }
+    (vacuum)agenda_diem_ponere(m->doc, I, &hodie);
+    (vacuum)agenda_diem_ponere(m->doc, II, &hodie);
+    (vacuum)agenda_perficere(m->doc, II, hodie);
+    d = fasti_dies(MMXXVI, X, XX);
+    (vacuum)agenda_diem_ponere(m->doc, III, &d);
+    (vacuum)agenda_perficere(m->doc, III, hodie);
+    (vacuum)agenda_diem_ponere(m->doc, IV, &hodie);
+    (vacuum)agenda_rem_delere(m->doc, IV);
+    (vacuum)agenda_perficere(m->doc, V, fasti_dies(MMXXVI, X, XV));
+    d = fasti_dies(MMXXVI, XI, I);
+    (vacuum)agenda_diem_ponere(m->doc, VI, &d);
+
+    CREDO_VERUM(ids_sunt(agenda_res_diei(m->doc, hodie, c->piscina),
+        "1 2"));
+    CREDO_VERUM(ids_sunt(agenda_perfectae_die(m->doc, hodie,
+        c->piscina),
+        "2 3"));
+    CREDO_VERUM(ids_sunt(agenda_perfectae_die(m->doc, fasti_dies(MMXXVI,
+        X, XV), c->piscina), "5"));
+    CREDO_VERUM(ids_sunt(agenda_res_diei(m->doc, fasti_dies(MMXXVI, X,
+        I), c->piscina), ""));
+
+    memset(signa, VII, magnitudo(signa));
+    CREDO_VERUM(agenda_signa_mensis(m->doc, MMXXVI, X, signa));
+    CREDO_VERUM(signum_est(&signa[XIII], II, I, II));
+    CREDO_VERUM(signum_est(&signa[XIX], I, ZEPHYRUM, ZEPHYRUM));
+    CREDO_VERUM(signum_est(&signa[XIV], ZEPHYRUM, ZEPHYRUM, I));
+    CREDO_VERUM(signum_est(&signa[ZEPHYRUM], ZEPHYRUM, ZEPHYRUM,
+        ZEPHYRUM));
+    CREDO_VERUM(signum_est(&signa[XXX], ZEPHYRUM, ZEPHYRUM, ZEPHYRUM));
+    CREDO_VERUM(agenda_signa_mensis(m->doc, MMXXVI, XI, signa));
+    CREDO_VERUM(signum_est(&signa[ZEPHYRUM], I, I, ZEPHYRUM));
+
+    /* bissextilis: XXIX dies, ceteri nulli */
+    d = fasti_dies(MMXXVIII, II, XXIX);
+    (vacuum)agenda_diem_ponere(m->doc, I, &d);
+    memset(signa, VII, magnitudo(signa));
+    CREDO_VERUM(agenda_signa_mensis(m->doc, MMXXVIII, II, signa));
+    CREDO_VERUM(signum_est(&signa[XXVIII], I, I, ZEPHYRUM));
+    CREDO_VERUM(signum_est(&signa[XXIX], ZEPHYRUM, ZEPHYRUM, ZEPHYRUM));
+    CREDO_VERUM(signum_est(&signa[XXX], ZEPHYRUM, ZEPHYRUM, ZEPHYRUM));
+    CREDO_FALSUM(agenda_signa_mensis(m->doc, MMXXVI, XIII, signa));
+    CREDO_FALSUM(agenda_signa_mensis(m->doc, MMXXVI, ZEPHYRUM, signa));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "creatio",      _probare_creationem,     mundum_parare,
         mundum_purgare,
@@ -384,6 +487,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "aperitio",     _probare_aperitionem,    mundum_parare,
         mundum_purgare,
         NIHIL, NIHIL },
+    { "quaestiones",  _probare_quaestiones,    mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

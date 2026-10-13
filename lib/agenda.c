@@ -992,3 +992,115 @@ agenda_res (
     r = doc ? vivum(doc, id) : NIHIL;
     redde r ? &r->res : NIHIL;
 }
+
+
+/* ==================================================
+ * Quaestiones (A1b)
+ * ================================================== */
+
+interior b32
+dies_aequales (
+    Dies a,
+    Dies b)
+{
+    redde a.annus == b.annus && a.mensis == b.mensis
+        && a.dies == b.dies;
+}
+
+/* res vivae quibus 'congruit' (perfectae: dies perfectionis; aliter:
+ * dies assignata) == dies, ordine id */
+interior Xar*
+res_colligere (
+    constans AgendaDocumentum* doc,
+                         Dies  dies,
+                          b32  perfectae,
+                      Piscina* piscina)
+{
+          Xar* l;
+     Recordum* r;
+          i32  i;
+
+    si (!doc || !piscina)
+    {
+        redde NIHIL;
+    }
+    l = xar_creare(piscina, (i32)magnitudo(constans AgendaRes*));
+    per (i = ZEPHYRUM; l && i < xar_numerus(doc->recorda); i++)
+    {
+        r = (Recordum*)xar_obtinere(doc->recorda, i);
+        si (r->deleta)
+        {
+            perge;
+        }
+        si (perfectae ? (r->res.perfecta && dies_aequales(
+                r->res.dies_perfectionis, dies))
+                      : (r->res.dies_posita
+                          && dies_aequales(r->res.dies,
+                dies)))
+        {
+            *(constans AgendaRes**)xar_addere(l) = &r->res;
+        }
+    }
+    redde l;
+}
+
+Xar*
+agenda_res_diei (
+    constans AgendaDocumentum* doc,
+                         Dies  dies,
+                      Piscina* piscina)
+{
+    redde res_colligere(doc, dies, FALSUM, piscina);
+}
+
+Xar*
+agenda_perfectae_die (
+    constans AgendaDocumentum* doc,
+                         Dies  dies,
+                      Piscina* piscina)
+{
+    redde res_colligere(doc, dies, VERUM, piscina);
+}
+
+b32
+agenda_signa_mensis (
+    constans AgendaDocumentum* doc,
+                          s32  annus,
+                          s32  mensis,
+                 AgendaSignum  signa[XXXI])
+{
+     Recordum* r;
+          i32  i;
+
+    si (!doc || !signa || mensis < I || mensis > XII)
+    {
+        redde FALSUM;
+    }
+    memset(signa, ZEPHYRUM, magnitudo(AgendaSignum) * XXXI);
+    per (i = ZEPHYRUM; i < xar_numerus(doc->recorda); i++)
+    {
+        r = (Recordum*)xar_obtinere(doc->recorda, i);
+        si (r->deleta)
+        {
+            perge;
+        }
+        /* dies validae (fasti_dies_valida in actis): 1..XXXI, mensis
+         * sui longitudine */
+        si (   r->res.dies_posita && r->res.dies.annus == annus
+            && r->res.dies.mensis == mensis)
+        {
+            signa[r->res.dies.dies - I].assignatae++;
+            si (!r->res.perfecta)
+            {
+                signa[r->res.dies.dies - I].apertae++;
+            }
+        }
+        si (   r->res.perfecta
+            && r->res.dies_perfectionis.annus  == annus
+            && r->res.dies_perfectionis.mensis == mensis)
+        {
+            signa[r->res.dies_perfectionis.dies - I].perfectae++;
+        }
+    }
+    redde VERUM;
+}

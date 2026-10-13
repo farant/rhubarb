@@ -137,8 +137,9 @@ State-model question to settle before A2 (A1 is content only).
     undo/redo, reopen, verify; titles in attribute-element form
     (`<@titulus=>`, quotes representable). probatio_agenda (8
     sections, plants II).
-  - **A1b** queries for A2/A3 (items of a day, completed on a day,
-    month marks) + seal-cost measurement (AUDIENDA).
+  - **A1b** DONE 2026-10-13 (lib/agenda.worklog.md): `agenda_res_diei`,
+    `agenda_perfectae_die`, `agenda_signa_mensis` (assigned / open /
+    completed); seal cost measured (tools/agenda_mensura.c).
 - **A2 — month view pane** `$calendarium` (opens on today; argument
   `YYYY-MM`): grid, liturgical colour + feast, per-day marks (items
   assigned, items completed).
@@ -153,6 +154,8 @@ State-model question to settle before A2 (A1 is content only).
 ## V. AUDIENDA
 
 - Seal cost: canonical text of the whole state per act - fine for
-  hundreds/thousands of items; measure in A1.
+  hundreds/thousands of items; measure in A1. **Measured (A1b):** ~1.5 us per item
+  per act (1000 items: 1.56 ms/act, reopen 4.7 ms); bulk creation is
+  quadratic (2000 items: 9.3 s). Incremental seal if ever needed.
 - Exact vicus shape of a pane that switches year/month/day (one genus
   with a mode, or three genera).

@@ -218,8 +218,8 @@ widgets are migrated by hand.*
 
 ### The calendar, interleaved (agenda-plan.md)
 
-- **A1** (agenda library) independent - any time. A1a DONE 2026-10-13 (document,
-  acts, projection); A1b queries next.
+- **A1** (agenda library) independent - any time. A1 DONE 2026-10-13 (A1a document,
+  acts, projection; A1b queries + seal cost). A2 next.
 - **A2-A5** (views) after Arc I.
 - **A6** (embedded day scriba) after Arc III - the depth-2 consumer.
 
