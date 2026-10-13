@@ -30,3 +30,17 @@ plant went red at the pannus-rectangle index, green on revert.
 Second mute plant in two tasks: a plant must touch a value the test
 actually varies. `<purus/>` anchors on `pingere` and `figura_finium`
 for lint L2. Examen ACCIPE; formator 0 after two long lines.
+
+## 2026-10-13 — figura_mensam_pingere, FIGURA_EXEMPLAR_FOCI
+
+The "mensa" (pane surface in COLOR_SUPERFICIES, focus dots
+EXEMPLAR_PUNCTA_DUPLICIA_DISPERSA in COLOR_BORDER over it when focused)
+was painted by hand in scriba_figurae, pictor_figurae and kalendarium -
+three copies of the macro and the two rectangles. Now one helper here;
+figura.h includes thema.h and exemplaria.h for it (figura.c already
+included thema.h). Emission order is part of the contract: surface
+first, pattern second (probatio_figura asserts both, by index). The
+focus decision itself lives in motus.h (`motus_ramus_focatus`) - this
+helper takes a plain b32 so figures stay pure.
+Plant: pattern never drawn -> red in probatio_vicus_latera (scriba/
+pictor panes) and probatio_kalendarium.

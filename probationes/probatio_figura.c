@@ -212,6 +212,37 @@ s32 principale (vacuum)
             figura_finium, NIHIL));
     }
 
+    /* figura_mensam_pingere: superficies per fines, exemplar foci
+     * supra solum si focatum */
+    {
+                   Mandata* mandata_mensae;
+         constans Mandatum* y;
+                     Fines  f;
+
+        f.x             = II;
+        f.y             = III;
+        f.latitudo      = XL;
+        f.altitudo      = XXX;
+        mandata_mensae  = mandata_creare(piscina, intern);
+        figura_mensam_pingere(mandata_mensae, f, FALSUM);
+        CREDO_AEQUALIS_I32(xar_numerus(mandata_mensae->elementa), I);
+        y = (constans Mandatum*)xar_obtinere(mandata_mensae->elementa,
+            ZEPHYRUM);
+        CREDO_VERUM(y->genus == MANDATUM_RECTANGULUM && y->impletum);
+        CREDO_VERUM(y->fines.x == II && y->fines.latitudo == XL);
+        CREDO_VERUM(   y->color.genus == COLOR_MANDATI_THEMA
+                    && y->color.valor == (i32)COLOR_SUPERFICIES);
+        mandata_mensae = mandata_creare(piscina, intern);
+        figura_mensam_pingere(mandata_mensae, f, VERUM);
+        CREDO_AEQUALIS_I32(xar_numerus(mandata_mensae->elementa), II);
+        y = (constans Mandatum*)xar_obtinere(mandata_mensae->elementa,
+            I);
+        CREDO_VERUM(y->exemplar == FIGURA_EXEMPLAR_FOCI);
+        CREDO_VERUM(   y->color.genus == COLOR_MANDATI_THEMA
+                    && y->color.valor == (i32)COLOR_BORDER);
+        CREDO_VERUM(y->fines.y == III && y->fines.altitudo == XXX);
+    }
+
     credo_imprimere_compendium();
     redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
 }

@@ -9,9 +9,6 @@
 #include <stdio.h>
 #include <string.h>
 
-/* indicium foci: exemplar marginis lateris focati (vicus-latera) */
-#define EXEMPLAR_FOCI EXEMPLAR_PUNCTA_DUPLICIA_DISPERSA
-
 interior ColorMandati
 color_thematis (
     ColorThema c)
@@ -185,13 +182,9 @@ figura_prospectus (
     f.y         = ZEPHYRUM;
     f.latitudo  = c->fines.latitudo;
     f.altitudo  = c->fines.altitudo;
-    mandata_rectangulum(m, f, color_thematis(COLOR_SUPERFICIES), VERUM);
     /* indicium foci (Franus): puncta levia super superficiem */
-    si (chorda_aequalis_literis(c->titulus, "focatum"))
-    {
-        mandata_rectangulum_exemplar(m, f, color_thematis(COLOR_BORDER),
-            EXEMPLAR_FOCI);
-    }
+    figura_mensam_pingere(m, f, chorda_aequalis_literis(c->titulus,
+        "focatum"));
 }
 
 /* P4a penicillus (praevisio): disci per fascias colore vero (titulus

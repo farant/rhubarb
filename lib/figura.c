@@ -288,3 +288,22 @@ figura_finium (
     color.valor  = (i32)COLOR_BORDER;
     mandata_rectangulum(m, f, color, FALSUM);
 }
+
+vacuum
+figura_mensam_pingere (
+    Mandata* md,
+      Fines  fines,
+        b32  focatum)
+{
+    ColorMandati color;
+
+    color.genus = COLOR_MANDATI_THEMA;
+    color.valor = (i32)COLOR_SUPERFICIES;
+    mandata_rectangulum(md, fines, color, VERUM);
+    si (focatum)
+    {
+        color.valor = (i32)COLOR_BORDER;
+        mandata_rectangulum_exemplar(md, fines, color,
+            FIGURA_EXEMPLAR_FOCI);
+    }
+}

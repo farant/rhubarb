@@ -277,3 +277,13 @@ three: a candidate for a shared home (exemplaria.h or a small "mensa"
 helper in the widget layer) - asked Fran, not done.
 
 Plant: focatum never set -> red.
+
+## 2026-10-13 — mensa helper shared (figura.h, motus.h)
+
+The three copies (scriba, pictor, here) of the focus check and the mensa
+painting are gone: `motus_ramus_focatus(motus, ramus)` in motus.h and
+`figura_mensam_pingere(md, fines, focatum)` + `FIGURA_EXEMPLAR_FOCI` in
+figura.h (Fran approved option (a): mensa only). `color_thematis` is
+still copied in five files (scriba, pictor, kalendarium, terminale,
+vicus) - its own follow-up commit, since terminale.c brings the
+aemulator gates and an install refresh.

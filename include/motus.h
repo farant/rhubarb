@@ -162,4 +162,17 @@ vacuum
 motus_captura_tollere (
     Motus* motus);
 
+
+/* ==================================================
+ * Focus
+ * ================================================== */
+
+/* ramus focatus? (indicium foci, vicus-latera): VERUM sine Motu aut
+ * pro ramo radicis (applicatio sola); in vico spatium Motus = via
+ * rami */
+b32
+motus_ramus_focatus (
+    constans Motus* motus,
+       InsulaRamus  ramus);
+
 #endif /* MOTUS_H */

@@ -8,7 +8,6 @@
 #include "color.h"
 #include "mandatum.h"
 #include "thema.h"
-#include "exemplaria.h"
 #include "scriba_documentum.h"   /* scriba_effugere / scriba_solvere */
 #include "tabula_characterum.h"
 #include "vim.h"
@@ -28,9 +27,6 @@ hic_manens constans character actio_calendarii[] = "calendarium.agere";
 #define KALENDARIUM_PROMPTA          CCLVI    /* octeti promptae */
 #define KALENDARIUM_MARGO_X          VI       /* mensa: cellula una, */
 #define KALENDARIUM_MARGO_Y          VIII     /* ut scriba et pictor */
-
-/* indicium foci: exemplar mensae focatae (ut scriba et pictor) */
-#define EXEMPLAR_FOCI EXEMPLAR_PUNCTA_DUPLICIA_DISPERSA
 
 /* contextus figurarum (privatus; figurae_ctx): liturgia semel creata */
 nomen structura {
@@ -1512,6 +1508,7 @@ figura_tabulae (
                 vacuum* ctx)
 {
     KalendariumFigurae* contextus;
+                 Fines  mensa;
            SignaMensis  menses[III];
                    i32  numerus;
                    i32  i;
@@ -1522,21 +1519,13 @@ figura_tabulae (
 
     (vacuum)thema;
     contextus = (KalendariumFigurae*)ctx;
-    /* mensa: superficies, exemplar foci, fundus intra marginem */
-    rectangulum(md, ZEPHYRUM, ZEPHYRUM, c->fines.latitudo,
-        c->fines.altitudo, color_thematis(COLOR_SUPERFICIES), VERUM);
-    si (chorda_aequalis_literis(c->titulus, "focatum"))
-    {
-        Fines f;
-
-        f.x         = ZEPHYRUM;
-        f.y         = ZEPHYRUM;
-        f.latitudo  = c->fines.latitudo;
-        f.altitudo  = c->fines.altitudo;
-        mandata_rectangulum_exemplar(md, f,
-            color_thematis(COLOR_BORDER),
-            EXEMPLAR_FOCI);
-    }
+    /* mensa (superficies, exemplar foci), fundus intra marginem */
+    mensa.x         = ZEPHYRUM;
+    mensa.y         = ZEPHYRUM;
+    mensa.latitudo  = c->fines.latitudo;
+    mensa.altitudo  = c->fines.altitudo;
+    figura_mensam_pingere(md, mensa, chorda_aequalis_literis(c->titulus,
+        "focatum"));
     rectangulum(md, KALENDARIUM_MARGO_X, KALENDARIUM_MARGO_Y,
         c->fines.latitudo - II * KALENDARIUM_MARGO_X, c->fines.altitudo
         - II * KALENDARIUM_MARGO_Y, color_thematis(COLOR_BACKGROUND),
@@ -2133,17 +2122,6 @@ liberos_movere (
     }
 }
 
-/* indicium foci (ut scriba): sine Motu aut ramo radicis semper; in
- * vico spatium Motus = via rami */
-interior b32
-focatum_est (
-    constans Motus* motus,
-       InsulaRamus  ramus)
-{
-    redde !motus || chorda_vacua(ramus.via)
-        || chorda_aequalis(motus->spatium, ramus.via);
-}
-
 /* <componens/> <purus/> */
 Componens*
 kalendarium_componere (
@@ -2176,7 +2154,7 @@ kalendarium_componere (
     }
     componens_ponere_focusabilis(radix, VERUM);
     componens_ponere_actio(radix, actio_calendarii);
-    si (focatum_est(motus, m->ramus))
+    si (motus_ramus_focatus(motus, m->ramus))
     {
         componens_ponere_titulum(radix, "focatum");
     }

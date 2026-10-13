@@ -24,6 +24,8 @@
 #include "xar.h"
 #include "componens.h"
 #include "mandatum.h"
+#include "thema.h"
+#include "exemplaria.h"
 
 
 /* ==================================================
@@ -132,5 +134,16 @@ figura_finium (
                Mandata* m,
                    i32  thema,
                 vacuum* ctx);
+
+/* indicium foci: exemplar mensae lateris focati */
+#define FIGURA_EXEMPLAR_FOCI  EXEMPLAR_PUNCTA_DUPLICIA_DISPERSA
+
+/* mensa (scriba, pictor, calendarium): fines toti colore
+ * COLOR_SUPERFICIES; focatum = exemplar foci (COLOR_BORDER) supra */
+vacuum
+figura_mensam_pingere (
+    Mandata* md,
+      Fines  fines,
+        b32  focatum);
 
 #endif /* FIGURA_H */

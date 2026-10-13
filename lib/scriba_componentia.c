@@ -127,17 +127,6 @@ volutio (
  * ================================================== */
 
 /* <componens/> <purus/> */
-/* indicium foci (vicus-latera): ramus focatus - sine Motu aut ramo
- * radicis (applicatio sola) semper; in vico spatium Motus = via rami */
-interior b32
-focatum_est (
-    constans Motus* motus,
-       InsulaRamus  ramus)
-{
-    redde !motus || chorda_vacua(ramus.via)
-        || chorda_aequalis(motus->spatium, ramus.via);
-}
-
 Componens*
 scriba_componere (
      InsulaRepositorium* repo,
@@ -244,7 +233,7 @@ scriba_componere (
                        fp);
     componens_ponere_sectio(prospectus, VERUM);
     /* indicium foci: figura mensae exemplar addit */
-    si (focatum_est(motus, ramus))
+    si (motus_ramus_focatus(motus, ramus))
     {
         componens_ponere_titulum(prospectus, "focatum");
     }
