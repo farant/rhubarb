@@ -260,14 +260,15 @@ s32 principale (vacuum)
     }
     /* latus dextrum: radix pictoris in spatio suo, x CCXL */
     c = componens_invenire_in_spatio(dispensator_arbor(d),
-        chorda_ex_literis("s1_dextrum_pictor", piscina),
+        chorda_ex_literis("pictor:s1_dextrum_pictor", piscina),
         chorda_ex_literis("radix", piscina));
     CREDO_NON_NIHIL(c);
     si (c)
     {
         CREDO_AEQUALIS_S32(c->fines.x, CCXL);
         CREDO_AEQUALIS_S32(c->fines.y, VIII);
-        CREDO_CHORDA_AEQUALIS_LITERIS(c->spatium, "s1_dextrum_pictor");
+        CREDO_CHORDA_AEQUALIS_LITERIS(c->spatium,
+            "pictor:s1_dextrum_pictor");
     }
     CREDO_NON_NIHIL(liberum(d, "vicus.divisor"));
 

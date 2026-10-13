@@ -318,6 +318,18 @@ superficiem_mutator (
         chorda_ut_cstr(chorda_ex_s32(sp->altitudo, p), p));
 }
 
+/* via rami lateris (status-plan S8c): spatium arboris, registrorum,
+ * Motus */
+interior chorda
+via_lateris (
+       InsulaRepositorium* repo,
+      constans VicusLatus* l,
+                  Piscina* piscina)
+{
+    redde insula_ramus(repo, chorda_ut_cstr(l->genus, piscina),
+        chorda_ut_cstr(l->id, piscina)).via;
+}
+
 interior vacuum
 latus_superficiem_scribere (
          Vicus* v,
@@ -944,7 +956,7 @@ motum_aptare (
     v->motus->ramus = insula_ramus(v->repo,
         chorda_ut_cstr(l->genus, v->piscina),
         chorda_ut_cstr(l->id, v->piscina));
-    v->motus->spatium = l->id;
+    v->motus->spatium = v->motus->ramus.via;
     si (l->facies.gestum_ponere)
     {
         l->facies.gestum_ponere(v->motus, l->facies.gestum_ctx);
@@ -994,12 +1006,12 @@ registra_lateris_miscere (
     si (l->facies.actiones)
     {
         (vacuum)actio_registrum_miscere_in_spatio(v->actiones,
-            l->facies.actiones, l->id);
+            l->facies.actiones, via_lateris(v->repo, l, v->piscina));
     }
     si (l->facies.figurae)
     {
         (vacuum)figura_registrum_miscere_in_spatio(v->figurae,
-            l->facies.figurae, l->id);
+            l->facies.figurae, via_lateris(v->repo, l, v->piscina));
     }
 }
 
@@ -1771,7 +1783,8 @@ latus_componere (
     f.x  += x;
     f.y  += VICUS_ALTITUDO_TABULARUM;
     componens_ponere_fines(app, f);
-    componens_ponere_spatium(app, chorda_ut_cstr(l->id, piscina));
+    componens_ponere_spatium(app, chorda_ut_cstr(via_lateris(repo, l,
+        piscina), piscina));
     componens_addere_liberum(radix, app);
 }
 

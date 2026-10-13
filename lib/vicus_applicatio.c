@@ -333,7 +333,7 @@ scribae_ictus_primus (
     {
         redde FALSUM;
     }
-    pagina = componens_invenire_in_spatio(arbor, m->ramus.id,
+    pagina = componens_invenire_in_spatio(arbor, m->ramus.via,
         chorda_ex_literis("pagina", m->actiones_ctx.doc->piscina));
     p.x = ev->datum.mus.x;
     p.y = ev->datum.mus.y;

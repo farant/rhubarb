@@ -8,7 +8,7 @@
 /* ramus registratus cum campis suis aspectus popover */
 nomen structura {
     InsulaRamus  ramus;
-         chorda  spatium;     /* = id rami (spatium componentium) */
+         chorda  spatium;     /* = via rami (spatium componentium) */
             Xar* campi;       /* Xar de constans OrganumCampus* */
 } RamusDimissionis;
 
@@ -286,7 +286,7 @@ dimissio_ramum_addere (
     }
     rd           = (RamusDimissionis*)xar_addere(dimissio->rami);
     rd->ramus    = *ramus;
-    rd->spatium  = ramus->id;
+    rd->spatium  = ramus->via;
     rd->campi   = xar_creare(dimissio->piscina,
         (i32)magnitudo(constans OrganumCampus*));
     per (i = ZEPHYRUM; i < organum_numerus_camporum(organum); i++)

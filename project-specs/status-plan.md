@@ -149,10 +149,20 @@ widgets are migrated by hand.*
   per level; persistence keyed by the path (caller passes `via` as
   clavis); relatio branch identity = path. dimissio (spatium = id)
   waits for S8c.
-- **S8c** routing by path: spatium = branch path (one address);
-  registry, focus/focus_acervus, kinetic slot -> innermost focused
-  branch; pictor/scriba compare with the path. Test: toy widget three
-  deep gets keys/clicks with its branch; focus moves between levels.
+- **S8c** routing by path, split in two (Fran 2026-10-12):
+  - **S8c-1** DONE 2026-10-12 (lib/vicus.worklog.md): one address. A
+    pane's spatium (component subtree, registry merge, Motus.spatium,
+    dimissio) is its branch path "pictor:1_dextrum_pictor", no longer
+    the bare id; pictor/scriba `focatum_est` and scriba's page lookup
+    compare with `ramus.via`. Behaviour unchanged at depth 1; tests
+    that hard-coded ids as namespaces now say the path.
+  - **S8c-2** nested routing (header text to Fran first): registry
+    merge keeps entries that already carry a spatium; focus chain from
+    the pane branch down to the innermost focused branch (focus,
+    focus_acervus, Motus.ramus/spatium); `insula_ramus_ex_via`;
+    kinetic slot follows the innermost branch (scoped to the toy).
+    Test: toy widget three deep gets keys/clicks with its branch;
+    focus moves between levels.
 - **S8d** measure: park 010 table + nested rows, `sample`; then judge
   touched branches only vs the persistent-tree arc.
 

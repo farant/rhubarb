@@ -154,7 +154,7 @@ s32 principale (vacuum)
     CREDO_VERUM(vicus_latus_focatum(v)
         == vicus_latus(vicus_activa(v), VICUS_DEXTRUM));
     CREDO_CHORDA_AEQUALIS_LITERIS(dispensator_motus(app.d)->spatium,
-        "3_dextrum_terminale");
+        "terminale:3_dextrum_terminale");
     CREDO_VERUM(index_continet(vol,
         "<latus genus=\"terminale\" id=\"3_dextrum_terminale\"/>"));
     terminale = vicus_latus(vicus_activa(v), VICUS_DEXTRUM)->montatio;

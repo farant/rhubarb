@@ -133,7 +133,7 @@ _probare_dimissionem (
         "palette.aperire", c->piscina));
     CREDO_NECESSE(mutare_ramum(&ramus, ponere, par));
     dispensator_recomponere(app.d);
-    app.d->motus.spatium = chorda_ex_literis("1_dextrum_pictor",
+    app.d->motus.spatium = chorda_ex_literis("pictor:1_dextrum_pictor",
         c->piscina);
     memset(&e, ZEPHYRUM, magnitudo(e));
     e.genus                  = EVENTUS_CLAVIS_DEPRESSUS;
