@@ -121,6 +121,13 @@ Each task follows the house cycle:
   minimal polynomial of 1 + sqrt2 recovered from the vector of its
   powers in Q(sqrt2) coordinates); relations among the 24 points of 2O
   include every coincident pair sum.
+  *(2026-10-13: landed, with Q accepted as well as Z: rows are
+  multiplied by their denominators' lcm, so T6 can pass 2O's exact
+  coordinates. Judged by relation, rank, reducedness and saturation
+  (Hermite membership) against a brute force and all 216 signed
+  pair-sum coincidences of 2O (rank-16 relation lattice). 7 plants
+  red, delta-ignored only after the composition with
+  reticulum_reduce was asserted.)*
 - **T5. Review** (independent reviewer with its own Python oracle),
   then fixes.
 - **T6. First consumer:** a knotapel demo of relation profiles of 2T,

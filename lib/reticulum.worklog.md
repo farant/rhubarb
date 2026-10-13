@@ -245,3 +245,61 @@ budget 3 does not and counts 2. This pins the documented node
 definition too.
 
 **Glossary.** `cartan` (Elie Cartan, Cartan matrices in the tests).
+
+## 2026-10-13 - T4: integer relations
+
+**Thin by design.** `reticulum_relationes` = `matrix_reticulum_nuclei`
+(Hermite with certificate, matrix.h v2: a basis of the FULL kernel
+lattice, so every integer relation is an integer combination, not only
+every rational one) -> transpose to rows -> T2's LLL at the requested
+delta. An empty kernel returns 0 x n (n = columns of a), not 0 x 0.
+
+**Scope addition: Q as well as Z.** Each row of a rational matrix is
+multiplied by the lcm of its denominators (the kernel is unchanged), so
+callers can pass exact coordinates with halves (2O's points, T6)
+without scaling by hand. The header's refusal list says "Z (relationes:
+Z or Q)". Every other ring is refused.
+
+**Tests: no relation oracle needed.** Four judgments:
+1. every row is a relation (a r^T = 0);
+2. n - rank(a) rows (Bareiss);
+3. reduced at the requested delta (T1's judge);
+4. SATURATED: every relation found independently lies in the output
+   lattice, by Hermite membership (Hermite of r stacked with v equals
+   Hermite of r plus a zero row).
+Independent relations: a brute force over [-2, 2]^n on 40 random
+matrices (3,126 relations), and the 2O catalog. The 24 points up to
+sign are embedded exactly in (Z + Z sqrt2)^4 -> Z^8, scaled by 2.
+Every signed pair sum that coincides with another, or with its
+negative, gives a relation: 216 in all, every one in the rank-16
+output lattice. Hand cases:
+- the minimal polynomial of sqrt2 + sqrt3 (t^4 - 10 t^2 + 1) from its
+  powers in the basis (1, sqrt2, sqrt3, sqrt6);
+- the powers 0..4 of 1 + sqrt2, whose shortest relation is
+  (0, 0, 1, 2, -1) = -t^2 (t^2 - 2t - 1), norm 6 (Python brute force),
+  found with T3's `reticulum_minimum` on the output;
+- Q inputs; no rows (Z^n entire); full rank; no columns.
+
+**My test bug, again an ordering artifact.** I pinned "172 equal pair
+sums" from Python, and C counted 166 (+50 opposite against Python's
+44). Both have the same point set, but C orders the 2T block
+differently. A signed pair (a < b, a's sign +) represents p_a + s p_b,
+so reordering turns some p + q into q + p and some p - q into
+-(q - p): the equal/opposite split depends on the order, the total
+(216) does not. Now the total is asserted. Lesson: before pinning a
+count from an oracle, ask whether it is invariant under the choices
+(order, sign representatives) that the two implementations make
+differently.
+
+**Plants: 7, all red, one only after a new test.** Kernel from
+`matrix_nucleus` (rational, not saturated: the sqrt2 + sqrt3 relation
+came back as a multiple); no LLL; Q refused; lcm of the first column
+only; kernel not transposed; empty kernel with 0 columns; delta
+ignored. The survivor was delta ignored: small random kernels reduced
+at 99/100 are almost always reduced at 1 too, so "reduced at delta"
+could not tell. Fix:
+- the composition is now asserted: the output equals
+  `reticulum_reduce(kernel^T, delta)`;
+- the regime is counted: the delta 3/4 and delta 1 outputs differ for
+  3 of the 40 random matrices, and the test asserts > 0 (the plant
+  makes them always equal).

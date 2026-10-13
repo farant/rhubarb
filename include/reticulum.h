@@ -22,10 +22,10 @@
  *
  * DELTA: parametrum Lovasz exactum, 1/4 < delta <= 1; NIHIL = 99/100.
  *
- * DEFECTUS: FALSUM si anulus non Z, vectores dependentes (basis) aut
- * forma non definita positiva, dimensiones discrepant, delta extra
- * fines; exitus tunc non tanguntur. reticulum_relationes (T4
- * consilii) nondum facta est et FALSUM semper reddit.
+ * DEFECTUS: FALSUM si anulus non Z (reticulum_relationes: Z aut Q),
+ * vectores dependentes (basis) aut forma non definita positiva,
+ * dimensiones discrepant, delta extra fines; exitus tunc non
+ * tanguntur.
  *
  * MEMORIA: temporaria in piscinis propriis, destructis; effecta SOLA in
  * piscina vocantis (reticulum_apex_officinarum metitur).
@@ -185,11 +185,15 @@ reticulum_minimum (
 
 
 /* ==================================================
- * Relationes integrae (consilium T4 - nondum: FALSUM)
+ * Relationes integrae
  * ================================================== */
 
-/* basis LLL-reducta reticuli {x in Z^n : a x = 0}, relationes inter
- * COLUMNAS a, lineae exitus */
+/* basis LLL-reducta (delta) reticuli TOTIUS {x in Z^n : a x = 0}:
+ * relationes integrae inter COLUMNAS a, lineae exitus (n - gradus(a)
+ * lineae; 0 x n si nullae). Omnis relatio integra combinatio integra
+ * linearum est (saturata, non solum relationes rationales). a super Z
+ * aut Q (Q: linea quaeque per denominatores multiplicatur, nucleus
+ * idem). Relationes brevissimae: reticulum_enumera super exitum. */
 b32
 reticulum_relationes (
               Matrix  a,

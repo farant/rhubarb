@@ -1483,8 +1483,70 @@ reticulum_minimum (
 
 
 /* ==================================================
- * Nondum facta (consilium T4): FALSUM
+ * Relationes integrae
+ *
+ * Reticulum {x in Z^n : a x = 0}: basis eius (matrix_reticulum_nuclei,
+ * Hermite cum certificato - omnis relatio integra combinatio integra
+ * est, non solum relationes rationales), in lineas transposita, deinde
+ * LLL. Super Q: linea quaeque per communem multiplicem denominatorum
+ * multiplicatur - nucleus idem.
  * ================================================== */
+
+/* a super Q -> matrix super Z eodem nucleo; a super Z redditur */
+interior b32
+_integra_lineis (
+      Matrix  a,
+     Piscina* opus,
+      Matrix* exitus)
+{
+    constans Fractio* f;
+              Matrix  z;
+              Magnus  multiplex;
+              Magnus  d;
+              Magnus  x;
+                 i32  i;
+                 i32  j;
+
+    si (matrix_anulus(a) == &ANULUS_INTEGRORUM)
+    {
+        *exitus = a;
+        redde VERUM;
+    }
+    si (   matrix_anulus(a) != &ANULUS_RATIONALIUM
+        || !matrix_nulla(&ANULUS_INTEGRORUM, matrix_lineae(a),
+            matrix_columnae(a), opus, &z))
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < matrix_lineae(a); i++)
+    {
+        multiplex = magnus_ex_s64(I);
+        per (j = ZEPHYRUM; j < matrix_columnae(a); j++)
+        {
+            f = (constans Fractio*)matrix_elementum(a, i, j);
+            d = fractio_denominator(*f);
+            /* mcm(m, d) = m d / mcd(m, d) */
+            si (!_divide_exacte(magnus_multiplica(multiplex, d, opus),
+                magnus_divisor_communis(multiplex, d, opus), opus,
+                &multiplex))
+            {
+                redde FALSUM;
+            }
+        }
+        per (j = ZEPHYRUM; j < matrix_columnae(a); j++)
+        {
+            f = (constans Fractio*)matrix_elementum(a, i, j);
+            si (!_divide_exacte(magnus_multiplica(fractio_numerator(*f),
+                multiplex, opus), fractio_denominator(*f), opus, &x))
+            {
+                redde FALSUM;
+            }
+            matrix_pone(&z, i, j, &x);
+        }
+    }
+    *exitus = z;
+    redde VERUM;
+}
 
 b32
 reticulum_relationes (
@@ -1493,9 +1555,39 @@ reticulum_relationes (
              Piscina* piscina,
               Matrix* exitus)
 {
-    (vacuum)a;
-    (vacuum)delta;
-    (vacuum)piscina;
-    (vacuum)exitus;
-    redde FALSUM;
+    Piscina* opus;
+     Matrix  z;
+     Matrix  nucleus;
+     Matrix  lineae;
+     Matrix  reducta;
+    Fractio  dl;
+        b32  bene;
+
+    opus = _officina_aperi();
+    si (opus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    bene = _delta_para(delta, opus, &dl)
+        && _integra_lineis(a, opus, &z)
+        && matrix_reticulum_nuclei(z, opus, &nucleus)
+        && matrix_transposita(nucleus, opus, &lineae);
+    si (bene && matrix_lineae(lineae) == ZEPHYRUM)
+    {
+        bene = matrix_nulla(&ANULUS_INTEGRORUM, ZEPHYRUM,
+            matrix_columnae(a), piscina, &reducta);
+    }
+    alioquin si (bene)
+    {
+        /* reductio piscinam suam aperit; apex = maximus utriusque */
+        bene = _reduce_publicum(lineae, FALSUM, &dl, piscina, &reducta,
+            NIHIL, NIHIL);
+    }
+    _officina_claude(opus);
+    si (!bene)
+    {
+        redde FALSUM;
+    }
+    *exitus = reducta;
+    redde VERUM;
 }
