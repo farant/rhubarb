@@ -1,0 +1,15 @@
+<!-- css/aedificatio.stml - declarationes aedificationis css (dialectus
+     aedificatio, aedificatio.canon; bin/fabrica per fabrica.stml).
+     Cursores ad gradus T3 (2026-10-13): suita css ut compositum
+     probationes_css - quaeque probatio actio sua (clausura aedilis,
+     thesaurus, area, ambitus basis, vestigium suum), verdictum clavatum
+     iis quae legit. Ianua css/compile_probationes.sh et porta css per
+     'bin/fabrica probare probationes_css'; oraculum conversionis
+     tools/gradus_oraculum.sh css. -->
+<aedificatio>
+  <actio titulus="probationes_css" genus="iudicium">
+    <probationes_c exemplar="css/probationes/probatio_*.c"/>
+    <!-- aurum computus rescribere (COMPUTUS_SCRIBERE=1 cum causa) -->
+    <ambitus variabilis="COMPUTUS_SCRIBERE"/>
+  </actio>
+</aedificatio>

@@ -1124,6 +1124,12 @@ try:
           and '<actio titulus="probationes_toml" genus="iudicium">'
           in open(os.path.join(RADIX, 'toml', 'aedificatio.stml')).read(),
           'portae graduum: toml -> probationes_toml declaratum')
+    credo(silva.PORTAE_GRADUUM.get('css') == 'probationes_css'
+          and '<actio titulus="probationes_css" genus="iudicium">'
+          in open(os.path.join(RADIX, 'css', 'aedificatio.stml')).read()
+          and '<subsystema via="css"/>'
+          in open(os.path.join(RADIX, 'fabrica.stml')).read(),
+          'portae graduum: css -> probationes_css declaratum (cursores ad gradus T3)')
     # RESIDUA (fabrica-7 T7): 'prae' ANTE sanare, 'post' POST; sana
     # solum si omnes; residua fracta nominata (residua_<gradus>)
     ordo_log = os.path.join(T, 'residua_ordo.txt')
@@ -1336,6 +1342,24 @@ try:
     credo(False, 'probatio ignota levat')
 except silva.SilvaError as ex:
     credo('probatio ignota' in str(ex), 'probatio_suita: ignota nominata')
+# SUITAE GRADUUM (cursores ad gradus T3): suita conversa binarium in
+# area membri habet (build/fabrica/area/<c>/<m>/<m>), non <sub>/build/ -
+# ibi binaria cursoris veteris STALA manent (toml post T2)
+credo(silva._binarium_probationis('toml', 'probatio_toml_api')
+      == 'build/fabrica/area/probationes_toml/probatio_toml_api/probatio_toml_api'
+      and silva._binarium_probationis('css', 'probatio_css_arbor')
+      == 'build/fabrica/area/probationes_css/probatio_css_arbor/probatio_css_arbor'
+      and silva._binarium_probationis('radix', 'probatio_piscina')
+      == 'build/probationes/probatio_piscina',
+      'probatio_currere: suita conversa -> binarium in area membri')
+try:
+    c = silva.probatio_currere('probatio_css_arbor', aedificare=True)
+    credo(c.rc == 0 and c.suita == 'css'
+          and 'Conditio: OMNIA PRAETERIERUNT' in c.acta,
+          'probatio_currere: probatio css (gradus) aedificata per probare,'
+          ' cursa (rc=%s)' % c.rc)
+except silva.SilvaError as ex:
+    credo(False, 'probatio_currere: probatio css (gradus) - %s' % ex)
 # via binarii: scriptum rubrum fictum (exitus 1) - fracturae genericae
 scriptum = os.path.join(silva.RADIX, 'pythonica', '.cursus_ruber.tmp.sh')
 open(scriptum, 'w').write("#!/bin/sh\necho \"radix: $RHUBARB_RADIX\"\npwd\ncat <<'ACTA'\n"

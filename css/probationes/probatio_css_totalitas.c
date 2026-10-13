@@ -29,8 +29,9 @@
  * (01M1FAD8) - CREDO_RUIT_CUM eam FIGIT. Cum remedium veniat pinna
  * rubet, et in CREDO_NON_RUIT promovenda est.
  *
- * IN FRACTURA: fons peccans in css/build/totalitas_fractum.css
- * scribitur, ut reproductio vocamen unum sit.
+ * IN FRACTURA: fons peccans in $TMPDIR/totalitas_fractum.css (in
+ * gradu = area membri; sine TMPDIR css/build/) scribitur et via
+ * imprimitur, ut reproductio vocamen unum sit.
  */
 
 #include "latina.h"
@@ -163,10 +164,20 @@ _fractum_scribere (
     constans character* fons,
                    i32  mensura)
 {
-    character via[DXII];
-    FILE* f;
+              character  via[DXII];
+     constans character* tmp = getenv("TMPDIR");
+                   FILE* f;
 
-    sprintf(via, "%s/css/build/totalitas_fractum.css", RADIX_VIAE);
+    /* gradus (cursores ad gradus T3): scriptura extra aream membri
+     * vetita - TMPDIR membri est area ipsa */
+    si (tmp != NIHIL && tmp[0] != '\0' && strlen(tmp) < CD)
+    {
+        sprintf(via, "%s/totalitas_fractum.css", tmp);
+    }
+    alioquin
+    {
+        sprintf(via, "%s/css/build/totalitas_fractum.css", RADIX_VIAE);
+    }
     f = fopen(via, "wb");
     si (f == NIHIL)
     {

@@ -2773,3 +2773,39 @@ it is now one C command used by both the gate (T2) and humans.
   producers in `sana`) stayed GREEN: probare already exits 1 when a
   producer fails, so `and not productores` was dead code no test could
   see - removed; producers are only named in the fractures now.
+
+## 2026-10-13 - cursores ad gradus T3: css to steps
+
+- css was not a fabrica subsystem: new css/aedificatio.stml
+  (`probationes_css`, ambitus COMPUTUS_SCRIBERE) + `<subsystema
+  via="css"/>` in fabrica.stml. First heal 10/10 SANATUM (4 s); oracle
+  vs HEAD runner 10/10.
+- Out-of-area write: probatio_css_totalitas wrote its failing source to
+  css/build/ on failure; now $TMPDIR (= member area in a step), falling
+  back to css/build/ by hand. Path printed either way.
+- Hidden dependent again: css/computus.sh linked css/build/*.o -> own
+  closure (cursor_instrumentum_struere), checked on a real css file.
+- LATENT T2 BUG found: silva.probatio_currere located test binaries via
+  SUITAE '<sub>/build/%s' - for a converted suite that is the OLD
+  runner's binary, stale forever. New `_binarium_probationis`: converted
+  suites (in PORTAE_GRADUUM, radix excepted - compile_tests.sh still
+  builds build/probationes/) -> build/fabrica/area/<c>/<m>/<m>.
+  pythonica now runs probatio_currere('probatio_css_arbor',
+  aedificare=True) for real.
+- MEASURED, and not good for a small suite: old css runner warm 4.2 s;
+  probare warm 6.6 s; -vis 25 s. `sample` of a warm probare: ~4.8 of
+  ~6 s is setup over the WHOLE graph before any member - 
+  `_ordinare_per_locos` ~3.2 s (dependencies of all ~600 actions from
+  the read traces in build/fabrica.db) and `fabrica_gradus_explicare`
+  ~1.6 s (every composite expanded, radix's 256 members included). A
+  fixed floor of ~6 s per probare/sanare/iudicare call, whatever the
+  selection. Candidate fix: scope the cursus to the electa's upward
+  closure (and explain only the composites named). Not done in T3 -
+  raised with Fran.
+- Plants: css out of PORTAE_GRADUUM -> red (declared test). Binary path
+  back to css/build/ -> by hand red (FRACTA 1, path test); note the REAL
+  probatio_currere run of probatio_css_arbor stayed GREEN under that
+  plant - it ran the stale old binary, which is the bug itself: a run
+  cannot tell fresh from stale, the path assertion can. silva.planta
+  reported "porta cum planta non cucurrit (signum absens)" for this
+  plant twice, not explained; the by-hand run is the evidence.

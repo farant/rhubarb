@@ -16,4 +16,5 @@
   <subsystema via="tessera"/>
   <subsystema via="officina"/>
   <subsystema via="toml"/>
+  <subsystema via="css"/>
 </fabrica>

@@ -39,9 +39,16 @@ Mechanism first, then the pilots in rising difficulty (gen 3 -> 2 -> 1
   green and exposed a dead clause (removed).
 
 ### T3: css (gen 2 -> steps)
-- [ ] css/aedificatio.stml `probationes_css`; oracle vs HEAD runner
+- [x] css/aedificatio.stml `probationes_css`; oracle vs HEAD runner
   agrees; entry point; PORTAE_GRADUUM; measured cold/warm before and
   after; expedition row (rubric v3). Commit.
+  As built (2026-10-13): css registered as a subsystem in fabrica.stml;
+  oracle 10/10; totalitas failure write -> $TMPDIR; css/computus.sh own
+  closure; latent T2 bug fixed (silva.probatio_currere ran the OLD
+  runner's stale binary for converted suites -> `_binarium_probationis`).
+  Measured: old 4.2 s warm vs probare 6.6 s (~4.8 s fixed setup over the
+  whole graph: ordering ~3.2 s, composite expansion ~1.6 s) - raised
+  with Fran. Expedition row deferred to T6 (rubric v3).
 
 ### T4: md (gen 1 -> steps)
 - [ ] same as T3 for md (first jump straight from excubitor/mtime: hand

@@ -4,31 +4,15 @@
 #
 # usus: ./css/computus.sh <plagula.css> [-machina] [-iter N]
 #
-# Obiecta css/build/*.o poscit (./css/compile_probationes.sh primum) -
-# ut materia/oraculum_silvae_struere.sh; binaria probationum (sine .o) non nectit.
+# Instrumentum ex clausura SUA (tools/cursor_communis.sh, per thesaurum;
+# olim obiecta css/build/*.o quae cursor vetus struebat - cursores ad
+# gradus T3); binarium in css/build/computus.
 set -u
 CSS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 RADIX_DIR="$(cd "$CSS_DIR/.." && pwd)"
-MATERIA_DIR="$RADIX_DIR/materia"
-BUILD="$CSS_DIR/build"
-cd "$RADIX_DIR"
-source "$RADIX_DIR/tools/vexilla.sh"
-
-OBIECTA=$(ls "$BUILD"/*.o 2>/dev/null | grep -v -E "/probatio_")
-if [ -z "$OBIECTA" ]; then
-    echo "DEEST: css/build/*.o - curre ./css/compile_probationes.sh primum" >&2
-    exit 2
-fi
-BIN="$BUILD/computus"
-SRC="$CSS_DIR/instrumenta/computus.c"
-recens=""
-if [ -f "$BIN" ]; then
-    recens="$(find "$BUILD" -name '*.o' -newer "$BIN" 2>/dev/null | head -1)"
-fi
-if [ ! -f "$BIN" ] || ! [ "$BIN" -nt "$SRC" ] || [ -n "$recens" ]; then
-    echo "  [computus] css" >&2
-    clang "${VEXILLA_C89[@]}" -I"$RADIX_DIR/include" -I"$MATERIA_DIR/fontes" \
-        -I"$CSS_DIR/fontes" -I"$CSS_DIR/probationes" \
-        "$SRC" $OBIECTA -o "$BIN" || exit 1
-fi
-exec "$BIN" "$@"
+BUILD_DIR="$CSS_DIR/build"
+declare -a INCLUDE_FLAGS=("-I$RADIX_DIR/include" "-I$RADIX_DIR/materia/fontes" "-I$CSS_DIR/fontes")
+source "$RADIX_DIR/tools/cursor_communis.sh"
+cursor_instrumenta_parare >&2 || exit 1
+cursor_instrumentum_struere "$CSS_DIR/instrumenta/computus.c" "$BUILD_DIR/computus" >&2 || exit 1
+exec "$BUILD_DIR/computus" "$@"

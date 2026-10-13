@@ -1517,7 +1517,8 @@ PORTAE = {
               r'Tests Passed:|PROBATIONES: \d+/\d+'),
     'silva': (['./silva/compile_probationes.sh'],
               r'SILVA PROBATIONES: \d+/\d+ praeteritae'),
-    'css': (['./css/compile_probationes.sh'], r'CSS PROBATIONES: \d+/\d+'),
+    'css': (['./css/compile_probationes.sh'],
+            r'probationes_css: \d+/\d+ praeteritae'),
     'materia': (['./materia/compile_probationes.sh'],
                 r'MATERIA PROBATIONES: \d+/\d+'),
     'md': (['./md/compile_probationes.sh'], r'MD PROBATIONES: \d+/\d+'),
@@ -1826,6 +1827,7 @@ def porta(nomen, filtrum=None, radix=None, receptum=True, vis=False,
 # umbra, bin/fabrica absens; cursor conversus = ianua tenuis ipsa 'bin/fabrica
 # probare' vocans (cursores ad gradus), oraculum tools/gradus_oraculum.sh.
 PORTAE_GRADUUM = {'toml': 'probationes_toml',
+                  'css': 'probationes_css',
                   'radix': 'probationes_radicis'}
 # RESIDUA (fabrica-7 T7): quod porta PRAETER membra probat - portae
 # radix: 'prae' ANTE compositum (bibliothecae omnes, generare ->
@@ -3839,6 +3841,19 @@ Cursus = namedtuple('Cursus', 'nomen suita rc secunda acta fracturae partitio'
                     ' via_partitionis', defaults=(None,))
 
 
+def _binarium_probationis(suita, nomen):
+    """via binarii probationis (radici relativa). Suita CONVERSA (cursores
+    ad gradus: compositum in PORTAE_GRADUUM, cursor = ianua 'bin/fabrica
+    probare') binarium in area membri habet - <sub>/build/ binaria
+    cursoris veteris STALA servat. radix excipitur: compositum habet sed
+    compile_tests.sh (filtrum, aedificare) adhuc build/probationes/
+    struit."""
+    compositum = PORTAE_GRADUUM.get(suita)
+    if compositum is not None and suita != 'radix':
+        return 'build/fabrica/area/%s/%s/%s' % (compositum, nomen, nomen)
+    return SUITAE[suita][1] % nomen
+
+
 def probatio_suita(nomen):
     """suita cui probatio nominata pertinet (fons <dir>/<nomen>.c)"""
     for suita, (fontes, _) in SUITAE.items():
@@ -3922,7 +3937,7 @@ def _probatio_currere(nomen, aedificare, secunda, mora, tectum):
                 raise SilvaError('aedificatio %s fracta (%s)%s' % (
                     nomen, p.compendium,
                     relatio_fracturarum(p.fracturae) or '\n' + p.acta[-800:]))
-        binarium = os.path.join(RADIX, SUITAE[suita][1] % nomen)
+        binarium = os.path.join(RADIX, _binarium_probationis(suita, nomen))
         if not os.path.exists(binarium):
             raise SilvaError('binarium absens: %s (aedificare=True ut cursor'
                              ' suitae id aedificet)' % binarium)
