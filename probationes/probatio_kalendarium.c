@@ -19,6 +19,7 @@
 #include "figura.h"
 #include "mandatum.h"
 #include "thema.h"
+#include "exemplaria.h"
 #include "credo.h"
 #include <stdio.h>
 #include <string.h>
@@ -1308,6 +1309,90 @@ _probare_figuras_agendae (
     CREDO_VERUM(textus_ullus_continet(md, "Agenda: 2 open"));
 }
 
+/* rectangulum exemplari foci (ut scriba et pictor) ? */
+interior b32
+exemplar_foci_adest (
+    Mandata* md)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        constans Mandatum* y;
+
+        y = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   y->genus    == MANDATUM_RECTANGULUM
+            && y->exemplar == EXEMPLAR_PUNCTA_DUPLICIA_DISPERSA)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* rectangulum plenum COLOR_SUPERFICIES per fines radicis totos ? */
+interior b32
+superficies_tota_adest (
+     Mundus* x,
+    Mandata* md)
+{
+    Componens* radix;
+          i32  i;
+
+    radix = dispensator_arbor(x->d);
+    per (i = ZEPHYRUM; radix && i < xar_numerus(md->elementa); i++)
+    {
+        constans Mandatum* y;
+
+        y = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   y->genus          == MANDATUM_RECTANGULUM && y->impletum
+            && y->fines.latitudo == radix->fines.latitudo
+            && y->fines.altitudo == radix->fines.altitudo
+            && color_thematis_est(y->color, COLOR_SUPERFICIES))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* mensa (ut scriba et pictor): superficies circum calendarium,
+ * exemplar foci dum latus focatum; omnes visus intra marginem */
+interior vacuum
+_probare_mensam (
+    CredoContextus* c)
+{
+     Mundus* x;
+      Motus* motus;
+    Mandata* md;
+      Fines  f;
+
+    x = (Mundus*)c->datum;
+    thema_initiare();
+    CREDO_NECESSE(mundum_struere(x, c->piscina, "2026-10"));
+    motus           = dispensator_motus(x->d);
+    motus->spatium  = x->m.ramus.via;
+    dispensator_recomponere(x->d);
+    md = reddere(x, c->piscina);
+    CREDO_VERUM(exemplar_foci_adest(md));
+    CREDO_VERUM(superficies_tota_adest(x, md));
+    /* titulus et cellulae intra marginem */
+    f = fines_componentis(x, "titulus", c->piscina);
+    CREDO_VERUM(f.x > ZEPHYRUM && f.y > ZEPHYRUM);
+    f = fines_componentis(x, "2026-09-27", c->piscina);
+    CREDO_VERUM(f.x > ZEPHYRUM);
+    /* latus aliud focatum: superficies sine exemplari */
+    motus->spatium = chorda_ex_literis("scriba:alia", c->piscina);
+    dispensator_recomponere(x->d);
+    md = reddere(x, c->piscina);
+    CREDO_FALSUM(exemplar_foci_adest(md));
+    /* visus agendae et diei intra marginem */
+    CREDO_NECESSE(kalendarium_argumentum_ponere(&x->m, "agenda"));
+    dispensator_recomponere(x->d);
+    f = fines_componentis(x, "titulus", c->piscina);
+    CREDO_VERUM(f.x > ZEPHYRUM && f.y > ZEPHYRUM);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "montatio",     _probare_montationem,   mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
@@ -1337,6 +1422,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         mundum_purgare, NIHIL, NIHIL },
     { "figurae_agendae", _probare_figuras_agendae, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
+    { "mensa", _probare_mensam, mundum_parare, mundum_purgare, NIHIL,
+        NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

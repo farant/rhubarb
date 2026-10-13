@@ -8,6 +8,7 @@
 #include "color.h"
 #include "mandatum.h"
 #include "thema.h"
+#include "exemplaria.h"
 #include "scriba_documentum.h"   /* scriba_effugere / scriba_solvere */
 #include "tabula_characterum.h"
 #include "vim.h"
@@ -25,6 +26,11 @@ hic_manens constans character actio_calendarii[] = "calendarium.agere";
 #define KALENDARIUM_SIGNA_MAXIMA     IV
 #define KALENDARIUM_TITULI_DIEI      XXVIII   /* lineae III + margo */
 #define KALENDARIUM_PROMPTA          CCLVI    /* octeti promptae */
+#define KALENDARIUM_MARGO_X          VI       /* mensa: cellula una, */
+#define KALENDARIUM_MARGO_Y          VIII     /* ut scriba et pictor */
+
+/* indicium foci: exemplar mensae focatae (ut scriba et pictor) */
+#define EXEMPLAR_FOCI EXEMPLAR_PUNCTA_DUPLICIA_DISPERSA
 
 /* contextus figurarum (privatus; figurae_ctx): liturgia semel creata */
 nomen structura {
@@ -1516,8 +1522,25 @@ figura_tabulae (
 
     (vacuum)thema;
     contextus = (KalendariumFigurae*)ctx;
+    /* mensa: superficies, exemplar foci, fundus intra marginem */
     rectangulum(md, ZEPHYRUM, ZEPHYRUM, c->fines.latitudo,
-        c->fines.altitudo, color_thematis(COLOR_BACKGROUND), VERUM);
+        c->fines.altitudo, color_thematis(COLOR_SUPERFICIES), VERUM);
+    si (chorda_aequalis_literis(c->titulus, "focatum"))
+    {
+        Fines f;
+
+        f.x         = ZEPHYRUM;
+        f.y         = ZEPHYRUM;
+        f.latitudo  = c->fines.latitudo;
+        f.altitudo  = c->fines.altitudo;
+        mandata_rectangulum_exemplar(md, f,
+            color_thematis(COLOR_BORDER),
+            EXEMPLAR_FOCI);
+    }
+    rectangulum(md, KALENDARIUM_MARGO_X, KALENDARIUM_MARGO_Y,
+        c->fines.latitudo - II * KALENDARIUM_MARGO_X, c->fines.altitudo
+        - II * KALENDARIUM_MARGO_Y, color_thematis(COLOR_BACKGROUND),
+        VERUM);
     si (!contextus || !contextus->m)
     {
         redde;
@@ -2044,57 +2067,24 @@ agendam_componere (
     }
 }
 
-/* <componens/> <purus/> */
-Componens*
-kalendarium_componere (
-     InsulaRepositorium* repo,
-         constans Motus* motus,
+/* visus mensis: titulus et cellulae XLII */
+interior vacuum
+mensem_componere (
+    KalendariumMontatio* m,
+              Componens* radix,
                 Piscina* piscina,
     InternamentumChorda* intern,
-                 vacuum* ctx)
+                    s32  latitudo,
+                    s32  altitudo)
 {
-    KalendariumMontatio* m;
-              Componens* radix;
               Componens* cellula;
                    Dies  electus;
                    Dies  initium;
                    Dies  dies;
-                    s32  latitudo;
-                    s32  altitudo;
                     s32  lat_cellulae;
                     s32  alt_cellulae;
                     i32  k;
 
-    (vacuum)repo;
-    (vacuum)motus;
-    m = (KalendariumMontatio*)ctx;
-    si (!m)
-    {
-        redde NIHIL;
-    }
-    latitudo  = attributum_s32(&m->ramus, "superficies_latitudo",
-        KALENDARIUM_LATITUDO);
-    altitudo  = attributum_s32(&m->ramus, "superficies_altitudo",
-        KALENDARIUM_ALTITUDO);
-    radix = nodus(piscina, intern, "kalendarium", PARTES_TABULA,
-        ZEPHYRUM, ZEPHYRUM, latitudo, altitudo);
-    si (!radix)
-    {
-        redde NIHIL;
-    }
-    componens_ponere_focusabilis(radix, VERUM);
-    componens_ponere_actio(radix, actio_calendarii);
-    si (visus_agendae(m))
-    {
-        agendam_componere(m, radix, piscina, intern, latitudo,
-            altitudo);
-        redde radix;
-    }
-    si (visus_diei(m))
-    {
-        diem_componere(m, radix, piscina, intern, latitudo, altitudo);
-        redde radix;
-    }
     componens_addere_liberum(radix, nodus(piscina, intern, "titulus",
         PARTES_TITULUS, ZEPHYRUM, ZEPHYRUM, latitudo,
         KALENDARIUM_TITULI_ALTITUDO));
@@ -2120,5 +2110,92 @@ kalendarium_componere (
             componens_addere_liberum(radix, cellula);
         }
     }
+}
+
+/* liberi radicis intra marginem mensae */
+interior vacuum
+liberos_movere (
+     Componens* radix,
+           s32  dx,
+           s32  dy)
+{
+     Componens* l;
+         Fines  f;
+           i32  i;
+
+    per (i = ZEPHYRUM; i < componens_numerus_liberorum(radix); i++)
+    {
+        l    = componens_liberum(radix, i);
+        f    = l->fines;
+        f.x  += dx;
+        f.y  += dy;
+        componens_ponere_fines(l, f);
+    }
+}
+
+/* indicium foci (ut scriba): sine Motu aut ramo radicis semper; in
+ * vico spatium Motus = via rami */
+interior b32
+focatum_est (
+    constans Motus* motus,
+       InsulaRamus  ramus)
+{
+    redde !motus || chorda_vacua(ramus.via)
+        || chorda_aequalis(motus->spatium, ramus.via);
+}
+
+/* <componens/> <purus/> */
+Componens*
+kalendarium_componere (
+     InsulaRepositorium* repo,
+         constans Motus* motus,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                 vacuum* ctx)
+{
+    KalendariumMontatio* m;
+              Componens* radix;
+                    s32  latitudo;
+                    s32  altitudo;
+
+    (vacuum)repo;
+    m = (KalendariumMontatio*)ctx;
+    si (!m)
+    {
+        redde NIHIL;
+    }
+    latitudo  = attributum_s32(&m->ramus, "superficies_latitudo",
+        KALENDARIUM_LATITUDO);
+    altitudo  = attributum_s32(&m->ramus, "superficies_altitudo",
+        KALENDARIUM_ALTITUDO);
+    radix = nodus(piscina, intern, "kalendarium", PARTES_TABULA,
+        ZEPHYRUM, ZEPHYRUM, latitudo, altitudo);
+    si (!radix)
+    {
+        redde NIHIL;
+    }
+    componens_ponere_focusabilis(radix, VERUM);
+    componens_ponere_actio(radix, actio_calendarii);
+    si (focatum_est(motus, m->ramus))
+    {
+        componens_ponere_titulum(radix, "focatum");
+    }
+    /* visus intra mensam: area interior, deinde liberi moventur */
+    latitudo -= II * KALENDARIUM_MARGO_X;
+    altitudo -= II * KALENDARIUM_MARGO_Y;
+    si (visus_agendae(m))
+    {
+        agendam_componere(m, radix, piscina, intern, latitudo,
+            altitudo);
+    }
+    alioquin si (visus_diei(m))
+    {
+        diem_componere(m, radix, piscina, intern, latitudo, altitudo);
+    }
+    alioquin
+    {
+        mensem_componere(m, radix, piscina, intern, latitudo, altitudo);
+    }
+    liberos_movere(radix, KALENDARIUM_MARGO_X, KALENDARIUM_MARGO_Y);
     redde radix;
 }

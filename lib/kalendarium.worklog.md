@@ -255,3 +255,25 @@ looked cramped against the pane edge).
 
 Plant: agenda branch of `figura_tituli` disabled -> red at the header
 assertion.
+
+## 2026-10-13 — mensa: focus border like scriba and pictor
+
+Fran asked for the lighter inset border that changes texture on focus.
+Scriba and pictor do it with a "mensa": a component filling the pane in
+COLOR_SUPERFICIES, titled "focatum" when `motus->spatium == ramus.via`,
+whose figure overlays EXEMPLAR_PUNCTA_DUPLICIA_DISPERSA; the page sits
+one cell in. The calendarium had no wrapper component, so the root
+plays the mensa: it keeps the full pane size, the views are composed
+for the inner area (pane minus 6px/8px each side - one scriba cell) and
+`liberos_movere` shifts every child by the margin afterwards. The root
+figure paints surface, focus pattern, then COLOR_BACKGROUND inset. No
+tree change: ids, actions and hit-testing are as before, all old tests
+green unchanged. Month composition moved into `mensem_componere` so all
+three views share the one exit.
+
+`focatum_est` and the EXEMPLAR_FOCI macro are now copied THREE times
+(scriba_figurae/componentia, pictor_figurae/componentia, here). Rule of
+three: a candidate for a shared home (exemplaria.h or a small "mensa"
+helper in the widget layer) - asked Fran, not done.
+
+Plant: focatum never set -> red.

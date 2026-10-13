@@ -15,6 +15,12 @@
  * quarum id = dies ISO ("2026-10-14"), actio eadem. Cellula prima =
  * dominica ante aut in die I mensis electi.
  *
+ * MENSA (ut scriba et pictor): radix totum latus tenet, superficies
+ * colore COLOR_SUPERFICIES et, dum latus focatum est (titulus radicis
+ * "focatum"), exemplar foci; visus omnes intra marginem (VI x VIII
+ * pixela, cellula una) componuntur - fines liberorum in spatio
+ * radicis margine includunt.
+ *
  * FIGURAE (A2b; registrum montationis, spatium lateris): tabula =
  * fundus ET cellulae omnes - figura una, dies liturgici et signa
  * semel per quadrum computantur (cellulae ipsae figuram non habent;
