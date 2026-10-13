@@ -174,6 +174,9 @@ cuboctahedral axes give equal |dot| products. Rounding of noise of order
 - **D84 (audited by D124):**
   - 12.8% of its 21M cell decisions are exact ties. Every float decision
     lies in the exact tie set, so no float error proper.
+    *(Correction 2026-10-13, KC 22.5: the 12.8% are the ties that floats
+    resolve differently from the exact rule; ties overall are at least a
+    fifth of all decisions.)*
   - The recorded capacity claims (non-null XOR6, null-only XOR6, "worse
     than random") are not reproduced even by D84's own code here, and are
     false exactly: non-null max XOR8, null-only 0.

@@ -14,14 +14,19 @@ claims carry objections (`N.obj.1`) with replies. Cite a claim as
 `KC 21.4`.
 
 **Addresses never change.** A new claim is appended after the last
-sibling. A claim that turns out wrong is never deleted: change its
-grade and add a child that says why. Every future audit updates this
-file in the same commit as its correction notes.
+sibling, even where logical order suffers (a new top-level question
+sits in its part with a "logically follows" note). A claim that turns
+out wrong is never deleted: change its grade and add a child that says
+why. Every future audit updates this file in the same commit as its
+correction notes.
 
 **Negative results are claims too.** A "No," answer carries a grade
 like any other. `[proved]` or `[exact]` means the thing does not
 exist. `[exact-search]` means the search found none, and the bounds are
 stated.
+
+A node that only summarizes other nodes carries no grade of its own:
+its strength is that of the nodes it cites.
 
 ### Grades
 
@@ -45,9 +50,38 @@ stated.
 |---|---|
 | KC | this file, `knotapel/claims.md` |
 | Dn | demo n: `demo_n_*/findings.md` (audits) or `main.c` (as built) |
-| KR | `docs/knotapel.html`, "Notes from this reading" (2026-10-03), cited by note title |
+| KR n | `docs/knotapel.html`, "Notes from this reading" (2026-10-03), note n of its numbered list |
 | AA | the archived atlas, `archived-analysis/atlas/` |
 | XL | `explorers-log.md` (the synthesis of 2026-10-13 is at its end) |
+
+### Proposed audits
+
+Each is a desideratum in the tabularium, region "knotapel research",
+ranked by how much it bears on KC 47.
+
+| | ledger | settles | question |
+|---|---|---|---|
+| P1 | …E72XG3 | 47, 48, 19.7 | group catalogs against knot-free point sets under one exact activation |
+| P2 | …5BB3SQ | 18.2, 47.obj.1, 49 | is D118's Q8-coset characterization geometric or group-built? |
+| P3 | …S0E97V | 47.1.1, 53.4 | are XOR verdicts constant on knot classes? is D66's representation the TL one? |
+| P4 | …JYSRSC | 9 | exact D29 forward DKC against determinant-star and random-phase nulls |
+| P5 | …DHY1TG | 11, 14 | exact D50/D63 sector search with nulls and both boundary conventions |
+| P6 | …9ZQ5E1 | 22.6 | all 1,307,504 15-subsets of 2O, exactly |
+| P7 | …6DD3NK | 40, 50 | exact Temperley–Lieb radical audit, n ≤ 10 |
+| P8 | …NPCP6E | 51, 26.3.1 | beyond-greedy XOR14 search at ζ₁₂ (low priority) |
+| P9 | …6AED71 | 33 | D89–D93 |
+| P10 | …G9DPA5 | 41 | gauge-fixed b for D85, n = 4, 6, 8 |
+| P11 | …N4FWHD | 19.1 | independent oracle runs for D119 at N = 5–6 |
+
+### Revisions
+
+- **Review I (2026-10-13, before merge into main).** An independent
+  reviewer checked every node against its source: 8 high, 16 medium
+  and 15 low findings, all verified before acting. The main
+  correction: catalog entries are not knot invariants, and the ζ₁₂
+  catalogs are not braid images at all (KC 53). Nodes were corrected
+  in place and new nodes appended; no address was removed or
+  renumbered.
 
 ## Part I. Definitions
 
@@ -58,18 +92,32 @@ stated.
      values in Z[zeta_n], or unit quaternions taken mod sign.
      [definition]
 1.2. Its order matters to any search that keeps only its first
-     winners (see 26.2).
+     winners (see 27.2, 45.1).
 
 2. What does it mean for weights to compute a Boolean function?
-2.1. Each input bit selects a signed weight; the neuron adds them, and
-     an activation maps the sum to a cell. The weights compute f if no
-     cell receives sums with both values of f. [definition]
-2.2. A cell is a sector of the sum's angle (k sectors), crossed in the
-     quaternion demos with the nearest axis of an axis table (Voronoi).
+2.1. Each input bit selects or signs a weight, the neuron combines
+     them (see 2.4), an activation maps the result to a cell, and the
+     cells' labels give the output (see 2.5). [definition]
+2.2. A cell is a sector of the sum's angle (k sectors), crossed in
+     most quaternion demos with the nearest axis of an axis table.
      [definition]
-2.3. XOR2n with n weights: in the +-q encoding each weight contributes
-     +q, -q or 0 for its two bits, and the target is the parity of
-     all 2n bits. [definition]
+2.3. Paired +-q encoding (D66, D79-D87, D92, D118, D124, D125): each
+     weight contributes +q, -q or 0 for its two bits, so n weights
+     read 2n bits, and XOR2n is the parity of all 2n. [definition]
+2.4. Four encodings occur. [definition]
+2.4.1. Inclusion, z = sum of x_i w_i (D29, D48, D50, D57, D63-D65).
+2.4.2. Multiplicative, z = product of w_i^(x_i) (D55, D56, D61,
+       D62).
+2.4.3. Signed, one weight per bit, S = sum of +-q_i (D94-D97, D106,
+       D119-D123); there N counts both bits and weights.
+2.4.4. Paired +-q (see 2.3).
+2.5. Two labeling regimes. Up to D64 the labels are fixed (sector
+     index mod 2, or a fixed readout such as the split sigmoid). From
+     D65 on they are free: the weights compute f if no cell receives
+     both values of f, so the activation is a lookup table. [definition]
+     (KR 35)
+2.6. D66 and D118 use Voronoi cells: the nearest catalog element (the
+     24-cell Voronoi), plus a cell for the zero sum. [definition]
 
 3. Which cell does a sum on a boundary land in?
 3.1. Exact rule: the demo's own formula evaluated exactly (sector by
@@ -82,16 +130,17 @@ stated.
        half-angles 90 degrees): each sum can then take its own
        parity's side. (see 21.5, 22.2.1)
 3.4. Float: the demo's double-precision code. At an exact tie its
-     answer is a rounding accident. (see 40.1)
+     answer is a rounding accident. (see 43.1)
 
 4. What is capacity?
 4.1. The largest XOR level reached, and the counts of winning sets,
      for a given catalog, activation, tie rule and search. [definition]
 4.1.1. So capacity is never a property of the catalog alone.
 4.2. A search is exhaustive if it tests every weight set of a size,
-     and greedy if it extends a bounded list of winners (D81, D82,
-     D87: triples from the first 100 entries, 32 winners per level,
-     at most 6 weights). [definition]
+     and greedy if it extends a bounded list of winners: D81, D82 and
+     D87 take triples from the first 100 entries, keep 32 winners per
+     level and stop at 6 weights; D79 keeps 1,024 winners and its
+     XOR12 search stops at 50; D84 keeps its first 32. [definition]
 ```
 
 ## Part II. The bracket and its catalogs
@@ -101,8 +150,10 @@ stated.
 5.1. Yes, where checked. All 87,890 braids of D29's enumeration agree
      with a second exact route (symbolic delta in polynomium,
      evaluated in cyclotomia). [exact] (D117 Part A)
-5.2. D29's product table equals Z[zeta_8] multiplication. [exact]
-     (D117 Part A)
+5.2. D29's multiplication table agrees with Z[zeta_8] multiplication
+     on 10,000 random pairs. [exact] (D117 Part A)
+5.2.1. The table is bilinear, so checking its 16 basis products would
+       make this complete.
 5.3. The other demos' hand-written rings (Cyc16, Cyc5, Cyc24, 3x3
      matrices, quaternion tables) were not compared with the house
      library. [unaudited] (D117)
@@ -113,87 +164,191 @@ stated.
 6.1. No. 64 is the first 8,192 of 69,960 nonzero brackets
      (MAX_CATALOG). All 69,960 take 100 distinct values. [falls]
      (D117 Part A)
+6.2. Those 100 values lie over 30 determinants (1-45): each is a
+     determinant times a phase, an eight-pointed star of integers,
+     not a lattice. [exact] (D113)
 
 7. Are the early demos' named knots knots?
 7.1. Not all. sigma1 sigma2 sigma1, labelled the trefoil in D2, D3,
      D6 and D10, closes to a Hopf link with one stabilizing crossing.
-     [checked] (KR "Demo 10's knot table is mostly links")
+     [checked] (KR 1)
 7.2. D10's six-braid table is mostly links: only the figure-eight is
-     a knot. [checked] (KR, same note)
+     a knot. [checked] (KR 3)
 7.3. The three-strand "T(2,n)" entries of D11-D17 close to
-     two-component links. [checked] (KR, same notes)
+     two-component links. [checked] (KR 4)
 7.3.1. Results that compare entries with each other stand; results
        stated about torus knots are about these links.
 7.4. D1's printed f-polynomial is mis-normalized: the writhe sign does
-     not match the bracket's chirality. [checked] (KR "Demo 1's
-     printed f-polynomial is mis-normalized")
+     not match the bracket's chirality. [checked] (KR 2)
+7.5. The bracket is multiplicative under connected sum; D14's and
+     D16's contrary conclusions come from the Hopf-link label.
+     [checked] (KR 5, 8)
+7.6. Not every zero of the bracket is a zero of delta, and the
+     delta-exponent is not the Arf invariant. [checked] (KR 6, 9)
 
 8. Is the bracket at delta = 0 always axial (n times a power of A)?
 8.1. Recorded as verified on about 131,000 braids, with a three-step
-     proof sketch (D35, XL). [unaudited] (AA theorems.md)
+     proof sketch (D35, XL). [unaudited; superseded by 8.2] (AA
+     theorems.md)
+8.2. Yes. Every bracket of 151,559 braids (2 strands to length 12, 3
+     to length 8, 4 to length 6) is a monomial n zeta_8^k with |n| =
+     det(L), the determinant computed independently by reduced Burau.
+     [exact] (D113)
+8.2.1. This is classical: <L> = (-A^3)^w V_L(t) with t = A^-4 = -1,
+       and |V_L(-1)| = det(L).
+8.3. The bracket is 0 exactly when det(L) = 0; "delta = 0 detects
+     split links" is "split links have determinant 0". [exact] (D113;
+     KR 24)
+
+52. What do the bracket catalogs at the other roots of unity carry?
+    (logically follows 8)
+52.1. Classical invariants times a phase: at delta = 0 the
+      determinant (see 8.2), at delta = 1 (-1)^crossings (V = 1), at
+      delta = sqrt2 the Arf invariant and the component count, at
+      delta = sqrt3 |V| = sqrt3^d with d the mod-3 rank. [checked]
+      (KR 23, 24, 28)
+52.2. delta = phi (D58) is the first hard point: exact evaluation is
+      #P-hard there (Jaeger, Vertigan and Welsh). [checked] (KR 28)
+52.3. So until D58 every bracket catalog in the project was a
+      classical invariant times a phase. [checked] (KR 28)
+
+53. Which catalogs are images of the braid group?
+    (logically follows 52)
+53.1. At zeta_8, D66's generators (1+i)/sqrt2 and (1-k)/sqrt2 satisfy
+      aba = bab and generate 2O (see 17.1). Whether this hand-chosen
+      representation is projectively the Temperley-Lieb one at
+      A = e^(i5pi/4) is not established. [checked] (KR 34)
+53.2. The zeta_12 catalogs of D79-D87 and D125 are not braid images.
+      Their generators are rotations by one angle about perpendicular
+      axes, which satisfy aba = bab only at half-angle pi/4; at pi/6
+      they do not. [checked] (KR 41; D82 main.c, init_su2)
+53.2.1. So every zeta_12 result (Part V) is about a group generated
+        by two rotations, and none can bear on knots.
+53.3. D94's 2I generators (orders 6 and 10) are not conjugate, so
+      they do not represent the braid group; the braid-correct zeta_10
+      representation also has image 2I. [checked] (KR 41, 47)
+53.4. Even at zeta_8, an entry is an invariant of a braid word as
+      represented, not of a knot: sigma1 and sigma2 are conjugate and
+      close to the same link, yet have different axes and so
+      different cells. [checked] (KR 40)
+53.5. An entry's depth, writhe and framing belong to the first word
+      that produced it, not to the element: in a finite group many
+      words of different writhe give one element. [checked] (KR 43)
+53.6. Proposed audit P3 (ledger ...S0E97V): are verdicts constant on
+      knot classes, and is D66's representation the TL one? [open]
 ```
 
 ## Part III. Boolean functions from bracket weights
 
 ```text
 9. Do bracket values compute Boolean functions without training?
-9.1. Recorded yes: D29's catalog contains weights that compute XOR
-     (the forward DKC result). [unaudited]
-9.1.1. The bracket values themselves are exact (see 5.1); the search
-       over them ran in floats and was not re-run.
+9.1. Yes: D29's catalog contains weights that compute XOR with no
+     training (the forward DKC result). [checked] (KR 16)
+9.1.1. The bracket values are exact (see 5.1); the search was re-run
+       uncapped in floats in the 2026-10-03 reading, not in exact
+       arithmetic.
+9.2. Uncapped, 28,644 distinct triples work (10.9% of 262,144). D29's
+     "65,536 valid triples", "~35%" and "10,357" came from caps, and
+     its phase sweep has 72 angles, not 360. [checked] (KR 16)
+9.3. 64 points with the same magnitudes and random phases give 35,248
+     to 37,889 working triples (13.4-14.5%): that bracket values are
+     unusually good at XOR is not supported. [checked] (KR 16)
+9.3.1. The neuron is a soft XOR of two half-plane decisions, so it
+       computes XOR whenever Re and Im realize two different threshold
+       functions. [checked] (KR 16)
+9.4. Proposed audit P4 (ledger ...JYSRSC): the same comparison
+     exactly, over all 100 values. [open]
 
 10. Why is three-input parity unreachable with the split-sigmoid
     neuron (D48)?
 10.1. Because of the neuron, not the bracket. Its output is
       [Re z > 0] XOR [Im z > 0], the XOR of two threshold functions,
       and no pair of the 104 three-input threshold functions XORs to
-      parity. [checked] (KR "Demo 48's parity wall is the neuron's")
+      parity. [checked] (KR 19)
 10.1.1. So parity is unreachable for every weight set, before any
         bracket is computed.
 
 11. At what sector count does three-input parity first appear (D50)?
-11.1. At k = 6 for the bracket catalog. [unaudited] (D50)
-11.2. The threshold belongs to the activation. Null catalogs
-      (shuffled pairings, random magnitudes on the same directions,
-      random Z[zeta_8] elements, random phases) all first reach parity
-      at k = 6 and none below. [checked] (KR "Demo 50 against null
-      catalogs")
+11.1. At k = 6 for the bracket catalog; re-run, the counts for
+      k = 2..8 are 0 0 0 0 906 756 96. [checked] (KR 20)
+11.2. Null catalogs (shuffled pairings, random magnitudes on the same
+      directions, random Z[zeta_8] elements, random phases) also first
+      reach parity at k = 6 and none below. [checked] (KR 20)
 11.3. The bracket catalog behaves like a typical eight-direction star
-      of integers. [checked] (KR, same note)
+      of integers. [checked] (KR 20)
+11.4. k >= 2n is forced for any weights (inclusion encoding, no bias,
+      sectors read mod 2): n weights need n different odd sectors. So
+      an equal threshold cannot tell the bracket from a null.
+      [checked] (KR 31)
+11.5. Counts depend on the boundary convention (k = 6: 906 -> 1,002
+      when the sectors are rotated by -1e-9); thresholds do not.
+      [checked] (KR 32)
+11.6. Above k = 6 the counts do differ: the decline after k = 6
+      appears for the eight-direction catalogs (bracket, star,
+      shuffle), not for generic or random-phase ones. [checked]
+      (KR 20)
+11.7. Proposed audit P5 (ledger ...DHY1TG): the same search exactly,
+      with the nulls and both boundary conventions. [open]
 
 12. How many of the 13 NPN classes of three-input functions do
-    half-plane activations reach?
-12.1. 11 of 13; 0x06 and 0x1B are unreachable. Recorded as proved,
-      computationally at N = 360 and then analytically (D61, D62).
-      [unaudited]
-12.1.1. The proofs have not been re-checked.
+    half-plane activations reach, on the multiplicative encoding
+    z = w1^a w2^b w3^c?
+12.1. 11 of 13; 0x06 and 0x1B are unreachable. [checked] (D61, D62;
+      KR 30)
+12.1.1. KR 30 gives a complete argument (arrangement vertices on
+        (pi/12)Z^3, cell barycenters on (pi/48)Z^3), confirmed at
+        N = 96, 192, 384 and on 20 million random configurations.
+        D62's proof B is right once one missing case is added; its
+        proof A covers one case only.
+12.2. On the inclusion encoding, Re z > 0 is a perceptron with zero
+      threshold and reaches 5 of 13; the inclusion split sigmoid
+      reaches 12 of 13. [checked] (KR 27)
+12.3. "delta = sqrt2 strictly dominates delta = 0" (13 against 12 of
+      13) falls: it compared a multiplicative search with an inclusion
+      one, and within one encoding the two roots agree. [falls]
+      (KR 25, 27)
 
 13. Does the two-sector activation reach 12 of 13 classes (D56)?
 13.1. No. Exactly 11 of 13, including parity. [falls] (D117 Part B)
 13.1.1. Class 0x06's 3 solutions came from overflowed long products
         (92 of 729 weight triples overflow); exactly it has 0.
-13.2. D56's class totals and parity counts survive exactly under all
-      five activations; its per-class solution counts move under
-      every one. [exact] (D117 Part B)
+13.2. Under the other four activations D56's class totals survive
+      exactly (11 / 10 / 10 / 11), and its parity counts survive under
+      all five; per-class solution counts move under every one.
+      [exact] (D117 Part B)
 
 14. Are the multi-input parity ceilings sound (D63-D65)?
 14.1. The sets survive, but D63 and D64's ordered counts are a float
       zero-test artifact: 3,020 ordered XOR5 solutions in 27 sets,
       where permutation invariance requires 27 x 120 = 3,240. D65,
-      summing exactly, gets 3,240. [checked] (KR "Order of summation
-      changes the counts")
-14.2. The ceilings themselves (Z[zeta_8] parity ceiling n = 5; XOR4 at
-      k = 8; XOR5 at k = 15). [unaudited] (AA theorems.md)
+      summing exactly, gets 3,240. [checked] (KR 33)
+14.2. The ceilings themselves: with parity-labelled sectors no k in
+      2..16 gives XOR6 (D63-D65); with free labels XOR6 appears at
+      k = 24 with zero margin, and XOR7 at k = 91 (D65). [unaudited]
+      (AA theorems.md)
+14.2.1. The atlas conflicts with itself on XOR5: only at k = 15 (D63)
+        against k = 14 (D65).
+14.2.2. XOR5 at k = 15 is above the bound of 10 (see 11.4); the
+        ceiling of five belongs to the eight-ray, bounded-magnitude
+        catalog. [checked] (KR 31)
+14.3. Proposed audit P5 settles these too (see 11.7). [open]
 
 15. Does the "Barrington-Radical Principle" (D102) hold?
 15.1. No, as stated. Programs over abelian groups compute parity (over
-      Z/2); what solvable groups cannot do in bounded width is AND or
-      majority, so the implication is reversed. [checked] (KR "Abelian
-      groups compute parity")
+      Z/2), so the implication is reversed. [checked] (KR 53)
+15.1.1. What such groups provably cannot do: abelian and nilpotent
+        groups cannot compute AND in polynomial length
+        (Barrington-Straubing-Therien); for solvable groups this is
+        open. (literature, cited by review I; not checked here)
+15.2. These neurons add their weights rather than multiply them, so
+      Barrington's theorem, which is about products, does not apply
+      to them. [checked] (KR 47, 53)
 
 16. Does the parity-lock theorem (D92, +-q encoding) hold?
-16.1. Recorded as proved, with a written proof in
-      proofs/parity-lock-theorem.md. [unaudited]
+16.1. Yes: a written proof in proofs/parity-lock-theorem.md, parts
+      (a)-(e) checked by review I. [proved]
+16.1.1. Part (f) ("standard functions") is right read as symmetric
+        functions; "standard" is not defined there.
 ```
 
 ## Part IV. The zeta_8 catalog: the binary octahedral group 2O
@@ -205,16 +360,21 @@ stated.
       (D118 Part A)
 17.2. "The 24-cell is the braid image" falls. The 24-cell is the
       subgroup 2T; 2O is the 24-cell together with its dual. [falls]
-      (D118; KR "The group is the binary octahedral group")
+      (D118; KR 34)
 17.3. The catalog has exactly 13 rotation axes: 3 four-fold, 4
       three-fold, 6 two-fold. [exact] (D118 Part B)
 17.4. The 9 null entries (Re q = 0) are the 9 half-turns: 3 about
-      face axes, 6 about edge axes. [checked] (KR "The null entries
-      are the half-turns")
+      face axes, 6 about edge axes. [checked] (KR 44)
 17.4.1. So "null" and "non-null" are unions of conjugacy classes, not
         the radical and its quotient.
-17.5. The finiteness is classical: Jones's representations have
-      finite image at these roots of unity. [checked] (KR)
+17.5. A finite image at these roots is the classical picture: Jones's
+      representations are finite at the low-order roots and dense from
+      l = 5 on (Freedman, Larsen and Wang). [checked] (KR 34)
+17.5.1. That finiteness concerns the semisimple quotient; on the
+        Temperley-Lieb modules at delta = 0, sigma_i has infinite
+        order (D98).
+17.5.2. Whether D66's representation is that one is not established
+        (see 53.1).
 
 18. Which antipodal triples compute XOR6 with the 24-cell Voronoi
     activation (D66)?
@@ -223,33 +383,62 @@ stated.
 18.2. Under every tie resolution: exactly the 24 triples inside one
       coset of Q8 = {+-1, +-i, +-j, +-k}, which form one orbit under
       the group's symmetries. [exact] (D118)
+18.2.1. The catalog has 24 orthonormal frames; only the 6 that are Q8
+        cosets contain a robust triple, and the other 18 contain none.
+        So being a frame does not decide robustness. [exact] (D118)
 18.3. D66's 35 is the lowest-index tie rule, which 92 of the 96
       symmetry maps break, so it is not a property of the weights.
       [falls] (D118)
 18.4. "Beats the 6x6 geographic grid (3 winners)": the geographic
       cells were not recounted. [unaudited] (D118)
+18.5. The 1,928 non-orthogonal triples fail under every tie rule: a
+      pair sum is exactly equidistant from its own two members.
+      [exact] (D118)
+18.6. D66's "16 symmetry orbits" are classes of matching labelings,
+      not orbits: the 24 robust sets form one orbit. [exact] (D118)
+18.7. The activation is the catalog's own 24-cell Voronoi, a
+      partition centred on the weights' own group and so tuned to
+      them. [checked] (KR 35)
+18.8. Proposed audit P2 (ledger ...5BB3SQ): the same
+      characterization under group-free activations. [open]
 
 19. Does 2I compute better than zeta_8 at the same catalog size (D94)?
 19.1. Yes for XOR at N = 3-6, under every tie rule. At N = 6 the
       random-24 mean of 2I against zeta_8 is +82.7% (rule), +94.2%
       (robust), +37.2% (possible). [exact] (D119)
+19.1.1. The independent oracles cover N = 3, 4 (and N = 3 for all 60
+        of 2I); the N = 6 figures rest on main.c and D120's second
+        in-house exact layer, and 2I's is a mean over 10 sampled
+        subsets. Proposed audit P11 (ledger ...N4FWHD). [open]
 19.2. "2I wins at N = 7 (3.4x)" falls: D94 compared a scaled mean with
       a raw count. [falls] (D119 Part F)
 19.2.1. On one scale, N = 7 XOR is about even (0.97-1.12x), and
-        zeta_8 is ahead for AND at N = 7 and 8.
+        zeta_8 is ahead for AND at N = 7 and 8 (float counts on D94's
+        samples).
 19.3. "Solvability is the bottleneck" was refuted earlier with a Haar
-      control. [checked] (D119, citing KR notes 47-48)
+      control (see 19.7). [checked] (KR 47)
 19.4. D94's float counts are tie artifacts in both directions: the
       exact rule sometimes exceeds them. [exact] (D119)
+19.5. 2I has exactly 120 elements, 60 classes mod sign and 31 axes;
+      D94's float dedup was right. [exact] (D118 Part D)
+19.6. D94's 2I is not a braid image (see 53.3).
+19.7. With D94's activation, Haar-random unit quaternions beat 2I
+      subsets, which beat 2O: XOR at N = 6, 38,939 / 23,137 / 12,983;
+      at N = 7, 3,449 / 672 / 197. "The order is the order of
+      genericity." [checked] (KR 47, floats)
+19.8. 2I's first 24 at N = 8: D94's single XOR success is 0 under the
+      rule and robustly. [exact] (D119)
+19.9. Proposed audit P1 (ledger ...E72XG3): group catalogs against
+      knot-free point sets under one exact activation. [open]
 
 20. What do D95-D97 show about the pieces of zeta_8?
-20.1. Cell B (the six +-45 degree rotations about three orthogonal
-      axes) is 100% at every N under every resolution. [exact] (D121)
+20.1. Cell B (the six quarter-turns, half-angle 45 degrees, about
+      three orthogonal axes) is 100% at every N under every
+      resolution. [exact] (D121)
 20.2. COMM survives N = 7 (8 sets) and NON-COMM dies (0), under every
       resolution. [exact] (D121)
 20.2.1. COMM against NON-COMM is the 24-cell (2T) against its dual:
-        two geometries. [checked] (KR "Demo 95's splits are
-        geometric")
+        two geometries. [checked] (KR 48)
 20.3. B+C wins at every N, robustly: 96.7, 92.8, 71.7, 29.0%. [exact]
       (D121)
 20.4. A+B+C(+E) beats the whole catalog at every N under rule, robust
@@ -258,17 +447,27 @@ stated.
       robustly 15 of 126 sets (11.9%). [falls] (D121)
 20.6. "The optimal catalog is A+B+C" falls, in D96's own floats as
       well (B+C is higher at every N). [falls] (D121)
-20.7. Cell C at N = 6 "57%" is decided by ties: robust 4 of 28 (14%),
-      possible 28. [falls] (D121)
+20.7. Cell C at N = 6 is decided by ties: rule 16 of 28 (57%, as in
+      floats), robust 4 (14%), possible 28. [exact] (D121)
 20.8. 2I's first 12 beat zeta_8-COMM at N = 3-5, robustly (1.56,
       1.63, 1.98x). [exact] (D121)
+20.9. "Removing C hurts most at N = 3-5, B at N = 6" holds robustly.
+      [exact] (D121)
+20.10. D94 and D95 count the same table differently in floats (their
+       floats differ in the last bit at exact ties); exactly, the two
+       agree. [exact] (D121)
+20.11. zeta_8 N = 7 XOR, exhaustive: rule 606, robust 456, possible
+       2,777. [exact] (D121)
 
 21. Why does cell B compute parity?
-21.1. Weights with a common real part c give Re S = c(2k - N), so the
-      sum's real part records the Hamming weight, and parity is a
-      function of it. [checked] (KR "Why cell B computes parity")
-21.1.1. Half-turns have c = 0, so their sums carry no Hamming weight:
-        hence cells A and D compute nothing alone.
+21.1. In the signed encoding, weights with a common real part c give
+      Re S = c(2k - N): the sum's real part records the Hamming
+      weight, and parity is a function of it. [checked] (KR 51)
+21.1.1. Half-turns have c = 0, so their sums carry no Hamming weight
+        in Re S, and cells A and D alone compute nothing under the
+        rule or robustly (D121). Yet A+D computes 15 of 126 robustly
+        at N = 4 (see 20.5), so a zero real part is not the whole
+        story.
 21.2. By half-angle theta, cell B is 100% robust at every N on exactly
       two windows, (21.552, 33.355) and (38.794, 79.453) degrees, with
       closed-form ends arctan(c tan(j pi/24)). [exact] (D122)
@@ -278,8 +477,9 @@ stated.
         [falls] (D122)
 21.4. 45 degrees is not special: it lies on a breakpoint (u = 1), not
       at the plateau's midpoint. [exact] (D122)
-21.5. Total collapse at 90 degrees holds under each fixed tie rule
-      and robustly; "possible" is vacuous there. [exact] (D122)
+21.5. Total collapse at 90 degrees holds under each of the four
+      uniform tie rules (sector lower/upper x axis first/last) and
+      robustly; "possible" is vacuous there. [exact] (D122)
 21.6. D97's float sweep equals the exact rule at all 21 of its angles:
       the error was the reading, not the arithmetic. [exact] (D122,
       D123)
@@ -289,10 +489,12 @@ stated.
 22. Do the 9 null entries of zeta_8 carry capacity (D84)?
 22.1. No. The 15 non-null entries reach XOR8, as all 24 do, under the
       exact rule and robustly. [exact] (D124)
-22.2. The 9 null entries alone reach no XOR level under the rule or
-      robustly. [exact] (D124)
+22.2. With their own 9-axis table, the 9 null entries alone reach no
+      XOR level under the rule or robustly. [exact] (D124)
 22.2.1. Under "possible" they reach XOR14, because every null sum is a
         two-way tie: vacuity, not capability. (see 3.3.1)
+22.2.2. With the full 13-axis table, null-only reaches XOR6 with 4
+        sets, under the rule and robustly. [exact] (D124)
 22.3. Removing the nulls removes winners, not the maximum: XOR8 sets
       402 -> 106 (rule), 218 -> 36 (robust). [exact] (D124 Part D)
 22.4. D84 recorded "non-null XOR6, null-only XOR6, worse than a
@@ -300,9 +502,24 @@ stated.
 22.4.1. D84's own code prints XOR8 and 0 on every build tried; where
         the recorded figures came from is unknown. [not-reproduced]
         (D124)
-22.5. One cell decision in eight in D84's search is an exact tie
-      (2,686,124 of 20,965,173), and none is a real float error.
-      [exact] (D124 Part C)
+22.5. In D84's search, 2,686,124 of 20,965,173 cell decisions (12.8%)
+      are exact ties that the floats resolve differently from the
+      rule; none is a real float error. [exact] (D124 Part C)
+22.5.1. Ties overall are more: 3,977,481 null-sum ties, 1,395,665
+        axis ties and 4,285,855 non-null sector ties, so at least a
+        fifth of all decisions. (see 43.1)
+22.6. All 10,000 sampled random 15-subsets reach exactly XOR8 under
+      the rule, and the non-null subset equals that distribution; the
+      exhaustive check over all 1,307,504 has not been run. [exact]
+      (D124 Part E)
+22.6.1. Proposed audit P6 (ledger ...9ZQ5E1): all 1,307,504. [open]
+22.7. XOR8 winners under-use nulls: 0.746 per set against 1.500 for
+      random sets (ratio 0.50). [exact] (D124 Part F)
+22.7.1. D84's "nulls are specifically required" (0.79, from its first
+        32 winners) read a ratio below 1 the wrong way. [falls]
+22.8. The k = 1 "synergy" (null-only 0 + non-null 0, full 36) is an
+      activation-table confound; like for like, the synergy is the 24
+      mixed sets. [exact] (D124 Part F)
 
 23. Is there a zeta_8 / zeta_12 "regime transition" in null
     indispensability (D87)?
@@ -310,7 +527,7 @@ stated.
       as far as the search reaches (see 29.1). [falls] (D124, D125)
 ```
 
-## Part V. The zeta_12 catalog
+## Part V. The zeta_12 catalog (not a braid image: see 53.2)
 
 ```text
 24. Do the zeta_12 catalogs saturate at 512 directions (D79-D84)?
@@ -321,13 +538,29 @@ stated.
 24.3. "After round 7 directions saturate; XOR10 -> XOR12 needs finer
       angles, not more directions" falls: depth 7 adds 468 new
       directions, and depth 8 at least 1,068. [falls] (D117 Part F)
+24.4. These catalogs are not images of the braid group (see 53.2).
+      [checked] (KR 41)
+24.5. D82's round 8 is truncated by MAX_QCAT (1,804 of 2,304
+      elements); the full round adds 1,124 axes and depth 9 adds
+      2,156. [intervention] (D117 Part F)
+24.6. D84's zeta_12 census is 2,043 / 67 / 1,922 / 54 (total /
+      null-only / non-null-only / both), not 512 / 29 / 453 / 30.
+      [intervention] (D117 Part F)
 
 25. Does zeta_12 reach XOR12 (D79)?
-25.1. Yes. Exactly, rounds 6-8 of D82's catalog reach XOR12 under the
-      rule and robustly. [exact-search] (D125)
+25.1. Yes. Rounds 6-8 of D82's catalog contain XOR12 sets under the
+      rule and robustly, every stored winner re-decided by an
+      independent oracle (5,149 winners, 0 wrong). [exact] (D125)
+25.1.1. The maxima and counts come from the greedy search and are
+        [exact-search].
 25.2. D79's XOR10 = 124 at k = 8 is a cap: 214 at k = 6 with all 112
       axes of its 256-entry catalog, both extensions of a capped
       parent set. [falls] (D117 Part D)
+25.3. D79's XOR12 with the 4,096 catalog reproduces; "50+" is a stop
+      at 50. Uncapped, the smallest ladder k is 6 (12,264 cells),
+      against k = 8 (4,104 cells) capped, so the capped result is the
+      stronger statement, about a coarser activation. [intervention]
+      (D117 Part D)
 
 26. Does capacity grow as "max XOR = depth + 6" (D82)?
 26.1. The line fits rounds 0, 2, 4, 6 only. At odd rounds max XOR is
@@ -340,7 +573,7 @@ stated.
       XOR12 winners, with 512 axes and with all axes), the search
       finds no XOR14 at round 7 or 8. [exact-search] (D125)
 26.3.1. This bounds the search, not the catalog: an XOR14 set may
-        exist outside what it explores. (see 48)
+        exist outside what it explores. (see 51)
 26.4. D81's logarithmic law (0.62 XOR per doubling) is fitted to the
       same nine points and shares the ceiling; its extrapolation
       (XOR14 at about 38,000 entries) rests on it. [exact-search]
@@ -388,6 +621,10 @@ stated.
       (shallow 2,559). [intervention] (D117 Part C)
 30.1.1. D90's two "failed predictions" compared 2048 < 2048, its
         MAX_DISTINCT cap.
+30.2. D90's "73 distinct angles in 50,000 pairs, against 1,313"
+      counted only the first 2,048 pairs: uncapped 2,226 and 7,456.
+      The direction holds; the numbers do not. [intervention] (D117
+      Part C)
 
 31. Do D100's and D106's sign-hash counts describe the matrices?
 31.1. They describe the overflowing hash that ran. A wrapping hash
@@ -397,6 +634,13 @@ stated.
 31.2. D106's verdict, that pseudo-Anosov braids do not compute better,
       is unchanged under the intended hash. [intervention] (D117
       Part E)
+31.3. Under the intended hash AND3 = OR3 (320,265 each), as negation
+      symmetry requires; D106's "no gap above 3.7 points" is
+      hash-specific (6.6 and 7.3 points, favouring periodic braids).
+      [intervention] (D117 Part E)
+31.4. Burau at t = -1 is the bracket's own W_{4,2} representation, so
+      D106's entropy null is a property of the sign readout.
+      [checked] (KR 54)
 
 32. Does framing change zeta_12 capacity (D83)?
 32.1. Its bracket against Jones-normalized comparison (43 against 31
@@ -404,10 +648,17 @@ stated.
       mixed-writhe XOR12 winners go from 4/32 to 0/32. [intervention]
       (D117 Part F)
 32.2. Its exact recount is not done. [unaudited]
+32.3. "Framing" has no knot-level meaning here: D83's normalization
+      multiplies q by a rotation about one axis, while the Jones factor
+      (-A^3)^(-w) is a scalar, and writhe belongs to the first word,
+      not the element (see 53.5). [checked] (KR 43)
 
 33. Do D89-D93's results hold?
-33.1. They build on D82's depth law and "algebraic coherence" (see 26,
-      27) and have not been audited. [unaudited]
+33.1. D89, D91 and D93 build on D82's depth law and "algebraic
+      coherence" (see 26, 27) and have not been audited. D90 is partly
+      audited (see 30); D92's parity-lock does not depend on the depth
+      law (see 16). [unaudited]
+33.2. Proposed audit P9 (ledger ...6AED71). [open]
 ```
 
 ## Part VI. Construction words
@@ -429,21 +680,37 @@ stated.
 35.2. On honest polygons (legal moves only) every alternative of
       every knot is simple; D112's 50-100% self-intersection rates
       are artifacts. [exact] (D115)
+35.3. D112's reachability and stability fall: 6_3's out-degree 10 ->
+      5; its "universal core" holds in 11 of 20 trials, not 20; the
+      union is 9, not 118. [falls] (D114)
+35.4. "100% palindromic after the filter" certified nothing: exact
+      Alexander polynomials are palindromic by theorem, and D112's
+      wrong ones were palindromic too. [exact] (D114)
 
 36. What do honest construction-word spectra contain?
-36.1. Small, orderly spectra: the knot, its mirror, simpler knots,
-      and mostly unknots. [exact] (D115, D116)
+36.1. Typically small, orderly spectra: the knot, its mirror, simpler
+      knots, and mostly unknots. [exact] (D115, D116)
+36.1.1. Exceptions: 6_1 reaches 7_4 (det 15 > 9); one 4_1 polygon
+        (r17) reaches 5_2; one 6_3 polygon (+23) reaches 8_14; 8_18
+        reaches 8_20. (D115, D116)
 36.2. 7_2's 15-vertex polygon is the exception: 47 distinct Alexander
       polynomials, determinants up to 85, and 50 distinct prime knots
-      of the 13-crossing table, many of them non-alternating. [exact]
-      (D115, D116 Revisions II)
+      of the 13-crossing table (first candidate, up to mirror), many
+      of them non-alternating. [exact] (D115, D116 Revisions II)
 36.2.1. The spectrum depends on the polygon: over all 15
         fewest-vertex 6_3 polygons the core is {6_3, 3_1, 3_1*,
-        unknot}, union 18 classes. [exact] (D115)
-36.3. All 9,768 alternatives are classified: 5,084 proven unknots,
-      138 unknots by citation (Jones detects the unknot up to 24
-      crossings), and 4,546 named by the table. [exact] (D116
-      Revisions II)
+        unknot}, and the union is 17 named classes. [exact] (D115,
+        D116)
+36.3. Of the 9,768 alternatives, 5,084 are proven unknots and 4,546
+      are named by the table. [exact] (D116 Revisions II)
+36.3.1. 138 more are unknots by citation, not proof: Jones detects the
+        unknot up to 24 crossings (Tuzun and Sikora). (D116)
+36.3.2. A name means Alexander and Jones match a table knot; some are
+        ambiguous (8_16|10_156; 12n_468|13n_413|13n_2357), and sums of
+        three or more knots were not searched. (D116)
+36.4. Five of D112's braid knots (3_1, 5_1, 7_1, 7_3, 7_4) are
+      KnotInfo's mirror images: a convention, not an error. [exact]
+      (D116 Part A)
 
 37. Is D110's "complement chirality theorem" a fact about knots?
 37.1. No. It is true by construction: vertices 0, 1, 2 lie on the
@@ -455,13 +722,17 @@ stated.
       64 figure-eights, 384 unknots, 32 + 32 trefoils. [exact] (D114)
 38.2. Its "left-trefoil if b2 = 1" is right-handed by Jones: the names
       are swapped. [falls] (D114)
+38.3. D110's mirror test fails widely in its 64-bit arithmetic,
+      through overflow; with 128-bit integers it holds. [checked]
+      (KR 58)
 
 39. Do D111's statistics (det spectra, influence, complement closure,
     Hamming profiles) hold?
-39.1. No. They were computed on singular polygons with overflowing
-      arithmetic; the det spectra recomputed exactly collapse
+39.1. Partly. Its det spectra fall: recomputed exactly they collapse
       (6_3: 22 dets -> 5). [falls] (D114)
-39.1.1. The derived statistics were not recomputed.
+39.1.1. The derived statistics (influence, Hamming profiles) were not
+        recomputed: unsupported, not refuted. [unaudited] (D114)
+39.1.2. Complement closure is true by construction (see 37.1).
 ```
 
 ## Part VII. Temperley–Lieb algebra
@@ -473,24 +744,33 @@ stated.
       D51-D52), often citing known theory (Graham-Lehrer;
       Goodman-de la Harpe-Jones). [unaudited] (AA theorems.md)
 40.2. D51 and D52's tables follow from textbook cellular-algebra
-      formulas. [checked] (KR "Demos 51 and 52's tables follow from
-      textbook theory")
+      formulas: a thirty-line rule reproduces 27 of their 28 rows
+      (TL2(0): rad^2 is 0, where the rule gives 1). [checked] (KR 21)
+40.3. rad^2 = A/rad holds as bimodules, not as algebras (rad^2 times
+      rad^2 = 0), so the atlas's first "novel" result falls as stated.
+      [falls] (KR 22)
+40.4. "Every TL_n(0) admits exactly three orthogonal idempotents"
+      describes the search: TL7(0) has 35 primitive orthogonal
+      idempotents. [falls] (KR 22)
+40.5. Proposed audit P7 (ledger ...6DD3NK). [open]
 
 41. Is the indecomposability parameter b = -5/8 for dense polymers
     (D85)?
-41.1. Not established. [checked] (KR "Demo 85's b depends on the
-      gauge")
+41.1. Not established. [checked] (KR 45)
 41.1.1. The delta-form leaves b gauge-dependent: b = -2.5 - 2c^2
         along one kernel direction.
 41.1.2. The division by 4 is asserted, not derived.
 41.1.3. -5/8 is percolation's value; delta = 0 is dense polymers, and
         b is a limit over growing lattices, not one n = 4 value.
+41.2. Proposed audit P10 (ledger ...G9DPA5). [open]
 
 42. Do D101, D103 and D105 test simplicity correctly?
 42.1. No. They take the radical as the vectors killed by every e_i,
       which detects only copies of the one-dimensional
-      representation. [checked] (KR "'Simple' was tested the wrong
-      way")
+      representation. [checked] (KR 52)
+42.2. W_{6,2} and W_{8,2} are not simple: they have proper submodules
+      of dimension 4 and 14. [checked] (KR 52)
+42.3. D100's frozen radical exists for even n only. [checked] (KR 50)
 ```
 
 ## Part VIII. Method findings
@@ -498,18 +778,26 @@ stated.
 ```text
 43. Are exact ties rare in these catalogs?
 43.1. No, they are the norm. Every null sum lies on a sector boundary
-      at every even k. In D119, all 397,565,109 near-boundary sector
-      decisions and all 93,638,928 near-tie axis decisions were exact
-      ties. In D84's search one decision in eight is a tie. [exact]
-      (D119, D120, D124)
+      at every even k. In D119, every near-boundary sector decision
+      (397,565,109) and every near-tie axis decision (93,638,928) was
+      an exact tie. In D84's search ties are at least a fifth of all
+      cell decisions. [exact] (D119, D120, D124)
 43.2. So float verdicts are arbitrary exactly where the structure
       lives, and every capacity count should report rule, robust and
       possible. [interpretation]
+43.3. In D125's zeta_12 rule search, 19.3 M of 105 M cell decisions
+      needed the exact path, and 15.5 M of those were ties. [exact]
+      (D125)
 
-44. What was the dominant fault of the old demos?
-44.1. Silent caps (D29, D79-D84, D90), then long overflow (D56,
-      D111-D112), then float ties (D66, D94-D96, D84). (see 6.1, 24.1,
-      30.1.1, 13.1.1, 35.1.1, 18.3, 43.1)
+44. What faults did the old demos have?
+44.1. Silent caps (D29, D79-D84, D90), long and int overflow (D56,
+      D100, D106, D111-D112), float ties (D66, D84, D94-D96),
+      greedy-search artifacts (D82), mislabelled knots (D2-D17),
+      figures the code does not print (D84) and mixed scales (D94).
+      (see 6.1, 24.1, 30.1.1, 13.1.1, 31.1, 35.1.1, 18.3, 43.1, 27.2,
+      7.1, 22.4.1, 19.2)
+44.1.1. In the cyclotomic line, silent caps were the dominant fault.
+        (D117 Lessons)
 44.2. A cap can decide a test: D90's failures compared 2048 < 2048.
       (see 30.1.1)
 44.3. Recorded figures that the demo's code does not print are
@@ -522,49 +810,86 @@ stated.
 
 46. Do free symmetry checks catch faults?
 46.1. Yes. Permutation invariance (see 14.1), the AND/OR negation
-      symmetry (D117 Part E) and the group's symmetries (see 18.3)
-      would each have flagged a fault at no cost.
+      symmetry (see 31.3) and the group's symmetries (see 18.3) would
+      each have flagged a fault at no cost.
+46.2. The mirror pairing of construction words is another (see 37.1,
+      38.3).
 ```
 
 ## Part IX. Open questions
 
 ```text
 47. Is DKC capacity a property of the knots, or of the point set?
-47.1. Of the point set and the activation, as far as audited.
-      [interpretation] (XL synthesis 2026-10-13)
-47.1.1. Knot -> group element is classical: at zeta_8 the braid image
-        is the finite group 2O. (see 17.1, 17.5)
-47.1.2. Group element -> Boolean function is geometry: directions,
-        angles, and where exact ties fall. (see 18.2, 21.1, 43.1)
-47.1.3. Null catalogs reach parity at the same k as the bracket
-        catalog (see 11.2), and random 564-entry samples reach XOR12
-        as often as deep ones (see 27.2).
+47.1. Not of the knots, as far as the record goes; whether the group
+      structure helps or hurts against a fair null is open.
+      [interpretation] (XL synthesis 2026-10-13, corrected)
+47.1.1. There is no knot -> element map: an entry is an invariant of a
+        braid word as represented (see 53.4). The zeta_12 and D94 2I
+        catalogs are not braid images at all (see 53.2, 53.3), and
+        the bracket catalogs are classical invariants times a phase
+        (see 8.2, 52.3).
+47.1.2. The neurons add their weights, so a cell depends only on the
+        points, not on the group they generate (KR 47). Capacity then
+        follows from directions, angles and where exact ties fall
+        (see 18.2.1, 21.1, 43.1).
+47.1.3. The knot-free controls that exist point the same way: random
+        phases do at least as well as D29's brackets (see 9.3); null
+        catalogs differ from the bracket only through their directions
+        (see 11.6); Haar-random points beat 2I, which beats 2O, under
+        D94's activation (see 19.7, floats).
+47.1.4. Every audited activation table is built from the point set
+        itself (D66, D79-D84, D94; see 18.7, 22.2.2): a third
+        ingredient that any test must control.
 47.obj.1. Objection: the catalogs are not arbitrary point sets. The
           cleanest results (18.2: Q8 cosets) are group-theoretic, so
           the algebra matters.
-47.obj.1.1. Reply: the algebra matters through the geometry it
-            produces. Q8's cosets are orthonormal frames, and frames
-            are what the activation reads. Whether the braid origin
-            adds anything beyond the group has not been tested
-            (see 48).
+47.obj.1.1. Reply, in part: the neurons see points, not products (see
+            47.1.2). But being a frame does not decide robustness:
+            only the 6 frames that are Q8 cosets contain a robust
+            triple (see 18.2.1), and the activation is the group's own
+            Voronoi (see 18.7). Whether coset structure matters under
+            a group-free activation is untested (see 18.8).
 47.obj.2. Objection: no audit has tested a knot-specific prediction,
           so 47.1 rests on absence of evidence.
-47.obj.2.1. Reply: granted. That is why 47.1 is graded an
-            interpretation; 48 is the test that would decide it.
+47.obj.2.1. Reply: granted, and on catalogs whose entries are not knot
+            invariants no knot-specific test is possible (see 53.4).
+            What can be tested is whether group structure helps or
+            hurts against a matched null under a fixed activation
+            (see 48.1), and whether verdicts are constant on knot
+            classes (see 48.3).
 
 48. What experiment would decide 47?
-48.1. A matched null model: random point sets matched to a catalog on
-      distinct directions, distinct angles and tie structure, run
-      through the same activation and search. If capacity matches,
-      DKC reduces to geometry; if not, something is left to explain.
+48.1. A matched null under one fixed activation: group catalogs
+      against knot-free point sets (exact rational points on S^3; the
+      same axes with random angles; the same angles with random axes),
+      each judged with its own table, with a common group-built table
+      and with a group-free table, under rule, robust and possible,
+      with tie counts reported. Proposed audit P1 (ledger ...E72XG3).
       [open]
+48.1.1. Generic random points have no exact ties, so matching a
+        catalog's tie structure needs a construction, not a sample.
+48.2. Float nulls already exist (see 9.3, 11.6, 19.7) and generic
+      points do at least as well; the likely outcome is that group
+      structure lowers capacity, through ties and coincident sums.
+      [interpretation] (KR 42, 47)
+48.3. Are XOR verdicts constant on braids with the same closure?
+      Proposed audit P3 (ledger ...S0E97V); KR 40 predicts no. [open]
 
-49. Do robust XOR sets in 2T and 2I correspond to cosets of a normal
-    subgroup, as the Q8 cosets do in 2O (see 18.2)? [open]
+49. Do robust XOR sets in other groups follow a subgroup structure, as
+    Q8 cosets do in 2O (see 18.2)?
+49.1. In 2T, Q8 is normal of index 3: does the coset characterization
+      recur? [open]
+49.2. In 2I it cannot in the same form: 2I/{+-1} = A5 is simple, so 2I
+      has no other proper normal subgroup. Which structure, if any,
+      decides there? [open]
+49.3. Proposed audit P2 (ledger ...5BB3SQ). [open]
 
 50. Do the TL radical results survive an exact audit at a second size
     (see 40)? [open]
+50.1. Proposed audit P7 (ledger ...6DD3NK). [open]
 
 51. Is there an XOR14 set at zeta_12 depths 7-8 outside D82's greedy
     search (see 26.3.1)? [open]
+51.1. Proposed audit P8 (ledger ...NPCP6E), low priority: this catalog
+      is not a braid image (see 53.2). [open]
 ```
