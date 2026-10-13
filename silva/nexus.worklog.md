@@ -38,3 +38,40 @@ Fallback path (compilator forced off): exit 0, old behaviour (213 s
 with a full sweep), and the next normal run 1.48 s.
 A real code change in a file nexus links still triggers a full sweep,
 by design.
+
+## 2026-10-12 — column 8: storage class (`externus` / `staticus` / `-`)
+
+`build/nexus.tsv` rows now carry the symbol's storage class as an 8th
+column, from `SemanticaSymbolum.repositio` (`REPOSITIO_EXTERNA` →
+`externus`, `REPOSITIO_STATICA` → `staticus`, else `-`; macro rows `-`).
+The receptor `NexusOrdinesReceptor` got a `repositio` parameter; its two
+implementers are the sweep writer (`nexus_percursus.c`) and legatus's
+live overlay (`legatus.c`, which ignores it).
+
+Why: `sedes` means *declaration site*, not definition. `extern char
+**environ;` in `lib/processus_posix.c` is a `sedes` at depth 0 in a
+`lib/*.c` with no header, so `tools/corpus_infixum.sh` filed it as a
+file-private static, and the conflator renamed it to
+`environ_processus_posix`, breaking the link of D125's snapshot (first
+demo to pull `processus` into an amalgam). The rule now skips
+`externus` rows. Diff of `corpus.symbola.tsv`: exactly one row removed
+(`environ`).
+
+Readers checked before appending the column (all positional): the shell
+awk readers (corpus_infixum, lectiones_lint, renominare,
+officina/interpretare), nexus.c (reads 7 fields, skips the rest),
+tabularium.c (caps at 6), oratio vocabula (by index), silva.py and
+docs/derivare_bibliothecas.py (split + index), legatus.c (splits into 7;
+the 8th glues onto field 7 = depth, whose number parse stops at the
+tab — harmless; the legatus index takes its rows from the receptor
+anyway when live).
+
+Test: probatio_officina_capita section IV parses a four-line TU (extern,
+static, plain, function) and checks the column via a receptor. Plant
+(`externus` → `-`) red under the officina gate. The awk clause itself
+is covered end-to-end by knotapel/archive.sh on D125 (the snapshot only
+links with it), not by a gate.
+
+`corpus_infixum.sh` also regenerates the table when the script itself is
+newer than the table: a rule change used to leave the old table in
+place (it only watched headers and sources).

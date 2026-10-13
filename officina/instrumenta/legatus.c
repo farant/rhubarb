@@ -965,7 +965,8 @@ _superpositio_recipere (
     constans SilvaChorda* via,
       insignatus integer  linea,
       insignatus integer  columna,
-      insignatus integer  profunditas)
+      insignatus integer  profunditas,
+      constans character* repositio)
 {
                           Legatus* l = (Legatus*)datum;
                            chorda  titulus_c;
@@ -974,6 +975,7 @@ _superpositio_recipere (
     constans insignatus character* via_datum    = via->datum;
                insignatus integer  via_mensura  = via->mensura;
 
+    (vacuum)repositio;   /* indici legati non opus (nexus.tsv solum) */
     si (   via_mensura > II && via_datum[ZEPHYRUM] == '.'
         && via_datum[I] == '/')
     {

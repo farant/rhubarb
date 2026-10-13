@@ -35,7 +35,11 @@ source "$(dirname "${BASH_SOURCE[0]}")/capsula_radicis.sh"
 #     -amalgama ea per plagulam renominat (#define/#undef) ne fontes in
 #     plagula una collidant. Nexus linkage non novit: 'sine sede in
 #     capite' = staticum (functio publica sine prototypo capitis sub
-#     -Wmissing-prototypes non compilat).
+#     -Wmissing-prototypes non compilat). EXCEPTIO: declaratio
+#     'extern' (columna VIII nexus = externus) obiectum ALIBI definitum
+#     nominat - extern char **environ in lib/processus_posix.c est
+#     environ libc, non plagulae; renominatum nexum fregit (D125
+#     archivum, 2026-10-12). Non statica.
 # Regenerata cum caput aut fons quivis recentior.
 # RADICES CLIENTIUM materiae: caput et implementatio in eodem directorio
 # (toml Q12/Q13). Idem ordo et eadem nomina ac SILEX_RADICES_CLIENTIUM
@@ -45,7 +49,13 @@ RADICES_CLIENTIUM=(materia/fontes toml/fontes)
 corpus_symbola_generare () {
     local TABULA=corpus.symbola.tsv
     local RADIX="${CAPSULA_RADIX:-$(pwd)}"
-    if [ "${CAPSULA_SEMPER:-0}" != 1 ] && [ -f "$TABULA" ] && [ -z "$(find include "${RADICES_CLIENTIUM[@]}" -name '*.h' -newer "$TABULA" -print -quit 2>/dev/null)" ] \
+    # regula mutata (hoc scriptum non vetustius tabula) = tabula stala;
+    # '! [ tabula -nt scriptum ]': in aequalitate DENUO (nt-aequalitas)
+    local regula_nova=0
+    if ! [ "$TABULA" -nt "${BASH_SOURCE[0]}" ]; then
+        regula_nova=1
+    fi
+    if [ "${CAPSULA_SEMPER:-0}" != 1 ] && [ "$regula_nova" = 0 ] && [ -f "$TABULA" ] && [ -z "$(find include "${RADICES_CLIENTIUM[@]}" -name '*.h' -newer "$TABULA" -print -quit 2>/dev/null)" ] \
         && [ -z "$(find lib "${RADICES_CLIENTIUM[@]}" -name '*.c' -newer "$TABULA" -print -quit 2>/dev/null)" ]; then
         return 0
     fi
@@ -54,7 +64,7 @@ corpus_symbola_generare () {
     ( cd "$RADIX" && ./silva/nexus.sh -renovare > /dev/null 2>&1 ) || return 1
     [ -f "$RADIX/build/nexus.tsv" ] || return 1
     {
-        echo "# corpus.symbola.tsv GENERATUM a tools/corpus_infixum.sh (sedes include/*.h et <radix>/*.h = capita; sedes lib/*.c et <radix>/*.c profunditate 0 sine capite = statica; radices: ${RADICES_CLIENTIUM[*]}) e build/nexus.tsv - NE MANU EDITES"
+        echo "# corpus.symbola.tsv GENERATUM a tools/corpus_infixum.sh (sedes include/*.h et <radix>/*.h = capita; sedes lib/*.c et <radix>/*.c profunditate 0 sine capite, non externa = statica; radices: ${RADICES_CLIENTIUM[*]}) e build/nexus.tsv - NE MANU EDITES"
         awk -F'\t' -v radices="${RADICES_CLIENTIUM[*]}" '
             BEGIN { nr = split(radices, R, " ") }
             function in_radice(via, suffixum,    k) {
@@ -64,7 +74,7 @@ corpus_symbola_generare () {
                 return 0
             }
             $2=="sedes" && ($4 ~ /^include\// || in_radice($4, ".h")) { publica[$1]=1; print $1"\t"$3"\t"$4 }
-            $2=="sedes" && ($4 ~ /^lib\/[^\/]*\.c$/ || in_radice($4, ".c")) && $7=="0" \
+            $2=="sedes" && ($4 ~ /^lib\/[^\/]*\.c$/ || in_radice($4, ".c")) && $7=="0" && $8!="externus" \
                 && ($3=="functio" || $3=="variabile" || $3=="typedef" || $3=="constans" || $3=="macro") {
                 n=n+1; statica[n]=$1"\t"$3"\t"$4; nomina[n]=$1
             }

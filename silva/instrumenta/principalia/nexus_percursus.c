@@ -99,7 +99,8 @@ _ordinem_recipere (
     constans SilvaChorda* via,
       insignatus integer  linea,
       insignatus integer  columna,
-      insignatus integer  profunditas)
+      insignatus integer  profunditas,
+      constans character* repositio)
 {
                         character  clavis_litterae[1024];
                            chorda  clavis;
@@ -162,12 +163,12 @@ _ordinem_recipere (
     }
     (vacuum)tabula_dispersa_inserere(clavium_visa, clavis, NIHIL);
 
-    fprintf(effusio, "%.*s\t%s\t%s\t%.*s\t%u\t%u\t%u\n",
+    fprintf(effusio, "%.*s\t%s\t%s\t%.*s\t%u\t%u\t%u\t%s\n",
         (int)titulus->mensura,
         (constans character*)titulus->datum,
         species, genus,
         (int)via_mensura, (constans character*)via_datum,
-        linea, columna, profunditas);
+        linea, columna, profunditas, repositio);
     ordines_scripti++;
 }
 
