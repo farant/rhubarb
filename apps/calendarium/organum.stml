@@ -32,6 +32,20 @@
     <campus nomen="res_electa" typus="numerus" vita="transiens"
             scriptor="calendarium.agere"
             nota="id rei electae in visu diei; absens = prima"/>
+    <campus nomen="prompta" typus="electio" vita="transiens"
+            absens="nulla" scriptor="calendarium.agere">
+      <optio>nulla</optio>
+      <optio>nova</optio>
+      <optio>nota</optio>
+      <optio>titulus</optio>
+      <optio>dies</optio>
+    </campus>
+    <campus nomen="prompta_textus" typus="textus" vita="transiens"
+            scriptor="calendarium.agere"
+            nota="effugitus (scriba_effugere): quota duplex in attributo
+                  irrepraesentabilis"/>
+    <campus nomen="prompta_cursor" typus="numerus" vita="transiens"
+            scriptor="calendarium.agere"/>
   </status>
 
   <basis genus="organum_commune"/>

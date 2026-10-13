@@ -8,6 +8,9 @@
 #include "color.h"
 #include "mandatum.h"
 #include "thema.h"
+#include "scriba_documentum.h"   /* scriba_effugere / scriba_solvere */
+#include "tabula_characterum.h"
+#include "vim.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -21,6 +24,7 @@ hic_manens constans character actio_calendarii[] = "calendarium.agere";
 #define KALENDARIUM_LINEA            VIII     /* altitudo glyphi */
 #define KALENDARIUM_SIGNA_MAXIMA     IV
 #define KALENDARIUM_TITULI_DIEI      XXVIII   /* lineae III + margo */
+#define KALENDARIUM_PROMPTA          CCLVI    /* octeti promptae */
 
 /* contextus figurarum (privatus; figurae_ctx): liturgia semel creata */
 nomen structura {
@@ -126,7 +130,36 @@ campum_ponere (
     ParCampi* par;
 
     par = (ParCampi*)ctx;
+    si (!par->valor || !par->valor[ZEPHYRUM])
+    {
+        /* "" internari non potest: vacuum = tollere */
+        (vacuum)insula_attributum_tollere(radix, par->titulus);
+        redde;
+    }
     insula_attributum_ponere(radix, p, in, par->titulus, par->valor);
+}
+
+/* campi plures scriptura UNA */
+nomen structura {
+              ParCampi* pares;
+                   i32  numerus;
+} GrexCamporum;
+
+interior vacuum
+campos_ponere (
+              StmlNodus* radix,
+                Piscina* p,
+    InternamentumChorda* in,
+                 vacuum* ctx)
+{
+    GrexCamporum* grex;
+             i32  i;
+
+    grex = (GrexCamporum*)ctx;
+    per (i = ZEPHYRUM; i < grex->numerus; i++)
+    {
+        campum_ponere(radix, p, in, (vacuum*)(grex->pares + i));
+    }
 }
 
 /* campum status scribere, scriptore calendarii (prior restituitur -
@@ -336,6 +369,266 @@ agere_mensem (
     redde diem_scribere(m, d);
 }
 
+
+/* ==================================================
+ * Prompta (A3b): linea una per vim.h (modus inserendi)
+ * ================================================== */
+
+/* prompta aperta? genus in *genus (NIHIL licet) */
+interior b32
+prompta_aperta (
+    constans KalendariumMontatio* m,
+                          chorda* genus)
+{
+    chorda* a;
+
+    a = insula_ramus_attributum(&m->ramus, "prompta");
+    si (!a || chorda_aequalis_literis(*a, "nulla"))
+    {
+        redde FALSUM;
+    }
+    si (genus)
+    {
+        *genus = *a;
+    }
+    redde VERUM;
+}
+
+/* textus promptae (solutus) in exitus[KALENDARIUM_PROMPTA];
+ * redde longitudinem */
+interior i32
+promptae_textus (
+     constans KalendariumMontatio* m,
+                        character* exitus)
+{
+    chorda* a;
+       s32  n;
+
+    a = insula_ramus_attributum(&m->ramus, "prompta_textus");
+    n = a ? scriba_solvere(*a, exitus, KALENDARIUM_PROMPTA) : ZEPHYRUM;
+    redde n > ZEPHYRUM ? (i32)n : ZEPHYRUM;
+}
+
+/* status promptae scribere (scriptura una): genus ("nulla" claudit),
+ * textus crudus (effugitur), cursor */
+interior b32
+promptam_scribere (
+     KalendariumMontatio* m,
+      constans character* genus,
+      constans character* textus,
+                     i32  longitudo,
+                     i32  cursor,
+                 Piscina* p)
+{
+         ParCampi pares[III];
+     GrexCamporum grex;
+           chorda prior;
+           chorda effugitus;
+        character numerus[XVI];
+              b32 ok;
+
+    effugitus = scriba_effugere(textus, longitudo, p);
+    sprintf(numerus, "%d", (integer)cursor);
+    pares[ZEPHYRUM].titulus  = "prompta";
+    pares[ZEPHYRUM].valor    = genus;
+    pares[I].titulus         = "prompta_textus";
+    pares[I].valor           = longitudo > ZEPHYRUM
+                             ? chorda_ut_cstr(effugitus, p) : "";
+    pares[II].titulus  = "prompta_cursor";
+    pares[II].valor    = longitudo > ZEPHYRUM ? numerus : "";
+    grex.pares         = pares;
+    grex.numerus       = III;
+    prior              = m->ramus.repo->scriptor;
+    insula_scriptorem_ponere(m->ramus.repo, chorda_ex_literis(
+        actio_calendarii, m->piscina));
+    ok = mutare_ramum(&m->ramus, campos_ponere, &grex);
+    insula_scriptorem_ponere(m->ramus.repo, prior);
+    redde ok;
+}
+
+interior b32
+promptam_claudere (
+    KalendariumMontatio* m,
+                Piscina* p)
+{
+    redde promptam_scribere(m, "nulla", "", ZEPHYRUM, ZEPHYRUM, p);
+}
+
+/* clavis eventus -> clavis vim (nominatae et imprimibiles); 0 =
+ * nulla */
+interior s32
+clavis_vim (
+    constans Eventus* ev)
+{
+    commutatio (ev->datum.clavis.clavis)
+    {
+        casus CLAVIS_RETRORSUM:  redde VIM_CLAVIS_BACKSPACE;
+        casus CLAVIS_DELERE:     redde VIM_CLAVIS_DELETE;
+        casus CLAVIS_SINISTER:   redde VIM_CLAVIS_SINISTRAM;
+        casus CLAVIS_DEXTER:     redde VIM_CLAVIS_DEXTRAM;
+        casus CLAVIS_DOMUS:      redde VIM_CLAVIS_HOME;
+        casus CLAVIS_FINIS:      redde VIM_CLAVIS_END;
+        ordinarius:              frange;
+    }
+    si (   ev->datum.clavis.producta >= ' '
+        && ev->datum.clavis.producta < CXXVII)
+    {
+        redde ev->datum.clavis.producta;
+    }
+    redde ZEPHYRUM;
+}
+
+/* Enter: textus in actum agendae per genus; VERUM si actum (prompta
+ * tunc clauditur), FALSUM = recusatum (prompta manet) */
+interior b32
+promptam_committere (
+    KalendariumMontatio* m,
+                 chorda  genus,
+                 chorda  textus,
+                Piscina* p)
+{
+    Xar* l;
+    s32  id;
+   Dies  d;
+    i32  index;
+
+    si (!m->documentum)
+    {
+        redde FALSUM;
+    }
+    d   = kalendarium_dies_electus(m);
+    l   = ordines_diei(m, d, p);
+    id  = res_electa(m, l);
+    si (chorda_aequalis_literis(genus, "nova"))
+    {
+        id = agenda_rem_creare(m->documentum, textus);
+        si (id <= ZEPHYRUM || agenda_diem_ponere(m->documentum, id, &d)
+                <= ZEPHYRUM)
+        {
+            redde FALSUM;
+        }
+        redde electionem_scribere(m, id);
+    }
+    si (id <= ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    si (chorda_aequalis_literis(genus, "nota"))
+    {
+        redde agenda_notam_addere(m->documentum, id, hodie(m), textus)
+            > ZEPHYRUM;
+    }
+    si (chorda_aequalis_literis(genus, "titulus"))
+    {
+        redde agenda_titulum_ponere(m->documentum, id, textus)
+            > ZEPHYRUM;
+    }
+    si (chorda_aequalis_literis(genus, "dies"))
+    {
+        Dies nova;
+
+        index = index_rei(l, id);
+        si (textus.mensura == ZEPHYRUM)
+        {
+            si (agenda_diem_ponere(m->documentum, id, NIHIL)
+                <= ZEPHYRUM)
+            {
+                redde FALSUM;
+            }
+        }
+        alioquin si (   !fasti_parsare_iso(textus, &nova)
+                     || !fasti_dies_valida(nova)
+                     || agenda_diem_ponere(m->documentum, id, &nova)
+                        <= ZEPHYRUM)
+        {
+            redde FALSUM;
+        }
+        electionem_reficere(m, d, index, p);
+        redde VERUM;
+    }
+    redde FALSUM;
+}
+
+/* clavis dum prompta aperta est: Esc claudit, Enter committit, ceterae
+ * per vim (modus inserendi, linea una) */
+interior b32
+agere_promptam (
+    KalendariumMontatio* m,
+       constans Eventus* ev,
+                 chorda  genus,
+                Piscina* p)
+{
+     TabulaCharacterum  t;
+             VimStatus  st;
+             character  textus[KALENDARIUM_PROMPTA];
+                chorda* a;
+                   s32  cursor;
+                   s32  clavis;
+                   i32  n;
+                   i32  i;
+
+    si (ev->genus != EVENTUS_CLAVIS_DEPRESSUS)
+    {
+        redde FALSUM;
+    }
+    n = promptae_textus(m, textus);
+    si (ev->datum.clavis.clavis == CLAVIS_EFFUGIUM)
+    {
+        redde promptam_claudere(m, p);
+    }
+    si (ev->datum.clavis.clavis == CLAVIS_REDITUS)
+    {
+        chorda c;
+
+        dum (n > ZEPHYRUM && textus[n - I] == ' ')
+        {
+            n--;
+        }
+        c.datum    = (i8*)textus;
+        c.mensura  = n;
+        si (promptam_committere(m, genus, chorda_transcribere(c, p), p))
+        {
+            (vacuum)promptam_claudere(m, p);
+        }
+        redde VERUM;
+    }
+    clavis = clavis_vim(ev);
+    si (   clavis == ZEPHYRUM
+        || (clavis > ZEPHYRUM && n >= KALENDARIUM_PROMPTA - I))
+    {
+        redde VERUM;   /* consumpta: prompta claves omnes capit */
+    }
+    a = insula_ramus_attributum(&m->ramus, "prompta_cursor");
+    si (   !a || !chorda_ut_s32(*a, &cursor) || cursor < ZEPHYRUM
+        || cursor > (s32)n)
+    {
+        cursor = (s32)n;
+    }
+    tabula_initiare(&t, p, KALENDARIUM_PROMPTA, I);
+    memcpy(t.cellulae, textus, (size_t)n);
+    st = vim_initiare(&t);
+    st = vim_ponere_modum(st, MODO_VIM_INSERERE);
+    st = vim_ponere_cursor(st, ZEPHYRUM, (i32)cursor);
+    st = vim_tractare_clavem(st, clavis);
+    /* longitudo: vim cellulas vacuas spatiis implet - ultima cellula
+     * non alba, aut cursor (spatium modo typatum manet donec littera
+     * sequitur; ad Enter abscinditur) */
+    n = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < KALENDARIUM_PROMPTA; i++)
+    {
+        si (t.cellulae[i] != '\0' && t.cellulae[i] != ' ')
+        {
+            n = i + I;
+        }
+    }
+    si ((s32)n < (s32)st.cursor_columna)
+    {
+        n = st.cursor_columna;
+    }
+    redde promptam_scribere(m, chorda_ut_cstr(genus, p), t.cellulae, n,
+        st.cursor_columna, p);
+}
+
 /* visus diei: electio, perfectio, translatio, deletio, historia
  * agendae; ictus in ordine ("r<id>") eligit */
 interior b32
@@ -439,6 +732,30 @@ agere_diem (
                 electionem_reficere(m, d, (i32)index, p);
             }
             redde VERUM;
+        casus 'n':
+            redde promptam_scribere(m, "nova", "", ZEPHYRUM, ZEPHYRUM,
+                p);
+        casus 'a':
+            redde r ? promptam_scribere(m, "nota", "", ZEPHYRUM,
+                ZEPHYRUM, p) : VERUM;
+        casus 'c':
+            redde r ? promptam_scribere(m, "titulus",
+                (constans character*)r->titulus.datum,
+                r->titulus.mensura,
+                r->titulus.mensura, p) : VERUM;
+        casus 'D':
+            si (r && r->dies_posita)
+            {
+                chorda iso;
+
+                iso = fasti_formare_diem(r->dies, FASTI_FORMA_ISO, p);
+                redde promptam_scribere(m, "dies",
+                    (constans character*)iso.datum, iso.mensura,
+                    iso.mensura, p);
+            }
+            redde r ? promptam_scribere(m, "dies", "", ZEPHYRUM,
+                ZEPHYRUM,
+                p) : VERUM;
         ordinarius:
             redde FALSUM;
     }
@@ -471,6 +788,14 @@ agere (
         redde FALSUM;
     }
     piscina_vacare(privatum->scheda);
+    {
+        chorda genus;
+
+        si (prompta_aperta(m, &genus))
+        {
+            redde agere_promptam(m, ev, genus, privatum->scheda);
+        }
+    }
     redde agere_diem(m, nodus, ev, privatum->scheda);
 }
 
@@ -954,14 +1279,15 @@ diem_componere (
               Componens* radix,
                 Piscina* piscina,
     InternamentumChorda* intern,
-                    s32  latitudo)
+                    s32  latitudo,
+                    s32  altitudo)
 {
                     Xar* l;
      constans AgendaRes* r;
               Componens* ordo;
               character  id[XVI];
                     s32  y;
-                    s32  altitudo;
+                    s32  alt_ordinis;
                     i32  i;
 
     componens_addere_liberum(radix, nodus(piscina, intern, "titulus",
@@ -971,18 +1297,26 @@ diem_componere (
     y = KALENDARIUM_TITULI_DIEI;
     per (i = ZEPHYRUM; l && i < xar_numerus(l); i++)
     {
-        r         = *(constans AgendaRes**)xar_obtinere(l, i);
-        altitudo  = (s32)(I + xar_numerus(r->notae)) * KALENDARIUM_LINEA
-                  + II;
+        r            = *(constans AgendaRes**)xar_obtinere(l, i);
+        alt_ordinis  = (s32)(I + xar_numerus(r->notae))
+                     * KALENDARIUM_LINEA + II;
         sprintf(id, "r%d", (integer)r->id);
         ordo = nodus(piscina, intern, id, PARTES_ITEM, ZEPHYRUM, y,
-            latitudo, altitudo);
+            latitudo, alt_ordinis);
         si (ordo)
         {
             componens_ponere_actio(ordo, actio_calendarii);
             componens_addere_liberum(radix, ordo);
         }
-        y += altitudo;
+        y += alt_ordinis;
+    }
+    /* prompta (A3b): linea ultima dum aperta */
+    si (prompta_aperta(m, NIHIL))
+    {
+        componens_addere_liberum(radix, nodus(piscina, intern,
+            "prompta",
+            PARTES_CAMPUS, ZEPHYRUM, altitudo - KALENDARIUM_LINEA - II,
+            latitudo, KALENDARIUM_LINEA + II));
     }
 }
 
@@ -1028,7 +1362,7 @@ kalendarium_componere (
     componens_ponere_actio(radix, actio_calendarii);
     si (visus_diei(m))
     {
-        diem_componere(m, radix, piscina, intern, latitudo);
+        diem_componere(m, radix, piscina, intern, latitudo, altitudo);
         redde radix;
     }
     componens_addere_liberum(radix, nodus(piscina, intern, "titulus",

@@ -163,7 +163,10 @@ State-model question to settle before A2 (A1 is content only).
   - **A3a** DONE 2026-10-13 (lib/kalendarium.worklog.md): view switch,
     list (assigned + completed here), selection, tick/untick, move,
     delete, undo/redo, click selects.
-  - **A3b** prompt (n/a/c/D); **A3c** drawing + screenshot.
+  - **A3b** DONE 2026-10-13: one-line prompt on vim.h (insert mode;
+    text stored escaped via scriba's codec), n/a/c/D, Enter commits,
+    Esc cancels, bad date refused.
+  - **A3c** drawing + screenshot.
 - **A4 — todo view/editor** `$agenda`: all incomplete items (whatever
   their day) + unscheduled, grouped by category.
 - **A5 — year view.**

@@ -832,6 +832,122 @@ _probare_acta_diei (
     CREDO_VERUM(campus_est(x, "res_electa", "3"));
 }
 
+/* textus typare (clavibus singulis) */
+interior vacuum
+typare (
+                Mundus* x,
+    constans character* textus)
+{
+    constans character* q;
+
+    per (q = textus; *q; q++)
+    {
+        clavis(x, *q);
+    }
+}
+
+/* retrorsum n vicibus */
+interior vacuum
+retro (
+    Mundus* x,
+       i32  n)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        clavis_specialis(x, CLAVIS_RETRORSUM, CXXVII, CXXVII, ZEPHYRUM);
+    }
+}
+
+interior vacuum
+reditus (
+    Mundus* x)
+{
+    clavis_specialis(x, CLAVIS_REDITUS, XIII, XIII, ZEPHYRUM);
+}
+
+interior vacuum
+effugium (
+    Mundus* x)
+{
+    clavis_specialis(x, CLAVIS_EFFUGIUM, XXVII, XXVII, ZEPHYRUM);
+}
+
+/* prompta (A3b): n res nova, a nota, c titulus, D dies; Enter
+ * committit, Esc claudit; quota duplex et '<' in textu servantur */
+interior vacuum
+_probare_promptam (
+    CredoContextus* c)
+{
+                Mundus* x;
+    constans AgendaRes* r;
+            AgendaNota* nota;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(agendam_parare(x, c));
+    reditus(x);
+    /* n: res nova in die XIV, electa */
+    CREDO_NIHIL(componens_invenire_per_id(dispensator_arbor(x->d),
+        chorda_ex_literis("prompta", c->piscina)));
+    clavis(x, 'n');
+    CREDO_VERUM(campus_est(x, "prompta", "nova"));
+    CREDO_NON_NIHIL(componens_invenire_per_id(dispensator_arbor(x->d),
+        chorda_ex_literis("prompta", c->piscina)));
+    typare(x, "panis");
+    reditus(x);
+    CREDO_VERUM(campus_est(x, "prompta", "nulla"));
+    r = agenda_res(x->documentum, V);
+    CREDO_NECESSE_NON_NIHIL(r);
+    CREDO_CHORDA_AEQUALIS_LITERIS(r->titulus, "panis");
+    CREDO_VERUM(r->dies_posita && r->dies.dies == XIV);
+    CREDO_VERUM(campus_est(x, "res_electa", "5"));
+    /* a: nota cum quota duplici, die hodierna */
+    clavis(x, 'a');
+    typare(x, "dic \"salve\" <hic>");
+    reditus(x);
+    r = agenda_res(x->documentum, V);
+    CREDO_NECESSE(r && xar_numerus(r->notae) == I);
+    nota = (AgendaNota*)xar_obtinere(r->notae, ZEPHYRUM);
+    CREDO_CHORDA_AEQUALIS_LITERIS(nota->textus, "dic \"salve\" <hic>");
+    CREDO_VERUM(nota->dies.dies == XIV);
+    /* c: titulus praeimpletus, retrorsum, additio */
+    clavis(x, 'c');
+    CREDO_VERUM(campus_est(x, "prompta", "titulus"));
+    retro(x, II);
+    typare(x, "em");
+    reditus(x);
+    CREDO_CHORDA_AEQUALIS_LITERIS(agenda_res(x->documentum, V)->titulus,
+        "panem");
+    /* D: praeimpleta die rei; vacuata, dies nova scripta */
+    clavis(x, 'D');
+    CREDO_VERUM(campus_est(x, "prompta", "dies"));
+    CREDO_VERUM(campus_est(x, "prompta_textus", "2026-10-14"));
+    retro(x, X);
+    typare(x, "2026-10-20");
+    reditus(x);
+    CREDO_VERUM(agenda_res(x->documentum, V)->dies.dies == XX);
+    CREDO_VERUM(campus_est(x, "prompta", "nulla"));
+    /* res V abiit: electio in ordine eodem (ordines 1 2 5 3 -> 1 2 3:
+     * res III, hic perfecta, alibi assignata); dies mala recusatur
+     * (prompta manet), Esc claudit sine mutatione */
+    CREDO_VERUM(campus_est(x, "res_electa", "3"));
+    clavis(x, 'D');
+    retro(x, X);
+    typare(x, "2026-13-01");
+    reditus(x);
+    CREDO_VERUM(campus_est(x, "prompta", "dies"));
+    effugium(x);
+    CREDO_VERUM(campus_est(x, "prompta", "nulla"));
+    CREDO_VERUM(agenda_res(x->documentum, III)->dies.dies == XX);
+    /* n et Esc: nihil creatur */
+    clavis(x, 'n');
+    typare(x, "x");
+    effugium(x);
+    CREDO_NIHIL(agenda_res(x->documentum, VI));
+    CREDO_VERUM(campus_est(x, "visus", "dies"));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "montatio",     _probare_montationem,   mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
@@ -850,6 +966,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "visus_diei",   _probare_visum_diei,    mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { "acta_diei",    _probare_acta_diei,     mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "prompta",      _probare_promptam,      mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

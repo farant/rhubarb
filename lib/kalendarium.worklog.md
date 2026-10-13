@@ -132,3 +132,34 @@ computes the list in a scratch pool kept in the private context
 per keystroke. Rows are components "r<id>" (PARTES_ITEM, the action) of
 height (1 + notes) lines, so a click selects through the ordinary
 dispatcher path. Plant: "completed here" group dropped -> red.
+
+## 2026-10-13 — A3b: the one-line prompt (vim.h)
+
+Fran: implement as envisioned, refine after testing. `n` (new item on
+the shown day, selected after), `a` (note, dated today from the clock
+port), `c` (rename, pre-filled), `D` (date, pre-filled with the item's
+date; empty = unscheduled; a bad date is refused and the prompt stays
+open). Enter commits, Esc cancels; while a prompt is open every key
+goes to it (clicks are ignored). New transient fields `prompta`
+(nulla/nova/nota/titulus/dies), `prompta_textus`, `prompta_cursor`,
+written in ONE insula write (`GrexCamporum` mutator; an empty value
+removes the attribute - the interner refuses "").
+
+Mechanics: each key rebuilds a one-line TabulaCharacterum (256 wide)
+from the island, starts vim.h in insert mode at the stored cursor, feeds
+the key, reads line 0 back. Since vim state is rebuilt per key, vim's
+"fd" escape can never fire. Findings:
+- vim fills empty cells with SPACES, so "last non-empty cell" was always
+  256. Length = max(last non-space cell, cursor) - a just-typed space
+  survives until the next letter; trailing spaces are trimmed at Enter.
+- `prompta_textus` lives in an attribute, so it is stored through
+  scriba's codec (`scriba_effugere`/`scriba_solvere`: no raw `"` or
+  control bytes). That makes kalendarium depend on scriba_documentum -
+  candidate to move the codec into a neutral library. Plant: read the
+  text undecoded -> red (by crash: the escaped form overflows the buffer).
+- Test bugs fixed on the way: a second `D` typed into the prompt
+  instead of clearing the pre-fill; after D moves item 5 away the next
+  selected row is item 3 (same index rule as </>), not 1.
+
+The tree gets a "prompta" component (PARTES_CAMPUS) on the pane's last
+line while a prompt is open - drawing is A3c.
