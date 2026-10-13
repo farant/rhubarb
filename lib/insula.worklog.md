@@ -195,3 +195,37 @@ different roots, refused by the auto-merge as they should be;
 collapsed to "<insula/>". 276/276 root tests, ludus_tessera 8/8, plants
 5/5. briar's smoke builds project-specs/exempla/salutatio.thistle -
 updated too.
+
+## 2026-10-12 — status-plan S8a: branches at any depth
+
+`InsulaRamus` gained `via`: the interned path from the root, segments
+`elementum:id` joined by '/' ("" = root; canon `nomen` allows only
+[A-Za-z0-9_*], so ':' and '/' are safe). `elementum`/`id` stay = the
+last segment (pictor/scriba/dimissio/organum_montatio read them). Value
+type, so a branch still copies by assignment; interning makes equal
+paths share a pointer and keeps the per-event `insula_ramus` calls from
+growing the arena (paths are built in a stack buffer, copied only when
+new). `insula_ramus_liberi(parens, e, id)`: a widget mounting children
+hands over ITS branch; `insula_ramus` = liberi of the root.
+
+Depth-1 was in four places, all in insula.c: ramum_invenire (now walks
+the path), the root canon's view (visio_radicis -> visio_nodi), owners
+(InsulaDominus.via) and initiation (adds under the PARENT node; an
+absent parent is refused BEFORE the gate with a named cause - nothing
+written). Branch canons (CanonRami.via) are judged on a view too now:
+every canon judges its node minus descendant branches that have their
+own canon, nearest wins. The view copies only nodes on the way to an
+excluded branch (shallow copies with a new child list); untouched
+subtrees are shared pointers. With no branch canons it is the node
+itself (old fast path).
+
+Cost note for S8d: the view is rebuilt per canon per write (relative
+suffixes of the canon paths below it, matched segment by segment) -
+same order as before at depth 1, but now also for branch canons.
+
+Plants (silva.planta, function gate on probatio_insula_profunda): view
+recursion off (depth-1 behaviour) -> `canones` red 6/9; initiation to
+the root instead of the parent -> tree cannot be built (parent check of
+c fails). Both reverted -> green. Existing insula, organum, pictor,
+scriba, vicus, terminale, conservatio, relatio, dimissio, motus,
+dispensator suites and ludus_tessera 8/8 unchanged.

@@ -35,10 +35,9 @@ causam_ponere (
 }
 
 
-/* canon rami (R1): nodus <elementum id> suo canone iudicatur */
+/* canon rami (R1; S8 per viam): nodus rami suo canone iudicatur */
 nomen structura {
-    chorda  elementum;
-    chorda  id;
+    chorda  via;
      Canon* canon;
 } CanonRami;
 
@@ -52,43 +51,137 @@ chorda_nulla_insulae (vacuum)
     redde c;
 }
 
-/* nodus rami in radice data: elementum vacuum = radix; aliter liberum
- * radicis titulo elementi et attributo id; NIHIL si abest */
-interior StmlNodus*
-ramum_invenire (
-     StmlNodus* radix,
+/* S8: segmentum viae proximum ab indice *i ("elementum:id", '/'
+ * sequens consumitur); FALSUM si finis aut segmentum sine ':' */
+interior b32
+segmentum_legere (
+     chorda  via,
+        i32* i,
+     chorda* elementum,
+     chorda* id)
+{
+    i32 initium;
+    i32 colon;
+    b32 colon_visum;
+
+    si (*i >= via.mensura)
+    {
+        redde FALSUM;
+    }
+    initium      = *i;
+    colon        = ZEPHYRUM;
+    colon_visum  = FALSUM;
+    dum (*i < via.mensura && via.datum[*i] != '/')
+    {
+        si (via.datum[*i] == ':' && !colon_visum)
+        {
+            colon        = *i;
+            colon_visum  = VERUM;
+        }
+        (*i)++;
+    }
+    si (!colon_visum)
+    {
+        redde FALSUM;
+    }
+    elementum->datum    = via.datum + initium;
+    elementum->mensura  = colon - initium;
+    id->datum           = via.datum + colon + I;
+    id->mensura         = *i - colon - I;
+    si (*i < via.mensura)
+    {
+        (*i)++;
+    }
+    redde VERUM;
+}
+
+/* nodus est <elementum id="id">? */
+interior b32
+nodus_est (
+     StmlNodus* n,
         chorda  elementum,
         chorda  id)
 {
+    chorda* v;
+
+    si (   n->genus != STML_NODUS_ELEMENTUM || !n->titulus
+        || !chorda_aequalis(*n->titulus, elementum))
+    {
+        redde FALSUM;
+    }
+    v = stml_attributum_capere(n, "id");
+    redde v && chorda_aequalis(*v, id);
+}
+
+/* nodus rami in radice data per viam (S8: quavis profunditate; vacua
+ * = radix); NIHIL si quodvis segmentum abest */
+interior StmlNodus*
+ramum_invenire (
+     StmlNodus* radix,
+        chorda  via)
+{
     StmlNodus* n;
-       chorda* v;
+    StmlNodus* liber;
+       chorda  elementum;
+       chorda  id;
           i32  i;
+          i32  j;
           i32  k;
 
-    si (!radix)
+    n = radix;
+    i = ZEPHYRUM;
+    dum (n && i < via.mensura)
     {
-        redde NIHIL;
-    }
-    si (chorda_vacua(elementum))
-    {
-        redde radix;
-    }
-    k = stml_numerus_liberorum(radix);
-    per (i = ZEPHYRUM; i < k; i++)
-    {
-        n = stml_liberum_ad_indicem(radix, i);
-        si (   n->genus != STML_NODUS_ELEMENTUM || !n->titulus
-            || !chorda_aequalis(*n->titulus, elementum))
+        si (!segmentum_legere(via, &i, &elementum, &id))
         {
-            perge;
+            redde NIHIL;
         }
-        v = stml_attributum_capere(n, "id");
-        si (v && chorda_aequalis(*v, id))
+        liber  = NIHIL;
+        k      = stml_numerus_liberorum(n);
+        per (j = ZEPHYRUM; j < k && !liber; j++)
         {
-            redde n;
+            si (nodus_est(stml_liberum_ad_indicem(n, j), elementum, id))
+            {
+                liber = stml_liberum_ad_indicem(n, j);
+            }
         }
+        n = liber;
     }
-    redde NIHIL;
+    redde n;
+}
+
+/* S8: via inferior STRICTE sub superiore? (superior vacua = radix) */
+interior b32
+via_descendens (
+    chorda superior,
+    chorda inferior)
+{
+    si (chorda_vacua(superior))
+    {
+        redde !chorda_vacua(inferior);
+    }
+    redde inferior.mensura > superior.mensura + I
+        && memcmp(inferior.datum, superior.datum,
+               (size_t)superior.mensura) == ZEPHYRUM
+        && inferior.datum[superior.mensura] == '/';
+}
+
+/* S8: via parentis (segmentum ultimum sublatum; vacua = radix) */
+interior chorda
+via_parentis (
+    chorda via)
+{
+    chorda r;
+       i32 k;
+
+    k = via.mensura;
+    dum (k > ZEPHYRUM && via.datum[k - I] != '/')
+    {
+        k--;
+    }
+    r.datum    = via.datum;
+    r.mensura  = k > ZEPHYRUM ? k - I : ZEPHYRUM;
+    redde r;
 }
 
 
@@ -294,10 +387,8 @@ dominos_iudicare (
     {
         d = (InsulaDominus*)xar_obtinere(repo->domini, i);
         /* R1: attributum in nodo RAMI domini, ante et post */
-        si (!attributum_mutatum(ramum_invenire(ante, d->elementum,
-            d->id),
-                                ramum_invenire(post, d->elementum,
-                                d->id),
+        si (!attributum_mutatum(ramum_invenire(ante, d->via),
+                                ramum_invenire(post, d->via),
                                 d->attributum))
         {
             perge;
@@ -344,49 +435,100 @@ dominos_iudicare (
  * per textum - ipsa disciplina rehydrationis), mutare, canone
  * iudicare, permutare. Recusatio relinquit duplicatum in piscina
  * altera, quae proxima scriptura vacatur. */
-/* visio canonis radicis: copia superficialis radicis sine ramis qui
- * canonem proprium habent (R1) - arbor vera intacta */
-interior StmlNodus*
-visio_radicis (
+/* viae relativae (Xar de chorda, in p) ramorum cum canone proprio
+ * STRICTE sub via data */
+interior Xar*
+reliqua_sub (
     InsulaRepositorium* repo,
-             StmlNodus* radix,
+                chorda  via,
                Piscina* p)
+{
+          Xar* reliqua;
+    CanonRami* cr;
+       chorda  r;
+          i32  j;
+          i32  initium;
+
+    reliqua = xar_creare(p, (i32)magnitudo(chorda));
+    initium = chorda_vacua(via) ? ZEPHYRUM : via.mensura + I;
+    per (j = ZEPHYRUM; j < xar_numerus(repo->canones_ramorum); j++)
+    {
+        cr = (CanonRami*)xar_obtinere(repo->canones_ramorum, j);
+        si (!via_descendens(via, cr->via))
+        {
+            perge;
+        }
+        r.datum                        = cr->via.datum + initium;
+        r.mensura                      = cr->via.mensura - initium;
+        *(chorda*)xar_addere(reliqua)  = r;
+    }
+    redde reliqua;
+}
+
+/* visio canonis (R1; S8 quavis profunditate): nodus sine ramis
+ * descendentibus qui canonem proprium habent (reliqua = viae eorum
+ * relativae). Copiae superficiales in via ad eos solum - arbor vera
+ * intacta; sine reliquis nodus ipse. */
+interior StmlNodus*
+visio_nodi (
+    StmlNodus* nodus,
+          Xar* reliqua,
+      Piscina* p)
 {
     StmlNodus* visio;
     StmlNodus* n;
-    CanonRami* cr;
+          Xar* sub;
+       chorda* v;
+       chorda  elementum;
+       chorda  id;
+       chorda  r;
           i32  i;
           i32  j;
           i32  k;
+          i32  idx;
           b32  delegatus;
 
-    si (xar_numerus(repo->canones_ramorum) == ZEPHYRUM)
+    si (!nodus || xar_numerus(reliqua) == ZEPHYRUM)
     {
-        redde radix;
+        redde nodus;
     }
     visio = (StmlNodus*)piscina_allocare(p, magnitudo(StmlNodus));
-    *visio = *radix;
+    *visio = *nodus;
     visio->liberi = xar_creare(p, (i32)magnitudo(StmlNodus*));
-    k = stml_numerus_liberorum(radix);
+    k = stml_numerus_liberorum(nodus);
     per (i = ZEPHYRUM; i < k; i++)
     {
-        n          = stml_liberum_ad_indicem(radix, i);
+        n          = stml_liberum_ad_indicem(nodus, i);
+        sub        = NIHIL;
         delegatus  = FALSUM;
-        per (j = ZEPHYRUM; j
-            < xar_numerus(repo->canones_ramorum);
-             j++)
+        per (j = ZEPHYRUM; j < xar_numerus(reliqua) && !delegatus; j++)
         {
-            cr = (CanonRami*)xar_obtinere(repo->canones_ramorum,
-                j);
-            si (ramum_invenire(radix, cr->elementum, cr->id) == n)
+            v    = (chorda*)xar_obtinere(reliqua, j);
+            idx  = ZEPHYRUM;
+            si (   !segmentum_legere(*v, &idx, &elementum, &id)
+                || !nodus_est(n, elementum, id))
             {
-                delegatus = VERUM;
+                perge;
             }
+            si (idx >= v->mensura)
+            {
+                delegatus = VERUM;   /* ramus ipse: suo canone */
+                perge;
+            }
+            si (!sub)
+            {
+                sub = xar_creare(p, (i32)magnitudo(chorda));
+            }
+            r.datum                    = v->datum + idx;
+            r.mensura                  = v->mensura - idx;
+            *(chorda*)xar_addere(sub)  = r;
         }
-        si (!delegatus)
+        si (delegatus)
         {
-            *(StmlNodus**)xar_addere(visio->liberi) = n;
+            perge;
         }
+        *(StmlNodus**)xar_addere(visio->liberi) = sub
+            ? visio_nodi(n, sub, p) : n;
     }
     redde visio;
 }
@@ -394,8 +536,7 @@ visio_radicis (
 interior b32
 mutare (
      InsulaRepositorium* repo,
-                 chorda  elementum,
-                 chorda  id,
+                 chorda  via,
           InsulaMutator  fn,
                  vacuum* ctx)
 {
@@ -426,11 +567,10 @@ mutare (
         redde FALSUM;
     }
 
-    scopus = ramum_invenire(duplicatum, elementum, id);
+    scopus = ramum_invenire(duplicatum, via);
     si (!scopus)
     {
-        causam_ponere(repo, "ramus abest: nullum liberum radicis"
-                            " elemento et id datis");
+        causam_ponere(repo, "ramus abest: nullus nodus in via data");
         redde FALSUM;
     }
     fn(scopus, p, repo->intern, ctx);
@@ -448,7 +588,8 @@ mutare (
     si (repo->canon)
     {
         vitia = canon_iudicare(repo->canon,
-            visio_radicis(repo, duplicatum, p), p);
+            visio_nodi(duplicatum, reliqua_sub(repo,
+                chorda_nulla_insulae(), p), p), p);
         si (vitia && xar_numerus(vitia) > ZEPHYRUM)
         {
             v = (CanonVitium*)xar_obtinere(vitia, ZEPHYRUM);
@@ -466,12 +607,13 @@ mutare (
         < xar_numerus(repo->canones_ramorum); j++)
     {
         cr = (CanonRami*)xar_obtinere(repo->canones_ramorum, j);
-        nodus_rami = ramum_invenire(duplicatum, cr->elementum, cr->id);
+        nodus_rami = ramum_invenire(duplicatum, cr->via);
         si (!nodus_rami || !cr->canon)
         {
             perge;
         }
-        vitia = canon_iudicare(cr->canon, nodus_rami, p);
+        vitia = canon_iudicare(cr->canon, visio_nodi(nodus_rami,
+            reliqua_sub(repo, cr->via, p), p), p);
         si (vitia && xar_numerus(vitia) > ZEPHYRUM)
         {
             v = (CanonVitium*)xar_obtinere(vitia, ZEPHYRUM);
@@ -502,8 +644,7 @@ insula_mutare (
          InsulaMutator  fn,
                 vacuum* ctx)
 {
-    redde mutare(repo, chorda_nulla_insulae(), chorda_nulla_insulae(),
-                 fn, ctx);
+    redde mutare(repo, chorda_nulla_insulae(), fn, ctx);
 }
 
 b32
@@ -652,8 +793,7 @@ insula_scriptorem_ponere (
 interior b32
 dominum_addere (
     InsulaRepositorium* repo,
-                chorda  elementum,
-                chorda  id,
+                chorda  via,
     constans character* attributum,
     constans character* dominus,
     constans character* systemata)
@@ -680,8 +820,7 @@ dominum_addere (
     d->attributum  = *a;
     d->dominus     = *s;
     d->systemata   = y ? *y : chorda_nulla_insulae();
-    d->elementum   = elementum;
-    d->id          = id;
+    d->via         = via;
     redde VERUM;
 }
 
@@ -691,16 +830,14 @@ insula_dominum_ponere (
     constans character* attributum,
     constans character* dominus)
 {
-    redde dominum_addere(repo, chorda_nulla_insulae(),
-                         chorda_nulla_insulae(), attributum, dominus,
-                         NIHIL);
+    redde dominum_addere(repo, chorda_nulla_insulae(), attributum,
+                         dominus, NIHIL);
 }
 
 interior i32
 dominos_legere (
     InsulaRepositorium* repo,
-                chorda  elementum,
-                chorda  id,
+                chorda  via,
              StmlNodus* domini)
 {
              StmlNodus* n;
@@ -732,7 +869,7 @@ dominos_legere (
         {
             perge;
         }
-        si (dominum_addere(repo, elementum, id,
+        si (dominum_addere(repo, via,
                 chorda_ut_cstr(*a, repo->piscina),
                 chorda_ut_cstr(*s, repo->piscina),
                 y ? chorda_ut_cstr(*y, repo->piscina) : NIHIL))
@@ -748,8 +885,7 @@ insula_dominos_legere (
     InsulaRepositorium* repo,
              StmlNodus* domini)
 {
-    redde dominos_legere(repo, chorda_nulla_insulae(),
-                         chorda_nulla_insulae(), domini);
+    redde dominos_legere(repo, chorda_nulla_insulae(), domini);
 }
 
 b32
@@ -791,6 +927,7 @@ insula_ramus_radix (
     InsulaRamus r;
 
     r.repo       = repo;
+    r.via        = chorda_nulla_insulae();
     r.elementum  = chorda_nulla_insulae();
     r.id         = chorda_nulla_insulae();
     redde r;
@@ -802,19 +939,65 @@ insula_ramus (
     constans character* elementum,
     constans character* id)
 {
-    InsulaRamus  r;
-         chorda* e;
-         chorda* i;
+    InsulaRamus radix;
 
-    r = insula_ramus_radix(repo);
-    si (!repo || !elementum || !id)
+    radix = insula_ramus_radix(repo);
+    redde insula_ramus_liberi(&radix, elementum, id);
+}
+
+InsulaRamus
+insula_ramus_liberi (
+    constans InsulaRamus* parens,
+      constans character* elementum,
+      constans character* id)
+{
+       InsulaRamus  r;
+            chorda* e;
+            chorda* i;
+            chorda* v;
+            chorda  t;
+         character  memoria[CCLVI];
+         character* b;
+    memoriae_index  n;
+    memoriae_index  le;
+    memoriae_index  li;
+    memoriae_index  k;
+
+    si (!parens)
+    {
+        redde insula_ramus_radix(NIHIL);
+    }
+    r = *parens;
+    si (!parens->repo || !elementum || !id)
     {
         redde r;
     }
-    e = chorda_internare_ex_literis(repo->intern, elementum);
-    i = chorda_internare_ex_literis(repo->intern, id);
-    si (e && i)
+    /* via = [via parentis '/'] elementum ':' id - internata */
+    le  = (memoriae_index)strlen(elementum);
+    li  = (memoriae_index)strlen(id);
+    n   = (memoriae_index)parens->via.mensura + le + li + II;
+    b   = n <= magnitudo(memoria) ? memoria
+        : (character*)piscina_allocare(parens->repo->piscina, n);
+    k   = ZEPHYRUM;
+    si (!chorda_vacua(parens->via))
     {
+        memcpy(b, parens->via.datum, (size_t)parens->via.mensura);
+        k       = (memoriae_index)parens->via.mensura;
+        b[k++]  = '/';
+    }
+    memcpy(b + k, elementum, (size_t)le);
+    k       += le;
+    b[k++]  = ':';
+    memcpy(b + k, id, (size_t)li);
+    k += li;
+    t.datum = (i8*)b;
+    t.mensura = (i32)k;
+    v = chorda_internare(parens->repo->intern, t);
+    e = chorda_internare_ex_literis(parens->repo->intern, elementum);
+    i = chorda_internare_ex_literis(parens->repo->intern, id);
+    si (v && e && i)
+    {
+        r.via        = *v;
         r.elementum  = *e;
         r.id         = *i;
     }
@@ -829,8 +1012,7 @@ insula_ramus_nodus (
     {
         redde NIHIL;
     }
-    redde ramum_invenire(ramus->repo->radix, ramus->elementum,
-                         ramus->id);
+    redde ramum_invenire(ramus->repo->radix, ramus->via);
 }
 
 chorda*
@@ -854,8 +1036,7 @@ mutare_ramum (
     {
         redde FALSUM;
     }
-    redde mutare(ramus->repo, ramus->elementum, ramus->id, fn,
-                 ctx);
+    redde mutare(ramus->repo, ramus->via, fn, ctx);
 }
 
 b32
@@ -868,9 +1049,8 @@ insula_ramus_dominum_ponere (
     {
         redde FALSUM;
     }
-    redde dominum_addere(ramus->repo, ramus->elementum,
-        ramus->id,
-                         attributum, dominus, NIHIL);
+    redde dominum_addere(ramus->repo, ramus->via, attributum, dominus,
+                         NIHIL);
 }
 
 i32
@@ -882,9 +1062,7 @@ insula_ramus_dominos_legere (
     {
         redde ZEPHYRUM;
     }
-    redde dominos_legere(ramus->repo, ramus->elementum,
-        ramus->id,
-                         domini);
+    redde dominos_legere(ramus->repo, ramus->via, domini);
 }
 
 /* initiatio rami (T1a): elementum STML in piscina portae legitur */
@@ -904,6 +1082,7 @@ initiatio_mutator (
       InitiatioRami* x;
        StmlResultus  res;
           StmlNodus* e;
+          StmlNodus* parens;
      StmlAttributum* attr;
                 i32  i;
 
@@ -915,7 +1094,7 @@ initiatio_mutator (
         redde;
     }
     e = res.elementum_radix;
-    si (chorda_vacua(x->ramus->elementum))
+    si (chorda_vacua(x->ramus->via))
     {
         /* radix: attributa absentia sola */
         per (i = ZEPHYRUM; e->attributa
@@ -933,9 +1112,16 @@ initiatio_mutator (
         }
         redde;
     }
-    si (!ramum_invenire(radix, x->ramus->elementum, x->ramus->id))
+    /* S8: sub nodo parentis (exstantia ante portam probata) */
+    parens = ramum_invenire(radix, via_parentis(x->ramus->via));
+    si (!parens)
     {
-        stml_liberum_addere(radix, e);
+        x->bene = FALSUM;
+        redde;
+    }
+    si (!ramum_invenire(radix, x->ramus->via))
+    {
+        stml_liberum_addere(parens, e);
     }
 }
 
@@ -951,16 +1137,25 @@ insula_ramum_initiare (
     {
         redde FALSUM;
     }
-    si (   !chorda_vacua(ramus->elementum)
+    si (   !chorda_vacua(ramus->via)
         && insula_ramus_nodus(ramus))
     {
         redde VERUM;   /* exstat: nihil mutatur */
     }
+    /* S8: parens exstare debet (ante portam - nihil scribitur) */
+    si (   !chorda_vacua(ramus->via)
+        && !ramum_invenire(ramus->repo->radix,
+               via_parentis(ramus->via)))
+    {
+        causam_ponere(ramus->repo, "ramus parens abest: initiatio"
+                                   " sub nodo nullo");
+        redde FALSUM;
+    }
     x.ramus  = ramus;
     x.stml   = elementum_stml;
     x.bene   = VERUM;
-    redde mutare(ramus->repo, chorda_nulla_insulae(),
-                 chorda_nulla_insulae(), initiatio_mutator, &x)
+    redde mutare(ramus->repo, chorda_nulla_insulae(), initiatio_mutator,
+                 &x)
         && x.bene;
 }
 
@@ -977,7 +1172,6 @@ insula_ramus_canonem_ponere (
     }
     cr             = (CanonRami*)xar_addere(
         ramus->repo->canones_ramorum);
-    cr->elementum  = ramus->elementum;
-    cr->id         = ramus->id;
-    cr->canon      = canon;
+    cr->via    = ramus->via;
+    cr->canon  = canon;
 }

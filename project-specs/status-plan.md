@@ -132,6 +132,26 @@ widgets are migrated by hand.*
 - **S8** branches as paths at any depth; focus, dispatcher, kinetic
   slot and registry route by path. Test: a toy widget three levels
   deep. Re-measure the store-copy cost (terminal-planning park 010).
+  Fran 10-12: split a/b/c/d. Findings: depth-1 lives only in insula
+  (find, root-canon view, owners, initiation); the dispatcher routes by
+  `spatium` and `motus.ramus` names the one active pane (pictor/scriba
+  compare spatium == ramus.id); no persistent-tree substrate in materia
+  or stml-visio; park 010 suspects canon judging, not the text copy.
+- **S8a** DONE 2026-10-12 (lib/insula.worklog.md): InsulaRamus.via =
+  interned path "elementum:id/..."; `insula_ramus_liberi(parens, e,
+  id)`; owners and branch canons keyed by path; every canon judges its
+  node minus descendant branches with their own canon (nearest wins,
+  any depth); initiation under the parent (absent parent refused,
+  named). probatio_insula_profunda (3 levels).
+- **S8b** mounting at depth: organum_ramum_parare + conservatio /
+  relatio / dimissio on nested branches; persistence key from the path;
+  toy widgets in probationes.
+- **S8c** routing by path: spatium = branch path (one address);
+  registry, focus/focus_acervus, kinetic slot -> innermost focused
+  branch; pictor/scriba compare with the path. Test: toy widget three
+  deep gets keys/clicks with its branch; focus moves between levels.
+- **S8d** measure: park 010 table + nested rows, `sample`; then judge
+  touched branches only vs the persistent-tree arc.
 
 ### Arc IV — generation and lints (after three hand migrations)
 
