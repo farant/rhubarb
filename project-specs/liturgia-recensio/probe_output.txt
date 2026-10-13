@@ -1,0 +1,171 @@
+
+==== A. Easter: library vs published table 2000-2040 ====
+table mismatches: 0 / 41
+
+==== B. Easter: library vs independent Oudin algorithm 1583-4099 ====
+mismatches: 0 / 2517
+ 1818:3-22 2285:3-22 1943:4-25 2038:4-25 1981:4-19 2049:4-18 2076:4-19 2008:3-23
+
+==== C. Anchors for selected years ====
+2008: ash=2008-02-06(Wed) easter=2008-03-23(Sun) asc=2008-05-01(Thu) pent=2008-05-11(Sun) trin=2008-05-18(Sun) corpus=2008-05-22(Thu) cor=2008-05-30(Fri) CK=2008-11-23(Sun) adv1=2008-11-30(Sun) bapt=2008-01-07(Mon)
+2011: ash=2011-03-09(Wed) easter=2011-04-24(Sun) asc=2011-06-02(Thu) pent=2011-06-12(Sun) trin=2011-06-19(Sun) corpus=2011-06-23(Thu) cor=2011-07-01(Fri) CK=2011-11-20(Sun) adv1=2011-11-27(Sun) bapt=2011-01-09(Sun)
+2019: ash=2019-03-06(Wed) easter=2019-04-21(Sun) asc=2019-05-30(Thu) pent=2019-06-09(Sun) trin=2019-06-16(Sun) corpus=2019-06-20(Thu) cor=2019-06-28(Fri) CK=2019-11-24(Sun) adv1=2019-12-01(Sun) bapt=2019-01-07(Mon)
+2022: ash=2022-03-02(Wed) easter=2022-04-17(Sun) asc=2022-05-26(Thu) pent=2022-06-05(Sun) trin=2022-06-12(Sun) corpus=2022-06-16(Thu) cor=2022-06-24(Fri) CK=2022-11-20(Sun) adv1=2022-11-27(Sun) bapt=2022-01-09(Sun)
+2023: ash=2023-02-22(Wed) easter=2023-04-09(Sun) asc=2023-05-18(Thu) pent=2023-05-28(Sun) trin=2023-06-04(Sun) corpus=2023-06-08(Thu) cor=2023-06-16(Fri) CK=2023-11-26(Sun) adv1=2023-12-03(Sun) bapt=2023-01-08(Sun)
+2024: ash=2024-02-14(Wed) easter=2024-03-31(Sun) asc=2024-05-09(Thu) pent=2024-05-19(Sun) trin=2024-05-26(Sun) corpus=2024-05-30(Thu) cor=2024-06-07(Fri) CK=2024-11-24(Sun) adv1=2024-12-01(Sun) bapt=2024-01-07(Sun)
+2025: ash=2025-03-05(Wed) easter=2025-04-20(Sun) asc=2025-05-29(Thu) pent=2025-06-08(Sun) trin=2025-06-15(Sun) corpus=2025-06-19(Thu) cor=2025-06-27(Fri) CK=2025-11-23(Sun) adv1=2025-11-30(Sun) bapt=2025-01-12(Sun)
+2026: ash=2026-02-18(Wed) easter=2026-04-05(Sun) asc=2026-05-14(Thu) pent=2026-05-24(Sun) trin=2026-05-31(Sun) corpus=2026-06-04(Thu) cor=2026-06-12(Fri) CK=2026-11-22(Sun) adv1=2026-11-29(Sun) bapt=2026-01-11(Sun)
+2027: ash=2027-02-10(Wed) easter=2027-03-28(Sun) asc=2027-05-06(Thu) pent=2027-05-16(Sun) trin=2027-05-23(Sun) corpus=2027-05-27(Thu) cor=2027-06-04(Fri) CK=2027-11-21(Sun) adv1=2027-11-28(Sun) bapt=2027-01-10(Sun)
+2028: ash=2028-03-01(Wed) easter=2028-04-16(Sun) asc=2028-05-25(Thu) pent=2028-06-04(Sun) trin=2028-06-11(Sun) corpus=2028-06-15(Thu) cor=2028-06-23(Fri) CK=2028-11-26(Sun) adv1=2028-12-03(Sun) bapt=2028-01-09(Sun)
+2029: ash=2029-02-14(Wed) easter=2029-04-01(Sun) asc=2029-05-10(Thu) pent=2029-05-20(Sun) trin=2029-05-27(Sun) corpus=2029-05-31(Thu) cor=2029-06-08(Fri) CK=2029-11-25(Sun) adv1=2029-12-02(Sun) bapt=2029-01-07(Sun)
+2030: ash=2030-03-06(Wed) easter=2030-04-21(Sun) asc=2030-05-30(Thu) pent=2030-06-09(Sun) trin=2030-06-16(Sun) corpus=2030-06-20(Thu) cor=2030-06-28(Fri) CK=2030-11-24(Sun) adv1=2030-12-01(Sun) bapt=2030-01-07(Mon)
+2035: ash=2035-02-07(Wed) easter=2035-03-25(Sun) asc=2035-05-03(Thu) pent=2035-05-13(Sun) trin=2035-05-20(Sun) corpus=2035-05-24(Thu) cor=2035-06-01(Fri) CK=2035-11-25(Sun) adv1=2035-12-02(Sun) bapt=2035-01-07(Sun)
+2036: ash=2036-02-27(Wed) easter=2036-04-13(Sun) asc=2036-05-22(Thu) pent=2036-06-01(Sun) trin=2036-06-08(Sun) corpus=2036-06-12(Thu) cor=2036-06-20(Fri) CK=2036-11-23(Sun) adv1=2036-11-30(Sun) bapt=2036-01-07(Mon)
+2038: ash=2038-03-10(Wed) easter=2038-04-25(Sun) asc=2038-06-03(Thu) pent=2038-06-13(Sun) trin=2038-06-20(Sun) corpus=2038-06-24(Thu) cor=2038-07-02(Fri) CK=2038-11-21(Sun) adv1=2038-11-28(Sun) bapt=2038-01-10(Sun)
+2285: ash=2285-02-04(Wed) easter=2285-03-22(Sun) asc=2285-04-30(Thu) pent=2285-05-10(Sun) trin=2285-05-17(Sun) corpus=2285-05-21(Thu) cor=2285-05-29(Fri) CK=2285-11-22(Sun) adv1=2285-11-29(Sun) bapt=2285-01-11(Sun)
+
+==== D. Season boundary API (finis/initium) for 2026 ====
+ADV   initium=2025-11-30(Sun) finis=2025-12-24(Wed)
+NAT   initium=2025-12-25(Thu) finis=2026-01-11(Sun)
+PA_I  initium=2026-01-12(Mon) finis=2026-02-17(Tue)
+QUAD  initium=2026-02-18(Wed) finis=2026-04-01(Wed)
+TRID  initium=2026-04-02(Thu) finis=2026-04-04(Sat)
+PASCH initium=2026-04-05(Sun) finis=2026-05-24(Sun)
+PA_II initium=2026-05-25(Mon) finis=2027-11-27(Sat)
+
+==== E. Known bug + solemnities on Sundays outside Advent/Lent/Easter ====
+2026-11-01 Sun | PA_II wk31 ps3 A/II | DOMINICA    green  | Dominica XXXI per Annum  [titulus_diei=Dominica XXXI per Annum]  {all: Dominica XXXI per Annum(DOMINICA,green); All Saints(SOLLEMNITAS,white);}
+2020-11-01 Sun | PA_II wk31 ps3 A/II | DOMINICA    green  | Dominica XXXI per Annum  [titulus_diei=Dominica XXXI per Annum]  {all: Dominica XXXI per Annum(DOMINICA,green); All Saints(SOLLEMNITAS,white);}
+2025-06-29 Sun | PA_II wk13 ps1 C/I | DOMINICA    green  | Dominica XIII per Annum  [titulus_diei=Dominica XIII per Annum]  {all: Dominica XIII per Annum(DOMINICA,green); Ss. Peter & Paul(SOLLEMNITAS,red);}
+2031-06-29 Sun | PA_II wk13 ps1 C/I | DOMINICA    green  | Dominica XIII per Annum  [titulus_diei=Dominica XIII per Annum]  {all: Dominica XIII per Annum(DOMINICA,green); Ss. Peter & Paul(SOLLEMNITAS,red);}
+2029-06-24 Sun | PA_II wk12 ps4 A/I | DOMINICA    green  | Dominica XII per Annum  [titulus_diei=Dominica XII per Annum]  {all: Dominica XII per Annum(DOMINICA,green); Birth of St. John Baptist(SOLLEMNITAS,white);}
+2035-06-24 Sun | PA_II wk12 ps4 A/I | DOMINICA    green  | Dominica XII per Annum  [titulus_diei=Dominica XII per Annum]  {all: Dominica XII per Annum(DOMINICA,green); Birth of St. John Baptist(SOLLEMNITAS,white);}
+2027-08-15 Sun | PA_II wk20 ps4 B/I | DOMINICA    green  | Dominica XX per Annum  [titulus_diei=Dominica XX per Annum]  {all: Dominica XX per Annum(DOMINICA,green); Assumption(SOLLEMNITAS,white);}
+2032-08-15 Sun | PA_II wk20 ps4 A/II | DOMINICA    green  | Dominica XX per Annum  [titulus_diei=Dominica XX per Annum]  {all: Dominica XX per Annum(DOMINICA,green); Assumption(SOLLEMNITAS,white);}
+2022-12-25 Sun | NAT   wk1  ps1 A/I | DOMINICA    white  | Dominica - Tempus Nativitatis  [titulus_diei=Dominica - Tempus Nativitatis]  {all: Dominica - Tempus Nativitatis(DOMINICA,white); Christmas(SOLLEMNITAS,white);}
+2023-01-01 Sun | NAT   wk1  ps1 A/I | DOMINICA    white  | Dominica - Tempus Nativitatis  [titulus_diei=Dominica - Tempus Nativitatis]  {all: Dominica - Tempus Nativitatis(DOMINICA,white); Mary, Mother of God(SOLLEMNITAS,white);}
+2034-01-01 Sun | NAT   wk1  ps1 C/II | DOMINICA    white  | Dominica - Tempus Nativitatis  [titulus_diei=Dominica - Tempus Nativitatis]  {all: Dominica - Tempus Nativitatis(DOMINICA,white); Mary, Mother of God(SOLLEMNITAS,white);}
+2019-01-06 Sun | NAT   wk1  ps1 C/I | DOMINICA    white  | Dominica - Tempus Nativitatis  [titulus_diei=Dominica - Tempus Nativitatis]  {all: Dominica - Tempus Nativitatis(DOMINICA,white); Epiphany(SOLLEMNITAS,white);}
+2030-01-06 Sun | NAT   wk1  ps1 B/II | DOMINICA    white  | Dominica - Tempus Nativitatis  [titulus_diei=Dominica - Tempus Nativitatis]  {all: Dominica - Tempus Nativitatis(DOMINICA,white); Epiphany(SOLLEMNITAS,white);}
+
+==== F. Feasts of the Lord on OT / Christmas Sundays ====
+2025-02-02 Sun | PA_I  wk4  ps4 C/I | DOMINICA    green  | Dominica IV per Annum  [titulus_diei=Dominica IV per Annum]
+2020-02-02 Sun | PA_I  wk4  ps4 A/II | DOMINICA    green  | Dominica IV per Annum  [titulus_diei=Dominica IV per Annum]
+2023-08-06 Sun | PA_II wk18 ps2 A/I | DOMINICA    green  | Dominica XVIII per Annum  [titulus_diei=Dominica XVIII per Annum]
+2028-08-06 Sun | PA_II wk18 ps2 C/II | DOMINICA    green  | Dominica XVIII per Annum  [titulus_diei=Dominica XVIII per Annum]
+2025-09-14 Sun | PA_II wk24 ps4 C/I | DOMINICA    green  | Dominica XXIV per Annum  [titulus_diei=Dominica XXIV per Annum]
+2031-09-14 Sun | PA_II wk24 ps4 C/I | DOMINICA    green  | Dominica XXIV per Annum  [titulus_diei=Dominica XXIV per Annum]
+2025-11-09 Sun | PA_II wk32 ps4 C/I | DOMINICA    green  | Dominica XXXII per Annum  [titulus_diei=Dominica XXXII per Annum]
+2031-11-09 Sun | PA_II wk32 ps4 C/I | DOMINICA    green  | Dominica XXXII per Annum  [titulus_diei=Dominica XXXII per Annum]
+
+==== G. All Souls (Nov 2) - weekday and Sunday ====
+2026-11-02 Mon | PA_II wk31 ps3 A/II | FERIA       green  | Feria II, Hebdomada XXXI  [titulus_diei=Feria II, Hebdomada XXXI]
+2025-11-02 Sun | PA_II wk31 ps3 C/I | DOMINICA    green  | Dominica XXXI per Annum  [titulus_diei=Dominica XXXI per Annum]
+2024-11-02 Sat | PA_II wk30 ps2 B/II | FERIA       green  | Sabbatum, Hebdomada XXX  [titulus_diei=Sabbatum, Hebdomada XXX]
+
+==== H. Transfers: Joseph / Annunciation / Immaculate Conception ====
+2023-03-19 Sun | QUAD  wk4  ps4 A/I | DOMINICA    rose   | Dominica IV Quadragesimae  [titulus_diei=Dominica IV Quadragesimae]
+2023-03-20 Mon | QUAD  wk4  ps4 A/I | FERIA       violet | Feria II, Hebdomada IV  [titulus_diei=Feria II, Hebdomada IV]
+2028-03-19 Sun | QUAD  wk3  ps3 C/II | DOMINICA    violet | Dominica III Quadragesimae  [titulus_diei=Dominica III Quadragesimae]
+2028-03-20 Mon | QUAD  wk3  ps3 C/II | FERIA       violet | Feria II, Hebdomada III  [titulus_diei=Feria II, Hebdomada III]
+2008-03-15 Sat | QUAD  wk6  ps2 A/II | FERIA       violet | Sabbatum, Hebdomada VI  [titulus_diei=Sabbatum, Hebdomada VI]
+2008-03-19 Wed | QUAD  wk6  ps2 A/II | DIES_PEC    violet | Feria IV, Hebdomada VI  [titulus_diei=Feria IV, Hebdomada VI]
+2035-03-17 Sat | QUAD  wk6  ps2 A/I | MEM_OPT     white  | St. Patrick  [titulus_diei=Sabbatum, Hebdomada VI]  {all: Sabbatum, Hebdomada VI(FERIA,violet); St. Patrick(MEM_OPT,white);}
+2035-03-19 Mon | QUAD  wk6  ps2 A/I | DIES_PEC    violet | Feria II, Hebdomada VI  [titulus_diei=Feria II, Hebdomada VI]
+2024-03-25 Mon | QUAD  wk6  ps2 B/II | DIES_PEC    violet | Feria II, Hebdomada VI  [titulus_diei=Feria II, Hebdomada VI]
+2024-04-08 Mon | PASCH wk2  ps2 B/II | FERIA       white  | Feria II, Hebdomada II  [titulus_diei=Feria II, Hebdomada II]
+2008-03-25 Tue | PASCH wk1  ps1 A/II | DIES_PEC    white  | Feria III, Hebdomada I  [titulus_diei=Feria III, Hebdomada I]
+2008-03-31 Mon | PASCH wk2  ps2 A/II | FERIA       white  | Feria II, Hebdomada II  [titulus_diei=Feria II, Hebdomada II]
+2029-03-25 Sun | QUAD  wk6  ps2 A/I | DOMINICA    violet | Dominica VI Quadragesimae  [titulus_diei=Dominica VI Quadragesimae]
+2029-04-09 Mon | PASCH wk2  ps2 A/I | FERIA       white  | Feria II, Hebdomada II  [titulus_diei=Feria II, Hebdomada II]
+2035-03-25 Sun | PASCH wk1  ps1 A/I | DOMINICA    white  | Dominica I Paschae  [titulus_diei=Dominica I Paschae]
+2035-04-02 Mon | PASCH wk2  ps2 A/I | MEM_OPT     white  | St. Francis of Paola  [titulus_diei=Feria II, Hebdomada II]  {all: Feria II, Hebdomada II(FERIA,white); St. Francis of Paola(MEM_OPT,white);}
+2024-12-08 Sun | ADV   wk2  ps2 C/I | DOMINICA    violet | Dominica II Adventus  [titulus_diei=Dominica II Adventus]
+2024-12-09 Mon | ADV   wk2  ps2 C/I | MEM_OPT     white  | St. Juan Diego  [titulus_diei=Feria II, Hebdomada II]  {all: Feria II, Hebdomada II(FERIA,violet); St. Juan Diego(MEM_OPT,white);}
+2030-12-08 Sun | ADV   wk2  ps2 C/I | DOMINICA    violet | Dominica II Adventus  [titulus_diei=Dominica II Adventus]
+2030-12-09 Mon | ADV   wk2  ps2 C/I | MEM_OPT     white  | St. Juan Diego  [titulus_diei=Feria II, Hebdomada II]  {all: Feria II, Hebdomada II(FERIA,violet); St. Juan Diego(MEM_OPT,white);}
+2027-12-12 Sun | ADV   wk3  ps3 C/II | DOMINICA    rose   | Dominica III Adventus  [titulus_diei=Dominica III Adventus]
+
+==== I. Movable solemnities / feasts / memorials ====
+2026-05-14 Thu | PASCH wk6  ps2 A/II | FESTUM      red    | St. Matthias  [titulus_diei=Saint Matthias the Apostle]  {all: Feria V, Hebdomada VI(FERIA,white); St. Matthias(FESTUM,red);}
+2026-05-17 Sun | PASCH wk7  ps3 A/II | DOMINICA    white  | Dominica VII Paschae  [titulus_diei=Dominica VII Paschae]
+2026-05-24 Sun | PASCH wk8  ps4 A/II | DOMINICA    red    | Dominica VIII Paschae  [titulus_diei=Dominica VIII Paschae]
+2026-05-25 Mon | PA_II wk8  ps4 A/II | MEM_OPT     white  | St. Bede  [titulus_diei=Feria II, Hebdomada VIII]  {all: Feria II, Hebdomada VIII(FERIA,green); St. Bede(MEM_OPT,white); St. Gregory VII(MEM_OPT,white); St. Mary Magdalene de' Pazzi(MEM_OPT,white);}
+2026-05-31 Sun | PA_II wk9  ps1 A/II | DOMINICA    green  | Dominica IX per Annum  [titulus_diei=Dominica IX per Annum]
+2026-06-04 Thu | PA_II wk9  ps1 A/II | FERIA       green  | Feria V, Hebdomada IX  [titulus_diei=Feria V, Hebdomada IX]
+2026-06-07 Sun | PA_II wk10 ps2 A/II | DOMINICA    green  | Dominica X per Annum  [titulus_diei=Dominica X per Annum]
+2026-06-12 Fri | PA_II wk10 ps2 A/II | FERIA       green  | Feria VI, Hebdomada X  [titulus_diei=Feria VI, Hebdomada X]
+2026-06-13 Sat | PA_II wk10 ps2 A/II | MEMORIA     white  | St. Anthony of Padua  [titulus_diei=Sabbatum, Hebdomada X]  {all: Sabbatum, Hebdomada X(FERIA,green); St. Anthony of Padua(MEMORIA,white);}
+2022-06-23 Thu | PA_II wk12 ps4 C/II | FERIA       green  | Feria V, Hebdomada XII  [titulus_diei=Feria V, Hebdomada XII]
+2022-06-24 Fri | PA_II wk12 ps4 C/II | SOLLEMNITAS white  | Birth of St. John Baptist  [titulus_diei=The Nativity of Saint John the Baptist]  {all: Feria VI, Hebdomada XII(FERIA,green); Birth of St. John Baptist(SOLLEMNITAS,white);}
+2026-11-22 Sun | PA_II wk34 ps2 A/II | DOMINICA    green  | Dominica XXXIV per Annum  [titulus_diei=Dominica XXXIV per Annum]
+2025-11-23 Sun | PA_II wk34 ps2 C/I | DOMINICA    green  | Dominica XXXIV per Annum  [titulus_diei=Dominica XXXIV per Annum]
+2025-12-28 Sun | NAT   wk1  ps1 A/II | DOMINICA    white  | Dominica - Tempus Nativitatis  [titulus_diei=Dominica - Tempus Nativitatis]
+2027-12-26 Sun | NAT   wk1  ps1 C/II | DOMINICA    white  | Dominica - Tempus Nativitatis  [titulus_diei=Dominica - Tempus Nativitatis]
+2022-12-30 Fri | NAT   wk1  ps1 A/I | FERIA       white  | Feria VI, Hebdomada I  [titulus_diei=Feria VI, Hebdomada I]
+2026-01-11 Sun | NAT   wk1  ps1 A/II | DOMINICA    white  | Dominica - Tempus Nativitatis  [titulus_diei=Dominica - Tempus Nativitatis]
+2019-01-07 Mon | NAT   wk1  ps1 C/I | MEM_OPT     white  | St. Raymond  [titulus_diei=Feria II, Hebdomada I]  {all: Feria II, Hebdomada I(FERIA,white); St. Raymond(MEM_OPT,white);}
+2019-01-13 Sun | PA_I  wk1  ps1 C/I | DOMINICA    green  | Dominica I per Annum  [titulus_diei=Dominica I per Annum]
+2019-01-14 Mon | PA_I  wk2  ps2 C/I | FERIA       green  | Feria II, Hebdomada II  [titulus_diei=Feria II, Hebdomada II]
+2019-01-19 Sat | PA_I  wk2  ps2 C/I | FERIA       green  | Sabbatum, Hebdomada II  [titulus_diei=Sabbatum, Hebdomada II]
+2019-01-21 Mon | PA_I  wk3  ps3 C/I | MEMORIA     red    | St. Agnes  [titulus_diei=Feria II, Hebdomada III]  {all: Feria II, Hebdomada III(FERIA,green); St. Agnes(MEMORIA,red);}
+
+==== J. Memorials in privileged seasons ====
+2025-03-07 Fri | QUAD  wk1  ps1 C/I | MEMORIA     red    | Ss. Perpetua & Felicity  [titulus_diei=Feria VI, Hebdomada I]  {all: Feria VI, Hebdomada I(FERIA,violet); Ss. Perpetua & Felicity(MEMORIA,red);}
+2026-03-17 Tue | QUAD  wk4  ps4 A/II | MEM_OPT     white  | St. Patrick  [titulus_diei=Feria III, Hebdomada IV]  {all: Feria III, Hebdomada IV(FERIA,violet); St. Patrick(MEM_OPT,white);}
+2026-02-23 Mon | QUAD  wk1  ps1 A/II | MEMORIA     red    | St. Polycarp  [titulus_diei=Feria II, Hebdomada I]  {all: Feria II, Hebdomada I(FERIA,violet); St. Polycarp(MEMORIA,red);}
+2025-12-03 Wed | ADV   wk1  ps1 A/II | MEMORIA     white  | St. Francis Xavier  [titulus_diei=Feria IV, Hebdomada I]  {all: Feria IV, Hebdomada I(FERIA,violet); St. Francis Xavier(MEMORIA,white);}
+2026-12-21 Mon | ADV   wk4  ps4 B/I | MEM_OPT     white  | St. Peter Canisius  [titulus_diei=Feria II, Hebdomada IV]  {all: Feria II, Hebdomada IV(FERIA,violet); St. Peter Canisius(MEM_OPT,white);}
+2026-12-23 Wed | ADV   wk4  ps4 B/I | MEM_OPT     white  | St. John of Kanty  [titulus_diei=Feria IV, Hebdomada IV]  {all: Feria IV, Hebdomada IV(FERIA,violet); St. John of Kanty(MEM_OPT,white);}
+2026-12-29 Tue | NAT   wk1  ps1 B/I | MEM_OPT     red    | St. Thomas Becket  [titulus_diei=Feria III, Hebdomada I]  {all: Feria III, Hebdomada I(FERIA,white); St. Thomas Becket(MEM_OPT,red);}
+2026-12-31 Thu | NAT   wk1  ps1 B/I | MEM_OPT     white  | St. Sylvester I  [titulus_diei=Feria V, Hebdomada I]  {all: Feria V, Hebdomada I(FERIA,white); St. Sylvester I(MEM_OPT,white);}
+2026-01-02 Fri | NAT   wk1  ps1 A/II | MEMORIA     white  | Ss. Basil & Gregory  [titulus_diei=Feria VI, Hebdomada I]  {all: Feria VI, Hebdomada I(FERIA,white); Ss. Basil & Gregory(MEMORIA,white);}
+2026-02-22 Sun | QUAD  wk1  ps1 A/II | DOMINICA    violet | Dominica I Quadragesimae  [titulus_diei=Dominica I Quadragesimae]
+2027-02-22 Mon | QUAD  wk2  ps2 B/I | FESTUM      white  | Chair of St. Peter  [titulus_diei=The Chair of Saint Peter the Apostle]  {all: Feria II, Hebdomada II(FERIA,violet); Chair of St. Peter(FESTUM,white);}
+2026-01-20 Tue | PA_I  wk2  ps2 A/II | MEM_OPT     red    | St. Fabian  [titulus_diei=Feria III, Hebdomada II]  {all: Feria III, Hebdomada II(FERIA,green); St. Fabian(MEM_OPT,red); St. Sebastian(MEM_OPT,red);}
+2026-10-19 Mon | PA_II wk29 ps1 A/II | MEMORIA     red    | Ss. John de Brebeuf & Isaac Jogues  [titulus_diei=Feria II, Hebdomada XXIX]  {all: Feria II, Hebdomada XXIX(FERIA,green); Ss. John de Brebeuf & Isaac Jogues(MEMORIA,red); St. Paul of the Cross(MEM_OPT,white);}
+2026-04-25 Sat | PASCH wk3  ps3 A/II | FESTUM      red    | St. Mark  [titulus_diei=Saint Mark the Evangelist]  {all: Sabbatum, Hebdomada III(FERIA,white); St. Mark(FESTUM,red);}
+
+==== K. Colours: Palm Sunday, Triduum, Gaudete, Laetare, Pentecost ====
+2026-03-29 Sun | QUAD  wk6  ps2 A/II | DOMINICA    violet | Dominica VI Quadragesimae  [titulus_diei=Dominica VI Quadragesimae]
+2026-03-30 Mon | QUAD  wk6  ps2 A/II | DIES_PEC    violet | Feria II, Hebdomada VI  [titulus_diei=Feria II, Hebdomada VI]
+2026-04-02 Thu | TRID  wk1  ps1 A/II | DIES_PEC    red    | Feria V, Hebdomada I  [titulus_diei=Feria V, Hebdomada I]
+2026-04-03 Fri | TRID  wk1  ps1 A/II | DIES_PEC    red    | Feria VI, Hebdomada I  [titulus_diei=Feria VI, Hebdomada I]
+2026-04-04 Sat | TRID  wk1  ps1 A/II | DIES_PEC    red    | Sabbatum, Hebdomada I  [titulus_diei=Sabbatum, Hebdomada I]
+2026-04-05 Sun | PASCH wk1  ps1 A/II | DOMINICA    white  | Dominica I Paschae  [titulus_diei=Dominica I Paschae]
+2026-04-12 Sun | PASCH wk2  ps2 A/II | DOMINICA    white  | Dominica II Paschae  [titulus_diei=Dominica II Paschae]
+2026-12-13 Sun | ADV   wk3  ps3 B/I | DOMINICA    rose   | Dominica III Adventus  [titulus_diei=Dominica III Adventus]
+2026-03-15 Sun | QUAD  wk4  ps4 A/II | DOMINICA    rose   | Dominica IV Quadragesimae  [titulus_diei=Dominica IV Quadragesimae]
+2026-02-18 Wed | QUAD  wk1  ps1 A/II | DIES_PEC    violet | Feria IV, Hebdomada I  [titulus_diei=Feria IV, Hebdomada I]
+2026-02-19 Thu | QUAD  wk1  ps1 A/II | FERIA       violet | Feria V, Hebdomada I  [titulus_diei=Feria V, Hebdomada I]
+2026-02-21 Sat | QUAD  wk1  ps1 A/II | MEM_OPT     white  | St. Peter Damian  [titulus_diei=Sabbatum, Hebdomada I]  {all: Sabbatum, Hebdomada I(FERIA,violet); St. Peter Damian(MEM_OPT,white);}
+
+==== L. Week / psalter / cycle boundaries ====
+2025-11-29 Sat | PA_II wk34 ps2 C/I | FERIA       green  | Sabbatum, Hebdomada XXXIV  [titulus_diei=Sabbatum, Hebdomada XXXIV]
+2025-11-30 Sun | ADV   wk1  ps1 A/II | DOMINICA    violet | Dominica I Adventus  [titulus_diei=Dominica I Adventus]
+2025-12-24 Wed | ADV   wk4  ps4 A/II | FERIA       violet | Feria IV, Hebdomada IV  [titulus_diei=Feria IV, Hebdomada IV]
+2025-12-25 Thu | NAT   wk1  ps1 A/II | SOLLEMNITAS white  | Christmas  [titulus_diei=The Nativity of the Lord]  {all: Feria V, Hebdomada I(FERIA,white); Christmas(SOLLEMNITAS,white);}
+2026-01-03 Sat | NAT   wk1  ps1 A/II | MEM_OPT     white  | Holy Name of Jesus  [titulus_diei=Sabbatum, Hebdomada I]  {all: Sabbatum, Hebdomada I(FERIA,white); Holy Name of Jesus(MEM_OPT,white);}
+2026-01-04 Sun | NAT   wk1  ps1 A/II | DOMINICA    white  | Dominica - Tempus Nativitatis  [titulus_diei=Dominica - Tempus Nativitatis]
+2026-01-12 Mon | PA_I  wk1  ps1 A/II | FERIA       green  | Feria II, Hebdomada I  [titulus_diei=Feria II, Hebdomada I]
+2026-02-17 Tue | PA_I  wk6  ps2 A/II | MEM_OPT     white  | Seven Servite Founders  [titulus_diei=Feria III, Hebdomada VI]  {all: Feria III, Hebdomada VI(FERIA,green); Seven Servite Founders(MEM_OPT,white);}
+2026-02-22 Sun | QUAD  wk1  ps1 A/II | DOMINICA    violet | Dominica I Quadragesimae  [titulus_diei=Dominica I Quadragesimae]
+2026-05-23 Sat | PASCH wk7  ps3 A/II | FERIA       white  | Sabbatum, Hebdomada VII  [titulus_diei=Sabbatum, Hebdomada VII]
+2008-05-12 Mon | PA_II wk6  ps2 A/II | MEM_OPT     red    | Ss. Nereus & Achilleus  [titulus_diei=Feria II, Hebdomada VI]  {all: Feria II, Hebdomada VI(FERIA,green); Ss. Nereus & Achilleus(MEM_OPT,red); St. Pancras(MEM_OPT,red);}
+2038-06-14 Mon | PA_II wk11 ps3 A/II | FERIA       green  | Feria II, Hebdomada XI  [titulus_diei=Feria II, Hebdomada XI]
+2008-01-13 Sun | PA_I  wk1  ps1 A/II | DOMINICA    green  | Dominica I per Annum  [titulus_diei=Dominica I per Annum]
+2008-02-05 Tue | PA_I  wk5  ps1 A/II | MEMORIA     red    | St. Agatha  [titulus_diei=Feria III, Hebdomada V]  {all: Feria III, Hebdomada V(FERIA,green); St. Agatha(MEMORIA,red);}
+2038-03-09 Tue | PA_I  wk9  ps1 A/II | MEM_OPT     white  | St. Frances of Rome  [titulus_diei=Feria III, Hebdomada IX]  {all: Feria III, Hebdomada IX(FERIA,green); St. Frances of Rome(MEM_OPT,white);}
+
+==== M. Robustness ====
+cache after 26 distinct years: year3000 recomputed=yes annus=3000
+descending scan 2100..2000 checked
+365 obtinere_diem calls OK
+cyclus_dominicalis(-1)=2 quotidianus(-1)=1
+computus(1000)=1000-3-30 (Julian-era year, not rejected)
+computus(-5)=-5-3-4
+2026-02-30 Mon | QUAD  wk2  ps2 A/II | FERIA       violet | Feria II, Hebdomada II  [titulus_diei=Feria II, Hebdomada II]
+invenire_festum(Easter,2026)=0-0-0
+nomen_celebrationum(2029-03-25)=Palm Sunday, The Annunciation of the Lord
+nomen_celebrationum(2026-11-01)=All Saints
+nomen_celebrationum(2026-05-14)=Saint Matthias the Apostle

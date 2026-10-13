@@ -92,3 +92,22 @@ mandata pool (or static storage). Test `litterae_dierum_sunt` (letters
 on the title's second line, y 8, read AFTER other calls reused the
 stack): red before, green after. The probe source is kept in the
 session scratchpad, not committed.
+
+## 2026-10-13 — A2b after the screenshot (Fran's calls)
+
+- Plain Sundays show no title: the library's short title "Dominica XXIX
+  per Annum" cut to the cell read "Dominica X". Rule now: memorial or
+  higher, except GRADUS_DOMINICA. (Solemnities on Sundays will show once
+  the liturgical library ranks them properly - see below.)
+- The liturgical colour moved from a 2 px edge bar (read as a divider
+  between days) to a 5x5 square right after the day number.
+- Test: the colour checks look for the 5x5 RGBA square; the Oct 18
+  (Sunday) cell carries only its number. Red before, green after.
+
+Liturgical library review (background agent, probe-verified): 15
+findings - Sundays beat solemnities (132 dates 1970-2100), All Souls
+never shown, movable celebrations unused, no transfers, Holy Week
+colours, optional memorials recolouring weekdays (visible here: Oct 14
+St Callistus paints the day red). Kept in
+project-specs/liturgia-recensio/. Fran: the calendar is US; other
+calendars later; this is the next project after the calendar widget.

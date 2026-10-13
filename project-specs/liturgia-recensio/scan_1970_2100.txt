@@ -1,0 +1,864 @@
+C2 dropped FESTUM 1970-01-25 Sun PA_I  Conv. of St. Paul
+C2 dropped FESTUM 1970-02-22 Sun QUAD  Chair of St. Peter
+C2 dropped SOLLEMNITAS 1970-03-25 Wed QUAD  Annunciation
+C2 dropped FESTUM 1970-05-03 Sun PASCH Ss. Philip & James
+C2 dropped FESTUM 1970-05-31 Sun PA_II Visitation
+C2 dropped FESTUM 1970-10-18 Sun PA_II St. Luke
+C1 swallowed-solemnity 1970-11-01 Sun PA_II principal=Dominica XXXI per Annum / lost=All Saints
+C2 dropped DIES_PEC 1970-11-02 Mon PA_II All Souls
+C2 dropped FESTUM 1970-12-27 Sun NAT   St. John
+C2 dropped FESTUM 1971-04-25 Sun PASCH St. Mark
+C2 dropped FESTUM 1971-07-25 Sun PA_II St. James
+C1 swallowed-solemnity 1971-08-15 Sun PA_II principal=Dominica XX per Annum / lost=Assumption
+C2 dropped DIES_PEC 1971-11-02 Tue PA_II All Souls
+C2 dropped FESTUM 1971-12-12 Sun ADV   Our Lady of Guadalupe
+C2 dropped FESTUM 1971-12-26 Sun NAT   St. Stephen
+C2 dropped SOLLEMNITAS 1972-03-19 Sun QUAD  St. Joseph
+C2 dropped FESTUM 1972-05-14 Sun PASCH St. Matthias
+C2 dropped FESTUM 1972-08-06 Sun PA_II Transfiguration
+C2 dropped DIES_PEC 1972-11-02 Thu PA_II All Souls
+C2 dropped SOLLEMNITAS 1973-03-25 Sun QUAD  Annunciation
+C2 dropped FESTUM 1973-04-25 Wed PASCH St. Mark
+C1 swallowed-solemnity 1973-06-24 Sun PA_II principal=Dominica XII per Annum / lost=Birth of St. John Baptist
+C2 dropped FESTUM 1973-07-22 Sun PA_II St. Mary Magdalene
+C2 dropped FESTUM 1973-10-28 Sun PA_II Ss. Simon & Jude
+C2 dropped DIES_PEC 1973-11-02 Fri PA_II All Souls
+C1 swallowed-solemnity 1974-01-06 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Epiphany
+C2 dropped FESTUM 1974-09-08 Sun PA_II Birth of Mary
+C2 dropped FESTUM 1974-09-29 Sun PA_II Ss. Michael, Gabriel, Raphael
+C2 dropped DIES_PEC 1974-11-02 Sat PA_II All Souls
+C2 dropped SOLLEMNITAS 1974-12-08 Sun ADV   Immaculate Conception
+C2 dropped FESTUM 1975-02-02 Sun PA_I  Presentation
+C2 dropped SOLLEMNITAS 1975-03-25 Tue QUAD  Annunciation
+C1 swallowed-solemnity 1975-06-29 Sun PA_II principal=Dominica XIII per Annum / lost=Ss. Peter & Paul
+C2 dropped FESTUM 1975-08-10 Sun PA_II St. Lawrence
+C2 dropped FESTUM 1975-08-24 Sun PA_II St. Bartholomew
+C2 dropped FESTUM 1975-09-14 Sun PA_II Exaltation of Holy Cross
+C2 dropped FESTUM 1975-09-21 Sun PA_II St. Matthew
+C2 dropped DIES_PEC 1975-11-02 Sun PA_II All Souls
+C2 dropped FESTUM 1975-11-09 Sun PA_II Lateran Basilica
+C2 dropped FESTUM 1975-11-30 Sun ADV   St. Andrew
+C2 dropped FESTUM 1975-12-28 Sun NAT   Holy Innocents
+C2 dropped FESTUM 1976-01-25 Sun PA_I  Conv. of St. Paul
+C2 dropped FESTUM 1976-02-22 Sun PA_I  Chair of St. Peter
+C2 dropped FESTUM 1976-04-25 Sun PASCH St. Mark
+C2 dropped FESTUM 1976-07-25 Sun PA_II St. James
+C1 swallowed-solemnity 1976-08-15 Sun PA_II principal=Dominica XX per Annum / lost=Assumption
+C2 dropped DIES_PEC 1976-11-02 Tue PA_II All Souls
+C2 dropped FESTUM 1976-12-12 Sun ADV   Our Lady of Guadalupe
+C2 dropped FESTUM 1976-12-26 Sun NAT   St. Stephen
+C2 dropped FESTUM 1977-07-03 Sun PA_II St. Thomas
+C2 dropped DIES_PEC 1977-11-02 Wed PA_II All Souls
+C1 swallowed-solemnity 1977-12-25 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Christmas
+C1 swallowed-solemnity 1978-01-01 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Mary, Mother of God
+C2 dropped SOLLEMNITAS 1978-03-19 Sun QUAD  St. Joseph
+C2 dropped SOLLEMNITAS 1978-03-25 Sat TRID  Annunciation
+C2 dropped FESTUM 1978-05-14 Sun PASCH St. Matthias
+C2 dropped FESTUM 1978-08-06 Sun PA_II Transfiguration
+C2 dropped DIES_PEC 1978-11-02 Thu PA_II All Souls
+C2 dropped SOLLEMNITAS 1979-03-25 Sun QUAD  Annunciation
+C1 swallowed-solemnity 1979-06-24 Sun PA_II principal=Dominica XII per Annum / lost=Birth of St. John Baptist
+C2 dropped FESTUM 1979-07-22 Sun PA_II St. Mary Magdalene
+C2 dropped FESTUM 1979-10-28 Sun PA_II Ss. Simon & Jude
+C2 dropped DIES_PEC 1979-11-02 Fri PA_II All Souls
+C1 swallowed-solemnity 1980-01-06 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Epiphany
+C1 swallowed-solemnity 1980-06-29 Sun PA_II principal=Dominica XIII per Annum / lost=Ss. Peter & Paul
+C2 dropped FESTUM 1980-08-10 Sun PA_II St. Lawrence
+C2 dropped FESTUM 1980-08-24 Sun PA_II St. Bartholomew
+C2 dropped FESTUM 1980-09-14 Sun PA_II Exaltation of Holy Cross
+C2 dropped FESTUM 1980-09-21 Sun PA_II St. Matthew
+C2 dropped DIES_PEC 1980-11-02 Sun PA_II All Souls
+C2 dropped FESTUM 1980-11-09 Sun PA_II Lateran Basilica
+C2 dropped FESTUM 1980-11-30 Sun ADV   St. Andrew
+C2 dropped FESTUM 1980-12-28 Sun NAT   Holy Innocents
+C2 dropped FESTUM 1981-01-25 Sun PA_I  Conv. of St. Paul
+C2 dropped FESTUM 1981-02-22 Sun PA_I  Chair of St. Peter
+C2 dropped FESTUM 1981-04-25 Sat PASCH St. Mark
+C2 dropped FESTUM 1981-05-03 Sun PASCH Ss. Philip & James
+C2 dropped FESTUM 1981-05-31 Sun PASCH Visitation
+C2 dropped FESTUM 1981-10-18 Sun PA_II St. Luke
+C1 swallowed-solemnity 1981-11-01 Sun PA_II principal=Dominica XXXI per Annum / lost=All Saints
+C2 dropped DIES_PEC 1981-11-02 Mon PA_II All Souls
+C2 dropped FESTUM 1981-12-27 Sun NAT   St. John
+C2 dropped FESTUM 1982-04-25 Sun PASCH St. Mark
+C2 dropped FESTUM 1982-07-25 Sun PA_II St. James
+C1 swallowed-solemnity 1982-08-15 Sun PA_II principal=Dominica XX per Annum / lost=Assumption
+C2 dropped DIES_PEC 1982-11-02 Tue PA_II All Souls
+C2 dropped FESTUM 1982-12-12 Sun ADV   Our Lady of Guadalupe
+C2 dropped FESTUM 1982-12-26 Sun NAT   St. Stephen
+C2 dropped FESTUM 1983-07-03 Sun PA_II St. Thomas
+C2 dropped DIES_PEC 1983-11-02 Wed PA_II All Souls
+C1 swallowed-solemnity 1983-12-25 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Christmas
+C1 swallowed-solemnity 1984-01-01 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Mary, Mother of God
+C2 dropped SOLLEMNITAS 1984-03-25 Sun QUAD  Annunciation
+C2 dropped FESTUM 1984-04-25 Wed PASCH St. Mark
+C1 swallowed-solemnity 1984-06-24 Sun PA_II principal=Dominica XII per Annum / lost=Birth of St. John Baptist
+C2 dropped FESTUM 1984-07-22 Sun PA_II St. Mary Magdalene
+C2 dropped FESTUM 1984-10-28 Sun PA_II Ss. Simon & Jude
+C2 dropped DIES_PEC 1984-11-02 Fri PA_II All Souls
+C1 swallowed-solemnity 1985-01-06 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Epiphany
+C2 dropped FESTUM 1985-09-08 Sun PA_II Birth of Mary
+C2 dropped FESTUM 1985-09-29 Sun PA_II Ss. Michael, Gabriel, Raphael
+C2 dropped DIES_PEC 1985-11-02 Sat PA_II All Souls
+C2 dropped SOLLEMNITAS 1985-12-08 Sun ADV   Immaculate Conception
+C2 dropped FESTUM 1986-02-02 Sun PA_I  Presentation
+C2 dropped SOLLEMNITAS 1986-03-25 Tue QUAD  Annunciation
+C1 swallowed-solemnity 1986-06-29 Sun PA_II principal=Dominica XIII per Annum / lost=Ss. Peter & Paul
+C2 dropped FESTUM 1986-08-10 Sun PA_II St. Lawrence
+C2 dropped FESTUM 1986-08-24 Sun PA_II St. Bartholomew
+C2 dropped FESTUM 1986-09-14 Sun PA_II Exaltation of Holy Cross
+C2 dropped FESTUM 1986-09-21 Sun PA_II St. Matthew
+C2 dropped DIES_PEC 1986-11-02 Sun PA_II All Souls
+C2 dropped FESTUM 1986-11-09 Sun PA_II Lateran Basilica
+C2 dropped FESTUM 1986-11-30 Sun ADV   St. Andrew
+C2 dropped FESTUM 1986-12-28 Sun NAT   Holy Innocents
+C2 dropped FESTUM 1987-01-25 Sun PA_I  Conv. of St. Paul
+C2 dropped FESTUM 1987-02-22 Sun PA_I  Chair of St. Peter
+C2 dropped FESTUM 1987-04-25 Sat PASCH St. Mark
+C2 dropped FESTUM 1987-05-03 Sun PASCH Ss. Philip & James
+C2 dropped FESTUM 1987-05-31 Sun PASCH Visitation
+C2 dropped FESTUM 1987-10-18 Sun PA_II St. Luke
+C1 swallowed-solemnity 1987-11-01 Sun PA_II principal=Dominica XXXI per Annum / lost=All Saints
+C2 dropped DIES_PEC 1987-11-02 Mon PA_II All Souls
+C2 dropped FESTUM 1987-12-27 Sun NAT   St. John
+C2 dropped FESTUM 1988-07-03 Sun PA_II St. Thomas
+C2 dropped DIES_PEC 1988-11-02 Wed PA_II All Souls
+C1 swallowed-solemnity 1988-12-25 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Christmas
+C1 swallowed-solemnity 1989-01-01 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Mary, Mother of God
+C2 dropped SOLLEMNITAS 1989-03-19 Sun QUAD  St. Joseph
+C2 dropped SOLLEMNITAS 1989-03-25 Sat TRID  Annunciation
+C2 dropped FESTUM 1989-05-14 Sun PASCH St. Matthias
+C2 dropped FESTUM 1989-08-06 Sun PA_II Transfiguration
+C2 dropped DIES_PEC 1989-11-02 Thu PA_II All Souls
+C2 dropped SOLLEMNITAS 1990-03-25 Sun QUAD  Annunciation
+C1 swallowed-solemnity 1990-06-24 Sun PA_II principal=Dominica XII per Annum / lost=Birth of St. John Baptist
+C2 dropped FESTUM 1990-07-22 Sun PA_II St. Mary Magdalene
+C2 dropped FESTUM 1990-10-28 Sun PA_II Ss. Simon & Jude
+C2 dropped DIES_PEC 1990-11-02 Fri PA_II All Souls
+C1 swallowed-solemnity 1991-01-06 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Epiphany
+C2 dropped SOLLEMNITAS 1991-03-25 Mon QUAD  Annunciation
+C2 dropped FESTUM 1991-09-08 Sun PA_II Birth of Mary
+C2 dropped FESTUM 1991-09-29 Sun PA_II Ss. Michael, Gabriel, Raphael
+C2 dropped DIES_PEC 1991-11-02 Sat PA_II All Souls
+C2 dropped SOLLEMNITAS 1991-12-08 Sun ADV   Immaculate Conception
+C2 dropped FESTUM 1992-02-02 Sun PA_I  Presentation
+C2 dropped FESTUM 1992-04-25 Sat PASCH St. Mark
+C2 dropped FESTUM 1992-05-03 Sun PASCH Ss. Philip & James
+C2 dropped FESTUM 1992-05-31 Sun PASCH Visitation
+C2 dropped FESTUM 1992-10-18 Sun PA_II St. Luke
+C1 swallowed-solemnity 1992-11-01 Sun PA_II principal=Dominica XXXI per Annum / lost=All Saints
+C2 dropped DIES_PEC 1992-11-02 Mon PA_II All Souls
+C2 dropped FESTUM 1992-12-27 Sun NAT   St. John
+C2 dropped FESTUM 1993-04-25 Sun PASCH St. Mark
+C2 dropped FESTUM 1993-07-25 Sun PA_II St. James
+C1 swallowed-solemnity 1993-08-15 Sun PA_II principal=Dominica XX per Annum / lost=Assumption
+C2 dropped DIES_PEC 1993-11-02 Tue PA_II All Souls
+C2 dropped FESTUM 1993-12-12 Sun ADV   Our Lady of Guadalupe
+C2 dropped FESTUM 1993-12-26 Sun NAT   St. Stephen
+C2 dropped FESTUM 1994-07-03 Sun PA_II St. Thomas
+C2 dropped DIES_PEC 1994-11-02 Wed PA_II All Souls
+C1 swallowed-solemnity 1994-12-25 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Christmas
+C1 swallowed-solemnity 1995-01-01 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Mary, Mother of God
+C2 dropped SOLLEMNITAS 1995-03-19 Sun QUAD  St. Joseph
+C2 dropped FESTUM 1995-05-14 Sun PASCH St. Matthias
+C2 dropped FESTUM 1995-08-06 Sun PA_II Transfiguration
+C2 dropped DIES_PEC 1995-11-02 Thu PA_II All Souls
+C2 dropped FESTUM 1996-09-08 Sun PA_II Birth of Mary
+C2 dropped FESTUM 1996-09-29 Sun PA_II Ss. Michael, Gabriel, Raphael
+C2 dropped DIES_PEC 1996-11-02 Sat PA_II All Souls
+C2 dropped SOLLEMNITAS 1996-12-08 Sun ADV   Immaculate Conception
+C2 dropped FESTUM 1997-02-02 Sun PA_I  Presentation
+C2 dropped SOLLEMNITAS 1997-03-25 Tue QUAD  Annunciation
+C1 swallowed-solemnity 1997-06-29 Sun PA_II principal=Dominica XIII per Annum / lost=Ss. Peter & Paul
+C2 dropped FESTUM 1997-08-10 Sun PA_II St. Lawrence
+C2 dropped FESTUM 1997-08-24 Sun PA_II St. Bartholomew
+C2 dropped FESTUM 1997-09-14 Sun PA_II Exaltation of Holy Cross
+C2 dropped FESTUM 1997-09-21 Sun PA_II St. Matthew
+C2 dropped DIES_PEC 1997-11-02 Sun PA_II All Souls
+C2 dropped FESTUM 1997-11-09 Sun PA_II Lateran Basilica
+C2 dropped FESTUM 1997-11-30 Sun ADV   St. Andrew
+C2 dropped FESTUM 1997-12-28 Sun NAT   Holy Innocents
+C2 dropped FESTUM 1998-01-25 Sun PA_I  Conv. of St. Paul
+C2 dropped FESTUM 1998-02-22 Sun PA_I  Chair of St. Peter
+C2 dropped FESTUM 1998-05-03 Sun PASCH Ss. Philip & James
+C2 dropped FESTUM 1998-05-31 Sun PASCH Visitation
+C2 dropped FESTUM 1998-10-18 Sun PA_II St. Luke
+C1 swallowed-solemnity 1998-11-01 Sun PA_II principal=Dominica XXXI per Annum / lost=All Saints
+C2 dropped DIES_PEC 1998-11-02 Mon PA_II All Souls
+C2 dropped FESTUM 1998-12-27 Sun NAT   St. John
+C2 dropped FESTUM 1999-04-25 Sun PASCH St. Mark
+C2 dropped FESTUM 1999-07-25 Sun PA_II St. James
+C1 swallowed-solemnity 1999-08-15 Sun PA_II principal=Dominica XX per Annum / lost=Assumption
+C2 dropped DIES_PEC 1999-11-02 Tue PA_II All Souls
+C2 dropped FESTUM 1999-12-12 Sun ADV   Our Lady of Guadalupe
+C2 dropped FESTUM 1999-12-26 Sun NAT   St. Stephen
+C2 dropped SOLLEMNITAS 2000-03-19 Sun QUAD  St. Joseph
+C2 dropped FESTUM 2000-04-25 Tue PASCH St. Mark
+C2 dropped FESTUM 2000-05-14 Sun PASCH St. Matthias
+C2 dropped FESTUM 2000-08-06 Sun PA_II Transfiguration
+C2 dropped DIES_PEC 2000-11-02 Thu PA_II All Souls
+C2 dropped SOLLEMNITAS 2001-03-25 Sun QUAD  Annunciation
+C1 swallowed-solemnity 2001-06-24 Sun PA_II principal=Dominica XII per Annum / lost=Birth of St. John Baptist
+C2 dropped FESTUM 2001-07-22 Sun PA_II St. Mary Magdalene
+C2 dropped FESTUM 2001-10-28 Sun PA_II Ss. Simon & Jude
+C2 dropped DIES_PEC 2001-11-02 Fri PA_II All Souls
+C1 swallowed-solemnity 2002-01-06 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Epiphany
+C2 dropped SOLLEMNITAS 2002-03-25 Mon QUAD  Annunciation
+C2 dropped FESTUM 2002-09-08 Sun PA_II Birth of Mary
+C2 dropped FESTUM 2002-09-29 Sun PA_II Ss. Michael, Gabriel, Raphael
+C2 dropped DIES_PEC 2002-11-02 Sat PA_II All Souls
+C2 dropped SOLLEMNITAS 2002-12-08 Sun ADV   Immaculate Conception
+C2 dropped FESTUM 2003-02-02 Sun PA_I  Presentation
+C2 dropped FESTUM 2003-04-25 Fri PASCH St. Mark
+C1 swallowed-solemnity 2003-06-29 Sun PA_II principal=Dominica XIII per Annum / lost=Ss. Peter & Paul
+C2 dropped FESTUM 2003-08-10 Sun PA_II St. Lawrence
+C2 dropped FESTUM 2003-08-24 Sun PA_II St. Bartholomew
+C2 dropped FESTUM 2003-09-14 Sun PA_II Exaltation of Holy Cross
+C2 dropped FESTUM 2003-09-21 Sun PA_II St. Matthew
+C2 dropped DIES_PEC 2003-11-02 Sun PA_II All Souls
+C2 dropped FESTUM 2003-11-09 Sun PA_II Lateran Basilica
+C2 dropped FESTUM 2003-11-30 Sun ADV   St. Andrew
+C2 dropped FESTUM 2003-12-28 Sun NAT   Holy Innocents
+C2 dropped FESTUM 2004-01-25 Sun PA_I  Conv. of St. Paul
+C2 dropped FESTUM 2004-02-22 Sun PA_I  Chair of St. Peter
+C2 dropped FESTUM 2004-04-25 Sun PASCH St. Mark
+C2 dropped FESTUM 2004-07-25 Sun PA_II St. James
+C1 swallowed-solemnity 2004-08-15 Sun PA_II principal=Dominica XX per Annum / lost=Assumption
+C2 dropped DIES_PEC 2004-11-02 Tue PA_II All Souls
+C2 dropped FESTUM 2004-12-12 Sun ADV   Our Lady of Guadalupe
+C2 dropped FESTUM 2004-12-26 Sun NAT   St. Stephen
+C2 dropped SOLLEMNITAS 2005-03-25 Fri TRID  Annunciation
+C2 dropped FESTUM 2005-07-03 Sun PA_II St. Thomas
+C2 dropped DIES_PEC 2005-11-02 Wed PA_II All Souls
+C1 swallowed-solemnity 2005-12-25 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Christmas
+C1 swallowed-solemnity 2006-01-01 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Mary, Mother of God
+C2 dropped SOLLEMNITAS 2006-03-19 Sun QUAD  St. Joseph
+C2 dropped FESTUM 2006-05-14 Sun PASCH St. Matthias
+C2 dropped FESTUM 2006-08-06 Sun PA_II Transfiguration
+C2 dropped DIES_PEC 2006-11-02 Thu PA_II All Souls
+C2 dropped SOLLEMNITAS 2007-03-25 Sun QUAD  Annunciation
+C1 swallowed-solemnity 2007-06-24 Sun PA_II principal=Dominica XII per Annum / lost=Birth of St. John Baptist
+C2 dropped FESTUM 2007-07-22 Sun PA_II St. Mary Magdalene
+C2 dropped FESTUM 2007-10-28 Sun PA_II Ss. Simon & Jude
+C2 dropped DIES_PEC 2007-11-02 Fri PA_II All Souls
+C1 swallowed-solemnity 2008-01-06 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Epiphany
+C2 dropped SOLLEMNITAS 2008-03-19 Wed QUAD  St. Joseph
+C2 dropped SOLLEMNITAS 2008-03-25 Tue PASCH Annunciation
+C1 swallowed-solemnity 2008-06-29 Sun PA_II principal=Dominica XIII per Annum / lost=Ss. Peter & Paul
+C2 dropped FESTUM 2008-08-10 Sun PA_II St. Lawrence
+C2 dropped FESTUM 2008-08-24 Sun PA_II St. Bartholomew
+C2 dropped FESTUM 2008-09-14 Sun PA_II Exaltation of Holy Cross
+C2 dropped FESTUM 2008-09-21 Sun PA_II St. Matthew
+C2 dropped DIES_PEC 2008-11-02 Sun PA_II All Souls
+C2 dropped FESTUM 2008-11-09 Sun PA_II Lateran Basilica
+C2 dropped FESTUM 2008-11-30 Sun ADV   St. Andrew
+C2 dropped FESTUM 2008-12-28 Sun NAT   Holy Innocents
+C2 dropped FESTUM 2009-01-25 Sun PA_I  Conv. of St. Paul
+C2 dropped FESTUM 2009-02-22 Sun PA_I  Chair of St. Peter
+C2 dropped FESTUM 2009-05-03 Sun PASCH Ss. Philip & James
+C2 dropped FESTUM 2009-05-31 Sun PASCH Visitation
+C2 dropped FESTUM 2009-10-18 Sun PA_II St. Luke
+C1 swallowed-solemnity 2009-11-01 Sun PA_II principal=Dominica XXXI per Annum / lost=All Saints
+C2 dropped DIES_PEC 2009-11-02 Mon PA_II All Souls
+C2 dropped FESTUM 2009-12-27 Sun NAT   St. John
+C2 dropped FESTUM 2010-04-25 Sun PASCH St. Mark
+C2 dropped FESTUM 2010-07-25 Sun PA_II St. James
+C1 swallowed-solemnity 2010-08-15 Sun PA_II principal=Dominica XX per Annum / lost=Assumption
+C2 dropped DIES_PEC 2010-11-02 Tue PA_II All Souls
+C2 dropped FESTUM 2010-12-12 Sun ADV   Our Lady of Guadalupe
+C2 dropped FESTUM 2010-12-26 Sun NAT   St. Stephen
+C2 dropped FESTUM 2011-04-25 Mon PASCH St. Mark
+C2 dropped FESTUM 2011-07-03 Sun PA_II St. Thomas
+C2 dropped DIES_PEC 2011-11-02 Wed PA_II All Souls
+C1 swallowed-solemnity 2011-12-25 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Christmas
+C1 swallowed-solemnity 2012-01-01 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Mary, Mother of God
+C2 dropped FESTUM 2012-02-22 Wed QUAD  Chair of St. Peter
+C2 dropped SOLLEMNITAS 2012-03-25 Sun QUAD  Annunciation
+C1 swallowed-solemnity 2012-06-24 Sun PA_II principal=Dominica XII per Annum / lost=Birth of St. John Baptist
+C2 dropped FESTUM 2012-07-22 Sun PA_II St. Mary Magdalene
+C2 dropped FESTUM 2012-10-28 Sun PA_II Ss. Simon & Jude
+C2 dropped DIES_PEC 2012-11-02 Fri PA_II All Souls
+C1 swallowed-solemnity 2013-01-06 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Epiphany
+C2 dropped SOLLEMNITAS 2013-03-25 Mon QUAD  Annunciation
+C2 dropped FESTUM 2013-09-08 Sun PA_II Birth of Mary
+C2 dropped FESTUM 2013-09-29 Sun PA_II Ss. Michael, Gabriel, Raphael
+C2 dropped DIES_PEC 2013-11-02 Sat PA_II All Souls
+C2 dropped SOLLEMNITAS 2013-12-08 Sun ADV   Immaculate Conception
+C2 dropped FESTUM 2014-02-02 Sun PA_I  Presentation
+C2 dropped FESTUM 2014-04-25 Fri PASCH St. Mark
+C1 swallowed-solemnity 2014-06-29 Sun PA_II principal=Dominica XIII per Annum / lost=Ss. Peter & Paul
+C2 dropped FESTUM 2014-08-10 Sun PA_II St. Lawrence
+C2 dropped FESTUM 2014-08-24 Sun PA_II St. Bartholomew
+C2 dropped FESTUM 2014-09-14 Sun PA_II Exaltation of Holy Cross
+C2 dropped FESTUM 2014-09-21 Sun PA_II St. Matthew
+C2 dropped DIES_PEC 2014-11-02 Sun PA_II All Souls
+C2 dropped FESTUM 2014-11-09 Sun PA_II Lateran Basilica
+C2 dropped FESTUM 2014-11-30 Sun ADV   St. Andrew
+C2 dropped FESTUM 2014-12-28 Sun NAT   Holy Innocents
+C2 dropped FESTUM 2015-01-25 Sun PA_I  Conv. of St. Paul
+C2 dropped FESTUM 2015-02-22 Sun QUAD  Chair of St. Peter
+C2 dropped FESTUM 2015-05-03 Sun PASCH Ss. Philip & James
+C2 dropped FESTUM 2015-05-31 Sun PA_II Visitation
+C2 dropped FESTUM 2015-10-18 Sun PA_II St. Luke
+C1 swallowed-solemnity 2015-11-01 Sun PA_II principal=Dominica XXXI per Annum / lost=All Saints
+C2 dropped DIES_PEC 2015-11-02 Mon PA_II All Souls
+C2 dropped FESTUM 2015-12-27 Sun NAT   St. John
+C2 dropped SOLLEMNITAS 2016-03-25 Fri TRID  Annunciation
+C2 dropped FESTUM 2016-07-03 Sun PA_II St. Thomas
+C2 dropped DIES_PEC 2016-11-02 Wed PA_II All Souls
+C1 swallowed-solemnity 2016-12-25 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Christmas
+C1 swallowed-solemnity 2017-01-01 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Mary, Mother of God
+C2 dropped SOLLEMNITAS 2017-03-19 Sun QUAD  St. Joseph
+C2 dropped FESTUM 2017-05-14 Sun PASCH St. Matthias
+C2 dropped FESTUM 2017-08-06 Sun PA_II Transfiguration
+C2 dropped DIES_PEC 2017-11-02 Thu PA_II All Souls
+C2 dropped SOLLEMNITAS 2018-03-25 Sun QUAD  Annunciation
+C1 swallowed-solemnity 2018-06-24 Sun PA_II principal=Dominica XII per Annum / lost=Birth of St. John Baptist
+C2 dropped FESTUM 2018-07-22 Sun PA_II St. Mary Magdalene
+C2 dropped FESTUM 2018-10-28 Sun PA_II Ss. Simon & Jude
+C2 dropped DIES_PEC 2018-11-02 Fri PA_II All Souls
+C1 swallowed-solemnity 2019-01-06 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Epiphany
+C2 dropped FESTUM 2019-04-25 Thu PASCH St. Mark
+C2 dropped FESTUM 2019-09-08 Sun PA_II Birth of Mary
+C2 dropped FESTUM 2019-09-29 Sun PA_II Ss. Michael, Gabriel, Raphael
+C2 dropped DIES_PEC 2019-11-02 Sat PA_II All Souls
+C2 dropped SOLLEMNITAS 2019-12-08 Sun ADV   Immaculate Conception
+C2 dropped FESTUM 2020-02-02 Sun PA_I  Presentation
+C2 dropped FESTUM 2020-05-03 Sun PASCH Ss. Philip & James
+C2 dropped FESTUM 2020-05-31 Sun PASCH Visitation
+C2 dropped FESTUM 2020-10-18 Sun PA_II St. Luke
+C1 swallowed-solemnity 2020-11-01 Sun PA_II principal=Dominica XXXI per Annum / lost=All Saints
+C2 dropped DIES_PEC 2020-11-02 Mon PA_II All Souls
+C2 dropped FESTUM 2020-12-27 Sun NAT   St. John
+C2 dropped FESTUM 2021-04-25 Sun PASCH St. Mark
+C2 dropped FESTUM 2021-07-25 Sun PA_II St. James
+C1 swallowed-solemnity 2021-08-15 Sun PA_II principal=Dominica XX per Annum / lost=Assumption
+C2 dropped DIES_PEC 2021-11-02 Tue PA_II All Souls
+C2 dropped FESTUM 2021-12-12 Sun ADV   Our Lady of Guadalupe
+C2 dropped FESTUM 2021-12-26 Sun NAT   St. Stephen
+C2 dropped FESTUM 2022-07-03 Sun PA_II St. Thomas
+C2 dropped DIES_PEC 2022-11-02 Wed PA_II All Souls
+C1 swallowed-solemnity 2022-12-25 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Christmas
+C1 swallowed-solemnity 2023-01-01 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Mary, Mother of God
+C2 dropped FESTUM 2023-02-22 Wed QUAD  Chair of St. Peter
+C2 dropped SOLLEMNITAS 2023-03-19 Sun QUAD  St. Joseph
+C2 dropped FESTUM 2023-05-14 Sun PASCH St. Matthias
+C2 dropped FESTUM 2023-08-06 Sun PA_II Transfiguration
+C2 dropped DIES_PEC 2023-11-02 Thu PA_II All Souls
+C2 dropped SOLLEMNITAS 2024-03-25 Mon QUAD  Annunciation
+C2 dropped FESTUM 2024-09-08 Sun PA_II Birth of Mary
+C2 dropped FESTUM 2024-09-29 Sun PA_II Ss. Michael, Gabriel, Raphael
+C2 dropped DIES_PEC 2024-11-02 Sat PA_II All Souls
+C2 dropped SOLLEMNITAS 2024-12-08 Sun ADV   Immaculate Conception
+C2 dropped FESTUM 2025-02-02 Sun PA_I  Presentation
+C2 dropped FESTUM 2025-04-25 Fri PASCH St. Mark
+C1 swallowed-solemnity 2025-06-29 Sun PA_II principal=Dominica XIII per Annum / lost=Ss. Peter & Paul
+C2 dropped FESTUM 2025-08-10 Sun PA_II St. Lawrence
+C2 dropped FESTUM 2025-08-24 Sun PA_II St. Bartholomew
+C2 dropped FESTUM 2025-09-14 Sun PA_II Exaltation of Holy Cross
+C2 dropped FESTUM 2025-09-21 Sun PA_II St. Matthew
+C2 dropped DIES_PEC 2025-11-02 Sun PA_II All Souls
+C2 dropped FESTUM 2025-11-09 Sun PA_II Lateran Basilica
+C2 dropped FESTUM 2025-11-30 Sun ADV   St. Andrew
+C2 dropped FESTUM 2025-12-28 Sun NAT   Holy Innocents
+C2 dropped FESTUM 2026-01-25 Sun PA_I  Conv. of St. Paul
+C3 memorial-principal-privileged 2026-02-21 QUAD St. Peter Damian
+C2 dropped FESTUM 2026-02-22 Sun QUAD  Chair of St. Peter
+C3 memorial-principal-privileged 2026-02-23 QUAD St. Polycarp
+C3 memorial-principal-privileged 2026-03-04 QUAD St. Casimir
+C3 memorial-principal-privileged 2026-03-07 QUAD Ss. Perpetua & Felicity
+C3 memorial-principal-privileged 2026-03-09 QUAD St. Frances of Rome
+C3 memorial-principal-privileged 2026-03-17 QUAD St. Patrick
+C3 memorial-principal-privileged 2026-03-18 QUAD St. Cyril of Jerusalem
+C3 memorial-principal-privileged 2026-03-23 QUAD St. Turibius
+C2 dropped FESTUM 2026-05-03 Sun PASCH Ss. Philip & James
+C2 dropped FESTUM 2026-05-31 Sun PA_II Visitation
+C2 dropped FESTUM 2026-10-18 Sun PA_II St. Luke
+C1 swallowed-solemnity 2026-11-01 Sun PA_II principal=Dominica XXXI per Annum / lost=All Saints
+C2 dropped DIES_PEC 2026-11-02 Mon PA_II All Souls
+C3 memorial-principal-privileged 2026-12-21 ADV St. Peter Canisius
+C3 memorial-principal-privileged 2026-12-23 ADV St. John of Kanty
+C2 dropped FESTUM 2026-12-27 Sun NAT   St. John
+C3 memorial-principal-privileged 2026-12-29 NAT St. Thomas Becket
+C3 memorial-principal-privileged 2026-12-31 NAT St. Sylvester I
+C2 dropped SOLLEMNITAS 2027-03-25 Thu TRID  Annunciation
+C2 dropped FESTUM 2027-04-25 Sun PASCH St. Mark
+C2 dropped FESTUM 2027-07-25 Sun PA_II St. James
+C1 swallowed-solemnity 2027-08-15 Sun PA_II principal=Dominica XX per Annum / lost=Assumption
+C2 dropped DIES_PEC 2027-11-02 Tue PA_II All Souls
+C2 dropped FESTUM 2027-12-12 Sun ADV   Our Lady of Guadalupe
+C2 dropped FESTUM 2027-12-26 Sun NAT   St. Stephen
+C2 dropped SOLLEMNITAS 2028-03-19 Sun QUAD  St. Joseph
+C2 dropped FESTUM 2028-05-14 Sun PASCH St. Matthias
+C2 dropped FESTUM 2028-08-06 Sun PA_II Transfiguration
+C2 dropped DIES_PEC 2028-11-02 Thu PA_II All Souls
+C2 dropped SOLLEMNITAS 2029-03-25 Sun QUAD  Annunciation
+C1 swallowed-solemnity 2029-06-24 Sun PA_II principal=Dominica XII per Annum / lost=Birth of St. John Baptist
+C2 dropped FESTUM 2029-07-22 Sun PA_II St. Mary Magdalene
+C2 dropped FESTUM 2029-10-28 Sun PA_II Ss. Simon & Jude
+C2 dropped DIES_PEC 2029-11-02 Fri PA_II All Souls
+C1 swallowed-solemnity 2030-01-06 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Epiphany
+C2 dropped FESTUM 2030-04-25 Thu PASCH St. Mark
+C2 dropped FESTUM 2030-09-08 Sun PA_II Birth of Mary
+C2 dropped FESTUM 2030-09-29 Sun PA_II Ss. Michael, Gabriel, Raphael
+C2 dropped DIES_PEC 2030-11-02 Sat PA_II All Souls
+C2 dropped SOLLEMNITAS 2030-12-08 Sun ADV   Immaculate Conception
+C2 dropped FESTUM 2031-02-02 Sun PA_I  Presentation
+C1 swallowed-solemnity 2031-06-29 Sun PA_II principal=Dominica XIII per Annum / lost=Ss. Peter & Paul
+C2 dropped FESTUM 2031-08-10 Sun PA_II St. Lawrence
+C2 dropped FESTUM 2031-08-24 Sun PA_II St. Bartholomew
+C2 dropped FESTUM 2031-09-14 Sun PA_II Exaltation of Holy Cross
+C2 dropped FESTUM 2031-09-21 Sun PA_II St. Matthew
+C2 dropped DIES_PEC 2031-11-02 Sun PA_II All Souls
+C2 dropped FESTUM 2031-11-09 Sun PA_II Lateran Basilica
+C2 dropped FESTUM 2031-11-30 Sun ADV   St. Andrew
+C2 dropped FESTUM 2031-12-28 Sun NAT   Holy Innocents
+C2 dropped FESTUM 2032-01-25 Sun PA_I  Conv. of St. Paul
+C2 dropped FESTUM 2032-02-22 Sun QUAD  Chair of St. Peter
+C2 dropped SOLLEMNITAS 2032-03-25 Thu TRID  Annunciation
+C2 dropped FESTUM 2032-04-25 Sun PASCH St. Mark
+C2 dropped FESTUM 2032-07-25 Sun PA_II St. James
+C1 swallowed-solemnity 2032-08-15 Sun PA_II principal=Dominica XX per Annum / lost=Assumption
+C2 dropped DIES_PEC 2032-11-02 Tue PA_II All Souls
+C2 dropped FESTUM 2032-12-12 Sun ADV   Our Lady of Guadalupe
+C2 dropped FESTUM 2032-12-26 Sun NAT   St. Stephen
+C2 dropped FESTUM 2033-07-03 Sun PA_II St. Thomas
+C2 dropped DIES_PEC 2033-11-02 Wed PA_II All Souls
+C1 swallowed-solemnity 2033-12-25 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Christmas
+C1 swallowed-solemnity 2034-01-01 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Mary, Mother of God
+C2 dropped FESTUM 2034-02-22 Wed QUAD  Chair of St. Peter
+C2 dropped SOLLEMNITAS 2034-03-19 Sun QUAD  St. Joseph
+C2 dropped FESTUM 2034-05-14 Sun PASCH St. Matthias
+C2 dropped FESTUM 2034-08-06 Sun PA_II Transfiguration
+C2 dropped DIES_PEC 2034-11-02 Thu PA_II All Souls
+C2 dropped SOLLEMNITAS 2035-03-19 Mon QUAD  St. Joseph
+C2 dropped SOLLEMNITAS 2035-03-25 Sun PASCH Annunciation
+C1 swallowed-solemnity 2035-06-24 Sun PA_II principal=Dominica XII per Annum / lost=Birth of St. John Baptist
+C2 dropped FESTUM 2035-07-22 Sun PA_II St. Mary Magdalene
+C2 dropped FESTUM 2035-10-28 Sun PA_II Ss. Simon & Jude
+C2 dropped DIES_PEC 2035-11-02 Fri PA_II All Souls
+C1 swallowed-solemnity 2036-01-06 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Epiphany
+C1 swallowed-solemnity 2036-06-29 Sun PA_II principal=Dominica XIII per Annum / lost=Ss. Peter & Paul
+C2 dropped FESTUM 2036-08-10 Sun PA_II St. Lawrence
+C2 dropped FESTUM 2036-08-24 Sun PA_II St. Bartholomew
+C2 dropped FESTUM 2036-09-14 Sun PA_II Exaltation of Holy Cross
+C2 dropped FESTUM 2036-09-21 Sun PA_II St. Matthew
+C2 dropped DIES_PEC 2036-11-02 Sun PA_II All Souls
+C2 dropped FESTUM 2036-11-09 Sun PA_II Lateran Basilica
+C2 dropped FESTUM 2036-11-30 Sun ADV   St. Andrew
+C2 dropped FESTUM 2036-12-28 Sun NAT   Holy Innocents
+C2 dropped FESTUM 2037-01-25 Sun PA_I  Conv. of St. Paul
+C2 dropped FESTUM 2037-02-22 Sun QUAD  Chair of St. Peter
+C2 dropped FESTUM 2037-05-03 Sun PASCH Ss. Philip & James
+C2 dropped FESTUM 2037-05-31 Sun PA_II Visitation
+C2 dropped FESTUM 2037-10-18 Sun PA_II St. Luke
+C1 swallowed-solemnity 2037-11-01 Sun PA_II principal=Dominica XXXI per Annum / lost=All Saints
+C2 dropped DIES_PEC 2037-11-02 Mon PA_II All Souls
+C2 dropped FESTUM 2037-12-27 Sun NAT   St. John
+C2 dropped FESTUM 2038-04-25 Sun PASCH St. Mark
+C2 dropped FESTUM 2038-07-25 Sun PA_II St. James
+C1 swallowed-solemnity 2038-08-15 Sun PA_II principal=Dominica XX per Annum / lost=Assumption
+C2 dropped DIES_PEC 2038-11-02 Tue PA_II All Souls
+C2 dropped FESTUM 2038-12-12 Sun ADV   Our Lady of Guadalupe
+C2 dropped FESTUM 2038-12-26 Sun NAT   St. Stephen
+C2 dropped FESTUM 2039-07-03 Sun PA_II St. Thomas
+C2 dropped DIES_PEC 2039-11-02 Wed PA_II All Souls
+C1 swallowed-solemnity 2039-12-25 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Christmas
+C1 swallowed-solemnity 2040-01-01 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Mary, Mother of God
+C2 dropped SOLLEMNITAS 2040-03-25 Sun QUAD  Annunciation
+C1 swallowed-solemnity 2040-06-24 Sun PA_II principal=Dominica XII per Annum / lost=Birth of St. John Baptist
+C2 dropped FESTUM 2040-07-22 Sun PA_II St. Mary Magdalene
+C2 dropped FESTUM 2040-10-28 Sun PA_II Ss. Simon & Jude
+C2 dropped DIES_PEC 2040-11-02 Fri PA_II All Souls
+C1 swallowed-solemnity 2041-01-06 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Epiphany
+C2 dropped FESTUM 2041-04-25 Thu PASCH St. Mark
+C2 dropped FESTUM 2041-09-08 Sun PA_II Birth of Mary
+C2 dropped FESTUM 2041-09-29 Sun PA_II Ss. Michael, Gabriel, Raphael
+C2 dropped DIES_PEC 2041-11-02 Sat PA_II All Souls
+C2 dropped SOLLEMNITAS 2041-12-08 Sun ADV   Immaculate Conception
+C2 dropped FESTUM 2042-02-02 Sun PA_I  Presentation
+C1 swallowed-solemnity 2042-06-29 Sun PA_II principal=Dominica XIII per Annum / lost=Ss. Peter & Paul
+C2 dropped FESTUM 2042-08-10 Sun PA_II St. Lawrence
+C2 dropped FESTUM 2042-08-24 Sun PA_II St. Bartholomew
+C2 dropped FESTUM 2042-09-14 Sun PA_II Exaltation of Holy Cross
+C2 dropped FESTUM 2042-09-21 Sun PA_II St. Matthew
+C2 dropped DIES_PEC 2042-11-02 Sun PA_II All Souls
+C2 dropped FESTUM 2042-11-09 Sun PA_II Lateran Basilica
+C2 dropped FESTUM 2042-11-30 Sun ADV   St. Andrew
+C2 dropped FESTUM 2042-12-28 Sun NAT   Holy Innocents
+C2 dropped FESTUM 2043-01-25 Sun PA_I  Conv. of St. Paul
+C2 dropped FESTUM 2043-02-22 Sun QUAD  Chair of St. Peter
+C2 dropped SOLLEMNITAS 2043-03-25 Wed QUAD  Annunciation
+C2 dropped FESTUM 2043-05-03 Sun PASCH Ss. Philip & James
+C2 dropped FESTUM 2043-05-31 Sun PA_II Visitation
+C2 dropped FESTUM 2043-10-18 Sun PA_II St. Luke
+C1 swallowed-solemnity 2043-11-01 Sun PA_II principal=Dominica XXXI per Annum / lost=All Saints
+C2 dropped DIES_PEC 2043-11-02 Mon PA_II All Souls
+C2 dropped FESTUM 2043-12-27 Sun NAT   St. John
+C2 dropped FESTUM 2044-07-03 Sun PA_II St. Thomas
+C2 dropped DIES_PEC 2044-11-02 Wed PA_II All Souls
+C1 swallowed-solemnity 2044-12-25 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Christmas
+C1 swallowed-solemnity 2045-01-01 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Mary, Mother of God
+C2 dropped FESTUM 2045-02-22 Wed QUAD  Chair of St. Peter
+C2 dropped SOLLEMNITAS 2045-03-19 Sun QUAD  St. Joseph
+C2 dropped FESTUM 2045-05-14 Sun PASCH St. Matthias
+C2 dropped FESTUM 2045-08-06 Sun PA_II Transfiguration
+C2 dropped DIES_PEC 2045-11-02 Thu PA_II All Souls
+C2 dropped SOLLEMNITAS 2046-03-19 Mon QUAD  St. Joseph
+C2 dropped SOLLEMNITAS 2046-03-25 Sun PASCH Annunciation
+C1 swallowed-solemnity 2046-06-24 Sun PA_II principal=Dominica XII per Annum / lost=Birth of St. John Baptist
+C2 dropped FESTUM 2046-07-22 Sun PA_II St. Mary Magdalene
+C2 dropped FESTUM 2046-10-28 Sun PA_II Ss. Simon & Jude
+C2 dropped DIES_PEC 2046-11-02 Fri PA_II All Souls
+C1 swallowed-solemnity 2047-01-06 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Epiphany
+C2 dropped FESTUM 2047-09-08 Sun PA_II Birth of Mary
+C2 dropped FESTUM 2047-09-29 Sun PA_II Ss. Michael, Gabriel, Raphael
+C2 dropped DIES_PEC 2047-11-02 Sat PA_II All Souls
+C2 dropped SOLLEMNITAS 2047-12-08 Sun ADV   Immaculate Conception
+C2 dropped FESTUM 2048-02-02 Sun PA_I  Presentation
+C2 dropped FESTUM 2048-05-03 Sun PASCH Ss. Philip & James
+C2 dropped FESTUM 2048-05-31 Sun PA_II Visitation
+C2 dropped FESTUM 2048-10-18 Sun PA_II St. Luke
+C1 swallowed-solemnity 2048-11-01 Sun PA_II principal=Dominica XXXI per Annum / lost=All Saints
+C2 dropped DIES_PEC 2048-11-02 Mon PA_II All Souls
+C2 dropped FESTUM 2048-12-27 Sun NAT   St. John
+C2 dropped FESTUM 2049-04-25 Sun PASCH St. Mark
+C2 dropped FESTUM 2049-07-25 Sun PA_II St. James
+C1 swallowed-solemnity 2049-08-15 Sun PA_II principal=Dominica XX per Annum / lost=Assumption
+C2 dropped DIES_PEC 2049-11-02 Tue PA_II All Souls
+C2 dropped FESTUM 2049-12-12 Sun ADV   Our Lady of Guadalupe
+C2 dropped FESTUM 2049-12-26 Sun NAT   St. Stephen
+C2 dropped FESTUM 2050-07-03 Sun PA_II St. Thomas
+C2 dropped DIES_PEC 2050-11-02 Wed PA_II All Souls
+C1 swallowed-solemnity 2050-12-25 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Christmas
+C1 swallowed-solemnity 2051-01-01 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Mary, Mother of God
+C2 dropped SOLLEMNITAS 2051-03-19 Sun QUAD  St. Joseph
+C2 dropped FESTUM 2051-05-14 Sun PASCH St. Matthias
+C2 dropped FESTUM 2051-08-06 Sun PA_II Transfiguration
+C2 dropped DIES_PEC 2051-11-02 Thu PA_II All Souls
+C2 dropped FESTUM 2052-04-25 Thu PASCH St. Mark
+C2 dropped FESTUM 2052-09-08 Sun PA_II Birth of Mary
+C2 dropped FESTUM 2052-09-29 Sun PA_II Ss. Michael, Gabriel, Raphael
+C2 dropped DIES_PEC 2052-11-02 Sat PA_II All Souls
+C2 dropped SOLLEMNITAS 2052-12-08 Sun ADV   Immaculate Conception
+C2 dropped FESTUM 2053-02-02 Sun PA_I  Presentation
+C1 swallowed-solemnity 2053-06-29 Sun PA_II principal=Dominica XIII per Annum / lost=Ss. Peter & Paul
+C2 dropped FESTUM 2053-08-10 Sun PA_II St. Lawrence
+C2 dropped FESTUM 2053-08-24 Sun PA_II St. Bartholomew
+C2 dropped FESTUM 2053-09-14 Sun PA_II Exaltation of Holy Cross
+C2 dropped FESTUM 2053-09-21 Sun PA_II St. Matthew
+C2 dropped DIES_PEC 2053-11-02 Sun PA_II All Souls
+C2 dropped FESTUM 2053-11-09 Sun PA_II Lateran Basilica
+C2 dropped FESTUM 2053-11-30 Sun ADV   St. Andrew
+C2 dropped FESTUM 2053-12-28 Sun NAT   Holy Innocents
+C2 dropped FESTUM 2054-01-25 Sun PA_I  Conv. of St. Paul
+C2 dropped FESTUM 2054-02-22 Sun QUAD  Chair of St. Peter
+C2 dropped SOLLEMNITAS 2054-03-25 Wed QUAD  Annunciation
+C2 dropped FESTUM 2054-05-03 Sun PASCH Ss. Philip & James
+C2 dropped FESTUM 2054-05-31 Sun PA_II Visitation
+C2 dropped FESTUM 2054-10-18 Sun PA_II St. Luke
+C1 swallowed-solemnity 2054-11-01 Sun PA_II principal=Dominica XXXI per Annum / lost=All Saints
+C2 dropped DIES_PEC 2054-11-02 Mon PA_II All Souls
+C2 dropped FESTUM 2054-12-27 Sun NAT   St. John
+C2 dropped FESTUM 2055-04-25 Sun PASCH St. Mark
+C2 dropped FESTUM 2055-07-25 Sun PA_II St. James
+C1 swallowed-solemnity 2055-08-15 Sun PA_II principal=Dominica XX per Annum / lost=Assumption
+C2 dropped DIES_PEC 2055-11-02 Tue PA_II All Souls
+C2 dropped FESTUM 2055-12-12 Sun ADV   Our Lady of Guadalupe
+C2 dropped FESTUM 2055-12-26 Sun NAT   St. Stephen
+C2 dropped SOLLEMNITAS 2056-03-19 Sun QUAD  St. Joseph
+C2 dropped FESTUM 2056-05-14 Sun PASCH St. Matthias
+C2 dropped FESTUM 2056-08-06 Sun PA_II Transfiguration
+C2 dropped DIES_PEC 2056-11-02 Thu PA_II All Souls
+C2 dropped SOLLEMNITAS 2057-03-25 Sun QUAD  Annunciation
+C2 dropped FESTUM 2057-04-25 Wed PASCH St. Mark
+C1 swallowed-solemnity 2057-06-24 Sun PA_II principal=Dominica XII per Annum / lost=Birth of St. John Baptist
+C2 dropped FESTUM 2057-07-22 Sun PA_II St. Mary Magdalene
+C2 dropped FESTUM 2057-10-28 Sun PA_II Ss. Simon & Jude
+C2 dropped DIES_PEC 2057-11-02 Fri PA_II All Souls
+C1 swallowed-solemnity 2058-01-06 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Epiphany
+C2 dropped FESTUM 2058-09-08 Sun PA_II Birth of Mary
+C2 dropped FESTUM 2058-09-29 Sun PA_II Ss. Michael, Gabriel, Raphael
+C2 dropped DIES_PEC 2058-11-02 Sat PA_II All Souls
+C2 dropped SOLLEMNITAS 2058-12-08 Sun ADV   Immaculate Conception
+C2 dropped FESTUM 2059-02-02 Sun PA_I  Presentation
+C2 dropped SOLLEMNITAS 2059-03-25 Tue QUAD  Annunciation
+C1 swallowed-solemnity 2059-06-29 Sun PA_II principal=Dominica XIII per Annum / lost=Ss. Peter & Paul
+C2 dropped FESTUM 2059-08-10 Sun PA_II St. Lawrence
+C2 dropped FESTUM 2059-08-24 Sun PA_II St. Bartholomew
+C2 dropped FESTUM 2059-09-14 Sun PA_II Exaltation of Holy Cross
+C2 dropped FESTUM 2059-09-21 Sun PA_II St. Matthew
+C2 dropped DIES_PEC 2059-11-02 Sun PA_II All Souls
+C2 dropped FESTUM 2059-11-09 Sun PA_II Lateran Basilica
+C2 dropped FESTUM 2059-11-30 Sun ADV   St. Andrew
+C2 dropped FESTUM 2059-12-28 Sun NAT   Holy Innocents
+C2 dropped FESTUM 2060-01-25 Sun PA_I  Conv. of St. Paul
+C2 dropped FESTUM 2060-02-22 Sun PA_I  Chair of St. Peter
+C2 dropped FESTUM 2060-04-25 Sun PASCH St. Mark
+C2 dropped FESTUM 2060-07-25 Sun PA_II St. James
+C1 swallowed-solemnity 2060-08-15 Sun PA_II principal=Dominica XX per Annum / lost=Assumption
+C2 dropped DIES_PEC 2060-11-02 Tue PA_II All Souls
+C2 dropped FESTUM 2060-12-12 Sun ADV   Our Lady of Guadalupe
+C2 dropped FESTUM 2060-12-26 Sun NAT   St. Stephen
+C2 dropped FESTUM 2061-07-03 Sun PA_II St. Thomas
+C2 dropped DIES_PEC 2061-11-02 Wed PA_II All Souls
+C1 swallowed-solemnity 2061-12-25 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Christmas
+C1 swallowed-solemnity 2062-01-01 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Mary, Mother of God
+C2 dropped SOLLEMNITAS 2062-03-19 Sun QUAD  St. Joseph
+C2 dropped SOLLEMNITAS 2062-03-25 Sat TRID  Annunciation
+C2 dropped FESTUM 2062-05-14 Sun PASCH St. Matthias
+C2 dropped FESTUM 2062-08-06 Sun PA_II Transfiguration
+C2 dropped DIES_PEC 2062-11-02 Thu PA_II All Souls
+C2 dropped SOLLEMNITAS 2063-03-25 Sun QUAD  Annunciation
+C1 swallowed-solemnity 2063-06-24 Sun PA_II principal=Dominica XII per Annum / lost=Birth of St. John Baptist
+C2 dropped FESTUM 2063-07-22 Sun PA_II St. Mary Magdalene
+C2 dropped FESTUM 2063-10-28 Sun PA_II Ss. Simon & Jude
+C2 dropped DIES_PEC 2063-11-02 Fri PA_II All Souls
+C1 swallowed-solemnity 2064-01-06 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Epiphany
+C1 swallowed-solemnity 2064-06-29 Sun PA_II principal=Dominica XIII per Annum / lost=Ss. Peter & Paul
+C2 dropped FESTUM 2064-08-10 Sun PA_II St. Lawrence
+C2 dropped FESTUM 2064-08-24 Sun PA_II St. Bartholomew
+C2 dropped FESTUM 2064-09-14 Sun PA_II Exaltation of Holy Cross
+C2 dropped FESTUM 2064-09-21 Sun PA_II St. Matthew
+C2 dropped DIES_PEC 2064-11-02 Sun PA_II All Souls
+C2 dropped FESTUM 2064-11-09 Sun PA_II Lateran Basilica
+C2 dropped FESTUM 2064-11-30 Sun ADV   St. Andrew
+C2 dropped FESTUM 2064-12-28 Sun NAT   Holy Innocents
+C2 dropped FESTUM 2065-01-25 Sun PA_I  Conv. of St. Paul
+C2 dropped FESTUM 2065-02-22 Sun QUAD  Chair of St. Peter
+C2 dropped SOLLEMNITAS 2065-03-25 Wed QUAD  Annunciation
+C2 dropped FESTUM 2065-05-03 Sun PASCH Ss. Philip & James
+C2 dropped FESTUM 2065-05-31 Sun PA_II Visitation
+C2 dropped FESTUM 2065-10-18 Sun PA_II St. Luke
+C1 swallowed-solemnity 2065-11-01 Sun PA_II principal=Dominica XXXI per Annum / lost=All Saints
+C2 dropped DIES_PEC 2065-11-02 Mon PA_II All Souls
+C2 dropped FESTUM 2065-12-27 Sun NAT   St. John
+C2 dropped FESTUM 2066-04-25 Sun PASCH St. Mark
+C2 dropped FESTUM 2066-07-25 Sun PA_II St. James
+C1 swallowed-solemnity 2066-08-15 Sun PA_II principal=Dominica XX per Annum / lost=Assumption
+C2 dropped DIES_PEC 2066-11-02 Tue PA_II All Souls
+C2 dropped FESTUM 2066-12-12 Sun ADV   Our Lady of Guadalupe
+C2 dropped FESTUM 2066-12-26 Sun NAT   St. Stephen
+C2 dropped FESTUM 2067-07-03 Sun PA_II St. Thomas
+C2 dropped DIES_PEC 2067-11-02 Wed PA_II All Souls
+C1 swallowed-solemnity 2067-12-25 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Christmas
+C1 swallowed-solemnity 2068-01-01 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Mary, Mother of God
+C2 dropped SOLLEMNITAS 2068-03-25 Sun QUAD  Annunciation
+C2 dropped FESTUM 2068-04-25 Wed PASCH St. Mark
+C1 swallowed-solemnity 2068-06-24 Sun PA_II principal=Dominica XII per Annum / lost=Birth of St. John Baptist
+C2 dropped FESTUM 2068-07-22 Sun PA_II St. Mary Magdalene
+C2 dropped FESTUM 2068-10-28 Sun PA_II Ss. Simon & Jude
+C2 dropped DIES_PEC 2068-11-02 Fri PA_II All Souls
+C1 swallowed-solemnity 2069-01-06 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Epiphany
+C2 dropped FESTUM 2069-09-08 Sun PA_II Birth of Mary
+C2 dropped FESTUM 2069-09-29 Sun PA_II Ss. Michael, Gabriel, Raphael
+C2 dropped DIES_PEC 2069-11-02 Sat PA_II All Souls
+C2 dropped SOLLEMNITAS 2069-12-08 Sun ADV   Immaculate Conception
+C2 dropped FESTUM 2070-02-02 Sun PA_I  Presentation
+C2 dropped SOLLEMNITAS 2070-03-25 Tue QUAD  Annunciation
+C1 swallowed-solemnity 2070-06-29 Sun PA_II principal=Dominica XIII per Annum / lost=Ss. Peter & Paul
+C2 dropped FESTUM 2070-08-10 Sun PA_II St. Lawrence
+C2 dropped FESTUM 2070-08-24 Sun PA_II St. Bartholomew
+C2 dropped FESTUM 2070-09-14 Sun PA_II Exaltation of Holy Cross
+C2 dropped FESTUM 2070-09-21 Sun PA_II St. Matthew
+C2 dropped DIES_PEC 2070-11-02 Sun PA_II All Souls
+C2 dropped FESTUM 2070-11-09 Sun PA_II Lateran Basilica
+C2 dropped FESTUM 2070-11-30 Sun ADV   St. Andrew
+C2 dropped FESTUM 2070-12-28 Sun NAT   Holy Innocents
+C2 dropped FESTUM 2071-01-25 Sun PA_I  Conv. of St. Paul
+C2 dropped FESTUM 2071-02-22 Sun PA_I  Chair of St. Peter
+C2 dropped FESTUM 2071-04-25 Sat PASCH St. Mark
+C2 dropped FESTUM 2071-05-03 Sun PASCH Ss. Philip & James
+C2 dropped FESTUM 2071-05-31 Sun PASCH Visitation
+C2 dropped FESTUM 2071-10-18 Sun PA_II St. Luke
+C1 swallowed-solemnity 2071-11-01 Sun PA_II principal=Dominica XXXI per Annum / lost=All Saints
+C2 dropped DIES_PEC 2071-11-02 Mon PA_II All Souls
+C2 dropped FESTUM 2071-12-27 Sun NAT   St. John
+C2 dropped FESTUM 2072-07-03 Sun PA_II St. Thomas
+C2 dropped DIES_PEC 2072-11-02 Wed PA_II All Souls
+C1 swallowed-solemnity 2072-12-25 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Christmas
+C1 swallowed-solemnity 2073-01-01 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Mary, Mother of God
+C2 dropped SOLLEMNITAS 2073-03-19 Sun QUAD  St. Joseph
+C2 dropped SOLLEMNITAS 2073-03-25 Sat TRID  Annunciation
+C2 dropped FESTUM 2073-05-14 Sun PASCH St. Matthias
+C2 dropped FESTUM 2073-08-06 Sun PA_II Transfiguration
+C2 dropped DIES_PEC 2073-11-02 Thu PA_II All Souls
+C2 dropped SOLLEMNITAS 2074-03-25 Sun QUAD  Annunciation
+C1 swallowed-solemnity 2074-06-24 Sun PA_II principal=Dominica XII per Annum / lost=Birth of St. John Baptist
+C2 dropped FESTUM 2074-07-22 Sun PA_II St. Mary Magdalene
+C2 dropped FESTUM 2074-10-28 Sun PA_II Ss. Simon & Jude
+C2 dropped DIES_PEC 2074-11-02 Fri PA_II All Souls
+C1 swallowed-solemnity 2075-01-06 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Epiphany
+C2 dropped FESTUM 2075-09-08 Sun PA_II Birth of Mary
+C2 dropped FESTUM 2075-09-29 Sun PA_II Ss. Michael, Gabriel, Raphael
+C2 dropped DIES_PEC 2075-11-02 Sat PA_II All Souls
+C2 dropped SOLLEMNITAS 2075-12-08 Sun ADV   Immaculate Conception
+C2 dropped FESTUM 2076-02-02 Sun PA_I  Presentation
+C2 dropped FESTUM 2076-04-25 Sat PASCH St. Mark
+C2 dropped FESTUM 2076-05-03 Sun PASCH Ss. Philip & James
+C2 dropped FESTUM 2076-05-31 Sun PASCH Visitation
+C2 dropped FESTUM 2076-10-18 Sun PA_II St. Luke
+C1 swallowed-solemnity 2076-11-01 Sun PA_II principal=Dominica XXXI per Annum / lost=All Saints
+C2 dropped DIES_PEC 2076-11-02 Mon PA_II All Souls
+C2 dropped FESTUM 2076-12-27 Sun NAT   St. John
+C2 dropped FESTUM 2077-04-25 Sun PASCH St. Mark
+C2 dropped FESTUM 2077-07-25 Sun PA_II St. James
+C1 swallowed-solemnity 2077-08-15 Sun PA_II principal=Dominica XX per Annum / lost=Assumption
+C2 dropped DIES_PEC 2077-11-02 Tue PA_II All Souls
+C2 dropped FESTUM 2077-12-12 Sun ADV   Our Lady of Guadalupe
+C2 dropped FESTUM 2077-12-26 Sun NAT   St. Stephen
+C2 dropped FESTUM 2078-07-03 Sun PA_II St. Thomas
+C2 dropped DIES_PEC 2078-11-02 Wed PA_II All Souls
+C1 swallowed-solemnity 2078-12-25 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Christmas
+C1 swallowed-solemnity 2079-01-01 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Mary, Mother of God
+C2 dropped SOLLEMNITAS 2079-03-19 Sun QUAD  St. Joseph
+C2 dropped FESTUM 2079-04-25 Tue PASCH St. Mark
+C2 dropped FESTUM 2079-05-14 Sun PASCH St. Matthias
+C2 dropped FESTUM 2079-08-06 Sun PA_II Transfiguration
+C2 dropped DIES_PEC 2079-11-02 Thu PA_II All Souls
+C2 dropped FESTUM 2080-09-08 Sun PA_II Birth of Mary
+C2 dropped FESTUM 2080-09-29 Sun PA_II Ss. Michael, Gabriel, Raphael
+C2 dropped DIES_PEC 2080-11-02 Sat PA_II All Souls
+C2 dropped SOLLEMNITAS 2080-12-08 Sun ADV   Immaculate Conception
+C2 dropped FESTUM 2081-02-02 Sun PA_I  Presentation
+C2 dropped SOLLEMNITAS 2081-03-25 Tue QUAD  Annunciation
+C1 swallowed-solemnity 2081-06-29 Sun PA_II principal=Dominica XIII per Annum / lost=Ss. Peter & Paul
+C2 dropped FESTUM 2081-08-10 Sun PA_II St. Lawrence
+C2 dropped FESTUM 2081-08-24 Sun PA_II St. Bartholomew
+C2 dropped FESTUM 2081-09-14 Sun PA_II Exaltation of Holy Cross
+C2 dropped FESTUM 2081-09-21 Sun PA_II St. Matthew
+C2 dropped DIES_PEC 2081-11-02 Sun PA_II All Souls
+C2 dropped FESTUM 2081-11-09 Sun PA_II Lateran Basilica
+C2 dropped FESTUM 2081-11-30 Sun ADV   St. Andrew
+C2 dropped FESTUM 2081-12-28 Sun NAT   Holy Innocents
+C2 dropped FESTUM 2082-01-25 Sun PA_I  Conv. of St. Paul
+C2 dropped FESTUM 2082-02-22 Sun PA_I  Chair of St. Peter
+C2 dropped FESTUM 2082-04-25 Sat PASCH St. Mark
+C2 dropped FESTUM 2082-05-03 Sun PASCH Ss. Philip & James
+C2 dropped FESTUM 2082-05-31 Sun PASCH Visitation
+C2 dropped FESTUM 2082-10-18 Sun PA_II St. Luke
+C1 swallowed-solemnity 2082-11-01 Sun PA_II principal=Dominica XXXI per Annum / lost=All Saints
+C2 dropped DIES_PEC 2082-11-02 Mon PA_II All Souls
+C2 dropped FESTUM 2082-12-27 Sun NAT   St. John
+C2 dropped FESTUM 2083-04-25 Sun PASCH St. Mark
+C2 dropped FESTUM 2083-07-25 Sun PA_II St. James
+C1 swallowed-solemnity 2083-08-15 Sun PA_II principal=Dominica XX per Annum / lost=Assumption
+C2 dropped DIES_PEC 2083-11-02 Tue PA_II All Souls
+C2 dropped FESTUM 2083-12-12 Sun ADV   Our Lady of Guadalupe
+C2 dropped FESTUM 2083-12-26 Sun NAT   St. Stephen
+C2 dropped SOLLEMNITAS 2084-03-19 Sun QUAD  St. Joseph
+C2 dropped SOLLEMNITAS 2084-03-25 Sat TRID  Annunciation
+C2 dropped FESTUM 2084-05-14 Sun PASCH St. Matthias
+C2 dropped FESTUM 2084-08-06 Sun PA_II Transfiguration
+C2 dropped DIES_PEC 2084-11-02 Thu PA_II All Souls
+C2 dropped SOLLEMNITAS 2085-03-25 Sun QUAD  Annunciation
+C1 swallowed-solemnity 2085-06-24 Sun PA_II principal=Dominica XII per Annum / lost=Birth of St. John Baptist
+C2 dropped FESTUM 2085-07-22 Sun PA_II St. Mary Magdalene
+C2 dropped FESTUM 2085-10-28 Sun PA_II Ss. Simon & Jude
+C2 dropped DIES_PEC 2085-11-02 Fri PA_II All Souls
+C1 swallowed-solemnity 2086-01-06 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Epiphany
+C2 dropped SOLLEMNITAS 2086-03-25 Mon QUAD  Annunciation
+C2 dropped FESTUM 2086-09-08 Sun PA_II Birth of Mary
+C2 dropped FESTUM 2086-09-29 Sun PA_II Ss. Michael, Gabriel, Raphael
+C2 dropped DIES_PEC 2086-11-02 Sat PA_II All Souls
+C2 dropped SOLLEMNITAS 2086-12-08 Sun ADV   Immaculate Conception
+C2 dropped FESTUM 2087-02-02 Sun PA_I  Presentation
+C2 dropped FESTUM 2087-04-25 Fri PASCH St. Mark
+C1 swallowed-solemnity 2087-06-29 Sun PA_II principal=Dominica XIII per Annum / lost=Ss. Peter & Paul
+C2 dropped FESTUM 2087-08-10 Sun PA_II St. Lawrence
+C2 dropped FESTUM 2087-08-24 Sun PA_II St. Bartholomew
+C2 dropped FESTUM 2087-09-14 Sun PA_II Exaltation of Holy Cross
+C2 dropped FESTUM 2087-09-21 Sun PA_II St. Matthew
+C2 dropped DIES_PEC 2087-11-02 Sun PA_II All Souls
+C2 dropped FESTUM 2087-11-09 Sun PA_II Lateran Basilica
+C2 dropped FESTUM 2087-11-30 Sun ADV   St. Andrew
+C2 dropped FESTUM 2087-12-28 Sun NAT   Holy Innocents
+C2 dropped FESTUM 2088-01-25 Sun PA_I  Conv. of St. Paul
+C2 dropped FESTUM 2088-02-22 Sun PA_I  Chair of St. Peter
+C2 dropped FESTUM 2088-04-25 Sun PASCH St. Mark
+C2 dropped FESTUM 2088-07-25 Sun PA_II St. James
+C1 swallowed-solemnity 2088-08-15 Sun PA_II principal=Dominica XX per Annum / lost=Assumption
+C2 dropped DIES_PEC 2088-11-02 Tue PA_II All Souls
+C2 dropped FESTUM 2088-12-12 Sun ADV   Our Lady of Guadalupe
+C2 dropped FESTUM 2088-12-26 Sun NAT   St. Stephen
+C2 dropped FESTUM 2089-07-03 Sun PA_II St. Thomas
+C2 dropped DIES_PEC 2089-11-02 Wed PA_II All Souls
+C1 swallowed-solemnity 2089-12-25 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Christmas
+C1 swallowed-solemnity 2090-01-01 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Mary, Mother of God
+C2 dropped SOLLEMNITAS 2090-03-19 Sun QUAD  St. Joseph
+C2 dropped FESTUM 2090-05-14 Sun PASCH St. Matthias
+C2 dropped FESTUM 2090-08-06 Sun PA_II Transfiguration
+C2 dropped DIES_PEC 2090-11-02 Thu PA_II All Souls
+C2 dropped SOLLEMNITAS 2091-03-25 Sun QUAD  Annunciation
+C1 swallowed-solemnity 2091-06-24 Sun PA_II principal=Dominica XII per Annum / lost=Birth of St. John Baptist
+C2 dropped FESTUM 2091-07-22 Sun PA_II St. Mary Magdalene
+C2 dropped FESTUM 2091-10-28 Sun PA_II Ss. Simon & Jude
+C2 dropped DIES_PEC 2091-11-02 Fri PA_II All Souls
+C1 swallowed-solemnity 2092-01-06 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Epiphany
+C2 dropped SOLLEMNITAS 2092-03-25 Tue QUAD  Annunciation
+C1 swallowed-solemnity 2092-06-29 Sun PA_II principal=Dominica XIII per Annum / lost=Ss. Peter & Paul
+C2 dropped FESTUM 2092-08-10 Sun PA_II St. Lawrence
+C2 dropped FESTUM 2092-08-24 Sun PA_II St. Bartholomew
+C2 dropped FESTUM 2092-09-14 Sun PA_II Exaltation of Holy Cross
+C2 dropped FESTUM 2092-09-21 Sun PA_II St. Matthew
+C2 dropped DIES_PEC 2092-11-02 Sun PA_II All Souls
+C2 dropped FESTUM 2092-11-09 Sun PA_II Lateran Basilica
+C2 dropped FESTUM 2092-11-30 Sun ADV   St. Andrew
+C2 dropped FESTUM 2092-12-28 Sun NAT   Holy Innocents
+C2 dropped FESTUM 2093-01-25 Sun PA_I  Conv. of St. Paul
+C2 dropped FESTUM 2093-02-22 Sun PA_I  Chair of St. Peter
+C2 dropped FESTUM 2093-05-03 Sun PASCH Ss. Philip & James
+C2 dropped FESTUM 2093-05-31 Sun PASCH Visitation
+C2 dropped FESTUM 2093-10-18 Sun PA_II St. Luke
+C1 swallowed-solemnity 2093-11-01 Sun PA_II principal=Dominica XXXI per Annum / lost=All Saints
+C2 dropped DIES_PEC 2093-11-02 Mon PA_II All Souls
+C2 dropped FESTUM 2093-12-27 Sun NAT   St. John
+C2 dropped FESTUM 2094-04-25 Sun PASCH St. Mark
+C2 dropped FESTUM 2094-07-25 Sun PA_II St. James
+C1 swallowed-solemnity 2094-08-15 Sun PA_II principal=Dominica XX per Annum / lost=Assumption
+C2 dropped DIES_PEC 2094-11-02 Tue PA_II All Souls
+C2 dropped FESTUM 2094-12-12 Sun ADV   Our Lady of Guadalupe
+C2 dropped FESTUM 2094-12-26 Sun NAT   St. Stephen
+C2 dropped FESTUM 2095-04-25 Mon PASCH St. Mark
+C2 dropped FESTUM 2095-07-03 Sun PA_II St. Thomas
+C2 dropped DIES_PEC 2095-11-02 Wed PA_II All Souls
+C1 swallowed-solemnity 2095-12-25 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Christmas
+C1 swallowed-solemnity 2096-01-01 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Mary, Mother of God
+C2 dropped SOLLEMNITAS 2096-03-25 Sun QUAD  Annunciation
+C1 swallowed-solemnity 2096-06-24 Sun PA_II principal=Dominica XII per Annum / lost=Birth of St. John Baptist
+C2 dropped FESTUM 2096-07-22 Sun PA_II St. Mary Magdalene
+C2 dropped FESTUM 2096-10-28 Sun PA_II Ss. Simon & Jude
+C2 dropped DIES_PEC 2096-11-02 Fri PA_II All Souls
+C1 swallowed-solemnity 2097-01-06 Sun NAT   principal=Dominica - Tempus Nativitatis / lost=Epiphany
+C2 dropped SOLLEMNITAS 2097-03-25 Mon QUAD  Annunciation
+C2 dropped FESTUM 2097-09-08 Sun PA_II Birth of Mary
+C2 dropped FESTUM 2097-09-29 Sun PA_II Ss. Michael, Gabriel, Raphael
+C2 dropped DIES_PEC 2097-11-02 Sat PA_II All Souls
+C2 dropped SOLLEMNITAS 2097-12-08 Sun ADV   Immaculate Conception
+C2 dropped FESTUM 2098-02-02 Sun PA_I  Presentation
+C2 dropped FESTUM 2098-04-25 Fri PASCH St. Mark
+C1 swallowed-solemnity 2098-06-29 Sun PA_II principal=Dominica XIII per Annum / lost=Ss. Peter & Paul
+C2 dropped FESTUM 2098-08-10 Sun PA_II St. Lawrence
+C2 dropped FESTUM 2098-08-24 Sun PA_II St. Bartholomew
+C2 dropped FESTUM 2098-09-14 Sun PA_II Exaltation of Holy Cross
+C2 dropped FESTUM 2098-09-21 Sun PA_II St. Matthew
+C2 dropped DIES_PEC 2098-11-02 Sun PA_II All Souls
+C2 dropped FESTUM 2098-11-09 Sun PA_II Lateran Basilica
+C2 dropped FESTUM 2098-11-30 Sun ADV   St. Andrew
+C2 dropped FESTUM 2098-12-28 Sun NAT   Holy Innocents
+C2 dropped FESTUM 2099-01-25 Sun PA_I  Conv. of St. Paul
+C2 dropped FESTUM 2099-02-22 Sun PA_I  Chair of St. Peter
+C2 dropped FESTUM 2099-05-03 Sun PASCH Ss. Philip & James
+C2 dropped FESTUM 2099-05-31 Sun PASCH Visitation
+C2 dropped FESTUM 2099-10-18 Sun PA_II St. Luke
+C1 swallowed-solemnity 2099-11-01 Sun PA_II principal=Dominica XXXI per Annum / lost=All Saints
+C2 dropped DIES_PEC 2099-11-02 Mon PA_II All Souls
+C2 dropped FESTUM 2099-12-27 Sun NAT   St. John
+C2 dropped SOLLEMNITAS 2100-03-25 Thu TRID  Annunciation
+C2 dropped FESTUM 2100-04-25 Sun PASCH St. Mark
+C2 dropped FESTUM 2100-07-25 Sun PA_II St. James
+C1 swallowed-solemnity 2100-08-15 Sun PA_II principal=Dominica XX per Annum / lost=Assumption
+C2 dropped DIES_PEC 2100-11-02 Tue PA_II All Souls
+C2 dropped FESTUM 2100-12-12 Sun ADV   Our Lady of Guadalupe
+C2 dropped FESTUM 2100-12-26 Sun NAT   St. Stephen
+TOTALS 1970-2100: C1=132 C2=719 C3=1591 C4(opt-mem recolours day)=9103

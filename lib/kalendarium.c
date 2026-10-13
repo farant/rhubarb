@@ -345,17 +345,10 @@ cellulam_pingere (
         info = calendarium_obtinere_diem(contextus->liturgia, dies,
             md->piscina);
     }
-    si (info)
-    {
-        rectangulum(md, f.x, f.y, II, f.altitudo,
-            color_liturgicus(info->color_diei), VERUM);
-    }
     /* numerus diei: hodie inversus, alieni obscuri */
-    numerus[ZEPHYRUM]  = (character)(dies.dies >= X ? '0' + dies.dies
-        / X
-                                                    : ' ');
-    numerus[I]   = (character)('0' + dies.dies % X);
-    numerus[II]  = '\0';
+    numerus[ZEPHYRUM]  = (character)('0' + dies.dies / X);
+    numerus[I]         = (character)('0' + dies.dies % X);
+    numerus[II]        = '\0';
     textus = chorda_ex_literis(dies.dies >= X ? numerus : numerus + I,
         md->piscina);
     si (dies_aequales(dies, hodierna))
@@ -371,10 +364,19 @@ cellulam_pingere (
         mandata_textus(md, f.x + IV, f.y + I, textus, ZEPHYRUM,
             color_thematis(alienus ? COLOR_TEXT_DIM : COLOR_TEXT));
     }
-    /* festum: memoria aut maius, aut dominica */
+    /* color liturgicus: quadratum iuxta numerum (Franus: linea ad
+     * marginem ut divisor legebatur) */
+    si (info)
+    {
+        rectangulum(md, f.x + V + (s32)textus.mensura
+            * KALENDARIUM_LITTERA + II, f.y + II, V, V,
+            color_liturgicus(info->color_diei), VERUM);
+    }
+    /* festum: memoria aut maius; dominica nuda nihil (Franus: color et
+     * columna dicunt - titulus praecisus "Dominica X" fallebat) */
     si (   info && info->celebratio_principalis
-        && (   info->celebratio_principalis->gradus >= GRADUS_MEMORIA
-            || info->tempus_info.est_dominica))
+        && info->celebratio_principalis->gradus >= GRADUS_MEMORIA
+        && info->celebratio_principalis->gradus != GRADUS_DOMINICA)
     {
         mandata_textus(md, f.x + IV, f.y + KALENDARIUM_LINEA + III,
             praecidere(info->celebratio_principalis->titulus_brevis,

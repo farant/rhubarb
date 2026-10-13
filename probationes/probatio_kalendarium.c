@@ -400,8 +400,8 @@ color_thematis_est (
     redde c.genus == COLOR_MANDATI_THEMA && c.valor == signum;
 }
 
-/* linea coloris liturgici cellulae: rectangulum plenum II pixelorum ad
- * sinistrum, altitudine cellulae; NIHIL si nulla */
+/* quadratum coloris liturgici cellulae: rectangulum plenum V x V
+ * (RGBA) intra cellulam, iuxta numerum; NIHIL si nullum */
 interior constans Mandatum*
 linea_coloris (
     Mandata* md,
@@ -414,9 +414,9 @@ linea_coloris (
     {
         x = (constans Mandatum*)xar_obtinere(md->elementa, i);
         si (   x->genus          == MANDATUM_RECTANGULUM && x->impletum
-            && x->fines.x        == f.x && x->fines.y == f.y
-            && x->fines.latitudo == II
-            && x->fines.altitudo == f.altitudo)
+            && x->color.genus    == COLOR_MANDATI_RGBA
+            && x->fines.latitudo == V && x->fines.altitudo == V
+            && intra(x->fines, f))
         {
             redde x;
         }
@@ -431,6 +431,28 @@ colores_aequales (
 {
     redde a && b && a->color.genus == b->color.genus
         && a->color.valor == b->color.valor;
+}
+
+/* textus (quilibet) in cellula numerati */
+interior i32
+textus_numerare (
+    Mandata* md,
+      Fines  f)
+{
+    constans Mandatum* x;
+                  i32  i;
+                  i32  n;
+
+    n = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        x = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (x->genus == MANDATUM_TEXTUS && punctum_intra(x->fines, f))
+        {
+            n++;
+        }
+    }
+    redde n;
 }
 
 /* signa in cellula: quadrata III x III, plena aut vacua */
@@ -621,6 +643,10 @@ _probare_figuras (
     CREDO_FALSUM(colores_aequales(linea_coloris(md, cellula(x,
         "2026-10-15", c->piscina)), linea_coloris(md, cellula(x,
         "2026-10-19", c->piscina))));
+    /* dominica per annum: numerus solus (titulus "Dominica ..." non
+     * ostenditur - color et columna dicunt) */
+    CREDO_AEQUALIS_I32(textus_numerare(md, cellula(x, "2026-10-18",
+        c->piscina)), I);
     /* festum in cellula XV (praecisum) */
     CREDO_VERUM(textus_in(md, cellula(x, "2026-10-15", c->piscina),
         "St. Teresa of Avila"));

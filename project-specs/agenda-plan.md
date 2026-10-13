@@ -160,6 +160,9 @@ State-model question to settle before A2 (A1 is content only).
   their day) + unscheduled, grouped by category.
 - **A5 — year view.**
 - **A6 — day documents**: embedded scriba per day.
+- **Next after the widget (Fran 2026-10-13):** fix the liturgical
+  library - review in project-specs/liturgia-recensio/RECENSIO.md
+  (US calendar; other calendars a later design question).
 - Later: recurring items.
 
 ## V. AUDIENDA

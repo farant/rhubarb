@@ -21,10 +21,11 @@
  * figurae purae manent); titulus = mensis et annus (Anglice, ut
  * horologium vici) et tempus liturgicum, deinde litterae dierum (S M
  * T W T F S); in cellula: numerus diei (mensis alieni obscurus,
- * hodie inversus), linea coloris liturgici ad sinistrum, festum
- * (titulus brevis: memoria aut maius, aut dominica) ad latitudinem
- * praecisum, signa rerum infra (quadrata plena = apertae, vacua =
- * perfectae; IV summum, deinde '+'), dies electa margine activo.
+ * hodie inversus), quadratum coloris liturgici iuxta numerum,
+ * festum (titulus brevis: memoria aut maius; dominica nuda nihil) ad
+ * latitudinem praecisum, signa rerum infra (quadrata plena = apertae,
+ * vacua = perfectae; IV summum, deinde '+'), dies electa margine
+ * activo.
  *
  * CLAVES: h/l dies -1/+1, k/j hebdomas -1/+1, H/L mensis -1/+1 (dies
  * ad finem mensis praecisa), t hodie. ICTUS in cellula diem eligit.
