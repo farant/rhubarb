@@ -462,6 +462,68 @@ _probare_quaestiones (
     CREDO_FALSUM(agenda_signa_mensis(m->doc, MMXXVI, ZEPHYRUM, signa));
 }
 
+/* A4: apertae (sine perfectis et deletis, sine die incluse) et
+ * rubricae distinctae ordine canonico */
+interior vacuum
+_probare_apertas (
+    CredoContextus* c)
+{
+       Mundus* m;
+          Xar* l;
+         Dies  d;
+          i32  i;
+    character  visae[LXIV];
+          i32  k;
+
+    m = (Mundus*)c->datum;
+    CREDO_NECESSE(m && m->doc);
+    /* 1 domus (XIV); 2 perfecta; 3 sine die "opus domus"; 4 XX sine
+     * rubrica; 5 deleta "zeta" */
+    per (i = ZEPHYRUM; i < V; i++)
+    {
+        (vacuum)agenda_rem_creare(m->doc, lit("res", c->piscina));
+    }
+    d = fasti_dies(MMXXVI, X, XIV);
+    (vacuum)agenda_diem_ponere(m->doc, I, &d);
+    (vacuum)agenda_rubricas_ponere(m->doc, I, lit("domus", c->piscina));
+    (vacuum)agenda_perficere(m->doc, II, d);
+    (vacuum)agenda_rubricas_ponere(m->doc, III, lit("opus domus",
+        c->piscina));
+    d = fasti_dies(MMXXVI, X, XX);
+    (vacuum)agenda_diem_ponere(m->doc, IV, &d);
+    (vacuum)agenda_rubricas_ponere(m->doc, V, lit("zeta", c->piscina));
+    (vacuum)agenda_rem_delere(m->doc, V);
+    l = agenda_apertae(m->doc, c->piscina);
+    CREDO_NECESSE_NON_NIHIL(l);
+    CREDO_AEQUALIS_I32(xar_numerus(l), III);
+    CREDO_AEQUALIS_S32((*(constans AgendaRes**)xar_obtinere(l,
+        ZEPHYRUM))
+        ->id, I);
+    CREDO_AEQUALIS_S32((*(constans AgendaRes**)xar_obtinere(l, I))->id,
+        III);
+    CREDO_AEQUALIS_S32((*(constans AgendaRes**)xar_obtinere(l, II))->id,
+        IV);
+    l = agenda_rubricae(m->doc, c->piscina);
+    CREDO_NECESSE_NON_NIHIL(l);
+    k                = ZEPHYRUM;
+    visae[ZEPHYRUM]  = '\0';
+    per (i = ZEPHYRUM; i < xar_numerus(l); i++)
+    {
+        chorda* r;
+
+        r = (chorda*)xar_obtinere(l, i);
+        si (i > ZEPHYRUM)
+        {
+            visae[k++] = ' ';
+        }
+        memcpy(visae + k, r->datum, (size_t)r->mensura);
+        k         += r->mensura;
+        visae[k]  = '\0';
+    }
+    /* deleta (zeta) abest; domus semel */
+    CREDO_VERUM(strcmp(visae, "domus opus") == ZEPHYRUM);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "creatio",      _probare_creationem,     mundum_parare,
         mundum_purgare,
@@ -488,6 +550,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         mundum_purgare,
         NIHIL, NIHIL },
     { "quaestiones",  _probare_quaestiones,    mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "apertae",      _probare_apertas,        mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

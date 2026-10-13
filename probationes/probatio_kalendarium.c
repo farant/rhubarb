@@ -716,6 +716,34 @@ agendam_parare (
     redde mundum_struere(x, c->piscina, NIHIL);
 }
 
+/* agenda cum argumento "agenda": fixa agendae diei (1 domus XIV, 2 et
+ * 3 perfectae, 4 deleta) + 5 sine die "opus domus" + 6 XX sine
+ * rubrica */
+interior b32
+agendam_visus_parare (
+                Mundus* x,
+        CredoContextus* c)
+{
+    s32 id;
+   Dies d;
+
+    si (!agendam_parare(x, c))
+    {
+        redde FALSUM;
+    }
+    (vacuum)agenda_rubricas_ponere(x->documentum, I, chorda_ex_literis(
+        "domus", c->piscina));
+    id = agenda_rem_creare(x->documentum, chorda_ex_literis("res",
+        c->piscina));
+    (vacuum)agenda_rubricas_ponere(x->documentum, id, chorda_ex_literis(
+        "opus domus", c->piscina));
+    id = agenda_rem_creare(x->documentum, chorda_ex_literis("res",
+        c->piscina));
+    d  = fasti_dies(MMXXVI, X, XX);
+    (vacuum)agenda_diem_ponere(x->documentum, id, &d);
+    redde kalendarium_argumentum_ponere(&x->m, "agenda");
+}
+
 /* ordines visus diei (id "r<n>") ordine arboris = "r1 r2 ..." ? */
 interior b32
 ordines_sunt (
@@ -1084,6 +1112,48 @@ _probare_figuras_diei (
     CREDO_VERUM(textus_ullus_continet(md, "note: abc"));
 }
 
+/* visus agendae (A4a): res apertae per rubricas (ordine canonico,
+ * intra greges dies, sine die ultimae; sine rubrica ultimae); res in
+ * gregibus duobus bis; j/k iterata praetereunt; x perficit (abit); n
+ * rem sine die creat */
+interior vacuum
+_probare_visum_agendae (
+    CredoContextus* c)
+{
+                Mundus* x;
+    constans AgendaRes* r;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(agendam_visus_parare(x, c));
+    dispensator_recomponere(x->d);
+    CREDO_VERUM(campus_est(x, "visus", "agenda"));
+    CREDO_VERUM(ordines_sunt(x, "r1-0 r5-0 r5-1 r6-2"));
+    CREDO_NON_NIHIL(componens_invenire_per_id(dispensator_arbor(x->d),
+        chorda_ex_literis("g1", c->piscina)));
+    clavis(x, 'j');
+    CREDO_VERUM(campus_est(x, "res_electa", "5"));
+    clavis(x, 'j');
+    CREDO_VERUM(campus_est(x, "res_electa", "6"));
+    clavis(x, 'k');
+    CREDO_VERUM(campus_est(x, "res_electa", "5"));
+    clavis(x, 'k');
+    CREDO_VERUM(campus_est(x, "res_electa", "1"));
+    clavis(x, 'x');
+    CREDO_VERUM(agenda_res(x->documentum, I)->perfecta);
+    CREDO_VERUM(ordines_sunt(x, "r5-0 r5-1 r6-2"));
+    CREDO_VERUM(campus_est(x, "res_electa", "5"));
+    clavis(x, 'n');
+    typare(x, "lac");
+    reditus(x);
+    r = agenda_res(x->documentum, VII);
+    CREDO_NECESSE_NON_NIHIL(r);
+    CREDO_FALSUM(r->dies_posita);
+    CREDO_VERUM(ordines_sunt(x, "r5-0 r5-1 r6-2 r7-2"));
+    /* Esc sine filtro: visus manet */
+    effugium(x);
+    CREDO_VERUM(campus_est(x, "visus", "agenda"));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "montatio",     _probare_montationem,   mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
@@ -1106,6 +1176,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "prompta",      _probare_promptam,      mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { "figurae_diei", _probare_figuras_diei,  mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "visus_agendae", _probare_visum_agendae, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

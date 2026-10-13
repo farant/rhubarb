@@ -105,6 +105,9 @@ dies_iussum (
 nomen structura {
                   Vicus* vicus;
      constans character* genus;
+     /* A4: '$agenda' = genus calendarium cum "agenda"; NIHIL =
+      * argumentum ab usore */
+     constans character* argumentum_fixum;
 } ContextusAperiendi;
 
 /* S3e: contextus generis pictoris - memoria picturarum COMMUNIS omnium
@@ -200,8 +203,9 @@ aperire_iussum (
         redde VERUM;
     }
     si (!vicus_acervo_aperire(ca->vicus, ca->genus,
-            arg.mensura > ZEPHYRUM ? chorda_ut_cstr(arg, piscina)
-                                   : NIHIL))
+            ca->argumentum_fixum ? ca->argumentum_fixum
+            : arg.mensura > ZEPHYRUM ? chorda_ut_cstr(arg, piscina)
+                                     : NIHIL))
     {
         effectus->error = chorda_concatenare(chorda_ex_literis(
             ca->genus, piscina), chorda_ex_literis(
@@ -225,9 +229,35 @@ aperiens_registrare (
     {
         redde FALSUM;
     }
-    ca->vicus = v;
-    ca->genus = genus;
+    ca->vicus             = v;
+    ca->genus             = genus;
+    ca->argumentum_fixum  = NIHIL;
     redde iussum_registrare(r, genus, FALSUM, aperire_iussum, ca);
+}
+
+/* A4: verbum quod genus cum argumento fixo aperit ('$agenda' =
+ * calendarium "agenda") */
+interior b32
+aperiens_fixum_registrare (
+        IussumRegistrum* r,
+                  Vicus* v,
+     constans character* verbum,
+     constans character* genus,
+     constans character* argumentum,
+                Piscina* piscina)
+{
+    ContextusAperiendi* ca;
+
+    ca = (ContextusAperiendi*)piscina_allocare(piscina,
+        magnitudo(ContextusAperiendi));
+    si (!ca)
+    {
+        redde FALSUM;
+    }
+    ca->vicus             = v;
+    ca->genus             = genus;
+    ca->argumentum_fixum  = argumentum;
+    redde iussum_registrare(r, verbum, FALSUM, aperire_iussum, ca);
 }
 
 interior b32
@@ -947,6 +977,8 @@ vicus_applicatio_aedificare (
                piscina)
         || !aperiens_registrare(cs->iussa, app->vicus, "calendarium",
                piscina)
+        || !aperiens_fixum_registrare(cs->iussa, app->vicus, "agenda",
+               "calendarium", "agenda", piscina)
         || !cyclum_registrare(cs->iussa, app->vicus, "pictor-next", I,
                piscina)
         || !cyclum_registrare(cs->iussa, app->vicus, "pictor-prev", -I,

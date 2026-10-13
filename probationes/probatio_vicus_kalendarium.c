@@ -11,6 +11,8 @@
 #include "vicus_applicatio.h"
 #include "kalendarium.h"
 #include "thema.h"
+#include "manus_ludus.h"
+#include "insula.h"
 #include "credo.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -127,8 +129,46 @@ _probare_latera (
     CREDO_VERUM(altera->documentum == prima->documentum);
 }
 
+/* '$agenda' (A4a): verbum in pagina scribae - latus calendarii cum
+ * argumento "agenda" (visus agendae) in fronte post pulsum */
+interior vacuum
+_probare_agendam (
+    CredoContextus* c)
+{
+                 Mundus* x;
+                  Vicus* v;
+             ManusLudus* m;
+    KalendariumMontatio* k;
+                 chorda* visus;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(x && x->volumen);
+    CREDO_NECESSE(vicus_applicatio_aedificare(&x->app, c->piscina,
+        internamentum_creare(c->piscina), x->volumen, CDLXXX,
+        CDLXXX + VICUS_ALTITUDO_TABULARUM));
+    v = x->app.vicus;
+    m = manus_ludus_creare(c->piscina, x->app.d);
+    CREDO_NECESSE(vicus_activam_ponere(v, "3"));
+    dispensator_recomponere(x->app.d);
+    /* ictus in pagina sinistra (focus), scribere, Esc, ictus in
+     * verbo */
+    (vacuum)manus_ludus_premere_ad(m, VI + III, VICUS_ALTITUDO_TABULARUM
+        + VIII + II * VIII + IV);
+    CREDO_VERUM(manus_ludus_scribere(m, "i$agenda"));
+    CREDO_VERUM(manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));
+    (vacuum)manus_ludus_premere_ad(m, VI + III * VI + III,
+        VICUS_ALTITUDO_TABULARUM + VIII + II * VIII + IV);
+    (vacuum)vicus_pulsare(v);
+    k = kalendarium_frontale(v);
+    CREDO_NECESSE_NON_NIHIL(k);
+    visus = insula_ramus_attributum(&k->ramus, "visus");
+    CREDO_VERUM(visus && chorda_aequalis_literis(*visus, "agenda"));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "latera",  _probare_latera,  mundum_parare, mundum_purgare, NIHIL,
+        NIHIL },
+    { "agenda",  _probare_agendam, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

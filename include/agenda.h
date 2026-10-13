@@ -198,4 +198,18 @@ agenda_signa_mensis (
                           s32  mensis,
                  AgendaSignum  signa[XXXI]);
 
+/* A4: res vivae NONDUM perfectae (quocumque die, sine die incluse),
+ * ordine id - visus agendae (decisio 7: res aperta numquam abit) */
+Xar*
+agenda_apertae (
+    constans AgendaDocumentum* doc,
+                      Piscina* piscina);
+
+/* A4: rubricae distinctae rerum vivarum, ordine canonico (Xar de
+ * chorda) */
+Xar*
+agenda_rubricae (
+    constans AgendaDocumentum* doc,
+                      Piscina* piscina);
+
 #endif /* AGENDA_H */

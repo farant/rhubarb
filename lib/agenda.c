@@ -1104,3 +1104,86 @@ agenda_signa_mensis (
     }
     redde VERUM;
 }
+
+
+/* ==================================================
+ * Quaestiones (A4)
+ * ================================================== */
+
+Xar*
+agenda_apertae (
+    constans AgendaDocumentum* doc,
+                      Piscina* piscina)
+{
+          Xar* l;
+     Recordum* r;
+          i32  i;
+
+    si (!doc || !piscina)
+    {
+        redde NIHIL;
+    }
+    l = xar_creare(piscina, (i32)magnitudo(constans AgendaRes*));
+    per (i = ZEPHYRUM; l && i < xar_numerus(doc->recorda); i++)
+    {
+        r = (Recordum*)xar_obtinere(doc->recorda, i);
+        si (!r->deleta && !r->res.perfecta)
+        {
+            *(constans AgendaRes**)xar_addere(l) = &r->res;
+        }
+    }
+    redde l;
+}
+
+Xar*
+agenda_rubricae (
+    constans AgendaDocumentum* doc,
+                      Piscina* piscina)
+{
+          Xar* l;
+     Recordum* r;
+       chorda  c;
+       chorda* x;
+          i32  i;
+          i32  j;
+          i32  k;
+          i32  q;
+
+    si (!doc || !piscina)
+    {
+        redde NIHIL;
+    }
+    l = xar_creare(piscina, (i32)magnitudo(chorda));
+    per (i = ZEPHYRUM; l && i < xar_numerus(doc->recorda); i++)
+    {
+        r = (Recordum*)xar_obtinere(doc->recorda, i);
+        per (j = ZEPHYRUM; !r->deleta
+            && j < xar_numerus(r->res.rubricae);
+            j++)
+        {
+            c = *(chorda*)xar_obtinere(r->res.rubricae, j);
+            /* insertio ordinata, iterata praeteruntur */
+            k = ZEPHYRUM;
+            dum (   k < xar_numerus(l)
+                 && rubricas_comparare(*(chorda*)xar_obtinere(l, k), c)
+                    < ZEPHYRUM)
+            {
+                k++;
+            }
+            si (   k < xar_numerus(l)
+                && rubricas_comparare(*(chorda*)xar_obtinere(l, k), c)
+                   == ZEPHYRUM)
+            {
+                perge;
+            }
+            (vacuum)xar_addere(l);
+            per (q = xar_numerus(l) - I; q > k; q--)
+            {
+                x   = (chorda*)xar_obtinere(l, q);
+                *x  = *(chorda*)xar_obtinere(l, q - I);
+            }
+            *(chorda*)xar_obtinere(l, k) = c;
+        }
+    }
+    redde l;
+}

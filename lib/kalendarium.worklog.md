@@ -183,3 +183,34 @@ draws in its own component's space, so the prompt text is at local
 y 1, not at the component's pane position - the check looks for the
 text anywhere. A leftover temp volume from the A3b crash plant (purgare
 never ran on the crash) was found in /tmp and removed.
+
+## 2026-10-13 — A4a: the agenda (todo) view
+
+Fran chose (b): no separate genus - `visus="agenda"` on the calendarium
+pane, opened by argument "agenda"; vicus registers `$agenda` as a
+fixed-argument alias (`aperiens_fixum_registrare`, ContextusAperiendi
+.argumentum_fixum). Enter -> day view deferred.
+
+agenda.h gained `agenda_apertae` (live incomplete items, any day,
+unscheduled included) and `agenda_rubricae` (distinct rubrics of live
+items, canonical order). Groups (`greges_agendae`): rubrics in order
+(filter: that one only), then items without rubrics (not under a
+filter); within a group by date, unscheduled last, then id; empty groups
+skipped. An item with two rubrics appears in both, so row ids carry the
+group: "r<id>-<k>" (no ':' - component ids may not contain it, S8c);
+group headings "g<k>" (PARTES_INDEX). j/k skip a repeated occurrence of
+the same item. The day-view code was generalized to "the current list"
+(`ordines_currentes`): h/l and </> only in the day view; Esc in the
+agenda view clears the filter (A4b) or does nothing; `n` creates an
+UNSCHEDULED item carrying the filter rubric; `x` refreshes the selection
+in the agenda view (a completed item leaves the list).
+
+Manifest correction after approval: `rubrica_filtrum` had to be
+`typus="textus"`, not `nomen` - canon `nomen` refuses '-', and rubrics
+are kebab-case. Also rewrote the j/k step with s32: it used i32 (which
+is UNSIGNED here) and only worked through casts.
+
+Tests: probatio_agenda `apertae` (queries), probatio_kalendarium
+`visus_agendae` (grouping, skip, complete, create), probatio_vicus_
+kalendarium `agenda` (typed and clicked '$agenda' in a scriba page).
+Plant: no "(none)" group -> red.

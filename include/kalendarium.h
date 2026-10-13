@@ -52,7 +52,17 @@
  * reficere (agenda), n res nova, a nota, c titulus, D dies scripta
  * (vacua = sine die) - prompta (A3b); Esc ad mensem (aut promptam
  * claudit).
- * Argumentum "YYYY-MM": dies I eius mensis (aut hodie si in eo).
+ * Argumentum "YYYY-MM": dies I eius mensis (aut hodie si in eo);
+ * "agenda": visus agendae.
+ *
+ * VISUS AGENDAE (A4; visus="agenda", argumentum "agenda", '$agenda'):
+ * res apertae (quocumque die, sine die incluse) per rubricas ordine
+ * canonico, deinde sine rubrica; intra gregem dies, sine die ultimae;
+ * res rubricarum plurium in quoque grege. radix > "titulus" + per
+ * gregem "g<k>" (PARTES_INDEX) et ordines "r<id>-<k>" (PARTES_ITEM).
+ * Claves ut in visu diei (j/k iterata praetereunt; x rem perficit -
+ * abit; n rem SINE die creat, rubrica filtri si posita), sine h/l et
+ * </>; Esc filtrum tollit.
  */
 
 #ifndef KALENDARIUM_H

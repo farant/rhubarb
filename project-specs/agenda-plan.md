@@ -171,6 +171,13 @@ State-model question to settle before A2 (A1 is content only).
     checked.
 - **A4 — todo view/editor** `$agenda`: all incomplete items (whatever
   their day) + unscheduled, grouped by category.
+  - Design (Fran 2026-10-13): a third view of the calendarium pane
+    (`visus="agenda"`), `$agenda` = alias; grouped by rubric, then
+    "(none)"; dates shown, no overdue; notes only for the selected item;
+    `r` rubrics, `f` filter (persistent); Enter -> day view deferred.
+  - **A4a** DONE 2026-10-13: queries `agenda_apertae`, `agenda_rubricae`;
+    view, grouping, keys, `$agenda`.
+  - **A4b** rubric prompt + filter; **A4c** drawing.
 - **A5 — year view.**
 - **A6 — day documents**: embedded scriba per day.
 - **Next after the widget (Fran 2026-10-13):** fix the liturgical

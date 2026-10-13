@@ -25,6 +25,7 @@
       <optio>mensis</optio>
       <optio>dies</optio>
       <optio>annus</optio>
+      <optio>agenda</optio>
     </campus>
     <campus nomen="dies_electus" typus="textus" vita="transiens"
             scriptor="calendarium.agere"
@@ -39,6 +40,8 @@
       <optio>nota</optio>
       <optio>titulus</optio>
       <optio>dies</optio>
+      <optio>rubricae</optio>
+      <optio>filtrum</optio>
     </campus>
     <campus nomen="prompta_textus" typus="textus" vita="transiens"
             scriptor="calendarium.agere"
@@ -46,6 +49,10 @@
                   irrepraesentabilis"/>
     <campus nomen="prompta_cursor" typus="numerus" vita="transiens"
             scriptor="calendarium.agere"/>
+    <campus nomen="rubrica_filtrum" typus="textus" vita="persistens"
+            scriptor="calendarium.agere"
+            nota="visus agendae: una rubrica (kebab: '-' in typo nomen
+                  non licet); absens = omnes"/>
   </status>
 
   <basis genus="organum_commune"/>
