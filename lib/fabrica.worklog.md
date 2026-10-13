@@ -2978,3 +2978,20 @@ The checklist from T4, applied to silva (55 tests):
   Restored in all four, WITHOUT exec (sera.sh releases by trap EXIT;
   exec would drop the trap and leave a stale lock for the next caller to
   clear noisily).
+
+## 2026-10-13 - cursores ad gradus T7: the fresh-clone check caught the entry points
+
+frigida_probare at b8ea30f0: css, md, toml RED in 1-14 s, every member
+OMISSA - "FRACTUM md_corpus - scripsit extra vestigium:
+build/test_logs/md.log - aut manu mutata dum currebat". The entry points
+tee'd their output INTO the tree (build/test_logs/<sub>.log) while
+bin/fabrica ran underneath; fabrica prints during an action ("agitur
+md_corpus"), the log grows mid-action, and the whole-tree write check
+rightly calls it a write outside the footprint. Never seen in quinta:
+every entry-point run there had nothing upstream to RUN (all kept), and
+the gate calls probare directly, without the tee. A cold clone is
+exactly where producers run under the entry point. Reproduced in quinta
+(remove md/build/corpus_md.txt, run the entry point -> same FRACTUM),
+fixed by tee-ing into a temp file outside the tree and moving it into
+build/test_logs/ after the run; reproduction then green. silva stayed
+green because nothing upstream of its members runs under the tee.

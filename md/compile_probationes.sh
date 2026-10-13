@@ -5,9 +5,17 @@
 # <porta titulus="md" tegit="materia/fontes/* md/fontes/* md/grammatica/* md/html/* md/probationes/*" currit="tools/fabrica.c"/>
 if [ -z "${MD_PROBATIONES_EFFUSIO:-}" ]; then
     export MD_PROBATIONES_EFFUSIO=1
+    # effusio in plagula TEMPORARIA extra arborem, post cursum in locum
+    # movetur: bin/fabrica arborem totam ante et post actionem
+    # photographat - log in arbore crescens actionem 'scripsit extra
+    # vestigium' faceret (frigida b8ea30f0: md_corpus, toml_corpus,
+    # aedilis FRACTA, cursores ad gradus T7)
     mkdir -p "$(dirname "$0")/../build/test_logs"
-    "$0" "$@" 2>&1 | tee "$(dirname "$0")/../build/test_logs/md.log"
-    exit "${PIPESTATUS[0]}"
+    _effusio="$(mktemp "${TMPDIR:-/tmp}/md.log.XXXXXX")"
+    "$0" "$@" 2>&1 | tee "$_effusio"
+    _rc="${PIPESTATUS[0]}"
+    mv -f "$_effusio" "$(dirname "$0")/../build/test_logs/md.log"
+    exit "$_rc"
 fi
 
 # md/compile_probationes.sh - IANUA probationum md (cursores ad gradus
