@@ -531,6 +531,7 @@ Updated 2026-02-26: Added results from Demos 102 (Barrington-Radical Principle, 
 ### Parity-Lock Theorem (±q Encoding)
 - **Statement:** Under the ±q paired input encoding with k weights (2k input bits), the (0,0)≡(1,1) collision per weight creates 3^k equivalence classes. XOR/XNOR are the only standard Boolean functions constant on all classes. AND, OR, MAJ, and threshold functions are structurally impossible — zero winners at ALL depths (0-8) for both 6-input and 8-input arities. The mechanism: masks 0...0 and 1...1 always produce identical sums (both zero), so any f with f(0...0) ≠ f(1...1) is impossible under ANY activation. Sign-flip symmetry (combined_cell(S) = combined_cell(-S)) collapses 3^k classes to at most (3^k+1)/2 distinguishable groups.
 - **Status:** **PROVEN** (formal proof in `proofs/parity-lock-theorem.md`; computationally verified: 0 winners for AND/OR/MAJ/THR2 at all depths 0-8, 76/76 collisions same-parity, 0/27 class conflicts for XOR, all 16 numerical tests confirm theorem, 13/13 sign-flip pairs verified identical)
+- **Note (2026-10-12, Demo 125):** the theorem is unaffected; only its Significance cites D82's depth law, which D125 found unsupported above depth 6. See `demo_125_exact_crossing_depth/findings.md`.
 - **Demo provenance:** Demo 92. **Proof:** `proofs/parity-lock-theorem.md` (P04)
 - **Cross-references:** Parity Unreachability (Demo 48), Parity Reachability at k=6 (Demo 50), Depth Law (Demo 82/89/91)
 - **Significance:** The ±q encoding concentrates all computational power on parity — the single Boolean function outside AC⁰. The depth law max_xor ≈ depth + 6 describes scaling for the ONLY achievable function family under this encoding. Contrasts with 1-weight-per-input encoding (Demos 48/50) which computes all 13 NPN classes.
@@ -545,6 +546,7 @@ Updated 2026-02-26: Added results from Demos 102 (Barrington-Radical Principle, 
 ### Parity Wall Theorem (Activation Is Not the Bottleneck)
 - **Statement:** The maximum achievable XOR arity at a given catalog depth is determined entirely by the parity constraint (whether any weight tuple separates even vs odd input subsets). Activation resolution (angular sectors k_sec = 2 to 48, Voronoi direction counts 2 to 114) controls the number of solutions but not their existence. max_xor = 8 at ALL k_sec values with 275 entries at ζ₁₂.
 - **Status:** DEMONSTRATED (exhaustive k_sec sweep 2-48, Voronoi sweep 2-114 dirs)
+- **Note (2026-10-12, Demo 125):** rests on D82's linear depth law, which D125 found unsupported above depth 6 (no XOR14 at depths 7-8). This entry's own data are not yet audited. See `demo_125_exact_crossing_depth/findings.md`.
 - **Demo provenance:** Demo 91
 - **Cross-references:** Depth Law (Demo 82), Balanced Exponentials Linearity (below), Axis Cancellation Mechanism (Demo 90)
 - **Significance:** Confirms that the linear depth law is a property of the parity constraint and BFS vocabulary growth, not an activation geometry artifact.
@@ -552,6 +554,7 @@ Updated 2026-02-26: Added results from Demos 102 (Barrington-Radical Principle, 
 ### Depth Gap Invariance
 - **Statement:** The depth gap between consecutive XOR levels (e.g., XOR6 first appearing at depth d₁ and XOR8 first appearing at depth d₂) is constant across all tested activation resolutions (k_sec = 2 to 48, direction counts 2 to 114). The depth law slope is fixed by parity, not activation geometry.
 - **Status:** DEMONSTRATED (9×9 depth × k_sec interaction grid)
+- **Note (2026-10-12, Demo 125):** rests on D82's linear depth law, which D125 found unsupported above depth 6 (no XOR14 at depths 7-8). This entry's own data are not yet audited. See `demo_125_exact_crossing_depth/findings.md`.
 - **Demo provenance:** Demo 91
 - **Cross-references:** Parity Wall Theorem (above), Balanced Exponentials Linearity (below)
 - **Significance:** Key diagnostic: if activation were the bottleneck, finer resolution would shift the depth gap — it does not.
@@ -559,6 +562,7 @@ Updated 2026-02-26: Added results from Demos 102 (Barrington-Radical Principle, 
 ### Balanced Exponentials Linearity
 - **Statement:** The linear depth law max_xor ≈ depth + 6 arises because BFS closure rounds add vocabulary at rate ~2×/round while parity demand grows at 4×/weight (2^{2N} masks). The ratio yields ~2 depth rounds per additional weight, producing the observed slope ≈ 1. Confirmed from three independent directions: D90 (supply side — vocabulary growth), D91 (demand side — activation invariance), and the quantitative match.
 - **Status:** CONFIRMED (from both supply and demand sides)
+- **Note (2026-10-12, Demo 125):** rests on D82's linear depth law, which D125 found unsupported above depth 6 (no XOR14 at depths 7-8). This entry's own data are not yet audited. See `demo_125_exact_crossing_depth/findings.md`.
 - **Demo provenance:** Demo 89 (proposed), Demo 90 (supply analysis), Demo 91 (demand confirmation)
 - **Cross-references:** Linear Depth Law (Demo 82), Parity Wall Theorem (Demo 91), Axis Cancellation Mechanism (Demo 90)
 - **Significance:** Provides the mechanistic explanation for the linear depth law. The linearity emerges from the ratio of two exponential processes (BFS branching vs parity constraint growth).
@@ -1175,36 +1179,42 @@ Updated 2026-02-26: Added results from Demos 102 (Barrington-Radical Principle, 
 ### Logarithmic Scaling Law
 - **Statement:** For ζ_12 (infinite group), XOR capacity scales logarithmically with catalog size: max_xor ≈ 0.62 × log₂(catalog_size) + 4.6. Each doubling of catalog size adds ~0.62 to max XOR; each additional +2 XOR inputs requires approximately 10× more entries. Transition points: XOR6 at ~5 entries, XOR8 at ~51, XOR10 at ~275, XOR12 at ~1140.
 - **Status:** DEMONSTRATED (9 snapshot rounds, catalog size 5 to 4096)
+- **Correction (2026-10-12, Demo 125):** the nine points are the output of a search that stops at XOR12, so rounds 7-8 sit at its ceiling. Extended one level, the search finds no XOR14 at round 7 or 8 (exact rule, 512 and all directions). The fit and its XOR14 extrapolation rest on capped points. See `demo_125_exact_crossing_depth/findings.md`.
 - **Demo provenance:** Demo 81
 - **Significance:** Connects DKC scaling to Kuperberg's #P-hardness — the exponential catalog cost per XOR level is consistent with the hardness of the Jones polynomial evaluation at non-lattice roots. XOR14 requires ~38,000 entries (feasible); XOR32 requires ~10^14 (infeasible).
 
 ### Direction Bottleneck
 - **Statement:** Each XOR transition in the ζ_12 catalog is gated by direction count: XOR8 requires ~22 directions, XOR10 requires ~114, XOR12 requires ~507. After direction saturation (round 7, 512 directions), angular diversity alone drives continued winner-count growth. The transition from direction explosion to angle refinement is a clean phase boundary at closure rounds 6–7.
 - **Status:** OBSERVED
+- **Correction (2026-10-07, Demo 117; 2026-10-12, Demo 125):** "saturation at 512" is `MAX_DIR`; uncapped, round 7 has 975 directions and round 8 has 2,043. The angle-refinement phase boundary rests on the cap. See `demo_125_exact_crossing_depth/findings.md`.
 - **Demo provenance:** Demo 81
 - **Significance:** Angular resolution is the limiting factor for higher XOR levels, not raw catalog size. This constrains which optimization strategies can efficiently expand capacity.
 
 ### Linear Depth Law
 - **Statement:** Maximum XOR capacity scales linearly with quaternion "depth" (birth round in group closure = number of generator multiplications = crossing depth in braid/knot sense): max_xor ≈ depth + 6. Each unit of crossing depth adds a fixed increment to computational capacity across all measured transition points (depth 0 → XOR6, depth 2 → XOR8, depth 4 → XOR10, depth 6 → XOR12).
 - **Status:** DEMONSTRATED (all four transition points confirmed at ζ_12)
+- **Correction (2026-10-12, Demo 125):** fits only the even rounds 0, 2, 4, 6 (odd rounds are depth + 5). D81/D82 never searched past XOR12. Extended one level, the same search finds **no XOR14** at depth 7 or 8 (exact rule, 512 and all directions), so max XOR is 12 at depths 6, 7 and 8 under every semantics. Not supported above depth 6. See `demo_125_exact_crossing_depth/findings.md`.
 - **Demo provenance:** Demo 82
 - **Significance:** The logarithmic scaling law from Demo 81 is a corollary: catalog grows as ~2^depth per round, so log₂(catalog) ≈ depth, giving max_xor ≈ 0.62 × log₂(catalog) + const. The depth law is the more fundamental statement.
 
 ### Algebraic Coherence Beats Vocabulary
 - **Statement:** A subset of 564 entries from deep closure rounds (depth 8) reaches XOR12 with 19 winners. A strided 564-entry subset spanning all closure rounds (maximum possible vocabulary: 512 directions, 43 angles — matching the full 4096-entry catalog) reaches only XOR10. More vocabulary with less algebraic structure loses to less vocabulary with more depth. Deep entries are ~2× more efficient per entry for XOR capacity.
 - **Status:** DEMONSTRATED
+- **Correction (2026-10-12, Demo 125):** REFUTED as stated. It holds in D82's entry order (exactly, every semantics), but in other seeded orders strided 564 reaches XOR12 in 8 of 10, and 9 of 10 random 564-entry samples from all depths do. Deep 564: 10 of 10; shallow 564 (rounds 0-5): 1 of 10. "2x more efficient" compares with the shallow prefix. See `demo_125_exact_crossing_depth/findings.md`.
 - **Demo provenance:** Demo 82
 - **Significance:** The determining factor is shared algebraic structure of deep entries — every depth-d entry is a product of d generators, creating common intermediate factors. Strided sampling destroys this structure despite maximizing geometric coverage.
 
 ### Depth IS Crossing Depth
 - **Statement:** Each closure round equals one generator multiplication, which equals one crossing in the braid/knot sense. A depth-d quaternion encodes d crossings of the associated braid diagram. The linear capacity law (max_xor ≈ depth + 6) says computational power scales linearly with knot crossing complexity. Consistent with Kuperberg's #P-hardness: the hardness is in generating deep entries (exponential BFS cost), not in their algebraic structure itself (linear gain).
 - **Status:** STATED (interpretation; not yet a formal theorem)
+- **Correction (2026-10-12, Demo 125):** the "linear capacity law" it interprets is not supported above depth 6 (no XOR14 at depths 7-8); the interpretation of depth as crossings is unaffected. See `demo_125_exact_crossing_depth/findings.md`.
 - **Demo provenance:** Demo 82
 - **Significance:** Connects DKC computation directly to knot theory — more complexly knotted braid words compute more than many simply knotted words with equal or greater total vocabulary.
 
 ### Two-Component Winner Architecture
 - **Statement:** Every XOR winner at all levels has a two-component structure: a shallow core (depth-0 entries = generators + identity appear in every winner at every level) plus deep extensions that provide the additional angular resolution. Mean entry depth rises monotonically: 0.52 (XOR6) → 0.63 (XOR8) → 1.00 (XOR10) → 1.98 (XOR12).
 - **Status:** DEMONSTRATED (all winner tuples at all XOR levels analyzed)
+- **Correction (2026-10-12, Demo 125):** the depth-0 core in every winner comes from the search (triples from the first 100 entries, extension of the first winners in order), not from the entries. Uncapped, no XOR12 winner uses depth 8 (mean depth 1.68). See `demo_125_exact_crossing_depth/findings.md`.
 - **Demo provenance:** Demo 82
 - **Significance:** Deep entries function as "effective generators" encoding complex rotation axes from their algebraic structure as many-generator products. The shallow core anchors the computation while deep extensions refine the angular discrimination.
 
@@ -1275,7 +1285,8 @@ Updated 2026-02-26: Added results from Demos 102 (Barrington-Radical Principle, 
 ### Null Dispensability at Infinite Groups
 - **Statement:** At ζ₁₂ (infinite group, 4096 entries, 121 null entries = 3.0%), removing all bracket-null entries preserves full XOR capacity (XOR6/8/10/12 all 32 winners, identical to full catalog). Null entries are directionally indispensable (67 exclusive S² axes) but computationally dispensable. This contrasts with ζ₈ where removing nulls destroys XOR8 capacity (32 → 4 winners).
 - **Status:** DEMONSTRATED (exhaustive; non-null-only subset tested at all XOR levels)
-- **Correction (2026-10-10, Demo 124):** the ζ₁₂ comparison (32 = 32 at every level) compares MAX_WIN-capped counts and is not yet audited exactly (planned with the D82 / ζ₁₂ audit). Nulls are dispensable at ζ₈ too (D124).
+- **Correction (2026-10-10, Demo 124):** the ζ₁₂ comparison (32 = 32 at every level) compares MAX_WIN-capped counts. Nulls are dispensable at ζ₈ too (D124).
+- **Exact audit (2026-10-12, Demo 125):** the ζ₁₂ result holds exactly: non-null reaches XOR12 under the exact rule and robustly. "32 = 32" is the search's stop at 32 winners; "exhaustive" is wrong (greedy search). See `demo_125_exact_crossing_depth/findings.md`.
 - **Demo provenance:** Demo 87
 - **Cross-references:** Null Indispensability Theorem (Demo 84), Null Fraction Dilution Conjecture (Demo 84), Regime Transition Theorem (below)
 - **Significance:** Null indispensability does NOT generalize from finite to infinite groups. The transition mechanism is direction density — when the non-null direction count is large enough (1976 out of 2043), losing 67 null-only directions cannot constrain combinatorial search.
@@ -1284,6 +1295,7 @@ Updated 2026-02-26: Added results from Demos 102 (Barrington-Radical Principle, 
 - **Statement:** There is a qualitative transition between finite groups (ζ₈: nulls computationally critical, 37.5% of catalog, 6/13 exclusive directions in a sparse direction set) and infinite groups (ζ₁₂: nulls computationally redundant, 3% of catalog, 67/2043 exclusive directions in a dense direction set). Directional indispensability (owning exclusive S² axes) is necessary but not sufficient for computational indispensability.
 - **Status:** DEMONSTRATED (two-root comparison)
 - **Correction (2026-10-10, Demo 124):** REFUTED on the ζ₈ side: nulls are computationally dispensable at ζ₈ as well (non-null max XOR8 = full, exactly). No transition is shown.
+- **Exact audit (2026-10-12, Demo 125):** the ζ₁₂ side holds exactly; with D124, nulls are dispensable at both roots, so there is no transition. See `demo_125_exact_crossing_depth/findings.md`.
 - **Demo provenance:** Demo 87
 - **Cross-references:** Null Indispensability Theorem (Demo 84), Null Dispensability at Infinite Groups (above)
 - **Significance:** Establishes that the controlling variable for null indispensability is direction density, not null fraction per se. At ζ₈ the non-null directions are too sparse; at ζ₁₂ they are dense enough.
@@ -1317,6 +1329,7 @@ Updated 2026-02-26: Added results from Demos 102 (Barrington-Radical Principle, 
 ### Pairwise Coherence Non-Mechanism
 - **Statement:** Mean pairwise |qdot| (quaternion alignment) is flat at ~0.42 across all depth shells (0-8) and identical to random baseline. Intra-depth coherence (0.4214) is actually LESS than inter-depth coherence (0.4254) — depth shells are more internally orthogonal than across shells. Quaternion alignment does NOT explain the depth advantage.
 - **Status:** DEMONSTRATED (KILLED as explanation)
+- **Note (2026-10-12, Demo 125):** rests on D82's linear depth law, which D125 found unsupported above depth 6 (no XOR14 at depths 7-8). This entry's own data are not yet audited. See `demo_125_exact_crossing_depth/findings.md`.
 - **Demo provenance:** Demo 89 (Phase 3, Phase 5)
 - **Cross-references:** Linear Depth Law (Demo 82), Axis Cancellation Mechanism (Demo 90)
 - **Significance:** One of 5 candidate mechanisms eliminated in the D89-D90-D91 depth law arc.
@@ -1324,6 +1337,7 @@ Updated 2026-02-26: Added results from Demos 102 (Barrington-Radical Principle, 
 ### Direction Coverage Non-Mechanism
 - **Statement:** All 13 ζ₈ directions are covered by depth 2. The +6 intercept in max_xor ≈ depth + 6 relates to XOR6 base capacity, not direction coverage timing.
 - **Status:** DEMONSTRATED (KILLED as intercept explanation)
+- **Note (2026-10-12, Demo 125):** rests on D82's linear depth law, which D125 found unsupported above depth 6 (no XOR14 at depths 7-8). This entry's own data are not yet audited. See `demo_125_exact_crossing_depth/findings.md`.
 - **Demo provenance:** Demo 89 (Phase 4)
 - **Cross-references:** Linear Depth Law (Demo 82)
 - **Significance:** Direction coverage completes much earlier than the depth law begins to operate.
@@ -1338,6 +1352,7 @@ Updated 2026-02-26: Added results from Demos 102 (Barrington-Radical Principle, 
 ### Sector Saturation Non-Mechanism
 - **Statement:** Pairwise sum sectors saturate early and do not grow with depth. Voronoi coverage is always 100%. Sectors are NOT the bottleneck for the depth law.
 - **Status:** DEMONSTRATED (KILLED)
+- **Note (2026-10-12, Demo 125):** rests on D82's linear depth law, which D125 found unsupported above depth 6 (no XOR14 at depths 7-8). This entry's own data are not yet audited. See `demo_125_exact_crossing_depth/findings.md`.
 - **Demo provenance:** Demo 89 (Phases 7, 9)
 - **Cross-references:** Linear Depth Law (Demo 82)
 - **Significance:** Individual sectors saturate quickly; the bottleneck is relational (how entries combine), not positional.
@@ -1345,6 +1360,7 @@ Updated 2026-02-26: Added results from Demos 102 (Barrington-Radical Principle, 
 ### Axis Cancellation Mechanism
 - **Statement:** XOR winners preferentially contain anti-aligned quaternion pairs. Mean min_dot for XOR8 winners = -0.75 vs -0.65 for random non-winners. Two quaternions with nearly opposite rotation axes partially cancel, yielding a sum quaternion with a small rotation angle (30-66°) — exactly what sector activation needs for parity satisfaction. This is the geometric content of "algebraic coherence" identified in Demo 82.
 - **Status:** DEMONSTRATED
+- **Note (2026-10-12, Demo 125):** rests on D82's linear depth law, which D125 found unsupported above depth 6 (no XOR14 at depths 7-8). This entry's own data are not yet audited. See `demo_125_exact_crossing_depth/findings.md`.
 - **Demo provenance:** Demo 90 (Phase 2b)
 - **Cross-references:** Algebraic Coherence Beats Vocabulary (Demo 82), Cross-Depth Algebraic Constraint (below), Relational Computation Thesis (below)
 - **Significance:** First identification of the geometric mechanism underlying the depth law. Winners select for anti-alignment, which produces low sum angles needed for fine-grained sector discrimination.
@@ -1359,6 +1375,7 @@ Updated 2026-02-26: Added results from Demos 102 (Barrington-Radical Principle, 
 ### Spectral Inversion Theorem
 - **Statement:** The S² point cloud bandwidth (spherical harmonic decomposition of rotation axis positions) DECREASES as depth increases. BW_90% drops from l=4 (depth 0 only) to l=2 (cumulative all depths). BW_99% drops from l=11 to l=6. The point cloud converges to spherical uniformity (l=0 dominant). Computational power grows while positional information content shrinks.
 - **Status:** DEMONSTRATED
+- **Note (2026-10-12, Demo 125):** rests on D82's linear depth law, which D125 found unsupported above depth 6 (no XOR14 at depths 7-8). This entry's own data are not yet audited. See `demo_125_exact_crossing_depth/findings.md`.
 - **Demo provenance:** Demo 90 (Phase 5)
 - **Cross-references:** Relational Computation Thesis (below), 13=13 Theorem (Demo 71)
 - **Significance:** RULES OUT all positional/bandwidth-based explanations for the depth law. The Altschuler-Parrilo hypothesis (deeper = higher bandwidth = more computational modes) is INVERTED: deeper entries are more uniformly distributed, meaning individual positions carry less information. The mechanism must be relational.
@@ -1366,6 +1383,7 @@ Updated 2026-02-26: Added results from Demos 102 (Barrington-Radical Principle, 
 ### Relational Computation Thesis
 - **Statement:** The depth law is relational: what matters is how entries combine (axis cancellation, cross-depth algebraic constraints), not where they individually sit on S². The spectral inversion is the cleanest evidence — positional information degrades monotonically while computation improves linearly.
 - **Status:** DEMONSTRATED (synthesis of D89/D90/D91 results)
+- **Note (2026-10-12, Demo 125):** rests on D82's linear depth law (unsupported above depth 6) and "resolves" D82's "algebraic coherence", which D125 found to be an entry-order effect (strided and random 564-entry sets reach XOR12 in other orders). This entry's own data are not yet audited. See `demo_125_exact_crossing_depth/findings.md`.
 - **Demo provenance:** Demos 89, 90, 91
 - **Cross-references:** Axis Cancellation Mechanism (D90), Cross-Depth Algebraic Constraint (D90), Spectral Inversion (D90), Parity Wall Theorem (D91)
 - **Significance:** Resolves the "algebraic coherence" mystery from Demo 82. Deep entries compose better not because they are individually special, but because their algebraic ancestry creates favorable relational structure (anti-aligned axes, constrained sum vocabularies).
@@ -1380,6 +1398,7 @@ Updated 2026-02-26: Added results from Demos 102 (Barrington-Radical Principle, 
 ### +2 Sectors per Weight
 - **Statement:** Each additional weight in multi-element quaternion sums adds approximately 2 sectors to the coverage count, matching the +2 XOR input step per additional weight in the depth law.
 - **Status:** OBSERVED
+- **Note (2026-10-12, Demo 125):** rests on D82's linear depth law, which D125 found unsupported above depth 6 (no XOR14 at depths 7-8). This entry's own data are not yet audited. See `demo_125_exact_crossing_depth/findings.md`.
 - **Demo provenance:** Demo 89 (Phase 9)
 - **Cross-references:** Balanced Exponentials Linearity (D91), Linear Depth Law (D82)
 - **Significance:** Provides a per-weight sector accounting that connects the depth law slope to the activation cell structure.
@@ -1549,12 +1568,14 @@ Updated 2026-02-26: Added results from Demos 102 (Barrington-Radical Principle, 
 ### Combinatorial-Algebraic Balance Conjecture
 - **Statement:** The linear depth law (max_xor ≈ depth + 6, slope ≈ 1) arises from the ratio of two exponential processes: catalog growth ~2×/depth round (BFS branching) vs parity constraint difficulty ~4×/weight level (2^{2N} masks). These two exponentials balance to give ~2 depth rounds per XOR level. The precise coefficient (slope = 1) comes from the BFS branching factor of the specific SU(2) generator construction. Different generators or groups could yield different slopes.
 - **Status:** SUPPORTED (confirmed from supply and demand sides in D90/D91; not analytically derived from first principles)
+- **Note (2026-10-12, Demo 125):** rests on D82's linear depth law, which D125 found unsupported above depth 6 (no XOR14 at depths 7-8). This entry's own data are not yet audited. See `demo_125_exact_crossing_depth/findings.md`.
 - **Demo provenance:** Demo 89 (proposed), Demo 90 (supply side), Demo 91 (demand confirmation)
 - **Significance:** Would be a genuine theoretical result if the BFS branching factor could be connected to the parity constraint growth rate analytically.
 
 ### Casimir Balance Hypothesis
 - **Statement:** Catalog doubling vs linear eigenvalue gap yields ~1 new representation per depth round, potentially explaining the linear depth law via representation-theoretic capacity growth.
 - **Status:** CONJECTURED (suggested by researcher; consistent with angle data but not proven)
+- **Note (2026-10-12, Demo 125):** rests on D82's linear depth law, which D125 found unsupported above depth 6 (no XOR14 at depths 7-8). This entry's own data are not yet audited. See `demo_125_exact_crossing_depth/findings.md`.
 - **Demo provenance:** Demo 89
 - **Significance:** Would provide a representation-theoretic rather than combinatorial explanation for the depth law.
 
@@ -1567,6 +1588,7 @@ Updated 2026-02-26: Added results from Demos 102 (Barrington-Radical Principle, 
 ### Depth Law Generalization to Non-Parity Functions
 - **Statement:** Does the linear depth law hold for ALL Boolean functions, or just parity? Different functions have different constraint growth rates (parity is hardest — outside AC⁰), so different slopes are expected. Sub-linear slopes for easier functions, potentially no depth dependence for the simplest.
 - **Status:** OPEN CONJECTURE
+- **Note (2026-10-12, Demo 125):** rests on D82's linear depth law, which D125 found unsupported above depth 6 (no XOR14 at depths 7-8). This entry's own data are not yet audited. See `demo_125_exact_crossing_depth/findings.md`.
 - **Demo provenance:** Demo 91 (open question), Demo 92 (parity-lock shows only XOR achievable under ±q encoding)
 - **Significance:** Would characterize the full Boolean function landscape under the depth law framework.
 

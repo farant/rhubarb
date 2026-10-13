@@ -4150,6 +4150,8 @@ Only ζ₄ and ζ₈ generate finite SU(2) subgroups under the standard two-gene
 
 ## Demo 81: Capacity Scaling Law
 
+> **Correction (2026-10-12, Demo 125).** The search stops at 6 weights, so the XOR12 at rounds 7–8 is its ceiling. Extended one level, it finds no XOR14 at round 7 or 8 (exact rule, 512 and all directions). The logarithmic fit and its extrapolations rest on capped points. See `demo_125_exact_crossing_depth/findings.md`.
+
 - **Status**: COMPLETE
 - **File**: `demo_81_capacity_scaling/main.c` (~604 lines)
 - **Tests**: 14/14 pass
@@ -4208,6 +4210,13 @@ For ζ₁₂ (infinite group), XOR capacity scales logarithmically with catalog 
 - **Can union catalogs improve the constant?** Mixing ζ₁₀ + ζ₁₂ entries might give denser angular coverage per entry and change the scaling constant without altering the logarithmic character.
 
 ## Demo 82: Crossing Depth and Computational Role
+
+> **Correction (2026-10-12, Demo 125).** All of D82 is one greedy search; D125 reran it with exact cells and in other entry orders.
+> - "max_xor ≈ depth + 6" fits only rounds 0, 2, 4, 6. Extended one level, the search finds no XOR14 at depth 7 or 8; max XOR is 12 at depths 6–8.
+> - Part D holds in D82's order under every exact semantics. But in other orders strided 564 reaches XOR12 in 8 of 10, and 9 of 10 random 564-entry samples reach it (deep 10/10, shallow 1/10). "Algebraic coherence beats vocabulary" and "2× more efficient" do not survive.
+> - "XOR12 first uses depth-8 entries" needs the 512-direction cap; the depth-0 core of every winner comes from the search order.
+> 
+> See `demo_125_exact_crossing_depth/findings.md`.
 
 - **Status**: COMPLETE
 - **File**: `demo_82_crossing_depth/main.c` (~930 lines)
@@ -4616,7 +4625,9 @@ The delta-parameterized Gram matrix approach universally diverges on a single pr
 > - The non-null subset's XOR8 = 4 is greater than 0, and the full catalog's 32 is the MAX_WIN cap.
 > - Exactly, non-null reaches max XOR8, as the full catalog does; only the number of winners drops (D124).
 >
-> So the "regime transition" has no ζ₈ side: nulls are dispensable at ζ₈ too. The ζ₁₂ comparison here (32 = 32 at every level) compares MAX_WIN-capped counts. It has not yet been audited exactly (planned with the D82 / ζ₁₂ audit); D117 corrected its axis counts. See `demo_124_exact_null_states/findings.md`.
+> So the "regime transition" has no ζ₈ side: nulls are dispensable at ζ₈ too. The ζ₁₂ comparison here (32 = 32 at every level) compares MAX_WIN-capped counts. D117 corrected its axis counts; D125 audits it exactly (below). See `demo_124_exact_null_states/findings.md`.
+
+> **Exact audit (2026-10-12, Demo 125).** The ζ₁₂ result holds exactly: non-null reaches XOR12 under the exact rule and robustly. "32 = 32" is the search's stop at 32 winners. With D124, there is no regime transition. See `demo_125_exact_crossing_depth/findings.md`.
 
 - **Status**: COMPLETE
 - **File**: `demo_87_null_indispensability/main.c` (~907 lines)
@@ -4771,6 +4782,8 @@ The algebraic directions that are worst for spherical integration are best for D
 
 ## Demo 89: Depth Law Mechanism
 
+> **Note (2026-10-12, Demo 125).** This demo builds on D82's linear depth law and its "algebraic coherence". D125 found the law unsupported above depth 6 (no XOR14 at depths 7–8), and coherence to be an entry-order effect. This demo's own data are not yet audited. See `demo_125_exact_crossing_depth/findings.md`.
+
 - **Status**: PRELIMINARY
 - **File**: `demo_89_depth_law_mechanism/main.c` (~1964 lines)
 - **Tests**: 14/14 pass (12 phase completions + catalog built + direction coverage; Phase 5 intra>inter coherence FAIL is expected negative result, Phase 8 deep>strided Cayley FAIL is expected negative result)
@@ -4860,6 +4873,8 @@ Systematic investigation of WHY the depth law holds, testing 8 mechanistic hypot
 
 ## Demo 90: Sum-Angle Structure — Why Deep Entries Compose Better
 
+> **Note (2026-10-12, Demo 125).** This demo builds on D82's linear depth law and its "algebraic coherence". D125 found the law unsupported above depth 6 (no XOR14 at depths 7–8), and coherence to be an entry-order effect. This demo's own data are not yet audited. See `demo_125_exact_crossing_depth/findings.md`.
+
 - **Status**: COMPLETE
 - **File**: `demo_90_sum_angle_structure/main.c` (~1713 lines)
 - **Tests**: 10/12 pass (2 informative fails: Phase 1 count hypothesis — all subsets produce 2048+ distinct sum angles, so deep vs strided/random distinct-count comparisons fail because count is not the discriminating feature)
@@ -4944,6 +4959,8 @@ The depth law mechanism is **axis cancellation** (anti-aligned rotation axes pro
 
 ## Demo 91: Activation Bottleneck Test
 
+> **Note (2026-10-12, Demo 125).** This demo builds on D82's linear depth law and its "algebraic coherence". D125 found the law unsupported above depth 6 (no XOR14 at depths 7–8), and coherence to be an entry-order effect. This demo's own data are not yet audited. See `demo_125_exact_crossing_depth/findings.md`.
+
 - **Status**: COMPLETE
 - **File**: `demo_91_activation_bottleneck/main.c` (~769 lines)
 - **Tests**: 6/7 pass (1 informative fail: activation bottleneck hypothesis refuted)
@@ -5008,6 +5025,8 @@ The combined_cell activation is NOT the bottleneck for the linear depth law — 
 ---
 
 ## Demo 92: Function Scaling — The Parity-Lock Theorem
+
+> **Note (2026-10-12, Demo 125).** This demo builds on D82's linear depth law and its "algebraic coherence". D125 found the law unsupported above depth 6 (no XOR14 at depths 7–8), and coherence to be an entry-order effect. This demo's own data are not yet audited. See `demo_125_exact_crossing_depth/findings.md`.
 
 - **Status**: COMPLETE
 - **File**: `demo_92_function_scaling/main.c` (~1399 lines)
@@ -5082,6 +5101,8 @@ The +/-q input encoding is structurally parity-locked — only XOR/XNOR are comp
 ---
 
 ## Demo 93: Function Scaling — 1-Weight-Per-Input Encoding
+
+> **Note (2026-10-12, Demo 125).** This demo builds on D82's linear depth law and its "algebraic coherence". D125 found the law unsupported above depth 6 (no XOR14 at depths 7–8), and coherence to be an entry-order effect. This demo's own data are not yet audited. See `demo_125_exact_crossing_depth/findings.md`.
 
 - **Status**: COMPLETE (LANDMARK)
 - **File**: `demo_93_function_scaling_1wpi/main.c` (~1636 lines)

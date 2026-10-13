@@ -125,6 +125,13 @@ Each task follows the house cycle:
 - **T9. D125:** D82's depth law and matched-size control, plus D87's ζ₁₂
   claim, on `cellae`. Separate sketch, already approved in outline: the
   replica, exact rule / robust, the 512 cap and uncapped.
+  *(2026-10-12: D125 = `knotapel/demo_125_exact_crossing_depth`, about
+  32 min, every search pinned. The depth law has no support above depth
+  6: the search, extended to XOR14 at rounds 7–8, finds none. "Algebraic
+  coherence" is an entry-order effect (strided 8/10 and random samples
+  9/10 reach XOR12 in other orders). D87's ζ₁₂ result holds exactly.
+  `oracle.py` re-decides every stored winner. Correction notes in 76
+  files.)*
 
 ## Gates
 

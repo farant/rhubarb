@@ -849,6 +849,8 @@ Result: CSS approach fails. Radical is self-orthogonal under Gram form (tautolog
 
 > **Correction (2026-10-10, Demo 124):** rows 84 and 87. Removing the ζ₈ nulls keeps max XOR8 exactly; there is no finite↔infinite regime transition on the ζ₈ side. See `demo_124_exact_null_states/findings.md`.
 
+> **Correction (2026-10-12, Demo 125):** row 82. The depth law is not supported above depth 6 (no XOR14 at depths 7–8), and "algebraic coherence" is an entry-order effect. Row 87 (ζ₁₂) holds exactly. See `demo_125_exact_crossing_depth/findings.md`.
+
 ---
 
 ## 18. Neglecton Data — Demo 49
@@ -1926,6 +1928,8 @@ Angle algebraic degrees: cos(π/2)=0 (rational, finite), cos(π/4)=√2/2 (degre
 
 ## 43. Capacity Scaling Law — Demo 81
 
+> **Correction (2026-10-12, Demo 125).** The search stops at 6 weights, so the XOR12 at rounds 7–8 is its ceiling. Extended one level, it finds no XOR14 at round 7 or 8 (exact rule, 512 and all directions). The logarithmic fit and its extrapolations rest on capped points. See `demo_125_exact_crossing_depth/findings.md`.
+
 ### ζ₁₂ Snapshot Table (9 rounds: catalog, dirs, angles, max XOR)
 
 | Round | Catalog size | Directions | Angles | Max XOR level |
@@ -1963,6 +1967,13 @@ Predictions: XOR14 at ~38,000 entries (~11 rounds); XOR16 at ~615,000 entries; X
 ---
 
 ## 44. Depth Census and Shallow/Strided/Deep Comparison — Demo 82
+
+> **Correction (2026-10-12, Demo 125).** All of D82 is one greedy search; D125 reran it with exact cells and in other entry orders.
+> - "max_xor ≈ depth + 6" fits only rounds 0, 2, 4, 6. Extended one level, the search finds no XOR14 at depth 7 or 8; max XOR is 12 at depths 6–8.
+> - Part D holds in D82's order under every exact semantics. But in other orders strided 564 reaches XOR12 in 8 of 10, and 9 of 10 random 564-entry samples reach it (deep 10/10, shallow 1/10). "Algebraic coherence beats vocabulary" and "2× more efficient" do not survive.
+> - "XOR12 first uses depth-8 entries" needs the 512-direction cap; the depth-0 core of every winner comes from the search order.
+> 
+> See `demo_125_exact_crossing_depth/findings.md`.
 
 ### Depth Census (ζ₁₂ closure, per round)
 
@@ -2289,6 +2300,8 @@ Formal coefficient ratios (divergent): TL_4 λ=-√2 loop gives 1/2; TL_6 λ=0 l
 ---
 
 ## 49. Null Dispensability at ζ₁₂ — Demo 87
+
+> **Exact audit (2026-10-12, Demo 125).** The ζ₁₂ result holds exactly: non-null reaches XOR12 under the exact rule and robustly. "32 = 32" is the search's stop at 32 winners. With D124, there is no regime transition. See `demo_125_exact_crossing_depth/findings.md`.
 
 ### Cross-Root Null Statistics
 

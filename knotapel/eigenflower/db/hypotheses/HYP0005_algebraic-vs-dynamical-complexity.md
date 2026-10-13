@@ -11,6 +11,8 @@ related: []
 
 ## Claim
 
+> **Correction (2026-10-12, Demo 125):** D82's "linear depth law" (max_xor ≈ depth + 6) is not supported above depth 6: the D81/D82 search never went past XOR12, and extended one level it finds no XOR14 at depths 7–8 (exact cells). D82's "algebraic coherence beats vocabulary" / "deep entries 2× more efficient" is an entry-order effect: in other orders, strided and random 564-entry sets reach XOR12 too. D87's ζ₁₂ null dispensability holds exactly. Statements here that rely on the depth law or on coherence are superseded; the D89–D93 "mechanisms" are not yet audited. See `knotapel/demo_125_exact_crossing_depth/findings.md`.
+
 For algebraic reservoirs (DKC-type systems where the computational substrate is an algebraic structure), the correct measure of computational capacity is algebraic complexity — specifically, derived series depth and group solvability — NOT dynamical complexity (topological entropy, Lyapunov exponents, edge-of-chaos measures).
 
 D106 falsifies the naive application of the "Edge of Chaos" thesis to algebraic reservoirs: topological entropy is completely orthogonal to computational capability. A group with high topological entropy may have zero computational utility if it is solvable (Barrington's theorem: solvable groups cannot compute parity). Conversely, a group with low topological entropy may have high computational power if it has deep derived series.

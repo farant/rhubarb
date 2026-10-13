@@ -11,6 +11,8 @@ related: []
 
 ## Claim
 
+> **Correction (2026-10-12, Demo 125):** D82's "linear depth law" (max_xor ≈ depth + 6) is not supported above depth 6: the D81/D82 search never went past XOR12, and extended one level it finds no XOR14 at depths 7–8 (exact cells). D82's "algebraic coherence beats vocabulary" / "deep entries 2× more efficient" is an entry-order effect: in other orders, strided and random 564-entry sets reach XOR12 too. D87's ζ₁₂ null dispensability holds exactly. Statements here that rely on the depth law or on coherence are superseded; the D89–D93 "mechanisms" are not yet audited. See `knotapel/demo_125_exact_crossing_depth/findings.md`.
+
 LLMs generalize because they develop internal circuits that match abstract algebraic patterns of relationships between objects in reality. Once a model has a circuit for "asymmetric dependency," inputs from different domains (family trees, causal reasoning, logical inference) start sharing that circuit. The circuit is domain-independent; the inputs are domain-specific. Generalization happens when domain-specific inputs route through domain-independent circuits.
 
 This is NOT an analogy — it is a claim about the actual mechanism. The abstract relational pattern IS the shared computational structure, and the reason scaling works is that more data provides more instances of the same abstract patterns, strengthening the shared circuits until they "click" and work for all instances (emergence).

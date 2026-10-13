@@ -9,6 +9,8 @@ strength: moderate
 source: "extractions/group-a-knotapel-relevance.md, Connection 5 (quantitative prediction)"
 ---
 
+> **Correction (2026-10-12, Demo 125):** D82's "linear depth law" (max_xor ≈ depth + 6) is not supported above depth 6: the D81/D82 search never went past XOR12, and extended one level it finds no XOR14 at depths 7–8 (exact cells). D82's "algebraic coherence beats vocabulary" / "deep entries 2× more efficient" is an entry-order effect: in other orders, strided and random 564-entry sets reach XOR12 too. D87's ζ₁₂ null dispensability holds exactly. Statements here that rely on the depth law or on coherence are superseded; the D89–D93 "mechanisms" are not yet audited. See `knotapel/demo_125_exact_crossing_depth/findings.md`.
+
 The DKC depth law (max_xor ~ depth + 6) makes a quantitative prediction for TRM: if the task requires N-input parity, TRM should need approximately N - 6 recursion steps.
 
 TRM uses n=6 recursions for Sudoku (81 cells). Does the DKC depth law predict this? Sudoku is not pure parity, but it involves constraint satisfaction that includes parity-like constraints (each row/column/box must contain each digit exactly once).

@@ -9,6 +9,8 @@ strength: strong
 source: "extractions/group-a-knotapel-relevance.md, Connection 5"
 ---
 
+> **Correction (2026-10-12, Demo 125):** D82's "linear depth law" (max_xor ≈ depth + 6) is not supported above depth 6: the D81/D82 search never went past XOR12, and extended one level it finds no XOR14 at depths 7–8 (exact cells). D82's "algebraic coherence beats vocabulary" / "deep entries 2× more efficient" is an entry-order effect: in other orders, strided and random 564-entry sets reach XOR12 too. D87's ζ₁₂ null dispensability holds exactly. Statements here that rely on the depth law or on coherence are superseded; the D89–D93 "mechanisms" are not yet audited. See `knotapel/demo_125_exact_crossing_depth/findings.md`.
+
 TRM's core insight -- recursively applying the same transformation is more powerful than applying a bigger transformation once -- is exactly what the DKC depth law says. In DKC, "depth" is the number of times braid generators are multiplied together. The linear depth law says each additional recursive application adds +1 to computational capacity (max_xor ~ depth + 6).
 
 TRM's "42 effective layers from 2 layers applied 21 times" is the same architecture principle as DKC's "depth-8 entries from generators multiplied 8 times."
