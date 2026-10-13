@@ -512,6 +512,11 @@ nomen structura {
     b32 (*compilare)(vacuum* datum, constans character* fons,
                      constans character* obiectum, Piscina* piscina,
                      chorda* erratum_out);
+    /* GRADUS SOLUS (cursores ad gradus T3b): titulus actionis gradus
+     * cuius SOLIUS membra fabrica_gradus_explicare facit (clausurae
+     * ceterorum non computantur); ceterae actiones gradus parentes
+     * manent sine membris. Vacua (mensura 0, ordinarium) = omnes. */
+    chorda gradus_solus;
 } FabricaSutura;
 
 /* species viae (sutura->species) */
@@ -530,6 +535,16 @@ chorda
 fabrica_liber_via (
      chorda  titulus,
     Piscina* piscina);
+
+/* THESAURUS (plan 2 T3; cursores ad gradus T3c): via (plagula aut
+ * directorium, arbori relativa, sine '/' finali) sub partibus thesauri
+ * build/aedilis/obiecta/{blobi,actiones,generationes}? Cache, nec
+ * ingressus nec vestigium actionis: scriptura ibi omni actioni licet
+ * (fabrica_ordo), ergo photographia eam non ambulat. */
+b32
+fabrica_via_thesauri (
+      chorda  via,
+     Piscina* piscina);
 
 /* Suturam vacuam parare: OMNIA membra NIHIL. Vocans deinde quae
  * praebet ponit - membrum novum postea additum sic tutum manet

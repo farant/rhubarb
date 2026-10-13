@@ -1,0 +1,34 @@
+<!-- md/aedificatio.stml - declarationes aedificationis md (dialectus
+     aedificatio, aedificatio.canon; bin/fabrica per fabrica.stml).
+     Cursores ad gradus T4 (2026-10-13): suita md ut compositum
+     probationes_md - quaeque probatio actio sua (clausura aedilis,
+     thesaurus, area, ambitus basis, vestigium suum), verdictum clavatum
+     iis quae legit. Ianua md/compile_probationes.sh et porta md per
+     'bin/fabrica probare probationes_md'; oraculum conversionis
+     tools/gradus_oraculum.sh md. -->
+<aedificatio>
+  <!-- index corporis markdown: git ls-files (index git = ingressus non
+       declarabilis; regeneratio omni iudicio eum legit; exemplar
+       toml_corpus) -->
+  <actio titulus="md_corpus" genus="generator">
+    <mandatum>
+      <verbum! (>./md/corpus_indicem.sh
+    </mandatum>
+    <ingressus genus="fasciculus" via="md/corpus_indicem.sh"/>
+    <exitus via="md/build/corpus_md.txt" provenientia="regeneratio"/>
+  </actio>
+  <actio titulus="probationes_md" genus="iudicium">
+    <probationes_c exemplar="md/probationes/probatio_*.c"/>
+    <!-- producens per post (ordo, non clavis): probatio quae indicem
+         legit per vestigium suum clavatur -->
+    <post actio="md_corpus"/>
+    <!-- aurum computus rescribere (COMPUTUS_SCRIBERE=1 cum causa) -->
+    <ambitus variabilis="COMPUTUS_SCRIBERE"/>
+    <!-- aurum computus rescribitur cum COMPUTUS_SCRIBERE=1 (cursores ad
+         gradus T5): scriptura extra aream, membri unius -->
+    <debitum_scripturae membrum="probatio_md_computus" via="md/probationes/fixa/computus/basis.tsv" causa="aurum computus (COMPUTUS_SCRIBERE=1)"/>
+    <!-- oraculum: casus omnes / exemplum unum (manu) -->
+    <ambitus variabilis="ORACULUM_OMNIA"/>
+    <ambitus variabilis="ORACULUM_EXEMPLUM"/>
+  </actio>
+</aedificatio>

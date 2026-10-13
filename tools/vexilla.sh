@@ -57,3 +57,31 @@ if [ ! -f "$_vexilla_sigillum" ] || [ "$(cat "$_vexilla_sigillum" 2>/dev/null)" 
     touch "$_vexilla_radix/include/latina.h"
     echo "vexilla: tabula mutata (sigillum $_vexilla_hash) - latina.h tacta, aedificatio frigida sequitur" >&2
 fi
+
+# RADICES INCLUSAE (cursores ad gradus T6): fons UNUS = aedilis.stml
+# <inclusa>, per 'bin/aedilis --radices' (lector verus configurationis,
+# non grep). Olim scripta indices -I manu ferebant - SUBSET, quisque
+# suum, et radix nova (crusta/fontes, 2026-10-10) haruspicem tres
+# commissiones tacite fregit. Gradus fabricae radicibus eisdem compilant;
+# scripta quae clang ipsa vocant hinc eas sumunt:
+#
+#   vexilla_radices ""                # -> RADICES_C89: -Iinclude ...
+#   vexilla_radices "$RADIX_DIR/"     # -> -I/via/absoluta/include ...
+#   declare -a INCLUDE_FLAGS=("${RADICES_C89[@]}")
+#
+# bin/aedilis absens -> struitur (tools/aedilis_struere.sh). Exitus 1 si
+# radices legi nequeunt (RADICES_C89 vacua). Porta: tools/vexilla_fumus.sh
+# IV-VI (ratchet: tools/radices_manu.tsv = debita scriptorum nondum
+# derivatorum, tantum decrescit).
+vexilla_radices () {
+    local praefixum="${1:-}" radix lineae
+    RADICES_C89=()
+    if [ ! -x "$_vexilla_radix/bin/aedilis" ]; then
+        "$_vexilla_radix/tools/aedilis_struere.sh" >&2 || return 1
+    fi
+    lineae="$(cd "$_vexilla_radix" && bin/aedilis --radices)" || return 1
+    while IFS= read -r radix; do
+        [ -n "$radix" ] && RADICES_C89+=("-I$praefixum$radix")
+    done <<< "$lineae"
+    [ "${#RADICES_C89[@]}" -gt 0 ]
+}

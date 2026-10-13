@@ -58,6 +58,11 @@ suturae_agentem_addere (
                b32  siccum,
            Piscina* piscina);
 
+/* ambitus verus (getenv): explicatio membrorum (cursores ad gradus T4) */
+vacuum
+suturae_ambitum_addere (
+    FabricaSutura* sutura);
+
 vacuum
 suturae_currentem_addere (
     FabricaSutura* sutura);

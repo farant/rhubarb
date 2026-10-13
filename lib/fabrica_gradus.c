@@ -397,6 +397,34 @@ _membrum_actionem_facere (
     fabricae_chordam_addere(actio_out->mandatum, chorda_ex_literis(
         parens->gradus->titulus, piscina));
     fabricae_chordam_addere(actio_out->mandatum, membrum->fons);
+    /* AMBITUS DECLARATUS IN CLAVE (cursores ad gradus T4): valor omnis
+     * variabilis declaratae (<ambitus variabilis>) in mandato - clavis
+     * transitus mandatum sigillat, ergo valor mutatus membrum frescum
+     * iterum currit. Olim nomen solum transibat: 'COMPUTUS_SCRIBERE=1'
+     * membrum SERVABAT et aurum numquam rescribebatur (fumus LI) */
+    per (i = ZEPHYRUM; parens->ambitus != NIHIL
+         && i < xar_numerus(parens->ambitus); i++)
+    {
+        chorda titulus =
+            *(constans chorda*)xar_obtinere(parens->ambitus,
+            i);
+        chorda valor;
+
+        si (   sutura->ambitus != NIHIL
+            && sutura->ambitus(sutura->datum, chorda_ut_cstr(titulus,
+                   piscina), piscina, &valor))
+        {
+            fabricae_chordam_addere(actio_out->mandatum,
+                chorda_concatenare(fabricae_iungere(piscina, "ambitus:",
+                titulus, "="), valor, piscina));
+        }
+        alioquin
+        {
+            fabricae_chordam_addere(actio_out->mandatum,
+                fabricae_iungere(piscina, "ambitus:", titulus,
+                " absens"));
+        }
+    }
     causa = chorda_ex_literis("", piscina);
     si (   parens->gradus->ingressus != NIHIL
         && !parens->gradus->ingressus(sutura, parens, copia, piscina,
@@ -480,6 +508,14 @@ fabrica_gradus_explicare (
 
         *(FabricaActio*)xar_addere(explicata) = *actio;
         si (actio->gradus == NIHIL || actio->membrum != NIHIL)
+        {
+            perge;
+        }
+        /* GRADUS SOLUS (cursores ad gradus T3b): ceterae actiones gradus
+         * parentes manent sine membris - clausurae eorum non computantur
+         * neque declarationes membrorum (debita) iudicantur */
+        si (   sutura->gradus_solus.mensura > ZEPHYRUM
+            && !chorda_aequalis(sutura->gradus_solus, actio->titulus))
         {
             perge;
         }

@@ -2699,3 +2699,299 @@ in the kept fresh tree:
 Result: fresh tree + bootstrap step 2 (natura_struere, canon_struere),
 member areas / bin/generare / speculum capsule deleted -> porta radix
 SANA 256/256, prae and post sana, 6 min 44 s cold.
+
+## 2026-10-12 - cursores ad gradus T1: `bin/fabrica probare`
+
+The composite-as-gate logic lived in pythonica (`_porta_per_gradum`,
+~90 lines: delete verdicts for vis, sanare -machina, find VERDICTUM,
+list members run). The thin entry points the slice needs
+(`<sub>/compile_probationes.sh`) would have had to reimplement it, so
+it is now one C command used by both the gate (T2) and humans.
+
+- `probare` reuses sanare whole: `_sanare_suturam` (sutura agens, judge
+  itself, lock) and `_sanare_agere` (judge stage, then the electa) were
+  extracted from `_sanare`, so the two cannot drift.
+- REUSED members are the composite's parts with NO sanatio:
+  `fabrica_sanare` does not report actions whose outputs are all RECENS
+  (include/fabrica.h:984). Re-judging them (celer, sigilla memoized)
+  returns the judge's own reason - "transitus: lectiones congruunt
+  (vestigium)" - which is grouped and counted into the line
+  `servatae K/M: ingressus immutati post transitum ultimum (<causa>)`
+  (Fran's request: never let "not run" read as "ran and passed").
+- Members that RAN print their acta log (build/fabrica/acta/<id>.log:
+  command, effusio, erratum) between `=== m ===` and `--- m praeteriit
+  (x s)` / `--- m FRACTA`, the old runners' line shapes, so oracles
+  that parse old runner output can parse this too.
+- FILTRUM = substring of the member title (old runners' contract);
+  no match = "NULLA PROBATIO CURSA" exit 2. `-vis` deletes the selected
+  verdicts first (what pythonica did). Producers reached through post /
+  praecondicio print sanare's lines; a failed one makes exit 1.
+- Machine lines: MEMBRUM (titulus, transiit|fracta|omissa|servata|non
+  iudicata, ms, causa), SERVATAE (K, M, causa), PROBARE (c, N, M, cursae,
+  servatae).
+- Live: probationes_toml warm = 13/13 servatae in ~9 s; `-vis
+  probationes_toml lector` re-runs one member with its full output.
+- Fumus XLVI (red first: usage, rc=2 x7). Plants: servatae line, -vis,
+  acta printing, filtra.
+- Editio refuses a multi-line anchor whose replacement has a different
+  line count unless `tolerans='spatia'` (verbatim) - the first plant
+  batch hit it before planting anything.
+
+## 2026-10-13 - cursores ad gradus T2: gate on probare, toml is an entry point
+
+- `_porta_per_gradum` (pythonica) is now ONE call: `bin/fabrica probare
+  -machina [-vis] [-audit] <c>`, reading PROBARE / MEMBRUM / producer
+  SANATIO lines. The verdict deletion for vis and the fallback
+  `iudicare -plenus` are gone (both live in C now). A failed producer
+  (post / praecondicio) makes the gate red and is named. PROBARE absent
+  or exit 2 -> via altera, as before. Bug of mine on the way: MEMBRUM
+  has FIVE fields (genus, titulus, status, ms, causa) - a `>= 6` filter
+  dropped every failing member silently; the frangitur test caught it.
+- `porta_toml` (iudicium action running ./toml/compile_probationes.sh)
+  RETIRED: once the runner execs `bin/fabrica probare`, that action
+  would be fabrica inside fabrica (one lock, build/fabrica/sera). The
+  gate already went through the composite (PORTAE_GRADUUM); the
+  portae-verdictorum test now asserts porta_aedilis present and
+  porta_toml absent.
+- toml/arbor.sh and toml/computus.sh linked `toml/build/*.o`, objects
+  the OLD runner built as a side effect - steps don't. Both now build
+  from their own closure via `cursor_instrumentum_struere`
+  (tools/cursor_communis.sh), verified from an empty toml/build. Any
+  runner conversion must look for tools living off the runner's objects.
+- `tools/gradus_oraculum.sh SUB [-ref REF]` replaces
+  tools/toml_gradus_oraculum.sh: old runner from REF written as a hidden
+  temp file INSIDE <sub>/ (old runners find their root via BASH_SOURCE)
+  vs `probare -vis` (every member really runs; the oracle never trusts
+  reuse). toml at HEAD: 13/13.
+- probare normalizes a filter given as a path ('t/probatio_a.c' ->
+  'probatio_a'), the old runners' contract (fumus XLVI).
+- Measured (warm store): old runner 38 s (always all 13); probare 7 s
+  (13 kept); probare -vis 55 s (each test its own step: own link,
+  snapshot) - the price of per-test verdicts, paid only when forced.
+- Plants: probare XLVI filter-as-path red first; pythonica: `-vis` not
+  passed -> red; producer not NAMED -> red. A third plant (ignore failed
+  producers in `sana`) stayed GREEN: probare already exits 1 when a
+  producer fails, so `and not productores` was dead code no test could
+  see - removed; producers are only named in the fractures now.
+
+## 2026-10-13 - cursores ad gradus T3: css to steps
+
+- css was not a fabrica subsystem: new css/aedificatio.stml
+  (`probationes_css`, ambitus COMPUTUS_SCRIBERE) + `<subsystema
+  via="css"/>` in fabrica.stml. First heal 10/10 SANATUM (4 s); oracle
+  vs HEAD runner 10/10.
+- Out-of-area write: probatio_css_totalitas wrote its failing source to
+  css/build/ on failure; now $TMPDIR (= member area in a step), falling
+  back to css/build/ by hand. Path printed either way.
+- Hidden dependent again: css/computus.sh linked css/build/*.o -> own
+  closure (cursor_instrumentum_struere), checked on a real css file.
+- LATENT T2 BUG found: silva.probatio_currere located test binaries via
+  SUITAE '<sub>/build/%s' - for a converted suite that is the OLD
+  runner's binary, stale forever. New `_binarium_probationis`: converted
+  suites (in PORTAE_GRADUUM, radix excepted - compile_tests.sh still
+  builds build/probationes/) -> build/fabrica/area/<c>/<m>/<m>.
+  pythonica now runs probatio_currere('probatio_css_arbor',
+  aedificare=True) for real.
+- MEASURED, and not good for a small suite: old css runner warm 4.2 s;
+  probare warm 6.6 s; -vis 25 s. `sample` of a warm probare: ~4.8 of
+  ~6 s is setup over the WHOLE graph before any member - 
+  `_ordinare_per_locos` ~3.2 s (dependencies of all ~600 actions from
+  the read traces in build/fabrica.db) and `fabrica_gradus_explicare`
+  ~1.6 s (every composite expanded, radix's 256 members included). A
+  fixed floor of ~6 s per probare/sanare/iudicare call, whatever the
+  selection. Candidate fix: scope the cursus to the electa's upward
+  closure (and explain only the composites named). Not done in T3 -
+  raised with Fran.
+- Plants: css out of PORTAE_GRADUUM -> red (declared test). Binary path
+  back to css/build/ -> by hand red (FRACTA 1, path test); note the REAL
+  probatio_currere run of probatio_css_arbor stayed GREEN under that
+  plant - it ran the stale old binary, which is the bug itself: a run
+  cannot tell fresh from stale, the path assertion can. silva.planta
+  reported "porta cum planta non cucurrit (signum absens)" for this
+  plant twice, not explained; the by-hand run is the evidence.
+
+## 2026-10-13 - cursores ad gradus T3b: what a warm fabrica call spent
+
+Fran asked what the 6.6 s of a warm `probare probationes_css` (old
+runner 4.2 s) was made of. `sample` over the whole run (~6.4 s of
+samples), then fix-and-remeasure:
+
+| step | warm css | what |
+|---|---|---|
+| start | 6.6 s | |
+| 1. indices (memoria migrations VII-IX) | 3.5 s | `lectiones` (90 504 rows, 30 MB db) had NO index: `WHERE titulus = ?` scanned the table once per traced action in the ordering (~340 times) - ~2.5 s. Same pattern on particulae, cursus |
+| 2. gradus solus | 1.8 s | probare explains only the composite it names (sutura->gradus_solus): radix's 256 member closures (aedilis derivations, uncached clang -MM for .m, stats) no longer computed |
+| 3. numeri_latinae memorabilis | 1.2 s | the latina.h numerals generator is upstream of EVERY C member and was regenerated (~0.54 s) on every full judgement - now judged from memoria |
+
+Forced (`-vis`) css was 18.5 s: ~7 s whole-tree snapshot (write check
+before/after each wave), ~3.3 s `clang -print-prog-name` spawned on
+every compile AND every action keyed on identitas_clang (31 spawns in
+one run; desideratum …HHD43). Both identities now memoized per process
+(compilator: content digest via store; sutura: metadata digest - two
+different facts, so 2 spawns per process, constant): 13.5 s.
+
+Also: with gradus solus, a broken declaration in an UNRELATED suite
+(debt naming an unknown member) no longer blocks probare of another;
+probare of the broken suite, and full sanare/iudicare, still refuse
+naming it (fumus XLVIII). A composite named but not found under the
+scope (a declared composite, not a gradus) -> full declarations.
+
+Left on the table (not done, parked): (a) the whole-tree snapshot per
+wave (~7 s of forced css) - a hermeticity design question, not tuning;
+(b) ordering over all ~600 actions, now ~0.6 s mostly SHA-256 of every
+action's particles - scoping it to the selection's upstream closure
+needs care (producers, preconditions) and is no longer worth the risk
+for 0.6 s.
+
+Tests: probatio_fabrica_gradus section 'gradus solus' (red first:
+explicata NIHIL); fumus XLVII (query plans use an index; red first),
+XLVIII (alien rot does not block), XLIX (identity spawns constant, red
+first at 13).
+- Plants V, each red at its own stage then green: index migration ->
+  XLVII; lib gradus_solus check -> XLVIII; probare not passing the scope
+  -> XLVIII; sutura identity memo off -> XLIX (10); compilator memo off
+  -> XLIX (5). Parks: 01M4SZQX0DM0K9E8QT267CH1CJ (whole-tree snapshot),
+  01M4SZQZYZ47C9WV5JM78WMEC7 (scoped ordering); …HHD43 noted (in-process
+  part done, bin/compilator CLI still one spawn per process).
+
+## 2026-10-13 - cursores ad gradus T3c: the snapshot skips the store
+
+What the whole-tree snapshot costs (Fran asked): 2 x (members that RUN)
+x (entries in the tree). A warm run where everything is kept takes no
+snapshot at all; each member that runs takes one before and one after
+(serial path, _actionem_agere). The tree had 110 174 entries, 86% under
+build/ and 64% in ONE directory, build/aedilis/obiecta/actiones (store
+action records) - ~0.35 s per snapshot, so it grew with the CACHE, not
+with the sources. The ordering already grants every action write
+permission in the three store parts (lib/fabrica_ordo.c, "involucrum,
+non vestigium"), so walking them could never change a verdict:
+`fabrica_via_thesauri` (public, include/fabrica.h) and the snapshot
+skips those directories. Forced css 13.5 -> 8.2 s, forced toml 54 ->
+37 s (quiet machine; an other session's frigida doubled wall times
+mid-measurement - a profile, not a stopwatch, was the reliable
+evidence). Fumus L: X empty tests, store +40 000 files, forced probare
+min-of-two must stay < 1.5 s slower (1.66 vs 1.73 s; planted back:
+1.66 vs 3.95 s, red). XXI (write outside footprint) still red-capable.
+Remaining snapshot cost (~2.8 s of forced css) = the rest of build/
+and the sources, still per member - park …CH1CJ.
+
+## 2026-10-13 - cursores ad gradus T4: md to steps, and declared env in the key
+
+- md (generation 1: hand source lists, newest-header mtime rule,
+  excubitor post-check): md/aedificatio.stml `probationes_md` +
+  generator `md_corpus` (md/corpus_indicem.sh, exemplar toml_corpus) as
+  `post` - four tests read md/build/corpus_md.txt, which the old runner
+  wrote by hand; ambitus COMPUTUS_SCRIBERE, ORACULUM_OMNIA,
+  ORACULUM_EXEMPLUM. First heal 14/14, oracle vs HEAD 14/14. Warm: old
+  runner 51.5 s every time -> probare 1.2 s; forced 43.7 s.
+- totalitas failure write -> $TMPDIR (as css). FIVE md tools (arbor,
+  census, computus, extenta, html) lived off md/build/*.o -> own
+  closures via cursor_instrumentum_struere, each run on a real file.
+- silva.oraculum ran the md suite filtered to read the test's OUTPUT
+  (ORACULUM_* only change verbosity, not pass/fail): as a step the
+  member was fresh -> kept -> nothing printed -> pythonica ABORTED.
+  Callers that want output must force a run: `-vis`. Only caller of its
+  kind in silva.py. Its test now fails by name instead of aborting.
+- BUG FOUND (fabrica, since T2 for toml): a declared <ambitus
+  variabilis> passed its NAME into the member's environment, but its
+  VALUE was in no key - `COMPUTUS_SCRIBERE=1 ... computus` KEPT the
+  fresh member and the golden was never rewritten, silently. The old
+  runners always ran, so the conversions introduced it. Fix: each
+  declared variable's value (or 'absens') goes into the member's
+  mandatum as `ambitus:NAME=value` - the transit key seals the mandatum
+  (lib/fabrica.c fabricae_particulas_transitus). The expansion sutura
+  needed env access: `suturae_ambitum_addere`. Fumus LI (value changed
+  -> runs; same value -> kept; back to absent -> runs). Every member of
+  a composite with declared variables (toml, css, md, radix) re-ran once
+  after this change, then kept as before.
+- Plants: md out of PORTAE_GRADUUM -> pythonica red (declared test);
+  ambitus loop off -> fumus LI red; expansion sutura without ambitus ->
+  LI red; oraculum without -vis -> first planted with a two-line anchor
+  that left `r` unbound (an abort, not a red - redone as a whole
+  statement), and it showed the test could not catch it: with values in
+  the key the first oraculum call runs anyway. Added a REPEATED
+  identical call (same env -> same key -> kept without -vis); planted:
+  red "probatio_md_oraculum servata", by name.
+
+## 2026-10-13 - cursores ad gradus T5: silva to steps
+
+The checklist from T4, applied to silva (55 tests):
+- silva/build is a SHARED space: obiecta_mechanismi_silva
+  (silva/amalgamare.sh -obiecta) builds the mechanism's objects itself,
+  percursus/arbor/infidelis build their own (fons_ prefix) - not
+  dependents. The ONE hidden dependent: materia/oraculum_silvae_struere.sh
+  linked every bare-named silva/build/*.o, i.e. the silva sources only
+  the OLD TEST RUNNER compiled, and materia/oraculum_probare.sh built
+  them by running the runner with a filter matching nothing
+  (STRUERE_SOLUM). After conversion it would have linked STALE objects
+  silently. Now `vivum` builds from its own closure
+  (cursor_instrumentum_struere; aedilis follows the #else branch, the
+  amalgam stays out); the gate's step 1 is gone. Oracle gate green: 630
+  files, 0/0/0.
+- Hidden implementer: silva_arbor_parsurae_aequales is declared in
+  silva/fontes/silva_arbor.h and implemented in
+  silva_arbor_aequalitas.c. The old runner linked ALL silva sources into
+  every test, so nobody knew; four members (arbor, arbor_circuitus,
+  arbor_parsura, arbor_plagula) failed to link with their own closure.
+  `<aedilis corpus="silva/fontes/silva_arbor_aequalitas.c"/>` in the
+  header (corpus composes with the naming convention). First heal 51/55
+  -> 55/55.
+- Env: COMPUTUS_SCRIBERE, ARBOR_DEFIGERE(_NOMEN), LINT_INDAGO,
+  LINT_VERBOSA, MENSURA_VERBOSA declared (values in the key since T4).
+  ARBOR_DEFIGERE=<path> must point OUTSIDE the tree (e.g. /tmp): inside
+  it, the write check refuses it.
+- SECOND LATENT BUG of the earlier conversions: with T4's fix the
+  golden-rewrite ritual ran - and then FAILED the write check ("scripsit
+  extra vestigium: css/probationes/fixa/computus/basis.tsv"). Each
+  computus test now has a <debitum_scripturae> for its basis.tsv (toml,
+  css, md, silva); the ritual was run on toml, css, md: passes, goldens
+  unchanged.
+- Three tests (canon_corpus, exemplaria_lint, arbor_plagula) run
+  bin/aedilis through apparatus_clausuras_petere and declared nothing -
+  their kept verdicts would not have noticed an aedilis change.
+  `<aedilis instrumentum="bin/aedilis"/>` in each test file (scope only);
+  the judge then names bin/aedilis among the member's inputs.
+- Measured: warm with nothing changed, old runner 417 s EVERY time ->
+  probare 23.6 s, of which ~16.6 s one upstream regeneration
+  (tabula_nodorum, upstream of the corpus tests which read lib/*.c) ->
+  memorabilis -> ~7 s. Rest ~6 s = other non-memorabilis generators
+  whose inputs are not fully declared (park …). Forced: 355 s (< old).
+- A false measurement on the way: right after the silva_arbor.h edit,
+  "probare warm 1.2 s" was bin/fabrica REFUSING (judge stale, the header
+  is in its closure) - the tail line was empty. Always read the summary
+  line, never the stopwatch alone.
+- Oracle silva 55/55 (614 s). Plants: corpus annotation removed -> by
+  hand (silva.planta refuses build-breaking plants; here the link
+  failure IS the evidence) red "_silva_arbor_parsurae_aequales"
+  undefined, green restored; silva out of PORTAE_GRADUUM -> pythonica
+  red by name.
+- Two more output readers surfaced at commit time (the checklist item
+  "callers that read output, not verdict"): silva/m3_probare.sh runs the
+  silva suite filtered to arbor_ and parses numbers the tests PRINT ->
+  kept members printed nothing -> "M3 NIHIL CURSUM"; now `-vis` (6/6).
+  Also briar-fumus in the worktree wanted the tree's bin/briar rebuilt
+  (silva amalgam changed) - its own recipe, tree-local. examen-corpus
+  was red from main (probatio_dimissio.c, credo 92-95, not pinned):
+  excused BY NAME for this commit, re-run after merging main.
+- Gate `sera` VIII: every */compile_probationes.sh must take its cursor
+  lock - my T2-T5 entry points had dropped it (spec D2 said keep it).
+  Restored in all four, WITHOUT exec (sera.sh releases by trap EXIT;
+  exec would drop the trap and leave a stale lock for the next caller to
+  clear noisily).
+
+## 2026-10-13 - cursores ad gradus T7: the fresh-clone check caught the entry points
+
+frigida_probare at b8ea30f0: css, md, toml RED in 1-14 s, every member
+OMISSA - "FRACTUM md_corpus - scripsit extra vestigium:
+build/test_logs/md.log - aut manu mutata dum currebat". The entry points
+tee'd their output INTO the tree (build/test_logs/<sub>.log) while
+bin/fabrica ran underneath; fabrica prints during an action ("agitur
+md_corpus"), the log grows mid-action, and the whole-tree write check
+rightly calls it a write outside the footprint. Never seen in quinta:
+every entry-point run there had nothing upstream to RUN (all kept), and
+the gate calls probare directly, without the tee. A cold clone is
+exactly where producers run under the entry point. Reproduced in quinta
+(remove md/build/corpus_md.txt, run the entry point -> same FRACTUM),
+fixed by tee-ing into a temp file outside the tree and moving it into
+build/test_logs/ after the run; reproduction then green. silva stayed
+green because nothing upstream of its members runs under the tee.

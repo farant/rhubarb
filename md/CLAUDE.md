@@ -27,7 +27,8 @@ polish list desideratum 01M1NBEVM0.
 - **Consumers**: `md_extenta` (selector → source bytes by pre-order token
   correspondence), `md_census` (counts from the parsed tree; code-span
   dump), `md_computus` (bench twin).
-- **Instruments** (`md/*.sh`, need `md/build/*.o` from the runner):
+- **Instruments** (`md/*.sh`; each builds from its own aedilis closure via
+  `tools/cursor_communis.sh` since 2026-10-13 - no runner first):
   `arbor.sh <x.md>` projection · `html.sh <x.md> [-stml]` · `extenta.sh
   <x.md> '<selector>'` (TSV, rc 0/1/2) · `census.sh [-machina | -citata
   [via] | -scribere]` (`-scribere` regenerates `md/CENSUS.md`) ·
@@ -49,6 +50,15 @@ FIDELIS round trip) · canon (drift guard both ways, seal, corpus judged)
 html (twelve inputs byte-exact) · oraculum (1,272/1,324 pinned, only rising — 1,270 at birth, +2
 from the full entity table 2026-09-15; `ORACULUM_OMNIA=1`, `ORACULUM_EXEMPLUM=N`) · extenta (57) ·
 census (41). Every gate was born red by a planted fault.
+
+Since 2026-10-13 (cursores ad gradus T4) the suite is the fabrica
+composite `probationes_md` (`md/aedificatio.stml`), one action per test,
+each verdict keyed on what that test read; the corpus list
+`md/build/corpus_md.txt` comes from action `md_corpus`
+(`md/corpus_indicem.sh`). The script is a thin entry point to `bin/fabrica
+probare probationes_md`: stale tests run with output, fresh ones are kept
+and said so; `-vis` re-runs all. Warm, nothing changed: ~1.2 s (old
+runner: 51 s every time).
 
 ## The registry is generated (2026-09-15)
 

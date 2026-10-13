@@ -482,6 +482,15 @@ _in_thesauro (
     redde FALSUM;
 }
 
+b32
+fabrica_via_thesauri (
+      chorda  via,
+     Piscina* piscina)
+{
+    redde _in_thesauro(chorda_concatenare(via, chorda_ex_literis("/",
+        piscina), piscina), piscina);
+}
+
 hic_manens constans character* constans SIGNUM_ABSENS   = "\001absens";
 hic_manens constans character* constans SIGNUM_PRAESENS =
     "\001praesens";
