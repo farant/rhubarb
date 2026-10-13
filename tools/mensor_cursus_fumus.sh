@@ -19,7 +19,7 @@
 #        commissum et ramus vacui, nulla ruina (planta D T2: setenv cum
 #        NIHIL ruebat)
 # Exitus 0 sanum | 1 FRACTUM | 2 nihil actum.
-# <porta titulus="mensor-cursus" instrumentum="bin/mensor" tegit="tools/cursus.sh tools/mensor.c lib/mensura.c include/mensura.h"/>
+# <porta titulus="mensor-cursus" currit="bin/mensor" tegit="tools/cursus.sh tools/mensor.c lib/mensura.c include/mensura.h"/>
 set -u
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$RADIX" || exit 2

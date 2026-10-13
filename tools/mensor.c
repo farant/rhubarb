@@ -706,6 +706,17 @@ _ramum_legere (
         piscina), piscina);
 }
 
+interior vacuum
+_dormire_ms (
+    longus ms)
+{
+    structura timespec  mora;
+
+    mora.tv_sec   = (time_t)(ms / (longus)M);
+    mora.tv_nsec  = (ms % (longus)M) * (longus)M * (longus)M;
+    (vacuum)nanosleep(&mora, NIHIL);
+}
+
 /* chorda vacua datum NIHIL habet (allocatio nulla) et chorda_ut_cstr
  * NIHIL reddit - setenv(titulus, NIHIL) ruit (planta D T2, extra
  * repositorium). Litterae vacuae pro chorda vacua. */
@@ -1070,7 +1081,7 @@ _cursum_currere (
             &offset_ef, stdout);
         _novum_effundere(processus_erratum_hactenus(processus),
             &offset_er, stderr);
-        (vacuum)usleep((useconds_t)(XX * M));
+        _dormire_ms((longus)XX);
     }
     r = processus_metere(processus);
     _novum_effundere(r.effusio, &offset_ef, stdout);
@@ -1121,7 +1132,7 @@ _cursus_condere (
     {
         redde VERUM;   /* diarium absens: nihil condendum */
     }
-    (vacuum)usleep((useconds_t)(L * M));
+    _dormire_ms((longus)L);
     fructus = mensura_condere(condendum, volumen, piscina);
     (vacuum)remove(condendum);
     redde fructus.successus;
