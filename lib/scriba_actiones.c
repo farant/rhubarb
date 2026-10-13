@@ -194,6 +194,15 @@ capsam_scribere (
     redde scriba_effugere(octeti, n, piscina);
 }
 
+/* S7b: ramus registri - hospitis (ramus_capsae) aut proprius */
+interior constans InsulaRamus*
+capsae_ramum (
+       constans InsulaRamus* ramus,
+    constans ScribaActiones* sa)
+{
+    redde sa->ramus_capsae.repo ? &sa->ramus_capsae : ramus;
+}
+
 interior VimStatus
 status_legere (
     constans InsulaRamus* ramus,
@@ -204,7 +213,7 @@ status_legere (
        chorda* a;
     character  c;
 
-    capsam_legere(ramus, capsa);
+    capsam_legere(capsae_ramum(ramus, sa), capsa);
     st = vim_initiare_cum_contextu(&sa->laboris, capsa, NIHIL);
     st.cursor_linea    = limitare(attributum_s32(ramus, "cursor_linea",
         ZEPHYRUM), sa->laboris.altitudo);
@@ -242,10 +251,14 @@ status_legere (
 
 nomen structura {
          VimStatus st;
-            chorda capsa;         /* effugita; vacua = tollere */
-               i32 capsa_lineae;
             chorda praecedens;    /* effugita; vacua = tollere */
 } Scriptura;
+
+/* S7b: registrum scriptura sua (ramus registri saepe alius) */
+nomen structura {
+    chorda capsa;         /* effugita; vacua = tollere */
+       i32 lineae;
+} ScripturaCapsae;
 
 interior vacuum
 numerum_ponere (
@@ -305,8 +318,20 @@ status_scribere_mutator (
                              s->st.esperans_fd ? "verum" : "falsum");
     numerum_ponere(radix, p, in, "fd_tempus",
                    (s64)(s->st.tempus_f * 1000.0 + 0.5));
+}
+
+interior vacuum
+capsae_mutator (
+              StmlNodus* radix,
+                Piscina* p,
+    InternamentumChorda* in,
+                 vacuum* ctx)
+{
+    constans ScripturaCapsae* s;
+
+    s = (constans ScripturaCapsae*)ctx;
     textum_ponere(radix, p, in, "capsa", s->capsa);
-    numerum_ponere(radix, p, in, "capsa_lineae", (s64)s->capsa_lineae);
+    numerum_ponere(radix, p, in, "capsa_lineae", (s64)s->lineae);
 }
 
 interior vacuum
@@ -316,12 +341,13 @@ status_scribere (
                   VimStatus  st,
       constans VimClipboard* capsa)
 {
-    Scriptura s;
-    character c;
+               Scriptura  s;
+         ScripturaCapsae  sc;
+    constans InsulaRamus* rc;
+                  chorda* a;
+               character  c;
 
     s.st                  = st;
-    s.capsa               = capsam_scribere(capsa, sa->doc->piscina);
-    s.capsa_lineae        = capsa->numerus_linearum;
     s.praecedens.datum    = NIHIL;
     s.praecedens.mensura  = ZEPHYRUM;
     si (st.clavis_praecedens != '\0')
@@ -331,6 +357,19 @@ status_scribere (
     }
     (vacuum)mutare_ramum(ramus,
         status_scribere_mutator, &s);
+    /* S7b: registrum solum si mutatum - ramus hospitis (servatus)
+     * aliter ad omnem clavem scriberetur */
+    sc.capsa   = capsam_scribere(capsa, sa->doc->piscina);
+    sc.lineae  = capsa->numerus_linearum;
+    rc         = capsae_ramum(ramus, sa);
+    a          = insula_ramus_attributum(rc, "capsa");
+    si (   attributum_s32(rc, "capsa_lineae", ZEPHYRUM)
+        == (s32)sc.lineae
+        && (a ? chorda_aequalis(*a, sc.capsa) : chorda_vacua(sc.capsa)))
+    {
+        redde;
+    }
+    (vacuum)mutare_ramum(rc, capsae_mutator, &sc);
 }
 
 

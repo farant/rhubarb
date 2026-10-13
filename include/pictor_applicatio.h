@@ -26,18 +26,8 @@
 #include "pictor_componentia.h"
 #include "pictor_actiones.h"
 #include "pictor_figurae.h"
-#include "conservatio.h"
-#include "relatio.h"
-#include "dimissio.h"
+#include "organum_montatio.h"
 #include "tabula_dispersa.h"
-
-/* systemata status repositorii (status-plan S3-S5): NIHIL in campo =
- * systema absens; NIHIL totum = nulla (probationes) */
-nomen structura {
-    Conservatio* conservatio;
-        Relatio* relatio;
-       Dimissio* dimissio;
-} StatusSystemata;
 
 /* MONTATIO (insula-rami-plan T1a): pictor in repositorio dato, ramo
  * <pictor id> (aut radice): documentum in spatio id, canones et

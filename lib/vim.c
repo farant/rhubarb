@@ -107,7 +107,8 @@ _ultima_linea_cum_contentu (
 
     per (linea = (s32)tabula->altitudo - I; linea >= ZEPHYRUM; linea--)
     {
-        si (tabula_invenire_finem_contenti(tabula, (i32)linea) >= ZEPHYRUM)
+        si (tabula_invenire_finem_contenti(tabula, (i32)linea)
+            >= ZEPHYRUM)
         {
             redde (i32)linea;
         }
@@ -187,7 +188,8 @@ _movere_sinistram (
         status.cursor_columna--;
 
         /* Si landed on TAB_CONTINUATIO, skip to '\t' */
-        si (tabula_est_tab_continuatio(status.tabula, status.cursor_linea, status.cursor_columna))
+        si (tabula_est_tab_continuatio(status.tabula,
+            status.cursor_linea, status.cursor_columna))
         {
             si (status.cursor_columna > ZEPHYRUM)
             {
@@ -209,7 +211,8 @@ _movere_dextram (
         status.cursor_columna++;
 
         /* Si landed on TAB_CONTINUATIO, skip past it */
-        si (tabula_est_tab_continuatio(status.tabula, status.cursor_linea, status.cursor_columna))
+        si (tabula_est_tab_continuatio(status.tabula,
+            status.cursor_linea, status.cursor_columna))
         {
             si (status.cursor_columna < status.tabula->latitudo - I)
             {
@@ -264,7 +267,8 @@ _movere_finem_lineae (
     s32 finis;
 
     /* Usare raw value pro detectare lineas vacuas */
-    finis_raw = tabula_invenire_finem_contenti(status.tabula, status.cursor_linea);
+    finis_raw = tabula_invenire_finem_contenti(status.tabula,
+        status.cursor_linea);
 
     /* Si linea vacua, ire ad ultimam cellulam */
     si (finis_raw < ZEPHYRUM)
@@ -298,7 +302,8 @@ _movere_initium_contenti (
 {
     i32 initium;
 
-    initium = tabula_invenire_initium_contenti(status.tabula, status.cursor_linea);
+    initium = tabula_invenire_initium_contenti(status.tabula,
+        status.cursor_linea);
 
     si (initium < status.tabula->latitudo)
     {
@@ -322,7 +327,8 @@ _movere_verbum_proximum (
     /* Si cursor ultra contentum, movere ad proximam lineam */
     si ((s32)status.cursor_columna >= finis)
     {
-        si (status.cursor_linea < _ultima_linea_cum_contentu(status.tabula))
+        si (status.cursor_linea
+            < _ultima_linea_cum_contentu(status.tabula))
         {
             status.cursor_linea++;
             status.cursor_columna = tabula_invenire_initium_contenti(
@@ -331,13 +337,15 @@ _movere_verbum_proximum (
         redde status;
     }
 
-    c = tabula_cellula(status.tabula, status.cursor_linea, status.cursor_columna);
+    c = tabula_cellula(status.tabula, status.cursor_linea,
+        status.cursor_columna);
     in_verbo = _est_character_verbi(c);
 
     /* Saltare characteres similes (verbum vel non-verbum) */
     dum ((s32)status.cursor_columna < finis)
     {
-        c = tabula_cellula(status.tabula, status.cursor_linea, status.cursor_columna);
+        c = tabula_cellula(status.tabula, status.cursor_linea,
+            status.cursor_columna);
 
         si (_est_character_verbi(c) != in_verbo)
         {
@@ -356,7 +364,8 @@ _movere_verbum_proximum (
     /* Saltare spatia */
     dum ((s32)status.cursor_columna <= finis)
     {
-        c = tabula_cellula(status.tabula, status.cursor_linea, status.cursor_columna);
+        c = tabula_cellula(status.tabula, status.cursor_linea,
+            status.cursor_columna);
 
         si (c != ' ' && c != '\t' && c != '\0')
         {
@@ -369,7 +378,8 @@ _movere_verbum_proximum (
     /* Si ultra finem lineae, movere ad proximam lineam */
     si ((s32)status.cursor_columna > finis)
     {
-        si (status.cursor_linea < _ultima_linea_cum_contentu(status.tabula))
+        si (status.cursor_linea
+            < _ultima_linea_cum_contentu(status.tabula))
         {
             status.cursor_linea++;
             status.cursor_columna = tabula_invenire_initium_contenti(
@@ -410,7 +420,8 @@ _movere_verbum_praecedens (
     /* Saltare spatia retro */
     dum (status.cursor_columna > ZEPHYRUM)
     {
-        c = tabula_cellula(status.tabula, status.cursor_linea, status.cursor_columna);
+        c = tabula_cellula(status.tabula, status.cursor_linea,
+            status.cursor_columna);
 
         si (c != ' ' && c != '\t' && c != '\0')
         {
@@ -425,8 +436,10 @@ _movere_verbum_praecedens (
     {
         character c_prior;
 
-        c = tabula_cellula(status.tabula, status.cursor_linea, status.cursor_columna);
-        c_prior = tabula_cellula(status.tabula, status.cursor_linea, status.cursor_columna - I);
+        c = tabula_cellula(status.tabula, status.cursor_linea,
+            status.cursor_columna);
+        c_prior = tabula_cellula(status.tabula, status.cursor_linea,
+            status.cursor_columna - I);
 
         /* Si character prior est spatium vel typus differens, sumus ad initium */
         si (c_prior == ' ' || c_prior == '\t' || c_prior == '\0')
@@ -572,19 +585,22 @@ _delere_characterem_ante_cursorem (
     {
         character c_ante;
 
-        c_ante = tabula_cellula(status.tabula, status.cursor_linea, status.cursor_columna - I);
+        c_ante = tabula_cellula(status.tabula, status.cursor_linea,
+            status.cursor_columna - I);
 
         /* Si character ante est TAB_CONTINUATIO, delere totum tab */
         si (c_ante == TAB_CONTINUATIO && status.cursor_columna >= II)
         {
-            tabula_delere_tab(status.tabula, status.cursor_linea, status.cursor_columna - I);
+            tabula_delere_tab(status.tabula, status.cursor_linea,
+                status.cursor_columna - I);
             status.cursor_columna  -= II;  /* Movere cursor retro per 2 */
             status.mutatus         = VERUM;
         }
         alioquin si (c_ante == '\t')
         {
             /* Cursor est ad TAB_CONTINUATIO, delere totum tab */
-            tabula_delere_tab(status.tabula, status.cursor_linea, status.cursor_columna - I);
+            tabula_delere_tab(status.tabula, status.cursor_linea,
+                status.cursor_columna - I);
             status.cursor_columna--;
             status.mutatus = VERUM;
         }
@@ -612,7 +628,8 @@ _delere_characterem_ante_cursorem (
 
         linea_inferior = status.cursor_linea;
         status.cursor_linea--;
-        finis_superioris = _finis_lineae(status.tabula, status.cursor_linea);
+        finis_superioris = _finis_lineae(status.tabula,
+            status.cursor_linea);
         finis_currentis = _finis_lineae(status.tabula, linea_inferior);
 
         /* Positio ubi cursor erit et ubi contentum jungitur */
@@ -629,7 +646,8 @@ _delere_characterem_ante_cursorem (
                 c = tabula_cellula(status.tabula, linea_inferior, col);
                 si (pos_junctionis + col < status.tabula->latitudo)
                 {
-                    tabula_cellula(status.tabula, status.cursor_linea, pos_junctionis + col) = c;
+                    tabula_cellula(status.tabula, status.cursor_linea,
+                        pos_junctionis + col) = c;
                 }
             }
         }
@@ -654,7 +672,8 @@ _delere_lineam (
     /* Salvare lineam ad clipboard (si praesens) */
     si (status.clipboard != NIHIL)
     {
-        _clipboard_copiare_lineam(status.clipboard, status.tabula, status.cursor_linea, ZEPHYRUM);
+        _clipboard_copiare_lineam(status.clipboard, status.tabula,
+            status.cursor_linea, ZEPHYRUM);
         status.clipboard->numerus_linearum = I;
     }
 
@@ -668,12 +687,15 @@ _delere_lineam (
 
         /* Copiare contentum lineae ad undo */
         memset(undo_op.data, ZEPHYRUM, VIM_CLIPBOARD_LINEA_MAXIMA);
-        finis = tabula_invenire_finem_contenti(status.tabula, status.cursor_linea);
+        finis = tabula_invenire_finem_contenti(status.tabula,
+            status.cursor_linea);
         si (finis >= ZEPHYRUM)
         {
-            per (col = ZEPHYRUM; col <= (i32)finis && col < VIM_CLIPBOARD_LINEA_MAXIMA - I; col++)
+            per (col = ZEPHYRUM; col <= (i32)finis
+                && col < VIM_CLIPBOARD_LINEA_MAXIMA - I; col++)
             {
-                undo_op.data[col] = tabula_cellula(status.tabula, status.cursor_linea, col);
+                undo_op.data[col] = tabula_cellula(status.tabula,
+                    status.cursor_linea, col);
             }
         }
 
@@ -703,7 +725,8 @@ _delere_ad_finem_lineae (
     /* Delere omnes characteres a cursore ad finem */
     per (col = finis; col >= (s32)status.cursor_columna; col--)
     {
-        tabula_delere_characterem(status.tabula, status.cursor_linea, (i32)col);
+        tabula_delere_characterem(status.tabula, status.cursor_linea,
+            (i32)col);
     }
 
     status.mutatus  = VERUM;
@@ -723,7 +746,8 @@ _delere_ad_finem_tabulae (
     ultima = _ultima_linea_cum_contentu(status.tabula);
 
     /* Delere omnes lineas a cursore ad finem */
-    per (linea = (s32)ultima; linea >= (s32)status.cursor_linea; linea--)
+    per (linea = (s32)ultima; linea
+        >= (s32)status.cursor_linea; linea--)
     {
         tabula_delere_lineam(status.tabula, (i32)linea);
     }
@@ -753,11 +777,14 @@ _jungere_lineas (
     }
 
     linea_inferior = status.cursor_linea + I;
-    finis_currentis = tabula_invenire_finem_contenti(status.tabula, status.cursor_linea);
-    finis_inferioris = tabula_invenire_finem_contenti(status.tabula, linea_inferior);
+    finis_currentis = tabula_invenire_finem_contenti(status.tabula,
+        status.cursor_linea);
+    finis_inferioris = tabula_invenire_finem_contenti(status.tabula,
+        linea_inferior);
 
     /* Invenire initium contenti (non-whitespace) in linea inferiore */
-    initium_contenti_inferioris = tabula_invenire_initium_contenti(status.tabula, linea_inferior);
+    initium_contenti_inferioris =
+        tabula_invenire_initium_contenti(status.tabula, linea_inferior);
 
     /* Determinare positio junctionis */
     si (finis_currentis < ZEPHYRUM)
@@ -771,9 +798,11 @@ _jungere_lineas (
         pos_junctionis = (i32)finis_currentis + I;
 
         /* Inserere spatium separator (si linea inferior habet contentum) */
-        si (finis_inferioris >= ZEPHYRUM && pos_junctionis < status.tabula->latitudo - I)
+        si (   finis_inferioris >= ZEPHYRUM
+            && pos_junctionis < status.tabula->latitudo - I)
         {
-            tabula_cellula(status.tabula, status.cursor_linea, pos_junctionis) = ' ';
+            tabula_cellula(status.tabula, status.cursor_linea,
+                pos_junctionis) = ' ';
             pos_junctionis++;
         }
     }
@@ -781,14 +810,17 @@ _jungere_lineas (
     /* Copiare contentum lineae inferioris (sine leading whitespace) */
     si (finis_inferioris >= ZEPHYRUM)
     {
-        per (col = initium_contenti_inferioris; col <= (i32)finis_inferioris; col++)
+        per (col = initium_contenti_inferioris; col
+            <= (i32)finis_inferioris; col++)
         {
             i32 dest_col;
 
-            dest_col = pos_junctionis + col - initium_contenti_inferioris;
+            dest_col = pos_junctionis + col
+                - initium_contenti_inferioris;
             si (dest_col < status.tabula->latitudo)
             {
-                tabula_cellula(status.tabula, status.cursor_linea, dest_col) =
+                tabula_cellula(status.tabula, status.cursor_linea,
+                    dest_col) =
                     tabula_cellula(status.tabula, linea_inferior, col);
             }
         }
@@ -821,15 +853,18 @@ _augere_indentationem (
         {
             character c;
 
-            c = tabula_cellula(status.tabula, status.cursor_linea, (i32)col);
+            c = tabula_cellula(status.tabula, status.cursor_linea,
+                (i32)col);
             si ((i32)col + II < status.tabula->latitudo)
             {
-                tabula_cellula(status.tabula, status.cursor_linea, (i32)col + II) = c;
+                tabula_cellula(status.tabula, status.cursor_linea,
+                    (i32)col + II) = c;
             }
         }
 
         /* Inserere duo spatia ad initium */
-        tabula_cellula(status.tabula, status.cursor_linea, ZEPHYRUM) = ' ';
+        tabula_cellula(status.tabula, status.cursor_linea, ZEPHYRUM) =
+            ' ';
         tabula_cellula(status.tabula, status.cursor_linea, I) = ' ';
 
         status.mutatus = VERUM;
@@ -848,7 +883,8 @@ _minuere_indentationem (
     i32 numerus_deletorum;
     s32 col;
 
-    initium = tabula_invenire_initium_contenti(status.tabula, status.cursor_linea);
+    initium = tabula_invenire_initium_contenti(status.tabula,
+        status.cursor_linea);
     finis = _finis_lineae(status.tabula, status.cursor_linea);
 
     /* Computare quantum indentationis delere (maximum II) */
@@ -867,14 +903,18 @@ _minuere_indentationem (
         /* Trahere contentum sinistram */
         per (col = (s32)initium; col <= finis; col++)
         {
-            tabula_cellula(status.tabula, status.cursor_linea, (i32)col - numerus_deletorum) =
-                tabula_cellula(status.tabula, status.cursor_linea, (i32)col);
+            tabula_cellula(status.tabula, status.cursor_linea, (i32)col
+                - numerus_deletorum) =
+                tabula_cellula(status.tabula, status.cursor_linea,
+                (i32)col);
         }
 
         /* Vacare cellulas ad finem */
-        per (col = finis - (s32)numerus_deletorum + I; col <= finis; col++)
+        per (col = finis - (s32)numerus_deletorum + I; col
+            <= finis; col++)
         {
-            tabula_cellula(status.tabula, status.cursor_linea, (i32)col) = '\0';
+            tabula_cellula(status.tabula, status.cursor_linea,
+                (i32)col) = '\0';
         }
 
         /* Adjustare cursor si necessarium */
@@ -908,9 +948,11 @@ _delere_selectio (
                 i32 clipboard_idx;
 
     /* Determinare range selectio */
-    linea_min = (status.selectio_initium_linea < (s32)status.cursor_linea) ?
+    linea_min = (status.selectio_initium_linea
+        < (s32)status.cursor_linea) ?
         (i32)status.selectio_initium_linea : status.cursor_linea;
-    linea_max = (status.selectio_initium_linea > (s32)status.cursor_linea) ?
+    linea_max = (status.selectio_initium_linea
+        > (s32)status.cursor_linea) ?
         (i32)status.selectio_initium_linea : status.cursor_linea;
 
     numerus_linearum = linea_max - linea_min + I;
@@ -926,9 +968,11 @@ _delere_selectio (
     si (status.clipboard != NIHIL)
     {
         clipboard_idx = ZEPHYRUM;
-        per (linea = (s32)linea_min; linea <= (s32)linea_max && clipboard_idx < VIM_CLIPBOARD_LINEAE_MAXIMAE; linea++)
+        per (linea = (s32)linea_min; linea <= (s32)linea_max
+            && clipboard_idx < VIM_CLIPBOARD_LINEAE_MAXIMAE; linea++)
         {
-            _clipboard_copiare_lineam(status.clipboard, status.tabula, (i32)linea, clipboard_idx);
+            _clipboard_copiare_lineam(status.clipboard, status.tabula,
+                (i32)linea, clipboard_idx);
             clipboard_idx++;
         }
         status.clipboard->numerus_linearum = clipboard_idx;
@@ -947,12 +991,15 @@ _delere_selectio (
 
             /* Copiare contentum lineae ad undo */
             memset(undo_op.data, ZEPHYRUM, VIM_CLIPBOARD_LINEA_MAXIMA);
-            finis = tabula_invenire_finem_contenti(status.tabula, (i32)linea);
+            finis = tabula_invenire_finem_contenti(status.tabula,
+                (i32)linea);
             si (finis >= ZEPHYRUM)
             {
-                per (col = ZEPHYRUM; col <= (i32)finis && col < VIM_CLIPBOARD_LINEA_MAXIMA - I; col++)
+                per (col = ZEPHYRUM; col <= (i32)finis
+                    && col < VIM_CLIPBOARD_LINEA_MAXIMA - I; col++)
                 {
-                    undo_op.data[col] = tabula_cellula(status.tabula, (i32)linea, col);
+                    undo_op.data[col] = tabula_cellula(status.tabula,
+                        (i32)linea, col);
                 }
             }
 
@@ -976,6 +1023,58 @@ _delere_selectio (
     redde status;
 }
 
+/* yy / Y - lineam currentem in clipboard copiare; tabula intacta,
+ * nihil retexendum */
+hic_manens VimStatus
+_copiare_lineam (
+    VimStatus status)
+{
+    si (status.clipboard != NIHIL)
+    {
+        _clipboard_copiare_lineam(status.clipboard, status.tabula,
+            status.cursor_linea, ZEPHYRUM);
+        status.clipboard->numerus_linearum = I;
+    }
+    redde status;
+}
+
+/* y pro selectio visuali - lineas selectas copiare; modus normalis,
+ * cursor ad lineam primam selectionis (ut vim) */
+hic_manens VimStatus
+_copiare_selectio (
+    VimStatus status)
+{
+    i32 linea_min;
+    i32 linea_max;
+    i32 linea;
+    i32 index;
+
+    linea_min = (status.selectio_initium_linea
+        < (s32)status.cursor_linea)
+        ? (i32)status.selectio_initium_linea : status.cursor_linea;
+    linea_max = (status.selectio_initium_linea
+        > (s32)status.cursor_linea)
+        ? (i32)status.selectio_initium_linea : status.cursor_linea;
+    si (status.clipboard != NIHIL)
+    {
+        index = ZEPHYRUM;
+        per (linea = linea_min; linea <= linea_max
+             && index < VIM_CLIPBOARD_LINEAE_MAXIMAE; linea++)
+        {
+            _clipboard_copiare_lineam(status.clipboard, status.tabula,
+                linea, index);
+            index++;
+        }
+        status.clipboard->numerus_linearum = index;
+    }
+    status.modo                      = MODO_VIM_NORMALIS;
+    status.selectio_initium_linea    = -I;
+    status.selectio_initium_columna  = -I;
+    status.cursor_linea              = linea_min;
+    status                           = _clamp_cursor(status);
+    redde status;
+}
+
 /* >> pro selectio - augere indentationem omnium linearum in selectione */
 hic_manens VimStatus
 _augere_indentationem_selectio (
@@ -987,9 +1086,11 @@ _augere_indentationem_selectio (
     i32 cursor_originalis;
 
     /* Determinare range selectio */
-    linea_min = (status.selectio_initium_linea < (s32)status.cursor_linea) ?
+    linea_min = (status.selectio_initium_linea
+        < (s32)status.cursor_linea) ?
         (i32)status.selectio_initium_linea : status.cursor_linea;
-    linea_max = (status.selectio_initium_linea > (s32)status.cursor_linea) ?
+    linea_max = (status.selectio_initium_linea
+        > (s32)status.cursor_linea) ?
         (i32)status.selectio_initium_linea : status.cursor_linea;
 
     cursor_originalis = status.cursor_linea;
@@ -1019,9 +1120,11 @@ _minuere_indentationem_selectio (
     i32 cursor_originalis;
 
     /* Determinare range selectio */
-    linea_min = (status.selectio_initium_linea < (s32)status.cursor_linea) ?
+    linea_min = (status.selectio_initium_linea
+        < (s32)status.cursor_linea) ?
         (i32)status.selectio_initium_linea : status.cursor_linea;
-    linea_max = (status.selectio_initium_linea > (s32)status.cursor_linea) ?
+    linea_max = (status.selectio_initium_linea
+        > (s32)status.cursor_linea) ?
         (i32)status.selectio_initium_linea : status.cursor_linea;
 
     cursor_originalis = status.cursor_linea;
@@ -1064,7 +1167,8 @@ _copiare_indentationem (
     {
         s32 finis_contenti;
 
-        finis_contenti = tabula_invenire_finem_contenti(status.tabula, linea_fons);
+        finis_contenti = tabula_invenire_finem_contenti(status.tabula,
+            linea_fons);
 
         /* Solum scandere whitespace si linea habet contentum */
         si (finis_contenti >= ZEPHYRUM)
@@ -1114,7 +1218,8 @@ _copiare_indentationem (
      * Hoc est "sticky" behavior pro spatiis */
     si (indentatio < ZEPHYRUM)
     {
-        per (linea_scan = (s32)linea_fons; linea_scan >= ZEPHYRUM; linea_scan--)
+        per (linea_scan = (s32)linea_fons; linea_scan
+            >= ZEPHYRUM; linea_scan--)
         {
             si (status.tabula->indentatio[linea_scan] >= ZEPHYRUM)
             {
@@ -1126,13 +1231,16 @@ _copiare_indentationem (
     }
 
     /* Si inventa indentatio valida, copiare ad lineam currentem */
-    si (indentatio > ZEPHYRUM && indentatio < (s32)status.tabula->latitudo && linea_cum_indentatio >= ZEPHYRUM)
+    si (   indentatio > ZEPHYRUM
+        && indentatio < (s32)status.tabula->latitudo
+        && linea_cum_indentatio >= ZEPHYRUM)
     {
         /* Copiare characteres indentationis (preservat tabs!) */
         per (col = ZEPHYRUM; col < (i32)indentatio; col++)
         {
             tabula_cellula(status.tabula, status.cursor_linea, col) =
-                tabula_cellula(status.tabula, (i32)linea_cum_indentatio, col);
+                tabula_cellula(status.tabula, (i32)linea_cum_indentatio,
+                col);
         }
 
         /* NON ponere indentatio metadata - permittere typing determinare
@@ -1153,7 +1261,8 @@ _inserere_lineam_novam_infra (
     i32 linea_fons;
 
     linea_fons = status.cursor_linea;
-    successus = tabula_inserere_lineam(status.tabula, status.cursor_linea + I);
+    successus = tabula_inserere_lineam(status.tabula,
+        status.cursor_linea + I);
 
     si (successus)
     {
@@ -1184,7 +1293,8 @@ _inserere_lineam_novam_supra (
     }
 
     linea_fons = status.cursor_linea;
-    successus = tabula_inserere_lineam(status.tabula, status.cursor_linea);
+    successus = tabula_inserere_lineam(status.tabula,
+        status.cursor_linea);
 
     si (successus)
     {
@@ -1214,12 +1324,14 @@ _inserere_novam_lineam_in_inserere (
 
     linea_fons = status.cursor_linea;
     cursor_col = status.cursor_columna;
-    successus = tabula_inserere_lineam(status.tabula, status.cursor_linea + I);
+    successus = tabula_inserere_lineam(status.tabula,
+        status.cursor_linea + I);
 
     si (successus)
     {
         /* Invenire finem contenti in linea fonte */
-        finis_contenti = tabula_invenire_finem_contenti(status.tabula, linea_fons);
+        finis_contenti = tabula_invenire_finem_contenti(status.tabula,
+            linea_fons);
 
         /* Determinare indentationem pro nova linea (ante copiare textum) */
         indentatio_nova       = ZEPHYRUM;
@@ -1256,11 +1368,14 @@ _inserere_novam_lineam_in_inserere (
             {
                 s32 linea_scan;  /* Must be signed for loop to terminate correctly */
 
-                per (linea_scan = (s32)linea_fons; linea_scan >= ZEPHYRUM; linea_scan--)
+                per (linea_scan = (s32)linea_fons; linea_scan
+                    >= ZEPHYRUM; linea_scan--)
                 {
-                    si (status.tabula->indentatio[linea_scan] >= ZEPHYRUM)
+                    si (status.tabula->indentatio[linea_scan]
+                        >= ZEPHYRUM)
                     {
-                        indentatio_nova = (i32)status.tabula->indentatio[linea_scan];
+                        indentatio_nova =
+                            (i32)status.tabula->indentatio[linea_scan];
                         linea_cum_indentatio = (i32)linea_scan;
                         frange;
                     }
@@ -1277,7 +1392,8 @@ _inserere_novam_lineam_in_inserere (
                 character c;
 
                 c = tabula_cellula(status.tabula, linea_fons, col);
-                tabula_cellula(status.tabula, linea_fons + I, indentatio_nova + col - cursor_col) = c;
+                tabula_cellula(status.tabula, linea_fons + I,
+                    indentatio_nova + col - cursor_col) = c;
             }
 
             /* Vacare textum a cursore ad finem in linea fonte */
@@ -1293,7 +1409,8 @@ _inserere_novam_lineam_in_inserere (
             per (col = ZEPHYRUM; col < indentatio_nova; col++)
             {
                 tabula_cellula(status.tabula, linea_fons + I, col) =
-                    tabula_cellula(status.tabula, linea_cum_indentatio, col);
+                    tabula_cellula(status.tabula, linea_cum_indentatio,
+                    col);
             }
         }
 
@@ -1375,6 +1492,10 @@ _tractare_visualis (
         casus 'x':
             redde _delere_selectio(status);
 
+        /* Copiare selectio (yank) */
+        casus 'y':
+            redde _copiare_selectio(status);
+
         /* Exit visual mode */
         casus VIM_CLAVIS_ESCAPE:
             status.modo = MODO_VIM_NORMALIS;
@@ -1418,6 +1539,19 @@ _tractare_normalis (
         {
             /* dG - delete to end of file */
             redde _delere_ad_finem_tabulae(status);
+        }
+
+        redde status;
+    }
+
+    si (status.clavis_praecedens == 'y')
+    {
+        status.clavis_praecedens = '\0';
+
+        si (clavis == 'y')
+        {
+            /* yy - copiare lineam */
+            redde _copiare_lineam(status);
         }
 
         redde status;
@@ -1534,6 +1668,14 @@ _tractare_normalis (
             status.clavis_praecedens = 'd';
             redde status;
 
+        /* Copiare (yank): yy, Y */
+        casus 'y':
+            status.clavis_praecedens = 'y';
+            redde status;
+
+        casus 'Y':
+            redde _copiare_lineam(status);
+
         /* Jungere lineas (J) */
         casus 'J':
             redde _jungere_lineas(status);
@@ -1626,7 +1768,8 @@ _tractare_inserere (
 
         casus VIM_CLAVIS_TAB:
             /* Tab occupat 2 cellulas: '\t' + TAB_CONTINUATIO */
-            si (tabula_inserere_tab(status.tabula, status.cursor_linea, status.cursor_columna))
+            si (tabula_inserere_tab(status.tabula, status.cursor_linea,
+                status.cursor_columna))
             {
                 status.cursor_columna  += II;  /* Movere cursor per 2 */
                 status.mutatus         = VERUM;
@@ -1791,12 +1934,14 @@ _clipboard_copiare_lineam (
     finis = tabula_invenire_finem_contenti(tabula, linea);
 
     /* Vacare lineam in clipboard */
-    memset(clipboard->lineae[index_clipboard], ZEPHYRUM, VIM_CLIPBOARD_LINEA_MAXIMA);
+    memset(clipboard->lineae[index_clipboard], ZEPHYRUM,
+        VIM_CLIPBOARD_LINEA_MAXIMA);
 
     /* Copiare characteres */
     si (finis >= ZEPHYRUM)
     {
-        per (col = ZEPHYRUM; col <= (i32)finis && col < VIM_CLIPBOARD_LINEA_MAXIMA - I; col++)
+        per (col = ZEPHYRUM; col <= (i32)finis
+            && col < VIM_CLIPBOARD_LINEA_MAXIMA - I; col++)
         {
             clipboard->lineae[index_clipboard][col] =
                 tabula_cellula(tabula, linea, col);
@@ -1820,7 +1965,8 @@ vim_undo_creare (
         redde NIHIL;
     }
 
-    acervus = (VimUndoAcervus*)piscina_allocare(piscina, magnitudo(VimUndoAcervus));
+    acervus = (VimUndoAcervus*)piscina_allocare(piscina,
+        magnitudo(VimUndoAcervus));
     si (acervus == NIHIL)
     {
         redde NIHIL;
@@ -1874,7 +2020,8 @@ vim_undo_tollere (
     }
 
     /* Computare index ad tollere (ante currentem) */
-    index_tollere = (acervus->index - I + VIM_UNDO_MAGNITUDO) % VIM_UNDO_MAGNITUDO;
+    index_tollere = (acervus->index - I + VIM_UNDO_MAGNITUDO)
+        % VIM_UNDO_MAGNITUDO;
 
     *op = acervus->operationes[index_tollere];
 
@@ -1914,13 +2061,15 @@ _gluten_post (
                 b32 successus;
 
     /* Si clipboard vacuus, nihil facere */
-    si (status.clipboard == NIHIL || status.clipboard->numerus_linearum == ZEPHYRUM)
+    si (   status.clipboard                   == NIHIL
+        || status.clipboard->numerus_linearum == ZEPHYRUM)
     {
         redde status;
     }
 
     /* Inserere lineas ex clipboard post lineam currentem */
-    per (linea_idx = ZEPHYRUM; linea_idx < status.clipboard->numerus_linearum; linea_idx++)
+    per (linea_idx = ZEPHYRUM; linea_idx
+        < status.clipboard->numerus_linearum; linea_idx++)
     {
         linea_nova = status.cursor_linea + linea_idx + I;
 
@@ -1976,13 +2125,15 @@ _gluten_ante (
                 b32 successus;
 
     /* Si clipboard vacuus, nihil facere */
-    si (status.clipboard == NIHIL || status.clipboard->numerus_linearum == ZEPHYRUM)
+    si (   status.clipboard                   == NIHIL
+        || status.clipboard->numerus_linearum == ZEPHYRUM)
     {
         redde status;
     }
 
     /* Inserere lineas ex clipboard ante lineam currentem */
-    per (linea_idx = ZEPHYRUM; linea_idx < status.clipboard->numerus_linearum; linea_idx++)
+    per (linea_idx = ZEPHYRUM; linea_idx
+        < status.clipboard->numerus_linearum; linea_idx++)
     {
         linea_nova = status.cursor_linea + linea_idx;
 
@@ -2060,13 +2211,15 @@ _retexere (
             si (successus)
             {
                 /* Copiare contentum retro */
-                per (col = ZEPHYRUM; col < VIM_CLIPBOARD_LINEA_MAXIMA; col++)
+                per (col = ZEPHYRUM; col
+                    < VIM_CLIPBOARD_LINEA_MAXIMA; col++)
                 {
                     si (op.data[col] == '\0')
                     {
                         frange;
                     }
-                    tabula_cellula(status.tabula, op.linea, col) = op.data[col];
+                    tabula_cellula(status.tabula, op.linea, col) =
+                        op.data[col];
                 }
 
                 status.cursor_linea    = op.linea;

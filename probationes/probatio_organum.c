@@ -577,6 +577,83 @@ _probare_dominos (
 
 
 /* ==================================================
+ * VIIb. S6b: manifestum VIVUM scribae = tabula ante S6b
+ * ================================================== */
+
+interior vacuum
+_probare_scribam_vivam (
+    CredoContextus* c)
+{
+    InternamentumChorda* in;
+                Organum* o;
+                Organum* basis;
+                    Xar* vitia;
+              StmlNodus* domini;
+              StmlNodus* ante;
+           StmlResultus  r;
+                    i32  i;
+                    s32  novi;
+                    s32  veteres;
+
+    in    = internamentum_creare(c->piscina);
+    o     = legere_plagulam(c->piscina, in, "apps/scriba/organum.stml",
+        &vitia);
+    vitia_imprimere(vitia);
+    basis = legere_plagulam(c->piscina, in, "apps/organum_commune.stml",
+        &vitia);
+    CREDO_NECESSE_NON_NIHIL(o);
+    CREDO_NECESSE_NON_NIHIL(basis);
+    CREDO_NECESSE(organum_basim_addere(o, basis));
+    domini = organum_dominos_generare(o, c->piscina, in);
+    CREDO_NECESSE_NON_NIHIL(domini);
+    r = stml_legere(filum_legere_totum(
+        "probationes/fixa/organum/scriba_domini_ante_s6.stml",
+        c->piscina),
+        c->piscina, in);
+    CREDO_NECESSE(r.successus);
+    ante = stml_invenire_liberum(r.radix, "domini");
+    CREDO_NECESSE_NON_NIHIL(ante);
+    /* novus -> idem in vetere; vetus -> idem in novo (aequales) */
+    novi = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < xar_numerus(domini->liberi); i++)
+    {
+        StmlNodus* d;
+           chorda* a;
+           chorda* vetus;
+
+        d      = *(StmlNodus**)xar_obtinere(domini->liberi, i);
+        a      = stml_attributum_capere(d, "attributum");
+        vetus  = scriptor_domini(ante, chorda_ut_cstr(*a, c->piscina));
+        CREDO_NON_NIHIL(vetus);
+        si (vetus)
+        {
+            CREDO_CHORDA_AEQUALIS(*vetus,
+                *stml_attributum_capere(d, "scriptor"));
+        }
+        novi++;
+    }
+    veteres = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < xar_numerus(ante->liberi); i++)
+    {
+        StmlNodus* d;
+           chorda* a;
+
+        d = *(StmlNodus**)xar_obtinere(ante->liberi, i);
+        si (d->genus != STML_NODUS_ELEMENTUM)
+        {
+            perge;
+        }
+        a = stml_attributum_capere(d, "attributum");
+        CREDO_NON_NIHIL(scriptor_domini(domini, chorda_ut_cstr(*a,
+            c->piscina)));
+        veteres++;
+    }
+    CREDO_AEQUALIS_S32(novi, veteres);
+    CREDO_AEQUALIS_S32(novi, XVI);
+}
+
+
+/* ==================================================
  * VIII. S4: valores initiales ex absentibus
  * ================================================== */
 
@@ -778,6 +855,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "pictor_vivus",      _probare_pictorem_vivum,
       NIHIL, NIHIL, NIHIL, NIHIL },
     { "initium",           _probare_initium,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "scriba_viva",       _probare_scribam_vivam,
       NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

@@ -21,6 +21,7 @@
 #include "aemulator.h"
 #include "aemulator_hospes.h"
 #include "terminale.h"
+#include "organum_montatio.h"
 #include "imago.h"
 #include "credo.h"
 #include "canon.h"
@@ -1202,18 +1203,23 @@ superficiem_ponere (
         chorda_ut_cstr(chorda_ex_s32(sp->altitudo, p), p));
 }
 
-interior Canon*
-canonem_vici (
-    constans character* via)
+/* S7a: radix ut vicus eam parat - ex manifesto hospitis */
+interior b32
+radicem_vici_parare (
+    InsulaRepositorium* repo)
 {
-    chorda causa;
+        Organum* organum;
+    InsulaRamus  radix;
 
-    redde canon_legere(filum_legere_totum(via, piscina), piscina,
-        intern, &causa);
+    organum = organum_legere_viam(piscina, intern, NIHIL,
+        "apps/vicus/organum.stml", "probatio_terminale");
+    radix = insula_ramus_radix(repo);
+    redde organum && organum_ramum_parare(organum, &radix, NIHIL, NIHIL,
+        NIHIL, piscina, intern);
 }
 
 /* XIV: montatio in hospite (vicus-latera S1b) - repositorium cum
- * canonibus VERIS vici (radix liberos non declarat: montatio sine
+ * canone VERO vici (radix liberos non declarat: montatio sine
  * canone suo recusaretur); concha vera (SHELL=/bin/sh) */
 interior vacuum
 montationem_probare (vacuum)
@@ -1232,10 +1238,7 @@ montationem_probare (vacuum)
     repo = insula_repositorium_creare(piscina, intern,
         "<vicus/>");
     CREDO_NON_NIHIL(repo);
-    insula_ponere_canonem(repo,
-        canonem_vici("apps/vicus/canones/durabilis.canon"));
-    insula_ponere_canonem(repo,
-        canonem_vici("apps/vicus/canones/ephemera.canon"));
+    CREDO_VERUM(radicem_vici_parare(repo));
     CREDO_VERUM(terminale_montare(&app, piscina, intern, repo, "t1",
         CDLXXX, CXCII));
     /* ramus in utroque genere; dispensator nullus (hospitis est) */

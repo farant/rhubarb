@@ -10,7 +10,9 @@
  * in tabula aut spatio vacuo lineae non commutat. VIII: dies
  * mutatus (hora eadem) pingitur. IX (S5): pila ficta - "87%" ad
  * dextrum, horologium sinistrorsum; "87%+" cum oneratur; nulla pila
- * nihil; mutatio pingitur; ictus in pila horologium non commutat. */
+ * nihil; mutatio pingitur; ictus in pila horologium non commutat. X
+ * (S7a): lectiones (tempus_*, pila_*) et horologium_dies in insula
+ * radicis; pila nulla = campi absentes. */
 #include "latina.h"
 #include "piscina.h"
 #include "internamentum.h"
@@ -336,6 +338,71 @@ s32 principale (vacuum)
         CREDO_VERUM(vicus_pulsare(v));
         CREDO_VERUM(textus_x(d, v, "86%+") < ZEPHYRUM);
         CREDO_AEQUALIS_S32(textus_x(d, v, "12:04 PM"), CDXXVI);
+    }
+
+    imprimere("\n--- X (S7a): lectiones in insula radicis ---\n");
+    {
+        PilaFicta  pf;
+           chorda* a;
+              s32  x;
+
+        /* Sabbati X Octobris MMXXVI, 12:04 */
+        a = insula_attributum(v->repo, "tempus_annus");
+        CREDO_NON_NIHIL(a);
+        CREDO_CHORDA_AEQUALIS_LITERIS(*a, "2026");
+        a = insula_attributum(v->repo, "tempus_mensis");
+        CREDO_NON_NIHIL(a);
+        CREDO_CHORDA_AEQUALIS_LITERIS(*a, "10");
+        a = insula_attributum(v->repo, "tempus_dies");
+        CREDO_NON_NIHIL(a);
+        CREDO_CHORDA_AEQUALIS_LITERIS(*a, "10");
+        a = insula_attributum(v->repo, "tempus_dies_hebdomadis");
+        CREDO_NON_NIHIL(a);
+        CREDO_CHORDA_AEQUALIS_LITERIS(*a, "6");
+        a = insula_attributum(v->repo, "tempus_hora");
+        CREDO_NON_NIHIL(a);
+        CREDO_CHORDA_AEQUALIS_LITERIS(*a, "12");
+        a = insula_attributum(v->repo, "tempus_minutum");
+        CREDO_NON_NIHIL(a);
+        CREDO_CHORDA_AEQUALIS_LITERIS(*a, "4");
+        /* nulla pila: campi absentes */
+        CREDO_NIHIL(insula_attributum(v->repo, "pila_centesimae"));
+        CREDO_NIHIL(insula_attributum(v->repo, "pila_oneratur"));
+        pf.centesimae  = L;
+        pf.oneratur    = VERUM;
+        vicus_pilam_ponere(v, pila_ficta, &pf);
+        a = insula_attributum(v->repo, "pila_centesimae");
+        CREDO_NON_NIHIL(a);
+        CREDO_CHORDA_AEQUALIS_LITERIS(*a, "50");
+        a = insula_attributum(v->repo, "pila_oneratur");
+        CREDO_NON_NIHIL(a);
+        CREDO_CHORDA_AEQUALIS_LITERIS(*a, "verum");
+        CREDO_VERUM(textus_x(d, v, "50%+") > ZEPHYRUM);
+        /* pila iterum nulla: campi tolluntur */
+        pf.centesimae = -I;
+        ficta.minutum = V;
+        CREDO_VERUM(vicus_pulsare(v));
+        CREDO_NIHIL(insula_attributum(v->repo, "pila_centesimae"));
+        CREDO_NIHIL(insula_attributum(v->repo, "pila_oneratur"));
+        a = insula_attributum(v->repo, "tempus_minutum");
+        CREDO_NON_NIHIL(a);
+        CREDO_CHORDA_AEQUALIS_LITERIS(*a, "5");
+        /* ictus in hora: dies in insula */
+        a = insula_attributum(v->repo, "horologium_dies");
+        CREDO_VERUM(!a || chorda_aequalis_literis(*a, "falsum"));
+        x = textus_x(d, v, "12:05 PM");
+        CREDO_VERUM(x > ZEPHYRUM);
+        ictus_lineae(d, x + VI);
+        a = insula_attributum(v->repo, "horologium_dies");
+        CREDO_NON_NIHIL(a);
+        CREDO_CHORDA_AEQUALIS_LITERIS(*a, "verum");
+        CREDO_VERUM(textus_x(d, v, "Saturday, October 10th, 2026")
+            > ZEPHYRUM);
+        ictus_lineae(d, x + VI);
+        a = insula_attributum(v->repo, "horologium_dies");
+        CREDO_NON_NIHIL(a);
+        CREDO_CHORDA_AEQUALIS_LITERIS(*a, "falsum");
+        CREDO_VERUM(textus_x(d, v, "12:05 PM") > ZEPHYRUM);
     }
 
     imprimere("\n");

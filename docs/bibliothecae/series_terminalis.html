@@ -13,13 +13,13 @@
 <h1>series_terminalis</h1>
 <p class="subtitulus">Lexemator fluminis terminalis (DEC/Williams)</p>
 
-<p>The lexer for the byte stream of a terminal, in both directions (what a program writes for an emulator, and what the terminal sends back: keys, mouse, paste, replies). Bytes in, tokens out (print, execute, ESC, CSI, SS, OSC, DCS, APC, abandoned sequences), and no meaning: what CSI &#x27;A&#x27; means is for the layers above. No time, no UTF-8, no allocation after creation. The state machine is Paul Williams&#x27;s DEC parser as Ghostty implements it (pinned commit, MIT), with each deliberate divergence listed: C1 bytes are not recognized (they are UTF-8 continuations), kitty&#x27;s &#x27;:&#x27; separators are kept, an interrupted sequence becomes a named FUGA token with its raw bytes rather than vanishing, and a sequence with too many parameters is dropped whole (&#x27;half an SGR is worse than none&#x27;). Eventus B1a, October 2026.</p>
+<p>The lexer for the byte stream of a terminal, in both directions (what a program writes for an emulator, and what the terminal sends back: keys, mouse, paste, replies). Bytes in, tokens out (print, execute, ESC, CSI, SS, OSC, DCS, APC, abandoned sequences), and no meaning: what CSI &#x27;A&#x27; means is for the layers above. No time, no UTF-8, no allocation after creation. The state machine is Paul Williams&#x27;s DEC parser as Ghostty implements it (pinned commit, MIT), with each deliberate divergence listed: C1 bytes are not recognized (they are UTF-8 continuations), kitty&#x27;s &#x27;:&#x27; separators are kept, an interrupted sequence becomes a named FUGA token with its raw bytes rather than vanishing, and a sequence with too many parameters is dropped whole (&#x27;half an SGR is worse than none&#x27;). The emulator, its first consumer in the other direction, found two things on 2026-10-07. The single-shift state, a house addition, had no rule for bytes above 0x7F, so ESC N followed by a UTF-8 character silently swallowed the character and shifted the next ASCII letter; it is now an abandoned sequence followed by the character. And an OSC token records which terminator ended it, BEL or ST, so that a reply can be sent back in the form the question was asked. Eventus B1a, October 2026.</p>
 
 <table>
 <tbody>
 <tr><td>Header</td><td><a href="../../include/series_terminalis.h"><code>include/series_terminalis.h</code></a></td></tr>
 <tr><td>Implementation</td><td><a href="../../lib/series_terminalis.c"><code>lib/series_terminalis.c</code></a></td></tr>
-<tr><td>Last change</td><td>2026-10-02 79e2f3a0</td></tr>
+<tr><td>Last change</td><td>2026-10-07 4b2642c3</td></tr>
 <tr><td>Group</td><td><a href="greges.html#fenestra">Window, input and drawing</a></td></tr>
 </tbody>
 </table>

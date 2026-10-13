@@ -13,13 +13,13 @@
 <h1>piscina</h1>
 <p class="subtitulus">arena memoriae: liberatio tota semel (arena, pool)</p>
 
-<p>The house&#x27;s arena allocator, and the memory discipline nearly every library is built on. Instead of malloc and free per object, everything belonging to one job (a document, a request, a frame) is allocated from a piscina and freed all at once by emptying it (piscina_vacare) or destroying it. Pools are dynamic (growing by adding blocks) or of fixed size; allocation either aborts on failure or, with the conari_ variants, returns NIHIL. A mark and reset (piscina_notare / piscina_reficere) gives cheap scratch space, and query functions report usage, peak, number of blocks and number of allocations, which is what actually costs. The full guide is docs/piscina.md.</p>
+<p>The house&#x27;s arena allocator, and the memory discipline nearly every library is built on. Instead of malloc and free per object, everything belonging to one job (a document, a request, a frame) is allocated from a piscina and freed all at once by emptying it (piscina_vacare) or destroying it. Pools are dynamic (growing by adding blocks) or of fixed size; allocation either aborts on failure or, with the conari_ variants, returns NIHIL. A mark and reset (piscina_notare / piscina_reficere) gives cheap scratch space, and query functions report usage, peak, number of blocks and number of allocations, which is what actually costs. Two changes from the mathematics work of October 2026. An allocation is now aligned to 8 bytes, as malloc&#x27;s is: until 10-05 the plain call packed byte-tight, and a review of the big-integer library found 32-bit limbs at odd addresses, undefined behaviour that arm64 tolerates (the sanitizer counted 71 misaligned accesses in one suite). Tight packing is still available by asking for alignment 1. And because a reset neither frees nor clears, a value that outlives its reset usually still reads correctly, so the bug is silent; a poisoning build (PISCINA_VENENUM, gate venenum) fills released bytes with 0xA5 so that such lifetime bugs fail. The full guide is docs/piscina.md.</p>
 
 <table>
 <tbody>
 <tr><td>Header</td><td><a href="../../include/piscina.h"><code>include/piscina.h</code></a></td></tr>
 <tr><td>Implementation</td><td><a href="../../lib/piscina.c"><code>lib/piscina.c</code></a></td></tr>
-<tr><td>Last change</td><td>2026-09-28 a3632f55</td></tr>
+<tr><td>Last change</td><td>2026-10-06 b83914c5</td></tr>
 <tr><td>Group</td><td><a href="greges.html#fundamenta">Foundation</a></td></tr>
 </tbody>
 </table>

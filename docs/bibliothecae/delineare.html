@@ -13,13 +13,13 @@
 <h1>delineare</h1>
 <p class="subtitulus"></p>
 
-<p>Classic 2D drawing on a TabulaPixelorum, in the spirit of QuickDraw: a context with a clip rectangle and a mode (solid, 8x8 pattern, or XOR), the 38 classic Mac patterns, then lines, rectangles, rounded rectangles, circles, ellipses, triangles, polygons and grids, outlined or filled. Its unusual part is dithering: gradients and colour reduction by Floyd-Steinberg, Atkinson (the original Mac&#x27;s), or ordered Bayer 4x4/8x8 against a palette, which gives the house its 1-bit, early-Macintosh look. Immediate mode: each call writes pixels now and keeps no scene. The oldest layer of the GUI stack (2025-11) and the most widely used: every *_visus view, the dialogs, elementa, libro_paginarum and arx_caeli draw through it, and delineare_mandata uses it as its backend.</p>
+<p>Classic 2D drawing on a TabulaPixelorum, in the spirit of QuickDraw: a context with a clip rectangle and a mode (solid, 8x8 pattern, or XOR), then lines, rectangles, rounded rectangles, circles, ellipses, triangles, polygons and grids, outlined or filled. The 38 classic Mac patterns it draws with were its own until 2026-10-09 and are now a shared table, exemplaria, which it reads like everyone else. Its unusual part is dithering: gradients and colour reduction by Floyd-Steinberg, Atkinson (the original Mac&#x27;s), or ordered Bayer 4x4/8x8 against a palette, which gives the house its 1-bit, early-Macintosh look. Immediate mode: each call writes pixels now and keeps no scene. A solid rectangle fill was rewritten on 10-07 to clip once and fill rows directly, after profiling the terminal under btop showed the per-pixel path taking most of a frame; the first version of the fast path crashed on a glyph at a negative position, because the house&#x27;s 32-bit integer is unsigned and the bounds check wrapped. The oldest layer of the GUI stack (2025-11) and the most widely used: every *_visus view, the dialogs, elementa, libro_paginarum and arx_caeli draw through it, and delineare_mandata uses it as its backend.</p>
 
 <table>
 <tbody>
 <tr><td>Header</td><td><a href="../../include/delineare.h"><code>include/delineare.h</code></a></td></tr>
 <tr><td>Implementation</td><td><a href="../../lib/delineare.c"><code>lib/delineare.c</code></a></td></tr>
-<tr><td>Last change</td><td>2026-10-01 4941f626</td></tr>
+<tr><td>Last change</td><td>2026-10-09 6b00d1e5</td></tr>
 <tr><td>Group</td><td><a href="greges.html#fenestra">Window, input and drawing</a></td></tr>
 </tbody>
 </table>

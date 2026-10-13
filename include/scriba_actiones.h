@@ -64,6 +64,10 @@ nomen structura {
      * ponit). Hospes post montationem ponit (ut liber); verba nota
      * colorantur, ictus in iussum id currit */
       IussumRegistrum* iussa;
+    /* S7b: ramus registri vim (capsa, capsa_lineae); repo NIHIL =
+     * ramus proprius (scriba sola). Hospes post montationem ponit, ut
+     * liber et iussa (vicus: radix - registrum unum applicationis) */
+          InsulaRamus ramus_capsae;
 } ScribaActiones;
 
 /* folium laboris = copia proiectionis documenti */

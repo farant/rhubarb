@@ -16,11 +16,22 @@ via_greges = sys.argv[3] if len(sys.argv) > 3 else None
 NOTA_GENERATUM = '<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->'
 dir_folii = os.path.join(radix, 'docs', 'bibliothecae')
 
+EFFUGIA = {'\\\\': '\\', '\\t': '\t', '\\n': ' '}
+
+
+def effugia_solvere(textus):
+    """Forma machinae inventarii (gesta: _inventarii_effugere) soluta:
+    '\\\\' -> '\\', '\\t' -> tabulatio, '\\n' -> spatium (linea nova in
+    pagina spatium est). Uno transitu - duo 'replace' seriati '\\\\t'
+    (obliqua effugita + 't') in obliquam et tabulationem verterent."""
+    return re.sub(r'\\[\\tn]', lambda m: EFFUGIA[m.group(0)], textus)
+
+
 cellae = {}
 for linea in open(via_tsv):
     partes = linea.rstrip('\n').split('\t')
     if len(partes) == 4:
-        cellae.setdefault(partes[0], {})[partes[1]] = partes[3].replace('\\t', '\t').replace('\\n', ' ')
+        cellae.setdefault(partes[0], {})[partes[1]] = effugia_solvere(partes[3])
 
 
 ROMANI = {'I': 1, 'V': 5, 'X': 10, 'L': 50, 'C': 100}
@@ -46,7 +57,7 @@ if via_greges:
     for linea in open(via_greges):
         partes = linea.rstrip('\n').split('\t')
         if len(partes) == 4:
-            greges.setdefault(partes[0], {})[partes[1]] = partes[3].replace('\\t', '\t').replace('\\n', ' ')
+            greges.setdefault(partes[0], {})[partes[1]] = effugia_solvere(partes[3])
 
 
 def sententia_prima(textus, maxima=170):

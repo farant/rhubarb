@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>portae</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>portae</h1>
+<p class="subtitulus">PORTAE DECLARATAE: opertura portarum ex REPOSITORIO (spec project-specs/portae-declaratae-spec.md; ledger …GGMGY94)</p>
+
+<p>Declared gates: which gates a change owes, computed from the repository alone. Each gate&#x27;s runner script carries its declaration as an STML annotation in a header comment: the key of the gate it runs, or &#x27;manu&#x27; with a reason for a gate a human runs, and optionally extra paths it covers, programs its tests launch, and house binaries it owns. Everything derivable is derived and not stored: what the runner reads, executes and sources (from effectus, the summary of a script&#x27;s effects), the C sources it compiles with their aedilis closures and those of the suite&#x27;s tests, and any tracked path a test names in a string. From that it answers, for a list of changed paths, which gates are owed and why, which need a human, and which paths no gate covers. Written 2026-10-10 to 12, it replaced some 550 lines of Python that decided this from a ledger inventory. Two principles of Fran&#x27;s drove it: what changes what a build or test does lives in the repository, and the ledger is never read to decide an outcome; and logic that runs regularly is C, with scripts as thin wrappers. Unknowns are named and never guessed: a gate whose coverage cannot be derived is owed by every change but covers nothing, so it cannot hide an uncovered path. A shadow comparison over all 9,815 tracked paths found nothing that the old answer owed and the new one does not, and about 2,000 real dependencies the ledger had never recorded, such as a gate that runs another suite&#x27;s runner. One decision came out of it: the gate that tests a build tool owns that binary, so other gates that merely run bin/aedilis or bin/fabrica do not inherit its sources. Pure, with disk, git and the lexer behind a seam. The CLI is bin/fabrica portae, some fifty runner scripts carry declarations, and the owed-gates phase of a commit went from about 22 s to under 5.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/portae.h"><code>include/portae.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/portae.c"><code>lib/portae.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-10-12 def78408</td></tr>
+<tr><td>Group</td><td><a href="greges.html#aedificatio">Build, binaries and tooling</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

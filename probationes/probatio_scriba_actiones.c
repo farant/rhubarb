@@ -24,6 +24,7 @@
 #include "scriba_documentum.h"
 #include "scriba_actiones.h"
 #include "credo.h"
+#include "organum_probationis.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -54,25 +55,6 @@ componere_minimum (
     componens_ponere_focusabilis(pagina, VERUM);
     componens_addere_liberum(radix, pagina);
     redde radix;
-}
-
-interior Canon*
-canonem_legere (
-    constans character* via)
-{
-    chorda  fons;
-    chorda  causa;
-     Canon* c;
-
-    fons  = filum_legere_totum(via, piscina);
-    c     = canon_legere(fons, piscina, intern, &causa);
-    si (!c)
-    {
-        imprimere("  canon malus %s: %.*s\n", via,
-            (integer)causa.mensura,
-                  causa.datum ? (constans character*)causa.datum : "");
-    }
-    redde c;
 }
 
 /* linea l folii (spatiis finalibus omissis) == expectata */
@@ -187,21 +169,15 @@ s32 principale (vacuum)
     repo = insula_repositorium_creare(piscina, intern,
         "<scriba latitudo=\"16\" altitudo=\"6\""
         " focus=\"pagina\"/>");
-    insula_ponere_canonem(repo,
-        canonem_legere("apps/scriba/canones/durabilis.canon"));
-    insula_ponere_canonem(repo,
-        canonem_legere("apps/scriba/canones/ephemera.canon"));
     {
-              chorda domini;
-        StmlResultus res;
+            Canon* canon;
+        StmlNodus* domini;
 
-        domini = filum_legere_totum("apps/scriba/canones/domini.stml",
-                                    piscina);
-        res = stml_legere_ex_literis(chorda_ut_cstr(domini, piscina),
-                                     piscina, intern);
-        CREDO_VERUM(res.successus);
-        CREDO_VERUM(insula_dominos_legere(repo,
-            res.elementum_radix) > ZEPHYRUM);
+        /* S6b: ex manifesto scribae */
+        CREDO_VERUM(organum_probationis_parare(piscina, intern,
+            "apps/scriba/organum.stml", &canon, &domini));
+        insula_ponere_canonem(repo, canon);
+        CREDO_VERUM(insula_dominos_legere(repo, domini) > ZEPHYRUM);
     }
     reg = actio_registrum_creare(piscina, intern);
     scriba_actiones_initiare(&sa, doc, piscina);
@@ -233,7 +209,8 @@ s32 principale (vacuum)
         "selectio_linea"));
     CREDO_NON_NIHIL(insula_attributum(repo,
         "fd_exspectans"));
-    CREDO_NON_NIHIL(insula_attributum(repo,
+    /* S7b: registrum solum mutatum scribitur - vacuum numquam */
+    CREDO_NIHIL(insula_attributum(repo,
         "capsa_lineae"));
     /* nullus valor vacuus: capsa et clavis praecedens ABSUNT - in
      * textu scripto quaeritur (a="" capere NIHIL reddit ut absentia;

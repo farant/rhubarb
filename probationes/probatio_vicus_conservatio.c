@@ -1,7 +1,9 @@
 /* probatio_vicus_conservatio.c - systema persistentiae in vico
  * (status-plan S3): compositio VERA (vicus_applicatio); latus pictoris
  * "2_dextrum_pictor" statum suum in volumine vici servat et sessio
- * altera (applicatio recens, idem volumen) eum restituit. */
+ * altera (applicatio recens, idem volumen) eum restituit. S7b:
+ * registrum vim (capsa) unum applicationis in radice - copiatum in
+ * tabula III, insertum in IV, sessionem alteram supervivit. */
 #include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
@@ -13,6 +15,8 @@
 #include "vicus.h"
 #include "vicus_applicatio.h"
 #include "dispensator.h"
+#include "manus_ludus.h"
+#include "scriba_applicatio.h"
 #include "credo.h"
 #include <stdio.h>
 #include <string.h>
@@ -141,10 +145,120 @@ _probare_dimissionem (
     volumen_claudere(vol);
 }
 
+/* S6b: latus scribae "1_sinistrum_scriba" cursorem servat (systemata
+ * repositorii communia), modus ut vim incipit */
+interior vacuum
+_probare_latus_scribae (
+    CredoContextus* c)
+{
+     InternamentumChorda* in;
+                 Volumen* vol;
+         VicusApplicatio  prima;
+         VicusApplicatio  altera;
+             InsulaRamus  r;
+               character  cursor[]  = "cursor_linea=3";
+               character  modus[]   = "modus=inserere";
+                  chorda* a;
+
+    in = internamentum_creare(c->piscina);
+    thema_initiare();
+    vol = volumen_temporarium(c->piscina, "probatio_vicus_conservatio");
+    CREDO_NECESSE_NON_NIHIL(vol);
+    CREDO_NECESSE(vicus_applicatio_aedificare(&prima, c->piscina, in,
+        vol, NIHIL, CM, DC));
+    r = insula_ramus(prima.vicus->repo, "scriba", "1_sinistrum_scriba");
+    CREDO_NECESSE(insula_ramus_nodus(&r) != NIHIL);
+    insula_scriptorem_ponere(prima.vicus->repo, chorda_ex_literis(
+        "pagina.clavis", c->piscina));
+    CREDO_VERUM(mutare_ramum(&r, ponere, cursor));
+    CREDO_VERUM(mutare_ramum(&r, ponere, modus));
+
+    CREDO_NECESSE(vicus_applicatio_aedificare(&altera, c->piscina, in,
+        vol, NIHIL, CM, DC));
+    r = insula_ramus(altera.vicus->repo, "scriba",
+        "1_sinistrum_scriba");
+    a = insula_ramus_attributum(&r, "cursor_linea");
+    CREDO_VERUM(a && chorda_aequalis_literis(*a, "3"));
+    a = insula_ramus_attributum(&r, "modus");
+    CREDO_VERUM(a && chorda_aequalis_literis(*a, "normalis"));
+    volumen_claudere(vol);
+}
+
+/* S7b: latus scribae tabulae t (sinistrum) */
+interior ScribaMontatio*
+scriba_tabulae (
+     VicusApplicatio* app,
+                 i32  t)
+{
+    redde (ScribaMontatio*)vicus_latus(vicus_tabula(app->vicus, t),
+        VICUS_SINISTRUM)->montatio;
+}
+
+/* S7b: registrum vim unum applicationis (radix), persistens */
+interior vacuum
+_probare_capsam (
+    CredoContextus* c)
+{
+     InternamentumChorda* in;
+                 Volumen* vol;
+         VicusApplicatio  prima;
+         VicusApplicatio  altera;
+              ManusLudus* m;
+          ScribaMontatio* s4;
+             InsulaRamus  r;
+                  chorda* a;
+
+    in = internamentum_creare(c->piscina);
+    thema_initiare();
+    vol = volumen_temporarium(c->piscina, "probatio_vicus_conservatio");
+    CREDO_NECESSE_NON_NIHIL(vol);
+    CREDO_NECESSE(vicus_applicatio_aedificare(&prima, c->piscina, in,
+        vol, NIHIL, CM, DC));
+    m = manus_ludus_creare(c->piscina, prima.d);
+    CREDO_NECESSE_NON_NIHIL(m);
+    /* tabula III: scriba focata; "abc" scribitur et copiatur (yy) */
+    CREDO_VERUM(manus_ludus_clavem(m, '3', MOD_SUPER));
+    CREDO_VERUM(manus_ludus_scribere(m, "iabc"));
+    CREDO_VERUM(manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));
+    CREDO_VERUM(manus_ludus_scribere(m, "yy"));
+    /* registrum in radice, non in latere */
+    a = insula_attributum(prima.vicus->repo, "capsa_lineae");
+    CREDO_VERUM(a && chorda_aequalis_literis(*a, "1"));
+    a = insula_attributum(prima.vicus->repo, "capsa");
+    CREDO_VERUM(a && chorda_aequalis_literis(*a, "abc"));
+    r = insula_ramus(prima.vicus->repo, "scriba", "3_sinistrum_scriba");
+    CREDO_NECESSE(insula_ramus_nodus(&r) != NIHIL);
+    CREDO_NIHIL(insula_ramus_attributum(&r, "capsa"));
+    /* tabula IV: 'p' registrum commune inserit */
+    CREDO_VERUM(manus_ludus_clavem(m, '4', MOD_SUPER));
+    CREDO_VERUM(manus_ludus_scribere(m, "p"));
+    s4 = scriba_tabulae(&prima, III);
+    CREDO_NECESSE_NON_NIHIL(s4);
+    /* linea post cursorem (p infra inserit) */
+    CREDO_VERUM(tabula_cellula(&s4->actiones_ctx.laboris, I, ZEPHYRUM)
+        == 'a');
+    CREDO_VERUM(tabula_cellula(&s4->actiones_ctx.laboris, I, I) == 'b');
+    CREDO_VERUM(tabula_cellula(&s4->actiones_ctx.laboris, I, II)
+        == 'c');
+
+    /* sessio altera: registrum restitutum */
+    CREDO_NECESSE(vicus_applicatio_aedificare(&altera, c->piscina, in,
+        vol, NIHIL, CM, DC));
+    a = insula_attributum(altera.vicus->repo, "capsa");
+    CREDO_VERUM(a && chorda_aequalis_literis(*a, "abc"));
+    a = insula_attributum(altera.vicus->repo, "capsa_lineae");
+    CREDO_VERUM(a && chorda_aequalis_literis(*a, "1"));
+    volumen_claudere(vol);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "latus_pictoris", _probare_latus_pictoris,
       NIHIL, NIHIL, NIHIL, NIHIL },
     { "dimissio", _probare_dimissionem,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "latus_scribae", _probare_latus_scribae,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "capsa", _probare_capsam,
       NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

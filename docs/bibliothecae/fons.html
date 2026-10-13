@@ -13,13 +13,13 @@
 <h1>fons</h1>
 <p class="subtitulus">Mappatio codepoints Unicode ad indices glypharum</p>
 
-<p>Maps Unicode codepoints to the 256 glyphs of the 6x8 bitmap font: ASCII and Latin-1 directly, curly quotes to straight ones, en and em dashes to a hyphen, the ellipsis to a full stop, a few symbols to their places in the font, and everything else to a tofu glyph. Used when the window draws text (fenestra_textus). December 2025.</p>
+<p>Maps Unicode codepoints to the 256 glyphs of the 6x8 bitmap font: ASCII and Latin-1 directly, curly quotes to straight ones, en and em dashes to a hyphen, the ellipsis to a full stop, a few symbols to their places in the font, and everything else to a tofu glyph. Used when the window draws text (fenestra_textus). December 2025. Two corrections in October 2026. The Latin-1 range went straight to the same slot of the font, and forty of those slots were empty, so such characters drew as nothing and the substitutions written for them further down were dead code; an empty slot now falls through to the substitutions and then to tofu, and the font gained the missing glyphs. And the Greek letters that look like Latin ones (Alpha, Beta, Epsilon and a dozen more, with omicron) map to the Latin glyph, which makes them work in every app; the rest of Greek stays tofu here and is drawn by glyphae_ductae in the terminal.</p>
 
 <table>
 <tbody>
 <tr><td>Header</td><td><a href="../../include/fons.h"><code>include/fons.h</code></a></td></tr>
 <tr><td>Implementation</td><td><a href="../../lib/fons.c"><code>lib/fons.c</code></a></td></tr>
-<tr><td>Last change</td><td>2026-09-05 1cc061ac</td></tr>
+<tr><td>Last change</td><td>2026-10-09 a11400ef</td></tr>
 <tr><td>Group</td><td><a href="greges.html#fenestra">Window, input and drawing</a></td></tr>
 </tbody>
 </table>
