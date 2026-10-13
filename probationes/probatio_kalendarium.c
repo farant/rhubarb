@@ -15,6 +15,10 @@
 #include "fasti.h"
 #include "conservatio.h"
 #include "kalendarium.h"
+#include "agenda.h"
+#include "figura.h"
+#include "mandatum.h"
+#include "thema.h"
 #include "credo.h"
 #include <stdio.h>
 #include <string.h>
@@ -37,6 +41,7 @@ nomen structura {
              Dispensator* d;
                  Volumen* volumen;
          StatusSystemata  systemata;
+        AgendaDocumentum* documentum;
 } Mundus;
 
 /* montare (sine systematis nisi volumen) et dispensatorem ligare; m in
@@ -61,7 +66,7 @@ mundum_struere (
             x->volumen, x->repo);
     }
     si (!kalendarium_montare(&x->m, p, x->intern, x->repo, "c1",
-            argumentum, NIHIL, hodie_fixa, NIHIL,
+            argumentum, x->documentum, hodie_fixa, NIHIL,
             x->volumen ? &x->systemata : NIHIL))
     {
         redde FALSUM;
@@ -348,6 +353,257 @@ _probare_conservationem (
     CREDO_VERUM(electa_est(&y, MMXXVI, X, XIV));
 }
 
+/* fines cellulae dies ISO */
+interior Fines
+cellula (
+                 Mundus* x,
+     constans character* id,
+                Piscina* p)
+{
+     Componens* c;
+         Fines  f;
+
+    memset(&f, ZEPHYRUM, magnitudo(f));
+    c = componens_invenire_per_id(dispensator_arbor(x->d),
+        chorda_ex_literis(id, p));
+    si (c)
+    {
+        f = c->fines;
+    }
+    redde f;
+}
+
+interior b32
+intra (
+    Fines a,
+    Fines f)
+{
+    redde a.x >= f.x && a.y >= f.y
+        && a.x + a.latitudo <= f.x + f.latitudo
+        && a.y + a.altitudo <= f.y + f.altitudo;
+}
+
+interior b32
+punctum_intra (
+    Fines a,
+    Fines f)
+{
+    redde a.x >= f.x && a.y >= f.y && a.x < f.x + f.latitudo
+        && a.y < f.y + f.altitudo;
+}
+
+interior b32
+color_thematis_est (
+    ColorMandati c,
+             i32 signum)
+{
+    redde c.genus == COLOR_MANDATI_THEMA && c.valor == signum;
+}
+
+/* linea coloris liturgici cellulae: rectangulum plenum II pixelorum ad
+ * sinistrum, altitudine cellulae; NIHIL si nulla */
+interior constans Mandatum*
+linea_coloris (
+    Mandata* md,
+      Fines  f)
+{
+    constans Mandatum* x;
+                  i32  i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        x = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   x->genus          == MANDATUM_RECTANGULUM && x->impletum
+            && x->fines.x        == f.x && x->fines.y == f.y
+            && x->fines.latitudo == II
+            && x->fines.altitudo == f.altitudo)
+        {
+            redde x;
+        }
+    }
+    redde NIHIL;
+}
+
+interior b32
+colores_aequales (
+    constans Mandatum* a,
+    constans Mandatum* b)
+{
+    redde a && b && a->color.genus == b->color.genus
+        && a->color.valor == b->color.valor;
+}
+
+/* signa in cellula: quadrata III x III, plena aut vacua */
+interior i32
+signa_numerare (
+    Mandata* md,
+      Fines  f,
+        b32  plena)
+{
+    constans Mandatum* x;
+                  i32  i;
+                  i32  n;
+
+    n = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        x = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   x->genus == MANDATUM_RECTANGULUM
+            && x->fines.latitudo == III
+            && x->fines.altitudo == III && intra(x->fines, f)
+            && (x->impletum ? VERUM : FALSUM) == plena)
+        {
+            n++;
+        }
+    }
+    redde n;
+}
+
+/* textus in cellula (puncto initii) qui praefixum fert */
+interior b32
+textus_in (
+                 Mandata* md,
+                   Fines  f,
+      constans character* praefixum)
+{
+    constans Mandatum* x;
+                  i32  i;
+                  i32  n;
+
+    n = (i32)strlen(praefixum);
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        x = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   x->genus == MANDATUM_TEXTUS && punctum_intra(x->fines, f)
+            && x->textus.mensura > ZEPHYRUM
+            && memcmp(x->textus.datum, praefixum,
+                   (size_t)(x->textus.mensura
+                       < n ? x->textus.mensura : n))
+               == ZEPHYRUM
+            && x->textus.mensura >= (n < III ? n : III))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+interior b32
+textus_ullus_continet (
+                Mandata* md,
+     constans character* pars)
+{
+    constans Mandatum* x;
+                  i32  i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        x = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   x->genus == MANDATUM_TEXTUS
+            && chorda_continet(x->textus, chorda_ex_literis(pars,
+                   md->piscina)))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* figurae: titulus, hodie, electa, colores liturgici, festum, signa */
+interior vacuum
+_probare_figuras (
+    CredoContextus* c)
+{
+                 Mundus* x;
+                Mandata* md;
+      constans Mandatum* r;
+                    i32  i;
+                  Fines  f;
+                    s32  a;
+                    s32  b;
+                   Dies  d;
+
+    x = (Mundus*)c->datum;
+    thema_initiare();
+    x->volumen = volumen_temporarium(c->piscina,
+        "probatio_kalendarium");
+    CREDO_NECESSE_NON_NIHIL(x->volumen);
+    x->documentum = agenda_aperire(c->piscina, x->intern, x->volumen,
+        "agenda", ZEPHYRUM);
+    CREDO_NECESSE_NON_NIHIL(x->documentum);
+    a = agenda_rem_creare(x->documentum, chorda_ex_literis("a",
+        c->piscina));
+    b = agenda_rem_creare(x->documentum, chorda_ex_literis("b",
+        c->piscina));
+    d = fasti_dies(MMXXVI, X, XIV);
+    (vacuum)agenda_diem_ponere(x->documentum, a, &d);
+    d = fasti_dies(MMXXVI, X, XIII);
+    (vacuum)agenda_diem_ponere(x->documentum, b, &d);
+    (vacuum)agenda_perficere(x->documentum, b, d);
+    CREDO_NECESSE(mundum_struere(x, c->piscina, NIHIL));
+    md = mandata_creare(c->piscina, x->intern);
+    pingere(dispensator_arbor(x->d), x->m.figurae, ZEPHYRUM, md);
+
+    CREDO_VERUM(textus_ullus_continet(md, "October 2026"));
+    /* hodie: numerus inversus (rectangulum accentus) in cellula XIV */
+    f = cellula(x, "2026-10-14", c->piscina);
+    r = NIHIL;
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa) && !r; i++)
+    {
+        constans Mandatum* y;
+
+        y = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   y->genus == MANDATUM_RECTANGULUM && y->impletum
+            && intra(y->fines, f)
+            && color_thematis_est(y->color, COLOR_ACCENT_PRIMARY))
+        {
+            r = y;
+        }
+    }
+    CREDO_NON_NIHIL(r);
+    /* electa (= hodie): margo activus finibus cellulae */
+    r = NIHIL;
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa) && !r; i++)
+    {
+        constans Mandatum* y;
+
+        y = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   y->genus          == MANDATUM_RECTANGULUM && !y->impletum
+            && y->fines.x        == f.x && y->fines.y == f.y
+            && y->fines.latitudo == f.latitudo
+            && color_thematis_est(y->color, COLOR_BORDER_ACTIVE))
+        {
+            r = y;
+        }
+    }
+    CREDO_NON_NIHIL(r);
+    /* colores: VII et XV (memoriae, albus) aequales; XX et XXI (feriae
+     * per annum, viridis) aequales; albus != viridis, albus != XIX
+     * (memoria martyrum, ruber) */
+    CREDO_VERUM(colores_aequales(linea_coloris(md, cellula(x,
+        "2026-10-15", c->piscina)), linea_coloris(md, cellula(x,
+        "2026-10-07", c->piscina))));
+    CREDO_VERUM(colores_aequales(linea_coloris(md, cellula(x,
+        "2026-10-20", c->piscina)), linea_coloris(md, cellula(x,
+        "2026-10-21", c->piscina))));
+    CREDO_FALSUM(colores_aequales(linea_coloris(md, cellula(x,
+        "2026-10-15", c->piscina)), linea_coloris(md, cellula(x,
+        "2026-10-20", c->piscina))));
+    CREDO_FALSUM(colores_aequales(linea_coloris(md, cellula(x,
+        "2026-10-15", c->piscina)), linea_coloris(md, cellula(x,
+        "2026-10-19", c->piscina))));
+    /* festum in cellula XV (praecisum) */
+    CREDO_VERUM(textus_in(md, cellula(x, "2026-10-15", c->piscina),
+        "St. Teresa of Avila"));
+    /* signa: XIV res aperta (plenum I), XIII perfecta (vacuum I) */
+    CREDO_AEQUALIS_I32(signa_numerare(md, cellula(x, "2026-10-14",
+        c->piscina), VERUM), I);
+    CREDO_AEQUALIS_I32(signa_numerare(md, cellula(x, "2026-10-13",
+        c->piscina), FALSUM), I);
+    CREDO_AEQUALIS_I32(signa_numerare(md, cellula(x, "2026-10-13",
+        c->piscina), VERUM), ZEPHYRUM);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "montatio",     _probare_montationem,   mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
@@ -360,6 +616,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "argumentum",   _probare_argumentum,    mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { "persistentia", _probare_conservationem, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "figurae",      _probare_figuras,       mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

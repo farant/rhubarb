@@ -4,7 +4,12 @@
  * restituitur - aliter domini scripturam tacite recusant). */
 
 #include "kalendarium.h"
+#include "calendarium_liturgicum.h"
+#include "color.h"
+#include "mandatum.h"
+#include "thema.h"
 
+#include <stdio.h>
 #include <string.h>
 
 hic_manens constans character actio_calendarii[] = "calendarium.agere";
@@ -12,6 +17,15 @@ hic_manens constans character actio_calendarii[] = "calendarium.agere";
 #define KALENDARIUM_TITULI_ALTITUDO  XVI
 #define KALENDARIUM_LATITUDO         CCLXXX   /* superficies absens */
 #define KALENDARIUM_ALTITUDO         CCLVI
+#define KALENDARIUM_LITTERA          VI       /* latitudo glyphi */
+#define KALENDARIUM_LINEA            VIII     /* altitudo glyphi */
+#define KALENDARIUM_SIGNA_MAXIMA     IV
+
+/* contextus figurarum (privatus; figurae_ctx): liturgia semel creata */
+nomen structura {
+    KalendariumMontatio* m;
+  CalendariumLiturgicum* liturgia;
+} KalendariumFigurae;
 
 
 /* ==================================================
@@ -184,6 +198,355 @@ agere (
 
 
 /* ==================================================
+ * Figurae (A2b)
+ * ================================================== */
+
+hic_manens constans character* constans menses_anglice[XII] = {
+    "January", "February", "March", "April", "May", "June", "July",
+    "August", "September", "October", "November", "December"
+};
+
+interior ColorMandati
+color_thematis (
+    i32 signum)
+{
+    ColorMandati c;
+
+    c.genus = COLOR_MANDATI_THEMA;
+    c.valor = signum;
+    redde c;
+}
+
+/* colores liturgici RGB, ordine ColorLiturgicus (albus aureus: in fundo
+ * clarissimo videtur) */
+hic_manens constans i32 colores_liturgici[VI][III] = {
+    { CCXXX, CCV, CXX },     /* albus */
+    { CXC, XL, XL },         /* ruber */
+    { LX, CXL, LXX },        /* viridis */
+    { CXX, LX, CL },         /* violaceus */
+    { CCXXX, CXL, CLXX },    /* rosaceus */
+    { XXX, XXX, XXX }        /* niger */
+};
+
+interior ColorMandati
+color_liturgicus (
+    ColorLiturgicus color)
+{
+    ColorMandati c;
+             i32 k;
+
+    k        = ((i32)color < VI) ? (i32)color : ZEPHYRUM;
+    c.genus  = COLOR_MANDATI_RGBA;
+    c.valor  = color_ad_pixelum(color_ex_rgba(
+        (i8)colores_liturgici[k][ZEPHYRUM], (i8)colores_liturgici[k][I],
+        (i8)colores_liturgici[k][II], (i8)CCLV));
+    redde c;
+}
+
+interior b32
+dies_aequales (
+    Dies a,
+    Dies b)
+{
+    redde a.annus == b.annus && a.mensis == b.mensis
+        && a.dies == b.dies;
+}
+
+/* textus ad latitudinem (pixela) praecisus */
+interior chorda
+praecidere (
+    chorda textus,
+       s32 latitudo)
+{
+    s32 n;
+
+    n = latitudo / KALENDARIUM_LITTERA;
+    si (n < ZEPHYRUM)
+    {
+        n = ZEPHYRUM;
+    }
+    si (textus.mensura > (i32)n)
+    {
+        textus.mensura = (i32)n;
+    }
+    redde textus;
+}
+
+interior vacuum
+rectangulum (
+         Mandata* md,
+             s32  x,
+             s32  y,
+             s32  latitudo,
+             s32  altitudo,
+    ColorMandati  color,
+             b32  impletum)
+{
+    Fines f;
+
+    f.x         = x;
+    f.y         = y;
+    f.latitudo  = latitudo;
+    f.altitudo  = altitudo;
+    mandata_rectangulum(md, f, color, impletum);
+}
+
+/* signa (apertae, perfectae) diei ex signis mensium praesentium */
+nomen structura {
+             s32 annus;
+             s32 mensis;
+    AgendaSignum signa[XXXI];
+} SignaMensis;
+
+interior constans AgendaSignum*
+signum_diei (
+    constans SignaMensis* menses,
+                     i32  numerus,
+                    Dies  dies)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        si (   menses[i].annus  == dies.annus
+            && menses[i].mensis == dies.mensis)
+        {
+            redde &menses[i].signa[dies.dies - I];
+        }
+    }
+    redde NIHIL;
+}
+
+/* cellula una (in spatio tabulae; cellulae liberi tabulae in 0,0) */
+interior vacuum
+cellulam_pingere (
+       KalendariumFigurae* contextus,
+                  Mandata* md,
+                    Fines  f,
+                     Dies  dies,
+                     Dies  electa,
+                     Dies  hodierna,
+    constans AgendaSignum* signum)
+{
+     InformatioDiei* info;
+          character  numerus[IV];
+             chorda  textus;
+                b32  alienus;
+                s32  x;
+                i32  k;
+                i32  apertae;
+                i32  perfectae;
+
+    alienus = dies.mensis != electa.mensis
+        || dies.annus != electa.annus;
+    info = NIHIL;
+    si (contextus->liturgia)
+    {
+        info = calendarium_obtinere_diem(contextus->liturgia, dies,
+            md->piscina);
+    }
+    si (info)
+    {
+        rectangulum(md, f.x, f.y, II, f.altitudo,
+            color_liturgicus(info->color_diei), VERUM);
+    }
+    /* numerus diei: hodie inversus, alieni obscuri */
+    numerus[ZEPHYRUM]  = (character)(dies.dies >= X ? '0' + dies.dies
+        / X
+                                                    : ' ');
+    numerus[I]   = (character)('0' + dies.dies % X);
+    numerus[II]  = '\0';
+    textus = chorda_ex_literis(dies.dies >= X ? numerus : numerus + I,
+        md->piscina);
+    si (dies_aequales(dies, hodierna))
+    {
+        rectangulum(md, f.x + III, f.y + I, (s32)textus.mensura
+            * KALENDARIUM_LITTERA + II, KALENDARIUM_LINEA + I,
+            color_thematis(COLOR_ACCENT_PRIMARY), VERUM);
+        mandata_textus(md, f.x + IV, f.y + I, textus, ZEPHYRUM,
+            color_thematis(COLOR_BACKGROUND));
+    }
+    alioquin
+    {
+        mandata_textus(md, f.x + IV, f.y + I, textus, ZEPHYRUM,
+            color_thematis(alienus ? COLOR_TEXT_DIM : COLOR_TEXT));
+    }
+    /* festum: memoria aut maius, aut dominica */
+    si (   info && info->celebratio_principalis
+        && (   info->celebratio_principalis->gradus >= GRADUS_MEMORIA
+            || info->tempus_info.est_dominica))
+    {
+        mandata_textus(md, f.x + IV, f.y + KALENDARIUM_LINEA + III,
+            praecidere(info->celebratio_principalis->titulus_brevis,
+            f.latitudo - VI), ZEPHYRUM, color_thematis(alienus
+            ? COLOR_TEXT_DIM : COLOR_TEXT));
+    }
+    /* signa: plena = apertae, vacua = perfectae; IV summum, '+' */
+    apertae    = signum ? signum->apertae : ZEPHYRUM;
+    perfectae  = signum ? signum->perfectae : ZEPHYRUM;
+    x          = f.x + IV;
+    per (k = ZEPHYRUM; k < apertae + perfectae; k++)
+    {
+        si (k == KALENDARIUM_SIGNA_MAXIMA)
+        {
+            mandata_textus(md, x, f.y + f.altitudo - KALENDARIUM_LINEA
+                - I, chorda_ex_literis("+", md->piscina), ZEPHYRUM,
+                color_thematis(COLOR_TEXT_DIM));
+            frange;
+        }
+        rectangulum(md, x, f.y + f.altitudo - V, III, III,
+            color_thematis(k < apertae ? COLOR_ACCENT_PRIMARY
+                                       : COLOR_SUCCESS), k < apertae);
+        x += V;
+    }
+    si (dies_aequales(dies, electa))
+    {
+        rectangulum(md, f.x, f.y, f.latitudo, f.altitudo,
+            color_thematis(COLOR_BORDER_ACTIVE), FALSUM);
+    }
+}
+
+/* <figura/> <purus/> tabula: fundus et cellulae omnes (liberi
+ * PARTES_ITEM quorum id = dies ISO); dies liturgici et signa semel per
+ * quadrum */
+interior vacuum
+figura_tabulae (
+    constans Componens* c,
+               Mandata* md,
+                   i32  thema,
+                vacuum* ctx)
+{
+    KalendariumFigurae* contextus;
+           SignaMensis  menses[III];
+                   i32  numerus;
+                   i32  i;
+                  Dies  electa;
+                  Dies  hodierna;
+                  Dies  dies;
+             Componens* l;
+
+    (vacuum)thema;
+    contextus = (KalendariumFigurae*)ctx;
+    rectangulum(md, ZEPHYRUM, ZEPHYRUM, c->fines.latitudo,
+        c->fines.altitudo, color_thematis(COLOR_BACKGROUND), VERUM);
+    si (!contextus || !contextus->m)
+    {
+        redde;
+    }
+    electa    = kalendarium_dies_electus(contextus->m);
+    hodierna  = hodie(contextus->m);
+    /* signa mensium cellularum (III summum: prior, electus, sequens) */
+    numerus = ZEPHYRUM;
+    per (i = ZEPHYRUM; contextus->m->documentum
+        && i < componens_numerus_liberorum(c); i++)
+    {
+        l = componens_liberum(c, i);
+        si (   l->partes != PARTES_ITEM
+            || !fasti_parsare_iso(l->id, &dies)
+            || signum_diei(menses, numerus, dies) || numerus >= III)
+        {
+            perge;
+        }
+        menses[numerus].annus   = dies.annus;
+        menses[numerus].mensis  = dies.mensis;
+        si (agenda_signa_mensis(contextus->m->documentum, dies.annus,
+                dies.mensis, menses[numerus].signa))
+        {
+            numerus++;
+        }
+    }
+    per (i = ZEPHYRUM; i < componens_numerus_liberorum(c); i++)
+    {
+        l = componens_liberum(c, i);
+        si (l->partes == PARTES_ITEM && fasti_parsare_iso(l->id, &dies))
+        {
+            cellulam_pingere(contextus, md, l->fines, dies, electa,
+                hodierna,
+                signum_diei(menses, numerus, dies));
+        }
+    }
+}
+
+/* <figura/> <purus/> titulus: "October 2026 · tempus", deinde litterae
+ * dierum sub columnis */
+interior vacuum
+figura_tituli (
+    constans Componens* c,
+               Mandata* md,
+                   i32  thema,
+                vacuum* ctx)
+{
+                        character  litterae[VIII];
+               KalendariumFigurae* contextus;
+                   InformatioDiei* info;
+                             Dies  electa;
+                        character  titulus[LXIV];
+                           chorda  textus;
+                              s32  columna;
+                              i32  j;
+
+    (vacuum)thema;
+    contextus = (KalendariumFigurae*)ctx;
+    si (!contextus || !contextus->m)
+    {
+        redde;
+    }
+    electa = kalendarium_dies_electus(contextus->m);
+    sprintf(titulus, "%s %d", menses_anglice[electa.mensis - I],
+        (integer)electa.annus);
+    textus  = chorda_ex_literis(titulus, md->piscina);
+    info    = NIHIL;
+    si (contextus->liturgia)
+    {
+        info = calendarium_obtinere_diem(contextus->liturgia, electa,
+            md->piscina);
+    }
+    si (info)
+    {
+        textus = chorda_concatenare(textus, chorda_ex_literis(" - ",
+            md->piscina), md->piscina);
+        textus = chorda_concatenare(textus, calendarium_nomen_temporis(
+            info->tempus_info.tempus, FALSUM, md->piscina),
+            md->piscina);
+    }
+    mandata_textus(md, IV, ZEPHYRUM, praecidere(textus,
+        c->fines.latitudo - VIII), ZEPHYRUM,
+        color_thematis(COLOR_TEXT));
+    columna = c->fines.latitudo / VII;
+    strcpy(litterae, "SMTWTFS");
+    per (j = ZEPHYRUM; j < VII; j++)
+    {
+        textus.datum    = (i8*)(litterae + j);
+        textus.mensura  = I;
+        mandata_textus(md, (s32)j * columna + (columna
+            - KALENDARIUM_LITTERA) / II, KALENDARIUM_LINEA, textus,
+            ZEPHYRUM, color_thematis(COLOR_TEXT_DIM));
+    }
+}
+
+interior b32
+figuras_registrare (
+    KalendariumMontatio* m)
+{
+    KalendariumFigurae* contextus;
+
+    contextus = (KalendariumFigurae*)piscina_allocare(m->piscina,
+        magnitudo(KalendariumFigurae));
+    si (!contextus)
+    {
+        redde FALSUM;
+    }
+    contextus->m         = m;
+    contextus->liturgia  = calendarium_creare(m->piscina);
+    m->figurae_ctx       = contextus;
+    redde figura_registrare(m->figurae, PARTES_TABULA, ZEPHYRUM,
+               figura_tabulae, contextus)
+        && figura_registrare(m->figurae, PARTES_TITULUS, ZEPHYRUM,
+               figura_tituli, contextus);
+}
+
+
+/* ==================================================
  * Montatio
  * ================================================== */
 
@@ -232,7 +595,8 @@ kalendarium_montare (
     m->actiones  = actio_registrum_creare(piscina, intern);
     m->figurae   = figura_registrum_creare(piscina);
     si (   !m->actiones || !m->figurae
-        || !actio_registrare(m->actiones, actio_calendarii, agere, m))
+        || !actio_registrare(m->actiones, actio_calendarii, agere, m)
+        || !figuras_registrare(m))
     {
         redde FALSUM;
     }
@@ -283,6 +647,7 @@ nodus (
                 Piscina* p,
     InternamentumChorda* in,
      constans character* id,
+                 Partes  partes,
                     s32  x,
                     s32  y,
                     s32  latitudo,
@@ -291,7 +656,7 @@ nodus (
     Componens* c;
         Fines  f;
 
-    c = componens_creare(p, in, id, PARTES_NULLUM);
+    c = componens_creare(p, in, id, partes);
     si (!c)
     {
         redde NIHIL;
@@ -336,8 +701,8 @@ kalendarium_componere (
         KALENDARIUM_LATITUDO);
     altitudo  = attributum_s32(&m->ramus, "superficies_altitudo",
         KALENDARIUM_ALTITUDO);
-    radix = nodus(piscina, intern, "kalendarium", ZEPHYRUM, ZEPHYRUM,
-        latitudo, altitudo);
+    radix = nodus(piscina, intern, "kalendarium", PARTES_TABULA,
+        ZEPHYRUM, ZEPHYRUM, latitudo, altitudo);
     si (!radix)
     {
         redde NIHIL;
@@ -345,7 +710,8 @@ kalendarium_componere (
     componens_ponere_focusabilis(radix, VERUM);
     componens_ponere_actio(radix, actio_calendarii);
     componens_addere_liberum(radix, nodus(piscina, intern, "titulus",
-        ZEPHYRUM, ZEPHYRUM, latitudo, KALENDARIUM_TITULI_ALTITUDO));
+        PARTES_TITULUS, ZEPHYRUM, ZEPHYRUM, latitudo,
+        KALENDARIUM_TITULI_ALTITUDO));
     /* VI hebdomades x VII, dominica prima ante aut in die I */
     electus = kalendarium_dies_electus(m);
     initium = fasti_dies(electus.annus, electus.mensis, I);
@@ -358,7 +724,7 @@ kalendarium_componere (
         dies     = fasti_addere_dies(initium, (s32)k);
         cellula  = nodus(piscina, intern, chorda_ut_cstr(
             fasti_formare_diem(dies, FASTI_FORMA_ISO, piscina),
-            piscina),
+            piscina), PARTES_ITEM,
             (s32)(k % VII) * lat_cellulae, KALENDARIUM_TITULI_ALTITUDO
             + (s32)(k / VII) * alt_cellulae, lat_cellulae,
             alt_cellulae);

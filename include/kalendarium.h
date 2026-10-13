@@ -9,10 +9,22 @@
  * (vicus: tempus_* radicis; probationes: dies fixa), numquam ex
  * systemate.
  *
- * ARBOR (visus mensis): radix "kalendarium" (focusabilis, actio
- * calendarium.agere) > "titulus" + cellulae XLII (VI hebdomades x VII,
- * dominica prima) quarum id = dies ISO ("2026-10-14"), actio eadem.
- * Cellula prima = dominica ante aut in die I mensis electi.
+ * ARBOR (visus mensis): radix "kalendarium" (PARTES_TABULA,
+ * focusabilis, actio calendarium.agere) > "titulus" (PARTES_TITULUS)
+ * + cellulae XLII (PARTES_ITEM; VI hebdomades x VII, dominica prima)
+ * quarum id = dies ISO ("2026-10-14"), actio eadem. Cellula prima =
+ * dominica ante aut in die I mensis electi.
+ *
+ * FIGURAE (A2b; registrum montationis, spatium lateris): tabula =
+ * fundus ET cellulae omnes - figura una, dies liturgici et signa
+ * semel per quadrum computantur (cellulae ipsae figuram non habent;
+ * figurae purae manent); titulus = mensis et annus (Anglice, ut
+ * horologium vici) et tempus liturgicum, deinde litterae dierum (S M
+ * T W T F S); in cellula: numerus diei (mensis alieni obscurus,
+ * hodie inversus), linea coloris liturgici ad sinistrum, festum
+ * (titulus brevis: memoria aut maius, aut dominica) ad latitudinem
+ * praecisum, signa rerum infra (quadrata plena = apertae, vacua =
+ * perfectae; IV summum, deinde '+'), dies electa margine activo.
  *
  * CLAVES: h/l dies -1/+1, k/j hebdomas -1/+1, H/L mensis -1/+1 (dies
  * ad finem mensis praecisa), t hodie. ICTUS in cellula diem eligit.
@@ -50,6 +62,7 @@ nomen structura {
                   vacuum* hodie_ctx;
                  Piscina* piscina;
      InternamentumChorda* intern;
+                  vacuum* figurae_ctx;   /* A2b: privatum (liturgia) */
 } KalendariumMontatio;
 
 /* montare in repositorio dato: id NIHIL = radix; aliter liberum

@@ -149,8 +149,11 @@ State-model question to settle before A2 (A1 is content only).
     42-cell grid (id = ISO date), keys h/l/j/k/H/L/t, click, argument;
     vicus genus + `$calendarium`, one shared agenda document, clock
     port.
-  - **A2b** drawing: liturgical colour + feast, marks, today/selection
-    (screenshot).
+  - **A2b** DONE 2026-10-13 (lib/kalendarium.worklog.md): one pure
+    figure on the root draws all cells (colour bar, feast, marks,
+    today, selection); title with season and weekday letters; 51 us
+    per month render at 1000 items, no cache. Found: liturgical
+    library ranks OT Sundays above solemnities (parcum ...KC11SH).
 - **A3 — day view**: feast, items of the day, tick/untick, reassign,
   notes.
 - **A4 — todo view/editor** `$agenda`: all incomplete items (whatever

@@ -40,3 +40,40 @@ probatio_vicus_kalendarium (two panes, argument, clock port, shared
 document). Plants: Monday-first grid, unshared document, dead clock
 port - all red. ludus_tessera's hand list needed "agenda" and
 "kalendarium" (vicus_applicatio links them).
+
+## 2026-10-13 — A2b: drawing the month
+
+Parts: root `PARTES_TABULA`, title `PARTES_TITULUS`, cells
+`PARTES_ITEM` - no new Partes value (figures are per pane namespace, so
+existing values cannot collide). Fran asked whether a liturgical-day
+cache belonged in the liturgical library: it already caches the costly
+part (movable-feast anchors per year, in its own pool); a day lookup is
+cheap. So NO cache. First design (root computes into a per-frame
+scratch the cells read) would have broken figura.h's purity rule
+(figures write nothing but commands, lint L2) - final design (c): ONE
+figure on the root draws background and all 42 cells, walking its
+children (positions + ISO ids); cells have no figure; liturgy and
+agenda marks computed once per frame. Measured: full month render with
+1000 agenda items = 51 us.
+
+Cell: number (other month dimmed, today inverted on the accent colour),
+2 px liturgical colour bar (RGB table by ColorLiturgicus; "white" drawn
+gold so it shows on the light theme), feast short title for memorials
+and above or Sundays, cut to the cell width, marks (3x3 filled = open,
+hollow = completed, 4 then '+'), selected = active border. Title:
+"October 2026 - <season>" (season names come Latin from the library)
+plus S M T W T F S over the columns.
+
+Test bug found a LIBRARY bug: Nov 1 2026 (Sunday) comes back as
+"Dominica XXXI per Annum", green - All Saints outranks Ordinary Time
+Sundays. GRADUS_DOMINICA (V) > GRADUS_SOLLEMNITAS (IV) for every
+Sunday. Parked in the ledger (parcum ...KC11SH), not fixed here. Colour
+checks use unambiguous days (Oct 7/15 white memorials, Oct 19 red
+memorial, Oct 20/21 green ferias). Plant: constant colour -> red.
+
+Commit side-trip: the first A2b commit failed ludus_tessera at LINK time
+- kalendarium now calls calendarium_liturgicum, and ludus_tessera's
+hand-written library list (vicus_applicatio links kalendarium) lacked
+it and sanctorale. Rule: when a library vicus links gains a NEW library
+dependency (not only when a new lib file appears), run
+./ludus_tessera/compile_probationes.sh before committing.
