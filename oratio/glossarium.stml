@@ -1621,5 +1621,14 @@
     <forma textus="reproducibile" casus="nominativus" numerus="singularis" genus="neutrum"/>
     <forma textus="reproducibilia" casus="nominativus" numerus="pluralis" genus="neutrum"/>
   </vocabulum>
+  <vocabulum lemma="orthogonalizo" lingua="latina" classis="verbum" nota="Neo-Lat. (Gr. orthogonios): vectores orthogonales reddere - Gram-Schmidt; sedes reticulum_orthogonaliza (include/reticulum.h, reticulum-plan T1)">
+    <forma textus="orthogonalizare" tempus="praesens" modus="infinitivus" vox="activa" forma-verbi="infinitivum"/>
+    <forma textus="orthogonaliza" persona="II" numerus="singularis" tempus="praesens" modus="imperativus" vox="activa"/>
+    <forma textus="orthogonalizatio" nota="nomen actionis"/>
+  </vocabulum>
+  <vocabulum lemma="orthogonalis" lingua="latina" classis="adiectivum" nota="Neo-Lat. (Gr. orthogonios, rectangulus): ad angulos rectos - vectores quorum productum interius nullum est; sedes Orthogonalis (lib/reticulum.c)">
+    <forma textus="orthogonalis" casus="nominativus" numerus="singularis"/>
+    <forma textus="orthogonales" casus="nominativus" numerus="pluralis"/>
+  </vocabulum>
 
 </glossarium>

@@ -19,10 +19,11 @@
 #     piscinam ipse reficit, sed icosianos super extensionem et Q per
 #     sanitatores agit), radices (acervus VCA per notas LIFO, opus post
 #     quodque opus et quamque bisectionem refectum), cellae (candidata
-#     catalogi refutata piscinam ad notam reficiunt), sub veneno et
+#     catalogi refutata piscinam ad notam reficiunt), reticulum (officina
+#     per vocationem publicam, effecta transcripta), sub veneno et
 #     sanitatoribus.
 # Exitus 0 sana | 1 FRACTA | 2 nihil actum.
-# <porta titulus="venenum" tegit="probationes/probatio_extensio.c probationes/probatio_fractio.c probationes/probatio_laqueus.c probationes/probatio_magnus.c probationes/probatio_matrix.c probationes/probatio_piscina.c probationes/probatio_polynomium.c probationes/probatio_quaternio.c probationes/probatio_radices.c probationes/probatio_situs.c" currit="lib/anulus.c lib/congruentia.c lib/cyclotomia.c lib/extensio.c lib/fractio.c lib/laqueus.c lib/magnus.c lib/matrix.c lib/polynomium.c lib/quaternio.c lib/radices.c lib/situs.c"/>
+# <porta titulus="venenum" tegit="probationes/probatio_extensio.c probationes/probatio_fractio.c probationes/probatio_laqueus.c probationes/probatio_magnus.c probationes/probatio_matrix.c probationes/probatio_piscina.c probationes/probatio_polynomium.c probationes/probatio_quaternio.c probationes/probatio_radices.c probationes/probatio_reticulum.c probationes/probatio_situs.c" currit="lib/anulus.c lib/congruentia.c lib/cyclotomia.c lib/extensio.c lib/fractio.c lib/laqueus.c lib/magnus.c lib/matrix.c lib/polynomium.c lib/quaternio.c lib/radices.c lib/reticulum.c lib/situs.c"/>
 set -u
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$RADIX" || exit 2
@@ -80,7 +81,9 @@ lib/anulus.c lib/matrix.c lib/cyclotomia.c lib/extensio.c lib/quaternio.c" \
 lib/anulus.c lib/matrix.c lib/cyclotomia.c lib/extensio.c lib/radices.c" \
     "cellae:lib/magnus.c lib/fractio.c lib/polynomium.c lib/congruentia.c \
 lib/anulus.c lib/matrix.c lib/cyclotomia.c lib/extensio.c lib/quaternio.c \
-lib/friatio.c lib/tabula_dispersa.c lib/radices.c lib/cellae.c"; do
+lib/friatio.c lib/tabula_dispersa.c lib/radices.c lib/cellae.c" \
+    "reticulum:lib/magnus.c lib/fractio.c lib/polynomium.c lib/congruentia.c \
+lib/anulus.c lib/matrix.c lib/reticulum.c"; do
     titulus="${suita%%:*}"
     read -r -a fontes <<< "${suita#*:}"
     if ! clang "${VEXILLA_C89[@]}" -Wno-overlength-strings -Iinclude \

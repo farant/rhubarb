@@ -199,6 +199,7 @@ declare -a SOURCE_FILES=(
     "lib/registrum_widget.c"
     "lib/relatio.c"
     "lib/rete_posix.c"
+    "lib/reticulum.c"
     "lib/rivus_terminalis.c"
     "lib/router.c"
     "lib/runae.c"

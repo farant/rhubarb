@@ -82,6 +82,11 @@ Each task follows the house cycle:
   Credo: hand-computed 2x2 and 3x3 cases; a basis that is size-reduced
   but fails Lovasz at delta = 99/100 and passes at 3/4; dependent rows
   refused.
+  *(2026-10-13: landed with two form-variant additions,
+  `reticulum_formam_orthogonaliza` and `reticulum_formam_est_reducta`,
+  which T2's tests need. 1,591 checks against an in-test textbook
+  Gram-Schmidt and Bareiss; 12 plants red, one only after a reduced
+  dimension >= 3 regime was added to the tests. See the worklog.)*
 - **T2. Integral LLL.** `reticulum_reduce` and `reticulum_formam_reduce`
   on one integral core, with the `u` certificate and statistics.
   Credo: output judged by `est_reductum`; u unimodular; same lattice
