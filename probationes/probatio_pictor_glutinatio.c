@@ -20,6 +20,14 @@
 #include "imago_typus.h"
 #include "tabula_pixelorum.h"
 #include "pictor_documentum.h"
+#include "insula.h"
+#include "motus.h"
+#include "componens.h"
+#include "mandatum.h"
+#include "figura.h"
+#include "delineare_mandata.h"
+#include "pictor_componentia.h"
+#include "pictor_figurae.h"
 #include <string.h>
 
 #define LATUS_DOC CDLXXX
@@ -322,6 +330,115 @@ _sectio_iterum (
     CREDO_FALSUM(pictor_documentum_glutinationem_parare(NIHIL, &im));
 }
 
+/* compositio + figurae + rasterizatio: praevisio modi electi pingitur
+ * ad locum suum, fons imaginum eam reddit, linea status A / B / OK / X */
+interior vacuum
+_sectio_figura (
+    CredoContextus* c)
+{
+                 Volumen* vol;
+        PictorDocumentum* doc  = _documentum(c, &vol);
+                   Imago  im   = _imago_ficta(c->piscina);
+     InternamentumChorda* in   = internamentum_creare(c->piscina);
+      InsulaRepositorium* repo;
+                   Motus  motus;
+        PictorCompositio  cfg;
+           PictorFigurae  pf;
+         FiguraRegistrum* reg;
+                 Mandata* m;
+               Componens* arbor;
+         TabulaPixelorum* t;
+                     i32  n;
+                     i32  i;
+                     i32  imagines      = ZEPHYRUM;
+                     i32  praevisiones  = ZEPHYRUM;
+                     i32  litterae      = ZEPHYRUM;
+                     i32  k;
+                     s32  px = -I;
+                     s32  py = -I;
+
+    CREDO_NECESSE_NON_NIHIL(doc);
+    CREDO_NECESSE(pictor_documentum_glutinationem_parare(doc, &im));
+    repo = insula_repositorium_creare(c->piscina, in,
+        "<pictor latitudo=\"480\" altitudo=\"480\""
+        " instrumentum=\"penicillus\" zoom=\"1\" glutinatio=\"B\"/>");
+    motus_initiare(&motus, c->piscina);
+    memset(&cfg, ZEPHYRUM, magnitudo(cfg));
+    cfg.fenestra_latitudo = D;
+    cfg.fenestra_altitudo = D + LX;
+    cfg.cellula_latitudo = VI;
+    cfg.cellula_altitudo = VIII;
+    cfg.status_lineae = IV;
+    cfg.doc = doc;
+    arbor = pictor_componere(repo, &motus, c->piscina, in, &cfg);
+    CREDO_NECESSE_NON_NIHIL(arbor);
+
+    pf.doc               = doc;
+    pf.cellula_latitudo  = VI;
+    pf.cellula_altitudo  = VIII;
+    reg                  = figura_registrum_creare(c->piscina);
+    pictor_figurae_registrare(reg, ZEPHYRUM, &pf);
+    m = mandata_creare(c->piscina, in);
+    pingere(arbor, reg, ZEPHYRUM, m);
+    n = mandata_numerus(m);
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        Mandatum* x = mandata_obtinere(m, i);
+        si (x->genus == MANDATUM_IMAGO)
+        {
+            imagines++;
+            si (   x->textus.mensura > XI
+                && memcmp(x->textus.datum, "glutinatio:", XI)
+                    == ZEPHYRUM)
+            {
+                praevisiones++;
+                CREDO_VERUM(pictor_imago_fons(x->textus, &pf)
+                    == &doc->glutinatio.praevisio[PICTOR_GLUTINATIO_EXEMPLARIA]);
+                CREDO_AEQUALIS_S32(x->fines.latitudo,
+                    (s32)doc->glutinatio.latitudo);
+                CREDO_AEQUALIS_S32(x->fines.altitudo,
+                    (s32)doc->glutinatio.altitudo);
+            }
+        }
+        si (   x->genus == MANDATUM_TEXTUS
+            && (chorda_aequalis_literis(x->textus, "A")
+                || chorda_aequalis_literis(x->textus, "B")
+                || chorda_aequalis_literis(x->textus, "OK")
+                || chorda_aequalis_literis(x->textus, "X")))
+        {
+            litterae++;
+        }
+    }
+    CREDO_AEQUALIS_I32(imagines, II);
+    CREDO_AEQUALIS_I32(praevisiones, I);
+    CREDO_AEQUALIS_I32(litterae, IV);
+
+    /* rasterizatio: pixelum non perspicuum praevisionis in tabula
+     * (ad originem tabulae VI, VIII) colorem praevisionis habet */
+    per (k = ZEPHYRUM; k
+        < doc->glutinatio.latitudo * doc->glutinatio.altitudo; k++)
+    {
+        si (doc->glutinatio.indices[PICTOR_GLUTINATIO_EXEMPLARIA][k]
+            < XVI)
+        {
+            px = (s32)(k % doc->glutinatio.latitudo);
+            py = (s32)(k / doc->glutinatio.latitudo);
+            frange;
+        }
+    }
+    CREDO_NECESSE(px >= ZEPHYRUM);
+    t = tabula_pixelorum_creare_nuda(c->piscina, D, D + LX);
+    tabula_pixelorum_vacare(t, ZEPHYRUM);
+    delineare_mandata(m, t, pictor_imago_fons, &pf);
+    CREDO_AEQUALIS_I32((i32)tabula_pixelorum_obtinere_pixelum(t,
+        (i32)(VI + doc->glutinatio.x + px), (i32)(VIII
+            + doc->glutinatio.y + py)),
+        ((constans i32*)(constans vacuum*)
+            doc->glutinatio.praevisio[PICTOR_GLUTINATIO_EXEMPLARIA].pixela)
+            [py * (s32)doc->glutinatio.latitudo + px]);
+    (vacuum)vol;
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "parare", _sectio_parare, _parare, _purgare, NIHIL, NIHIL },
     { "confirmare exemplaria", _sectio_confirmare, _parare, _purgare,
@@ -330,6 +447,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         _purgare, NIHIL, NIHIL },
     { "abicere", _sectio_abicere, _parare, _purgare, NIHIL, NIHIL },
     { "parare iterum", _sectio_iterum, _parare, _purgare, NIHIL,
+        NIHIL },
+    { "praevisio in figura", _sectio_figura, _parare, _purgare, NIHIL,
         NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

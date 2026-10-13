@@ -1665,6 +1665,7 @@
     <forma textus="praevisioni" casus="dativus" numerus="singularis" genus="femininum"/>
     <forma textus="praevisionem" casus="accusativus" numerus="singularis" genus="femininum"/>
     <forma textus="praevisione" casus="ablativus" numerus="singularis" genus="femininum"/>
+    <forma textus="praevisiones" casus="nominativus" numerus="pluralis" genus="femininum"/>
   </vocabulum>
   <vocabulum lemma="stilizo" lingua="latina" classis="verbum" nota="vox domus: stilo proprio reddere (regio stilizata = pictogrammate impleta)">
     <forma textus="stilizare" tempus="praesens" modus="infinitivus" vox="activa" forma-verbi="infinitivum"/>

@@ -268,6 +268,28 @@ figura_tabulae (
         mandata_rectangulum(m, margo, color_thematis(COLOR_BORDER),
                             FALSUM);
     }
+    /* glutinatio pendens ("glutinatio:<A|B>"): praevisio modi electi
+     * super compositum, ad locum suum; fons imaginum per sigillum */
+    si (   c->titulus.mensura > XI
+        && memcmp(c->titulus.datum, "glutinatio:", XI) == ZEPHYRUM
+        && pf->doc->glutinatio.pendens)
+    {
+        constans PictorGlutinatio* g = &pf->doc->glutinatio;
+                              i32  modus = c->titulus.datum[XI] == 'A'
+                                  ? (i32)PICTOR_GLUTINATIO_ATKINSON
+                                  : (i32)PICTOR_GLUTINATIO_EXEMPLARIA;
+        Fines locus;
+
+        locus.x         = g->x;
+        locus.y         = g->y;
+        locus.latitudo  = (s32)g->latitudo;
+        locus.altitudo  = (s32)g->altitudo;
+        mandata_imago(m,
+            chorda_concatenare(chorda_ex_literis("glutinatio:",
+            m->piscina), chorda_ex_literis(g->sigillum[modus],
+            m->piscina),
+            m->piscina), locus);
+    }
     /* aspergillum (actio): guttae puncti cuiusque ex semine, radio et
      * colore in titulo - eaedem ac in actu (pictor_gutta) et colore
      * vero, sine morae guttis (eae solutione apparent) */
@@ -402,6 +424,23 @@ pictor_imago_fons (
             pictor_documentum_sigillum_hex(pf->doc, pf->doc->piscina)))
     {
         redde pictor_documentum_proiectio(pf->doc);
+    }
+    /* glutinatio pendens: "glutinatio:<sigillum>" -> praevisio modi */
+    si (   pf->doc->glutinatio.pendens && provenientia.mensura > XI
+        && memcmp(provenientia.datum, "glutinatio:", XI) == ZEPHYRUM)
+    {
+        i32 k;
+        per (k = ZEPHYRUM; k < (i32)PICTOR_GLUTINATIO_MODI; k++)
+        {
+            si (   provenientia.mensura - XI
+                    == (i32)strlen(pf->doc->glutinatio.sigillum[k])
+                && memcmp(provenientia.datum + XI,
+                       pf->doc->glutinatio.sigillum[k],
+                       (size_t)(provenientia.mensura - XI)) == ZEPHYRUM)
+            {
+                redde &pf->doc->glutinatio.praevisio[k];
+            }
+        }
     }
     redde NIHIL;
 }
@@ -593,6 +632,18 @@ figura_quadrati (
     si (chorda_aequalis_literis(t, "instrumentum:linea"))
     {
         iconem_pingere(m, icon_lineae, II, II);
+        redde;
+    }
+    /* glutinatio pendens: "textus:<litterae>" centrata (A, B, OK, X) */
+    si (t.mensura > VII && memcmp(t.datum, "textus:", VII) == ZEPHYRUM)
+    {
+        s32 lx;
+
+        reliquum.datum = t.datum + VII;
+        reliquum.mensura = t.mensura - VII;
+        lx = (c->fines.latitudo - VIII * (s32)reliquum.mensura) / II;
+        mandata_textus(m, lx < II ? II : lx, (c->fines.altitudo - VIII)
+            / II, reliquum, ZEPHYRUM, color_thematis(COLOR_TEXT));
         redde;
     }
     /* L3 strata: '+' / '-' (strata:novum / strata:deletum), nomen

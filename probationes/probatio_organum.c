@@ -748,8 +748,10 @@ _probare_pictorem_vivum (
         a = stml_attributum_capere(d, "attributum");
         CREDO_NECESSE_NON_NIHIL(a);
         vetus = scriptor_domini(ante, chorda_ut_cstr(*a, c->piscina));
-        /* S5c: palette dominum NOVUM habet (olim sine domino) */
-        si (chorda_aequalis_literis(*a, "palette"))
+        /* S5c: palette dominum NOVUM habet (olim sine domino);
+         * glutinatio (2026-10-13) campus novus post S2 */
+        si (   chorda_aequalis_literis(*a, "palette")
+            || chorda_aequalis_literis(*a, "glutinatio"))
         {
             CREDO_NIHIL(vetus);
             novi++;
@@ -763,7 +765,7 @@ _probare_pictorem_vivum (
         }
         novi++;
     }
-    CREDO_AEQUALIS_S32(novi, XVII);
+    CREDO_AEQUALIS_S32(novi, XVIII);
 
     /* vetus sine novo: soli mortui */
     absentes = ZEPHYRUM;

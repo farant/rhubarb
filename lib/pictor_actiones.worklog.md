@@ -113,3 +113,29 @@ click outside the canvas cancels (Fran). Mechanics:
   FALSUM), so switching tool with p/a/e/l while a line is pending
   goes through instrumentum.eligere, which now drops the pending line
   (else the brush would inherit a captured 2-point preview).
+
+## 2026-10-13 - pending paste (glutinatio pendens), UI half (Fran)
+
+Cmd+V no longer creates a layer: imaginem_glutinare prepares the
+document's pending paste (both ditherings, outside the acta) and sets
+the transient field 'glutinatio' = "B". One action, glutinatio.agere,
+owns the field and dispatches on the button id (glutinatio.A / .B /
+.confirmare / .abicere), the strata.agere pattern - so one owner ever
+writes the field. Key paths (Esc, Return, Cmd+V-again) run inside
+instrumentum.eligere, so glutinationem_scribere sets repo->scriptor to
+"glutinatio.agere" for the write and restores it (memory: domini
+refuse silently otherwise). confirmare writes stratum_activum under
+"strata.agere" exactly like the old paste did.
+
+While pending, instrumentum.eligere handles ONLY Esc / Return / Cmd+V
+and returns FALSUM for every other key (tool letters, undo) - Fran:
+the canvas ignores drawing while a paste is pending; this is where
+resize / positioning will live later.
+
+Tests: probatio_pictor_imago II rewritten for the pending flow (+ II b:
+Esc, X, Return) - written after the code, so planted twice to see red
+(canvas action kept while pending -> red; Esc not discarding -> red),
+restored with plain cp. Owner counts in probatio_pictor_canones and
+probatio_organum went XVII -> XVIII (glutinatio is a new owned field;
+probatio_organum exempts it from the frozen pre-S2 owner table the
+same way it exempts S5c palette).
