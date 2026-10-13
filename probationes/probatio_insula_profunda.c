@@ -267,6 +267,73 @@ _probare_canones (
         c->piscina));
 }
 
+/* S8c: via -> ramus (inversum liberi); via mala recusatur */
+interior vacuum
+_probare_ex_via (
+    CredoContextus* c)
+{
+     InternamentumChorda* in;
+                   Arbor  x;
+             InsulaRamus  r;
+
+    in = internamentum_creare(c->piscina);
+    CREDO_NECESSE(arborem_struere(&x, c->piscina, in));
+    r = insula_ramus_ex_via(x.repo, chorda_ex_literis("a:a1/b:b1/c:c1",
+        c->piscina));
+    CREDO_VERUM(r.repo == x.repo);
+    CREDO_VERUM(r.via.datum == x.c.via.datum);
+    CREDO_CHORDA_AEQUALIS_LITERIS(r.elementum, "c");
+    CREDO_CHORDA_AEQUALIS_LITERIS(r.id, "c1");
+    CREDO_VERUM(insula_ramus_nodus(&r) == insula_ramus_nodus(&x.c));
+    /* vacua = radix */
+    r = insula_ramus_ex_via(x.repo, chorda_ex_literis("", c->piscina));
+    CREDO_VERUM(r.repo == x.repo);
+    CREDO_CHORDA_VACUA(r.via);
+    /* absens validus (nodus non quaeritur) */
+    r = insula_ramus_ex_via(x.repo, chorda_ex_literis("a:a1/z:z9",
+        c->piscina));
+    CREDO_VERUM(r.repo == x.repo);
+    CREDO_NIHIL(insula_ramus_nodus(&r));
+    /* malae */
+    CREDO_NIHIL(insula_ramus_ex_via(x.repo, chorda_ex_literis("a:a1/b",
+        c->piscina)).repo);
+    CREDO_NIHIL(insula_ramus_ex_via(x.repo, chorda_ex_literis(
+        "a:a1//b:b1", c->piscina)).repo);
+    CREDO_NIHIL(insula_ramus_ex_via(x.repo, chorda_ex_literis("a:a1/",
+        c->piscina)).repo);
+    CREDO_NIHIL(insula_ramus_ex_via(x.repo, chorda_ex_literis(":a1",
+        c->piscina)).repo);
+    CREDO_NIHIL(insula_ramus_ex_via(x.repo, chorda_ex_literis("a:",
+        c->piscina)).repo);
+}
+
+interior b32
+continet (
+    constans character* via,
+    constans character* descendens,
+               Piscina* p)
+{
+    redde insula_via_continet(chorda_ex_literis(via, p),
+        chorda_ex_literis(descendens, p));
+}
+
+/* S8c: continentia viarum per segmenta, non per praefixum */
+interior vacuum
+_probare_continentiam (
+    CredoContextus* c)
+{
+    CREDO_VERUM(continet("a:1", "a:1", c->piscina));
+    CREDO_VERUM(continet("a:1", "a:1/b:2", c->piscina));
+    CREDO_VERUM(continet("a:1", "a:1/b:2/c:3", c->piscina));
+    CREDO_FALSUM(continet("a:1", "a:10", c->piscina));
+    CREDO_FALSUM(continet("a:1", "a:10/b:2", c->piscina));
+    CREDO_FALSUM(continet("a:1/b:2", "a:1", c->piscina));
+    CREDO_FALSUM(continet("a:1", "b:1", c->piscina));
+    CREDO_VERUM(continet("", "a:1", c->piscina));
+    CREDO_VERUM(continet("", "", c->piscina));
+    CREDO_FALSUM(continet("a:1", "", c->piscina));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "via",          _probare_viam,          NIHIL, NIHIL, NIHIL,
         NIHIL },
@@ -277,6 +344,10 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "domini",       _probare_dominos,       NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "canones",      _probare_canones,       NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "ex_via",       _probare_ex_via,        NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "continentia",  _probare_continentiam,  NIHIL, NIHIL, NIHIL,
         NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

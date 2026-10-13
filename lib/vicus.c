@@ -520,7 +520,8 @@ est_imperium_tabulae (
 }
 
 /* DestinatioStrategia hospitis: Cmd+numerus ad radicem; ictus in
- * latus NON focatum (spatium destinati ab activo Motus.spatium differt)
+ * latus NON focatum (spatium destinati non sub Motus.spatium - S8c:
+ * organum nidificatum in latere focato idem latus est)
  * ad radicem - radix latus focat (S2a; ictus primus lateris, si vult,
  * etiam agit); cetera geometrica (Ctrl-A ad latus focatum) */
 interior Destinatio
@@ -545,7 +546,8 @@ destinare (
     {
         c   = destinatio_componens(&d);
         sp  = c ? componens_spatium(c) : chorda_nulla_vici();
-        si (!chorda_vacua(sp) && !chorda_aequalis(sp, motus->spatium))
+        si (   !chorda_vacua(sp)
+            && !insula_via_continet(motus->spatium, sp))
         {
             redde destinatio_ex_componente(arbor, piscina);
         }

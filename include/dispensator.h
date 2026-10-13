@@ -9,6 +9,20 @@
  * quemque, si motus quiescit, effundit (<quies/> in motus.c).
  * Derivata hic: mus_intravit/exiit (super), focus_captus/amissus,
  * focus_petitus (id foci ex arbore nova absens -> radici missum).
+ *
+ * CATENA FOCI (status-plan S8c): organum organa montare potest (via
+ * "pictor:1/ludibrium:liber"). Focus rami = id componentis in spatio
+ * suo, AUT segmentum liberi ("ludibrium:liber"; ':' in id componentis
+ * numquam): focus intra illum ramum est. Dispensator a Motus.ramus
+ * per segmenta descendit usque ad ramum cuius focus id est (aut
+ * vacuus) = Motus.ramus_intimus: focus et focus_acervus ibi leguntur
+ * et scribuntur, Tab ibi circuit. Ictus in componentem focusabilem
+ * spatii nidificati catenam scribit (quisque ramus a Motus.ramus
+ * segmentum proximum, ramus componentis id eius); ictus in gradu
+ * superiore catenam ibi praecidit - focus inferiorum manet, reditus
+ * eum restituit. Ramo intimo mutato pan/zoom sordida in priorem
+ * effunduntur. Gestus applicationis hospitis manet (organum
+ * nidificatum cum gestu proprio: postea, A6).
  */
 
 #ifndef DISPENSATOR_H
@@ -179,20 +193,24 @@ Componens*
 dispensator_arbor (
     constans Dispensator* d);
 
+/* in ramo intimo (S8c) */
 chorda
 dispensator_focus (
     Dispensator* d);
 
+/* in ramo intimo (S8c) */
 vacuum
 dispensator_focus_ponere (
      Dispensator* d,
           chorda  id);
 
+/* in ramo intimo (S8c) */
 vacuum
 dispensator_focus_impellere (
      Dispensator* d,
           chorda  id);
 
+/* in ramo intimo (S8c) */
 vacuum
 dispensator_focus_extrahere (
     Dispensator* d);

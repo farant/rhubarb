@@ -87,8 +87,10 @@ figura_invenire (
                     FiguraFn*  fn_ex,
                       vacuum** ctx_ex);
 
-/* Spatia (vicus-latera S2a): introitus fontis in spatium datum
- * (internatum - vivit cum registro); collisio solum intra idem
+/* Spatia (vicus-latera S2a; status-plan S8c): introitus fontis SINE
+ * spatio in spatium datum (internatum - vivit cum registro);
+ * introitus qui iam spatium habent (organa nidificata, a parente
+ * mixti) suum servant - via absoluta est. Collisio solum intra idem
  * spatium. figura_registrare et figura_invenire = spatium "";
  * figura_registrum_miscere spatium cuiusque introitus servat. */
 b32

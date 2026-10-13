@@ -149,6 +149,22 @@ insula_ramus_liberi (
       constans character* elementum,
       constans character* id);
 
+/* S8c: ramus ex via ("a:a1/b:b1"; vacua = radix) - inversum
+ * insula_ramus_liberi (via internatur). Via mala (segmentum sine ':'
+ * aut vacuum) = ramus cum repo NIHIL. Nodus non quaeritur: ramus
+ * absens validus est (ut insula_ramus). */
+InsulaRamus
+insula_ramus_ex_via (
+    InsulaRepositorium* repo,
+                chorda  via);
+
+/* S8c: VERUM si descendens = via aut sub ea - "a:1" continet "a:1"
+ * et "a:1/b:2", non "a:10". Via vacua (radix) omnia continet. */
+b32
+insula_via_continet (
+    chorda via,
+    chorda descendens);
+
 /* LECTIO SOLA; NIHIL si ramus abest */
 StmlNodus*
 insula_ramus_nodus (

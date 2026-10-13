@@ -60,11 +60,16 @@ nomen structura {
           b32  sordida;
       Piscina* piscina;
   MotusGestus  gestus;          /* S1a */
-  InsulaRamus  ramus;           /* T3a: ramus activus - focus et
-                                 * effusio pan/zoom; nullus = radix */
-       chorda spatium;         /* S2a: spatium activum - focus et
-                                 * captura intra id quaeruntur;
-                                 * vacuum = arbor tota */
+  InsulaRamus  ramus;           /* T3a: ramus activus ab hospite datus
+                                 * (vicus: latus focatum) = caput
+                                 * catenae foci; nullus = radix */
+       chorda spatium;         /* S2a: = ramus.via; vacuum = arbor
+                                 * tota */
+  /* S8c: ramus focatus INTIMUS - dispensator a ramo per catenam
+   * 'focus' descendit; focus, captura, effusio pan/zoom hic. repo
+   * NIHIL = idem ac ramus (sine dispensatore, sine nidificatione) */
+  InsulaRamus ramus_intimus;
+       chorda spatium_intimum;  /* = ramus_intimus.via */
 } Motus;
 
 nomen vacuum (*MotusMutator)(
@@ -100,7 +105,8 @@ motus_quies (
 
 /* <quies/> - scriptura UNA camporum persistendorum (pan, zoom) in
  * insulam per insula_mutare (C2: insula una); sordida tollitur si
- * porta accepit. */
+ * porta accepit. In ramum intimum (S8c; nullus = ramus, deinde
+ * radix). */
 b32
 motus_effundere (
                  Motus* motus,

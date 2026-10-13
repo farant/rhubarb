@@ -142,3 +142,41 @@ never work: the interner refuses empty strings. Test: probatio_spatium
 VI (scoped and unscoped); plant (branch disabled) caught by both.
 Full suites unchanged (236/236, ludus_tessera 8/8): nothing relied on
 the stale focus.
+
+## 2026-10-13 — status-plan S8c-2: focus chain
+
+Organs can mount organs (S8a/b), so focus needs to say "inside that
+child". Model (approved by Fran): a branch's `focus` holds a component
+id OR a child segment "elementum:id" (component ids never contain
+':'). `catenam_sequi` walks from the host-set head (`Motus.ramus`,
+root if none) through segments to the innermost branch and stores it in
+`Motus.ramus_intimus`/`spatium_intimum`; every focus read/write goes
+through it, so the chain is recomputed on each access (depth is tiny;
+bounded at XVI). The head's spatium is `Motus.spatium` as the host gave
+it, not `ramus.via` - probatio_spatium sets a spatium without any
+branch and must keep working.
+
+A click on a focusable component whose spatium lies under the head
+calls `catenam_scribere`: each branch from the head down gets the next
+segment, the component's branch gets the id. Clicks whose spatium is
+NOT under the head fall back to the old single write (depth-1
+behaviour, probatio_spatium IV). The "focus changed?" test now also
+compares spatia: "agere" at level 1 and "agere" at level 3 are
+different foci.
+
+Segments are relative, so a stored chain survives remounting the pane
+at another path. Lower branches keep their focus when a click cuts the
+chain higher up - clicking back restores it.
+
+Pan/zoom: if the click moves the innermost branch while Motus is dirty,
+it is effused into the branch being left first (mirrors vicus
+`motum_relinquere`); `motus_effundere` targets `ramus_intimus`. The
+host's gesture slot is untouched - a nested widget with its own gesture
+is deferred to A6.
+
+Test: probatio_catena_foci, toy `ludibrium` three deep mounted through
+`organum_ramum_parare` (so the generated canon judges the segment value
+in `focus` - textus, accepted). The effusion section uses bare branches
+because the toy manifest has no pan/zoom fields (manifest text is
+Fran's call, not worth changing for this). Plant: `catenam_scribere`
+refusing every nested spatium -> catena section red, reverted green.

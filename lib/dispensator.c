@@ -50,8 +50,10 @@ invenire_id (
     {
         redde NIHIL;
     }
-    /* S2a: intra spatium activum (vacuum = arbor tota) */
-    redde componens_invenire_in_spatio(d->arbor, d->motus.spatium, id);
+    /* S2a, S8c: intra spatium intimum (vacuum = arbor tota) */
+    redde componens_invenire_in_spatio(d->arbor,
+        d->motus.spatium_intimum,
+        id);
 }
 
 interior Componens*
@@ -104,6 +106,91 @@ nomen structura {
                 chorda  valor;
 } AttrCtx;
 
+/* S8c: focus segmentum liberi est ("elementum:id")? Ids componentium
+ * ':' numquam habent */
+interior b32
+segmentum_est (
+    chorda focus)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < focus.mensura; i++)
+    {
+        si (focus.datum[i] == ':')
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* S8c: ramus liberi ex segmento ("elementum:id"); repo NIHIL si
+ * segmentum malum aut nimis longum */
+interior InsulaRamus
+liberum_ex_segmento (
+    constans InsulaRamus* parens,
+                  chorda  segmentum)
+{
+    character elementum[LXIV];
+    character id[CXXVIII];
+          i32 i;
+          i32 colon;
+
+    colon = ZEPHYRUM;
+    dum (colon < segmentum.mensura && segmentum.datum[colon] != ':')
+    {
+        colon++;
+    }
+    i = segmentum.mensura - colon - I;
+    si (   colon == ZEPHYRUM || colon >= segmentum.mensura
+        || colon >= (i32)magnitudo(elementum) || i <= ZEPHYRUM
+        || i     >= (i32)magnitudo(id))
+    {
+        redde insula_ramus_radix(NIHIL);
+    }
+    memcpy(elementum, segmentum.datum, (size_t)colon);
+    elementum[colon] = '\0';
+    memcpy(id, segmentum.datum + colon + I, (size_t)i);
+    id[i] = '\0';
+    redde insula_ramus_liberi(parens, elementum, id);
+}
+
+/* S8c: catena foci - a capite (Motus.ramus; nullus = radix) per
+ * segmenta 'focus' descendit usque ad ramum cuius focus id est, aut
+ * vacuus, aut cuius liberum abest. Spatium capitis = Motus.spatium
+ * (ab hospite datum), inferiorum = via sua. */
+interior vacuum
+catenam_sequi (
+    Dispensator* d)
+{
+    InsulaRamus  r;
+    InsulaRamus  liber;
+         chorda  spatium;
+         chorda* f;
+            i32  gradus;
+
+    r        = d->motus.ramus.repo ? d->motus.ramus
+                                   : insula_ramus_radix(d->repo);
+    spatium  = d->motus.spatium;
+    per (gradus = ZEPHYRUM; gradus < XVI; gradus++)
+    {
+        f = insula_ramus_attributum(&r, "focus");
+        si (!f || !segmentum_est(*f))
+        {
+            frange;
+        }
+        liber = liberum_ex_segmento(&r, *f);
+        si (!liber.repo || !insula_ramus_nodus(&liber))
+        {
+            frange;
+        }
+        r        = liber;
+        spatium  = liber.via;
+    }
+    d->motus.ramus_intimus    = r;
+    d->motus.spatium_intimum  = spatium;
+}
+
 interior vacuum
 attr_ponere (
               StmlNodus* radix,
@@ -131,18 +218,34 @@ attr_legere (
            Dispensator* d,
     constans character* titulus)
 {
-         chorda* c;
-    InsulaRamus  ramus;
+    chorda* c;
 
-    /* T3a: focus in ramo activo (Motus; nullus = radix) */
-    ramus = d->motus.ramus.repo ? d->motus.ramus
-                                : insula_ramus_radix(d->repo);
-    c = insula_ramus_attributum(&ramus, titulus);
+    /* T3a, S8c: focus in ramo intimo catenae */
+    catenam_sequi(d);
+    c = insula_ramus_attributum(&d->motus.ramus_intimus, titulus);
     si (c)
     {
         redde *c;
     }
     redde chorda_nulla();
+}
+
+/* attributum in ramo dato, scriptore "dispensator" */
+interior vacuum
+attr_scribere_in (
+             Dispensator* d,
+    constans InsulaRamus* ramus,
+      constans character* titulus,
+                  chorda  valor)
+{
+    AttrCtx a;
+
+    a.titulus  = titulus;
+    a.valor    = valor;
+    insula_scriptorem_ponere(d->repo, chorda_ex_literis("dispensator",
+        d->piscina));
+    (vacuum)mutare_ramum(ramus, attr_ponere, &a);
+    insula_scriptorem_ponere(d->repo, chorda_nulla());
 }
 
 interior vacuum
@@ -151,18 +254,63 @@ attr_scribere (
     constans character* titulus,
                 chorda  valor)
 {
-        AttrCtx a;
-    InsulaRamus ramus;
+    /* S8c: in ramo intimo catenae */
+    catenam_sequi(d);
+    attr_scribere_in(d, &d->motus.ramus_intimus, titulus, valor);
+}
 
-    a.titulus  = titulus;
-    a.valor    = valor;
-    ramus      = d->motus.ramus.repo ? d->motus.ramus
-                                     : insula_ramus_radix(d->repo);
-        insula_scriptorem_ponere(d->repo,
-                             chorda_ex_literis("dispensator",
-                             d->piscina));
-    (vacuum)mutare_ramum(&ramus, attr_ponere, &a);
-    insula_scriptorem_ponere(d->repo, chorda_nulla());
+/* S8c: focus in componentem spatii P (P = caput aut sub eo): quisque
+ * ramus a capite usque ad parentem segmentum proximum viae P, ramus P
+ * id. FALSUM si P extra caput (nihil scribitur). Pan/zoom sordida
+ * ante in intimum relictum effunduntur si intimus mutatur. */
+interior b32
+catenam_scribere (
+    Dispensator* d,
+         chorda  spatium,
+         chorda  id)
+{
+    InsulaRamus r;
+         chorda segmentum;
+         chorda via;
+            i32 initium;
+            i32 finis;
+
+    si (!insula_via_continet(d->motus.spatium, spatium))
+    {
+        redde FALSUM;
+    }
+    catenam_sequi(d);
+    si (   d->motus.sordida
+        && !spatia_aequalia(d->motus.spatium_intimum, spatium))
+    {
+        (vacuum)motus_effundere(&d->motus, d->repo);
+    }
+    r        = d->motus.ramus.repo ? d->motus.ramus
+                                   : insula_ramus_radix(d->repo);
+    initium  = d->motus.spatium.mensura == ZEPHYRUM ? ZEPHYRUM
+             : d->motus.spatium.mensura + I;
+    dum (initium < spatium.mensura)
+    {
+        finis = initium;
+        dum (finis < spatium.mensura && spatium.datum[finis] != '/')
+        {
+            finis++;
+        }
+        segmentum.datum    = spatium.datum + initium;
+        segmentum.mensura  = finis - initium;
+        via.datum          = spatium.datum;
+        via.mensura        = finis;
+        attr_scribere_in(d, &r, "focus", segmentum);
+        r = insula_ramus_ex_via(d->repo, via);
+        si (!r.repo)
+        {
+            redde FALSUM;
+        }
+        initium = finis + I;
+    }
+    attr_scribere_in(d, &r, "focus", id);
+    catenam_sequi(d);
+    redde VERUM;
 }
 
 /* Superficies (modulus 013 B1): magnitudo superficiei STATUS est -
@@ -493,8 +641,9 @@ dispensator_addressare (
     {
         redde;
     }
-    /* id nudum: spatium activum (S2a) */
-    differre(d, d->motus.spatium, id, genus, tempus);
+    /* id nudum: spatium intimum (S2a, S8c) */
+    catenam_sequi(d);
+    differre(d, d->motus.spatium_intimum, id, genus, tempus);
 }
 
 /* Limen: differenda TUNC praesentia traduntur contra arborem novam;
@@ -615,7 +764,8 @@ tractare_unum (
     spatium_super = (   destinatum
                      && chorda_aequalis(destinatum->id,
                             des.id_geometricum))
-                  ? componens_spatium(destinatum) : d->motus.spatium;
+                  ? componens_spatium(destinatum)
+                  : d->motus.spatium_intimum;
     si (   e->genus == EVENTUS_MUS_MOTUS
         && (   !chorda_aequalis(des.id_geometricum, d->super)
             || !spatia_aequalia(spatium_super, d->super_spatium)))
@@ -629,14 +779,21 @@ tractare_unum (
             e->tempus);
     }
 
-    /* ictus dat focum */
+    /* ictus dat focum (S8c: idem id in gradu alio = focus alius;
+     * spatium nidificatum catenam scribit) */
     si (   e->genus == EVENTUS_MUS_DEPRESSUS && destinatum
         && destinatum->focusabilis
-        && !chorda_aequalis(destinatum->id, focus))
+        && (   !chorda_aequalis(destinatum->id, focus)
+            || !spatia_aequalia(componens_spatium(destinatum),
+                   d->motus.spatium_intimum)))
     {
         mittere_ad(d, invenire_id(d, focus), EVENTUS_FOCUS_AMISSUS,
                    e->tempus);
-        dispensator_focus_ponere(d, destinatum->id);
+        si (!catenam_scribere(d, componens_spatium(destinatum),
+                destinatum->id))
+        {
+            dispensator_focus_ponere(d, destinatum->id);
+        }
         mittere_ad(d, destinatum, EVENTUS_FOCUS_CAPTUS, e->tempus);
         focus = destinatum->id;
     }
@@ -663,7 +820,7 @@ tractare_unum (
         && e->datum.clavis.clavis == CLAVIS_TABULA)
     {
         /* S2a: circuitus intra spatium activum */
-        radix = radix_spatii(d->arbor, d->motus.spatium);
+        radix = radix_spatii(d->arbor, d->motus.spatium_intimum);
         focus_novus = !radix ? chorda_nulla()
             : (e->datum.clavis.modificantes & MOD_SHIFT)
             ? destinatio_focus_praecedens(radix, focus, d->scratch)

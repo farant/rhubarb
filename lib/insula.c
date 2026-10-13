@@ -1004,6 +1004,61 @@ insula_ramus_liberi (
     redde r;
 }
 
+InsulaRamus
+insula_ramus_ex_via (
+    InsulaRepositorium* repo,
+                chorda  via)
+{
+    InsulaRamus  r;
+         chorda  elementum;
+         chorda  id;
+         chorda* v;
+         chorda* e;
+         chorda* d;
+            i32  i;
+
+    r = insula_ramus_radix(repo);
+    si (!repo || chorda_vacua(via))
+    {
+        redde r;
+    }
+    /* omnia segmenta "elementum:id" plena; '/' finalis malus */
+    i = ZEPHYRUM;
+    dum (i < via.mensura)
+    {
+        si (   !segmentum_legere(via, &i, &elementum, &id)
+            || chorda_vacua(elementum) || chorda_vacua(id)
+            || (i == via.mensura && via.datum[i - I] == '/'))
+        {
+            redde insula_ramus_radix(NIHIL);
+        }
+    }
+    v = chorda_internare(repo->intern, via);
+    e = chorda_internare(repo->intern, elementum);
+    d = chorda_internare(repo->intern, id);
+    si (!v || !e || !d)
+    {
+        redde insula_ramus_radix(NIHIL);
+    }
+    r.via        = *v;
+    r.elementum  = *e;
+    r.id         = *d;
+    redde r;
+}
+
+b32
+insula_via_continet (
+    chorda via,
+    chorda descendens)
+{
+    si (chorda_vacua(via))
+    {
+        redde VERUM;
+    }
+    redde chorda_aequalis(via, descendens)
+        || via_descendens(via, descendens);
+}
+
 StmlNodus*
 insula_ramus_nodus (
     constans InsulaRamus* ramus)

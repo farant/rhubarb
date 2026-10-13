@@ -31,6 +31,8 @@ motus_initiare (
     memset(&motus->ramus, ZEPHYRUM, magnitudo(InsulaRamus));
     motus->spatium.mensura  = ZEPHYRUM;
     motus->spatium.datum    = NIHIL;
+    memset(&motus->ramus_intimus, ZEPHYRUM, magnitudo(InsulaRamus));
+    motus->spatium_intimum  = motus->spatium;
     motus->gestus.status    = NIHIL;
     motus->gestus.effusor   = NIHIL;
     motus->gestus.ctx       = NIHIL;
@@ -116,10 +118,11 @@ motus_effundere (
     {
         redde FALSUM;
     }
-    /* T3a: in ramum activum (nullus = radix) */
-    ramus = motus->ramus.repo ? motus->ramus : insula_ramus_radix(repo);
-        nulla.mensura = ZEPHYRUM;
-    nulla.datum = NIHIL;
+    /* T3a, S8c: in ramum intimum (nullus = ramus, deinde radix) */
+    ramus = motus->ramus_intimus.repo ? motus->ramus_intimus
+          : motus->ramus.repo ? motus->ramus : insula_ramus_radix(repo);
+        nulla.mensura  = ZEPHYRUM;
+    nulla.datum        = NIHIL;
     insula_scriptorem_ponere(repo, chorda_ex_literis("motus",
         motus->piscina));
     ok = mutare_ramum(&ramus, effusio_mutator, motus);

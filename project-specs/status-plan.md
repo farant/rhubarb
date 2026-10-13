@@ -156,13 +156,21 @@ widgets are migrated by hand.*
     the bare id; pictor/scriba `focatum_est` and scriba's page lookup
     compare with `ramus.via`. Behaviour unchanged at depth 1; tests
     that hard-coded ids as namespaces now say the path.
-  - **S8c-2** nested routing (header text to Fran first): registry
-    merge keeps entries that already carry a spatium; focus chain from
-    the pane branch down to the innermost focused branch (focus,
-    focus_acervus, Motus.ramus/spatium); `insula_ramus_ex_via`;
-    kinetic slot follows the innermost branch (scoped to the toy).
-    Test: toy widget three deep gets keys/clicks with its branch;
-    focus moves between levels.
+  - **S8c-2** DONE 2026-10-13 (lib/dispensator.worklog.md): nested
+    routing. Registry merge stamps only entries without a spatium
+    (nested ones keep their absolute path). Focus chain: a branch's
+    `focus` is a component id or a child segment "elementum:id";
+    the dispatcher follows segments from `Motus.ramus` (host-set
+    head) to `Motus.ramus_intimus`/`spatium_intimum`, where focus,
+    focus_acervus, Tab, capture, pan/zoom effusion and dimissio's
+    Esc act. A click in a nested spatium writes the chain; a click
+    higher cuts it (lower focus kept). `insula_ramus_ex_via`,
+    `insula_via_continet`; vicus counts a nested click as the same
+    pane. probatio_catena_foci (toy three deep under a real
+    dispatcher). Deferred, named: Tab between levels (keyboard into
+    or out of a nested widget) - when a real widget needs it; a
+    nested widget's OWN gesture slot (host's gesture stays) - A6,
+    calendar day view embedding scriba.
 - **S8d** measure: park 010 table + nested rows, `sample`; then judge
   touched branches only vs the persistent-tree arc.
 

@@ -99,12 +99,8 @@ ramus_nodi (
     InsulaRepositorium* repo,
              Componens* nodus)
 {
-    chorda sp;
-
-    /* spatium = via rami "pop:<id>" (status-plan S8c) */
-    sp = componens_spatium(nodus);
-    redde insula_ramus(repo, "pop", chorda_ut_cstr(chorda_sectio(sp, IV,
-        sp.mensura), repo->piscina));
+    /* spatium = via rami (status-plan S8c) */
+    redde insula_ramus_ex_via(repo, componens_spatium(nodus));
 }
 
 interior b32

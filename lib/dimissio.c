@@ -163,7 +163,7 @@ ante (
         {
             redde FALSUM;
         }
-        redde spatium_claudere(dim, d->motus.spatium);
+        redde spatium_claudere(dim, d->motus.spatium_intimum);
     }
     si (e->genus != EVENTUS_MUS_DEPRESSUS)
     {
@@ -173,7 +173,7 @@ ante (
                      > ZEPHYRUM)
         ? componens_spatium(*(Componens**)xar_obtinere(des->ascensus,
               ZEPHYRUM))
-        : d->motus.spatium;
+        : d->motus.spatium_intimum;
     consumptus = FALSUM;
     per (i = ZEPHYRUM; i < xar_numerus(dim->rami); i++)
     {

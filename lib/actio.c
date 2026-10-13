@@ -126,6 +126,21 @@ introitum_addere (
     *(chorda*)xar_addere(reg->spatia)       = spatium;
 }
 
+/* spatium introitus in registro: datum solum si introitus spatium non
+ * habet (S8c: organa nidificata viam absolutam ferunt); NIHIL =
+ * suum */
+interior chorda
+spatium_introitus (
+    constans ActioRegistrum* fons,
+                        i32  i,
+            constans chorda* spatium)
+{
+    chorda s;
+
+    s = *(chorda*)xar_obtinere(fons->spatia, i);
+    redde spatium && chorda_vacua(s) ? *spatium : s;
+}
+
 /* spatium NIHIL = spatium cuiusque introitus servatur */
 interior b32
 miscere (
@@ -145,8 +160,7 @@ miscere (
     /* collisio ulla: nihil additur */
     per (i = ZEPHYRUM; i < k; i++)
     {
-        s = spatium ? *spatium : *(chorda*)xar_obtinere(fons->spatia,
-            i);
+        s = spatium_introitus(fons, i, spatium);
         si (index_nominis(reg, s, *(chorda*)xar_obtinere(fons->nomina,
                 i)) >= ZEPHYRUM)
         {
@@ -155,8 +169,7 @@ miscere (
     }
     per (i = ZEPHYRUM; i < k; i++)
     {
-        s = spatium ? *spatium : *(chorda*)xar_obtinere(fons->spatia,
-            i);
+        s = spatium_introitus(fons, i, spatium);
         introitum_addere(reg, s, *(chorda*)xar_obtinere(fons->nomina,
             i),
             *(ActioFn*)xar_obtinere(fons->functiones, i),
