@@ -254,7 +254,9 @@ scriba_reficere (
         redde FALSUM;
     }
     sa       = &m->actiones_ctx;
-    mutatum  = m->doc != sa->doc;
+    /* $question: iussum dilatum (pictura nuntii prius, deinde verbum) */
+    mutatum  = scriba_iussum_dilatum_currere(sa);
+    mutatum  = (m->doc != sa->doc) || mutatum;
     m->doc   = sa->doc;
     si (paginam_indicare(m, mutatum))
     {

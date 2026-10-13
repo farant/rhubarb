@@ -175,3 +175,27 @@ is on the same line it shifts left by the head's length, handled. The
 cursor goes after the inserted text on the closer's line. Tested in
 probatio_vicus_iussa section "corpus" (two throwaway verbs, eco and
 ecoc; clicking inside the body runs nothing).
+
+## 2026-10-13 - deferred commands (effectus.differre) for $question
+
+Fran wants $question synchronous with a "loading..." message. A
+blocking call cannot paint, so a verb may DEFER: its first call returns
+differre + nuntius; iussum_exsequi shows the message and stores the
+command (sa->dilatum = I, copy of the Iussum). scriba_reficere (the
+pane pulse) calls scriba_iussum_dilatum_currere: stage I -> II returns
+VERUM (repaint: the message is now on screen), stage II relocates the
+command on the working sheet (same line, start column and verb, else
+"<verb>: evanuit"), runs the verb again with iussum->iterum, applies
+the effect and commits with scriba_documentum_committere - ONE change,
+'u' restores all. Writes to 'nuntius' (owner pagina.clavis) are made
+under that scriptor since the pulse runs outside any action.
+
+effectum_applicare is now shared by the click path and the deferred
+path: optional head replacement (effectus.caput, body verbs), then
+text whose '\n' segments become NEW lines below the insertion line.
+tabula_inserere_lineam refuses to push a non-blank last line off the
+page, so an answer can only consume trailing blank lines - extra
+segments are dropped, user text is never lost. Test: probatio_vicus_
+iussa "dilatum" (verb 'mora': message only, first pulse nothing,
+second pulse head + two lines, 'u' restores, deleted before the pulse
+-> evanuit).

@@ -68,6 +68,11 @@ nomen structura {
      * ramus proprius (scriba sola). Hospes post montationem ponit, ut
      * liber et iussa (vicus: radix - registrum unum applicationis) */
           InsulaRamus ramus_capsae;
+    /* $question (2026-10-13): iussum DILATUM (effectus.differre) -
+     * 0 nullum, I armatum (pulsus proximus picturam sinit), II
+     * currendum (pulsus sequens verbum iterum currit) */
+                  s32 dilatum;
+               Iussum iussum_dilatum;   /* locus et verbum ictus */
 } ScribaActiones;
 
 /* folium laboris = copia proiectionis documenti */
@@ -107,5 +112,15 @@ scriba_iussum_ad_punctum (
             ScribaActiones* sa,
         constans Componens* pagina,
                    Punctum  schirmi);
+
+/* pulsus (scriba_reficere): iussum dilatum (si quod) - gradus I ->
+ * II (pictura nuntii prius), gradus II: iussum in folio laboris
+ * relocatur (linea, initium, verbum idem; aliter nuntius
+ * "<verbum>: evanuit"), verbum iterum currit (iussum->iterum), effectus
+ * (caput, textus cum '\n', nuntius) in folium, commissio UNA. Redde
+ * VERUM si folium aut status mutatum (pictura repetenda) */
+b32
+scriba_iussum_dilatum_currere (
+    ScribaActiones* sa);
 
 #endif /* SCRIBA_ACTIONES_H */

@@ -83,6 +83,32 @@ segmentum (
     redde c;
 }
 
+/* lineae ALBAE in fine tabulae infra lineam 'post' (spatium responsi
+ * quod nihil delet) */
+interior s32
+lineae_liberae_numerare (
+    constans TabulaCharacterum* t,
+                           s32  post)
+{
+    s32 l;
+    s32 c;
+    s32 n;
+
+    n = ZEPHYRUM;
+    per (l = (s32)t->altitudo - I; l > post; l--)
+    {
+        per (c = ZEPHYRUM; c < (s32)t->latitudo; c++)
+        {
+            si (!spatium_est(cellula(t, l, c)))
+            {
+                redde n;
+            }
+        }
+        n++;
+    }
+    redde n;
+}
+
 /* corpus: '</>' primum a (linea, columna) - eadem linea aut
  * sequentibus; VERUM et locus '<' */
 interior b32
@@ -399,6 +425,10 @@ iussum_proximum (
         si (legere(t, linea, c, notum, ctx, piscina, exitus, VERUM,
             VERUM))
         {
+            exitus->latitudo_tabulae  = (s32)t->latitudo;
+            exitus->lineae_liberae    = lineae_liberae_numerare(t,
+                exitus->corpus ? exitus->linea_clausurae : exitus->linea);
+            exitus->iterum            = FALSUM;
             redde VERUM;
         }
     }
@@ -488,6 +518,9 @@ nexum_legere (
     exitus->corpus                = FALSUM;
     exitus->linea_clausurae       = linea;
     exitus->post_clausuram        = j;
+    exitus->latitudo_tabulae      = (s32)t->latitudo;
+    exitus->lineae_liberae        = ZEPHYRUM;
+    exitus->iterum                = FALSUM;
     redde VERUM;
 }
 

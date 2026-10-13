@@ -471,6 +471,23 @@ s32 principale (vacuum)
         CREDO_FALSUM(x.corpus);
         CREDO_AEQUALIS_S32(x.initium, XII);
 
+        /* spatium post iussum: latitudo tabulae, lineae ALBAE in fine
+         * paginae infra lineam clausurae (textus infra non numeratur) */
+        LINEAE("$dies<>a", "b</>", "", "");
+        CREDO_VERUM(AD(ZEPHYRUM, ZEPHYRUM, NIHIL));
+        CREDO_AEQUALIS_S32(x.latitudo_tabulae, XX);
+        CREDO_AEQUALIS_S32(x.lineae_liberae, II);
+        CREDO_FALSUM(x.iterum);
+        LINEAE("$dies<>a</>", "", "x", "");
+        CREDO_VERUM(AD(ZEPHYRUM, ZEPHYRUM, NIHIL));
+        CREDO_AEQUALIS_S32(x.lineae_liberae, I);
+        LINEAE("$dies", "", "", "y");
+        CREDO_VERUM(AD(ZEPHYRUM, ZEPHYRUM, NIHIL));
+        CREDO_AEQUALIS_S32(x.lineae_liberae, ZEPHYRUM);
+        LINEAE("$dies(1)", "", "", "");
+        CREDO_VERUM(AD(ZEPHYRUM, ZEPHYRUM, NIHIL));
+        CREDO_AEQUALIS_S32(x.lineae_liberae, III);
+
         /* corpus vacuum: argumenta nulla, ut '()' */
         LINEAE("$dies<></>", "", "", "");
         CREDO_VERUM(AD(ZEPHYRUM, ZEPHYRUM, NIHIL));

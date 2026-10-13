@@ -46,6 +46,13 @@ nomen structura {
        b32  corpus;             /* forma '<>...</>': argumentum unum */
        s32  linea_clausurae;    /* linea '</>' (corpus solum) */
        s32  post_clausuram;     /* columna post '</>' in ea */
+    /* spatium ($question, 2026-10-13): ex tabula ipsa computatum */
+       s32 latitudo_tabulae;   /* columnae paginae */
+       s32 lineae_liberae;     /* lineae ALBAE in fine paginae infra
+                                 * lineam clausurae (aut iussi): spatium
+                                 * responsi quod nihil delet */
+       b32 iterum;             /* hospes ponit in vocatione altera
+                                 * (effectus.differre) */
 } Iussum;
 
 /* iussum quod cellulam (linea, columna) tegit (initium <= columna <
@@ -107,6 +114,15 @@ nomen structura IussumRegistrum IussumRegistrum;   /* opacum */
 nomen structura {
     chorda textus;
     chorda error;
+    chorda nuntius;     /* linea status sine errore ("quaerens...") */
+    chorda caput;       /* corpus: caput '$verbum<>' hoc textu substituitur
+                         * (e.g. "<question answered>"); vacuum = ut
+                         * consumit dicit */
+       b32 differre;    /* vocatio prima: hospes nuntium ostendit et
+                         * functionem ITERUM vocat pulsu proximo (pictura
+                         * iam facta) cum iussum->iterum; textus tunc
+                         * '\n' continere potest: lineae novae infra
+                         * lineam clausurae, ex lineis albis finalibus */
 } IussumEffectus;
 
 nomen b32 (*IussumFunctio)(constans Iussum* iussum, vacuum* ctx,
