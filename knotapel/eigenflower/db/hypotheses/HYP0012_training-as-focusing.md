@@ -2,7 +2,7 @@
 id: HYP0012
 title: "Training-as-Focusing: training does not create computational structure, it locates pre-existing solutions on the algebraic lattice"
 status: proposed
-source: "knotapel/atlas/inventory/theorems.md (Forward DKC Theorem)"
+source: "knotapel/archived-analysis/atlas/inventory/theorems.md (Forward DKC Theorem)"
 evidence_for: []
 evidence_against: []
 testable_by: []

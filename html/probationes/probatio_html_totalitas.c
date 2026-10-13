@@ -62,7 +62,7 @@ hic_manens constans character* CORPUS[] = {
     "apps/villa/assets/index.html",
     "apps/mensor/assets/index.html",
     "tools/silex_assets/index.html",
-    "knotapel/atlas/web/index.html",
+    "probationes/fixa/html/knotapel_atlas_index_2026-02-26.html",
     "lib/speculum_assets/probatio_visus.html",
     "reference/aquinas-dithering-tool.html"
 };
