@@ -599,6 +599,46 @@ _clavem_thesauri_imprimere (
     redde ZEPHYRUM;
 }
 
+/* --radices (cursores ad gradus T6): radices inclusae aedilis.stml
+ * (sectio <inclusa>, ordine), una per lineam, radici relativae - FONS
+ * UNUS radicum pro scriptis quae clang ipsa vocant (tools/vexilla.sh
+ * vexilla_radices). Lector verus configurationis, non grep. Exitus 1 si
+ * aedilis.stml legi nequit. */
+interior s32
+_radices_imprimere (vacuum)
+{
+                Piscina* piscina;
+    AedilisConfiguratio* configuratio;
+                 chorda  causa;
+                    i32  i;
+
+    piscina = piscina_generare_dynamicum("aedilis_radices", 262144);
+    si (piscina == NIHIL)
+    {
+        redde 1;
+    }
+    causa.datum    = NIHIL;
+    causa.mensura  = 0;
+    configuratio = aedilis_configurationem_legere(piscina,
+        "aedilis.stml", &causa);
+    si (configuratio == NIHIL)
+    {
+        fprintf(stderr, "AEDILIS RECUSAT: %.*s\n", (s32)causa.mensura,
+            (constans character*)causa.datum);
+        piscina_destruere(piscina);
+        redde 1;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(configuratio->inclusa); i++)
+    {
+        chorda radix = *(chorda*)xar_obtinere(configuratio->inclusa, i);
+
+        printf("%.*s\n", (s32)radix.mensura,
+            (constans character*)radix.datum);
+    }
+    piscina_destruere(piscina);
+    redde ZEPHYRUM;
+}
+
 s32
 principale (
           s32   numerus_argumentorum,
@@ -630,6 +670,11 @@ principale (
         && strcmp(argumenta_cruda[1], "--clavis-thesauri") == 0)
     {
         redde _clavem_thesauri_imprimere(argumenta_cruda[0]);
+    }
+    si (   numerus_argumentorum                    == II
+        && strcmp(argumenta_cruda[1], "--radices") == 0)
+    {
+        redde _radices_imprimere();
     }
     piscina = piscina_generare_dynamicum("aedilis", 16777216);
     si (piscina == NIHIL)
@@ -719,7 +764,7 @@ principale (
         si (argumenta_numerus_positionalium(lecta) != 1)
         {
             fprintf(stderr,
-                "usus: aedilis <fons.c> [--varians <verbum>] | --corpus <dir> --partes\n");
+                "usus: aedilis <fons.c> [--varians <verbum>] | --corpus <dir> --partes | --radices\n");
             redde 1;
         }
         scopus       = argumenta_obtinere_positionalem(lecta, 0,

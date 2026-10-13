@@ -882,3 +882,22 @@ parallelism collides with the shared object cache (slice 2).
   an optimisation, not a truth. None of the slice's gates could see
   this, because they all run in warm trees. That is exactly what the
   fresh-clone check is for.
+
+## 2026-10-13 - `--radices`: one source of include roots (cursores ad gradus T6)
+
+`bin/aedilis --radices` prints aedilis.stml's `<inclusa>` roots, in
+order, one per line, read by aedilis_configurationem_legere (not grep).
+tools/vexilla.sh `vexilla_radices PRAEFIXUM` turns them into
+RADICES_C89 (-I flags, relative or prefixed); tools/cursor_communis.sh
+uses them when the caller sets no INCLUDE_FLAGS. Converted:
+compile_tests.sh (was a hand SUBSET, 8 of 32 roots - now the SAME roots
+the probationes_radicis members compile with), compile_tools.sh (3 of
+32), silva/haruspex.sh (two hand lists; keeps one named extra,
+-I$RADIX_DIR, the generated TUs include 'silva/fontes/x.h'), and the
+eight tool scripts T2-T4 had given hand lists. The other 118 scripts
+with hand -I are named debt in tools/radices_manu.tsv (via, causa) and
+gate vexilla VI is a ratchet: a script with hand roots NOT in the table
+is red, a table row whose script has none is red - the table only
+shrinks. aedilis_struere.sh stays hand (it builds bin/aedilis itself).
+Plants IV red (--radices off, helper empty, hand root re-added, row
+removed). The test came after the CLI this time - the plant is the red.

@@ -15,7 +15,6 @@ MD_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
 RADIX_DIR="$(cd "$MD_DIR/.." && pwd)"
 BUILD_DIR="$MD_DIR/build"
 BIN="$BUILD_DIR/census"
-declare -a INCLUDE_FLAGS=("-I$RADIX_DIR/include" "-I$RADIX_DIR/materia/fontes" "-I$MD_DIR/fontes")
 SRC="$MD_DIR/instrumenta/census.c"
 MODUS="${1:-}"
 PLAGULA="${2:-}"

@@ -95,11 +95,21 @@ Mechanism first, then the pilots in rising difficulty (gen 3 -> 2 -> 1
   355 s. Plants red (one by hand, link failure).
 
 ### T6: expedition rubric v3 + roots for what stays bash (D6)
-- [ ] rubric v3 ("to steps", recipe = T3-T5) with rows for the
+- [x] rubric v3 ("to steps", recipe = T3-T5) with rows for the
   remaining runners, class B marked as needing instrument declarations;
   `bin/aedilis --radices`; compile_tests.sh, silva/haruspex.sh,
   compile_tools.sh read it; check refusing hand `-I` lists in runners
   (plant). Commit.
+  As built (2026-10-13): rubric v3 = target steps + recipe + a NINE-point
+  inspection checklist (what the oracle cannot see: object linkers,
+  runner-written inputs, outside writes, env and test-as-tool modes,
+  output readers, binary paths, house binaries, split implementers,
+  hand roots); md, silva, css done under v3; briar, ludus_tessera
+  added (class B). `bin/aedilis --radices` + `vexilla_radices`;
+  compile_tests.sh, compile_tools.sh, haruspex and 8 tool scripts
+  derive their roots. 129 scripts had hand -I: 118 remain as named debt
+  in tools/radices_manu.tsv; gate vexilla VI is a two-way ratchet.
+  Plants IV red.
 
 ### T7: close
 - [ ] spec "As built", worklogs, MEMORY; merge per ritual.

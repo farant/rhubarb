@@ -11,7 +11,6 @@ MD_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
 RADIX_DIR="$(cd "$MD_DIR/.." && pwd)"
 BUILD_DIR="$MD_DIR/build"
 BIN="$BUILD_DIR/arbor"
-declare -a INCLUDE_FLAGS=("-I$RADIX_DIR/include" "-I$RADIX_DIR/materia/fontes" "-I$MD_DIR/fontes")
 SRC="$MD_DIR/instrumenta/arbor.c"
 source "$RADIX_DIR/tools/cursor_communis.sh"
 cursor_instrumenta_parare >&2 || exit 1

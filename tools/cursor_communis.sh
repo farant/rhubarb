@@ -3,8 +3,9 @@
 # thesaurum (fabrica plan 2, migratio ad compilatorem; exemplar toml T5
 # 215f88cc). FONTANDUM, non exsequendum.
 #
-# Vocator ante fontationem definit: RADIX_DIR, BUILD_DIR (absoluti),
-# GCC_FLAGS, INCLUDE_FLAGS (tabulae). Functiones:
+# Vocator ante fontationem definit: RADIX_DIR, BUILD_DIR (absoluti);
+# GCC_FLAGS (absens: VEXILLA_C89) et INCLUDE_FLAGS (absens: radices
+# aedilis.stml, vexilla_radices) optionales. Functiones:
 #   cursor_instrumenta_parare     bin/aedilis + bin/compilator (struit si
 #                                 absunt); THESAURUS unus (FABRICA_THESAURUS,
 #                                 ordinarie build/aedilis/obiecta)
@@ -30,6 +31,12 @@
 # praevalet; absens -> VEXILLA_C89
 source "$RADIX_DIR/tools/vexilla.sh"
 [ -n "${GCC_FLAGS[0]+x}" ] || GCC_FLAGS=("${VEXILLA_C89[@]}")
+# radices: INCLUDE_FLAGS vocatoris praevalet; absens -> aedilis.stml
+# <inclusa> per vexilla_radices (cursores ad gradus T6), absolutae
+if [ -z "${INCLUDE_FLAGS[0]+x}" ]; then
+    vexilla_radices "$RADIX_DIR/" || { echo "FRACTA: radices inclusae (bin/aedilis --radices)" >&2; return 1 2>/dev/null || exit 1; }
+    INCLUDE_FLAGS=("${RADICES_C89[@]}")
+fi
 
 cursor_instrumenta_parare () {
     [ -x "$RADIX_DIR/bin/aedilis" ] || "$RADIX_DIR/tools/aedilis_struere.sh" >&2 \
