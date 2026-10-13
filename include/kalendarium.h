@@ -58,6 +58,9 @@
  * reficere (agenda), n res nova, a nota, c titulus, D dies scripta
  * (vacua = sine die), r rubricae (A4b) - prompta (A3b); Esc ad mensem
  * (aut promptam claudit).
+ * Claves omnes per tabulam mandatorum (lib: titulus, descriptio,
+ * clavis, visus, requisita); littera cum Cmd aut Ctrl nullum mandatum
+ * est. Clavis visus cuius mandatum non praesto: consumpta, nisi Esc.
  * Argumentum "YYYY-MM": dies I eius mensis (aut hodie si in eo);
  * "agenda": visus agendae.
  *

@@ -504,46 +504,21 @@ electionem_reficere (
  * Actio
  * ================================================== */
 
-/* visus mensis: claves (h/l/j/k/H/L/t, Enter) et ictus in cellula
- * (id = dies ISO) */
+/* visus mensis: ictus in cellula (id = dies ISO) diem eligit; claves
+ * per tabulam mandatorum */
 interior b32
-agere_mensem (
+ictus_mensis (
     KalendariumMontatio* m,
-              Componens* nodus,
-       constans Eventus* ev)
+              Componens* nodus)
 {
     Dies d;
 
-    si (ev->genus == EVENTUS_MUS_DEPRESSUS)
+    si (   nodus && fasti_parsare_iso(nodus->id, &d)
+        && fasti_dies_valida(d))
     {
-        si (   nodus && fasti_parsare_iso(nodus->id, &d)
-            && fasti_dies_valida(d))
-        {
-            redde diem_scribere(m, d);
-        }
-        redde FALSUM;
+        redde diem_scribere(m, d);
     }
-    si (ev->genus != EVENTUS_CLAVIS_DEPRESSUS)
-    {
-        redde FALSUM;
-    }
-    si (ev->datum.clavis.clavis == CLAVIS_REDITUS)
-    {
-        redde campum_scribere(m, "visus", "dies");
-    }
-    d = kalendarium_dies_electus(m);
-    commutatio (ev->datum.clavis.producta)
-    {
-        casus 'h': d = fasti_addere_dies(d, -I);              frange;
-        casus 'l': d = fasti_addere_dies(d, I);               frange;
-        casus 'j': d = fasti_addere_dies(d, VII);             frange;
-        casus 'k': d = fasti_addere_dies(d, -VII);            frange;
-        casus 'H': d = fasti_addere_menses(d, -I);            frange;
-        casus 'L': d = fasti_addere_menses(d, I);             frange;
-        casus 't': d = hodie(m);                              frange;
-        ordinarius: redde FALSUM;
-    }
-    redde diem_scribere(m, d);
+    redde FALSUM;
 }
 
 
@@ -885,193 +860,500 @@ agere_promptam (
         st.cursor_columna, p);
 }
 
-/* visus diei: electio, perfectio, translatio, deletio, historia
- * agendae; ictus in ordine ("r<id>") eligit */
+/* visus indicis (dies, agenda): ictus in ordine ("r<id>", "r<id>-<k>")
+ * rem eligit; claves per tabulam mandatorum */
 interior b32
-agere_diem (
+ictus_ordinis (
     KalendariumMontatio* m,
-              Componens* nodus,
+              Componens* nodus)
+{
+    s32 id;
+
+    /* "r<id>" (dies) aut "r<id>-<grex>" (agenda) */
+    si (   nodus && nodus->id.mensura > I
+        && nodus->id.datum[ZEPHYRUM] == 'r')
+    {
+        chorda numerus;
+
+        numerus.datum    = nodus->id.datum + I;
+        numerus.mensura  = ZEPHYRUM;
+        dum (   numerus.mensura < nodus->id.mensura - I
+             && numerus.datum[numerus.mensura] != '-')
+        {
+            numerus.mensura++;
+        }
+        si (chorda_ut_s32(numerus, &id))
+        {
+            redde electionem_scribere(m, id);
+        }
+    }
+    redde FALSUM;
+}
+
+
+/* ==================================================
+ * Tabula mandatorum (claves; postea mus et index mandatorum)
+ * ================================================== */
+
+/* visus in quibus mandatum valet (larva) */
+#define VISUS_MENSIS   I
+#define VISUS_DIEI     II
+#define VISUS_AGENDAE  IV
+#define VISUS_INDICIS  (VISUS_DIEI | VISUS_AGENDAE)   /* ordines */
+
+/* requisita: quod mandatum praesto facit (data, non functio) */
+#define REQUIRIT_REM      I    /* res electa */
+#define REQUIRIT_FILTRUM  II   /* filtrum positum */
+
+/* contextus: semel per eventum computatus */
+nomen structura {
+    KalendariumMontatio* m;
+                Piscina* p;
+                   Dies  dies;       /* dies electa */
+                    Xar* ordines;    /* ordines currentes */
+                    s32  id;         /* res electa, 0 = nulla */
+                    i32  index;
+     constans AgendaRes* r;
+} ContextusMandati;
+
+nomen b32 (*MandatumFn)(
+    ContextusMandati* cm);
+
+nomen structura {
+     constans character* titulus;      /* "calendarium.perficere" */
+     constans character* descriptio;   /* "Complete / reopen item" */
+     constans character* clavis;       /* "x", "Enter", "Esc", "C-r" */
+                    i32  visus;        /* larva VISUS_* */
+                    i32  requisita;    /* larva REQUIRIT_* */
+             MandatumFn  fn;
+} MandatumKalendarii;
+
+interior b32
+fac_diem_priorem (
+    ContextusMandati* cm)
+{
+    redde diem_scribere(cm->m, fasti_addere_dies(cm->dies, -I));
+}
+
+interior b32
+fac_diem_proximum (
+    ContextusMandati* cm)
+{
+    redde diem_scribere(cm->m, fasti_addere_dies(cm->dies, I));
+}
+
+interior b32
+fac_hebdomadem_priorem (
+    ContextusMandati* cm)
+{
+    redde diem_scribere(cm->m, fasti_addere_dies(cm->dies, -VII));
+}
+
+interior b32
+fac_hebdomadem_proximam (
+    ContextusMandati* cm)
+{
+    redde diem_scribere(cm->m, fasti_addere_dies(cm->dies, VII));
+}
+
+/* dies ad finem mensis praecisa (fasti_addere_menses) */
+interior b32
+fac_mensem_priorem (
+    ContextusMandati* cm)
+{
+    redde diem_scribere(cm->m, fasti_addere_menses(cm->dies, -I));
+}
+
+interior b32
+fac_mensem_proximum (
+    ContextusMandati* cm)
+{
+    redde diem_scribere(cm->m, fasti_addere_menses(cm->dies, I));
+}
+
+interior b32
+fac_hodie (
+    ContextusMandati* cm)
+{
+    redde diem_scribere(cm->m, hodie(cm->m));
+}
+
+interior b32
+fac_diem_aperire (
+    ContextusMandati* cm)
+{
+    redde campum_scribere(cm->m, "visus", "dies");
+}
+
+/* res proxima/prior: res in gregibus pluribus iterata praetereunt */
+interior b32
+rem_gradi (
+    ContextusMandati* cm,
+                 s32  gradus)
+{
+    constans AgendaRes* proxima;
+                   s32  k;
+
+    si (cm->index == (i32)-I)
+    {
+        redde VERUM;
+    }
+    k = (s32)cm->index;
+    dum (   k + gradus >= ZEPHYRUM && k + gradus < (s32)xar_numerus(
+        cm->ordines))
+    {
+        k        += gradus;
+        proxima  = *(constans AgendaRes**)xar_obtinere(cm->ordines,
+            (i32)k);
+        si (proxima->id != cm->id)
+        {
+            redde electionem_scribere(cm->m, proxima->id);
+        }
+    }
+    redde VERUM;
+}
+
+interior b32
+fac_rem_proximam (
+    ContextusMandati* cm)
+{
+    redde rem_gradi(cm, I);
+}
+
+interior b32
+fac_rem_priorem (
+    ContextusMandati* cm)
+{
+    redde rem_gradi(cm, -I);
+}
+
+/* dies perfectionis = hodie ex porta; agenda: res perfecta abit -
+ * electio ad ordinem proximum */
+interior b32
+fac_perficere (
+    ContextusMandati* cm)
+{
+    (vacuum)(cm->r->perfecta
+        ? agenda_perfectionem_tollere(cm->m->documentum, cm->id)
+        : agenda_perficere(cm->m->documentum, cm->id, hodie(cm->m)));
+    si (visus_agendae(cm->m))
+    {
+        electionem_reficere(cm->m, cm->index, cm->p);
+    }
+    redde VERUM;
+}
+
+interior b32
+fac_delere (
+    ContextusMandati* cm)
+{
+    (vacuum)agenda_rem_delere(cm->m->documentum, cm->id);
+    electionem_reficere(cm->m, cm->index, cm->p);
+    redde VERUM;
+}
+
+interior b32
+fac_revocare (
+    ContextusMandati* cm)
+{
+    (vacuum)agenda_revocare(cm->m->documentum);
+    redde VERUM;
+}
+
+interior b32
+fac_reficere (
+    ContextusMandati* cm)
+{
+    (vacuum)agenda_reficere(cm->m->documentum);
+    redde VERUM;
+}
+
+/* res ad diem priorem/proximum (visus manet) */
+interior b32
+rem_movere (
+    ContextusMandati* cm,
+                 s32  gradus)
+{
+    Dies novus;
+
+    novus = fasti_addere_dies(cm->r->dies_posita ? cm->r->dies
+                                                 : cm->dies, gradus);
+    (vacuum)agenda_diem_ponere(cm->m->documentum, cm->id, &novus);
+    electionem_reficere(cm->m, cm->index, cm->p);
+    redde VERUM;
+}
+
+interior b32
+fac_rem_ante (
+    ContextusMandati* cm)
+{
+    redde rem_movere(cm, -I);
+}
+
+interior b32
+fac_rem_post (
+    ContextusMandati* cm)
+{
+    redde rem_movere(cm, I);
+}
+
+/* promptae (A3b): textus initialis, cursor in fine */
+interior b32
+promptam_aperire (
+      ContextusMandati* cm,
+    constans character* genus,
+                chorda  textus)
+{
+    redde promptam_scribere(cm->m, genus, (constans character*)
+        textus.datum, textus.mensura, textus.mensura, cm->p);
+}
+
+interior b32
+fac_novam (
+    ContextusMandati* cm)
+{
+    redde promptam_scribere(cm->m, "nova", "", ZEPHYRUM, ZEPHYRUM,
+        cm->p);
+}
+
+interior b32
+fac_notam (
+    ContextusMandati* cm)
+{
+    redde promptam_scribere(cm->m, "nota", "", ZEPHYRUM, ZEPHYRUM,
+        cm->p);
+}
+
+interior b32
+fac_titulum (
+    ContextusMandati* cm)
+{
+    redde promptam_aperire(cm, "titulus", cm->r->titulus);
+}
+
+/* dies scripta (vacua = sine die) */
+interior b32
+fac_diem_rei (
+    ContextusMandati* cm)
+{
+    chorda iso;
+
+    iso.datum    = NIHIL;
+    iso.mensura  = ZEPHYRUM;
+    si (cm->r->dies_posita)
+    {
+        iso = fasti_formare_diem(cm->r->dies, FASTI_FORMA_ISO, cm->p);
+    }
+    redde promptam_aperire(cm, "dies", iso);
+}
+
+interior b32
+fac_rubricas (
+    ContextusMandati* cm)
+{
+    redde promptam_aperire(cm, "rubricae", rubricas_iungere(cm->r,
+        cm->p));
+}
+
+/* filtrum (A4b): vacuum tollit, rubrica persistens */
+interior b32
+fac_filtrum (
+    ContextusMandati* cm)
+{
+    chorda* filtrum;
+    chorda  textus;
+
+    filtrum         = insula_ramus_attributum(&cm->m->ramus,
+        "rubrica_filtrum");
+    textus.datum    = NIHIL;
+    textus.mensura  = ZEPHYRUM;
+    si (filtrum)
+    {
+        textus = *filtrum;
+    }
+    redde promptam_aperire(cm, "filtrum", textus);
+}
+
+interior b32
+fac_filtrum_tollere (
+    ContextusMandati* cm)
+{
+    redde campum_scribere(cm->m, "rubrica_filtrum", "");
+}
+
+interior b32
+fac_mensem (
+    ContextusMandati* cm)
+{
+    redde campum_scribere(cm->m, "visus", "mensis");
+}
+
+/* tabula: clavis in visu UNO mandatum unum (mandata_verificare);
+ * descriptio Anglice (lingua interfaciei, ut horologium vici) */
+hic_manens constans MandatumKalendarii TABULA_MANDATORUM[] = {
+    { "calendarium.dies_prior", "Previous day", "h", VISUS_MENSIS
+        | VISUS_DIEI, ZEPHYRUM, fac_diem_priorem },
+    { "calendarium.dies_proximus", "Next day", "l", VISUS_MENSIS
+        | VISUS_DIEI, ZEPHYRUM, fac_diem_proximum },
+    { "calendarium.hebdomas_prior", "Previous week", "k", VISUS_MENSIS,
+        ZEPHYRUM, fac_hebdomadem_priorem },
+    { "calendarium.hebdomas_proxima", "Next week", "j", VISUS_MENSIS,
+        ZEPHYRUM, fac_hebdomadem_proximam },
+    { "calendarium.mensis_prior", "Previous month", "H", VISUS_MENSIS,
+        ZEPHYRUM, fac_mensem_priorem },
+    { "calendarium.mensis_proximus", "Next month", "L", VISUS_MENSIS,
+        ZEPHYRUM, fac_mensem_proximum },
+    { "calendarium.hodie", "Go to today", "t", VISUS_MENSIS, ZEPHYRUM,
+        fac_hodie },
+    { "calendarium.diem_aperire", "Open day", "Enter", VISUS_MENSIS,
+        ZEPHYRUM, fac_diem_aperire },
+    { "calendarium.res_proxima", "Next item", "j", VISUS_INDICIS,
+        ZEPHYRUM, fac_rem_proximam },
+    { "calendarium.res_prior", "Previous item", "k", VISUS_INDICIS,
+        ZEPHYRUM, fac_rem_priorem },
+    { "calendarium.perficere", "Complete / reopen item", "x",
+        VISUS_INDICIS, REQUIRIT_REM, fac_perficere },
+    { "calendarium.delere", "Delete item", "X", VISUS_INDICIS,
+        REQUIRIT_REM, fac_delere },
+    { "calendarium.revocare", "Undo", "u", VISUS_INDICIS, ZEPHYRUM,
+        fac_revocare },
+    { "calendarium.reficere", "Redo", "C-r", VISUS_INDICIS, ZEPHYRUM,
+        fac_reficere },
+    { "calendarium.nova", "New item", "n", VISUS_INDICIS, ZEPHYRUM,
+        fac_novam },
+    { "calendarium.nota", "Add note", "a", VISUS_INDICIS, REQUIRIT_REM,
+        fac_notam },
+    { "calendarium.titulus", "Edit title", "c", VISUS_INDICIS,
+        REQUIRIT_REM, fac_titulum },
+    { "calendarium.dies_rei", "Set date", "D", VISUS_INDICIS,
+        REQUIRIT_REM, fac_diem_rei },
+    { "calendarium.rubricae", "Edit rubrics", "r", VISUS_INDICIS,
+        REQUIRIT_REM, fac_rubricas },
+    { "calendarium.res_ante", "Move item to previous day", "<",
+        VISUS_DIEI, REQUIRIT_REM, fac_rem_ante },
+    { "calendarium.res_post", "Move item to next day", ">", VISUS_DIEI,
+        REQUIRIT_REM, fac_rem_post },
+    { "calendarium.ad_mensem", "Back to month", "Esc", VISUS_DIEI,
+        ZEPHYRUM, fac_mensem },
+    { "calendarium.filtrum", "Filter by rubric", "f", VISUS_AGENDAE,
+        ZEPHYRUM, fac_filtrum },
+    { "calendarium.filtrum_tollere", "Clear filter", "Esc",
+        VISUS_AGENDAE, REQUIRIT_FILTRUM, fac_filtrum_tollere },
+    { NIHIL, NIHIL, NIHIL, ZEPHYRUM, ZEPHYRUM, NIHIL }
+};
+
+interior i32
+visus_currens (
+    constans KalendariumMontatio* m)
+{
+    redde visus_agendae(m) ? VISUS_AGENDAE
+         : visus_diei(m)   ? VISUS_DIEI
+         :                   VISUS_MENSIS;
+}
+
+/* clavis eventus = forma tabulae? "Enter", "Esc", "C-r" (Ctrl), aut
+ * littera una SINE Ctrl/Cmd (Cmd chorda etiam ut clavis advenit) */
+interior b32
+clavis_congruit (
+    constans character* forma,
+      constans Eventus* ev)
+{
+    i32 mod;
+
+    mod = ev->datum.clavis.modificantes;
+    si (strcmp(forma, "Enter") == ZEPHYRUM)
+    {
+        redde ev->datum.clavis.clavis == CLAVIS_REDITUS;
+    }
+    si (strcmp(forma, "Esc") == ZEPHYRUM)
+    {
+        redde ev->datum.clavis.clavis == CLAVIS_EFFUGIUM;
+    }
+    si (forma[ZEPHYRUM] == 'C' && forma[I] == '-')
+    {
+        redde (mod & (i32)MOD_IMPERIUM)
+            && ev->datum.clavis.runa == (s32)(insignatus character)
+            forma[II];
+    }
+    redde !(mod & (i32)(MOD_IMPERIUM | MOD_SUPER))
+        && ev->datum.clavis.producta == (s32)(insignatus character)
+        forma[ZEPHYRUM];
+}
+
+/* tabula sana: omnia posita, clavis in visu uno semel (montatio
+ * aliter recusat - tabula fracta nulla probatione praeterit) */
+interior b32
+mandata_verificare (
+    vacuum)
+{
+    constans MandatumKalendarii* a;
+    constans MandatumKalendarii* b;
+
+    per (a = TABULA_MANDATORUM; a->titulus; a++)
+    {
+        si (!a->descriptio || !a->clavis || !a->fn || !a->visus)
+        {
+            redde FALSUM;
+        }
+        per (b = a + I; b->titulus; b++)
+        {
+            si (   (a->visus & b->visus)
+                && strcmp(a->clavis, b->clavis) == ZEPHYRUM)
+            {
+                redde FALSUM;
+            }
+        }
+    }
+    redde VERUM;
+}
+
+/* clavis -> mandatum visus currentis. Clavis visus sed mandatum non
+ * praesto: consumpta (nihil fit), nisi Esc - Esc hospiti transit
+ * (gradus sursum) */
+interior b32
+clavem_agere (
+    KalendariumMontatio* m,
        constans Eventus* ev,
                 Piscina* p)
 {
-                    Xar* l;
-     constans AgendaRes* r;
-                   Dies  d;
-                    s32  id;
-                    i32  index;
+    constans MandatumKalendarii* t;
+               ContextusMandati  cm;
+                            i32  visus;
+                            b32  praesto;
 
-    si (ev->genus == EVENTUS_MUS_DEPRESSUS)
+    visus = visus_currens(m);
+    per (t = TABULA_MANDATORUM; t->titulus; t++)
     {
-        si (   nodus && nodus->id.mensura > I
-            && nodus->id.datum[ZEPHYRUM] == 'r')
+        si ((t->visus & visus) && clavis_congruit(t->clavis, ev))
         {
-            chorda numerus;
-
-            /* "r<id>" (dies) aut "r<id>-<grex>" (agenda) */
-            numerus.datum    = nodus->id.datum + I;
-            numerus.mensura  = ZEPHYRUM;
-            dum (   numerus.mensura < nodus->id.mensura - I
-                 && numerus.datum[numerus.mensura] != '-')
-            {
-                numerus.mensura++;
-            }
-            si (chorda_ut_s32(numerus, &id))
-            {
-                redde electionem_scribere(m, id);
-            }
+            frange;
         }
-        redde FALSUM;
     }
-    si (ev->genus != EVENTUS_CLAVIS_DEPRESSUS)
+    si (!t->titulus)
     {
         redde FALSUM;
     }
-    si (ev->datum.clavis.clavis == CLAVIS_EFFUGIUM)
+    memset(&cm, ZEPHYRUM, magnitudo(cm));
+    cm.m      = m;
+    cm.p      = p;
+    cm.dies   = kalendarium_dies_electus(m);
+    cm.index  = (i32)-I;
+    si (visus & VISUS_INDICIS)
     {
-        si (!visus_agendae(m))
-        {
-            redde campum_scribere(m, "visus", "mensis");
-        }
-        /* agenda: Esc filtrum tollit (A4b); sine filtro nihil */
-        si (insula_ramus_attributum(&m->ramus, "rubrica_filtrum"))
-        {
-            redde campum_scribere(m, "rubrica_filtrum", "");
-        }
-        redde FALSUM;
+        cm.ordines  = ordines_currentes(m, p);
+        cm.id       = res_electa(m, cm.ordines);
+        cm.index    = index_rei(cm.ordines, cm.id);
+        cm.r        = (m->documentum && cm.id > ZEPHYRUM)
+                    ? agenda_res(m->documentum, cm.id) : NIHIL;
     }
-    si (   (ev->datum.clavis.modificantes & (i32)MOD_IMPERIUM)
-        && ev->datum.clavis.runa == 'r')
+    praesto = (!(t->requisita & REQUIRIT_REM) || cm.r)
+        && (   !(t->requisita & REQUIRIT_FILTRUM)
+            || insula_ramus_attributum(&m->ramus, "rubrica_filtrum"));
+    si (!praesto)
     {
-        (vacuum)agenda_reficere(m->documentum);
-        redde VERUM;
+        redde strcmp(t->clavis, "Esc") != ZEPHYRUM;
     }
-    d      = kalendarium_dies_electus(m);
-    l      = ordines_currentes(m, p);
-    id     = res_electa(m, l);
-    index  = index_rei(l, id);
-    r      = (m->documentum && id > ZEPHYRUM)
-           ? agenda_res(m->documentum, id) : NIHIL;
-    commutatio (ev->datum.clavis.producta)
-    {
-        casus 'j':
-        casus 'k':
-            si (index != (i32)-I)
-            {
-                 constans AgendaRes* proxima;
-                                s32  gradus;
-                                s32  k;
-
-                /* res in gregibus pluribus: iterata praetereunt */
-                gradus  = ev->datum.clavis.producta == 'j' ? I : -I;
-                k       = (s32)index;
-                dum (   k + gradus >= ZEPHYRUM
-                     && k + gradus < (s32)xar_numerus(l))
-                {
-                    k        += gradus;
-                    proxima  = *(constans AgendaRes**)xar_obtinere(l,
-                        (i32)k);
-                    si (proxima->id != id)
-                    {
-                        redde electionem_scribere(m, proxima->id);
-                    }
-                }
-            }
-            redde VERUM;
-        casus 'h':
-            redde !visus_agendae(m)
-                && diem_scribere(m, fasti_addere_dies(d, -I));
-        casus 'l':
-            redde !visus_agendae(m)
-                && diem_scribere(m, fasti_addere_dies(d, I));
-        casus 'u':
-            (vacuum)agenda_revocare(m->documentum);
-            redde VERUM;
-        casus 'x':
-            si (r)
-            {
-                (vacuum)(r->perfecta
-                    ? agenda_perfectionem_tollere(m->documentum, id)
-                    : agenda_perficere(m->documentum, id, hodie(m)));
-                si (visus_agendae(m))
-                {
-                    /* agenda: res perfecta abit - electio ad ordinem
-                     * proximum */
-                    electionem_reficere(m, (i32)index, p);
-                }
-            }
-            redde VERUM;
-        casus '<':
-        casus '>':
-            si (r && !visus_agendae(m))
-            {
-                Dies novus;
-
-                novus = fasti_addere_dies(r->dies_posita ? r->dies : d,
-                    ev->datum.clavis.producta == '>' ? I : -I);
-                (vacuum)agenda_diem_ponere(m->documentum, id, &novus);
-                electionem_reficere(m, (i32)index, p);
-            }
-            redde VERUM;
-        casus 'X':
-            si (r)
-            {
-                (vacuum)agenda_rem_delere(m->documentum, id);
-                electionem_reficere(m, (i32)index, p);
-            }
-            redde VERUM;
-        casus 'n':
-            redde promptam_scribere(m, "nova", "", ZEPHYRUM, ZEPHYRUM,
-                p);
-        casus 'r':
-            si (r)
-            {
-                chorda iunctae;
-
-                iunctae = rubricas_iungere(r, p);
-                redde promptam_scribere(m, "rubricae",
-                    (constans character*)iunctae.datum, iunctae.mensura,
-                    iunctae.mensura, p);
-            }
-            redde VERUM;
-        casus 'f':
-            si (visus_agendae(m))
-            {
-                chorda* filtrum;
-
-                filtrum = insula_ramus_attributum(&m->ramus,
-                    "rubrica_filtrum");
-                redde filtrum
-                    ? promptam_scribere(m, "filtrum",
-                          (constans character*)filtrum->datum,
-                          filtrum->mensura, filtrum->mensura, p)
-                    : promptam_scribere(m, "filtrum", "", ZEPHYRUM,
-                          ZEPHYRUM, p);
-            }
-            redde FALSUM;
-        casus 'a':
-            redde r ? promptam_scribere(m, "nota", "", ZEPHYRUM,
-                ZEPHYRUM, p) : VERUM;
-        casus 'c':
-            redde r ? promptam_scribere(m, "titulus",
-                (constans character*)r->titulus.datum,
-                r->titulus.mensura,
-                r->titulus.mensura, p) : VERUM;
-        casus 'D':
-            si (r && r->dies_posita)
-            {
-                chorda iso;
-
-                iso = fasti_formare_diem(r->dies, FASTI_FORMA_ISO, p);
-                redde promptam_scribere(m, "dies",
-                    (constans character*)iso.datum, iso.mensura,
-                    iso.mensura, p);
-            }
-            redde r ? promptam_scribere(m, "dies", "", ZEPHYRUM,
-                ZEPHYRUM,
-                p) : VERUM;
-        ordinarius:
-            redde FALSUM;
-    }
+    redde t->fn(&cm);
 }
 
 /* <actio/> calendarium.agere: visus mensis aut diei */
@@ -1092,15 +1374,12 @@ agere (
     (vacuum)des;
     m         = (KalendariumMontatio*)ctx;
     privatum  = (KalendariumFigurae*)m->figurae_ctx;
-    si (!visus_diei(m) && !visus_agendae(m))
-    {
-        redde agere_mensem(m, nodus, ev);
-    }
     si (!privatum || !privatum->scheda)
     {
         redde FALSUM;
     }
     piscina_vacare(privatum->scheda);
+    si (visus_diei(m) || visus_agendae(m))
     {
         chorda genus;
 
@@ -1109,7 +1388,16 @@ agere (
             redde agere_promptam(m, ev, genus, privatum->scheda);
         }
     }
-    redde agere_diem(m, nodus, ev, privatum->scheda);
+    si (ev->genus == EVENTUS_MUS_DEPRESSUS)
+    {
+        redde (visus_diei(m) || visus_agendae(m)) ? ictus_ordinis(m,
+            nodus) : ictus_mensis(m, nodus);
+    }
+    si (ev->genus != EVENTUS_CLAVIS_DEPRESSUS)
+    {
+        redde FALSUM;
+    }
+    redde clavem_agere(m, ev, privatum->scheda);
 }
 
 
@@ -1857,7 +2145,7 @@ kalendarium_montare (
     }
     m->actiones  = actio_registrum_creare(piscina, intern);
     m->figurae   = figura_registrum_creare(piscina);
-    si (   !m->actiones || !m->figurae
+    si (   !m->actiones || !m->figurae || !mandata_verificare()
         || !actio_registrare(m->actiones, actio_calendarii, agere, m)
         || !figuras_registrare(m))
     {

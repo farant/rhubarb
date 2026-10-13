@@ -1393,6 +1393,30 @@ _probare_mensam (
     CREDO_VERUM(f.x > ZEPHYRUM && f.y > ZEPHYRUM);
 }
 
+/* tabula mandatorum: littera cum Cmd aut Ctrl mandatum NON est (Cmd
+ * chorda etiam ut clavis advenit - "Cut" menu) - littera nuda est */
+interior vacuum
+_probare_mandata (
+    CredoContextus* c)
+{
+                Mundus* x;
+    constans AgendaRes* r;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(agendam_parare(x, c));
+    reditus(x);
+    clavis_specialis(x, (clavis_t)'x', 'x', 'x', (i32)MOD_SUPER);
+    r = agenda_res(x->documentum, I);
+    CREDO_NECESSE_NON_NIHIL(r);
+    CREDO_FALSUM(r->perfecta);
+    clavis_specialis(x, (clavis_t)'x', 'x', 'x', (i32)MOD_IMPERIUM);
+    r = agenda_res(x->documentum, I);
+    CREDO_FALSUM(r->perfecta);
+    clavis(x, 'x');
+    r = agenda_res(x->documentum, I);
+    CREDO_VERUM(r->perfecta);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "montatio",     _probare_montationem,   mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
@@ -1423,6 +1447,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "figurae_agendae", _probare_figuras_agendae, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { "mensa", _probare_mensam, mundum_parare, mundum_purgare, NIHIL,
+        NIHIL },
+    { "mandata", _probare_mandata, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

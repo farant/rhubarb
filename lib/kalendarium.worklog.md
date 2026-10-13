@@ -287,3 +287,33 @@ figura.h (Fran approved option (a): mensa only). `color_thematis` is
 still copied in five files (scriba, pictor, kalendarium, terminale,
 vicus) - its own follow-up commit, since terminale.c brings the
 aemulator gates and an install refresh.
+
+## 2026-10-13 — command table (TABULA_MANDATORUM)
+
+The key switches in agere_mensem / agere_diem became a table of 24 named
+commands: titulus ("calendarium.perficere"), descriptio (English UI
+label), clavis ("x", "Enter", "Esc", "C-r"), visus mask (MENSIS / DIEI /
+AGENDAE), requisita mask (REQUIRIT_REM selected item, REQUIRIT_FILTRUM
+active filter) and a `fac_*` handler taking a ContextusMandati computed
+once per event (day, current list, selected id/index/item, scratch
+pool). Availability is DATA (two masks), not a per-command function -
+every current command fits, which is what a palette wants ("what is
+available now" = filter over rows). Same key in different views = row
+per view (j = next week in the month, next item in lists); h/l are one
+command valid in month AND day.
+
+Consumption rule made explicit: a key the view owns but whose command
+is not available is swallowed, EXCEPT Esc, which passes to the host
+(go-up). That reproduces the old behaviour exactly; the one intentional
+change: letter keys no longer fire with Cmd or Ctrl held - Cmd chords
+also arrive as keys (memory fenestra-cmd-keys), so Cmd+X completed the
+selected item. Test `mandata` (red first). Side effects of the masks:
+'<'/'>' in the agenda view are no longer swallowed (they did nothing).
+
+`mandata_verificare` runs at mount: every row complete, no key twice in
+a shared view; a broken table refuses the mount so no test can pass
+over it. Plant: "Previous item" on 'j' -> mount refused, red in
+probatio_kalendarium and probatio_vicus_kalendarium.
+
+Mouse stays outside (ictus_mensis / ictus_ordinis) until mouse batch 1
+maps gestures to command titles; the prompt stays a text editor.

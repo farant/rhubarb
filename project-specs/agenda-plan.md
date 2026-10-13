@@ -182,6 +182,21 @@ State-model question to settle before A2 (A1 is content only).
   - **A4c** DONE 2026-10-13: header "Agenda: n open" (+ "#filter"),
     group headings, rows with the date at the right ("-" unscheduled),
     selected item's notes; screenshot checked. A4 complete.
+- **M — mouse + commands** (Fran 2026-10-13; order agreed):
+  - **M0a** DONE: shared mensa helper (`motus_ramus_focatus`,
+    `figura_mensam_pingere`) and `figura_color_thematis` (5 copies -> 1).
+  - **M0b** DONE 2026-10-13: kalendarium command table
+    (TABULA_MANDATORUM: name, label, key, view mask, requirement mask,
+    handler); letters with Cmd/Ctrl no longer fire.
+  - **M1** mouse batch 1 via the table: double-click day -> day view;
+    click `[ ]` toggles; header arrows + view switcher (Month · Day ·
+    Agenda); wheel over the month = month -1/+1.
+  - **M2** batch 2: double-click row -> title prompt; click group
+    heading -> filter; right-click context menu (from the table).
+  - **M3** generalize: commands declared in the manifest, availability
+    query on the action registry, then the palette UI (after a 2nd
+    widget has a table).
+  - Long lists: PAGINATION, not scrolling (Fran 2026-10-13).
 - **A5 — year view.**
 - **A6 — day documents**: embedded scriba per day.
 - **Next after the widget (Fran 2026-10-13):** fix the liturgical
