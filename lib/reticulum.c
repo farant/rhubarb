@@ -970,8 +970,460 @@ reticulum_formam_reduce (
 
 
 /* ==================================================
- * Nondum facta (consilium T3-T4): FALSUM
+ * Enumeratio (Fincke-Pohst integra)
+ *
+ * Super formam LLL-reductam (delta 99/100) G' = u G u^T; x coefficientes
+ * in basi reducta. Cum d et integri Gram-Schmidt integrae formae G',
+ * Q(x) = summa_k t_k^2 / (d_k d_(k+1)), t_k = d_(k+1) x_k + s_k,
+ * s_k = summa_(j > k) integri_jk x_j. Sine fractionibus: F_n = 1,
+ * F_k = F_(k+1) d_k d_(k+1); N_n = R, N_k = N_(k+1) d_k d_(k+1) -
+ * t_k^2 F_(k+1) = (R - summa_(i >= k) Q_i) F_k. x_k admissibilis sse
+ * N_k >= 0; in folio Q(x) = R - N_0 / F_0 (divisio exacta - aliter
+ * vitium internum). Intervallum admissibile x_k centrum -s_k / d_(k+1)
+ * habet: si integer proximus centro non admittitur, nullus.
+ *
+ * Signum: dum omnes x_j (j > k) nulli sunt, x_k >= 0 tantum - ergo par
+ * {v, -v} semel numeratur; vector nullus excluditur.
+ *
+ * Memoria: gradus quisque piscinam notat et post quemque x_k reficit;
+ * x_k ipse ANTE notam allocatur (aliter refectio eum deleret). Servata
+ * in piscina propria (repositorium); locus vectoris expulsi vectori
+ * novo redit, ergo solum membra magnorum (extra s64) quae expelluntur
+ * relinquuntur. Insertiones ~2.5-3 x limes (Python, Z^2 et Z^3).
  * ================================================== */
+
+nomen structura {
+     Magnus  norma;
+     Magnus* vector;               /* 'columnae' elementa */
+} Servatum;
+
+nomen structura {
+          i32  n;
+       Magnus* d;                  /* n + 1, formae reductae */
+       Magnus* integri;            /* n x n */
+       Magnus* f;                  /* n + 1: F_k */
+       Magnus  radius;
+       Magnus* x;                  /* n, in basi reducta */
+       Magnus* transitus;          /* n x columnae: vector = x transitus */
+          i32  columnae;
+          i64  numerus;
+          i64  nodi;
+          i64  limes_nodorum;      /* 0 = sine limite */
+          b32  abruptum;
+          b32  vitium;
+          i32  limes_servandi;
+          i32  servati;
+          i32  capacitas;
+     Servatum* servata;            /* in repositorio */
+      Piscina* repositorium;
+      Piscina* opus;
+} Enumeratio;
+
+/* -1, 0, +1: ordo canonicus (norma, deinde lexicographice) */
+interior s32
+_servatum_compara (
+     constans Enumeratio* e,
+                  Magnus  norma,
+         constans Magnus* vector,
+       constans Servatum* s)
+{
+    s32 c = magnus_compara(norma, s->norma);
+    i32 j;
+
+    per (j = ZEPHYRUM; c == ZEPHYRUM && j < e->columnae; j++)
+    {
+        c = magnus_compara(vector[j], s->vector[j]);
+    }
+    redde c;
+}
+
+interior Servatum*
+_servata_nova (
+         i32  capacitas,
+     Piscina* piscina)
+{
+    redde (Servatum*)piscina_allocare(piscina,
+        (memoriae_index)capacitas * (memoriae_index)magnitudo(Servatum)
+        + (memoriae_index)I);
+}
+
+/* vectorem in ordinem canonicum inserere, si inter primos limes */
+interior vacuum
+_serva (
+         Enumeratio* e,
+             Magnus  norma,
+    constans Magnus* vector)
+{
+     Servatum* s;
+       Magnus* locus = NIHIL;
+          i32  infima;
+          i32  suprema;
+          i32  media;
+          i32  i;
+
+    /* locus: primus index cuius servatum novo maius est */
+    infima   = ZEPHYRUM;
+    suprema  = e->servati;
+    dum (infima < suprema)
+    {
+        media = infima + (suprema - infima) / II;
+        si (_servatum_compara(e, norma, vector, &e->servata[media])
+            > ZEPHYRUM)
+        {
+            infima = media + I;
+        }
+        alioquin
+        {
+            suprema = media;
+        }
+    }
+    si (infima >= e->limes_servandi)
+    {
+        redde;
+    }
+    si (e->servati == e->capacitas)
+    {
+        /* capacitas duplicatur usque ad limitem */
+        i32 nova_capacitas = e->capacitas > e->limes_servandi / II
+            ? e->limes_servandi : e->capacitas * II;
+
+        si (nova_capacitas > e->capacitas)
+        {
+            s = _servata_nova(nova_capacitas, e->repositorium);
+            per (i = ZEPHYRUM; i < e->servati; i++)
+            {
+                s[i] = e->servata[i];
+            }
+            e->servata    = s;
+            e->capacitas  = nova_capacitas;
+        }
+    }
+    si (e->servati == e->capacitas)
+    {
+        /* ultimus excidit; locus eius vectori novo redit */
+        locus = e->servata[e->servati - I].vector;
+        e->servati--;
+    }
+    per (i = e->servati; i > infima; i--)
+    {
+        e->servata[i] = e->servata[i - I];
+    }
+    si (locus == NIHIL)
+    {
+        locus = _magni(e->columnae, e->repositorium);
+    }
+    per (i = ZEPHYRUM; i < e->columnae; i++)
+    {
+        locus[i] = magnus_transcribe(vector[i], e->repositorium);
+    }
+    e->servata[infima].norma = magnus_transcribe(norma,
+        e->repositorium);
+    e->servata[infima].vector = locus;
+    e->servati++;
+}
+
+/* folium: x != 0 cum Q(x) <= R; N = N_0 */
+interior vacuum
+_folium (
+    Enumeratio* e,
+        Magnus  n_infimus)
+{
+    Magnus  q;
+    Magnus  norma;
+    Magnus* vector;
+       i32  i;
+       i32  j;
+       b32  negandum = FALSUM;
+       s32  sg;
+
+    si (!_divide_exacte(n_infimus, e->f[ZEPHYRUM], e->opus, &q))
+    {
+        e->vitium = VERUM;
+        redde;
+    }
+    norma = magnus_subtrahe(e->radius, q, e->opus);
+    e->numerus++;
+    si (e->limes_servandi == ZEPHYRUM)
+    {
+        redde;
+    }
+    si (   e->servati == e->limes_servandi
+        && magnus_compara(norma,
+            e->servata[e->servati - I].norma) > ZEPHYRUM)
+    {
+        redde;
+    }
+    vector = _magni(e->columnae, e->opus);
+    per (j = ZEPHYRUM; j < e->columnae; j++)
+    {
+        vector[j] = magnus_ex_s64(ZEPHYRUM);
+        per (i = ZEPHYRUM; i < e->n; i++)
+        {
+            vector[j] = magnus_adde(vector[j],
+                magnus_multiplica(e->x[i],
+                e->transitus[i * e->columnae + j], e->opus), e->opus);
+        }
+    }
+    /* signum canonicum: coordinata prima non nulla positiva */
+    per (j = ZEPHYRUM; j < e->columnae; j++)
+    {
+        sg = magnus_signum(vector[j]);
+        si (sg != ZEPHYRUM)
+        {
+            negandum = sg < ZEPHYRUM;
+            frange;
+        }
+    }
+    si (negandum)
+    {
+        per (j = ZEPHYRUM; j < e->columnae; j++)
+        {
+            vector[j] = magnus_nega(vector[j], e->opus);
+        }
+    }
+    _serva(e, norma, vector);
+}
+
+/* gradus k (n - 1 ... 0); n_superior = N_(k+1); nulli: x_j = 0 pro
+ * omni j > k */
+interior vacuum
+_gradus (
+    Enumeratio* e,
+           s32  k,
+        Magnus  n_superior,
+           b32  nulli)
+{
+             Magnus  s;
+             Magnus  centrum;
+             Magnus  x;
+             Magnus  t;
+             Magnus  n_k;
+             Magnus  d_sequens;
+     PiscinaNotatio  nota;
+                s32  directio;
+                i32  j;
+            Piscina* opus = e->opus;
+
+    si (k < (s32)ZEPHYRUM)
+    {
+        si (!nulli)
+        {
+            _folium(e, n_superior);
+        }
+        redde;
+    }
+    d_sequens  = e->d[k + I];
+    s          = magnus_ex_s64(ZEPHYRUM);
+    per (j = (i32)k + I; j < e->n; j++)
+    {
+        s = magnus_adde(s, magnus_multiplica(e->integri[j * e->n
+            + (i32)k],
+            e->x[j], opus), opus);
+    }
+    /* integer proximus -s / d_(k+1): pavimentum((d - 2 s) / (2 d)) */
+    centrum = magnus_ex_s64(ZEPHYRUM);
+    si (!nulli)
+    {
+        (vacuum)magnus_divide(magnus_subtrahe(d_sequens,
+            magnus_multiplica(
+            magnus_ex_s64(II), s, opus), opus), magnus_multiplica(
+            magnus_ex_s64(II), d_sequens, opus), opus, &centrum, NIHIL);
+    }
+    per (directio = I; directio >= -(s32)I; directio -= II)
+    {
+        x = directio > ZEPHYRUM ? centrum : magnus_subtrahe(centrum,
+            magnus_ex_s64(I), opus);
+        dum (VERUM)
+        {
+            nota = piscina_notare(opus);
+            t = magnus_adde(magnus_multiplica(d_sequens, x, opus), s,
+                opus);
+            n_k  = magnus_subtrahe(magnus_multiplica(n_superior,
+                magnus_multiplica(e->d[k], d_sequens, opus), opus),
+                magnus_multiplica(magnus_multiplica(t, t, opus),
+                e->f[k + I], opus), opus);
+            si (magnus_signum(n_k) < ZEPHYRUM)
+            {
+                piscina_reficere(opus, nota);
+                frange;
+            }
+            si (   e->limes_nodorum != ZEPHYRUM
+                && e->nodi          == e->limes_nodorum)
+            {
+                piscina_reficere(opus, nota);
+                e->abruptum = VERUM;
+                redde;
+            }
+            e->nodi++;
+            e->x[k] = x;
+            _gradus(e, k - (s32)I, n_k, nulli && magnus_signum(x)
+                == ZEPHYRUM);
+            piscina_reficere(opus, nota);
+            si (e->abruptum || e->vitium)
+            {
+                redde;
+            }
+            /* post refectionem: x novus supra notam veterem, vivus */
+            x = magnus_adde(x, magnus_ex_s64((s64)directio), opus);
+        }
+        e->x[k] = magnus_ex_s64(ZEPHYRUM);
+        si (nulli)
+        {
+            frange;                 /* x_k >= 0 tantum */
+        }
+    }
+}
+
+/* nucleus enumerationis. minimum: radius = min diagonalis formae
+ * reductae (limes superior minimi). FALSUM si refutatur aut vitium. */
+interior b32
+_enumera_publicum (
+                        Matrix  m,
+                           b32  est_forma,
+    constans ReticulumQuaestio* quaestio,
+                           b32  minimum,
+                       Piscina* piscina,
+           ReticulumEnumeratio* exitus)
+{
+                   Fons  fons;
+                   Fons  fons_reducta;
+               Reductio  r;
+           Orthogonalis  o;
+             Enumeratio  e;
+                Piscina* opus;
+                Fractio  dl;
+    ReticulumStatistica  stat;
+                 Matrix  g;
+                 Matrix  vectores;
+                 Magnus* normae = NIHIL;
+                 Magnus  v;
+                    i32  i;
+                    i32  j;
+                    i32  c;
+
+    si (   quaestio == NIHIL || exitus == NIHIL
+        || (!minimum && magnus_signum(quaestio->radius_quadratus)
+            < ZEPHYRUM)
+        || !_fons_para(m, est_forma, &fons))
+    {
+        redde FALSUM;
+    }
+    opus = _officina_aperi();
+    si (opus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (   !_delta_para(NIHIL, opus, &dl)
+        || !_reductio_para(&fons, dl, opus, &r)
+        || !_reductio_curre(&r, &opus, &stat)
+        || !_matrix_ex_magnis(r.forma, r.n, opus, &g)
+        || !_fons_para(g, VERUM, &fons_reducta)
+        || !_orthogonaliza(&fons_reducta, opus, &o))
+    {
+        _officina_claude(opus);
+        redde FALSUM;
+    }
+    e.n               = r.n;
+    e.d               = o.determinantes;
+    e.integri         = o.integri;
+    e.numerus         = ZEPHYRUM;
+    e.nodi            = ZEPHYRUM;
+    e.limes_nodorum   = quaestio->limes_nodorum;
+    e.abruptum        = FALSUM;
+    e.vitium          = FALSUM;
+    e.limes_servandi  = quaestio->limes_servandi;
+    e.servati         = ZEPHYRUM;
+    e.opus            = opus;
+    e.columnae        = est_forma ? r.n : matrix_columnae(m);
+    e.x               = _magni(r.n, opus);
+    e.f               = _magni(r.n + I, opus);
+    e.transitus       = _magni(r.n * e.columnae, opus);
+    per (i = ZEPHYRUM; i < r.n; i++)
+    {
+        e.x[i] = magnus_ex_s64(ZEPHYRUM);
+        per (c = ZEPHYRUM; c < e.columnae; c++)
+        {
+            /* forma: transitus = u; basis: basis reducta = u * basis */
+            si (est_forma)
+            {
+                v = IN_U(&r, i, c);
+            }
+            alioquin
+            {
+                v = magnus_ex_s64(ZEPHYRUM);
+                per (j = ZEPHYRUM; j < r.n; j++)
+                {
+                    v = magnus_adde(v, magnus_multiplica(IN_U(&r, i, j),
+                        *_elementum(m, j, c), opus), opus);
+                }
+            }
+            e.transitus[i * e.columnae + c] = v;
+        }
+    }
+    e.f[r.n] = magnus_ex_s64(I);
+    per (i = r.n; i > ZEPHYRUM; i--)
+    {
+        e.f[i - I] = magnus_multiplica(e.f[i], magnus_multiplica(
+            e.d[i - I], e.d[i], opus), opus);
+    }
+    si (minimum)
+    {
+        e.radius = IN_FORMA(&r, ZEPHYRUM, ZEPHYRUM);
+        per (i = I; i < r.n; i++)
+        {
+            si (magnus_compara(IN_FORMA(&r, i, i), e.radius) < ZEPHYRUM)
+            {
+                e.radius = IN_FORMA(&r, i, i);
+            }
+        }
+    }
+    alioquin
+    {
+        e.radius = quaestio->radius_quadratus;
+    }
+    e.capacitas = e.limes_servandi < (i32)XVI ? e.limes_servandi
+        : (i32)XVI;
+    e.repositorium = piscina_generare_dynamicum("reticulum",
+        (memoriae_index)65536);
+    si (e.repositorium == NIHIL)
+    {
+        _officina_claude(opus);
+        redde FALSUM;
+    }
+    e.servata = _servata_nova(e.capacitas, e.repositorium);
+
+    _gradus(&e, (s32)r.n - (s32)I, e.radius, VERUM);
+
+    si (   e.vitium
+        || !matrix_nulla(&ANULUS_INTEGRORUM, e.servati, e.columnae,
+            piscina, &vectores))
+    {
+        _officina_claude(e.repositorium);
+        _officina_claude(opus);
+        redde FALSUM;
+    }
+    si (e.servati > ZEPHYRUM)
+    {
+        normae = _magni(e.servati, piscina);
+    }
+    per (i = ZEPHYRUM; i < e.servati; i++)
+    {
+        normae[i] = magnus_transcribe(e.servata[i].norma, piscina);
+        per (c = ZEPHYRUM; c < e.columnae; c++)
+        {
+            v = magnus_transcribe(e.servata[i].vector[c], piscina);
+            matrix_pone(&vectores, i, c, &v);
+        }
+    }
+    _officina_claude(e.repositorium);
+    _officina_claude(opus);
+    exitus->numerus   = (i64)e.numerus;
+    exitus->completa  = !e.abruptum;
+    exitus->servati   = e.servati;
+    exitus->vectores  = vectores;
+    exitus->normae    = normae;
+    redde VERUM;
+}
 
 b32
 reticulum_enumera (
@@ -980,11 +1432,8 @@ reticulum_enumera (
                        Piscina* piscina,
            ReticulumEnumeratio* exitus)
 {
-    (vacuum)basis;
-    (vacuum)quaestio;
-    (vacuum)piscina;
-    (vacuum)exitus;
-    redde FALSUM;
+    redde _enumera_publicum(basis, FALSUM, quaestio, FALSUM, piscina,
+        exitus);
 }
 
 b32
@@ -994,11 +1443,8 @@ reticulum_formam_enumera (
                        Piscina* piscina,
            ReticulumEnumeratio* exitus)
 {
-    (vacuum)forma;
-    (vacuum)quaestio;
-    (vacuum)piscina;
-    (vacuum)exitus;
-    redde FALSUM;
+    redde _enumera_publicum(forma, VERUM, quaestio, FALSUM, piscina,
+        exitus);
 }
 
 b32
@@ -1008,12 +1454,37 @@ reticulum_minimum (
       Matrix* vector,
       Magnus* norma)
 {
-    (vacuum)basis;
-    (vacuum)piscina;
-    (vacuum)vector;
-    (vacuum)norma;
-    redde FALSUM;
+      ReticulumQuaestio quaestio;
+    ReticulumEnumeratio e;
+
+    si (matrix_lineae(basis) == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    quaestio.radius_quadratus  = magnus_ex_s64(ZEPHYRUM);
+    quaestio.limes_servandi    = I;
+    quaestio.limes_nodorum     = ZEPHYRUM;
+    si (   !_enumera_publicum(basis, FALSUM, &quaestio, VERUM, piscina,
+            &e)
+        || e.servati != I)
+    {
+        redde FALSUM;
+    }
+    si (vector != NIHIL)
+    {
+        *vector = e.vectores;       /* 1 x columnae */
+    }
+    si (norma != NIHIL)
+    {
+        *norma = e.normae[ZEPHYRUM];
+    }
+    redde VERUM;
 }
+
+
+/* ==================================================
+ * Nondum facta (consilium T4): FALSUM
+ * ================================================== */
 
 b32
 reticulum_relationes (

@@ -376,6 +376,7 @@
     <forma textus="unimodularem" casus="accusativus" numerus="singularis"/>
   </vocabulum>
   <vocabulum lemma="hermite" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: Charles Hermite (forma normalis Hermite, matrix_forma_hermite)"/>
+  <vocabulum lemma="cartan" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: Elie Cartan (matrix Cartan systematis radicum, probatio_reticulum.c)"/>
   <vocabulum lemma="lovasz" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: Laszlo Lovasz (condicio Lovasz in reductione LLL, lib/reticulum.c)"/>
   <vocabulum lemma="lll" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio: Lenstra-Lenstra-Lovasz, reductio basium reticuli (lib/reticulum.c)"/>
   <vocabulum lemma="galois" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: Evariste Galois (automorphismi Galois, lib/cyclotomia.c)"/>

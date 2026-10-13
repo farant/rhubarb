@@ -149,3 +149,99 @@ Lesson: any loop whose termination depends on the algorithm being
 right (LLL's potential argument) needs a test-side time bound, and a
 bound that records a failure and then runs the loop anyway is not a
 bound.
+
+## 2026-10-13 - T3: enumeration (integer Fincke-Pohst), the minimum
+
+**Algorithm, without fractions.** Reduce the form with T2's LLL
+(delta 99/100), then recompute the integral Gram-Schmidt of the reduced
+form with T1's `_orthogonaliza` (rather than reusing LLL's internal
+lambdas: one less invariant to trust). With B_k = d_(k+1)/d_k and
+mu_jk = lambda_jk / d_(k+1), each term of
+Q(x) = sum_k B_k (x_k + sum_(j>k) mu_jk x_j)^2 is t_k^2 / (d_k d_(k+1))
+with t_k = d_(k+1) x_k + s_k, s_k = sum_(j>k) lambda_jk x_j, all
+integers. Scaling the remaining budget by F_k = prod_(i>=k) d_i d_(i+1)
+gives an integer recurrence: N_n = R, N_k = N_(k+1) d_k d_(k+1) -
+t_k^2 F_(k+1), and x_k is admissible iff N_k >= 0. At a leaf,
+Q(x) = R - N_0 / F_0, and that division must be exact (a free internal
+consistency check: a remainder means a bug, and returns FALSUM). The
+denominators F_k do not depend on the path, so the numbers stay a fixed
+size per level. Checked first in Python (`scratchpad/reticulum/enum.py`)
+against brute force on 300 random forms and the E8 theta series.
+
+**Admissible x_k.** The admissible set is an interval around
+-s_k / d_(k+1); if the nearest integer is not admissible, none is. So
+the search goes up from the rounded center, then down from center - 1,
+each until the first failure; no square roots at all.
+
+**Counting modulo sign.** While every higher coordinate is zero, x_k
+is restricted to >= 0, and the all-zero leaf is skipped. Each pair
+{v, -v} is visited exactly once, in the coordinates of the reduced
+basis. The output (ambient vector for a basis, coefficients in the
+GIVEN form's coordinates for a form) is a linear bijection of x, so the
+pairing carries over; the stored representative is then flipped to its
+canonical sign (first nonzero coordinate positive).
+
+**Budget and completeness.** A node is a feasible partial assignment.
+The budget is checked after feasibility and before counting the node,
+so a tree of exactly `limes_nodorum` nodes completes. A truncated run
+says so (`completa = FALSUM`); its count is a lower bound and its
+stored vectors are the canonically first AMONG THOSE FOUND, which the
+header now says. Node counts depend on the reduced basis (an
+implementation detail), so there is no node-count field in the API and
+the tests only check monotonicity and completion.
+
+**Memory.** Each level marks the arena and rewinds after each x_k; x_k
+itself is allocated BEFORE the mark (after a rewind, x + 1 is allocated
+at the old mark, below the next one), so the values deeper levels read
+stay alive. Measured on Z^6 scaled by 10^10 in 60 columns (norms
+~10^21, so every node allocates): counting 11,896 vectors peaks at
+~35 KB; without the rewind it is ~24 MB. Stored vectors live in their
+own arena, in a sorted array (binary search, then shift), capacity
+doubling up to the limit. An evicted entry's vector slot is reused for
+the newcomer. Only the digit arrays of values beyond s64 are left
+behind. I first wrote a T2-style compaction for this arena, but
+measured
+insertions are only ~2.5-3x the limit (Python, Z^2 and Z^3; the early
+norm test rejects most leaves), so compaction never fired in any test
+and a plant disabling it could not go red. Removed; recycling instead,
+measured: 50 stored, ~78 KB with it, ~286 KB without.
+
+**Tests (7,519 checks with T1-T2).**
+- An independent brute force: every y in a box, with the exact box
+  bound y_i^2 <= R (G^-1)_ii = R det(G without i) / det G (Cramer,
+  Bareiss), no Gram-Schmidt, no reduction. 180 random cases (forms and
+  ambient bases, dimension 1-4) compared vector for vector in canonical
+  order; the regime is counted and asserted: 54 cases with equal norms
+  (where the lexicographic tiebreak matters), 45 with >= 5 vectors.
+- Root systems from Cartan matrices: A_1..A_8 n(n+1)/2, D_4..D_8
+  n(n-1), E6 36, E7 63, E8 120; E8 at R = 4 and 6: 1,200 and 4,560
+  (theta series 240, 2160, 6720, halved).
+- Lattice, not basis: enumeration of B and of U B (U a product of 40
+  random row operations) gives identical vectors, norms and counts.
+  My first generator drew a new multiplier per COLUMN, which is not a
+  row operation and not unimodular: the test failed on correct code.
+- Limits: storage 0, 1, 3, 121 = prefixes of the full list; budget 1 is
+  incomplete; doubling budgets give non-decreasing lower bounds that
+  end at the true count.
+- The minimum against brute force (59 cases) and T2's deferred check:
+  (4p - q)^(n-1) |b_1|^2 <= (4q)^(n-1) lambda_1^2 for delta = p/q in
+  {3/4, 99/100, 1}, 60 bases.
+- Refusals with outputs untouched; memory bounds as measured above.
+- All T3 sections run under `_sub_termino` (child first, 30 s).
+
+**Plants: 15, all red, one only after a new test.** Center sign; the
+budget recurrence with F_k for F_(k+1); F without d_(k+1) (the exact
+leaf division turns it into FALSUM); sign restriction removed; the
+"all higher zero" flag propagated wrongly; zero vector counted;
+completa always true; canonical sign inverted; lexicographic order
+reversed; output without u; minimum radius one too small; no per-level
+rewind (memory bound); evicted slot not reused (memory bound);
+negative radius accepted. The survivor: budget `>` instead of `==`
+(one node too many). Nothing pinned the exact boundary: budget 1 was
+incomplete either way and the doubling loop only checked monotonicity.
+Fix: the lattice [1] at R = 9, whose tree is exactly x = 0, 1, 2, 3 (4
+nodes, the zero leaf not counted): budget 4 completes with 3 vectors,
+budget 3 does not and counts 2. This pins the documented node
+definition too.
+
+**Glossary.** `cartan` (Elie Cartan, Cartan matrices in the tests).

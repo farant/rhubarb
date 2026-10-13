@@ -24,8 +24,8 @@
  *
  * DEFECTUS: FALSUM si anulus non Z, vectores dependentes (basis) aut
  * forma non definita positiva, dimensiones discrepant, delta extra
- * fines; exitus tunc non tanguntur. Functiones nondum factae (T2-T4
- * consilii) FALSUM semper reddunt - vide singulas.
+ * fines; exitus tunc non tanguntur. reticulum_relationes (T4
+ * consilii) nondum facta est et FALSUM semper reddit.
  *
  * MEMORIA: temporaria in piscinis propriis, destructis; effecta SOLA in
  * piscina vocantis (reticulum_apex_officinarum metitur).
@@ -95,7 +95,7 @@ reticulum_formam_est_reducta (
 
 
 /* ==================================================
- * Reductio LLL (consilium T2 - nondum: FALSUM)
+ * Reductio LLL integra (Cohen, Algorithmus 2.6.7)
  * ================================================== */
 
 nomen structura {
@@ -126,26 +126,37 @@ reticulum_formam_reduce (
 
 
 /* ==================================================
- * Enumeratio (consilium T3 - nondum: FALSUM)
+ * Enumeratio (Fincke-Pohst integra)
+ *
+ * Vectores v != 0 cum |v|^2 <= radius, MODULO SIGNO (par {v, -v} semel,
+ * repraesentans cuius coordinata prima non nulla positiva est). Ordo
+ * canonicus: norma, deinde lexicographice ascendens. Super formam
+ * LLL-reductam (delta 99/100) internam, in integris - sine
+ * fractionibus et sine fluitantibus; effectus a basi data non pendet
+ * (idem reticulum, idem effectus), nodi autem pendent.
  * ================================================== */
 
 nomen structura {
-    Magnus radius_quadratus;    /* 0 < |v|^2 <= radius_quadratus */
-       i32 limes_servandi;      /* vectores servati maximi */
-       i64 limes_nodorum;       /* sumptus arboris; 0 = sine limite */
+    Magnus radius_quadratus;    /* 0 < |v|^2 <= radius_quadratus; >= 0 */
+       i32 limes_servandi;      /* vectores servati maximi (0: numerare
+                                 * tantum) */
+       i64 limes_nodorum;       /* nodi arboris (assignationes partiales
+                                 * admissibiles); 0 = sine limite */
 } ReticulumQuaestio;
 
 nomen structura {
        i64 numerus;            /* vectores intra radium, modulo signo;
                                  * si completa FALSUM, LIMES INFERIOR */
        b32 completa;           /* FALSUM: limes_nodorum attactus */
-       i32 servati;
-    Matrix vectores;           /* lineae: primi 'servati' ordine
-                                 * canonico */
-    Magnus* normae;             /* |v|^2 vectorum servatorum */
+       i32 servati;            /* min(limes_servandi, numerus) */
+    Matrix vectores;           /* servati x columnae: primi ordine
+                                 * canonico. Si completa FALSUM, primi
+                                 * INTER INVENTOS tantum. */
+    Magnus* normae;             /* |v|^2 vectorum servatorum; NIHIL si
+                                 * servati == 0 */
 } ReticulumEnumeratio;
 
-/* vectores v != 0 reticuli (coordinatae ambientis) */
+/* vectores v != 0 reticuli, coordinatae ambientis (columnae basis) */
 b32
 reticulum_enumera (
                         Matrix  basis,
@@ -153,7 +164,8 @@ reticulum_enumera (
                        Piscina* piscina,
            ReticulumEnumeratio* exitus);
 
-/* vectores coefficientium x != 0 cum x^T forma x <= radius */
+/* vectores coefficientium x != 0 cum x^T forma x <= radius, in
+ * coordinatis formae DATAE (non reductae); normae = x^T forma x */
 b32
 reticulum_formam_enumera (
                         Matrix  forma,
@@ -161,7 +173,9 @@ reticulum_formam_enumera (
                        Piscina* piscina,
            ReticulumEnumeratio* exitus);
 
-/* vector brevissimus non nullus (primus canonice si plures) */
+/* vector brevissimus non nullus (primus canonice si plures): vector
+ * 1 x columnae, norma |v|^2; uterque NIHIL esse potest. FALSUM si basis
+ * vacua. */
 b32
 reticulum_minimum (
       Matrix  basis,

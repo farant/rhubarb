@@ -107,6 +107,15 @@ Each task follows the house cycle:
   Credo: equal to brute-force box enumeration in small dimensions,
   vector for vector; Z^n and A_n / D_n / E_8 root counts (E_8: 240
   roots, i.e. 120 up to sign); budget hit -> completa FALSUM.
+  *(2026-10-13: landed. Integer Fincke-Pohst on the LLL-reduced form,
+  no fractions: the remaining budget is scaled by a path-independent
+  product of Gram determinants, and the leaf norm comes from an exact
+  division that doubles as a consistency check. 180 random cases equal
+  an independent brute force vector for vector (54 with norm ties);
+  A_n, D_n, E6-E8 root counts and E8 at norms 4 and 6 (1,200 and
+  4,560); identical output for B and U B; the minimum, and T2's
+  deferred bound on |b_1|^2. 15 plants red, the node-budget boundary
+  only after an exact-size tree was added. See the worklog.)*
 - **T4. Integer relations.** `reticulum_relationes`.
   Credo: relations among exactly embedded algebraic numbers (e.g. the
   minimal polynomial of 1 + sqrt2 recovered from the vector of its

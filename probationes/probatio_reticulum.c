@@ -586,10 +586,8 @@ _probare_nondum (
     Piscina* piscina  = c->piscina;
      Matrix  b        = _z("[1, 0; 0, 1]", piscina);
      Matrix  r;
-     Magnus  norma;
 
     r.anulus = NIHIL;
-    CREDO_FALSUM (reticulum_minimum(b, piscina, &r, &norma));
     CREDO_FALSUM (reticulum_relationes(b, NIHIL, piscina, &r));
     CREDO_NIHIL (r.anulus);
 }
@@ -934,6 +932,856 @@ _lll_memoriam (
     _proprietates(b, NIHIL, r, u, piscina);
 }
 
+
+/* ==================================================
+ * T3: enumeratio
+ *
+ * Oraculum: fraternitas bruta in capsa, sine Gram-Schmidt et sine
+ * reductione. max y_i^2 sub y^T G y <= R est R (G^-1)_ii = R
+ * det(G sine i) / det G (Cramer), ergo capsa |y_i| <= b_i cum b_i
+ * minimo ut b_i^2 det G >= R det(G sine i) - exacta, in integris.
+ * ================================================== */
+
+nomen structura {
+       i32  numerus;
+       i32  columnae;
+    Magnus* normae;
+    Magnus* vectores;               /* numerus x columnae */
+} Bruta;
+
+interior Magnus
+_elem (
+    Matrix m,
+       i32 i,
+       i32 j)
+{
+    redde *(constans Magnus*)matrix_elementum(m, i, j);
+}
+
+interior s64
+_capsa (
+     Matrix  g,
+        i32  i,
+        s64  radius,
+    Piscina* piscina)
+{
+    Matrix minor;
+    Magnus det;
+    Magnus det_minoris;
+    Magnus dextra;
+    Magnus x;
+       s64 b = ZEPHYRUM;
+       i32 n = matrix_lineae(g);
+       i32 a;
+       i32 k;
+       i32 la = ZEPHYRUM;
+       i32 ca;
+
+    (vacuum)matrix_nulla(&ANULUS_INTEGRORUM, n - I, n - I, piscina,
+        &minor);
+    per (a = ZEPHYRUM; a < n; a++)
+    {
+        si (a == i)
+        {
+            perge;
+        }
+        ca = ZEPHYRUM;
+        per (k = ZEPHYRUM; k < n; k++)
+        {
+            si (k == i)
+            {
+                perge;
+            }
+            x = _elem(g, a, k);
+            matrix_pone(&minor, la, ca, &x);
+            ca++;
+        }
+        la++;
+    }
+    (vacuum)matrix_determinans(g, piscina, &det);
+    (vacuum)matrix_determinans(minor, piscina, &det_minoris);
+    dextra = magnus_multiplica(magnus_ex_s64(radius), det_minoris,
+        piscina);
+    dum (magnus_compara(magnus_multiplica(magnus_ex_s64(b * b), det,
+        piscina), dextra) < ZEPHYRUM)
+    {
+        b++;
+    }
+    redde b;
+}
+
+interior s32
+_bruta_compara (
+    constans Bruta* b,
+               i32  p,
+               i32  q)
+{
+    s32 c = magnus_compara(b->normae[p], b->normae[q]);
+    i32 j;
+
+    per (j = ZEPHYRUM; c == ZEPHYRUM && j < b->columnae; j++)
+    {
+        c = magnus_compara(b->vectores[p * b->columnae + j],
+            b->vectores[q * b->columnae + j]);
+    }
+    redde c;
+}
+
+interior vacuum
+_bruta_permuta (
+    Bruta* b,
+      i32  p,
+      i32  q)
+{
+    Magnus t;
+       i32 j;
+
+    t             = b->normae[p];
+    b->normae[p]  = b->normae[q];
+    b->normae[q]  = t;
+    per (j = ZEPHYRUM; j < b->columnae; j++)
+    {
+        t = b->vectores[p * b->columnae + j];
+        b->vectores[p * b->columnae + j]
+            = b->vectores[q * b->columnae + j];
+        b->vectores[q * b->columnae + j] = t;
+    }
+}
+
+/* omnes y in capsa; vector exitus (forma: y; basis: y basis) cum
+ * 0 < y^T g y <= R et signo canonico, ordine canonico. FALSUM si
+ * capsa nimis magna (casus omittitur). */
+interior b32
+_bruta (
+     Matrix  g,
+     Matrix  basis,
+        b32  est_forma,
+        s64  radius,
+    Piscina* piscina,
+      Bruta* exitus)
+{
+       i32  n         = matrix_lineae(g);
+       i32  columnae  = est_forma ? n : matrix_columnae(basis);
+       s64  capsa[VIII];
+       s64  y[VIII];
+       s64  capacitas = I;
+    Magnus  q;
+    Magnus  r = magnus_ex_s64(radius);
+    Magnus* v;
+       i32  i;
+       i32  j;
+       i32  k;
+       s32  sg;
+       b32  finis = FALSUM;
+
+    si (n > VIII)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        capsa[i]   = _capsa(g, i, radius, piscina);
+        y[i]       = -capsa[i];
+        capacitas  *= II * capsa[i] + I;
+        si (capacitas > (s64)CC * (s64)M)
+        {
+            redde FALSUM;
+        }
+    }
+    exitus->numerus   = ZEPHYRUM;
+    exitus->columnae  = columnae;
+    exitus->normae    = (Magnus*)piscina_allocare(piscina,
+        (memoriae_index)capacitas * (memoriae_index)magnitudo(Magnus));
+    exitus->vectores  = (Magnus*)piscina_allocare(piscina,
+        (memoriae_index)capacitas * (memoriae_index)(columnae + I)
+        * (memoriae_index)magnitudo(Magnus));
+    dum (!finis)
+    {
+        q = magnus_ex_s64(ZEPHYRUM);
+        per (i = ZEPHYRUM; i < n; i++)
+        {
+            per (j = ZEPHYRUM; j < n; j++)
+            {
+                q = magnus_adde(q, magnus_multiplica(magnus_ex_s64(y[i]
+                    * y[j]), _elem(g, i, j), piscina), piscina);
+            }
+        }
+        si (   magnus_signum(q) > ZEPHYRUM && magnus_compara(q, r)
+            <= ZEPHYRUM)
+        {
+            v   = &exitus->vectores[exitus->numerus * columnae];
+            sg  = ZEPHYRUM;
+            per (j = ZEPHYRUM; j < columnae; j++)
+            {
+                si (est_forma)
+                {
+                    v[j] = magnus_ex_s64(y[j]);
+                }
+                alioquin
+                {
+                    v[j] = magnus_ex_s64(ZEPHYRUM);
+                    per (i = ZEPHYRUM; i < n; i++)
+                    {
+                        v[j] = magnus_adde(v[j], magnus_multiplica(
+                            magnus_ex_s64(y[i]), _elem(basis, i, j),
+                            piscina), piscina);
+                    }
+                }
+                si (sg == ZEPHYRUM)
+                {
+                    sg = magnus_signum(v[j]);
+                }
+            }
+            si (sg > ZEPHYRUM)
+            {
+                exitus->normae[exitus->numerus] = q;
+                exitus->numerus++;
+            }
+        }
+        k = ZEPHYRUM;
+        dum (k < n && y[k] == capsa[k])
+        {
+            y[k] = -capsa[k];
+            k++;
+        }
+        si (k == n)
+        {
+            finis = VERUM;
+        }
+        alioquin
+        {
+            y[k]++;
+        }
+    }
+    /* ordo canonicus (insertio) */
+    per (i = I; i < exitus->numerus; i++)
+    {
+        per (k = i; k > ZEPHYRUM && _bruta_compara(exitus, k - I, k)
+            > ZEPHYRUM; k--)
+        {
+            _bruta_permuta(exitus, k - I, k);
+        }
+    }
+    redde VERUM;
+}
+
+/* enumeratio = bruta: numerus, completa, primi min(servandi, numerus)
+ * vector pro vectore */
+interior b32
+_congruit (
+    constans ReticulumEnumeratio* e,
+                  constans Bruta* b,
+                             i32  servandi)
+{
+    i32 exspectati = b->numerus < servandi ? b->numerus : servandi;
+    i32 i;
+    i32 j;
+
+    si (   !e->completa || e->numerus != (i64)b->numerus
+        || e->servati                   != exspectati
+        || matrix_lineae(e->vectores)   != exspectati
+        || matrix_columnae(e->vectores) != b->columnae)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < exspectati; i++)
+    {
+        si (!magnus_aequalis(e->normae[i], b->normae[i]))
+        {
+            redde FALSUM;
+        }
+        per (j = ZEPHYRUM; j < b->columnae; j++)
+        {
+            si (!magnus_aequalis(_elem(e->vectores, i, j),
+                b->vectores[i * b->columnae + j]))
+            {
+                redde FALSUM;
+            }
+        }
+    }
+    redde VERUM;
+}
+
+interior ReticulumQuaestio
+_quaestio (
+    s64 radius,
+    i32 servandi,
+    i64 limes_nodorum)
+{
+    ReticulumQuaestio q;
+
+    q.radius_quadratus  = magnus_ex_s64(radius);
+    q.limes_servandi    = servandi;
+    q.limes_nodorum     = limes_nodorum;
+    redde q;
+}
+
+/* matrix Cartan simpliciter laqueata: catena 0..n-1; si ramus_ad >= 0,
+ * catena 0..n-2 et nodus n-1 ad nodum ramus_ad */
+interior Matrix
+_cartan (
+         i32  n,
+         s32  ramus_ad,
+     Piscina* piscina)
+{
+    Matrix m;
+    Magnus duo     = magnus_ex_s64(II);
+    Magnus minus   = magnus_ex_s64(-(s64)I);
+       i32 catena  = ramus_ad >= ZEPHYRUM ? n - I : n;
+       i32 i;
+
+    (vacuum)matrix_nulla(&ANULUS_INTEGRORUM, n, n, piscina, &m);
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        matrix_pone(&m, i, i, &duo);
+    }
+    per (i = I; i < catena; i++)
+    {
+        matrix_pone(&m, i, i - I, &minus);
+        matrix_pone(&m, i - I, i, &minus);
+    }
+    si (ramus_ad >= ZEPHYRUM)
+    {
+        matrix_pone(&m, n - I, (i32)ramus_ad, &minus);
+        matrix_pone(&m, (i32)ramus_ad, n - I, &minus);
+    }
+    redde m;
+}
+
+interior b32
+_vectores_aequales (
+    Matrix a,
+       i32 la,
+    Matrix b,
+       i32 lb)
+{
+    i32 j;
+
+    si (matrix_columnae(a) != matrix_columnae(b))
+    {
+        redde FALSUM;
+    }
+    per (j = ZEPHYRUM; j < matrix_columnae(a); j++)
+    {
+        si (!magnus_aequalis(_elem(a, la, j), _elem(b, lb, j)))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+interior b32
+_textus_vectoris (
+                Matrix  m,
+                   i32  linea,
+    constans character* textus,
+               Piscina* piscina)
+{
+    Matrix v = _z(textus, piscina);
+       i32 j;
+
+    si (matrix_columnae(v) != matrix_columnae(m))
+    {
+        redde FALSUM;
+    }
+    per (j = ZEPHYRUM; j < matrix_columnae(m); j++)
+    {
+        si (!magnus_aequalis(_elem(m, linea, j), _elem(v, ZEPHYRUM, j)))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+interior vacuum
+_enumeratio_manu (
+    CredoContextus* c)
+{
+                Piscina* piscina = c->piscina;
+      ReticulumQuaestio  q;
+    ReticulumEnumeratio  e;
+
+    /* Z^2, R = 2: (0,1), (1,0) norma 1; (1,-1), (1,1) norma 2 */
+    q = _quaestio(II, X, ZEPHYRUM);
+    CREDO_NECESSE (reticulum_formam_enumera(_z("[1, 0; 0, 1]", piscina),
+        &q, piscina, &e));
+    CREDO_AEQUALIS_S64 ((s64)e.numerus, (s64)IV);
+    CREDO_VERUM (e.completa);
+    CREDO_AEQUALIS_I32 (e.servati, IV);
+    CREDO_VERUM (_textus_vectoris(e.vectores, ZEPHYRUM, "[0, 1]",
+        piscina));
+    CREDO_VERUM (_textus_vectoris(e.vectores, I, "[1, 0]", piscina));
+    CREDO_VERUM (_textus_vectoris(e.vectores, II, "[1, -1]", piscina));
+    CREDO_VERUM (_textus_vectoris(e.vectores, III, "[1, 1]", piscina));
+    CREDO_VERUM (magnus_aequalis(e.normae[ZEPHYRUM], magnus_ex_s64(I)));
+    CREDO_VERUM (magnus_aequalis(e.normae[III], magnus_ex_s64(II)));
+    /* Z^3, R = 3: 3 + 6 + 4 */
+    q = _quaestio(III, ZEPHYRUM, ZEPHYRUM);
+    CREDO_NECESSE (reticulum_enumera(_z("[1, 0, 0; 0, 1, 0; 0, 0, 1]",
+        piscina), &q, piscina, &e));
+    CREDO_AEQUALIS_S64 ((s64)e.numerus, (s64)XIII);
+    CREDO_AEQUALIS_I32 (e.servati, ZEPHYRUM);
+    CREDO_NIHIL (e.normae);
+    /* A2: radices (0,1), (1,0), (1,1) in coefficientibus */
+    q = _quaestio(II, X, ZEPHYRUM);
+    CREDO_NECESSE (reticulum_formam_enumera(_z("[2, -1; -1, 2]",
+        piscina), &q, piscina, &e));
+    CREDO_AEQUALIS_S64 ((s64)e.numerus, (s64)III);
+    CREDO_VERUM (_textus_vectoris(e.vectores, ZEPHYRUM, "[0, 1]",
+        piscina));
+    CREDO_VERUM (_textus_vectoris(e.vectores, II, "[1, 1]", piscina));
+    /* D4 in Z^4: XXIV radices, XII modulo signo; prima canonice */
+    CREDO_NECESSE (reticulum_enumera(_z("[1, -1, 0, 0; 0, 1, -1, 0; "
+        "0, 0, 1, -1; 0, 0, 1, 1]", piscina), &q, piscina, &e));
+    CREDO_AEQUALIS_S64 ((s64)e.numerus, (s64)XII);
+    CREDO_VERUM (_textus_vectoris(e.vectores, ZEPHYRUM, "[0, 0, 1, -1]",
+        piscina));
+    CREDO_VERUM (_textus_vectoris(e.vectores, IX, "[1, 0, 0, 1]",
+        piscina));
+    /* radius 0 et basis vacua: nihil, completa */
+    q = _quaestio(ZEPHYRUM, X, ZEPHYRUM);
+    CREDO_NECESSE (reticulum_formam_enumera(_z("[1, 0; 0, 1]", piscina),
+        &q, piscina, &e));
+    CREDO_AEQUALIS_S64 ((s64)e.numerus, (s64)ZEPHYRUM);
+    CREDO_VERUM (e.completa);
+    CREDO_AEQUALIS_I32 (matrix_lineae(e.vectores), ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (matrix_columnae(e.vectores), II);
+    q = _quaestio(V, X, ZEPHYRUM);
+    CREDO_NECESSE (reticulum_enumera(_z("[]", piscina), &q, piscina,
+        &e));
+    CREDO_AEQUALIS_S64 ((s64)e.numerus, (s64)ZEPHYRUM);
+    CREDO_VERUM (e.completa);
+}
+
+/* systemata radicum: A_n n(n+1)/2, D_n n(n-1), E6 36, E7 63, E8 120
+ * (modulo signo); E8 per seriem theta: 240, 2160, 6720 in normis
+ * 2, 4, 6 */
+interior vacuum
+_enumeratio_radicum (
+    CredoContextus* c)
+{
+                Piscina* piscina  = c->piscina;
+      ReticulumQuaestio  q        = _quaestio(II, ZEPHYRUM, ZEPHYRUM);
+    ReticulumEnumeratio  e;
+                 Matrix  e8 = _cartan(VIII, II, piscina);
+                    i32  n;
+
+    per (n = I; n <= VIII; n++)
+    {
+        CREDO_NECESSE (reticulum_formam_enumera(_cartan(n, -(s32)I,
+            piscina), &q, piscina, &e));
+        CREDO_AEQUALIS_S64 ((s64)e.numerus, (s64)(n * (n + I) / II));
+        CREDO_VERUM (e.completa);
+    }
+    per (n = IV; n <= VIII; n++)
+    {
+        CREDO_NECESSE (reticulum_formam_enumera(_cartan(n, (s32)n
+            - (s32)III, piscina), &q, piscina, &e));
+        CREDO_AEQUALIS_S64 ((s64)e.numerus, (s64)(n * (n - I)));
+    }
+    CREDO_NECESSE (reticulum_formam_enumera(_cartan(VI, II, piscina),
+        &q,
+        piscina, &e));
+    CREDO_AEQUALIS_S64 ((s64)e.numerus, (s64)XXXVI);
+    CREDO_NECESSE (reticulum_formam_enumera(_cartan(VII, II, piscina),
+        &q, piscina, &e));
+    CREDO_AEQUALIS_S64 ((s64)e.numerus, (s64)LXIII);
+    CREDO_NECESSE (reticulum_formam_enumera(e8, &q, piscina, &e));
+    CREDO_AEQUALIS_S64 ((s64)e.numerus, (s64)CXX);
+    q = _quaestio(IV, ZEPHYRUM, ZEPHYRUM);
+    CREDO_NECESSE (reticulum_formam_enumera(e8, &q, piscina, &e));
+    CREDO_AEQUALIS_S64 ((s64)e.numerus, (s64)MCC);
+    q = _quaestio(VI, IV * M + D, ZEPHYRUM);
+    CREDO_NECESSE (reticulum_formam_enumera(e8, &q, piscina, &e));
+    CREDO_AEQUALIS_S64 ((s64)e.numerus, (s64)(IV * M + DLX));
+    CREDO_AEQUALIS_I32 (e.servati, IV * M + D);
+    CREDO_VERUM (magnus_aequalis(e.normae[CXIX], magnus_ex_s64(II)));
+    CREDO_VERUM (magnus_aequalis(e.normae[CXX], magnus_ex_s64(IV)));
+    CREDO_VERUM (magnus_aequalis(e.normae[MCXCIX], magnus_ex_s64(IV)));
+    CREDO_VERUM (magnus_aequalis(e.normae[MCC], magnus_ex_s64(VI)));
+}
+
+/* contra bruta: formae et bases fortuitae (dimensio 1-4, elementa
+ * parva), vector pro vectore; regimen numeratum: casus cum normis
+ * aequalibus (ordo lexicographicus refert) et cum vectoribus multis */
+interior vacuum
+_enumeratio_contra_bruta (
+    CredoContextus* c)
+{
+                Piscina* piscina  = c->piscina;
+                    i64  semen    = (i64)MMXXXI;
+                    i32  exemplum;
+                    i32  probati   = ZEPHYRUM;
+                    i32  aequales  = ZEPHYRUM;
+                    i32  multi     = ZEPHYRUM;
+                    i32  i;
+                 Matrix  b;
+                 Matrix  g;
+                  Bruta  br;
+      ReticulumQuaestio  q;
+    ReticulumEnumeratio  e;
+                    s64  radius;
+                    b32  est_forma;
+
+    per (exemplum = ZEPHYRUM; exemplum < CC; exemplum++)
+    {
+        i32 n = (i32)(I + _alea(&semen, IV));
+
+        est_forma = exemplum % II == ZEPHYRUM;
+        b = _basis_fortuita(&semen, n, est_forma ? n
+            : n + (i32)_alea(&semen, III), III, FALSUM, piscina);
+        si (!reticulum_orthogonaliza(b, piscina, NIHIL, NIHIL))
+        {
+            perge;
+        }
+        g       = _forma(b, piscina);
+        radius  = _alea(&semen, XXI);
+        si (!_bruta(g, b, est_forma, radius, piscina, &br))
+        {
+            perge;
+        }
+        q = _quaestio(radius, (i32)M, ZEPHYRUM);
+        si (est_forma)
+        {
+            CREDO_NECESSE (reticulum_formam_enumera(g, &q, piscina,
+                &e));
+        }
+        alioquin
+        {
+            CREDO_NECESSE (reticulum_enumera(b, &q, piscina, &e));
+        }
+        CREDO_VERUM (_congruit(&e, &br, (i32)M));
+        probati++;
+        multi += br.numerus >= (i32)V ? I : ZEPHYRUM;
+        per (i = I; i < br.numerus; i++)
+        {
+            si (magnus_aequalis(br.normae[i], br.normae[i - I]))
+            {
+                aequales++;
+                frange;
+            }
+        }
+    }
+    imprimere("    contra bruta %d, cum normis aequalibus %d, cum >= 5 "
+        "vectoribus %d\n", (int)probati, (int)aequales, (int)multi);
+    CREDO_MAIOR_I32 (probati, CL);
+    CREDO_MAIOR_I32 (aequales, XL);
+    CREDO_MAIOR_I32 (multi, XL);
+}
+
+/* enumeratio reticulum solum videt, non basim: b et u b (u
+ * unimodularis fortuita, elementa magna) idem reddunt */
+interior vacuum
+_enumeratio_invarians (
+    CredoContextus* c)
+{
+                Piscina* piscina  = c->piscina;
+                    i64  semen    = (i64)MMXXXII;
+                    i32  exemplum;
+                    i32  gradus;
+                    i32  i;
+                    i32  j;
+                    i32  k;
+                    i32  probati = ZEPHYRUM;
+                 Matrix  b;
+                 Matrix  u;
+                 Matrix  ub;
+                 Magnus  x;
+                 Magnus  multiplicator;
+      ReticulumQuaestio  q;
+    ReticulumEnumeratio  e1;
+    ReticulumEnumeratio  e2;
+
+    per (exemplum = ZEPHYRUM; exemplum < XXX; exemplum++)
+    {
+        i32 n = (i32)(II + _alea(&semen, IV));
+
+        b = _basis_fortuita(&semen, n, n + (i32)_alea(&semen, II), IV,
+            FALSUM, piscina);
+        si (!reticulum_orthogonaliza(b, piscina, NIHIL, NIHIL))
+        {
+            perge;
+        }
+        (vacuum)matrix_identitas(&ANULUS_INTEGRORUM, n, piscina, &u);
+        per (gradus = ZEPHYRUM; gradus < XL; gradus++)
+        {
+            /* linea i += k linea j */
+            i = (i32)_alea(&semen, (s64)n);
+            j = (i32)_alea(&semen, (s64)n);
+            si (i == j)
+            {
+                perge;
+            }
+            multiplicator = magnus_ex_s64(_alea(&semen, VII) - III);
+            per (k = ZEPHYRUM; k < n; k++)
+            {
+                x = magnus_adde(_elem(u, i, k), magnus_multiplica(
+                    multiplicator, _elem(u, j, k), piscina), piscina);
+                matrix_pone(&u, i, k, &x);
+            }
+        }
+        CREDO_NECESSE (matrix_multiplica(u, b, piscina, &ub));
+        q = _quaestio(XL + _alea(&semen, XL), (i32)M, ZEPHYRUM);
+        CREDO_NECESSE (reticulum_enumera(b, &q, piscina, &e1));
+        CREDO_NECESSE (reticulum_enumera(ub, &q, piscina, &e2));
+        CREDO_AEQUALIS_S64 ((s64)e1.numerus, (s64)e2.numerus);
+        CREDO_VERUM (matrix_aequalis(e1.vectores, e2.vectores));
+        per (i = ZEPHYRUM; i < e1.servati; i++)
+        {
+            CREDO_VERUM (magnus_aequalis(e1.normae[i], e2.normae[i]));
+        }
+        probati++;
+    }
+    imprimere("    bases permutatae %d\n", (int)probati);
+    CREDO_MAIOR_I32 (probati, XX);
+}
+
+/* limites: servandi (primi canonice) et nodorum (completa, limes
+ * inferior, monotonia) */
+interior vacuum
+_enumeratio_limitum (
+    CredoContextus* c)
+{
+                Piscina* piscina  = c->piscina;
+                 Matrix  e8       = _cartan(VIII, II, piscina);
+      ReticulumQuaestio  q;
+    ReticulumEnumeratio  tota;
+    ReticulumEnumeratio  e;
+                    i64  limes;
+                    i64  prior = ZEPHYRUM;
+                    i32  i;
+                    i32  j;
+                    b32  completa = FALSUM;
+
+    q = _quaestio(IV, MCC, ZEPHYRUM);
+    CREDO_NECESSE (reticulum_formam_enumera(e8, &q, piscina, &tota));
+    CREDO_AEQUALIS_I32 (tota.servati, MCC);
+    per (i = ZEPHYRUM; i < IV; i++)
+    {
+        i32 servandi = i == ZEPHYRUM ? ZEPHYRUM : i == I ? I
+            : i == II ? III : CXXI;
+
+        q = _quaestio(IV, servandi, ZEPHYRUM);
+        CREDO_NECESSE (reticulum_formam_enumera(e8, &q, piscina, &e));
+        CREDO_AEQUALIS_S64 ((s64)e.numerus, (s64)MCC);
+        CREDO_AEQUALIS_I32 (e.servati, servandi);
+        per (j = ZEPHYRUM; j < servandi; j++)
+        {
+            CREDO_VERUM (magnus_aequalis(e.normae[j], tota.normae[j]));
+            CREDO_VERUM (_vectores_aequales(e.vectores, j,
+                tota.vectores, j));
+        }
+    }
+    q = _quaestio(IV, ZEPHYRUM, I);
+    CREDO_NECESSE (reticulum_formam_enumera(e8, &q, piscina, &e));
+    CREDO_FALSUM (e.completa);
+    per (limes = I; !completa; limes *= II)
+    {
+        q = _quaestio(IV, ZEPHYRUM, limes);
+        CREDO_NECESSE (reticulum_formam_enumera(e8, &q, piscina, &e));
+        CREDO_VERUM (e.numerus >= prior);
+        CREDO_VERUM (e.numerus <= (i64)MCC);
+        si (!e.completa)
+        {
+            CREDO_VERUM (e.numerus < (i64)MCC);
+        }
+        prior     = e.numerus;
+        completa  = e.completa;
+    }
+    CREDO_AEQUALIS_S64 ((s64)prior, (s64)MCC);
+    /* limes exactus: reticulum [1], R = 9 - arbor nodos IV habet
+     * (x = 0, 1, 2, 3; folium x = 0 nullum, non numeratur). Limes IV
+     * perficit (III vectores), limes III non (x = 3 non visitatur). */
+    q = _quaestio(IX, ZEPHYRUM, IV);
+    CREDO_NECESSE (reticulum_enumera(_z("[1]", piscina), &q, piscina,
+        &e));
+    CREDO_VERUM (e.completa);
+    CREDO_AEQUALIS_S64 ((s64)e.numerus, (s64)III);
+    q = _quaestio(IX, ZEPHYRUM, III);
+    CREDO_NECESSE (reticulum_enumera(_z("[1]", piscina), &q, piscina,
+        &e));
+    CREDO_FALSUM (e.completa);
+    CREDO_AEQUALIS_S64 ((s64)e.numerus, (s64)II);
+}
+
+/* vector brevissimus: contra bruta; deinde limes LLL |b_1|^2 <=
+ * alpha^(n-1) lambda_1^2, alpha = 4/(4 delta - 1) = 4q/(4p - q), in
+ * integris: (4p - q)^(n-1) |b_1|^2 <= (4q)^(n-1) lambda_1^2 */
+interior vacuum
+_minimum (
+    CredoContextus* c)
+{
+                Piscina* piscina = c->piscina;
+                Fractio  deltae[III];
+                    i64  semen = (i64)MMXXXIII;
+                    i32  exemplum;
+                    i32  i;
+                    i32  probati_bruta = ZEPHYRUM;
+                    i32  probati_limes = ZEPHYRUM;
+                 Matrix  b;
+                 Matrix  g;
+                 Matrix  v;
+                 Matrix  r;
+                 Magnus  norma;
+                 Magnus  b1;
+                 Magnus  p;
+                 Magnus  qq;
+                 Magnus  diag;
+                  Bruta  br;
+                    s64  radius;
+
+    CREDO_NECESSE (reticulum_minimum(_z("[1, 0, 0; 0, 1, 0; 0, 0, 1]",
+        piscina), piscina, &v, &norma));
+    CREDO_VERUM (magnus_aequalis(norma, magnus_ex_s64(I)));
+    CREDO_VERUM (_textus_vectoris(v, ZEPHYRUM, "[0, 0, 1]", piscina));
+    CREDO_FALSUM (reticulum_minimum(_z("[]", piscina), piscina, &v,
+        &norma));
+    deltae[ZEPHYRUM]  = _f("3/4", piscina);
+    deltae[I]         = _f("99/100", piscina);
+    deltae[II]        = _f("1", piscina);
+    per (exemplum = ZEPHYRUM; exemplum < LX; exemplum++)
+    {
+        i32 n = (i32)(I + _alea(&semen, VI));
+
+        b = _basis_fortuita(&semen, n, n + (i32)_alea(&semen, II),
+            exemplum % II == ZEPHYRUM ? (s64)III : (s64)XX, FALSUM,
+            piscina);
+        si (!reticulum_orthogonaliza(b, piscina, NIHIL, NIHIL))
+        {
+            perge;
+        }
+        CREDO_NECESSE (reticulum_minimum(b, piscina, &v, &norma));
+        /* contra bruta: radius = diagonalis minima formae datae */
+        g     = _forma(b, piscina);
+        diag  = _elem(g, ZEPHYRUM, ZEPHYRUM);
+        per (i = I; i < n; i++)
+        {
+            si (magnus_compara(_elem(g, i, i), diag) < ZEPHYRUM)
+            {
+                diag = _elem(g, i, i);
+            }
+        }
+        si (   magnus_ad_s64(diag, &radius)
+            && _bruta(g, b, FALSUM, radius, piscina, &br))
+        {
+            CREDO_MAIOR_I32 (br.numerus, ZEPHYRUM);
+            CREDO_VERUM (magnus_aequalis(norma, br.normae[ZEPHYRUM]));
+            per (i = ZEPHYRUM; i < br.columnae; i++)
+            {
+                CREDO_VERUM (magnus_aequalis(_elem(v, ZEPHYRUM, i),
+                    br.vectores[i]));
+            }
+            probati_bruta++;
+        }
+        /* limes LLL */
+        CREDO_NECESSE (reticulum_reduce(b, &deltae[exemplum % III],
+            piscina, &r, NIHIL, NIHIL));
+        b1 = magnus_ex_s64(ZEPHYRUM);
+        per (i = ZEPHYRUM; i < matrix_columnae(r); i++)
+        {
+            b1 = magnus_adde(b1, magnus_multiplica(_elem(r, ZEPHYRUM,
+                i),
+                _elem(r, ZEPHYRUM, i), piscina), piscina);
+        }
+        p   = fractio_numerator(deltae[exemplum % III]);
+        qq  = fractio_denominator(deltae[exemplum % III]);
+        CREDO_VERUM (magnus_compara(
+            magnus_multiplica(magnus_potentia(magnus_subtrahe(
+                magnus_multiplica(magnus_ex_s64(IV), p, piscina), qq,
+                piscina), (i32)(n - I), piscina), b1, piscina),
+            magnus_multiplica(magnus_potentia(magnus_multiplica(
+                magnus_ex_s64(IV), qq, piscina), (i32)(n - I), piscina),
+                norma, piscina)) <= ZEPHYRUM);
+        /* minimum non maius quam |b_1|^2 */
+        CREDO_VERUM (magnus_compara(norma, b1) <= ZEPHYRUM);
+        probati_limes++;
+    }
+    imprimere("    minima contra bruta %d, limes LLL %d\n",
+        (int)probati_bruta, (int)probati_limes);
+    CREDO_MAIOR_I32 (probati_bruta, XX);
+    CREDO_MAIOR_I32 (probati_limes, XL);
+}
+
+interior vacuum
+_probare_enumerationem_refutationes (
+    CredoContextus* c)
+{
+                Piscina* piscina   = c->piscina;
+      ReticulumQuaestio  q         = _quaestio(IV, X, ZEPHYRUM);
+      ReticulumQuaestio  negativa  = _quaestio(-(s64)I, X, ZEPHYRUM);
+    ReticulumEnumeratio  e;
+                 Matrix  v;
+                 Magnus  norma;
+
+    e.numerus  = (i64)LXXVII;
+    v.anulus   = NIHIL;
+    CREDO_FALSUM (reticulum_formam_enumera(_z("[1, 0; 0, 1]", piscina),
+        &negativa, piscina, &e));
+    CREDO_FALSUM (reticulum_formam_enumera(_z("[1, 0; 0, 1]", piscina),
+        NIHIL, piscina, &e));
+    CREDO_FALSUM (reticulum_formam_enumera(_z("[1, 0; 0, 1]", piscina),
+        &q, piscina, NIHIL));
+    CREDO_FALSUM (reticulum_enumera(_z("[1, 2; 2, 4]", piscina), &q,
+        piscina, &e));
+    CREDO_FALSUM (reticulum_formam_enumera(_z("[1, 2; 2, 1]", piscina),
+        &q, piscina, &e));
+    CREDO_FALSUM (reticulum_formam_enumera(_z("[2, 1; 0, 2]", piscina),
+        &q, piscina, &e));
+    CREDO_FALSUM (reticulum_enumera(_matrix(&ANULUS_RATIONALIUM,
+        "[1/2, 0; 0, 1]", piscina), &q, piscina, &e));
+    CREDO_FALSUM (reticulum_minimum(_z("[1, 2; 2, 4]", piscina),
+        piscina,
+        &v, &norma));
+    CREDO_AEQUALIS_S64 ((s64)e.numerus, (s64)LXXVII);
+    CREDO_NIHIL (v.anulus);
+}
+
+/* memoria: Z^6 multiplicatum per 10^10 in LX columnis - normae ~10^21
+ * extra s64, ergo nodus quisque allocat; vectores lati. Numerus idem ac
+ * Z^6 (XI DCCCXCVI). Mensum 2026-10-13: numeratio ~35 KB (sine
+ * refectione per gradus ~24 MB); L servati ~78 KB (sine loco expulsi
+ * reddito ~286 KB). */
+interior vacuum
+_enumerationis_memoriam (
+    CredoContextus* c)
+{
+                Piscina* piscina = c->piscina;
+      ReticulumQuaestio  q;
+    ReticulumEnumeratio  e;
+                 Matrix  z6;
+                 Magnus  scala = magnus_potentia(magnus_ex_s64(X), X,
+                     piscina);
+                 Magnus x;
+                    i32 i;
+
+    (vacuum)matrix_nulla(&ANULUS_INTEGRORUM, VI, LX, piscina, &z6);
+    per (i = ZEPHYRUM; i < VI; i++)
+    {
+        x = scala;
+        matrix_pone(&z6, i, i, &x);
+    }
+    q = _quaestio(XVI, I, ZEPHYRUM);
+    q.radius_quadratus = magnus_multiplica(magnus_ex_s64(XVI),
+        magnus_multiplica(scala, scala, piscina), piscina);
+    CREDO_NECESSE (reticulum_enumera(z6, &q, piscina, &e));
+    imprimere("    Z^6 x 10^10: numerus %ld, apex %lu\n",
+        (long)e.numerus,
+        (unsigned long)reticulum_apex_officinarum());
+    CREDO_AEQUALIS_S64 ((s64)e.numerus, (s64)XI * (s64)M
+        + (s64)DCCCXCVI);
+    CREDO_VERUM (reticulum_apex_officinarum()
+        < (memoriae_index)1048576);
+    q.limes_servandi = L;
+    CREDO_NECESSE (reticulum_enumera(z6, &q, piscina, &e));
+    imprimere("    Z^6 x 10^10, L servati: apex %lu\n",
+        (unsigned long)reticulum_apex_officinarum());
+    CREDO_AEQUALIS_I32 (e.servati, L);
+    CREDO_VERUM (reticulum_apex_officinarum()
+        < (memoriae_index)CLX * (memoriae_index)M);
+}
+
 /* LLL sub termino: vitium quod gyrum infinitum facit (d_k non
  * renovatus, plantatio T2) suitam aliter in aeternum tenet - planta
  * horas II pependit antequam manu occisa est. Sectio prius in filio
@@ -989,6 +1837,55 @@ _probare_lll_memoriam (
     _sub_termino(c, _lll_memoriam);
 }
 
+interior vacuum
+_probare_enumeratio_manu (
+    CredoContextus* c)
+{
+    _sub_termino(c, _enumeratio_manu);
+}
+
+interior vacuum
+_probare_enumeratio_radicum (
+    CredoContextus* c)
+{
+    _sub_termino(c, _enumeratio_radicum);
+}
+
+interior vacuum
+_probare_enumeratio_contra_bruta (
+    CredoContextus* c)
+{
+    _sub_termino(c, _enumeratio_contra_bruta);
+}
+
+interior vacuum
+_probare_enumeratio_invarians (
+    CredoContextus* c)
+{
+    _sub_termino(c, _enumeratio_invarians);
+}
+
+interior vacuum
+_probare_enumeratio_limitum (
+    CredoContextus* c)
+{
+    _sub_termino(c, _enumeratio_limitum);
+}
+
+interior vacuum
+_probare_minimum (
+    CredoContextus* c)
+{
+    _sub_termino(c, _minimum);
+}
+
+interior vacuum
+_probare_enumerationis_memoriam (
+    CredoContextus* c)
+{
+    _sub_termino(c, _enumerationis_memoriam);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "manu", _probare_manu, NIHIL, NIHIL, NIHIL, NIHIL },
     { "iudicium manu", _probare_iudicium_manu, NIHIL, NIHIL, NIHIL,
@@ -1013,6 +1910,23 @@ hic_manens constans CredoSectio SECTIONES[] = {
       NIHIL },
     { "LLL memoria", _probare_lll_memoriam, NIHIL, NIHIL, NIHIL,
         NIHIL },
+    { "enumeratio manu", _probare_enumeratio_manu, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { "radices", _probare_enumeratio_radicum, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { "enumeratio contra bruta", _probare_enumeratio_contra_bruta,
+        NIHIL,
+      NIHIL, NIHIL, NIHIL },
+    { "enumeratio invarians", _probare_enumeratio_invarians, NIHIL,
+      NIHIL, NIHIL, NIHIL },
+    { "limites enumerationis", _probare_enumeratio_limitum, NIHIL,
+        NIHIL,
+      NIHIL, NIHIL },
+    { "minimum", _probare_minimum, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "enumeratio refutationes", _probare_enumerationem_refutationes,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "enumeratio memoria", _probare_enumerationis_memoriam, NIHIL,
+      NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 
