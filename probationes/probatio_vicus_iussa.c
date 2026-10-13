@@ -11,7 +11,10 @@
  * praecisus ante indicem paginae; clavis proxima et ictus proximus
  * tollunt. VII: '$dies(-1)', '$dies(7)'; '$dies(1, 2)' error; verbum
  * FALSUM sine errore -> "<verbum>: defecit". VIII: ictus primus in
- * latus non focatum iussum statim currit; extra iussum focat solum. */
+ * latus non focatum iussum statim currit; extra iussum focat solum.
+ * Sectio corpus (2026-10-13): '$eco<>..</>' (non consumens) textum
+ * POST '</>' inserit, etiam si '</>' in linea sequenti; ictus intra
+ * corpus nihil currit; consumens caput solum delet. */
 #include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
@@ -216,6 +219,20 @@ frange_iussum (
     (vacuum)p;
     (vacuum)effectus;
     redde FALSUM;
+}
+
+/* corpus: textus "!" (ctx NIHIL: non consumens) aut "#" (ctx
+ * quilibet: consumens) */
+interior b32
+resonare_iussum (
+    constans Iussum* iussum,
+             vacuum* ctx,
+            Piscina* p,
+     IussumEffectus* effectus)
+{
+    (vacuum)iussum;
+    effectus->textus = chorda_ex_literis(ctx ? "#" : "!", p);
+    redde VERUM;
 }
 
 /* MUNDUS APPLICATIONIS (credo v2): applicatio vicus cum volumine
@@ -445,9 +462,47 @@ _probare_iussa (
     CREDO_VERUM(linea_est(sin, IX, hodie));
 }
 
+interior vacuum
+_probare_corpus (
+    CredoContextus* c)
+{
+      MundusApplicationis* ms   = (MundusApplicationis*)c->datum;
+               ManusLudus* m    = ms->m;
+           ScribaMontatio* sin  = ms->sin;
+
+    CREDO_NECESSE(iussum_registrare(sin->actiones_ctx.iussa, "eco",
+        FALSUM, resonare_iussum, NIHIL));
+    CREDO_NECESSE(iussum_registrare(sin->actiones_ctx.iussa, "ecoc",
+        VERUM, resonare_iussum, ms));
+    ictus(m, III, ZEPHYRUM);
+    CREDO_VERUM(manus_ludus_scribere(m, "i$eco<>hi"));
+    CREDO_VERUM(manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));
+    ictus(m, IV, ZEPHYRUM);
+    CREDO_VERUM(manus_ludus_scribere(m, "ithere</> z"));
+    CREDO_VERUM(manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));
+    ictus(m, VI, ZEPHYRUM);
+    CREDO_VERUM(manus_ludus_scribere(m, "i$ecoc<>ab</> q"));
+    CREDO_VERUM(manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));
+    CREDO_VERUM(linea_est(sin, III, "$eco<>hi"));
+    CREDO_VERUM(linea_est(sin, IV, "there</> z"));
+
+    /* ictus intra corpus: nihil currit */
+    ictus(m, III, VII);
+    CREDO_VERUM(linea_est(sin, IV, "there</> z"));
+    /* ictus in caput: textus post '</>' in linea IV */
+    ictus(m, III, I);
+    CREDO_VERUM(linea_est(sin, III, "$eco<>hi"));
+    CREDO_VERUM(linea_est(sin, IV, "there</>! z"));
+    /* consumens: caput deletur, textus post '</>' */
+    ictus(m, VI, II);
+    CREDO_VERUM(linea_est(sin, VI, "ab</># q"));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "iussa in pagina scribae (scenarium I-VIII)", _probare_iussa,
       _applicationem_parare, _applicationem_purgare, NIHIL, NIHIL },
+    { "corpus", _probare_corpus, _applicationem_parare,
+      _applicationem_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

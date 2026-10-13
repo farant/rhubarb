@@ -10,6 +10,15 @@
  * sine ')' iussum NON est (dimidium iussi numquam currit). Solum
  * verba NOTA iussa sunt (hospes respondet): cetera prosa manent
  * ('$5.00', '$foo(' - nullum effugium necessarium).
+ * CORPUS (Franus 2026-10-13): '$verbum<>corpus</>' - '<>' statim post
+ * verbum, corpus usque ad '</>' PRIMUM (eadem linea aut sequentibus,
+ * intra tabulam; nulla nidificatio). Sine '</>' iussum NON est (ut
+ * '$verbum(' sine ')': dimidium numquam currit). Corpus = argumentum
+ * unum: lineae verbatim (spatiis finalibus demptis) '\n' iunctae,
+ * spatia extrema totius dempta; commata et ')' litterae sunt. Aut
+ * '(...)' aut '<>', non ambo. ICTUS: CAPUT solum ('$verbum<>', [initium,
+ * finis) in linea) - corpus textus est, ictu editur. '$' intra corpus
+ * iussum non est (prosa).
  *
  * <purus/>: tabulam legit, nihil mutat; chordae exitus in piscina
  * (copiae - tabula postea mutari potest). */
@@ -34,6 +43,9 @@ nomen structura {
     chorda  verbum;             /* sine '$' */
        i32  numerus_argumentorum;
     chorda* argumenta;          /* in piscina; spatia extrema dempta */
+       b32  corpus;             /* forma '<>...</>': argumentum unum */
+       s32  linea_clausurae;    /* linea '</>' (corpus solum) */
+       s32  post_clausuram;     /* columna post '</>' in ea */
 } Iussum;
 
 /* iussum quod cellulam (linea, columna) tegit (initium <= columna <
@@ -90,7 +102,8 @@ nomen structura IussumRegistrum IussumRegistrum;   /* opacum */
 
 /* effectus iussi: textus inserendus et/aut error. textus: consumens
  * signum substituit, aliter post signum inseritur. error non vacuus:
- * nihil mutatur, nuntius ostenditur (S3b-2: linea status). */
+ * nihil mutatur, nuntius ostenditur (S3b-2: linea status).
+ * Corpus: textus post '</>' inseritur; consumens caput solum delet. */
 nomen structura {
     chorda textus;
     chorda error;

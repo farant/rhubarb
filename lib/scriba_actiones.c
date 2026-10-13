@@ -746,6 +746,8 @@ nomen structura {
                  b32  consumit;
               chorda  textus;
                  s32  columna;    /* exitus: post textum insertum */
+                 s32  linea;      /* exitus: linea textus (corpus:
+                                   * linea '</>') */
 } Substitutio;
 
 interior vacuum
@@ -759,9 +761,10 @@ substitutio_mutator (
                   s32  i;
 
     (vacuum)motus;
-    sub  = (Substitutio*)ctx;
-    t    = &sub->sa->laboris;
-    a    = sub->consumit ? sub->iussum->initium : sub->iussum->finis;
+    sub = (Substitutio*)ctx;
+    t = &sub->sa->laboris;
+    a = sub->consumit ? sub->iussum->initium : sub->iussum->finis;
+    sub->linea = sub->iussum->linea;
     si (sub->consumit)
     {
         per (i = sub->iussum->initium; i < sub->iussum->finis; i++)
@@ -770,15 +773,26 @@ substitutio_mutator (
                 (i32)a);
         }
     }
+    /* corpus: textus post '</>' (consumens caput solum delevit -
+     * '</>' in eadem linea tot cellulis sinistrorsum movetur) */
+    si (sub->iussum->corpus)
+    {
+        sub->linea  = sub->iussum->linea_clausurae;
+        a           = sub->iussum->post_clausuram;
+        si (sub->consumit && sub->linea == sub->iussum->linea)
+        {
+            a -= sub->iussum->finis - sub->iussum->initium;
+        }
+    }
     sub->columna = a;
     si (   sub->textus.mensura > ZEPHYRUM
-        && tabula_inserere_spatium(t, (i32)sub->iussum->linea, (i32)a,
+        && tabula_inserere_spatium(t, (i32)sub->linea, (i32)a,
                sub->textus.mensura))
     {
         per (i = ZEPHYRUM; i < (s32)sub->textus.mensura
                            && a + i < (s32)t->latitudo; i++)
         {
-            t->cellulae[(i32)sub->iussum->linea * t->latitudo
+            t->cellulae[(i32)sub->linea * t->latitudo
                 + (i32)(a + i)] = (character)sub->textus.datum[i];
         }
         sub->columna = a + i;
@@ -822,12 +836,13 @@ iussum_exsequi (
     sub.consumit  = iussum_consumit(sa->iussa, iussum->verbum);
     sub.textus    = eff.textus;
     sub.columna   = iussum->finis;
+    sub.linea     = iussum->linea;
     si (sub.consumit || sub.textus.mensura > ZEPHYRUM)
     {
         mutare_gestum(motus, substitutio_mutator, &sub, tempus);
     }
     /* cursorem_ponere effundit: substitutio commissio una */
-    cursorem_ponere(ramus, motus, sa, iussum->linea,
+    cursorem_ponere(ramus, motus, sa, sub.linea,
         sub.columna < (s32)sa->laboris.latitudo
         ? sub.columna : (s32)sa->laboris.latitudo - I);
 }

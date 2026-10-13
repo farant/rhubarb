@@ -165,3 +165,13 @@ and vicus's one-click ictus_primus hook) pass the event through
 scriba_pagina_clavis, so one call site reads MOD_SHIFT. #next/#prev
 ignore Shift (not asked). manus_ludus_premere_ad carries no modifiers;
 probatio_vicus_nexus VII builds the Shift events by hand.
+
+## 2026-10-13 - body verbs: text goes after '</>'
+
+iussum_exsequi / substitutio_mutator: for a body command the effect's
+text is inserted at (linea_clausurae, post_clausuram), not after the
+head; a consuming body verb deletes only the head ($verb<>) - if '</>'
+is on the same line it shifts left by the head's length, handled. The
+cursor goes after the inserted text on the closer's line. Tested in
+probatio_vicus_iussa section "corpus" (two throwaway verbs, eco and
+ecoc; clicking inside the body runs nothing).

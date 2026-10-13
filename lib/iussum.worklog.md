@@ -41,3 +41,26 @@ stays $dies followed by prose '-' (and "$dies--" too). Registration
 applies the same rule (rejects "a-", "-a"; accepts "a-b"). The '$'
 precondition (not after a verbal character) still uses
 verbi_character, which does NOT include '-': "a-$b" is a command.
+
+## 2026-10-13 - body form '$verb<>...</>' (Fran)
+
+Fran's idea for $question (scriba asks Anthropic via vates): a single
+multi-line argument in STML's own closer syntax. Rules (header):
+'<>' right after the verb, body to the FIRST '</>' on this or a later
+line, no nesting, unclosed = prose; body = one argument, lines
+verbatim minus trailing spaces, '\n'-joined, outer whitespace trimmed;
+commas and ')' are plain text; only the HEAD ('$verb<>') is the click
+target, so clicking into the body edits it instead of firing it.
+
+- '$' inside a body is not a command: legere() asks intra_corpus(),
+  which walks the page from (0,0) jumping over every body it meets -
+  so a '$' inside a body can never open a body itself (no nesting by
+  construction). The walk parses in PROBE mode (plenum FALSUM: no
+  body copy, no intra check -> no recursion). Cost: O(page cells) per
+  '$' probed; pages are ~60 x 40, the figure probes per line.
+- Iussum gained corpus / linea_clausurae / post_clausuram; finis stays
+  the end of the clickable part (head), so iussum_ad_locum and the
+  figure's per-line colouring loops are unchanged: only the head is
+  coloured, the body is plain text.
+- An empty body ('$verb<></>') gives zero arguments, like '()'.
+- '$verb(...)<>...</>' is the simple form; the '<>' after it is prose.
