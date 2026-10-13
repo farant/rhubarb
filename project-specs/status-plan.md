@@ -143,9 +143,12 @@ widgets are migrated by hand.*
   node minus descendant branches with their own canon (nearest wins,
   any depth); initiation under the parent (absent parent refused,
   named). probatio_insula_profunda (3 levels).
-- **S8b** mounting at depth: organum_ramum_parare + conservatio /
-  relatio / dimissio on nested branches; persistence key from the path;
-  toy widgets in probationes.
+- **S8b** DONE 2026-10-12 (lib/organum.worklog.md): toy widget
+  `ludibrium` (probationes/fixa/organum/ludibrium.stml) mounts itself
+  three deep, id "liber" at every level; start values, canon, owners
+  per level; persistence keyed by the path (caller passes `via` as
+  clavis); relatio branch identity = path. dimissio (spatium = id)
+  waits for S8c.
 - **S8c** routing by path: spatium = branch path (one address);
   registry, focus/focus_acervus, kinetic slot -> innermost focused
   branch; pictor/scriba compare with the path. Test: toy widget three

@@ -42,7 +42,8 @@ conservatio_creare (
 
 /* ramum registrare et statum servatum restituere. VOCANDUM post
  * insula_ramum_initiare et ANTE dominos (restitutio anonyma, ut
- * initiatio). clavis = id rami (aut genus pro radice). Redde numerum
+ * initiatio). clavis = id rami (aut genus pro radice; via rami pro
+ * ramis profundis, S8 - id idem sub parentibus diversis). Redde numerum
  * camporum restitutorum quorum valor MUTATUS est (id idem non
  * numeratur). */
 i32

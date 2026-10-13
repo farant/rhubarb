@@ -227,3 +227,28 @@ Tool candidate (not built): silva has renominare for renames but nothing
 for "remove argument k from every call of F + the parameter from its
 definitions/prototype/function-pointer type". This slice did it by
 script; a silva-aware `argumentum_tollere` would make it one command.
+
+## 2026-10-12 — status-plan S8b: mounting at depth
+
+Toy widget `ludibrium` (probationes/fixa/organum/ludibrium.stml, read
+from disk - test fixture, not embedded): one persistent field `valor`
+(absens 0), one transient `nota`, action `ludibrium.agere`, and a
+declared `<montatio nomen="liber" genus="ludibrium"/>` (organum.canon
+accepts montationes; nothing reads them yet - the parent mounts
+explicitly). It mounts itself three deep with the SAME id "liber" at
+every level, as a real recursive child slot would - which is what makes
+id-keyed anything collide.
+
+S8a already carried most of it: organum_ramum_parare on a nested branch
+got the canon at depth, initiation under the parent and owners by path
+for free (`gradus`, `conservatio` green before any S8b change). Changes:
+- relatio `rami_aequales` compared elementum+id -> two "liber" branches
+  under different parents were one; now compares `via` (red first:
+  second registration refused).
+- organum_montatio's root check uses `via` (same meaning, clearer).
+- persistence key: conservatio keeps the caller-given clavis; nested
+  mounts pass the path (`status/ludibrium:liber/ludibrium:liber/...` -
+  ':' and '/' fine in volume paths). Plant: keying by id -> all three
+  levels share one plagula -> `conservatio` red 14/16.
+dimissio still uses `ramus->id` as its namespace - S8c unifies
+namespace and path.

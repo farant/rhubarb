@@ -177,7 +177,7 @@ organum_ramum_parare (
     /* S7a: radix (hospes) canonem radicis repositorii accipit - visio
      * radicis montationes delegat; canon rami arborem totam
      * iudicaret */
-    si (chorda_vacua(ramus->elementum))
+    si (chorda_vacua(ramus->via))
     {
         insula_ponere_canonem(ramus->repo, canon);
     }
