@@ -274,3 +274,32 @@ Profiles (`sample`):
 So the dominant costs are all "the whole store, every write" in the
 JUDGING and PERSISTING layers, not the copy. Options for S8e are in
 status-plan (S8d).
+
+## 2026-10-13 — S8e-1: path index (no API change)
+
+`mutare` now resolves branches through an `IndexViarum` per tree
+(old root and the copy), allocated in the write's arena:
+- `ramum_per_viam`: lazy `tabula_dispersa` path -> node. The first
+  query under a parent indexes ALL its children in one pass; a key is
+  inserted only if absent (first match wins, like `ramum_invenire`).
+  Children `ramum_invenire` could never match are skipped (title with
+  ':' or '/', id with '/') - same results, no key collisions.
+- `ramum_quaerere`: a pointer-keyed memo in front (`friatio_sedis`
+  hashes `via.datum`, compares pointer + length). Owner, canon and
+  target paths are interned, so a branch's several owner entries hit
+  the memo. Without it the chain case REGRESSED (22 levels 114 -> 183
+  us): `friatio_fnv1a` over ~300-byte paths, once per lookup, was the
+  top of the profile. Non-interned paths just miss the memo.
+- `visio_nodi`: excluded paths grouped by first segment in a table
+  (`GrexReliquorum`) - one probe per child instead of children x
+  excluded.
+
+`insula_ramus_nodus` and initiation still use `ramum_invenire` (reads
+on the live tree, one lookup each); conservatio's `statum_scribere`
+lookups are S8e-3's job.
+
+| case | S8d | S8e-1 |
+|---|---|---|
+| vicus 2 / 10 tabs | 58 / 284 us | 60 / 194 us |
+| chain 1 / 22 | 1.8 / 114 us | 2.8 / 113 us |
+| rows 50 / 100 / 200 | 415 us / 1.5 ms / 5.1 ms | 84 / 192 / 482 us |

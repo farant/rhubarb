@@ -181,6 +181,21 @@ widgets are migrated by hand.*
   Verdict: the persistent-tree arc is NOT what the numbers ask for
   yet; scope the judging and persisting to the written branch first
   (S8e, design to Fran).
+- **S8e** (Fran 2026-10-13, design + header text approved): judge and
+  persist only what a write can have changed.
+  - **S8e-1** DONE 2026-10-13 (lib/insula.worklog.md): path index.
+    `mutare` builds a lazy `tabula_dispersa` per tree (first query
+    under a parent indexes all its children; first match wins, as
+    `ramum_invenire`), with a pointer-keyed memo in front (vias are
+    interned); `visio_nodi` groups excluded paths by first segment.
+    200 rows 5.1 ms -> 482 us, vicus 10 tabs 284 -> 194 us; small
+    cases flat.
+  - **S8e-2** scope owners/canons to the written path + guard (text
+    outside the subtree compared before/after); `InsulaActarius`
+    gets the written path.
+  - **S8e-3** conservatio re-serializes only branches under the
+    written path. Open: fsync per write vs at quiet (decide after the
+    numbers).
 
 ### Arc IV — generation and lints (after three hand migrations)
 
