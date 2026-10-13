@@ -198,9 +198,15 @@ widgets are migrated by hand.*
     `InsulaActarius(radix, via, ctx)`. 200 rows 482 -> 184 us
     (linear), chain 22 113 -> 86 us. vicus is now ~72% SQLite commit
     in the persistence hook (2 tabs) - S8e-3 + the quiet question.
-  - **S8e-3** conservatio re-serializes only branches under the
-    written path. Open: fsync per write vs at quiet (decide after the
-    numbers).
+  - **S8e-3** DONE 2026-10-13 (lib/conservatio.worklog.md): the
+    persistence hook skips registered branches outside the written
+    path (`insula_via_continet(via, rc->ramus.via)`). vicus 10 tabs
+    195 -> 93 us (S8d 284). Remaining at 10 tabs: text copy ~46%
+    (persistent-tree arc territory), persistence ~41% (almost all the
+    per-write SQLite commit), lookups 5%, canons 1%. Commit at quiet
+    instead of per write: PARKED by Fran 2026-10-13 (ledger parcum
+    ...QNVSR) - revisit when persistent state is written per mouse
+    move.
 
 ### Arc IV — generation and lints (after three hand migrations)
 

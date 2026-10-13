@@ -126,7 +126,6 @@ actarius_conservationis (
             i32  i;
 
     (vacuum)radix;
-    (vacuum)via;
     c = (Conservatio*)ctx;
     piscina_vacare(c->scheda);
     per (i = ZEPHYRUM; i < xar_numerus(c->rami); i++)
@@ -134,8 +133,14 @@ actarius_conservationis (
         RamusConservatus* rc;
                   chorda  status;
 
-        rc      = (RamusConservatus*)xar_obtinere(c->rami, i);
-        status  = statum_scribere(rc, c->scheda);
+        rc = (RamusConservatus*)xar_obtinere(c->rami, i);
+        /* S8e: extra viam scriptam nihil mutatum (porta custodit) -
+         * status rami sunt attributa nodi sui */
+        si (!insula_via_continet(via, rc->ramus.via))
+        {
+            perge;
+        }
+        status = statum_scribere(rc, c->scheda);
         si (chorda_aequalis(status, rc->ultimum))
         {
             perge;
