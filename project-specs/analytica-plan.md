@@ -5,12 +5,19 @@ Fran approves each; failing test -> red -> implement -> green -> plant ->
 commit via silva.commissio. Work in `../rhubarb-quinta`.
 
 ### T1: the run record in lib/mensura
-- [ ] Run API: begin/end records (initium/finis journal lines), fields of
+- [x] Run API: begin/end records (initium/finis journal lines), fields of
   spec §II, session context (commit, dirty, branch, tree, machine,
   invoker) computed once and inherited by environment; fold into the
   volume. Tests: round trip of both lines; an unfinished run reads as
   interruptus; nesting across processes; context inherited, not
   recomputed. Commit.
+  As built (2026-10-13): CursusInitium / CursusFinis / Cursus types,
+  line formats (argv escaped, other fields pure or refused), append,
+  fold routing (genus "cursus"), pairing reader (hash by id, start
+  order, missing end = INTERRUPTUS). Session context is fields only -
+  computing it (git) and inheriting it by environment moved to T2 (the
+  CLI), keeping lib/mensura pure. probatio_mensura_cursus 5 sections;
+  plants IV red.
 
 ### T2: `bin/mensor cursus` + the chassis prologue `tools/cursus.sh`
 - [ ] CLI begin/end; prologue opens, traps EXIT, captures output OUTSIDE

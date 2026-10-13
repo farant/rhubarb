@@ -140,3 +140,23 @@ more.
 actum is a *record*, not a line of a file — left in, the terminator
 would sit invisibly at the end of the last field and surface later as a
 baffling query result.
+
+## 2026-10-13 - runs (cursus) in the journal (analytica T1)
+
+A run = something with a start, an end and an outcome, written as TWO
+journal lines in the same journal measurements use (`cursus\tinitium...`
+and `cursus\tfinis...`), folded by mensura_condere with genus "cursus".
+Two lines, not one written at the end, so a run that never finished
+(killed, hung, shell died) is visible as CURSUS_INTERRUPTUS instead of
+missing - that is the "did my hook stop firing" class of question.
+mensura_cursus_legere pairs end with start by id through a hash table
+(the live volume has ~265k events), keeps start order (stable sort),
+skips an end without a start. Only argv is escaped (\\ \t \n \r: a
+command is data); every other field must be pure or the line is refused
+(the house rule of mensura_ad_lineam - a format that lets itself break
+corrupts silently). Session context (commit, dirty, branch, tree,
+machine, invoker) is just fields here: computing it once and passing it
+down by environment needs git, so it belongs to the CLI (T2), keeping
+this core pure. Suite probatio_mensura_cursus (credo v2, 5 sections,
+mixed order green); plants IV red (fold routing off, exit ignored, no
+interruptus, argv unescaped).
