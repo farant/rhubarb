@@ -163,6 +163,8 @@ _declarationes_colligere (
     /* gradus (fabrica-6 T6c-2): membra clausuram suam in clave
      * ferunt */
     enumerans.clausura_c  = suturae_clausura_c;
+    /* valores variabilium declaratarum in clavibus membrorum (T4) */
+    suturae_ambitum_addere(&enumerans);
     si (gradus_solus != NIHIL)
     {
         enumerans.gradus_solus = chorda_ex_literis(gradus_solus,

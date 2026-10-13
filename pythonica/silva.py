@@ -226,7 +226,11 @@ def oraculum(exemplum=None):
     ambitus['ORACULUM_OMNIA'] = '1'
     if exemplum is not None:
         ambitus['ORACULUM_EXEMPLUM'] = str(int(exemplum))
-    r = _curre(['./md/compile_probationes.sh', 'oraculum'], env=ambitus)
+    # -vis (cursores ad gradus T4): suita md gradus est - membrum frescum
+    # SERVARETUR (verdictum idem, ORACULUM_* effusionem solam mutat) et
+    # nihil imprimeret; vocator EFFUSIONEM poscit, ergo cursus cogitur
+    r = _curre(['./md/compile_probationes.sh', '-vis', 'oraculum'],
+               env=ambitus)
     acta = _ANSI.sub('', r.stdout + r.stderr)
     m = re.search(r'--- ORACULUM: (\d+)/(\d+) praeterita \(pinna (\d+)\) ---',
                   acta)
@@ -1521,7 +1525,8 @@ PORTAE = {
             r'probationes_css: \d+/\d+ praeteritae'),
     'materia': (['./materia/compile_probationes.sh'],
                 r'MATERIA PROBATIONES: \d+/\d+'),
-    'md': (['./md/compile_probationes.sh'], r'MD PROBATIONES: \d+/\d+'),
+    'md': (['./md/compile_probationes.sh'],
+           r'probationes_md: \d+/\d+ praeteritae'),
     'html': (['./html/compile_probationes.sh'], r'HTML PROBATIONES: \d+/\d+'),
     'crusta': (['./crusta/compile_probationes.sh'],
                r'CRUSTA PROBATIONES: \d+/\d+'),
@@ -1828,6 +1833,7 @@ def porta(nomen, filtrum=None, radix=None, receptum=True, vis=False,
 # probare' vocans (cursores ad gradus), oraculum tools/gradus_oraculum.sh.
 PORTAE_GRADUUM = {'toml': 'probationes_toml',
                   'css': 'probationes_css',
+                  'md': 'probationes_md',
                   'radix': 'probationes_radicis'}
 # RESIDUA (fabrica-7 T7): quod porta PRAETER membra probat - portae
 # radix: 'prae' ANTE compositum (bibliothecae omnes, generare ->

@@ -70,8 +70,16 @@ Mechanism first, then the pilots in rising difficulty (gen 3 -> 2 -> 1
   min-of-two, planted red).
 
 ### T4: md (gen 1 -> steps)
-- [ ] same as T3 for md (first jump straight from excubitor/mtime: hand
+- [x] same as T3 for md (first jump straight from excubitor/mtime: hand
   RADIX_FONTES and `-I` deleted). Commit.
+  As built (2026-10-13): md registered; `md_corpus` generator (corpus
+  list the old runner wrote by hand) as post; ambitus COMPUTUS_SCRIBERE +
+  ORACULUM_*; totalitas -> $TMPDIR; five md tools on their own closures;
+  silva.oraculum forces a run (-vis) since it reads OUTPUT. Oracle 14/14.
+  Warm 51.5 s -> 1.2 s, forced 43.7 s. FABRICA BUG FIXED: declared
+  ambitus VALUES were in no key (COMPUTUS_SCRIBERE=1 kept the member -
+  golden never rewritten, since T2) -> `ambitus:NAME=value` in member
+  mandatum; fumus LI. Plants IV red.
 
 ### T5: silva (the big one)
 - [ ] same as T3 for silva (55 tests; findings about hermeticity and

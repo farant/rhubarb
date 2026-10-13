@@ -1060,6 +1060,15 @@ suturae_legentem_parare (
     sutura->enumerare  = _enumerare;
 }
 
+/* ambitus verus (getenv) - explicatio membrorum valores variabilium
+ * declaratarum in clave ponit (cursores ad gradus T4) */
+vacuum
+suturae_ambitum_addere (
+    FabricaSutura* sutura)
+{
+    sutura->ambitus = _ambitus;
+}
+
 /* processus veri: generatores currere, relationes rogare */
 vacuum
 suturae_currentem_addere (

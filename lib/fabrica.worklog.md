@@ -2874,3 +2874,41 @@ min-of-two must stay < 1.5 s slower (1.66 vs 1.73 s; planted back:
 1.66 vs 3.95 s, red). XXI (write outside footprint) still red-capable.
 Remaining snapshot cost (~2.8 s of forced css) = the rest of build/
 and the sources, still per member - park …CH1CJ.
+
+## 2026-10-13 - cursores ad gradus T4: md to steps, and declared env in the key
+
+- md (generation 1: hand source lists, newest-header mtime rule,
+  excubitor post-check): md/aedificatio.stml `probationes_md` +
+  generator `md_corpus` (md/corpus_indicem.sh, exemplar toml_corpus) as
+  `post` - four tests read md/build/corpus_md.txt, which the old runner
+  wrote by hand; ambitus COMPUTUS_SCRIBERE, ORACULUM_OMNIA,
+  ORACULUM_EXEMPLUM. First heal 14/14, oracle vs HEAD 14/14. Warm: old
+  runner 51.5 s every time -> probare 1.2 s; forced 43.7 s.
+- totalitas failure write -> $TMPDIR (as css). FIVE md tools (arbor,
+  census, computus, extenta, html) lived off md/build/*.o -> own
+  closures via cursor_instrumentum_struere, each run on a real file.
+- silva.oraculum ran the md suite filtered to read the test's OUTPUT
+  (ORACULUM_* only change verbosity, not pass/fail): as a step the
+  member was fresh -> kept -> nothing printed -> pythonica ABORTED.
+  Callers that want output must force a run: `-vis`. Only caller of its
+  kind in silva.py. Its test now fails by name instead of aborting.
+- BUG FOUND (fabrica, since T2 for toml): a declared <ambitus
+  variabilis> passed its NAME into the member's environment, but its
+  VALUE was in no key - `COMPUTUS_SCRIBERE=1 ... computus` KEPT the
+  fresh member and the golden was never rewritten, silently. The old
+  runners always ran, so the conversions introduced it. Fix: each
+  declared variable's value (or 'absens') goes into the member's
+  mandatum as `ambitus:NAME=value` - the transit key seals the mandatum
+  (lib/fabrica.c fabricae_particulas_transitus). The expansion sutura
+  needed env access: `suturae_ambitum_addere`. Fumus LI (value changed
+  -> runs; same value -> kept; back to absent -> runs). Every member of
+  a composite with declared variables (toml, css, md, radix) re-ran once
+  after this change, then kept as before.
+- Plants: md out of PORTAE_GRADUUM -> pythonica red (declared test);
+  ambitus loop off -> fumus LI red; expansion sutura without ambitus ->
+  LI red; oraculum without -vis -> first planted with a two-line anchor
+  that left `r` unbound (an abort, not a red - redone as a whole
+  statement), and it showed the test could not catch it: with values in
+  the key the first oraculum call runs anyway. Added a REPEATED
+  identical call (same env -> same key -> kept without -vis); planted:
+  red "probatio_md_oraculum servata", by name.

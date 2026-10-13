@@ -93,6 +93,9 @@
 #        licita (fabrica_ordo), ergo ambulatio eius nihil iudicat -
 #        XL milia plagularum in thesauro 'probare -vis' (X membra, XX
 #        photographiae) < 1.5 s tardius (olim ~3.5 s)
+#   LI   ambitus declaratus in clave (T4): membrum frescum cum valore
+#        variabilis declaratae MUTATO currit (COMPUTUS_SCRIBERE=1 olim
+#        servabatur - aurum non rescribebatur); valore eodem servatur
 #
 # Exitus: 0 sanum · 1 fractum · 2 bin/fabrica deest.
 # <porta titulus="fabrica-fumus" instrumentum="bin/fabrica" tegit="*/aedificatio.stml aedificatio.canon fabrica.canon tools/fabrica_struere.sh"/>
@@ -780,6 +783,22 @@ for i in range(400):
 cum=$(tempus_vis)
 if python3 -c "import sys; sys.exit(0 if float('$cum') - float('$sine') < 1.5 else 1)" 2>/dev/null; then echo "  L    photographia thesaurum praeterit (sine $sine s, cum XL milibus $cum s) OK"; else echo "  L    FRACTUM (sine $sine s, cum XL milibus plagularum in thesauro $cum s)"; fracta=1; fi
 
+# LI (cursores ad gradus T4): AMBITUS DECLARATUS IN CLAVE - membrum unum
+# quod FUMUS_DECLARATUM imprimit; declaratum per <ambitus variabilis>
+radix '<fabrica titulus="t"><subsystema via="."/></fabrica>'
+cp "$RADIX/aedilis.stml" "$T/r/aedilis.stml"
+mkdir -p "$T/r/t"
+printf '#include <stdio.h>\n#include <stdlib.h>\nint main(void) { const char* v = getenv("FUMUS_DECLARATUM"); printf("valor: %%s\\n", v ? v : "absens"); return 0; }\n' > "$T/r/t/probatio_v.c"
+printf '<aedificatio>\n  <actio titulus="probationes_t" genus="iudicium">\n    <probationes_c exemplar="t/probatio_*.c"/>\n    <ambitus variabilis="FUMUS_DECLARATUM"/>\n  </actio>\n</aedificatio>\n' > "$T/r/aedificatio.stml"
+(cd "$T/r" && env -u FUMUS_DECLARATUM "$F" probare probationes_t) > "$T/a1" 2>&1; rc1=$?
+(cd "$T/r" && FUMUS_DECLARATUM=1 "$F" probare probationes_t) > "$T/a2" 2>&1; rc2=$?
+(cd "$T/r" && FUMUS_DECLARATUM=1 "$F" probare probationes_t) > "$T/a3" 2>&1; rc3=$?
+(cd "$T/r" && env -u FUMUS_DECLARATUM "$F" probare probationes_t) > "$T/a4" 2>&1; rc4=$?
+if [ "$rc1$rc2$rc3$rc4" = "0000" ] && grep -qx 'valor: absens' "$T/a1" \
+   && grep -qx 'valor: 1' "$T/a2" && grep -q 'cursae 1, servatae 0' "$T/a2" \
+   && grep -q 'cursae 0, servatae 1' "$T/a3" \
+   && grep -qx 'valor: absens' "$T/a4" && grep -q 'cursae 1, servatae 0' "$T/a4"; then echo "  LI   ambitus declaratus in clave: valor mutatus currit, idem servatur OK"; else echo "  LI   FRACTUM (rc=$rc1$rc2$rc3$rc4)"; tail -2 "$T/a2" "$T/a3" "$T/a4" | sed 's/^/      /'; fracta=1; fi
+
 if [ "$fracta" -ne 0 ]; then echo "fumus fabricae: FRACTUM"; exit 1; fi
-echo "fumus fabricae: sanum (L/L)"
+echo "fumus fabricae: sanum (LI/LI)"
 exit 0

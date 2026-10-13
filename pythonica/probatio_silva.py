@@ -1130,6 +1130,12 @@ try:
           and '<subsystema via="css"/>'
           in open(os.path.join(RADIX, 'fabrica.stml')).read(),
           'portae graduum: css -> probationes_css declaratum (cursores ad gradus T3)')
+    credo(silva.PORTAE_GRADUUM.get('md') == 'probationes_md'
+          and '<actio titulus="probationes_md" genus="iudicium">'
+          in open(os.path.join(RADIX, 'md', 'aedificatio.stml')).read()
+          and '<subsystema via="md"/>'
+          in open(os.path.join(RADIX, 'fabrica.stml')).read(),
+          'portae graduum: md -> probationes_md declaratum (cursores ad gradus T4)')
     # RESIDUA (fabrica-7 T7): 'prae' ANTE sanare, 'post' POST; sana
     # solum si omnes; residua fracta nominata (residua_<gradus>)
     ordo_log = os.path.join(T, 'residua_ordo.txt')
@@ -1730,15 +1736,24 @@ for _f in (via_m, via_v, via_p):
     os.unlink(_f)
 
 print('--- oraculum md (ambitus ORACULUM_* involutus) ---')
-o = silva.oraculum(exemplum=25)
-credo(o.totalis == 1324 and o.praeterita >= o.pinna >= 1270, 'oraculum: summa cum pinna')
-credo(o.sectiones.get('Tabs', (0, 0))[1] == 22 and len(o.sectiones) >= 30, 'oraculum: sectiones (Tabs 22, XXXI tituli)')
-credo(any(f.numerus == 5 and f.sectio == 'Tabs' and f.causa is None and f.sperata and f.nostra
-          for f in o.fracturae), 'oraculum: fracturae omnes cum sperata/nostra normatis')
-credo(len(o.exempla) == 2 and {e.plagula.split('/')[-2] for e in o.exempla} == {'commonmark', 'gfm'}
-      and o.exempla[0].md.startswith('&nbsp;') and o.exempla[0].nostra.endswith('</p>'),
-      'oraculum: exemplum 25 ex plagula utraque, cruda')
-credo(o.ignoscentiae.get('inter', 0) > 0 and silva.oraculum().exempla == [], 'oraculum: ignoscentiae; sine exemplo nulla')
+# suita md gradus est (cursores ad gradus T4): oraculum cursum COGIT
+# (-vis); defectus nominatur, numquam suitam abrumpit
+try:
+    o = silva.oraculum(exemplum=25)
+    credo(o.totalis == 1324 and o.praeterita >= o.pinna >= 1270, 'oraculum: summa cum pinna')
+    credo(o.sectiones.get('Tabs', (0, 0))[1] == 22 and len(o.sectiones) >= 30, 'oraculum: sectiones (Tabs 22, XXXI tituli)')
+    credo(any(f.numerus == 5 and f.sectio == 'Tabs' and f.causa is None and f.sperata and f.nostra
+              for f in o.fracturae), 'oraculum: fracturae omnes cum sperata/nostra normatis')
+    credo(len(o.exempla) == 2 and {e.plagula.split('/')[-2] for e in o.exempla} == {'commonmark', 'gfm'}
+          and o.exempla[0].md.startswith('&nbsp;') and o.exempla[0].nostra.endswith('</p>'),
+          'oraculum: exemplum 25 ex plagula utraque, cruda')
+    credo(o.ignoscentiae.get('inter', 0) > 0 and silva.oraculum().exempla == [], 'oraculum: ignoscentiae; sine exemplo nulla')
+    # vocatio ITERATA ambitu eodem: clavis membri eadem (T4) - sine -vis
+    # membrum servaretur, effusio nulla
+    o2 = silva.oraculum()
+    credo(o2.totalis == 1324, 'oraculum: iterum ambitu eodem (cursus cogitur)')
+except silva.SilvaError as ex:
+    credo(False, 'oraculum: cucurrit (%s)' % str(ex)[:160])
 
 print('--- Prosa: editio markdown per ancoras structurales (C1) ---')
 import shutil
