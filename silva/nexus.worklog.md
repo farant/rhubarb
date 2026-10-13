@@ -75,3 +75,17 @@ links with it), not by a gate.
 `corpus_infixum.sh` also regenerates the table when the script itself is
 newer than the table: a rule change used to leave the old table in
 place (it only watched headers and sources).
+
+### 2026-10-13 — review fixes (recensor-extensio)
+
+The reviewer confirmed the column: each declaration is its own symbol and
+row, so `extern int x; int x = 3;` gives one `externus` row and one `-`
+row (the definition stays a static candidate when no header declares
+it), and an `extern` function prototype is `externus`. Both cases are
+now in probatio_officina_capita section IV.
+
+`corpus_infixum.sh` freshness: the script path is resolved absolutely
+and a missing script means regenerate (`[ a -nt b ]` is TRUE when b is
+missing, so an unresolvable path would never have fired). Known limit:
+a change in silva's classification without an edit to the script does
+not refresh the table - use `CAPSULA_SEMPER=1`.

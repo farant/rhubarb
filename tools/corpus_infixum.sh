@@ -50,9 +50,14 @@ corpus_symbola_generare () {
     local TABULA=corpus.symbola.tsv
     local RADIX="${CAPSULA_RADIX:-$(pwd)}"
     # regula mutata (hoc scriptum non vetustius tabula) = tabula stala;
-    # '! [ tabula -nt scriptum ]': in aequalitate DENUO (nt-aequalitas)
-    local regula_nova=0
-    if ! [ "$TABULA" -nt "${BASH_SOURCE[0]}" ]; then
+    # '! [ tabula -nt scriptum ]': in aequalitate DENUO (nt-aequalitas).
+    # Via ABSOLUTA scripti: '-nt' contra plagulam absentem VERUM reddit,
+    # ergo via irresolubilis regulam tacite numquam excitaret - scriptum
+    # non inventum = regenera. (Mutatio classificationis silvae sine
+    # scripto mutato tabulam NON renovat: tunc CAPSULA_SEMPER=1.)
+    local scriptum regula_nova=0
+    scriptum="$(cd "$(dirname "${BASH_SOURCE[0]}")" 2>/dev/null && pwd)/$(basename "${BASH_SOURCE[0]}")"
+    if [ ! -f "$scriptum" ] || ! [ "$TABULA" -nt "$scriptum" ]; then
         regula_nova=1
     fi
     if [ "${CAPSULA_SEMPER:-0}" != 1 ] && [ "$regula_nova" = 0 ] && [ -f "$TABULA" ] && [ -z "$(find include "${RADICES_CLIENTIUM[@]}" -name '*.h' -newer "$TABULA" -print -quit 2>/dev/null)" ] \

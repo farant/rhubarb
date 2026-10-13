@@ -74,7 +74,7 @@ _sedem_recipere (
     sedes_numerus++;
 }
 
-/* repositio sedis nominatae; NIHIL si nulla */
+/* repositio sedis nominatae (prima); NIHIL si nulla */
 interior constans character*
 _repositio (
     constans character* titulus)
@@ -89,6 +89,27 @@ _repositio (
         }
     }
     redde NIHIL;
+}
+
+/* sedes nominatae cum repositione data (declarationes eiusdem nominis
+ * singulae sedes sunt) */
+interior i32
+_sedes_cum (
+    constans character* titulus,
+    constans character* valor)
+{
+    i32 k;
+    i32 n = ZEPHYRUM;
+
+    per (k = ZEPHYRUM; k < sedes_numerus; k++)
+    {
+        si (   strcmp(repositio_titulus[k], titulus) == ZEPHYRUM
+            && strcmp(repositio_valor[k], valor)     == ZEPHYRUM)
+        {
+            n++;
+        }
+    }
+    redde n;
 }
 
 interior constans character*
@@ -307,8 +328,11 @@ principale (vacuum)
             "extern char **alibi;\n"
             "static int proprius;\n"
             "int publicus;\n"
+            "extern int posterius;\n"
+            "int posterius = 3;\n"
+            "extern int functio_alibi(void);\n"
             "int specimen(void) { return proprius + publicus"
-            " + (alibi != 0); }\n";
+            " + posterius + functio_alibi() + (alibi != 0); }\n";
         PraeparatorConfiguratio cfg;
                     Praeparatio praeparatio;
                    SilvaPiscina* effimera;
@@ -352,6 +376,14 @@ principale (vacuum)
             && strcmp(_repositio("publicus"), "-") == ZEPHYRUM);
         CREDO_VERUM (_repositio("specimen") != NIHIL
             && strcmp(_repositio("specimen"), "-") == ZEPHYRUM);
+        /* extern deinde definitio in eadem TU: sedes duae, declaratio
+         * externa et definitio simplex (haec manet statica in tabula
+         * corpus_infixum si nullum caput eam fert) */
+        CREDO_AEQUALIS_I32 (_sedes_cum("posterius", "externus"), I);
+        CREDO_AEQUALIS_I32 (_sedes_cum("posterius", "-"), I);
+        /* prototypus functionis extern: externus (non statica) */
+        CREDO_AEQUALIS_I32 (_sedes_cum("functio_alibi", "externus"), I);
+        CREDO_AEQUALIS_I32 (_sedes_cum("functio_alibi", "-"), ZEPHYRUM);
         si (effimera != NIHIL) silva_piscina_destruere(effimera);
         si (piscina_ordinum
             != NIHIL) piscina_destruere(piscina_ordinum);
