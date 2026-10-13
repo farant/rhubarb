@@ -2172,6 +2172,34 @@ nomen structura {
        ChordaAedificator* fractae;    /* tituli fractarum, spatio */
 } CursusProbandi;
 
+/* filtrum ut via (cursores veteres): 'dir/probatio_x.c' -> 'probatio_x' -
+ * directorium et suffixum '.c' dempta */
+interior character*
+_filtrum_nudare (
+    character* filtrum,
+      Piscina* piscina)
+{
+         character* basis = strrchr(filtrum, '/');
+         character* nudum;
+    memoriae_index  longitudo;
+
+    basis      = (basis != NIHIL) ? basis + I : filtrum;
+    longitudo  = strlen(basis);
+    si (   longitudo > II
+        && strcmp(basis + longitudo - II, ".c") == ZEPHYRUM)
+    {
+        longitudo -= II;
+    }
+    nudum = (character*)piscina_allocare(piscina, longitudo + I);
+    si (nudum == NIHIL)
+    {
+        redde filtrum;
+    }
+    memcpy(nudum, basis, longitudo);
+    nudum[longitudo] = '\0';
+    redde nudum;
+}
+
 /* vexilla, compositum, filtra. FALSUM = exitus II (nuntiatum) */
 interior b32
 _probare_optiones (
@@ -2208,7 +2236,9 @@ _probare_optiones (
         }
         alioquin
         {
-            *(character**)xar_addere(p->filtra) = argv[a];
+            *(character**)xar_addere(p->filtra) =
+                _filtrum_nudare(argv[a],
+                piscina);
         }
     }
     si (p->titulus == NIHIL)

@@ -78,7 +78,8 @@
 #   XLVI probare (cursores ad gradus T1): membra cursa acta sua
 #        imprimunt, fresca 'servata' cum causa iudicis (linea
 #        'servatae N/M'), summa, exitus 1 si fracta; FILTRUM, -vis,
-#        filtrum sine paribus -> 2, compositum ignotum -> 2, -machina
+#        filtrum sine paribus -> 2, compositum ignotum -> 2, -machina;
+#        filtrum ut via ('t/probatio_a.c' -> probatio_a; cursores veteres)
 #
 # Exitus: 0 sanum · 1 fractum · 2 bin/fabrica deest.
 # <porta titulus="fabrica-fumus" instrumentum="bin/fabrica" tegit="*/aedificatio.stml aedificatio.canon fabrica.canon tools/fabrica_struere.sh"/>
@@ -659,6 +660,8 @@ printf '#include <stdio.h>\nint main(void) { printf("c dicit salve\\n"); return 
 (cd "$T/r" && "$F" probare probationes_t zzz) > "$T/p5" 2>&1; rc5=$?
 (cd "$T/r" && "$F" probare probationes_nulla) > "$T/p6" 2>&1; rc6=$?
 (cd "$T/r" && "$F" probare -machina probationes_t) > "$T/p7" 2>/dev/null; rc7=$?
+# filtrum ut via (cursores veteres: 'dir/probatio_a.c' -> 'probatio_a')
+(cd "$T/r" && "$F" probare probationes_t t/probatio_a.c) > "$T/p8" 2>&1; rc8=$?
 if [ "$rc1" -eq 1 ] && grep -qx 'a dicit salve' "$T/p1" && grep -qx 'b dicit vae' "$T/p1" \
    && grep -q '^--- probatio_a praeteriit' "$T/p1" && grep -q '^--- probatio_b FRACTA' "$T/p1" \
    && grep -qx 'probationes_t: 2/3 praeteritae \[cursae 3, servatae 0\]' "$T/p1" \
@@ -674,7 +677,8 @@ if [ "$rc1" -eq 1 ] && grep -qx 'a dicit salve' "$T/p1" && grep -qx 'b dicit vae
    && [ "$rc6" -eq 2 ] && grep -q "compositum ignotum 'probationes_nulla'" "$T/p6" \
    && [ "$rc7" -eq 1 ] && grep -q '^MEMBRUM	probatio_a	servata	' "$T/p7" \
    && grep -q '^MEMBRUM	probatio_b	fracta	' "$T/p7" \
-   && grep -qx 'PROBARE	probationes_t	2	3	1	2' "$T/p7"; then echo "  XLVI probare: acta, servatae cum causa, filtrum, -vis, -machina OK"; else echo "  XLVI FRACTUM (rc=$rc1 $rc2 $rc3 $rc4 $rc5 $rc6 $rc7)"; cat "$T/p1" "$T/p2" "$T/p3" "$T/p7" | sed 's/^/      /' | head -40; fracta=1; fi
+   && grep -qx 'PROBARE	probationes_t	2	3	1	2' "$T/p7" \
+   && [ "$rc8" -eq 0 ] && grep -qx 'probationes_t: 1/1 praeteritae \[cursae 0, servatae 1\]' "$T/p8"; then echo "  XLVI probare: acta, servatae cum causa, filtrum, -vis, -machina OK"; else echo "  XLVI FRACTUM (rc=$rc1 $rc2 $rc3 $rc4 $rc5 $rc6 $rc7 $rc8)"; cat "$T/p1" "$T/p2" "$T/p3" "$T/p7" "$T/p8" | sed 's/^/      /' | head -40; fracta=1; fi
 
 if [ "$fracta" -ne 0 ]; then echo "fumus fabricae: FRACTUM"; exit 1; fi
 echo "fumus fabricae: sanum (XLVI/XLVI)"

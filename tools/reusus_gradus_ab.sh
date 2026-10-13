@@ -6,8 +6,9 @@
 # aedilis.stml).
 #
 #   ./tools/reusus_gradus_ab.sh GRADUS PORTA DIRECTORIUM [-n N]
-#   e.g. ./tools/reusus_gradus_ab.sh probationes_toml porta_toml \
-#            toml/probationes -n 150
+#   e.g. ./tools/reusus_gradus_ab.sh probationes_radicis - probationes \
+#            -cursor "compile_tests.sh" -porta-titulus radix
+#   (porta_toml, exemplum olim, emerita est: cursores ad gradus T2)
 #   PORTA '-' (fabrica-7 T6): cursor sine actione declarata (radix:
 #   compile_tests.sh per silva.porta) - verdictum totum reusum solum si
 #   OMNIA membra reusa et plagulae cursoris (-cursor 'a b ...')

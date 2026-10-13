@@ -1525,7 +1525,7 @@ PORTAE = {
     'crusta': (['./crusta/compile_probationes.sh'],
                r'CRUSTA PROBATIONES: \d+/\d+'),
     'toml': (['./toml/compile_probationes.sh'],
-             r'TOML PROBATIONES: \d+/\d+'),
+             r'probationes_toml: \d+/\d+ praeteritae'),
     'briar': (['./briar/compile_probationes.sh'],
               r'BRIAR PROBATIONES: \d+/\d+'),
     'oratio': (['./oratio/compile_probationes.sh'],
@@ -1823,7 +1823,8 @@ def porta(nomen, filtrum=None, radix=None, receptum=True, vis=False,
 # PORTAE GRADUUM (fabrica-6 T10): porta iudicata per COMPOSITUM actionis
 # gradus (membra = probationes singulae) - linea 'VERDICTUM <c>: N/M'
 # bin/fabrica, non signum cursoris. Cursor (PORTAE[nomen]) manet: filtrum,
-# umbra, bin/fabrica absens, oraculum (tools/toml_gradus_oraculum.sh).
+# umbra, bin/fabrica absens; cursor conversus = ianua tenuis ipsa 'bin/fabrica
+# probare' vocans (cursores ad gradus), oraculum tools/gradus_oraculum.sh.
 PORTAE_GRADUUM = {'toml': 'probationes_toml',
                   'radix': 'probationes_radicis'}
 # RESIDUA (fabrica-7 T7): quod porta PRAETER membra probat - portae
@@ -1879,64 +1880,57 @@ def _machina_humana(ordines):
 
 def _porta_per_gradum(nomen, vis=False, auditus=None):
     """porta per compositum gradus; None = via altera (fabrica verdicti
-    cursoris, deinde cruda). 'bin/fabrica sanare <c>' membra stala (et
-    producentes per post) currit, recentia reutitur; deinde 'iudicare
-    -plenus <c>' lineam VERDICTUM dat: sana SOLUM si N == M. vis: verdicta
-    membrorum deleta (omnia currunt); auditus: 'sanare -audit'."""
+    cursoris, deinde cruda). Vocatio UNA 'bin/fabrica probare -machina
+    <c>' (cursores ad gradus T2: logica in C, eadem ac homini per
+    <sub>/compile_probationes.sh): membra stala et producentes currunt,
+    fresca servantur; linea PROBARE c N M cursae servatae - sana SOLUM si
+    N == M. vis -> '-vis' (omnia currunt); auditus -> '-audit'."""
     compositum = PORTAE_GRADUUM.get(nomen)
     if compositum is None or not os.path.exists(FABRICA_BIN):
         return None
     initium = time.time()
-    if vis:
-        for v in glob.glob(os.path.join(RADIX, 'build', 'fabrica', 'area',
-                                        compositum, '*', 'verdictum.txt')):
-            try:
-                os.unlink(v)
-            except OSError:
-                pass
     if auditus is None:
         auditus = bool(os.environ.get('FABRICA_AUDITUS'))
     residua = PORTAE_RESIDUA.get(nomen, [])
     residua_facta = [(g, _curre(cmd), signum) for g, cmd, signum in residua
                      if g == 'prae']
-    r = _curre([FABRICA_BIN, 'sanare', '-machina']
-               + (['-audit'] if auditus else []) + [compositum])
+    r = _curre([FABRICA_BIN, 'probare', '-machina']
+               + (['-vis'] if vis else []) + (['-audit'] if auditus else [])
+               + [compositum])
     if r.returncode == 2:
-        print('porta %s: fabrica sanare %s nequit (exitus 2) - via altera'
+        print('porta %s: fabrica probare %s nequit (exitus 2) - via altera'
               % (nomen, compositum))
         return None
-    # VERDICTUM ab ipsa sanatione (lineae machinae, H1); iudicium alterum
-    # solum si linea abest
     ordines = _machina_legere(r.stdout)
-    rj = r
-    v = [o for o in ordines if o[0] == 'VERDICTUM' and len(o) >= 4
+    v = [o for o in ordines if o[0] == 'PROBARE' and len(o) >= 6
          and o[1] == compositum]
     if not v:
-        rj = _curre([FABRICA_BIN, 'iudicare', '-plenus', '-machina',
-                     compositum])
-        v = [o for o in _machina_legere(rj.stdout) if o[0] == 'VERDICTUM'
-             and len(o) >= 4 and o[1] == compositum]
-    if not v:
-        print('porta %s: VERDICTUM %s absens - via altera' % (nomen, compositum))
+        print('porta %s: PROBARE %s absens - via altera' % (nomen, compositum))
         return None
-    recentia, omnia = int(v[0][2]), int(v[0][3])
-    non_recentia = [x for x in (v[0][4] if len(v[0]) > 4 else '').split(',')
-                    if x]
-    cursa = [o for o in ordines if o[0] == 'SANATIO' and len(o) >= 5
-             and o[2].startswith(compositum + '/')]
-    sana = r.returncode == 0 and omnia > 0 and recentia == omnia
-    compendium = '%s: %d/%d%s [membra cursa %d/%d, cetera reusa]' % (
-        compositum, recentia, omnia,
+    transeuntes, omnia = int(v[0][2]), int(v[0][3])
+    cursae, servatae = int(v[0][4]), int(v[0][5])
+    membra = [o for o in ordines if o[0] == 'MEMBRUM' and len(o) >= 5]
+    mala = [o for o in membra if o[2] not in ('transiit', 'servata')]
+    # producentes (post, praecondiciones) fracti: probatio non
+    # iudicabilis - probare ipse tunc exitu 1 redit (sana non est); hic
+    # solum NOMINANTUR
+    productores = [o for o in ordines if o[0] == 'SANATIO' and len(o) >= 5
+                   and o[1] in ('FRACTUM', 'OMISSUM', 'AUDITUM DISCORS')
+                   and not o[2].startswith(compositum + '/')]
+    sana = r.returncode == 0 and omnia > 0 and transeuntes == omnia
+    non_recentia = [o[1] for o in mala]
+    compendium = '%s: %d/%d%s [membra cursa %d/%d, servatae %d]' % (
+        compositum, transeuntes, omnia,
         (' - non recentia: ' + ', '.join(non_recentia[:3])
          + (' +%d' % (len(non_recentia) - 3) if len(non_recentia) > 3 else ''))
-        if non_recentia else '', len(cursa), omnia)
-    fr = [] if sana else [
-        # relatio = TEXTUS (relatio_fracturarum / _summa_fracturae
-        # .splitlines() vocant; olim lista - porta gradus rubra ruisset)
-        Fractura(o[2], ('%s: %s' % (o[1], o[4]))[:300])
-        for o in cursa if o[1] != 'SANATUM']
-    acta = _ANSI.sub('', r.stdout + r.stderr
-                     + (rj.stdout if rj is not r else ''))
+        if non_recentia else '', cursae, omnia, servatae)
+    # relatio = TEXTUS (relatio_fracturarum / _summa_fracturae
+    # .splitlines() vocant; olim lista - porta gradus rubra ruisset)
+    fr = [] if sana else (
+        [Fractura(o[2], ('%s: %s' % (o[1], o[4]))[:300]) for o in productores]
+        + [Fractura(compositum + '/' + o[1], ('%s: %s' % (o[2], o[4]))[:300])
+           for o in mala])
+    acta = _ANSI.sub('', r.stdout + r.stderr)
     residua_facta += [(g, _curre(cmd), signum) for g, cmd, signum
                       in residua if g == 'post']
     for g, rr, signum in residua_facta:

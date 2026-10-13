@@ -1000,10 +1000,12 @@ try:
     finally:
         silva._alea = _alea_vera
         os.environ.pop('FABRICA_AUDITUS_COMMISSIONIS', None)
-    # portae verdictorum ex declarationibus veris: toml
+    # portae verdictorum ex declarationibus veris: aedilis (porta_toml
+    # emerita - cursores ad gradus T2: toml per compositum solum)
     silva._VERDICTA_MEMORATA = None
-    credo('toml' in silva._portae_verdictorum(),
-          'portae verdictorum: porta_toml in toml/aedificatio.stml inventa')
+    credo('aedilis' in silva._portae_verdictorum()
+          and 'toml' not in silva._portae_verdictorum(),
+          'portae verdictorum: porta_aedilis inventa, porta_toml emerita')
     # praevia = artificia quae 'sanare' nominare potest: manifesta
     # (directorium alterius actionis vestigium) NON (plan 5 T5b:
     # 'sanare' exitus 2 -> porta aedilis via cruda in commissione)
@@ -1017,32 +1019,41 @@ finally:
     silva._VERDICTA_MEMORATA = _verdicta_vera
 
 
-# PORTAE GRADUUM (fabrica-6 T10): porta per compositum gradus - VERDICTUM
-# 'c: N/M' ex 'bin/fabrica sanare <c>'; sana solum N == M; membra fracta
-# ut fracturae nominata; exitus 2 -> via altera; VERDICTUM absens ->
-# iudicare -plenus; filtrum -> via cruda
+# PORTAE GRADUUM (fabrica-6 T10; cursores ad gradus T2): porta per
+# compositum gradus - vocatio UNA 'bin/fabrica probare -machina <c>'
+# (vis -> -vis, auditus -> -audit; nec sanare nec iudicare); linea PROBARE
+# c N M cursae servatae; sana solum N == M; membra non transeuntia et
+# producentes fracti (SANATIO) ut fracturae nominata; exitus 2 aut PROBARE
+# absens -> via altera; filtrum -> via cruda
+_gradus_log = os.path.join(T, 'fabrica_gradus_argv.txt')
+
+
 def _fabrica_gradus(modus):
     via = os.path.join(T, 'fabrica_gradus_%s' % modus)
     with open(via, 'w') as f:
-        f.write('#!/bin/bash\n')
+        f.write('#!/bin/bash\necho "$*" >> %s\n' % _gradus_log)
         if modus == 'transit':
-            f.write('printf "SANATIO\\tSANATUM\\tgradus_fictus/a\\t100\\t\\n"\n'
-                    'printf "SANATIO\\tSANATUM\\tgradus_fictus/b\\t100\\t\\n"\n'
-                    'printf "VERDICTUM\\tgradus_fictus\\t2\\t2\\t\\n"; exit 0\n')
+            f.write('printf "MEMBRUM\\tprobatio_a\\ttransiit\\t100\\t\\n"\n'
+                    'printf "MEMBRUM\\tprobatio_b\\ttransiit\\t100\\t\\n"\n'
+                    'printf "PROBARE\\tgradus_fictus\\t2\\t2\\t2\\t0\\n"; exit 0\n')
         elif modus == 'reusus':
-            f.write('printf "SUMMA\\t0\\t0\\t0\\t0\\t0\\t0\\n"\n'
-                    'printf "VERDICTUM\\tgradus_fictus\\t2\\t2\\t\\n"; exit 0\n')
+            f.write('printf "MEMBRUM\\tprobatio_a\\tservata\\t0\\tlectiones congruunt\\n"\n'
+                    'printf "MEMBRUM\\tprobatio_b\\tservata\\t0\\tlectiones congruunt\\n"\n'
+                    'printf "SERVATAE\\t2\\t2\\tlectiones congruunt\\n"\n'
+                    'printf "PROBARE\\tgradus_fictus\\t2\\t2\\t0\\t2\\n"; exit 0\n')
         elif modus == 'frangitur':
-            f.write('printf "SANATIO\\tFRACTUM\\tgradus_fictus/b\\t100\\t'
+            f.write('printf "MEMBRUM\\tprobatio_a\\tservata\\t0\\tlectiones congruunt\\n"\n'
+                    'printf "MEMBRUM\\tprobatio_b\\tfracta\\t100\\t'
                     'exitus 1: probatio fracta\\n"\n'
-                    'printf "VERDICTUM\\tgradus_fictus\\t1\\t2\\t'
-                    'gradus_fictus/b\\n"; exit 1\n')
+                    'printf "PROBARE\\tgradus_fictus\\t1\\t2\\t1\\t1\\n"; exit 1\n')
+        elif modus == 'productor':
+            f.write('printf "SANATIO\\tFRACTUM\\tcorpus_g\\t50\\texitus 3: index\\n"\n'
+                    'printf "MEMBRUM\\tprobatio_a\\tservata\\t0\\tlectiones congruunt\\n"\n'
+                    'printf "PROBARE\\tgradus_fictus\\t1\\t1\\t0\\t1\\n"; exit 1\n')
         elif modus == 'sera':
             f.write('echo "fabrica: iudex plenus alius currit" >&2; exit 2\n')
         else:
-            f.write('if [ "$1" = iudicare ]; then\n'
-                    '  printf "VERDICTUM\\tgradus_fictus\\t2\\t2\\t\\n"; exit 0\nfi\n'
-                    'printf "SUMMA\\t0\\t0\\t0\\t0\\t0\\t0\\n"; exit 0\n')
+            f.write('printf "MEMBRUM\\tprobatio_a\\ttransiit\\t100\\t\\n"; exit 0\n')
     os.chmod(via, 0o755)
     return via
 
@@ -1051,21 +1062,32 @@ _fb_gradus_vera = silva.FABRICA_BIN
 silva.PORTAE['ficta-g'] = (['echo', 'fictum: sanum'], r'fictum: (sanum|FRACTUM)')
 silva.PORTAE_GRADUUM['ficta-g'] = 'gradus_fictus'
 try:
+    open(_gradus_log, 'w').close()
     silva.FABRICA_BIN = _fabrica_gradus('transit')
     pg = silva.porta('ficta-g')
+    _argv_g = open(_gradus_log).read().splitlines()
     credo(pg.sana and pg.compendium.startswith('gradus_fictus: 2/2')
-          and '[membra cursa 2/2' in pg.compendium,
-          'porta gradus: membra currunt, VERDICTUM 2/2 -> sana (%r)'
-          % (pg.compendium,))
+          and '[membra cursa 2/2' in pg.compendium
+          and _argv_g == ['probare -machina gradus_fictus'],
+          'porta gradus: probare UNUM, membra currunt, 2/2 -> sana (%r, %r)'
+          % (pg.compendium, _argv_g))
+    open(_gradus_log, 'w').close()
+    pg = silva.porta('ficta-g', vis=True, auditus=True)
+    _argv_g = open(_gradus_log).read().splitlines()
+    credo(_argv_g == ['probare -machina -vis -audit gradus_fictus'],
+          'porta gradus: vis/auditus -> probare -vis -audit (%r)' % (_argv_g,))
     silva.FABRICA_BIN = _fabrica_gradus('reusus')
     pg = silva.porta('ficta-g')
-    credo(pg.sana and '[membra cursa 0/2' in pg.compendium,
-          'porta gradus: omnia reusa -> sana, cursa 0/2')
+    credo(pg.sana and '[membra cursa 0/2' in pg.compendium
+          and 'servatae 2' in pg.compendium,
+          'porta gradus: omnia reusa -> sana, cursa 0/2, servatae (%r)'
+          % (pg.compendium,))
     silva.FABRICA_BIN = _fabrica_gradus('frangitur')
     pg = silva.porta('ficta-g')
     credo(not pg.sana and pg.rc == 1 and len(pg.fracturae) == 1
-          and pg.fracturae[0].nomen == 'gradus_fictus/b'
-          and 'probatio fracta' in pg.fracturae[0].relatio,
+          and pg.fracturae[0].nomen == 'gradus_fictus/probatio_b'
+          and 'probatio fracta' in pg.fracturae[0].relatio
+          and 'non recentia: probatio_b' in pg.compendium,
           'porta gradus: 1/2 -> FRACTA, membrum fractum nominatum (%r)'
           % (pg.fracturae,))
     # relatio TEXTUS esse debet (fabrica-7 T7): relatio_fracturarum et
@@ -1075,7 +1097,7 @@ try:
         _ = [silva._summa_fracturae(f) for f in pg.fracturae]
     except AttributeError as e:
         textus_relationis = 'RUIT: %s' % e
-    credo('gradus_fictus/b' in textus_relationis
+    credo('gradus_fictus/probatio_b' in textus_relationis
           and 'probatio fracta' in textus_relationis,
           'porta gradus: relatio fracturarum legibilis (%r)'
           % textus_relationis[:120])
@@ -1083,10 +1105,17 @@ try:
     pg = silva.porta('ficta-g')
     credo(pg.sana and pg.compendium == 'fictum: sanum',
           'porta gradus: sanare exitus 2 -> via cruda (cursor)')
+    silva.FABRICA_BIN = _fabrica_gradus('productor')
+    pg = silva.porta('ficta-g')
+    credo(not pg.sana and pg.rc == 1
+          and [f.nomen for f in pg.fracturae] == ['corpus_g']
+          and 'index' in pg.fracturae[0].relatio,
+          'porta gradus: producens fractus -> FRACTA nominans eum (%r)'
+          % ([f.nomen for f in pg.fracturae],))
     silva.FABRICA_BIN = _fabrica_gradus('sine_verdicto')
     pg = silva.porta('ficta-g')
-    credo(pg.sana and pg.compendium.startswith('gradus_fictus: 2/2'),
-          'porta gradus: VERDICTUM in sanare absens -> iudicare -plenus')
+    credo(pg.sana and pg.compendium == 'fictum: sanum',
+          'porta gradus: PROBARE absens -> via cruda (cursor)')
     silva.FABRICA_BIN = _fabrica_gradus('frangitur')
     pg = silva.porta('ficta-g', 'aliquid')
     credo(pg.sana and pg.compendium == 'fictum: sanum',
@@ -1104,7 +1133,7 @@ try:
         corpus_fab = f.read()
     with open(fab, 'w') as f:
         f.write(corpus_fab.replace('#!/bin/bash\n', '#!/bin/bash\necho '
-                                   'sanare >> %s\n' % ordo_log, 1))
+                                   'probare >> %s\n' % ordo_log, 1))
     def _residuum(nomen, sanum):
         return ['bash', '-c', 'echo %s >> %s; echo "RESIDUA: %s"; exit %d'
                 % (nomen, ordo_log, 'sana' if sanum else 'FRACTA ' + nomen,
@@ -1115,10 +1144,10 @@ try:
         ('post', _residuum('post', True), 'RESIDUA: sana')]
     pg = silva.porta('ficta-g')
     ordo = open(ordo_log).read().split()
-    credo(pg.sana and ordo == ['prae', 'sanare', 'post']
+    credo(pg.sana and ordo == ['prae', 'probare', 'post']
           and 'prae RESIDUA: sana' in pg.compendium
           and 'post RESIDUA: sana' in pg.compendium,
-          'residua: prae ante sanare, post post (%r, %s)'
+          'residua: prae ante probare, post post (%r, %s)'
           % (ordo, pg.compendium))
     silva.PORTAE_RESIDUA['ficta-g'][1] = (
         'post', _residuum('post', False), 'RESIDUA: sana')

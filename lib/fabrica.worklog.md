@@ -2736,3 +2736,40 @@ it is now one C command used by both the gate (T2) and humans.
 - Editio refuses a multi-line anchor whose replacement has a different
   line count unless `tolerans='spatia'` (verbatim) - the first plant
   batch hit it before planting anything.
+
+## 2026-10-13 - cursores ad gradus T2: gate on probare, toml is an entry point
+
+- `_porta_per_gradum` (pythonica) is now ONE call: `bin/fabrica probare
+  -machina [-vis] [-audit] <c>`, reading PROBARE / MEMBRUM / producer
+  SANATIO lines. The verdict deletion for vis and the fallback
+  `iudicare -plenus` are gone (both live in C now). A failed producer
+  (post / praecondicio) makes the gate red and is named. PROBARE absent
+  or exit 2 -> via altera, as before. Bug of mine on the way: MEMBRUM
+  has FIVE fields (genus, titulus, status, ms, causa) - a `>= 6` filter
+  dropped every failing member silently; the frangitur test caught it.
+- `porta_toml` (iudicium action running ./toml/compile_probationes.sh)
+  RETIRED: once the runner execs `bin/fabrica probare`, that action
+  would be fabrica inside fabrica (one lock, build/fabrica/sera). The
+  gate already went through the composite (PORTAE_GRADUUM); the
+  portae-verdictorum test now asserts porta_aedilis present and
+  porta_toml absent.
+- toml/arbor.sh and toml/computus.sh linked `toml/build/*.o`, objects
+  the OLD runner built as a side effect - steps don't. Both now build
+  from their own closure via `cursor_instrumentum_struere`
+  (tools/cursor_communis.sh), verified from an empty toml/build. Any
+  runner conversion must look for tools living off the runner's objects.
+- `tools/gradus_oraculum.sh SUB [-ref REF]` replaces
+  tools/toml_gradus_oraculum.sh: old runner from REF written as a hidden
+  temp file INSIDE <sub>/ (old runners find their root via BASH_SOURCE)
+  vs `probare -vis` (every member really runs; the oracle never trusts
+  reuse). toml at HEAD: 13/13.
+- probare normalizes a filter given as a path ('t/probatio_a.c' ->
+  'probatio_a'), the old runners' contract (fumus XLVI).
+- Measured (warm store): old runner 38 s (always all 13); probare 7 s
+  (13 kept); probare -vis 55 s (each test its own step: own link,
+  snapshot) - the price of per-test verdicts, paid only when forced.
+- Plants: probare XLVI filter-as-path red first; pythonica: `-vis` not
+  passed -> red; producer not NAMED -> red. A third plant (ignore failed
+  producers in `sana`) stayed GREEN: probare already exits 1 when a
+  producer fails, so `and not productores` was dead code no test could
+  see - removed; producers are only named in the fractures now.

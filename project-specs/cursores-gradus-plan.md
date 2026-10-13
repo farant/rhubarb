@@ -23,12 +23,20 @@ Mechanism first, then the pilots in rising difficulty (gen 3 -> 2 -> 1
   (servatae line, -vis, acta, filtra). Live toml: 13/13 servatae ~9 s.
 
 ### T2: porta via probare; toml becomes an entry point (D1, D2, D3)
-- [ ] `_porta_per_gradum` parses `probare -machina` (pythonica test with
+- [x] `_porta_per_gradum` parses `probare -machina` (pythonica test with
   a fake fabrica: same Porta as today for pass/fail/reuse; residua
   untouched). `tools/gradus_oraculum.sh <sub> [-ref REF]` from toml's
   oracle; run it on toml: agrees. toml/compile_probationes.sh -> entry
   point; tools/toml_gradus_oraculum.sh deleted; park …MX8N closed.
   porta('toml') green. Commit.
+  As built (2026-10-13): one `probare -machina` call (vis/audit passed
+  through; verdict deletion and iudicare fallback gone); `porta_toml`
+  RETIRED (it ran the runner = fabrica in fabrica); toml/arbor.sh and
+  computus.sh built off the old runner's objects -> own closures via
+  cursor_instrumentum_struere; probare normalizes path filters. Oracle
+  toml 13/13. Warm: old runner 38 s -> probare 7 s; -vis 55 s. Plants:
+  XLVI path filter, pythonica -vis, producer named; one plant stayed
+  green and exposed a dead clause (removed).
 
 ### T3: css (gen 2 -> steps)
 - [ ] css/aedificatio.stml `probationes_css`; oracle vs HEAD runner
