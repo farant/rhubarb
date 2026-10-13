@@ -659,6 +659,179 @@ _probare_figuras (
         c->piscina), VERUM), ZEPHYRUM);
 }
 
+/* clavis specialis (Enter, Esc, Ctrl-R) */
+interior vacuum
+clavis_specialis (
+       Mundus* x,
+     clavis_t  codex,
+          s32  producta,
+          s32  runa,
+          i32  modificantes)
+{
+    Eventus e;
+
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus                      = EVENTUS_CLAVIS_DEPRESSUS;
+    e.datum.clavis.clavis        = codex;
+    e.datum.clavis.producta      = producta;
+    e.datum.clavis.runa          = runa;
+    e.datum.clavis.modificantes  = modificantes;
+    dispensator_tractare(x->d, &e);
+}
+
+/* agenda diei XIV: 1 aperta, 2 perfecta XIV, 3 assignata XX perfecta
+ * XIV (hic perfecta), 4 deleta; dein montatio */
+interior b32
+agendam_parare (
+                Mundus* x,
+        CredoContextus* c)
+{
+    s32 id;
+   Dies d;
+    i32 i;
+
+    x->volumen = volumen_temporarium(c->piscina,
+        "probatio_kalendarium");
+    si (!x->volumen)
+    {
+        redde FALSUM;
+    }
+    x->documentum = agenda_aperire(c->piscina, x->intern, x->volumen,
+        "agenda", ZEPHYRUM);
+    si (!x->documentum)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < IV; i++)
+    {
+        id = agenda_rem_creare(x->documentum, chorda_ex_literis("res",
+            c->piscina));
+        d  = fasti_dies(MMXXVI, X, i == II ? XX : XIV);
+        (vacuum)agenda_diem_ponere(x->documentum, id, &d);
+    }
+    d = fasti_dies(MMXXVI, X, XIV);
+    (vacuum)agenda_perficere(x->documentum, II, d);
+    (vacuum)agenda_perficere(x->documentum, III, d);
+    (vacuum)agenda_rem_delere(x->documentum, IV);
+    redde mundum_struere(x, c->piscina, NIHIL);
+}
+
+/* ordines visus diei (id "r<n>") ordine arboris = "r1 r2 ..." ? */
+interior b32
+ordines_sunt (
+                 Mundus* x,
+     constans character* exspectati)
+{
+    Componens* radix;
+    character  visi[CXXVIII];
+          i32  i;
+          i32  k;
+    Componens* l;
+
+    radix           = dispensator_arbor(x->d);
+    k               = ZEPHYRUM;
+    visi[ZEPHYRUM]  = '\0';
+    per (i = ZEPHYRUM; radix && i < componens_numerus_liberorum(radix);
+        i++)
+    {
+        l = componens_liberum(radix, i);
+        si (   l->id.mensura  >= II && l->id.datum[ZEPHYRUM] == 'r'
+            && l->id.datum[I] >= '0' && l->id.datum[I] <= '9')
+        {
+            si (k > ZEPHYRUM)
+            {
+                visi[k++] = ' ';
+            }
+            memcpy(visi + k, l->id.datum, (size_t)l->id.mensura);
+            k        += l->id.mensura;
+            visi[k]  = '\0';
+        }
+    }
+    redde strcmp(visi, exspectati) == ZEPHYRUM;
+}
+
+interior b32
+campus_est (
+                 Mundus* x,
+     constans character* titulus,
+     constans character* valor)
+{
+    chorda* a;
+
+    a = insula_ramus_attributum(&x->m.ramus, titulus);
+    redde a && chorda_aequalis_literis(*a, valor);
+}
+
+/* Enter diem aperit (visus dies), Esc ad mensem; ordines diei */
+interior vacuum
+_probare_visum_diei (
+    CredoContextus* c)
+{
+    Mundus* x;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(agendam_parare(x, c));
+    clavis_specialis(x, CLAVIS_REDITUS, XIII, XIII, ZEPHYRUM);
+    CREDO_VERUM(campus_est(x, "visus", "dies"));
+    CREDO_VERUM(ordines_sunt(x, "r1 r2 r3"));
+    CREDO_NON_NIHIL(componens_invenire_per_id(dispensator_arbor(x->d),
+        chorda_ex_literis("titulus", c->piscina)));
+    clavis_specialis(x, CLAVIS_EFFUGIUM, XXVII, XXVII, ZEPHYRUM);
+    CREDO_VERUM(campus_est(x, "visus", "mensis"));
+    CREDO_VERUM(ordines_sunt(x, ""));
+}
+
+/* electio, perfectio, translatio, dies alius, deletio, revocatio,
+ * ictus */
+interior vacuum
+_probare_acta_diei (
+    CredoContextus* c)
+{
+                Mundus* x;
+    constans AgendaRes* r;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(agendam_parare(x, c));
+    clavis_specialis(x, CLAVIS_REDITUS, XIII, XIII, ZEPHYRUM);
+    clavis(x, 'j');
+    CREDO_VERUM(campus_est(x, "res_electa", "2"));
+    clavis(x, 'j');
+    clavis(x, 'j');
+    CREDO_VERUM(campus_est(x, "res_electa", "3"));
+    clavis(x, 'k');
+    clavis(x, 'k');
+    clavis(x, 'k');
+    CREDO_VERUM(campus_est(x, "res_electa", "1"));
+    /* x: perficere hodie, iterum aperire */
+    clavis(x, 'x');
+    r = agenda_res(x->documentum, I);
+    CREDO_VERUM(r && r->perfecta && r->dies_perfectionis.dies == XIV);
+    clavis(x, 'x');
+    CREDO_FALSUM(agenda_res(x->documentum, I)->perfecta);
+    /* >: res I ad diem XV; visus manet, electio ad proximam */
+    clavis(x, '>');
+    CREDO_VERUM(agenda_res(x->documentum, I)->dies.dies == XV);
+    CREDO_VERUM(ordines_sunt(x, "r2 r3"));
+    CREDO_VERUM(campus_est(x, "res_electa", "2"));
+    /* l/h: dies alius */
+    clavis(x, 'l');
+    CREDO_VERUM(ordines_sunt(x, "r1"));
+    clavis(x, 'h');
+    CREDO_VERUM(ordines_sunt(x, "r2 r3"));
+    /* X delere, u revocare, Ctrl-R reficere */
+    clavis(x, 'X');
+    CREDO_NIHIL(agenda_res(x->documentum, II));
+    CREDO_VERUM(ordines_sunt(x, "r3"));
+    clavis(x, 'u');
+    CREDO_VERUM(ordines_sunt(x, "r2 r3"));
+    clavis_specialis(x, (clavis_t)'r', XVIII, 'r', (i32)MOD_IMPERIUM);
+    CREDO_VERUM(ordines_sunt(x, "r3"));
+    /* ictus in ordine eligit */
+    clavis(x, 'u');
+    CREDO_VERUM(ictus_in(x, "r3", c->piscina));
+    CREDO_VERUM(campus_est(x, "res_electa", "3"));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "montatio",     _probare_montationem,   mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
@@ -673,6 +846,10 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "persistentia", _probare_conservationem, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { "figurae",      _probare_figuras,       mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "visus_diei",   _probare_visum_diei,    mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "acta_diei",    _probare_acta_diei,     mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

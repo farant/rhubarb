@@ -111,3 +111,24 @@ colours, optional memorials recolouring weekdays (visible here: Oct 14
 St Callistus paints the day red). Kept in
 project-specs/liturgia-recensio/. Fran: the calendar is US; other
 calendars later; this is the next project after the calendar widget.
+
+## 2026-10-13 — A3a: day view structure and acts (agenda-plan A3)
+
+Design approved by Fran: same pane, `visus="dies"`; Enter on a month
+day opens it, Esc returns. List = items assigned to the day (id order)
+then items completed that day but assigned elsewhere ("completed
+here", decision 4) - an item assigned and completed the same day
+appears once. Keys: j/k select (clamped), h/l day -+1, x tick/untick
+(completion date = clock port's today), </> move the selected item a
+day (the view stays; selection moves to the next row), X delete (undo
+covers it), u / Ctrl-R undo/redo through the agenda's historia. New
+transient field `res_electa` (absent or not in the list = first row).
+Prompt keys (n, a, c, D) are A3b; drawing is A3c.
+
+Implementation notes: state writes go through one `campum_scribere`
+(writer set to calendarium.agere and restored). Each day-view action
+computes the list in a scratch pool kept in the private context
+(`figurae_ctx`, reset per action) - the mount pool would otherwise grow
+per keystroke. Rows are components "r<id>" (PARTES_ITEM, the action) of
+height (1 + notes) lines, so a click selects through the ordinary
+dispatcher path. Plant: "completed here" group dropped -> red.

@@ -27,8 +27,23 @@
  * vacua = perfectae; IV summum, deinde '+'), dies electa margine
  * activo.
  *
- * CLAVES: h/l dies -1/+1, k/j hebdomas -1/+1, H/L mensis -1/+1 (dies
- * ad finem mensis praecisa), t hodie. ICTUS in cellula diem eligit.
+ * VISUS DIEI (A3; visus="dies"): radix "kalendarium" (PARTES_TABULA)
+ * > "titulus" (PARTES_TITULUS: dies plena, celebratio, tempus) +
+ * ordines rerum (PARTES_ITEM, id "r<id>"; ictus eligit): primum res
+ * diei assignatae (ordine id), deinde res eo die perfectae sed alibi
+ * assignatae; notae sub quaque re. "prompta" (PARTES_CAMPUS) solum
+ * dum prompta aperta est (A3b).
+ *
+ * CLAVES (mensis): h/l dies -1/+1, k/j hebdomas -1/+1, H/L mensis
+ * -1/+1 (dies ad finem mensis praecisa), t hodie, Enter diem aperit.
+ * ICTUS in cellula diem eligit.
+ *
+ * CLAVES (dies): j/k res proxima/prior, h/l dies -1/+1, x perficere
+ * aut aperire (dies perfectionis = hodie ex porta), </> res ad diem
+ * priorem/proximum (visus manet), X delere, u/Ctrl-R revocare/
+ * reficere (agenda), n res nova, a nota, c titulus, D dies scripta
+ * (vacua = sine die) - prompta (A3b); Esc ad mensem (aut promptam
+ * claudit).
  * Argumentum "YYYY-MM": dies I eius mensis (aut hodie si in eo).
  */
 

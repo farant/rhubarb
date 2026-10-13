@@ -29,6 +29,9 @@
     <campus nomen="dies_electus" typus="textus" vita="transiens"
             scriptor="calendarium.agere"
             nota="YYYY-MM-DD; absens = hodie"/>
+    <campus nomen="res_electa" typus="numerus" vita="transiens"
+            scriptor="calendarium.agere"
+            nota="id rei electae in visu diei; absens = prima"/>
   </status>
 
   <basis genus="organum_commune"/>

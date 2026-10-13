@@ -156,6 +156,14 @@ State-model question to settle before A2 (A1 is content only).
     library ranks OT Sundays above solemnities (parcum ...KC11SH).
 - **A3 — day view**: feast, items of the day, tick/untick, reassign,
   notes.
+  - Design (Fran 2026-10-13): same pane, `visus="dies"`; keys j/k h/l
+    x </> X u/Ctrl-R, prompt keys n/a/c/D; one-line prompt on vim.h
+    (insert mode; Enter commits, Esc cancels); `n` creates items here;
+    view stays when an item moves; notes under every item.
+  - **A3a** DONE 2026-10-13 (lib/kalendarium.worklog.md): view switch,
+    list (assigned + completed here), selection, tick/untick, move,
+    delete, undo/redo, click selects.
+  - **A3b** prompt (n/a/c/D); **A3c** drawing + screenshot.
 - **A4 — todo view/editor** `$agenda`: all incomplete items (whatever
   their day) + unscheduled, grouped by category.
 - **A5 — year view.**
