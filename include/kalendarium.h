@@ -50,6 +50,10 @@
  *
  * CLAVES (mensis): h/l dies -1/+1, k/j hebdomas -1/+1, H/L mensis
  * -1/+1 (dies ad finem mensis praecisa), t hodie, Enter diem aperit.
+ * BARRA (M1b): supra omnes visus, globuli (PARTES_BOTTONE) "praecedens"
+ * "<", "sequens" ">", "hodie" "Today" ad sinistrum (mensis, dies) et
+ * "visus-mensis" "visus-dies" "visus-agenda" ad dextrum (visus
+ * currens fundo selectionis); ictus mandatum nominatum currit.
  * ICTUS in cellula diem eligit; DUPLEX in cellula diem aperit (M1a).
  * In ordine (dies, agenda): ictus eligit; ictus in capsa "[ ]" rem
  * insuper perficit aut aperit (M1a).

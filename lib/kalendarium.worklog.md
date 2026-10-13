@@ -336,3 +336,26 @@ slack), runs calendarium.perficere - the fresh context reads the
 selection just written. Wheel dropped from M1 (Fran: a trackpad swipe on
 the MacBook; later, with pagination).
 Plants: checkbox branch off -> red; duplex branch off -> red.
+
+## 2026-10-13 — M1b: header buttons (toolbar row)
+
+GLOBULI table: id, label, views where shown, own view (highlight),
+group (left/right), command in the month vs in the other views. `<`/`>`
+= mensis_prior/proximus in the month, dies_prior/proximus in the day
+view; Today = calendarium.hodie (now valid in the day view too, so `t`
+works there); Month/Day/Agenda = new KEYLESS commands
+calendarium.visus_{mensis,diei,agendae}. A press on a PARTES_BOTTONE
+child runs `globulum_premere` -> mandatum_invocare. Figure: label
+centred, own-view button on COLOR_SELECTION, others COLOR_ACCENT_PRIMARY
+(low contrast on the tan theme - tune after use).
+
+DEVIATION from the approved design (buttons at the right end of the
+title's first line): the test pane (280px default) left the title 7
+letters, and any narrow vicus pane would too. Buttons now have their own
+row (KALENDARIUM_BARRA = 14px) above every view: left group `< > Today`,
+right group `Month Day Agenda`; views are composed 14px shorter and
+moved down. Titles keep their full width at any pane size.
+Gotcha: a button figure draws in the BUTTON's own space, so
+`textus_in_continet(md, fines_of_button, ...)` (root-space check) does
+not see its label - use textus_ullus_continet.
+Plant: button press inert -> red.

@@ -190,9 +190,9 @@ State-model question to settle before A2 (A1 is content only).
     handler); letters with Cmd/Ctrl no longer fire.
   - **M1a** DONE 2026-10-13: `mandatum_invocare` (by name);
     double-click day -> day view; click `[ ]` toggles.
-  - **M1b** header buttons: `<` `>` (month/day -1/+1; later pages),
-    Today, view switcher Month · Day · Agenda (keyless commands
-    calendarium.visus_*); screenshot.
+  - **M1b** DONE 2026-10-13: toolbar row (not on the title line - narrow
+    panes): `<` `>` (month/day -1/+1; later pages), Today, view switcher
+    Month · Day · Agenda (keyless commands calendarium.visus_*).
   - Wheel/swipe: dropped from M1 (Fran: trackpad swipe; with
     pagination later).
   - **M2** batch 2: double-click row -> title prompt; click group

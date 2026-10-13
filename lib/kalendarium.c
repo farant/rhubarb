@@ -26,6 +26,7 @@ hic_manens constans character actio_calendarii[] = "calendarium.agere";
 #define KALENDARIUM_TITULI_DIEI      XXVIII   /* lineae III + margo */
 #define KALENDARIUM_PROMPTA          CCLVI    /* octeti promptae */
 #define KALENDARIUM_CAPSA            XXIV     /* ictus capsae: x < */
+#define KALENDARIUM_BARRA            XIV      /* barra globulorum */
 #define KALENDARIUM_MARGO_X          VI       /* mensa: cellula una, */
 #define KALENDARIUM_MARGO_Y          VIII     /* ut scriba et pictor */
 
@@ -1190,6 +1191,27 @@ fac_mensem (
     redde campum_scribere(cm->m, "visus", "mensis");
 }
 
+interior b32
+fac_visum_mensis (
+    ContextusMandati* cm)
+{
+    redde campum_scribere(cm->m, "visus", "mensis");
+}
+
+interior b32
+fac_visum_diei (
+    ContextusMandati* cm)
+{
+    redde campum_scribere(cm->m, "visus", "dies");
+}
+
+interior b32
+fac_visum_agendae (
+    ContextusMandati* cm)
+{
+    redde campum_scribere(cm->m, "visus", "agenda");
+}
+
 /* tabula: clavis in visu UNO mandatum unum (mandata_verificare);
  * descriptio Anglice (lingua interfaciei, ut horologium vici) */
 hic_manens constans MandatumKalendarii TABULA_MANDATORUM[] = {
@@ -1205,8 +1227,8 @@ hic_manens constans MandatumKalendarii TABULA_MANDATORUM[] = {
         ZEPHYRUM, fac_mensem_priorem },
     { "calendarium.mensis_proximus", "Next month", "L", VISUS_MENSIS,
         ZEPHYRUM, fac_mensem_proximum },
-    { "calendarium.hodie", "Go to today", "t", VISUS_MENSIS, ZEPHYRUM,
-        fac_hodie },
+    { "calendarium.hodie", "Go to today", "t", VISUS_MENSIS
+        | VISUS_DIEI, ZEPHYRUM, fac_hodie },
     { "calendarium.diem_aperire", "Open day", "Enter", VISUS_MENSIS,
         ZEPHYRUM, fac_diem_aperire },
     { "calendarium.res_proxima", "Next item", "j", VISUS_INDICIS,
@@ -1241,6 +1263,12 @@ hic_manens constans MandatumKalendarii TABULA_MANDATORUM[] = {
         ZEPHYRUM, fac_filtrum },
     { "calendarium.filtrum_tollere", "Clear filter", "Esc",
         VISUS_AGENDAE, REQUIRIT_FILTRUM, fac_filtrum_tollere },
+    { "calendarium.visus_mensis", "Month view", NIHIL, VISUS_MENSIS
+        | VISUS_INDICIS, ZEPHYRUM, fac_visum_mensis },
+    { "calendarium.visus_diei", "Day view", NIHIL, VISUS_MENSIS
+        | VISUS_INDICIS, ZEPHYRUM, fac_visum_diei },
+    { "calendarium.visus_agendae", "Agenda", NIHIL, VISUS_MENSIS
+        | VISUS_INDICIS, ZEPHYRUM, fac_visum_agendae },
     { NIHIL, NIHIL, NIHIL, ZEPHYRUM, ZEPHYRUM, NIHIL }
 };
 
@@ -1407,6 +1435,71 @@ clavem_agere (
     redde t->fn(&cm);
 }
 
+
+/* ==================================================
+ * Bottones tituli (M1b)
+ * ================================================== */
+
+/* globuli in barra supra titulum: < > Today ad sinistrum, Month Day
+ * Agenda ad dextrum. Mandatum per visum: in mense mandatum_mensis,
+ * aliter mandatum_ceteris. visus_proprius: globulus visus (activus si
+ * currens) */
+nomen structura {
+     constans character* id;
+     constans character* textus;
+                    i32  visus;            /* larva: ubi adest */
+                    i32  visus_proprius;   /* 0 = non globulus visus */
+                    b32  dexter;           /* grex dexter */
+     constans character* mandatum_mensis;
+     constans character* mandatum_ceteris;
+} GlobulusTituli;
+
+hic_manens constans GlobulusTituli GLOBULI[] = {
+    { "praecedens", "<", VISUS_MENSIS | VISUS_DIEI, ZEPHYRUM, FALSUM,
+        "calendarium.mensis_prior", "calendarium.dies_prior" },
+    { "sequens", ">", VISUS_MENSIS | VISUS_DIEI, ZEPHYRUM, FALSUM,
+        "calendarium.mensis_proximus", "calendarium.dies_proximus" },
+    { "hodie", "Today", VISUS_MENSIS | VISUS_DIEI, ZEPHYRUM, FALSUM,
+        "calendarium.hodie", "calendarium.hodie" },
+    { "visus-mensis", "Month", VISUS_MENSIS | VISUS_INDICIS,
+        VISUS_MENSIS, VERUM, "calendarium.visus_mensis",
+        "calendarium.visus_mensis" },
+    { "visus-dies", "Day", VISUS_MENSIS | VISUS_INDICIS, VISUS_DIEI,
+        VERUM, "calendarium.visus_diei", "calendarium.visus_diei" },
+    { "visus-agenda", "Agenda", VISUS_MENSIS | VISUS_INDICIS,
+        VISUS_AGENDAE, VERUM, "calendarium.visus_agendae",
+        "calendarium.visus_agendae" },
+    { NIHIL, NIHIL, ZEPHYRUM, ZEPHYRUM, FALSUM, NIHIL, NIHIL }
+};
+
+/* latitudo globuli: littera vacua utrimque */
+interior s32
+globuli_latitudo (
+    constans GlobulusTituli* b)
+{
+    redde ((s32)strlen(b->textus) + II) * KALENDARIUM_LITTERA;
+}
+
+/* ictus in bottone: mandatum eius in visu currenti */
+interior b32
+globulum_premere (
+    KalendariumMontatio* m,
+                 chorda  id,
+                Piscina* p)
+{
+    constans GlobulusTituli* b;
+
+    per (b = GLOBULI; b->id; b++)
+    {
+        si (chorda_aequalis_literis(id, b->id))
+        {
+            redde mandatum_invocare(m, visus_currens(m) == VISUS_MENSIS
+                ? b->mandatum_mensis : b->mandatum_ceteris, p);
+        }
+    }
+    redde FALSUM;
+}
+
 /* <actio/> calendarium.agere: visus mensis aut diei */
 interior b32
 agere (
@@ -1437,6 +1530,11 @@ agere (
         {
             redde agere_promptam(m, ev, genus, privatum->scheda);
         }
+    }
+    si (   ev->genus     == EVENTUS_MUS_DEPRESSUS && nodus
+        && nodus->partes == PARTES_BOTTONE)
+    {
+        redde globulum_premere(m, nodus->id, privatum->scheda);
     }
     si (ev->genus == EVENTUS_MUS_DEPRESSUS)
     {
@@ -1947,7 +2045,8 @@ titulum_diei_pingere (
         dies)], menses_anglice[dies.mensis - I], (integer)dies.dies,
         (integer)dies.annus);
     mandata_textus(md, IV, ZEPHYRUM, praecidere(chorda_ex_literis(
-        titulus, md->piscina), c->fines.latitudo - VIII), ZEPHYRUM,
+        titulus, md->piscina), c->fines.latitudo - VIII),
+        ZEPHYRUM,
         figura_color_thematis(COLOR_TEXT));
     info = NIHIL;
     si (contextus->liturgia)
@@ -2145,6 +2244,47 @@ figura_tituli (
     }
 }
 
+/* <figura/> <purus/> globulus tituli: textus (titulus componentis)
+ * centratus; globulus visus currentis fundo selectionis */
+interior vacuum
+figura_globuli (
+    constans Componens* c,
+               Mandata* md,
+                   i32  thema,
+                vacuum* ctx)
+{
+         KalendariumFigurae* contextus;
+    constans GlobulusTituli* b;
+                        b32  activus;
+
+    (vacuum)thema;
+    contextus = (KalendariumFigurae*)ctx;
+    si (!contextus || !contextus->m)
+    {
+        redde;
+    }
+    activus = FALSUM;
+    per (b = GLOBULI; b->id; b++)
+    {
+        si (   chorda_aequalis_literis(c->id, b->id)
+            && (b->visus_proprius & visus_currens(contextus->m)))
+        {
+            activus = VERUM;
+        }
+    }
+    si (activus)
+    {
+        rectangulum(md, ZEPHYRUM, ZEPHYRUM, c->fines.latitudo,
+            c->fines.altitudo, figura_color_thematis(COLOR_SELECTION),
+            VERUM);
+    }
+    mandata_textus(md, (c->fines.latitudo - (s32)c->titulus.mensura
+        * KALENDARIUM_LITTERA) / II, I, chorda_transcribere(
+        c->titulus, md->piscina), ZEPHYRUM,
+        figura_color_thematis(activus
+        ? COLOR_TEXT : COLOR_ACCENT_PRIMARY));
+}
+
 interior b32
 figuras_registrare (
     KalendariumMontatio* m)
@@ -2167,7 +2307,9 @@ figuras_registrare (
         && figura_registrare(m->figurae, PARTES_TITULUS, ZEPHYRUM,
                figura_tituli, contextus)
         && figura_registrare(m->figurae, PARTES_CAMPUS, ZEPHYRUM,
-               figura_promptae, contextus);
+               figura_promptae, contextus)
+        && figura_registrare(m->figurae, PARTES_BOTTONE, ZEPHYRUM,
+               figura_globuli, contextus);
 }
 
 
@@ -2460,6 +2602,57 @@ mensem_componere (
     }
 }
 
+/* globuli in barra (y = 0, spatium interius; liberos_movere postea):
+ * grex sinister ab x = 0, dexter ad latitudinem; II pixela inter */
+interior vacuum
+globulos_componere (
+    KalendariumMontatio* m,
+              Componens* radix,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                    s32  latitudo)
+{
+    constans GlobulusTituli* b;
+                  Componens* c;
+                        s32  sinister;
+                        s32  dexter;
+                        s32  x;
+
+    dexter = latitudo + II;
+    per (b = GLOBULI; b->id; b++)
+    {
+        si (b->dexter && (b->visus & visus_currens(m)))
+        {
+            dexter -= globuli_latitudo(b) + II;
+        }
+    }
+    sinister = ZEPHYRUM;
+    per (b = GLOBULI; b->id; b++)
+    {
+        si (!(b->visus & visus_currens(m)))
+        {
+            perge;
+        }
+        x  = b->dexter ? dexter : sinister;
+        c  = nodus(piscina, intern, b->id, PARTES_BOTTONE, x, ZEPHYRUM,
+            globuli_latitudo(b), KALENDARIUM_LINEA + II);
+        si (c)
+        {
+            componens_ponere_titulum(c, b->textus);
+            componens_ponere_actio(c, actio_calendarii);
+            componens_addere_liberum(radix, c);
+        }
+        si (b->dexter)
+        {
+            dexter += globuli_latitudo(b) + II;
+        }
+        alioquin
+        {
+            sinister += globuli_latitudo(b) + II;
+        }
+    }
+}
+
 /* liberi radicis intra marginem mensae */
 interior vacuum
 liberos_movere (
@@ -2517,9 +2710,10 @@ kalendarium_componere (
     {
         componens_ponere_titulum(radix, "focatum");
     }
-    /* visus intra mensam: area interior, deinde liberi moventur */
+    /* visus intra mensam (area interior) et sub barra globulorum (M1b);
+     * deinde liberi moventur */
     latitudo -= II * KALENDARIUM_MARGO_X;
-    altitudo -= II * KALENDARIUM_MARGO_Y;
+    altitudo -= II * KALENDARIUM_MARGO_Y + KALENDARIUM_BARRA;
     si (visus_agendae(m))
     {
         agendam_componere(m, radix, piscina, intern, latitudo,
@@ -2533,6 +2727,8 @@ kalendarium_componere (
     {
         mensem_componere(m, radix, piscina, intern, latitudo, altitudo);
     }
+    liberos_movere(radix, ZEPHYRUM, KALENDARIUM_BARRA);
+    globulos_componere(m, radix, piscina, intern, latitudo);
     liberos_movere(radix, KALENDARIUM_MARGO_X, KALENDARIUM_MARGO_Y);
     redde radix;
 }

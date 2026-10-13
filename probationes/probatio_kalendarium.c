@@ -1474,6 +1474,86 @@ _probare_murem (
     CREDO_VERUM(r && r->perfecta);
 }
 
+/* globuli tituli (M1b): < > Today et Month Day Agenda; ictus mandatum
+ * nominatum currit; globuli visus currentis fundo selectionis */
+interior b32
+globulum_adest (
+                Mundus* x,
+    constans character* id,
+               Piscina* p)
+{
+    Componens* c;
+
+    c = componens_invenire_per_id(dispensator_arbor(x->d),
+        chorda_ex_literis(id, p));
+    redde c && c->partes == PARTES_BOTTONE
+        && c->fines.latitudo > ZEPHYRUM;
+}
+
+interior vacuum
+_probare_globulos (
+    CredoContextus* c)
+{
+     Mundus* x;
+    Mandata* md;
+       Dies  d;
+      Fines  f;
+        i32  i;
+        b32  electus;
+
+    x = (Mundus*)c->datum;
+    thema_initiare();
+    CREDO_NECESSE(agendam_parare(x, c));
+    CREDO_VERUM(globulum_adest(x, "praecedens", c->piscina));
+    CREDO_VERUM(globulum_adest(x, "sequens", c->piscina));
+    CREDO_VERUM(globulum_adest(x, "hodie", c->piscina));
+    CREDO_VERUM(globulum_adest(x, "visus-mensis", c->piscina));
+    CREDO_VERUM(globulum_adest(x, "visus-dies", c->piscina));
+    CREDO_VERUM(globulum_adest(x, "visus-agenda", c->piscina));
+    /* mensis: > mensis proximus, < < duo priores, Today hodie */
+    CREDO_NECESSE(ictus_in(x, "sequens", c->piscina));
+    d = kalendarium_dies_electus(&x->m);
+    CREDO_VERUM(d.mensis == XI);
+    CREDO_NECESSE(ictus_in(x, "praecedens", c->piscina));
+    CREDO_NECESSE(ictus_in(x, "praecedens", c->piscina));
+    d = kalendarium_dies_electus(&x->m);
+    CREDO_VERUM(d.mensis == IX);
+    CREDO_NECESSE(ictus_in(x, "hodie", c->piscina));
+    d = kalendarium_dies_electus(&x->m);
+    CREDO_VERUM(d.mensis == X && d.dies == XIV);
+    /* globuli "Month" activi: fundus selectionis et textus */
+    md  = reddere(x, c->piscina);
+    f   = fines_componentis(x, "visus-mensis", c->piscina);
+    CREDO_VERUM(textus_ullus_continet(md, "Month"));
+    electus = FALSUM;
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        constans Mandatum* y;
+
+        y = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   y->genus          == MANDATUM_RECTANGULUM && y->impletum
+            && y->fines.latitudo == f.latitudo
+            && color_thematis_est(y->color, COLOR_SELECTION))
+        {
+            electus = VERUM;
+        }
+    }
+    CREDO_VERUM(electus);
+    /* Day: visus diei; > dies proximus */
+    CREDO_NECESSE(ictus_in(x, "visus-dies", c->piscina));
+    CREDO_VERUM(campus_est(x, "visus", "dies"));
+    CREDO_NECESSE(ictus_in(x, "sequens", c->piscina));
+    d = kalendarium_dies_electus(&x->m);
+    CREDO_VERUM(d.dies == XV);
+    /* Agenda: sagittae et Today absunt; Month redit */
+    CREDO_NECESSE(ictus_in(x, "visus-agenda", c->piscina));
+    CREDO_VERUM(campus_est(x, "visus", "agenda"));
+    CREDO_FALSUM(globulum_adest(x, "praecedens", c->piscina));
+    CREDO_FALSUM(globulum_adest(x, "hodie", c->piscina));
+    CREDO_NECESSE(ictus_in(x, "visus-mensis", c->piscina));
+    CREDO_VERUM(campus_est(x, "visus", "mensis"));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "montatio",     _probare_montationem,   mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
@@ -1509,6 +1589,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "mus", _probare_murem, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
+    { "globuli", _probare_globulos, mundum_parare, mundum_purgare,
+        NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 
