@@ -132,6 +132,13 @@ State-model question to settle before A2 (A1 is content only).
 - **A1 — `agenda` library**: document (create/open, typed act helpers,
   undo/redo, verify), projection (items with title, day, tags, notes,
   completion), queries needed by A2/A3 only. No UI.
+  - **A1a** DONE 2026-10-13 (lib/agenda.worklog.md): include/agenda.h
+    (Fran approved), historia L1 client, typed acts, projection,
+    undo/redo, reopen, verify; titles in attribute-element form
+    (`<@titulus=>`, quotes representable). probatio_agenda (8
+    sections, plants II).
+  - **A1b** queries for A2/A3 (items of a day, completed on a day,
+    month marks) + seal-cost measurement (AUDIENDA).
 - **A2 — month view pane** `$calendarium` (opens on today; argument
   `YYYY-MM`): grid, liturgical colour + feast, per-day marks (items
   assigned, items completed).
