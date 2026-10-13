@@ -192,6 +192,7 @@ declare -a SOURCE_FILES=(
     "lib/qr.c"
     "lib/quadrans.c"
     "lib/quaerere.c"
+    "lib/quaestio.c"
     "lib/quaestiones_lectio.c"
     "lib/quaternio.c"
     "lib/radices.c"
