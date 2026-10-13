@@ -872,3 +872,13 @@ parallelism collides with the shared object cache (slice 2).
     different binaries with the same digest-based key;
   - plants III went red, then green: fabrica keyed by its binary again;
     the digest key mixed with the binary; uppercase hex accepted.
+- **Caught by the fresh-clone check (frigida_probare) during the T6
+  merge:** in a COLD tree, pass 2 of fabrica_struere.sh wrote the
+  `extractor` provenance strictly. `bin/fabrica digestum aedilis` failed
+  because bin/aedilis's manifest (build/aedilis/aedilis/manifestum.stml)
+  doesn't exist during bootstrap, so fabrica, compilator and radix all
+  failed (rc 2). Fix: that line is ALWAYS tolerant, so "ignotum" falls
+  back to the binary key, the designed bootstrap behaviour; the key is
+  an optimisation, not a truth. None of the slice's gates could see
+  this, because they all run in warm trees. That is exactly what the
+  fresh-clone check is for.

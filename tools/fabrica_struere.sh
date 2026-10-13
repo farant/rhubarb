@@ -26,8 +26,11 @@ for cursus in 1 2; do
         echo "fabrica: provenientia fracta"; exit 1; }
     # digestum extractoris (circulus commissionis P1): actio 'aedilis'
     # infixa - clavis thesauri eadem ac bin/aedilis, editio extra
-    # extractorem eam non mutat
-    PROVENIENTIA_TOLERANS=$t ./tools/provenientia_scribere.sh extractor bin/aedilis aedilis || {
+    # extractorem eam non mutat. SEMPER TOLERANS: in arbore frigida
+    # manifestum bin/aedilis nondum exstat (aedilis_struere sine eo) ->
+    # 'ignotum' = clavis ex binario ut olim (optimizatio, non veritas;
+    # frigida_probare radicem rubram vidit sine hoc, 2026-10-12)
+    PROVENIENTIA_TOLERANS=1 ./tools/provenientia_scribere.sh extractor bin/aedilis aedilis || {
         echo "fabrica: provenientia extractoris fracta"; exit 1; }
     sh build/aedilis/fabrica/struere.sh >/dev/null || {
         echo "fabrica: structura fracta"; exit 1; }
