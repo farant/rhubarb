@@ -43,6 +43,9 @@ audits no longer support.
 
 ## Where current status lives
 
+- **Claim by claim:** `knotapel/claims.md`, the live index: every
+  audited claim and the headline unaudited ones, graded (exact, falls,
+  unaudited, ...), with stable addresses to cite.
 - **Each audit's findings:** `knotapel/demo_114_exact_audit/` through
   `knotapel/demo_125_exact_crossing_depth/`, each with `findings.md`,
   verdict tables and an independent oracle.
@@ -50,8 +53,6 @@ audits no longer support.
   Leave Standing" at the end of `knotapel/explorers-log.md`.
 - **Demos 1–112 as built**, with reading notes on errors:
   `docs/knotapel.html`.
-- **Planned:** a live claims-status index (one row per major claim:
-  survives / falls / unaudited), replacing the atlas as the reference.
 
 ## Elsewhere
 

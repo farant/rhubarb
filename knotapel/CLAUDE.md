@@ -17,7 +17,7 @@
 - also for the explorer: if you want to ask questions about past demos or the project as a whole this is a great job for the researcher
 
 - the old atlas documentation folder was ARCHIVED on 2026-10-13 to `archived-analysis/atlas/` (see `archived-analysis/README.md`). it was written before the exact audits (demos 114-125), which corrected or overturned many of its claims, so don't treat it as the current state of results: read it as history, and check any claim against the demo's findings.md and its correction notes
-- current status lives in the audit demos' findings.md files and in the "Synthesis (2026-10-13)" entry at the end of explorers-log.md
+- current status lives in `claims.md` (the live claims index: graded, stable addresses, cite as `KC 21.4`), backed by the audit demos' findings.md files and the "Synthesis (2026-10-13)" entry at the end of explorers-log.md. every audit updates claims.md in the same commit as its correction notes
 - for reusable code look at the house libraries first (see "House Libraries in Demos" below); the archived `atlas/inventory/code-assets.md` predates them
 - for team lead: it might be worthwhile to just 100% avoid floating point, occasionally we have artifacts in results that are from floating point, i think we've caught them so far but wouldn't want that kind of thing to slip through
 - another source of bad results can be truncated catalogs / limits where we don't explore the whole space, obviously sometimes this might be necessary or proudent but good to keep in mind
