@@ -40,7 +40,7 @@ rhubarb/
 │                    tessera. daily-driver. saltuarius.sh.
 ├── knotapel/        Knot-algebra research (Kauffman bracket, Jones,
 │                    Temperley-Lieb, DKC). 100+ numbered demo_NN_* dirs;
-│                    scrutinium.h algebraic-analysis framework; atlas/.
+│                    scrutinium.h algebraic-analysis framework; archived-analysis/.
 ├── gesta/           TABULARIUM records office: append-only JSONL ledger
 │                    (annales/tabularium.jsonl = truth) behind the
 │                    tabularii MCP server. cold path: ./gesta/frigida.sh.

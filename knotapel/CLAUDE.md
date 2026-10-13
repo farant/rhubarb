@@ -16,12 +16,9 @@
 - if you just compacted don't spawn a new team. it is possible you are the explorer that team lead spawned and if you try to spawn a team yourself things get glitchy
 - also for the explorer: if you want to ask questions about past demos or the project as a whole this is a great job for the researcher
 
-- for team lead don't forget you have access to our read from our new atlas documentation folder
-- before you implement any demo look at atlas/inventory/code-assets.md it might document demos that have code you can reuse for whatever you are working on
-- don't worry about updating it, there is process for doing that which will happen when i explicitly ask that is documented in PROCESS.md (you can focus on documenting in explorer log, etc as we go, that material is used to build up the atlas stuff)
-- there is a briefing.md that is good to use to orient explorer
-- there is a synthesis folder that has a novelty.md which is probably good to reference when starting new projects
-- there is also a planning folder that has some useful markdown files
+- the old atlas documentation folder was ARCHIVED on 2026-10-13 to `archived-analysis/atlas/` (see `archived-analysis/README.md`). it was written before the exact audits (demos 114-125), which corrected or overturned many of its claims, so don't treat it as the current state of results: read it as history, and check any claim against the demo's findings.md and its correction notes
+- current status lives in `claims.md` (the live claims index: graded, stable addresses, cite as `KC 21.4`), backed by the audit demos' findings.md files and the "Synthesis (2026-10-13)" entry at the end of explorers-log.md. every audit updates claims.md in the same commit as its correction notes
+- for reusable code look at the house libraries first (see "House Libraries in Demos" below); the archived `atlas/inventory/code-assets.md` predates them
 - for team lead: it might be worthwhile to just 100% avoid floating point, occasionally we have artifacts in results that are from floating point, i think we've caught them so far but wouldn't want that kind of thing to slip through
 - another source of bad results can be truncated catalogs / limits where we don't explore the whole space, obviously sometimes this might be necessary or proudent but good to keep in mind
 - if you are writing something that you expect to be more compute expensive it might be worthwhile to think about inlining functions in hot loop, using pointers instead of copying to stack, etc
@@ -40,7 +37,7 @@ this is a long running way of working, it is not a task oriented thing so once w
 
 the researcher is a long-running team member focused on literature survey and web research.
 
-- researcher does NOT write files or code — they search the web, read project files (especially the atlas folder), synthesize, and report
+- researcher does NOT write files or code — they search the web, read project files (especially demo findings.md files and explorers-log.md; the archived atlas is history, not current status), synthesize, and report
 - researcher can talk directly to explorer (and vice versa) — research questions don't need to route through team lead
 - team lead gets a brief summary in idle notifications when explorer and researcher DM each other, so team lead has visibility without full context
 - team lead can also send queries to researcher when needed for implementation context

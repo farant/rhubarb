@@ -6785,6 +6785,26 @@ several became sharper.
 
 ### Interpretation (opinion, not a result)
 
+> **Correction (2026-10-13, review I of `claims.md`).** Two supports
+> below are wrong; the corrected reading is KC 47 in `claims.md`.
+> - There is no "knot → group element" step. An entry is an invariant
+>   of a braid word as represented, not of a knot: σ₁ and σ₂ are
+>   conjugate, close to the same link, and have different axes (KR
+>   note 40). The ζ₁₂ catalogs (D79–D87, D125) are not braid images at
+>   all: their generators are rotations about perpendicular axes,
+>   which satisfy the braid relation only at half-angle π/4 (KR note
+>   41; D82's `init_su2` uses π/6). D94's 2I generators are not a
+>   braid representation either (KR note 47).
+> - D125's random 564-entry samples are subsets of the same catalog,
+>   and an equal parity threshold for null catalogs is forced (k ≥ 2n
+>   for any weights, KR note 31), so neither discriminates. The
+>   knot-free controls that do exist are KR notes 16 (random phases do
+>   as well as D29's brackets), 20 and 47 (Haar-random points beat 2I,
+>   which beats 2O, in floats).
+> - The conclusion "not a property of the knots" stands, more firmly;
+>   what is open is whether group structure helps or hurts against a
+>   fair null under a fixed activation (proposed audit P1).
+
 The pipeline has two classical steps:
 
 1. **Knot → group element.** At these roots of unity the bracket factors

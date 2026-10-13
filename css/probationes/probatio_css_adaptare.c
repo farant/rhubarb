@@ -558,7 +558,7 @@ principale (vacuum)
             "probationes/fixa/css/thema_2026-08-18.css",
             "probationes/fixa/css/adversarius.css",
             "lib/speculum_assets/speculum.css",
-            "knotapel/atlas/web/style.css"
+            "probationes/fixa/css/knotapel_atlas_2026-02-26.css"
         };
         i32 numerus_plagularum =
             (i32)(magnitudo(PLAGULAE) / magnitudo(PLAGULAE[0]));
