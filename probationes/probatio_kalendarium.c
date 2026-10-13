@@ -1154,6 +1154,102 @@ _probare_visum_agendae (
     CREDO_VERUM(campus_est(x, "visus", "agenda"));
 }
 
+/* rubricae rei = "a b" ? */
+interior b32
+rubricae_rei_sunt (
+                 Mundus* x,
+                    s32  id,
+     constans character* exspectatae)
+{
+     constans AgendaRes* r;
+              character  visae[CXXVIII];
+                    i32  i;
+                    i32  k;
+                 chorda* c;
+
+    r = agenda_res(x->documentum, id);
+    si (!r)
+    {
+        redde FALSUM;
+    }
+    k                = ZEPHYRUM;
+    visae[ZEPHYRUM]  = '\0';
+    per (i = ZEPHYRUM; i < xar_numerus(r->rubricae); i++)
+    {
+        c = (chorda*)xar_obtinere(r->rubricae, i);
+        si (i > ZEPHYRUM)
+        {
+            visae[k++] = ' ';
+        }
+        memcpy(visae + k, c->datum, (size_t)c->mensura);
+        k         += c->mensura;
+        visae[k]  = '\0';
+    }
+    redde strcmp(visae, exspectatae) == ZEPHYRUM;
+}
+
+/* A4b: r rubricae (praeimpletae; mala recusatur), f filtrum (grex
+ * unus, sine rubrica occultae; n rubricam filtri dat; Esc tollit;
+ * persistens) */
+interior vacuum
+_probare_rubricas_filtrum (
+    CredoContextus* c)
+{
+     Mundus* x;
+     Mundus  y;
+     chorda* a;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(agendam_visus_parare(x, c));
+    dispensator_recomponere(x->d);
+    /* electio in re VI (sine rubrica); r opus */
+    clavis(x, 'j');
+    clavis(x, 'j');
+    CREDO_VERUM(campus_est(x, "res_electa", "6"));
+    clavis(x, 'r');
+    CREDO_VERUM(campus_est(x, "prompta", "rubricae"));
+    typare(x, "opus");
+    reditus(x);
+    CREDO_VERUM(rubricae_rei_sunt(x, VI, "opus"));
+    CREDO_VERUM(ordines_sunt(x, "r1-0 r5-0 r6-1 r5-1"));
+    /* praeimpletio et recusatio (ordines r1 r5 r6 r5: k ex VI = V) */
+    clavis(x, 'k');
+    CREDO_VERUM(campus_est(x, "res_electa", "5"));
+    clavis(x, 'r');
+    CREDO_VERUM(campus_est(x, "prompta_textus", "domus opus"));
+    typare(x, " Bad");
+    reditus(x);
+    CREDO_VERUM(campus_est(x, "prompta", "rubricae"));
+    effugium(x);
+    CREDO_VERUM(rubricae_rei_sunt(x, V, "domus opus"));
+    /* f domus */
+    clavis(x, 'f');
+    CREDO_VERUM(campus_est(x, "prompta", "filtrum"));
+    typare(x, "domus");
+    reditus(x);
+    CREDO_VERUM(campus_est(x, "rubrica_filtrum", "domus"));
+    CREDO_VERUM(ordines_sunt(x, "r1-0 r5-0"));
+    /* n sub filtro: rubrica domus */
+    clavis(x, 'n');
+    typare(x, "lac");
+    reditus(x);
+    CREDO_VERUM(rubricae_rei_sunt(x, VII, "domus"));
+    CREDO_VERUM(ordines_sunt(x, "r1-0 r5-0 r7-0"));
+    /* persistens: montatio altera filtrum restituit */
+    memset(&y, ZEPHYRUM, magnitudo(y));
+    y.intern      = x->intern;
+    y.volumen     = x->volumen;
+    y.documentum  = x->documentum;
+    CREDO_NECESSE(mundum_struere(&y, c->piscina, NIHIL));
+    a = insula_ramus_attributum(&y.m.ramus, "rubrica_filtrum");
+    CREDO_VERUM(a && chorda_aequalis_literis(*a, "domus"));
+    /* Esc filtrum tollit */
+    effugium(x);
+    CREDO_VERUM(insula_ramus_attributum(&x->m.ramus, "rubrica_filtrum")
+        == NIHIL);
+    CREDO_VERUM(ordines_sunt(x, "r1-0 r5-0 r7-0 r6-1 r5-1"));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "montatio",     _probare_montationem,   mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
@@ -1178,6 +1274,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "figurae_diei", _probare_figuras_diei,  mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { "visus_agendae", _probare_visum_agendae, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "rubricae_filtrum", _probare_rubricas_filtrum, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

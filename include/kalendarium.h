@@ -50,8 +50,8 @@
  * aut aperire (dies perfectionis = hodie ex porta), </> res ad diem
  * priorem/proximum (visus manet), X delere, u/Ctrl-R revocare/
  * reficere (agenda), n res nova, a nota, c titulus, D dies scripta
- * (vacua = sine die) - prompta (A3b); Esc ad mensem (aut promptam
- * claudit).
+ * (vacua = sine die), r rubricae (A4b) - prompta (A3b); Esc ad mensem
+ * (aut promptam claudit).
  * Argumentum "YYYY-MM": dies I eius mensis (aut hodie si in eo);
  * "agenda": visus agendae.
  *
@@ -62,7 +62,8 @@
  * gregem "g<k>" (PARTES_INDEX) et ordines "r<id>-<k>" (PARTES_ITEM).
  * Claves ut in visu diei (j/k iterata praetereunt; x rem perficit -
  * abit; n rem SINE die creat, rubrica filtri si posita), sine h/l et
- * </>; Esc filtrum tollit.
+ * </>; f filtrum (prompta; vacuum tollit, rubrica persistens - A4b);
+ * Esc filtrum tollit.
  */
 
 #ifndef KALENDARIUM_H

@@ -653,6 +653,53 @@ clavis_vim (
     redde ZEPHYRUM;
 }
 
+/* rubrica filtri valida: [a-z0-9-]+ (ut agenda) */
+interior b32
+rubrica_valida (
+    chorda c)
+{
+    i32 i;
+
+    si (c.mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < c.mensura; i++)
+    {
+        si (!(   (c.datum[i] >= 'a' && c.datum[i] <= 'z')
+              || (c.datum[i] >= '0' && c.datum[i] <= '9')
+              || c.datum[i] == '-'))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* rubricae rei iunctae ("a b") in piscina */
+interior chorda
+rubricas_iungere (
+    constans AgendaRes* r,
+               Piscina* p)
+{
+    chorda s;
+       i32 i;
+
+    s.datum    = NIHIL;
+    s.mensura  = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < xar_numerus(r->rubricae); i++)
+    {
+        si (i > ZEPHYRUM)
+        {
+            s = chorda_concatenare(s, chorda_ex_literis(" ", p), p);
+        }
+        s = chorda_concatenare(s, *(chorda*)xar_obtinere(r->rubricae,
+            i),
+            p);
+    }
+    redde s;
+}
+
 /* Enter: textus in actum agendae per genus; VERUM si actum (prompta
  * tunc clauditur), FALSUM = recusatum (prompta manet) */
 interior b32
@@ -701,9 +748,24 @@ promptam_committere (
         }
         redde electionem_scribere(m, id);
     }
+    si (chorda_aequalis_literis(genus, "filtrum"))
+    {
+        /* vacuum = filtrum tollere; aliter rubrica valida */
+        si (textus.mensura == ZEPHYRUM)
+        {
+            redde campum_scribere(m, "rubrica_filtrum", "");
+        }
+        redde rubrica_valida(textus) && campum_scribere(m,
+            "rubrica_filtrum", chorda_ut_cstr(textus, p));
+    }
     si (id <= ZEPHYRUM)
     {
         redde FALSUM;
+    }
+    si (chorda_aequalis_literis(genus, "rubricae"))
+    {
+        redde agenda_rubricas_ponere(m->documentum, id, textus)
+            > ZEPHYRUM;
     }
     si (chorda_aequalis_literis(genus, "nota"))
     {
@@ -958,6 +1020,32 @@ agere_diem (
         casus 'n':
             redde promptam_scribere(m, "nova", "", ZEPHYRUM, ZEPHYRUM,
                 p);
+        casus 'r':
+            si (r)
+            {
+                chorda iunctae;
+
+                iunctae = rubricas_iungere(r, p);
+                redde promptam_scribere(m, "rubricae",
+                    (constans character*)iunctae.datum, iunctae.mensura,
+                    iunctae.mensura, p);
+            }
+            redde VERUM;
+        casus 'f':
+            si (visus_agendae(m))
+            {
+                chorda* filtrum;
+
+                filtrum = insula_ramus_attributum(&m->ramus,
+                    "rubrica_filtrum");
+                redde filtrum
+                    ? promptam_scribere(m, "filtrum",
+                          (constans character*)filtrum->datum,
+                          filtrum->mensura, filtrum->mensura, p)
+                    : promptam_scribere(m, "filtrum", "", ZEPHYRUM,
+                          ZEPHYRUM, p);
+            }
+            redde FALSUM;
         casus 'a':
             redde r ? promptam_scribere(m, "nota", "", ZEPHYRUM,
                 ZEPHYRUM, p) : VERUM;

@@ -214,3 +214,18 @@ Tests: probatio_agenda `apertae` (queries), probatio_kalendarium
 `visus_agendae` (grouping, skip, complete, create), probatio_vicus_
 kalendarium `agenda` (typed and clicked '$agenda' in a scriba page).
 Plant: no "(none)" group -> red.
+
+## 2026-10-13 — A4b: rubric prompt and filter
+
+`r` (day and agenda views - same prompt, so the day view got it too)
+opens the prompt pre-filled with the item's rubrics ("domus opus");
+Enter goes through `agenda_rubricas_ponere`, which validates (" Bad"
+refused, prompt stays open). `f` (agenda view) opens a prompt with the
+current filter; empty removes it, otherwise the name must be kebab
+([a-z0-9-]+, checked locally - agenda's own validator is private). The
+filter commit is handled before the "needs a selected item" check, so it
+works on an empty list. Under a filter `n` gives the new item that
+rubric; Esc on the list clears the filter; the filter is persistent
+(survives a remount through conservatio - tested). Test bug fixed: after
+`r` the order is r1 r5 r6 r5, so one `k` from item 6 reaches item 5.
+Plant: filter rubric not applied to `n` -> red.

@@ -177,7 +177,9 @@ State-model question to settle before A2 (A1 is content only).
     `r` rubrics, `f` filter (persistent); Enter -> day view deferred.
   - **A4a** DONE 2026-10-13: queries `agenda_apertae`, `agenda_rubricae`;
     view, grouping, keys, `$agenda`.
-  - **A4b** rubric prompt + filter; **A4c** drawing.
+  - **A4b** DONE 2026-10-13: `r` rubrics prompt (both views), `f`
+    filter (persistent; Esc clears; `n` inherits the filter rubric).
+  - **A4c** drawing.
 - **A5 — year view.**
 - **A6 — day documents**: embedded scriba per day.
 - **Next after the widget (Fran 2026-10-13):** fix the liturgical
