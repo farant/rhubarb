@@ -2264,37 +2264,78 @@ _probare_limites_quaestionis (
     }
 }
 
+/* PURGARE (credo examen 92-95; cursores ad gradus T5, ex fusione main):
+ * status moduli - catalogus fluitans f_*, campus et clausura oraculi
+ * o_*, tabula victorum ref_*, status aleae - inter sectiones NON manet. Sectio quae o_d/o_scala pro zeta_12
+ * ponit (III, XXXII) alias ad initium (II, II) reddit; quaeque sectio a
+ * statu initiali incipit, ordine quovis (CREDO_ORDO=mixtus). */
+interior vacuum
+_statum_purgare (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    memset(f_cat, ZEPHYRUM, magnitudo(f_cat));
+    memset(f_prof, ZEPHYRUM, magnitudo(f_prof));
+    memset(f_torsio, ZEPHYRUM, magnitudo(f_torsio));
+    f_n       = ZEPHYRUM;
+    o_d       = II;
+    o_scala   = II;
+    o_vitium  = FALSUM;
+    memset(o_axis, ZEPHYRUM, magnitudo(o_axis));
+    memset(o_n2, ZEPHYRUM, magnitudo(o_n2));
+    o_nd      = ZEPHYRUM;
+    memset(ref_victor, ZEPHYRUM, magnitudo(ref_victor));
+    memset(ref_k, ZEPHYRUM, magnitudo(ref_k));
+    memset(ref_numerus, ZEPHYRUM, magnitudo(ref_numerus));
+    o_status_aleae = I;
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
-    { "zeta_8", _probare_zeta_octo, NIHIL, NIHIL, NIHIL, NIHIL },
-    { "zeta_12", _probare_zeta_duodecim, NIHIL, NIHIL, NIHIL, NIHIL },
-    { "limites", _probare_limites, NIHIL, NIHIL, NIHIL, NIHIL },
-    { "axes", _probare_axes, NIHIL, NIHIL, NIHIL, NIHIL },
-    { "cellae manu", _probare_cellas_manu, NIHIL, NIHIL, NIHIL, NIHIL },
-    { "cellae contra oraculum", _probare_cellas, NIHIL, NIHIL, NIHIL,
-      NIHIL },
-    { "separatio contra D124", _probare_separationem, NIHIL, NIHIL,
-        NIHIL,
-      NIHIL },
-    { "regulae fixae", _probare_regulas_fixas, NIHIL, NIHIL, NIHIL,
+    { "zeta_8", _probare_zeta_octo, NIHIL, _statum_purgare, NIHIL,
         NIHIL },
-    { "collisio", _probare_collisionem, NIHIL, NIHIL, NIHIL, NIHIL },
-    { "exhaustiva contra D124", _probare_exhaustivam, NIHIL, NIHIL,
+    { "zeta_12", _probare_zeta_duodecim, NIHIL, _statum_purgare, NIHIL,
+        NIHIL },
+    { "limites", _probare_limites, NIHIL, _statum_purgare, NIHIL,
+        NIHIL },
+    { "axes", _probare_axes, NIHIL, _statum_purgare, NIHIL, NIHIL },
+    { "cellae manu", _probare_cellas_manu, NIHIL, _statum_purgare,
+        NIHIL, NIHIL },
+    { "cellae contra oraculum", _probare_cellas, NIHIL, _statum_purgare,
         NIHIL,
       NIHIL },
-    { "quaestiones aliae", _probare_quaestiones_alias, NIHIL, NIHIL,
+    { "separatio contra D124", _probare_separationem, NIHIL,
+        _statum_purgare,
+        NIHIL,
+      NIHIL },
+    { "regulae fixae", _probare_regulas_fixas, NIHIL, _statum_purgare,
+        NIHIL,
+        NIHIL },
+    { "collisio", _probare_collisionem, NIHIL, _statum_purgare, NIHIL,
+        NIHIL },
+    { "exhaustiva contra D124", _probare_exhaustivam, NIHIL,
+        _statum_purgare,
+        NIHIL,
+      NIHIL },
+    { "quaestiones aliae", _probare_quaestiones_alias, NIHIL,
+        _statum_purgare,
       NIHIL, NIHIL },
-    { "filtrum sine iactura", _probare_filtrum, NIHIL, NIHIL, NIHIL,
+    { "filtrum sine iactura", _probare_filtrum, NIHIL, _statum_purgare,
+        NIHIL,
       NIHIL },
-    { "filtrum avidum", _probare_filtrum_avidum, NIHIL, NIHIL, NIHIL,
+    { "filtrum avidum", _probare_filtrum_avidum, NIHIL, _statum_purgare,
+        NIHIL,
       NIHIL },
-    { "scrutinium axium", _probare_scrutinium, NIHIL, NIHIL, NIHIL,
+    { "scrutinium axium", _probare_scrutinium, NIHIL, _statum_purgare,
+        NIHIL,
       NIHIL },
     { "cellae zeta_12 contra oraculum", _probare_cellas_duodecim, NIHIL,
-      NIHIL, NIHIL, NIHIL },
-    { "victores D82 profundi", _probare_victores_d82, NIHIL, NIHIL,
+      _statum_purgare, NIHIL, NIHIL },
+    { "victores D82 profundi", _probare_victores_d82, NIHIL,
+        _statum_purgare,
         NIHIL,
       NIHIL },
-    { "limites quaestionis", _probare_limites_quaestionis, NIHIL, NIHIL,
+    { "limites quaestionis", _probare_limites_quaestionis, NIHIL,
+        _statum_purgare,
       NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

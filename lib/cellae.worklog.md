@@ -500,3 +500,19 @@ pages (`madvise`) for memory allocated per weight set.
 - verdict lost after the arena reset.
 
 The two crashes show the growth path now runs in the suite.
+
+## 2026-10-13 - probatio_cellae: module state reset between sections (examen 92)
+
+Found from quinta after merging main (cursores ad gradus T5): the
+examen-corpus gate went red - probatio_cellae.c was REICE (14
+violations, credo rule 92: a static written in a section that neither
+parare nor purgare resets) and not in the pinned exclusions. The
+statics: the float catalogue f_cat/f_prof/f_torsio/f_n, the oracle's
+o_d/o_scala/o_vitium/o_axis/o_n2/o_nd, ref_victor/ref_k/ref_numerus,
+o_status_aleae. o_d/o_scala are the real hazard: the zeta_12 sections
+set III/XXXII while others assume the initial II/II - under a different
+section order a zeta_8 section would have run in zeta_12's field.
+Fix: one `_statum_purgare` restoring every one of them to its initial
+value, as purgare of all 17 sections. examen ACCIPE (0 violations; the
+17 'domestica' - hand-printed section titles - were there before and
+are advisory). 17/17 in normal order and CREDO_ORDO=mixtus:7 and :13.
