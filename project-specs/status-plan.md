@@ -190,9 +190,14 @@ widgets are migrated by hand.*
     interned); `visio_nodi` groups excluded paths by first segment.
     200 rows 5.1 ms -> 482 us, vicus 10 tabs 284 -> 194 us; small
     cases flat.
-  - **S8e-2** scope owners/canons to the written path + guard (text
-    outside the subtree compared before/after); `InsulaActarius`
-    gets the written path.
+  - **S8e-2** DONE 2026-10-13 (lib/insula.worklog.md): `mutare_ramum`
+    judges only owners under the written path, the nearest canon at
+    or above it (else the root canon) and canons below it; guard:
+    text outside the target's span compared before/after (parser
+    positions vs `stml_scribere_sedibus`), escape refused by name;
+    `InsulaActarius(radix, via, ctx)`. 200 rows 482 -> 184 us
+    (linear), chain 22 113 -> 86 us. vicus is now ~72% SQLite commit
+    in the persistence hook (2 tabs) - S8e-3 + the quiet question.
   - **S8e-3** conservatio re-serializes only branches under the
     written path. Open: fsync per write vs at quiet (decide after the
     numbers).

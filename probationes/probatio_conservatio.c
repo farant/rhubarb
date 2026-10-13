@@ -332,10 +332,12 @@ _probare_typum_malum (
 
 interior vacuum
 actarius_alius (
-    StmlNodus* radix,
-       vacuum* ctx)
+     StmlNodus* radix,
+        chorda  via,
+        vacuum* ctx)
 {
     (vacuum)radix;
+    (vacuum)via;
     (vacuum)ctx;
 }
 

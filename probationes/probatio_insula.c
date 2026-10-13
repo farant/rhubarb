@@ -62,10 +62,12 @@ tollere_focum (
 /* Actarius: scripturas numerare */
 interior vacuum
 numerare (
-    StmlNodus* radix,
-       vacuum* ctx)
+     StmlNodus* radix,
+        chorda  via,
+        vacuum* ctx)
 {
     (vacuum)radix;
+    (vacuum)via;
     (*(i32*)ctx)++;
 }
 

@@ -47,9 +47,12 @@ nomen vacuum (*InsulaMutator)(
                  vacuum* ctx);
 
 /* Vocatur post omnem scripturam per portam successam - pictor P3
- * hic acta appendit. */
+ * hic acta appendit. via = ramus scriptus (S8e; vacua = radix, tota
+ * arbor mutari potuit): extra viam nihil mutatum est (porta custodit),
+ * actarius partes alias praeterire potest. */
 nomen vacuum (*InsulaActarius)(
     StmlNodus*  radix,
+        chorda  via,
        vacuum*  ctx);
 
 nomen structura {
@@ -175,9 +178,13 @@ insula_ramus_attributum (
     constans InsulaRamus* ramus,
       constans character* titulus);
 
-/* porta rami: mutator NODUM RAMI in duplicato radicis accipit; domini
- * et canones (radicis et ramorum) iudicant ut semper. FALSUM si ramus
- * abest (causa nominata). */
+/* porta rami: mutator NODUM RAMI in duplicato radicis accipit et
+ * SOLUM subarborem eius mutat (S8e). Iudicant soli qui eam videre
+ * possunt: domini rami et descendentium; canon proximus supra (ramus
+ * ipse, ramus superior, aut radix) et canones descendentium. CUSTODIA:
+ * textus extra subarborem ante et post conferuntur - mutatio extra
+ * (per 'parens') recusatur, causa nominata. FALSUM et si ramus abest
+ * (causa nominata). */
 b32
 mutare_ramum (
     constans InsulaRamus* ramus,

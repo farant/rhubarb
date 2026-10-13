@@ -118,13 +118,15 @@ via_status (
 
 interior vacuum
 actarius_conservationis (
-    StmlNodus* radix,
-       vacuum* ctx)
+     StmlNodus* radix,
+        chorda  via,
+        vacuum* ctx)
 {
     Conservatio* c;
             i32  i;
 
     (vacuum)radix;
+    (vacuum)via;
     c = (Conservatio*)ctx;
     piscina_vacare(c->scheda);
     per (i = ZEPHYRUM; i < xar_numerus(c->rami); i++)

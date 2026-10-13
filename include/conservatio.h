@@ -3,9 +3,10 @@
  * (plagula "status/<clavis>") et ad montationem restituuntur.
  *
  * Systema actarium repositorii possidet: post omnem scripturam per
- * portam successam, ramus quisque cuius pars PERSISTENS mutata est
- * scribitur (transientes numquam; mobiles semel per quietem, quia
- * motus insulam solum in quiete tangit).
+ * portam successam, ramus quisque SUB VIA SCRIPTA (S8e; radix = omnes)
+ * cuius pars PERSISTENS mutata est scribitur (transientes numquam;
+ * mobiles semel per quietem, quia motus insulam solum in quiete
+ * tangit).
  *
  * Forma plagulae (versio 2, C2 - insula una: campi ut attributa):
  *   <status versio="2" genus="pictor" instrumentum="linea" zoom="2"/>

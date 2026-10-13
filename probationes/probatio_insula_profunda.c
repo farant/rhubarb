@@ -334,6 +334,154 @@ _probare_continentiam (
     CREDO_FALSUM(continet("a:1", "", c->piscina));
 }
 
+/* mutator qui per 'parens' extra ramum suum scribit */
+interior vacuum
+parentem_scribere (
+              StmlNodus* radix,
+                Piscina* p,
+    InternamentumChorda* in,
+                 vacuum* ctx)
+{
+    (vacuum)ctx;
+    insula_attributum_ponere(radix->parens, p, in, "fuga", "1");
+}
+
+/* S8e: custodia - mutatio extra subarborem recusatur, nihil mutatum */
+interior vacuum
+_probare_custodiam (
+    CredoContextus* c)
+{
+    InternamentumChorda* in;
+                  Arbor  x;
+                    i32  versio;
+              character  par[XVI];
+
+    in = internamentum_creare(c->piscina);
+    CREDO_NECESSE(arborem_struere(&x, c->piscina, in));
+    versio = insula_versio(x.repo);
+    CREDO_FALSUM(mutare_ramum(&x.c, parentem_scribere, NIHIL));
+    CREDO_CHORDA_CONTINET(insula_causa(x.repo), chorda_ex_literis(
+        "extra ramum", c->piscina));
+    CREDO_VERUM(valor_est(&x.b, "fuga", NIHIL));
+    CREDO_AEQUALIS_I32(insula_versio(x.repo), versio);
+    /* intra subarborem licet */
+    CREDO_VERUM(scribere(&x.c, "quilibet", "gamma=1", c->piscina));
+    /* radix: tota arbor sua */
+    strcpy(par, "omega=1");
+    CREDO_VERUM(insula_mutare(x.repo, ponere, par));
+}
+
+nomen structura {
+       i32 numerus;
+    chorda via;
+} Acta;
+
+interior vacuum
+actum_notare (
+     StmlNodus* radix,
+        chorda  via,
+        vacuum* ctx)
+{
+    Acta* a;
+
+    (vacuum)radix;
+    a = (Acta*)ctx;
+    a->numerus++;
+    a->via = via;
+}
+
+/* S8e: actarius viam scriptam accipit; radix = vacua */
+interior vacuum
+_probare_actarium (
+    CredoContextus* c)
+{
+    InternamentumChorda* in;
+                  Arbor  x;
+                   Acta  a;
+              character  par[XVI];
+
+    in = internamentum_creare(c->piscina);
+    CREDO_NECESSE(arborem_struere(&x, c->piscina, in));
+    memset(&a, ZEPHYRUM, magnitudo(a));
+    insula_ponere_actarium(x.repo, actum_notare, &a);
+    CREDO_VERUM(scribere(&x.c, "quilibet", "gamma=1", c->piscina));
+    CREDO_AEQUALIS_I32(a.numerus, I);
+    CREDO_VERUM(a.via.datum == x.c.via.datum);
+    strcpy(par, "omega=1");
+    CREDO_VERUM(insula_mutare(x.repo, ponere, par));
+    CREDO_AEQUALIS_I32(a.numerus, II);
+    CREDO_CHORDA_VACUA(a.via);
+}
+
+#define CANON_D \
+    "<canon dialectus=\"d\" versio=\"1\">" \
+    "<elementum nomen=\"d\" radix=\"verum\">" \
+    "<attributum nomen=\"id\" genus=\"nomen\"/>" \
+    "</elementum></canon>"
+
+/* canon ramorum a gradu primo: a, b, c sine canonibus propriis */
+#define CANON_A \
+    "<canon dialectus=\"a\" versio=\"1\">" \
+    "<elementum nomen=\"a\" radix=\"verum\">" \
+    "<attributum nomen=\"id\" genus=\"nomen\"/>" \
+    "<liberum nomen=\"b\"/><liberum nomen=\"d\"/></elementum>" \
+    "<elementum nomen=\"b\">" \
+    "<attributum nomen=\"id\" genus=\"nomen\"/>" \
+    "<liberum nomen=\"c\"/></elementum>" \
+    "<elementum nomen=\"c\">" \
+    "<attributum nomen=\"id\" genus=\"nomen\"/>" \
+    "<attributum nomen=\"gamma\" genus=\"numerus\"/>" \
+    "</elementum></canon>"
+
+/* S8e: iudicant soli qui subarborem videre possunt */
+interior vacuum
+_probare_scopum_canonum (
+    CredoContextus* c)
+{
+    InternamentumChorda* in;
+                  Arbor  x;
+            InsulaRamus  d;
+                  Canon* cr;
+                  Canon* cb;
+                  Canon* ca;
+              character  par[XVI];
+
+    in = internamentum_creare(c->piscina);
+    /* frater d invalidus (zeta ante canonem suum): scriptura in c
+     * eum non tangit - canon d non iudicat */
+    CREDO_NECESSE(arborem_struere(&x, c->piscina, in));
+    d = insula_ramus_liberi(&x.a, "d", "d1");
+    CREDO_NECESSE(insula_ramum_initiare(&d, "<d id=\"d1\"/>"));
+    CREDO_NECESSE(scribere(&d, "quilibet", "zeta=1", c->piscina));
+    insula_ramus_canonem_ponere(&d, canonem(CANON_D, c->piscina, in));
+    CREDO_VERUM(scribere(&x.c, "quilibet", "gamma=1", c->piscina));
+    CREDO_FALSUM(scribere(&d, "quilibet", "zeta=2", c->piscina));
+
+    /* radix invalida (zeta): ramus cum canone proprio (b) eam non
+     * tangit; ramus sine canone proprio (a) a radice iudicatur */
+    CREDO_NECESSE(arborem_struere(&x, c->piscina, in));
+    strcpy(par, "zeta=1");
+    CREDO_NECESSE(insula_mutare(x.repo, ponere, par));
+    cr = canonem(CANON_RADICIS, c->piscina, in);
+    cb = canonem(CANON_B, c->piscina, in);
+    CREDO_NECESSE(cr && cb);
+    insula_ponere_canonem(x.repo, cr);
+    insula_ramus_canonem_ponere(&x.b, cb);
+    insula_ramus_canonem_ponere(&x.c, canonem(CANON_C, c->piscina, in));
+    CREDO_VERUM(scribere(&x.b, "quilibet", "beta=2", c->piscina));
+    CREDO_FALSUM(scribere(&x.a, "quilibet", "alpha=1", c->piscina));
+
+    /* canon in gradu primo solo: scriptura in c ab eo iudicatur */
+    CREDO_NECESSE(arborem_struere(&x, c->piscina, in));
+    ca = canonem(CANON_A, c->piscina, in);
+    CREDO_NECESSE(ca);
+    insula_ramus_canonem_ponere(&x.a, ca);
+    CREDO_VERUM(scribere(&x.c, "quilibet", "gamma=3", c->piscina));
+    CREDO_FALSUM(scribere(&x.c, "quilibet", "delta=1", c->piscina));
+    CREDO_FALSUM(scribere(&x.c, "quilibet", "gamma=magnus",
+        c->piscina));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "via",          _probare_viam,          NIHIL, NIHIL, NIHIL,
         NIHIL },
@@ -348,6 +496,12 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "ex_via",       _probare_ex_via,        NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "continentia",  _probare_continentiam,  NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "custodia",     _probare_custodiam,     NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "actarius",     _probare_actarium,      NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "scopus_canonum", _probare_scopum_canonum, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

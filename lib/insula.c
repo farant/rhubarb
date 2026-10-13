@@ -564,6 +564,7 @@ inter_systemata (
 interior chorda
 dominos_iudicare (
      InsulaRepositorium* repo,
+                 chorda  via,
             IndexViarum* ante,
             IndexViarum* post)
 {
@@ -576,6 +577,11 @@ dominos_iudicare (
     per (i = ZEPHYRUM; i < n; i++)
     {
         d = (InsulaDominus*)xar_obtinere(repo->domini, i);
+        /* S8e: domini extra viam scriptam mutari non possunt */
+        si (!insula_via_continet(via, d->via))
+        {
+            perge;
+        }
         /* R1: attributum in nodo RAMI domini, ante et post */
         si (!attributum_mutatum(ramum_quaerere(ante, d->via),
                                 ramum_quaerere(post, d->via),
@@ -751,6 +757,66 @@ visio_nodi (
     redde visio;
 }
 
+/* canon unus nodum suum iudicat (visio sine ramis descendentibus
+ * cum canone proprio); FALSUM = recusat, causa posita */
+interior b32
+canone_iudicare (
+     InsulaRepositorium* repo,
+                  Canon* canon,
+              StmlNodus* nodus,
+                 chorda  via_canonis,
+     constans character* praefixum,
+                Piscina* p)
+{
+            Xar* vitia;
+    CanonVitium* v;
+
+    vitia = canon_iudicare(canon, visio_nodi(nodus, reliqua_sub(repo,
+        via_canonis, p), p), p);
+    si (!vitia || xar_numerus(vitia) == ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    v = (CanonVitium*)xar_obtinere(vitia, ZEPHYRUM);
+    repo->causa = chorda_concatenare(chorda_ex_literis(praefixum,
+        repo->piscina), chorda_ex_literis(canon_nuntius(v->genus),
+        repo->piscina), repo->piscina);
+    redde FALSUM;
+}
+
+/* S8e custodia: textus extra subarborem scopi idem ante et post?
+ * Extensio ante = positus parsatoris (duplicatum ex textu ante
+ * lectum); post = sedes scriptoris. */
+interior b32
+extra_intactum (
+          chorda  ante,
+       StmlNodus* scopus,
+          chorda  post,
+             Xar* sedes)
+{
+    constans StmlSedesNodi* s;
+                       i32  i;
+                       i32  a;
+                       i32  b;
+
+    s = NIHIL;
+    per (i = ZEPHYRUM; i < xar_numerus(sedes) && !s; i++)
+    {
+        s = (constans StmlSedesNodi*)xar_obtinere(sedes, i);
+        si (s->nodus != scopus)
+        {
+            s = NIHIL;
+        }
+    }
+    a = scopus->positus_initium;
+    b = scopus->positus_finis;
+    redde s && a == s->initium && b <= ante.mensura
+        && ante.mensura - b == post.mensura - s->finis
+        && memcmp(ante.datum, post.datum, (size_t)a) == ZEPHYRUM
+        && memcmp(ante.datum + b, post.datum + s->finis,
+               (size_t)(ante.mensura - b)) == ZEPHYRUM;
+}
+
 interior b32
 mutare (
      InsulaRepositorium* repo,
@@ -766,8 +832,9 @@ mutare (
         Piscina* p;
       StmlNodus* duplicatum;
          chorda  textus;
-            Xar* vitia;
-    CanonVitium* v;
+         chorda  textus_novus;
+            Xar* sedes;
+      CanonRami* proximus;
          chorda  causa_dominorum;
     IndexViarum  index_ante;
     IndexViarum  index_post;
@@ -799,63 +866,70 @@ mutare (
     }
     fn(scopus, p, repo->intern, ctx);
 
-    /* domini: attributa radicis mutata contra tabulam dominorum */
-    causa_dominorum = dominos_iudicare(repo, &index_ante, &index_post);
+    /* S8e custodia: mutator rami solum subarborem suam mutat (textus
+     * post etiam textus ultimus fit) */
+    sedes = chorda_vacua(via) ? NIHIL
+          : xar_creare(p, (i32)magnitudo(StmlSedesNodi));
+    textus_novus = stml_scribere_sedibus(duplicatum, p, FALSUM, sedes);
+    si (sedes && !extra_intactum(textus, scopus, textus_novus, sedes))
+    {
+        causam_ponere(repo, "mutatio extra ramum: mutator rami solum "
+            "subarborem suam mutat");
+        redde FALSUM;
+    }
+
+    /* domini (S8e: soli sub via scripta) */
+    causa_dominorum = dominos_iudicare(repo, via, &index_ante,
+        &index_post);
     si (!chorda_vacua(causa_dominorum))
     {
         repo->causa = causa_dominorum;
         redde FALSUM;
     }
 
-    si (repo->canon)
-    {
-        vitia = canon_iudicare(repo->canon,
-            visio_nodi(duplicatum, reliqua_sub(repo,
-                chorda_nulla_insulae(), p), p), p);
-        si (vitia && xar_numerus(vitia) > ZEPHYRUM)
-        {
-            v = (CanonVitium*)xar_obtinere(vitia, ZEPHYRUM);
-            repo->causa = chorda_concatenare(
-                chorda_ex_literis("canon recusat scripturam: ",
-                                  repo->piscina),
-                chorda_ex_literis(canon_nuntius(v->genus),
-                                  repo->piscina),
-                repo->piscina);
-            redde FALSUM;
-        }
-    }
-    /* canones ramorum (R1): quisque nodum suum iudicat */
-    per (j = ZEPHYRUM; j
-        < xar_numerus(repo->canones_ramorum); j++)
+    /* S8e canones: proximus supra viam (ramus ipse aut superior; nullus
+     * = radix) - inter eum et viam nemo canonem habet - et canones
+     * descendentium. Via vacua: radix et omnes, ut olim. */
+    proximus = NIHIL;
+    per (j = ZEPHYRUM; j < xar_numerus(repo->canones_ramorum); j++)
     {
         cr = (CanonRami*)xar_obtinere(repo->canones_ramorum, j);
-        nodus_rami = ramum_quaerere(&index_post, cr->via);
-        si (!nodus_rami || !cr->canon)
+        si (   cr->canon && insula_via_continet(cr->via, via)
+            && (!proximus || cr->via.mensura > proximus->via.mensura))
+        {
+            proximus = cr;
+        }
+    }
+    si (   !proximus && repo->canon
+        && !canone_iudicare(repo, repo->canon, duplicatum,
+               chorda_nulla_insulae(), "canon recusat scripturam: ", p))
+    {
+        redde FALSUM;
+    }
+    per (j = ZEPHYRUM; j < xar_numerus(repo->canones_ramorum); j++)
+    {
+        cr = (CanonRami*)xar_obtinere(repo->canones_ramorum, j);
+        si (   !cr->canon || (cr != proximus && !via_descendens(via,
+                cr->via)))
         {
             perge;
         }
-        vitia = canon_iudicare(cr->canon, visio_nodi(nodus_rami,
-            reliqua_sub(repo, cr->via, p), p), p);
-        si (vitia && xar_numerus(vitia) > ZEPHYRUM)
+        nodus_rami = ramum_quaerere(&index_post, cr->via);
+        si (   nodus_rami
+            && !canone_iudicare(repo, cr->canon, nodus_rami, cr->via,
+                   "canon rami recusat scripturam: ", p))
         {
-            v = (CanonVitium*)xar_obtinere(vitia, ZEPHYRUM);
-            repo->causa = chorda_concatenare(
-                chorda_ex_literis("canon rami recusat scripturam: ",
-                                  repo->piscina),
-                chorda_ex_literis(canon_nuntius(v->genus),
-                                  repo->piscina),
-                repo->piscina);
             redde FALSUM;
         }
     }
 
     repo->radix           = duplicatum;
     repo->activa          = alia;
-    repo->textus_ultimus  = stml_scribere(duplicatum, p, FALSUM);
+    repo->textus_ultimus  = textus_novus;
     repo->versio++;
     si (repo->actarius)
     {
-        repo->actarius(duplicatum, repo->actarius_ctx);
+        repo->actarius(duplicatum, via, repo->actarius_ctx);
     }
     redde VERUM;
 }

@@ -303,3 +303,38 @@ lookups are S8e-3's job.
 | vicus 2 / 10 tabs | 58 / 284 us | 60 / 194 us |
 | chain 1 / 22 | 1.8 / 114 us | 2.8 / 113 us |
 | rows 50 / 100 / 200 | 415 us / 1.5 ms / 5.1 ms | 84 / 192 / 482 us |
+
+## 2026-10-13 — S8e-2: scoped judging + guard
+
+`mutare(repo, via, ...)` with a non-empty path now:
+- **Guard first.** The copy is parsed from `textus`, so the target
+  node's `positus_initium/finis` are its span in the OLD text; the new
+  text comes from `stml_scribere_sedibus`, whose entry for the same
+  node is its span in the NEW text. Bytes before and after must match
+  (two memcmp). Escape -> "mutatio extra ramum: ...". The new text is
+  reused as `textus_ultimus` (no second serialization). Root writes
+  skip the guard (no sedes collected).
+- **Owners** only where `insula_via_continet(via, d->via)`.
+- **Canons**: the nearest `CanonRami` whose path contains `via`
+  (longest), else the root canon; plus every branch canon strictly
+  below `via`. Nothing between the nearest canon and `via` has a
+  canon, so it sees the change; ancestors above it exclude it from
+  their view (`visio_nodi`), so they cannot see it.
+- `InsulaActarius` gets `via` (conservatio ignores it until S8e-3).
+
+Behaviour change, deliberate: state made invalid OUTSIDE the gate's
+view (a canon installed after the node already broke it) no longer
+blocks writes elsewhere - only writes that canon can see. Tests in
+probatio_insula_profunda: custodia (plant: guard off -> red),
+actarius, scopus_canonum (invalid sibling ignored; invalid root
+ignored under a branch canon but still judging a canon-less branch;
+canon on level 1 judges a write at level 3). Test bug on the way:
+b's canon does not allow child c, so c needs its own canon for the
+root-skip case (cause printed, not guessed).
+
+Numbers: rows 50/100/200 = 52/103/184 us (S8e-1: 84/192/482), chain
+22 = 86 us (113). vicus barely moved (10 tabs 195 us) and its small
+rows got noisier: `sample` at 2 tabs shows 72% in
+`actarius_conservationis` -> `volumen_plagulam_condere` -> SQLite
+commit (WAL pwrite) - every focus write is a transaction. The gate
+itself is ~11%.
