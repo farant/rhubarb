@@ -195,6 +195,21 @@ State-model question to settle before A2 (A1 is content only).
     Month · Day · Agenda (keyless commands calendarium.visus_*).
   - Wheel/swipe: dropped from M1 (Fran: trackpad swipe; with
     pagination later).
+- **V — visual pass, "GUI-forward"** (Fran 2026-10-13): less TUI, more
+  web app; FLAT with 1-bit pattern fills (classic Mac OS as reference),
+  flat drop shadows in a couple of places at most; 6x8 font for now.
+  - **V0** layout on `dispositio` (padding, gaps, toolbar row, header /
+    body / prompt column, month grid with even remainders) - structure
+    before polish; sizes snap to cells.
+  - **V1** shared drawing helpers in figura.h (button, checkbox,
+    segmented control, ...) - API shown to Fran first; reusable by
+    scriba / pictor / vicus.
+  - **V2** calendarium polish with them: toolbar (drawn arrows,
+    segmented Month/Day/Agenda), month grid (lines, weekday band,
+    dithered outside days, today badge, 2px selection), lists (drawn
+    checkbox, strikethrough, separators, accent bar, heading bands),
+    prompt as an input field. Iterate by screenshots Fran reviews.
+
   - **M2** batch 2: double-click row -> title prompt; click group
     heading -> filter; right-click context menu (from the table).
   - **M3** generalize: commands declared in the manifest, availability

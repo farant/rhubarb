@@ -72,31 +72,6 @@ nodus (
     redde c;
 }
 
-/* Fines cellularum -> pixela nostra: orae ad cellulas, PRAETER oram
- * quae superficiem tangit - ea ad superficiem ipsam (fenestra:
- * superficies non semper cellularum multiplex - nulla fascia vacua ad
- * marginem; terminalis: idem, superficies semper multiplex). */
-interior Fines
-_ad_pixela (
-    Fines f,
-      s32 columnae,
-      s32 lineae,
-      s32 latitudo,
-      s32 altitudo,
-      s32 cw,
-      s32 ch)
-{
-    Fines p;
-
-    p.x = f.x * cw;
-    p.y = f.y * ch;
-    p.latitudo  = (f.x + f.latitudo >= columnae) ? latitudo - p.x
-                                                  : f.latitudo * cw;
-    p.altitudo  = (f.y + f.altitudo >= lineae) ? altitudo - p.y
-                                                : f.altitudo * ch;
-    redde p;
-}
-
 constans character*
 pictor_actio_instrumenti (
     chorda instrumentum)
@@ -546,10 +521,12 @@ pictor_componere (
     dispositio_computare(dispositio, latitudo / cw, altitudo / ch,
         NIHIL,
         NIHIL);
-    fp = _ad_pixela(dispositio_fines(dispositio, d_prospectus), latitudo
+    fp = dispositio_ad_pixela(dispositio_fines(dispositio,
+        d_prospectus), latitudo
         / cw,
         altitudo / ch, latitudo, altitudo, cw, ch);
-    fs = _ad_pixela(dispositio_fines(dispositio, d_status), latitudo
+    fs = dispositio_ad_pixela(dispositio_fines(dispositio, d_status),
+        latitudo
         / cw,
         altitudo / ch, latitudo, altitudo, cw, ch);
     instrumentum = attributum_chorda(&ramus,

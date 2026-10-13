@@ -72,29 +72,6 @@ fines (
     redde f;
 }
 
-/* cellulae -> pixela; ora superficiem tangens ad superficiem (ut
- * pictor 013 B3) */
-interior Fines
-ad_pixela (
-    Fines f,
-      s32 columnae,
-      s32 lineae,
-      s32 latitudo,
-      s32 altitudo,
-      s32 cw,
-      s32 ch)
-{
-    Fines p;
-
-    p.x = f.x * cw;
-    p.y = f.y * ch;
-    p.latitudo  = (f.x + f.latitudo >= columnae) ? latitudo - p.x
-                                                  : f.latitudo * cw;
-    p.altitudo  = (f.y + f.altitudo >= lineae) ? altitudo - p.y
-                                                : f.altitudo * ch;
-    redde p;
-}
-
 /* volutio in cellulis: 0 si totum videtur; aliter cursor centratus,
  * ad [0, totum - visum] limitatus */
 interior s32
@@ -208,10 +185,12 @@ scriba_componere (
     dispositio_computare(dispositio, latitudo / cw, altitudo / ch,
         NIHIL,
                          NIHIL);
-    fp = ad_pixela(dispositio_fines(dispositio, d_prospectus),
+    fp = dispositio_ad_pixela(dispositio_fines(dispositio,
+        d_prospectus),
                    latitudo / cw, altitudo / ch, latitudo, altitudo, cw,
                    ch);
-    fs = ad_pixela(dispositio_fines(dispositio, d_status), latitudo
+    fs = dispositio_ad_pixela(dispositio_fines(dispositio, d_status),
+        latitudo
         / cw,
                    altitudo / ch, latitudo, altitudo, cw, ch);
 
