@@ -1624,4 +1624,40 @@
     <forma textus="reproducibilia" casus="nominativus" numerus="pluralis" genus="neutrum"/>
   </vocabulum>
 
+  <!-- dithering per exemplaria (2026-10-13): voces domus modi lib/dithering_exemplaria.c -->
+  <vocabulum lemma="pictogramma" lingua="latina" classis="substantivum" nota="Gk. pictogramma n. (pictogrammatis), more lexematis: exemplar 8x8 cum significatione (lateres, squamae, undae)">
+    <forma textus="pictogramma" casus="nominativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="pictogrammatis" casus="genitivus" numerus="singularis" genus="neutrum"/>
+    <forma textus="pictogrammate" casus="ablativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="pictogrammata" casus="nominativus" numerus="pluralis" genus="neutrum"/>
+    <forma textus="pictogrammatum" casus="genitivus" numerus="pluralis" genus="neutrum"/>
+    <forma textus="pictogrammatibus" casus="ablativus" numerus="pluralis" genus="neutrum"/>
+  </vocabulum>
+  <vocabulum lemma="hachura" lingua="latina" classis="substantivum" nota="vox domus ex Francogallico hachure: lineolae parallelae quae umbram reddunt (hachurae curvae)">
+    <forma textus="hachura" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="hachurae" casus="nominativus" numerus="pluralis" genus="femininum"/>
+    <forma textus="hachuras" casus="accusativus" numerus="pluralis" genus="femininum"/>
+    <forma textus="hachurarum" casus="genitivus" numerus="pluralis" genus="femininum"/>
+    <forma textus="hachuris" casus="ablativus" numerus="pluralis" genus="femininum"/>
+  </vocabulum>
+  <vocabulum lemma="hachuratus" lingua="latina" classis="adiectivum" nota="vox domus: hachuris pictus (regio hachurata)">
+    <forma textus="hachuratus" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="hachurata" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="hachuratum" casus="nominativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="hachuratae" casus="nominativus" numerus="pluralis" genus="femininum"/>
+  </vocabulum>
+  <vocabulum lemma="praesupputatio" lingua="latina" classis="substantivum" nota="vox domus ex supputatio: summa ante constituta quae non exceditur (budget)">
+    <forma textus="praesupputatio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="praesupputationis" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="praesupputationem" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="praesupputatione" casus="ablativus" numerus="singularis" genus="femininum"/>
+    <forma textus="praesupputationes" casus="nominativus" numerus="pluralis" genus="femininum"/>
+  </vocabulum>
+  <vocabulum lemma="stilizo" lingua="latina" classis="verbum" nota="vox domus: stilo proprio reddere (regio stilizata = pictogrammate impleta)">
+    <forma textus="stilizare" tempus="praesens" modus="infinitivus" vox="activa" forma-verbi="infinitivum"/>
+    <forma textus="stilizata" tempus="perfectum" vox="passiva" forma-verbi="participium"/>
+    <forma textus="stilizatae" tempus="perfectum" vox="passiva" forma-verbi="participium"/>
+    <forma textus="stilizatum" tempus="perfectum" vox="passiva" forma-verbi="participium"/>
+  </vocabulum>
+
 </glossarium>

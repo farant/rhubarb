@@ -72,6 +72,7 @@ declare -a SOURCE_FILES=(
     "lib/dispensator.c"
     "lib/dispositio.c"
     "lib/dithering.c"
+    "lib/dithering_exemplaria.c"
     "lib/elementa.c"
     "lib/entitas.c"
     "lib/entitas_repositorium_impl.c"
