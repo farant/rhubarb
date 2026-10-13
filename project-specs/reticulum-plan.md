@@ -93,6 +93,13 @@ Each task follows the house cycle:
   (equal Hermite forms); |b_1|^2 <= alpha^(n-1) lambda_1^2 with
   alpha = 4/(4 delta - 1), checked against enumeration in T3; knapsack and subset-sum lattices; the form variant
   agrees with the basis variant on G = B B^T.
+  *(2026-10-13: landed. Agrees with a Python reference on outputs and
+  swap/reduction counts; 60 random bases judged by invariants (u * b =
+  reducta, |det u| = 1, equal Hermite forms, est_reductum); knapsack
+  recovered in 216 swaps; form variant gives the same u. Scratch-arena
+  compaction: 8.9 MB -> 1.1 MB peak at n = 20. 12 plants red; one
+  looped forever, so every LLL section now runs first in a child under
+  a 30 s bound. The bound on |b_1|^2 waits for T3's enumeration.)*
 - **T3. Enumeration.** Fincke-Pohst on the reduced basis:
   `reticulum_enumera`, `reticulum_formam_enumera`, `reticulum_minimum`;
   canonical order, true counts, storage limit (first in canonical

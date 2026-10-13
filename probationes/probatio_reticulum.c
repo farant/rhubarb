@@ -578,7 +578,7 @@ _probare_contra_libros (
     CREDO_MAIOR_I32 ((i32)reticulum_apex_officinarum(), ZEPHYRUM);
 }
 
-/* functiones T2-T4 nondum factae: FALSUM, exitus non tacti */
+/* functiones T3-T4 nondum factae: FALSUM, exitus non tacti */
 interior vacuum
 _probare_nondum (
     CredoContextus* c)
@@ -589,13 +589,404 @@ _probare_nondum (
      Magnus  norma;
 
     r.anulus = NIHIL;
-    CREDO_FALSUM (reticulum_reduce(b, NIHIL, piscina, &r, NIHIL,
-        NIHIL));
-    CREDO_FALSUM (reticulum_formam_reduce(b, NIHIL, piscina, &r, NIHIL,
-        NIHIL));
     CREDO_FALSUM (reticulum_minimum(b, piscina, &r, &norma));
     CREDO_FALSUM (reticulum_relationes(b, NIHIL, piscina, &r));
     CREDO_NIHIL (r.anulus);
+}
+
+
+/* ==================================================
+ * T2: reductio LLL
+ * ================================================== */
+
+/* |det u| = 1 */
+interior b32
+_unimodularis (
+     Matrix  u,
+    Piscina* piscina)
+{
+    Magnus det;
+
+    si (!matrix_determinans(u, piscina, &det))
+    {
+        redde FALSUM;
+    }
+    redde magnus_aequalis(magnus_absolutum(det, piscina),
+        magnus_ex_s64(I));
+}
+
+/* idem reticulum: formae Hermite aequales (lineae) */
+interior b32
+_idem_reticulum (
+     Matrix  a,
+     Matrix  b,
+    Piscina* piscina)
+{
+    Matrix hermite_prima;
+    Matrix hermite_secunda;
+
+    si (   !matrix_forma_hermite(a, piscina, &hermite_prima, NIHIL)
+        || !matrix_forma_hermite(b, piscina, &hermite_secunda, NIHIL))
+    {
+        redde FALSUM;
+    }
+    redde matrix_aequalis(hermite_prima, hermite_secunda);
+}
+
+/* reducta = u b, u unimodularis, idem reticulum, reducta LLL-reducta */
+interior vacuum
+_proprietates (
+     Matrix  b,
+    Fractio* delta,
+     Matrix  reducta,
+     Matrix  u,
+    Piscina* piscina)
+{
+    Matrix ub;
+       b32 r = FALSUM;
+
+    CREDO_NECESSE (matrix_multiplica(u, b, piscina, &ub));
+    CREDO_VERUM (matrix_aequalis(ub, reducta));
+    CREDO_VERUM (_unimodularis(u, piscina));
+    CREDO_VERUM (_idem_reticulum(b, reducta, piscina));
+    CREDO_NECESSE (reticulum_est_reductum(reducta, delta, piscina, &r));
+    CREDO_VERUM (r);
+}
+
+interior vacuum
+_lll_manu (
+    CredoContextus* c)
+{
+                Piscina* piscina       = c->piscina;
+                Fractio  tres_quartae  = _f("3/4", piscina);
+                 Matrix  b;
+                 Matrix  r;
+                 Matrix  u;
+    ReticulumStatistica  s;
+
+    /* exemplum vulgare: [0,1,0; 1,0,1; -1,0,2], II permutationes, III
+     * reductiones (Python, LLL librorum eodem ordine) */
+    b = _z("[1, 1, 1; -1, 0, 2; 3, 5, 6]", piscina);
+    CREDO_NECESSE (reticulum_reduce(b, &tres_quartae, piscina, &r, &u,
+        &s));
+    CREDO_VERUM (matrix_aequalis(r, _z("[0, 1, 0; 1, 0, 1; -1, 0, 2]",
+        piscina)));
+    CREDO_AEQUALIS_S64 ((s64)s.permutationes, (s64)II);
+    CREDO_AEQUALIS_S64 ((s64)s.reductiones, (s64)III);
+    _proprietates(b, &tres_quartae, r, u, piscina);
+    CREDO_NECESSE (reticulum_reduce(b, NIHIL, piscina, &r, &u, &s));
+    CREDO_VERUM (matrix_aequalis(r, _z("[0, 1, 0; 1, 0, 1; -1, 0, 2]",
+        piscina)));
+    /* iam reducta: nihil mutatur */
+    b = _z("[1, 0, 0; 0, 1, 0; 0, 0, 1]", piscina);
+    CREDO_NECESSE (reticulum_reduce(b, NIHIL, piscina, &r, &u, &s));
+    CREDO_VERUM (matrix_aequalis(r, b));
+    CREDO_VERUM (matrix_aequalis(u, b));
+    CREDO_AEQUALIS_S64 ((s64)s.permutationes, (s64)ZEPHYRUM);
+    CREDO_AEQUALIS_S64 ((s64)s.reductiones, (s64)ZEPHYRUM);
+    /* exitus optionales NIHIL; basis vacua et vector unus */
+    b = _z("[1, 1, 1; -1, 0, 2; 3, 5, 6]", piscina);
+    CREDO_VERUM (reticulum_reduce(b, NIHIL, piscina, &r, NIHIL, NIHIL));
+    CREDO_NECESSE (reticulum_reduce(_z("[]", piscina), NIHIL, piscina,
+        &r,
+        &u, &s));
+    CREDO_AEQUALIS_I32 (matrix_lineae(r), ZEPHYRUM);
+    b = _z("[-4, 6, 2]", piscina);
+    CREDO_NECESSE (reticulum_reduce(b, NIHIL, piscina, &r, &u, &s));
+    CREDO_VERUM (matrix_aequalis(r, b));
+}
+
+interior vacuum
+_lll_fortuita (
+    CredoContextus* c)
+{
+                Piscina* piscina = c->piscina;
+                Fractio  deltae[III];
+                 Matrix  b;
+                 Matrix  r;
+                 Matrix  u;
+                    i64  semen = (i64)MMXXVIII;
+                    i32  exemplum;
+                    i32  probati  = ZEPHYRUM;
+                    i32  mutati   = ZEPHYRUM;
+    ReticulumStatistica  s;
+
+    deltae[ZEPHYRUM]  = _f("3/4", piscina);
+    deltae[I]         = _f("99/100", piscina);
+    deltae[II]        = _f("1", piscina);
+    per (exemplum = ZEPHYRUM; exemplum < LX; exemplum++)
+    {
+        i32 n = (i32)(I + _alea(&semen, VIII));
+
+        b = _basis_fortuita(&semen, n, n + (i32)_alea(&semen, III),
+            exemplum % III == ZEPHYRUM ? (s64)M : (s64)XX,
+            exemplum % IV == III, piscina);
+        si (!reticulum_orthogonaliza(b, piscina, NIHIL, NIHIL))
+        {
+            CREDO_FALSUM (reticulum_reduce(b, NIHIL, piscina, &r, &u,
+                &s));
+            perge;
+        }
+        CREDO_NECESSE (reticulum_reduce(b, &deltae[exemplum % III],
+            piscina,
+            &r, &u, &s));
+        _proprietates(b, &deltae[exemplum % III], r, u, piscina);
+        mutati += (s.permutationes > ZEPHYRUM) ? I : ZEPHYRUM;
+        probati++;
+    }
+    imprimere("    bases reductae %d, permutatione mutatae %d\n",
+        (int)probati, (int)mutati);
+    CREDO_MAIOR_I32 (probati, L);
+    CREDO_MAIOR_I32 (mutati, XXX);
+}
+
+/* subset-sum (Lagarias-Odlyzko): b_i = (e_i, N a_i), b_(n+1) = (0, N s);
+ * x reperitur ut linea +-(x, 0) (casus ex Python probatus) */
+interior vacuum
+_summam_partium (
+    CredoContextus* c)
+{
+    hic_manens constans character* PONDERA[X] = {
+        "898159780889", "1011707717353", "1089925756095",
+            "1033311238886",
+        "550786322915", "638293147116", "863764036341", "660637959597",
+        "560277001298", "1089569543265"
+    };
+    hic_manens constans s32 SECRETUM[X] = { I, ZEPHYRUM, I, I, ZEPHYRUM,
+        ZEPHYRUM, I, ZEPHYRUM, I, I };
+                Piscina* piscina  = c->piscina;
+                 Magnus  scala    = magnus_ex_s64((s64)1048576);
+                 Magnus  summa    = magnus_ex_s64(ZEPHYRUM);
+                 Magnus  a;
+                 Magnus  x;
+                 Matrix  b;
+                 Matrix  r;
+                    i32  i;
+                    i32  j;
+                    b32  inventum = FALSUM;
+    ReticulumStatistica  s;
+
+    CREDO_NECESSE (matrix_nulla(&ANULUS_INTEGRORUM, XI, XI, piscina,
+        &b));
+    per (i = ZEPHYRUM; i < X; i++)
+    {
+        CREDO_NECESSE (magnus_ex_chorda(chorda_ex_literis(PONDERA[i],
+            piscina), piscina, &a));
+        x = magnus_ex_s64(I);
+        matrix_pone(&b, i, i, &x);
+        x = magnus_multiplica(scala, a, piscina);
+        matrix_pone(&b, i, X, &x);
+        si (SECRETUM[i])
+        {
+            summa = magnus_adde(summa, a, piscina);
+        }
+    }
+    x = magnus_multiplica(scala, summa, piscina);
+    matrix_pone(&b, X, X, &x);
+    CREDO_NECESSE (reticulum_reduce(b, NIHIL, piscina, &r, NIHIL, &s));
+    per (i = ZEPHYRUM; i < XI && !inventum; i++)
+    {
+        s32 signum = ZEPHYRUM;
+        b32 congruit =
+            magnus_signum(*(constans Magnus*)matrix_elementum(r,
+            i, X)) == ZEPHYRUM;
+
+        per (j = ZEPHYRUM; j < X && congruit; j++)
+        {
+            s64 v = ZEPHYRUM;
+
+            (vacuum)magnus_ad_s64(*(constans Magnus*)matrix_elementum(r,
+                i,
+                j), &v);
+            si (signum == ZEPHYRUM && v != ZEPHYRUM)
+            {
+                signum = (s32)v;
+            }
+            congruit = (v == (s64)signum * (s64)SECRETUM[j]);
+        }
+        inventum = congruit && signum != ZEPHYRUM;
+    }
+    imprimere("    permutationes %ld\n", (long)s.permutationes);
+    CREDO_VERUM (inventum);
+}
+
+/* forma b b^T: eadem u ac basis (nucleus communis), forma_reducta =
+ * u forma u^T; formae E_8, A_4 */
+interior vacuum
+_formam_reducere (
+    CredoContextus* c)
+{
+                Piscina* piscina = c->piscina;
+                 Matrix  b;
+                 Matrix  g;
+                 Matrix  rb;
+                 Matrix  ub;
+                 Matrix  rg;
+                 Matrix  u_formae;
+                 Matrix  t;
+                 Matrix  productum;
+                 Magnus  det;
+                    i64  semen = (i64)MMXXIX;
+                    i32  exemplum;
+                    i32  probati = ZEPHYRUM;
+                    b32  r;
+    ReticulumStatistica  sb;
+    ReticulumStatistica  sg;
+
+    per (exemplum = ZEPHYRUM; exemplum < XXX; exemplum++)
+    {
+        i32 n = (i32)(I + _alea(&semen, VII));
+
+        b = _basis_fortuita(&semen, n, n + (i32)_alea(&semen, II), L,
+            exemplum % V == IV, piscina);
+        si (!reticulum_reduce(b, NIHIL, piscina, &rb, &ub, &sb))
+        {
+            perge;
+        }
+        g = _forma(b, piscina);
+        CREDO_NECESSE (reticulum_formam_reduce(g, NIHIL, piscina, &rg,
+            &u_formae,
+            &sg));
+        CREDO_VERUM (matrix_aequalis(ub, u_formae));
+        CREDO_VERUM (sb.permutationes == sg.permutationes
+            && sb.reductiones == sg.reductiones);
+        CREDO_VERUM (matrix_aequalis(rg, _forma(rb, piscina)));
+        probati++;
+    }
+    CREDO_MAIOR_I32 (probati, XX);
+    /* E_8 (Cartan, unimodularis) et A_4 */
+    g = _z("[2, -1, 0, 0, 0, 0, 0, 0; -1, 2, -1, 0, 0, 0, 0, 0;"
+        " 0, -1, 2, -1, 0, 0, 0, -1; 0, 0, -1, 2, -1, 0, 0, 0;"
+        " 0, 0, 0, -1, 2, -1, 0, 0; 0, 0, 0, 0, -1, 2, -1, 0;"
+        " 0, 0, 0, 0, 0, -1, 2, 0; 0, 0, -1, 0, 0, 0, 0, 2]", piscina);
+    CREDO_NECESSE (matrix_determinans(g, piscina, &det));
+    CREDO_VERUM (magnus_aequalis(det, magnus_ex_s64(I)));
+    CREDO_NECESSE (reticulum_formam_reduce(g, NIHIL, piscina, &rg,
+        &u_formae,
+        &sg));
+    CREDO_VERUM (_unimodularis(u_formae, piscina));
+    CREDO_NECESSE (matrix_transposita(u_formae, piscina, &t));
+    CREDO_NECESSE (matrix_multiplica(u_formae, g, piscina, &productum));
+    CREDO_NECESSE (matrix_multiplica(productum, t, piscina,
+        &productum));
+    CREDO_VERUM (matrix_aequalis(productum, rg));
+    CREDO_NECESSE (reticulum_formam_est_reducta(rg, NIHIL, piscina,
+        &r));
+    CREDO_VERUM (r);
+    g = _z("[2, -1, 0, 0; -1, 2, -1, 0; 0, -1, 2, -1; 0, 0, -1, 2]",
+        piscina);
+    CREDO_NECESSE (reticulum_formam_reduce(g, NIHIL, piscina, &rg,
+        &u_formae,
+        &sg));
+    CREDO_NECESSE (reticulum_formam_est_reducta(rg, NIHIL, piscina,
+        &r));
+    CREDO_VERUM (r);
+}
+
+interior vacuum
+_probare_lll_refutationes (
+    CredoContextus* c)
+{
+    Piscina* piscina  = c->piscina;
+    Fractio  quarta   = _f("1/4", piscina);
+     Matrix  r;
+     Matrix  u;
+
+    r.anulus = NIHIL;
+    u.anulus = NIHIL;
+    CREDO_FALSUM (reticulum_reduce(_z("[1, 2; 2, 4]", piscina), NIHIL,
+        piscina, &r, &u, NIHIL));
+    CREDO_FALSUM (reticulum_reduce(_z("[1, 0; 0, 1; 1, 1]", piscina),
+        NIHIL,
+        piscina, &r, &u, NIHIL));
+    CREDO_FALSUM (reticulum_reduce(_z("[1, 0; 0, 1]", piscina), &quarta,
+        piscina, &r, &u, NIHIL));
+    CREDO_FALSUM (reticulum_reduce(_matrix(&ANULUS_RATIONALIUM,
+        "[1/2, 0; 0, 1]", piscina), NIHIL, piscina, &r, &u, NIHIL));
+    CREDO_FALSUM (reticulum_formam_reduce(_z("[1, 2; 2, 1]", piscina),
+        NIHIL, piscina, &r, &u, NIHIL));
+    CREDO_FALSUM (reticulum_formam_reduce(_z("[2, 1; 0, 2]", piscina),
+        NIHIL, piscina, &r, &u, NIHIL));
+    CREDO_NIHIL (r.anulus);
+    CREDO_NIHIL (u.anulus);
+}
+
+/* basis maior (n = XX, elementa ~10^25): compactio piscinae temporariae */
+interior vacuum
+_lll_memoriam (
+    CredoContextus* c)
+{
+                Piscina* piscina = c->piscina;
+                 Matrix  b;
+                 Matrix  r;
+                 Matrix  u;
+                    i64  semen = (i64)MMXXX;
+    ReticulumStatistica  s;
+
+    b = _basis_fortuita(&semen, XX, XX, C, VERUM, piscina);
+    CREDO_NECESSE (reticulum_reduce(b, NIHIL, piscina, &r, &u, &s));
+    imprimere("    n = 20: permutationes %ld, reductiones %ld, apex %lu\n",
+        (long)s.permutationes, (long)s.reductiones,
+        (unsigned long)reticulum_apex_officinarum());
+    /* sine compactione ~8.9 MB (mensum 2026-10-13), cum ea ~1.1 MB */
+    CREDO_VERUM (reticulum_apex_officinarum()
+        < (memoriae_index)3 * (memoriae_index)1048576);
+    _proprietates(b, NIHIL, r, u, piscina);
+}
+
+/* LLL sub termino: vitium quod gyrum infinitum facit (d_k non
+ * renovatus, plantatio T2) suitam aliter in aeternum tenet - planta
+ * horas II pependit antequam manu occisa est. Sectio prius in filio
+ * currit (XXX s; sectiones LLL simul ~0.25 s), deinde in parente,
+ * quae numerat - sed solum si filius transiit: aliter parens ipse
+ * penderet. */
+interior vacuum
+_sub_termino (
+    CredoContextus* c,
+       CredoFunctio corpus)
+{
+    memoriae_index fracti_ante = credo_numerus_fracti();
+
+    CREDO_NON_PENDET (corpus(c), XXX * M);
+    si (credo_numerus_fracti() == fracti_ante)
+    {
+        corpus(c);
+    }
+}
+
+interior vacuum
+_probare_lll_manu (
+    CredoContextus* c)
+{
+    _sub_termino(c, _lll_manu);
+}
+
+interior vacuum
+_probare_lll_fortuita (
+    CredoContextus* c)
+{
+    _sub_termino(c, _lll_fortuita);
+}
+
+interior vacuum
+_probare_summam_partium (
+    CredoContextus* c)
+{
+    _sub_termino(c, _summam_partium);
+}
+
+interior vacuum
+_probare_formam_reducere (
+    CredoContextus* c)
+{
+    _sub_termino(c, _formam_reducere);
+}
+
+interior vacuum
+_probare_lll_memoriam (
+    CredoContextus* c)
+{
+    _sub_termino(c, _lll_memoriam);
 }
 
 hic_manens constans CredoSectio SECTIONES[] = {
@@ -610,6 +1001,18 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "contra libros", _probare_contra_libros, NIHIL, NIHIL, NIHIL,
       NIHIL },
     { "nondum facta", _probare_nondum, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "LLL manu", _probare_lll_manu, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "LLL fortuita", _probare_lll_fortuita, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "summa partium", _probare_summam_partium, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { "formam reducere", _probare_formam_reducere, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { "LLL refutationes", _probare_lll_refutationes, NIHIL, NIHIL,
+        NIHIL,
+      NIHIL },
+    { "LLL memoria", _probare_lll_memoriam, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

@@ -376,6 +376,8 @@
     <forma textus="unimodularem" casus="accusativus" numerus="singularis"/>
   </vocabulum>
   <vocabulum lemma="hermite" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: Charles Hermite (forma normalis Hermite, matrix_forma_hermite)"/>
+  <vocabulum lemma="lovasz" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: Laszlo Lovasz (condicio Lovasz in reductione LLL, lib/reticulum.c)"/>
+  <vocabulum lemma="lll" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio: Lenstra-Lenstra-Lovasz, reductio basium reticuli (lib/reticulum.c)"/>
   <vocabulum lemma="galois" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: Evariste Galois (automorphismi Galois, lib/cyclotomia.c)"/>
   <vocabulum lemma="gauss" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: C. F. Gauss (summae Gauss, probationes/probatio_cyclotomia.c)"/>
   <vocabulum lemma="sturm" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: J. C. F. Sturm (catena Sturm, numerus radicum realium; lib/extensio.c)"/>

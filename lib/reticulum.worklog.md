@@ -70,3 +70,82 @@ and ASan/UBSan, clean).
 
 **Glossary.** `orthogonalizo` (verb, imperative `orthogonaliza`) and
 `orthogonalis` added as Neo-Latin entries.
+
+## 2026-10-13 - T2: integral LLL (basis and form on one core)
+
+**Algorithm.** Cohen, Algorithm 2.6.7 (de Weger's integral LLL), run on
+the current Gram matrix G and the transformation u, never on the basis
+itself. `Reductio` holds G (n x n), u (n x n), d_0..d_n and the
+integers lambda_kj, all as Magnus. RED(k, l): q = floor((2 lambda + d) /
+(2 d)) with d = d_(l+1), skipped when 2 |lambda| <= d (so mu = 1/2
+exactly is NOT reduced, the same boundary the T1 judge uses). SWAP:
+B = (d_(k-1) d_(k+1) + lambda^2) / d_k, then Cohen's updates of the
+lambdas left of k-1 (plain exchange) and below k (the exact-division
+pair). The Lovasz test is the T1 inequality, in integers. After the
+loop, the basis variant returns reducta = u * basis (matrix_multiplica:
+an independent product, not the maintained G), the form variant returns
+the maintained G as `forma_reducta`. The two variants share everything
+except the source of the inner products (`Fons`), so the form variant on
+B B^T returns the same u as the basis variant on B (tested).
+
+**Checked against Python first.** `scratchpad/reticulum/lll.py`
+(Fractions, textbook LLL in the same order of operations) agrees with the
+C on the outputs AND the swap and reduction counts. The common example
+[1,1,1; -1,0,2; 3,5,6] at delta 3/4 gives [0,1,0; 1,0,1; -1,0,2] in 2
+swaps and 3 reductions; the knapsack lattice (summa partium) needs 216
+swaps and recovers the hidden subset.
+
+**What the tests check.** Pinned outputs only for the hand cases. For
+60 random bases (dimension 1-6, three entry scales, delta 3/4, 99/100
+and 1) the checks are lattice invariants that hold for ANY correct LLL:
+u * basis = reducta; |det u| = 1 (Bareiss); the same lattice (equal
+Hermite forms, matrix.h); reducta judged reduced by the T1 judge. The
+form variant: same u as the basis variant, E8 Cartan matrix (reduced
+form has 2 on the diagonal), A4.
+
+**Memory: compaction.** Without care, every Magnus temporary of every
+step stays in the scratch arena: n = 20 with 10^25 entries peaked at
+8.9 MB. `_reductio_curre` now transcribes the live state (G, u, d,
+lambdas) into a fresh arena when usage passes a limit (1 MB at first;
+when the live data alone fill more than half of it, the limit becomes
+twice the live size), so the peak follows the size of the live numbers.
+Measured: 1.1 MB peak, and about 10x faster (less to touch). The test
+bounds the peak at 3 MB, and the plant "compactio nulla" is red on that
+bound alone.
+
+**Crash only in the house build (exit 139).** Compaction copies d_0..d_n,
+but `_reductio_para` had only set d_0..d_k for the k reached so far; the
+rest were uninitialized pointers that magnus_transcribe followed; only
+the house build crashed on them. Fix: initialize every d to 0
+in `_reductio_para`. Lesson: a struct the compactor copies wholesale must
+be fully initialized at birth, not lazily.
+
+**Unsigned loop index.** `for (l = k - 2; l >= 0; l--)` with i32 l
+(UNSIGNED in this house) never ends; it is s32 now.
+
+**Plants: 12, all red.** Rounding (floor instead of nearest), the
+size-reduction boundary (< instead of <=), the sign in the new G_kk, u
+not reduced, lambdas left of k-1 not swapped, d_k not updated on a swap,
+the RED loop over l < k-1 skipped, compaction dropping u, no compaction,
+reducta = basis, swaps not counted, form variant returning u instead of
+G. Two plants first errored, not survived: a multi-line anchor with a
+one-line replacement, which planta refuses (it would lose the layout);
+re-run with replacements of the same line count.
+
+**A plant that hung.** "d_k not updated" made LLL loop forever. That is
+red in substance, but silva.planta has no timeout and waited for two
+hours until I killed the test binary by hand. Fix in the suite, not in
+the tool: each LLL section (hand, random, knapsack, form, memory) runs
+through `_sub_termino`, which runs it first in a forked child under
+CREDO_NON_PENDET (30 s; all LLL sections together take ~0.25 s) and
+then again in the parent, which counts, ONLY if the child passed. My
+first version (one "non pendet" section running everything in a child,
+the normal sections after it) still hung: the child was killed and the
+failure recorded, and then the parent's own sections looped. The
+"only if the child passed" step is the whole point; probatio_matrix
+does the same around its normal forms. Now the plant is red in about
+3.5 minutes, most of it compiling plus 30 s per section.
+Lesson: any loop whose termination depends on the algorithm being
+right (LLL's potential argument) needs a test-side time bound, and a
+bound that records a failure and then runs the loop anyway is not a
+bound.
