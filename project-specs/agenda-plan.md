@@ -198,9 +198,8 @@ State-model question to settle before A2 (A1 is content only).
 - **V — visual pass, "GUI-forward"** (Fran 2026-10-13): less TUI, more
   web app; FLAT with 1-bit pattern fills (classic Mac OS as reference),
   flat drop shadows in a couple of places at most; 6x8 font for now.
-  - **V0** layout on `dispositio` (padding, gaps, toolbar row, header /
-    body / prompt column, month grid with even remainders) - structure
-    before polish; sizes snap to cells.
+  - **V0** DONE 2026-10-13: `dispositio_ad_pixela` shared (V0a);
+    calendarium layout as a dispositio tree in cells (V0b) - rows 16px.
   - **V1** shared drawing helpers in figura.h (button, checkbox,
     segmented control, ...) - API shown to Fran first; reusable by
     scriba / pictor / vicus.

@@ -15,6 +15,11 @@
  * quarum id = dies ISO ("2026-10-14"), actio eadem. Cellula prima =
  * dominica ante aut in die I mensis electi.
  *
+ * DISPOSITIO (V0b): arbor dispositio.h in cellulis (VI x VIII): radix
+ * columna (margo cellulae unius = mensa) > barra (II), titulus (II;
+ * dies IV), corpus crescens (mensis: VI x VII crescentes; ordines II
+ * + I per notam), prompta (II); fines per dispositio_ad_pixela.
+ *
  * MENSA (ut scriba et pictor): radix totum latus tenet, superficies
  * colore COLOR_SUPERFICIES et, dum latus focatum est (titulus radicis
  * "focatum"), exemplar foci; visus omnes intra marginem (VI x VIII

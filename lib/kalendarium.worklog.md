@@ -359,3 +359,23 @@ Gotcha: a button figure draws in the BUTTON's own space, so
 `textus_in_continet(md, fines_of_button, ...)` (root-space check) does
 not see its label - use textus_ullus_continet.
 Plant: button press inert -> red.
+
+## 2026-10-13 — V0b: layout on dispositio
+
+The composer builds a dispositio tree in cells (6x8): root column with a
+one-cell padding (the mensa margin) > barra row (2: left group, grow
+spacer, right group) > titulus (2; day view 4) > corpus (grow: month =
+6 grow rows x 7 grow cells, remainders spread evenly; lists = rows of 2
+cells + 1 per visible note; headings 2) > prompta (2, only while open).
+Each component is created at its leaf (`componentem_locare`) and gets its
+bounds after `dispositio_computare` via `dispositio_ad_pixela`; children
+are still added to the root in the old order (toolbar buttons last), ids
+and actions unchanged. Gone: liberos_movere, KALENDARIUM_BARRA, the
+pixel title heights, globuli_latitudo, all `y +=` arithmetic.
+
+Visible: rows 10 -> 16px (text now at +4, centred), toolbar 14 -> 16,
+day title 28 -> 32. No test needed changing - they assert relations
+(text inside a component's bounds, fills at a row's y), not pixel
+constants. The pixel remainder of a pane that is not a cell multiple now
+lands in the right/bottom margin (content never touches the edge).
+Plant: root left padding 0 -> red (mensa section).
