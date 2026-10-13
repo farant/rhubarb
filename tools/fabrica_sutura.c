@@ -1167,6 +1167,15 @@ _arborem_photographare (
          * currit actionem FRACTAM faceret ('scripsit extra vestigium',
          * fabrica spec 3 T9, mensuratum). Limes: actio quae ibi errans
          * scriberet non capitur. */
+        /* THESAURUS (cursores ad gradus T3c): scriptura ibi omni actioni
+         * licet (fabrica_ordo) - ambulatio nihil iudicaret, et LXX% arboris
+         * est (LXX milia 'actiones' ex CX; ~0.35 s per photographiam, bis
+         * per membrum cursum; fumus L) */
+        si (   introitus->genus == INTROITUS_DIRECTORIUM
+            && fabrica_via_thesauri(via, piscina))
+        {
+            perge;
+        }
         si (   chorda_aequalis_literis(via, "gesta/annales")
             || (   directorium.mensura == 0
                 && (   chorda_incipit(via, chorda_ex_literis(

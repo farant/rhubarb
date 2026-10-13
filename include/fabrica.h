@@ -536,6 +536,16 @@ fabrica_liber_via (
      chorda  titulus,
     Piscina* piscina);
 
+/* THESAURUS (plan 2 T3; cursores ad gradus T3c): via (plagula aut
+ * directorium, arbori relativa, sine '/' finali) sub partibus thesauri
+ * build/aedilis/obiecta/{blobi,actiones,generationes}? Cache, nec
+ * ingressus nec vestigium actionis: scriptura ibi omni actioni licet
+ * (fabrica_ordo), ergo photographia eam non ambulat. */
+b32
+fabrica_via_thesauri (
+      chorda  via,
+     Piscina* piscina);
+
 /* Suturam vacuam parare: OMNIA membra NIHIL. Vocans deinde quae
  * praebet ponit - membrum novum postea additum sic tutum manet
  * (T7: 'sigilla' additum, sutura instrumenti membrum non posuit,

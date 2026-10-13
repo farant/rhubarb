@@ -2853,3 +2853,24 @@ first at 13).
   -> XLIX (5). Parks: 01M4SZQX0DM0K9E8QT267CH1CJ (whole-tree snapshot),
   01M4SZQZYZ47C9WV5JM78WMEC7 (scoped ordering); …HHD43 noted (in-process
   part done, bin/compilator CLI still one spawn per process).
+
+## 2026-10-13 - cursores ad gradus T3c: the snapshot skips the store
+
+What the whole-tree snapshot costs (Fran asked): 2 x (members that RUN)
+x (entries in the tree). A warm run where everything is kept takes no
+snapshot at all; each member that runs takes one before and one after
+(serial path, _actionem_agere). The tree had 110 174 entries, 86% under
+build/ and 64% in ONE directory, build/aedilis/obiecta/actiones (store
+action records) - ~0.35 s per snapshot, so it grew with the CACHE, not
+with the sources. The ordering already grants every action write
+permission in the three store parts (lib/fabrica_ordo.c, "involucrum,
+non vestigium"), so walking them could never change a verdict:
+`fabrica_via_thesauri` (public, include/fabrica.h) and the snapshot
+skips those directories. Forced css 13.5 -> 8.2 s, forced toml 54 ->
+37 s (quiet machine; an other session's frigida doubled wall times
+mid-measurement - a profile, not a stopwatch, was the reliable
+evidence). Fumus L: X empty tests, store +40 000 files, forced probare
+min-of-two must stay < 1.5 s slower (1.66 vs 1.73 s; planted back:
+1.66 vs 3.95 s, red). XXI (write outside footprint) still red-capable.
+Remaining snapshot cost (~2.8 s of forced css) = the rest of build/
+and the sources, still per member - park …CH1CJ.

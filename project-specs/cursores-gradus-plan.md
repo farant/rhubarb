@@ -62,6 +62,13 @@ Mechanism first, then the pilots in rising difficulty (gen 3 -> 2 -> 1
   gradus unit section; fumus XLVII-XLIX; plants V red. Parked: whole-tree
   snapshot per wave (~7 s of forced css) and scoped ordering (~0.6 s).
 
+### T3c: the snapshot skips the store (inserted, Fran 2026-10-13)
+- [x] Snapshot cost = 2 x members run x tree entries; 64% of entries
+  were the store's action records, where writes are allowed by
+  construction. As built: `fabrica_via_thesauri` + skip in the
+  snapshot; forced css 13.5 -> 8.2 s, toml 54 -> 37 s. Fumus L (timing,
+  min-of-two, planted red).
+
 ### T4: md (gen 1 -> steps)
 - [ ] same as T3 for md (first jump straight from excubitor/mtime: hand
   RADIX_FONTES and `-I` deleted). Commit.

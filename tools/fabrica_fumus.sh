@@ -89,6 +89,10 @@
 #   XLIX identitas compilatoris semel per processum (T3b): 'clang
 #        -print-prog-name' olim omni compilatione et actione (XIII in
 #        mundo III membrorum; ~3 s in -vis css); nunc II constantes
+#   L    photographia thesaurum praeterit (T3c): scriptura ibi semper
+#        licita (fabrica_ordo), ergo ambulatio eius nihil iudicat -
+#        XL milia plagularum in thesauro 'probare -vis' (X membra, XX
+#        photographiae) < 1.5 s tardius (olim ~3.5 s)
 #
 # Exitus: 0 sanum · 1 fractum · 2 bin/fabrica deest.
 # <porta titulus="fabrica-fumus" instrumentum="bin/fabrica" tegit="*/aedificatio.stml aedificatio.canon fabrica.canon tools/fabrica_struere.sh"/>
@@ -735,6 +739,47 @@ chmod +x "$T/via/clang"
 ni=$(wc -l < "$T/identitates" | tr -d ' ')
 if [ "$rc1" -eq 0 ] && [ "$ni" -le 2 ] && grep -qx 'probationes_t: 3/3 praeteritae \[cursae 3, servatae 0\]' "$T/i1"; then echo "  XLIX identitas compilatoris semel per processum OK"; else echo "  XLIX FRACTUM (rc=$rc1, identitates $ni)"; sed 's/^/      /' "$T/i1" | tail -5; fracta=1; fi
 
+# L (cursores ad gradus T3c): PHOTOGRAPHIA SINE THESAURO - radix cum X
+# probationibus vacuis; 'probare -vis' sine thesauro, deinde cum XL
+# milibus plagularum in build/aedilis/obiecta/actiones (cursus primus
+# post creationem calefacit, secundus mensuratur). Differentia < 1.5 s
+radix '<fabrica titulus="t"><subsystema via="."/></fabrica>'
+cp "$RADIX/aedilis.stml" "$T/r/aedilis.stml"
+mkdir -p "$T/r/t"
+for i in 0 1 2 3 4 5 6 7 8 9; do printf 'int main(void) { return 0; }\n' > "$T/r/t/probatio_m$i.c"; done
+printf '<aedificatio>\n  <actio titulus="probationes_t" genus="iudicium">\n    <probationes_c exemplar="t/probatio_*.c"/>\n  </actio>\n</aedificatio>\n' > "$T/r/aedificatio.stml"
+# tempus probare -vis, MINIMUM duorum (machina occupata: tempus unum
+# fallax - basis lenta differentiam celaret)
+tempus_vis () {
+    python3 - "$T/r" "$F" <<'PY'
+import subprocess, sys, time
+radix, f = sys.argv[1], sys.argv[2]
+t = []
+for _ in range(2):
+    a = time.time()
+    r = subprocess.run([f, 'probare', '-vis', 'probationes_t'], cwd=radix,
+                       capture_output=True)
+    t.append(time.time() - a)
+    if r.returncode != 0:
+        print('rc%d' % r.returncode); sys.exit(0)
+print('%.2f' % min(t))
+PY
+}
+(cd "$T/r" && "$F" probare probationes_t) > /dev/null 2>&1
+sine=$(tempus_vis)
+python3 -c "
+import os
+d = os.path.join('$T/r', 'build/aedilis/obiecta/actiones')
+for i in range(400):
+    p = os.path.join(d, '%02x' % (i % 256), '%03d' % i)
+    os.makedirs(p, exist_ok=True)
+    for j in range(100):
+        open(os.path.join(p, 'r%d' % j), 'w').close()
+"
+(cd "$T/r" && "$F" probare -vis probationes_t) > /dev/null 2>&1
+cum=$(tempus_vis)
+if python3 -c "import sys; sys.exit(0 if float('$cum') - float('$sine') < 1.5 else 1)" 2>/dev/null; then echo "  L    photographia thesaurum praeterit (sine $sine s, cum XL milibus $cum s) OK"; else echo "  L    FRACTUM (sine $sine s, cum XL milibus plagularum in thesauro $cum s)"; fracta=1; fi
+
 if [ "$fracta" -ne 0 ]; then echo "fumus fabricae: FRACTUM"; exit 1; fi
-echo "fumus fabricae: sanum (XLIX/XLIX)"
+echo "fumus fabricae: sanum (L/L)"
 exit 0
