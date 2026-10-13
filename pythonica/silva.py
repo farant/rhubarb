@@ -1600,6 +1600,8 @@ PORTAE = {
                     r'fumus diagnostica: (sanum|FRACTUM)'),
     'mensor-suitae': (['./tools/mensor_suitae_fumus.sh'],
                       r'fumus mensor_suitae: (sanum|FRACTUM)'),
+    'mensor-cursus': (['./tools/mensor_cursus_fumus.sh'],
+                      r'fumus mensor_cursus: (sanum|FRACTUM)'),
     'vexilla': (['./tools/vexilla_fumus.sh'], r'fumus vexilla: (sanum|FRACTUM)'),
     'scribe': (['./silva/scribe_fumus.sh'], r'fumus scribe: (sanum|FRACTUM)'),
     'aequivalentia': (['./silva/aequivalentia.sh', '-conferre'],

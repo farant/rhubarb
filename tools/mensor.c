@@ -35,11 +35,17 @@
 #include "machina.h"
 #include "processus.h"
 #include "volumen.h"
+#include "git.h"
+#include "xar.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>   /* execvp pro -ui */
+#include <time.h>
+#include <sys/time.h>
+#include <sys/resource.h>
+#include <sys/stat.h>
 
 /* Mandatum metiendum horas capere potest (aedificatio plena) */
 #define MORA_AMPLA (IV * MXXIV * M)
@@ -584,6 +590,647 @@ _condere (
 }
 
 
+/* ============================================================
+ * cursus (analytica T2): currere, legere
+ * ============================================================ */
+
+/* acta: corpus maximum per fluxum (cauda servatur) */
+#define ACTA_MAXIMA (VIII * MXXIV * MXXIV)
+
+/* horologium monotonum (duratio; murus pro initio/fine) */
+interior s64
+_horologium_ms (vacuum)
+{
+    structura timespec t;
+
+    si (clock_gettime(CLOCK_MONOTONIC, &t) != 0)
+    {
+        redde mensura_momentum_nunc();
+    }
+    redde (s64)t.tv_sec * (s64)M + (s64)t.tv_nsec / ((s64)M * (s64)M);
+}
+
+interior chorda
+_effusio_mandati (
+    constans character* constans* argumenta,
+    constans character*           directorium,
+                       Piscina*   piscina,
+                           b32*   successus_out)
+{
+     ProcessusOptiones optiones;
+     ProcessusResultus r;
+
+    memset(&optiones, ZEPHYRUM, magnitudo(optiones));
+    optiones.directorium = directorium;
+    r = processus_exsequi_cum(argumenta, &optiones, (i32)(X * M),
+        piscina);
+    *successus_out = r.successus && r.codex_exitus == ZEPHYRUM;
+    dum (   r.effusio.mensura > ZEPHYRUM
+         && (   r.effusio.datum[r.effusio.mensura - I] == '\n'
+             || r.effusio.datum[r.effusio.mensura - I] == '\r'))
+    {
+        r.effusio.mensura--;
+    }
+    redde r.effusio;
+}
+
+/* radix arboris operis: ascendit ex cwd donec '.git' (directorium aut
+ * plagula - arbor operis) inveniat; vacua si nulla */
+interior chorda
+_arborem_invenire (
+    Piscina* piscina)
+{
+         character  via[IV * MXXIV];
+         character  proba[IV * MXXIV + XVI];
+         character* ultima;
+    structura stat  status;
+
+    si (getcwd(via, magnitudo(via)) == NIHIL)
+    {
+        redde chorda_ex_literis("", piscina);
+    }
+    dum (VERUM)
+    {
+        sprintf(proba, "%s/.git", via);
+        si (stat(proba, &status) == ZEPHYRUM)
+        {
+            redde chorda_transcribere(chorda_ex_literis(via, piscina),
+                piscina);
+        }
+        ultima = strrchr(via, '/');
+        si (ultima == NIHIL || ultima == via)
+        {
+            redde chorda_ex_literis("", piscina);
+        }
+        *ultima = '\0';
+    }
+}
+
+/* ramus ex HEAD repositorii ('ref: refs/heads/X') aut 'detached' */
+interior chorda
+_ramum_legere (
+    GitRepositorium* repositorium,
+            Piscina* piscina)
+{
+         character via[IV * MXXIV];
+         character linea[DXII];
+             FILE*  f;
+    constans character* praefixum = "ref: refs/heads/";
+    memoriae_index  longitudo;
+
+    sprintf(via, "%s/HEAD", repositorium->via_git);
+    f = fopen(via, "rb");
+    si (f == NIHIL)
+    {
+        redde chorda_ex_literis("", piscina);
+    }
+    si (fgets(linea, (integer)magnitudo(linea), f) == NIHIL)
+    {
+        fclose(f);
+        redde chorda_ex_literis("", piscina);
+    }
+    fclose(f);
+    longitudo = strlen(linea);
+    dum (   longitudo > ZEPHYRUM
+         && (linea[longitudo - I] == '\n'
+         || linea[longitudo - I] == '\r'))
+    {
+        linea[--longitudo] = '\0';
+    }
+    si (strncmp(linea, praefixum, strlen(praefixum)) != ZEPHYRUM)
+    {
+        redde chorda_ex_literis("detached", piscina);
+    }
+    redde chorda_transcribere(chorda_ex_literis(linea
+        + strlen(praefixum),
+        piscina), piscina);
+}
+
+/* chorda vacua datum NIHIL habet (allocatio nulla) et chorda_ut_cstr
+ * NIHIL reddit - setenv(titulus, NIHIL) ruit (planta D T2, extra
+ * repositorium). Litterae vacuae pro chorda vacua. */
+interior constans character*
+_litterae_aut_vacuae (
+    chorda  s,
+   Piscina* piscina)
+{
+    constans character* litterae = chorda_ut_cstr(s, piscina);
+
+    redde (litterae != NIHIL) ? litterae : "";
+}
+
+/* CONTEXTUS: ex ambitu (hereditas) aut SEMEL computatus et in ambitum
+ * positus - cursus interiores eum hereditant, git non iterum vocatur */
+interior vacuum
+_contextum_parare (
+    CursusInitium* i,
+          Piscina* piscina)
+{
+    constans character* commissum = getenv("MENSOR_COMMISSUM");
+
+    si (commissum == NIHIL)
+    {
+                 chorda  arbor         = _arborem_invenire(piscina);
+        GitRepositorium* repositorium  = NIHIL;
+              character  sha[GIT_SHA_HEX_MENSURA + I];
+                 chorda  ramus = chorda_ex_literis("", piscina);
+                 chorda  status;
+                    b32  bene = FALSUM;
+              character  sordidum[II];
+     constans character* status_argv[V];
+
+        sha[ZEPHYRUM] = '\0';
+        si (arbor.mensura > ZEPHYRUM)
+        {
+            repositorium = git_aperire(piscina, chorda_ut_cstr(arbor,
+                piscina));
+        }
+        si (repositorium != NIHIL)
+        {
+            si (!git_ref_resolvere(repositorium, "HEAD", sha))
+            {
+                sha[ZEPHYRUM] = '\0';
+            }
+            ramus = _ramum_legere(repositorium, piscina);
+        }
+        status_argv[ZEPHYRUM]  = "git";
+        status_argv[I]         = "status";
+        status_argv[II]        = "--porcelain";
+        status_argv[III]       = "--untracked-files=no";
+        status_argv[IV]        = NIHIL;
+        status = (arbor.mensura > ZEPHYRUM)
+            ? _effusio_mandati(status_argv, chorda_ut_cstr(arbor,
+                  piscina), piscina, &bene)
+            : chorda_ex_literis("", piscina);
+        sordidum[ZEPHYRUM] = (bene && status.mensura > ZEPHYRUM)
+            ? '1' : '0';
+        sordidum[I] = '\0';
+        setenv("MENSOR_COMMISSUM", sha, I);
+        setenv("MENSOR_SORDIDUM", sordidum, I);
+        setenv("MENSOR_RAMUS", _litterae_aut_vacuae(ramus, piscina), I);
+        setenv("MENSOR_ARBOR", _litterae_aut_vacuae(arbor, piscina), I);
+        si (getenv("MENSOR_MACHINA") == NIHIL)
+        {
+            setenv("MENSOR_MACHINA", _litterae_aut_vacuae(machina_nota(
+                piscina).identitas, piscina), I);
+        }
+    }
+    si (getenv("MENSOR_SESSIO") == NIHIL)
+    {
+        setenv("MENSOR_SESSIO", _litterae_aut_vacuae(
+            mensura_sessionem_novam(piscina), piscina), I);
+    }
+    i->sessio     = chorda_ex_literis(_ambitus_aut("MENSOR_SESSIO", ""),
+        piscina);
+    i->parens     = chorda_ex_literis(_ambitus_aut("MENSOR_PARENS", ""),
+        piscina);
+    i->commissum  = chorda_ex_literis(_ambitus_aut("MENSOR_COMMISSUM",
+        ""),
+        piscina);
+    i->sordidum   = strcmp(_ambitus_aut("MENSOR_SORDIDUM", "0"), "1")
+        == ZEPHYRUM;
+    i->ramus      = chorda_ex_literis(_ambitus_aut("MENSOR_RAMUS", ""),
+        piscina);
+    i->arbor      = chorda_ex_literis(_ambitus_aut("MENSOR_ARBOR", ""),
+        piscina);
+    i->machina    = chorda_ex_literis(_ambitus_aut("MENSOR_MACHINA",
+        ""),
+        piscina);
+    i->vocator    = chorda_ex_literis(_ambitus_aut("MENSOR_VOCATOR",
+        "homo"), piscina);
+}
+
+/* annotatio '<cursus titulus="X" versio="N"/>' in capite scripti
+ * (lineae primae, MMXLVIII octeti); titulus vacuus si absens */
+interior chorda
+_attributum_annotationis (
+    constans character* textus,
+    constans character* nomen_attributi,
+               Piscina* piscina)
+{
+    constans character* initium;
+    constans character* finis;
+             character  quaesitum[LXIV];
+
+    sprintf(quaesitum, "%s=\"", nomen_attributi);
+    initium = strstr(textus, quaesitum);
+    si (initium == NIHIL)
+    {
+        redde chorda_ex_literis("", piscina);
+    }
+    initium  += strlen(quaesitum);
+    finis    = strchr(initium, '"');
+    si (finis == NIHIL)
+    {
+        redde chorda_ex_literis("", piscina);
+    }
+    redde chorda_transcribere(chorda_sectio(chorda_ex_literis(textus,
+        piscina), (i32)(initium - textus), (i32)(finis - textus)),
+        piscina);
+}
+
+interior chorda
+_titulum_annotationis (
+    constans character* via_scripti,
+               Piscina* piscina)
+{
+         character caput[MMXLVIII + I];
+             FILE*  f;
+            size_t  lecta;
+         character* annotatio;
+         character* finis;
+
+    f = fopen(via_scripti, "rb");
+    si (f == NIHIL)
+    {
+        redde chorda_ex_literis("", piscina);
+    }
+    lecta = fread(caput, (size_t)I, (size_t)MMXLVIII, f);
+    fclose(f);
+    caput[lecta]  = '\0';
+    annotatio     = strstr(caput, "<cursus ");
+    si (annotatio == NIHIL)
+    {
+        redde chorda_ex_literis("", piscina);
+    }
+    finis = strstr(annotatio, "/>");
+    si (finis == NIHIL)
+    {
+        redde chorda_ex_literis("", piscina);
+    }
+    *finis = '\0';
+    redde _attributum_annotationis(annotatio, "titulus", piscina);
+}
+
+/* SUTURA ACTORUM (spec par. IV): corpus servatur per hanc functionem
+ * SOLAM - redactio postea filtrum intra eam fiet. v1: <acta>/<id>.log
+ * (MENSOR_ACTA aut ~/.rhubarb/cursus/acta), forma ut acta fabricae;
+ * fluxus quisque ACTA_MAXIMA (cauda servatur). Referentia = "<id>.log"
+ * radici actorum relativa; vacua si scribi nequit. */
+interior vacuum
+_fluxum_scribere (
+                FILE* f,
+    constans character* titulus,
+               chorda  fluxus)
+{
+    fprintf(f, "== %s ==\n", titulus);
+    si (fluxus.mensura > (i32)ACTA_MAXIMA)
+    {
+        fprintf(f, "[... %ld octeti praecisi, cauda servata]\n",
+            (longus)(fluxus.mensura - (i32)ACTA_MAXIMA));
+        fluxus.datum    += fluxus.mensura - (i32)ACTA_MAXIMA;
+        fluxus.mensura  = (i32)ACTA_MAXIMA;
+    }
+    si (fluxus.mensura > ZEPHYRUM)
+    {
+        fwrite(fluxus.datum, (size_t)I, (size_t)fluxus.mensura, f);
+        si (fluxus.datum[fluxus.mensura - I] != '\n')
+        {
+            fputc('\n', f);
+        }
+    }
+}
+
+interior chorda
+_acta_servare (
+               chorda  id,
+               chorda  effusio,
+               chorda  erratum,
+              Piscina* piscina,
+                  s64* mensura_out)
+{
+    constans character* radix;
+             character  directorium[IV * MXXIV];
+             character  via[IV * MXXIV + C];
+              FILE*  f;
+              long   magnitudo_plagulae;
+
+    *mensura_out  = (s64)ZEPHYRUM;
+    radix         = getenv("MENSOR_ACTA");
+    si (radix != NIHIL && radix[0] != '\0')
+    {
+        sprintf(directorium, "%s", radix);
+    }
+    alioquin
+    {
+        sprintf(directorium, "%s/.rhubarb/cursus/acta",
+            _ambitus_aut("HOME", "/tmp"));
+    }
+    {
+        character  gradus[IV * MXXIV];
+        character* p;
+
+        sprintf(gradus, "%s", directorium);
+        per (p = gradus + I; *p != '\0'; p++)
+        {
+            si (*p == '/')
+            {
+                *p = '\0';
+                (vacuum)mkdir(gradus, (mode_t)0755);
+                *p = '/';
+            }
+        }
+        (vacuum)mkdir(gradus, (mode_t)0755);
+    }
+    sprintf(via, "%s/%.*s.log", directorium, (integer)id.mensura,
+        (constans character*)id.datum);
+    f = fopen(via, "wb");
+    si (f == NIHIL)
+    {
+        redde chorda_ex_literis("", piscina);
+    }
+    _fluxum_scribere(f, "effusio", effusio);
+    _fluxum_scribere(f, "erratum", erratum);
+    magnitudo_plagulae = ftell(f);
+    fclose(f);
+    *mensura_out = (s64)magnitudo_plagulae;
+    redde chorda_concatenare(id, chorda_ex_literis(".log", piscina),
+        piscina);
+}
+
+/* diarium cursuum: MENSOR_DIARIUM aut ~/.rhubarb/mensurae.diarium
+ * (persistens - /tmp ad reboot perit) */
+interior constans character*
+_diarium_cursuum (
+    Piscina* piscina)
+{
+    constans character* via = getenv("MENSOR_DIARIUM");
+             character* plena;
+
+    si (via != NIHIL && via[0] != '\0')
+    {
+        redde via;
+    }
+    plena = (character*)piscina_allocare(piscina, (memoriae_index)DXII);
+    sprintf(plena, "%s/.rhubarb/mensurae.diarium",
+        _ambitus_aut("HOME", "/tmp"));
+    redde plena;
+}
+
+/* fluxum novum (post offset) effundere; offset promovetur */
+interior vacuum
+_novum_effundere (
+     chorda  fluxus,
+        i32* offset,
+       FILE* exitus)
+{
+    si (fluxus.mensura > *offset)
+    {
+        fwrite(fluxus.datum + *offset, (size_t)I,
+            (size_t)(fluxus.mensura - *offset), exitus);
+        fflush(exitus);
+        *offset = fluxus.mensura;
+    }
+}
+
+interior integer
+_cursum_currere (
+      Piscina*  piscina,
+      integer   argc,
+    character** argv)
+{
+          CursusInitium  initium;
+            CursusFinis  finis;
+                integer  i;
+                integer  primum = ZEPHYRUM;
+              Processus* processus;
+      ProcessusResultus  r;
+                    i32  offset_ef = ZEPHYRUM;
+                    i32  offset_er = ZEPHYRUM;
+                    s64  ante;
+      structura rusage  usus;
+      ChordaAedificator* argv_textus;
+              character  id_tabula[LXIV];
+     constans character* diarium;
+     constans character* titulus;
+                integer  codex;
+
+    per (i = I; i < argc; i++)
+    {
+        si (strcmp(argv[i], "--") == 0)
+        {
+            primum = i + I;
+            frange;
+        }
+    }
+    si (primum == ZEPHYRUM || primum >= argc)
+    {
+        fprintf(stderr,
+            "mensor cursus currere: '--' cum mandato deest\n");
+        redde 2;
+    }
+    memset(&initium, ZEPHYRUM, magnitudo(initium));
+    memset(&finis, ZEPHYRUM, magnitudo(finis));
+    _contextum_parare(&initium, piscina);
+    titulus = _arg(argc, argv, "-titulus");
+    initium.titulus = (titulus != NIHIL)
+        ? chorda_ex_literis(titulus, piscina)
+        : _titulum_annotationis(argv[primum], piscina);
+    si (initium.titulus.mensura == ZEPHYRUM)
+    {
+        initium.titulus = chorda_ex_literis(argv[primum], piscina);
+    }
+    argv_textus = chorda_aedificator_creare(piscina,
+        (memoriae_index)CC);
+    per (i = primum; i < argc; i++)
+    {
+        si (i > primum)
+        {
+            chorda_aedificator_appendere_character(argv_textus, ' ');
+        }
+        chorda_aedificator_appendere_literis(argv_textus, argv[i]);
+    }
+    initium.argv     = chorda_aedificator_finire(argv_textus);
+    initium.id       = mensura_id_novum(piscina);
+    initium.initium  = mensura_momentum_nunc();
+    diarium          = _diarium_cursuum(piscina);
+    si (!mensura_cursum_incipere(diarium, &initium, piscina))
+    {
+        fprintf(stderr, "mensor cursus: initium non annotatum (%s)\n",
+            diarium);
+    }
+    /* proles sub hoc cursu: parens, et scriptum ipsum non iterum
+     * involvitur */
+    sprintf(id_tabula, "%.*s", (integer)initium.id.mensura,
+        (constans character*)initium.id.datum);
+    setenv("MENSOR_PARENS", id_tabula, I);
+    setenv("CURSUS_INTUS", argv[primum], I);
+
+    ante       = _horologium_ms();
+    processus  = processus_incipere(
+        (constans character* constans*)(argv + primum), ZEPHYRUM,
+        piscina);
+    si (processus == NIHIL)
+    {
+        redde 127;
+    }
+    dum (processus_pulsare(processus) == PROCESSUS_CURRIT)
+    {
+        _novum_effundere(processus_effusio_hactenus(processus),
+            &offset_ef, stdout);
+        _novum_effundere(processus_erratum_hactenus(processus),
+            &offset_er, stderr);
+        (vacuum)usleep((useconds_t)(XX * M));
+    }
+    r = processus_metere(processus);
+    _novum_effundere(r.effusio, &offset_ef, stdout);
+    _novum_effundere(r.erratum, &offset_er, stderr);
+
+    codex = (r.signum != ZEPHYRUM) ? (integer)(CXXVIII + r.signum)
+        : (r.successus || r.codex_exitus != ZEPHYRUM)
+            ? (integer)r.codex_exitus : 127;
+    finis.id          = initium.id;
+    finis.momentum    = mensura_momentum_nunc();
+    finis.duratio_ms  = _horologium_ms() - ante;
+    finis.exitus      = (s32)codex;
+    si (getrusage(RUSAGE_CHILDREN, &usus) == ZEPHYRUM)
+    {
+        /* macOS: ru_maxrss in octetis */
+        finis.rss_maxima         = (s64)usus.ru_maxrss;
+        finis.cpu_usoris_ms      = (s64)usus.ru_utime.tv_sec * (s64)M
+            + (s64)usus.ru_utime.tv_usec / (s64)M;
+        finis.cpu_systematis_ms  = (s64)usus.ru_stime.tv_sec * (s64)M
+            + (s64)usus.ru_stime.tv_usec / (s64)M;
+    }
+    finis.acta = _acta_servare(initium.id, r.effusio, r.erratum,
+        piscina,
+        &finis.acta_mensura);
+    si (!mensura_cursum_finire(diarium, &finis, piscina))
+    {
+        fprintf(stderr, "mensor cursus: finis non annotatus (%s)\n",
+            diarium);
+    }
+    redde codex;
+}
+
+/* diarium in volumen condere PER RENOMINATIONEM: appensores quae post
+ * eam scribunt plagulam novam creant, nihil inter lectionem et
+ * truncationem perditur (fenestra: appensio quae ante renominationem
+ * aperuit - mora brevis eam claudit) */
+interior b32
+_cursus_condere (
+    Volumen* volumen,
+    Piscina* piscina)
+{
+    constans character* diarium = _diarium_cursuum(piscina);
+             character  condendum[DXII + LXIV];
+        MensuraFructus  fructus;
+
+    sprintf(condendum, "%s.condendum.%ld", diarium, (longus)getpid());
+    si (rename(diarium, condendum) != ZEPHYRUM)
+    {
+        redde VERUM;   /* diarium absens: nihil condendum */
+    }
+    (vacuum)usleep((useconds_t)(L * M));
+    fructus = mensura_condere(condendum, volumen, piscina);
+    (vacuum)remove(condendum);
+    redde fructus.successus;
+}
+
+interior constans character*
+_status_verbum (
+    CursusStatus status)
+{
+    commutatio (status)
+    {
+        casus CURSUS_TRANSIIT:  redde "transiit";
+        casus CURSUS_FRACTUS:   redde "fractus";
+        ordinarius:             redde "interruptus";
+    }
+}
+
+interior integer
+_cursus_legere (
+      Piscina*  piscina,
+      integer   argc,
+    character** argv)
+{
+          Volumen* volumen;
+              Xar* cursus;
+              i32  k;
+              b32  machina  = _vexillum(argc, argv, "-machina");
+           chorda  via      = _volumen_via(argc, argv, piscina);
+
+    volumen = volumen_aperire_aut_creare(piscina, _litterae(via,
+        piscina));
+    si (volumen == NIHIL)
+    {
+        fprintf(stderr, "mensor: volumen aperiri non potest\n");
+        redde I;
+    }
+    si (!_cursus_condere(volumen, piscina))
+    {
+        fprintf(stderr, "mensor: diarium cursuum condi non potuit\n");
+    }
+    cursus = mensura_cursus_legere(volumen, piscina);
+    per (k = ZEPHYRUM; cursus != NIHIL && k < xar_numerus(cursus); k++)
+    {
+        constans Cursus* c = (constans Cursus*)xar_obtinere(cursus, k);
+                 chorda  argv_visum = c->initium.argv;
+                    i32  j;
+              character* a = (character*)piscina_allocare(piscina,
+                  (memoriae_index)(argv_visum.mensura + I));
+
+        per (j = ZEPHYRUM; a != NIHIL && j < argv_visum.mensura; j++)
+        {
+            a[j] = (argv_visum.datum[j] == '\t' || argv_visum.datum[j]
+                == '\n') ? ' ' : (character)argv_visum.datum[j];
+        }
+        si (a != NIHIL)
+        {
+            a[argv_visum.mensura] = '\0';
+        }
+        imprimere(machina
+            ? "CURSUS\t%.*s\t%.*s\t%.*s\t%s\t%d\t%ld\t%.*s\t%d"
+              "\t%.*s\t%.*s\t%.*s\t%.*s\t%s\n"
+            : "%.*s  parens=%.*s  %.*s  %s  exitus %d  %ld ms  %.*s"
+              " sordidum=%d  %.*s  %.*s  %.*s  acta %.*s  [%s]\n",
+            (integer)c->initium.id.mensura,
+            (constans character*)c->initium.id.datum,
+            (integer)c->initium.parens.mensura,
+            (constans character*)c->initium.parens.datum,
+            (integer)c->initium.titulus.mensura,
+            (constans character*)c->initium.titulus.datum,
+            _status_verbum(c->status), (integer)c->finis.exitus,
+            (longus)c->finis.duratio_ms,
+            (integer)c->initium.commissum.mensura,
+            (constans character*)c->initium.commissum.datum,
+            (integer)(c->initium.sordidum ? I : ZEPHYRUM),
+            (integer)c->initium.ramus.mensura,
+            (constans character*)c->initium.ramus.datum,
+            (integer)c->initium.arbor.mensura,
+            (constans character*)c->initium.arbor.datum,
+            (integer)c->initium.vocator.mensura,
+            (constans character*)c->initium.vocator.datum,
+            (integer)c->finis.acta.mensura,
+            (constans character*)c->finis.acta.datum,
+            a != NIHIL ? a : "");
+    }
+    volumen_claudere(volumen);
+    redde ZEPHYRUM;
+}
+
+interior integer
+_cursus (
+      Piscina*  piscina,
+      integer   argc,
+    character** argv)
+{
+    si (argc >= III && strcmp(argv[II], "currere") == ZEPHYRUM)
+    {
+        redde _cursum_currere(piscina, argc, argv);
+    }
+    si (argc >= III && strcmp(argv[II], "legere") == ZEPHYRUM)
+    {
+        redde _cursus_legere(piscina, argc, argv);
+    }
+    fprintf(stderr,
+        "usus: mensor cursus currere [-titulus T] -- mandatum ...\n"
+        "      mensor cursus legere [-machina] [-volumen via]\n");
+    redde 2;
+}
+
+
 /* ============================================================ */
 
 interior vacuum
@@ -595,7 +1242,9 @@ _usus (vacuum)
         "  mensor sessio -nudus          clavem solam imprimere\n"
         "  mensor mensurare -titulus X [-unitas U] [-parens ID] -- cmd\n"
         "  mensor addere -titulus X -valor N [-unitas U] [-parens ID]\n"
-        "  mensor condere [-volumen via]\n\n"
+        "  mensor condere [-volumen via]\n"
+        "  mensor cursus currere [-titulus T] -- cmd  (tools/cursus.sh)\n"
+        "  mensor cursus legere [-machina]\n\n"
         "  Ambitus: MENSOR_SESSIO MENSOR_PARENS MENSOR_DIARIUM"
         " MENSOR_VOLUMEN\n");
 }
@@ -676,6 +1325,10 @@ main (
     alioquin si (strcmp(argv[I], "condere") == 0)
     {
         codex = _condere(piscina, argc, argv);
+    }
+    alioquin si (strcmp(argv[I], "cursus") == 0)
+    {
+        codex = _cursus(piscina, argc, argv);
     }
     alioquin
     {

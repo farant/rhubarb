@@ -187,6 +187,13 @@ emittere_asserta() {
     # filum_arborem_delere (2026-09-14): lstat ENOENT = nihil delendum
     echo "IUNGO_ASSERTA(ENOENT == 2);"
     echo "IUNGO_ASSERTA(EINTR == 4 && EAGAIN == 35 && EISCONN == 56);"
+    # analytica T2 (2026-10-13): horologium monotonum + usus prolis
+    echo "IUNGO_ASSERTA(CLOCK_REALTIME == 0 && CLOCK_MONOTONIC == 6);"
+    echo "IUNGO_ASSERTA(sizeof(clockid_t) == 4);"
+    echo "IUNGO_ASSERTA(RUSAGE_SELF == 0 && RUSAGE_CHILDREN == -1);"
+    echo "IUNGO_ASSERTA(sizeof(struct rusage) == 144);"
+    echo "IUNGO_ASSERTA(OFF(rusage, ru_utime) == 0 && OFF(rusage, ru_stime) == 16);"
+    echo "IUNGO_ASSERTA(OFF(rusage, ru_maxrss) == 32 && OFF(rusage, ru_nivcsw) == 136);"
 }
 
 PRAEAMBULUM='#define IUNGO2(a,b) a##b
@@ -221,6 +228,8 @@ PRAEAMBULUM='#define IUNGO2(a,b) a##b
     echo "#include <net/if.h>"
     echo "#include <dlfcn.h>"
     echo "#include <util.h>"
+    echo "#include <time.h>"
+    echo "#include <sys/resource.h>"
     echo "$PRAEAMBULUM"
     emittere_asserta
 } > "$GEN_DIR/verum.c"
@@ -249,7 +258,7 @@ for tu in verum nostrum; do
 done
 
 if [ $BENE -eq 1 ]; then
-    echo "auspex_posix: FORMAE CERTIFICATAE (stat 144 + timeval/timespec 16 + dirent 1048 + termios 72 + winsize/utimbuf/sigaction + macra)"
+    echo "auspex_posix: FORMAE CERTIFICATAE (stat 144 + timeval/timespec 16 + dirent 1048 + termios 72 + winsize/utimbuf/sigaction/rusage + macra)"
     exit 0
 fi
 exit 1

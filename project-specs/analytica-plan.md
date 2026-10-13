@@ -20,11 +20,20 @@ commit via silva.commissio. Work in `../rhubarb-quinta`.
   plants IV red.
 
 ### T2: `bin/mensor cursus` + the chassis prologue `tools/cursus.sh`
-- [ ] CLI begin/end; prologue opens, traps EXIT, captures output OUTSIDE
+- [x] CLI begin/end; prologue opens, traps EXIT, captures output OUTSIDE
   the tree, stores the body through the one seam; annotation
   `<cursus titulus versio>`. Tests (mensor fumus): exit codes and
   durations recorded, killed script = interruptus, output captured.
   Commit.
+  As built (2026-10-13): DEPARTURE - no bash trap; `tools/cursus.sh`
+  execs `bin/mensor cursus currere -- "$0" "$@"`, a C wrapper (rusage,
+  monotonic duration, 128+signum, streaming passthrough, one body seam
+  `_acta_servare`; CURSUS_INTUS stops the re-wrap, CURSUS_NULLUS opts
+  out). Context computed once in C, inherited by env (settles the spec's
+  AUDIENDA on rusage in bash). `cursus legere [-machina]` folds by
+  rename, 14 columns. Gate `mensor-cursus` VIII stages; plants XI red;
+  a plant found a real crash outside any repo (empty chorda -> NULL ->
+  setenv). Overhead: top-level +~27 ms, inherited ~0.
 
 ### T3: producers - gates, commit phases, fabrica actions
 - [ ] silva.py (porta:<g>, phasis:<x>) and bin/fabrica actions emit run

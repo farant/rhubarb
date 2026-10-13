@@ -160,3 +160,50 @@ down by environment needs git, so it belongs to the CLI (T2), keeping
 this core pure. Suite probatio_mensura_cursus (credo v2, 5 sections,
 mixed order green); plants IV red (fold routing off, exit ignored, no
 interruptus, argv unescaped).
+
+## 2026-10-13 - analytica T2: `bin/mensor cursus currere|legere` + chassis `tools/cursus.sh`
+
+The chassis is a C WRAPPER, not a bash `trap EXIT` (spec §III said trap;
+this departs). `tools/cursus.sh` is a 6-line sourced prologue that
+`exec`s `bin/mensor cursus currere -- "$0" "$@"`; mensor writes the start
+line, spawns the script again (CURSUS_INTUS=$0 stops the second wrap),
+streams stdout/stderr through (processus_incipere + pulsare +
+*_hactenus offsets, 20 ms), reaps, writes the end line. Why C: rusage
+(`getrusage(RUSAGE_CHILDREN)`, ru_maxrss in BYTES on macOS), a monotonic
+duration, `128+signum` for a signalled child, and one place that stores
+the body - a bash trap gets none of those reliably and dies with SIGKILL
+anyway (the start line is what makes a killed run visible as
+interruptus). Escape hatches: CURSUS_NULLUS=1, or bin/mensor absent
+(script runs bare).
+
+Context (commissum, sordidum, ramus, arbor, machina, sessio) is computed
+ONCE when MENSOR_COMMISSUM is absent and put into the environment;
+children inherit and never call git. Branch is read from the HEAD file
+("ref: refs/heads/X" else `detached`), the tree by ascending from cwd to
+a `.git` entry, dirty = `git status --porcelain --untracked-files=no`
+non-empty. Measured: top-level run +~27 ms, inherited child ~noise.
+
+Bug found by a plant (D: HEAD unreadable): `chorda_ex_literis("")`
+gives datum NIHIL (zero-byte allocation), `chorda_ut_cstr` then returns
+NULL, and `setenv(name, NULL)` segfaults - every run outside a git repo
+would have crashed the wrapper (and so the script). `_litterae_aut_vacuae`
+in tools/mensor.c; fumus stage VIII (run from a dir with no repo above)
+born red. General trap worth remembering: an empty chorda is not a
+valid C string source.
+
+Body seam: `_acta_servare` is the ONE function that writes a run's
+output (v1: `<MENSOR_ACTA|~/.rhubarb/cursus/acta>/<id>.log`, fabrica's
+"== effusio == / == erratum ==" form, 8 MB tail per stream) - T4 moves
+it into volume massae, redaction later goes inside it. `cursus legere`
+folds the diary by RENAMING it first (appenders after the rename create a
+new file), then reads; 14 TSV columns with -machina.
+
+Gate `mensor-cursus` (tools/mensor_cursus_fumus.sh, VIII stages). Stage V
+first raced under the gate (killed before the start line existed: git
+context in the big dirty tree > 0.5 s) - it now polls for the start line.
+Stage III first could not tell inherited from recomputed context (same
+repo, same answer) - it now presets MENSOR_COMMISSUM and requires it to
+win. Plants XI red (mensor.c via silva.planta with a rebuild-then-gate
+callable, since fabrica does not track bin/mensor; cursus.sh by hand).
+Not planted: V (pairing is the reader's, T1 plants), VII (any plant =
+unbounded fork recursion).
