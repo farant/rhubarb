@@ -121,6 +121,30 @@ nomen structura {
     TabulaPixelorum* pixela;
 } PictorStratum;
 
+/* GLUTINATIO PENDENS (Franus 2026-10-13): Cmd+V imaginem aptat et BIS
+ * ditherat - A Atkinson, B dithering_exemplaria - in memoria documenti,
+ * EXTRA acta (nihil in cauda, nulla revocatio). Tabula praevisionem
+ * super compositum pingit; confirmare = imaginem_inserere electi
+ * (acta coniuncta, revocatio una); abicere = acta intacta. */
+nomen enumeratio {
+    PICTOR_GLUTINATIO_ATKINSON = ZEPHYRUM,  /* "A" */
+    PICTOR_GLUTINATIO_EXEMPLARIA,           /* "B" */
+    PICTOR_GLUTINATIO_MODI
+} PictorGlutinatioModus;
+
+nomen structura {
+          b32  pendens;
+          s32  x;          /* locus in documento (centratus, contain) */
+          s32  y;
+          i32  latitudo;
+          i32  altitudo;
+           i8* indices[PICTOR_GLUTINATIO_MODI];    /* 0xFF perspicuum */
+        Imago  praevisio[PICTOR_GLUTINATIO_MODI];  /* RGBA, alpha 0
+                                                    * perspicuum */
+    character sigillum[PICTOR_GLUTINATIO_MODI][SIGILLUM_HEX_MENSURA];
+                                    /* identitas imaginis praevisionis */
+} PictorGlutinatio;
+
 nomen structura {
                 Volumen* volumen;
                 Piscina* piscina;
@@ -134,6 +158,7 @@ nomen structura {
                                                         * primum */
                     i32  numerus_stratorum;
                Historia* historia;       /* cauda, cursor, sigillum */
+       PictorGlutinatio  glutinatio;     /* pendens, extra acta */
 } PictorDocumentum;
 
 PictorDocumentum*
@@ -225,6 +250,26 @@ pictor_documentum_imaginem_inserere (
                   s32  x,
                   s32  y,
                   s32  supra);
+
+/* glutinatio pendens (vide supra): fons aptatur (ut
+ * pictor_imaginem_aptare) et bis ditheratur; prior pendens abicitur.
+ * FALSUM si fons vacua (tunc nihil mutatur) */
+b32
+pictor_documentum_glutinationem_parare (
+    PictorDocumentum* doc,
+      constans Imago* fons);
+
+/* modus electus in stratum novum supra 'supra'; pendens finitur.
+ * Redde id strati aut 0 (tunc pendens manet) */
+s32
+pictor_documentum_glutinationem_confirmare (
+         PictorDocumentum* doc,
+    PictorGlutinatioModus  modus,
+                      s32  supra);
+
+vacuum
+pictor_documentum_glutinationem_abicere (
+    PictorDocumentum* doc);
 
 /* strata ordine (imum primum); NIHIL si index extra */
 constans PictorStratum*

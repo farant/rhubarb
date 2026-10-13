@@ -352,3 +352,33 @@ pasted once, then the menu's paste: (no text on the pasteboard) pushed
 my synthetic Cmd+V and it pasted again: two layers per paste. The
 synthetic key is gone; paste: does nothing without text again. The
 library side was right all along (one Cmd+V = one layer, tested).
+
+## 2026-10-13 - pending paste (glutinatio pendens), document half (Fran)
+
+Fran's flow: Cmd+V no longer commits; the status row shows A / B / OK /
+X, A = Atkinson, B = dithering_exemplaria (the new pattern mode), OK
+commits the layer, X/Esc discards. This entry is the DOCUMENT half:
+
+- PictorGlutinatio lives in PictorDocumentum, OUTSIDE the acta: two
+  index buffers, two RGBA previews, two seals, the contain geometry.
+  parare / confirmare / abicere; confirmare goes through the existing
+  imaginem_inserere, so the commit is the same coniunctum pair as the
+  old paste (one undo) and replay never depends on dithering.
+- The preview RGBA is built exactly like imaginem_applicare paints a
+  layer (color_ad_pixelum(color_ex_palette)), so the test can demand
+  layer == preview pixel for pixel after confirm.
+- pictor_imaginem_aptare was split: imaginem_scalare (contain fit,
+  centred) + perspicua_signare (alpha < 128 -> 0xFF) are shared, so
+  the paste fits once and both ditherings see the same scaled image.
+  aptare's behaviour is unchanged (probatio_pictor_imago still green).
+- A failed parare (empty source) changes NOTHING - the prior pending
+  paste survives; a successful one replaces it.
+- Cost: the pattern mode is ~0.5 s for a 480x240 paste (the suite
+  takes ~6 s for six pastes). Acceptable for a paste; if it ever feels
+  slow, B could be computed lazily on first selection.
+- Transparent pixels' RGB still feeds the pattern mode's regions and
+  error diffusion (only the result is masked). Fine for v1; a
+  premultiplied or masked input would be the fix if edges look odd.
+- New link dependency: pictor_documentum -> dithering_exemplaria, so
+  ludus_tessera's hand list gained "dithering_exemplaria" (vicus links
+  pictor; memory note: A2b failed at link the same way).

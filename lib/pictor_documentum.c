@@ -12,6 +12,7 @@
 #include "xar.h"
 #include "flatura.h"
 #include "dithering.h"
+#include "dithering_exemplaria.h"
 #include "imago_opus.h"
 
 #include <stdio.h>
@@ -1435,29 +1436,26 @@ pictor_documentum_finis (
     redde doc ? historia_finis(doc->historia) : ZEPHYRUM;
 }
 
-i8*
-pictor_imaginem_aptare (
+/* contain: scala et locus centratus (communia aptare et glutinationi).
+ * FALSUM si fons vacua */
+interior b32
+imaginem_scalare (
     constans Imago* fons,
                i32  latitudo,
                i32  altitudo,
            Piscina* piscina,
+             Imago* scalata,
                s32* x,
-               s32* y,
-               i32* lat,
-               i32* alt)
+               s32* y)
 {
-               Imago scalata;
-    DitheringFructus df;
-                 b32 activi[XVI];
-                 i32 nl;
-                 i32 na;
-                 i32 i;
+    i32 nl;
+    i32 na;
 
     si (   !fons || !fons->pixela || fons->latitudo == ZEPHYRUM
         || fons->altitudo == ZEPHYRUM || latitudo == ZEPHYRUM
         || altitudo       == ZEPHYRUM || !piscina)
     {
-        redde NIHIL;
+        redde FALSUM;
     }
     /* contain: latus quod prius marginem tangit (aspectus servatur) */
     si (fons->latitudo * altitudo >= fons->altitudo * latitudo)
@@ -1472,9 +1470,53 @@ pictor_imaginem_aptare (
     }
     nl = nl < I ? I : nl;
     na = na < I ? I : na;
-    scalata = imago_scalare(fons, nl, na, nl < fons->latitudo
+    *scalata = imago_scalare(fons, nl, na, nl < fons->latitudo
         ? IMAGO_SCALA_AREA : IMAGO_SCALA_BILINEARIS, piscina);
-    si (!scalata.pixela)
+    si (!scalata->pixela)
+    {
+        redde FALSUM;
+    }
+    *x = (s32)(latitudo - nl) / II;
+    *y = (s32)(altitudo - na) / II;
+    redde VERUM;
+}
+
+/* alpha < CXXVIII: perspicuum (0xFF) */
+interior vacuum
+perspicua_signare (
+    constans Imago* scalata,
+                i8* indices)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < scalata->latitudo * scalata->altitudo; i++)
+    {
+        si (scalata->pixela[i * IV + III] < CXXVIII)
+        {
+            indices[i] = (i8)CCLV;
+        }
+    }
+}
+
+i8*
+pictor_imaginem_aptare (
+    constans Imago* fons,
+               i32  latitudo,
+               i32  altitudo,
+           Piscina* piscina,
+               s32* x,
+               s32* y,
+               i32* lat,
+               i32* alt)
+{
+               Imago scalata;
+    DitheringFructus df;
+                 b32 activi[XVI];
+                 i32 i;
+
+    si (!imaginem_scalare(fons, latitudo, altitudo, piscina, &scalata,
+        x,
+            y))
     {
         redde NIHIL;
     }
@@ -1482,24 +1524,15 @@ pictor_imaginem_aptare (
     {
         activi[i] = VERUM;
     }
-    df = dithering_atkinson_colorum(scalata.pixela, nl, na, activi,
-        piscina);
+    df = dithering_atkinson_colorum(scalata.pixela, scalata.latitudo,
+        scalata.altitudo, activi, piscina);
     si (!df.successus || !df.indices)
     {
         redde NIHIL;
     }
-    /* alpha < CXXVIII: perspicuum */
-    per (i = ZEPHYRUM; i < nl * na; i++)
-    {
-        si (scalata.pixela[i * IV + III] < CXXVIII)
-        {
-            df.indices[i] = (i8)CCLV;
-        }
-    }
-    *x    = (s32)(latitudo - nl) / II;
-    *y    = (s32)(altitudo - na) / II;
-    *lat  = nl;
-    *alt  = na;
+    perspicua_signare(&scalata, df.indices);
+    *lat = scalata.latitudo;
+    *alt = scalata.altitudo;
     redde df.indices;
 }
 
@@ -1556,6 +1589,112 @@ pictor_documentum_imaginem_inserere (
     (vacuum)historia_actum_coniunctum(doc->historia, chorda_ex_literis(
         actum, doc->piscina));
     redde id;
+}
+
+b32
+pictor_documentum_glutinationem_parare (
+    PictorDocumentum* doc,
+      constans Imago* fons)
+{
+               Imago scalata;
+    PictorGlutinatio g;
+    DitheringFructus df[PICTOR_GLUTINATIO_MODI];
+                 b32 activi[XVI];
+                 s32 x;
+                 s32 y;
+                 i32 m;
+                 i32 k;
+
+    si (   !doc || !imaginem_scalare(fons, doc->latitudo, doc->altitudo,
+            doc->piscina, &scalata, &x, &y))
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < XVI; k++)
+    {
+        activi[k] = VERUM;
+    }
+    df[PICTOR_GLUTINATIO_ATKINSON] = dithering_atkinson_colorum(
+        scalata.pixela, scalata.latitudo, scalata.altitudo, activi,
+        doc->piscina);
+    df[PICTOR_GLUTINATIO_EXEMPLARIA] = dithering_exemplaria_colorum(
+        scalata.pixela, scalata.latitudo, scalata.altitudo, activi,
+        NIHIL,
+        NIHIL, doc->piscina);
+    memset(&g, ZEPHYRUM, magnitudo(g));
+    g.x         = x;
+    g.y         = y;
+    g.latitudo  = scalata.latitudo;
+    g.altitudo  = scalata.altitudo;
+    per (m = ZEPHYRUM; m < PICTOR_GLUTINATIO_MODI; m++)
+    {
+        Sigillum  s;
+              i8* q;
+
+        si (!df[m].successus || !df[m].indices)
+        {
+            redde FALSUM;
+        }
+        perspicua_signare(&scalata, df[m].indices);
+        g.indices[m] = df[m].indices;
+        /* praevisio: pixela ut imaginem_applicare ea in stratum ponit
+         * (color_ad_pixelum palettae), perspicuum = 0 (alpha 0) */
+        g.praevisio[m].latitudo = g.latitudo;
+        g.praevisio[m].altitudo = g.altitudo;
+        g.praevisio[m].pixela = (i8*)piscina_allocare(doc->piscina,
+            (memoriae_index)(g.latitudo * g.altitudo * IV));
+        si (!g.praevisio[m].pixela)
+        {
+            redde FALSUM;
+        }
+        q = g.praevisio[m].pixela;
+        per (k = ZEPHYRUM; k < g.latitudo * g.altitudo; k++)
+        {
+            i32 pixelum = g.indices[m][k] >= XVI ? ZEPHYRUM
+                : color_ad_pixelum(color_ex_palette((i32)g.indices[m][k]));
+            memcpy(q + k * IV, &pixelum, IV);
+        }
+        s = sigillum_computare(g.indices[m],
+            (memoriae_index)(g.latitudo * g.altitudo));
+        sigillum_hex(&s, g.sigillum[m]);
+    }
+    g.pendens        = VERUM;
+    doc->glutinatio  = g;
+    redde VERUM;
+}
+
+s32
+pictor_documentum_glutinationem_confirmare (
+         PictorDocumentum* doc,
+    PictorGlutinatioModus  modus,
+                      s32  supra)
+{
+    s32 id;
+
+    si (   !doc || !doc->glutinatio.pendens || (s32)modus < ZEPHYRUM
+        || (s32)modus >= (s32)PICTOR_GLUTINATIO_MODI)
+    {
+        redde ZEPHYRUM;
+    }
+    id = pictor_documentum_imaginem_inserere(doc,
+        doc->glutinatio.indices[modus], doc->glutinatio.latitudo,
+        doc->glutinatio.altitudo, doc->glutinatio.x, doc->glutinatio.y,
+        supra);
+    si (id != ZEPHYRUM)
+    {
+        pictor_documentum_glutinationem_abicere(doc);
+    }
+    redde id;
+}
+
+vacuum
+pictor_documentum_glutinationem_abicere (
+    PictorDocumentum* doc)
+{
+    si (doc)
+    {
+        memset(&doc->glutinatio, ZEPHYRUM, magnitudo(doc->glutinatio));
+    }
 }
 
 constans PictorStratum*

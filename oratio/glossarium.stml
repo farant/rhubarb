@@ -1653,6 +1653,19 @@
     <forma textus="praesupputatione" casus="ablativus" numerus="singularis" genus="femininum"/>
     <forma textus="praesupputationes" casus="nominativus" numerus="pluralis" genus="femininum"/>
   </vocabulum>
+  <vocabulum lemma="glutinatio" lingua="latina" classis="substantivum" nota="Latina (Celsus): glutinatio, -onis - pictor: glutinatio pendens (Cmd+V ante commissionem)">
+    <forma textus="glutinatio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="glutinationis" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="glutinationem" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="glutinatione" casus="ablativus" numerus="singularis" genus="femininum"/>
+  </vocabulum>
+  <vocabulum lemma="praevisio" lingua="latina" classis="substantivum" nota="Latina sera: praevisio, -onis - imago ante commissionem ostensa (preview)">
+    <forma textus="praevisio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="praevisionis" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="praevisioni" casus="dativus" numerus="singularis" genus="femininum"/>
+    <forma textus="praevisionem" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="praevisione" casus="ablativus" numerus="singularis" genus="femininum"/>
+  </vocabulum>
   <vocabulum lemma="stilizo" lingua="latina" classis="verbum" nota="vox domus: stilo proprio reddere (regio stilizata = pictogrammate impleta)">
     <forma textus="stilizare" tempus="praesens" modus="infinitivus" vox="activa" forma-verbi="infinitivum"/>
     <forma textus="stilizata" tempus="perfectum" vox="passiva" forma-verbi="participium"/>

@@ -73,6 +73,7 @@ declare -a RADIX_FONTES=(
     "terminalis_posix"
     "quadrans"
     "dithering"
+    "dithering_exemplaria"
     "imago"
     "imago_opus"
     "color"
