@@ -317,3 +317,22 @@ probatio_kalendarium and probatio_vicus_kalendarium.
 
 Mouse stays outside (ictus_mensis / ictus_ordinis) until mouse batch 1
 maps gestures to command titles; the prompt stays a text editor.
+
+## 2026-10-13 — M1a: invoke by name, double-click, checkbox click
+
+`mandatum_invocare(m, titulus, p)` runs a table command by name (view
+mask + requirements checked); the key path and it share
+`contextum_parare` + `requisita_impleta`. Rows may now have clavis NIHIL
+(mouse/palette only - none yet, M1b adds the view commands), and
+`mandata_verificare` also requires unique titles since names are now
+addresses.
+
+Gestures: EVENTUS_MUS_DUPLEX arrives AFTER an ordinary press at the same
+spot (derivare), so a double-click on a month cell = the press selects,
+the duplex runs calendarium.diem_aperire. A press in a list row first
+selects (ictus_ordinis), then, if `des->punctum_locale` is on the
+checkbox (first line, x < KALENDARIUM_CAPSA = 24px: 4px pad + "[ ]" +
+slack), runs calendarium.perficere - the fresh context reads the
+selection just written. Wheel dropped from M1 (Fran: a trackpad swipe on
+the MacBook; later, with pagination).
+Plants: checkbox branch off -> red; duplex branch off -> red.

@@ -166,6 +166,22 @@ ictus_in (
     redde VERUM;
 }
 
+/* ictus in puncto (spatium radicis) */
+interior vacuum
+ictus_ad (
+    Mundus* x,
+       s32  px,
+       s32  py)
+{
+    Eventus e;
+
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus        = EVENTUS_MUS_DEPRESSUS;
+    e.datum.mus.x  = px;
+    e.datum.mus.y  = py;
+    dispensator_tractare(x->d, &e);
+}
+
 /* montatio: hodie electa, focus in radice, visus mensis */
 interior vacuum
 _probare_montationem (
@@ -1417,6 +1433,47 @@ _probare_mandata (
     CREDO_VERUM(r->perfecta);
 }
 
+/* mus (M1a): ictus duplex in cellula diem aperit; ictus in capsa "[ ]"
+ * rem perficit, alibi in ordine solum eligit */
+interior vacuum
+_probare_murem (
+    CredoContextus* c)
+{
+                 Mundus* x;
+     constans AgendaRes* r;
+                  Fines  f;
+                   Dies  d;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(agendam_parare(x, c));
+    CREDO_NECESSE(ictus_in(x, "2026-10-20", c->piscina));
+    CREDO_FALSUM(campus_est(x, "visus", "dies"));
+    CREDO_NECESSE(ictus_in(x, "2026-10-20", c->piscina));
+    CREDO_VERUM(campus_est(x, "visus", "dies"));
+    d = kalendarium_dies_electus(&x->m);
+    CREDO_VERUM(d.mensis == X && d.dies == XX);
+    /* ad diem XIV: Esc, ictus simplex, Enter */
+    effugium(x);
+    CREDO_NECESSE(ictus_in(x, "2026-10-14", c->piscina));
+    reditus(x);
+    CREDO_VERUM(campus_est(x, "visus", "dies"));
+    /* ictus in capsa rei I */
+    f = fines_componentis(x, "r1", c->piscina);
+    CREDO_NECESSE(f.altitudo > ZEPHYRUM);
+    ictus_ad(x, f.x + X, f.y + IV);
+    r = agenda_res(x->documentum, I);
+    CREDO_NECESSE_NON_NIHIL(r);
+    CREDO_VERUM(r->perfecta);
+    /* ictus in titulo rei II: electio sola */
+    f = fines_componentis(x, "r2", c->piscina);
+    ictus_ad(x, f.x + C, f.y + IV);
+    CREDO_VERUM(campus_est(x, "res_electa", "2"));
+    r = agenda_res(x->documentum, II);
+    CREDO_VERUM(r && r->perfecta);
+    r = agenda_res(x->documentum, I);
+    CREDO_VERUM(r && r->perfecta);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "montatio",     _probare_montationem,   mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
@@ -1449,6 +1506,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "mensa", _probare_mensam, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
     { "mandata", _probare_mandata, mundum_parare, mundum_purgare, NIHIL,
+        NIHIL },
+    { "mus", _probare_murem, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

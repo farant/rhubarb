@@ -50,7 +50,9 @@
  *
  * CLAVES (mensis): h/l dies -1/+1, k/j hebdomas -1/+1, H/L mensis
  * -1/+1 (dies ad finem mensis praecisa), t hodie, Enter diem aperit.
- * ICTUS in cellula diem eligit.
+ * ICTUS in cellula diem eligit; DUPLEX in cellula diem aperit (M1a).
+ * In ordine (dies, agenda): ictus eligit; ictus in capsa "[ ]" rem
+ * insuper perficit aut aperit (M1a).
  *
  * CLAVES (dies): j/k res proxima/prior, h/l dies -1/+1, x perficere
  * aut aperire (dies perfectionis = hodie ex porta), </> res ad diem

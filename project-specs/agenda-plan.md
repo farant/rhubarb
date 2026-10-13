@@ -188,9 +188,13 @@ State-model question to settle before A2 (A1 is content only).
   - **M0b** DONE 2026-10-13: kalendarium command table
     (TABULA_MANDATORUM: name, label, key, view mask, requirement mask,
     handler); letters with Cmd/Ctrl no longer fire.
-  - **M1** mouse batch 1 via the table: double-click day -> day view;
-    click `[ ]` toggles; header arrows + view switcher (Month · Day ·
-    Agenda); wheel over the month = month -1/+1.
+  - **M1a** DONE 2026-10-13: `mandatum_invocare` (by name);
+    double-click day -> day view; click `[ ]` toggles.
+  - **M1b** header buttons: `<` `>` (month/day -1/+1; later pages),
+    Today, view switcher Month · Day · Agenda (keyless commands
+    calendarium.visus_*); screenshot.
+  - Wheel/swipe: dropped from M1 (Fran: trackpad swipe; with
+    pagination later).
   - **M2** batch 2: double-click row -> title prompt; click group
     heading -> filter; right-click context menu (from the table).
   - **M3** generalize: commands declared in the manifest, availability

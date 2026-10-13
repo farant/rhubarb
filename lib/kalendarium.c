@@ -25,6 +25,7 @@ hic_manens constans character actio_calendarii[] = "calendarium.agere";
 #define KALENDARIUM_SIGNA_MAXIMA     IV
 #define KALENDARIUM_TITULI_DIEI      XXVIII   /* lineae III + margo */
 #define KALENDARIUM_PROMPTA          CCLVI    /* octeti promptae */
+#define KALENDARIUM_CAPSA            XXIV     /* ictus capsae: x < */
 #define KALENDARIUM_MARGO_X          VI       /* mensa: cellula una, */
 #define KALENDARIUM_MARGO_Y          VIII     /* ut scriba et pictor */
 
@@ -922,10 +923,11 @@ nomen b32 (*MandatumFn)(
 nomen structura {
      constans character* titulus;      /* "calendarium.perficere" */
      constans character* descriptio;   /* "Complete / reopen item" */
-     constans character* clavis;       /* "x", "Enter", "Esc", "C-r" */
-                    i32  visus;        /* larva VISUS_* */
-                    i32  requisita;    /* larva REQUIRIT_* */
-             MandatumFn  fn;
+     constans character* clavis;       /* "x", "Enter", "Esc", "C-r";
+                                        * NIHIL = sine clave (mus) */
+                    i32 visus;        /* larva VISUS_* */
+                    i32 requisita;    /* larva REQUIRIT_* */
+             MandatumFn fn;
 } MandatumKalendarii;
 
 interior b32
@@ -1280,8 +1282,9 @@ clavis_congruit (
         forma[ZEPHYRUM];
 }
 
-/* tabula sana: omnia posita, clavis in visu uno semel (montatio
- * aliter recusat - tabula fracta nulla probatione praeterit) */
+/* tabula sana: omnia posita, titulus unicus, clavis in visu uno
+ * semel (montatio aliter recusat - tabula fracta nulla probatione
+ * praeterit) */
 interior b32
 mandata_verificare (
     vacuum)
@@ -1291,20 +1294,83 @@ mandata_verificare (
 
     per (a = TABULA_MANDATORUM; a->titulus; a++)
     {
-        si (!a->descriptio || !a->clavis || !a->fn || !a->visus)
+        si (!a->descriptio || !a->fn || !a->visus)
         {
             redde FALSUM;
         }
         per (b = a + I; b->titulus; b++)
         {
-            si (   (a->visus & b->visus)
-                && strcmp(a->clavis, b->clavis) == ZEPHYRUM)
+            /* titulus unicus (mandatum_invocare); clavis semel per
+             * visum */
+            si (   strcmp(a->titulus, b->titulus) == ZEPHYRUM
+                || (   a->clavis && b->clavis && (a->visus & b->visus)
+                    && strcmp(a->clavis, b->clavis) == ZEPHYRUM))
             {
                 redde FALSUM;
             }
         }
     }
     redde VERUM;
+}
+
+/* contextus mandati: dies, ordines currentes, res electa */
+interior vacuum
+contextum_parare (
+     KalendariumMontatio* m,
+                Piscina* p,
+       ContextusMandati* cm)
+{
+    memset(cm, ZEPHYRUM, magnitudo(*cm));
+    cm->m      = m;
+    cm->p      = p;
+    cm->dies   = kalendarium_dies_electus(m);
+    cm->index  = (i32)-I;
+    si (visus_currens(m) & VISUS_INDICIS)
+    {
+        cm->ordines  = ordines_currentes(m, p);
+        cm->id       = res_electa(m, cm->ordines);
+        cm->index    = index_rei(cm->ordines, cm->id);
+        cm->r        = (m->documentum && cm->id > ZEPHYRUM)
+                     ? agenda_res(m->documentum, cm->id) : NIHIL;
+    }
+}
+
+/* requisita mandati impleta? (visus a vocante probatur) */
+interior b32
+requisita_impleta (
+       constans MandatumKalendarii* t,
+         constans ContextusMandati* cm)
+{
+    redde (!(t->requisita & REQUIRIT_REM) || cm->r)
+        && (   !(t->requisita & REQUIRIT_FILTRUM)
+            || insula_ramus_attributum(&cm->m->ramus,
+            "rubrica_filtrum"));
+}
+
+/* mandatum per titulum (mus; postea index mandatorum): FALSUM si
+ * ignotum aut in visu currenti non praesto */
+interior b32
+mandatum_invocare (
+    KalendariumMontatio* m,
+     constans character* titulus,
+                Piscina* p)
+{
+    constans MandatumKalendarii* t;
+               ContextusMandati  cm;
+
+    per (t = TABULA_MANDATORUM; t->titulus; t++)
+    {
+        si (strcmp(t->titulus, titulus) == ZEPHYRUM)
+        {
+            frange;
+        }
+    }
+    si (!t->titulus || !(t->visus & visus_currens(m)))
+    {
+        redde FALSUM;
+    }
+    contextum_parare(m, p, &cm);
+    redde requisita_impleta(t, &cm) && t->fn(&cm);
 }
 
 /* clavis -> mandatum visus currentis. Clavis visus sed mandatum non
@@ -1319,12 +1385,12 @@ clavem_agere (
     constans MandatumKalendarii* t;
                ContextusMandati  cm;
                             i32  visus;
-                            b32  praesto;
 
     visus = visus_currens(m);
     per (t = TABULA_MANDATORUM; t->titulus; t++)
     {
-        si ((t->visus & visus) && clavis_congruit(t->clavis, ev))
+        si (   (t->visus & visus) && t->clavis
+            && clavis_congruit(t->clavis, ev))
         {
             frange;
         }
@@ -1333,23 +1399,8 @@ clavem_agere (
     {
         redde FALSUM;
     }
-    memset(&cm, ZEPHYRUM, magnitudo(cm));
-    cm.m      = m;
-    cm.p      = p;
-    cm.dies   = kalendarium_dies_electus(m);
-    cm.index  = (i32)-I;
-    si (visus & VISUS_INDICIS)
-    {
-        cm.ordines  = ordines_currentes(m, p);
-        cm.id       = res_electa(m, cm.ordines);
-        cm.index    = index_rei(cm.ordines, cm.id);
-        cm.r        = (m->documentum && cm.id > ZEPHYRUM)
-                    ? agenda_res(m->documentum, cm.id) : NIHIL;
-    }
-    praesto = (!(t->requisita & REQUIRIT_REM) || cm.r)
-        && (   !(t->requisita & REQUIRIT_FILTRUM)
-            || insula_ramus_attributum(&m->ramus, "rubrica_filtrum"));
-    si (!praesto)
+    contextum_parare(m, p, &cm);
+    si (!requisita_impleta(t, &cm))
     {
         redde strcmp(t->clavis, "Esc") != ZEPHYRUM;
     }
@@ -1371,7 +1422,6 @@ agere (
 
     (vacuum)repo;
     (vacuum)motus;
-    (vacuum)des;
     m         = (KalendariumMontatio*)ctx;
     privatum  = (KalendariumFigurae*)m->figurae_ctx;
     si (!privatum || !privatum->scheda)
@@ -1390,8 +1440,33 @@ agere (
     }
     si (ev->genus == EVENTUS_MUS_DEPRESSUS)
     {
-        redde (visus_diei(m) || visus_agendae(m)) ? ictus_ordinis(m,
-            nodus) : ictus_mensis(m, nodus);
+        si (!(visus_diei(m) || visus_agendae(m)))
+        {
+            redde ictus_mensis(m, nodus);
+        }
+        si (!ictus_ordinis(m, nodus))
+        {
+            redde FALSUM;
+        }
+        /* capsa "[ ]" (M1a): linea prima, ante titulum */
+        si (   des && des->punctum_locale.x < KALENDARIUM_CAPSA
+            && des->punctum_locale.y < KALENDARIUM_LINEA + II)
+        {
+            (vacuum)mandatum_invocare(m, "calendarium.perficere",
+                privatum->scheda);
+        }
+        redde VERUM;
+    }
+    /* duplex (M1a): in cellula mensis diem aperit (ictus primus iam
+     * elegit) */
+    si (ev->genus == EVENTUS_MUS_DUPLEX)
+    {
+        Dies d;
+
+        redde !visus_diei(m) && !visus_agendae(m) && nodus
+            && fasti_parsare_iso(nodus->id, &d)
+            && mandatum_invocare(m, "calendarium.diem_aperire",
+            privatum->scheda);
     }
     si (ev->genus != EVENTUS_CLAVIS_DEPRESSUS)
     {
