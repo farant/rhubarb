@@ -117,6 +117,8 @@ declare -a RADIX_FONTES=(
     "dimissio"         # status S5c: systema dimissionis
     "organum_montatio" # status S6: organum in ramo montare
     "organa_infixa"    # status S7c-1: manifesta infixa (GENERATUM)
+    "agenda"           # agenda-plan A1: documentum agendae
+    "kalendarium"      # agenda-plan A2: calendarium in vico
     # scriba H2: cauda documenti per historia
     "historia"
     "pictor_figurae"

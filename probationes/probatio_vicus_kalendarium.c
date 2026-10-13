@@ -1,0 +1,141 @@
+/* probatio_vicus_kalendarium.c - calendarium in vico (agenda-plan
+ * A2a): genus 'calendarium' montatur cum argumento, hodie ex
+ * horologio vici (fictum), latera duo documentum agendae UNUM
+ * communicant. */
+#include "postulata_posix.h"
+#include "latina.h"
+#include "piscina.h"
+#include "internamentum.h"
+#include "volumen.h"
+#include "vicus.h"
+#include "vicus_applicatio.h"
+#include "kalendarium.h"
+#include "thema.h"
+#include "credo.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+nomen structura {
+            Volumen* volumen;
+    VicusApplicatio  app;
+        VicusTempus  tempus;
+} Mundus;
+
+interior vacuum
+horologium_fictum (
+         vacuum* ctx,
+    VicusTempus* tempus)
+{
+    *tempus = *(VicusTempus*)ctx;
+}
+
+interior vacuum
+mundum_parare (
+    CredoContextus* c)
+{
+    Mundus* x;
+
+    x = (Mundus*)piscina_allocare(c->piscina, magnitudo(Mundus));
+    memset(x, ZEPHYRUM, magnitudo(Mundus));
+    thema_initiare();
+    (vacuum)setenv("SHELL", "/bin/sh", I);
+    x->volumen = volumen_temporarium(c->piscina,
+        "probatio_vicus_kalendarium");
+    c->datum = x;
+}
+
+interior vacuum
+mundum_purgare (
+    CredoContextus* c)
+{
+    Mundus* x;
+
+    x = (Mundus*)c->datum;
+    si (x && x->volumen)
+    {
+        volumen_claudere(x->volumen);
+    }
+}
+
+/* latus frontale tabulae activae, si calendarium */
+interior KalendariumMontatio*
+kalendarium_frontale (
+    Vicus* v)
+{
+    VicusTabula* t;
+     VicusLatus* l;
+
+    t = vicus_activa(v);
+    l = t ? vicus_latus(t, VICUS_DEXTRUM) : NIHIL;
+    si (   !l || !l->montata || !chorda_aequalis_literis(l->genus,
+            "calendarium"))
+    {
+        redde NIHIL;
+    }
+    redde (KalendariumMontatio*)l->montatio;
+}
+
+interior b32
+dies_est (
+    Dies d,
+     s32 annus,
+     s32 mensis,
+     s32 dies)
+{
+    redde d.annus == annus && d.mensis == mensis && d.dies == dies;
+}
+
+/* montatio cum argumento; hodie ex horologio; documentum commune */
+interior vacuum
+_probare_latera (
+    CredoContextus* c)
+{
+                 Mundus* x;
+                  Vicus* v;
+    KalendariumMontatio* prima;
+    KalendariumMontatio* altera;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(x && x->volumen);
+    CREDO_NECESSE(vicus_applicatio_aedificare(&x->app, c->piscina,
+        internamentum_creare(c->piscina), x->volumen, CDLXXX,
+        CDLXXX + VICUS_ALTITUDO_TABULARUM));
+    v                 = x->app.vicus;
+    x->tempus.annus   = MMXXVI;
+    x->tempus.mensis  = X;
+    x->tempus.dies    = XIV;
+    vicus_horologium_ponere(v, horologium_fictum, &x->tempus);
+
+    CREDO_VERUM(vicus_acervo_aperire(v, "calendarium", "2026-12"));
+    (vacuum)vicus_pulsare(v);
+    prima = kalendarium_frontale(v);
+    CREDO_NECESSE_NON_NIHIL(prima);
+    CREDO_VERUM(dies_est(kalendarium_dies_electus(prima), MMXXVI, XII,
+        I));
+    CREDO_NON_NIHIL(prima->documentum);
+
+    /* argumentum mensis hodierni: hodie ex horologio vici */
+    CREDO_VERUM(vicus_acervo_aperire(v, "calendarium", "2026-10"));
+    (vacuum)vicus_pulsare(v);
+    altera = kalendarium_frontale(v);
+    CREDO_NECESSE_NON_NIHIL(altera);
+    CREDO_VERUM(altera != prima);
+    CREDO_VERUM(dies_est(kalendarium_dies_electus(altera), MMXXVI, X,
+        XIV));
+    /* documentum agendae unum */
+    CREDO_VERUM(altera->documentum == prima->documentum);
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "latera",  _probare_latera,  mundum_parare, mundum_purgare, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (
+    vacuum)
+{
+    redde credo_suitam_currere("vicus_kalendarium", SECTIONES);
+}

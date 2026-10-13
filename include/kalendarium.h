@@ -1,0 +1,94 @@
+/* kalendarium.h - calendarium: pagina mensis (agenda-plan A2; genus
+ * "calendarium", praefixum kalendarium_ quia calendarium_ liturgici
+ * est)
+ *
+ * Montatio in ramo <calendarium id> per organum (manifestum infixum:
+ * canon, domini, status). Status visus in insula (visus persistens,
+ * dies_electus transiens - absens = hodie); contentum ex documento
+ * agendae (ligamen a parente, commune lateribus). Hodie ex porta
+ * (vicus: tempus_* radicis; probationes: dies fixa), numquam ex
+ * systemate.
+ *
+ * ARBOR (visus mensis): radix "kalendarium" (focusabilis, actio
+ * calendarium.agere) > "titulus" + cellulae XLII (VI hebdomades x VII,
+ * dominica prima) quarum id = dies ISO ("2026-10-14"), actio eadem.
+ * Cellula prima = dominica ante aut in die I mensis electi.
+ *
+ * CLAVES: h/l dies -1/+1, k/j hebdomas -1/+1, H/L mensis -1/+1 (dies
+ * ad finem mensis praecisa), t hodie. ICTUS in cellula diem eligit.
+ * Argumentum "YYYY-MM": dies I eius mensis (aut hodie si in eo).
+ */
+
+#ifndef KALENDARIUM_H
+#define KALENDARIUM_H
+
+/* <aedilis corpus="lib/kalendarium.c"/> */
+
+#include "latina.h"
+#include "piscina.h"
+#include "internamentum.h"
+#include "insula.h"
+#include "actio.h"
+#include "figura.h"
+#include "dispensator.h"
+#include "fasti.h"
+#include "agenda.h"
+#include "organum_montatio.h"
+
+/* porta 'hodie': VERUM et *hodie posita, aut FALSUM (nulla lectio -
+ * tunc dies electa vel I Ianuarii MMXXVI) */
+nomen b32 (*KalendariumHodie)(
+    vacuum* ctx,
+      Dies* hodie);
+
+nomen structura {
+             InsulaRamus  ramus;
+          ActioRegistrum* actiones;
+         FiguraRegistrum* figurae;
+        AgendaDocumentum* documentum;   /* ligamen (a parente) */
+        KalendariumHodie  hodie;        /* porta */
+                  vacuum* hodie_ctx;
+                 Piscina* piscina;
+     InternamentumChorda* intern;
+} KalendariumMontatio;
+
+/* montare in repositorio dato: id NIHIL = radix; aliter liberum
+ * <calendarium id> (creatur si abest). argumentum "YYYY-MM" aut
+ * NIHIL. systemata ut pictor (conservatio: visus; NIHIL = nulla).
+ * FALSUM si argumentum malum aut ramus recusatur. */
+b32
+kalendarium_montare (
+     KalendariumMontatio* m,
+                 Piscina* piscina,
+     InternamentumChorda* intern,
+      InsulaRepositorium* repo,
+      constans character* id,
+      constans character* argumentum,
+        AgendaDocumentum* documentum,
+        KalendariumHodie  hodie,
+                  vacuum* hodie_ctx,
+         StatusSystemata* systemata);
+
+/* argumentum novum (vicus_acervo_mutare): "YYYY-MM" -> dies electa.
+ * FALSUM si malum (nihil mutatur). */
+b32
+kalendarium_argumentum_ponere (
+    KalendariumMontatio* m,
+     constans character* argumentum);
+
+/* dies electa: campus dies_electus, absens = hodie */
+Dies
+kalendarium_dies_electus (
+    constans KalendariumMontatio* m);
+
+/* componere hospitis (dispensator.h Componere), ctx =
+ * KalendariumMontatio* - purum */
+Componens*
+kalendarium_componere (
+     InsulaRepositorium* repo,
+         constans Motus* motus,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                 vacuum* ctx);
+
+#endif /* KALENDARIUM_H */

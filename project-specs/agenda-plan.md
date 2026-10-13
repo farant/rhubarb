@@ -143,6 +143,14 @@ State-model question to settle before A2 (A1 is content only).
 - **A2 — month view pane** `$calendarium` (opens on today; argument
   `YYYY-MM`): grid, liturgical colour + feast, per-day marks (items
   assigned, items completed).
+  - **A2a** DONE 2026-10-13 (lib/kalendarium.worklog.md): one genus
+    `calendarium` + `visus` field, C prefix `kalendarium_`, selection
+    transient, Sunday first (Fran); manifest, include/kalendarium.h,
+    42-cell grid (id = ISO date), keys h/l/j/k/H/L/t, click, argument;
+    vicus genus + `$calendarium`, one shared agenda document, clock
+    port.
+  - **A2b** drawing: liturgical colour + feast, marks, today/selection
+    (screenshot).
 - **A3 — day view**: feast, items of the day, tick/untick, reassign,
   notes.
 - **A4 — todo view/editor** `$agenda`: all incomplete items (whatever

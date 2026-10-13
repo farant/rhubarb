@@ -126,6 +126,7 @@ declare -a SOURCE_FILES=(
     "lib/iussum.c"
     "lib/js_lexema.c"
     "lib/json.c"
+    "lib/kalendarium.c"
     "lib/lapifex_generare.c"
     "lib/lapifex_glr.c"
     "lib/lapifex_lexere.c"
