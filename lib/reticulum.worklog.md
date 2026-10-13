@@ -303,3 +303,124 @@ could not tell. Fix:
 - the regime is counted: the delta 3/4 and delta 1 outputs differ for
   3 of the 40 random matrices, and the test asserts > 0 (the plant
   makes them always equal).
+
+## 2026-10-13 - T5: independent review, and the fixes
+
+**The review.** A reviewer agent with its own from-scratch Fraction
+oracle (textbook Cohen 2.6.3 LLL, Gram-Schmidt from the Gram matrix,
+Fincke-Pohst on the unreduced form cross-checked against a Cramer box
+brute force, kernel lattices by extended HNF) ran ~45,000 differential
+cases against the library, including:
+- huge entries (to 10^40), delta just above 1/4;
+- budgets swept over 140 lattices; Q relations with mixed
+  denominators;
+- builds with ASan, UBSan and venenum, and with a forced-compaction
+  build.
+
+**No wrong results.** LLL matched the textbook exactly, including u and
+both counts. It also reproduced the worklog's numbers independently
+(E8 120/1200/4560, Z^6 11896, 2O 216, knapsack 216/287). Findings: 3
+memory, 4 test gaps, 2 contract, 4 API, 2 nits. Sources and inputs are
+in `scratchpad/recensio_reticulum/` (the summary is in
+`findings_summa.md` there; the agent's own report file was blocked, so
+it arrived by message).
+
+**Fixed (memory).**
+1. `_magni(n * n)` multiplied in i32 (unsigned 32-bit here), which wraps
+   at n = 65536, and 65536 rows of [1] overflowed the heap under ASan.
+   Counts are now `memoriae_index` (`_quadratum`). After fix 2 no
+   feasible input reaches a square n >= 65536 (it would need 4G input
+   entries), so a plant restoring the i32 product is an equivalent
+   mutant; the fix stays as defense in depth.
+2. Tall bases (more rows than columns, always dependent) were refused
+   only after building the Gram matrix and the n x n lambda table:
+   3000 x 2 cost 648 MB before FALSUM, and `piscina_allocare` aborts on
+   failure. `_fons_para` now refuses them at once (apex 0, also under
+   ASan).
+3. `_orthogonaliza` (est_reductum, orthogonaliza, the Gram-Schmidt of
+   every enumeration) never rewound: ~n^4 growth, 424 MB at n = 80 with
+   10^25 entries. T1's worklog said to revisit this after T2, and I had
+   not. Now d and lambda are transcribed into the caller's arena and
+   each entry's temporaries live in their own arena, rewound per
+   entry. est_reductum peaks:
+   - n = 20: 89 KB (was 1.9 MB);
+   - n = 40: 0.47 MB (was 27.8 MB);
+   - n = 60: 1.3 MB (was 136 MB);
+   - n = 80: 2.8 MB (was 424 MB).
+   Enumeration at n = 60: 31 MB (was 139), now dominated by LLL.
+
+**Fixed (contract), with Fran's decisions.**
+- `reticulum_apex_officinarum` was max-per-arena and went stale on
+  early refusals. Fran chose SUM: the apex is now the sum of the peaks
+  of every scratch arena of the call. That is an upper bound on the
+  concurrent peak, never an underestimate. LLL compaction counts the
+  largest retired arena TWICE, because transcription holds the old and
+  new arenas at once. Every public function resets the apex at entry,
+  so a refusal reports 0. matrix.h's own scratch is not counted (it
+  has `matrix_apex_officinarum`). Consequence: LLL at n = 20 now
+  reports 3.05 MB (1.1 MB max-semantics); the bound is 5 MB (8.9 MB
+  without compaction), and a lower bound of 2 MB proves that the
+  retired arena was counted.
+- `ReticulumEnumeratio.nodi` added (Fran: now, because adding a struct
+  field later is awkward in C89). It is the number of nodes visited, a
+  diagnostic that depends on the implementation like the apex, pinned
+  on [1], R = 9 (4 complete, 3 at budget 3), and equal to
+  `limes_nodorum` whenever a run is incomplete.
+- Header wording:
+  - `completa = FALSUM` may come with an already true count;
+  - only a COMPLETE result is basis-independent;
+  - the piscina argument of est_reductum is reserved;
+  - Q in relationes ONLY, by design.
+
+**Fixed (tests).**
+- My assertion "incomplete implies numerus < true count" was wrong:
+  the unvisited node can be a dead end after the last leaf (reviewer
+  repro [[-1,3],[-3,0]], R = 9, budget 3). The test now asserts <=.
+- Compaction with u entries beyond s64: the reviewer's skewed basis
+  (u = 128 row operations |q| <= 1000, b = u diag(1..16), 12,039
+  swaps). Before, the plant "compaction keeps u untranscribed" (a
+  use-after-free) stayed green even under ASan + venenum, because n = 20
+  random bases have tiny u entries, stored inline in Magnus.
+- Knapsack counts pinned: 216 swaps, 287 reductions (the reviewer's
+  textbook agrees); the l-loop reduction counter was untested.
+- New regimes:
+  - delta = 1/4 + 10^-18 and 51/100 in random LLL;
+  - scaling, enumerate(S b, S^2 R) = S enumerate(b, R) with S = 10^20:
+    big F_k, N_k and centers, on non-diagonal bases (34 cases, 129
+    vectors);
+  - stored vectors of INCOMPLETE runs checked (true norm, inside the
+    ball, canonical sign, strict order, present in the full list);
+  - random Q relations against a test-side integer matrix scaled by the
+    PRODUCT of denominators (another route than the library's lcm),
+    compared by Hermite form;
+  - tall refusals with apex 0.
+- Sum semantics tested: apex(relationes) > apex(reduce on the same
+  kernel basis), which is equal under max.
+
+**Measured, no change (finding 15).** Evicted entries leave the digits
+of values beyond s64 behind, but on Z^12 x 10^20 at R = 3 x 10^40
+(1,024 vectors, heavy norm ties) storing 10 vectors peaks at 188 KB
+against 183 KB counting only.
+
+**Deferred (plan, later slices).**
+- A prepared object, so enumerations at several radii (successive
+  minima) do not re-run LLL and Gram-Schmidt each time.
+- `reticulum_formam_minimum` with a node budget and `completa`
+  (today: reduce, then enumerate with limes_servandi 1).
+- The file-static apex (the same convention as matrix.h).
+
+**Plants: 8, all red.** Tall refusal removed (the section first tries a
+modest 1000 x 2 basis and ABORTS on a nonzero apex - otherwise the
+70,000-row case would try to allocate ~100 GB); Gram-Schmidt without
+the rewind (memory bound) and without the transcription; apex not reset
+at entry; apex as max instead of sum (apex(relationes) > apex(reduce on
+the same kernel basis)); retired compaction arenas not counted (apex >
+2 MB after a compaction); nodi not set; compaction keeping u
+untranscribed, under the venenum gate (the skewed basis turns the
+use-after-free into a crash, which `_sub_termino` reports). The i32
+`n * n` is the equivalent mutant noted above.
+
+**Lesson.** Diagnostics have semantics too. "Sum vs max" and "retired
+arenas counted twice" were invisible to every upper-bound assertion,
+since a plant that UNDER-reports passes an upper bound. Each needed a
+property that only the intended semantics satisfies.

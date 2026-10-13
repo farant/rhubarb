@@ -17,6 +17,12 @@
  * Piscinae temporariae
  * ================================================== */
 
+/* apex: SUMMA apicum omnium piscinarum temporariarum vocationis -
+ * limes superior usus simul vivi, numquam minor (recensio T5: maximus
+ * singularum piscinarum simul vivarum minor erat). Piscinae successivae
+ * compactionis LLL: maximus veterum BIS additur, nam transcriptio
+ * veterem et novam simul tenet. Vocatio publica quaeque a nihilo
+ * incipit, etiam si statim refutat. */
 interior memoriae_index _apex_officinarum = ZEPHYRUM;
 
 memoriae_index
@@ -25,27 +31,49 @@ reticulum_apex_officinarum (vacuum)
     redde _apex_officinarum;
 }
 
-/* piscina temporaria vocationis publicae; NIHIL si memoria deest */
+interior vacuum
+_apex_incipe (vacuum)
+{
+    _apex_officinarum = ZEPHYRUM;
+}
+
+/* piscina temporaria; NIHIL si memoria deest */
 interior Piscina*
 _officina_aperi (vacuum)
 {
-    _apex_officinarum = ZEPHYRUM;
     redde piscina_generare_dynamicum("reticulum",
         (memoriae_index)65536);
 }
 
+/* apicem piscinae summae addit, deinde destruit */
 interior vacuum
 _officina_claude (
     Piscina* opus)
 {
     si (opus != NIHIL)
     {
-        si (piscina_summa_apex_usus(opus) > _apex_officinarum)
-        {
-            _apex_officinarum = piscina_summa_apex_usus(opus);
-        }
+        _apex_officinarum += piscina_summa_apex_usus(opus);
         piscina_destruere(opus);
     }
+}
+
+/* numerus in memoriae_index: n * n in i32 (insignatus XXXII bitorum)
+ * ad n = 65536 in nihilum volvitur (recensio T5) */
+interior Magnus*
+_magni (
+    memoriae_index  numerus,
+           Piscina* opus)
+{
+    redde (Magnus*)piscina_allocare(opus,
+        numerus * (memoriae_index)magnitudo(Magnus)
+        + (memoriae_index)I);
+}
+
+interior memoriae_index
+_quadratum (
+    i32 n)
+{
+    redde (memoriae_index)n * (memoriae_index)n;
 }
 
 
@@ -79,6 +107,12 @@ _fons_para (
     i32 j;
 
     si (matrix_anulus(m) != &ANULUS_INTEGRORUM)
+    {
+        redde FALSUM;
+    }
+    /* plures vectores quam dimensiones: semper dependentes - refutatio
+     * statim, ante matricem Gram (recensio T5: 3000 x 2 ~648 MB) */
+    si (!est_forma && matrix_lineae(m) > matrix_columnae(m))
     {
         redde FALSUM;
     }
@@ -163,42 +197,53 @@ _divide_exacte (
 }
 
 /* FALSUM si d_k <= 0 pro aliquo k (dependentes / non definita) aut
- * divisio non exacta (vitium internum) */
+ * divisio non exacta (vitium internum). d et integri (soli valores
+ * vivi) in opus; temporaria cuiusque elementi in piscina propria, post
+ * elementum refecta (recensio T5: sine refectione n = 80, 10^25 ~424
+ * MB, ~n^4). */
 interior b32
 _orthogonaliza (
     constans Fons* fons,
           Piscina* opus,
      Orthogonalis* exitus)
 {
-       i32  n = fons->n;
-    Magnus* d;
-    Magnus* lam;
-       i32  k;
-       i32  j;
-       i32  i;
-    Magnus  u;
+             i32  n = fons->n;
+          Magnus* d;
+          Magnus* lam;
+             i32  k;
+             i32  j;
+             i32  i;
+          Magnus  u;
+         Piscina* temporaria;
+  PiscinaNotatio  nota;
 
-    d   = (Magnus*)piscina_allocare(opus,
-        (memoriae_index)(n + I) * (memoriae_index)magnitudo(Magnus));
-    lam = (Magnus*)piscina_allocare(opus,
-        (memoriae_index)n * (memoriae_index)n
-        * (memoriae_index)magnitudo(Magnus) + I);
-    d[ZEPHYRUM] = magnus_ex_s64(I);
+    temporaria = _officina_aperi();
+    si (temporaria == NIHIL)
+    {
+        redde FALSUM;
+    }
+    nota         = piscina_notare(temporaria);
+    d            = _magni((memoriae_index)n + I, opus);
+    lam          = _magni(_quadratum(n), opus);
+    d[ZEPHYRUM]  = magnus_ex_s64(I);
     per (k = ZEPHYRUM; k < n; k++)
     {
         per (j = ZEPHYRUM; j <= k; j++)
         {
-            u = _productum(fons, k, j, opus);
+            piscina_reficere(temporaria, nota);
+            u = _productum(fons, k, j, temporaria);
             per (i = ZEPHYRUM; i < j; i++)
             {
                 si (!_divide_exacte(magnus_subtrahe(
-                    magnus_multiplica(d[i + I], u, opus),
+                    magnus_multiplica(d[i + I], u, temporaria),
                     magnus_multiplica(lam[k * n + i], lam[j * n + i],
-                        opus), opus), d[i], opus, &u))
+                        temporaria), temporaria), d[i], temporaria, &u))
                 {
+                    _officina_claude(temporaria);
                     redde FALSUM;
                 }
             }
+            u = magnus_transcribe(u, opus);
             si (j < k)
             {
                 lam[k * n + j] = u;
@@ -207,12 +252,14 @@ _orthogonaliza (
             {
                 si (magnus_signum(u) <= ZEPHYRUM)
                 {
+                    _officina_claude(temporaria);
                     redde FALSUM;
                 }
                 d[k + I] = u;
             }
         }
     }
+    _officina_claude(temporaria);
     exitus->n              = n;
     exitus->determinantes  = d;
     exitus->integri        = lam;
@@ -311,6 +358,7 @@ reticulum_orthogonaliza (
       Matrix*  coefficientes,
      Fractio** normae)
 {
+    _apex_incipe();
     redde _orthogonaliza_publica(basis, FALSUM, piscina, coefficientes,
         normae);
 }
@@ -322,6 +370,7 @@ reticulum_formam_orthogonaliza (
       Matrix*  coefficientes,
      Fractio** normae)
 {
+    _apex_incipe();
     redde _orthogonaliza_publica(forma, VERUM, piscina, coefficientes,
         normae);
 }
@@ -446,6 +495,7 @@ reticulum_est_reductum (
              Piscina* piscina,
                  b32* exitus)
 {
+    _apex_incipe();
     (vacuum)piscina;
     redde _est_reductum_publicum(basis, FALSUM, delta, exitus);
 }
@@ -457,6 +507,7 @@ reticulum_formam_est_reducta (
              Piscina* piscina,
                  b32* exitus)
 {
+    _apex_incipe();
     (vacuum)piscina;
     redde _est_reductum_publicum(forma, VERUM, delta, exitus);
 }
@@ -488,26 +539,16 @@ nomen structura {
 #define IN_U(r, i, j)  ((r)->u[(i) * (r)->n + (j)])
 #define IN_INTEGRIS(r, k, j)  ((r)->integri[(k) * (r)->n + (j)])
 
-interior Magnus*
-_magni (
-         i32  numerus,
-     Piscina* opus)
-{
-    redde (Magnus*)piscina_allocare(opus,
-        (memoriae_index)numerus * (memoriae_index)magnitudo(Magnus)
-        + (memoriae_index)I);
-}
-
 /* status in piscinam novam transcribere (valores vivi soli) */
 interior vacuum
 _reductio_transcribe (
     Reductio* r,
      Piscina* nova)
 {
-    Magnus* forma    = _magni(r->n * r->n, nova);
-    Magnus* u        = _magni(r->n * r->n, nova);
-    Magnus* d        = _magni(r->n + I, nova);
-    Magnus* integri  = _magni(r->n * r->n, nova);
+    Magnus* forma    = _magni(_quadratum(r->n), nova);
+    Magnus* u        = _magni(_quadratum(r->n), nova);
+    Magnus* d        = _magni((memoriae_index)r->n + I, nova);
+    Magnus* integri  = _magni(_quadratum(r->n), nova);
        i32  i;
        i32  j;
 
@@ -721,12 +762,14 @@ _reductio_lovasz_fracta (
 }
 
 /* LLL super r (forma et u iam posita). *opus mutari potest
- * (compactio): vocans piscinam currentem destruit. */
+ * (compactio): vocans piscinam currentem destruit. *apex_veterum: apex
+ * maximus piscinarum per compactionem destructarum (veterum). */
 interior b32
-_reductio_curre (
+_reductio_curre_nucleus (
                Reductio* r,
                Piscina** opus,
-    ReticulumStatistica* statistica)
+    ReticulumStatistica* statistica,
+         memoriae_index* apex_veterum)
 {
                i32  k      = I;
                i32  k_max  = ZEPHYRUM;
@@ -793,7 +836,11 @@ _reductio_curre (
                 redde FALSUM;
             }
             _reductio_transcribe(r, nova);
-            _officina_claude(*opus);
+            si (piscina_summa_apex_usus(*opus) > *apex_veterum)
+            {
+                *apex_veterum = piscina_summa_apex_usus(*opus);
+            }
+            piscina_destruere(*opus);
             *opus = nova;
             si (II * piscina_summa_usus(nova) > limes)
             {
@@ -802,6 +849,20 @@ _reductio_curre (
         }
     }
     redde VERUM;
+}
+
+interior b32
+_reductio_curre (
+               Reductio*  r,
+                Piscina** opus,
+    ReticulumStatistica*  statistica)
+{
+    memoriae_index apex_veterum = ZEPHYRUM;
+               b32 bene;
+
+    bene = _reductio_curre_nucleus(r, opus, statistica, &apex_veterum);
+    _apex_officinarum += II * apex_veterum;
+    redde bene;
 }
 
 /* status initialis: forma (basis basis^T aut data), u = identitas */
@@ -817,10 +878,10 @@ _reductio_para (
     i32 j;
 
     r->n        = n;
-    r->forma    = _magni(n * n, opus);
-    r->u        = _magni(n * n, opus);
-    r->d        = _magni(n + I, opus);
-    r->integri  = _magni(n * n, opus);
+    r->forma    = _magni(_quadratum(n), opus);
+    r->u        = _magni(_quadratum(n), opus);
+    r->d        = _magni((memoriae_index)n + I, opus);
+    r->integri  = _magni(_quadratum(n), opus);
     r->p        = fractio_numerator(delta);
     r->q        = fractio_denominator(delta);
     /* omnes d positi: compactio omnes transcribit, etiam d_k vectorum
@@ -950,6 +1011,7 @@ reticulum_reduce (
                  Matrix* u,
     ReticulumStatistica* statistica)
 {
+    _apex_incipe();
     redde _reduce_publicum(basis, FALSUM, delta, piscina, reducta, u,
         statistica);
 }
@@ -963,6 +1025,7 @@ reticulum_formam_reduce (
                  Matrix* u,
     ReticulumStatistica* statistica)
 {
+    _apex_incipe();
     redde _reduce_publicum(forma, VERUM, delta, piscina, forma_reducta,
         u,
         statistica);
@@ -1336,8 +1399,9 @@ _enumera_publicum (
     e.opus            = opus;
     e.columnae        = est_forma ? r.n : matrix_columnae(m);
     e.x               = _magni(r.n, opus);
-    e.f               = _magni(r.n + I, opus);
-    e.transitus       = _magni(r.n * e.columnae, opus);
+    e.f               = _magni((memoriae_index)r.n + I, opus);
+    e.transitus       = _magni((memoriae_index)r.n
+        * (memoriae_index)e.columnae, opus);
     per (i = ZEPHYRUM; i < r.n; i++)
     {
         e.x[i] = magnus_ex_s64(ZEPHYRUM);
@@ -1419,6 +1483,7 @@ _enumera_publicum (
     _officina_claude(opus);
     exitus->numerus   = (i64)e.numerus;
     exitus->completa  = !e.abruptum;
+    exitus->nodi      = (i64)e.nodi;
     exitus->servati   = e.servati;
     exitus->vectores  = vectores;
     exitus->normae    = normae;
@@ -1432,6 +1497,7 @@ reticulum_enumera (
                        Piscina* piscina,
            ReticulumEnumeratio* exitus)
 {
+    _apex_incipe();
     redde _enumera_publicum(basis, FALSUM, quaestio, FALSUM, piscina,
         exitus);
 }
@@ -1443,6 +1509,7 @@ reticulum_formam_enumera (
                        Piscina* piscina,
            ReticulumEnumeratio* exitus)
 {
+    _apex_incipe();
     redde _enumera_publicum(forma, VERUM, quaestio, FALSUM, piscina,
         exitus);
 }
@@ -1457,6 +1524,7 @@ reticulum_minimum (
       ReticulumQuaestio quaestio;
     ReticulumEnumeratio e;
 
+    _apex_incipe();
     si (matrix_lineae(basis) == ZEPHYRUM)
     {
         redde FALSUM;
@@ -1563,6 +1631,7 @@ reticulum_relationes (
     Fractio  dl;
         b32  bene;
 
+    _apex_incipe();
     opus = _officina_aperi();
     si (opus == NIHIL)
     {

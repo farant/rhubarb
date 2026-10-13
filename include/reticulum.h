@@ -22,10 +22,12 @@
  *
  * DELTA: parametrum Lovasz exactum, 1/4 < delta <= 1; NIHIL = 99/100.
  *
- * DEFECTUS: FALSUM si anulus non Z (reticulum_relationes: Z aut Q),
- * vectores dependentes (basis) aut forma non definita positiva,
- * dimensiones discrepant, delta extra fines; exitus tunc non
- * tanguntur.
+ * DEFECTUS: FALSUM si anulus non Z, vectores dependentes (basis;
+ * plures lineae quam columnae statim refutantur) aut forma non
+ * definita positiva, dimensiones discrepant, delta extra fines; exitus
+ * tunc non tanguntur. Q CONSULTO in reticulum_relationes solo (lineae
+ * per denominatores multiplicari possunt sine damno); basis aut forma
+ * super Q a vocante scalanda est (normae per quadratum scalae).
  *
  * MEMORIA: temporaria in piscinis propriis, destructis; effecta SOLA in
  * piscina vocantis (reticulum_apex_officinarum metitur).
@@ -78,7 +80,8 @@ reticulum_formam_orthogonaliza (
 
 /* iudicium EXACTUM reductionis LLL: |mu_ij| <= 1/2 (j < i) et
  * |b*_i|^2 >= (delta - mu_i,i-1^2) |b*_i-1|^2. Oraculum probationum,
- * independens a via reductionis. */
+ * independens a via reductionis. piscina reservata (non adhibetur:
+ * exitus b32 tantum). */
 b32
 reticulum_est_reductum (
               Matrix  basis,
@@ -132,8 +135,9 @@ reticulum_formam_reduce (
  * repraesentans cuius coordinata prima non nulla positiva est). Ordo
  * canonicus: norma, deinde lexicographice ascendens. Super formam
  * LLL-reductam (delta 99/100) internam, in integris - sine
- * fractionibus et sine fluitantibus; effectus a basi data non pendet
- * (idem reticulum, idem effectus), nodi autem pendent.
+ * fractionibus et sine fluitantibus. Effectus COMPLETUS a basi data
+ * non pendet (idem reticulum, idem effectus); nodi, et sub limite
+ * nodorum numerus, completa et servati, autem pendent.
  * ================================================== */
 
 nomen structura {
@@ -147,7 +151,11 @@ nomen structura {
 nomen structura {
        i64 numerus;            /* vectores intra radium, modulo signo;
                                  * si completa FALSUM, LIMES INFERIOR */
-       b32 completa;           /* FALSUM: limes_nodorum attactus */
+       b32 completa;           /* FALSUM: limes_nodorum attactus (nodus
+                                 * admissibilis non visitatus - numerus
+                                 * iam verus esse potest) */
+       i64 nodi;               /* nodi visitati: diagnosis, ab
+                                 * implementatione pendet (sicut apex) */
        i32 servati;            /* min(limes_servandi, numerus) */
     Matrix vectores;           /* servati x columnae: primi ordine
                                  * canonico. Si completa FALSUM, primi
@@ -206,8 +214,11 @@ reticulum_relationes (
  * Diagnosis
  * ================================================== */
 
-/* maximus usus (octeti) piscinarum temporariarum in ultima vocatione;
- * computator sumptus deterministicus */
+/* usus piscinarum temporariarum (octeti) in ultima vocatione publica:
+ * SUMMA apicum omnium - limes superior usus simul vivi, numquam minor
+ * (compactio LLL: maximus veterum bis). Officinae matrix.h non
+ * numerantur (matrix_apex_officinarum). Vocatio refutata: apex suus,
+ * non prioris. Computator sumptus deterministicus. */
 memoriae_index
 reticulum_apex_officinarum (
     vacuum);

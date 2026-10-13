@@ -130,6 +130,13 @@ Each task follows the house cycle:
   reticulum_reduce was asserted.)*
 - **T5. Review** (independent reviewer with its own Python oracle),
   then fixes.
+  *(2026-10-13: ~45,000 differential cases against a from-scratch
+  Fraction oracle, no wrong results. Fixed: an i32 overflow at n =
+  65536, tall bases refused at once, Gram-Schmidt rewound per entry
+  (424 MB -> 2.8 MB at n = 80), the apex as a SUM of arena peaks (Fran)
+  reset at every entry, a `nodi` field (Fran), one wrong assertion, and
+  new tests for the regimes the review found unexercised. 8 plants red.
+  See the worklog.)*
 - **T6. First consumer:** a knotapel demo of relation profiles of 2T,
   2O and 2I (feeds audits P1 and P2), with its own plan.
 
@@ -151,3 +158,9 @@ entry).
   library on this one.
 - **Speed:** measured first (agenda A3); faster LLL variants only where
   a real workload needs them.
+- **Prepared lattice** (review T5, finding 11): reduce once, then
+  enumerate at several radii (successive minima) without re-running
+  LLL and Gram-Schmidt; new functions, `reticulum_enumera` unchanged.
+- **`reticulum_formam_minimum`** with a node budget and `completa`
+  (review T5, finding 12; Fran: later). Today: reduce, then enumerate
+  with `limes_servandi` 1.
