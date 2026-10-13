@@ -229,3 +229,48 @@ the root instead of the parent -> tree cannot be built (parent check of
 c fails). Both reverted -> green. Existing insula, organum, pictor,
 scriba, vicus, terminale, conservatio, relatio, dimissio, motus,
 dispensator suites and ludus_tessera 8/8 unchanged.
+
+## 2026-10-13 — status-plan S8d: write cost measured (park 010 again)
+
+Tool: `tools/insula_mensura.c` (build: `./bin/aedilis
+tools/insula_mensura.c && bash build/aedilis/insula_mensura/struere.sh`;
+`-ansa <genus> <n>` loops 20 s for `sample`). Per-write cost, min of 3
+runs x 2000 writes, Apple silicon, default flags:
+
+| case | n | branches | store B | per write |
+|---|---|---|---|---|
+| vicus (focus via dispatcher) | 2 | 4 | 1666 | 58 us |
+| | 3 | 6 | 2488 | 76 us |
+| | 6 | 12 | 4954 | 149 us |
+| | 10 | 20 | 8244 | 284 us |
+| toy chain, write at the bottom | 1 | 1 | 43 | 1.8 us |
+| | 6 | 6 | 215 | 14 us |
+| | 11 | 11 | 394 | 36 us |
+| | 22 | 22 | 999 | 114 us |
+| toy parent + k rows, write one row | 11 | 12 | 437 | 35 us |
+| | 50 | 51 | 1850 | 415 us |
+| | 100 | 101 | 3651 | 1.5 ms |
+| | 200 | 201 | 7351 | 5.1 ms |
+
+vicus opens at most 10 tabs (Cmd+1..0) - park 010's "11 tabs" row was
+10 too. vicus at 10 tabs is 5x T5 (52.7 -> 284 us): the store is 8x
+bigger (one island: every pane's whole state, not just ephemera) and
+every write now also persists.
+
+Profiles (`sample`):
+- 200 rows: ~85% `ramum_invenire` from `mutare` - `dominos_iudicare`
+  does TWO path lookups (before/after) per owner entry, every branch
+  has several entries, each lookup scans siblings linearly: quadratic.
+  `visio_nodi` 8% (the parent's view excludes 200 children, each
+  matched against 200 paths), `reliqua_sub` 3%, canon judging and the
+  text copy under 2% each. Park 010 suspected canon judging; at size
+  it is the lookups.
+- vicus 10 tabs: lookups ~38%; persistence actarius ~29%
+  (`statum_scribere` re-serializes EVERY registered branch's state on
+  every write, 19%; `volumen_plagulam_condere` pwrite+fsync of the
+  changed one, 10%); text copy (scribere + legere) ~12%; canon judging
+  ~7%.
+
+So the dominant costs are all "the whole store, every write" in the
+JUDGING and PERSISTING layers, not the copy. Options for S8e are in
+status-plan (S8d).

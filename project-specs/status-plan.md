@@ -171,8 +171,16 @@ widgets are migrated by hand.*
     or out of a nested widget) - when a real widget needs it; a
     nested widget's OWN gesture slot (host's gesture stays) - A6,
     calendar day view embedding scriba.
-- **S8d** measure: park 010 table + nested rows, `sample`; then judge
-  touched branches only vs the persistent-tree arc.
+- **S8d** DONE 2026-10-13 (lib/insula.worklog.md; tool
+  `tools/insula_mensura.c`): measured. vicus 10 tabs 284 us/write (T5:
+  52.7); toy 200 rows 5.1 ms/write, quadratic. Profiles: path lookups
+  dominate (owners do two lookups per entry, linear sibling scans;
+  85% at 200 rows, 38% in vicus), then persistence (every write
+  re-serializes every branch's state + fsync, 29% in vicus); text copy
+  12% in vicus, under 2% at 200 rows; canon judging 7% / under 2%.
+  Verdict: the persistent-tree arc is NOT what the numbers ask for
+  yet; scope the judging and persisting to the written branch first
+  (S8e, design to Fran).
 
 ### Arc IV — generation and lints (after three hand migrations)
 
