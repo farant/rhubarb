@@ -159,3 +159,63 @@ leftover) is a separate park.
 - Whether `crusta/facies.sh` and `crusta/oraculum.sh` are runners at
   all in the step sense (expedition rows say "own adaptation").
 - Member log printing order under `FABRICA_FILA` parallelism.
+
+## VI. As built (2026-10-13; T1 30ea606f, T2 18019b81, T3 0c81e1bd, T3b 94789d9c, T3c 1f438e79, T4 d8c73a8e, T5 a828a58e, T6 a89565a5)
+
+**Mechanism (D1-D3).** `bin/fabrica probare COMPOSITUM [FILTRUM]` is the
+one command for the gate and for humans: stale members run and print
+their output, fresh ones are kept and said so ("servatae K/M: inputs
+unchanged since the last pass (<judge's reason>)", Fran's addition),
+`-vis` forces, `-machina` gives MEMBRUM/SERVATAE/PROBARE. pythonica's
+`_porta_per_gradum` is one call. `tools/gradus_oraculum.sh SUB` (old
+runner from a commit vs `probare -vis`) agreed on every conversion.
+
+**Converted** (entry point = tee + cursor lock + `bin/fabrica probare`):
+
+| suite | oracle | warm, nothing changed: before -> after | forced (`-vis`) |
+|---|---|---|---|
+| toml | 13/13 | 38 s -> 2.3 s | 54 -> 37 s |
+| css | 10/10 | 4.2 s -> 1.2 s | 8.2 s |
+| md | 14/14 | 51.5 s -> 1.2 s | 43.7 s |
+| silva | 55/55 | 417 s -> ~7 s | 355 s |
+
+**Fabrica fixed on the way** (each measured with `sample`, each with a
+red-first test):
+- T3b: `lectiones`/`particulae`/`cursus` had NO index (~2.5 s per call);
+  `probare` explains only the composite it names (`gradus_solus`; a broken
+  unrelated suite no longer blocks); `numeri_latinae` and (T5)
+  `tabula_nodorum` memorabilis; clang identity once per process.
+- T3c: the whole-tree snapshot skips the store (64% of entries, where
+  every action may write) - forced css 13.5 -> 8.2 s.
+- T4: declared `<ambitus variabilis>` VALUES were in no key - the
+  golden-rewrite ritual (COMPUTUS_SCRIBERE=1) silently kept the fresh
+  member. Values now go into the member's mandatum (fumus LI).
+- T5: with T4 the ritual ran but failed the write check -
+  `<debitum_scripturae>` for every computus golden.
+
+**What conversions surfaced** (now rubric v3's inspection checklist,
+expedition …W0ZBW): hidden object linkers (8 tools, the materia oracle
+gate - which would have linked STALE silva objects silently); runner-
+written inputs (md corpus list -> generator `md_corpus`); writes outside
+the area; env and test-as-tool modes; callers that read OUTPUT not
+verdict (`silva.oraculum`, `silva-m3` -> `-vis`); binary-path helpers
+(`silva.probatio_currere` ran the old runner's stale binaries ->
+`_binarium_probationis`); undeclared house binaries (3 silva tests run
+bin/aedilis); a split implementer the link-everything runner hid
+(`<aedilis corpus>` in silva_arbor.h).
+
+**D6.** `bin/aedilis --radices` + `vexilla_radices`: compile_tests.sh
+(was 8 of 32 roots), compile_tools.sh, silva/haruspex.sh and 8 tool
+scripts derive their roots. 129 scripts had hand `-I`; 118 remain as
+named debt in tools/radices_manu.tsv, gate vexilla VI a two-way ratchet.
+
+**Departures.** T3b/T3c inserted (Fran); the cursor lock was dropped in
+T2 contrary to D2 and restored in T5 (gate sera VIII; without `exec`, the
+lock's trap must release it); main's examen-corpus was red twice from
+another session's tests (probatio_dimissio fixed in main;
+probatio_cellae fixed here, 286b54ef - Fran's option a).
+
+**Parked.** Snapshot per action (~2.8 s of forced css; …CH1CJ); ordering
+over all actions (~0.6 s; …WMEC7); ~6 s of non-memorabilis generators
+upstream of silva's corpus tests (…JH96E); class B runners (briar,
+officina, tessera, ludus_tessera) need instrument declarations first.

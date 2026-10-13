@@ -112,4 +112,5 @@ Mechanism first, then the pilots in rising difficulty (gen 3 -> 2 -> 1
   Plants IV red.
 
 ### T7: close
-- [ ] spec "As built", worklogs, MEMORY; merge per ritual.
+- [x] spec "As built", worklogs, MEMORY; merge per ritual.
+  As built (2026-10-13): spec §VI; merge ritual below.
