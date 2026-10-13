@@ -179,7 +179,9 @@ State-model question to settle before A2 (A1 is content only).
     view, grouping, keys, `$agenda`.
   - **A4b** DONE 2026-10-13: `r` rubrics prompt (both views), `f`
     filter (persistent; Esc clears; `n` inherits the filter rubric).
-  - **A4c** drawing.
+  - **A4c** DONE 2026-10-13: header "Agenda: n open" (+ "#filter"),
+    group headings, rows with the date at the right ("-" unscheduled),
+    selected item's notes; screenshot checked. A4 complete.
 - **A5 — year view.**
 - **A6 — day documents**: embedded scriba per day.
 - **Next after the widget (Fran 2026-10-13):** fix the liturgical

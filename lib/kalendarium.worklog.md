@@ -229,3 +229,29 @@ rubric; Esc on the list clears the filter; the filter is persistent
 (survives a remount through conservatio - tested). Test bug fixed: after
 `r` the order is r1 r5 r6 r5, so one `k` from item 6 reaches item 5.
 Plant: filter rubric not applied to `n` -> red.
+
+## 2026-10-13 — A4c: drawing the agenda view
+
+`ordines_pingere` now serves both list views instead of a copy: ids are
+parsed by `numerus_identitatis` (one-letter prefix, digits up to '-'),
+so "r5-0" and "g2" both work - the old parse took the whole tail and
+"r5-0" failed silently (no row drawn). In the agenda view nothing is
+"elsewhere" (no dimming, no "(Oct 20)" suffix); the date goes at the
+right in its own column ("-" when unscheduled) and the title is cut a
+full letter short of it; notes only under the selected item (the
+composer already gave only that row the extra height). Group headings
+("#rubric" / "(none)", dim) are drawn by `greges_pingere` from the same
+`greges_agendae` the composer used, indexed by the "g<k>" suffix.
+
+Header: "Agenda: n open" counts DISTINCT items in the current list (an
+item in two rubrics is one), so under a filter it is the filter's count;
+"  #rubric" appended when filtered.
+
+Observed in the screenshot, left as is: an item in two groups is
+selected (fill + notes) in BOTH places, since the selection is the item
+id, not the row. It reads as "this is the same thing" and costs nothing;
+revisit if it feels noisy in use. Right margin for the date is 8px (4px
+looked cramped against the pane edge).
+
+Plant: agenda branch of `figura_tituli` disabled -> red at the header
+assertion.

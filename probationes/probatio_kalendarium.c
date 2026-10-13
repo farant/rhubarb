@@ -1250,6 +1250,64 @@ _probare_rubricas_filtrum (
     CREDO_VERUM(ordines_sunt(x, "r1-0 r5-0 r7-0 r6-1 r5-1"));
 }
 
+/* figurae visus agendae (A4c): titulus, tituli gregum, ordines cum
+ * diebus, electa cum notis, filtrum in titulo */
+interior vacuum
+_probare_figuras_agendae (
+    CredoContextus* c)
+{
+     Mundus* x;
+    Mandata* md;
+      Fines  f;
+        i32  i;
+        b32  electus;
+
+    x = (Mundus*)c->datum;
+    thema_initiare();
+    CREDO_NECESSE(agendam_visus_parare(x, c));
+    (vacuum)agenda_notam_addere(x->documentum, I, fasti_dies(MMXXVI, X,
+        XIII), chorda_ex_literis("panem emere", c->piscina));
+    dispensator_recomponere(x->d);
+    md = reddere(x, c->piscina);
+    CREDO_VERUM(textus_ullus_continet(md, "Agenda: 3 open"));
+    CREDO_VERUM(textus_in_continet(md, fines_componentis(x, "g0",
+        c->piscina), "#domus"));
+    CREDO_VERUM(textus_in_continet(md, fines_componentis(x, "g1",
+        c->piscina), "#opus"));
+    CREDO_VERUM(textus_in_continet(md, fines_componentis(x, "g2",
+        c->piscina), "(none)"));
+    f = fines_componentis(x, "r1-0", c->piscina);
+    CREDO_VERUM(textus_in_continet(md, f, "[ ] res"));
+    CREDO_VERUM(textus_in_continet(md, f, "Oct 14"));
+    CREDO_VERUM(textus_in_continet(md, f, "panem emere"));
+    CREDO_VERUM(textus_in_continet(md, fines_componentis(x, "r6-2",
+        c->piscina), "Oct 20"));
+    /* r5: sine die */
+    CREDO_VERUM(textus_in_continet(md, fines_componentis(x, "r5-0",
+        c->piscina), "-"));
+    electus = FALSUM;
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        constans Mandatum* y;
+
+        y = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   y->genus   == MANDATUM_RECTANGULUM && y->impletum
+            && y->fines.y == f.y && y->fines.altitudo == f.altitudo
+            && color_thematis_est(y->color, COLOR_SELECTION))
+        {
+            electus = VERUM;
+        }
+    }
+    CREDO_VERUM(electus);
+    /* filtrum in titulo */
+    clavis(x, 'f');
+    typare(x, "domus");
+    reditus(x);
+    md = reddere(x, c->piscina);
+    CREDO_VERUM(textus_ullus_continet(md, "#domus"));
+    CREDO_VERUM(textus_ullus_continet(md, "Agenda: 2 open"));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "montatio",     _probare_montationem,   mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
@@ -1276,6 +1334,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "visus_agendae", _probare_visum_agendae, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { "rubricae_filtrum", _probare_rubricas_filtrum, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "figurae_agendae", _probare_figuras_agendae, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

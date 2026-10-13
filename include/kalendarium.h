@@ -55,6 +55,11 @@
  * Argumentum "YYYY-MM": dies I eius mensis (aut hodie si in eo);
  * "agenda": visus agendae.
  *
+ * FIGURAE (visus agendae, A4c): titulus = "Agenda: <n> open" (et
+ * "#rubrica" sub filtro); titulus gregis "#rubrica" aut "(none)";
+ * ordo = "[ ]" et titulus, dies ad dextrum ("Oct 14" aut "-"); res
+ * electa fundo selectionis et notis suis infra.
+ *
  * VISUS AGENDAE (A4; visus="agenda", argumentum "agenda", '$agenda'):
  * res apertae (quocumque die, sine die incluse) per rubricas ordine
  * canonico, deinde sine rubrica; intra gregem dies, sine die ultimae;
