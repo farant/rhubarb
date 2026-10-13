@@ -30,3 +30,30 @@ http.c, vates.c, quaestio.c).
   capture (~/.rhubarb/herbarium), as agreed.
 - No prices: vates prices only from a caller table; none for Opus 5.5
   yet, so the status line shows tokens only.
+
+## 2026-10-13 - Markdown flattened with the house parser (Fran: ragged lines, flat code)
+
+Live test: the answer came back as Markdown with its own line breaks
+(and hard-wrapped at the model's guess of a width), and our wrap broke
+it again -> "start of line / end / next line"; code lost all
+indentation because the old layout skipped runs of spaces and ad_ascii
+turned tabs into one space. "No Markdown" in the system prompt was not
+enough. Now: ad_ascii keeps '\t'; markdown_planare parses with
+md_arbor_parsare (first user of the md parser outside md/; the root
+suite gained md_arbor, md_inlinea, md_lexema, md_lexicon, md_decoctum,
+md_registrum_coctum) and emits LOGICAL LINES:
+- paragraph = one line: soft/hard breaks -> space, emphasis/strong
+  delimiters and link syntax dropped (text kept), code spans keep their
+  backticks, escapes lose the backslash; whitespace collapsed.
+- heading = "# " + text (one '#' whatever the level - Fran).
+- the paragraph's own PREFIX tokens carry list/quote nesting: indent
+  -> spaces, bullet -> "- ", "N. " and "> " kept. So nested lists and
+  quotes come out right without walking containers specially.
+- fenced/indented code: one line per code line, leading '\t' sentinel,
+  only MD_LEX_INDENTATIO_CODICIS (the code's OWN indentation, not the
+  container's) expanded to spaces at 4-column stops, then the content.
+- tables, html, rules: raw token text line by line, verbatim.
+- blank lines only where the source had a LINEA_VACUA (tight lists stay
+  tight).
+The exact output for a sample answer is pinned in probatio_quaestio
+"markdown" (hand-written expectation, matched first run).

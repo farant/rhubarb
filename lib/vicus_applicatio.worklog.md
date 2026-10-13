@@ -16,3 +16,17 @@ sentence, else a word cut with "..."). Effect: head -> "<question
 answered>", text "\n" + lines, status "question: <usage>". Tests:
 probatio_vicus_quaestio (fake port; 7 sections), two plants red
 (truncation off, deferral off).
+
+## 2026-10-13 - answer layout: margins, hanging indents, verbatim code
+
+responsum_disponere now reads quaestio's logical lines: two columns of
+margin on each side (Fran; dropped on pages narrower than 24), text
+reflows to the inner width with a hanging indent after its marker
+("- ", "1. ", "> ", "# "), '\t'-lines are code - never reflowed, only
+hard-broken at the inner width so nothing is lost - and blank lines
+are kept. "<answer>" opens the first line at the margin (a code first
+line goes below it); "</>" follows the last word or code line.
+Truncation candidates now include logical-line ends as well as
+sentence ends. probatio_vicus_quaestio "forma" checks heading, blank,
+paragraph within margins, hanging indent, code indentation; planted
+(code reflowed) -> red.

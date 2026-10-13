@@ -103,7 +103,7 @@ _sectio_ascii (
         c->piscina);
     CREDO_VERUM(r.successus);
     CREDO_CHORDA_AEQUALIS_LITERIS(r.textus,
-        "\"quoted\" it's - caf?...\nnext line");
+        "\"quoted\" it's - caf?... next line");
 }
 
 interior vacuum
@@ -164,12 +164,53 @@ _sectio_usus (
     CREDO_AEQUALIS_S64(r.usus.output, XXXIV);
 }
 
+/* markdown -> lineae logicae: paragraphus una linea (fracturae
+ * spatia, emphasis et nexus sine marcis, codex inlineus cum gravibus),
+ * capitulum "# ", elementa cum praefixis (nidificata indentata),
+ * saeptum verbatim cum '\t' ducente et indentatione propria (tabula ->
+ * IV spatia), citatio "> ", lineae vacuae ubi fons eas habuit */
+interior vacuum
+_sectio_markdown (
+    CredoContextus* c)
+{
+                Vates* v = _fictus(c->piscina);
+    QuaestioResponsum  r;
+
+    CREDO_NECESSE_NON_NIHIL(v);
+    vates_fictus_textum(v, _c(
+        "# TestFlight API\n\nApple offers the **App Store Connect API**,\n"
+        "which covers `builds` and [testers](https://x.y).\n\n"
+        "- first item\n  continues here\n- second\n  1. nested one\n\n"
+        "```c\nint main(void)\n{\n\treturn 0;\n}\n```\n\n> quoted\n",
+        c->piscina), _usus());
+    r = quaestio_rogare(v, _c("", c->piscina), _c("q", c->piscina), D,
+        LX,
+        c->piscina);
+    CREDO_VERUM(r.successus);
+    CREDO_CHORDA_AEQUALIS_LITERIS(r.textus,
+        "# TestFlight API\n"
+        "\n"
+        "Apple offers the App Store Connect API, which covers `builds` and testers.\n"
+        "\n"
+        "- first item continues here\n"
+        "- second\n"
+        "  1. nested one\n"
+        "\n"
+        "\tint main(void)\n"
+        "\t{\n"
+        "\t    return 0;\n"
+        "\t}\n"
+        "\n"
+        "> quoted");
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "petitio", _sectio_petitio, NIHIL, NIHIL, NIHIL, NIHIL },
     { "ascii", _sectio_ascii, NIHIL, NIHIL, NIHIL, NIHIL },
     { "error", _sectio_error, NIHIL, NIHIL, NIHIL, NIHIL },
     { "invalida", _sectio_invalida, NIHIL, NIHIL, NIHIL, NIHIL },
     { "usus", _sectio_usus, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "markdown", _sectio_markdown, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

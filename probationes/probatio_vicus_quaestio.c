@@ -245,7 +245,7 @@ _sectio_responsum (
     CREDO_CHORDA_AEQUALIS_LITERIS(linea_legere(ms->sin, III),
         "<question answered>Why?</>");
     CREDO_CHORDA_AEQUALIS_LITERIS(linea_legere(ms->sin, IV),
-        "<answer>Short answer.</>");
+        "  <answer>Short answer.</>");
     CREDO_CHORDA_CONTINET(nuntius(ms), chorda_ex_literis(
         "question: 12 in, 34 out", piscina));
 }
@@ -275,11 +275,12 @@ _sectio_longum (
     pulsare_bis(ms);
     CREDO_CHORDA_AEQUALIS_LITERIS(linea_legere(ms->sin, q),
         "<question answered>Long?</>");
-    CREDO_VERUM(linea_est(ms->sin, q + I, "<answer>"));
+    CREDO_VERUM(linea_est(ms->sin, q + I, "  <answer>"));
+    /* margo II utrimque */
     per (l = q + I; l < (s32)t->altitudo; l++)
     {
         CREDO_VERUM(linea_legere(ms->sin, l).mensura
-            <= (i32)t->latitudo);
+            <= (i32)t->latitudo - II);
     }
     ultima = linea_legere(ms->sin, (s32)t->altitudo - I);
     CREDO_VERUM(ultima.mensura >= IV
@@ -347,7 +348,7 @@ _sectio_multilinea (
     CREDO_CHORDA_AEQUALIS_LITERIS(linea_legere(ms->sin, III),
         "<question answered>first line, (comma)");
     CREDO_CHORDA_AEQUALIS_LITERIS(linea_legere(ms->sin, V),
-        "<answer>ok</>");
+        "  <answer>ok</>");
 }
 
 interior vacuum
@@ -367,6 +368,71 @@ _sectio_vacua (
     CREDO_AEQUALIS_S32(ms->porta.vocationes, ZEPHYRUM);
 }
 
+/* lineae logicae (forma quaestio.h): capitulum, linea vacua,
+ * paragraphus refluens intra margines, elementum cum indentatione
+ * pendente, codex verbatim (indentatio servata, numquam refluit) */
+interior vacuum
+_sectio_forma (
+    CredoContextus* c)
+{
+                        Mundus* ms  = (Mundus*)c->datum;
+    constans TabulaCharacterum* t   = &ms->sin->actiones_ctx.laboris;
+                           s32  w   = (s32)t->latitudo;
+                           s32  l;
+                        chorda  x;
+
+    ms->porta.responsum =
+        "# Title\n"
+        "\n"
+        "This paragraph is long enough that it must wrap across several "
+        "lines of the page at its width, and then some more words follow.\n"
+        "- a list item that is also long enough to wrap onto a second line "
+        "of the page here and onwards\n"
+        "\tint f(void)\n"
+        "\t{\n"
+        "\t    return 1;\n"
+        "\t}";
+    vicus_applicatio_quaestionis_portam_ponere(&ms->app, porta_ficta,
+        &ms->porta);
+    scribere(ms, III, "$question<>Code?</>");
+    ictus(ms->m, III, I);
+    pulsare_bis(ms);
+    CREDO_CHORDA_AEQUALIS_LITERIS(linea_legere(ms->sin, IV),
+        "  <answer># Title");
+    CREDO_CHORDA_AEQUALIS_LITERIS(linea_legere(ms->sin, V), "");
+    /* paragraphus: margo, intra latitudinem, plures lineae */
+    l = VI;
+    CREDO_VERUM(linea_est(ms->sin, l, "  This paragraph"));
+    dum (l < (s32)t->altitudo && !linea_est(ms->sin, l, "  - a list"))
+    {
+        x = linea_legere(ms->sin, l);
+        CREDO_VERUM(x.mensura <= (i32)(w - II));
+        CREDO_VERUM(x.mensura > II && x.datum[0] == (i8)' '
+            && x.datum[I] == (i8)' ' && x.datum[II] != (i8)' ');
+        l++;
+    }
+    CREDO_VERUM(l > VII);
+    /* elementum: linea secunda indentatione pendente (margo + "- ") */
+    CREDO_VERUM(linea_est(ms->sin, l, "  - a list item"));
+    l++;
+    x = linea_legere(ms->sin, l);
+    CREDO_VERUM(x.mensura > IV && linea_est(ms->sin, l, "    ")
+        && x.datum[IV] != (i8)' ');
+    dum (   l < (s32)t->altitudo
+         && !linea_est(ms->sin, l, "  int f(void)"))
+    {
+        l++;
+    }
+    /* codex: verbatim, indentatio servata */
+    CREDO_CHORDA_AEQUALIS_LITERIS(linea_legere(ms->sin, l),
+        "  int f(void)");
+    CREDO_CHORDA_AEQUALIS_LITERIS(linea_legere(ms->sin, l + I), "  {");
+    CREDO_CHORDA_AEQUALIS_LITERIS(linea_legere(ms->sin, l + II),
+        "      return 1;");
+    CREDO_CHORDA_AEQUALIS_LITERIS(linea_legere(ms->sin, l + III),
+        "  }</>");
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "sine porta", _sectio_sine_porta, _parare, _purgare, NIHIL,
         NIHIL },
@@ -379,6 +445,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "multilinea", _sectio_multilinea, _parare, _purgare, NIHIL,
         NIHIL },
     { "vacua", _sectio_vacua, _parare, _purgare, NIHIL, NIHIL },
+    { "forma", _sectio_forma, _parare, _purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 
