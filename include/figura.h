@@ -135,6 +135,12 @@ figura_finium (
                    i32  thema,
                 vacuum* ctx);
 
+/* color thematis ut ColorMandati (genus COLOR_MANDATI_THEMA: thema in
+ * pingendo resolvitur) - scriba, pictor, calendarium, terminale, vicus */
+ColorMandati
+figura_color_thematis (
+    ColorThema color);
+
 /* indicium foci: exemplar mensae lateris focati */
 #define FIGURA_EXEMPLAR_FOCI  EXEMPLAR_PUNCTA_DUPLICIA_DISPERSA
 

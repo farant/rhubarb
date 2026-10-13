@@ -1122,17 +1122,6 @@ hic_manens constans character* constans menses_anglice[XII] = {
     "August", "September", "October", "November", "December"
 };
 
-interior ColorMandati
-color_thematis (
-    i32 signum)
-{
-    ColorMandati c;
-
-    c.genus = COLOR_MANDATI_THEMA;
-    c.valor = signum;
-    redde c;
-}
-
 /* colores liturgici RGB, ordine ColorLiturgicus (albus aureus: in fundo
  * clarissimo videtur) */
 hic_manens constans i32 colores_liturgici[VI][III] = {
@@ -1262,14 +1251,15 @@ cellulam_pingere (
     {
         rectangulum(md, f.x + III, f.y + I, (s32)textus.mensura
             * KALENDARIUM_LITTERA + II, KALENDARIUM_LINEA + I,
-            color_thematis(COLOR_ACCENT_PRIMARY), VERUM);
+            figura_color_thematis(COLOR_ACCENT_PRIMARY), VERUM);
         mandata_textus(md, f.x + IV, f.y + I, textus, ZEPHYRUM,
-            color_thematis(COLOR_BACKGROUND));
+            figura_color_thematis(COLOR_BACKGROUND));
     }
     alioquin
     {
         mandata_textus(md, f.x + IV, f.y + I, textus, ZEPHYRUM,
-            color_thematis(alienus ? COLOR_TEXT_DIM : COLOR_TEXT));
+            figura_color_thematis(alienus ? COLOR_TEXT_DIM
+                                          : COLOR_TEXT));
     }
     /* color liturgicus: quadratum iuxta numerum (Franus: linea ad
      * marginem ut divisor legebatur) */
@@ -1287,7 +1277,7 @@ cellulam_pingere (
     {
         mandata_textus(md, f.x + IV, f.y + KALENDARIUM_LINEA + III,
             praecidere(info->celebratio_principalis->titulus_brevis,
-            f.latitudo - VI), ZEPHYRUM, color_thematis(alienus
+            f.latitudo - VI), ZEPHYRUM, figura_color_thematis(alienus
             ? COLOR_TEXT_DIM : COLOR_TEXT));
     }
     /* signa: plena = apertae, vacua = perfectae; IV summum, '+' */
@@ -1300,18 +1290,18 @@ cellulam_pingere (
         {
             mandata_textus(md, x, f.y + f.altitudo - KALENDARIUM_LINEA
                 - I, chorda_ex_literis("+", md->piscina), ZEPHYRUM,
-                color_thematis(COLOR_TEXT_DIM));
+                figura_color_thematis(COLOR_TEXT_DIM));
             frange;
         }
         rectangulum(md, x, f.y + f.altitudo - V, III, III,
-            color_thematis(k < apertae ? COLOR_ACCENT_PRIMARY
+            figura_color_thematis(k < apertae ? COLOR_ACCENT_PRIMARY
                                        : COLOR_SUCCESS), k < apertae);
         x += V;
     }
     si (dies_aequales(dies, electa))
     {
         rectangulum(md, f.x, f.y, f.latitudo, f.altitudo,
-            color_thematis(COLOR_BORDER_ACTIVE), FALSUM);
+            figura_color_thematis(COLOR_BORDER_ACTIVE), FALSUM);
     }
 }
 
@@ -1389,7 +1379,7 @@ greges_pingere (
             : chorda_ex_literis("(none)", md->piscina);
         mandata_textus(md, l->fines.x + IV, l->fines.y + II, praecidere(
             titulus, l->fines.latitudo - VIII), ZEPHYRUM,
-            color_thematis(
+            figura_color_thematis(
             COLOR_TEXT_DIM));
     }
 }
@@ -1442,14 +1432,15 @@ ordines_pingere (
         si (id == electa)
         {
             rectangulum(md, l->fines.x, l->fines.y, l->fines.latitudo,
-                l->fines.altitudo, color_thematis(COLOR_SELECTION),
+                l->fines.altitudo,
+                figura_color_thematis(COLOR_SELECTION),
                 VERUM);
         }
         alibi  = !agenda && (!r->dies_posita || !dies_aequales(r->dies,
             dies));
         /* ordo electus: notae colore pleno (obscurae in fundo
          * selectionis non leguntur) */
-        color_notae = color_thematis(id == electa ? COLOR_TEXT
+        color_notae = figura_color_thematis(id == electa ? COLOR_TEXT
                                                   : COLOR_TEXT_DIM);
         linea  = chorda_concatenare(chorda_ex_literis(r->perfecta
             ? "[x] " : "[ ] ", md->piscina), r->titulus, md->piscina);
@@ -1475,11 +1466,13 @@ ordines_pingere (
                 + II) * KALENDARIUM_LITTERA;
             mandata_textus(md, l->fines.x + l->fines.latitudo - VIII
                 - (s32)dextrum.mensura * KALENDARIUM_LITTERA, l->fines.y
-                + I, dextrum, ZEPHYRUM, color_thematis(id == electa
+                + I, dextrum, ZEPHYRUM, figura_color_thematis(id
+                == electa
                 ? COLOR_TEXT : COLOR_TEXT_DIM));
         }
         mandata_textus(md, l->fines.x + IV, l->fines.y + I, praecidere(
-            linea, spatium), ZEPHYRUM, color_thematis((alibi && id
+            linea, spatium), ZEPHYRUM, figura_color_thematis((alibi
+                && id
             != electa) ? COLOR_TEXT_DIM : COLOR_TEXT));
         per (k = ZEPHYRUM; (!agenda || id == electa)
             && k < xar_numerus(r->notae); k++)
@@ -1528,7 +1521,8 @@ figura_tabulae (
         "focatum"));
     rectangulum(md, KALENDARIUM_MARGO_X, KALENDARIUM_MARGO_Y,
         c->fines.latitudo - II * KALENDARIUM_MARGO_X, c->fines.altitudo
-        - II * KALENDARIUM_MARGO_Y, color_thematis(COLOR_BACKGROUND),
+        - II * KALENDARIUM_MARGO_Y,
+        figura_color_thematis(COLOR_BACKGROUND),
         VERUM);
     si (!contextus || !contextus->m)
     {
@@ -1591,7 +1585,7 @@ titulum_diei_pingere (
         (integer)dies.annus);
     mandata_textus(md, IV, ZEPHYRUM, praecidere(chorda_ex_literis(
         titulus, md->piscina), c->fines.latitudo - VIII), ZEPHYRUM,
-        color_thematis(COLOR_TEXT));
+        figura_color_thematis(COLOR_TEXT));
     info = NIHIL;
     si (contextus->liturgia)
     {
@@ -1608,12 +1602,12 @@ titulum_diei_pingere (
     {
         mandata_textus(md, XII, KALENDARIUM_LINEA + I, praecidere(
             info->celebratio_principalis->titulus, c->fines.latitudo
-            - XVI), ZEPHYRUM, color_thematis(COLOR_TEXT));
+            - XVI), ZEPHYRUM, figura_color_thematis(COLOR_TEXT));
     }
     mandata_textus(md, IV, II * KALENDARIUM_LINEA + II, praecidere(
         calendarium_nomen_temporis(info->tempus_info.tempus, FALSUM,
         md->piscina), c->fines.latitudo - VIII), ZEPHYRUM,
-        color_thematis(COLOR_TEXT_DIM));
+        figura_color_thematis(COLOR_TEXT_DIM));
 }
 
 /* <figura/> <purus/> prompta: genus, textus (solutus, in piscinam
@@ -1638,7 +1632,8 @@ figura_promptae (
     (vacuum)thema;
     contextus = (KalendariumFigurae*)ctx;
     rectangulum(md, ZEPHYRUM, ZEPHYRUM, c->fines.latitudo,
-        c->fines.altitudo, color_thematis(COLOR_SELECTION), VERUM);
+        c->fines.altitudo, figura_color_thematis(COLOR_SELECTION),
+        VERUM);
     si (   !contextus || !contextus->m || !prompta_aperta(contextus->m,
             &genus))
     {
@@ -1656,14 +1651,15 @@ figura_promptae (
         md->piscina), chorda_transcribere(textus, md->piscina),
         md->piscina);
     mandata_textus(md, IV, I, praecidere(linea, c->fines.latitudo
-        - VIII), ZEPHYRUM, color_thematis(COLOR_TEXT));
+        - VIII), ZEPHYRUM, figura_color_thematis(COLOR_TEXT));
     a = insula_ramus_attributum(&contextus->m->ramus, "prompta_cursor");
     si (!a || !chorda_ut_s32(*a, &cursor) || cursor < ZEPHYRUM)
     {
         cursor = (s32)n;
     }
     rectangulum(md, IV + ((s32)strlen(nomen_generis) + cursor)
-        * KALENDARIUM_LITTERA, I, I, KALENDARIUM_LINEA, color_thematis(
+        * KALENDARIUM_LITTERA, I, I, KALENDARIUM_LINEA,
+        figura_color_thematis(
         COLOR_CURSOR), VERUM);
 }
 
@@ -1712,7 +1708,7 @@ titulum_agendae_pingere (
     }
     mandata_textus(md, IV, ZEPHYRUM, praecidere(textus,
         c->fines.latitudo - VIII), ZEPHYRUM,
-        color_thematis(COLOR_TEXT));
+        figura_color_thematis(COLOR_TEXT));
 }
 
 /* <figura/> <purus/> titulus: "October 2026 · tempus", deinde litterae
@@ -1769,7 +1765,7 @@ figura_tituli (
     }
     mandata_textus(md, IV, ZEPHYRUM, praecidere(textus,
         c->fines.latitudo - VIII), ZEPHYRUM,
-        color_thematis(COLOR_TEXT));
+        figura_color_thematis(COLOR_TEXT));
     columna = c->fines.latitudo / VII;
     strcpy(litterae, "SMTWTFS");
     per (j = ZEPHYRUM; j < VII; j++)
@@ -1782,7 +1778,7 @@ figura_tituli (
         textus          = chorda_transcribere(textus, md->piscina);
         mandata_textus(md, (s32)j * columna + (columna
             - KALENDARIUM_LITTERA) / II, KALENDARIUM_LINEA, textus,
-            ZEPHYRUM, color_thematis(COLOR_TEXT_DIM));
+            ZEPHYRUM, figura_color_thematis(COLOR_TEXT_DIM));
     }
 }
 

@@ -44,3 +44,21 @@ focus decision itself lives in motus.h (`motus_ramus_focatus`) - this
 helper takes a plain b32 so figures stay pure.
 Plant: pattern never drawn -> red in probatio_vicus_latera (scriba/
 pictor panes) and probatio_kalendarium.
+
+## 2026-10-13 — figura_color_thematis (5 copies -> 1)
+
+`color_thematis(c)` (theme colour -> ColorMandati of genus
+COLOR_MANDATI_THEMA) was a private copy in scriba_figurae, pictor_
+figurae, kalendarium (taking i32), terminale and vicus. Now
+`figura_color_thematis` here; ~70 call sites renamed with
+`./silva/renominare.sh -via <file> -scribere`.
+
+Mechanics worth remembering: renominare REFUSES when the new name is
+already visible ("collisio: nomen novum iam registratum") - correct, the
+header declaration collides with each file's static copy. Sequence that
+works: remove the declaration from the header, rename per file (local
+definition + calls), restore the header, then delete the now-duplicate
+static definitions. `color_thematis_index` in pictor_figurae is a
+different function (palette index) and stays.
+Plant: valor ignored -> red in probatio_figura, probatio_pictor_figurae,
+probatio_scriba_figurae (pixel checks), probatio_kalendarium.

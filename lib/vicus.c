@@ -826,17 +826,6 @@ latitudo_tabulae (
         * VICUS_CELLULA_LATITUDO;
 }
 
-interior ColorMandati
-color_thematis (
-    ColorThema c)
-{
-    ColorMandati cm;
-
-    cm.genus = COLOR_MANDATI_THEMA;
-    cm.valor = (i32)c;
-    redde cm;
-}
-
 /* <purus/> linea tabularum: tituli, activa inversa (ctx = Vicus*) */
 interior vacuum
 figura_tabularum (
@@ -859,7 +848,8 @@ figura_tabularum (
     f.y         = ZEPHYRUM;
     f.latitudo  = c->fines.latitudo;
     f.altitudo  = c->fines.altitudo;
-    mandata_rectangulum(m, f, color_thematis(COLOR_BACKGROUND), VERUM);
+    mandata_rectangulum(m, f, figura_color_thematis(COLOR_BACKGROUND),
+        VERUM);
     x = ZEPHYRUM;
     per (i = ZEPHYRUM; v && i < xar_numerus(v->tabulae); i++)
     {
@@ -872,12 +862,13 @@ figura_tabularum (
             f.y         = ZEPHYRUM;
             f.latitudo  = lat;
             f.altitudo  = c->fines.altitudo;
-            mandata_rectangulum(m, f, color_thematis(COLOR_SELECTION),
+            mandata_rectangulum(m, f,
+                figura_color_thematis(COLOR_SELECTION),
                                 VERUM);
         }
         mandata_textus(m, x + VICUS_CELLULA_LATITUDO, ZEPHYRUM,
             titulus_tabulae(t, m->piscina),
-            ZEPHYRUM, color_thematis(activa ? COLOR_BACKGROUND
+            ZEPHYRUM, figura_color_thematis(activa ? COLOR_BACKGROUND
                                             : COLOR_TEXT));
         x += lat;
     }
@@ -898,14 +889,15 @@ figura_tabularum (
             textus = chorda_ex_literis(pila, m->piscina);
             mandata_textus(m, c->fines.latitudo - VICUS_CELLULA_LATITUDO
                 - (s32)textus.mensura * VICUS_CELLULA_LATITUDO,
-                ZEPHYRUM, textus, ZEPHYRUM, color_thematis(COLOR_TEXT));
+                ZEPHYRUM, textus, ZEPHYRUM,
+                figura_color_thematis(COLOR_TEXT));
         }
         si (   horologii_textus(v, horae)
             && horologii_fines(v, c->fines.latitudo, &x0, &x1))
         {
             textus = chorda_ex_literis(horae, m->piscina);
             mandata_textus(m, x0, ZEPHYRUM, textus, ZEPHYRUM,
-                color_thematis(COLOR_TEXT));
+                figura_color_thematis(COLOR_TEXT));
         }
     }
 }
@@ -932,7 +924,8 @@ figura_divisoris (
     f.y         = ZEPHYRUM;
     f.latitudo  = c->fines.latitudo;
     f.altitudo  = c->fines.altitudo;
-    mandata_rectangulum(m, f, color_thematis(COLOR_BORDER), VERUM);
+    mandata_rectangulum(m, f, figura_color_thematis(COLOR_BORDER),
+        VERUM);
 }
 
 /* Motus ligatus (T3a, S2a): ramus, spatium et gestus lateris FOCATI.

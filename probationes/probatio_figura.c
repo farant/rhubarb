@@ -243,6 +243,15 @@ s32 principale (vacuum)
         CREDO_VERUM(y->fines.y == III && y->fines.altitudo == XXX);
     }
 
+    /* figura_color_thematis: genus thematis, valor = color datus */
+    {
+        ColorMandati cm;
+
+        cm = figura_color_thematis(COLOR_ACCENT_PRIMARY);
+        CREDO_VERUM(cm.genus == COLOR_MANDATI_THEMA);
+        CREDO_AEQUALIS_I32((i32)cm.valor, (i32)COLOR_ACCENT_PRIMARY);
+    }
+
     credo_imprimere_compendium();
     redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
 }

@@ -275,18 +275,16 @@ figura_finium (
                    i32  thema,
                 vacuum* ctx)
 {
-           Fines f;
-    ColorMandati color;
+    Fines f;
 
     (vacuum)thema;
     (vacuum)ctx;
-    f.x          = ZEPHYRUM;
-    f.y          = ZEPHYRUM;
-    f.latitudo   = c->fines.latitudo;
-    f.altitudo   = c->fines.altitudo;
-    color.genus  = COLOR_MANDATI_THEMA;
-    color.valor  = (i32)COLOR_BORDER;
-    mandata_rectangulum(m, f, color, FALSUM);
+    f.x         = ZEPHYRUM;
+    f.y         = ZEPHYRUM;
+    f.latitudo  = c->fines.latitudo;
+    f.altitudo  = c->fines.altitudo;
+    mandata_rectangulum(m, f, figura_color_thematis(COLOR_BORDER),
+        FALSUM);
 }
 
 vacuum
@@ -295,15 +293,22 @@ figura_mensam_pingere (
       Fines  fines,
         b32  focatum)
 {
-    ColorMandati color;
-
-    color.genus = COLOR_MANDATI_THEMA;
-    color.valor = (i32)COLOR_SUPERFICIES;
-    mandata_rectangulum(md, fines, color, VERUM);
+    mandata_rectangulum(md, fines, figura_color_thematis(
+        COLOR_SUPERFICIES), VERUM);
     si (focatum)
     {
-        color.valor = (i32)COLOR_BORDER;
-        mandata_rectangulum_exemplar(md, fines, color,
-            FIGURA_EXEMPLAR_FOCI);
+        mandata_rectangulum_exemplar(md, fines, figura_color_thematis(
+            COLOR_BORDER), FIGURA_EXEMPLAR_FOCI);
     }
+}
+
+ColorMandati
+figura_color_thematis (
+    ColorThema color)
+{
+    ColorMandati cm;
+
+    cm.genus = COLOR_MANDATI_THEMA;
+    cm.valor = (i32)color;
+    redde cm;
 }
