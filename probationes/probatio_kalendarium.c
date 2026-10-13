@@ -509,6 +509,31 @@ textus_ullus_continet (
     redde FALSUM;
 }
 
+/* septem textus unius litterae in linea II tituli (y VIII; numeri
+ * dierum infra tabulam tituli XVI) ordine S M T W T F S */
+interior b32
+litterae_dierum_sunt (
+    Mandata* md)
+{
+    constans Mandatum* x;
+            character  visae[VIII];
+                  i32  i;
+                  i32  n;
+
+    n = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa) && n < VII; i++)
+    {
+        x = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   x->genus   == MANDATUM_TEXTUS && x->textus.mensura == I
+            && x->fines.y == VIII)
+        {
+            visae[n++] = (character)x->textus.datum[ZEPHYRUM];
+        }
+    }
+    visae[n] = '\0';
+    redde strcmp(visae, "SMTWTFS") == ZEPHYRUM;
+}
+
 /* figurae: titulus, hodie, electa, colores liturgici, festum, signa */
 interior vacuum
 _probare_figuras (
@@ -545,6 +570,10 @@ _probare_figuras (
     pingere(dispensator_arbor(x->d), x->m.figurae, ZEPHYRUM, md);
 
     CREDO_VERUM(textus_ullus_continet(md, "October 2026"));
+    /* litterae dierum: textus in memoria mandatorum, non in acervo
+     * figurae (mandata textum per indicem servant) - post vocationes
+     * alias acervum rescribentes */
+    CREDO_VERUM(litterae_dierum_sunt(md));
     /* hodie: numerus inversus (rectangulum accentus) in cellula XIV */
     f = cellula(x, "2026-10-14", c->piscina);
     r = NIHIL;

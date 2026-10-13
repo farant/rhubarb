@@ -516,8 +516,12 @@ figura_tituli (
     strcpy(litterae, "SMTWTFS");
     per (j = ZEPHYRUM; j < VII; j++)
     {
+        /* mandata textum per indicem servant: littera in memoriam
+         * mandatorum transcribitur (acervus figurae post reditum
+         * perit) */
         textus.datum    = (i8*)(litterae + j);
         textus.mensura  = I;
+        textus          = chorda_transcribere(textus, md->piscina);
         mandata_textus(md, (s32)j * columna + (columna
             - KALENDARIUM_LITTERA) / II, KALENDARIUM_LINEA, textus,
             ZEPHYRUM, color_thematis(COLOR_TEXT_DIM));

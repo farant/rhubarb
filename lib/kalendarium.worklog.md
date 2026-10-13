@@ -77,3 +77,18 @@ hand-written library list (vicus_applicatio links kalendarium) lacked
 it and sanctorale. Rule: when a library vicus links gains a NEW library
 dependency (not only when a new lib file appears), run
 ./ludus_tessera/compile_probationes.sh before committing.
+
+## 2026-10-13 — A2b screenshot: weekday letters were garbage
+
+First headless screenshot (throwaway probe: vicus at 960x600, fixed
+clock, calendar pane, agenda items; ludus_fenestra on a bare pixel
+table) showed S M T W T F S as random glyphs. Cause: `mandata_textus`
+stores the chorda BY REFERENCE; figura_tituli pointed each letter at a
+stack buffer (`litterae + j`) that is gone when the rasterizer reads
+it. Day numbers and the title were safe only because
+`chorda_ex_literis` copies into the pool. Fix: `chorda_transcribere`
+into `md->piscina`. Rule: any text handed to mandata must live in the
+mandata pool (or static storage). Test `litterae_dierum_sunt` (letters
+on the title's second line, y 8, read AFTER other calls reused the
+stack): red before, green after. The probe source is kept in the
+session scratchpad, not committed.
