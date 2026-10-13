@@ -197,11 +197,14 @@ renaming privates and they collide (`Gradus`, found in Q13).
 | `totalitas` | never crash, emission == source, depth 100 000 in time |
 | `computus` | twin columns against `basis.tsv` |
 
-13 suites, 14,267 assertions (2026-09-28). **The gate is a fabrica
-verdict** (fabrica spec 3, 2026-10-03): `porta_toml` in
-`toml/aedificatio.stml`; `bin/fabrica sanare build/fabrica/verdicta/toml.txt`
-runs it and records its read trace, `bin/fabrica iudicare <same>` says
-RECENS (~2 s, nothing run) while nothing it read changed. The root `silex` and briar
+13 suites, 14,267 assertions (2026-09-28). **The suite is a fabrica
+composite** (cursores ad gradus T2, 2026-10-13): `probationes_toml` in
+`toml/aedificatio.stml`, one action per test, each verdict keyed on what
+that test read. Gate and humans both go through `bin/fabrica probare
+probationes_toml`: stale tests run (output printed), fresh ones are
+kept and SAID so (`servata`, line `servatae N/M: ...` with the judge's
+reason) - warm, nothing changed: ~7 s; `-vis` runs everything (~55 s).
+The old `porta_toml` verdict action is retired. The root `silex` and briar
 gates (`briar`, `briar-fumus`) also cover the client since Q12/Q13;
 `portae_debitae` owes `toml` for any `toml/fontes` change.
 
@@ -244,8 +247,9 @@ gates (`briar`, `briar-fumus`) also cover the client since Q12/Q13;
 ## Currere
 
 ```
-./toml/compile_probationes.sh              # omnes
+./toml/compile_probationes.sh              # omnes (fresca servata)
 ./toml/compile_probationes.sh registrum    # filtrum substringae
+./toml/compile_probationes.sh -vis         # omnes iterum (nihil servatum)
 ./toml/tomllib_aurum.sh [-silvestre]       # aurea tomllib (Q1)
 ./toml/computus.sh <f.toml> [-machina]     # mensura (Q11b)
 ./toml/arbor.sh <f.toml> [-sedes]          # STML (Q11b)

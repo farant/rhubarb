@@ -120,7 +120,16 @@ zero code bugs; that is the class this practice exists for). Phase-log
 sections are APPENDED, never inserted (chronology is the re-entry
 reader's map).
 
-Build/test: `./silva/compile_probationes.sh [filter]`. Tables:
+Build/test: `./silva/compile_probationes.sh [filter|-vis]` - since
+2026-10-13 (cursores ad gradus T5) a thin entry point to `bin/fabrica
+probare probationes_silva` (`silva/aedificatio.stml`): one action per
+test, each linking ONLY its own aedilis closure, each verdict keyed on
+what that test read; fresh tests are kept and said so. Warm, nothing
+changed: ~7 s (old runner: 417 s every time); forced: ~355 s. A test
+that runs a house binary declares it (`<aedilis instrumentum="bin/X"/>`
+in the test file - canon_corpus, exemplaria_lint, arbor_plagula run
+bin/aedilis). `ARBOR_DEFIGERE=<path>` must point OUTSIDE the tree.
+Tables:
 `./silva/generare.sh` regenerates fontes/silva_tabulae_*.{h,c} from
 grammatica/*.stml — run it after ANY grammar edit (probatio_silva_tabulae
 breaks loudly if you forget; generated files are committed). Amalgam:
@@ -142,8 +151,8 @@ The read bench (instrumenta prima, 2026-07-10): ./silva/censor.sh
 (latina lint; also in amalgamare porta 6 + post-edit hook),
 ./silva/emitte.sh <file> <symbol> (byte-exact definition),
 ./silva/origo.sh <file> <linea>[:<col>] (expansion story),
-Suita (compile_probationes.sh) probationes PARALLELAS currit
-(2026-09-02): PROBATIONES_FILA=N operarii (ordinarius nuclei
+HISTORIA (cursor vetus, usque ad 2026-10-13): suita probationes
+PARALLELAS currebat (2026-09-02): PROBATIONES_FILA=N operarii (ordinarius nuclei
 performantes = IV; =1 seriatim), acta per probationem in
 build/singulae/<nomen>.log, collectio ordine nominum; murus ~96 s pro
 239 s seriatim; 80 s post clausuras corporis. Res inter probationes

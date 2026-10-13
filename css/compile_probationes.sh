@@ -2,117 +2,47 @@
 
 # Effusio cursus ultimi semper in build/test_logs/css.log
 # radicis (stdout + stderr; codex exitus per PIPESTATUS servatus).
-# <porta titulus="css" tegit="css/fontes/* css/grammatica/* css/probationes/* materia/fontes/*" currit="tools/aedilis.c tools/compilator.c"/>
+# <porta titulus="css" tegit="css/fontes/* css/grammatica/* css/probationes/* materia/fontes/*" currit="tools/fabrica.c"/>
 if [ -z "${CSS_PROBATIONES_EFFUSIO:-}" ]; then
     export CSS_PROBATIONES_EFFUSIO=1
+    # effusio in plagula TEMPORARIA extra arborem, post cursum in locum
+    # movetur: bin/fabrica arborem totam ante et post actionem
+    # photographat - log in arbore crescens actionem 'scripsit extra
+    # vestigium' faceret (frigida b8ea30f0: md_corpus, toml_corpus,
+    # aedilis FRACTA, cursores ad gradus T7)
     mkdir -p "$(dirname "$0")/../build/test_logs"
-    "$0" "$@" 2>&1 | tee "$(dirname "$0")/../build/test_logs/css.log"
-    exit "${PIPESTATUS[0]}"
+    _effusio="$(mktemp "${TMPDIR:-/tmp}/css.log.XXXXXX")"
+    "$0" "$@" 2>&1 | tee "$_effusio"
+    _rc="${PIPESTATUS[0]}"
+    mv -f "$_effusio" "$(dirname "$0")/../build/test_logs/css.log"
+    exit "$_rc"
 fi
 
-# materia/compile_probationes.sh - Probationes materiae
+# css/compile_probationes.sh - IANUA probationum css (cursores ad gradus
+# T3; exemplar toml/compile_probationes.sh). Suita est compositum
+# probationes_css (css/aedificatio.stml): quaeque probatio actio sua,
+# verdictum clavatum iis quae legit. 'bin/fabrica probare' membra stala
+# currit (acta impressa), fresca SERVAT ('servata', linea 'servatae N/M'
+# cum causa iudicis) - eadem vocatio ac porta (silva.py).
 #
 # Usage:
-#   ./compile_probationes.sh            # omnes
-#   ./compile_probationes.sh lexicon    # quarum titulus "lexicon" continet
+#   ./css/compile_probationes.sh              # omnes (fresca servata)
+#   ./css/compile_probationes.sh selector     # quarum titulus "selector" continet
+#   ./css/compile_probationes.sh -vis [...]   # omnes (electae) iterum
 #
-# Exemplar: silva/compile_probationes.sh. Contractus exitus idem -
-# 0 sanum, 1 fractae, 2 NULLA CURSA (filtrum pravum).
+# Exitus: 0 sanum, 1 fractae, 2 NULLA CURSA (filtrum sine paribus,
+# fabrica occupata aut declarationes fractae).
 
 set -u
-
-CSS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-MATERIA_DIR="$(cd "$CSS_DIR/../materia" && pwd)"
-RADIX_DIR="$(cd "$CSS_DIR/.." && pwd)"
-BUILD_DIR="$CSS_DIR/build"
-# SERA cursoris (tools/sera.sh, 2026-09-07): cursus duo eiusdem suitae
-# obiecta eadem scriberent, binarium currens obtererent (137);
-# exspectatio ad SERA_TECTUM (DC s), deinde exitus 2 = NIHIL cucurrit
-# (tenens nominatur). Involucra et pythonica reentrant (SERA_TENTA).
-mkdir -p "$BUILD_DIR"
+RADIX_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$RADIX_DIR" || exit 2
+[ -x bin/fabrica ] || ./tools/fabrica_struere.sh >&2 \
+    || { echo "FRACTA: bin/fabrica struere nequit - NULLA PROBATIO CURSA"; exit 2; }
+# SERA CURSORIS (tools/sera.sh; porta sera VIII): cursus duo eiusdem
+# suitae - secundus exspectat (ad SERA_TECTUM), deinde exitus 2. Sine
+# 'exec': trap EXIT seram dimittit (exec eum perderet, sera vetus
+# maneret)
 source "$RADIX_DIR/tools/sera.sh"
-sera_capere "$BUILD_DIR/cursor.sera" || exit 2
-mkdir -p "$BUILD_DIR"
-
-# vexilla: tools/vexilla.sh (una sedes; LVII copiae olim, 2026-09-02)
-source "$RADIX_DIR/tools/vexilla.sh"
-declare -a GCC_FLAGS=("${VEXILLA_C89[@]}")
-
-declare -a INCLUDE_FLAGS=(
-    "-I$RADIX_DIR/include"
-    "-I$MATERIA_DIR/fontes"
-    "-I$CSS_DIR/fontes"
-    "-I$CSS_DIR/probationes"
-)
-
-FILTER="${1:-}"
-
-if [ -n "$FILTER" ]; then
-    FILTRUM_DATUM="$FILTER"
-    FILTER="${FILTER##*/}"
-    FILTER="${FILTER%.c}"
-    if [ "$FILTER" != "$FILTRUM_DATUM" ]; then
-        echo "compile_probationes: filtrum '$FILTRUM_DATUM' -> '$FILTER'" >&2
-    fi
-fi
-
-# ---- FONTES ex clausuris (migratio ad compilatorem, cursor communis) ----
-# Olim indices MANU scripti (XIX lib, XIII materia, css/fontes, adiumenta)
-# et regula crassa 'caput recentissimum quodvis omne obiectum stalum facit'
-# (mtime), deinde custodia excubitoris (mtime). Nunc tools/cursor_communis.sh:
-# clausura cuiusque probationis ab aedile, unio per bin/compilator,
-# probatio quaeque cum clausura SUA nexa (exemplar toml, T5).
-source "$RADIX_DIR/tools/cursor_communis.sh"
-cursor_instrumenta_parare || exit 1
-cursor_clausuras_derivare "$CSS_DIR/probationes" || exit 1
-cursor_fontes_compilare || exit 1
-shopt -s nullglob
-
-# metra suitae in volumen mensoris (tools/mensor_suitae.sh; praefixum
-# "css." - silva.mensurae('css.', n) eas legit); numquam suitam frangit
-source "$RADIX_DIR/tools/mensor_suitae.sh"
-mensor_suitae_incipere "css."
-total=0 ; passed=0 ; failed_names=""
-for test_file in "$CSS_DIR"/probationes/probatio_*.c; do
-    name="$(basename "$test_file" .c)"
-    if [ -n "$FILTER" ] && [[ "$name" != *"$FILTER"* ]]; then
-        continue
-    fi
-    total=$((total + 1))
-    bin="$BUILD_DIR/$name"
-    echo ""
-    echo "=== $name ==="
-    t0=$(mensor_suitae_nunc)
-    if ! cursor_probationem_struere "$test_file" "$bin"; then
-        echo "FRACTA (compilatio): $name"
-        failed_names="$failed_names $name"
-        continue
-    fi
-    mensor_suitae_compilatio "$name" "$t0"
-    t0=$(mensor_suitae_nunc)
-    if RHUBARB_RADIX="$RADIX_DIR" "$bin"; then
-        mensor_suitae_cursus "$name" "$t0"
-        echo "--- $name praeteriit (${MSU_ULTIMA}s)"
-        passed=$((passed + 1))
-    else
-        mensor_suitae_cursus "$name" "$t0"
-        echo "--- $name FRACTA (${MSU_ULTIMA}s)"
-        failed_names="$failed_names $name"
-    fi
-done
-shopt -u nullglob
-
-echo ""
-mensor_suitae_tardissimae 5
-echo "========================================"
-echo "CSS PROBATIONES: $passed/$total praeteritae"
-mensor_suitae_finire "" "$total" "$(echo $failed_names | wc -w | tr -d ' ')" 0
-if [ -n "$failed_names" ]; then
-    echo "FRACTAE:$failed_names"
-    exit 1
-fi
-if [ "$total" -eq 0 ]; then
-    echo "NULLA PROBATIO CURSA (filtrum sine paribus?) - exitus II"
-    exit 2
-fi
-exit 0
+sera_capere "$RADIX_DIR/css/build/cursor.sera" || exit 2
+bin/fabrica probare probationes_css "$@"
+exit $?

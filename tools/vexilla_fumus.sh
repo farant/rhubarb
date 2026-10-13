@@ -6,6 +6,14 @@
 # II.  nullum scriptum tabulam suam declarat (declare -a GCC_FLAGS=( cum
 #      lineis) - copiae nominantur;
 # III. omne scriptum quod GCC_FLAGS adhibet vexilla.sh fontat.
+# IV.  RADICES (cursores ad gradus T6): 'bin/aedilis --radices' ==
+#      <inclusa> aedilis.stml (ordine, lectio altera independens);
+# V.   vexilla_radices PRAEFIXUM -> RADICES_C89 ("-I" + praefixum +
+#      radix), relativa et praefixa;
+# VI.  RATCHET radicum manu scriptarum: scripta cum '-I' manu ==
+#      tools/radices_manu.tsv utrimque - scriptum NOVUM cum radicibus
+#      manu RUBET; scriptum in tabula sine eis RUBET (linea delenda) -
+#      tabula tantum decrescit.
 # Exitus 0 sanum | 1 FRACTUM | 2 nihil actum.
 # <porta titulus="vexilla" tegit="*.sh"/>
 set -u
@@ -32,6 +40,34 @@ for s in $(git ls-files '*.sh'); do
 done
 [ -z "$sine" ]; credo $? "omne scriptum cum GCC_FLAGS vexilla.sh fontat"
 [ -n "$sine" ] && echo "   sine fonte:$sine"
+# IV. radices ex aedilis (lector verus) == <inclusa> (lectio altera)
+exspectatae=$(sed -n '/<inclusa>/,/<\/inclusa>/p' aedilis.stml | sed -n 's/^ *<via (>\(.*\)$/\1/p')
+datae=$(bin/aedilis --radices 2>/dev/null)
+[ -n "$datae" ] && [ "$datae" = "$exspectatae" ]; credo $? "bin/aedilis --radices == <inclusa> aedilis.stml ($(echo "$datae" | grep -c .) radices)"
+
+# V. vexilla_radices: relativa et praefixa
+RADICES_C89=()
+vexilla_radices "" 2>/dev/null
+n_rel=${#RADICES_C89[@]}; prima_rel="${RADICES_C89[0]:-}"
+vexilla_radices "/x/" 2>/dev/null
+prima_abs="${RADICES_C89[0]:-}"
+[ "$n_rel" -eq "$(echo "$exspectatae" | grep -c .)" ] && [ "$prima_rel" = "-Iinclude" ] && [ "$prima_abs" = "-I/x/include" ]; credo $? "vexilla_radices: $n_rel radices, '$prima_rel', '$prima_abs'"
+
+# VI. RATCHET: scripta cum radicibus manu == tools/radices_manu.tsv
+manu=""
+for s in $(git ls-files '*.sh' | grep -v '/fixa/'); do
+    case "$s" in tools/vexilla.sh|tools/vexilla_fumus.sh) continue ;; esac
+    grep -qE '(^|[ "(])-I["$a-zA-Z/.]|"-I' "$s" && manu="$manu
+$s"
+done
+manu=$(echo "$manu" | grep . | sort)
+tabula=$(grep -v '^#' tools/radices_manu.tsv 2>/dev/null | cut -f1 | grep . | sort)
+nova=$(comm -23 <(echo "$manu") <(echo "$tabula"))
+stalae=$(comm -13 <(echo "$manu") <(echo "$tabula"))
+[ -n "$tabula" ] && [ -z "$nova" ]; credo $? "nullum scriptum NOVUM radices manu (tabula: $(echo "$tabula" | grep -c .) debita)"
+[ -n "$nova" ] && echo "$nova" | sed 's/^/    radices manu, non in tabula (vexilla_radices adhibe): /'
+[ -z "$stalae" ]; credo $? "tabula radices_manu sine lineis stalis"
+[ -n "$stalae" ] && echo "$stalae" | sed 's/^/    sine radicibus manu iam - linea delenda: /'
 echo
 if [ "$fracta" -eq 0 ]; then echo "fumus vexilla: sanum"; exit 0; fi
 echo "fumus vexilla: FRACTUM ($fracta)"; exit 1

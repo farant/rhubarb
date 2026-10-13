@@ -22,6 +22,10 @@
  */
 
 #include "postulata_posix.h"
+/* bin/aedilis per apparatus_clausuras_petere (clausurae corporis) -
+ * binarium domus quod probatio currit, in clave membri (cursores ad
+ * gradus T5; fabrica-7 T2) */
+/* <aedilis instrumentum="bin/aedilis"/> */
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"

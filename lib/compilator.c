@@ -173,6 +173,26 @@ _plagulam_sigillare (
 /* IDENTITAS COMPILATORIS: FABRICA_CLANG -> octeti involucri; aliter
  * binarium verum per memoriam (via, mensura, mtime, inode) in
  * thesauro */
+/* identitas clang memorata per processum (via -> sigillum); via
+ * longior quam VIA_MAXIMA numquam memoratur */
+hic_manens b32       _identitas_memorata = FALSUM;
+hic_manens character _identitas_clang[VIA_MAXIMA];
+hic_manens Sigillum  _identitas_sigillum;
+
+interior vacuum
+_identitatem_memorare (
+    constans character* clang,
+     constans Sigillum* sigillum)
+{
+    si (strlen(clang) >= VIA_MAXIMA)
+    {
+        redde;
+    }
+    strcpy(_identitas_clang, clang);
+    _identitas_sigillum = *sigillum;
+    _identitas_memorata = VERUM;
+}
+
 interior b32
 _identitas_compilatoris (
     Compilatio* c,
@@ -191,6 +211,16 @@ _identitas_compilatoris (
     si (getenv("FABRICA_CLANG") != NIHIL)
     {
         redde _plagulam_sigillare(c->clang, c->piscina, out);
+    }
+    /* SEMEL PER PROCESSUM (cursores ad gradus T3b): clang inter
+     * compilationes eiusdem processus non mutatur - '-print-prog-name'
+     * olim omni compilatione currebat (~50 ms; ~3 s in 'probare -vis'
+     * css, fumus fabricae XLIX). Clavis = via clang data. */
+    si (   _identitas_memorata
+        && strcmp(_identitas_clang, c->clang) == ZEPHYRUM)
+    {
+        *out = _identitas_sigillum;
+        redde VERUM;
     }
     argv[0]   = c->clang;
     argv[I]   = "-print-prog-name=clang";
@@ -224,6 +254,7 @@ _identitas_compilatoris (
     {
         *out = *(Sigillum*)xar_obtinere(capta, ZEPHYRUM);
         thesaurus_generationem_notare(c->thesaurus, &clavis);
+        _identitatem_memorare(c->clang, out);
         redde VERUM;
     }
     si (!_plagulam_sigillare(via, c->piscina, out))
@@ -234,6 +265,7 @@ _identitas_compilatoris (
     *(Sigillum*)xar_addere(ponenda) = *out;
     (vacuum)thesaurus_actio_ponere(c->thesaurus, &clavis, ponenda);
     thesaurus_generationem_notare(c->thesaurus, &clavis);
+    _identitatem_memorare(c->clang, out);
     redde VERUM;
 }
 

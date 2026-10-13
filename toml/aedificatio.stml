@@ -31,46 +31,26 @@
     <ingressus genus="instrumentum" via="/opt/homebrew/bin/python3"/>
     <exitus via="toml/build/aurum_silvestre.txt" provenientia="regeneratio"/>
   </actio>
-  <!-- PORTA toml ut actio (fabrica spec 3 T5c): transitus sub vestigio
-       libri lectionum servatur - nihil eorum quae porta legit mutatum =
-       transitus idem, sine cursu. Ingressus declarati sunt quae liber
-       non videt: effectus scriptorum (crusta/effectus.sh -clavis: quae
-       cursor fontat, legit, probat, enumerat - effectus-plan T7), silva.py,
-       binaria quae currit, identitas clang, et artificia duarum actionum
-       supra (ordo + domini lectionum build/). Vestigia: quae porta ipsa
-       scribit. -->
-  <!-- fabrica plan 5 T3: bin/fabrica cursorem IPSE currit et verdictum
-       IPSE scribit (signum) - silva.py extra clavem huius verdicti -->
-  <actio titulus="porta_toml" genus="iudicium" lectiones="verum"
-      signum="TOML PROBATIONES:">
-    <mandatum>
-      <verbum! (>./toml/compile_probationes.sh
-    </mandatum>
-    <vestigium via="toml/build"/>
-    <vestigium via="build/test_logs/toml.log" forma="plagula"/>
-    <vestigium via="build/portae/tempora.tsv" forma="plagula" communis="verum"/>
-    <!-- argv radicis ex mandato ipso (plan 5 T3, A3) -->
-    <ingressus genus="effectus" via="toml/compile_probationes.sh"/>
-    <ingressus genus="instrumentum_domus" via="bin/aedilis"/>
-    <ingressus genus="instrumentum_domus" via="bin/compilator"/>
-    <ingressus genus="identitas_clang" via="clang"/>
-    <ingressus genus="fasciculus" via="build/toml_corpus.lst"/>
-    <ingressus genus="fasciculus" via="toml/build/aurum_silvestre.txt"/>
-    <exitus via="build/fabrica/verdicta/toml.txt" provenientia="verdictum"/>
-  </actio>
+  <!-- PORTA toml: olim actio 'porta_toml' (genus iudicium, fabrica spec
+       3 T5c) cursorem toml/compile_probationes.sh currens - emerita
+       (cursores ad gradus T2): cursor nunc ipse 'bin/fabrica probare'
+       vocat (fabrica in fabrica). Porta per compositum infra solum. -->
   <!-- GRADUS (fabrica-6 T8): eadem suita ut membra probationes_c -
        quaeque probatio actio sua (clausura aedilis, thesaurus, area,
-       ambitus basis, vestigium suum). Porta toml (cursor supra) eius
-       ORACULUM est usque ad commutationem (T10): transitus et fracturae
-       per probationem congruere debent. Producentes per post (ordo, non
-       clavis): probatio quae indicem aut aurum legit per vestigium suum
-       clavatur. -->
+       ambitus basis, vestigium suum). Porta toml et ianua
+       toml/compile_probationes.sh per 'bin/fabrica probare' (cursores
+       ad gradus T2; oraculum conversionis tools/gradus_oraculum.sh toml
+       13/13). Producentes per post (ordo, non clavis): probatio quae
+       indicem aut aurum legit per vestigium suum clavatur. -->
   <actio titulus="probationes_toml" genus="iudicium">
     <probationes_c exemplar="toml/probationes/probatio_*.c"/>
     <post actio="toml_corpus"/>
     <post actio="toml_aurum_silvestre"/>
     <!-- aurum computus rescribere (COMPUTUS_SCRIBERE=1 cum causa) -->
     <ambitus variabilis="COMPUTUS_SCRIBERE"/>
+    <!-- aurum computus rescribitur cum COMPUTUS_SCRIBERE=1 (cursores ad
+         gradus T5): scriptura extra aream, membri unius -->
+    <debitum_scripturae membrum="probatio_toml_computus" via="toml/probationes/fixa/computus/basis.tsv" causa="aurum computus (COMPUTUS_SCRIBERE=1)"/>
     <!-- oraculum: casus omnes / exemplum unum (manu) -->
     <ambitus variabilis="ORACULUM_OMNIA"/>
     <ambitus variabilis="ORACULUM_EXEMPLUM"/>
