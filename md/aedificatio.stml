@@ -24,6 +24,9 @@
     <post actio="md_corpus"/>
     <!-- aurum computus rescribere (COMPUTUS_SCRIBERE=1 cum causa) -->
     <ambitus variabilis="COMPUTUS_SCRIBERE"/>
+    <!-- aurum computus rescribitur cum COMPUTUS_SCRIBERE=1 (cursores ad
+         gradus T5): scriptura extra aream, membri unius -->
+    <debitum_scripturae membrum="probatio_md_computus" via="md/probationes/fixa/computus/basis.tsv" causa="aurum computus (COMPUTUS_SCRIBERE=1)"/>
     <!-- oraculum: casus omnes / exemplum unum (manu) -->
     <ambitus variabilis="ORACULUM_OMNIA"/>
     <ambitus variabilis="ORACULUM_EXEMPLUM"/>

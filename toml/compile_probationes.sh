@@ -30,4 +30,11 @@ RADIX_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$RADIX_DIR" || exit 2
 [ -x bin/fabrica ] || ./tools/fabrica_struere.sh >&2 \
     || { echo "FRACTA: bin/fabrica struere nequit - NULLA PROBATIO CURSA"; exit 2; }
-exec bin/fabrica probare probationes_toml "$@"
+# SERA CURSORIS (tools/sera.sh; porta sera VIII): cursus duo eiusdem
+# suitae - secundus exspectat (ad SERA_TECTUM), deinde exitus 2. Sine
+# 'exec': trap EXIT seram dimittit (exec eum perderet, sera vetus
+# maneret)
+source "$RADIX_DIR/tools/sera.sh"
+sera_capere "$RADIX_DIR/toml/build/cursor.sera" || exit 2
+bin/fabrica probare probationes_toml "$@"
+exit $?

@@ -7,6 +7,12 @@
  *
  * Consilium: project-specs/arbor-stml-spec-v2.md + arbor-stml-plan.md.
  *
+ * CORPORA: silva_arbor.c (conventio) et silva_arbor_aequalitas.c
+ * (comparator, T4 - silva_arbor_parsurae_aequales) - hoc caput eum
+ * declarat; cursor vetus silvae omnia nectebat et absentiam celabat
+ * (cursores ad gradus T5: membrum quod clausuram suam solam nectit
+ * 'Undefined symbols' dabat).
+ *
  * CHARTA VOCABULARII (spec §2, contra registrum coctum mensurata):
  *   - genus nodi   -> tag elementi VERBATIM ex SilvaTabGenus.titulus
  *   - locus        -> tag elementi VERBATIM ex SilvaTabLocus.titulus
@@ -23,6 +29,8 @@
  * tabula separata est numquam in SilvaRegistrumCoctum nexa. Praefixum
  * ergo limitem spatii nominum DICIT, non celat.
  */
+
+/* <aedilis corpus="silva/fontes/silva_arbor_aequalitas.c"/> */
 
 #ifndef SILVA_ARBOR_H
 #define SILVA_ARBOR_H

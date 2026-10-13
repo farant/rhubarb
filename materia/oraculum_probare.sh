@@ -24,10 +24,10 @@
 # iam NON differt STALA est et rubet (ut dispar crustae nominatus):
 # aliter sanatio quae aliud frangit post totalem immutatum lateret.
 #
-# OBIECTA SILVAE: binarium vivum silva/build nectit; ea hic per
-# cursorem silvae STRUUNTUR (filtrum nulli probationi congruens:
-# gradus I-II compilant, nulla probatio currit) - porta quae obiecta
-# rancida iudicat codicem heri, non hodie, iudicat.
+# SILVA VIVA: binarium vivum ex clausura SUA (oraculum_silvae_struere.sh,
+# cursor_communis) struitur, per thesaurum - porta quae obiecta rancida
+# iudicat codicem heri, non hodie, iudicat (olim obiecta silva/build per
+# cursorem silvae, cursores ad gradus T5).
 # <porta titulus="oraculum-silvae" tegit="materia/fontes/* silva/fontes/* silva/grammatica/*"/>
 
 set -u
@@ -41,13 +41,9 @@ sera_capere "$BASIS/cursor.sera" || exit 2
 PIGNUS=$(sed -n 's/^PIGNUS=//p' "$RADIX/materia/oraculum_silvae_struere.sh")
 T0=$(date +%s)
 
-# ---- 1. silva viva: obiecta recentia ----
-"$RADIX/silva/compile_probationes.sh" STRUERE_SOLUM > "$BASIS/silva.effusio" 2>&1
-if grep -q "^FRACTA" "$BASIS/silva.effusio"; then
-    grep "^FRACTA" "$BASIS/silva.effusio"
-    echo "VERDICTUM: ORACULUM SILVAE FRACTUM (silva viva non compilat)"
-    exit 1
-fi
+# ---- 1. silva viva: ex clausura sua in struere (gradu 2) - olim
+# obiecta per cursorem silvae (STRUERE_SOLUM) hic struebantur
+# (cursores ad gradus T5: cursor nunc gradus est) ----
 
 # ---- 2. binaria ----
 "$RADIX/materia/oraculum_silvae_struere.sh" > "$BASIS/struere.effusio" 2>&1

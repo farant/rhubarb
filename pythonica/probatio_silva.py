@@ -1136,6 +1136,10 @@ try:
           and '<subsystema via="md"/>'
           in open(os.path.join(RADIX, 'fabrica.stml')).read(),
           'portae graduum: md -> probationes_md declaratum (cursores ad gradus T4)')
+    credo(silva.PORTAE_GRADUUM.get('silva') == 'probationes_silva'
+          and '<actio titulus="probationes_silva" genus="iudicium">'
+          in open(os.path.join(RADIX, 'silva', 'aedificatio.stml')).read(),
+          'portae graduum: silva -> probationes_silva declaratum (cursores ad gradus T5)')
     # RESIDUA (fabrica-7 T7): 'prae' ANTE sanare, 'post' POST; sana
     # solum si omnes; residua fracta nominata (residua_<gradus>)
     ordo_log = os.path.join(T, 'residua_ordo.txt')
@@ -1384,7 +1388,8 @@ finally:
 # binarium absens sine aedificare: refusio quae remedium nominat
 try:
     silva.probatio_currere('probatio_silva_lexema') if not os.path.exists(
-        os.path.join(silva.RADIX, 'silva/build/probatio_silva_lexema')) else (_ for _ in ()).throw(
+        os.path.join(silva.RADIX, silva._binarium_probationis(
+            'silva', 'probatio_silva_lexema'))) else (_ for _ in ()).throw(
         silva.SilvaError('binarium absens (fictum)'))
     credo(False, 'binarium absens levat')
 except silva.SilvaError as ex:

@@ -82,8 +82,17 @@ Mechanism first, then the pilots in rising difficulty (gen 3 -> 2 -> 1
   mandatum; fumus LI. Plants IV red.
 
 ### T5: silva (the big one)
-- [ ] same as T3 for silva (55 tests; findings about hermeticity and
+- [x] same as T3 for silva (55 tests; findings about hermeticity and
   house-binary reads go in the spec). Commit.
+  As built (2026-10-13): probationes_silva + 6 declared env vars;
+  hidden implementer declared (`<aedilis corpus>` silva_arbor.h ->
+  silva_arbor_aequalitas.c: 4 tests failed to link alone); bin/aedilis
+  declared in 3 corpus tests; materia oracle's live binary from its own
+  closure (it linked the old runner's objects - would have gone stale
+  silently); computus write-debts for toml/css/md/silva (the
+  golden-rewrite ritual failed the write check since T2-T4);
+  tabula_nodorum memorabilis. Oracle 55/55. Warm 417 s -> ~7 s, forced
+  355 s. Plants red (one by hand, link failure).
 
 ### T6: expedition rubric v3 + roots for what stays bash (D6)
 - [ ] rubric v3 ("to steps", recipe = T3-T5) with rows for the

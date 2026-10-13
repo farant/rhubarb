@@ -393,8 +393,13 @@
     <exitus via="lib/runae_tabulae.c" provenientia="regeneratio"/>
   </actio>
   <!-- tabula nodorum: polynomia per laqueus ex codicibus PD extracti
-       KnotInfo fixi (tools/tabula_nodorum_extrahere.sh) computata -->
-  <actio titulus="tabula_nodorum" genus="generator">
+       KnotInfo fixi (tools/tabula_nodorum_extrahere.sh) computata.
+       MEMORABILIS (cursores ad gradus T5): lib/tabula_nodorum_data.c
+       supra probationes corporis silvae stat (lib/*.c legunt) - sine
+       memoria omni iudicio pleno regenerabatur (~16.6 s in 'probare'
+       silvae calido); generator determinatus, ingressus omnes manu
+       declarati -->
+  <actio titulus="tabula_nodorum" genus="generator" memorabilis="verum">
     <mandatum>
       <verbum! (>./tools/tabula_nodorum_generare.sh
     </mandatum>

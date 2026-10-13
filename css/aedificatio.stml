@@ -11,5 +11,8 @@
     <probationes_c exemplar="css/probationes/probatio_*.c"/>
     <!-- aurum computus rescribere (COMPUTUS_SCRIBERE=1 cum causa) -->
     <ambitus variabilis="COMPUTUS_SCRIBERE"/>
+    <!-- aurum computus rescribitur cum COMPUTUS_SCRIBERE=1 (cursores ad
+         gradus T5): scriptura extra aream, membri unius -->
+    <debitum_scripturae membrum="probatio_css_computus" via="css/probationes/fixa/computus/basis.tsv" causa="aurum computus (COMPUTUS_SCRIBERE=1)"/>
   </actio>
 </aedificatio>

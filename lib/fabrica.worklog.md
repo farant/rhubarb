@@ -2912,3 +2912,69 @@ and the sources, still per member - park …CH1CJ.
   the key the first oraculum call runs anyway. Added a REPEATED
   identical call (same env -> same key -> kept without -vis); planted:
   red "probatio_md_oraculum servata", by name.
+
+## 2026-10-13 - cursores ad gradus T5: silva to steps
+
+The checklist from T4, applied to silva (55 tests):
+- silva/build is a SHARED space: obiecta_mechanismi_silva
+  (silva/amalgamare.sh -obiecta) builds the mechanism's objects itself,
+  percursus/arbor/infidelis build their own (fons_ prefix) - not
+  dependents. The ONE hidden dependent: materia/oraculum_silvae_struere.sh
+  linked every bare-named silva/build/*.o, i.e. the silva sources only
+  the OLD TEST RUNNER compiled, and materia/oraculum_probare.sh built
+  them by running the runner with a filter matching nothing
+  (STRUERE_SOLUM). After conversion it would have linked STALE objects
+  silently. Now `vivum` builds from its own closure
+  (cursor_instrumentum_struere; aedilis follows the #else branch, the
+  amalgam stays out); the gate's step 1 is gone. Oracle gate green: 630
+  files, 0/0/0.
+- Hidden implementer: silva_arbor_parsurae_aequales is declared in
+  silva/fontes/silva_arbor.h and implemented in
+  silva_arbor_aequalitas.c. The old runner linked ALL silva sources into
+  every test, so nobody knew; four members (arbor, arbor_circuitus,
+  arbor_parsura, arbor_plagula) failed to link with their own closure.
+  `<aedilis corpus="silva/fontes/silva_arbor_aequalitas.c"/>` in the
+  header (corpus composes with the naming convention). First heal 51/55
+  -> 55/55.
+- Env: COMPUTUS_SCRIBERE, ARBOR_DEFIGERE(_NOMEN), LINT_INDAGO,
+  LINT_VERBOSA, MENSURA_VERBOSA declared (values in the key since T4).
+  ARBOR_DEFIGERE=<path> must point OUTSIDE the tree (e.g. /tmp): inside
+  it, the write check refuses it.
+- SECOND LATENT BUG of the earlier conversions: with T4's fix the
+  golden-rewrite ritual ran - and then FAILED the write check ("scripsit
+  extra vestigium: css/probationes/fixa/computus/basis.tsv"). Each
+  computus test now has a <debitum_scripturae> for its basis.tsv (toml,
+  css, md, silva); the ritual was run on toml, css, md: passes, goldens
+  unchanged.
+- Three tests (canon_corpus, exemplaria_lint, arbor_plagula) run
+  bin/aedilis through apparatus_clausuras_petere and declared nothing -
+  their kept verdicts would not have noticed an aedilis change.
+  `<aedilis instrumentum="bin/aedilis"/>` in each test file (scope only);
+  the judge then names bin/aedilis among the member's inputs.
+- Measured: warm with nothing changed, old runner 417 s EVERY time ->
+  probare 23.6 s, of which ~16.6 s one upstream regeneration
+  (tabula_nodorum, upstream of the corpus tests which read lib/*.c) ->
+  memorabilis -> ~7 s. Rest ~6 s = other non-memorabilis generators
+  whose inputs are not fully declared (park …). Forced: 355 s (< old).
+- A false measurement on the way: right after the silva_arbor.h edit,
+  "probare warm 1.2 s" was bin/fabrica REFUSING (judge stale, the header
+  is in its closure) - the tail line was empty. Always read the summary
+  line, never the stopwatch alone.
+- Oracle silva 55/55 (614 s). Plants: corpus annotation removed -> by
+  hand (silva.planta refuses build-breaking plants; here the link
+  failure IS the evidence) red "_silva_arbor_parsurae_aequales"
+  undefined, green restored; silva out of PORTAE_GRADUUM -> pythonica
+  red by name.
+- Two more output readers surfaced at commit time (the checklist item
+  "callers that read output, not verdict"): silva/m3_probare.sh runs the
+  silva suite filtered to arbor_ and parses numbers the tests PRINT ->
+  kept members printed nothing -> "M3 NIHIL CURSUM"; now `-vis` (6/6).
+  Also briar-fumus in the worktree wanted the tree's bin/briar rebuilt
+  (silva amalgam changed) - its own recipe, tree-local. examen-corpus
+  was red from main (probatio_dimissio.c, credo 92-95, not pinned):
+  excused BY NAME for this commit, re-run after merging main.
+- Gate `sera` VIII: every */compile_probationes.sh must take its cursor
+  lock - my T2-T5 entry points had dropped it (spec D2 said keep it).
+  Restored in all four, WITHOUT exec (sera.sh releases by trap EXIT;
+  exec would drop the trap and leave a stale lock for the next caller to
+  clear noisily).

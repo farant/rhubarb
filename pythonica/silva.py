@@ -1520,7 +1520,7 @@ PORTAE = {
     'radix': (['./compile_tests.sh'],
               r'Tests Passed:|PROBATIONES: \d+/\d+'),
     'silva': (['./silva/compile_probationes.sh'],
-              r'SILVA PROBATIONES: \d+/\d+ praeteritae'),
+              r'probationes_silva: \d+/\d+ praeteritae'),
     'css': (['./css/compile_probationes.sh'],
             r'probationes_css: \d+/\d+ praeteritae'),
     'materia': (['./materia/compile_probationes.sh'],
@@ -1834,6 +1834,7 @@ def porta(nomen, filtrum=None, radix=None, receptum=True, vis=False,
 PORTAE_GRADUUM = {'toml': 'probationes_toml',
                   'css': 'probationes_css',
                   'md': 'probationes_md',
+                  'silva': 'probationes_silva',
                   'radix': 'probationes_radicis'}
 # RESIDUA (fabrica-7 T7): quod porta PRAETER membra probat - portae
 # radix: 'prae' ANTE compositum (bibliothecae omnes, generare ->
