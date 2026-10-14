@@ -279,6 +279,37 @@ nomen structura {
     vacuum* datum;
 } HttpVectura;
 
+/* Exsequi cum rivo: ut http_exsequi, sed corpus 2xx per rivum exit dum
+ * advenit (quaestio-rivus-spec II.2). responsum->corpus TOTUM quoque
+ * redditur (R6). Lectio finitur cum responsum finitum est (connexio
+ * non exspectatur claudi). */
+HttpResultus
+http_exsequi_rivus (
+    HttpPetitio* petitio,
+      HttpRivus  rivus,
+         vacuum* rivi_datum,
+        Piscina* piscina);
+
+nomen structura {
+    HttpResultus (*exsequi)(HttpPetitio* petitio, HttpRivus rivus,
+                            vacuum* rivi_datum, Piscina* piscina,
+                            vacuum* datum);
+    vacuum* datum;
+} HttpVecturaRivi;
+
+/* Vectura rivi ordinaria: http_exsequi_rivus, datum NIHIL. */
+HttpVecturaRivi
+http_vectura_rivi_ordinaria (vacuum);
+
+/* exsequi NIHIL -> HTTP_ERROR_CONNEXIO nominatus, numquam ruina */
+HttpResultus
+http_vectura_rivi_exsequi (
+    HttpVecturaRivi  vectura,
+        HttpPetitio* petitio,
+          HttpRivus  rivus,
+             vacuum* rivi_datum,
+            Piscina* piscina);
+
 /* Vectura ordinaria: http_exsequi, datum NIHIL. */
 HttpVectura
 http_vectura_ordinaria (vacuum);

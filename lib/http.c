@@ -1165,6 +1165,106 @@ _error_truncati (
     redde res;
 }
 
+/* petitio construitur, connexio aperitur (https: TLS), petitio
+ * mittitur; communis http_exsequi et http_exsequi_rivus (quaestio-rivus
+ * T2). FALSUM: *error impletum, connexio nulla relicta */
+interior b32
+_connexionem_aperire (
+     HttpPetitio*  petitio,
+         Piscina*  piscina,
+     TlsConnexio** tls,
+     TcpConnexio** tcp,
+    HttpResultus*  error)
+{
+    chorda petitio_str;
+       b32 est_https;
+
+    *tls = NIHIL;
+    *tcp = NIHIL;
+    /* Construere petitio string */
+    petitio_str = _construere_petitio(petitio);
+
+    /* Determinare si HTTPS */
+    est_https = chorda_aequalis_literis(petitio->schema, "https");
+
+    /* Connectere */
+    si (est_https)
+    {
+        TlsOptiones tls_opt = tls_optiones_default();
+        TlsResultus tls_res;
+
+        /* tempus vocantis etiam in https (vates-plan-1 T2): olim
+         * tls_connectere sine optionibus = XXX s semper, et vocatio
+         * exemplaris sine fluxu longior frangebatur */
+        si (petitio->tempus_ms > 0)
+        {
+            tls_opt.timeout_ms = (i32)petitio->tempus_ms;
+        }
+        tls_res = tls_connectere_cum_optionibus(
+            (constans character*)petitio->hospes.datum,
+            petitio->portus, &tls_opt, piscina);
+        si (!tls_res.successus)
+        {
+            error->successus         = FALSUM;
+            error->responsum         = NIHIL;
+            error->error             = HTTP_ERROR_CONNEXIO;
+            error->error_descriptio  = tls_res.error_descriptio;
+            redde FALSUM;
+        }
+        *tls = tls_res.connexio;
+    }
+    alioquin
+    {
+        TcpOptiones tcp_opt = tcp_optiones_default();
+        TcpResultus tcp_res;
+
+        si (petitio->tempus_ms > 0)
+        {
+            /* sutura tcp adhuc i32 - valor positivus custoditus */
+            tcp_opt.timeout_ms = (i32)petitio->tempus_ms;
+        }
+        tcp_res = tcp_connectere_cum_optionibus(
+            (constans character*)petitio->hospes.datum,
+            petitio->portus, &tcp_opt, piscina);
+        si (!tcp_res.successus)
+        {
+            error->successus         = FALSUM;
+            error->responsum         = NIHIL;
+            error->error             = HTTP_ERROR_CONNEXIO;
+            error->error_descriptio  = tcp_res.error_descriptio;
+            redde FALSUM;
+        }
+        *tcp = tcp_res.connexio;
+    }
+
+    /* Mittere petitio */
+    si (est_https)
+    {
+        si (!tls_mittere_omnia(*tls,
+            (constans i8*)petitio_str.datum, petitio_str.mensura))
+        {
+            tls_claudere(*tls);
+            *tls = NIHIL;
+            *error = _creare_error(HTTP_ERROR_IO, "Mittere fallita",
+                piscina);
+            redde FALSUM;
+        }
+    }
+    alioquin
+    {
+        si (!tcp_mittere_omnia(*tcp,
+            (constans i8*)petitio_str.datum, petitio_str.mensura))
+        {
+            tcp_claudere(*tcp);
+            *tcp = NIHIL;
+            *error = _creare_error(HTTP_ERROR_IO, "Mittere fallita",
+                piscina);
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
 HttpResultus
 http_exsequi (
     HttpPetitio* petitio,
@@ -1172,7 +1272,6 @@ http_exsequi (
 {
           HttpResultus  res;
          HttpResponsum* resp;
-                chorda  petitio_str;
            TlsConnexio* tls_conn = NIHIL;
            TcpConnexio* tcp_conn = NIHIL;
                    b32  est_https;
@@ -1204,82 +1303,11 @@ http_exsequi (
                                                  (i64)(HTTP_CAPITA_MAXIMA * (i32)magnitudo(HttpCaput)));
     resp->capita_numerus = 0;
 
-    /* Construere petitio string */
-    petitio_str = _construere_petitio(petitio);
-
-    /* Determinare si HTTPS */
     est_https = chorda_aequalis_literis(petitio->schema, "https");
-
-    /* Connectere */
-    si (est_https)
+    si (!_connexionem_aperire(petitio, piscina, &tls_conn, &tcp_conn,
+            &res))
     {
-        TlsOptiones tls_opt = tls_optiones_default();
-        TlsResultus tls_res;
-
-        /* tempus vocantis etiam in https (vates-plan-1 T2): olim
-         * tls_connectere sine optionibus = XXX s semper, et vocatio
-         * exemplaris sine fluxu longior frangebatur */
-        si (petitio->tempus_ms > 0)
-        {
-            tls_opt.timeout_ms = (i32)petitio->tempus_ms;
-        }
-        tls_res = tls_connectere_cum_optionibus(
-            (constans character*)petitio->hospes.datum,
-            petitio->portus, &tls_opt, piscina);
-        si (!tls_res.successus)
-        {
-            res.successus         = FALSUM;
-            res.responsum         = NIHIL;
-            res.error             = HTTP_ERROR_CONNEXIO;
-            res.error_descriptio  = tls_res.error_descriptio;
-            redde res;
-        }
-        tls_conn = tls_res.connexio;
-    }
-    alioquin
-    {
-        TcpOptiones tcp_opt = tcp_optiones_default();
-        TcpResultus tcp_res;
-
-        si (petitio->tempus_ms > 0)
-        {
-            /* sutura tcp adhuc i32 - valor positivus custoditus */
-            tcp_opt.timeout_ms = (i32)petitio->tempus_ms;
-        }
-        tcp_res = tcp_connectere_cum_optionibus(
-            (constans character*)petitio->hospes.datum,
-            petitio->portus, &tcp_opt, piscina);
-        si (!tcp_res.successus)
-        {
-            res.successus         = FALSUM;
-            res.responsum         = NIHIL;
-            res.error             = HTTP_ERROR_CONNEXIO;
-            res.error_descriptio  = tcp_res.error_descriptio;
-            redde res;
-        }
-        tcp_conn = tcp_res.connexio;
-    }
-
-    /* Mittere petitio */
-    si (est_https)
-    {
-        si (!tls_mittere_omnia(tls_conn,
-            (constans i8*)petitio_str.datum, petitio_str.mensura))
-        {
-            tls_claudere(tls_conn);
-            redde _creare_error(HTTP_ERROR_IO, "Mittere fallita",
-                piscina);
-        }
-    }
-    alioquin
-    {
-        si (!tcp_mittere_omnia(tcp_conn,
-            (constans i8*)petitio_str.datum, petitio_str.mensura))
-        {
-            tcp_claudere(tcp_conn);
-            redde _creare_error(HTTP_ERROR_IO, "Mittere fallita",
-                piscina);
-        }
+        redde res;
     }
 
     /* Recipere responsum */
@@ -2777,6 +2805,90 @@ http_petitio_parse (
  * VECTURA ET VISUS (vates-plan-1 T2; herbarium-spec par. V)
  * ======================================================================== */
 
+HttpResultus
+http_exsequi_rivus (
+    HttpPetitio* petitio,
+      HttpRivus  rivus,
+         vacuum* rivi_datum,
+        Piscina* piscina)
+{
+        HttpResultus  res;
+         TlsConnexio* tls_conn = NIHIL;
+         TcpConnexio* tcp_conn = NIHIL;
+          HttpLector* lector;
+                  i8* buffer;
+                 s32  n;
+    HttpLectorStatus  status;
+
+    si (!petitio || !piscina)
+    {
+        redde _creare_error(HTTP_ERROR_URL, "Argumenta invalida",
+            piscina);
+    }
+    si (!_connexionem_aperire(petitio, piscina, &tls_conn, &tcp_conn,
+            &res))
+    {
+        redde res;
+    }
+    lector  = http_lector_creare(piscina, petitio->methodus, rivus,
+        rivi_datum);
+    buffer = (i8*)piscina_allocare(piscina,
+        (i64)HTTP_BUFFER_MAGNITUDO);
+    status = HTTP_LECTOR_CAPITA;
+    fac
+    {
+        n = tls_conn ? tls_recipere(tls_conn, buffer,
+                           HTTP_BUFFER_MAGNITUDO)
+                     : tcp_recipere(tcp_conn, buffer,
+                           HTTP_BUFFER_MAGNITUDO);
+        si (n > ZEPHYRUM)
+        {
+            status = http_lector_adicere(lector, buffer, (i32)n);
+        }
+    } dum (   n > ZEPHYRUM && status != HTTP_LECTOR_FINITUS
+           && status != HTTP_LECTOR_ERROR);
+    si (tls_conn)
+    {
+        tls_claudere(tls_conn);
+    }
+    alioquin
+    {
+        tcp_claudere(tcp_conn);
+    }
+    si (status == HTTP_LECTOR_ERROR)
+    {
+        redde _creare_error(HTTP_ERROR_PARSE,
+            chorda_ut_cstr(http_lector_error(lector), piscina),
+            piscina);
+    }
+    si (status != HTTP_LECTOR_FINITUS)
+    {
+        si (n == TCP_ITERUM)
+        {
+            redde _creare_error(HTTP_ERROR_TIMEOUT,
+                "Tempus receptionis excessum (rivus)", piscina);
+        }
+        si (n < ZEPHYRUM)
+        {
+            redde _creare_error(HTTP_ERROR_IO,
+                "Error retis inter receptionem (rivus)", piscina);
+        }
+        status = http_lector_finire(lector);
+        si (status != HTTP_LECTOR_FINITUS)
+        {
+            redde _creare_error(HTTP_ERROR_IO,
+                chorda_ut_cstr(http_lector_error(lector), piscina),
+                piscina);
+        }
+    }
+    res.successus                 = VERUM;
+    res.responsum                 = http_lector_responsum(lector);
+    res.error                     = HTTP_OK;
+    res.error_descriptio.datum    = NIHIL;
+    res.error_descriptio.mensura  = ZEPHYRUM;
+    redde res;
+}
+
 interior HttpResultus
 _vectura_ordinaria_exsequi (
     HttpPetitio* petitio,
@@ -2809,6 +2921,45 @@ http_vectura_exsequi (
             "Vectura sine functione exsequendi", piscina);
     }
     redde vectura.exsequi(petitio, piscina, vectura.datum);
+}
+
+interior HttpResultus
+_vectura_rivi_ordinaria_exsequi (
+    HttpPetitio* petitio,
+      HttpRivus  rivus,
+         vacuum* rivi_datum,
+        Piscina* piscina,
+         vacuum* datum)
+{
+    (vacuum)datum;
+    redde http_exsequi_rivus(petitio, rivus, rivi_datum, piscina);
+}
+
+HttpVecturaRivi
+http_vectura_rivi_ordinaria (vacuum)
+{
+    HttpVecturaRivi v;
+
+    v.exsequi  = _vectura_rivi_ordinaria_exsequi;
+    v.datum    = NIHIL;
+    redde v;
+}
+
+HttpResultus
+http_vectura_rivi_exsequi (
+    HttpVecturaRivi  vectura,
+        HttpPetitio* petitio,
+          HttpRivus  rivus,
+             vacuum* rivi_datum,
+            Piscina* piscina)
+{
+    si (vectura.exsequi == NIHIL)
+    {
+        redde _creare_error(HTTP_ERROR_CONNEXIO,
+            "Vectura rivi sine functione exsequendi", piscina);
+    }
+    redde vectura.exsequi(petitio, rivus, rivi_datum, piscina,
+        vectura.datum);
 }
 
 HttpPetitioVisus

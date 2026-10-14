@@ -188,3 +188,17 @@ feed it from callbacks unchanged).
   15-byte body (systematic failure across splits = fixture, not the
   parser). Plants: chunk-end state -> FRUSTUM, sink open for non-2xx
   - both red in probatio_http_lector, green after revert.
+
+## 2026-10-14 — http_exsequi_rivus + HttpVecturaRivi (quaestio-rivus T2)
+
+`http_exsequi`'s connect + send moved into `_connexionem_aperire`
+(shared, behaviour unchanged: probatio_http's old sections green on
+the refactored path). `http_exsequi_rivus` feeds the T1 lector and
+STOPS READING at FINITUS - unlike `http_exsequi`, which reads to EOF
+(a keep-alive server would make it wait for the server's timeout).
+The `FIXTURA_RIVUS` raw server proves both properties: it sends the
+first chunk, pauses 300 ms, sends the rest, then holds the connection
+open 2 s; the test asserts first sink call < 200 ms and total < 1.5 s.
+Plant (stop condition removed): red on the 1.5 s assert, as intended.
+Streaming seam `HttpVecturaRivi` mirrors `HttpVectura` (ordinary =
+`http_exsequi_rivus`; `exsequi` NIHIL -> named error).
