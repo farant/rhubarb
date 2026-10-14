@@ -6,6 +6,12 @@
 set -u
 cd "$(dirname "${BASH_SOURCE[0]}")/../.." || exit 1
 [ -x bin/aedilis ] || ./tools/aedilis_struere.sh >&2 || exit 1
+# $question adiutor (quaestio-rivus T6): bin/quaestio iuxta bin/vicus -
+# vicus eum ex argv[0] invenit (clavem SOLUS legit)
+./bin/aedilis apps/quaestio/quaestio.c >&2 || exit 1
+bash build/aedilis/quaestio/struere.sh >&2 || exit 1
+mkdir -p bin && rm -f bin/quaestio \
+    && cp build/aedilis/quaestio/quaestio bin/quaestio
 ./bin/aedilis apps/vicus/vicus.c >&2 || exit 1
 bash build/aedilis/vicus/struere.sh >&2 || exit 1
 # rm ante cp: macOS binarium exsistens superscriptum SIGKILL dat

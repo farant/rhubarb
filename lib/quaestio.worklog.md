@@ -86,3 +86,20 @@ The exact output for a sample answer is pinned in probatio_quaestio
   content - assert positions.
 - `quaestio_adiutor_currere`: T per delta immediately, then U + F, or
   E + `F error`; the F frame is always last (plant: F dropped -> red).
+
+## 2026-10-14 — bin/quaestio helper (quaestio-rivus T6)
+
+`apps/quaestio/quaestio.c`: argv `-exemplar -lineae -latitudo
+-quaestio`, reads `$HOME/.rhubarb/anthropic.clavis` itself (the ONLY
+reader of the key after T8; never argv/stdout/frame), zeroes its copy
+right after `vates_aperire` (the Vates keeps its one NUL-terminated
+copy), runs `quaestio_adiutor_currere` writing frames to stdout with
+fflush per frame (vicus reads them per pulse through processus).
+Every path ends with an F frame: bad arguments -> `E usage` + `F error`,
+exit 2; HOME absent / key file absent / empty key -> E + F, exit 0.
+No unit test of its own: all logic is `quaestio_adiutor_currere`
+(tested in T5); by-hand checks of the three key-free paths done
+(`HOME=/nonexistent`, `env -u HOME`, missing args) - the key file
+itself never touched by Claude. `apps/vicus/vicus.sh` builds it next
+to bin/vicus (plan ruling R4: vicus is run from the tree, not
+installed).
