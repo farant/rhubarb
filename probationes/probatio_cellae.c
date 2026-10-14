@@ -3542,6 +3542,336 @@ _probare_iudicium_manu (
     CREDO_VERUM (memcmp(&iu, &intactum, magnitudo(iu)) == ZEPHYRUM);
 }
 
+interior b32
+_iudicia_aequalia (
+    constans Iudicium* x,
+    constans Iudicium* y)
+{
+    redde x->regula == y->regula && x->robusta == y->robusta
+        && x->possibilis == y->possibilis && x->ligata == y->ligata
+        && x->indecisa == y->indecisa && x->concursus == y->concursus;
+}
+
+/* imago integra sine iactura (cellae II T4b): Iudicium idem cum
+ * imagine et sine, copia per copiam, SINE filtro (omnis summa per
+ * punctum): zeta_8 et 2I (D94), zeta_8 (D82); n = III omnes, IV omnis
+ * quinta, VIII omnis 36000-a; XOR et MAJ. Statistica: cum imagine
+ * nulla summa algebraica, sine imagine nulla per imaginem. */
+interior vacuum
+_probare_imaginem (
+    CredoContextus* c)
+{
+                  Catalogus* catalogi[III];
+                        i64  comparatae  = ZEPHYRUM;
+                        i64  diversae    = ZEPHYRUM;
+    hic_manens constans i32  CELLAE[III] = { CELLAE_CELLA_D94,
+                                             CELLAE_CELLA_D94,
+                                             CELLAE_CELLA_D82 };
+    hic_manens constans i32 GRADUS[III] = { III, IV, VIII };
+    hic_manens constans i64 PASSUS[III] = { 1, 5, 36000 };
+                        i32 r;
+
+    catalogi[ZEPHYRUM]  = _zeta_octo_catalogus(c->piscina);
+    catalogi[I]         = _aurea_prima(c->piscina);
+    catalogi[II]        = catalogi[ZEPHYRUM];
+    CREDO_NECESSE_NON_NIHIL (catalogi[ZEPHYRUM]);
+    CREDO_NECESSE_NON_NIHIL (catalogi[I]);
+    per (r = ZEPHYRUM; r < III; r++)
+    {
+               Activatio* cum   = NIHIL;
+               Activatio* sine  = NIHIL;
+        CellaeStatistica  cum_ante;
+        CellaeStatistica  cum_post;
+        CellaeStatistica  sine_ante;
+        CellaeStatistica  sine_post;
+                     i32  g;
+
+        CREDO_NECESSE (activatio_creare(catalogi[r], NIHIL, ZEPHYRUM,
+            CELLAE[r], ZEPHYRUM, c->piscina, &cum));
+        CREDO_NECESSE (activatio_creare(catalogi[r], NIHIL, ZEPHYRUM,
+            CELLAE[r], ZEPHYRUM, c->piscina, &sine));
+        activatio_filtrum(cum, FALSUM);
+        activatio_filtrum(sine, FALSUM);
+        activatio_imago(sine, FALSUM);
+        activatio_statistica(cum, &cum_ante);
+        activatio_statistica(sine, &sine_ante);
+        per (g = ZEPHYRUM; g < III; g++)
+        {
+            i32 n = GRADUS[g];
+            i32 functio;
+
+            per (functio = ZEPHYRUM; functio < III; functio += II)
+            {
+                constans i8* tv = _tabula_functionis(n, functio,
+                    c->piscina);
+                        i32 pondera[VIII];
+                        i32 j;
+                        i64 ordo = ZEPHYRUM;
+
+                CREDO_NECESSE (tv != NIHIL);
+                per (j = ZEPHYRUM; j < n; j++)
+                {
+                    pondera[j] = j;
+                }
+                fac
+                {
+                    Iudicium x;
+                    Iudicium y;
+
+                    si ((ordo++ % PASSUS[g]) != ZEPHYRUM)
+                    {
+                        perge;
+                    }
+                    CREDO_NECESSE (activatio_iudica(cum, pondera, n,
+                        SCALA_D119, III, tv, &x));
+                    CREDO_NECESSE (activatio_iudica(sine, pondera, n,
+                        SCALA_D119, III, tv, &y));
+                    comparatae++;
+                    diversae += _iudicia_aequalia(&x,
+                        &y) ? ZEPHYRUM : I;
+                } dum (_copia_proxima(pondera, n, XXIV));
+            }
+        }
+        activatio_statistica(cum, &cum_post);
+        activatio_statistica(sine, &sine_post);
+        CREDO_VERUM (cum_post.imagine > cum_ante.imagine);
+        CREDO_AEQUALIS_S64 ((s64)(cum_post.algebraice
+            - cum_ante.algebraice), ZEPHYRUM);
+        CREDO_AEQUALIS_S64 ((s64)(sine_post.imagine
+            - sine_ante.imagine),
+            ZEPHYRUM);
+        CREDO_VERUM (sine_post.algebraice > sine_ante.algebraice);
+    }
+    CREDO_AEQUALIS_S64 ((s64)diversae, ZEPHYRUM);
+    /* (2024 + ceil(10626/5) + ceil(735471/36000)) x 2 functiones x 3 */
+    CREDO_AEQUALIS_S64 ((s64)comparatae, (s64)((2024 + 2126 + XXI) * II
+        * III));
+}
+
+/* catalogus Q(sqrt 2) quinque punctorum, pars prima puncti primi
+ * 'prima' */
+interior Catalogus*
+_catalogus_magnus (
+    constans character* prima,
+               Piscina* piscina)
+{
+    constans Anulus* q2 = extensio_anulus(extensio_quadratica(II,
+        piscina));
+           Quaternio  puncta[V];
+           Catalogus* cat = NIHIL;
+           character  textus[CXXVIII];
+
+    sprintf(textus, "[%s, 1, 0, 0]", prima);
+    puncta[ZEPHYRUM]  = _q(q2, textus, piscina);
+    puncta[I]         = _q(q2, "[1, a, 1, 0]", piscina);
+    puncta[II]        = _q(q2, "[0, 1, a, 1]", piscina);
+    puncta[III]       = _q(q2, "[1, 0, 1, a]", piscina);
+    puncta[IV]        = _q(q2, "[a, 1, 0, 1]", piscina);
+    si (!catalogus_ex_punctis(puncta, V, piscina, &cat))
+    {
+        redde NIHIL;
+    }
+    redde cat;
+}
+
+/* limes imaginis: coefficiens 2^40 accipitur; 2^40 + 1 et D = 3^40
+ * (extra s64) imaginem non habent - via algebraica, nihil tacite.
+ * Verdicta eadem cum imagine et sine (omnes C(5, 3) copiae, XOR et
+ * MAJ, sine filtro). */
+interior vacuum
+_probare_imaginis_limites (
+    CredoContextus* c)
+{
+    hic_manens constans character* PRIMAE[III] = {
+        "1099511627776",               /* 2^40: imago */
+        "1099511627777",               /* 2^40 + 1: nulla */
+        "1/12157665459056928801"       /* 3^40 > 2^63: nulla */
+    };
+    i32 r;
+
+    per (r = ZEPHYRUM; r < III; r++)
+    {
+              Catalogus* cat = _catalogus_magnus(PRIMAE[r],
+                  c->piscina);
+               Activatio* cum   = NIHIL;
+               Activatio* sine  = NIHIL;
+        CellaeStatistica  st;
+                     i32  functio;
+                     i64  diversae = ZEPHYRUM;
+
+        CREDO_NECESSE_NON_NIHIL (cat);
+        CREDO_NECESSE (activatio_creare(cat, NIHIL, ZEPHYRUM,
+            CELLAE_CELLA_D94, ZEPHYRUM, c->piscina, &cum));
+        CREDO_NECESSE (activatio_creare(cat, NIHIL, ZEPHYRUM,
+            CELLAE_CELLA_D94, ZEPHYRUM, c->piscina, &sine));
+        activatio_filtrum(cum, FALSUM);
+        activatio_filtrum(sine, FALSUM);
+        activatio_imago(sine, FALSUM);
+        per (functio = ZEPHYRUM; functio < III; functio += II)
+        {
+            constans i8* tv = _tabula_functionis(III, functio,
+                c->piscina);
+                    i32 pondera[III];
+
+            CREDO_NECESSE (tv != NIHIL);
+            pondera[ZEPHYRUM]  = ZEPHYRUM;
+            pondera[I]         = I;
+            pondera[II]        = II;
+            fac
+            {
+                Iudicium x;
+                Iudicium y;
+
+                CREDO_NECESSE (activatio_iudica(cum, pondera, III,
+                    SCALA_D119, III, tv, &x));
+                CREDO_NECESSE (activatio_iudica(sine, pondera, III,
+                    SCALA_D119, III, tv, &y));
+                diversae += _iudicia_aequalia(&x, &y) ? ZEPHYRUM : I;
+            } dum (_copia_proxima(pondera, III, V));
+        }
+        CREDO_AEQUALIS_S64 ((s64)diversae, ZEPHYRUM);
+        activatio_statistica(cum, &st);
+        si (r == ZEPHYRUM)
+        {
+            CREDO_VERUM (st.imagine > ZEPHYRUM);
+            CREDO_AEQUALIS_S64 ((s64)st.algebraice, ZEPHYRUM);
+        } alioquin
+        {
+            CREDO_AEQUALIS_S64 ((s64)st.imagine, ZEPHYRUM);
+            CREDO_VERUM (st.algebraice > ZEPHYRUM);
+        }
+    }
+}
+
+/* nomen unum: activatio_cella summam repraesentabilem per imaginem
+ * nominat, ergo summae quaestionis idem punctum. Summae VIII copiae {0,
+ * 1, 2} zeta_8 per activatio_cella, deinde activatio_iudica eiusdem
+ * copiae (sine filtro): puncta nova nulla. Commutatio inter duas
+ * (cella sine imagine, iudica cum) puncta nova facit - probatio
+ * differentiam videt. Summa non repraesentabilis (1/3; D = 2): via
+ * algebraica. Cellae eaedem ac sine imagine. */
+interior vacuum
+_probare_imaginis_nomina (
+    CredoContextus* c)
+{
+            Catalogus* zeta = _zeta_octo_catalogus(c->piscina);
+            Quaternio  summae[VIII];
+            Quaternio  tertia;
+                  i32  pondera[III];
+                  i32  modus;
+                  i32  v;
+                  i32  j;
+
+    CREDO_NECESSE_NON_NIHIL (zeta);
+    per (v = ZEPHYRUM; v < VIII; v++)
+    {
+        CREDO_NECESSE (quaternio_nullum(quaternio_anulus(
+            catalogus_elementum(zeta, ZEPHYRUM)), c->piscina,
+            &summae[v]));
+        per (j = ZEPHYRUM; j < III; j++)
+        {
+            Quaternio q = catalogus_elementum(zeta, (i32)j);
+
+            CREDO_NECESSE (((v >> j) & I)
+                ? quaternio_adde(summae[v], q, c->piscina, &summae[v])
+                : quaternio_subtrahe(summae[v], q, c->piscina,
+                &summae[v]));
+        }
+    }
+    pondera[ZEPHYRUM]  = ZEPHYRUM;
+    pondera[I]         = I;
+    pondera[II]        = II;
+    /* modus 0: cella et iudica cum imagine; 1: ambae sine; 2: cella
+     * sine, iudica cum (nomina diversa: puncta nova) */
+    per (modus = ZEPHYRUM; modus < III; modus++)
+    {
+               Activatio* act   = NIHIL;
+               Activatio* sine  = NIHIL;
+        CellaeStatistica  ante;
+        CellaeStatistica  post_cellae;
+        CellaeStatistica  post;
+                Iudicium  iu;
+                     b32  eaedem    = VERUM;
+
+        CREDO_NECESSE (activatio_creare(zeta, NIHIL, ZEPHYRUM,
+            CELLAE_CELLA_D94, ZEPHYRUM, c->piscina, &act));
+        CREDO_NECESSE (activatio_creare(zeta, NIHIL, ZEPHYRUM,
+            CELLAE_CELLA_D94, ZEPHYRUM, c->piscina, &sine));
+        activatio_filtrum(act, FALSUM);
+        activatio_imago(sine, FALSUM);
+        activatio_imago(act, modus == ZEPHYRUM);
+        activatio_statistica(act, &ante);
+        per (v = ZEPHYRUM; v < VIII; v++)
+        {
+            Cella x;
+            Cella y;
+
+            CREDO_NECESSE (activatio_cella(act, summae[v], XXIV, &x));
+            CREDO_NECESSE (activatio_cella(sine, summae[v], XXIV, &y));
+            eaedem = eaedem && x.regula == y.regula
+                && x.numerus == y.numerus
+                && memcmp(x.ligatae, y.ligatae,
+                (memoriae_index)x.numerus
+                * magnitudo(i32)) == ZEPHYRUM;
+        }
+        CREDO_VERUM (eaedem);
+        activatio_statistica(act, &post_cellae);
+        activatio_imago(act, modus != I);
+        CREDO_NECESSE (activatio_iudica(act, pondera, III, SCALA_D119,
+            III, cellae_paritas(III, c->piscina), &iu));
+        activatio_statistica(act, &post);
+        si (modus == ZEPHYRUM)
+        {
+            CREDO_AEQUALIS_S64 ((s64)(post_cellae.imagine
+                - ante.imagine),
+                VIII);
+            CREDO_AEQUALIS_S64 ((s64)(post_cellae.algebraice
+                - ante.algebraice), ZEPHYRUM);
+        }
+        si (modus == I)
+        {
+            CREDO_AEQUALIS_S64 ((s64)(post_cellae.algebraice
+                - ante.algebraice), VIII);
+        }
+        CREDO_VERUM (post_cellae.puncta > ante.puncta);
+        si (modus == II)
+        {
+            CREDO_VERUM (post.puncta > post_cellae.puncta);
+        } alioquin
+        {
+            CREDO_AEQUALIS_S64 ((s64)post.puncta,
+                (s64)post_cellae.puncta);
+        }
+    }
+    /* non repraesentabilis: 1/3 x D (= 2) non integer */
+    tertia = _q(quaternio_anulus(catalogus_elementum(zeta, ZEPHYRUM)),
+        "[1/3, 0, 0, 0]", c->piscina);
+    {
+               Activatio* act   = NIHIL;
+               Activatio* sine  = NIHIL;
+        CellaeStatistica  ante;
+        CellaeStatistica  post;
+                   Cella  x;
+                   Cella  y;
+
+        CREDO_NECESSE (activatio_creare(zeta, NIHIL, ZEPHYRUM,
+            CELLAE_CELLA_D94, ZEPHYRUM, c->piscina, &act));
+        CREDO_NECESSE (activatio_creare(zeta, NIHIL, ZEPHYRUM,
+            CELLAE_CELLA_D94, ZEPHYRUM, c->piscina, &sine));
+        activatio_imago(sine, FALSUM);
+        activatio_statistica(act, &ante);
+        CREDO_NECESSE (activatio_cella(act, tertia, XXIV, &x));
+        CREDO_NECESSE (activatio_cella(sine, tertia, XXIV, &y));
+        activatio_statistica(act, &post);
+        CREDO_AEQUALIS_S64 ((s64)(post.imagine - ante.imagine),
+            ZEPHYRUM);
+        CREDO_AEQUALIS_S64 ((s64)(post.algebraice - ante.algebraice),
+            I);
+        CREDO_AEQUALIS_I32 (x.regula, y.regula);
+        CREDO_AEQUALIS_I32 (x.numerus, y.numerus);
+    }
+}
+
 /* PURGARE (credo examen 92-95; cursores ad gradus T5, ex fusione main):
  * status moduli - catalogus fluitans f_*, campus et clausura oraculi
  * o_*, tabula victorum ref_*, status aleae - inter sectiones NON manet. Sectio quae o_d/o_scala pro zeta_12
@@ -3633,6 +3963,13 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL, NIHIL },
     { "iudicium memoria", _probare_iudicium_memoriam, NIHIL,
         _statum_purgare, NIHIL, NIHIL },
+    { "imago sine iactura", _probare_imaginem, NIHIL, _statum_purgare,
+        NIHIL, NIHIL },
+    { "imago limites", _probare_imaginis_limites, NIHIL,
+        _statum_purgare,
+        NIHIL, NIHIL },
+    { "imago nomina", _probare_imaginis_nomina, NIHIL, _statum_purgare,
+        NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

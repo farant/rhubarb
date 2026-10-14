@@ -400,11 +400,31 @@ nomen structura {
     i64 filtro;      /* cellae a filtro decisae */
     i64 exacte;      /* cellae per viam exactam */
     i64 ligatae;     /* exactae cum paritate (plus quam una cella) */
+    i64 imagine;     /* summae per imaginem integram nominatae */
+    i64 algebraice;  /* summae per numeros algebraicos nominatae */
+    i64 puncta;      /* puncta exacta in memoria activationis */
 } CellaeStatistica;
 
 /* filtrum (ordinarie VERUM) */
 vacuum
 activatio_filtrum (
+     Activatio* activatio,
+           b32  utere);
+
+/* IMAGO INTEGRA (cellae II T4b): ad creationem pars j elementi =
+ * (p + q alpha)/D, alpha generator corporis, D denominator communis,
+ * p, q integri |p|, |q| <= 2^40. Summa tum additiones integrorum et
+ * punctum exactum per integros nominatur (valor idem sse integri
+ * idem); numeri algebraici solum pro puncto novo. Coefficiens maior aut
+ * D extra s64: nulla imago, via algebraica (statistica: imagine 0).
+ * activatio_cella summam repraesentabilem (omnis coefficiens x D
+ * integer in s64) per imaginem quoque nominat: idem valor, idem
+ * punctum. Ordinarie VERUM; FALSUM viam algebraicam priorem reddit
+ * (probationis causa: verdicta eadem). Commutatio inter vocationes
+ * licet; idem valor tum puncta duo habere potest (unum per nomen),
+ * cellis eisdem (ambae exactae). */
+vacuum
+activatio_imago (
      Activatio* activatio,
            b32  utere);
 

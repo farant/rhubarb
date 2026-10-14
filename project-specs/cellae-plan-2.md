@@ -245,6 +245,15 @@ Each task follows the house cycle:
 
   Credo: filtered == exact on every ζ₈ sum; the statistics separate
   filter, exact and tied decisions.
+  *(2026-10-14, done: each part = (p + q·alpha)/D in s64 (|p|, |q| ≤
+  2^40), with basis {1, alpha} rather than √d, so no factoring and no
+  `surdus` is needed. The canonical sign is taken on the integers; the
+  relation to the real representative is stored per point, computed
+  once. Representability depends on the value, so `activatio_cella`
+  uses the same namespace. New API: `activatio_imago`, plus
+  statistics `imagine`/`algebraice`/`puncta`. Both tables N = 3-8 in
+  113 s against D120's 125 s; 36/36 rows; zero algebraic sums. 3 credo
+  sections, 8 plants red.)*
 - **T5. Review** (an independent reviewer with its own oracle), then
   fixes.
 - **T6. P1** as a demo, with its own plan for Fran's approval first.

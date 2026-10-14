@@ -854,3 +854,101 @@ sources).
 Not planted: dropping the `_punctum` reset of the call arena. That
 scratch dies with the call anyway, so no correctness test can see it
 (an equivalent mutant); it only lowers one call's peak.
+
+## 2026-10-14 - cellae II T4b: integer image of the catalog
+
+**Design.** At creation each catalog part becomes `(p + q alpha)/D`:
+alpha is the field's generator, D the least common denominator, and
+p, q are s64 with |p|, |q| <= 2^40. A signed sum of up to 8 weights is
+then 8 integer additions per weight (< 2^43), and two values are equal
+iff their integer tuples are equal, because {1, alpha} is a basis over
+Q. The tuple is the exact point key. A coefficient over the bound, or
+D outside s64, means no image: the activation runs the old algebraic
+path, and nothing is rounded.
+- Basis {1, alpha}, not {1, sqrt d}. Keys only need some fixed basis,
+  so there is no square root to find and no factoring. It should
+  also cover `extensio_cosinus` fields of degree 2 (alpha = 2cos 72°
+  for n = 5), but the credo does not exercise them yet.
+- `surdus` is not used. The sign of s is never needed on the hot
+  path. Canonical form of {s, -s} = the tuple whose first nonzero
+  integer is positive; epsilon = s / canonical. The real
+  representative (first nonzero part positive as a real number) is
+  related to the canonical tuple by a sign `relatio`. It is computed
+  once, when the point is created (`_orientatio` on the algebraic sum),
+  and stored on the Punctum. A sum's D94 orientation is then
+  epsilon x relatio, with no algebraic sign at all. The zero sum gets
+  epsilon = +1 and relatio = +1 automatically: the T3 bug cannot come
+  back through this path.
+- Algebraic numbers appear only on a point-cache miss: the quaternion
+  sum is built for the point's own data (axes, tan^2 h).
+- The combination cache is bypassed on the image path. Complements
+  fold through epsilon, and the point table is the only table.
+
+**One value, one point (namespaces).** Image keys are binary: byte 1,
+then 8 x 8 bytes. General keys are quaternion text, which never
+contains byte 1, so the two namespaces are disjoint. Which namespace a
+value uses depends on the value itself, not on the path that produced
+it. `activatio_cella` converts its sum into the image when every
+coefficient x D is an integer in s64, so an external sum equal to a
+search sum finds the same point. Credo "imago nomina" checks this by
+counting points: 8 sums through `activatio_cella`, then
+`activatio_iudica` on the same set creates no new point. The
+discrimination check (cell without the image, judgment with it) does
+create points, which shows the test can see a split. Switching the
+image between calls is allowed and documented: the same value can then
+hold one point per namespace, with identical cells, since both are
+exact.
+
+**API.**
+- `activatio_imago(act, utere)`, mirroring `activatio_filtrum`; off =
+  the old algebraic path, the equivalence oracle.
+- `CellaeStatistica` gained:
+  - `imagine` / `algebraice`: sums identified by each path. A silent
+    fallback cannot pass for speed; the harness prints both.
+  - `puncta`: distinct exact points held. It serves the namespace
+    test and memory diagnosis; T4's instrument counted the same thing
+    by hand.
+- Hygiene: `activatio_cella` resets the arena after the D94 sign
+  computation, so a cached point and cell allocate nothing.
+
+**Measured** (same harness and rows as the T4 checkpoint, load ~4):
+- Both tables, N = 3-8: **113 s** (T4: ~265 s; D120: 125 s).
+- 36/36 D119 rows equal.
+- Every sum went through the image (algebraice 0); peak RSS 66 MB.
+- Profile at N = 8, zeta_8, 15 s of samples:
+  - `_vector_parare` (float intervals): ~35%;
+  - self time in `activatio_iudica` (inlined `_iudica_intra`,
+    concursus pair scan): ~30%;
+  - `_cella_vectoris`: ~14%;
+  - exact sums + keys + hashing: ~3% (was ~46%).
+
+**Credo (3 new sections).**
+- "imago sine iactura":
+  - Iudicium identical with and without the image, set by set, filter
+    OFF, so every sum goes through a point;
+  - zeta_8 and 2I (D94), plus zeta_8 (D82);
+  - N = 3 all sets, N = 4 every 5th, N = 8 every 36000th;
+  - XOR and MAJ;
+  - with the image: algebraice delta 0; without it: imagine delta 0.
+- "imago limites", on a catalog of 5 points in Q(sqrt 2):
+  - a coefficient of exactly 2^40 gets an image;
+  - 2^40 + 1 and a denominator 3^40 (> 2^63) get none, with the same
+    verdicts.
+- "imago nomina": namespaces (above), plus a non-representable sum
+  (1/3 with D = 2) going the algebraic way, with cells equal to the
+  image-off activation.
+
+**Plants: 8, all red.**
+- Key not canonical (epsilon always +1, so s and -s get two keys):
+  red in the D82 hand cases ("iudicium manu", concursus: D82 must
+  fold s and -s).
+- relatio without epsilon (planted as epsilon x epsilon x relatio;
+  the plain removal does not compile): D119 rule counts.
+- Key without its last component (values collide): the cells oracle
+  in "cellae contra oraculum".
+- Bound strict (2^40 refused) and bound loosened (2^41): "imago
+  limites", in both directions.
+- Remainder ignored (a non-integer value goes into the image): "imago
+  nomina".
+- `activatio_cella` skips the image: "imago nomina".
+- Switch ignored: "imago sine iactura".
