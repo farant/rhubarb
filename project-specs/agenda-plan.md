@@ -209,6 +209,9 @@ State-model question to settle before A2 (A1 is content only).
     dithered outside days, today badge, 2px selection), lists (drawn
     checkbox, strikethrough, separators, accent bar, heading bands),
     prompt as an input field. Iterate by screenshots Fran reviews.
+  - **V2a** DONE 2026-10-13: toolbar (arrow buttons, Today, segmented
+    views, flat shadows) + prompt as an input field; rubric/filter
+    prompt labels fixed.
 
   - **M2** batch 2: double-click row -> title prompt; click group
     heading -> filter; right-click context menu (from the table).

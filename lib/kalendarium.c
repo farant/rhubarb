@@ -2078,7 +2078,7 @@ figura_promptae (
 {
      KalendariumFigurae* contextus;
                  chorda  genus;
-                 chorda  linea;
+                  Fines  campus;
                  chorda  textus;
                  chorda* a;
               character  crudus[KALENDARIUM_PROMPTA];
@@ -2088,35 +2088,45 @@ figura_promptae (
 
     (vacuum)thema;
     contextus = (KalendariumFigurae*)ctx;
-    rectangulum(md, ZEPHYRUM, ZEPHYRUM, c->fines.latitudo,
-        c->fines.altitudo, figura_color_thematis(COLOR_SELECTION),
-        VERUM);
     si (   !contextus || !contextus->m || !prompta_aperta(contextus->m,
             &genus))
     {
         redde;
     }
-    nomen_generis = chorda_aequalis_literis(genus, "nova") ? "new: "
-                  : chorda_aequalis_literis(genus, "nota") ? "note: "
+    nomen_generis = chorda_aequalis_literis(genus, "nova") ? "new:"
+                  : chorda_aequalis_literis(genus, "nota") ? "note:"
+                  : chorda_aequalis_literis(genus, "titulus") ? "title:"
+                  : chorda_aequalis_literis(genus, "rubricae")
+                  ? "rubrics:"
                   : chorda_aequalis_literis(genus,
-                  "titulus") ? "title: "
-                  : "date: ";
+                  "filtrum") ? "filter:"
+                  : "date:";
+    /* V2a: titulus generis, deinde campus (superficies, margo) cum
+     * textu et cursore tenui */
+    mandata_textus(md, IV, (c->fines.altitudo - KALENDARIUM_LINEA) / II,
+        chorda_ex_literis(nomen_generis, md->piscina), ZEPHYRUM,
+        figura_color_thematis(COLOR_TEXT_DIM));
+    campus.x         = IV + ((s32)strlen(nomen_generis) + I)
+                     * KALENDARIUM_LITTERA;
+    campus.y         = I;
+    campus.latitudo  = c->fines.latitudo - campus.x - IV;
+    campus.altitudo  = c->fines.altitudo - II;
+    figura_campum_pingere(md, campus);
     n               = promptae_textus(contextus->m, crudus);
     textus.datum    = (i8*)crudus;
     textus.mensura  = n;
-    linea = chorda_concatenare(chorda_ex_literis(nomen_generis,
-        md->piscina), chorda_transcribere(textus, md->piscina),
-        md->piscina);
-    mandata_textus(md, IV, IV, praecidere(linea, c->fines.latitudo
-        - VIII), ZEPHYRUM, figura_color_thematis(COLOR_TEXT));
+    mandata_textus(md, campus.x + IV, (c->fines.altitudo
+        - KALENDARIUM_LINEA) / II,
+        praecidere(chorda_transcribere(textus,
+        md->piscina), campus.latitudo - VIII), ZEPHYRUM,
+        figura_color_thematis(COLOR_TEXT));
     a = insula_ramus_attributum(&contextus->m->ramus, "prompta_cursor");
     si (!a || !chorda_ut_s32(*a, &cursor) || cursor < ZEPHYRUM)
     {
         cursor = (s32)n;
     }
-    rectangulum(md, IV + ((s32)strlen(nomen_generis) + cursor)
-        * KALENDARIUM_LITTERA, IV, I, KALENDARIUM_LINEA,
-        figura_color_thematis(
+    rectangulum(md, campus.x + IV + cursor * KALENDARIUM_LITTERA - I,
+        campus.y + II, II, campus.altitudo - IV, figura_color_thematis(
         COLOR_CURSOR), VERUM);
 }
 
@@ -2239,8 +2249,8 @@ figura_tituli (
     }
 }
 
-/* <figura/> <purus/> globulus tituli: textus (titulus componentis)
- * centratus; globulus visus currentis fundo selectionis */
+/* <figura/> <purus/> globulus barrae (V2a, instrumenta figura.h):
+ * sagittae, Today, segmenta visus (visus currens electum) */
 interior vacuum
 figura_globuli (
     constans Componens* c,
@@ -2250,7 +2260,8 @@ figura_globuli (
 {
          KalendariumFigurae* contextus;
     constans GlobulusTituli* b;
-                        b32  activus;
+                      Fines  f;
+                        i32  status;
 
     (vacuum)thema;
     contextus = (KalendariumFigurae*)ctx;
@@ -2258,27 +2269,45 @@ figura_globuli (
     {
         redde;
     }
-    activus = FALSUM;
+    /* V2a: sagittae, Today globulus, visus segmenta (PRIMUM / MEDIUM
+     * / ULTIMUM ordine GLOBULI); omnia cum umbra plana */
     per (b = GLOBULI; b->id; b++)
     {
-        si (   chorda_aequalis_literis(c->id, b->id)
-            && (b->visus_proprius & visus_currens(contextus->m)))
+        si (!chorda_aequalis_literis(c->id, b->id))
         {
-            activus = VERUM;
+            perge;
+        }
+        status = FIGURA_UMBRA;
+        si (b->visus_proprius & visus_currens(contextus->m))
+        {
+            status |= FIGURA_ELECTUM;
+        }
+        f.x         = ZEPHYRUM;
+        f.y         = ZEPHYRUM;
+        f.latitudo  = c->fines.latitudo;
+        f.altitudo  = c->fines.altitudo;
+        si (strcmp(b->id, "praecedens") == ZEPHYRUM)
+        {
+            figura_sagittam_pingere(md, f, -I, status);
+        }
+        alioquin si (strcmp(b->id, "sequens") == ZEPHYRUM)
+        {
+            figura_sagittam_pingere(md, f, I, status);
+        }
+        alioquin si (!b->visus_proprius)
+        {
+            figura_globulum_pingere(md, f, c->titulus, status);
+        }
+        alioquin
+        {
+            figura_segmentum_pingere(md, f, c->titulus,
+                b->visus_proprius == VISUS_MENSIS
+                ? FIGURA_SEGMENTUM_PRIMUM
+                : b->visus_proprius == VISUS_AGENDAE
+                ? FIGURA_SEGMENTUM_ULTIMUM : FIGURA_SEGMENTUM_MEDIUM,
+                status);
         }
     }
-    si (activus)
-    {
-        rectangulum(md, ZEPHYRUM, ZEPHYRUM, c->fines.latitudo,
-            c->fines.altitudo, figura_color_thematis(COLOR_SELECTION),
-            VERUM);
-    }
-    mandata_textus(md, (c->fines.latitudo - (s32)c->titulus.mensura
-        * KALENDARIUM_LITTERA) / II, (c->fines.altitudo
-        - KALENDARIUM_LINEA) / II, chorda_transcribere(
-        c->titulus, md->piscina), ZEPHYRUM,
-        figura_color_thematis(activus
-        ? COLOR_TEXT : COLOR_ACCENT_PRIMARY));
 }
 
 interior b32
@@ -2630,12 +2659,14 @@ globulos_disponere (
 {
     constans GlobulusTituli* b;
                   Componens* c;
+            DispositioForma  forma;
                         s32  sinister;
                         s32  dexter;
 
-    sinister  = locum_addere(dp, barra, DISPOSITIO_LINEA,
-        DISPOSITIO_APTA,
-        ZEPHYRUM, DISPOSITIO_APTA, ZEPHYRUM);
+    /* grex sinister: intervallum cellulae unius inter globulos */
+    dispositio_formam_initiare(&forma);
+    forma.intervallum  = I;
+    sinister           = dispositio_addere(dp->d, barra, &forma);
     (vacuum)locum_addere(dp, barra, DISPOSITIO_LINEA,
         DISPOSITIO_CRESCENS,
         ZEPHYRUM, DISPOSITIO_APTA, ZEPHYRUM);
@@ -2726,7 +2757,7 @@ kalendarium_componere (
     forma.spatium_inferum    = I;
     radix_d                  = dispositio_addere(dp.d, -I, &forma);
     barra   = locum_addere(&dp, radix_d, DISPOSITIO_LINEA,
-        DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_FIXA, II);
+        DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_FIXA, III);
     globulos_disponere(m, &dp, barra);
     (vacuum)componentem_locare(&dp, radix_d, "titulus", PARTES_TITULUS,
         DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_FIXA, visus_diei(m)

@@ -387,3 +387,20 @@ flagged it (domesticum: sentinella negativa in functione insignata) once
 contextum_parare made the flow visible. Now s32 with -1; ContextusMandati
 .index and electionem_reficere take s32, and electionem_reficere keeps
 its old meaning explicitly: index -1 or past the end = last row.
+
+## 2026-10-13 — V2a: toolbar and prompt on the V1 helpers
+
+Toolbar: `<` `>` = figura_sagittam_pingere, Today = globulus, Month /
+Day / Agenda = figura_segmentum_pingere (PRIMUM / MEDIUM / ULTIMUM by
+the button's own view), all with FIGURA_UMBRA; the current view's
+segment ELECTUM (purple). Left group has a one-cell gap (its own
+DispositioForma with intervallum); the right group stays contiguous so
+the segments join. The toolbar row grew to 3 cells (buttons 2, top
+aligned) - at 2 the button shadows touched the title text.
+Prompt: kind label in dim text, then an input field (figura_campum_
+pingere) with the text and a 2px COLOR_CURSOR bar. Fixed on the way: the
+label only knew new/note/title and fell through to "date:" for the
+rubric and filter prompts - now "rubrics:" / "filter:" (test).
+Test change: "note: abc" as one string became "note:" + "abc" (label and
+field are drawn separately now).
+Plant: left arrow drawn as a plain button -> red (sagittas_numerare).

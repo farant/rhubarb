@@ -1071,6 +1071,28 @@ reddere (
     redde md;
 }
 
+/* rectangulum plenum COLOR_SUPERFICIES (campus V2a) ? */
+interior b32
+campus_superficiei_adest (
+    Mandata* md)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        constans Mandatum* y;
+
+        y = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   y->genus == MANDATUM_RECTANGULUM && y->impletum
+            && color_thematis_est(y->color, COLOR_SUPERFICIES)
+            && y->fines.altitudo < XX)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
 /* figurae visus diei: titulus, ordines (capsa, electio), notae,
  * prompta */
 interior vacuum
@@ -1126,7 +1148,15 @@ _probare_figuras_diei (
     /* figura promptae in spatio componentis sui pingit */
     CREDO_NON_NIHIL(componens_invenire_per_id(dispensator_arbor(x->d),
         chorda_ex_literis("prompta", c->piscina)));
-    CREDO_VERUM(textus_ullus_continet(md, "note: abc"));
+    /* V2a: titulus generis ante campum, textus in campo */
+    CREDO_VERUM(textus_ullus_continet(md, "note:"));
+    CREDO_VERUM(textus_ullus_continet(md, "abc"));
+    CREDO_VERUM(campus_superficiei_adest(md));
+    /* titulus promptae rubricarum (antea "date:") */
+    effugium(x);
+    clavis(x, 'r');
+    md = reddere(x, c->piscina);
+    CREDO_VERUM(textus_ullus_continet(md, "rubrics:"));
 }
 
 /* visus agendae (A4a): res apertae per rubricas (ordine canonico,
@@ -1474,6 +1504,26 @@ _probare_murem (
     CREDO_VERUM(r && r->perfecta);
 }
 
+/* sagittae (polygona plena, V2a) */
+interior i32
+sagittas_numerare (
+    Mandata* md)
+{
+    i32 i;
+    i32 n;
+
+    n = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        si (((constans Mandatum*)xar_obtinere(md->elementa, i))->genus
+            == MANDATUM_POLYGONUM)
+        {
+            n++;
+        }
+    }
+    redde n;
+}
+
 /* globuli tituli (M1b): < > Today et Month Day Agenda; ictus mandatum
  * nominatum currit; globuli visus currentis fundo selectionis */
 interior b32
@@ -1521,6 +1571,9 @@ _probare_globulos (
     CREDO_NECESSE(ictus_in(x, "hodie", c->piscina));
     d = kalendarium_dies_electus(&x->m);
     CREDO_VERUM(d.mensis == X && d.dies == XIV);
+    /* V2a: sagittae triangula (polygona plena) */
+    md = reddere(x, c->piscina);
+    CREDO_VERUM(sagittas_numerare(md) >= II);
     /* globuli "Month" activi: fundus selectionis et textus */
     md  = reddere(x, c->piscina);
     f   = fines_componentis(x, "visus-mensis", c->piscina);
