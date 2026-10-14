@@ -952,3 +952,127 @@ exact.
   nomina".
 - `activatio_cella` skips the image: "imago nomina".
 - Switch ignored: "imago sine iactura".
+
+## 2026-10-14 - cellae II T5: review fixes (filter scale, caps, image bound)
+
+The T5 review checked ~63k weight sets and ~46k `activatio_cella` cases
+against an independent Fraction oracle (scratchpad, not committed). It
+found one serious bug (H1), two medium (M1, M2), two low (L1, L2) and
+three notes (N1-N3). All were fixed except N2/N3, which stay as notes.
+
+**H1 - the float filter assumed axes near unit scale.** Axis doubles
+came from `_duplex_ex`: 20 decimal PLACES, an absolute error. The filter
+then treated them as relatively accurate (stage-1 margin 1e-15 |v|).
+- An axis around 1e-17 kept ~3 digits: wrong direction, and the true
+  maximum was pruned.
+- At 1e-25 the axis printed as 0. The unit vector became NaN and was
+  pruned by `>=`.
+- When every value interval was garbage, `optimus` stayed -1 with one
+  candidate: cell index -1 + sector, then an out-of-bounds write
+  (SIGBUS in `_separat_ad_k`).
+- Filter-off verdicts were always right; filter-on verdicts were wrong,
+  including `ligata`.
+Fix: `_axis_normata` divides the vector part exactly by its
+largest-magnitude component, compared via `algebraicus_compara` on the
+squares. So |u| is in [1, sqrt 3] and the 20 decimals are a RELATIVE
+error of 1e-19, whatever the axis scale. The filter is scale-invariant
+in u ((v.u)^2/|u|^2), so cells do not change. If normalisation or
+conversion fails, or |u|^2 is not certainly > 0,
+`a->axes_certae = FALSUM`: the filter abstains from axis selection and
+the vector goes exact over all axes. Also:
+- the vector decides only with a real axis (`optimus >= 0`) and a valid
+  tan^2 h;
+- tan^2 h is computed only if a^2's interval is > 0 (underflow guard);
+- stage 1 and the candidate cut keep NaN entries (written as
+  `!(x < y)`).
+The last three are defence in depth: after normalisation they cannot
+fire, so their plants survive (equivalent mutants, see below).
+
+**M1 - huge elements failed the whole judgment.** Parts >= ~1e43 do not
+fit `_duplex_ex`'s 64-byte buffer. `_fluitans` returned NIHIL and
+`_vector_parare` returned FALSUM, so `activatio_iudica` returned FALSUM
+while filter-off judged correctly. Now the failure is remembered per
+element (`fluitantia_parata` = 2) and the vector takes the exact path.
+Huge AXES are covered by the normalisation. Honest limit: at 1e45 the
+filter decides nothing (credo asserts filtro = 0, exacte > 0). A
+relative-precision conversion would lift that; not done.
+
+**M2 - three silent caps of 64.**
+- `termini[64]`: distinct k per activation, then FALSUM forever.
+- Per-point (k, sign) memory: 64 entries, so 32 k on D94.
+- `_primus_k`: the avida scale was cut to its first 64 entries, and the
+  rest were dropped SILENTLY.
+Whether a call failed depended on call history. Now the termini table
+is a growable pointer array (pointers stay stable), per_k just keeps
+doubling, and the avida scale lives in the query arena at full length.
+`CELLAE_K_MAXIMA` is gone.
+
+**L1 - signed overflow.** `activatio_cella` accepted any s64 image
+coefficient. Then `t[m] * epsilon` at -2^63 is undefined behaviour.
+External sums now enter the image only when |coefficient x D| <= 2^62
+(`CELLAE_IMAGO_SUMMA_LIMES`). Catalog sums stay below 2^43 anyway.
+
+**L2 - D94 judged only at k in {6, 12, 24}.** No odd k, so the a < 0
+sector reflection and h = pi at odd k went untested. The reviewer's
+plants pl1 ((k+1)/2), pl7 (real negative only for even k) and pl3
+(both, consistently in filter and exact) survived the whole credo.
+Now:
+- the phase oracle (surdus, cos(j pi/12)) also runs k in {1, 2, 3, 4,
+  8} for n <= 3, asserting odd-k a < 0 cases > 100 and odd-k real
+  negatives > 0;
+- hand cases for sigma, -sigma and -1 at k = 3 and 5;
+- "iudicium filtrum sine iactura" compares ladders {3, 5} and
+  {7, 2, 1} filter on/off for n <= 4.
+
+**N1 - scratch in the activation arena.** `activatio_cella` now runs in
+its own dynamic arena per call (`_activatio_cella_intra`). Image test,
+key, new point and sign of a all go there, and the key is transcribed
+once. `_terminum_comparare` also resets the activation arena around
+`radix_compara`, which works on values only. That scratch leaked on
+every new (point, k) cell, on the iudica path too. No test can see
+either: these are memory-only (equivalent) mutants.
+N2 (k (nd+1) wraps at k ~ 2^31 / (nd+1)) and N3 (the `ligatae`
+statistic differs between filter settings, since it counts the exact
+cells) stay as notes.
+
+**Credo: 4 new sections.** "imago summae limites", "filtrum scalae",
+"filtrum testes recensionis", "k sine limite"; plus the L2 extensions.
+- "filtrum scalae":
+  - zeta_8's own axes x 10^-17, 10^-20, 10^-25, 10^45 as explicit axes;
+  - the catalog x 10^45;
+  - all n = 3 sets, XOR and MAJ, against filter-off at unit scale;
+  - each scaled-axes activation must show filtro > 0, so a filter that
+    silently gives up cannot pass.
+- "filtrum testes recensionis": the reviewer's witnesses (crash1,
+  own-axes 1e-25 / 1e-20), all truth tables for n = 2, 3, k in
+  {1, 2, 3, 4, 6, 12}, D82 and D94, filter on = off. Before the fix
+  both scale sections died with SIGBUS (rc 138).
+- "k sine limite":
+  - one point at 40 k x 2 signs, against a fresh activation per k;
+  - `activatio_iudica` with k = 1..70, filter on = off;
+  - avida with 64 x k = 1 then 6, equal to {1, 6}.
+- Totals: 32 sections plus 1 lentus, 110,245 checks, ~50 s (was 46 s);
+  lentus 18 s, green.
+
+**Plants: 12; 10 red, 2 survive (equivalent).**
+- Axes not normalised (quotient = raw part): "filtrum scalae" (filtro > 0:
+  the |u|^2 guard makes the filter abstain, and the check sees it).
+- `axes_certae` always FALSUM (filter silently gives up): "filtrum sine
+  iactura" (filtro > exacte).
+- Huge element -> FALSUM again: "filtrum scalae".
+- termini cap 64, per-point cap 64, avida scale 64: "k sine limite"
+  (three asserts, one each).
+- External image sums unbounded: "imago summae limites".
+- pl1, pl7 (reviewer): "cellae phasis contra oraculum" (odd k).
+- a < 0 sector (k + 1)/2 in the filter only: the {3, 5} ladder in
+  "iudicium filtrum sine iactura".
+- Survive: `optimus >= 0` guard and NaN-keeping in stage 1. After
+  normalisation every axis interval is finite and > 0, so neither can
+  fire; kept as defence in depth.
+
+**Reviewer re-run.** Rebuilt the review driver on the fixed library:
+0 disagreements on all its witnesses (t_tiny_own 5,400 cases, was
+138/900 wrong; t_scale 1e20/1e43/1e45 with 0 FALSUM refusals;
+crash1 and own_crash exit 0; ovf.in ASan/UBSan clean). The full batches (12 catalog runs x
+D82/D94, 8 random-point runs; ~47k weight sets) also show 0
+disagreements.

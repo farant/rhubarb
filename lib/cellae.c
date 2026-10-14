@@ -500,8 +500,6 @@ catalogus_ex_punctis (
  * Activatio
  * ================================================== */
 
-#define CELLAE_K_MAXIMA 64             /* k distincti in memoria puncti */
-
 #define GENUS_NULLUM    0              /* s = 0 */
 #define GENUS_REALE     1              /* v = 0 */
 #define GENUS_NULLA     2              /* a = 0 */
@@ -522,7 +520,7 @@ nomen structura {
             i32* axes;
             i32  numerus_k;
             i32  capacitas_k;          /* per_k: IV, duplicando */
-         CellaK* per_k;                /* usque ad CELLAE_K_MAXIMA */
+         CellaK* per_k;                /* sine limite (recensio M2) */
             i32  signum_visitationis;  /* separatio: visitatio currens */
             i32  paritas_visitationis;
             i32  signum_visitationis_negati;   /* D94: -s */
@@ -551,8 +549,8 @@ structura Activatio {
                    i32  numerus_axium;
                    b32  truncata;
         TabulaDispersa* puncta;         /* clavis -> Punctum* */
-               Termini  termini[CELLAE_K_MAXIMA];
                    i32  numerus_terminorum;
+                   i32  capacitas_terminorum;
                Piscina* piscina;
                     i8* visum_par;        /* cella: bit paritatis visae */
                    i32* variabilis;       /* cella -> variabilis SAT + 1 */
@@ -570,6 +568,7 @@ structura Activatio {
                                           * habitant: piscina; iudica:
                                           * opus vocationis */
             Intervallum* axes_intervalla;  /* (u, |u|^2) per axem */
+                    b32  axes_certae;
                  duplex* axes_unitae;      /* u / |u| (gradus I scrutinii) */
             Intervallum* valores_axium;    /* scrutinium: valor per axem */
                     i32* reliquae;         /* scrutinium: axes reliquae */
@@ -583,6 +582,8 @@ structura Activatio {
                     b32 imago_utere;
                     i64 numerus_imagine;
                     i64 numerus_algebraice;
+    /* termini S_k per k, crescens (indicatores stabiles) */
+    Termini** termini;
 };
 
 interior constans Algebraicus*
@@ -642,6 +643,9 @@ _clavis_axis (
  * ================================================== */
 
 #define CELLAE_IMAGO_LIMES   ((s64)1 << 40)
+/* summa externa (activatio_cella): |x| <= 2^62, ergo -x in s64 (clavis
+ * canonica negat; recensio L1: -2^63 olim) */
+#define CELLAE_IMAGO_SUMMA_LIMES  ((s64)1 << 62)
 #define CELLAE_IMAGO_CLAVIS  (I + VIII * VIII)   /* octeti */
 
 /* numerus magnus ut s64 cum |x| <= limes (limes 0: s64 quilibet) */
@@ -773,8 +777,8 @@ _imago_clavis (
 }
 
 /* quaternio in imagine: VERUM sse repraesentabilis (omnis coefficiens
- * x D integer in s64) - proprietas VALORIS, non viae; computatio in
- * piscina */
+ * x D integer, |.| <= 2^62) - proprietas VALORIS, non viae; computatio
+ * in piscina */
 interior b32
 _imago_ex_summa (
     constans Activatio* a,
@@ -788,7 +792,8 @@ _imago_ex_summa (
     per (j = ZEPHYRUM; j < VIII; j++)
     {
         si (!_imago_coefficiens(algebraicus_coefficiens(*_pars(s,
-            j / II), j % II, piscina), d, 0, piscina, &t[j]))
+            j / II), j % II, piscina), d, CELLAE_IMAGO_SUMMA_LIMES,
+            piscina, &t[j]))
         {
             redde FALSUM;
         }
@@ -827,24 +832,27 @@ _activatio_nova (
     a->puncta = tabula_dispersa_creare_chorda(piscina, (i32)MMXLVIII);
     a->axes = (Quaternio*)piscina_allocare(piscina,
         (memoriae_index)capacitas_axium * magnitudo(Quaternio));
-    a->catalogus            = catalogus;
-    a->cella                = cella;
-    a->numerus_axium        = ZEPHYRUM;
-    a->truncata             = FALSUM;
-    a->numerus_terminorum   = ZEPHYRUM;
-    a->piscina              = piscina;
-    a->visum_par            = NIHIL;
-    a->variabilis           = NIHIL;
-    a->capacitas_cellarum   = ZEPHYRUM;
-    a->tacta                = NIHIL;
-    a->literae              = NIHIL;
-    a->capacitas_literarum  = ZEPHYRUM;
-    a->visitatio            = ZEPHYRUM;
-    a->filtrum              = VERUM;
+    a->catalogus             = catalogus;
+    a->cella                 = cella;
+    a->numerus_axium         = ZEPHYRUM;
+    a->truncata              = FALSUM;
+    a->termini               = NIHIL;
+    a->numerus_terminorum    = ZEPHYRUM;
+    a->capacitas_terminorum  = ZEPHYRUM;
+    a->piscina               = piscina;
+    a->visum_par             = NIHIL;
+    a->variabilis            = NIHIL;
+    a->capacitas_cellarum    = ZEPHYRUM;
+    a->tacta                 = NIHIL;
+    a->literae               = NIHIL;
+    a->capacitas_literarum   = ZEPHYRUM;
+    a->visitatio             = ZEPHYRUM;
+    a->filtrum               = VERUM;
     a->combinationes = tabula_dispersa_creare_chorda(piscina,
         (i32)MMXLVIII);
     a->piscina_combinationum  = piscina;
     a->axes_intervalla        = NIHIL;
+    a->axes_certae            = FALSUM;
     a->axes_unitae            = NIHIL;
     a->valores_axium          = NIHIL;
     a->reliquae               = NIHIL;
@@ -1052,7 +1060,9 @@ activatio_truncata (
 }
 
 /* S_k(u) = sum_l C(k, 2l+1) (-1)^l u^l: radices tan^2(m pi/k), m = 1 ..
- * (k-1)/2, crescentes (D123) */
+ * (k-1)/2, crescentes (D123). Tabula per k sine limite (recensio M2:
+ * olim LXIV k per activationem, deinde FALSUM); indicatores
+ * stabiles. */
 interior Termini*
 _termini (
     Activatio* a,
@@ -1063,16 +1073,36 @@ _termini (
 
     per (j = ZEPHYRUM; j < a->numerus_terminorum; j++)
     {
-        si (a->termini[j].k == k)
+        si (a->termini[j]->k == k)
         {
-            redde &a->termini[j];
+            redde a->termini[j];
         }
     }
-    si (a->numerus_terminorum >= CELLAE_K_MAXIMA)
+    si (a->numerus_terminorum == a->capacitas_terminorum)
+    {
+              i32 capacitas = a->capacitas_terminorum == ZEPHYRUM ? VIII
+                  : a->capacitas_terminorum * II;
+        Termini** nova = (Termini**)piscina_allocare(a->piscina,
+            (memoriae_index)capacitas * magnitudo(Termini*));
+
+        si (nova == NIHIL)
+        {
+            redde NIHIL;
+        }
+        si (a->numerus_terminorum > ZEPHYRUM)
+        {
+            memcpy(nova, a->termini,
+                (memoriae_index)a->numerus_terminorum
+                * magnitudo(Termini*));
+        }
+        a->termini               = nova;
+        a->capacitas_terminorum  = capacitas;
+    }
+    t = (Termini*)piscina_allocare(a->piscina, magnitudo(Termini));
+    si (t == NIHIL)
     {
         redde NIHIL;
     }
-    t              = &a->termini[a->numerus_terminorum];
     t->k           = k;
     t->numerus     = (k - I) / II;
     t->termini     = NIHIL;
@@ -1124,7 +1154,7 @@ _termini (
             t->fluitantes[m]        = strtod(alveus, NIHIL);
         }
     }
-    a->numerus_terminorum++;
+    a->termini[a->numerus_terminorum++] = t;
     redde t;
 }
 
@@ -1405,8 +1435,15 @@ _terminum_comparare (
             redde VERUM;
         }
     }
-    redde radix_compara(p->tangens, t->termini[m], activatio->piscina,
-        exitus);
+    {
+        /* computatio sola (radices per valorem): refecta */
+        PiscinaNotatio nota = piscina_notare(activatio->piscina);
+                   b32 bene = radix_compara(p->tangens, t->termini[m],
+                       activatio->piscina, exitus);
+
+        piscina_reficere(activatio->piscina, nota);
+        redde bene;
+    }
 }
 
 /* cella puncti ad k (memoria per k et signum in puncto). Punctum est
@@ -1443,10 +1480,6 @@ _cella_puncti (
             exitus->ligatae  = p->per_k[j].ligatae;
             redde VERUM;
         }
-    }
-    si (p->numerus_k >= CELLAE_K_MAXIMA)
-    {
-        redde FALSUM;
     }
     si (p->numerus_k == p->capacitas_k)
     {
@@ -1585,40 +1618,34 @@ _cella_puncti (
     redde VERUM;
 }
 
-b32
-activatio_cella (
+/* activatio_cella in opere vocationis: computationes omnes (imago,
+ * clavis, punctum novum, signum a) in opus; in activatione sola
+ * effecta (punctum, cella) - recensio N1 */
+interior b32
+_activatio_cella_intra (
      Activatio* activatio,
      Quaternio  summa,
            i32  k,
+       Piscina* opus,
          Cella* exitus)
 {
-    Punctum* p;
-        s32  signum = ZEPHYRUM;
+    Punctum* p       = NIHIL;
+        s32  signum  = ZEPHYRUM;
 
-    si (   k < I
-        || quaternio_anulus(summa) != activatio->catalogus->anulus)
-    {
-        redde FALSUM;
-    }
-    p = NIHIL;
     si (activatio->imago != NIHIL && activatio->imago_utere)
     {
         /* repraesentabilis: nomen imaginis (idem punctum ac summae
          * quaestionum); aliter via generalis */
-        PiscinaNotatio nota = piscina_notare(activatio->piscina);
-                   s64 t[VIII];
-                   b32 in_imagine = _imago_ex_summa(activatio,
-                       summa, activatio->piscina, t);
+        s64 t[VIII];
 
-        piscina_reficere(activatio->piscina, nota);
-        si (in_imagine)
+        si (_imago_ex_summa(activatio, summa, opus, t))
         {
             s32 epsilon;
              i8 octeti[CELLAE_IMAGO_CLAVIS];
 
             activatio->numerus_imagine++;
             si (!_punctum_imaginis(activatio, summa, _imago_clavis(t,
-                octeti, &epsilon), epsilon, NIHIL, NIHIL, ZEPHYRUM, &p))
+                octeti, &epsilon), epsilon, opus, NIHIL, ZEPHYRUM, &p))
             {
                 redde FALSUM;
             }
@@ -1627,26 +1654,44 @@ activatio_cella (
     si (p == NIHIL)
     {
         activatio->numerus_algebraice++;
-        p = _punctum(activatio, summa, NIHIL, NIHIL, ZEPHYRUM);
+        p = _punctum(activatio, summa, opus, NIHIL, ZEPHYRUM);
     }
     si (p == NIHIL)
     {
         redde FALSUM;
     }
-    si (activatio->cella == CELLAE_CELLA_D94)
+    si (   activatio->cella == CELLAE_CELLA_D94
+        && !algebraicus_signum(*_pars(summa, ZEPHYRUM), opus, &signum))
     {
-        /* computatio refecta: punctum et cella in memoria = nihil
-         * novi in piscina activationis */
-        PiscinaNotatio nota = piscina_notare(activatio->piscina);
-
-        si (!algebraicus_signum(*_pars(summa, ZEPHYRUM),
-            activatio->piscina, &signum))
-        {
-            redde FALSUM;
-        }
-        piscina_reficere(activatio->piscina, nota);
+        redde FALSUM;
     }
     redde _cella_puncti(activatio, p, k, signum, NIHIL, exitus);
+}
+
+b32
+activatio_cella (
+     Activatio* activatio,
+     Quaternio  summa,
+           i32  k,
+         Cella* exitus)
+{
+    Piscina* opus;
+        b32  bene;
+
+    si (   k < I
+        || quaternio_anulus(summa) != activatio->catalogus->anulus)
+    {
+        redde FALSUM;
+    }
+    opus = piscina_generare_dynamicum("cellae_cella",
+        (memoriae_index)4096);
+    si (opus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    bene = _activatio_cella_intra(activatio, summa, k, opus, exitus);
+    piscina_destruere(opus);
+    redde bene;
 }
 
 
@@ -1775,12 +1820,18 @@ _duplex_ex (
     redde VERUM;
 }
 
-/* elementum i ut duplices (pigre) */
+/* elementum i ut duplices (pigre); NIHIL si non convertibile (pars
+ * >= ~1e43: textus ultra alveum) - semel probatum (II), deinde via
+ * exacta (recensio M1: olim iudicium totum FALSUM) */
 interior constans duplex*
 _fluitans (
     Activatio* a,
           i32  i)
 {
+    si (a->fluitantia_parata[i] == II)
+    {
+        redde NIHIL;
+    }
     si (!a->fluitantia_parata[i])
     {
         i32 j;
@@ -1790,6 +1841,7 @@ _fluitans (
             si (!_duplex_ex(*_pars(a->catalogus->elementa[i], j),
                 a->piscina, &a->fluitantia[i * IV + j]))
             {
+                a->fluitantia_parata[i] = II;
                 redde NIHIL;
             }
         }
@@ -2059,7 +2111,71 @@ nomen structura {
             i32  cella;            /* cella fluitans ad k currentem */
 } Vector;
 
-/* intervalla axium et normarum (semel per activationem) */
+/* axis exacte normata ut duplices: partes vectoriae per partem
+ * maximam (|.|, exacte comparatam) divisae, ergo |u| in [1, sqrt 3] et
+ * XX decimales errorem RELATIVUM <= 1e-19 dant, scala axis quavis.
+ * FALSUM si pars vectoria nulla aut conversio deficit. Computatio in
+ * piscina (vocans reficit). */
+interior b32
+_axis_normata (
+    Quaternio  q,
+      Piscina* piscina,
+       duplex* u)
+{
+    i32 optima = ZEPHYRUM;
+    i32 m;
+
+    per (m = I; m < IV; m++)
+    {
+        constans Algebraicus* x = _pars(q, m);
+                         s32  signum;
+
+        si (algebraicus_est_nullum(*x))
+        {
+            perge;
+        }
+        si (optima == ZEPHYRUM)
+        {
+            optima = m;
+            perge;
+        }
+        si (!algebraicus_compara(algebraicus_multiplica(*x, *x,
+            piscina),
+            algebraicus_multiplica(*_pars(q, optima), *_pars(q, optima),
+            piscina), piscina, &signum))
+        {
+            redde FALSUM;
+        }
+        si (signum > ZEPHYRUM)
+        {
+            optima = m;
+        }
+    }
+    si (optima == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    u[ZEPHYRUM] = 0.0;
+    per (m = I; m < IV; m++)
+    {
+        Algebraicus quotiens;
+
+        si (   !algebraicus_divide(*_pars(q, m), *_pars(q, optima),
+                piscina, &quotiens)
+            || !_duplex_ex(quotiens, piscina, &u[m]))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* intervalla axium et normarum (semel per activationem). Axes ante
+ * conversionem normatae (_axis_normata; recensio H1: axes parvae olim
+ * in XX decimalibus directionem falsam aut NaN dabant, maximum verum
+ * praetermissum). Normatio deficiens aut |u|^2 non certe positivum:
+ * axes_certae FALSUM, filtrum axes non eligit (via exacta, axes
+ * omnes); FALSUM solum si allocatio. */
 interior b32
 _axes_intervalla (
     Activatio* a)
@@ -2083,34 +2199,37 @@ _axes_intervalla (
     {
         redde FALSUM;
     }
+    a->axes_certae = VERUM;
     per (j = ZEPHYRUM; j < a->numerus_axium; j++)
     {
-             duplex  u[IV];
-        Intervallum* x = &a->axes_intervalla[j * IV];
-                i32  m;
+                duplex  u[IV];
+                duplex  norma;
+           Intervallum* x     = &a->axes_intervalla[j * IV];
+        PiscinaNotatio  nota  = piscina_notare(a->piscina);
+                   b32  normata;
 
         /* ex axe ipso (axes externi elementa catalogi non sunt) */
-        u[ZEPHYRUM] = 0.0;
-        per (m = I; m < IV; m++)
+        normata = _axis_normata(a->axes[j], a->piscina, u);
+        piscina_reficere(a->piscina, nota);
+        si (!normata)
         {
-            si (!_duplex_ex(*_pars(a->axes[j], m), a->piscina, &u[m]))
-            {
-                redde FALSUM;
-            }
+            a->axes_certae = FALSUM;
+            redde VERUM;
         }
         x[ZEPHYRUM]  = _iv_elementi(u[I]);
         x[I]         = _iv_elementi(u[II]);
         x[II]        = _iv_elementi(u[III]);
         x[III]      = _iv_adde(_iv_adde(_iv_quadratum(x[ZEPHYRUM]),
             _iv_quadratum(x[I])), _iv_quadratum(x[II]));
+        norma = sqrt(u[I] * u[I] + u[II] * u[II] + u[III] * u[III]);
+        si (!(x[III].infra > 0.0) || !(norma > 0.0))
         {
-            duplex norma = sqrt(u[I] * u[I] + u[II] * u[II]
-                + u[III] * u[III]);
-
-            a->axes_unitae[j * III]       = u[I] / norma;
-            a->axes_unitae[j * III + I]   = u[II] / norma;
-            a->axes_unitae[j * III + II]  = u[III] / norma;
+            a->axes_certae = FALSUM;
+            redde VERUM;
         }
+        a->axes_unitae[j * III]       = u[I] / norma;
+        a->axes_unitae[j * III + I]   = u[II] / norma;
+        a->axes_unitae[j * III + II]  = u[III] / norma;
     }
     redde VERUM;
 }
@@ -2159,7 +2278,7 @@ _vector_parare (
         e = _fluitans(a, pondera[j]);
         si (e == NIHIL)
         {
-            redde FALSUM;
+            redde VERUM;               /* extra duplices: exacte */
         }
         per (m = ZEPHYRUM; m < IV; m++)
         {
@@ -2182,9 +2301,25 @@ _vector_parare (
     }
     x->signum_fluitans = partes[ZEPHYRUM].infra
         > 0.0 ? (s32)I : -(s32)I;
+    {
+        /* a^2 > 0 certe (a 0 non continet; nisi underflow) */
+        Intervallum a2 = _iv_quadratum(partes[ZEPHYRUM]);
+
+        si (a2.infra > 0.0)
+        {
+            x->tangens = _iv_divide_positivo(_iv_adde(_iv_adde(
+                _iv_quadratum(partes[I]), _iv_quadratum(partes[II])),
+                _iv_quadratum(partes[III])), a2);
+            x->tangens_validum = VERUM;
+        }
+    }
     si (!_axes_intervalla(a))
     {
         redde FALSUM;
+    }
+    si (!a->axes_certae)
+    {
+        redde VERUM;                   /* axes incertae: exacte */
     }
     /* alvei activationis (intra vocationem solum; nulla reentrantia) */
     valores = a->valores_axium;
@@ -2231,7 +2366,8 @@ _vector_parare (
         }
         per (j = ZEPHYRUM; j < a->numerus_axium; j++)
         {
-            si (valores[j].infra >= maximum_f - delta)
+            /* NaN manet (numquam certe infra) */
+            si (!(valores[j].infra < maximum_f - delta))
             {
                 reliquae[numerus_reliquarum++] = j;
             }
@@ -2258,7 +2394,7 @@ _vector_parare (
          * exacta transcribuntur (vector eas post vocationem tenet) */
         per (m = ZEPHYRUM; m < numerus_reliquarum; m++)
         {
-            si (valores[reliquae[m]].supra >= optimum_infra)
+            si (!(valores[reliquae[m]].supra < optimum_infra))
             {
                 reliquae[x->numerus_candidatarum++] = reliquae[m];
             }
@@ -2275,12 +2411,10 @@ _vector_parare (
                 x->numerus_candidatarum * magnitudo(i32));
         }
     }
-    x->tangens = _iv_divide_positivo(_iv_adde(_iv_adde(_iv_quadratum(
-        partes[I]), _iv_quadratum(partes[II])),
-        _iv_quadratum(partes[III])),
-        _iv_quadratum(partes[ZEPHYRUM]));
-    x->tangens_validum = VERUM;
-    si (x->numerus_candidatarum == I)
+    /* decisus solum cum axis vera inventa (optimus >= 0; olim -1 ->
+     * cella extra alveum) et tan^2 h certum */
+    si (   x->numerus_candidatarum == I && optimus >= ZEPHYRUM
+        && x->tangens_validum)
     {
         x->fluitans_decisus  = VERUM;
         x->axis              = (i32)optimus;
@@ -3834,19 +3968,26 @@ _primus_k (
                Piscina* opus,
                    i32* k)
 {
-               i32 scala[CELLAE_K_MAXIMA];
-               i32 numerus = ZEPHYRUM;
-               i32 index_k;
-    PiscinaNotatio nota;
-               b32 bene;
+               i32* scala;
+               i32  numerus = ZEPHYRUM;
+               i32  index_k;
+    PiscinaNotatio  nota;
+               b32  bene;
 
     *k = ZEPHYRUM;
     si (!_separat_validum(a, pondera, n, q->modus))
     {
         redde FALSUM;
     }
-    per (index_k = ZEPHYRUM; index_k < q->numerus_k
-        && numerus < CELLAE_K_MAXIMA; index_k++)
+    /* scala tota (recensio M2: olim LXIV primi, ceteri omissi) */
+    nota   = piscina_notare(opus);
+    scala  = (i32*)piscina_allocare(opus, (memoriae_index)q->numerus_k
+        * magnitudo(i32));
+    si (scala == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (index_k = ZEPHYRUM; index_k < q->numerus_k; index_k++)
     {
         si (_k_permissus(a, q, q->scala_k[index_k]))
         {
@@ -3855,11 +3996,11 @@ _primus_k (
     }
     si (numerus == ZEPHYRUM)
     {
+        piscina_reficere(opus, nota);
         redde VERUM;
     }
     /* opus quaestionis reficitur (alvei manent: nulla liberatio per
      * copiam) */
-    nota = piscina_notare(opus);
     bene = _separat_scala(a, pondera, n, scala, numerus, q->modus, opus,
         k);
     piscina_reficere(opus, nota);

@@ -256,6 +256,18 @@ Each task follows the house cycle:
   sections, 8 plants red.)*
 - **T5. Review** (an independent reviewer with its own oracle), then
   fixes.
+  *(2026-10-14, done: an independent Fraction oracle over ~63k weight
+  sets and ~46k cells found one serious bug: the float filter took the
+  axis doubles as relatively accurate, so tiny axes gave a NaN or the
+  wrong direction, wrong verdicts and an out-of-bounds write. Fixed by
+  normalising each axis exactly before converting it; when a value
+  can't be converted, the vector takes the exact path (the filter
+  abstains, it never gives FALSUM). Also fixed: the silent caps of
+  64 k (termini, per-point memory, avida scale); external image sums
+  bounded at 2^62 (the UB at -2^63); D94 now judged at odd k (k | 24
+  oracle and ladders). 4 new credo sections; 10 plants red, 2
+  defence-in-depth guards are equivalent mutants. The reviewer's
+  witnesses now show 0 disagreements.)*
 - **T6. P1** as a demo, with its own plan for Fran's approval first.
   That plan settles, among other things:
   - which group-free table;

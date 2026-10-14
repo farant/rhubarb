@@ -135,7 +135,8 @@ catalogus_ex_punctis (
  * polynomii t^2 - Tr t + N, termini tan^2(m pi/k) radices S_k(u) = sum
  * C(k, 2l+1) (-1)^l u^l per POSITIONEM (radices). Aliter FALSUM.
  * Memoria cellarum per punctum exactum (s et -s idem) in piscina
- * activationis.
+ * activationis. Nullus limes k (k distincti, k per punctum, scala
+ * quaestionis): memoria crescit (cellae II T5).
  * ================================================== */
 
 nomen structura Activatio Activatio;
@@ -393,7 +394,10 @@ activatio_avida (
  * probant, cella decisa est et sine paritate (paritas aequalitas exacta
  * est, quam intervallum numquam excludit). Aliter via exacta (axes
  * candidatae solae si filtrum eas angustavit). Sine iactura: verdicta
- * eadem ac sine filtro (probatur).
+ * eadem ac sine filtro (probatur). Axes ante conversionem exacte
+ * normatae (pars maxima 1): scala axium quaevis. Elementum quod duplex
+ * XX decimalium non capit (|pars| >= ~1e43): filtrum abstinet, via
+ * exacta (statistica: filtro 0) - numquam FALSUM, numquam aestimatum.
  * ================================================== */
 
 nomen structura {
@@ -418,7 +422,7 @@ activatio_filtrum (
  * idem); numeri algebraici solum pro puncto novo. Coefficiens maior aut
  * D extra s64: nulla imago, via algebraica (statistica: imagine 0).
  * activatio_cella summam repraesentabilem (omnis coefficiens x D
- * integer in s64) per imaginem quoque nominat: idem valor, idem
+ * integer, |.| <= 2^62) per imaginem quoque nominat: idem valor, idem
  * punctum. Ordinarie VERUM; FALSUM viam algebraicam priorem reddit
  * (probationis causa: verdicta eadem). Commutatio inter vocationes
  * licet; idem valor tum puncta duo habere potest (unum per nomen),
