@@ -6,7 +6,8 @@
  *   ictus extra subarborem DIALOGUS rami - in eodem organo consumitur,
  *   in alio transit; ictus ad actionem domini campi (aperiens) exemptus
  *   (ipse commutat);
- *   actio successa componentis 'claudit'.
+ *   actio successa componentis 'claudit' - per PRESSIONEM (muris aut
+ *   clavis) solum; motus consumptus (illuminatio) non claudit.
  * Assumptio expressa: popover unus per organum (DIALOGUS = intus). */
 
 #ifndef DIMISSIO_H

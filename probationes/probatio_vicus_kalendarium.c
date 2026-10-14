@@ -342,6 +342,14 @@ _probare_elenchum (
     locale.x  = r->fines.latitudo / II;
     locale.y  = r->fines.altitudo / II;
     schirmus  = manus_ludus_ad_schirmum(m, r, locale);
+    /* motus super rem: illuminat, menu manet (dimissio post: solum
+     * pressio claudit - menu sub muris olim evanescebat, Franus
+     * 10-14) */
+    CREDO_VERUM(manus_ludus_movere(m, schirmus.x, schirmus.y));
+    dispensator_recomponere(x->app.d);
+    CREDO_NON_NIHIL(manus_ludus_invenire(m, "#elenchus"));
+    a = insula_ramus_attributum(&k->ramus, "elenchus_electa");
+    CREDO_VERUM(a && chorda_aequalis_literis(*a, "0"));
     CREDO_VERUM(manus_ludus_premere_ad(m, schirmus.x, schirmus.y));
     dispensator_recomponere(x->app.d);
     CREDO_NIHIL(manus_ludus_invenire(m, "#elenchus"));
