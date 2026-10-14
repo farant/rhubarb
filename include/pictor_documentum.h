@@ -143,6 +143,9 @@ nomen structura {
                                                     * perspicuum */
     character sigillum[PICTOR_GLUTINATIO_MODI][SIGILLUM_HEX_MENSURA];
                                     /* identitas imaginis praevisionis */
+           i8* larva;      /* latitudo x altitudo: 1 = modus ALTER hic
+                            * (radendo, Franus 2026-10-13); praevisio
+                            * [m] = larva ? indices alterius : [m] */
 } PictorGlutinatio;
 
 nomen structura {
@@ -259,7 +262,8 @@ pictor_documentum_glutinationem_parare (
     PictorDocumentum* doc,
       constans Imago* fons);
 
-/* modus electus in stratum novum supra 'supra'; pendens finitur.
+/* modus electus (per pixelum: larva ? alter : electus) in stratum
+ * novum supra 'supra'; pendens finitur.
  * Redde id strati aut 0 (tunc pendens manet) */
 s32
 pictor_documentum_glutinationem_confirmare (
@@ -270,6 +274,22 @@ pictor_documentum_glutinationem_confirmare (
 vacuum
 pictor_documentum_glutinationem_abicere (
     PictorDocumentum* doc);
+
+/* radere (Franus 2026-10-13): discus diametri n (ut penicillus) per
+ * segmentum (x0, y0) - (x1, y1) coordinatis documenti in larvam;
+ * restituere FALSUM = modum alterum revelat, VERUM = electum reponit.
+ * Mutato A/B larva manet (vice versa); praevisiones ambae ad pixela
+ * tacta renovantur; acta intacta. Extra glutinationem nihil. Redde
+ * VERUM si pixelum ullum mutatum */
+b32
+pictor_documentum_glutinationem_radere (
+    PictorDocumentum* doc,
+                 s32  x0,
+                 s32  y0,
+                 s32  x1,
+                 s32  y1,
+                 s32  n,
+                 b32  restituere);
 
 /* strata ordine (imum primum); NIHIL si index extra */
 constans PictorStratum*

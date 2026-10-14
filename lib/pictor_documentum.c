@@ -1591,6 +1591,28 @@ pictor_documentum_imaginem_inserere (
     redde id;
 }
 
+/* praevisio pixeli k in modo utroque: larva ? alter : ipse (pixela
+ * ut imaginem_applicare ea in stratum ponit, perspicuum = 0) */
+interior vacuum
+praevisionem_renovare (
+    PictorGlutinatio* g,
+                 i32  k)
+{
+    i32 m;
+     i8 index;
+    i32 pixelum;
+
+    per (m = ZEPHYRUM; m < PICTOR_GLUTINATIO_MODI; m++)
+    {
+        index = g->larva[k]
+            ? g->indices[(PICTOR_GLUTINATIO_MODI - I) - m][k]
+            : g->indices[m][k];
+        pixelum = index >= XVI ? ZEPHYRUM
+            : color_ad_pixelum(color_ex_palette((i32)index));
+        memcpy(g->praevisio[m].pixela + k * IV, &pixelum, IV);
+    }
+}
+
 b32
 pictor_documentum_glutinationem_parare (
     PictorDocumentum* doc,
@@ -1628,8 +1650,7 @@ pictor_documentum_glutinationem_parare (
     g.altitudo  = scalata.altitudo;
     per (m = ZEPHYRUM; m < PICTOR_GLUTINATIO_MODI; m++)
     {
-        Sigillum  s;
-              i8* q;
+        Sigillum s;
 
         si (!df[m].successus || !df[m].indices)
         {
@@ -1647,16 +1668,21 @@ pictor_documentum_glutinationem_parare (
         {
             redde FALSUM;
         }
-        q = g.praevisio[m].pixela;
-        per (k = ZEPHYRUM; k < g.latitudo * g.altitudo; k++)
-        {
-            i32 pixelum = g.indices[m][k] >= XVI ? ZEPHYRUM
-                : color_ad_pixelum(color_ex_palette((i32)g.indices[m][k]));
-            memcpy(q + k * IV, &pixelum, IV);
-        }
         s = sigillum_computare(g.indices[m],
             (memoriae_index)(g.latitudo * g.altitudo));
         sigillum_hex(&s, g.sigillum[m]);
+    }
+    /* larva vacua: praevisio [m] = indices [m] */
+    g.larva = (i8*)piscina_allocare(doc->piscina,
+        (memoriae_index)(g.latitudo * g.altitudo));
+    si (!g.larva)
+    {
+        redde FALSUM;
+    }
+    memset(g.larva, ZEPHYRUM, (size_t)(g.latitudo * g.altitudo));
+    per (k = ZEPHYRUM; k < g.latitudo * g.altitudo; k++)
+    {
+        praevisionem_renovare(&g, k);
     }
     g.pendens        = VERUM;
     doc->glutinatio  = g;
@@ -1669,15 +1695,32 @@ pictor_documentum_glutinationem_confirmare (
     PictorGlutinatioModus  modus,
                       s32  supra)
 {
-    s32 id;
+    constans PictorGlutinatio* g;
+                          s32  id;
+                           i8* mixta;
+                          i32  k;
 
     si (   !doc || !doc->glutinatio.pendens || (s32)modus < ZEPHYRUM
         || (s32)modus >= (s32)PICTOR_GLUTINATIO_MODI)
     {
         redde ZEPHYRUM;
     }
-    id = pictor_documentum_imaginem_inserere(doc,
-        doc->glutinatio.indices[modus], doc->glutinatio.latitudo,
+    /* per pixelum: larva ? alter : electus */
+    g      = &doc->glutinatio;
+    mixta  = (i8*)piscina_allocare(doc->piscina,
+        (memoriae_index)(g->latitudo * g->altitudo));
+    si (!mixta)
+    {
+        redde ZEPHYRUM;
+    }
+    per (k = ZEPHYRUM; k < g->latitudo * g->altitudo; k++)
+    {
+        mixta[k] = g->larva[k]
+            ? g->indices[(PICTOR_GLUTINATIO_MODI - I) - (i32)modus][k]
+            : g->indices[modus][k];
+    }
+    id = pictor_documentum_imaginem_inserere(doc, mixta,
+        doc->glutinatio.latitudo,
         doc->glutinatio.altitudo, doc->glutinatio.x, doc->glutinatio.y,
         supra);
     si (id != ZEPHYRUM)
@@ -1695,6 +1738,82 @@ pictor_documentum_glutinationem_abicere (
     {
         memset(&doc->glutinatio, ZEPHYRUM, magnitudo(doc->glutinatio));
     }
+}
+
+/* radere: discus in larvam (vide caput) */
+nomen structura {
+    PictorGlutinatio* g;
+                 s32  n;
+                  i8  valor;      /* 1 revelat, 0 reponit */
+                 b32  mutatum;
+} Rasura;
+
+interior vacuum
+rasuram_imprimere (
+       s32  cx,
+       s32  cy,
+    vacuum* ctx)
+{
+              Rasura* r;
+    PictorGlutinatio* g;
+                 s32  i;
+                 s32  j;
+                 s32  x;
+                 s32  y;
+                 i32  k;
+
+    r = (Rasura*)ctx;
+    g = r->g;
+    per (j = ZEPHYRUM; j < r->n; j++)
+    {
+        y = cy - r->n / II + j - g->y;
+        si (y < ZEPHYRUM || y >= (s32)g->altitudo)
+        {
+            perge;
+        }
+        per (i = ZEPHYRUM; i < r->n; i++)
+        {
+            x = cx - r->n / II + i - g->x;
+            si (   x < ZEPHYRUM || x >= (s32)g->latitudo
+                || !pictor_disci_pixelum(r->n, i, j))
+            {
+                perge;
+            }
+            k = (i32)y * g->latitudo + (i32)x;
+            si (g->larva[k] != r->valor)
+            {
+                g->larva[k] = r->valor;
+                praevisionem_renovare(g, k);
+                r->mutatum = VERUM;
+            }
+        }
+    }
+}
+
+b32
+pictor_documentum_glutinationem_radere (
+    PictorDocumentum* doc,
+                 s32  x0,
+                 s32  y0,
+                 s32  x1,
+                 s32  y1,
+                 s32  n,
+                 b32  restituere)
+{
+    Rasura r;
+
+    si (   !doc || !doc->glutinatio.pendens || !doc->glutinatio.larva
+        || n < I)
+    {
+        redde FALSUM;
+    }
+    r.g        = &doc->glutinatio;
+    r.n        = n;
+    r.valor    = restituere ? (i8)ZEPHYRUM : (i8)I;
+    r.mutatum  = FALSUM;
+    rasuram_imprimere(x0, y0, &r);
+    pictor_lineam_ambulare(x0, y0, x1, y1, rasuram_imprimere, &r);
+    redde r.mutatum;
 }
 
 constans PictorStratum*

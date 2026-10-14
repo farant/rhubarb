@@ -6,7 +6,10 @@
  * praevisio RGBA = pixela strati futuri, sigilla diversa. confirmare:
  * stratum novum modi electi, revocatio una, reapertio eadem. abicere:
  * nihil in actis. parare iterum: prior abicitur; fons vacua: nihil
- * mutatur.
+ * mutatur. radere (Franus 2026-10-13): larva "alterum hic" - discus
+ * per segmentum alterum modum in praevisione UTRAQUE revelat (A/B
+ * mutato larva manet: vice versa), restituere reponit, acta intacta,
+ * extra glutinationem nihil; confirmare per pixelum miscet.
  */
 #include "postulata_posix.h"
 #include "latina.h"
@@ -439,6 +442,251 @@ _sectio_figura (
     (vacuum)vol;
 }
 
+/* pixelum praevisionis ex indice (0xFF -> 0 perspicuum) */
+interior i32
+_pixelum_indicis (
+    i8 index)
+{
+    redde index >= XVI ? ZEPHYRUM
+        : (i32)color_ad_pixelum(color_ex_palette((i32)index));
+}
+
+interior i32
+_praevisio_pixelum (
+    constans PictorGlutinatio* g,
+                          i32  modus,
+                          i32  k)
+{
+    redde ((constans i32*)(constans vacuum*)g->praevisio[modus].pixela)
+        [k];
+}
+
+/* index k glutinationis (non perspicuum) ubi A et B different, longe
+ * a marginibus (discus XI totus intus) */
+interior s32
+_k_diversum (
+    constans PictorGlutinatio* g)
+{
+    i32 k;
+    i32 x;
+    i32 y;
+
+    per (k = ZEPHYRUM; k < g->latitudo * g->altitudo; k++)
+    {
+        x = k % g->latitudo;
+        y = k / g->latitudo;
+        si (   x >= XX && y >= XX && x + XX < g->latitudo
+            && y + XX < g->altitudo
+            && g->indices[PICTOR_GLUTINATIO_ATKINSON][k] < XVI
+            && g->indices[PICTOR_GLUTINATIO_ATKINSON][k]
+                != g->indices[PICTOR_GLUTINATIO_EXEMPLARIA][k])
+        {
+            redde (s32)k;
+        }
+    }
+    redde -I;
+}
+
+interior vacuum
+_sectio_radere (
+    CredoContextus* c)
+{
+             Volumen* vol;
+    PictorDocumentum* doc  = _documentum(c, &vol);
+               Imago  im   = _imago_ficta(c->piscina);
+    PictorGlutinatio* g;
+                 s32  k;
+                 s32  cx;
+                 s32  cy;
+                 s32  dx;
+                 s32  dy;
+                 s64  finis;
+                 i32  revelata;
+                 i32  mala;
+                 i32  j;
+
+    CREDO_NECESSE_NON_NIHIL(doc);
+    /* sine pendente: nihil */
+    CREDO_FALSUM(pictor_documentum_glutinationem_radere(doc, C, C, C, C,
+        V, FALSUM));
+    CREDO_NECESSE(pictor_documentum_glutinationem_parare(doc, &im));
+    g      = &doc->glutinatio;
+    finis  = pictor_documentum_finis(doc);
+    CREDO_NECESSE_NON_NIHIL(g->larva);
+    k = _k_diversum(g);
+    CREDO_NECESSE(k >= ZEPHYRUM);
+    cx = g->x + k % (s32)g->latitudo;
+    cy = g->y + k / (s32)g->latitudo;
+
+    /* discus XI in puncto uno: centrum revelat alterum in UTRAQUE */
+    CREDO_VERUM(pictor_documentum_glutinationem_radere(doc, cx, cy, cx,
+        cy, XI, FALSUM));
+    CREDO_AEQUALIS_I32((i32)g->larva[k], I);
+    CREDO_AEQUALIS_I32(_praevisio_pixelum(g,
+        PICTOR_GLUTINATIO_EXEMPLARIA,
+        (i32)k),
+        _pixelum_indicis(g->indices[PICTOR_GLUTINATIO_ATKINSON][k]));
+    CREDO_AEQUALIS_I32(_praevisio_pixelum(g, PICTOR_GLUTINATIO_ATKINSON,
+        (i32)k),
+        _pixelum_indicis(g->indices[PICTOR_GLUTINATIO_EXEMPLARIA][k]));
+    /* acta intacta */
+    CREDO_VERUM(pictor_documentum_finis(doc) == finis);
+    /* forma: pixela larvae = discus XI exacte (pictor_disci_pixelum) */
+    revelata  = ZEPHYRUM;
+    mala      = ZEPHYRUM;
+    per (j = ZEPHYRUM; j < g->latitudo * g->altitudo; j++)
+    {
+        dx = (s32)(j % g->latitudo) + g->x - (cx - XI / II);
+        dy = (s32)(j / g->latitudo) + g->y - (cy - XI / II);
+        si (g->larva[j])
+        {
+            revelata++;
+        }
+        si ((g->larva[j] != ZEPHYRUM) != pictor_disci_pixelum(XI, dx,
+            dy))
+        {
+            mala++;
+        }
+        /* praevisio B ubique = larva ? A : B */
+        si (_praevisio_pixelum(g, PICTOR_GLUTINATIO_EXEMPLARIA, j)
+            != _pixelum_indicis(g->larva[j]
+                ? g->indices[PICTOR_GLUTINATIO_ATKINSON][j]
+                : g->indices[PICTOR_GLUTINATIO_EXEMPLARIA][j]))
+        {
+            mala++;
+        }
+    }
+    CREDO_AEQUALIS_I32(mala, ZEPHYRUM);
+    CREDO_VERUM(revelata > LXXX && revelata < CXXI);
+    /* iterum idem: nihil novi */
+    CREDO_FALSUM(pictor_documentum_glutinationem_radere(doc, cx, cy, cx,
+        cy, XI, FALSUM));
+
+    /* restituere: reponit */
+    CREDO_VERUM(pictor_documentum_glutinationem_radere(doc, cx, cy, cx,
+        cy, XI, VERUM));
+    mala = ZEPHYRUM;
+    per (j = ZEPHYRUM; j < g->latitudo * g->altitudo; j++)
+    {
+        si (   g->larva[j]
+            || _praevisio_pixelum(g, PICTOR_GLUTINATIO_EXEMPLARIA, j)
+                != _pixelum_indicis(
+                    g->indices[PICTOR_GLUTINATIO_EXEMPLARIA][j]))
+        {
+            mala++;
+        }
+    }
+    CREDO_AEQUALIS_I32(mala, ZEPHYRUM);
+
+    /* segmentum: discus I per lineam - pixela omnia lineae */
+    CREDO_VERUM(pictor_documentum_glutinationem_radere(doc, cx - X, cy,
+        cx + X, cy, I, FALSUM));
+    revelata = ZEPHYRUM;
+    per (j = ZEPHYRUM; j < g->latitudo * g->altitudo; j++)
+    {
+        si (g->larva[j])
+        {
+            revelata++;
+            CREDO_AEQUALIS_S32((s32)(j / g->latitudo) + g->y, cy);
+        }
+    }
+    CREDO_AEQUALIS_I32(revelata, XXI);
+    CREDO_VERUM(pictor_documentum_finis(doc) == finis);
+}
+
+/* extra glutinationem nihil; discus in margine praeciditur */
+interior vacuum
+_sectio_radere_margines (
+    CredoContextus* c)
+{
+             Volumen* vol;
+    PictorDocumentum* doc  = _documentum(c, &vol);
+               Imago  im   = _imago_ficta(c->piscina);
+    PictorGlutinatio* g;
+                 i32  revelata;
+                 i32  j;
+
+    CREDO_NECESSE_NON_NIHIL(doc);
+    CREDO_NECESSE(pictor_documentum_glutinationem_parare(doc, &im));
+    g = &doc->glutinatio;
+    /* imago C x L in CDLXXX: y = CXX, supra eam nihil */
+    CREDO_NECESSE(g->y > XX);
+    CREDO_FALSUM(pictor_documentum_glutinationem_radere(doc, C, V, CC,
+        V,
+        IX, FALSUM));
+    CREDO_FALSUM(pictor_documentum_glutinationem_radere(doc, -L, -L, -L,
+        -L, IX, FALSUM));
+    /* centrum in margine summo: dimidium disci intus */
+    CREDO_VERUM(pictor_documentum_glutinationem_radere(doc, C, g->y, C,
+        g->y, IX, FALSUM));
+    revelata = ZEPHYRUM;
+    per (j = ZEPHYRUM; j < g->latitudo * g->altitudo; j++)
+    {
+        si (g->larva[j])
+        {
+            revelata++;
+            CREDO_VERUM((s32)(j / g->latitudo) <= IV);
+        }
+    }
+    CREDO_VERUM(revelata > XX && revelata < L);
+}
+
+/* confirmare per pixelum: larva ? alter : electus - pro B et A */
+interior vacuum
+_sectio_confirmare_larva (
+    CredoContextus* c)
+{
+    i32 modus;
+
+    per (modus = ZEPHYRUM; modus < (i32)PICTOR_GLUTINATIO_MODI; modus++)
+    {
+                       Volumen* vol;
+              PictorDocumentum* doc;
+                         Imago  im   = _imago_ficta(c->piscina);
+              PictorGlutinatio  g;
+                           s32  k;
+                           s32  cx;
+                           s32  cy;
+        constans PictorStratum* s;
+                           i32  j;
+                           i32  mala;
+
+        _purgare(c);
+        _parare(c);
+        doc = _documentum(c, &vol);
+        CREDO_NECESSE_NON_NIHIL(doc);
+        CREDO_NECESSE(pictor_documentum_glutinationem_parare(doc, &im));
+        k = _k_diversum(&doc->glutinatio);
+        CREDO_NECESSE(k >= ZEPHYRUM);
+        cx = doc->glutinatio.x + k % (s32)doc->glutinatio.latitudo;
+        cy = doc->glutinatio.y + k / (s32)doc->glutinatio.latitudo;
+        CREDO_VERUM(pictor_documentum_glutinationem_radere(doc, cx - XX,
+            cy, cx + XX, cy + V, VII, FALSUM));
+        g = doc->glutinatio;   /* indices et larva in piscina manent */
+        CREDO_AEQUALIS_S32(pictor_documentum_glutinationem_confirmare(doc,
+            (PictorGlutinatioModus)modus, I), II);
+        s = pictor_documentum_stratum(doc, I);
+        CREDO_NECESSE_NON_NIHIL(s);
+        mala = ZEPHYRUM;
+        per (j = ZEPHYRUM; j < g.latitudo * g.altitudo; j++)
+        {
+            i8 index = g.larva[j]
+                ? g.indices[(PICTOR_GLUTINATIO_MODI - I)
+                    - (i32)modus][j]
+                : g.indices[modus][j];
+            si ((i32)tabula_pixelorum_obtinere_pixelum(s->pixela,
+                    (i32)(g.x + (s32)(j % g.latitudo)),
+                    (i32)(g.y + (s32)(j / g.latitudo)))
+                != _pixelum_indicis(index))
+            {
+                mala++;
+            }
+        }
+        CREDO_AEQUALIS_I32(mala, ZEPHYRUM);
+        CREDO_VERUM(g.larva[k] != ZEPHYRUM);
+    }
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "parare", _sectio_parare, _parare, _purgare, NIHIL, NIHIL },
     { "confirmare exemplaria", _sectio_confirmare, _parare, _purgare,
@@ -450,6 +698,11 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "praevisio in figura", _sectio_figura, _parare, _purgare, NIHIL,
         NIHIL },
+    { "radere", _sectio_radere, _parare, _purgare, NIHIL, NIHIL },
+    { "radere margines", _sectio_radere_margines, _parare, _purgare,
+        NIHIL, NIHIL },
+    { "confirmare larva", _sectio_confirmare_larva, _parare, _purgare,
+        NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

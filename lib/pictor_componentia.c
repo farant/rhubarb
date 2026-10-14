@@ -497,6 +497,8 @@ pictor_componere (
                 chorda  instrumentum;
                 chorda  glutinatio;
                    b32  pendens;
+                   s32  x_magnitudinis;   /* quadratum magnitudinis
+                                           * lineae pendentis */
                    s32  doc_latitudo;
                    s32  doc_altitudo;
                    s32  zoom;
@@ -581,6 +583,13 @@ pictor_componere (
     glutinatio = attributum_chorda(&ramus, "glutinatio");
     pendens    = !chorda_vacua(glutinatio) && cfg->doc
               && cfg->doc->glutinatio.pendens;
+    x_magnitudinis = ZEPHYRUM;
+    /* pendens: tractus radit magnitudine PENICILLI (Franus 2026-10-13)
+     * - palette magnitudinis ut penicilli, quidquid instrumentum */
+    si (pendens)
+    {
+        instrumentum = chorda_ex_literis("penicillus", piscina);
+    }
 
     radix = nodus(piscina, intern, "radix", PARTES_NULLUM, ZEPHYRUM,
                   ZEPHYRUM, latitudo, altitudo);
@@ -605,7 +614,7 @@ pictor_componere (
                    doc_latitudo, doc_altitudo);
     componens_ponere_praedicatum(tabula, PRAEDICATUM_PROPRIUS);
     componens_ponere_focusabilis(tabula, VERUM);
-    componens_ponere_actio(tabula, pendens ? ""
+    componens_ponere_actio(tabula, pendens ? "glutinatio.agere"
         : pictor_actio_instrumenti(instrumentum));
     si (pendens)
     {
@@ -733,6 +742,12 @@ pictor_componere (
             componens_addere_liberum(status, q);
             x += LATITUDO[k] + cw;
         }
+        /* magnitudo radendi (penicilli): palettam suam aperit */
+        sprintf(t, "magnitudo:%d", (integer)attributum_s32(&ramus,
+            "magnitudo_penicilli", I));
+        x_magnitudinis = x + cw;
+        (vacuum)quadratum_addere(piscina, intern, status,
+            "quadratum.magnitudo", x_magnitudinis, y, t);
         componens_ponere_titulum(status,
             "glutinatio: A Atkinson, B exemplaria");
     }
@@ -830,8 +845,12 @@ pictor_componere (
            s32 qx;
            s32 qy;
 
-        palette = pendens ? chorda_ex_literis("", piscina)
-                          : attributum_chorda(&ramus, "palette");
+        /* pendens: palette magnitudinis sola */
+        palette = attributum_chorda(&ramus, "palette");
+        si (pendens && !chorda_aequalis_literis(palette, "magnitudo"))
+        {
+            palette = chorda_ex_literis("", piscina);
+        }
         qy = fs.y + (fs.altitudo > XX ? (fs.altitudo - XX) / II
                                       : ZEPHYRUM);
         qx = chorda_aequalis_literis(palette, "color_primus")
@@ -841,7 +860,7 @@ pictor_componere (
             : chorda_aequalis_literis(palette, "exemplar")
             ? IV * cw + III * XX
             : chorda_aequalis_literis(palette, "magnitudo")
-            ? V * cw + IV * XX : cw;
+            ? (pendens ? x_magnitudinis : V * cw + IV * XX) : cw;
         /* L3: palette stratorum (margine dextro ad quadratum) */
         si (chorda_aequalis_literis(palette, "strata") && cfg->doc)
         {

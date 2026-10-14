@@ -692,6 +692,61 @@ glutinationem_abicere (
     redde glutinationem_scribere(repo, ctx, NIHIL);
 }
 
+/* tractus in tabula pendente: radere a puncto ultimo ad praesens
+ * (pressio: punctum solum); Optio = restituere. Magnitudo = penicilli */
+interior b32
+glutinationem_radere (
+    InsulaRepositorium* repo,
+                 Motus* motus,
+             Componens* nodus,
+      constans Eventus* ev,
+                vacuum* ctx)
+{
+    PictorActiones* pa;
+       InsulaRamus  ramus;
+           Punctum  p;
+               s32  n;
+               b32  restituere;
+
+    pa = (PictorActiones*)ctx;
+    si (!pa || !pa->doc || !motus || !pa->doc->glutinatio.pendens)
+    {
+        redde FALSUM;
+    }
+    /* punctum in spatio tabulae (ut ictum_tractare) */
+    p.x         = (s32)ev->datum.mus.x;
+    p.y         = (s32)ev->datum.mus.y;
+    p           = destinatio_ad_locale(nodus, p);
+    ramus       = ramus_pictoris(repo, ctx);
+    n           = attributum_s32(&ramus, "magnitudo_penicilli", I);
+    restituere  = (ev->datum.mus.modificantes & MOD_ALT) != ZEPHYRUM;
+    commutatio (ev->genus)
+    {
+        casus EVENTUS_MUS_DEPRESSUS:
+            motus_captura_ponere(motus, nodus->id);
+            pa->rasura = p;
+            (vacuum)pictor_documentum_glutinationem_radere(pa->doc, p.x,
+                p.y, p.x, p.y, n, restituere);
+            redde VERUM;
+        casus EVENTUS_MUS_MOTUS:
+        casus EVENTUS_MUS_LIBERATUS:
+            si (chorda_vacua(motus->captura))
+            {
+                redde FALSUM;
+            }
+            (vacuum)pictor_documentum_glutinationem_radere(pa->doc,
+                pa->rasura.x, pa->rasura.y, p.x, p.y, n, restituere);
+            pa->rasura = p;
+            si (ev->genus == EVENTUS_MUS_LIBERATUS)
+            {
+                motus_captura_tollere(motus);
+            }
+            redde VERUM;
+        ordinarius:
+            redde FALSUM;
+    }
+}
+
 /* <tractator/> (vide caput) */
 b32
 pictor_glutinatio_agere (
@@ -702,9 +757,16 @@ pictor_glutinatio_agere (
       constans Eventus* ev,
                 vacuum* ctx)
 {
-    (vacuum)motus;
     (vacuum)destinatio;
-    si (!repo || !ev || !nodus || ev->genus != EVENTUS_MUS_DEPRESSUS)
+    si (!repo || !ev || !nodus)
+    {
+        redde FALSUM;
+    }
+    si (chorda_aequalis_literis(nodus->id, "tabula"))
+    {
+        redde glutinationem_radere(repo, motus, nodus, ev, ctx);
+    }
+    si (ev->genus != EVENTUS_MUS_DEPRESSUS)
     {
         redde FALSUM;
     }
@@ -999,6 +1061,7 @@ pictor_magnitudinem_ponere (
        ColorPonendus  cp;
               chorda  valor;
               chorda* instrumentum;
+              chorda  penicillus;
         constans s32* tabula;
                  i32  numerus;
                  i32  k;
@@ -1016,10 +1079,18 @@ pictor_magnitudinem_ponere (
         redde FALSUM;
     }
     /* P4b: instrumentum currens - penicillus diametrum, aspergillum
-     * multiplicem; ceteri (spongia) nihil */
+     * multiplicem; ceteri (spongia) nihil. Glutinatio pendens: penicillus
+     * semper (magnitudo radendi, Franus 2026-10-13) */
     ramus         = ramus_pictoris(repo, ctx);
     instrumentum  = insula_ramus_attributum(&ramus,
         "instrumentum");
+    si (   ctx && ((PictorActiones*)ctx)->doc
+        && ((PictorActiones*)ctx)->doc->glutinatio.pendens)
+    {
+        penicillus    = chorda_ex_literis(litterae_penicillus,
+            ((PictorActiones*)ctx)->doc->piscina);
+        instrumentum  = &penicillus;
+    }
     si (   instrumentum && chorda_aequalis_literis(*instrumentum,
         "aspergillum"))
     {

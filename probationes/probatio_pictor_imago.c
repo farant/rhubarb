@@ -7,7 +7,11 @@
  * B / OK / X, tabula sine actione (ictus nihil scribit); A eligitur, OK
  * stratum novum supra currens, currens fit, pixela palettae in strato,
  * margo perspicuus; revocatio una stratum et imaginem tollit; reficere
- * reddit. II b: Esc abicit (acta intacta), Reditus confirmat. III:
+ * reddit. II b: Esc abicit (acta intacta), Reditus confirmat. II c
+ * (Franus 2026-10-13): tractus in tabula pendente RADIT - larva modum
+ * alterum revelat, Optio-tractus reponit, acta intacta; magnitudo
+ * penicilli ex quadrato lineae pendentis (etiam sub spongia); A electo
+ * larva manet, OK per pixelum miscet. III:
  * reapertio - massa ex volumine, pixela eadem. IV: sine porta aut
  * imagine vacua nihil. */
 #include "postulata_posix.h"
@@ -185,6 +189,24 @@ clavem_premere (
     dispensator_recomponere(app->d);
 }
 
+/* clavis litterae ('e' spongia) */
+interior vacuum
+clavem_runam_premere (
+    PictorApplicatio* app,
+           character  runa)
+{
+    Eventus e;
+
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus                = EVENTUS_CLAVIS_DEPRESSUS;
+    e.tempus               = M;
+    e.datum.clavis.clavis  = (clavis_t)runa;
+    e.datum.clavis.runa    = (s32)runa;
+    e.datum.clavis.actio   = EVENTUS_ACTIO_PRESSA;
+    dispensator_tractare(app->d, &e);
+    dispensator_recomponere(app->d);
+}
+
 /* ictus in nodum lineae status (filius 'status', fines relativi) */
 interior b32
 nodum_premere (
@@ -239,6 +261,93 @@ tabulam_premere (
     e.tempus  = M + X;
     dispensator_tractare(app->d, &e);
     dispensator_recomponere(app->d);
+}
+
+/* ictus in optionem palettae apertae (filius 'palette', fines
+ * relativi) */
+interior b32
+optionem_premere (
+    PictorApplicatio* app,
+  constans character* id)
+{
+     Componens* p;
+     Componens* q;
+       Eventus  e;
+
+    p = componens_invenire_per_id(dispensator_arbor(app->d),
+        chorda_ex_literis("palette", piscina));
+    q = componens_invenire_per_id(dispensator_arbor(app->d),
+        chorda_ex_literis(id, piscina));
+    si (!p || !q)
+    {
+        imprimere("  optio abest: %s\n", id);
+        redde FALSUM;
+    }
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus   = EVENTUS_MUS_DEPRESSUS;
+    e.tempus  = M;
+    e.datum.mus.x = p->fines.x + q->fines.x + q->fines.latitudo
+        / II;
+    e.datum.mus.y = p->fines.y + q->fines.y + q->fines.altitudo
+        / II;
+    e.datum.mus.botton = MUS_SINISTER;
+    dispensator_tractare(app->d, &e);
+    e.genus = EVENTUS_MUS_LIBERATUS;
+    dispensator_tractare(app->d, &e);
+    dispensator_recomponere(app->d);
+    redde VERUM;
+}
+
+/* tractus in tabula: pressio (x0, y0), motus et solutio (x1, y1)
+ * coordinatis tabulae; modificantes in eventu quoque */
+interior vacuum
+tabulam_trahere (
+    PictorApplicatio* app,
+                 s32  x0,
+                 s32  y0,
+                 s32  x1,
+                 s32  y1,
+                 i32  modificantes)
+{
+    Eventus e;
+
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus                   = EVENTUS_MUS_DEPRESSUS;
+    e.tempus                  = M;
+    e.datum.mus.x             = ORIGO_X + x0;
+    e.datum.mus.y             = ORIGO_Y + y0;
+    e.datum.mus.botton        = MUS_SINISTER;
+    e.datum.mus.modificantes  = modificantes;
+    dispensator_tractare(app->d, &e);
+    e.genus        = EVENTUS_MUS_MOTUS;
+    e.tempus       = M + V;
+    e.datum.mus.x  = ORIGO_X + x1;
+    e.datum.mus.y  = ORIGO_Y + y1;
+    dispensator_tractare(app->d, &e);
+    e.genus   = EVENTUS_MUS_LIBERATUS;
+    e.tempus  = M + X;
+    dispensator_tractare(app->d, &e);
+    dispensator_recomponere(app->d);
+}
+
+/* pixela larvae signata */
+interior i32
+larva_numerus (
+    constans PictorDocumentum* doc)
+{
+    i32 n;
+    i32 k;
+
+    n = ZEPHYRUM;
+    per (k = ZEPHYRUM; k < doc->glutinatio.latitudo
+        * doc->glutinatio.altitudo; k++)
+    {
+        si (doc->glutinatio.larva[k])
+        {
+            n++;
+        }
+    }
+    redde n;
 }
 
 interior Componens*
@@ -386,8 +495,8 @@ s32 principale (vacuum)
         CREDO_VERUM(doc->glutinatio.pendens);
         CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app,
             "glutinatio"), "B");
-        /* linea status: A / B / OK / X, quadrata absunt; tabula sine
-         * actione, praevisio in titulo */
+        /* linea status: A / B / OK / X, quadrata absunt; tabula radit
+         * (glutinatio.agere), praevisio in titulo */
         CREDO_NON_NIHIL(nodus_arboris(&app, "glutinatio.A"));
         CREDO_NON_NIHIL(nodus_arboris(&app, "glutinatio.B"));
         CREDO_NON_NIHIL(nodus_arboris(&app, "glutinatio.confirmare"));
@@ -396,14 +505,18 @@ s32 principale (vacuum)
             == NIHIL);
         CREDO_VERUM(nodus_arboris(&app, "quadratum.strata") == NIHIL);
         CREDO_VERUM(nodus_arboris(&app, "tabula")
-            && chorda_vacua(nodus_arboris(&app, "tabula")->actio));
+            && chorda_aequalis_literis(nodus_arboris(&app,
+            "tabula")->actio, "glutinatio.agere"));
         CREDO_VERUM(nodus_arboris(&app, "tabula")
             && chorda_aequalis_literis(nodus_arboris(&app,
             "tabula")->titulus,
                 "glutinatio:B"));
-        /* ictus in tabula dum pendet: nihil */
+        /* ictus in tabula dum pendet: acta intacta (radit solum),
+         * Optio-ictus reponit */
         tabulam_premere(&app, C, C);
         CREDO_VERUM(pictor_documentum_finis(doc) == finis);
+        tabulam_trahere(&app, C, C, C, C, MOD_ALT);
+        CREDO_AEQUALIS_I32(larva_numerus(doc), ZEPHYRUM);
         /* A eligitur */
         CREDO_VERUM(nodum_premere(&app, "glutinatio.A"));
         CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app,
@@ -494,6 +607,111 @@ s32 principale (vacuum)
             III);
         CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app,
             "stratum_activum"), "3");
+    }
+
+    imprimere("\n--- II c: radere - alterum subter, Optio reponit ---\n");
+    {
+          PictorGlutinatio  g;
+                       s64  finis;
+                       s32  y;
+                       s32  x0;
+                       s32  x1;
+                       i32  k;
+                       i32  j;
+                       i32  diversum;
+                       i32  revelata;
+                       i32  strata;
+                       s32  activum;
+                       i32  index_novi;
+    constans PictorStratum* novum;
+
+        finis   = pictor_documentum_finis(doc);
+        strata  = pictor_documentum_numerus_stratorum(doc);
+        /* instrumentum spongia: radere tamen magnitudine penicilli */
+        clavem_runam_premere(&app, 'e');
+        CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app,
+            "instrumentum"), "spongia");
+        CREDO_VERUM(cmd_v(&app));
+        CREDO_VERUM(doc->glutinatio.pendens);
+        /* linea in dimidio rubro (opaco), magnitudo penicilli I */
+        y   = doc->glutinatio.y + (s32)doc->glutinatio.altitudo / IV;
+        x0  = doc->glutinatio.x + XX;
+        x1  = x0 + CC;
+        tabulam_trahere(&app, x0, y, x1, y, ZEPHYRUM);
+        CREDO_VERUM(pictor_documentum_finis(doc) == finis);
+        revelata = larva_numerus(doc);
+        CREDO_AEQUALIS_I32(revelata, CCI);
+        k = (i32)(y - doc->glutinatio.y) * doc->glutinatio.latitudo
+            + (i32)(x0 - doc->glutinatio.x);
+        CREDO_AEQUALIS_I32((i32)doc->glutinatio.larva[k], I);
+        /* Optio-tractus dimidium reponit */
+        tabulam_trahere(&app, x0, y, x0 + C - I, y, MOD_ALT);
+        CREDO_AEQUALIS_I32(larva_numerus(doc), CI);
+        CREDO_AEQUALIS_I32((i32)doc->glutinatio.larva[k], ZEPHYRUM);
+        /* magnitudo in linea pendente: quadratum penicilli (etiam si
+         * instrumentum spongia), palette, optio VIII */
+        CREDO_NON_NIHIL(nodus_arboris(&app, "quadratum.magnitudo"));
+        CREDO_VERUM(nodus_arboris(&app, "quadratum.magnitudo")
+            && chorda_aequalis_literis(nodus_arboris(&app,
+            "quadratum.magnitudo")->titulus, "magnitudo:1"));
+        CREDO_VERUM(nodum_premere(&app, "quadratum.magnitudo"));
+        CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app, "palette"),
+            "magnitudo");
+        CREDO_VERUM(optionem_premere(&app, "optio.magnitudo.8"));
+        CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app,
+            "magnitudo_penicilli"), "8");
+        CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app, "palette"),
+            "");
+        CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app,
+            "instrumentum"), "spongia");
+        CREDO_VERUM(doc->glutinatio.pendens);
+        /* tractus VIII latus: fascia, non linea */
+        tabulam_trahere(&app, x0, y + XX, x1, y + XX, ZEPHYRUM);
+        revelata = larva_numerus(doc) - CI;
+        CREDO_VERUM(revelata > CC * VII && revelata < CCXX * VIII);
+        revelata = larva_numerus(doc);
+        /* A: larva manet */
+        CREDO_VERUM(nodum_premere(&app, "glutinatio.A"));
+        CREDO_AEQUALIS_I32(larva_numerus(doc), revelata);
+        CREDO_VERUM(pictor_documentum_finis(doc) == finis);
+        /* OK: per pixelum - larva ? B : A */
+        g = doc->glutinatio;
+        CREDO_VERUM(nodum_premere(&app, "glutinatio.confirmare"));
+        CREDO_FALSUM(doc->glutinatio.pendens);
+        CREDO_AEQUALIS_I32(pictor_documentum_numerus_stratorum(doc),
+            strata + I);
+        /* stratum novum per id (stratum_activum) - ordo post revocationem
+         * et refectionem in II non est ordo id */
+        activum = ZEPHYRUM;
+        CREDO_VERUM(chorda_ut_s32(ephemera_legere(&app,
+            "stratum_activum"), &activum));
+        novum = NIHIL;
+        per (index_novi = ZEPHYRUM; index_novi < strata
+            + I; index_novi++)
+        {
+            si (pictor_documentum_stratum(doc, index_novi)->id
+                == activum)
+            {
+                novum = pictor_documentum_stratum(doc, index_novi);
+            }
+        }
+        CREDO_NON_NIHIL(novum);
+        diversum = ZEPHYRUM;
+        per (j = ZEPHYRUM; novum && j < g.latitudo * g.altitudo; j++)
+        {
+            i8 index = g.larva[j]
+                ? g.indices[PICTOR_GLUTINATIO_EXEMPLARIA][j]
+                : g.indices[PICTOR_GLUTINATIO_ATKINSON][j];
+            i32 p =
+                (i32)tabula_pixelorum_obtinere_pixelum(novum->pixela,
+                (i32)(g.x + (s32)(j % g.latitudo)),
+                (i32)(g.y + (s32)(j / g.latitudo)));
+            si (p != (index >= XVI ? ZEPHYRUM : palettae((s32)index)))
+            {
+                diversum++;
+            }
+        }
+        CREDO_AEQUALIS_I32(diversum, ZEPHYRUM);
     }
 
     imprimere("\n--- III: reapertio ---\n");
