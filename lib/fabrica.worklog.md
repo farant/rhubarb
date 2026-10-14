@@ -3032,3 +3032,27 @@ First real reading: probatio_mensura_cursus 221 ms as a member, its six
 sections ~13 ms together - ~94% of the test is process start + dyld of
 a binary that links everything. Only 32 of 555 suites are sectioned.
 Plants III red (synthetic not skipped, wrong parent, TRANSIIT counted as failure).
+
+## 2026-10-13 - foreign roots and the diary guard (analytica T4 step 1)
+
+Reading the T3 commit's own run tree showed fake iudicium-fumus actions
+(`gen`, `porta_x`, two FRACTUM) under quinta's tree and commit: that
+fumus runs bin/fabrica on throwaway roots, and every record inherited
+the SESSION context. A static grep for offenders cannot tell "mktemp for
+scratch while judging the real tree" from "judging a fake root", and a
+gate reading the real diary is not hermetic (the polluted records are in
+the volume forever). So two structural rules instead of a detector:
+(1) a record names the root fabrica ACTUALLY judged - if `sutura->radix`
+differs from the inherited arbor, its own context is computed once per
+process (`mensura_contextum_arboris`: HEAD/branch/dirty if a repo, blank
+if not; cached in Memoria, now zeroed in suturae_memoriam_aperire);
+(2) a root that is not a repository is a fixture by nature and writes
+run records ONLY to an explicit MENSOR_DIARIUM, never the default.
+fumus LIV (foreign root keeps its own path, alien commit not
+inherited), LV (default diary: fixture writes nothing, the same root as
+a git repo writes with its own commit). LV's first half first passed
+vacuously - the default diary's directory did not exist, so nothing
+could be written for ANY reason; the test now creates it. Verified on
+the real offender: iudicium_fumus run against the real diary adds 0
+lines. Plants III red (guard off, foreign context not applied, commit
+not read in the shared lib).

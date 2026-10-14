@@ -27,6 +27,17 @@ mensura_contextum_parare (
     CursusInitium* initium,
           Piscina* piscina);
 
+/* Contextus ARBORIS datae (analytica T4), non sessionis: arbor =
+ * via_arboris, commissum HEAD, ramus, sordidum computati si via
+ * repositorium est (VERUM redditur), aliter vacui (FALSUM). Ambitum
+ * non tangit. Pro producente qui radicem ALIAM iudicat quam arbor
+ * sessionis (bin/fabrica in radice fixturae). */
+b32
+mensura_contextum_arboris (
+         CursusInitium* initium,
+    constans character* via_arboris,
+               Piscina* piscina);
+
 /* diarium cursuum: MENSOR_DIARIUM aut ~/.rhubarb/mensurae.diarium */
 constans character*
 mensura_diarium_cursuum (

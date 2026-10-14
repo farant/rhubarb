@@ -519,6 +519,7 @@ suturae_memoriam_aperire (
     Memoria* memoria,
     Piscina* piscina)
 {
+    memset(memoria, ZEPHYRUM, magnitudo(Memoria));
     memoria->piscina = piscina;
     si (!filum_directorium_creare_cum_parentibus("build"))
     {
@@ -677,6 +678,34 @@ _cursum_annalibus_inscribere (
     memset(&initium, ZEPHYRUM, magnitudo(initium));
     memset(&finis, ZEPHYRUM, magnitudo(finis));
     mensura_contextum_parare(&initium, memoria->piscina);
+    /* RADIX ALIENA (T4): fabrica radicem ALIAM iudicat quam arbor
+     * sessionis (fixtura fumi in /tmp, arbor frigida) - contextus SUUS,
+     * semel per processum; radix non repositorium = fixtura: in diarium
+     * ordinarium nihil scribit, solum in MENSOR_DIARIUM expressum
+     * (actiones fictae iudicium-fumi olim commissum arboris quintae
+     * ferebant, 2026-10-13) */
+    si (   memoria->sutura != NIHIL
+        && memoria->sutura->radix.mensura > ZEPHYRUM
+        && !chorda_aequalis(memoria->sutura->radix, initium.arbor))
+    {
+        si (!memoria->radix_aliena_nota)
+        {
+            memoria->radix_repositorium = mensura_contextum_arboris(
+                &memoria->radix_aliena, chorda_ut_cstr(
+                memoria->sutura->radix, memoria->piscina),
+                memoria->piscina);
+            memoria->radix_aliena_nota = VERUM;
+        }
+        initium.arbor      = memoria->radix_aliena.arbor;
+        initium.commissum  = memoria->radix_aliena.commissum;
+        initium.ramus      = memoria->radix_aliena.ramus;
+        initium.sordidum   = memoria->radix_aliena.sordidum;
+        si (   !memoria->radix_repositorium && getenv("MENSOR_DIARIUM")
+            == NIHIL)
+        {
+            redde;
+        }
+    }
     nunc             = mensura_momentum_nunc();
     initium.id       = mensura_id_novum(memoria->piscina);
     initium.titulus  = sanatio->actio->titulus;

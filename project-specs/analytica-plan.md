@@ -65,10 +65,17 @@ commit via silva.commissio. Work in `../rhubarb-quinta`.
   ~94%). Only 32/555 suites are sectioned.
 
 ### T4: logs and retention
-- [ ] FIRST: isolate every fumus that drives bin/fabrica on throwaway
+- [x] FIRST: isolate every fumus that drives bin/fabrica on throwaway
   roots (iudicium-fumus wrote fake 'gen'/'porta_x' runs - two FRACTUM -
   into the real diary under quinta's tree and commit, 2026-10-13) + a
   check that refuses a fumus writing the real diary.
+  As built: structural instead of per-fumus isolation + detector (Fran
+  approved the two layers; the detector became a guard because a gate
+  reading the real diary is not hermetic). fabrica records the root it
+  judged (own context if it differs from the session tree;
+  `mensura_contextum_arboris`), and a non-repository root writes only to
+  an explicit MENSOR_DIARIUM. fumus LIV + LV; plants III red;
+  iudicium_fumus against the real diary: +0 lines.
 - [ ] Bodies in the volume (massae dedup), size cap, retention policy as
   STML data, `bin/mensor purgare [-siccum]`. Tests: dedup, age tiers,
   failures kept longer, last body per job kept, pinned kept. Commit.

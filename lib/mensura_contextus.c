@@ -142,6 +142,65 @@ _litterae_aut_vacuae (
     redde (litterae != NIHIL) ? litterae : "";
 }
 
+/* contextus ARBORIS datae (non sessionis): commissum HEAD, ramus,
+ * sordidum, arbor = via. VERUM si repositorium est; aliter campi vacui
+ * (arbor tamen ponitur). Ambitum non tangit. */
+interior b32
+_arborem_computare (
+           chorda  arbor,
+    CursusInitium* i,
+          Piscina* piscina)
+{
+     GitRepositorium* repositorium = NIHIL;
+           character  sha[GIT_SHA_HEX_MENSURA + I];
+              chorda  status;
+                 b32  bene = FALSUM;
+  constans character* status_argv[V];
+
+    sha[ZEPHYRUM]  = '\0';
+    i->arbor       = arbor;
+    i->commissum   = chorda_ex_literis("", piscina);
+    i->ramus       = chorda_ex_literis("", piscina);
+    i->sordidum    = FALSUM;
+    si (arbor.mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    repositorium = git_aperire(piscina, chorda_ut_cstr(arbor, piscina));
+    si (repositorium == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (git_ref_resolvere(repositorium, "HEAD", sha))
+    {
+        i->commissum = chorda_transcribere(chorda_ex_literis(sha,
+            piscina),
+            piscina);
+    }
+    i->ramus               = _ramum_legere(repositorium, piscina);
+    status_argv[ZEPHYRUM]  = "git";
+    status_argv[I]         = "status";
+    status_argv[II]        = "--porcelain";
+    status_argv[III]       = "--untracked-files=no";
+    status_argv[IV]        = NIHIL;
+    status = _effusio_mandati(status_argv, chorda_ut_cstr(arbor,
+        piscina),
+        piscina, &bene);
+    i->sordidum = bene && status.mensura > ZEPHYRUM;
+    redde VERUM;
+}
+
+b32
+mensura_contextum_arboris (
+         CursusInitium* initium,
+    constans character* via_arboris,
+               Piscina* piscina)
+{
+    redde _arborem_computare(chorda_transcribere(chorda_ex_literis(
+        via_arboris != NIHIL ? via_arboris : "", piscina), piscina),
+        initium, piscina);
+}
+
 /* CONTEXTUS: ex ambitu (hereditas) aut SEMEL computatus et in ambitum
  * positus - cursus interiores eum hereditant, git non iterum vocatur */
 vacuum
@@ -153,45 +212,20 @@ mensura_contextum_parare (
 
     si (commissum == NIHIL)
     {
-                 chorda  arbor         = _arborem_invenire(piscina);
-        GitRepositorium* repositorium  = NIHIL;
-              character  sha[GIT_SHA_HEX_MENSURA + I];
-                 chorda  ramus = chorda_ex_literis("", piscina);
-                 chorda  status;
-                    b32  bene = FALSUM;
-              character  sordidum[II];
-     constans character* status_argv[V];
+        CursusInitium computatus;
 
-        sha[ZEPHYRUM] = '\0';
-        si (arbor.mensura > ZEPHYRUM)
-        {
-            repositorium = git_aperire(piscina, chorda_ut_cstr(arbor,
-                piscina));
-        }
-        si (repositorium != NIHIL)
-        {
-            si (!git_ref_resolvere(repositorium, "HEAD", sha))
-            {
-                sha[ZEPHYRUM] = '\0';
-            }
-            ramus = _ramum_legere(repositorium, piscina);
-        }
-        status_argv[ZEPHYRUM]  = "git";
-        status_argv[I]         = "status";
-        status_argv[II]        = "--porcelain";
-        status_argv[III]       = "--untracked-files=no";
-        status_argv[IV]        = NIHIL;
-        status = (arbor.mensura > ZEPHYRUM)
-            ? _effusio_mandati(status_argv, chorda_ut_cstr(arbor,
-                  piscina), piscina, &bene)
-            : chorda_ex_literis("", piscina);
-        sordidum[ZEPHYRUM] = (bene && status.mensura > ZEPHYRUM)
-            ? '1' : '0';
-        sordidum[I] = '\0';
-        setenv("MENSOR_COMMISSUM", sha, I);
-        setenv("MENSOR_SORDIDUM", sordidum, I);
-        setenv("MENSOR_RAMUS", _litterae_aut_vacuae(ramus, piscina), I);
-        setenv("MENSOR_ARBOR", _litterae_aut_vacuae(arbor, piscina), I);
+        memset(&computatus, ZEPHYRUM, magnitudo(computatus));
+        (vacuum)_arborem_computare(_arborem_invenire(piscina),
+            &computatus,
+            piscina);
+        setenv("MENSOR_COMMISSUM",
+            _litterae_aut_vacuae(computatus.commissum,
+            piscina), I);
+        setenv("MENSOR_SORDIDUM", computatus.sordidum ? "1" : "0", I);
+        setenv("MENSOR_RAMUS", _litterae_aut_vacuae(computatus.ramus,
+            piscina), I);
+        setenv("MENSOR_ARBOR", _litterae_aut_vacuae(computatus.arbor,
+            piscina), I);
         si (getenv("MENSOR_MACHINA") == NIHIL)
         {
             setenv("MENSOR_MACHINA", _litterae_aut_vacuae(machina_nota(

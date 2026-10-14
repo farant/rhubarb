@@ -22,6 +22,7 @@
 #include "fabrica.h"
 #include "provenientia.h"
 #include "sigillum.h"
+#include "mensura.h"
 
 /* sanare: terminus unus per actum (briar ~3 min, obiecta radicis
  * frigida ~150 s); termini per actionem non in 1b */
@@ -34,6 +35,11 @@ nomen structura {
     constans FabricaSutura* sutura;   /* a suturae_memoriam_nectere
                                        * positum: lectio plagulae
                                        * sectionum (analytica T3b) */
+            CursusInitium radix_aliena;    /* contextus radicis si ab
+                                             * arbore sessionis differt
+                                             * (T4), semel computatus */
+                      b32 radix_aliena_nota;
+                      b32 radix_repositorium;
 } Memoria;
 
 /* mandata (fabrica.c) */
