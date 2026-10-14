@@ -15,6 +15,7 @@ declare -a SOURCE_FILES=(
     "lib/aemulator_hospes.c"
     "lib/agenda.c"
     "lib/agmen.c"
+    "lib/album.c"
     "lib/anulus.c"
     "lib/arbor.c"
     "lib/arbor2_conditio_evaluare.c"

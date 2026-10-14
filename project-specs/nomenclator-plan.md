@@ -47,6 +47,18 @@ Answers to the first open questions (Fran, 2026-10-14, same day):
     not a direct dependency on contacts - and the dates are TYPED, so
     the calendar knows a date is a birthday and can display it its own
     way.
+15. **Recurring schedules get their own library** (Fran, 2026-10-14):
+    a "recurring scheduled date" data type ("2nd Monday of the month",
+    "every other Tuesday", ...) that the calendar knows, and from which
+    clients extract the concrete dates in a range. Birthdays are its
+    simplest case (yearly), but they do not wait for it - P6 handles
+    them simply, in a shape the recurrence type can later replace.
+    Survey 2026-10-14: no cron or recurrence code in rhubarb nor in the
+    predecessor trees (nog*, solarium - only vendored sqlite3.c hits);
+    building blocks in `include/fasti.h` (weekday, first weekday of a
+    month, add days/months/years, day/week of year) and Easter in
+    `calendarium_liturgicum`. Agenda decision 9 (recurring items, data
+    model must not preclude them) is the same need.
 
 ## II. Where things stand (2026-10-14)
 
@@ -165,6 +177,20 @@ suite (30 sections) is the oracle for every extraction.
   cell-exact area, shadow, book follows the selection.
 - **U6 toolbar** - button table (id, text, commands per view),
   segmented controls, arrow buttons.
+
+- **U1 DONE 2026-10-14: `album`** (include/album.h). The approved name
+  `catalogus` collided at link time with `cellae.h`'s public
+  `catalogus_*` functions; Fran chose `album`. Rows declare their kind
+  (ALBUM_RES / ALBUM_TITULUS / ALBUM_FASCIA); the calendar's 30
+  sections passed unchanged after the move.
+- **Open (Fran, 2026-10-14): a kind prefix for the UI component
+  libraries**, so what is available is easy to scan. The ledger already
+  has the house convention (…PTMJ2, 2026-10-08): double-underscore
+  KIND prefixes on file names (`forma__`, `stilus__`, `nuntius__`,
+  `probatio__`, `generata__`) with a kind registry in STML; libraries
+  keep their name as the function prefix. Proposal: a UI-component kind
+  (e.g. `membrum__album.h`, functions stay `album_*`), decided before
+  U2 so the renames happen once.
 
 Names, and each header, go to Fran before code. The library is
 probably several small ones (one per item above), following the

@@ -706,3 +706,16 @@ after it + the first item; a heading starts a new page if that does
 not fit. Test `titulus_solus` (13 open rows, then band at 14 and date
 at 15 with the first completed item not fitting -> band and date both
 move to page 2), red before the fix.
+
+## 2026-10-14 - U1: pagination moved onto `album`
+
+OrdoIndicis, ordinem_addere, titulum_gregis, altitudo_tituli,
+paginas_computare and paginae_fines left the calendar (-197 lines net).
+`ordines_indicis` now builds an `Album` (capacity = capacitas_indicis,
+forward-declared): "g<k>", "c", "p<k>" = ALBUM_TITULUS, "p" =
+ALBUM_FASCIA, rows = ALBUM_RES. pagina_currens clamps the "pagina"
+field with album_pagina_coacta; pagina_rei / paginae_status /
+paginam_vertere / indicem_disponere call album_pagina_rei,
+album_paginae, album_res_prima, album_pagina. The calendar's 30
+sections passed unchanged - they are the oracle for the move.
+ludus_tessera's hand list gained "album" (vicus links the calendar).

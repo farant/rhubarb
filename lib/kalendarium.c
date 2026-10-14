@@ -13,6 +13,7 @@
 #include "fons.h"
 #include "dispositio.h"
 #include "elenchus.h"
+#include "album.h"
 #include "vim.h"
 #include "scriba_applicatio.h"
 #include "scriba_componentia.h"
@@ -1280,46 +1281,21 @@ ictus_ordinis (
 #define KALENDARIUM_BARRA_LINEAE    III   /* barra globulorum */
 #define KALENDARIUM_CAPUT_LINEAE    II    /* caput indicis */
 
-/* ordo indicis: titulus (PARTES_INDEX) aut res (PARTES_ITEM) */
-nomen structura {
-    character id[XXXII];
-       Partes partes;
-          s32 altitudo;   /* cellulae */
-          s32 res;        /* id rei; 0 = titulus */
-} OrdoIndicis;
+interior s32
+capacitas_indicis (
+    constans KalendariumMontatio* m);
 
-interior vacuum
-ordinem_addere (
-                    Xar* l,
-     constans character* id,
-                 Partes  partes,
-                    s32  altitudo,
-                    s32  res)
-{
-    OrdoIndicis* o;
-
-    o = (OrdoIndicis*)xar_addere(l);
-    si (!o)
-    {
-        redde;
-    }
-    strncpy(o->id, id, XXXI);
-    o->id[XXXI]  = '\0';
-    o->partes    = partes;
-    o->altitudo  = altitudo;
-    o->res       = res;
-}
-
-/* ordines indicis visus currentis (dies aut agenda), ordine picturae:
- * dies - apertae "r<id>", "c", perfectae "r<id>"; agenda - "g<k>" et
- * "r<id>-<k>", "p", "p<k>", "q<id>". Altitudo: II + notae (dies:
- * omnes; agenda: electae solius). */
-interior Xar*
+/* album indicis visus currentis (dies aut agenda), ordine picturae:
+ * dies - apertae "r<id>", "c" (titulus), perfectae "r<id>"; agenda -
+ * "g<k>" (titulus) et "r<id>-<k>", "p" (fascia), "p<k>" (titulus),
+ * "q<id>". Altitudo: II + notae (dies: omnes; agenda: electae solius).
+ * Paginae per album (nomenclator-plan U1). */
+interior Album*
 ordines_indicis (
      constans KalendariumMontatio* m,
                           Piscina* p)
 {
-                    Xar* l;
+                  Album* l;
                     Xar* res;
                     Xar* greges;
                     Xar* perfectae;
@@ -1332,7 +1308,7 @@ ordines_indicis (
                     i32  i;
                     i32  j;
 
-    l = xar_creare(p, (i32)magnitudo(OrdoIndicis));
+    l = album_creare(p, capacitas_indicis(m));
     si (!l)
     {
         redde l;
@@ -1346,11 +1322,12 @@ ordines_indicis (
             r = *(constans AgendaRes**)xar_obtinere(res, i);
             si (r->perfecta && !divisor)
             {
-                ordinem_addere(l, "c", PARTES_INDEX, II, ZEPHYRUM);
+                (vacuum)album_addere(l, "c", ALBUM_TITULUS, II,
+                    ZEPHYRUM);
                 divisor = VERUM;
             }
             sprintf(id, "r%d", (integer)r->id);
-            ordinem_addere(l, id, PARTES_ITEM, (s32)(II
+            (vacuum)album_addere(l, id, ALBUM_RES, (s32)(II
                 + xar_numerus(r->notae)), r->id);
         }
         redde l;
@@ -1361,12 +1338,12 @@ ordines_indicis (
     {
         g = (GrexAgendae*)xar_obtinere(greges, i);
         sprintf(id, "g%d", (integer)i);
-        ordinem_addere(l, id, PARTES_INDEX, II, ZEPHYRUM);
+        (vacuum)album_addere(l, id, ALBUM_TITULUS, II, ZEPHYRUM);
         per (j = ZEPHYRUM; j < xar_numerus(g->res); j++)
         {
             r = *(constans AgendaRes**)xar_obtinere(g->res, j);
             sprintf(id, "r%d-%d", (integer)r->id, (integer)i);
-            ordinem_addere(l, id, PARTES_ITEM, (s32)(II + (r->id
+            (vacuum)album_addere(l, id, ALBUM_RES, (s32)(II + (r->id
                 == electa ? xar_numerus(r->notae) : ZEPHYRUM)), r->id);
         }
     }
@@ -1375,7 +1352,7 @@ ordines_indicis (
     {
         redde l;
     }
-    ordinem_addere(l, "p", PARTES_INDEX, II, ZEPHYRUM);
+    (vacuum)album_addere(l, "p", ALBUM_FASCIA, II, ZEPHYRUM);
     k = -I;
     per (j = ZEPHYRUM; j < xar_numerus(perfectae); j++)
     {
@@ -1386,10 +1363,11 @@ ordines_indicis (
         {
             k++;
             sprintf(id, "p%d", (integer)k);
-            ordinem_addere(l, id, PARTES_INDEX, II, ZEPHYRUM);
+            (vacuum)album_addere(l, id, ALBUM_TITULUS, II, ZEPHYRUM);
         }
         sprintf(id, "q%d", (integer)r->id);
-        ordinem_addere(l, id, PARTES_ITEM, (s32)(II + (r->id == electa
+        (vacuum)album_addere(l, id, ALBUM_RES, (s32)(II + (r->id
+            == electa
             ? xar_numerus(r->notae) : ZEPHYRUM)), r->id);
     }
     redde l;
@@ -1418,140 +1396,14 @@ capacitas_indicis (
         ? II : ZEPHYRUM);
 }
 
-/* titulus gregis cui ordo i pertinet: titulus proximus prior - "g<k>"
- * (rubrica), "p<k>" (dies perfectionis), "c" (perfectae diei); -1 si
- * ordo ipse titulus est aut gregem nullum habet. Pagina in medio gregis
- * incipiens eum iterat ("<id>-c", Franus 10-14). */
-interior s32
-titulum_gregis (
-    Xar* ordines,
-    s32  i)
-{
-    OrdoIndicis* o;
-            s32  j;
-
-    si (!ordines || i <= ZEPHYRUM || i >= (s32)xar_numerus(ordines))
-    {
-        redde -I;
-    }
-    o = (OrdoIndicis*)xar_obtinere(ordines, (i32)i);
-    si (o->partes != PARTES_ITEM)
-    {
-        redde -I;
-    }
-    per (j = i - I; j >= ZEPHYRUM; j--)
-    {
-        o = (OrdoIndicis*)xar_obtinere(ordines, (i32)j);
-        si (o->partes == PARTES_INDEX)
-        {
-            redde (   o->id[ZEPHYRUM] == 'g' || o->id[ZEPHYRUM] == 'c'
-                   || (o->id[ZEPHYRUM] == 'p' && o->id[I] != '\0'))
-                ? j : -I;
-        }
-    }
-    redde -I;
-}
-
-/* altitudo tituli i cum titulis sequentibus et ordine primo post eos:
- * titulus numquam ultimus paginae, etiam ante titulum alium ("p"
- * Completed ante "p<k>" diem - Franus 10-14) */
-interior s32
-altitudo_tituli (
-    Xar* ordines,
-    s32  i)
-{
-    OrdoIndicis* o;
-            s32  h;
-
-    h = ZEPHYRUM;
-    per (; i < (s32)xar_numerus(ordines); i++)
-    {
-        o = (OrdoIndicis*)xar_obtinere(ordines, (i32)i);
-        h += o->altitudo;
-        si (o->partes != PARTES_INDEX)
-        {
-            frange;
-        }
-    }
-    redde h;
-}
-
-/* initia paginarum (Xar de s32, index ordinis): ordo qui non capit in
- * paginam novam; pagina in medio gregis incipiens spatium tituli
- * iterati servat; titulus (PARTES_INDEX) numquam ultimus - si cum
- * ordine sequente non capit, in paginam novam; ordo maior capacitate
- * solus */
-interior Xar*
-paginas_computare (
-          Xar* ordines,
-          s32  capacitas,
-      Piscina* p)
-{
-            Xar* initia;
-    OrdoIndicis* o;
-            s32  usus;
-            s32  j;
-            i32  i;
-
-    initia = xar_creare(p, (i32)magnitudo(s32));
-    si (!initia)
-    {
-        redde initia;
-    }
-    *(s32*)xar_addere(initia)  = ZEPHYRUM;
-    usus                       = ZEPHYRUM;
-    per (i = ZEPHYRUM; ordines && i < xar_numerus(ordines); i++)
-    {
-        o = (OrdoIndicis*)xar_obtinere(ordines, i);
-        si (   usus > ZEPHYRUM
-            && (   usus + o->altitudo > capacitas
-                || (   o->partes == PARTES_INDEX
-                    && usus + altitudo_tituli(ordines, (s32)i)
-                       > capacitas)))
-        {
-            *(s32*)xar_addere(initia) = (s32)i;
-            usus = ZEPHYRUM;
-            j = titulum_gregis(ordines, (s32)i);
-            si (j >= ZEPHYRUM)
-            {
-                usus = ((OrdoIndicis*)xar_obtinere(ordines, (i32)j))
-                    ->altitudo;
-            }
-        }
-        usus += o->altitudo;
-    }
-    redde initia;
-}
-
-/* pagina currens (campus "pagina"), ad [0, numerus - 1] coacta */
+/* pagina currens (campus "pagina"), ad paginas albi coacta */
 interior s32
 pagina_currens (
     constans KalendariumMontatio* m,
-                             s32  numerus)
+                           Album* l)
 {
-    s32 k;
-
-    k = attributum_s32(&m->ramus, "pagina", ZEPHYRUM);
-    si (k >= numerus)
-    {
-        k = numerus - I;
-    }
-    redde k < ZEPHYRUM ? ZEPHYRUM : k;
-}
-
-/* fines paginae k in ordinibus: [*a, *b) */
-interior vacuum
-paginae_fines (
-      Xar* initia,
-      s32  k,
-      Xar* ordines,
-      s32* a,
-      s32* b)
-{
-    *a = *(s32*)xar_obtinere(initia, (i32)k);
-    *b = (i32)(k + I) < xar_numerus(initia)
-        ? *(s32*)xar_obtinere(initia, (i32)(k + I))
-        : (s32)xar_numerus(ordines);
+    redde album_pagina_coacta(l, attributum_s32(&m->ramus, "pagina",
+        ZEPHYRUM));
 }
 
 interior s32
@@ -1559,16 +1411,8 @@ pagina_rei (
     KalendariumMontatio* m,
                     s32  id)
 {
-            Xar* ordines;
-            Xar* initia;
-        Piscina* p;
-    OrdoIndicis* o;
-            s32  k;
-            s32  a;
-            s32  b;
-            s32  prima;
-            s32  currens;
-            s32  i;
+       Album* l;
+     Piscina* p;
 
     p = m->figurae_ctx ? ((KalendariumFigurae*)m->figurae_ctx)->scheda
                        : NIHIL;
@@ -1576,35 +1420,9 @@ pagina_rei (
     {
         redde -I;
     }
-    ordines  = ordines_indicis(m, p);
-    initia   = paginas_computare(ordines, capacitas_indicis(m), p);
-    si (!ordines || !initia)
-    {
-        redde -I;
-    }
-    currens  = pagina_currens(m, (s32)xar_numerus(initia));
-    prima    = -I;
-    per (k = ZEPHYRUM; k < (s32)xar_numerus(initia); k++)
-    {
-        paginae_fines(initia, k, ordines, &a, &b);
-        per (i = a; i < b; i++)
-        {
-            o = (OrdoIndicis*)xar_obtinere(ordines, (i32)i);
-            si (o->res == id)
-            {
-                /* res iterata (agenda): pagina currens praefertur */
-                si (k == currens)
-                {
-                    redde k;
-                }
-                si (prima < ZEPHYRUM)
-                {
-                    prima = k;
-                }
-            }
-        }
-    }
-    redde prima;
+    l = ordines_indicis(m, p);
+    /* res iterata (agenda): pagina currens praefertur */
+    redde l ? album_pagina_rei(l, id, pagina_currens(m, l)) : -I;
 }
 
 /* pagina currens et numerus paginarum (figurae; vacuum: 0 et 1) */
@@ -1615,12 +1433,11 @@ paginae_status (
                              s32* k,
                              s32* n)
 {
-    Xar* initia;
+    Album* l;
 
-    initia = paginas_computare(ordines_indicis(m, p), capacitas_indicis(
-        m), p);
-    *n = initia ? (s32)xar_numerus(initia) : I;
-    *k = pagina_currens(m, *n);
+    l   = ordines_indicis(m, p);
+    *n  = album_paginae(l);
+    *k  = pagina_currens(m, l);
 }
 
 /* paginam vertere (gradus -1 / +1): res prima paginae novae electa */
@@ -1630,39 +1447,29 @@ paginam_vertere (
                 Piscina* p,
                     s32  gradus)
 {
-            Xar* ordines;
-            Xar* initia;
-    OrdoIndicis* o;
-            s32  k;
-            s32  a;
-            s32  b;
-            s32  i;
-      character  numerus[XVI];
-      character  pagina[XVI];
+       Album* l;
+         s32  k;
+         s32  id;
+   character  numerus[XVI];
+   character  pagina[XVI];
 
-    ordines  = ordines_indicis(m, p);
-    initia   = paginas_computare(ordines, capacitas_indicis(m), p);
-    si (!ordines || !initia)
+    l = ordines_indicis(m, p);
+    si (!l)
     {
         redde VERUM;
     }
-    k = pagina_currens(m, (s32)xar_numerus(initia)) + gradus;
-    si (k < ZEPHYRUM || k >= (s32)xar_numerus(initia))
+    k = pagina_currens(m, l) + gradus;
+    si (k < ZEPHYRUM || k >= album_paginae(l))
     {
         redde VERUM;
     }
-    paginae_fines(initia, k, ordines, &a, &b);
     sprintf(pagina, "%d", (integer)k);
-    per (i = a; i < b; i++)
+    id = album_res_prima(l, k);
+    si (id > ZEPHYRUM)
     {
-        o = (OrdoIndicis*)xar_obtinere(ordines, (i32)i);
-        si (o->res > ZEPHYRUM)
-        {
-            sprintf(numerus, "%d", (integer)o->res);
-            redde campos_duos_scribere(m, "pagina", pagina,
-                "res_electa",
-                numerus);
-        }
+        sprintf(numerus, "%d", (integer)id);
+        redde campos_duos_scribere(m, "pagina", pagina, "res_electa",
+            numerus);
     }
     redde campum_scribere(m, "pagina", pagina);
 }
@@ -4304,14 +4111,14 @@ indicem_disponere (
               Disponens* dp,
                     s32  corpus)
 {
-            Xar* ordines;
-            Xar* initia;
-    OrdoIndicis* o;
-            s32  regio;
-            s32  caput;
-            s32  a;
-            s32  b;
-            s32  i;
+                 Album* l;
+    constans AlbumOrdo* o;
+                   s32  regio;
+                   s32  caput;
+                   s32  a;
+                   s32  b;
+                   s32  t;
+                   s32  i;
 
     regio = corpus;
     si (visus_diei(m))
@@ -4338,24 +4145,19 @@ indicem_disponere (
         DISPOSITIO_FIXA, VII, DISPOSITIO_FIXA, KALENDARIUM_CAPUT_LINEAE,
         VERUM, FALSUM);
     globulum_capitis_locare(dp, caput, "pagina-proxima");
-    ordines  = ordines_indicis(m, dp->piscina);
-    initia   = paginas_computare(ordines, capacitas_indicis(m),
-        dp->piscina);
-    si (!ordines || !initia)
+    l = ordines_indicis(m, dp->piscina);
+    si (!l)
     {
         redde;
     }
-    paginae_fines(initia, pagina_currens(m, (s32)xar_numerus(initia)),
-        ordines, &a, &b);
+    album_pagina(l, pagina_currens(m, l), &a, &b, &t);
     /* pagina in medio gregis: titulus eius iteratus ("<id>-c") */
-    i = titulum_gregis(ordines, a);
-    si (i >= ZEPHYRUM)
+    si (t >= ZEPHYRUM)
     {
-        character id[XXXVI];
-
-        o = (OrdoIndicis*)xar_obtinere(ordines, (i32)i);
-        sprintf(id, "%s-c", o->id);
-        (vacuum)componentem_locare(dp, regio, id, PARTES_INDEX,
+        o = album_ordo(l, (i32)t);
+        (vacuum)componentem_locare(dp, regio, chorda_ut_cstr(
+            chorda_concatenare(o->id, chorda_ex_literis("-c",
+            dp->piscina), dp->piscina), dp->piscina), PARTES_INDEX,
             DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_FIXA, o->altitudo,
             VERUM, FALSUM);
     }
@@ -4363,10 +4165,11 @@ indicem_disponere (
      * omnes ictu dextro menu aperiunt (M2c) */
     per (i = a; i < b; i++)
     {
-        o = (OrdoIndicis*)xar_obtinere(ordines, (i32)i);
-        (vacuum)componentem_locare(dp, regio, o->id, o->partes,
-            DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_FIXA, o->altitudo,
-            VERUM, FALSUM);
+        o = album_ordo(l, (i32)i);
+        (vacuum)componentem_locare(dp, regio, chorda_ut_cstr(o->id,
+            dp->piscina), o->genus == ALBUM_RES ? PARTES_ITEM
+            : PARTES_INDEX, DISPOSITIO_CRESCENS, ZEPHYRUM,
+            DISPOSITIO_FIXA, o->altitudo, VERUM, FALSUM);
     }
     /* M2c: spatium reliquum = "index_vacuum" (ictus dexter: menu
      * vacuum); prompta (A3b; A6e: in regione indicis, linea ultima -
