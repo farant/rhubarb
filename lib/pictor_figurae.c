@@ -9,20 +9,6 @@
 #include <stdio.h>
 #include <string.h>
 
-/* indicium foci: exemplar marginis lateris focati (vicus-latera) */
-#define EXEMPLAR_FOCI EXEMPLAR_PUNCTA_DUPLICIA_DISPERSA
-
-interior ColorMandati
-color_thematis (
-    ColorThema c)
-{
-    ColorMandati cm;
-
-    cm.genus = COLOR_MANDATI_THEMA;
-    cm.valor = (i32)c;
-    redde cm;
-}
-
 /* index palettae COLORATIONIS (colores ictuum), non semanticus */
 /* color palettae Aquinas (ut ictus pinguntur): RGBA ex
  * color_ex_palette - non COLOR_MANDATI_INDEX, quod rasterizatores per
@@ -144,7 +130,7 @@ spongiam_praevidere (
     pv.m          = m;
     pv.n          = (s32)latus;
     pv.quadratum  = VERUM;
-    pv.color      = color_thematis(COLOR_BACKGROUND);
+    pv.color      = figura_color_thematis(COLOR_BACKGROUND);
     pv.gradus     = I;
     pv.numerus    = ZEPHYRUM;
     verrere_praevidere(c, &pv);
@@ -154,7 +140,8 @@ spongiam_praevidere (
         / II;
     g.latitudo = (s32)latus;
     g.altitudo = (s32)latus;
-    mandata_rectangulum(m, g, color_thematis(COLOR_BORDER), FALSUM);
+    mandata_rectangulum(m, g, figura_color_thematis(COLOR_BORDER),
+        FALSUM);
 }
 
 interior ColorMandati
@@ -185,13 +172,9 @@ figura_prospectus (
     f.y         = ZEPHYRUM;
     f.latitudo  = c->fines.latitudo;
     f.altitudo  = c->fines.altitudo;
-    mandata_rectangulum(m, f, color_thematis(COLOR_SUPERFICIES), VERUM);
     /* indicium foci (Franus): puncta levia super superficiem */
-    si (chorda_aequalis_literis(c->titulus, "focatum"))
-    {
-        mandata_rectangulum_exemplar(m, f, color_thematis(COLOR_BORDER),
-            EXEMPLAR_FOCI);
-    }
+    figura_mensam_pingere(m, f, chorda_aequalis_literis(c->titulus,
+        "focatum"));
 }
 
 /* P4a penicillus (praevisio): disci per fascias colore vero (titulus
@@ -265,7 +248,8 @@ figura_tabulae (
         margo.y         = -my;
         margo.latitudo  = f.latitudo + II * mx;
         margo.altitudo  = f.altitudo + II * my;
-        mandata_rectangulum(m, margo, color_thematis(COLOR_BORDER),
+        mandata_rectangulum(m, margo,
+            figura_color_thematis(COLOR_BORDER),
                             FALSUM);
     }
     /* glutinatio pendens ("glutinatio:<A|B>"): praevisio modi electi
@@ -357,7 +341,7 @@ figura_tabulae (
         per (i = I; i < c->numerus_punctorum; i++)
         {
             mandata_linea(m, c->puncta[i - I], c->puncta[i], I,
-                          color_thematis(COLOR_ACCENT_PRIMARY));
+                          figura_color_thematis(COLOR_ACCENT_PRIMARY));
         }
     }
     si (c->numerus_punctorum > ZEPHYRUM)
@@ -366,7 +350,8 @@ figura_tabulae (
         f.y         = c->puncta[c->numerus_punctorum - I].y - I;
         f.latitudo  = III;
         f.altitudo  = III;
-        mandata_rectangulum(m, f, color_thematis(COLOR_CURSOR), FALSUM);
+        mandata_rectangulum(m, f, figura_color_thematis(COLOR_CURSOR),
+            FALSUM);
     }
 }
 
@@ -389,7 +374,8 @@ figura_tituli (
     f.y         = ZEPHYRUM;
     f.latitudo  = c->fines.latitudo;
     f.altitudo  = c->fines.altitudo;
-    mandata_rectangulum(m, f, color_thematis(COLOR_BACKGROUND), VERUM);
+    mandata_rectangulum(m, f, figura_color_thematis(COLOR_BACKGROUND),
+        VERUM);
     /* P1a: textus post quadratum filium ultimum (cellula inter) */
     x = II;
     per (i = ZEPHYRUM; c->liberi && i < xar_numerus(c->liberi); i++)
@@ -405,7 +391,8 @@ figura_tituli (
      * linea XII: in VIII pars inferior praecidebatur) */
     mandata_textus(m, x, (f.altitudo > VIII) ? (f.altitudo - VIII) / II
                                              : ZEPHYRUM,
-                   c->titulus, ZEPHYRUM, color_thematis(COLOR_TEXT));
+                   c->titulus, ZEPHYRUM,
+                   figura_color_thematis(COLOR_TEXT));
 }
 
 constans Imago*
@@ -545,7 +532,8 @@ iconem_pingere (
             {
                 g.x = x0 + x;
                 g.y = y0 + y;
-                mandata_rectangulum(m, g, color_thematis(COLOR_TEXT),
+                mandata_rectangulum(m, g,
+                    figura_color_thematis(COLOR_TEXT),
                     VERUM);
             }
         }
@@ -579,7 +567,8 @@ figura_quadrati (
         f.y         = ZEPHYRUM;
         f.latitudo  = c->fines.latitudo;
         f.altitudo  = c->fines.altitudo;
-        mandata_rectangulum(m, f, color_thematis(COLOR_ACCENT_PRIMARY),
+        mandata_rectangulum(m, f,
+            figura_color_thematis(COLOR_ACCENT_PRIMARY),
             VERUM);
         redde;
     }
@@ -600,8 +589,9 @@ figura_quadrati (
     intus.y         = II;
     intus.latitudo  = c->fines.latitudo - IV;
     intus.altitudo  = c->fines.altitudo - IV;
-    mandata_rectangulum(m, f, color_thematis(COLOR_BACKGROUND), VERUM);
-    mandata_rectangulum(m, f, color_thematis(electum
+    mandata_rectangulum(m, f, figura_color_thematis(COLOR_BACKGROUND),
+        VERUM);
+    mandata_rectangulum(m, f, figura_color_thematis(electum
         ? COLOR_ACCENT_PRIMARY : COLOR_BORDER), FALSUM);
     si (electum)
     {
@@ -611,7 +601,8 @@ figura_quadrati (
         g.y         = I;
         g.latitudo  = f.latitudo - II;
         g.altitudo  = f.altitudo - II;
-        mandata_rectangulum(m, g, color_thematis(COLOR_ACCENT_PRIMARY),
+        mandata_rectangulum(m, g,
+            figura_color_thematis(COLOR_ACCENT_PRIMARY),
             FALSUM);
     }
     si (chorda_aequalis_literis(t, "instrumentum:penicillus"))
@@ -643,7 +634,8 @@ figura_quadrati (
         reliquum.mensura = t.mensura - VII;
         lx = (c->fines.latitudo - VIII * (s32)reliquum.mensura) / II;
         mandata_textus(m, lx < II ? II : lx, (c->fines.altitudo - VIII)
-            / II, reliquum, ZEPHYRUM, color_thematis(COLOR_TEXT));
+            / II, reliquum, ZEPHYRUM,
+            figura_color_thematis(COLOR_TEXT));
         redde;
     }
     /* L3 strata: '+' / '-' (strata:novum / strata:deletum), nomen
@@ -655,12 +647,12 @@ figura_quadrati (
         a.y = V;
         b.x = a.x;
         b.y = c->fines.altitudo - VI;
-        mandata_linea(m, a, b, I, color_thematis(COLOR_TEXT));
+        mandata_linea(m, a, b, I, figura_color_thematis(COLOR_TEXT));
         a.x = V;
         a.y = c->fines.altitudo / II;
         b.x = c->fines.latitudo - VI;
         b.y = a.y;
-        mandata_linea(m, a, b, I, color_thematis(COLOR_TEXT));
+        mandata_linea(m, a, b, I, figura_color_thematis(COLOR_TEXT));
         redde;
     }
     si (chorda_aequalis_literis(t, "strata:deletum"))
@@ -669,7 +661,7 @@ figura_quadrati (
         a.y = c->fines.altitudo / II;
         b.x = c->fines.latitudo - VI;
         b.y = a.y;
-        mandata_linea(m, a, b, I, color_thematis(COLOR_TEXT));
+        mandata_linea(m, a, b, I, figura_color_thematis(COLOR_TEXT));
         redde;
     }
     si (t.mensura > VII && memcmp(t.datum, "strata:", VII) == ZEPHYRUM)
@@ -677,7 +669,7 @@ figura_quadrati (
         reliquum.datum    = t.datum + VII;
         reliquum.mensura  = t.mensura - VII;
         mandata_textus(m, IV, (c->fines.altitudo - VIII) / II, reliquum,
-            ZEPHYRUM, color_thematis(COLOR_TEXT));
+            ZEPHYRUM, figura_color_thematis(COLOR_TEXT));
         redde;
     }
     si (   t.mensura > VIII
@@ -689,7 +681,7 @@ figura_quadrati (
             chorda_concatenare(chorda_ex_literis("stratum ",
             m->piscina),
             reliquum, m->piscina), ZEPHYRUM,
-            color_thematis(COLOR_TEXT));
+            figura_color_thematis(COLOR_TEXT));
         redde;
     }
     si (chorda_aequalis_literis(t, "oculus:1"))
@@ -700,7 +692,8 @@ figura_quadrati (
         g.y         = V;
         g.latitudo  = c->fines.latitudo - X;
         g.altitudo  = c->fines.altitudo - X;
-        mandata_rectangulum(m, g, color_thematis(COLOR_TEXT), VERUM);
+        mandata_rectangulum(m, g, figura_color_thematis(COLOR_TEXT),
+            VERUM);
         redde;
     }
     si (chorda_aequalis_literis(t, "oculus:0"))
@@ -744,7 +737,8 @@ figura_quadrati (
                     &dy);
                 g.x = c->fines.latitudo / II + dx;
                 g.y = c->fines.altitudo / II + dy;
-                mandata_rectangulum(m, g, color_thematis(COLOR_TEXT),
+                mandata_rectangulum(m, g,
+                    figura_color_thematis(COLOR_TEXT),
                     VERUM);
             }
             redde;
@@ -762,7 +756,7 @@ figura_quadrati (
             g.y         = (c->fines.altitudo - (s32)n) / II;
             g.latitudo  = c->fines.latitudo - VI;
             g.altitudo  = (s32)n;
-            mandata_rectangulum(m, g, color_thematis(COLOR_TEXT),
+            mandata_rectangulum(m, g, figura_color_thematis(COLOR_TEXT),
                 VERUM);
             redde;
         }
@@ -774,7 +768,8 @@ figura_quadrati (
             g.y         = IV;
             g.latitudo  = c->fines.latitudo - VIII;
             g.altitudo  = c->fines.altitudo - VIII;
-            mandata_rectangulum(m, g, color_thematis(COLOR_BORDER),
+            mandata_rectangulum(m, g,
+                figura_color_thematis(COLOR_BORDER),
                 FALSUM);
             redde;
         }
@@ -787,7 +782,7 @@ figura_quadrati (
             mandata_textus(m, (c->fines.latitudo
                 - (s32)reliquum.mensura * VI) / II,
                 (c->fines.altitudo - VIII) / II, reliquum, ZEPHYRUM,
-                color_thematis(COLOR_TEXT));
+                figura_color_thematis(COLOR_TEXT));
             redde;
         }
         si (n >= I)
@@ -795,7 +790,7 @@ figura_quadrati (
             pv.m          = m;
             pv.n          = (s32)n;
             pv.quadratum  = FALSUM;
-            pv.color      = color_thematis(COLOR_TEXT);
+            pv.color      = figura_color_thematis(COLOR_TEXT);
             pv.gradus     = I;
             pv.numerus    = ZEPHYRUM;
             sigillum_praevidere(&pv, c->fines.latitudo / II,
@@ -826,7 +821,7 @@ figura_quadrati (
                 && (secundus < ZEPHYRUM || secundus >= XVI)))
         {
             mandata_rectangulum_exemplar(m, intus,
-                color_thematis(COLOR_TEXT), (i32)exemplar);
+                figura_color_thematis(COLOR_TEXT), (i32)exemplar);
             redde;
         }
         /* solidus (0): secundus invisibilis */
@@ -860,10 +855,10 @@ figura_quadrati (
         a.y = intus.y;
         b.x = intus.x + intus.latitudo - I;
         b.y = intus.y + intus.altitudo - I;
-        mandata_linea(m, a, b, I, color_thematis(COLOR_TEXT));
+        mandata_linea(m, a, b, I, figura_color_thematis(COLOR_TEXT));
         a.x = b.x;
         b.x = intus.x;
-        mandata_linea(m, a, b, I, color_thematis(COLOR_TEXT));
+        mandata_linea(m, a, b, I, figura_color_thematis(COLOR_TEXT));
     }
 }
 
@@ -883,8 +878,10 @@ figura_palettae (
     f.y         = ZEPHYRUM;
     f.latitudo  = c->fines.latitudo;
     f.altitudo  = c->fines.altitudo;
-    mandata_rectangulum(m, f, color_thematis(COLOR_SUPERFICIES), VERUM);
-    mandata_rectangulum(m, f, color_thematis(COLOR_BORDER), FALSUM);
+    mandata_rectangulum(m, f, figura_color_thematis(COLOR_SUPERFICIES),
+        VERUM);
+    mandata_rectangulum(m, f, figura_color_thematis(COLOR_BORDER),
+        FALSUM);
 }
 
 vacuum

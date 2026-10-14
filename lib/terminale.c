@@ -81,17 +81,6 @@ nomen structura {
  * Colores
  * ================================================== */
 
-interior ColorMandati
-color_thematis (
-    ColorThema c)
-{
-    ColorMandati cm;
-
-    cm.genus = COLOR_MANDATI_THEMA;
-    cm.valor = (i32)c;
-    redde cm;
-}
-
 /* 0x00RRGGBB -> color mandati RGBA = pixelum tabulae (mandatum.h) */
 interior ColorMandati
 color_rgb (
@@ -133,7 +122,7 @@ colorem_dynamicum (
         index);
     si (vivus == thematis)
     {
-        redde color_thematis(signum);
+        redde figura_color_thematis(signum);
     }
     redde color_rgb(vivus);
 }

@@ -616,6 +616,30 @@ index_visus (
     redde i < ZEPHYRUM ? ZEPHYRUM : i;
 }
 
+b32
+scriba_actiones_librum_ponere (
+    constans InsulaRamus* ramus,
+                   Motus* motus,
+          ScribaActiones* sa,
+             ScribaLiber* liber)
+{
+    chorda currens;
+       b32 inventum;
+
+    si (!ramus || !sa || !liber || !sa->doc)
+    {
+        redde FALSUM;
+    }
+    currens = volumen_plagulam_promere(sa->doc->volumen, sa->visus,
+        sa->doc->piscina, &inventum);
+    sa->liber = liber;
+    si (!inventum || scriba_liber_index(liber, currens) < ZEPHYRUM)
+    {
+        currens = scriba_liber_nomen(liber, ZEPHYRUM);
+    }
+    redde paginam_ponere(ramus, motus, sa, currens, ZEPHYRUM, ZEPHYRUM);
+}
+
 /* S2b: pagina proxima (gradus I) aut prior (-I) libri; ultra ultimam
  * nova, ante primam nihil; cursor ad 0,0 */
 interior vacuum
@@ -1375,6 +1399,19 @@ scriba_pagina_clavis (
         && !attributum_est(&ramus, "modus", "inserere"))
     {
         redde FALSUM;
+    }
+    /* A6d: Esc otiosus (modo normali, nihil pendens - nec clavis
+     * praecedens nec 'fd'): dispensatori relinquitur, qui e scriba
+     * nidificata gradum unum ascendit (calendarium: notae -> index) */
+    si (   clavis == VIM_CLAVIS_ESCAPE
+        && (   attributum_est(&ramus, "modus", "normalis")
+            || !insula_ramus_attributum(&ramus, "modus")))
+    {
+        st = status_legere(&ramus, sa, &capsa);
+        si (st.clavis_praecedens == '\0' && !st.esperans_fd)
+        {
+            redde FALSUM;
+        }
     }
     clavem_tractare(&ramus, motus, sa, clavis, ev->tempus);
     redde VERUM;

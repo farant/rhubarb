@@ -556,8 +556,8 @@ primitivum_pingere (
             }
             frange;
         casus MANDATUM_TEXTUS:
-            tabula_pixelorum_pingere_chordam(t, (i32)sx, (i32)sy,
-                x->textus, color_ad_pixelum(color));
+            tabula_pixelorum_pingere_chordam_fonte(t, (i32)sx, (i32)sy,
+                x->textus, color_ad_pixelum(color), x->fons);
             frange;
         casus MANDATUM_IMAGO:
             imago = fons ? fons(x->textus, fons_ctx) : NIHIL;

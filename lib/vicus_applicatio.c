@@ -4,6 +4,7 @@
 #include "pictor_applicatio.h"
 #include "scriba_applicatio.h"
 #include "terminale.h"
+#include "kalendarium.h"
 #include "iussum.h"
 #include <stdio.h>
 #include <string.h>
@@ -691,6 +692,9 @@ quaestionem_iussum (
 nomen structura {
                   Vicus* vicus;
      constans character* genus;
+     /* A4: '$agenda' = genus calendarium cum "agenda"; NIHIL =
+      * argumentum ab usore */
+     constans character* argumentum_fixum;
 } ContextusAperiendi;
 
 /* S3e: contextus generis pictoris - memoria picturarum COMMUNIS omnium
@@ -786,8 +790,9 @@ aperire_iussum (
         redde VERUM;
     }
     si (!vicus_acervo_aperire(ca->vicus, ca->genus,
-            arg.mensura > ZEPHYRUM ? chorda_ut_cstr(arg, piscina)
-                                   : NIHIL))
+            ca->argumentum_fixum ? ca->argumentum_fixum
+            : arg.mensura > ZEPHYRUM ? chorda_ut_cstr(arg, piscina)
+                                     : NIHIL))
     {
         effectus->error = chorda_concatenare(chorda_ex_literis(
             ca->genus, piscina), chorda_ex_literis(
@@ -811,9 +816,35 @@ aperiens_registrare (
     {
         redde FALSUM;
     }
-    ca->vicus = v;
-    ca->genus = genus;
+    ca->vicus             = v;
+    ca->genus             = genus;
+    ca->argumentum_fixum  = NIHIL;
     redde iussum_registrare(r, genus, FALSUM, aperire_iussum, ca);
+}
+
+/* A4: verbum quod genus cum argumento fixo aperit ('$agenda' =
+ * calendarium "agenda") */
+interior b32
+aperiens_fixum_registrare (
+        IussumRegistrum* r,
+                  Vicus* v,
+     constans character* verbum,
+     constans character* genus,
+     constans character* argumentum,
+                Piscina* piscina)
+{
+    ContextusAperiendi* ca;
+
+    ca = (ContextusAperiendi*)piscina_allocare(piscina,
+        magnitudo(ContextusAperiendi));
+    si (!ca)
+    {
+        redde FALSUM;
+    }
+    ca->vicus             = v;
+    ca->genus             = genus;
+    ca->argumentum_fixum  = argumentum;
+    redde iussum_registrare(r, verbum, FALSUM, aperire_iussum, ca);
 }
 
 interior b32
@@ -1288,6 +1319,115 @@ terminale_describere (
     f->focus_in_apertura = VERUM;
 }
 
+/* agenda-plan A2: calendarium - documentum agendae UNUM per volumen
+ * vici (spatium "agenda"), pigre apertum, commune omnibus lateribus
+ * calendarii; hodie ex horologio vici (probationes fictum ponunt) */
+nomen structura {
+                  Vicus* vicus;
+                Volumen* volumen;
+                Piscina* piscina;
+    InternamentumChorda* intern;
+       AgendaDocumentum* documentum;
+        StatusSystemata* systemata;
+} ContextusKalendarii;
+
+/* porta 'hodie' calendarii: horologium vici (fons ipse lectionis
+ * tempus_* radicis); nullum = FALSUM */
+interior b32
+hodie_vici (
+    vacuum* ctx,
+      Dies* hodie)
+{
+          Vicus* v;
+    VicusTempus  t;
+
+    v = (Vicus*)ctx;
+    si (!v || !v->horologium)
+    {
+        redde FALSUM;
+    }
+    memset(&t, ZEPHYRUM, magnitudo(t));
+    v->horologium(v->horologium_ctx, &t);
+    *hodie = fasti_dies(t.annus, t.mensis, t.dies);
+    redde fasti_dies_valida(*hodie);
+}
+
+interior b32
+kalendarium_montare_in_vico (
+                 vacuum* sedes,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+     InsulaRepositorium* repo,
+     constans character* id,
+     constans character* argumentum,
+                    i32  latitudo,
+                    i32  altitudo,
+                 vacuum* ctx)
+{
+    ContextusKalendarii* ck;
+
+    ck = (ContextusKalendarii*)ctx;
+    si (!ck)
+    {
+        redde FALSUM;
+    }
+    si (!ck->documentum)
+    {
+        ck->documentum = agenda_aperire(ck->piscina, ck->intern,
+            ck->volumen, "agenda", ZEPHYRUM);
+    }
+    redde kalendarium_montare((KalendariumMontatio*)sedes, piscina,
+        intern, repo, id, (argumentum && argumentum[ZEPHYRUM])
+        ? argumentum : NIHIL, ck->documentum, volumen, latitudo,
+        altitudo, hodie_vici,
+        ck->vicus,
+        ck->systemata);
+}
+
+interior b32
+kalendarii_argumentum_ponere (
+                 vacuum* ctx,
+     constans character* argumentum)
+{
+    redde kalendarium_argumentum_ponere((KalendariumMontatio*)ctx,
+        argumentum);
+}
+
+/* A6e: pulsus lateris calendarii - notae refectae */
+interior VicusPulsus
+kalendarii_pulsare (
+    vacuum* ctx)
+{
+    VicusPulsus p;
+
+    p.mutatum = kalendarium_reficere((KalendariumMontatio*)ctx);
+    p.finitus = FALSUM;
+    redde p;
+}
+
+interior vacuum
+kalendarium_describere (
+         vacuum* montatio,
+    VicusFacies* f)
+{
+    KalendariumMontatio* m;
+
+    m                         = (KalendariumMontatio*)montatio;
+    f->actiones               = m->actiones;
+    f->figurae                = m->figurae;
+    f->componere              = kalendarium_componere;
+    f->componere_ctx          = m;
+    f->argumentum_ponere      = kalendarii_argumentum_ponere;
+    f->argumentum_ponere_ctx  = m;
+    /* A6d: notae diei - gestus scribae nidificatae */
+    f->gestum_ponere  = kalendarium_gestum_ponere;
+    f->gestum_ctx     = m;
+    /* A6e: pulsus - indicium paginae notarum */
+    f->pulsare      = kalendarii_pulsare;
+    f->pulsare_ctx  = m;
+}
+
 /* folium paginae novae (S2b): lateris sinistri cellulae (dimidium
  * cellulis rotundatum) minus margines; altitudo minus linea tabularum,
  * status, margines - minima ut scriba (XX x X) */
@@ -1397,11 +1537,12 @@ vicus_applicatio_aedificare (
                     i32  latitudo,
                     i32  altitudo)
 {
-               chorda  causa;
-     ContextusScribae* cs;
-    ContextusPictoris* cp;
- ContextusQuaestionis* cq;
-      StatusSystemata* systemata;
+                chorda  causa;
+      ContextusScribae* cs;
+     ContextusPictoris* cp;
+   ContextusKalendarii* ck;
+  ContextusQuaestionis* cq;
+       StatusSystemata* systemata;
 
     si (!app || !piscina || !intern || !volumen)
     {
@@ -1433,6 +1574,18 @@ vicus_applicatio_aedificare (
         cp->systemata  = systemata;
     }
     app->pictoris = cp;
+    /* A2: calendarium - documentum agendae commune */
+    ck = (ContextusKalendarii*)piscina_allocare(piscina,
+        magnitudo(ContextusKalendarii));
+    si (ck)
+    {
+        memset(ck, ZEPHYRUM, magnitudo(ContextusKalendarii));
+        ck->vicus      = app->vicus;
+        ck->volumen    = volumen;
+        ck->piscina    = piscina;
+        ck->intern     = intern;
+        ck->systemata  = systemata;
+    }
     /* $question: porta nulla donec applicatio fenestrae ponit */
     cq = (ContextusQuaestionis*)piscina_allocare(piscina,
         magnitudo(ContextusQuaestionis));
@@ -1460,6 +1613,10 @@ vicus_applicatio_aedificare (
                piscina)
         || !aperiens_registrare(cs->iussa, app->vicus, "pictor",
                piscina)
+        || !aperiens_registrare(cs->iussa, app->vicus, "calendarium",
+               piscina)
+        || !aperiens_fixum_registrare(cs->iussa, app->vicus, "agenda",
+               "calendarium", "agenda", piscina)
         || !cyclum_registrare(cs->iussa, app->vicus, "pictor-next", I,
                piscina)
         || !cyclum_registrare(cs->iussa, app->vicus, "pictor-prev", -I,
@@ -1476,6 +1633,10 @@ vicus_applicatio_aedificare (
                magnitudo(TerminaleApplicatio),
                terminale_montare_in_vico, terminale_describere,
                systemata)
+        || !ck
+        || !vicus_genus_addere(app->vicus, "calendarium",
+               magnitudo(KalendariumMontatio),
+               kalendarium_montare_in_vico, kalendarium_describere, ck)
         || !vicus_aperire(app->vicus, INDEX_ORDINARIUS))
     {
         causa = app->vicus ? vicus_causa(app->vicus)

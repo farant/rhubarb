@@ -1710,6 +1710,15 @@ credo(silva.syntaxis('lib/piscina.c') is None, 'syntaxis: plagula viva sana')
 causa = silva.syntaxis(via_m, open(via_m).read())
 credo(causa is not None and 'error:' in causa and '.syntaxis_' not in causa and 'mortua.c' in causa,
       'syntaxis: copia temporaria iudicata, via data ostensa (%s)' % (causa or '')[-60:])
+# caput cum tabula static (fons_8x16.h, V3a): solum compilatum tabula
+# non adhibetur - id error non est (praevolatus plantae eam recusabat);
+# error verus in capite tamen nuntiatur
+caput = open('include/fons_8x16.h').read()
+credo(silva.syntaxis('include/fons_8x16.h', caput) is None,
+      'syntaxis: caput cum tabula static non adhibita sanum')
+causa = silva.syntaxis('include/fons_8x16.h', caput.replace('#define FONS_8X16_H', '#define FONS_8X16_H\nint x = ;'))
+credo(causa is not None and 'error:' in causa,
+      'syntaxis: error verus in capite nuntiatur (%s)' % (causa or '')[-60:])
 via_p = os.path.join(T, 'planta_prae.c')
 open(via_p, 'w').write('#include "latina.h"\n\nvacuum\nh (\n    i32 a)\n{\n    (vacuum)a;\n}\n')
 cursus = []

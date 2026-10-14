@@ -1,0 +1,50 @@
+/* Scan: enumerate whole bug classes over a year range. */
+#include <stdio.h>
+#include <stdlib.h>
+#include "calendarium_liturgicum.h"
+static const char* WD[] = {"Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
+static const char* TEMP[] = {"ADV","NAT","PA_I","QUAD","TRID","PASCH","PA_II"};
+int main(int argc, char** argv)
+{
+    Piscina* p = piscina_generare_dynamicum("scan", 1 << 24);
+    CalendariumLiturgicum* cal = calendarium_creare(p);
+    int y0 = argc > 1 ? atoi(argv[1]) : 2020, y1 = argc > 2 ? atoi(argv[2]) : 2040;
+    int y, k, n1 = 0, n2 = 0, n3 = 0, n4 = 0;
+    for (y = y0; y <= y1; y++) {
+        Dies d = fasti_dies(y, 1, 1);
+        while (d.annus == y) {
+            InformatioDiei* inf = calendarium_obtinere_diem(cal, d, p);
+            s32 nsan; const SanctoraleDatum* s = sanctorale_obtinere(d.mensis, d.dies, &nsan);
+            Celebratio* pr = inf->celebratio_principalis;
+            int wd = fasti_dies_hebdomadis(d);
+            /* class 1: solemnity present but not principal */
+            for (k = 0; k < inf->numerus_celebrationum; k++)
+                if (inf->celebrationes[k].gradus == GRADUS_SOLLEMNITAS && pr->gradus != GRADUS_SOLLEMNITAS) {
+                    printf("C1 swallowed-solemnity %04d-%02d-%02d %s %-5s principal=%.*s / lost=%.*s\n", y, d.mensis, d.dies, WD[wd], TEMP[inf->tempus_info.tempus],
+                        (int)pr->titulus_brevis.mensura, pr->titulus_brevis.datum,
+                        (int)inf->celebrationes[k].titulus_brevis.mensura, inf->celebrationes[k].titulus_brevis.datum); n1++; }
+            /* class 2: sanctoral solemnity or feast dropped entirely */
+            for (k = 0; k < nsan; k++) {
+                int found = 0, j;
+                if (s[k].gradus < GRADUS_FESTUM) continue;
+                for (j = 0; j < inf->numerus_celebrationum; j++)
+                    if (inf->celebrationes[j].genus == GENUS_SANCTORALE && inf->celebrationes[j].titulus.datum && 
+                        inf->celebrationes[j].gradus == s[k].gradus) found = 1;
+                if (!found) { printf("C2 dropped %s %04d-%02d-%02d %s %-5s %s\n", s[k].gradus == GRADUS_SOLLEMNITAS ? "SOLLEMNITAS" : (s[k].gradus == GRADUS_FESTUM ? "FESTUM" : "DIES_PEC"), y, d.mensis, d.dies, WD[wd], TEMP[inf->tempus_info.tempus], s[k].titulus_brevis); n2++; }
+            }
+            /* class 3: memorial principal in Lent, Dec 17-24, Christmas octave */
+            if (pr->genus == GENUS_SANCTORALE && pr->gradus <= GRADUS_MEMORIA &&
+                (inf->tempus_info.tempus == TEMPUS_QUADRAGESIMAE ||
+                 (d.mensis == 12 && d.dies >= 17 && d.dies <= 24) ||
+                 calendarium_est_octava_nativitatis(cal, d))) {
+                if (y == 2026) printf("C3 memorial-principal-privileged %04d-%02d-%02d %s %.*s\n", y, d.mensis, d.dies, TEMP[inf->tempus_info.tempus], (int)pr->titulus_brevis.mensura, pr->titulus_brevis.datum);
+                n3++;
+            }
+            /* class 4: weekday where only optional memorials exist and colour != season colour */
+            if (pr->gradus == GRADUS_MEMORIA_AD_LIBITUM && inf->color_diei != calendarium_color_temporis(cal, d)) n4++;
+            d = fasti_addere_dies(d, 1);
+        }
+    }
+    printf("TOTALS %d-%d: C1=%d C2=%d C3=%d C4(opt-mem recolours day)=%d\n", y0, y1, n1, n2, n3, n4);
+    return 0;
+}

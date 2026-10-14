@@ -200,6 +200,15 @@ iussa "dilatum" (verb 'mora': message only, first pulse nothing,
 second pulse head + two lines, 'u' restores, deleted before the pulse
 -> evanuit).
 
+## 2026-10-13 — idle Esc passes through (A6d-2)
+
+In normal mode with nothing pending (no clavis_praecedens, no 'fd'
+wait) Esc is now returned unconsumed, next to the existing "Tab in
+normal mode -> dispatcher" rule. The dispatcher uses it to leave a
+nested scriba (calendar notes -> list); for top-level panes nothing
+acts on it (vicus has no Esc handling; dimissio only with an open
+popover). Esc still cancels pending commands, visual and insert mode.
+
 ## 2026-10-14 — running commands: IussumOpus (quaestio-rivus T7)
 
 A verb can now return `effectus->opus` (`include/iussum.h`): scriba owns

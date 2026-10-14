@@ -64,3 +64,28 @@ node on both views across new-page/back, and PIXELS in the left status
 line (the tree checks alone cannot see an unregistered figura);
 a headless PNG lands in build/probatio_vicus_paginae.png. Five plants
 caught.
+
+## 2026-10-13 — A6c: scriba_montare_in_ramo (nested mount)
+
+`scriba_montare` hard-coded its branch (`<scriba id>` under the ROOT or
+the root itself). Its body is now `ad_ramum_montare(..., InsulaRamus
+ramus, ...)`; `scriba_montare` computes the root-level branch as before
+and `scriba_montare_in_ramo(parens, id)` uses
+`insula_ramus_liberi(parens, "scriba", id)` - the calendar day view
+mounts the day's notes under its own branch (A6d). The id also keys the
+page cursor ('scriba/visus/<id>') and the saved state, so it must be
+unique in the volume, AND it is a canon `nomen`: '-' is refused
+("canon rami recusat scripturam: valor generi attributi non congruit") -
+use "c1_notae", not "c1-notae" (the first test tripped on exactly that).
+Plant: nested mount placed at the root -> red.
+
+## 2026-10-13 — A6d: scriba_librum_ponere
+
+Switches a mounted view to another book (the calendar's day books)
+through scriba's own page-switch path (`paginam_ponere`, exposed as
+`scriba_actiones_librum_ponere`): page from the view file if it exists
+in the new book, else the first; working sheet, cursor, mode and branch
+dimensions follow. Writes go to the scriba branch, whose owners admit
+only `pagina.clavis` - the caller is calendarium.agere, so the writer
+is set to pagina.clavis for the call and restored (memory: domini refuse
+silently). Registries and contexts stay; nothing is remounted.

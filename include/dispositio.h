@@ -137,6 +137,19 @@ dispositio_fines (
     constans Dispositio* d,
                     s32  index);
 
+/* fines in cellulis -> pixela (cw x ch per cellulam); nodus qui ad
+ * oram superficiei pertinet residuum pixelorum accipit (superficies
+ * latitudo x altitudo pixela, columnae x lineae cellulae) */
+Fines
+dispositio_ad_pixela (
+    Fines fines,
+      s32 columnae,
+      s32 lineae,
+      s32 latitudo,
+      s32 altitudo,
+      s32 cw,
+      s32 ch);
+
 s32
 dispositio_numerus (
     constans Dispositio* d);

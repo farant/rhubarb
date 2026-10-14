@@ -4,26 +4,12 @@
 #include "thema.h"
 #include "exemplaria.h"
 
-/* indicium foci: exemplar marginis lateris focati (vicus-latera) */
-#define EXEMPLAR_FOCI EXEMPLAR_PUNCTA_DUPLICIA_DISPERSA
-
 #include <string.h>
 
 
 /* ==================================================
  * Auxilia
  * ================================================== */
-
-interior ColorMandati
-color_thematis (
-    ColorThema c)
-{
-    ColorMandati cm;
-
-    cm.genus = COLOR_MANDATI_THEMA;
-    cm.valor = (i32)c;
-    redde cm;
-}
 
 interior Fines
 fines (
@@ -81,7 +67,7 @@ iussa_colorare (
                                  ? i.finis : (s32)linea.mensura)
                                 - i.initium);
         mandata_textus(m, i.initium * cw, l * ch, signum, ZEPHYRUM,
-            color_thematis(COLOR_ACCENT_PRIMARY));
+            figura_color_thematis(COLOR_ACCENT_PRIMARY));
         a = i.finis;
     }
 }
@@ -112,7 +98,7 @@ nexus_colorare (
                                  ? i.finis : (s32)linea.mensura)
                                 - i.initium);
         mandata_textus(m, i.initium * cw, l * ch, signum, ZEPHYRUM,
-            color_thematis(COLOR_ACCENT_SECONDARY));
+            figura_color_thematis(COLOR_ACCENT_SECONDARY));
         a = i.finis;
     }
 }
@@ -132,15 +118,11 @@ scriba_figura_mensae (
 {
     (vacuum)thema;
     (vacuum)ctx;
-    mandata_rectangulum(m, fines(ZEPHYRUM, ZEPHYRUM, c->fines.latitudo,
-        c->fines.altitudo), color_thematis(COLOR_SUPERFICIES), VERUM);
     /* indicium foci (Franus): puncta levia super superficiem */
-    si (chorda_aequalis_literis(c->titulus, "focatum"))
-    {
-        mandata_rectangulum_exemplar(m, fines(ZEPHYRUM, ZEPHYRUM,
-            c->fines.latitudo, c->fines.altitudo),
-            color_thematis(COLOR_BORDER), EXEMPLAR_FOCI);
-    }
+    figura_mensam_pingere(m, fines(ZEPHYRUM, ZEPHYRUM,
+        c->fines.latitudo,
+        c->fines.altitudo), chorda_aequalis_literis(c->titulus,
+        "focatum"));
 }
 
 /* <purus/> folium: charta, margo, selectio, cursor, textus */
@@ -180,7 +162,7 @@ scriba_figura_folii (
     ch = c->fines.altitudo / (s32)t->altitudo;
     /* opus currens (quaestio-rivus III): pagina clausa colore mensae */
     mandata_rectangulum(m, fines(ZEPHYRUM, ZEPHYRUM, c->fines.latitudo,
-        c->fines.altitudo), color_thematis(sf->sa->opus
+        c->fines.altitudo), figura_color_thematis(sf->sa->opus
         ? COLOR_SUPERFICIES : COLOR_BACKGROUND), VERUM);
     /* margo in cellulis MARGINIS (cellula tota extra folium):
      * tessellatio rectangulum ad oras cellularum PROXIMAS rotundat et
@@ -189,7 +171,7 @@ scriba_figura_folii (
      * delebatur) */
     mandata_rectangulum(m, fines(-cw, -ch,
         c->fines.latitudo + II * cw, c->fines.altitudo + II * ch),
-        color_thematis(COLOR_BORDER), FALSUM);
+        figura_color_thematis(COLOR_BORDER), FALSUM);
 
     /* selectio (visualis): lineae inter ancoram et cursorem */
     sel_a = -I;
@@ -202,7 +184,7 @@ scriba_figura_folii (
               ? c->puncta[ZEPHYRUM].y : c->puncta[I].y;
         mandata_rectangulum(m, fines(ZEPHYRUM, sel_a * ch,
             c->fines.latitudo, (sel_b - sel_a + I) * ch),
-            color_thematis(COLOR_SELECTION), VERUM);
+            figura_color_thematis(COLOR_SELECTION), VERUM);
     }
 
     /* cursor: quadratum plenum sub textu, colore STATUS modi sui (ut
@@ -219,7 +201,7 @@ scriba_figura_folii (
         cursor = c->puncta[ZEPHYRUM];
         mandata_rectangulum(m, fines(cursor.x * cw, cursor.y * ch, cw,
             ch),
-            color_thematis(color_cursoris),
+            figura_color_thematis(color_cursoris),
             VERUM);
     }
 
@@ -246,7 +228,8 @@ scriba_figura_folii (
                 (i32)col));
         }
         mandata_textus(m, ZEPHYRUM, l * ch, linea, ZEPHYRUM,
-            color_thematis((l >= sel_a && l <= sel_b) ? COLOR_BACKGROUND
+            figura_color_thematis((l >= sel_a
+                && l <= sel_b) ? COLOR_BACKGROUND
                                                       : COLOR_TEXT));
         /* S3b: iussa nota colore accentus super textum (lineae
          * selectae non: textus ibi colore chartae) */
@@ -275,7 +258,8 @@ scriba_figura_folii (
             linea.datum[ZEPHYRUM] = (i8)sub;
             linea.mensura = I;
             mandata_textus(m, cursor.x * cw, cursor.y * ch, linea,
-                           ZEPHYRUM, color_thematis(COLOR_BACKGROUND));
+                           ZEPHYRUM,
+                           figura_color_thematis(COLOR_BACKGROUND));
         }
     }
 }
@@ -296,7 +280,8 @@ scriba_figura_status (
     (vacuum)thema;
     (vacuum)ctx;
     mandata_rectangulum(m, fines(ZEPHYRUM, ZEPHYRUM, c->fines.latitudo,
-        c->fines.altitudo), color_thematis(COLOR_BACKGROUND), VERUM);
+        c->fines.altitudo), figura_color_thematis(COLOR_BACKGROUND),
+        VERUM);
     y = (c->fines.altitudo > VIII) ? (c->fines.altitudo - VIII) / II
                                    : ZEPHYRUM;
     modus = c->titulus;
@@ -311,14 +296,14 @@ scriba_figura_status (
     reliquum.datum    = c->titulus.datum + i;
     reliquum.mensura  = c->titulus.mensura - i;
     mandata_textus(m, II, y, modus, ZEPHYRUM,
-        color_thematis(chorda_aequalis_literis(modus, "INSERERE")
+        figura_color_thematis(chorda_aequalis_literis(modus, "INSERERE")
                        ? COLOR_STATUS_INSERT
                        : chorda_aequalis_literis(modus, "VISUALIS")
                        ? COLOR_STATUS_VISUAL : COLOR_STATUS_NORMAL));
     si (reliquum.mensura > ZEPHYRUM)
     {
         mandata_textus(m, II + (s32)modus.mensura * VI, y, reliquum,
-                       ZEPHYRUM, color_thematis(COLOR_TEXT));
+                       ZEPHYRUM, figura_color_thematis(COLOR_TEXT));
     }
 }
 
@@ -338,7 +323,7 @@ scriba_figura_paginae (
     y = (c->fines.altitudo > VIII) ? (c->fines.altitudo - VIII) / II
                                    : ZEPHYRUM;
     mandata_textus(m, ZEPHYRUM, y, c->titulus, ZEPHYRUM,
-                   color_thematis(COLOR_TEXT));
+                   figura_color_thematis(COLOR_TEXT));
 }
 
 /* <purus/> nuntius: titulus colore erroris, centratus ut status */
@@ -356,7 +341,7 @@ scriba_figura_nuntii (
     y = (c->fines.altitudo > VIII) ? (c->fines.altitudo - VIII) / II
                                    : ZEPHYRUM;
     mandata_textus(m, ZEPHYRUM, y, c->titulus, ZEPHYRUM,
-                   color_thematis(COLOR_ERROR));
+                   figura_color_thematis(COLOR_ERROR));
 }
 
 vacuum

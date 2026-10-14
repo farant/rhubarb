@@ -1,0 +1,3 @@
+#!/bin/sh
+R=/Users/francisarant/Documents/projects/rhubarb-secunda
+clang -std=c89 -Wno-everything -I$R/include probe.c $R/lib/calendarium_liturgicum.c $R/lib/sanctorale.c $R/lib/fasti.c $R/lib/piscina.c $R/lib/chorda.c $R/lib/chorda_aedificator.c -o probe

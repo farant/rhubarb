@@ -125,13 +125,15 @@ paginam_indicare (
         &indicium);
 }
 
-b32
-scriba_montare (
+/* A6c: montatio ad ramum datum (radix, <scriba id> radicis, aut
+ * liberum parentis) - scriba_montare et scriba_montare_in_ramo */
+interior b32
+ad_ramum_montare (
          ScribaMontatio* m,
                 Piscina* piscina,
     InternamentumChorda* intern,
                 Volumen* volumen,
-     InsulaRepositorium* repo,
+            InsulaRamus  ramus,
      constans character* id,
                     i32  latitudo,
                     i32  altitudo,
@@ -146,7 +148,7 @@ scriba_montare (
     constans TabulaCharacterum* folium;
             constans character* spatium;
 
-    si (!m || !piscina || !intern || !volumen || !repo)
+    si (!m || !piscina || !intern || !volumen)
     {
         redde FALSUM;
     }
@@ -191,9 +193,8 @@ scriba_montare (
         fprintf(stderr, "scriba: documentum\n");
         redde FALSUM;
     }
-    folium   = scriba_documentum_tabula(m->doc);
-    m->ramus = id ? insula_ramus(repo, "scriba", id)
-                  : insula_ramus_radix(repo);
+    folium    = scriba_documentum_tabula(m->doc);
+    m->ramus  = ramus;
 
     /* status-plan S6b: organum per modulum communem (manifestum cum
      * basi, canon, initium, restitutio, domini); manifestum infixum
@@ -237,6 +238,83 @@ scriba_montare (
     m->compositio.cellula_altitudo   = CELLULA_ALTITUDO;
     m->compositio.status_lineae      = STATUS_LINEAE;
     m->compositio.ramus              = m->ramus;
+    (vacuum)paginam_indicare(m, VERUM);
+    redde VERUM;
+}
+
+b32
+scriba_montare (
+         ScribaMontatio* m,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+     InsulaRepositorium* repo,
+     constans character* id,
+                    i32  latitudo,
+                    i32  altitudo,
+            ScribaLiber* liber,
+        StatusSystemata* systemata)
+{
+    si (!repo)
+    {
+        redde FALSUM;
+    }
+    redde ad_ramum_montare(m, piscina, intern, volumen, id
+        ? insula_ramus(repo, "scriba", id) : insula_ramus_radix(repo),
+        id,
+        latitudo, altitudo, liber, systemata);
+}
+
+b32
+scriba_montare_in_ramo (
+          ScribaMontatio* m,
+                 Piscina* piscina,
+     InternamentumChorda* intern,
+                 Volumen* volumen,
+    constans InsulaRamus* parens,
+      constans character* id,
+                     i32  latitudo,
+                     i32  altitudo,
+             ScribaLiber* liber,
+         StatusSystemata* systemata)
+{
+    si (!parens || !id || !id[ZEPHYRUM])
+    {
+        redde FALSUM;
+    }
+    redde ad_ramum_montare(m, piscina, intern, volumen,
+        insula_ramus_liberi(parens, "scriba", id), id, latitudo,
+        altitudo,
+        liber, systemata);
+}
+
+b32
+scriba_librum_ponere (
+    ScribaMontatio* m,
+       ScribaLiber* liber)
+{
+    chorda prior;
+       b32 ok;
+
+    si (!m || !liber || !m->ramus.repo)
+    {
+        redde FALSUM;
+    }
+    /* domini rami scribae scripturas 'pagina.clavis' solas admittunt
+     * (vocans actio alia est: calendarium.agere) */
+    prior = m->ramus.repo->scriptor;
+    insula_scriptorem_ponere(m->ramus.repo, chorda_ex_literis(
+        "pagina.clavis", m->ramus.repo->piscina));
+    ok = scriba_actiones_librum_ponere(&m->ramus, NIHIL,
+        &m->actiones_ctx,
+        liber);
+    insula_scriptorem_ponere(m->ramus.repo, prior);
+    si (!ok)
+    {
+        redde FALSUM;
+    }
+    m->liber  = liber;
+    m->doc    = m->actiones_ctx.doc;
     (vacuum)paginam_indicare(m, VERUM);
     redde VERUM;
 }
