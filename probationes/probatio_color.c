@@ -267,6 +267,88 @@ s32 principale (vacuum)
 
 
     /* ==================================================
+     * Probare spatia colorum (lux linearis, OKLab)
+     * ================================================== */
+
+    {
+        f64 lin[III], lab[III], retro[III];
+        f64 nigrum[III]  = {0.0, 0.0, 0.0};
+        f64 album[III]   = {1.0, 1.0, 1.0};
+        s32 i;
+
+        imprimere("\n--- Probans spatia colorum ---\n");
+
+        /* curva sRGB: extrema, medium, et reditus */
+        CREDO_F64_PROXIMUS(color_srgb_ad_linearem(0.0), 0.0, 1e-12);
+        CREDO_F64_PROXIMUS(color_srgb_ad_linearem(1.0), 1.0, 1e-12);
+        CREDO_F64_PROXIMUS(color_srgb_ad_linearem(0.5), 0.214041, 1e-6);
+        per (i = 0; i <= C; i++)
+        {
+            f64 c = (f64)i / 100.0;
+            CREDO_F64_PROXIMUS(color_linearis_ad_srgb(color_srgb_ad_linearem(c)),
+                c, 1e-9);
+        }
+
+        /* tabula nigro-alba alternans: media lineare 0.5 -> sRGB ~188, non 128 */
+        CREDO_F64_PROXIMUS(color_linearis_ad_srgb(0.5) * 255.0, 187.5,
+            0.5);
+
+        /* octeti per tabulam = formula */
+        CREDO_F64_PROXIMUS(color_octetus_ad_linearem(0), 0.0, 1e-12);
+        CREDO_F64_PROXIMUS(color_octetus_ad_linearem(CCLV), 1.0, 1e-12);
+        per (i = 0; i < CCLVI; i++)
+        {
+            CREDO_F64_PROXIMUS(color_octetus_ad_linearem((i8)i),
+                               color_srgb_ad_linearem((f64)i / 255.0),
+                               1e-12);
+        }
+
+        /* OKLab: niger, albus, ruber purus (Ottosson: 0.627955, 0.224863, 0.125846) */
+        color_linearis_ad_oklab(nigrum, lab);
+        CREDO_F64_PROXIMUS(lab[0], 0.0, 1e-9);
+        CREDO_F64_PROXIMUS(lab[1], 0.0, 1e-9);
+        CREDO_F64_PROXIMUS(lab[2], 0.0, 1e-9);
+        color_linearis_ad_oklab(album, lab);
+        CREDO_F64_PROXIMUS(lab[0], 1.0, 1e-4);
+        CREDO_F64_PROXIMUS(lab[1], 0.0, 1e-4);
+        CREDO_F64_PROXIMUS(lab[2], 0.0, 1e-4);
+        lin[0] = 1.0; lin[1] = 0.0; lin[2] = 0.0;
+        color_linearis_ad_oklab(lin, lab);
+        CREDO_F64_PROXIMUS(lab[0], 0.627955, 1e-4);
+        CREDO_F64_PROXIMUS(lab[1], 0.224863, 1e-4);
+        CREDO_F64_PROXIMUS(lab[2], 0.125846, 1e-4);
+
+        /* reditus lineare -> OKLab -> lineare. Matrices Ottosson X
+         * digitis editae non sunt inversae exactae: error maximus
+         * 2.6e-7 (mensuratum 2026-10-13), longe infra octetum (~2e-3). */
+        per (i = 0; i < XXVII; i++)
+        {
+            lin[0] = (f64)(i % III) / 2.0;
+            lin[1] = (f64)((i / III) % III) / 2.0;
+            lin[2] = (f64)(i / IX) / 2.0;
+            color_linearis_ad_oklab(lin, lab);
+            color_oklab_ad_linearem(lab, retro);
+            CREDO_F64_PROXIMUS(retro[0], lin[0], 1e-6);
+            CREDO_F64_PROXIMUS(retro[1], lin[1], 1e-6);
+            CREDO_F64_PROXIMUS(retro[2], lin[2], 1e-6);
+        }
+
+        /* negativa ad 0 tonduntur (error diffusus extra gamutum) */
+        lin[0] = -0.2; lin[1] = 0.0; lin[2] = 0.0;
+        color_linearis_ad_oklab(lin, lab);
+        CREDO_F64_PROXIMUS(lab[0], 0.0, 1e-9);
+
+        /* commoditas Color et distantia */
+        color_ad_oklab(COLOR_ALBUS, lab);
+        CREDO_F64_PROXIMUS(lab[0], 1.0, 1e-4);
+        color_ad_oklab(COLOR_NIGER, retro);
+        CREDO_F64_PROXIMUS(color_oklab_distantia(lab, retro), 1.0,
+            1e-4);
+        CREDO_F64_PROXIMUS(color_oklab_distantia(lab, lab), 0.0, 1e-12);
+    }
+
+
+    /* ==================================================
      * Compendium
      * ================================================== */
 

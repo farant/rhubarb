@@ -32,7 +32,17 @@ nomen structura {
             Dispensator* d;
                  vacuum* pictoris;   /* L5: contextus communis pictoris
                                       * (opacus) - porta imaginis */
+                 vacuum* quaestionis; /* $question: contextus (opacus) -
+                                       * porta quaestionis */
 } VicusApplicatio;
+
+/* $question: porta quaestionis - responsum textus aut error, nuntius
+ * usus ("412 in, 380 out"). NIHIL = nulla (gemellus terminalis,
+ * probationes): '$question' errorem nominatum dat. Applicatio fenestrae
+ * portam ponit quae clavem legit et quaestio_rogare vocat. */
+nomen b32 (*VicusPortaQuaestionis)(vacuum* ctx, chorda quaestio,
+    s32 characteres, s32 latitudo, Piscina* piscina, chorda* responsum,
+    chorda* nuntius, chorda* error);
 
 /* Argumenta communia: -fumus (volumen temporarium), -volumen <via>
  * (ordinarie "vicus.volumen"). Reddit volumen apertum aut NIHIL. */
@@ -62,5 +72,11 @@ vicus_applicatio_imaginis_portam_ponere (
      VicusApplicatio* app,
         ImagoFructus (*porta)(vacuum* ctx, Piscina* piscina),
               vacuum* ctx);
+
+vacuum
+vicus_applicatio_quaestionis_portam_ponere (
+          VicusApplicatio* app,
+    VicusPortaQuaestionis  porta,
+                   vacuum* ctx);
 
 #endif /* VICUS_APPLICATIO_H */

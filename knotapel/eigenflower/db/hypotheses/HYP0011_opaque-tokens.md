@@ -2,7 +2,7 @@
 id: HYP0011
 title: "Opaque tokens can break the finite-vocabulary limitation by allowing the net to reason about logical structure without knowing content"
 status: proposed
-source: "CLAUDE.md, knotapel/atlas/planning/vision.md"
+source: "CLAUDE.md, knotapel/archived-analysis/atlas/planning/vision.md"
 evidence_for: []
 evidence_against: []
 testable_by: []

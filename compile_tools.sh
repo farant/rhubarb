@@ -5,14 +5,10 @@
 source "$(dirname "$0")/tools/vexilla.sh"
 declare -a GCC_FLAGS=("${VEXILLA_C89[@]}")
 
-# Include paths
-# materia/fontes et toml/fontes: instrumenta capsulae et librarii
-# clientem toml trahunt (toml Q12, 2026-09-28); idem ac compile_tests.sh
-declare -a INCLUDE_FLAGS=(
-    "-Iinclude"
-    "-Imateria/fontes"
-    "-Itoml/fontes"
-)
+# Include paths: aedilis.stml <inclusa> per vexilla_radices (cursores ad
+# gradus T6; olim III manu)
+vexilla_radices "" || { echo "FRACTA: radices inclusae (bin/aedilis --radices)"; exit 1; }
+declare -a INCLUDE_FLAGS=("${RADICES_C89[@]}")
 
 # Build directory for object files
 BUILD_DIR="build"

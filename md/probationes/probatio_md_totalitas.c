@@ -15,7 +15,8 @@
  * unci et delimitatores polynomiales) NON RUIT - md ruinam notam nullam
  * habet quam pinnet (css 01M1FAD8 pinnabat).
  *
- * IN FRACTURA: fons peccans in md/build/totalitas_fractum.md scribitur.
+ * IN FRACTURA: fons peccans in $TMPDIR/totalitas_fractum.md (in gradu =
+ * area membri; sine TMPDIR md/build/) scribitur et via imprimitur.
  */
 
 #include "latina.h"
@@ -147,10 +148,20 @@ _fractum_scribere (
     constans character* fons,
                    i32  mensura)
 {
-    character via[DXII];
-    FILE* f;
+              character  via[DXII];
+     constans character* tmp = getenv("TMPDIR");
+                   FILE* f;
 
-    sprintf(via, "%s/md/build/totalitas_fractum.md", RADIX_VIAE);
+    /* gradus (cursores ad gradus T4): scriptura extra aream membri
+     * vetita - TMPDIR membri est area ipsa */
+    si (tmp != NIHIL && tmp[0] != '\0' && strlen(tmp) < CD)
+    {
+        sprintf(via, "%s/totalitas_fractum.md", tmp);
+    }
+    alioquin
+    {
+        sprintf(via, "%s/md/build/totalitas_fractum.md", RADIX_VIAE);
+    }
     f = fopen(via, "wb");
     si (f == NIHIL)
     {

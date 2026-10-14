@@ -33,8 +33,8 @@ See `notes/` for detailed architecture notes:
 - Eigenflower references knotapel results but doesn't duplicate them
 - DKC proves the core mechanism (exact algebraic weights compute Boolean functions)
 - Eigenflower's job is scaling from 3-5 input Boolean functions to propositional complexity
-- The atlas (`knotapel/atlas/`) is the reference for DKC results, theorems, and proofs
-- Key knotapel results for eigenflower: parity-lock theorem (D92), depth law (D82), dual-channel theorem (D108-109), axis-alignment theorem (D107), forward DKC (D29), five-pillar synthesis
+- The atlas (archived 2026-10-13 at `knotapel/archived-analysis/atlas/`) was the reference for DKC results, theorems, and proofs. It predates the exact audits (knotapel demos 114-125), which corrected or overturned many claims; check a result against its demo's findings.md and the 2026-10-13 synthesis at the end of `knotapel/explorers-log.md` before relying on it
+- Key knotapel results for eigenflower: parity-lock theorem (D92), depth law (D82), dual-channel theorem (D108-109), axis-alignment theorem (D107), forward DKC (D29), five-pillar synthesis. Status after the audits: D29's brackets survive exactly (D117); D82's depth law has no support above depth 6 (D125); the others are not yet audited
 
 ### Key Papers (from extractions)
 - **Tensor Logic** (Domingos): SP[s,p] = H(SM[s,m] * MP[m,p]) — syllogism = matrix multiply + step function

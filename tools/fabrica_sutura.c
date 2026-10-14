@@ -149,6 +149,13 @@ _species (
         : (i32)FABRICA_SPECIES_ALIA;
 }
 
+/* identitas clang memorata per processum (cursores ad gradus T3b):
+ * omnis actio cum ingressu identitas_clang eam poscit - olim processus
+ * 'clang -print-prog-name' per actionem (XXXI in 'probare -vis' css,
+ * fumus XLIX). clang inter actiones eiusdem processus non mutatur. */
+hic_manens b32      _identitas_clang_memorata = FALSUM;
+hic_manens Sigillum _identitas_clang_sigillum;
+
 /* identitas clang ut bin/compilator (tools/compilator.c
  * _identitas_compilatoris): FABRICA_CLANG = octeti eius; aliter via
  * vera ('clang -print-prog-name=clang') cum mensura, mtime, inodo */
@@ -183,6 +190,11 @@ _identitas (
             (memoriae_index)octeti.mensura);
         redde VERUM;
     }
+    si (_identitas_clang_memorata)
+    {
+        *identitas_out = _identitas_clang_sigillum;
+        redde VERUM;
+    }
     argv[0]   = "clang";
     argv[I]   = "-print-prog-name=clang";
     argv[II]  = NIHIL;
@@ -214,6 +226,8 @@ _identitas (
         (longus)status.st_size, (longus)status.st_mtime,
         (longus insignatus)status.st_ino);
     *identitas_out = sigillum_computare(memoria, strlen(memoria));
+    _identitas_clang_sigillum = *identitas_out;
+    _identitas_clang_memorata = VERUM;
     redde VERUM;
 }
 
@@ -1046,6 +1060,15 @@ suturae_legentem_parare (
     sutura->enumerare  = _enumerare;
 }
 
+/* ambitus verus (getenv) - explicatio membrorum valores variabilium
+ * declaratarum in clave ponit (cursores ad gradus T4) */
+vacuum
+suturae_ambitum_addere (
+    FabricaSutura* sutura)
+{
+    sutura->ambitus = _ambitus;
+}
+
 /* processus veri: generatores currere, relationes rogare */
 vacuum
 suturae_currentem_addere (
@@ -1153,6 +1176,15 @@ _arborem_photographare (
          * currit actionem FRACTAM faceret ('scripsit extra vestigium',
          * fabrica spec 3 T9, mensuratum). Limes: actio quae ibi errans
          * scriberet non capitur. */
+        /* THESAURUS (cursores ad gradus T3c): scriptura ibi omni actioni
+         * licet (fabrica_ordo) - ambulatio nihil iudicaret, et LXX% arboris
+         * est (LXX milia 'actiones' ex CX; ~0.35 s per photographiam, bis
+         * per membrum cursum; fumus L) */
+        si (   introitus->genus == INTROITUS_DIRECTORIUM
+            && fabrica_via_thesauri(via, piscina))
+        {
+            perge;
+        }
         si (   chorda_aequalis_literis(via, "gesta/annales")
             || (   directorium.mensura == 0
                 && (   chorda_incipit(via, chorda_ex_literis(

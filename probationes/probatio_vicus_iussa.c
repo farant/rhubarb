@@ -11,7 +11,14 @@
  * praecisus ante indicem paginae; clavis proxima et ictus proximus
  * tollunt. VII: '$dies(-1)', '$dies(7)'; '$dies(1, 2)' error; verbum
  * FALSUM sine errore -> "<verbum>: defecit". VIII: ictus primus in
- * latus non focatum iussum statim currit; extra iussum focat solum. */
+ * latus non focatum iussum statim currit; extra iussum focat solum.
+ * Sectio corpus (2026-10-13): '$eco<>..</>' (non consumens) textum
+ * POST '</>' inserit, etiam si '</>' in linea sequenti; ictus intra
+ * corpus nihil currit; consumens caput solum delet. Sectio dilatum
+ * ($question): verbum 'mora' differt - ictus nuntium solum ponit,
+ * pulsus primus picturam sinit, secundus verbum iterum currit (caput
+ * substituitur, lineae novae infra '</>'), 'u' totum restituit; iussum
+ * deletum ante pulsum: "mora: evanuit". */
 #include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
@@ -216,6 +223,42 @@ frange_iussum (
     (vacuum)p;
     (vacuum)effectus;
     redde FALSUM;
+}
+
+/* corpus: textus "!" (ctx NIHIL: non consumens) aut "#" (ctx
+ * quilibet: consumens) */
+interior b32
+resonare_iussum (
+    constans Iussum* iussum,
+             vacuum* ctx,
+            Piscina* p,
+     IussumEffectus* effectus)
+{
+    (vacuum)iussum;
+    effectus->textus = chorda_ex_literis(ctx ? "#" : "!", p);
+    redde VERUM;
+}
+
+/* dilatum: vocatio prima differt, altera caput et lineas reddit;
+ * ctx = numerus vocationum */
+interior b32
+mora_iussum (
+    constans Iussum* iussum,
+             vacuum* ctx,
+            Piscina* p,
+     IussumEffectus* effectus)
+{
+    (*(s32*)ctx)++;
+    si (!iussum->iterum)
+    {
+        effectus->differre  = VERUM;
+        effectus->nuntius   = chorda_ex_literis("mora: exspecta", p);
+        redde VERUM;
+    }
+    effectus->caput    = chorda_ex_literis("<mora facta>", p);
+    effectus->textus   = chorda_ex_literis("\nlinea una\nlinea duo", p);
+    effectus->nuntius  = chorda_ex_literis("mora: facta", p);
+    redde VERUM;
 }
 
 /* MUNDUS APPLICATIONIS (credo v2): applicatio vicus cum volumine
@@ -445,9 +488,107 @@ _probare_iussa (
     CREDO_VERUM(linea_est(sin, IX, hodie));
 }
 
+interior vacuum
+_probare_corpus (
+    CredoContextus* c)
+{
+      MundusApplicationis* ms   = (MundusApplicationis*)c->datum;
+               ManusLudus* m    = ms->m;
+           ScribaMontatio* sin  = ms->sin;
+
+    CREDO_NECESSE(iussum_registrare(sin->actiones_ctx.iussa, "eco",
+        FALSUM, resonare_iussum, NIHIL));
+    CREDO_NECESSE(iussum_registrare(sin->actiones_ctx.iussa, "ecoc",
+        VERUM, resonare_iussum, ms));
+    ictus(m, III, ZEPHYRUM);
+    CREDO_VERUM(manus_ludus_scribere(m, "i$eco<>hi"));
+    CREDO_VERUM(manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));
+    ictus(m, IV, ZEPHYRUM);
+    CREDO_VERUM(manus_ludus_scribere(m, "ithere</> z"));
+    CREDO_VERUM(manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));
+    ictus(m, VI, ZEPHYRUM);
+    CREDO_VERUM(manus_ludus_scribere(m, "i$ecoc<>ab</> q"));
+    CREDO_VERUM(manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));
+    CREDO_VERUM(linea_est(sin, III, "$eco<>hi"));
+    CREDO_VERUM(linea_est(sin, IV, "there</> z"));
+
+    /* ictus intra corpus: nihil currit */
+    ictus(m, III, VII);
+    CREDO_VERUM(linea_est(sin, IV, "there</> z"));
+    /* ictus in caput: textus post '</>' in linea IV */
+    ictus(m, III, I);
+    CREDO_VERUM(linea_est(sin, III, "$eco<>hi"));
+    CREDO_VERUM(linea_est(sin, IV, "there</>! z"));
+    /* consumens: caput deletur, textus post '</>' */
+    ictus(m, VI, II);
+    CREDO_VERUM(linea_est(sin, VI, "ab</># q"));
+}
+
+interior vacuum
+_probare_dilatum (
+    CredoContextus* c)
+{
+    MundusApplicationis* ms          = (MundusApplicationis*)c->datum;
+        VicusApplicatio* app         = &ms->app;
+                  Vicus* v           = ms->v;
+             ManusLudus* m           = ms->m;
+         ScribaMontatio* sin         = ms->sin;
+                    s32  vocationes  = ZEPHYRUM;
+
+    CREDO_NECESSE(iussum_registrare(sin->actiones_ctx.iussa, "mora",
+        FALSUM, mora_iussum, &vocationes));
+    ictus(m, XII, ZEPHYRUM);
+    CREDO_VERUM(manus_ludus_scribere(m, "i$mora<>q</>"));
+    CREDO_VERUM(manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));
+    CREDO_VERUM(linea_est(sin, XII, "$mora<>q</>"));
+
+    /* ictus: nuntius solum, folium intactum */
+    ictus(m, XII, I);
+    dispensator_recomponere(app->d);
+    CREDO_AEQUALIS_S32(vocationes, I);
+    CREDO_VERUM(nuntius_est(v, sin, "mora: exspecta"));
+    CREDO_VERUM(linea_est(sin, XII, "$mora<>q</>"));
+    /* pulsus primus: pictura sinitur, nihil currit */
+    (vacuum)vicus_pulsare(v);
+    CREDO_AEQUALIS_S32(vocationes, I);
+    CREDO_VERUM(linea_est(sin, XII, "$mora<>q</>"));
+    /* pulsus secundus: verbum iterum, caput et lineae */
+    (vacuum)vicus_pulsare(v);
+    dispensator_recomponere(app->d);
+    CREDO_AEQUALIS_S32(vocationes, II);
+    CREDO_VERUM(linea_est(sin, XII, "<mora facta>q</>"));
+    CREDO_VERUM(linea_est(sin, XIII, "linea una"));
+    CREDO_VERUM(linea_est(sin, XIV, "linea duo"));
+    CREDO_VERUM(nuntius_est(v, sin, "mora: facta"));
+    /* pulsus ulterior: nihil iterum */
+    (vacuum)vicus_pulsare(v);
+    CREDO_AEQUALIS_S32(vocationes, II);
+    /* 'u': commissio una - totum restituitur */
+    ictus(m, XX, ZEPHYRUM);
+    CREDO_VERUM(manus_ludus_scribere(m, "u"));
+    CREDO_VERUM(linea_est(sin, XII, "$mora<>q</>"));
+    CREDO_VERUM(linea_est(sin, XIII, "          ")
+        || linea_est(sin, XIII, ""));
+
+    /* iussum deletum ante pulsum: evanuit, nihil mutatur */
+    ictus(m, XII, I);
+    CREDO_AEQUALIS_S32(vocationes, III);
+    ictus(m, XII, VII);
+    CREDO_VERUM(manus_ludus_scribere(m, "dd"));
+    (vacuum)vicus_pulsare(v);
+    (vacuum)vicus_pulsare(v);
+    dispensator_recomponere(app->d);
+    CREDO_AEQUALIS_S32(vocationes, III);
+    CREDO_VERUM(nuntius_est(v, sin, "mora: evanuit"));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "iussa in pagina scribae (scenarium I-VIII)", _probare_iussa,
       _applicationem_parare, _applicationem_purgare, NIHIL, NIHIL },
+    { "corpus", _probare_corpus, _applicationem_parare,
+      _applicationem_purgare, NIHIL, NIHIL },
+    { "dilatum", _probare_dilatum, _applicationem_parare,
+      _applicationem_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

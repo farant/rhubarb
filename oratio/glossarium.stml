@@ -376,10 +376,15 @@
     <forma textus="unimodularem" casus="accusativus" numerus="singularis"/>
   </vocabulum>
   <vocabulum lemma="hermite" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: Charles Hermite (forma normalis Hermite, matrix_forma_hermite)"/>
+  <vocabulum lemma="cartan" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: Elie Cartan (matrix Cartan systematis radicum, probatio_reticulum.c)"/>
+  <vocabulum lemma="lovasz" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: Laszlo Lovasz (condicio Lovasz in reductione LLL, lib/reticulum.c)"/>
+  <vocabulum lemma="lll" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio: Lenstra-Lenstra-Lovasz, reductio basium reticuli (lib/reticulum.c)"/>
   <vocabulum lemma="galois" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: Evariste Galois (automorphismi Galois, lib/cyclotomia.c)"/>
   <vocabulum lemma="gauss" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: C. F. Gauss (summae Gauss, probationes/probatio_cyclotomia.c)"/>
   <vocabulum lemma="sturm" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: J. C. F. Sturm (catena Sturm, numerus radicum realium; lib/extensio.c)"/>
   <vocabulum lemma="cauchy" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: A.-L. Cauchy (limes radicum 1 + max |f_i|; lib/extensio.c)"/>
+  <vocabulum lemma="oklab" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: spatium colorum OKLab (B. Ottosson 2020; color_linearis_ad_oklab, lib/color.c)"/>
+  <vocabulum lemma="srgb" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: spatium colorum sRGB (IEC 61966-2-1; color_srgb_ad_linearem, lib/color.c)"/>
   <vocabulum lemma="horner" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: W. G. Horner (aestimatio polynomii per multiplicationes nidificatas; lib/extensio.c)"/>
   <vocabulum lemma="montgomery" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: P. L. Montgomery (reductio Montgomery, 1985; lib/agmen.c)"/>
   <vocabulum lemma="vectorizare" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="terminus technicus domus: ansam in instructiones vectoris (SIMD) vertere (lib/agmen.c, tools/agmen_vectorizatio.sh)"/>
@@ -1620,6 +1625,65 @@
   <vocabulum lemma="reproducibilis" lingua="latina" classis="adiectivum" nota="vox domus (re + producere): quod iterum productum idem reddit - artificium octetis ex ingressibus determinatum (FabricaGenus.reproducibile; census fabricae, fabrica-6 T1)">
     <forma textus="reproducibile" casus="nominativus" numerus="singularis" genus="neutrum"/>
     <forma textus="reproducibilia" casus="nominativus" numerus="pluralis" genus="neutrum"/>
+  </vocabulum>
+  <vocabulum lemma="orthogonalizo" lingua="latina" classis="verbum" nota="Neo-Lat. (Gr. orthogonios): vectores orthogonales reddere - Gram-Schmidt; sedes reticulum_orthogonaliza (include/reticulum.h, reticulum-plan T1)">
+    <forma textus="orthogonalizare" tempus="praesens" modus="infinitivus" vox="activa" forma-verbi="infinitivum"/>
+    <forma textus="orthogonaliza" persona="II" numerus="singularis" tempus="praesens" modus="imperativus" vox="activa"/>
+    <forma textus="orthogonalizatio" nota="nomen actionis"/>
+  </vocabulum>
+  <vocabulum lemma="orthogonalis" lingua="latina" classis="adiectivum" nota="Neo-Lat. (Gr. orthogonios, rectangulus): ad angulos rectos - vectores quorum productum interius nullum est; sedes Orthogonalis (lib/reticulum.c)">
+    <forma textus="orthogonalis" casus="nominativus" numerus="singularis"/>
+    <forma textus="orthogonales" casus="nominativus" numerus="pluralis"/>
+  </vocabulum>
+
+  <!-- dithering per exemplaria (2026-10-13): voces domus modi lib/dithering_exemplaria.c -->
+  <vocabulum lemma="pictogramma" lingua="latina" classis="substantivum" nota="Gk. pictogramma n. (pictogrammatis), more lexematis: exemplar 8x8 cum significatione (lateres, squamae, undae)">
+    <forma textus="pictogramma" casus="nominativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="pictogrammatis" casus="genitivus" numerus="singularis" genus="neutrum"/>
+    <forma textus="pictogrammate" casus="ablativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="pictogrammata" casus="nominativus" numerus="pluralis" genus="neutrum"/>
+    <forma textus="pictogrammatum" casus="genitivus" numerus="pluralis" genus="neutrum"/>
+    <forma textus="pictogrammatibus" casus="ablativus" numerus="pluralis" genus="neutrum"/>
+  </vocabulum>
+  <vocabulum lemma="hachura" lingua="latina" classis="substantivum" nota="vox domus ex Francogallico hachure: lineolae parallelae quae umbram reddunt (hachurae curvae)">
+    <forma textus="hachura" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="hachurae" casus="nominativus" numerus="pluralis" genus="femininum"/>
+    <forma textus="hachuras" casus="accusativus" numerus="pluralis" genus="femininum"/>
+    <forma textus="hachurarum" casus="genitivus" numerus="pluralis" genus="femininum"/>
+    <forma textus="hachuris" casus="ablativus" numerus="pluralis" genus="femininum"/>
+  </vocabulum>
+  <vocabulum lemma="hachuratus" lingua="latina" classis="adiectivum" nota="vox domus: hachuris pictus (regio hachurata)">
+    <forma textus="hachuratus" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="hachurata" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="hachuratum" casus="nominativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="hachuratae" casus="nominativus" numerus="pluralis" genus="femininum"/>
+  </vocabulum>
+  <vocabulum lemma="praesupputatio" lingua="latina" classis="substantivum" nota="vox domus ex supputatio: summa ante constituta quae non exceditur (budget)">
+    <forma textus="praesupputatio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="praesupputationis" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="praesupputationem" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="praesupputatione" casus="ablativus" numerus="singularis" genus="femininum"/>
+    <forma textus="praesupputationes" casus="nominativus" numerus="pluralis" genus="femininum"/>
+  </vocabulum>
+  <vocabulum lemma="glutinatio" lingua="latina" classis="substantivum" nota="Latina (Celsus): glutinatio, -onis - pictor: glutinatio pendens (Cmd+V ante commissionem)">
+    <forma textus="glutinatio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="glutinationis" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="glutinationem" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="glutinatione" casus="ablativus" numerus="singularis" genus="femininum"/>
+  </vocabulum>
+  <vocabulum lemma="praevisio" lingua="latina" classis="substantivum" nota="Latina sera: praevisio, -onis - imago ante commissionem ostensa (preview)">
+    <forma textus="praevisio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="praevisionis" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="praevisioni" casus="dativus" numerus="singularis" genus="femininum"/>
+    <forma textus="praevisionem" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="praevisione" casus="ablativus" numerus="singularis" genus="femininum"/>
+    <forma textus="praevisiones" casus="nominativus" numerus="pluralis" genus="femininum"/>
+  </vocabulum>
+  <vocabulum lemma="stilizo" lingua="latina" classis="verbum" nota="vox domus: stilo proprio reddere (regio stilizata = pictogrammate impleta)">
+    <forma textus="stilizare" tempus="praesens" modus="infinitivus" vox="activa" forma-verbi="infinitivum"/>
+    <forma textus="stilizata" tempus="perfectum" vox="passiva" forma-verbi="participium"/>
+    <forma textus="stilizatae" tempus="perfectum" vox="passiva" forma-verbi="participium"/>
+    <forma textus="stilizatum" tempus="perfectum" vox="passiva" forma-verbi="participium"/>
   </vocabulum>
 
 </glossarium>

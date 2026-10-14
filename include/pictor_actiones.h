@@ -59,6 +59,18 @@ pictor_aspergillum_ictus (
       constans Eventus* ev,
                 vacuum* ctx);
 
+/* <tractator/> glutinatio pendens: 'glutinatio.A' / 'glutinatio.B'
+ * modum eligit, 'glutinatio.confirmare' stratum novum (fit currens),
+ * 'glutinatio.abicere' abicit. Dominus 'glutinatio'. */
+b32
+pictor_glutinatio_agere (
+    InsulaRepositorium* repo,
+                 Motus* motus,
+   constans Destinatio* destinatio,
+             Componens* nodus,
+      constans Eventus* ev,
+                vacuum* ctx);
+
 /* <tractator/> strata (pictor-strata L3): ictus in palette stratorum -
  * 'stratum.<id>' eligit (campus stratum_activum), 'oculus.<id>'
  * visibilitatem in actis mutat, 'strata.novum' stratum novum supra

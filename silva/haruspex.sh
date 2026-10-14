@@ -23,11 +23,11 @@ mkdir -p "$HX_DIR"
 # vexilla: tools/vexilla.sh (una sedes; LVII copiae olim, 2026-09-02)
 source "$RADIX_DIR/tools/vexilla.sh"
 declare -a GCC_FLAGS=("${VEXILLA_C89[@]}")
-declare -a INCLUDE_FLAGS=(
-    "-I$RADIX_DIR/include"
-    "-I$SILVA_DIR/fontes"
-    "-I$RADIX_DIR/materia/fontes"
-)
+# radices: aedilis.stml <inclusa> per vexilla_radices (cursores ad gradus
+# T6) - olim indices manu duo (III et XIII radices); crusta/fontes absens
+# portam silva-m3 tres commissiones tacite fregit
+vexilla_radices "$RADIX_DIR/" || { echo "FRACTA: radices inclusae (bin/aedilis --radices)"; exit 1; }
+declare -a INCLUDE_FLAGS=("${RADICES_C89[@]}")
 # GENERATUM AB AEDILE - fontes derivati (regeneratio: vide snippet)
 source "$SILVA_DIR/haruspex_fontes_generata.sh"
 
@@ -70,20 +70,10 @@ cd "$RADIX_DIR"
 "$BUILD_DIR/haruspex" "$@" || exit 1
 
 # Gradus II: compilatio est iudicium
-declare -a TU_FLAGS=(
-    "-I$RADIX_DIR"
-    "-I$RADIX_DIR/include"
-    "-I$RADIX_DIR/probationes"
-    "-I$RADIX_DIR/book_assets"
-    "-I$SILVA_DIR/fontes"
-    "-I$RADIX_DIR/materia/fontes"
-    "-I$RADIX_DIR/crusta/fontes"
-    "-I$SILVA_DIR/instrumenta"
-    "-I$RADIX_DIR/tessera/fontes"
-    "-I$RADIX_DIR/saltuarius/fontes"
-    "-I$SILVA_DIR/amalgama"
-    "-I$RADIX_DIR/tessera/amalgama"
-)
+# Gradus II: radices aedilis + radix repositorii IPSA (TU generatae
+# capita forma 'silva/fontes/x.h' includunt - praeter radices aedilis,
+# ideo in tools/radices_manu.tsv nominata)
+declare -a TU_FLAGS=("-I$RADIX_DIR" "${RADICES_C89[@]}")
 fracta=0
 summa=0
 for tu in "$HX_DIR"/*.c; do

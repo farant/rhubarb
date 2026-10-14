@@ -290,3 +290,11 @@ blocks keeps its inline unit test.
 violating discrepancies (REQUISITUM_ABSENS, NON_DECLARATUM, GENUS_LATIUS,
 NULLUM_NOVUM, VARIATIO_NON_DECLARATA) between lib/vates_responsum.norma and every
 committed specimen. Plant: the old seed -> red naming $.content[].name/input.
+
+## 2026-10-13 - header comment fix: bloci hold structs
+
+VatesNuntius.bloci and VatesResponsum.bloci are Xar of VatesBlocus
+STRUCTS (xar_creare(..., magnitudo(VatesBlocus)); xar_obtinere returns
+VatesBlocus*). The comments said "VatesBlocus*", which reads as an
+array of pointers - quaestio dereferenced one level too deep and got
+empty text. Comments corrected; no code change.

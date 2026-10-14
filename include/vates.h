@@ -68,7 +68,8 @@ nomen structura {
 
 nomen structura {
     VatesMunus  munus;
-           Xar* bloci;          /* VatesBlocus* */
+           Xar* bloci;          /* VatesBlocus (structurae, non
+                                 * indices: xar_obtinere -> VatesBlocus*) */
 } VatesNuntius;
 
 nomen structura {
@@ -204,7 +205,7 @@ nomen structura {
             chorda  error_nuntius;
             chorda  id;
             chorda  exemplar;
-               Xar* bloci;                /* VatesBlocus* */
+               Xar* bloci;                /* VatesBlocus (structurae) */
    VatesCausaFinis  causa_finis;
             chorda  causa_finis_cruda;
             chorda  recusatio_categoria;  /* stop_details.category */

@@ -22,22 +22,14 @@ fi
 source "$(dirname "$0")/tools/vexilla.sh"
 declare -a GCC_FLAGS=("${VEXILLA_C89[@]}")
 
-# Include paths
-# materia/fontes et toml/fontes: instrumenta capsulae et librarii
-# clientem toml (materiae) trahunt ex 2026-09-28 (toml Q12; lib/toml.c
-# deleta). crusta/fontes: lib/portae.c commentaria cursorum per crustam
-# legit (portae-declaratae T1, 2026-10-10). Indices SUBSET aedilis.stml
-# <inclusa> (manu - drift nominata in worklog portae).
-declare -a INCLUDE_FLAGS=(
-    "-Iinclude"
-    "-Imateria/fontes"
-    "-Itoml/fontes"
-    "-Icrusta/fontes"
-    "-Iprobationes"
-    "-Ibook_assets"
-    "-Iprobationes/vitrea_assets"
-    "-Iprobationes/tabella_assets"
-)
+# Include paths: aedilis.stml <inclusa> per vexilla_radices (cursores ad
+# gradus T6) - EAEDEM ac gradus probationes_radicis. Olim SUBSET manu
+# (VIII ex XXXII; radix quaeque nova manu addenda - crusta/fontes
+# 2026-10-10, toml/fontes 2026-09-28).
+vexilla_radices "" || { echo "FRACTA: radices inclusae (bin/aedilis --radices)"; exit 1; }
+declare -a INCLUDE_FLAGS=("${RADICES_C89[@]}")
+# operariis (bash -c): tabula non exportatur - linea
+export INCLUDE_LINEA="${INCLUDE_FLAGS[*]}"
 
 # Fontes obiectorum (SOURCE_FILES + OBJC_SOURCES): GENERATI ab
 # aedile - unio clausurarum omnium principalium suite. Via media:
@@ -612,7 +604,7 @@ probatio_una() {
     local obj_files t0 t1 tc tr rc
     local -a INC
     source "$(dirname "$0")/tools/vexilla.sh" 2>/dev/null || source tools/vexilla.sh
-    INC=("-Iinclude" "-Imateria/fontes" "-Itoml/fontes" "-Icrusta/fontes" "-Iprobationes" "-Ibook_assets" "-Iprobationes/vitrea_assets" "-Iprobationes/tabella_assets")
+    read -r -a INC <<< "$INCLUDE_LINEA"
     obj_files="$(cat "$OBIECTA")"
     case "$name" in
         probatio_speculum_fontium|probatio_speculum)

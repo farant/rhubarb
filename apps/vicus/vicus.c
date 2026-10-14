@@ -21,7 +21,10 @@
 #include "vicus_applicatio.h"
 #include "energia.h"
 #include "clipboard_platform.h"
+#include "vates.h"
+#include "quaestio.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 /* applicationes CDLXXX x CDLXXX ut solae, linea tabularum supra */
@@ -48,6 +51,88 @@ imaginem_glutinatam (
 {
     (vacuum)ctx;
     redde clipboard_capere_imaginem(piscina);
+}
+
+/* $question: porta quaestionis - clavis ~/.rhubarb/anthropic.clavis IN
+ * PROCESSU legitur (numquam in nuntium aut stderr), vates "anthropic",
+ * quaestio_rogare; copia nostra clavis post vocationem nullatur */
+interior b32
+quaestionem_rogare (
+     vacuum* ctx,
+     chorda  quaestio,
+        s32  characteres,
+        s32  latitudo,
+    Piscina* piscina,
+     chorda* responsum,
+     chorda* nuntius,
+     chorda* error)
+{
+     constans character* domus = getenv("HOME");
+              character  via[MXXIV];
+              character  octeti[DXII];
+                   FILE* f;
+                 size_t  n;
+                 size_t  a;
+                 chorda  clavis;
+                 Vates*  v;
+          VatesOptiones  o;
+      QuaestioResponsum  r;
+              character  usus[XCVI];
+
+    (vacuum)ctx;
+    si (!domus || strlen(domus) > DCCC)
+    {
+        *error = chorda_ex_literis("HOME absent", piscina);
+        redde FALSUM;
+    }
+    sprintf(via, "%s/.rhubarb/anthropic.clavis", domus);
+    f = fopen(via, "rb");
+    si (!f)
+    {
+        *error =
+            chorda_ex_literis("~/.rhubarb/anthropic.clavis not found",
+            piscina);
+        redde FALSUM;
+    }
+    n = fread(octeti, I, magnitudo(octeti) - I, f);
+    fclose(f);
+    a = ZEPHYRUM;
+    dum (   a < n && (octeti[a] == ' ' || octeti[a] == '\n'
+        || octeti[a] == '\r' || octeti[a] == '\t'))
+    {
+        a++;
+    }
+    dum (   n > a && (octeti[n - I] == ' ' || octeti[n - I] == '\n'
+        || octeti[n - I] == '\r' || octeti[n - I] == '\t'))
+    {
+        n--;
+    }
+    clavis.datum    = (i8*)(octeti + a);
+    clavis.mensura  = (i32)(n - a);
+    o               = vates_optiones_ordinariae();
+    v = clavis.mensura > ZEPHYRUM ? vates_aperire(piscina,
+        chorda_ex_literis("anthropic", piscina), clavis, &o) : NIHIL;
+    si (!v)
+    {
+        memset(octeti, ZEPHYRUM, magnitudo(octeti));
+        *error = chorda_ex_literis(clavis.mensura > ZEPHYRUM
+            ? "vates anthropic non apertus" : "API key file empty",
+            piscina);
+        redde FALSUM;
+    }
+    r = quaestio_rogare(v, chorda_ex_literis("", piscina), quaestio,
+        characteres, latitudo, piscina);
+    memset(octeti, ZEPHYRUM, magnitudo(octeti));
+    si (!r.successus)
+    {
+        *error = r.error;
+        redde FALSUM;
+    }
+    *responsum = r.textus;
+    sprintf(usus, "%ld in, %ld out", (longus)r.usus.input,
+        (longus)r.usus.output);
+    *nuntius = chorda_ex_literis(usus, piscina);
+    redde VERUM;
 }
 
 /* S5: porta pilae - energia_status systematis */
@@ -158,6 +243,9 @@ principale (
     vicus_pilam_ponere(app.vicus, pilam_systematis, NIHIL);
     /* L5: Cmd+V in pictore: imago e clipboard in stratum novum */
     vicus_applicatio_imaginis_portam_ponere(&app, imaginem_glutinatam,
+        NIHIL);
+    /* $question: Anthropic per vates (clavis in processu legitur) */
+    vicus_applicatio_quaestionis_portam_ponere(&app, quaestionem_rogare,
         NIHIL);
 
     cfg.titulus   = "vicus";

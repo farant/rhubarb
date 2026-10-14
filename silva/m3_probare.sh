@@ -67,9 +67,12 @@ FRACTA=""        # causae exitus I
 DEEST=""         # causae exitus II
 
 # ---- 1. probationes silvae: una vocatio, filtrum 'arbor_' ----
-# (circuitus, plagula, parsura parallelae; sedes quoque currit)
+# (circuitus, plagula, parsura; sedes quoque currit). -vis (cursores ad
+# gradus T5): suita silvae gradus est - membra fresca SERVARENTUR et
+# nihil imprimerent; porta haec EFFUSIONEM earum (numeros) legit, ergo
+# cursus cogitur
 EFFUSIO_SILVAE="$BUILD/silva.effusio"
-"$RADIX/silva/compile_probationes.sh" arbor_ > "$EFFUSIO_SILVAE" 2>&1
+"$RADIX/silva/compile_probationes.sh" -vis arbor_ > "$EFFUSIO_SILVAE" 2>&1
 RC_SILVAE=$?
 
 sectio () {   # <nomen probationis> -> lineae sectionis eius

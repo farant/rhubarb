@@ -401,6 +401,115 @@ s32 principale (vacuum)
     /* '-' initium verbi non est */
     ponere("$-x");
     CREDO_FALSUM(ad(ZEPHYRUM, &i));
+    /* forma simplex: corpus nullum */
+    ponere("$dies(1)");
+    CREDO_VERUM(ad(ZEPHYRUM, &i));
+    CREDO_FALSUM(i.corpus);
+
+    imprimere("\n--- XI: corpus '$verbum<>...</>' (Franus 2026-10-13) ---\n");
+    {
+        TabulaCharacterum m;
+                   Iussum x;
+
+        tabula_initiare(&m, piscina, LATITUDO, IV);
+#define LINEAE(a, b, c, d) fac { \
+            constans character* l_[IV]; s32 k_; \
+            l_[0] = a; l_[1] = b; l_[2] = c; l_[3] = d; \
+            memset(m.cellulae, ZEPHYRUM, (memoriae_index)(LATITUDO * IV)); \
+            per (k_ = ZEPHYRUM; k_ < IV; k_++) \
+                memcpy(m.cellulae + k_ * LATITUDO, l_[k_], strlen(l_[k_])); \
+        } dum (ZEPHYRUM)
+#define AD(l, c, nt) iussum_ad_locum(&m, (l), (c), (nt), NIHIL, piscina, &x)
+
+        /* eadem linea: commata et ')' litterae; caput solum ictu */
+        LINEAE("$dies<>hi, a)b</> x", "", "", "");
+        CREDO_VERUM(AD(ZEPHYRUM, ZEPHYRUM, NIHIL));
+        CREDO_VERUM(x.corpus);
+        CREDO_CHORDA_AEQUALIS_LITERIS(x.verbum, "dies");
+        CREDO_AEQUALIS_S32(x.finis, VII);
+        CREDO_AEQUALIS_I32(x.numerus_argumentorum, I);
+        CREDO_CHORDA_AEQUALIS_LITERIS(x.argumenta[ZEPHYRUM], "hi, a)b");
+        CREDO_AEQUALIS_S32(x.linea_clausurae, ZEPHYRUM);
+        CREDO_AEQUALIS_S32(x.post_clausuram, XVII);
+        CREDO_VERUM(AD(ZEPHYRUM, VI, NIHIL));
+        CREDO_FALSUM(AD(ZEPHYRUM, VII, NIHIL));
+        CREDO_FALSUM(AD(ZEPHYRUM, XV, NIHIL));
+
+        /* lineae tres: verbatim, spatia finalia dempta, '\n' iunctae */
+        LINEAE("$dies<>prima   ", "  media", "ultima</> post", "");
+        CREDO_VERUM(AD(ZEPHYRUM, ZEPHYRUM, NIHIL));
+        CREDO_VERUM(x.corpus);
+        CREDO_CHORDA_AEQUALIS_LITERIS(x.argumenta[ZEPHYRUM],
+            "prima\n  media\nultima");
+        CREDO_AEQUALIS_S32(x.linea_clausurae, II);
+        CREDO_AEQUALIS_S32(x.post_clausuram, IX);
+        CREDO_FALSUM(AD(I, II, NIHIL));
+        CREDO_FALSUM(iussum_proximum(&m, I, ZEPHYRUM, NIHIL, NIHIL,
+            piscina,
+            &x));
+
+        /* sine '</>': prosa (dimidium numquam currit) */
+        LINEAE("$dies<>abc", "def", "", "");
+        CREDO_FALSUM(AD(ZEPHYRUM, ZEPHYRUM, NIHIL));
+
+        /* '</>' primum vincit */
+        LINEAE("$dies<>a</>b</>", "", "", "");
+        CREDO_VERUM(AD(ZEPHYRUM, ZEPHYRUM, NIHIL));
+        CREDO_CHORDA_AEQUALIS_LITERIS(x.argumenta[ZEPHYRUM], "a");
+        CREDO_AEQUALIS_S32(x.post_clausuram, XI);
+
+        /* '$' intra corpus iussum non est - eadem linea et sequenti */
+        LINEAE("$dies<>x $dies y", "$dies", "z</>", "");
+        CREDO_VERUM(AD(ZEPHYRUM, ZEPHYRUM, NIHIL));
+        CREDO_FALSUM(AD(ZEPHYRUM, IX, NIHIL));
+        CREDO_FALSUM(iussum_proximum(&m, ZEPHYRUM, I, NIHIL, NIHIL,
+            piscina, &x));
+        CREDO_FALSUM(AD(I, ZEPHYRUM, NIHIL));
+        /* post '</>' iussa redeunt */
+        LINEAE("$dies<>a</> $dies", "", "", "");
+        CREDO_VERUM(AD(ZEPHYRUM, XII, NIHIL));
+        CREDO_FALSUM(x.corpus);
+        CREDO_AEQUALIS_S32(x.initium, XII);
+
+        /* spatium post iussum: latitudo tabulae, lineae ALBAE in fine
+         * paginae infra lineam clausurae (textus infra non numeratur) */
+        LINEAE("$dies<>a", "b</>", "", "");
+        CREDO_VERUM(AD(ZEPHYRUM, ZEPHYRUM, NIHIL));
+        CREDO_AEQUALIS_S32(x.latitudo_tabulae, XX);
+        CREDO_AEQUALIS_S32(x.lineae_liberae, II);
+        CREDO_FALSUM(x.iterum);
+        LINEAE("$dies<>a</>", "", "x", "");
+        CREDO_VERUM(AD(ZEPHYRUM, ZEPHYRUM, NIHIL));
+        CREDO_AEQUALIS_S32(x.lineae_liberae, I);
+        LINEAE("$dies", "", "", "y");
+        CREDO_VERUM(AD(ZEPHYRUM, ZEPHYRUM, NIHIL));
+        CREDO_AEQUALIS_S32(x.lineae_liberae, ZEPHYRUM);
+        LINEAE("$dies(1)", "", "", "");
+        CREDO_VERUM(AD(ZEPHYRUM, ZEPHYRUM, NIHIL));
+        CREDO_AEQUALIS_S32(x.lineae_liberae, III);
+
+        /* corpus vacuum: argumenta nulla, ut '()' */
+        LINEAE("$dies<></>", "", "", "");
+        CREDO_VERUM(AD(ZEPHYRUM, ZEPHYRUM, NIHIL));
+        CREDO_VERUM(x.corpus);
+        CREDO_AEQUALIS_I32(x.numerus_argumentorum, ZEPHYRUM);
+        CREDO_AEQUALIS_S32(x.post_clausuram, X);
+
+        /* verbum ignotum: prosa, corpus nullum - '$dies' intra iussum
+         * est */
+        LINEAE("$foo<>$dies</>", "", "", "");
+        CREDO_FALSUM(AD(ZEPHYRUM, ZEPHYRUM, notum));
+        CREDO_VERUM(AD(ZEPHYRUM, VI, notum));
+        CREDO_CHORDA_AEQUALIS_LITERIS(x.verbum, "dies");
+
+        /* '(...)' deinde '<>': forma simplex, '<>' prosa */
+        LINEAE("$dies(1)<>a</>", "", "", "");
+        CREDO_VERUM(AD(ZEPHYRUM, ZEPHYRUM, NIHIL));
+        CREDO_FALSUM(x.corpus);
+        CREDO_AEQUALIS_S32(x.finis, VIII);
+#undef AD
+#undef LINEAE
+    }
 
     imprimere("\n");
     credo_imprimere_compendium();

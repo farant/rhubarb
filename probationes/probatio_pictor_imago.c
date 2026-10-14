@@ -2,11 +2,14 @@
  *
  * I: pictor_imaginem_aptare - "contain": lata (C x XX in CDLXVIII x
  * CDXL), alta, parva (sursum); centrata; indices palettae (0-15) aut
- * 0xFF; alpha < CXXVIII perspicuum. II: Cmd+V cum porta ficta - stratum
- * novum supra currens, currens fit, pixela palettae in strato, margo
- * perspicuus; revocatio una stratum et imaginem tollit; reficere
- * reddit. III: reapertio - massa ex volumine, pixela eadem. IV: sine
- * porta aut imagine vacua nihil. */
+ * 0xFF; alpha < CXXVIII perspicuum. II: Cmd+V cum porta ficta -
+ * glutinatio PENDENS (Franus 2026-10-13): campus "B", linea status A /
+ * B / OK / X, tabula sine actione (ictus nihil scribit); A eligitur, OK
+ * stratum novum supra currens, currens fit, pixela palettae in strato,
+ * margo perspicuus; revocatio una stratum et imaginem tollit; reficere
+ * reddit. II b: Esc abicit (acta intacta), Reditus confirmat. III:
+ * reapertio - massa ex volumine, pixela eadem. IV: sine porta aut
+ * imagine vacua nihil. */
 #include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
@@ -165,6 +168,88 @@ imago_plena (
     redde im;
 }
 
+/* clavis simplex (Esc, Reditus) */
+interior vacuum
+clavem_premere (
+    PictorApplicatio* app,
+            clavis_t  clavis)
+{
+    Eventus e;
+
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus                = EVENTUS_CLAVIS_DEPRESSUS;
+    e.tempus               = M;
+    e.datum.clavis.clavis  = clavis;
+    e.datum.clavis.actio   = EVENTUS_ACTIO_PRESSA;
+    dispensator_tractare(app->d, &e);
+    dispensator_recomponere(app->d);
+}
+
+/* ictus in nodum lineae status (filius 'status', fines relativi) */
+interior b32
+nodum_premere (
+    PictorApplicatio* app,
+  constans character* id)
+{
+     Componens* s;
+     Componens* q;
+       Eventus  e;
+
+    s = componens_invenire_per_id(dispensator_arbor(app->d),
+        chorda_ex_literis("status", piscina));
+    q = componens_invenire_per_id(dispensator_arbor(app->d),
+        chorda_ex_literis(id, piscina));
+    si (!s || !q)
+    {
+        imprimere("  nodus abest: %s\n", id);
+        redde FALSUM;
+    }
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus   = EVENTUS_MUS_DEPRESSUS;
+    e.tempus  = M;
+    e.datum.mus.x = s->fines.x + q->fines.x + q->fines.latitudo
+        / II;
+    e.datum.mus.y = s->fines.y + q->fines.y + q->fines.altitudo
+        / II;
+    e.datum.mus.botton = MUS_SINISTER;
+    dispensator_tractare(app->d, &e);
+    e.genus = EVENTUS_MUS_LIBERATUS;
+    dispensator_tractare(app->d, &e);
+    dispensator_recomponere(app->d);
+    redde VERUM;
+}
+
+/* ictus (pressio + solutio) in tabula ad (x, y) tabulae */
+interior vacuum
+tabulam_premere (
+    PictorApplicatio* app,
+                 s32  x,
+                 s32  y)
+{
+    Eventus e;
+
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus             = EVENTUS_MUS_DEPRESSUS;
+    e.tempus            = M;
+    e.datum.mus.x       = ORIGO_X + x;
+    e.datum.mus.y       = ORIGO_Y + y;
+    e.datum.mus.botton  = MUS_SINISTER;
+    dispensator_tractare(app->d, &e);
+    e.genus   = EVENTUS_MUS_LIBERATUS;
+    e.tempus  = M + X;
+    dispensator_tractare(app->d, &e);
+    dispensator_recomponere(app->d);
+}
+
+interior Componens*
+nodus_arboris (
+    PictorApplicatio* app,
+  constans character* id)
+{
+    redde componens_invenire_per_id(dispensator_arbor(app->d),
+        chorda_ex_literis(id, piscina));
+}
+
 interior b32
 cmd_v (
     PictorApplicatio* app)
@@ -179,6 +264,7 @@ cmd_v (
     e.datum.clavis.modificantes  = MOD_SUPER;
     e.datum.clavis.actio         = EVENTUS_ACTIO_PRESSA;
     dispensator_tractare(app->d, &e);
+    dispensator_recomponere(app->d);
     redde VERUM;
 }
 
@@ -289,8 +375,49 @@ s32 principale (vacuum)
         i32 p;
         i32 r;
 
+        s64 finis;
+
         app.montatio.actiones_ctx.imago_capere = porta_ficta;
+        finis = pictor_documentum_finis(doc);
         CREDO_VERUM(cmd_v(&app));
+        /* pendens: nullum stratum, nihil in actis, campus B */
+        CREDO_AEQUALIS_I32(pictor_documentum_numerus_stratorum(doc), I);
+        CREDO_VERUM(pictor_documentum_finis(doc) == finis);
+        CREDO_VERUM(doc->glutinatio.pendens);
+        CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app,
+            "glutinatio"), "B");
+        /* linea status: A / B / OK / X, quadrata absunt; tabula sine
+         * actione, praevisio in titulo */
+        CREDO_NON_NIHIL(nodus_arboris(&app, "glutinatio.A"));
+        CREDO_NON_NIHIL(nodus_arboris(&app, "glutinatio.B"));
+        CREDO_NON_NIHIL(nodus_arboris(&app, "glutinatio.confirmare"));
+        CREDO_NON_NIHIL(nodus_arboris(&app, "glutinatio.abicere"));
+        CREDO_VERUM(nodus_arboris(&app, "quadratum.instrumentum")
+            == NIHIL);
+        CREDO_VERUM(nodus_arboris(&app, "quadratum.strata") == NIHIL);
+        CREDO_VERUM(nodus_arboris(&app, "tabula")
+            && chorda_vacua(nodus_arboris(&app, "tabula")->actio));
+        CREDO_VERUM(nodus_arboris(&app, "tabula")
+            && chorda_aequalis_literis(nodus_arboris(&app,
+            "tabula")->titulus,
+                "glutinatio:B"));
+        /* ictus in tabula dum pendet: nihil */
+        tabulam_premere(&app, C, C);
+        CREDO_VERUM(pictor_documentum_finis(doc) == finis);
+        /* A eligitur */
+        CREDO_VERUM(nodum_premere(&app, "glutinatio.A"));
+        CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app,
+            "glutinatio"), "A");
+        CREDO_VERUM(nodus_arboris(&app, "tabula")
+            && chorda_aequalis_literis(nodus_arboris(&app,
+            "tabula")->titulus,
+                "glutinatio:A"));
+        /* OK: stratum novum */
+        CREDO_VERUM(nodum_premere(&app, "glutinatio.confirmare"));
+        CREDO_FALSUM(doc->glutinatio.pendens);
+        CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app,
+            "glutinatio"), "");
+        CREDO_NON_NIHIL(nodus_arboris(&app, "quadratum.instrumentum"));
         CREDO_AEQUALIS_I32(pictor_documentum_numerus_stratorum(doc),
             II);
         CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app,
@@ -337,6 +464,36 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32(pictor_documentum_numerus_stratorum(doc),
             II);
         CREDO_VERUM(pixelum(doc, X, y0 + h / II) != fundus);
+    }
+
+    imprimere("\n--- II b: Esc abicit, Reditus confirmat ---\n");
+    {
+        s64 finis;
+
+        finis = pictor_documentum_finis(doc);
+        CREDO_VERUM(cmd_v(&app));
+        CREDO_VERUM(doc->glutinatio.pendens);
+        clavem_premere(&app, CLAVIS_EFFUGIUM);
+        CREDO_FALSUM(doc->glutinatio.pendens);
+        CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app,
+            "glutinatio"), "");
+        CREDO_VERUM(pictor_documentum_finis(doc) == finis);
+        CREDO_AEQUALIS_I32(pictor_documentum_numerus_stratorum(doc),
+            II);
+        /* X quoque abicit */
+        CREDO_VERUM(cmd_v(&app));
+        CREDO_VERUM(nodum_premere(&app, "glutinatio.abicere"));
+        CREDO_FALSUM(doc->glutinatio.pendens);
+        CREDO_AEQUALIS_I32(pictor_documentum_numerus_stratorum(doc),
+            II);
+        /* Reditus confirmat modum B (ordinarium) */
+        CREDO_VERUM(cmd_v(&app));
+        clavem_premere(&app, CLAVIS_REDITUS);
+        CREDO_FALSUM(doc->glutinatio.pendens);
+        CREDO_AEQUALIS_I32(pictor_documentum_numerus_stratorum(doc),
+            III);
+        CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app,
+            "stratum_activum"), "3");
     }
 
     imprimere("\n--- III: reapertio ---\n");

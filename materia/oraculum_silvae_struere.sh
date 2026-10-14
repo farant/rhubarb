@@ -7,9 +7,9 @@
 #
 # Effectus:
 #   build/oraculum_silvae/<PIGNUS>/oraculum   silva ad pignus
-#   build/oraculum_silvae/vivum               silva viva (silva/build)
+#   build/oraculum_silvae/vivum               silva viva (clausura sua)
 # Contractus exitus: 0 ambo aedificata · 1 compilatio/nexus fractus aut
-# ISOLATIO violata · 2 NIHIL (obiecta silvae absunt, git fractus).
+# ISOLATIO violata · 2 NIHIL (git fractus).
 #
 # PIGNUS = COMMISSUM quod oraculum EST (silva-migratio-plan T2). Omne
 # commissum ante T6 silvam eandem fert; post T6 pignus NUMQUAM
@@ -23,8 +23,8 @@
 # amalgamate definiuntur aut in indice libc infra stant; aliud
 # quodlibet = functio domus per errorem vocata -> exitus I.
 #
-# Binarium VIVUM obiecta silva/build nectit (shim olim idem) -
-# ea ./silva/compile_probationes.sh struit; hic non struuntur.
+# Binarium VIVUM ex clausura sua struitur (cursores ad gradus T5; olim
+# obiecta silva/build quae cursor silvae vetus struebat).
 
 set -u
 PIGNUS=7a4847b0
@@ -137,21 +137,20 @@ clang "${VEXILLA_C89[@]}" "$SEDES/oraculum.o" "$SEDES/amalgama.o" \
     || { echo "FRACTA: nexus oraculi ad pignus" >&2; exit 1; }
 
 # ---- 3. instrumentum vivum ----
-# exclusio (olim shim eadem) (amalgama, instrumenta, probationes)
-OBIECTA=$(ls "$RADIX"/silva/build/*.o 2>/dev/null \
-          | grep -v -E "/(fons_|nexus_|instr_|probatio_|silva_amalgama\.o|amalgama_verificatio\.o|apparatus\.o)")
-if [ -z "$OBIECTA" ]; then
-    echo "DEEST: silva/build/*.o - curre ./silva/compile_probationes.sh primum" >&2
-    exit 2
-fi
-clang "${VEXILLA_C89[@]}" \
-      -I"$RADIX/include" -I"$RADIX/silva/fontes" -I"$RADIX/silva/instrumenta" \
-      -I"$RADIX/materia/fontes" \
-      -c "$FONS" -o "$BASIS/vivum.o" \
-    || { echo "FRACTA: oraculum_silvae.c (vivum)" >&2; exit 1; }
-# shellcheck disable=SC2086
-clang "${VEXILLA_C89[@]}" "$BASIS/vivum.o" $OBIECTA -o "$BASIS/vivum" \
-    || { echo "FRACTA: nexus oraculi vivi" >&2; exit 1; }
+# Ex clausura SUA (tools/cursor_communis.sh, per thesaurum; cursores ad
+# gradus T5). Olim obiecta silva/build nectebat quae cursor silvae vetus
+# struebat - cursor nunc gradus est et obiecta illa non iam facit: nexa
+# STALA essent, tacite (codex heri, non hodie, iudicatus). Clausura
+# viva ramum #else sequitur (aedilis): amalgama non intrat.
+RADIX_DIR="$RADIX"
+BUILD_DIR="$BASIS"
+declare -a INCLUDE_FLAGS=(-I"$RADIX/include" -I"$RADIX/silva/fontes"
+    -I"$RADIX/silva/instrumenta" -I"$RADIX/materia/fontes")
+source "$RADIX/tools/cursor_communis.sh"
+cursor_instrumenta_parare >&2 \
+    || { echo "FRACTA: instrumenta domus (aedilis, compilator)" >&2; exit 1; }
+cursor_instrumentum_struere "$FONS" "$BASIS/vivum" \
+    || { echo "FRACTA: oraculum_silvae.c (vivum, clausura sua)" >&2; exit 1; }
 
 echo "oraculum_silvae: pignus $PIGNUS + vivum aedificata"
 exit 0

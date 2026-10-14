@@ -294,10 +294,16 @@ if the answer is luck, the test has to remove the luck.
 ## Currere
 
 ```
-./css/compile_probationes.sh          # omnes
+./css/compile_probationes.sh          # omnes (fresca servata)
 ./css/compile_probationes.sh adaptare
+./css/compile_probationes.sh -vis     # omnes iterum
 ```
 
 0 sanum / 1 fractae / **2 = NULLA CURSA**. Log: `build/test_logs/css.log`.
-Compiles materia's sources into `css/build/` — css CONSUMES materia,
-it does not contain it.
+Since 2026-10-13 (cursores ad gradus T3) the suite is the fabrica
+composite `probationes_css` (`css/aedificatio.stml`): one action per
+test, each verdict keyed on what that test read; the script is a thin
+entry point to `bin/fabrica probare probationes_css` (stale tests run
+with output, fresh ones are kept and said so). Each test links its own
+aedilis closure - css CONSUMES materia, it does not contain it.
+`css/computus.sh` builds from its own closure too.

@@ -199,4 +199,28 @@
     <exitus via="silva/renominare_fontes_generata.sh" provenientia="regeneratio"/>
     <exitus via="silva/selecta_fontes_generata.sh" provenientia="regeneratio"/>
   </actio>
+  <!-- PROBATIONES SILVAE (cursores ad gradus T5, 2026-10-13): suita ut
+       compositum - quaeque probatio actio sua (clausura aedilis, area,
+       ambitus basis, vestigium suum), verdictum clavatum iis quae legit.
+       Olim cursor nexit OMNES fontes silvae et instrumenta in omnem
+       probationem (indices manu, regula capitis recentissimi,
+       excubitor). Ianua silva/compile_probationes.sh et porta silva per
+       'bin/fabrica probare probationes_silva'; oraculum conversionis
+       tools/gradus_oraculum.sh silva. -->
+  <actio titulus="probationes_silva" genus="iudicium">
+    <probationes_c exemplar="silva/probationes/probatio_*.c"/>
+    <!-- modi probationum (valores in clave membri, T4): aurum computus
+         rescribere; arborem plagulae defigere (ARBOR_DEFIGERE=via EXTRA
+         arborem, e.g. /tmp - intra arborem scriptura extra aream
+         recusatur); verbositas lintri et mensurae -->
+    <ambitus variabilis="COMPUTUS_SCRIBERE"/>
+    <ambitus variabilis="ARBOR_DEFIGERE"/>
+    <ambitus variabilis="ARBOR_DEFIGERE_NOMEN"/>
+    <ambitus variabilis="LINT_INDAGO"/>
+    <ambitus variabilis="LINT_VERBOSA"/>
+    <ambitus variabilis="MENSURA_VERBOSA"/>
+    <!-- aurum computus rescribitur cum COMPUTUS_SCRIBERE=1 (cursores ad
+         gradus T5): scriptura extra aream, membri unius -->
+    <debitum_scripturae membrum="probatio_silva_computus" via="silva/probationes/fixa/computus/basis.tsv" causa="aurum computus (COMPUTUS_SCRIBERE=1)"/>
+  </actio>
 </aedificatio>
