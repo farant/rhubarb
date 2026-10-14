@@ -11,6 +11,7 @@
 #include "extensio.h"
 #include "quaternio.h"
 #include "cellae.h"
+#include "surdus.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -2470,10 +2471,419 @@ _probare_puncta_refutationes (
         ZEPHYRUM, piscina, &act));
     CREDO_FALSUM (activatio_creare(cat, axis_nullus, ZEPHYRUM,
         CELLAE_CELLA_D82, ZEPHYRUM, piscina, &act));
-    CREDO_FALSUM (activatio_creare(cat, NIHIL, ZEPHYRUM,
-        CELLAE_CELLA_D94,
-        ZEPHYRUM, piscina, &act));
+    CREDO_FALSUM (activatio_creare(cat, NIHIL, ZEPHYRUM, VII, ZEPHYRUM,
+        piscina, &act));
     CREDO_NIHIL (act);
+}
+
+/* cellae II T2: cella phasis (D94) contra oraculum ALIA VIA: signum
+ * (a/|s| - cos(m pi/k)) per quadrata in Z[sqrt2, sqrt3, sqrt6] (surdus,
+ * ut D120), sector = numerus terminorum cum signo <= 0 (definitio D119
+ * ipsa, sine reflexione nec radicibus S_k); axes per oraculum integrum
+ * Z[sqrt2] supra. */
+
+/* 4 cos(j pi/12) in Z[sqrt2, sqrt3] (bitum 1 sqrt2, 2 sqrt3, 3 sqrt6) */
+interior Surdus
+_o_cos_quater (
+    s32 j)
+{
+    Surdus r        = surdus_ex_s64(0);
+       b32 negatum  = FALSUM;
+       i32 s;
+
+    j %= XXIV;
+    si (j < 0) j += XXIV;
+    si (j > XII) j = XXIV - j;
+    si (j > VI)
+    { j = XII - j; negatum = VERUM;
+    }
+    si (j == 0) r.c[0] = 4;
+    si (j == 1)
+    { r.c[3] = 1; r.c[1] = 1;
+    }
+    si (j == 2) r.c[2] = 2;
+    si (j == 3) r.c[1] = 2;
+    si (j == 4) r.c[0] = 2;
+    si (j == 5)
+    { r.c[3] = 1; r.c[1] = -1;
+    }
+    si (negatum)
+    {
+        per (s = 0; s < VIII; s++) r.c[s] = -r.c[s];
+    }
+    redde r;
+}
+
+/* signum(a/|s| - cos(m pi/k)); A = scala a, N = scala^2 |s|^2 */
+interior s32
+_o_terminus_phasis (
+    constans SurdiSpatium* sp,
+                   Surdus  a_surdus,
+                   Surdus  n_surdus,
+                      s32  signum_a,
+                      i32  m,
+                      i32  k)
+{
+       s32 sb = (k > 2 * m) - (k < 2 * m);
+    Surdus cc;
+    Surdus sinistra;
+    Surdus dextra;
+    Surdus d;
+       s32 r = ZEPHYRUM;
+
+    si (sb == 0) redde signum_a;
+    si (signum_a == 0) redde -sb;
+    si (signum_a != sb) redde signum_a;
+    /* 8 cos^2(m pi/k) = 4 + 4 cos(j pi/12), j = 24 m/k */
+    cc       = _o_cos_quater((s32)(XXIV * m / k));
+    cc.c[0]  += 4;
+    si (   !surdus_multiplica(sp, a_surdus, a_surdus, &sinistra)
+        || !surdus_scala(sinistra, 8, &sinistra)
+        || !surdus_multiplica(sp, cc, n_surdus, &dextra)
+        || !surdus_subtrahe(sinistra, dextra, &d)
+        || !surdus_signum(sp, d, &r))
+    {
+        o_vitium = VERUM;
+        redde 0;
+    }
+    redde signum_a * r;
+}
+
+/* axes oraculi (ut _o_cella): regula prima maxima, paritas omnes */
+interior vacuum
+_o_axes_summae (
+    Binomium* s,
+         i32* axes,
+         i32* numerus)
+{
+    Binomium bn = binomium(-1, 0);
+    Binomium bd = binomium(1, 0);
+         i32 j;
+
+    *numerus = 0;
+    per (j = ZEPHYRUM; j < o_nd; j++)
+    {
+        Binomium scalare = binomium_adde(binomium_adde(
+            binomium_multiplica(s[1], o_axis[j][0]),
+            binomium_multiplica(s[2], o_axis[j][1])),
+            binomium_multiplica(s[3], o_axis[j][2]));
+        Binomium num = binomium_multiplica(scalare, scalare);
+             s32 c = *numerus == 0 ? I
+                 : binomium_signum(binomium_subtrahe(binomium_multiplica(
+                 num, bd), binomium_multiplica(bn, o_n2[j])));
+
+        si (c > 0)
+        { bn = num; bd = o_n2[j]; *numerus = 0;
+        }
+        si (c >= 0) axes[(*numerus)++] = j;
+    }
+}
+
+interior b32
+_o_cella_phasis (
+    constans SurdiSpatium* sp,
+                 Binomium* s,
+                      i32  k,
+                      i32* regula,
+                      i32* ligatae,
+                      i32* n)
+{
+       i32 nv = o_nd + I;
+       b32 v0 = binomium_nullum(s[1]) && binomium_nullum(s[2])
+           && binomium_nullum(s[3]);
+       i32 axes[O_MAX];
+       i32 numerus_axium_o  = ZEPHYRUM;
+       i32 sector           = ZEPHYRUM;
+       i32 par              = ZEPHYRUM;
+       i32 m;
+       i32 j;
+    Surdus a_surdus;
+    Surdus n_surdus = surdus_ex_s64(0);
+    Surdus t;
+       s32 signum_a = ZEPHYRUM;
+
+    *n = ZEPHYRUM;
+    si (v0 && binomium_nullum(s[0]))
+    {
+        *regula          = (k - I) * nv + o_nd;
+        ligatae[(*n)++]  = *regula;
+        redde VERUM;
+    }
+    a_surdus       = surdus_ex_s64(s[0].p);
+    a_surdus.c[1]  = s[0].q;
+    per (j = ZEPHYRUM; j < IV; j++)
+    {
+        Surdus x = surdus_ex_s64(s[j].p);
+
+        x.c[1] = s[j].q;
+        si (   !surdus_multiplica(sp, x, x, &t)
+            || !surdus_adde(n_surdus, t, &n_surdus))
+        {
+            redde FALSUM;
+        }
+    }
+    si (!surdus_signum(sp, a_surdus, &signum_a))
+    {
+        redde FALSUM;
+    }
+    per (m = I; m < k; m++)
+    {
+        s32 c = _o_terminus_phasis(sp, a_surdus, n_surdus, signum_a, m,
+            k);
+
+        si (c <= 0) sector = m;
+        si (c == 0) par = m;
+    }
+    si (v0)
+    {
+        axes[0]          = o_nd;
+        numerus_axium_o  = I;
+    } alioquin
+    {
+        _o_axes_summae(s, axes, &numerus_axium_o);
+    }
+    *regula = sector * nv + axes[0];
+    per (j = 0; j < numerus_axium_o; j++)
+    {
+        si (par > 0)
+        {
+            ligatae[(*n)++] = (par - I) * nv + axes[j];
+        }
+        ligatae[(*n)++] = (par > 0 ? par : sector) * nv + axes[j];
+    }
+    redde !o_vitium;
+}
+
+#define PHASIS_N_MAXIMUS IV
+
+interior vacuum
+_probare_cellas_phasis (
+    CredoContextus* c)
+{
+                    Piscina* piscina = c->piscina;
+                  Quaternio  g[IV];
+                  Catalogus* cat = NIHIL;
+                  Activatio* act = NIHIL;
+               SurdiSpatium  sp;
+                        s32  primi[III];
+                        i32  idx[PHASIS_N_MAXIMUS];
+                        i32  n;
+                        i32  i;
+    hic_manens constans i32  SCALA_PHASIS[III] = { VI, XII, XXIV };
+                        i64  comparatae = 0;
+                        i64  discordes = 0;
+                        i64  ligatae_sectionis_negativae = 0;
+                        i64  ligatae_axis = 0;
+                        i64  reales_negativae = 0;
+                        i64  nullae = 0;
+                        i32  n_cat;
+
+    primi[0] = II; primi[1] = III; primi[2] = V;
+    CREDO_NECESSE (surdi_spatium(primi, III, &sp));
+    o_d       = II;
+    o_scala   = II;
+    o_vitium  = FALSUM;
+    _generatores(extensio_anulus(extensio_quadratica(II, piscina)),
+        "a/2", "a/2", "-a/2", piscina, g);
+    CREDO_NECESSE (catalogus_clausura(g, TORSIONES, IV, ZEPHYRUM, XVI,
+        piscina, &cat));
+    CREDO_NECESSE (activatio_creare(cat, NIHIL, ZEPHYRUM,
+        CELLAE_CELLA_D94, ZEPHYRUM, piscina, &act));
+    _o_axes(cat, piscina);
+    CREDO_AEQUALIS_I32 (activatio_axes(act), o_nd);
+    n_cat = catalogus_numerus(cat);
+    per (n = I; n <= PHASIS_N_MAXIMUS; n++)
+    {
+        per (i = 0; i < n; i++) idx[i] = i;
+        fac
+        {
+            i32 larva;
+
+            per (larva = 0; larva < (i32)(I << n); larva++)
+            {
+                Quaternio summa;
+                 Binomium s[IV];
+                      i32 j;
+                      i32 t;
+
+                (vacuum)quaternio_nullum(quaternio_anulus(g[0]),
+                    piscina,
+                    &summa);
+                per (t = 0; t < IV; t++) s[t] = binomium(0, 0);
+                per (j = 0; j < n; j++)
+                {
+                    Quaternio e     = catalogus_elementum(cat, idx[j]);
+                          b32 plus  = (larva >> j) & I;
+
+                    si (plus) (vacuum)quaternio_adde(summa, e, piscina,
+                                  &summa);
+                    alioquin (vacuum)quaternio_subtrahe(summa, e,
+                                 piscina,
+                                 &summa);
+                    per (t = 0; t < IV; t++)
+                    {
+                        Binomium x = _binomium_ex(e, t, piscina);
+
+                        s[t] = plus ? binomium_adde(s[t], x)
+                            : binomium_subtrahe(s[t], x);
+                    }
+                }
+                per (t = 0; t < III; t++)
+                {
+                    Cella cl;
+                      i32 regula_o = 0;
+                      i32 ligatae_o[2 * O_MAX];
+                      i32 n_o = 0;
+                      i32 ligatae_l[2 * O_MAX];
+                      i32 q;
+                      b32 aequales;
+
+                    si (   !activatio_cella(act, summa, SCALA_PHASIS[t],
+                        &cl)
+                        || !_o_cella_phasis(&sp, s, SCALA_PHASIS[t],
+                        &regula_o,
+                            ligatae_o, &n_o))
+                    {
+                        discordes++;
+                        perge;
+                    }
+                    per (q = 0; q < cl.numerus; q++) ligatae_l[q] =
+                                                         cl.ligatae[q];
+                    _ordina(ligatae_l, cl.numerus);
+                    _ordina(ligatae_o, n_o);
+                    aequales = (i32)cl.regula == regula_o
+                        && (i32)cl.numerus == n_o;
+                    per (q = 0; aequales
+                        && q < n_o; q++) aequales = ligatae_l[q]
+                                             == ligatae_o[q];
+                    si (!aequales) discordes++;
+                    comparatae++;
+                    /* regimina: paritas sectoris cum a < 0, axis */
+                    {
+                        b32 v0 = binomium_nullum(s[1])
+                            && binomium_nullum(s[2])
+                            && binomium_nullum(s[3]);
+
+                        si (v0 && binomium_nullum(s[0])) nullae++;
+                        alioquin si (   v0
+                                     && binomium_signum(s[0])
+                                         < 0) reales_negativae++;
+                        alioquin si (!v0)
+                        {
+                            i32 axes_n[O_MAX];
+                            i32 na = 0;
+
+                            _o_axes_summae(s, axes_n, &na);
+                            si (na > I) ligatae_axis++;
+                            si (   binomium_signum(s[0]) < 0
+                                && n_o
+                                    > na) ligatae_sectionis_negativae++;
+                        }
+                    }
+                }
+            }
+            /* combinatio sequens */
+            i = n;
+            dum (i > 0 && idx[i - 1] == n_cat - n + i - 1) i--;
+            si (i == 0) frange;
+            idx[i - 1]++;
+            per (; i < n; i++) idx[i] = idx[i - 1] + 1;
+        } dum (VERUM);
+    }
+    imprimere("    cellae phasis contra oraculum: %ld (discordes %ld); "
+        "paritas sectoris a < 0: %ld, paritas axis: %ld, reales "
+        "negativae: %ld, nullae: %ld\n", (long)comparatae,
+        (long)discordes, (long)ligatae_sectionis_negativae,
+        (long)ligatae_axis, (long)reales_negativae, (long)nullae);
+    CREDO_FALSUM (o_vitium);
+    CREDO_AEQUALIS_S64 ((s64)discordes, (s64)0);
+    CREDO_VERUM (comparatae > (L * M));
+    CREDO_VERUM (ligatae_sectionis_negativae > C);
+    CREDO_VERUM (ligatae_axis > C);
+    CREDO_VERUM (reales_negativae > ZEPHYRUM);
+    CREDO_VERUM (nullae > ZEPHYRUM);
+}
+
+/* cellae phasis manu (D120 Pars A) et speculum; s et -s; refutationes
+ * quaestionum antipodalium */
+interior vacuum
+_probare_cellas_phasis_manu (
+    CredoContextus* c)
+{
+       Piscina* piscina = c->piscina;
+     Quaternio  g[IV];
+     Catalogus* cat        = NIHIL;
+     Activatio* phasis     = NIHIL;
+     Activatio* combinata  = NIHIL;
+     Quaternio  sigma;
+     Quaternio  minus_sigma;
+     Quaternio  minus_unum;
+     Quaternio  nullum;
+         Cella  cl;
+         Cella  cella_altera;
+           i32  nv;
+           i32  pondera[III];
+           b32  verdictum = FALSUM;
+      Quaestio  q;
+     Capacitas  cap;
+
+    _generatores(extensio_anulus(extensio_quadratica(II, piscina)),
+        "a/2", "a/2", "-a/2", piscina, g);
+    CREDO_NECESSE (catalogus_clausura(g, TORSIONES, IV, ZEPHYRUM, XVI,
+        piscina, &cat));
+    CREDO_NECESSE (activatio_creare(cat, NIHIL, ZEPHYRUM,
+        CELLAE_CELLA_D94, ZEPHYRUM, piscina, &phasis));
+    CREDO_NECESSE (activatio_ex_catalogo(cat, ZEPHYRUM, piscina,
+        &combinata));
+    nv     = activatio_axes(phasis) + I;
+    sigma  = catalogus_elementum(cat, I);    /* (sqrt2/2)(1 + i) */
+    CREDO_NECESSE (quaternio_nullum(quaternio_anulus(sigma), piscina,
+        &nullum));
+    CREDO_NECESSE (quaternio_subtrahe(nullum, sigma, piscina,
+        &minus_sigma));
+    CREDO_NECESSE (quaternio_subtrahe(nullum, catalogus_elementum(cat,
+        ZEPHYRUM), piscina, &minus_unum));
+    /* D120: sigma_1 in termino k = 12, m = 3: sector 3, paritas {2, 3};
+     * k = 6: sector 1, sine paritate */
+    CREDO_NECESSE (activatio_cella(phasis, sigma, XII, &cl));
+    CREDO_AEQUALIS_I32 (cl.regula / nv, III);
+    CREDO_AEQUALIS_I32 (cl.numerus, II);
+    CREDO_NECESSE (activatio_cella(phasis, sigma, VI, &cl));
+    CREDO_AEQUALIS_I32 (cl.regula / nv, I);
+    CREDO_AEQUALIS_I32 (cl.numerus, I);
+    /* -sigma_1: h = 3 pi/4, in termino m = 9 (k = 12): sector 9, paritas
+     * {8, 9}; k = 6: h k/pi = 4.5, sector 4 */
+    CREDO_NECESSE (activatio_cella(phasis, minus_sigma, XII, &cl));
+    CREDO_AEQUALIS_I32 (cl.regula / nv, IX);
+    CREDO_AEQUALIS_I32 (cl.numerus, II);
+    CREDO_AEQUALIS_I32 (cl.ligatae[0] / nv + cl.ligatae[1] / nv,
+        XVII);
+    CREDO_NECESSE (activatio_cella(phasis, minus_sigma, VI, &cl));
+    CREDO_AEQUALIS_I32 (cl.regula / nv, IV);
+    /* D82 plicat: sigma et -sigma eandem cellam; D94 non */
+    CREDO_NECESSE (activatio_cella(combinata, sigma, XII, &cl));
+    CREDO_NECESSE (activatio_cella(combinata, minus_sigma, XII,
+        &cella_altera));
+    CREDO_AEQUALIS_I32 (cl.regula, cella_altera.regula);
+    CREDO_NECESSE (activatio_cella(phasis, sigma, XII, &cl));
+    CREDO_NECESSE (activatio_cella(phasis, minus_sigma, XII,
+        &cella_altera));
+    CREDO_VERUM (cl.regula != cella_altera.regula);
+    /* summa realis: +1 cella nd; -1 = cella summae nullae */
+    CREDO_NECESSE (activatio_cella(phasis, catalogus_elementum(cat,
+        ZEPHYRUM), XII, &cl));
+    CREDO_AEQUALIS_I32 (cl.regula, nv - I);
+    CREDO_NECESSE (activatio_cella(phasis, minus_unum, XII, &cl));
+    CREDO_AEQUALIS_I32 (cl.regula, XI * nv + nv - I);
+    CREDO_NECESSE (activatio_cella(phasis, nullum, XII, &cella_altera));
+    CREDO_AEQUALIS_I32 (cl.regula, cella_altera.regula);
+    /* quaestiones antipodales: cella D82 sola */
+    pondera[0] = I; pondera[1] = II; pondera[2] = III;
+    CREDO_FALSUM (activatio_separat(phasis, pondera, III, VI,
+        CELLAE_REGULA, &verdictum));
+    _quaestio(&q, CELLAE_REGULA);
+    CREDO_FALSUM (activatio_exhaustiva(phasis, &q, piscina, &cap));
+    CREDO_FALSUM (activatio_avida(phasis, &q, piscina, &cap));
 }
 
 /* PURGARE (credo examen 92-95; cursores ad gradus T5, ex fusione main):
@@ -2552,6 +2962,10 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "puncta et axes expressi", _probare_puncta_et_axes, NIHIL,
         _statum_purgare, NIHIL, NIHIL },
     { "puncta refutationes", _probare_puncta_refutationes, NIHIL,
+        _statum_purgare, NIHIL, NIHIL },
+    { "cellae phasis contra oraculum", _probare_cellas_phasis, NIHIL,
+        _statum_purgare, NIHIL, NIHIL },
+    { "cellae phasis manu", _probare_cellas_phasis_manu, NIHIL,
         _statum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

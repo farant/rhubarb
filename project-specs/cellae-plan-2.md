@@ -192,6 +192,12 @@ Each task follows the house cycle:
     3, tie {2, 3}; at k = 6 sector 1, no tie; −σ1 below the boundary);
   - every ζ₈ sum of up to 4 weights at k = 6, 12, 24 against an
     independent exact oracle (Python, Q(√2, √3)).
+  *(2026-10-14: landed. The sector reduces to slice 1's tan^2 machinery,
+  reflected by the sign of a; the point cache stays keyed by {s, -s},
+  the per-k cell by (k, sign). Oracle in the test instead of Python:
+  D119's own method (signs of a/|s| - cos(m pi/k) by `surdus`) plus the
+  existing integer axis oracle. 562,080 cells, 0 disagreements. 8
+  plants red.)*
 - **T3. The signed encoding and `activatio_iudica`.** Truth tables,
   rule, robust, possible (point clash and SAT), any-k union, tied,
   undecided.

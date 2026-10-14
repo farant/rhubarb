@@ -478,6 +478,7 @@ catalogus_ex_punctis (
 
 nomen structura {
             i32  k;
+            s32  signum;               /* D94: signum a (D82: 0) */
             i32  regula;
             i32  numerus;
             i32* ligatae;
@@ -755,8 +756,7 @@ activatio_creare (
     TabulaDispersa* visae;
                i32  i;
 
-    /* cella phasis (D94): consilium T2 - nondum */
-    si (cella != CELLAE_CELLA_D82)
+    si (cella != CELLAE_CELLA_D82 && cella != CELLAE_CELLA_D94)
     {
         redde FALSUM;
     }
@@ -1061,12 +1061,16 @@ _punctum (
     redde p;
 }
 
-/* cella puncti ad k (memoria per k in puncto) */
+/* cella puncti ad k (memoria per k et signum in puncto). Punctum est
+ * {s, -s} (tan^2 h, genus, axes signo non mutantur); cella phasis
+ * (D94) signum a summae ipsius postulat: signum = signum(a), ad D82
+ * neglectum (0). */
 interior b32
 _cella_puncti (
     Activatio* activatio,
       Punctum* p,
           i32  k,
+          s32  signum,
         Cella* exitus)
 {
      CellaK* ck;
@@ -1075,10 +1079,15 @@ _cella_puncti (
         i32  n_sec = I;
         i32  j;
         i32  m;
+        b32  phasis = activatio->cella == CELLAE_CELLA_D94;
 
+    si (!phasis)
+    {
+        signum = ZEPHYRUM;
+    }
     per (j = ZEPHYRUM; j < p->numerus_k; j++)
     {
-        si (p->per_k[j].k == k)
+        si (p->per_k[j].k == k && p->per_k[j].signum == signum)
         {
             exitus->regula   = p->per_k[j].regula;
             exitus->numerus  = p->per_k[j].numerus;
@@ -1090,13 +1099,17 @@ _cella_puncti (
     {
         redde FALSUM;
     }
-    ck     = &p->per_k[p->numerus_k];
-    ck->k  = k;
+    ck          = &p->per_k[p->numerus_k];
+    ck->k       = k;
+    ck->signum  = signum;
     si (p->genus == GENUS_NULLUM || p->genus == GENUS_REALE)
     {
         ck->ligatae = (i32*)piscina_allocare(activatio->piscina,
             magnitudo(i32));
-        ck->regula = p->genus == GENUS_NULLUM
+        /* D94: summa realis negativa, h = pi: sector k - 1, axis nd -
+         * eadem cella ac summa nulla (D119 exacte) */
+        ck->regula = (p->genus == GENUS_NULLUM
+            || (phasis && signum < ZEPHYRUM))
             ? (k - I) * nv + activatio->numerus_axium
             : activatio->numerus_axium;
         ck->ligatae[ZEPHYRUM]  = ck->regula;
@@ -1111,7 +1124,7 @@ _cella_puncti (
                 sectiones[I]  = k / II - I;
                 n_sec         = II;
             }
-        } alioquin
+        } alioquin si (!phasis || signum > ZEPHYRUM)
         {
              Termini* t    = _termini(activatio, k);
                  b32  par  = FALSUM;
@@ -1137,6 +1150,43 @@ _cella_puncti (
                 sectiones[ZEPHYRUM]  = m;
                 par                  = s == ZEPHYRUM;
             }
+            si (par)
+            {
+                sectiones[I]  = sectiones[ZEPHYRUM] - I;
+                n_sec         = II;
+            }
+        } alioquin
+        {
+            /* D94, a < 0: h in (pi/2, pi). Termini m <= k/2 (cos >= 0 >
+             * cos h) omnes numerantur; m = k - m', m' < k/2: cos h <=
+             * cos(m pi/k) sse tan^2 h <= tan^2(m' pi/k). Regula =
+             * numerus terminorum cum cos h <= cos(m pi/k); paritas ad
+             * m' = m_par: termini {m - 1, m}, m = k - m'. */
+             Termini* t     = _termini(activatio, k);
+                 i32  plus  = ZEPHYRUM;
+                 b32  par   = FALSUM;
+
+            si (t == NIHIL)
+            {
+                redde FALSUM;
+            }
+            per (m = t->numerus; m >= I; m--)
+            {
+                s32 s = ZEPHYRUM;
+
+                si (!radix_compara(p->tangens, t->termini[m - I],
+                    activatio->piscina, &s))
+                {
+                    redde FALSUM;
+                }
+                si (s > ZEPHYRUM)
+                {
+                    frange;            /* tan^2 h > tan^2(m' pi/k) */
+                }
+                plus++;
+                par = s == ZEPHYRUM;
+            }
+            sectiones[ZEPHYRUM] = k / II + plus;
             si (par)
             {
                 sectiones[I]  = sectiones[ZEPHYRUM] - I;
@@ -1172,6 +1222,7 @@ activatio_cella (
          Cella* exitus)
 {
     Punctum* p;
+        s32  signum = ZEPHYRUM;
 
     si (   k < I
         || quaternio_anulus(summa) != activatio->catalogus->anulus)
@@ -1183,7 +1234,15 @@ activatio_cella (
     {
         redde FALSUM;
     }
-    redde _cella_puncti(activatio, p, k, exitus);
+    si (activatio->cella == CELLAE_CELLA_D94)
+    {
+        si (!algebraicus_signum(*_pars(summa, ZEPHYRUM),
+            activatio->piscina, &signum))
+        {
+            redde FALSUM;
+        }
+    }
+    redde _cella_puncti(activatio, p, k, signum, exitus);
 }
 
 
@@ -1939,7 +1998,7 @@ _vector_cella (
         }
     }
     si (   !_vector_punctum(a, pondera, n, x, opus)
-        || !_cella_puncti(a, x->punctum, k, exitus))
+        || !_cella_puncti(a, x->punctum, k, ZEPHYRUM, exitus))
     {
         redde FALSUM;
     }
@@ -2260,7 +2319,9 @@ _separat_validum (
     i32 j;
     i32 l;
 
-    si (n == ZEPHYRUM || n > VII || modus > CELLAE_FIXA(I, I))
+    /* encodatio antipodalis: cella combinata (D82) sola */
+    si (   n        == ZEPHYRUM || n > VII || modus > CELLAE_FIXA(I, I)
+        || a->cella != CELLAE_CELLA_D82)
     {
         redde FALSUM;
     }
@@ -2553,7 +2614,8 @@ _quaestio_valida (
 
     si (   q->scala_k   == NIHIL || q->numerus_k == ZEPHYRUM
         || q->n_maximum == ZEPHYRUM || q->n_maximum > CELLAE_N_MAXIMUS
-        || q->modus > CELLAE_FIXA(I, I))
+        || q->modus > CELLAE_FIXA(I, I)
+        || a->cella     != CELLAE_CELLA_D82)
     {
         redde FALSUM;
     }

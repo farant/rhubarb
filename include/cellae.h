@@ -147,7 +147,21 @@ nomen structura {
 } Cella;
 
 #define CELLAE_CELLA_D82  0    /* cella combinata (supra) */
-#define CELLAE_CELLA_D94  1    /* cella phasis (cellae II, T2 - nondum) */
+#define CELLAE_CELLA_D94  1    /* cella phasis (infra) */
+
+/* CELLA PHASIS (D94, D119 exacte; cellae II T2). Summa s = (a, v), h =
+ * acos(a/|s|) in [0, pi], angulus rotationis 2h in k sectores:
+ *   - s = 0: (k - 1)(nd + 1) + nd (ut D82);
+ *   - v = 0: a > 0 sector 0, a < 0 sector k - 1 (h = pi), axis nd - a <
+ *     0 ergo eadem cella ac summa nulla (D119);
+ *   - aliter: sector = #{m in 1..k-1 : cos h <= cos(m pi/k)}; in termino
+ *     (aequalitas ad m) regula m, paritas {m - 1, m}. a = 0: sector
+ *     floor(k/2), k par paritas cum k/2 - 1 (ut D82). Axis ut D82.
+ * NULLA plicatio: s et -s cellas diversas habent (D82 plicat). Via: tan^2
+ * h = |v|^2/a^2 radicibus S_k per positionem comparatur (ut D82),
+ * terminis per signum a reflexis (m = k - m'). Activationes D94 a
+ * quaestionibus antipodalibus (activatio_separat, _exhaustiva, _avida)
+ * refutantur; activatio_cella et activatio_iudica (T3) eas accipiunt. */
 
 /* FALSUM si corpus non quadraticum ordinatum, aut catalogus sine axe.
  * = activatio_creare(catalogus, NIHIL, 0, CELLAE_CELLA_D82, ...) */
@@ -163,8 +177,7 @@ activatio_ex_catalogo (
  * antipodes et multipla idem (primus manet); NIHIL = tabula catalogi
  * ipsius (ut activatio_ex_catalogo). Sic copia una tabula alterius
  * iudicari potest (activatio_axis). FALSUM si axis anulo alieno aut
- * parte vectoria nulla, numerus_axium 0 cum axibus, aut cella nondum
- * facta (CELLAE_CELLA_D94 ante T2). */
+ * parte vectoria nulla, numerus_axium 0 cum axibus, aut cella ignota. */
 b32
 activatio_creare (
     constans Catalogus*  catalogus,

@@ -585,3 +585,71 @@ Also checked:
 places, which examen flags as house-style (credo v2 prints them
 itself). I copied the pattern for the new section, then removed it.
 The 17 old ones are left as found.
+
+## 2026-10-13 - cellae II T2: the phase cell (D94)
+
+**The sector reduces to slice 1's machinery.** D94's sector is
+#{m in 1..k-1 : cos h <= cos(m pi/k)}, with h = acos(a/|s|) in [0, pi]
+(the rotation angle 2h in k sectors, no fold). tan^2 h = |v|^2/a^2 does
+not depend on the sign of a, so the per-point data (genus, tan^2 h, the
+axis tie set) can still be keyed by {s, -s}; only the sector needs the
+sign:
+- a > 0: the same count as D82's cell,
+  #{m < k/2 : tan^2 h >= tan^2(m pi/k)} (the S_k roots by position).
+- a < 0: every boundary m <= k/2 counts (cos >= 0 > cos h). For
+  m = k - m' with m' < k/2, cos h <= cos(m pi/k) iff
+  tan^2 h <= tan^2(m' pi/k). So
+  sector = floor(k/2) + #{m' : tan^2(m' pi/k) >= tan^2 h}. A tie at m'
+  means the boundary m = k - m', with rule m and tie set {m - 1, m}.
+  The count lands on k - m' for both parities of k (checked by hand,
+  then by the oracle).
+- a = 0: as D82 (floor(k/2); k even ties with k/2 - 1).
+- Real sums: a > 0 gives sector 0, axis nd. a < 0 gives h = pi,
+  sector k - 1, axis nd. That is the SAME cell as the zero sum, as in
+  D119's exact code: its float clamp (sector k → k - 1) carried into
+  the exact layer.
+
+The per-k cell cache inside a point gained the sign of a in its key
+(D82 always uses 0). Antipodal searches (`activatio_separat`,
+`_exhaustiva`, `_avida`) refuse D94 activations: the antipodal encoding
+belongs to D82's cell.
+
+**Oracle, another route.** The plan said a Python oracle. The suite's
+own pattern (slice 1: integer Z[sqrt d] oracle in the test) is better
+because it runs on every test run. So the test carries D119/D120's
+method directly, which differs from the library's:
+- the sign of a/|s| - cos(m pi/k) for every m, through squares in
+  Z[sqrt2, sqrt3, sqrt6] with `surdus`:
+  8A^2 - (4 + 4 cos(j pi/12)) N, j = 24m/k;
+- the sector is the number of boundaries with sign <= 0, D119's
+  definition as written, with no reflection and no S_k roots;
+- axes come from the existing integer Z[sqrt2] oracle.
+
+Every zeta_8 signed sum of up to 4 weights at k = 6, 12, 24: 562,080
+cells, rule and tie set, 0 disagreements, in 5.6 s. The regimes are
+counted and asserted:
+- 18,900 sector ties with a < 0 (the reflected branch);
+- 58,608 axis ties;
+- 639 real negative sums;
+- 624 zero sums.
+
+**Hand cells.**
+- D120's cells: sigma_1 at k = 12 is on the boundary m = 3 (sector 3,
+  tie {2, 3}); at k = 6, sector 1 with no tie.
+- Their mirror -sigma_1: h = 3 pi/4, on m = 9 (sector 9, tie {8, 9});
+  at k = 6, sector 4.
+- D82 folds sigma and -sigma into one cell; D94 does not.
+- The real sums: +1 is cell nd, and -1 is the zero sum's cell.
+
+**Plants: 8, all red.**
+- The reflected sector off by one.
+- Equality not counted in the reflection.
+- Real negative sums put in sector 0.
+- The sign left out of the cell cache key, so s and -s shared a cached
+  cell.
+- The sign of a read from the wrong part.
+- Ties dropped in the a < 0 branch.
+- Antipodal searches accepting a D94 activation.
+- An unknown cell code accepted.
+The first six were caught by the oracle comparison alone. The last two
+were caught by the refusal checks.
