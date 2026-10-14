@@ -81,14 +81,16 @@ _applicare_optiones (
     si (opt->nodelay)
     {
         flag = 1;
-        setsockopt(fd, IPPROTO_TCP, TCP_NODELAY, &flag, (socklen_t)magnitudo(flag));
+        setsockopt(fd, IPPROTO_TCP, TCP_NODELAY, &flag,
+            (socklen_t)magnitudo(flag));
     }
 
     /* SO_KEEPALIVE */
     si (opt->keepalive)
     {
         flag = 1;
-        setsockopt(fd, SOL_SOCKET, SO_KEEPALIVE, &flag, (socklen_t)magnitudo(flag));
+        setsockopt(fd, SOL_SOCKET, SO_KEEPALIVE, &flag,
+            (socklen_t)magnitudo(flag));
     }
 
     /* Timeout */
@@ -97,8 +99,10 @@ _applicare_optiones (
         structura timeval tv;
         tv.tv_sec   = opt->timeout_ms / M;
         tv.tv_usec  = (opt->timeout_ms % M) * M;
-        setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, &tv, (socklen_t)magnitudo(tv));
-        setsockopt(fd, SOL_SOCKET, SO_SNDTIMEO, &tv, (socklen_t)magnitudo(tv));
+        setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, &tv,
+            (socklen_t)magnitudo(tv));
+        setsockopt(fd, SOL_SOCKET, SO_SNDTIMEO, &tv,
+            (socklen_t)magnitudo(tv));
     }
 }
 
@@ -166,7 +170,8 @@ tcp_connectere_cum_optionibus (
     /* Validare argumenta */
     si (!hospes || !piscina)
     {
-        redde _creare_error(TCP_ERROR_CONNEXIO, "Argumenta invalida", piscina);
+        redde _creare_error(TCP_ERROR_CONNEXIO, "Argumenta invalida",
+            piscina);
     }
 
     /* Convertere portus ad chorda */
@@ -207,7 +212,8 @@ tcp_connectere_cum_optionibus (
     status = getaddrinfo(hospes, portus_str, &hints, &result);
     si (status != 0)
     {
-        redde _creare_error(TCP_ERROR_DNS, gai_strerror(status), piscina);
+        redde _creare_error(TCP_ERROR_DNS, gai_strerror(status),
+            piscina);
     }
 
     /* Probare omnes addresses */
@@ -250,7 +256,8 @@ tcp_connectere_cum_optionibus (
 
     si (fd == -1)
     {
-        redde _creare_error(TCP_ERROR_CONNEXIO, strerror(errno), piscina);
+        redde _creare_error(TCP_ERROR_CONNEXIO, strerror(errno),
+            piscina);
     }
 
     /* Applicare optiones */
@@ -258,11 +265,13 @@ tcp_connectere_cum_optionibus (
     _ponere_nosigpipe(fd);
 
     /* Allocare connexio */
-    conn = (TcpConnexio*)piscina_allocare(piscina, (i64)magnitudo(TcpConnexio));
+    conn = (TcpConnexio*)piscina_allocare(piscina,
+        (i64)magnitudo(TcpConnexio));
     si (!conn)
     {
         close(fd);
-        redde _creare_error(TCP_ERROR_CONNEXIO, "Allocatio fallita", piscina);
+        redde _creare_error(TCP_ERROR_CONNEXIO, "Allocatio fallita",
+            piscina);
     }
 
     conn->piscina  = piscina;
@@ -276,6 +285,138 @@ tcp_connectere_cum_optionibus (
     res.error_descriptio.mensura  = 0;
 
     redde res;
+}
+
+
+/* --- connexio non-blocans (http-vocatio II.2) --- */
+
+interior TcpError
+_ponere_non_blocans_fd (
+    integer fd,
+        b32 non_blocans);
+
+interior TcpConnexio*
+_connexionem_creare (
+    integer  fd,
+    Piscina* piscina)
+{
+    TcpConnexio* conn;
+
+    conn = (TcpConnexio*)piscina_allocare(piscina,
+        (i64)magnitudo(TcpConnexio));
+    si (!conn)
+    {
+        redde NIHIL;
+    }
+    conn->piscina  = piscina;
+    conn->fd       = fd;
+    conn->clausa   = FALSUM;
+    redde conn;
+}
+
+TcpResultus
+tcp_incipere (
+    constans i8* addressus,
+            i32  mensura,
+        Piscina* piscina)
+{
+    constans structura sockaddr* sa;
+                  TcpResultus  res;
+                  TcpOptiones  opt;
+                  TcpConnexio* conn;
+                      integer  fd;
+                      integer  r;
+                      integer  erratum;
+
+    si (!addressus || mensura == 0 || !piscina)
+    {
+        redde _creare_error(TCP_ERROR_CONNEXIO, "Argumenta invalida",
+            piscina);
+    }
+    sa = (constans structura sockaddr*)(constans vacuum*)addressus;
+    fd = socket(sa->sa_family, SOCK_STREAM, IPPROTO_TCP);
+    si (fd == -1)
+    {
+        redde _creare_error(TCP_ERROR_CONNEXIO, strerror(errno),
+            piscina);
+    }
+    si (_ponere_non_blocans_fd(fd, VERUM) != TCP_OK)
+    {
+        close(fd);
+        redde _creare_error(TCP_ERROR_CONNEXIO, "O_NONBLOCK fallitum",
+            piscina);
+    }
+    _ponere_nosigpipe(fd);
+    opt.timeout_ms  = 0;          /* tempora vocantis, non socket */
+    opt.nodelay     = VERUM;
+    opt.keepalive   = FALSUM;
+    _applicare_optiones(fd, &opt);
+
+    /* EINPROGRESS = in fundo pergit; EINTR in socket non-blocans idem
+     * (POSIX: connexio asynchrone perficitur) */
+    r = connect(fd, sa, (socklen_t)mensura);
+    si (r == -1 && errno != EINPROGRESS && errno != EINTR)
+    {
+        erratum = errno;
+        close(fd);
+        redde _creare_error(TCP_ERROR_CONNEXIO, strerror(erratum),
+            piscina);
+    }
+
+    conn = _connexionem_creare(fd, piscina);
+    si (!conn)
+    {
+        close(fd);
+        redde _creare_error(TCP_ERROR_CONNEXIO, "Allocatio fallita",
+            piscina);
+    }
+    res.successus                 = VERUM;
+    res.connexio                  = conn;
+    res.error                     = TCP_OK;
+    res.error_descriptio.datum    = NIHIL;
+    res.error_descriptio.mensura  = 0;
+    redde res;
+}
+
+TcpError
+tcp_incipere_perficere (
+    TcpConnexio* connexio,
+         chorda* descriptio,
+        Piscina* piscina)
+{
+      integer erratum  = 0;
+    socklen_t n        = (socklen_t)magnitudo(erratum);
+
+    si (!connexio || connexio->fd < 0)
+    {
+        redde TCP_ERROR_IO;
+    }
+    si (getsockopt(connexio->fd, SOL_SOCKET, SO_ERROR, &erratum, &n)
+        != 0)
+    {
+        erratum = errno;
+    }
+    si (erratum == 0)
+    {
+        redde TCP_OK;
+    }
+    si (descriptio && piscina)
+    {
+        *descriptio = chorda_ex_literis(strerror(erratum), piscina);
+    }
+    redde TCP_ERROR_CONNEXIO;
+}
+
+TcpConnexio*
+tcp_ex_fossa (
+    integer  fossa,
+    Piscina* piscina)
+{
+    si (fossa < 0 || !piscina)
+    {
+        redde NIHIL;
+    }
+    redde _connexionem_creare(fossa, piscina);
 }
 
 
@@ -408,12 +549,16 @@ tcp_claudere (
         redde;
     }
 
-    si (connexio->fd >= 0 && !connexio->clausa)
+    /* SEMPER claudere: clausa a tcp_recipere poni potest (par clausit)
+     * dum fossa nostra adhuc aperta est - olim close() omittebatur et
+     * fossa omnis connexionis ab hospite clausae peribat (http-vocatio
+     * R5; omnis http_exsequi legit usque ad clausuram) */
+    si (connexio->fd >= 0)
     {
         close(connexio->fd);
-        connexio->fd      = -1;
-        connexio->clausa  = VERUM;
+        connexio->fd = -1;
     }
+    connexio->clausa = VERUM;
 }
 
 
@@ -547,7 +692,8 @@ tcp_servus_creare (
     Piscina* piscina)
 {
     TcpServusOptiones opt = tcp_servus_optiones_default();
-    redde tcp_servus_creare_cum_optionibus(NIHIL, portus, &opt, piscina);
+    redde tcp_servus_creare_cum_optionibus(NIHIL, portus, &opt,
+        piscina);
 }
 
 TcpServusResultus
@@ -567,19 +713,22 @@ tcp_servus_creare_cum_optionibus (
     /* Validare argumenta */
     si (!piscina)
     {
-        redde _creare_servus_error(TCP_ERROR_CONNEXIO, "Piscina NIHIL", NIHIL);
+        redde _creare_servus_error(TCP_ERROR_CONNEXIO, "Piscina NIHIL",
+            NIHIL);
     }
 
     si (!optiones)
     {
-        redde _creare_servus_error(TCP_ERROR_CONNEXIO, "Optiones NIHIL", piscina);
+        redde _creare_servus_error(TCP_ERROR_CONNEXIO, "Optiones NIHIL",
+            piscina);
     }
 
     /* Creare socket */
     fd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     si (fd == -1)
     {
-        redde _creare_servus_error(TCP_ERROR_CONNEXIO, strerror(errno), piscina);
+        redde _creare_servus_error(TCP_ERROR_CONNEXIO, strerror(errno),
+            piscina);
     }
 
     /* SO_REUSEADDR */
@@ -591,7 +740,8 @@ tcp_servus_creare_cum_optionibus (
         {
             close(fd);
             redde _creare_servus_error(TCP_ERROR_CONNEXIO,
-                                        "SO_REUSEADDR fallita", piscina);
+                                        "SO_REUSEADDR fallita",
+                                        piscina);
         }
     }
 
@@ -602,7 +752,8 @@ tcp_servus_creare_cum_optionibus (
         {
             close(fd);
             redde _creare_servus_error(TCP_ERROR_IO,
-                                        "Non-blocking mode fallita", piscina);
+                                        "Non-blocking mode fallita",
+                                        piscina);
         }
     }
 
@@ -626,7 +777,8 @@ tcp_servus_creare_cum_optionibus (
         si (status != 0)
         {
             close(fd);
-            redde _creare_servus_error(TCP_ERROR_DNS, gai_strerror(status), piscina);
+            redde _creare_servus_error(TCP_ERROR_DNS,
+                gai_strerror(status), piscina);
         }
 
         memcpy(&addr.sin_addr,
@@ -641,10 +793,12 @@ tcp_servus_creare_cum_optionibus (
     }
 
     /* Bind */
-    si (bind(fd, (structura sockaddr*)&addr, (socklen_t)magnitudo(addr)) == -1)
+    si (bind(fd, (structura sockaddr*)&addr, (socklen_t)magnitudo(addr))
+        == -1)
     {
         close(fd);
-        redde _creare_servus_error(TCP_ERROR_CONNEXIO, strerror(errno), piscina);
+        redde _creare_servus_error(TCP_ERROR_CONNEXIO, strerror(errno),
+            piscina);
     }
 
     /* Obtinere actual port (si portus 0) */
@@ -652,15 +806,18 @@ tcp_servus_creare_cum_optionibus (
     si (getsockname(fd, (structura sockaddr*)&addr, &addr_len) == -1)
     {
         close(fd);
-        redde _creare_servus_error(TCP_ERROR_IO, strerror(errno), piscina);
+        redde _creare_servus_error(TCP_ERROR_IO, strerror(errno),
+            piscina);
     }
 
     /* Allocare servus */
-    servus = (TcpServus*)piscina_allocare(piscina, (i64)magnitudo(TcpServus));
+    servus = (TcpServus*)piscina_allocare(piscina,
+        (i64)magnitudo(TcpServus));
     si (!servus)
     {
         close(fd);
-        redde _creare_servus_error(TCP_ERROR_CONNEXIO, "Allocatio fallita", piscina);
+        redde _creare_servus_error(TCP_ERROR_CONNEXIO,
+            "Allocatio fallita", piscina);
     }
 
     servus->piscina         = piscina;
@@ -743,25 +900,30 @@ tcp_servus_accipere (
 
     si (!servus || !piscina)
     {
-        redde _creare_error(TCP_ERROR_CONNEXIO, "Argumenta invalida", piscina);
+        redde _creare_error(TCP_ERROR_CONNEXIO, "Argumenta invalida",
+            piscina);
     }
 
     si (!servus->auscultans)
     {
-        redde _creare_error(TCP_ERROR_IO, "Servus non auscultans", piscina);
+        redde _creare_error(TCP_ERROR_IO, "Servus non auscultans",
+            piscina);
     }
 
     addr_len = (socklen_t)magnitudo(client_addr);
-    client_fd = accept(servus->fd, (structura sockaddr*)&client_addr, &addr_len);
+    client_fd = accept(servus->fd, (structura sockaddr*)&client_addr,
+        &addr_len);
 
     si (client_fd == -1)
     {
         si (errno == EAGAIN || errno == EWOULDBLOCK)
         {
             /* Non-blocking et nullae connexiones - non est error */
-            redde _creare_error(TCP_ERROR_ITERUM, "Nullae connexiones", piscina);
+            redde _creare_error(TCP_ERROR_ITERUM, "Nullae connexiones",
+                piscina);
         }
-        redde _creare_error(TCP_ERROR_CONNEXIO, strerror(errno), piscina);
+        redde _creare_error(TCP_ERROR_CONNEXIO, strerror(errno),
+            piscina);
     }
 
     _ponere_nosigpipe(client_fd);
@@ -782,11 +944,13 @@ tcp_servus_accipere (
     }
 
     /* Allocare connexio */
-    conn = (TcpConnexio*)piscina_allocare(piscina, (i64)magnitudo(TcpConnexio));
+    conn = (TcpConnexio*)piscina_allocare(piscina,
+        (i64)magnitudo(TcpConnexio));
     si (!conn)
     {
         close(client_fd);
-        redde _creare_error(TCP_ERROR_CONNEXIO, "Allocatio fallita", piscina);
+        redde _creare_error(TCP_ERROR_CONNEXIO, "Allocatio fallita",
+            piscina);
     }
 
     conn->piscina  = piscina;
@@ -893,9 +1057,11 @@ tcp_obtinere_peer_address (
     }
 
     addr_len = (socklen_t)magnitudo(peer_addr);
-    si (getpeername(connexio->fd, (structura sockaddr*)&peer_addr, &addr_len) == 0)
+    si (getpeername(connexio->fd, (structura sockaddr*)&peer_addr,
+        &addr_len) == 0)
     {
-        inet_ntop(AF_INET, &peer_addr.sin_addr, addr.hospes, magnitudo(addr.hospes));
+        inet_ntop(AF_INET, &peer_addr.sin_addr, addr.hospes,
+            magnitudo(addr.hospes));
         addr.portus = (i32)ntohs(peer_addr.sin_port);
     }
 

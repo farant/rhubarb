@@ -73,3 +73,35 @@ plagulam fert, error electus nexum verum obstruxit. Solutio plena
 missione ipsa (tcp_scribere). Pinnae portae remotae; glibc 133/136.
 Codex 86 vigilat pro Darwinismis FUTURIS - specimen primum suum
 munus implevit.
+
+## 2026-10-14 - non-blocking connect + the fd leak in tcp_claudere (http-vocatio T3)
+
+**The leak.** `tcp_recipere` sets `clausa` when `recv` returns 0 (the
+peer closed). `tcp_claudere` then skipped `close()` because its guard
+was `fd >= 0 && !clausa` - so every connection the SERVER closed first
+leaked its fd. That is every `http_exsequi` (it reads until close) and
+every TLS connection closed by the peer. Short-lived tools never
+noticed; a long-running vicus asking questions over route B would
+have run out of fds. `probatio_tcp_incipere` section `clausura paris`
+showed it live (the fd still open after `tcp_claudere`, `fcntl
+F_GETFD` != -1) before the fix. Now `tcp_claudere` always closes a
+non-negative fd and is idempotent. Possibly related: the open ledger
+question "probatio_tcp_servus fluctuans" - not checked.
+
+**Non-blocking connect** for the reactor-driven client:
+- `tcp_incipere(addressus, mensura, piscina)` - raw sockaddr bytes with
+  the port already set (nomina fills it, plan R3), so this file never
+  needs `sockaddr_in6`. Socket `O_NONBLOCK`, `SO_NOSIGPIPE`,
+  `TCP_NODELAY`, and deliberately NO `SO_RCVTIMEO/SO_SNDTIMEO`: the
+  caller's reactor timers own time. `connect` returning `EINPROGRESS`
+  (or `EINTR`, which on a non-blocking socket also means "continues
+  asynchronously") is success-pending.
+- `tcp_incipere_perficere` - call ONLY after the fd is writable:
+  `getsockopt(SO_ERROR)` 0 = connected, else a named error. Called
+  before writability it would report 0 falsely.
+- `tcp_ex_fossa` wraps an existing fd (tests over pipes/socketpairs).
+
+Lexicon: examen REICE'd this file for `EINPROGRESS` and `SO_ERROR`
+(the predicted gap); both added to `silva/fontes/systema_posix.h` with
+Darwin values and asserted in auspex (plant `EINPROGRESS 37` ->
+DISSENTIT).
