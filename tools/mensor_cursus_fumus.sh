@@ -31,11 +31,14 @@
 #        ultimi, quaestio VI), 'quaestio commissiones' (culpa nominata),
 #        'quaestio numquam' (radix cum scripto non curso), quaestio
 #        ignota / parametrum ignotum -> 2
+#   XII  censura (T6): adoptor sine annotatione / versione alia /
+#        annotatio sine prologo / titulus duplex -> exitus 1 singula
+#        nominans; radix munda -> 0; ARBOR VIVA conformis (invariatio)
 #   VIII extra omne repositorium (contextus vacuus) -> cursus notatus,
 #        commissum et ramus vacui, nulla ruina (planta D T2: setenv cum
 #        NIHIL ruebat)
 # Exitus 0 sanum | 1 FRACTUM | 2 nihil actum.
-# <porta titulus="mensor-cursus" currit="bin/mensor" tegit="tools/cursus.sh tools/mensor.c lib/mensura.c include/mensura.h"/>
+# <porta titulus="mensor-cursus" currit="bin/mensor" tegit="tools/cursus.sh tools/mensor.c lib/mensura.c include/mensura.h *.sh tools/unci-git/*"/>
 set -u
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$RADIX" || exit 2
@@ -226,6 +229,30 @@ echo "$u" | grep -q "	porta:xi	fractus	" \
   && [ "$sx" = "rc0" ] && [ "${lx##*rc}" = "0" ] && [ "$l25" = "1" ] && [ "$l35" = "0" ]
 credo $? "XI   quaestiones: ultimum, acta fracti, commissiones cum culpa, numquam; ignota -> 2"
 
+# XII
+C="$T/cens"; mkdir -p "$C/a" "$C/m"
+bonus() { printf '#!/bin/bash\n# <cursus titulus="%s" versio="I"/>\nsource "$(dirname "$0")/../tools/cursus.sh"\n' "$2" > "$1"; }
+bonus "$C/a/bonus.sh" "cens/bonus"
+printf '#!/bin/bash\nsource "$(dirname "$0")/../tools/cursus.sh"\n' > "$C/a/sine_annotatione.sh"
+printf '#!/bin/bash\n# <cursus titulus="cens/vetus" versio="0"/>\nsource "$(dirname "$0")/../tools/cursus.sh"\n' > "$C/a/vetus.sh"
+printf '#!/bin/bash\n# <cursus titulus="cens/mortuus" versio="I"/>\necho\n' > "$C/a/mortuus.sh"
+bonus "$C/a/geminus1.sh" "cens/geminus"
+bonus "$C/a/geminus2.sh" "cens/geminus"
+bonus "$C/m/solus.sh" "cens/solus"
+# uncus sine suffixo cum prologo sine annotatione -> vitium (universum
+# scripta sine '.sh' quoque videt); via relativa 'cursus.sh' = prologus
+printf '#!/bin/bash\nsource "$(git rev-parse --show-toplevel)/tools/cursus.sh"\n' > "$C/a/pre-commit"
+printf '#!/bin/bash\n# <cursus titulus="cens/vicinus" versio="I"/>\nsource "$(dirname "$0")/cursus.sh"\n' > "$C/m/vicinus.sh"
+"$M" cursus censura -radix "$C/a" > "$T/c1" 2>&1; rc1=$?
+"$M" cursus censura -radix "$C/m" > "$T/c2" 2>&1; rc2=$?
+"$M" cursus censura -radix "$RADIX" > "$T/c3" 2>&1; rc3=$?
+[ "$rc1" -eq 1 ] && grep -q "sine_annotatione.sh" "$T/c1" && grep -q "vetus.sh" "$T/c1" \
+  && grep -q "mortuus.sh" "$T/c1" && grep -q "cens/geminus" "$T/c1" && ! grep -q "bonus.sh" "$T/c1" \
+  && grep -q "	pre-commit	" "$T/c1" && grep -q "adoptores 2" "$T/c2" \
+  && [ "$rc2" -eq 0 ] && [ "$rc3" -eq 0 ]
+credo $? "XII  censura: sine annotatione, versio alia, mortuus, geminus nominati; mundus 0; arbor viva conformis"
+[ "$rc3" -eq 0 ] || sed 's/^/      /' "$T/c3" | head -8
+
 echo
-if [ "$fracta" -eq 0 ]; then echo "fumus mensor_cursus: sanum (XI/XI)"; exit 0; fi
+if [ "$fracta" -eq 0 ]; then echo "fumus mensor_cursus: sanum (XII/XII)"; exit 0; fi
 echo "fumus mensor_cursus: FRACTUM ($fracta)"; exit 1

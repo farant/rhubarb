@@ -1,4 +1,7 @@
 #!/bin/bash
+# <cursus titulus="tools/unci-git/pre-commit" versio="I"/>
+# CHASSIS CURSUUM (analytica T6): cursus in annalibus
+source "$(git rev-parse --show-toplevel)/tools/cursus.sh"
 
 # pre-commit - EXAMEN C89 super plagulas .c commissioni traditas.
 #

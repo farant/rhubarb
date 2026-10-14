@@ -1,4 +1,7 @@
 #!/bin/bash
+# <cursus titulus="css/compile_probationes.sh" versio="I"/>
+# CHASSIS CURSUUM (analytica T6): cursus in annalibus
+source "$(dirname "${BASH_SOURCE[0]}")/../tools/cursus.sh"
 
 # Effusio cursus ultimi semper in build/test_logs/css.log
 # radicis (stdout + stderr; codex exitus per PIPESTATUS servatus).

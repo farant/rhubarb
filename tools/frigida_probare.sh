@@ -1,4 +1,7 @@
 #!/bin/bash
+# <cursus titulus="tools/frigida_probare.sh" versio="I"/>
+# CHASSIS CURSUUM (analytica T6): cursus in annalibus
+source "$(dirname "${BASH_SOURCE[0]}")/cursus.sh"
 # frigida_probare.sh - omnes suitae in arbore FRIGIDA (clone novus)
 #
 # Quaestio …QY4 (2026-09-28): suita quae initum gitignoratum legit

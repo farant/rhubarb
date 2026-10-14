@@ -377,3 +377,31 @@ caught by cmp, restored by cp).
 First reading (`quaestio sectiones titulus=pythonica`): ~400 s over 57
 groups, half in three - pondera.py generator test 76 s, umbra receipts
 58 s, commissio owed-gates block 57 s. Recorded on ledger …PRYJ22.
+
+## 2026-10-14 - pilot adoption + censura (analytica T6b)
+
+Chassis on seven scripts: the four converted entry points (toml, css,
+md, silva - their own `tee` self-re-exec keeps CURSUS_INTUS, so one
+wrap), tools/frigida_probare.sh, tools/vexilla_fumus.sh and the
+pre-commit hook (sources via `git rev-parse --show-toplevel`; escape
+hatches CURSUS_NULLUS and absent bin/mensor). `bin/mensor cursus
+censura -radix D`: per script, a non-comment `source`/`.` line naming
+cursus.sh needs a `# <cursus titulus versio/>` line at CURSUS_VERSIO
+("I"), an annotation without the source line is dead, a title may
+appear once (it is the job's identity); exit 1 naming each. The real
+adoption found two gaps in my own lint before any plant: it required
+the literal `tools/cursus.sh` (tools scripts source `$(dirname
+..)/cursus.sh`), and it enumerated only *.sh, so the extensionless hook
+was invisible - one predicate `_scriptum_est` (.sh, or no dot + shell
+shebang) now feeds both censura and `numquam`. The mensor-cursus gate
+checks the LIVE tree (live-tree invariant) and now `tegit` *.sh and
+tools/unci-git/*.
+
+Measured: css entry warm 1.17 -> 1.25 s (+~80 ms per top-level run:
+git context, wrap, body write); css -vis 9.3 vs 9.1 s (inside noise) -
+but -vis prints only 10 KB, so the 20 ms polling throttle (…KHK441) is
+still unmeasured on a truly chatty script. frigida -suitae css under the
+chassis: 91 s, nested fabrica runs carry the temp tree's own branch
+`frigida-1046becc-24504` and commit (acceptance question 4 answered on
+real data). Plants V red (version, twin titles, extensionless blind,
+literal source rule, live-tree source line removed).

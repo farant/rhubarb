@@ -1195,6 +1195,13 @@ _cursus_legere (
     redde ZEPHYRUM;
 }
 
+/* censura infra (post quaestiones) definitur */
+interior integer
+_censura (
+      Piscina*  piscina,
+      integer   argc,
+    character** argv);
+
 interior integer
 _cursus (
       Piscina*  piscina,
@@ -1221,13 +1228,18 @@ _cursus (
     {
         redde _cursus_acta(piscina, argc, argv);
     }
+    si (argc >= III && strcmp(argv[II], "censura") == ZEPHYRUM)
+    {
+        redde _censura(piscina, argc, argv);
+    }
     fprintf(stderr,
         "usus: mensor cursus currere [-titulus T] -- mandatum ...\n"
         "      mensor cursus legere [-machina] [-volumen via]\n"
         "      mensor cursus incipere -titulus T [-argv S]\n"
         "      mensor cursus finire -id X -exitus N [-duratio_ms D]"
         " [-nota S] [-titulus T -acta via|-]\n"
-        "      mensor cursus acta <id>\n");
+        "      mensor cursus acta <id>\n"
+        "      mensor cursus censura [-radix via]\n");
     redde 2;
 }
 
@@ -1460,6 +1472,44 @@ _cursum_imprimere (
         _visum(c->finis.nota, piscina));
 }
 
+/* SCRIPTUM: '*.sh' aut plagula sine puncto cuius linea prima '#!'
+ * concham nominat (unci git: pre-commit, post-commit - sine suffixo) */
+interior b32
+_scriptum_est (
+     constans character* plena,
+                 chorda  titulus)
+{
+         FILE* f;
+     character  caput[LXIV];
+           i32  k;
+
+    si (   titulus.mensura > III
+        && memcmp(titulus.datum + titulus.mensura - III, ".sh",
+        (size_t)III)
+           == ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    per (k = ZEPHYRUM; k < titulus.mensura; k++)
+    {
+        si (titulus.datum[k] == '.')
+        {
+            redde FALSUM;
+        }
+    }
+    f = fopen(plena, "rb");
+    si (f == NIHIL)
+    {
+        redde FALSUM;
+    }
+    k = (i32)fread(caput, (size_t)I, magnitudo(caput) - I, f);
+    fclose(f);
+    caput[k] = '\0';
+    redde caput[ZEPHYRUM] == '#' && caput[I] == '!'
+        && (strstr(caput, "sh\n") != NIHIL
+        || strstr(caput, "bash") != NIHIL);
+}
+
 /* *.sh sub radice (build, .git, probationes/fixa omissis): titulus
  * annotationis aut via relativa -> universum; via per titulum */
 interior vacuum
@@ -1505,10 +1555,8 @@ _scripta_colligere (
                     piscina);
             }
         }
-        alioquin si (   introitus->titulus.mensura > III
-                     && memcmp(introitus->titulus.datum
-                            + introitus->titulus.mensura - III, ".sh",
-                            (size_t)III) == ZEPHYRUM)
+        alioquin si (_scriptum_est((sprintf(plena, "%s/%s", radix, sub),
+                         plena), introitus->titulus))
         {
             chorda titulus;
             chorda relativa_chorda =
@@ -1998,6 +2046,250 @@ _quaestio (
     }
     volumen_claudere(volumen);
     redde ZEPHYRUM;
+}
+
+
+/* ============================================================
+ * censura (analytica T6): adoptores chassis versionem hodiernam ferunt
+ * ============================================================ */
+
+/* versio HODIERNA chassis: mutatio semanticae prologi/involucri ->
+ * augenda; adoptores annotationem suam renovare debent (censura) */
+#define CURSUS_VERSIO "I"
+
+/* *.sh sub radice (build, .git, probationes/fixa, tools/cursus.sh ipso
+ * omissis) - viae relativae */
+interior vacuum
+_scripta_enumerare (
+    constans character* radix,
+    constans character* relativa,
+                   Xar* viae,
+               Piscina* piscina)
+{
+               character  via[IV * MXXIV];
+     DirectoriumIterator* it;
+    DirectoriumIntroitus* introitus;
+
+    sprintf(via, "%s%s%s", radix, relativa[ZEPHYRUM] ? "/" : "",
+        relativa);
+    it = directorium_iterator_aperire(via, piscina);
+    si (it == NIHIL)
+    {
+        redde;
+    }
+    dum ((introitus = directorium_iterator_proximum(it)) != NIHIL)
+    {
+        character sub[IV * MXXIV];
+
+        si (   introitus->titulus.mensura         == ZEPHYRUM
+            || introitus->titulus.datum[ZEPHYRUM] == '.')
+        {
+            perge;
+        }
+        sprintf(sub, "%s%s%.*s", relativa,
+            relativa[ZEPHYRUM] ? "/" : "",
+            (integer)introitus->titulus.mensura,
+            (constans character*)introitus->titulus.datum);
+        si (introitus->genus == INTROITUS_DIRECTORIUM)
+        {
+            si (   strcmp(sub, "build")            != ZEPHYRUM
+                && strstr(sub, "/build")           == NIHIL
+                && strcmp(sub, "probationes/fixa") != ZEPHYRUM)
+            {
+                _scripta_enumerare(radix, sub, viae, piscina);
+            }
+        }
+        alioquin si (strcmp(sub, "tools/cursus.sh") != ZEPHYRUM)
+        {
+            character plena_sub[IV * MXXIV];
+
+            sprintf(plena_sub, "%s/%s", radix, sub);
+            si (!_scriptum_est(plena_sub, introitus->titulus))
+            {
+                perge;
+            }
+            *(chorda*)xar_addere(viae) = chorda_transcribere(
+                chorda_ex_literis(sub, piscina), piscina);
+        }
+    }
+    directorium_iterator_claudere(it);
+}
+
+/* plagula: annotatio (linea '# <cursus ...' ) et prologus (linea non
+ * commentaria 'source'/'.' cum tools/cursus.sh) */
+interior vacuum
+_scriptum_legere (
+    constans character* via,
+               Piscina* piscina,
+                chorda* titulus_out,
+                chorda* versio_out,
+                   b32* annotatum_out,
+                   b32* fontat_out)
+{
+       chorda textus   = filum_legere_totum(via, piscina);
+          i32 initium  = ZEPHYRUM;
+          i32 k;
+
+    *annotatum_out  = FALSUM;
+    *fontat_out     = FALSUM;
+    *titulus_out    = chorda_ex_literis("", piscina);
+    *versio_out     = chorda_ex_literis("", piscina);
+    per (k = ZEPHYRUM; k <= textus.mensura; k++)
+    {
+        chorda linea;
+        chorda nuda;
+           i32 j = ZEPHYRUM;
+
+        si (k < textus.mensura && textus.datum[k] != '\n')
+        {
+            perge;
+        }
+        linea    = chorda_sectio(textus, initium, k);
+        initium  = k + I;
+        dum (   j < linea.mensura
+             && (linea.datum[j] == ' ' || linea.datum[j] == '\t'))
+        {
+            j++;
+        }
+        nuda = chorda_sectio(linea, j, linea.mensura);
+        si (   !*annotatum_out
+            && chorda_incipit(nuda, chorda_ex_literis("# <cursus ",
+                   piscina)))
+        {
+            character* a = (character*)piscina_allocare(piscina,
+                (memoriae_index)(nuda.mensura + I));
+
+            si (a != NIHIL)
+            {
+                memcpy(a, nuda.datum, (size_t)nuda.mensura);
+                a[nuda.mensura] = '\0';
+                *titulus_out = _attributum_annotationis(a, "titulus",
+                    piscina);
+                *versio_out = _attributum_annotationis(a, "versio",
+                    piscina);
+            }
+            *annotatum_out = VERUM;
+        }
+        alioquin si (   (   chorda_incipit(nuda, chorda_ex_literis(
+                                "source ", piscina))
+                         || chorda_incipit(nuda, chorda_ex_literis(". ",
+                                piscina)))
+                     && chorda_continet(nuda, chorda_ex_literis(
+                            "cursus.sh", piscina)))
+        {
+            *fontat_out = VERUM;
+        }
+    }
+}
+
+interior integer
+_censura (
+      Piscina*  piscina,
+      integer   argc,
+    character** argv)
+{
+     constans character* radix = _arg(argc, argv, "-radix");
+                    Xar* viae = xar_creare(piscina,
+                        (i32)magnitudo(chorda));
+         TabulaDispersa* tituli = tabula_dispersa_creare_chorda(piscina,
+                    (i32)CXXVIII);
+                    i32 k;
+                    i32 utentes  = ZEPHYRUM;
+                    i32 vitia    = ZEPHYRUM;
+
+    si (radix == NIHIL)
+    {
+        radix = ".";
+    }
+    si (viae == NIHIL || tituli == NIHIL)
+    {
+        redde I;
+    }
+    _scripta_enumerare(radix, "", viae, piscina);
+    per (k = ZEPHYRUM; k < xar_numerus(viae); k++)
+    {
+        chorda  relativa = *(chorda*)xar_obtinere(viae, k);
+     character  plena[IV * MXXIV];
+        chorda  titulus;
+        chorda  versio;
+           b32  annotatum;
+           b32  fontat;
+        vacuum* locus = NIHIL;
+
+        sprintf(plena, "%s/%.*s", radix, (integer)relativa.mensura,
+            (constans character*)relativa.datum);
+        _scriptum_legere(plena, piscina, &titulus, &versio, &annotatum,
+            &fontat);
+        si (!annotatum && !fontat)
+        {
+            perge;
+        }
+        utentes++;
+        si (fontat && !annotatum)
+        {
+            imprimere("VITIUM\t%.*s\tprologus sine annotatione"
+                " '# <cursus"
+                " titulus=... versio=\"%s\"/>'\n",
+                (integer)relativa.mensura,
+                (constans character*)relativa.datum, CURSUS_VERSIO);
+            vitia++;
+            perge;
+        }
+        si (annotatum && !fontat)
+        {
+            imprimere("VITIUM\t%.*s\tannotatio sine prologo (source"
+                " tools/cursus.sh) - mortua\n",
+                (integer)relativa.mensura,
+                (constans character*)relativa.datum);
+            vitia++;
+        }
+        si (!chorda_aequalis_literis(versio, CURSUS_VERSIO))
+        {
+            imprimere("VITIUM\t%.*s\tversio '%.*s', hodierna '%s'\n",
+                (integer)relativa.mensura,
+                (constans character*)relativa.datum,
+                (integer)versio.mensura,
+                (constans character*)versio.datum,
+                CURSUS_VERSIO);
+            vitia++;
+        }
+        si (titulus.mensura == ZEPHYRUM)
+        {
+            imprimere("VITIUM\t%.*s\tannotatio sine titulo\n",
+                (integer)relativa.mensura,
+                (constans character*)relativa.datum);
+            vitia++;
+        }
+        alioquin si (tabula_dispersa_invenire(tituli, titulus, &locus))
+        {
+            chorda prior = *(chorda*)locus;
+
+            imprimere("VITIUM\t%.*s\ttitulus '%.*s' iam in %.*s -"
+                " identitas"
+                " operis una\n", (integer)relativa.mensura,
+                (constans character*)relativa.datum,
+                (integer)titulus.mensura,
+                (constans character*)titulus.datum,
+                (integer)prior.mensura,
+                (constans character*)prior.datum);
+            vitia++;
+        }
+        alioquin
+        {
+            chorda* sedes = (chorda*)piscina_allocare(piscina,
+                magnitudo(chorda));
+
+            si (sedes != NIHIL)
+            {
+                *sedes = relativa;
+                (vacuum)tabula_dispersa_inserere(tituli, titulus,
+                    sedes);
+            }
+        }
+    }
+    imprimere("censura chassis (versio %s): adoptores %d, vitia %d\n",
+        CURSUS_VERSIO, (integer)utentes, (integer)vitia);
+    redde vitia > ZEPHYRUM ? I : ZEPHYRUM;
 }
 
 

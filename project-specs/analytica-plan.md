@@ -143,6 +143,10 @@ commit via silva.commissio. Work in `../rhubarb-quinta`.
 - [x] 6a (Fran 10-14): pythonica suite groups as runs `pythonica#<grex>`
   (headers -> `_grex`), real diary, gate as parent. First reading: 400 s,
   half in three groups (ledger …PRYJ22).
+- [x] 6b: chassis on toml/css/md/silva entry points, frigida, vexilla
+  fumus, pre-commit hook; `mensor cursus censura` (version lint, live
+  tree in gate mensor-cursus). +~80 ms per top-level run. Plants V red.
+- [ ] 6c: opportunistic fold + once-a-day purge.
 - [ ] Chassis on the four converted entry points, frigida, one hook (=
   tools/unci-git/pre-commit: hand-made `git commit`s are attempts too,
   Fran 10-13), one gate script; lint stage: an adopter must carry the current version.
