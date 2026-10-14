@@ -1110,6 +1110,61 @@ agenda_signa_mensis (
  * Quaestiones (A4)
  * ================================================== */
 
+/* a ante b in historia perfectarum: dies perfectionis descendens,
+ * deinde id descendens */
+interior b32
+perfecta_ante (
+    constans AgendaRes* a,
+    constans AgendaRes* b)
+{
+    s32 c;
+
+    c = fasti_comparare(a->dies_perfectionis, b->dies_perfectionis);
+    si (c != ZEPHYRUM)
+    {
+        redde c > ZEPHYRUM;
+    }
+    redde a->id > b->id;
+}
+
+Xar*
+agenda_perfectae (
+    constans AgendaDocumentum* doc,
+                      Piscina* piscina)
+{
+          Xar* l;
+     Recordum* r;
+          i32  i;
+          i32  j;
+
+    si (!doc || !piscina)
+    {
+        redde NIHIL;
+    }
+    l = xar_creare(piscina, (i32)magnitudo(constans AgendaRes*));
+    per (i = ZEPHYRUM; l && i < xar_numerus(doc->recorda); i++)
+    {
+        r = (Recordum*)xar_obtinere(doc->recorda, i);
+        si (r->deleta || !r->res.perfecta)
+        {
+            perge;
+        }
+        /* insertio ordinata (historiae breves; n^2 tolerabile) */
+        (vacuum)xar_addere(l);
+        j = xar_numerus(l) - I;
+        dum (   j > ZEPHYRUM
+             && perfecta_ante(&r->res, *(constans AgendaRes**)
+                xar_obtinere(l, j - I)))
+        {
+            *(constans AgendaRes**)xar_obtinere(l, j) =
+                *(constans AgendaRes**)xar_obtinere(l, j - I);
+            j--;
+        }
+        *(constans AgendaRes**)xar_obtinere(l, j) = &r->res;
+    }
+    redde l;
+}
+
 Xar*
 agenda_apertae (
     constans AgendaDocumentum* doc,

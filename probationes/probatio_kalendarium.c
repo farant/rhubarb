@@ -1826,6 +1826,65 @@ _probare_globulos (
     CREDO_VERUM(campus_est(x, "visus", "mensis"));
 }
 
+/* agenda perfectae (A6a): post greges apertos "p" (Completed), per
+ * diem perfectionis "p<k>" novissimo primum, ordines "q<id>" (id
+ * descendens intra diem); titulus solas apertas numerat; x in q
+ * reaperit; filtrum sectionem quoque filtrat */
+interior vacuum
+_probare_perfectas_agendae (
+    CredoContextus* c)
+{
+                Mundus* x;
+               Mandata* md;
+    constans AgendaRes* r;
+
+    x = (Mundus*)c->datum;
+    thema_initiare();
+    CREDO_NECESSE(agendam_visus_parare(x, c));
+    (vacuum)agenda_perficere(x->documentum, VI, fasti_dies(MMXXVI, X,
+        XIII));
+    dispensator_recomponere(x->d);
+    md = reddere(x, c->piscina);
+    CREDO_VERUM(textus_ullus_continet(md, "Agenda: 2 open"));
+    CREDO_VERUM(textus_in_continet(md, fines_componentis(x, "p",
+        c->piscina), "Completed"));
+    CREDO_VERUM(textus_in_continet(md, fines_componentis(x, "p0",
+        c->piscina), "Oct 14"));
+    CREDO_VERUM(textus_in_continet(md, fines_componentis(x, "p1",
+        c->piscina), "Oct 13"));
+    CREDO_VERUM(   fines_componentis(x, "p0", c->piscina).y
+                 < fines_componentis(x, "q3", c->piscina).y);
+    CREDO_VERUM(   fines_componentis(x, "q3", c->piscina).y
+                 < fines_componentis(x, "q2", c->piscina).y);
+    CREDO_VERUM(   fines_componentis(x, "q2", c->piscina).y
+                 < fines_componentis(x, "p1", c->piscina).y);
+    CREDO_VERUM(   fines_componentis(x, "p1", c->piscina).y
+                 < fines_componentis(x, "q6", c->piscina).y);
+    CREDO_VERUM(capsa_in(md, fines_componentis(x, "q3", c->piscina),
+        VERUM));
+    /* ictus in q2 (titulus) eligit; x reaperit - ad greges apertos */
+    {
+        Fines f;
+
+        f = fines_componentis(x, "q2", c->piscina);
+        ictus_ad(x, f.x + C, f.y + IV);
+    }
+    CREDO_VERUM(campus_est(x, "res_electa", "2"));
+    clavis(x, 'x');
+    r = agenda_res(x->documentum, II);
+    CREDO_VERUM(r && !r->perfecta);
+    CREDO_VERUM(fines_componentis(x, "q2", c->piscina).altitudo
+        == ZEPHYRUM);
+    CREDO_VERUM(fines_componentis(x, "r2-2", c->piscina).altitudo
+        > ZEPHYRUM);
+    /* filtrum domus: nulla perfecta domus - sectio abest */
+    clavis(x, 'f');
+    typare(x, "domus");
+    reditus(x);
+    CREDO_VERUM(fines_componentis(x, "p", c->piscina).altitudo
+        == ZEPHYRUM);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "montatio",     _probare_montationem,   mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
@@ -1863,6 +1922,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "globuli", _probare_globulos, mundum_parare, mundum_purgare,
         NIHIL, NIHIL },
+    { "perfectae_agendae", _probare_perfectas_agendae, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

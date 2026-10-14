@@ -198,6 +198,14 @@ agenda_signa_mensis (
                           s32  mensis,
                  AgendaSignum  signa[XXXI]);
 
+/* A6a: res vivae PERFECTAE (non deletae), perfectione novissima
+ * primum (dies_perfectionis descendens, deinde id descendens) - visus
+ * agendae: historia perfectarum tota */
+Xar*
+agenda_perfectae (
+    constans AgendaDocumentum* doc,
+                      Piscina* piscina);
+
 /* A4: res vivae NONDUM perfectae (quocumque die, sine die incluse),
  * ordine id - visus agendae (decisio 7: res aperta numquam abit) */
 Xar*

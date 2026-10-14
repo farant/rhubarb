@@ -524,6 +524,44 @@ _probare_apertas (
     CREDO_VERUM(strcmp(visae, "domus opus") == ZEPHYRUM);
 }
 
+/* agenda_perfectae (A6a): perfectae vivae, perfectione novissima
+ * primum, deinde id descendens; deletae et reapertae absunt */
+interior vacuum
+_probare_perfectas (
+    CredoContextus* c)
+{
+     Mundus* m;
+        Xar* l;
+       Dies  d;
+        i32  i;
+
+    m = (Mundus*)c->datum;
+    CREDO_NECESSE(m && m->doc);
+    /* 1 perfecta XII; 2 perfecta XIV; 3 perfecta XIV; 4 aperta; 5
+     * perfecta XIII deinde reaperta; 6 perfecta XIV deinde deleta */
+    per (i = ZEPHYRUM; i < VI; i++)
+    {
+        (vacuum)agenda_rem_creare(m->doc, lit("res", c->piscina));
+    }
+    (vacuum)agenda_perficere(m->doc, I, fasti_dies(MMXXVI, X, XII));
+    d = fasti_dies(MMXXVI, X, XIV);
+    (vacuum)agenda_perficere(m->doc, II, d);
+    (vacuum)agenda_perficere(m->doc, III, d);
+    (vacuum)agenda_perficere(m->doc, V, fasti_dies(MMXXVI, X, XIII));
+    (vacuum)agenda_perfectionem_tollere(m->doc, V);
+    (vacuum)agenda_perficere(m->doc, VI, d);
+    (vacuum)agenda_rem_delere(m->doc, VI);
+    l = agenda_perfectae(m->doc, c->piscina);
+    CREDO_NECESSE_NON_NIHIL(l);
+    CREDO_AEQUALIS_I32(xar_numerus(l), III);
+    CREDO_AEQUALIS_S32((*(constans AgendaRes**)xar_obtinere(l,
+        ZEPHYRUM))->id, III);
+    CREDO_AEQUALIS_S32((*(constans AgendaRes**)xar_obtinere(l, I))->id,
+        II);
+    CREDO_AEQUALIS_S32((*(constans AgendaRes**)xar_obtinere(l, II))->id,
+        I);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "creatio",      _probare_creationem,     mundum_parare,
         mundum_purgare,
@@ -550,6 +588,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         mundum_purgare,
         NIHIL, NIHIL },
     { "quaestiones",  _probare_quaestiones,    mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "perfectae",    _probare_perfectas,      mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { "apertae",      _probare_apertas,        mundum_parare,
         mundum_purgare, NIHIL, NIHIL },

@@ -67,3 +67,11 @@ and hashes the whole canonical text. `sample`: seal ~90%+ (tree build
 creation is quadratic (import would want it). Path if ever needed:
 incremental seal - hash per item cached, seal = hash of item hashes in
 id order - no API change.
+
+## 2026-10-13 — A6a: agenda_perfectae
+
+Live completed items, newest completion first (completion day
+descending, then id descending), deleted and reopened ones excluded.
+Insertion sort while scanning the records (history lists are short; n^2
+is fine until it is not - pagination does not change the query).
+Plant: oldest first -> red.

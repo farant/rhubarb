@@ -235,7 +235,27 @@ State-model question to settle before A2 (A1 is content only).
     widget has a table).
   - Long lists: PAGINATION, not scrolling (Fran 2026-10-13).
 - **A5 — year view.**
-- **A6 — day documents**: embedded scriba per day.
+- **A6 — day view redesign + day documents** (Fran 2026-10-13):
+  - Day view = top half list / bottom half embedded scriba (50/50 for
+    now). List: incomplete items first, then completed ones (everything
+    completed THAT day, assigned elsewhere included, with its date);
+    header row "To do  [+ New]  < 1/2 >" - the list paginates with its
+    own buttons; j/k cross pages. Notes half = the day's own scriba
+    BOOK (decision 8: one paginated book per day, namespace keyed by
+    date, e.g. dies/2026-10-14), drawn as a "wide post-it": margin and
+    flat drop shadow. Focus: click either half; Tab switches list <->
+    notes (the "Tab between levels" deferred in S8c-2); Esc in notes
+    (normal mode) back to the list.
+  - Agenda: open groups, then a "Completed" section grouped by
+    completion day, newest first, EVERYTHING (Fran: the agenda is a
+    paginated view of the whole todo history) - so pagination comes in
+    this arc for both list views.
+  - Steps: **A6a** DONE 2026-10-13 agenda completed section
+    (agenda_perfectae; "p"/"p<k>"/"q<id>"); **A6b** list pagination (shared by day list and agenda) +
+    day list grouping + [+ New]; **A6c** day book storage (ScribaLiber
+    per day) + nested scriba mount helper (API to Fran); **A6d**
+    embedding: mount in the bottom half, nested gesture slot, focus /
+    Tab / Esc, book follows the day, post-it look, screenshots.
 - **Next after the widget (Fran 2026-10-13):** fix the liturgical
   library - review in project-specs/liturgia-recensio/RECENSIO.md
   (US calendar; other calendars a later design question).

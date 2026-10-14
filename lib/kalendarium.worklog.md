@@ -448,3 +448,17 @@ row 2 -> 3. Truncation per font: `praecidere_fonte` divides by
 fons_latitudo(fons) (8 for the header font). Test helper
 `textus_fontis_est` checks the text command's `fons`.
 Plant: month title drawn with FONS_PARVUS -> red.
+
+## 2026-10-13 — A6a: Completed section in the agenda view
+
+Fran: the agenda is a paginated view of the WHOLE todo history, so all
+completed items show, below the open groups: "p" heading (band, bold
+"Completed"), one "p<k>" sub-heading per completion day (dim
+"Wednesday, Oct 14"), rows "q<id>" (ticked, strikethrough, assigned date
+on the right). `perfectae_agendae` applies the rubric filter;
+`ordines_currentes` = open groups (`apertae_agendae`) + completed, so
+j/k and selection cross into the history; `x` on a q-row reopens it and
+it moves back into its group. The header counts open items only (it
+counted ordines_currentes before - would have included the history).
+Click handling and row drawing accept 'q' ids. Pagination (A6b) is what
+keeps a long history on screen.

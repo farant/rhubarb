@@ -452,10 +452,42 @@ greges_agendae (
     redde greges;
 }
 
-/* ordines currentes (Xar de constans AgendaRes*): visus diei aut
- * agendae (greges iuncti - res in gregibus pluribus pluries) */
+/* A6a: res perfectae visus agendae (perfectione novissima primum;
+ * filtro: solae rubricae eius) */
 interior Xar*
-ordines_currentes (
+perfectae_agendae (
+     constans KalendariumMontatio* m,
+                          Piscina* p)
+{
+                    Xar* omnes;
+                    Xar* l;
+                 chorda* filtrum;
+     constans AgendaRes* r;
+                    i32  i;
+
+    omnes = m->documentum ? agenda_perfectae(m->documentum,
+        p) : NIHIL;
+    filtrum = insula_ramus_attributum(&m->ramus, "rubrica_filtrum");
+    si (!omnes || !filtrum)
+    {
+        redde omnes;
+    }
+    l = xar_creare(p, (i32)magnitudo(constans AgendaRes*));
+    per (i = ZEPHYRUM; l && i < xar_numerus(omnes); i++)
+    {
+        r = *(constans AgendaRes**)xar_obtinere(omnes, i);
+        si (rubricam_habet(r, *filtrum))
+        {
+            *(constans AgendaRes**)xar_addere(l) = r;
+        }
+    }
+    redde l;
+}
+
+/* res apertae visus agendae: greges iuncti (res in gregibus pluribus
+ * pluries) */
+interior Xar*
+apertae_agendae (
      constans KalendariumMontatio* m,
                           Piscina* p)
 {
@@ -465,10 +497,6 @@ ordines_currentes (
             i32  i;
             i32  j;
 
-    si (!visus_agendae(m))
-    {
-        redde ordines_diei(m, kalendarium_dies_electus(m), p);
-    }
     l       = xar_creare(p, (i32)magnitudo(constans AgendaRes*));
     greges  = greges_agendae(m, p);
     per (i = ZEPHYRUM; l && greges && i < xar_numerus(greges); i++)
@@ -479,6 +507,32 @@ ordines_currentes (
             *(constans AgendaRes**)xar_addere(l) =
                 *(constans AgendaRes**)xar_obtinere(g->res, j);
         }
+    }
+    redde l;
+}
+
+/* ordines currentes (Xar de constans AgendaRes*): visus diei, aut
+ * agendae = apertae (greges) deinde perfectae (A6a) */
+interior Xar*
+ordines_currentes (
+     constans KalendariumMontatio* m,
+                          Piscina* p)
+{
+    Xar* l;
+    Xar* perfectae;
+    i32  i;
+
+    si (!visus_agendae(m))
+    {
+        redde ordines_diei(m, kalendarium_dies_electus(m), p);
+    }
+    l          = apertae_agendae(m, p);
+    perfectae  = perfectae_agendae(m, p);
+    per (i = ZEPHYRUM; l && perfectae
+        && i < xar_numerus(perfectae); i++)
+    {
+        *(constans AgendaRes**)xar_addere(l) =
+            *(constans AgendaRes**)xar_obtinere(perfectae, i);
     }
     redde l;
 }
@@ -875,9 +929,10 @@ ictus_ordinis (
 {
     s32 id;
 
-    /* "r<id>" (dies) aut "r<id>-<grex>" (agenda) */
+    /* "r<id>" (dies), "r<id>-<grex>" (agenda), "q<id>" (perfectae) */
     si (   nodus && nodus->id.mensura > I
-        && nodus->id.datum[ZEPHYRUM] == 'r')
+        && (   nodus->id.datum[ZEPHYRUM] == 'r'
+            || nodus->id.datum[ZEPHYRUM] == 'q'))
     {
         chorda numerus;
 
@@ -1837,6 +1892,36 @@ numerus_identitatis (
     redde chorda_ut_s32(n, numerus);
 }
 
+/* A6a: dies perfectionis gregis k (dies distincti ordine historiae) */
+interior b32
+diem_perfectionis_k (
+      Xar* perfectae,
+      s32  k,
+     Dies* dies)
+{
+    constans AgendaRes* r;
+                   s32  n;
+                   i32  i;
+
+    n = -I;
+    per (i = ZEPHYRUM; i < xar_numerus(perfectae); i++)
+    {
+        r = *(constans AgendaRes**)xar_obtinere(perfectae, i);
+        si (   i == ZEPHYRUM || !dies_aequales(r->dies_perfectionis,
+                (*(constans AgendaRes**)xar_obtinere(perfectae, i - I))
+                ->dies_perfectionis))
+        {
+            n++;
+        }
+        si (n == k)
+        {
+            *dies = r->dies_perfectionis;
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
 /* visus agendae: tituli gregum (liberi "g<k>" PARTES_INDEX) -
  * "#rubrica" aut "(none)" */
 interior vacuum
@@ -1846,17 +1931,46 @@ greges_pingere (
     constans Componens* c)
 {
              Xar* greges;
+             Xar* perfectae;
      GrexAgendae* g;
        Componens* l;
           chorda  titulus;
              s32  k;
              i32  i;
 
-    greges = greges_agendae(contextus->m, md->piscina);
+    greges     = greges_agendae(contextus->m, md->piscina);
+    perfectae  = perfectae_agendae(contextus->m, md->piscina);
     per (i = ZEPHYRUM; greges
         && i < componens_numerus_liberorum(c); i++)
     {
         l = componens_liberum(c, i);
+        /* A6a: "p" Completed (fascia), "p<k>" dies perfectionis k */
+        si (   l->partes == PARTES_INDEX && l->id.mensura == I
+            && l->id.datum[ZEPHYRUM] == 'p')
+        {
+            figura_fasciam_pingere(md, l->fines);
+            figura_textum_audacem(md, l->fines.x + VI, l->fines.y + IV,
+                chorda_ex_literis("Completed", md->piscina),
+                figura_color_thematis(COLOR_TEXT));
+            perge;
+        }
+        si (   l->partes == PARTES_INDEX
+            && numerus_identitatis(l->id, 'p', &k) && perfectae)
+        {
+            Dies dies;
+
+            si (diem_perfectionis_k(perfectae, k, &dies))
+            {
+                mandata_textus(md, l->fines.x + VI, l->fines.y + IV,
+                    chorda_concatenare(chorda_ex_literis(dies_anglice[
+                    fasti_dies_hebdomadis(dies)], md->piscina),
+                    chorda_concatenare(chorda_ex_literis(", ",
+                    md->piscina), dies_brevis(dies, md->piscina),
+                    md->piscina), md->piscina), ZEPHYRUM,
+                    figura_color_thematis(COLOR_TEXT_DIM));
+            }
+            perge;
+        }
         si (   l->partes != PARTES_INDEX
             || !numerus_identitatis(l->id, 'g', &k) || k < ZEPHYRUM
             || (i32)k    >= xar_numerus(greges))
@@ -1916,7 +2030,8 @@ ordines_pingere (
     {
         l = componens_liberum(c, i);
         r = (   l->partes == PARTES_ITEM
-             && numerus_identitatis(l->id, 'r', &id))
+             && (   numerus_identitatis(l->id, 'r', &id)
+                 || numerus_identitatis(l->id, 'q', &id)))
             ? agenda_res(m->documentum, id) : NIHIL;
         si (!r)
         {
@@ -2249,7 +2364,7 @@ titulum_agendae_pingere (
                     i32  i;
                     i32  j;
 
-    ordines     = ordines_currentes(contextus->m, md->piscina);
+    ordines     = apertae_agendae(contextus->m, md->piscina);
     distinctae  = ZEPHYRUM;
     per (i = ZEPHYRUM; ordines && i < xar_numerus(ordines); i++)
     {
@@ -2715,10 +2830,12 @@ agendam_disponere (
                     s32  corpus)
 {
                     Xar* greges;
+                    Xar* perfectae;
             GrexAgendae* g;
      constans AgendaRes* r;
               character  id[XXXII];
                     s32  electa;
+                    s32  k;
                     i32  i;
                     i32  j;
 
@@ -2740,6 +2857,36 @@ agendam_disponere (
                 + (r->id == electa ? xar_numerus(r->notae) : ZEPHYRUM)),
                 VERUM, FALSUM);
         }
+    }
+    /* A6a: "p" (Completed), per diem perfectionis "p<k>", ordines
+     * "q<id>" */
+    perfectae = perfectae_agendae(m, dp->piscina);
+    si (!perfectae || xar_numerus(perfectae) == ZEPHYRUM)
+    {
+        redde;
+    }
+    (vacuum)componentem_locare(dp, corpus, "p", PARTES_INDEX,
+        DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_FIXA, II, FALSUM,
+        FALSUM);
+    k = -I;
+    per (j = ZEPHYRUM; j < xar_numerus(perfectae); j++)
+    {
+        r = *(constans AgendaRes**)xar_obtinere(perfectae, j);
+        si (   j == ZEPHYRUM || !dies_aequales(r->dies_perfectionis,
+                (*(constans AgendaRes**)xar_obtinere(perfectae, j - I))
+                ->dies_perfectionis))
+        {
+            k++;
+            sprintf(id, "p%d", (integer)k);
+            (vacuum)componentem_locare(dp, corpus, id, PARTES_INDEX,
+                DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_FIXA, II,
+                FALSUM, FALSUM);
+        }
+        sprintf(id, "q%d", (integer)r->id);
+        (vacuum)componentem_locare(dp, corpus, id, PARTES_ITEM,
+            DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_FIXA, (s32)(II
+            + (r->id == electa ? xar_numerus(r->notae) : ZEPHYRUM)),
+            VERUM, FALSUM);
     }
 }
 
