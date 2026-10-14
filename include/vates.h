@@ -250,6 +250,9 @@ nomen structura {
                     b32 sine_herbario;          /* VERUM = sine captura
                                                   * (expresse; herbarium-spec-2) */
             HttpVectura vectura;                /* exsequi NIHIL = ordinaria */
+        HttpVecturaRivi vectura_rivi;           /* rivus (quaestio-rivus
+                                                  * T4); exsequi NIHIL =
+                                                  * ordinaria */
 } VatesOptiones;
 
 nomen structura Vates Vates;   /* opacum */
@@ -296,6 +299,25 @@ vates_mittere (
            chorda  propositum,
           Piscina* piscina);
 
+/* delta textus (cogitatio FALSUM) aut cogitationis (VERUM) dum
+ * advenit (quaestio-rivus-spec II.4); chorda post reditum invalida */
+nomen vacuum (*VatesRivus)(vacuum* datum, chorda delta, b32 cogitatio);
+
+/* Ut vates_mittere, sed "stream": true; deltae per rivum dum adveniunt.
+ * Redditur responsum IDEM ac vates_mittere pro eodem nuntio (bloci,
+ * causa finis, usus) - congregatum ex eventis. Iteratio SOLUM ante
+ * deltam primam (post eam defectus nuntiatur, non iteratur). Rivus
+ * truncatus (message_stop deest) = VATES_ERROR_RETE; eventus 'error' =
+ * VATES_ERROR_STATUS cum genere et nuntio provisoris. */
+VatesResponsum*
+vates_mittere_rivum (
+            Vates* vates,
+     VatesPetitio* petitio,
+           chorda  propositum,
+       VatesRivus  rivus,
+           vacuum* datum,
+          Piscina* piscina);
+
 constans character*
 vates_error_descriptio (
     VatesError error);
@@ -317,6 +339,16 @@ vates_anthropic_legere (
          i32  status_http,
       chorda  corpus,
      Piscina* piscina);
+
+
+/* Corpus SSE Anthropic totum -> responsum neutrum (ut
+ * vates_mittere_rivum congregat); deltae per rivum (NIHIL licet). */
+VatesResponsum*
+vates_anthropic_rivum_legere (
+        chorda  corpus,
+    VatesRivus  rivus,
+        vacuum* datum,
+       Piscina* piscina);
 
 
 /* ========================================================================
@@ -351,6 +383,26 @@ vates_fictus_crudum (
                    Vates* vates,
                      i32  status_http,
       constans character* corpus_json);
+
+/* Responsum textus per rivum (SSE verum: message_start, ping, deltae
+ * partium, message_delta, message_stop; corpus in frustis V
+ * octetorum) */
+vacuum
+vates_fictus_rivum (
+              Vates* vates,
+    constans chorda* partes,
+                i32  numerus,
+          VatesUsus  usus);
+
+/* Rivus qui post partes eventu 'error' finitur (numerus 0 = error ante
+ * deltam) */
+vacuum
+vates_fictus_rivum_fractum (
+                  Vates* vates,
+        constans chorda* partes,
+                    i32  numerus,
+     constans character* error_genus,
+     constans character* error_nuntius);
 
 i32
 vates_fictus_petitiones_numerus (
