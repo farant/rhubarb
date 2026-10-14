@@ -140,6 +140,9 @@ commit via silva.commissio. Work in `../rhubarb-quinta`.
   red gate, examen refusal at git commit, success.
 
 ### T6: pilot adoption + version lint
+- [x] 6a (Fran 10-14): pythonica suite groups as runs `pythonica#<grex>`
+  (headers -> `_grex`), real diary, gate as parent. First reading: 400 s,
+  half in three groups (ledger …PRYJ22).
 - [ ] Chassis on the four converted entry points, frigida, one hook (=
   tools/unci-git/pre-commit: hand-made `git commit`s are attempts too,
   Fran 10-13), one gate script; lint stage: an adopter must carry the current version.

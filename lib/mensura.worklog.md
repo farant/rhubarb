@@ -359,3 +359,21 @@ its history rule (a 4-run title), and the CLI's decimal limes (2.5 vs
 `credo $?`, so $? was the echo's and the stage "passed" - the real
 failure was my new block feeding data into an older smoke check.
 Plants XVII red over two batches (two first did not compile - an unused variable after the planted change; redone with FALSUM &&). The pythonica check 'commissio_umbra: recepta sua deleta' failed once during an unrelated plant run and passed on a clean rerun - its second sighting, recorded on the ledger item (…GKC0).
+
+## 2026-10-14 - pythonica groups as runs (analytica T6a)
+
+The pythonica suite's 57 `print('--- name ---')` headers became
+`_grex('name')`: same header, plus the previous group's run is closed
+and `pythonica#name` opened (exit 1 if any check in it failed; nota =
+"N fracta"; a crash mid-group leaves it interrupted). Group runs go to
+the REAL diary/diurna (targets saved BEFORE the suite isolates its
+fake gates into T) with the gate run as parent. Self-test points the
+helper at a temp diary and restores the open real group. Plant (wrong
+title prefix) red on the self-test only - my first attempt ran it with
+CURSUS_NULLUS=1, which disables groups entirely (wrong red), and when
+I killed it the plant stayed in the file (SIGTERM skips `finally`;
+caught by cmp, restored by cp).
+
+First reading (`quaestio sectiones titulus=pythonica`): ~400 s over 57
+groups, half in three - pondera.py generator test 76 s, umbra receipts
+58 s, commissio owed-gates block 57 s. Recorded on ledger …PRYJ22.
