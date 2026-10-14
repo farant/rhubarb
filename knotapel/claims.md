@@ -883,6 +883,10 @@ ranked by how much it bears on KC 47.
           D119-D123). The antipodal 0/1 encoding (D66/D118, D79-D84/
           D124, D125) joins patterns by relations in {-2 .. 2}.
           [checked] (D126 review F3)
+48.4.1.2. The antipodal encoding also forces coincidences in every
+          point set: x_i = 0 comes from both bits on or both off.
+          They join patterns of equal parity, so XOR is unaffected;
+          AND and MAJ are not. [checked] (D126 review R7)
 48.4.2. Every catalog has relations of norm 3 (p_a +- p_b +- p_c =
         0): 16 in 2T, 32 in 2O, 200 in 2I. The coincidences grow
         fast; in 2I there are 1,800, 16,392 and 169,100 at support 4,
@@ -896,6 +900,7 @@ ranked by how much it bears on KC 47.
           many relations: about 4,500 with entries in {-1, 0, 1} at
           height 6 (N = 24), against 2O's 9,472. 48.4.3 measures
           height, not group structure. [exact] (D126 Part F, oracle)
+          [last sentence: interpretation]
 48.4.4. A null with a catalog's entire relation lattice is a linear
         image of the catalog. A knot-free null can therefore match
         the profile only in part (e.g. its shortest shells), and must
@@ -903,12 +908,24 @@ ranked by how much it bears on KC 47.
         48.4.4.1]
 48.4.4.1. The first sentence stands. The second falls for 2O: a unit
           point set with exactly 2O's relation lattice that is not
-          congruent to 2O exists (2T u r sigma_1 2T). [falls] (D126
-          Part E, the review's counter-example)
+          congruent to 2O exists (2T u r sigma_1 2T). [exact] (D126
+          Part E, the review's counter-example) [grade corrected in
+          round two: the existence is exact; 48.4.4 is what falls]
 48.4.4.2. On the unit sphere, a whole-lattice null must be congruent
           to 2T (its points pin every quadratic form, rank 10 of 10).
           [proved] (D126 Part E)
+48.4.4.2.1. Precisely: over a real field, every real embedding of
+            the null is congruent to 2T. [proved] (D126 review R3)
 48.4.4.3. For 2I (quadric rank 35 of 36) this is open. [open]
+          [superseded by 48.4.4.4]
+48.4.4.4. For 2I it holds too: over a real field, a whole-lattice
+          unit null is congruent to 2I as a set (possibly through
+          the Galois twist), and no rational unit point set has
+          2I's whole lattice. The forms vanishing on 2I are exactly
+          the sqrt5 part of the norm; the two embedding norms are
+          the only positive semidefinite rank-4 forms in the span.
+          [proved] (D126 Part E; sketched by the reviewer, checked by
+          the author)
 48.4.5. So the catalogs force pairs of input patterns that no
         activation can separate, and generic point sets have none at
         these lengths: the coincident-sum half of 48.2's prediction.
@@ -918,7 +935,18 @@ ranked by how much it bears on KC 47.
           sets is the norm-3 relations (16, 32, 200, against at most
           1) and the odd-norm ones (see 48.4.7): 2O has 2,720 to norm
           8, against 0 at odd height and about 1,000 at height 6.
-          [exact] (D126 Parts B, F)
+          [exact] (D126 Parts B, F) ["at most 1" falls, see 48.4.5.2]
+48.4.5.2. Against random rational unit points of nearby small height
+          (the catalogs' own heights 2 and 4 have only 2T): norm-3
+          relations 2O 32 against 1-2 (H = 6, N = 24, 8 seeds); 2I
+          200 against 25-39 (H = 6, N = 60). Odd-norm: 2O 2,720
+          against 970-1,056; 2I 16,592 against 6,603-7,661. At odd
+          height the odd counts are 0 by 48.4.8. [exact] (D126 Part
+          F, oracle-pinned; review R1)
+48.4.5.3. So the catalogs have more norm-3 and more XOR-relevant
+          coincidences than these controls, by 2.2-30x depending on
+          the comparison; one sample of controls, no significance
+          test. [interpretation]
 48.4.6. Whether these coincidences lower capacity, and which matter
         for which function, needs activations: P1. [open]
 48.4.7. Only relations of odd norm join input patterns of opposite
@@ -929,6 +957,9 @@ ranked by how much it bears on KC 47.
 48.4.8. Rational unit points of odd height have no relation of odd
         norm: |v|^2 odd forces an odd coordinate sum, so every
         relation has an even coefficient sum. [proved] (D126 Part F)
+48.4.8.1. Stated generally: the points v_i/H share one odd
+          denominator H. Mixed odd heights are covered by taking the
+          common one. [proved] (D126 review R4)
 48.4.9. 2O's profile is 2T's squared (theta_2O = theta_2T^2): 2O = 2T
         u sigma_1 2T in separate coordinate blocks, so 2O adds no
         relation structure beyond two copies of 2T. [proved] (D126

@@ -12,7 +12,10 @@ among the points, with coefficients that depend on the input encoding:
 | antipodal 0/1 (inputs +q_i and −q_i per weight) | D66/D118, D79–D84/D124, D125 | {−2 … 2} |
 
 The encodings were identified by the review; the first version claimed
-{−1, 0, 1} "exactly", which holds only for the signed encoding.
+{−1, 0, 1} "exactly", which holds only for the signed encoding. The
+antipodal encoding also forces coincidences in EVERY point set, since
+x_i = 0 can come from both bits on or both off. Those have the same
+parity, so they leave XOR alone, but they do affect AND and MAJ.
 
 All integer relations of a point set S = (p_1 .. p_N) form a lattice,
 
@@ -23,10 +26,12 @@ and its rank, its shells by norm and its shortest vectors are the set's
 
 **Parity** [proved, one line]. Σ x_i ≡ Σ x_i² (mod 2), so a relation's
 coefficient sum is odd exactly when its norm is odd. In both encodings,
-two patterns of opposite parity differ by a relation with an odd
-coefficient sum. So only relations of **odd norm** can matter for XOR,
-the function of every audited capacity demo. The demo checks
-"coefficient sum odd ⇔ norm odd" on every stored vector.
+two patterns with the same sum differ by a relation, and its
+coefficient sum is odd exactly when their parities differ. So only
+relations of **odd norm** can matter for XOR, the function of every
+audited capacity demo. The demo checks "coefficient sum odd ⇔ norm
+odd" on every stored vector; that is an identity, so the check
+guards the counting code, not the data.
 
 This demo measures the profile exactly, with the house library
 `reticulum` (integral LLL and integer Fincke-Pohst; no floating point),
@@ -39,36 +44,43 @@ review the same day (see "Review" below).
 
 - **Every catalog has relations of norm 3**, p_a ± p_b ± p_c = 0: 16
   in 2T, 32 in 2O, 200 in 2I. These are odd, so they join patterns of
-  opposite parity. No height-matched knot-free set has more than 1.
-- **XOR-relevant (odd-norm) coincidences:**
+  opposite parity.
+- **XOR-relevant (odd-norm) coincidences:** 2T 608 to norm 10 (320
+  with entries in {−1, 0, 1}), 2O 2,720 to norm 8, 2I 16,592 to norm 5.
+- **Against random rational unit points of nearby small height**
+  (Part F; the catalogs themselves sit at heights 2 and 4, where the
+  only rational unit points are 2T):
 
-  | | relations of odd norm | radius |
-  |---|---:|---:|
-  | 2T | 608 (320 with entries in {−1, 0, 1}) | 10 |
-  | 2O | 2,720 | 8 |
-  | 2I | 16,592 | 5 |
+  | catalog | vs | norm 3 | odd norm |
+  |---|---|---|---|
+  | 2O (N = 24) | H = 6 | 32 against 1–2 | 2,720 against 970–1,056 (2.6–2.8×) |
+  | 2I (N = 60) | H = 6 | 200 against 25–39 (5–8×) | 16,592 against 6,603–7,661 (2.2–2.5×) |
+  | 2T (N = 12) | H = 6 | 16 against 0 | 608 against 0–19 |
 
-  Random rational unit points of the SAME small height have none at
-  odd height (proved, Part F) and about 1,000 at height 6 (N = 24,
-  against 2O's 2,720).
-- **The even coincidences are not distinctive.** Random rational unit
-  points of small height have thousands of relations: about 4,500
-  with entries in {−1, 0, 1} at height 6 (N = 24), against 2O's 9,472.
-  2I's 1,800 four-term and 169,100 six-term coincidences are even and
-  can never matter for parity.
+  At H = 10 the controls have fewer coincidences still. At odd heights
+  every odd-norm count is 0 by a theorem (Part F), so those rows say
+  nothing about structure.
+
+  So the catalogs have more of both, by a factor that depends strongly
+  on the comparison. "Far more" and "no set has more than 1" (the
+  first revision) fell to the second review.
+- **The even coincidences are not distinctive.** At H = 6 (N = 24)
+  random points have about 4,200–4,600 with entries in {−1, 0, 1},
+  against 2O's 9,472. 2I's 1,800 four-term and 169,100 six-term
+  coincidences are even and can never matter for parity.
 - **The high-height nulls of Part D have no relation at all.** Their
   coordinate denominators are about 10^30 and more. That reflects
-  their height, not the absence of a group; Part F matches the height.
+  their height, not the absence of a group.
 - **2O adds nothing beyond 2T** [proved, Part E]. Its points split into
   2T and σ1·2T in separate coordinate blocks, so its profile is two
   copies of 2T's (θ_2O = θ_2T²), checked shell by shell.
 - **A null with a catalog's whole relation lattice:**
   - it is a Q-linear image of the catalog [proved];
-  - on the unit sphere it must be congruent to 2T (rank 10 of 10)
-    [proved];
+  - over a real field and on the unit sphere it is congruent to 2T
+    [proved], and congruent to 2I as a set [proved, round two];
   - it need not be congruent to 2O: a unit set with exactly 2O's
     lattice and different geometry exists (Part E);
-  - for 2I this is open.
+  - no RATIONAL unit point set has 2I's whole lattice [proved].
 
 ## Catalogs (Part A)
 
@@ -165,7 +177,8 @@ though none occurred.
 
 Both kinds have **high height**: coordinate denominators of 10^30 and
 more (measured by the reviewer). They do NOT match the catalogs' height
-(denominators 2 and 4); Part F does.
+(denominators 2 and 4). Part F uses nearby small heights; a non-group
+control at the catalogs' own heights does not exist.
 
 | catalog (radius) | null | relation rank | relations within radius | LLL \|b_1\|^2 (an upper bound on λ_1) |
 |---|---|---:|---:|---|
@@ -187,46 +200,63 @@ more (measured by the reviewer). They do NOT match the catalogs' height
 the same point twice, a "relation" of norm 2 made by the sampler. Small
 heights make short relations likely; Part F measures this on purpose.
 
-## Height-matched nulls (Part F)
+## Rational nulls of nearby small height (Part F)
 
 All rational unit quaternions of height H, v/H with v ∈ Z^4 and
-|v| = H, taken modulo sign. Random subsets of N points (three seeds; the
-same sphere order and LCG draws as `oracle.py -F`). None is closed
-under multiplication. Ambient rank 4.
+|v| = H, taken modulo sign. Random subsets of N points, with the same
+sphere order and LCG draws as `oracle.py -F`. Ambient rank 4. "None
+closed under multiplication" is checked, but it is near-vacuous for
+random subsets.
 
 **At H = 2 and H = 4 these points ARE 2T** (checked): r_4(4) = r_4(16) =
-24. At the catalogs' own height, height and group structure cannot be
-separated.
+24. The catalogs sit at exactly these heights (2T and both blocks of 2O
+at 2, 2I at 4), so a truly height-matched non-group control does not
+exist. Heights 3–25 are NEARBY small heights. Every even-height sphere
+contains a scaled copy of 2T, and the H = 12 sphere equals the H = 6
+one (r_4(144) = r_4(36) = 312), so H = 12 would add nothing.
 
-| H | N (radius) | ±1 relations | norm 3 | odd-norm relations |
-|---|---|---:|---:|---:|
-| 3 | 12 (10) | 20–44 | 0 | 0 |
-| 5 | 12 (10) | 2–3 | 0 | 0 |
-| 5 | 24 (8) | 1,662–1,882 | 0 | 0 |
-| 6 | 24 (8) | 4,427–4,561 | 1 | 1,004–1,056 |
-| 9 | 24 (8) | 169–195 | 0 | 0 |
-| 25 | 24 (8) | 3–5 | 0 | 0 |
-| 5 | 60 (5) | 318–416 | 0 | 0 |
-| 25 | 60 (5) | 0–1 | 0 | 0 |
+| H | N (radius) | seeds | ±1 relations | norm 3 | odd norm (±1 only) |
+|---|---|---:|---:|---:|---:|
+| 3 | 12 (10) | 3 | 20–44 | 0 | 0* |
+| 5 | 12 (10) | 3 | 2–3 | 0 | 0* |
+| 6 | 12 (10) | 8 | 6–21 | 0 | 0–19 (0–13) |
+| 10 | 12 (10) | 8 | 0–2 | 0 | 0–2 (0–2) |
+| 5 | 24 (8) | 3 | 1,662–1,882 | 0 | 0* |
+| 6 | 24 (8) | 8 | 4,228–4,583 | 1–2 | 970–1,056 (962–1,046) |
+| 9 | 24 (8) | 3 | 169–195 | 0 | 0* |
+| 10 | 24 (8) | 8 | 541–603 | 0 | 110–153 (109–152) |
+| 25 | 24 (8) | 3 | 3–5 | 0 | 0* |
+| 5 | 60 (5) | 3 | 318–416 | 0 | 0* |
+| 6 | 60 (5) | 8 | 7,117–8,281 | 25–39 | 6,603–7,661 |
+| 10 | 60 (5) | 8 | 881–1,085 | 3–11 | 795–996 |
+| 25 | 60 (5) | 3 | 0–1 | 0 | 0* |
 
-For comparison: 2T (N = 12, to 10) has 608 ±1 relations, 320 of them
-odd; 2O (N = 24, to 8) 9,472 and 2,720; 2I (N = 60, to 5) 18,392 and
-16,592.
+\* forced by the odd-height lemma: a theorem, not an observation.
 
-**Odd height** [proved, one line]. If |v|² = H² is odd, then v's
-coordinate sum is odd, since Σ v_k ≡ Σ v_k² (mod 2). A relation
-Σ x_i v_i = 0 then gives Σ x_i ≡ 0 (mod 2). So at odd height no
-coincidence joins patterns of opposite parity. The demo checks this
-(0 odd-norm relations at H = 3, 5, 9, 25).
+- The ±1 totals, the norm-3 counts and the odd ±1 counts are pinned
+  from `oracle.py -F`.
+- The odd counts with an entry ±2 (a few at norm 7) are library-only.
+- For comparison: 2T (N = 12, to norm 10) has 608 ±1 relations, 320 of
+  them odd; 2O (N = 24, to 8) 9,472 and 2,720; 2I (N = 60, to 5)
+  18,392 and 16,592.
+
+**Odd denominators** [proved, one line]. Suppose every point is v/H for
+one common odd H (|v|² = H²). Then v's coordinate sum is odd, since
+Σ v_k ≡ Σ v_k² (mod 2). A relation Σ x_i v_i = 0 then gives
+Σ x_i ≡ 0 (mod 2). So such a set has no coincidence joining patterns
+of opposite parity. The demo checks this: 0 odd-norm relations at
+H = 3, 5, 9, 25.
 
 **Reading** [interpretation]:
 - Small height alone produces many coincidences. "Coincident sums
   belong to the group catalogs" (the first version's claim) falls.
-- What separates the catalogs from every height-matched set measured:
-  - many norm-3 relations (16, 32, 200 against ≤ 1);
-  - more coincidences overall;
-  - many odd ones, which matter for XOR (none at odd height, about
-    1,000 at H = 6 against 2O's 2,720).
+- Against the informative (even-height) controls, the catalogs have:
+  - more norm-3 relations: 2O 32 against 1–2, 2I 200 against 25–39;
+  - more odd-norm ones: 2.2–2.8× against H = 6.
+
+  These are three seeds to eight per row and two even heights. A
+  catalog is not a random draw, so these are comparisons with a
+  sample, not a test of significance.
 
 ## The structure of 2O (Part E)
 
@@ -244,24 +274,43 @@ coincidence joins patterns of opposite parity. The demo checks this
     and 2O's profile;
   - 11 distinct inner products against 2O's 5;
   - not closed under multiplication.
-- **When must a whole-lattice unit null be congruent?** If p′_i = A p_i
-  and every p′_i is a unit, A preserves both the rational part and the
-  √d part of the norm on every p_i. If the quadratic monomials of the
-  points have full rank on the coordinates they span, both quadratic
-  forms are pinned. Then A preserves every inner product, so S′ is
-  congruent to S. The evaluation ranks:
-  - 2T: 10 of 10, congruent [proved];
-  - 2O: 20 of 36, not pinned (S′ above);
-  - 2I: 35 of 36, open. The missing form is the √5 part of the norm,
-    which vanishes on unit points anyway; the reviewer's reading,
-    not settled here.
+- **When must a whole-lattice unit null be congruent?** Let
+  p′_i = A p_i be unit points over a REAL field K′. A then fixes, on
+  every p_i, each part of the norm (its rational and irrational
+  coordinates in K′). Whether that forces congruence depends on the
+  rank of the points' quadratic monomials. The evaluation ranks:
+  - **2T: 10 of 10.** Every part-form is pinned. By polarization the
+    K′-Gram matrices agree, and every real embedding of S′ is
+    congruent to 2T [proved].
+  - **2O: 20 of 36.** Not pinned; S′ above is a counter-example.
+  - **2I: 35 of 36, closed in round two** [proved; sketched by the
+    reviewer, checked by the author]:
+    1. The forms vanishing on all 60 points are exactly span(f₅), with
+       f₅ = 2 Σ a_k b_k the √5 part of the norm.
+    2. So each part-form of S′, pulled back by A, lies in
+       span(f₁, f₅), with f₁ = Σ (a_k² + 5 b_k²).
+    3. Over R that span is spanned by the two embedding norms
+       N± = f₁ ± √5 f₅: each is positive semidefinite of rank 4, with
+       complementary kernels.
+    4. For a real embedding τ of K′, the pulled-back norm is positive
+       semidefinite of rank ≤ 4 and lies in that span. So it is N₊ or
+       N₋ (a positive mixture has rank 8), with coefficient 1 by unit
+       norm.
+    5. Hence τ(S′) has the Gram matrix of a Galois image of 2I. Both
+       images are order-120 subgroups of SU(2), hence conjugate, so
+       τ(S′) is congruent to 2I as a set. The labeling may be the
+       Galois twist, which keeps the lattice (it is Q-linear).
+    6. With K′ = Q the pulled-back norm would be f₁ + c f₅ with c
+       rational, never N±, so **no rational unit set has 2I's whole
+       lattice**.
 - **Consequence for P1.** A null with a catalog's whole relation
   lattice is a Q-linear image of it.
   - Non-unit images A·S (A ∈ GL(Q)) keep every coincidence and change
     every metric. That may be exactly the null that separates
     coincidences from geometry.
-  - On the unit sphere such a null is congruent to the catalog for
-    2T, not necessarily for 2O, and open for 2I.
+  - Over a real field and on the unit sphere, such a null is
+    congruent to the catalog for 2T and (as a set) for 2I, and not
+    necessarily for 2O.
   - The first version's "a knot-free null can only match part of the
     profile" falls.
 
@@ -269,9 +318,10 @@ coincidence joins patterns of opposite parity. The demo checks this
 
 - KC 48.2 predicted that group structure lowers capacity "through ties
   and coincident sums". The odd-norm coincidences are the only ones
-  that can affect XOR, and the catalogs have far more of them than
-  height-matched sets. That is consistent with the prediction, and it
-  is not a capacity result: that needs activations (P1).
+  that can affect XOR, and the catalogs have more of them than random
+  sets of nearby small height (2.2–2.8× against H = 6). That is
+  consistent with the prediction, and it is not a capacity result:
+  that needs activations (P1).
 - A coincidence matters only if the target function needs to separate
   the two patterns it joins. For XOR that is exactly the odd ones.
   For other functions it is open.
@@ -378,6 +428,21 @@ including 169,100. What changed:
   |x|² > R". The LLL range is labeled as an upper bound.
 - **F11 (positive).** θ_2O = θ_2T². Now proved and checked in Part E.
 
+- **Round two (re-review of 7ee57122).** F1–F11 confirmed addressed;
+  every number reproduced (40/40, both oracles). New:
+  - R1: "no height-matched set has more than 1 norm-3 relation" and
+    "far more" were sample artifacts. The odd-height rows are forced
+    zeros, and H = 6 at N = 60 has 25–39 norm-3 relations. Even-height
+    rows were added (H = 6 and 10, N = 12/24/60, 8 seeds, oracle
+    pinned), and the reading now gives ranges and ratios.
+  - R2: "same height" corrected to "nearby small heights". The catalogs'
+    own heights (2, 4) have only 2T.
+  - R3: 2I's whole-lattice rigidity closed (proof above, checked).
+  - R4: grade fixes in claims.md 48.4.x; the odd-denominator
+    hypothesis restated; the odd ±1 counts are now oracle-pinned.
+  - R5–R7: the identity check labeled; parity wording; the antipodal
+    encoding's forced coincidences.
+
 ## Not covered
 
 - The KC 48.1 nulls (same axes with random angles; same angles with
@@ -385,7 +450,7 @@ including 169,100. What changed:
   capacity or tie-resolution question: that is P1.
 - 2I beyond norm 5 in the run. 2O beyond norm 8. 2T beyond norm 10.
   2I's norm-9 shell (odd, with ±2 entries).
-- Whether 2I's whole-lattice unit nulls must be congruent.
+- Whole-lattice nulls over non-real fields.
 - Successive minima beyond the shortest norm. Relations among subsets,
   such as the Q8 cosets of KC 49 or particular weight sets.
 
@@ -396,7 +461,7 @@ including 169,100. What changed:
   bash build/aedilis/main/struere.sh && ./build/aedilis/main/main
 ```
 
-About 2.5 minutes, 40/40. `D126_CELER=1` runs 2I to norm 4 (the plants used
+About 5 minutes, 40/40. `D126_CELER=1` runs 2I to norm 4 (the plants used
 it). Oracles: `python3 -I oracle.py -F` (about 70 s),
 `python3 -I oracle_nulls.py` (about 85 s). Frozen in `demo-snapshot.c`
 via `knotapel/archive.sh`.

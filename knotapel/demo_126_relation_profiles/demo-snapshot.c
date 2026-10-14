@@ -7,7 +7,7 @@
  *
  *   clang -std=c89 -pedantic -Wall -Wextra -Werror -Wconversion -Wsign-conversion -Wcast-qual -Wstrict-prototypes -Wmissing-prototypes -Wwrite-strings -Wno-long-long -Wno-overlength-strings -fbracket-depth=512 -O2 -g demo-snapshot.c -o demo-snapshot
  *
- * Commit (library closure clean): 08168c3ebf183102af3908cf34b2b66ed67d0ac7
+ * Commit (library closure clean): 7ee571229f14cc8b8ed76baaaed142a5e98a7ae7
  * Regenerate: ./knotapel/archive.sh knotapel/demo_126_relation_profiles/main.c
  * Verified: live build and snapshot gave byte-identical output.
  * Sources (git blob hashes):
@@ -39,7 +39,7 @@
  *   9967d4ccc5d5f5e18bf84f716b4f8fb7b7964a85  lib/polynomium.c
  *   3ff5d14a1ae470bce4da7fe3a6e8e37a1e028184  lib/quaternio.c
  *   be0859ce8f1cbc3bdb92d4d67239940c50d88b2a  lib/reticulum.c
- *   f33e998d0d34ae6dec528c64422c0c817d11c2cc  knotapel/demo_126_relation_profiles/main.c (uncommitted, embedded verbatim)
+ *   2615733dd19a981ce7cff0818103b8497fbcc2ef  knotapel/demo_126_relation_profiles/main.c (uncommitted, embedded verbatim)
  */
 
 #line 1 "include/postulata_posix.h"
@@ -25074,9 +25074,12 @@ congruentia_restitue (
  *           relation lattice that is NOT congruent to 2O (the review's
  *           counter-example); the quadric evaluation ranks that decide
  *           when a whole-lattice unit null must be congruent.
- *   Part F  height-matched nulls (added after the review): random
- *           subsets of ALL rational unit quaternions of height H (v/H,
- *           v in Z^4), H = 3 .. 25; at H = 2 and 4 those are 2T itself.
+ *   Part F  nulls of nearby small height (added after the review):
+ *           random subsets of ALL rational unit quaternions of height H
+ *           (v/H, v in Z^4), H = 3 .. 25. At H = 2 and 4, the catalogs'
+ *           own heights, those points are 2T itself. Odd heights have
+ *           no odd-norm relation by a theorem; the even heights (6, 10)
+ *           are the informative controls (8 seeds, oracle-pinned).
  *
  * Embedding: a coordinate a + b sqrt d becomes (a, b), a point a vector
  * in Q^8; 1 and sqrt d are independent over Q, so the relation lattice
@@ -25797,7 +25800,8 @@ part_b (void)
     /* sum x_i = sum x_i^2 (mod 2), so the coefficient sum is odd exactly
      * on odd norms: only odd shells join input patterns of opposite
      * parity, in the signed and the antipodal encoding alike */
-    check("coefficient sum odd <=> norm odd, every stored vector",
+    check("coefficient sum odd <=> norm odd, every stored vector (an "
+        "identity: checks the counting, not the data)",
         parity_lemma_holds(&pr_2t) && parity_lemma_holds(&pr_2o)
         && parity_lemma_holds(&pr_2i));
     /* an entry +-3 needs 3 p_a = signed sum of the others: impossible
@@ -26400,29 +26404,69 @@ typedef struct {
     long h;
     int  n;
     int  radius;
+    int  seeds;
 } HeightRow;
 
+/* odd heights: illustrations (their odd-norm zeros are forced by the
+ * odd-height lemma); even heights: the informative controls (review
+ * round two: more seeds) */
 static const HeightRow height_rows[] = {
-    { 3, 12, 10 }, { 5, 12, 10 },
-    { 5, 24, 8 }, { 6, 24, 8 }, { 9, 24, 8 }, { 25, 24, 8 },
-    { 5, 60, 5 }, { 25, 60, 5 }
+    { 3, 12, 10, 3 }, { 5, 12, 10, 3 },
+    { 5, 24, 8, 3 }, { 6, 24, 8, 8 }, { 9, 24, 8, 3 }, { 25, 24, 8, 3 },
+    { 5, 60, 5, 3 }, { 25, 60, 5, 3 },
+    { 6, 12, 10, 8 }, { 10, 12, 10, 8 }, { 10, 24, 8, 8 },
+    { 6, 60, 5, 8 }, { 10, 60, 5, 8 }
 };
 
-#define HEIGHT_SEEDS 3
-
-static long height_pm1[8][HEIGHT_SEEDS];
-static long height_norm3[8][HEIGHT_SEEDS];
+#define HEIGHT_ROWS 13
+#define HEIGHT_SEEDS_MAX 8
 
 /* pinned from oracle.py -F (same sphere order and LCG subsets; signed
- * coincidences by direct search) */
-static const long oracle_height_pm1[8][HEIGHT_SEEDS] = {
-    { 20, 31, 44 }, { 3, 2, 2 }, { 1750, 1662, 1882 },
-    { 4559, 4561, 4427 }, { 195, 169, 176 }, { 3, 3, 5 },
-    { 416, 318, 327 }, { 0, 0, 1 }
+ * coincidences by direct search): +-1 total, support 3, odd supports */
+static const long oracle_height_pm1[HEIGHT_ROWS][HEIGHT_SEEDS_MAX] = {
+    { 20, 31, 44, 0, 0, 0, 0, 0 },
+    { 3, 2, 2, 0, 0, 0, 0, 0 },
+    { 1750, 1662, 1882, 0, 0, 0, 0, 0 },
+    { 4559, 4561, 4427, 4459, 4346, 4583, 4301, 4228 },
+    { 195, 169, 176, 0, 0, 0, 0, 0 },
+    { 3, 3, 5, 0, 0, 0, 0, 0 },
+    { 416, 318, 327, 0, 0, 0, 0, 0 },
+    { 0, 0, 1, 0, 0, 0, 0, 0 },
+    { 12, 21, 10, 14, 6, 9, 9, 14 },
+    { 2, 2, 1, 1, 1, 0, 1, 2 },
+    { 565, 563, 603, 566, 593, 561, 603, 541 },
+    { 7879, 7601, 7476, 7392, 7117, 8281, 8033, 7513 },
+    { 1048, 1038, 1034, 955, 881, 1064, 1076, 1085 }
 };
-static const long oracle_height_norm3[8][HEIGHT_SEEDS] = {
-    { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 1, 1, 1 }, { 0, 0, 0 },
-    { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }
+static const long oracle_height_norm3[HEIGHT_ROWS][HEIGHT_SEEDS_MAX] = {
+    { 0, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0, 0, 0, 0, 0 },
+    { 1, 1, 1, 1, 1, 2, 1, 1 },
+    { 0, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0, 0, 0, 0, 0 },
+    { 30, 26, 29, 25, 27, 39, 27, 30 },
+    { 3, 6, 8, 9, 4, 7, 9, 11 }
+};
+static const long oracle_height_odd_pm1[HEIGHT_ROWS][HEIGHT_SEEDS_MAX] = {
+    { 0, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0, 0, 0, 0, 0 },
+    { 1025, 1046, 1001, 999, 991, 1045, 962, 975 },
+    { 0, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 13, 4, 7, 0, 4, 3, 9 },
+    { 1, 0, 0, 1, 0, 0, 1, 2 },
+    { 141, 120, 137, 133, 152, 129, 134, 109 },
+    { 7348, 7108, 6934, 6900, 6603, 7661, 7493, 6998 },
+    { 969, 942, 955, 867, 795, 974, 982, 996 }
 };
 
 static void
@@ -26437,13 +26481,16 @@ part_f (void)
     int  bad = 0;
     int  closed = 0;
     int  pins = 1;
+    int  n_sets = 0;
     long odd_at_odd_height = 0;
     long h;
     char msg[256];
 
-    printf("\n=== Part F: height-matched rational nulls ===\n");
+    printf("\n=== Part F: rational nulls of nearby small height ===\n");
     printf("  points v/H, v in Z^4, |v| = H (all rational unit "
-        "quaternions of height H), random subsets of N (no group)\n");
+        "quaternions of height H), random subsets of N (no group);\n"
+        "  the catalogs sit at H = 2 (2T, both blocks of 2O) and 4 (2I),"
+        " where these points ARE 2T\n");
     for (h = 2; h <= 4; h += 2) {
         PointSet s;
         int      ok;
@@ -26469,11 +26516,12 @@ part_f (void)
         m = sphere_points(hr->h);
         printf("  H = %2ld (%4d points mod sign), N = %d, R = %d:\n",
             hr->h, m, hr->n, hr->radius);
-        for (seed = 0; seed < HEIGHT_SEEDS; seed++) {
+        for (seed = 0; seed < hr->seeds; seed++) {
             PointSet s;
             Profile  pr;
             long     pm1 = 0;
             long     odd = 0;
+            long     odd_pm1 = 0;
             int      n;
 
             rng_state = 1000L * hr->h + hr->n + seed;
@@ -26492,24 +26540,25 @@ part_f (void)
                 s.p[i] = sphere_quaternion(idx[i], hr->h);
             }
             profile(&s, hr->radius, STORE_LIMIT, NODE_BUDGET, &pr);
+            n_sets++;
             for (n = 1; n <= hr->radius; n++) {
                 pm1 += pr.pm1_by_norm[n];
                 if (n % 2) {
                     odd += pr.by_norm[n];
+                    odd_pm1 += pr.pm1_by_norm[n];
                 }
             }
-            height_pm1[row][seed] = pm1;
-            height_norm3[row][seed] = pr.by_norm[3];
             pins = pins && pm1 == oracle_height_pm1[row][seed]
-                && pr.by_norm[3] == oracle_height_norm3[row][seed];
+                && pr.by_norm[3] == oracle_height_norm3[row][seed]
+                && odd_pm1 == oracle_height_odd_pm1[row][seed];
             if (hr->h % 2) {
                 odd_at_odd_height += odd;
             }
             closed += closed_with_signs(&s);
             printf("    seed %d: %6ld relations to R (%s), +-1: %6ld, "
-                "norm 3: %ld, odd norms: %ld\n", seed, pr.count,
+                "norm 3: %ld, odd norms: %ld (+-1: %ld)\n", seed, pr.count,
                 pr.complete ? "complete" : "INCOMPLETE", pm1, pr.by_norm[3],
-                odd);
+                odd, odd_pm1);
             if (!pr.complete || !pr.classified
                 || pr.rank != s.n - pr.ambient_rank
                 || pr.ambient_rank != 4) {
@@ -26517,11 +26566,12 @@ part_f (void)
             }
         }
     }
-    sprintf(msg, "%d height-matched sets: shells complete, ambient rank 4,"
-        " relation rank N - 4; none closed under multiplication",
-        rows * HEIGHT_SEEDS);
+    sprintf(msg, "%d sets of nearby height: shells complete, ambient rank "
+        "4, relation rank N - 4; none closed under multiplication (near-"
+        "vacuous for random subsets)", n_sets);
     check(msg, bad == 0 && closed == 0);
-    check("every set's +-1 total and norm-3 count = oracle.py -F", pins);
+    check("every set's +-1 total, norm-3 count and odd +-1 count = "
+        "oracle.py -F", pins);
     /* |v|^2 = h^2 odd => sum of v's coordinates odd; a relation
      * sum x_i v_i = 0 then forces sum x_i even: at odd height no
      * coincidence joins patterns of opposite parity */

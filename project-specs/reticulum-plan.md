@@ -151,6 +151,10 @@ Each task follows the house cycle:
   with 2O's whole lattice, not congruent). Added height-matched nulls,
   the encodings, the odd-norm (XOR) column, theta_2O = theta_2T^2; 40
   checks, 11 plants. KC 48.4.x corrected append-only.)*
+  *(Re-review: the "at most 1 norm-3" contrast was a sample artifact
+  (odd heights are theorem zeros); even-height controls added, the
+  contrast is now 2.2-30x by comparison. 2I whole-lattice rigidity
+  proved (real fields); no rational unit set has 2I's lattice.)*
 
 ## Gates
 

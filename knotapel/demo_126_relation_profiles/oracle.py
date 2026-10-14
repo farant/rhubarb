@@ -276,14 +276,19 @@ class Lcg:
 
 
 def height_rows():
-    rows = [(3, 12, 10), (5, 12, 10), (5, 24, 8), (6, 24, 8), (9, 24, 8),
-            (25, 24, 8), (5, 60, 5), (25, 60, 5)]
+    # (H, N, radius, seeds): odd heights are illustrations (their zeros
+    # are forced by the odd-height lemma); even heights are the
+    # informative controls (review round two)
+    rows = [(3, 12, 10, 3), (5, 12, 10, 3), (5, 24, 8, 3), (6, 24, 8, 8),
+            (9, 24, 8, 3), (25, 24, 8, 3), (5, 60, 5, 3), (25, 60, 5, 3),
+            (6, 12, 10, 8), (10, 12, 10, 8), (10, 24, 8, 8), (6, 60, 5, 8),
+            (10, 60, 5, 8)]
     print("Part F: height-matched rational nulls (same sphere order and "
           "LCG subsets as main.c)")
-    for h, n, radius in rows:
+    for h, n, radius, seeds in rows:
         pts_all = sphere(h)
         m = len(pts_all)
-        for seed in range(3):
+        for seed in range(seeds):
             rng = Lcg(1000 * h + n + seed)
             idx = list(range(m))
             for i in range(n):
@@ -292,14 +297,18 @@ def height_rows():
             pts = [pts_all[idx[i]] for i in range(n)]
             cache = {}
             pm1 = 0
+            odd = 0
             norm3 = 0
             for s in range(3, radius + 1):
                 c = coincidences(pts, s, cache)
                 pm1 += c
+                if s % 2:
+                    odd += c
                 if s == 3:
                     norm3 = c
             print(f"  H {h:2d} N {n} seed {seed}: +-1 relations to support "
-                  f"{radius}: {pm1}, support 3: {norm3}")
+                  f"{radius}: {pm1}, support 3: {norm3}, odd supports: "
+                  f"{odd}")
             sys.stdout.flush()
 
 
