@@ -247,6 +247,8 @@ State-model question to settle before A2 (A1 is content only).
     query on the action registry, then the palette UI (after a 2nd
     widget has a table).
   - Long lists: PAGINATION, not scrolling (Fran 2026-10-13).
+    Split groups (Fran 2026-10-14, DONE): a page starting mid-group
+    repeats its heading (#tag, completion date, day "Completed").
 - **A5 — year view.**
 - **A6 — day view redesign + day documents** (Fran 2026-10-13):
   - Day view = top half list / bottom half embedded scriba (50/50 for

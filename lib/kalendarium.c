@@ -1418,8 +1418,43 @@ capacitas_indicis (
         ? II : ZEPHYRUM);
 }
 
+/* titulus gregis cui ordo i pertinet: titulus proximus prior - "g<k>"
+ * (rubrica), "p<k>" (dies perfectionis), "c" (perfectae diei); -1 si
+ * ordo ipse titulus est aut gregem nullum habet. Pagina in medio gregis
+ * incipiens eum iterat ("<id>-c", Franus 10-14). */
+interior s32
+titulum_gregis (
+    Xar* ordines,
+    s32  i)
+{
+    OrdoIndicis* o;
+            s32  j;
+
+    si (!ordines || i <= ZEPHYRUM || i >= (s32)xar_numerus(ordines))
+    {
+        redde -I;
+    }
+    o = (OrdoIndicis*)xar_obtinere(ordines, (i32)i);
+    si (o->partes != PARTES_ITEM)
+    {
+        redde -I;
+    }
+    per (j = i - I; j >= ZEPHYRUM; j--)
+    {
+        o = (OrdoIndicis*)xar_obtinere(ordines, (i32)j);
+        si (o->partes == PARTES_INDEX)
+        {
+            redde (   o->id[ZEPHYRUM] == 'g' || o->id[ZEPHYRUM] == 'c'
+                   || (o->id[ZEPHYRUM] == 'p' && o->id[I] != '\0'))
+                ? j : -I;
+        }
+    }
+    redde -I;
+}
+
 /* initia paginarum (Xar de s32, index ordinis): ordo qui non capit in
- * paginam novam; titulus (PARTES_INDEX) numquam ultimus - si cum
+ * paginam novam; pagina in medio gregis incipiens spatium tituli
+ * iterati servat; titulus (PARTES_INDEX) numquam ultimus - si cum
  * ordine sequente non capit, in paginam novam; ordo maior capacitate
  * solus */
 interior Xar*
@@ -1432,6 +1467,7 @@ paginas_computare (
     OrdoIndicis* o;
     OrdoIndicis* sequens;
             s32  usus;
+            s32  j;
             i32  i;
 
     initia = xar_creare(p, (i32)magnitudo(s32));
@@ -1454,6 +1490,13 @@ paginas_computare (
         {
             *(s32*)xar_addere(initia)  = (s32)i;
             usus                       = ZEPHYRUM;
+            j = titulum_gregis(ordines,
+                (s32)i);
+            si (j >= ZEPHYRUM)
+            {
+                usus = ((OrdoIndicis*)xar_obtinere(ordines, (i32)j))
+                    ->altitudo;
+            }
         }
         usus += o->altitudo;
     }
@@ -3032,10 +3075,11 @@ greges_pingere (
         && i < componens_numerus_liberorum(c); i++)
     {
         l = componens_liberum(c, i);
-        /* A6b: "c" Completed (dies), "caput" ("To do" in die),
-         * "index_paginae" ("k/n" si plures) */
-        si (   l->partes == PARTES_INDEX && l->id.mensura == I
-            && l->id.datum[ZEPHYRUM] == 'c')
+        /* A6b: "c" Completed (dies; "c-c" iteratus), "caput" ("To do"
+         * in die), "index_paginae" ("k/n" si plures) */
+        si (   l->partes == PARTES_INDEX
+            && (   chorda_aequalis_literis(l->id, "c")
+                || chorda_aequalis_literis(l->id, "c-c")))
         {
             figura_fasciam_pingere(md, l->fines);
             figura_textum_audacem(md, l->fines.x + VI, l->fines.y + IV,
@@ -4283,6 +4327,18 @@ indicem_disponere (
     }
     paginae_fines(initia, pagina_currens(m, (s32)xar_numerus(initia)),
         ordines, &a, &b);
+    /* pagina in medio gregis: titulus eius iteratus ("<id>-c") */
+    i = titulum_gregis(ordines, a);
+    si (i >= ZEPHYRUM)
+    {
+        character id[XXXVI];
+
+        o = (OrdoIndicis*)xar_obtinere(ordines, (i32)i);
+        sprintf(id, "%s-c", o->id);
+        (vacuum)componentem_locare(dp, regio, id, PARTES_INDEX,
+            DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_FIXA, o->altitudo,
+            VERUM, FALSUM);
+    }
     /* res et tituli omnes actionem habent: "g<k>" ictu filtrat (M2a),
      * omnes ictu dextro menu aperiunt (M2c) */
     per (i = a; i < b; i++)

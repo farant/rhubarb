@@ -2485,6 +2485,186 @@ _probare_greges_filtrum (
     CREDO_VERUM(r && r->perfecta);
 }
 
+/* componens id supra omnes ordines (PARTES_ITEM) paginae ? */
+interior b32
+supra_ordines (
+                 Mundus* x,
+     constans character* id,
+                Piscina* p)
+{
+     Componens* radix;
+     Componens* l;
+         Fines  f;
+           i32  i;
+
+    f      = fines_componentis(x, id, p);
+    radix  = dispensator_arbor(x->d);
+    si (f.altitudo <= ZEPHYRUM || !radix)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < componens_numerus_liberorum(radix); i++)
+    {
+        l = componens_liberum(radix, i);
+        si (l->partes == PARTES_ITEM && l->fines.y <= f.y)
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* ordines paginae intra superficiem: omnis res II cellulas alta et
+ * supra marginem inferum (cellula una) - pagina non redundat */
+interior b32
+ordines_intra (
+    Mundus* x)
+{
+     Componens* radix;
+     Componens* l;
+           i32  i;
+
+    radix = dispensator_arbor(x->d);
+    per (i = ZEPHYRUM; radix && i < componens_numerus_liberorum(radix);
+         i++)
+    {
+        l = componens_liberum(radix, i);
+        si (   l->partes == PARTES_ITEM
+            && (   l->fines.altitudo != XVI
+                || l->fines.y + l->fines.altitudo
+                    > radix->fines.altitudo
+                   - VIII))
+        {
+            imprimere("  redundat: %.*s (%d+%d)\n",
+                (integer)l->id.mensura,
+                (constans character*)l->id.datum,
+                (integer)l->fines.y, (integer)l->fines.altitudo);
+            redde FALSUM;
+        }
+    }
+    redde radix != NIHIL;
+}
+
+/* res n novae: rubrica data (NIHIL = nulla), perfecta die data
+ * (dies.annus 0 = aperta) */
+interior vacuum
+res_addere (
+                 Mundus* x,
+                    i32  n,
+     constans character* rubrica,
+                   Dies  perfectio,
+                Piscina* p)
+{
+    s32 id;
+    i32 i;
+
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        id = agenda_rem_creare(x->documentum, chorda_ex_literis("res",
+            p));
+        si (rubrica)
+        {
+            (vacuum)agenda_rubricas_ponere(x->documentum, id,
+                chorda_ex_literis(rubrica, p));
+        }
+        si (perfectio.annus > ZEPHYRUM)
+        {
+            (vacuum)agenda_perficere(x->documentum, id, perfectio);
+        }
+    }
+}
+
+/* tituli gregum iterati (Franus 10-14): pagina in medio gregis
+ * incipiens titulum eius iterat ("<id>-c") - agenda (CCCLX x CCCXX:
+ * XV ordines per paginam). Domus: g0 + XVI res (1, 5, 7-20) - pagina I
+ * g0 + XIV, pagina II "g0-c" + 19, 20, g1, g2, p, p0 + VI perfectae;
+ * perfectae XXVI (2, 3, 21-44) die XIV: pagina III "p0-c" + XIV,
+ * pagina IV "p0-c" + VI */
+interior vacuum
+_probare_paginas_gregum (
+    CredoContextus* c)
+{
+     Mundus* x;
+    Mandata* md;
+       Dies  nulla;
+
+    x            = (Mundus*)c->datum;
+    x->latitudo  = CCCLX;
+    x->altitudo  = CCCXX;
+    thema_initiare();
+    CREDO_NECESSE(agendam_visus_parare(x, c));
+    memset(&nulla, ZEPHYRUM, magnitudo(nulla));
+    res_addere(x, XIV, "domus", nulla, c->piscina);
+    res_addere(x, XXIV, NIHIL, fasti_dies(MMXXVI, X, XIV), c->piscina);
+    dispensator_recomponere(x->d);
+    CREDO_VERUM(adest(x, "g0", c->piscina));
+    CREDO_VERUM(adest(x, "r18-0", c->piscina));
+    CREDO_VERUM(ordines_intra(x));
+    CREDO_FALSUM(adest(x, "r19-0", c->piscina));
+    CREDO_FALSUM(adest(x, "g0-c", c->piscina));
+    /* pagina II: titulus domus iteratus supra 19 */
+    clavis(x, ']');
+    CREDO_VERUM(adest(x, "g0-c", c->piscina));
+    CREDO_FALSUM(adest(x, "g0", c->piscina));
+    CREDO_VERUM(ordines_intra(x));
+    CREDO_VERUM(supra_ordines(x, "g0-c", c->piscina));
+    CREDO_VERUM(adest(x, "r20-0", c->piscina));
+    CREDO_VERUM(adest(x, "g2", c->piscina));
+    CREDO_VERUM(adest(x, "p0", c->piscina));
+    CREDO_FALSUM(adest(x, "p0-c", c->piscina));
+    md = reddere(x, c->piscina);
+    CREDO_VERUM(textus_in_continet(md, fines_componentis(x, "g0-c",
+        c->piscina), "#domus"));
+    /* pagina III: dies perfectionis iteratus */
+    clavis(x, ']');
+    CREDO_VERUM(adest(x, "p0-c", c->piscina));
+    CREDO_FALSUM(adest(x, "p", c->piscina));
+    CREDO_VERUM(ordines_intra(x));
+    CREDO_VERUM(supra_ordines(x, "p0-c", c->piscina));
+    md = reddere(x, c->piscina);
+    CREDO_VERUM(textus_in_continet(md, fines_componentis(x, "p0-c",
+        c->piscina), "Oct 14"));
+    /* pagina IV (ultima): iterum */
+    clavis(x, ']');
+    CREDO_VERUM(adest(x, "p0-c", c->piscina));
+    md = reddere(x, c->piscina);
+    CREDO_VERUM(textus_in_continet(md, fines_componentis(x,
+        "index_paginae", c->piscina), "4/4"));
+    /* titulus iteratus filtrat (M2a) */
+    clavis(x, '[');
+    clavis(x, '[');
+    CREDO_NECESSE(ictus_in(x, "g0-c", c->piscina));
+    CREDO_VERUM(campus_est(x, "rubrica_filtrum", "domus"));
+}
+
+/* visus diei (CCCLX x CCCXX: VI ordines per paginam): r1, c, IV
+ * perfectae; pagina II incipit in perfectis - "c-c" iteratus */
+interior vacuum
+_probare_paginas_gregum_diei (
+    CredoContextus* c)
+{
+    Mundus* x;
+      Dies  nulla;
+
+    x            = (Mundus*)c->datum;
+    x->latitudo  = CCCLX;
+    x->altitudo  = CCCXX;
+    CREDO_NECESSE(agendam_parare(x, c));
+    memset(&nulla, ZEPHYRUM, magnitudo(nulla));
+    res_addere(x, VIII, NIHIL, fasti_dies(MMXXVI, X, XIV), c->piscina);
+    reditus(x);
+    CREDO_VERUM(campus_est(x, "visus", "dies"));
+    CREDO_VERUM(adest(x, "c", c->piscina));
+    CREDO_FALSUM(adest(x, "c-c", c->piscina));
+    clavis(x, ']');
+    CREDO_VERUM(adest(x, "c-c", c->piscina));
+    CREDO_FALSUM(adest(x, "c", c->piscina));
+    CREDO_VERUM(supra_ordines(x, "c-c", c->piscina));
+    CREDO_VERUM(textus_in_continet(reddere(x, c->piscina),
+        fines_componentis(x, "c-c", c->piscina), "Completed"));
+    (vacuum)nulla;
+}
+
 /* menu diei (M2c): dexter in cellula eligit et aperit; claves movent,
  * Reditus agit et claudit; clavis alia deglutitur; ictus in re agit */
 interior vacuum
@@ -2629,6 +2809,11 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "elenchus_diei", _probare_elenchum_diei, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { "elenchus_rei", _probare_elenchum_rei, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "paginae_greges", _probare_paginas_gregum, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "paginae_greges_diei", _probare_paginas_gregum_diei,
+        mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

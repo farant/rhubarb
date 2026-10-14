@@ -669,3 +669,29 @@ to the dispatcher (the calendar already returns early) - it matters for
 vicus-level handlers, which no suite exercises yet.
 Screenshots (headless probe, deleted; copy in $TMPDIR/imago): day-view
 row menu with "Edit title" highlighted, month-cell menu.
+
+## 2026-10-14 - repeated group headings on split pages (Fran)
+
+A page that starts in the middle of a group repeats that group's
+heading at the top: agenda "#tag" ("g<k>"), completion date ("p<k>"),
+and the day view's "Completed" band ("c"). `titulum_gregis(ordines, i)`
+finds the owning heading (nearest heading above an ITEM row; -1 for a
+heading row or the "p" Completed band, which never owns items directly
+- a "q" row always has a "p<k>" date above it). Two places use it:
+- paginas_computare: when a new page starts at row i, `usus` starts at
+  the owning heading's height, so the page still fits after the
+  repeat;
+- indicem_disponere: the repeat is laid out as "<id>-c" (PARTES_INDEX,
+  with the action). "-c" is chosen because numerus_identitatis stops
+  at '-', so "g0-c" draws as #domus and the M2a filter click works on
+  it unchanged; the only drawing change is "c" OR "c-c" for the band.
+Repeated is the immediate group heading only: a page starting mid
+completed-date group shows the date, not the "Completed" band above it
+too (Fran asked for "what tag / completed date").
+Test gap found by plant: removing the space reservation stayed green
+(page counts happened to be equal) - new invariant `ordines_intra`:
+every item row is a full 16 px and ends above the bottom margin, on
+every page of the agenda test.
+Known older edge (not changed): "heading never ends a page" only looks
+one row ahead, so the "p" band can still end a page when it is followed
+by a "p<k>" heading that does not fit with its first item.
