@@ -2995,3 +2995,18 @@ exactly where producers run under the entry point. Reproduced in quinta
 fixed by tee-ing into a temp file outside the tree and moving it into
 build/test_logs/ after the run; reproduction then green. silva stayed
 green because nothing upstream of its members runs under the tee.
+
+## 2026-10-13 - every action is also a run record (analytica T3)
+
+`_cursum_inscribere` (tools/fabrica_memoria.c), the hook that fills the
+sqlite `cursus` table for SANATUM / FRACTUM / PRAEPARATUM / IUDICIUM,
+now also appends a run record to the mensura diary
+(`_cursum_annalibus_inscribere`, written first so a broken sqlite
+statement cannot hide it): titulus = action title, parent and context
+inherited from the environment (git computed once per process if
+absent, via lib/mensura_contextus), start = now - duration (written
+after the fact: an interrupted action shows through its interrupted
+parent gate), exit 1 only for FRACTUM, nota = eventus + causa + stalum.
+The CHILD environment is deliberately untouched: a step member's env is
+in its key, a run id there would make every member stale on every run.
+fabrica fumus LII (whole fumus now isolated to a temp diary).

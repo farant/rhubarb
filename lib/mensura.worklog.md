@@ -207,3 +207,73 @@ win. Plants XI red (mensor.c via silva.planta with a rebuild-then-gate
 callable, since fabrica does not track bin/mensor; cursus.sh by hand).
 Not planted: V (pairing is the reader's, T1 plants), VII (any plant =
 unbounded fork recursion).
+
+## 2026-10-13 - analytica T3: producers (porta, commissio, phases, fabrica actions)
+
+Context moved out of tools/mensor.c into `lib/mensura_contextus.c`
+(`mensura_contextum_parare`, `mensura_diarium_cursuum`) so bin/fabrica
+uses the SAME code; lib/mensura stays pure (no git). Vocator default
+is now `agens` when CLAUDECODE is set, else `homo` - the invoker
+question (Q5) answered from a real signal instead of guessed.
+
+End line gained `nota` (12th field): how a run ended, in words - a
+gate's compendium, fabrica's eventus + causa + stalum ("IUDICIUM - ..."
+is what acceptance question 2 will query). Escaped like argv, capped at
+CURSUS_NOTA_MAXIMA (256) bytes, retreating to a UTF-8 character start.
+The cap's own test was WRONG first: with "aé" from byte 0 the 256 cut
+already fell on a boundary, so the retreat loop was never exercised -
+plant N2 (loop exits at once) survived. Two leading 'b's put the cut
+between C3 and A9; N2 then red. Lesson: a boundary test must assert
+WHERE the boundary falls, not just that it exists.
+
+Python producers do not reimplement anything: `bin/mensor cursus
+incipere -titulus T` writes the start line and prints KEY=VALUE lines
+(MENSOR_PARENS = the new id + context); silva.py's `_cursus` context
+manager puts them in os.environ while its body runs (no threads in
+silva.py, so this nests correctly through every spawn: gates, fabrica,
+chassis scripts), restores after, then `finire -id -exitus
+-duratio_ms -nota`. Exception = exitus 1 + first line of the message;
+KeyboardInterrupt/SystemExit write NO end -> interruptus, like a killed
+process. Wrapped: porta (`porta:<g>[.<filtrum>]`, nota = compendium),
+commissio (`commissio`, children get vocator commissio), phases
+forma / lint / fabrica / portae debitae / git commit (`phasis:<x>`;
+tempora.tsv lines kept, still only on success). commissio_umbra not
+wrapped (v1).
+
+fabrica: the run record is written from the hook that already fills
+its sqlite `cursus` table (`_cursum_inscribere`, every SANATUM /
+FRACTUM / PRAEPARATUM / IUDICIUM event), start and end AFTER the fact
+(start = now - duration) - an interrupted action is visible through its
+interrupted parent gate, not itself. Written FIRST, so a broken sqlite
+statement cannot hide the run. The child environment is deliberately
+NOT given MENSOR_PARENS: a step member's environment is in its cache
+key, a per-run id there would make every member stale forever.
+
+Tests: mensor fumus IX (incipere/finire, nesting through them, nota in
+column 15); fabrica fumus LII (one record per member, inherited parent
+and commit, exit from eventus; whole fumus isolated to a temp diary,
+read raw with awk so fabrica's gate does not need bin/mensor);
+pythonica (commissio tree: phases + gates as children, vocator
+commissio, commissum HEAD; _cursus nesting / exception / interrupt /
+env restored; suite isolated to build/pythonica). probatio_mensura_cursus
+section VI (nota).
+
+Second blind test, same day: the pythonica check "env restored after
+the run" compared against the value captured RIGHT BEFORE its block.
+With restoration broken (plant Y2), the earlier commissio tests in the
+same suite had already leaked MENSOR_PARENS, so "restored to the
+leaked value" passed. It now compares every run-context key against
+the value at SUITE START. Plants XI red in total (C: N1-N3 lib, M1-M2
+mensor, F1-F2 fabrica; Python by hand: Y1 vocator, Y2 restore, Y3
+exception end). Cost: forced css 18-22 s with records or with
+CURSUS_NULLUS=1 (busy machine; difference inside the noise), 11 records
+per run.
+
+Open question found on the way (Fran asked whether fabrica would
+benefit from reactor): fabrica's two parallel loops and this wrapper
+poll children with a 20 ms sleep - a finished child's slot idles up to
+20 ms, and a child printing faster than a pipe-full (16-64 KB) per
+20 ms is throttled to ~1-3 MB/s. The right shape for batch loops is a
+wait-any in processus (poll on all children's fds, timeout = nearest
+deadline), not reactor's callbacks; reactor fits the fabrica resident.
+Not measured yet.

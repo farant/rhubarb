@@ -231,7 +231,14 @@ nomen structura {
     chorda acta;                /* referentia corporis actorum; vacua =
                                  * nulla */
        s64 acta_mensura;
+    chorda nota;                /* quomodo finivit, verbis (analytica
+                                 * T3): compendium portae, eventus
+                                 * fabricae; effugitur ut argv,
+                                 * praeciditur ad CURSUS_NOTA_MAXIMA
+                                 * octetos (charactere integro) */
 } CursusFinis;
+
+#define CURSUS_NOTA_MAXIMA CCLVI
 
 nomen enumeratio {
     CURSUS_TRANSIIT = ZEPHYRUM,   /* exitus 0 */

@@ -3,6 +3,7 @@
 Plagulae fictae in build/pythonica/; nihil in arbore tangitur.
 Exitus 0 sanum | 1 fractum. Culpae plantatae: ancora fallens plagulam
 intactam relinquit; differre substantiva verdictum negat."""
+import glob
 import os
 import re
 import subprocess
@@ -45,6 +46,34 @@ silva.TEMPORA_VIA = os.path.join(T, 'tempora.tsv')
 os.environ['SILVA_TEMPORA_VIA'] = silva.TEMPORA_VIA
 if os.path.exists(silva.TEMPORA_VIA):
     os.unlink(silva.TEMPORA_VIA)
+
+# annales cursuum (analytica T3): in T, numquam in ~/.rhubarb vivo -
+# portae et commissiones fictae ibi historiam veram mentirentur
+for _k, _v in (('MENSOR_DIARIUM', 'cursus.diarium'),
+               ('MENSOR_VOLUMEN', 'cursus.volumen'),
+               ('MENSOR_ACTA', 'cursus_acta')):
+    os.environ[_k] = os.path.join(T, _v)
+# ambitus cursuum IN INITIO suitae (porta vera parentem legitime
+# hereditat): post cursus omnes idem esse debet. Comparatio 'ante
+# sectionem' caeca erat - commissiones priores iam effluxerant (planta
+# Y2 T3 superfuit)
+_CLAVES_CURSUS = ('MENSOR_PARENS', 'MENSOR_SESSIO', 'MENSOR_COMMISSUM',
+                  'MENSOR_SORDIDUM', 'MENSOR_RAMUS', 'MENSOR_ARBOR',
+                  'MENSOR_MACHINA', 'MENSOR_VOCATOR')
+_AMBITUS_CURSUS_INITIO = dict((k, os.environ.get(k)) for k in _CLAVES_CURSUS)
+for _f in glob.glob(os.path.join(T, 'cursus.diarium*')) + glob.glob(
+        os.path.join(T, 'cursus.volumen*')):
+    os.unlink(_f)
+
+
+def _cursus_lineae():
+    """lineae 'CURSUS' bin/mensor (columnae 0-14: CURSUS id parens titulus
+    status exitus duratio commissum sordidum ramus arbor vocator acta argv
+    nota)"""
+    r = subprocess.run([silva.MENSOR_BIN, 'cursus', 'legere', '-machina'],
+                       capture_output=True, text=True, errors='replace')
+    return [l.split('\t') for l in r.stdout.splitlines()
+            if l.startswith('CURSUS\t')]
 
 
 def _tempora_lineae():
@@ -1258,6 +1287,52 @@ try:
     phases = set(l[2] for l in _tempora_lineae() if l[1] == 'phasis')
     credo({'fabrica', 'portae debitae'} <= phases,
           'commissio: phases ante portas temporibus notatae (%s)' % sorted(phases))
+    # cursus (analytica T3): commissio = ARBOR cursuum - phases et
+    # portae filii eius, vocator 'commissio', commissum HEAD
+    lc = _cursus_lineae()
+    com = [l for l in lc if l[3] == 'commissio']
+    filii = [l for l in lc if com and l[2] == com[-1][1]]
+    caput = subprocess.run(['git', 'rev-parse', 'HEAD'], cwd=RADIX,
+                           capture_output=True, text=True).stdout.strip()
+    credo(len(com) >= 2 and com[-1][4] == 'fractus'
+          and com[-1][14].startswith('SilvaError: ') and com[-1][7] == caput,
+          'cursus: commissio notata (fractus, nota = refusio, commissum HEAD)')
+    credo({'phasis:fabrica', 'phasis:portae debitae', 'porta:ficta-numerans',
+           'porta:ficta-rubra2'} <= set(l[3] for l in filii)
+          and all(l[11] == 'commissio' for l in filii),
+          'cursus: phases et portae filii commissionis, vocator commissio (%s)'
+          % sorted(set(l[3] for l in filii)))
+    rubra = [l for l in filii if l[3] == 'porta:ficta-rubra2']
+    credo(rubra and rubra[0][4] == 'fractus' and rubra[0][14],
+          'cursus: porta rubra fractus, nota = compendium')
+    # _cursus ipse: nidificatio, exceptio, interruptio, ambitus restitutus
+    with silva._cursus('fumus:exterior'):
+        id_ext = os.environ.get('MENSOR_PARENS')
+        with silva._cursus('fumus:interior'):
+            pass
+    try:
+        with silva._cursus('fumus:exceptio'):
+            raise silva.SilvaError('probatio fracta\nlinea secunda')
+    except silva.SilvaError:
+        pass
+    try:
+        with silva._cursus('fumus:interruptus'):
+            raise KeyboardInterrupt()
+    except KeyboardInterrupt:
+        pass
+    lc = dict((l[3], l) for l in _cursus_lineae())
+    credo(lc.get('fumus:interior', [''] * 15)[2] == id_ext
+          and lc['fumus:exterior'][4] == 'transiit',
+          'cursus: _cursus nidificatur (parens interioris = id exterioris)')
+    credo(lc.get('fumus:exceptio', [''] * 15)[4] == 'fractus'
+          and lc['fumus:exceptio'][14] == 'SilvaError: probatio fracta',
+          'cursus: exceptio = fractus, nota linea prima')
+    credo(lc.get('fumus:interruptus', [''] * 15)[4] == 'interruptus',
+          'cursus: KeyboardInterrupt = interruptus (finis non scriptus)')
+    credo(dict((k, os.environ.get(k)) for k in _CLAVES_CURSUS)
+          == _AMBITUS_CURSUS_INITIO,
+          'cursus: ambitus post cursus omnes (commissiones incluso) idem ac'
+          ' in initio suitae')
     open(novum, 'w').write('x')
     try:
         try:

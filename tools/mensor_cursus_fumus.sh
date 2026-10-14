@@ -15,6 +15,10 @@
 #   VI   CURSUS_NULLUS=1 -> scriptum sine involucro currit, nihil notatum
 #   VII  scriptum se ipsum iterum exsequens (exemplar ianuarum) -> cursus
 #        UNUS, non duo
+#   IX   'cursus incipere' lineas ambitus pro prolibus reddit (MENSOR_PARENS
+#        = id novum, contextus); 'finire -exitus -nota' cursum claudit;
+#        nidificatio per incipere; nota in columna XV (analytica T3:
+#        producentes sine involucro - silva.porta, commissio)
 #   VIII extra omne repositorium (contextus vacuus) -> cursus notatus,
 #        commissum et ramus vacui, nulla ruina (planta D T2: setenv cum
 #        NIHIL ruebat)
@@ -129,6 +133,23 @@ r=$(legere)
   && [ -z "$(echo "$r" | campus fumus/extra 8)" ] && [ -z "$(echo "$r" | campus fumus/extra 10)" ]
 credo $? "VIII extra repositorium: contextus vacuus, cursus notatus, nulla ruina"
 
+# IX
+amb=$("$RADIX/bin/mensor" cursus incipere -titulus fumus/incipere)
+id_p=$(echo "$amb" | sed -n 's/^MENSOR_PARENS=//p')
+amb_f=$(env $(echo "$amb" | tr '\n' ' ') "$RADIX/bin/mensor" cursus incipere -titulus fumus/incipere_filius)
+id_f=$(echo "$amb_f" | sed -n 's/^MENSOR_PARENS=//p')
+"$RADIX/bin/mensor" cursus finire -id "$id_f" -exitus 2 -duratio_ms 40 -nota "filius: 1/2 FRACTA"
+"$RADIX/bin/mensor" cursus finire -id "$id_p" -exitus 0 -duratio_ms 90 -nota "pater sanus"
+r=$(legere)
+[ -n "$id_p" ] && echo "$amb" | grep -q '^MENSOR_COMMISSUM=' && echo "$amb" | grep -q '^MENSOR_SESSIO=' \
+  && [ "$(echo "$r" | campus fumus/incipere_filius 3)" = "$id_p" ] \
+  && [ "$(echo "$r" | campus fumus/incipere_filius 5)" = "fractus" ] \
+  && [ "$(echo "$r" | campus fumus/incipere_filius 15)" = "filius: 1/2 FRACTA" ] \
+  && [ "$(echo "$r" | campus fumus/incipere 5)" = "transiit" ] \
+  && [ "$(echo "$r" | campus fumus/incipere 7)" = "90" ] \
+  && [ "$(echo "$r" | campus fumus/incipere 15)" = "pater sanus" ]
+credo $? "IX   incipere/finire: ambitus prolis, nidificatio, exitus et nota"
+
 echo
-if [ "$fracta" -eq 0 ]; then echo "fumus mensor_cursus: sanum (VIII/VIII)"; exit 0; fi
+if [ "$fracta" -eq 0 ]; then echo "fumus mensor_cursus: sanum (IX/IX)"; exit 0; fi
 echo "fumus mensor_cursus: FRACTUM ($fracta)"; exit 1

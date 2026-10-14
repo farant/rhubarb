@@ -133,6 +133,57 @@ _sectio_finis (
     CREDO_AEQUALIS_S64(lectum.acta_mensura, f.acta_mensura);
 }
 
+/* VI. nota (T3): TAB, linea nova, backslash circuitu redduntur; nota
+ * longa ad CURSUS_NOTA_MAXIMA praeciditur, numquam in medio characteris
+ * UTF-8 (octetus continuationis 10xxxxxx non ultimus relinquitur) */
+interior vacuum
+_sectio_nota (
+    CredoContextus* c)
+{
+       CursusFinis f = _finem_fictum("c1", (s64)1791900001234LL, (s32)I,
+           c->piscina);
+       CursusFinis lectum;
+     CursusInitium initium_nullum;
+               b32 est_finis = FALSUM;
+            chorda linea;
+         character longa[DCCC + I];
+               i32 k;
+
+    f.nota  = chorda_ex_literis("toml: 12/13\tFRACTA\nprobatio_x \\ y",
+        c->piscina);
+    linea   = mensura_cursus_finis_ad_lineam(&f, c->piscina);
+    CREDO_NECESSE(mensura_cursus_ex_linea(linea, &initium_nullum,
+        &lectum,
+        &est_finis, c->piscina));
+    CREDO_CHORDA_AEQUALIS(lectum.nota, f.nota);
+    /* "bb" deinde 'a' 'é' (C3 A9) iterum: octetus CCLV = C3, CCLVI =
+     * A9 - limes VERE in medio 'é' cadit (sine "bb" in initio 'a'
+     * caderet et retractio numquam probaretur: planta N2 T3 superfuit) */
+    longa[ZEPHYRUM]  = 'b';
+    longa[I]         = 'b';
+    per (k = II; k + II < (i32)DCCC; k += III)
+    {
+        longa[k]       = 'a';
+        longa[k + I]   = (character)0xC3;
+        longa[k + II]  = (character)0xA9;
+    }
+    longa[k]  = '\0';
+    f.nota    = chorda_ex_literis(longa, c->piscina);
+    linea     = mensura_cursus_finis_ad_lineam(&f, c->piscina);
+    CREDO_NECESSE(mensura_cursus_ex_linea(linea, &initium_nullum,
+        &lectum,
+        &est_finis, c->piscina));
+    CREDO_NECESSE(lectum.nota.mensura > ZEPHYRUM);
+    CREDO_VERUM(lectum.nota.mensura <= (i32)CURSUS_NOTA_MAXIMA);
+    CREDO_VERUM(lectum.nota.mensura > (i32)CURSUS_NOTA_MAXIMA - III);
+    /* finis integer: 'a', aut 'é' totum (C3 A9) - numquam C3 solum */
+    CREDO_VERUM(   lectum.nota.datum[lectum.nota.mensura - I] == 'a'
+                || (   (insignatus character)lectum.nota.datum[
+                           lectum.nota.mensura - I] == 0xA9
+                    && (insignatus character)lectum.nota.datum[
+                           lectum.nota.mensura - II] == 0xC3));
+}
+
 /* III. campi impuri (TAB in titulo aut arbore) recusantur - linea
  * vacua, numquam forma fracta; lineae malae non leguntur */
 interior vacuum
@@ -290,6 +341,9 @@ hic_manens constans CredoSectio SECTIONES[] = {
       NIHIL },
     { "legere: coniunctio per id", _sectio_legere, NIHIL, NIHIL, NIHIL,
       NIHIL },
+    { "finis: nota effugitur et praeciditur", _sectio_nota, NIHIL,
+        NIHIL,
+      NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

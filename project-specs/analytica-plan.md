@@ -36,9 +36,23 @@ commit via silva.commissio. Work in `../rhubarb-quinta`.
   setenv). Overhead: top-level +~27 ms, inherited ~0.
 
 ### T3: producers - gates, commit phases, fabrica actions
-- [ ] silva.py (porta:<g>, phasis:<x>) and bin/fabrica actions emit run
+- [x] silva.py (porta:<g>, phasis:<x>) and bin/fabrica actions emit run
   records with parens. Tests: a commissio produces a nested tree
   (commissio -> phases -> gates -> fabrica actions). Commit.
+  As built (2026-10-13): context code moved to lib/mensura_contextus
+  (shared by mensor and fabrica; vocator default `agens` under
+  CLAUDECODE); end line gains `nota` (gate compendium / fabrica eventus,
+  256-byte cap on a UTF-8 boundary); `mensor cursus incipere|finire`
+  (incipere prints the child's KEY=VALUE env - Python reimplements no
+  format); silva.py `_cursus` context manager on porta, commissio and
+  phases forma/lint/fabrica/portae debitae/git commit (exception =
+  fractus, KeyboardInterrupt = interruptus); fabrica from its existing
+  `cursum_inscribere` hook (child env untouched - it is in the member
+  key). Tests: mensor fumus IX, fabrica fumus LII, pythonica commissio
+  tree + _cursus semantics, probatio_mensura_cursus VI. Plants XI red;
+  two blind tests found and fixed by survivors (UTF-8 cut alignment,
+  env-restore baseline). Not wrapped: commissio_umbra. Cost inside
+  noise.
 
 ### T4: logs and retention
 - [ ] Bodies in the volume (massae dedup), size cap, retention policy as

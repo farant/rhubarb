@@ -431,7 +431,7 @@ mensura_condere (
  * ============================================================ */
 
 #define CURSUS_CAMPI_INITII  XIV
-#define CURSUS_CAMPI_FINIS   XI
+#define CURSUS_CAMPI_FINIS   XII
 
 /* argv effugere: \\ \t \n \r - mandatum ut datum servatur */
 interior vacuum
@@ -569,6 +569,26 @@ mensura_cursus_initium_ad_lineam (
     redde chorda_aedificator_finire(a);
 }
 
+/* nota ad CURSUS_NOTA_MAXIMA octetos, limite ad initium characteris
+ * UTF-8 retracto (octeti continuationis 10xxxxxx non dividuntur) */
+interior chorda
+_notam_praecidere (
+    chorda nota)
+{
+    si (nota.mensura <= (i32)CURSUS_NOTA_MAXIMA)
+    {
+        redde nota;
+    }
+    nota.mensura = (i32)CURSUS_NOTA_MAXIMA;
+    dum (   nota.mensura > ZEPHYRUM
+         && (((insignatus character)nota.datum[nota.mensura] & 0xC0)
+             == 0x80))
+    {
+        nota.mensura--;
+    }
+    redde nota;
+}
+
 chorda
 mensura_cursus_finis_ad_lineam (
     constans CursusFinis* f,
@@ -599,6 +619,8 @@ mensura_cursus_finis_ad_lineam (
     _numerum_addere(a, f->cpu_systematis_ms);
     _campum_addere(a, f->acta);
     _numerum_addere(a, f->acta_mensura);
+    chorda_aedificator_appendere_character(a, '\t');
+    _effugere(a, _notam_praecidere(f->nota));
     chorda_aedificator_appendere_character(a, '\n');
     redde chorda_aedificator_finire(a);
 }
@@ -729,6 +751,7 @@ mensura_cursus_ex_linea (
         }
         finis_out->exitus  = (s32)numerus;
         finis_out->acta    = campi[IX];
+        finis_out->nota    = _reddere_effugium(campi[XI], piscina);
         *est_finis_out     = VERUM;
         redde VERUM;
     }

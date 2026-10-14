@@ -27,6 +27,8 @@
 #include "aedilis_silva.h"
 #include "compilator.h"
 #include "fabrica_sutura.h"
+#include "mensura.h"
+#include "mensura_contextus.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -565,6 +567,68 @@ suturae_eventus_titulus (
  * causa sanati vacua 'NOT NULL' frangebat (1b T7) */
 hic_manens character TEXTUS_VACUUS[I] = { '\0' };
 
+/* ANNALES CURSUUM (analytica T3): actum quodque etiam cursus in diario
+ * mensurae - initium et finis POST factum (initium = nunc - duratio;
+ * actio interrupta hic non apparet, porta parens eam INTERRUPTAM
+ * ostendit). Parens et contextus ex ambitu hereditati (absentes:
+ * semel per processum computati); nota = eventus, causa, stalum.
+ * Ambitus PROLIS non tangitur: clavis membri ambitum suum continet,
+ * id cursus in eo claves omnes frangeret. CURSUS_NULLUS = nihil. */
+interior vacuum
+_cursum_annalibus_inscribere (
+                    Memoria* memoria,
+    constans FabricaSanatio* sanatio)
+{
+          CursusInitium  initium;
+            CursusFinis  finis;
+      ChordaAedificator* nota;
+     constans character* diarium;
+                    s64  nunc;
+
+    si (getenv("CURSUS_NULLUS") != NIHIL || sanatio->actio == NIHIL)
+    {
+        redde;
+    }
+    memset(&initium, ZEPHYRUM, magnitudo(initium));
+    memset(&finis, ZEPHYRUM, magnitudo(finis));
+    mensura_contextum_parare(&initium, memoria->piscina);
+    nunc             = mensura_momentum_nunc();
+    initium.id       = mensura_id_novum(memoria->piscina);
+    initium.titulus  = sanatio->actio->titulus;
+    initium.argv     = chorda_ex_literis("", memoria->piscina);
+    initium.initium  = nunc - (s64)sanatio->duratio_ms;
+    nota = chorda_aedificator_creare(memoria->piscina,
+        (memoriae_index)CXXVIII);
+    si (nota == NIHIL)
+    {
+        redde;
+    }
+    chorda_aedificator_appendere_literis(nota,
+        suturae_eventus_titulus(sanatio->eventus));
+    si (sanatio->causa.mensura > ZEPHYRUM)
+    {
+        chorda_aedificator_appendere_literis(nota, " - ");
+        chorda_aedificator_appendere_chorda(nota, sanatio->causa);
+    }
+    si (sanatio->stalum.mensura > ZEPHYRUM)
+    {
+        chorda_aedificator_appendere_literis(nota, " (");
+        chorda_aedificator_appendere_chorda(nota, sanatio->stalum);
+        chorda_aedificator_appendere_character(nota, ')');
+    }
+    finis.id          = initium.id;
+    finis.momentum    = nunc;
+    finis.duratio_ms  = (s64)sanatio->duratio_ms;
+    finis.exitus      = (sanatio->eventus == FABRICA_FRACTUM) ? (s32)I
+        : (s32)ZEPHYRUM;
+    finis.acta  = chorda_ex_literis("", memoria->piscina);
+    finis.nota  = chorda_aedificator_finire(nota);
+    diarium     = mensura_diarium_cursuum(memoria->piscina);
+    (vacuum)mensura_cursum_incipere(diarium, &initium,
+        memoria->piscina);
+    (vacuum)mensura_cursum_finire(diarium, &finis, memoria->piscina);
+}
+
 /* cursus (1b T7): actum scribere; tempus = initium ~ finis - duratio */
 interior vacuum
 _cursum_inscribere (
@@ -575,6 +639,8 @@ _cursum_inscribere (
     ScriniumEnuntiatum* enuntiatum;
 
     memoria    = (Memoria*)datum;
+    /* annales primum: scrinium fractum cursum non celat */
+    _cursum_annalibus_inscribere(memoria, sanatio);
     enuntiatum = scrinium_praeparare(memoria->scrinium,
         "INSERT INTO cursus (titulus, initium, duratio_ms, eventus,"
         " causa, stalum) VALUES (?, ?, ?, ?, ?, ?)");

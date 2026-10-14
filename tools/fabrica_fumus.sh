@@ -96,6 +96,9 @@
 #   LI   ambitus declaratus in clave (T4): membrum frescum cum valore
 #        variabilis declaratae MUTATO currit (COMPUTUS_SCRIBERE=1 olim
 #        servabatur - aurum non rescribebatur); valore eodem servatur
+#   LII  actiones in annalibus (analytica T3): cursus per membrum actum
+#        in diario mensurae, parens et contextus ex ambitu hereditati,
+#        exitus ex eventu (FRACTUM = 1), nota = eventus
 #
 # Exitus: 0 sanum · 1 fractum · 2 bin/fabrica deest.
 # <porta titulus="fabrica-fumus" instrumentum="bin/fabrica" tegit="*/aedificatio.stml aedificatio.canon fabrica.canon tools/fabrica_struere.sh"/>
@@ -107,6 +110,9 @@ F="$RADIX/bin/fabrica"
 T="$(mktemp -d)"
 ORPH="build/aedilis/fumus_orphanum_fabricae"
 trap 'rm -rf "$T" "$ORPH"' EXIT
+# annales cursuum (analytica T3): actiones fictae numquam in diario vero
+export MENSOR_DIARIUM="$T/cursus.diarium"
+unset MENSOR_PARENS MENSOR_COMMISSUM MENSOR_SESSIO CURSUS_NULLUS
 fracta=0
 
 "$F" > "$T/o" 2>&1; rc=$?
@@ -799,6 +805,22 @@ if [ "$rc1$rc2$rc3$rc4" = "0000" ] && grep -qx 'valor: absens' "$T/a1" \
    && grep -q 'cursae 0, servatae 1' "$T/a3" \
    && grep -qx 'valor: absens' "$T/a4" && grep -q 'cursae 1, servatae 0' "$T/a4"; then echo "  LI   ambitus declaratus in clave: valor mutatus currit, idem servatur OK"; else echo "  LI   FRACTUM (rc=$rc1$rc2$rc3$rc4)"; tail -2 "$T/a2" "$T/a3" "$T/a4" | sed 's/^/      /'; fracta=1; fi
 
+# LII (analytica T3): ACTIONES IN ANNALIBUS - radix_c + d (a transit; d
+# vere fracta - c nexu solo transit) sub MENSOR_PARENS et contextu hereditato: cursus unus per
+# membrum actum, parens hereditatus, exitus ex eventu (FRACTUM = 1),
+# nota = eventus, commissum hereditatum (git non vocatur). Diarium
+# crudum legitur (awk) - porta fabricae bin/mensor non eget
+radix_c
+printf 'int main(void) { return 1; }\n' > "$T/r/t/probatio_d.c"
+(cd "$T/r" && MENSOR_PARENS=fumus-lii MENSOR_COMMISSUM=commissum-lii MENSOR_SESSIO=sessio-lii \
+    "$F" probare -vis probationes_t) > "$T/lii.e" 2>&1
+awk -F'\t' -v p=fumus-lii '$1 == "cursus" && $2 == "initium" && $4 == p { t[$3] = $6; c[$3] = $9 }
+    $1 == "cursus" && $2 == "finis" { e[$3] = $6; n[$3] = $12 }
+    END { for (i in t) if (t[i] ~ /probatio_[ad]$/) print t[i] "\t" e[i] "\t" substr(n[i], 1, 7) "\t" c[i] }' \
+    "$MENSOR_DIARIUM" 2>/dev/null | sort > "$T/lii"
+printf 'probationes_t/probatio_a\t0\tSANATUM\tcommissum-lii\nprobationes_t/probatio_d\t1\tFRACTUM\tcommissum-lii\n' > "$T/lii.exp"
+if cmp -s "$T/lii" "$T/lii.exp"; then echo "  LII  actiones in annalibus: cursus per membrum, parens et contextus hereditati, exitus et nota ex eventu OK"; else echo "  LII  FRACTUM"; sed 's/^/      lectum: /' "$T/lii"; fracta=1; fi
+
 if [ "$fracta" -ne 0 ]; then echo "fumus fabricae: FRACTUM"; exit 1; fi
-echo "fumus fabricae: sanum (LI/LI)"
+echo "fumus fabricae: sanum (LII/LII)"
 exit 0
