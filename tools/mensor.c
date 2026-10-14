@@ -36,6 +36,8 @@
 #include "processus.h"
 #include "volumen.h"
 #include "mensura_contextus.h"
+#include "internamentum.h"
+#include "stml.h"
 #include "filum.h"
 #include "xar.h"
 
@@ -1227,6 +1229,170 @@ _cursus (
 }
 
 
+/* ============================================================
+ * purgare (analytica T4 2c): regula retentionis ex STML -> diurna
+ * ============================================================ */
+
+/* attributum numericum (dies) elementi regulae; FALSUM si deest */
+interior b32
+_regulae_dies (
+             StmlNodus* radix,
+    constans character* elementum,
+    constans character* attributum,
+                   s64* ms_out)
+{
+      StmlNodus* nodus = stml_invenire_liberum(radix, elementum);
+         chorda* valor;
+      character  tabula[XXXII];
+      character* finis;
+         longus  dies;
+
+    si (nodus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    valor = stml_attributum_capere(nodus, attributum);
+    si (   valor          == NIHIL || valor->mensura <= ZEPHYRUM
+        || valor->mensura >= (i32)XXXII)
+    {
+        redde FALSUM;
+    }
+    memcpy(tabula, valor->datum, (size_t)valor->mensura);
+    tabula[valor->mensura]  = '\0';
+    dies                    = strtol(tabula, &finis, X);
+    si (*finis != '\0' || dies < 0)
+    {
+        redde FALSUM;
+    }
+    *ms_out = (s64)dies * (s64)(LXXXVI * M + CD) * (s64)M;
+    redde VERUM;
+}
+
+/* regula TOTA aut nulla: elementum absens = recusatio nominata (nullae
+ * constantes tacitae - interview Q8) */
+interior b32
+_regulam_legere (
+     constans character* via,
+           DiurnaRegula* regula,
+                Piscina* piscina)
+{
+                chorda  fons = filum_legere_totum(via, piscina);
+          StmlResultus  r;
+             StmlNodus* radix;
+             StmlNodus* ultimum;
+                chorda* servare;
+    constans character* deest = NIHIL;
+
+    memset(regula, ZEPHYRUM, magnitudo(DiurnaRegula));
+    si (fons.mensura == ZEPHYRUM)
+    {
+        fprintf(stderr, "mensor purgare: regula retentionis absens: %s"
+            " (-regula via aut MENSOR_RETENTIO)\n", via);
+        redde FALSUM;
+    }
+    r      = stml_legere(fons, piscina, internamentum_creare(piscina));
+    radix  = r.successus ? r.elementum_radix : NIHIL;
+    si (   radix == NIHIL || radix->titulus == NIHIL
+        || !chorda_aequalis_literis(*radix->titulus, "retentio"))
+    {
+        fprintf(stderr, "mensor purgare: %s: elementum 'retentio' deest"
+            " aut STML fractum\n", via);
+        redde FALSUM;
+    }
+    si (!_regulae_dies(radix, "sana", "cruda", &regula->crudum_ms))
+    {
+        deest = "sana cruda";
+    }
+    alioquin si (!_regulae_dies(radix, "sana", "compressa",
+                     &regula->compressum_ms))
+    {
+        deest = "sana compressa";
+    }
+    alioquin si (!_regulae_dies(radix, "fracta", "cruda",
+                     &regula->crudum_fracti_ms))
+    {
+        deest = "fracta cruda";
+    }
+    alioquin si (!_regulae_dies(radix, "fracta", "compressa",
+                     &regula->compressum_fracti_ms))
+    {
+        deest = "fracta compressa";
+    }
+    alioquin si (!_regulae_dies(radix, "oblivio", "dies",
+                     &regula->oblivio_ms))
+    {
+        deest = "oblivio dies";
+    }
+    ultimum = stml_invenire_liberum(radix, "ultimum");
+    servare = (ultimum != NIHIL) ? stml_attributum_capere(ultimum,
+        "servare") : NIHIL;
+    si (deest == NIHIL && servare == NIHIL)
+    {
+        deest = "ultimum servare";
+    }
+    si (deest != NIHIL)
+    {
+        fprintf(stderr, "mensor purgare: %s: '%s' deest aut non numerus"
+            " dierum\n", via, deest);
+        redde FALSUM;
+    }
+    regula->ultimum_servare = chorda_aequalis_literis(*servare,
+        "verum");
+    redde VERUM;
+}
+
+interior integer
+_purgare (
+      Piscina*  piscina,
+      integer   argc,
+    character** argv)
+{
+                   b32  siccum   = _vexillum(argc, argv, "-siccum");
+                   b32  machina  = _vexillum(argc, argv, "-machina");
+    constans character* via      = _arg(argc, argv, "-regula");
+          DiurnaRegula  regula;
+         DiurnaRelatio  relatio;
+                Diurna* diurna;
+
+    si (via == NIHIL)
+    {
+        via = _ambitus_aut("MENSOR_RETENTIO",
+            "tools/analytica_retentio.stml");
+    }
+    si (!_regulam_legere(via, &regula, piscina))
+    {
+        redde 2;
+    }
+    diurna = mensura_diurna_aperire(piscina);
+    si (diurna == NIHIL)
+    {
+        fprintf(stderr, "mensor purgare: diurna aperiri non potest\n");
+        redde I;
+    }
+    si (!diurna_purgare(diurna, &regula, mensura_momentum_nunc(),
+        siccum,
+            &relatio))
+    {
+        fprintf(stderr, "mensor purgare: purgatio fracta (sera aut"
+            " index)\n");
+        redde I;
+    }
+    imprimere(machina
+        ? "PURGATIO\t%s\t%d\t%d\t%d\t%d\t%ld\t%ld\t%d\t%d\t%d\n"
+        : "mensor purgare%s: introitus %d, corpora %d, comprimenda %d,"
+          " delenda %d, octeti %ld (liberati %ld); index lineae %d"
+          " -> %d,"
+          " oblita %d\n",
+        siccum ? (machina ? "siccum" : " (siccum)") : (machina ? "verum"
+            : ""), (integer)relatio.introitus, (integer)relatio.corpora,
+        (integer)relatio.compressa, (integer)relatio.deleta,
+        (longus)relatio.octeti_ante, (longus)relatio.octeti_liberati,
+        (integer)relatio.lineae_ante, (integer)relatio.lineae_post,
+        (integer)relatio.oblita);
+    redde ZEPHYRUM;
+}
+
+
 /* ============================================================ */
 
 interior vacuum
@@ -1240,7 +1406,9 @@ _usus (vacuum)
         "  mensor addere -titulus X -valor N [-unitas U] [-parens ID]\n"
         "  mensor condere [-volumen via]\n"
         "  mensor cursus currere [-titulus T] -- cmd  (tools/cursus.sh)\n"
-        "  mensor cursus legere [-machina]\n\n"
+        "  mensor cursus legere [-machina]\n"
+        "  mensor purgare [-siccum] [-machina] [-regula via]"
+        "   (diurna)\n\n"
         "  Ambitus: MENSOR_SESSIO MENSOR_PARENS MENSOR_DIARIUM"
         " MENSOR_VOLUMEN\n");
 }
@@ -1321,6 +1489,10 @@ main (
     alioquin si (strcmp(argv[I], "condere") == 0)
     {
         codex = _condere(piscina, argc, argv);
+    }
+    alioquin si (strcmp(argv[I], "purgare") == 0)
+    {
+        codex = _purgare(piscina, argc, argv);
     }
     alioquin si (strcmp(argv[I], "cursus") == 0)
     {

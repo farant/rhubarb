@@ -99,11 +99,20 @@ commit via silva.commissio. Work in `../rhubarb-quinta`.
   'X' RUIT; N non cursae"; #X fractus run. credo fumus II/VI, fabrica
   fumus LVII (crash inside a section AND between sections). Plants V
   red.
-- [ ] 2c: retention policy as STML data + `diurna_purgare` (per-key
+- [x] 2c: retention policy as STML data + `diurna_purgare` (per-key
   tiers, per-body action, last-per-job, pins, index compaction under a
   lock) + `bin/mensor purgare [-siccum]`. Tests: dedup survives, age
   tiers, failures kept longer, last body per job kept, pinned kept,
   compressed read. Commit.
+  As built (10-14): `diurna_purgare(d, &regula, nunc_ms, siccum,
+  &relatio)` (now as a parameter: deterministic tests), forward-only
+  actions, ONE lock for all writers (ponere / figere / purgare),
+  compaction tmp + rename, oblivio horizon. tools/analytica_retentio.stml
+  (7/30, failed 30/90, last-per-title, oblivio 365); `bin/mensor
+  purgare [-siccum] [-machina] [-regula]`, missing element refused.
+  probatio_diurna XV sections, mensor fumus X. Plants VIII red (two
+  test blind spots fixed by reasoning first). NOT done: the daily
+  opportunistic trigger (T6); real two-process concurrency untested.
 - [ ] Bodies for Python-produced runs too (commissio, phases, gates:
   the full refusal / hook output through the one seam) - Fran 10-13:
   "what test or lint or whatever caused them to fail" needs more than a

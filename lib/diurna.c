@@ -82,6 +82,20 @@ _via_indicis (
     sprintf(via, "%s/index.tsv", d->radix);
 }
 
+/* sera indicis (scriptores et purgatio): <radix>/index.sera, flock */
+#define DIURNA_MORA_SERAE_MS (X * M)
+
+interior FilumSera*
+_seram_capere (
+    constans Diurna* d)
+{
+    character via[DXII + XVI];
+
+    sprintf(via, "%s/index.sera", d->radix);
+    redde filum_seram_capere(via, (i32)DIURNA_MORA_SERAE_MS,
+        d->piscina);
+}
+
 Diurna*
 diurna_aperire (
     constans character* radix,
@@ -366,6 +380,7 @@ diurna_ponere (
           character  linea_numeri[CXXVIII];
   ChordaAedificator* linea;
                 s64  momentum;
+          FilumSera* sera;
 
     si (   diurna == NIHIL || clavis.mensura == ZEPHYRUM
         || !_purum(clavis)
@@ -400,6 +415,14 @@ diurna_ponere (
     sigillum_hex(&sigillum, hex);
     _via_corporis(diurna, hex, "", via);
     _via_corporis(diurna, hex, ".gz", via_compressa);
+    /* SERA: "corpus adest?" + scriptura + linea sub sera UNA quam
+     * purgare tenet - aliter purgare corpus inter probationem et lineam
+     * deleret (linea ad corpus absens) */
+    sera = _seram_capere(diurna);
+    si (sera == NIHIL)
+    {
+        redde FALSUM;
+    }
     /* corpus praesens (crudum aut compressum) non rescribitur */
     si (!filum_existit(via) && !filum_existit(via_compressa))
     {
@@ -410,6 +433,7 @@ diurna_ponere (
             || !filum_movere(temporaria, via))
         {
             (vacuum)filum_delere(temporaria);
+            filum_seram_liberare(sera);
             redde FALSUM;
         }
     }
@@ -418,6 +442,7 @@ diurna_ponere (
         (memoriae_index)(clavis.mensura + titulus.mensura + CC));
     si (linea == NIHIL)
     {
+        filum_seram_liberare(sera);
         redde FALSUM;
     }
     sprintf(linea_numeri, "positum\t%ld\t", (longus)momentum);
@@ -433,8 +458,10 @@ diurna_ponere (
     si (!filum_appendere_firmiter(via,
         chorda_aedificator_finire(linea)))
     {
+        filum_seram_liberare(sera);
         redde FALSUM;
     }
+    filum_seram_liberare(sera);
     si (positum_out != NIHIL)
     {
         memset(positum_out, ZEPHYRUM, magnitudo(DiurnaIntroitus));
@@ -547,25 +574,31 @@ diurna_figere (
     Diurna* diurna,
     chorda  clavis)
 {
-              Xar* introitus;
-        character  via[DXII + XVI];
-        character  numeri[LXIV];
-ChordaAedificator* linea;
+               Xar* introitus;
+         character  via[DXII + XVI];
+         character  numeri[LXIV];
+ ChordaAedificator* linea;
+         FilumSera* sera;
+               b32  bene;
 
     si (diurna == NIHIL || !_purum(clavis))
     {
         redde FALSUM;
     }
-    introitus = _plicare(diurna, diurna->piscina);
-    si (   introitus == NIHIL || _invenire(introitus, clavis, ZEPHYRUM)
-        == NIHIL)
+    /* sub sera: compactio clavem inter probationem et lineam tollere
+     * non potest */
+    sera = _seram_capere(diurna);
+    si (sera == NIHIL)
     {
         redde FALSUM;
     }
+    introitus = _plicare(diurna, diurna->piscina);
     linea = chorda_aedificator_creare(diurna->piscina,
         (memoriae_index)(clavis.mensura + LXIV));
-    si (linea == NIHIL)
+    si (   introitus == NIHIL || linea == NIHIL
+        || _invenire(introitus, clavis, ZEPHYRUM) == NIHIL)
     {
+        filum_seram_liberare(sera);
         redde FALSUM;
     }
     sprintf(numeri, "fixum\t%ld\t", (longus)_momentum_nunc());
@@ -573,8 +606,10 @@ ChordaAedificator* linea;
     chorda_aedificator_appendere_chorda(linea, clavis);
     chorda_aedificator_appendere_character(linea, '\n');
     _via_indicis(diurna, via);
-    redde filum_appendere_firmiter(via,
+    bene = filum_appendere_firmiter(via,
         chorda_aedificator_finire(linea));
+    filum_seram_liberare(sera);
+    redde bene;
 }
 
 Xar*
@@ -601,4 +636,346 @@ diurna_status_nomen (
         casus DIURNA_CORRUPTUM:  redde "corruptum";
         ordinarius:              redde "?";
     }
+}
+
+
+/* ==================================================
+ * PURGARE (analytica T4 2c)
+ * ================================================== */
+
+/* corpus in plicatura purgationis */
+nomen structura {
+    constans character* sigillum;
+           DiurnaForma  forma;          /* praesens */
+                   s64  momentum;       /* formae praesentis */
+           DiurnaForma  necessaria;     /* recentissima poscita */
+                   b32  referenda;      /* clavis superstes spectat */
+} DiurnaPurgatum;
+
+/* forma quam clavis poscit (CRUDUM < COMPRESSUM < DELETUM) */
+interior DiurnaForma
+_forma_necessaria (
+    constans DiurnaIntroitus* i,
+       constans DiurnaRegula* regula,
+                         s64  nunc_ms,
+                         b32  ultimum_tituli)
+{
+    s64 aetas = nunc_ms - i->momentum;
+    s64 crudum =
+        i->fractum ? regula->crudum_fracti_ms : regula->crudum_ms;
+    s64 compressum = i->fractum ? regula->compressum_fracti_ms
+        : regula->compressum_ms;
+
+    si (i->fixum || (regula->ultimum_servare && ultimum_tituli))
+    {
+        redde DIURNA_CRUDUM;
+    }
+    si (aetas < crudum)
+    {
+        redde DIURNA_CRUDUM;
+    }
+    si (aetas < compressum)
+    {
+        redde DIURNA_COMPRESSUM;
+    }
+    redde DIURNA_DELETUM;
+}
+
+interior vacuum
+_lineam_positi_addere (
+           ChordaAedificator* a,
+    constans DiurnaIntroitus* i)
+{
+    character numeri[CXXVIII];
+
+    sprintf(numeri, "positum\t%ld\t", (longus)i->momentum);
+    chorda_aedificator_appendere_literis(a, numeri);
+    chorda_aedificator_appendere_chorda(a, i->clavis);
+    sprintf(numeri, "\t%d\t", (integer)i->seq);
+    chorda_aedificator_appendere_literis(a, numeri);
+    chorda_aedificator_appendere_chorda(a, i->titulus);
+    sprintf(numeri, "\t%d\t%s\t%ld\t%ld\n", i->fractum ? I : ZEPHYRUM,
+        i->sigillum, (longus)i->mensura, (longus)i->originalis);
+    chorda_aedificator_appendere_literis(a, numeri);
+}
+
+/* corpus in formam compressam: .gz atomice, crudum deletum; octeti
+ * liberati redduntur (siccum: computati, nihil scriptum) */
+interior s64
+_comprimere (
+       constans Diurna* d,
+    constans character* sigillum,
+                   b32  siccum,
+               Piscina* piscina,
+                   b32* bene_out)
+{
+         character via[DXII + C];
+         character via_compressa[DXII + C];
+         character temporaria[DXII + C];
+            chorda crudum;
+    FlaturaFructus f;
+            chorda compressum;
+
+    *bene_out = FALSUM;
+    _via_corporis(d, sigillum, "", via);
+    _via_corporis(d, sigillum, ".gz", via_compressa);
+    crudum = filum_legere_totum(via, piscina);
+    si (   crudum.datum == NIHIL && crudum.mensura == ZEPHYRUM
+        && !filum_existit(via))
+    {
+        redde (s64)ZEPHYRUM;
+    }
+    f = flatura_gzip_deflare(crudum.datum, crudum.mensura,
+        FLATURA_COMPRESSIO_ORDINARIA, piscina);
+    si (f.status != FLATURA_STATUS_OK)
+    {
+        redde (s64)ZEPHYRUM;
+    }
+    *bene_out = VERUM;
+    si (!siccum)
+    {
+        compressum.datum    = f.datum;
+        compressum.mensura  = f.mensura;
+        sprintf(temporaria, "%s.%ld.tmp", via_compressa,
+            (longus)getpid());
+        si (   !filum_scribere(temporaria, compressum)
+            || !filum_movere(temporaria, via_compressa))
+        {
+            (vacuum)filum_delere(temporaria);
+            *bene_out = FALSUM;
+            redde (s64)ZEPHYRUM;
+        }
+        (vacuum)filum_delere(via);
+    }
+    redde (s64)crudum.mensura - (s64)f.mensura;
+}
+
+b32
+diurna_purgare (
+                   Diurna* diurna,
+    constans DiurnaRegula* regula,
+                      s64  nunc_ms,
+                      b32  siccum,
+            DiurnaRelatio* relatio_out)
+{
+           DiurnaRelatio  relatio;
+               FilumSera* sera;
+                     Xar* introitus;
+                     Xar* corpora;
+          TabulaDispersa* per_corpus;
+          TabulaDispersa* ultima;
+               character  via[DXII + C];
+                  chorda  textus;
+       ChordaAedificator* novus;
+                     s32  k;
+                     i32  j;
+                     b32  bene = VERUM;
+
+    memset(&relatio, ZEPHYRUM, magnitudo(relatio));
+    si (relatio_out != NIHIL)
+    {
+        *relatio_out = relatio;
+    }
+    si (diurna == NIHIL || regula == NIHIL)
+    {
+        redde FALSUM;
+    }
+    sera = _seram_capere(diurna);
+    si (sera == NIHIL)
+    {
+        redde FALSUM;
+    }
+    _via_indicis(diurna, via);
+    textus = filum_legere_totum(via, diurna->piscina);
+    per (j = ZEPHYRUM; j < textus.mensura; j++)
+    {
+        si (textus.datum[j] == '\n')
+        {
+            relatio.lineae_ante++;
+        }
+    }
+    introitus = _plicare(diurna, diurna->piscina);
+    corpora = xar_creare(diurna->piscina,
+        (i32)magnitudo(DiurnaPurgatum));
+    per_corpus  = tabula_dispersa_creare_chorda(diurna->piscina,
+        (i32)CXXVIII);
+    ultima      = tabula_dispersa_creare_chorda(diurna->piscina,
+        (i32)CXXVIII);
+    novus       = chorda_aedificator_creare(diurna->piscina,
+        (memoriae_index)(textus.mensura + LXIV));
+    si (   introitus == NIHIL || corpora == NIHIL || per_corpus == NIHIL
+        || ultima    == NIHIL || novus == NIHIL)
+    {
+        filum_seram_liberare(sera);
+        redde FALSUM;
+    }
+    relatio.introitus = (i32)xar_numerus(introitus);
+    /* ultimum cuiusque tituli: positum recentissimum */
+    per (j = ZEPHYRUM; j < xar_numerus(introitus); j++)
+    {
+        DiurnaIntroitus* i = (DiurnaIntroitus*)xar_obtinere(introitus,
+            j);
+                 vacuum* locus = NIHIL;
+
+        si (   !tabula_dispersa_invenire(ultima, i->titulus, &locus)
+            || ((DiurnaIntroitus*)locus)->momentum <= i->momentum)
+        {
+            (vacuum)tabula_dispersa_inserere(ultima, i->titulus, i);
+        }
+    }
+    /* per clavem forma necessaria, per corpus recentissima */
+    per (j = ZEPHYRUM; j < xar_numerus(introitus); j++)
+    {
+        DiurnaIntroitus* i = (DiurnaIntroitus*)xar_obtinere(introitus,
+            j);
+                  chorda  sigillum;
+          DiurnaPurgatum* corpus  = NIHIL;
+                  vacuum* locus   = NIHIL;
+             DiurnaForma  forma;
+
+        (vacuum)tabula_dispersa_invenire(ultima, i->titulus, &locus);
+        forma = _forma_necessaria(i, regula, nunc_ms,
+            (DiurnaIntroitus*)locus == i);
+        sigillum.datum    = (i8*)i->sigillum;
+        sigillum.mensura  = (i32)LXIV;
+        si (!tabula_dispersa_invenire(per_corpus, sigillum,
+                (vacuum**)&corpus))
+        {
+            corpus = (DiurnaPurgatum*)xar_addere(corpora);
+            si (corpus == NIHIL)
+            {
+                filum_seram_liberare(sera);
+                redde FALSUM;
+            }
+            corpus->sigillum    = i->sigillum;
+            corpus->forma       = i->forma;
+            corpus->momentum    = i->momentum_formae;
+            corpus->necessaria  = DIURNA_DELETUM;
+            corpus->referenda   = FALSUM;
+            (vacuum)tabula_dispersa_inserere(per_corpus, sigillum,
+                corpus);
+        }
+        si (forma < corpus->necessaria)
+        {
+            corpus->necessaria = forma;
+        }
+    }
+    relatio.corpora = (i32)xar_numerus(corpora);
+    /* actiones per corpus - solum progrediuntur */
+    per (j = ZEPHYRUM; j < xar_numerus(corpora); j++)
+    {
+        DiurnaPurgatum* corpus = (DiurnaPurgatum*)xar_obtinere(corpora,
+            j);
+             character via_cruda[DXII + C];
+             character via_compressa[DXII + C];
+                   s64 octeti;
+
+        _via_corporis(diurna, corpus->sigillum, "", via_cruda);
+        _via_corporis(diurna, corpus->sigillum, ".gz", via_compressa);
+        octeti = (s64)filum_mensura(corpus->forma == DIURNA_COMPRESSUM
+            ? via_compressa : via_cruda);
+        relatio.octeti_ante += octeti;
+        si (   corpus->necessaria == DIURNA_DELETUM
+            && corpus->forma      != DIURNA_DELETUM)
+        {
+            relatio.deleta++;
+            relatio.octeti_liberati += octeti;
+            si (!siccum)
+            {
+                (vacuum)filum_delere(via_cruda);
+                (vacuum)filum_delere(via_compressa);
+            }
+            corpus->forma     = DIURNA_DELETUM;
+            corpus->momentum  = nunc_ms;
+        }
+        alioquin si (   corpus->necessaria == DIURNA_COMPRESSUM
+                     && corpus->forma      == DIURNA_CRUDUM)
+        {
+            b32 compressum = FALSUM;
+
+            relatio.octeti_liberati += _comprimere(diurna,
+                corpus->sigillum,
+                siccum, diurna->piscina, &compressum);
+            si (compressum)
+            {
+                relatio.compressa++;
+                corpus->forma     = DIURNA_COMPRESSUM;
+                corpus->momentum  = nunc_ms;
+            }
+        }
+    }
+    /* COMPACTIO: positum ultimum per clavem (+ fixum), deinde formae
+     * corporum - lineae formae POST positum (plicatura ordinem legit).
+     * Oblivio: clavis cuius corpus diutius quam oblivio_ms deletum est
+     * tollitur; linea corporis sine clave superstite quoque */
+    per (j = ZEPHYRUM; j < xar_numerus(introitus); j++)
+    {
+        DiurnaIntroitus* i = (DiurnaIntroitus*)xar_obtinere(introitus,
+            j);
+                  chorda  sigillum;
+          DiurnaPurgatum* corpus = NIHIL;
+
+        sigillum.datum    = (i8*)i->sigillum;
+        sigillum.mensura  = (i32)LXIV;
+        (vacuum)tabula_dispersa_invenire(per_corpus, sigillum,
+            (vacuum**)&corpus);
+        si (   corpus != NIHIL && corpus->forma == DIURNA_DELETUM
+            && regula->oblivio_ms > (s64)ZEPHYRUM
+            && nunc_ms - corpus->momentum > regula->oblivio_ms)
+        {
+            relatio.oblita++;
+            perge;
+        }
+        si (corpus != NIHIL)
+        {
+            corpus->referenda = VERUM;
+        }
+        _lineam_positi_addere(novus, i);
+        relatio.lineae_post++;
+        si (i->fixum)
+        {
+            character numeri[LXIV];
+
+            sprintf(numeri, "fixum\t%ld\t", (longus)i->momentum);
+            chorda_aedificator_appendere_literis(novus, numeri);
+            chorda_aedificator_appendere_chorda(novus, i->clavis);
+            chorda_aedificator_appendere_character(novus, '\n');
+            relatio.lineae_post++;
+        }
+    }
+    per (k = ZEPHYRUM; k < (s32)xar_numerus(corpora); k++)
+    {
+        DiurnaPurgatum* corpus = (DiurnaPurgatum*)xar_obtinere(corpora,
+            (i32)k);
+             character linea[CXXVIII];
+
+        si (!corpus->referenda || corpus->forma == DIURNA_CRUDUM)
+        {
+            perge;
+        }
+        sprintf(linea, "%s\t%ld\t%s\n", corpus->forma == DIURNA_DELETUM
+            ? "deletum" : "compressum", (longus)corpus->momentum,
+            corpus->sigillum);
+        chorda_aedificator_appendere_literis(novus, linea);
+        relatio.lineae_post++;
+    }
+    si (!siccum)
+    {
+        character temporaria[DXII + C];
+
+        sprintf(temporaria, "%s.%ld.tmp", via, (longus)getpid());
+        bene =    filum_scribere(temporaria,
+            chorda_aedificator_finire(novus))
+               && filum_movere(temporaria, via);
+        si (!bene)
+        {
+            (vacuum)filum_delere(temporaria);
+        }
+    }
+    filum_seram_liberare(sera);
+    si (relatio_out != NIHIL)
+    {
+        *relatio_out = relatio;
+    }
+    redde bene;
 }

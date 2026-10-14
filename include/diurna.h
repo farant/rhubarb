@@ -124,6 +124,54 @@ diurna_introitus (
      Diurna* diurna,
     Piscina* piscina);
 
+
+/* ==================================================
+ * RETENTIO (analytica T4 2c)
+ * ================================================== */
+
+/* regula a vocante impleta (analytica: ex STML) - diurna nullas
+ * constantes retentionis tenet. Tempora in ms; ZEPHYRUM = gradus nullus
+ * (e.g. compressum ZEPHYRUM: post crudum statim deletur). */
+nomen structura {
+    s64 crudum_ms;              /* sanum: crudum servatur usque ad */
+    s64 compressum_ms;          /* sanum: .gz usque ad, tum deletum */
+    s64 crudum_fracti_ms;       /* fractum: idem, longius */
+    s64 compressum_fracti_ms;
+    b32 ultimum_servare;        /* positum ultimum cuiusque tituli
+                                  * crudum in aeternum */
+    s64 oblivio_ms;             /* linea introitus deleti post hoc a
+                                  * deletione ex indice tollitur; 0 =
+                                  * numquam */
+} DiurnaRegula;
+
+/* relatio purgationis (siccum: quid FIERET) */
+nomen structura {
+    i32 introitus;              /* claves in indice ante */
+    i32 corpora;                /* corpora distincta ante */
+    i32 compressa;              /* corpora compressa (comprimenda) */
+    i32 deleta;                 /* corpora deleta (aut delenda) */
+    s64 octeti_ante;            /* corpora in disco ante */
+    s64 octeti_liberati;        /* deletione + compressione */
+    i32 lineae_ante;
+    i32 lineae_post;            /* index compactus */
+    i32 oblita;                 /* introitus deleti ex indice sublati */
+} DiurnaRelatio;
+
+/* PURGARE: retentio per CLAVEM iudicatur (fixum / ultimum tituli ->
+ * crudum semper; fractum -> gradus fracti; aliter gradus sani, aetate
+ * nunc_ms - momentum), actio per CORPUS (forma recentissima quam clavis
+ * ulla poscit). Actiones solum progrediuntur: crudum -> compressum ->
+ * deletum (compressum numquam inflatur - legere inflat). Index sub sera
+ * compactatur (tmp + rename). siccum: nihil mutatur, relatio quid
+ * fieret. FALSUM si sera capi aut index scribi nequit. */
+b32
+diurna_purgare (
+                   Diurna* diurna,
+    constans DiurnaRegula* regula,
+                      s64  nunc_ms,
+                      b32  siccum,
+            DiurnaRelatio* relatio_out);
+
 constans character*
 diurna_status_nomen (
     DiurnaStatus status);

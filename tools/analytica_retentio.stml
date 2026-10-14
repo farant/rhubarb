@@ -1,0 +1,19 @@
+<!-- tools/analytica_retentio.stml - regula retentionis actorum cursuum
+     (analytica T4 2c; Franus 2026-10-13, interview Q8). Legitur a
+     'bin/mensor purgare' - diurna nullas constantes tenet. Dies.
+
+     sana: corpus cursus transeuntis crudum servatur 'cruda' dies,
+           deinde .gz usque ad 'compressa', deinde deletur.
+     fracta: idem pro cursibus fractis, longius.
+     ultimum: corpus ULTIMUM cuiusque tituli crudum in aeternum.
+     oblivio: linea introitus cuius corpus deletum est ex indice
+              tollitur post tot dies (0 = numquam); cursus ipse in
+              volumine manet (sigillum + nota).
+     Clavis fixa (diurna_figere: id in tabulario aut worklog nominatum)
+     crudum in aeternum - non hic, in indice. -->
+<retentio>
+  <sana cruda="7" compressa="30"/>
+  <fracta cruda="30" compressa="90"/>
+  <ultimum servare="verum"/>
+  <oblivio dies="365"/>
+</retentio>

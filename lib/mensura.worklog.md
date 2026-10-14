@@ -313,3 +313,12 @@ and the case the body guard exists for - a fumus isolating only the
 diary, as fabrica-fumus did until this morning - was untested. LV now
 runs that case (explicit diary, no explicit diurna -> no bodies in the
 default store); F6 then red.
+
+## 2026-10-14 - `mensor purgare` (analytica T4 2c)
+
+Reads the retention policy from STML (tools/analytica_retentio.stml by
+default, -regula / MENSOR_RETENTIO) - every tier required, a missing
+element refused by name (exit 2) - and applies diurna_purgare to the
+run-log store with now = wall clock. -siccum reports what would be
+compressed / deleted / freed, -machina gives one PURGATIO line. fumus
+X. The daily opportunistic trigger is not wired yet (T6).

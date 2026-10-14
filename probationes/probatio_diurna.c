@@ -310,6 +310,327 @@ _sectio_iterum_aperta (
     (vacuum)filum_arborem_delere(radix);
 }
 
+
+/* ==================================================
+ * RETENTIO (T4 2c): tempus ut parametrum - "nunc" = momentum positi +
+ * dies N, deterministicum
+ * ================================================== */
+
+/* LXXXVI CD secunda per diem, in ms */
+#define DIES_MS ((s64)(LXXXVI * M + CD) * (s64)M)
+
+interior DiurnaRegula
+_regula (
+    b32  ultimum)
+{
+    DiurnaRegula r;
+
+    memset(&r, ZEPHYRUM, magnitudo(r));
+    r.crudum_ms             = (s64)VII * DIES_MS;
+    r.compressum_ms         = (s64)XXX * DIES_MS;
+    r.crudum_fracti_ms      = (s64)XXX * DIES_MS;
+    r.compressum_fracti_ms  = (s64)XC * DIES_MS;
+    r.ultimum_servare       = ultimum;
+    r.oblivio_ms            = (s64)ZEPHYRUM;
+    redde r;
+}
+
+interior DiurnaIntroitus*
+_introitus (
+                Diurna* d,
+    constans character* clavis,
+               Piscina* piscina)
+{
+    Xar* omnes = diurna_introitus(d, piscina);
+    i32  k;
+
+    per (k = ZEPHYRUM; omnes != NIHIL && k < xar_numerus(omnes); k++)
+    {
+        DiurnaIntroitus* i = (DiurnaIntroitus*)xar_obtinere(omnes, k);
+
+        si (chorda_aequalis_literis(i->clavis, clavis))
+        {
+            redde i;
+        }
+    }
+    redde NIHIL;
+}
+
+interior b32
+_corpus_adest (
+    constans character* radix,
+    constans character* sigillum,
+    constans character* suffixum)
+{
+    character via[DXII];
+
+    sprintf(via, "%s/corpora/%.2s/%s%s", radix, sigillum, sigillum + II,
+        suffixum);
+    redde filum_existit(via);
+}
+
+/* VIII. aetas: sanum post VII dies comprimitur (legere inflat), post
+ * XXX deletur (legere: ABLATUM, linea manet) */
+interior vacuum
+_sectio_aetas (
+    CredoContextus* c)
+{
+    constans character* radix  = _radix("aetas", c->piscina);
+                Diurna* d      = diurna_aperire(radix, c->piscina);
+       DiurnaIntroitus  p;
+          DiurnaRegula  r = _regula(FALSUM);
+         DiurnaRelatio  rel;
+          DiurnaStatus  status = DIURNA_IGNOTUM;
+                chorda  corpus = chorda_ex_literis("acta vetera\n",
+                    c->piscina);
+
+    CREDO_NECESSE_NON_NIHIL(d);
+    CREDO_NECESSE(diurna_ponere(d, chorda_ex_literis("k1", c->piscina),
+        chorda_ex_literis("t", c->piscina), FALSUM, corpus, &p));
+    CREDO_NECESSE(diurna_purgare(d, &r, p.momentum + (s64)X * DIES_MS,
+        FALSUM, &rel));
+    CREDO_AEQUALIS_I32(rel.compressa, I);
+    CREDO_AEQUALIS_I32(rel.deleta, ZEPHYRUM);
+    CREDO_VERUM(_corpus_adest(radix, p.sigillum, ".gz"));
+    CREDO_FALSUM(_corpus_adest(radix, p.sigillum, ""));
+    CREDO_CHORDA_AEQUALIS(diurna_legere(d, chorda_ex_literis("k1",
+        c->piscina), c->piscina, &status), corpus);
+    CREDO_AEQUALIS_I32((i32)status, (i32)DIURNA_ADEST);
+    CREDO_AEQUALIS_I32((i32)_introitus(d, "k1", c->piscina)->forma,
+        (i32)DIURNA_COMPRESSUM);
+    CREDO_NECESSE(diurna_purgare(d, &r, p.momentum + (s64)XL * DIES_MS,
+        FALSUM, &rel));
+    CREDO_AEQUALIS_I32(rel.deleta, I);
+    CREDO_FALSUM(_corpus_adest(radix, p.sigillum, ".gz"));
+    (vacuum)diurna_legere(d, chorda_ex_literis("k1", c->piscina),
+        c->piscina, &status);
+    CREDO_AEQUALIS_I32((i32)status, (i32)DIURNA_ABLATUM);
+    CREDO_NECESSE_NON_NIHIL(_introitus(d, "k1", c->piscina));
+    CREDO_AEQUALIS_I32((i32)_introitus(d, "k1", c->piscina)->forma,
+        (i32)DIURNA_DELETUM);
+    (vacuum)filum_arborem_delere(radix);
+}
+
+/* IX. fractum diutius: post X dies crudum manet, post XL compressum */
+interior vacuum
+_sectio_fracta (
+    CredoContextus* c)
+{
+    constans character* radix  = _radix("fracta", c->piscina);
+                Diurna* d      = diurna_aperire(radix, c->piscina);
+       DiurnaIntroitus  p;
+          DiurnaRegula  r = _regula(FALSUM);
+         DiurnaRelatio  rel;
+
+    CREDO_NECESSE_NON_NIHIL(d);
+    CREDO_NECESSE(diurna_ponere(d, chorda_ex_literis("f1", c->piscina),
+        chorda_ex_literis("porta:radix", c->piscina), VERUM,
+        chorda_ex_literis("FRACTA\n", c->piscina), &p));
+    CREDO_NECESSE(diurna_purgare(d, &r, p.momentum + (s64)X * DIES_MS,
+        FALSUM, &rel));
+    CREDO_AEQUALIS_I32((i32)_introitus(d, "f1", c->piscina)->forma,
+        (i32)DIURNA_CRUDUM);
+    CREDO_NECESSE(diurna_purgare(d, &r, p.momentum + (s64)XL * DIES_MS,
+        FALSUM, &rel));
+    CREDO_AEQUALIS_I32((i32)_introitus(d, "f1", c->piscina)->forma,
+        (i32)DIURNA_COMPRESSUM);
+    (vacuum)filum_arborem_delere(radix);
+}
+
+/* X. ultimum tituli crudum in aeternum; prius eiusdem tituli deletur */
+interior vacuum
+_sectio_ultimum (
+    CredoContextus* c)
+{
+    constans character* radix  = _radix("ultimum", c->piscina);
+                Diurna* d      = diurna_aperire(radix, c->piscina);
+       DiurnaIntroitus  p;
+          DiurnaRegula  r = _regula(VERUM);
+         DiurnaRelatio  rel;
+
+    CREDO_NECESSE_NON_NIHIL(d);
+    CREDO_NECESSE(diurna_ponere(d, chorda_ex_literis("u1", c->piscina),
+        chorda_ex_literis("porta:x", c->piscina), FALSUM,
+        chorda_ex_literis("prius\n", c->piscina), &p));
+    CREDO_NECESSE(diurna_ponere(d, chorda_ex_literis("u2", c->piscina),
+        chorda_ex_literis("porta:x", c->piscina), FALSUM,
+        chorda_ex_literis("posterius\n", c->piscina), NIHIL));
+    CREDO_NECESSE(diurna_purgare(d, &r, p.momentum + (s64)XL * DIES_MS,
+        FALSUM, &rel));
+    CREDO_AEQUALIS_I32((i32)_introitus(d, "u1", c->piscina)->forma,
+        (i32)DIURNA_DELETUM);
+    CREDO_AEQUALIS_I32((i32)_introitus(d, "u2", c->piscina)->forma,
+        (i32)DIURNA_CRUDUM);
+    (vacuum)filum_arborem_delere(radix);
+}
+
+/* XI. fixum crudum in aeternum */
+interior vacuum
+_sectio_fixum_servatum (
+    CredoContextus* c)
+{
+    constans character* radix  = _radix("fixum", c->piscina);
+                Diurna* d      = diurna_aperire(radix, c->piscina);
+       DiurnaIntroitus  p;
+          DiurnaRegula  r = _regula(FALSUM);
+         DiurnaRelatio  rel;
+
+    CREDO_NECESSE_NON_NIHIL(d);
+    CREDO_NECESSE(diurna_ponere(d, chorda_ex_literis("p1", c->piscina),
+        chorda_ex_literis("t", c->piscina), FALSUM,
+        chorda_ex_literis("in tabulario nominatum\n", c->piscina), &p));
+    CREDO_NECESSE(diurna_figere(d, chorda_ex_literis("p1",
+        c->piscina)));
+    CREDO_NECESSE(diurna_purgare(d, &r, p.momentum + (s64)CC * DIES_MS,
+        FALSUM, &rel));
+    CREDO_AEQUALIS_I32((i32)_introitus(d, "p1", c->piscina)->forma,
+        (i32)DIURNA_CRUDUM);
+    CREDO_VERUM(_corpus_adest(radix, p.sigillum, ""));
+    (vacuum)filum_arborem_delere(radix);
+}
+
+/* XII. corpus commune: forma recentissima quam clavis ulla poscit -
+ * sanum (comprimendum) et fractum (crudum) eiusdem corporis: crudum;
+ * post XL: deletum + compressum -> compressum; ambae leguntur */
+interior vacuum
+_sectio_commune (
+    CredoContextus* c)
+{
+    constans character* radix  = _radix("commune", c->piscina);
+                Diurna* d      = diurna_aperire(radix, c->piscina);
+       DiurnaIntroitus  p;
+          DiurnaRegula  r = _regula(FALSUM);
+         DiurnaRelatio  rel;
+          DiurnaStatus  status = DIURNA_IGNOTUM;
+                chorda  corpus = chorda_ex_literis("idem\n",
+                    c->piscina);
+
+    CREDO_NECESSE_NON_NIHIL(d);
+    /* fractum (recentius poscens) PRIMUM: regula 'clavis ultima
+     * vincit' hic falleret, 'recentissima vincit' non */
+    CREDO_NECESSE(diurna_ponere(d, chorda_ex_literis("f1", c->piscina),
+        chorda_ex_literis("t2", c->piscina), VERUM, corpus, &p));
+    CREDO_NECESSE(diurna_ponere(d, chorda_ex_literis("s1", c->piscina),
+        chorda_ex_literis("t", c->piscina), FALSUM, corpus, NIHIL));
+    CREDO_NECESSE(diurna_purgare(d, &r, p.momentum + (s64)X * DIES_MS,
+        FALSUM, &rel));
+    CREDO_VERUM(_corpus_adest(radix, p.sigillum, ""));
+    CREDO_AEQUALIS_I32(rel.compressa, ZEPHYRUM);
+    CREDO_NECESSE(diurna_purgare(d, &r, p.momentum + (s64)XL * DIES_MS,
+        FALSUM, &rel));
+    CREDO_AEQUALIS_I32(rel.compressa, I);
+    CREDO_AEQUALIS_I32(rel.deleta, ZEPHYRUM);
+    CREDO_CHORDA_AEQUALIS(diurna_legere(d, chorda_ex_literis("s1",
+        c->piscina), c->piscina, &status), corpus);
+    CREDO_CHORDA_AEQUALIS(diurna_legere(d, chorda_ex_literis("f1",
+        c->piscina), c->piscina, &status), corpus);
+    (vacuum)filum_arborem_delere(radix);
+}
+
+/* XIII. siccum: relatio quid fieret, nihil mutatum */
+interior vacuum
+_sectio_siccum (
+    CredoContextus* c)
+{
+    constans character* radix  = _radix("siccum", c->piscina);
+                Diurna* d      = diurna_aperire(radix, c->piscina);
+       DiurnaIntroitus  p;
+          DiurnaRegula  r = _regula(FALSUM);
+         DiurnaRelatio  rel;
+             character  via[DXII];
+                chorda  ante;
+
+    CREDO_NECESSE_NON_NIHIL(d);
+    CREDO_NECESSE(diurna_ponere(d, chorda_ex_literis("k1", c->piscina),
+        chorda_ex_literis("t", c->piscina), FALSUM,
+        chorda_ex_literis("x\n", c->piscina), &p));
+    sprintf(via, "%s/index.tsv", radix);
+    ante = filum_legere_totum(via, c->piscina);
+    CREDO_NECESSE(diurna_purgare(d, &r, p.momentum + (s64)XL * DIES_MS,
+        VERUM, &rel));
+    CREDO_AEQUALIS_I32(rel.deleta, I);
+    CREDO_VERUM(rel.octeti_liberati > (s64)ZEPHYRUM);
+    CREDO_VERUM(_corpus_adest(radix, p.sigillum, ""));
+    CREDO_CHORDA_AEQUALIS(filum_legere_totum(via, c->piscina), ante);
+    (vacuum)filum_arborem_delere(radix);
+}
+
+/* XIV. compactio et oblivio: positum iteratum + fixum -> lineae II;
+ * introitus deletus post oblivionem ex indice tollitur (IGNOTUM) */
+interior vacuum
+_sectio_compactio (
+    CredoContextus* c)
+{
+    constans character* radix  = _radix("compactio", c->piscina);
+                Diurna* d      = diurna_aperire(radix, c->piscina);
+       DiurnaIntroitus  p;
+          DiurnaRegula  r = _regula(FALSUM);
+         DiurnaRelatio  rel;
+          DiurnaStatus  status = DIURNA_ADEST;
+
+    CREDO_NECESSE_NON_NIHIL(d);
+    CREDO_NECESSE(diurna_ponere(d, chorda_ex_literis("k1", c->piscina),
+        chorda_ex_literis("t", c->piscina), FALSUM,
+        chorda_ex_literis("a\n", c->piscina), &p));
+    CREDO_NECESSE(diurna_ponere(d, chorda_ex_literis("k1", c->piscina),
+        chorda_ex_literis("t", c->piscina), FALSUM,
+        chorda_ex_literis("b\n", c->piscina), NIHIL));
+    CREDO_NECESSE(diurna_figere(d, chorda_ex_literis("k1",
+        c->piscina)));
+    CREDO_NECESSE(diurna_ponere(d, chorda_ex_literis("k2", c->piscina),
+        chorda_ex_literis("t2", c->piscina), FALSUM,
+        chorda_ex_literis("c\n", c->piscina), NIHIL));
+    CREDO_NECESSE(diurna_purgare(d, &r, p.momentum, FALSUM, &rel));
+    CREDO_AEQUALIS_I32(rel.lineae_ante, IV);
+    CREDO_AEQUALIS_I32(rel.lineae_post, III);
+    CREDO_CHORDA_AEQUALIS(diurna_legere(d, chorda_ex_literis("k1",
+        c->piscina), c->piscina, &status), chorda_ex_literis("b\n",
+        c->piscina));
+    r.oblivio_ms = (s64)X * DIES_MS;
+    CREDO_NECESSE(diurna_purgare(d, &r, p.momentum + (s64)XL * DIES_MS,
+        FALSUM, &rel));
+    CREDO_AEQUALIS_I32((i32)_introitus(d, "k2", c->piscina)->forma,
+        (i32)DIURNA_DELETUM);
+    CREDO_NECESSE(diurna_purgare(d, &r, p.momentum + (s64)LX * DIES_MS,
+        FALSUM, &rel));
+    CREDO_AEQUALIS_I32(rel.oblita, I);
+    (vacuum)diurna_legere(d, chorda_ex_literis("k2", c->piscina),
+        c->piscina, &status);
+    CREDO_AEQUALIS_I32((i32)status, (i32)DIURNA_IGNOTUM);
+    CREDO_AEQUALIS_I32((i32)_introitus(d, "k1", c->piscina)->forma,
+        (i32)DIURNA_CRUDUM);
+    (vacuum)filum_arborem_delere(radix);
+}
+
+/* XV. corpus deletum iterum positum: rescribitur, crudum, legitur */
+interior vacuum
+_sectio_rescriptum (
+    CredoContextus* c)
+{
+    constans character* radix  = _radix("rescriptum", c->piscina);
+                Diurna* d      = diurna_aperire(radix, c->piscina);
+       DiurnaIntroitus  p;
+          DiurnaRegula  r = _regula(FALSUM);
+         DiurnaRelatio  rel;
+          DiurnaStatus  status = DIURNA_IGNOTUM;
+                chorda  corpus = chorda_ex_literis("iterum\n",
+                    c->piscina);
+
+    CREDO_NECESSE_NON_NIHIL(d);
+    CREDO_NECESSE(diurna_ponere(d, chorda_ex_literis("k1", c->piscina),
+        chorda_ex_literis("t", c->piscina), FALSUM, corpus, &p));
+    CREDO_NECESSE(diurna_purgare(d, &r, p.momentum + (s64)XL * DIES_MS,
+        FALSUM, &rel));
+    CREDO_FALSUM(_corpus_adest(radix, p.sigillum, ""));
+    CREDO_NECESSE(diurna_ponere(d, chorda_ex_literis("k3", c->piscina),
+        chorda_ex_literis("t", c->piscina), FALSUM, corpus, NIHIL));
+    CREDO_VERUM(_corpus_adest(radix, p.sigillum, ""));
+    CREDO_CHORDA_AEQUALIS(diurna_legere(d, chorda_ex_literis("k3",
+        c->piscina), c->piscina, &status), corpus);
+    CREDO_AEQUALIS_I32((i32)status, (i32)DIURNA_ADEST);
+    (vacuum)filum_arborem_delere(radix);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "ponere et legere", _sectio_circuitus, NIHIL, NIHIL, NIHIL,
         NIHIL },
@@ -323,6 +644,20 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "figere", _sectio_figere, NIHIL, NIHIL, NIHIL, NIHIL },
     { "reapertio", _sectio_iterum_aperta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "retentio: aetas", _sectio_aetas, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "retentio: fracta diutius", _sectio_fracta, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { "retentio: ultimum tituli", _sectio_ultimum, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { "retentio: fixum", _sectio_fixum_servatum, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { "retentio: corpus commune", _sectio_commune, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { "retentio: siccum", _sectio_siccum, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "retentio: compactio et oblivio", _sectio_compactio, NIHIL, NIHIL,
+      NIHIL, NIHIL },
+    { "retentio: corpus rescriptum", _sectio_rescriptum, NIHIL, NIHIL,
+      NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

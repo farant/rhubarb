@@ -23,6 +23,9 @@
 #        nidificatio per incipere; nota in columna XV (analytica T3:
 #        producentes sine involucro - silva.porta, commissio); '-acta -'
 #        corpus ex stdin in diurna (T4), cursus sine corpore: 'acta' exitus 1
+#   X    purgare (T4 2c): regula ex STML (tools/analytica_retentio.stml
+#        legitur), -siccum nihil mutat, purgatio vera corpus delet
+#        ('cursus acta' -> deletum), regula absens aut deformis -> 2
 #   VIII extra omne repositorium (contextus vacuus) -> cursus notatus,
 #        commissum et ramus vacui, nulla ruina (planta D T2: setenv cum
 #        NIHIL ruebat)
@@ -159,6 +162,28 @@ r=$(legere)
   && ! "$RADIX/bin/mensor" cursus acta "$id_p" > /dev/null 2>&1
 credo $? "IX   incipere/finire: ambitus prolis, nidificatio, exitus, nota, corpus ex stdin"
 
+# X
+cat > "$T/regula_nulla.stml" <<'R'
+<retentio>
+  <sana cruda="0" compressa="0"/>
+  <fracta cruda="0" compressa="0"/>
+  <ultimum servare="falsum"/>
+  <oblivio dies="0"/>
+</retentio>
+R
+printf '<retentio>\n  <sana cruda="7"/>\n</retentio>\n' > "$T/regula_mala.stml"
+"$RADIX/bin/mensor" purgare -siccum -regula "$RADIX/tools/analytica_retentio.stml" > "$T/p0" 2>&1; rc0=$?
+"$RADIX/bin/mensor" purgare -siccum -regula "$T/regula_nulla.stml" > "$T/p1" 2>&1; rc1=$?
+"$RADIX/bin/mensor" cursus acta "$id2" > /dev/null 2>&1; rcs=$?
+"$RADIX/bin/mensor" purgare -regula "$T/regula_nulla.stml" > "$T/p2" 2>&1; rc2=$?
+"$RADIX/bin/mensor" cursus acta "$id2" > /dev/null 2> "$T/p3"; rc3=$?
+"$RADIX/bin/mensor" purgare -regula "$T/nulla_talis.stml" > "$T/p4" 2>&1; rc4=$?
+"$RADIX/bin/mensor" purgare -regula "$T/regula_mala.stml" > "$T/p5" 2>&1; rc5=$?
+[ "$rc0" -eq 0 ] && [ "$rc1" -eq 0 ] && grep -q "siccum" "$T/p1" && grep -qE "delenda [1-9]" "$T/p1" \
+  && [ "$rcs" -eq 0 ] && [ "$rc2" -eq 0 ] && [ "$rc3" -eq 1 ] && grep -q "deletum" "$T/p3" \
+  && [ "$rc4" -eq 2 ] && grep -q "nulla_talis.stml" "$T/p4" && [ "$rc5" -eq 2 ] && grep -q "'sana compressa' deest" "$T/p5"
+credo $? "X    purgare: regula domus legitur, siccum nihil mutat, vera delet, regula absens/deformis -> 2"
+
 echo
-if [ "$fracta" -eq 0 ]; then echo "fumus mensor_cursus: sanum (IX/IX)"; exit 0; fi
+if [ "$fracta" -eq 0 ]; then echo "fumus mensor_cursus: sanum (X/X)"; exit 0; fi
 echo "fumus mensor_cursus: FRACTUM ($fracta)"; exit 1

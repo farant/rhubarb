@@ -34,3 +34,43 @@ Not yet tested: the compressed read branch (nothing writes .gz until
 purgare). probatio_diurna 7 sections, mixed order green; plants VI red
 (sigil not of content, tail not cut, impure title accepted, sha check
 off, pin not applied, momentum from the wrong field).
+
+## 2026-10-14 - retention: diurna_purgare (analytica T4 2c)
+
+`diurna_purgare(d, &regula, nunc_ms, siccum, &relatio)`. "now" is a
+parameter, so retention tests are deterministic ("now + 40 days").
+Per KEY a needed form: pinned or last-of-its-title (ultimum_servare)
+-> raw forever; failed keys use their own (longer) tiers; else age vs
+crudum_ms / compressum_ms. Per BODY the freshest form any key needs
+(CRUDUM < COMPRESSUM < DELETUM as an enum order). Actions only move
+forward - a compressed body is never re-expanded (legere inflates),
+so a later pin only stops further steps. Compression: gzip (flatura)
+to .gz via temp + rename, then the raw file goes. Deleted bodies keep
+their key's line until `oblivio_ms` after deletion; compaction then
+drops the key (legere: IGNOTUM - the run record still has the hash
+and the note).
+
+One lock (index.sera, flock) for EVERY writer: ponere now holds it
+across "body exists? / write / append" and figere across "key exists?
+/ append"; otherwise a purge could delete a body between ponere's
+existence check and its index line (a line pointing at nothing), or
+compaction could drop a key figere just checked. Compaction writes the
+live state (last positum per key, fixum, then body-form lines AFTER all
+positum lines because the fold reads in order) to a temp file and
+renames it. Not tested: real concurrency (two processes racing) - the
+lock is structural, its absence would not show in a single-process
+suite.
+
+Two tests strengthened BY REASONING before planting: XII first had the
+fresher (failed) key second, so "last key wins" would have passed as
+"freshest wins" - now the fresher key comes first; and the compressed
+read path finally has a test (VIII: legere after compression).
+
+Policy is data: tools/analytica_retentio.stml (sana 7/30, fracta
+30/90, ultimum servare, oblivio 365 - interview Q8). `bin/mensor
+purgare [-siccum] [-machina] [-regula via]` (else MENSOR_RETENTIO,
+else tools/analytica_retentio.stml from cwd); every element is
+required - a missing one is refused by name, exit 2 (no compiled-in
+defaults). Not yet: the opportunistic once-a-day trigger after a fold
+(spec IV) - belongs with T6's adoption.
+Plants VIII red (pin ignored, failed tiers ignored, last key wins, first-of-title kept, dry run deletes, oblivio ignored, servare inverted, missing element silently accepted).
