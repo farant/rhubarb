@@ -100,20 +100,35 @@ system file-IO function outside the channel.
   `filum_lector_aperire` / `filum_scriptor_aperire`; `opendir` ->
   `iter_directoria`; `stat` -> `filum_status` / `filum_existit`;
   `access` -> `via_existit`), printed in the message like 86/87.
-- **Detection:** the 85-87 mechanism (walk of the main source against
-  name tables, `silva/fontes/silva_c89_semantica.h` comment above
-  `EXAMEN_CODEX_POSTULATA_DESUNT`), extended from symbol use to call
-  sites in function bodies if it does not see them already.
+- **Detection:** the 85-87 mechanism. The table is DATA: rows of the
+  existing tag in `silva/fontes/systema_posix.h` comments,
+  `<gradus titulus="fopen" genus="canalis" pro="filum_lector_aperire"/>`,
+  read by `_portabilitas_colligere` into `sem->gradus_tabula`
+  (`silva/fontes/silva_c89_semantica.c:6330-6360`); the walk over the
+  main source's final token stream, reduced to source tokens, already
+  sees identifiers in function bodies (`:7040-7115`). New: the
+  `canalis` genus judges CALLS only - identifier followed by `(` and
+  not after `struct` (`struct stat st;` is a type, not a bypass).
+  Decree …PX2QAC (5): the platform layer's table is these rows.
 - **Severity:** VIOLATIO domus (exemplar 91: clang accepts, the house
   does not); suppressible per line by
   `<tolera codex="CANALIS_PRAETERITUS" (>causa>`.
 - **The channel's own calls** (filum.c, lectiones.c, iter_directoria.c,
   via.c, thesaurus.c) and credo.c carry `<tolera>` with their reason;
   `/* lectiones: notatur */` markers become `<tolera>`.
-- **Ratchet:** examen judges changed files at commit
-  (`pythonica/silva.py:1577`), so untouched violators bite only when
-  touched. The `examen-corpus` gate pins its exclusions; today's ~220
-  violating files go into that pin ONCE, and the pin may only shrink.
+- **Ratchet (Fran 2026-10-14, option a):** the pre-commit hook judges
+  staged `.c`/`.m` (`tools/unci-git/pre-commit:14`) and only VIOLATIO
+  severity gives REICE (`silva/instrumenta/principalia/examen.c:589`).
+  Today's violators are listed ONCE in
+  `silva/probationes/fixa/examinis/canalis_debita.tsv` (`via<TAB>causa`,
+  like `tools/radices_manu.tsv`): for a listed file code 96 is reported
+  at DOMESTICUM (counted, no REICE); unlisted = VIOLATIO. Two-way check
+  (gate examen-corpus): an unlisted file with a raw call = red; a
+  listed file without one = red ("linea delenda"). The list only
+  shrinks. NOT the corpus exclusions file - that pins whole-file REICE
+  with a per-line read reason (12 entries); ~220 blanket entries would
+  be the silently-ageing list its header forbids. knotapel/ is outside
+  examen entirely (Fran 2026-10-03).
 - **House chores:** add the code by hand to `silva/amalgama/silva.h`,
   `./tools/amalgama_excludenda_generare.sh silva`,
   `./silva/amalgamare.sh` (else commissio refuses: credo II T7).
@@ -191,7 +206,8 @@ the fixture plant re-runs a member. Converting = declaration with
 
 ## VII. Order (plan to follow)
 
-T1 the examen code + plant + pin; T2-T7 the six migrations (II), html
+T1 the examen code (`genus="canalis"` rows, call check, code 96) + the
+debt list and its two-way check + plant; T2-T7 the six migrations (II), html
 first; T8 `porta=` + `composita` + shadow comparison (owed gates over
 the last N commits, tegit vs derived; pairs owed only by tegit = 0 or
 explained) + `tegit` removed; T9 the audit; T10 registration + shared
@@ -224,14 +240,17 @@ gesta); deriving `PORTAE` for unconverted runners.
 
 ## AUDIENDA (not verified when this was written)
 
-- whether the 85-87 walk already sees call sites inside function bodies
-  or only declarations/uses at file scope;
-- whether `<tolera>` is per line for a DOMESTICUM/VIOLATIO-domus code as
-  for 91 ("absorptio per LINEAM");
-- how `examen-corpus` pins exclusions (file, format) and whether a pin
-  of ~220 files is reviewable as one diff;
-- whether a test's raw `fopen` under CREDO_NON_RUIT children or in
-  generated sources (`*_fontes_generata.sh`) changes the counts;
+Answered 2026-10-14 (after the draft): the walk sees function bodies
+(§I Detection); `<tolera>` matches per site - same source, firing line
+or the line before (`_tolera_absorbere_sedem`,
+`silva_c89_semantica.c:1347`); the corpus exclusions are whole-file
+REICE pins, so the ratchet gets its own list (§I Ratchet).
+
+Still open:
+- how examen finds `canalis_debita.tsv` (it judges one file; the
+  repository root it already receives for headers is the candidate);
+- whether a test's raw `fopen` in generated sources changes the counts
+  (amalgama, fixa and build are outside the edit hook);
 - whether filum's line reader and writers are fast enough for the
   largest fixtures (silva corpus tests) - measure before/after in T7;
 - the 130-site count joins nexus rows to `--enumerare` closures; a test
