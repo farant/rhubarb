@@ -376,6 +376,9 @@
     <forma textus="unimodularem" casus="accusativus" numerus="singularis"/>
   </vocabulum>
   <vocabulum lemma="hermite" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: Charles Hermite (forma normalis Hermite, matrix_forma_hermite)"/>
+  <vocabulum lemma="cartan" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: Elie Cartan (matrix Cartan systematis radicum, probatio_reticulum.c)"/>
+  <vocabulum lemma="lovasz" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: Laszlo Lovasz (condicio Lovasz in reductione LLL, lib/reticulum.c)"/>
+  <vocabulum lemma="lll" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio: Lenstra-Lenstra-Lovasz, reductio basium reticuli (lib/reticulum.c)"/>
   <vocabulum lemma="galois" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: Evariste Galois (automorphismi Galois, lib/cyclotomia.c)"/>
   <vocabulum lemma="gauss" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: C. F. Gauss (summae Gauss, probationes/probatio_cyclotomia.c)"/>
   <vocabulum lemma="sturm" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: J. C. F. Sturm (catena Sturm, numerus radicum realium; lib/extensio.c)"/>
@@ -1622,6 +1625,15 @@
   <vocabulum lemma="reproducibilis" lingua="latina" classis="adiectivum" nota="vox domus (re + producere): quod iterum productum idem reddit - artificium octetis ex ingressibus determinatum (FabricaGenus.reproducibile; census fabricae, fabrica-6 T1)">
     <forma textus="reproducibile" casus="nominativus" numerus="singularis" genus="neutrum"/>
     <forma textus="reproducibilia" casus="nominativus" numerus="pluralis" genus="neutrum"/>
+  </vocabulum>
+  <vocabulum lemma="orthogonalizo" lingua="latina" classis="verbum" nota="Neo-Lat. (Gr. orthogonios): vectores orthogonales reddere - Gram-Schmidt; sedes reticulum_orthogonaliza (include/reticulum.h, reticulum-plan T1)">
+    <forma textus="orthogonalizare" tempus="praesens" modus="infinitivus" vox="activa" forma-verbi="infinitivum"/>
+    <forma textus="orthogonaliza" persona="II" numerus="singularis" tempus="praesens" modus="imperativus" vox="activa"/>
+    <forma textus="orthogonalizatio" nota="nomen actionis"/>
+  </vocabulum>
+  <vocabulum lemma="orthogonalis" lingua="latina" classis="adiectivum" nota="Neo-Lat. (Gr. orthogonios, rectangulus): ad angulos rectos - vectores quorum productum interius nullum est; sedes Orthogonalis (lib/reticulum.c)">
+    <forma textus="orthogonalis" casus="nominativus" numerus="singularis"/>
+    <forma textus="orthogonales" casus="nominativus" numerus="pluralis"/>
   </vocabulum>
 
   <!-- dithering per exemplaria (2026-10-13): voces domus modi lib/dithering_exemplaria.c -->
