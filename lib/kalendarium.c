@@ -14,6 +14,7 @@
 #include "dispositio.h"
 #include "elenchus.h"
 #include "membrum__album.h"
+#include "rubrica.h"
 #include "vim.h"
 #include "scriba_applicatio.h"
 #include "scriba_componentia.h"
@@ -458,24 +459,6 @@ nomen structura {
        Xar* res;   /* constans AgendaRes* */
 } GrexAgendae;
 
-interior b32
-rubricam_habet (
-    constans AgendaRes* r,
-                chorda  rubrica)
-{
-    i32 i;
-
-    per (i = ZEPHYRUM; i < xar_numerus(r->rubricae); i++)
-    {
-        si (chorda_aequalis(*(chorda*)xar_obtinere(r->rubricae, i),
-                rubrica))
-        {
-            redde VERUM;
-        }
-    }
-    redde FALSUM;
-}
-
 /* a ante b in grege: datae ordine diei, deinde sine die; id */
 interior b32
 ante_in_agenda (
@@ -572,7 +555,7 @@ greges_agendae (
         {
             r = *(constans AgendaRes**)xar_obtinere(apertae, j);
             si (  g.rubrica.mensura > ZEPHYRUM
-                ? rubricam_habet(r, g.rubrica)
+                ? rubricam_habet(r->rubricae, g.rubrica)
                 : xar_numerus(r->rubricae) == ZEPHYRUM)
             {
                 in_gregem_inserere(g.res, r);
@@ -610,7 +593,7 @@ perfectae_agendae (
     per (i = ZEPHYRUM; l && i < xar_numerus(omnes); i++)
     {
         r = *(constans AgendaRes**)xar_obtinere(omnes, i);
-        si (rubricam_habet(r, *filtrum))
+        si (rubricam_habet(r->rubricae, *filtrum))
         {
             *(constans AgendaRes**)xar_addere(l) = r;
         }
@@ -824,52 +807,6 @@ clavis_vim (
     redde ZEPHYRUM;
 }
 
-/* rubrica filtri valida: [a-z0-9-]+ (ut agenda) */
-interior b32
-rubrica_valida (
-    chorda c)
-{
-    i32 i;
-
-    si (c.mensura == ZEPHYRUM)
-    {
-        redde FALSUM;
-    }
-    per (i = ZEPHYRUM; i < c.mensura; i++)
-    {
-        si (!(   (c.datum[i] >= 'a' && c.datum[i] <= 'z')
-              || (c.datum[i] >= '0' && c.datum[i] <= '9')
-              || c.datum[i] == '-'))
-        {
-            redde FALSUM;
-        }
-    }
-    redde VERUM;
-}
-
-/* rubricae rei iunctae ("a b") in piscina */
-interior chorda
-rubricas_iungere (
-    constans AgendaRes* r,
-               Piscina* p)
-{
-    chorda s;
-       i32 i;
-
-    s.datum    = NIHIL;
-    s.mensura  = ZEPHYRUM;
-    per (i = ZEPHYRUM; i < xar_numerus(r->rubricae); i++)
-    {
-        si (i > ZEPHYRUM)
-        {
-            s = chorda_concatenare(s, chorda_ex_literis(" ", p), p);
-        }
-        s = chorda_concatenare(s, *(chorda*)xar_obtinere(r->rubricae,
-            i),
-            p);
-    }
-    redde s;
-}
 
 /* Enter: textus in actum agendae per genus; VERUM si actum (prompta
  * tunc clauditur), FALSUM = recusatum (prompta manet) */
@@ -1134,7 +1071,7 @@ promptam_committere (
         }
         redde agenda_rubricas_ponere(m->documentum, id,
             rubricas_miscere(
-            rubricas_iungere(r, p), rubricae, p)) > ZEPHYRUM;
+            rubricas_iungere(r->rubricae, p), rubricae, p)) > ZEPHYRUM;
     }
     si (chorda_aequalis_literis(genus, "dies"))
     {
@@ -1736,7 +1673,8 @@ interior b32
 fac_rubricas (
     ContextusMandati* cm)
 {
-    redde promptam_aperire(cm, "rubricae", rubricas_iungere(cm->r,
+    redde promptam_aperire(cm, "rubricae",
+        rubricas_iungere(cm->r->rubricae,
         cm->p));
 }
 

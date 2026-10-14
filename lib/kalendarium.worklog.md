@@ -719,3 +719,9 @@ paginam_vertere / indicem_disponere call album_pagina_rei,
 album_paginae, album_res_prima, album_pagina. The calendar's 30
 sections passed unchanged - they are the oracle for the move.
 ludus_tessera's hand list gained "album" (vicus links the calendar).
+
+## 2026-10-14 - tag rules from `rubrica`
+
+The calendar's private rubrica_valida, rubricam_habet (item-shaped) and
+rubricas_iungere wrapper are gone; calls use include/rubrica.h with the
+item's set (`r->rubricae`). 30 sections unchanged.

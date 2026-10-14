@@ -205,6 +205,9 @@ house rule of independent composable libraries.
 ## V. Phases
 
 - **U1–U6** as above (U1 before P2; the others as P-phases pull them).
+- **P1a DONE 2026-10-14: `rubrica`** (include/rubrica.h) - the tag
+  rules shared by agenda, calendar and contacts (were two private
+  copies).
 - **P1 `personae` document** - acts, projection, sort key, letter
   heading, birthday parse (`YYYY-MM-DD` / `--MM-DD`), age function,
   natales projection; undo/redo, seal; tests.

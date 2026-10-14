@@ -6,6 +6,7 @@
  * appendit et applicat). */
 
 #include "agenda.h"
+#include "rubrica.h"
 #include "stml.h"
 #include "sigillum.h"
 
@@ -94,133 +95,6 @@ dies_legere (
 {
     redde c && c->mensura > ZEPHYRUM && fasti_parsare_iso(*c, dies)
         && fasti_dies_valida(*dies);
-}
-
-/* rubrica [a-z0-9-]+ */
-interior b32
-rubrica_valida (
-    chorda c)
-{
-    i32 i;
-
-    si (c.mensura == ZEPHYRUM)
-    {
-        redde FALSUM;
-    }
-    per (i = ZEPHYRUM; i < c.mensura; i++)
-    {
-        si (!(   (c.datum[i] >= 'a' && c.datum[i] <= 'z')
-              || (c.datum[i] >= '0' && c.datum[i] <= '9')
-              || c.datum[i] == '-'))
-        {
-            redde FALSUM;
-        }
-    }
-    redde VERUM;
-}
-
-interior s32
-rubricas_comparare (
-    chorda a,
-    chorda b)
-{
-    i32 n;
-    s32 r;
-
-    n = a.mensura < b.mensura ? a.mensura : b.mensura;
-    r = (s32)memcmp(a.datum, b.datum, (size_t)n);
-    si (r != ZEPHYRUM)
-    {
-        redde r;
-    }
-    redde (s32)a.mensura - (s32)b.mensura;
-}
-
-/* "a b  c" -> Xar chorda (frusta in textu ipso), ordinata, sine
- * iteratis; NIHIL si rubrica mala */
-interior Xar*
-rubricas_legere (
-     chorda  textus,
-    Piscina* piscina)
-{
-       Xar* l;
-    chorda  r;
-    chorda* x;
-       i32  i;
-       i32  j;
-       i32  k;
-
-    l = xar_creare(piscina, (i32)magnitudo(chorda));
-    i = ZEPHYRUM;
-    dum (i < textus.mensura)
-    {
-        dum (i < textus.mensura && textus.datum[i] == ' ')
-        {
-            i++;
-        }
-        j = i;
-        dum (j < textus.mensura && textus.datum[j] != ' ')
-        {
-            j++;
-        }
-        si (j == i)
-        {
-            frange;
-        }
-        r.datum    = textus.datum + i;
-        r.mensura  = j - i;
-        i          = j;
-        si (!rubrica_valida(r))
-        {
-            redde NIHIL;
-        }
-        /* insertio ordinata, iterata praeteruntur */
-        k = ZEPHYRUM;
-        dum (   k < xar_numerus(l)
-             && rubricas_comparare(*(chorda*)xar_obtinere(l, k), r)
-                < ZEPHYRUM)
-        {
-            k++;
-        }
-        si (   k < xar_numerus(l)
-            && rubricas_comparare(*(chorda*)xar_obtinere(l, k), r)
-               == ZEPHYRUM)
-        {
-            perge;
-        }
-        (vacuum)xar_addere(l);
-        per (j = xar_numerus(l) - I; j > k; j--)
-        {
-            x   = (chorda*)xar_obtinere(l, j);
-            *x  = *(chorda*)xar_obtinere(l, j - I);
-        }
-        *(chorda*)xar_obtinere(l, k) = r;
-    }
-    redde l;
-}
-
-/* copia rubricarum -> "a b" (vacua: datum NIHIL) */
-interior chorda
-rubricas_iungere (
-        Xar* l,
-    Piscina* piscina)
-{
-    chorda s;
-       i32 i;
-
-    s.datum    = NIHIL;
-    s.mensura  = ZEPHYRUM;
-    per (i = ZEPHYRUM; l && i < xar_numerus(l); i++)
-    {
-        si (i > ZEPHYRUM)
-        {
-            s = chorda_concatenare(s, chorda_ex_literis(" ", piscina),
-                piscina);
-        }
-        s = chorda_concatenare(s, *(chorda*)xar_obtinere(l, i),
-            piscina);
-    }
-    redde s;
 }
 
 interior vacuum

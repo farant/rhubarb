@@ -211,6 +211,7 @@ declare -a SOURCE_FILES=(
     "lib/rivus_eventuum.c"
     "lib/rivus_terminalis.c"
     "lib/router.c"
+    "lib/rubrica.c"
     "lib/runae.c"
     "lib/runae_tabulae.c"
     "lib/sanctorale.c"
