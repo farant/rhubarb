@@ -1,0 +1,233 @@
+# cellae II: plan (house tier)
+
+Approved by Fran (2026-10-13): the API sketch and five decisions:
+- per-set judgment only (counting and sampling stay in the caller);
+- the antipodal encoding stays XOR-only;
+- quadratic fields only (`surdus` as a fast path only if T4 measures a
+  need);
+- D119's frozen exact tables as the regression oracle;
+- P1's design questions are left to P1's own plan (T6).
+
+Follows `project-specs/cellae-plan.md` (slice 1, closed with D125).
+
+## Purpose
+
+Audit P1 (ledger …E72XG3, claims.md KC 47–48) asks whether the group
+catalogs compute better or worse than knot-free point sets under one
+fixed exact activation. P1 as filed uses D94's activation: the signed
+encoding with XOR, AND and MAJ. That engine exists only as about 2,000
+lines of demo code (D119, D120). `cellae` has a close cousin (D82/D84),
+but with a different sector rule, the antipodal encoding, and XOR only.
+
+This slice moves D94's engine into `cellae`, generalized just enough
+for P1 and later audits:
+- catalogs from **explicit point lists**, not only group closure: null
+  catalogs are arbitrary point sets;
+- **activation tables from explicit axes**, so one set can be judged
+  with another set's table (2O's) or a group-free table. Today the
+  table is always built from the catalog judged, the confound of KC
+  47.1.4;
+- **D94's phase cell** beside D82's combined cell;
+- the **signed encoding** with **any truth table** (XOR, AND, MAJ, …),
+  judged per weight set under rule, robust and possible.
+
+P1 itself is a demo on top of this slice, with its own plan (task T6).
+Fran approved extracting the engine rather than copying it again.
+
+## Semantics
+
+**D94's phase cell** (D119's exact form). For a sum S = (a, v), with
+k sectors and nd axes:
+- **zero sum:** cell (k − 1)(nd + 1) + nd;
+- **sector:** floor(h·k/π) with h = acos(a/|S|) ∈ [0, π], so the
+  full rotation angle 2h lies in k sectors.
+  - On a boundary, a/|S| = cos(mπ/k) for some 1 ≤ m < k, the rule is
+    sector m (the floor of the exact angle) and the tie set is
+    {m − 1, m}.
+  - Unlike D82's cell there is no fold: S and −S differ.
+- **axis:** nd when v = 0. Otherwise the first maximum of
+  (v·u)²/|u|² over the table (rule), with all maxima as the tie set.
+  This is the same comparison as D82's.
+- **cell** = sector · (nd + 1) + axis.
+
+**Signed encoding.** Weights q_1 … q_n. A mask x ∈ {0,1}^n gives
+S = Σ ±q_i (+ where the bit is 1). A truth table assigns 0 or 1 to
+each of the 2^n masks. A weight set computes the function at k if no
+cell receives both values:
+- **rule:** rule cells;
+- **robust:** under every tie resolution (all tied cells);
+- **possible:** under some resolution, chosen per exact point. Two
+  masks with the same exact sum and different values fail at once;
+  otherwise SAT (DPLL with a decision budget, as D119).
+- **"Computes"** (D94): some k of a given ladder passes, per mode
+  separately.
+- **"Tied"**: some mask has a tie set larger than one cell.
+
+D82's combined cell keeps its antipodal encoding and parity
+(`activatio_separat`, unchanged). The new judgment also accepts D82's
+cell under the signed encoding, since the cell rule and the encoding
+are independent choices.
+
+## API sketch (additions to include/cellae.h)
+
+```c
+/* catalog from an explicit point list, in the given order; FALSUM if
+ * a point repeats up to sign, the ring is not an ordered quadratic
+ * field, or the list is empty. Depth and writhe 0. */
+b32
+catalogus_ex_punctis (
+    constans Quaternio*  puncta,
+                   i32   numerus,
+               Piscina*  piscina,
+             Catalogus** exitus);
+
+#define CELLAE_CELLA_D82  0    /* combined cell (slice 1) */
+#define CELLAE_CELLA_D94  1    /* phase cell (this slice) */
+
+/* activation over 'catalogus' (whose sums it judges) with the axis
+ * table given explicitly: the vector parts of 'axes' in order,
+ * antipodes merged; NIHIL = the catalog's own table (as
+ * activatio_ex_catalogo). Axes must lie in the catalog's ring. */
+b32
+activatio_creare (
+    constans Catalogus*  catalogus,
+    constans Quaternio*  axes,
+                   i32   numerus_axium,
+                   i32   cella,             /* CELLAE_CELLA_* */
+                   i32   axes_maximae,
+               Piscina*  piscina,
+             Activatio** exitus);
+
+/* the table's axis i (a quaternion with zero real part), to hand one
+ * set's table to another */
+Quaternio
+activatio_axis (
+    constans Activatio* activatio,
+                   i32  i);
+
+nomen structura {
+    b32 regula;
+    b32 robusta;
+    b32 possibilis;
+    b32 ligata;        /* some mask tied at some k */
+    b32 concursus;     /* same exact sum, different values */
+    b32 indecisa;      /* SAT budget hit: possibilis unknown, never
+                        * guessed */
+} Iudicium;
+
+/* signed encoding: one weight set, one truth table (2^n bytes, mask
+ * bit i = weight i), a ladder of k; each mode passes if SOME k passes
+ * (D94). FALSUM if n is 0 or > VII, an index is out of range, k < 1,
+ * or the table is malformed. */
+b32
+activatio_iudica (
+       Activatio* activatio,
+    constans i32* pondera,
+             i32  n,
+    constans i32* scala_k,
+             i32  numerus_k,
+     constans i8* tabula,
+        Iudicium* exitus);
+
+/* truth tables for the three functions of D94 (2^n bytes in piscina) */
+constans i8* cellae_paritas (i32 n, Piscina* piscina);   /* XOR */
+constans i8* cellae_et      (i32 n, Piscina* piscina);   /* AND */
+constans i8* cellae_maior   (i32 n, Piscina* piscina);   /* MAJ */
+```
+
+Counting (exhaustive over C(N, n), or sampled with a caller's RNG)
+stays in the caller. D94's sampling streams and scaling are demo
+semantics, and a loop over `activatio_iudica` is a few lines. The
+existing searches (`activatio_exhaustiva`, `activatio_avida`) stay as
+they are, for the antipodal XOR audits.
+
+## Exactness
+
+Slice 1's machinery carries over:
+- integer Z[√d] coordinates;
+- a cache per exact point;
+- the certified float filter, which never decides a tie;
+- boundaries placed by position (radices).
+
+For the phase cell, the sector compares a/|S| with cos(mπ/k): the sign
+of a, then a²/|S|² ∈ K against cos²(mπ/k), placed by position among
+the roots of its minimal polynomial. That is the same technique as
+slice 1's tan² comparison.
+
+Fields stay quadratic (v1 scope). P1's catalogs (2O over Q(√2), 2T
+over Q, 2I over Q(√5)) and nulls built on suitable conics fit inside.
+D120's `surdus` path is a measured option (T4), not a default.
+
+## Tasks
+
+Each task follows the house cycle:
+1. implement;
+2. tests red, then green;
+3. planted faults;
+4. worklog;
+5. commit behind the gates;
+6. stop for Fran's go-ahead.
+
+- **T1. Point-list catalogs and explicit axis tables.**
+  `catalogus_ex_punctis`, `activatio_creare` (D82 cell only),
+  `activatio_axis`.
+
+  Credo:
+  - a catalog from ζ₈'s own points equals its closure, entry for
+    entry;
+  - an explicit table equal to the own table gives D124's tables
+    unchanged;
+  - 2O's table carried over to a subset;
+  - refusals (repeats, foreign ring, empty).
+- **T2. The phase cell.** `CELLAE_CELLA_D94`: sectors by cos² roots,
+  the zero sum, a zero vector part, and the tie sets.
+
+  Credo:
+  - D120's hand cells (σ1 on the k = 12 boundary m = 3: rule sector
+    3, tie {2, 3}; at k = 6 sector 1, no tie; −σ1 below the boundary);
+  - every ζ₈ sum of up to 4 weights at k = 6, 12, 24 against an
+    independent exact oracle (Python, Q(√2, √3)).
+- **T3. The signed encoding and `activatio_iudica`.** Truth tables,
+  rule, robust, possible (point clash and SAT), any-k union, tied,
+  undecided.
+
+  Regression credo:
+  - D119's exact columns (rule, robust, possible, tied) for ζ₈ and
+    2I's first 24, every exhaustive row (N = 3–6, XOR / AND / MAJ):
+    24 rows × 4 numbers, pinned from D119's frozen output;
+  - D119's oracle counts (ζ₈ N = 3, 4, 18 numbers).
+  - The slow rows (N = 6) go in a credo section signed `lentus`.
+- **T4. Speed, measured first.**
+  - The certified filter for the phase cell, and the per-point cache
+    on signed sums.
+  - Compared with D120 on the same rows (D120: Parts A–C in 136 s).
+  - `surdus` as a fast path only if the measurement asks for it.
+
+  Credo: filtered == exact on every ζ₈ sum; the statistics separate
+  filter, exact and tied decisions.
+- **T5. Review** (an independent reviewer with its own oracle), then
+  fixes.
+- **T6. P1** as a demo, with its own plan for Fran's approval first.
+  That plan settles, among other things:
+  - which group-free table;
+  - which nulls (D126: match height, report odd-norm coincidences,
+    name the encoding);
+  - whether the braid-correct ζ₁₀ generators are included.
+
+## Gates
+
+- `radix` and `silva` (lib/cellae.c changes).
+- `generata` (if an amalgam embeds cellae).
+- `venenum` (the caches and arenas).
+- `oratio` if the glossary is touched.
+
+## Out of scope
+
+- AND/MAJ under the antipodal encoding. There each weight has two
+  input bits, and x_i = 0 arises from both bits on or both off, so a
+  general function needs bit-level patterns (4^n). XOR is the parity
+  of the nonzero coefficients and is supported already.
+- Fields beyond quadratic.
+- Moving D94's float replica into the library. It reproduces D94's
+  printed numbers and stays in the demos.
+- Parallel processes.
