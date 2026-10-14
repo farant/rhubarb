@@ -1531,7 +1531,7 @@ PORTAE = {
     'css': (['./css/compile_probationes.sh'],
             r'probationes_css: \d+/\d+ praeteritae'),
     'materia': (['./materia/compile_probationes.sh'],
-                r'MATERIA PROBATIONES: \d+/\d+'),
+                r'probationes_materia: \d+/\d+ praeteritae'),
     'md': (['./md/compile_probationes.sh'],
            r'probationes_md: \d+/\d+ praeteritae'),
     'html': (['./html/compile_probationes.sh'],
@@ -1976,6 +1976,7 @@ PORTAE_GRADUUM = {'toml': 'probationes_toml',
                   'md': 'probationes_md',
                   'html': 'probationes_html',
                   'saltuarius': 'probationes_saltuarius',
+                  'materia': 'probationes_materia',
                   'silva': 'probationes_silva',
                   'radix': 'probationes_radicis'}
 # RESIDUA (fabrica-7 T7): quod porta PRAETER membra probat - portae

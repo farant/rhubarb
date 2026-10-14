@@ -29,7 +29,6 @@ gesta/tabulariumd.sh	nondum derivatum
 glr_debug.sh	nondum derivatum
 glr_quaestio.sh	nondum derivatum
 ludus_tessera/compile_probationes.sh	nondum derivatum
-materia/compile_probationes.sh	nondum derivatum
 materia/coquere.sh	nondum derivatum
 materia/oraculum_silvae_struere.sh	pignus: -I$SEDES (amalgama commissi ad pignus) - isolatio consulta; vivum radices derivatas habet
 officina/amalgamare.sh	nondum derivatum

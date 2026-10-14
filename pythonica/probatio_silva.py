@@ -1245,6 +1245,12 @@ try:
           and '<subsystema via="saltuarius"/>'
           in open(os.path.join(RADIX, 'fabrica.stml')).read(),
           'portae graduum: saltuarius -> probationes_saltuarius declaratum (expeditio W0ZBW, 2026-10-14)')
+    credo(silva.PORTAE_GRADUUM.get('materia') == 'probationes_materia'
+          and '<actio titulus="probationes_materia" genus="iudicium">'
+          in open(os.path.join(RADIX, 'materia', 'aedificatio.stml')).read()
+          and '<subsystema via="materia"/>'
+          in open(os.path.join(RADIX, 'fabrica.stml')).read(),
+          'portae graduum: materia -> probationes_materia declaratum (2026-10-14)')
     # RESIDUA (fabrica-7 T7): 'prae' ANTE sanare, 'post' POST; sana
     # solum si omnes; residua fracta nominata (residua_<gradus>)
     ordo_log = os.path.join(T, 'residua_ordo.txt')

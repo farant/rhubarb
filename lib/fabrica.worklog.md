@@ -3120,3 +3120,18 @@ plus a final `FRACTAE:` list - fallback parser added. Oracle 13/13;
 plant (columnae separator +I -> +II) red on BOTH sides with the same
 member named, restored green. Measured: old 23 s / 20 s warm;
 composite warm 2.9 s, -vis 12.5 s.
+
+## 2026-10-14 - materia to steps
+
+`probationes_materia` (materia/aedificatio.stml), thin entry point,
+PORTAE + PORTAE_GRADUUM, radices_manu line deleted. Not an expedition
+row originally (the runner never called excubitor) - added. Rubric
+point 3 was the only one that applied: probatio_materia_coctor's rancor
+section (VI) wrote materia/build/proba.registrum.stml and its two
+generated files into the TREE; `materia_registrum_recens` reads nothing
+else under its root, so the section now uses `$TMPDIR/coctor_rancor` as
+its root (old runner: TMPDIR is always set on macOS, so it writes there
+too). Plant (branch disabled) -> red with fabrica's own words "scripsit
+extra vestigium: materia/build/proba.registrum.stml, ..." - restored
+green. Oracle 14/14. Measured (machine shared with a frigida run): old
+7.4 s / 4.1 s warm; composite warm 1.6 s, -vis 15 s.

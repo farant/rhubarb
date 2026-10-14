@@ -20,4 +20,5 @@
   <subsystema via="md"/>
   <subsystema via="html"/>
   <subsystema via="saltuarius"/>
+  <subsystema via="materia"/>
 </fabrica>
