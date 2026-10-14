@@ -161,7 +161,7 @@ nomen structura {
  * h = |v|^2/a^2 radicibus S_k per positionem comparatur (ut D82),
  * terminis per signum a reflexis (m = k - m'). Activationes D94 a
  * quaestionibus antipodalibus (activatio_separat, _exhaustiva, _avida)
- * refutantur; activatio_cella et activatio_iudica (T3) eas accipiunt. */
+ * refutantur; activatio_cella et activatio_iudica eas accipiunt. */
 
 /* FALSUM si corpus non quadraticum ordinatum, aut catalogus sine axe.
  * = activatio_creare(catalogus, NIHIL, 0, CELLAE_CELLA_D82, ...) */
@@ -245,6 +245,66 @@ activatio_separat (
              i32  k,
              i32  modus,
              b32* exitus);
+
+
+/* ==================================================
+ * Encodatio signata (D94, D119-D123; cellae II T3)
+ *
+ * Pondera n (indices catalogi), larva in [0, 2^n): summa = sum +-q_i,
+ * +q_i si bitum i larvae, -q_i aliter (nullus coefficiens 0). Valor
+ * desideratus tabula[larva] in {0, 1}. Separat ad k si nulla cella
+ * larvas valoris diversi continet; verdicta per k unita (aliquod k
+ * scalae transit). Cellae D82 et D94 ambae accipiuntur (D82 plicat s et
+ * -s). Modi ut supra:
+ *   regula:     cellae regulae;
+ *   robusta:    omnis resolutio paritatum;
+ *   possibilis: aliqua resolutio (per punctum exactum; D94: s et -s
+ *               puncta diversa); quaeritur solum ubi robusta deficit et
+ *               nondum possibilis.
+ * ================================================== */
+
+nomen structura {
+    b32 regula;
+    b32 robusta;
+    b32 possibilis;
+    b32 ligata;      /* aliqua larva, aliquod k: cella cum paritate */
+    b32 indecisa;    /* limes SAT attactus, possibilis non probata:
+                      * possibilis FALSUM ergo ignotum, non verdictum */
+    b32 concursus;   /* duae larvae valoris diversi, summa exacte eadem
+                      * (D82: aut opposita): nulla cella ullo k eas
+                      * distinguit, ergo nullus modus transit. Completum
+                      * (paria omnia), non per quaestionem SAT; 0 si
+                      * possibilis. Concursus indecisam tollit. */
+} Iudicium;
+
+/* *exitus verdicta; FALSUM si n 0 aut > VII, index extra aut iteratus,
+ * scala vacua aut k < 1, tabula valore > 1 (exitus non tangitur) */
+b32
+activatio_iudica (
+       Activatio* activatio,
+    constans i32* pondera,
+             i32  n,
+    constans i32* scala_k,
+             i32  numerus_k,
+     constans i8* tabula,
+        Iudicium* exitus);
+
+/* tabulae veritatis 2^n (D94): paritas (XOR), et (AND: larva plena),
+ * maior (MAJ: plus quam n/2 bita). NIHIL si n 0 aut > VII. */
+constans i8*
+cellae_paritas (
+         i32  n,
+     Piscina* piscina);
+
+constans i8*
+cellae_et (
+         i32  n,
+     Piscina* piscina);
+
+constans i8*
+cellae_maior (
+         i32  n,
+     Piscina* piscina);
 
 
 /* ==================================================

@@ -208,7 +208,23 @@ Each task follows the house cycle:
     24 rows × 4 numbers, pinned from D119's frozen output;
   - D119's oracle counts (ζ₈ N = 3, 4, 18 numbers).
   - The slow rows (N = 6) go in a credo section signed `lentus`.
-- **T4. Speed, measured first.**
+  *(2026-10-14: landed. Every D119 row equal for N = 3-6, both
+  catalogs, none undecided. N = 3, 4 run in 6 s; N = 5, 6 (`lentus`) in
+  40 s at 463 MB peak. The 18 oracle.py counts are D119_B's N = 3, 4
+  entries, so those rows pin them. Each mask carries an orientation
+  (s or -s of the point), and the SAT keeps two identities per point
+  under D94. `concursus` (same exact sum, different values) is computed
+  completely after the k loop, not as a SAT by-product, and is checked
+  against a plain quaternion-sum oracle on every N = 3, 4 set. That
+  oracle found the bug of the slice: the zero sum must have no
+  orientation. The phase cell's float filter (reflected for a < 0)
+  moved here from T4, checked set by set against the filter off. A
+  reversed ladder {24, 12, 6} was added after a plant survived: on
+  {6, 12, 24}, k = 24 refines the others, so "last k only" equals the
+  union. 16 plants red.)*
+- **T4. Speed, measured first.** *(The filter part landed in T3; T4
+  is measurement against D120, plus the combination cache's memory
+  (463 MB over about 1M judgments).)*
   - The certified filter for the phase cell, and the per-point cache
     on signed sums.
   - Compared with D120 on the same rows (D120: Parts A–C in 136 s).

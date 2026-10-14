@@ -653,3 +653,106 @@ counted and asserted:
 - An unknown cell code accepted.
 The first six were caught by the oracle comparison alone. The last two
 were caught by the refusal checks.
+
+## 2026-10-14 - cellae II T3: signed encoding, `activatio_iudica`
+
+**What it is.** One weight set, one truth table, a ladder of k. Mask bit
+i set means +q_i, clear means -q_i (no zero coefficients, unlike the
+antipodal search's 3^n vectors). Rule, robust and possible are each a
+union over k, as in D94/D119; possible is searched only where robust
+failed and possible is not yet established (D119's order, so the
+counts line up). Both cells are accepted. D82 folds s and -s, which
+has a consequence worth knowing (below).
+
+**Orientation.** The point cache is keyed by {s, -s}, and so is the
+combination cache (`#±idx,` folded by the first coefficient). Under
+D94, s and -s are different cells, so every vector now carries an
+`orientatio` (+1/-1). It says whether its sum is the point's
+representative (first nonzero part positive) or its negative. The
+combination entry stores the orientation of the canonical combination
+(first coefficient +1), and a lookup multiplies by the vector's own
+`primum`. The exact cell takes sign(a) = orientation (a != 0; a = 0
+and s = 0 pass 0). The SAT's point identity got a second visitation
+slot (`_negati`), so s and -s are separate variables under D94.
+
+**Bug found by the concursus oracle: the zero sum has no orientation.**
+A signed relation (D126) gives two OPPOSITE masks of the same
+combination whose sums are both 0: in 2I, s + s* = 1, so over weights
+{1, s, s*} masks 001 (1 - s - s*) and 110 (-1 + s + s*) are both 0.
+They share the combination key with opposite `primum`, so they got
+opposite orientations, and the D94 concursus check ("same point AND
+same orientation") called them different. Fix: the zero point's
+orientation is always +1. The test's oracle (plain exact quaternion
+sums, compared pairwise, sharing none of the library's dedup) found 32
+missed sets in zeta_8 XOR n = 3 alone. The verdict counts were right
+all along: the zero cell has one option, so the SAT identity split
+never changed an answer. Only the concursus flag was wrong.
+
+**`concursus` is complete, not a by-product.** The first draft set it
+inside the SAT search. That would be a partial witness, because the
+search runs only at some k and stops at the first conflict, and it sees
+point identity only for tied vectors. Now it is computed after the k
+loop, only when possible is false (a concursus implies the same cell at
+every k, so possible is impossible): every pair of masks with different
+values. A pair is skipped when one component's float intervals are
+disjoint (D82: also against -w). Otherwise it is decided exactly by
+point identity. A concursus clears `indecisa`, because it proves
+possible false.
+
+**D82 under signed encoding.** The complement mask has the negated sum,
+and D82 folds it into the same point. For odd n, XOR flips parity under
+complement, so EVERY odd-n XOR set is a D82 concursus. Signed odd-n XOR
+is impossible with the folded cell, which is structural and not a
+finding. Hand-tested (n = 1, n = 3).
+
+**The float filter for D94, a < 0.** It is the reflected count from the
+largest boundary down, matching the exact branch from T2: count while
+terminus > tan^2 h strictly, stop when terminus < tan^2 h strictly,
+undecided otherwise. The sign of a comes from the a-interval, which
+`_vector_parare` already requires to exclude 0. Equivalence is checked
+set by set with the filter off, every n = 3 set and every 5th n = 4 set,
+XOR and MAJ: 8,300 judgments, 0 differences. That moved the plan's T4
+filter work into T3, so T4 is now measurement only.
+
+**Regression: D119's frozen exact tables, every exhaustive row.**
+zeta_8 (24 elements, own 13 axes) and 2I's first 24 (closure of
+(s, s*, t, t*) with D120's BFS and its ± dedup, so the closure is 60
+points, not 120; own 12 axes). For n = 3..6 and each of XOR, AND, MAJ:
+the set count, rule, robust, possible, tied, and no undecided set.
+- n = 3, 4: all equal, 5.8 s, plus the concursus oracle on every set.
+- n = 5, 6 (credo `lentus`): all equal, 39.7 s, 463 MB peak RSS.
+The memory is the activation's per-combination cache growing over
+about 1M judgments. Whether to bound it (reset per weight set, or an
+LRU) is a T4 question; the D119 sweep does not reuse combinations
+across sets much.
+
+**Hand cases.**
+- n = 1, weight 1: D94 separates +1 (sector 0) from -1 (the zero-sum
+  cell); D82 folds them into one point (concursus).
+- n = 3, zeta_8 {0, 1, 2}, XOR: D82 concursus; D94 none.
+- 2I {1, s, s*}: XOR concursus under both cells; AND none (the only
+  {-1, 0, 1} relations are ±(1, -1, -1)).
+- The truth tables, and refusals with `*exitus` untouched.
+
+**Plants: 16, all red (one only after a test was added).**
+- The zero sum keeping an orientation (concursus oracle).
+- The orientation stored without `primum` (rule counts).
+- Concursus ignoring orientation under D94. This one was caught by the
+  filter on/off comparison and not by the oracle rows. With the filter
+  on, s and -s have disjoint intervals and never reach the exact check.
+  So the filter-off run is what guards that line.
+- The D82 disjointness test without the opposite sum (hand case n = 1).
+- The reflected filter off by one; the float sign inverted; the
+  reflected filter deciding an overlap (rule/possible counts).
+- s and -s sharing one SAT identity under D94 (possible counts). So the
+  second visitation slot changes verdicts, not just bookkeeping.
+- possible not seeded by robust; ties checked at the first k only; the
+  mask bit inverted; MAJ as >= n/2 (D119 counts).
+- A repeated weight or a table value 2 accepted (refusals).
+- Concursus never computed (oracle).
+- **Survived at first:** the rule verdict taken from the last k only.
+  On {6, 12, 24} every boundary of k = 6 and 12 is also a boundary of
+  k = 24, so k = 24's cells refine the others, and rule-separable at 6
+  or 12 implies rule-separable at 24. Union = last k on that ladder.
+  Fixed by judging every N = 3 row again on {24, 12, 6} (the union is
+  order-independent); the plant is red there.
