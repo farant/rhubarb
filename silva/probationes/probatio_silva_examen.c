@@ -2386,6 +2386,72 @@ s32 principale (vacuum)
 #undef CREDO_PRAELUDIUM
 #undef CREDO_PRINCIPALE
 
+
+    /* ========================================================
+     * XX. Debita canalis (codex 96, spec canalis-lectionum §I):
+     * silva_c89_semantica_debita_applicare - via inscripta (cum aut
+     * sine './') demittit 96 ad DOMESTICUM, ceteros codices non
+     * tangit; via non inscripta, praefixum solum, linea '#' nihil
+     * mutant. (Detectio ipsa: silva/examen_vectis.sh 'canalis'.)
+     * ======================================================== */
+
+    {
+        constans character* tabula =
+            "# commentarium\n"
+            "./lib/a.c\tcausa a\n"
+            "lib/b.c\tcausa b\n"
+            "#lib/c.c\tcommentata\n";
+                     chorda textus = chorda_ex_literis(tabula,
+                         piscina);
+                     chorda via_a = chorda_ex_literis("lib/a.c",
+                         piscina);
+                     chorda via_b = chorda_ex_literis("./lib/b.c",
+                         piscina);
+                     chorda via_c = chorda_ex_literis("lib/c.c",
+                         piscina);
+                     chorda via_ap = chorda_ex_literis("lib/a.c.bak",
+                         piscina);
+              SilvaParsura* parsura = _parsare(piscina,
+                  "static int probe;\n");
+                        SilvaSemantica* sem;
+        constans SemanticaDiagnosticum* d;
+
+        CREDO_NON_NIHIL (parsura);
+        sem = silva_c89_semantica_analysare(piscina, parsura);
+        CREDO_NON_NIHIL (sem);
+        si (sem != NIHIL)
+        {
+            silva_c89_diagnosticum_addere(sem, NIHIL,
+                (s32)EXAMEN_CODEX_CANALIS_PRAETERITUS);
+            silva_c89_diagnosticum_addere(sem, NIHIL,
+                (s32)EXAMEN_CODEX_IDENTIFICATOR_IGNOTUS);
+            d = _diagnosticum_codicis(sem,
+                (s32)EXAMEN_CODEX_CANALIS_PRAETERITUS);
+            CREDO_VERUM (d != NIHIL
+                && d->severitas == (s32)EXAMEN_VIOLATIO);
+
+            /* non inscripta: c (commentata), a.c.bak (praefixum) */
+            CREDO_VERUM (!silva_c89_semantica_debita_applicare(sem,
+                &via_c, &textus));
+            CREDO_VERUM (!silva_c89_semantica_debita_applicare(sem,
+                &via_ap, &textus));
+            CREDO_VERUM (d != NIHIL
+                && d->severitas == (s32)EXAMEN_VIOLATIO);
+
+            /* inscripta: a ('./' in tabula), b ('./' in via) */
+            CREDO_VERUM (silva_c89_semantica_debita_applicare(sem,
+                &via_b, &textus));
+            CREDO_VERUM (silva_c89_semantica_debita_applicare(sem,
+                &via_a, &textus));
+            CREDO_VERUM (d != NIHIL
+                && d->severitas == (s32)EXAMEN_DOMESTICUM);
+            d = _diagnosticum_codicis(sem,
+                (s32)EXAMEN_CODEX_IDENTIFICATOR_IGNOTUS);
+            CREDO_VERUM (d != NIHIL
+                && d->severitas == (s32)EXAMEN_VIOLATIO);
+        }
+    }
+
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);

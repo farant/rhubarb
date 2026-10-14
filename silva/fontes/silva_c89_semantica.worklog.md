@@ -953,3 +953,39 @@ Without the silva.h edit the excludenda harvest compiles the new .c against
 the old enum ("use of undeclared identifier EXAMEN_CODEX_..." plus the
 _assertum_codicum negative-size assert) and amalgamare refuses at porta 0.
 Commissio's fabrica precheck names both steps but not the hand edit.
+
+## 2026-10-14 - codex 96 CANALIS_PRAETERITUS (spec canalis-lectionum T1)
+
+Why: fabrica keys test members by what they READ, and the read ledger
+(include/lectiones.h) only sees calls that go through filum /
+via_existit / iter_directoria. A test doing raw `fopen` on a fixture
+kept a stale pass after the fixture changed (html oracle, ledger
+...QT3PR64). 96 flags raw file-IO calls outside the channel.
+
+Design points that are not obvious from the code:
+- The name table is DATA, not code: `<gradus titulus="fopen"
+  genus="canalis" pro="..."/>` rows in comments of systema_c89.h /
+  systema_posix.h, collected by the same `_portabilitas_trivium` that
+  feeds 86/87 (new field `GradusPortabilitatis.canalis`). The 86/87
+  loop skips canalis rows (else every fopen would also be "obsoletum").
+- `_canalem_examinare` is its OWN walk over the final token stream:
+  it matches the EXPANDED token's text and reports at its radix in the
+  main source. The 85-87 walk matches the radix (source) token and
+  skips repeated radices, so it would miss `#define LEGERE(v) fopen(v,..)`.
+  Planted: matching the radix instead loses the macro site (red).
+- Calls only: identifier followed by `(`. `struct stat st;` and `stat`
+  as a function pointer stay silent. A separate "not after `struct`"
+  exclusion was written first and removed: `(` already covers it, so a
+  plant on it would have stayed green (dead code).
+- It runs BEFORE `_toleras_irritas_examinare` (next to credo 92-95):
+  `<tolera codex="CANALIS_PRAETERITUS">` is absorbed per site through
+  `_tolera_absorbere_sedem` like 91; after the irritas pass every
+  tolerated 96 would be judged unused.
+- Debt (ratchet, Fran option a): `silva_c89_semantica_debita_applicare`
+  is PURE (text in). Callers that form verdicts read
+  SILVA_VIA_DEBITORUM_CANALIS and apply it: examen.c (commit + edit
+  hook), percursus.c (corpus gate), officina/instrumenta/legatus.c
+  (legati). Listed file -> 96 demoted to DOMESTICUM; listed file with
+  no 96 left -> REICE "linea delenda" (so a migration deletes its line
+  in the same commit). The amalgam's hand header (silva/amalgama/
+  silva.h) carries the enum, the prototype and the path define.

@@ -509,6 +509,42 @@ _loca "mores: tolera sine invento -> TOLERA_IRRITUM" \
     "$(awk -F'\t' '$1!="VERDICTUM" && $1!~/^#/{print $2":"$5}' "$SILVA_DIR/$LOCA/irrita.tsv")"
 rm -rf "$SILVA_DIR/$LOCA"
 
+# canalis lectionum (96, spec canalis-lectionum §I): vocatio directa,
+# per macrum, tolerata, 'stat' ut monstrator (non vocatio), 'struct
+# stat' (typus) - sedes exspectatae 10 11 15 solae; tolera absorbet
+# (nulla TOLERA_IRRITUM). Plagula in build/ non inscripta in debitis.
+echo "--- canalis lectionum (96) ---"
+mkdir -p "$SILVA_DIR/$LOCA"
+cat > "$SILVA_DIR/$LOCA/canalis.c" <<'FIXA'
+#include "postulata_posix.h"
+#include <stdio.h>
+#include <sys/stat.h>
+#define LEGERE(v) fopen((v), "rb")
+int principalis(const char* v);
+int principalis(const char* v)
+{
+    struct stat st;
+    int (*fp)(const char*, struct stat*) = stat;
+    FILE* f = fopen(v, "rb");
+    FILE* g = LEGERE(v);
+    FILE* h = fopen(v, "r"); /* <tolera codex="CANALIS_PRAETERITUS" (>fixtura: tolerata */
+    (void)fp;
+    if (f) { fclose(f); } if (g) { fclose(g); } if (h) { fclose(h); }
+    return stat(v, &st);
+}
+FIXA
+( cd "$RADIX_DIR" && ./silva/examen.sh "silva/$LOCA/canalis.c" -machina ) \
+    > "$SILVA_DIR/$LOCA/canalis.tsv" 2>/dev/null
+C96="$(_codex CANALIS_PRAETERITUS)"
+_loca "canalis: verdictum REICE (non inscripta)" \
+    "REICE" "$(awk -F'\t' '$1=="VERDICTUM"{print $2}' "$SILVA_DIR/$LOCA/canalis.tsv")"
+_loca "canalis: sedes 10 (directa) 11 (macrum) 15 (stat) - tolerata, monstrator, typus tacent" \
+    "10:$C96 11:$C96 15:$C96" \
+    "$(awk -F'\t' -v c="$C96" '$5==c{print $2":"$5}' "$SILVA_DIR/$LOCA/canalis.tsv" | sort -n | tr '\n' ' ' | sed 's/ $//')"
+_loca "canalis: tolera absorpta (nulla TOLERA_IRRITUM)" \
+    "0" "$(awk -F'\t' -v c="$CIRR" '$5==c' "$SILVA_DIR/$LOCA/canalis.tsv" | wc -l | tr -d ' ')"
+rm -rf "$SILVA_DIR/$LOCA"
+
 # ③ -corpus: columna verdicti percursus contra exclusiones pinnatas
 #    + plagulae INFRA (annotatio/compositio/praeparatio fracta):
 #    praefixo FRACTA in tabulam intrant - annotatio fracta oraculo
@@ -530,6 +566,23 @@ if [ "${1:-}" = "-corpus" ]; then
     else
         echo "  exclusiones: $(grep -cv '^#' "$FIXA/exclusiones.txt" \
             | tr -d ' ') pinnatae, omnes notae"
+    fi
+    # debita canalis (96): 'linea delenda' pro plagula inscripta sine
+    # vocatione cruda iam in REICE supra; hic plagula inscripta ABSENS
+    # (deleta/mota - percursus eam numquam visitat, linea taceret)
+    absentes=0
+    while IFS='	' read -r via _causa; do
+        case "$via" in ''|'#'*) continue ;; esac
+        if [ ! -f "$RADIX_DIR/$via" ]; then
+            echo "  DEBITA CANALIS: $via absens - linea delenda"
+            absentes=$((absentes + 1))
+        fi
+    done < "$FIXA/canalis_debita.tsv"
+    if [ "$absentes" -gt 0 ]; then
+        fracta=1
+    else
+        echo "  debita canalis: $(grep -cv '^#' "$FIXA/canalis_debita.tsv" \
+            | tr -d ' ') plagulae inscriptae, omnes praesentes"
     fi
 fi
 

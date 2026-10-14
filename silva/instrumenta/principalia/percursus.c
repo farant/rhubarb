@@ -62,6 +62,14 @@ hic_manens i32 summa_symbolorum = ZEPHYRUM;
 hic_manens i32 summa_diagnosticorum = ZEPHYRUM;
 hic_manens i32 census_codicum[EXAMEN_CODEX_NUMERUS];
 hic_manens i32 verdicta_reice = ZEPHYRUM;
+/* debita canalis (codex 96, ratchet - spec canalis-lectionum §I):
+ * tabula semel lecta; plagulae cum vocatione cruda, inscriptae, et
+ * inscriptae SINE ea (linea delenda = REICE) */
+hic_manens character* debita_canalis = NIHIL;
+hic_manens i32 mensura_debitorum = ZEPHYRUM;
+hic_manens i32 plagulae_canalis = ZEPHYRUM;
+hic_manens i32 plagulae_inscriptae = ZEPHYRUM;
+hic_manens i32 lineae_delendae = ZEPHYRUM;
 hic_manens i32 summa_typationum = ZEPHYRUM;      /* M0b */
 hic_manens i32 summa_expr_visorum = ZEPHYRUM;    /* M0b C: coopertura */
 hic_manens i32 summa_expr_typatorum = ZEPHYRUM;
@@ -826,16 +834,65 @@ _plagulam_percurrere (
             }
             si (sem != NIHIL)
             {
-                i32 diag = xar_numerus(sem->diagnostica);
+                i32 diag;
+                b32 delenda = FALSUM;
 
-                summa_symbolorum += (i32)xar_numerus(sem->symbola);
+                /* debita canalis ANTE censum: 96 inscriptae DOMESTICUM */
+                {
+                    i32 crudae = ZEPHYRUM;
+                    i32 di;
+                    b32 inscripta = FALSUM;
+
+                    si (debita_canalis != NIHIL)
+                    {
+                        chorda via_ch = chorda_ex_literis(via, piscina);
+                        chorda textus_d;
+
+                        textus_d.datum    = (i8*)debita_canalis;
+                        textus_d.mensura  = mensura_debitorum;
+                        inscripta =
+                            silva_c89_semantica_debita_applicare(
+                            sem, &via_ch, &textus_d);
+                    }
+                    per (di = ZEPHYRUM;
+                         di < (i32)xar_numerus(sem->diagnostica); di++)
+                    {
+                        constans SemanticaDiagnosticum* dg =
+                            silva_c89_diagnosticum_per_indicem(sem, di);
+
+                        si (   dg != NIHIL && dg->codex
+                            == (s32)EXAMEN_CODEX_CANALIS_PRAETERITUS)
+                        {
+                            crudae++;
+                        }
+                    }
+                    si (crudae > ZEPHYRUM)
+                    {
+                        plagulae_canalis++;
+                        imprimere("[canalis %d] %s\n", (int)crudae,
+                            via);
+                    }
+                    si (inscripta)
+                    {
+                        plagulae_inscriptae++;
+                        si (crudae == ZEPHYRUM)
+                        {
+                            delenda = VERUM;
+                            lineae_delendae++;
+                            imprimere("[canalis linea delenda] %s\n",
+                                via);
+                        }
+                    }
+                }
+                diag              = xar_numerus(sem->diagnostica);
+                summa_symbolorum  += (i32)xar_numerus(sem->symbola);
                 summa_typationum +=
                     silva_c89_typationes_numerus(sem);
                 si (diag > ZEPHYRUM)
                 {
                     i32 di;
                     b32 reice = parsura->numerus_errorum
-                        > ZEPHYRUM;
+                        > ZEPHYRUM || delenda;
 
                     summa_diagnosticorum += diag;
                     plagulae_cum_diagnosticis++;
@@ -867,6 +924,11 @@ _plagulam_percurrere (
                         verdicta_reice++;
                         imprimere("[verdictum REICE] %s\n", via);
                     }
+                }
+                alioquin si (delenda)
+                {
+                    verdicta_reice++;
+                    imprimere("[verdictum REICE] %s\n", via);
                 }
                 /* coopertura POST clausuram contra sem2 - lacuna
                  * canonicae CLAUSA esse debet (proba acceptionis) */
@@ -1067,6 +1129,12 @@ principale (
         }
     }
 
+    si (cum_semantica)
+    {
+        debita_canalis = _plagulam_totam_legere(piscina_ctx,
+            SILVA_VIA_DEBITORUM_CANALIS, &mensura_debitorum);
+    }
+
     /* Praepassus: omne caput repositorii COLLIGERE (textus semel
      * lectus) - expansio per inclusionem VERAM (nullum lexicon
      * incondicionale) */
@@ -1164,6 +1232,11 @@ principale (
         }
         imprimere("verdicta:  %d REICE (examen; cetera ACCIPE)\n",
             (int)verdicta_reice);
+        imprimere("canalis:   %d plagulae cum vocatione IO cruda; %d"
+            " inscriptae in debitis%s; %d lineae delendae\n",
+            (int)plagulae_canalis, (int)plagulae_inscriptae,
+            debita_canalis == NIHIL ? " (tabula ABSENS)" : "",
+            (int)lineae_delendae);
         imprimere("clausura:  %d versae; %d indecisa (residuum)\n",
             (int)summa_versorum, (int)summa_indecisorum);
         si (summa_expr_visorum > ZEPHYRUM)

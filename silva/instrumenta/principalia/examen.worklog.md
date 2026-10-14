@@ -74,3 +74,16 @@ viae = semantics/annotations/expander/stand-ins/grammar/exclusions;
 currit binaria = examen.c, so its lib closure owes it too) — ordinary
 edits are already examined at commit. Planted red through the
 registered gate (an exclusion removed → VECTIS FRACTUS).
+
+## 2026-10-14 - debita canalis (codex 96)
+
+examen reads silva/probationes/fixa/examinis/canalis_debita.tsv (cwd =
+repo root, like systema_*.h) after the authoritative second analysis and
+before the tally. Absent list = no debts (every 96 is a violation).
+"linea delenda" is printed as a synthetic violation row (machine form:
+`via 0 0 violatio 96 0 <causa>`) so the pre-commit hook needs no change.
+percursus does the same per file and prints `[canalis N] via`,
+`[canalis linea delenda] via` and a `canalis:` summary line; the corpus
+stage of examen_vectis.sh also refuses a listed path that no longer
+exists (percursus never visits it). The list was generated once from
+`[canalis N]` lines (222 files, 478 sites).

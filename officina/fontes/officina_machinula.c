@@ -1812,6 +1812,27 @@ _aed_localtime (
     redde VERUM;
 }
 
+/* CANALIS LECTIONUM (examen 96, spec canalis-lectionum): scripta
+ * sessionis per filum legunt, filum per lib/lectiones.c notat, quae
+ * getenv("FABRICA_LECTIONES") legit - antea 'decipula vocata:
+ * getenv'. LACUNA NOTA: sub FABRICA_LECTIONES lectiones_notare
+ * ulterius currit (open/write + magnitudo(_via_aperta) quam demissio
+ * aestimare nequit - 'magnitudo inaestimabilis'); colloquium nondum
+ * sub fabrica currit (park in tabulario). */
+interior b32
+_aed_getenv (
+       Machinula* m,
+    constans i64* a,
+             s32  n,
+             i64* fr)
+{
+    (vacuum)m;
+    (vacuum)n;
+    *fr = (i64)(memoriae_index)getenv(
+        (constans character*)(memoriae_index)a[ZEPHYRUM]);
+    redde VERUM;
+}
+
 nomen structura {
     constans character* titulus;
          MachinulaPons  pons;
@@ -1878,7 +1899,9 @@ interior constans AedificatumNota AEDIFICATA[] = {
     { "gettimeofday", _aed_gettimeofday },
     { "localtime",    _aed_localtime },
     { "unlink",       _aed_unlink },
-    { "clock",        _aed_clock }
+    { "clock",        _aed_clock },
+    /* canalis lectionum: lib/lectiones.c legit FABRICA_LECTIONES */
+    { "getenv",       _aed_getenv }
 };
 /* structuralis - numerus falsus (44 vs 42 verae) lectiones extra
  * tabulam in ansa ligationis fecit; magnitudo drift vetat */

@@ -97,3 +97,4 @@ CREDO_STATUS_NON_PURGATUS	credo suites: file-scope state written by a section (o
 CREDO_SECTIO_SINE_ASSERTIONE	credo suites: a section whose probare reaches no assertion - it would run VACUA.
 CREDO_SUITA_MUTATA	credo suites: c->suita written or converted to a non-const pointer - sections read suite state, never change it.
 CREDO_TITULUS_IMPRESSUS	credo suites: a hand-printed '--- ... ---' title inside a section - credo prints section titles; name steps with CREDO_GRADUS.
+CANALIS_PRAETERITUS	a raw file-IO call (fopen, freopen, open, opendir, stat, lstat, access) that bypasses the filum channel - fabrica records no read, so a test or tool keyed by its reads can keep a stale pass; files that predate the rule are listed in silva/probationes/fixa/examinis/canalis_debita.tsv (warning only), and a listed file with no raw call left must lose its line.
