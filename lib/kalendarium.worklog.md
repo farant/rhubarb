@@ -566,3 +566,23 @@ test now mounts at 360x320 (53x9 page) - and that exposed the composer
 still using the defaults standalone (fixed: superficies_ordinaria).
 Plants: mount size ignored -> red; area not cell-exact -> red; vicus
 pulse not forwarded -> red.
+
+## 2026-10-14 — A7: inline #tags, double-click edits the title
+
+Fran: "#tag" in the text. The new-item and title prompts now run
+`rubricas_extrahere`: every space-separated word "#x" is lowercased and,
+if a valid rubric, removed from the title and collected (duplicates
+once); anything else (incl. "#a/b", a bare "#") stays in the title. New
+item: title without the tags; rubrics = filter rubric (agenda) + tags.
+Title edit: tags are ADDED to the existing rubrics (`rubricas_miscere`,
+nothing removed - removing stays with `r`); a text of tags only changes
+just the rubrics. Note: a title edit with tags is two acts, so it takes
+two `u` to undo.
+Bug I made on the way: inserting the rubric block between `si
+(visus_agendae)` and its `alioquin` re-attached the else to my block and
+dated new agenda items - caught by the old visus_agendae test.
+Double-click on a list row (day view, agenda) selects (the first press
+already did) and runs calendarium.titulus; on the checkbox it does
+nothing extra (the two presses toggled twice).
+Plants: tags never extracted -> red; double-click without the title
+prompt -> red.

@@ -2218,6 +2218,50 @@ _probare_chartam_notarum (
         "paginae_numerus"), "2"));
 }
 
+/* rubricae in linea (n, c): "#verbum" e titulo in rubricas
+ * (minusculis; c addit, non tollit); invalidum in titulo manet; ictus
+ * duplex in ordine titulum edit */
+interior vacuum
+_probare_rubricas_in_linea (
+    CredoContextus* c)
+{
+                Mundus* x;
+    constans AgendaRes* r;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(agendam_parare(x, c));
+    reditus(x);
+    clavis(x, 'n');
+    typare(x, "panem #domus #Opus");
+    reditus(x);
+    r = agenda_res(x->documentum, V);
+    CREDO_NECESSE_NON_NIHIL(r);
+    CREDO_CHORDA_AEQUALIS_LITERIS(r->titulus, "panem");
+    CREDO_VERUM(rubricae_rei_sunt(x, V, "domus opus"));
+    /* c: titulus novus, rubrica addita (domus opus manent) */
+    CREDO_VERUM(campus_est(x, "res_electa", "5"));
+    clavis(x, 'c');
+    retro(x, V);
+    typare(x, "panis #urbs");
+    reditus(x);
+    r = agenda_res(x->documentum, V);
+    CREDO_CHORDA_AEQUALIS_LITERIS(r->titulus, "panis");
+    CREDO_VERUM(rubricae_rei_sunt(x, V, "domus opus urbs"));
+    /* invalidum ("#a/b") in titulo manet */
+    clavis(x, 'n');
+    typare(x, "res #a/b");
+    reditus(x);
+    r = agenda_res(x->documentum, VI);
+    CREDO_NECESSE_NON_NIHIL(r);
+    CREDO_CHORDA_AEQUALIS_LITERIS(r->titulus, "res #a/b");
+    CREDO_VERUM(rubricae_rei_sunt(x, VI, ""));
+    /* ictus duplex in ordine r1: electio et prompta tituli */
+    CREDO_NECESSE(ictus_in(x, "r1", c->piscina));
+    CREDO_NECESSE(ictus_in(x, "r1", c->piscina));
+    CREDO_VERUM(campus_est(x, "res_electa", "1"));
+    CREDO_VERUM(campus_est(x, "prompta", "titulus"));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "montatio",     _probare_montationem,   mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
@@ -2264,6 +2308,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "notae_focus", _probare_focum_notarum, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { "charta_notarum", _probare_chartam_notarum, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "rubricae_in_linea", _probare_rubricas_in_linea, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

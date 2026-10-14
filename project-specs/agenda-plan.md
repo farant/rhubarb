@@ -228,8 +228,9 @@ State-model question to settle before A2 (A1 is content only).
     - **V3c** DONE 2026-10-13: month, day and agenda titles in the
       8x16 (season / celebration stay 6x8). V3 complete.
 
-  - **M2** batch 2: double-click row -> title prompt; click group
-    heading -> filter; right-click context menu (from the table).
+  - **M2** batch 2: double-click row -> title prompt (DONE 2026-10-14
+    with A7 inline #tags); click group heading -> filter; right-click
+    context menu (from the table).
   - **M3** generalize: commands declared in the manifest, availability
     query on the action registry, then the palette UI (after a 2nd
     widget has a table).

@@ -871,6 +871,158 @@ rubricas_iungere (
 
 /* Enter: textus in actum agendae per genus; VERUM si actum (prompta
  * tunc clauditur), FALSUM = recusatum (prompta manet) */
+/* A7: verbum in lista spatiis divisa? */
+interior b32
+verbum_in_lista (
+     chorda  lista,
+     chorda  verbum,
+    Piscina* p)
+{
+    chorda spatium;
+
+    spatium = chorda_ex_literis(" ", p);
+    redde chorda_continet(chorda_concatenare(spatium,
+        chorda_concatenare(
+        lista, spatium, p), p), chorda_concatenare(spatium,
+        chorda_concatenare(verbum, spatium, p), p));
+}
+
+/* A7: rubricae in linea - "#verbum" e textu: titulus = verba cetera
+ * (spatio singulo iuncta), rubricae = verba post '#' minusculis, si
+ * validae, sine iteratione, spatio iunctae; invalida ("#a/b", "#")
+ * in titulo manent */
+interior vacuum
+rubricas_extrahere (
+     chorda  textus,
+    Piscina* p,
+     chorda* titulus,
+     chorda* rubricae)
+{
+     character* t;
+     character* r;
+           i32  nt;
+           i32  nr;
+           i32  i;
+           i32  j;
+           i32  k;
+        chorda  verbum;
+        chorda  iam;
+
+    t   = (character*)piscina_allocare(p, (memoriae_index)textus.mensura
+        + I);
+    r   = (character*)piscina_allocare(p, (memoriae_index)textus.mensura
+        + I);
+    nt  = ZEPHYRUM;
+    nr  = ZEPHYRUM;
+    i   = ZEPHYRUM;
+    dum (t && r && i < textus.mensura)
+    {
+        dum (i < textus.mensura && textus.datum[i] == ' ')
+        {
+            i++;
+        }
+        j = i;
+        dum (j < textus.mensura && textus.datum[j] != ' ')
+        {
+            j++;
+        }
+        si (j == i)
+        {
+            frange;
+        }
+        verbum.datum = (i8*)(r + nr + (nr
+            > ZEPHYRUM ? I : ZEPHYRUM));
+        verbum.mensura = ZEPHYRUM;
+        si (textus.datum[i] == '#' && j - i > I)
+        {
+            /* candidatum minusculis in r (post spatium) */
+            per (k = i + I; k < j; k++)
+            {
+                character ch;
+
+                ch = (character)textus.datum[k];
+                si (ch >= 'A' && ch <= 'Z')
+                {
+                    ch = (character)(ch - 'A' + 'a');
+                }
+                verbum.datum[verbum.mensura++] = (i8)ch;
+            }
+        }
+        si (verbum.mensura > ZEPHYRUM && rubrica_valida(verbum))
+        {
+            /* iterata non additur */
+            iam.datum    = (i8*)r;
+            iam.mensura  = nr;
+            si (!verbum_in_lista(iam, verbum, p))
+            {
+                si (nr > ZEPHYRUM)
+                {
+                    r[nr] = ' ';
+                }
+                nr += (nr > ZEPHYRUM ? I : ZEPHYRUM) + verbum.mensura;
+            }
+        }
+        alioquin
+        {
+            si (nt > ZEPHYRUM)
+            {
+                t[nt++] = ' ';
+            }
+            memcpy(t + nt, textus.datum + i, (size_t)(j - i));
+            nt += j - i;
+        }
+        i = j;
+    }
+    titulus->datum     = (i8*)t;
+    titulus->mensura   = t ? nt : ZEPHYRUM;
+    rubricae->datum    = (i8*)r;
+    rubricae->mensura  = r ? nr : ZEPHYRUM;
+}
+
+/* rubricae a et b iunctae (spatio), b sine iteratione earum quae
+ * in a (aut prius in b) sunt */
+interior chorda
+rubricas_miscere (
+     chorda  a,
+     chorda  b,
+    Piscina* p)
+{
+    chorda res;
+    chorda verbum;
+       i32 i;
+       i32 j;
+
+    res  = a;
+    i    = ZEPHYRUM;
+    dum (i < b.mensura)
+    {
+        dum (i < b.mensura && b.datum[i] == ' ')
+        {
+            i++;
+        }
+        j = i;
+        dum (j < b.mensura && b.datum[j] != ' ')
+        {
+            j++;
+        }
+        si (j == i)
+        {
+            frange;
+        }
+        verbum.datum    = b.datum + i;
+        verbum.mensura  = j - i;
+        si (!verbum_in_lista(res, verbum, p))
+        {
+            res = res.mensura == ZEPHYRUM
+                ? chorda_transcribere(verbum, p)
+                : chorda_concatenare(res, chorda_concatenare(
+                    chorda_ex_literis(" ", p), verbum, p), p);
+        }
+        i = j;
+    }
+    redde res;
+}
+
 interior b32
 promptam_committere (
     KalendariumMontatio* m,
@@ -892,7 +1044,16 @@ promptam_committere (
     id  = res_electa(m, l);
     si (chorda_aequalis_literis(genus, "nova"))
     {
-        id = agenda_rem_creare(m->documentum, textus);
+        chorda titulus;
+        chorda rubricae;
+
+        /* A7: "#verbum" in rubricas */
+        rubricas_extrahere(textus, p, &titulus, &rubricae);
+        si (titulus.mensura == ZEPHYRUM)
+        {
+            redde FALSUM;
+        }
+        id = agenda_rem_creare(m->documentum, titulus);
         si (id <= ZEPHYRUM)
         {
             redde FALSUM;
@@ -906,14 +1067,17 @@ promptam_committere (
                 "rubrica_filtrum");
             si (filtrum)
             {
-                (vacuum)agenda_rubricas_ponere(m->documentum, id,
-                    *filtrum);
+                rubricae = rubricas_miscere(*filtrum, rubricae, p);
             }
         }
         alioquin si (agenda_diem_ponere(m->documentum, id, &d)
                      <= ZEPHYRUM)
         {
             redde FALSUM;
+        }
+        si (rubricae.mensura > ZEPHYRUM)
+        {
+            (vacuum)agenda_rubricas_ponere(m->documentum, id, rubricae);
         }
         redde electionem_scribere(m, id);
     }
@@ -944,8 +1108,31 @@ promptam_committere (
     }
     si (chorda_aequalis_literis(genus, "titulus"))
     {
-        redde agenda_titulum_ponere(m->documentum, id, textus)
-            > ZEPHYRUM;
+        constans AgendaRes* r;
+                    chorda  titulus;
+                    chorda  rubricae;
+
+        /* A7: "#verbum" rubricis ADDITUR (nulla tollitur) */
+        rubricas_extrahere(textus, p, &titulus, &rubricae);
+        r = agenda_res(m->documentum, id);
+        si (   !r || (titulus.mensura == ZEPHYRUM
+                   && rubricae.mensura == ZEPHYRUM))
+        {
+            redde FALSUM;
+        }
+        si (   titulus.mensura > ZEPHYRUM
+            && agenda_titulum_ponere(m->documentum, id, titulus)
+               <= ZEPHYRUM)
+        {
+            redde FALSUM;
+        }
+        si (rubricae.mensura == ZEPHYRUM)
+        {
+            redde VERUM;
+        }
+        redde agenda_rubricas_ponere(m->documentum, id,
+            rubricas_miscere(
+            rubricas_iungere(r, p), rubricae, p)) > ZEPHYRUM;
     }
     si (chorda_aequalis_literis(genus, "dies"))
     {
@@ -2108,8 +2295,19 @@ agere_intus (
     {
         Dies d;
 
-        redde !visus_diei(m) && !visus_agendae(m) && nodus
-            && fasti_parsare_iso(nodus->id, &d)
+        si (visus_diei(m) || visus_agendae(m))
+        {
+            /* A7: duplex in ordine (non in capsa - ibi bis perficit)
+             * titulum edit */
+            si (   des && des->punctum_locale.x < KALENDARIUM_CAPSA
+                && des->punctum_locale.y < II * KALENDARIUM_LINEA)
+            {
+                redde FALSUM;
+            }
+            redde ictus_ordinis(m, nodus) && mandatum_invocare(m,
+                "calendarium.titulus", privatum->scheda);
+        }
+        redde nodus && fasti_parsare_iso(nodus->id, &d)
             && mandatum_invocare(m, "calendarium.diem_aperire",
             privatum->scheda);
     }
