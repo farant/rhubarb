@@ -36,13 +36,33 @@ nomen structura {
                                        * porta quaestionis */
 } VicusApplicatio;
 
-/* $question: porta quaestionis - responsum textus aut error, nuntius
- * usus ("412 in, 380 out"). NIHIL = nulla (gemellus terminalis,
- * probationes): '$question' errorem nominatum dat. Applicatio fenestrae
- * portam ponit quae clavem legit et quaestio_rogare vocat. */
-nomen b32 (*VicusPortaQuaestionis)(vacuum* ctx, chorda quaestio,
-    s32 characteres, s32 latitudo, Piscina* piscina, chorda* responsum,
-    chorda* nuntius, chorda* error);
+/* $question per rivum (quaestio-rivus-spec II.8): porta incipit,
+ * pulsat, abrumpit - numquam obstat. Pulsus textum PLANATUM totum
+ * hactenus reddit (lineae logicae, quaestio.h: porta planat, non
+ * vicus - ruling R9: vicus_applicatio sine vate et md manet). Porta
+ * nulla (gemellus terminalis, probationes): '$question' errorem
+ * nominatum dat. Applicatio fenestrae portam ponit quae bin/quaestio
+ * per processum currit (clavem SOLUS adiutor legit). */
+nomen structura {
+     b32 finitus;      /* F visa (aut adiutor mortuus) */
+     b32 mutatum;      /* textus mutatus post pulsum priorem */
+  chorda textus;       /* planatum totum hactenus (si mutatum) */
+  chorda error;        /* non vacuum: defectus */
+     s64 input;
+     s64 output;
+} VicusPulsusQuaestionis;
+
+nomen structura {
+    /* opus incipere; NIHIL + *error si nequit. lineae: pro textu
+     * (sine linea "<answer>"); latitudo: columnae textus (sine
+     * marginibus) */
+    vacuum* (*incipere)(vacuum* ctx, chorda quaestio, s32 lineae,
+                        s32 latitudo, Piscina* piscina, chorda* error);
+    VicusPulsusQuaestionis (*pulsare)(vacuum* manubrium,
+                                      Piscina* piscina);
+    vacuum (*abrumpere)(vacuum* manubrium);
+    vacuum* ctx;
+} VicusPortaQuaestionis;
 
 /* Argumenta communia: -fumus (volumen temporarium), -volumen <via>
  * (ordinarie "vicus.volumen"). Reddit volumen apertum aut NIHIL. */
@@ -73,10 +93,21 @@ vicus_applicatio_imaginis_portam_ponere (
         ImagoFructus (*porta)(vacuum* ctx, Piscina* piscina),
               vacuum* ctx);
 
+/* porta NIHIL = nulla; copia servatur */
 vacuum
 vicus_applicatio_quaestionis_portam_ponere (
-          VicusApplicatio* app,
-    VicusPortaQuaestionis  porta,
-                   vacuum* ctx);
+                   VicusApplicatio* app,
+    constans VicusPortaQuaestionis* porta);
+
+/* textus planatus -> lineae paginae latitudinis w intra l lineas
+ * ("<answer>" ... "</>", margines, praecisio ad finem sententiae), '\n'
+ * ducente: quod $question in folium inserit, per pulsum et in
+ * fine */
+chorda
+vicus_quaestio_disponere (
+      chorda  planatum,
+         s32  w,
+         s32  l,
+     Piscina* piscina);
 
 #endif /* VICUS_APPLICATIO_H */

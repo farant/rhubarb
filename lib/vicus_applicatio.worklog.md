@@ -30,3 +30,29 @@ Truncation candidates now include logical-line ends as well as
 sentence ends. probatio_vicus_quaestio "forma" checks heading, blank,
 paragraph within margins, hanging indent, code indentation; planted
 (code reflowed) -> red.
+
+## 2026-10-14 — $question streams (quaestio-rivus T8)
+
+The verb no longer blocks: stage II starts the port and returns an
+`IussumOpus` (T7) whose pulse lays out the PLANNED text so far with the
+existing `responsum_disponere` / `responsum_aptare`
+(`vicus_quaestio_disponere`, public so the test can compare the
+streamed page with the layout of the final text - section `aequale`).
+- Plan ruling R9: the PORT plans (`quaestio_textum_planare` in
+  `lib/vicus_quaestio_porta.c`), not this file - otherwise
+  vicus_applicatio would include quaestio -> vates -> http/TLS and the
+  terminal twin + ludus_tessera hand list would drag the API stack in.
+  Same planning function as the non-streamed path, so equality holds.
+- R8: prompt lines = free lines - 1 (the `<answer>` line), width = page
+  width - 2*QUAESTIO_MARGO (or the page width under 20).
+- Page full: when the laid-out text needs more than the free lines the
+  port is aborted and the existing sentence-end truncation finishes it
+  (`question: page full`). Esc: `[cancelled]` paragraph; error after
+  text: `[error: <reason>]` paragraph, both committed as answered;
+  error before any text: IRRITUM (page and head untouched).
+- `OpusQuaestionis` lives in its own dynamic piscina, destroyed at the
+  end; returned texts are built in the pulse piscina first.
+- Fran's live check (2026-10-14, ../rhubarb-quarta ./apps/vicus/vicus.sh):
+  "it works and the text appears in steady pieces" - spec AUDIENDA 1
+  (SecureTransport hands partial TLS records to the reader promptly)
+  answered yes.

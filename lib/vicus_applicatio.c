@@ -110,8 +110,8 @@ dies_iussum (
 #define QUAESTIO_FINIS          "</>"
 
 nomen structura {
-    VicusPortaQuaestionis  porta;
-                   vacuum* ctx;
+    VicusPortaQuaestionis porta;
+                      b32 posita;   /* porta data (fenestra) */
 } ContextusQuaestionis;
 
 #define QUAESTIO_MARGO II   /* columnae vacuae utrimque (Franus) */
@@ -432,6 +432,172 @@ responsum_aptare (
     redde c;
 }
 
+chorda
+vicus_quaestio_disponere (
+      chorda  planatum,
+         s32  w,
+         s32  l,
+     Piscina* piscina)
+{
+    redde chorda_concatenare(chorda_ex_literis("\n", piscina),
+        responsum_aptare(planatum, w, l, piscina), piscina);
+}
+
+/* opus $question (quaestio-rivus T8): porta pulsatur, textus planatus
+ * disponitur; pagina plena -> porta abrumpitur; piscina propria in fine
+ * destruitur (textus redditi in piscina pulsus) */
+nomen structura {
+               IussumOpus  opus;        /* primum */
+    VicusPortaQuaestionis  porta;
+                   vacuum* manubrium;
+                  Piscina* piscina;     /* propria */
+                   chorda  textus;      /* planatum ultimum */
+                      s32  w;
+                      s32  l;
+} OpusQuaestionis;
+
+interior chorda
+quaestionis_nuntius (
+     constans character* praefixum,
+                 chorda  textus,
+                Piscina* piscina)
+{
+    redde chorda_concatenare(chorda_ex_literis(praefixum, piscina),
+        textus, piscina);
+}
+
+/* textus + paragraphus ultimus (marca) */
+interior chorda
+cum_marca (
+                chorda  textus,
+    constans character* marca,
+               Piscina* piscina)
+{
+    chorda c = chorda_concatenare(chorda_ex_literis("", piscina),
+        textus,
+        piscina);
+
+    si (c.mensura > ZEPHYRUM)
+    {
+        c = chorda_concatenare(c, chorda_ex_literis("\n\n", piscina),
+            piscina);
+    }
+    redde chorda_concatenare(c, chorda_ex_literis(marca, piscina),
+        piscina);
+}
+
+interior vacuum
+opus_quaestionis_finire (
+    OpusQuaestionis* opera)
+{
+    Piscina* p = opera->piscina;
+
+    opera->piscina = NIHIL;
+    si (p)
+    {
+        piscina_destruere(p);
+    }
+}
+
+interior IussumOpusStatus
+opus_quaestionis_pulsare (
+    IussumOpus* opus,
+       Piscina* piscina,
+        chorda* textus,
+        chorda* nuntius,
+           b32* mutatum)
+{
+           OpusQuaestionis* opera = (OpusQuaestionis*)opus->datum;
+    VicusPulsusQuaestionis  p;
+                       s32  n;
+                    chorda  planatum;
+                 character  usus[XCVI];
+
+    p = opera->porta.pulsare(opera->manubrium, opera->piscina);
+    si (p.mutatum)
+    {
+        opera->textus = chorda_concatenare(chorda_ex_literis("",
+            opera->piscina), p.textus, opera->piscina);
+    }
+    planatum = chorda_concatenare(chorda_ex_literis("", piscina),
+        opera->textus, piscina);
+    si (p.error.mensura > ZEPHYRUM)
+    {
+        *nuntius = quaestionis_nuntius("question: ", p.error, piscina);
+        si (planatum.mensura == ZEPHYRUM)
+        {
+            opus_quaestionis_finire(opera);
+            redde IUSSUM_OPUS_IRRITUM;
+        }
+        *textus = vicus_quaestio_disponere(cum_marca(planatum,
+            chorda_ut_cstr(quaestionis_nuntius("[error: ",
+            chorda_concatenare(
+            p.error, chorda_ex_literis("]", piscina), piscina),
+            piscina),
+            piscina), piscina), opera->w, opera->l, piscina);
+        opus_quaestionis_finire(opera);
+        redde IUSSUM_OPUS_FINITUM;
+    }
+    si (p.mutatum)
+    {
+        /* pagina plena: rivus sistitur, praecisio ad finem
+         * sententiae */
+        si (responsum_disponere(planatum.datum, (s32)planatum.mensura,
+                opera->w, FALSUM, NIHIL, &n) > opera->l)
+        {
+            opera->porta.abrumpere(opera->manubrium);
+            *textus = vicus_quaestio_disponere(planatum, opera->w,
+                opera->l,
+                piscina);
+            *nuntius = chorda_ex_literis("question: page full",
+                piscina);
+            opus_quaestionis_finire(opera);
+            redde IUSSUM_OPUS_FINITUM;
+        }
+        *textus = vicus_quaestio_disponere(planatum, opera->w, opera->l,
+            piscina);
+        *mutatum = VERUM;
+    }
+    si (p.finitus)
+    {
+        si (planatum.mensura == ZEPHYRUM)
+        {
+            *nuntius = chorda_ex_literis("question: empty answer",
+                piscina);
+            opus_quaestionis_finire(opera);
+            redde IUSSUM_OPUS_IRRITUM;
+        }
+        sprintf(usus, "question: %ld in, %ld out", (longus)p.input,
+            (longus)p.output);
+        *textus = vicus_quaestio_disponere(planatum, opera->w, opera->l,
+            piscina);
+        *nuntius = chorda_ex_literis(usus, piscina);
+        opus_quaestionis_finire(opera);
+        redde IUSSUM_OPUS_FINITUM;
+    }
+    redde IUSSUM_OPUS_CURRIT;
+}
+
+interior vacuum
+opus_quaestionis_abrumpere (
+    IussumOpus* opus,
+       Piscina* piscina,
+        chorda* textus,
+        chorda* nuntius)
+{
+    OpusQuaestionis* opera = (OpusQuaestionis*)opus->datum;
+             chorda  planatum;
+
+    opera->porta.abrumpere(opera->manubrium);
+    planatum = chorda_concatenare(chorda_ex_literis("", piscina),
+        opera->textus, piscina);
+    *textus = vicus_quaestio_disponere(cum_marca(planatum,
+        "[cancelled]",
+        piscina), opera->w, opera->l, piscina);
+    *nuntius = chorda_ex_literis("question: cancelled", piscina);
+    opus_quaestionis_finire(opera);
+}
+
 interior b32
 quaestionem_iussum (
     constans Iussum* iussum,
@@ -442,9 +608,10 @@ quaestionem_iussum (
     ContextusQuaestionis* cq  = (ContextusQuaestionis*)ctx;
                      s32  w   = iussum->latitudo_tabulae;
                      s32  l   = iussum->lineae_liberae;
-                     s32  characteres;
-                  chorda  responsum;
-                  chorda  nuntius;
+                     s32  lineae;
+                     s32  latitudo;
+                 Piscina* propria;
+         OpusQuaestionis* opera;
                   chorda  error;
 
     si (!iussum->corpus || iussum->numerus_argumentorum != I)
@@ -459,14 +626,12 @@ quaestionem_iussum (
             "question: no free lines below", piscina);
         redde VERUM;
     }
-    si (!cq || !cq->porta)
+    si (!cq || !cq->posita)
     {
         effectus->error = chorda_ex_literis(
             "question: no API port (window app only)", piscina);
         redde VERUM;
     }
-    characteres = (l * w - (s32)(strlen(QUAESTIO_INITIUM)
-        + strlen(QUAESTIO_FINIS))) * LXXXV / C;
     si (!iussum->iterum)
     {
         effectus->differre = VERUM;
@@ -474,26 +639,49 @@ quaestionem_iussum (
             "question: asking " QUAESTIO_EXEMPLAR_NOMEN "...", piscina);
         redde VERUM;
     }
-    responsum.datum    = NIHIL;
-    responsum.mensura  = ZEPHYRUM;
-    nuntius            = responsum;
-    error              = responsum;
-    si (!cq->porta(cq->ctx, iussum->argumenta[ZEPHYRUM], characteres, w,
-            piscina, &responsum, &nuntius, &error))
+    /* R8: linea "<answer>" non textus; margines non textus */
+    lineae    = l - I >= I ? l - I : I;
+    latitudo  = w - II * QUAESTIO_MARGO >= XX ? w - II * QUAESTIO_MARGO
+                                            : w;
+    propria   = piscina_generare_dynamicum("quaestio_opus", LXIV * M);
+    opera        = propria ? (OpusQuaestionis*)piscina_allocare(propria,
+        magnitudo(OpusQuaestionis)) : NIHIL;
+    si (!opera)
     {
-        effectus->error =
-            chorda_concatenare(chorda_ex_literis("question: ",
-            piscina), error, piscina);
+        si (propria)
+        {
+            piscina_destruere(propria);
+        }
+        effectus->error = chorda_ex_literis("question: out of memory",
+            piscina);
         redde VERUM;
     }
-    effectus->caput   = chorda_ex_literis("<question answered>",
+    memset(opera, ZEPHYRUM, magnitudo(OpusQuaestionis));
+    error.datum    = NIHIL;
+    error.mensura  = ZEPHYRUM;
+    opera->manubrium  = cq->porta.incipere(cq->porta.ctx,
+        iussum->argumenta[ZEPHYRUM], lineae, latitudo, propria, &error);
+    si (!opera->manubrium)
+    {
+        effectus->error = quaestionis_nuntius("question: ",
+            chorda_concatenare(chorda_ex_literis("", piscina), error,
+            piscina), piscina);
+        piscina_destruere(propria);
+        redde VERUM;
+    }
+    opera->porta           = cq->porta;
+    opera->piscina         = propria;
+    opera->textus          = chorda_ex_literis("", propria);
+    opera->w               = w;
+    opera->l               = l;
+    opera->opus.datum      = opera;
+    opera->opus.pulsare    = opus_quaestionis_pulsare;
+    opera->opus.abrumpere  = opus_quaestionis_abrumpere;
+    effectus->opus         = &opera->opus;
+    effectus->caput     = chorda_ex_literis("<question answered>",
         piscina);
-    effectus->textus  = chorda_concatenare(chorda_ex_literis("\n",
-        piscina),
-        responsum_aptare(responsum, w, l, piscina), piscina);
-    effectus->nuntius =
-        chorda_concatenare(chorda_ex_literis("question: ",
-        piscina), nuntius, piscina);
+    effectus->nuntius   = chorda_ex_literis(
+        "question: streaming... (Esc cancels)", piscina);
     redde VERUM;
 }
 
@@ -1163,9 +1351,8 @@ vicus_volumen_aperire (
 
 vacuum
 vicus_applicatio_quaestionis_portam_ponere (
-          VicusApplicatio* app,
-    VicusPortaQuaestionis  porta,
-                   vacuum* ctx)
+                   VicusApplicatio* app,
+    constans VicusPortaQuaestionis* porta)
 {
     ContextusQuaestionis* cq;
 
@@ -1173,9 +1360,15 @@ vicus_applicatio_quaestionis_portam_ponere (
     {
         redde;
     }
-    cq         = (ContextusQuaestionis*)app->quaestionis;
-    cq->porta  = porta;
-    cq->ctx    = ctx;
+    cq = (ContextusQuaestionis*)app->quaestionis;
+    si (   !porta || !porta->incipere || !porta->pulsare
+        || !porta->abrumpere)
+    {
+        memset(cq, ZEPHYRUM, magnitudo(ContextusQuaestionis));
+        redde;
+    }
+    cq->porta   = *porta;
+    cq->posita  = VERUM;
 }
 
 vacuum
@@ -1245,8 +1438,7 @@ vicus_applicatio_aedificare (
         magnitudo(ContextusQuaestionis));
     si (cq)
     {
-        cq->porta  = NIHIL;
-        cq->ctx    = NIHIL;
+        memset(cq, ZEPHYRUM, magnitudo(ContextusQuaestionis));
     }
     app->quaestionis = cq;
     cs = (ContextusScribae*)piscina_allocare(piscina,
