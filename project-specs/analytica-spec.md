@@ -138,3 +138,73 @@ cleanup measured (the instrument must not slow what it measures).
 - Whether every journal writer today is folded (`mensor condere`) - the
   census could not confirm it per runner.
 - rusage availability in bash (`times` vs a C wrapper) - to settle in T2.
+
+## VIII. As built (2026-10-13/14; T1 8adeeb42, lexicon 622f8951, T2
+ee0ca588, T3 ce33b60a, T3b 47b33d94, T4 de11107a 043c9b0b 5fc88cd6
+f822bdc6 34311f3c, T5 21e9a7df, T6 1046becc 212889e9 d00cbb67)
+
+**Three stores, one key** (§III-half): spans = `cursus` in the mensura
+volume (journal first, two lines per run so a killed run reads
+`interruptus`); logs = `diurna` (new library: SHA-256 bodies, append-only
+index keyed (clavis, seq), retention per key / storage per body, one
+lock for every writer); metrics = derived from spans at query time.
+Context (commit, dirty, branch, tree, machine, invoker) is computed once
+per top-level session in `lib/mensura_contextus` and inherited by
+environment; a producer judging a DIFFERENT root (fabrica on a fumus
+fixture, a frigida tree) computes that root's own context, and a root
+that is not a repository writes only to an explicit diary/store.
+
+**Producers.** The chassis (`tools/cursus.sh`, a six-line prologue that
+execs `bin/mensor cursus currere`: streaming passthrough, rusage,
+monotonic duration, 128+signum, body through one seam) - a C wrapper,
+not the bash `trap EXIT` of §III (a trap cannot read rusage and dies with
+SIGKILL). silva.py `_cursus` on porta / commissio / five phases; fabrica
+from its existing `cursum_inscribere` hook (child env untouched - it is
+in the member key) plus one child run per credo section (T3b) and a
+named crashed section (credo `SECTIONES` + flushed `INCIPIT`, reader
+synthesizes RUIT; no signal handlers - credo doctrine). Bodies: chassis
+output, gate output, WHOLE exception messages, every fabrica action's
+log. Pilot adopters (T6b): toml/css/md/silva entry points, frigida,
+vexilla fumus, pre-commit hook; the pythonica suite's 57 groups as
+`pythonica#<grex>`.
+
+**Queries** (`bin/mensor quaestio`, logic in `lib/mensura_quaestio`,
+`silva.cursus` thin): the six acceptance questions + `commissiones`
+(culprit = deepest failing descendant), `statistica`/`sectiones`,
+`lentescentes` (last-k vs earlier median, ratio AND k-1 consistency),
+`discus`. Answered on real data during the slice: a 22-min commit's tree;
+>10 min/day of judge-only regenerations (corpus_silicis 4 min);
+the credo change's 415 s radix spike; frigida's own branch and commit;
+332 of 351 scripts never run; pythonica's 400 s, half in three groups.
+
+**Lint and maintenance.** `mensor cursus censura`: adopters carry
+`versio` = CURSUS_VERSIO, no dead annotations, unique titles; the
+mensor-cursus gate checks the live tree. `mensor curare` (fold + daily
+purge by `tools/analytica_retentio.stml`), spawned detached by top-level
+runs only when due.
+
+**Departures from this spec.** C wrapper instead of a trap (above);
+bodies in `diurna`, not volume massae (massae are permanent - Fran:
+logs are not metrics); `tendentia` keys runs inside a commit attempt by
+the commit it PRODUCED (found on real data - otherwise the next change's
+cost was filed under the previous commit); `mensor:curare` replaces
+"purgare after a fold" as the maintenance unit.
+
+**Measured cost.** +~80 ms per top-level run (git context, wrap, body);
+nested runs ~0; fabrica's per-action records inside the noise of a busy
+machine. Not measured: the 20 ms polling throttle on a truly chatty
+script (…KHK441), two-process races on the diurna lock, Python producer
+spawns per commit (estimated < 1 s).
+
+**Found on the way (ledger).** Concurrent `~/.bin` installs falsely
+attributed to a running test (…4F2Q1, recurrence); the flaky pythonica
+`commissio_umbra` check (…GKC0, second sighting); portae-declaratae
+deriving `currit` from path strings in C sources (…NFVZY); pythonica as
+the costliest gate with its three heavy groups (…PRYJ22); processus
+wait-any for fabrica's 20 ms loops (…KHK441); Metrum due at the first
+sampled series (note on …AMZVFN).
+
+**Not done.** `commissio_umbra` not wrapped; no redaction yet (the seam
+is `diurna_ponere`); no `diurna_appendere` streams for residents; the
+lint covers adopters only - "every script carries the chassis" (vision
+phase III) is the next slice's question, with `numquam` as its census.

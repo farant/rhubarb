@@ -155,4 +155,5 @@ commit via silva.commissio. Work in `../rhubarb-quinta`.
   Measured: fold and capture overhead. Commit.
 
 ### T7: close
-- [ ] spec "As built", worklogs, MEMORY; merge per ritual.
+- [x] spec "As built" (§VIII), worklogs (per task), MEMORY; merge per
+  ritual (Fran 10-14: merge allowed overnight, nothing else running).
