@@ -2782,6 +2782,26 @@ try:
     eff, err, n = _iudex_casus({})
     credo(err is not None and 'sana fabrica prius' in err and n == 0,
           'iudex stalus: iudex sine struere noto -> obstat ut antea', causa=repr((err, n)))
+    # CATENA IUDICUM (circulus commissionis II T1; T1 canalis lectionum
+    # conatus 1): fabrica sanata aedilem stalum nominat - uterque sanatur
+    # in vocatione UNA (olim post primum: 'sana aedilis prius')
+    _status_b = os.path.join(T, 'iudex_sanus_b')
+    with open(_fs, 'w') as f:
+        f.write('#!/bin/bash\nif [ -f %s ]; then printf "SUMMA\\t1\\t0\\t0\\t0\\t0\\tplenus\\n"; exit 0; fi\n'
+                'if [ -f %s ]; then printf "IUDICIUM\\tNON IUDICATUM\\tg/x.c\\tiudex aedilis non recens - sana aedilis prius\\n"; exit 1; fi\n'
+                'printf "IUDICIUM\\tNON IUDICATUM\\tg/x.c\\tiudex fabrica non recens - sana fabrica prius\\n"; exit 1\n'
+                % (_status_b, _status))
+    _sb = os.path.join(T, 'struere_aedilis.sh')
+    with open(_sb, 'w') as f:
+        f.write('#!/bin/bash\necho x >> %s\ntouch %s\necho struere aedilis\n' % (_vocatae, _status_b))
+    os.chmod(_sb, 0o755)
+    if os.path.exists(_status_b):
+        os.remove(_status_b)
+    eff, err, n = _iudex_casus({'fabrica': _struere_fictum(0, True), 'aedilis': [_sb]})
+    credo(err is None and 'iudex sanatus: fabrica' in eff and 'iudex sanatus: aedilis' in eff and n == 2,
+          'iudices catena: fabrica deinde aedilis sanantur in vocatione una', causa=repr((eff[-300:], err, n)))
+    if os.path.exists(_status_b):
+        os.remove(_status_b)
     silva.IUDICES_STRUERE = {}
     # exitus 2: iudicare nequit (sera) - obstat
     silva.FABRICA_BIN = _fabrica_ficta(2, 'fabrica: iudex plenus alius currit\n')

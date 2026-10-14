@@ -1156,3 +1156,17 @@ that hangs proves nothing, replaced with "keep only the first child"
 (finite).
 Plant 2 (finite): red on the communia unit test and the VINCULUM
 assertion. End to end: `porta_umbra('css')` in a snapshot -> 10/10, 18 s.
+
+## 2026-10-14 - judges healed to a fixed point (circulus commissionis II T1)
+
+`_fabricam_exigere` healed a stale judge only ONCE (`_iudex_sanatus`
+flag, P3 of the first slice). Seen in the canalis-lectionum T1 commit,
+attempt 1: rebuilding bin/fabrica made the NEW fabrica report
+"iudex aedilis non recens", and the flag forbade a second heal - refused
+after 140 s. Now `_sanati` tracks which judges this call healed: newly
+stale judges are healed and the judgment repeats; a judge that was
+healed and is STILL stale refuses (the struere did not take - this also
+bounds the loop by the size of IUDICES_STRUERE). Test "iudices catena"
+(fake fabrica: fabrica stale -> after its heal, aedilis stale -> after
+its heal, sane): both healed, two struere calls. Plant: the old
+one-shot condition (`not _sanati`) -> that test red, rest green.

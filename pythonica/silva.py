@@ -2780,15 +2780,19 @@ IUDICES_STRUERE = {
 }
 
 
-def _fabricam_exigere(viae, sine_fabrica=None, _iudex_sanatus=False):
+def _fabricam_exigere(viae, sine_fabrica=None, _sanati=()):
     """bin/fabrica iudicare -plenus -tacta VIAE ante portas. exitus 0 =
     pergit; 1 = artificium generatum tactum STALUM/IGNOTUM - SilvaError
     cum lineis et sanatione; 2 = iudicare nequit (sera tenetur,
     declarationes fractae) - SilvaError. bin/fabrica deest = MONITUM
     (clonus recens), non obstat. sine_fabrica='<causa>' omittit (causa
-    impressa); vacua = SilvaError. Iudex SOLUS stalus et sanabilis
-    (IUDICES_STRUERE) sanatur ('iudex sanatus: X') et iudicium SEMEL
-    iteratur; struere fractum aut iudex adhuc stalus = SilvaError."""
+    impressa); vacua = SilvaError. Iudices stali et sanabiles
+    (IUDICES_STRUERE) sanantur ('iudex sanatus: X') et iudicium iteratur
+    USQUE AD PUNCTUM FIXUM (circulus commissionis II T1): fabrica sanata
+    aedilem stalum nominare potest (T1 canalis lectionum, conatus 1) -
+    olim SEMEL tantum, deinde recusatio. _sanati = iudices iam sanati in
+    hac vocatione: iudex sanatus qui ADHUC stalus est = SilvaError (struere
+    non sanat - limes circuli); struere fractum = SilvaError."""
     if sine_fabrica is not None:
         if not str(sine_fabrica).strip():
             raise SilvaError('sine_fabrica causam poscit: cur iudicium'
@@ -2823,8 +2827,9 @@ def _fabricam_exigere(viae, sine_fabrica=None, _iudex_sanatus=False):
     iudices = sorted(set(
         m.group(1) for m in (re.match(r'iudex (\S+) non recens', o[3])
                              for o in recusata) if m))
-    if (recusata and not _iudex_sanatus and iudices
-            and all(i in IUDICES_STRUERE for i in iudices)):
+    if (recusata and iudices
+            and all(i in IUDICES_STRUERE for i in iudices)
+            and not any(i in _sanati for i in iudices)):
         for i in iudices:
             r2 = _curre(list(IUDICES_STRUERE[i]))
             if r2.returncode != 0:
@@ -2834,7 +2839,8 @@ def _fabricam_exigere(viae, sine_fabrica=None, _iudex_sanatus=False):
                     % (i, ' '.join(IUDICES_STRUERE[i]), r2.returncode,
                        (r2.stdout + r2.stderr).strip()[-2000:]))
             print('iudex sanatus: %s (%s)' % (i, ' '.join(IUDICES_STRUERE[i])))
-        return _fabricam_exigere(viae, sine_fabrica, _iudex_sanatus=True)
+        return _fabricam_exigere(viae, sine_fabrica,
+                                 _sanati=tuple(_sanati) + tuple(iudices))
     if recusata:
         raise SilvaError(
             'FABRICA (ante portas): stadium iudicum - artificia tacta NON'
