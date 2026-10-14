@@ -29,8 +29,11 @@
 
 /* memoria verificationum (tools/fabrica_memoria.c) */
 nomen structura {
-    Scrinium* scrinium;
-     Piscina* piscina;
+                  Scrinium* scrinium;
+                   Piscina* piscina;
+    constans FabricaSutura* sutura;   /* a suturae_memoriam_nectere
+                                       * positum: lectio plagulae
+                                       * sectionum (analytica T3b) */
 } Memoria;
 
 /* mandata (fabrica.c) */

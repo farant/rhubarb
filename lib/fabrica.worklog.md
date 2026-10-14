@@ -3010,3 +3010,25 @@ parent gate), exit 1 only for FRACTUM, nota = eventus + causa + stalum.
 The CHILD environment is deliberately untouched: a step member's env is
 in its key, a run id there would make every member stale on every run.
 fabrica fumus LII (whole fumus now isolated to a temp diary).
+
+## 2026-10-13 - sections as child runs (analytica T3b)
+
+Fran asked whether per-test / per-section timing could live in credo.
+credo v2 already times every section (SECTIO ... ms in CREDO_VERDICTA =
+<area>/credo.tsv), but the file is overwritten per run. The bridge is in
+fabrica, not credo: credo pulls nothing but chorda + piscina, and the
+member's env is hermetic (a parent id there would be in its key), so a
+test cannot know its run. After a member that RAN (SANATUM/FRACTUM)
+gets its record, `_sectiones_annalibus_inscribere` reads the same file
+through `fabrica_sectiones_legere` (Memoria now carries a back-pointer
+to its sutura, set in suturae_memoriam_nectere) and writes one child
+per section: `<membrum>#<sectio>`, start = member start + earlier
+sections' ms, duration = credo ms, exit 0 for TRANSIIT / NOTA_FRACTA /
+OMISSA, nota = exitus p/t + first fracture. Synthetic files (classic
+suites, 'totum') add nothing. fumus LIII: a fake member writes the
+credo contract itself (no credo in the temp root).
+
+First real reading: probatio_mensura_cursus 221 ms as a member, its six
+sections ~13 ms together - ~94% of the test is process start + dyld of
+a binary that links everything. Only 32 of 555 suites are sectioned.
+Plants III red (synthetic not skipped, wrong parent, TRANSIIT counted as failure).

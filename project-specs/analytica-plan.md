@@ -54,19 +54,45 @@ commit via silva.commissio. Work in `../rhubarb-quinta`.
   env-restore baseline). Not wrapped: commissio_umbra. Cost inside
   noise.
 
+### T3b: sections as child runs (Fran 2026-10-13, inserted)
+- [x] "are we tracking time for individual tests or test groups within
+  a suite? that seems like something that could be built into credo?"
+  credo v2 already times sections (credo.tsv, overwritten per run); the
+  bridge is fabrica, after a member that ran: one child run per SECTIO
+  line (`<membrum>#<sectio>`, ms, exit, nota). credo stays pure, member
+  env stays hermetic. fumus LIII; plants III red. Found on real data:
+  probatio_mensura_cursus 221 ms, its sections ~13 ms (start-up + dyld
+  ~94%). Only 32/555 suites are sectioned.
+
 ### T4: logs and retention
+- [ ] FIRST: isolate every fumus that drives bin/fabrica on throwaway
+  roots (iudicium-fumus wrote fake 'gen'/'porta_x' runs - two FRACTUM -
+  into the real diary under quinta's tree and commit, 2026-10-13) + a
+  check that refuses a fumus writing the real diary.
 - [ ] Bodies in the volume (massae dedup), size cap, retention policy as
   STML data, `bin/mensor purgare [-siccum]`. Tests: dedup, age tiers,
   failures kept longer, last body per job kept, pinned kept. Commit.
+- [ ] Bodies for Python-produced runs too (commissio, phases, gates:
+  the full refusal / hook output through the one seam) - Fran 10-13:
+  "what test or lint or whatever caused them to fail" needs more than a
+  first line ('git commit rc=1: <tail>' can start mid-word).
 
 ### T5: named queries + `silva.cursus`
 - [ ] ultimum, historia, tendentia, numquam, fracta, acta, filii,
   discus; -machina; thin pythonica wrapper. Tests: the six acceptance
   questions, each on fixture data. Commit.
+- [ ] `commissiones` (Fran 10-13: "analytics about how long git commit
+  attempts take, if they failed/succeeded, what test or lint caused
+  them to fail"): one row per attempt - when, tree/branch, duration,
+  outcome, CULPRIT = deepest failing descendant (derived from the tree,
+  never guessed by the producer) + its nota, resulting hash; attempts
+  per landed commit; which gate refuses most. Fixtures: lint refusal,
+  red gate, examen refusal at git commit, success.
 
 ### T6: pilot adoption + version lint
-- [ ] Chassis on the four converted entry points, frigida, one hook, one
-  gate script; lint stage: an adopter must carry the current version.
+- [ ] Chassis on the four converted entry points, frigida, one hook (=
+  tools/unci-git/pre-commit: hand-made `git commit`s are attempts too,
+  Fran 10-13), one gate script; lint stage: an adopter must carry the current version.
   Measured: fold and capture overhead. Commit.
 
 ### T7: close

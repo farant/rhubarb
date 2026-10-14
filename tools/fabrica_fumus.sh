@@ -99,6 +99,9 @@
 #   LII  actiones in annalibus (analytica T3): cursus per membrum actum
 #        in diario mensurae, parens et contextus ex ambitu hereditati,
 #        exitus ex eventu (FRACTUM = 1), nota = eventus
+#   LIII sectiones in annalibus (analytica T3b): ex plagula credo membri
+#        cursus filius per sectionem (<membrum>#<sectio>), synthetica
+#        nihil
 #
 # Exitus: 0 sanum · 1 fractum · 2 bin/fabrica deest.
 # <porta titulus="fabrica-fumus" instrumentum="bin/fabrica" tegit="*/aedificatio.stml aedificatio.canon fabrica.canon tools/fabrica_struere.sh"/>
@@ -821,6 +824,40 @@ awk -F'\t' -v p=fumus-lii '$1 == "cursus" && $2 == "initium" && $4 == p { t[$3] 
 printf 'probationes_t/probatio_a\t0\tSANATUM\tcommissum-lii\nprobationes_t/probatio_d\t1\tFRACTUM\tcommissum-lii\n' > "$T/lii.exp"
 if cmp -s "$T/lii" "$T/lii.exp"; then echo "  LII  actiones in annalibus: cursus per membrum, parens et contextus hereditati, exitus et nota ex eventu OK"; else echo "  LII  FRACTUM"; sed 's/^/      lectum: /' "$T/lii"; fracta=1; fi
 
+# LIII (analytica T3b): SECTIONES IN ANNALIBUS - membrum s plagulam
+# CREDO_VERDICTA ipsum scribit (contractus credo sine credo: alpha
+# TRANSIIT 40 ms, beta FRACTA 60 ms); cursus filius per sectionem sub
+# cursu membri: titulus <membrum>#<sectio>, exitus ex exitu sectionis,
+# duratio = ms sectionis, nota = exitus + fractura. Plagula synthetica
+# ('totum' a fabrica scriptum, membrum a) filium NULLUM dat
+radix_c
+cat > "$T/r/t/probatio_s.c" <<'CEOF'
+#include <stdio.h>
+#include <stdlib.h>
+int main(void)
+{
+    const char* v = getenv("CREDO_VERDICTA");
+    FILE* f;
+    if (v == 0) { return 3; }
+    f = fopen(v, "w");
+    if (f == 0) { return 4; }
+    fprintf(f, "SECTIO\tprobatio_s\talpha\tTRANSIIT\t3\t3\t40\t\t\t\t\n");
+    fprintf(f, "SECTIO\tprobatio_s\tbeta\tFRACTA\t1\t2\t60\tt.c:9\tcredo_verum\tx == y\t\n");
+    fprintf(f, "SUITA\tprobatio_s\tFRACTA\t1\t2\t4\t5\t100\n");
+    fclose(f);
+    return 1;
+}
+CEOF
+(cd "$T/r" && MENSOR_PARENS=fumus-liii MENSOR_COMMISSUM=commissum-liii MENSOR_SESSIO=sessio-liii \
+    "$F" probare -vis probationes_t) > "$T/liii.e" 2>&1
+awk -F'\t' '$1 == "cursus" && $2 == "initium" { t[$3] = $6; p[$3] = $4 }
+    $1 == "cursus" && $2 == "finis" { e[$3] = $6; d[$3] = $5; n[$3] = $12 }
+    END { for (i in t) if (t[i] ~ /#/ && t[p[i]] ~ /^probationes_t\// && p[p[i]] == "fumus-liii")
+              print t[i] "\t" t[p[i]] "\t" e[i] "\t" d[i] "\t" substr(n[i], 1, 6) }' \
+    "$MENSOR_DIARIUM" 2>/dev/null | sort > "$T/liii"
+printf 'probationes_t/probatio_s#alpha\tprobationes_t/probatio_s\t0\t40\tTRANSI\nprobationes_t/probatio_s#beta\tprobationes_t/probatio_s\t1\t60\tFRACTA\n' > "$T/liii.exp"
+if cmp -s "$T/liii" "$T/liii.exp"; then echo "  LIII sectiones in annalibus: filius per sectionem sub membro, exitus et duratio ex credo, synthetica nihil OK"; else echo "  LIII FRACTUM"; sed 's/^/      lectum: /' "$T/liii"; fracta=1; fi
+
 if [ "$fracta" -ne 0 ]; then echo "fumus fabricae: FRACTUM"; exit 1; fi
-echo "fumus fabricae: sanum (LII/LII)"
+echo "fumus fabricae: sanum (LIII/LIII)"
 exit 0
