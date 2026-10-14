@@ -14,7 +14,6 @@
 #include "piscina.h"
 #include "chorda.h"
 #include "credo.h"
-#include "vicus_applicatio.h"
 #include "vicus_quaestio_porta.h"
 #include <string.h>
 #include <unistd.h>

@@ -17,7 +17,7 @@
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"
-#include "vicus_applicatio.h"
+#include "vicus_quaestio.h"
 
 /* via adiutoris copiatur; mora_maxima_ms terminus durus adiutoris
  * (ZEPHYRUM = CLXXX s) */
