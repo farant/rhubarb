@@ -1888,6 +1888,27 @@ def _cursus(titulus, vocator_filiorum=None):
                                  % (titulus, r.stderr))
 
 
+def cursus(nomen, **par):
+    """QUAESTIO NOMINATA cursuum (analytica T5): 'bin/mensor quaestio
+    <nomen> par=valor ... -machina' - logica tota in C
+    (lib/mensura_quaestio); hic involucrum tenue. Reddit ordines (tuplae
+    camporum TSV, genere omisso); 'acta' textum corporis reddit.
+    Quaestio aut parametrum ignotum -> SilvaError cum nuntio mensoris.
+    nomina: historia ultimum fracta acta tendentia filii summa iudicia
+    commissiones numquam discus."""
+    args = [MENSOR_BIN, 'quaestio', nomen] + [
+        '%s=%s' % (k, v) for k, v in sorted(par.items())]
+    if nomen != 'acta':
+        args.append('-machina')
+    r = subprocess.run(args, capture_output=True, text=True, errors='replace')
+    if r.returncode != 0:
+        raise SilvaError('quaestio %s: %s' % (nomen, r.stderr.strip()))
+    if nomen == 'acta':
+        return r.stdout
+    return [tuple(l.split('\t')[1:]) for l in r.stdout.splitlines()
+            if '\t' in l]
+
+
 def _cursu_notatum(titulus, exitus_ex, vocator_filiorum=None):
     """decorator: vocatio tota = cursus unus. titulus(*a, **k) -> nomen;
     exitus_ex(fructus) -> (exitus, nota) aut (exitus, nota, acta)"""

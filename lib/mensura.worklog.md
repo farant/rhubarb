@@ -322,3 +322,40 @@ element refused by name (exit 2) - and applies diurna_purgare to the
 run-log store with now = wall clock. -siccum reports what would be
 compressed / deleted / freed, -machina gives one PURGATIO line. fumus
 X. The daily opportunistic trigger is not wired yet (T6).
+
+## 2026-10-14 - named queries (analytica T5)
+
+`lib/mensura_quaestio.c`: pure functions over the run list (and
+diurna's index for discus) - an index (by id, children by parent),
+one shared filter (titulus, praefixum, arbor, ramus, nota prefix,
+status mask, post, n), and the queries: historia (ultimum = n 1, fracta
+= status mask), tendentia, filii, summa (iudicia = nota IUDICIUM),
+commissiones (culprit = deepest failing descendant), statistica
+(sectiones = praefixum '<member>#'), lentescentes, numquam, discus.
+`bin/mensor quaestio <nomen> par=valor [-machina]` only parses and
+prints; unknown query or parameter -> exit 2 naming it. `silva.cursus`
+is a thin wrapper (rows = TSV fields minus the type column; acta =
+the body text).
+
+Found by reading REAL output, not by the fixtures:
+- tendentia keyed runs by HEAD at start, so a commit attempt's gates
+  (testing the NEXT change on a dirty tree) were filed under the
+  previous commit: the 415 s radix spike of the credo change showed
+  under 2b. Now: runs inside a commissio that PRODUCED a commit are
+  keyed by that commit (from its nota, marked '*'); other dirty runs by
+  'parent+'; clean by HEAD.
+- the human tendentia print cut the key to 11 chars and hid the '+' of
+  a 40-char sha + '+' (data was right); marker now separate.
+- lentescentes on composite jobs ('commissio' x2.14) is not a
+  regression signal - later commits simply owed more gates; it means
+  something for fixed jobs (a test, a section, a gate).
+
+Tests strengthened by reasoning before plants: numquam's path-boundary
+case (top-level b.sh vs a run of .../tools/ab.sh), lentescentes'
+consistency rule (with window 3 and a lower median any ratio pass
+already implies 2/3 above - the rule only bites at window >= 4) and
+its history rule (a 4-run title), and the CLI's decimal limes (2.5 vs
+3.5). My own debugging slip: a trace copy put `echo` right before
+`credo $?`, so $? was the echo's and the stage "passed" - the real
+failure was my new block feeding data into an older smoke check.
+Plants XVII red over two batches (two first did not compile - an unused variable after the planted change; redone with FALSUM &&). The pythonica check 'commissio_umbra: recepta sua deleta' failed once during an unrelated plant run and passed on a clean rerun - its second sighting, recorded on the ledger item (…GKC0).

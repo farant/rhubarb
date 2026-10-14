@@ -1319,6 +1319,21 @@ try:
           % len(corpus_com))
     credo(rubra and 'fictum: FRACTUM' in _acta(rubra[0][1]),
           'cursus: corpus portae = effusio eius')
+    # quaestiones (T5): silva.cursus = involucrum tenue 'mensor quaestio'
+    tent = silva.cursus('commissiones', n=1)
+    credo(len(tent) == 1 and tent[0][0] == com[-1][1] and tent[0][7]
+          == 'porta:ficta-rubra2',
+          'silva.cursus commissiones: tentamen ultimum, culpa porta rubra (%s)'
+          % (tent[0][7] if tent else None))
+    credo('fictum: FRACTUM' in silva.cursus('acta', titulus='porta:ficta-rubra2',
+                                            status='fracta'),
+          'silva.cursus acta: corpus fracti ultimi (quaestio VI)')
+    try:
+        silva.cursus('nulla_talis')
+        credo(False, 'silva.cursus: quaestio ignota levat')
+    except silva.SilvaError as ex:
+        credo("'nulla_talis' ignota" in str(ex),
+              'silva.cursus: quaestio ignota -> SilvaError cum nuntio mensoris')
     # _cursus ipse: nidificatio, exceptio, interruptio, ambitus restitutus
     with silva._cursus('fumus:exterior'):
         id_ext = os.environ.get('MENSOR_PARENS')

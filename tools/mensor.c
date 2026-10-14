@@ -36,6 +36,9 @@
 #include "processus.h"
 #include "volumen.h"
 #include "mensura_contextus.h"
+#include "tabula_dispersa.h"
+#include "iter_directoria.h"
+#include "mensura_quaestio.h"
 #include "internamentum.h"
 #include "stml.h"
 #include "filum.h"
@@ -1230,6 +1233,775 @@ _cursus (
 
 
 /* ============================================================
+ * quaestio (analytica T5): quaestiones nominatae (lib/mensura_quaestio)
+ * ============================================================ */
+
+/* parametra 'par=valor' cognita - aliud = recusatio nominata */
+hic_manens constans character* constans PARAMETRA_QUAESTIONIS[] = {
+    "titulus", "arbor", "ramus", "nota", "status", "post", "n", "id",
+    "profunditas", "radix", "praefixum", "fenestra", "limes", NIHIL
+};
+
+nomen structura {
+         CursusFiltrum  filtrum;
+                chorda  id;
+                   i32  profunditas;
+    constans character* radix;
+                   i32  fenestra;
+                   i32  limes_permille;
+} Parametra;
+
+interior b32
+_parametra_legere (
+      integer   argc,
+    character** argv,
+    Parametra*  p,
+      Piscina*  piscina)
+{
+    integer i;
+
+    memset(p, ZEPHYRUM, magnitudo(Parametra));
+    p->radix           = ".";
+    p->fenestra        = V;
+    p->limes_permille  = MCCL;
+    per (i = III; i < argc; i++)
+    {
+        constans character* signum = strchr(argv[i], '=');
+                    chorda  valor;
+                    chorda  nomen_par;
+                       i32  k;
+                       b32  notum = FALSUM;
+
+        si (argv[i][ZEPHYRUM] == '-')
+        {
+            perge;   /* vexilla (-machina) */
+        }
+        si (signum == NIHIL)
+        {
+            fprintf(stderr, "mensor quaestio: '%s' non 'par=valor'\n",
+                argv[i]);
+            redde FALSUM;
+        }
+        nomen_par = chorda_ex_buffer((i8*)argv[i], (i32)(signum
+            - argv[i]));
+        valor = chorda_ex_literis(signum + I, piscina);
+        per (k = ZEPHYRUM; PARAMETRA_QUAESTIONIS[k] != NIHIL; k++)
+        {
+            si (chorda_aequalis_literis(nomen_par,
+                PARAMETRA_QUAESTIONIS[k]))
+            {
+                notum = VERUM;
+            }
+        }
+        si (!notum)
+        {
+            fprintf(stderr, "mensor quaestio: parametrum ignotum '%.*s'"
+                " (nota: titulus praefixum arbor ramus nota status post"
+                " n"
+                " id profunditas radix fenestra limes)\n",
+                (integer)nomen_par.mensura,
+                (constans character*)nomen_par.datum);
+            redde FALSUM;
+        }
+        si (chorda_aequalis_literis(nomen_par, "titulus"))
+        {
+            p->filtrum.titulus = valor;
+        }
+        alioquin si (chorda_aequalis_literis(nomen_par, "arbor"))
+        {
+            p->filtrum.arbor = valor;
+        }
+        alioquin si (chorda_aequalis_literis(nomen_par, "ramus"))
+        {
+            p->filtrum.ramus = valor;
+        }
+        alioquin si (chorda_aequalis_literis(nomen_par, "nota"))
+        {
+            p->filtrum.nota = valor;
+        }
+        alioquin si (chorda_aequalis_literis(nomen_par, "status"))
+        {
+            p->filtrum.status = chorda_aequalis_literis(valor,
+                "transiit")
+                ? CURSUS_MASCULA_TRANSIIT
+                : chorda_aequalis_literis(valor, "fractus")
+                ? CURSUS_MASCULA_FRACTUS
+                : chorda_aequalis_literis(valor, "interruptus")
+                ? CURSUS_MASCULA_INTERRUPTUS
+                : chorda_aequalis_literis(valor, "fracta")
+                ? (CURSUS_MASCULA_FRACTUS | CURSUS_MASCULA_INTERRUPTUS)
+                : ZEPHYRUM;
+            si (p->filtrum.status == ZEPHYRUM)
+            {
+                fprintf(stderr, "mensor quaestio: status '%s' ignotus"
+                    " (transiit fractus interruptus fracta)\n", signum
+                        + I);
+                redde FALSUM;
+            }
+        }
+        alioquin si (chorda_aequalis_literis(nomen_par, "post"))
+        {
+            p->filtrum.post_ms = mensura_momentum_nunc() - (s64)strtol(
+                signum + I, NIHIL, X) * (s64)(LXXXVI * M + CD) * (s64)M;
+        }
+        alioquin si (chorda_aequalis_literis(nomen_par, "n"))
+        {
+            p->filtrum.numerus = (i32)strtol(signum + I, NIHIL, X);
+        }
+        alioquin si (chorda_aequalis_literis(nomen_par, "id"))
+        {
+            p->id = valor;
+        }
+        alioquin si (chorda_aequalis_literis(nomen_par, "profunditas"))
+        {
+            p->profunditas = (i32)strtol(signum + I, NIHIL, X);
+        }
+        alioquin si (chorda_aequalis_literis(nomen_par, "praefixum"))
+        {
+            p->filtrum.praefixum = valor;
+        }
+        alioquin si (chorda_aequalis_literis(nomen_par, "fenestra"))
+        {
+            p->fenestra = (i32)strtol(signum + I, NIHIL, X);
+        }
+        alioquin si (chorda_aequalis_literis(nomen_par, "limes"))
+        {
+            /* ratio decimalis ('1.25') -> permille, sine fluitantibus
+             */
+            constans character* q           = signum + I;
+                           i32  integra     = (i32)strtol(q, NIHIL, X);
+                           i32  millesimae  = ZEPHYRUM;
+                           i32  pondus      = C;
+            constans character* punctum     = strchr(q, '.');
+
+            si (punctum != NIHIL)
+            {
+                per (punctum++; *punctum >= '0' && *punctum <= '9'
+                     && pondus > ZEPHYRUM; punctum++)
+                {
+                    millesimae  += (i32)(*punctum - '0') * pondus;
+                    pondus      /= X;
+                }
+            }
+            p->limes_permille = integra * (i32)M + millesimae;
+        }
+        alioquin
+        {
+            p->radix = signum + I;
+        }
+    }
+    redde VERUM;
+}
+
+interior vacuum
+_tempus_iso (
+          s64  ms,
+    character* tabula)
+{
+         time_t secunda  = (time_t)(ms / (s64)M);
+    structura tm* t      = gmtime(&secunda);
+
+    si (t == NIHIL)
+    {
+        sprintf(tabula, "?");
+        redde;
+    }
+    sprintf(tabula, "%04d-%02d-%02dT%02d:%02d:%02dZ", t->tm_year + MCM,
+        t->tm_mon + I, t->tm_mday, t->tm_hour, t->tm_min, t->tm_sec);
+}
+
+interior constans character*
+_statum (
+    CursusStatus status)
+{
+    redde _status_verbum(status);
+}
+
+interior vacuum
+_cursum_imprimere (
+    constans Cursus* c,
+                b32  machina,
+            Piscina* piscina)
+{
+    character tempus[XXXII];
+
+    si (machina)
+    {
+        imprimere("HISTORIA\t%.*s\t%.*s\t%s\t%d\t%ld\t%ld\t%.*s\t%.*s"
+            "\t%.*s"
+            "\t%s\n", (integer)c->initium.id.mensura,
+            (constans character*)c->initium.id.datum,
+            (integer)c->initium.titulus.mensura,
+            (constans character*)c->initium.titulus.datum,
+            _statum(c->status), (integer)c->finis.exitus,
+            (longus)c->initium.initium, (longus)c->finis.duratio_ms,
+            (integer)c->initium.arbor.mensura,
+            (constans character*)c->initium.arbor.datum,
+            (integer)c->initium.ramus.mensura,
+            (constans character*)c->initium.ramus.datum,
+            (integer)c->initium.commissum.mensura,
+            (constans character*)c->initium.commissum.datum,
+            _visum(c->finis.nota, piscina));
+        redde;
+    }
+    _tempus_iso(c->initium.initium, tempus);
+    /* %.*s cum mensura - chorda non terminata (et fortasse NIHIL) */
+    imprimere("%s  %-11s %-40.*s %8ld ms  %.*s@%.*s  %.*s  %s\n",
+        tempus,
+        _statum(c->status), (integer)c->initium.titulus.mensura,
+        (constans character*)c->initium.titulus.datum,
+        (longus)c->finis.duratio_ms, (integer)c->initium.arbor.mensura,
+        (constans character*)c->initium.arbor.datum,
+        (integer)c->initium.ramus.mensura,
+        (constans character*)c->initium.ramus.datum,
+        (integer)(c->initium.commissum.mensura < X
+            ? c->initium.commissum.mensura : X),
+        (constans character*)c->initium.commissum.datum,
+        _visum(c->finis.nota, piscina));
+}
+
+/* *.sh sub radice (build, .git, probationes/fixa omissis): titulus
+ * annotationis aut via relativa -> universum; via per titulum */
+interior vacuum
+_scripta_colligere (
+    constans character* radix,
+    constans character* relativa,
+                   Xar* universum,
+        TabulaDispersa* viae,
+               Piscina* piscina)
+{
+               character  via[IV * MXXIV];
+     DirectoriumIterator* it;
+    DirectoriumIntroitus* introitus;
+
+    sprintf(via, "%s%s%s", radix, relativa[ZEPHYRUM] ? "/" : "",
+        relativa);
+    it = directorium_iterator_aperire(via, piscina);
+    si (it == NIHIL)
+    {
+        redde;
+    }
+    dum ((introitus = directorium_iterator_proximum(it)) != NIHIL)
+    {
+        character sub[IV * MXXIV];
+        character plena[IV * MXXIV];
+
+        si (   introitus->titulus.mensura         == ZEPHYRUM
+            || introitus->titulus.datum[ZEPHYRUM] == '.')
+        {
+            perge;
+        }
+        sprintf(sub, "%s%s%.*s", relativa,
+            relativa[ZEPHYRUM] ? "/" : "",
+            (integer)introitus->titulus.mensura,
+            (constans character*)introitus->titulus.datum);
+        si (introitus->genus == INTROITUS_DIRECTORIUM)
+        {
+            si (   strcmp(sub, "build")            != ZEPHYRUM
+                && strstr(sub, "/build")           == NIHIL
+                && strcmp(sub, "probationes/fixa") != ZEPHYRUM)
+            {
+                _scripta_colligere(radix, sub, universum, viae,
+                    piscina);
+            }
+        }
+        alioquin si (   introitus->titulus.mensura > III
+                     && memcmp(introitus->titulus.datum
+                            + introitus->titulus.mensura - III, ".sh",
+                            (size_t)III) == ZEPHYRUM)
+        {
+            chorda titulus;
+            chorda relativa_chorda =
+                chorda_transcribere(chorda_ex_literis(
+                sub, piscina), piscina);
+
+            sprintf(plena, "%s/%s", radix, sub);
+            titulus = _titulum_annotationis(plena, piscina);
+            si (titulus.mensura == ZEPHYRUM)
+            {
+                titulus = relativa_chorda;
+            }
+            *(chorda*)xar_addere(universum) = titulus;
+            (vacuum)tabula_dispersa_inserere(viae, titulus,
+                piscina_allocare(piscina, magnitudo(chorda)));
+            {
+                vacuum* locus = NIHIL;
+
+                (vacuum)tabula_dispersa_invenire(viae, titulus, &locus);
+                si (locus != NIHIL)
+                {
+                    *(chorda*)locus = relativa_chorda;
+                }
+            }
+        }
+    }
+    directorium_iterator_claudere(it);
+}
+
+interior integer
+_quaestio (
+      Piscina*  piscina,
+      integer   argc,
+    character** argv)
+{
+     constans character* nomen_q = argc >= III ? argv[II] : "";
+                    b32  machina = _vexillum(argc, argv, "-machina");
+              Parametra  par;
+                Volumen* volumen;
+                    Xar* cursus;
+            CursusIndex* index;
+                    Xar* ordines;
+                    i32  k;
+
+    si (argc < III)
+    {
+        fprintf(stderr, "usus: mensor quaestio <nomen> par=valor ..."
+            " [-machina]\n");
+        redde 2;
+    }
+    si (!_parametra_legere(argc, argv, &par, piscina))
+    {
+        redde 2;
+    }
+    si (strcmp(nomen_q, "discus") == ZEPHYRUM)
+    {
+        Diurna* diurna = mensura_diurna_aperire(piscina);
+
+        ordines = (diurna != NIHIL) ? cursus_quaerere_discus(
+            diurna_introitus(diurna, piscina), piscina) : NIHIL;
+        per (k = ZEPHYRUM; ordines != NIHIL && k < xar_numerus(ordines);
+             k++)
+        {
+            CursusSumma* s = (CursusSumma*)xar_obtinere(ordines, k);
+
+            si (   par.filtrum.numerus > ZEPHYRUM
+                && k >= par.filtrum.numerus)
+            {
+                frange;
+            }
+            imprimere(machina ? "DISCUS\t%.*s\t%d\t%ld\n"
+                : "%-60.*s  n=%d  %ld octeti\n",
+                (integer)s->titulus.mensura,
+                (constans character*)s->titulus.datum,
+                (integer)s->numerus,
+                (longus)s->octeti);
+        }
+        redde ZEPHYRUM;
+    }
+    volumen = volumen_aperire_aut_creare(piscina,
+        _litterae(_volumen_via(
+        argc, argv, piscina), piscina));
+    si (volumen == NIHIL)
+    {
+        fprintf(stderr,
+            "mensor quaestio: volumen aperiri non potest\n");
+        redde I;
+    }
+    (vacuum)_cursus_condere(volumen, piscina);
+    cursus = mensura_cursus_legere(volumen, piscina);
+    index = (cursus != NIHIL) ? cursus_indicem_struere(cursus, piscina)
+        : NIHIL;
+    si (index == NIHIL)
+    {
+        fprintf(stderr, "mensor quaestio: cursus legi non possunt\n");
+        volumen_claudere(volumen);
+        redde I;
+    }
+    si (   strcmp(nomen_q, "historia") == ZEPHYRUM
+        || strcmp(nomen_q, "ultimum")  == ZEPHYRUM
+        || strcmp(nomen_q, "fracta")   == ZEPHYRUM
+        || strcmp(nomen_q, "acta")     == ZEPHYRUM)
+    {
+        si (   strcmp(nomen_q, "ultimum") == ZEPHYRUM
+            || strcmp(nomen_q, "acta")    == ZEPHYRUM)
+        {
+            par.filtrum.numerus = I;
+        }
+        si (   strcmp(nomen_q, "fracta") == ZEPHYRUM
+            && par.filtrum.status        == ZEPHYRUM)
+        {
+            par.filtrum.status = CURSUS_MASCULA_FRACTUS
+                | CURSUS_MASCULA_INTERRUPTUS;
+        }
+        si (   strcmp(nomen_q, "acta") == ZEPHYRUM
+            && par.id.mensura > ZEPHYRUM)
+        {
+            Diurna* diurna  = mensura_diurna_aperire(piscina);
+      DiurnaStatus  st      = DIURNA_IGNOTUM;
+            chorda  corpus = diurna != NIHIL ? diurna_legere(diurna,
+                par.id,
+                piscina, &st) : par.id;
+
+            volumen_claudere(volumen);
+            si (st != DIURNA_ADEST)
+            {
+                fprintf(stderr, "mensor quaestio acta: %s\n",
+                    diurna_status_nomen(st));
+                redde I;
+            }
+            fwrite(corpus.datum, (size_t)I, (size_t)corpus.mensura,
+                stdout);
+            redde ZEPHYRUM;
+        }
+        ordines = cursus_quaerere_historia(index, &par.filtrum,
+            piscina);
+        si (strcmp(nomen_q, "acta") == ZEPHYRUM)
+        {
+                      Diurna* diurna  = mensura_diurna_aperire(piscina);
+                DiurnaStatus  st      = DIURNA_IGNOTUM;
+             constans Cursus* c;
+                      chorda  corpus;
+
+            volumen_claudere(volumen);
+            si (ordines == NIHIL || xar_numerus(ordines) == ZEPHYRUM)
+            {
+                fprintf(stderr, "mensor quaestio acta: nullus cursus"
+                    " congruit\n");
+                redde I;
+            }
+            c = *(constans Cursus**)xar_obtinere(ordines, ZEPHYRUM);
+            corpus = diurna != NIHIL ? diurna_legere(diurna,
+                c->initium.id,
+                piscina, &st) : c->initium.id;
+            si (st != DIURNA_ADEST)
+            {
+                fprintf(stderr, "mensor quaestio acta %.*s: %s\n",
+                    (integer)c->initium.id.mensura,
+                    (constans character*)c->initium.id.datum,
+                    diurna_status_nomen(st));
+                redde I;
+            }
+            fwrite(corpus.datum, (size_t)I, (size_t)corpus.mensura,
+                stdout);
+            redde ZEPHYRUM;
+        }
+        per (k = ZEPHYRUM; ordines != NIHIL && k < xar_numerus(ordines);
+             k++)
+        {
+            _cursum_imprimere(*(constans Cursus**)xar_obtinere(ordines,
+                k),
+                machina, piscina);
+        }
+    }
+    alioquin si (strcmp(nomen_q, "tendentia") == ZEPHYRUM)
+    {
+        ordines = cursus_quaerere_tendentia(index, &par.filtrum,
+            piscina);
+        per (k = ZEPHYRUM; ordines != NIHIL && k < xar_numerus(ordines);
+             k++)
+        {
+            CursusTendentia* t = (CursusTendentia*)xar_obtinere(ordines,
+                k);
+                  character tempus[XXXII];
+
+            _tempus_iso(t->primum, tempus);
+            si (machina)
+            {
+                imprimere("TENDENTIA\t%.*s\t%s\t%d\t%ld\t%ld\t%ld"
+                    "\t%ld\n",
+                    (integer)t->commissum.mensura,
+                    (constans character*)t->commissum.datum,
+                    t->per_commissionem ? "commissio" : "arbor",
+                    (integer)t->numerus, (longus)t->mediana_ms,
+                    (longus)t->minima_ms, (longus)t->maxima_ms,
+                    (longus)t->primum);
+            }
+            alioquin
+            {
+                /* signum: '*' = commissum a commissione PARTUM; '+'
+                 * = arbor sordida super commissum (clavis '+' finitur -
+                 * praefixum X characterum id celaret) */
+                i32 longitudo = t->commissum.mensura;
+                b32 sordida = longitudo > ZEPHYRUM
+                    && t->commissum.datum[longitudo - I] == '+';
+
+                si (sordida)
+                {
+                    longitudo--;
+                }
+                imprimere("%-10.*s %s n=%-4d mediana %8ld ms"
+                    "  [%ld..%ld]"
+                    "  primum %s\n", (integer)(longitudo < X ? longitudo
+                    : X), (constans character*)t->commissum.datum,
+                    t->per_commissionem ? "*" : sordida ? "+" : " ",
+                    (integer)t->numerus, (longus)t->mediana_ms,
+                    (longus)t->minima_ms, (longus)t->maxima_ms, tempus);
+            }
+        }
+    }
+    alioquin si (strcmp(nomen_q, "filii") == ZEPHYRUM)
+    {
+        si (par.id.mensura == ZEPHYRUM)
+        {
+            Xar* ultimi;
+
+            par.filtrum.numerus = I;
+            ultimi = cursus_quaerere_historia(index, &par.filtrum,
+                piscina);
+            si (ultimi == NIHIL || xar_numerus(ultimi) == ZEPHYRUM)
+            {
+                fprintf(stderr,
+                    "mensor quaestio filii: id= aut titulus="
+                    " cursus exstantis necessarium\n");
+                volumen_claudere(volumen);
+                redde 2;
+            }
+            par.id = (*(constans Cursus**)xar_obtinere(ultimi,
+                ZEPHYRUM))
+                ->initium.id;
+        }
+        ordines = cursus_quaerere_filii(index, par.id, par.profunditas,
+            piscina);
+        per (k = ZEPHYRUM; ordines != NIHIL && k < xar_numerus(ordines);
+             k++)
+        {
+            CursusNodus* n = (CursusNodus*)xar_obtinere(ordines, k);
+
+            si (machina)
+            {
+                imprimere("FILIUS\t%d\t%.*s\t%.*s\t%s\t%ld\t%d\t%s\n",
+                    (integer)n->profunditas,
+                    (integer)n->cursus->initium.id.mensura,
+                    (constans character*)n->cursus->initium.id.datum,
+                    (integer)n->cursus->initium.titulus.mensura,
+                    (constans character*)
+                    n->cursus->initium.titulus.datum,
+                    _statum(n->cursus->status),
+                    (longus)n->cursus->finis.duratio_ms,
+                    (integer)n->pars,
+                    _visum(n->cursus->finis.nota, piscina));
+            }
+            alioquin
+            {
+                imprimere("%*s%8ld ms %3d.%d%%  %.*s  %s  %.60s\n",
+                    (integer)(n->profunditas * II), "",
+                    (longus)n->cursus->finis.duratio_ms,
+                    (integer)(n->pars / X), (integer)(n->pars % X),
+                    (integer)n->cursus->initium.titulus.mensura,
+                    (constans character*)
+                    n->cursus->initium.titulus.datum,
+                    _statum(n->cursus->status),
+                    _visum(n->cursus->finis.nota, piscina));
+            }
+        }
+    }
+    alioquin si (   strcmp(nomen_q, "summa")   == ZEPHYRUM
+                 || strcmp(nomen_q, "iudicia") == ZEPHYRUM)
+    {
+        si (strcmp(nomen_q, "iudicia") == ZEPHYRUM)
+        {
+            par.filtrum.nota = chorda_ex_literis("IUDICIUM", piscina);
+        }
+        /* numerus: ordines summae, non cursus - post ordinationem */
+        {
+            i32 numerus = par.filtrum.numerus;
+
+            par.filtrum.numerus = ZEPHYRUM;
+            ordines = cursus_quaerere_summa(index, &par.filtrum,
+                piscina);
+            par.filtrum.numerus = numerus;
+        }
+        per (k = ZEPHYRUM; ordines != NIHIL && k < xar_numerus(ordines);
+             k++)
+        {
+            CursusSumma* s = (CursusSumma*)xar_obtinere(ordines, k);
+
+            si (   par.filtrum.numerus > ZEPHYRUM
+                && k >= par.filtrum.numerus)
+            {
+                frange;
+            }
+            si (machina)
+            {
+                imprimere("SUMMA\t%.*s\t%d\t%ld\t%d\n",
+                    (integer)s->titulus.mensura,
+                    (constans character*)s->titulus.datum,
+                    (integer)s->numerus, (longus)s->ms_summa,
+                    (integer)s->parentes);
+            }
+            alioquin
+            {
+                imprimere("%10ld ms  n=%-5d parentes=%-3d %.*s\n",
+                    (longus)s->ms_summa, (integer)s->numerus,
+                    (integer)s->parentes, (integer)s->titulus.mensura,
+                    (constans character*)s->titulus.datum);
+            }
+        }
+    }
+    alioquin si (strcmp(nomen_q, "commissiones") == ZEPHYRUM)
+    {
+        ordines = cursus_quaerere_commissiones(index, &par.filtrum,
+            piscina);
+        per (k = ZEPHYRUM; ordines != NIHIL && k < xar_numerus(ordines);
+             k++)
+        {
+            CursusCommissio* t = (CursusCommissio*)xar_obtinere(ordines,
+                k);
+             constans Cursus* c = t->commissio;
+                   character  tempus[XXXII];
+                      chorda  culpa_titulus = t->culpa != NIHIL
+                          ? t->culpa->initium.titulus
+                          : chorda_ex_literis("", piscina);
+                      chorda culpa_nota = t->culpa != NIHIL
+                          ? t->culpa->finis.nota : c->finis.nota;
+
+            _tempus_iso(c->initium.initium, tempus);
+            si (machina)
+            {
+                imprimere("COMMISSIO\t%.*s\t%ld\t%s\t%ld\t%.*s\t%.*s"
+                    "\t%.*s"
+                    "\t%.*s\t%s\n", (integer)c->initium.id.mensura,
+                    (constans character*)c->initium.id.datum,
+                    (longus)c->initium.initium, _statum(c->status),
+                    (longus)c->finis.duratio_ms,
+                    (integer)c->initium.arbor.mensura,
+                    (constans character*)c->initium.arbor.datum,
+                    (integer)c->initium.ramus.mensura,
+                    (constans character*)c->initium.ramus.datum,
+                    (integer)t->commissum.mensura,
+                    (constans character*)t->commissum.datum,
+                    (integer)culpa_titulus.mensura,
+                    (constans character*)culpa_titulus.datum,
+                    _visum(culpa_nota, piscina));
+            }
+            alioquin
+            {
+                imprimere("%s  %-11s %6ld s  %.*s@%.*s  %s%.*s%s%.*s"
+                    "  %s\n",
+                    tempus, _statum(c->status),
+                    (longus)(c->finis.duratio_ms / (s64)M),
+                    (integer)c->initium.arbor.mensura,
+                    (constans character*)c->initium.arbor.datum,
+                    (integer)c->initium.ramus.mensura,
+                    (constans character*)c->initium.ramus.datum,
+                    t->commissum.mensura > ZEPHYRUM ? "-> " : "",
+                    (integer)t->commissum.mensura,
+                    (constans character*)t->commissum.datum,
+                    culpa_titulus.mensura > ZEPHYRUM ? "culpa: " : "",
+                    (integer)culpa_titulus.mensura,
+                    (constans character*)culpa_titulus.datum,
+                    _visum(culpa_nota, piscina));
+            }
+        }
+    }
+    alioquin si (   strcmp(nomen_q, "statistica") == ZEPHYRUM
+                 || strcmp(nomen_q, "sectiones")  == ZEPHYRUM)
+    {
+        /* 'sectiones titulus=M' = 'statistica praefixum=M#' */
+        si (   strcmp(nomen_q, "sectiones") == ZEPHYRUM
+            && par.filtrum.titulus.mensura > ZEPHYRUM)
+        {
+            par.filtrum.praefixum =
+                chorda_concatenare(par.filtrum.titulus,
+                chorda_ex_literis("#", piscina), piscina);
+            par.filtrum.titulus = chorda_ex_literis("", piscina);
+        }
+        ordines = cursus_quaerere_statistica(index, &par.filtrum,
+            piscina);
+        per (k = ZEPHYRUM; ordines != NIHIL && k < xar_numerus(ordines);
+             k++)
+        {
+            CursusStatistica* s =
+                (CursusStatistica*)xar_obtinere(ordines,
+                k);
+
+            si (machina)
+            {
+                imprimere("STATISTICA\t%.*s\t%d\t%d\t%ld\t%ld\n",
+                    (integer)s->titulus.mensura,
+                    (constans character*)s->titulus.datum,
+                    (integer)s->numerus, (integer)s->fracti,
+                    (longus)s->mediana_ms, (longus)s->maxima_ms);
+            }
+            alioquin
+            {
+                imprimere("%8ld ms mediana  %8ld max  n=%-4d"
+                    " fracti=%-3d"
+                    " %.*s\n", (longus)s->mediana_ms,
+                    (longus)s->maxima_ms,
+                    (integer)s->numerus, (integer)s->fracti,
+                    (integer)s->titulus.mensura,
+                    (constans character*)s->titulus.datum);
+            }
+        }
+    }
+    alioquin si (strcmp(nomen_q, "lentescentes") == ZEPHYRUM)
+    {
+        ordines = cursus_quaerere_lentescentes(index, &par.filtrum,
+            par.fenestra, par.limes_permille, piscina);
+        per (k = ZEPHYRUM; ordines != NIHIL && k < xar_numerus(ordines);
+             k++)
+        {
+            CursusLentescens* l =
+                (CursusLentescens*)xar_obtinere(ordines,
+                k);
+
+            si (machina)
+            {
+                imprimere("LENTESCENS\t%.*s\t%d\t%ld\t%ld\t%d\t%d\n",
+                    (integer)l->titulus.mensura,
+                    (constans character*)l->titulus.datum,
+                    (integer)l->priores, (longus)l->mediana_prior_ms,
+                    (longus)l->mediana_recens_ms, (integer)l->supra,
+                    (integer)l->ratio_permille);
+            }
+            alioquin
+            {
+                imprimere("x%d.%02d  %8ld -> %8ld ms  (ultimi %d supra"
+                    " %d/%d, priores %d)  %.*s\n",
+                    (integer)(l->ratio_permille / M),
+                    (integer)((l->ratio_permille % M) / X),
+                    (longus)l->mediana_prior_ms,
+                    (longus)l->mediana_recens_ms, (integer)par.fenestra,
+                    (integer)l->supra, (integer)par.fenestra,
+                    (integer)l->priores, (integer)l->titulus.mensura,
+                    (constans character*)l->titulus.datum);
+            }
+        }
+    }
+    alioquin si (strcmp(nomen_q, "numquam") == ZEPHYRUM)
+    {
+                    Xar* universum = xar_creare(piscina,
+                        (i32)magnitudo(chorda));
+         TabulaDispersa* viae = tabula_dispersa_creare_chorda(piscina,
+                        (i32)CCLVI);
+
+        si (universum != NIHIL && viae != NIHIL)
+        {
+            _scripta_colligere(par.radix, "", universum, viae, piscina);
+        }
+        ordines = cursus_quaerere_numquam(index, universum, piscina);
+        per (k = ZEPHYRUM; ordines != NIHIL && k < xar_numerus(ordines);
+             k++)
+        {
+            chorda  titulus  = *(chorda*)xar_obtinere(ordines, k);
+            vacuum* locus    = NIHIL;
+            chorda  via      = titulus;
+
+            si (   tabula_dispersa_invenire(viae, titulus, &locus)
+                && locus != NIHIL)
+            {
+                via = *(chorda*)locus;
+            }
+            imprimere(machina ? "NUMQUAM\t%.*s\n" : "%.*s\n",
+                (integer)via.mensura, (constans character*)via.datum);
+        }
+    }
+    alioquin
+    {
+        fprintf(stderr, "mensor quaestio: '%s' ignota (historia ultimum"
+            " fracta acta tendentia filii summa iudicia commissiones"
+            " statistica sectiones lentescentes numquam discus)\n",
+            nomen_q);
+        volumen_claudere(volumen);
+        redde 2;
+    }
+    volumen_claudere(volumen);
+    redde ZEPHYRUM;
+}
+
+
+/* ============================================================
  * purgare (analytica T4 2c): regula retentionis ex STML -> diurna
  * ============================================================ */
 
@@ -1407,6 +2179,10 @@ _usus (vacuum)
         "  mensor condere [-volumen via]\n"
         "  mensor cursus currere [-titulus T] -- cmd  (tools/cursus.sh)\n"
         "  mensor cursus legere [-machina]\n"
+        "  mensor quaestio <nomen> par=valor ... [-machina]"
+        "   (historia ultimum fracta acta tendentia filii\n"
+        "      summa iudicia commissiones statistica sectiones"
+        " lentescentes numquam discus)\n"
         "  mensor purgare [-siccum] [-machina] [-regula via]"
         "   (diurna)\n\n"
         "  Ambitus: MENSOR_SESSIO MENSOR_PARENS MENSOR_DIARIUM"
@@ -1493,6 +2269,10 @@ main (
     alioquin si (strcmp(argv[I], "purgare") == 0)
     {
         codex = _purgare(piscina, argc, argv);
+    }
+    alioquin si (strcmp(argv[I], "quaestio") == 0)
+    {
+        codex = _quaestio(piscina, argc, argv);
     }
     alioquin si (strcmp(argv[I], "cursus") == 0)
     {

@@ -26,6 +26,11 @@
 #   X    purgare (T4 2c): regula ex STML (tools/analytica_retentio.stml
 #        legitur), -siccum nihil mutat, purgatio vera corpus delet
 #        ('cursus acta' -> deletum), regula absens aut deformis -> 2
+#   XI   quaestiones (T5): commissio fixa cum porta fracta (corpus) ->
+#        'quaestio ultimum' (status), 'quaestio acta' (corpus fracti
+#        ultimi, quaestio VI), 'quaestio commissiones' (culpa nominata),
+#        'quaestio numquam' (radix cum scripto non curso), quaestio
+#        ignota / parametrum ignotum -> 2
 #   VIII extra omne repositorium (contextus vacuus) -> cursus notatus,
 #        commissum et ramus vacui, nulla ruina (planta D T2: setenv cum
 #        NIHIL ruebat)
@@ -184,6 +189,43 @@ printf '<retentio>\n  <sana cruda="7"/>\n</retentio>\n' > "$T/regula_mala.stml"
   && [ "$rc4" -eq 2 ] && grep -q "nulla_talis.stml" "$T/p4" && [ "$rc5" -eq 2 ] && grep -q "'sana compressa' deest" "$T/p5"
 credo $? "X    purgare: regula domus legitur, siccum nihil mutat, vera delet, regula absens/deformis -> 2"
 
+# XI
+M="$RADIX/bin/mensor"
+amb_c=$("$M" cursus incipere -titulus commissio)
+id_c=$(echo "$amb_c" | sed -n 's/^MENSOR_PARENS=//p')
+amb_g=$(env $(echo "$amb_c" | tr '\n' ' ') "$M" cursus incipere -titulus porta:xi)
+id_g=$(echo "$amb_g" | sed -n 's/^MENSOR_PARENS=//p')
+printf 'probatio_xi FRACTA\nlinea secunda\n' | "$M" cursus finire -id "$id_g" -exitus 1 -nota "xi: 0/1" -titulus porta:xi -acta -
+"$M" cursus finire -id "$id_c" -exitus 1 -nota "SilvaError: porta xi non sana"
+mkdir -p "$T/rx/tools"
+printf '#!/bin/bash\n# <cursus titulus="fumus/annotatum" versio="I"/>\n' > "$T/rx/tools/annotatum.sh"
+printf '#!/bin/bash\necho\n' > "$T/rx/tools/nudum.sh"
+scriptum "$T/rx/tools/cursum.sh" "fumus/cursum" 'exit 0'
+"$T/rx/tools/cursum.sh" > /dev/null 2>&1
+u=$("$M" quaestio ultimum titulus=porta:xi -machina 2>&1)
+a=$("$M" quaestio acta titulus=porta:xi status=fracta 2>&1)
+cm=$("$M" quaestio commissiones n=1 -machina 2>&1)
+nq=$("$M" quaestio numquam radix="$T/rx" 2>&1)
+# limes decimalis: fumus/lentum 100,100 -> 300,300 (ratio III.0):
+# limes 2.5 nominat, 3.5 non (parsatio decimalis vere legitur)
+for dur in 100 100 300 300; do
+    a_l=$("$M" cursus incipere -titulus fumus/lentum)
+    "$M" cursus finire -id "$(echo "$a_l" | sed -n 's/^MENSOR_PARENS=//p')" -exitus 0 -duratio_ms $dur
+done
+l25=$("$M" quaestio lentescentes fenestra=2 limes=2.5 titulus=fumus/lentum -machina 2>&1 | grep -c '^LENTESCENS')
+l35=$("$M" quaestio lentescentes fenestra=2 limes=3.5 titulus=fumus/lentum -machina 2>&1 | grep -c '^LENTESCENS')
+sx=$("$M" quaestio sectiones titulus=nemo -machina 2>&1; echo "rc$?")
+lx=$("$M" quaestio lentescentes fenestra=2 limes=1.5 -machina 2>&1; echo "rc$?")
+"$M" quaestio nulla_talis > /dev/null 2>&1; rq=$?
+"$M" quaestio historia frobnica=1 > /dev/null 2>&1; rp=$?
+echo "$u" | grep -q "	porta:xi	fractus	" \
+  && [ "$a" = "$(printf 'probatio_xi FRACTA\nlinea secunda')" ] \
+  && echo "$cm" | awk -F'\t' '$1 == "COMMISSIO" && $9 == "porta:xi"' | grep -q . \
+  && echo "$nq" | grep -qx "tools/annotatum.sh" && echo "$nq" | grep -qx "tools/nudum.sh" \
+  && ! echo "$nq" | grep -q "cursum.sh" && [ "$rq" -eq 2 ] && [ "$rp" -eq 2 ] \
+  && [ "$sx" = "rc0" ] && [ "${lx##*rc}" = "0" ] && [ "$l25" = "1" ] && [ "$l35" = "0" ]
+credo $? "XI   quaestiones: ultimum, acta fracti, commissiones cum culpa, numquam; ignota -> 2"
+
 echo
-if [ "$fracta" -eq 0 ]; then echo "fumus mensor_cursus: sanum (X/X)"; exit 0; fi
+if [ "$fracta" -eq 0 ]; then echo "fumus mensor_cursus: sanum (XI/XI)"; exit 0; fi
 echo "fumus mensor_cursus: FRACTUM ($fracta)"; exit 1

@@ -146,6 +146,7 @@ declare -a SOURCE_FILES=(
     "lib/matrix.c"
     "lib/mensa.c"
     "lib/mensura.c"
+    "lib/mensura_quaestio.c"
     "lib/mimen.c"
     "lib/modulus.c"
     "lib/moneta.c"

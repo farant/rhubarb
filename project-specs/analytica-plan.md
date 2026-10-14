@@ -119,10 +119,19 @@ commit via silva.commissio. Work in `../rhubarb-quinta`.
   first line ('git commit rc=1: <tail>' can start mid-word).
 
 ### T5: named queries + `silva.cursus`
-- [ ] ultimum, historia, tendentia, numquam, fracta, acta, filii,
+- [x] ultimum, historia, tendentia, numquam, fracta, acta, filii,
   discus; -machina; thin pythonica wrapper. Tests: the six acceptance
   questions, each on fixture data. Commit.
-- [ ] `commissiones` (Fran 10-13: "analytics about how long git commit
+  As built (10-14): queries are a LIBRARY (lib/mensura_quaestio, pure
+  over the run list) - mensor only parses and prints; `silva.cursus`
+  thin. Plus `statistica` / `sectiones` (per-section stats of a test)
+  and `lentescentes` (Fran 10-14: "tests consistently getting slower"
+  - last-k median vs earlier median, ratio >= limes AND k-1 of the last
+  k above the earlier median, enough history). tendentia re-keyed after
+  reading real data (runs inside a commit attempt -> the commit it
+  produced). probatio_mensura_quaestio XI sections, mensor fumus XI,
+  pythonica silva.cursus. Plants XVII red.
+- [x] `commissiones` (Fran 10-13: "analytics about how long git commit
   attempts take, if they failed/succeeded, what test or lint caused
   them to fail"): one row per attempt - when, tree/branch, duration,
   outcome, CULPRIT = deepest failing descendant (derived from the tree,
