@@ -257,7 +257,8 @@ ordines_diei (
     redde l;
 }
 
-interior i32
+/* index rei in ordinibus; -1 si abest */
+interior s32
 index_rei (
     Xar* l,
     s32  id)
@@ -268,10 +269,10 @@ index_rei (
     {
         si ((*(constans AgendaRes**)xar_obtinere(l, i))->id == id)
         {
-            redde (i32)i;
+            redde (s32)i;
         }
     }
-    redde (i32)-I;
+    redde -I;
 }
 
 /* res electa: campus res_electa si in ordinibus, aliter prima; 0 si
@@ -285,7 +286,7 @@ res_electa (
        s32  id;
 
     a = insula_ramus_attributum(&m->ramus, "res_electa");
-    si (a && chorda_ut_s32(*a, &id) && index_rei(l, id) != (i32)-I)
+    si (a && chorda_ut_s32(*a, &id) && index_rei(l, id) >= ZEPHYRUM)
     {
         redde id;
     }
@@ -486,7 +487,7 @@ ordines_currentes (
 interior vacuum
 electionem_reficere (
     KalendariumMontatio* m,
-                    i32  index,
+                    s32  index,
                 Piscina* p)
 {
     Xar* l;
@@ -496,8 +497,10 @@ electionem_reficere (
     n = l ? xar_numerus(l) : ZEPHYRUM;
     si (n > ZEPHYRUM)
     {
+        /* index ignotus (-1) aut ultra finem: ordo ultimus */
         (vacuum)electionem_scribere(m, (*(constans AgendaRes**)
-            xar_obtinere(l, index < n ? index : n - I))->id);
+            xar_obtinere(l, (index < ZEPHYRUM || (i32)index >= n)
+            ? n - I : (i32)index))->id);
     }
 }
 
@@ -691,7 +694,7 @@ promptam_committere (
     Xar* l;
     s32  id;
    Dies  d;
-    i32  index;
+    s32  index;
 
     si (!m->documentum)
     {
@@ -914,7 +917,7 @@ nomen structura {
                    Dies  dies;       /* dies electa */
                     Xar* ordines;    /* ordines currentes */
                     s32  id;         /* res electa, 0 = nulla */
-                    i32  index;
+                    s32  index;      /* -1 = nulla */
      constans AgendaRes* r;
 } ContextusMandati;
 
@@ -997,11 +1000,11 @@ rem_gradi (
     constans AgendaRes* proxima;
                    s32  k;
 
-    si (cm->index == (i32)-I)
+    si (cm->index < ZEPHYRUM)
     {
         redde VERUM;
     }
-    k = (s32)cm->index;
+    k = cm->index;
     dum (   k + gradus >= ZEPHYRUM && k + gradus < (s32)xar_numerus(
         cm->ordines))
     {
@@ -1352,7 +1355,7 @@ contextum_parare (
     cm->m      = m;
     cm->p      = p;
     cm->dies   = kalendarium_dies_electus(m);
-    cm->index  = (i32)-I;
+    cm->index  = -I;
     si (visus_currens(m) & VISUS_INDICIS)
     {
         cm->ordines  = ordines_currentes(m, p);

@@ -379,3 +379,11 @@ day title 28 -> 32. No test needed changing - they assert relations
 constants. The pixel remainder of a pane that is not a cell multiple now
 lands in the right/bottom margin (content never touches the edge).
 Plant: root left padding 0 -> red (mensa section).
+
+## 2026-10-13 — index_rei signed
+
+`index_rei` returned `(i32)-I` (i32 is UNSIGNED) as "absent"; examen
+flagged it (domesticum: sentinella negativa in functione insignata) once
+contextum_parare made the flow visible. Now s32 with -1; ContextusMandati
+.index and electionem_reficere take s32, and electionem_reficere keeps
+its old meaning explicitly: index -1 or past the end = last row.

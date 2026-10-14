@@ -62,3 +62,27 @@ static definitions. `color_thematis_index` in pictor_figurae is a
 different function (palette index) and stays.
 Plant: valor ignored -> red in probatio_figura, probatio_pictor_figurae,
 probatio_scriba_figurae (pixel checks), probatio_kalendarium.
+
+## 2026-10-13 — V1: shared drawing helpers ("flat with patterns")
+
+Fran chose, from a specimen sheet (copy of the probe:
+$TMPDIR/imago/probatio_zz_specimen_v1.c), style B: flat 1px COLOR_TEXT
+borders, COLOR_BACKGROUND bodies, COLOR_SELECTION (purple) for selected,
+flat COLOR_TEXT drop shadows; classic Mac OS as the reference. Helpers:
+globulus (button), sagitta (arrow button, filled triangle), segmentum
+(one segment of a segmented control - PRIMUM/MEDIUM draw top, bottom
+and left (divider), ULTIMUM also the right, so adjacent components never
+double a border), capsa (9x9 checkbox, tick = two 2px lines), ordo
+electus (selection fill + 3px accent bar), fascia (background +
+CINEREUM_LEVE band), umbra, campus (input field), textus audax (text
+twice, +1px). Status mask FIGURA_ELECTUM / UMBRA / OBSCURUM.
+
+Rules: with FIGURA_UMBRA the body shrinks by 2px and the shadow stays
+INSIDE the given bounds - a component never paints outside itself (the
+toolbar sits directly above the title). Segments: the shadow strip of
+segment i runs 2px into segment i+1's bottom strip, so it is continuous;
+only ULTIMUM shrinks in width. All text is transcribed into
+md->piscina (mandata_textus keeps a reference - the A3 bug class).
+Also: a 74-col comment from f40f2f4d slipped past the commit formatter
+(include/figura.h) - wrapped here.
+Plant: selected button not filled -> red.

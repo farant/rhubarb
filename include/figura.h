@@ -136,7 +136,8 @@ figura_finium (
                 vacuum* ctx);
 
 /* color thematis ut ColorMandati (genus COLOR_MANDATI_THEMA: thema in
- * pingendo resolvitur) - scriba, pictor, calendarium, terminale, vicus */
+ * pingendo resolvitur) - scriba, pictor, calendarium, terminale,
+ * vicus */
 ColorMandati
 figura_color_thematis (
     ColorThema color);
@@ -151,5 +152,94 @@ figura_mensam_pingere (
     Mandata* md,
       Fines  fines,
         b32  focatum);
+
+
+/* ==================================================
+ * Instrumenta visus (V1): forma communis "plana cum exemplaribus"
+ * (Mac classicus): margo 1px COLOR_TEXT, fundus COLOR_BACKGROUND,
+ * electum COLOR_SELECTION, umbra plana COLOR_TEXT; textus 6x8
+ * centratus et in piscinam mandatorum transcriptus. Omnia in spatio
+ * vocantis. Cum FIGURA_UMBRA corpus II pixela minus et umbra INTRA
+ * fines datos (nihil extra componentem pingitur).
+ * ================================================== */
+
+/* status instrumenti (larva) */
+#define FIGURA_ELECTUM   I    /* electum / pressum: plenum */
+#define FIGURA_UMBRA     II   /* umbra plana II px infra-dextrorsum */
+#define FIGURA_OBSCURUM  IV   /* non praesto: textus obscurus */
+
+/* positio segmenti in controllo segmentato */
+#define FIGURA_SEGMENTUM_PRIMUM   ZEPHYRUM
+#define FIGURA_SEGMENTUM_MEDIUM   I
+#define FIGURA_SEGMENTUM_ULTIMUM  II
+
+/* globulus: margo 1px, fundus, textus centratus */
+vacuum
+figura_globulum_pingere (
+    Mandata* md,
+      Fines  f,
+     chorda  textus,
+        i32  status);
+
+/* globulus cum sagitta (triangulum): directio -1 sinistra, +1 dextra */
+vacuum
+figura_sagittam_pingere (
+    Mandata* md,
+      Fines  f,
+        s32  directio,
+        i32  status);
+
+/* segmentum unum controlli segmentati: quisque margines superum,
+ * inferum et sinistrum (divisor) pingit, ULTIMUM etiam dextrum -
+ * margines communes sine duplicatione; quisque componens suum */
+vacuum
+figura_segmentum_pingere (
+    Mandata* md,
+      Fines  f,
+     chorda  textus,
+        i32  positio,
+        i32  status);
+
+/* capsa IX x IX ad (x, y); signum si factum */
+vacuum
+figura_capsam_pingere (
+    Mandata* md,
+        s32  x,
+        s32  y,
+        b32  factum);
+
+/* ordo electus: fundus selectionis, fascia accentus sinistra (III) */
+vacuum
+figura_ordinem_electum_pingere (
+    Mandata* md,
+      Fines  f);
+
+/* fascia: fundus et exemplar leve (titulus gregis, dies hebdomadis) */
+vacuum
+figura_fasciam_pingere (
+    Mandata* md,
+      Fines  f);
+
+/* umbra plana sub fines (II infra-dextrorsum; tabellae, menus):
+ * vocans tabellam postea pingit */
+vacuum
+figura_umbram_pingere (
+    Mandata* md,
+      Fines  f);
+
+/* campus: fundus superficiei et margo (textus a vocante) */
+vacuum
+figura_campum_pingere (
+    Mandata* md,
+      Fines  f);
+
+/* textus audax: bis, secundus +1 px */
+vacuum
+figura_textum_audacem (
+         Mandata* md,
+             s32  x,
+             s32  y,
+          chorda  textus,
+    ColorMandati  color);
 
 #endif /* FIGURA_H */

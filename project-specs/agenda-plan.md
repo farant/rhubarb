@@ -200,9 +200,10 @@ State-model question to settle before A2 (A1 is content only).
   flat drop shadows in a couple of places at most; 6x8 font for now.
   - **V0** DONE 2026-10-13: `dispositio_ad_pixela` shared (V0a);
     calendarium layout as a dispositio tree in cells (V0b) - rows 16px.
-  - **V1** shared drawing helpers in figura.h (button, checkbox,
-    segmented control, ...) - API shown to Fran first; reusable by
-    scriba / pictor / vicus.
+  - **V1** DONE 2026-10-13: figura.h helpers (globulus, sagitta,
+    segmentum, capsa, ordo electus, fascia, umbra, campus, textus audax;
+    status ELECTUM / UMBRA / OBSCURUM) - style B chosen by Fran from a
+    specimen sheet (purple selection, flat shadows).
   - **V2** calendarium polish with them: toolbar (drawn arrows,
     segmented Month/Day/Agenda), month grid (lines, weekday band,
     dithered outside days, today badge, 2px selection), lists (drawn
