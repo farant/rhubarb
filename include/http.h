@@ -79,6 +79,64 @@ nomen structura {
 
 
 /* ========================================================================
+ * LECTOR RESPONSI - incrementalis (quaestio-rivus-spec II.1)
+ * ========================================================================
+ * Octeti intrant, eventa exeunt; nullum I/O. Corpus decodificatum
+ * (Content-Length, chunked, aut usque ad clausuram) per rivum exit SOLUM
+ * si status 2xx; corpus TOTUM semper colligitur (responsum->corpus,
+ * limes HTTP_LECTOR_CORPUS_MAXIMUM). Fines octetorum ubicumque cadere
+ * possunt. Octeti post FINITUM neglecti. */
+
+nomen vacuum (*HttpRivus)(vacuum* datum, constans i8* octeti, i32 n);
+
+nomen enumeratio {
+    HTTP_LECTOR_CAPITA = 0,   /* capita nondum integra */
+    HTTP_LECTOR_CORPUS,       /* status notus, corpus currit */
+    HTTP_LECTOR_FINITUS,
+    HTTP_LECTOR_ERROR
+} HttpLectorStatus;
+
+nomen structura HttpLector HttpLector;   /* opacus */
+
+#define HTTP_LECTOR_CAPITA_MAXIMA   (LXIV * M)        /* octeti capitum */
+#define HTTP_LECTOR_CORPUS_MAXIMUM  (XVI * M * M)     /* octeti corporis */
+
+/* methodus HTTP_HEAD: nullum corpus. rivus NIHIL = colligere solum */
+HttpLector*
+http_lector_creare (
+         Piscina* piscina,
+    HttpMethodus  methodus,
+       HttpRivus  rivus,
+          vacuum* rivi_datum);
+
+HttpLectorStatus
+http_lector_adicere (
+      HttpLector* lector,
+     constans i8* octeti,
+             i32  n);
+
+/* EOF connexionis: corpus usque ad clausuram FINITUM; ceterum nondum
+ * finitum -> ERROR "truncatum" */
+HttpLectorStatus
+http_lector_finire (
+    HttpLector* lector);
+
+HttpLectorStatus
+http_lector_status (
+    constans HttpLector* lector);
+
+/* NIHIL ante HTTP_LECTOR_CORPUS; corpus = collectum hactenus */
+HttpResponsum*
+http_lector_responsum (
+    HttpLector* lector);
+
+/* causa si ERROR, aliter vacua */
+chorda
+http_lector_error (
+    constans HttpLector* lector);
+
+
+/* ========================================================================
  * TYPI - SERVER (REQUEST PARSING)
  * ======================================================================== */
 

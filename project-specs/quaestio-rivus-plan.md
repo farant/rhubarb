@@ -364,7 +364,7 @@ _sectio_non_2xx (
     CredoContextus* c)
 {
     /* corpus colligitur, rivus tacet */
-    _omnes(c, "HTTP/1.1 529 Overloaded\r\nContent-Length: 16\r\n\r\n"
+    _omnes(c, "HTTP/1.1 529 Overloaded\r\nContent-Length: 15\r\n\r\n"
         "{\"error\":\"o\"}xx", HTTP_POST, FALSUM, HTTP_LECTOR_FINITUS,
         DXXIX, "{\"error\":\"o\"}xx", FALSUM);
 }
