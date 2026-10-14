@@ -32,6 +32,7 @@
     <via (>officina/amalgama
     <via (>css/fontes
     <via (>crusta/fontes
+    <via (>oratio/fontes
   </inclusa>
   <vexilla>
     <vexillum! (>-std=c89
