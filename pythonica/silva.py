@@ -2557,20 +2557,39 @@ def _portae_fabricae(modus, viae, machina):
     return r.stdout
 
 
-def portae_debitae(viae):
-    """(debita, intecta): Debitum(porta, causa, manu) ex lineis DEBITUM,
-    viae nullius portae ex INTECTUM - ordine fabricae (registrum, deinde
-    manu). Linea extra contractum = SilvaError (numquam tacite)."""
-    debita, intecta = [], []
+def _portae_debitae_plenae(viae):
+    """(debita, intecta, binaria): ut portae_debitae, et binaria
+    {porta: [(bin/x, ratio)]} ex lineis BINARIUM (circulus commissionis
+    II T2: binaria arboris quae porta debita currit - praevolatus ea
+    sanat). Linea extra contractum = SilvaError (numquam tacite)."""
+    debita, intecta, binaria = [], [], {}
     for linea in _portae_fabricae('debitae', viae, True).splitlines():
         f = [_ineffugere(x) for x in linea.split('\t')]
         if f[0] == 'DEBITUM' and len(f) == 4:
             debita.append(Debitum(f[1], f[3], f[2] == '1'))
         elif f[0] == 'INTECTUM' and len(f) == 2:
             intecta.append(f[1])
+        elif f[0] == 'BINARIUM' and len(f) == 4:
+            binaria.setdefault(f[1], []).append((f[2], f[3]))
         else:
             raise SilvaError('bin/fabrica portae: linea extra contractum:'
                              ' %r' % linea)
+    return debita, intecta, binaria
+
+
+# binaria vocationis ULTIMAE portae_debitae: (viae, {porta: [...]}) -
+# _portae_debitas_addere ea legit si viae eaedem (portae_debitae ficta
+# probationum nihil ponit -> nihil sanatur)
+_BINARIA_ULTIMA = (None, {})
+
+
+def portae_debitae(viae):
+    """(debita, intecta): Debitum(porta, causa, manu) ex lineis DEBITUM,
+    viae nullius portae ex INTECTUM - ordine fabricae (registrum, deinde
+    manu). Binaria (BINARIUM) in _BINARIA_ULTIMA servantur."""
+    global _BINARIA_ULTIMA
+    debita, intecta, binaria = _portae_debitae_plenae(viae)
+    _BINARIA_ULTIMA = (tuple(viae), binaria)
     return debita, intecta
 
 
@@ -2612,7 +2631,7 @@ def _excusatas_praeiudicare(excusatae, portae, sine_debitis):
     return causae
 
 
-def _portae_debitas_addere(viae, portae, excusatae=None):
+def _portae_debitas_addere(viae, portae, excusatae=None, binaria_out=None):
     """portae petitae + DEBITAE absentes (portae_debitae), ordine: petitae,
     deinde additae ordine PORTAE. Linea una per additam cum causa sua;
     debitae manu nominantur, numquam curruntur. excusatae {porta: causa}
@@ -2621,7 +2640,11 @@ def _portae_debitas_addere(viae, portae, excusatae=None):
     (nihil excusandum - numquam tacite). Debita incomputabilia
     (RECUSATIO, bin/fabrica fractum) = MONITUM et petitae solae (monet,
     numquam obstat: machina haec
-    commissionem nunquam impedit). Decretum 01M38VGAK8."""
+    commissionem nunquam impedit). Decretum 01M38VGAK8. binaria_out
+    (dict, circulus commissionis II T2) impletur {porta: [(bin, ratio)]}
+    portarum quae current (petitae et additae, non manu nec excusatae)."""
+    global _BINARIA_ULTIMA
+    _BINARIA_ULTIMA = (None, {})
     try:
         debita, _ = portae_debitae(viae)
     except SilvaError as ex:
@@ -2653,7 +2676,57 @@ def _portae_debitas_addere(viae, portae, excusatae=None):
         elif d.porta not in petitae:
             print('porta debita addita: %s - %s' % (d.porta, d.causa))
             fructus.append(d.porta)
+    binaria = (_BINARIA_ULTIMA[1] if _BINARIA_ULTIMA[0] == tuple(viae)
+               else {})
+    if binaria_out is not None:
+        currentes = set(petitae) | set(p for p in fructus if isinstance(p, str))
+        for porta, bina in binaria.items():
+            if porta in currentes and porta not in excusatae:
+                binaria_out[porta] = list(bina)
     return fructus
+
+
+def _instrumenta_portarum_sanare(binaria):
+    """PRAEVOLATUS (circulus commissionis II T2): binaria arboris quae
+    portae currentes currunt ('bin/x' - BINARIUM portae debitae) iudicantur
+    et stala per bin/fabrica sanare IN ARBORE sanantur ANTE portas -
+    numquam institutio (~/.bin): sanare bin/x actionem eius solam agit
+    (FABRICA_AGIT, nectere solum). Conatus IV T1 canalis lectionum:
+    briar-fumus post ~18 min portarum sanarum in praecondicione sua
+    (bin/briar non recens, 4 s) cecidit. Fabrica ignota praeterit
+    (candidati 'currit tools/x.c' -> bin/x). Sanatio fracta = SilvaError
+    ante portas."""
+    porta_binarii = {}
+    for porta, bina in sorted(binaria.items()):
+        for b, _ratio in bina:
+            if b.startswith('bin/'):
+                porta_binarii.setdefault(b, []).append(porta)
+    if not porta_binarii or not os.path.exists(FABRICA_BIN):
+        return
+    r = _curre([FABRICA_BIN, 'iudicare', '-machina'] + sorted(porta_binarii))
+    if r.returncode == 2:
+        raise SilvaError('FABRICA (ante portas): instrumenta portarum'
+                         ' iudicari non possunt (exitus 2) - nihil cursum,'
+                         ' nihil commissum:\n%s'
+                         % (r.stdout + r.stderr).strip()[-2000:])
+    stala = [o[2] for o in _machina_legere(r.stdout)
+             if o[0] == 'IUDICIUM' and len(o) >= 3
+             and o[1] in ('STALUM', 'IGNOTUM') and o[2] in porta_binarii]
+    if not stala:
+        print('instrumenta portarum: %d recentia' % len(porta_binarii))
+        return
+    r2 = _curre([FABRICA_BIN, 'sanare', '-machina'] + stala)
+    if r2.returncode != 0:
+        raise SilvaError('FABRICA (ante portas): instrumenta portarum'
+                         ' sanari non potuerunt (%s, exitus %d) - nihil'
+                         ' cursum, nihil commissum:\n%s'
+                         % (', '.join(stala), r2.returncode,
+                            (r2.stdout + r2.stderr).strip()[-2000:]))
+    for b in stala:
+        print('instrumentum sanatum: %s (portae: %s)'
+              % (b, ', '.join(porta_binarii[b][:3])
+                 + (' +%d' % (len(porta_binarii[b]) - 3)
+                    if len(porta_binarii[b]) > 3 else '')))
 
 
 # LINT LATINUS PRAEVIUS (fail-fast, Fran 2026-09-25): verba identificatorum
@@ -2975,8 +3048,12 @@ def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
     if sine_debitis is not None:
         print('portae debitae OMISSAE: %s' % sine_debitis)
     elif not _debitae_additae:
+        binaria = {}
         with _phasis('portae debitae'):
-            portae = _portae_debitas_addere(viae, portae, excusatae)
+            portae = _portae_debitas_addere(viae, portae, excusatae,
+                                            binaria_out=binaria)
+        with _phasis('instrumenta portarum'):
+            _instrumenta_portarum_sanare(binaria)
     ante = _sigilla_viarum(viae)
     for p in portae:
         if isinstance(p, str) and p.endswith('.json'):

@@ -712,6 +712,15 @@ _sectio_derivatio_cursoris (
         == NIHIL);
     CREDO_AEQUALIS_I32(xar_numerus(p->fontes_c), II);
     CREDO_AEQUALIS_I32(xar_numerus(p->ignota), ZEPHYRUM);
+    /* binaria quae porta currit (circulus commissionis II T2):
+     * exsecutio bin/fabrica sic; probatio '-x' bin/aedilis non
+     * (existentia, non vocatio) */
+    e = _exemplar(p->binaria, "bin/fabrica");
+    CREDO_NECESSE_NON_NIHIL(e);
+    CREDO_VERUM(chorda_continet(e->ratio, _ch(c,
+        "tools/credo_fumus.sh currit bin/fabrica")));
+    CREDO_VERUM(_exemplar(p->binaria, "bin/aedilis") == NIHIL);
+    CREDO_AEQUALIS_I32(xar_numerus(p->binaria), I);
 }
 
 /* VII. suita et vocationes (ludus_tessera -> tessera/...,
@@ -873,6 +882,12 @@ _sectio_derivatio_ignota (
     CREDO_NECESSE_NON_NIHIL(e);
     CREDO_AEQUALIS_I32((i32)e->genus, (i32)PORTAE_EXEMPLAR_VIA);
     CREDO_VERUM(_ignotum_habet(c, p->ignota, "currit bin/nullum"));
+    /* binaria (circulus commissionis II T2): 'currit bin/x' et
+     * 'currit tools/x.c' -> bin/x candidatus; scriptum non */
+    CREDO_NON_NIHIL(_exemplar(p->binaria, "bin/folium"));
+    CREDO_NON_NIHIL(_exemplar(p->binaria, "bin/x"));
+    CREDO_NON_NIHIL(_exemplar(p->binaria, "bin/nullum"));
+    CREDO_AEQUALIS_I32(xar_numerus(p->binaria), III);
     p = _opertura(o, "tools/rete_fumus.sh");
     CREDO_NECESSE_NON_NIHIL(p);
     CREDO_NON_NIHIL(_exemplar(p->exemplaria, "tools/rete_fumus.sh"));
@@ -1175,7 +1190,9 @@ _sectio_contractus (
                Xar* debita;
                Xar* intecta;
                Xar* recusationes;
+               Xar* binaria;
      PortaeDebitum* d;
+    PortaeExemplar* e_b;
     MundusPortarum  mundus;
       PortaeSutura  sutura;
             chorda  causa;
@@ -1183,20 +1200,30 @@ _sectio_contractus (
 
     CREDO_VERUM(chorda_aequalis_literis(portae_campum_effugere(_ch(c,
         "a\tb\nc\\d\re"), c->piscina), "a\\tb\\nc\\\\d\\re"));
-    debita = xar_creare(c->piscina, (i32)magnitudo(PortaeDebitum));
-    intecta = xar_creare(c->piscina, (i32)magnitudo(chorda));
+    debita   = xar_creare(c->piscina, (i32)magnitudo(PortaeDebitum));
+    intecta  = xar_creare(c->piscina, (i32)magnitudo(chorda));
+    /* BINARIUM (circulus commissionis II T2): binaria quae porta
+     * currit post DEBITUM suum; porta manu nulla (homo currit) */
+    binaria = xar_creare(c->piscina, (i32)magnitudo(PortaeExemplar));
+    e_b = (PortaeExemplar*)xar_addere(binaria);
+    e_b->exemplar = _ch(c, "bin/fabrica");
+    e_b->genus = PORTAE_EXEMPLAR_VIA;
+    e_b->ratio = _ch(c, "currit bin/fabrica");
     d = (PortaeDebitum*)xar_addere(debita);
     d->porta = _ch(c, "credo");
     d->causa = _ch(c, "x.c (a\tb)");
     d->manu = FALSUM;
+    d->binaria = binaria;
     d = (PortaeDebitum*)xar_addere(debita);
     d->porta = _ch(c, "tools/rete_fumus.sh");
     d->causa = _ch(c, "y");
     d->manu = VERUM;
+    d->binaria = binaria;
     *(chorda*)xar_addere(intecta) = _ch(c, "docs/x.md");
     CREDO_VERUM(chorda_aequalis_literis(portae_debita_scribere(debita,
         intecta, NIHIL, III, VERUM, c->piscina),
         "DEBITUM\tcredo\t0\tx.c (a\\tb)\n"
+        "BINARIUM\tcredo\tbin/fabrica\tcurrit bin/fabrica\n"
         "DEBITUM\ttools/rete_fumus.sh\t1\ty\n"
         "INTECTUM\tdocs/x.md\n"));
     CREDO_VERUM(chorda_aequalis_literis(portae_debita_scribere(debita,
@@ -1330,10 +1357,19 @@ _sectio_possessio (
         "currit bin/acies: instrumentum portae 'aedilis'"));
     CREDO_NON_NIHIL(_exemplar(p->fontes_c, "tools/folium.c"));
     CREDO_AEQUALIS_I32(xar_numerus(p->ignota), ZEPHYRUM);
+    /* binaria: alienus instrumentum possessum TAMEN currit -> recens
+     * esse debet (circulus commissionis II T2) */
+    CREDO_NON_NIHIL(_exemplar(p->binaria, "bin/acies"));
+    CREDO_NON_NIHIL(_exemplar(p->binaria, "bin/folium"));
+    CREDO_AEQUALIS_I32(xar_numerus(p->binaria), II);
+    p = _opertura(o, "aedilis");
+    CREDO_NECESSE_NON_NIHIL(p);
+    CREDO_AEQUALIS_I32(xar_numerus(p->binaria), I);   /* semel */
     /* 'currit' expressum valet */
     p = _opertura(o, "credo");
     CREDO_NECESSE_NON_NIHIL(p);
     CREDO_NON_NIHIL(_exemplar(p->fontes_c, "tools/acies.c"));
+    CREDO_NON_NIHIL(_exemplar(p->binaria, "bin/acies"));
     CREDO_VERUM(chorda_continet(portae_declaratas_scribere(o, NIHIL,
         VERUM,
         c->piscina), _ch(c, "INSTRUMENTUM\taedilis\tbin/acies\n")));

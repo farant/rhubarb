@@ -1170,3 +1170,21 @@ bounds the loop by the size of IUDICES_STRUERE). Test "iudices catena"
 (fake fabrica: fabrica stale -> after its heal, aedilis stale -> after
 its heal, sane): both healed, two struere calls. Plant: the old
 one-shot condition (`not _sanati`) -> that test red, rest green.
+
+## 2026-10-14 - pre-flight heals the owed gates' binaries (circulus commissionis II T2)
+
+New phase `instrumenta portarum` between `portae debitae` and the gates:
+`_instrumenta_portarum_sanare` judges every `bin/` binary the running
+gates execute (BINARIUM lines) in ONE `bin/fabrica iudicare -machina`
+call and heals the STALUM/IGNOTUM ones with one `bin/fabrica sanare`
+call - tree-local (an action producing bin/x never installs). Heal
+failure refuses before any gate. Why: canalis-lectionum T1 attempt 4
+lost ~18 min of passing gates to briar-fumus's own precondition (tree
+bin/briar not RECENS).
+Wiring trap: tests monkeypatch `silva.portae_debitae`. A first version
+called the new parser directly from `_portae_debitas_addere`, bypassing
+the fakes - 10 commissio tests went red against the fake fabrica. Now
+`portae_debitae` stays the single entry point and leaves the binaries of
+its LAST call in `_BINARIA_ULTIMA` (keyed by the paths); a patched fake
+leaves nothing, so nothing is healed. Plant: healer never sees a stale
+binary -> the two healing tests red.

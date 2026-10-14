@@ -154,6 +154,17 @@ nomen structura {
                         Xar* fontes_c;    /* PortaeExemplar (VIA) */
                         Xar* ignota;      /* chorda: caeca */
                         Xar* notae;       /* chorda */
+                        Xar* binaria;     /* PortaeExemplar (VIA):
+                                           * binaria arboris 'bin/x'
+                                           * quae porta CURRIT -
+                                           * exsecutio cursoris aut
+                                           * probationis, instrumentum
+                                           * possessum, 'currit
+                                           * tools/<b>.c' -> bin/<b>
+                                           * (candidatus; fabrica
+                                           * ignota praeterit).
+                                           * circulus commissionis II
+                                           * T2: praevolatus ea sanat */
 } PortaeOpertura;
 
 /* Operturae declarationum omnium (Xar de PortaeOpertura, ordine
@@ -174,9 +185,10 @@ portae_operturas_derivare (
  * currit: nominatur, numquam curritur). causa = ratio prima, '(+N
  * aliae)' si plures */
 nomen structura {
-    chorda porta;
-    chorda causa;
-       b32 manu;
+             chorda porta;
+             chorda causa;
+                b32 manu;
+    constans Xar*   binaria;   /* operturae (PortaeExemplar); NIHIL licet */
 } PortaeDebitum;
 
 /* tactus unus: via mutata portam tangit, rationes OMNES (Xar de
@@ -225,6 +237,9 @@ portae_debita_computare (
  *
  *   portae debitae:
  *     DEBITUM    <porta>  <0|1 manu>  <causa>
+ *     BINARIUM   <porta>  <bin/x>     <ratio>   (post DEBITUM suum;
+ *                portae non manu solae - binaria quae currit,
+ *                circulus commissionis II T2)
  *     INTECTUM   <via>
  *     RECUSATIO  <via>    <linea|0>   <causa>
  *   portae tactus:

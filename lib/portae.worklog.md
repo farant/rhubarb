@@ -289,3 +289,21 @@ script-level plumbing ownership …SRFSD9, `-I` lists derived from
 aedilis.stml …W5W01, path-glob home …H5021. Next: merge main into
 quinta (that brings in insula C2 aa623c1b, which unbreaks briar-fumus),
 run the ritual, then ff main.
+
+## 2026-10-14 - binaria quae porta currit (circulus commissionis II T2)
+
+`PortaeOpertura.binaria` (PortaeExemplar VIA): the tree binaries
+`bin/x` a gate EXECUTES. Fed from three places: an `exsecutio` of a
+house binary in the runner's effect summary or in a test's literals
+(`_vocatum_tractare`, added BEFORE the ownership check - the owner
+inherits the sources, but a non-owner still runs the binary, so it must
+be current); the gate's own `instrumentum`; and `currit tools/<b>.c`
+as the candidate `bin/<b>` (briar-fumus runs `$RADIX/bin/briar` through
+a variable, which the effect summary cannot see). An existence probe
+(`[ -x bin/aedilis ]`) is not an execution and adds nothing - the
+derivation test pins that. `portae debitae -machina` writes them as
+`BINARIUM <porta> <bin/x> <ratio>` after each non-manual DEBITUM
+(contract in portae.h, bytes tested). Candidates are not filtered here:
+`bin/fabrica iudicare` silently skips artifacts no action declares.
+Plants: execution not recorded -> derivation test red (:719);
+`tools/x.c` candidate dropped -> red (:888).

@@ -2513,6 +2513,57 @@ try:
         credo(False, 'involucrum: fabrica absens refutanda')
     except silva.SilvaError as ex:
         credo('fabrica_struere' in str(ex), 'involucrum: bin/fabrica absens = SilvaError cum remedio')
+    # BINARIUM (circulus commissionis II T2): binaria per portam
+    # (_portae_debitae_plenae); portae_debitae ea omittit (forma vetus)
+    silva.FABRICA_BIN = _portae_ficta(0, 'DEBITUM\tbriar-fumus\t0\tx\n'
+                                      'BINARIUM\tbriar-fumus\tbin/briar\tcurrit tools/briar.c (t:1)\n'
+                                      'BINARIUM\tbriar-fumus\tbin/fabrica\tt currit bin/fabrica\n')
+    debita, intecta, binaria = silva._portae_debitae_plenae(['x.c'])
+    credo(binaria == {'briar-fumus': [('bin/briar', 'currit tools/briar.c (t:1)'),
+                                      ('bin/fabrica', 't currit bin/fabrica')]} and len(debita) == 1,
+          'involucrum: BINARIUM -> binaria per portam', causa=repr(binaria))
+    credo(silva.portae_debitae(['x.c']) == ([silva.Debitum('briar-fumus', 'x', False)], []),
+          'involucrum: portae_debitae binaria omittit (forma vetus)')
+    # PRAEVOLATUS INSTRUMENTORUM: stala bin/ sola sanantur, ANTE portas
+    _ia = os.path.join(T, 'instrumenta_argv.txt')
+
+    def _fabrica_instrumentorum(sanare_rc, stalum=True):
+        via = os.path.join(T, 'fabrica_instr_%d_%d' % (sanare_rc, int(stalum)))
+        with open(via, 'w') as f:
+            f.write('#!/bin/bash\necho "$@" >> %s\n' % _ia
+                    + 'if [ "$1" = iudicare ]; then printf "IUDICIUM\\t%s\\tbin/briar\\tingressus mutati\\n'
+                      'IUDICIUM\\tRECENS\\tbin/fabrica\\trelatio congruit\\n"; exit %d; fi\n'
+                    % ('STALUM' if stalum else 'RECENS', 1 if stalum else 0)
+                    + 'echo sanatio ficta\nexit %d\n' % sanare_rc)
+        os.chmod(via, 0o755)
+        return via
+    _bina = {'briar-fumus': [('bin/briar', 'r'), ('bin/fabrica', 'r'), ('tools/x', 'r')],
+             'radix': [('bin/fabrica', 'r')]}
+    for _rc, _stalum in ((0, True), (1, True), (0, False)):
+        if os.path.exists(_ia):
+            os.remove(_ia)
+        silva.FABRICA_BIN = _fabrica_instrumentorum(_rc, _stalum)
+        buf = io.StringIO()
+        err = None
+        try:
+            with contextlib.redirect_stdout(buf):
+                silva._instrumenta_portarum_sanare(_bina)
+        except silva.SilvaError as ex:
+            err = str(ex)
+        vocationes = open(_ia).read().splitlines() if os.path.exists(_ia) else []
+        if _rc == 0 and _stalum:
+            credo(err is None and vocationes == ['iudicare -machina bin/briar bin/fabrica',
+                                                 'sanare -machina bin/briar']
+                  and 'instrumentum sanatum: bin/briar (portae: briar-fumus)' in buf.getvalue(),
+                  'praevolatus: binarium stalum sanatur ante portas (bin/ solum, recentia non)',
+                  causa=repr((err, vocationes, buf.getvalue())))
+        elif _rc == 1:
+            credo(err is not None and 'sanari non potuerunt' in err and 'sanatio ficta' in err,
+                  'praevolatus: sanatio fracta obstat ante portas, effusionem nominans', causa=repr(err))
+        else:
+            credo(err is None and vocationes == ['iudicare -machina bin/briar bin/fabrica']
+                  and 'instrumenta portarum: 2 recentia' in buf.getvalue(),
+                  'praevolatus: omnia recentia - nihil sanatur', causa=repr((err, vocationes)))
     # arbor VIVA (invariantes): cursor ipse, manu, intectum, normatio.
     # portae FICTAE probationum priorum (cursores extra arborem, sine
     # annotatione) seponuntur - registrum verum solum

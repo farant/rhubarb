@@ -879,6 +879,19 @@ _vocatum_tractare (
         : _ratio(der->piscina, "", origo, " currit ", v, "");
     si (_in_arbore(der, v))
     {
+        /* 'currit tools/<b>.c' (annotatio): binarium bin/<b> candidatus
+         * (circulus commissionis II T2; briar-fumus currit $RADIX/
+         * bin/briar per variabilem - effectus id non videt) */
+        si (   annotatio && _finit(v, ".c")
+            && chorda_incipit(v, chorda_ex_literis("tools/",
+                   der->piscina)))
+        {
+            chorda nomen_b = chorda_sectio(v, (i32)VI, v.mensura - II);
+
+            _exemplar_addere(der->o->binaria, _ratio(der->piscina,
+                "bin/",
+                nomen_b, "", _vacua(), ""), PORTAE_EXEMPLAR_VIA, ratio);
+        }
         /* probatio quae viam arboris nominat ab ea pendet (scriptum
          * vocatum, fixum lectum, fons compilatus) */
         si (!annotatio && !_finit(v, ".sh"))
@@ -899,6 +912,14 @@ _vocatum_tractare (
                 "");
         }
         redde;
+    }
+    /* binarium arboris quod porta currit (circulus commissionis II
+     * T2): ETIAM si alius portae instrumentum est - possessor fontes
+     * hereditat, haec tamen id currit, ergo recens esse debet */
+    si (chorda_incipit(v, chorda_ex_literis("bin/", der->piscina)))
+    {
+        _exemplar_addere(der->o->binaria, v, PORTAE_EXEMPLAR_VIA,
+            ratio);
     }
     /* possessio: instrumentum alius portae - infrastructura, non
      * subiectum; 'currit' expressum (annotatio) semper valet */
@@ -1124,9 +1145,19 @@ portae_operturas_derivare (
             (i32)magnitudo(PortaeExemplar));
         o->ignota  = xar_creare(piscina, (i32)magnitudo(chorda));
         o->notae   = xar_creare(piscina, (i32)magnitudo(chorda));
+        o->binaria = xar_creare(piscina,
+            (i32)magnitudo(PortaeExemplar));
         der.o      = o;
         _exemplar_addere(o->exemplaria, d->via, PORTAE_EXEMPLAR_VIA,
             _ratio(piscina, "cursor ipse", vacua, "", vacua, ""));
+        /* instrumenta possessa: porta ea ipsa currit */
+        per (j = ZEPHYRUM; d->instrumenta != NIHIL
+             && j < xar_numerus(d->instrumenta); j++)
+        {
+            _exemplar_addere(o->binaria, *(chorda*)xar_obtinere(
+                d->instrumenta, j), PORTAE_EXEMPLAR_VIA, _ratio(piscina,
+                "instrumentum (", locus, ")", vacua, ""));
+        }
         summarium = sutura->effectus != NIHIL
             ? sutura->effectus(sutura->datum, d->via, piscina) : NIHIL;
         si (summarium == NIHIL)
@@ -1466,10 +1497,11 @@ _debitum_addere (
     {
         redde;
     }
-    d         = (PortaeDebitum*)xar_addere(debita);
-    d->porta  = _porta_operturae(o);
-    d->causa  = _causam_debiti(rationes, piscina);
-    d->manu   = o->declaratio->manu;
+    d           = (PortaeDebitum*)xar_addere(debita);
+    d->porta    = _porta_operturae(o);
+    d->causa    = _causam_debiti(rationes, piscina);
+    d->manu     = o->declaratio->manu;
+    d->binaria  = o->binaria;
 }
 
 Xar*
@@ -1702,11 +1734,25 @@ portae_debita_scribere (
             constans PortaeDebitum* d = (constans PortaeDebitum*)
                 xar_obtinere(debita, i);
 
+            i32 k;
+
             chorda_aedificator_appendere_literis(a, "DEBITUM");
             _campus(a, d->porta);
             _campus_numerus(a, d->manu ? I : ZEPHYRUM);
             _campus(a, d->causa);
             chorda_aedificator_appendere_character(a, '\n');
+            per (k = ZEPHYRUM; !d->manu && d->binaria != NIHIL
+                 && k < xar_numerus(d->binaria); k++)
+            {
+                constans PortaeExemplar* b = (constans PortaeExemplar*)
+                    xar_obtinere(d->binaria, k);
+
+                chorda_aedificator_appendere_literis(a, "BINARIUM");
+                _campus(a, d->porta);
+                _campus(a, b->exemplar);
+                _campus(a, b->ratio);
+                chorda_aedificator_appendere_character(a, '\n');
+            }
         }
     }
     alioquin

@@ -98,10 +98,18 @@ already named; nothing reads that before the gate runs.
 afterwards, is done by commissio itself; it refuses only where someone
 must DECIDE - a real test failure, a new word, a code violation.
 
-The resolution of `currit`/`instrumentum` to artifacts is C:
-`bin/fabrica portae instrumenta -portae TSV <gates...>` prints
-`INSTRUMENTUM\t<porta>\t<bin/x>\t<causa>`; pythonica calls `sanare` on
-the list.
+The resolution of `currit`/`instrumentum` to artifacts is C. **As built
+(T2, departure):** no separate `portae instrumenta` command - `portae
+debitae -machina` already derives exactly the owed gates, so each owed
+gate's binaries follow its DEBITUM line as `BINARIUM\t<porta>\t<bin/x>
+\t<ratio>` (`PortaeOpertura.binaria`: binaries the runner or its tests
+EXECUTE - also when another gate owns them -, the gate's own
+`instrumentum`, and `currit tools/<b>.c` -> candidate `bin/<b>`). An
+existence probe (`[ -x bin/x ]`) is not an execution and adds nothing.
+`bin/fabrica iudicare` ignores artifacts no action declares, so
+candidates need no filter. pythonica: `_instrumenta_portarum_sanare`,
+phase `instrumenta portarum` after `portae debitae`; `commissio_umbra`
+does not heal yet.
 
 ## II. INTERFACE - two kinds of gate (for Fran's approval)
 
@@ -165,6 +173,15 @@ ordo` + commissio phases + report-all for pre-checks; T6 measure.
 - the order and kinds are computed in C; silva.py only iterates.
 
 ## VI. Not in this slice
+
+Recorded from the landscape review (Fran 2026-10-14): manual gates
+(`manu`: apps/forum/fumus.sh, aequivalentia, fasciculum_fumus,
+icones_fumus) are a third kind - "a human runs this" - correctly outside
+both phases; radix's `residua prae` (all libraries compile, generare,
+speculum/JS) are pre-check-like work inside a test gate and could become
+their own pre-check later; merges keep their own ritual (pre-merge hook,
+frigida, installata).
+
 
 Running gates in parallel; moving commissio itself to C; a gate kind for
 "manual" beyond the existing `manu`; healing `~/.bin` (main only, after
