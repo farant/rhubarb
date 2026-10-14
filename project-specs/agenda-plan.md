@@ -214,6 +214,9 @@ State-model question to settle before A2 (A1 is content only).
     prompt labels fixed.
   - **V2b** DONE 2026-10-13: lists - drawn checkbox, strikethrough,
     accent bar on the selected row, separators, heading bands.
+  - **V2c** DONE 2026-10-13: month grid - lines, weekday band aligned
+    to the real columns, dotted outside days, dark today badge, dark
+    double border for the selected day. V2 complete.
 
   - **M2** batch 2: double-click row -> title prompt; click group
     heading -> filter; right-click context menu (from the table).

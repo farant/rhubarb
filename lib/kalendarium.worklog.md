@@ -418,3 +418,22 @@ The checkbox click area (x < 24) still covers the drawn box (8..17).
 Tests: "[ ]"/"[x]" text checks became `capsa_in` (outlined 9x9 box,
 tick = >= 2 lines of thickness 2 inside the row); new `linea_transversa_
 in`, `accentus_in`, `fascia_in`. Plant: tick never drawn -> red.
+
+## 2026-10-13 — V2c: month grid on the V1 helpers
+
+Weekday letters left the title: a 2-cell band row at the top of the
+month body (layout node without a component), painted by the TABLE
+figure as figura_fasciam_pingere with each letter centred over its REAL
+first-week cell. Since V0b the columns are grow cells with the remainder
+spread (6 or 7 cells wide in the 44-cell test pane), so the old
+title-width / 7 spacing drifted off the columns; the plant "uniform
+spacing" turns `litterae_dierum_sunt` red, so the test sees exactly that
+bug. Cells: 1px grid line = outline 1px PAST the bounds (shared with the
+neighbour, never doubled); outside-month days PUNCTA_DISPERSA; today =
+dark badge (COLOR_TEXT, specimen); selected = DARK double border, not
+purple - COLOR_SELECTION and the grid's COLOR_TEXT_DIM are the same
+purple in the theme, so a purple selection differed from the grid only
+by thickness (seen in the first screenshot).
+Tests: today ACCENT_PRIMARY -> TEXT, selection BORDER_ACTIVE (= cell
+bounds) -> TEXT (bounds + 1); new: band above the first week, outside
+pattern, grid outline.

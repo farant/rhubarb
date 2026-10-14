@@ -548,29 +548,45 @@ textus_ullus_continet (
     redde FALSUM;
 }
 
-/* septem textus unius litterae in linea II tituli (y VIII; numeri
- * dierum infra tabulam tituli XVI) ordine S M T W T F S */
+/* litterae dierum (V2c): in fascia supra hebdomadem primam, quaeque
+ * super columnam suam centrata (cellulae verae, non latitudo / VII) */
 interior b32
 litterae_dierum_sunt (
-    Mandata* md)
+     Mundus* x,
+    Mandata* md,
+    Piscina* p)
 {
-    constans Mandatum* x;
-            character  visae[VIII];
-                  i32  i;
-                  i32  n;
+    constans character* ids[VII] = { "2026-09-27", "2026-09-28",
+        "2026-09-29", "2026-09-30", "2026-10-01", "2026-10-02",
+        "2026-10-03" };
+    constans character* litterae = "SMTWTFS";
+     constans Mandatum* y;
+                 Fines  f;
+                   i32  i;
+                   i32  j;
+                   b32  inventa;
 
-    n = ZEPHYRUM;
-    per (i = ZEPHYRUM; i < xar_numerus(md->elementa) && n < VII; i++)
+    per (j = ZEPHYRUM; j < VII; j++)
     {
-        x = (constans Mandatum*)xar_obtinere(md->elementa, i);
-        si (   x->genus   == MANDATUM_TEXTUS && x->textus.mensura == I
-            && x->fines.y == VIII)
+        f        = cellula(x, ids[j], p);
+        inventa  = FALSUM;
+        per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
         {
-            visae[n++] = (character)x->textus.datum[ZEPHYRUM];
+            y = (constans Mandatum*)xar_obtinere(md->elementa, i);
+            si (   y->genus == MANDATUM_TEXTUS && y->textus.mensura == I
+                && y->textus.datum[ZEPHYRUM] == (i8)litterae[j]
+                && y->fines.x == f.x + (f.latitudo - VI) / II
+                && y->fines.y == f.y - XII)
+            {
+                inventa = VERUM;
+            }
+        }
+        si (!inventa)
+        {
+            redde FALSUM;
         }
     }
-    visae[n] = '\0';
-    redde strcmp(visae, "SMTWTFS") == ZEPHYRUM;
+    redde VERUM;
 }
 
 /* figurae: titulus, hodie, electa, colores liturgici, festum, signa */
@@ -612,8 +628,57 @@ _probare_figuras (
     /* litterae dierum: textus in memoria mandatorum, non in acervo
      * figurae (mandata textum per indicem servant) - post vocationes
      * alias acervum rescribentes */
-    CREDO_VERUM(litterae_dierum_sunt(md));
-    /* hodie: numerus inversus (rectangulum accentus) in cellula XIV */
+    CREDO_VERUM(litterae_dierum_sunt(x, md, c->piscina));
+    /* V2c: fascia dierum supra hebdomadem primam */
+    f = cellula(x, "2026-09-27", c->piscina);
+    r = NIHIL;
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa) && !r; i++)
+    {
+        constans Mandatum* y;
+
+        y = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   y->genus                       == MANDATUM_RECTANGULUM
+            && y->exemplar                    == EXEMPLAR_CINEREUM_LEVE
+            && y->fines.x                     == f.x
+            && y->fines.y + y->fines.altitudo == f.y)
+        {
+            r = y;
+        }
+    }
+    CREDO_NON_NIHIL(r);
+    /* dies alieni (IX 27): exemplar punctorum per cellulam */
+    r = NIHIL;
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa) && !r; i++)
+    {
+        constans Mandatum* y;
+
+        y = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   y->genus    == MANDATUM_RECTANGULUM
+            && y->exemplar == EXEMPLAR_PUNCTA_DISPERSA
+            && y->fines.x  == f.x && y->fines.y == f.y)
+        {
+            r = y;
+        }
+    }
+    CREDO_NON_NIHIL(r);
+    /* craticula: margo cellulae (XX) I px ultra (linea communis) */
+    f = cellula(x, "2026-10-20", c->piscina);
+    r = NIHIL;
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa) && !r; i++)
+    {
+        constans Mandatum* y;
+
+        y = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   y->genus          == MANDATUM_RECTANGULUM && !y->impletum
+            && y->fines.x        == f.x && y->fines.y == f.y
+            && y->fines.latitudo == f.latitudo + I
+            && color_thematis_est(y->color, COLOR_TEXT_DIM))
+        {
+            r = y;
+        }
+    }
+    CREDO_NON_NIHIL(r);
+    /* hodie: insigne (rectangulum COLOR_TEXT, V2c) in cellula XIV */
     f = cellula(x, "2026-10-14", c->piscina);
     r = NIHIL;
     per (i = ZEPHYRUM; i < xar_numerus(md->elementa) && !r; i++)
@@ -623,13 +688,13 @@ _probare_figuras (
         y = (constans Mandatum*)xar_obtinere(md->elementa, i);
         si (   y->genus == MANDATUM_RECTANGULUM && y->impletum
             && intra(y->fines, f)
-            && color_thematis_est(y->color, COLOR_ACCENT_PRIMARY))
+            && color_thematis_est(y->color, COLOR_TEXT))
         {
             r = y;
         }
     }
     CREDO_NON_NIHIL(r);
-    /* electa (= hodie): margo activus finibus cellulae */
+    /* electa (= hodie): margo duplex obscurus (V2c) */
     r = NIHIL;
     per (i = ZEPHYRUM; i < xar_numerus(md->elementa) && !r; i++)
     {
@@ -638,8 +703,8 @@ _probare_figuras (
         y = (constans Mandatum*)xar_obtinere(md->elementa, i);
         si (   y->genus          == MANDATUM_RECTANGULUM && !y->impletum
             && y->fines.x        == f.x && y->fines.y == f.y
-            && y->fines.latitudo == f.latitudo
-            && color_thematis_est(y->color, COLOR_BORDER_ACTIVE))
+            && y->fines.latitudo == f.latitudo + I
+            && color_thematis_est(y->color, COLOR_TEXT))
         {
             r = y;
         }
