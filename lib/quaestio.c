@@ -600,57 +600,88 @@ errorem_reddere (
     redde r;
 }
 
-QuaestioResponsum
-quaestio_rogare (
-        Vates* vates,
-       chorda  exemplar,
-       chorda  quaestio,
-          s32  characteres,
-          s32  latitudo,
-      Piscina* piscina)
+chorda
+quaestio_textum_planare (
+      chorda  crudum,
+     Piscina* piscina)
 {
-     QuaestioResponsum  r;
-          VatesPetitio* petitio;
-          VatesNuntius* nuntius;
-        VatesResponsum* responsum;
-             character  systema[CCCLXXXIV];
-                chorda  textus;
-                   i32  k;
+    redde markdown_planare(ad_ascii(crudum, piscina), piscina);
+}
 
-    si (!piscina)
-    {
-        memset(&r, ZEPHYRUM, magnitudo(r));
-        redde r;
-    }
+/* argumenta; FALSUM = *r error impletum */
+interior b32
+argumenta_probare (
+                Vates* vates,
+               chorda  quaestio,
+                  s32  lineae,
+              Piscina* piscina,
+    QuaestioResponsum* r)
+{
     si (!vates)
     {
-        redde errorem_reddere("nullus vates", piscina);
+        *r = errorem_reddere("nullus vates", piscina);
+        redde FALSUM;
     }
     si (quaestio.mensura <= ZEPHYRUM)
     {
-        redde errorem_reddere("quaestio vacua", piscina);
+        *r = errorem_reddere("quaestio vacua", piscina);
+        redde FALSUM;
     }
-    si (characteres <= ZEPHYRUM)
+    si (lineae <= ZEPHYRUM)
     {
-        redde errorem_reddere("spatium nullum", piscina);
+        *r = errorem_reddere("spatium nullum", piscina);
+        redde FALSUM;
     }
+    redde VERUM;
+}
+
+/* petitio communis: systema formam paginae dicit (lineae, latitudo;
+ * Franus 2026-10-14), Markdown levis licet (refluitur) */
+interior VatesPetitio*
+petitionem_struere (
+     chorda  exemplar,
+     chorda  quaestio,
+        s32  lineae,
+        s32  latitudo,
+    Piscina* piscina)
+{
+    VatesPetitio* petitio;
+    VatesNuntius* nuntius;
+       character  systema[DCCLXVIII];
+
     petitio = vates_petitio_creare(piscina, exemplar.mensura > ZEPHYRUM
         ? exemplar : chorda_ex_literis(QUAESTIO_EXEMPLAR, piscina));
-    /* signa ~ characteres / IV; margo pro verbis longis */
-    vates_petitio_maxima_ponere(petitio, characteres / III + LXIV);
-    sprintf(systema, "Answer in plain ASCII text only: no Markdown, no "
-        "lists, no headings. The whole answer must fit in at most %d "
-        "characters; it will be shown on a fixed-width page %d columns "
-        "wide. Be direct.", (integer)characteres, (integer)latitudo);
+    /* signa ~ characteres / IV; margo pro verbis longis (tectum solum:
+     * rivus ipse ad paginam plenam sistitur) */
+    vates_petitio_maxima_ponere(petitio, lineae * latitudo / III
+        + LXIV);
+    sprintf(systema, "Answer in plain ASCII. Light Markdown is fine "
+        "(headings, lists, code blocks); it will be reflowed to the "
+        "page. The page has %d lines of %d characters. Every paragraph "
+        "starts on a new line, a blank line between paragraphs uses a "
+        "whole line, and a short last line still uses the whole line, "
+        "so prefer fewer, fuller paragraphs. Be direct.",
+        (integer)lineae, (integer)latitudo);
     vates_systema_addere(petitio, chorda_ex_literis(systema, piscina),
         FALSUM);
     nuntius = vates_nuntium_addere(petitio, VATES_USOR);
     (vacuum)vates_textum_addere(nuntius, quaestio);
-    responsum = vates_mittere(vates, petitio,
-        chorda_ex_literis("quaestio",
-        piscina), piscina);
+    redde petitio;
+}
+
+/* responsum vatis -> QuaestioResponsum (textus blocorum planatus) */
+interior QuaestioResponsum
+responsum_reddere (
+    constans VatesResponsum* responsum,
+                    Piscina* piscina)
+{
+    QuaestioResponsum r;
+               chorda textus;
+                  i32 k;
+
     memset(&r, ZEPHYRUM, magnitudo(r));
-    r.usus = responsum->usus;
+    r.usus         = responsum->usus;
+    r.causa_finis  = responsum->causa_finis_cruda;
     si (!responsum->successus)
     {
         r.error =
@@ -671,8 +702,7 @@ quaestio_rogare (
         && k < xar_numerus(responsum->bloci);
          k++)
     {
-        /* bloci in Xar ut structurae (non indices - ut probatio_vates
-         * legit), quamvis caput "VatesBlocus*" dicat */
+        /* bloci in Xar ut structurae (non indices) */
         VatesBlocus* b = (VatesBlocus*)xar_obtinere(responsum->bloci,
             k);
         si (b && b->genus == VATES_TEXTUS)
@@ -687,7 +717,309 @@ quaestio_rogare (
             piscina);
         redde r;
     }
-    r.textus     = markdown_planare(ad_ascii(textus, piscina), piscina);
+    r.textus     = quaestio_textum_planare(textus, piscina);
     r.successus  = VERUM;
     redde r;
+}
+
+QuaestioResponsum
+quaestio_rogare (
+        Vates* vates,
+       chorda  exemplar,
+       chorda  quaestio,
+          s32  lineae,
+          s32  latitudo,
+      Piscina* piscina)
+{
+    QuaestioResponsum r;
+
+    si (!piscina)
+    {
+        memset(&r, ZEPHYRUM, magnitudo(r));
+        redde r;
+    }
+    si (!argumenta_probare(vates, quaestio, lineae, piscina, &r))
+    {
+        redde r;
+    }
+    redde responsum_reddere(vates_mittere(vates, petitionem_struere(
+        exemplar, quaestio, lineae, latitudo, piscina),
+        chorda_ex_literis("quaestio", piscina), piscina), piscina);
+}
+
+/* rivus: deltae textus solae (cogitatio omittitur) vocanti */
+nomen structura {
+    VatesRivus  rivus;
+        vacuum* datum;
+} RivusQuaestionis;
+
+interior vacuum
+deltam_transmittere (
+    vacuum* datum,
+    chorda  delta,
+       b32  cogitatio)
+{
+    RivusQuaestionis* transitus = (RivusQuaestionis*)datum;
+
+    si (!cogitatio && transitus->rivus)
+    {
+        transitus->rivus(transitus->datum, delta, FALSUM);
+    }
+}
+
+QuaestioResponsum
+quaestio_rogare_rivum (
+        Vates* vates,
+       chorda  exemplar,
+       chorda  quaestio,
+          s32  lineae,
+          s32  latitudo,
+   VatesRivus  rivus,
+       vacuum* datum,
+      Piscina* piscina)
+{
+    QuaestioResponsum r;
+     RivusQuaestionis transitus;
+
+    si (!piscina)
+    {
+        memset(&r, ZEPHYRUM, magnitudo(r));
+        redde r;
+    }
+    si (!argumenta_probare(vates, quaestio, lineae, piscina, &r))
+    {
+        redde r;
+    }
+    transitus.rivus = rivus;
+    transitus.datum = datum;
+    redde responsum_reddere(vates_mittere_rivum(vates,
+        petitionem_struere(exemplar, quaestio, lineae, latitudo,
+        piscina), chorda_ex_literis("quaestio", piscina),
+        deltam_transmittere, &transitus, piscina), piscina);
+}
+
+
+/* ==================================================
+ * Tabulae adiutoris (quaestio-rivus II.6)
+ * ================================================== */
+
+chorda
+quaestio_tabulam_scribere (
+    constans QuaestioTabula* t,
+                    Piscina* piscina)
+{
+    ChordaAedificator* aed;
+            character  caput[LXIV];
+
+    aed = chorda_aedificator_creare(piscina, (memoriae_index)(t
+        ? t->textus.mensura : ZEPHYRUM) + LXIV);
+    si (!t)
+    {
+        redde chorda_aedificator_finire(aed);
+    }
+    commutatio (t->genus)
+    {
+        casus QUAESTIO_TABULA_TEXTUS:
+        casus QUAESTIO_TABULA_ERROR:
+            sprintf(caput, "%c %u\n",
+                t->genus == QUAESTIO_TABULA_TEXTUS ? 'T' : 'E',
+                (insignatus integer)t->textus.mensura);
+            chorda_aedificator_appendere_literis(aed, caput);
+            chorda_aedificator_appendere_chorda(aed, t->textus);
+            frange;
+        casus QUAESTIO_TABULA_USUS:
+            sprintf(caput, "U %ld %ld\n", (longus)t->input,
+                (longus)t->output);
+            chorda_aedificator_appendere_literis(aed, caput);
+            frange;
+        ordinarius:
+            chorda_aedificator_appendere_literis(aed, "F ");
+            chorda_aedificator_appendere_chorda(aed, t->textus);
+            chorda_aedificator_appendere_character(aed, '\n');
+            frange;
+    }
+    redde chorda_aedificator_finire(aed);
+}
+
+/* numerus decimalis (cifrae solae, unus saltem) in [a, f); *finis post
+ * eum; FALSUM si nullus aut nimius */
+interior b32
+numerum_legere (
+    constans i8* d,
+            i32  a,
+            i32  f,
+            s64* valor,
+            i32* finis)
+{
+    i32 k = a;
+
+    *valor = ZEPHYRUM;
+    dum (k < f && d[k] >= (i8)'0' && d[k] <= (i8)'9')
+    {
+        si (*valor > (s64)M * M * M)
+        {
+            redde FALSUM;
+        }
+        *valor = *valor * X + (s64)(d[k] - (i8)'0');
+        k++;
+    }
+    *finis = k;
+    redde k > a;
+}
+
+QuaestioLectio
+quaestio_tabulam_legere (
+            chorda  fluxus,
+               i32* positio,
+    QuaestioTabula* t,
+           Piscina* piscina)
+{
+             i8* d;
+            i32  a;
+            i32  linea_finis;
+            i32  k;
+            s64  n;
+            s64  m;
+
+    si (!positio || !t || *positio >= fluxus.mensura)
+    {
+        redde QUAESTIO_LECTIO_PLURA;
+    }
+    d            = fluxus.datum;
+    a            = *positio;
+    linea_finis  = a;
+    dum (linea_finis < fluxus.mensura && d[linea_finis] != (i8)'\n')
+    {
+        linea_finis++;
+    }
+    si (linea_finis >= fluxus.mensura)
+    {
+        redde QUAESTIO_LECTIO_PLURA;
+    }
+    memset(t, ZEPHYRUM, magnitudo(*t));
+    si (linea_finis - a < II || d[a + I] != (i8)' ')
+    {
+        redde QUAESTIO_LECTIO_PRAVA;
+    }
+    commutatio ((character)d[a])
+    {
+        casus 'T':
+        casus 'E':
+            si (   !numerum_legere(d, a + II, linea_finis, &n, &k)
+                || k != linea_finis)
+            {
+                redde QUAESTIO_LECTIO_PRAVA;
+            }
+            si ((s64)(fluxus.mensura - linea_finis - I) < n)
+            {
+                redde QUAESTIO_LECTIO_PLURA;
+            }
+            t->genus = d[a] == (i8)'T' ? QUAESTIO_TABULA_TEXTUS
+                                       : QUAESTIO_TABULA_ERROR;
+            t->textus = chorda_concatenare(chorda_ex_literis("",
+                piscina), chorda_ex_buffer(d + linea_finis + I,
+                (i32)n), piscina);
+            *positio = linea_finis + I + (i32)n;
+            redde QUAESTIO_LECTIO_TABULA;
+        casus 'U':
+            si (   !numerum_legere(d, a + II, linea_finis, &n, &k)
+                || k >= linea_finis || d[k] != (i8)' '
+                || !numerum_legere(d, k + I, linea_finis, &m, &k)
+                || k != linea_finis)
+            {
+                redde QUAESTIO_LECTIO_PRAVA;
+            }
+            t->genus   = QUAESTIO_TABULA_USUS;
+            t->input   = n;
+            t->output  = m;
+            *positio   = linea_finis + I;
+            redde QUAESTIO_LECTIO_TABULA;
+        casus 'F':
+            t->genus   = QUAESTIO_TABULA_FINIS;
+            t->textus  = chorda_concatenare(chorda_ex_literis("",
+                piscina), chorda_ex_buffer(d + a + II,
+                linea_finis - a - II), piscina);
+            *positio   = linea_finis + I;
+            redde QUAESTIO_LECTIO_TABULA;
+        ordinarius:
+            redde QUAESTIO_LECTIO_PRAVA;
+    }
+}
+
+/* adiutor: delta -> tabula T statim */
+nomen structura {
+    QuaestioScriptor  scriptor;
+              vacuum* datum;
+             Piscina* piscina;
+} Adiutor;
+
+interior vacuum
+tabulam_mittere (
+                Adiutor* ad,
+    QuaestioTabulaGenus  genus,
+                 chorda  textus,
+                    s64  input,
+                    s64  output)
+{
+    QuaestioTabula t;
+
+    memset(&t, ZEPHYRUM, magnitudo(t));
+    t.genus   = genus;
+    t.textus  = textus;
+    t.input   = input;
+    t.output  = output;
+    ad->scriptor(ad->datum, quaestio_tabulam_scribere(&t, ad->piscina));
+}
+
+interior vacuum
+deltam_scribere (
+    vacuum* datum,
+    chorda  delta,
+       b32  cogitatio)
+{
+    (vacuum)cogitatio;
+    tabulam_mittere((Adiutor*)datum, QUAESTIO_TABULA_TEXTUS, delta,
+        ZEPHYRUM, ZEPHYRUM);
+}
+
+vacuum
+quaestio_adiutor_currere (
+               Vates* vates,
+              chorda  exemplar,
+              chorda  quaestio,
+                 s32  lineae,
+                 s32  latitudo,
+    QuaestioScriptor  scriptor,
+              vacuum* datum,
+             Piscina* piscina)
+{
+               Adiutor ad;
+     QuaestioResponsum r;
+                chorda vacua;
+
+    si (!scriptor || !piscina)
+    {
+        redde;
+    }
+    ad.scriptor  = scriptor;
+    ad.datum     = datum;
+    ad.piscina   = piscina;
+    vacua        = chorda_ex_literis("", piscina);
+    r = quaestio_rogare_rivum(vates, exemplar, quaestio, lineae,
+        latitudo, deltam_scribere, &ad, piscina);
+    si (!r.successus)
+    {
+        tabulam_mittere(&ad, QUAESTIO_TABULA_ERROR, r.error.mensura
+            > ZEPHYRUM ? r.error : chorda_ex_literis("defectus",
+            piscina),
+            ZEPHYRUM, ZEPHYRUM);
+        tabulam_mittere(&ad, QUAESTIO_TABULA_FINIS, chorda_ex_literis(
+            "error", piscina), ZEPHYRUM, ZEPHYRUM);
+        redde;
+    }
+    tabulam_mittere(&ad, QUAESTIO_TABULA_USUS, vacua, r.usus.input,
+        r.usus.output);
+    tabulam_mittere(&ad, QUAESTIO_TABULA_FINIS, r.causa_finis.mensura
+        > ZEPHYRUM ? r.causa_finis : chorda_ex_literis("end_turn",
+        piscina), ZEPHYRUM, ZEPHYRUM);
 }

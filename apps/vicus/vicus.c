@@ -78,6 +78,8 @@ quaestionem_rogare (
           VatesOptiones  o;
       QuaestioResponsum  r;
               character  usus[XCVI];
+                    s32  lineae;
+                    s32  latitudo_textus;
 
     (vacuum)ctx;
     si (!domus || strlen(domus) > DCCC)
@@ -120,8 +122,18 @@ quaestionem_rogare (
             piscina);
         redde FALSUM;
     }
+    /* INTERIM (quaestio-rivus T5; T8 portam totam substituit): porta
+     * adhuc characteres dat - lineae paginae ex eis restituuntur, minus
+     * linea "<answer>"; latitudo textus sine marginibus (R8) */
+    lineae = latitudo > ZEPHYRUM
+        ? (characteres * C / LXXXV + XI) / latitudo - I : I;
+    si (lineae < I)
+    {
+        lineae = I;
+    }
+    latitudo_textus = latitudo - IV >= XX ? latitudo - IV : latitudo;
     r = quaestio_rogare(v, chorda_ex_literis("", piscina), quaestio,
-        characteres, latitudo, piscina);
+        lineae, latitudo_textus, piscina);
     memset(octeti, ZEPHYRUM, magnitudo(octeti));
     si (!r.successus)
     {

@@ -57,3 +57,32 @@ md_registrum_coctum) and emits LOGICAL LINES:
   tight).
 The exact output for a sample answer is pinned in probatio_quaestio
 "markdown" (hand-written expectation, matched first run).
+
+## 2026-10-14 — one planning path, line budget, stream, frames (quaestio-rivus T5)
+
+- `quaestio_textum_planare` (= markdown_planare(ad_ascii(x))) is public:
+  the non-streamed result, the streamed result and (T8) vicus' per-pulse
+  re-layout all go through it, so the finished page cannot differ by
+  path. `quaestio_rogare` / `_rivum` share `petitionem_struere` and
+  `responsum_reddere`.
+- Budget in LINES (Fran 2026-10-14: a paragraph's ragged last line and
+  the blank line after it eat whole lines, so a character budget
+  overshoots by ~40% on paragraphy answers): the prompt says "The page
+  has L lines of W characters" plus the rules that eat space, and
+  allows light Markdown (we reflow it since 4731ac17; the old "no
+  Markdown" was ignored anyway). `max_tokens = L*W/3 + 64`, a backstop.
+  API change: `characteres` -> `lineae`; the one caller
+  (apps/vicus/vicus.c) converts its old character budget back to lines
+  INTERIM until T8 replaces the port.
+- `QuaestioResponsum.causa_finis` (raw stop reason) so the helper's F
+  frame can say `max_tokens`.
+- Frames `T <n>\n<bytes>`, `E <n>\n<bytes>`, `U <in> <out>\n`,
+  `F <causa>\n`: reader returns PLURA for a partial frame, PRAVA for
+  malformed headers (digits only). PLANT LESSON: the first plant (accept
+  a T frame before all its bytes arrived) stayed GREEN - the test's
+  prefix shares its buffer with the whole stream, so the over-read found
+  the right bytes. Added "position never passes the prefix end"; then
+  red. A split test over one shared buffer cannot see over-reads by
+  content - assert positions.
+- `quaestio_adiutor_currere`: T per delta immediately, then U + F, or
+  E + `F error`; the F frame is always last (plant: F dropped -> red).
