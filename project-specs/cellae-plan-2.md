@@ -179,6 +179,11 @@ Each task follows the house cycle:
     unchanged;
   - 2O's table carried over to a subset;
   - refusals (repeats, foreign ring, empty).
+  *(2026-10-13: landed. Axes are now stored pure, (0, v), with floats
+  from the axis itself, replacing `axis_elementum`; the slice-1 suite
+  stayed green unchanged. D124's 13-axis numbers reproduced by a second
+  route (each subset as its own catalog plus the full table). 10 plants
+  red.)*
 - **T2. The phase cell.** `CELLAE_CELLA_D94`: sectors by cos² roots,
   the zero sum, a zero vector part, and the tie sets.
 

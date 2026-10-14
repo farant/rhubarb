@@ -99,6 +99,20 @@ catalogus_pars (
              Catalogus** exitus);
 
 
+/* catalogus ex punctis datis, ORDINE dato (cellae II, T1): catalogi
+ * nulli non ex clausura oriuntur. Profunditas, torsio, gradus 0.
+ * FALSUM si numerus 0, anulus sine ordine, anuli mixti, punctum
+ * nullum, aut punctum REPETITUM ad signum (refutatur, non tacite
+ * deletur); exitus non tangitur. Puncta non copiantur: valent dum
+ * piscina eorum vivit. Unitas non postulatur. */
+b32
+catalogus_ex_punctis (
+    constans Quaternio*  puncta,
+                   i32   numerus,
+               Piscina*  piscina,
+             Catalogus** exitus);
+
+
 /* ==================================================
  * Activatio: tabula axium et cella summae (semantica D82/D84
  * combined_cell, exacte)
@@ -132,13 +146,41 @@ nomen structura {
     constans i32* ligatae;     /* valida dum activatio vivit */
 } Cella;
 
-/* FALSUM si corpus non quadraticum ordinatum, aut catalogus sine axe */
+#define CELLAE_CELLA_D82  0    /* cella combinata (supra) */
+#define CELLAE_CELLA_D94  1    /* cella phasis (cellae II, T2 - nondum) */
+
+/* FALSUM si corpus non quadraticum ordinatum, aut catalogus sine axe.
+ * = activatio_creare(catalogus, NIHIL, 0, CELLAE_CELLA_D82, ...) */
 b32
 activatio_ex_catalogo (
     constans Catalogus*  catalogus,
                    i32   axes_maximae,
                Piscina*  piscina,
              Activatio** exitus);
+
+/* activatio super 'catalogus' (cuius summas iudicat) cum tabula axium
+ * EXPRESSA (cellae II): partes vectoriae 'axes' ordine dato,
+ * antipodes et multipla idem (primus manet); NIHIL = tabula catalogi
+ * ipsius (ut activatio_ex_catalogo). Sic copia una tabula alterius
+ * iudicari potest (activatio_axis). FALSUM si axis anulo alieno aut
+ * parte vectoria nulla, numerus_axium 0 cum axibus, aut cella nondum
+ * facta (CELLAE_CELLA_D94 ante T2). */
+b32
+activatio_creare (
+    constans Catalogus*  catalogus,
+    constans Quaternio*  axes,
+                   i32   numerus_axium,
+                   i32   cella,
+                   i32   axes_maximae,
+               Piscina*  piscina,
+             Activatio** exitus);
+
+/* axis i tabulae, quaternio PURUS (0, v); i extra [0, axes): quaternio
+ * cum anulo NIHIL. Valet dum piscina activationis vivit. */
+Quaternio
+activatio_axis (
+    constans Activatio* activatio,
+                   i32  i);
 
 i32
 activatio_axes (

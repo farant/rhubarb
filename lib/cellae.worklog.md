@@ -516,3 +516,72 @@ Fix: one `_statum_purgare` restoring every one of them to its initial
 value, as purgare of all 17 sections. examen ACCIPE (0 violations; the
 17 'domestica' - hand-printed section titles - were there before and
 are advisory). 17/17 in normal order and CREDO_ORDO=mixtus:7 and :13.
+
+## 2026-10-13 - cellae II T1: point-list catalogs, explicit axis tables
+
+Plan: `project-specs/cellae-plan-2.md` (approved the same day): D94's
+engine into cellae for audit P1.
+
+**`catalogus_ex_punctis`.** A catalog from an explicit list, in the
+given order: depth, writhe and rounds 0, never truncated. It refuses
+(FALSUM, output untouched):
+- an empty list, an unordered ring, mixed rings;
+- the zero quaternion, which has no sign representative;
+- a point repeated up to sign (q and −q, or q twice), which is refused
+  rather than silently dropped.
+Points are not copied (the same lifetime rule as the closure's
+products: valid while their arena lives). Unit norm is not required:
+D126's non-unit linear images A·S are legitimate nulls.
+
+**`activatio_creare` and `activatio_axis`.** `activatio_ex_catalogo`
+is now `activatio_creare(catalogus, NIHIL, 0, CELLAE_CELLA_D82, …)`.
+The constructor split into `_activatio_nova` (allocation),
+`_axem_addere` (one axis: key, dedupe, cap) and `_axes_proprii` (the
+catalog's own table, first appearance, ±1 skipped).
+- Explicit axes must be in the catalog's ring and have a nonzero
+  vector part.
+- Duplicates, antipodes and multiples merge to the first, which is
+  the documented table semantics (`_clavis_axis` divides by the first
+  nonzero part, so 2v and −v share a key).
+- `CELLAE_CELLA_D94` is refused until T2.
+
+**Axes are stored PURE, (0, v).** Before, the table held whole catalog
+elements and found each axis's floats through `axis_elementum` (axis →
+catalog index). External axes have no catalog index, so the floats now
+come from the axis itself, and the field is gone. Every use (the key,
+`quaternio_proximi`, the interval setup) reads only vector parts, so
+behavior is unchanged: the whole slice-1 suite (17 sections, D124 and
+D82 tables) stayed green before any new test was added.
+
+**Tests (2 sections; 237 checks with slice 1).** The independent route
+to D124's 13-axis numbers:
+- D124's existing test restricts weights by index inside the full
+  catalog (`Quaestio.indices`);
+- here each subset is its OWN catalog (`catalogus_ex_punctis` for
+  non-null, `catalogus_pars` for null-only), handed the full catalog's
+  13 axes through `activatio_axis`;
+- both give 328 / 184 (rule) and 328 / 88 (robust) for non-null, and 4
+  for null-only.
+Also checked:
+- the explicit table equal to the own table leaves D124's full numbers
+  (1132 / 402, max XOR8) unchanged;
+- the non-null subset with its OWN table gives D124's 304 / 106 and has
+  fewer than 13 axes (the table matters);
+- duplicates, antipodes and doubled axes merge; the cap truncates and
+  says so;
+- refusals.
+
+**Plants: 10, all red.**
+- Point-list catalogs: repeat refusal removed; zero point admitted;
+  mixed ring admitted.
+- Explicit axes: foreign-ring axis admitted; axis dedupe removed; axes
+  stored unpurified.
+- Axis floats read from the wrong part. Slice 1's D124 regression
+  caught this: the certified filter is only as good as its inputs.
+- Truncation not flagged; `activatio_axis` off by one; the phase cell
+  admitted before T2.
+
+**Lint note.** The suite prints its section titles by hand in 17
+places, which examen flags as house-style (credo v2 prints them
+itself). I copied the pattern for the new section, then removed it.
+The 17 old ones are left as found.

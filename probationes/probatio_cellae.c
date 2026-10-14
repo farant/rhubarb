@@ -2264,6 +2264,218 @@ _probare_limites_quaestionis (
     }
 }
 
+/* cellae II T1: catalogi ex punctis et tabulae axium expressae. Via
+ * altera ad numeros D124 XIII axium: subcopia ut catalogus PROPRIUS
+ * (catalogus_ex_punctis / catalogus_pars) cum tabula plenae expressa,
+ * non pondera restricta (Quaestio.indices) intra catalogum plenum. */
+interior vacuum
+_probare_puncta_et_axes (
+    CredoContextus* c)
+{
+                    Piscina* piscina = c->piscina;
+                  Quaternio  g[IV];
+                  Catalogus* cat         = NIHIL;
+                  Catalogus* ex_punctis  = NIHIL;
+                  Catalogus* non_nulla   = NIHIL;
+                  Catalogus* nulla       = NIHIL;
+                  Activatio* plena       = NIHIL;
+                  Activatio* creata      = NIHIL;
+                  Activatio* act         = NIHIL;
+                  Quaternio  puncta[XXIV];
+                  Quaternio  puncta_nn[XXIV];
+                  Quaternio  axes[XXIV];
+                        i32  indices_n[XXIV];
+                        i32  nn = ZEPHYRUM;
+                        i32  nu = ZEPHYRUM;
+                        i32  i;
+                        i32  modus;
+                   Quaestio  q;
+                  Capacitas  cap;
+                        b32  bene = VERUM;
+    hic_manens constans i64  PLENA[II][V] = {
+        { 1132, 402, 0, 0, 0 }, { 992, 218, 0, 0, 0 } };
+    hic_manens constans i64 TREDECIM[II][II][V] = {
+        { { 328, 184, 0, 0, 0 }, { 4, 0, 0, 0, 0 } },
+        { { 328, 88, 0, 0, 0 }, { 4, 0, 0, 0, 0 } } };
+    hic_manens constans i64 PROPRIA_NN[V] = { 304, 106, 0, 0, 0 };
+
+    _generatores(extensio_anulus(extensio_quadratica(II, piscina)),
+        "a/2", "a/2", "-a/2", piscina, g);
+    CREDO_NECESSE (catalogus_clausura(g, TORSIONES, IV, ZEPHYRUM, XVI,
+        piscina, &cat));
+    CREDO_AEQUALIS_I32 (catalogus_numerus(cat), XXIV);
+    per (i = ZEPHYRUM; i < catalogus_numerus(cat); i++)
+    {
+        puncta[i] = catalogus_elementum(cat, i);
+        si (catalogus_nullum(cat, i)) indices_n[nu++] = i;
+        alioquin puncta_nn[nn++] = puncta[i];
+    }
+    /* catalogus ex punctis clausurae: idem elementum per elementum */
+    CREDO_NECESSE (catalogus_ex_punctis(puncta, XXIV, piscina,
+        &ex_punctis));
+    CREDO_AEQUALIS_I32 (catalogus_numerus(ex_punctis), XXIV);
+    per (i = ZEPHYRUM; i < XXIV; i++)
+    {
+        bene = bene
+            && quaternio_aequalis(catalogus_elementum(ex_punctis,
+            i), puncta[i]) && catalogus_profunditas(ex_punctis, i) == 0
+            && catalogus_torsio(ex_punctis, i) == 0
+            && catalogus_nullum(ex_punctis, i) == catalogus_nullum(cat,
+            i);
+    }
+    CREDO_VERUM (bene);
+    CREDO_AEQUALIS_I32 (catalogus_gradus(ex_punctis), ZEPHYRUM);
+    CREDO_FALSUM (catalogus_truncatus(ex_punctis));
+    /* tabula propria: creare(NIHIL) == ex_catalogo, axes puri */
+    CREDO_NECESSE (activatio_ex_catalogo(cat, ZEPHYRUM, piscina,
+        &plena));
+    CREDO_NECESSE (activatio_creare(ex_punctis, NIHIL, ZEPHYRUM,
+        CELLAE_CELLA_D82, ZEPHYRUM, piscina, &creata));
+    CREDO_AEQUALIS_I32 (activatio_axes(plena), XIII);
+    CREDO_AEQUALIS_I32 (activatio_axes(creata), XIII);
+    bene = VERUM;
+    per (i = ZEPHYRUM; i < XIII; i++)
+    {
+        axes[i] = activatio_axis(plena, i);
+        bene = bene
+            && quaternio_aequalis(axes[i], activatio_axis(creata,
+            i)) && algebraicus_est_nullum(*(constans Algebraicus*)
+            quaternio_pars(axes[i], ZEPHYRUM));
+    }
+    CREDO_VERUM (bene);
+    CREDO_NIHIL (activatio_axis(plena, XIII).anulus);
+    /* tabula expressa == propria: numeri D124 (plena) non mutantur */
+    CREDO_NECESSE (activatio_creare(ex_punctis, axes, XIII,
+        CELLAE_CELLA_D82, ZEPHYRUM, piscina, &act));
+    bene = VERUM;
+    per (modus = ZEPHYRUM; modus < II; modus++)
+    {
+        _quaestio(&q, modus);
+        CREDO_NECESSE (activatio_exhaustiva(act, &q, piscina, &cap));
+        bene = bene && _numeri(&cap, PLENA[modus])
+            && cap.maximum == VIII;
+    }
+    CREDO_VERUM (bene);
+    /* subcopiae ut catalogi proprii cum tabula plenae: numeri XIII
+     * axium D124, via altera quam Quaestio.indices */
+    CREDO_NECESSE (catalogus_ex_punctis(puncta_nn, nn, piscina,
+        &non_nulla));
+    CREDO_NECESSE (catalogus_pars(cat, indices_n, nu, piscina, &nulla));
+    bene = VERUM;
+    per (modus = ZEPHYRUM; modus < II; modus++)
+    {
+        Activatio* a_nn  = NIHIL;
+        Activatio* a_n   = NIHIL;
+
+        _quaestio(&q, modus);
+        CREDO_NECESSE (activatio_creare(non_nulla, axes, XIII,
+            CELLAE_CELLA_D82, ZEPHYRUM, piscina, &a_nn));
+        CREDO_NECESSE (activatio_exhaustiva(a_nn, &q, piscina, &cap));
+        bene = bene && _numeri(&cap, TREDECIM[modus][0]);
+        CREDO_NECESSE (activatio_creare(nulla, axes, XIII,
+            CELLAE_CELLA_D82, ZEPHYRUM, piscina, &a_n));
+        CREDO_NECESSE (activatio_exhaustiva(a_n, &q, piscina, &cap));
+        bene = bene && _numeri(&cap, TREDECIM[modus][1]);
+    }
+    CREDO_VERUM (bene);
+    /* tabula propria subcopiae non nullae: numeri D124 (304) - tabula
+     * refert */
+    {
+        Activatio* propria = NIHIL;
+
+        CREDO_NECESSE (activatio_creare(non_nulla, NIHIL, ZEPHYRUM,
+            CELLAE_CELLA_D82, ZEPHYRUM, piscina, &propria));
+        _quaestio(&q, CELLAE_REGULA);
+        CREDO_NECESSE (activatio_exhaustiva(propria, &q, piscina,
+            &cap));
+        CREDO_VERUM (_numeri(&cap, PROPRIA_NN));
+        CREDO_MINOR_I32 (activatio_axes(propria), XIII);
+    }
+    /* axes duplicati, antipodes, multipla: unus; axes_maximae */
+    {
+        Quaternio  tres[IV];
+        Activatio* a3 = NIHIL;
+        Quaternio  duplum;
+        Quaternio  negatum;
+        Quaternio  nullum;
+
+        CREDO_NECESSE (quaternio_adde(axes[I], axes[I], piscina,
+            &duplum));
+        CREDO_NECESSE (quaternio_nullum(quaternio_anulus(axes[I]),
+            piscina,
+            &nullum));
+        CREDO_NECESSE (quaternio_subtrahe(nullum, axes[I], piscina,
+            &negatum));
+        tres[ZEPHYRUM]  = axes[I];
+        tres[I]         = duplum;
+        tres[II]        = negatum;
+        tres[III]       = axes[II];
+        CREDO_NECESSE (activatio_creare(ex_punctis, tres, IV,
+            CELLAE_CELLA_D82, ZEPHYRUM, piscina, &a3));
+        CREDO_AEQUALIS_I32 (activatio_axes(a3), II);
+        CREDO_FALSUM (activatio_truncata(a3));
+        CREDO_NECESSE (activatio_creare(ex_punctis, axes, XIII,
+            CELLAE_CELLA_D82, V, piscina, &a3));
+        CREDO_AEQUALIS_I32 (activatio_axes(a3), V);
+        CREDO_VERUM (activatio_truncata(a3));
+    }
+}
+
+/* refutationes T1: exitus non tanguntur */
+interior vacuum
+_probare_puncta_refutationes (
+    CredoContextus* c)
+{
+            Piscina* piscina = c->piscina;
+          Quaternio  g[IV];
+          Quaternio  duo[II];
+          Quaternio  axis_peregrinus[I];
+          Quaternio  axis_nullus[I];
+          Catalogus* cat     = NIHIL;
+          Catalogus* exitus  = NIHIL;
+          Activatio* act     = NIHIL;
+          Quaternio  nullum;
+          Quaternio  negatum;
+    constans Anulus* anulus = extensio_anulus(extensio_quadratica(II,
+        piscina));
+    constans Anulus* alius = extensio_anulus(extensio_quadratica(III,
+        piscina));
+
+    _generatores(anulus, "a/2", "a/2", "-a/2", piscina, g);
+    CREDO_NECESSE (catalogus_clausura(g, TORSIONES, IV, ZEPHYRUM, XVI,
+        piscina, &cat));
+    CREDO_FALSUM (catalogus_ex_punctis(g, ZEPHYRUM, piscina, &exitus));
+    /* q et -q: repetitum ad signum */
+    CREDO_NECESSE (quaternio_nullum(anulus, piscina, &nullum));
+    CREDO_NECESSE (quaternio_subtrahe(nullum, g[ZEPHYRUM], piscina,
+        &negatum));
+    duo[ZEPHYRUM]  = g[ZEPHYRUM];
+    duo[I]         = negatum;
+    CREDO_FALSUM (catalogus_ex_punctis(duo, II, piscina, &exitus));
+    duo[I] = g[ZEPHYRUM];
+    CREDO_FALSUM (catalogus_ex_punctis(duo, II, piscina, &exitus));
+    duo[I] = nullum;
+    CREDO_FALSUM (catalogus_ex_punctis(duo, II, piscina, &exitus));
+    duo[I] = _q(alius, "[1, 0, 0, 0]", piscina);
+    CREDO_FALSUM (catalogus_ex_punctis(duo, II, piscina, &exitus));
+    CREDO_NIHIL (exitus);
+    /* activatio: axis peregrinus, axis sine parte vectoria, numerus 0,
+     * cella nondum facta */
+    axis_peregrinus[ZEPHYRUM]  = _q(alius, "[0, 1, 0, 0]", piscina);
+    axis_nullus[ZEPHYRUM]      = _q(anulus, "[1, 0, 0, 0]", piscina);
+    CREDO_FALSUM (activatio_creare(cat, axis_peregrinus, I,
+        CELLAE_CELLA_D82, ZEPHYRUM, piscina, &act));
+    CREDO_FALSUM (activatio_creare(cat, axis_nullus, I,
+        CELLAE_CELLA_D82,
+        ZEPHYRUM, piscina, &act));
+    CREDO_FALSUM (activatio_creare(cat, axis_nullus, ZEPHYRUM,
+        CELLAE_CELLA_D82, ZEPHYRUM, piscina, &act));
+    CREDO_FALSUM (activatio_creare(cat, NIHIL, ZEPHYRUM,
+        CELLAE_CELLA_D94,
+        ZEPHYRUM, piscina, &act));
+    CREDO_NIHIL (act);
+}
+
 /* PURGARE (credo examen 92-95; cursores ad gradus T5, ex fusione main):
  * status moduli - catalogus fluitans f_*, campus et clausura oraculi
  * o_*, tabula victorum ref_*, status aleae - inter sectiones NON manet. Sectio quae o_d/o_scala pro zeta_12
@@ -2337,6 +2549,10 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "limites quaestionis", _probare_limites_quaestionis, NIHIL,
         _statum_purgare,
       NIHIL, NIHIL },
+    { "puncta et axes expressi", _probare_puncta_et_axes, NIHIL,
+        _statum_purgare, NIHIL, NIHIL },
+    { "puncta refutationes", _probare_puncta_refutationes, NIHIL,
+        _statum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

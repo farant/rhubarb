@@ -393,6 +393,77 @@ catalogus_pars (
     redde VERUM;
 }
 
+b32
+catalogus_ex_punctis (
+    constans Quaternio*  puncta,
+                   i32   numerus,
+               Piscina*  piscina,
+             Catalogus** exitus)
+{
+     constans Anulus* anulus;
+           Catalogus* c;
+      TabulaDispersa* tabula;
+                 i32  k;
+
+    si (numerus == ZEPHYRUM || puncta == NIHIL)
+    {
+        redde FALSUM;
+    }
+    anulus = quaternio_anulus(puncta[ZEPHYRUM]);
+    si (anulus == NIHIL || anulus->signum == NIHIL)
+    {
+        redde FALSUM;
+    }
+    c = (Catalogus*)piscina_allocare(piscina, magnitudo(Catalogus));
+    tabula = tabula_dispersa_creare_chorda(piscina, (i32)MMXLVIII);
+    si (c == NIHIL || tabula == NIHIL)
+    {
+        redde FALSUM;
+    }
+    c->anulus     = anulus;
+    c->numerus    = ZEPHYRUM;
+    c->capacitas  = numerus;
+    c->gradus     = ZEPHYRUM;
+    c->truncatus  = FALSUM;
+    c->elementa       = (Quaternio*)piscina_allocare(piscina,
+        (memoriae_index)numerus * magnitudo(Quaternio));
+    c->profunditates  = (i32*)piscina_allocare(piscina,
+        (memoriae_index)numerus * magnitudo(i32));
+    c->torsiones      = (s32*)piscina_allocare(piscina,
+        (memoriae_index)numerus * magnitudo(s32));
+    per (k = ZEPHYRUM; k < numerus; k++)
+    {
+        Quaternio q = puncta[k];
+           chorda clavis;
+              i32 j;
+              b32 nullum = VERUM;
+
+        si (quaternio_anulus(q) != anulus)
+        {
+            redde FALSUM;
+        }
+        per (j = ZEPHYRUM; j < IV; j++)
+        {
+            nullum = nullum && anulus->est_nullum(anulus,
+                quaternio_pars(q, j));
+        }
+        /* punctum nullum signum non habet; repetitum (ad signum)
+         * refutatur, non tacite deletur */
+        si (   nullum || !_clavis(q, piscina, &clavis)
+            || tabula_dispersa_continet(tabula, clavis)
+            || !tabula_dispersa_inserere(tabula, clavis, NIHIL))
+        {
+            redde FALSUM;
+        }
+        c->elementa[c->numerus]       = q;
+        c->profunditates[c->numerus]  = ZEPHYRUM;
+        c->torsiones[c->numerus]      = ZEPHYRUM;
+        c->numerus++;
+    }
+    *exitus = c;
+    redde VERUM;
+}
+
 
 /* ==================================================
  * Activatio
@@ -454,7 +525,7 @@ structura Activatio {
                    i32  visitatio;        /* signum separationis currentis */
                 duplex* fluitantia;       /* elementa ut duplices (IV) */
                     i8* fluitantia_parata;
-                   i32* axis_elementum;   /* axis -> elementum catalogi */
+                   i32  cella;            /* CELLAE_CELLA_* */
                    b32  filtrum;
         TabulaDispersa* combinationes;   /* (index, +-1)... -> Punctum* */
             Intervallum* axes_intervalla;  /* (u, |u|^2) per axem */
@@ -509,19 +580,21 @@ _clavis_axis (
     redde VERUM;
 }
 
-b32
-activatio_ex_catalogo (
+/* activatio vacua super catalogum; FALSUM si corpus non quadraticum
+ * ordinatum aut catalogus vacuus */
+interior b32
+_activatio_nova (
     constans Catalogus*  catalogus,
-                   i32   axes_maximae,
+                   i32   capacitas_axium,
+                   i32   cella,
                Piscina*  piscina,
              Activatio** exitus)
 {
             Activatio* a;
-       TabulaDispersa* visae;
     constans Extensio* corpus;
                   i32  i;
 
-    si (catalogus->numerus == ZEPHYRUM)
+    si (catalogus->numerus == ZEPHYRUM || capacitas_axium == ZEPHYRUM)
     {
         redde FALSUM;
     }
@@ -535,11 +608,11 @@ activatio_ex_catalogo (
         redde FALSUM;
     }
     a = (Activatio*)piscina_allocare(piscina, magnitudo(Activatio));
-    visae = tabula_dispersa_creare_chorda(piscina, (i32)MMXLVIII);
     a->puncta = tabula_dispersa_creare_chorda(piscina, (i32)MMXLVIII);
     a->axes = (Quaternio*)piscina_allocare(piscina,
-        (memoriae_index)catalogus->numerus * magnitudo(Quaternio));
+        (memoriae_index)capacitas_axium * magnitudo(Quaternio));
     a->catalogus            = catalogus;
+    a->cella                = cella;
     a->numerus_axium        = ZEPHYRUM;
     a->truncata             = FALSUM;
     a->numerus_terminorum   = ZEPHYRUM;
@@ -565,10 +638,8 @@ activatio_ex_catalogo (
         (memoriae_index)catalogus->numerus * IV * magnitudo(duplex));
     a->fluitantia_parata = (i8*)piscina_allocare(piscina,
         (memoriae_index)catalogus->numerus);
-    a->axis_elementum = (i32*)piscina_allocare(piscina,
-        (memoriae_index)catalogus->numerus * magnitudo(i32));
-    si (   a->fluitantia     == NIHIL || a->fluitantia_parata == NIHIL
-        || a->axis_elementum == NIHIL)
+    si (   a->axes              == NIHIL || a->fluitantia == NIHIL
+        || a->fluitantia_parata == NIHIL)
     {
         redde FALSUM;
     }
@@ -576,10 +647,74 @@ activatio_ex_catalogo (
     {
         a->fluitantia_parata[i] = ZEPHYRUM;
     }
-    per (i = ZEPHYRUM; i < catalogus->numerus; i++)
+    *exitus = a;
+    redde VERUM;
+}
+
+/* axis ex parte vectoria q (pura servatur: (0, v)); antipodes et
+ * multipla idem (clavis _clavis_axis), primus manet. FALSUM si pars
+ * vectoria nulla aut error. */
+interior b32
+_axem_addere (
+         Activatio* a,
+    TabulaDispersa* visae,
+         Quaternio  q,
+               i32  axes_maximae)
+{
+     Quaternio nullum;
+     Quaternio pura;
+        chorda clavis;
+
+    si (   algebraicus_est_nullum(*_pars(q, I))
+        && algebraicus_est_nullum(*_pars(q, II))
+        && algebraicus_est_nullum(*_pars(q, III)))
     {
-        Quaternio q = catalogus->elementa[i];
-           chorda clavis;
+        redde FALSUM;
+    }
+    si (!_clavis_axis(q, a->piscina, &clavis))
+    {
+        redde FALSUM;
+    }
+    si (tabula_dispersa_continet(visae, clavis))
+    {
+        redde VERUM;
+    }
+    si (axes_maximae > ZEPHYRUM && a->numerus_axium >= axes_maximae)
+    {
+        a->truncata = VERUM;
+        redde VERUM;
+    }
+    si (   !quaternio_nullum(quaternio_anulus(q), a->piscina, &nullum)
+        || !quaternio_ex_partibus(quaternio_anulus(q),
+            quaternio_pars(nullum, ZEPHYRUM), quaternio_pars(q, I),
+            quaternio_pars(q, II), quaternio_pars(q, III), a->piscina,
+            &pura)
+        || !tabula_dispersa_inserere(visae, clavis, NIHIL))
+    {
+        redde FALSUM;
+    }
+    a->axes[a->numerus_axium++] = pura;
+    redde VERUM;
+}
+
+/* tabula propria: partes vectoriae elementorum, ordine primae
+ * apparitionis (+-1 sine axe praetermittitur) */
+interior b32
+_axes_proprii (
+     Activatio* a,
+           i32  axes_maximae)
+{
+    TabulaDispersa* visae = tabula_dispersa_creare_chorda(a->piscina,
+        (i32)MMXLVIII);
+               i32 i;
+
+    si (visae == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < a->catalogus->numerus; i++)
+    {
+        Quaternio q = a->catalogus->elementa[i];
 
         si (   algebraicus_est_nullum(*_pars(q, I))
             && algebraicus_est_nullum(*_pars(q, II))
@@ -587,29 +722,93 @@ activatio_ex_catalogo (
         {
             perge;                     /* +-1: sine axe */
         }
-        si (!_clavis_axis(q, piscina, &clavis))
+        si (!_axem_addere(a, visae, q, axes_maximae))
         {
             redde FALSUM;
         }
-        si (tabula_dispersa_continet(visae, clavis))
-        {
-            perge;
-        }
-        si (axes_maximae > ZEPHYRUM && a->numerus_axium >= axes_maximae)
-        {
-            a->truncata = VERUM;
-            perge;
-        }
-        (vacuum)tabula_dispersa_inserere(visae, clavis, NIHIL);
-        a->axis_elementum[a->numerus_axium]  = i;
-        a->axes[a->numerus_axium++]          = q;
     }
-    si (a->numerus_axium == ZEPHYRUM)
+    redde a->numerus_axium > ZEPHYRUM;
+}
+
+b32
+activatio_ex_catalogo (
+    constans Catalogus*  catalogus,
+                   i32   axes_maximae,
+               Piscina*  piscina,
+             Activatio** exitus)
+{
+    redde activatio_creare(catalogus, NIHIL, ZEPHYRUM, CELLAE_CELLA_D82,
+        axes_maximae, piscina, exitus);
+}
+
+b32
+activatio_creare (
+    constans Catalogus*  catalogus,
+    constans Quaternio*  axes,
+                   i32   numerus_axium,
+                   i32   cella,
+                   i32   axes_maximae,
+               Piscina*  piscina,
+             Activatio** exitus)
+{
+         Activatio* a;
+    TabulaDispersa* visae;
+               i32  i;
+
+    /* cella phasis (D94): consilium T2 - nondum */
+    si (cella != CELLAE_CELLA_D82)
     {
         redde FALSUM;
     }
+    si (axes == NIHIL)
+    {
+        si (   !_activatio_nova(catalogus, catalogus->numerus, cella,
+                piscina, &a)
+            || !_axes_proprii(a, axes_maximae))
+        {
+            redde FALSUM;
+        }
+        *exitus = a;
+        redde VERUM;
+    }
+    si (   numerus_axium == ZEPHYRUM
+        || !_activatio_nova(catalogus, numerus_axium, cella, piscina,
+        &a))
+    {
+        redde FALSUM;
+    }
+    visae = tabula_dispersa_creare_chorda(piscina, (i32)MMXLVIII);
+    si (visae == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < numerus_axium; i++)
+    {
+        /* anulus alienus aut pars vectoria nulla: refutatur */
+        si (   quaternio_anulus(axes[i]) != catalogus->anulus
+            || !_axem_addere(a, visae, axes[i], axes_maximae))
+        {
+            redde FALSUM;
+        }
+    }
     *exitus = a;
     redde VERUM;
+}
+
+Quaternio
+activatio_axis (
+    constans Activatio* activatio,
+                   i32  i)
+{
+    Quaternio nullus;
+
+    si (i < activatio->numerus_axium)
+    {
+        redde activatio->axes[i];
+    }
+    nullus.anulus = NIHIL;
+    nullus.partes = NIHIL;
+    redde nullus;
 }
 
 i32
@@ -1405,12 +1604,18 @@ _axes_intervalla (
     }
     per (j = ZEPHYRUM; j < a->numerus_axium; j++)
     {
-        constans duplex* u = _fluitans(a, a->axis_elementum[j]);
-            Intervallum* x = &a->axes_intervalla[j * IV];
+             duplex  u[IV];
+        Intervallum* x = &a->axes_intervalla[j * IV];
+                i32  m;
 
-        si (u == NIHIL)
+        /* ex axe ipso (axes externi elementa catalogi non sunt) */
+        u[ZEPHYRUM] = 0.0;
+        per (m = I; m < IV; m++)
         {
-            redde FALSUM;
+            si (!_duplex_ex(*_pars(a->axes[j], m), a->piscina, &u[m]))
+            {
+                redde FALSUM;
+            }
         }
         x[ZEPHYRUM]  = _iv_elementi(u[I]);
         x[I]         = _iv_elementi(u[II]);
