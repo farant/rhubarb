@@ -2637,6 +2637,33 @@ _probare_paginas_gregum (
     CREDO_VERUM(campus_est(x, "rubrica_filtrum", "domus"));
 }
 
+/* titulus numquam solus in fine paginae, etiam si titulus alius
+ * sequitur (Franus 10-14): g0 + VIII res, g1, g2 = XIII ordines; "p"
+ * (XIV) et "p0" (XV) caperent, prima perfecta non - "p" cum "p0" in
+ * paginam II transit */
+interior vacuum
+_probare_titulum_solum (
+    CredoContextus* c)
+{
+    Mundus* x;
+      Dies  nulla;
+
+    x            = (Mundus*)c->datum;
+    x->latitudo  = CCCLX;
+    x->altitudo  = CCCXX;
+    CREDO_NECESSE(agendam_visus_parare(x, c));
+    memset(&nulla, ZEPHYRUM, magnitudo(nulla));
+    res_addere(x, VI, "domus", nulla, c->piscina);
+    dispensator_recomponere(x->d);
+    CREDO_VERUM(adest(x, "r6-2", c->piscina));
+    CREDO_FALSUM(adest(x, "p", c->piscina));
+    CREDO_FALSUM(adest(x, "p0", c->piscina));
+    clavis(x, ']');
+    CREDO_VERUM(adest(x, "p", c->piscina));
+    CREDO_VERUM(adest(x, "p0", c->piscina));
+    CREDO_VERUM(ordines_intra(x));
+}
+
 /* visus diei (CCCLX x CCCXX: VI ordines per paginam): r1, c, IV
  * perfectae; pagina II incipit in perfectis - "c-c" iteratus */
 interior vacuum
@@ -2814,6 +2841,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         mundum_purgare, NIHIL, NIHIL },
     { "paginae_greges_diei", _probare_paginas_gregum_diei,
         mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "titulus_solus", _probare_titulum_solum, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

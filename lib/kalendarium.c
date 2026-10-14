@@ -1452,6 +1452,30 @@ titulum_gregis (
     redde -I;
 }
 
+/* altitudo tituli i cum titulis sequentibus et ordine primo post eos:
+ * titulus numquam ultimus paginae, etiam ante titulum alium ("p"
+ * Completed ante "p<k>" diem - Franus 10-14) */
+interior s32
+altitudo_tituli (
+    Xar* ordines,
+    s32  i)
+{
+    OrdoIndicis* o;
+            s32  h;
+
+    h = ZEPHYRUM;
+    per (; i < (s32)xar_numerus(ordines); i++)
+    {
+        o = (OrdoIndicis*)xar_obtinere(ordines, (i32)i);
+        h += o->altitudo;
+        si (o->partes != PARTES_INDEX)
+        {
+            frange;
+        }
+    }
+    redde h;
+}
+
 /* initia paginarum (Xar de s32, index ordinis): ordo qui non capit in
  * paginam novam; pagina in medio gregis incipiens spatium tituli
  * iterati servat; titulus (PARTES_INDEX) numquam ultimus - si cum
@@ -1465,7 +1489,6 @@ paginas_computare (
 {
             Xar* initia;
     OrdoIndicis* o;
-    OrdoIndicis* sequens;
             s32  usus;
             s32  j;
             i32  i;
@@ -1479,19 +1502,16 @@ paginas_computare (
     usus                       = ZEPHYRUM;
     per (i = ZEPHYRUM; ordines && i < xar_numerus(ordines); i++)
     {
-        o        = (OrdoIndicis*)xar_obtinere(ordines, i);
-        sequens  = i + I < xar_numerus(ordines)
-                 ? (OrdoIndicis*)xar_obtinere(ordines, i + I) : NIHIL;
+        o = (OrdoIndicis*)xar_obtinere(ordines, i);
         si (   usus > ZEPHYRUM
             && (   usus + o->altitudo > capacitas
-                || (   o->partes == PARTES_INDEX && sequens
-                    && usus + o->altitudo + sequens->altitudo
+                || (   o->partes == PARTES_INDEX
+                    && usus + altitudo_tituli(ordines, (s32)i)
                        > capacitas)))
         {
-            *(s32*)xar_addere(initia)  = (s32)i;
-            usus                       = ZEPHYRUM;
-            j = titulum_gregis(ordines,
-                (s32)i);
+            *(s32*)xar_addere(initia) = (s32)i;
+            usus = ZEPHYRUM;
+            j = titulum_gregis(ordines, (s32)i);
             si (j >= ZEPHYRUM)
             {
                 usus = ((OrdoIndicis*)xar_obtinere(ordines, (i32)j))

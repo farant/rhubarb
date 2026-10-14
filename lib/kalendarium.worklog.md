@@ -695,3 +695,14 @@ every page of the agenda test.
 Known older edge (not changed): "heading never ends a page" only looks
 one row ahead, so the "p" band can still end a page when it is followed
 by a "p<k>" heading that does not fit with its first item.
+
+## 2026-10-14 - heading chains stay with their first item (Fran)
+
+Fixes the "older edge" noted in the split-groups entry: "heading never
+ends a page" only looked one row ahead, so the "p" Completed band could
+end a page when the "p<k>" date after it did not fit with its first
+item. `altitudo_tituli(ordines, i)` = the heading + every heading right
+after it + the first item; a heading starts a new page if that does
+not fit. Test `titulus_solus` (13 open rows, then band at 14 and date
+at 15 with the first completed item not fitting -> band and date both
+move to page 2), red before the fix.
