@@ -44,6 +44,12 @@ constans character*
 mensura_diarium_cursuum (
     Piscina* piscina);
 
+/* radix tabernae actorum cursuum: MENSOR_DIURNA aut ~/.rhubarb/diurna
+ * (curatio T6c notam et seram ibi ponit) */
+constans character*
+mensura_diurna_radix (
+    Piscina* piscina);
+
 /* taberna actorum cursuum (analytica T4): MENSOR_DIURNA aut
  * ~/.rhubarb/diurna. Clavis = id cursus. NIHIL si aperiri nequit. */
 Diurna*

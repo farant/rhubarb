@@ -52,6 +52,7 @@
 #include <sys/time.h>
 #include <sys/resource.h>
 #include <sys/stat.h>
+#include <fcntl.h>
 
 /* Mandatum metiendum horas capere potest (aedificatio plena) */
 #define MORA_AMPLA (IV * MXXIV * M)
@@ -822,6 +823,15 @@ _novum_effundere (
     }
 }
 
+/* curatio (T6c) infra definitur */
+interior b32
+_curatio_debita (
+    Piscina* piscina);
+
+interior vacuum
+_curare_separatim (
+    constans character* mensor);
+
 interior integer
 _cursum_currere (
       Piscina*  piscina,
@@ -937,6 +947,11 @@ _cursum_currere (
     {
         fprintf(stderr, "mensor cursus: finis non annotatus (%s)\n",
             diarium);
+    }
+    /* cursus SUMMUS: curatio separata si debita (T6c) */
+    si (initium.parens.mensura == ZEPHYRUM && _curatio_debita(piscina))
+    {
+        _curare_separatim(argv[ZEPHYRUM]);
     }
     redde codex;
 }
@@ -1096,6 +1111,12 @@ _cursum_finire (
         fprintf(stderr, "mensor cursus finire: finis non annotatus\n");
         redde I;
     }
+    /* cursus SUMMUS (nullus parens in ambitu - commissio exterior):
+     * curatio separata si debita (T6c) */
+    si (getenv("MENSOR_PARENS") == NIHIL && _curatio_debita(piscina))
+    {
+        _curare_separatim(argv[ZEPHYRUM]);
+    }
     redde ZEPHYRUM;
 }
 
@@ -1201,6 +1222,7 @@ _censura (
       Piscina*  piscina,
       integer   argc,
     character** argv);
+
 
 interior integer
 _cursus (
@@ -2294,6 +2316,232 @@ _censura (
 
 
 /* ============================================================
+ * curare (analytica T6c): conditio + purgatio cotidiana, SEPARATIM
+ * ============================================================ */
+
+/* diarium maius quam hoc -> curatio debita (MENSOR_CURARE_LIMES
+ * octeti); purgatio semel per diem (nota curatio.ultima) */
+#define CURATIO_LIMES_DIARII (CCLVI * MXXIV)
+#define CURATIO_INTERVALLUM_S ((longus)LXXXVI * (longus)M + (longus)CD)
+
+interior constans character*
+_curationis_via (
+    constans character* nomen_plagulae,
+               Piscina* piscina)
+{
+    character* via = (character*)piscina_allocare(piscina,
+        (memoriae_index)DXII);
+
+    si (via == NIHIL)
+    {
+        redde nomen_plagulae;
+    }
+    sprintf(via, "%s/%s", mensura_diurna_radix(piscina),
+        nomen_plagulae);
+    redde via;
+}
+
+/* nota purgationis ultimae vetustior quam dies (aut absens)? */
+interior b32
+_purgatio_debita (
+    Piscina* piscina)
+{
+    structura stat  status;
+
+    si (stat(_curationis_via("curatio.ultima", piscina), &status) != 0)
+    {
+        redde VERUM;
+    }
+    redde (longus)(time(NIHIL) - status.st_mtime)
+        > CURATIO_INTERVALLUM_S;
+}
+
+/* debetne cursus summus curationem excitare? duo 'stat' soli - cursus
+ * fere omnes nihil solvunt */
+interior b32
+_curatio_debita (
+    Piscina* piscina)
+{
+    structura stat  status;
+            longus limes = (longus)CURATIO_LIMES_DIARII;
+
+    si (getenv("MENSOR_CURARE_NULLUS") != NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (getenv("MENSOR_CURARE_LIMES") != NIHIL)
+    {
+        limes = strtol(getenv("MENSOR_CURARE_LIMES"), NIHIL, X);
+    }
+    si (   stat(mensura_diarium_cursuum(piscina), &status) == 0
+        && (longus)status.st_size > limes)
+    {
+        redde VERUM;
+    }
+    redde _purgatio_debita(piscina);
+}
+
+/* curationem SEPARATIM excitare: fork + setsid, stdio ad /dev/null,
+ * 'mensor curare' - scriptum vocatum statim redit (exemplar manus
+ * _detrahere); orphanus a launchd metitur */
+interior vacuum
+_curare_separatim (
+    constans character* mensor)
+{
+        pid_t  proles;
+    character  verbum[XVI];
+    character* argumenta[III];
+
+    sprintf(verbum, "curare");
+    argumenta[ZEPHYRUM]  = (character*)(memoriae_index)mensor;
+    argumenta[I]         = verbum;
+    argumenta[II]        = NIHIL;
+    (vacuum)fflush(stdout);
+    (vacuum)fflush(stderr);
+    proles = fork();
+    si (proles != 0)
+    {
+        redde;   /* parens (aut fork fractus): nihil exspectat */
+    }
+    (vacuum)setsid();
+    {
+        s32 fd = open("/dev/null", O_WRONLY);
+
+        si (fd >= 0)
+        {
+            (vacuum)dup2(fd, I);
+            (vacuum)dup2(fd, II);
+            (vacuum)close(fd);
+        }
+    }
+    si (strchr(mensor, '/') != NIHIL)
+    {
+        (vacuum)execv(mensor, argumenta);
+    }
+    alioquin
+    {
+        (vacuum)execvp(mensor, argumenta);
+    }
+    _exit(CXXVII);
+}
+
+/* regula retentionis (sectio purgare infra) */
+interior b32
+_regulam_legere (
+     constans character* via,
+           DiurnaRegula* regula,
+                Piscina* piscina);
+
+interior integer
+_curare (
+      Piscina*  piscina,
+      integer   argc,
+    character** argv)
+{
+               b32  vis = _vexillum(argc, argv, "-vis");
+         FilumSera* sera;
+     CursusInitium  initium;
+       CursusFinis  finis;
+           Volumen* volumen;
+         character  nota[CCLVI];
+         character  via_regulae[IV * MXXIV];
+constans character* regula_via = getenv("MENSOR_RETENTIO");
+               s64  ante;
+    structura stat  status;
+       longus octeti_diarii = ZEPHYRUM;
+
+    /* sera NON exspectans: curatio altera currit -> nihil */
+    (vacuum)filum_directorium_creare_cum_parentibus(
+        mensura_diurna_radix(piscina));
+    sera = filum_seram_capere(_curationis_via("curatio.sera", piscina),
+        ZEPHYRUM, piscina);
+    si (sera == NIHIL)
+    {
+        redde ZEPHYRUM;
+    }
+    memset(&initium, ZEPHYRUM, magnitudo(initium));
+    memset(&finis, ZEPHYRUM, magnitudo(finis));
+    mensura_contextum_parare(&initium, piscina);
+    initium.titulus  = chorda_ex_literis("mensor:curare", piscina);
+    initium.argv     = chorda_ex_literis(vis ? "-vis" : "", piscina);
+    initium.id       = mensura_id_novum(piscina);
+    initium.initium  = mensura_momentum_nunc();
+    (vacuum)mensura_cursum_incipere(mensura_diarium_cursuum(piscina),
+        &initium, piscina);
+    ante = _horologium_ms();
+    si (stat(mensura_diarium_cursuum(piscina), &status) == 0)
+    {
+        octeti_diarii = (longus)status.st_size;
+    }
+    /* I. conditio diarii (per renominationem: appensores non
+     * perduntur) */
+    volumen = volumen_aperire_aut_creare(piscina,
+        _litterae(_volumen_via(
+        argc, argv, piscina), piscina));
+    si (volumen != NIHIL)
+    {
+        (vacuum)_cursus_condere(volumen, piscina);
+        volumen_claudere(volumen);
+    }
+    sprintf(nota, "condita %ld octeti", octeti_diarii);
+    /* II. purgatio semel per diem (aut -vis); regula: MENSOR_RETENTIO,
+     * aliter arbor contextus, aliter cwd - absens = non purgatur */
+    si (vis || _purgatio_debita(piscina))
+    {
+        DiurnaRegula  regula;
+       DiurnaRelatio  relatio;
+              Diurna* diurna;
+
+        si (regula_via == NIHIL)
+        {
+            sprintf(via_regulae, "%s/tools/analytica_retentio.stml",
+                _ambitus_aut("MENSOR_ARBOR", "."));
+            regula_via = via_regulae;
+        }
+        diurna = mensura_diurna_aperire(piscina);
+        si (!_regulam_legere(regula_via, &regula, piscina))
+        {
+            sprintf(nota + strlen(nota), "; regula absens (%.120s)",
+                regula_via);
+        }
+        alioquin si (   diurna != NIHIL
+                     && diurna_purgare(diurna, &regula,
+                            mensura_momentum_nunc(), FALSUM, &relatio))
+        {
+            sprintf(nota + strlen(nota),
+                "; purgata: compressa %d, deleta"
+                " %d, liberati %ld", (integer)relatio.compressa,
+                (integer)relatio.deleta,
+                (longus)relatio.octeti_liberati);
+        }
+        alioquin
+        {
+            sprintf(nota + strlen(nota), "; purgatio fracta");
+        }
+        /* nota scribitur etiam sine regula: conatus semel per diem */
+        (vacuum)filum_scribere_literis(_curationis_via("curatio.ultima",
+            piscina), nota);
+    }
+    alioquin
+    {
+        sprintf(nota + strlen(nota), "; purgatio non debita");
+    }
+    finis.id          = initium.id;
+    finis.momentum    = mensura_momentum_nunc();
+    finis.duratio_ms  = _horologium_ms() - ante;
+    finis.exitus      = ZEPHYRUM;
+    finis.acta        = chorda_ex_literis("", piscina);
+    finis.nota        = chorda_ex_literis(nota, piscina);
+    (vacuum)mensura_cursum_finire(mensura_diarium_cursuum(piscina),
+        &finis,
+        piscina);
+    imprimere("mensor curare: %s\n", nota);
+    filum_seram_liberare(sera);
+    redde ZEPHYRUM;
+}
+
+
+/* ============================================================
  * purgare (analytica T4 2c): regula retentionis ex STML -> diurna
  * ============================================================ */
 
@@ -2561,6 +2809,10 @@ main (
     alioquin si (strcmp(argv[I], "purgare") == 0)
     {
         codex = _purgare(piscina, argc, argv);
+    }
+    alioquin si (strcmp(argv[I], "curare") == 0)
+    {
+        codex = _curare(piscina, argc, argv);
     }
     alioquin si (strcmp(argv[I], "quaestio") == 0)
     {

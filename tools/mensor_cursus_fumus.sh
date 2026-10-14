@@ -34,6 +34,10 @@
 #   XII  censura (T6): adoptor sine annotatione / versione alia /
 #        annotatio sine prologo / titulus duplex -> exitus 1 singula
 #        nominans; radix munda -> 0; ARBOR VIVA conformis (invariatio)
+#   XIII curare (T6c): 'mensor curare -vis' condit, purgat regula,
+#        notam ultimam scribit, se ut cursum 'mensor:curare' notat;
+#        iteratum intra diem non purgat; cursus summus cum limite
+#        minimo curationem SEPARATAM excitat (apparet intra X s)
 #   VIII extra omne repositorium (contextus vacuus) -> cursus notatus,
 #        commissum et ramus vacui, nulla ruina (planta D T2: setenv cum
 #        NIHIL ruebat)
@@ -49,6 +53,10 @@ fi
 T=$(mktemp -d)
 trap 'rm -rf "$T"' EXIT
 export MENSOR_DIARIUM="$T/diarium.tsv" MENSOR_VOLUMEN="$T/v.volumen" MENSOR_DIURNA="$T/diurna"
+# curatio separata (T6c) in fumo NON sponte: proles detracta diarium
+# temporarium dum probationes legunt conderet - gradus XIII eam solus
+# solvit
+export MENSOR_CURARE_NULLUS=1
 unset MENSOR_SESSIO MENSOR_PARENS MENSOR_COMMISSUM MENSOR_RAMUS MENSOR_ARBOR MENSOR_SORDIDUM MENSOR_MACHINA MENSOR_VOCATOR CURSUS_INTUS CURSUS_NULLUS
 fracta=0
 credo () { if [ "$1" -eq 0 ]; then echo "  ok   $2"; else echo "  FRACTUM $2"; fracta=$((fracta + 1)); fi; }
@@ -253,6 +261,36 @@ printf '#!/bin/bash\n# <cursus titulus="cens/vicinus" versio="I"/>\nsource "$(di
 credo $? "XII  censura: sine annotatione, versio alia, mortuus, geminus nominati; mundus 0; arbor viva conformis"
 [ "$rc3" -eq 0 ] || sed 's/^/      /' "$T/c3" | head -8
 
+# XIII
+# corpus RECENS (purgatio gradus X priora iam delevit)
+scriptum "$T/corpus13.sh" "fumus/corpus13" 'echo corpus decimum tertium; exit 0'
+"$T/corpus13.sh" > /dev/null 2>&1
+id13=$(legere | campus fumus/corpus13 2)
+"$M" cursus acta "$id13" > /dev/null 2>&1; ante=$?
+# cursus post legere (quod iam condit) - eius lineae in diario manent
+# donec curare condat: probatio conditionis non vacua
+scriptum "$T/plicandum.sh" "fumus/plicandum" 'exit 0'
+"$T/plicandum.sh" > /dev/null 2>&1
+d0=$(grep -c 'fumus/plicandum' "$MENSOR_DIARIUM" 2>/dev/null)
+MENSOR_RETENTIO="$T/regula_nulla.stml" "$M" curare -vis > "$T/k1" 2>&1; rk1=$?
+d1=$(grep -c 'fumus/plicandum' "$MENSOR_DIARIUM" 2>/dev/null)
+"$M" cursus acta "$id13" > /dev/null 2> "$T/k1a"; post=$?
+MENSOR_RETENTIO="$T/regula_nulla.stml" "$M" curare > "$T/k2" 2>&1; rk2=$?
+k=$("$M" quaestio historia titulus=mensor:curare -machina 2>/dev/null)
+nk=$(echo "$k" | grep -c '^HISTORIA')
+ultima=$(echo "$k" | head -1 | cut -f11)
+scriptum "$T/excitans.sh" "fumus/excitans" 'exit 0'
+( unset MENSOR_CURARE_NULLUS; MENSOR_CURARE_LIMES=1 MENSOR_RETENTIO="$T/regula_nulla.stml" "$T/excitans.sh" ) > /dev/null 2>&1
+n=0; nk3=0
+until [ "$nk3" -ge 3 ] || [ $n -ge 100 ]; do
+    sleep 0.1; n=$((n + 1))
+    nk3=$("$M" quaestio historia titulus=mensor:curare -machina 2>/dev/null | grep -c '^HISTORIA')
+done
+[ "$ante" -eq 0 ] && [ "${d0:-0}" -ge 1 ] && [ "$rk1" -eq 0 ] && [ "${d1:-0}" = "0" ] && [ "$post" -eq 1 ] && grep -q "deletum" "$T/k1a" \
+  && [ -f "$MENSOR_DIURNA/curatio.ultima" ] && [ "$rk2" -eq 0 ] && [ "$nk" -eq 2 ] \
+  && echo "$ultima" | grep -q "purgatio non debita" && [ "$nk3" -ge 3 ]
+credo $? "XIII curare: condit, purgat, notatur; intra diem non purgat; cursus summus curationem separatam excitat"
+
 echo
-if [ "$fracta" -eq 0 ]; then echo "fumus mensor_cursus: sanum (XII/XII)"; exit 0; fi
+if [ "$fracta" -eq 0 ]; then echo "fumus mensor_cursus: sanum (XIII/XIII)"; exit 0; fi
 echo "fumus mensor_cursus: FRACTUM ($fracta)"; exit 1

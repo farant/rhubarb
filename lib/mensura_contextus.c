@@ -278,17 +278,29 @@ mensura_diarium_cursuum (
     redde plena;
 }
 
+constans character*
+mensura_diurna_radix (
+    Piscina* piscina)
+{
+    constans character* radix = getenv("MENSOR_DIURNA");
+             character* via;
+
+    si (radix != NIHIL && radix[ZEPHYRUM] != '\0')
+    {
+        redde radix;
+    }
+    via = (character*)piscina_allocare(piscina, (memoriae_index)DXII);
+    si (via == NIHIL)
+    {
+        redde "/tmp/diurna";
+    }
+    sprintf(via, "%s/.rhubarb/diurna", _ambitus_aut("HOME", "/tmp"));
+    redde via;
+}
+
 Diurna*
 mensura_diurna_aperire (
     Piscina* piscina)
 {
-    constans character* radix = getenv("MENSOR_DIURNA");
-             character  via[DXII];
-
-    si (radix != NIHIL && radix[ZEPHYRUM] != '\0')
-    {
-        redde diurna_aperire(radix, piscina);
-    }
-    sprintf(via, "%s/.rhubarb/diurna", _ambitus_aut("HOME", "/tmp"));
-    redde diurna_aperire(via, piscina);
+    redde diurna_aperire(mensura_diurna_radix(piscina), piscina);
 }

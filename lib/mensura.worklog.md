@@ -405,3 +405,28 @@ chassis: 91 s, nested fabrica runs carry the temp tree's own branch
 `frigida-1046becc-24504` and commit (acceptance question 4 answered on
 real data). Plants V red (version, twin titles, extensionless blind,
 literal source rule, live-tree source line removed).
+
+## 2026-10-14 - maintenance without waiting (analytica T6c)
+
+`bin/mensor curare [-vis]`: folds the run diary into the volume, and
+once a day (stamp `<diurna>/curatio.ultima`, or -vis) applies the
+retention policy (MENSOR_RETENTIO, else the run's own tree
+`tools/analytica_retentio.stml`; absent = not purged, said in the
+note - never invented); records itself as run `mensor:curare` with
+what it folded / compressed / deleted; a non-waiting lock
+(`curatio.sera`) means two never overlap. The stamp is written after
+every attempt, so a missing policy retries daily, not on every run.
+Trigger: a TOP-LEVEL run ending (`cursus currere` with no parent;
+`cursus finire` with no MENSOR_PARENS - an outer commissio) checks two
+`stat`s (diary > 256 KB / MENSOR_CURARE_LIMES, stamp older than a day)
+and only then forks `mensor curare` detached (setsid, stdio to
+/dev/null; the manus `_detrahere` pattern) - the script returns at
+once, most runs pay two stats. `mensura_diurna_radix` moved into
+lib/mensura_contextus so stamp and lock sit beside the store.
+MENSOR_CURARE_NULLUS=1 in the mensor fumus and the pythonica suite:
+both create runs in temp diaries, and a detached fold racing their own
+reads would be a flake. fumus XIII - my first version tested a body
+stage X had already purged, then "diary empty" (curare records itself
+after the fold), then a fold the preceding `legere` had already done;
+each vacuous, each rewritten. Plants IV red (trigger off, daily gate
+off, opt-out ignored, fold skipped).

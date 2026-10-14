@@ -146,8 +146,10 @@ commit via silva.commissio. Work in `../rhubarb-quinta`.
 - [x] 6b: chassis on toml/css/md/silva entry points, frigida, vexilla
   fumus, pre-commit hook; `mensor cursus censura` (version lint, live
   tree in gate mensor-cursus). +~80 ms per top-level run. Plants V red.
-- [ ] 6c: opportunistic fold + once-a-day purge.
-- [ ] Chassis on the four converted entry points, frigida, one hook (=
+- [x] 6c: opportunistic fold + once-a-day purge: `mensor curare`,
+  spawned detached by top-level runs when the diary is big or the last
+  purge is a day old (two stats otherwise). Plants IV red.
+- [x] Chassis on the four converted entry points, frigida, one hook (=
   tools/unci-git/pre-commit: hand-made `git commit`s are attempts too,
   Fran 10-13), one gate script; lint stage: an adopter must carry the current version.
   Measured: fold and capture overhead. Commit.

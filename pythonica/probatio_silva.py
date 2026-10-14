@@ -61,6 +61,10 @@ for _k, _v in (('MENSOR_DIARIUM', 'cursus.diarium'),
                ('MENSOR_ACTA', 'cursus_acta'),
                ('MENSOR_DIURNA', 'cursus_diurna')):
     os.environ[_k] = os.path.join(T, _v)
+# curatio separata (analytica T6c) NON in suita: commissiones fictae ut
+# cursus summi finiunt - proles detracta diarium T dum probationes legunt
+# conderet (fluxa)
+os.environ['MENSOR_CURARE_NULLUS'] = '1'
 # ambitus cursuum IN INITIO suitae (porta vera parentem legitime
 # hereditat): post cursus omnes idem esse debet. Comparatio 'ante
 # sectionem' caeca erat - commissiones priores iam effluxerant (planta
