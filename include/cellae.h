@@ -263,6 +263,11 @@ activatio_separat (
  *               nondum possibilis.
  * ================================================== */
 
+/* n maximum encodationis signatae (D94/D119 usque ad N = VIII);
+ * quaestio
+ * antipodalis CELLAE_N_MAXIMUS (VII) servat */
+#define CELLAE_N_SIGNATA_MAXIMA  VIII
+
 nomen structura {
     b32 regula;
     b32 robusta;
@@ -277,7 +282,8 @@ nomen structura {
                       * possibilis. Concursus indecisam tollit. */
 } Iudicium;
 
-/* *exitus verdicta; FALSUM si n 0 aut > VII, index extra aut iteratus,
+/* *exitus verdicta; FALSUM si n 0 aut > CELLAE_N_SIGNATA_MAXIMA, index
+ * extra aut iteratus,
  * scala vacua aut k < 1, tabula valore > 1 (exitus non tangitur) */
 b32
 activatio_iudica (
@@ -290,7 +296,8 @@ activatio_iudica (
         Iudicium* exitus);
 
 /* tabulae veritatis 2^n (D94): paritas (XOR), et (AND: larva plena),
- * maior (MAJ: plus quam n/2 bita). NIHIL si n 0 aut > VII. */
+ * maior (MAJ: plus quam n/2 bita). NIHIL si n 0 aut >
+ * CELLAE_N_SIGNATA_MAXIMA. */
 constans i8*
 cellae_paritas (
          i32  n,

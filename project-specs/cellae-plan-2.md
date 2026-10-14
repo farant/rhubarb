@@ -225,6 +225,19 @@ Each task follows the house cycle:
 - **T4. Speed, measured first.** *(The filter part landed in T3; T4
   is measurement against D120, plus the combination cache's memory
   (463 MB over about 1M judgments).)*
+  *(2026-10-14, checkpoint: measured with a harness reproducing D120
+  Parts B-C through `activatio_iudica`. All 36 D119 rows are equal,
+  including the sampled N = 7, 8 rows. N = 8 needed its own limit
+  (`CELLAE_N_SIGNATA_MAXIMA`). Memory went from 949 MB to 36-69 MB:
+  the combination cache was 97% of it and is now per call. Each cell
+  is computed once per (mask, k); the exact path takes the vector's
+  float hint; keys are binary. About 265 s against D120's 125 s for
+  both tables. What's left is exact sums and point keys through general
+  algebraic numbers (~46%), which T4b targets. venenum's cellae build
+  was broken since T2 and undeclared; both fixed. 8 plants red.)*
+- **T4b. Integer image of the catalog** (sketch for Fran first). Exact
+  sums and point keys in integers over (p + q√d)/D, the general path
+  as the fallback, one key scheme per activation.
   - The certified filter for the phase cell, and the per-point cache
     on signed sums.
   - Compared with D120 on the same rows (D120: Parts A–C in 136 s).

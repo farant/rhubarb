@@ -756,3 +756,101 @@ across sets much.
   or 12 implies rule-separable at 24. Union = last k on that ladder.
   Fixed by judging every N = 3 row again on {24, 12, 6} (the union is
   order-independent); the plant is red there.
+
+## 2026-10-14 - cellae II T4 checkpoint: N = 8, memory, cells once
+
+**Harness.** `mensura.c` (scratchpad, built with aedilis via a relative
+path out of the tree) reproduces D120 Parts B-C through
+`activatio_iudica`. It uses the same rows, exhaustive where C(24, N)
+<= 200,000, and otherwise 100,000 sets from D120's seeded LCG stream
+(seed base + N, shared by XOR/AND/MAJ in order). Rows are checked
+against D119_B/D119_C. All 36 rows are equal, now including the 12
+sampled N = 7, 8 rows that the credo does not cover. The baseline is
+D120 `MEDIUS` on the same machine and day: 125 s, 5 MB peak.
+
+**N = 8 was refused.** `activatio_iudica` inherited the antipodal limit
+(VII). D94/D119 go to N = 8, so the signed encoding gets its own limit,
+`CELLAE_N_SIGNATA_MAXIMA` (VIII); the antipodal searches keep
+CELLAE_N_MAXIMUS. T3's regression used only exhaustive rows (N <= 6),
+so this surfaced only with the sampled rows. New credo: 21 N = 8 sets
+spread over C(24, 8), filter on/off and concursus oracle.
+
+**Memory: count, don't guess.** Peak RSS was 949 MB for zeta_8 to
+N = 7. Two guesses moved little:
+- exact scratch in `_punctum` moved to the call arena: -5%;
+- `per_k[64]` inline in every point became a growing array (4, 8):
+  -10%.
+Byte counters per allocation site (a temporary instrument, removed
+before commit) then showed that the combination cache was 97% of the
+arena: 3.25M entries, while there were only 38k distinct points.
+- Why it never pays: in the signed encoding a key names the WHOLE
+  weight set, so another set never hits it.
+- Why it looked useful: the same set judged for another truth table
+  does hit it (AND/MAJ ran 5x faster after XOR).
+- Hash tables doubling inside an arena abandon each old table, hence
+  the jumps.
+`activatio_iudica` now keeps the table per call (`piscina_combinationum`
+swapped for the call). Points stay on the activation, where they are
+heavily shared. Peak RSS: 36 MB to N = 7, 69 MB for the N = 8 rows.
+The antipodal searches keep the activation table, since their
+sub-combinations do recur across sets. Guard: credo "iudicium
+memoria". All ζ₈ N = 4 XOR sets grow the activation arena by less than
+5 MB (15 MB before), and a second pass over the same sets allocates
+exactly 0 bytes there.
+
+**Cells once per (mask, k).** The tie loop, rule, robust and possible
+each recomputed every mask's cell, up to 4 times per k. A per-k memo
+(`_cella_vectoris`) is filled lazily, so rule keeps its early exit.
+Robust implies rule (the rule cell is among the tie cells), so robust
+is skipped when rule fails. Float cells per row roughly halved.
+
+**Exact cells use the vector's float tan^2 h.** `radix_compara` was
+19% of the 2I profile: once the vector-level filter gave up, every
+boundary was compared exactly. Now `_terminum_comparare` decides each
+boundary by the vector's certified tan^2 h interval (tan^2 is
+sign-invariant, so it encloses the point's value) against the filter's
+own boundary enclosure. Only overlaps reach `radix_compara`. 2I went
+from 2-5x slower than zeta_8 to equal. The filter-off credo now also
+covers this: with the filter off there is no hint, so that run is the
+pure exact path.
+
+**Binary combination keys.** 4 bytes per weight, ±(index + 1),
+replacing sprintf text (~5-7% of the profile).
+
+**Standing.**
+- Both tables, N = 3-8: about 265 s here, against D120's 125 s;
+  36/36 rows equal to D119.
+- Profile now: about 46% exact sums and exact point keys through
+  general algebraic numbers (`_vector_punctum`), about 20% float
+  intervals (`_vector_parare`). The integer image of the catalog
+  (T4b) targets the 46%.
+- Timing noise: load average was about 5 from other sessions'
+  builds. Profiles and per-row filter/exact counts are the reliable
+  signal; wall times are +-15%.
+
+**venenum found a dead gate.** `tools/venenum_probare.sh` builds
+cellae from a hand-written source list, and since T2 the test needs
+`surdus`: the cellae suite did not even link under venenum. Nobody saw
+it, because the gate's `<porta>` declaration covered neither
+`probatio_cellae.c` nor `lib/cellae.c`, so commissio never owed venenum
+for cellae changes. Fixed both: `lib/surdus.c` added to the list, and
+cellae (+ surdus) declared. Under poison and ASan/UBSan the cellae suite
+passes (17,292 checks), so the `_punctum` arena reset leaves nothing
+dangling. The hand-written link lists remain debt (aedilis knows the
+sources).
+
+**Plants: 8, all red.**
+- Combinations back in the activation: the memory credo.
+- The memo always hit: a crash, exit 138.
+- Robust searched only when rule fails (inverted guard): D119 robust
+  counts.
+- Hint sign inverted; hint deciding on overlap; combination key without
+  the sign: first red in "separatio contra D124" (the antipodal path
+  shares `_vector_cella` and the key; that section runs before the D119
+  rows).
+- per_k growing without copying: the slice-1 oracle (cached cells
+  lost).
+- N = 8 refused again: the N = 8 credo.
+Not planted: dropping the `_punctum` reset of the call arena. That
+scratch dies with the call anyway, so no correctness test can see it
+(an equivalent mutant); it only lowers one call's peak.
