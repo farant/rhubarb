@@ -166,27 +166,40 @@ ictus_in (
         redde FALSUM;
     }
     memset(&e, ZEPHYRUM, magnitudo(Eventus));
-    e.genus        = EVENTUS_MUS_DEPRESSUS;
-    e.datum.mus.x  = c->fines.x + c->fines.latitudo / II;
-    e.datum.mus.y  = c->fines.y + c->fines.altitudo / II;
+    e.genus             = EVENTUS_MUS_DEPRESSUS;
+    e.datum.mus.x       = c->fines.x + c->fines.latitudo / II;
+    e.datum.mus.y       = c->fines.y + c->fines.altitudo / II;
+    e.datum.mus.botton  = MUS_SINISTER;
     dispensator_tractare(x->d, &e);
     redde VERUM;
 }
 
-/* ictus in puncto (spatium radicis) */
+/* ictus bottone dato in puncto (spatium radicis) */
+interior vacuum
+ictus_bottone_ad (
+          Mundus* x,
+             s32  px,
+             s32  py,
+    mus_botton_t  botton)
+{
+    Eventus e;
+
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus             = EVENTUS_MUS_DEPRESSUS;
+    e.datum.mus.x       = px;
+    e.datum.mus.y       = py;
+    e.datum.mus.botton  = botton;
+    dispensator_tractare(x->d, &e);
+}
+
+/* ictus sinister in puncto (spatium radicis) */
 interior vacuum
 ictus_ad (
     Mundus* x,
        s32  px,
        s32  py)
 {
-    Eventus e;
-
-    memset(&e, ZEPHYRUM, magnitudo(Eventus));
-    e.genus        = EVENTUS_MUS_DEPRESSUS;
-    e.datum.mus.x  = px;
-    e.datum.mus.y  = py;
-    dispensator_tractare(x->d, &e);
+    ictus_bottone_ad(x, px, py, MUS_SINISTER);
 }
 
 /* montatio: hodie electa, focus in radice, visus mensis */
@@ -2262,6 +2275,50 @@ _probare_rubricas_in_linea (
     CREDO_VERUM(campus_est(x, "prompta", "titulus"));
 }
 
+/* greges et filtrum (M2a): ictus in titulo gregis rubricam eius
+ * filtrat, in titulo filtri positi tollit; "(none)" nihil agit. Botton
+ * dexter nec filtrat nec perficit (menu contextuale: M2c). */
+interior vacuum
+_probare_greges_filtrum (
+    CredoContextus* c)
+{
+                Mundus* x;
+    constans AgendaRes* r;
+                 Fines  f;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(agendam_visus_parare(x, c));
+    dispensator_recomponere(x->d);
+    CREDO_VERUM(ordines_sunt(x, "r1-0 r5-0 r5-1 r6-2"));
+    /* "#opus" (g1) */
+    CREDO_NECESSE(ictus_in(x, "g1", c->piscina));
+    CREDO_VERUM(campus_est(x, "rubrica_filtrum", "opus"));
+    CREDO_VERUM(ordines_sunt(x, "r5-0"));
+    /* titulus idem (sub filtro g0) filtrum tollit */
+    CREDO_NECESSE(ictus_in(x, "g0", c->piscina));
+    CREDO_VERUM(ordines_sunt(x, "r1-0 r5-0 r5-1 r6-2"));
+    /* "(none)" (g2): nihil */
+    CREDO_NECESSE(ictus_in(x, "g2", c->piscina));
+    CREDO_VERUM(ordines_sunt(x, "r1-0 r5-0 r5-1 r6-2"));
+    /* botton dexter in titulo: filtrum nullum */
+    f = fines_componentis(x, "g1", c->piscina);
+    CREDO_NECESSE(f.altitudo > ZEPHYRUM);
+    ictus_bottone_ad(x, f.x + f.latitudo / II, f.y + f.altitudo / II,
+        MUS_DEXTER);
+    CREDO_VERUM(ordines_sunt(x, "r1-0 r5-0 r5-1 r6-2"));
+    /* botton dexter in capsa: non perficit; sinister ibidem perficit
+     * (custodia: punctum vere in capsa est) */
+    f = fines_componentis(x, "r1-0", c->piscina);
+    CREDO_NECESSE(f.altitudo > ZEPHYRUM);
+    ictus_bottone_ad(x, f.x + X, f.y + IV, MUS_DEXTER);
+    r = agenda_res(x->documentum, I);
+    CREDO_NECESSE_NON_NIHIL(r);
+    CREDO_FALSUM(r->perfecta);
+    ictus_ad(x, f.x + X, f.y + IV);
+    r = agenda_res(x->documentum, I);
+    CREDO_VERUM(r && r->perfecta);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "montatio",     _probare_montationem,   mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
@@ -2310,6 +2367,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "charta_notarum", _probare_chartam_notarum, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { "rubricae_in_linea", _probare_rubricas_in_linea, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "greges_filtrum", _probare_greges_filtrum, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

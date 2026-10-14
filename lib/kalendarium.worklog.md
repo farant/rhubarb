@@ -586,3 +586,28 @@ already did) and runs calendarium.titulus; on the checkbox it does
 nothing extra (the two presses toggled twice).
 Plants: tags never extracted -> red; double-click without the title
 prompt -> red.
+
+## 2026-10-14 - M2a: heading click filters, left button only
+
+Agenda group headings ("g<k>") now filter: a click writes that rubric
+into `rubrica_filtrum` (and resets `pagina`, same as the `f` prompt); a
+click on the heading of the active filter runs
+calendarium.filtrum_tollere; "(none)" does nothing (there is no "no
+rubric" filter). `gregem_premere` resolves k through `greges_agendae`,
+so under a filter the one visible group is g0 again.
+Trap: the first green-looking attempt never reached the handler - the
+hit test only lands on nodes that carry an action, and
+`indicem_disponere` gave the action to PARTES_ITEM rows only, so a
+heading click fell through to the root "kalendarium" node (found with a
+printf of nodus->id). Headings "g<k>" now get the action too; other
+headings ("c", "p", "p<k>", "caput") stay inert.
+Bug fixed on the way: the mouse handler never looked at the button, so a
+right-click acted like a left-click (on the checkbox it COMPLETED the
+item). Now MUS_DEPRESSUS / MUS_DUPLEX with any button but MUS_SINISTER
+returns FALSUM (the right button is for the context menu, M2c). Test
+helpers had sent botton 0; `ictus_ad`/`ictus_in` now send MUS_SINISTER
+and `ictus_bottone_ad` takes the button.
+Plants (all compile): right button let through -> red; heading without
+the action -> red; toggle never clears -> red. The "(none)" guard is
+defensive only (empty chorda datum) - clearing with no filter is a
+no-op, so no plant shows it.

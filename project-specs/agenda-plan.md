@@ -231,6 +231,13 @@ State-model question to settle before A2 (A1 is content only).
   - **M2** batch 2: double-click row -> title prompt (DONE 2026-10-14
     with A7 inline #tags); click group heading -> filter; right-click
     context menu (from the table).
+    - **M2a** DONE 2026-10-14: agenda heading click filters by its
+      rubric (again on the active one clears; "(none)" inert); only the
+      LEFT button acts (right-click used to complete via the checkbox).
+    - **M2b** menu component (own library, figura-drawn, inside the
+      pane, keyboard too) - header text to Fran first.
+    - **M2c** calendar wiring: right-click on a row / day opens the
+      menu of the commands available there (unavailable greyed).
   - **M3** generalize: commands declared in the manifest, availability
     query on the action registry, then the palette UI (after a 2nd
     widget has a table).

@@ -2234,6 +2234,49 @@ globulum_premere (
     redde FALSUM;
 }
 
+interior b32
+numerus_identitatis (
+         chorda  id,
+      character  praefixum,
+            s32* numerus);
+
+/* M2a: ictus in titulo gregis "g<k>" (agenda) rubricam eius filtrat; in
+ * titulo filtri iam positi filtrum tollit. "(none)" nihil agit. */
+interior b32
+gregem_premere (
+    KalendariumMontatio* m,
+              Componens* nodus,
+                Piscina* p)
+{
+             Xar* greges;
+     GrexAgendae* g;
+          chorda* filtrum;
+             s32  k;
+
+    si (   !visus_agendae(m) || !nodus || nodus->partes != PARTES_INDEX
+        || !numerus_identitatis(nodus->id, 'g', &k) || k < ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    greges = greges_agendae(m, p);
+    si (!greges || (i32)k >= xar_numerus(greges))
+    {
+        redde FALSUM;
+    }
+    g = (GrexAgendae*)xar_obtinere(greges, (i32)k);
+    si (g->rubrica.mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    filtrum = insula_ramus_attributum(&m->ramus, "rubrica_filtrum");
+    si (filtrum && chorda_aequalis(*filtrum, g->rubrica))
+    {
+        redde mandatum_invocare(m, "calendarium.filtrum_tollere", p);
+    }
+    redde campos_duos_scribere(m, "rubrica_filtrum", chorda_ut_cstr(
+        g->rubrica, p), "pagina", "");
+}
+
 /* <actio/> calendarium.agere: visus mensis aut diei */
 interior b32
 agere_intus (
@@ -2256,6 +2299,13 @@ agere_intus (
         redde FALSUM;
     }
     piscina_vacare(privatum->scheda);
+    /* M2a: solum botton sinister (dexter: menu contextuale, M2c) */
+    si (   (   ev->genus == EVENTUS_MUS_DEPRESSUS
+            || ev->genus == EVENTUS_MUS_DUPLEX)
+        && ev->datum.mus.botton != MUS_SINISTER)
+    {
+        redde FALSUM;
+    }
     si (visus_diei(m) || visus_agendae(m))
     {
         chorda genus;
@@ -2275,6 +2325,10 @@ agere_intus (
         si (!(visus_diei(m) || visus_agendae(m)))
         {
             redde ictus_mensis(m, nodus);
+        }
+        si (gregem_premere(m, nodus, privatum->scheda))
+        {
+            redde VERUM;
         }
         si (!ictus_ordinis(m, nodus))
         {
@@ -3899,12 +3953,14 @@ indicem_disponere (
     }
     paginae_fines(initia, pagina_currens(m, (s32)xar_numerus(initia)),
         ordines, &a, &b);
+    /* res et tituli gregum "g<k>" (M2a: ictus filtrat) actionem
+     * habent */
     per (i = a; i < b; i++)
     {
         o = (OrdoIndicis*)xar_obtinere(ordines, (i32)i);
         (vacuum)componentem_locare(dp, regio, o->id, o->partes,
             DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_FIXA, o->altitudo,
-            o->partes == PARTES_ITEM, FALSUM);
+            o->partes == PARTES_ITEM || o->id[ZEPHYRUM] == 'g', FALSUM);
     }
     /* prompta (A3b; A6e: in regione indicis, linea ultima - notae non
      * contrahuntur) */
