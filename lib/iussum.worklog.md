@@ -64,3 +64,11 @@ target, so clicking into the body edits it instead of firing it.
   coloured, the body is plain text.
 - An empty body ('$verb<></>') gives zero arguments, like '()'.
 - '$verb(...)<>...</>' is the simple form; the '<>' after it is prose.
+
+## 2026-10-14 — IussumOpus (quaestio-rivus T7)
+
+`IussumEffectus.opus` (NIHIL = synchronous, zeroed by iussum_currere's
+memset) + `IussumOpus {datum, pulsare, abrumpere}` with statuses
+CURRIT / FINITUM / IRRITUM (IRRITUM = ended with nothing to insert,
+plan ruling R7). The host (scriba) owns lock/snapshot/commit; the verb
+owns its text and layout. First user: $question (T8).

@@ -73,6 +73,15 @@ nomen structura {
      * currendum (pulsus sequens verbum iterum currit) */
                   s32 dilatum;
                Iussum iussum_dilatum;   /* locus et verbum ictus */
+    /* opus currens (quaestio-rivus III, 2026-10-14): NIHIL nullum;
+     * dum currit pagina CLAUSA (Esc solum), folium = basis + textus */
+           IussumOpus* opus;
+               Iussum  iussum_operis;     /* locus (relocatum) */
+               chorda  caput_operis;      /* in fine applicatur */
+                  b32  consumit_operis;
+                   i8* basis_cellulae;    /* folium ante opus */
+                  s32* basis_indentatio;
+              Piscina* piscina_operis;    /* pulsus: vacatur */
 } ScribaActiones;
 
 /* folium laboris = copia proiectionis documenti */
@@ -121,6 +130,14 @@ scriba_iussum_ad_punctum (
  * VERUM si folium aut status mutatum (pictura repetenda) */
 b32
 scriba_iussum_dilatum_currere (
+    ScribaActiones* sa);
+
+/* pulsus (scriba_reficere, ANTE iussum dilatum - pulsus initii nuntium
+ * solum pingit): opus currens (si quod) pulsatur, folium = basis +
+ * textus hactenus; FINITUM: caput + commissio UNA; IRRITUM: basis.
+ * Redde VERUM si folium aut status mutatum */
+b32
+scriba_opus_pulsare (
     ScribaActiones* sa);
 
 #endif /* SCRIBA_ACTIONES_H */

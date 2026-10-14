@@ -1029,6 +1029,154 @@ nexum_sequi (
         p), p));
 }
 
+/* opus currens (quaestio-rivus T7) - nuntius sub domino
+ * 'pagina.clavis' (pulsus extra actionem currit), deinde scriptor
+ * prior */
+interior vacuum
+opus_nuntium_ponere (
+     ScribaActiones* sa,
+             chorda  nuntius)
+{
+    InsulaRamus ramus = sa->ramus;
+         chorda prior;
+
+    si (!ramus.repo || nuntius.mensura == ZEPHYRUM)
+    {
+        redde;
+    }
+    prior = ramus.repo->scriptor;
+    insula_scriptorem_ponere(ramus.repo, chorda_ex_literis(
+        "pagina.clavis", sa->doc->piscina));
+    nuntium_ponere(&ramus, nuntius);
+    insula_scriptorem_ponere(ramus.repo, prior);
+}
+
+interior vacuum
+opus_basim_restituere (
+    ScribaActiones* sa)
+{
+    memcpy(sa->laboris.cellulae, sa->basis_cellulae,
+        (memoriae_index)(sa->laboris.latitudo * sa->laboris.altitudo));
+    memcpy(sa->laboris.indentatio, sa->basis_indentatio,
+        (memoriae_index)sa->laboris.altitudo * magnitudo(s32));
+}
+
+interior vacuum
+opus_finire (
+    ScribaActiones* sa)
+{
+    si (sa->piscina_operis)
+    {
+        piscina_destruere(sa->piscina_operis);
+    }
+    sa->piscina_operis    = NIHIL;
+    sa->opus              = NIHIL;
+    sa->basis_cellulae    = NIHIL;
+    sa->basis_indentatio  = NIHIL;
+}
+
+/* finis (FINITUM aut Esc): basis + caput + textus, commissio UNA */
+interior vacuum
+opus_claudere (
+     ScribaActiones* sa,
+             chorda  textus,
+             chorda  nuntius)
+{
+    s32 linea;
+    s32 columna;
+
+    opus_basim_restituere(sa);
+    effectum_applicare(&sa->laboris, &sa->iussum_operis,
+        sa->consumit_operis, sa->caput_operis, textus, &linea,
+        &columna);
+    (vacuum)scriba_documentum_committere(sa->doc, &sa->laboris);
+    sa->cursor_laboris = scriba_documentum_cursor(sa->doc);
+    opus_nuntium_ponere(sa, nuntius);
+    opus_finire(sa);
+}
+
+/* initium: basis servatur, pagina clauditur (folium intactum) */
+interior b32
+opus_incipere (
+             ScribaActiones* sa,
+            constans Iussum* iussum,
+    constans IussumEffectus* eff)
+{
+    i32 n;
+
+    n = sa->laboris.latitudo * sa->laboris.altitudo;
+    sa->piscina_operis = piscina_generare_dynamicum("scriba_opus",
+        LXIV * M);
+    si (!sa->piscina_operis)
+    {
+        redde FALSUM;
+    }
+    sa->basis_cellulae = (i8*)piscina_allocare(sa->doc->piscina,
+        (memoriae_index)n);
+    sa->basis_indentatio = (s32*)piscina_allocare(sa->doc->piscina,
+        (memoriae_index)sa->laboris.altitudo * magnitudo(s32));
+    si (!sa->basis_cellulae || !sa->basis_indentatio)
+    {
+        piscina_destruere(sa->piscina_operis);
+        sa->piscina_operis = NIHIL;
+        redde FALSUM;
+    }
+    memcpy(sa->basis_cellulae, sa->laboris.cellulae, (memoriae_index)n);
+    memcpy(sa->basis_indentatio, sa->laboris.indentatio,
+        (memoriae_index)sa->laboris.altitudo * magnitudo(s32));
+    sa->iussum_operis    = *iussum;
+    sa->caput_operis     = chorda_concatenare(chorda_ex_literis("",
+        sa->doc->piscina), eff->caput, sa->doc->piscina);
+    sa->consumit_operis  = iussum_consumit(sa->iussa, iussum->verbum);
+    sa->opus             = eff->opus;
+    redde VERUM;
+}
+
+b32
+scriba_opus_pulsare (
+    ScribaActiones* sa)
+{
+    IussumOpusStatus status;
+              chorda textus;
+              chorda nuntius;
+              chorda vacua;
+                 b32 mutatum = FALSUM;
+                 s32 linea;
+                 s32 columna;
+
+    si (!sa || !sa->opus || !sa->opus->pulsare)
+    {
+        redde FALSUM;
+    }
+    piscina_vacare(sa->piscina_operis);
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
+    textus         = vacua;
+    nuntius        = vacua;
+    status = sa->opus->pulsare(sa->opus, sa->piscina_operis, &textus,
+        &nuntius, &mutatum);
+    si (status == IUSSUM_OPUS_FINITUM)
+    {
+        opus_claudere(sa, textus, nuntius);
+        redde VERUM;
+    }
+    si (status == IUSSUM_OPUS_IRRITUM)
+    {
+        opus_basim_restituere(sa);
+        opus_nuntium_ponere(sa, nuntius);
+        opus_finire(sa);
+        redde VERUM;
+    }
+    si (mutatum)
+    {
+        opus_basim_restituere(sa);
+        effectum_applicare(&sa->laboris, &sa->iussum_operis,
+            sa->consumit_operis, vacua, textus, &linea, &columna);
+    }
+    opus_nuntium_ponere(sa, nuntius);
+    redde mutatum || nuntius.mensura > ZEPHYRUM;
+}
+
 b32
 scriba_iussum_ad_punctum (
             ScribaActiones* sa,
@@ -1039,7 +1187,7 @@ scriba_iussum_ad_punctum (
        s32 linea;
        s32 columna;
 
-    si (   !sa || !pagina || !sa->doc
+    si (   !sa || !pagina || !sa->doc || sa->opus
         || !cellulam_ictam(sa, pagina, schirmi, &linea, &columna))
     {
         redde FALSUM;
@@ -1081,6 +1229,30 @@ scriba_pagina_clavis (
     si (!repo || !motus || !ev || !sa)
     {
         redde FALSUM;
+    }
+    /* opus currens (quaestio-rivus III): pagina CLAUSA - eventus omnis
+     * deglutitur; Esc (aut Ctrl-[) opus abrumpit et quod advenit
+     * committit */
+    si (sa->opus)
+    {
+        si (   ev->genus == EVENTUS_CLAVIS_DEPRESSUS
+            && (   ev->datum.clavis.clavis == CLAVIS_EFFUGIUM
+                || (   (ev->datum.clavis.modificantes & MOD_IMPERIUM)
+                    && (   ev->datum.clavis.runa == '['
+                        || ev->datum.clavis.producta == XXVII))))
+        {
+            chorda textus;
+            chorda nuntius;
+
+            piscina_vacare(sa->piscina_operis);
+            textus.datum    = NIHIL;
+            textus.mensura  = ZEPHYRUM;
+            nuntius         = textus;
+            sa->opus->abrumpere(sa->opus, sa->piscina_operis, &textus,
+                &nuntius);
+            opus_claudere(sa, textus, nuntius);
+        }
+        redde VERUM;
     }
     /* R4: status scribae per ramum (sine eo radix repositorii) */
     ramus = sa->ramus.repo ? sa->ramus : insula_ramus_radix(repo);
@@ -1319,6 +1491,14 @@ scriba_iussum_dilatum_currere (
             si (ramus.repo)
             {
                 nuntium_ponere(&ramus, eff.error);
+            }
+        }
+        alioquin si (eff.opus)
+        {
+            /* opus currens: pagina clauditur, textus per pulsus */
+            si (opus_incipere(sa, &iussum, &eff) && ramus.repo)
+            {
+                nuntium_ponere(&ramus, eff.nuntius);
             }
         }
         alioquin

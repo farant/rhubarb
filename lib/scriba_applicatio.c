@@ -254,8 +254,11 @@ scriba_reficere (
         redde FALSUM;
     }
     sa       = &m->actiones_ctx;
+    /* opus currens (quaestio-rivus T7) ANTE iussum dilatum: pulsus quo
+     * opus incipit nuntium solum pingit, textus pulsu proximo */
+    mutatum  = scriba_opus_pulsare(sa);
     /* $question: iussum dilatum (pictura nuntii prius, deinde verbum) */
-    mutatum  = scriba_iussum_dilatum_currere(sa);
+    mutatum  = scriba_iussum_dilatum_currere(sa) || mutatum;
     mutatum  = (m->doc != sa->doc) || mutatum;
     m->doc   = sa->doc;
     si (paginam_indicare(m, mutatum))

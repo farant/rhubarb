@@ -261,6 +261,82 @@ mora_iussum (
     redde VERUM;
 }
 
+/* opus (quaestio-rivus T7): verbum 'lente' differt, deinde opus
+ * fictum reddit quod per pulsus "a" -> "a b" -> "a b c" crescit et
+ * finit; irritum: pulsus primus IRRITUM (nihil inserendum) */
+nomen structura {
+    IussumOpus opus;
+           s32 pulsus;
+           b32 abruptum;
+           b32 irritum;
+} OpusFictum;
+
+interior IussumOpusStatus
+_opus_pulsare (
+    IussumOpus* opus,
+       Piscina* p,
+        chorda* textus,
+        chorda* nuntius,
+           b32* mutatum)
+{
+                       OpusFictum* o = (OpusFictum*)opus->datum;
+    hic_manens constans character* GRADUS[III] = { "\na", "\na b",
+        "\na b c" };
+
+    o->pulsus++;
+    si (o->irritum)
+    {
+        *textus   = chorda_ex_literis("", p);
+        *nuntius  = chorda_ex_literis("lente: defecit", p);
+        *mutatum  = FALSUM;
+        redde IUSSUM_OPUS_IRRITUM;
+    }
+    *textus   = chorda_ex_literis(GRADUS[(o->pulsus - I) % III], p);
+    *nuntius  = chorda_ex_literis(o->pulsus >= III ? "lente: facta"
+                                                   : "lente: currit",
+                                                   p);
+    *mutatum  = VERUM;
+    redde o->pulsus >= III ? IUSSUM_OPUS_FINITUM : IUSSUM_OPUS_CURRIT;
+}
+
+interior vacuum
+_opus_abrumpere (
+    IussumOpus* opus,
+       Piscina* p,
+        chorda* textus,
+        chorda* nuntius)
+{
+    OpusFictum* o = (OpusFictum*)opus->datum;
+
+    o->abruptum  = VERUM;
+    *textus      = chorda_ex_literis("\na\n[cancelled]", p);
+    *nuntius     = chorda_ex_literis("lente: cancelled", p);
+}
+
+interior b32
+lente_iussum (
+    constans Iussum* iussum,
+             vacuum* ctx,
+            Piscina* p,
+     IussumEffectus* effectus)
+{
+    OpusFictum* o = (OpusFictum*)ctx;
+
+    si (!iussum->iterum)
+    {
+        effectus->differre  = VERUM;
+        effectus->nuntius   = chorda_ex_literis("lente: incipit", p);
+        redde VERUM;
+    }
+    o->opus.datum      = o;
+    o->opus.pulsare    = _opus_pulsare;
+    o->opus.abrumpere  = _opus_abrumpere;
+    effectus->opus     = &o->opus;
+    effectus->caput    = chorda_ex_literis("<lente facta>", p);
+    effectus->nuntius  = chorda_ex_literis("lente: currit (Esc)", p);
+    redde VERUM;
+}
+
 /* MUNDUS APPLICATIONIS (credo v2): applicatio vicus cum volumine
  * temporario - parare aedificat, purgare volumen SEMPER claudit (etiam post NECESSE
  * fractum: volumina temporaria relicta portas olim fregerunt). Gradus
@@ -582,12 +658,165 @@ _probare_dilatum (
     CREDO_VERUM(nuntius_est(v, sin, "mora: evanuit"));
 }
 
+/* opus: crescit per pulsus, pagina clausa (claves negleguntur, color
+ * mensae), finis: caput + textus, commissio UNA */
+interior vacuum
+_probare_opus (
+    CredoContextus* c)
+{
+    MundusApplicationis* ms   = (MundusApplicationis*)c->datum;
+        VicusApplicatio* app  = &ms->app;
+                  Vicus* v    = ms->v;
+             ManusLudus* m    = ms->m;
+         ScribaMontatio* sin  = ms->sin;
+             OpusFictum  o;
+                    s64  cursor;
+        TabulaPixelorum* tp;
+                    i32  mensa;
+                    i32  fundus;
+
+    memset(&o, ZEPHYRUM, magnitudo(o));
+    mensa   = (i32)color_ad_pixelum(thema_color(COLOR_SUPERFICIES));
+    fundus  = (i32)color_ad_pixelum(thema_color(COLOR_BACKGROUND));
+    CREDO_NECESSE(iussum_registrare(sin->actiones_ctx.iussa, "lente",
+        FALSUM, lente_iussum, &o));
+    ictus(m, XII, ZEPHYRUM);
+    CREDO_VERUM(manus_ludus_scribere(m, "i$lente<>q</>"));
+    CREDO_VERUM(manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));
+    cursor = scriba_documentum_cursor(sin->actiones_ctx.doc);
+    ictus(m, XII, I);
+    (vacuum)vicus_pulsare(v);   /* gradus I: pictura nuntii */
+    (vacuum)vicus_pulsare(v);   /* gradus II: opus incipit */
+    dispensator_recomponere(app->d);
+    CREDO_NECESSE(sin->actiones_ctx.opus != NIHIL);
+    CREDO_AEQUALIS_S32(o.pulsus, ZEPHYRUM);
+    CREDO_VERUM(nuntius_est(v, sin, "lente: currit (Esc)"));
+    /* pagina clausa: colore mensae */
+    tp = quadrum_pingere(app, NIHIL);
+    CREDO_NECESSE_NON_NIHIL(tp);
+    CREDO_VERUM(pixela_coloris(tp, XX, X, XX, mensa) > CD);
+    CREDO_AEQUALIS_I32(pixela_coloris(tp, XX, X, XX, fundus),
+        ZEPHYRUM);
+    /* pulsus: crescit, nihil commissum */
+    (vacuum)vicus_pulsare(v);
+    CREDO_VERUM(linea_est(sin, XIII, "a"));
+    CREDO_VERUM(scriba_documentum_cursor(sin->actiones_ctx.doc)
+        == cursor);
+    /* clausa: claves et ictus negleguntur */
+    CREDO_VERUM(manus_ludus_scribere(m, "dd"));
+    ictus(m, XII, I);
+    CREDO_VERUM(linea_est(sin, XII, "$lente<>q</>"));
+    CREDO_VERUM(sin->actiones_ctx.opus != NIHIL);
+    (vacuum)vicus_pulsare(v);
+    CREDO_VERUM(linea_est(sin, XIII, "a b"));
+    /* finis: caput, textus, commissio UNA, color fundi */
+    (vacuum)vicus_pulsare(v);
+    dispensator_recomponere(app->d);
+    CREDO_VERUM(sin->actiones_ctx.opus == NIHIL);
+    CREDO_VERUM(linea_est(sin, XII, "<lente facta>q</>"));
+    CREDO_VERUM(linea_est(sin, XIII, "a b c"));
+    /* basis restituta ante finem: nihil reliqui pulsuum (planta:
+     * finis sine restitutione "a b" in lineam XIV trudebat) */
+    CREDO_FALSUM(linea_est(sin, XIV, "a"));
+    CREDO_VERUM(nuntius_est(v, sin, "lente: facta"));
+    CREDO_VERUM(scriba_documentum_cursor(sin->actiones_ctx.doc)
+        == cursor + I);
+    tp = quadrum_pingere(app, NIHIL);
+    CREDO_NECESSE_NON_NIHIL(tp);
+    CREDO_AEQUALIS_I32(pixela_coloris(tp, XX, X, XX, mensa),
+        ZEPHYRUM);
+    /* pulsus ulterior: nihil */
+    (vacuum)vicus_pulsare(v);
+    CREDO_AEQUALIS_S32(o.pulsus, III);
+    /* 'u': totum restituitur uno gradu */
+    ictus(m, XX, ZEPHYRUM);
+    CREDO_VERUM(manus_ludus_scribere(m, "u"));
+    CREDO_VERUM(linea_est(sin, XII, "$lente<>q</>"));
+    CREDO_VERUM(!linea_est(sin, XIII, "a"));
+}
+
+/* Esc: abrumpere, textus finalis committitur, caput factum */
+interior vacuum
+_probare_opus_esc (
+    CredoContextus* c)
+{
+    MundusApplicationis* ms   = (MundusApplicationis*)c->datum;
+                  Vicus* v    = ms->v;
+             ManusLudus* m    = ms->m;
+         ScribaMontatio* sin  = ms->sin;
+             OpusFictum  o;
+
+    memset(&o, ZEPHYRUM, magnitudo(o));
+    CREDO_NECESSE(iussum_registrare(sin->actiones_ctx.iussa, "lente",
+        FALSUM, lente_iussum, &o));
+    ictus(m, XII, ZEPHYRUM);
+    CREDO_VERUM(manus_ludus_scribere(m, "i$lente<>q</>"));
+    CREDO_VERUM(manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));
+    ictus(m, XII, I);
+    (vacuum)vicus_pulsare(v);
+    (vacuum)vicus_pulsare(v);
+    (vacuum)vicus_pulsare(v);
+    CREDO_VERUM(linea_est(sin, XIII, "a"));
+    CREDO_VERUM(manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));
+    CREDO_VERUM(o.abruptum);
+    CREDO_VERUM(sin->actiones_ctx.opus == NIHIL);
+    CREDO_VERUM(linea_est(sin, XII, "<lente facta>q</>"));
+    CREDO_VERUM(linea_est(sin, XIII, "a"));
+    CREDO_VERUM(linea_est(sin, XIV, "[cancelled]"));
+    CREDO_VERUM(nuntius_est(v, sin, "lente: cancelled"));
+}
+
+/* IRRITUM (R7): basis restituitur, nihil committitur, nuntius */
+interior vacuum
+_probare_opus_irritum (
+    CredoContextus* c)
+{
+    MundusApplicationis* ms   = (MundusApplicationis*)c->datum;
+        VicusApplicatio* app  = &ms->app;
+                  Vicus* v    = ms->v;
+             ManusLudus* m    = ms->m;
+         ScribaMontatio* sin  = ms->sin;
+             OpusFictum  o;
+                    s64  cursor;
+
+    memset(&o, ZEPHYRUM, magnitudo(o));
+    o.irritum = VERUM;
+    CREDO_NECESSE(iussum_registrare(sin->actiones_ctx.iussa, "lente",
+        FALSUM, lente_iussum, &o));
+    ictus(m, XII, ZEPHYRUM);
+    CREDO_VERUM(manus_ludus_scribere(m, "i$lente<>q</>"));
+    CREDO_VERUM(manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));
+    cursor = scriba_documentum_cursor(sin->actiones_ctx.doc);
+    ictus(m, XII, I);
+    (vacuum)vicus_pulsare(v);
+    (vacuum)vicus_pulsare(v);
+    (vacuum)vicus_pulsare(v);
+    dispensator_recomponere(app->d);
+    CREDO_VERUM(sin->actiones_ctx.opus == NIHIL);
+    CREDO_VERUM(linea_est(sin, XII, "$lente<>q</>"));
+    CREDO_VERUM(scriba_documentum_cursor(sin->actiones_ctx.doc)
+        == cursor);
+    CREDO_VERUM(nuntius_est(v, sin, "lente: defecit"));
+    /* pagina non clausa: claves iterum agunt (linea vacua - ictus in
+     * '$' iussum iterum curreret) */
+    ictus(m, XX, ZEPHYRUM);
+    CREDO_VERUM(manus_ludus_scribere(m, "iz"));
+    CREDO_VERUM(manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));
+    CREDO_VERUM(linea_est(sin, XX, "z"));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "iussa in pagina scribae (scenarium I-VIII)", _probare_iussa,
       _applicationem_parare, _applicationem_purgare, NIHIL, NIHIL },
     { "corpus", _probare_corpus, _applicationem_parare,
       _applicationem_purgare, NIHIL, NIHIL },
     { "dilatum", _probare_dilatum, _applicationem_parare,
+      _applicationem_purgare, NIHIL, NIHIL },
+    { "opus", _probare_opus, _applicationem_parare,
+      _applicationem_purgare, NIHIL, NIHIL },
+    { "opus esc", _probare_opus_esc, _applicationem_parare,
+      _applicationem_purgare, NIHIL, NIHIL },
+    { "opus irritum", _probare_opus_irritum, _applicationem_parare,
       _applicationem_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

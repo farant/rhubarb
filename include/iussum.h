@@ -107,6 +107,31 @@ iussum_nexus_proximus (
 
 nomen structura IussumRegistrum IussumRegistrum;   /* opacum */
 
+/* OPUS CURRENS (quaestio-rivus-spec II.7): iussum longum. Hospes
+ * (scriba) paginam claudit, folium ante opus servat, per pulsum
+ * pulsare vocat et folium = basis + textus hactenus reficit; FINITUM:
+ * caput + textus, commissio UNA; IRRITUM: basis restituitur, nihil
+ * committitur (nuntius solum); Esc: abrumpere, deinde ut FINITUM. */
+nomen enumeratio {
+    IUSSUM_OPUS_CURRIT = 0,
+    IUSSUM_OPUS_FINITUM,
+    IUSSUM_OPUS_IRRITUM
+} IussumOpusStatus;
+
+nomen structura IussumOpus IussumOpus;
+
+structura IussumOpus {
+    vacuum* datum;
+    /* textus TOTUS hactenus (ut effectus->textus) in piscina data;
+     * *mutatum VERUM si textus mutatus; *nuntius vacuus = nihil novi */
+    IussumOpusStatus (*pulsare)(IussumOpus* opus, Piscina* piscina,
+                                chorda* textus, chorda* nuntius,
+                                b32* mutatum);
+    /* Esc: opus sistitur; textus finalis, nuntius */
+    vacuum (*abrumpere)(IussumOpus* opus, Piscina* piscina,
+                        chorda* textus, chorda* nuntius);
+};
+
 /* effectus iussi: textus inserendus et/aut error. textus: consumens
  * signum substituit, aliter post signum inseritur. error non vacuus:
  * nihil mutatur, nuntius ostenditur (S3b-2: linea status).
@@ -123,6 +148,8 @@ nomen structura {
                          * iam facta) cum iussum->iterum; textus tunc
                          * '\n' continere potest: lineae novae infra
                          * lineam clausurae, ex lineis albis finalibus */
+    IussumOpus* opus;   /* non NIHIL: effectus CURRIT (textus per
+                         * pulsus, caput in fine applicatur) */
 } IussumEffectus;
 
 nomen b32 (*IussumFunctio)(constans Iussum* iussum, vacuum* ctx,

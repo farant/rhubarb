@@ -178,8 +178,10 @@ scriba_figura_folii (
     }
     cw = c->fines.latitudo / (s32)t->latitudo;
     ch = c->fines.altitudo / (s32)t->altitudo;
+    /* opus currens (quaestio-rivus III): pagina clausa colore mensae */
     mandata_rectangulum(m, fines(ZEPHYRUM, ZEPHYRUM, c->fines.latitudo,
-        c->fines.altitudo), color_thematis(COLOR_BACKGROUND), VERUM);
+        c->fines.altitudo), color_thematis(sf->sa->opus
+        ? COLOR_SUPERFICIES : COLOR_BACKGROUND), VERUM);
     /* margo in cellulis MARGINIS (cellula tota extra folium):
      * tessellatio rectangulum ad oras cellularum PROXIMAS rotundat et
      * marginem in anulo interiore pingit - margo I pixeli extra
