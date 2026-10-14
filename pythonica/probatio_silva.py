@@ -875,7 +875,9 @@ except Exception as ex:
 # operarius umbrae ruens (porta parenti nota, operario ignota - PORTAE
 # in processu mutatae operarium non attingunt): receptum FRACTUM
 # scribitur, signum pendens tollitur - numquam 'pendens' in perpetuum
-via_u = silva.porta_umbra('ficta-octeti')
+# photographica=False: ruina operarii hic iudicatur, non clone (photographia
+# suo grege; clone ~V s, 2026-10-14)
+via_u = silva.porta_umbra('ficta-octeti', photographica=False)
 ru = silva.exspectare(via_u, tectum=60)
 credo(not ru.sana and not ru.cucurrit and 'UMBRA FRACTA' in ru.compendium
       and not os.path.exists(via_u + '.pendens'),
@@ -1657,6 +1659,11 @@ try:
           'photographia_materializare: clone cum statu capto, bin/build clonata, .git verum')
     credo(subprocess.run(['git', 'rev-parse', 'HEAD'], cwd=ph.via, capture_output=True, text=True).stdout.strip() == ph.basis,
           'photographia: HEAD in clone = basis')
+    _th = os.path.join(ph.via, 'build', 'aedilis', 'obiecta')
+    credo(os.path.islink(_th) and os.path.realpath(_th) == os.path.realpath(os.path.join(silva.RADIX, 'build', 'aedilis', 'obiecta'))
+          and not os.path.islink(os.path.join(ph.via, 'build')) and os.path.isdir(os.path.join(ph.via, 'build', 'fabrica'))
+          and not os.path.islink(os.path.join(ph.via, 'build', 'fabrica')),
+          'photographia: thesaurus build/aedilis/obiecta VINCULUM ad vivum (XI s clonationis), cetera build/ clonata', causa=repr(_th))
 finally:
     silva.photographia_delere(ph)
 credo(not os.path.exists(ph.via), 'photographia_delere: clone sublatus')
@@ -1725,6 +1732,20 @@ finally:
 _dirs, _plag = silva._ignorata_dividere(['a/', 'a/f.txt', 'a/sub/', 'b.txt', 'ab.txt', 'c/d/'])
 credo(_dirs == ['a', 'c/d'] and _plag == ['ab.txt', 'b.txt'],
       'clonatio: res intra directorium ignoratum non seorsum clonatur', causa=repr((_dirs, _plag)))
+# thesaurus communis (2026-10-14): directorium continens in filios
+# solvitur, commune ipsum excisum (vinculum fit); absens/extra omittitur
+import tempfile
+_CX = tempfile.mkdtemp(prefix='silva_communia_')
+for _d in ('b/a/o/x', 'b/a/e', 'b/f', 'c'):
+    os.makedirs(os.path.join(_CX, _d))
+open(os.path.join(_CX, 'b', 'p.txt'), 'w').write('p')
+_cd_, _cc_ = silva._communia_excidere(['b', 'c'], ('b/a/o', 'nusquam/o'), _CX)
+credo(_cd_ == ['b/a/e', 'b/f', 'b/p.txt', 'c'] and _cc_ == ['b/a/o'],
+      'communia: pater solutus gradatim, commune excisum, absens omissum', causa=repr((_cd_, _cc_)))
+_cd_, _cc_ = silva._communia_excidere(['c'], ('b/a/o',), _CX)
+credo(_cd_ == ['c'] and _cc_ == [], 'communia: commune extra directoria clonanda non vinculatur', causa=repr((_cd_, _cc_)))
+import shutil as _shx
+_shx.rmtree(_CX, ignore_errors=True)
 
 _grex('custodes: nomina plana, clones orphani')
 for malum in ('a/b', '..', '.', '', 'x y'):
@@ -2533,6 +2554,14 @@ _pd_vera = silva.portae_debitae
 _debita_ficta = [silva.Debitum('ficta-debita', 'x.c in clausura probatio_y.c', False),
                  silva.Debitum('apps/z/fumus.sh', 'apps/z/z.c congruit apps/z/*', True)]
 silva.portae_debitae = lambda viae, *a, **k: (list(_debita_ficta), [])
+# iudicium fabricae et photographia hic NON iudicantur (greges sui: 'fabrica
+# ante portas' fictis, 'photographia'): verum iudicium ~III,VI s per
+# commissionem fictam (XIV hic), clone ~V s per portam umbrae (mensuratum
+# 2026-10-14, grex LVII s). Ordo portarum debitarum non mutatur.
+_fe_verum = silva._fabricam_exigere
+_pu_verum = silva.porta_umbra
+silva._fabricam_exigere = lambda viae, sine_fabrica=None, **k: None
+silva.porta_umbra = lambda nomen, filtrum=None, photographica=True: _pu_verum(nomen, filtrum, photographica=False)
 
 
 def _signum_tollere():
@@ -2634,6 +2663,8 @@ except (AttributeError, TypeError) as ex:
     credo(False, 'portae debitae in commissione absunt: %s' % ex)
 finally:
     silva.portae_debitae = _pd_vera
+    silva._fabricam_exigere = _fe_verum
+    silva.porta_umbra = _pu_verum
     os.environ.pop('PYTHONICA_PORTAE_FICTAE', None)
     silva._portae_fictae()
     import shutil

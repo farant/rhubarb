@@ -3118,6 +3118,14 @@ Photographia = namedtuple('Photographia', 'arbor basis via')
 _IGNORATA_NON_CLONANDA = ('.superpowers', '.claude', '.DS_Store',
                           'tabularium.db', 'tabularium.db-wal',
                           'tabularium.db-shm')
+# THESAURUS COMMUNIS (2026-10-14, mensuratum): build/aedilis/obiecta
+# (~XCII milia rerum, thesaurus compilationis) clonare XI ex XIII,IV s
+# materializationis constabat. Thesaurus contento inscribitur (clavis ex
+# ingressibus, viae normatae: clone ictus eosdem habet - probatum),
+# scriptura atomica (temporarium + rename, lib/thesaurus.c): in clone
+# VINCULUM ad thesaurum vivum, non copia. Purgatio concurrens ictum
+# solum perdit, numquam effectum falsum (lib/thesaurus.worklog.md).
+_IGNORATA_COMMUNIA = ('build/aedilis/obiecta',)
 
 
 def photographia_capere():
@@ -3226,12 +3234,42 @@ def _ignorata_dividere(ignorata):
             sorted(l for l in ignorata if not l.endswith('/') and not tecta(l)))
 
 
+def _communia_excidere(directoria, communia, radix):
+    """directoria clonanda SINE communibus: directorium quod commune
+    continet in filios suos solvitur (gradatim) donec commune ipsum
+    seorsum stet, deinde excipitur. Commune absens aut extra directoria
+    clonanda omittitur. Reddit (directoria ordinata, communia excisa)."""
+    directoria = list(directoria)
+    excisa = []
+    for c in communia:
+        if not os.path.isdir(os.path.join(radix, c)):
+            continue
+        while True:
+            pater = next((d for d in directoria
+                          if c == d or c.startswith(d + '/')), None)
+            if pater is None:
+                break
+            directoria.remove(pater)
+            if pater == c:
+                excisa.append(c)
+                break
+            directoria.extend(pater + '/' + f for f in
+                              sorted(os.listdir(os.path.join(radix, pater))))
+    return sorted(directoria), excisa
+
+
 def _clonare_ignorata(ad):
     """res ignoratae (bin/, build/, silva/build/, book_assets/*.txt ...)
     in clone: copy-on-write (_clonare_paria: clonefile per bin/clonare,
     regressus cp -c) - spatium nullum donec scribantur. Directoria
-    PRIMUM, deinde parentes plagularum solutarum"""
+    PRIMUM, deinde parentes plagularum solutarum. _IGNORATA_COMMUNIA
+    vincula ad arborem vivam fiunt, non clonantur."""
     directoria, plagulae = _ignorata_dividere(_ignorata())
+    directoria, communia = _communia_excidere(directoria,
+                                              _IGNORATA_COMMUNIA, RADIX)
+    for c in communia:
+        os.makedirs(os.path.join(ad, os.path.dirname(c)), exist_ok=True)
+        os.symlink(os.path.join(RADIX, c), os.path.join(ad, c))
     for d in directoria:
         os.makedirs(os.path.join(ad, os.path.dirname(d)), exist_ok=True)
     _clonare_paria([(os.path.join(RADIX, d), os.path.join(ad, d))
