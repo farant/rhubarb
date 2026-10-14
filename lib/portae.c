@@ -27,7 +27,9 @@
 
 /* vocabulum CLAUSUM attributorum <porta> */
 hic_manens constans character* constans _portae_attributa[] = {
-    "titulus", "manu", "causa", "tegit", "currit", "instrumentum", NIHIL
+    "titulus", "manu", "causa", "tegit", "currit", "instrumentum",
+        "genus",
+    NIHIL
 };
 
 interior b32
@@ -217,7 +219,8 @@ _portam_legere (
         {
             _causa(causae, via, linea, "attributum ignotum '",
                 at->titulus != NIHIL ? *at->titulus : _valor(elementum,
-                ""), "' in <porta> (titulus manu causa tegit currit)");
+                ""), "' in <porta> (titulus manu causa tegit currit"
+                " instrumentum genus)");
             bene = FALSUM;
         }
     }
@@ -233,6 +236,22 @@ _portam_legere (
         "instrumentum"), piscina);
     d->currit   = _verba(stml_attributum_capere(elementum, "currit"),
         piscina);
+    d->genus    = PORTA_PROBATIO;
+    si (stml_attributum_habet(elementum, "genus"))
+    {
+        chorda g = _valor(elementum, "genus");
+
+        si (chorda_aequalis_literis(g, "praeiudicium"))
+        {
+            d->genus = PORTA_PRAEIUDICIUM;
+        }
+        alioquin si (!chorda_aequalis_literis(g, "probatio"))
+        {
+            _causa(causae, via, linea, "genus ignotum '", g,
+                "' in <porta> (praeiudicium probatio)");
+            bene = FALSUM;
+        }
+    }
     /* titulus + manu = porta registrata (nomine curri potest) quam
      * tamen homo currit: debita eam nominant, numquam currunt */
     si (d->titulus.mensura == ZEPHYRUM && !d->manu)
@@ -1897,6 +1916,23 @@ portae_declaratas_scribere (
                 chorda_aedificator_appendere_chorda(a, b);
             }
             chorda_aedificator_appendere_character(a, '\n');
+        }
+        /* genus non ordinarium (circulus commissionis II T4) */
+        si (d->genus == PORTA_PRAEIUDICIUM)
+        {
+            chorda_aedificator_appendere_literis(a, machina
+                ? "GENUS" : "    genus");
+            si (machina)
+            {
+                _campus(a, clavis);
+                chorda_aedificator_appendere_literis(a,
+                    "\tpraeiudicium\n");
+            }
+            alioquin
+            {
+                chorda_aedificator_appendere_literis(a,
+                    " praeiudicium\n");
+            }
         }
         per (j = ZEPHYRUM; j < xar_numerus(o->exemplaria); j++)
         {

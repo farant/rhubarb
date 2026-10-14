@@ -22,6 +22,14 @@
  *            eorum non hereditant (infrastructura aedificandi, non
  *            subiectum); possessor et 'currit' expressum hereditant.
  *            Possessio bina = recusatio
+ *   genus    'praeiudicium' (PRAE-IUDICIUM: proprietas arboris commissae
+ *            - ratchet, registrum, generata == regeneratio, verdicta
+ *            corporis - SINE codice probando currendo) aut 'probatio'
+ *            (ordinarium: codicem currit, mores iudicat). Genus phasim
+ *            et regulam fracturae decernit (praeiudicia omnia currunt,
+ *            fracturae SIMUL nominantur; probationes primam fracturam
+ *            sistunt); sumptus ordinem intra phasim (circulus
+ *            commissionis II §II-III). Valor alius = recusatio
  * Vocabulum CLAUSUM: attributum aliud = recusatio (error scribae).
  *
  * MACHINA PURA: ingressus et egressus per suturam (exemplar
@@ -77,16 +85,23 @@ nomen structura {
     constans Xar* tabula_portarum;
 } PortaeSutura;
 
+/* genus portae (attributum 'genus'; circulus commissionis II T4) */
+nomen enumeratio {
+    PORTA_PROBATIO = 0,      /* ordinarium */
+    PORTA_PRAEIUDICIUM
+} PortaGenus;
+
 /* porta declarata una (elementum <porta> unum) */
 nomen structura {
-    chorda  via;        /* cursor: scriptum annotatum */
-       i32  linea;      /* linea commentarii, I-basata */
-    chorda  titulus;    /* clavis PORTAE; vacua si manu */
-       b32  manu;
-    chorda  causa;      /* manu: cur homo currit; vacua aliter */
-       Xar* tegit;      /* chorda: exemplaria viarum */
-       Xar* currit;     /* chorda: programmata */
-       Xar* instrumenta; /* chorda: binaria domus possessa */
+     chorda  via;        /* cursor: scriptum annotatum */
+        i32  linea;      /* linea commentarii, I-basata */
+     chorda  titulus;    /* clavis PORTAE; vacua si manu */
+        b32  manu;
+     chorda  causa;      /* manu: cur homo currit; vacua aliter */
+        Xar* tegit;      /* chorda: exemplaria viarum */
+        Xar* currit;     /* chorda: programmata */
+        Xar* instrumenta; /* chorda: binaria domus possessa */
+ PortaGenus  genus;      /* PORTA_PROBATIO nisi 'genus' aliter */
 } PortaDeclarata;
 
 /* recusatio una: locus (via vacua = registrum aut fundamentum; linea
@@ -249,6 +264,7 @@ portae_debita_computare (
  *   portae declaratae:
  *     PORTA      <porta>  <0|1 manu>  <via>  <linea>  <causa manu>
  *     INSTRUMENTUM <porta> <binarium possessum>
+ *     GENUS      <porta>  praeiudicium   (solum si non ordinarium)
  *     TEGIT      <porta>  <via|globus|praefixum>  <exemplar>  <ratio>
  *     CLAUSURA   <porta>  <fons>      <ratio>
  *     IGNOTUM    <porta>  <textus>

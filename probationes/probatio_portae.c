@@ -1270,7 +1270,8 @@ _sectio_contractus (
     CREDO_VERUM(chorda_aequalis_literis(portae_debita_scribere(NIHIL,
         NIHIL, recusationes, ZEPHYRUM, VERUM, c->piscina),
         "RECUSATIO\ttools/credo_fumus.sh\t2\tattributum ignotum"
-        " 'tegti' in <porta> (titulus manu causa tegit currit)\n"
+        " 'tegti' in <porta> (titulus manu causa tegit currit"
+        " instrumentum genus)\n"
         "RECUSATIO\t\t0\tporta 'credo' (cursor tools/credo_fumus.sh)"
         " sine annotatione <porta titulus=\"...\"/>\n"
         "RECUSATIO\t\t0\tporta 'sera' (cursor tools/sera_fumus.sh)"
@@ -1380,8 +1381,59 @@ _sectio_possessio (
         " (prior: aedilis)")));
 }
 
+/* XIII. genus (circulus commissionis II T4): 'praeiudicium' acceptum et
+ * per GENUS nominatum (machina et homo); 'probatio' expressum =
+ * ordinarium (nihil scribitur); valor alius recusatur nomine */
+interior vacuum
+_sectio_genus (
+    CredoContextus* c)
+{
+    hic_manens constans PlagulaFicta plagulae[] = {
+        { "tools/vexilla_fumus.sh",
+          "# <porta titulus=\"vexilla\" genus=\"praeiudicium\"/>\n" },
+        { "tools/credo_fumus.sh",
+          "# <porta titulus=\"credo\" genus=\"probatio\"/>\n" },
+        { NIHIL, NIHIL }
+    };
+    hic_manens constans character* constans paria[] = {
+        "vexilla=tools/vexilla_fumus.sh", "credo=tools/credo_fumus.sh",
+        NIHIL
+    };
+    hic_manens constans character* const credo_solum[] = {
+        "credo=tools/credo_fumus.sh", NIHIL
+    };
+                         Xar* o;
+                      chorda  t;
+                      chorda  h;
+                      chorda  causa;
+                         Xar* d;
+     constans PortaDeclarata* v;
+
+    _recusatio_probare(c,
+        "# <porta titulus=\"credo\" genus=\"praeiudicum\"/>\n",
+        credo_solum,
+        "tools/credo_fumus.sh:1: genus ignotum 'praeiudicum'");
+    d = _legere_mundum(c, plagulae, paria, &causa);
+    CREDO_NECESSE_NON_NIHIL(d);
+    v = _declaratio(d, "vexilla");
+    CREDO_NECESSE_NON_NIHIL(v);
+    CREDO_AEQUALIS_I32((i32)v->genus, (i32)PORTA_PRAEIUDICIUM);
+    v = _declaratio(d, "credo");
+    CREDO_NECESSE_NON_NIHIL(v);
+    CREDO_AEQUALIS_I32((i32)v->genus, (i32)PORTA_PROBATIO);
+    o = _derivare_mundum(c, plagulae, paria, NIHIL, NIHIL);
+    CREDO_NECESSE_NON_NIHIL(o);
+    t = portae_declaratas_scribere(o, NIHIL, VERUM, c->piscina);
+    CREDO_VERUM(chorda_continet(t, _ch(c,
+        "GENUS\tvexilla\tpraeiudicium\n")));
+    CREDO_VERUM(!chorda_continet(t, _ch(c, "GENUS\tcredo")));
+    h = portae_declaratas_scribere(o, NIHIL, FALSUM, c->piscina);
+    CREDO_VERUM(chorda_continet(h, _ch(c, "    genus praeiudicium\n")));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "lectio sana", _sectio_lectio, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "genus portae", _sectio_genus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "chordae et annotationes aliae", _sectio_non_commentaria, NIHIL,
       NIHIL, NIHIL, NIHIL },
     { "recusationes", _sectio_recusationes, NIHIL, NIHIL, NIHIL,

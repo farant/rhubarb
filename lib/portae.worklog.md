@@ -307,3 +307,18 @@ derivation test pins that. `portae debitae -machina` writes them as
 `bin/fabrica iudicare` silently skips artifacts no action declares.
 Plants: execution not recorded -> derivation test red (:719);
 `tools/x.c` candidate dropped -> red (:888).
+
+## 2026-10-14 - genus portae (circulus commissionis II T4)
+
+Annotation attribute `genus`: `praeiudicium` (a check of the committed
+tree's state that does not run the code under test) or `probatio` (the
+default). `PortaDeclarata.genus`; any other value is refused by name
+("genus ignotum 'x' in <porta> (praeiudicium probatio)"). Declarations
+output gains `GENUS <porta> praeiudicium` only for the non-default kind,
+so existing byte-exact outputs did not move; the refusal message for an
+unknown attribute now lists all seven attributes (it had omitted
+`instrumentum` since portae-declaratae T4 - the one pinned test was
+updated). Annotated: vexilla, portae-declaratae, amalgamata, generata,
+examen-corpus. The kind drives the phase and the failure policy in
+commissio (T5); cost drives order inside a phase. Plant: parser ignores
+`praeiudicium` -> genus section red (:1419).

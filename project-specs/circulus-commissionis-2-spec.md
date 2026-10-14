@@ -140,6 +140,12 @@ The annotation gains `genus`:
 Kind decides the PHASE and the failure policy; cost decides the order
 inside a phase (III).
 
+**As built (T4):** `PortaGenus` / `PortaDeclarata.genus` in
+`include/portae.h`; validated in the C reader (the house has no canon
+for `<porta>` - it is the reader that refuses, by name);
+`portae declaratae -machina` writes `GENUS <porta> praeiudicium` for the
+non-default kind only. The five pre-checks are annotated.
+
 ## III. Order and failure policy
 
 1. pre-flight (I) - refuses before any gate;
