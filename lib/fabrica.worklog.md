@@ -3056,3 +3056,14 @@ could be written for ANY reason; the test now creates it. Verified on
 the real offender: iudicium_fumus run against the real diary adds 0
 lines. Plants III red (guard off, foreign context not applied, commit
 not read in the shared lib).
+
+## 2026-10-13 - action bodies into diurna (analytica T4 step 2b)
+
+`_acta_actionis_ponere` (tools/fabrica_memoria.c): after a SANATUM /
+FRACTUM / PRAEPARATUM action, build/fabrica/acta/TITULUS.log (which the
+next run overwrites) is stored in diurna under the action's run id;
+the run's `acta` = its SHA-256. Diurna opened once per process
+(Memoria.diurna). A fixture root needs an explicit MENSOR_DIURNA as
+well as MENSOR_DIARIUM - fumus LV runs the diary-only case explicitly
+(plant F6 survived without it). fumus LVI: a failing member's output
+is found by run id. Whole fumus exports MENSOR_DIURNA.

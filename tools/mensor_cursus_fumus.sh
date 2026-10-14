@@ -3,9 +3,12 @@
 # T2): tools/cursus.sh + 'bin/mensor cursus currere|legere'.
 #
 # Diarium, volumen, acta TEMPORARIA (MENSOR_DIARIUM, MENSOR_VOLUMEN,
-# MENSOR_ACTA) - nihil verum tangitur. Probat:
+# MENSOR_DIURNA - taberna actorum, analytica T4) - nihil verum
+# tangitur. Probat:
 #   I    exitus, duratio, titulus ex annotatione <cursus>, argv
-#   II   effusio et erratum TRANSMISSA (terminalis) ET capta (acta)
+#   II   effusio et erratum TRANSMISSA (terminalis) ET capta (corpus in
+#        diurna: columna acta = sigillum LXIV hex, 'cursus acta <id>'
+#        corpus reddit)
 #   III  nidificatio: scriptum chassis scriptum alterum vocat -> parens,
 #        contextus HEREDITATUS (commissum idem; contextus in ambitu
 #        praepositus vincit git - hereditas, non recomputatio)
@@ -18,7 +21,8 @@
 #   IX   'cursus incipere' lineas ambitus pro prolibus reddit (MENSOR_PARENS
 #        = id novum, contextus); 'finire -exitus -nota' cursum claudit;
 #        nidificatio per incipere; nota in columna XV (analytica T3:
-#        producentes sine involucro - silva.porta, commissio)
+#        producentes sine involucro - silva.porta, commissio); '-acta -'
+#        corpus ex stdin in diurna (T4), cursus sine corpore: 'acta' exitus 1
 #   VIII extra omne repositorium (contextus vacuus) -> cursus notatus,
 #        commissum et ramus vacui, nulla ruina (planta D T2: setenv cum
 #        NIHIL ruebat)
@@ -33,7 +37,7 @@ if [ ! -x bin/mensor ]; then
 fi
 T=$(mktemp -d)
 trap 'rm -rf "$T"' EXIT
-export MENSOR_DIARIUM="$T/diarium.tsv" MENSOR_VOLUMEN="$T/v.volumen" MENSOR_ACTA="$T/acta"
+export MENSOR_DIARIUM="$T/diarium.tsv" MENSOR_VOLUMEN="$T/v.volumen" MENSOR_DIURNA="$T/diurna"
 unset MENSOR_SESSIO MENSOR_PARENS MENSOR_COMMISSUM MENSOR_RAMUS MENSOR_ARBOR MENSOR_SORDIDUM MENSOR_MACHINA MENSOR_VOCATOR CURSUS_INTUS CURSUS_NULLUS
 fracta=0
 credo () { if [ "$1" -eq 0 ]; then echo "  ok   $2"; else echo "  FRACTUM $2"; fracta=$((fracta + 1)); fi; }
@@ -59,9 +63,11 @@ credo $? "I    exitus 3 (fractus), duratio >= 150 ms, titulus ex annotatione, ar
 scriptum "$T/secundum.sh" "fumus/secundum" 'echo "ad effusionem"; echo "ad erratum" >&2; exit 0'
 "$T/secundum.sh" > "$T/o2" 2> "$T/e2"
 acta=$(legere | campus fumus/secundum 13)
+id2=$(legere | campus fumus/secundum 2)
+"$RADIX/bin/mensor" cursus acta "$id2" > "$T/a2" 2>/dev/null
 grep -qx "ad effusionem" "$T/o2" && grep -qx "ad erratum" "$T/e2" \
-  && [ -n "$acta" ] && [ -f "$MENSOR_ACTA/$acta" ] \
-  && grep -q "ad effusionem" "$MENSOR_ACTA/$acta" && grep -q "ad erratum" "$MENSOR_ACTA/$acta"
+  && echo "$acta" | grep -qE '^[0-9a-f]{64}$' \
+  && grep -q "ad effusionem" "$T/a2" && grep -q "ad erratum" "$T/a2"
 credo $? "II   effusio et erratum transmissa et in actis capta"
 
 # III
@@ -138,7 +144,8 @@ amb=$("$RADIX/bin/mensor" cursus incipere -titulus fumus/incipere)
 id_p=$(echo "$amb" | sed -n 's/^MENSOR_PARENS=//p')
 amb_f=$(env $(echo "$amb" | tr '\n' ' ') "$RADIX/bin/mensor" cursus incipere -titulus fumus/incipere_filius)
 id_f=$(echo "$amb_f" | sed -n 's/^MENSOR_PARENS=//p')
-"$RADIX/bin/mensor" cursus finire -id "$id_f" -exitus 2 -duratio_ms 40 -nota "filius: 1/2 FRACTA"
+printf 'corpus ex stdin\nlinea secunda\n' | "$RADIX/bin/mensor" cursus finire -id "$id_f" -exitus 2 \
+    -duratio_ms 40 -nota "filius: 1/2 FRACTA" -titulus fumus/incipere_filius -acta -
 "$RADIX/bin/mensor" cursus finire -id "$id_p" -exitus 0 -duratio_ms 90 -nota "pater sanus"
 r=$(legere)
 [ -n "$id_p" ] && echo "$amb" | grep -q '^MENSOR_COMMISSUM=' && echo "$amb" | grep -q '^MENSOR_SESSIO=' \
@@ -147,8 +154,10 @@ r=$(legere)
   && [ "$(echo "$r" | campus fumus/incipere_filius 15)" = "filius: 1/2 FRACTA" ] \
   && [ "$(echo "$r" | campus fumus/incipere 5)" = "transiit" ] \
   && [ "$(echo "$r" | campus fumus/incipere 7)" = "90" ] \
-  && [ "$(echo "$r" | campus fumus/incipere 15)" = "pater sanus" ]
-credo $? "IX   incipere/finire: ambitus prolis, nidificatio, exitus et nota"
+  && [ "$(echo "$r" | campus fumus/incipere 15)" = "pater sanus" ] \
+  && [ "$("$RADIX/bin/mensor" cursus acta "$id_f" 2>/dev/null)" = "$(printf 'corpus ex stdin\nlinea secunda')" ] \
+  && ! "$RADIX/bin/mensor" cursus acta "$id_p" > /dev/null 2>&1
+credo $? "IX   incipere/finire: ambitus prolis, nidificatio, exitus, nota, corpus ex stdin"
 
 echo
 if [ "$fracta" -eq 0 ]; then echo "fumus mensor_cursus: sanum (IX/IX)"; exit 0; fi

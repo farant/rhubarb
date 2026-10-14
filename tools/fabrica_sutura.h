@@ -23,6 +23,7 @@
 #include "provenientia.h"
 #include "sigillum.h"
 #include "mensura.h"
+#include "diurna.h"
 
 /* sanare: terminus unus per actum (briar ~3 min, obiecta radicis
  * frigida ~150 s); termini per actionem non in 1b */
@@ -38,8 +39,10 @@ nomen structura {
             CursusInitium radix_aliena;    /* contextus radicis si ab
                                              * arbore sessionis differt
                                              * (T4), semel computatus */
-                      b32 radix_aliena_nota;
-                      b32 radix_repositorium;
+                      b32  radix_aliena_nota;
+                      b32  radix_repositorium;
+                   Diurna* diurna;          /* corpora actionum (T4) */
+                      b32  diurna_temptata;
 } Memoria;
 
 /* mandata (fabrica.c) */

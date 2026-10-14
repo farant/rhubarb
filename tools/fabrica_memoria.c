@@ -653,6 +653,62 @@ _sectiones_annalibus_inscribere (
     }
 }
 
+/* CORPUS ACTIONIS (analytica T4): acta actionis quae VERE cucurrit
+ * (build/fabrica/acta/TITULUS.log - cursus ultimus solum, obteritur)
+ * in diurna sub id cursus ponuntur: historia "quid membrum X effudit
+ * cum ultimo fractum est". Referentia = sigillum. Fixtura (radix non
+ * repositorium) solum in MENSOR_DIURNA expressum scribit, ut diarium.
+ * Diurna semel per processum aperitur. */
+interior chorda
+_acta_actionis_ponere (
+                   Memoria* memoria,
+    constans CursusInitium* initium,
+   constans FabricaSanatio* sanatio,
+                       b32  fixtura,
+                       s64* mensura_out)
+{
+             chorda via;
+             chorda corpus;
+    DiurnaIntroitus positum;
+
+    *mensura_out = (s64)ZEPHYRUM;
+    si (   (   sanatio->eventus != FABRICA_SANATUM
+            && sanatio->eventus != FABRICA_FRACTUM
+            && sanatio->eventus != FABRICA_PRAEPARATUM)
+        || (fixtura && getenv("MENSOR_DIURNA") == NIHIL)
+        || memoria->sutura == NIHIL)
+    {
+        redde chorda_ex_literis("", memoria->piscina);
+    }
+    via = chorda_concatenare(memoria->sutura->radix, chorda_concatenare(
+        chorda_ex_literis("/build/fabrica/acta/", memoria->piscina),
+        chorda_concatenare(initium->titulus, chorda_ex_literis(".log",
+        memoria->piscina), memoria->piscina), memoria->piscina),
+        memoria->piscina);
+    si (!filum_existit(chorda_ut_cstr(via, memoria->piscina)))
+    {
+        redde chorda_ex_literis("", memoria->piscina);
+    }
+    si (!memoria->diurna_temptata)
+    {
+        memoria->diurna =
+            mensura_diurna_aperire(memoria->piscina);
+        memoria->diurna_temptata = VERUM;
+    }
+    corpus = filum_legere_totum(chorda_ut_cstr(via, memoria->piscina),
+        memoria->piscina);
+    si (   memoria->diurna == NIHIL
+        || !diurna_ponere(memoria->diurna, initium->id,
+        initium->titulus,
+               sanatio->eventus == FABRICA_FRACTUM, corpus, &positum))
+    {
+        redde chorda_ex_literis("", memoria->piscina);
+    }
+    *mensura_out = positum.mensura;
+    redde chorda_transcribere(chorda_ex_literis(positum.sigillum,
+        memoria->piscina), memoria->piscina);
+}
+
 /* ANNALES CURSUUM (analytica T3): actum quodque etiam cursus in diario
  * mensurae - initium et finis POST factum (initium = nunc - duratio;
  * actio interrupta hic non apparet, porta parens eam INTERRUPTAM
@@ -670,6 +726,7 @@ _cursum_annalibus_inscribere (
       ChordaAedificator* nota;
      constans character* diarium;
                     s64  nunc;
+                    b32  fixtura = FALSUM;
 
     si (getenv("CURSUS_NULLUS") != NIHIL || sanatio->actio == NIHIL)
     {
@@ -705,6 +762,7 @@ _cursum_annalibus_inscribere (
         {
             redde;
         }
+        fixtura = !memoria->radix_repositorium;
     }
     nunc             = mensura_momentum_nunc();
     initium.id       = mensura_id_novum(memoria->piscina);
@@ -735,7 +793,8 @@ _cursum_annalibus_inscribere (
     finis.duratio_ms  = (s64)sanatio->duratio_ms;
     finis.exitus      = (sanatio->eventus == FABRICA_FRACTUM) ? (s32)I
         : (s32)ZEPHYRUM;
-    finis.acta  = chorda_ex_literis("", memoria->piscina);
+    finis.acta  = _acta_actionis_ponere(memoria, &initium, sanatio,
+        fixtura, &finis.acta_mensura);
     finis.nota  = chorda_aedificator_finire(nota);
     diarium     = mensura_diarium_cursuum(memoria->piscina);
     (vacuum)mensura_cursum_incipere(diarium, &initium,

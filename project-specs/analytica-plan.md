@@ -81,8 +81,19 @@ commit via silva.commissio. Work in `../rhubarb-quinta`.
   sha verified on read, (clavis, seq) index ready for streams.
   probatio_diurna VII sections; plants VI red. Compressed read untested
   until purgare writes .gz.
-- [ ] 2b: wire the seam - mensor `_acta_servare` -> diurna_ponere;
+- [x] 2b: wire the seam - mensor `_acta_servare` -> diurna_ponere;
   `cursus finire -acta <file>` for Python producers; `cursus acta <id>`.
+  As built: `mensura_diurna_aperire` (MENSOR_DIURNA | ~/.rhubarb/diurna)
+  shared by mensor and fabrica; run `acta` = body SHA-256; Python bodies
+  = gate output / WHOLE exception message via `finire -titulus -acta -`
+  (stdin); fabrica stores each ran action's log under its run id (the
+  history of "what did probatio_x print when it failed"). Fixture guard
+  covers bodies. Plants VI red (one survivor fixed: LV diary-only case).
+- [ ] 2b-ii (Fran 10-13, after 2b): credo names a crashed section -
+  `INCIPIT` line before each section, the reader turns "started, no
+  SECTIO" into "sectio X RUIT (signal), N not run" + a fractus section
+  run. No signal handlers (credo doctrine). Opt-in per-section fork
+  isolation parked.
 - [ ] 2c: retention policy as STML data + `diurna_purgare` (per-key
   tiers, per-body action, last-per-job, pins, index compaction under a
   lock) + `bin/mensor purgare [-siccum]`. Tests: dedup survives, age

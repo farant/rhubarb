@@ -106,6 +106,8 @@
 #        alterius arboris non hereditatur
 #   LV   custodia diarii (analytica T4): radix non repositorium in diarium
 #        ordinarium nihil scribit; repositorium scribit
+#   LVI  corpus actionis (analytica T4): acta membri in diurna sub id
+#        cursus, campus acta = sigillum
 #
 # Exitus: 0 sanum · 1 fractum · 2 bin/fabrica deest.
 # <porta titulus="fabrica-fumus" instrumentum="bin/fabrica" tegit="*/aedificatio.stml aedificatio.canon fabrica.canon tools/fabrica_struere.sh"/>
@@ -118,7 +120,7 @@ T="$(mktemp -d)"
 ORPH="build/aedilis/fumus_orphanum_fabricae"
 trap 'rm -rf "$T" "$ORPH"' EXIT
 # annales cursuum (analytica T3): actiones fictae numquam in diario vero
-export MENSOR_DIARIUM="$T/cursus.diarium"
+export MENSOR_DIARIUM="$T/cursus.diarium" MENSOR_DIURNA="$T/diurna"
 unset MENSOR_PARENS MENSOR_COMMISSUM MENSOR_SESSIO CURSUS_NULLUS
 fracta=0
 
@@ -884,16 +886,41 @@ radix_c
 # directorium diarii EXSTAT (aliter "nihil scriptum" ex fopen fracto
 # veniret, non ex custodia - pars prima vacue transibat)
 mkdir -p "$T/domus/.rhubarb"
-(cd "$T/r" && env -u MENSOR_DIARIUM HOME="$T/domus" MENSOR_ARBOR=/alibi MENSOR_COMMISSUM=c-alienum \
+(cd "$T/r" && env -u MENSOR_DIARIUM -u MENSOR_DIURNA HOME="$T/domus" MENSOR_ARBOR=/alibi MENSOR_COMMISSUM=c-alienum \
     "$F" probare -vis probationes_t) > "$T/lv.e" 2>&1
-lv1=$(cat "$T/domus/.rhubarb/mensurae.diarium" 2>/dev/null | wc -l | tr -d ' ')
+lv1=$(cat "$T/domus/.rhubarb/mensurae.diarium" "$T/domus/.rhubarb/diurna/index.tsv" 2>/dev/null | wc -l | tr -d ' ')
+# diarium EXPRESSUM, diurna NON: fumus qui diarium solum isolat (ut
+# fabrica-fumus ante T4) corpora in diurnam veram non scribit - custodia
+# corporum propria (planta F6 T4 superfuit: casus ille non probabatur)
+mkdir -p "$T/domus2/.rhubarb"
+(cd "$T/r" && env -u MENSOR_DIURNA HOME="$T/domus2" MENSOR_DIARIUM="$T/lv.diarium" MENSOR_ARBOR=/alibi \
+    MENSOR_COMMISSUM=c-alienum "$F" probare -vis probationes_t) > "$T/lv.e3" 2>&1
+lv4=$(cat "$T/domus2/.rhubarb/diurna/index.tsv" 2>/dev/null | wc -l | tr -d ' ')
+lv5=$(grep -c '^cursus	initium' "$T/lv.diarium" 2>/dev/null)
 (cd "$T/r" && git init -q . && git add -A && git -c user.email=f@f -c user.name=f commit -q -m i) > /dev/null 2>&1
 sha=$(cd "$T/r" && git rev-parse HEAD)
-(cd "$T/r" && env -u MENSOR_DIARIUM HOME="$T/domus" MENSOR_ARBOR=/alibi MENSOR_COMMISSUM=c-alienum \
+(cd "$T/r" && env -u MENSOR_DIARIUM -u MENSOR_DIURNA HOME="$T/domus" MENSOR_ARBOR=/alibi MENSOR_COMMISSUM=c-alienum \
     "$F" probare -vis probationes_t) > "$T/lv.e2" 2>&1
+lv3=$(grep -c '^positum' "$T/domus/.rhubarb/diurna/index.tsv" 2>/dev/null)
 lv2=$(awk -F'\t' '$1 == "cursus" && $2 == "initium" && $6 ~ /probatio_a$/ { print $9 }' "$T/domus/.rhubarb/mensurae.diarium" 2>/dev/null | head -1)
-if [ "$lv1" = "0" ] && [ "$lv2" = "$sha" ]; then echo "  LV   custodia diarii: fixtura nihil scribit, repositorium scribit commisso suo OK"; else echo "  LV   FRACTUM (fixtura lineae $lv1, repositorium commissum '$lv2' pro '$sha')"; fracta=1; fi
+if [ "$lv1" = "0" ] && [ "$lv2" = "$sha" ] && [ "${lv3:-0}" -gt 0 ] && [ "$lv4" = "0" ] && [ "${lv5:-0}" -gt 0 ]; then echo "  LV   custodia diarii et diurnae: fixtura nihil scribit, repositorium scribit commisso suo OK"; else echo "  LV   FRACTUM (fixtura lineae $lv1, repositorium commissum '$lv2' pro '$sha', corpora repositorii ${lv3:-0}, corpora fixturae sine diurna expressa $lv4, lineae diarii expressi ${lv5:-0})"; fracta=1; fi
+
+# LVI (analytica T4): CORPUS ACTIONIS IN DIURNA - membrum d effundit et
+# frangitur; acta eius (build/fabrica/acta/<titulus>.log) sub id cursus
+# in diurna ponuntur: linea positum clavis = id, fractum 1, corpus
+# effusionem continet, campus acta lineae finis = sigillum corporis
+radix_c
+printf '#include <stdio.h>\nint main(void) { printf("d dicit: fracta\\n"); return 1; }\n' > "$T/r/t/probatio_d.c"
+RP=$(cd "$T/r" && pwd -P)
+(cd "$T/r" && MENSOR_PARENS=fumus-lvi MENSOR_COMMISSUM=commissum-lvi MENSOR_SESSIO=sessio-lvi \
+    MENSOR_ARBOR="$RP" "$F" probare -vis probationes_t) > "$T/lvi.e" 2>&1
+id_d=$(awk -F'\t' '$1 == "cursus" && $2 == "initium" && $4 == "fumus-lvi" && $6 ~ /probatio_d$/ { print $3 }' "$MENSOR_DIARIUM" | head -1)
+acta_d=$(awk -F'\t' -v i="$id_d" '$1 == "cursus" && $2 == "finis" && $3 == i { print $10 }' "$MENSOR_DIARIUM" | head -1)
+pos_d=$(awk -F'\t' -v i="$id_d" '$1 == "positum" && $3 == i { print $6 "|" $7 }' "$MENSOR_DIURNA/index.tsv" 2>/dev/null | head -1)
+sig_d=${pos_d#*|}
+if [ -n "$id_d" ] && [ "${pos_d%%|*}" = "1" ] && [ "$acta_d" = "$sig_d" ] \
+   && grep -q "d dicit: fracta" "$MENSOR_DIURNA/corpora/${sig_d:0:2}/${sig_d:2}" 2>/dev/null; then echo "  LVI  corpus actionis in diurna sub id cursus, acta = sigillum OK"; else echo "  LVI  FRACTUM (id '$id_d', positum '$pos_d', acta '$acta_d')"; fracta=1; fi
 
 if [ "$fracta" -ne 0 ]; then echo "fumus fabricae: FRACTUM"; exit 1; fi
-echo "fumus fabricae: sanum (LV/LV)"
+echo "fumus fabricae: sanum (LVI/LVI)"
 exit 0

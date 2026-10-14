@@ -1813,10 +1813,12 @@ MENSOR_BIN = os.path.join(RADIX, 'bin', 'mensor')
 
 
 class _CursusApertus(object):
-    """cursus apertus: corpus 'with' exitum et notam ponere potest"""
+    """cursus apertus: corpus 'with' exitum, notam et acta (corpus
+    actorum, in diurna per 'finire -acta -') ponere potest"""
     def __init__(self):
         self.exitus = 0
         self.nota = ''
+        self.acta = ''
 
 
 @contextlib.contextmanager
@@ -1860,8 +1862,11 @@ def _cursus(titulus, vocator_filiorum=None):
     except Exception as ex:
         finitus = True
         c.exitus = c.exitus or 1
-        c.nota = c.nota or ('%s: %s' % (type(ex).__name__, ex)).split(
-            '\n')[0]
+        nuntius = '%s: %s' % (type(ex).__name__, ex)
+        c.nota = c.nota or nuntius.split('\n')[0]
+        # corpus = nuntius TOTUS (refusio integra: 'quid commissionem
+        # fregit' - Franus 10-13), non linea prima
+        c.acta = c.acta or nuntius
         raise
     finally:
         for k, v in veteres.items():
@@ -1874,7 +1879,10 @@ def _cursus(titulus, vocator_filiorum=None):
                 [MENSOR_BIN, 'cursus', 'finire', '-id', amb['MENSOR_PARENS'],
                  '-exitus', str(c.exitus), '-duratio_ms',
                  str(int((time.monotonic() - initium) * 1000)), '-nota',
-                 c.nota], capture_output=True, text=True, errors='replace')
+                 c.nota] + (['-titulus', titulus, '-acta', '-'] if c.acta
+                            else []),
+                input=c.acta or None, capture_output=True, text=True,
+                errors='replace')
             if r.returncode != 0:
                 sys.stderr.write('finis cursus non notatus (%s): %s'
                                  % (titulus, r.stderr))
@@ -1882,13 +1890,15 @@ def _cursus(titulus, vocator_filiorum=None):
 
 def _cursu_notatum(titulus, exitus_ex, vocator_filiorum=None):
     """decorator: vocatio tota = cursus unus. titulus(*a, **k) -> nomen;
-    exitus_ex(fructus) -> (exitus, nota)"""
+    exitus_ex(fructus) -> (exitus, nota) aut (exitus, nota, acta)"""
     def decorator(f):
         @functools.wraps(f)
         def involucrum(*a, **k):
             with _cursus(titulus(*a, **k), vocator_filiorum) as c:
                 fructus = f(*a, **k)
-                c.exitus, c.nota = exitus_ex(fructus)
+                e = exitus_ex(fructus)
+                c.exitus, c.nota = e[0], e[1]
+                c.acta = e[2] if len(e) > 2 else ''
                 return fructus
         return involucrum
     return decorator
@@ -1907,7 +1917,7 @@ def _phasis(nomen):
 
 @_cursu_notatum(lambda nomen, filtrum=None, *a, **k:
                 'porta:' + nomen + ('.' + filtrum if filtrum else ''),
-                lambda p: (0 if p.sana else 1, p.compendium))
+                lambda p: (0 if p.sana else 1, p.compendium, p.acta or ''))
 def porta(nomen, filtrum=None, radix=None, receptum=True, vis=False,
           auditus=None):
     """portam currere. VERDICTUM (fabrica spec 3 T6): porta sine filtro in

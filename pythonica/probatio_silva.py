@@ -51,7 +51,8 @@ if os.path.exists(silva.TEMPORA_VIA):
 # portae et commissiones fictae ibi historiam veram mentirentur
 for _k, _v in (('MENSOR_DIARIUM', 'cursus.diarium'),
                ('MENSOR_VOLUMEN', 'cursus.volumen'),
-               ('MENSOR_ACTA', 'cursus_acta')):
+               ('MENSOR_ACTA', 'cursus_acta'),
+               ('MENSOR_DIURNA', 'cursus_diurna')):
     os.environ[_k] = os.path.join(T, _v)
 # ambitus cursuum IN INITIO suitae (porta vera parentem legitime
 # hereditat): post cursus omnes idem esse debet. Comparatio 'ante
@@ -1305,6 +1306,19 @@ try:
     rubra = [l for l in filii if l[3] == 'porta:ficta-rubra2']
     credo(rubra and rubra[0][4] == 'fractus' and rubra[0][14],
           'cursus: porta rubra fractus, nota = compendium')
+    # corpora (T4): commissio fracta refusionem TOTAM fert (non lineam
+    # primam solam), porta effusionem suam - per 'cursus acta <id>'
+    def _acta(i):
+        return subprocess.run([silva.MENSOR_BIN, 'cursus', 'acta', i],
+                              capture_output=True, text=True,
+                              errors='replace').stdout
+    corpus_com = _acta(com[-1][1])
+    credo(corpus_com.startswith('SilvaError: ') and 'ficta-rubra2' in corpus_com
+          and len(corpus_com) > len(com[-1][14]),
+          'cursus: corpus commissionis fractae = refusio tota (%d octeti)'
+          % len(corpus_com))
+    credo(rubra and 'fictum: FRACTUM' in _acta(rubra[0][1]),
+          'cursus: corpus portae = effusio eius')
     # _cursus ipse: nidificatio, exceptio, interruptio, ambitus restitutus
     with silva._cursus('fumus:exterior'):
         id_ext = os.environ.get('MENSOR_PARENS')

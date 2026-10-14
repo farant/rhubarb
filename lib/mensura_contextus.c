@@ -277,3 +277,18 @@ mensura_diarium_cursuum (
         _ambitus_aut("HOME", "/tmp"));
     redde plena;
 }
+
+Diurna*
+mensura_diurna_aperire (
+    Piscina* piscina)
+{
+    constans character* radix = getenv("MENSOR_DIURNA");
+             character  via[DXII];
+
+    si (radix != NIHIL && radix[ZEPHYRUM] != '\0')
+    {
+        redde diurna_aperire(radix, piscina);
+    }
+    sprintf(via, "%s/.rhubarb/diurna", _ambitus_aut("HOME", "/tmp"));
+    redde diurna_aperire(via, piscina);
+}

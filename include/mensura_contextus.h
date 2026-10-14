@@ -15,6 +15,7 @@
 #include "chorda.h"
 #include "piscina.h"
 #include "mensura.h"
+#include "diurna.h"
 
 /* Contextum in 'initium' ponit (sessio, parens, commissum, sordidum,
  * ramus, arbor, machina, vocator). MENSOR_COMMISSUM absens = contextus
@@ -41,6 +42,12 @@ mensura_contextum_arboris (
 /* diarium cursuum: MENSOR_DIARIUM aut ~/.rhubarb/mensurae.diarium */
 constans character*
 mensura_diarium_cursuum (
+    Piscina* piscina);
+
+/* taberna actorum cursuum (analytica T4): MENSOR_DIURNA aut
+ * ~/.rhubarb/diurna. Clavis = id cursus. NIHIL si aperiri nequit. */
+Diurna*
+mensura_diurna_aperire (
     Piscina* piscina);
 
 #endif /* MENSURA_CONTEXTUS_H */

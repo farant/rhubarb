@@ -277,3 +277,39 @@ poll children with a 20 ms sleep - a finished child's slot idles up to
 wait-any in processus (poll on all children's fds, timeout = nearest
 deadline), not reactor's callbacks; reactor fits the fabrica resident.
 Not measured yet.
+
+## 2026-10-13 - bodies go to diurna (analytica T4 step 2b)
+
+The one seam now ends in diurna: mensor's `_acta_servare` composes the
+body ("== effusio ==" / "== erratum ==", each stream tail-capped at 4 MB
+so the pair stays under diurna's 8 MB) and `_corpus_ponere` stores it
+under the run id; the run's `acta` field is the body's SHA-256 (was a
+file name under ~/.rhubarb/cursus/acta - that spool is gone).
+`mensura_diurna_aperire` (lib/mensura_contextus) resolves the store
+once for every producer: MENSOR_DIURNA, else ~/.rhubarb/diurna.
+`cursus finire -titulus T -acta -|via` stores a body for producers
+without the wrapper; `cursus acta <id>` prints it (exit 1 + status name
+when unknown / deleted / corrupt).
+
+Python: `_CursusApertus.acta`. A gate's body is its whole output
+(Porta.acta); an exception's body is the WHOLE message (the nota keeps
+its first line) - "what caused the commit to fail" no longer stops at
+"git commit rc=1: <tail starting mid-word>". Passed on stdin, no temp
+files.
+
+fabrica: `_acta_actionis_ponere` stores build/fabrica/acta/TITULUS.log
+(last-run-only until now) under the action's run id for SANATUM /
+FRACTUM / PRAEPARATUM; diurna opened once per process (Memoria). Same
+guard as the diary: a fixture root writes bodies only to an explicit
+MENSOR_DIURNA (fumus LV now checks both stores).
+
+Plants VI red (stderr not captured, -acta ignored, fabrica body guard
+off, fractum not passed, Python body = first line only, gate body
+dropped). Two notes: M4 went red by a SEGFAULT the plant itself made
+(inverted guard passed NULL to strcmp) - weaker evidence than an
+assertion, recorded as such. F6 (body guard off) first SURVIVED: in
+fumus LV the diary guard returned before the body guard was reached,
+and the case the body guard exists for - a fumus isolating only the
+diary, as fabrica-fumus did until this morning - was untested. LV now
+runs that case (explicit diary, no explicit diurna -> no bodies in the
+default store); F6 then red.

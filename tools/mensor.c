@@ -36,6 +36,7 @@
 #include "processus.h"
 #include "volumen.h"
 #include "mensura_contextus.h"
+#include "filum.h"
 #include "xar.h"
 
 #include <stdio.h>
@@ -595,7 +596,7 @@ _condere (
  * ============================================================ */
 
 /* acta: corpus maximum per fluxum (cauda servatur) */
-#define ACTA_MAXIMA (VIII * MXXIV * MXXIV)
+#define ACTA_MAXIMA (IV * MXXIV * MXXIV)
 
 /* horologium monotonum (duratio; murus pro initio/fine) */
 interior s64
@@ -683,90 +684,121 @@ _titulum_annotationis (
     redde _attributum_annotationis(annotatio, "titulus", piscina);
 }
 
-/* SUTURA ACTORUM (spec par. IV): corpus servatur per hanc functionem
- * SOLAM - redactio postea filtrum intra eam fiet. v1: <acta>/<id>.log
- * (MENSOR_ACTA aut ~/.rhubarb/cursus/acta), forma ut acta fabricae;
- * fluxus quisque ACTA_MAXIMA (cauda servatur). Referentia = "<id>.log"
- * radici actorum relativa; vacua si scribi nequit. */
+/* SUTURA ACTORUM (spec par. IV): corpus cursus per hanc functionem
+ * SOLAM in diurna ponitur (T4; redactio postea intra diurna_ponere).
+ * Corpus = "== effusio ==" + "== erratum ==", fluxus quisque ad
+ * ACTA_MAXIMA (cauda servatur) - summa intra DIURNA_CORPUS_MAXIMUM.
+ * Referentia = sigillum corporis (LXIV hex); vacua si poni nequit. */
 interior vacuum
-_fluxum_scribere (
-                FILE* f,
-    constans character* titulus,
-               chorda  fluxus)
+_fluxum_addere (
+    ChordaAedificator* a,
+   constans character* titulus,
+                chorda  fluxus)
 {
-    fprintf(f, "== %s ==\n", titulus);
+    character caput[CXXVIII];
+
+    sprintf(caput, "== %s ==\n", titulus);
+    chorda_aedificator_appendere_literis(a, caput);
     si (fluxus.mensura > (i32)ACTA_MAXIMA)
     {
-        fprintf(f, "[... %ld octeti praecisi, cauda servata]\n",
+        sprintf(caput, "[... %ld octeti praecisi, cauda servata]\n",
             (longus)(fluxus.mensura - (i32)ACTA_MAXIMA));
+        chorda_aedificator_appendere_literis(a, caput);
         fluxus.datum    += fluxus.mensura - (i32)ACTA_MAXIMA;
         fluxus.mensura  = (i32)ACTA_MAXIMA;
     }
     si (fluxus.mensura > ZEPHYRUM)
     {
-        fwrite(fluxus.datum, (size_t)I, (size_t)fluxus.mensura, f);
+        chorda_aedificator_appendere_chorda(a, fluxus);
         si (fluxus.datum[fluxus.mensura - I] != '\n')
         {
-            fputc('\n', f);
+            chorda_aedificator_appendere_character(a, '\n');
         }
     }
+}
+
+/* corpus ponere sub id cursus; referentia (sigillum) et mensura */
+interior chorda
+_corpus_ponere (
+               chorda  id,
+               chorda  titulus,
+                  b32  fractum,
+               chorda  corpus,
+              Piscina* piscina,
+                  s64* mensura_out)
+{
+              Diurna* diurna = mensura_diurna_aperire(piscina);
+     DiurnaIntroitus  positum;
+
+    *mensura_out = (s64)ZEPHYRUM;
+    si (   diurna == NIHIL
+        || !diurna_ponere(diurna, id, titulus, fractum, corpus,
+        &positum))
+    {
+        fprintf(stderr, "mensor cursus: corpus non positum (%.*s)\n",
+            (integer)id.mensura, (constans character*)id.datum);
+        redde chorda_ex_literis("", piscina);
+    }
+    *mensura_out = positum.mensura;
+    redde chorda_transcribere(chorda_ex_literis(positum.sigillum,
+        piscina),
+        piscina);
 }
 
 interior chorda
 _acta_servare (
                chorda  id,
+               chorda  titulus,
+                  b32  fractum,
                chorda  effusio,
                chorda  erratum,
               Piscina* piscina,
                   s64* mensura_out)
 {
-    constans character* radix;
-             character  directorium[IV * MXXIV];
-             character  via[IV * MXXIV + C];
-              FILE*  f;
-              long   magnitudo_plagulae;
+    ChordaAedificator* a = chorda_aedificator_creare(piscina,
+        (memoriae_index)(effusio.mensura + erratum.mensura + CXXVIII));
 
-    *mensura_out  = (s64)ZEPHYRUM;
-    radix         = getenv("MENSOR_ACTA");
-    si (radix != NIHIL && radix[0] != '\0')
-    {
-        sprintf(directorium, "%s", radix);
-    }
-    alioquin
-    {
-        sprintf(directorium, "%s/.rhubarb/cursus/acta",
-            _ambitus_aut("HOME", "/tmp"));
-    }
-    {
-        character  gradus[IV * MXXIV];
-        character* p;
-
-        sprintf(gradus, "%s", directorium);
-        per (p = gradus + I; *p != '\0'; p++)
-        {
-            si (*p == '/')
-            {
-                *p = '\0';
-                (vacuum)mkdir(gradus, (mode_t)0755);
-                *p = '/';
-            }
-        }
-        (vacuum)mkdir(gradus, (mode_t)0755);
-    }
-    sprintf(via, "%s/%.*s.log", directorium, (integer)id.mensura,
-        (constans character*)id.datum);
-    f = fopen(via, "wb");
-    si (f == NIHIL)
+    *mensura_out = (s64)ZEPHYRUM;
+    si (a == NIHIL)
     {
         redde chorda_ex_literis("", piscina);
     }
-    _fluxum_scribere(f, "effusio", effusio);
-    _fluxum_scribere(f, "erratum", erratum);
-    magnitudo_plagulae = ftell(f);
-    fclose(f);
-    *mensura_out = (s64)magnitudo_plagulae;
-    redde chorda_concatenare(id, chorda_ex_literis(".log", piscina),
-        piscina);
+    _fluxum_addere(a, "effusio", effusio);
+    _fluxum_addere(a, "erratum", erratum);
+    redde _corpus_ponere(id, titulus, fractum,
+        chorda_aedificator_finire(a),
+        piscina, mensura_out);
+}
+
+/* corpus ex stdin ('-') aut plagula legere */
+interior chorda
+_corpus_legere (
+    constans character* via,
+               Piscina* piscina)
+{
+     ChordaAedificator* a;
+             character  frustum[IV * MXXIV];
+                size_t  n;
+
+    si (strcmp(via, "-") != ZEPHYRUM)
+    {
+        redde filum_legere_totum(via, piscina);
+    }
+    a = chorda_aedificator_creare(piscina,
+        (memoriae_index)(IV * MXXIV));
+    si (a == NIHIL)
+    {
+        redde chorda_ex_literis("", piscina);
+    }
+    dum ((n = fread(frustum, (size_t)I, magnitudo(frustum), stdin)) > 0)
+    {
+        chorda pars;
+
+        pars.datum    = (i8*)frustum;
+        pars.mensura  = (i32)n;
+        chorda_aedificator_appendere_chorda(a, pars);
+    }
+    redde chorda_aedificator_finire(a);
 }
 
 /* fluxum novum (post offset) effundere; offset promovetur */
@@ -894,9 +926,8 @@ _cursum_currere (
         finis.cpu_systematis_ms  = (s64)usus.ru_stime.tv_sec * (s64)M
             + (s64)usus.ru_stime.tv_usec / (s64)M;
     }
-    finis.acta = _acta_servare(initium.id, r.effusio, r.erratum,
-        piscina,
-        &finis.acta_mensura);
+    finis.acta = _acta_servare(initium.id, initium.titulus, codex != 0,
+        r.effusio, r.erratum, piscina, &finis.acta_mensura);
     si (!mensura_cursum_finire(diarium, &finis, piscina))
     {
         fprintf(stderr, "mensor cursus: finis non annotatus (%s)\n",
@@ -1029,6 +1060,8 @@ _cursum_finire (
      constans character* exitus   = _arg(argc, argv, "-exitus");
      constans character* duratio  = _arg(argc, argv, "-duratio_ms");
      constans character* nota     = _arg(argc, argv, "-nota");
+     constans character* acta     = _arg(argc, argv, "-acta");
+     constans character* titulus  = _arg(argc, argv, "-titulus");
 
     si (id == NIHIL || exitus == NIHIL)
     {
@@ -1044,12 +1077,57 @@ _cursum_finire (
         X) : (s64)ZEPHYRUM;
     finis.nota        = chorda_ex_literis(nota != NIHIL ? nota : "",
         piscina);
+    si (acta != NIHIL)
+    {
+        finis.acta = _corpus_ponere(finis.id, chorda_ex_literis(
+            titulus != NIHIL ? titulus : "", piscina), finis.exitus
+                != 0,
+            _corpus_legere(acta, piscina), piscina,
+            &finis.acta_mensura);
+    }
     si (!mensura_cursum_finire(mensura_diarium_cursuum(piscina), &finis,
             piscina))
     {
         fprintf(stderr, "mensor cursus finire: finis non annotatus\n");
         redde I;
     }
+    redde ZEPHYRUM;
+}
+
+/* ACTA: 'cursus acta <id>' - corpus cursus ex diurna; exitus 1 cum
+ * statu nominato (ignotum, deletum, corruptum) */
+interior integer
+_cursus_acta (
+      Piscina*  piscina,
+      integer   argc,
+    character** argv)
+{
+          Diurna* diurna;
+    DiurnaStatus  status = DIURNA_IGNOTUM;
+          chorda  corpus;
+
+    si (argc < IV)
+    {
+        fprintf(stderr, "usus: mensor cursus acta <id>\n");
+        redde 2;
+    }
+    diurna = mensura_diurna_aperire(piscina);
+    si (diurna == NIHIL)
+    {
+        fprintf(stderr,
+            "mensor cursus acta: diurna aperiri non potest\n");
+        redde I;
+    }
+    corpus = diurna_legere(diurna, chorda_ex_literis(argv[III],
+        piscina),
+        piscina, &status);
+    si (status != DIURNA_ADEST)
+    {
+        fprintf(stderr, "mensor cursus acta %s: %s\n", argv[III],
+            diurna_status_nomen(status));
+        redde I;
+    }
+    fwrite(corpus.datum, (size_t)I, (size_t)corpus.mensura, stdout);
     redde ZEPHYRUM;
 }
 
@@ -1134,12 +1212,17 @@ _cursus (
     {
         redde _cursum_finire(piscina, argc, argv);
     }
+    si (argc >= III && strcmp(argv[II], "acta") == ZEPHYRUM)
+    {
+        redde _cursus_acta(piscina, argc, argv);
+    }
     fprintf(stderr,
         "usus: mensor cursus currere [-titulus T] -- mandatum ...\n"
         "      mensor cursus legere [-machina] [-volumen via]\n"
         "      mensor cursus incipere -titulus T [-argv S]\n"
         "      mensor cursus finire -id X -exitus N [-duratio_ms D]"
-        " [-nota S]\n");
+        " [-nota S] [-titulus T -acta via|-]\n"
+        "      mensor cursus acta <id>\n");
     redde 2;
 }
 
