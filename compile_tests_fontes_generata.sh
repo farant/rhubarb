@@ -202,6 +202,7 @@ declare -a SOURCE_FILES=(
     "lib/relatio.c"
     "lib/rete_posix.c"
     "lib/reticulum.c"
+    "lib/rivus_eventuum.c"
     "lib/rivus_terminalis.c"
     "lib/router.c"
     "lib/runae.c"
