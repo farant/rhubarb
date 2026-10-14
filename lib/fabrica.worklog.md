@@ -3067,3 +3067,16 @@ the run's `acta` = its SHA-256. Diurna opened once per process
 well as MENSOR_DIARIUM - fumus LV runs the diary-only case explicitly
 (plant F6 survived without it). fumus LVI: a failing member's output
 is found by run id. Whole fumus exports MENSOR_DIURNA.
+
+## 2026-10-14 - crashed sections named (analytica T4 2b-ii)
+
+`fabrica_sectiones_legere` reads credo's new SECTIONES / INCIPIT lines:
+a section started but never recorded in a file without SUITA becomes a
+synthetic RUIT section, and `non_cursae = declaratae - seen`. The
+member cause names it ("sectio 'beta' RUIT; 1 non cursae"; RUIT prints
+no p/t); files without SECTIONES keep the old "SUITA absens" text.
+fumus LVII has two crashing members: r dies INSIDE beta, q dies
+BETWEEN sections (alpha recorded, beta never started). q was added by
+reasoning before planting - without it the plant "incepta not cleared"
+(R1: the last completed section reported as RUIT) would survive. Plants
+III red here + II in credo.

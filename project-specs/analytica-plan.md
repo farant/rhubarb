@@ -89,11 +89,16 @@ commit via silva.commissio. Work in `../rhubarb-quinta`.
   (stdin); fabrica stores each ran action's log under its run id (the
   history of "what did probatio_x print when it failed"). Fixture guard
   covers bodies. Plants VI red (one survivor fixed: LV diary-only case).
-- [ ] 2b-ii (Fran 10-13, after 2b): credo names a crashed section -
+- [x] 2b-ii (Fran 10-13, after 2b): credo names a crashed section -
   `INCIPIT` line before each section, the reader turns "started, no
   SECTIO" into "sectio X RUIT (signal), N not run" + a fractus section
   run. No signal handlers (credo doctrine). Opt-in per-section fork
   isolation parked.
+  As built (10-14): credo SECTIONES (first line) + flushed INCIPIT;
+  fabrica reader synthesizes RUIT + non_cursae; member cause "sectio
+  'X' RUIT; N non cursae"; #X fractus run. credo fumus II/VI, fabrica
+  fumus LVII (crash inside a section AND between sections). Plants V
+  red.
 - [ ] 2c: retention policy as STML data + `diurna_purgare` (per-key
   tiers, per-body action, last-per-job, pins, index compaction under a
   lock) + `bin/mensor purgare [-siccum]`. Tests: dedup survives, age

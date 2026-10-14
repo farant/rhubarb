@@ -288,13 +288,15 @@ _obiectum_nominare (
  * SYNTHETICA a gradu scripta, sectio una 'totum' (exitus ex codice,
  * numeri ex compendio effusionis) - lector unus, forma una. Linea
  * SECTIO: campi X (credo I) aut XI (credo II: gradus fracturae, in
- * fractura "[gradus ...]" fit); lineae aliae (ORDO credo II)
- * praetereuntur
+ * fractura "[gradus ...]" fit); SECTIONES (numerus declaratus) et
+ * INCIPIT (analytica T4): sectio incepta sine SECTIO in plagula sine
+ * SUITA = sectio RUPTA - sectio synthetica 'RUIT' additur, non_cursae
+ * numerantur; lineae aliae (ORDO credo II) praetereuntur
  * ================================================== */
 
 hic_manens constans character* constans _exitus_sectionis[] = {
     "TRANSIIT", "FRACTA", "VACUA", "ABORTA", "OMISSA", "NOTA_FRACTA",
-    "INOPINATA", NIHIL
+    "INOPINATA", "RUIT", NIHIL
 };
 
 /* campus effugitus ('\t' '\n' '\\' ut credo scribit) -> literae */
@@ -425,6 +427,7 @@ fabrica_sectiones_legere (
                     chorda* causa_out)
 {
     chorda contentum;
+    chorda incepta;
        i32 initium;
        i32 linea;
        i32 i;
@@ -433,6 +436,10 @@ fabrica_sectiones_legere (
         (i32)magnitudo(FabricaSectio));
     sectiones_out->completa    = FALSUM;
     sectiones_out->synthetica  = FALSUM;
+    sectiones_out->declaratae  = ZEPHYRUM;
+    sectiones_out->non_cursae  = ZEPHYRUM;
+    incepta.datum              = NIHIL;
+    incepta.mensura            = ZEPHYRUM;
     si (   sutura->legere == NIHIL
         || !sutura->legere(sutura->datum, via, piscina, &contentum))
     {
@@ -464,6 +471,18 @@ fabrica_sectiones_legere (
         {
             sectiones_out->synthetica = VERUM;
         }
+        alioquin si (   chorda_aequalis_literis(campi[ZEPHYRUM],
+                            "SECTIONES") && n == III)
+        {
+            (vacuum)_numerum_legere(campi[II],
+                &sectiones_out->declaratae);
+        }
+        alioquin si (   chorda_aequalis_literis(campi[ZEPHYRUM],
+                     "INCIPIT")
+                     && n == III)
+        {
+            incepta = _campum_solvere(campi[II], piscina);
+        }
         alioquin si (chorda_aequalis_literis(campi[ZEPHYRUM], "SUITA"))
         {
             si (n != VIII)
@@ -490,6 +509,10 @@ fabrica_sectiones_legere (
                 (FabricaSectio*)xar_addere(sectiones_out->sectiones);
             sectio->titulus  = _campum_solvere(campi[II], piscina);
             sectio->exitus   = campi[III];
+            si (chorda_aequalis(sectio->titulus, incepta))
+            {
+                incepta.mensura = ZEPHYRUM;   /* incepta et notata */
+            }
             si (!_exitum_noscere(sectio->exitus))
             {
                 *causa_out = _lineam_recusare(via, linea, "exitus "
@@ -523,6 +546,26 @@ fabrica_sectiones_legere (
                 }
             }
         }
+    }
+    /* SECTIO RUPTA: incepta, numquam notata, suita non completa */
+    si (!sectiones_out->completa && incepta.mensura > ZEPHYRUM)
+    {
+        FabricaSectio* rupta = (FabricaSectio*)xar_addere(
+            sectiones_out->sectiones);
+
+        si (rupta != NIHIL)
+        {
+            memset(rupta, ZEPHYRUM, magnitudo(FabricaSectio));
+            rupta->titulus   = incepta;
+            rupta->exitus    = chorda_ex_literis("RUIT", piscina);
+            rupta->fractura  = chorda_ex_literis("", piscina);
+        }
+    }
+    si (   !sectiones_out->completa && sectiones_out->declaratae
+        > xar_numerus(sectiones_out->sectiones))
+    {
+        sectiones_out->non_cursae = sectiones_out->declaratae
+            - xar_numerus(sectiones_out->sectiones);
     }
     redde VERUM;
 }
@@ -722,8 +765,13 @@ _sectiones_explicare (
         {
             perge;
         }
-        sprintf(numeri, " %u/%u", (insignatus integer)s->praeteriti,
-            (insignatus integer)s->totales);
+        /* RUIT: sine numeris (sectio numquam summata) */
+        numeri[ZEPHYRUM] = '\0';
+        si (!chorda_aequalis_literis(s->exitus, "RUIT"))
+        {
+            sprintf(numeri, " %u/%u", (insignatus integer)s->praeteriti,
+                (insignatus integer)s->totales);
+        }
         nota = fabricae_iungere(piscina, "", nota, fractae > I ? ", "
             : "");
         nota = chorda_concatenare(nota, fabricae_iungere(piscina,
@@ -744,7 +792,19 @@ _sectiones_explicare (
             - III));
         nota = fabricae_iungere(piscina, "", nota, reliquae);
     }
-    si (!sectiones.completa)
+    si (!sectiones.completa && sectiones.declaratae > ZEPHYRUM)
+    {
+        character non_cursae[LXIV];
+
+        /* SECTIONES + INCIPIT (analytica T4): ruptura nominata in nota;
+         * hic numerus sectionum quae numquam cucurrerunt */
+        sprintf(non_cursae, "%s%u non cursae", nota.mensura > ZEPHYRUM
+            ? "; " : "", (insignatus integer)sectiones.non_cursae);
+        nota = fabricae_iungere(piscina, "", nota, non_cursae);
+        actum_out->codex = actum_out->codex == ZEPHYRUM ? I
+            : actum_out->codex;
+    }
+    alioquin si (!sectiones.completa)
     {
         nota = fabricae_iungere(piscina, "", nota, nota.mensura
             > ZEPHYRUM ? "; SUITA absens (ruina post sectionem ultimam "

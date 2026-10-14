@@ -1649,6 +1649,25 @@ credo_suitam_currere_cum (
         redde I;
     }
     _credo_ordinem_parare(ordo, numerus_sectionum, mixtus, semen);
+    /* SECTIONES (analytica T4): numerus declaratus PRIMUM - lector post
+     * ruinam 'N non cursae' computat (filtrum: congruentes solae) */
+    si (plagula != NIHIL)
+    {
+        insignatus longus declaratae = ZEPHYRUM;
+
+        per (i = ZEPHYRUM; i < numerus_sectionum; i++)
+        {
+            si (   filtrum                               == NIHIL
+                || strcmp(sectiones[i].titulus, filtrum) == ZEPHYRUM)
+            {
+                declaratae++;
+            }
+        }
+        fputs("SECTIONES\t", plagula);
+        _credo_literas_scribere(plagula, titulus_suitae);
+        fprintf(plagula, "\t%lu\n", declaratae);
+        (vacuum)fflush(plagula);
+    }
     si (mixtus)
     {
         /* semen NOMINATUM: cursus fractus eodem semine iteratur */
@@ -1758,6 +1777,19 @@ credo_suitam_currere_cum (
                     sectio->titulus, summa, 0.0);
             }
             perge;
+        }
+        /* INCIPIT (analytica T4) EFFLUXUM ante sectionem: ruina vera
+         * (SEGV, KILL) nihil effluit - sectio incepta sine linea SECTIO
+         * = sectio rupta, a lectore nominata. Nullum manubrium signi
+         * (vide 'Assertiones processus'). */
+        si (plagula != NIHIL)
+        {
+            fputs("INCIPIT\t", plagula);
+            _credo_literas_scribere(plagula, titulus_suitae);
+            fputc('\t', plagula);
+            _credo_literas_scribere(plagula, sectio->titulus);
+            fputc('\n', plagula);
+            (vacuum)fflush(plagula);
         }
         imprimere("\n--- Probans %s ---\n", sectio->titulus);
         contextus.piscina  = piscina_generare_dynamicum(sectio->titulus,

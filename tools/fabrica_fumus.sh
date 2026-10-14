@@ -108,6 +108,8 @@
 #        ordinarium nihil scribit; repositorium scribit
 #   LVI  corpus actionis (analytica T4): acta membri in diurna sub id
 #        cursus, campus acta = sigillum
+#   LVII sectio rupta (analytica T4 2b-ii): INCIPIT sine SECTIO -> causa
+#        "sectio 'X' RUIT; N non cursae", cursus filius #X fractus
 #
 # Exitus: 0 sanum · 1 fractum · 2 bin/fabrica deest.
 # <porta titulus="fabrica-fumus" instrumentum="bin/fabrica" tegit="*/aedificatio.stml aedificatio.canon fabrica.canon tools/fabrica_struere.sh"/>
@@ -921,6 +923,62 @@ sig_d=${pos_d#*|}
 if [ -n "$id_d" ] && [ "${pos_d%%|*}" = "1" ] && [ "$acta_d" = "$sig_d" ] \
    && grep -q "d dicit: fracta" "$MENSOR_DIURNA/corpora/${sig_d:0:2}/${sig_d:2}" 2>/dev/null; then echo "  LVI  corpus actionis in diurna sub id cursus, acta = sigillum OK"; else echo "  LVI  FRACTUM (id '$id_d', positum '$pos_d', acta '$acta_d')"; fracta=1; fi
 
+# LVII (analytica T4 2b-ii): SECTIO RUPTA NOMINATA - membrum r contractum
+# credo ipsum scribit (SECTIONES 3, alpha TRANSIIT, INCIPIT beta) deinde
+# SIGSEGV: causa membri 'sectio 'beta' RUIT; 1 non cursae' (non 'SUITA
+# absens'), cursus filius #beta fractus nota RUIT; q ruit INTER sectiones
+# (alpha notata): nulla RUIT, '1 non cursae'
+radix_c
+cat > "$T/r/t/probatio_r.c" <<'CEOF'
+#include <signal.h>
+#include <stdio.h>
+#include <stdlib.h>
+int main(void)
+{
+    const char* v = getenv("CREDO_VERDICTA");
+    FILE* f;
+    if (v == 0) { return 3; }
+    f = fopen(v, "w");
+    if (f == 0) { return 4; }
+    fprintf(f, "SECTIONES\tprobatio_r\t3\n");
+    fprintf(f, "INCIPIT\tprobatio_r\talpha\n");
+    fprintf(f, "SECTIO\tprobatio_r\talpha\tTRANSIIT\t1\t1\t5\t\t\t\t\n");
+    fprintf(f, "INCIPIT\tprobatio_r\tbeta\n");
+    fflush(f);
+    raise(SIGSEGV);
+    return 0;
+}
+CEOF
+# q: ruina INTER sectiones (alpha notata, beta numquam incepta) -
+# nulla sectio RUIT (alpha non duplicatur), '1 non cursae'
+cat > "$T/r/t/probatio_q.c" <<'CEOF'
+#include <signal.h>
+#include <stdio.h>
+#include <stdlib.h>
+int main(void)
+{
+    const char* v = getenv("CREDO_VERDICTA");
+    FILE* f;
+    if (v == 0) { return 3; }
+    f = fopen(v, "w");
+    if (f == 0) { return 4; }
+    fprintf(f, "SECTIONES\tprobatio_q\t2\n");
+    fprintf(f, "INCIPIT\tprobatio_q\talpha\n");
+    fprintf(f, "SECTIO\tprobatio_q\talpha\tTRANSIIT\t1\t1\t5\t\t\t\t\n");
+    fflush(f);
+    raise(SIGSEGV);
+    return 0;
+}
+CEOF
+RP=$(cd "$T/r" && pwd -P)
+(cd "$T/r" && MENSOR_PARENS=fumus-lvii MENSOR_COMMISSUM=commissum-lvii MENSOR_SESSIO=sessio-lvii \
+    MENSOR_ARBOR="$RP" "$F" probare -vis probationes_t) > "$T/lvii" 2>&1
+nb=$(awk -F'\t' '$1 == "cursus" && $2 == "initium" { t[$3] = $6 } $1 == "cursus" && $2 == "finis" { e[$3] = $6; n[$3] = $12 }
+    END { for (i in t) if (t[i] == "probationes_t/probatio_r#beta") print e[i] "|" substr(n[i], 1, 4) }' "$MENSOR_DIARIUM" | head -1)
+if grep -q "probatio_r FRACTA.*sectio 'beta' RUIT; 1 non cursae" "$T/lvii" && ! grep -q "probatio_r FRACTA.*SUITA absens" "$T/lvii" \
+   && [ "$nb" = "1|RUIT" ] && grep -q "probatio_q FRACTA.* - exitus 139: 1 non cursae" "$T/lvii" \
+   && ! grep -q "probatio_q FRACTA.*RUIT" "$T/lvii"; then echo "  LVII sectio rupta nominata: RUIT, non cursae numeratae, cursus #beta fractus OK"; else echo "  LVII FRACTUM (cursus #beta '$nb')"; grep "probatio_r" "$T/lvii" | sed 's/^/      /' | head -4; fracta=1; fi
+
 if [ "$fracta" -ne 0 ]; then echo "fumus fabricae: FRACTUM"; exit 1; fi
-echo "fumus fabricae: sanum (LVI/LVI)"
+echo "fumus fabricae: sanum (LVII/LVII)"
 exit 0

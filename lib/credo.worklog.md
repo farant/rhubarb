@@ -513,3 +513,21 @@ Reading: incremental migration through the commit note reaches ~20% of
 the old suites mechanically; the rest are judgement conversions (the T5
 kind). Widening to unnumbered '--- T ---' titles is the obvious next
 lever - Fran's call (numbered titles must stay excluded).
+
+## 2026-10-14 - a crashed section is named (analytica T4 2b-ii)
+
+Fran: "is there a way to catch segfaults in test sections and ... log
+'this section segfaulted'?" The doctrine in credo.h stands (never catch
+SIGSEGV in-process; fork is the only sound isolation), so no handler:
+credo now writes `SECTIONES <suita> <n>` first (declared count, filter
+respected) and a FLUSHED `INCIPIT <suita> <titulus>` before each
+section. A real crash (SEGV, KILL) flushes nothing, so "started, no
+SECTIO, no SUITA" = the section that died. The reader is fabrica's
+(lib/fabrica_probationes_c.c): it synthesizes a RUIT section and
+counts `non_cursae`; the member cause reads "sectio 'beta' RUIT; 1 non
+cursae" instead of "SUITA absens (ruina post sectionem ultimam
+notatam)", and the analytics get a fractus `#beta` run. credo fumus II
+(new line types with exact field counts) and VI (SIGKILL fixture, now
+with a section after the crash). Opt-in per-section fork isolation
+(full report despite a crash) parked: fork per section + Cocoa
+fork-unsafety.

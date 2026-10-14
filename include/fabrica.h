@@ -161,7 +161,8 @@ nomen structura {
     chorda titulus;
     chorda exitus;      /* TRANSIIT | FRACTA | VACUA | ABORTA (credo);
                          * gradus II credo: OMISSA, NOTA_FRACTA,
-                         * INOPINATA */
+                         * INOPINATA; RUIT (lector: INCIPIT sine
+                         * SECTIO post ruinam, analytica T4) */
        i32 praeteriti;
        i32 totales;
        i32 ms;          /* tempus - NUMQUAM in verdicto sigillato
@@ -175,6 +176,8 @@ nomen structura {
      b32  completa;      /* linea SUITA adest; FALSUM = ruina post
                          * sectionem ultimam notatam */
      b32 synthetica;    /* 'totum' a fabrica scriptum */
+     i32 declaratae;    /* linea SECTIONES (analytica T4); 0 ignotum */
+     i32 non_cursae;    /* post ruinam: declaratae minus visae */
 } FabricaSectiones;
 
 nomen structura {
