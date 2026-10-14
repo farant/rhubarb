@@ -404,3 +404,17 @@ rubric and filter prompts - now "rubrics:" / "filter:" (test).
 Test change: "note: abc" as one string became "note:" + "abc" (label and
 field are drawn separately now).
 Plant: left arrow drawn as a plain button -> red (sagittas_numerare).
+
+## 2026-10-13 — V2b: lists on the V1 helpers
+
+Rows: drawn checkbox (figura_capsam_pingere, 9x9 at x+8, y+3) instead
+of "[ ]"/"[x]" text; title at x+22; completed items dim with a 1px
+strikethrough over the title part only (not the "(Oct 20)" suffix),
+clipped to the visible width; selected row = figura_ordinem_electum_
+pingere (purple + 3px green accent bar), the others a 1px COLOR_
+SUPERFICIES separator at the bottom; notes aligned with the title
+(x+22). Agenda headings: figura_fasciam_pingere band + bold text.
+The checkbox click area (x < 24) still covers the drawn box (8..17).
+Tests: "[ ]"/"[x]" text checks became `capsa_in` (outlined 9x9 box,
+tick = >= 2 lines of thickness 2 inside the row); new `linea_transversa_
+in`, `accentus_in`, `fascia_in`. Plant: tick never drawn -> red.

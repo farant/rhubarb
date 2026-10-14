@@ -1071,6 +1071,121 @@ reddere (
     redde md;
 }
 
+/* punctum (x, y) intra fines? */
+interior b32
+locus_intra (
+      s32 x,
+      s32 y,
+    Fines f)
+{
+    redde x >= f.x && y >= f.y && x < f.x + f.latitudo
+        && y < f.y + f.altitudo;
+}
+
+/* capsa picta (IX x IX, margo) in finibus; facta: lineae signi (II) */
+interior b32
+capsa_in (
+    Mandata* md,
+      Fines  f,
+        b32  facta)
+{
+    constans Mandatum* y;
+                  i32  i;
+                  b32  capsa;
+                  i32  signa;
+
+    capsa = FALSUM;
+    signa = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        y = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   y->genus          == MANDATUM_RECTANGULUM && !y->impletum
+            && y->fines.latitudo == IX && y->fines.altitudo == IX
+            && locus_intra(y->fines.x, y->fines.y, f))
+        {
+            capsa = VERUM;
+        }
+        si (   y->genus == MANDATUM_LINEA && y->crassitudo == II
+            && locus_intra(y->puncta[ZEPHYRUM].x, y->puncta[ZEPHYRUM].y,
+            f))
+        {
+            signa++;
+        }
+    }
+    redde capsa && (facta ? signa >= II : signa == ZEPHYRUM);
+}
+
+/* linea horizontalis tenuis (per titulum perfectum) in finibus? */
+interior b32
+linea_transversa_in (
+    Mandata* md,
+      Fines  f)
+{
+    constans Mandatum* y;
+                  i32  i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        y = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   y->genus == MANDATUM_LINEA && y->crassitudo == I
+            && y->puncta[ZEPHYRUM].y == y->puncta[I].y
+            && y->puncta[ZEPHYRUM].y > f.y + II
+            && y->puncta[ZEPHYRUM].y < f.y + f.altitudo - II
+            && locus_intra(y->puncta[ZEPHYRUM].x, y->puncta[ZEPHYRUM].y,
+            f))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* fascia accentus (III px, COLOR_ACCENT_PRIMARY) ad oram sinistram? */
+interior b32
+accentus_in (
+    Mandata* md,
+      Fines  f)
+{
+    constans Mandatum* y;
+                  i32  i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        y = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   y->genus          == MANDATUM_RECTANGULUM && y->impletum
+            && y->fines.x        == f.x && y->fines.y == f.y
+            && y->fines.latitudo == III
+            && color_thematis_est(y->color, COLOR_ACCENT_PRIMARY))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* fascia gregis: exemplar leve per fines? */
+interior b32
+fascia_in (
+    Mandata* md,
+      Fines  f)
+{
+    constans Mandatum* y;
+                  i32  i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        y = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   y->genus          == MANDATUM_RECTANGULUM
+            && y->exemplar       == EXEMPLAR_CINEREUM_LEVE
+            && y->fines.x        == f.x && y->fines.y == f.y
+            && y->fines.latitudo == f.latitudo)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
 /* rectangulum plenum COLOR_SUPERFICIES (campus V2a) ? */
 interior b32
 campus_superficiei_adest (
@@ -1115,14 +1230,20 @@ _probare_figuras_diei (
     CREDO_VERUM(textus_ullus_continet(md,
         "Wednesday, October 14, 2026"));
     f = fines_componentis(x, "r1", c->piscina);
-    CREDO_VERUM(textus_in_continet(md, f, "[ ]"));
+    /* V2b: capsa picta (non textus "[ ]"), fascia accentus electi */
+    CREDO_VERUM(capsa_in(md, f, FALSUM));
+    CREDO_FALSUM(textus_in_continet(md, f, "[ ]"));
+    CREDO_VERUM(accentus_in(md, f));
     CREDO_VERUM(textus_in_continet(md, f, "panem emere"));
     CREDO_VERUM(textus_in_continet(md, f, "Oct 13"));
     /* ordo electus: nota colore textus pleno (non obscuro - in fundo
      * selectionis legi non poterat, imago A3c) */
     CREDO_VERUM(textus_coloris_est(md, f, "panem emere", COLOR_TEXT));
-    CREDO_VERUM(textus_in_continet(md, fines_componentis(x, "r2",
-        c->piscina), "[x]"));
+    /* r2 perfecta: capsa cum signo, linea per titulum */
+    CREDO_VERUM(capsa_in(md, fines_componentis(x, "r2", c->piscina),
+        VERUM));
+    CREDO_VERUM(linea_transversa_in(md, fines_componentis(x, "r2",
+        c->piscina)));
     /* r3: alibi assignata - dies sua */
     CREDO_VERUM(textus_in_continet(md, fines_componentis(x, "r3",
         c->piscina), "Oct 20"));
@@ -1323,8 +1444,11 @@ _probare_figuras_agendae (
         c->piscina), "#opus"));
     CREDO_VERUM(textus_in_continet(md, fines_componentis(x, "g2",
         c->piscina), "(none)"));
+    /* V2b: fascia gregis (exemplar leve) */
+    CREDO_VERUM(fascia_in(md, fines_componentis(x, "g0", c->piscina)));
     f = fines_componentis(x, "r1-0", c->piscina);
-    CREDO_VERUM(textus_in_continet(md, f, "[ ] res"));
+    CREDO_VERUM(capsa_in(md, f, FALSUM));
+    CREDO_VERUM(textus_in_continet(md, f, "res"));
     CREDO_VERUM(textus_in_continet(md, f, "Oct 14"));
     CREDO_VERUM(textus_in_continet(md, f, "panem emere"));
     CREDO_VERUM(textus_in_continet(md, fines_componentis(x, "r6-2",

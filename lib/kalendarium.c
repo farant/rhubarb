@@ -1833,10 +1833,11 @@ greges_pingere (
             ? chorda_concatenare(chorda_ex_literis("#", md->piscina),
             g->rubrica, md->piscina)
             : chorda_ex_literis("(none)", md->piscina);
-        mandata_textus(md, l->fines.x + IV, l->fines.y + IV, praecidere(
-            titulus, l->fines.latitudo - VIII), ZEPHYRUM,
-            figura_color_thematis(
-            COLOR_TEXT_DIM));
+        /* V2b: fascia (exemplar leve) et textus audax */
+        figura_fasciam_pingere(md, l->fines);
+        figura_textum_audacem(md, l->fines.x + VI, l->fines.y + IV,
+            praecidere(titulus, l->fines.latitudo - XII),
+            figura_color_thematis(COLOR_TEXT));
     }
 }
 
@@ -1863,6 +1864,7 @@ ordines_pingere (
                       b32  alibi;
                       b32  agenda;
              ColorMandati  color_notae;
+             ColorMandati  color_tituli;
                       i32  i;
                       i32  k;
 
@@ -1885,21 +1887,33 @@ ordines_pingere (
         {
             perge;
         }
+        /* V2b: electus = fundus et fascia accentus; ceteri linea
+         * separationis infra */
         si (id == electa)
         {
-            rectangulum(md, l->fines.x, l->fines.y, l->fines.latitudo,
-                l->fines.altitudo,
-                figura_color_thematis(COLOR_SELECTION),
-                VERUM);
+            figura_ordinem_electum_pingere(md, l->fines);
         }
+        alioquin
+        {
+            Punctum a;
+            Punctum b;
+
+            a.x = l->fines.x;
+            a.y = l->fines.y + l->fines.altitudo - I;
+            b.x = l->fines.x + l->fines.latitudo - I;
+            b.y = a.y;
+            mandata_linea(md, a, b, I, figura_color_thematis(
+                COLOR_SUPERFICIES));
+        }
+        figura_capsam_pingere(md, l->fines.x + VIII, l->fines.y + III,
+            r->perfecta);
         alibi  = !agenda && (!r->dies_posita || !dies_aequales(r->dies,
             dies));
         /* ordo electus: notae colore pleno (obscurae in fundo
          * selectionis non leguntur) */
         color_notae = figura_color_thematis(id == electa ? COLOR_TEXT
                                                   : COLOR_TEXT_DIM);
-        linea  = chorda_concatenare(chorda_ex_literis(r->perfecta
-            ? "[x] " : "[ ] ", md->piscina), r->titulus, md->piscina);
+        linea  = r->titulus;
         si (alibi)
         {
             linea = chorda_concatenare(linea, chorda_ex_literis("  (",
@@ -1911,7 +1925,7 @@ ordines_pingere (
             linea = chorda_concatenare(linea, chorda_ex_literis(")",
                 md->piscina), md->piscina);
         }
-        spatium = l->fines.latitudo - VIII;
+        spatium = l->fines.latitudo - XXVI;
         si (agenda)
         {
             dextrum  = r->dies_posita ? dies_brevis(r->dies,
@@ -1926,10 +1940,31 @@ ordines_pingere (
                 == electa
                 ? COLOR_TEXT : COLOR_TEXT_DIM));
         }
-        mandata_textus(md, l->fines.x + IV, l->fines.y + IV, praecidere(
-            linea, spatium), ZEPHYRUM, figura_color_thematis((alibi
-                && id
-            != electa) ? COLOR_TEXT_DIM : COLOR_TEXT));
+        /* titulus post capsam; perfecta et alibi obscura (nisi electa),
+         * perfecta linea per titulum */
+        color_tituli = figura_color_thematis(((alibi || r->perfecta)
+            && id != electa) ? COLOR_TEXT_DIM : COLOR_TEXT);
+        mandata_textus(md, l->fines.x + XXII, l->fines.y + IV,
+            praecidere(chorda_transcribere(linea, md->piscina),
+            spatium),
+            ZEPHYRUM, color_tituli);
+        si (r->perfecta)
+        {
+            Punctum a;
+            Punctum b;
+                s32 n;
+
+            n    = (s32)r->titulus.mensura;
+            si (n * KALENDARIUM_LITTERA > spatium)
+            {
+                n = spatium / KALENDARIUM_LITTERA;
+            }
+            a.x = l->fines.x + XXII;
+            a.y = l->fines.y + IV + KALENDARIUM_LINEA / II;
+            b.x = a.x + n * KALENDARIUM_LITTERA - I;
+            b.y = a.y;
+            mandata_linea(md, a, b, I, color_tituli);
+        }
         per (k = ZEPHYRUM; (!agenda || id == electa)
             && k < xar_numerus(r->notae); k++)
         {
@@ -1939,9 +1974,9 @@ ordines_pingere (
                 md->piscina);
             linea  = chorda_concatenare(linea, nota->textus,
                 md->piscina);
-            mandata_textus(md, l->fines.x + XX, l->fines.y + IV
+            mandata_textus(md, l->fines.x + XXII, l->fines.y + IV
                 + (s32)(k + I) * KALENDARIUM_LINEA, praecidere(linea,
-                l->fines.latitudo - XXIV), ZEPHYRUM, color_notae);
+                l->fines.latitudo - XXVI), ZEPHYRUM, color_notae);
         }
     }
 }
