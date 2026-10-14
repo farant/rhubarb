@@ -217,6 +217,14 @@ State-model question to settle before A2 (A1 is content only).
   - **V2c** DONE 2026-10-13: month grid - lines, weekday band aligned
     to the real columns, dotted outside days, dark today badge, dark
     double border for the selected day. V2 complete.
+  - **V3** header font (Fran 2026-10-13): Nix8810 M15 8x16 from the
+    int10h Oldschool PC Font Pack (CC BY-SA 4.0).
+    - **V3a** DONE 2026-10-13: tools/fon_ad_fons.c (.FON importer),
+      include/fons_8x16.h (native CP437 order, attribution + sha256);
+      attribution added to fons_6x8.h (HP 100LX + Alcuin).
+    - **V3b** rasterizer: Mandatum.fons selects the table; Unicode ->
+      CP437 lookup for the 8x16 (API to Fran); font metrics helper.
+    - **V3c** calendarium titles in the 8x16.
 
   - **M2** batch 2: double-click row -> title prompt; click group
     heading -> filter; right-click context menu (from the table).

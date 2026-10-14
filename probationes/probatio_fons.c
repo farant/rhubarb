@@ -2,6 +2,7 @@
 #include "latina.h"
 #include "fons.h"
 #include "fons_6x8.h"
+#include "fons_8x16.h"
 #include "piscina.h"
 #include "credo.h"
 #include <stdio.h>
@@ -294,6 +295,64 @@ s32 principale(vacuum)
      * ================================================== */
 
     imprimere("\n");
+    /* fons_8x16 (V3a): Nix8810 M15 ordine CP437 nativo; 'A' bytes ut
+     * in Bm437_Nix8810_M15.FON (fon_ad_fons legit); spatium vacuum;
+     * ASCII imprimibile totum pictum; sedes CP437 (0x7F domus, 0x82 e
+     * acutum, 0xDB plenum); nihil ultra XVI ordines */
+    {
+        hic_manens constans i8 a_fontis[XVI] = {
+            0x00, 0x38, 0x7C, 0xEE, 0xC6, 0xC6, 0xC6, 0xFE,
+            0xFE, 0xC6, 0xC6, 0xC6, 0x00, 0x00, 0x00, 0x00 };
+        i32 c;
+        i32 r;
+        b32 omnes;
+        b32 vacua;
+
+        CREDO_AEQUALIS_I32(FONS_8X16_LATITUDO, VIII);
+        CREDO_AEQUALIS_I32(FONS_8X16_ALTITUDO, XVI);
+        omnes = VERUM;
+        per (r = ZEPHYRUM; r < XVI; r++)
+        {
+            si (fons_8x16['A'][r] != a_fontis[r])
+            {
+                omnes = FALSUM;
+            }
+        }
+        CREDO_VERUM(omnes);
+        vacua = VERUM;
+        per (r = ZEPHYRUM; r < XVI; r++)
+        {
+            si (fons_8x16[' '][r] != ZEPHYRUM)
+            {
+                vacua = FALSUM;
+            }
+        }
+        CREDO_VERUM(vacua);
+        omnes = VERUM;
+        per (c = 0x21; c <= 0x7F; c++)
+        {
+            vacua = VERUM;
+            per (r = ZEPHYRUM; r < XVI; r++)
+            {
+                si (fons_8x16[c][r] != ZEPHYRUM)
+                {
+                    vacua = FALSUM;
+                }
+            }
+            si (vacua)
+            {
+                omnes = FALSUM;
+            }
+        }
+        CREDO_VERUM(omnes);
+        /* 0xDB plenum: ordines medii omnes 0xFF */
+        CREDO_AEQUALIS_I32(fons_8x16[0xDB][VIII], 0xFF);
+        /* 0x82 e acutum: aliquid supra (accentus) et in medio */
+        CREDO_VERUM(   fons_8x16[0x82][I] != ZEPHYRUM
+                    || fons_8x16[0x82][II] != ZEPHYRUM
+                    || fons_8x16[0x82][III] != ZEPHYRUM);
+    }
+
     credo_imprimere_compendium();
 
     praeteritus = credo_omnia_praeterierunt();

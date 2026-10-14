@@ -15,3 +15,29 @@ blank. Test: every Latin-1 code point maps to its own slot, nothing
 mapped is blank. Drafted with a contact-sheet script (glyphs as
 '.#' strings -> PNG at 4x) - the way to design any future glyphs.
 Noticed, untouched: Ñ (0xD1) has no visible tilde.
+
+## 2026-10-13 — fons_8x16 (Nix8810 M15) imported; attribution for fons_6x8
+
+Fran wants an oversized header face (agenda-plan V3). Source: The
+Ultimate Oldschool PC Font Pack v2.2 (int10h.org, VileR), CC BY-SA 4.0 -
+LICENSE.TXT in ../oldschool_pc_font_pack_v2.2_FULL (outside the repo,
+like the reference clones). `tools/fon_ad_fons.c` reads the Windows
+bitmap font (`Bm437_Nix8810_M15.FON`: MZ -> NE -> RT_FONT 0x8008 -> FNT
+v2/v3 glyph table; 8 px wide = one byte per row) and writes
+include/fons_8x16.h with the attribution and the source's SHA-256
+(house friatio == shasum -a 256, checked). The formatter leaves the tool
+output unchanged, so the committed file IS the tool output (regenerable
+byte for byte; not marked GENERATUM because its input lives outside the
+repo - no gate could rerun it).
+
+Design change vs the first plan: glyphs stay in NATIVE CP437 order. The
+6x8's high slots are a hybrid (Latin-1 at their codepoints, but the
+substitutions for degree, superscript 2, 1/4 1/2 3/4 point at leftover
+HP 100LX/CP437 positions 0xF8, 0xFD, 0xAB-0xAD), so one shared mapping
+cannot serve both. The 8x16 gets its own Unicode -> CP437 lookup in V3b.
+
+fons_6x8.h now carries its origin: HP 100LX 6x8 from the same pack (CC
+BY-SA 4.0), Alcuin by Aliivibrio (itch.io, "free to use for any
+purpose"), 40 Latin-1 glyphs drawn in-house (a11400ef) - so the file as
+a whole is CC BY-SA 4.0.
+Plant: one row of 'A' changed -> red (probatio_fons).

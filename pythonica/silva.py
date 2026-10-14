@@ -136,7 +136,12 @@ def syntaxis(via, textus=None):
         with os.fdopen(fd, 'w') as f:
             f.write(textus)
     try:
-        r = _curre(['clang', '-fsyntax-only'] + _vexilla()
+        # caput solum compilatum: tabulae et functiones static nemini
+        # adhibentur - in contextu vero (inclusum) id non est error
+        # (fons_8x16.h: praevolatus plantae caput datorum recusabat)
+        solum = (['-Wno-unused-const-variable', '-Wno-unused-function']
+                 if via.endswith('.h') else [])
+        r = _curre(['clang', '-fsyntax-only'] + _vexilla() + solum
                    + _inclusiones_clang(via_t) + [via_t])
         if r.returncode == 0:
             return None
