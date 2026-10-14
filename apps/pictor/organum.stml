@@ -36,6 +36,7 @@
     <actio nomen="exemplar.ponere"/>
     <actio nomen="magnitudo.ponere"/>
     <actio nomen="instrumentum.eligere"/>
+    <actio nomen="glutinatio.agere"/>
     <actio nomen="motus" systema="verum"/>
   </actiones>
 
@@ -83,6 +84,10 @@
     <campus nomen="palette" typus="nomen" vita="transiens"
             aspectus="popover" scriptor="palette.aperire"
             nota="palette aperta; absens = nulla"/>
+    <campus nomen="glutinatio" typus="nomen" vita="transiens"
+            scriptor="glutinatio.agere"
+            nota="glutinatio pendens: A (Atkinson) | B (exemplaria); absens =
+                  nulla. Imagines in documento (PictorGlutinatio), extra acta"/>
     <campus nomen="semen" typus="numerus" vita="transiens"
             scriptor="aspergillum.ictus"
             nota="semen ictus aspergilli (praevisio); in motum postea"/>

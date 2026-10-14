@@ -135,3 +135,13 @@ Note: the theme's colouring palette repeats entries (slots 0, 13, 14,
 - The 3 px threshold is not independently observable: rounding to
   whole rows already makes small moves a no-op (no plant can redden
   it). Kept as intent.
+
+## 2026-10-13 - pending paste in the composition
+
+'glutinatio' field set AND doc->glutinatio.pendens (both must agree):
+tabula gets actio "" (drawing ignored) and titulus "glutinatio:<A|B>"
+(the figure paints the preview from the document - data in the title,
+as the aspergillum preview does); the status row shows four
+PARTES_BOTTONE nodes glutinatio.A / .B / .confirmare / .abicere
+("textus:A[:electum]" ...) instead of the squares, the layers button
+is omitted, and no palette is composed (palette treated as "").

@@ -158,3 +158,47 @@ vectura ordinaria against the local fixture, a scripted vectura (datum
 reaches it, its response is returned), a vectura without function.
 Plants: ordinaria without function -> red at :982; visus without portus
 -> red at :927.
+
+## 2026-10-14 — http_lector: incremental response parser (quaestio-rivus T1)
+
+Bytes in, events out, no I/O (`http_lector_creare/adicere/finire`,
+`include/http.h`). Built for streaming $question (route A feeds it from
+a blocking loop in T2's `http_exsequi_rivus`; route B's reactor will
+feed it from callbacks unchanged).
+
+- Body modes: Content-Length, chunked (hex size with `;ext` or spaces
+  ignored, CRLF between chunks, trailers until the empty line),
+  read-until-close (FINITUS only at `http_lector_finire` = EOF); HEAD
+  and 1xx/204/304 finish right after the headers.
+- The sink (HttpRivus) gets decoded body bytes ONLY for 2xx; the whole
+  body is ALWAYS collected too (`http_lector_responsum(l)->corpus`,
+  cap 16 MB) so errors, retries and herbarium reuse the old code
+  (plan ruling R6).
+- Placed right after `_http_corpus_prohibitum`, not after
+  `_decodificare_chunked` as the plan said: everything it uses
+  (`_parse_status_line`, `_parse_header`, `_hex_ad_valor`,
+  `_chorda_ad_i32`) is defined above that point - no forward
+  prototypes needed.
+- Unlike the old `_decodificare_chunked`, chunk extensions are
+  handled (the old one stops at ';' and would misparse; not fixed
+  there - `http_exsequi` is untouched in T1).
+- Oracle (plan R2): every case fed whole, byte by byte and at every
+  2-way split, against written expectations. First run: one section
+  red on ALL 62 splits = my fixture's Content-Length was 16 for a
+  15-byte body (systematic failure across splits = fixture, not the
+  parser). Plants: chunk-end state -> FRUSTUM, sink open for non-2xx
+  - both red in probatio_http_lector, green after revert.
+
+## 2026-10-14 — http_exsequi_rivus + HttpVecturaRivi (quaestio-rivus T2)
+
+`http_exsequi`'s connect + send moved into `_connexionem_aperire`
+(shared, behaviour unchanged: probatio_http's old sections green on
+the refactored path). `http_exsequi_rivus` feeds the T1 lector and
+STOPS READING at FINITUS - unlike `http_exsequi`, which reads to EOF
+(a keep-alive server would make it wait for the server's timeout).
+The `FIXTURA_RIVUS` raw server proves both properties: it sends the
+first chunk, pauses 300 ms, sends the rest, then holds the connection
+open 2 s; the test asserts first sink call < 200 ms and total < 1.5 s.
+Plant (stop condition removed): red on the 1.5 s assert, as intended.
+Streaming seam `HttpVecturaRivi` mirrors `HttpVectura` (ordinary =
+`http_exsequi_rivus`; `exsequi` NIHIL -> named error).

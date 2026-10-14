@@ -23,6 +23,7 @@
 #include "dispensator.h"
 #include "vicus.h"
 #include "imago.h"
+#include "vicus_quaestio.h"   /* porta $question (typi) */
 
 nomen structura {
                 Piscina* piscina;
@@ -32,7 +33,10 @@ nomen structura {
             Dispensator* d;
                  vacuum* pictoris;   /* L5: contextus communis pictoris
                                       * (opacus) - porta imaginis */
+                 vacuum* quaestionis; /* $question: contextus (opacus) -
+                                       * porta quaestionis */
 } VicusApplicatio;
+
 
 /* Argumenta communia: -fumus (volumen temporarium), -volumen <via>
  * (ordinarie "vicus.volumen"). Reddit volumen apertum aut NIHIL. */
@@ -62,5 +66,22 @@ vicus_applicatio_imaginis_portam_ponere (
      VicusApplicatio* app,
         ImagoFructus (*porta)(vacuum* ctx, Piscina* piscina),
               vacuum* ctx);
+
+/* porta NIHIL = nulla; copia servatur */
+vacuum
+vicus_applicatio_quaestionis_portam_ponere (
+                   VicusApplicatio* app,
+    constans VicusPortaQuaestionis* porta);
+
+/* textus planatus -> lineae paginae latitudinis w intra l lineas
+ * ("<answer>" ... "</>", margines, praecisio ad finem sententiae), '\n'
+ * ducente: quod $question in folium inserit, per pulsum et in
+ * fine */
+chorda
+vicus_quaestio_disponere (
+      chorda  planatum,
+         s32  w,
+         s32  l,
+     Piscina* piscina);
 
 #endif /* VICUS_APPLICATIO_H */

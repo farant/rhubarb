@@ -21,7 +21,9 @@
 #include "vicus_applicatio.h"
 #include "energia.h"
 #include "clipboard_platform.h"
+#include "vicus_quaestio_porta.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 /* applicationes CDLXXX x CDLXXX ut solae, linea tabularum supra */
@@ -85,6 +87,7 @@ principale (
                                         b32  fumus;
                                         s32  exitus;
                          constans character* via_imaginis;
+                      VicusPortaQuaestionis  porta_quaestionis;
                                         s32  k;
                                         i32  latitudo;
                                         i32  altitudo;
@@ -159,6 +162,14 @@ principale (
     /* L5: Cmd+V in pictore: imago e clipboard in stratum novum */
     vicus_applicatio_imaginis_portam_ponere(&app, imaginem_glutinatam,
         NIHIL);
+    /* $question: per bin/quaestio (quaestio-rivus T8; clavem SOLUS
+     * adiutor legit) */
+    porta_quaestionis =
+        vicus_quaestio_porta(vicus_quaestio_adiutoris_via(
+        argc > ZEPHYRUM ? argv[ZEPHYRUM] : NIHIL, piscina), ZEPHYRUM,
+        piscina);
+    vicus_applicatio_quaestionis_portam_ponere(&app,
+        &porta_quaestionis);
 
     cfg.titulus   = "vicus";
     cfg.latitudo  = latitudo_fenestrae * SCALA;

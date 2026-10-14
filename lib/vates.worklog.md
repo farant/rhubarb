@@ -290,3 +290,42 @@ blocks keeps its inline unit test.
 violating discrepancies (REQUISITUM_ABSENS, NON_DECLARATUM, GENUS_LATIUS,
 NULLUM_NOVUM, VARIATIO_NON_DECLARATA) between lib/vates_responsum.norma and every
 committed specimen. Plant: the old seed -> red naming $.content[].name/input.
+
+## 2026-10-13 - header comment fix: bloci hold structs
+
+VatesNuntius.bloci and VatesResponsum.bloci are Xar of VatesBlocus
+STRUCTS (xar_creare(..., magnitudo(VatesBlocus)); xar_obtinere returns
+VatesBlocus*). The comments said "VatesBlocus*", which reads as an
+array of pointers - quaestio dereferenced one level too deep and got
+empty text. Comments corrected; no code change.
+
+## 2026-10-14 — vates_mittere_rivum (quaestio-rivus T4)
+
+Streaming without a second response model: the Anthropic events are
+collected (`VatesCollector`, fed by `rivus_eventuum` over the T2
+streaming transport) into a message JSON of the NON-stream shape -
+content blocks rebuilt from `content_block_start` + deltas (text,
+thinking + signature, tool_use input from `input_json_delta` pieces),
+`stop_reason` and final `output_tokens` from `message_delta` - and then
+run through the existing `_legere`. So the assembled `VatesResponsum`
+is the same as `vates_mittere`'s (section `aequale` compares them
+field by field; the two request bodies differ by exactly
+`,"stream":true`, which `_corpus_anthropic` emits after max_tokens
+when `petitio->rivus`).
+
+Retry rule (spec II.4): non-2xx responses arrive whole (R6) and use
+`_status_iterandus` as before; a 200 stream retries only when NO text
+or thinking delta was delivered and it ended in an `overloaded_error` /
+`api_error` event; transport failures likewise only before the first
+delta. Plants: retry ignoring the delta count (two requests after a
+visible "a") and the missing output_tokens overwrite (usage 1, not 34)
+- both red.
+
+Fake streams: `vates_fictus_rivum` / `_rivum_fractum` queue a real SSE
+body (built with the json API, ids like the non-stream fake so the
+`aequale` comparison includes `id`) served by `_fictus_exsequi_rivi`
+in 5-byte pieces with `Content-Type: text/event-stream`;
+`_iudex_anthropic` returns "" for that content type (plan R5).
+`_fictus_ponere` now returns the queued entry (to flag it as a stream).
+Formatter parity with HEAD kept (vates.c 24/24, vates.h 46/46
+pre-existing findings); my own new lines conform.

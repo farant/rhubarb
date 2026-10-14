@@ -56,6 +56,8 @@ hic_manens character litterae_penicillus[]  = "penicillus";
 hic_manens character litterae_aspergillum[] = "aspergillum";
 hic_manens character litterae_spongia[]     = "spongia";
 hic_manens character litterae_linea[]       = "linea";
+hic_manens character litterae_glutinatio_a[] = "A";
+hic_manens character litterae_glutinatio_b[] = "B";
 
 /* aspergillum: semen ictus in ephemera (praevisio guttarum) */
 interior vacuum
@@ -566,26 +568,58 @@ pictor_linea_ictus (
     }
 }
 
-/* L5: Cmd+V - imago e porta (clipboard) in stratum novum supra currens,
- * quod currens fit. stratum_activum dominum 'strata.agere' habet:
- * scriptura sub nomine eius (ut vicus ictus_primus), deinde prior */
+/* glutinatio pendens: campus 'glutinatio' ("A"/"B"; ctx NIHIL =
+ * tollitur) */
+interior vacuum
+glutinationem_mutator (
+              StmlNodus* radix,
+                Piscina* p,
+    InternamentumChorda* in,
+                 vacuum* ctx)
+{
+    si (!ctx)
+    {
+        (vacuum)insula_attributum_tollere(radix, "glutinatio");
+        redde;
+    }
+    insula_attributum_ponere(radix, p, in, "glutinatio",
+                             (constans character*)ctx);
+}
+
+/* campus 'glutinatio' sub nomine domini - vocatur etiam ex clavibus
+ * (actio instrumentum.eligere), ergo scriptor ponitur, deinde prior */
+interior b32
+glutinationem_scribere (
+    InsulaRepositorium* repo,
+                vacuum* ctx,
+             character* valor)
+{
+    PictorActiones* pa;
+       InsulaRamus  ramus;
+            chorda  prior;
+               b32  scriptum;
+
+    pa     = (PictorActiones*)ctx;
+    ramus  = ramus_pictoris(repo, ctx);
+    prior  = repo->scriptor;
+    insula_scriptorem_ponere(repo, chorda_ex_literis("glutinatio.agere",
+        pa->doc->piscina));
+    scriptum = mutare_ramum(&ramus, glutinationem_mutator, valor);
+    insula_scriptorem_ponere(repo, prior);
+    redde scriptum;
+}
+
+/* L5 + glutinatio pendens (Franus 2026-10-13): Cmd+V - imago e porta
+ * (clipboard) aptatur et bis ditheratur in documento, EXTRA acta;
+ * campus 'glutinatio' = "B" (exemplaria). Iterum Cmd+V: prior
+ * abicitur. Stratum nascitur solum per glutinationem_confirmare. */
 interior b32
 imaginem_glutinare (
     InsulaRepositorium* repo,
                 vacuum* ctx)
 {
-       PictorActiones* pa;
-         ImagoFructus  f;
-          InsulaRamus  ramus;
-        ColorPonendus  cp;
-               chorda  prior;
-                   i8* indices;
-                  s32  x;
-                  s32  y;
-                  i32  lat;
-                  i32  alt;
-                  s32  id;
-                  b32  scriptum;
+    PictorActiones* pa;
+      ImagoFructus  f;
 
     pa = (PictorActiones*)ctx;
     si (!pa || !pa->doc || !pa->imago_capere)
@@ -593,19 +627,40 @@ imaginem_glutinare (
         redde FALSUM;
     }
     f = pa->imago_capere(pa->imago_ctx, pa->doc->piscina);
-    si (!f.successus)
+    si (   !f.successus
+        || !pictor_documentum_glutinationem_parare(pa->doc, &f.imago))
     {
         redde FALSUM;
     }
-    indices = pictor_imaginem_aptare(&f.imago, pa->doc->latitudo,
-        pa->doc->altitudo, pa->doc->piscina, &x, &y, &lat, &alt);
-    si (!indices)
+    redde glutinationem_scribere(repo, ctx, litterae_glutinatio_b);
+}
+
+/* OK: modus campi in stratum novum supra currens, quod currens fit
+ * (stratum_activum dominum 'strata.agere' habet: scriptura sub nomine
+ * eius, deinde prior); campus tollitur */
+interior b32
+glutinationem_confirmare (
+    InsulaRepositorium* repo,
+                vacuum* ctx)
+{
+       PictorActiones* pa;
+          InsulaRamus  ramus;
+        ColorPonendus  cp;
+               chorda  prior;
+               chorda* modus;
+                  s32  id;
+
+    pa = (PictorActiones*)ctx;
+    si (!pa || !pa->doc)
     {
         redde FALSUM;
     }
-    ramus  = ramus_pictoris(repo, ctx);
-    id     = pictor_documentum_imaginem_inserere(pa->doc, indices, lat,
-        alt, x, y, stratum_currens(&ramus, pa->doc));
+    ramus = ramus_pictoris(repo, ctx);
+    modus = insula_ramus_attributum(&ramus, "glutinatio");
+    id     = pictor_documentum_glutinationem_confirmare(pa->doc,
+        modus && chorda_aequalis_literis(*modus, "A")
+            ? PICTOR_GLUTINATIO_ATKINSON : PICTOR_GLUTINATIO_EXEMPLARIA,
+        stratum_currens(&ramus, pa->doc));
     si (id == ZEPHYRUM)
     {
         redde FALSUM;
@@ -615,10 +670,123 @@ imaginem_glutinare (
     prior          = repo->scriptor;
     insula_scriptorem_ponere(repo, chorda_ex_literis("strata.agere",
         pa->doc->piscina));
-    scriptum = mutare_ramum(&ramus, colorem_mutator,
-        &cp);
+    (vacuum)mutare_ramum(&ramus, colorem_mutator, &cp);
     insula_scriptorem_ponere(repo, prior);
-    redde scriptum;
+    redde glutinationem_scribere(repo, ctx, NIHIL);
+}
+
+/* X / Esc: abicitur, acta intacta */
+interior b32
+glutinationem_abicere (
+    InsulaRepositorium* repo,
+                vacuum* ctx)
+{
+    PictorActiones* pa;
+
+    pa = (PictorActiones*)ctx;
+    si (!pa || !pa->doc)
+    {
+        redde FALSUM;
+    }
+    pictor_documentum_glutinationem_abicere(pa->doc);
+    redde glutinationem_scribere(repo, ctx, NIHIL);
+}
+
+/* tractus in tabula pendente: radere a puncto ultimo ad praesens
+ * (pressio: punctum solum); Optio = restituere. Magnitudo = penicilli */
+interior b32
+glutinationem_radere (
+    InsulaRepositorium* repo,
+                 Motus* motus,
+             Componens* nodus,
+      constans Eventus* ev,
+                vacuum* ctx)
+{
+    PictorActiones* pa;
+       InsulaRamus  ramus;
+           Punctum  p;
+               s32  n;
+               b32  restituere;
+
+    pa = (PictorActiones*)ctx;
+    si (!pa || !pa->doc || !motus || !pa->doc->glutinatio.pendens)
+    {
+        redde FALSUM;
+    }
+    /* punctum in spatio tabulae (ut ictum_tractare) */
+    p.x         = (s32)ev->datum.mus.x;
+    p.y         = (s32)ev->datum.mus.y;
+    p           = destinatio_ad_locale(nodus, p);
+    ramus       = ramus_pictoris(repo, ctx);
+    n           = attributum_s32(&ramus, "magnitudo_penicilli", I);
+    restituere  = (ev->datum.mus.modificantes & MOD_ALT) != ZEPHYRUM;
+    commutatio (ev->genus)
+    {
+        casus EVENTUS_MUS_DEPRESSUS:
+            motus_captura_ponere(motus, nodus->id);
+            pa->rasura = p;
+            (vacuum)pictor_documentum_glutinationem_radere(pa->doc, p.x,
+                p.y, p.x, p.y, n, restituere);
+            redde VERUM;
+        casus EVENTUS_MUS_MOTUS:
+        casus EVENTUS_MUS_LIBERATUS:
+            si (chorda_vacua(motus->captura))
+            {
+                redde FALSUM;
+            }
+            (vacuum)pictor_documentum_glutinationem_radere(pa->doc,
+                pa->rasura.x, pa->rasura.y, p.x, p.y, n, restituere);
+            pa->rasura = p;
+            si (ev->genus == EVENTUS_MUS_LIBERATUS)
+            {
+                motus_captura_tollere(motus);
+            }
+            redde VERUM;
+        ordinarius:
+            redde FALSUM;
+    }
+}
+
+/* <tractator/> (vide caput) */
+b32
+pictor_glutinatio_agere (
+    InsulaRepositorium* repo,
+                 Motus* motus,
+   constans Destinatio* destinatio,
+             Componens* nodus,
+      constans Eventus* ev,
+                vacuum* ctx)
+{
+    (vacuum)destinatio;
+    si (!repo || !ev || !nodus)
+    {
+        redde FALSUM;
+    }
+    si (chorda_aequalis_literis(nodus->id, "tabula"))
+    {
+        redde glutinationem_radere(repo, motus, nodus, ev, ctx);
+    }
+    si (ev->genus != EVENTUS_MUS_DEPRESSUS)
+    {
+        redde FALSUM;
+    }
+    si (chorda_aequalis_literis(nodus->id, "glutinatio.A"))
+    {
+        redde glutinationem_scribere(repo, ctx, litterae_glutinatio_a);
+    }
+    si (chorda_aequalis_literis(nodus->id, "glutinatio.B"))
+    {
+        redde glutinationem_scribere(repo, ctx, litterae_glutinatio_b);
+    }
+    si (chorda_aequalis_literis(nodus->id, "glutinatio.confirmare"))
+    {
+        redde glutinationem_confirmare(repo, ctx);
+    }
+    si (chorda_aequalis_literis(nodus->id, "glutinatio.abicere"))
+    {
+        redde glutinationem_abicere(repo, ctx);
+    }
+    redde FALSUM;
 }
 
 /* nomen instrumenti -> litterae (penicillus si ignotum) */
@@ -675,6 +843,26 @@ pictor_instrumentum_eligere (
     }
     si (ev->genus != EVENTUS_CLAVIS_DEPRESSUS)
     {
+        redde FALSUM;
+    }
+    /* glutinatio pendens: Esc abicit, Reditus confirmat, Cmd+V
+     * reponit; claves ceterae (instrumenta, revocatio) nihil agunt */
+    si (   ctx && ((PictorActiones*)ctx)->doc
+        && ((PictorActiones*)ctx)->doc->glutinatio.pendens)
+    {
+        si (ev->datum.clavis.clavis == CLAVIS_EFFUGIUM)
+        {
+            redde glutinationem_abicere(repo, ctx);
+        }
+        si (ev->datum.clavis.clavis == CLAVIS_REDITUS)
+        {
+            redde glutinationem_confirmare(repo, ctx);
+        }
+        si (   ev->datum.clavis.runa                       == 'v'
+            && (ev->datum.clavis.modificantes & MOD_SUPER) != ZEPHYRUM)
+        {
+            redde imaginem_glutinare(repo, ctx);
+        }
         redde FALSUM;
     }
     /* P1b: Esc palettam apertam claudit - systema dimissio (S5c) eum
@@ -873,6 +1061,7 @@ pictor_magnitudinem_ponere (
        ColorPonendus  cp;
               chorda  valor;
               chorda* instrumentum;
+              chorda  penicillus;
         constans s32* tabula;
                  i32  numerus;
                  i32  k;
@@ -890,10 +1079,18 @@ pictor_magnitudinem_ponere (
         redde FALSUM;
     }
     /* P4b: instrumentum currens - penicillus diametrum, aspergillum
-     * multiplicem; ceteri (spongia) nihil */
+     * multiplicem; ceteri (spongia) nihil. Glutinatio pendens: penicillus
+     * semper (magnitudo radendi, Franus 2026-10-13) */
     ramus         = ramus_pictoris(repo, ctx);
     instrumentum  = insula_ramus_attributum(&ramus,
         "instrumentum");
+    si (   ctx && ((PictorActiones*)ctx)->doc
+        && ((PictorActiones*)ctx)->doc->glutinatio.pendens)
+    {
+        penicillus    = chorda_ex_literis(litterae_penicillus,
+            ((PictorActiones*)ctx)->doc->piscina);
+        instrumentum  = &penicillus;
+    }
     si (   instrumentum && chorda_aequalis_literis(*instrumentum,
         "aspergillum"))
     {
@@ -1229,4 +1426,6 @@ pictor_actiones_registrare (
         pictor_magnitudinem_ponere, ctx);
     actio_registrare(reg, "instrumentum.eligere",
                      pictor_instrumentum_eligere, ctx);
+    actio_registrare(reg, "glutinatio.agere", pictor_glutinatio_agere,
+        ctx);
 }

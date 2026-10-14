@@ -83,3 +83,17 @@ The capture tool keeps variantes_maximae XXXII (deliberate capture wants
 every example); the always-on outlier capture keeps III (a disk bound per
 kind; the number of kinds is unbounded and every sighting is counted).
 Plants (red): first element only; object keys unsorted.
+
+## 2026-10-14 — streaming capture and replay (quaestio-rivus T2)
+
+`_exsequi_capiens`' predicate became `_iudicare_et_premere` (status >=
+limit -> 'status', else the consumer's judge), shared by
+`herbarium_vectura_rivi`: the inner streaming transport runs with the
+caller's sink untouched, THEN the whole response is judged and pressed
+(plan ruling R5 - a stream cannot be judged before the consumer sees a
+byte; the streaming transport always returns the whole body too, R6).
+`herbarium_reddens_rivi` replays a 2xx specimen's body through the sink
+in 7-byte pieces so incremental readers downstream see arbitrary
+boundaries; non-2xx stays silent. `HerbariumInvolucrum` gained
+`involuta_rivi` and is now memset at creation. Plant (replay feeds one
+piece only): red on the collected-body compare.

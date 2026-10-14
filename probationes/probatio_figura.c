@@ -7,6 +7,7 @@
 #include "componens.h"
 #include "mandatum.h"
 #include "figura.h"
+#include "exemplaria.h"
 #include "credo.h"
 #include <stdio.h>
 
@@ -55,6 +56,28 @@ nodus (
     f.altitudo  = h;
     componens_ponere_fines(c, f);
     redde c;
+}
+
+/* linea verticalis ad x (margo segmenti) ? */
+interior b32
+linea_ad_x_adest (
+     Mandata* v,
+         s32  x)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(v->elementa); i++)
+    {
+        constans Mandatum* y;
+
+        y = (constans Mandatum*)xar_obtinere(v->elementa, i);
+        si (   y->genus == MANDATUM_LINEA && y->puncta[ZEPHYRUM].x == x
+            && y->puncta[I].x == x)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
 }
 
 s32 principale (vacuum)
@@ -210,6 +233,143 @@ s32 principale (vacuum)
             &c));
         CREDO_VERUM(figura_registrare(hospes, PARTES_INDEX, ZEPHYRUM,
             figura_finium, NIHIL));
+    }
+
+    /* figura_mensam_pingere: superficies per fines, exemplar foci
+     * supra solum si focatum */
+    {
+                   Mandata* mandata_mensae;
+         constans Mandatum* y;
+                     Fines  f;
+
+        f.x             = II;
+        f.y             = III;
+        f.latitudo      = XL;
+        f.altitudo      = XXX;
+        mandata_mensae  = mandata_creare(piscina, intern);
+        figura_mensam_pingere(mandata_mensae, f, FALSUM);
+        CREDO_AEQUALIS_I32(xar_numerus(mandata_mensae->elementa), I);
+        y = (constans Mandatum*)xar_obtinere(mandata_mensae->elementa,
+            ZEPHYRUM);
+        CREDO_VERUM(y->genus == MANDATUM_RECTANGULUM && y->impletum);
+        CREDO_VERUM(y->fines.x == II && y->fines.latitudo == XL);
+        CREDO_VERUM(   y->color.genus == COLOR_MANDATI_THEMA
+                    && y->color.valor == (i32)COLOR_SUPERFICIES);
+        mandata_mensae = mandata_creare(piscina, intern);
+        figura_mensam_pingere(mandata_mensae, f, VERUM);
+        CREDO_AEQUALIS_I32(xar_numerus(mandata_mensae->elementa), II);
+        y = (constans Mandatum*)xar_obtinere(mandata_mensae->elementa,
+            I);
+        CREDO_VERUM(y->exemplar == FIGURA_EXEMPLAR_FOCI);
+        CREDO_VERUM(   y->color.genus == COLOR_MANDATI_THEMA
+                    && y->color.valor == (i32)COLOR_BORDER);
+        CREDO_VERUM(y->fines.y == III && y->fines.altitudo == XXX);
+    }
+
+    /* figura_color_thematis: genus thematis, valor = color datus */
+    {
+        ColorMandati cm;
+
+        cm = figura_color_thematis(COLOR_ACCENT_PRIMARY);
+        CREDO_VERUM(cm.genus == COLOR_MANDATI_THEMA);
+        CREDO_AEQUALIS_I32((i32)cm.valor, (i32)COLOR_ACCENT_PRIMARY);
+    }
+
+    /* instrumenta visus (V1): globulus, sagitta, segmentum, capsa,
+     * ordo electus, fascia, umbra, campus, textus audax */
+    {
+                    Mandata* v;
+          constans Mandatum* y;
+                      Fines  f;
+                     chorda  t;
+
+        f.x         = X;
+        f.y         = XX;
+        f.latitudo  = XL;
+        f.altitudo  = XVI;
+        t           = chorda_ex_literis("Today", piscina);
+        /* globulus planus: fundus, margo, textus centratus */
+        v = mandata_creare(piscina, intern);
+        figura_globulum_pingere(v, f, t, ZEPHYRUM);
+        CREDO_AEQUALIS_I32(xar_numerus(v->elementa), III);
+        y = (constans Mandatum*)xar_obtinere(v->elementa, ZEPHYRUM);
+        CREDO_VERUM(y->impletum
+            && y->color.valor == (i32)COLOR_BACKGROUND);
+        y = (constans Mandatum*)xar_obtinere(v->elementa, I);
+        CREDO_VERUM(!y->impletum && y->color.valor == (i32)COLOR_TEXT);
+        y = (constans Mandatum*)xar_obtinere(v->elementa, II);
+        CREDO_VERUM(y->genus == MANDATUM_TEXTUS);
+        CREDO_AEQUALIS_S32(y->fines.x, X + (XL - V * VI) / II);
+        CREDO_VERUM(chorda_aequalis_literis(y->textus, "Today"));
+        /* electum cum umbra: umbra primum (intra fines), corpus II
+         * minus, fundus selectionis */
+        v = mandata_creare(piscina, intern);
+        figura_globulum_pingere(v, f, t, FIGURA_ELECTUM | FIGURA_UMBRA);
+        y = (constans Mandatum*)xar_obtinere(v->elementa, ZEPHYRUM);
+        CREDO_VERUM(y->impletum && y->color.valor == (i32)COLOR_TEXT);
+        CREDO_AEQUALIS_S32(y->fines.x + y->fines.latitudo, X + XL);
+        CREDO_AEQUALIS_S32(y->fines.y + y->fines.altitudo, XX + XVI);
+        y = (constans Mandatum*)xar_obtinere(v->elementa, I);
+        CREDO_VERUM(y->color.valor == (i32)COLOR_SELECTION);
+        CREDO_AEQUALIS_S32(y->fines.latitudo, XL - II);
+        /* obscurum: textus obscurus */
+        v = mandata_creare(piscina, intern);
+        figura_globulum_pingere(v, f, t, FIGURA_OBSCURUM);
+        y = (constans Mandatum*)xar_obtinere(v->elementa, II);
+        CREDO_VERUM(y->color.valor == (i32)COLOR_TEXT_DIM);
+        /* sagitta: polygonum plenum */
+        v = mandata_creare(piscina, intern);
+        figura_sagittam_pingere(v, f, I, ZEPHYRUM);
+        y = (constans Mandatum*)xar_obtinere(v->elementa,
+            xar_numerus(v->elementa) - I);
+        CREDO_VERUM(y->genus == MANDATUM_POLYGONUM && y->impletum);
+        /* segmentum ultimum: margo dexter adest, medium sine eo */
+        v = mandata_creare(piscina, intern);
+        figura_segmentum_pingere(v, f, t, FIGURA_SEGMENTUM_MEDIUM,
+            ZEPHYRUM);
+        CREDO_FALSUM(linea_ad_x_adest(v, X + XL - I));
+        v = mandata_creare(piscina, intern);
+        figura_segmentum_pingere(v, f, t, FIGURA_SEGMENTUM_ULTIMUM,
+            ZEPHYRUM);
+        CREDO_VERUM(linea_ad_x_adest(v, X + XL - I));
+        CREDO_VERUM(linea_ad_x_adest(v, X));
+        /* capsa: vacua II elementa, facta + II lineae */
+        v = mandata_creare(piscina, intern);
+        figura_capsam_pingere(v, X, XX, FALSUM);
+        CREDO_AEQUALIS_I32(xar_numerus(v->elementa), II);
+        v = mandata_creare(piscina, intern);
+        figura_capsam_pingere(v, X, XX, VERUM);
+        CREDO_AEQUALIS_I32(xar_numerus(v->elementa), IV);
+        /* ordo electus: fundus selectionis, fascia accentus */
+        v = mandata_creare(piscina, intern);
+        figura_ordinem_electum_pingere(v, f);
+        y = (constans Mandatum*)xar_obtinere(v->elementa, ZEPHYRUM);
+        CREDO_VERUM(y->color.valor == (i32)COLOR_SELECTION);
+        y = (constans Mandatum*)xar_obtinere(v->elementa, I);
+        CREDO_VERUM(   y->color.valor == (i32)COLOR_ACCENT_PRIMARY
+                    && y->fines.latitudo == III);
+        /* fascia: fundus et exemplar */
+        v = mandata_creare(piscina, intern);
+        figura_fasciam_pingere(v, f);
+        y = (constans Mandatum*)xar_obtinere(v->elementa, I);
+        CREDO_VERUM(y->exemplar == EXEMPLAR_CINEREUM_LEVE);
+        /* umbra: II infra-dextrorsum */
+        v = mandata_creare(piscina, intern);
+        figura_umbram_pingere(v, f);
+        y = (constans Mandatum*)xar_obtinere(v->elementa, ZEPHYRUM);
+        CREDO_VERUM(y->fines.x == X + II && y->fines.y == XX + II);
+        /* campus: superficies, margo */
+        v = mandata_creare(piscina, intern);
+        figura_campum_pingere(v, f);
+        y = (constans Mandatum*)xar_obtinere(v->elementa, ZEPHYRUM);
+        CREDO_VERUM(y->color.valor == (i32)COLOR_SUPERFICIES);
+        /* textus audax: bis, +1 px */
+        v = mandata_creare(piscina, intern);
+        figura_textum_audacem(v, X, XX, t, figura_color_thematis(
+            COLOR_TEXT));
+        CREDO_AEQUALIS_I32(xar_numerus(v->elementa), II);
+        y = (constans Mandatum*)xar_obtinere(v->elementa, I);
+        CREDO_AEQUALIS_S32(y->fines.x, X + I);
     }
 
     credo_imprimere_compendium();

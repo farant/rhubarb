@@ -959,3 +959,24 @@ dispositio_numerus (
 {
     redde d ? (s32)xar_numerus(d->nodi) : ZEPHYRUM;
 }
+
+Fines
+dispositio_ad_pixela (
+    Fines fines,
+      s32 columnae,
+      s32 lineae,
+      s32 latitudo,
+      s32 altitudo,
+      s32 cw,
+      s32 ch)
+{
+    Fines p;
+
+    p.x = fines.x * cw;
+    p.y = fines.y * ch;
+    p.latitudo  = (fines.x + fines.latitudo >= columnae)
+                ? latitudo - p.x : fines.latitudo * cw;
+    p.altitudo  = (fines.y + fines.altitudo >= lineae)
+                ? altitudo - p.y : fines.altitudo * ch;
+    redde p;
+}

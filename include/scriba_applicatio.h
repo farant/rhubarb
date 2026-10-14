@@ -81,6 +81,32 @@ scriba_montare (
             ScribaLiber* liber,
         StatusSystemata* systemata);
 
+/* A6c: scribam montare SUB ramo parentis (nidificata, status-plan S8):
+ * <scriba id> liberum parentis (creatur si abest); cetera ut
+ * scriba_montare (liber, systemata, visus paginae 'scriba/visus/' +
+ * id, clavis status id) - id unicum in volumine esse debet (canon:
+ * nomen - "c1_notae", non "c1-notae") */
+b32
+scriba_montare_in_ramo (
+          ScribaMontatio* m,
+                 Piscina* piscina,
+     InternamentumChorda* intern,
+                 Volumen* volumen,
+    constans InsulaRamus* parens,
+      constans character* id,
+                     i32  latitudo,
+                     i32  altitudo,
+             ScribaLiber* liber,
+         StatusSystemata* systemata);
+
+/* A6d: visum montatum ad librum alium vertere (calendarium: liber
+ * diei): pagina ex plagula visus si in libro novo exstat, aliter
+ * prima; registra et contextus manent. FALSUM si liber NIHIL. */
+b32
+scriba_librum_ponere (
+    ScribaMontatio* m,
+       ScribaLiber* liber);
+
 /* Visus stalus reficitur (vicus-latera S2b): si alius visus paginam
  * commisit (cursor documenti != cursor_laboris), folium laboris ex
  * proiectione - visus sine gestu pendente solum (commissio in omni

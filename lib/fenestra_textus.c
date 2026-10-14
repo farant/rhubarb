@@ -2,6 +2,7 @@
  * fenestra, sine Cocoa */
 #include "tabula_pixelorum.h"
 #include "fons_6x8.h"
+#include "fons_8x16.h"
 #include "utf8.h"
 #include "fons.h"
 #include <string.h>
@@ -171,6 +172,71 @@ tabula_pixelorum_pingere_chordam (
                 (character)glypha, color);
             x += FONS_LATITUDO;
         }
+    }
+}
+
+/* glypha 8x16 (fons_8x16, V3b): pixelum per pixelum, fines probantur */
+interior vacuum
+characterem_8x16_pingere (
+    TabulaPixelorum* tabula,
+                i32  x,
+                i32  y,
+                 i8  glypha,
+                i32  color)
+{
+    i32 ordo;
+    i32 columna;
+     i8 bits;
+
+    per (ordo = ZEPHYRUM; ordo < FONS_8X16_ALTITUDO; ordo++)
+    {
+        bits = fons_8x16[glypha][ordo];
+        per (columna = ZEPHYRUM; bits && columna < FONS_8X16_LATITUDO;
+            columna++)
+        {
+            si (bits & (0x80 >> columna))
+            {
+                tabula_pixelorum_ponere_pixelum(tabula, x + columna, y
+                    + ordo, color);
+            }
+        }
+    }
+}
+
+vacuum
+tabula_pixelorum_pingere_chordam_fonte (
+    TabulaPixelorum* tabula,
+                i32  x,
+                i32  y,
+             chorda  textus,
+                i32  color,
+                i32  fons)
+{
+            i32  initium_x;
+    constans i8* ptr;
+    constans i8* finis;
+            s32  runa;
+
+    si (fons != FONS_TITULI)
+    {
+        tabula_pixelorum_pingere_chordam(tabula, x, y, textus, color);
+        redde;
+    }
+    initium_x  = x;
+    ptr        = textus.datum;
+    finis      = textus.datum + textus.mensura;
+    dum (ptr < finis)
+    {
+        runa = utf8_decodere(&ptr, finis);
+        si (runa == '\n')
+        {
+            y += FONS_8X16_ALTITUDO;
+            x = initium_x;
+            perge;
+        }
+        characterem_8x16_pingere(tabula, x, y,
+            fons_8x16_codepoint_ad_glypham(runa), color);
+        x += FONS_8X16_LATITUDO;
     }
 }
 

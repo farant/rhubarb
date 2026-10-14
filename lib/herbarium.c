@@ -26,8 +26,9 @@ structura Herbarium {
 };
 
 nomen structura {
-      Herbarium* herbarium;
-    HttpVectura  involuta;
+          Herbarium* herbarium;
+        HttpVectura  involuta;
+    HttpVecturaRivi  involuta_rivi;   /* quaestio-rivus T2 */
 } HerbariumInvolucrum;
 
 nomen structura {
@@ -511,6 +512,37 @@ herbarium_aperire (
     redde h;
 }
 
+/* PRAEDICATUM capturae (vectura et rivus): status >= limen ->
+ * 'status'; aliter iudex consumptoris (herbarium-spec-2) */
+interior vacuum
+_iudicare_et_premere (
+       Herbarium* herbarium,
+     HttpPetitio* petitio,
+    HttpResultus  res,
+         Piscina* piscina)
+{
+    si (   res.successus && res.responsum
+        && res.responsum->status >= herbarium->optiones.status_minimus)
+    {
+        _premere(herbarium, petitio, res.responsum,
+                 chorda_ex_literis("status", piscina));
+    }
+    alioquin si (   res.successus && res.responsum
+                 && herbarium->optiones.iudex)
+    {
+        /* custos ante usum (herbarium-spec-2): iudex consumptoris
+         * responsum iudicat ANTE redditionem - inexspectatum in disco
+         * antequam consumptor octetum videt (rivus: post finem, R5) */
+        chorda causa = herbarium->optiones.iudex(petitio, res.responsum,
+            piscina, herbarium->optiones.iudex_datum);
+
+        si (causa.mensura > 0)
+        {
+            _premere(herbarium, petitio, res.responsum, causa);
+        }
+    }
+}
+
 interior HttpResultus
 _exsequi_capiens (
     HttpPetitio* petitio,
@@ -521,29 +553,50 @@ _exsequi_capiens (
            HttpResultus  res;
 
     res = http_vectura_exsequi(inv->involuta, petitio, piscina);
-    si (   res.successus && res.responsum
-        && res.responsum->status
-            >= inv->herbarium->optiones.status_minimus)
-    {
-        _premere(inv->herbarium, petitio, res.responsum,
-                 chorda_ex_literis("status", piscina));
-    }
-    alioquin si (   res.successus && res.responsum
-                 && inv->herbarium->optiones.iudex)
-    {
-        /* custos ante usum (herbarium-spec-2): iudex consumptoris
-         * responsum iudicat ANTE redditionem - inexspectatum in disco
-         * antequam consumptor octetum videt */
-        chorda causa = inv->herbarium->optiones.iudex(petitio,
-            res.responsum, piscina,
-            inv->herbarium->optiones.iudex_datum);
-
-        si (causa.mensura > 0)
-        {
-            _premere(inv->herbarium, petitio, res.responsum, causa);
-        }
-    }
+    _iudicare_et_premere(inv->herbarium, petitio, res, piscina);
     redde res;
+}
+
+/* rivus: interior exsequitur, rivus transmittitur immutatus; responsum
+ * TOTUM post finem iudicatur et premitur (quaestio-rivus R5: rivus
+ * ante usum iudicari nequit) */
+interior HttpResultus
+_exsequi_capiens_rivi (
+    HttpPetitio* petitio,
+      HttpRivus  rivus,
+         vacuum* rivi_datum,
+        Piscina* piscina,
+         vacuum* datum)
+{
+    HerbariumInvolucrum* inv = (HerbariumInvolucrum*)datum;
+           HttpResultus  res;
+
+    res = http_vectura_rivi_exsequi(inv->involuta_rivi, petitio, rivus,
+        rivi_datum, piscina);
+    _iudicare_et_premere(inv->herbarium, petitio, res, piscina);
+    redde res;
+}
+
+HttpVecturaRivi
+herbarium_vectura_rivi (
+          Herbarium* herbarium,
+    HttpVecturaRivi  involuta)
+{
+    HerbariumInvolucrum* inv;
+        HttpVecturaRivi  v;
+
+    si (!herbarium)
+    {
+        redde involuta;
+    }
+    inv = (HerbariumInvolucrum*)piscina_allocare(herbarium->piscina,
+        (i64)magnitudo(HerbariumInvolucrum));
+    memset(inv, 0, magnitudo(*inv));
+    inv->herbarium      = herbarium;
+    inv->involuta_rivi  = involuta;
+    v.exsequi           = _exsequi_capiens_rivi;
+    v.datum             = inv;
+    redde v;
 }
 
 HttpVectura
@@ -560,6 +613,7 @@ herbarium_vectura (
     }
     inv = (HerbariumInvolucrum*)piscina_allocare(herbarium->piscina,
         (i64)magnitudo(HerbariumInvolucrum));
+    memset(inv, 0, magnitudo(*inv));
     inv->herbarium  = herbarium;
     inv->involuta   = involuta;
     v.exsequi       = _exsequi_capiens;
@@ -904,6 +958,49 @@ _exsequi_reddens (
     res.successus         = VERUM;
     res.responsum         = resp;
     redde res;
+}
+
+/* rivus: ut _exsequi_reddens; corpus 2xx per rivum in frustis VII
+ * octetorum (fines ubicumque - lectores incrementales probantur) */
+interior HttpResultus
+_exsequi_reddens_rivi (
+    HttpPetitio* petitio,
+      HttpRivus  rivus,
+         vacuum* rivi_datum,
+        Piscina* piscina,
+         vacuum* datum)
+{
+    HttpResultus res = _exsequi_reddens(petitio, piscina, datum);
+             i32 k;
+
+    si (   res.successus && rivus && res.responsum->status >= CC
+        && res.responsum->status < CCC)
+    {
+        per (k = 0; k < res.responsum->corpus.mensura; k += VII)
+        {
+            i32 n = res.responsum->corpus.mensura - k < VII
+                ? res.responsum->corpus.mensura - k : VII;
+
+            rivus(rivi_datum, res.responsum->corpus.datum + k, n);
+        }
+    }
+    redde res;
+}
+
+HttpVecturaRivi
+herbarium_reddens_rivi (
+    Piscina* piscina,
+        Xar* specimina)
+{
+    HerbariumRedditor* r = (HerbariumRedditor*)piscina_allocare(piscina,
+        (i64)magnitudo(HerbariumRedditor));
+    HttpVecturaRivi v;
+
+    r->specimina  = specimina;
+    r->index      = 0;
+    v.exsequi     = _exsequi_reddens_rivi;
+    v.datum       = r;
+    redde v;
 }
 
 HttpVectura

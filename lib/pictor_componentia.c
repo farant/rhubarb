@@ -72,31 +72,6 @@ nodus (
     redde c;
 }
 
-/* Fines cellularum -> pixela nostra: orae ad cellulas, PRAETER oram
- * quae superficiem tangit - ea ad superficiem ipsam (fenestra:
- * superficies non semper cellularum multiplex - nulla fascia vacua ad
- * marginem; terminalis: idem, superficies semper multiplex). */
-interior Fines
-_ad_pixela (
-    Fines f,
-      s32 columnae,
-      s32 lineae,
-      s32 latitudo,
-      s32 altitudo,
-      s32 cw,
-      s32 ch)
-{
-    Fines p;
-
-    p.x = f.x * cw;
-    p.y = f.y * ch;
-    p.latitudo  = (f.x + f.latitudo >= columnae) ? latitudo - p.x
-                                                  : f.latitudo * cw;
-    p.altitudo  = (f.y + f.altitudo >= lineae) ? altitudo - p.y
-                                                : f.altitudo * ch;
-    redde p;
-}
-
 constans character*
 pictor_actio_instrumenti (
     chorda instrumentum)
@@ -468,17 +443,6 @@ strata_palettam_componere (
 }
 
 /* <componens/> <purus/> */
-/* indicium foci (vicus-latera): ramus focatus - sine Motu aut ramo
- * radicis (applicatio sola) semper; in vico spatium Motus = via rami */
-interior b32
-focatum_est (
-    constans Motus* motus,
-       InsulaRamus  ramus)
-{
-    redde !motus || chorda_vacua(ramus.via)
-        || chorda_aequalis(motus->spatium, ramus.via);
-}
-
 Componens*
 pictor_componere (
      InsulaRepositorium* repo,
@@ -495,6 +459,10 @@ pictor_componere (
              Componens* tabula;
              Componens* status;
                 chorda  instrumentum;
+                chorda  glutinatio;
+                   b32  pendens;
+                   s32  x_magnitudinis;   /* quadratum magnitudinis
+                                           * lineae pendentis */
                    s32  doc_latitudo;
                    s32  doc_altitudo;
                    s32  zoom;
@@ -557,10 +525,12 @@ pictor_componere (
     dispositio_computare(dispositio, latitudo / cw, altitudo / ch,
         NIHIL,
         NIHIL);
-    fp = _ad_pixela(dispositio_fines(dispositio, d_prospectus), latitudo
+    fp = dispositio_ad_pixela(dispositio_fines(dispositio,
+        d_prospectus), latitudo
         / cw,
         altitudo / ch, latitudo, altitudo, cw, ch);
-    fs = _ad_pixela(dispositio_fines(dispositio, d_status), latitudo
+    fs = dispositio_ad_pixela(dispositio_fines(dispositio, d_status),
+        latitudo
         / cw,
         altitudo / ch, latitudo, altitudo, cw, ch);
     instrumentum = attributum_chorda(&ramus,
@@ -574,6 +544,18 @@ pictor_componere (
     {
         zoom = I;
     }
+    /* glutinatio pendens (Franus 2026-10-13): campus et documentum
+     * concordant - praevisio in tabula, linea status A / B / OK / X */
+    glutinatio = attributum_chorda(&ramus, "glutinatio");
+    pendens    = !chorda_vacua(glutinatio) && cfg->doc
+              && cfg->doc->glutinatio.pendens;
+    x_magnitudinis = ZEPHYRUM;
+    /* pendens: tractus radit magnitudine PENICILLI (Franus 2026-10-13)
+     * - palette magnitudinis ut penicilli, quidquid instrumentum */
+    si (pendens)
+    {
+        instrumentum = chorda_ex_literis("penicillus", piscina);
+    }
 
     radix = nodus(piscina, intern, "radix", PARTES_NULLUM, ZEPHYRUM,
                   ZEPHYRUM, latitudo, altitudo);
@@ -583,7 +565,7 @@ pictor_componere (
                        fp.x, fp.y, fp.latitudo, fp.altitudo);
     componens_ponere_sectio(prospectus, VERUM);
     /* indicium foci: figura prospectus exemplar addit */
-    si (focatum_est(motus, ramus))
+    si (motus_ramus_focatus(motus, ramus))
     {
         componens_ponere_titulum(prospectus, "focatum");
     }
@@ -598,8 +580,15 @@ pictor_componere (
                    doc_latitudo, doc_altitudo);
     componens_ponere_praedicatum(tabula, PRAEDICATUM_PROPRIUS);
     componens_ponere_focusabilis(tabula, VERUM);
-    componens_ponere_actio(tabula,
-        pictor_actio_instrumenti(instrumentum));
+    componens_ponere_actio(tabula, pendens ? "glutinatio.agere"
+        : pictor_actio_instrumenti(instrumentum));
+    si (pendens)
+    {
+        /* "glutinatio:<A|B>" - figura praevisionem ex documento pingit */
+        componens_ponere_titulum(tabula,
+            chorda_aequalis_literis(glutinatio, "A") ? "glutinatio:A"
+                                                     : "glutinatio:B");
+    }
     /* puncta pendentia tabulae solae (L4: tractus ordinis stratorum
      * puncta quoque in motu fert - captura alia) */
     n = motus && motus->ictus_pendens
@@ -686,9 +675,52 @@ pictor_componere (
                                    : chorda_ut_cstr(instrumentum,
                                    piscina));
 
+    /* glutinatio pendens: A / B / OK / X loco quadratorum */
+    si (pendens)
+    {
+        hic_manens constans character* ID[IV] = {
+            "glutinatio.A", "glutinatio.B", "glutinatio.confirmare",
+            "glutinatio.abicere"
+        };
+        hic_manens constans character* TEXTUS[IV] = {"A", "B", "OK",
+            "X"};
+              hic_manens constans s32  LATITUDO[IV] = {XX, XX, XXX, XX};
+                            character  t[XXIV];
+                                  s32  y;
+                                  s32  x;
+                                  i32  k;
+                            Componens* q;
+
+        y = fs.altitudo > XX ? (fs.altitudo - XX) / II : ZEPHYRUM;
+        x = cw;
+        per (k = ZEPHYRUM; k < IV; k++)
+        {
+            b32 electum = (k == ZEPHYRUM
+                && chorda_aequalis_literis(glutinatio, "A"))
+                       || (k == I
+                           && chorda_aequalis_literis(glutinatio, "B"));
+            sprintf(t, "textus:%s%s", TEXTUS[k],
+                electum ? ":electum" : "");
+            q = nodus(piscina, intern, ID[k], PARTES_BOTTONE, x, y,
+                LATITUDO[k], XX);
+            componens_ponere_titulum(q, t);
+            componens_ponere_actio(q, "glutinatio.agere");
+            componens_addere_liberum(status, q);
+            x += LATITUDO[k] + cw;
+        }
+        /* magnitudo radendi (penicilli): palettam suam aperit */
+        sprintf(t, "magnitudo:%d", (integer)attributum_s32(&ramus,
+            "magnitudo_penicilli", I));
+        x_magnitudinis = x + cw;
+        (vacuum)quadratum_addere(piscina, intern, status,
+            "quadratum.magnitudo", x_magnitudinis, y, t);
+        componens_ponere_titulum(status,
+            "glutinatio: A Atkinson, B exemplaria");
+    }
     /* P1a: quadrata (XX x XX, cellula inter se, centrata in linea):
      * instrumentum, color primus, color secundus (nullus ordinarie,
      * -1) - titulus dicit quid figura pingat */
+    alioquin
     {
         character  t[XLVIII];
               s32  y;
@@ -779,7 +811,12 @@ pictor_componere (
            s32 qx;
            s32 qy;
 
+        /* pendens: palette magnitudinis sola */
         palette = attributum_chorda(&ramus, "palette");
+        si (pendens && !chorda_aequalis_literis(palette, "magnitudo"))
+        {
+            palette = chorda_ex_literis("", piscina);
+        }
         qy = fs.y + (fs.altitudo > XX ? (fs.altitudo - XX) / II
                                       : ZEPHYRUM);
         qx = chorda_aequalis_literis(palette, "color_primus")
@@ -789,7 +826,7 @@ pictor_componere (
             : chorda_aequalis_literis(palette, "exemplar")
             ? IV * cw + III * XX
             : chorda_aequalis_literis(palette, "magnitudo")
-            ? V * cw + IV * XX : cw;
+            ? (pendens ? x_magnitudinis : V * cw + IV * XX) : cw;
         /* L3: palette stratorum (margine dextro ad quadratum) */
         si (chorda_aequalis_literis(palette, "strata") && cfg->doc)
         {

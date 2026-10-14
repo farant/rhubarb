@@ -83,7 +83,125 @@ segmentum (
     redde c;
 }
 
-/* iussum cuius '$' in columna c legere; FALSUM si non iussum */
+/* lineae ALBAE in fine tabulae infra lineam 'post' (spatium responsi
+ * quod nihil delet) */
+interior s32
+lineae_liberae_numerare (
+    constans TabulaCharacterum* t,
+                           s32  post)
+{
+    s32 l;
+    s32 c;
+    s32 n;
+
+    n = ZEPHYRUM;
+    per (l = (s32)t->altitudo - I; l > post; l--)
+    {
+        per (c = ZEPHYRUM; c < (s32)t->latitudo; c++)
+        {
+            si (!spatium_est(cellula(t, l, c)))
+            {
+                redde n;
+            }
+        }
+        n++;
+    }
+    redde n;
+}
+
+/* corpus: '</>' primum a (linea, columna) - eadem linea aut
+ * sequentibus; VERUM et locus '<' */
+interior b32
+clausuram_invenire (
+    constans TabulaCharacterum* t,
+                           s32  linea,
+                           s32  columna,
+                           s32* linea_inventa,
+                           s32* columna_inventa)
+{
+    s32 l;
+    s32 c;
+
+    per (l = linea; l < (s32)t->altitudo; l++)
+    {
+        per (c = (l == linea ? columna : ZEPHYRUM);
+             c + II < (s32)t->latitudo; c++)
+        {
+            si (   cellula(t, l, c)      == '<'
+                && cellula(t, l, c + I)  == '/'
+                && cellula(t, l, c + II) == '>')
+            {
+                *linea_inventa    = l;
+                *columna_inventa  = c;
+                redde VERUM;
+            }
+        }
+    }
+    redde FALSUM;
+}
+
+/* corpus a (la, ca) ad (lb, cb) exclusum: lineae verbatim, spatiis
+ * finalibus demptis, '\n' iunctae; spatia extrema totius dempta;
+ * cellula vacua ('\0') = spatium */
+interior chorda
+corpus_legere (
+    constans TabulaCharacterum* t,
+                           s32  la,
+                           s32  ca,
+                           s32  lb,
+                           s32  cb,
+                       Piscina* piscina)
+{
+    chorda  c;
+        i8* q;
+       s32  l;
+       s32  n;
+       s32  a;
+       s32  b;
+       s32  k;
+
+    c.datum    = NIHIL;
+    c.mensura  = ZEPHYRUM;
+    q = (i8*)piscina_allocare(piscina, (memoriae_index)((lb - la + I)
+        * ((s32)t->latitudo + I)));
+    si (!q)
+    {
+        redde c;
+    }
+    n = ZEPHYRUM;
+    per (l = la; l <= lb; l++)
+    {
+        a = l == la ? ca : ZEPHYRUM;
+        b = l == lb ? cb : (s32)t->latitudo;
+        dum (b > a && spatium_est(cellula(t, l, b - I)))
+        {
+            b--;
+        }
+        si (l > la)
+        {
+            q[n++] = (i8)'\n';
+        }
+        per (k = a; k < b; k++)
+        {
+            character x  = cellula(t, l, k);
+            q[n++]       = (i8)(x == '\0' ? ' ' : x);
+        }
+    }
+    a = ZEPHYRUM;
+    dum (a < n && (spatium_est((character)q[a]) || q[a] == (i8)'\n'))
+    {
+        a++;
+    }
+    dum (   n > a
+         && (spatium_est((character)q[n - I]) || q[n - I] == (i8)'\n'))
+    {
+        n--;
+    }
+    c.datum    = n > a ? q + a : NIHIL;
+    c.mensura  = (i32)(n - a);
+    redde c;
+}
+
 interior b32
 legere (
     constans TabulaCharacterum* t,
@@ -92,7 +210,69 @@ legere (
                    IussumNotum  notum,
                         vacuum* ctx,
                        Piscina* piscina,
-                        Iussum* exitus)
+                        Iussum* exitus,
+                           b32  plenum,
+                           b32  intra_probare);
+
+/* '$' in (linea, c) intra corpus iussi prioris? Ab initio tabulae
+ * percurritur; corpora transiliuntur (ergo '$' intra corpus numquam
+ * corpus aperit - nulla nidificatio) */
+interior b32
+intra_corpus (
+    constans TabulaCharacterum* t,
+                           s32  linea,
+                           s32  c,
+                   IussumNotum  notum,
+                        vacuum* ctx,
+                       Piscina* piscina)
+{
+    Iussum x;
+       s32 l;
+       s32 k;
+
+    l = ZEPHYRUM;
+    k = ZEPHYRUM;
+    dum (l < linea || (l == linea && k < c))
+    {
+        si (   cellula(t, l, k) == '$'
+            && legere(t, l, k, notum, ctx, piscina, &x, FALSUM, FALSUM)
+            && x.corpus)
+        {
+            si (   x.linea_clausurae > linea
+                || (x.linea_clausurae == linea && x.post_clausuram > c))
+            {
+                redde VERUM;
+            }
+            l = x.linea_clausurae;
+            k = x.post_clausuram;
+        }
+        alioquin
+        {
+            k++;
+        }
+        si (k >= (s32)t->latitudo)
+        {
+            l++;
+            k = ZEPHYRUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* iussum cuius '$' in columna c legere; FALSUM si non iussum.
+ * plenum FALSUM: corpus non copiatur (percursio intra_corpus);
+ * intra_probare: '$' intra corpus prius non est iussum */
+interior b32
+legere (
+    constans TabulaCharacterum* t,
+                           s32  linea,
+                           s32  c,
+                   IussumNotum  notum,
+                        vacuum* ctx,
+                       Piscina* piscina,
+                        Iussum* exitus,
+                           b32  plenum,
+                           b32  intra_probare)
 {
     s32 latitudo;
     s32 j;
@@ -131,9 +311,45 @@ legere (
         piscina);
     exitus->numerus_argumentorum  = ZEPHYRUM;
     exitus->argumenta             = NIHIL;
+    exitus->corpus                = FALSUM;
+    exitus->linea_clausurae       = linea;
+    exitus->post_clausuram        = j;
     si (notum && !notum(exitus->verbum, ctx))
     {
         redde FALSUM;
+    }
+    si (intra_probare && intra_corpus(t, linea, c, notum, ctx, piscina))
+    {
+        redde FALSUM;
+    }
+    /* corpus: '<>' statim post verbum, '</>' primum - aliter prosa */
+    si (   j + I < latitudo && cellula(t, linea, j) == '<'
+        && cellula(t, linea, j + I) == '>')
+    {
+        s32 lc;
+        s32 cc;
+
+        si (!clausuram_invenire(t, linea, j + II, &lc, &cc))
+        {
+            redde FALSUM;
+        }
+        exitus->corpus           = VERUM;
+        exitus->finis            = j + II;
+        exitus->linea_clausurae  = lc;
+        exitus->post_clausuram   = cc + III;
+        si (plenum)
+        {
+            chorda corpus = corpus_legere(t, linea, j + II, lc, cc,
+                piscina);
+            si (corpus.mensura > ZEPHYRUM)
+            {
+                exitus->argumenta = (chorda*)piscina_allocare(piscina,
+                    magnitudo(chorda));
+                exitus->argumenta[ZEPHYRUM]   = corpus;
+                exitus->numerus_argumentorum  = I;
+            }
+        }
+        redde VERUM;
     }
     si (j >= latitudo || cellula(t, linea, j) != '(')
     {
@@ -206,8 +422,13 @@ iussum_proximum (
     per (c = a_columna < ZEPHYRUM ? ZEPHYRUM : a_columna;
          c < (s32)t->latitudo; c++)
     {
-        si (legere(t, linea, c, notum, ctx, piscina, exitus))
+        si (legere(t, linea, c, notum, ctx, piscina, exitus, VERUM,
+            VERUM))
         {
+            exitus->latitudo_tabulae  = (s32)t->latitudo;
+            exitus->lineae_liberae    = lineae_liberae_numerare(t,
+                exitus->corpus ? exitus->linea_clausurae : exitus->linea);
+            exitus->iterum            = FALSUM;
             redde VERUM;
         }
     }
@@ -294,6 +515,12 @@ nexum_legere (
         piscina);
     exitus->numerus_argumentorum  = ZEPHYRUM;
     exitus->argumenta             = NIHIL;
+    exitus->corpus                = FALSUM;
+    exitus->linea_clausurae       = linea;
+    exitus->post_clausuram        = j;
+    exitus->latitudo_tabulae      = (s32)t->latitudo;
+    exitus->lineae_liberae        = ZEPHYRUM;
+    exitus->iterum                = FALSUM;
     redde VERUM;
 }
 

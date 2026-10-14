@@ -12,6 +12,7 @@
 #include "piscina.h"
 #include "chorda.h"
 #include "tcp.h"   /* fixtura prava: servus crudus misbehavens */
+#include "chorda_aedificator.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -19,6 +20,7 @@
 #include <signal.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <sys/time.h>
 
 
 /* ========================================================================
@@ -191,6 +193,8 @@ _url_fixturae (
 #define FIXTURA_CHUNKED_INGENS    VII  /* magnitudo involutiva */
 #define FIXTURA_CAPUT_SOLUM      VIII  /* capita sine corpore (HEAD) */
 #define FIXTURA_CORPUS_MAGNUM      IX  /* CC milia octetorum */
+#define FIXTURA_RIVUS               X  /* chunked in III scripturis, pausa,
+                                        * connexio II s aperta */
 
 #define CORPUS_MAGNUM_MENSURA  (CC * M)
 
@@ -318,6 +322,22 @@ _fixturam_pravam_incipere (
             }
             (vacuum)tcp_mittere_omnia(conn.connexio,
                 (constans i8*)r, (i32)strlen(r));
+        }
+        alioquin si (modus == FIXTURA_RIVUS)
+        {
+            constans character* a = "HTTP/1.1 200 OK\r\n"
+                "Transfer-Encoding: chunked\r\n\r\n5\r\nsalve\r\n";
+            constans character* b    = "6\r\n munde\r\n";
+            constans character* fin  = "0\r\n\r\n";
+
+            (vacuum)tcp_mittere_omnia(conn.connexio, (constans i8*)a,
+                (i32)strlen(a));
+            usleep(CCC * M);   /* CCC ms: rivus primum ante finem */
+            (vacuum)tcp_mittere_omnia(conn.connexio, (constans i8*)b,
+                (i32)strlen(b));
+            (vacuum)tcp_mittere_omnia(conn.connexio,
+                (constans i8*)fin, (i32)strlen(fin));
+            sleep(II);         /* connexio aperta manet */
         }
         alioquin si (modus == FIXTURA_CORPUS_MAGNUM)
         {
@@ -848,6 +868,141 @@ probatio_chunked(Piscina* piscina)
     printf("\n");
 }
 
+/* ---- rivus (quaestio-rivus T2) ---- */
+
+nomen structura {
+    ChordaAedificator* aed;
+                  s64  primum_ms;
+                  i32  vocationes;
+} RivusProbationis;
+
+interior s64
+_ms_nunc_probationis (vacuum)
+{
+    structura timeval tv;
+
+    gettimeofday(&tv, NIHIL);
+    redde (s64)tv.tv_sec * M + (s64)tv.tv_usec / M;
+}
+
+interior vacuum
+_rivus_probationis (
+          vacuum* datum,
+     constans i8* octeti,
+             i32  n)
+{
+    RivusProbationis* r = (RivusProbationis*)datum;
+                 i32  k;
+
+    si (r->primum_ms == 0)
+    {
+        r->primum_ms = _ms_nunc_probationis();
+    }
+    r->vocationes++;
+    per (k = 0; k < n; k++)
+    {
+        chorda_aedificator_appendere_character(r->aed,
+            (character)octeti[k]);
+    }
+}
+
+/* fixtura una, petitio rivi una */
+interior HttpResultus
+_rivum_a_fixtura (
+             Piscina* piscina,
+             integer  modus,
+    RivusProbationis* r)
+{
+           pid_t  pid = 0;
+             i32  portus;
+       character  url[CXXVIII];
+     HttpPetitio* pet;
+    HttpResultus  res;
+
+    portus = _fixturam_pravam_incipere(&pid, modus);
+    CREDO_VERUM(portus > 0);
+    pet = http_petitio_creare(piscina, HTTP_GET,
+                              _url_fixturae(url, portus, "/"));
+    CREDO_NON_NIHIL(pet);
+    r->aed = chorda_aedificator_creare(piscina, LXIV);
+    r->primum_ms = 0;
+    r->vocationes = 0;
+    res = http_exsequi_rivus(pet, _rivus_probationis, r, piscina);
+    _fixturam_terminare(pid);
+    redde res;
+}
+
+/* rivus: frustum primum ANTE pausam servi advenit; corpus totum
+ * redditur; lectio finitur sine clausura (servus II s apertus); idem
+ * corpus ac http_exsequi pro chunked integro et corpore magno;
+ * truncatum = error IO; vectura rivi ordinaria et nulla */
+interior vacuum
+probatio_rivus (
+    Piscina* piscina)
+{
+        HttpResultus  res;
+    RivusProbationis  r;
+                 s64  initium;
+                 s64  finis;
+         HttpPetitio* pet;
+     HttpVecturaRivi  v;
+
+    printf("--- Probans http_exsequi_rivus ---\n");
+
+    initium  = _ms_nunc_probationis();
+    res      = _rivum_a_fixtura(piscina, FIXTURA_RIVUS, &r);
+    finis    = _ms_nunc_probationis();
+    CREDO_VERUM(res.successus);
+    si (res.successus)
+    {
+        CREDO_CHORDA_AEQUALIS_LITERIS(chorda_aedificator_finire(r.aed),
+            "salve munde");
+        CREDO_CHORDA_AEQUALIS_LITERIS(res.responsum->corpus,
+            "salve munde");
+        /* frustum primum ante pausam (CCC ms); finis ante clausuram
+         * servi (II s) */
+        CREDO_VERUM(r.primum_ms - initium < CC);
+        CREDO_VERUM(finis - initium < M + D);
+        CREDO_VERUM(r.vocationes >= II);
+    }
+
+    res = _rivum_a_fixtura(piscina, FIXTURA_CHUNKED_INTEGRUM, &r);
+    CREDO_VERUM(res.successus);
+    si (res.successus)
+    {
+        CREDO_CHORDA_AEQUALIS_LITERIS(res.responsum->corpus,
+            "salve munde!");
+        CREDO_CHORDA_AEQUALIS_LITERIS(chorda_aedificator_finire(r.aed),
+            "salve munde!");
+    }
+
+    res = _rivum_a_fixtura(piscina, FIXTURA_CORPUS_MAGNUM, &r);
+    CREDO_VERUM(res.successus);
+    si (res.successus)
+    {
+        CREDO_AEQUALIS_I32(res.responsum->corpus.mensura,
+            CORPUS_MAGNUM_MENSURA);
+        CREDO_AEQUALIS_I32((i32)chorda_aedificator_longitudo(r.aed),
+            CORPUS_MAGNUM_MENSURA);
+    }
+
+    res = _rivum_a_fixtura(piscina, FIXTURA_CHUNKED_TRUNCATUM, &r);
+    CREDO_FALSUM(res.successus);
+    CREDO_AEQUALIS_I32((i32)res.error, (i32)HTTP_ERROR_IO);
+
+    /* vectura rivi nulla: error nominatus */
+    pet = http_petitio_creare(piscina, HTTP_GET, "http://127.0.0.1:1/");
+    v = http_vectura_rivi_ordinaria();
+    CREDO_VERUM(v.exsequi != NIHIL);
+    v.exsequi = NIHIL;
+    res = http_vectura_rivi_exsequi(v, pet, _rivus_probationis, &r,
+        piscina);
+    CREDO_FALSUM(res.successus);
+    CREDO_VERUM(res.error == HTTP_ERROR_CONNEXIO);
+
+    printf("\n");
+}
+
 /* HEAD: Content-Length nuntiat magnitudinem, corpus nullum per legem -
  * successus, non error truncati */
 interior vacuum
@@ -1056,6 +1211,7 @@ principale(vacuum)
     probatio_chunked(piscina);
     probatio_head_sine_corpore(piscina);
     probatio_corpus_magnum(piscina);
+    probatio_rivus(piscina);
 
     credo_imprimere_compendium();
 

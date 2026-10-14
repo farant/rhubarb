@@ -144,6 +144,51 @@ s32 principale (vacuum)
         CREDO_NON_NIHIL(scriba_liber_paginam_condere(l, lit("x-1_b")));
     }
 
+    imprimere("\n--- VIII: liber in spatio (A6c, liber diei) ---\n");
+    {
+             ScribaLiber* ld;
+        ScribaDocumentum* dd;
+
+        ld = scriba_liber_aperire_in_spatio(piscina, intern, vol,
+            "dies/2026-10-14", XL, X);
+        CREDO_NON_NIHIL(ld);
+        CREDO_AEQUALIS_I32(scriba_liber_numerus(ld), I);
+        index = volumen_plagulam_promere(vol,
+            lit("dies/2026-10-14/paginae"), piscina, &inventum);
+        CREDO_VERUM(inventum);
+        CREDO_CHORDA_CONTINET(index, lit("<pagina nomen=\"1\"/>"));
+        dd = scriba_liber_pagina(ld, lit("1"));
+        CREDO_NON_NIHIL(dd);
+        CREDO_AEQUALIS_I32(dd ? dd->altitudo : ZEPHYRUM, X);
+        /* textus diei: pagina '1' communis ('q') non mutatur */
+        si (dd)
+        {
+            tabula_initiare(&folium, piscina, dd->latitudo,
+                dd->altitudo);
+            memcpy(folium.cellulae, scriba_documentum_tabula(dd)
+                ->cellulae, (memoriae_index)(dd->latitudo
+                * dd->altitudo));
+            tabula_cellula(&folium, ZEPHYRUM, ZEPHYRUM) = 'z';
+            CREDO_VERUM(scriba_documentum_committere(dd, &folium)
+                > ZEPHYRUM);
+        }
+        ld = scriba_liber_aperire_in_spatio(piscina, intern, vol,
+            "dies/2026-10-14", XL, X);
+        dd = scriba_liber_pagina(ld, lit("1"));
+        CREDO_VERUM(dd && tabula_cellula(scriba_documentum_tabula(dd),
+            ZEPHYRUM, ZEPHYRUM) == 'z');
+        l = scriba_liber_aperire(piscina, intern, vol, XL, XX);
+        d = scriba_liber_pagina(l, lit("1"));
+        CREDO_VERUM(d && tabula_cellula(scriba_documentum_tabula(d),
+            ZEPHYRUM, ZEPHYRUM) == 'q');
+        /* dies alius: liber suus, vacuus */
+        ld = scriba_liber_aperire_in_spatio(piscina, intern, vol,
+            "dies/2026-10-15", XL, X);
+        dd = scriba_liber_pagina(ld, lit("1"));
+        CREDO_VERUM(dd && tabula_cellula(scriba_documentum_tabula(dd),
+            ZEPHYRUM, ZEPHYRUM) != 'z');
+    }
+
     imprimere("\n");
     credo_imprimere_compendium();
     volumen_claudere(vol);

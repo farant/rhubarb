@@ -61,7 +61,9 @@ figura_tabulae (
  * centratus colore textus; n > XVI: numerus),
  * "magnitudo:aspergillum:<m>" (guttae in disco crescente),
  * "magnitudo:spongia:<n>" (quadratum hebes; magnitudo fixa),
- * "magnitudo:linea:<n>" (tractus latitudinis n).
+ * "magnitudo:linea:<n>" (tractus latitudinis n),
+ * "textus:<litterae>" (litterae centratae - glutinatio pendens: A, B,
+ * OK, X).
  * Margo colore marginis; titulus in ":electum" desinens (optio
  * electa in palette, P1b): margo colore accentus. */
 vacuum

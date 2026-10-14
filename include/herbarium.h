@@ -164,4 +164,19 @@ herbarium_reddens (
     Piscina* piscina,
         Xar* specimina);
 
+/* Vectura capiens rivi: ut herbarium_vectura - interiorem exsequitur,
+ * rivum TRANSMITTIT, deinde responsum totum iudicat et premit (post
+ * finem rivi: R5). */
+HttpVecturaRivi
+herbarium_vectura_rivi (
+          Herbarium* herbarium,
+    HttpVecturaRivi  involuta);
+
+/* Vectura reddens rivi: corpus speciminis 2xx per rivum in frustis
+ * VII octetorum (fines ubicumque), deinde responsum. */
+HttpVecturaRivi
+herbarium_reddens_rivi (
+    Piscina* piscina,
+        Xar* specimina);
+
 #endif /* HERBARIUM_H */

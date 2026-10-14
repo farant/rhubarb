@@ -1,0 +1,324 @@
+/* Review probe for lib/calendarium_liturgicum.c + lib/sanctorale.c.
+ * Plain C89; reads repo headers, links repo sources, writes nothing
+ * outside this directory.
+ *
+ * Usage:
+ *   ./probe                 all sections
+ *   ./probe dump Y M D      one day, full detail
+ *   ./probe year Y          every day of civil year Y (one line each)
+ */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "calendarium_liturgicum.h"
+
+static const char* WD[] = {"Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
+static const char* COL[] = {"white","red","green","violet","rose","black"};
+static const char* GR[]  = {"FERIA","MEM_OPT","MEMORIA","FESTUM","SOLLEMNITAS","DOMINICA","DIES_PEC"};
+static const char* TEMP[] = {"ADV","NAT","PA_I","QUAD","TRID","PASCH","PA_II"};
+static const char* CYD[] = {"A","B","C"};
+static const char* CYQ[] = {"I","II"};
+
+static Piscina* P;
+static CalendariumLiturgicum* CAL;
+
+static void line(int y, int m, int d)
+{
+    Dies dd = fasti_dies(y, m, d);
+    InformatioDiei* inf = calendarium_obtinere_diem(CAL, dd, P);
+    Celebratio* pr;
+    int k;
+    if (inf == NULL) { printf("%04d-%02d-%02d NULL\n", y, m, d); return; }
+    pr = inf->celebratio_principalis;
+    printf("%04d-%02d-%02d %s | %-5s wk%-2d ps%d %s/%s | %-11s %-6s | %.*s",
+        y, m, d, WD[fasti_dies_hebdomadis(dd)],
+        TEMP[inf->tempus_info.tempus], (int)inf->tempus_info.hebdomada,
+        (int)inf->cyclus.hebdomada_psalterii,
+        CYD[inf->cyclus.cyclus_dominicalis], CYQ[inf->cyclus.cyclus_quotidianus],
+        pr ? GR[pr->gradus] : "-", COL[inf->color_diei],
+        pr ? (int)pr->titulus_brevis.mensura : 0,
+        pr ? (const char*)pr->titulus_brevis.datum : "");
+    printf("  [titulus_diei=%.*s]", (int)inf->titulus_diei.mensura,
+        (const char*)inf->titulus_diei.datum);
+    if (inf->numerus_celebrationum > 1) {
+        printf("  {all:");
+        for (k = 0; k < inf->numerus_celebrationum; k++) {
+            Celebratio* c = &inf->celebrationes[k];
+            printf(" %.*s(%s,%s);", (int)c->titulus_brevis.mensura,
+                (const char*)c->titulus_brevis.datum, GR[c->gradus], COL[c->color]);
+        }
+        printf("}");
+    }
+    printf("\n");
+}
+
+/* Independent Easter algorithm (Oudin 1940), for cross-check */
+static void oudin(int yy, int* mo, int* da)
+{
+    int cc = yy / 100, nn = yy - 19 * (yy / 19), kk = (cc - 17) / 25;
+    int ii = cc - cc / 4 - (cc - kk) / 3 + 19 * nn + 15;
+    int jj, ll;
+    ii = ii - 30 * (ii / 30);
+    ii = ii - (ii / 28) * (1 - (ii / 28) * (29 / (ii + 1)) * ((21 - nn) / 11));
+    jj = yy + yy / 4 + ii + 2 - cc + cc / 4;
+    jj = jj - 7 * (jj / 7);
+    ll = ii - jj;
+    *mo = 3 + (ll + 40) / 44;
+    *da = ll + 28 - 31 * (*mo / 4);
+}
+
+/* Published table 2000-2040 (month*100+day) */
+static const int EASTER_TABLE[] = {
+    423,415,331,420,411,327,416,408,323,412, /* 2000-2009 */
+    404,424,408,331,420,405,327,416,401,421, /* 2010-2019 */
+    412,404,417,409,331,420,405,328,416,401, /* 2020-2029 */
+    421,413,328,417,409,325,413,405,425,410, /* 2030-2039 */
+    401                                       /* 2040 */
+};
+
+static void pd(const char* lab, Dies d)
+{
+    printf(" %s=%04d-%02d-%02d(%s)", lab, d.annus, d.mensis, d.dies, WD[fasti_dies_hebdomadis(d)]);
+}
+
+static void sect(const char* s) { printf("\n==== %s ====\n", s); }
+
+int main(int argc, char** argv)
+{
+    int y, m, d, bad;
+    P = piscina_generare_dynamicum("probe", 1 << 24);
+    CAL = calendarium_creare(P);
+
+    if (argc == 5 && strcmp(argv[1], "dump") == 0) {
+        line(atoi(argv[2]), atoi(argv[3]), atoi(argv[4]));
+        return 0;
+    }
+    if (argc == 3 && strcmp(argv[1], "year") == 0) {
+        Dies dd = fasti_dies(atoi(argv[2]), 1, 1);
+        while (dd.annus == atoi(argv[2])) {
+            line(dd.annus, dd.mensis, dd.dies);
+            dd = fasti_addere_dies(dd, 1);
+        }
+        return 0;
+    }
+
+    sect("A. Easter: library vs published table 2000-2040");
+    bad = 0;
+    for (y = 2000; y <= 2040; y++) {
+        Dies e = calendarium_anchorae(CAL, y)->pascha;
+        int want = EASTER_TABLE[y - 2000];
+        if (e.mensis * 100 + e.dies != want) { printf("MISMATCH %d lib=%d-%d want=%d\n", y, e.mensis, e.dies, want); bad++; }
+    }
+    printf("table mismatches: %d / 41\n", bad);
+
+    sect("B. Easter: library vs independent Oudin algorithm 1583-4099");
+    bad = 0;
+    for (y = 1583; y <= 4099; y++) {
+        Dies e = fasti_computus(y);
+        oudin(y, &m, &d);
+        if (e.mensis != m || e.dies != d) { if (bad < 10) printf("MISMATCH %d lib=%d-%d oudin=%d-%d\n", y, e.mensis, e.dies, m, d); bad++; }
+    }
+    printf("mismatches: %d / %d\n", bad, 4099 - 1583 + 1);
+    {
+        int ys[] = {1818, 2285, 1943, 2038, 1981, 2049, 2076, 2008};
+        int i;
+        for (i = 0; i < 8; i++) { Dies e = fasti_computus(ys[i]); printf(" %d:%d-%02d", ys[i], e.mensis, e.dies); }
+        printf("\n");
+    }
+
+    sect("C. Anchors for selected years");
+    {
+        int ys[] = {2008, 2011, 2019, 2022, 2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030, 2035, 2036, 2038, 2285};
+        int i;
+        for (i = 0; i < 16; i++) {
+            AnchoresMobiles* a = calendarium_anchorae(CAL, ys[i]);
+            printf("%d:", ys[i]);
+            pd("ash", a->feria_iv_cinerum); pd("easter", a->pascha); pd("asc", a->ascensio);
+            pd("pent", a->pentecoste); pd("trin", a->ss_trinitas); pd("corpus", a->corpus_christi);
+            pd("cor", a->cor_iesu); pd("CK", a->christus_rex); pd("adv1", a->dominica_i_adventus);
+            pd("bapt", a->baptisma_domini);
+            printf("\n");
+        }
+    }
+
+    sect("D. Season boundary API (finis/initium) for 2026");
+    {
+        int t;
+        for (t = 0; t <= 6; t++) {
+            Dies a = calendarium_initium_temporis(CAL, (TempusLiturgicum)t, 2026);
+            Dies b = calendarium_finis_temporis(CAL, (TempusLiturgicum)t, 2026);
+            printf("%-5s", TEMP[t]); pd("initium", a); pd("finis", b); printf("\n");
+        }
+    }
+
+    sect("E. Known bug + solemnities on Sundays outside Advent/Lent/Easter");
+    line(2026, 11, 1);   /* All Saints, Sunday */
+    line(2020, 11, 1);   /* All Saints, Sunday */
+    line(2025, 6, 29);   /* Peter & Paul, Sunday */
+    line(2031, 6, 29);
+    line(2029, 6, 24);   /* John Baptist, Sunday */
+    line(2035, 6, 24);
+    line(2027, 8, 15);   /* Assumption, Sunday */
+    line(2032, 8, 15);
+    line(2022, 12, 25);  /* Christmas, Sunday */
+    line(2023, 1, 1);    /* Mary Mother of God, Sunday */
+    line(2034, 1, 1);
+    line(2019, 1, 6);    /* Epiphany, Sunday */
+    line(2030, 1, 6);
+
+    sect("F. Feasts of the Lord on OT / Christmas Sundays");
+    line(2025, 2, 2);    /* Presentation, Sunday */
+    line(2020, 2, 2);
+    line(2023, 8, 6);    /* Transfiguration, Sunday */
+    line(2028, 8, 6);
+    line(2025, 9, 14);   /* Exaltation, Sunday */
+    line(2031, 9, 14);
+    line(2025, 11, 9);   /* Lateran, Sunday */
+    line(2031, 11, 9);
+
+    sect("G. All Souls (Nov 2) - weekday and Sunday");
+    line(2026, 11, 2);   /* Monday */
+    line(2025, 11, 2);   /* Sunday */
+    line(2024, 11, 2);   /* Saturday */
+
+    sect("H. Transfers: Joseph / Annunciation / Immaculate Conception");
+    line(2023, 3, 19);   /* Joseph on Lent Sunday -> Mon 20 */
+    line(2023, 3, 20);
+    line(2028, 3, 19);
+    line(2028, 3, 20);
+    line(2008, 3, 15);   /* Joseph anticipated (Holy Wed 19) */
+    line(2008, 3, 19);
+    line(2035, 3, 17);   /* Joseph 2035 anticipated: 19 = Holy Monday */
+    line(2035, 3, 19);
+    line(2024, 3, 25);   /* Annunciation Holy Monday -> Apr 8 */
+    line(2024, 4, 8);
+    line(2008, 3, 25);   /* Easter Tuesday -> Mar 31 */
+    line(2008, 3, 31);
+    line(2029, 3, 25);   /* Palm Sunday -> Apr 9 */
+    line(2029, 4, 9);
+    line(2035, 3, 25);   /* Easter Sunday -> Apr 2 */
+    line(2035, 4, 2);
+    line(2024, 12, 8);   /* IC on Advent Sunday -> Mon 9 */
+    line(2024, 12, 9);
+    line(2030, 12, 8);
+    line(2030, 12, 9);
+    line(2027, 12, 12);  /* Guadalupe on Advent Sunday (US feast) */
+
+    sect("I. Movable solemnities / feasts / memorials");
+    line(2026, 5, 14);   /* Ascension Thu = St Matthias */
+    line(2026, 5, 17);   /* Easter VII (US Ascension) */
+    line(2026, 5, 24);   /* Pentecost */
+    line(2026, 5, 25);   /* Mary Mother of the Church */
+    line(2026, 5, 31);   /* Trinity Sunday (= Visitation date) */
+    line(2026, 6, 4);    /* Corpus Christi Thu */
+    line(2026, 6, 7);    /* Corpus Christi Sunday (US) */
+    line(2026, 6, 12);   /* Sacred Heart */
+    line(2026, 6, 13);   /* Immaculate Heart = St Anthony */
+    line(2022, 6, 23);   /* JB anticipated in 2022 */
+    line(2022, 6, 24);   /* Sacred Heart 2022 = JB date */
+    line(2026, 11, 22);  /* Christ the King */
+    line(2025, 11, 23);
+    line(2025, 12, 28);  /* Holy Family (Sunday in octave) */
+    line(2027, 12, 26);  /* Holy Family displaces Stephen */
+    line(2022, 12, 30);  /* Holy Family when Christmas is Sunday */
+    line(2026, 1, 11);   /* Baptism of the Lord */
+    line(2019, 1, 7);    /* lib: Baptism Monday */
+    line(2019, 1, 13);   /* actual Baptism 2019 */
+    line(2019, 1, 14);
+    line(2019, 1, 19);
+    line(2019, 1, 21);
+
+    sect("J. Memorials in privileged seasons");
+    line(2025, 3, 7);    /* Perpetua & Felicity, Lent Friday */
+    line(2026, 3, 17);   /* St Patrick, Lent Tuesday */
+    line(2026, 2, 23);   /* Polycarp, Lent Monday */
+    line(2025, 12, 3);   /* Francis Xavier, Advent weekday (before 17) */
+    line(2026, 12, 21);  /* Peter Canisius, Dec 21 Monday */
+    line(2026, 12, 23);  /* John of Kanty */
+    line(2026, 12, 29);  /* Becket, Christmas octave */
+    line(2026, 12, 31);  /* Sylvester, Christmas octave */
+    line(2026, 1, 2);    /* Basil & Gregory, after octave */
+    line(2026, 2, 22);   /* Chair of Peter on Lent Sunday */
+    line(2027, 2, 22);   /* Chair of Peter on Lent weekday? */
+    line(2026, 1, 20);   /* optional memorial weekday */
+    line(2026, 10, 19);  /* Brebeuf/Jogues + Paul of the Cross */
+    line(2026, 4, 25);   /* St Mark Saturday Easter II */
+
+    sect("K. Colours: Palm Sunday, Triduum, Gaudete, Laetare, Pentecost");
+    line(2026, 3, 29);   /* Palm Sunday */
+    line(2026, 3, 30);   /* Holy Monday */
+    line(2026, 4, 2);    /* Holy Thursday */
+    line(2026, 4, 3);    /* Good Friday */
+    line(2026, 4, 4);    /* Holy Saturday */
+    line(2026, 4, 5);    /* Easter */
+    line(2026, 4, 12);   /* Divine Mercy / Easter II */
+    line(2026, 12, 13);  /* Gaudete */
+    line(2026, 3, 15);   /* Laetare */
+    line(2026, 2, 18);   /* Ash Wednesday */
+    line(2026, 2, 19);
+    line(2026, 2, 21);
+
+    sect("L. Week / psalter / cycle boundaries");
+    line(2025, 11, 29);  /* Sat before Advent */
+    line(2025, 11, 30);  /* Advent I */
+    line(2025, 12, 24);
+    line(2025, 12, 25);
+    line(2026, 1, 3);
+    line(2026, 1, 4);    /* 2nd Sunday after Christmas */
+    line(2026, 1, 12);
+    line(2026, 2, 17);   /* day before Ash Wed */
+    line(2026, 2, 22);   /* Lent I */
+    line(2026, 5, 23);   /* Sat before Pentecost */
+    line(2008, 5, 12);   /* Monday after Pentecost, early Easter year */
+    line(2038, 6, 14);   /* Monday after Pentecost, late Easter year */
+    line(2008, 1, 13);   /* OT before Lent in early year */
+    line(2008, 2, 5);
+    line(2038, 3, 9);    /* last day before Ash Wed in late year */
+
+    sect("M. Robustness");
+    {
+        int i;
+        AnchoresMobiles* first = calendarium_anchorae(CAL, 3000);
+        AnchoresMobiles* again;
+        for (i = 0; i < 25; i++) calendarium_anchorae(CAL, 3001 + i);
+        again = calendarium_anchorae(CAL, 3000);
+        printf("cache after 26 distinct years: year3000 recomputed=%s annus=%d\n",
+            first == again ? "no" : "yes", again->annus);
+        /* descending scan: does eviction still give correct values? */
+        for (i = 2100; i >= 2000; i--) {
+            AnchoresMobiles* a = calendarium_anchorae(CAL, i);
+            Dies e = fasti_computus(i);
+            if (a->annus != i || a->pascha.dies != e.dies || a->pascha.mensis != e.mensis) printf("CACHE WRONG %d\n", i);
+        }
+        printf("descending scan 2100..2000 checked\n");
+        {
+            unsigned long before = 0;
+            Dies dd = fasti_dies(2026, 1, 1);
+            (void)before;
+            for (i = 0; i < 365; i++) { calendarium_obtinere_diem(CAL, dd, P); dd = fasti_addere_dies(dd, 1); }
+            printf("365 obtinere_diem calls OK\n");
+        }
+        printf("cyclus_dominicalis(-1)=%d quotidianus(-1)=%d\n",
+            (int)calendarium_cyclus_dominicalis(-1), (int)calendarium_cyclus_quotidianus(-1));
+        {
+            Dies e = fasti_computus(1000);
+            printf("computus(1000)=%d-%d-%d (Julian-era year, not rejected)\n", e.annus, e.mensis, e.dies);
+            e = fasti_computus(-5);
+            printf("computus(-5)=%d-%d-%d\n", e.annus, e.mensis, e.dies);
+        }
+        line(2026, 2, 30);   /* invalid date */
+        {
+            Dies f = calendarium_invenire_festum(CAL, chorda_ex_literis("Easter", P), 2026);
+            printf("invenire_festum(Easter,2026)=%d-%d-%d\n", f.annus, f.mensis, f.dies);
+        }
+        {
+            chorda c = calendarium_nomen_celebrationum(fasti_dies(2029, 3, 25), P);
+            printf("nomen_celebrationum(2029-03-25)=%.*s\n", (int)c.mensura, (const char*)c.datum);
+            c = calendarium_nomen_celebrationum(fasti_dies(2026, 11, 1), P);
+            printf("nomen_celebrationum(2026-11-01)=%.*s\n", (int)c.mensura, (const char*)c.datum);
+            c = calendarium_nomen_celebrationum(fasti_dies(2026, 5, 14), P);
+            printf("nomen_celebrationum(2026-05-14)=%.*s\n", (int)c.mensura, (const char*)c.datum);
+        }
+    }
+    return 0;
+}

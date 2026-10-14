@@ -4,6 +4,7 @@
 #include "pictor_applicatio.h"
 #include "scriba_applicatio.h"
 #include "terminale.h"
+#include "kalendarium.h"
 #include "iussum.h"
 #include <stdio.h>
 #include <string.h>
@@ -98,12 +99,602 @@ dies_iussum (
     redde VERUM;
 }
 
+
+/* ==================================================
+ * $question<>...</> (Franus 2026-10-13): quaestio ad exemplar per
+ * portam (applicatio fenestrae: vates); responsum in lineas albas
+ * finales paginae, numquam ultra
+ * ================================================== */
+
+#define QUAESTIO_EXEMPLAR_NOMEN "claude-opus-5-5"
+#define QUAESTIO_INITIUM        "<answer>"
+#define QUAESTIO_FINIS          "</>"
+
+nomen structura {
+    VicusPortaQuaestionis porta;
+                      b32 posita;   /* porta data (fenestra) */
+} ContextusQuaestionis;
+
+#define QUAESTIO_MARGO II   /* columnae vacuae utrimque (Franus) */
+
+/* status dispositionis: exitus (NIHIL = numerare solum) */
+nomen structura {
+        i8* exitus;
+       s32  o;
+       s32  columna;
+       s32  lineae;
+       b32  nuda;      /* linea sine octeto adhuc (margo nondum) */
+       s32  margo;
+} Dispositio;
+
+interior vacuum
+dispositionem_scribere (
+    Dispositio* d,
+   constans i8* datum,
+           s32  n)
+{
+    si (d->nuda && n > ZEPHYRUM)
+    {
+        s32 k;
+        per (k = ZEPHYRUM; k < d->margo; k++)
+        {
+            si (d->exitus)
+            {
+                d->exitus[d->o] = (i8)' ';
+            }
+            d->o++;
+        }
+        d->columna  = d->margo;
+        d->nuda     = FALSUM;
+    }
+    si (d->exitus && n > ZEPHYRUM)
+    {
+        memcpy(d->exitus + d->o, datum, (memoriae_index)n);
+    }
+    d->o        += n;
+    d->columna  += n;
+}
+
+interior vacuum
+dispositionis_linea_nova (
+    Dispositio* d)
+{
+    si (d->exitus)
+    {
+        d->exitus[d->o] = (i8)'\n';
+    }
+    d->o++;
+    d->lineae++;
+    d->columna  = ZEPHYRUM;
+    d->nuda     = VERUM;
+}
+
+/* marca lineae logicae post indentationem: "- " "* " "+ " "> " "# " aut
+ * "N. " "N) "; redde longitudinem (0 = nulla) */
+interior s32
+marca_longitudo (
+    constans i8* t,
+            s32  n)
+{
+    s32 k = ZEPHYRUM;
+
+    si (   n >= II && t[I] == (i8)' '
+        && (t[0] == (i8)'-' || t[0] == (i8)'*' || t[0] == (i8)'+'
+            || t[0] == (i8)'>' || t[0] == (i8)'#'))
+    {
+        redde II;
+    }
+    dum (k < n && k < IX && t[k] >= (i8)'0' && t[k] <= (i8)'9')
+    {
+        k++;
+    }
+    si (   k > ZEPHYRUM && k + I < n
+        && (t[k] == (i8)'.' || t[k] == (i8)')') && t[k + I] == (i8)' ')
+    {
+        redde k + II;
+    }
+    redde ZEPHYRUM;
+}
+
+/* lineae logicae (quaestio.h: '\t' ducens = verbatim; aliter indentatio
+ * + marca + verba refluenda; linea vacua = separatio) in lineas paginae
+ * latitudinis W cum margine QUAESTIO_MARGO utrimque: "<answer>" ante
+ * primam, "</>" post ultimam; textus refluit cum indentatione pendente
+ * post marcam, verbatim numquam refluit (longior frangitur). ellipsis:
+ * "..." post textum. Redde numerum linearum; exitus (si datus) eas '\n'
+ * iunctas accipit */
+interior s32
+responsum_disponere (
+    constans i8* t,
+            s32  n,
+            s32  w,
+            b32  ellipsis,
+             i8* exitus,
+            s32* longitudo)
+{
+    Dispositio d;
+           s32 dextra;
+           s32 i              = ZEPHYRUM;
+           b32 sola_marca     = VERUM;   /* linea prima: "<answer>" solum */
+           b32 vacua_pendens  = FALSUM;
+
+    d.exitus   = exitus;
+    d.o        = ZEPHYRUM;
+    d.columna  = ZEPHYRUM;
+    d.lineae   = I;
+    d.nuda     = VERUM;
+    d.margo = (w - II * QUAESTIO_MARGO
+        >= XX) ? QUAESTIO_MARGO : ZEPHYRUM;
+    dextra = w - d.margo;
+    dispositionem_scribere(&d, (constans i8*)QUAESTIO_INITIUM,
+        (s32)strlen(QUAESTIO_INITIUM));
+    dum (i < n)
+    {
+        s32 f = i;
+        s32 k;
+        s32 m;
+
+        dum (f < n && t[f] != (i8)'\n')
+        {
+            f++;
+        }
+        si (f == i)
+        {
+            vacua_pendens  = !sola_marca;
+            i              = f + I;
+            perge;
+        }
+        si (!sola_marca || t[i] == (i8)'\t')
+        {
+            dispositionis_linea_nova(&d);
+            si (vacua_pendens)
+            {
+                dispositionis_linea_nova(&d);
+            }
+        }
+        sola_marca     = FALSUM;
+        vacua_pendens  = FALSUM;
+        si (t[i] == (i8)'\t')
+        {
+            /* verbatim: frusta latitudinis interioris */
+            s32 a      = i + I;
+            s32 latus  = dextra - d.margo;
+            b32 prima  = VERUM;
+            dum (prima || a < f)
+            {
+                s32 q = f - a < latus ? f - a : latus;
+                si (!prima)
+                {
+                    dispositionis_linea_nova(&d);
+                }
+                dispositionem_scribere(&d, t + a, q);
+                a      += q;
+                prima  = FALSUM;
+            }
+            i = f + I;
+            perge;
+        }
+        /* textus: indentatio + marca, deinde verba */
+        k = ZEPHYRUM;
+        dum (i + k < f && t[i + k] == (i8)' ')
+        {
+            k++;
+        }
+        m = marca_longitudo(t + i + k, f - i - k);
+        dispositionem_scribere(&d, t + i, k + m);
+        {
+            s32 pendens  = k + m;
+            s32 a        = i + k + m;
+            b32 initium  = VERUM;   /* nullum verbum adhuc post marcam */
+
+            dum (a < f)
+            {
+                s32 b;
+                si (t[a] == (i8)' ')
+                {
+                    a++;
+                    perge;
+                }
+                b = a;
+                dum (b < f && t[b] != (i8)' ')
+                {
+                    b++;
+                }
+                dum (a < b)
+                {
+                    s32 spatium  = initium ? ZEPHYRUM : I;
+                    s32 locus    = dextra - d.columna - spatium;
+                    s32 q        = b - a;
+                    si (   q > locus && (q <= dextra - d.margo - pendens
+                        || locus <= ZEPHYRUM))
+                    {
+                        s32 r;
+                        dispositionis_linea_nova(&d);
+                        per (r = ZEPHYRUM; r < pendens; r++)
+                        {
+                            dispositionem_scribere(&d,
+                                (constans i8*)" ", I);
+                        }
+                        si (pendens == ZEPHYRUM)
+                        {
+                            dispositionem_scribere(&d, (constans i8*)"",
+                                ZEPHYRUM);
+                        }
+                        spatium = ZEPHYRUM;
+                        locus = dextra - (d.nuda ? d.margo : d.columna);
+                    }
+                    si (q > locus)
+                    {
+                        q = locus;   /* verbum longius quam linea */
+                    }
+                    si (spatium)
+                    {
+                        dispositionem_scribere(&d, (constans i8*)" ",
+                            I);
+                    }
+                    dispositionem_scribere(&d, t + a, q);
+                    a        += q;
+                    initium  = FALSUM;
+                }
+            }
+        }
+        i = f + I;
+    }
+    si (ellipsis)
+    {
+        si (d.columna + III > dextra)
+        {
+            dispositionis_linea_nova(&d);
+        }
+        dispositionem_scribere(&d, (constans i8*)"...", III);
+    }
+    si (d.nuda || d.columna + (s32)strlen(QUAESTIO_FINIS) > dextra)
+    {
+        dispositionis_linea_nova(&d);
+    }
+    dispositionem_scribere(&d, (constans i8*)QUAESTIO_FINIS,
+        (s32)strlen(QUAESTIO_FINIS));
+    *longitudo = d.o;
+    redde d.lineae;
+}
+
+/* responsum in L lineas: totum si capit; aliter praefixum longissimum
+ * quod ad finem lineae logicae aut sententiae ('.', '!', '?') desinit;
+ * aliter ad verbum cum "..." */
+interior chorda
+responsum_aptare (
+    chorda  textus,
+       s32  w,
+       s32  l,
+   Piscina* piscina)
+{
+    chorda  c;
+        i8* q;
+       s32  n;
+       s32  k;
+
+    q = (i8*)piscina_allocare(piscina,
+        (memoriae_index)((s32)textus.mensura
+        * II + w * IV + LXIV));
+    c.datum = q;
+    si (responsum_disponere(textus.datum, (s32)textus.mensura, w,
+        FALSUM,
+            NIHIL, &n) <= l)
+    {
+        (vacuum)responsum_disponere(textus.datum, (s32)textus.mensura,
+            w,
+            FALSUM, q, &n);
+        c.mensura = (i32)n;
+        redde c;
+    }
+    per (k = (s32)textus.mensura - I; k > ZEPHYRUM; k--)
+    {
+         i8 x          = textus.datum[k];
+        s32 longitudo  = -I;
+        si (x == (i8)'\n')
+        {
+            longitudo = k;
+        }
+        alioquin si (   (x == (i8)'.' || x == (i8)'!' || x == (i8)'?')
+                     && (k + I == (s32)textus.mensura
+                         || textus.datum[k + I] == (i8)' '
+                         || textus.datum[k + I] == (i8)'\n'))
+        {
+            longitudo = k + I;
+        }
+        si (   longitudo > ZEPHYRUM
+            && responsum_disponere(textus.datum, longitudo, w, FALSUM,
+            NIHIL,
+                   &n) <= l)
+        {
+            (vacuum)responsum_disponere(textus.datum, longitudo, w,
+                FALSUM, q,
+                &n);
+            c.mensura = (i32)n;
+            redde c;
+        }
+    }
+    per (k = (s32)textus.mensura - I; k > ZEPHYRUM; k--)
+    {
+        si (   (textus.datum[k] == (i8)' '
+            || textus.datum[k] == (i8)'\n')
+            && responsum_disponere(textus.datum, k, w, VERUM, NIHIL, &n)
+                <= l)
+        {
+            (vacuum)responsum_disponere(textus.datum, k, w, VERUM, q,
+                &n);
+            c.mensura = (i32)n;
+            redde c;
+        }
+    }
+    (vacuum)responsum_disponere(textus.datum, ZEPHYRUM, w, VERUM, q,
+        &n);
+    c.mensura = (i32)n;
+    redde c;
+}
+
+chorda
+vicus_quaestio_disponere (
+      chorda  planatum,
+         s32  w,
+         s32  l,
+     Piscina* piscina)
+{
+    redde chorda_concatenare(chorda_ex_literis("\n", piscina),
+        responsum_aptare(planatum, w, l, piscina), piscina);
+}
+
+/* opus $question (quaestio-rivus T8): porta pulsatur, textus planatus
+ * disponitur; pagina plena -> porta abrumpitur; piscina propria in fine
+ * destruitur (textus redditi in piscina pulsus) */
+nomen structura {
+               IussumOpus  opus;        /* primum */
+    VicusPortaQuaestionis  porta;
+                   vacuum* manubrium;
+                  Piscina* piscina;     /* propria */
+                   chorda  textus;      /* planatum ultimum */
+                      s32  w;
+                      s32  l;
+} OpusQuaestionis;
+
+interior chorda
+quaestionis_nuntius (
+     constans character* praefixum,
+                 chorda  textus,
+                Piscina* piscina)
+{
+    redde chorda_concatenare(chorda_ex_literis(praefixum, piscina),
+        textus, piscina);
+}
+
+/* textus + paragraphus ultimus (marca) */
+interior chorda
+cum_marca (
+                chorda  textus,
+    constans character* marca,
+               Piscina* piscina)
+{
+    chorda c = chorda_concatenare(chorda_ex_literis("", piscina),
+        textus,
+        piscina);
+
+    si (c.mensura > ZEPHYRUM)
+    {
+        c = chorda_concatenare(c, chorda_ex_literis("\n\n", piscina),
+            piscina);
+    }
+    redde chorda_concatenare(c, chorda_ex_literis(marca, piscina),
+        piscina);
+}
+
+interior vacuum
+opus_quaestionis_finire (
+    OpusQuaestionis* opera)
+{
+    Piscina* p = opera->piscina;
+
+    opera->piscina = NIHIL;
+    si (p)
+    {
+        piscina_destruere(p);
+    }
+}
+
+interior IussumOpusStatus
+opus_quaestionis_pulsare (
+    IussumOpus* opus,
+       Piscina* piscina,
+        chorda* textus,
+        chorda* nuntius,
+           b32* mutatum)
+{
+           OpusQuaestionis* opera = (OpusQuaestionis*)opus->datum;
+    VicusPulsusQuaestionis  p;
+                       s32  n;
+                    chorda  planatum;
+                 character  usus[XCVI];
+
+    p = opera->porta.pulsare(opera->manubrium, opera->piscina);
+    si (p.mutatum)
+    {
+        opera->textus = chorda_concatenare(chorda_ex_literis("",
+            opera->piscina), p.textus, opera->piscina);
+    }
+    planatum = chorda_concatenare(chorda_ex_literis("", piscina),
+        opera->textus, piscina);
+    si (p.error.mensura > ZEPHYRUM)
+    {
+        *nuntius = quaestionis_nuntius("question: ", p.error, piscina);
+        si (planatum.mensura == ZEPHYRUM)
+        {
+            opus_quaestionis_finire(opera);
+            redde IUSSUM_OPUS_IRRITUM;
+        }
+        *textus = vicus_quaestio_disponere(cum_marca(planatum,
+            chorda_ut_cstr(quaestionis_nuntius("[error: ",
+            chorda_concatenare(
+            p.error, chorda_ex_literis("]", piscina), piscina),
+            piscina),
+            piscina), piscina), opera->w, opera->l, piscina);
+        opus_quaestionis_finire(opera);
+        redde IUSSUM_OPUS_FINITUM;
+    }
+    si (p.mutatum)
+    {
+        /* pagina plena: rivus sistitur, praecisio ad finem
+         * sententiae */
+        si (responsum_disponere(planatum.datum, (s32)planatum.mensura,
+                opera->w, FALSUM, NIHIL, &n) > opera->l)
+        {
+            opera->porta.abrumpere(opera->manubrium);
+            *textus = vicus_quaestio_disponere(planatum, opera->w,
+                opera->l,
+                piscina);
+            *nuntius = chorda_ex_literis("question: page full",
+                piscina);
+            opus_quaestionis_finire(opera);
+            redde IUSSUM_OPUS_FINITUM;
+        }
+        *textus = vicus_quaestio_disponere(planatum, opera->w, opera->l,
+            piscina);
+        *mutatum = VERUM;
+    }
+    si (p.finitus)
+    {
+        si (planatum.mensura == ZEPHYRUM)
+        {
+            *nuntius = chorda_ex_literis("question: empty answer",
+                piscina);
+            opus_quaestionis_finire(opera);
+            redde IUSSUM_OPUS_IRRITUM;
+        }
+        sprintf(usus, "question: %ld in, %ld out", (longus)p.input,
+            (longus)p.output);
+        *textus = vicus_quaestio_disponere(planatum, opera->w, opera->l,
+            piscina);
+        *nuntius = chorda_ex_literis(usus, piscina);
+        opus_quaestionis_finire(opera);
+        redde IUSSUM_OPUS_FINITUM;
+    }
+    redde IUSSUM_OPUS_CURRIT;
+}
+
+interior vacuum
+opus_quaestionis_abrumpere (
+    IussumOpus* opus,
+       Piscina* piscina,
+        chorda* textus,
+        chorda* nuntius)
+{
+    OpusQuaestionis* opera = (OpusQuaestionis*)opus->datum;
+             chorda  planatum;
+
+    opera->porta.abrumpere(opera->manubrium);
+    planatum = chorda_concatenare(chorda_ex_literis("", piscina),
+        opera->textus, piscina);
+    *textus = vicus_quaestio_disponere(cum_marca(planatum,
+        "[cancelled]",
+        piscina), opera->w, opera->l, piscina);
+    *nuntius = chorda_ex_literis("question: cancelled", piscina);
+    opus_quaestionis_finire(opera);
+}
+
+interior b32
+quaestionem_iussum (
+    constans Iussum* iussum,
+             vacuum* ctx,
+            Piscina* piscina,
+     IussumEffectus* effectus)
+{
+    ContextusQuaestionis* cq  = (ContextusQuaestionis*)ctx;
+                     s32  w   = iussum->latitudo_tabulae;
+                     s32  l   = iussum->lineae_liberae;
+                     s32  lineae;
+                     s32  latitudo;
+                 Piscina* propria;
+         OpusQuaestionis* opera;
+                  chorda  error;
+
+    si (!iussum->corpus || iussum->numerus_argumentorum != I)
+    {
+        effectus->error = chorda_ex_literis(
+            "question: write $question<>...</>", piscina);
+        redde VERUM;
+    }
+    si (l < I)
+    {
+        effectus->error = chorda_ex_literis(
+            "question: no free lines below", piscina);
+        redde VERUM;
+    }
+    si (!cq || !cq->posita)
+    {
+        effectus->error = chorda_ex_literis(
+            "question: no API port (window app only)", piscina);
+        redde VERUM;
+    }
+    si (!iussum->iterum)
+    {
+        effectus->differre = VERUM;
+        effectus->nuntius = chorda_ex_literis(
+            "question: asking " QUAESTIO_EXEMPLAR_NOMEN "...", piscina);
+        redde VERUM;
+    }
+    /* R8: linea "<answer>" non textus; margines non textus */
+    lineae    = l - I >= I ? l - I : I;
+    latitudo  = w - II * QUAESTIO_MARGO >= XX ? w - II * QUAESTIO_MARGO
+                                            : w;
+    propria   = piscina_generare_dynamicum("quaestio_opus", LXIV * M);
+    opera        = propria ? (OpusQuaestionis*)piscina_allocare(propria,
+        magnitudo(OpusQuaestionis)) : NIHIL;
+    si (!opera)
+    {
+        si (propria)
+        {
+            piscina_destruere(propria);
+        }
+        effectus->error = chorda_ex_literis("question: out of memory",
+            piscina);
+        redde VERUM;
+    }
+    memset(opera, ZEPHYRUM, magnitudo(OpusQuaestionis));
+    error.datum    = NIHIL;
+    error.mensura  = ZEPHYRUM;
+    opera->manubrium  = cq->porta.incipere(cq->porta.ctx,
+        iussum->argumenta[ZEPHYRUM], lineae, latitudo, propria, &error);
+    si (!opera->manubrium)
+    {
+        effectus->error = quaestionis_nuntius("question: ",
+            chorda_concatenare(chorda_ex_literis("", piscina), error,
+            piscina), piscina);
+        piscina_destruere(propria);
+        redde VERUM;
+    }
+    opera->porta           = cq->porta;
+    opera->piscina         = propria;
+    opera->textus          = chorda_ex_literis("", propria);
+    opera->w               = w;
+    opera->l               = l;
+    opera->opus.datum      = opera;
+    opera->opus.pulsare    = opus_quaestionis_pulsare;
+    opera->opus.abrumpere  = opus_quaestionis_abrumpere;
+    effectus->opus         = &opera->opus;
+    effectus->caput     = chorda_ex_literis("<question answered>",
+        piscina);
+    effectus->nuntius   = chorda_ex_literis(
+        "question: streaming... (Esc cancels)", piscina);
+    redde VERUM;
+}
+
 /* S3c: verba aperientia ('$terminale', '$scriba(nomen)',
  * '$pictor(nomen)') - latus in acervo tabulae activae (petitio,
  * pulsu proximo applicata); signum manet (non consumunt) */
 nomen structura {
                   Vicus* vicus;
      constans character* genus;
+     /* A4: '$agenda' = genus calendarium cum "agenda"; NIHIL =
+      * argumentum ab usore */
+     constans character* argumentum_fixum;
 } ContextusAperiendi;
 
 /* S3e: contextus generis pictoris - memoria picturarum COMMUNIS omnium
@@ -199,8 +790,9 @@ aperire_iussum (
         redde VERUM;
     }
     si (!vicus_acervo_aperire(ca->vicus, ca->genus,
-            arg.mensura > ZEPHYRUM ? chorda_ut_cstr(arg, piscina)
-                                   : NIHIL))
+            ca->argumentum_fixum ? ca->argumentum_fixum
+            : arg.mensura > ZEPHYRUM ? chorda_ut_cstr(arg, piscina)
+                                     : NIHIL))
     {
         effectus->error = chorda_concatenare(chorda_ex_literis(
             ca->genus, piscina), chorda_ex_literis(
@@ -224,9 +816,35 @@ aperiens_registrare (
     {
         redde FALSUM;
     }
-    ca->vicus = v;
-    ca->genus = genus;
+    ca->vicus             = v;
+    ca->genus             = genus;
+    ca->argumentum_fixum  = NIHIL;
     redde iussum_registrare(r, genus, FALSUM, aperire_iussum, ca);
+}
+
+/* A4: verbum quod genus cum argumento fixo aperit ('$agenda' =
+ * calendarium "agenda") */
+interior b32
+aperiens_fixum_registrare (
+        IussumRegistrum* r,
+                  Vicus* v,
+     constans character* verbum,
+     constans character* genus,
+     constans character* argumentum,
+                Piscina* piscina)
+{
+    ContextusAperiendi* ca;
+
+    ca = (ContextusAperiendi*)piscina_allocare(piscina,
+        magnitudo(ContextusAperiendi));
+    si (!ca)
+    {
+        redde FALSUM;
+    }
+    ca->vicus             = v;
+    ca->genus             = genus;
+    ca->argumentum_fixum  = argumentum;
+    redde iussum_registrare(r, verbum, FALSUM, aperire_iussum, ca);
 }
 
 interior b32
@@ -701,6 +1319,115 @@ terminale_describere (
     f->focus_in_apertura = VERUM;
 }
 
+/* agenda-plan A2: calendarium - documentum agendae UNUM per volumen
+ * vici (spatium "agenda"), pigre apertum, commune omnibus lateribus
+ * calendarii; hodie ex horologio vici (probationes fictum ponunt) */
+nomen structura {
+                  Vicus* vicus;
+                Volumen* volumen;
+                Piscina* piscina;
+    InternamentumChorda* intern;
+       AgendaDocumentum* documentum;
+        StatusSystemata* systemata;
+} ContextusKalendarii;
+
+/* porta 'hodie' calendarii: horologium vici (fons ipse lectionis
+ * tempus_* radicis); nullum = FALSUM */
+interior b32
+hodie_vici (
+    vacuum* ctx,
+      Dies* hodie)
+{
+          Vicus* v;
+    VicusTempus  t;
+
+    v = (Vicus*)ctx;
+    si (!v || !v->horologium)
+    {
+        redde FALSUM;
+    }
+    memset(&t, ZEPHYRUM, magnitudo(t));
+    v->horologium(v->horologium_ctx, &t);
+    *hodie = fasti_dies(t.annus, t.mensis, t.dies);
+    redde fasti_dies_valida(*hodie);
+}
+
+interior b32
+kalendarium_montare_in_vico (
+                 vacuum* sedes,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+     InsulaRepositorium* repo,
+     constans character* id,
+     constans character* argumentum,
+                    i32  latitudo,
+                    i32  altitudo,
+                 vacuum* ctx)
+{
+    ContextusKalendarii* ck;
+
+    ck = (ContextusKalendarii*)ctx;
+    si (!ck)
+    {
+        redde FALSUM;
+    }
+    si (!ck->documentum)
+    {
+        ck->documentum = agenda_aperire(ck->piscina, ck->intern,
+            ck->volumen, "agenda", ZEPHYRUM);
+    }
+    redde kalendarium_montare((KalendariumMontatio*)sedes, piscina,
+        intern, repo, id, (argumentum && argumentum[ZEPHYRUM])
+        ? argumentum : NIHIL, ck->documentum, volumen, latitudo,
+        altitudo, hodie_vici,
+        ck->vicus,
+        ck->systemata);
+}
+
+interior b32
+kalendarii_argumentum_ponere (
+                 vacuum* ctx,
+     constans character* argumentum)
+{
+    redde kalendarium_argumentum_ponere((KalendariumMontatio*)ctx,
+        argumentum);
+}
+
+/* A6e: pulsus lateris calendarii - notae refectae */
+interior VicusPulsus
+kalendarii_pulsare (
+    vacuum* ctx)
+{
+    VicusPulsus p;
+
+    p.mutatum = kalendarium_reficere((KalendariumMontatio*)ctx);
+    p.finitus = FALSUM;
+    redde p;
+}
+
+interior vacuum
+kalendarium_describere (
+         vacuum* montatio,
+    VicusFacies* f)
+{
+    KalendariumMontatio* m;
+
+    m                         = (KalendariumMontatio*)montatio;
+    f->actiones               = m->actiones;
+    f->figurae                = m->figurae;
+    f->componere              = kalendarium_componere;
+    f->componere_ctx          = m;
+    f->argumentum_ponere      = kalendarii_argumentum_ponere;
+    f->argumentum_ponere_ctx  = m;
+    /* A6d: notae diei - gestus scribae nidificatae */
+    f->gestum_ponere  = kalendarium_gestum_ponere;
+    f->gestum_ctx     = m;
+    /* A6e: pulsus - indicium paginae notarum */
+    f->pulsare      = kalendarii_pulsare;
+    f->pulsare_ctx  = m;
+}
+
 /* folium paginae novae (S2b): lateris sinistri cellulae (dimidium
  * cellulis rotundatum) minus margines; altitudo minus linea tabularum,
  * status, margines - minima ut scriba (XX x X) */
@@ -763,6 +1490,28 @@ vicus_volumen_aperire (
 }
 
 vacuum
+vicus_applicatio_quaestionis_portam_ponere (
+                   VicusApplicatio* app,
+    constans VicusPortaQuaestionis* porta)
+{
+    ContextusQuaestionis* cq;
+
+    si (!app || !app->quaestionis)
+    {
+        redde;
+    }
+    cq = (ContextusQuaestionis*)app->quaestionis;
+    si (   !porta || !porta->incipere || !porta->pulsare
+        || !porta->abrumpere)
+    {
+        memset(cq, ZEPHYRUM, magnitudo(ContextusQuaestionis));
+        redde;
+    }
+    cq->porta   = *porta;
+    cq->posita  = VERUM;
+}
+
+vacuum
 vicus_applicatio_imaginis_portam_ponere (
      VicusApplicatio* app,
         ImagoFructus (*porta)(vacuum* ctx, Piscina* piscina),
@@ -788,10 +1537,12 @@ vicus_applicatio_aedificare (
                     i32  latitudo,
                     i32  altitudo)
 {
-              chorda  causa;
-    ContextusScribae* cs;
-   ContextusPictoris* cp;
-     StatusSystemata* systemata;
+                chorda  causa;
+      ContextusScribae* cs;
+     ContextusPictoris* cp;
+   ContextusKalendarii* ck;
+  ContextusQuaestionis* cq;
+       StatusSystemata* systemata;
 
     si (!app || !piscina || !intern || !volumen)
     {
@@ -823,6 +1574,26 @@ vicus_applicatio_aedificare (
         cp->systemata  = systemata;
     }
     app->pictoris = cp;
+    /* A2: calendarium - documentum agendae commune */
+    ck = (ContextusKalendarii*)piscina_allocare(piscina,
+        magnitudo(ContextusKalendarii));
+    si (ck)
+    {
+        memset(ck, ZEPHYRUM, magnitudo(ContextusKalendarii));
+        ck->vicus      = app->vicus;
+        ck->volumen    = volumen;
+        ck->piscina    = piscina;
+        ck->intern     = intern;
+        ck->systemata  = systemata;
+    }
+    /* $question: porta nulla donec applicatio fenestrae ponit */
+    cq = (ContextusQuaestionis*)piscina_allocare(piscina,
+        magnitudo(ContextusQuaestionis));
+    si (cq)
+    {
+        memset(cq, ZEPHYRUM, magnitudo(ContextusQuaestionis));
+    }
+    app->quaestionis = cq;
     cs = (ContextusScribae*)piscina_allocare(piscina,
         magnitudo(ContextusScribae));
     cs->systemata = systemata;
@@ -831,6 +1602,9 @@ vicus_applicatio_aedificare (
     /* S3b: iussa omnium visuum scribae */
     cs->iussa = iussum_registrum_creare(piscina);
     si (   !app->vicus || !cs->liber || !cs->iussa
+        || !cq
+        || !iussum_registrare(cs->iussa, "question", FALSUM,
+               quaestionem_iussum, cq)
         || !iussum_registrare(cs->iussa, "dies", VERUM, dies_iussum,
                NIHIL)
         || !aperiens_registrare(cs->iussa, app->vicus, "terminale",
@@ -839,6 +1613,10 @@ vicus_applicatio_aedificare (
                piscina)
         || !aperiens_registrare(cs->iussa, app->vicus, "pictor",
                piscina)
+        || !aperiens_registrare(cs->iussa, app->vicus, "calendarium",
+               piscina)
+        || !aperiens_fixum_registrare(cs->iussa, app->vicus, "agenda",
+               "calendarium", "agenda", piscina)
         || !cyclum_registrare(cs->iussa, app->vicus, "pictor-next", I,
                piscina)
         || !cyclum_registrare(cs->iussa, app->vicus, "pictor-prev", -I,
@@ -855,6 +1633,10 @@ vicus_applicatio_aedificare (
                magnitudo(TerminaleApplicatio),
                terminale_montare_in_vico, terminale_describere,
                systemata)
+        || !ck
+        || !vicus_genus_addere(app->vicus, "calendarium",
+               magnitudo(KalendariumMontatio),
+               kalendarium_montare_in_vico, kalendarium_describere, ck)
         || !vicus_aperire(app->vicus, INDEX_ORDINARIUS))
     {
         causa = app->vicus ? vicus_causa(app->vicus)

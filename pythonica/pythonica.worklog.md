@@ -1110,3 +1110,14 @@ the open ledger question (…GGMGY94).
 - Live check: one comment appended to lib/portae.c made bin/fabrica stale;
   the precheck rebuilt it (~40 s) and passed on the second judgement.
 - Plants II (hand): heal disabled → red; a failed rebuild ignored → red.
+
+## 2026-10-13 — syntaxis: headers compiled alone tolerate unused statics
+
+`silva.planta` refused every plant in include/fons_8x16.h: its
+pre-check (`syntaxis`) compiles the planted copy ALONE as a .c with the
+house -Werror flags, and a header's `static const` table (or static
+function) is necessarily unused there - "unused variable 'fons_8x16'".
+Real users include the header; the gates compile it in context. Now a
+`.h` adds -Wno-unused-const-variable -Wno-unused-function for the
+pre-check only; a genuine error in the header is still reported (both
+cases in probatio_silva.py).

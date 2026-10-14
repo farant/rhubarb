@@ -244,3 +244,12 @@ motus_captura_tollere (
     motus->captura.mensura  = ZEPHYRUM;
     motus->captura.datum    = NIHIL;
 }
+
+b32
+motus_ramus_focatus (
+    constans Motus* motus,
+       InsulaRamus  ramus)
+{
+    redde !motus || chorda_vacua(ramus.via)
+        || chorda_aequalis(motus->spatium, ramus.via);
+}

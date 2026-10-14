@@ -722,6 +722,422 @@ _http_corpus_prohibitum (
         || status == CCCIV;
 }
 
+
+/* ========================================================================
+ * LECTOR RESPONSI INCREMENTALIS (quaestio-rivus-spec II.1)
+ * ======================================================================== */
+
+nomen enumeratio {
+    LECTOR_CAPITA = 0,
+    LECTOR_LONGITUDO,        /* Content-Length: reliqua */
+    LECTOR_CLAUSURA,         /* usque ad EOF */
+    LECTOR_FRUSTI_MENSURA,   /* chunked: linea magnitudinis */
+    LECTOR_FRUSTUM,          /* chunked: data */
+    LECTOR_FRUSTI_FINIS,     /* chunked: CRLF post data */
+    LECTOR_POSTREMA,         /* chunked: capita postrema usque vacuam */
+    LECTOR_FINITUS,
+    LECTOR_ERROR
+} LectorGradus;
+
+structura HttpLector {
+          Piscina* piscina;
+     HttpMethodus  methodus;
+        HttpRivus  rivus;
+           vacuum* rivi_datum;
+     LectorGradus  gradus;
+               i8* capita;
+              i32  capita_n;
+    HttpResponsum* responsum;
+               i8* corpus;
+              i32  corpus_n;
+              i32  corpus_capacitas;
+              i32  reliqua;
+              i32  frusti_mensura;
+              b32  hex_visum;
+              b32  in_extensione;
+              b32  cr_visum;
+              i32  linea_n;
+              b32  rivus_activus;
+           chorda  error;
+};
+
+interior HttpLectorStatus
+_lector_status_publicus (
+    constans HttpLector* l)
+{
+    commutatio (l->gradus)
+    {
+        casus LECTOR_CAPITA:   redde HTTP_LECTOR_CAPITA;
+        casus LECTOR_FINITUS:  redde HTTP_LECTOR_FINITUS;
+        casus LECTOR_ERROR:    redde HTTP_LECTOR_ERROR;
+        ordinarius:            redde HTTP_LECTOR_CORPUS;
+    }
+}
+
+interior vacuum
+_lector_errare (
+             HttpLector* l,
+     constans character* causa)
+{
+    l->gradus  = LECTOR_ERROR;
+    l->error   = chorda_ex_literis(causa, l->piscina);
+}
+
+interior vacuum
+_lector_corpus_addere (
+      HttpLector* l,
+    constans i8* octeti,
+             i32  n)
+{
+    si (n == ZEPHYRUM)
+    {
+        redde;
+    }
+    si (l->corpus_n + n > HTTP_LECTOR_CORPUS_MAXIMUM)
+    {
+        _lector_errare(l, "corpus nimium");
+        redde;
+    }
+    si (l->corpus_n + n > l->corpus_capacitas)
+    {
+        i32 capacitas = l->corpus_capacitas > ZEPHYRUM
+            ? l->corpus_capacitas : M;
+        i8* novum;
+
+        dum (capacitas < l->corpus_n + n)
+        {
+            capacitas *= II;
+        }
+        novum = (i8*)piscina_allocare(l->piscina, (i64)capacitas);
+        si (l->corpus_n > ZEPHYRUM)
+        {
+            memcpy(novum, l->corpus, (size_t)l->corpus_n);
+        }
+        l->corpus            = novum;
+        l->corpus_capacitas  = capacitas;
+    }
+    memcpy(l->corpus + l->corpus_n, octeti, (size_t)n);
+    l->corpus_n += n;
+    si (l->rivus_activus && l->rivus)
+    {
+        l->rivus(l->rivi_datum, octeti, n);
+    }
+}
+
+/* capita[0..capita_n) desinunt in \r\n\r\n: status, capita, modus
+ * corporis */
+interior vacuum
+_lector_capita_parare (
+    HttpLector* l)
+{
+    constans character* t      = (constans character*)l->capita;
+                   i32  finis  = l->capita_n - II;  /* ante \r\n ultimum */
+                   i32  a      = ZEPHYRUM;
+                   i32  b;
+                chorda  te;
+                chorda  cl;
+
+    l->responsum = (HttpResponsum*)piscina_allocare(l->piscina,
+        (i64)magnitudo(HttpResponsum));
+    memset(l->responsum, ZEPHYRUM, magnitudo(HttpResponsum));
+    l->responsum->capita = (HttpCaput*)piscina_allocare(l->piscina,
+        (i64)(HTTP_CAPITA_MAXIMA * (i32)magnitudo(HttpCaput)));
+    b = a;
+    dum (b + I < finis && !(t[b] == '\r' && t[b + I] == '\n'))
+    {
+        b++;
+    }
+    si (!_parse_status_line(t + a, b - a, l->responsum, l->piscina))
+    {
+        _lector_errare(l, "linea status prava");
+        redde;
+    }
+    a = b + II;
+    dum (a < finis)
+    {
+        b = a;
+        dum (b + I < finis + II && !(t[b] == '\r' && t[b + I] == '\n'))
+        {
+            b++;
+        }
+        si (b > a && l->responsum->capita_numerus < HTTP_CAPITA_MAXIMA)
+        {
+            _parse_header(t + a, b - a,
+                &l->responsum->capita[l->responsum->capita_numerus],
+                l->piscina);
+            l->responsum->capita_numerus++;
+        }
+        a = b + II;
+    }
+    l->rivus_activus = l->responsum->status >= CC
+        && l->responsum->status < CCC;
+    te = http_responsum_caput(l->responsum, "Transfer-Encoding");
+    cl = http_responsum_caput(l->responsum, "Content-Length");
+    si (   l->methodus == HTTP_HEAD
+        || _http_corpus_prohibitum(l->responsum->status))
+    {
+        l->gradus = LECTOR_FINITUS;
+    }
+    alioquin si (   te.mensura > ZEPHYRUM
+                 && _chorda_aequalis_literis_ignora_casus(te,
+                 "chunked"))
+    {
+        l->gradus          = LECTOR_FRUSTI_MENSURA;
+        l->frusti_mensura  = ZEPHYRUM;
+        l->hex_visum       = FALSUM;
+        l->in_extensione   = FALSUM;
+    }
+    alioquin si (cl.mensura > ZEPHYRUM)
+    {
+        l->reliqua  = _chorda_ad_i32(cl);
+        l->gradus   = l->reliqua == ZEPHYRUM ? LECTOR_FINITUS
+                                             : LECTOR_LONGITUDO;
+    }
+    alioquin
+    {
+        l->gradus = LECTOR_CLAUSURA;
+    }
+}
+
+HttpLector*
+http_lector_creare (
+        Piscina* piscina,
+    HttpMethodus methodus,
+       HttpRivus rivus,
+         vacuum* rivi_datum)
+{
+    HttpLector* l;
+
+    si (!piscina)
+    {
+        redde NIHIL;
+    }
+    l = (HttpLector*)piscina_allocare(piscina,
+        (i64)magnitudo(HttpLector));
+    memset(l, ZEPHYRUM, magnitudo(HttpLector));
+    l->piscina     = piscina;
+    l->methodus    = methodus;
+    l->rivus       = rivus;
+    l->rivi_datum  = rivi_datum;
+    l->gradus      = LECTOR_CAPITA;
+    l->capita      = (i8*)piscina_allocare(piscina,
+        (i64)HTTP_LECTOR_CAPITA_MAXIMA);
+    redde l;
+}
+
+HttpLectorStatus
+http_lector_adicere (
+      HttpLector* l,
+    constans i8* octeti,
+             i32  n)
+{
+    i32 i = ZEPHYRUM;
+
+    si (!l)
+    {
+        redde HTTP_LECTOR_ERROR;
+    }
+    dum (   i < n && l->gradus != LECTOR_FINITUS
+         && l->gradus != LECTOR_ERROR)
+    {
+         i8 c = octeti[i];
+        i32 k;
+
+        commutatio (l->gradus)
+        {
+            casus LECTOR_CAPITA:
+                si (l->capita_n >= HTTP_LECTOR_CAPITA_MAXIMA)
+                {
+                    _lector_errare(l, "capita nimia");
+                    frange;
+                }
+                l->capita[l->capita_n++] = c;
+                i++;
+                si (   l->capita_n                  >= IV
+                    && l->capita[l->capita_n - IV]  == '\r'
+                    && l->capita[l->capita_n - III] == '\n'
+                    && l->capita[l->capita_n - II]  == '\r'
+                    && l->capita[l->capita_n - I]   == '\n')
+                {
+                    _lector_capita_parare(l);
+                }
+                frange;
+            casus LECTOR_LONGITUDO:
+            casus LECTOR_FRUSTUM:
+                k = n - i < l->reliqua ? n - i : l->reliqua;
+                _lector_corpus_addere(l, octeti + i, k);
+                i          += k;
+                l->reliqua -= k;
+                si (l->gradus != LECTOR_ERROR && l->reliqua == ZEPHYRUM)
+                {
+                    si (l->gradus == LECTOR_LONGITUDO)
+                    {
+                        l->gradus = LECTOR_FINITUS;
+                    }
+                    alioquin
+                    {
+                        l->gradus    = LECTOR_FRUSTI_FINIS;
+                        l->cr_visum  = FALSUM;
+                    }
+                }
+                frange;
+            casus LECTOR_CLAUSURA:
+                _lector_corpus_addere(l, octeti + i, n - i);
+                i = n;
+                frange;
+            casus LECTOR_FRUSTI_MENSURA:
+                i++;
+                si (c == '\n')
+                {
+                    si (!l->hex_visum)
+                    {
+                        _lector_errare(l, "magnitudo frusti absens");
+                    }
+                    alioquin si (l->frusti_mensura == ZEPHYRUM)
+                    {
+                        l->gradus   = LECTOR_POSTREMA;
+                        l->linea_n  = ZEPHYRUM;
+                    }
+                    alioquin
+                    {
+                        l->gradus   = LECTOR_FRUSTUM;
+                        l->reliqua  = l->frusti_mensura;
+                    }
+                    l->frusti_mensura  = ZEPHYRUM;
+                    l->hex_visum       = FALSUM;
+                    l->in_extensione   = FALSUM;
+                }
+                alioquin si (c == '\r' || l->in_extensione)
+                {
+                    /* finis lineae aut extensio: neglegitur */
+                }
+                alioquin si (c == ';' || c == ' ' || c == '\t')
+                {
+                    l->in_extensione = l->hex_visum;
+                    si (!l->hex_visum)
+                    {
+                        _lector_errare(l, "magnitudo frusti prava");
+                    }
+                }
+                alioquin
+                {
+                    integer v = _hex_ad_valor(c);
+
+                    si (v < ZEPHYRUM)
+                    {
+                        _lector_errare(l, "magnitudo frusti prava");
+                    }
+                    alioquin si (l->frusti_mensura
+                                 > HTTP_LECTOR_CORPUS_MAXIMUM / XVI)
+                    {
+                        _lector_errare(l, "frustum nimium");
+                    }
+                    alioquin
+                    {
+                        l->frusti_mensura = l->frusti_mensura * XVI
+                            + (i32)v;
+                        l->hex_visum = VERUM;
+                    }
+                }
+                frange;
+            casus LECTOR_FRUSTI_FINIS:
+                i++;
+                si (c == '\r' && !l->cr_visum)
+                {
+                    l->cr_visum = VERUM;
+                }
+                alioquin si (c == '\n')
+                {
+                    l->gradus = LECTOR_FRUSTI_MENSURA;
+                }
+                alioquin
+                {
+                    _lector_errare(l, "finis frusti pravus");
+                }
+                frange;
+            casus LECTOR_POSTREMA:
+                i++;
+                si (c == '\n')
+                {
+                    si (l->linea_n == ZEPHYRUM)
+                    {
+                        l->gradus = LECTOR_FINITUS;
+                    }
+                    l->linea_n = ZEPHYRUM;
+                }
+                alioquin si (c != '\r')
+                {
+                    l->linea_n++;
+                }
+                frange;
+            ordinarius:
+                i = n;
+                frange;
+        }
+    }
+    redde _lector_status_publicus(l);
+}
+
+HttpLectorStatus
+http_lector_finire (
+    HttpLector* l)
+{
+    si (!l)
+    {
+        redde HTTP_LECTOR_ERROR;
+    }
+    si (l->gradus == LECTOR_CLAUSURA)
+    {
+        l->gradus = LECTOR_FINITUS;
+    }
+    alioquin si (l->gradus == LECTOR_CAPITA)
+    {
+        _lector_errare(l, l->capita_n == ZEPHYRUM ? "responsum vacuum"
+                                                  : "capita truncata");
+    }
+    alioquin si (   l->gradus != LECTOR_FINITUS
+                 && l->gradus != LECTOR_ERROR)
+    {
+        _lector_errare(l, "corpus truncatum");
+    }
+    redde _lector_status_publicus(l);
+}
+
+HttpLectorStatus
+http_lector_status (
+    constans HttpLector* l)
+{
+    redde l ? _lector_status_publicus(l) : HTTP_LECTOR_ERROR;
+}
+
+HttpResponsum*
+http_lector_responsum (
+    HttpLector* l)
+{
+    si (!l || !l->responsum)
+    {
+        redde NIHIL;
+    }
+    l->responsum->corpus.datum    = l->corpus;
+    l->responsum->corpus.mensura  = l->corpus_n;
+    redde l->responsum;
+}
+
+chorda
+http_lector_error (
+    constans HttpLector* l)
+{
+    chorda v;
+
+    si (l && l->gradus == LECTOR_ERROR)
+    {
+        redde l->error;
+    }
+    v.datum    = NIHIL;
+    v.mensura  = ZEPHYRUM;
+    redde v;
+}
+
 /* Corpus brevius quam Content-Length promisit: error nominatus cum
  * numeris (RFC 9112 6.3 - nuntius incompletus est). */
 interior HttpResultus
@@ -749,6 +1165,106 @@ _error_truncati (
     redde res;
 }
 
+/* petitio construitur, connexio aperitur (https: TLS), petitio
+ * mittitur; communis http_exsequi et http_exsequi_rivus (quaestio-rivus
+ * T2). FALSUM: *error impletum, connexio nulla relicta */
+interior b32
+_connexionem_aperire (
+     HttpPetitio*  petitio,
+         Piscina*  piscina,
+     TlsConnexio** tls,
+     TcpConnexio** tcp,
+    HttpResultus*  error)
+{
+    chorda petitio_str;
+       b32 est_https;
+
+    *tls = NIHIL;
+    *tcp = NIHIL;
+    /* Construere petitio string */
+    petitio_str = _construere_petitio(petitio);
+
+    /* Determinare si HTTPS */
+    est_https = chorda_aequalis_literis(petitio->schema, "https");
+
+    /* Connectere */
+    si (est_https)
+    {
+        TlsOptiones tls_opt = tls_optiones_default();
+        TlsResultus tls_res;
+
+        /* tempus vocantis etiam in https (vates-plan-1 T2): olim
+         * tls_connectere sine optionibus = XXX s semper, et vocatio
+         * exemplaris sine fluxu longior frangebatur */
+        si (petitio->tempus_ms > 0)
+        {
+            tls_opt.timeout_ms = (i32)petitio->tempus_ms;
+        }
+        tls_res = tls_connectere_cum_optionibus(
+            (constans character*)petitio->hospes.datum,
+            petitio->portus, &tls_opt, piscina);
+        si (!tls_res.successus)
+        {
+            error->successus         = FALSUM;
+            error->responsum         = NIHIL;
+            error->error             = HTTP_ERROR_CONNEXIO;
+            error->error_descriptio  = tls_res.error_descriptio;
+            redde FALSUM;
+        }
+        *tls = tls_res.connexio;
+    }
+    alioquin
+    {
+        TcpOptiones tcp_opt = tcp_optiones_default();
+        TcpResultus tcp_res;
+
+        si (petitio->tempus_ms > 0)
+        {
+            /* sutura tcp adhuc i32 - valor positivus custoditus */
+            tcp_opt.timeout_ms = (i32)petitio->tempus_ms;
+        }
+        tcp_res = tcp_connectere_cum_optionibus(
+            (constans character*)petitio->hospes.datum,
+            petitio->portus, &tcp_opt, piscina);
+        si (!tcp_res.successus)
+        {
+            error->successus         = FALSUM;
+            error->responsum         = NIHIL;
+            error->error             = HTTP_ERROR_CONNEXIO;
+            error->error_descriptio  = tcp_res.error_descriptio;
+            redde FALSUM;
+        }
+        *tcp = tcp_res.connexio;
+    }
+
+    /* Mittere petitio */
+    si (est_https)
+    {
+        si (!tls_mittere_omnia(*tls,
+            (constans i8*)petitio_str.datum, petitio_str.mensura))
+        {
+            tls_claudere(*tls);
+            *tls = NIHIL;
+            *error = _creare_error(HTTP_ERROR_IO, "Mittere fallita",
+                piscina);
+            redde FALSUM;
+        }
+    }
+    alioquin
+    {
+        si (!tcp_mittere_omnia(*tcp,
+            (constans i8*)petitio_str.datum, petitio_str.mensura))
+        {
+            tcp_claudere(*tcp);
+            *tcp = NIHIL;
+            *error = _creare_error(HTTP_ERROR_IO, "Mittere fallita",
+                piscina);
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
 HttpResultus
 http_exsequi (
     HttpPetitio* petitio,
@@ -756,7 +1272,6 @@ http_exsequi (
 {
           HttpResultus  res;
          HttpResponsum* resp;
-                chorda  petitio_str;
            TlsConnexio* tls_conn = NIHIL;
            TcpConnexio* tcp_conn = NIHIL;
                    b32  est_https;
@@ -788,82 +1303,11 @@ http_exsequi (
                                                  (i64)(HTTP_CAPITA_MAXIMA * (i32)magnitudo(HttpCaput)));
     resp->capita_numerus = 0;
 
-    /* Construere petitio string */
-    petitio_str = _construere_petitio(petitio);
-
-    /* Determinare si HTTPS */
     est_https = chorda_aequalis_literis(petitio->schema, "https");
-
-    /* Connectere */
-    si (est_https)
+    si (!_connexionem_aperire(petitio, piscina, &tls_conn, &tcp_conn,
+            &res))
     {
-        TlsOptiones tls_opt = tls_optiones_default();
-        TlsResultus tls_res;
-
-        /* tempus vocantis etiam in https (vates-plan-1 T2): olim
-         * tls_connectere sine optionibus = XXX s semper, et vocatio
-         * exemplaris sine fluxu longior frangebatur */
-        si (petitio->tempus_ms > 0)
-        {
-            tls_opt.timeout_ms = (i32)petitio->tempus_ms;
-        }
-        tls_res = tls_connectere_cum_optionibus(
-            (constans character*)petitio->hospes.datum,
-            petitio->portus, &tls_opt, piscina);
-        si (!tls_res.successus)
-        {
-            res.successus         = FALSUM;
-            res.responsum         = NIHIL;
-            res.error             = HTTP_ERROR_CONNEXIO;
-            res.error_descriptio  = tls_res.error_descriptio;
-            redde res;
-        }
-        tls_conn = tls_res.connexio;
-    }
-    alioquin
-    {
-        TcpOptiones tcp_opt = tcp_optiones_default();
-        TcpResultus tcp_res;
-
-        si (petitio->tempus_ms > 0)
-        {
-            /* sutura tcp adhuc i32 - valor positivus custoditus */
-            tcp_opt.timeout_ms = (i32)petitio->tempus_ms;
-        }
-        tcp_res = tcp_connectere_cum_optionibus(
-            (constans character*)petitio->hospes.datum,
-            petitio->portus, &tcp_opt, piscina);
-        si (!tcp_res.successus)
-        {
-            res.successus         = FALSUM;
-            res.responsum         = NIHIL;
-            res.error             = HTTP_ERROR_CONNEXIO;
-            res.error_descriptio  = tcp_res.error_descriptio;
-            redde res;
-        }
-        tcp_conn = tcp_res.connexio;
-    }
-
-    /* Mittere petitio */
-    si (est_https)
-    {
-        si (!tls_mittere_omnia(tls_conn,
-            (constans i8*)petitio_str.datum, petitio_str.mensura))
-        {
-            tls_claudere(tls_conn);
-            redde _creare_error(HTTP_ERROR_IO, "Mittere fallita",
-                piscina);
-        }
-    }
-    alioquin
-    {
-        si (!tcp_mittere_omnia(tcp_conn,
-            (constans i8*)petitio_str.datum, petitio_str.mensura))
-        {
-            tcp_claudere(tcp_conn);
-            redde _creare_error(HTTP_ERROR_IO, "Mittere fallita",
-                piscina);
-        }
+        redde res;
     }
 
     /* Recipere responsum */
@@ -2361,6 +2805,90 @@ http_petitio_parse (
  * VECTURA ET VISUS (vates-plan-1 T2; herbarium-spec par. V)
  * ======================================================================== */
 
+HttpResultus
+http_exsequi_rivus (
+    HttpPetitio* petitio,
+      HttpRivus  rivus,
+         vacuum* rivi_datum,
+        Piscina* piscina)
+{
+        HttpResultus  res;
+         TlsConnexio* tls_conn = NIHIL;
+         TcpConnexio* tcp_conn = NIHIL;
+          HttpLector* lector;
+                  i8* buffer;
+                 s32  n;
+    HttpLectorStatus  status;
+
+    si (!petitio || !piscina)
+    {
+        redde _creare_error(HTTP_ERROR_URL, "Argumenta invalida",
+            piscina);
+    }
+    si (!_connexionem_aperire(petitio, piscina, &tls_conn, &tcp_conn,
+            &res))
+    {
+        redde res;
+    }
+    lector  = http_lector_creare(piscina, petitio->methodus, rivus,
+        rivi_datum);
+    buffer = (i8*)piscina_allocare(piscina,
+        (i64)HTTP_BUFFER_MAGNITUDO);
+    status = HTTP_LECTOR_CAPITA;
+    fac
+    {
+        n = tls_conn ? tls_recipere(tls_conn, buffer,
+                           HTTP_BUFFER_MAGNITUDO)
+                     : tcp_recipere(tcp_conn, buffer,
+                           HTTP_BUFFER_MAGNITUDO);
+        si (n > ZEPHYRUM)
+        {
+            status = http_lector_adicere(lector, buffer, (i32)n);
+        }
+    } dum (   n > ZEPHYRUM && status != HTTP_LECTOR_FINITUS
+           && status != HTTP_LECTOR_ERROR);
+    si (tls_conn)
+    {
+        tls_claudere(tls_conn);
+    }
+    alioquin
+    {
+        tcp_claudere(tcp_conn);
+    }
+    si (status == HTTP_LECTOR_ERROR)
+    {
+        redde _creare_error(HTTP_ERROR_PARSE,
+            chorda_ut_cstr(http_lector_error(lector), piscina),
+            piscina);
+    }
+    si (status != HTTP_LECTOR_FINITUS)
+    {
+        si (n == TCP_ITERUM)
+        {
+            redde _creare_error(HTTP_ERROR_TIMEOUT,
+                "Tempus receptionis excessum (rivus)", piscina);
+        }
+        si (n < ZEPHYRUM)
+        {
+            redde _creare_error(HTTP_ERROR_IO,
+                "Error retis inter receptionem (rivus)", piscina);
+        }
+        status = http_lector_finire(lector);
+        si (status != HTTP_LECTOR_FINITUS)
+        {
+            redde _creare_error(HTTP_ERROR_IO,
+                chorda_ut_cstr(http_lector_error(lector), piscina),
+                piscina);
+        }
+    }
+    res.successus                 = VERUM;
+    res.responsum                 = http_lector_responsum(lector);
+    res.error                     = HTTP_OK;
+    res.error_descriptio.datum    = NIHIL;
+    res.error_descriptio.mensura  = ZEPHYRUM;
+    redde res;
+}
+
 interior HttpResultus
 _vectura_ordinaria_exsequi (
     HttpPetitio* petitio,
@@ -2393,6 +2921,45 @@ http_vectura_exsequi (
             "Vectura sine functione exsequendi", piscina);
     }
     redde vectura.exsequi(petitio, piscina, vectura.datum);
+}
+
+interior HttpResultus
+_vectura_rivi_ordinaria_exsequi (
+    HttpPetitio* petitio,
+      HttpRivus  rivus,
+         vacuum* rivi_datum,
+        Piscina* piscina,
+         vacuum* datum)
+{
+    (vacuum)datum;
+    redde http_exsequi_rivus(petitio, rivus, rivi_datum, piscina);
+}
+
+HttpVecturaRivi
+http_vectura_rivi_ordinaria (vacuum)
+{
+    HttpVecturaRivi v;
+
+    v.exsequi  = _vectura_rivi_ordinaria_exsequi;
+    v.datum    = NIHIL;
+    redde v;
+}
+
+HttpResultus
+http_vectura_rivi_exsequi (
+    HttpVecturaRivi  vectura,
+        HttpPetitio* petitio,
+          HttpRivus  rivus,
+             vacuum* rivi_datum,
+            Piscina* piscina)
+{
+    si (vectura.exsequi == NIHIL)
+    {
+        redde _creare_error(HTTP_ERROR_CONNEXIO,
+            "Vectura rivi sine functione exsequendi", piscina);
+    }
+    redde vectura.exsequi(petitio, rivus, rivi_datum, piscina,
+        vectura.datum);
 }
 
 HttpPetitioVisus

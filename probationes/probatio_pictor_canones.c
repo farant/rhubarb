@@ -104,13 +104,14 @@ s32 principale (vacuum)
     CREDO_FALSUM(insula_mutare(repo, ponere_paletta, NIHIL));
 
     imprimere("\n--- Domini leguntur; motus solus zoom scribit ---\n");
-    /* XVII: XII pictoris (scriptor, insula; S5c palette quoque) + semen
+    /* XVIII: XIII pictoris (scriptor, insula; S5c palette quoque;
+     * glutinatio pendens 2026-10-13, dominus glutinatio.agere) + semen
      * (aspergillum.ictus, in insula usque ad migrationem) + IV basis
      * (focus, focus_acervus, superficies_*: dispensator). Olim
      * XVIII: cursus, gradus (mortui) abierunt. Durabilis: olim I
      * (sigillum, numquam scriptum), nunc nullus. */
     CREDO_AEQUALIS_I32(insula_dominos_legere(repo,
-                                             domini), XVII);
+                                             domini), XVIII);
     insula_scriptorem_ponere(repo,
         chorda_ex_literis("zoom.ponere", piscina));
     CREDO_FALSUM(insula_mutare(repo, ponere_zoom, NIHIL));

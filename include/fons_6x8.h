@@ -1,5 +1,17 @@
-/* Fons bitmap - merged HP 100LX + Alcuin */
-/* Magnitudo characteris: 6x8 pixela */
+/* Fons bitmap - merged HP 100LX + Alcuin + domestica
+ * Magnitudo characteris: 6x8 pixela
+ *
+ * ORIGO ET LICENTIA (materia adaptata):
+ *   HP 100LX 6x8 - The Ultimate Oldschool PC Font Pack v2.2,
+ *     (c) 2016-2020 VileR, https://int10h.org/oldschool-pc-fonts/
+ *     CC BY-SA 4.0, http://creativecommons.org/licenses/by-sa/4.0/
+ *     Mutata: in tabulam C conversa; sedes vacuae ex Alcuin impletae
+ *     (tools/fons_merge.c); XL glyphae Latin-1 domi pictae (a11400ef).
+ *   Alcuin (glyphae notatae [A]) - Aliivibrio,
+ *     https://aliivibrio.itch.io/alcuin-bitsy-font - "free to use for
+ *     any purpose" (auctor nuntium usus libenter accipit).
+ * Hic fasciculus ergo sub CC BY-SA 4.0 (licentia adaptatoris).
+ */
 
 #ifndef FONS_6X8_H
 #define FONS_6X8_H

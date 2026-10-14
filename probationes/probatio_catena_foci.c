@@ -75,6 +75,13 @@ agere (
     {
         redde FALSUM;
     }
+    /* A6d: Tab et Esc dispensatori relinquuntur (gradus inter) */
+    si (   ev->genus == EVENTUS_CLAVIS_DEPRESSUS
+        && (   ev->datum.clavis.clavis == CLAVIS_TABULA
+            || ev->datum.clavis.clavis == CLAVIS_EFFUGIUM))
+    {
+        redde FALSUM;
+    }
     redde mutare_ramum((InsulaRamus*)ctx, incrementare, NIHIL);
 }
 
@@ -243,6 +250,23 @@ clavis (
     dispensator_tractare(m->d, &e);
 }
 
+/* clavis specialis (Tab, Esc) */
+interior vacuum
+clavem_specialem (
+      Mundus* m,
+         s64  t,
+    clavis_t  codex)
+{
+    Eventus e;
+
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus                  = EVENTUS_CLAVIS_DEPRESSUS;
+    e.tempus                 = t;
+    e.datum.clavis.clavis    = codex;
+    e.datum.clavis.producta  = codex == CLAVIS_TABULA ? '\t' : XXVII;
+    dispensator_tractare(m->d, &e);
+}
+
 interior b32
 valor_est (
     constans InsulaRamus* ramus,
@@ -361,6 +385,46 @@ _probare_effusionem (
     CREDO_FALSUM(motus->sordida);
 }
 
+/* A6d: Tab inter gradus (circuitus lateris, nidificati inclusi;
+ * catena scripta aut praecisa) et Esc gradum unum ascendit */
+interior vacuum
+_probare_tab_et_esc (
+    CredoContextus* c)
+{
+    InternamentumChorda* in;
+                 Mundus  m;
+                  Motus* motus;
+
+    in = internamentum_creare(c->piscina);
+    CREDO_NECESSE(mundum_creare(&m, VERUM, c->piscina, in));
+    motus = dispensator_motus(m.d);
+    ictus(&m, M, CCXV);
+    CREDO_CHORDA_AEQUALIS(motus->spatium_intimum, m.g[II].via);
+    /* Tab ex ultimo (III) involvit ad I: catena praecisa */
+    clavem_specialem(&m, M + X, CLAVIS_TABULA);
+    CREDO_VERUM(valor_est(&m.g[ZEPHYRUM], "focus", "agere"));
+    CREDO_CHORDA_AEQUALIS(motus->spatium_intimum, m.g[ZEPHYRUM].via);
+    /* Tab: ad II (catena scripta) */
+    clavem_specialem(&m, M + XX, CLAVIS_TABULA);
+    CREDO_VERUM(valor_est(&m.g[ZEPHYRUM], "focus", "ludibrium:liber"));
+    CREDO_VERUM(valor_est(&m.g[I], "focus", "agere"));
+    CREDO_CHORDA_AEQUALIS(motus->spatium_intimum, m.g[I].via);
+    /* Esc: ad I */
+    clavem_specialem(&m, M + XXX, CLAVIS_EFFUGIUM);
+    CREDO_VERUM(valor_est(&m.g[ZEPHYRUM], "focus", "agere"));
+    CREDO_CHORDA_AEQUALIS(motus->spatium_intimum, m.g[ZEPHYRUM].via);
+    /* ex III: Esc ad II, deinde ad I; in I (caput) Esc nihil */
+    ictus(&m, M + XL, CCXV);
+    clavem_specialem(&m, M + L, CLAVIS_EFFUGIUM);
+    CREDO_CHORDA_AEQUALIS(motus->spatium_intimum, m.g[I].via);
+    clavem_specialem(&m, M + LX, CLAVIS_EFFUGIUM);
+    CREDO_CHORDA_AEQUALIS(motus->spatium_intimum, m.g[ZEPHYRUM].via);
+    clavem_specialem(&m, M + LXX, CLAVIS_EFFUGIUM);
+    CREDO_CHORDA_AEQUALIS(motus->spatium_intimum, m.g[ZEPHYRUM].via);
+    /* claves numquam consumptae: valores intacti */
+    CREDO_VERUM(valores_sunt(&m, "0", "0", "2"));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "catena",       _probare_catenam,       NIHIL, NIHIL, NIHIL,
         NIHIL },
@@ -370,6 +434,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "effusio",      _probare_effusionem,    NIHIL, NIHIL, NIHIL,
         NIHIL },
+    { "tab_et_esc", _probare_tab_et_esc, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 
