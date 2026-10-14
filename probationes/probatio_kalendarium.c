@@ -1065,10 +1065,10 @@ _probare_promptam (
     reditus(x);
     CREDO_VERUM(agenda_res(x->documentum, V)->dies.dies == XX);
     CREDO_VERUM(campus_est(x, "prompta", "nulla"));
-    /* res V abiit: electio in ordine eodem (ordines 1 2 5 3 -> 1 2 3:
-     * res III, hic perfecta, alibi assignata); dies mala recusatur
-     * (prompta manet), Esc claudit sine mutatione */
-    CREDO_VERUM(campus_est(x, "res_electa", "3"));
+    /* res V abiit: electio in ordine eodem (A6b: apertae primum,
+     * ordines 1 5 2 3 -> 1 2 3: res II, perfecta); dies mala
+     * recusatur (prompta manet), Esc claudit sine mutatione */
+    CREDO_VERUM(campus_est(x, "res_electa", "2"));
     clavis(x, 'D');
     retro(x, X);
     typare(x, "2026-13-01");
@@ -1885,6 +1885,123 @@ _probare_perfectas_agendae (
         == ZEPHYRUM);
 }
 
+/* sagittae obscurae (polygona COLOR_TEXT_DIM): A6b, pagina nulla */
+interior i32
+sagittae_obscurae (
+    Mandata* md)
+{
+    constans Mandatum* y;
+                  i32  i;
+                  i32  n;
+
+    n = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        y = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   y->genus == MANDATUM_POLYGONUM
+            && color_thematis_est(y->color, COLOR_TEXT_DIM))
+        {
+            n++;
+        }
+    }
+    redde n;
+}
+
+/* componens adest (altitudo > 0)? */
+interior b32
+adest (
+                 Mundus* x,
+     constans character* id,
+                Piscina* p)
+{
+    redde fines_componentis(x, id, p).altitudo > ZEPHYRUM;
+}
+
+/* paginae (A6b): visus diei 256 px alti - index IX cellulas (dimidium
+ * corporis minus caput), IV ordines per paginam. Apertae (1, 5-10)
+ * primum, deinde "c" et perfectae (2, 3, et 11 assignata XIV perfecta
+ * XVI: "done Oct 16"); titulus gregis numquam ultimus paginae; j trans
+ * paginas; [ ] et globuli; + New; dies mutatus -> pagina prima */
+interior vacuum
+_probare_paginas (
+    CredoContextus* c)
+{
+                 Mundus* x;
+                Mandata* md;
+                    s32  id;
+                   Dies  d;
+                    i32  i;
+                  Fines  f;
+
+    x = (Mundus*)c->datum;
+    thema_initiare();
+    CREDO_NECESSE(agendam_parare(x, c));
+    d = fasti_dies(MMXXVI, X, XIV);
+    per (i = ZEPHYRUM; i < VI; i++)
+    {
+        id = agenda_rem_creare(x->documentum, chorda_ex_literis("plus",
+            c->piscina));
+        (vacuum)agenda_diem_ponere(x->documentum, id, &d);
+    }
+    id = agenda_rem_creare(x->documentum, chorda_ex_literis("serius",
+        c->piscina));
+    (vacuum)agenda_diem_ponere(x->documentum, id, &d);
+    (vacuum)agenda_perficere(x->documentum, id, fasti_dies(MMXXVI, X,
+        XVI));
+    reditus(x);
+    /* pagina I: r1 r5 r6 r7 */
+    CREDO_VERUM(adest(x, "r1", c->piscina));
+    CREDO_VERUM(adest(x, "r7", c->piscina));
+    CREDO_FALSUM(adest(x, "r8", c->piscina));
+    md = reddere(x, c->piscina);
+    CREDO_VERUM(textus_in_continet(md, fines_componentis(x, "paginae",
+        c->piscina), "1/3"));
+    /* pagina prima: sola sagitta prior obscura */
+    CREDO_AEQUALIS_I32(sagittae_obscurae(md), I);
+    CREDO_VERUM(adest(x, "nova", c->piscina));
+    /* pagina II: r8 r9 r10; "c" non ultimus - ad paginam III */
+    clavis(x, ']');
+    CREDO_VERUM(adest(x, "r8", c->piscina));
+    CREDO_VERUM(adest(x, "r10", c->piscina));
+    /* pagina media: nulla obscura */
+    md = reddere(x, c->piscina);
+    CREDO_AEQUALIS_I32(sagittae_obscurae(md), ZEPHYRUM);
+    CREDO_FALSUM(adest(x, "r1", c->piscina));
+    CREDO_FALSUM(adest(x, "c", c->piscina));
+    /* pagina III: c, perfectae, "done Oct 16" */
+    CREDO_NECESSE(ictus_in(x, "pagina-proxima", c->piscina));
+    CREDO_VERUM(adest(x, "c", c->piscina));
+    CREDO_VERUM(adest(x, "r2", c->piscina));
+    CREDO_VERUM(adest(x, "r3", c->piscina));
+    CREDO_VERUM(   fines_componentis(x, "c", c->piscina).y
+                 < fines_componentis(x, "r2", c->piscina).y);
+    md = reddere(x, c->piscina);
+    CREDO_VERUM(textus_in_continet(md, fines_componentis(x, "r11",
+        c->piscina), "done Oct 16"));
+    CREDO_VERUM(textus_in_continet(md, fines_componentis(x, "paginae",
+        c->piscina), "3/3"));
+    /* [ et globulus prior */
+    clavis(x, '[');
+    CREDO_VERUM(adest(x, "r8", c->piscina));
+    CREDO_NECESSE(ictus_in(x, "pagina-prior", c->piscina));
+    CREDO_VERUM(adest(x, "r1", c->piscina));
+    /* j ex ordine ultimo paginae I: res 8 electa, pagina II */
+    f = fines_componentis(x, "r7", c->piscina);
+    ictus_ad(x, f.x + C, f.y + IV);
+    CREDO_VERUM(campus_est(x, "res_electa", "7"));
+    clavis(x, 'j');
+    CREDO_VERUM(campus_est(x, "res_electa", "8"));
+    CREDO_VERUM(adest(x, "r8", c->piscina));
+    CREDO_FALSUM(adest(x, "r7", c->piscina));
+    /* dies mutatus et redditus: pagina prima */
+    clavis(x, 'l');
+    clavis(x, 'h');
+    CREDO_VERUM(adest(x, "r1", c->piscina));
+    /* + New: prompta nova */
+    CREDO_NECESSE(ictus_in(x, "nova", c->piscina));
+    CREDO_VERUM(campus_est(x, "prompta", "nova"));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "montatio",     _probare_montationem,   mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
@@ -1924,6 +2041,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL, NIHIL },
     { "perfectae_agendae", _probare_perfectas_agendae, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
+    { "paginae", _probare_paginas, mundum_parare, mundum_purgare,
+        NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

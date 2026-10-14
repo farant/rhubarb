@@ -53,6 +53,10 @@
             scriptor="calendarium.agere"
             nota="visus agendae: una rubrica (kebab: '-' in typo nomen
                   non licet); absens = omnes"/>
+    <campus nomen="pagina" typus="numerus" vita="transiens"
+            scriptor="calendarium.agere"
+            nota="pagina indicis (visus diei et agendae; 0 = prima);
+                  ad 0 redit cum dies aut visus mutatur"/>
   </status>
 
   <basis genus="organum_commune"/>

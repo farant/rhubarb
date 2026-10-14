@@ -462,3 +462,33 @@ it moves back into its group. The header counts open items only (it
 counted ordines_currentes before - would have included the history).
 Click handling and row drawing accept 'q' ids. Pagination (A6b) is what
 keeps a long history on screen.
+
+## 2026-10-13 — A6b: paginated lists, day list regrouped, + New
+
+Row model `OrdoIndicis` (id, partes, height in cells, item id) built by
+`ordines_indicis` for BOTH list views (day: open "r<id>", "c", completed
+"r<id>"; agenda: g/r, p/p<k>/q). `paginas_computare(rows, capacity)`:
+a row that does not fit starts a page; a heading never ends a page (if
+it and the next row do not both fit, the heading moves); an oversize row
+sits alone. `capacitas_indicis` repeats the composer's arithmetic in
+cells (pane / 8 - padding 2 - toolbar 3 - title - prompt 2 if open; day:
+half the body, dispositio PARS floors; minus the 2-cell header) - pure,
+so keys, figures and the composer agree on page breaks without layout.
+`indicem_disponere` replaced diem_/agendam_disponere: header row "caput"
+("To do" in the day view), [+ New], gap, [<] "paginae" "k/n" [>], then
+only the current page's rows. Day view: the body splits PARS 50 / grow;
+the lower half is empty until A6d.
+State: manifest field `pagina` (transient). Writes that change the list
+reset it in the SAME act (campos_duos_scribere: day, visus via
+`visum_ponere` - all 7 writers - filter). `electionem_scribere` moves to
+the item's page (current page preferred for agenda duplicates), so j/k
+cross pages; page turns ([ ] / buttons, `paginam_vertere`) select the
+first item of the new page. Arrows dim (FIGURA_OBSCURUM) at the ends.
+Day order is now open first, then completed today (anywhere), then
+assigned here but done elsewhere ("done Oct 16", right column). The
+`prompta` test's position expectation changed with the order (1 5 2 3).
+Bugs caught in review, not by the first tests: the counter text was a
+stack buffer passed by reference (A3 class) - now transcribed; the
+prior/next arrow test `id[VIII] == 'r'` was true for BOTH ids - new test
+counts dimmed arrows (1 on the first page, 0 in the middle).
+Plant: capacity huge (no paging) -> red.
