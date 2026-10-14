@@ -1,6 +1,7 @@
-/* album.h - INDEX PAGINATUS cum titulis gregum (nomenclator-plan
- * U1; ex calendario extractum): ordines (res et tituli) altitudinis
- * datae in paginas capacitatis datae.
+/* membrum__album.h - INDEX PAGINATUS cum titulis gregum
+ * (nomenclator-plan U1; ex calendario extractum; genus membrum__ =
+ * componens UI compositioni destinatum): ordines (res et tituli)
+ * altitudinis datae in paginas capacitatis datae.
  *
  * Regulae paginarum:
  *   - ordo qui non capit paginam novam incipit; ordo capacitate maior
@@ -16,10 +17,10 @@
  * titulum iteratum disponit et pingit. Unitates altitudinis hospitis
  * sunt (calendarium: cellulae).
  */
-#ifndef ALBUM_H
-#define ALBUM_H
+#ifndef MEMBRUM__ALBUM_H
+#define MEMBRUM__ALBUM_H
 
-/* <aedilis corpus="lib/album.c"/> */
+/* <aedilis corpus="lib/membrum__album.c"/> */
 
 #include "latina.h"
 #include "piscina.h"
@@ -102,4 +103,4 @@ album_res_prima (
         Album* c,
           s32  k);
 
-#endif /* ALBUM_H */
+#endif /* MEMBRUM__ALBUM_H */

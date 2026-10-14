@@ -1,10 +1,10 @@
-/* probatio_album.c - index paginatus cum titulis gregum
+/* probatio_membrum__album.c - index paginatus cum titulis gregum
  * (nomenclator-plan U1): paginae, titulus numquam ultimus, titulus
  * iteratus (fascia non), res et paginae */
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"
-#include "album.h"
+#include "membrum__album.h"
 #include "credo.h"
 #include <stdio.h>
 #include <string.h>

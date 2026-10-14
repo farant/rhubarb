@@ -1,7 +1,8 @@
-/* album.c - index paginatus cum titulis gregum (include/album.h).
+/* membrum__album.c - index paginatus cum titulis gregum
+ * (include/membrum__album.h).
  * Regulae ex calendario translatae (kalendarium A6b, M2a, titulus
  * iteratus et catena titulorum 2026-10-14). */
-#include "album.h"
+#include "membrum__album.h"
 
 #include <string.h>
 

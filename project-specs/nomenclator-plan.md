@@ -183,8 +183,14 @@ suite (30 sections) is the oracle for every extraction.
   `catalogus_*` functions; Fran chose `album`. Rows declare their kind
   (ALBUM_RES / ALBUM_TITULUS / ALBUM_FASCIA); the calendar's 30
   sections passed unchanged after the move.
-- **Open (Fran, 2026-10-14): a kind prefix for the UI component
-  libraries**, so what is available is easy to scan. The ledger already
+- **DECIDED (Fran, 2026-10-14): UI component libraries carry the kind
+  prefix `membrum__`** on their FILES (`include/membrum__album.h`,
+  `lib/membrum__album.c`, `probationes/probatio_membrum__album.c`);
+  functions and types keep the short library name (`album_*`,
+  `Album`); header guard `MEMBRUM__ALBUM_H`. `ls include/membrum__*`
+  lists them. Order (Fran asked, Claude recommended): P1 next (pure
+  document, settles the data model), U2 right before P2 (its second
+  consumer shapes it). Background - the ask was The ledger already
   has the house convention (…PTMJ2, 2026-10-08): double-underscore
   KIND prefixes on file names (`forma__`, `stilus__`, `nuntius__`,
   `probatio__`, `generata__`) with a kind registry in STML; libraries

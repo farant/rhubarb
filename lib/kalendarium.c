@@ -13,7 +13,7 @@
 #include "fons.h"
 #include "dispositio.h"
 #include "elenchus.h"
-#include "album.h"
+#include "membrum__album.h"
 #include "vim.h"
 #include "scriba_applicatio.h"
 #include "scriba_componentia.h"
