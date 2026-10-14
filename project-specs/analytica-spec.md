@@ -59,12 +59,46 @@ via `parens` as today (Q4).
   environment), alongside fabrica's own `cursus` table (which its
   estimates need).
 
+## III½. Three kinds of record (Fran 2026-10-13)
+
+Fran: "a clear distinction between logs and metrics ... elasticsearch
+type stuff for logs and prometheusdb type stuff for metrics". The field
+splits three ways (OpenTelemetry's spans / logs / metrics), each with
+its own engine, and so do we - ONE STORE PER KIND, joined only by the
+run id:
+
+| kind | ours | model | unit | retention | hard rule |
+|---|---|---|---|---|---|
+| spans (traces) | `cursus` in the mensura volume | Jaeger / Tempo / OTel | id, parens, sessio (= trace id), titulus, start, duration, status, attributes | metadata forever (cheap) | children carry the parent id |
+| logs | `diurna` (new library, §IV) | Loki, NOT Elasticsearch | a body (run output) or, later, a stream of chunks | by age: full -> gzip -> deleted; failures, last-per-job, pins kept longer | index only low-cardinality labels; the run id is the KEY, never a label; search = scan bodies inside a label/time window |
+| metrics | none yet - DERIVED from spans at query time (durations by commit, failure counts, regenerations) | Prometheus / RRD | sampled number + labels | downsampled (lossy on purpose) | label cardinality low |
+
+`mensura` measurements stay what mensura.h says they are: discrete,
+lossless, attached to a run (span events), NOT a time series. A real
+metrics store is the parked Metrum (…AMZVFN) and becomes due with the
+first continuously SAMPLED series (a resident's RSS every N s, disk use
+over months) - not before.
+
 ## IV. Logs and retention (D3, Q7, Q8, Q11)
 
-- Bodies stored as volume files over content-addressed `massae`
-  (SHA-256 dedup: identical quiet logs = one blob). One function stores a
-  body - the SEAM where redaction plugs in later; the chassis never
-  writes the environment wholesale.
+- DECIDED 2026-10-13 (Fran: "metrics and logs are a different thing
+  ... a solution tailored to their use case"): bodies do NOT go in the
+  volume - volumen massae are permanent by design and retention must
+  delete. A log library `diurna` (acta diurna) owns them: files under a
+  root (`corpora/<2>/<62>` SHA-256, atomic write, dedup; `.gz` after
+  compression), an append-only `index.tsv` of `positum / fixum /
+  compressum / deletum` lines keyed `(clavis, seq)` - seq 0 for a
+  run's whole body; streams of chunks (residents, servers) later reuse
+  the same key without a format change. Retention decides per KEY,
+  storage is per BODY: a deduplicated body is compressed or deleted
+  only when no key still needs it fresher. A deleted body keeps its
+  index line ("deleted on <date>", not "not found"). Compaction of the
+  index under a file lock in purgare. Policy is a struct the caller
+  fills (analytica: from STML); diurna knows no mensura and no volume.
+- (superseded) Bodies stored as volume files over content-addressed
+  `massae` (SHA-256 dedup: identical quiet logs = one blob). One
+  function stores a body - the SEAM where redaction plugs in later; the
+  chassis never writes the environment wholesale.
 - Size cap per body (8 MB, tail kept).
 - Retention as data (one STML file): metadata forever; bodies full 7 d,
   gzip (flatura) to 30 d, then deleted; failures full 30 d, gzip to 90 d;

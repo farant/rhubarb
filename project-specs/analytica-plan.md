@@ -76,9 +76,18 @@ commit via silva.commissio. Work in `../rhubarb-quinta`.
   `mensura_contextum_arboris`), and a non-repository root writes only to
   an explicit MENSOR_DIARIUM. fumus LIV + LV; plants III red;
   iudicium_fumus against the real diary: +0 lines.
-- [ ] Bodies in the volume (massae dedup), size cap, retention policy as
-  STML data, `bin/mensor purgare [-siccum]`. Tests: dedup, age tiers,
-  failures kept longer, last body per job kept, pinned kept. Commit.
+- [x] 2a: library `diurna` (Fran: logs are not metrics; spec III-half,
+  IV): ponere / legere / figere / introitus, SHA-256 dedup, tail cap,
+  sha verified on read, (clavis, seq) index ready for streams.
+  probatio_diurna VII sections; plants VI red. Compressed read untested
+  until purgare writes .gz.
+- [ ] 2b: wire the seam - mensor `_acta_servare` -> diurna_ponere;
+  `cursus finire -acta <file>` for Python producers; `cursus acta <id>`.
+- [ ] 2c: retention policy as STML data + `diurna_purgare` (per-key
+  tiers, per-body action, last-per-job, pins, index compaction under a
+  lock) + `bin/mensor purgare [-siccum]`. Tests: dedup survives, age
+  tiers, failures kept longer, last body per job kept, pinned kept,
+  compressed read. Commit.
 - [ ] Bodies for Python-produced runs too (commissio, phases, gates:
   the full refusal / hook output through the one seam) - Fran 10-13:
   "what test or lint or whatever caused them to fail" needs more than a
