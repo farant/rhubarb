@@ -879,6 +879,10 @@ ranked by how much it bears on KC 47.
         joins two input patterns with the same sum, so no activation
         can separate them. It is not a boundary tie, which depends on
         the activation. [definition] (D126)
+48.4.1.1. That coefficient set is right for the signed encoding (D94,
+          D119-D123). The antipodal 0/1 encoding (D66/D118, D79-D84/
+          D124, D125) joins patterns by relations in {-2 .. 2}.
+          [checked] (D126 review F3)
 48.4.2. Every catalog has relations of norm 3 (p_a +- p_b +- p_c =
         0): 16 in 2T, 32 in 2O, 200 in 2I. The coincidences grow
         fast; in 2I there are 1,800, 16,392 and 169,100 at support 4,
@@ -887,16 +891,48 @@ ranked by how much it bears on KC 47.
         (10, 8, 5). Tested: 30 sets matched in count, either r g over
         the catalog's own field (same relation rank) or rational.
         [exact] (D126)
+48.4.3.1. Narrowed: those nulls have coordinate denominators near
+          10^30. At small height, random rational unit points have
+          many relations: about 4,500 with entries in {-1, 0, 1} at
+          height 6 (N = 24), against 2O's 9,472. 48.4.3 measures
+          height, not group structure. [exact] (D126 Part F, oracle)
 48.4.4. A null with a catalog's entire relation lattice is a linear
         image of the catalog. A knot-free null can therefore match
         the profile only in part (e.g. its shortest shells), and must
-        say which part. [proved] (D126)
+        say which part. [proved] (D126) [second sentence: falls, see
+        48.4.4.1]
+48.4.4.1. The first sentence stands. The second falls for 2O: a unit
+          point set with exactly 2O's relation lattice that is not
+          congruent to 2O exists (2T u r sigma_1 2T). [falls] (D126
+          Part E, the review's counter-example)
+48.4.4.2. On the unit sphere, a whole-lattice null must be congruent
+          to 2T (its points pin every quadratic form, rank 10 of 10).
+          [proved] (D126 Part E)
+48.4.4.3. For 2I (quadric rank 35 of 36) this is open. [open]
 48.4.5. So the catalogs force pairs of input patterns that no
         activation can separate, and generic point sets have none at
         these lengths: the coincident-sum half of 48.2's prediction.
-        [interpretation]
+        [interpretation] [falls, see 48.4.5.1]
+48.4.5.1. Small height alone produces many coincidences (see
+          48.4.3.1). What separates the catalogs from height-matched
+          sets is the norm-3 relations (16, 32, 200, against at most
+          1) and the odd-norm ones (see 48.4.7): 2O has 2,720 to norm
+          8, against 0 at odd height and about 1,000 at height 6.
+          [exact] (D126 Parts B, F)
 48.4.6. Whether these coincidences lower capacity, and which matter
         for which function, needs activations: P1. [open]
+48.4.7. Only relations of odd norm join input patterns of opposite
+        parity, in both encodings, because sum x_i = sum x_i^2 (mod
+        2). So only they can matter for XOR. 2I's 1,800 four-term and
+        169,100 six-term coincidences cannot. [proved] (D126, review
+        F4)
+48.4.8. Rational unit points of odd height have no relation of odd
+        norm: |v|^2 odd forces an odd coordinate sum, so every
+        relation has an even coefficient sum. [proved] (D126 Part F)
+48.4.9. 2O's profile is 2T's squared (theta_2O = theta_2T^2): 2O = 2T
+        u sigma_1 2T in separate coordinate blocks, so 2O adds no
+        relation structure beyond two copies of 2T. [proved] (D126
+        Part E, review F11)
 
 49. Do robust XOR sets in other groups follow a subgroup structure, as
     Q8 cosets do in 2O (see 18.2)?

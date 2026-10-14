@@ -16,7 +16,8 @@ No house code. Python Fractions only:
 - for 2T, ALL relations (any integer entries) up to norm 10, by splitting
   the 12 points into two halves of 6 with entries in [-3, 3].
 
-Run: python3 -I oracle.py  (about a minute)
+Run: python3 -I oracle.py      (catalogs, about 30 s)
+     python3 -I oracle.py -F   (also Part F's height-matched nulls)
 """
 from fractions import Fraction as F
 from itertools import combinations, product
@@ -250,5 +251,59 @@ def main():
                 print(f"    norm {nrm}: {c}")
 
 
+# ---------------- Part F: height-matched rational nulls ----------------
+
+def sphere(h):
+    """v in Z^4, |v|^2 = h^2, first nonzero entry positive, in the same
+    lexicographic order as main.c"""
+    out = []
+    for v in product(range(-h, h + 1), repeat=4):
+        if sum(x * x for x in v) != h * h:
+            continue
+        first = next(x for x in v if x != 0)
+        if first > 0:
+            out.append(v)
+    return out
+
+
+class Lcg:
+    def __init__(self, seed):
+        self.s = seed
+
+    def __call__(self, mod):
+        self.s = (self.s * 1103515245 + 12345) & 0x7fffffff
+        return self.s % mod
+
+
+def height_rows():
+    rows = [(3, 12, 10), (5, 12, 10), (5, 24, 8), (6, 24, 8), (9, 24, 8),
+            (25, 24, 8), (5, 60, 5), (25, 60, 5)]
+    print("Part F: height-matched rational nulls (same sphere order and "
+          "LCG subsets as main.c)")
+    for h, n, radius in rows:
+        pts_all = sphere(h)
+        m = len(pts_all)
+        for seed in range(3):
+            rng = Lcg(1000 * h + n + seed)
+            idx = list(range(m))
+            for i in range(n):
+                k = i + rng(m - i)
+                idx[i], idx[k] = idx[k], idx[i]
+            pts = [pts_all[idx[i]] for i in range(n)]
+            cache = {}
+            pm1 = 0
+            norm3 = 0
+            for s in range(3, radius + 1):
+                c = coincidences(pts, s, cache)
+                pm1 += c
+                if s == 3:
+                    norm3 = c
+            print(f"  H {h:2d} N {n} seed {seed}: +-1 relations to support "
+                  f"{radius}: {pm1}, support 3: {norm3}")
+            sys.stdout.flush()
+
+
 if __name__ == "__main__":
     main()
+    if "-F" in sys.argv or "--omnia" in sys.argv:
+        height_rows()

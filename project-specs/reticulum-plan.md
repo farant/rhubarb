@@ -146,6 +146,11 @@ Each task follows the house cycle:
   relation lattice is a linear image of the catalog (proved), so P1's
   nulls can match it only in part. Independent oracle agrees on every
   number; 25 checks, 5 plants red. KC 48.4, ledger note on P1.)*
+  *(Review, same day: no wrong number, but the nulls differed mainly in
+  HEIGHT, and the "only in part" consequence fails for 2O (a unit set
+  with 2O's whole lattice, not congruent). Added height-matched nulls,
+  the encodings, the odd-norm (XOR) column, theta_2O = theta_2T^2; 40
+  checks, 11 plants. KC 48.4.x corrected append-only.)*
 
 ## Gates
 
