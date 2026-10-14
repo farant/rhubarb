@@ -289,6 +289,37 @@ scriba_montare_in_ramo (
 }
 
 b32
+scriba_librum_ponere (
+    ScribaMontatio* m,
+       ScribaLiber* liber)
+{
+    chorda prior;
+       b32 ok;
+
+    si (!m || !liber || !m->ramus.repo)
+    {
+        redde FALSUM;
+    }
+    /* domini rami scribae scripturas 'pagina.clavis' solas admittunt
+     * (vocans actio alia est: calendarium.agere) */
+    prior = m->ramus.repo->scriptor;
+    insula_scriptorem_ponere(m->ramus.repo, chorda_ex_literis(
+        "pagina.clavis", m->ramus.repo->piscina));
+    ok = scriba_actiones_librum_ponere(&m->ramus, NIHIL,
+        &m->actiones_ctx,
+        liber);
+    insula_scriptorem_ponere(m->ramus.repo, prior);
+    si (!ok)
+    {
+        redde FALSUM;
+    }
+    m->liber  = liber;
+    m->doc    = m->actiones_ctx.doc;
+    (vacuum)paginam_indicare(m, VERUM);
+    redde VERUM;
+}
+
+b32
 scriba_reficere (
     ScribaMontatio* m)
 {

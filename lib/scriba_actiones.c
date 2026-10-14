@@ -616,6 +616,30 @@ index_visus (
     redde i < ZEPHYRUM ? ZEPHYRUM : i;
 }
 
+b32
+scriba_actiones_librum_ponere (
+    constans InsulaRamus* ramus,
+                   Motus* motus,
+          ScribaActiones* sa,
+             ScribaLiber* liber)
+{
+    chorda currens;
+       b32 inventum;
+
+    si (!ramus || !sa || !liber || !sa->doc)
+    {
+        redde FALSUM;
+    }
+    currens = volumen_plagulam_promere(sa->doc->volumen, sa->visus,
+        sa->doc->piscina, &inventum);
+    sa->liber = liber;
+    si (!inventum || scriba_liber_index(liber, currens) < ZEPHYRUM)
+    {
+        currens = scriba_liber_nomen(liber, ZEPHYRUM);
+    }
+    redde paginam_ponere(ramus, motus, sa, currens, ZEPHYRUM, ZEPHYRUM);
+}
+
 /* S2b: pagina proxima (gradus I) aut prior (-I) libri; ultra ultimam
  * nova, ante primam nihil; cursor ad 0,0 */
 interior vacuum

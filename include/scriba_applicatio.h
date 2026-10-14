@@ -99,6 +99,14 @@ scriba_montare_in_ramo (
              ScribaLiber* liber,
          StatusSystemata* systemata);
 
+/* A6d: visum montatum ad librum alium vertere (calendarium: liber
+ * diei): pagina ex plagula visus si in libro novo exstat, aliter
+ * prima; registra et contextus manent. FALSUM si liber NIHIL. */
+b32
+scriba_librum_ponere (
+    ScribaMontatio* m,
+       ScribaLiber* liber);
+
 /* Visus stalus reficitur (vicus-latera S2b): si alius visus paginam
  * commisit (cursor documenti != cursor_laboris), folium laboris ex
  * proiectione - visus sine gestu pendente solum (commissio in omni

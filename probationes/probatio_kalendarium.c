@@ -17,6 +17,9 @@
 #include "kalendarium.h"
 #include "fons.h"
 #include "agenda.h"
+#include "scriba_liber.h"
+#include "scriba_documentum.h"
+#include "tabula_characterum.h"
 #include "figura.h"
 #include "mandatum.h"
 #include "thema.h"
@@ -68,7 +71,7 @@ mundum_struere (
             x->volumen, x->repo);
     }
     si (!kalendarium_montare(&x->m, p, x->intern, x->repo, "c1",
-            argumentum, x->documentum, hodie_fixa, NIHIL,
+            argumentum, x->documentum, x->volumen, hodie_fixa, NIHIL,
             x->volumen ? &x->systemata : NIHIL))
     {
         redde FALSUM;
@@ -1954,7 +1957,8 @@ _probare_paginas (
     CREDO_VERUM(adest(x, "r7", c->piscina));
     CREDO_FALSUM(adest(x, "r8", c->piscina));
     md = reddere(x, c->piscina);
-    CREDO_VERUM(textus_in_continet(md, fines_componentis(x, "paginae",
+    CREDO_VERUM(textus_in_continet(md, fines_componentis(x,
+        "index_paginae",
         c->piscina), "1/3"));
     /* pagina prima: sola sagitta prior obscura */
     CREDO_AEQUALIS_I32(sagittae_obscurae(md), I);
@@ -1978,7 +1982,8 @@ _probare_paginas (
     md = reddere(x, c->piscina);
     CREDO_VERUM(textus_in_continet(md, fines_componentis(x, "r11",
         c->piscina), "done Oct 16"));
-    CREDO_VERUM(textus_in_continet(md, fines_componentis(x, "paginae",
+    CREDO_VERUM(textus_in_continet(md, fines_componentis(x,
+        "index_paginae",
         c->piscina), "3/3"));
     /* [ et globulus prior */
     clavis(x, '[');
@@ -2000,6 +2005,60 @@ _probare_paginas (
     /* + New: prompta nova */
     CREDO_NECESSE(ictus_in(x, "nova", c->piscina));
     CREDO_VERUM(campus_est(x, "prompta", "nova"));
+}
+
+/* notae diei (A6d-1): liber "dies/<ISO>" in dimidio infero visus
+ * diei (scriba nidificata, spatium suum); liber diem sequitur */
+interior vacuum
+_probare_notas (
+    CredoContextus* c)
+{
+               Mundus* x;
+              Mandata* md;
+          ScribaLiber* l;
+     ScribaDocumentum* d;
+    TabulaCharacterum  folium;
+            Componens* pagina;
+
+    x = (Mundus*)c->datum;
+    thema_initiare();
+    x->volumen = volumen_temporarium(c->piscina,
+        "probatio_kalendarium");
+    CREDO_NECESSE_NON_NIHIL(x->volumen);
+    x->documentum = agenda_aperire(c->piscina, x->intern, x->volumen,
+        "agenda", ZEPHYRUM);
+    /* liber XIV praeparatus: "quinque" in pagina prima */
+    l = scriba_liber_aperire_in_spatio(c->piscina, x->intern,
+        x->volumen,
+        "dies/2026-10-14", XL, VI);
+    CREDO_NECESSE_NON_NIHIL(l);
+    d = scriba_liber_pagina(l, chorda_ex_literis("1", c->piscina));
+    CREDO_NECESSE_NON_NIHIL(d);
+    tabula_initiare(&folium, c->piscina, d->latitudo, d->altitudo);
+    memcpy(folium.cellulae, scriba_documentum_tabula(d)->cellulae,
+        (memoriae_index)(d->latitudo * d->altitudo));
+    memcpy(&tabula_cellula(&folium, ZEPHYRUM, ZEPHYRUM), "quinque",
+        VII);
+    CREDO_NECESSE(scriba_documentum_committere(d, &folium) > ZEPHYRUM);
+    CREDO_NECESSE(mundum_struere(x, c->piscina, NIHIL));
+    /* mensis: notae absunt */
+    CREDO_FALSUM(componens_invenire_per_id(dispensator_arbor(x->d),
+        chorda_ex_literis("pagina", c->piscina)) != NIHIL);
+    reditus(x);
+    pagina = componens_invenire_per_id(dispensator_arbor(x->d),
+        chorda_ex_literis("pagina", c->piscina));
+    CREDO_NECESSE_NON_NIHIL(pagina);
+    /* dimidium inferum: pagina sub capite indicis */
+    CREDO_VERUM(pagina->fines.y >= ZEPHYRUM);
+    md = reddere(x, c->piscina);
+    CREDO_VERUM(textus_ullus_continet(md, "quinque"));
+    /* dies XV: liber suus (vacuus); XIV redit */
+    clavis(x, 'l');
+    md = reddere(x, c->piscina);
+    CREDO_FALSUM(textus_ullus_continet(md, "quinque"));
+    clavis(x, 'h');
+    md = reddere(x, c->piscina);
+    CREDO_VERUM(textus_ullus_continet(md, "quinque"));
 }
 
 hic_manens constans CredoSectio SECTIONES[] = {
@@ -2043,6 +2102,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         mundum_purgare, NIHIL, NIHIL },
     { "paginae", _probare_paginas, mundum_parare, mundum_purgare,
         NIHIL, NIHIL },
+    { "notae", _probare_notas, mundum_parare, mundum_purgare, NIHIL,
+        NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

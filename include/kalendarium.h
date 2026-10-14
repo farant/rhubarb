@@ -138,9 +138,18 @@ kalendarium_montare (
       constans character* id,
       constans character* argumentum,
         AgendaDocumentum* documentum,
+                 Volumen* volumen,     /* A6d: libri dierum (NIHIL:
+                                        * sine notis) */
         KalendariumHodie  hodie,
                   vacuum* hodie_ctx,
          StatusSystemata* systemata);
+
+/* A6d: gestus (vicus T3a): notae diei montatae - gestus scribae
+ * notarum (liber diei refectus); aliter nullus */
+vacuum
+kalendarium_gestum_ponere (
+     Motus* motus,
+    vacuum* ctx);
 
 /* argumentum novum (vicus_acervo_mutare): "YYYY-MM" -> dies electa.
  * FALSUM si malum (nihil mutatur). */

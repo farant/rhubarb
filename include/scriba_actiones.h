@@ -70,6 +70,18 @@ nomen structura {
           InsulaRamus ramus_capsae;
 } ScribaActiones;
 
+/* A6d: visum ad librum alium vertere (scriba_librum_ponere): pagina
+ * plagulae visus si in libro novo exstat, aliter prima; via paginae
+ * ponendae (gestus effusus, folium laboris, cursor, modus normalis).
+ * Vocans scriptorem actionis scribae ponit. FALSUM si liber NIHIL aut
+ * pagina aperiri nequit. */
+b32
+scriba_actiones_librum_ponere (
+    constans InsulaRamus* ramus,
+                   Motus* motus,
+          ScribaActiones* sa,
+             ScribaLiber* liber);
+
 /* folium laboris = copia proiectionis documenti */
 vacuum
 scriba_actiones_initiare (

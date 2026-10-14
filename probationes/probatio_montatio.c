@@ -17,6 +17,7 @@
 #include "pictor_applicatio.h"
 #include "scriba_applicatio.h"
 #include "scriba_liber.h"
+#include "tabula_characterum.h"
 #include "xar.h"
 #include "credo.h"
 #include <stdio.h>
@@ -224,6 +225,35 @@ s32 principale (vacuum)
             chorda_ex_literis("1", piscina)));
         CREDO_VERUM(insula_ramus_attributum(&sn.ramus, "latitudo")
             != NIHIL);
+        /* A6d: liber alius (dies XV): pagina sua; reditus ad XIV */
+        {
+                  ScribaLiber* l15;
+             ScribaDocumentum* d14;
+            TabulaCharacterum  folium;
+
+            d14 = sn.doc;
+            tabula_initiare(&folium, piscina, d14->latitudo,
+                d14->altitudo);
+            memcpy(folium.cellulae, scriba_documentum_tabula(d14)
+                ->cellulae, (memoriae_index)(d14->latitudo
+                * d14->altitudo));
+            tabula_cellula(&folium, ZEPHYRUM, ZEPHYRUM) = 'k';
+            CREDO_VERUM(scriba_documentum_committere(d14, &folium)
+                > ZEPHYRUM);
+            l15 = scriba_liber_aperire_in_spatio(piscina, intern, vol,
+                "dies/2026-10-15", XL, XX);
+            CREDO_VERUM(scriba_librum_ponere(&sn, l15));
+            CREDO_VERUM(sn.doc == scriba_liber_pagina(l15,
+                chorda_ex_literis("1", piscina)));
+            CREDO_VERUM(sn.actiones_ctx.doc == sn.doc);
+            CREDO_VERUM(tabula_cellula(&sn.actiones_ctx.laboris,
+                ZEPHYRUM, ZEPHYRUM) != 'k');
+            CREDO_VERUM(scriba_librum_ponere(&sn, ld));
+            CREDO_VERUM(sn.doc == d14);
+            CREDO_VERUM(tabula_cellula(&sn.actiones_ctx.laboris,
+                ZEPHYRUM, ZEPHYRUM) == 'k');
+            CREDO_FALSUM(scriba_librum_ponere(&sn, NIHIL));
+        }
     }
 
     credo_imprimere_compendium();

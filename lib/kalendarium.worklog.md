@@ -492,3 +492,31 @@ stack buffer passed by reference (A3 class) - now transcribed; the
 prior/next arrow test `id[VIII] == 'r'` was true for BOTH ids - new test
 counts dimmed arrows (1 on the first page, 0 in the middle).
 Plant: capacity huge (no paging) -> red.
+
+## 2026-10-13 — A6d-1: the day's notes (nested scriba) in the lower half
+
+With a volume (new `kalendarium_montare` parameter; vicus passes its
+own), the calendar mounts ONE nested scriba "<id>_notae" under its
+branch (scriba_montare_in_ramo) on the selected day's book
+("dies/<ISO>") and merges its action and figure registries into its own
+under the scriba's path (vicus then merges the calendar's; nested
+entries keep their absolute path - S8c-2). It is kept for the pane's
+lifetime; a day change swaps the BOOK (`librum_aptare` after every
+action via an `agere` wrapper, and in kalendarium_argumentum_ponere):
+pending typing is flushed first, then scriba_librum_ponere. Registries
+never change, so nothing has to be re-merged.
+Layout: the day view's lower half is a PARTES_NULLUM slot "notae"; after
+dispositio the composer composes scriba with a COPY of its compositio
+sized to the slot minus an 8px margin and 2px for the shadow (pure - the
+mounted config is not touched), offsets it there and stamps the subtree
+with the scriba's path. The root figure draws the flat shadow under it
+(figura_umbram_pingere) - the "post-it".
+Day pages have a FIXED size (72 x 30 cells): the first version sized
+them from superficies_* at mount time, but vicus writes those after
+mounting, so pages came out 40 x 6 (defaults) - seen in the screenshot.
+A scriba folium keeps the size it was created with; a smaller area
+scrolls. My calendar page counter id "paginae" collided with scriba's
+own "paginae" component - renamed "index_paginae".
+Also new: kalendarium_gestum_ponere (vicus facies.gestum_ponere) hands
+the pane's gesture slot to the nested scriba - exercised in A6d-2.
+Plant: book never follows the day -> red.

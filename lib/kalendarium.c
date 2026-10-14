@@ -13,6 +13,9 @@
 #include "fons.h"
 #include "dispositio.h"
 #include "vim.h"
+#include "scriba_applicatio.h"
+#include "scriba_componentia.h"
+#include "scriba_liber.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -31,12 +34,38 @@ hic_manens constans character actio_calendarii[] = "calendarium.agere";
 #define KALENDARIUM_MARGO_X          VI       /* mensa: cellula una, */
 #define KALENDARIUM_MARGO_Y          VIII     /* ut scriba et pictor */
 
-/* contextus figurarum (privatus; figurae_ctx): liturgia semel creata */
+/* contextus figurarum (privatus; figurae_ctx): liturgia semel creata;
+ * A6d: notae diei (scriba nidificata, liber diei currentis) */
 nomen structura {
     KalendariumMontatio* m;
   CalendariumLiturgicum* liturgia;
                 Piscina* scheda;     /* A3: actio una (vacatur) */
+                Volumen* volumen;    /* A6d: NIHIL = sine notis */
+         ScribaMontatio  notae;
+                    b32  notae_montatae;
+              character  dies_libri[XVI];   /* ISO libri currentis */
 } KalendariumFigurae;
+
+#define KALENDARIUM_MARGO_NOTARUM    VIII     /* charta notarum */
+/* pagina libri diei (cellulae): mensura FIXA - folium scribae creatum
+ * mensuram suam servat, et superficies lateris in montatione nondum
+ * nota est (vicus superficies_* post montationem scribit); area minor
+ * volvitur */
+#define KALENDARIUM_NOTAE_LATITUDO   LXXII
+#define KALENDARIUM_NOTAE_ALTITUDO   XXX
+
+/* A6d: charta notarum - fines "notae" minus marginem; area scribae =
+ * charta minus II (umbra plana dextra et infra, intra chartam) */
+interior Fines
+notarum_area (
+    Fines f)
+{
+    f.x         += KALENDARIUM_MARGO_NOTARUM;
+    f.y         += KALENDARIUM_MARGO_NOTARUM;
+    f.latitudo  -= II * KALENDARIUM_MARGO_NOTARUM + II;
+    f.altitudo  -= II * KALENDARIUM_MARGO_NOTARUM + II;
+    redde f;
+}
 
 
 /* ==================================================
@@ -1985,7 +2014,7 @@ globulum_premere (
 
 /* <actio/> calendarium.agere: visus mensis aut diei */
 interior b32
-agere (
+agere_intus (
      InsulaRepositorium* repo,
                   Motus* motus,
     constans Destinatio* des,
@@ -2054,6 +2083,28 @@ agere (
         redde FALSUM;
     }
     redde clavem_agere(m, ev, privatum->scheda);
+}
+
+/* A6d: liber notarum diem electum sequitur (post actum quemque) */
+interior vacuum
+librum_aptare (
+    KalendariumMontatio* m,
+                  Motus* motus);
+
+interior b32
+agere (
+     InsulaRepositorium* repo,
+                  Motus* motus,
+    constans Destinatio* des,
+              Componens* nodus,
+       constans Eventus* ev,
+                 vacuum* ctx)
+{
+    b32 r;
+
+    r = agere_intus(repo, motus, des, nodus, ev, ctx);
+    librum_aptare((KalendariumMontatio*)ctx, motus);
+    redde r;
 }
 
 
@@ -2377,7 +2428,7 @@ greges_pingere (
     {
         l = componens_liberum(c, i);
         /* A6b: "c" Completed (dies), "caput" ("To do" in die),
-         * "paginae" ("k/n" si plures) */
+         * "index_paginae" ("k/n" si plures) */
         si (   l->partes == PARTES_INDEX && l->id.mensura == I
             && l->id.datum[ZEPHYRUM] == 'c')
         {
@@ -2399,7 +2450,7 @@ greges_pingere (
             perge;
         }
         si (   l->partes == PARTES_INDEX
-            && chorda_aequalis_literis(l->id, "paginae"))
+            && chorda_aequalis_literis(l->id, "index_paginae"))
         {
                   s32 pagina;
                   s32 paginae;
@@ -2661,6 +2712,16 @@ figura_tabulae (
     }
     si (visus_diei(contextus->m) || visus_agendae(contextus->m))
     {
+        /* A6d: umbra plana chartae notarum (scriba supra pingitur) */
+        per (i = ZEPHYRUM; contextus->notae_montatae
+            && i < componens_numerus_liberorum(c); i++)
+        {
+            l = componens_liberum(c, i);
+            si (chorda_aequalis_literis(l->id, "notae"))
+            {
+                figura_umbram_pingere(md, notarum_area(l->fines));
+            }
+        }
         ordines_pingere(contextus, md, c);
         redde;
     }
@@ -3051,6 +3112,163 @@ figuras_registrare (
  * Montatio
  * ================================================== */
 
+/* A6d: notae diei - mensurae (cellulae paginae, pixela fenestrae) ex
+ * superficie: latitudo lateris minus margines, altitudo dimidii inferi
+ * corporis visus diei minus margines chartae et lineam status */
+interior vacuum
+notarum_mensurae (
+    KalendariumMontatio* m,
+                    i32* lat_cellulae,
+                    i32* alt_cellulae,
+                    s32* lat_pixela,
+                    s32* alt_pixela)
+{
+    s32 corpus;
+    s32 lat;
+    s32 alt;
+
+    lat     = attributum_s32(&m->ramus, "superficies_latitudo",
+        KALENDARIUM_LATITUDO) - II * KALENDARIUM_MARGO_X
+        - II * KALENDARIUM_MARGO_NOTARUM - II;
+    corpus  = attributum_s32(&m->ramus, "superficies_altitudo",
+        KALENDARIUM_ALTITUDO) / KALENDARIUM_LINEA - II
+        - KALENDARIUM_BARRA_LINEAE - KALENDARIUM_TITULI_DIEI;
+    alt     = (corpus - corpus * L / C) * KALENDARIUM_LINEA
+            - II * KALENDARIUM_MARGO_NOTARUM - II;
+    *lat_pixela    = lat < CXX ? CXX : lat;
+    *alt_pixela    = alt < XL ? XL : alt;
+    *lat_cellulae  = (i32)(*lat_pixela / KALENDARIUM_LITTERA - II);
+    *alt_cellulae  = (i32)(*alt_pixela / KALENDARIUM_LINEA - III);
+}
+
+/* liber diei (spatium "dies/<ISO>") */
+interior ScribaLiber*
+librum_diei_aperire (
+    KalendariumMontatio* m,
+     constans character* iso)
+{
+    KalendariumFigurae* ctx;
+             character  praefixum[XXXII];
+
+    ctx = (KalendariumFigurae*)m->figurae_ctx;
+    sprintf(praefixum, "dies/%s", iso);
+    redde scriba_liber_aperire_in_spatio(m->piscina, m->intern,
+        ctx->volumen, praefixum, KALENDARIUM_NOTAE_LATITUDO,
+        KALENDARIUM_NOTAE_ALTITUDO);
+}
+
+/* ISO diei electi in buffer (XVI) */
+interior vacuum
+iso_diei_electi (
+    KalendariumMontatio* m,
+              character* iso)
+{
+    chorda textus;
+
+    textus = fasti_formare_diem(kalendarium_dies_electus(m),
+        FASTI_FORMA_ISO, m->piscina);
+    iso[ZEPHYRUM] = '\0';
+    si (textus.mensura > ZEPHYRUM && textus.mensura < XVI)
+    {
+        memcpy(iso, textus.datum, (size_t)textus.mensura);
+        iso[textus.mensura] = '\0';
+    }
+}
+
+/* notas montare: scriba nidificata "<id>_notae" sub ramo calendarii,
+ * liber diei electi; registra eius in nostra (spatio suo) */
+interior b32
+notas_montare (
+    KalendariumMontatio* m,
+                Volumen* volumen,
+     constans character* id,
+        StatusSystemata* systemata)
+{
+    KalendariumFigurae* ctx;
+           ScribaLiber* liber;
+             character  titulus[LXIV];
+                   i32  lc;
+                   i32  ac;
+                   s32  lp;
+                   s32  ap;
+
+    ctx = (KalendariumFigurae*)m->figurae_ctx;
+    si (!volumen || !ctx)
+    {
+        redde VERUM;
+    }
+    ctx->volumen = volumen;
+    iso_diei_electi(m, ctx->dies_libri);
+    liber = librum_diei_aperire(m, ctx->dies_libri);
+    si (!liber)
+    {
+        redde FALSUM;
+    }
+    sprintf(titulus, "%s_notae", id ? id : "calendarium");
+    notarum_mensurae(m, &lc, &ac, &lp, &ap);
+    si (   !scriba_montare_in_ramo(&ctx->notae, m->piscina, m->intern,
+            volumen, &m->ramus, titulus, (i32)lp, (i32)ap, liber,
+            systemata)
+        || !actio_registrum_miscere_in_spatio(m->actiones,
+            ctx->notae.actiones, ctx->notae.ramus.via)
+        || !figura_registrum_miscere_in_spatio(m->figurae,
+            ctx->notae.figurae, ctx->notae.ramus.via))
+    {
+        redde FALSUM;
+    }
+    ctx->notae_montatae = VERUM;
+    redde VERUM;
+}
+
+/* liber diem electum sequitur: gestus pendens prius effunditur */
+interior vacuum
+librum_aptare (
+    KalendariumMontatio* m,
+                  Motus* motus)
+{
+    KalendariumFigurae* ctx;
+           ScribaLiber* liber;
+             character  iso[XVI];
+
+    ctx = m ? (KalendariumFigurae*)m->figurae_ctx : NIHIL;
+    si (!ctx || !ctx->notae_montatae)
+    {
+        redde;
+    }
+    iso_diei_electi(m, iso);
+    si (strcmp(iso, ctx->dies_libri) == ZEPHYRUM)
+    {
+        redde;
+    }
+    si (motus)
+    {
+        (vacuum)motus_gestum_effundere(motus, m->ramus.repo);
+    }
+    liber = librum_diei_aperire(m, iso);
+    si (liber && scriba_librum_ponere(&ctx->notae, liber))
+    {
+        strcpy(ctx->dies_libri, iso);
+    }
+}
+
+vacuum
+kalendarium_gestum_ponere (
+     Motus* motus,
+    vacuum* ctx)
+{
+    KalendariumMontatio* m;
+     KalendariumFigurae* privatum;
+
+    m         = (KalendariumMontatio*)ctx;
+    privatum  = m ? (KalendariumFigurae*)m->figurae_ctx : NIHIL;
+    si (!motus || !privatum || !privatum->notae_montatae)
+    {
+        redde;
+    }
+    (vacuum)scriba_reficere(&privatum->notae);
+    scriba_gestum_ponere(motus, &privatum->notae.actiones_ctx);
+}
+
 b32
 kalendarium_montare (
      KalendariumMontatio* m,
@@ -3060,6 +3278,7 @@ kalendarium_montare (
       constans character* id,
       constans character* argumentum,
         AgendaDocumentum* documentum,
+                 Volumen* volumen,
         KalendariumHodie  hodie_porta,
                   vacuum* hodie_ctx,
          StatusSystemata* systemata)
@@ -3067,6 +3286,7 @@ kalendarium_montare (
     Organum* organum;
         s32  annus;
         s32  mensis;
+        b32  ok;
 
     si (!m || !piscina || !intern || !repo)
     {
@@ -3102,15 +3322,15 @@ kalendarium_montare (
     {
         redde FALSUM;
     }
+    ok = VERUM;
     si (argumentum)
     {
-        si (strcmp(argumentum, "agenda") == ZEPHYRUM)
-        {
-            redde visum_ponere(m, "agenda");
-        }
-        redde diem_scribere(m, dies_argumenti(m, annus, mensis));
+        ok = strcmp(argumentum, "agenda") == ZEPHYRUM
+            ? visum_ponere(m, "agenda")
+            : diem_scribere(m, dies_argumenti(m, annus, mensis));
     }
-    redde VERUM;
+    /* A6d: notae diei post diem argumenti */
+    redde ok && notas_montare(m, volumen, id, systemata);
 }
 
 b32
@@ -3129,7 +3349,12 @@ kalendarium_argumentum_ponere (
     {
         redde FALSUM;
     }
-    redde diem_scribere(m, dies_argumenti(m, annus, mensis));
+    si (!diem_scribere(m, dies_argumenti(m, annus, mensis)))
+    {
+        redde FALSUM;
+    }
+    librum_aptare(m, NIHIL);
+    redde VERUM;
 }
 
 Dies
@@ -3331,7 +3556,8 @@ globulum_capitis_locare (
 
 /* index (visus diei et agendae, A6b): regio = dies: dimidium superum
  * corporis (PARS L; inferum notis A6d), agenda: corpus totum; caput
- * "caput" + nova + < "paginae" >; deinde ordines paginae currentis */
+ * "caput" + nova + < "index_paginae" >; deinde ordines paginae
+ * currentis */
 interior vacuum
 indicem_disponere (
     KalendariumMontatio* m,
@@ -3352,9 +3578,11 @@ indicem_disponere (
     {
         regio = locum_addere(dp, corpus, DISPOSITIO_COLUMNA,
             DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_PARS, L);
-        (vacuum)locum_addere(dp, corpus, DISPOSITIO_COLUMNA,
+        /* A6d: dimidium inferum = notae (scriba post computationem) */
+        (vacuum)componentem_locare(dp, corpus, "notae", PARTES_NULLUM,
             DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_CRESCENS,
-            ZEPHYRUM);
+            ZEPHYRUM,
+            FALSUM, FALSUM);
     }
     caput = locum_addere(dp, regio, DISPOSITIO_LINEA,
         DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_FIXA,
@@ -3366,7 +3594,7 @@ indicem_disponere (
     (vacuum)locum_addere(dp, caput, DISPOSITIO_LINEA, DISPOSITIO_FIXA,
         I, DISPOSITIO_FIXA, KALENDARIUM_CAPUT_LINEAE);
     globulum_capitis_locare(dp, caput, "pagina-prior");
-    (vacuum)componentem_locare(dp, caput, "paginae", PARTES_INDEX,
+    (vacuum)componentem_locare(dp, caput, "index_paginae", PARTES_INDEX,
         DISPOSITIO_FIXA, VII, DISPOSITIO_FIXA, KALENDARIUM_CAPUT_LINEAE,
         FALSUM, FALSUM);
     globulum_capitis_locare(dp, caput, "pagina-proxima");
@@ -3429,6 +3657,55 @@ globulos_disponere (
     }
 }
 
+/* scriba notarum composita in area chartae (compositio COPIA cum
+ * mensura areae - purum), spatio rami scribae signata */
+interior vacuum
+notas_componere (
+     KalendariumMontatio* m,
+      InsulaRepositorium* repo,
+          constans Motus* motus,
+                 Piscina* piscina,
+     InternamentumChorda* intern,
+               Componens* radix)
+{
+     KalendariumFigurae* ctx;
+              Componens* locus;
+              Componens* app;
+       ScribaCompositio  cfg;
+                  Fines  area;
+                  Fines  f;
+
+    ctx = (KalendariumFigurae*)m->figurae_ctx;
+    si (!ctx || !ctx->notae_montatae)
+    {
+        redde;
+    }
+    locus = componens_invenire_per_id(radix, chorda_ex_literis("notae",
+        piscina));
+    si (!locus || locus->fines.altitudo <= ZEPHYRUM)
+    {
+        redde;
+    }
+    area  = notarum_area(locus->fines);
+    cfg   = ctx->notae.compositio;
+    cfg.fenestra_latitudo  = (i32)(area.latitudo > ZEPHYRUM
+                                   ? area.latitudo : ZEPHYRUM);
+    cfg.fenestra_altitudo  = (i32)(area.altitudo > ZEPHYRUM
+                                   ? area.altitudo : ZEPHYRUM);
+    app = scriba_componere(repo, motus, piscina, intern, &cfg);
+    si (!app)
+    {
+        redde;
+    }
+    f    = app->fines;
+    f.x  = area.x;
+    f.y  = area.y;
+    componens_ponere_fines(app, f);
+    componens_ponere_spatium(app, chorda_ut_cstr(ctx->notae.ramus.via,
+        piscina));
+    componens_addere_liberum(radix, app);
+}
+
 /* <componens/> <purus/> */
 Componens*
 kalendarium_componere (
@@ -3452,7 +3729,6 @@ kalendarium_componere (
                     i32  i;
                     i32  k;
 
-    (vacuum)repo;
     m = (KalendariumMontatio*)ctx;
     si (!m)
     {
@@ -3539,6 +3815,11 @@ kalendarium_componere (
                 componens_addere_liberum(radix, l->c);
             }
         }
+    }
+    /* A6d: notae diei in charta dimidii inferi */
+    si (visus_diei(m))
+    {
+        notas_componere(m, repo, motus, piscina, intern, radix);
     }
     redde radix;
 }
