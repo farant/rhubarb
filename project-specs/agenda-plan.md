@@ -234,8 +234,10 @@ State-model question to settle before A2 (A1 is content only).
     - **M2a** DONE 2026-10-14: agenda heading click filters by its
       rubric (again on the active one clears; "(none)" inert); only the
       LEFT button acts (right-click used to complete via the checkbox).
-    - **M2b** menu component (own library, figura-drawn, inside the
-      pane, keyboard too) - header text to Fran first.
+    - **M2b** DONE 2026-10-14: `elenchus` library (include/elenchus.h,
+      header approved): house popover pattern (host popover field,
+      DIALOGUS subtree as last root child, dimissio closes), fines with
+      Mac flip + clamp, one figure, keys j/k/arrows/Return.
     - **M2c** calendar wiring: right-click on a row / day opens the
       menu of the commands available there (unavailable greyed).
   - **M3** generalize: commands declared in the manifest, availability

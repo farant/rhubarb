@@ -76,6 +76,7 @@ declare -a SOURCE_FILES=(
     "lib/dithering_exemplaria.c"
     "lib/diurna.c"
     "lib/elementa.c"
+    "lib/elenchus.c"
     "lib/entitas.c"
     "lib/entitas_repositorium_impl.c"
     "lib/entitates_html.c"
