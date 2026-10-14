@@ -533,3 +533,36 @@ dispatcher's new level rules (Tab: list <-> notes; Esc: notes -> list,
 the day view stays). Plants: hand-off off -> red (vicus); key-ignore off
 -> red ('l' changed the day under the notes); scriba consuming idle Esc
 -> red.
+
+## 2026-10-14 — A6e: notes fit their box; page indicator follows
+
+Fran's screenshots (4x scale) showed three things. (1) The 72x30 fixed
+day page was taller than the post-it (~27 rows), so scriba scrolled when
+clicking near the bottom - and while scrolled scriba's light surface
+moved up with the content and my shadow (drawn under the whole area)
+showed through as a thick dark band. (2) Uneven light strips and a
+misplaced purple outline: the area was sized in PIXELS, scriba lays out
+in whole cells with a one-cell margin around the page. (3) "pagina 1/4"
+never changed on Ctrl-Shift-Right: scriba refreshes its indicator in
+scriba_reficere, which vicus calls from a pane's pulse - nothing pulsed
+the NESTED scriba.
+Fixes: `notarum_area(slot, page)` = (page + 2) x (page + 3) cells,
+clipped to the slot minus the paper margin and shadow, used by both the
+composer and the shadow figure. `notarum_mensurae` derives the page size
+for NEW pages from the pane size with the same arithmetic, so a new page
+fits exactly. Pane size: superficies_* attributes, else the size passed
+at mount (new kalendarium_montare latitudo/altitudo - vicus writes the
+attributes only after mounting, which is what made yesterday's 40x6
+pages), else defaults; `superficies_ordinaria` is that fallback, shared
+by the composer, the capacity and the notes. The prompt moved into the
+list region (bottom of the top half) so opening it no longer shrinks
+the notes. `kalendarium_reficere` (scriba_reficere on the notes) is the
+calendar facies' pulse in vicus.
+Existing day pages keep their size (Fran: leave them) - a 72x30 page
+still scrolls in a smaller box.
+Test caught by review: the first exact-fit test mounted at 280x256 =
+the defaults, so a plant ignoring the mount size stayed invisible; the
+test now mounts at 360x320 (53x9 page) - and that exposed the composer
+still using the defaults standalone (fixed: superficies_ordinaria).
+Plants: mount size ignored -> red; area not cell-exact -> red; vicus
+pulse not forwarded -> red.

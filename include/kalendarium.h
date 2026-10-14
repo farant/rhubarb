@@ -140,9 +140,18 @@ kalendarium_montare (
         AgendaDocumentum* documentum,
                  Volumen* volumen,     /* A6d: libri dierum (NIHIL:
                                         * sine notis) */
+                     i32  latitudo,    /* A6e: superficies in
+                                        * montatione (0 = ignota) */
+                     i32  altitudo,
         KalendariumHodie  hodie,
                   vacuum* hodie_ctx,
          StatusSystemata* systemata);
+
+/* A6e: pulsus (vicus): notae diei refectae (indicium paginae post
+ * navigationem in notis); VERUM si mutatum (pingendum) */
+b32
+kalendarium_reficere (
+    KalendariumMontatio* m);
 
 /* A6d: gestus (vicus T3a): notae diei montatae - gestus scribae
  * notarum (liber diei refectus); aliter nullus */

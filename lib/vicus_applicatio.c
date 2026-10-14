@@ -780,8 +780,6 @@ kalendarium_montare_in_vico (
 {
     ContextusKalendarii* ck;
 
-    (vacuum)latitudo;
-    (vacuum)altitudo;
     ck = (ContextusKalendarii*)ctx;
     si (!ck)
     {
@@ -794,7 +792,8 @@ kalendarium_montare_in_vico (
     }
     redde kalendarium_montare((KalendariumMontatio*)sedes, piscina,
         intern, repo, id, (argumentum && argumentum[ZEPHYRUM])
-        ? argumentum : NIHIL, ck->documentum, volumen, hodie_vici,
+        ? argumentum : NIHIL, ck->documentum, volumen, latitudo,
+        altitudo, hodie_vici,
         ck->vicus,
         ck->systemata);
 }
@@ -806,6 +805,18 @@ kalendarii_argumentum_ponere (
 {
     redde kalendarium_argumentum_ponere((KalendariumMontatio*)ctx,
         argumentum);
+}
+
+/* A6e: pulsus lateris calendarii - notae refectae */
+interior VicusPulsus
+kalendarii_pulsare (
+    vacuum* ctx)
+{
+    VicusPulsus p;
+
+    p.mutatum = kalendarium_reficere((KalendariumMontatio*)ctx);
+    p.finitus = FALSUM;
+    redde p;
 }
 
 interior vacuum
@@ -825,6 +836,9 @@ kalendarium_describere (
     /* A6d: notae diei - gestus scribae nidificatae */
     f->gestum_ponere  = kalendarium_gestum_ponere;
     f->gestum_ctx     = m;
+    /* A6e: pulsus - indicium paginae notarum */
+    f->pulsare      = kalendarii_pulsare;
+    f->pulsare_ctx  = m;
 }
 
 /* folium paginae novae (S2b): lateris sinistri cellulae (dimidium

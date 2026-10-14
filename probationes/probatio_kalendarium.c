@@ -40,13 +40,15 @@ hodie_fixa (
 }
 
 nomen structura {
-     InternamentumChorda* intern;
-      InsulaRepositorium* repo;
-     KalendariumMontatio  m;
-             Dispensator* d;
-                 Volumen* volumen;
-         StatusSystemata  systemata;
-        AgendaDocumentum* documentum;
+      InternamentumChorda* intern;
+       InsulaRepositorium* repo;
+      KalendariumMontatio  m;
+              Dispensator* d;
+                  Volumen* volumen;
+          StatusSystemata  systemata;
+         AgendaDocumentum* documentum;
+                      s32  latitudo;   /* A6e: superficies montat. */
+                      s32  altitudo;
 } Mundus;
 
 /* montare (sine systematis nisi volumen) et dispensatorem ligare; m in
@@ -71,7 +73,8 @@ mundum_struere (
             x->volumen, x->repo);
     }
     si (!kalendarium_montare(&x->m, p, x->intern, x->repo, "c1",
-            argumentum, x->documentum, x->volumen, hodie_fixa, NIHIL,
+            argumentum, x->documentum, x->volumen, (i32)x->latitudo,
+            (i32)x->altitudo, hodie_fixa, NIHIL,
             x->volumen ? &x->systemata : NIHIL))
     {
         redde FALSUM;
@@ -2163,6 +2166,58 @@ _probare_focum_notarum (
     CREDO_VERUM(kalendarium_dies_electus(&x->m).dies == XV);
 }
 
+/* A6e: charta notarum cellulis exacta - pagina diei ex superficie
+ * montationis (CCCLX x CCCXX: LIII x IX), area scribae = (pagina + II)
+ * x (pagina + III) cellulae intra locum "notae"; indicium paginae
+ * kalendarium_reficere sequitur (Ctrl-Shift-Dextra) */
+interior vacuum
+_probare_chartam_notarum (
+    CredoContextus* c)
+{
+              Mundus* x;
+               Motus* motus;
+           Componens* scriba;
+           Componens* locus;
+         InsulaRamus  rs;
+               Fines  f;
+
+    x = (Mundus*)c->datum;
+    thema_initiare();
+    x->volumen = volumen_temporarium(c->piscina,
+        "probatio_kalendarium");
+    CREDO_NECESSE_NON_NIHIL(x->volumen);
+    x->documentum = agenda_aperire(c->piscina, x->intern, x->volumen,
+        "agenda", ZEPHYRUM);
+    x->latitudo = CCCLX;
+    x->altitudo = CCCXX;
+    CREDO_NECESSE(mundum_struere(x, c->piscina, NIHIL));
+    motus = dispensator_motus(x->d);
+    kalendarium_gestum_ponere(motus, &x->m);
+    reditus(x);
+    locus   = componens_invenire_per_id(dispensator_arbor(x->d),
+        chorda_ex_literis("notae", c->piscina));
+    scriba  = componens_invenire_per_id(dispensator_arbor(x->d),
+        chorda_ex_literis("radix", c->piscina));
+    CREDO_NECESSE(locus && scriba);
+    CREDO_AEQUALIS_S32(scriba->fines.latitudo, (LIII + II) * VI);
+    CREDO_AEQUALIS_S32(scriba->fines.altitudo, (IX + III) * VIII);
+    CREDO_VERUM(   scriba->fines.x + scriba->fines.latitudo
+                <= locus->fines.x + locus->fines.latitudo);
+    CREDO_VERUM(   scriba->fines.y + scriba->fines.altitudo
+                <= locus->fines.y + locus->fines.altitudo);
+    /* Ctrl-Shift-Dextra in notis: pagina II; indicium post reficere */
+    f = fines_componentis(x, "notae", c->piscina);
+    ictus_ad(x, f.x + XL, f.y + XX);
+    clavis_specialis(x, CLAVIS_DEXTER, ZEPHYRUM, ZEPHYRUM,
+        (i32)(MOD_IMPERIUM | MOD_SHIFT));
+    CREDO_VERUM(kalendarium_reficere(&x->m));
+    rs = insula_ramus_ex_via(x->repo, motus->spatium_intimum);
+    CREDO_VERUM(chorda_aequalis_literis(*insula_ramus_attributum(&rs,
+        "pagina_positio"), "2"));
+    CREDO_VERUM(chorda_aequalis_literis(*insula_ramus_attributum(&rs,
+        "paginae_numerus"), "2"));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "montatio",     _probare_montationem,   mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
@@ -2207,6 +2262,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "notae", _probare_notas, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
     { "notae_focus", _probare_focum_notarum, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "charta_notarum", _probare_chartam_notarum, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

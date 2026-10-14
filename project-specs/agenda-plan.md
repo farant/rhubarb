@@ -259,7 +259,11 @@ State-model question to settle before A2 (A1 is content only).
     post-it shadow, book follows day; day pages fixed 72x30);
     **A6d-2** DONE 2026-10-13 focus (click; Tab between levels and Esc
     out of a nested widget as GENERAL dispatcher rules), gesture
-    hand-off, vicus typing test. A6 complete. **A6d** embedding: mount in the bottom half, nested gesture slot, focus /
+    hand-off, vicus typing test. A6 complete. **A6e** DONE 2026-10-14 (Fran's
+    screenshots): post-it cell-exact (no scroll, even frame), new pages
+    sized from the pane (size passed at mount), page indicator refreshed
+    by the pane pulse (kalendarium_reficere), prompt inside the list
+    half. **A6d** embedding: mount in the bottom half, nested gesture slot, focus /
     Tab / Esc, book follows the day, post-it look, screenshots.
 - **Next after the widget (Fran 2026-10-13):** fix the liturgical
   library - review in project-specs/liturgia-recensio/RECENSIO.md

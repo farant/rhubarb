@@ -44,26 +44,60 @@ nomen structura {
          ScribaMontatio  notae;
                     b32  notae_montatae;
               character  dies_libri[XVI];   /* ISO libri currentis */
+                    s32  latitudo_montationis;   /* A6e: 0 = ignota */
+                    s32  altitudo_montationis;
 } KalendariumFigurae;
 
 #define KALENDARIUM_MARGO_NOTARUM    VIII     /* charta notarum */
-/* pagina libri diei (cellulae): mensura FIXA - folium scribae creatum
- * mensuram suam servat, et superficies lateris in montatione nondum
- * nota est (vicus superficies_* post montationem scribit); area minor
- * volvitur */
-#define KALENDARIUM_NOTAE_LATITUDO   LXXII
-#define KALENDARIUM_NOTAE_ALTITUDO   XXX
 
-/* A6d: charta notarum - fines "notae" minus marginem; area scribae =
- * charta minus II (umbra plana dextra et infra, intra chartam) */
+/* A6e: superficies sine superficies_* rami: montationis (si nota),
+ * aliter ordinaria (KALENDARIUM_LATITUDO / ALTITUDO) */
+interior s32
+superficies_ordinaria (
+    constans KalendariumMontatio* m,
+                             b32  latitudo)
+{
+    constans KalendariumFigurae* ctx;
+                            s32  v;
+
+    ctx = (constans KalendariumFigurae*)m->figurae_ctx;
+    v   = !ctx ? ZEPHYRUM : latitudo ? ctx->latitudo_montationis
+                                     : ctx->altitudo_montationis;
+    redde v > ZEPHYRUM ? v : latitudo ? KALENDARIUM_LATITUDO
+                                      : KALENDARIUM_ALTITUDO;
+}
+
+/* A6e: area scribae notarum in loco "notae" (spatio radicis): ad
+ * cellulas exacta - (pagina + II) x (pagina + III) cellulae (margo
+ * cellulae utrimque, linea status), intra locum minus marginem chartae
+ * et umbram (II); pagina maior quam locus: area loco aptata
+ * (volvitur) */
 interior Fines
 notarum_area (
-    Fines f)
+            Fines locus,
+              i32 pagina_latitudo,
+              i32 pagina_altitudo)
 {
-    f.x         += KALENDARIUM_MARGO_NOTARUM;
-    f.y         += KALENDARIUM_MARGO_NOTARUM;
-    f.latitudo  -= II * KALENDARIUM_MARGO_NOTARUM + II;
-    f.altitudo  -= II * KALENDARIUM_MARGO_NOTARUM + II;
+    Fines f;
+      s32 lat;
+      s32 alt;
+
+    f.x = locus.x + KALENDARIUM_MARGO_NOTARUM;
+    f.y = locus.y + KALENDARIUM_MARGO_NOTARUM;
+    lat  = (locus.latitudo - II * KALENDARIUM_MARGO_NOTARUM - II)
+         / KALENDARIUM_LITTERA;
+    alt  = (locus.altitudo - II * KALENDARIUM_MARGO_NOTARUM - II)
+         / KALENDARIUM_LINEA;
+    si ((s32)pagina_latitudo + II < lat)
+    {
+        lat = (s32)pagina_latitudo + II;
+    }
+    si ((s32)pagina_altitudo + III < alt)
+    {
+        alt = (s32)pagina_altitudo + III;
+    }
+    f.latitudo = lat > ZEPHYRUM ? lat * KALENDARIUM_LITTERA : ZEPHYRUM;
+    f.altitudo = alt > ZEPHYRUM ? alt * KALENDARIUM_LINEA : ZEPHYRUM;
     redde f;
 }
 
@@ -1184,15 +1218,16 @@ capacitas_indicis (
     s32 corpus;
 
     corpus = attributum_s32(&m->ramus, "superficies_altitudo",
-        KALENDARIUM_ALTITUDO) / KALENDARIUM_LINEA - II
+        superficies_ordinaria(m, FALSUM)) / KALENDARIUM_LINEA - II
         - KALENDARIUM_BARRA_LINEAE - (visus_diei(m)
-        ? KALENDARIUM_TITULI_DIEI : KALENDARIUM_TITULI_LINEAE)
-        - (prompta_aperta(m, NIHIL) ? II : ZEPHYRUM);
+        ? KALENDARIUM_TITULI_DIEI : KALENDARIUM_TITULI_LINEAE);
     si (visus_diei(m))
     {
         corpus = corpus * L / C;
     }
-    redde corpus - KALENDARIUM_CAPUT_LINEAE;
+    /* A6e: prompta in regione indicis */
+    redde corpus - KALENDARIUM_CAPUT_LINEAE - (prompta_aperta(m, NIHIL)
+        ? II : ZEPHYRUM);
 }
 
 /* initia paginarum (Xar de s32, index ordinis): ordo qui non capit in
@@ -2730,7 +2765,12 @@ figura_tabulae (
             l = componens_liberum(c, i);
             si (chorda_aequalis_literis(l->id, "notae"))
             {
-                figura_umbram_pingere(md, notarum_area(l->fines));
+                constans ScribaDocumentum* doc;
+
+                doc = contextus->notae.doc;
+                figura_umbram_pingere(md, notarum_area(l->fines, doc
+                    ? doc->latitudo : ZEPHYRUM, doc ? doc->altitudo
+                    : ZEPHYRUM));
             }
         }
         ordines_pingere(contextus, md, c);
@@ -3123,9 +3163,11 @@ figuras_registrare (
  * Montatio
  * ================================================== */
 
-/* A6d: notae diei - mensurae (cellulae paginae, pixela fenestrae) ex
- * superficie: latitudo lateris minus margines, altitudo dimidii inferi
- * corporis visus diei minus margines chartae et lineam status */
+/* A6e: mensurae notarum ex superficie lateris (superficies_* rami,
+ * aliter superficies montationis, aliter ordinaria): locus = dimidium
+ * inferum corporis visus diei (cellulae ut dispositio); pagina =
+ * cellulae areae minus margines scribae (II) et status (I) - eadem
+ * arithmetica ac notarum_area, ergo pagina nova sine volutione */
 interior vacuum
 notarum_mensurae (
     KalendariumMontatio* m,
@@ -3134,22 +3176,34 @@ notarum_mensurae (
                     s32* lat_pixela,
                     s32* alt_pixela)
 {
-    s32 corpus;
-    s32 lat;
-    s32 alt;
+    KalendariumFigurae* ctx;
+                   s32  lat;
+                   s32  alt;
+                   s32  corpus;
+                 Fines  locus;
+                 Fines  area;
 
-    lat     = attributum_s32(&m->ramus, "superficies_latitudo",
-        KALENDARIUM_LATITUDO) - II * KALENDARIUM_MARGO_X
-        - II * KALENDARIUM_MARGO_NOTARUM - II;
-    corpus  = attributum_s32(&m->ramus, "superficies_altitudo",
-        KALENDARIUM_ALTITUDO) / KALENDARIUM_LINEA - II
-        - KALENDARIUM_BARRA_LINEAE - KALENDARIUM_TITULI_DIEI;
-    alt     = (corpus - corpus * L / C) * KALENDARIUM_LINEA
-            - II * KALENDARIUM_MARGO_NOTARUM - II;
-    *lat_pixela    = lat < CXX ? CXX : lat;
-    *alt_pixela    = alt < XL ? XL : alt;
-    *lat_cellulae  = (i32)(*lat_pixela / KALENDARIUM_LITTERA - II);
-    *alt_cellulae  = (i32)(*alt_pixela / KALENDARIUM_LINEA - III);
+    ctx = (KalendariumFigurae*)m->figurae_ctx;
+    (vacuum)ctx;
+    lat = attributum_s32(&m->ramus, "superficies_latitudo",
+        superficies_ordinaria(m, VERUM));
+    alt = attributum_s32(&m->ramus, "superficies_altitudo",
+        superficies_ordinaria(m, FALSUM));
+    corpus           = alt / KALENDARIUM_LINEA - II
+                     - KALENDARIUM_BARRA_LINEAE
+                     - KALENDARIUM_TITULI_DIEI;
+    locus.x = ZEPHYRUM;
+    locus.y = ZEPHYRUM;
+    locus.latitudo   = (lat / KALENDARIUM_LITTERA - II)
+                     * KALENDARIUM_LITTERA;
+    locus.altitudo  = (corpus - corpus * L / C) * KALENDARIUM_LINEA;
+    area            = notarum_area(locus, CM, CM);
+    *lat_pixela     = area.latitudo;
+    *alt_pixela     = area.altitudo;
+    *lat_cellulae    = (i32)(area.latitudo / KALENDARIUM_LITTERA > IV
+                     ? area.latitudo / KALENDARIUM_LITTERA - II : II);
+    *alt_cellulae    = (i32)(area.altitudo / KALENDARIUM_LINEA > IV
+                     ? area.altitudo / KALENDARIUM_LINEA - III : I);
 }
 
 /* liber diei (spatium "dies/<ISO>") */
@@ -3160,12 +3214,17 @@ librum_diei_aperire (
 {
     KalendariumFigurae* ctx;
              character  praefixum[XXXII];
+                   i32  lc;
+                   i32  ac;
+                   s32  lp;
+                   s32  ap;
 
     ctx = (KalendariumFigurae*)m->figurae_ctx;
     sprintf(praefixum, "dies/%s", iso);
+    /* A6e: paginae novae magnitudine areae currentis */
+    notarum_mensurae(m, &lc, &ac, &lp, &ap);
     redde scriba_liber_aperire_in_spatio(m->piscina, m->intern,
-        ctx->volumen, praefixum, KALENDARIUM_NOTAE_LATITUDO,
-        KALENDARIUM_NOTAE_ALTITUDO);
+        ctx->volumen, praefixum, lc, ac);
 }
 
 /* ISO diei electi in buffer (XVI) */
@@ -3262,6 +3321,20 @@ librum_aptare (
     }
 }
 
+b32
+kalendarium_reficere (
+    KalendariumMontatio* m)
+{
+    KalendariumFigurae* ctx;
+
+    ctx = m ? (KalendariumFigurae*)m->figurae_ctx : NIHIL;
+    si (!ctx || !ctx->notae_montatae)
+    {
+        redde FALSUM;
+    }
+    redde scriba_reficere(&ctx->notae);
+}
+
 vacuum
 kalendarium_gestum_ponere (
      Motus* motus,
@@ -3290,6 +3363,8 @@ kalendarium_montare (
       constans character* argumentum,
         AgendaDocumentum* documentum,
                  Volumen* volumen,
+                     i32  latitudo,
+                     i32  altitudo,
         KalendariumHodie  hodie_porta,
                   vacuum* hodie_ctx,
          StatusSystemata* systemata)
@@ -3340,7 +3415,15 @@ kalendarium_montare (
             ? visum_ponere(m, "agenda")
             : diem_scribere(m, dies_argumenti(m, annus, mensis));
     }
-    /* A6d: notae diei post diem argumenti */
+    /* A6d: notae diei post diem argumenti; A6e: superficies
+     * montationis (vicus superficies_* postea scribit) */
+    si (m->figurae_ctx)
+    {
+        ((KalendariumFigurae*)m->figurae_ctx)->latitudo_montationis =
+            (s32)latitudo;
+        ((KalendariumFigurae*)m->figurae_ctx)->altitudo_montationis =
+            (s32)altitudo;
+    }
     redde ok && notas_montare(m, volumen, id, systemata);
 }
 
@@ -3625,6 +3708,17 @@ indicem_disponere (
             DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_FIXA, o->altitudo,
             o->partes == PARTES_ITEM, FALSUM);
     }
+    /* prompta (A3b; A6e: in regione indicis, linea ultima - notae non
+     * contrahuntur) */
+    si (prompta_aperta(m, NIHIL))
+    {
+        (vacuum)locum_addere(dp, regio, DISPOSITIO_LINEA,
+            DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_CRESCENS,
+            ZEPHYRUM);
+        (vacuum)componentem_locare(dp, regio, "prompta", PARTES_CAMPUS,
+            DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_FIXA, II, FALSUM,
+            FALSUM);
+    }
 }
 
 /* barra: grex sinister (< > Today), spatium crescens, grex dexter
@@ -3697,7 +3791,9 @@ notas_componere (
     {
         redde;
     }
-    area  = notarum_area(locus->fines);
+    area  = notarum_area(locus->fines, ctx->notae.doc
+        ? ctx->notae.doc->latitudo : ZEPHYRUM, ctx->notae.doc
+        ? ctx->notae.doc->altitudo : ZEPHYRUM);
     cfg   = ctx->notae.compositio;
     cfg.fenestra_latitudo  = (i32)(area.latitudo > ZEPHYRUM
                                    ? area.latitudo : ZEPHYRUM);
@@ -3745,10 +3841,11 @@ kalendarium_componere (
     {
         redde NIHIL;
     }
+    /* A6e: superficies rami, aliter montationis, aliter ordinaria */
     latitudo  = attributum_s32(&m->ramus, "superficies_latitudo",
-        KALENDARIUM_LATITUDO);
+        superficies_ordinaria(m, VERUM));
     altitudo  = attributum_s32(&m->ramus, "superficies_altitudo",
-        KALENDARIUM_ALTITUDO);
+        superficies_ordinaria(m, FALSUM));
     radix = nodus(piscina, intern, "kalendarium", PARTES_TABULA,
         ZEPHYRUM, ZEPHYRUM, latitudo, altitudo);
     si (!radix)
@@ -3799,14 +3896,6 @@ kalendarium_componere (
     alioquin
     {
         mensem_disponere(m, &dp, corpus);
-    }
-    /* prompta (A3b): linea ultima dum aperta */
-    si ((visus_diei(m) || visus_agendae(m)) && prompta_aperta(m, NIHIL))
-    {
-        (vacuum)componentem_locare(&dp, radix_d, "prompta",
-            PARTES_CAMPUS, DISPOSITIO_CRESCENS, ZEPHYRUM,
-            DISPOSITIO_FIXA,
-            II, FALSUM, FALSUM);
     }
     dispositio_computare(dp.d, columnae, lineae, NIHIL, NIHIL);
     /* fines in pixela; liberi ordine priore: ceteri, deinde barra */

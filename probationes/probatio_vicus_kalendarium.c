@@ -233,6 +233,24 @@ _probare_notas (
         }
     }
     CREDO_VERUM(inventa);
+    /* A6e: Ctrl-Shift-Dextra in notis -> pagina II; pulsus vici
+     * indicium reficit (facies.pulsare calendarii) */
+    {
+            Eventus  e;
+        InsulaRamus  rs;
+             chorda* a;
+
+        memset(&e, ZEPHYRUM, magnitudo(Eventus));
+        e.genus                      = EVENTUS_CLAVIS_DEPRESSUS;
+        e.datum.clavis.clavis        = CLAVIS_DEXTER;
+        e.datum.clavis.modificantes  = (i32)(MOD_IMPERIUM | MOD_SHIFT);
+        dispensator_tractare(x->app.d, &e);
+        (vacuum)vicus_pulsare(v);
+        rs = insula_ramus_ex_via(x->app.vicus->repo,
+            dispensator_motus(x->app.d)->spatium_intimum);
+        a  = insula_ramus_attributum(&rs, "pagina_positio");
+        CREDO_VERUM(a && chorda_aequalis_literis(*a, "2"));
+    }
 }
 
 hic_manens constans CredoSectio SECTIONES[] = {
