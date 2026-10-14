@@ -208,6 +208,10 @@ house rule of independent composable libraries.
 - **P1a DONE 2026-10-14: `rubrica`** (include/rubrica.h) - the tag
   rules shared by agenda, calendar and contacts (were two private
   copies).
+- **P1b DONE 2026-10-14: `personae`** (include/personae.h) - with one
+  forced deviation: phone/email values use the element-attribute form
+  `<telephonum><@valor=>..</></telephonum>` (a '"' in a plain attribute
+  is not representable).
 - **P1 `personae` document** - acts, projection, sort key, letter
   heading, birthday parse (`YYYY-MM-DD` / `--MM-DD`), age function,
   natales projection; undo/redo, seal; tests.

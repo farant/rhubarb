@@ -180,6 +180,7 @@ declare -a SOURCE_FILES=(
     "lib/partitio_aestimatio.c"
     "lib/persistentia_memoria.c"
     "lib/persistentia_nuntium.c"
+    "lib/personae.c"
     "lib/pictor_actiones.c"
     "lib/pictor_applicatio.c"
     "lib/pictor_componentia.c"
