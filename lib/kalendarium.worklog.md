@@ -725,3 +725,18 @@ ludus_tessera's hand list gained "album" (vicus links the calendar).
 The calendar's private rubrica_valida, rubricam_habet (item-shaped) and
 rubricas_iungere wrapper are gone; calls use include/rubrica.h with the
 item's set (`r->rubricae`). 30 sections unchanged.
+
+## 2026-10-14 - U2: command table on `membrum__praecepta`
+
+MandatumKalendarii/MandatumFn, clavis_congruit, mandata_verificare and
+mandatum_invenire are gone; TABULA_MANDATORUM is a `Praeceptum[]`.
+The 29 handlers take `vacuum* ctx` and start with
+`ContextusMandati* cm = (ContextusMandati*)ctx;` (casting the function
+pointers instead would be UB). requisita_impleta became the predicate
+`requisita_kalendarii`. clavem_agere = praecepta_ad_clavem + status
+(Esc still passes through when unavailable); mandatum_invocare =
+praecepta_invocare; the menu reader uses praecepta_invenire/status.
+Trap: my scripted signature rewrite also matched contextum_parare's
+`ContextusMandati* cm)` parameter (30 conversions, not 29) - it still
+compiled through void*, silently losing the type; restored by hand.
+30 sections unchanged.

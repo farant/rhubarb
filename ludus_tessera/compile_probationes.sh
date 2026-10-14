@@ -123,6 +123,7 @@ declare -a RADIX_FONTES=(
     "kalendarium"      # agenda-plan A2: calendarium in vico
     "elenchus"         # agenda-plan M2b: menu contextuale (calendarium)
     "membrum__album"   # nomenclator-plan U1: index paginatus (calendarium)
+    "membrum__praecepta" # nomenclator-plan U2: tabula praeceptorum
     "calendarium_liturgicum" # A2b: figurae calendarii (dies liturgici)
     "sanctorale"
     # scriba H2: cauda documenti per historia

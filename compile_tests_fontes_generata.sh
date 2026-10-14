@@ -149,6 +149,7 @@ declare -a SOURCE_FILES=(
     "lib/manus_ludus.c"
     "lib/matrix.c"
     "lib/membrum__album.c"
+    "lib/membrum__praecepta.c"
     "lib/mensa.c"
     "lib/mensura.c"
     "lib/mensura_quaestio.c"

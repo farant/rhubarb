@@ -205,6 +205,10 @@ house rule of independent composable libraries.
 ## V. Phases
 
 - **U1–U6** as above (U1 before P2; the others as P-phases pull them).
+- **U2 DONE 2026-10-14: `membrum__praecepta`** (include/
+  membrum__praecepta.h) - command table (key forms, check, lookup,
+  absent/grey/available, invoke); requirements and the Esc policy stay
+  with the host. Calendar moved onto it, 30 sections unchanged.
 - **P1a DONE 2026-10-14: `rubrica`** (include/rubrica.h) - the tag
   rules shared by agenda, calendar and contacts (were two private
   copies).
