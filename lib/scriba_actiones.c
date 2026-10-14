@@ -1135,6 +1135,19 @@ scriba_pagina_clavis (
     {
         redde FALSUM;
     }
+    /* A6d: Esc otiosus (modo normali, nihil pendens - nec clavis
+     * praecedens nec 'fd'): dispensatori relinquitur, qui e scriba
+     * nidificata gradum unum ascendit (calendarium: notae -> index) */
+    si (   clavis == VIM_CLAVIS_ESCAPE
+        && (   attributum_est(&ramus, "modus", "normalis")
+            || !insula_ramus_attributum(&ramus, "modus")))
+    {
+        st = status_legere(&ramus, sa, &capsa);
+        si (st.clavis_praecedens == '\0' && !st.esperans_fd)
+        {
+            redde FALSUM;
+        }
+    }
     clavem_tractare(&ramus, motus, sa, clavis, ev->tempus);
     redde VERUM;
 }

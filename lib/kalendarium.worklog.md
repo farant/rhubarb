@@ -520,3 +520,16 @@ own "paginae" component - renamed "index_paginae".
 Also new: kalendarium_gestum_ponere (vicus facies.gestum_ponere) hands
 the pane's gesture slot to the nested scriba - exercised in A6d-2.
 Plant: book never follows the day -> red.
+
+## 2026-10-13 — A6d-2: typing in the day notes, Tab / Esc
+
+Click in the post-it focuses the nested scriba (S8c-2 chain); vicus
+hands the pane's gesture slot to it (`kalendarium_gestum_ponere`) - the
+vicus test proves typing reaches the day's book, and the plant without
+the hand-off goes red (scriba does NOT commit typing without a gesture).
+While focus is in the notes, calendarium.agere returns FALSUM for keys:
+list commands stay quiet and Tab / a second Esc fall through to the
+dispatcher's new level rules (Tab: list <-> notes; Esc: notes -> list,
+the day view stays). Plants: hand-off off -> red (vicus); key-ignore off
+-> red ('l' changed the day under the notes); scriba consuming idle Esc
+-> red.

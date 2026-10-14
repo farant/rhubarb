@@ -170,7 +170,11 @@ widgets are migrated by hand.*
     dispatcher). Deferred, named: Tab between levels (keyboard into
     or out of a nested widget) - when a real widget needs it; a
     nested widget's OWN gesture slot (host's gesture stays) - A6,
-    calendar day view embedding scriba.
+    calendar day view embedding scriba. DONE 2026-10-13 (agenda A6d-2,
+    lib/dispensator.worklog.md): Tab circuit over the pane incl.
+    nested levels; unconsumed Esc pops one level; the calendar hands
+    its gesture slot to its nested scriba (a host with its OWN gesture
+    plus a nested one: still open).
 - **S8d** DONE 2026-10-13 (lib/insula.worklog.md; tool
   `tools/insula_mensura.c`): measured. vicus 10 tabs 284 us/write (T5:
   52.7); toy 200 rows 5.1 ms/write, quadratic. Profiles: path lookups

@@ -257,8 +257,9 @@ State-model question to settle before A2 (A1 is content only).
     (scriba_liber_aperire_in_spatio, "dies/<ISO>") + nested mount
     (scriba_montare_in_ramo; id is a canon nomen: "c1_notae"); **A6d-1** DONE 2026-10-13 (mount, layout,
     post-it shadow, book follows day; day pages fixed 72x30);
-    **A6d-2** focus (click / Tab / Esc), gesture hand-off, vicus typing
-    test. **A6d** embedding: mount in the bottom half, nested gesture slot, focus /
+    **A6d-2** DONE 2026-10-13 focus (click; Tab between levels and Esc
+    out of a nested widget as GENERAL dispatcher rules), gesture
+    hand-off, vicus typing test. A6 complete. **A6d** embedding: mount in the bottom half, nested gesture slot, focus /
     Tab / Esc, book follows the day, post-it look, screenshots.
 - **Next after the widget (Fran 2026-10-13):** fix the liturgical
   library - review in project-specs/liturgia-recensio/RECENSIO.md

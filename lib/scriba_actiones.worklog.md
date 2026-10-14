@@ -165,3 +165,12 @@ and vicus's one-click ictus_primus hook) pass the event through
 scriba_pagina_clavis, so one call site reads MOD_SHIFT. #next/#prev
 ignore Shift (not asked). manus_ludus_premere_ad carries no modifiers;
 probatio_vicus_nexus VII builds the Shift events by hand.
+
+## 2026-10-13 — idle Esc passes through (A6d-2)
+
+In normal mode with nothing pending (no clavis_praecedens, no 'fd'
+wait) Esc is now returned unconsumed, next to the existing "Tab in
+normal mode -> dispatcher" rule. The dispatcher uses it to leave a
+nested scriba (calendar notes -> list); for top-level panes nothing
+acts on it (vicus has no Esc handling; dimissio only with an open
+popover). Esc still cancels pending commands, visual and insert mode.

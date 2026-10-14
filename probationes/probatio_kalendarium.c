@@ -2061,6 +2061,108 @@ _probare_notas (
     CREDO_VERUM(textus_ullus_continet(md, "quinque"));
 }
 
+/* textus commissus (imprimibiles, ut fenestra) */
+interior vacuum
+textum_mittere (
+                 Mundus* x,
+     constans character* t)
+{
+    Eventus e;
+
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus                   = EVENTUS_TEXTUS;
+    e.datum.textus.genus      = EVENTUS_TEXTUS_COMMISSUM;
+    e.datum.textus.contentum  = chorda_ex_literis(t, x->m.piscina);
+    dispensator_tractare(x->d, &e);
+}
+
+/* x in pagina I libri diei (lectio nova ex volumine)? */
+interior b32
+littera_in_libro (
+                 Mundus* x,
+     constans character* praefixum,
+              character  littera,
+                Piscina* p)
+{
+                   ScribaLiber* l;
+              ScribaDocumentum* d;
+    constans TabulaCharacterum* t;
+                           i32  i;
+
+    l = scriba_liber_aperire_in_spatio(p, x->intern, x->volumen,
+        praefixum, LXXII, XXX);
+    d = l ? scriba_liber_pagina(l, chorda_ex_literis("1", p)) : NIHIL;
+    si (!d)
+    {
+        redde FALSUM;
+    }
+    t = scriba_documentum_tabula(d);
+    per (i = ZEPHYRUM; i < t->latitudo * t->altitudo; i++)
+    {
+        si (t->cellulae[i] == (i8)littera)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* focus in notis (A6d-2): ictus in charta catenam scribit; i x Esc in
+ * librum XIV; claves indicis interea nihil faciunt; Esc secundus ad
+ * indicem (visus manet); Tab ad notas et retro */
+interior vacuum
+_probare_focum_notarum (
+    CredoContextus* c)
+{
+     Mundus* x;
+      Motus* motus;
+      Fines  f;
+
+    x = (Mundus*)c->datum;
+    thema_initiare();
+    x->volumen = volumen_temporarium(c->piscina,
+        "probatio_kalendarium");
+    CREDO_NECESSE_NON_NIHIL(x->volumen);
+    x->documentum = agenda_aperire(c->piscina, x->intern, x->volumen,
+        "agenda", ZEPHYRUM);
+    CREDO_NECESSE(mundum_struere(x, c->piscina, NIHIL));
+    motus = dispensator_motus(x->d);
+    /* hospes gestum ponit (ut vicus in foco lateris) */
+    kalendarium_gestum_ponere(motus, &x->m);
+    reditus(x);
+    CREDO_VERUM(campus_est(x, "visus", "dies"));
+    f = fines_componentis(x, "notae", c->piscina);
+    CREDO_NECESSE(f.altitudo > ZEPHYRUM);
+    ictus_ad(x, f.x + XL, f.y + XXX);
+    CREDO_VERUM(chorda_continet(motus->spatium_intimum,
+        chorda_ex_literis("_notae", c->piscina)));
+    /* imprimibiles per TEXTUM (scriba: "per TEXTUM venit") */
+    textum_mittere(x, "i");
+    textum_mittere(x, "x");
+    effugium(x);
+    (vacuum)motus_gestum_effundere(motus, x->repo);
+    CREDO_VERUM(littera_in_libro(x, "dies/2026-10-14", 'x',
+        c->piscina));
+    /* claves indicis non agunt: res electa et dies manent */
+    clavis(x, 'l');
+    CREDO_VERUM(kalendarium_dies_electus(&x->m).dies == XIV);
+    /* Esc secundus: ad indicem, visus diei manet */
+    effugium(x);
+    CREDO_FALSUM(chorda_continet(motus->spatium_intimum,
+        chorda_ex_literis("_notae", c->piscina)));
+    CREDO_VERUM(campus_est(x, "visus", "dies"));
+    /* Tab ad notas, Tab (modo normali) retro */
+    clavis_specialis(x, CLAVIS_TABULA, '\t', '\t', ZEPHYRUM);
+    CREDO_VERUM(chorda_continet(motus->spatium_intimum,
+        chorda_ex_literis("_notae", c->piscina)));
+    clavis_specialis(x, CLAVIS_TABULA, '\t', '\t', ZEPHYRUM);
+    CREDO_FALSUM(chorda_continet(motus->spatium_intimum,
+        chorda_ex_literis("_notae", c->piscina)));
+    /* in indice claves iterum agunt */
+    clavis(x, 'l');
+    CREDO_VERUM(kalendarium_dies_electus(&x->m).dies == XV);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "montatio",     _probare_montationem,   mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
@@ -2104,6 +2206,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL, NIHIL },
     { "notae", _probare_notas, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
+    { "notae_focus", _probare_focum_notarum, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

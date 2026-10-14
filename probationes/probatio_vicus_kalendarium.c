@@ -13,6 +13,11 @@
 #include "thema.h"
 #include "manus_ludus.h"
 #include "insula.h"
+#include "scriba_liber.h"
+#include "scriba_documentum.h"
+#include "tabula_characterum.h"
+#include "dispensator.h"
+#include "motus.h"
 #include "credo.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -165,10 +170,77 @@ _probare_agendam (
     CREDO_VERUM(visus && chorda_aequalis_literis(*visus, "agenda"));
 }
 
+/* notae diei per vicum (A6d-2): latus calendarii, Enter (visus diei),
+ * ictus in charta notarum, "ix" Esc - gestus scribae nidificatae per
+ * faciem lateris (kalendarium_gestum_ponere); 'x' in libro XIV
+ * voluminis vici */
+interior vacuum
+_probare_notas (
+    CredoContextus* c)
+{
+                 Mundus* x;
+                  Vicus* v;
+             ManusLudus* m;
+              Componens* notae;
+                Punctum  locale;
+                Punctum  schirmus;
+            ScribaLiber* l;
+       ScribaDocumentum* d;
+                    i32  i;
+                    b32  inventa;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(x && x->volumen);
+    CREDO_NECESSE(vicus_applicatio_aedificare(&x->app, c->piscina,
+        internamentum_creare(c->piscina), x->volumen, CDLXXX,
+        CDLXXX + VICUS_ALTITUDO_TABULARUM));
+    v                 = x->app.vicus;
+    x->tempus.annus   = MMXXVI;
+    x->tempus.mensis  = X;
+    x->tempus.dies    = XIV;
+    vicus_horologium_ponere(v, horologium_fictum, &x->tempus);
+    CREDO_VERUM(vicus_acervo_aperire(v, "calendarium", "2026-10"));
+    (vacuum)vicus_pulsare(v);
+    CREDO_NECESSE_NON_NIHIL(kalendarium_frontale(v));
+    m = manus_ludus_creare(c->piscina, x->app.d);
+    dispensator_recomponere(x->app.d);
+    /* focus in latus calendarii (ictus in eius radice), Enter */
+    CREDO_NECESSE(manus_ludus_premere(m, "#kalendarium"));
+    CREDO_VERUM(manus_ludus_clavem(m, (character)XIII, ZEPHYRUM));
+    dispensator_recomponere(x->app.d);
+    notae = manus_ludus_invenire(m, "#notae");
+    CREDO_NECESSE_NON_NIHIL(notae);
+    locale.x = XL;
+    locale.y = XXX;
+    schirmus = manus_ludus_ad_schirmum(m, notae, locale);
+    CREDO_VERUM(manus_ludus_premere_ad(m, schirmus.x, schirmus.y));
+    CREDO_VERUM(manus_ludus_scribere(m, "ix"));
+    CREDO_VERUM(manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));
+    (vacuum)motus_gestum_effundere(dispensator_motus(x->app.d),
+        x->app.vicus->repo);
+    l = scriba_liber_aperire_in_spatio(c->piscina,
+        internamentum_creare(c->piscina), x->volumen, "dies/2026-10-14",
+        LXXII, XXX);
+    d = l ? scriba_liber_pagina(l, chorda_ex_literis("1", c->piscina))
+          : NIHIL;
+    CREDO_NECESSE_NON_NIHIL(d);
+    inventa = FALSUM;
+    per (i = ZEPHYRUM; i < d->latitudo * d->altitudo; i++)
+    {
+        si (scriba_documentum_tabula(d)->cellulae[i] == 'x')
+        {
+            inventa = VERUM;
+        }
+    }
+    CREDO_VERUM(inventa);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "latera",  _probare_latera,  mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
     { "agenda",  _probare_agendam, mundum_parare, mundum_purgare, NIHIL,
+        NIHIL },
+    { "notae",   _probare_notas,   mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

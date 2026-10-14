@@ -2100,10 +2100,21 @@ agere (
        constans Eventus* ev,
                  vacuum* ctx)
 {
-    b32 r;
+    KalendariumMontatio* m;
+                    b32  r;
 
+    m = (KalendariumMontatio*)ctx;
+    /* A6d-2: focus in notis (spatium intimum sub ramo nostro): claves
+     * notis et dispensatori (Tab, Esc gradus) relinquuntur - indicis
+     * mandata non currunt */
+    si (   ev->genus == EVENTUS_CLAVIS_DEPRESSUS && motus
+        && motus->spatium_intimum.mensura > m->ramus.via.mensura
+        && insula_via_continet(m->ramus.via, motus->spatium_intimum))
+    {
+        redde FALSUM;
+    }
     r = agere_intus(repo, motus, des, nodus, ev, ctx);
-    librum_aptare((KalendariumMontatio*)ctx, motus);
+    librum_aptare(m, motus);
     redde r;
 }
 
