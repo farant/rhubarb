@@ -1188,3 +1188,20 @@ the fakes - 10 commissio tests went red against the fake fabrica. Now
 its LAST call in `_BINARIA_ULTIMA` (keyed by the paths); a patched fake
 leaves nothing, so nothing is healed. Plant: healer never sees a stale
 binary -> the two healing tests red.
+
+## 2026-10-14 - regeneration in the commit + the hook before the gates (circulus commissionis II T3)
+
+(a) `_fabricam_exigere`: a STALUM/IGNOTUM generated artifact that is
+committed AND among the commit's own paths is regenerated through
+`bin/fabrica sanare -machina` and judged again (once, `_regenerata`);
+one that is committed but NOT among the paths still refuses with the
+recipe (auto-adding would change what is committed). Fran 2026-10-14.
+(b) phase `unci` after `fabrica`: the real pre-commit hook runs with
+`UNCUS_VIAE=<commit paths> UNCUS_CRIBRUM=1` - examen on .c/.m and
+diagnostica on .sh/.css refuse BEFORE the gates instead of inside
+`git commit` after all of them. UNCUS_CRIBRUM (new in the hook) applies
+the git-mode directory filters to the explicit list, so the rules stay
+in the hook (fumus unci XXII). After `fabrica` so regenerated files are
+judged too. The hook still runs in `git commit` (backstop for a bare
+commit). Plants: regeneration disabled -> 2 tests red; hook called
+without the filter -> 1 test red.

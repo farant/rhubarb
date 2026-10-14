@@ -2853,6 +2853,57 @@ try:
           'iudices catena: fabrica deinde aedilis sanantur in vocatione una', causa=repr((eff[-300:], err, n)))
     if os.path.exists(_status_b):
         os.remove(_status_b)
+    # REGENERATIO IN COMMISSIONE (circulus commissionis II T3 (a)):
+    # stalum commissum INTER vias -> sanare + iudicium iterum; extra vias
+    # recusatur (probatio 'exitus 1 obstat' supra); sanatio fracta obstat
+    _rg_status = os.path.join(T, 'regeneratum')
+    _rg_argv = os.path.join(T, 'regeneratio_argv.txt')
+
+    def _fabrica_regenerans(sanare_rc):
+        via = os.path.join(T, 'fabrica_regenerans_%d' % sanare_rc)
+        with open(via, 'w') as f:
+            f.write('#!/bin/bash\necho "$@" >> %s\n' % _rg_argv
+                    + 'if [ "$1" = sanare ]; then echo sanatio ficta; [ %d -eq 0 ] && touch %s; exit %d; fi\n'
+                    % (sanare_rc, _rg_status, sanare_rc)
+                    + 'if [ -f %s ]; then printf "SUMMA\\t1\\t0\\t0\\t0\\t0\\tplenus\\n"; exit 0; fi\n' % _rg_status
+                    + 'printf "IUDICIUM\\tSTALUM\\tg/gen.c\\tregeneratio differt\\n"; exit 1\n')
+        os.chmod(via, 0o755)
+        return via
+    for _src in (0, 1):
+        for _f in (_rg_status, _rg_argv):
+            if os.path.exists(_f):
+                os.remove(_f)
+        silva.FABRICA_BIN = _fabrica_regenerans(_src)
+        buf = io.StringIO()
+        err = None
+        try:
+            with contextlib.redirect_stdout(buf):
+                silva._fabricam_exigere(['lib/a.c', 'g/gen.c'])
+        except silva.SilvaError as ex:
+            err = str(ex)
+        vocationes = open(_rg_argv).read().splitlines() if os.path.exists(_rg_argv) else []
+        if _src == 0:
+            credo(err is None and 'regeneratum (in commissione): g/gen.c' in buf.getvalue()
+                  and vocationes[1] == 'sanare -machina g/gen.c' and len(vocationes) == 3,
+                  'regeneratio: stalum inter vias regeneratur, iudicium iterum, pergit',
+                  causa=repr((err, vocationes, buf.getvalue()[-200:])))
+        else:
+            credo(err is not None and 'regenerari non potuerunt' in err and 'sanatio ficta' in err,
+                  'regeneratio: sanatio fracta obstat ante portas', causa=repr(err))
+    # extra vias: idem stalum, via non in commissione -> recusatur
+    for _f in (_rg_status, _rg_argv):
+        if os.path.exists(_f):
+            os.remove(_f)
+    silva.FABRICA_BIN = _fabrica_regenerans(0)
+    err = None
+    try:
+        with contextlib.redirect_stdout(io.StringIO()):
+            silva._fabricam_exigere(['lib/a.c'])
+    except silva.SilvaError as ex:
+        err = str(ex)
+    vocationes = open(_rg_argv).read().splitlines() if os.path.exists(_rg_argv) else []
+    credo(err is not None and 'STALUM g/gen.c' in err and not any(v.startswith('sanare') for v in vocationes),
+          'regeneratio: stalum EXTRA vias commissionis recusatur, non regeneratur', causa=repr((err, vocationes)))
     silva.IUDICES_STRUERE = {}
     # exitus 2: iudicare nequit (sera) - obstat
     silva.FABRICA_BIN = _fabrica_ficta(2, 'fabrica: iudex plenus alius currit\n')
@@ -2910,6 +2961,46 @@ try:
             err = str(ex)
     credo(err is not None and 'FABRICA (ante portas)' in err,
           'commissio: fabrica obstat ANTE portas')
+    # UNCUS PRAEVIUS (circulus commissionis II T3): uncus ipse cum viis
+    # commissionis (UNCUS_VIAE + UNCUS_CRIBRUM=1) ANTE portas
+    _uncus_verus = silva.UNCUS_PRAECOMMISSIONIS
+    _ua = os.path.join(T, 'uncus_ambitus.txt')
+
+    def _uncus_fictus(rc):
+        via = os.path.join(T, 'uncus_fictus_%d' % rc)
+        with open(via, 'w') as f:
+            f.write('#!/bin/bash\necho "$UNCUS_VIAE|$UNCUS_CRIBRUM" >> %s\n'
+                    'echo "examen (pre-commit): x REICE" >&2\nexit %d\n' % (_ua, rc))
+        os.chmod(via, 0o755)
+        return via
+    _cf = os.path.join(T, 'uncus_c.c')
+    open(_cf, 'w').write('int x;\n')
+    try:
+        for _urc in (1, 0):
+            if os.path.exists(_ua):
+                os.remove(_ua)
+            silva.UNCUS_PRAECOMMISSIONIS = _uncus_fictus(_urc)
+            err = None
+            try:
+                with contextlib.redirect_stdout(io.StringIO()):
+                    silva._uncum_praevium_exigere([_cf, 'docs/x.md', 'non/exstat.c'])
+            except silva.SilvaError as ex:
+                err = str(ex)
+            amb = open(_ua).read().strip() if os.path.exists(_ua) else ''
+            if _urc == 1:
+                credo(err is not None and 'UNCUS (ante portas)' in err and 'REICE' in err
+                      and amb.endswith('|1') and 'uncus_c.c' in amb and 'exstat' not in amb
+                      and 'x.md' not in amb,
+                      'uncus praevius: obstat ante portas (viae .c exstantes, cribrum)', causa=repr((err, amb)))
+            else:
+                credo(err is None, 'uncus praevius: uncus sanus pergit', causa=repr(err))
+        if os.path.exists(_ua):
+            os.remove(_ua)
+        with contextlib.redirect_stdout(io.StringIO()):
+            silva._uncum_praevium_exigere(['docs/x.md'])
+        credo(not os.path.exists(_ua), 'uncus praevius: nulla via C/sh - uncus non vocatur')
+    finally:
+        silva.UNCUS_PRAECOMMISSIONIS = _uncus_verus
 finally:
     silva.VIAE_COMMISSAE = _commissae_verae
     silva.FABRICA_BIN = _fb_verum

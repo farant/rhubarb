@@ -93,6 +93,14 @@ already named; nothing reads that before the gate runs.
    naming every rejected file at once. The hook stays as the backstop
    for plain `git commit`.
 
+**As built (T3):** I.3 in `_fabricam_exigere` (regenerate once, then
+judge again); I.4 as phase `unci` AFTER `fabrica` (regenerated files are
+judged too), calling the real hook with `UNCUS_VIAE` + the new
+`UNCUS_CRIBRUM=1` - the same directory filters as the hook's git mode,
+so the rules stay in the hook; it also moves `diagnostica` (.sh/.css)
+before the gates. Phase order now: forma, lint, fabrica, unci, portae
+debitae, instrumenta portarum, gates.
+
 **The rule behind I** (Fran 2026-10-14): a refusal that would only print
 "run X", where X is deterministic, tree-local and its result is judged
 afterwards, is done by commissio itself; it refuses only where someone

@@ -2842,6 +2842,36 @@ def _viae_commissae(viae):
 VIAE_COMMISSAE = _viae_commissae
 
 
+# UNCUS PRAEVIUS (circulus commissionis II T3): uncus pre-commit ipse
+# (examen .c/.m, diagnostica .sh/.css) in viis commissionis ANTE portas -
+# olim solum in 'git commit', POST portas omnes (REICE ibi = cursus totus
+# perditus). UNCUS_VIAE + UNCUS_CRIBRUM=1: eadem cribra ac via git,
+# regulae in uno sede (tools/unci-git/pre-commit). Uncus in 'git commit'
+# manet - receptaculum pro 'git commit' nudo.
+UNCUS_PRAECOMMISSIONIS = os.path.join(RADIX, 'tools', 'unci-git', 'pre-commit')
+
+
+def _uncum_praevium_exigere(viae):
+    """uncum pre-commit in viis commissionis (.c .m .sh .css exstantibus)
+    currere; exitus non 0 = SilvaError ante portas cum effusione uncI."""
+    eligendae = [_via_normata(v) for v in viae
+                 if v.endswith(('.c', '.m', '.sh', '.css'))
+                 and os.path.exists(_absoluta(v))]
+    if not eligendae:
+        return
+    env = dict(os.environ, UNCUS_VIAE=' '.join(eligendae), UNCUS_CRIBRUM='1')
+    r = subprocess.run([UNCUS_PRAECOMMISSIONIS], cwd=RADIX, env=env,
+                       capture_output=True, text=True)
+    textus = (r.stdout + r.stderr).strip()
+    if r.returncode != 0:
+        raise SilvaError('UNCUS (ante portas): examen/diagnostica obstant -'
+                         ' nihil cursum, nihil commissum:\n%s'
+                         % textus[-3000:])
+    summae = [l for l in textus.splitlines()
+              if l.startswith(('examen (pre-commit):', 'diagnostica (pre-commit):'))]
+    print('uncus (ante portas): %s' % ('; '.join(summae[-2:]) or 'sanus'))
+
+
 # IUDICES SANABILES (circulus commissionis P3): iudex stalus fabricae
 # (binarium domus quod iudicat) per struere.sh SUUM sanatur - aedificatio
 # in bin/ arboris, numquam institutio. Tabula hic, non recipe impressa
@@ -2853,7 +2883,7 @@ IUDICES_STRUERE = {
 }
 
 
-def _fabricam_exigere(viae, sine_fabrica=None, _sanati=()):
+def _fabricam_exigere(viae, sine_fabrica=None, _sanati=(), _regenerata=False):
     """bin/fabrica iudicare -plenus -tacta VIAE ante portas. exitus 0 =
     pergit; 1 = artificium generatum tactum STALUM/IGNOTUM - SilvaError
     cum lineis et sanatione; 2 = iudicare nequit (sera tenetur,
@@ -2913,7 +2943,8 @@ def _fabricam_exigere(viae, sine_fabrica=None, _sanati=()):
                        (r2.stdout + r2.stderr).strip()[-2000:]))
             print('iudex sanatus: %s (%s)' % (i, ' '.join(IUDICES_STRUERE[i])))
         return _fabricam_exigere(viae, sine_fabrica,
-                                 _sanati=tuple(_sanati) + tuple(iudices))
+                                 _sanati=tuple(_sanati) + tuple(iudices),
+                                 _regenerata=_regenerata)
     if recusata:
         raise SilvaError(
             'FABRICA (ante portas): stadium iudicum - artificia tacta NON'
@@ -2927,7 +2958,31 @@ def _fabricam_exigere(viae, sine_fabrica=None, _sanati=()):
         malae = [o[2] for o in ordines
                  if o[0] == 'IUDICIUM' and len(o) >= 3
                  and o[1] in ('STALUM', 'IGNOTUM')]
-        if malae and not VIAE_COMMISSAE(malae):
+        # REGENERATIO IN COMMISSIONE (circulus commissionis II T3, Fran
+        # 2026-10-14 (a)): artificium generatum commissum et stalum quod
+        # INTER VIAS commissionis est regeneratur (bytes quos vocans
+        # proxime committeret; porta generata eos adhuc iudicat) - semel;
+        # commissum EXTRA vias recusatur ut antea (additio tacita mutaret
+        # quod committitur). Conatus II T1 canalis lectionum: formator
+        # commissionis fontes post amalgamare mutavit.
+        commissae = VIAE_COMMISSAE(malae) if malae else set()
+        in_viis = set(_via_normata(v) for v in viae)
+        regenerandae = [m for m in malae if m in commissae]
+        if (regenerandae and not _regenerata
+                and all(m in in_viis for m in regenerandae)):
+            r3 = _curre([FABRICA_BIN, 'sanare', '-machina'] + regenerandae)
+            if r3.returncode != 0:
+                raise SilvaError(
+                    'FABRICA (ante portas): artificia commissionis regenerari'
+                    ' non potuerunt (%s, exitus %d) - nihil cursum, nihil'
+                    ' commissum:\n%s'
+                    % (', '.join(regenerandae), r3.returncode,
+                       (r3.stdout + r3.stderr).strip()[-2000:]))
+            for m in regenerandae:
+                print('regeneratum (in commissione): %s' % m)
+            return _fabricam_exigere(viae, sine_fabrica, _sanati,
+                                     _regenerata=True)
+        if malae and not commissae:
             print('fabrica: %d artificia NON commissa non recentia (%s) -'
                   ' commissionem non obstant; bin/fabrica sanare ea sanat'
                   % (len(malae), ', '.join(malae[:3])
@@ -3045,6 +3100,9 @@ def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
     if not _fabrica_facta:
         with _phasis('fabrica'):
             _fabricam_exigere(viae, sine_fabrica)
+    if verificare:
+        with _phasis('unci'):
+            _uncum_praevium_exigere(viae)
     if sine_debitis is not None:
         print('portae debitae OMISSAE: %s' % sine_debitis)
     elif not _debitae_additae:
