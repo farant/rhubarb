@@ -16,6 +16,7 @@
 #include "componens.h"
 #include "pictor_applicatio.h"
 #include "scriba_applicatio.h"
+#include "scriba_liber.h"
 #include "xar.h"
 #include "credo.h"
 #include <stdio.h>
@@ -196,6 +197,35 @@ s32 principale (vacuum)
     }
 
     imprimere("\n");
+    imprimere("\n--- VI: scriba nidificata (A6c) ---\n");
+    {
+        InsulaRepositorium* rn;
+               InsulaRamus  parens;
+            ScribaMontatio  sn;
+               ScribaLiber* ld;
+
+        rn = insula_repositorium_creare(piscina, intern,
+            "<schirmata><calendarium id=\"c1\"/></schirmata>");
+        CREDO_NECESSE_NON_NIHIL(rn);
+        parens  = insula_ramus(rn, "calendarium", "c1");
+        ld      = scriba_liber_aperire_in_spatio(piscina, intern, vol,
+            "dies/2026-10-14", XL, XX);
+        CREDO_NECESSE_NON_NIHIL(ld);
+        CREDO_VERUM(scriba_montare_in_ramo(&sn, piscina, intern, vol,
+            &parens, "c1_notae", CCXL, CLX, ld, NIHIL));
+        /* sub parente, non in radice: radix liberum unum tenet */
+        CREDO_AEQUALIS_I32(stml_numerus_liberorum(insula_radix(rn)), I);
+        CREDO_VERUM(chorda_continet(sn.ramus.via, chorda_ex_literis(
+            "calendarium:c1", piscina)));
+        CREDO_VERUM(chorda_continet(sn.ramus.via, chorda_ex_literis(
+            "scriba:c1_notae", piscina)));
+        /* documentum = pagina prima libri diei */
+        CREDO_VERUM(sn.doc == scriba_liber_pagina(ld,
+            chorda_ex_literis("1", piscina)));
+        CREDO_VERUM(insula_ramus_attributum(&sn.ramus, "latitudo")
+            != NIHIL);
+    }
+
     credo_imprimere_compendium();
     volumen_claudere(vol);
     redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;

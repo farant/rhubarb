@@ -253,8 +253,9 @@ State-model question to settle before A2 (A1 is content only).
   - Steps: **A6a** DONE 2026-10-13 agenda completed section
     (agenda_perfectae; "p"/"p<k>"/"q<id>"); **A6b** DONE 2026-10-13 list pagination (shared
     by day list and agenda; field `pagina`, [ ] keys) + day list
-    grouping + [+ New]; **A6c** day book storage (ScribaLiber
-    per day) + nested scriba mount helper (API to Fran); **A6d**
+    grouping + [+ New]; **A6c** DONE 2026-10-13 day book storage
+    (scriba_liber_aperire_in_spatio, "dies/<ISO>") + nested mount
+    (scriba_montare_in_ramo; id is a canon nomen: "c1_notae"); **A6d**
     embedding: mount in the bottom half, nested gesture slot, focus /
     Tab / Esc, book follows the day, post-it look, screenshots.
 - **Next after the widget (Fran 2026-10-13):** fix the liturgical

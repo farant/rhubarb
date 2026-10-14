@@ -32,6 +32,20 @@ scriba_liber_aperire (
                     i32  latitudo,
                     i32  altitudo);
 
+/* A6c: liber in spatio dato: index in plagula '<praefixum>/paginae',
+ * textus paginae in spatio '<praefixum>/paginae/' + nomen (e.g.
+ * "dies/2026-10-14": liber diei). scriba_liber_aperire = liber
+ * communis vici (index 'scriba/paginae', paginae 'paginae/' - mos
+ * prior, intactus) */
+ScribaLiber*
+scriba_liber_aperire_in_spatio (
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+     constans character* praefixum,
+                    i32  latitudo,
+                    i32  altitudo);
+
 /* documentum paginae (aperitur aut creatur, semel); NIHIL si nomen
  * ignotum */
 ScribaDocumentum*

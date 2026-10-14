@@ -9,6 +9,7 @@
 
 #define INTERVALLUM  LXIV
 
+/* liber communis vici: mos prior (A6c: spatium per liber) */
 hic_manens constans character clavis_indicis[] = "scriba/paginae";
 
 structura ScribaLiber {
@@ -20,6 +21,8 @@ structura ScribaLiber {
                     Xar* nomina;      /* Xar de chorda (internatae) */
                     Xar* documenta;   /* Xar de ScribaDocumentum*;
                                        * NIHIL donec apertum */
+                 chorda index;       /* A6c: plagula indicis */
+                 chorda spatium;     /* A6c: praefixum paginarum */
 };
 
 interior chorda
@@ -64,15 +67,18 @@ indicem_scribere (
     }
     chorda_aedificator_appendere_literis(a, "</paginae>");
     redde volumen_plagulam_condere(l->volumen,
-        chorda_ex_literis(clavis_indicis, l->piscina),
+        l->index,
         chorda_aedificator_finire(a), "scriba:paginae");
 }
 
-ScribaLiber*
-scriba_liber_aperire (
+/* liber cum viis datis (index, praefixum paginarum) */
+interior ScribaLiber*
+librum_aperire (
                 Piscina* piscina,
     InternamentumChorda* intern,
                 Volumen* volumen,
+                 chorda  via_indicis,
+                 chorda  spatium_paginarum,
                     i32  latitudo,
                     i32  altitudo)
 {
@@ -102,8 +108,10 @@ scriba_liber_aperire (
     l->nomina    = xar_creare(piscina, (i32)magnitudo(chorda));
     l->documenta = xar_creare(piscina,
         (i32)magnitudo(ScribaDocumentum*));
+    l->index    = via_indicis;
+    l->spatium  = spatium_paginarum;
     index = volumen_plagulam_promere(volumen,
-        chorda_ex_literis(clavis_indicis, piscina), piscina, &inventum);
+        l->index, piscina, &inventum);
     si (!inventum)
     {
         nomen_addere(l, chorda_ex_literis("1", piscina));
@@ -136,6 +144,46 @@ scriba_liber_aperire (
         (vacuum)indicem_scribere(l);
     }
     redde l;
+}
+
+ScribaLiber*
+scriba_liber_aperire (
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+                    i32  latitudo,
+                    i32  altitudo)
+{
+    si (!piscina)
+    {
+        redde NIHIL;
+    }
+    redde librum_aperire(piscina, intern, volumen, chorda_ex_literis(
+        clavis_indicis, piscina), chorda_ex_literis("paginae/",
+        piscina),
+        latitudo, altitudo);
+}
+
+ScribaLiber*
+scriba_liber_aperire_in_spatio (
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+     constans character* praefixum,
+                    i32  latitudo,
+                    i32  altitudo)
+{
+    chorda basis;
+
+    si (!piscina || !praefixum || !praefixum[ZEPHYRUM])
+    {
+        redde NIHIL;
+    }
+    basis = chorda_concatenare(chorda_ex_literis(praefixum, piscina),
+        chorda_ex_literis("/paginae", piscina), piscina);
+    redde librum_aperire(piscina, intern, volumen, basis,
+        chorda_concatenare(basis, chorda_ex_literis("/", piscina),
+        piscina), latitudo, altitudo);
 }
 
 i32
@@ -194,8 +242,8 @@ scriba_liber_pagina (
     {
         redde *sedes;
     }
-    spatium = chorda_ut_cstr(chorda_concatenare(chorda_ex_literis(
-        "paginae/", l->piscina), titulus, l->piscina), l->piscina);
+    spatium = chorda_ut_cstr(chorda_concatenare(l->spatium, titulus,
+        l->piscina), l->piscina);
     *sedes = scriba_documentum_aperire(l->piscina, l->intern,
         l->volumen,
         spatium);
