@@ -49,6 +49,16 @@ sed -n 's/^--- \(probatio_[A-Za-z0-9_]*\) praeteriit.*/\1 transiit/p;
         s/^--- \(probatio_[A-Za-z0-9_]*\) FRACTA.*/\1 fracta/p;
         s/^FRACTA (compilatio): \(probatio_[A-Za-z0-9_]*\).*/\1 fracta/p' \
     "$T/cursor" | sort -u > "$T/c"
+# forma vetustior (saltuarius, gesta... 2026-10-14): sine lineis '---'
+# per probationem - '=== NOMEN ===' quaeque cursa, 'FRACTAE: A B' in
+# fine; fracta = in FRACTAE nominata, cetera transierunt
+if [ ! -s "$T/c" ]; then
+    awk '/^=== probatio_[A-Za-z0-9_]* ===$/ { cursae[$2] = 1 }
+         /^FRACTAE:/ { for (i = 2; i <= NF; i++) fr[$i] = 1;
+                       sub(/^FRACTAE:/, ""); for (i = 1; i <= NF; i++) fr[$i] = 1 }
+         END { for (n in cursae) print n " " ((n in fr) ? "fracta" : "transiit") }' \
+        "$T/cursor" | sort -u > "$T/c"
+fi
 [ -s "$T/c" ] || { echo "oraculum $SUB: cursor nihil cucurrit" >&2; tail -5 "$T/cursor" >&2; exit 2; }
 
 # II. gradus: probare -vis (omnia currunt), lineae MEMBRUM

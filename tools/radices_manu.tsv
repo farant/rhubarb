@@ -56,7 +56,6 @@ oratio/vocabularium.sh	nondum derivatum
 probationes/probatio_qr_gyrus.sh	nondum derivatum
 run_benchmark.sh	nondum derivatum
 run_lint.sh	nondum derivatum
-saltuarius/compile_probationes.sh	nondum derivatum
 saltuarius/saltuarius.sh	nondum derivatum
 silva/amalgamare.sh	nondum derivatum
 silva/ambigua.sh	nondum derivatum

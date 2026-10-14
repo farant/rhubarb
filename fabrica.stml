@@ -19,4 +19,5 @@
   <subsystema via="css"/>
   <subsystema via="md"/>
   <subsystema via="html"/>
+  <subsystema via="saltuarius"/>
 </fabrica>

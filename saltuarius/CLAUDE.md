@@ -30,7 +30,11 @@ a compaction summary alone.
 
 ## Build/test
 
-- `./saltuarius/compile_probationes.sh [filter]` — the suite.
+- `./saltuarius/compile_probationes.sh [filter|-vis]` — the suite: since
+  2026-10-14 a thin entry point to `bin/fabrica probare
+  probationes_saltuarius` (`saltuarius/aedificatio.stml`; fresh tests kept,
+  `-vis` reruns all; each test links its own aedilis closure, amalgams
+  included).
   Headless: tessera memoria pons + fixture listings; no tty, no
   real filesystem in view-model tests.
 - `./saltuarius/saltuarius.sh [radix]` — build + run the app on a

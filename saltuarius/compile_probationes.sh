@@ -1,196 +1,52 @@
 #!/bin/bash
+# <cursus titulus="saltuarius/compile_probationes.sh" versio="I"/>
+# CHASSIS CURSUUM (analytica T6): cursus in annalibus
+source "$(dirname "${BASH_SOURCE[0]}")/../tools/cursus.sh"
 
 # Effusio cursus ultimi semper in build/test_logs/saltuarius.log
-# radicis (stdout + stderr; codex exitus per PIPESTATUS
-# servatus). Ratio plena: compile_tests.sh radicis.
-# <porta titulus="saltuarius" tegit="saltuarius/*_fontes_generata.sh"/>
+# radicis (stdout + stderr; codex exitus per PIPESTATUS servatus).
+# <porta titulus="saltuarius" tegit="saltuarius/fontes/* saltuarius/probationes/*" currit="tools/fabrica.c"/>
 if [ -z "${SALTUARIUS_PROBATIONES_EFFUSIO:-}" ]; then
     export SALTUARIUS_PROBATIONES_EFFUSIO=1
+    # effusio in plagula TEMPORARIA extra arborem, post cursum in locum
+    # movetur: bin/fabrica arborem totam ante et post actionem
+    # photographat - log in arbore crescens actionem 'scripsit extra
+    # vestigium' faceret (frigida b8ea30f0: md_corpus, toml_corpus,
+    # aedilis FRACTA, cursores ad gradus T7)
     mkdir -p "$(dirname "$0")/../build/test_logs"
-    "$0" "$@" 2>&1 | tee "$(dirname "$0")/../build/test_logs/saltuarius.log"
-    exit "${PIPESTATUS[0]}"
+    _effusio="$(mktemp "${TMPDIR:-/tmp}/saltuarius.log.XXXXXX")"
+    "$0" "$@" 2>&1 | tee "$_effusio"
+    _rc="${PIPESTATUS[0]}"
+    mv -f "$_effusio" "$(dirname "$0")/../build/test_logs/saltuarius.log"
+    exit "$_rc"
 fi
 
-# saltuarius/compile_probationes.sh - Probationes saltuarii compilare
-# et currere
+# saltuarius/compile_probationes.sh - IANUA probationum saltuarii
+# (cursores ad gradus, expeditio ...W0ZBW 2026-10-14; exemplar css).
+# Suita est compositum probationes_saltuarius
+# (saltuarius/aedificatio.stml): quaeque probatio actio sua,
+# verdictum clavatum iis quae legit. 'bin/fabrica probare' membra stala
+# currit (acta impressa), fresca SERVAT ('servata', linea 'servatae N/M'
+# cum causa iudicis) - eadem vocatio ac porta (silva.py).
 #
 # Usage:
-#   ./compile_probationes.sh            # omnes probationes
-#   ./compile_probationes.sh salve      # substring filter
+#   ./saltuarius/compile_probationes.sh              # omnes (fresca servata)
+#   ./saltuarius/compile_probationes.sh selector     # quarum titulus "selector" continet
+#   ./saltuarius/compile_probationes.sh -vis [...]   # omnes (electae) iterum
 #
-# Tessera's template. THE AMALGAM BOUNDARY IS THE API: silva and
-# tessera enter this build ONLY as amalgama/*.c objects with
-# amalgama include dirs — their fontes/ are deliberately absent
-# from INCLUDE_FLAGS (a fontes include is a compile error here;
-# that is the pin working). Suite is headless: memoria pons +
-# fixture listings; probationes may build real /tmp fixture trees
-# only for the iter_directoria integration pledges.
+# Exitus: 0 sanum, 1 fractae, 2 NULLA CURSA (filtrum sine paribus,
+# fabrica occupata aut declarationes fractae).
 
 set -u
-
-SALT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-RADIX_DIR="$(cd "$SALT_DIR/.." && pwd)"
-BUILD_DIR="$SALT_DIR/build"
-# SERA cursoris (tools/sera.sh, 2026-09-07): cursus duo eiusdem suitae
-# obiecta eadem scriberent, binarium currens obtererent (137);
-# exspectatio ad SERA_TECTUM (DC s), deinde exitus 2 = NIHIL cucurrit
-# (tenens nominatur). Involucra et pythonica reentrant (SERA_TENTA).
-mkdir -p "$BUILD_DIR"
+RADIX_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$RADIX_DIR" || exit 2
+[ -x bin/fabrica ] || ./tools/fabrica_struere.sh >&2 \
+    || { echo "FRACTA: bin/fabrica struere nequit - NULLA PROBATIO CURSA"; exit 2; }
+# SERA CURSORIS (tools/sera.sh; porta sera VIII): cursus duo eiusdem
+# suitae - secundus exspectat (ad SERA_TECTUM), deinde exitus 2. Sine
+# 'exec': trap EXIT seram dimittit (exec eum perderet, sera vetus
+# maneret)
 source "$RADIX_DIR/tools/sera.sh"
-sera_capere "$BUILD_DIR/cursor.sera" || exit 2
-mkdir -p "$BUILD_DIR"
-
-# vexilla: tools/vexilla.sh (una sedes; LVII copiae olim, 2026-09-02)
-source "$RADIX_DIR/tools/vexilla.sh"
-declare -a GCC_FLAGS=("${VEXILLA_C89[@]}")
-
-declare -a INCLUDE_FLAGS=(
-    "-I$RADIX_DIR/include"
-    "-I$RADIX_DIR/silva/amalgama"
-    "-I$RADIX_DIR/tessera/amalgama"
-    "-I$SALT_DIR/fontes"
-    "-I$SALT_DIR/probationes"
-)
-
-# Rhubarb libs saltuarius consumes as a monorepo citizen
-# (spec-v2 par 3). friatio is tabula_dispersa's dependency.
-declare -a RADIX_FONTES=(
-    "piscina"
-    "chorda"
-    "chorda_aedificator"
-    "xar"
-    "tabula_dispersa"
-    "friatio"
-    "filum"
-    "via"
-    "lectiones"
-    "iter_directoria"
-    "utf8"
-    "runae"
-    "runae_tabulae"
-    "quadrans"
-    "imago"
-    "imago_opus"
-    "credo"
-)
-
-FILTER="${1:-}"
-
-# NORMALIZATIO FILTRI (exemplar radicis): formae quas homo revera
-# scribit ('silva/probationes/probatio_x.c' e completione TAB,
-# '.c' appensum) ad substringam rediguntur - CLAMAT, non tacet.
-if [ -n "$FILTER" ]; then
-    FILTRUM_DATUM="$FILTER"
-    FILTER="${FILTER##*/}"
-    FILTER="${FILTER%.c}"
-    if [ "$FILTER" != "$FILTRUM_DATUM" ]; then
-        echo "compile_probationes: filtrum '$FILTRUM_DATUM' -> '$FILTER'" >&2
-    fi
-fi
-
-# CAPUT RECENTISSIMUM SEMEL (exemplar radicis 2026-08-25): find
-# per obiectum retiratum - aequivalentia: aliquod caput recentius
-# obiecto <=> recentissimum recentius obiecto. Custos: nihil
-# inventum = viae find pravae = custodia capitum MORTUA - CLAMAT.
-CAPUT_RECENS=""
-while IFS= read -r caput_via; do
-    # <tolera codex="lint:nt-aequalitas" (>maximum quaeritur, non comparatio duorum: in aequalitate utrumlibet aeque valet
-    if [ -z "$CAPUT_RECENS" ] || [ "$caput_via" -nt "$CAPUT_RECENS" ]; then
-        CAPUT_RECENS="$caput_via"
-    fi
-done < <(find "$RADIX_DIR/include" "$SALT_DIR/fontes" "$RADIX_DIR/silva/amalgama" "$RADIX_DIR/tessera/amalgama" -name '*.h' 2>/dev/null)
-if [ -z "$CAPUT_RECENS" ]; then
-    echo "CAUTIO: nullum caput inventum (viae find pravae?) - custodia recompilationis capitum MORTUA" >&2
-fi
-
-newest_header () {
-    if [ -n "$CAPUT_RECENS" ] && ! [ "$1" -nt "$CAPUT_RECENS" ]; then
-        echo "$CAPUT_RECENS"
-    fi
-}
-
-# ---- 1. dependency objects (incremental) ----
-obj_files=""
-for f in "${RADIX_FONTES[@]}"; do
-    src="$RADIX_DIR/lib/$f.c"
-    obj="$BUILD_DIR/$f.o"
-    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
-        echo "  [dep] $f.c"
-        if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj"; then
-            echo "FRACTA: $f.c" ; exit 1
-        fi
-    fi
-    obj_files="$obj_files $obj"
-done
-
-# ---- 2. the amalgams as objects (tessera now; silva from Phase B) ----
-for amalgama in "tessera" "silva"; do
-    src="$RADIX_DIR/$amalgama/amalgama/$amalgama.c"
-    obj="$BUILD_DIR/amalgama_$amalgama.o"
-    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ]; then
-        echo "  [amalgama] $amalgama.c"
-        if ! clang "${GCC_FLAGS[@]}" -c "$src" -o "$obj"; then
-            echo "FRACTA: amalgama $amalgama" ; exit 1
-        fi
-    fi
-    obj_files="$obj_files $obj"
-done
-
-# ---- 3. saltuarius fontes + proba helpers ----
-shopt -s nullglob
-for src in "$SALT_DIR"/fontes/*.c "$SALT_DIR"/probationes/saltuarius_proba.c; do
-    [ -f "$src" ] || continue
-    base="$(basename "$src" .c)"
-    obj="$BUILD_DIR/$base.o"
-    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
-        echo "  [saltuarius] $base.c"
-        if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj"; then
-            echo "FRACTA: $base.c" ; exit 1
-        fi
-    fi
-    obj_files="$obj_files $obj"
-done
-
-# ---- 4. discover, compile, run probationes ----
-total=0 ; passed=0 ; failed_names=""
-for test_file in "$SALT_DIR"/probationes/probatio_*.c; do
-    name="$(basename "$test_file" .c)"
-    if [ -n "$FILTER" ] && [[ "$name" != *"$FILTER"* ]]; then
-        continue
-    fi
-    total=$((total + 1))
-    bin="$BUILD_DIR/$name"
-    echo ""
-    echo "=== $name ==="
-    if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$test_file" $obj_files -o "$bin"; then
-        echo "FRACTA (compilatio): $name"
-        failed_names="$failed_names $name"
-        continue
-    fi
-    if RHUBARB_RADIX="$RADIX_DIR" "$bin"; then
-        passed=$((passed + 1))
-    else
-        failed_names="$failed_names $name"
-    fi
-done
-shopt -u nullglob
-
-echo ""
-echo "========================================"
-echo "SALTUARIUS PROBATIONES: $passed/$total praeteritae"
-if [ -n "$failed_names" ]; then
-    echo "FRACTAE:$failed_names"
-    exit 1
-fi
-
-# NULLA probatio cursa = error operantis (filtrum male
-# scriptum), NON successus - exitus II ut radix (01M0XDNTN6;
-# contractus 0/1/2, vide compile_tests.sh radicis).
-if [ "$total" -eq 0 ]; then
-    echo "NULLA PROBATIO CURSA (filtrum sine paribus?) - exitus II"
-    exit 2
-fi
-
-# canalis excubitoris: verdictum post-constructionem (tacet nisi stala)
-"$RADIX_DIR/excubitor.sh" -tacitus "saltuarius/build/" >&2 || true
-exit 0
+sera_capere "$RADIX_DIR/saltuarius/build/cursor.sera" || exit 2
+bin/fabrica probare probationes_saltuarius "$@"
+exit $?

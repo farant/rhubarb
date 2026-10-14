@@ -1551,7 +1551,7 @@ PORTAE = {
     'tessera': (['./tessera/compile_probationes.sh'],
                 r'TESSERA PROBATIONES: \d+/\d+'),
     'saltuarius': (['./saltuarius/compile_probationes.sh'],
-                   r'SALTUARIUS PROBATIONES: \d+/\d+'),
+                   r'probationes_saltuarius: \d+/\d+ praeteritae'),
     # modulus 013 (project-specs/ludus-tessera-plan.md A0): glutinum
     # ludus -> tessera
     'ludus_tessera': (['./ludus_tessera/compile_probationes.sh'],
@@ -1975,6 +1975,7 @@ PORTAE_GRADUUM = {'toml': 'probationes_toml',
                   'css': 'probationes_css',
                   'md': 'probationes_md',
                   'html': 'probationes_html',
+                  'saltuarius': 'probationes_saltuarius',
                   'silva': 'probationes_silva',
                   'radix': 'probationes_radicis'}
 # RESIDUA (fabrica-7 T7): quod porta PRAETER membra probat - portae

@@ -3102,3 +3102,21 @@ Plant via silva.planta: FOVENTIA "table" -> red (4 members named),
 restored green. A first plant in the WHATWG 'special' list stayed GREEN
 under both runners (oracle on the planted tree: 14/14 congruent) - an
 old test gap, filed, not a conversion loss.
+
+## 2026-10-14 - saltuarius to steps; oracle reads the older runner format
+
+`probationes_saltuarius` (saltuarius/aedificatio.stml), thin entry
+point, PORTAE + PORTAE_GRADUUM; the gate's `tegit` was only
+`saltuarius/*_fontes_generata.sh` (its own sources owed nothing) - now
+`saltuarius/fontes/* saltuarius/probationes/*` + `currit="tools/fabrica.c"`
+like css. The aedilis closure picks the amalgams (silva/amalgama/silva.c,
+tessera/amalgama/tessera.c), the old runner's boundary, and the
+probationes helper saltuarius_proba.c by itself. No env vars, no goldens;
+the /tmp fixtures stay (radix precedent: fabrica traces the tree only).
+saltuarius.sh builds its own objects (not a hidden linker).
+`tools/gradus_oraculum.sh` said "cursor nihil cucurrit": it parsed only
+`--- NAME praeteriit` lines; saltuarius (and gesta) print `=== NAME ===`
+plus a final `FRACTAE:` list - fallback parser added. Oracle 13/13;
+plant (columnae separator +I -> +II) red on BOTH sides with the same
+member named, restored green. Measured: old 23 s / 20 s warm;
+composite warm 2.9 s, -vis 12.5 s.

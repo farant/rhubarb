@@ -1,0 +1,15 @@
+<!-- saltuarius/aedificatio.stml - declarationes aedificationis
+     saltuarius (dialectus aedificatio, aedificatio.canon; bin/fabrica
+     per fabrica.stml). Cursores ad gradus (expeditio ...W0ZBW,
+     2026-10-14; exemplar css): suita saltuarius ut compositum
+     probationes_saltuarius - quaeque probatio actio sua (clausura
+     aedilis: amalgamata silva/tessera per radices silva/amalgama et
+     tessera/amalgama, limes amalgamatis = API), verdictum clavatum iis
+     quae legit. Ianua saltuarius/compile_probationes.sh et porta
+     saltuarius per 'bin/fabrica probare probationes_saltuarius';
+     oraculum conversionis tools/gradus_oraculum.sh saltuarius. -->
+<aedificatio>
+  <actio titulus="probationes_saltuarius" genus="iudicium">
+    <probationes_c exemplar="saltuarius/probationes/probatio_*.c"/>
+  </actio>
+</aedificatio>
