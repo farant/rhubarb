@@ -3135,3 +3135,18 @@ too). Plant (branch disabled) -> red with fabrica's own words "scripsit
 extra vestigium: materia/build/proba.registrum.stml, ..." - restored
 green. Oracle 14/14. Measured (machine shared with a frigida run): old
 7.4 s / 4.1 s warm; composite warm 1.6 s, -vis 15 s.
+
+## 2026-10-14 - oratio's nine tools build from their own closures
+
+arbor, computus, formae, quaere, reticulum, sententiae, verba, vocabula,
+vocabularium (rubric point 1, before the runner itself): each linked
+EVERY object in oratio/build/*.o that the runner had last built - with
+no staleness check at all (oraculum.sh at least ran excubitor). Edit a
+library, run verba.sh without the runner: the old object. Now
+`cursor_instrumentum_struere` (aedilis closure, 8-38 objects each,
+relink only if an object changed); computus.sh named its dir `$BUILD`,
+cursor_communis needs `BUILD_DIR` - added. Eleven probes on fixtures
+byte-identical before/after (computus outside ms_ columns). Plant
+(class name in oratio_registrum.c, no runner run) changed verba's
+output, restore identical. Nine radices_manu lines deleted. The runner
+(oratio/compile_probationes.sh) is the next step.

@@ -42,16 +42,7 @@ officina/interpretare.sh	nondum derivatum
 officina/legatus.sh	nondum derivatum
 officina/sonda.sh	nondum derivatum
 officina/vindex.sh	nondum derivatum
-oratio/arbor.sh	nondum derivatum
 oratio/compile_probationes.sh	nondum derivatum
-oratio/computus.sh	nondum derivatum
-oratio/formae.sh	nondum derivatum
-oratio/quaere.sh	nondum derivatum
-oratio/reticulum.sh	nondum derivatum
-oratio/sententiae.sh	nondum derivatum
-oratio/verba.sh	nondum derivatum
-oratio/vocabula.sh	nondum derivatum
-oratio/vocabularium.sh	nondum derivatum
 probationes/probatio_qr_gyrus.sh	nondum derivatum
 run_benchmark.sh	nondum derivatum
 run_lint.sh	nondum derivatum

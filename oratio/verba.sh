@@ -3,13 +3,11 @@
 #
 # Usage:  ./oratio/verba.sh <plagula.txt>... [-machina] [-analyses] [-clausulae]
 # Exit:   0 vocabula | 1 nulla | 2 usus/plagula/tabula absens
-# Obiecta oratio/build/*.o poscit (cursor oratio/compile_probationes.sh ea
-# struit); instrumentum in oratio/build/verba. Tabula la.bin et glossarium
+# Instrumentum ex clausura sua; binarium in oratio/build/verba. Tabula la.bin et glossarium
 # ex RHUBARB_RADIX (radix repositorii nisi data).
 set -u
 ORATIO_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
 RADIX_DIR="$(cd "$ORATIO_DIR/.." && pwd)"
-MATERIA_DIR="$RADIX_DIR/materia"
 BUILD_DIR="$ORATIO_DIR/build"
 # SERA suitae orationis (tools/sera.sh, 2026-09-07): obiecta et
 # binaria in oratio/build sub cursore currenti non tanguntur; cursor
@@ -18,24 +16,14 @@ mkdir -p "$BUILD_DIR"
 source "$RADIX_DIR/tools/sera.sh"
 sera_capere "$BUILD_DIR/cursor.sera" || exit 2
 BIN="$BUILD_DIR/verba"
-source "$RADIX_DIR/tools/vexilla.sh"
-declare -a GCC_FLAGS=("${VEXILLA_C89[@]}")
-declare -a INCLUDE_FLAGS=("-I$RADIX_DIR/include" "-I$MATERIA_DIR/fontes" "-I$ORATIO_DIR/fontes")
 SRC="$ORATIO_DIR/instrumenta/verba.c"
 export RHUBARB_RADIX="${RHUBARB_RADIX:-$RADIX_DIR}"
-if [ ! -d "$BUILD_DIR" ] || [ -z "$(ls "$BUILD_DIR"/oratio_*.o 2>/dev/null)" ]; then
-    echo "verba: obiecta absunt - ./oratio/compile_probationes.sh registrum primum" >&2
-    exit 2
-fi
-OBJ=""
-for o in "$BUILD_DIR"/*.o; do
-    case "$(basename "$o")" in probatio_*) continue ;; esac
-    OBJ="$OBJ $o"
-done
-if [ ! -f "$BIN" ] || ! [ "$BIN" -nt "$SRC" ] || [ -n "$(find "$BUILD_DIR" -name '*.o' -newer "$BIN" 2>/dev/null)" ]; then
-    rm -f "$BIN"
-    clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$SRC" $OBJ -o "$BIN" || exit 1
-fi
+# Instrumentum ex clausura SUA (tools/cursor_communis.sh, 2026-10-14):
+# olim obiecta oratio/build/*.o ligabantur quae cursor ULTIMO struxerat
+# (vetustas nulla iudicata - instrumentum contra fontes veteres)
+source "$RADIX_DIR/tools/cursor_communis.sh" || exit 2
+cursor_instrumenta_parare >&2 || exit 2
+cursor_instrumentum_struere "$SRC" "$BIN" >&2 || exit 2
 # non exec: crusta manet ut sera suitae usque ad finem instrumenti
 # teneatur et in exitu dimittatur (exec trap EXIT praeterit -
 # sera cum pid mortuo relicta, 2026-09-07)
