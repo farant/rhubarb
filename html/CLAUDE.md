@@ -65,9 +65,9 @@ anything). Findings at find-time: `html/fontes/html_arbor.worklog.md`.
   since 2026-09-21 — the 36 NUL refusals went first (the `nul`
   attribute, `e84c33e7`) and the closing-sequence refusal followed
   (the escape ladder, `771fa413`/`8a9d8ad8`). Both counters are pinned
-  at ZERO by cause; any refusal at all is now a failure). The
-  runner compiles `materia/fontes` and `md/fontes` into `html/build/`
-  — consumed, never contained.
+  at ZERO by cause; any refusal at all is now a failure). Each test
+  links its own aedilis closure, `materia/fontes` and `md/fontes`
+  included — consumed, never contained.
 - **What it found:** in itself, one byte-order bug (a pending close
   taking a later `>`; totality, H8). In the substrate, ZERO changes
   forced (css 4, oratio 5) and two measurements: the raw-form limit
@@ -436,10 +436,17 @@ the first divergent line.
 ## Currere
 
 ```
-./html/compile_probationes.sh            # omnes (≈ 5 s)
+./html/compile_probationes.sh            # omnes (fresca servata, ~1.3 s)
 ./html/compile_probationes.sh totalitas  # filtrum substringae
+./html/compile_probationes.sh -vis       # omnes iterum (~13 s)
 ./html/computus.sh <x.html> [-machina] [-iter N]
 ./html/arbor.sh <x.html> [-tacitus]      # proiectio STML in stdout
 ```
 
 0 sanum / 1 fractae / **2 = NULLA CURSA**. Log: `build/test_logs/html.log`.
+Since 2026-10-14 the suite is the fabrica composite `probationes_html`
+(`html/aedificatio.stml`): one action per test, each verdict keyed on
+what that test read; the script is a thin entry point to `bin/fabrica
+probare probationes_html`. `html/arbor.sh`, `html/computus.sh` and
+`tools/runae_corpus.sh` build from their own closures (they used to
+link the old runner's `html/build/*.o`).

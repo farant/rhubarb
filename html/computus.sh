@@ -4,31 +4,16 @@
 #
 # usus: ./html/computus.sh <plagula.html> [-machina] [-iter N]
 #
-# Obiecta html/build/*.o poscit (./html/compile_probationes.sh primum) -
-# ut materia/oraculum_silvae_struere.sh; binaria probationum (sine .o) non nectit.
+# Instrumentum ex clausura SUA (tools/cursor_communis.sh, per thesaurum;
+# olim obiecta html/build/*.o quae cursor vetus struebat - cursores ad
+# gradus, html 2026-10-14; exemplar css/computus.sh); binarium in
+# html/build/computus.
 set -u
 HTML_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 RADIX_DIR="$(cd "$HTML_DIR/.." && pwd)"
-MATERIA_DIR="$RADIX_DIR/materia"
-BUILD="$HTML_DIR/build"
-cd "$RADIX_DIR"
-source "$RADIX_DIR/tools/vexilla.sh"
-
-OBIECTA=$(ls "$BUILD"/*.o 2>/dev/null | grep -v -E "/probatio_")
-if [ -z "$OBIECTA" ]; then
-    echo "DEEST: html/build/*.o - curre ./html/compile_probationes.sh primum" >&2
-    exit 2
-fi
-BIN="$BUILD/computus"
-SRC="$HTML_DIR/instrumenta/computus.c"
-recens=""
-if [ -f "$BIN" ]; then
-    recens="$(find "$BUILD" -name '*.o' -newer "$BIN" 2>/dev/null | head -1)"
-fi
-if [ ! -f "$BIN" ] || ! [ "$BIN" -nt "$SRC" ] || [ -n "$recens" ]; then
-    echo "  [computus] html" >&2
-    clang "${VEXILLA_C89[@]}" -I"$RADIX_DIR/include" -I"$MATERIA_DIR/fontes" \
-        -I"$HTML_DIR/fontes" -I"$HTML_DIR/probationes" \
-        "$SRC" $OBIECTA -o "$BIN" || exit 1
-fi
+BUILD_DIR="$HTML_DIR/build"
+BIN="$BUILD_DIR/computus"
+source "$RADIX_DIR/tools/cursor_communis.sh" || exit 1
+cursor_instrumenta_parare >&2 || exit 1
+cursor_instrumentum_struere "$HTML_DIR/instrumenta/computus.c" "$BIN" >&2 || exit 1
 exec "$BIN" "$@"

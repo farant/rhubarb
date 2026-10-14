@@ -18,4 +18,5 @@
   <subsystema via="toml"/>
   <subsystema via="css"/>
   <subsystema via="md"/>
+  <subsystema via="html"/>
 </fabrica>

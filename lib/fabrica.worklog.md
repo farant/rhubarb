@@ -3080,3 +3080,25 @@ BETWEEN sections (alpha recorded, beta never started). q was added by
 reasoning before planting - without it the plant "incepta not cleared"
 (R1: the last completed section reported as RUIT) would survive. Plants
 III red here + II in credo.
+
+## 2026-10-14 - html to steps (expedition …W0ZBW row, rubric v3)
+
+`probationes_html` composite (html/aedificatio.stml, subsystema in
+fabrica.stml), html/compile_probationes.sh a thin entry point (css
+template), PORTAE html + PORTAE_GRADUUM. Rubric points that applied:
+(1) THREE hidden linkers of html/build/*.o - html/arbor.sh,
+html/computus.sh, tools/runae_corpus.sh - now `cursor_instrumentum_struere`
+(arbor byte-identical incl. -sedes, computus identical outside ms_
+columns, runae_corpus regenerates the committed corpus with zero diff);
+needed `html/fontes` as an aedilis root (no header collision);
+(3) totalitas' failure file -> $TMPDIR (area) like css; (4)
+COMPUTUS_SCRIBERE / ORACULUM_OMNIA / ORACULUM_EXEMPLUM / ORACULUM_SCRIBERE
+declared, both goldens as `<debitum_scripturae>`; (9) three
+radices_manu lines deleted. No callers read the runner's output
+(domus.cruda.tsv names its old lines but is a frozen-corpus snapshot).
+Oracle 14/14. Measured: old runner 26 s / 21 s warm; composite cold
+58 s (new root = new keys), warm 1.3 s, -vis 13.4 s.
+Plant via silva.planta: FOVENTIA "table" -> red (4 members named),
+restored green. A first plant in the WHATWG 'special' list stayed GREEN
+under both runners (oracle on the planted tree: 14/14 congruent) - an
+old test gap, filed, not a conversion loss.

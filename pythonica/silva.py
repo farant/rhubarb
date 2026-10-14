@@ -1534,7 +1534,8 @@ PORTAE = {
                 r'MATERIA PROBATIONES: \d+/\d+'),
     'md': (['./md/compile_probationes.sh'],
            r'probationes_md: \d+/\d+ praeteritae'),
-    'html': (['./html/compile_probationes.sh'], r'HTML PROBATIONES: \d+/\d+'),
+    'html': (['./html/compile_probationes.sh'],
+             r'probationes_html: \d+/\d+ praeteritae'),
     'crusta': (['./crusta/compile_probationes.sh'],
                r'CRUSTA PROBATIONES: \d+/\d+'),
     'toml': (['./toml/compile_probationes.sh'],
@@ -1973,6 +1974,7 @@ def porta(nomen, filtrum=None, radix=None, receptum=True, vis=False,
 PORTAE_GRADUUM = {'toml': 'probationes_toml',
                   'css': 'probationes_css',
                   'md': 'probationes_md',
+                  'html': 'probationes_html',
                   'silva': 'probationes_silva',
                   'radix': 'probationes_radicis'}
 # RESIDUA (fabrica-7 T7): quod porta PRAETER membra probat - portae

@@ -33,6 +33,7 @@
     <via (>css/fontes
     <via (>crusta/fontes
     <via (>oratio/fontes
+    <via (>html/fontes
   </inclusa>
   <vexilla>
     <vexillum! (>-std=c89

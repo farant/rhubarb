@@ -28,9 +28,6 @@ gesta/tabularium.sh	nondum derivatum
 gesta/tabulariumd.sh	nondum derivatum
 glr_debug.sh	nondum derivatum
 glr_quaestio.sh	nondum derivatum
-html/arbor.sh	nondum derivatum
-html/compile_probationes.sh	nondum derivatum
-html/computus.sh	nondum derivatum
 ludus_tessera/compile_probationes.sh	nondum derivatum
 materia/compile_probationes.sh	nondum derivatum
 materia/coquere.sh	nondum derivatum
@@ -114,7 +111,6 @@ tools/linux/percursus.sh	nondum derivatum
 tools/linux/probatio.sh	nondum derivatum
 tools/natura_struere.sh	nondum derivatum
 tools/provenientia_obiectum.sh	nondum derivatum
-tools/runae_corpus.sh	nondum derivatum
 tools/runae_generare.sh	nondum derivatum
 tools/runae_oraculum.sh	nondum derivatum
 tools/silex_struere.sh	nondum derivatum
