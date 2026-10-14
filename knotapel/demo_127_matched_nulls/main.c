@@ -55,6 +55,8 @@
 #include "extensio.h"
 #include "reticulum.h"
 #include "matrix.h"
+#include "processus.h"
+#include "fenestra_tempus.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -81,6 +83,7 @@ check (
 }
 
 static Piscina *pool;
+static int      in_worker = 0;   /* a "--opus" child: build, run, print */
 
 static void
 fatal (
@@ -1647,7 +1650,10 @@ part_a (void)
         check(msg, lin_det[0] != 0 && lin_unit < 120);
     }
 
-    /* --- anchor --- */
+    /* --- anchor (not in a worker: it only needs the sets) --- */
+    if (in_worker) {
+        return;
+    }
     printf("  D119 anchor (own tables, ladder {6, 12, 24}):\n");
     check("2O with its own table reproduces D119's exact rows N = 3-4 "
         "(sets, rule, robust, possible, tied; 0 undecided)",
@@ -1676,6 +1682,9 @@ static const long PIN_H5_24_PM1[3] = { 1750, 1662, 1882 };
 static const long PIN_H6_12[3][5] = {
     { 12, 21, 10, 14, 6 }, { 0, 0, 0, 0, 0 }, { 0, 13, 4, 7, 0 } };
 static const long PIN_H5_12_PM1[3] = { 3, 2, 2 };
+
+static long pm1_null24[6][SEEDS];   /* +-1 relations within R (Part C) */
+static long pm1_null12[2][SEEDS];
 
 static void
 print_profile_row (
@@ -1735,6 +1744,7 @@ part_b (void)
 
             profile(s, 8, &pr);
             print_profile_row(s, &pr);
+            pm1_null24[kind][seed] = pr.pm1;
             sound = sound && pr.complete && pr.classified
                 && pr.rows_checked == pr.rank
                 && pr.rank == s->n - pr.ambient_rank;
@@ -1766,6 +1776,7 @@ part_b (void)
 
             profile(s, 10, &pr);
             print_profile_row(s, &pr);
+            pm1_null12[kind][seed] = pr.pm1;
             sound = sound && pr.complete && pr.classified
                 && pr.rows_checked == pr.rank;
             if (kind == 0) {
@@ -1790,13 +1801,548 @@ part_b (void)
 }
 
 /* ================================================================
+ * Part C: capacity rows
+ *
+ * A JOB is one (point set, table): N = 3-7, every subset of the set
+ * (exhaustive at every N, so no row mixes scales), XOR / AND / MAJ.
+ * The parent runs each job in a child process (this binary, "--opus
+ * J"), at most D127_OPERARII (8) at once, and reads the child's counts
+ * back from one "RESULT" line. Printing reads only the result arrays,
+ * in a fixed order, so the output does not depend on which child
+ * finishes first. D127_SERIAL=1 runs every job in this process.
+ * ================================================================ */
+
+#define N_LOW 3
+#define N_HIGH 7
+#define N_ROWS (N_HIGH - N_LOW + 1)
+#define SETS 48
+#define TABLES 3
+#define JOBS (SETS * TABLES)
+#define FIELDS 7
+
+static const char *TABLE_NAME[TABLES] = { "own", "T13", "R13" };
+
+/* D127_CELER=1 (plants): N = 3-4 only; children inherit it */
+static int n_high = N_HIGH;
+
+/* the 48 sets: 0-3 catalogs (canonical) 2O, 2I-D94, 2I-B, 2T; 4-7 the
+ * same in D119's BFS signs; 8-37 nulls N = 24 (kind x 5 + seed); 38-47
+ * nulls N = 12 (H6, H5) */
+static const PointSet *
+set_of (
+    int i)
+{
+    static const PointSet *catalogs[8];
+
+    catalogs[0] = &canon_2o;
+    catalogs[1] = &canon_2i_d94;
+    catalogs[2] = &canon_2i_b;
+    catalogs[3] = &canon_2t;
+    catalogs[4] = &set_2o;
+    catalogs[5] = &set_2i_d94;
+    catalogs[6] = &set_2i_b;
+    catalogs[7] = &set_2t;
+    if (i < 8) {
+        return catalogs[i];
+    }
+    if (i < 38) {
+        return &nulls24[(i - 8) / SEEDS][(i - 8) % SEEDS];
+    }
+    return &nulls12[(i - 38) / SEEDS][(i - 38) % SEEDS];
+}
+
+static Row results[SETS][TABLES][N_ROWS][3];
+
+static void
+job_execute (
+    int job)
+{
+    int              set = job / TABLES;
+    int              table = job % TABLES;
+    const PointSet  *s = set_of(set);
+    Catalogus       *cat = as_catalog(s);
+    Activatio       *act = NULL;
+    const Quaternio *axes = NULL;
+    int              n;
+    int              f;
+
+    if (cat == NULL) {
+        fatal("job: catalog refused");
+    }
+    if (table > 0) {
+        axes = table_axes(table == 1 ? &t13 : &r13, s->ring);
+    }
+    if (!activatio_creare(cat, axes, axes == NULL ? 0 : TABLE_SIZE,
+            CELLAE_CELLA_D94, 0, pool, &act)) {
+        fatal("job: activation refused");
+    }
+    for (n = N_LOW; n <= n_high; n++) {
+        for (f = 0; f < 3; f++) {
+            run_rows(act, s->n, n, f, &results[set][table][n - N_LOW][f]);
+        }
+    }
+}
+
+static void
+job_print (
+    int job)
+{
+    int set = job / TABLES;
+    int table = job % TABLES;
+    int n;
+    int f;
+
+    printf("RESULT %d", job);
+    for (n = 0; n < N_ROWS; n++) {
+        for (f = 0; f < 3; f++) {
+            const Row *r = &results[set][table][n][f];
+
+            printf(" %ld %ld %ld %ld %ld %ld %ld", r->sets, r->rule,
+                r->robust, r->possible, r->tied, r->clash, r->undecided);
+        }
+    }
+    printf("\n");
+}
+
+/* the RESULT line of a child's output into the result arrays */
+static int
+job_parse (
+    int         job,
+    const char *text)
+{
+    const char *line = strstr(text, "RESULT ");
+    int         set = job / TABLES;
+    int         table = job % TABLES;
+    int         got;
+    int         read;
+    int         n;
+    int         f;
+
+    if (line == NULL || sscanf(line, "RESULT %d%n", &got, &read) != 1
+        || got != job) {
+        return 0;
+    }
+    line += read;
+    for (n = 0; n < N_ROWS; n++) {
+        for (f = 0; f < 3; f++) {
+            Row *r = &results[set][table][n][f];
+
+            if (sscanf(line, " %ld %ld %ld %ld %ld %ld %ld%n", &r->sets,
+                    &r->rule, &r->robust, &r->possible, &r->tied,
+                    &r->clash, &r->undecided, &read) != FIELDS) {
+                return 0;
+            }
+            line += read;
+        }
+    }
+    return 1;
+}
+
+/* measured: every N = 24 job ~55 s (the filter decides almost every
+ * cell, whatever the height); N = 12 jobs are tiny */
+static long
+job_cost (
+    int job)
+{
+    return set_of(job / TABLES)->n == 12 ? 1 : 10;
+}
+
+static void
+jobs_run_parallel (
+    const char *argv0,
+    int         workers)
+{
+    static Processus *slot_p[64];
+    static Piscina   *slot_pool[64];
+    static int        slot_job[64];
+    static char       arg_n[JOBS][16];
+    int               order[JOBS];
+    int               next = 0;
+    int               running = 0;
+    int               i;
+    int               k;
+
+    if (workers > 64) {
+        workers = 64;
+    }
+    for (i = 0; i < JOBS; i++) {
+        order[i] = i;
+    }
+    for (i = 1; i < JOBS; i++) {        /* stable: cost descending */
+        int x = order[i];
+
+        for (k = i; k > 0 && job_cost(order[k - 1]) < job_cost(x); k--) {
+            order[k] = order[k - 1];
+        }
+        order[k] = x;
+    }
+    for (i = 0; i < workers; i++) {
+        slot_p[i] = NULL;
+    }
+    while (next < JOBS || running > 0) {
+        int reaped = 0;
+
+        for (i = 0; i < workers; i++) {
+            if (slot_p[i] == NULL && next < JOBS) {
+                const char *args[4];
+                int         job = order[next++];
+
+                sprintf(arg_n[job], "%d", job);
+                args[0] = argv0;
+                args[1] = "--opus";
+                args[2] = arg_n[job];
+                args[3] = NULL;
+                slot_pool[i] = piscina_generare_dynamicum("d127-opus",
+                    1 << 16);
+                if (slot_pool[i] == NULL) {
+                    fatal("piscina (opus)");
+                }
+                slot_p[i] = processus_incipere((const char *const *)args,
+                    0, slot_pool[i]);
+                if (slot_p[i] == NULL) {
+                    fatal("processus_incipere");
+                }
+                slot_job[i] = job;
+                running++;
+            }
+        }
+        for (i = 0; i < workers; i++) {
+            ProcessusResultus res;
+            char             *text;
+
+            if (slot_p[i] == NULL
+                || processus_pulsare(slot_p[i]) != PROCESSUS_PARATUS) {
+                continue;
+            }
+            res = processus_metere(slot_p[i]);
+            if (!res.successus || res.codex_exitus != 0) {
+                printf("  FATAL: job %d: %s, exit %d, signal %d\n",
+                    slot_job[i], processus_error_nomen(res.error),
+                    (int)res.codex_exitus, (int)res.signum);
+                fwrite(res.erratum.datum, 1, (size_t)res.erratum.mensura,
+                    stdout);
+                exit(1);
+            }
+            text = (char *)malloc((size_t)res.effusio.mensura + 1);
+            if (text == NULL) {
+                fatal("malloc");
+            }
+            memcpy(text, res.effusio.datum, (size_t)res.effusio.mensura);
+            text[res.effusio.mensura] = '\0';
+            if (!job_parse(slot_job[i], text)) {
+                printf("  FATAL: job %d: unreadable result\n",
+                    slot_job[i]);
+                exit(1);
+            }
+            free(text);
+            piscina_destruere(slot_pool[i]);
+            slot_p[i] = NULL;
+            running--;
+            reaped++;
+        }
+        if (reaped == 0) {
+            fenestra_dormire(20000);
+        }
+    }
+}
+
+static long
+binomial (
+    int n,
+    int k)
+{
+    long r = 1;
+    int  i;
+
+    for (i = 1; i <= k; i++) {
+        r = r * (n - k + i) / i;
+    }
+    return r;
+}
+
+static long
+field_of (
+    const Row *r,
+    int        mode)
+{
+    return mode == 0 ? r->rule : mode == 1 ? r->robust : mode == 2
+        ? r->possible : mode == 3 ? r->tied : r->clash;
+}
+
+static const char *MODE_NAME[5] = { "rule", "robust", "possible", "tied",
+    "concursus" };
+
+/* one line: a catalog's counts, or a null kind's min-max over seeds */
+static void
+print_line (
+    const char *label,
+    int         first_set,
+    int         n_sets,
+    int         table,
+    int         f,
+    int         mode)
+{
+    int n;
+
+    printf("      %-9s", label);
+    for (n = 0; n < N_ROWS; n++) {
+        long lo = -1;
+        long hi = -1;
+        int  i;
+        char cell[48];
+
+        for (i = 0; i < n_sets; i++) {
+            long v = field_of(&results[first_set + i][table][n][f], mode);
+
+            if (lo < 0 || v < lo) {
+                lo = v;
+            }
+            if (v > hi) {
+                hi = v;
+            }
+        }
+        if (lo == hi) {
+            sprintf(cell, "%ld", lo);
+        } else {
+            sprintf(cell, "%ld-%ld", lo, hi);
+        }
+        printf(" %15s", cell);
+    }
+    printf("\n");
+}
+
+static void
+print_block (
+    int table,
+    int f,
+    int mode)
+{
+    int kind;
+    int n;
+
+    printf("    %s, %s, %s (N = 24 sets; counts of C(24, N)):\n",
+        TABLE_NAME[table], FUNCTION_NAME[f], MODE_NAME[mode]);
+    printf("      %-9s", "N");
+    for (n = N_LOW; n <= N_HIGH; n++) {
+        char head[32];
+
+        sprintf(head, "%d (%ld)", n, binomial(24, n));
+        printf(" %15s", head);
+    }
+    printf("\n");
+    print_line("2O", 0, 1, table, f, mode);
+    print_line("2I-D94", 1, 1, table, f, mode);
+    print_line("2I-B", 2, 1, table, f, mode);
+    for (kind = 0; kind < 6; kind++) {
+        print_line(KIND_NAME[kind], 8 + kind * SEEDS, SEEDS, table, f,
+            mode);
+    }
+}
+
+static void
+part_c (
+    const char *argv0)
+{
+    int  set;
+    int  table;
+    int  n;
+    int  f;
+    int  kind;
+    int  seed;
+    int  counts = 1;
+    int  undecided = 0;
+    int  xor_signs = 1;
+    int  lin_clash = 1;
+    int  free_clash = 1;
+    int  h5_xor = 1;
+    char msg[256];
+    s64  t0 = fenestra_tempus_ms();
+
+    printf("\n=== Part C: capacity rows (D94 phase cell, signed encoding,"
+        " k in {6, 12, 24}; N = 3-7 exhaustive) ===\n");
+    if (n_high < N_HIGH) {
+        printf("  (quick mode: N = 3-%d)\n", n_high);
+    }
+    if (getenv("D127_SERIAL") != NULL) {
+        for (set = 0; set < JOBS; set++) {
+            job_execute(set);
+        }
+    } else {
+        const char *w = getenv("D127_OPERARII");
+
+        jobs_run_parallel(argv0, w != NULL && atoi(w) > 0 ? atoi(w) : 8);
+    }
+    if (getenv("D127_TEMPORA") != NULL) {
+        fprintf(stderr, "  [%d jobs: %.1f s wall]\n", JOBS,
+            (double)(fenestra_tempus_ms() - t0) / 1000.0);
+    }
+
+    /* --- checks --- */
+    for (set = 0; set < SETS; set++) {
+        int points = set_of(set)->n;
+
+        for (table = 0; table < TABLES; table++) {
+            for (n = 0; n <= n_high - N_LOW; n++) {
+                for (f = 0; f < 3; f++) {
+                    const Row *r = &results[set][table][n][f];
+
+                    counts = counts && r->sets == binomial(points,
+                        n + N_LOW) && r->robust <= r->rule
+                        && r->rule <= r->possible;
+                    undecided += r->undecided > 0;
+                    /* the sign of a weight relabels masks: XOR's labels
+                     * all flip, so its verdicts cannot change */
+                    if (set < 4 && f == 0) {
+                        xor_signs = xor_signs
+                            && memcmp(r, &results[set + 4][table][n][f],
+                            sizeof(Row)) == 0;
+                    }
+                    /* LIN has 2O's whole relation lattice: equal sums
+                     * are equal relations, so concursus is identical */
+                    if (set >= 8 + 5 * SEEDS && set < 8 + 6 * SEEDS) {
+                        lin_clash = lin_clash && r->clash
+                            == results[0][table][n][f].clash;
+                    }
+                }
+            }
+        }
+    }
+    for (kind = 0; kind < 6; kind++) {
+        for (seed = 0; seed < SEEDS; seed++) {
+            int set = 8 + kind * SEEDS + seed;
+
+            for (table = 0; table < TABLES; table++) {
+                for (n = 0; n < N_ROWS; n++) {
+                    for (f = 0; f < 3; f++) {
+                        long c = results[set][table][n][f].clash;
+
+                        /* a coincidence among <= 7 weights is a +-1
+                         * relation of norm <= 7 <= R = 8 */
+                        if (pm1_null24[kind][seed] == 0) {
+                            free_clash = free_clash && c == 0;
+                        }
+                        if (kind == 1 && f == 0) {
+                            h5_xor = h5_xor && c == 0;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    sprintf(msg, "%d jobs: every row counts C(N_set, N) subsets, robust <= "
+        "rule <= possible", JOBS);
+    check(msg, counts);
+    {
+        /* the workers' rows against D119: 2O and 2I-D94 in BFS signs,
+         * own table and (2O) T13, N = 3-4 */
+        int pinned = 1;
+
+        for (n = 0; n < 2; n++) {
+            for (f = 0; f < 3; f++) {
+                const long *z = D119_ZETA[n * 3 + f];
+                const long *a = D119_AUREA[n * 3 + f];
+                int         t;
+
+                for (t = 0; t < 2; t++) {
+                    const Row *r = &results[4][t][n][f];
+
+                    pinned = pinned && r->sets == z[0] && r->rule == z[2]
+                        && r->robust == z[3] && r->possible == z[4]
+                        && r->tied == z[5];
+                }
+                pinned = pinned && results[5][0][n][f].rule == a[2]
+                    && results[5][0][n][f].robust == a[3]
+                    && results[5][0][n][f].possible == a[4]
+                    && results[5][0][n][f].tied == a[5];
+            }
+        }
+        check("the workers' rows reproduce D119 (2O own and T13, 2I-D94 "
+            "own; BFS signs; N = 3-4): jobs, sets and tables line up",
+            pinned);
+    }
+    sprintf(msg, "no undecided set (SAT budget never reached): %d rows "
+        "with one", undecided);
+    check(msg, undecided == 0);
+    check("XOR verdicts identical for the catalogs in D119's BFS signs "
+        "and in the canonical rule, every table and N (a weight's sign "
+        "flips every XOR label)", xor_signs);
+    check("LIN's concursus = 2O's in every row (the same relation lattice,"
+        " so the same coinciding sums)", lin_clash);
+    check("every null with no +-1 relation within norm 8 has concursus 0 "
+        "in every row (Part B and Part C agree)", free_clash);
+    check("H5: XOR concursus 0 in every row (the odd-height lemma)",
+        h5_xor);
+
+    /* --- tables --- */
+    for (table = 1; table < TABLES; table++) {
+        printf("\n  Table %s (common to every set):\n", TABLE_NAME[table]);
+        for (f = 0; f < 3; f++) {
+            print_block(table, f, 1);
+        }
+        for (f = 0; f < 3; f++) {
+            print_block(table, f, 0);
+            print_block(table, f, 2);
+        }
+        print_block(table, 0, 3);
+        for (f = 0; f < 3; f++) {
+            print_block(table, f, 4);
+        }
+    }
+    printf("\n  Own tables (each set's own; cell counts differ, so no "
+        "comparison across sets):\n");
+    for (f = 0; f < 3; f++) {
+        print_block(0, f, 1);
+    }
+    printf("\n  AND and MAJ, robust, catalogs in D119's BFS signs:\n");
+    for (table = 0; table < TABLES; table++) {
+        for (f = 1; f < 3; f++) {
+            printf("    %s, %s:\n", TABLE_NAME[table], FUNCTION_NAME[f]);
+            print_line("2O bfs", 4, 1, table, f, 1);
+            print_line("2I-D94 bfs", 5, 1, table, f, 1);
+            print_line("2I-B bfs", 6, 1, table, f, 1);
+        }
+    }
+    printf("\n  2T (N = 12) against H6 and H5 at N = 12, robust:\n");
+    for (table = 0; table < TABLES; table++) {
+        for (f = 0; f < 3; f++) {
+            printf("    %s, %s (counts of C(12, N), N = 3-7):\n",
+                TABLE_NAME[table], FUNCTION_NAME[f]);
+            print_line("2T", 3, 1, table, f, 1);
+            print_line("2T bfs", 7, 1, table, f, 1);
+            print_line("H6", 38, SEEDS, table, f, 1);
+            print_line("H5", 38 + SEEDS, SEEDS, table, f, 1);
+        }
+    }
+}
+
+/* ================================================================
  * Main
  * ================================================================ */
 
 int
-main (void)
+main (
+    int    argc,
+    char **argv)
 {
     pool = piscina_generare_dynamicum("demo_127", 1 << 22);
+    if (getenv("D127_CELER") != NULL) {
+        n_high = 4;
+    }
+    if (argc == 3 && strcmp(argv[1], "--opus") == 0) {
+        int job = atoi(argv[2]);
+
+        if (job < 0 || job >= JOBS) {
+            fatal("--opus: no such job");
+        }
+        in_worker = 1;
+        part_a();
+        if (n_fail > 0) {
+            fatal("--opus: Part A failed");
+        }
+        job_execute(job);
+        job_print(job);
+        return 0;
+    }
     printf("KNOTAPEL DEMO 127: Group Catalogs against Matched Nulls (P1)"
         "\n");
     printf("==========================================================="
@@ -1809,6 +2355,7 @@ main (void)
         return 1;
     }
     part_b();
+    part_c(argv[0]);
     printf("\n%d passed, %d failed\n", n_pass, n_fail);
     piscina_destruere(pool);
     return n_fail == 0 ? 0 : 1;

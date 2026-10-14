@@ -161,3 +161,18 @@ so its points take the algebraic path; it is measured first.
   coincidences. They remove coincidences AND change geometry; LIN is
   the null that keeps every coincidence.
 
+## Decisions made during T6b
+
+- **N = 7 exhaustive, not sampled.** One (set, table) job through N = 7
+  over all 346,104 subsets takes ~55 s, so every row is exhaustive.
+  No comparison mixes a sampled scale with an exhaustive one (D119's
+  lesson).
+- **Checks that tie the parts together:**
+  - the workers' rows reproduce D119, which proves that jobs, sets and
+    tables line up;
+  - XOR is identical under BFS and canonical signs (a theorem);
+  - LIN's concursus = 2O's in every row (the same relation lattice);
+  - concursus is 0 wherever Part B found no +-1 relation within norm 8;
+  - H5 XOR concursus is 0 (the odd-height lemma).
+- `D127_CELER=1` (plants): N = 3-4, about 20 s.
+
