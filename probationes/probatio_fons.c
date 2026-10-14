@@ -3,6 +3,12 @@
 #include "fons.h"
 #include "fons_6x8.h"
 #include "fons_8x16.h"
+#include "internamentum.h"
+#include "thema.h"
+#include "mandatum.h"
+#include "figura.h"
+#include "tabula_pixelorum.h"
+#include "delineare_mandata.h"
 #include "piscina.h"
 #include "credo.h"
 #include <stdio.h>
@@ -13,6 +19,14 @@ glypha (
     s32 cp)
 {
     redde (s32)(insignatus character)fons_codepoint_ad_glypham(cp);
+}
+
+/* index glyphae fons_8x16 ut numerus */
+interior s32
+g816 (
+    s32 cp)
+{
+    redde (s32)(insignatus character)fons_8x16_codepoint_ad_glypham(cp);
 }
 
 s32 principale(vacuum)
@@ -351,6 +365,62 @@ s32 principale(vacuum)
         CREDO_VERUM(   fons_8x16[0x82][I] != ZEPHYRUM
                     || fons_8x16[0x82][II] != ZEPHYRUM
                     || fons_8x16[0x82][III] != ZEPHYRUM);
+    }
+
+    /* V3b: fons_8x16_codepoint_ad_glypham (CP437), metrica, pictura
+     * per Mandatum.fons */
+    {
+        InternamentumChorda* in;
+                    Mandata* md;
+            TabulaPixelorum* t;
+                        i32  r;
+                        i32  b;
+                        b32  aequalis;
+
+        CREDO_AEQUALIS_S32(g816('A'), 0x41);
+        CREDO_AEQUALIS_S32(g816(0x00E9), 0x82);  /* e acutum */
+        CREDO_AEQUALIS_S32(g816(0x00BD), 0xAB);  /* dimidium */
+        CREDO_AEQUALIS_S32(g816(0x2588), 0xDB);  /* plenum */
+        CREDO_AEQUALIS_S32(g816(0x263A), 0x01);  /* facies */
+        CREDO_AEQUALIS_S32(g816(0x03C0), 0xE3);  /* pi */
+        CREDO_AEQUALIS_S32(g816(0x00C0), 'A');   /* A grave: basis */
+        CREDO_AEQUALIS_S32(g816(0x00F8), 'o');   /* o obliquum: basis */
+        CREDO_AEQUALIS_S32(g816(0x2019), 0x27);  /* virgula curva */
+        CREDO_AEQUALIS_S32(g816(0x2014), 0x2D);  /* lineola longa */
+        CREDO_AEQUALIS_S32(g816(0x4E2D), 0x7F);  /* ignotum: domus */
+        CREDO_AEQUALIS_S32(g816(-I), 0x7F);
+        CREDO_AEQUALIS_S32(fons_latitudo(FONS_PARVUS), VI);
+        CREDO_AEQUALIS_S32(fons_altitudo(FONS_PARVUS), VIII);
+        CREDO_AEQUALIS_S32(fons_latitudo(FONS_TITULI), VIII);
+        CREDO_AEQUALIS_S32(fons_altitudo(FONS_TITULI), XVI);
+        CREDO_AEQUALIS_S32(fons_latitudo(XLII), VI);   /* ignotus */
+        /* Mandatum cum fons = FONS_TITULI: 'A' 8x16 pixelis veris; 'B'
+         * post VIII pixela (progressus) */
+        thema_initiare();
+        in = internamentum_creare(piscina);
+        md = mandata_creare(piscina, in);
+        mandata_textus(md, ZEPHYRUM, ZEPHYRUM, chorda_ex_literis("AB",
+            piscina), FONS_TITULI, figura_color_thematis(COLOR_TEXT));
+        t = tabula_pixelorum_creare_nuda(piscina, XVI, XVI);
+        tabula_pixelorum_vacare(t, ZEPHYRUM);
+        delineare_mandata(md, t, NIHIL, NIHIL);
+        aequalis = VERUM;
+        per (r = ZEPHYRUM; r < XVI; r++)
+        {
+            per (b = ZEPHYRUM; b < XVI; b++)
+            {
+                b32 debet;
+
+                debet = (fons_8x16[b < VIII ? 'A' : 'B'][r]
+                    & (0x80 >> (b % VIII))) != ZEPHYRUM;
+                si (debet != (tabula_pixelorum_obtinere_pixelum(t, b, r)
+                        != ZEPHYRUM))
+                {
+                    aequalis = FALSUM;
+                }
+            }
+        }
+        CREDO_VERUM(aequalis);
     }
 
     credo_imprimere_compendium();

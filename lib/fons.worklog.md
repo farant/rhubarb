@@ -41,3 +41,22 @@ BY-SA 4.0), Alcuin by Aliivibrio (itch.io, "free to use for any
 purpose"), 40 Latin-1 glyphs drawn in-house (a11400ef) - so the file as
 a whole is CC BY-SA 4.0.
 Plant: one row of 'A' changed -> red (probatio_fons).
+
+## 2026-10-13 — V3b: Mandatum.fons is read; 8x16 lookup and metrics
+
+`Mandatum.fons` ("index fontis") existed but the rasterizer always drew
+6x8. Now FONS_PARVUS (0, every existing caller) / FONS_TITULI (1, 8x16):
+delineare_mandata -> tabula_pixelorum_pingere_chordam_fonte, which
+forwards FONS_PARVUS (and any unknown id) to the old 6x8 path untouched
+and draws FONS_TITULI glyph by glyph (bounds-checked per pixel - header
+text is short; no fast path yet). fons_8x16.h is included only by
+fenestra_textus.c, so the 4 KB table exists once.
+`fons_8x16_codepoint_ad_glypham`: ASCII direct (0x01-0x1F stay the CP437
+dingbats, like the 6x8), the full CP437 0x80-0xFF and 0x01-0x1F tables
+inverted, U+2302 -> 0x7F; then base letters for Latin-1 CP437 lacks
+(A grave -> A, o slash -> o, ...), the 6x8's substitutions (quotes,
+dashes, ellipsis, minus) and Greek capitals that look Latin; else 0x7F
+(house = tofu, as in the 6x8). `fons_latitudo/altitudo(fons)` give glyph
+metrics (unknown id = 6x8) for layouts that centre or measure text.
+Plant: rasterizer passes 0 instead of x->fons -> red (pixel compare of
+"AB" against fons_8x16 bits, which also proves the 8 px advance).

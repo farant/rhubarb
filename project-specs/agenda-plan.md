@@ -222,8 +222,9 @@ State-model question to settle before A2 (A1 is content only).
     - **V3a** DONE 2026-10-13: tools/fon_ad_fons.c (.FON importer),
       include/fons_8x16.h (native CP437 order, attribution + sha256);
       attribution added to fons_6x8.h (HP 100LX + Alcuin).
-    - **V3b** rasterizer: Mandatum.fons selects the table; Unicode ->
-      CP437 lookup for the 8x16 (API to Fran); font metrics helper.
+    - **V3b** DONE 2026-10-13: Mandatum.fons read by the rasterizer
+      (FONS_PARVUS / FONS_TITULI), fons_8x16_codepoint_ad_glypham,
+      fons_latitudo / fons_altitudo.
     - **V3c** calendarium titles in the 8x16.
 
   - **M2** batch 2: double-click row -> title prompt; click group
