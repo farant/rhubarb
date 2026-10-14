@@ -233,6 +233,35 @@ http_petitio_corpus_ponere_chorda (
     HttpPetitio* petitio,
          chorda  corpus);
 
+/* --- destinatio et octeti petitionis (http-vocatio II.4: vectura extra
+ * http.c, structura opaca) --- */
+
+/* hospes NUL-terminatus in piscina petitionis */
+constans character*
+http_petitio_hospes (
+    HttpPetitio* petitio);
+
+i32
+http_petitio_portus (
+    constans HttpPetitio* petitio);
+
+b32
+http_petitio_est_https (
+    constans HttpPetitio* petitio);
+
+MoraAngusta
+http_petitio_tempus (
+    constans HttpPetitio* petitio);
+
+HttpMethodus
+http_petitio_methodus (
+    constans HttpPetitio* petitio);
+
+/* petitio tota serializata (linea, capita, corpus) */
+chorda
+http_petitio_octeti (
+    HttpPetitio* petitio);
+
 
 /* ========================================================================
  * FUNCTIONES - EXSEQUI

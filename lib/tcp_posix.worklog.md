@@ -105,3 +105,15 @@ Lexicon: examen REICE'd this file for `EINPROGRESS` and `SO_ERROR`
 (the predicted gap); both added to `silva/fontes/systema_posix.h` with
 Darwin values and asserted in auspex (plant `EINPROGRESS 37` ->
 DISSENTIT).
+
+## 2026-10-14 - test race: accept right after the client sees "connected"
+
+The T5 commit's radix gate failed `probatio_tcp_incipere` section
+`clausura paris` (320/321): `tcp_servus_accipere` returned
+`TCP_ERROR_ITERUM`. On a non-blocking listener, accepting the moment
+the CLIENT reports the connect complete races the server side queuing
+the connection. Not reproducible locally (0 of 60 parallel runs, even
+with the old code) - it took the gate's full load. Both tests that do
+this (`probatio_tcp_incipere`, `probatio_tls_gradus`) now accept via
+`_accipere`: poll the listening fd readable, retry on ITERUM, bounded
+at II s. Cause plausible, not proven.

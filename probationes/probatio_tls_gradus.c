@@ -39,6 +39,30 @@ _ms_nunc (vacuum)
     redde (s64)tv.tv_sec * M + (s64)tv.tv_usec / M;
 }
 
+/* acceptio cum exspectatione: in loopback cliens "connexus" esse
+ * potest antequam servus connexionem in cauda habet - auscultator
+ * non-blocans tunc EAGAIN reddit (porta radix sub onere id vidit) */
+interior TcpResultus
+_accipere (
+    TcpServus* servus,
+      Piscina* p)
+{
+    structura pollfd pf;
+         TcpResultus acc;
+                 s64 initium = _ms_nunc();
+
+    fac
+    {
+        pf.fd       = tcp_servus_obtinere_fd(servus);
+        pf.events   = POLLIN;
+        pf.revents  = 0;
+        (vacuum)poll(&pf, I, (integer)L);
+        acc = tcp_servus_accipere(servus, p);
+    } dum (!acc.successus && acc.error == TCP_ERROR_ITERUM
+           && _ms_nunc() - initium < II * M);
+    redde acc;
+}
+
 interior vacuum
 _nomina_finis (
                       vacuum* datum,
@@ -116,7 +140,7 @@ _iungere (
     {
         redde FALSUM;
     }
-    acc = tcp_servus_accipere(sr.servus, p);
+    acc = _accipere(sr.servus, p);
     si (!acc.successus)
     {
         redde FALSUM;

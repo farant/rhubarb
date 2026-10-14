@@ -276,7 +276,12 @@ nomina_quaerere_incipere (
         redde q;
     }
 
-    erratum = DNSServiceGetAddrInfo(&q->servitium, 0, 0,
+    /* ReturnIntermediates: sine eo responsa NEGATIVA (NoSuchRecord)
+     * numquam veniunt - nomen ignotum nullum callback daret, quaestio
+     * usque ad tempus vocantis exspectaret, et "ambae familiae
+     * responderunt" numquam fieret (inventum per rete in T5) */
+    erratum = DNSServiceGetAddrInfo(&q->servitium,
+        kDNSServiceFlagsReturnIntermediates, 0,
         kDNSServiceProtocol_IPv4 | kDNSServiceProtocol_IPv6, hospes_c,
         _responsum, q);
     si (erratum != kDNSServiceErr_NoError || q->servitium == NULL)

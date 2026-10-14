@@ -14,6 +14,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <poll.h>
 #include <sys/time.h>
 
 nomen structura {
@@ -33,6 +34,30 @@ _ms_nunc (vacuum)
 
     gettimeofday(&tv, NIHIL);
     redde (s64)tv.tv_sec * M + (s64)tv.tv_usec / M;
+}
+
+/* acceptio cum exspectatione: in loopback cliens "connexus" esse
+ * potest antequam servus connexionem in cauda habet - auscultator
+ * non-blocans tunc EAGAIN reddit (porta radix sub onere id vidit) */
+interior TcpResultus
+_accipere (
+    TcpServus* servus,
+      Piscina* p)
+{
+    structura pollfd pf;
+         TcpResultus acc;
+                 s64 initium = _ms_nunc();
+
+    fac
+    {
+        pf.fd       = tcp_servus_obtinere_fd(servus);
+        pf.events   = POLLIN;
+        pf.revents  = 0;
+        (vacuum)poll(&pf, I, (integer)L);
+        acc = tcp_servus_accipere(servus, p);
+    } dum (!acc.successus && acc.error == TCP_ERROR_ITERUM
+           && _ms_nunc() - initium < II * M);
+    redde acc;
 }
 
 interior vacuum
@@ -151,7 +176,7 @@ _sectio_connexa (
     CREDO_AEQUALIS_I32((i32)tcp_incipere_perficere(res.connexio,
         &descriptio,
         c->piscina), (i32)TCP_OK);
-    acc = tcp_servus_accipere(servus, c->piscina);
+    acc = _accipere(servus, c->piscina);
     CREDO_VERUM(acc.successus);
     tcp_claudere(acc.connexio);
     tcp_claudere(res.connexio);
@@ -215,7 +240,7 @@ _sectio_clausura_paris (
     res = tcp_incipere(a.octeti, a.mensura, c->piscina);
     CREDO_NECESSE(res.successus);
     CREDO_NECESSE(_exspectare_paratam(r, res.connexio));
-    acc = tcp_servus_accipere(servus, c->piscina);
+    acc = _accipere(servus, c->piscina);
     CREDO_NECESSE(acc.successus);
     tcp_claudere(acc.connexio);
     initium = _ms_nunc();

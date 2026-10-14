@@ -37,3 +37,16 @@ mDNSResponder answers from /etc/hosts), literal, abort, empty host.
 The `.invalid` "unknown name" case needs the network and lives in the
 rete file of T5. Not tested: a family that never answers (the caller's
 connect deadline covers it).
+
+## 2026-10-14 - negative answers need kDNSServiceFlagsReturnIntermediates (found in T5)
+
+The rete file's `nomen ignotum` section (`nomen-nullum.invalid`) got NO
+callback in 10 s. `DNSServiceGetAddrInfo` delivers negative answers
+(`kDNSServiceErr_NoSuchRecord`) only with
+`kDNSServiceFlagsReturnIntermediates`; without it an unknown name just
+waits, so the HTTP layer would have reported "tempus connexionis
+excessum" after 30 s instead of "nomen ignotum" - and the "both families
+answered" fast path never fired (every lookup waited the full 50 ms
+resolution delay). Flag added; checked by hand (gates only link rete
+files): without it the section is red, with it green; the offline
+suite stays 4/4.
