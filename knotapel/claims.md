@@ -874,6 +874,29 @@ ranked by how much it bears on KC 47.
       [interpretation] (KR 42, 47)
 48.3. Are XOR verdicts constant on braids with the same closure?
       Proposed audit P3 (ledger ...S0E97V); KR 40 predicts no. [open]
+48.4. What do the catalogs' integer relations show (D126)?
+48.4.1. A signed coincidence (sum x_i p_i = 0, x_i in {-1, 0, 1})
+        joins two input patterns with the same sum, so no activation
+        can separate them. It is not a boundary tie, which depends on
+        the activation. [definition] (D126)
+48.4.2. Every catalog has relations of norm 3 (p_a +- p_b +- p_c =
+        0): 16 in 2T, 32 in 2O, 200 in 2I. The coincidences grow
+        fast; in 2I there are 1,800, 16,392 and 169,100 at support 4,
+        5 and 6. [exact] (D126, independent oracle)
+48.4.3. No knot-free null has any relation within the catalog's radius
+        (10, 8, 5). Tested: 30 sets matched in count, either r g over
+        the catalog's own field (same relation rank) or rational.
+        [exact] (D126)
+48.4.4. A null with a catalog's entire relation lattice is a linear
+        image of the catalog. A knot-free null can therefore match
+        the profile only in part (e.g. its shortest shells), and must
+        say which part. [proved] (D126)
+48.4.5. So the catalogs force pairs of input patterns that no
+        activation can separate, and generic point sets have none at
+        these lengths: the coincident-sum half of 48.2's prediction.
+        [interpretation]
+48.4.6. Whether these coincidences lower capacity, and which matter
+        for which function, needs activations: P1. [open]
 
 49. Do robust XOR sets in other groups follow a subgroup structure, as
     Q8 cosets do in 2O (see 18.2)?

@@ -139,6 +139,13 @@ Each task follows the house cycle:
   See the worklog.)*
 - **T6. First consumer:** a knotapel demo of relation profiles of 2T,
   2O and 2I (feeds audits P1 and P2), with its own plan.
+  *(2026-10-13: D126, `knotapel/demo_126_relation_profiles/` (plan.md
+  approved by Fran). Every catalog has norm-3 relations: 16, 32, 200;
+  2I has 169,100 signed coincidences of support 6. No knot-free null
+  has any relation within the radius. A null matching the whole
+  relation lattice is a linear image of the catalog (proved), so P1's
+  nulls can match it only in part. Independent oracle agrees on every
+  number; 25 checks, 5 plants red. KC 48.4, ledger note on P1.)*
 
 ## Gates
 
