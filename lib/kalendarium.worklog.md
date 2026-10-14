@@ -437,3 +437,14 @@ by thickness (seen in the first screenshot).
 Tests: today ACCENT_PRIMARY -> TEXT, selection BORDER_ACTIVE (= cell
 bounds) -> TEXT (bounds + 1); new: band above the first week, outside
 pattern, grid outline.
+
+## 2026-10-13 — V3c: titles in the 8x16 header font
+
+Month: "October 2026" in FONS_TITULI (8x16) with the liturgical season
+small and dim beside it (6x8, lower half); title row 2 -> 3 cells. Day:
+the full date in 8x16, colour square + celebration and the season below
+in 6x8; row 4 -> 5 cells. Agenda: "Agenda: n open  #filter" in 8x16;
+row 2 -> 3. Truncation per font: `praecidere_fonte` divides by
+fons_latitudo(fons) (8 for the header font). Test helper
+`textus_fontis_est` checks the text command's `fons`.
+Plant: month title drawn with FONS_PARVUS -> red.

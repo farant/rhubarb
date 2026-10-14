@@ -15,6 +15,7 @@
 #include "fasti.h"
 #include "conservatio.h"
 #include "kalendarium.h"
+#include "fons.h"
 #include "agenda.h"
 #include "figura.h"
 #include "mandatum.h"
@@ -548,6 +549,29 @@ textus_ullus_continet (
     redde FALSUM;
 }
 
+/* textus partem continens fonte dato pictus? (V3c) */
+interior b32
+textus_fontis_est (
+                Mandata* md,
+     constans character* pars,
+                    i32  fons)
+{
+    constans Mandatum* x;
+                  i32  i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        x = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   x->genus == MANDATUM_TEXTUS && x->fons == fons
+            && chorda_continet(x->textus, chorda_ex_literis(pars,
+                   md->piscina)))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
 /* litterae dierum (V2c): in fascia supra hebdomadem primam, quaeque
  * super columnam suam centrata (cellulae verae, non latitudo / VII) */
 interior b32
@@ -625,6 +649,9 @@ _probare_figuras (
     pingere(dispensator_arbor(x->d), x->m.figurae, ZEPHYRUM, md);
 
     CREDO_VERUM(textus_ullus_continet(md, "October 2026"));
+    /* V3c: titulus fonte titulorum (8x16), tempus parvo */
+    CREDO_VERUM(textus_fontis_est(md, "October 2026", FONS_TITULI));
+    CREDO_VERUM(textus_fontis_est(md, "Tempus", FONS_PARVUS));
     /* litterae dierum: textus in memoria mandatorum, non in acervo
      * figurae (mandata textum per indicem servant) - post vocationes
      * alias acervum rescribentes */
@@ -1294,6 +1321,8 @@ _probare_figuras_diei (
     md = reddere(x, c->piscina);
     CREDO_VERUM(textus_ullus_continet(md,
         "Wednesday, October 14, 2026"));
+    CREDO_VERUM(textus_fontis_est(md, "Wednesday, October 14, 2026",
+        FONS_TITULI));
     f = fines_componentis(x, "r1", c->piscina);
     /* V2b: capsa picta (non textus "[ ]"), fascia accentus electi */
     CREDO_VERUM(capsa_in(md, f, FALSUM));
@@ -1503,6 +1532,7 @@ _probare_figuras_agendae (
     dispensator_recomponere(x->d);
     md = reddere(x, c->piscina);
     CREDO_VERUM(textus_ullus_continet(md, "Agenda: 3 open"));
+    CREDO_VERUM(textus_fontis_est(md, "Agenda: 3 open", FONS_TITULI));
     CREDO_VERUM(textus_in_continet(md, fines_componentis(x, "g0",
         c->piscina), "#domus"));
     CREDO_VERUM(textus_in_continet(md, fines_componentis(x, "g1",

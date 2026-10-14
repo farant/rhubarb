@@ -225,7 +225,8 @@ State-model question to settle before A2 (A1 is content only).
     - **V3b** DONE 2026-10-13: Mandatum.fons read by the rasterizer
       (FONS_PARVUS / FONS_TITULI), fons_8x16_codepoint_ad_glypham,
       fons_latitudo / fons_altitudo.
-    - **V3c** calendarium titles in the 8x16.
+    - **V3c** DONE 2026-10-13: month, day and agenda titles in the
+      8x16 (season / celebration stay 6x8). V3 complete.
 
   - **M2** batch 2: double-click row -> title prompt; click group
     heading -> filter; right-click context menu (from the table).

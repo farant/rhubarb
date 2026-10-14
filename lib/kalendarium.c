@@ -10,6 +10,7 @@
 #include "thema.h"
 #include "scriba_documentum.h"   /* scriba_effugere / scriba_solvere */
 #include "tabula_characterum.h"
+#include "fons.h"
 #include "dispositio.h"
 #include "vim.h"
 
@@ -18,13 +19,13 @@
 
 hic_manens constans character actio_calendarii[] = "calendarium.agere";
 
-#define KALENDARIUM_TITULI_LINEAE    II       /* cellulae */
+#define KALENDARIUM_TITULI_LINEAE    III      /* cellulae (8x16) */
 #define KALENDARIUM_LATITUDO         CCLXXX   /* superficies absens */
 #define KALENDARIUM_ALTITUDO         CCLVI
 #define KALENDARIUM_LITTERA          VI       /* latitudo glyphi */
 #define KALENDARIUM_LINEA            VIII     /* altitudo glyphi */
 #define KALENDARIUM_SIGNA_MAXIMA     IV
-#define KALENDARIUM_TITULI_DIEI      IV       /* cellulae */
+#define KALENDARIUM_TITULI_DIEI      V        /* cellulae */
 #define KALENDARIUM_PROMPTA          CCLVI    /* octeti promptae */
 #define KALENDARIUM_CAPSA            XXIV     /* ictus capsae: x < */
 #define KALENDARIUM_MARGO_X          VI       /* mensa: cellula una, */
@@ -1624,6 +1625,27 @@ praecidere (
     redde textus;
 }
 
+/* textus ad latitudinem praecisus, fonte dato (V3c) */
+interior chorda
+praecidere_fonte (
+    chorda textus,
+       s32 latitudo,
+       i32 fons)
+{
+    s32 n;
+
+    n = latitudo / fons_latitudo(fons);
+    si (n < ZEPHYRUM)
+    {
+        n = ZEPHYRUM;
+    }
+    si (textus.mensura > (i32)n)
+    {
+        textus.mensura = (i32)n;
+    }
+    redde textus;
+}
+
 interior vacuum
 rectangulum (
          Mandata* md,
@@ -2119,10 +2141,11 @@ titulum_diei_pingere (
         dies_anglice[fasti_dies_hebdomadis(
         dies)], menses_anglice[dies.mensis - I], (integer)dies.dies,
         (integer)dies.annus);
-    mandata_textus(md, IV, ZEPHYRUM, praecidere(chorda_ex_literis(
-        titulus, md->piscina), c->fines.latitudo - VIII),
-        ZEPHYRUM,
-        figura_color_thematis(COLOR_TEXT));
+    /* V3c: dies plena fonte titulorum (8x16); celebratio et tempus
+     * parvo infra */
+    mandata_textus(md, IV, ZEPHYRUM, praecidere_fonte(chorda_ex_literis(
+        titulus, md->piscina), c->fines.latitudo - VIII, FONS_TITULI),
+        FONS_TITULI, figura_color_thematis(COLOR_TEXT));
     info = NIHIL;
     si (contextus->liturgia)
     {
@@ -2133,15 +2156,15 @@ titulum_diei_pingere (
     {
         redde;
     }
-    rectangulum(md, IV, KALENDARIUM_LINEA + III, V, V, color_liturgicus(
+    rectangulum(md, IV, XVIII + II, V, V, color_liturgicus(
         info->color_diei), VERUM);
     si (info->celebratio_principalis)
     {
-        mandata_textus(md, XII, KALENDARIUM_LINEA + I, praecidere(
+        mandata_textus(md, XII, XVIII, praecidere(
             info->celebratio_principalis->titulus, c->fines.latitudo
             - XVI), ZEPHYRUM, figura_color_thematis(COLOR_TEXT));
     }
-    mandata_textus(md, IV, II * KALENDARIUM_LINEA + II, praecidere(
+    mandata_textus(md, IV, XVIII + KALENDARIUM_LINEA + II, praecidere(
         calendarium_nomen_temporis(info->tempus_info.tempus, FALSUM,
         md->piscina), c->fines.latitudo - VIII), ZEPHYRUM,
         figura_color_thematis(COLOR_TEXT_DIM));
@@ -2253,8 +2276,8 @@ titulum_agendae_pingere (
             md->piscina), md->piscina);
         textus = chorda_concatenare(textus, *filtrum, md->piscina);
     }
-    mandata_textus(md, IV, ZEPHYRUM, praecidere(textus,
-        c->fines.latitudo - VIII), ZEPHYRUM,
+    mandata_textus(md, IV, II, praecidere_fonte(textus,
+        c->fines.latitudo - VIII, FONS_TITULI), FONS_TITULI,
         figura_color_thematis(COLOR_TEXT));
 }
 
@@ -2290,9 +2313,14 @@ figura_tituli (
         titulum_agendae_pingere(contextus, md, c);
         redde;
     }
+    /* V3c: mensis et annus fonte titulorum (8x16); tempus liturgicum
+     * parvum et obscurum iuxta, ad dimidium inferum */
     sprintf(titulus, "%s %d", menses_anglice[electa.mensis - I],
         (integer)electa.annus);
-    textus  = chorda_ex_literis(titulus, md->piscina);
+    textus  = praecidere_fonte(chorda_ex_literis(titulus, md->piscina),
+        c->fines.latitudo - VIII, FONS_TITULI);
+    mandata_textus(md, IV, II, textus, FONS_TITULI,
+        figura_color_thematis(COLOR_TEXT));
     info    = NIHIL;
     si (contextus->liturgia)
     {
@@ -2301,15 +2329,14 @@ figura_tituli (
     }
     si (info)
     {
-        textus = chorda_concatenare(textus, chorda_ex_literis(" - ",
-            md->piscina), md->piscina);
-        textus = chorda_concatenare(textus, calendarium_nomen_temporis(
-            info->tempus_info.tempus, FALSUM, md->piscina),
-            md->piscina);
+        s32 x;
+
+        x = IV + (s32)(textus.mensura + I) * fons_latitudo(FONS_TITULI);
+        mandata_textus(md, x, II + KALENDARIUM_LINEA - I, praecidere(
+            calendarium_nomen_temporis(info->tempus_info.tempus, FALSUM,
+            md->piscina), c->fines.latitudo - x - IV), ZEPHYRUM,
+            figura_color_thematis(COLOR_TEXT_DIM));
     }
-    mandata_textus(md, IV, ZEPHYRUM, praecidere(textus,
-        c->fines.latitudo - VIII), ZEPHYRUM,
-        figura_color_thematis(COLOR_TEXT));
 }
 
 /* <figura/> <purus/> globulus barrae (V2a, instrumenta figura.h):
