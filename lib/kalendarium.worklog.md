@@ -611,3 +611,61 @@ Plants (all compile): right button let through -> red; heading without
 the action -> red; toggle never clears -> red. The "(none)" guard is
 defensive only (empty chorda datum) - clearing with no filter is a
 no-op, so no plant shows it.
+
+## 2026-10-14 - M2c: right-click context menu (elenchus)
+
+Manifest (approved): `elenchus` (textus, transient, aspectus popover:
+"<r|d|v> <x> <y>" = context + anchor in the calendar root's space) and
+`elenchus_electa` (highlight). Menu contents come from
+TABULA_ELENCHORUM (context mask, command titulus, divider) - texts and
+keys from TABULA_MANDATORUM, so there is one source of truth;
+`elenchos_verificare` at mount refuses a titulus the command table does
+not know. Rows whose command is not visible in the current view are
+OMITTED and hand their divider to the next shown row; unmet requisita =
+greyed (no `claudit`).
+
+Event order in agere_intus: (1) menu open -> elenchum_agere takes
+EVERYTHING and returns early (so the calendar's own handlers never see
+an event while the menu is open); (2) right-click -> elenchum_aperire
+(month: cell selects + 'd'; day/agenda: row selects via ictus_ordinis +
+'r', any other list node 'v'; toolbar buttons / the bare root "kalendarium"
+(title, toolbar background) open nothing); (3) M2a left-button gate.
+The anchor is `destinatio_ad_locale(<"kalendarium" ancestor>, point)`
+so it is right inside a vicus pane, not only in the test world at 0,0.
+
+The calendar closes the menu ITSELF on item click / Return / Esc /
+click outside (dimissio does the same in vicus; with both, the second
+finds the field already gone). So the widget works without a host
+dimissio, and the vicus test proves the user-visible result, not which
+layer closed it.
+
+List-region changes: every index row AND heading now carries the
+calendar action (so right-click lands on them, not the root), and a
+filler "index_vacuum" (PARTES_NULLUM, actio, CRESCENS height) takes the
+rest of the list region - it replaced the anonymous spacer before the
+prompt, so the prompt still sits on the last line.
+
+Traps found by the tests:
+- Test events carry tempus 0, so two right-clicks on the same spot
+  become DEPRESSUS + DUPLEX (derivare pairs presses by time/distance
+  only, NOT by button). My first version treated DUPLEX like a press
+  and closed the menu it had just opened. Now DUPLEX is swallowed while
+  open. Real-world consequence still open: right-click then a quick
+  left-click on the first item (top-left of the menu IS the pointer)
+  pairs into a left DUPLEX that, after the item closes the menu, lands
+  on what is underneath - derivare should pair same-button presses
+  only (header change in derivare.h, asked Fran 10-14).
+- Near the bottom the menu flips up and can cover rows: my "right-click
+  outside" test clicked r1, which was under the menu. Tests now click
+  beside the menu (`ictus_extra_elenchum`).
+- The M2a checkbox right-click step passed only because the heading
+  menu from the step before swallowed it - an Esc now closes it first.
+
+Plants: menu not appended; right-click opens nothing; view filter
+dropped; greyed never greyed; Esc not closing; hover not highlighting
+- all red. NOT observable (documented, not claimed): swallowing a DUPLEX
+and leftover keys while open only changes the consumed flag returned
+to the dispatcher (the calendar already returns early) - it matters for
+vicus-level handlers, which no suite exercises yet.
+Screenshots (headless probe, deleted; copy in $TMPDIR/imago): day-view
+row menu with "Edit title" highlighted, month-cell menu.

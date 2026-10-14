@@ -12,6 +12,7 @@
 #include "tabula_characterum.h"
 #include "fons.h"
 #include "dispositio.h"
+#include "elenchus.h"
 #include "vim.h"
 #include "scriba_applicatio.h"
 #include "scriba_componentia.h"
@@ -2214,6 +2215,297 @@ hic_manens constans GlobulusTituli GLOBULI[] = {
     { NIHIL, NIHIL, ZEPHYRUM, ZEPHYRUM, FALSUM, NIHIL, NIHIL, FALSUM }
 };
 
+
+/* ==================================================
+ * Menu contextuale (M2c): ictus dexter eligit et menu aperit; res ex
+ * TABULA_ELENCHORUM (textus et claves ex tabula mandatorum). Campus
+ * "elenchus" = "<contextus> <x> <y>" (popover: dimissio claudit),
+ * "elenchus_electa" = res illuminata.
+ * ================================================== */
+
+/* contextus menu */
+#define ELENCHUS_REI    I    /* ordo (res) in die aut agenda */
+#define ELENCHUS_DIEI   II   /* cellula visus mensis */
+#define ELENCHUS_VACUI  IV   /* index extra ordines (titulus, vacuum) */
+
+nomen structura {
+                    i32  contextus;   /* larva ELENCHUS_* */
+     constans character* titulus;     /* mandatum TABULA_MANDATORUM */
+                    b32  divisor;     /* linea divisoria ante */
+} ResElenchiKalendarii;
+
+/* ordo menu; res extra visum currentem omittuntur (divisor earum ad
+ * proximam transit), requisita non impleta obscurae */
+hic_manens constans ResElenchiKalendarii TABULA_ELENCHORUM[] = {
+    { ELENCHUS_REI,   "calendarium.perficere",       FALSUM },
+    { ELENCHUS_REI,   "calendarium.titulus",         FALSUM },
+    { ELENCHUS_REI,   "calendarium.rubricae",        FALSUM },
+    { ELENCHUS_REI,   "calendarium.dies_rei",        FALSUM },
+    { ELENCHUS_REI,   "calendarium.nota",            FALSUM },
+    { ELENCHUS_REI,   "calendarium.res_ante",        VERUM },
+    { ELENCHUS_REI,   "calendarium.res_post",        FALSUM },
+    { ELENCHUS_REI,   "calendarium.delere",          VERUM },
+    { ELENCHUS_DIEI,  "calendarium.diem_aperire",    FALSUM },
+    { ELENCHUS_DIEI,  "calendarium.hodie",           FALSUM },
+    { ELENCHUS_DIEI,  "calendarium.visus_agendae",   VERUM },
+    { ELENCHUS_VACUI, "calendarium.nova",            FALSUM },
+    { ELENCHUS_VACUI, "calendarium.filtrum",         VERUM },
+    { ELENCHUS_VACUI, "calendarium.filtrum_tollere", FALSUM },
+    { ELENCHUS_VACUI, "calendarium.pagina_prior",    VERUM },
+    { ELENCHUS_VACUI, "calendarium.pagina_proxima",  FALSUM },
+    { ELENCHUS_VACUI, "calendarium.revocare",        VERUM },
+    { ELENCHUS_VACUI, "calendarium.reficere",        FALSUM },
+    { ZEPHYRUM, NIHIL, FALSUM }
+};
+
+/* mandatum tabulae per titulum; NIHIL si ignotum */
+interior constans MandatumKalendarii*
+mandatum_invenire (
+    constans character* titulus)
+{
+    constans MandatumKalendarii* t;
+
+    per (t = TABULA_MANDATORUM; t->titulus; t++)
+    {
+        si (strcmp(t->titulus, titulus) == ZEPHYRUM)
+        {
+            redde t;
+        }
+    }
+    redde NIHIL;
+}
+
+/* tabula menu sana: omnis titulus in tabula mandatorum */
+interior b32
+elenchos_verificare (
+    vacuum)
+{
+    constans ResElenchiKalendarii* r;
+
+    per (r = TABULA_ELENCHORUM; r->titulus; r++)
+    {
+        si (!mandatum_invenire(r->titulus))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* menu apertum? res (in p), electa et ancora ex statu */
+interior b32
+elenchum_legere (
+    KalendariumMontatio* m,
+                Piscina* p,
+               Elenchus* e,
+                Punctum* ancora)
+{
+                           chorda* a;
+                      ElenchusRes* res;
+      constans MandatumKalendarii* t;
+    constans ResElenchiKalendarii* r;
+                 ContextusMandati  cm;
+                        character  littera;
+                          integer  x;
+                          integer  y;
+                              i32  contextus;
+                              s32  electa;
+                              b32  divisor;
+
+    a = insula_ramus_attributum(&m->ramus, "elenchus");
+    si (   !a || a->mensura == ZEPHYRUM
+        || sscanf(chorda_ut_cstr(*a, p), "%c %d %d", &littera, &x, &y)
+        != III)
+    {
+        redde FALSUM;
+    }
+    contextus = littera == 'r' ? ELENCHUS_REI : littera == 'd'
+              ? ELENCHUS_DIEI : littera == 'v' ? ELENCHUS_VACUI
+              : ZEPHYRUM;
+    res = (ElenchusRes*)piscina_allocare(p, magnitudo(ElenchusRes)
+        * (magnitudo(TABULA_ELENCHORUM) / magnitudo(
+        TABULA_ELENCHORUM[ZEPHYRUM])));
+    si (!contextus || !res)
+    {
+        redde FALSUM;
+    }
+    contextum_parare(m, p, &cm);
+    e->res      = res;
+    e->numerus  = ZEPHYRUM;
+    divisor     = FALSUM;
+    per (r = TABULA_ELENCHORUM; r->titulus; r++)
+    {
+        si (!(r->contextus & contextus))
+        {
+            perge;
+        }
+        divisor  = divisor || r->divisor;
+        t        = mandatum_invenire(r->titulus);
+        si (!t || !(t->visus & visus_currens(m)))
+        {
+            perge;
+        }
+        res[e->numerus].titulus  = t->titulus;
+        res[e->numerus].textus   = t->descriptio;
+        res[e->numerus].clavis   = t->clavis;
+        res[e->numerus].habilis  = requisita_impleta(t, &cm);
+        res[e->numerus].divisor  = divisor && e->numerus > ZEPHYRUM;
+        divisor                  = FALSUM;
+        e->numerus++;
+    }
+    a          = insula_ramus_attributum(&m->ramus, "elenchus_electa");
+    e->electa  = (a && chorda_ut_s32(*a, &electa) && electa >= ZEPHYRUM
+                  && electa < (s32)e->numerus) ? electa : -I;
+    ancora->x = (s32)x;
+    ancora->y = (s32)y;
+    redde VERUM;
+}
+
+interior b32
+elenchum_claudere (
+    KalendariumMontatio* m)
+{
+    redde campos_duos_scribere(m, "elenchus", "", "elenchus_electa",
+        "");
+}
+
+/* ictus dexter: id sub puncto eligit (cellula, ordo), menu ad punctum
+ * (spatium radicis calendarii) aperit. Barra, titulus: nihil. */
+interior b32
+elenchum_aperire (
+    KalendariumMontatio* m,
+              Componens* nodus,
+       constans Eventus* ev,
+                Piscina* p)
+{
+     Componens* radix;
+       Punctum  ancora;
+     character  littera;
+     character  valor[XLVIII];
+          Dies  d;
+
+    littera = '\0';
+    si (!nodus || nodus->partes == PARTES_BOTTONE)
+    {
+        redde FALSUM;
+    }
+    si (!(visus_diei(m) || visus_agendae(m)))
+    {
+        si (fasti_parsare_iso(nodus->id, &d) && fasti_dies_valida(d))
+        {
+            (vacuum)ictus_mensis(m, nodus);
+            littera = 'd';
+        }
+    }
+    alioquin si (ictus_ordinis(m, nodus))
+    {
+        littera = 'r';
+    }
+    alioquin si (!chorda_aequalis_literis(nodus->id, "kalendarium"))
+    {
+        littera = 'v';
+    }
+    si (!littera)
+    {
+        redde FALSUM;
+    }
+    radix = nodus;
+    dum (   radix->parens && !chorda_aequalis_literis(radix->id,
+            "kalendarium"))
+    {
+        radix = radix->parens;
+    }
+    ancora.x  = ev->datum.mus.x;
+    ancora.y  = ev->datum.mus.y;
+    ancora    = destinatio_ad_locale(radix, ancora);
+    sprintf(valor, "%c %d %d", littera, (integer)ancora.x,
+        (integer)ancora.y);
+    (vacuum)p;
+    redde campos_duos_scribere(m, "elenchus", valor, "elenchus_electa",
+        "");
+}
+
+/* menu apertum: eventa ante omnia. Res habilis ictu aut Reditu: menu
+ * clauditur, mandatum agitur; obscura deglutitur (manet); ictus extra
+ * et Esc claudunt (dimissio idem in vico - hic etiam sine ea);
+ * claves et textus ceteri deglutiuntur; motus muris illuminat */
+interior b32
+elenchum_agere (
+       KalendariumMontatio* m,
+         constans Elenchus* e,
+                 Componens* nodus,
+          constans Eventus* ev,
+                   Piscina* p)
+{
+               s32 index;
+               s32 electa;
+    ElenchusExitus exitus;
+         character numerus[XVI];
+
+    index = elenchus_index(nodus);
+    si (ev->genus == EVENTUS_MUS_MOTUS)
+    {
+        si (   index < ZEPHYRUM || index >= (s32)e->numerus
+            || !e->res[index].habilis || index == e->electa)
+        {
+            redde index >= ZEPHYRUM;
+        }
+        sprintf(numerus, "%d", (integer)index);
+        redde campum_scribere(m, "elenchus_electa", numerus);
+    }
+    /* duplex = echo pressionis iam tractatae (menu id aperuit aut
+     * clausit): deglutitur */
+    si (ev->genus == EVENTUS_MUS_DUPLEX)
+    {
+        redde VERUM;
+    }
+    si (ev->genus == EVENTUS_MUS_DEPRESSUS)
+    {
+        si (index >= ZEPHYRUM && index < (s32)e->numerus)
+        {
+            si (   e->res[index].habilis
+                && ev->datum.mus.botton == MUS_SINISTER)
+            {
+                (vacuum)elenchum_claudere(m);
+                (vacuum)mandatum_invocare(m, e->res[index].titulus, p);
+            }
+            redde VERUM;
+        }
+        si (nodus && nodus->partes == PARTES_DIALOGUS)
+        {
+            redde VERUM;
+        }
+        (vacuum)elenchum_claudere(m);
+        redde VERUM;
+    }
+    si (ev->genus == EVENTUS_TEXTUS)
+    {
+        redde VERUM;
+    }
+    si (ev->genus != EVENTUS_CLAVIS_DEPRESSUS)
+    {
+        redde FALSUM;
+    }
+    si (ev->datum.clavis.clavis == CLAVIS_EFFUGIUM)
+    {
+        (vacuum)elenchum_claudere(m);
+        redde VERUM;
+    }
+    electa = e->electa;
+    exitus = elenchus_clavem_agere(e, ev, &electa);
+    si (exitus == ELENCHUS_MOTUM)
+    {
+        sprintf(numerus, "%d", (integer)electa);
+        (vacuum)campum_scribere(m, "elenchus_electa", numerus);
+    }
+    alioquin si (exitus == ELENCHUS_ELECTUM)
+    {
+        (vacuum)elenchum_claudere(m);
+        (vacuum)mandatum_invocare(m, e->res[electa].titulus, p);
+    }
+    redde VERUM;
+}
+
 /* ictus in bottone: mandatum eius in visu currenti */
 interior b32
 globulum_premere (
@@ -2299,7 +2591,22 @@ agere_intus (
         redde FALSUM;
     }
     piscina_vacare(privatum->scheda);
-    /* M2a: solum botton sinister (dexter: menu contextuale, M2c) */
+    /* M2c: menu apertum ante omnia; ictus dexter aperit */
+    {
+        Elenchus e;
+         Punctum ancora;
+
+        si (elenchum_legere(m, privatum->scheda, &e, &ancora))
+        {
+            redde elenchum_agere(m, &e, nodus, ev, privatum->scheda);
+        }
+    }
+    si (   ev->genus            == EVENTUS_MUS_DEPRESSUS
+        && ev->datum.mus.botton == MUS_DEXTER)
+    {
+        redde elenchum_aperire(m, nodus, ev, privatum->scheda);
+    }
+    /* M2a: solum botton sinister (dexter: menu contextuale) */
     si (   (   ev->genus == EVENTUS_MUS_DEPRESSUS
             || ev->genus == EVENTUS_MUS_DUPLEX)
         && ev->datum.mus.botton != MUS_SINISTER)
@@ -3383,6 +3690,26 @@ figura_globuli (
     }
 }
 
+/* M2c: menu contextuale - res ex statu (ut greges_pingere), figura
+ * elenchi */
+interior vacuum
+figura_elenchi (
+    constans Componens* c,
+               Mandata* md,
+                   i32  thema,
+                vacuum* ctx)
+{
+    KalendariumFigurae* contextus;
+              Elenchus  e;
+               Punctum  ancora;
+
+    contextus = (KalendariumFigurae*)ctx;
+    si (elenchum_legere(contextus->m, md->piscina, &e, &ancora))
+    {
+        elenchus_figura(c, md, thema, &e);
+    }
+}
+
 interior b32
 figuras_registrare (
     KalendariumMontatio* m)
@@ -3407,7 +3734,9 @@ figuras_registrare (
         && figura_registrare(m->figurae, PARTES_CAMPUS, ZEPHYRUM,
                figura_promptae, contextus)
         && figura_registrare(m->figurae, PARTES_BOTTONE, ZEPHYRUM,
-               figura_globuli, contextus);
+               figura_globuli, contextus)
+        && figura_registrare(m->figurae, PARTES_DIALOGUS, ZEPHYRUM,
+               figura_elenchi, contextus);
 }
 
 
@@ -3655,6 +3984,7 @@ kalendarium_montare (
     m->actiones  = actio_registrum_creare(piscina, intern);
     m->figurae   = figura_registrum_creare(piscina);
     si (   !m->actiones || !m->figurae || !mandata_verificare()
+        || !elenchos_verificare()
         || !actio_registrare(m->actiones, actio_calendarii, agere, m)
         || !figuras_registrare(m))
     {
@@ -3935,14 +4265,14 @@ indicem_disponere (
         KALENDARIUM_CAPUT_LINEAE);
     (vacuum)componentem_locare(dp, caput, "caput", PARTES_INDEX,
         DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_FIXA,
-        KALENDARIUM_CAPUT_LINEAE, FALSUM, FALSUM);
+        KALENDARIUM_CAPUT_LINEAE, VERUM, FALSUM);
     globulum_capitis_locare(dp, caput, "nova");
     (vacuum)locum_addere(dp, caput, DISPOSITIO_LINEA, DISPOSITIO_FIXA,
         I, DISPOSITIO_FIXA, KALENDARIUM_CAPUT_LINEAE);
     globulum_capitis_locare(dp, caput, "pagina-prior");
     (vacuum)componentem_locare(dp, caput, "index_paginae", PARTES_INDEX,
         DISPOSITIO_FIXA, VII, DISPOSITIO_FIXA, KALENDARIUM_CAPUT_LINEAE,
-        FALSUM, FALSUM);
+        VERUM, FALSUM);
     globulum_capitis_locare(dp, caput, "pagina-proxima");
     ordines  = ordines_indicis(m, dp->piscina);
     initia   = paginas_computare(ordines, capacitas_indicis(m),
@@ -3953,22 +4283,23 @@ indicem_disponere (
     }
     paginae_fines(initia, pagina_currens(m, (s32)xar_numerus(initia)),
         ordines, &a, &b);
-    /* res et tituli gregum "g<k>" (M2a: ictus filtrat) actionem
-     * habent */
+    /* res et tituli omnes actionem habent: "g<k>" ictu filtrat (M2a),
+     * omnes ictu dextro menu aperiunt (M2c) */
     per (i = a; i < b; i++)
     {
         o = (OrdoIndicis*)xar_obtinere(ordines, (i32)i);
         (vacuum)componentem_locare(dp, regio, o->id, o->partes,
             DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_FIXA, o->altitudo,
-            o->partes == PARTES_ITEM || o->id[ZEPHYRUM] == 'g', FALSUM);
+            VERUM, FALSUM);
     }
-    /* prompta (A3b; A6e: in regione indicis, linea ultima - notae non
-     * contrahuntur) */
+    /* M2c: spatium reliquum = "index_vacuum" (ictus dexter: menu
+     * vacuum); prompta (A3b; A6e: in regione indicis, linea ultima -
+     * notae non contrahuntur) */
+    (vacuum)componentem_locare(dp, regio, "index_vacuum", PARTES_NULLUM,
+        DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_CRESCENS, ZEPHYRUM,
+        VERUM, FALSUM);
     si (prompta_aperta(m, NIHIL))
     {
-        (vacuum)locum_addere(dp, regio, DISPOSITIO_LINEA,
-            DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_CRESCENS,
-            ZEPHYRUM);
         (vacuum)componentem_locare(dp, regio, "prompta", PARTES_CAMPUS,
             DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_FIXA, II, FALSUM,
             FALSUM);
@@ -4174,6 +4505,28 @@ kalendarium_componere (
     si (visus_diei(m))
     {
         notas_componere(m, repo, motus, piscina, intern, radix);
+    }
+    /* M2c: menu contextuale filius ULTIMUS (super omnia, destinatio
+     * primum) */
+    {
+        Elenchus  e;
+         Punctum  ancora;
+           Fines  area;
+       Componens* menu;
+
+        si (elenchum_legere(m, piscina, &e, &ancora))
+        {
+            area.x         = ZEPHYRUM;
+            area.y         = ZEPHYRUM;
+            area.latitudo  = latitudo;
+            area.altitudo  = altitudo;
+            menu = elenchus_componere(&e, elenchus_fines(&e, ancora,
+                area), actio_calendarii, piscina, intern);
+            si (menu)
+            {
+                componens_addere_liberum(radix, menu);
+            }
+        }
     }
     redde radix;
 }

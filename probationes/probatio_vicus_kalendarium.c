@@ -253,6 +253,102 @@ _probare_notas (
     }
 }
 
+/* ictus dexter in medio componentis (selector manus) */
+interior b32
+dexter_in (
+                Mundus* x,
+            ManusLudus* m,
+    constans character* selector)
+{
+     Componens* c;
+       Punctum  locale;
+       Punctum  schirmus;
+       Eventus  e;
+
+    c = manus_ludus_invenire(m, selector);
+    si (!c)
+    {
+        redde FALSUM;
+    }
+    locale.x = c->fines.latitudo / II;
+    locale.y = c->fines.altitudo / II;
+    schirmus = manus_ludus_ad_schirmum(m, c, locale);
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus             = EVENTUS_MUS_DEPRESSUS;
+    e.datum.mus.x       = schirmus.x;
+    e.datum.mus.y       = schirmus.y;
+    e.datum.mus.botton  = MUS_DEXTER;
+    dispensator_tractare(x->app.d, &e);
+    dispensator_recomponere(x->app.d);
+    redde VERUM;
+}
+
+/* menu contextuale per vicum (M2c): dimissio claudit - Esc (visus
+ * diei manet: non ad mensem), ictus extra (deglutitus: globulus "nova"
+ * promptam non aperit), res electa (agit et claudit) */
+interior vacuum
+_probare_elenchum (
+    CredoContextus* c)
+{
+                 Mundus* x;
+                  Vicus* v;
+             ManusLudus* m;
+    KalendariumMontatio* k;
+                 chorda* a;
+              Componens* r;
+                Punctum  locale;
+                Punctum  schirmus;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(x && x->volumen);
+    CREDO_NECESSE(vicus_applicatio_aedificare(&x->app, c->piscina,
+        internamentum_creare(c->piscina), x->volumen, CDLXXX,
+        CDLXXX + VICUS_ALTITUDO_TABULARUM));
+    v                 = x->app.vicus;
+    x->tempus.annus   = MMXXVI;
+    x->tempus.mensis  = X;
+    x->tempus.dies    = XIV;
+    vicus_horologium_ponere(v, horologium_fictum, &x->tempus);
+    CREDO_VERUM(vicus_acervo_aperire(v, "calendarium", "2026-10"));
+    (vacuum)vicus_pulsare(v);
+    k = kalendarium_frontale(v);
+    CREDO_NECESSE_NON_NIHIL(k);
+    m = manus_ludus_creare(c->piscina, x->app.d);
+    dispensator_recomponere(x->app.d);
+    CREDO_NECESSE(manus_ludus_premere(m, "#kalendarium"));
+    CREDO_VERUM(manus_ludus_clavem(m, (character)XIII, ZEPHYRUM));
+    dispensator_recomponere(x->app.d);
+    /* Esc: dimissio claudit, visus diei manet */
+    CREDO_NECESSE(dexter_in(x, m, "#index_vacuum"));
+    CREDO_NON_NIHIL(manus_ludus_invenire(m, "#elenchus"));
+    CREDO_VERUM(manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));
+    dispensator_recomponere(x->app.d);
+    CREDO_NIHIL(manus_ludus_invenire(m, "#elenchus"));
+    a = insula_ramus_attributum(&k->ramus, "visus");
+    CREDO_VERUM(a && chorda_aequalis_literis(*a, "dies"));
+    /* ictus extra ("nova"): clausum, deglutitus (prompta nulla) */
+    CREDO_NECESSE(dexter_in(x, m, "#index_vacuum"));
+    CREDO_NON_NIHIL(manus_ludus_invenire(m, "#elenchus"));
+    CREDO_VERUM(manus_ludus_premere(m, "#nova"));
+    dispensator_recomponere(x->app.d);
+    CREDO_NIHIL(manus_ludus_invenire(m, "#elenchus"));
+    a = insula_ramus_attributum(&k->ramus, "prompta");
+    CREDO_FALSUM(a && chorda_aequalis_literis(*a, "nova"));
+    /* res "New item" (elenchus.0): prompta nova, clausum */
+    CREDO_NECESSE(dexter_in(x, m, "#index_vacuum"));
+    r = manus_ludus_invenire(m, "#elenchus");
+    CREDO_NECESSE_NON_NIHIL(r);
+    r         = componens_liberum(r, ZEPHYRUM);
+    locale.x  = r->fines.latitudo / II;
+    locale.y  = r->fines.altitudo / II;
+    schirmus  = manus_ludus_ad_schirmum(m, r, locale);
+    CREDO_VERUM(manus_ludus_premere_ad(m, schirmus.x, schirmus.y));
+    dispensator_recomponere(x->app.d);
+    CREDO_NIHIL(manus_ludus_invenire(m, "#elenchus"));
+    a = insula_ramus_attributum(&k->ramus, "prompta");
+    CREDO_VERUM(a && chorda_aequalis_literis(*a, "nova"));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "latera",  _probare_latera,  mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
@@ -260,6 +356,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "notae",   _probare_notas,   mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
+    { "elenchus", _probare_elenchum, mundum_parare, mundum_purgare,
+        NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

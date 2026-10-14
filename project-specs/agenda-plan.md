@@ -238,8 +238,11 @@ State-model question to settle before A2 (A1 is content only).
       header approved): house popover pattern (host popover field,
       DIALOGUS subtree as last root child, dimissio closes), fines with
       Mac flip + clamp, one figure, keys j/k/arrows/Return.
-    - **M2c** calendar wiring: right-click on a row / day opens the
-      menu of the commands available there (unavailable greyed).
+    - **M2c** DONE 2026-10-14: right-click opens the menu
+      (TABULA_ELENCHORUM: item / month day / list background; omitted
+      outside the view, greyed when requisita unmet); hover, keys,
+      Esc, click outside; fields `elenchus` (popover) +
+      `elenchus_electa`. Open: derivare pairs presses across buttons.
   - **M3** generalize: commands declared in the manifest, availability
     query on the action registry, then the palette UI (after a 2nd
     widget has a table).

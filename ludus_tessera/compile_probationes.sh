@@ -120,6 +120,7 @@ declare -a RADIX_FONTES=(
     "organa_infixa"    # status S7c-1: manifesta infixa (GENERATUM)
     "agenda"           # agenda-plan A1: documentum agendae
     "kalendarium"      # agenda-plan A2: calendarium in vico
+    "elenchus"         # agenda-plan M2b: menu contextuale (calendarium)
     "calendarium_liturgicum" # A2b: figurae calendarii (dies liturgici)
     "sanctorale"
     # scriba H2: cauda documenti per historia
