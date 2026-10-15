@@ -800,3 +800,12 @@ start with 'n' but are not PARTES_ITEM / not numeric. Single clicks on
 still CALLS f - plant side-effecting calls as `FALSUM && f(x)`.
 Test fake source keeps its "last opened" in the section's Mundus (examen
 rejects a static written in a section and not reset by parare/purgare).
+
+## 2026-10-15 - P6c: "YYYY-MM-DD" argument = day view on that day
+
+`diem_legere` (strict: 10 chars, digits, valid date) next to
+mensem_legere; mount and `kalendarium_argumentum_ponere` both switch to
+the day view on that day ("YYYY-MM" keeps the old behaviour: selects a
+day, view unchanged). Test gap found by a plant: the first test started
+IN day view, so dropping `visum_ponere("dies")` from argumentum_ponere
+stayed green - added a case starting from the month view.

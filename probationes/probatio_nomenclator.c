@@ -33,6 +33,8 @@ nomen structura {
                   Volumen* volumen;
        PersonaeDocumentum* documentum;
                       b32  sine_notis;   /* P5b: sine volumine */
+                     Dies  dies_aperta;  /* P6c: porta diei notat */
+                      s32  aperitiones;
 } Mundus;
 
 interior vacuum
@@ -79,6 +81,20 @@ hodie_fixa (
     redde VERUM;
 }
 
+/* P6c: porta diei ficta - dies notatur */
+interior b32
+diem_notare (
+     vacuum* ctx,
+       Dies  dies)
+{
+    Mundus* x;
+
+    x               = (Mundus*)ctx;
+    x->dies_aperta  = dies;
+    x->aperitiones++;
+    redde VERUM;
+}
+
 /* montare (CCCLX x CCCXX) et dispensatorem ligare */
 interior b32
 montare (
@@ -95,6 +111,7 @@ montare (
     {
         redde FALSUM;
     }
+    nomenclator_portam_diei_ponere(&x->m, diem_notare, x);
     x->d = dispensator_creare(p, x->intern, x->repo, x->m.actiones,
         nomenclator_componere, &x->m, CCC);
     si (!x->d)
@@ -1305,6 +1322,97 @@ _probare_argumentum (
     CREDO_VERUM(campus_est(x, "persona_aperta", NIHIL));
 }
 
+/* P6c: natalis personae I ponere (annus 0 = sine anno) */
+interior b32
+natalem_ponere (
+     Mundus* x,
+        s32  annus,
+        s32  mensis,
+        s32  dies)
+{
+    Dies d;
+
+    d = fasti_dies(annus, mensis, dies);
+    redde personae_natalem_ponere(x->documentum, I, &d) > ZEPHYRUM;
+}
+
+interior b32
+dies_aperta_est (
+     Mundus* x,
+        s32  annus,
+        s32  mensis,
+        s32  dies)
+{
+    si (   x->dies_aperta.annus  != annus
+        || x->dies_aperta.mensis != mensis
+        || x->dies_aperta.dies   != dies)
+    {
+        imprimere("  dies aperta: %d-%d-%d\n",
+            (integer)x->dies_aperta.annus,
+            (integer)x->dies_aperta.mensis,
+            (integer)x->dies_aperta.dies);
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
+/* P6c: ad natalem - 'c' et globulus "ad_natalem" portam diei cum
+ * natali proximo (hodie XIV X MMXXVI inclusa) vocant: futurus hoc
+ * anno, hodie, praeteritus (anno proximo), sine anno, 29 II (28 II
+ * anni communis) */
+interior vacuum
+_probare_ad_natalem (
+    CredoContextus* c)
+{
+    Mundus* x;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(contactus_parare(x, c->piscina));
+    CREDO_NECESSE(natalem_ponere(x, MCMLXXXVI, XII, XXV));
+    CREDO_NECESSE(personam_aperire(x, "p1", c->piscina));
+    clavis(x, 'c');
+    CREDO_AEQUALIS_S32(x->aperitiones, I);
+    CREDO_VERUM(dies_aperta_est(x, MMXXVI, XII, XXV));
+    CREDO_NECESSE(natalem_ponere(x, MCMLXXXVI, X, XIV));
+    clavis(x, 'c');
+    CREDO_VERUM(dies_aperta_est(x, MMXXVI, X, XIV));
+    CREDO_NECESSE(natalem_ponere(x, MCMLXXXVI, III, II));
+    clavis(x, 'c');
+    CREDO_VERUM(dies_aperta_est(x, MMXXVII, III, II));
+    CREDO_NECESSE(natalem_ponere(x, ZEPHYRUM, XII, XXV));
+    clavis(x, 'c');
+    CREDO_VERUM(dies_aperta_est(x, MMXXVI, XII, XXV));
+    CREDO_NECESSE(natalem_ponere(x, MM, II, XXIX));
+    dispensator_recomponere(x->d);
+    CREDO_NECESSE(ictus_in(x, "ad_natalem", c->piscina));
+    CREDO_VERUM(dies_aperta_est(x, MMXXVII, II, XXVIII));
+    CREDO_AEQUALIS_S32(x->aperitiones, V);
+}
+
+/* P6c: sine natali (Banca) aut sine porta: globulus abest, 'c' nihil */
+interior vacuum
+_probare_ad_natalem_absens (
+    CredoContextus* c)
+{
+    Mundus* x;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(contactus_parare(x, c->piscina));
+    CREDO_NECESSE(personam_aperire(x, "p2", c->piscina));
+    CREDO_FALSUM(adest(x, "ad_natalem", c->piscina));
+    clavis(x, 'c');
+    CREDO_AEQUALIS_S32(x->aperitiones, ZEPHYRUM);
+    effugium(x);
+    CREDO_NECESSE(natalem_ponere(x, MCMLXXXVI, XII, XXV));
+    CREDO_NECESSE(personam_aperire(x, "p1", c->piscina));
+    CREDO_VERUM(adest(x, "ad_natalem", c->piscina));
+    nomenclator_portam_diei_ponere(&x->m, NIHIL, NIHIL);
+    dispensator_recomponere(x->d);
+    CREDO_FALSUM(adest(x, "ad_natalem", c->piscina));
+    clavis(x, 'c');
+    CREDO_AEQUALIS_S32(x->aperitiones, ZEPHYRUM);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "montatio", _probare_montationem, mundum_parare, mundum_purgare,
         NIHIL, NIHIL },
@@ -1352,6 +1460,10 @@ hic_manens constans CredoSectio SECTIONES[] = {
         mundum_purgare, NIHIL, NIHIL },
     { "argumentum", _probare_argumentum, mundum_parare, mundum_purgare,
         NIHIL, NIHIL },
+    { "ad_natalem", _probare_ad_natalem, mundum_parare, mundum_purgare,
+        NIHIL, NIHIL },
+    { "ad_natalem_absens", _probare_ad_natalem_absens, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

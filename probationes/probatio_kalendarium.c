@@ -2027,6 +2027,65 @@ _probare_paginas (
     CREDO_VERUM(campus_est(x, "prompta", "nova"));
 }
 
+/* P6c: argumentum "YYYY-MM-DD" - montatio et latus exstans in visum
+ * diei illius diei; malum (dies nulla, forma mala) FALSUM, status
+ * manet */
+interior vacuum
+_probare_argumentum_diei (
+    CredoContextus* c)
+{
+    Mundus* x;
+      Dies  d;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(mundum_struere(x, c->piscina, "2026-12-25"));
+    CREDO_VERUM(campus_est(x, "visus", "dies"));
+    d = kalendarium_dies_electus(&x->m);
+    CREDO_VERUM(d.annus == MMXXVI && d.mensis == XII && d.dies == XXV);
+    CREDO_VERUM(kalendarium_argumentum_ponere(&x->m, "2027-03-02"));
+    d = kalendarium_dies_electus(&x->m);
+    CREDO_VERUM(d.annus == MMXXVII && d.mensis == III && d.dies == II);
+    CREDO_VERUM(campus_est(x, "visus", "dies"));
+    CREDO_FALSUM(kalendarium_argumentum_ponere(&x->m, "2026-02-30"));
+    CREDO_FALSUM(kalendarium_argumentum_ponere(&x->m, "2026-10-2"));
+    CREDO_FALSUM(kalendarium_argumentum_ponere(&x->m, "2026-1x-02"));
+    d = kalendarium_dies_electus(&x->m);
+    CREDO_VERUM(d.annus == MMXXVII && d.mensis == III && d.dies == II);
+    /* "YYYY-MM" visum non mutat (mos prior) */
+    CREDO_VERUM(kalendarium_argumentum_ponere(&x->m, "2026-10"));
+    CREDO_VERUM(campus_est(x, "visus", "dies"));
+}
+
+/* P6c: latus in visu mensis - argumentum "YYYY-MM-DD" in visum diei
+ * vertit */
+interior vacuum
+_probare_argumentum_diei_ex_mense (
+    CredoContextus* c)
+{
+    Mundus* x;
+      Dies  d;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(mundum_struere(x, c->piscina, NIHIL));
+    CREDO_NECESSE(campus_est(x, "visus", NIHIL)
+        || campus_est(x, "visus", "mensis"));
+    CREDO_VERUM(kalendarium_argumentum_ponere(&x->m, "2026-12-25"));
+    CREDO_VERUM(campus_est(x, "visus", "dies"));
+    d = kalendarium_dies_electus(&x->m);
+    CREDO_VERUM(d.annus == MMXXVI && d.mensis == XII && d.dies == XXV);
+}
+
+/* montatio cum die mala recusatur */
+interior vacuum
+_probare_argumentum_diei_malum (
+    CredoContextus* c)
+{
+    Mundus* x;
+
+    x = (Mundus*)c->datum;
+    CREDO_FALSUM(mundum_struere(x, c->piscina, "2026-13-01"));
+}
+
 /* P6: fons fictus - Anna Rossi natalis 14 X (MCMLXXXVI), "Festa
  * urbis" genere ignoto 14 X, Luca Bianchi natalis 20 X (sine anno),
  * "Feriae" genere ignoto 22 X (solae) */
@@ -2992,6 +3051,12 @@ hic_manens constans CredoSectio SECTIONES[] = {
         mundum_purgare, NIHIL, NIHIL },
     { "signatum_aperire", _probare_signatum_aperire, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
+    { "argumentum_diei", _probare_argumentum_diei, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "argumentum_diei_malum", _probare_argumentum_diei_malum,
+        mundum_parare, mundum_purgare, NIHIL, NIHIL },
+    { "argumentum_diei_ex_mense", _probare_argumentum_diei_ex_mense,
+        mundum_parare, mundum_purgare, NIHIL, NIHIL },
     { "montatio",     _probare_montationem,   mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { "craticula",    _probare_craticulam,    mundum_parare,

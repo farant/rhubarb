@@ -130,6 +130,35 @@ mensem_legere (
     redde *mensis >= I && *mensis <= XII;
 }
 
+/* P6c: argumentum "YYYY-MM-DD" -> dies (valida) */
+interior b32
+diem_legere (
+    constans character* argumentum,
+                  Dies* dies)
+{
+    i32 i;
+
+    si (   !argumentum || strlen(argumentum) != X
+        || argumentum[IV] != '-' || argumentum[VII] != '-')
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < X; i++)
+    {
+        si (   i != IV && i != VII
+            && (argumentum[i] < '0' || argumentum[i] > '9'))
+        {
+            redde FALSUM;
+        }
+    }
+    *dies = fasti_dies((s32)((argumentum[ZEPHYRUM] - '0') * M
+        + (argumentum[I] - '0') * C + (argumentum[II] - '0') * X
+        + (argumentum[III] - '0')), (s32)((argumentum[V] - '0') * X
+        + (argumentum[VI] - '0')), (s32)((argumentum[VIII] - '0') * X
+        + (argumentum[IX] - '0')));
+    redde fasti_dies_valida(*dies);
+}
+
 /* dies argumenti: hodie si in eo mense, aliter dies I */
 interior Dies
 dies_argumenti (
@@ -3533,6 +3562,7 @@ kalendarium_montare (
     Organum* organum;
         s32  annus;
         s32  mensis;
+       Dies  dies_argumenti_plena;
         b32  ok;
 
     si (!m || !piscina || !intern || !repo)
@@ -3540,6 +3570,7 @@ kalendarium_montare (
         redde FALSUM;
     }
     si (   argumentum && strcmp(argumentum, "agenda") != ZEPHYRUM
+        && !diem_legere(argumentum, &dies_argumenti_plena)
         && !mensem_legere(argumentum, &annus, &mensis))
     {
         redde FALSUM;
@@ -3572,11 +3603,20 @@ kalendarium_montare (
         redde FALSUM;
     }
     ok = VERUM;
-    si (argumentum)
+    si (argumentum && strcmp(argumentum, "agenda") == ZEPHYRUM)
     {
-        ok = strcmp(argumentum, "agenda") == ZEPHYRUM
-            ? visum_ponere(m, "agenda")
-            : diem_scribere(m, dies_argumenti(m, annus, mensis));
+        ok = visum_ponere(m, "agenda");
+    }
+    /* P6c: "YYYY-MM-DD" - visus diei in eo die */
+    alioquin si (   argumentum && diem_legere(argumentum,
+                 &dies_argumenti_plena))
+    {
+        ok = diem_scribere(m, dies_argumenti_plena)
+            && visum_ponere(m, "dies");
+    }
+    alioquin si (argumentum)
+    {
+        ok = diem_scribere(m, dies_argumenti(m, annus, mensis));
     }
     /* A6d: notae diei post diem argumenti; A6e: superficies
      * montationis (vicus superficies_* postea scribit) */
@@ -3598,10 +3638,21 @@ kalendarium_argumentum_ponere (
 {
     s32 annus;
     s32 mensis;
+   Dies d;
 
     si (m && argumentum && strcmp(argumentum, "agenda") == ZEPHYRUM)
     {
         redde visum_ponere(m, "agenda");
+    }
+    /* P6c: "YYYY-MM-DD" - visus diei in eo die */
+    si (m && diem_legere(argumentum, &d))
+    {
+        si (!diem_scribere(m, d) || !visum_ponere(m, "dies"))
+        {
+            redde FALSUM;
+        }
+        librum_aptare(m, NIHIL);
+        redde VERUM;
     }
     si (!m || !mensem_legere(argumentum, &annus, &mensis))
     {

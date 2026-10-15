@@ -127,9 +127,10 @@ nomen structura {
 } KalendariumMontatio;
 
 /* montare in repositorio dato: id NIHIL = radix; aliter liberum
- * <calendarium id> (creatur si abest). argumentum "YYYY-MM" aut
- * NIHIL. systemata ut pictor (conservatio: visus; NIHIL = nulla).
- * FALSUM si argumentum malum aut ramus recusatur. P6: fontes dierum
+ * <calendarium id> (creatur si abest). argumentum "YYYY-MM" (mensis),
+ * "YYYY-MM-DD" (P6c: visus diei in eo die), "agenda" aut NIHIL.
+ * systemata ut pictor (conservatio: visus; NIHIL = nulla). FALSUM si
+ * argumentum malum aut ramus recusatur. P6: fontes dierum
  * signatorum (natales ...) - signum in cellula mensis, ordines in visu
  * diei; NIHIL = nulli. */
 b32
@@ -164,8 +165,9 @@ kalendarium_gestum_ponere (
      Motus* motus,
     vacuum* ctx);
 
-/* argumentum novum (vicus_acervo_mutare): "YYYY-MM" -> dies electa.
- * FALSUM si malum (nihil mutatur). */
+/* argumentum novum (vicus_acervo_mutare): "YYYY-MM" -> dies electa;
+ * "YYYY-MM-DD" (P6c) -> visus diei in eo die; "agenda". FALSUM si malum
+ * (nihil mutatur). */
 b32
 kalendarium_argumentum_ponere (
     KalendariumMontatio* m,

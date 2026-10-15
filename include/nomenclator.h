@@ -25,6 +25,13 @@ nomen b32 (*NomenclatorHodie)(
     vacuum* ctx,
       Dies* hodie);
 
+/* P6c: porta "diem in calendario aperire" (vicus: latus calendarii in
+ * die dato; probationes: dies notatur); NIHIL = globulus et clavis
+ * absunt */
+nomen b32 (*NomenclatorDiemAperire)(
+    vacuum* ctx,
+       Dies dies);
+
 nomen structura {
              InsulaRamus  ramus;
           ActioRegistrum* actiones;
@@ -32,6 +39,8 @@ nomen structura {
       PersonaeDocumentum* documentum;   /* ligamen (a parente) */
         NomenclatorHodie  hodie;        /* porta (P5: aetas) */
                   vacuum* hodie_ctx;
+  NomenclatorDiemAperire  dies_aperire;      /* P6c: post montationem */
+                  vacuum* dies_aperire_ctx;
                  Piscina* piscina;
      InternamentumChorda* intern;
                   vacuum* figurae_ctx;  /* privatum */
@@ -77,6 +86,14 @@ vacuum
 nomenclator_gestum_ponere (
      Motus* motus,
     vacuum* ctx);
+
+/* P6c: portam diei ponere (post montationem; vicus in montatione) -
+ * globulus ad natalem et clavis 'c' in visu personae */
+vacuum
+nomenclator_portam_diei_ponere (
+       NomenclatorMontatio* m,
+    NomenclatorDiemAperire  porta,
+                    vacuum* ctx);
 
 /* P6b: argumentum lateris (vicus_acervo_mutare / montatio): "<id>"
  * personam aperit (visus personae, campus primus); "" aut NIHIL ad

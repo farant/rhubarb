@@ -205,3 +205,27 @@ argumentum_ponere, so planting either one stayed green. Fixed by
 testing each alone: an existing contacts side (calendar double-click on
 a second birthday) and a fresh mount via vicus_acervo_aperire (no
 argumentum_ponere call).
+
+## 2026-10-15 - P6c: birthday -> calendar day (Fran's idea)
+
+Port `NomenclatorDiemAperire` (fields dies_aperire/_ctx, set AFTER
+montare with nomenclator_portam_diei_ponere - montare memsets m). One
+availability rule for key and button: REQUIRIT_NATALEM ->
+`natalis_aperibilis` (open contact has a birthday, port set, hodie port
+set). `c` in the detail view (TABULA_PRAECEPTORUM) and the arrow button
+"ad_natalem" both run `fac_ad_natalem`: next occurrence from today
+INCLUSIVE via fasti_annuum_expandere over [hodie, hodie + 1 year]
+(29 Feb -> 28 Feb in a common year), handed to the port.
+
+Layout: the birthday row becomes a LINEA locus (field CRESCENS + arrow
+FIXA III) only when available - the arrow sits at the row's right end,
+not right after the date text (that would need measuring the value
+string at layout time = hand pixel arithmetic; dispositio rule).
+
+Caveat seen in a headless probe without a vicus clock: the arrow shows
+whenever the hodie PORT is set, even if it cannot answer; pressing it
+then does nothing. vicus apps always set the clock.
+
+Formatter quirk: a long call inside `si (...)` got wrapped as
+"args,\n        hodie,\n            ultima, ..." - assigning the result
+to a local first gives a readable wrap.

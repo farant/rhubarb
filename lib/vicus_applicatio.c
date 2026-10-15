@@ -1443,6 +1443,27 @@ nomen structura {
         StatusSystemata* systemata;
 } ContextusNomenclatoris;
 
+/* P6c: porta diei nomenclatoris - latus calendarii in frontem acervi,
+ * visus diei in eo die (vicus_acervo_mutare "YYYY-MM-DD"; petitio
+ * pulsus proximi); ctx = ContextusNomenclatoris* */
+interior b32
+diem_in_calendario (
+     vacuum* ctx,
+       Dies  dies)
+{
+    ContextusNomenclatoris* cn;
+                 character  iso[XVI];
+
+    cn = (ContextusNomenclatoris*)ctx;
+    si (!cn || !fasti_dies_valida(dies))
+    {
+        redde FALSUM;
+    }
+    sprintf(iso, "%04d-%02d-%02d", (integer)dies.annus,
+        (integer)dies.mensis, (integer)dies.dies);
+    redde vicus_acervo_mutare(cn->vicus, "calendarium", iso);
+}
+
 interior b32
 nomenclatorem_montare_in_vico (
                  vacuum* sedes,
@@ -1475,6 +1496,8 @@ nomenclatorem_montare_in_vico (
     {
         redde FALSUM;
     }
+    nomenclator_portam_diei_ponere((NomenclatorMontatio*)sedes,
+        diem_in_calendario, cn);
     /* P6b: argumentum "<id>" personam aperit (malum: index manet) */
     si (argumentum && argumentum[ZEPHYRUM])
     {

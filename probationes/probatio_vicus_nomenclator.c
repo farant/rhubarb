@@ -10,6 +10,7 @@
 #include "vicus.h"
 #include "vicus_applicatio.h"
 #include "nomenclator.h"
+#include "kalendarium.h"
 #include "personae.h"
 #include "thema.h"
 #include "manus_ludus.h"
@@ -24,7 +25,16 @@
 nomen structura {
             Volumen* volumen;
     VicusApplicatio  app;
+        VicusTempus  tempus;   /* P6c: horologium fictum */
 } Mundus;
+
+interior vacuum
+horologium_fictum (
+         vacuum* ctx,
+    VicusTempus* tempus)
+{
+    *tempus = *(VicusTempus*)ctx;
+}
 
 interior vacuum
 mundum_parare (
@@ -277,6 +287,54 @@ _probare_argumentum (
     CREDO_VERUM(a && chorda_aequalis_literis(*a, "1"));
 }
 
+/* P6c: globulus ad natalem in visu personae - latus calendarii in
+ * frontem, visus diei in natali proximo (hodie XIV X MMXXVI; Anna XXV
+ * XII) */
+interior vacuum
+_probare_ad_natalem (
+    CredoContextus* c)
+{
+                   Mundus* x;
+                    Vicus* v;
+               ManusLudus* m;
+       PersonaeDocumentum* doc;
+               VicusLatus* l;
+      KalendariumMontatio* k;
+                   chorda* a;
+                     Dies  d;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(x && x->volumen);
+    doc = personae_aperire(c->piscina, internamentum_creare(c->piscina),
+        x->volumen, "personae", ZEPHYRUM);
+    CREDO_NECESSE(doc && personae_hominem_creare(doc, chorda_ex_literis(
+        "Anna", c->piscina), chorda_ex_literis("Rossi", c->piscina))
+        == I);
+    d = fasti_dies(MCMLXXXVI, XII, XXV);
+    CREDO_NECESSE(personae_natalem_ponere(doc, I, &d) > ZEPHYRUM);
+    CREDO_NECESSE(aedificare(x, c));
+    v                 = x->app.vicus;
+    x->tempus.annus   = MMXXVI;
+    x->tempus.mensis  = X;
+    x->tempus.dies    = XIV;
+    vicus_horologium_ponere(v, horologium_fictum, &x->tempus);
+    CREDO_VERUM(vicus_acervo_aperire(v, "nomenclator", "1"));
+    (vacuum)vicus_pulsare(v);
+    CREDO_NECESSE_NON_NIHIL(nomenclator_frontalis(v));
+    m = manus_ludus_creare(c->piscina, x->app.d);
+    dispensator_recomponere(x->app.d);
+    CREDO_NECESSE(manus_ludus_premere(m, "#ad_natalem"));
+    (vacuum)vicus_pulsare(v);
+    l = vicus_latus(vicus_activa(v), VICUS_DEXTRUM);
+    CREDO_NECESSE(l && l->montata);
+    CREDO_CHORDA_AEQUALIS_LITERIS(l->genus, "calendarium");
+    k = (KalendariumMontatio*)l->montatio;
+    a = insula_ramus_attributum(&k->ramus, "visus");
+    CREDO_VERUM(a && chorda_aequalis_literis(*a, "dies"));
+    d = kalendarium_dies_electus(k);
+    CREDO_VERUM(d.annus == MMXXVI && d.mensis == XII && d.dies == XXV);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "latera", _probare_latera, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
@@ -287,6 +345,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "notae", _probare_notas, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
     { "argumentum", _probare_argumentum, mundum_parare, mundum_purgare,
+        NIHIL, NIHIL },
+    { "ad_natalem", _probare_ad_natalem, mundum_parare, mundum_purgare,
         NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

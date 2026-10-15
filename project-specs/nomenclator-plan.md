@@ -277,6 +277,11 @@ house rule of independent composable libraries.
   contact open; `nomenclator_argumentum_ponere` (mount + existing side).
   Next P6c: arrow button / `c` by the birthday -> calendar day view on
   the next occurrence (design approved 10-15).
+- **P6c DONE 2026-10-15**: contact detail - arrow button at the end of
+  the Birthday row and key `c` -> calendar side to the front, day view
+  on the next occurrence (today inclusive; 29 Feb -> 28 Feb); port
+  `NomenclatorDiemAperire`, calendar argument "YYYY-MM-DD". P6
+  complete. Next: P4 fuzzy search or P7 photo - Fran to choose.
 - **P2 nomenclator list** - vicus genus `nomenclator`, command word
   `$contacts`, alphabetical list with letter headings (U1), selection, new
   contact (kind chosen at creation), open detail.

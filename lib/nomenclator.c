@@ -16,6 +16,7 @@
 #include "fons.h"
 #include "thema.h"
 #include "motus.h"
+#include "fasti_fontes.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -655,6 +656,50 @@ fac_paginam_proximam (
 
 #define REQUIRIT_PERSONAM  I    /* persona electa */
 #define REQUIRIT_FILTRUM   II   /* filtrum positum */
+#define REQUIRIT_NATALEM   IV   /* P6c: persona aperta cum natali, porta
+                                 * diei et hodie */
+
+/* P6c: natalis personae apertae in calendario aperiri potest? */
+interior b32
+natalis_aperibilis (
+    constans NomenclatorMontatio* m)
+{
+    constans Persona* q;
+
+    q = persona_aperta(m) > ZEPHYRUM ? personae_persona(m->documentum,
+        persona_aperta(m)) : NIHIL;
+    redde q && q->natalis_positus && m->dies_aperire && m->hodie;
+}
+
+/* P6c: natalis proximus (hodie inclusa; 29 II -> 28 II anni communis)
+ * portae diei redditur */
+interior b32
+fac_ad_natalem (
+    vacuum* ctx)
+{
+    ContextusPraecepti* cp = (ContextusPraecepti*)ctx;
+      constans Persona* q;
+                  Dies  hodie;
+                  Dies  ultima;
+                  Dies  dies[II];
+                   i32  n;
+
+    si (   !natalis_aperibilis(cp->m)
+        || !cp->m->hodie(cp->m->hodie_ctx, &hodie))
+    {
+        redde FALSUM;
+    }
+    q = personae_persona(cp->m->documentum,
+        persona_aperta(cp->m));
+    ultima = fasti_addere_annos(hodie, I);
+    n       = fasti_annuum_expandere(q->natalis.mensis, q->natalis.dies,
+        hodie, ultima, dies, II);
+    si (n < I)
+    {
+        redde FALSUM;
+    }
+    redde cp->m->dies_aperire(cp->m->dies_aperire_ctx, dies[ZEPHYRUM]);
+}
 
 interior b32
 requisita_nomenclatoris (
@@ -664,7 +709,9 @@ requisita_nomenclatoris (
     ContextusPraecepti* cp = (ContextusPraecepti*)ctx;
 
     redde (!(requisita & REQUIRIT_PERSONAM) || cp->electa > ZEPHYRUM)
-        && (!(requisita & REQUIRIT_FILTRUM) || filtrum_currens(cp->m));
+        && (!(requisita & REQUIRIT_FILTRUM) || filtrum_currens(cp->m))
+        && (!(requisita & REQUIRIT_NATALEM)
+        || natalis_aperibilis(cp->m));
 }
 
 /* P3: filtrum (prompta, filtro currenti praeimpleta), tollere, visus */
@@ -1016,6 +1063,8 @@ hic_manens constans Praeceptum TABULA_PRAECEPTORUM[] = {
         ZEPHYRUM, fac_campum_edere },
     { "nomenclator.genus_alternare", "Person / business", "t",
         VISUS_PERSONAE, ZEPHYRUM, fac_genus_alternare },
+    { "nomenclator.ad_natalem", "Birthday in calendar", "c",
+        VISUS_PERSONAE, REQUIRIT_NATALEM, fac_ad_natalem },
     { "nomenclator.filtrum", "Filter by tag", "f", VISUS_INDICIS,
         ZEPHYRUM, fac_filtrum },
     { "nomenclator.filtrum_tollere", "Clear filter", "Esc",
@@ -1440,6 +1489,11 @@ agere (
         {
             redde fac_redire(&cp);
         }
+        /* P6c: sagitta ad natalem in calendario */
+        si (chorda_aequalis_literis(nodus->id, "ad_natalem"))
+        {
+            redde fac_ad_natalem(&cp);
+        }
         si (chorda_aequalis_literis(nodus->id, "genus-homo"))
         {
             redde genus_ponere(&cp, PERSONA_HOMO);
@@ -1817,6 +1871,10 @@ personam_pingere (
                 md->piscina),
                 FIGURA_SEGMENTUM_ULTIMUM, q->genus == PERSONA_SOCIETAS
                 ? FIGURA_ELECTUM : ZEPHYRUM);
+        }
+        alioquin si (chorda_aequalis_literis(f->id, "ad_natalem"))
+        {
+            figura_sagittam_pingere(md, f->fines, I, ZEPHYRUM);
         }
         alioquin si (chorda_aequalis_literis(f->id, "imago"))
         {
@@ -2232,6 +2290,20 @@ personam_disponere (
     per (i = ZEPHYRUM; campi && i < xar_numerus(campi); i++)
     {
         sprintf(id, "f%d", (integer)i);
+        /* P6c: natalis - linea cum sagitta "ad_natalem" ad dextrum */
+        si (   ((CampusPersonae*)xar_obtinere(campi, i))->genus
+               == CAMPUS_NATALIS && natalis_aperibilis(m))
+        {
+            s32 linea;
+
+            linea = locum_addere(dp, campi_d, DISPOSITIO_LINEA,
+                DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_FIXA, II);
+            (vacuum)componentem_locare(dp, linea, id, PARTES_ITEM,
+                DISPOSITIO_CRESCENS, ZEPHYRUM, II);
+            (vacuum)componentem_locare(dp, linea, "ad_natalem",
+                PARTES_BOTTONE, DISPOSITIO_FIXA, III, II);
+            perge;
+        }
         (vacuum)componentem_locare(dp, campi_d, id, PARTES_ITEM,
             DISPOSITIO_CRESCENS, ZEPHYRUM, i == ZEPHYRUM ? III : II);
     }
@@ -2504,6 +2576,19 @@ librum_aptare (
     clavis_libri(persona_aperta(m), clavis);
     notarum_locus(m, &lat, &alt);
     (vacuum)charta_clavem_ponere(&ctx->notae, motus, clavis, lat, alt);
+}
+
+vacuum
+nomenclator_portam_diei_ponere (
+       NomenclatorMontatio* m,
+    NomenclatorDiemAperire  porta,
+                    vacuum* ctx)
+{
+    si (m)
+    {
+        m->dies_aperire      = porta;
+        m->dies_aperire_ctx  = ctx;
+    }
 }
 
 b32
