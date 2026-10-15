@@ -153,13 +153,70 @@ test that the new answer agrees with the old list on every tracked file
 - **U5** later consumers by PULL: gate derivation (a library change
   owes its consumers; an app is a leaf), docs expectations per kind,
   merge-time "which installed tools changed", the …MJ2 app layout.
+- **U5b** interrogationes pilot (§VII): xar + piscina, dead-answer
+  check through silva, then the pool query.
 - **U6** reorganization (moves, `genus__` prefixes) only when U1-U4
   have held - Fran 10-15.
 
-## VI. Open questions (for Fran)
+## VI½. Q1 answered (Fran 10-15): three mechanisms, each where it fits
 
-1. Unit declarations: inside `aedificatio.stml` (a) or `unitas.stml`
-   per unit (b) or both (b for units without builds)?
+| unit shape | mechanism |
+|---|---|
+| directory (app, subsystem, vendor, research) | `unitas.stml` in the directory |
+| single file (tool, script) | in-file annotation, like `<porta>`/`<cursus>` |
+| library in `include/`+`lib/` | stem convention (`xar` claims `include/xar.h`, `lib/xar.c`, `lib/xar.worklog.md`, `probationes/probatio_xar.c`) + one short families list (`fabrica fabrica_*`, `arbor2_*`) |
+
+Never declared: dependencies (aedilis closure), most roles (path
+conventions), language (extension), provenance (marker + fabrica).
+Declared minimum: titulus, genus, claimed paths (default: own dir),
+custody (default from kind), tool audience, exceptions, one-line
+descriptio; foreign code adds origo (source, pinned version, license).
+`aedificatio.stml` stays about BUILDING; `apps/*/organum.stml` is the
+app's RUNTIME manifest - neither absorbs unit identity; units point at
+their actions. Q3 follows: per-library units come free from the stem.
+
+## VII. Interrogationes - documentation as typed questions (Fran 10-15)
+
+A unit exposes what it can do by DECLARING QUESTIONS it answers
+("jeopardy style"): "how do I ...?" -> "xar_addere: segments never
+move". Why: question-shaped entries are self-contained and identical
+in shape, so they pool across hundreds of units by concatenation (API
+docs and READMEs do not); they are indexed by the question a reader
+HAS (THE BENCH in MEMORY.md - pain -> command - is the most-used doc
+an agent has, for this reason); and they are auditable units.
+
+Shape (sketch, details as we go):
+
+    <interrogatio genus="quomodo">
+      <quaestio(>how do I keep pointers stable while an array grows?
+      <responsum symbolum="xar_addere" (>segments never move; ...
+    </interrogatio>
+
+TYPED (Fran: the natural entry point for auditing pain points and
+limitations later): quomodo (how do I - answer = function, command,
+recipe), possumne (can I - yes/no + limits), cur (why does - decision,
+worklog), quid (what is - glossary); open set via the registry (§III):
+limitatio, dolor (known pain) are expected later.
+
+Audits made possible by ANCHORED answers (symbol, command, path):
+- dead answer: silva resolves `symbolum=`; renamed/deleted -> red;
+- API coverage: every public function of `include/X.h` answers at
+  least one question (uncovered = a to-do, or not really public);
+- overlap: two units answering one question = duplicate function or a
+  merge candidate;
+- reverse lookup: the questions naming `xar_addere` ARE its docs;
+- per-type counts per kind ("every library has >= 1 quomodo").
+
+Pool = a query, not a file: a legati/natura tool ("quaestio: how do I
+..." with FTS, like the ledger's). Open: questions in English or Latin;
+next to the function (annotation, fresher) or in the unit's file
+(easier to audit). Pilot when U3 lands: ~5 questions each for xar and
+piscina + the dead-answer check. `FAQ.md` is Fran's (never edited by
+agents) - a seed corpus only if Fran moves entries over.
+
+## VIII. Open questions (for Fran)
+
+1. ~~Unit declarations~~ - answered §VI½ (three mechanisms).
 2. Is "subsystem" a kind, or just a unit that contains other units?
    (silva is both a library family and a set of tools.)
 3. One library = one unit (`xar`), or `include/`+`lib/` = one big
