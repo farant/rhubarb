@@ -43,3 +43,13 @@ for readers: Darwin ru_maxrss is BYTES (Linux KiB). Six names tolerated
 in the glossary (clockid, gettime, realtime, monotonic, rusage,
 getrusage). The same session also moved mensor's two sleeps from usleep
 (code 87) to nanosleep.
+
+## 2026-10-14 - EINPROGRESS + SO_ERROR (http-vocatio T3)
+
+`lib/tcp_posix.c` gained a non-blocking connect (`tcp_incipere`,
+`tcp_incipere_perficere`): examen REICE'd it for `EINPROGRESS` and
+`SO_ERROR` while clang was happy - the lexicon-gap pattern again.
+Added `EINPROGRESS 36` to the errno.h sectio and `SO_ERROR 0x1007` to
+the sys/socket.h sectio (Darwin values). `officina/auspex_posix.sh`
+asserts both; clang agreed on the first run. Plant `EINPROGRESS 37` ->
+TU nostrum DISSENTIT (assertum_174), restored -> CONSENTIT.

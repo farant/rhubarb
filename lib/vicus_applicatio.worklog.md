@@ -56,3 +56,13 @@ streamed page with the layout of the final text - section `aequale`).
   "it works and the text appears in steady pieces" - spec AUDIENDA 1
   (SecureTransport hands partial TLS records to the reader promptly)
   answered yes.
+
+## 2026-10-14 - $question head is now "<answered>"
+
+Fran's choice after two split-question reports: the answered head was
+`<question answered>` (XIX cells) in place of `$question<>` (XI) - the
++VIII overflowed long first lines and, with the answer position computed
+before the move, split the question. `<answered>` (X) is shorter than
+the command, so the line can never grow. Nothing parses the head; the
+old marker stays in pages already answered. Placement itself is now
+robust in scriba_actiones (`clausuram_quaerere`) - see its worklog.

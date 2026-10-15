@@ -1707,6 +1707,158 @@ probans_J_jungere_lineas(vacuum)
     CREDO_VERUM(status.mutatus);
 }
 
+/* linea tota (contentum + spatia usque ad latitudinem) aequalis literis */
+hic_manens b32
+_linea_est (
+    constans TabulaCharacterum* tabula,
+                           i32  linea,
+           constans character* literae)
+{
+    i32 col;
+    i32 n;
+
+    per (n = ZEPHYRUM; literae[n] != '\0'; n++)
+    {
+    }
+    per (col = ZEPHYRUM; col < tabula->latitudo; col++)
+    {
+        character exspectatus  = col < n ? literae[col] : ' ';
+        character receptus     = tabula_cellula(tabula, linea, col);
+
+        si (receptus != exspectatus)
+        {
+            printf("  linea %u col %u: '%c' non '%c'\n", linea, col,
+                receptus, exspectatus);
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* J cum linea longa: verba quae capiuntur ascendunt, cetera in linea
+ * inferiore manent (ad indentationem suam) - nihil perditur */
+hic_manens vacuum
+probans_J_per_verba(vacuum)
+{
+    TabulaCharacterum tabula;
+            VimStatus status;
+
+    /* pars capitur: "abc" + "de fghijkl" (latitudo X) */
+    tabula_ex_literis_cum_dimensionibus(&tabula, g_piscina, X, IV,
+        "abc\nde fghijkl\nzz");
+    status = vim_initiare(&tabula);
+    status = vim_tractare_clavem(status, 'J');
+    CREDO_VERUM(_linea_est(&tabula, ZEPHYRUM, "abc de"));
+    CREDO_VERUM(_linea_est(&tabula, I, "fghijkl"));
+    CREDO_VERUM(_linea_est(&tabula, II, "zz"));
+    CREDO_AEQUALIS_I32(status.cursor_linea, ZEPHYRUM);
+    CREDO_VERUM(status.mutatus);
+
+    /* verbum primum non capitur: nihil mutatur, nullum spatium
+     * pendens */
+    tabula_ex_literis_cum_dimensionibus(&tabula, g_piscina, X, IV,
+        "abcdef\nghijklmn\nzz");
+    status = vim_initiare(&tabula);
+    status = vim_tractare_clavem(status, 'J');
+    CREDO_VERUM(_linea_est(&tabula, ZEPHYRUM, "abcdef"));
+    CREDO_VERUM(_linea_est(&tabula, I, "ghijklmn"));
+    CREDO_VERUM(_linea_est(&tabula, II, "zz"));
+    CREDO_FALSUM(status.mutatus);
+
+    /* capitur exacte (IV + I + V = X): linea inferior deletur */
+    tabula_ex_literis_cum_dimensionibus(&tabula, g_piscina, X, IV,
+        "abcd\nefghi\nzz");
+    status = vim_initiare(&tabula);
+    status = vim_tractare_clavem(status, 'J');
+    CREDO_VERUM(_linea_est(&tabula, ZEPHYRUM, "abcd efghi"));
+    CREDO_VERUM(_linea_est(&tabula, I, "zz"));
+
+    /* residuum indentationem lineae inferioris servat */
+    tabula_ex_literis_cum_dimensionibus(&tabula, g_piscina, XII, IV,
+        "abc\n  de fghijkl\nzz");
+    status = vim_initiare(&tabula);
+    status = vim_tractare_clavem(status, 'J');
+    CREDO_VERUM(_linea_est(&tabula, ZEPHYRUM, "abc de"));
+    CREDO_VERUM(_linea_est(&tabula, I, "  fghijkl"));
+    CREDO_VERUM(_linea_est(&tabula, II, "zz"));
+
+    /* verba plura capiuntur, ultimum non */
+    tabula_ex_literis_cum_dimensionibus(&tabula, g_piscina, XII, IV,
+        "ab\ncd ef gh ijk");
+    status = vim_initiare(&tabula);
+    status = vim_tractare_clavem(status, 'J');
+    CREDO_VERUM(_linea_est(&tabula, ZEPHYRUM, "ab cd ef gh"));
+    CREDO_VERUM(_linea_est(&tabula, I, "ijk"));
+
+    /* linea superior plena: nihil capitur, nihil mutatur */
+    tabula_ex_literis_cum_dimensionibus(&tabula, g_piscina, X, IV,
+        "abcdefghij\nkl");
+    status = vim_initiare(&tabula);
+    status = vim_tractare_clavem(status, 'J');
+    CREDO_VERUM(_linea_est(&tabula, ZEPHYRUM, "abcdefghij"));
+    CREDO_VERUM(_linea_est(&tabula, I, "kl"));
+    CREDO_FALSUM(status.mutatus);
+}
+
+/* backspace ad initium lineae cum linea longa: eadem regula verborum */
+hic_manens vacuum
+probans_backspace_jungere_per_verba(vacuum)
+{
+    TabulaCharacterum tabula;
+            VimStatus status;
+
+    /* "abcdef" + "ghi jklmn" (latitudo X): "ghi" capitur */
+    tabula_ex_literis_cum_dimensionibus(&tabula, g_piscina, X, IV,
+        "abcdef\nghi jklmn\nzz");
+    status = vim_initiare(&tabula);
+    status = vim_tractare_clavem(status, 'j');
+    status = vim_tractare_clavem(status, '0');
+    status = vim_tractare_clavem(status, 'i');
+    status = vim_tractare_clavem(status, VIM_CLAVIS_BACKSPACE);
+    CREDO_VERUM(_linea_est(&tabula, ZEPHYRUM, "abcdefghi"));
+    CREDO_VERUM(_linea_est(&tabula, I, "jklmn"));
+    CREDO_VERUM(_linea_est(&tabula, II, "zz"));
+    CREDO_AEQUALIS_I32(status.cursor_linea, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(status.cursor_columna, VI);
+
+    /* nihil capitur: textus manet, cursor ad finem lineae superioris */
+    tabula_ex_literis_cum_dimensionibus(&tabula, g_piscina, X, IV,
+        "abcdefgh\nijklm\nzz");
+    status = vim_initiare(&tabula);
+    status = vim_tractare_clavem(status, 'j');
+    status = vim_tractare_clavem(status, '0');
+    status = vim_tractare_clavem(status, 'i');
+    status = vim_tractare_clavem(status, VIM_CLAVIS_BACKSPACE);
+    CREDO_VERUM(_linea_est(&tabula, ZEPHYRUM, "abcdefgh"));
+    CREDO_VERUM(_linea_est(&tabula, I, "ijklm"));
+    CREDO_AEQUALIS_I32(status.cursor_linea, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(status.cursor_columna, VIII);
+
+    /* linea superior plena: cursor intra paginam manet */
+    tabula_ex_literis_cum_dimensionibus(&tabula, g_piscina, X, IV,
+        "abcdefghij\nkl");
+    status = vim_initiare(&tabula);
+    status = vim_tractare_clavem(status, 'j');
+    status = vim_tractare_clavem(status, '0');
+    status = vim_tractare_clavem(status, 'i');
+    status = vim_tractare_clavem(status, VIM_CLAVIS_BACKSPACE);
+    CREDO_VERUM(_linea_est(&tabula, ZEPHYRUM, "abcdefghij"));
+    CREDO_VERUM(_linea_est(&tabula, I, "kl"));
+    CREDO_VERUM(status.cursor_columna < X);
+
+    /* linea superior vacua: contentum ad columnam ZEPHYRUM */
+    tabula_ex_literis_cum_dimensionibus(&tabula, g_piscina, X, IV,
+        "\nabc\nzz");
+    status = vim_initiare(&tabula);
+    status = vim_tractare_clavem(status, 'j');
+    status = vim_tractare_clavem(status, '0');
+    status = vim_tractare_clavem(status, 'i');
+    status = vim_tractare_clavem(status, VIM_CLAVIS_BACKSPACE);
+    CREDO_VERUM(_linea_est(&tabula, ZEPHYRUM, "abc"));
+    CREDO_VERUM(_linea_est(&tabula, I, "zz"));
+    CREDO_AEQUALIS_I32(status.cursor_columna, ZEPHYRUM);
+}
+
 
 /* ==================================================
  * Main
@@ -1884,6 +2036,12 @@ principale (vacuum)
 
     printf("--- Probans J jungere lineas ---\n");
     probans_J_jungere_lineas();
+
+    printf("--- Probans J per verba ---\n");
+    probans_J_per_verba();
+
+    printf("--- Probans backspace jungere per verba ---\n");
+    probans_backspace_jungere_per_verba();
 
     printf("--- Probans yy copiare ---\n");
     probans_y_lineam_copiare();

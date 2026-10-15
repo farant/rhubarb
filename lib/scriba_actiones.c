@@ -800,6 +800,35 @@ segmentum_inserere (
     redde a + i;
 }
 
+/* '</>' primum ab (linea, a) per cellulas ordine linearum - cauda
+ * transfluxa contigua manet, quia transfluxus solum lineam PLENAM
+ * relinquit. VERUM: *l_post, *a_post post '>' in linea SUA (a_post ==
+ * latitudo si '>' in columna ultima) */
+interior b32
+clausuram_quaerere (
+    constans TabulaCharacterum* t,
+                           s32  linea,
+                           s32  a,
+                           s32* l_post,
+                           s32* a_post)
+{
+    s32 w = (s32)t->latitudo;
+    s32 n = w * (s32)t->altitudo;
+    s32 k;
+
+    per (k = linea * w + a; k >= ZEPHYRUM && k + II < n; k++)
+    {
+        si (   t->cellulae[k]      == '<' && t->cellulae[k + I] == '/'
+            && t->cellulae[k + II] == '>')
+        {
+            *l_post = (k + II) / w;
+            *a_post = (k + II) % w + I;
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
 /* effectus in folium: caput (corpus) aut consumptio, deinde textus -
  * segmentum primum ad locum insertionis, ceteri ('\n') lineae NOVAE
  * infra, ex lineis albis finalibus (tabula_inserere_lineam lineam
@@ -841,12 +870,18 @@ effectum_applicare (
             delta += (s32)caput.mensura;
         }
     }
-    /* corpus: textus post '</>' (in linea iussi tot cellulis motum) */
+    /* corpus: textus post '</>'. Positio RE-INVENITUR post caput:
+     * caput longius lineam transfluere potest (cauda in lineam
+     * sequentem aut novam) - positio ante computata textum inter
+     * quaestionem et caudam ponebat (Franus 2026-10-14) */
     si (iussum->corpus)
     {
         l = iussum->linea_clausurae;
         a = iussum->post_clausuram
             + (l == iussum->linea ? delta : ZEPHYRUM);
+        (vacuum)clausuram_quaerere(t, iussum->linea,
+            iussum->initium + (caput.mensura > ZEPHYRUM
+            ? (s32)caput.mensura : ZEPHYRUM), &l, &a);
     }
     initium = ZEPHYRUM;
     per (i = ZEPHYRUM; i <= (s32)textus.mensura; i++)

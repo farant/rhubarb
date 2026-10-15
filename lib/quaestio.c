@@ -637,8 +637,8 @@ argumenta_probare (
 
 /* petitio communis: systema formam paginae dicit (lineae, latitudo;
  * Franus 2026-10-14), Markdown levis licet (refluitur) */
-interior VatesPetitio*
-petitionem_struere (
+VatesPetitio*
+quaestio_petitionem_parare (
      chorda  exemplar,
      chorda  quaestio,
         s32  lineae,
@@ -670,8 +670,8 @@ petitionem_struere (
 }
 
 /* responsum vatis -> QuaestioResponsum (textus blocorum planatus) */
-interior QuaestioResponsum
-responsum_reddere (
+QuaestioResponsum
+quaestio_responsum_ex_vate (
     constans VatesResponsum* responsum,
                     Piscina* piscina)
 {
@@ -742,7 +742,8 @@ quaestio_rogare (
     {
         redde r;
     }
-    redde responsum_reddere(vates_mittere(vates, petitionem_struere(
+    redde quaestio_responsum_ex_vate(vates_mittere(vates,
+        quaestio_petitionem_parare(
         exemplar, quaestio, lineae, latitudo, piscina),
         chorda_ex_literis("quaestio", piscina), piscina), piscina);
 }
@@ -792,8 +793,8 @@ quaestio_rogare_rivum (
     }
     transitus.rivus = rivus;
     transitus.datum = datum;
-    redde responsum_reddere(vates_mittere_rivum(vates,
-        petitionem_struere(exemplar, quaestio, lineae, latitudo,
+    redde quaestio_responsum_ex_vate(vates_mittere_rivum(vates,
+        quaestio_petitionem_parare(exemplar, quaestio, lineae, latitudo,
         piscina), chorda_ex_literis("quaestio", piscina),
         deltam_transmittere, &transitus, piscina), piscina);
 }

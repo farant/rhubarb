@@ -708,6 +708,61 @@ http_petitio_corpus_ponere_chorda (
     petitio->corpus = corpus;
 }
 
+/* --- destinatio petitionis (http-vocatio II.4) --- */
+constans character*
+http_petitio_hospes (
+    HttpPetitio* petitio)
+{
+    si (!petitio)
+    {
+        redde NIHIL;
+    }
+    redde chorda_ut_cstr(petitio->hospes, petitio->piscina);
+}
+
+i32
+http_petitio_portus (
+    constans HttpPetitio* petitio)
+{
+    redde petitio ? petitio->portus : ZEPHYRUM;
+}
+
+b32
+http_petitio_est_https (
+    constans HttpPetitio* petitio)
+{
+    redde petitio && chorda_aequalis_literis(petitio->schema, "https");
+}
+
+MoraAngusta
+http_petitio_tempus (
+    constans HttpPetitio* petitio)
+{
+    redde petitio ? petitio->tempus_ms : ZEPHYRUM;
+}
+
+HttpMethodus
+http_petitio_methodus (
+    constans HttpPetitio* petitio)
+{
+    redde petitio ? petitio->methodus : HTTP_GET;
+}
+
+chorda
+http_petitio_octeti (
+    HttpPetitio* petitio)
+{
+    chorda vacua;
+
+    si (!petitio)
+    {
+        vacua.datum    = NIHIL;
+        vacua.mensura  = ZEPHYRUM;
+        redde vacua;
+    }
+    redde _construere_petitio(petitio);
+}
+
 
 /* ========================================================================
  * FUNCTIONES PUBLICAE - EXSEQUI

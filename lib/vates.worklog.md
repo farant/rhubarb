@@ -329,3 +329,44 @@ in 5-byte pieces with `Content-Type: text/event-stream`;
 `_fictus_ponere` now returns the queued entry (to flag it as a stream).
 Formatter parity with HEAD kept (vates.c 24/24, vates.h 46/46
 pre-existing findings); my own new lines conform.
+
+## 2026-10-14 - vates_vocare_rivum: streaming without blocking (http-vocatio T6)
+
+Route B of $question needs the streamed Anthropic call on the host's
+reactor. `vates_vocare_rivum(vates, petitio, propositum, reactor,
+rivus, datum, finis, finis_datum, piscina)` -> `VatesVocatio*` runs the
+same attempt loop as `vates_mittere_rivum`, as callbacks: attempt =
+`http_vocare` (T5) feeding the same `rivus_eventuum` + collector; at the
+call's finis the attempt is judged; retry waits on a reactor TIMER,
+never `_dormire`.
+
+- **One judgement, two paths.** The attempt judgement moved out of
+  `vates_mittere_rivum` into `_rivum_iudicare` (transport error / non-2xx
+  JSON / stream collector, plus "retry only before the first delta"),
+  with `_conatum_notare` (latency, price, rationarium, usage sum) and
+  `_responsum_claudere`. Both paths call them, so they cannot drift.
+  `probatio_vates_rivus` (8/8) guards the blocking path's behaviour.
+- **Abort calls finis too** (plan R9): responsum error `VATES_ERROR_RETE`,
+  nuntius "abruptum"; the HTTP call's own ABRUPTA finis is ignored via
+  `abrumpens`.
+- **LIMES before the first attempt** (more than IV cache points) is
+  delivered through a 0 ms timer, never synchronously.
+- **`VatesOptiones.url`** (last field, memset default NIHIL) points the
+  provider elsewhere - tests at the scripted local server (R6).
+- **Route B bypasses `HttpVecturaRivi`** (R10): herbarium capture and
+  the fictus transport do not see it. Note: route A's `bin/quaestio`
+  never set `sine_herbario`, so it DID capture real traffic.
+
+Tests `probatio_vates_vocatio.c` (5 sections vs servus_scriptus):
+parity with `vates_anthropic_rivum_legere` on the same events, the
+request (POST path, `"stream":true`, the key header), 529 twice ->
+conatus II and two accepts with no reactor poll over L ms (the backoff
+never blocks), no retry after a delta through BOTH branches of the judgement
+(a chunked body cut mid-stream = failed HTTP call = transport branch;
+an `overloaded_error` event after a delta = collector branch),
+synchronous abort. The plan's single "truncated after a delta" case was
+a blind spot: with `Connection: close` and no length a cut stream is
+a VALID close-delimited body, so the HTTP call succeeded and the
+transport guard was never reached - its plant stayed green until the
+section was rebuilt with both realistic failure modes; each guard's
+plant is now red on its own line.

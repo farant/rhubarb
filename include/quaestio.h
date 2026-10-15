@@ -37,6 +37,22 @@ quaestio_textum_planare (
  * margines). Systema formam paginae dicit (Franus 2026-10-14: lineae,
  * non characteres - paragraphus lineas totas consumit); max_tokens =
  * lineae * latitudo / III + LXIV */
+/* petitio $question communis (rogare, rivus, porta interna - via B):
+ * systema formam paginae dicit; exemplar vacua = QUAESTIO_EXEMPLAR */
+VatesPetitio*
+quaestio_petitionem_parare (
+     chorda  exemplar,
+     chorda  quaestio,
+        s32  lineae,
+        s32  latitudo,
+    Piscina* piscina);
+
+/* responsum vatis -> QuaestioResponsum (textus blocorum planatus) */
+QuaestioResponsum
+quaestio_responsum_ex_vate (
+    constans VatesResponsum* responsum,
+                    Piscina* piscina);
+
 QuaestioResponsum
 quaestio_rogare (
         Vates* vates,

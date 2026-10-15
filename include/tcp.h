@@ -80,6 +80,34 @@ tcp_connectere_cum_optionibus (
     constans TcpOptiones* optiones,
                  Piscina* piscina);
 
+/* Connexio NON-BLOCANS (http-vocatio II.2): socket O_NONBLOCK + connect
+ * ad addressum crudum (sockaddr, PORTU POSITO - nomina.h). successus:
+ * connexio PENDENS; vocans fossam (tcp_obtinere_fd) ad SCRIBENDUM
+ * exspectat, deinde tcp_incipere_perficere. Nullum SO_RCVTIMEO /
+ * SO_SNDTIMEO: tempora vocantis sunt (timers reactoris). */
+TcpResultus
+tcp_incipere (
+    constans i8* addressus,
+            i32  mensura,
+        Piscina* piscina);
+
+/* Post scribibilitatem SOLUM (ante eam SO_ERROR 0 falso diceret):
+ * TCP_OK = connexa; aliter TCP_ERROR_CONNEXIO et *descriptio
+ * (strerror SO_ERROR) */
+TcpError
+tcp_incipere_perficere (
+    TcpConnexio* connexio,
+         chorda* descriptio,
+        Piscina* piscina);
+
+/* Fossam exsistentem involvit (probationes, fossae aliunde acceptae);
+ * fossa a connexione possidetur - tcp_claudere eam claudit. Fossa
+ * negativa -> NIHIL. */
+TcpConnexio*
+tcp_ex_fossa (
+    integer  fossa,
+    Piscina* piscina);
+
 /* Optiones default */
 TcpOptiones
 tcp_optiones_default (vacuum);
@@ -128,7 +156,8 @@ tcp_recipere (
              i8* buffer,
             i32  capacitas);
 
-/* Claudere connexionem */
+/* Claudere connexionem: fossa SEMPER clauditur (etiam post clausuram
+ * paris, quam tcp_recipere notat); iterum vocare tutum */
 vacuum
 tcp_claudere (
     TcpConnexio* connexio);

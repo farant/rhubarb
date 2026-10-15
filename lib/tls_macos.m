@@ -24,7 +24,17 @@ structura TlsConnexio {
     TcpConnexio*   tcp;           /* Connexio TCP subiacens */
     SSLContextRef  ssl_context;   /* Security.framework context */
     b32            clausa;
-    b32            tempus_excessum; /* callback lectionis TCP_ITERUM vidit */
+    /* tempus_excessum: callback lectionis TCP_ITERUM vidit (solum modo
+     * obstruente); gradatim: non-blocans (http-vocatio II.3);
+     * scribere_pendet: callback scriptionis EAGAIN vidit;
+     * scriptum_pendens: SSLWrite WouldBlock - octeti intus servati,
+     * SSLWrite(NULL, 0) eos effundit (mos libcurl); erratum: post
+     * TLS_GRADUS_ERROR */
+    b32            tempus_excessum;
+    b32            gradatim;
+    b32            scribere_pendet;
+    size_t         scriptum_pendens;
+    chorda         erratum;
 };
 
 
@@ -58,7 +68,12 @@ _tls_read_callback(
     /* TCP_ITERUM ante n < 0 - sentinella ipsa negativa est */
     si (n == TCP_ITERUM)
     {
-        conn->tempus_excessum = VERUM;
+        /* obstruens: SO_RCVTIMEO incensum = tempus excessum;
+         * gradatim: solum 'nihil nunc' (http-vocatio II.3) */
+        si (!conn->gradatim)
+        {
+            conn->tempus_excessum = VERUM;
+        }
         *dataLength = 0;
         redde errSSLWouldBlock;
     }
@@ -114,6 +129,7 @@ _tls_write_callback(
 
     si (n == 0)
     {
+        conn->scribere_pendet = VERUM;
         *dataLength = 0;
         redde errSSLWouldBlock;
     }
@@ -266,6 +282,66 @@ _durare(SSLContextRef ssl_context, Piscina* piscina)
 }
 
 
+/* contextus SSL super conn->tcp: callbacks, connexio, SNI, durare,
+ * verificatio. NIHIL si bene (conn->ssl_context positum); aliter causa
+ * (contextus dimissus; tcp NON clausa - vocans claudit). Communis
+ * tls_connectere et tls_incipere (http-vocatio II.3). */
+interior constans character*
+_contextum_parare(TlsConnexio* conn, constans character* hospes,
+    constans TlsOptiones* optiones)
+{
+    SSLContextRef ssl_context;
+    OSStatus status;
+    constans character* causa;
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    ssl_context = SSLCreateContext(NIHIL, kSSLClientSide,
+        kSSLStreamType);
+#pragma clang diagnostic pop
+    si (!ssl_context)
+    {
+        redde "SSLCreateContext fallita";
+    }
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    status = SSLSetIOFuncs(ssl_context, _tls_read_callback,
+        _tls_write_callback);
+    si (status == noErr)
+    {
+        status = SSLSetConnection(ssl_context, conn);
+    }
+    si (status == noErr)
+    {
+        status = SSLSetPeerDomainName(ssl_context, hospes,
+            strlen(hospes));
+    }
+#pragma clang diagnostic pop
+    si (status != noErr)
+    {
+        CFRelease(ssl_context);
+        redde "SSLSetIOFuncs/SSLSetConnection/SSLSetPeerDomainName"
+            " fallita";
+    }
+    causa = _durare(ssl_context, conn->piscina);
+    si (causa)
+    {
+        CFRelease(ssl_context);
+        redde causa;
+    }
+    si (optiones && !optiones->verificare_certificatum)
+    {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        SSLSetSessionOption(ssl_context,
+            kSSLSessionOptionBreakOnServerAuth, true);
+#pragma clang diagnostic pop
+    }
+    conn->ssl_context = ssl_context;
+    redde NIHIL;
+}
+
+
 /* ========================================================================
  * FUNCTIONES PUBLICAE - CONNEXIO
  * ======================================================================== */
@@ -306,7 +382,8 @@ tls_connectere_cum_optionibus(
     /* Validare argumenta */
     si (!hospes || !piscina)
     {
-        redde _creare_error(TLS_ERROR_TCP, "Argumenta invalida", piscina);
+        redde _creare_error(TLS_ERROR_TCP, "Argumenta invalida",
+            piscina);
     }
 
     /* Connectere TCP */
@@ -316,7 +393,8 @@ tls_connectere_cum_optionibus(
         tcp_opt.timeout_ms = optiones->timeout_ms;
     }
 
-    tcp_res = tcp_connectere_cum_optionibus(hospes, portus, &tcp_opt, piscina);
+    tcp_res = tcp_connectere_cum_optionibus(hospes, portus, &tcp_opt,
+        piscina);
     si (!tcp_res.successus)
     {
         res.successus = FALSUM;
@@ -327,11 +405,13 @@ tls_connectere_cum_optionibus(
     }
 
     /* Allocare connexio */
-    conn = (TlsConnexio*)piscina_allocare(piscina, (i64)magnitudo(TlsConnexio));
+    conn = (TlsConnexio*)piscina_allocare(piscina,
+        (i64)magnitudo(TlsConnexio));
     si (!conn)
     {
         tcp_claudere(tcp_res.connexio);
-        redde _creare_error(TLS_ERROR_TCP, "Allocatio fallita", piscina);
+        redde _creare_error(TLS_ERROR_TCP, "Allocatio fallita",
+            piscina);
     }
 
     conn->piscina = piscina;
@@ -339,79 +419,22 @@ tls_connectere_cum_optionibus(
     conn->clausa = FALSUM;
     conn->tempus_excessum = FALSUM;
     conn->ssl_context = NIHIL;
+    conn->gradatim = FALSUM;
+    conn->scribere_pendet = FALSUM;
+    conn->scriptum_pendens = 0;
+    conn->erratum.datum = NIHIL;
+    conn->erratum.mensura = 0;
 
-    /* Creare SSL context */
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    ssl_context = SSLCreateContext(NIHIL, kSSLClientSide, kSSLStreamType);
-#pragma clang diagnostic pop
-
-    si (!ssl_context)
     {
-        tcp_claudere(conn->tcp);
-        redde _creare_error(TLS_ERROR_HANDSHAKE, "SSLCreateContext fallita", piscina);
-    }
-
-    conn->ssl_context = ssl_context;
-
-    /* Configurare I/O callbacks */
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    status = SSLSetIOFuncs(ssl_context, _tls_read_callback, _tls_write_callback);
-#pragma clang diagnostic pop
-
-    si (status != noErr)
-    {
-        CFRelease(ssl_context);
-        tcp_claudere(conn->tcp);
-        redde _creare_error(TLS_ERROR_HANDSHAKE, "SSLSetIOFuncs fallita", piscina);
-    }
-
-    /* Ponere connection reference (pro callbacks) */
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    status = SSLSetConnection(ssl_context, conn);
-#pragma clang diagnostic pop
-
-    si (status != noErr)
-    {
-        CFRelease(ssl_context);
-        tcp_claudere(conn->tcp);
-        redde _creare_error(TLS_ERROR_HANDSHAKE, "SSLSetConnection fallita", piscina);
-    }
-
-    /* Ponere hostname pro SNI et verificatio certificati */
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    status = SSLSetPeerDomainName(ssl_context, hospes, strlen(hospes));
-#pragma clang diagnostic pop
-
-    si (status != noErr)
-    {
-        CFRelease(ssl_context);
-        tcp_claudere(conn->tcp);
-        redde _creare_error(TLS_ERROR_HANDSHAKE, "SSLSetPeerDomainName fallita", piscina);
-    }
-
-    /* Durare: TLS 1.2 minimum, cifrae admissae solae (T1b) */
-    {
-        constans character* causa = _durare(ssl_context, piscina);
+        constans character* causa = _contextum_parare(conn, hospes,
+            optiones);
 
         si (causa)
         {
-            CFRelease(ssl_context);
             tcp_claudere(conn->tcp);
             redde _creare_error(TLS_ERROR_HANDSHAKE, causa, piscina);
         }
-    }
-
-    /* Disactivare verificatio certificati si petitum */
-    si (optiones && !optiones->verificare_certificatum)
-    {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-        SSLSetSessionOption(ssl_context, kSSLSessionOptionBreakOnServerAuth, true);
-#pragma clang diagnostic pop
+        ssl_context = conn->ssl_context;
     }
 
     /* Facere handshake. errSSLWouldBlock sine tempore excesso =
@@ -476,6 +499,98 @@ tls_connectere_cum_optionibus(
 }
 
 
+TlsResultus
+tls_incipere(
+    TcpConnexio*          tcp,
+    constans character*   hospes,
+    constans TlsOptiones* optiones,
+    Piscina*              piscina)
+{
+    TlsResultus res;
+    TlsConnexio* conn;
+    constans character* causa;
+
+    si (!tcp || !hospes || !piscina)
+    {
+        si (tcp)
+        {
+            tcp_claudere(tcp);
+        }
+        redde _creare_error(TLS_ERROR_TCP, "Argumenta invalida",
+            piscina);
+    }
+    conn = (TlsConnexio*)piscina_allocare(piscina,
+        (i64)magnitudo(TlsConnexio));
+    si (!conn)
+    {
+        tcp_claudere(tcp);
+        redde _creare_error(TLS_ERROR_TCP, "Allocatio fallita",
+            piscina);
+    }
+    memset(conn, 0, magnitudo(TlsConnexio));
+    conn->piscina   = piscina;
+    conn->tcp       = tcp;
+    conn->gradatim  = VERUM;
+    causa = _contextum_parare(conn, hospes, optiones);
+    si (causa)
+    {
+        tcp_claudere(tcp);
+        redde _creare_error(TLS_ERROR_HANDSHAKE, causa, piscina);
+    }
+    res.successus = VERUM;
+    res.connexio = conn;
+    res.error = TLS_OK;
+    res.error_descriptio.datum = NIHIL;
+    res.error_descriptio.mensura = 0;
+    redde res;
+}
+
+TlsGradus
+tls_gradus(TlsConnexio* connexio)
+{
+    OSStatus status;
+
+    si (!connexio || !connexio->ssl_context || connexio->clausa)
+    {
+        redde TLS_GRADUS_ERROR;
+    }
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    fac
+    {
+        connexio->scribere_pendet = FALSUM;
+        status = SSLHandshake(connexio->ssl_context);
+    } dum (status == errSSLServerAuthCompleted);
+#pragma clang diagnostic pop
+    si (status == noErr)
+    {
+        redde TLS_GRADUS_PERFECTUS;
+    }
+    si (status == errSSLWouldBlock)
+    {
+        redde connexio->scribere_pendet ? TLS_GRADUS_SCRIBERE
+                                        : TLS_GRADUS_LEGERE;
+    }
+    connexio->erratum = chorda_ex_literis(_osstatus_descriptio(status),
+        connexio->piscina);
+    redde TLS_GRADUS_ERROR;
+}
+
+chorda
+tls_gradus_error(TlsConnexio* connexio)
+{
+    chorda vacua;
+
+    vacua.datum = NIHIL;
+    vacua.mensura = 0;
+    si (!connexio)
+    {
+        redde vacua;
+    }
+    redde connexio->erratum;
+}
+
+
 /* ========================================================================
  * FUNCTIONES PUBLICAE - I/O
  * ======================================================================== */
@@ -499,9 +614,45 @@ tls_mittere(
         redde 0;
     }
 
+    si (connexio->gradatim)
+    {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    status = SSLWrite(connexio->ssl_context, data, (size_t)mensura, &processed);
+        si (connexio->scriptum_pendens > 0)
+        {
+            status = SSLWrite(connexio->ssl_context, NIHIL, 0,
+                &processed);
+            si (status == errSSLWouldBlock)
+            {
+                redde TLS_ITERUM;
+            }
+            si (status != noErr)
+            {
+                redde -1;
+            }
+            processed = connexio->scriptum_pendens;
+            connexio->scriptum_pendens = 0;
+            redde (s32)processed;
+        }
+        status = SSLWrite(connexio->ssl_context, data, (size_t)mensura,
+            &processed);
+#pragma clang diagnostic pop
+        si (status == errSSLWouldBlock)
+        {
+            si (processed > 0)
+            {
+                redde (s32)processed;
+            }
+            connexio->scriptum_pendens = (size_t)mensura;
+            redde TLS_ITERUM;
+        }
+        redde status == noErr ? (s32)processed : -1;
+    }
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    status = SSLWrite(connexio->ssl_context, data, (size_t)mensura,
+        &processed);
 #pragma clang diagnostic pop
 
     si (status == errSSLWouldBlock)
@@ -570,6 +721,30 @@ tls_recipere(
         redde 0;
     }
 
+    si (connexio->gradatim)
+    {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        status = SSLRead(connexio->ssl_context, buffer,
+            (size_t)capacitas, &processed);
+#pragma clang diagnostic pop
+        si (processed > 0)
+        {
+            redde (s32)processed;
+        }
+        si (status == errSSLWouldBlock)
+        {
+            redde TLS_ITERUM;
+        }
+        si (status == errSSLClosedGraceful
+            || status == errSSLClosedNoNotify)
+        {
+            connexio->clausa = VERUM;
+            redde 0;
+        }
+        redde -1;
+    }
+
     /* SSLRead errSSLWouldBlock cum 0 octetis reddit quotiens callback
      * lectionem TCP partialem nuntiat (recordum TLS nondum totum) -
      * id NON est finis. Olim 0 hinc reddebatur, quod contractus
@@ -583,7 +758,8 @@ tls_recipere(
     fac
     {
         processed = 0;
-        status = SSLRead(connexio->ssl_context, buffer, (size_t)capacitas, &processed);
+        status = SSLRead(connexio->ssl_context, buffer,
+            (size_t)capacitas, &processed);
     } dum (   status == errSSLWouldBlock
            && processed == 0
            && !connexio->tempus_excessum);
@@ -598,7 +774,8 @@ tls_recipere(
         redde (s32)processed;
     }
 
-    si (status == errSSLClosedGraceful || status == errSSLClosedNoNotify)
+    si (status == errSSLClosedGraceful
+        || status == errSSLClosedNoNotify)
     {
         connexio->clausa = VERUM;
         redde (s32)processed;
@@ -620,12 +797,17 @@ tls_claudere(TlsConnexio* connexio)
         redde;
     }
 
-    si (connexio->ssl_context && !connexio->clausa)
+    /* contextus SEMPER dimittitur - clausa a tls_recipere poni potest
+     * (par clausit) dum contextus adhuc vivit (R5) */
+    si (connexio->ssl_context)
     {
+        si (!connexio->clausa)
+        {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-        SSLClose(connexio->ssl_context);
+            SSLClose(connexio->ssl_context);
 #pragma clang diagnostic pop
+        }
         CFRelease(connexio->ssl_context);
         connexio->ssl_context = NIHIL;
     }

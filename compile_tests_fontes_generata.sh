@@ -115,6 +115,7 @@ declare -a SOURCE_FILES=(
     "lib/hospitium.c"
     "lib/html_lexema.c"
     "lib/http.c"
+    "lib/http_vocatio.c"
     "lib/icones.c"
     "lib/imago.c"
     "lib/imago_collatio.c"
@@ -277,6 +278,7 @@ declare -a SOURCE_FILES=(
     "lib/via.c"
     "lib/vicus.c"
     "lib/vicus_applicatio.c"
+    "lib/vicus_quaestio_interna.c"
     "lib/vicus_quaestio_porta.c"
     "lib/vigilia.c"
     "lib/villa_agens.c"
@@ -320,6 +322,7 @@ declare -a OBJC_SOURCES=(
     "lib/clipboard_platform_macos.m"
     "lib/energia_macos.m"
     "lib/fenestra_macos.m"
+    "lib/nomina_macos.m"
     "lib/tls_macos.m"
     "lib/vitrea_macos.m"
 )

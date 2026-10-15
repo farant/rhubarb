@@ -96,6 +96,7 @@ emittere_asserta() {
     echo "IUNGO_ASSERTA(SOL_SOCKET == 0xffff);"
     echo "IUNGO_ASSERTA(SO_REUSEADDR == 0x0004);"
     echo "IUNGO_ASSERTA(SO_KEEPALIVE == 0x0008);"
+    echo "IUNGO_ASSERTA(SO_ERROR == 0x1007);"
     echo "IUNGO_ASSERTA(SO_NOSIGPIPE == 0x1022);"
     echo "IUNGO_ASSERTA(IPPROTO_TCP == 6);"
     echo "IUNGO_ASSERTA(TCP_NODELAY == 0x01);"
@@ -186,6 +187,7 @@ emittere_asserta() {
     echo "IUNGO_ASSERTA(EEXIST == 17);"
     # filum_arborem_delere (2026-09-14): lstat ENOENT = nihil delendum
     echo "IUNGO_ASSERTA(ENOENT == 2);"
+    echo "IUNGO_ASSERTA(EINPROGRESS == 36);"
     echo "IUNGO_ASSERTA(EINTR == 4 && EAGAIN == 35 && EISCONN == 56);"
     # analytica T2 (2026-10-13): horologium monotonum + usus prolis
     echo "IUNGO_ASSERTA(CLOCK_REALTIME == 0 && CLOCK_MONOTONIC == 6);"
