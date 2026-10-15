@@ -10,6 +10,8 @@
 #include "vicus.h"
 #include "vicus_applicatio.h"
 #include "kalendarium.h"
+#include "personae.h"
+#include "nomenclator.h"
 #include "thema.h"
 #include "manus_ludus.h"
 #include "insula.h"
@@ -253,13 +255,216 @@ _probare_notas (
     }
 }
 
+/* ictus dexter in medio componentis (selector manus) */
+interior b32
+dexter_in (
+                Mundus* x,
+            ManusLudus* m,
+    constans character* selector)
+{
+     Componens* c;
+       Punctum  locale;
+       Punctum  schirmus;
+       Eventus  e;
+
+    c = manus_ludus_invenire(m, selector);
+    si (!c)
+    {
+        redde FALSUM;
+    }
+    locale.x = c->fines.latitudo / II;
+    locale.y = c->fines.altitudo / II;
+    schirmus = manus_ludus_ad_schirmum(m, c, locale);
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus             = EVENTUS_MUS_DEPRESSUS;
+    e.datum.mus.x       = schirmus.x;
+    e.datum.mus.y       = schirmus.y;
+    e.datum.mus.botton  = MUS_DEXTER;
+    dispensator_tractare(x->app.d, &e);
+    dispensator_recomponere(x->app.d);
+    redde VERUM;
+}
+
+/* menu contextuale per vicum (M2c): dimissio claudit - Esc (visus
+ * diei manet: non ad mensem), ictus extra (deglutitus: globulus "nova"
+ * promptam non aperit), res electa (agit et claudit) */
+interior vacuum
+_probare_elenchum (
+    CredoContextus* c)
+{
+                 Mundus* x;
+                  Vicus* v;
+             ManusLudus* m;
+    KalendariumMontatio* k;
+                 chorda* a;
+              Componens* r;
+                Punctum  locale;
+                Punctum  schirmus;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(x && x->volumen);
+    CREDO_NECESSE(vicus_applicatio_aedificare(&x->app, c->piscina,
+        internamentum_creare(c->piscina), x->volumen, CDLXXX,
+        CDLXXX + VICUS_ALTITUDO_TABULARUM));
+    v                 = x->app.vicus;
+    x->tempus.annus   = MMXXVI;
+    x->tempus.mensis  = X;
+    x->tempus.dies    = XIV;
+    vicus_horologium_ponere(v, horologium_fictum, &x->tempus);
+    CREDO_VERUM(vicus_acervo_aperire(v, "calendarium", "2026-10"));
+    (vacuum)vicus_pulsare(v);
+    k = kalendarium_frontale(v);
+    CREDO_NECESSE_NON_NIHIL(k);
+    m = manus_ludus_creare(c->piscina, x->app.d);
+    dispensator_recomponere(x->app.d);
+    CREDO_NECESSE(manus_ludus_premere(m, "#kalendarium"));
+    CREDO_VERUM(manus_ludus_clavem(m, (character)XIII, ZEPHYRUM));
+    dispensator_recomponere(x->app.d);
+    /* Esc: dimissio claudit, visus diei manet */
+    CREDO_NECESSE(dexter_in(x, m, "#index_vacuum"));
+    CREDO_NON_NIHIL(manus_ludus_invenire(m, "#elenchus"));
+    CREDO_VERUM(manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));
+    dispensator_recomponere(x->app.d);
+    CREDO_NIHIL(manus_ludus_invenire(m, "#elenchus"));
+    a = insula_ramus_attributum(&k->ramus, "visus");
+    CREDO_VERUM(a && chorda_aequalis_literis(*a, "dies"));
+    /* ictus extra ("nova"): clausum, deglutitus (prompta nulla) */
+    CREDO_NECESSE(dexter_in(x, m, "#index_vacuum"));
+    CREDO_NON_NIHIL(manus_ludus_invenire(m, "#elenchus"));
+    CREDO_VERUM(manus_ludus_premere(m, "#nova"));
+    dispensator_recomponere(x->app.d);
+    CREDO_NIHIL(manus_ludus_invenire(m, "#elenchus"));
+    a = insula_ramus_attributum(&k->ramus, "prompta");
+    CREDO_FALSUM(a && chorda_aequalis_literis(*a, "nova"));
+    /* res "New item" (elenchus.0): prompta nova, clausum */
+    CREDO_NECESSE(dexter_in(x, m, "#index_vacuum"));
+    r = manus_ludus_invenire(m, "#elenchus");
+    CREDO_NECESSE_NON_NIHIL(r);
+    r         = componens_liberum(r, ZEPHYRUM);
+    locale.x  = r->fines.latitudo / II;
+    locale.y  = r->fines.altitudo / II;
+    schirmus  = manus_ludus_ad_schirmum(m, r, locale);
+    /* motus super rem: illuminat, menu manet (dimissio post: solum
+     * pressio claudit - menu sub muris olim evanescebat, Franus
+     * 10-14) */
+    CREDO_VERUM(manus_ludus_movere(m, schirmus.x, schirmus.y));
+    dispensator_recomponere(x->app.d);
+    CREDO_NON_NIHIL(manus_ludus_invenire(m, "#elenchus"));
+    a = insula_ramus_attributum(&k->ramus, "elenchus_electa");
+    CREDO_VERUM(a && chorda_aequalis_literis(*a, "0"));
+    CREDO_VERUM(manus_ludus_premere_ad(m, schirmus.x, schirmus.y));
+    dispensator_recomponere(x->app.d);
+    CREDO_NIHIL(manus_ludus_invenire(m, "#elenchus"));
+    a = insula_ramus_attributum(&k->ramus, "prompta");
+    CREDO_VERUM(a && chorda_aequalis_literis(*a, "nova"));
+}
+
+/* P6: natales per vicum - Anna Rossi (natalis 14 X MCMLXXXVI) in
+ * documento personarum voluminis vici; calendarium (fons
+ * nomenclatoris) ordinem "n0" in visu diei XIV ostendit, nullum in
+ * XV; P6b: duplex in natali latus nomenclatoris aperit (montatum,
+ * deinde exstans: Luca XX) */
+interior vacuum
+_probare_natales (
+    CredoContextus* c)
+{
+                  Mundus* x;
+                   Vicus* v;
+              ManusLudus* m;
+      PersonaeDocumentum* doc;
+                    Dies  d;
+                     s32  id;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(x && x->volumen);
+    doc = personae_aperire(c->piscina, internamentum_creare(c->piscina),
+        x->volumen, "personae", ZEPHYRUM);
+    CREDO_NECESSE_NON_NIHIL(doc);
+    id = personae_hominem_creare(doc, chorda_ex_literis("Anna",
+        c->piscina), chorda_ex_literis("Rossi", c->piscina));
+    d  = fasti_dies(MCMLXXXVI, X, XIV);
+    CREDO_NECESSE(id > ZEPHYRUM && personae_natalem_ponere(doc, id, &d)
+        > ZEPHYRUM);
+    id = personae_hominem_creare(doc, chorda_ex_literis("Luca",
+        c->piscina), chorda_ex_literis("Bianchi", c->piscina));
+    d  = fasti_dies(ZEPHYRUM, X, XX);
+    CREDO_NECESSE(id == II && personae_natalem_ponere(doc, id, &d)
+        > ZEPHYRUM);
+    CREDO_NECESSE(vicus_applicatio_aedificare(&x->app, c->piscina,
+        internamentum_creare(c->piscina), x->volumen, CDLXXX,
+        CDLXXX + VICUS_ALTITUDO_TABULARUM));
+    v                 = x->app.vicus;
+    x->tempus.annus   = MMXXVI;
+    x->tempus.mensis  = X;
+    x->tempus.dies    = XIV;
+    vicus_horologium_ponere(v, horologium_fictum, &x->tempus);
+    CREDO_VERUM(vicus_acervo_aperire(v, "calendarium", "2026-10"));
+    (vacuum)vicus_pulsare(v);
+    m = manus_ludus_creare(c->piscina, x->app.d);
+    dispensator_recomponere(x->app.d);
+    CREDO_NECESSE(manus_ludus_premere(m, "#kalendarium"));
+    CREDO_VERUM(manus_ludus_clavem(m, (character)XIII, ZEPHYRUM));
+    dispensator_recomponere(x->app.d);
+    CREDO_VERUM(manus_ludus_invenire(m, "#n0") != NIHIL);
+    CREDO_VERUM(manus_ludus_clavem(m, 'l', ZEPHYRUM));
+    dispensator_recomponere(x->app.d);
+    CREDO_FALSUM(manus_ludus_invenire(m, "#n0") != NIHIL);
+    /* P6b: ictus duplex in natali (dies XIV) latus nomenclatoris in
+     * frontem fert, Anna aperta */
+    CREDO_VERUM(manus_ludus_clavem(m, 'h', ZEPHYRUM));
+    dispensator_recomponere(x->app.d);
+    CREDO_NECESSE(manus_ludus_premere(m, "#n0"));
+    CREDO_NECESSE(manus_ludus_premere(m, "#n0"));
+    (vacuum)vicus_pulsare(v);
+    {
+          VicusLatus* l;
+         InsulaRamus  r;
+              chorda* a;
+
+        l = vicus_latus(vicus_activa(v), VICUS_DEXTRUM);
+        CREDO_NECESSE(l && l->montata);
+        CREDO_CHORDA_AEQUALIS_LITERIS(l->genus, "nomenclator");
+        r = ((NomenclatorMontatio*)l->montatio)->ramus;
+        a = insula_ramus_attributum(&r, "persona_aperta");
+        CREDO_VERUM(a && chorda_aequalis_literis(*a, "1"));
+    }
+    /* latus nomenclatoris iam praesens: calendarium in frontem, dies XX
+     * (Luca, sine anno), duplex - argumentum_ponere lateris
+     * exstantis */
+    CREDO_VERUM(vicus_acervo_aperire(v, "calendarium", "2026-10"));
+    (vacuum)vicus_pulsare(v);
+    dispensator_recomponere(x->app.d);
+    CREDO_NECESSE(manus_ludus_premere(m, "#kalendarium"));
+    CREDO_VERUM(manus_ludus_scribere(m, "llllll"));
+    dispensator_recomponere(x->app.d);
+    CREDO_NECESSE(manus_ludus_premere(m, "#n0"));
+    CREDO_NECESSE(manus_ludus_premere(m, "#n0"));
+    (vacuum)vicus_pulsare(v);
+    {
+          VicusLatus* l;
+         InsulaRamus  r;
+              chorda* a;
+
+        l = vicus_latus(vicus_activa(v), VICUS_DEXTRUM);
+        CREDO_NECESSE(l && l->montata);
+        CREDO_CHORDA_AEQUALIS_LITERIS(l->genus, "nomenclator");
+        r = ((NomenclatorMontatio*)l->montatio)->ramus;
+        a = insula_ramus_attributum(&r, "persona_aperta");
+        CREDO_VERUM(a && chorda_aequalis_literis(*a, "2"));
+    }
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "latera",  _probare_latera,  mundum_parare, mundum_purgare, NIHIL,
+        NIHIL },
+    { "natales", _probare_natales, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
     { "agenda",  _probare_agendam, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
     { "notae",   _probare_notas,   mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
+    { "elenchus", _probare_elenchum, mundum_parare, mundum_purgare,
+        NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

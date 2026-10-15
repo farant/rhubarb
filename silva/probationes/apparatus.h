@@ -25,7 +25,15 @@
 #include "piscina.h"
 #include "silva_parsare.h"
 
-#define CLAUSURA_MAXIMA  96
+/* CLAUSURA_MAXIMA: capita in clausura plagulae unius. Pondus: Clausura
+ * valore series[CLAUSURA_MAXIMA][VIA_MAXIMA] tenet, una per plagulam
+ * corporis (CCLXXXVII lib/ ad 2026-10-15: CXCII -> ~28 MB in piscina
+ * dynamica). XCVI -> CXCII 2026-10-15 (Franus): lib/vicus_applicatio.c
+ * = nodus omnium applicationum, clausura CV post fusionem (nomenclator,
+ * calendarium, quaestio interna) et crescit cum applicationibus; iam
+ * semel (2026-10-14) caput gracilius pro limite elevato electum erat.
+ * Mensura: bin/aedilis <f> --partes | grep -c '^C'. */
+#define CLAUSURA_MAXIMA  CXCII
 #define VIA_MAXIMA       512
 #define CAUSAE_MAXIMAE   32
 

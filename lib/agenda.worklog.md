@@ -75,3 +75,9 @@ descending, then id descending), deleted and reopened ones excluded.
 Insertion sort while scanning the records (history lists are short; n^2
 is fine until it is not - pagination does not change the query).
 Plant: oldest first -> red.
+
+## 2026-10-14 - tag rules moved to `rubrica`
+
+rubrica_valida, rubricas_comparare, rubricas_legere, rubricas_iungere
+left agenda.c for the shared library include/rubrica.h (nomenclator-plan
+P1a; contacts is the next consumer). Same code; agenda 11/11 unchanged.

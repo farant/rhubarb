@@ -57,6 +57,16 @@
             scriptor="calendarium.agere"
             nota="pagina indicis (visus diei et agendae; 0 = prima);
                   ad 0 redit cum dies aut visus mutatur"/>
+    <campus nomen="elenchus" typus="textus" vita="transiens"
+            aspectus="popover" scriptor="calendarium.agere"
+            nota="menu contextuale apertum (M2c): '<contextus> x y' -
+                  larva contextus (I res, II dies mensis, IV vacuum) et
+                  ancora in spatio calendarii; absens = clausum
+                  (dimissio claudit: Esc, ictus extra, res electa)"/>
+    <campus nomen="elenchus_electa" typus="numerus" vita="transiens"
+            scriptor="calendarium.agere"
+            nota="res menu illuminata (claves, motus muris); absens =
+                  nulla; ad nullam redit cum menu aperitur"/>
   </status>
 
   <basis genus="organum_commune"/>

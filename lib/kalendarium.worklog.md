@@ -586,3 +586,226 @@ already did) and runs calendarium.titulus; on the checkbox it does
 nothing extra (the two presses toggled twice).
 Plants: tags never extracted -> red; double-click without the title
 prompt -> red.
+
+## 2026-10-14 - M2a: heading click filters, left button only
+
+Agenda group headings ("g<k>") now filter: a click writes that rubric
+into `rubrica_filtrum` (and resets `pagina`, same as the `f` prompt); a
+click on the heading of the active filter runs
+calendarium.filtrum_tollere; "(none)" does nothing (there is no "no
+rubric" filter). `gregem_premere` resolves k through `greges_agendae`,
+so under a filter the one visible group is g0 again.
+Trap: the first green-looking attempt never reached the handler - the
+hit test only lands on nodes that carry an action, and
+`indicem_disponere` gave the action to PARTES_ITEM rows only, so a
+heading click fell through to the root "kalendarium" node (found with a
+printf of nodus->id). Headings "g<k>" now get the action too; other
+headings ("c", "p", "p<k>", "caput") stay inert.
+Bug fixed on the way: the mouse handler never looked at the button, so a
+right-click acted like a left-click (on the checkbox it COMPLETED the
+item). Now MUS_DEPRESSUS / MUS_DUPLEX with any button but MUS_SINISTER
+returns FALSUM (the right button is for the context menu, M2c). Test
+helpers had sent botton 0; `ictus_ad`/`ictus_in` now send MUS_SINISTER
+and `ictus_bottone_ad` takes the button.
+Plants (all compile): right button let through -> red; heading without
+the action -> red; toggle never clears -> red. The "(none)" guard is
+defensive only (empty chorda datum) - clearing with no filter is a
+no-op, so no plant shows it.
+
+## 2026-10-14 - M2c: right-click context menu (elenchus)
+
+Manifest (approved): `elenchus` (textus, transient, aspectus popover:
+"<r|d|v> <x> <y>" = context + anchor in the calendar root's space) and
+`elenchus_electa` (highlight). Menu contents come from
+TABULA_ELENCHORUM (context mask, command titulus, divider) - texts and
+keys from TABULA_MANDATORUM, so there is one source of truth;
+`elenchos_verificare` at mount refuses a titulus the command table does
+not know. Rows whose command is not visible in the current view are
+OMITTED and hand their divider to the next shown row; unmet requisita =
+greyed (no `claudit`).
+
+Event order in agere_intus: (1) menu open -> elenchum_agere takes
+EVERYTHING and returns early (so the calendar's own handlers never see
+an event while the menu is open); (2) right-click -> elenchum_aperire
+(month: cell selects + 'd'; day/agenda: row selects via ictus_ordinis +
+'r', any other list node 'v'; toolbar buttons / the bare root "kalendarium"
+(title, toolbar background) open nothing); (3) M2a left-button gate.
+The anchor is `destinatio_ad_locale(<"kalendarium" ancestor>, point)`
+so it is right inside a vicus pane, not only in the test world at 0,0.
+
+The calendar closes the menu ITSELF on item click / Return / Esc /
+click outside (dimissio does the same in vicus; with both, the second
+finds the field already gone). So the widget works without a host
+dimissio, and the vicus test proves the user-visible result, not which
+layer closed it.
+
+List-region changes: every index row AND heading now carries the
+calendar action (so right-click lands on them, not the root), and a
+filler "index_vacuum" (PARTES_NULLUM, actio, CRESCENS height) takes the
+rest of the list region - it replaced the anonymous spacer before the
+prompt, so the prompt still sits on the last line.
+
+Traps found by the tests:
+- Test events carry tempus 0, so two right-clicks on the same spot
+  become DEPRESSUS + DUPLEX (derivare pairs presses by time/distance
+  only, NOT by button). My first version treated DUPLEX like a press
+  and closed the menu it had just opened. Now DUPLEX is swallowed while
+  open. Real-world consequence still open: right-click then a quick
+  left-click on the first item (top-left of the menu IS the pointer)
+  pairs into a left DUPLEX that, after the item closes the menu, lands
+  on what is underneath - derivare should pair same-button presses
+  only (header change in derivare.h, asked Fran 10-14).
+- Near the bottom the menu flips up and can cover rows: my "right-click
+  outside" test clicked r1, which was under the menu. Tests now click
+  beside the menu (`ictus_extra_elenchum`).
+- The M2a checkbox right-click step passed only because the heading
+  menu from the step before swallowed it - an Esc now closes it first.
+
+Plants: menu not appended; right-click opens nothing; view filter
+dropped; greyed never greyed; Esc not closing; hover not highlighting
+- all red. NOT observable (documented, not claimed): swallowing a DUPLEX
+and leftover keys while open only changes the consumed flag returned
+to the dispatcher (the calendar already returns early) - it matters for
+vicus-level handlers, which no suite exercises yet.
+Screenshots (headless probe, deleted; copy in $TMPDIR/imago): day-view
+row menu with "Edit title" highlighted, month-cell menu.
+
+## 2026-10-14 - repeated group headings on split pages (Fran)
+
+A page that starts in the middle of a group repeats that group's
+heading at the top: agenda "#tag" ("g<k>"), completion date ("p<k>"),
+and the day view's "Completed" band ("c"). `titulum_gregis(ordines, i)`
+finds the owning heading (nearest heading above an ITEM row; -1 for a
+heading row or the "p" Completed band, which never owns items directly
+- a "q" row always has a "p<k>" date above it). Two places use it:
+- paginas_computare: when a new page starts at row i, `usus` starts at
+  the owning heading's height, so the page still fits after the
+  repeat;
+- indicem_disponere: the repeat is laid out as "<id>-c" (PARTES_INDEX,
+  with the action). "-c" is chosen because numerus_identitatis stops
+  at '-', so "g0-c" draws as #domus and the M2a filter click works on
+  it unchanged; the only drawing change is "c" OR "c-c" for the band.
+Repeated is the immediate group heading only: a page starting mid
+completed-date group shows the date, not the "Completed" band above it
+too (Fran asked for "what tag / completed date").
+Test gap found by plant: removing the space reservation stayed green
+(page counts happened to be equal) - new invariant `ordines_intra`:
+every item row is a full 16 px and ends above the bottom margin, on
+every page of the agenda test.
+Known older edge (not changed): "heading never ends a page" only looks
+one row ahead, so the "p" band can still end a page when it is followed
+by a "p<k>" heading that does not fit with its first item.
+
+## 2026-10-14 - heading chains stay with their first item (Fran)
+
+Fixes the "older edge" noted in the split-groups entry: "heading never
+ends a page" only looked one row ahead, so the "p" Completed band could
+end a page when the "p<k>" date after it did not fit with its first
+item. `altitudo_tituli(ordines, i)` = the heading + every heading right
+after it + the first item; a heading starts a new page if that does
+not fit. Test `titulus_solus` (13 open rows, then band at 14 and date
+at 15 with the first completed item not fitting -> band and date both
+move to page 2), red before the fix.
+
+## 2026-10-14 - U1: pagination moved onto `album`
+
+OrdoIndicis, ordinem_addere, titulum_gregis, altitudo_tituli,
+paginas_computare and paginae_fines left the calendar (-197 lines net).
+`ordines_indicis` now builds an `Album` (capacity = capacitas_indicis,
+forward-declared): "g<k>", "c", "p<k>" = ALBUM_TITULUS, "p" =
+ALBUM_FASCIA, rows = ALBUM_RES. pagina_currens clamps the "pagina"
+field with album_pagina_coacta; pagina_rei / paginae_status /
+paginam_vertere / indicem_disponere call album_pagina_rei,
+album_paginae, album_res_prima, album_pagina. The calendar's 30
+sections passed unchanged - they are the oracle for the move.
+ludus_tessera's hand list gained "album" (vicus links the calendar).
+
+## 2026-10-14 - tag rules from `rubrica`
+
+The calendar's private rubrica_valida, rubricam_habet (item-shaped) and
+rubricas_iungere wrapper are gone; calls use include/rubrica.h with the
+item's set (`r->rubricae`). 30 sections unchanged.
+
+## 2026-10-14 - U2: command table on `membrum__praecepta`
+
+MandatumKalendarii/MandatumFn, clavis_congruit, mandata_verificare and
+mandatum_invenire are gone; TABULA_MANDATORUM is a `Praeceptum[]`.
+The 29 handlers take `vacuum* ctx` and start with
+`ContextusMandati* cm = (ContextusMandati*)ctx;` (casting the function
+pointers instead would be UB). requisita_impleta became the predicate
+`requisita_kalendarii`. clavem_agere = praecepta_ad_clavem + status
+(Esc still passes through when unavailable); mandatum_invocare =
+praecepta_invocare; the menu reader uses praecepta_invenire/status.
+Trap: my scripted signature rewrite also matched contextum_parare's
+`ContextusMandati* cm)` parameter (30 conversions, not 29) - it still
+compiled through void*, silently losing the type; restored by hand.
+30 sections unchanged.
+
+## 2026-10-14 - U3: prompt line on `membrum__prompta`
+
+prompta_aperta (calendar-shaped), promptae_textus, promptam_scribere,
+promptam_claudere and clavis_vim are gone (the library's prompta_aperta
+takes the branch: `&m->ramus`). agere_promptam = prompta_clavem_agere
++ the calendar's own promptam_committere (close only if it acted);
+openers call prompta_aperire with actio_calendarii; figura_promptae
+keeps only the label table and calls prompta_pingere in the
+component's own space. KALENDARIUM_PROMPTA removed (PROMPTA_MAXIMA).
+Behaviour change: Home now works in the calendar's prompt (it never
+did). 30 sections unchanged.
+
+## 2026-10-14 - U4: menu wiring on `membrum__elenchi`
+
+ResElenchiKalendarii, elenchos_verificare, elenchum_claudere and
+elenchum_agere are gone; TABULA_ELENCHORUM is an ElenchiIntroitus[]
+(same fields). elenchum_legere is now a thin wrapper (hospitem_parare
+builds the ContextusMandati + ElenchiHospes; elenchi_legere reads).
+The right-click opener keeps its calendar logic (which node, which
+context) and calls elenchi_aperire with the mask ELENCHUS_DIEI / _REI /
+_VACUI. 30 sections and vicus_kalendarium 4/4 unchanged.
+
+## 2026-10-15 - P6a: dated entries from sources (fasti_fontes)
+
+`kalendarium_montare` takes `constans FastiFontes*` (stored privately in
+KalendariumFigurae; NIHIL = none). Month view: ONE read per frame over
+the range first..last cell of the grid (not per month - the grid spans
+three), and a 5x5 COLOR_ACCENT_SECONDARY mark in the cell's top-right
+for any `natalis` entry; unknown genera get no month mark. Day view:
+album rows "n<k>" (ALBUM_RES, height II, numerus 0) BEFORE the to-dos;
+k indexes the day's sorted entries, re-read at draw time. "n" rows are
+ignored by ictus_ordinis (selection stays on agenda items) and fall to
+the empty-area menu on right click. Text: "Anna Rossi turns 40" (year
+known and age > 0), else "Anna Rossi's birthday"; unknown genus = title.
+`ordines_pingere` no longer skips every row when documentum is NIHIL -
+only agenda rows need it.
+
+## 2026-10-15 - P6a follow-up: birthday cake pictogram (Fran's request)
+
+The yellow accent square became a 13x12 one-colour cake (`placenta`
+table of '#'/'.' rows; `placentam_pingere` draws each horizontal run as
+a 1-px-tall filled rectangle - no new Mandata primitive). Theme text
+colour (dim on days outside the month, like the numbers). Month cell:
+top-right, and a feast title on the same day is truncated before it.
+Day row: in place of the checkbox. Tests recognise it by the frosting
+row (filled 13x1 rect). If more pictograms appear, this helper is the
+candidate to move into figura.h with the sprite as data.
+
+## 2026-10-15 - P6b: double-click a dated row -> its source
+
+`signatum_aperire`: day view, PARTES_ITEM "n<k>" -> the k-th entry of the
+selected day (re-read) -> `fasti_fontes_aperire`. Checked BEFORE the A7
+"double-click in the checkbox area" early return, so double-clicking the
+cake (which sits where the checkbox is) opens too. "nova"/"notae" also
+start with 'n' but are not PARTES_ITEM / not numeric. Single clicks on
+"n" rows still do nothing. Plant gotcha seen here: `f(x) && FALSUM`
+still CALLS f - plant side-effecting calls as `FALSUM && f(x)`.
+Test fake source keeps its "last opened" in the section's Mundus (examen
+rejects a static written in a section and not reset by parare/purgare).
+
+## 2026-10-15 - P6c: "YYYY-MM-DD" argument = day view on that day
+
+`diem_legere` (strict: 10 chars, digits, valid date) next to
+mensem_legere; mount and `kalendarium_argumentum_ponere` both switch to
+the day view on that day ("YYYY-MM" keeps the old behaviour: selects a
+day, view unchanged). Test gap found by a plant: the first test started
+IN day view, so dropping `visum_ponere("dies")` from argumentum_ponere
+stayed green - added a case starting from the month view.

@@ -46,3 +46,20 @@ suite - in a single-kind toy, "system closes" and "opener toggles"
 look identical; pictor's palette-SWITCH test (colour-1 open, click
 colour-2 square -> colour-2 directly) catches it. A toy can miss a rule
 whose value only shows with two kinds of the same thing.
+
+## 2026-10-14 - `post` closes on a PRESS only (calendar menu bug)
+
+Fran: the calendar's right-click menu "disappears when I move the
+mouse". Cause: the dispatcher calls `post` after EVERY consumed event,
+and `post` closed the popover whenever the actor had `claudit`. The
+calendar menu (elenchus, M2c) consumes EVENTUS_MUS_MOTUS over an item
+to move the highlight - so hovering over any enabled item (which
+carries `claudit`) "succeeded" and dimissio closed the menu. Now only
+EVENTUS_MUS_DEPRESSUS or EVENTUS_CLAVIS_DEPRESSUS on a `claudit` actor
+closes. pictor's palette closes on a click as before (22/22).
+Missed earlier because the calendar's own test world has no dimissio
+and the vicus menu test never hovered. Tests: probatio_dimissio
+`claudit` (the fixture option now consumes motion as a highlight;
+motion keeps the palette open) and probatio_vicus_kalendarium
+`elenchus` (hover keeps the menu open with "elenchus_electa"=0, then
+the click closes). Plant (old behaviour) -> red in the vicus suite.
