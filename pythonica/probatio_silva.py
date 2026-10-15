@@ -2527,22 +2527,23 @@ try:
     # PRAEVOLATUS INSTRUMENTORUM: stala bin/ sola sanantur, ANTE portas
     _ia = os.path.join(T, 'instrumenta_argv.txt')
 
-    def _fabrica_instrumentorum(sanare_rc, stalum=True):
-        via = os.path.join(T, 'fabrica_instr_%d_%d' % (sanare_rc, int(stalum)))
+    def _fabrica_instrumentorum(sanare_rc, status='STALUM'):
+        via = os.path.join(T, 'fabrica_instr_%d_%s' % (sanare_rc, status))
         with open(via, 'w') as f:
             f.write('#!/bin/bash\necho "$@" >> %s\n' % _ia
                     + 'if [ "$1" = iudicare ]; then printf "IUDICIUM\\t%s\\tbin/briar\\tingressus mutati\\n'
                       'IUDICIUM\\tRECENS\\tbin/fabrica\\trelatio congruit\\n"; exit %d; fi\n'
-                    % ('STALUM' if stalum else 'RECENS', 1 if stalum else 0)
+                    % (status, 0 if status == 'RECENS' else 1)
                     + 'echo sanatio ficta\nexit %d\n' % sanare_rc)
         os.chmod(via, 0o755)
         return via
     _bina = {'briar-fumus': [('bin/briar', 'r'), ('bin/fabrica', 'r'), ('tools/x', 'r')],
              'radix': [('bin/fabrica', 'r')]}
-    for _rc, _stalum in ((0, True), (1, True), (0, False)):
+    for _rc, _status in ((0, 'STALUM'), (1, 'STALUM'), (0, 'RECENS'), (0, 'FORTASSE')):
+        _stalum = _status != 'RECENS'
         if os.path.exists(_ia):
             os.remove(_ia)
-        silva.FABRICA_BIN = _fabrica_instrumentorum(_rc, _stalum)
+        silva.FABRICA_BIN = _fabrica_instrumentorum(_rc, _status)
         buf = io.StringIO()
         err = None
         try:
@@ -2555,7 +2556,9 @@ try:
             credo(err is None and vocationes == ['iudicare -machina bin/briar bin/fabrica',
                                                  'sanare -machina bin/briar']
                   and 'instrumentum sanatum: bin/briar (portae: briar-fumus)' in buf.getvalue(),
-                  'praevolatus: binarium stalum sanatur ante portas (bin/ solum, recentia non)',
+                  'praevolatus: binarium %s sanatur ante portas (bin/ solum, recentia non)%s'
+                  % (_status, ' - producens supra non recens (parcum 190VQB)'
+                     if _status == 'FORTASSE' else ''),
                   causa=repr((err, vocationes, buf.getvalue())))
         elif _rc == 1:
             credo(err is not None and 'sanari non potuerunt' in err and 'sanatio ficta' in err,
@@ -3099,21 +3102,21 @@ try:
     _rg_status = os.path.join(T, 'regeneratum')
     _rg_argv = os.path.join(T, 'regeneratio_argv.txt')
 
-    def _fabrica_regenerans(sanare_rc):
-        via = os.path.join(T, 'fabrica_regenerans_%d' % sanare_rc)
+    def _fabrica_regenerans(sanare_rc, status='STALUM'):
+        via = os.path.join(T, 'fabrica_regenerans_%d_%s' % (sanare_rc, status))
         with open(via, 'w') as f:
             f.write('#!/bin/bash\necho "$@" >> %s\n' % _rg_argv
                     + 'if [ "$1" = sanare ]; then echo sanatio ficta; [ %d -eq 0 ] && touch %s; exit %d; fi\n'
                     % (sanare_rc, _rg_status, sanare_rc)
                     + 'if [ -f %s ]; then printf "SUMMA\\t1\\t0\\t0\\t0\\t0\\tplenus\\n"; exit 0; fi\n' % _rg_status
-                    + 'printf "IUDICIUM\\tSTALUM\\tg/gen.c\\tregeneratio differt\\n"; exit 1\n')
+                    + 'printf "IUDICIUM\\t%s\\tg/gen.c\\tregeneratio differt\\n"; exit 1\n' % status)
         os.chmod(via, 0o755)
         return via
-    for _src in (0, 1):
+    for _src, _st in ((0, 'STALUM'), (1, 'STALUM'), (0, 'FORTASSE')):
         for _f in (_rg_status, _rg_argv):
             if os.path.exists(_f):
                 os.remove(_f)
-        silva.FABRICA_BIN = _fabrica_regenerans(_src)
+        silva.FABRICA_BIN = _fabrica_regenerans(_src, _st)
         buf = io.StringIO()
         err = None
         try:
@@ -3125,7 +3128,7 @@ try:
         if _src == 0:
             credo(err is None and 'regeneratum (in commissione): g/gen.c' in buf.getvalue()
                   and vocationes[1] == 'sanare -machina g/gen.c' and len(vocationes) == 3,
-                  'regeneratio: stalum inter vias regeneratur, iudicium iterum, pergit',
+                  'regeneratio: %s inter vias regeneratur, iudicium iterum, pergit' % _st,
                   causa=repr((err, vocationes, buf.getvalue()[-200:])))
         else:
             credo(err is not None and 'regenerari non potuerunt' in err and 'sanatio ficta' in err,

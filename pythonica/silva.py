@@ -2865,9 +2865,13 @@ def _instrumenta_portarum_sanare(binaria):
                          ' iudicari non possunt (exitus 2) - nihil cursum,'
                          ' nihil commissum:\n%s'
                          % (r.stdout + r.stderr).strip()[-2000:])
+    # FORTASSE (parcum 190VQB): binarium ipsum congruit sed producens
+    # supra (capsula generata) non recens - olim 'RECENS', porta altera
+    # capsulam regenerabat et binarium medio cursu stalum fiebat
     stala = [o[2] for o in _machina_legere(r.stdout)
              if o[0] == 'IUDICIUM' and len(o) >= 3
-             and o[1] in ('STALUM', 'IGNOTUM') and o[2] in porta_binarii]
+             and o[1] in ('STALUM', 'IGNOTUM', 'FORTASSE')
+             and o[2] in porta_binarii]
     if not stala:
         print('instrumenta portarum: %d recentia' % len(porta_binarii))
         return
@@ -3111,9 +3115,11 @@ def _fabricam_exigere(viae, sine_fabrica=None, _sanati=(), _regenerata=False):
     # corpus) - commissio de COMMISSIS solis iudicat; stala non commissa
     # nominantur, non obstant (sanare ea sanat)
     if r.returncode == 1:
+        # FORTASSE (parcum 190VQB): producens supra non recens - ut
+        # stalum tractatur (sanare producentem ordine prius sanat)
         malae = [o[2] for o in ordines
                  if o[0] == 'IUDICIUM' and len(o) >= 3
-                 and o[1] in ('STALUM', 'IGNOTUM')]
+                 and o[1] in ('STALUM', 'IGNOTUM', 'FORTASSE')]
         # REGENERATIO IN COMMISSIONE (circulus commissionis II T3, Fran
         # 2026-10-14 (a)): artificium generatum commissum et stalum quod
         # INTER VIAS commissionis est regeneratur (bytes quos vocans

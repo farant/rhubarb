@@ -3174,3 +3174,47 @@ copies; the section re-orders). Plant (old drop) -> VIId red.
 Real tree: golden recorded (`L html/probationes/fixa/oraculum/
 recusata.tsv`), golden edited -> member ran and failed, restored ->
 passes; ORACULUM_SCRIBERE=1 still writes it without a footprint refusal.
+
+## 2026-10-15 — catena iudicii: FORTASSE (parcum …190VQB, quinta)
+
+**Bug.** `iudicare` judged an artifact against its DIRECT inputs only, even
+with `-plenus`. Fixture g (a->b), h (b->c): after editing `a`, `iudicare
+-plenus c` said RECENS ("regeneratio congruit": h re-run against the STALE
+b gives the same c). Real hit: the commit preflight called `bin/briar` fresh
+while its capsule input was stale; gate `briar` then regenerated the capsule
+and `briar-fumus` refused mid-commit. Only `sanare` worked in dependency
+order, so two workarounds had grown around the gap: `_porta_per_fabricam`'s
+`praevia` (Python regex over aedificatio.stml, one level of build/ inputs)
+and the commissio healing fixed-point loop (`_regenerata`/`_sanati`).
+
+**Fix (tools/fabrica.c `_iudicare_catenam`).** After the sentences: seeds =
+actions of RECENS sentences; closure upward over `actio->dependentiae` (DATA
+edges only: producer of a path in an input locus, or last-run reads) -
+NEVER `praecondicio`/`post`, which are ordering, not data (otherwise a
+changed bin/aedilis would mark the world stale). Walk `c->ordo` (producers
+first); per action: own root cause if a sentence is STALUM/IGNOTUM, else
+judge its outputs now (same mode, not printed) if it has no sentence, else
+inherit the first upstream root. RECENS sentences with an inherited root ->
+new status `FABRICA_SUPRA`, printed `FORTASSE`, cause `supra: <titulus>
+<STATUS> (<cause>)` - the ROOT travels down, so deep chains name the real
+culprit. NON IUDICATUM (quick mode, regeneratio omissa) does NOT propagate:
+nothing is known, same as before.
+
+**Naming.** `FORTASSE` already existed as a `FabricaEventus` (sanare
+-siccum); C enum constants share one namespace, hence `FABRICA_SUPRA`.
+Appended at the END of FabricaStatus (no value shifts). Gravity in
+`fabrica_iudicia_coniungere`: RECENS < NON_IUDICATUM < SUPRA < IGNOTUM <
+STALUM. SUMMA columns are fixed (consumers count them): FORTASSE is added to
+the stala column; the human line appends ", N fortasse (...)". Exit 1.
+
+**Cost (CPU, load ~33 from other work - wall meaningless).** Targeted
+`iudicare bin/manus|bin/briar` 4.7 s old = new; no-arg 6.7-6.8 both;
+`-plenus -tacta lib/xar.c` 62 vs 58 s, silva_expandere.c 8.8 vs 10.7,
+capsule script 5.2 vs 5.4 (single runs). Upstream judging is cheap in quick
+mode because ordering already sealed inputs. Today's tree: zero FORTASSE.
+
+**Consumers.** silva.py preflight and `_fabricam_exigere` treat FORTASSE as
+stale (sanare heals upstream in order). Not yet: delete `praevia` + regex in
+`_porta_per_fabricam` (follow-up). Over-reporting narrowing ideas (per-exitus
+edges, cache-resolved FORTASSE in quick mode, hypothetical judgment against
+scratch output in plenus, measure first) are on the park.
