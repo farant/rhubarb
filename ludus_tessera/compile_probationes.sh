@@ -127,6 +127,7 @@ declare -a RADIX_FONTES=(
     "membrum__album"   # nomenclator-plan U1: index paginatus (calendarium)
     "membrum__praecepta" # nomenclator-plan U2: tabula praeceptorum
     "membrum__prompta" # nomenclator-plan U3: linea promptae
+    "membrum__elenchi" # nomenclator-plan U4: menu hospitis
     "calendarium_liturgicum" # A2b: figurae calendarii (dies liturgici)
     "sanctorale"
     # scriba H2: cauda documenti per historia

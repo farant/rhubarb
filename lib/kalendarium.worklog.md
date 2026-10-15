@@ -752,3 +752,13 @@ keeps only the label table and calls prompta_pingere in the
 component's own space. KALENDARIUM_PROMPTA removed (PROMPTA_MAXIMA).
 Behaviour change: Home now works in the calendar's prompt (it never
 did). 30 sections unchanged.
+
+## 2026-10-14 - U4: menu wiring on `membrum__elenchi`
+
+ResElenchiKalendarii, elenchos_verificare, elenchum_claudere and
+elenchum_agere are gone; TABULA_ELENCHORUM is an ElenchiIntroitus[]
+(same fields). elenchum_legere is now a thin wrapper (hospitem_parare
+builds the ContextusMandati + ElenchiHospes; elenchi_legere reads).
+The right-click opener keeps its calendar logic (which node, which
+context) and calls elenchi_aperire with the mask ELENCHUS_DIEI / _REI /
+_VACUI. 30 sections and vicus_kalendarium 4/4 unchanged.

@@ -234,6 +234,10 @@ house rule of independent composable libraries.
   delete (selection moves to the next contact), u / C-r. Next P2b-2:
   U4 (menu wiring out of the calendar) + "+ New" button opening a
   Person / Business menu (Fran chose option 1).
+- **U4 DONE 2026-10-14: `membrum__elenchi`** - menu wiring (context
+  mask + anchor in the host's popover field, items from the host's menu
+  table via praecepta, event handling while open). Calendar moved onto
+  it. Next: P2b-2 "+ New" button in the contacts list.
 - **P2 nomenclator list** - vicus genus `nomenclator`, command word
   `$contacts`, alphabetical list with letter headings (U1), selection, new
   contact (kind chosen at creation), open detail.
