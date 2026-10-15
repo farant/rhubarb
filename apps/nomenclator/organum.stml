@@ -35,6 +35,11 @@
       <optio>homo</optio>
       <optio>societas</optio>
       <optio>filtrum</optio>
+      <optio>nomen</optio>
+      <optio>telephonum</optio>
+      <optio>epistula</optio>
+      <optio>rubricae</optio>
+      <optio>natalis</optio>
     </campus>
     <campus nomen="prompta_textus" typus="textus" vita="transiens"
             scriptor="nomenclator.agere"
@@ -42,6 +47,12 @@
                   irrepraesentabilis"/>
     <campus nomen="prompta_cursor" typus="numerus" vita="transiens"
             scriptor="nomenclator.agere"/>
+    <campus nomen="persona_aperta" typus="numerus" vita="transiens"
+            scriptor="nomenclator.agere"
+            nota="persona in visu singulari (P5); absens = index"/>
+    <campus nomen="campus_electus" typus="numerus" vita="transiens"
+            scriptor="nomenclator.agere"
+            nota="ordo electus in visu personae; absens = primus"/>
     <campus nomen="elenchus" typus="textus" vita="transiens"
             aspectus="popover" scriptor="nomenclator.agere"
             nota="menu apertum: '<contextus> x y' (I = globulus +

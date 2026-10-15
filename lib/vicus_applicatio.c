@@ -1433,6 +1433,7 @@ kalendarium_describere (
  * volumen vici (spatium "personae"), pigre apertum, commune omnibus
  * lateribus nomenclatoris */
 nomen structura {
+                  Vicus* vicus;
                 Volumen* volumen;
                 Piscina* piscina;
     InternamentumChorda* intern;
@@ -1469,7 +1470,8 @@ nomenclatorem_montare_in_vico (
     }
     redde cn->documentum && nomenclator_montare(
         (NomenclatorMontatio*)sedes, piscina, intern, repo, id,
-        cn->documentum, latitudo, altitudo, cn->systemata);
+        cn->documentum, hodie_vici, cn->vicus, latitudo, altitudo,
+        cn->systemata);
 }
 
 interior vacuum
@@ -1651,6 +1653,7 @@ ContextusNomenclatoris* cn;
     si (cn)
     {
         memset(cn, ZEPHYRUM, magnitudo(ContextusNomenclatoris));
+        cn->vicus      = app->vicus;
         cn->volumen    = volumen;
         cn->piscina    = piscina;
         cn->intern     = intern;

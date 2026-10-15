@@ -374,6 +374,98 @@ electionem_scribere (
         k > ZEPHYRUM ? pagina : "");
 }
 
+/* P5a: persona in visu singulari (viva) aut 0 */
+interior s32
+persona_aperta (
+    constans NomenclatorMontatio* m)
+{
+    s32 id;
+
+    id = attributum_s32(&m->ramus, "persona_aperta", ZEPHYRUM);
+    redde (id > ZEPHYRUM && m->documentum
+           && personae_persona(m->documentum, id)) ? id : ZEPHYRUM;
+}
+
+/* P5a: ordines visus personae */
+#define CAMPUS_NOMEN             ZEPHYRUM
+#define CAMPUS_TELEPHONUM        I
+#define CAMPUS_TELEPHONUM_NOVUM  II
+#define CAMPUS_EPISTULA          III
+#define CAMPUS_EPISTULA_NOVA     IV
+#define CAMPUS_RUBRICAE          V
+#define CAMPUS_NATALIS           VI
+
+nomen structura {
+    i32 genus;
+    i32 index;   /* telephona / epistulae */
+} CampusPersonae;
+
+/* nomen, telephona, + phone, epistulae, + email, rubricae, natalis */
+interior Xar*
+campos_struere (
+    constans Persona* q,
+             Piscina* p)
+{
+               Xar* l;
+    CampusPersonae* c;
+               i32  i;
+
+    l = xar_creare(p, (i32)magnitudo(CampusPersonae));
+    si (!l || !q)
+    {
+        redde l;
+    }
+    c         = (CampusPersonae*)xar_addere(l);
+    c->genus  = CAMPUS_NOMEN;
+    c->index  = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < xar_numerus(q->telephona); i++)
+    {
+        c         = (CampusPersonae*)xar_addere(l);
+        c->genus  = CAMPUS_TELEPHONUM;
+        c->index  = i;
+    }
+    c         = (CampusPersonae*)xar_addere(l);
+    c->genus  = CAMPUS_TELEPHONUM_NOVUM;
+    c->index  = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < xar_numerus(q->epistulae); i++)
+    {
+        c         = (CampusPersonae*)xar_addere(l);
+        c->genus  = CAMPUS_EPISTULA;
+        c->index  = i;
+    }
+    c         = (CampusPersonae*)xar_addere(l);
+    c->genus  = CAMPUS_EPISTULA_NOVA;
+    c->index  = ZEPHYRUM;
+    c         = (CampusPersonae*)xar_addere(l);
+    c->genus  = CAMPUS_RUBRICAE;
+    c->index  = ZEPHYRUM;
+    c         = (CampusPersonae*)xar_addere(l);
+    c->genus  = CAMPUS_NATALIS;
+    c->index  = ZEPHYRUM;
+    redde l;
+}
+
+/* campus electus ad [0, n - 1] coactus */
+interior s32
+campus_electus (
+    constans NomenclatorMontatio* m,
+                             s32  n)
+{
+    s32 k;
+
+    k = attributum_s32(&m->ramus, "campus_electus", ZEPHYRUM);
+    si (k >= n)
+    {
+        k = n - I;
+    }
+    redde k < ZEPHYRUM ? ZEPHYRUM : k;
+}
+
+hic_manens constans character* menses_anglice[XII] = {
+    "January", "February", "March", "April", "May", "June", "July",
+    "August", "September", "October", "November", "December"
+};
+
 /* P3: filtrum ponere ("" tollit); pagina prima, electa prima indicis
  * novi */
 interior b32
@@ -458,7 +550,16 @@ gregis_index (
  * Praecepta
  * ================================================== */
 
-#define VISUS_INDICIS  I   /* P2a: visus unus */
+#define VISUS_INDICIS   I    /* index (P2a) */
+#define VISUS_PERSONAE  II   /* persona aperta (P5a) */
+#define VISUS_OMNES     (VISUS_INDICIS | VISUS_PERSONAE)
+
+interior i32
+visus_currens (
+    constans NomenclatorMontatio* m)
+{
+    redde persona_aperta(m) > ZEPHYRUM ? VISUS_PERSONAE : VISUS_INDICIS;
+}
 
 nomen structura {
     NomenclatorMontatio* m;
@@ -687,6 +788,10 @@ fac_delere (
     {
         redde FALSUM;
     }
+    /* P5a: ex visu personae - ad indicem */
+    (vacuum)campos_scribere(cp->m, "persona_aperta", "",
+        "campus_electus",
+        "");
     si (successor > ZEPHYRUM)
     {
         redde electionem_scribere(cp->m, successor, cp->p);
@@ -714,6 +819,170 @@ fac_reficere (
     redde VERUM;
 }
 
+/* P5a: visus personae */
+interior b32
+fac_aperire (
+    vacuum* ctx)
+{
+    ContextusPraecepti* cp = (ContextusPraecepti*)ctx;
+             character  numerus[XVI];
+
+    sprintf(numerus, "%d", (integer)cp->electa);
+    redde campos_scribere(cp->m, "persona_aperta", numerus,
+        "campus_electus", "");
+}
+
+interior b32
+fac_redire (
+    vacuum* ctx)
+{
+    ContextusPraecepti* cp = (ContextusPraecepti*)ctx;
+
+    redde campos_scribere(cp->m, "persona_aperta", "", "campus_electus",
+        "");
+}
+
+interior b32
+campum_movere (
+    ContextusPraecepti* cp,
+                   s32  gradus)
+{
+    constans Persona* q;
+                 Xar* campi;
+                 s32  k;
+           character  numerus[XVI];
+
+    q      = personae_persona(cp->m->documentum, cp->electa);
+    campi  = campos_struere(q, cp->p);
+    si (!campi)
+    {
+        redde VERUM;
+    }
+    k = campus_electus(cp->m, (s32)xar_numerus(campi)) + gradus;
+    si (k < ZEPHYRUM || k >= (s32)xar_numerus(campi))
+    {
+        redde VERUM;
+    }
+    sprintf(numerus, "%d", (integer)k);
+    redde campos_scribere(cp->m, "campus_electus", numerus, NIHIL,
+        NIHIL);
+}
+
+interior b32
+fac_campum_proximum (
+    vacuum* ctx)
+{
+    redde campum_movere((ContextusPraecepti*)ctx, I);
+}
+
+interior b32
+fac_campum_priorem (
+    vacuum* ctx)
+{
+    redde campum_movere((ContextusPraecepti*)ctx, -I);
+}
+
+/* natalis in prompta: "YYYY-MM-DD" aut "MM-DD"; nullus "" */
+interior chorda
+natalem_textu (
+    constans Persona* q,
+             Piscina* p)
+{
+    character t[XVI];
+
+    si (!q->natalis_positus)
+    {
+        redde chorda_ex_literis("", p);
+    }
+    si (q->natalis.annus == ZEPHYRUM)
+    {
+        sprintf(t, "%02d-%02d", (integer)q->natalis.mensis,
+            (integer)q->natalis.dies);
+    }
+    alioquin
+    {
+        sprintf(t, "%04d-%02d-%02d", (integer)q->natalis.annus,
+            (integer)q->natalis.mensis, (integer)q->natalis.dies);
+    }
+    redde chorda_ex_literis(t, p);
+}
+
+/* Enter in campo: prompta generis campi, valore praeimpleta */
+interior b32
+fac_campum_edere (
+    vacuum* ctx)
+{
+    ContextusPraecepti* cp = (ContextusPraecepti*)ctx;
+      constans Persona* q;
+                   Xar* campi;
+        CampusPersonae* campus;
+                chorda  valor;
+    constans character* genus;
+
+    q      = personae_persona(cp->m->documentum, cp->electa);
+    campi  = campos_struere(q, cp->p);
+    si (!q || !campi || xar_numerus(campi) == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    campus = (CampusPersonae*)xar_obtinere(campi, (i32)campus_electus(
+        cp->m, (s32)xar_numerus(campi)));
+    valor  = chorda_ex_literis("", cp->p);
+    commutatio (campus->genus)
+    {
+        casus CAMPUS_NOMEN:
+            genus = "nomen";
+            valor = q->genus == PERSONA_SOCIETAS ? q->titulus
+                  : persona_nomen(q, cp->p);
+            frange;
+        casus CAMPUS_TELEPHONUM:
+            genus = "telephonum";
+            valor = *(chorda*)xar_obtinere(q->telephona, campus->index);
+            frange;
+        casus CAMPUS_TELEPHONUM_NOVUM:
+            genus = "telephonum";
+            frange;
+        casus CAMPUS_EPISTULA:
+            genus = "epistula";
+            valor = *(chorda*)xar_obtinere(q->epistulae, campus->index);
+            frange;
+        casus CAMPUS_EPISTULA_NOVA:
+            genus = "epistula";
+            frange;
+        casus CAMPUS_RUBRICAE:
+            genus = "rubricae";
+            valor = rubricas_iungere(q->rubricae, cp->p);
+            frange;
+        ordinarius:
+            genus = "natalis";
+            valor = natalem_textu(q, cp->p);
+            frange;
+    }
+    redde prompta_aperire(&cp->m->ramus, actio_nomenclatoris, genus,
+        valor, cp->p);
+}
+
+interior b32
+genus_ponere (
+    ContextusPraecepti* cp,
+          PersonaGenus  genus)
+{
+    redde personae_genus_ponere(cp->m->documentum, cp->electa, genus)
+        > ZEPHYRUM;
+}
+
+interior b32
+fac_genus_alternare (
+    vacuum* ctx)
+{
+    ContextusPraecepti* cp = (ContextusPraecepti*)ctx;
+      constans Persona* q;
+
+    q = personae_persona(cp->m->documentum, cp->electa);
+    redde q && genus_ponere(cp, q->genus == PERSONA_HOMO
+        ? PERSONA_SOCIETAS : PERSONA_HOMO);
+}
+
 hic_manens constans Praeceptum TABULA_PRAECEPTORUM[] = {
     { "nomenclator.proxima", "Next contact", "j", VISUS_INDICIS,
         ZEPHYRUM, fac_proximam },
@@ -727,12 +996,24 @@ hic_manens constans Praeceptum TABULA_PRAECEPTORUM[] = {
         ZEPHYRUM, fac_novam_personam },
     { "nomenclator.nova_societas", "New business", "N", VISUS_INDICIS,
         ZEPHYRUM, fac_novam_societatem },
-    { "nomenclator.delere", "Delete contact", "X", VISUS_INDICIS,
+    { "nomenclator.delere", "Delete contact", "X", VISUS_OMNES,
         REQUIRIT_PERSONAM, fac_delere },
-    { "nomenclator.revocare", "Undo", "u", VISUS_INDICIS, ZEPHYRUM,
+    { "nomenclator.revocare", "Undo", "u", VISUS_OMNES, ZEPHYRUM,
         fac_revocare },
-    { "nomenclator.reficere", "Redo", "C-r", VISUS_INDICIS, ZEPHYRUM,
+    { "nomenclator.reficere", "Redo", "C-r", VISUS_OMNES, ZEPHYRUM,
         fac_reficere },
+    { "nomenclator.aperire", "Open contact", "Enter", VISUS_INDICIS,
+        REQUIRIT_PERSONAM, fac_aperire },
+    { "nomenclator.redire", "Back to list", "Esc", VISUS_PERSONAE,
+        ZEPHYRUM, fac_redire },
+    { "nomenclator.campus_proximus", "Next field", "j", VISUS_PERSONAE,
+        ZEPHYRUM, fac_campum_proximum },
+    { "nomenclator.campus_prior", "Previous field", "k", VISUS_PERSONAE,
+        ZEPHYRUM, fac_campum_priorem },
+    { "nomenclator.campum_edere", "Edit field", "Enter", VISUS_PERSONAE,
+        ZEPHYRUM, fac_campum_edere },
+    { "nomenclator.genus_alternare", "Person / business", "t",
+        VISUS_PERSONAE, ZEPHYRUM, fac_genus_alternare },
     { "nomenclator.filtrum", "Filter by tag", "f", VISUS_INDICIS,
         ZEPHYRUM, fac_filtrum },
     { "nomenclator.filtrum_tollere", "Clear filter", "Esc",
@@ -761,10 +1042,11 @@ contextum_parare (
                 Piscina* p,
      ContextusPraecepti* cp)
 {
-    cp->m       = m;
-    cp->p       = p;
-    cp->l       = ordines(m, p);
-    cp->electa  = nomenclator_persona_electa(m);
+    cp->m = m;
+    cp->p = p;
+    cp->l = ordines(m, p);
+    cp->electa  = persona_aperta(m) > ZEPHYRUM ? persona_aperta(m)
+                : nomenclator_persona_electa(m);
 }
 
 /* hospes menu: tabulae, visus, requisita, contextus paratus */
@@ -778,9 +1060,177 @@ hospitem_parare (
     contextum_parare(m, p, cp);
     h->introitus  = TABULA_ELENCHORUM;
     h->praecepta  = TABULA_PRAECEPTORUM;
-    h->visus      = VISUS_INDICIS;
+    h->visus      = visus_currens(m);
     h->requisita  = requisita_nomenclatoris;
     h->ctx        = cp;
+}
+
+/* "verba cognomen": verbum ultimum cognomen, cetera praenomen */
+interior vacuum
+nomen_dividere (
+     chorda  textus,
+     chorda* praenomen,
+     chorda* cognomen)
+{
+    i32 i;
+
+    dum (textus.mensura > ZEPHYRUM && textus.datum[ZEPHYRUM] == ' ')
+    {
+        textus.datum++;
+        textus.mensura--;
+    }
+    i = textus.mensura;
+    dum (i > ZEPHYRUM && textus.datum[i - I] != ' ')
+    {
+        i--;
+    }
+    *praenomen  = textus;
+    *cognomen   = textus;
+    si (i == ZEPHYRUM)
+    {
+        cognomen->mensura = ZEPHYRUM;
+        redde;
+    }
+    cognomen->datum     = textus.datum + i;
+    cognomen->mensura   = textus.mensura - i;
+    praenomen->mensura  = i;
+    dum (   praenomen->mensura > ZEPHYRUM
+         && praenomen->datum[praenomen->mensura - I] == ' ')
+    {
+        praenomen->mensura--;
+    }
+}
+
+/* natalis ex textu: "YYYY-MM-DD", "MM-DD", "--MM-DD"; FALSUM si forma
+ * mala (validitas a personis iudicatur) */
+interior b32
+natalem_ex_textu (
+    chorda  t,
+      Dies* d)
+{
+    s32 o;
+
+    si (t.mensura == X)
+    {
+        redde fasti_parsare_iso(t, d) && d->annus > ZEPHYRUM;
+    }
+    o = t.mensura == VII ? II : t.mensura == V ? ZEPHYRUM : -I;
+    si (   o < ZEPHYRUM || (o == II && (t.datum[ZEPHYRUM] != '-'
+            || t.datum[I] != '-')) || t.datum[o + II] != '-'
+        || t.datum[o] < '0' || t.datum[o] > '9' || t.datum[o + I] < '0'
+        || t.datum[o + I] > '9' || t.datum[o + III] < '0'
+        || t.datum[o + III] > '9' || t.datum[o + IV] < '0'
+        || t.datum[o + IV] > '9')
+    {
+        redde FALSUM;
+    }
+    d->annus   = ZEPHYRUM;
+    d->mensis  = (s32)(t.datum[o] - '0') * X + (s32)(t.datum[o + I]
+        - '0');
+    d->dies    = (s32)(t.datum[o + III] - '0') * X + (s32)(t.datum[o
+        + IV] - '0');
+    redde VERUM;
+}
+
+/* index (telephona / epistulae) mutatus: index k substitutus (vacuum:
+ * deletus), aut additus (k < 0) */
+interior Xar*
+indicem_mutare (
+     constans Xar* vetus,
+              s32  k,
+           chorda  valor,
+          Piscina* p)
+{
+    Xar* l;
+    i32  i;
+
+    l = xar_creare(p, (i32)magnitudo(chorda));
+    per (i = ZEPHYRUM; l && vetus && i < xar_numerus(vetus); i++)
+    {
+        si ((s32)i == k)
+        {
+            si (valor.mensura > ZEPHYRUM)
+            {
+                *(chorda*)xar_addere(l) = valor;
+            }
+            perge;
+        }
+        *(chorda*)xar_addere(l) = *(chorda*)xar_obtinere(vetus, i);
+    }
+    si (l && k < ZEPHYRUM && valor.mensura > ZEPHYRUM)
+    {
+        *(chorda*)xar_addere(l) = valor;
+    }
+    redde l;
+}
+
+/* P5a: Reditus in campo personae apertae: VERUM actum, FALSUM
+ * recusatum (prompta manet), -1 genus non campi */
+interior s32
+campum_committere (
+    NomenclatorMontatio* m,
+                 chorda  genus,
+                 chorda  textus,
+                Piscina* p)
+{
+     constans Persona* q;
+                  Xar* campi;
+       CampusPersonae* campus;
+                  s32  id;
+                 Dies  d;
+               chorda  praenomen;
+               chorda  cognomen;
+
+    id     = persona_aperta(m);
+    q      = personae_persona(m->documentum, id);
+    campi  = campos_struere(q, p);
+    si (!q || !campi)
+    {
+        redde -I;
+    }
+    campus = (CampusPersonae*)xar_obtinere(campi, (i32)campus_electus(m,
+        (s32)xar_numerus(campi)));
+    si (chorda_aequalis_literis(genus, "nomen"))
+    {
+        si (q->genus == PERSONA_SOCIETAS)
+        {
+            redde personae_titulum_ponere(m->documentum, id, textus)
+                > ZEPHYRUM;
+        }
+        nomen_dividere(textus, &praenomen, &cognomen);
+        redde personae_nomen_ponere(m->documentum, id, praenomen,
+            cognomen) > ZEPHYRUM;
+    }
+    si (chorda_aequalis_literis(genus, "telephonum"))
+    {
+        redde personae_telephona_ponere(m->documentum, id,
+            indicem_mutare(q->telephona, campus->genus
+            == CAMPUS_TELEPHONUM ? (s32)campus->index : -I, textus, p))
+            > ZEPHYRUM;
+    }
+    si (chorda_aequalis_literis(genus, "epistula"))
+    {
+        redde personae_epistulas_ponere(m->documentum, id,
+            indicem_mutare(q->epistulae, campus->genus
+            == CAMPUS_EPISTULA ? (s32)campus->index : -I, textus, p))
+            > ZEPHYRUM;
+    }
+    si (chorda_aequalis_literis(genus, "rubricae"))
+    {
+        redde personae_rubricas_ponere(m->documentum, id, textus)
+            > ZEPHYRUM;
+    }
+    si (chorda_aequalis_literis(genus, "natalis"))
+    {
+        si (textus.mensura == ZEPHYRUM)
+        {
+            redde personae_natalem_ponere(m->documentum, id, NIHIL)
+                > ZEPHYRUM;
+        }
+        redde natalem_ex_textu(textus, &d) && personae_natalem_ponere(
+            m->documentum, id, &d) > ZEPHYRUM;
+    }
+    redde -I;
 }
 
 /* Reditus promptae: homo "verba cognomen" (verbum ultimum cognomen,
@@ -798,6 +1248,22 @@ promptam_committere (
        s32 id;
        i32 i;
 
+    /* P5a: campi personae apertae */
+    si (persona_aperta(m) > ZEPHYRUM)
+    {
+        s32 r;
+
+        r = campum_committere(m, genus, textus, p);
+        si (r != -I)
+        {
+            si (r)
+            {
+                (vacuum)prompta_claudere(&m->ramus, actio_nomenclatoris,
+                    p);
+            }
+            redde r != ZEPHYRUM;
+        }
+    }
     /* P3: filtrum - vacuum tollit, aliter rubrica valida */
     si (chorda_aequalis_literis(genus, "filtrum"))
     {
@@ -919,19 +1385,61 @@ agere (
     }
     si (ev->genus == EVENTUS_CLAVIS_DEPRESSUS)
     {
-        t = praecepta_ad_clavem(TABULA_PRAECEPTORUM, VISUS_INDICIS, ev);
+        t = praecepta_ad_clavem(TABULA_PRAECEPTORUM, visus_currens(m),
+            ev);
         si (!t)
         {
             redde FALSUM;
         }
         contextum_parare(m, privatum->scheda, &cp);
-        redde praecepta_status(t, VISUS_INDICIS,
+        redde praecepta_status(t, visus_currens(m),
             requisita_nomenclatoris,
             &cp) == PRAECEPTUM_PRAESTO && t->fn(&cp);
+    }
+    /* P5a: ictus duplex in ordine indicis personam aperit */
+    si (   ev->genus            == EVENTUS_MUS_DUPLEX && nodus
+        && ev->datum.mus.botton == MUS_SINISTER
+        && nodus->partes        == PARTES_ITEM && id_ordinis(nodus->id)
+        > ZEPHYRUM && persona_aperta(m) == ZEPHYRUM)
+    {
+        character numerus[XVI];
+
+        sprintf(numerus, "%d", (integer)id_ordinis(nodus->id));
+        redde campos_scribere(m, "persona_aperta", numerus,
+            "campus_electus", "");
     }
     si (   ev->genus            != EVENTUS_MUS_DEPRESSUS
         || ev->datum.mus.botton != MUS_SINISTER || !nodus)
     {
+        redde FALSUM;
+    }
+    /* P5a: visus personae - campus eligitur, redire, genus */
+    si (persona_aperta(m) > ZEPHYRUM)
+    {
+        contextum_parare(m, privatum->scheda, &cp);
+        si (   nodus->partes == PARTES_ITEM && nodus->id.mensura >= II
+            && nodus->id.datum[ZEPHYRUM] == 'f')
+        {
+            chorda n;
+
+            n.datum    = nodus->id.datum + I;
+            n.mensura  = nodus->id.mensura - I;
+            redde chorda_ut_s32(n, &id) && campos_scribere(m,
+                "campus_electus", chorda_ut_cstr(n, privatum->scheda),
+                NIHIL, NIHIL);
+        }
+        si (chorda_aequalis_literis(nodus->id, "redire"))
+        {
+            redde fac_redire(&cp);
+        }
+        si (chorda_aequalis_literis(nodus->id, "genus-homo"))
+        {
+            redde genus_ponere(&cp, PERSONA_HOMO);
+        }
+        si (chorda_aequalis_literis(nodus->id, "genus-societas"))
+        {
+            redde genus_ponere(&cp, PERSONA_SOCIETAS);
+        }
         redde FALSUM;
     }
     id = nodus->partes
@@ -1114,6 +1622,233 @@ ordinem_pingere (
     }
 }
 
+/* titulus generis promptae */
+interior constans character*
+titulum_promptae (
+    constans NomenclatorMontatio* m,
+                          chorda  genus)
+{
+    constans Persona* q;
+
+    si (chorda_aequalis_literis(genus, "societas"))
+    {
+        redde "business:";
+    }
+    si (chorda_aequalis_literis(genus, "filtrum"))
+    {
+        redde "filter:";
+    }
+    si (chorda_aequalis_literis(genus, "nomen"))
+    {
+        q = personae_persona(m->documentum, persona_aperta(m));
+        redde (q && q->genus == PERSONA_SOCIETAS) ? "business:"
+            : "name:";
+    }
+    si (chorda_aequalis_literis(genus, "telephonum"))
+    {
+        redde "phone:";
+    }
+    si (chorda_aequalis_literis(genus, "epistula"))
+    {
+        redde "email:";
+    }
+    si (chorda_aequalis_literis(genus, "rubricae"))
+    {
+        redde "tags:";
+    }
+    si (chorda_aequalis_literis(genus, "natalis"))
+    {
+        redde "birthday:";
+    }
+    redde "name:";
+}
+
+/* P5a: ordo campi personae: titulus (obscurus) et valor */
+interior vacuum
+campum_pingere (
+        NomenclatorMontatio* m,
+                    Mandata* md,
+         constans Componens* f,
+           constans Persona* q,
+    constans CampusPersonae* campus,
+                        b32  electus)
+{
+       chorda valor;
+    character textus[LXIV];
+         Dies hodie;
+          s32 aetas;
+          s32 x;
+
+    si (electus)
+    {
+        figura_ordinem_electum_pingere(md, f->fines);
+    }
+    x = f->fines.x + IV + XI * NOMENCLATOR_LITTERA;
+    commutatio (campus->genus)
+    {
+        casus CAMPUS_NOMEN:
+            textum_pingere(md, f->fines.x + IV, f->fines.y + IV,
+                persona_nomen(q, md->piscina), FONS_TITULI, COLOR_TEXT);
+            redde;
+        casus CAMPUS_TELEPHONUM:
+            textum_pingere(md, f->fines.x + IV, f->fines.y + IV,
+                chorda_ex_literis("Phone", md->piscina), ZEPHYRUM,
+                COLOR_TEXT_DIM);
+            valor = *(chorda*)xar_obtinere(q->telephona, campus->index);
+            frange;
+        casus CAMPUS_TELEPHONUM_NOVUM:
+            textum_pingere(md, f->fines.x + IV, f->fines.y + IV,
+                chorda_ex_literis("+ phone", md->piscina), ZEPHYRUM,
+                COLOR_TEXT_DIM);
+            redde;
+        casus CAMPUS_EPISTULA:
+            textum_pingere(md, f->fines.x + IV, f->fines.y + IV,
+                chorda_ex_literis("Email", md->piscina), ZEPHYRUM,
+                COLOR_TEXT_DIM);
+            valor = *(chorda*)xar_obtinere(q->epistulae, campus->index);
+            frange;
+        casus CAMPUS_EPISTULA_NOVA:
+            textum_pingere(md, f->fines.x + IV, f->fines.y + IV,
+                chorda_ex_literis("+ email", md->piscina), ZEPHYRUM,
+                COLOR_TEXT_DIM);
+            redde;
+        casus CAMPUS_RUBRICAE:
+            textum_pingere(md, f->fines.x + IV, f->fines.y + IV,
+                chorda_ex_literis("Tags", md->piscina), ZEPHYRUM,
+                COLOR_TEXT_DIM);
+            /* "#a #b" */
+            valor = chorda_ex_literis("", md->piscina);
+            {
+                i32 r;
+
+                per (r = ZEPHYRUM; r < xar_numerus(q->rubricae); r++)
+                {
+                    valor = chorda_concatenare(valor, chorda_ex_literis(
+                        r > ZEPHYRUM ? " #" : "#", md->piscina),
+                        md->piscina);
+                    valor = chorda_concatenare(valor, *(chorda*)
+                        xar_obtinere(q->rubricae, r), md->piscina);
+                }
+            }
+            frange;
+        ordinarius:
+            textum_pingere(md, f->fines.x + IV, f->fines.y + IV,
+                chorda_ex_literis("Birthday", md->piscina), ZEPHYRUM,
+                COLOR_TEXT_DIM);
+            si (!q->natalis_positus)
+            {
+                valor = chorda_ex_literis("-", md->piscina);
+                frange;
+            }
+            si (q->natalis.annus > ZEPHYRUM)
+            {
+                sprintf(textus, "%d %s %d", (integer)q->natalis.dies,
+                    menses_anglice[q->natalis.mensis - I],
+                    (integer)q->natalis.annus);
+            }
+            alioquin
+            {
+                sprintf(textus, "%d %s", (integer)q->natalis.dies,
+                    menses_anglice[q->natalis.mensis - I]);
+            }
+            aetas = (m->hodie && m->hodie(m->hodie_ctx, &hodie))
+                  ? persona_aetas(q, hodie) : -I;
+            si (aetas >= ZEPHYRUM)
+            {
+                sprintf(textus + strlen(textus), "  %d",
+                    (integer)aetas);
+            }
+            valor = chorda_ex_literis(textus, md->piscina);
+            frange;
+    }
+    textum_pingere(md, x, f->fines.y + IV, praecidere(valor,
+        f->fines.x + f->fines.latitudo - x), ZEPHYRUM, COLOR_TEXT);
+}
+
+/* P5a: figura visus personae (spatio radicis) */
+interior vacuum
+personam_pingere (
+    NomenclatorMontatio* m,
+                Mandata* md,
+     constans Componens* c)
+{
+     constans Persona* q;
+                  Xar* campi;
+            Componens* f;
+                  s32  electus;
+                  s32  k;
+                  i32  i;
+
+    q      = personae_persona(m->documentum, persona_aperta(m));
+    campi  = campos_struere(q, md->piscina);
+    si (!q || !campi)
+    {
+        redde;
+    }
+    electus = campus_electus(m, (s32)xar_numerus(campi));
+    per (i = ZEPHYRUM; i < componens_numerus_liberorum(c); i++)
+    {
+        f = componens_liberum(c, i);
+        si (chorda_aequalis_literis(f->id, "redire"))
+        {
+            figura_globulum_pingere(md, f->fines, chorda_transcribere(
+                chorda_ex_literis("< Contacts", md->piscina),
+                md->piscina), FIGURA_UMBRA);
+        }
+        alioquin si (chorda_aequalis_literis(f->id, "genus-homo"))
+        {
+            figura_segmentum_pingere(md, f->fines, chorda_transcribere(
+                chorda_ex_literis("Person", md->piscina), md->piscina),
+                FIGURA_SEGMENTUM_PRIMUM, q->genus == PERSONA_HOMO
+                ? FIGURA_ELECTUM : ZEPHYRUM);
+        }
+        alioquin si (chorda_aequalis_literis(f->id, "genus-societas"))
+        {
+            figura_segmentum_pingere(md, f->fines, chorda_transcribere(
+                chorda_ex_literis("Business", md->piscina),
+                md->piscina),
+                FIGURA_SEGMENTUM_ULTIMUM, q->genus == PERSONA_SOCIETAS
+                ? FIGURA_ELECTUM : ZEPHYRUM);
+        }
+        alioquin si (chorda_aequalis_literis(f->id, "imago"))
+        {
+            /* P7: imago - locus servatus */
+            mandata_rectangulum(md, f->fines, figura_color_thematis(
+                COLOR_TEXT_DIM), FALSUM);
+            textum_pingere(md, f->fines.x + (f->fines.latitudo - V
+                * NOMENCLATOR_LITTERA) / II, f->fines.y
+                + (f->fines.altitudo - NOMENCLATOR_LINEA) / II,
+                chorda_ex_literis("photo", md->piscina), ZEPHYRUM,
+                COLOR_TEXT_DIM);
+        }
+        alioquin si (chorda_aequalis_literis(f->id, "prompta"))
+        {
+            chorda genus;
+
+            si (prompta_aperta(&m->ramus, &genus))
+            {
+                prompta_pingere(md, f->fines, titulum_promptae(m,
+                    genus),
+                    &m->ramus);
+            }
+        }
+        alioquin si (   f->partes == PARTES_ITEM && f->id.mensura >= II
+                     && f->id.datum[ZEPHYRUM] == 'f')
+        {
+            chorda n;
+
+            n.datum    = f->id.datum + I;
+            n.mensura  = f->id.mensura - I;
+            si (   chorda_ut_s32(n, &k) && k >= ZEPHYRUM
+                && k < (s32)xar_numerus(campi))
+            {
+                campum_pingere(m, md, f, q, (constans CampusPersonae*)
+                    xar_obtinere(campi, (i32)k), k == electus);
+            }
+        }
+    }
+}
+
 /* <figura/> <purus/> radix: mensa, titulus, caput, sagittae, tituli
  * litterarum, ordines - omnia spatio radicis */
 interior vacuum
@@ -1154,6 +1889,11 @@ figura_tabulae (
         redde;
     }
     m       = contextus->m;
+    si (persona_aperta(m) > ZEPHYRUM)
+    {
+        personam_pingere(m, md, c);
+        redde;
+    }
     l       = ordines(m, md->piscina);
     electa  = nomenclator_persona_electa(m);
     k       = pagina_currens(m, l);
@@ -1240,10 +1980,9 @@ figura_tabulae (
 
             si (prompta_aperta(&m->ramus, &genus))
             {
-                prompta_pingere(md, f->fines,
-                    chorda_aequalis_literis(genus,
-                    "societas") ? "business:" : chorda_aequalis_literis(
-                    genus, "filtrum") ? "filter:" : "name:", &m->ramus);
+                prompta_pingere(md, f->fines, titulum_promptae(m,
+                    genus),
+                    &m->ramus);
             }
         }
         alioquin si (chorda_aequalis_literis(f->id, "nova"))
@@ -1416,8 +2155,10 @@ componentem_locare (
      LocusComponentis* l;
                   s32  index;
 
+    /* lineae < 0: altitudo crescens */
     index = locum_addere(dp, parens, DISPOSITIO_LINEA, genus_x, valor_x,
-        DISPOSITIO_FIXA, lineae);
+        lineae >= ZEPHYRUM ? DISPOSITIO_FIXA : DISPOSITIO_CRESCENS,
+        lineae >= ZEPHYRUM ? lineae : ZEPHYRUM);
     c     = componens_creare(dp->piscina, dp->intern, id, partes);
     si (!c || index < ZEPHYRUM)
     {
@@ -1433,6 +2174,149 @@ componentem_locare (
     redde c;
 }
 
+/* P5a: visus personae - barra (redire, Person | Business), dimidium
+ * superum (campi; imago ~1/3 latitudinis ad dextrum), dimidium inferum
+ * notae (P5b) */
+interior vacuum
+personam_disponere (
+    NomenclatorMontatio* m,
+              Disponens* dp,
+                    s32  radix_d,
+                    s32  columnae,
+                Piscina* piscina)
+{
+     constans Persona* q;
+                  Xar* campi;
+                  s32  barra;
+                  s32  corpus;
+                  s32  superum;
+                  s32  campi_d;
+                  i32  i;
+            character  id[XVI];
+
+    q      = personae_persona(m->documentum, persona_aperta(m));
+    campi  = campos_struere(q, piscina);
+    barra  = locum_addere(dp, radix_d, DISPOSITIO_LINEA,
+        DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_FIXA, III);
+    (vacuum)componentem_locare(dp, barra, "redire", PARTES_BOTTONE,
+        DISPOSITIO_FIXA, XII, II);
+    (vacuum)locum_addere(dp, barra, DISPOSITIO_LINEA,
+        DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_FIXA, II);
+    (vacuum)componentem_locare(dp, barra, "genus-homo", PARTES_BOTTONE,
+        DISPOSITIO_FIXA, VIII, II);
+    (vacuum)componentem_locare(dp, barra, "genus-societas",
+        PARTES_BOTTONE, DISPOSITIO_FIXA, X, II);
+    corpus   = locum_addere(dp, radix_d, DISPOSITIO_COLUMNA,
+        DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_CRESCENS, ZEPHYRUM);
+    superum  = locum_addere(dp, corpus, DISPOSITIO_LINEA,
+        DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_PARS, L);
+    campi_d  = locum_addere(dp, superum, DISPOSITIO_COLUMNA,
+        DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_CRESCENS, ZEPHYRUM);
+    per (i = ZEPHYRUM; campi && i < xar_numerus(campi); i++)
+    {
+        sprintf(id, "f%d", (integer)i);
+        (vacuum)componentem_locare(dp, campi_d, id, PARTES_ITEM,
+            DISPOSITIO_CRESCENS, ZEPHYRUM, i == ZEPHYRUM ? III : II);
+    }
+    si (prompta_aperta(&m->ramus, NIHIL))
+    {
+        (vacuum)locum_addere(dp, campi_d, DISPOSITIO_LINEA,
+            DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_CRESCENS,
+            ZEPHYRUM);
+        (vacuum)componentem_locare(dp, campi_d, "prompta",
+            PARTES_CAMPUS,
+            DISPOSITIO_CRESCENS, ZEPHYRUM, NOMENCLATOR_ORDO);
+    }
+    /* P7: imago ~1/6 superficiei (tertia latitudinis, dimidium
+     * altitudinis) */
+    (vacuum)componentem_locare(dp, superum, "imago", PARTES_NULLUM,
+        DISPOSITIO_FIXA, columnae / III, -I);
+    /* P5b: notae (liber scribae) */
+    (vacuum)componentem_locare(dp, corpus, "notae", PARTES_NULLUM,
+        DISPOSITIO_CRESCENS, ZEPHYRUM, -I);
+}
+
+/* visus indicis: titulus cum segmentis, caput, regio ordinum,
+ * prompta */
+interior vacuum
+indicem_disponere (
+    NomenclatorMontatio* m,
+              Disponens* dp,
+                    s32  radix_d,
+                Piscina* piscina)
+{
+                  Album* l;
+     constans AlbumOrdo* o;
+                    s32  titulus_d;
+                    s32  caput;
+                    s32  regio;
+                    s32  a;
+                    s32  b;
+                    s32  t;
+                    s32  i;
+
+    /* P3: titulus et segmenta visus (All | Tags) ad dextrum */
+    titulus_d = locum_addere(dp, radix_d, DISPOSITIO_LINEA,
+        DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_FIXA,
+        NOMENCLATOR_TITULI);
+    (vacuum)componentem_locare(dp, titulus_d, "titulus",
+        PARTES_TITULUS,
+        DISPOSITIO_CRESCENS, ZEPHYRUM, NOMENCLATOR_TITULI);
+    (vacuum)componentem_locare(dp, titulus_d, "visus-indicis",
+        PARTES_BOTTONE, DISPOSITIO_FIXA, V, II);
+    (vacuum)componentem_locare(dp, titulus_d, "visus-rubricarum",
+        PARTES_BOTTONE, DISPOSITIO_FIXA, VI, II);
+    caput = locum_addere(dp, radix_d, DISPOSITIO_LINEA,
+        DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_FIXA,
+        NOMENCLATOR_CAPUT);
+    (vacuum)componentem_locare(dp, caput, "nova", PARTES_BOTTONE,
+        DISPOSITIO_FIXA, VII, NOMENCLATOR_CAPUT);
+    (vacuum)componentem_locare(dp, caput, "caput", PARTES_INDEX,
+        DISPOSITIO_CRESCENS, ZEPHYRUM, NOMENCLATOR_CAPUT);
+    (vacuum)componentem_locare(dp, caput, "pagina-prior",
+        PARTES_BOTTONE,
+        DISPOSITIO_FIXA, III, NOMENCLATOR_CAPUT);
+    (vacuum)componentem_locare(dp, caput, "index_paginae",
+        PARTES_INDEX,
+        DISPOSITIO_FIXA, VII, NOMENCLATOR_CAPUT);
+    (vacuum)componentem_locare(dp, caput, "pagina-proxima",
+        PARTES_BOTTONE, DISPOSITIO_FIXA, III, NOMENCLATOR_CAPUT);
+    regio = locum_addere(dp, radix_d, DISPOSITIO_COLUMNA,
+        DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_CRESCENS, ZEPHYRUM);
+    l = ordines(m, piscina);
+    si (l)
+    {
+        album_pagina(l, pagina_currens(m, l), &a, &b, &t);
+        /* pagina in medio litterae: titulus iteratus ("<id>-c") */
+        si (t >= ZEPHYRUM)
+        {
+            o = album_ordo(l, (i32)t);
+            (vacuum)componentem_locare(dp, regio, chorda_ut_cstr(
+                chorda_concatenare(o->id, chorda_ex_literis("-c",
+                piscina), piscina), piscina), PARTES_INDEX,
+                DISPOSITIO_CRESCENS, ZEPHYRUM, o->altitudo);
+        }
+        per (i = a; i < b; i++)
+        {
+            o = album_ordo(l, (i32)i);
+            (vacuum)componentem_locare(dp, regio, chorda_ut_cstr(o->id,
+                piscina), o->genus == ALBUM_RES ? PARTES_ITEM
+                : PARTES_INDEX, DISPOSITIO_CRESCENS, ZEPHYRUM,
+                o->altitudo);
+        }
+    }
+    /* P2b: prompta in linea ultima regionis indicis */
+    si (prompta_aperta(&m->ramus, NIHIL))
+    {
+        (vacuum)locum_addere(dp, regio, DISPOSITIO_LINEA,
+            DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_CRESCENS,
+            ZEPHYRUM);
+        (vacuum)componentem_locare(dp, regio, "prompta", PARTES_CAMPUS,
+            DISPOSITIO_CRESCENS, ZEPHYRUM, NOMENCLATOR_ORDO);
+    }
+}
+
+/* P5a */
 Componens*
 nomenclator_componere (
      InsulaRepositorium* repo,
@@ -1441,25 +2325,17 @@ nomenclator_componere (
     InternamentumChorda* intern,
                  vacuum* ctx)
 {
-     NomenclatorMontatio* m;
-               Componens* radix;
-               Disponens  dp;
-         DispositioForma  forma;
-                   Album* l;
-      constans AlbumOrdo* o;
-                     s32  latitudo;
-                     s32  altitudo;
-                     s32  columnae;
-                     s32  lineae;
-                     s32  radix_d;
-                     s32  titulus_d;
-                     s32  caput;
-                     s32  regio;
-                     s32  a;
-                     s32  b;
-                     s32  t;
-                     s32  i;
-                   Fines  f;
+           NomenclatorMontatio* m;
+                     Componens* radix;
+                     Disponens  dp;
+               DispositioForma  forma;
+                           s32  latitudo;
+                           s32  altitudo;
+                           s32  columnae;
+                           s32  lineae;
+                           s32  radix_d;
+                           s32  i;
+                         Fines  f;
 
     (vacuum)repo;
     m = (NomenclatorMontatio*)ctx;
@@ -1505,64 +2381,13 @@ nomenclator_componere (
     forma.spatium_superum    = I;
     forma.spatium_inferum    = I;
     radix_d                  = dispositio_addere(dp.d, -I, &forma);
-    /* P3: titulus et segmenta visus (All | Tags) ad dextrum */
-    titulus_d = locum_addere(&dp, radix_d, DISPOSITIO_LINEA,
-        DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_FIXA,
-        NOMENCLATOR_TITULI);
-    (vacuum)componentem_locare(&dp, titulus_d, "titulus",
-        PARTES_TITULUS,
-        DISPOSITIO_CRESCENS, ZEPHYRUM, NOMENCLATOR_TITULI);
-    (vacuum)componentem_locare(&dp, titulus_d, "visus-indicis",
-        PARTES_BOTTONE, DISPOSITIO_FIXA, V, II);
-    (vacuum)componentem_locare(&dp, titulus_d, "visus-rubricarum",
-        PARTES_BOTTONE, DISPOSITIO_FIXA, VI, II);
-    caput = locum_addere(&dp, radix_d, DISPOSITIO_LINEA,
-        DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_FIXA,
-        NOMENCLATOR_CAPUT);
-    (vacuum)componentem_locare(&dp, caput, "nova", PARTES_BOTTONE,
-        DISPOSITIO_FIXA, VII, NOMENCLATOR_CAPUT);
-    (vacuum)componentem_locare(&dp, caput, "caput", PARTES_INDEX,
-        DISPOSITIO_CRESCENS, ZEPHYRUM, NOMENCLATOR_CAPUT);
-    (vacuum)componentem_locare(&dp, caput, "pagina-prior",
-        PARTES_BOTTONE,
-        DISPOSITIO_FIXA, III, NOMENCLATOR_CAPUT);
-    (vacuum)componentem_locare(&dp, caput, "index_paginae",
-        PARTES_INDEX,
-        DISPOSITIO_FIXA, VII, NOMENCLATOR_CAPUT);
-    (vacuum)componentem_locare(&dp, caput, "pagina-proxima",
-        PARTES_BOTTONE, DISPOSITIO_FIXA, III, NOMENCLATOR_CAPUT);
-    regio = locum_addere(&dp, radix_d, DISPOSITIO_COLUMNA,
-        DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_CRESCENS, ZEPHYRUM);
-    l = ordines(m, piscina);
-    si (l)
+    si (persona_aperta(m) > ZEPHYRUM)
     {
-        album_pagina(l, pagina_currens(m, l), &a, &b, &t);
-        /* pagina in medio litterae: titulus iteratus ("<id>-c") */
-        si (t >= ZEPHYRUM)
-        {
-            o = album_ordo(l, (i32)t);
-            (vacuum)componentem_locare(&dp, regio, chorda_ut_cstr(
-                chorda_concatenare(o->id, chorda_ex_literis("-c",
-                piscina), piscina), piscina), PARTES_INDEX,
-                DISPOSITIO_CRESCENS, ZEPHYRUM, o->altitudo);
-        }
-        per (i = a; i < b; i++)
-        {
-            o = album_ordo(l, (i32)i);
-            (vacuum)componentem_locare(&dp, regio, chorda_ut_cstr(o->id,
-                piscina), o->genus == ALBUM_RES ? PARTES_ITEM
-                : PARTES_INDEX, DISPOSITIO_CRESCENS, ZEPHYRUM,
-                o->altitudo);
-        }
+        personam_disponere(m, &dp, radix_d, columnae, piscina);
     }
-    /* P2b: prompta in linea ultima regionis indicis */
-    si (prompta_aperta(&m->ramus, NIHIL))
+    alioquin
     {
-        (vacuum)locum_addere(&dp, regio, DISPOSITIO_LINEA,
-            DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_CRESCENS,
-            ZEPHYRUM);
-        (vacuum)componentem_locare(&dp, regio, "prompta", PARTES_CAMPUS,
-            DISPOSITIO_CRESCENS, ZEPHYRUM, NOMENCLATOR_ORDO);
+        indicem_disponere(m, &dp, radix_d, piscina);
     }
     dispositio_computare(dp.d, columnae, lineae, NIHIL, NIHIL);
     per (i = ZEPHYRUM; i < (s32)xar_numerus(dp.loci); i++)
@@ -1611,6 +2436,8 @@ nomenclator_montare (
       InsulaRepositorium* repo,
       constans character* id,
       PersonaeDocumentum* documentum,
+        NomenclatorHodie  hodie,
+                  vacuum* hodie_ctx,
                      i32  latitudo,
                      i32  altitudo,
          StatusSystemata* systemata)
@@ -1625,6 +2452,8 @@ nomenclator_montare (
     m->piscina     = piscina;
     m->intern      = intern;
     m->documentum  = documentum;
+    m->hodie       = hodie;
+    m->hodie_ctx   = hodie_ctx;
     m->ramus       = id ? insula_ramus(repo, "nomenclator", id)
                         : insula_ramus_radix(repo);
     organum = organum_legere_genus(piscina, intern, "nomenclator",

@@ -64,6 +64,17 @@ mundum_purgare (
     }
 }
 
+/* hodie fixa: 14 X 2026 */
+interior b32
+hodie_fixa (
+    vacuum* ctx,
+      Dies* hodie)
+{
+    (vacuum)ctx;
+    *hodie = fasti_dies(MMXXVI, X, XIV);
+    redde VERUM;
+}
+
 /* montare (CCCLX x CCCXX) et dispensatorem ligare */
 interior b32
 montare (
@@ -75,7 +86,7 @@ montare (
     x->repo = insula_repositorium_creare(p, x->intern, "<hospes/>");
     si (   !x->repo || !x->documentum
         || !nomenclator_montare(&x->m, p, x->intern, x->repo, "n1",
-               x->documentum, CCCLX, CCCXX, NIHIL))
+               x->documentum, hodie_fixa, NIHIL, CCCLX, CCCXX, NIHIL))
     {
         redde FALSUM;
     }
@@ -770,6 +781,240 @@ _probare_segmenta (
     CREDO_VERUM(campus_est(x, "visus", "index"));
 }
 
+/* Backspace n vicibus */
+interior vacuum
+retro (
+    Mundus* x,
+       i32  n)
+{
+    per (; n > ZEPHYRUM; n--)
+    {
+        clavis_specialis(x, CLAVIS_RETRORSUM, ZEPHYRUM, ZEPHYRUM,
+            ZEPHYRUM);
+    }
+}
+
+/* index (Xar de chorda) personae = "a|b" ? */
+interior b32
+index_est (
+          constans Xar* l,
+    constans character* exspectatus)
+{
+    character  visus[CCLVI];
+          i32  i;
+       chorda* c;
+
+    visus[ZEPHYRUM] = '\0';
+    per (i = ZEPHYRUM; l && i < xar_numerus(l); i++)
+    {
+        c = (chorda*)xar_obtinere(l, i);
+        si (i > ZEPHYRUM)
+        {
+            strcat(visus, "|");
+        }
+        strncat(visus, (constans character*)c->datum,
+            (size_t)c->mensura);
+    }
+    si (strcmp(visus, exspectatus) != ZEPHYRUM)
+    {
+        imprimere("  index: '%s'\n", visus);
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
+/* P5a: aperire (Enter, ictus duplex), redire (Esc) */
+interior vacuum
+_probare_aperire (
+    CredoContextus* c)
+{
+    Mundus* x;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(contactus_parare(x, c->piscina));
+    reditus(x);
+    CREDO_VERUM(campus_est(x, "persona_aperta", "5"));
+    CREDO_VERUM(adest(x, "f0", c->piscina));
+    CREDO_FALSUM(adest(x, "p5", c->piscina));
+    effugium(x);
+    CREDO_VERUM(campus_est(x, "persona_aperta", NIHIL));
+    CREDO_VERUM(adest(x, "p5", c->piscina));
+    CREDO_NECESSE(ictus_in(x, "p1", c->piscina));
+    CREDO_NECESSE(ictus_in(x, "p1", c->piscina));
+    CREDO_VERUM(campus_est(x, "persona_aperta", "1"));
+    /* redire globulo */
+    CREDO_NECESSE(ictus_in(x, "redire", c->piscina));
+    CREDO_VERUM(campus_est(x, "persona_aperta", NIHIL));
+}
+
+/* P5a: campi - telephona (addere, delere vacuo), epistula, rubricae,
+ * nomen. Anna Rossi: f0 nomen, f1 + phone, f2 + email, f3 tags, f4
+ * birthday */
+interior vacuum
+_probare_campos (
+    CredoContextus* c)
+{
+              Mundus* x;
+    constans Persona* q;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(contactus_parare(x, c->piscina));
+    CREDO_NECESSE(ictus_in(x, "p1", c->piscina));
+    reditus(x);
+    CREDO_VERUM(campus_est(x, "persona_aperta", "1"));
+    clavis(x, 'j');
+    CREDO_VERUM(campus_est(x, "campus_electus", "1"));
+    reditus(x);
+    CREDO_VERUM(campus_est(x, "prompta", "telephonum"));
+    typare(x, "+39 06 123");
+    reditus(x);
+    q = personae_persona(x->documentum, I);
+    CREDO_NECESSE_NON_NIHIL(q);
+    CREDO_VERUM(index_est(q->telephona, "+39 06 123"));
+    /* f1 phone, f2 + phone: alterum */
+    clavis(x, 'j');
+    reditus(x);
+    typare(x, "333");
+    reditus(x);
+    q = personae_persona(x->documentum, I);
+    CREDO_VERUM(index_est(q->telephona, "+39 06 123|333"));
+    /* f1 phone, f2 phone novum (electum), f3 + phone: f1 vacuum ->
+     * deletum */
+    clavis(x, 'k');
+    CREDO_VERUM(campus_est(x, "campus_electus", "1"));
+    reditus(x);
+    retro(x, X);
+    reditus(x);
+    q = personae_persona(x->documentum, I);
+    CREDO_VERUM(index_est(q->telephona, "333"));
+    /* f0 nomen, f1 333, f2 + phone, f3 + email */
+    clavis(x, 'j');
+    clavis(x, 'j');
+    reditus(x);
+    CREDO_VERUM(campus_est(x, "prompta", "epistula"));
+    typare(x, "anna@example.org");
+    reditus(x);
+    q = personae_persona(x->documentum, I);
+    CREDO_VERUM(index_est(q->epistulae, "anna@example.org"));
+    /* f3 email (electa), f4 + email, f5 tags */
+    clavis(x, 'j');
+    clavis(x, 'j');
+    reditus(x);
+    CREDO_VERUM(campus_est(x, "prompta", "rubricae"));
+    typare(x, " amici");
+    reditus(x);
+    q = personae_persona(x->documentum, I);
+    CREDO_VERUM(index_est(q->rubricae, "amici|familia|roma"));
+    /* nomen: "Anna Rossi" -> "Anna Bianchi" */
+    clavis(x, 'k');
+    clavis(x, 'k');
+    clavis(x, 'k');
+    clavis(x, 'k');
+    clavis(x, 'k');
+    clavis(x, 'k');
+    CREDO_VERUM(campus_est(x, "campus_electus", NIHIL)
+        || campus_est(x, "campus_electus", "0"));
+    reditus(x);
+    CREDO_VERUM(campus_est(x, "prompta", "nomen"));
+    retro(x, V);
+    typare(x, "Bianchi");
+    reditus(x);
+    CREDO_VERUM(persona_est(x, I, "Anna|Bianchi|"));
+}
+
+/* P5a: natalis - "1986-03-02" (aetas XL die 14 X 2026), "03-02" sine
+ * anno, "--12-25", malum recusatum, vacuum tollit */
+interior vacuum
+_probare_natalem (
+    CredoContextus* c)
+{
+              Mundus* x;
+    constans Persona* q;
+             Mandata* md;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(contactus_parare(x, c->piscina));
+    CREDO_NECESSE(ictus_in(x, "p1", c->piscina));
+    reditus(x);
+    clavis(x, 'j');
+    clavis(x, 'j');
+    clavis(x, 'j');
+    clavis(x, 'j');
+    reditus(x);
+    CREDO_VERUM(campus_est(x, "prompta", "natalis"));
+    typare(x, "1986-03-02");
+    reditus(x);
+    q = personae_persona(x->documentum, I);
+    CREDO_VERUM(q && q->natalis_positus && q->natalis.annus == MCMLXXXVI
+        && q->natalis.mensis == III && q->natalis.dies == II);
+    md = reddere(x, c->piscina);
+    CREDO_VERUM(textus_in(md, fines_componentis(x, "f4", c->piscina),
+        "2 March 1986", -I));
+    CREDO_VERUM(textus_in(md, fines_componentis(x, "f4", c->piscina),
+        "40", -I));
+    reditus(x);
+    retro(x, X);
+    typare(x, "03-02");
+    reditus(x);
+    q = personae_persona(x->documentum, I);
+    CREDO_VERUM(q && q->natalis_positus
+        && q->natalis.annus == ZEPHYRUM);
+    md = reddere(x, c->piscina);
+    CREDO_FALSUM(textus_in(md, fines_componentis(x, "f4", c->piscina),
+        "40", -I));
+    reditus(x);
+    retro(x, V);
+    typare(x, "--12-25");
+    reditus(x);
+    q = personae_persona(x->documentum, I);
+    CREDO_VERUM(q && q->natalis.mensis == XII
+        && q->natalis.dies == XXV);
+    /* malum: prompta manet */
+    reditus(x);
+    retro(x, VII);
+    typare(x, "13-40");
+    reditus(x);
+    CREDO_VERUM(campus_est(x, "prompta", "natalis"));
+    /* vacuum: tollit */
+    retro(x, V);
+    reditus(x);
+    q = personae_persona(x->documentum, I);
+    CREDO_VERUM(q && !q->natalis_positus);
+}
+
+/* P5a: genus (t, segmenta), delere ex visu personae, figura */
+interior vacuum
+_probare_personam_aliam (
+    CredoContextus* c)
+{
+     Mundus* x;
+    Mandata* md;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(contactus_parare(x, c->piscina));
+    CREDO_NECESSE(ictus_in(x, "p1", c->piscina));
+    reditus(x);
+    md = reddere(x, c->piscina);
+    CREDO_VERUM(textus_in(md, fines_componentis(x, "f0", c->piscina),
+        "Anna Rossi", FONS_TITULI));
+    CREDO_VERUM(textus_in(md, fines_componentis(x, "f1", c->piscina),
+        "+ phone", -I));
+    CREDO_VERUM(textus_in(md, fines_componentis(x, "imago", c->piscina),
+        "photo", -I));
+    /* f3 = Tags: "#familia #roma" */
+    CREDO_VERUM(textus_in(md, fines_componentis(x, "f3", c->piscina),
+        "#familia #roma", -I));
+    clavis(x, 't');
+    CREDO_VERUM(personae_persona(x->documentum, I)->genus
+        == PERSONA_SOCIETAS);
+    CREDO_NECESSE(ictus_in(x, "genus-homo", c->piscina));
+    CREDO_VERUM(personae_persona(x->documentum, I)->genus
+        == PERSONA_HOMO);
+    clavis(x, 'X');
+    CREDO_NIHIL(personae_persona(x->documentum, I));
+    CREDO_VERUM(campus_est(x, "persona_aperta", NIHIL));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "montatio", _probare_montationem, mundum_parare, mundum_purgare,
         NIHIL, NIHIL },
@@ -799,6 +1044,14 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "segmenta", _probare_segmenta, mundum_parare, mundum_purgare,
         NIHIL, NIHIL },
+    { "aperire", _probare_aperire, mundum_parare, mundum_purgare, NIHIL,
+        NIHIL },
+    { "campi", _probare_campos, mundum_parare, mundum_purgare, NIHIL,
+        NIHIL },
+    { "natalis", _probare_natalem, mundum_parare, mundum_purgare, NIHIL,
+        NIHIL },
+    { "persona_alia", _probare_personam_aliam, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

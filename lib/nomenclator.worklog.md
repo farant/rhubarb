@@ -121,3 +121,39 @@ Process slip: I started P3 edits while the P2b-2 commit's gates were
 still running; commissio refused ("plagulae commissionis mutatae DUM
 porta currebat"), I reverted and re-ran - the freeze rule exists for
 exactly this.
+
+## 2026-10-15 - P5a: contact detail view
+
+Approved header change: NomenclatorHodie port (+ hodie / hodie_ctx in
+the mount) for the age; vicus passes hodie_vici + the vicus (the same
+clock as the calendar); the test fixture a fixed 14 X 2026. Manifest
+(approved): persona_aperta, campus_electus, prompta options nomen /
+telephonum / epistula / rubricae / natalis.
+Opening: Enter (VISUS_INDICIS, REQUIRIT_PERSONAM) or a double click on
+a row (DUPLEX on "p<id>"); back: Esc (VISUS_PERSONAE - Esc in the list
+stays "clear filter") or the "< Contacts" button. The views are a
+command-table mask: visus_currens = persona_aperta ? VISUS_PERSONAE :
+VISUS_INDICIS; delete / undo / redo are in both (VISUS_OMNES); delete
+from the detail view closes it and selects the successor in the list.
+Rows (campos_struere): name, each phone, "+ phone", each email,
+"+ email", tags, birthday - ids "f<k>", selection campus_electus
+(clamped). Enter opens the prompt for the row prefilled with its value
+(birthday as "YYYY-MM-DD" or "MM-DD"); campum_committere: name split
+like creation (a business edits its title), phone / email via
+indicem_mutare (row index replaced, EMPTY removes it, the "+" rows
+append), tags via personae (invalid refused), birthday accepts
+"YYYY-MM-DD" / "MM-DD" / "--MM-DD" (empty clears; validity is personae's).
+Kind: `t` or the "Person | Business" segments.
+Layout: toolbar (back, segments), top half = fields column + a photo
+box of a third of the width x the half height (~1/6, reserved for P7,
+drawn as a dim frame "photo"), bottom half = "notae" (empty until
+P5b). The list layout moved into indicem_disponere so the composer only
+chooses; componentem_locare takes lineae < 0 for a growing height.
+Test arithmetic slips on the way (row indexes shift when a phone is
+added or removed - the selection stays on the row number); caught by
+the tests themselves. Display bug found in the screenshot: tags drawn
+"#familia roma" - now "#familia #roma", asserted.
+Tests: aperire, campi, natalis, persona_alia (+4 sections). Plants:
+Enter not opening; empty not removing; MM-DD rejected; age not drawn;
+kind toggle a no-op; delete not closing the view; double click not
+opening - all red.

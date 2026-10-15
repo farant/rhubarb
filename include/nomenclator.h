@@ -19,11 +19,18 @@
 #include "personae.h"
 #include "organum_montatio.h"
 
+/* porta hodie (vicus: horologium; probationes: dies fixa) */
+nomen b32 (*NomenclatorHodie)(
+    vacuum* ctx,
+      Dies* hodie);
+
 nomen structura {
              InsulaRamus  ramus;
           ActioRegistrum* actiones;
          FiguraRegistrum* figurae;
       PersonaeDocumentum* documentum;   /* ligamen (a parente) */
+        NomenclatorHodie  hodie;        /* porta (P5: aetas) */
+                  vacuum* hodie_ctx;
                  Piscina* piscina;
      InternamentumChorda* intern;
                   vacuum* figurae_ctx;  /* privatum */
@@ -40,6 +47,8 @@ nomenclator_montare (
       InsulaRepositorium* repo,
       constans character* id,
       PersonaeDocumentum* documentum,
+        NomenclatorHodie  hodie,
+                  vacuum* hodie_ctx,
                      i32  latitudo,
                      i32  altitudo,
          StatusSystemata* systemata);

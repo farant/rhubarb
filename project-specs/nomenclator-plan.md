@@ -244,6 +244,11 @@ house rule of independent composable libraries.
 - **P3 DONE 2026-10-14**: tag view (groups + "(none)", multi-tag
   contacts listed per tag), tag filter in both views (heading click,
   `f`, Esc), view switch `g` + "All | Tags" segments, "k of N".
+- **P5a DONE 2026-10-15**: detail view (Enter / double click; fields
+  editable through the prompt; phones / emails add & remove; birthday
+  three forms + age via the NomenclatorHodie port; kind toggle; delete;
+  photo box reserved). Next U5 (notes book out of the calendar), then
+  P5b (notes in the bottom half).
 - **P2 nomenclator list** - vicus genus `nomenclator`, command word
   `$contacts`, alphabetical list with letter headings (U1), selection, new
   contact (kind chosen at creation), open detail.
