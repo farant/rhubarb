@@ -175,6 +175,39 @@ descriptio; foreign code adds origo (source, pinned version, license).
 app's RUNTIME manifest - neither absorbs unit identity; units point at
 their actions. Q3 follows: per-library units come free from the stem.
 
+## VI¾. Q8 answered (Fran 10-15): natura holds the KINDS - three layers
+
+1. **Ontology = natura.** What a library/app/tool/research/foreign unit
+   IS. Builds on genera that already exist: `/elementa_programmatis/
+   bibliotheca` ("collection published for reuse"), `/elementa_
+   programmatis/programma` ("collection with its own entry point" - the
+   library/program line), `/fabricatio/adscitio` (foreign work adopted
+   into a project = vendored), `/fabricatio/probatio` (species unitatis/
+   integrationis/regressionis/fumi), `/plagula_computatralis` (file
+   language/format - its header already names "repository files marked
+   with their kind" as its purpose), `/documentatio` (manuale, exemplum,
+   dictionarium; defectus_documenti: deceptio, silentium, ambiguitas).
+   Missing (to add): `programma` -> species applicatio, instrumentum;
+   subsystema; investigatio; custody; unitas + "role within a unit".
+   `bin/natura quaere` ~40 ms cold.
+2. **Policy = a small repo-local file.** What rhubarb DOES with each
+   kind (custody aliena -> lint/formator skip; which roles a kind may
+   contain), referring to natura kinds by address. Kept out of natura:
+   natura is a REUSABLE semantic library (multilingual glosses, no
+   rhubarb rules) - the same split as canon rules naming genera.
+3. **Instances = the unit declarations of §VI½**, e.g. `<unitas
+   titulus="vicus" genus="/elementa_programmatis/applicatio">`. Units
+   are individuals of natura kinds, declared in the repo, not in natura.
+
+Fran: natura's types are a work in progress and this is their first
+real practical consumer - where a kind is missing or does not match
+reality, CHANGE natura (through natura_examen's contract), do not work
+around it. Smaller calls (proposed): tool audience = a multi-valued
+PROPERTY, not species/etiam=; natura's defectus_documenti species become
+the interrogationes audit categories (silentium = uncovered API,
+deceptio = dead answer, ambiguitas = two units answering one question);
+extend elementa_programmatis rather than start a parallel model.
+
 ## VII. Interrogationes - documentation as typed questions (Fran 10-15)
 
 A unit exposes what it can do by DECLARING QUESTIONS it answers
@@ -227,10 +260,7 @@ agents) - a seed corpus only if Fran moves entries over.
 5. Custody values: are exemplar and investigatio the same thing?
 6. Tool audience names: homo / agens / aedificatio - or different?
 7. Name of the CLI (`natura quid`? `fabrica quid`? its own binary?).
-8. The kind registry as a natura model (kinds = genera, tool audiences
-   = species, rules as properties) instead of a new STML format?
-   Proposed yes, pending a read of natura's model/property machinery -
-   one taxonomy layer, not two.
+8. ~~Kind registry as natura~~ - answered §VI¾ (three layers).
 
 ## AUDIENDA (not verified)
 
@@ -239,7 +269,7 @@ agents) - a seed corpus only if Fran moves entries over.
   worklogs, not checked one by one).
 - Whether the hooks' narrower exclusions are deliberate (e.g. formator
   on oracula/) or drift was not asked of their authors' commits.
-- natura's model machinery (properties, state machines, how a model
-  is consumed from C) was NOT read for this draft - only its memory
-  note. Q8 depends on it; read `project-specs/genera-spec*.md` and
-  `arbor-porphyriana-spec.md` before U3.
+- natura was read at the level of `include/natura.h` (loader, genus
+  lookup, apparatus with inheritance) and the genus lists of six code
+  models; METAMODULUS contract rules and how a NEW model is admitted
+  were not - read `natura/METAMODULUS.md` before adding genera (U3).
