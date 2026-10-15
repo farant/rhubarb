@@ -18,7 +18,7 @@ source "$(dirname "${BASH_SOURCE[0]}")/cursus.sh"
 #      manu RUBET; scriptum in tabula sine eis RUBET (linea delenda) -
 #      tabula tantum decrescit.
 # Exitus 0 sanum | 1 FRACTUM | 2 nihil actum.
-# <porta titulus="vexilla" tegit="*.sh"/>
+# <porta titulus="vexilla" genus="praeiudicium" tegit="*.sh"/>
 set -u
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$RADIX" || exit 2

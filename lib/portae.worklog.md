@@ -289,3 +289,79 @@ script-level plumbing ownership …SRFSD9, `-I` lists derived from
 aedilis.stml …W5W01, path-glob home …H5021. Next: merge main into
 quinta (that brings in insula C2 aa623c1b, which unbreaks briar-fumus),
 run the ritual, then ff main.
+
+## 2026-10-14 - binaria quae porta currit (circulus commissionis II T2)
+
+`PortaeOpertura.binaria` (PortaeExemplar VIA): the tree binaries
+`bin/x` a gate EXECUTES. Fed from three places: an `exsecutio` of a
+house binary in the runner's effect summary or in a test's literals
+(`_vocatum_tractare`, added BEFORE the ownership check - the owner
+inherits the sources, but a non-owner still runs the binary, so it must
+be current); the gate's own `instrumentum`; and `currit tools/<b>.c`
+as the candidate `bin/<b>` (briar-fumus runs `$RADIX/bin/briar` through
+a variable, which the effect summary cannot see). An existence probe
+(`[ -x bin/aedilis ]`) is not an execution and adds nothing - the
+derivation test pins that. `portae debitae -machina` writes them as
+`BINARIUM <porta> <bin/x> <ratio>` after each non-manual DEBITUM
+(contract in portae.h, bytes tested). Candidates are not filtered here:
+`bin/fabrica iudicare` silently skips artifacts no action declares.
+Plants: execution not recorded -> derivation test red (:719);
+`tools/x.c` candidate dropped -> red (:888).
+
+## 2026-10-14 - genus portae (circulus commissionis II T4)
+
+Annotation attribute `genus`: `praeiudicium` (a check of the committed
+tree's state that does not run the code under test) or `probatio` (the
+default). `PortaDeclarata.genus`; any other value is refused by name
+("genus ignotum 'x' in <porta> (praeiudicium probatio)"). Declarations
+output gains `GENUS <porta> praeiudicium` only for the non-default kind,
+so existing byte-exact outputs did not move; the refusal message for an
+unknown attribute now lists all seven attributes (it had omitted
+`instrumentum` since portae-declaratae T4 - the one pinned test was
+updated). Annotated: vexilla, portae-declaratae, amalgamata, generata,
+examen-corpus. The kind drives the phase and the failure policy in
+commissio (T5); cost drives order inside a phase. Plant: parser ignores
+`praeiudicium` -> genus section red (:1419).
+
+## 2026-10-14 - ordo portarum (circulus commissionis II T5)
+
+`portae_ordinare(declaratae, nomina, tempora)`: pure, text in. Kind from
+the annotation (undeclared = probatio); cost = median of the last X
+healthy runs (`porta` rows with ran=1 rc=0) in build/portae/tempora.tsv,
+durations parsed to milliseconds by hand (three decimals, no floats).
+Order: pre-checks before tests; inside a kind ascending median, no
+history (-1) first; a stable insertion sort keeps the given order on
+ties. CLI `bin/fabrica portae ordo [-machina] -portae TSV [-tempora VIA]
+PORTA...` reads declarations only (no derivation - fast), writes
+`ORDO <porta> <praeiudicium|probatio> <ms|->`. Missing tempora file =
+everything "no history" (given order kept). Plants: kind ignored, all
+history instead of the last X (only `cursus == X` catches it - the
+median is robust to two old outliers), no-history-last - each red.
+
+## 2026-10-15 - hyphenated binaries (`x_y.c` -> `bin/x-y`)
+
+The pre-flight healed 21 binaries and the commit still died on
+briar-fumus: `bin/briar-spectator` was stale and not among them. The
+fumus only PROBES it (`[ -x .../bin/briar-spectator ]` - not an
+execution), its annotation named only `tools/briar.c`, and the
+`currit tools/<b>.c` -> `bin/<b>` rule cannot produce the hyphen. Now a
+`tools/x_y.c` candidate also proposes `bin/x-y` (fabrica ignores the one
+it does not declare), and briar-fumus declares
+`currit="tools/briar.c tools/briar_spectator.c"`. Test: derivatio
+ignota fixture `tools/x_y.c` -> both candidates; plant (no hyphen form)
+red.
+
+## 2026-10-15 - gradus (two tiers of gates, T1)
+
+`gradus` = commissio (default) | fusio, parsed exactly like `genus` and
+independent of it (a pre-check can be merge-tier: vexilla in the test
+section XV is both). Only the non-default value is written (GRADUS /
+`    gradus fusio`), the same choice as GENUS, so existing goldens of
+`declaratae` stay byte-identical. ORDO is different: every line gains
+the fifth field, because the consumer (silva._portas_ordinare) needs a
+value per gate and a missing field must be distinguishable from a stale
+binary - the Python side now refuses four-field lines with the usual
+MONITUM (order as given), so a stale tree bin/fabrica degrades instead
+of silently treating everything as commit tier. Spec
+project-specs/gradus-portarum-spec.md §VII.
+

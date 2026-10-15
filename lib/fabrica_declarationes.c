@@ -1561,10 +1561,12 @@ _gravitas (
             redde ZEPHYRUM;
         casus FABRICA_NON_IUDICATUM:
             redde I;
-        casus FABRICA_IGNOTUM:
+        casus FABRICA_SUPRA:
             redde II;
-        ordinarius:
+        casus FABRICA_IGNOTUM:
             redde III;
+        ordinarius:
+            redde IV;
     }
 }
 
@@ -1578,6 +1580,8 @@ _status_titulus (
             redde "RECENS";
         casus FABRICA_NON_IUDICATUM:
             redde "NON IUDICATUM";
+        casus FABRICA_SUPRA:
+            redde "FORTASSE";
         casus FABRICA_IGNOTUM:
             redde "IGNOTUM";
         ordinarius:

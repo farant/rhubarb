@@ -700,8 +700,11 @@ principale (vacuum)
                                Sessio* s;
                         SessioRelatum  r;
                    SessioConfiguratio  cfg_scripti;
+        /* filum + dependentiae: scriptum per canalem lectionum
+         * scribit/legit (examen 96 fopen crudum recusat) */
         hic_manens constans character* plagulae_scripti[] = {
-            "lib/piscina.c", "lib/chorda.c"
+            "lib/piscina.c", "lib/chorda.c", "lib/chorda_aedificator.c",
+            "lib/lectiones.c", "lib/filum.c"
         };
         chorda scriptum;
            s32 recepti;
@@ -713,7 +716,7 @@ principale (vacuum)
         cfg_scripti.cum_posix = VERUM;
         cfg_scripti.sine_recusationibus = VERUM;
         cfg_scripti.plagulae = plagulae_scripti;
-        cfg_scripti.plagulae_numerus = II;
+        cfg_scripti.plagulae_numerus = V;
         s = sessio_creare(piscina, &cfg_scripti);
         CREDO_NON_NIHIL(s);
 
@@ -740,7 +743,7 @@ principale (vacuum)
         }
 
         recepti = sessio_scriptum_offerre(s, scriptum, &r);
-        CREDO_AEQUALIS_I32((i32)recepti, III);   /* 2 directivae + main */
+        CREDO_AEQUALIS_I32((i32)recepti, IV);   /* 3 directivae + main */
         CREDO_AEQUALIS_I32((i32)r.verdictum, (i32)SESSIO_ACCEPTUM);
         CREDO_VERUM(sessio_functionem_currere(s, "main", &codex));
         CREDO_VERUM(codex == (s64)ZEPHYRUM);
@@ -758,7 +761,6 @@ principale (vacuum)
                 fclose(pl);
             }
         }
-
         sessio_destruere(s);
     }
 

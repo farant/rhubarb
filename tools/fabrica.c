@@ -637,6 +637,9 @@ _sententiam_imprimere (
         casus FABRICA_NON_IUDICATUM:
             signum = "NON IUDICATUM";
             frange;
+        casus FABRICA_SUPRA:
+            signum = "FORTASSE";
+            frange;
         ordinarius:
             redde;
     }
@@ -671,6 +674,7 @@ _status_verbum (
         casus FABRICA_STALUM:         redde "STALUM";
         casus FABRICA_IGNOTUM:        redde "IGNOTUM";
         casus FABRICA_NON_IUDICATUM:  redde "NON IUDICATUM";
+        casus FABRICA_SUPRA:          redde "FORTASSE";
     }
     redde "IGNOTUM";
 }
@@ -930,6 +934,7 @@ nomen structura {
                i32  stala;
                i32  ignota;
                i32  non_iudicata;
+               i32  supra;         /* FORTASSE: producens non recens */
 } CursusIudicandi;
 
 /* vexilla iudicandi et viae tactae. FALSUM = vexillum ignotum */
@@ -1244,6 +1249,225 @@ _iudicare_sententias (
     }
 }
 
+/* causa non recentis actionis in catena: "<titulus> <STATUS> (<causa>)"
+ * - radix quae per catenam infra transmittitur */
+interior chorda*
+_catenae_causa (
+            Piscina* piscina,
+             chorda  titulus,
+    FabricaIudicium  iudicium)
+{
+               chorda* causa;
+    ChordaAedificator* aedificator;
+
+    causa        = (chorda*)piscina_allocare(piscina,
+        (memoriae_index)magnitudo(chorda));
+    aedificator  = chorda_aedificator_creare(piscina, 128);
+    si (causa == NIHIL || aedificator == NIHIL)
+    {
+        redde NIHIL;
+    }
+    (vacuum)chorda_aedificator_appendere_chorda(aedificator, titulus);
+    (vacuum)chorda_aedificator_appendere_character(aedificator, ' ');
+    (vacuum)chorda_aedificator_appendere_literis(aedificator,
+        _status_verbum(iudicium.status));
+    (vacuum)chorda_aedificator_appendere_literis(aedificator, " (");
+    (vacuum)chorda_aedificator_appendere_chorda(aedificator,
+        iudicium.causa);
+    (vacuum)chorda_aedificator_appendere_character(aedificator, ')');
+    *causa = chorda_aedificator_finire(aedificator);
+    redde causa;
+}
+
+/* CATENA IUDICII (parcum 190VQB): iudicium artificii ingressus DIRECTOS
+ * solum videbat - g (a->b), h (b->c), a mutato: h contra b stalum
+ * 'regeneratio congruit', c RECENS (fumus LVIII); bin/briar ex capsula
+ * stala 'RECENS' in praevolatu commissionis. Nunc sententia RECENS
+ * cuius actio ex producente NON RECENTI legit = SUPRA ('FORTASSE'),
+ * causa 'supra: <radix>'. Arcus DATORUM solum (actio->dependentiae:
+ * exitus alterius in loco ingressus, aut lectio cursus ultimi) -
+ * numquam praecondicio aut 'post' (ordo, non data: aedilis mutatus
+ * mundum totum non stalum facit). Actiones supra electa sine sententia
+ * hic modo eodem (celer/plenus) iudicantur, non impressae. NON
+ * IUDICATUM (celer: regeneratio omissa) non propagat - nihil scitur, ut
+ * antea. Iudice stalo nihil (sententiae iam NON IUDICATAE). */
+interior vacuum
+_iudicare_catenam (
+    CursusIudicandi* t)
+{
+     CursusFabricae* c = &t->cursus;
+     TabulaDispersa* per_titulum;   /* titulus -> FabricaActio* */
+     TabulaDispersa* in_catena;     /* titulus -> FabricaActio* */
+     TabulaDispersa* causae;        /* titulus -> chorda* radicis */
+                Xar* acervus;
+                i32  i;
+                i32  j;
+                b32  semen;
+
+    si (t->iudex_actio != NIHIL)
+    {
+        redde;
+    }
+    semen = FALSUM;
+    per (i = ZEPHYRUM; i < xar_numerus(t->sententiae); i++)
+    {
+        si (((Sententia*)xar_obtinere(t->sententiae,
+            i))->iudicium.status
+            == FABRICA_RECENS)
+        {
+            semen = VERUM;
+        }
+    }
+    si (!semen)
+    {
+        redde;
+    }
+    per_titulum  = tabula_dispersa_creare_chorda(c->piscina, 1024);
+    in_catena    = tabula_dispersa_creare_chorda(c->piscina, 256);
+    causae       = tabula_dispersa_creare_chorda(c->piscina, 256);
+    acervus = xar_creare(c->piscina,
+        (i32)magnitudo(FabricaActio*));
+    si (   per_titulum == NIHIL || in_catena == NIHIL || causae == NIHIL
+        || acervus     == NIHIL)
+    {
+        redde;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(c->actiones); i++)
+    {
+        FabricaActio* actio;
+
+        actio = (FabricaActio*)xar_obtinere(c->actiones, i);
+        (vacuum)tabula_dispersa_inserere(per_titulum, actio->titulus,
+            actio);
+    }
+    /* semina: actiones sententiarum RECENTIUM; clausura supra per arcus
+     * datorum (acervus per indicem - nihil extrahitur) */
+    per (i = ZEPHYRUM; i < xar_numerus(t->sententiae); i++)
+    {
+        Sententia* s;
+
+        s = (Sententia*)xar_obtinere(t->sententiae, i);
+        si (   s->iudicium.status == FABRICA_RECENS
+            && !tabula_dispersa_continet(in_catena, s->actio->titulus))
+        {
+            (vacuum)tabula_dispersa_inserere(in_catena,
+                s->actio->titulus,
+                s->actio);
+            *(FabricaActio**)xar_addere(acervus) = s->actio;
+        }
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(acervus); i++)
+    {
+        FabricaActio* actio;
+
+        actio = *(FabricaActio**)xar_obtinere(acervus, i);
+        per (j = ZEPHYRUM; actio->dependentiae != NIHIL
+             && j < xar_numerus(actio->dependentiae); j++)
+        {
+             vacuum* producens;
+             chorda  titulus;
+
+            titulus = *(chorda*)xar_obtinere(actio->dependentiae, j);
+            si (   !tabula_dispersa_continet(in_catena, titulus)
+                && tabula_dispersa_invenire(per_titulum, titulus,
+                       &producens))
+            {
+                (vacuum)tabula_dispersa_inserere(in_catena, titulus,
+                    producens);
+                *(FabricaActio**)xar_addere(acervus) =
+                    (FabricaActio*)producens;
+            }
+        }
+    }
+    /* ordine dependentiae (producens ante legentem): causa radicis
+     * propria aut hereditata */
+    per (i = ZEPHYRUM; i < xar_numerus(c->ordo); i++)
+    {
+           FabricaActio* actio;
+                 chorda* causa;
+                    b32  sententiam_habet;
+                    i32  k;
+
+        actio = *(FabricaActio**)xar_obtinere(c->ordo, i);
+        si (!tabula_dispersa_continet(in_catena, actio->titulus))
+        {
+            perge;
+        }
+        causa             = NIHIL;
+        sententiam_habet  = FALSUM;
+        per (k = ZEPHYRUM; k < xar_numerus(t->sententiae); k++)
+        {
+            Sententia* s;
+
+            s = (Sententia*)xar_obtinere(t->sententiae, k);
+            si (s->actio != actio)
+            {
+                perge;
+            }
+            sententiam_habet = VERUM;
+            si (   causa == NIHIL
+                && (   s->iudicium.status == FABRICA_STALUM
+                    || s->iudicium.status == FABRICA_IGNOTUM))
+            {
+                causa = _catenae_causa(c->piscina, actio->titulus,
+                    s->iudicium);
+            }
+        }
+        /* producens supra electa: exitus eius hic iudicantur */
+        per (k = ZEPHYRUM; !sententiam_habet
+             && k < xar_numerus(actio->exitus); k++)
+        {
+            FabricaExitus* exitus;
+          FabricaIudicium  iudicium;
+
+            exitus = (FabricaExitus*)xar_obtinere(actio->exitus, k);
+            si (!exitus->strategia->iudicatur)
+            {
+                perge;
+            }
+            iudicium = fabrica_iudicare(&c->sutura, actio, exitus,
+                t->plenus, c->piscina);
+            si (   iudicium.status == FABRICA_STALUM
+                || iudicium.status == FABRICA_IGNOTUM)
+            {
+                causa = _catenae_causa(c->piscina, actio->titulus,
+                    iudicium);
+                frange;
+            }
+        }
+        /* hereditas: producens non recens supra */
+        per (k = ZEPHYRUM; causa == NIHIL
+            && actio->dependentiae != NIHIL
+             && k < xar_numerus(actio->dependentiae); k++)
+        {
+            vacuum* supra;
+
+            si (   tabula_dispersa_invenire(causae,
+                    *(chorda*)xar_obtinere(actio->dependentiae, k),
+                    &supra)
+                && supra != NIHIL)
+            {
+                causa = (chorda*)supra;
+                per (j = ZEPHYRUM; j < xar_numerus(t->sententiae); j++)
+                {
+                    Sententia* s;
+
+                    s = (Sententia*)xar_obtinere(t->sententiae, j);
+                    si (   s->actio           == actio
+                        && s->iudicium.status == FABRICA_RECENS)
+                    {
+                        s->iudicium.status  = FABRICA_SUPRA;
+                        s->iudicium.causa   = chorda_concatenare(
+                            chorda_ex_literis("supra: ", c->piscina),
+                            *causa, c->piscina);
+                    }
+                }
+            }
+        }
+        (vacuum)tabula_dispersa_inserere(causae, actio->titulus, causa);
+    }
+}
+
 /* iudex ipse PRIMUS: si bin/fabrica stalum est, ceterae sententiae ab
  * eo scriptae suspectae sunt; deinde ceterae, numeratae */
 interior vacuum
@@ -1279,6 +1503,9 @@ _iudicare_imprimere (
                 frange;
             casus FABRICA_IGNOTUM:
                 t->ignota++;
+                frange;
+            casus FABRICA_SUPRA:
+                t->supra++;
                 frange;
             ordinarius:
                 t->non_iudicata++;
@@ -1359,7 +1586,7 @@ _iudicare_sanationem (
              i32  i;
              i32  k;
 
-    si (t->stala + t->ignota == 0)
+    si (t->stala + t->ignota + t->supra == 0)
     {
         redde;
     }
@@ -1374,7 +1601,8 @@ _iudicare_sanationem (
 
         s = (Sententia*)xar_obtinere(t->sententiae, i);
         si (   s->iudicium.status != FABRICA_STALUM
-            && s->iudicium.status != FABRICA_IGNOTUM)
+            && s->iudicium.status != FABRICA_IGNOTUM
+            && s->iudicium.status != FABRICA_SUPRA)
         {
             perge;
         }
@@ -1502,6 +1730,7 @@ _iudicare (
     _iudicare_praevidere(&t);
     _iudicare_iudices(&t);
     _iudicare_sententias(&t);
+    _iudicare_catenam(&t);
     si (xar_numerus(t.sententiae) == 0 && t.tacta)
     {
         printf(suturae_machina
@@ -1522,10 +1751,13 @@ _iudicare (
     _iudicare_composita(&t);
     _iudicare_sanationem(&t);
     orphana = _iudicare_orphana(&t);
+    /* SUMMA: FORTASSE in columna stalorum (sananda; columnae fixae -
+     * consumptores eas numerant) */
     si (suturae_machina)
     {
         printf("SUMMA\t%u\t%u\t%u\t%u\t%u\t%s\n",
-            (insignatus integer)t.recentia, (insignatus integer)t.stala,
+            (insignatus integer)t.recentia,
+            (insignatus integer)(t.stala + t.supra),
             (insignatus integer)t.ignota,
             (insignatus integer)t.non_iudicata,
             (insignatus integer)orphana, t.plenus ? "plenus" : "celer");
@@ -1533,13 +1765,19 @@ _iudicare (
     alioquin
     {
         printf("fabrica: %u recentia, %u stala, %u ignota, %u non "
-            "iudicata%s, %u orphana\n",
+            "iudicata%s, %u orphana",
             (insignatus integer)t.recentia, (insignatus integer)t.stala,
             (insignatus integer)t.ignota,
             (insignatus integer)t.non_iudicata,
             t.plenus ? "" : " (celer)", (insignatus integer)orphana);
+        si (t.supra > 0)
+        {
+            printf(", %u fortasse (producens supra non recens)",
+                (insignatus integer)t.supra);
+        }
+        putchar('\n');
     }
-    exitus = (t.stala + t.ignota > 0) ? I : ZEPHYRUM;
+    exitus = (t.stala + t.ignota + t.supra > 0) ? I : ZEPHYRUM;
     _cursum_finire(&t.cursus);
     redde exitus;
 }

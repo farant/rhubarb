@@ -712,6 +712,15 @@ _sectio_derivatio_cursoris (
         == NIHIL);
     CREDO_AEQUALIS_I32(xar_numerus(p->fontes_c), II);
     CREDO_AEQUALIS_I32(xar_numerus(p->ignota), ZEPHYRUM);
+    /* binaria quae porta currit (circulus commissionis II T2):
+     * exsecutio bin/fabrica sic; probatio '-x' bin/aedilis non
+     * (existentia, non vocatio) */
+    e = _exemplar(p->binaria, "bin/fabrica");
+    CREDO_NECESSE_NON_NIHIL(e);
+    CREDO_VERUM(chorda_continet(e->ratio, _ch(c,
+        "tools/credo_fumus.sh currit bin/fabrica")));
+    CREDO_VERUM(_exemplar(p->binaria, "bin/aedilis") == NIHIL);
+    CREDO_AEQUALIS_I32(xar_numerus(p->binaria), I);
 }
 
 /* VII. suita et vocationes (ludus_tessera -> tessera/...,
@@ -837,12 +846,13 @@ _sectio_derivatio_ignota (
         { "silva/compile_probationes.sh",
           "# <porta titulus=\"silva\""
           " currit=\"bin/folium tools/x.c tools/y.sh"
-          " bin/nullum\"/>\n" },
+          " bin/nullum tools/x_y.c\"/>\n" },
         { "silva/probationes/probatio_a.c", "" },
         { "tools/rete_fumus.sh",
           "# <porta manu causa=\"rete\"/>\n" },
         { "tools/folium.c", "" },
         { "tools/x.c", "" },
+        { "tools/x_y.c", "" },
         { "tools/y.sh", "" },
         { NIHIL, NIHIL }
     };
@@ -873,6 +883,16 @@ _sectio_derivatio_ignota (
     CREDO_NECESSE_NON_NIHIL(e);
     CREDO_AEQUALIS_I32((i32)e->genus, (i32)PORTAE_EXEMPLAR_VIA);
     CREDO_VERUM(_ignotum_habet(c, p->ignota, "currit bin/nullum"));
+    /* binaria (circulus commissionis II T2): 'currit bin/x' et
+     * 'currit tools/x.c' -> bin/x candidatus; scriptum non */
+    CREDO_NON_NIHIL(_exemplar(p->binaria, "bin/folium"));
+    CREDO_NON_NIHIL(_exemplar(p->binaria, "bin/x"));
+    CREDO_NON_NIHIL(_exemplar(p->binaria, "bin/nullum"));
+    /* 'tools/x_y.c' -> bin/x_y ET bin/x-y (briar_spectator.c ->
+     * bin/briar-spectator) */
+    CREDO_NON_NIHIL(_exemplar(p->binaria, "bin/x_y"));
+    CREDO_NON_NIHIL(_exemplar(p->binaria, "bin/x-y"));
+    CREDO_AEQUALIS_I32(xar_numerus(p->binaria), V);
     p = _opertura(o, "tools/rete_fumus.sh");
     CREDO_NECESSE_NON_NIHIL(p);
     CREDO_NON_NIHIL(_exemplar(p->exemplaria, "tools/rete_fumus.sh"));
@@ -1175,7 +1195,9 @@ _sectio_contractus (
                Xar* debita;
                Xar* intecta;
                Xar* recusationes;
+               Xar* binaria;
      PortaeDebitum* d;
+    PortaeExemplar* e_b;
     MundusPortarum  mundus;
       PortaeSutura  sutura;
             chorda  causa;
@@ -1183,20 +1205,30 @@ _sectio_contractus (
 
     CREDO_VERUM(chorda_aequalis_literis(portae_campum_effugere(_ch(c,
         "a\tb\nc\\d\re"), c->piscina), "a\\tb\\nc\\\\d\\re"));
-    debita = xar_creare(c->piscina, (i32)magnitudo(PortaeDebitum));
-    intecta = xar_creare(c->piscina, (i32)magnitudo(chorda));
+    debita   = xar_creare(c->piscina, (i32)magnitudo(PortaeDebitum));
+    intecta  = xar_creare(c->piscina, (i32)magnitudo(chorda));
+    /* BINARIUM (circulus commissionis II T2): binaria quae porta
+     * currit post DEBITUM suum; porta manu nulla (homo currit) */
+    binaria = xar_creare(c->piscina, (i32)magnitudo(PortaeExemplar));
+    e_b = (PortaeExemplar*)xar_addere(binaria);
+    e_b->exemplar = _ch(c, "bin/fabrica");
+    e_b->genus = PORTAE_EXEMPLAR_VIA;
+    e_b->ratio = _ch(c, "currit bin/fabrica");
     d = (PortaeDebitum*)xar_addere(debita);
     d->porta = _ch(c, "credo");
     d->causa = _ch(c, "x.c (a\tb)");
     d->manu = FALSUM;
+    d->binaria = binaria;
     d = (PortaeDebitum*)xar_addere(debita);
     d->porta = _ch(c, "tools/rete_fumus.sh");
     d->causa = _ch(c, "y");
     d->manu = VERUM;
+    d->binaria = binaria;
     *(chorda*)xar_addere(intecta) = _ch(c, "docs/x.md");
     CREDO_VERUM(chorda_aequalis_literis(portae_debita_scribere(debita,
         intecta, NIHIL, III, VERUM, c->piscina),
         "DEBITUM\tcredo\t0\tx.c (a\\tb)\n"
+        "BINARIUM\tcredo\tbin/fabrica\tcurrit bin/fabrica\n"
         "DEBITUM\ttools/rete_fumus.sh\t1\ty\n"
         "INTECTUM\tdocs/x.md\n"));
     CREDO_VERUM(chorda_aequalis_literis(portae_debita_scribere(debita,
@@ -1243,7 +1275,8 @@ _sectio_contractus (
     CREDO_VERUM(chorda_aequalis_literis(portae_debita_scribere(NIHIL,
         NIHIL, recusationes, ZEPHYRUM, VERUM, c->piscina),
         "RECUSATIO\ttools/credo_fumus.sh\t2\tattributum ignotum"
-        " 'tegti' in <porta> (titulus manu causa tegit currit)\n"
+        " 'tegti' in <porta> (titulus manu causa tegit currit"
+        " instrumentum genus)\n"
         "RECUSATIO\t\t0\tporta 'credo' (cursor tools/credo_fumus.sh)"
         " sine annotatione <porta titulus=\"...\"/>\n"
         "RECUSATIO\t\t0\tporta 'sera' (cursor tools/sera_fumus.sh)"
@@ -1330,10 +1363,19 @@ _sectio_possessio (
         "currit bin/acies: instrumentum portae 'aedilis'"));
     CREDO_NON_NIHIL(_exemplar(p->fontes_c, "tools/folium.c"));
     CREDO_AEQUALIS_I32(xar_numerus(p->ignota), ZEPHYRUM);
+    /* binaria: alienus instrumentum possessum TAMEN currit -> recens
+     * esse debet (circulus commissionis II T2) */
+    CREDO_NON_NIHIL(_exemplar(p->binaria, "bin/acies"));
+    CREDO_NON_NIHIL(_exemplar(p->binaria, "bin/folium"));
+    CREDO_AEQUALIS_I32(xar_numerus(p->binaria), II);
+    p = _opertura(o, "aedilis");
+    CREDO_NECESSE_NON_NIHIL(p);
+    CREDO_AEQUALIS_I32(xar_numerus(p->binaria), I);   /* semel */
     /* 'currit' expressum valet */
     p = _opertura(o, "credo");
     CREDO_NECESSE_NON_NIHIL(p);
     CREDO_NON_NIHIL(_exemplar(p->fontes_c, "tools/acies.c"));
+    CREDO_NON_NIHIL(_exemplar(p->binaria, "bin/acies"));
     CREDO_VERUM(chorda_continet(portae_declaratas_scribere(o, NIHIL,
         VERUM,
         c->piscina), _ch(c, "INSTRUMENTUM\taedilis\tbin/acies\n")));
@@ -1344,8 +1386,212 @@ _sectio_possessio (
         " (prior: aedilis)")));
 }
 
+/* XIII. genus (circulus commissionis II T4): 'praeiudicium' acceptum et
+ * per GENUS nominatum (machina et homo); 'probatio' expressum =
+ * ordinarium (nihil scribitur); valor alius recusatur nomine */
+interior vacuum
+_sectio_genus (
+    CredoContextus* c)
+{
+    hic_manens constans PlagulaFicta plagulae[] = {
+        { "tools/vexilla_fumus.sh",
+          "# <porta titulus=\"vexilla\" genus=\"praeiudicium\"/>\n" },
+        { "tools/credo_fumus.sh",
+          "# <porta titulus=\"credo\" genus=\"probatio\"/>\n" },
+        { NIHIL, NIHIL }
+    };
+    hic_manens constans character* constans paria[] = {
+        "vexilla=tools/vexilla_fumus.sh", "credo=tools/credo_fumus.sh",
+        NIHIL
+    };
+    hic_manens constans character* const credo_solum[] = {
+        "credo=tools/credo_fumus.sh", NIHIL
+    };
+                         Xar* o;
+                      chorda  t;
+                      chorda  h;
+                      chorda  causa;
+                         Xar* d;
+     constans PortaDeclarata* v;
+
+    _recusatio_probare(c,
+        "# <porta titulus=\"credo\" genus=\"praeiudicum\"/>\n",
+        credo_solum,
+        "tools/credo_fumus.sh:1: genus ignotum 'praeiudicum'");
+    d = _legere_mundum(c, plagulae, paria, &causa);
+    CREDO_NECESSE_NON_NIHIL(d);
+    v = _declaratio(d, "vexilla");
+    CREDO_NECESSE_NON_NIHIL(v);
+    CREDO_AEQUALIS_I32((i32)v->genus, (i32)PORTA_PRAEIUDICIUM);
+    v = _declaratio(d, "credo");
+    CREDO_NECESSE_NON_NIHIL(v);
+    CREDO_AEQUALIS_I32((i32)v->genus, (i32)PORTA_PROBATIO);
+    o = _derivare_mundum(c, plagulae, paria, NIHIL, NIHIL);
+    CREDO_NECESSE_NON_NIHIL(o);
+    t = portae_declaratas_scribere(o, NIHIL, VERUM, c->piscina);
+    CREDO_VERUM(chorda_continet(t, _ch(c,
+        "GENUS\tvexilla\tpraeiudicium\n")));
+    CREDO_VERUM(!chorda_continet(t, _ch(c, "GENUS\tcredo")));
+    h = portae_declaratas_scribere(o, NIHIL, FALSUM, c->piscina);
+    CREDO_VERUM(chorda_continet(h, _ch(c, "    genus praeiudicium\n")));
+}
+
+/* XIV. ordo portarum (circulus commissionis II T5): praeiudicia prima;
+ * intra genus mediana ultimorum X cursuum sanorum ascendens; sine
+ * historia prima; par = ordo nominum; cursus fracti et non cursi
+ * omissi; effusio machinae et hominis octetis */
+interior vacuum
+_sectio_ordo (
+    CredoContextus* c)
+{
+    hic_manens constans PlagulaFicta plagulae[] = {
+        { "tools/vexilla_fumus.sh",
+          "# <porta titulus=\"vexilla\" genus=\"praeiudicium\"/>\n" },
+        { "tools/credo_fumus.sh", "# <porta titulus=\"credo\"/>\n" },
+        { "tools/sera_fumus.sh", "# <porta titulus=\"sera\"/>\n" },
+        { NIHIL, NIHIL }
+    };
+    hic_manens constans character* constans paria[] = {
+        "vexilla=tools/vexilla_fumus.sh", "credo=tools/credo_fumus.sh",
+        "sera=tools/sera_fumus.sh", NIHIL
+    };
+    /* credo: duo cursus antiqui ingentes (extra ultimos X) + X cursus
+     * 20 s + fractus 1 s + non cursus 1 s; sera: 5 s, 7 s, 9 s;
+     * vexilla: 100 s (praeiudicium tamen primum); aequa: 7 s (par
+     * serae, post eam ordine nominum) */
+    hic_manens constans character tempora_t[] =
+        "t\tporta\tcredo\t900.0\t1\t0\n"
+        "t\tporta\tcredo\t900.0\t1\t0\n"
+        "t\tporta\tcredo\t20.0\t1\t0\n" "t\tporta\tcredo\t20.0\t1\t0\n"
+        "t\tporta\tcredo\t20.0\t1\t0\n" "t\tporta\tcredo\t20.0\t1\t0\n"
+        "t\tporta\tcredo\t20.0\t1\t0\n" "t\tporta\tcredo\t20.0\t1\t0\n"
+        "t\tporta\tcredo\t20.0\t1\t0\n" "t\tporta\tcredo\t20.0\t1\t0\n"
+        "t\tporta\tcredo\t20.0\t1\t0\n" "t\tporta\tcredo\t20.0\t1\t0\n"
+        "t\tporta\tcredo\t1.0\t0\t1\n"
+        "t\tporta\tcredo\t1.0\t0\t0\n"
+        "t\tphasis\tforma\t1.0\t\t\n"
+        "t\tporta\tsera\t5.0\t1\t0\n"
+        "t\tporta\tsera\t9.25\t1\t0\n"
+        "t\tporta\tsera\t7.0\t1\t0\n"
+        "t\tporta\taequa\t7.0\t1\t0\n"
+        "t\tporta\tvexilla\t100.0\t1\t0\n";
+                         Xar* d;
+                         Xar* nomina;
+                         Xar* o;
+                      chorda  causa;
+         constans PortaeOrdo* p;
+
+    d = _legere_mundum(c, plagulae, paria, &causa);
+    CREDO_NECESSE_NON_NIHIL(d);
+    nomina = xar_creare(c->piscina, (i32)magnitudo(chorda));
+    *(chorda*)xar_addere(nomina) = _ch(c, "credo");
+    *(chorda*)xar_addere(nomina) = _ch(c, "sera");
+    *(chorda*)xar_addere(nomina) = _ch(c, "aequa");
+    *(chorda*)xar_addere(nomina) = _ch(c, "nova");
+    *(chorda*)xar_addere(nomina) = _ch(c, "vexilla");
+    o = portae_ordinare(d, nomina, _ch(c, tempora_t), c->piscina);
+    CREDO_NECESSE_NON_NIHIL(o);
+    CREDO_AEQUALIS_I32(xar_numerus(o), V);
+    CREDO_VERUM(chorda_aequalis_literis(portae_ordinem_scribere(o,
+        VERUM,
+        c->piscina),
+        "ORDO\tvexilla\tpraeiudicium\t100000\tcommissio\n"
+        "ORDO\tnova\tprobatio\t-\tcommissio\n"
+        "ORDO\tsera\tprobatio\t7000\tcommissio\n"
+        "ORDO\taequa\tprobatio\t7000\tcommissio\n"
+        "ORDO\tcredo\tprobatio\t20000\tcommissio\n"));
+    p = (constans PortaeOrdo*)xar_obtinere(o, IV);
+    CREDO_AEQUALIS_I32(p->cursus, X);   /* ultimi X, fracti omissi */
+    CREDO_VERUM(chorda_aequalis_literis(portae_ordinem_scribere(o,
+        FALSUM, c->piscina),
+        "ordo portarum:\n"
+        "  praeiudicia: vexilla 100 s\n"
+        "  probationes: nova (nova), sera 7 s, aequa 7 s, credo 20 s\n"));
+    /* sine historia omnino: ordo nominum, genus servatum */
+    o = portae_ordinare(d, nomina, _ch(c, ""), c->piscina);
+    CREDO_NECESSE_NON_NIHIL(o);
+    CREDO_VERUM(chorda_aequalis_literis(portae_ordinem_scribere(o,
+        VERUM,
+        c->piscina),
+        "ORDO\tvexilla\tpraeiudicium\t-\tcommissio\n"
+        "ORDO\tcredo\tprobatio\t-\tcommissio\n"
+        "ORDO\tsera\tprobatio\t-\tcommissio\n"
+        "ORDO\taequa\tprobatio\t-\tcommissio\n"
+        "ORDO\tnova\tprobatio\t-\tcommissio\n"));
+}
+
+/* XV. gradus (gradus-portarum T1): 'fusio' acceptum et per GRADUS
+ * nominatum (machina et homo); 'commissio' expressum = ordinarium
+ * (nihil scribitur); valor alius recusatur nomine; genus et gradus
+ * independentes; ordo gradum fert (campus quintus, ' [fusio]') */
+interior vacuum
+_sectio_gradus (
+    CredoContextus* c)
+{
+    hic_manens constans PlagulaFicta plagulae[] = {
+        { "tools/vexilla_fumus.sh",
+          "# <porta titulus=\"vexilla\" genus=\"praeiudicium\""
+          " gradus=\"fusio\"/>\n" },
+        { "tools/credo_fumus.sh",
+          "# <porta titulus=\"credo\" gradus=\"commissio\"/>\n" },
+        { NIHIL, NIHIL }
+    };
+    hic_manens constans character* constans paria[] = {
+        "vexilla=tools/vexilla_fumus.sh", "credo=tools/credo_fumus.sh",
+        NIHIL
+    };
+    hic_manens constans character* const credo_solum[] = {
+        "credo=tools/credo_fumus.sh", NIHIL
+    };
+                         Xar* o;
+                         Xar* nomina;
+                      chorda  t;
+                      chorda  h;
+                      chorda  causa;
+                         Xar* d;
+     constans PortaDeclarata* v;
+
+    _recusatio_probare(c,
+        "# <porta titulus=\"credo\" gradus=\"fussio\"/>\n",
+        credo_solum,
+        "tools/credo_fumus.sh:1: gradus ignotus 'fussio'");
+    d = _legere_mundum(c, plagulae, paria, &causa);
+    CREDO_NECESSE_NON_NIHIL(d);
+    v = _declaratio(d, "vexilla");
+    CREDO_NECESSE_NON_NIHIL(v);
+    CREDO_AEQUALIS_I32((i32)v->gradus, (i32)PORTA_FUSIO);
+    CREDO_AEQUALIS_I32((i32)v->genus, (i32)PORTA_PRAEIUDICIUM);
+    v = _declaratio(d, "credo");
+    CREDO_NECESSE_NON_NIHIL(v);
+    CREDO_AEQUALIS_I32((i32)v->gradus, (i32)PORTA_COMMISSIO);
+    o = _derivare_mundum(c, plagulae, paria, NIHIL, NIHIL);
+    CREDO_NECESSE_NON_NIHIL(o);
+    t = portae_declaratas_scribere(o, NIHIL, VERUM, c->piscina);
+    CREDO_VERUM(chorda_continet(t, _ch(c, "GRADUS\tvexilla\tfusio\n")));
+    CREDO_VERUM(!chorda_continet(t, _ch(c, "GRADUS\tcredo")));
+    h = portae_declaratas_scribere(o, NIHIL, FALSUM, c->piscina);
+    CREDO_VERUM(chorda_continet(h, _ch(c, "    gradus fusio\n")));
+    nomina = xar_creare(c->piscina, (i32)magnitudo(chorda));
+    *(chorda*)xar_addere(nomina) = _ch(c, "credo");
+    *(chorda*)xar_addere(nomina) = _ch(c, "vexilla");
+    o = portae_ordinare(d, nomina, _ch(c, ""), c->piscina);
+    CREDO_NECESSE_NON_NIHIL(o);
+    CREDO_VERUM(chorda_aequalis_literis(portae_ordinem_scribere(o,
+        VERUM, c->piscina),
+        "ORDO\tvexilla\tpraeiudicium\t-\tfusio\n"
+        "ORDO\tcredo\tprobatio\t-\tcommissio\n"));
+    CREDO_VERUM(chorda_aequalis_literis(portae_ordinem_scribere(o,
+        FALSUM, c->piscina),
+        "ordo portarum:\n"
+        "  praeiudicia: vexilla [fusio] (nova)\n"
+        "  probationes: credo (nova)\n"));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "lectio sana", _sectio_lectio, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "genus portae", _sectio_genus, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "ordo portarum", _sectio_ordo, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "gradus portae", _sectio_gradus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "chordae et annotationes aliae", _sectio_non_commentaria, NIHIL,
       NIHIL, NIHIL, NIHIL },
     { "recusationes", _sectio_recusationes, NIHIL, NIHIL, NIHIL,

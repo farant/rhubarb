@@ -547,6 +547,163 @@ _summas_ordinare (
     redde ordines;
 }
 
+/* segmentum ultimum tituli: post '/', '#' aut ':' ultimum */
+interior chorda
+_segmentum_ultimum (
+    chorda titulus)
+{
+    s32 i;
+
+    per (i = (s32)titulus.mensura - I; i >= ZEPHYRUM; i--)
+    {
+        character c = (character)titulus.datum[i];
+
+        si (c == '/' || c == '#' || c == ':')
+        {
+            redde chorda_sectio(titulus, (i32)(i + I), titulus.mensura);
+        }
+    }
+    redde titulus;
+}
+
+interior b32
+_titulus_similis (
+    chorda titulus,
+    chorda quaesitum)
+{
+    chorda segmentum = _segmentum_ultimum(quaesitum);
+
+    redde chorda_continet(titulus, quaesitum)
+           || (   segmentum.mensura > ZEPHYRUM
+               && chorda_aequalis(_segmentum_ultimum(titulus),
+               segmentum));
+}
+
+/* numerus descendens, deinde titulus (ordo stabilis) */
+interior integer
+_similis_descendens (
+    constans vacuum* a,
+    constans vacuum* b)
+{
+    constans CursusSumma* x = (constans CursusSumma*)a;
+    constans CursusSumma* y = (constans CursusSumma*)b;
+
+    si (x->numerus != y->numerus)
+    {
+        redde (x->numerus < y->numerus) ? I : -I;
+    }
+    redde (integer)chorda_comparare(x->titulus, y->titulus);
+}
+
+Xar*
+cursus_quaerere_similes (
+      constans CursusIndex* index,
+    constans CursusFiltrum* filtrum,
+                       i32  maximi,
+                       i32* noti_out,
+                   Piscina* piscina)
+{
+      CursusFiltrum  solum_titulus;
+             chorda  quaesitum;
+                Xar* similes;
+                Xar* ordines;
+     TabulaDispersa* per_titulum;
+        CursusSumma* tabula;
+                i32  k;
+                i32  n;
+
+    si (noti_out != NIHIL)
+    {
+        *noti_out = ZEPHYRUM;
+    }
+    si (index == NIHIL || filtrum == NIHIL || piscina == NIHIL)
+    {
+        redde NIHIL;
+    }
+    quaesitum = filtrum->titulus.mensura > ZEPHYRUM ? filtrum->titulus
+        : filtrum->praefixum;
+    si (quaesitum.mensura == ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+    memset(&solum_titulus, ZEPHYRUM, magnitudo(CursusFiltrum));
+    solum_titulus.titulus = filtrum->titulus;
+    solum_titulus.praefixum = filtrum->praefixum;
+    similes = xar_creare(piscina, (i32)magnitudo(CursusSumma));
+    ordines = xar_creare(piscina, (i32)magnitudo(CursusSumma));
+    per_titulum = tabula_dispersa_creare_chorda(piscina, (i32)CXXVIII);
+    si (similes == NIHIL || ordines == NIHIL || per_titulum == NIHIL)
+    {
+        redde NIHIL;
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(index->cursus); k++)
+    {
+        constans Cursus* c =
+            (constans Cursus*)xar_obtinere(index->cursus, k);
+                  vacuum* locus = NIHIL;
+             CursusSumma* s;
+
+        si (_congruit(c, &solum_titulus))
+        {
+            si (noti_out != NIHIL)
+            {
+                (*noti_out)++;
+            }
+            perge;
+        }
+        si (!_titulus_similis(c->initium.titulus, quaesitum))
+        {
+            perge;
+        }
+        si (tabula_dispersa_invenire(per_titulum, c->initium.titulus,
+                &locus))
+        {
+            s = (CursusSumma*)xar_obtinere(similes,
+                (i32)(memoriae_index)locus - I);
+        }
+        alioquin
+        {
+            s = (CursusSumma*)xar_addere(similes);
+            si (s == NIHIL)
+            {
+                redde NIHIL;
+            }
+            memset(s, ZEPHYRUM, magnitudo(CursusSumma));
+            s->titulus = c->initium.titulus;
+            (vacuum)tabula_dispersa_inserere(per_titulum,
+                c->initium.titulus,
+                (vacuum*)(memoriae_index)xar_numerus(similes));
+        }
+        s->numerus++;
+    }
+    si (noti_out != NIHIL && *noti_out > ZEPHYRUM)
+    {
+        redde ordines;     /* titulus notus: filtra cetera exclusisse */
+    }
+    n = (i32)xar_numerus(similes);
+    si (n == ZEPHYRUM)
+    {
+        redde ordines;
+    }
+    tabula = (CursusSumma*)piscina_allocare(piscina,
+        (memoriae_index)n * magnitudo(CursusSumma));
+    si (tabula == NIHIL)
+    {
+        redde NIHIL;
+    }
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        tabula[k] = *(CursusSumma*)xar_obtinere(similes, k);
+    }
+    qsort(tabula, (size_t)n, magnitudo(CursusSumma),
+        _similis_descendens);
+    per (k = ZEPHYRUM; k < n && (maximi <= ZEPHYRUM || k < maximi); k++)
+    {
+        *(CursusSumma*)xar_addere(ordines) = tabula[k];
+    }
+    redde ordines;
+}
+
 Xar*
 cursus_quaerere_summa (
        constans CursusIndex* index,

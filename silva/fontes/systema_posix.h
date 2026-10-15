@@ -124,11 +124,13 @@ struct stat {
 #define st_mtime st_mtimespec.tv_sec
 #define st_ctime st_ctimespec.tv_sec
 
+/* <gradus titulus="stat" genus="canalis" pro="lectiones_stat (eadem forma), filum_status, filum_existit, filum_mensura"/> (codex 96) */
 int stat(const char* via, struct stat* sedes);
 int mkdir(const char* via, mode_t modus);
 int chmod(const char* via, mode_t modus);
 /* lstat: nexum IPSUM describit, non destinationem
  * (filum_arborem_delere, 2026-09-14) */
+/* <gradus titulus="lstat" genus="canalis" pro="filum_status"/> (codex 96) */
 int lstat(const char* via, struct stat* sedes);
 /* fstatat: via ad fossam directorii relativa (AT_FDCWD = cwd) -
  * oraculum effectuum eam interponit (effectus T5, 2026-10-05) */
@@ -186,6 +188,7 @@ pid_t   setsid(void);
  * et faccessat (sys/unistd.h, per unistd.h) exsistentiam probant */
 int     execve(const char* plagula, char* const argumenta[],
                char* const ambitus[]);
+/* <gradus titulus="access" genus="canalis" pro="via_existit, filum_existit"/> (codex 96) */
 int     access(const char* via, int modus);
 int     faccessat(int fossa, const char* via, int modus, int vexilla);
 unsigned int alarm(unsigned int secunda);
@@ -242,6 +245,7 @@ int WTERMSIG(int status);
 #define FD_CLOEXEC 1
 
 int fcntl(int fossa, int mandatum, ...);
+/* <gradus titulus="open" genus="canalis" pro="filum_lector_aperire, filum_scriptor_aperire"/> (codex 96) */
 int open(const char* via, int vexilla, ...);
 /* openat + AT_FDCWD (Darwin -2): oraculum effectuum (effectus T5,
  * 2026-10-05); valor per auspex_posix certificatur */
@@ -434,6 +438,7 @@ struct dirent {
 
 #define DT_DIR 4
 
+/* <gradus titulus="opendir" genus="canalis" pro="iter_directoria"/> (codex 96) */
 DIR*           opendir(const char* via);
 struct dirent* readdir(DIR* dir);
 int            closedir(DIR* dir);

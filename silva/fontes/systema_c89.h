@@ -274,10 +274,15 @@ fclose (
 int
 fflush (
     FILE* fluxus);
+/* canalis lectionum (codex 96): vocatio cruda liber lectionum non
+ * videt - plagulae per filum (include/filum.h) leguntur et
+ * scribuntur. */
+/* <gradus titulus="fopen" genus="canalis" pro="lectiones_fopen (eadem forma), filum_legere_totum, filum_lector_aperire, filum_scriptor_aperire"/> */
 FILE*
 fopen (
     const char* via,
     const char* modus);
+/* <gradus titulus="freopen" genus="canalis" pro="lectiones_fopen, filum_lector_aperire, filum_scriptor_aperire"/> */
 FILE*
 freopen (
     const char* via,

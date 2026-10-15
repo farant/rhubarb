@@ -2103,14 +2103,14 @@ def _porta_per_gradum(nomen, vis=False, auditus=None):
 
 
 def _portae_verdictorum():
-    """nomina portarum quarum actio 'iudicium' declarata est: tituli
-    'porta_<nomen>' genere iudicium in aedificatio.stml subsystematum
-    (fabrica.stml). Lectio textus, non iudicium - iudex verus bin/fabrica
-    manet; memoratur per processum."""
+    """nomina portarum (set) quarum actio 'iudicium' declarata est:
+    tituli 'porta_<nomen>' genere iudicium in aedificatio.stml
+    subsystematum (fabrica.stml). Lectio textus, non iudicium - iudex
+    verus bin/fabrica manet; memoratur per processum."""
     global _VERDICTA_MEMORATA
     if _VERDICTA_MEMORATA is not None:
         return _VERDICTA_MEMORATA
-    nomina = {}
+    nomina = set()
     try:
         radix_stml = open(os.path.join(RADIX, 'fabrica.stml')).read()
     except (IOError, OSError):
@@ -2120,18 +2120,11 @@ def _portae_verdictorum():
             t = open(os.path.join(RADIX, sub, 'aedificatio.stml')).read()
         except (IOError, OSError):
             continue
-        for m in re.finditer(r'<actio titulus="porta_([^"]+)" genus="iudicium"'
-                             r'(.*?)</actio>', t, re.S):
-            # ingressus sub build/: artificia actionum NON commissa, in
-            # porta() ante iudicium realizanda (spec 3 XIII v5). Solum
-            # FASCICULI - artificia quae 'sanare' nominat; manifesta
-            # (directorium vestigii alieni) per fontes suos sigillantur
-            # et 'sanare' ea nominare nequit (exitus 2; plan 5 T5b)
-            nomina[m.group(1)] = [
-                v for g, v in re.findall(
-                    r'<ingressus genus="([^"]+)" via="([^"]+)"', m.group(2))
-                if g == 'fasciculus'
-                and (v.startswith('build/') or '/build/' in v)]
+        # PRAEVIA (ingressus build/ ante iudicium sanandi, spec 3 XIII v5)
+        # deleta 2026-10-15: iudicare ipse catenam iudicat (FORTASSE,
+        # parcum 190VQB) et praevia vacua erant post portas ad gradus
+        nomina.update(re.findall(
+            r'<actio titulus="porta_([^"]+)" genus="iudicium"', t))
     _VERDICTA_MEMORATA = nomina
     return nomina
 
@@ -2230,11 +2223,13 @@ def _auditum_commissionis(nomen):
 
 
 def _porta_per_fabricam(nomen, vis=False, auditus=None):
-    """porta per actionem 'iudicium' fabricae; None = via cruda. SEMPER
-    'bin/fabrica sanare <verdictum>' (spec 3 par. XIII v5): sanare
-    dependentias (toml_corpus, aurum) ordine realizat, DEINDE verdictum
-    iudicat - 'iudicare' solum verdictum iudicaret et indicem stalum
-    crederet. Nulla linea 'SANATUM porta_<nomen>' + exitus 0 + verdictum
+    """porta per actionem 'iudicium' fabricae; None = via cruda.
+    'iudicare' verdictum CUM CATENA iudicat (parcum 190VQB, a12bd04b):
+    ingressus build/ stalus supra = FORTASSE, non RECENS - tum 'sanare
+    <verdictum>' dependentias ordine realizat, DEINDE verdictum iudicat
+    (olim 'praevia' ex STML Pythonice lecta ante iudicium sanabantur,
+    gradus unus solum). Limes: celer generatores non memorabiles non
+    iudicat ('regeneratio omissa') - per eos catena non transit. Nulla linea 'SANATUM porta_<nomen>' + exitus 0 + verdictum
     praesens = transitus servatus (nihil cursum). FABRICA_AUDITUS=N:
     '-audit' - transitus RECENS tamen currit; defectus = AUDITUM DISCORS
     (fracta, lectiones novae nominatae)."""
@@ -2253,16 +2248,8 @@ def _porta_per_fabricam(nomen, vis=False, auditus=None):
             pass
     if auditus is None:
         auditus = bool(os.environ.get('FABRICA_AUDITUS'))
-    # I. ingressus build/ (artificia non commissa: index corporis, aurum)
-    # realizantur - aliter iudicium contra artificium stalum (v5)
-    praevia = _portae_verdictorum()[nomen]
-    if praevia:
-        rp = _curre([FABRICA_BIN, 'sanare'] + praevia)
-        if rp.returncode == 2:
-            print('porta %s: fabrica sanare nequit (exitus 2) - via cruda'
-                  % nomen)
-            return None
-    # II. iudicium solum (vile): RECENS = transitus servatus
+    # I. iudicium solum (vile): RECENS = transitus servatus (catena
+    # inclusa: producens supra non recens = FORTASSE -> II)
     if not vis and not auditus:
         rj = _curre([FABRICA_BIN, 'iudicare', '-omnia', '-machina', via])
         if any(o[0] == 'IUDICIUM' and len(o) >= 3 and o[1] == 'RECENS'
@@ -2276,7 +2263,7 @@ def _porta_per_fabricam(nomen, vis=False, auditus=None):
             _tempus_notare('porta', nomen + ' (transitus)', initium, True, 0)
             return Porta(nomen, True, True, '%s [transitus servatus, ante %s]'
                          % (compendium, _aetas(aetas)), 0, '', [], False)
-    # III. sanare: porta currit (auditus: etiam RECENS) et servatur
+    # II. sanare: porta currit (auditus: etiam RECENS) et servatur
     argv = ([FABRICA_BIN, 'sanare', '-machina']
             + (['-audit'] if auditus else []) + [via])
     r = _curre(argv)
@@ -2533,7 +2520,7 @@ def portae_tabula():
     return '\n'.join(lineae) + '\n'
 
 
-def _portae_fabricae(modus, viae, machina):
+def _portae_fabricae(modus, viae, machina, normare=True):
     """bin/fabrica portae <modus> [-machina] -portae <registrum> <viae>
     -> effusio; exitus non 0 (RECUSATIO declarationum, fabrica absens aut
     fracta) = SilvaError cum effusione tota"""
@@ -2543,7 +2530,8 @@ def _portae_fabricae(modus, viae, machina):
     try:
         argv = ([FABRICA_BIN, 'portae', modus]
                 + (['-machina'] if machina else [])
-                + ['-portae', t.name] + [_via_normata(v) for v in viae])
+                + ['-portae', t.name]
+                + [_via_normata(v) if normare else v for v in viae])
         try:
             r = _curre(argv)
         except OSError as ex:
@@ -2557,20 +2545,39 @@ def _portae_fabricae(modus, viae, machina):
     return r.stdout
 
 
-def portae_debitae(viae):
-    """(debita, intecta): Debitum(porta, causa, manu) ex lineis DEBITUM,
-    viae nullius portae ex INTECTUM - ordine fabricae (registrum, deinde
-    manu). Linea extra contractum = SilvaError (numquam tacite)."""
-    debita, intecta = [], []
+def _portae_debitae_plenae(viae):
+    """(debita, intecta, binaria): ut portae_debitae, et binaria
+    {porta: [(bin/x, ratio)]} ex lineis BINARIUM (circulus commissionis
+    II T2: binaria arboris quae porta debita currit - praevolatus ea
+    sanat). Linea extra contractum = SilvaError (numquam tacite)."""
+    debita, intecta, binaria = [], [], {}
     for linea in _portae_fabricae('debitae', viae, True).splitlines():
         f = [_ineffugere(x) for x in linea.split('\t')]
         if f[0] == 'DEBITUM' and len(f) == 4:
             debita.append(Debitum(f[1], f[3], f[2] == '1'))
         elif f[0] == 'INTECTUM' and len(f) == 2:
             intecta.append(f[1])
+        elif f[0] == 'BINARIUM' and len(f) == 4:
+            binaria.setdefault(f[1], []).append((f[2], f[3]))
         else:
             raise SilvaError('bin/fabrica portae: linea extra contractum:'
                              ' %r' % linea)
+    return debita, intecta, binaria
+
+
+# binaria vocationis ULTIMAE portae_debitae: (viae, {porta: [...]}) -
+# _portae_debitas_addere ea legit si viae eaedem (portae_debitae ficta
+# probationum nihil ponit -> nihil sanatur)
+_BINARIA_ULTIMA = (None, {})
+
+
+def portae_debitae(viae):
+    """(debita, intecta): Debitum(porta, causa, manu) ex lineis DEBITUM,
+    viae nullius portae ex INTECTUM - ordine fabricae (registrum, deinde
+    manu). Binaria (BINARIUM) in _BINARIA_ULTIMA servantur."""
+    global _BINARIA_ULTIMA
+    debita, intecta, binaria = _portae_debitae_plenae(viae)
+    _BINARIA_ULTIMA = (tuple(viae), binaria)
     return debita, intecta
 
 
@@ -2612,7 +2619,8 @@ def _excusatas_praeiudicare(excusatae, portae, sine_debitis):
     return causae
 
 
-def _portae_debitas_addere(viae, portae, excusatae=None):
+def _portae_debitas_addere(viae, portae, excusatae=None, binaria_out=None,
+                           additae_out=None):
     """portae petitae + DEBITAE absentes (portae_debitae), ordine: petitae,
     deinde additae ordine PORTAE. Linea una per additam cum causa sua;
     debitae manu nominantur, numquam curruntur. excusatae {porta: causa}
@@ -2621,7 +2629,14 @@ def _portae_debitas_addere(viae, portae, excusatae=None):
     (nihil excusandum - numquam tacite). Debita incomputabilia
     (RECUSATIO, bin/fabrica fractum) = MONITUM et petitae solae (monet,
     numquam obstat: machina haec
-    commissionem nunquam impedit). Decretum 01M38VGAK8."""
+    commissionem nunquam impedit). Decretum 01M38VGAK8. binaria_out
+    (dict, circulus commissionis II T2) impletur {porta: [(bin, ratio)]}
+    portarum quae current (petitae et additae, non manu nec excusatae).
+    additae_out (dict, gradus-portarum T3) impletur {porta: causa}
+    additarum (non petitarum) - 'porta debita addita' tunc NON hic
+    imprimitur sed a _portas_ordinare, post divisionem graduum."""
+    global _BINARIA_ULTIMA
+    _BINARIA_ULTIMA = (None, {})
     try:
         debita, _ = portae_debitae(viae)
     except SilvaError as ex:
@@ -2651,9 +2666,234 @@ def _portae_debitas_addere(viae, portae, excusatae=None):
             print('porta debita EXCUSATA: %s - %s' % (d.porta,
                                                       excusatae[d.porta]))
         elif d.porta not in petitae:
-            print('porta debita addita: %s - %s' % (d.porta, d.causa))
+            if additae_out is None:
+                print('porta debita addita: %s - %s' % (d.porta, d.causa))
+            else:
+                additae_out[d.porta] = d.causa
             fructus.append(d.porta)
+    binaria = (_BINARIA_ULTIMA[1] if _BINARIA_ULTIMA[0] == tuple(viae)
+               else {})
+    if binaria_out is not None:
+        currentes = set(petitae) | set(p for p in fructus if isinstance(p, str))
+        for porta, bina in binaria.items():
+            if porta in currentes and porta not in excusatae:
+                binaria_out[porta] = list(bina)
     return fructus
+
+
+def _portas_ordinare(portae, additae=None, plena=True, recepta=False):
+    """ORDO PORTARUM (circulus commissionis II T5): (portae ordinatae,
+    genera {nomen: 'praeiudicium'|'probatio'}, gradus {nomen:
+    'commissio'|'fusio'} - gradus-portarum T1, dilatae {porta: causa})
+    per 'bin/fabrica portae
+    ordo -machina' (C: genus ex annotatione, mediana ultimorum X cursuum
+    sanorum ex tempora.tsv, sine historia primae). Recepta umbrae (.json)
+    prima manent ordine suo; ordo stabilis. Fractura quaevis = MONITUM et
+    ordo datus (numquam obstat).
+    GRADUS (gradus-portarum T3, spec §II): additae {porta: causa} = portae
+    debitae a commissione additae (non petitae). Nisi plena, additae
+    gradus 'fusio' DILATANTUR: e portis tolluntur, linea 'porta debita
+    DILATA ad fusionem', in 'dilatae' redduntur (debitum rami post
+    commissionem). Additae ceterae: 'porta debita addita'. Petitae
+    numquam dilatantur. Ordo incomputabilis = nihil dilatatum (plus
+    currit, numquam minus). Deinde 'aestimatio portarum' ex medianis;
+    supra AESTIMATIO_MONITUM s = MONITUM (non recusatio). recepta=True
+    (commissio): porta cuius omnes petitiones RECEPTUM VIVUM sanum habent
+    non iterum currit (_portas_currere) - in aestimatione 0 s, in ordine
+    '[receptum]' (parcum BEN87: mos agentis 'porta ipse, deinde
+    portae=[X]' MONITUM falsum semper excitabat, 478 s pro ~1 min)."""
+    additae = additae or {}
+
+    def _additas_nuntiare(dilatae):
+        for n, causa in additae.items():
+            if n not in dilatae:
+                print('porta debita addita: %s - %s' % (n, causa))
+    receptae = [p for p in portae if isinstance(p, str) and p.endswith('.json')]
+    ceterae = [p for p in portae
+               if not (isinstance(p, str) and p.endswith('.json'))]
+    nomina = []
+    for p in ceterae:
+        n = p if isinstance(p, str) else p[0]
+        if n not in nomina:
+            nomina.append(n)
+    if not nomina or not os.path.exists(FABRICA_BIN):
+        _additas_nuntiare({})
+        return list(portae), {}, {}, {}
+    try:
+        textus = _portae_fabricae('ordo', nomina, True, normare=False)
+    except SilvaError as ex:
+        print('MONITUM: ordo portarum computari non potuit (%s) - ordo'
+              ' datus' % str(ex).splitlines()[0])
+        _additas_nuntiare({})
+        return list(portae), {}, {}, {}
+    ordo, genera, sumptus, gradus = [], {}, {}, {}
+    for linea in textus.splitlines():
+        f = linea.split('\t')
+        if (f[0] == 'ORDO' and len(f) == 5
+                and f[4] in ('commissio', 'fusio')):
+            ordo.append(f[1])
+            genera[f[1]] = f[2]
+            sumptus[f[1]] = f[3]
+            gradus[f[1]] = f[4]
+        else:
+            print('MONITUM: ordo portarum: linea extra contractum %r - ordo'
+                  ' datus' % linea)
+            _additas_nuntiare({})
+            return list(portae), {}, {}, {}
+    if sorted(ordo) != sorted(nomina):
+        print('MONITUM: ordo portarum nomina non reddidit omnia - ordo datus')
+        _additas_nuntiare({})
+        return list(portae), {}, {}, {}
+    dilatae = {}
+    if not plena:
+        for n, causa in additae.items():
+            if gradus.get(n) == 'fusio':
+                dilatae[n] = causa
+    _additas_nuntiare(dilatae)
+    for n in ordo:
+        if n in dilatae:
+            print('porta debita DILATA ad fusionem: %s - %s' % (n, dilatae[n]))
+    if dilatae:
+        ordo = [n for n in ordo if n not in dilatae]
+        ceterae = [p for p in ceterae
+                   if (p if isinstance(p, str) else p[0]) not in dilatae]
+    positio = dict((n, i) for i, n in enumerate(ordo))
+    ceterae.sort(key=lambda p: positio[p if isinstance(p, str) else p[0]])
+    # recepta viva (BEN87): eadem probatio ac _portas_currere (sana,
+    # sigillum arboris idem) - omnes petitiones nominis receptae
+    receptae_vivae = set()
+    if recepta:
+        petitiones = {}
+        for p in ceterae:
+            n, filtrum = (p, None) if isinstance(p, str) else p
+            petitiones.setdefault(n, []).append(filtrum)
+        for n, filtra in petitiones.items():
+            vivae = [receptum_vivum(n, filtrum) for filtrum in filtra]
+            if all(f is not None and f.sana for f in vivae):
+                receptae_vivae.add(n)
+
+    def _pars(g):
+        return ', '.join('%s %s%s' % (n, ('(nova)' if sumptus[n] == '-' else
+                                          '%d s' % ((int(sumptus[n]) + 500) // 1000)),
+                                      ' [receptum]' if n in receptae_vivae else '')
+                         for n in ordo if genera[n] == g) or '(nullae)'
+    print('ordo portarum: praeiudicia: %s | probationes: %s'
+          % (_pars('praeiudicium'), _pars('probatio')))
+    currendae = [n for n in ordo if n not in receptae_vivae]
+    notae = [int(sumptus[n]) for n in currendae if sumptus[n] != '-']
+    secundae = (sum(notae) + 500) // 1000
+    ignotae = len(currendae) - len(notae)
+    print('aestimatio portarum: %d s%s%s%s%s' % (
+        secundae, ', %d sine historia' % ignotae if ignotae else '',
+        '; %d cum recepto vivo (~0 s)' % len(receptae_vivae)
+        if receptae_vivae else '',
+        '; dilatae ad fusionem: %d' % len(dilatae) if dilatae else '',
+        ' (plena: gradus ambo)' if plena else ''))
+    # plena (commissio plena, fusio_probare) gradus ambo vult: longa recte
+    if secundae > AESTIMATIO_MONITUM and not plena:
+        print('MONITUM: aestimatio portarum %d s > %d s (gradus-portarum'
+              ' §II: commissio ~V min summum) - portae gradus commissionis'
+              ' nimis multae aut lentae; annotatio gradus="fusio" consideranda'
+              % (secundae, AESTIMATIO_MONITUM))
+    return receptae + ceterae, genera, gradus, dilatae
+
+
+def _debita_fusionis_scribere(h, dilatae):
+    """DEBITUM RAMI (gradus-portarum T3): portae dilatae commissionis h
+    in DEBITA_FUSIONIS_VIA (TSV: tempus, porta, commissio, causa)
+    appenduntur - fusio_probare eas currit et purgat. Per arborem
+    (build/ non commissum)."""
+    if not dilatae:
+        return
+    os.makedirs(os.path.dirname(DEBITA_FUSIONIS_VIA), exist_ok=True)
+    with open(DEBITA_FUSIONIS_VIA, 'a') as f:
+        for n in sorted(dilatae):
+            causa = re.sub(r'[\t\n]+', ' ', str(dilatae[n]))
+            f.write('%d\t%s\t%s\t%s\n' % (int(time.time()), n, h, causa))
+    print('debitum rami: %d portae dilatae ad fusionem (%s) - %s'
+          % (len(dilatae), ', '.join(sorted(dilatae)), DEBITA_FUSIONIS_VIA))
+
+
+def _debita_fusionis_purgare(h, virides):
+    """DEBITUM SOLUTUM: porta gradus 'fusio' quam commissio h VIRIDEM
+    TOTAM (sine filtro) cucurrit debitum rami suum solvit - lineae eius
+    (commissionum priorum, quae in arbore iudicata insunt) delentur.
+    fusio_probare portas ex diff rami TOTO iterum computat: purgatio
+    indicem impactus et candidatos bisectionis acuit, numquam portam
+    fusionis omittit."""
+    nomina = set(virides or ())
+    debita = debita_fusionis()
+    solutae = [d for d in debita if d[1] in nomina]
+    if not solutae:
+        return
+    manent = [d for d in debita if d[1] not in nomina]
+    with open(DEBITA_FUSIONIS_VIA + '.novum', 'w') as f:
+        for t, n, c, causa in manent:
+            f.write('%d\t%s\t%s\t%s\n' % (t, n, c, causa))
+    os.replace(DEBITA_FUSIONIS_VIA + '.novum', DEBITA_FUSIONIS_VIA)
+    portae_solutae = sorted(set(d[1] for d in solutae))
+    print('debitum rami solutum: %s (%d lineae; viridis in %s) - manent %d'
+          % (', '.join(portae_solutae), len(solutae), h, len(manent)))
+
+
+def debita_fusionis():
+    """debita rami (gradus-portarum): [(tempus, porta, commissio,
+    causa)] ex DEBITA_FUSIONIS_VIA; [] si nulla."""
+    if not os.path.exists(DEBITA_FUSIONIS_VIA):
+        return []
+    fructus = []
+    for linea in open(DEBITA_FUSIONIS_VIA).read().splitlines():
+        f = linea.split('\t')
+        if len(f) == 4:
+            fructus.append((int(f[0]), f[1], f[2], f[3]))
+    return fructus
+
+
+def _instrumenta_portarum_sanare(binaria):
+    """PRAEVOLATUS (circulus commissionis II T2): binaria arboris quae
+    portae currentes currunt ('bin/x' - BINARIUM portae debitae) iudicantur
+    et stala per bin/fabrica sanare IN ARBORE sanantur ANTE portas -
+    numquam institutio (~/.bin): sanare bin/x actionem eius solam agit
+    (FABRICA_AGIT, nectere solum). Conatus IV T1 canalis lectionum:
+    briar-fumus post ~18 min portarum sanarum in praecondicione sua
+    (bin/briar non recens, 4 s) cecidit. Fabrica ignota praeterit
+    (candidati 'currit tools/x.c' -> bin/x). Sanatio fracta = SilvaError
+    ante portas."""
+    porta_binarii = {}
+    for porta, bina in sorted(binaria.items()):
+        for b, _ratio in bina:
+            if b.startswith('bin/'):
+                porta_binarii.setdefault(b, []).append(porta)
+    if not porta_binarii or not os.path.exists(FABRICA_BIN):
+        return
+    r = _curre([FABRICA_BIN, 'iudicare', '-machina'] + sorted(porta_binarii))
+    if r.returncode == 2:
+        raise SilvaError('FABRICA (ante portas): instrumenta portarum'
+                         ' iudicari non possunt (exitus 2) - nihil cursum,'
+                         ' nihil commissum:\n%s'
+                         % (r.stdout + r.stderr).strip()[-2000:])
+    # FORTASSE (parcum 190VQB): binarium ipsum congruit sed producens
+    # supra (capsula generata) non recens - olim 'RECENS', porta altera
+    # capsulam regenerabat et binarium medio cursu stalum fiebat
+    stala = [o[2] for o in _machina_legere(r.stdout)
+             if o[0] == 'IUDICIUM' and len(o) >= 3
+             and o[1] in ('STALUM', 'IGNOTUM', 'FORTASSE')
+             and o[2] in porta_binarii]
+    if not stala:
+        print('instrumenta portarum: %d recentia' % len(porta_binarii))
+        return
+    r2 = _curre([FABRICA_BIN, 'sanare', '-machina'] + stala)
+    if r2.returncode != 0:
+        raise SilvaError('FABRICA (ante portas): instrumenta portarum'
+                         ' sanari non potuerunt (%s, exitus %d) - nihil'
+                         ' cursum, nihil commissum:\n%s'
+                         % (', '.join(stala), r2.returncode,
+                            (r2.stdout + r2.stderr).strip()[-2000:]))
+    for b in stala:
+        print('instrumentum sanatum: %s (portae: %s)'
+              % (b, ', '.join(porta_binarii[b][:3])
+                 + (' +%d' % (len(porta_binarii[b]) - 3)
+                    if len(porta_binarii[b]) > 3 else '')))
 
 
 # LINT LATINUS PRAEVIUS (fail-fast, Fran 2026-09-25): verba identificatorum
@@ -2769,6 +3009,36 @@ def _viae_commissae(viae):
 VIAE_COMMISSAE = _viae_commissae
 
 
+# UNCUS PRAEVIUS (circulus commissionis II T3): uncus pre-commit ipse
+# (examen .c/.m, diagnostica .sh/.css) in viis commissionis ANTE portas -
+# olim solum in 'git commit', POST portas omnes (REICE ibi = cursus totus
+# perditus). UNCUS_VIAE + UNCUS_CRIBRUM=1: eadem cribra ac via git,
+# regulae in uno sede (tools/unci-git/pre-commit). Uncus in 'git commit'
+# manet - receptaculum pro 'git commit' nudo.
+UNCUS_PRAECOMMISSIONIS = os.path.join(RADIX, 'tools', 'unci-git', 'pre-commit')
+
+
+def _uncum_praevium_exigere(viae):
+    """uncum pre-commit in viis commissionis (.c .m .sh .css exstantibus)
+    currere; exitus non 0 = SilvaError ante portas cum effusione uncI."""
+    eligendae = [_via_normata(v) for v in viae
+                 if v.endswith(('.c', '.m', '.sh', '.css'))
+                 and os.path.exists(_absoluta(v))]
+    if not eligendae:
+        return
+    env = dict(os.environ, UNCUS_VIAE=' '.join(eligendae), UNCUS_CRIBRUM='1')
+    r = subprocess.run([UNCUS_PRAECOMMISSIONIS], cwd=RADIX, env=env,
+                       capture_output=True, text=True)
+    textus = (r.stdout + r.stderr).strip()
+    if r.returncode != 0:
+        raise SilvaError('UNCUS (ante portas): examen/diagnostica obstant -'
+                         ' nihil cursum, nihil commissum:\n%s'
+                         % textus[-3000:])
+    summae = [l for l in textus.splitlines()
+              if l.startswith(('examen (pre-commit):', 'diagnostica (pre-commit):'))]
+    print('uncus (ante portas): %s' % ('; '.join(summae[-2:]) or 'sanus'))
+
+
 # IUDICES SANABILES (circulus commissionis P3): iudex stalus fabricae
 # (binarium domus quod iudicat) per struere.sh SUUM sanatur - aedificatio
 # in bin/ arboris, numquam institutio. Tabula hic, non recipe impressa
@@ -2780,15 +3050,19 @@ IUDICES_STRUERE = {
 }
 
 
-def _fabricam_exigere(viae, sine_fabrica=None, _iudex_sanatus=False):
+def _fabricam_exigere(viae, sine_fabrica=None, _sanati=(), _regenerata=False):
     """bin/fabrica iudicare -plenus -tacta VIAE ante portas. exitus 0 =
     pergit; 1 = artificium generatum tactum STALUM/IGNOTUM - SilvaError
     cum lineis et sanatione; 2 = iudicare nequit (sera tenetur,
     declarationes fractae) - SilvaError. bin/fabrica deest = MONITUM
     (clonus recens), non obstat. sine_fabrica='<causa>' omittit (causa
-    impressa); vacua = SilvaError. Iudex SOLUS stalus et sanabilis
-    (IUDICES_STRUERE) sanatur ('iudex sanatus: X') et iudicium SEMEL
-    iteratur; struere fractum aut iudex adhuc stalus = SilvaError."""
+    impressa); vacua = SilvaError. Iudices stali et sanabiles
+    (IUDICES_STRUERE) sanantur ('iudex sanatus: X') et iudicium iteratur
+    USQUE AD PUNCTUM FIXUM (circulus commissionis II T1): fabrica sanata
+    aedilem stalum nominare potest (T1 canalis lectionum, conatus 1) -
+    olim SEMEL tantum, deinde recusatio. _sanati = iudices iam sanati in
+    hac vocatione: iudex sanatus qui ADHUC stalus est = SilvaError (struere
+    non sanat - limes circuli); struere fractum = SilvaError."""
     if sine_fabrica is not None:
         if not str(sine_fabrica).strip():
             raise SilvaError('sine_fabrica causam poscit: cur iudicium'
@@ -2823,8 +3097,9 @@ def _fabricam_exigere(viae, sine_fabrica=None, _iudex_sanatus=False):
     iudices = sorted(set(
         m.group(1) for m in (re.match(r'iudex (\S+) non recens', o[3])
                              for o in recusata) if m))
-    if (recusata and not _iudex_sanatus and iudices
-            and all(i in IUDICES_STRUERE for i in iudices)):
+    if (recusata and iudices
+            and all(i in IUDICES_STRUERE for i in iudices)
+            and not any(i in _sanati for i in iudices)):
         for i in iudices:
             r2 = _curre(list(IUDICES_STRUERE[i]))
             if r2.returncode != 0:
@@ -2834,7 +3109,9 @@ def _fabricam_exigere(viae, sine_fabrica=None, _iudex_sanatus=False):
                     % (i, ' '.join(IUDICES_STRUERE[i]), r2.returncode,
                        (r2.stdout + r2.stderr).strip()[-2000:]))
             print('iudex sanatus: %s (%s)' % (i, ' '.join(IUDICES_STRUERE[i])))
-        return _fabricam_exigere(viae, sine_fabrica, _iudex_sanatus=True)
+        return _fabricam_exigere(viae, sine_fabrica,
+                                 _sanati=tuple(_sanati) + tuple(iudices),
+                                 _regenerata=_regenerata)
     if recusata:
         raise SilvaError(
             'FABRICA (ante portas): stadium iudicum - artificia tacta NON'
@@ -2845,10 +3122,41 @@ def _fabricam_exigere(viae, sine_fabrica=None, _iudex_sanatus=False):
     # corpus) - commissio de COMMISSIS solis iudicat; stala non commissa
     # nominantur, non obstant (sanare ea sanat)
     if r.returncode == 1:
+        # FORTASSE (parcum 190VQB): producens supra non recens - ut
+        # stalum tractatur (sanare producentem ordine prius sanat)
         malae = [o[2] for o in ordines
                  if o[0] == 'IUDICIUM' and len(o) >= 3
-                 and o[1] in ('STALUM', 'IGNOTUM')]
-        if malae and not VIAE_COMMISSAE(malae):
+                 and o[1] in ('STALUM', 'IGNOTUM', 'FORTASSE')]
+        # REGENERATIO IN COMMISSIONE (circulus commissionis II T3, Fran
+        # 2026-10-14 (a)): artificium generatum commissum et stalum quod
+        # INTER VIAS commissionis est regeneratur (bytes quos vocans
+        # proxime committeret; porta generata eos adhuc iudicat) - semel;
+        # commissum EXTRA vias recusatur ut antea (additio tacita mutaret
+        # quod committitur). Conatus II T1 canalis lectionum: formator
+        # commissionis fontes post amalgamare mutavit.
+        commissae = VIAE_COMMISSAE(malae) if malae else set()
+        in_viis = set(_via_normata(v) for v in viae)
+        regenerandae = [m for m in malae if m in commissae]
+        if (regenerandae and not _regenerata
+                and all(m in in_viis for m in regenerandae)):
+            r3 = _curre([FABRICA_BIN, 'sanare', '-machina'] + regenerandae)
+            if r3.returncode != 0:
+                raise SilvaError(
+                    'FABRICA (ante portas): artificia commissionis regenerari'
+                    ' non potuerunt (%s, exitus %d) - nihil cursum, nihil'
+                    ' commissum:\n%s'
+                    % (', '.join(regenerandae), r3.returncode,
+                       (r3.stdout + r3.stderr).strip()[-2000:]))
+            for m in regenerandae:
+                print('regeneratum (in commissione): %s' % m)
+            # _sanati PURGATI: regeneratio ingressus iudicis mutare potest
+            # (amalgama silvae in clausura bin/fabrica - commissio
+            # lexationis pigrae 2026-10-15: fabrica sanata, silva.c
+            # regeneratum, fabrica iterum stala -> 'sana fabrica prius').
+            # Terminatio manet: regeneratio semel (_regenerata).
+            return _fabricam_exigere(viae, sine_fabrica, (),
+                                     _regenerata=True)
+        if malae and not commissae:
             print('fabrica: %d artificia NON commissa non recentia (%s) -'
                   ' commissionem non obstant; bin/fabrica sanare ea sanat'
                   % (len(malae), ', '.join(malae[:3])
@@ -2901,81 +3209,37 @@ def _lint_praevium_exigere(viae):
             + relatio)
 
 
-@_cursu_notatum(lambda *a, **k: 'commissio',
-                lambda h: (0, 'commissum %s' % h), 'commissio')
-def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
-              opus=None, actor='claude', sine_debitis=None,
-              sine_fabrica=None, excusatae=None, _debitae_additae=False,
-              _fabrica_facta=False):
-    """gate, deinde commissio - uno vocamine, in Pythone (crusta 'set -e'
-    non honorat; pipestatus fallit). portae: nomina aut (nomen,
-    filtrum) aut via recepti umbrae (.json); OMNES sanae esse debent
-    (cucurrit ET rc 0) aliter SilvaError et nihil commissum. Porta
-    nominata cum RECEPTO VIVO sano (sigillum arboris idem ac in cursu
-    priore per porta()/planta()/commissionem fractam) NON iterum
-    currit - linea 'non iterum cursa' imprimitur; recepta=False =
-    omnes currunt. Porta rancida (arbor mutata dum currebat): plagula
-    commissionis ulla mutata = refusio nominata; aliter monitum et
-    verdictum accipitur (cetera libera, ut in umbra photographica).
-    Viae explicitae solae (numquam -A); VETITAE (plagulae Frani in
-    cursu) refutantur. verificare=False = --no-verify (commissiones
-    formae solae). Reddit hash brevem; recepta viva omnia post
-    commissionem deleta (HEAD mutatum = sigilla rancida).
-    opus=ID: OPUS tabularii quod haec commissio PERFICIT. ANTE portas
-    praeiudicatur (exstat, genus opus, status pendens|susceptum);
-    POST commissionem successam 'effectus' + status 'perfectum' per
-    viam frigidam scribuntur (actor). Clausura fracta = SilvaOpusError
-    cum .hash - commissum STAT, numquam iterandum.
-    CAUSAE PRAEVIAE OMNES SIMUL (viae vetitae OMNES + opus), ne
-    vocans unam sanet et altera statim obstetur.
-    PORTAE DEBITAE (project-specs/portae-debitae-spec.md): portae quas
-    viae debent (portae_debitae) petitis ADDUNTUR et CURRUNT, linea una
-    cum causa; manu debitae nominantur. sine_debitis='<causa>' eas
-    omittit (causa impressa; vacua = causa praevia); excusatae={porta:
-    causa} singulas omittit, ceterae adduntur. _debitae_additae:
-    commissio_umbra eas iam addidit. FABRICA (T8): post lint, ante
-    portas, bin/fabrica iudicat artificia generata a viis tacta
-    (_fabricam_exigere); sine_fabrica='<causa>' omittit;
-    _fabrica_facta: commissio_umbra id iam fecit."""
-    causae = []
-    for v in viae:
-        if v in VETITAE:
-            causae.append('via VETITA commissioni: %s - plagula Frani in'
-                          ' cursu (FAQ, tabula, tabularium,'
-                          ' c89-formatted): Fran ipse eam committit,'
-                          ' numquam agens - e viis remove' % v)
-    if opus:
-        causae.extend(opus_praeiudicare(opus))
-    if sine_debitis is not None and not str(sine_debitis).strip():
-        causae.append('sine_debitis causam poscit (ut --no-verify): cur'
-                      ' portae debitae omittuntur? - nihil cursum')
-    causae.extend(_excusatas_praeiudicare(excusatae, portae, sine_debitis))
-    if causae:
-        raise SilvaError(
-            causae[0] if len(causae) == 1 else
-            'commissio RECUSATA (%d causae) - nihil cursum, nihil'
-            ' commissum:\n  %s' % (len(causae), '\n  '.join(
-                '%d. %s' % (k + 1, c) for k, c in enumerate(causae))))
-    if verificare:
-        with _phasis('forma'):
-            _formam_custodire(viae, sine_fabrica)
-        with _phasis('lint'):
-            _lint_praevium_exigere(viae)
-        for nota in notae_convertibilium(viae):
-            print(nota)
-    if not _fabrica_facta:
-        with _phasis('fabrica'):
-            _fabricam_exigere(viae, sine_fabrica)
-    if sine_debitis is not None:
-        print('portae debitae OMISSAE: %s' % sine_debitis)
-    elif not _debitae_additae:
-        with _phasis('portae debitae'):
-            portae = _portae_debitas_addere(viae, portae, excusatae)
+def _portas_currere(portae, genera, viae, recepta=True):
+    """PORTAE CURRUNTUR (ex commissio, gradus-portarum T4: commissio et
+    fusio_probare communes): praeiudicia OMNIA currunt, fracturae SIMUL
+    nominantur ante probationem primam; probatio fracta sistit
+    (SilvaError). Receptum vivum sanum non iterum currit; porta rancida
+    cum plagulis viarum mutatis = SilvaError. Reddit nomina portarum
+    viridium TOTARUM (sine filtro) - debitum rami earum purgabile."""
     ante = _sigilla_viarum(viae)
+    virides = []
+    # praeiudicia (circulus commissionis II T5): OMNIA currunt, fracturae
+    # colliguntur et SIMUL nominantur ante probationem primam; probatio
+    # fracta sistit ut antea
+    fractae_prae = []
+
+    def _praeiudicia_exigere():
+        if fractae_prae:
+            raise SilvaError(
+                'praeiudicia non sana (%d) - nihil cursum ultra, nihil'
+                ' commissum:\n%s' % (len(fractae_prae), '\n'.join(
+                    '  %s (%s, rc=%d) - acta: %s%s' % (n, ff.compendium, ff.rc,
+                                                      va, relatio_fracturarum(ff.fracturae))
+                    for n, ff, va in fractae_prae)))
     for p in portae:
+        est_prae = (genera.get(p if isinstance(p, str) else p[0])
+                    == 'praeiudicium')
+        if not est_prae:
+            _praeiudicia_exigere()
         if isinstance(p, str) and p.endswith('.json'):
             f = receptum_validum(p, viae)      # porta ex umbra
             nomen = f.nomen + ' (receptum)'
+            filtrum = receptum_legere(p).filtrum
         else:
             nomen, filtrum = (p, None) if isinstance(p, str) else p
             f = receptum_vivum(nomen, filtrum) if recepta else None
@@ -3013,10 +3277,114 @@ def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
                                     + '.fracta.acta')
             with open(via_acta, 'w') as fa:
                 fa.write(f.acta or '')
+            if est_prae:
+                print('praeiudicium %s NON sanum (%s) - cetera praeiudicia'
+                      ' currunt' % (nomen, f.compendium))
+                fractae_prae.append((nomen, f, via_acta))
+                continue
             raise SilvaError('porta %s non sana (%s, rc=%d) - nihil'
                              ' commissum; acta: %s%s'
                              % (nomen, f.compendium, f.rc, via_acta,
                                 relatio_fracturarum(f.fracturae)))
+        if filtrum is None:
+            virides.append(f.nomen)
+    _praeiudicia_exigere()
+    return virides
+
+
+@_cursu_notatum(lambda *a, **k: 'commissio',
+                lambda h: (0, 'commissum %s' % h), 'commissio')
+def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
+              opus=None, actor='claude', sine_debitis=None,
+              sine_fabrica=None, excusatae=None, _debitae_additae=False,
+              _fabrica_facta=False, plena=False, _dilatae=None):
+    """gate, deinde commissio - uno vocamine, in Pythone (crusta 'set -e'
+    non honorat; pipestatus fallit). portae: nomina aut (nomen,
+    filtrum) aut via recepti umbrae (.json); OMNES sanae esse debent
+    (cucurrit ET rc 0) aliter SilvaError et nihil commissum. Porta
+    nominata cum RECEPTO VIVO sano (sigillum arboris idem ac in cursu
+    priore per porta()/planta()/commissionem fractam) NON iterum
+    currit - linea 'non iterum cursa' imprimitur; recepta=False =
+    omnes currunt. Porta rancida (arbor mutata dum currebat): plagula
+    commissionis ulla mutata = refusio nominata; aliter monitum et
+    verdictum accipitur (cetera libera, ut in umbra photographica).
+    Viae explicitae solae (numquam -A); VETITAE (plagulae Frani in
+    cursu) refutantur. verificare=False = --no-verify (commissiones
+    formae solae). Reddit hash brevem; recepta viva omnia post
+    commissionem deleta (HEAD mutatum = sigilla rancida).
+    opus=ID: OPUS tabularii quod haec commissio PERFICIT. ANTE portas
+    praeiudicatur (exstat, genus opus, status pendens|susceptum);
+    POST commissionem successam 'effectus' + status 'perfectum' per
+    viam frigidam scribuntur (actor). Clausura fracta = SilvaOpusError
+    cum .hash - commissum STAT, numquam iterandum.
+    CAUSAE PRAEVIAE OMNES SIMUL (viae vetitae OMNES + opus), ne
+    vocans unam sanet et altera statim obstetur.
+    PORTAE DEBITAE (project-specs/portae-debitae-spec.md): portae quas
+    viae debent (portae_debitae) petitis ADDUNTUR et CURRUNT, linea una
+    cum causa; manu debitae nominantur. sine_debitis='<causa>' eas
+    omittit (causa impressa; vacua = causa praevia); excusatae={porta:
+    causa} singulas omittit, ceterae adduntur. _debitae_additae:
+    commissio_umbra eas iam addidit. FABRICA (T8): post lint, ante
+    portas, bin/fabrica iudicat artificia generata a viis tacta
+    (_fabricam_exigere); sine_fabrica='<causa>' omittit;
+    _fabrica_facta: commissio_umbra id iam fecit.
+    GRADUS (project-specs/gradus-portarum-spec.md §II): portae debitae
+    ADDITAE gradus 'fusio' non currunt sed DILATANTUR ('porta debita
+    DILATA ad fusionem') et post commissionem debitum rami fiunt
+    (debita_fusionis); petitae semper currunt; plena=True omnes currit
+    (mores ante 2026-10-15). _dilatae: commissio_umbra iam divisit.
+    Porta viridis tota (sine filtro) debitum rami suum SOLVIT post
+    commissionem (_debita_fusionis_purgare)."""
+    causae = []
+    for v in viae:
+        if v in VETITAE:
+            causae.append('via VETITA commissioni: %s - plagula Frani in'
+                          ' cursu (FAQ, tabula, tabularium,'
+                          ' c89-formatted): Fran ipse eam committit,'
+                          ' numquam agens - e viis remove' % v)
+    if opus:
+        causae.extend(opus_praeiudicare(opus))
+    if sine_debitis is not None and not str(sine_debitis).strip():
+        causae.append('sine_debitis causam poscit (ut --no-verify): cur'
+                      ' portae debitae omittuntur? - nihil cursum')
+    causae.extend(_excusatas_praeiudicare(excusatae, portae, sine_debitis))
+    if causae:
+        raise SilvaError(
+            causae[0] if len(causae) == 1 else
+            'commissio RECUSATA (%d causae) - nihil cursum, nihil'
+            ' commissum:\n  %s' % (len(causae), '\n  '.join(
+                '%d. %s' % (k + 1, c) for k, c in enumerate(causae))))
+    if verificare:
+        with _phasis('forma'):
+            _formam_custodire(viae, sine_fabrica)
+        with _phasis('lint'):
+            _lint_praevium_exigere(viae)
+        for nota in notae_convertibilium(viae):
+            print(nota)
+    if not _fabrica_facta:
+        with _phasis('fabrica'):
+            _fabricam_exigere(viae, sine_fabrica)
+    if verificare:
+        with _phasis('unci'):
+            _uncum_praevium_exigere(viae)
+    if sine_debitis is not None:
+        print('portae debitae OMISSAE: %s' % sine_debitis)
+    binaria, additae = None, {}
+    if sine_debitis is None and not _debitae_additae:
+        binaria = {}
+        with _phasis('portae debitae'):
+            portae = _portae_debitas_addere(viae, portae, excusatae,
+                                            binaria_out=binaria,
+                                            additae_out=additae)
+    with _phasis('ordo portarum'):
+        portae, genera, _gradus, dilatae = _portas_ordinare(
+            portae, additae, plena, recepta)
+    dilatae = {**(_dilatae or {}), **dilatae}
+    if binaria is not None:
+        with _phasis('instrumenta portarum'):
+            _instrumenta_portarum_sanare(dict(
+                (n, b) for n, b in binaria.items() if n not in dilatae))
+    virides = _portas_currere(portae, genera, viae, recepta)
     # renominationes/deletiones per git mv/rm iam in indice: via absens
     # in disco licet si deletio eius in indice stat (viae NOVAE dantur)
     deletae = set(_curre(['git', 'diff', '--cached', '--name-only',
@@ -3053,11 +3421,140 @@ def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
                              % (r.returncode,
                                 (r.stdout + r.stderr).strip()[-600:]))
     h = _curre(['git', 'rev-parse', '--short', 'HEAD']).stdout.strip()
+    _debita_fusionis_purgare(h, virides)
+    _debita_fusionis_scribere(h, dilatae)
     recepta_viva_delere()
     if opus:
         print('opus %s: perfectum - %s'
               % (opus, opus_claudere(opus, h, nuntius, actor)))
     return h
+
+
+def _ramus_status(basis):
+    """(basis antecessor HEAD?, viae sordidae praeter VETITAS, merge-base,
+    viae rami mutatae merge-base..HEAD - deletae et renominatae utrimque)"""
+    antecessor = _curre(['git', 'merge-base', '--is-ancestor', basis,
+                         'HEAD']).returncode == 0
+    sordidae = [l[3:] for l in _curre(['git', 'status', '--porcelain']
+                                      ).stdout.splitlines()
+                if l[3:] not in VETITAE]
+    mb = _curre(['git', 'merge-base', basis, 'HEAD']).stdout.strip()
+    viae = sorted(set(v for v in _curre(['git', 'diff', '--name-only',
+                                          '--no-renames', mb, 'HEAD']
+                                         ).stdout.splitlines() if v))
+    return antecessor, sordidae, mb, viae
+
+
+def portae_debitae_ramus(basis='main'):
+    """INDEX IMPACTUS (gradus-portarum T5, spec §IV): portae debitae viarum
+    rami (merge-base..HEAD) ET arboris (viae_mutatae), quaeque cum gradu,
+    sumptu (mediana), causa, et commissionibus debiti rami. Reddit textum;
+    agens portas e eo eligit (commissio portae=[...] aut porta(X)).
+    Nihil currit."""
+    _, _, mb, viae_rami = _ramus_status(basis)
+    viae = sorted(set(viae_rami) | set(viae_mutatae()))
+    lineae = ['portae debitae rami (%s..HEAD + arbor): %d viae'
+              % (mb[:8] or basis, len(viae))]
+    if not viae:
+        return '\n'.join(lineae + ['  (nullae)']) + '\n'
+    debita, _ = portae_debitae(viae)
+    registratae = [d for d in debita if not d.manu]
+    rami = {}
+    for _, n, h, _ in debita_fusionis():
+        rami.setdefault(n, []).append(h)
+    info = {}
+    nomina = [d.porta for d in registratae]
+    if nomina and os.path.exists(FABRICA_BIN):
+        try:
+            for l in _portae_fabricae('ordo', nomina, True,
+                                      normare=False).splitlines():
+                f = l.split('\t')
+                if f[0] == 'ORDO' and len(f) == 5:
+                    info[f[1]] = (f[4], f[3])
+        except SilvaError as ex:
+            lineae.append('MONITUM: ordo incomputabilis (%s)'
+                          % str(ex).splitlines()[0])
+    summae = {'commissio': 0, 'fusio': 0}
+
+    def _clavis(d):
+        g, ms = info.get(d.porta, ('?', '-'))
+        return (g != 'commissio', -1 if ms == '-' else int(ms))
+    for d in sorted(registratae, key=_clavis):
+        gradus, ms = info.get(d.porta, ('?', '-'))
+        if ms != '-' and gradus in summae:
+            summae[gradus] += int(ms)
+        lineae.append('  %-9s %-22s %6s  %s%s' % (
+            gradus, d.porta, '(nova)' if ms == '-' else
+            '%d s' % ((int(ms) + 500) // 1000), d.causa,
+            '  [debitum rami: %s]' % ', '.join(rami[d.porta])
+            if d.porta in rami else ''))
+    for d in debita:
+        if d.manu:
+            lineae.append('  manu      %-22s         %s' % (d.porta, d.causa))
+    lineae.append('summa: commissio %d s, fusio %d s (medianae; transitus'
+                  ' servati ~0)' % ((summae['commissio'] + 500) // 1000,
+                                    (summae['fusio'] + 500) // 1000))
+    return '\n'.join(lineae) + '\n'
+
+
+def fusio_probare(basis='main', frigida=True, recepta=True):
+    """FUSIO (gradus-portarum T4, spec §III): ramus ante fusionem in basis.
+    1. basis antecessor HEAD esse debet ('merge main first'), arbor munda
+       (iudicatur COMMISSUM);
+    2. portae debitae viarum rami TOTIUS (git diff merge-base..HEAD) +
+       debita rami (debita_fusionis), GRADUS AMBO, ordine et regula
+       commissionis (praeiudicia simul, probatio prima fracta sistit);
+       transitus servati ~0, rancida iterum currunt;
+    3. frigida=True: tools/frigida_probare.sh (clone novus, ~12+ min);
+    4. viride: debita rami purgantur et ritus 'merge --ff-only' imprimitur;
+       rubrum: SilvaError porta nominata et commissiones quae eam
+       debebant (candidati bisectionis).
+    Tardum (>20 min saepe): ex Claude per processum separatum (detach)."""
+    antecessor, sordidae, mb, viae = _ramus_status(basis)
+    if not antecessor:
+        raise SilvaError('fusio: %s non antecessor HEAD - merge %s first'
+                         ' (ritus fusionis), deinde fusio_probare' % (basis, basis))
+    if sordidae:
+        raise SilvaError('fusio: arbor non munda (%d viae, e.g. %s) - fusio'
+                         ' COMMISSUM iudicat: committe aut repone prius'
+                         % (len(sordidae), sordidae[0]))
+    debita_rami = debita_fusionis()
+    print('fusio: %d viae rami (%s..HEAD), %d debita rami'
+          % (len(viae), mb[:8], len(debita_rami)))
+    portae = []
+    for n in [d[1] for d in debita_rami]:
+        if n not in portae:
+            portae.append(n)
+    binaria = {}
+    with _phasis('portae debitae'):
+        portae = _portae_debitas_addere(viae, portae, binaria_out=binaria)
+    with _phasis('ordo portarum'):
+        portae, genera, _gradus, _ = _portas_ordinare(portae,
+                                                      recepta=recepta)
+    with _phasis('instrumenta portarum'):
+        _instrumenta_portarum_sanare(binaria)
+    try:
+        _portas_currere(portae, genera, viae, recepta)
+    except SilvaError as ex:
+        culpae = sorted(set(d[2] for d in debita_rami if re.search(
+            r'(?<![\w-])%s(?![\w-])' % re.escape(d[1]), str(ex))))
+        raise SilvaError('%s%s' % (ex, '\nfusio: commissiones quae eam portam'
+                                   ' debebant (bisectio): %s' % ', '.join(culpae)
+                                   if culpae else ''))
+    if frigida:
+        with _phasis('frigida'):
+            r = subprocess.run([os.path.join(RADIX, 'tools', 'frigida_probare.sh')],
+                               cwd=RADIX)
+        if r.returncode != 0:
+            raise SilvaError('fusio: frigida_probare rc=%d - clone novus rubrus'
+                             ' (supra nominatum); nihil purgatum' % r.returncode)
+    if os.path.exists(DEBITA_FUSIONIS_VIA):
+        os.remove(DEBITA_FUSIONIS_VIA)
+    ramus = _curre(['git', 'rev-parse', '--abbrev-ref', 'HEAD']).stdout.strip()
+    print('FUSIO PARATA: %d portae virides%s; debita rami purgata.\n'
+          '  in arbore %s: git merge --ff-only %s'
+          % (len(portae), ' + frigida' if frigida else '', basis, ramus))
+    return portae
 
 
 # ---------------------------------------------------------------- umbra
@@ -3073,6 +3570,12 @@ PORTAE_DIR = os.path.join(RADIX, 'build', 'portae')
 # filii (operarii umbrae) hereditate accipiunt
 TEMPORA_VIA = (os.environ.get('SILVA_TEMPORA_VIA')
                or os.path.join(PORTAE_DIR, 'tempora.tsv'))
+# debitum rami (gradus-portarum T3): portae gradus 'fusio' dilatae
+DEBITA_FUSIONIS_VIA = (os.environ.get('SILVA_DEBITA_FUSIONIS_VIA')
+                       or os.path.join(PORTAE_DIR, 'debita_fusionis.tsv'))
+# aestimatio portarum commissionis supra hoc (s) = MONITUM (Franus 10-15:
+# ~V minuta obligatoria inter commissiones)
+AESTIMATIO_MONITUM = 300
 Receptum = namedtuple('Receptum', 'via nomen filtrum sana cucurrit '
                       'compendium rc sigillum rancida finis fracturae '
                       'photographia', defaults=([], None))
@@ -3318,17 +3821,31 @@ def photographia_materializare(ph, nomen='umbra'):
     r = _curre(['git', 'clone', '-q', '-n', RADIX, via])
     if r.returncode != 0:
         raise SilvaError('photographia: clone: %s' % r.stderr.strip()[-300:])
-    r = subprocess.run(['git', 'read-tree', '--reset', '-u', ph.arbor],
-                       cwd=via, capture_output=True, text=True)
-    if r.returncode != 0:
-        raise SilvaError('photographia: read-tree: %s'
-                         % r.stderr.strip()[-300:])
-    _clonare_ignorata(via)
-    _tempora_speculari(via, ph.arbor)
+    # DOMINUS (parcum PKM86A): UMBRAE_DIR omnibus arboribus communis -
+    # purgatio recepta DOMINI legit, non sua (alias clonem rubrum arboris
+    # alterius ad inspiciendum servatum deleret)
+    open(os.path.join(via, UMBRA_DOMINUS), 'w').write(RADIX)
+    try:
+        r = subprocess.run(['git', 'read-tree', '--reset', '-u', ph.arbor],
+                           cwd=via, capture_output=True, text=True)
+        if r.returncode != 0:
+            raise SilvaError('photographia: read-tree: %s'
+                             % r.stderr.strip()[-300:])
+        _clonare_ignorata(via)
+        _tempora_speculari(via, ph.arbor)
+    except BaseException:
+        photographia_delere(via)     # clone dimidius numquam relinquitur
+        raise
     return ph._replace(via=via)
 
 
 PURGATORIUM = '.purgatorium'
+# signum domini in clone (arbor quae eum fecit) et exspiratio: clone quem
+# solum receptum RUBRUM arboris suae tenet, aut clone sine domino (codex
+# ante PKM86A), post tot dies purgatur (parcum PKM86A: 14 GB, V clones
+# 10-05..10-14 - 'ad inspiciendum' servati, numquam inspecti)
+UMBRA_DOMINUS = '.umbra.radix'
+UMBRA_EXSPIRATIO = 3 * 86400
 
 
 def _purgatorium_vacuare(viae):
@@ -3383,6 +3900,13 @@ def porta_umbra(nomen, filtrum=None, photographica=True):
     via = _receptum_via(nomen, filtrum)      # nomina plana hic iudicata
     extra = []
     if photographica:
+        # PURGATIO SPONTE (PKM86A): clones solum cum novo nascuntur
+        # cumulantur - ibi purgantur (orphani, exspirati), linea si quid
+        purgatae = umbrae_purgare()
+        if purgatae:
+            print('umbrae purgatae: %d (%s)' % (len(purgatae), ', '.join(
+                os.path.basename(v) for v in purgatae[:3])
+                + (' +%d' % (len(purgatae) - 3) if len(purgatae) > 3 else '')))
         ph = photographia_materializare(photographia_capere(), nomen)
         extra = [ph.via, ph.arbor, ph.basis]
         # sera processus: clone vivus dum PID vivit (lanceans nunc,
@@ -3681,32 +4205,56 @@ def _clones_vivi():
     (<clone>/.umbra.pid) tenet - trans contextus: porta in clone
     currens sua recepta non videt (build/portae eius alter est), sed
     PID eius vivus est ubique (porta pythonicae in clone se ipsam
-    delevit, 2026-09-02)"""
+    delevit, 2026-09-02). DOMINI (parcum PKM86A): recepta arboris quae
+    clonem fecit (<clone>/.umbra.radix) leguntur - UMBRAE_DIR communis
+    est, build/portae non. Clone sine domino (codex vetus) RECENS
+    (< UMBRA_EXSPIRATIO) servatur: arbor eius ignota est."""
     vivi = set()
-    if os.path.isdir(PORTAE_DIR):
-        for f in os.listdir(PORTAE_DIR):
-            via = os.path.join(PORTAE_DIR, f)
-            if f.endswith('.json'):
-                try:
-                    r = receptum_legere(via)
-                    if r.photographia and r.photographia.get('via_operis'):
-                        vivi.add(r.photographia['via_operis'])
-                except (SilvaError, ValueError, KeyError):
-                    pass
-            elif f.endswith('.pendens'):
-                lineae = open(via).read().splitlines()
-                if len(lineae) > 1 and lineae[1]:
-                    vivi.add(lineae[1])
+    sedes = {PORTAE_DIR}
+    nunc = time.time()
+    clones = []
     if os.path.isdir(UMBRAE_DIR):
         for f in os.listdir(UMBRAE_DIR):
             via = os.path.join(UMBRAE_DIR, f)
-            sera = os.path.join(via, '.umbra.pid')
-            if os.path.exists(sera):
+            if f.startswith('.') or not os.path.isdir(via):
+                continue
+            clones.append(via)
+            try:
+                dominus = open(os.path.join(via, UMBRA_DOMINUS)).read().strip()
+            except (IOError, OSError):
+                dominus = None
+            if dominus is None:
                 try:
-                    if _pid_vivus(open(sera).read().strip()):
+                    if nunc - os.path.getmtime(via) < UMBRA_EXSPIRATIO:
                         vivi.add(via)
-                except (IOError, OSError):
+                except OSError:
                     pass
+            elif dominus != RADIX:
+                sedes.add(os.path.join(dominus, 'build', 'portae'))
+    for sedes_portarum in sedes:
+        if not os.path.isdir(sedes_portarum):
+            continue        # dominus abiit: clones eius orphani
+        for f in os.listdir(sedes_portarum):
+            via = os.path.join(sedes_portarum, f)
+            try:
+                if f.endswith('.json'):
+                    r = receptum_legere(via)
+                    if r.photographia and r.photographia.get('via_operis'):
+                        vivi.add(r.photographia['via_operis'])
+                elif f.endswith('.pendens'):
+                    lineae = open(via).read().splitlines()
+                    if len(lineae) > 1 and lineae[1]:
+                        vivi.add(lineae[1])
+            except (SilvaError, ValueError, KeyError, IOError, OSError):
+                pass
+    for via in clones:
+        sera = os.path.join(via, '.umbra.pid')
+        if os.path.exists(sera):
+            try:
+                if _pid_vivus(open(sera).read().strip()):
+                    vivi.add(via)
+            except (IOError, OSError):
+                pass
     return vivi
 
 
@@ -3728,6 +4276,24 @@ def umbrae_purgare():
     servat donec receptum deleatur, oblivio eos cumulat (~C MB veri
     quisque). Reddit vias deletas."""
     deletae = []
+    # EXSPIRATIO (PKM86A): receptum umbrae ARBORIS HUIUS cum clone, finitum
+    # ante UMBRA_EXSPIRATIO, deletur cum clone (receptum_delere) - 'ad
+    # inspiciendum' quod dies III nemo inspexit. Recepta aliarum arborum
+    # numquam hic deleta (dominus suam purgat).
+    if os.path.isdir(PORTAE_DIR):
+        for f in sorted(os.listdir(PORTAE_DIR)):
+            via = os.path.join(PORTAE_DIR, f)
+            if not f.endswith('.json') or f.endswith('.viva.json'):
+                continue
+            try:
+                r = receptum_legere(via)
+            except (SilvaError, ValueError, KeyError, IOError, OSError):
+                continue
+            clone = (r.photographia or {}).get('via_operis')
+            if (clone and os.path.isdir(clone)
+                    and time.time() - (r.finis or 0) > UMBRA_EXSPIRATIO):
+                receptum_delere(via)
+                deletae.append(clone)
     # reliquiae purgatorii (rm in fundo interruptum): iterum - 'rm -rf'
     # geminum innocuum
     purgatorium = os.path.join(UMBRAE_DIR, PURGATORIUM)
@@ -3747,7 +4313,7 @@ def _totum_actorum(acta):
 
 def commissio_umbra(nuntius, viae, portae, verificare=True, tectum=1800,
                     siccum=False, sine_debitis=None, sine_fabrica=None,
-                    excusatae=None):
+                    excusatae=None, plena=False):
     """Portae umbrae SERIATIM (tempora non contendunt - mensurae suitae
     fidae manent), quaeque in clone photographiae suae (editio pergit),
     deinde commissio contra recepta OMNIA (plagulae viae contra blobs
@@ -3760,7 +4326,8 @@ def commissio_umbra(nuntius, viae, portae, verificare=True, tectum=1800,
     adduntur, ut in umbra quoque currant; sine_debitis et excusatae ut in
     commissio.
     Lint latinus praevius et iudicium fabricae ANTE umbras (ut in
-    commissio; sine_fabrica idem). Forma ANTE omnia (…QGT1)."""
+    commissio; sine_fabrica idem). Forma ANTE omnia (…QGT1). Gradus ut
+    in commissio: additae 'fusio' dilatae nisi plena."""
     causae = _excusatas_praeiudicare(excusatae, portae, sine_debitis)
     if causae:
         raise SilvaError('commissio_umbra RECUSATA - nihil cursum:\n  %s'
@@ -3777,8 +4344,12 @@ def commissio_umbra(nuntius, viae, portae, verificare=True, tectum=1800,
                              ' cur portae debitae omittuntur? - nihil'
                              ' cursum')
         print('portae debitae OMISSAE: %s' % sine_debitis)
+        dilatae = {}
     else:
-        portae = _portae_debitas_addere(viae, portae, excusatae)
+        additae = {}
+        portae = _portae_debitas_addere(viae, portae, excusatae,
+                                        additae_out=additae)
+        portae, _, _, dilatae = _portas_ordinare(portae, additae, plena)
     recepta = []
     for p in portae:
         nomen, filtrum = (p, None) if isinstance(p, str) else p
@@ -3806,7 +4377,7 @@ def commissio_umbra(nuntius, viae, portae, verificare=True, tectum=1800,
     if not siccum:
         h = commissio(nuntius, viae, portae=[v for v, _, _, _ in recepta],
                       verificare=verificare, _debitae_additae=True,
-                      _fabrica_facta=True)
+                      _fabrica_facta=True, _dilatae=dilatae)
     for v, _, _, _ in recepta:
         receptum_delere(v)
     return h, [(n, r.compendium, tot) for _, n, r, tot in recepta]

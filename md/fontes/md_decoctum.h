@@ -38,9 +38,17 @@ md_ens_decoquere (
                    i32* longitudo,
                    s32* post);
 
+/* Titulus nexus (par. 4.7): CMXCIX characteres SUMMUM intra uncos -
+ * longior titulus non est (ergo nec definitio nec referentia) */
+#define MD_TITULUS_MAXIMUS ((s32)CMXCIX)
+
 /* Clavis tituli nexus normalizata (par. 4.7): trim, cursus spatiorum
  * (spatium, tabula, linea nova) -> unum, minusculae ASCII (plicatio
- * Unicode = lacuna nominata). Copia in piscina. */
+ * Unicode = lacuna nominata). Copia in piscina. Titulus longior quam
+ * MD_TITULUS_MAXIMUS = clavis VACUA (datum NIHIL), nihil allocatum:
+ * uncus clausus contentum ad aperturam suam normalizabat - nidificatio
+ * '[[[...]]]' L milium = tempus et memoria quadratica (~3.5 s, ~2.5 GB;
+ * md totalitas sub onere 'KILL (mora excessa)', 2026-10-15) */
 chorda
 md_clavem_normalizare (
                Piscina* piscina,

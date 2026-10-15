@@ -26,7 +26,7 @@
 #
 # Obiectum VERUM scribitur, non /dev/null: '-o /dev/null' probat te
 # compilare POSSE, non compilavisse (lectio domus).
-# <porta titulus="amalgamata" tegit="*/amalgama/*"/>
+# <porta titulus="amalgamata" genus="praeiudicium" tegit="*/amalgama/*"/>
 
 set -u
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

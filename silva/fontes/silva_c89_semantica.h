@@ -573,6 +573,20 @@ nomen enumeratio {
     EXAMEN_CODEX_CREDO_SECTIO_SINE_ASSERTIONE, /* VIOLATIO domus */
     EXAMEN_CODEX_CREDO_SUITA_MUTATA,          /* VIOLATIO domus */
     EXAMEN_CODEX_CREDO_TITULUS_IMPRESSUS,     /* DOMESTICUM */
+    /* CANALIS LECTIONUM (spec canalis-lectionum §I, decretum Frani
+     * ...PX2QAC 2026-10-14). Liber lectionum (include/lectiones.h)
+     * solum videt quod per filum / via_existit / iter_directoria
+     * transit - vocatio IO cruda = ingressus fabricae invisibilis =
+     * transitus vetus servatus (html oraculum probatum, ...QT3PR64).
+     * Tabula = tagi <gradus genus="canalis" pro="vicarius"> in
+     * lexico systematis (ut 86/87); VOCATIONES solae (identificator
+     * + '(' - 'struct stat' typus et monstrator tacent). Lexema
+     * EXPANSUM iudicatur, sedes = radix in fonte principali (macro
+     * involvens quoque capitur). VIOLATIO domus; <tolera> cum causa
+     * per sedem. Debita (plagulae ante regulam) per
+     * silva_c89_semantica_debita_applicare ad DOMESTICUM demittuntur.
+     * 96 = vocatio IO cruda extra canalem - vicarius nominatur. */
+    EXAMEN_CODEX_CANALIS_PRAETERITUS,         /* VIOLATIO domus */
     EXAMEN_CODEX_NUMERUS
 } ExamenCodex;
 
@@ -987,6 +1001,22 @@ silva_c89_semantica_analysare_cum_systemate (
                   Piscina* piscina,
     constans SilvaParsura* parsura,
     constans SilvaParsura* systema);
+
+/* Debita canalis (codex 96, ratchet): textus = tabula debitorum
+ * ('via<TAB>causa' per lineam, '#' commentarium; via relativa ad
+ * radicem, './' praefixum ignoratur). Si via plagulae principalis
+ * inscripta est, diagnostica 96 ad DOMESTICUM demittuntur (numerantur,
+ * REICE non pariunt). Reddit VERUM si plagula inscripta est (etiam
+ * sine diagnostico 96 - vocans 'linea delenda' sic invenit). Purum:
+ * textum vocans legit (silva/probationes/fixa/examinis/
+ * canalis_debita.tsv). */
+#define SILVA_VIA_DEBITORUM_CANALIS \
+    "silva/probationes/fixa/examinis/canalis_debita.tsv"
+b32
+silva_c89_semantica_debita_applicare (
+      SilvaSemantica* sem,
+     constans chorda* via,
+     constans chorda* textus);
 
 /* Symbola semanticae in oraculum fundere: TYPEDEF -> typi noti,
  * cetera -> NON-typi noti (trivalens). Duplex usus: praeoneratio

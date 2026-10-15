@@ -92,7 +92,8 @@
 #   L    photographia thesaurum praeterit (T3c): scriptura ibi semper
 #        licita (fabrica_ordo), ergo ambulatio eius nihil iudicat -
 #        XL milia plagularum in thesauro 'probare -vis' (X membra, XX
-#        photographiae) < 1.5 s tardius (olim ~3.5 s)
+#        photographiae) < 1.0 s PROCESSORIS tardius (planta ~2.15 s;
+#        murale impressum, non iudicatum - sub onere fallebat)
 #   LI   ambitus declaratus in clave (T4): membrum frescum cum valore
 #        variabilis declaratae MUTATO currit (COMPUTUS_SCRIBERE=1 olim
 #        servabatur - aurum non rescribebatur); valore eodem servatur
@@ -110,9 +111,14 @@
 #        cursus, campus acta = sigillum
 #   LVII sectio rupta (analytica T4 2b-ii): INCIPIT sine SECTIO -> causa
 #        "sectio 'X' RUIT; N non cursae", cursus filius #X fractus
+#   LVIII catena iudicii (parcum 190VQB): g (a->b), h (b->c); a mutato
+#        'iudicare -plenus c' NON RECENS sed FORTASSE 'supra: g' (olim
+#        RECENS - h contra b stalum iudicabatur); arcus DATORUM solum
+#        (k cum praecondicione g, sine ingressu eius = RECENS); post
+#        sanare c RECENS
 #
 # Exitus: 0 sanum · 1 fractum · 2 bin/fabrica deest.
-# <porta titulus="fabrica-fumus" instrumentum="bin/fabrica" tegit="*/aedificatio.stml aedificatio.canon fabrica.canon tools/fabrica_struere.sh"/>
+# <porta titulus="fabrica-fumus" gradus="fusio" instrumentum="bin/fabrica" tegit="*/aedificatio.stml aedificatio.canon fabrica.canon tools/fabrica_struere.sh"/>
 set -u
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$RADIX" || exit 2
@@ -762,27 +768,34 @@ if [ "$rc1" -eq 0 ] && [ "$ni" -le 2 ] && grep -qx 'probationes_t: 3/3 praeterit
 # L (cursores ad gradus T3c): PHOTOGRAPHIA SINE THESAURO - radix cum X
 # probationibus vacuis; 'probare -vis' sine thesauro, deinde cum XL
 # milibus plagularum in build/aedilis/obiecta/actiones (cursus primus
-# post creationem calefacit, secundus mensuratur). Differentia < 1.5 s
+# post creationem calefacit, secundus mensuratur). Differentia tempus
+# PROCESSORIS (filii: user+sys) < 1.0 s; murale solum impressum
+# (2026-10-15, …GBVETQ: murale sub onere arborum aliarum fallebat -
+# exspectatio processoris non est ambulatio). Mensuratum: sanum ~0.02 s,
+# planta (thesaurus ambulatus) ~2.15 s processoris, ~2.5 s murale
 radix '<fabrica titulus="t"><subsystema via="."/></fabrica>'
 cp "$RADIX/aedilis.stml" "$T/r/aedilis.stml"
 mkdir -p "$T/r/t"
 for i in 0 1 2 3 4 5 6 7 8 9; do printf 'int main(void) { return 0; }\n' > "$T/r/t/probatio_m$i.c"; done
 printf '<aedificatio>\n  <actio titulus="probationes_t" genus="iudicium">\n    <probationes_c exemplar="t/probatio_*.c"/>\n  </actio>\n</aedificatio>\n' > "$T/r/aedificatio.stml"
-# tempus probare -vis, MINIMUM duorum (machina occupata: tempus unum
-# fallax - basis lenta differentiam celaret)
+# tempus probare -vis, MINIMUM duorum: 'processor murale' (processor =
+# user+sys filiorum, RUSAGE_CHILDREN)
 tempus_vis () {
     python3 - "$T/r" "$F" <<'PY'
-import subprocess, sys, time
+import resource, subprocess, sys, time
 radix, f = sys.argv[1], sys.argv[2]
-t = []
+mur, proc = [], []
 for _ in range(2):
     a = time.time()
+    r0 = resource.getrusage(resource.RUSAGE_CHILDREN)
     r = subprocess.run([f, 'probare', '-vis', 'probationes_t'], cwd=radix,
                        capture_output=True)
-    t.append(time.time() - a)
+    r1 = resource.getrusage(resource.RUSAGE_CHILDREN)
+    mur.append(time.time() - a)
+    proc.append(r1.ru_utime - r0.ru_utime + r1.ru_stime - r0.ru_stime)
     if r.returncode != 0:
         print('rc%d' % r.returncode); sys.exit(0)
-print('%.2f' % min(t))
+print('%.2f %.2f' % (min(proc), min(mur)))
 PY
 }
 (cd "$T/r" && "$F" probare probationes_t) > /dev/null 2>&1
@@ -798,7 +811,9 @@ for i in range(400):
 "
 (cd "$T/r" && "$F" probare -vis probationes_t) > /dev/null 2>&1
 cum=$(tempus_vis)
-if python3 -c "import sys; sys.exit(0 if float('$cum') - float('$sine') < 1.5 else 1)" 2>/dev/null; then echo "  L    photographia thesaurum praeterit (sine $sine s, cum XL milibus $cum s) OK"; else echo "  L    FRACTUM (sine $sine s, cum XL milibus plagularum in thesauro $cum s)"; fracta=1; fi
+read -r sine_p sine_m _ <<< "$sine ?"
+read -r cum_p cum_m _ <<< "$cum ?"
+if python3 -c "import sys; sys.exit(0 if float('$cum_p') - float('$sine_p') < 1.0 else 1)" 2>/dev/null; then echo "  L    photographia thesaurum praeterit (processor sine $sine_p s, cum XL milibus $cum_p s; murale $sine_m / $cum_m s) OK"; else echo "  L    FRACTUM (processor sine $sine_p s, cum XL milibus plagularum in thesauro $cum_p s - limes 1.0 s; murale $sine_m / $cum_m s)"; fracta=1; fi
 
 # LI (cursores ad gradus T4): AMBITUS DECLARATUS IN CLAVE - membrum unum
 # quod FUMUS_DECLARATUM imprimit; declaratum per <ambitus variabilis>
@@ -979,6 +994,32 @@ if grep -q "probatio_r FRACTA.*sectio 'beta' RUIT; 1 non cursae" "$T/lvii" && ! 
    && [ "$nb" = "1|RUIT" ] && grep -q "probatio_q FRACTA.* - exitus 139: 1 non cursae" "$T/lvii" \
    && ! grep -q "probatio_q FRACTA.*RUIT" "$T/lvii"; then echo "  LVII sectio rupta nominata: RUIT, non cursae numeratae, cursus #beta fractus OK"; else echo "  LVII FRACTUM (cursus #beta '$nb')"; grep "probatio_r" "$T/lvii" | sed 's/^/      /' | head -4; fracta=1; fi
 
+# LVIII (parcum 190VQB): CATENA IUDICII - iudicium artificii ingressus
+# DIRECTOS solum iudicabat: g (a->b) et h (b->c), a mutato, 'iudicare
+# -plenus c' RECENS dicebat (regeneratio h ex b stalo congruit) - binarium
+# ex capsula stala 'RECENS' in praevolatu commissionis (bin/briar,
+# 2026-10-15). Nunc catena per arcus DATORUM (exitus alterius in loco
+# ingressus) iudicatur: c FORTASSE 'supra: g'. Praecondicio arcus datorum
+# non est: k (e->d, praecondicio g) RECENS manet. Controla: ante
+# mutationem et post sanare c RECENS.
+radix '<fabrica titulus="t"><subsystema via="."/></fabrica>'
+printf 'unum\n' > "$T/r/a"; printf 'e\n' > "$T/r/e"
+printf '<aedificatio>\n  <actio titulus="g" genus="generator">\n    <mandatum>\n      <verbum! (>sh\n      <verbum! (>gen_b.sh\n    </mandatum>\n    <ingressus genus="fasciculus" via="a"/>\n    <exitus via="b" provenientia="regeneratio"/>\n  </actio>\n  <actio titulus="h" genus="generator">\n    <mandatum>\n      <verbum! (>sh\n      <verbum! (>gen_c.sh\n    </mandatum>\n    <ingressus genus="fasciculus" via="b"/>\n    <exitus via="c" provenientia="regeneratio"/>\n  </actio>\n  <actio titulus="k" genus="generator">\n    <mandatum>\n      <verbum! (>sh\n      <verbum! (>gen_d.sh\n    </mandatum>\n    <praecondicio actio="g"/>\n    <ingressus genus="fasciculus" via="e"/>\n    <exitus via="d" provenientia="regeneratio"/>\n  </actio>\n</aedificatio>\n' > "$T/r/aedificatio.stml"
+printf 'D="${FABRICA_SCRIPTURA:-.}"; printf "b:%%s" "$(cat a)" > "$D/b"\n' > "$T/r/gen_b.sh"
+printf 'D="${FABRICA_SCRIPTURA:-.}"; printf "c:%%s" "$(cat b)" > "$D/c"\n' > "$T/r/gen_c.sh"
+printf 'D="${FABRICA_SCRIPTURA:-.}"; printf "d:%%s" "$(cat e)" > "$D/d"\n' > "$T/r/gen_d.sh"
+(cd "$T/r" && "$F" sanare) > "$T/lviii_s" 2>&1; rcs=$?
+(cd "$T/r" && "$F" iudicare -plenus -machina c) > "$T/lviii_0" 2>&1; rc0=$?
+printf 'duo\n' > "$T/r/a"
+(cd "$T/r" && "$F" iudicare -plenus -machina c) > "$T/lviii_1" 2>&1; rc1=$?
+(cd "$T/r" && "$F" iudicare -plenus -machina d) > "$T/lviii_2" 2>&1; rc2=$?
+(cd "$T/r" && "$F" sanare) > /dev/null 2>&1
+(cd "$T/r" && "$F" iudicare -plenus -machina c) > "$T/lviii_3" 2>&1; rc3=$?
+if [ "$rcs" -eq 0 ] && [ "$rc0" -eq 0 ] && grep -q '^IUDICIUM	RECENS	c	' "$T/lviii_0" \
+   && [ "$rc1" -eq 1 ] && grep -q '^IUDICIUM	FORTASSE	c	.*supra: g' "$T/lviii_1" \
+   && [ "$rc2" -eq 0 ] && grep -q '^IUDICIUM	RECENS	d	' "$T/lviii_2" \
+   && [ "$rc3" -eq 0 ] && grep -q '^IUDICIUM	RECENS	c	' "$T/lviii_3"; then echo "  LVIII catena iudicii: c FORTASSE supra g, praecondicio non propagat, post sanare RECENS OK"; else echo "  LVIII FRACTUM (sanare rc=$rcs; c ante rc=$rc0, post a rc=$rc1, d rc=$rc2, post sanare rc=$rc3)"; for k in 0 1 2 3; do grep '^IUDICIUM' "$T/lviii_$k" | sed "s/^/      [$k] /"; done; fracta=1; fi
+
 if [ "$fracta" -ne 0 ]; then echo "fumus fabricae: FRACTUM"; exit 1; fi
-echo "fumus fabricae: sanum (LVII/LVII)"
+echo "fumus fabricae: sanum (LVIII/LVIII)"
 exit 0

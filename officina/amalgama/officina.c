@@ -7434,6 +7434,16 @@ officina_xar_creare_cum_vexillis (
                   XAR_SEGMENTA_ORDINARIA);
 }
 
+/* Bitum summum per instructionem UNAM (clz) ubi compilator eam praebet,
+ * aliter scansio C89 infra (eadem responsa; q > 0 semper). xar_mensura
+ * 2026-10-15: scansio ~XV instructiones in omni xar_obtinere, catena
+ * dependens - clz seriatim 3.0 -> 2.2 ns, temere 2.6 -> 1.5 ns.
+ * -DXAR_SINE_INTRINSECIS viam C89 cogit (probatio eius in clang). */
+#if (defined(__clang__) || defined(__GNUC__)) \
+    && !defined(XAR_SINE_INTRINSECIS)
+#define XAR_BITUM_SUMMUM(q) \
+    ((i32)(XXXI - (i32)__builtin_clz((insignatus integer)(q))))
+#else
 /* Bitum summum positum (0-basatum) numeri positivi: scansio binaria
  * quinque graduum (C89 sine intrinsecis). Pro xar_locare: segmentum k
  * >= II indices [primum x 2^(k-1), primum x 2^k) tenet, ergo cum
@@ -7463,6 +7473,9 @@ _bitum_summum (
     redde k;
 }
 
+#define XAR_BITUM_SUMMUM(q) _bitum_summum(q)
+#endif
+
 
 /* ========================================================================
  * LOCATIO ET ACCESSUS
@@ -7490,26 +7503,37 @@ officina_xar_locare (
         redde FALSUM;
     }
 
-    /* Via rapida pro primis duobus segmentis (eadem magnitudo)
-	 */
-    si (index < xar->magnitudo_primi * II)
+    /* Segmentum primum: via rapida */
+    si (index < xar->magnitudo_primi)
     {
-        si (index < xar->magnitudo_primi)
+        locatio->index_segmenti      = ZEPHYRUM;
+        locatio->offset_in_segmento  = index;
+        locatio->magnitudo_segmenti  = xar->magnitudo_primi;
+        locatio->basis_segmenti      = xar->segmenta[ZEPHYRUM];
+        redde VERUM;
+    }
+
+    /* PRIMUM POTENTIA BINARIA (ordinarium: IV, et omnes vocantes domus
+     * I/IV/VIII/XVI): primum = 2^p, h = bitum_summum(index) ->
+     * segmentum h - p + I, magnitudo 2^h, offset index - 2^h - sine
+     * divisione (segmentum I quoque: h = p). Primum aliud (probatio
+     * finium III, VII) per formam divisionis infra - mores exacti. */
+    si ((xar->magnitudo_primi & (xar->magnitudo_primi - I)) == ZEPHYRUM)
+    {
+        i32 h = XAR_BITUM_SUMMUM(index);
+
+        index_segmenti      = h - XAR_BITUM_SUMMUM(xar->magnitudo_primi)
+                            + I;
+        magnitudo_segmenti  = (i32)I << h;
+        index_adiustus      = index - magnitudo_segmenti;
+        si (index_segmenti >= xar->segmenta_maxima)
         {
-            /* Segmentum primum */
-            locatio->index_segmenti      = ZEPHYRUM;
-            locatio->offset_in_segmento  = index;
-            locatio->magnitudo_segmenti  = xar->magnitudo_primi;
+            redde FALSUM;
         }
-        alioquin
-        {
-            /* Segmentum secundum */
-            locatio->index_segmenti      = I;
-            locatio->offset_in_segmento  = index - xar->magnitudo_primi;
-            locatio->magnitudo_segmenti  = xar->magnitudo_primi;
-        }
-        locatio->basis_segmenti =
-            xar->segmenta[locatio->index_segmenti];
+        locatio->index_segmenti      = index_segmenti;
+        locatio->offset_in_segmento  = index_adiustus;
+        locatio->magnitudo_segmenti  = magnitudo_segmenti;
+        locatio->basis_segmenti      = xar->segmenta[index_segmenti];
         redde VERUM;
     }
 
@@ -7524,7 +7548,7 @@ officina_xar_locare (
      * referentiam). */
     {
         i32 q = index / xar->magnitudo_primi;
-        i32 b = _bitum_summum(q);
+        i32 b = XAR_BITUM_SUMMUM(q);
 
         index_segmenti      = b + I;
         magnitudo_segmenti  = xar->magnitudo_primi << b;
@@ -13045,6 +13069,27 @@ _aed_localtime (
     redde VERUM;
 }
 
+/* CANALIS LECTIONUM (examen 96, spec canalis-lectionum): scripta
+ * sessionis per filum legunt, filum per lib/lectiones.c notat, quae
+ * getenv("FABRICA_LECTIONES") legit - antea 'decipula vocata:
+ * getenv'. LACUNA NOTA: sub FABRICA_LECTIONES lectiones_notare
+ * ulterius currit (open/write + magnitudo(_via_aperta) quam demissio
+ * aestimare nequit - 'magnitudo inaestimabilis'); colloquium nondum
+ * sub fabrica currit (park in tabulario). */
+interior b32
+_aed_getenv (
+       Machinula* m,
+    constans i64* a,
+             s32  n,
+             i64* fr)
+{
+    (vacuum)m;
+    (vacuum)n;
+    *fr = (i64)(memoriae_index)getenv(
+        (constans character*)(memoriae_index)a[ZEPHYRUM]);
+    redde VERUM;
+}
+
 nomen structura {
     constans character* titulus;
          MachinulaPons  pons;
@@ -13111,7 +13156,9 @@ interior constans AedificatumNota AEDIFICATA[] = {
     { "gettimeofday", _aed_gettimeofday },
     { "localtime",    _aed_localtime },
     { "unlink",       _aed_unlink },
-    { "clock",        _aed_clock }
+    { "clock",        _aed_clock },
+    /* canalis lectionum: lib/lectiones.c legit FABRICA_LECTIONES */
+    { "getenv",       _aed_getenv }
 };
 /* structuralis - numerus falsus (44 vs 42 verae) lectiones extra
  * tabulam in ansa ligationis fecit; magnitudo drift vetat */
