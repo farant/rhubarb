@@ -92,7 +92,8 @@
 #   L    photographia thesaurum praeterit (T3c): scriptura ibi semper
 #        licita (fabrica_ordo), ergo ambulatio eius nihil iudicat -
 #        XL milia plagularum in thesauro 'probare -vis' (X membra, XX
-#        photographiae) < 1.5 s tardius (olim ~3.5 s)
+#        photographiae) < 1.0 s PROCESSORIS tardius (planta ~2.15 s;
+#        murale impressum, non iudicatum - sub onere fallebat)
 #   LI   ambitus declaratus in clave (T4): membrum frescum cum valore
 #        variabilis declaratae MUTATO currit (COMPUTUS_SCRIBERE=1 olim
 #        servabatur - aurum non rescribebatur); valore eodem servatur
@@ -762,27 +763,34 @@ if [ "$rc1" -eq 0 ] && [ "$ni" -le 2 ] && grep -qx 'probationes_t: 3/3 praeterit
 # L (cursores ad gradus T3c): PHOTOGRAPHIA SINE THESAURO - radix cum X
 # probationibus vacuis; 'probare -vis' sine thesauro, deinde cum XL
 # milibus plagularum in build/aedilis/obiecta/actiones (cursus primus
-# post creationem calefacit, secundus mensuratur). Differentia < 1.5 s
+# post creationem calefacit, secundus mensuratur). Differentia tempus
+# PROCESSORIS (filii: user+sys) < 1.0 s; murale solum impressum
+# (2026-10-15, …GBVETQ: murale sub onere arborum aliarum fallebat -
+# exspectatio processoris non est ambulatio). Mensuratum: sanum ~0.02 s,
+# planta (thesaurus ambulatus) ~2.15 s processoris, ~2.5 s murale
 radix '<fabrica titulus="t"><subsystema via="."/></fabrica>'
 cp "$RADIX/aedilis.stml" "$T/r/aedilis.stml"
 mkdir -p "$T/r/t"
 for i in 0 1 2 3 4 5 6 7 8 9; do printf 'int main(void) { return 0; }\n' > "$T/r/t/probatio_m$i.c"; done
 printf '<aedificatio>\n  <actio titulus="probationes_t" genus="iudicium">\n    <probationes_c exemplar="t/probatio_*.c"/>\n  </actio>\n</aedificatio>\n' > "$T/r/aedificatio.stml"
-# tempus probare -vis, MINIMUM duorum (machina occupata: tempus unum
-# fallax - basis lenta differentiam celaret)
+# tempus probare -vis, MINIMUM duorum: 'processor murale' (processor =
+# user+sys filiorum, RUSAGE_CHILDREN)
 tempus_vis () {
     python3 - "$T/r" "$F" <<'PY'
-import subprocess, sys, time
+import resource, subprocess, sys, time
 radix, f = sys.argv[1], sys.argv[2]
-t = []
+mur, proc = [], []
 for _ in range(2):
     a = time.time()
+    r0 = resource.getrusage(resource.RUSAGE_CHILDREN)
     r = subprocess.run([f, 'probare', '-vis', 'probationes_t'], cwd=radix,
                        capture_output=True)
-    t.append(time.time() - a)
+    r1 = resource.getrusage(resource.RUSAGE_CHILDREN)
+    mur.append(time.time() - a)
+    proc.append(r1.ru_utime - r0.ru_utime + r1.ru_stime - r0.ru_stime)
     if r.returncode != 0:
         print('rc%d' % r.returncode); sys.exit(0)
-print('%.2f' % min(t))
+print('%.2f %.2f' % (min(proc), min(mur)))
 PY
 }
 (cd "$T/r" && "$F" probare probationes_t) > /dev/null 2>&1
@@ -798,7 +806,9 @@ for i in range(400):
 "
 (cd "$T/r" && "$F" probare -vis probationes_t) > /dev/null 2>&1
 cum=$(tempus_vis)
-if python3 -c "import sys; sys.exit(0 if float('$cum') - float('$sine') < 1.5 else 1)" 2>/dev/null; then echo "  L    photographia thesaurum praeterit (sine $sine s, cum XL milibus $cum s) OK"; else echo "  L    FRACTUM (sine $sine s, cum XL milibus plagularum in thesauro $cum s)"; fracta=1; fi
+read -r sine_p sine_m _ <<< "$sine ?"
+read -r cum_p cum_m _ <<< "$cum ?"
+if python3 -c "import sys; sys.exit(0 if float('$cum_p') - float('$sine_p') < 1.0 else 1)" 2>/dev/null; then echo "  L    photographia thesaurum praeterit (processor sine $sine_p s, cum XL milibus $cum_p s; murale $sine_m / $cum_m s) OK"; else echo "  L    FRACTUM (processor sine $sine_p s, cum XL milibus plagularum in thesauro $cum_p s - limes 1.0 s; murale $sine_m / $cum_m s)"; fracta=1; fi
 
 # LI (cursores ad gradus T4): AMBITUS DECLARATUS IN CLAVE - membrum unum
 # quod FUMUS_DECLARATUM imprimit; declaratum per <ambitus variabilis>
