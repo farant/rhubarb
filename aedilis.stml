@@ -90,6 +90,11 @@
       <vexillum! (>-DSQLITE_OMIT_DEPRECATED
       <vexillum! (>-DSQLITE_DEFAULT_WAL_SYNCHRONOUS=1
     </fons>
+    <!-- BearSSL amalgama (tls-bearssl-plan T1, R1): GENERATUM ex
+         vendor/bearssl (tools/bearssl_amalgamare.sh); C99 laxe -->
+    <fons via="vendor/bearssl_amalgama.c">
+      <vexillum! (>-O2
+    </fons>
   </vendor>
   <!-- compilatio: vexilla per fontem nostrum, nomine obiecti lata
        (lib__sigillum__O2.o). sigillum -O2 (fabrica T8, mensuratum):

@@ -26,6 +26,17 @@
  * ================================================== */
 
 typedef long               intptr_t;      /* stdint.h - C99, corpus */
+/* stdint.h - typi latitudinis exactae (C99; vendor/bearssl_amalgama.h,
+ * tls-bearssl T1 R3). LP64: 64 bit ut long (praecedens intptr_t; C89
+ * 'long long' non novit). Formae per officina/auspex_posix.sh */
+typedef signed char        int8_t;
+typedef short              int16_t;
+typedef int                int32_t;
+typedef long               int64_t;
+typedef unsigned char      uint8_t;
+typedef unsigned short     uint16_t;
+typedef unsigned int       uint32_t;
+typedef unsigned long      uint64_t;
 typedef int                dev_t;
 typedef unsigned short     mode_t;
 typedef unsigned short     nlink_t;

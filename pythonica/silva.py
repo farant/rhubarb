@@ -114,6 +114,24 @@ def _vexilla():
     return list(_VEXILLA)
 
 
+_RADICES = None
+
+
+def _radices_aedilis():
+    """radices inclusionis DECLARATAE (bin/aedilis --radices, aedilis.stml
+    <inclusa>) - semel lectae; [] si bin/aedilis abest"""
+    global _RADICES
+    if _RADICES is None:
+        aed = os.path.join(RADIX, 'bin', 'aedilis')
+        _RADICES = []
+        if os.access(aed, os.X_OK):
+            r = _curre([aed, '--radices'])
+            if r.returncode == 0:
+                _RADICES = [os.path.join(RADIX, l.strip())
+                            for l in r.stdout.splitlines() if l.strip()]
+    return list(_RADICES)
+
+
 def _inclusiones_clang(via):
     """-I pro probatione syntaxis: include/, directorium plagulae, et
     fontes/ suitae cuiusque (md fontes materiae includit)"""
@@ -123,6 +141,11 @@ def _inclusiones_clang(via):
     # (silva.h + silva/instrumenta) - praevolatus plantae eas olim recusabat
     dirs += [os.path.join(RADIX, 'silva', 'amalgama'),
              os.path.join(RADIX, 'silva', 'instrumenta')]
+    # radices aedilis POST (ordo pristinus intactus): vendor/ inter eas -
+    # planta in plagula quae vendor/bearssl_amalgama.h aut sqlite3.h
+    # includit praevolatum olim fallebat ('file not found', tls-bearssl
+    # T1, 2026-10-15)
+    dirs += [d for d in _radices_aedilis() if d not in dirs]
     return ['-I' + d for d in dirs]
 
 
@@ -1557,6 +1580,8 @@ PORTAE = {
     'ludus_tessera': (['./ludus_tessera/compile_probationes.sh'],
                       r'LUDUS_TESSERA PROBATIONES: \d+/\d+'),
     'pythonica': (['./pythonica/probare.sh'], r'PYTHONICA: (sana|FRACTA)'),
+    # tls-bearssl-plan T1: integritas vendor/bearssl + KAT upstream
+    'bearssl': (['./tools/bearssl_probare.sh'], r'BEARSSL: (sana|FRACTA)'),
     'formator-intra': (['./silva/formator_intra_fumus.sh'],
                        r'fumus intra: (sanum|FRACTUM)'),
     'formator-delta': (['./silva/formator_delta_fumus.sh'],

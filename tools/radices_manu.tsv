@@ -85,6 +85,7 @@ tools/agmen_vectorizatio.sh	nondum derivatum
 tools/amalgama_excludenda_generare.sh	nondum derivatum
 tools/amalgama_ligare.sh	nondum derivatum
 tools/amalgamata_probare.sh	nondum derivatum
+tools/bearssl_probare.sh	radices arboris UPSTREAM (vendor/bearssl/inc, src) pro programmatis probationis vendoris test_crypto/test_x509 - non radices domus; distinctio vendor/domus in fabrica eam solvet (Franus 2026-10-15)
 tools/briar_spectator_struere.sh	nondum derivatum
 tools/briar_struere.sh	nondum derivatum
 tools/canon_struere.sh	nondum derivatum

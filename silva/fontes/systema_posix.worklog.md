@@ -67,3 +67,17 @@ The offline TLS server test uses `access(..., R_OK/X_OK)`; examen
 REICE'd them (unknown). Added beside the `access` prototype in the
 unistd.h sectio (Darwin = the common POSIX values 0/1/2/4); auspex
 asserts all four - CONSENTIT, plant R_OK 5 -> DISSENTIT, restored.
+
+## 2026-10-15 - stdint exact-width types (tls-bearssl T1, R3)
+
+`vendor/bearssl_amalgama.h` (BearSSL's public headers, generated) uses
+`uint8_t`..`uint64_t` / `int8_t`..`int64_t` everywhere; examen knew only
+`intptr_t`, so a house file including it got ~220 "typus nominatus
+ignotus" + "specificatores mixti" findings. Added the eight exact-width
+types in the semper sectio beside `intptr_t`; 64-bit spelled `long` /
+`unsigned long` (LP64, no `long long` in C89 - same choice as intptr_t).
+auspex asserts size AND signedness of all eight (real TU includes
+<stdint.h>); CONSENTIT both TUs; hand plant uint64_t -> unsigned int ->
+TU nostrum DISSENTIT, restored. (silva.planta could not run this plant:
+its preflight compiles the header ALONE and systema_posix.h needs the
+systema_c89.h prelude - expected, not a bug.)

@@ -162,6 +162,39 @@ with this plan; this plan argues from it and records where it departs.
   which drives ECDHE_RSA, `rsavrfy` and the decoder's RSA path in an
   offline test.
 
+### Rulings made while executing
+
+- **R13 (T1) - generated pair is `vendor/bearssl_amalgama.{c,h}`, not
+  `vendor/bearssl.{c,h}`.** Every later mention of `vendor/bearssl.c`,
+  `vendor/bearssl.h` and `#include "bearssl.h"` in this plan means the
+  amalgama names. Why: twelve silva tools collect every `.h` in the tree
+  and resolve a quoted include by BASENAME, and the first one met in the
+  directory walk wins (`silva_expandere.c:1210`). examen reached
+  `vendor/bearssl/inc/bearssl.h` first, bypassed the C89 shim and
+  REICE'd. A unique basename works in all twelve; the walk is ledger park
+  …C4Q5.
+- **R14 (T1) - header macros that a source redefines identically stay
+  defined.** `ARSH` in `ec_c25519_m15/m31` and `ec_p256_m31` duplicates
+  `inner.h:1030/1033` (legal C). The generator leaves such macros out of
+  its post-file `#undef`s, and fails on a DIFFERENT redefinition or an
+  `#undef` of a header macro. 455 undefs, not 461.
+- **R15 (T1) - `FABRICA_SCRIPTURA`**: the generator writes under it when
+  set (fabrica's scratch root), as `tools/runae_generare.sh` does.
+- **R16 (T1) - plant preflight include roots.** `silva.syntaxis` (the
+  `silva.planta` preflight) used a hand `-I` list without `vendor/`. It
+  now appends `bin/aedilis --radices`, keeping the old order first.
+- **R17 (merge 85baa08f) - examen code 96 CANALIS_PRAETERITUS**, which
+  arrived from main after planning: raw `fopen`/`access`/`stat` outside
+  filum is a violation. In T2-T5, `fiducia_macos.m`'s anchor read uses
+  `lectiones_fopen`, `tls_bearssl.c`'s anchor check uses `filum_existit`,
+  and test files use `filum_scribere`/`filum_existit`/`lectiones_fopen`
+  (same shapes as the plan's code).
+- **R18 (T1) - glossary / lint.** Eight `ignotum-permissum` entries
+  (`int8` ... `uint64`). Test identifiers are renamed instead of
+  glossaried: `_sectio_semen`, `generator`.
+- **R19 (T1) - the hook gate step is XXIII**, not XXI: main added XXI and
+  XXII.
+
 ## Review focus
 
 Inputs no task's tests reach that are most likely to bite, each with the

@@ -87,6 +87,13 @@ emittere_asserta() {
     echo "IUNGO_ASSERTA(S_ISDIR(0040755) && !S_ISDIR(0100644));"
     echo "IUNGO_ASSERTA(S_ISREG(0100644) && !S_ISREG(0040755));"
     # Unda 2 (hospitium): typi + valores macrorum fossarum/signorum
+    # stdint latitudinis exactae (tls-bearssl T1 R3): mensura + signum
+    echo "IUNGO_ASSERTA(sizeof(int8_t) == 1 && sizeof(uint8_t) == 1);"
+    echo "IUNGO_ASSERTA(sizeof(int16_t) == 2 && sizeof(uint16_t) == 2);"
+    echo "IUNGO_ASSERTA(sizeof(int32_t) == 4 && sizeof(uint32_t) == 4);"
+    echo "IUNGO_ASSERTA(sizeof(int64_t) == 8 && sizeof(uint64_t) == 8);"
+    echo "IUNGO_ASSERTA((int8_t)-1 < 0 && (int16_t)-1 < 0 && (int32_t)-1 < 0 && (int64_t)-1 < 0);"
+    echo "IUNGO_ASSERTA((uint8_t)-1 > 0 && (uint16_t)-1 > 0 && (uint32_t)-1 > 0 && (uint64_t)-1 > 0);"
     echo "IUNGO_ASSERTA(sizeof(pid_t) == 4);"
     echo "IUNGO_ASSERTA(sizeof(ssize_t) == 8);"
     echo "IUNGO_ASSERTA(sizeof(socklen_t) == 4);"
@@ -208,6 +215,7 @@ PRAEAMBULUM='#define IUNGO2(a,b) a##b
 
 # TU verum
 {
+    echo "#include <stdint.h>"
     echo "#include <sys/stat.h>"
     echo "#include <sys/time.h>"
     echo "#include <sys/socket.h>"
