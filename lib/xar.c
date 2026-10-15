@@ -260,6 +260,16 @@ xar_ponere_vexilla (
     }
 }
 
+/* Bitum summum per instructionem UNAM (clz) ubi compilator eam praebet,
+ * aliter scansio C89 infra (eadem responsa; q > 0 semper). xar_mensura
+ * 2026-10-15: scansio ~XV instructiones in omni xar_obtinere, catena
+ * dependens - clz seriatim 3.0 -> 2.2 ns, temere 2.6 -> 1.5 ns.
+ * -DXAR_SINE_INTRINSECIS viam C89 cogit (probatio eius in clang). */
+#if (defined(__clang__) || defined(__GNUC__)) \
+    && !defined(XAR_SINE_INTRINSECIS)
+#define XAR_BITUM_SUMMUM(q) \
+    ((i32)(XXXI - (i32)__builtin_clz((insignatus integer)(q))))
+#else
 /* Bitum summum positum (0-basatum) numeri positivi: scansio binaria
  * quinque graduum (C89 sine intrinsecis). Pro xar_locare: segmentum k
  * >= II indices [primum x 2^(k-1), primum x 2^k) tenet, ergo cum
@@ -289,6 +299,9 @@ _bitum_summum (
     redde k;
 }
 
+#define XAR_BITUM_SUMMUM(q) _bitum_summum(q)
+#endif
+
 
 /* ========================================================================
  * LOCATIO ET ACCESSUS
@@ -316,26 +329,37 @@ xar_locare (
         redde FALSUM;
     }
 
-    /* Via rapida pro primis duobus segmentis (eadem magnitudo)
-	 */
-    si (index < xar->magnitudo_primi * II)
+    /* Segmentum primum: via rapida */
+    si (index < xar->magnitudo_primi)
     {
-        si (index < xar->magnitudo_primi)
+        locatio->index_segmenti      = ZEPHYRUM;
+        locatio->offset_in_segmento  = index;
+        locatio->magnitudo_segmenti  = xar->magnitudo_primi;
+        locatio->basis_segmenti      = xar->segmenta[ZEPHYRUM];
+        redde VERUM;
+    }
+
+    /* PRIMUM POTENTIA BINARIA (ordinarium: IV, et omnes vocantes domus
+     * I/IV/VIII/XVI): primum = 2^p, h = bitum_summum(index) ->
+     * segmentum h - p + I, magnitudo 2^h, offset index - 2^h - sine
+     * divisione (segmentum I quoque: h = p). Primum aliud (probatio
+     * finium III, VII) per formam divisionis infra - mores exacti. */
+    si ((xar->magnitudo_primi & (xar->magnitudo_primi - I)) == ZEPHYRUM)
+    {
+        i32 h = XAR_BITUM_SUMMUM(index);
+
+        index_segmenti      = h - XAR_BITUM_SUMMUM(xar->magnitudo_primi)
+                            + I;
+        magnitudo_segmenti  = (i32)I << h;
+        index_adiustus      = index - magnitudo_segmenti;
+        si (index_segmenti >= xar->segmenta_maxima)
         {
-            /* Segmentum primum */
-            locatio->index_segmenti      = ZEPHYRUM;
-            locatio->offset_in_segmento  = index;
-            locatio->magnitudo_segmenti  = xar->magnitudo_primi;
+            redde FALSUM;
         }
-        alioquin
-        {
-            /* Segmentum secundum */
-            locatio->index_segmenti      = I;
-            locatio->offset_in_segmento  = index - xar->magnitudo_primi;
-            locatio->magnitudo_segmenti  = xar->magnitudo_primi;
-        }
-        locatio->basis_segmenti =
-            xar->segmenta[locatio->index_segmenti];
+        locatio->index_segmenti      = index_segmenti;
+        locatio->offset_in_segmento  = index_adiustus;
+        locatio->magnitudo_segmenti  = magnitudo_segmenti;
+        locatio->basis_segmenti      = xar->segmenta[index_segmenti];
         redde VERUM;
     }
 
@@ -350,7 +374,7 @@ xar_locare (
      * referentiam). */
     {
         i32 q = index / xar->magnitudo_primi;
-        i32 b = _bitum_summum(q);
+        i32 b = XAR_BITUM_SUMMUM(q);
 
         index_segmenti      = b + I;
         magnitudo_segmenti  = xar->magnitudo_primi << b;
