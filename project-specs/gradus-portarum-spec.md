@@ -12,8 +12,8 @@ deferred the merge-tier mechanism and the first cut to Claude (§II,
 §III). This deliberately relaxes the 10-12 rule "commissio runs every
 owed gate" (portae-declaratae).*
 
-*Status: APPROVED 2026-10-15 (Fran: "yes, that sounds great"); T1-T5
-built (§VII); T6 (ritual note, measurement) open.*
+*Status: CLOSED 2026-10-15 (T1-T6, §VII). First `fusio_probare` run =
+the next quinta merge into main.*
 
 ## 0. Data (build/portae/tempora.tsv, last 10 healthy runs per gate; the week's 371 commits through `portae tactus`)
 
@@ -164,4 +164,16 @@ which gates exist.
   since ed85fe10): commissio 286 s, fusio 1682 s. The estimate line
   says `(plena: gradus ambo)` under plena and the >300 s MONITUM is
   only for the commit tier.
+- **T6** (2026-10-15): merge ritual in the quinta worktree note
+  (`git merge main` -> rebuild judges -> commit -> `fusio_probare()`
+  detached -> ff in main -> installata); agent habit + phases/tiers in
+  memory `commissio-phases-gradus` (MEMORY.md index line points there).
+  Measurement, same day, same tree:
+  | commit | owed gates | wall |
+  |---|---|---|
+  | f2a3991b lexer (before tiers) | ~45 | 5 attempts, ~8-30 min each |
+  | caaa588b T1 (before tiers) | 15 | 7.6 min (3rd attempt, reuse) |
+  | 8abf4934 T2+T3 (`plena=True`) | 19 | 22.4 min |
+  | e5e15e99 T4+T5 (first tiered) | 4 (+pythonica named, reused) | 22 s |
+  Other trees keep the old rule until this reaches main.
 
