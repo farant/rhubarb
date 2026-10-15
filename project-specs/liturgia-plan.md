@@ -73,9 +73,19 @@ title, season name), `lib/schirmata.c` (`calendarium_nomen_celebrationum`),
   cache), forward to the nearest free day; Joseph in Holy Week and
   John Baptist backward; `translata` / `dies_originis`; 1970-2100
   sweep: each fixed solemnity once a year; 6 plants red.
-- L4 - next (sanctorale data audit).
+- L4 DONE 2026-10-15: sanctorale audited against the USCCB 2025 +
+  2026 calendars (fixture probationes/fixa/liturgia/usccb_sanctorale.tsv,
+  237 rows), 10 additions, 2 US moves, Day of Prayer (Sunday -> Jan 23),
+  Thanksgiving (movable), US obligatory memorials ordo XI,
+  CALENDARIUM_SANCTORALE_VIGENS. Carlo Acutis not in the GRC/US
+  calendar - left out (Fran); devotions source idea parked.
+- L5 - next.
 
 ## IV. AUDIENDA
+
+- 16 memorials in the fixture are `MEMORIA?`: their rank is not
+  visible in the 2025/2026 USCCB calendars (Lent, Dec 17-24, octave);
+  ours kept as they were. A third year (e.g. 2027) would settle most.
 
 - Mary, Mother of the Church colliding with another obligatory
   memorial: treated by the general two-memorials rule (both optional);

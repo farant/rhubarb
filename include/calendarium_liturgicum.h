@@ -231,6 +231,10 @@ nomen structura {
                                   * si Epiphania 7 aut 8 I */
     Dies sancta_familia;         /* dominica intra octavam Nativitatis,
                                   * aut 30 XII si nulla */
+
+    /* Proprium USA */
+    Dies gratiarum_actio;        /* Thanksgiving: feria V quarta
+                                  * Novembris */
 } AnchoresMobiles;
 
 
@@ -417,6 +421,12 @@ calendarium_nomen_celebrationum (
 /* ==================================================
  * Sanctorale - Data Structure
  * ================================================== */
+
+/* Sanctorale vigens ad: calendarium USA (USCCB 2026) et decretum
+ * ultimum inscriptum - S. Ioannes Henricus Newman (9 X; Dicasterium
+ * de Cultu Divino, 9 XI 2025). Fons et excerpta:
+ * probationes/fixa/liturgia/usccb_sanctorale.tsv (liturgia-plan L4) */
+#define CALENDARIUM_SANCTORALE_VIGENS "2026-02"
 
 /* SanctoraleDatum - Entry in the sanctorale table */
 nomen structura {

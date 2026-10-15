@@ -155,6 +155,12 @@ computare_anchorae (
     anch->sancta_familia = dies_hebdomadae == ZEPHYRUM
         ? fasti_dies(annus, FASTI_DECEMBER, XXX)
         : fasti_addere_dies(nativitas, VII - dies_hebdomadae);
+
+    /* Gratiarum Actio (USA): feria V quarta Novembris */
+    secunda          = fasti_dies(annus, FASTI_NOVEMBER, I);
+    dies_hebdomadae  = fasti_dies_hebdomadis(secunda);
+    anch->gratiarum_actio = fasti_addere_dies(secunda, (FASTI_FERIA_V
+        - dies_hebdomadae + VII) % VII + XXI);
 }
 
 interior AnnusComputatus*
@@ -1047,7 +1053,11 @@ interior constans MobileDatum MOBILIA[] = {
       { ZEPHYRUM, ZEPHYRUM,
         "The Immaculate Heart of the Blessed Virgin Mary",
         "Immaculate Heart of Mary", GRADUS_MEMORIA,
-        ORDO_MEMORIA_GENERALIS, COLLIT_ALBUS, FALSUM } }
+        ORDO_MEMORIA_GENERALIS, COLLIT_ALBUS, FALSUM } },
+    { offsetof(AnchoresMobiles, gratiarum_actio),
+      { ZEPHYRUM, ZEPHYRUM, "Thanksgiving Day", "Thanksgiving Day",
+        GRADUS_MEMORIA_AD_LIBITUM, ORDO_MEMORIA_AD_LIBITUM,
+        COLLIT_ALBUS, FALSUM } }
 };
 
 #define MOBILIA_NUMERUS \
@@ -1364,6 +1374,8 @@ calendarium_obtinere_diem (
              AnchoresMobiles* anch;
                          s32  prima;
                          s32  obligatoriae;
+    constans SanctoraleDatum* precatio;
+                         s32  num_precationis;
 
     info = (InformatioDiei*)piscina_allocare(piscina,
         magnitudo(InformatioDiei));
@@ -1490,6 +1502,22 @@ calendarium_obtinere_diem (
                 celebrationem_sanctoralem_ponere(&MOBILIA[i].datum,
                     &celebrationes[idx], piscina);
                 celebrationes[idx++].genus = GENUS_MOBILE;
+            }
+        }
+        /* dies precationis USA: 23 I si 22 I dominica (IGMR 373) */
+        si (   dies.mensis == FASTI_IANUARIUS && dies.dies == XXIII
+            && fasti_dies_hebdomadis(fasti_dies(dies.annus,
+            FASTI_IANUARIUS, XXII)) == FASTI_DOMINICA)
+        {
+            precatio = sanctorale_obtinere(FASTI_IANUARIUS, XXII,
+                &num_precationis);
+            per (i = ZEPHYRUM; precatio && i < num_precationis; i++)
+            {
+                si (precatio[i].ordo == ORDO_MEMORIA_PROPRIA)
+                {
+                    celebrationem_sanctoralem_ponere(&precatio[i],
+                        &celebrationes[idx++], piscina);
+                }
             }
         }
     }

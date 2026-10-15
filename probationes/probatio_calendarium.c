@@ -12,6 +12,7 @@
 #include "calendarium_liturgicum.h"
 #include "piscina.h"
 #include "credo.h"
+#include "filum.h"
 #include <stdio.h>
 
 
@@ -1466,9 +1467,10 @@ _probare_mobilia (
     CREDO_NECESSE(celeb != NIHIL);
     CREDO_VERUM(celeb->ad_libitum);
 
-    /* Epiphania 6 I non iam in sanctorali (USA: mobilis) */
-    CREDO_AEQUALIS_S32((s32)_ordo_sancti(FASTI_IANUARIUS, VI),
-        (s32)ORDO_FERIA);
+    /* Epiphania 6 I non iam in sanctorali (USA: mobilis) - 6 I solum
+     * memoria ad libitum (Andreas Bessette, L4) */
+    CREDO_VERUM(_ordo_sancti(FASTI_IANUARIUS, VI)
+        > ORDO_FESTUM_PROPRIUM);
     calendarium_destruere(cal);
 }
 
@@ -1683,6 +1685,248 @@ _probare_sollemnitates_semel (
     calendarium_destruere(cal);
 }
 
+
+/* ==================================================
+ * Sanctorale contra calendarium USA (liturgia-plan L4)
+ * ================================================== */
+
+#define VIA_FONTIS_USA "probationes/fixa/liturgia/usccb_sanctorale.tsv"
+
+/* gradus fontis: -I = "MEMORIA?" (ordo non visibilis: memoria
+ * quaelibet), -II = ignotus */
+interior s32
+_gradus_fontis (
+    chorda g)
+{
+    si (chorda_aequalis_literis(g, "SOLLEMNITAS"))
+    {
+        redde GRADUS_SOLLEMNITAS;
+    }
+    si (chorda_aequalis_literis(g, "FESTUM"))
+    {
+        redde GRADUS_FESTUM;
+    }
+    si (chorda_aequalis_literis(g, "MEMORIA"))
+    {
+        redde GRADUS_MEMORIA;
+    }
+    si (chorda_aequalis_literis(g, "MEMORIA_AD_LIBITUM"))
+    {
+        redde GRADUS_MEMORIA_AD_LIBITUM;
+    }
+    si (chorda_aequalis_literis(g, "DEFUNCTORUM"))
+    {
+        redde GRADUS_DEFUNCTORUM;
+    }
+    redde chorda_aequalis_literis(g, "MEMORIA?") ? -I : -II;
+}
+
+/* color fontis: -I = "-" (non visibilis) */
+interior s32
+_color_fontis (
+    chorda c)
+{
+    si (chorda_aequalis_literis(c, "ALBUS"))
+    {
+        redde COLLIT_ALBUS;
+    }
+    si (chorda_aequalis_literis(c, "RUBER"))
+    {
+        redde COLLIT_RUBER;
+    }
+    si (chorda_aequalis_literis(c, "VIOLACEUS"))
+    {
+        redde COLLIT_VIOLACEUS;
+    }
+    redde -I;
+}
+
+/* introitus sanctoralis diei nondum adhibitus qui lineae congruit */
+interior s32
+_introitus_congruens (
+      constans SanctoraleDatum* sanct,
+                           s32  numerus,
+                  constans b32* adhibiti,
+                           s32  gradus,
+                           s32  color)
+{
+    s32 k;
+
+    per (k = ZEPHYRUM; k < numerus; k++)
+    {
+        si (   !adhibiti[k]
+            && (gradus == -I
+                ? (   sanct[k].gradus == GRADUS_MEMORIA
+                   || sanct[k].gradus == GRADUS_MEMORIA_AD_LIBITUM)
+                : (s32)sanct[k].gradus == gradus)
+            && (color < ZEPHYRUM || (s32)sanct[k].color == color))
+        {
+            redde k;
+        }
+    }
+    redde -I;
+}
+
+/* omnis linea fontis (USCCB 2025-2026) introitui uni sui diei
+ * congruit (gradus, color) et numerus aequalis: sanctorale = fons;
+ * memoria obligatoria propria USA ordinis XI, ceterae X */
+interior vacuum
+_probare_sanctorale_usa (
+    CredoContextus* c)
+{
+                      chorda  textus;
+       chorda_fissio_fructus  lineae;
+       chorda_fissio_fructus  campi;
+    constans SanctoraleDatum* sanct;
+                         b32  adhibiti[VIII];
+                         s32  numerus;
+                         s32  mensis;
+                         s32  dies;
+                         s32  k;
+                         s32  gradus;
+                         s32  color;
+                         i32  i;
+                         i32  omnes;
+                         i32  errores;
+                         b32  proprium;
+
+    textus = filum_legere_totum(VIA_FONTIS_USA, c->piscina);
+    CREDO_NECESSE(textus.mensura > ZEPHYRUM);
+    lineae   = chorda_fissio(textus, '\n', c->piscina);
+    omnes    = ZEPHYRUM;
+    errores  = ZEPHYRUM;
+    mensis   = ZEPHYRUM;
+    dies     = ZEPHYRUM;
+    numerus  = ZEPHYRUM;
+    sanct    = NIHIL;
+    per (i = ZEPHYRUM; i < lineae.numerus; i++)
+    {
+        s32 m;
+        s32 d;
+
+        si (   lineae.elementa[i].mensura         == ZEPHYRUM
+            || lineae.elementa[i].datum[ZEPHYRUM] == '#')
+        {
+            perge;
+        }
+        m      = ZEPHYRUM;
+        d      = ZEPHYRUM;
+        campi  = chorda_fissio(lineae.elementa[i], '\t', c->piscina);
+        CREDO_NECESSE(campi.numerus >= VI
+            && chorda_ut_s32(campi.elementa[ZEPHYRUM], &m)
+            && chorda_ut_s32(campi.elementa[I], &d));
+        si (m != mensis || d != dies)
+        {
+            /* dies novus: introitus diei prioris omnes adhibiti */
+            per (k = ZEPHYRUM; sanct && k < numerus; k++)
+            {
+                si (!adhibiti[k])
+                {
+                    imprimere("  nostra solum %d-%d: %s\n",
+                        (integer)mensis, (integer)dies,
+                        sanct[k].titulus);
+                    errores++;
+                }
+            }
+            mensis  = m;
+            dies    = d;
+            sanct   = sanctorale_obtinere(mensis, dies, &numerus);
+            per (k = ZEPHYRUM; k < VIII; k++)
+            {
+                adhibiti[k] = FALSUM;
+            }
+        }
+        omnes++;
+        gradus    = _gradus_fontis(campi.elementa[II]);
+        color     = _color_fontis(campi.elementa[III]);
+        proprium  = chorda_aequalis_literis(campi.elementa[IV], "USA");
+        k         = sanct ? _introitus_congruens(sanct, numerus,
+            adhibiti,
+            gradus, color) : -I;
+        si (k < ZEPHYRUM)
+        {
+            imprimere("  fons solum %d-%d: %.*s\n", (integer)mensis,
+                (integer)dies, (integer)campi.elementa[V].mensura,
+                (constans character*)campi.elementa[V].datum);
+            errores++;
+            perge;
+        }
+        adhibiti[k] = VERUM;
+        si (   gradus == GRADUS_MEMORIA
+            && sanct[k].ordo != (proprium ? ORDO_MEMORIA_PROPRIA
+            : ORDO_MEMORIA_GENERALIS))
+        {
+            imprimere("  ordo %d-%d: %s (%d)\n", (integer)mensis,
+                (integer)dies, sanct[k].titulus,
+                (integer)sanct[k].ordo);
+            errores++;
+        }
+    }
+    per (k = ZEPHYRUM; sanct && k < numerus; k++)
+    {
+        si (!adhibiti[k])
+        {
+            imprimere("  nostra solum %d-%d: %s\n", (integer)mensis,
+                (integer)dies, sanct[k].titulus);
+            errores++;
+        }
+    }
+    CREDO_AEQUALIS_S32((s32)omnes, sanctorale_numerus());
+    CREDO_AEQUALIS_S32((s32)errores, ZEPHYRUM);
+}
+
+/* proprium USA: dies precationis pro nascituris (22 I; 23 I si 22 I
+ * dominica), Gratiarum Actio (feria V quarta Novembris, ad libitum),
+ * 29 VII Martha, Maria et Lazarus */
+hic_manens constans CasusDiei CASUS_USA[] = {
+    { MMXXVI, FASTI_IANUARIUS, XXII, "Day of Prayer for the Unborn",
+      GRADUS_MEMORIA, COLLIT_VIOLACEUS },
+    { MMXXIII, FASTI_IANUARIUS, XXIII, "Day of Prayer for the Unborn",
+      GRADUS_MEMORIA, COLLIT_VIOLACEUS },
+    { MMXXIII, FASTI_IANUARIUS, XXII, NIHIL, GRADUS_DOMINICA,
+      COLLIT_VIRIDIS },
+    { MMXXVI, FASTI_NOVEMBER, XXVI, NIHIL, GRADUS_FERIA,
+      COLLIT_VIRIDIS },
+    { MMXXVI, FASTI_IULIUS, XXIX, "Ss. Martha, Mary & Lazarus",
+      GRADUS_MEMORIA, COLLIT_ALBUS }
+};
+
+interior vacuum
+_probare_proprium_usa (
+    CredoContextus* c)
+{
+    CalendariumLiturgicum* cal;
+           InformatioDiei* info;
+      constans Celebratio* celeb;
+
+    _casus_probare(c, CASUS_USA, (i32)(magnitudo(CASUS_USA)
+        / magnitudo(CASUS_USA[0])));
+
+    cal = calendarium_creare(c->piscina);
+    CREDO_VERUM(_dies_est(calendarium_anchorae(cal,
+        MMXXVI)->gratiarum_actio, MMXXVI, FASTI_NOVEMBER, XXVI));
+    CREDO_VERUM(_dies_est(calendarium_anchorae(cal,
+        MMXXV)->gratiarum_actio, MMXXV, FASTI_NOVEMBER, XXVII));
+
+    /* Gratiarum Actio ad libitum (memoria mobilis) */
+    info   = calendarium_obtinere_diem(cal, fasti_dies(MMXXVI,
+        FASTI_NOVEMBER, XXVI), c->piscina);
+    celeb  = _celebratio_inventa(info, "Thanksgiving Day");
+    CREDO_NECESSE(celeb != NIHIL);
+    CREDO_VERUM(celeb->ad_libitum);
+
+    /* 23 I 2023: Vincentius et Mariana Cope cum die precationis
+     * translato manent (ad libitum) */
+    info   = calendarium_obtinere_diem(cal, fasti_dies(MMXXIII,
+        FASTI_IANUARIUS, XXIII), c->piscina);
+    celeb  = _celebratio_inventa(info, "St. Vincent");
+    CREDO_NECESSE(celeb != NIHIL);
+    CREDO_VERUM(celeb->ad_libitum);
+    CREDO_VERUM(_celebratio_inventa(info, "St. Marianne Cope")
+        != NIHIL);
+    calendarium_destruere(cal);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "pascha_editum", _probare_pascha_editum, NIHIL, NIHIL, NIHIL,
       NIHIL },
@@ -1729,6 +1973,10 @@ hic_manens constans CredoSectio SECTIONES[] = {
       NIHIL },
     { "sollemnitates_semel", _probare_sollemnitates_semel, NIHIL, NIHIL,
       NIHIL, NIHIL },
+    { "sanctorale_usa", _probare_sanctorale_usa, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { "proprium_usa", _probare_proprium_usa, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

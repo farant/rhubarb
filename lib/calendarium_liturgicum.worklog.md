@@ -244,3 +244,59 @@ date exercises them (the Annunciation lands by Apr 9 at the latest, no
 feast before St Mark; Joseph/Annunciation targets never coincide), so
 those two lines are unguarded by data, kept because UNLY 60 requires
 them.
+
+## 2026-10-15 - liturgia-plan L4: sanctorale against the USCCB calendar
+
+Oracle: the USCCB "Liturgical Calendar for the Dioceses of the United
+States of America" 2025 (emended Feb 2025) and 2026, read with
+`pdftotext -layout` (the PDFs are copyrighted: not committed). Two
+years because a saint on a Sunday in one year is visible in the other
+(no date is a Sunday in both). Excerpt committed as
+`probationes/fixa/liturgia/usccb_sanctorale.tsv` (date, rank, colour,
+US flag, USCCB name, note): 237 rows = our sanctorale after L4; section
+`sanctorale_usa` matches every row to one entry of its date (rank +
+colour) and checks counts, and US obligatory memorials have ordo XI.
+Names are NOT compared (ours are short English titles).
+
+Hand-fixed rows carry a note: 16 memorials whose rank is invisible in
+both years (Lent, Dec 17-24, octave - every memorial shows in brackets
+there) are `MEMORIA?`; May 25 (Sunday 2025, Mary Mother of the Church
+2026) taken from the General Roman Calendar; Jun 28 Irenaeus (2025 =
+Immaculate Heart collision); All Souls and Christmas (no rank line /
+temporal title in the source); the Day of Prayer (below).
+
+Changes: added Bessette 1/6 (US), Marianne Cope 1/23 (US), Gregory of
+Narek 2/27, Drexel 3/3 (US), John of Avila 5/10, Paul VI 5/29, Teresa
+of Calcutta 9/5 (universal since Dec 2024), Hildegard 9/17, Bl. Seelos
+10/5 (US), Newman 10/9 (decree 9 Nov 2025); moved Vincent 1/22 -> 1/23
+and Paul of the Cross 10/19 -> 10/20 (US); Jul 29 -> Martha, Mary and
+Lazarus; US obligatory memorials (Seton, Neumann, Kateri, Claver,
+Brebeuf/Jogues, Cabrini - the 2023 calendar's Proper Calendar table)
+-> ORDO_MEMORIA_PROPRIA; Thanksgiving = movable optional memorial
+(anchor `gratiarum_actio`, 4th Thursday of November); comment/data
+mismatches fixed. The review's advice to drop Independence Day was
+wrong: the USCCB says it is inscribed in the US proper calendar
+(optional, Jul 4) - kept. Loreto and Faustina were already present
+(the review was out of date there).
+
+Day of Prayer for the Legal Protection of Unborn Children (Jan 22; Jan
+23 when Jan 22 is a Sunday - checked in the 2023 calendar, where
+Vincent and Marianne Cope stay listed as options): modelled as a US
+memorial, rank XI, violet (Fran 10-15). Nuance: the Proper Calendar
+table footnote makes every unranked entry an optional memorial, but
+GIRM 373 (US) says the day "shall be observed" and the daily listing
+names it as the day itself - XI matches what the calendar shows. The
+Sunday move is a small rule in obtinere_diem (it reads the Jan 22
+entries of ordo XI on Jan 23).
+
+Carlo Acutis (canonized 7 Sep 2025, Oct 12): NOT in the General Roman
+Calendar - his date was set for Assisi and Milan and communities that
+ask; the USCCB 2026 calendar shows Oct 12 as a weekday. Left out of
+the liturgical data (Fran 10-15); a personal "devotions" date source
+through fasti_fontes is the clean way to show him.
+
+`CALENDARIUM_SANCTORALE_VIGENS "2026-02"` (header) names the currency
+(last decree: Newman). Five plants red (Thanksgiving week, Sunday
+move, Seton ordo, Newman rank, Day of Prayer colour). The `%s` in my
+own insertion template once wrote `COLLIT_%s` literally - the compile
+caught it; templates for data go through one format call per line.

@@ -48,15 +48,21 @@ interior constans SanctoraleDatum SANCTORALE[] = {
     /* 4 Ian - Memoria (US) */
     { FASTI_IANUARIUS, IV,
       "Saint Elizabeth Ann Seton", "St. Elizabeth Ann Seton",
-      GRADUS_MEMORIA, ORDO_MEMORIA_GENERALIS,
+      GRADUS_MEMORIA, ORDO_MEMORIA_PROPRIA,
       COLLIT_ALBUS, FALSUM },
 
     /* 5 Ian - Memoria (US) */
     { FASTI_IANUARIUS, V,
       "Saint John Neumann", "St. John Neumann",
-      GRADUS_MEMORIA, ORDO_MEMORIA_GENERALIS,
+      GRADUS_MEMORIA, ORDO_MEMORIA_PROPRIA,
       COLLIT_ALBUS, FALSUM },
 
+
+    /* 6 Ian - Memoria ad libitum (US) */
+    { FASTI_IANUARIUS, VI,
+      "Saint Andre Bessette", "St. Andre Bessette",
+      GRADUS_MEMORIA_AD_LIBITUM, ORDO_MEMORIA_AD_LIBITUM,
+      COLLIT_ALBUS, FALSUM },
 
     /* 7 Ian - Memoria ad libitum */
     { FASTI_IANUARIUS, VII,
@@ -93,11 +99,25 @@ interior constans SanctoraleDatum SANCTORALE[] = {
       GRADUS_MEMORIA, ORDO_MEMORIA_GENERALIS,
       COLLIT_RUBER, FALSUM },
 
-    /* 22 Ian - Memoria ad libitum */
+    /* 22 Ian - Dies precationis (US; 23 Ian si 22 Ian dominica -
+     * IGMR 373) */
     { FASTI_IANUARIUS, XXII,
+      "Day of Prayer for the Legal Protection of Unborn Children",
+      "Day of Prayer for the Unborn",
+      GRADUS_MEMORIA, ORDO_MEMORIA_PROPRIA,
+      COLLIT_VIOLACEUS, FALSUM },
+
+    /* 23 Ian - Memoria ad libitum (US) */
+    { FASTI_IANUARIUS, XXIII,
       "Saint Vincent", "St. Vincent",
       GRADUS_MEMORIA_AD_LIBITUM, ORDO_MEMORIA_AD_LIBITUM,
       COLLIT_RUBER, FALSUM },
+
+    /* 23 Ian - Memoria ad libitum (US) */
+    { FASTI_IANUARIUS, XXIII,
+      "Saint Marianne Cope", "St. Marianne Cope",
+      GRADUS_MEMORIA_AD_LIBITUM, ORDO_MEMORIA_AD_LIBITUM,
+      COLLIT_ALBUS, FALSUM },
 
     /* 24 Ian - Memoria */
     { FASTI_IANUARIUS, XXIV,
@@ -217,7 +237,7 @@ interior constans SanctoraleDatum SANCTORALE[] = {
       GRADUS_FESTUM, ORDO_FESTUM_GENERALE,
       COLLIT_ALBUS, FALSUM },
 
-    /* 23 Feb - Memoria ad libitum */
+    /* 23 Feb - Memoria */
     { FASTI_FEBRUARIUS, XXIII,
       "Saint Polycarp", "St. Polycarp",
       GRADUS_MEMORIA, ORDO_MEMORIA_GENERALIS,
@@ -227,6 +247,18 @@ interior constans SanctoraleDatum SANCTORALE[] = {
     /* ============================================
      * MARTIUS
      * ============================================ */
+
+    /* 27 Feb - Memoria ad libitum (2021) */
+    { FASTI_FEBRUARIUS, XXVII,
+      "Saint Gregory of Narek", "St. Gregory of Narek",
+      GRADUS_MEMORIA_AD_LIBITUM, ORDO_MEMORIA_AD_LIBITUM,
+      COLLIT_ALBUS, FALSUM },
+
+    /* 3 Mar - Memoria ad libitum (US) */
+    { FASTI_MARTIUS, III,
+      "Saint Katharine Drexel", "St. Katharine Drexel",
+      GRADUS_MEMORIA_AD_LIBITUM, ORDO_MEMORIA_AD_LIBITUM,
+      COLLIT_ALBUS, FALSUM },
 
     /* 4 Mar - Memoria ad libitum */
     { FASTI_MARTIUS, IV,
@@ -405,6 +437,12 @@ interior constans SanctoraleDatum SANCTORALE[] = {
       GRADUS_MEMORIA_AD_LIBITUM, ORDO_MEMORIA_AD_LIBITUM,
       COLLIT_ALBUS, FALSUM },
 
+    /* 10 Mai - Memoria ad libitum (2021) */
+    { FASTI_MAIUS, X,
+      "Saint John of Avila", "St. John of Avila",
+      GRADUS_MEMORIA_AD_LIBITUM, ORDO_MEMORIA_AD_LIBITUM,
+      COLLIT_ALBUS, FALSUM },
+
     /* 12 May - Memoria ad libitum */
     { FASTI_MAIUS, XII,
       "Saints Nereus and Achilleus", "Ss. Nereus & Achilleus",
@@ -428,7 +466,7 @@ interior constans SanctoraleDatum SANCTORALE[] = {
       GRADUS_FESTUM, ORDO_FESTUM_GENERALE,
       COLLIT_RUBER, FALSUM },
 
-    /* 15 May - Memoria (US) */
+    /* 15 Mai - Memoria ad libitum (US) */
     { FASTI_MAIUS, XV,
       "Saint Isidore the Farmer", "St. Isidore Farmer",
       GRADUS_MEMORIA_AD_LIBITUM, ORDO_MEMORIA_AD_LIBITUM,
@@ -484,6 +522,12 @@ interior constans SanctoraleDatum SANCTORALE[] = {
     /* 27 May - Memoria ad libitum */
     { FASTI_MAIUS, XXVII,
       "Saint Augustine of Canterbury", "St. Augustine of Canterbury",
+      GRADUS_MEMORIA_AD_LIBITUM, ORDO_MEMORIA_AD_LIBITUM,
+      COLLIT_ALBUS, FALSUM },
+
+    /* 29 Mai - Memoria ad libitum (2019) */
+    { FASTI_MAIUS, XXIX,
+      "Saint Paul VI", "St. Paul VI",
       GRADUS_MEMORIA_AD_LIBITUM, ORDO_MEMORIA_AD_LIBITUM,
       COLLIT_ALBUS, FALSUM },
 
@@ -606,7 +650,7 @@ interior constans SanctoraleDatum SANCTORALE[] = {
      * IULIUS
      * ============================================ */
 
-    /* 1 Jul - Memoria (US) */
+    /* 1 Iul - Memoria ad libitum (US) */
     { FASTI_IULIUS, I,
       "Saint Junipero Serra", "St. Junipero Serra",
       GRADUS_MEMORIA_AD_LIBITUM, ORDO_MEMORIA_AD_LIBITUM,
@@ -663,7 +707,7 @@ interior constans SanctoraleDatum SANCTORALE[] = {
     /* 14 Jul - Memoria (US) */
     { FASTI_IULIUS, XIV,
       "Saint Kateri Tekakwitha", "St. Kateri Tekakwitha",
-      GRADUS_MEMORIA, ORDO_MEMORIA_GENERALIS,
+      GRADUS_MEMORIA, ORDO_MEMORIA_PROPRIA,
       COLLIT_ALBUS, FALSUM },
 
     /* 15 Jul - Memoria */
@@ -728,7 +772,7 @@ interior constans SanctoraleDatum SANCTORALE[] = {
 
     /* 29 Jul - Memoria */
     { FASTI_IULIUS, XXIX,
-      "Saint Martha", "St. Martha",
+      "Saints Martha, Mary and Lazarus", "Ss. Martha, Mary & Lazarus",
       GRADUS_MEMORIA, ORDO_MEMORIA_GENERALIS,
       COLLIT_ALBUS, FALSUM },
 
@@ -927,16 +971,22 @@ interior constans SanctoraleDatum SANCTORALE[] = {
       GRADUS_MEMORIA, ORDO_MEMORIA_GENERALIS,
       COLLIT_ALBUS, FALSUM },
 
+    /* 5 Sep - Memoria ad libitum (2024) */
+    { FASTI_SEPTEMBER, V,
+      "Saint Teresa of Calcutta", "St. Teresa of Calcutta",
+      GRADUS_MEMORIA_AD_LIBITUM, ORDO_MEMORIA_AD_LIBITUM,
+      COLLIT_ALBUS, FALSUM },
+
     /* 8 Sep - Festum */
     { FASTI_SEPTEMBER, VIII,
       "The Nativity of the Blessed Virgin Mary", "Birth of Mary",
       GRADUS_FESTUM, ORDO_FESTUM_GENERALE,
       COLLIT_ALBUS, FALSUM },
 
-    /* 9 Sep - Memoria ad libitum */
+    /* 9 Sep - Memoria (US) */
     { FASTI_SEPTEMBER, IX,
       "Saint Peter Claver", "St. Peter Claver",
-      GRADUS_MEMORIA, ORDO_MEMORIA_GENERALIS,
+      GRADUS_MEMORIA, ORDO_MEMORIA_PROPRIA,
       COLLIT_ALBUS, FALSUM },
 
     /* 12 Sep - Memoria ad libitum */
@@ -975,6 +1025,12 @@ interior constans SanctoraleDatum SANCTORALE[] = {
       GRADUS_MEMORIA_AD_LIBITUM, ORDO_MEMORIA_AD_LIBITUM,
       COLLIT_ALBUS, FALSUM },
 
+    /* 17 Sep - Memoria ad libitum (2021) */
+    { FASTI_SEPTEMBER, XVII,
+      "Saint Hildegard of Bingen", "St. Hildegard",
+      GRADUS_MEMORIA_AD_LIBITUM, ORDO_MEMORIA_AD_LIBITUM,
+      COLLIT_ALBUS, FALSUM },
+
     /* 19 Sep - Memoria ad libitum */
     { FASTI_SEPTEMBER, XIX,
       "Saint Januarius", "St. Januarius",
@@ -994,7 +1050,7 @@ interior constans SanctoraleDatum SANCTORALE[] = {
       GRADUS_FESTUM, ORDO_FESTUM_GENERALE,
       COLLIT_RUBER, FALSUM },
 
-    /* 23 Sep - Memoria ad libitum */
+    /* 23 Sep - Memoria */
     { FASTI_SEPTEMBER, XXIII,
       "Saint Pius of Pietrelcina", "St. Padre Pio",
       GRADUS_MEMORIA, ORDO_MEMORIA_GENERALIS,
@@ -1065,6 +1121,12 @@ interior constans SanctoraleDatum SANCTORALE[] = {
       GRADUS_MEMORIA_AD_LIBITUM, ORDO_MEMORIA_AD_LIBITUM,
       COLLIT_ALBUS, FALSUM },
 
+    /* 5 Oct - Memoria ad libitum (US) */
+    { FASTI_OCTOBER, V,
+      "Blessed Francis Xavier Seelos", "Bl. Francis Xavier Seelos",
+      GRADUS_MEMORIA_AD_LIBITUM, ORDO_MEMORIA_AD_LIBITUM,
+      COLLIT_ALBUS, FALSUM },
+
     /* 6 Oct - Memoria ad libitum */
     { FASTI_OCTOBER, VI,
       "Saint Bruno", "St. Bruno",
@@ -1090,6 +1152,12 @@ interior constans SanctoraleDatum SANCTORALE[] = {
 
     { FASTI_OCTOBER, IX,
       "Saint John Leonardi", "St. John Leonardi",
+      GRADUS_MEMORIA_AD_LIBITUM, ORDO_MEMORIA_AD_LIBITUM,
+      COLLIT_ALBUS, FALSUM },
+
+    /* 9 Oct - Memoria ad libitum (2025) */
+    { FASTI_OCTOBER, IX,
+      "Saint John Henry Newman", "St. John Henry Newman",
       GRADUS_MEMORIA_AD_LIBITUM, ORDO_MEMORIA_AD_LIBITUM,
       COLLIT_ALBUS, FALSUM },
 
@@ -1138,10 +1206,11 @@ interior constans SanctoraleDatum SANCTORALE[] = {
     { FASTI_OCTOBER, XIX,
       "Saints John de Brebeuf and Isaac Jogues and Companions",
       "Ss. John de Brebeuf & Isaac Jogues",
-      GRADUS_MEMORIA, ORDO_MEMORIA_GENERALIS,
+      GRADUS_MEMORIA, ORDO_MEMORIA_PROPRIA,
       COLLIT_RUBER, FALSUM },
 
-    { FASTI_OCTOBER, XIX,
+    /* 20 Oct - Memoria ad libitum (US) */
+    { FASTI_OCTOBER, XX,
       "Saint Paul of the Cross", "St. Paul of the Cross",
       GRADUS_MEMORIA_AD_LIBITUM, ORDO_MEMORIA_AD_LIBITUM,
       COLLIT_ALBUS, FALSUM },
@@ -1226,7 +1295,7 @@ interior constans SanctoraleDatum SANCTORALE[] = {
     /* 13 Nov - Memoria (US) */
     { FASTI_NOVEMBER, XIII,
       "Saint Frances Xavier Cabrini", "St. Frances Cabrini",
-      GRADUS_MEMORIA, ORDO_MEMORIA_GENERALIS,
+      GRADUS_MEMORIA, ORDO_MEMORIA_PROPRIA,
       COLLIT_ALBUS, FALSUM },
 
     /* 15 Nov - Memoria ad libitum */
