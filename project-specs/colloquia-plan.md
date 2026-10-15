@@ -59,17 +59,51 @@ phase that needs it. Header text shown to Fran before coding.*
 | **T6** | tmux re-attach on restore: a terminal remembers its tmux session and vicus re-attaches it. |
 | **T7** | EXPERIMENT (progressive enhancement): Claude Code channels (MCP servers that push messages into a running session) - ask an agent for a status line, deliver a reply into the conversation. Verify the current mechanism against the docs first; a general `canales` library if it pans out. Nothing in T1-T6 depends on it. |
 
+### Phase 2 (Fran, 2026-10-15): gate and test progress dashboard
+
+| Phase | Content |
+|---|---|
+| **T8** | Live runs from mensor's journal: open runs (started, not finished) with their nested children (fabrica actions, suites, credo sections) and status; estimate from history (median of the last N runs of the same gate on this machine); "stage x of y" = children done vs the last run's count. |
+| **T9** | Run -> Claude session: join on cwd/worktree and the hook log (PreToolUse carries the Bash command and TMUX_PANE); fallback: `praeco` exports MENSOR_SESSIO into the session via CLAUDE_ENV_FILE at SessionStart. |
+| **T10** | vicus dashboard: per session, running gates with elapsed / estimated time, stage x/y, failures as they happen; also runs started outside any session (no link). Beside or inside the T5 sessions view. |
+
 ## IV. Status
 
 - T1 DONE 2026-10-15: `multiplexor` (lib/multiplexor.c) - panes and
   clients parsed from our TAB `-F` format, has-session, select
   window+pane, switch-client, attach vector; exact `=name` targets;
   `-S` for socket paths (tests run a private server in $TMPDIR).
-- T2 next: `praeco` + event log (check hook payload fields first).
+- T2 DONE 2026-10-15: `praeconium` (lib) + `praeco` (tools/praeco.c:
+  hamus / status / cauda); JSONL log ~/.rhubarb/colloquia/eventa.jsonl,
+  one O_APPEND write per event, UTF-8-safe 200-byte cut; installed via
+  `installata` at the main merge. Hooks in ~/.claude/settings.json: diff
+  for Fran after install.
+- T3 next: `colloquia` (sessions from the log + transcript tails +
+  multiplexor).
 
-## V. AUDIENDA
+## V. Hook facts (Claude Code docs, checked 2026-10-15)
 
-- Claude Code channels: mechanism and availability not verified (T7).
-- Hook event set and payload fields for PreToolUse / UserPromptSubmit
-  as of the installed Claude Code version: check before T2 fixes the
-  log format.
+- Common stdin fields: session_id, transcript_path, cwd,
+  hook_event_name, permission_mode (+ agent_id / agent_type /
+  prompt_id when relevant).
+- Notification: message, title, notification_type (matchers include
+  permission_prompt, idle_prompt, agent_needs_input, agent_completed,
+  elicitation_dialog, ...). PreToolUse: tool_name, tool_input,
+  tool_use_id. Stop: last_assistant_message, stop_hook_active.
+  SessionStart: trigger (startup/resume/clear/compact/fork). SessionEnd:
+  reason. StopFailure: error.
+- Hooks inherit the Claude process environment (TMUX, TMUX_PANE);
+  CLAUDE_PROJECT_DIR is set; CLAUDE_ENV_FILE (SessionStart, Setup,
+  CwdChanged, FileChanged) persists KEY=VALUE into later Bash commands.
+- Hooks are synchronous by default (30 s timeout); `"async": true` =
+  fire and forget.
+- Channels: research preview; MCP server with the channel capability;
+  `claude --channels plugin:<name>@<marketplace>`; custom channels need
+  `--dangerously-load-development-channels`; docs
+  code.claude.com/docs/en/channels.md and channels-reference.md.
+
+## VI. AUDIENDA
+
+- Claude Code channels: documented (V); not tried yet (T7).
+- Hook payload fields come from the docs (V), not yet from captured
+  real payloads - T2's first live run checks them.

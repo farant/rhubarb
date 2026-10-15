@@ -63,6 +63,21 @@
     <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
     <exitus via="bin/manus" provenientia="relatio"/>
   </actio>
+  <!-- praeco (colloquia-plan T2): acta colloquiorum Claude Code ex
+       hamis (praeco hamus / status / cauda) -->
+  <actio titulus="praeco" genus="institutio">
+    <mandatum>
+      <verbum! (>./tools/praeco_struere.sh
+    </mandatum>
+    <praecondicio actio="aedilis"/>
+    <vestigium via="build/aedilis/praeco"/>
+    <vestigium via="build/aedilis/obiecta" communis="verum"/>
+    <ingressus genus="manifestum" via="build/aedilis/praeco/manifestum.stml"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="fasciculus" via="tools/praeco_struere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
+    <exitus via="bin/praeco" provenientia="relatio"/>
+  </actio>
   <!-- clonare (pythonica S3): clonefile(2) arborum pro photographiis
        silvae (silva._clonare_ignorata) -->
   <actio titulus="clonare" genus="institutio">
@@ -1050,6 +1065,15 @@
     <ingressus genus="fasciculus" via="tools/instituere.sh"/>
     <exitus via="~/.bin/terminale" scriptura="terminale" provenientia="regeneratio"/>
   </actio>
+  <actio titulus="institutio_praeco" genus="institutio" memorabilis="verum" celer="verum">
+    <mandatum>
+      <verbum! (>./tools/instituere.sh
+      <verbum! (>bin/praeco
+    </mandatum>
+    <ingressus genus="fasciculus" via="bin/praeco"/>
+    <ingressus genus="fasciculus" via="tools/instituere.sh"/>
+    <exitus via="~/.bin/praeco" scriptura="praeco" provenientia="regeneratio"/>
+  </actio>
   <actio titulus="institutio_stml" genus="institutio" memorabilis="verum" celer="verum">
     <mandatum>
       <verbum! (>./tools/instituere.sh
@@ -1080,6 +1104,8 @@
     <pars actio="institutio_briar_spectator"/>
     <pars actio="institutio_silex"/>
     <pars actio="institutio_stml"/>
+    <pars actio="praeco"/>
+    <pars actio="institutio_praeco"/>
   </compositum>
   <compositum titulus="briar">
     <pars actio="corpus_silicis"/>

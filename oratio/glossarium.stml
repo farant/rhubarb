@@ -633,6 +633,7 @@
   <vocabulum lemma="fn" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio"/>
   <vocabulum lemma="err" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio"/>
   <vocabulum lemma="multiplexor" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen alienum technicum: tmux = terminal multiplexor (bibliotheca multiplexor, colloquia-plan T1)"/>
+  <vocabulum lemma="tmux" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen programmatis (terminal multiplexor); ambitus TMUX in hamis (praeconium)"/>
   <vocabulum lemma="tty" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio: teletypewriter, terminale (/dev/ttys011)"/>
   <vocabulum lemma="val" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio"/>
   <vocabulum lemma="msg" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio"/>
