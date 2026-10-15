@@ -1,0 +1,470 @@
+/* probatio_nomenclator.c - nomenclator P2a (nomenclator-plan): index
+ * personarum ordine clavis cum titulis litterarum (album), electio,
+ * claves (j k [ ]), paginae (titulus litterae iteratus), mus (ordo,
+ * sagittae), figurae (titulus, numerus, nomen, rubricae, societas,
+ * electa). Superficies CCCLX x CCCXX: XVI ordines per paginam. */
+#include "latina.h"
+#include "piscina.h"
+#include "chorda.h"
+#include "internamentum.h"
+#include "volumen.h"
+#include "insula.h"
+#include "componens.h"
+#include "dispensator.h"
+#include "eventus.h"
+#include "personae.h"
+#include "nomenclator.h"
+#include "figura.h"
+#include "mandatum.h"
+#include "thema.h"
+#include "fons.h"
+#include "credo.h"
+#include <stdio.h>
+#include <string.h>
+
+nomen structura {
+      InternamentumChorda* intern;
+       InsulaRepositorium* repo;
+      NomenclatorMontatio  m;
+              Dispensator* d;
+                  Volumen* volumen;
+       PersonaeDocumentum* documentum;
+} Mundus;
+
+interior vacuum
+mundum_parare (
+    CredoContextus* c)
+{
+    Mundus* x;
+
+    thema_initiare();
+    x = (Mundus*)piscina_allocare(c->piscina, magnitudo(Mundus));
+    memset(x, ZEPHYRUM, magnitudo(Mundus));
+    x->intern   = internamentum_creare(c->piscina);
+    x->volumen  = volumen_temporarium(c->piscina,
+        "probatio_nomenclator");
+    si (x->volumen)
+    {
+        x->documentum = personae_aperire(c->piscina, x->intern,
+            x->volumen, "personae", ZEPHYRUM);
+    }
+    c->datum = x;
+}
+
+interior vacuum
+mundum_purgare (
+    CredoContextus* c)
+{
+    Mundus* x;
+
+    x = (Mundus*)c->datum;
+    si (x && x->volumen)
+    {
+        volumen_claudere(x->volumen);
+    }
+}
+
+/* montare (CCCLX x CCCXX) et dispensatorem ligare */
+interior b32
+montare (
+     Mundus* x,
+    Piscina* p)
+{
+    Motus* motus;
+
+    x->repo = insula_repositorium_creare(p, x->intern, "<hospes/>");
+    si (   !x->repo || !x->documentum
+        || !nomenclator_montare(&x->m, p, x->intern, x->repo, "n1",
+               x->documentum, CCCLX, CCCXX, NIHIL))
+    {
+        redde FALSUM;
+    }
+    x->d = dispensator_creare(p, x->intern, x->repo, x->m.actiones,
+        nomenclator_componere, &x->m, CCC);
+    si (!x->d)
+    {
+        redde FALSUM;
+    }
+    motus         = dispensator_motus(x->d);
+    motus->ramus  = x->m.ramus;
+    dispensator_recomponere(x->d);
+    redde VERUM;
+}
+
+interior chorda
+lit (
+    constans character* s,
+               Piscina* p)
+{
+    redde chorda_ex_literis(s, p);
+}
+
+/* contactus fixturae: 1 Anna Rossi (familia roma), 2 Banca d'Italia
+ * (societas), 3 Luca Bianchi (amici), 4 Andrea Conti, 5 3M
+ * (societas) */
+interior b32
+contactus_parare (
+     Mundus* x,
+    Piscina* p)
+{
+    (vacuum)personae_hominem_creare(x->documentum, lit("Anna", p),
+        lit("Rossi", p));
+    (vacuum)personae_societatem_creare(x->documentum, lit(
+        "Banca d'Italia", p));
+    (vacuum)personae_hominem_creare(x->documentum, lit("Luca", p),
+        lit("Bianchi", p));
+    (vacuum)personae_hominem_creare(x->documentum, lit("Andrea", p),
+        lit("Conti", p));
+    (vacuum)personae_societatem_creare(x->documentum, lit("3M", p));
+    (vacuum)personae_rubricas_ponere(x->documentum, I, lit(
+        "roma familia", p));
+    (vacuum)personae_rubricas_ponere(x->documentum, III, lit("amici",
+        p));
+    redde montare(x, p);
+}
+
+interior b32
+campus_est (
+                 Mundus* x,
+     constans character* titulus,
+     constans character* valor)
+{
+    chorda* a;
+
+    a = insula_ramus_attributum(&x->m.ramus, titulus);
+    redde valor ? (a
+        && chorda_aequalis_literis(*a, valor)) : a == NIHIL;
+}
+
+/* ordines indicis (tituli et res) ordine arboris = "l_ p5 lB ..." ? */
+interior b32
+ordines_sunt (
+                 Mundus* x,
+     constans character* exspectati)
+{
+     Componens* radix;
+     Componens* l;
+     character  visi[CCLVI];
+           i32  i;
+
+    radix           = dispensator_arbor(x->d);
+    visi[ZEPHYRUM]  = '\0';
+    per (i = ZEPHYRUM; radix && i < componens_numerus_liberorum(radix);
+         i++)
+    {
+        l = componens_liberum(radix, i);
+        si (   (l->partes != PARTES_INDEX && l->partes != PARTES_ITEM)
+            || chorda_aequalis_literis(l->id, "caput")
+            || chorda_aequalis_literis(l->id, "index_paginae"))
+        {
+            perge;
+        }
+        si (visi[ZEPHYRUM])
+        {
+            strcat(visi, " ");
+        }
+        strncat(visi, (constans character*)l->id.datum,
+            (size_t)l->id.mensura);
+    }
+    si (strcmp(visi, exspectati) != ZEPHYRUM)
+    {
+        imprimere("  ordines: '%s'\n", visi);
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
+interior vacuum
+clavis (
+       Mundus* x,
+    character  typus)
+{
+    Eventus e;
+
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus                  = EVENTUS_CLAVIS_DEPRESSUS;
+    e.datum.clavis.producta  = (s32)(insignatus character)typus;
+    e.datum.clavis.clavis    = (clavis_t)typus;
+    e.datum.clavis.runa      = (s32)typus;
+    dispensator_tractare(x->d, &e);
+}
+
+interior Fines
+fines_componentis (
+                 Mundus* x,
+     constans character* id,
+                Piscina* p)
+{
+     Componens* c;
+         Fines  f;
+
+    memset(&f, ZEPHYRUM, magnitudo(f));
+    c = componens_invenire_per_id(dispensator_arbor(x->d),
+        chorda_ex_literis(id, p));
+    si (c)
+    {
+        f = c->fines;
+    }
+    redde f;
+}
+
+interior b32
+adest (
+                 Mundus* x,
+     constans character* id,
+                Piscina* p)
+{
+    redde fines_componentis(x, id, p).altitudo > ZEPHYRUM;
+}
+
+interior b32
+ictus_in (
+                 Mundus* x,
+     constans character* id,
+                Piscina* p)
+{
+      Fines f;
+    Eventus e;
+
+    f = fines_componentis(x, id, p);
+    si (f.altitudo <= ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus             = EVENTUS_MUS_DEPRESSUS;
+    e.datum.mus.x       = f.x + f.latitudo / II;
+    e.datum.mus.y       = f.y + f.altitudo / II;
+    e.datum.mus.botton  = MUS_SINISTER;
+    dispensator_tractare(x->d, &e);
+    redde VERUM;
+}
+
+interior Mandata*
+reddere (
+     Mundus* x,
+    Piscina* p)
+{
+    Mandata* md;
+
+    md = mandata_creare(p, x->intern);
+    pingere(dispensator_arbor(x->d), x->m.figurae, ZEPHYRUM, md);
+    redde md;
+}
+
+interior b32
+punctum_intra (
+    Fines a,
+    Fines f)
+{
+    redde a.x >= f.x && a.y >= f.y && a.x < f.x + f.latitudo
+        && a.y < f.y + f.altitudo;
+}
+
+/* textus partem continens in finibus? (fons: -1 = quivis) */
+interior b32
+textus_in (
+                 Mandata* md,
+                   Fines  f,
+      constans character* pars,
+                     s32  fons)
+{
+    constans Mandatum* x;
+                  i32  i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        x = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   x->genus == MANDATUM_TEXTUS && punctum_intra(x->fines, f)
+            && chorda_continet(x->textus, chorda_ex_literis(pars,
+                   md->piscina))
+            && (fons < ZEPHYRUM || (s32)x->fons == fons))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* rectangulum impletum coloris COLOR_SELECTION in finibus? */
+interior b32
+electum_in (
+     Mandata* md,
+       Fines  f)
+{
+    constans Mandatum* x;
+                  i32  i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        x = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   x->genus       == MANDATUM_RECTANGULUM && x->impletum
+            && x->color.genus == COLOR_MANDATI_THEMA
+            && x->color.valor == (i32)COLOR_SELECTION
+            && punctum_intra(x->fines, f))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* montatio: ramus, focus in radice, electa = prima ordinis */
+interior vacuum
+_probare_montationem (
+    CredoContextus* c)
+{
+    Mundus* x;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(x->documentum);
+    CREDO_NECESSE(contactus_parare(x, c->piscina));
+    CREDO_NON_NIHIL(x->m.ramus.repo);
+    CREDO_VERUM(x->m.documentum == x->documentum);
+    CREDO_AEQUALIS_S32(nomenclator_persona_electa(&x->m), V);
+    CREDO_VERUM(adest(x, "nomenclator", c->piscina));
+}
+
+/* ordo: clavis ("3m" < "banca" < "bianchi" < "conti" < "rossi"),
+ * tituli litterarum ("#" = "l_") */
+interior vacuum
+_probare_ordinem (
+    CredoContextus* c)
+{
+    Mundus* x;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(contactus_parare(x, c->piscina));
+    CREDO_VERUM(ordines_sunt(x, "l_ p5 lB p2 p3 lC p4 lR p1"));
+}
+
+/* claves: j k movent; in fine manet; Enter nihil (P5) */
+interior vacuum
+_probare_claves (
+    CredoContextus* c)
+{
+    Mundus* x;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(contactus_parare(x, c->piscina));
+    clavis(x, 'j');
+    CREDO_VERUM(campus_est(x, "persona_electa", "2"));
+    clavis(x, 'j');
+    clavis(x, 'j');
+    CREDO_VERUM(campus_est(x, "persona_electa", "4"));
+    clavis(x, 'k');
+    CREDO_VERUM(campus_est(x, "persona_electa", "3"));
+    clavis(x, 'j');
+    clavis(x, 'j');
+    clavis(x, 'j');
+    CREDO_AEQUALIS_S32(nomenclator_persona_electa(&x->m), I);
+}
+
+/* paginae: XX "R..." - pagina I lR + XV, pagina II "lR-c" + V; ]
+ * eligit primam paginae; j ex ultima paginae I paginam vertit */
+interior vacuum
+_probare_paginas (
+    CredoContextus* c)
+{
+       Mundus* x;
+    character  cognomen[XVI];
+          i32  i;
+
+    x = (Mundus*)c->datum;
+    per (i = ZEPHYRUM; i < XX; i++)
+    {
+        sprintf(cognomen, "Rossi%c", (character)('a' + i));
+        (vacuum)personae_hominem_creare(x->documentum, lit("Anna",
+            c->piscina), lit(cognomen, c->piscina));
+    }
+    CREDO_NECESSE(montare(x, c->piscina));
+    CREDO_VERUM(adest(x, "lR", c->piscina));
+    CREDO_VERUM(adest(x, "p15", c->piscina));
+    CREDO_FALSUM(adest(x, "p16", c->piscina));
+    clavis(x, ']');
+    CREDO_VERUM(adest(x, "lR-c", c->piscina));
+    CREDO_VERUM(adest(x, "p16", c->piscina));
+    CREDO_VERUM(adest(x, "p20", c->piscina));
+    CREDO_VERUM(campus_est(x, "persona_electa", "16"));
+    clavis(x, '[');
+    CREDO_VERUM(adest(x, "p1", c->piscina));
+    CREDO_VERUM(campus_est(x, "persona_electa", "1"));
+    /* j ex p15 (ultima paginae I): p16, pagina II */
+    per (i = ZEPHYRUM; i < XIV; i++)
+    {
+        clavis(x, 'j');
+    }
+    CREDO_VERUM(campus_est(x, "persona_electa", "15"));
+    clavis(x, 'j');
+    CREDO_VERUM(campus_est(x, "persona_electa", "16"));
+    CREDO_VERUM(adest(x, "p16", c->piscina));
+    CREDO_FALSUM(adest(x, "p1", c->piscina));
+}
+
+/* mus: ictus in ordine eligit; sagitta paginam vertit */
+interior vacuum
+_probare_murem (
+    CredoContextus* c)
+{
+    Mundus* x;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(contactus_parare(x, c->piscina));
+    CREDO_NECESSE(ictus_in(x, "p4", c->piscina));
+    CREDO_VERUM(campus_est(x, "persona_electa", "4"));
+    /* titulus litterae: nihil */
+    CREDO_NECESSE(ictus_in(x, "lB", c->piscina));
+    CREDO_VERUM(campus_est(x, "persona_electa", "4"));
+    CREDO_VERUM(adest(x, "pagina-proxima", c->piscina));
+}
+
+/* figurae: titulus 8x16, numerus, nomen et rubricae in ordine,
+ * societas signata, electa fundo selectionis */
+interior vacuum
+_probare_figuras (
+    CredoContextus* c)
+{
+     Mundus* x;
+    Mandata* md;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(contactus_parare(x, c->piscina));
+    md = reddere(x, c->piscina);
+    CREDO_VERUM(textus_in(md, fines_componentis(x, "titulus",
+        c->piscina), "Contacts", FONS_TITULI));
+    CREDO_VERUM(textus_in(md, fines_componentis(x, "caput", c->piscina),
+        "5 contacts", -I));
+    CREDO_VERUM(textus_in(md, fines_componentis(x, "p1", c->piscina),
+        "Anna Rossi", -I));
+    CREDO_VERUM(textus_in(md, fines_componentis(x, "p1", c->piscina),
+        "familia roma", -I));
+    CREDO_VERUM(textus_in(md, fines_componentis(x, "lB", c->piscina),
+        "B", -I));
+    /* electa prima (5): fundus selectionis; aliae non */
+    CREDO_VERUM(electum_in(md, fines_componentis(x, "p5", c->piscina)));
+    CREDO_FALSUM(electum_in(md, fines_componentis(x, "p1",
+        c->piscina)));
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "montatio", _probare_montationem, mundum_parare, mundum_purgare,
+        NIHIL, NIHIL },
+    { "ordo", _probare_ordinem, mundum_parare, mundum_purgare, NIHIL,
+        NIHIL },
+    { "claves", _probare_claves, mundum_parare, mundum_purgare, NIHIL,
+        NIHIL },
+    { "paginae", _probare_paginas, mundum_parare, mundum_purgare, NIHIL,
+        NIHIL },
+    { "mus", _probare_murem, mundum_parare, mundum_purgare, NIHIL,
+        NIHIL },
+    { "figurae", _probare_figuras, mundum_parare, mundum_purgare, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (
+    vacuum)
+{
+    redde credo_suitam_currere("nomenclator", SECTIONES);
+}

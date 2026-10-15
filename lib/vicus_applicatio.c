@@ -5,6 +5,7 @@
 #include "scriba_applicatio.h"
 #include "terminale.h"
 #include "kalendarium.h"
+#include "nomenclator.h"
 #include "iussum.h"
 #include <stdio.h>
 #include <string.h>
@@ -1428,6 +1429,63 @@ kalendarium_describere (
     f->pulsare_ctx  = m;
 }
 
+/* nomenclator-plan P2: nomenclator - documentum personarum UNUM per
+ * volumen vici (spatium "personae"), pigre apertum, commune omnibus
+ * lateribus nomenclatoris */
+nomen structura {
+                Volumen* volumen;
+                Piscina* piscina;
+    InternamentumChorda* intern;
+     PersonaeDocumentum* documentum;
+        StatusSystemata* systemata;
+} ContextusNomenclatoris;
+
+interior b32
+nomenclatorem_montare_in_vico (
+                 vacuum* sedes,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+     InsulaRepositorium* repo,
+     constans character* id,
+     constans character* argumentum,
+                    i32  latitudo,
+                    i32  altitudo,
+                 vacuum* ctx)
+{
+    ContextusNomenclatoris* cn;
+
+    (vacuum)volumen;
+    (vacuum)argumentum;
+    cn = (ContextusNomenclatoris*)ctx;
+    si (!cn)
+    {
+        redde FALSUM;
+    }
+    si (!cn->documentum)
+    {
+        cn->documentum = personae_aperire(cn->piscina, cn->intern,
+            cn->volumen, "personae", ZEPHYRUM);
+    }
+    redde cn->documentum && nomenclator_montare(
+        (NomenclatorMontatio*)sedes, piscina, intern, repo, id,
+        cn->documentum, latitudo, altitudo, cn->systemata);
+}
+
+interior vacuum
+nomenclatorem_describere (
+         vacuum* montatio,
+    VicusFacies* f)
+{
+    NomenclatorMontatio* m;
+
+    m                 = (NomenclatorMontatio*)montatio;
+    f->actiones       = m->actiones;
+    f->figurae        = m->figurae;
+    f->componere      = nomenclator_componere;
+    f->componere_ctx  = m;
+}
+
 /* folium paginae novae (S2b): lateris sinistri cellulae (dimidium
  * cellulis rotundatum) minus margines; altitudo minus linea tabularum,
  * status, margines - minima ut scriba (XX x X) */
@@ -1541,6 +1599,7 @@ vicus_applicatio_aedificare (
       ContextusScribae* cs;
      ContextusPictoris* cp;
    ContextusKalendarii* ck;
+ContextusNomenclatoris* cn;
   ContextusQuaestionis* cq;
        StatusSystemata* systemata;
 
@@ -1586,6 +1645,17 @@ vicus_applicatio_aedificare (
         ck->intern     = intern;
         ck->systemata  = systemata;
     }
+    /* P2: nomenclator - documentum personarum commune */
+    cn = (ContextusNomenclatoris*)piscina_allocare(piscina,
+        magnitudo(ContextusNomenclatoris));
+    si (cn)
+    {
+        memset(cn, ZEPHYRUM, magnitudo(ContextusNomenclatoris));
+        cn->volumen    = volumen;
+        cn->piscina    = piscina;
+        cn->intern     = intern;
+        cn->systemata  = systemata;
+    }
     /* $question: porta nulla donec applicatio fenestrae ponit */
     cq = (ContextusQuaestionis*)piscina_allocare(piscina,
         magnitudo(ContextusQuaestionis));
@@ -1617,6 +1687,8 @@ vicus_applicatio_aedificare (
                piscina)
         || !aperiens_fixum_registrare(cs->iussa, app->vicus, "agenda",
                "calendarium", "agenda", piscina)
+        || !aperiens_fixum_registrare(cs->iussa, app->vicus, "contacts",
+               "nomenclator", NIHIL, piscina)
         || !cyclum_registrare(cs->iussa, app->vicus, "pictor-next", I,
                piscina)
         || !cyclum_registrare(cs->iussa, app->vicus, "pictor-prev", -I,
@@ -1637,6 +1709,11 @@ vicus_applicatio_aedificare (
         || !vicus_genus_addere(app->vicus, "calendarium",
                magnitudo(KalendariumMontatio),
                kalendarium_montare_in_vico, kalendarium_describere, ck)
+        || !cn
+        || !vicus_genus_addere(app->vicus, "nomenclator",
+               magnitudo(NomenclatorMontatio),
+               nomenclatorem_montare_in_vico, nomenclatorem_describere,
+               cn)
         || !vicus_aperire(app->vicus, INDEX_ORDINARIUS))
     {
         causa = app->vicus ? vicus_causa(app->vicus)

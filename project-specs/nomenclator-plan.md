@@ -219,6 +219,12 @@ house rule of independent composable libraries.
 - **P1 `personae` document** - acts, projection, sort key, letter
   heading, birthday parse (`YYYY-MM-DD` / `--MM-DD`), age function,
   natales projection; undo/redo, seal; tests.
+- **P2a DONE 2026-10-14: the list** - vicus genus `nomenclator`,
+  `$contacts`, alphabetical list with letter bands (album), j k [ ],
+  click to select, page arrows; one shared personae document per
+  volume. Next: U3 (prompt line), then P2b (new person / business,
+  delete, undo). Layout glue copied from the calendar = membrum__
+  candidate (second consumer).
 - **P2 nomenclator list** - vicus genus `nomenclator`, command word
   `$contacts`, alphabetical list with letter headings (U1), selection, new
   contact (kind chosen at creation), open detail.

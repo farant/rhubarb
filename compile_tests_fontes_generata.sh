@@ -160,6 +160,7 @@ declare -a SOURCE_FILES=(
     "lib/multipart.c"
     "lib/natura.c"
     "lib/navigator_entitatum.c"
+    "lib/nomenclator.c"
     "lib/norma.c"
     "lib/norma_ad_c.c"
     "lib/norma_canon.c"

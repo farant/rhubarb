@@ -1,0 +1,27 @@
+<!-- organum.stml - manifestum nomenclatoris (nomenclator-plan P2):
+     index contactuum. Contentum (personae) in documento personarum
+     (volumen vici, spatium "personae"), commune omnibus lateribus -
+     hic solum status visus. -->
+<organum genus="nomenclator" versio="1">
+
+  <ligamina>
+    <ligamen nomen="documentum" genus="personae" a="parens"/>
+  </ligamina>
+
+  <actiones>
+    <actio nomen="nomenclator.agere"/>
+  </actiones>
+
+  <status>
+    <campus nomen="persona_electa" typus="numerus" vita="transiens"
+            scriptor="nomenclator.agere"
+            nota="id personae electae; absens = prima paginae"/>
+    <campus nomen="pagina" typus="numerus" vita="transiens"
+            scriptor="nomenclator.agere"
+            nota="pagina indicis (0 = prima); persona electa paginam
+                  sequitur"/>
+  </status>
+
+  <basis genus="organum_commune"/>
+  <montationes/>
+</organum>
