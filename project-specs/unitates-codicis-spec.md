@@ -277,6 +277,31 @@ extend elementa_programmatis rather than start a parallel model.
   no rhubarb policy - §VI¾). Agents: the same answer as a legati MCP
   tool `unitas {via}`.
 
+## VI⅞c. Tests are several facets; library families (Fran 10-15)
+
+How a test RUNS is orthogonal properties, not one kind:
+
+| facet | values | example today |
+|---|---|---|
+| role | probatio (asserts) / **exploratio** (demo, exploration: runs and shows, judges nothing) | `probatio_pictor_toy`; some of the 20 legacy names of §0b |
+| species | unitatis, integrationis, regressionis, fumi (natura `/fabricatio/probatio` already) | fumus scripts = fumi |
+| **interactio** | automatica / **manualis** (needs Fran: watch, click, decide) | `icones_fumus -agere`, `fasciculum_fumus -agere` |
+| **occupatio** | nihil / **fenestra** (opens windows) / **focus** (native events take the machine) | laboratorium, apps/forum, apps/pictor fumus (`manus_clavem` steals focus) |
+
+Consumers: `fusio_probare`'s "manu debita" list says WHY each is manual;
+`occupatio="focus"` never runs detached / asks first (today only a
+memory note, laboratorium-gui-test-focus); `manualis` is queued for when
+Fran is present instead of silently skipped. Generalizes the existing
+`<porta ... manu causa="...">` annotation (aequivalentia). exploratio
+files are research-role: never graded as tests.
+
+**Library families (Fran: good):** children are SEPARATE libraries
+nested under a family unit (`imago` family: `imago`, `imago_png`,
+`imago_opus`, ...) - "who uses imago_png" stays a query, "the imago
+family" too. BACKENDS (`_macos`, `_posix`, `_interna`, `_impl`,
+`_tabula`; 19 of 77 members) belong to their single library by a
+suffix rule, not a decision.
+
 ## VII. Interrogationes - documentation as typed questions (Fran 10-15)
 
 A unit exposes what it can do by DECLARING QUESTIONS it answers
