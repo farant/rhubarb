@@ -1000,6 +1000,7 @@
   <vocabulum lemma="uint16" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="uint16_t stdint.h (C99 latitudo exacta); systema_posix.h 2026-10-15 pro vendor/bearssl_amalgama.h (tls-bearssl T1 R3)"/>
   <vocabulum lemma="uint32" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="uint32_t stdint.h (C99 latitudo exacta); systema_posix.h 2026-10-15 pro vendor/bearssl_amalgama.h (tls-bearssl T1 R3)"/>
   <vocabulum lemma="uint64" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="uint64_t stdint.h (C99 latitudo exacta); systema_posix.h 2026-10-15 pro vendor/bearssl_amalgama.h (tls-bearssl T1 R3)"/>
+  <vocabulum lemma="rsa" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="RSA (Rivest-Shamir-Adleman) - algorithmus clavis publicae; folia probationis TLS et vectura BearSSL (tls-bearssl T2 R12, 2026-10-15)"/>
   <vocabulum lemma="inet6" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="AF_INET6 sys/socket.h (familia IPv6); systema_posix.h 2026-10-15 pro probationes/probatio_nomina.c (http-vocatio, conatus gradati)"/>
   <vocabulum lemma="offsetof" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="macrum ISO C89 stddef.h (typum accipit); systema_c89.h 2026-09-25 silva-migratio T16a"/>
   <vocabulum lemma="assert" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="macrum ISO C89 assert.h; systema_c89.h 2026-09-25 silva-migratio T16a"/>

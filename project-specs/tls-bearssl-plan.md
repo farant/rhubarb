@@ -194,6 +194,13 @@ with this plan; this plan argues from it and records where it departs.
   glossaried: `_sectio_semen`, `generator`.
 - **R19 (T1) - the hook gate step is XXIII**, not XXI: main added XXI and
   XXII.
+- **R20 (T2) - anchor check at setup = READABLE only** (`filum_existit`,
+  examen code 96). A readable non-DER anchor is rejected by fiducia at
+  server-auth with its named reason, not at setup (same error category).
+  Fixtures: `GENUS_CLAVIS=rsa hospes ...` selects the RSA leaf (`hospes`'
+  3rd/4th args are positional and optional); `ignotus.der` too.
+- **R21 (T2) - fiducia reads the anchor with `filum_legere_totum`**: no
+  16 KB stack buffer, and fabrica sees the read.
 
 ## Review focus
 

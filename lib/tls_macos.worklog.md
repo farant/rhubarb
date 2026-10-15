@@ -244,3 +244,26 @@ Lessons from building it:
   summary = exit 2 (a mute check is never green).
 - BSD sed has no `\|` in basic regexes (-E needed) - same trap as `\b`.
 Manual tool (not a gate): `./tools/tls_effluvia.sh [-aedificare]`.
+
+## 2026-10-15 - trust via fiducia (tls-bearssl T2)
+
+The anchor path no longer owns SecTrust code: `_ancoram_legere` and the
+SecTrust half of `_fiduciam_iudicare` moved to `lib/fiducia_macos.m`
+(`fiducia_iudicare`), as did `_tempus_ex_valore`/`_proprietatem_capere`
+(`fiducia_folium_describere`). This backend now copies the peer chain
+out as DER (`_catenam_capere`: SSLCopyPeerTrust -> SecCertificateCopyData,
+into the connection piscina) and hands it to fiducia - the same entry
+the BearSSL backend will use, so both judge trust with ONE policy
+(SecPolicyCreateSSL(true, host), anchors-only when ancora_via given).
+`hospes`/`ancora_via` are piscina copies (option strings need not
+outlive setup); no CF objects left in the struct (ancorae/hospes_cf
+gone, so nothing to CFRelease in tls_claudere besides the context).
+
+Behaviour kept: an unreadable anchor still fails at context setup
+("ancora legi non potest", via filum_existit - examen code 96); a
+readable but non-DER anchor now fails at server-auth with fiducia's
+named reason instead of at setup (same TLS_ERROR category).
+
+Mute by design (offline): SecTrustSetAnchorCertificatesOnly true->false
+changes nothing - the system store knows neither the test CA nor the
+rejected certs. Only the network -badssl run (T6) checks it.

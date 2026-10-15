@@ -63,6 +63,10 @@
     <regula obiectum="fenestra_macos">
       <vexillum! (>-framework Cocoa
     </regula>
+    <regula obiectum="fiducia_macos">
+      <vexillum! (>-framework Security
+      <vexillum! (>-framework CoreFoundation
+    </regula>
     <regula obiectum="tls_macos">
       <vexillum! (>-framework Security
       <vexillum! (>-framework CoreFoundation

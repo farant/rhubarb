@@ -13,6 +13,8 @@
 
 #include "tls.h"
 #include "tcp.h"
+#include "fiducia.h"
+#include "filum.h"
 
 
 /* ========================================================================
@@ -35,10 +37,12 @@ structura TlsConnexio {
     b32            scribere_pendet;
     size_t         scriptum_pendens;
     chorda         erratum;
-    /* ancorae: CA sola fide digna (TlsOptiones.ancora_via), NULL =
-     * repositorium systematis; hospes_cf pro politia SSL (nomen) */
-    CFArrayRef     ancorae;
-    CFStringRef    hospes_cf;
+    /* hospes: nomen pro politia SSL (fiducia); ancora_via: CA sola fide
+     * digna (TlsOptiones.ancora_via), NIHIL = repositorium systematis -
+     * ambo copiae in piscina (optiones vocantis ultra pactionem non
+     * vivunt; tls-bearssl T2: iudicium per fiducia.h) */
+    constans character* hospes;
+    constans character* ancora_via;
 };
 
 
@@ -286,103 +290,95 @@ _durare(SSLContextRef ssl_context, Piscina* piscina)
 }
 
 
-/* contextus SSL super conn->tcp: callbacks, connexio, SNI, durare,
- * verificatio. NIHIL si bene (conn->ssl_context positum); aliter causa
- * (contextus dimissus; tcp NON clausa - vocans claudit). Communis
- * tls_connectere et tls_incipere (http-vocatio II.3). */
-/* ancora DER ex via -> conn->ancorae; NIHIL si bene, aliter causa */
+/* chorda C in piscina (optiones vocantis non vivunt ultra pactionem) */
 interior constans character*
-_ancoram_legere(TlsConnexio* conn, constans character* via)
+_copiare(constans character* s, Piscina* piscina)
 {
-    FILE* f;
-    unsigned char capsa[XVI * MXXIV];
-    size_t n;
-    CFDataRef data;
-    SecCertificateRef cert;
+    size_t     n = strlen(s) + 1;
+    character* d = (character*)piscina_allocare(piscina, (i64)n);
 
-    f = fopen(via, "rb");
-    si (!f)
+    si (d)
     {
-        redde "ancora legi non potest";
+        memcpy(d, s, n);
     }
-    n = fread(capsa, 1, sizeof(capsa), f);
-    fclose(f);
-    data = CFDataCreate(NULL, capsa, (CFIndex)n);
-    cert = data ? SecCertificateCreateWithData(NULL, data) : NULL;
-    si (data)
-    {
-        CFRelease(data);
-    }
-    si (!cert)
-    {
-        redde "ancora non est certificatum DER";
-    }
-    {
-        constans void* valores[I];
-
-        valores[0] = cert;
-        conn->ancorae = CFArrayCreate(NULL, valores, 1,
-            &kCFTypeArrayCallBacks);
-    }
-    CFRelease(cert);
-    redde conn->ancorae ? NIHIL : "ancora: CFArrayCreate fallita";
+    redde d;
 }
 
-/* post errSSLServerAuthCompleted cum ancoris: fiducia hospitis contra
- * ancoras SOLAS, politia SSL cum nomine hospitis expresso (catena,
- * tempus, nomen). VERUM si fide dignus; aliter conn->erratum */
+/* catena hospitis (DER, folium primum) in piscina; numerus in *numerus;
+ * NIHIL si nulla */
+interior FiduciaCertificatum*
+_catenam_capere(TlsConnexio* conn, i32* numerus)
+{
+    SecTrustRef fiducia = NULL;
+    CFIndex n;
+    CFIndex k;
+    FiduciaCertificatum* catena;
+
+    *numerus = 0;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    si (SSLCopyPeerTrust(conn->ssl_context, &fiducia) != noErr
+        || fiducia == NULL)
+    {
+        redde NIHIL;
+    }
+    n = SecTrustGetCertificateCount(fiducia);
+    catena = n > 0 ? (FiduciaCertificatum*)piscina_allocare(conn->piscina,
+        (i64)((size_t)n * sizeof(FiduciaCertificatum))) : NIHIL;
+    per (k = 0; catena && k < n; k++)
+    {
+        CFDataRef data = SecCertificateCopyData(
+            SecTrustGetCertificateAtIndex(fiducia, k));
+        i8* octeti = data ? (i8*)piscina_allocare(conn->piscina,
+            (i64)CFDataGetLength(data)) : NIHIL;
+
+        si (octeti == NIHIL)
+        {
+            si (data)
+            {
+                CFRelease(data);
+            }
+            catena = NIHIL;
+            frange;
+        }
+        memcpy(octeti, CFDataGetBytePtr(data),
+            (size_t)CFDataGetLength(data));
+        catena[k].octeti  = octeti;
+        catena[k].mensura = (i32)CFDataGetLength(data);
+        CFRelease(data);
+    }
+#pragma clang diagnostic pop
+    CFRelease(fiducia);
+    si (catena)
+    {
+        *numerus = (i32)n;
+    }
+    redde catena;
+}
+
+/* post errSSLServerAuthCompleted cum ancora: catena per fiducia_iudicare
+ * (ancora SOLA, politia SSL cum nomine hospitis). VERUM si fide dignus;
+ * aliter conn->erratum (causa fiduciae) */
 interior b32
 _fiduciam_iudicare(TlsConnexio* conn)
 {
-    SecTrustRef fiducia = NULL;
-    SecPolicyRef politia;
-    CFErrorRef erratum = NULL;
-    OSStatus status;
-    b32 bene;
+    i32 numerus;
+    FiduciaCertificatum* catena = _catenam_capere(conn, &numerus);
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    status = SSLCopyPeerTrust(conn->ssl_context, &fiducia);
-#pragma clang diagnostic pop
-    si (status != noErr || fiducia == NULL)
+    si (catena == NIHIL)
     {
         conn->erratum = chorda_ex_literis("certificatum hospitis deest",
             conn->piscina);
         redde FALSUM;
     }
-    politia = SecPolicyCreateSSL(true, conn->hospes_cf);
-    SecTrustSetPolicies(fiducia, politia);
-    CFRelease(politia);
-    SecTrustSetAnchorCertificates(fiducia, conn->ancorae);
-    SecTrustSetAnchorCertificatesOnly(fiducia, true);
-    bene = SecTrustEvaluateWithError(fiducia,
-        &erratum) ? VERUM : FALSUM;
-    si (!bene)
-    {
-        character nuntius[CCLVI];
-        CFStringRef descriptio =
-            erratum ? CFErrorCopyDescription(erratum)
-                                         : NULL;
-
-        strcpy(nuntius, "certificatum reiectum");
-        si (descriptio)
-        {
-            strcpy(nuntius, "certificatum reiectum: ");
-            CFStringGetCString(descriptio, nuntius + strlen(nuntius),
-                (CFIndex)(sizeof(nuntius) - strlen(nuntius)),
-                kCFStringEncodingUTF8);
-            CFRelease(descriptio);
-        }
-        conn->erratum = chorda_ex_literis(nuntius, conn->piscina);
-    }
-    si (erratum)
-    {
-        CFRelease(erratum);
-    }
-    CFRelease(fiducia);
-    redde bene;
+    redde fiducia_iudicare(catena, numerus, conn->hospes, conn->ancora_via,
+        &conn->erratum, conn->piscina);
 }
 
+/* contextus SSL super conn->tcp: callbacks, connexio, SNI, durare,
+ * verificatio. NIHIL si bene (conn->ssl_context positum); aliter causa
+ * (contextus dimissus; tcp NON clausa - vocans claudit). Communis
+ * tls_connectere et tls_incipere (http-vocatio II.3). */
 interior constans character*
 _contextum_parare(TlsConnexio* conn, constans character* hospes,
     constans TlsOptiones* optiones)
@@ -426,16 +422,23 @@ _contextum_parare(TlsConnexio* conn, constans character* hospes,
         CFRelease(ssl_context);
         redde causa;
     }
+    conn->hospes = _copiare(hospes, conn->piscina);
     si (optiones && optiones->ancora_via)
     {
-        causa = _ancoram_legere(conn, optiones->ancora_via);
-        si (causa)
+        /* legibilitas ancorae STATIM (ut olim); forma DER a fiducia in
+         * iudicio nominatur */
+        si (!filum_existit(optiones->ancora_via))
         {
             CFRelease(ssl_context);
-            redde causa;
+            redde "ancora legi non potest";
         }
-        conn->hospes_cf = CFStringCreateWithCString(NULL, hospes,
-            kCFStringEncodingUTF8);
+        conn->ancora_via = _copiare(optiones->ancora_via, conn->piscina);
+    }
+    si (conn->hospes == NIHIL
+        || (optiones && optiones->ancora_via && conn->ancora_via == NIHIL))
+    {
+        CFRelease(ssl_context);
+        redde "Allocatio fallita";
     }
     /* ancora aut verificatio omissa: pactio ad auth hospitis sistit -
      * ancora: _fiduciam_iudicare; omissa: nihil iudicatur */
@@ -536,8 +539,8 @@ tls_connectere_cum_optionibus(
     conn->scriptum_pendens = 0;
     conn->erratum.datum = NIHIL;
     conn->erratum.mensura = 0;
-    conn->ancorae = NULL;
-    conn->hospes_cf = NULL;
+    conn->hospes = NIHIL;
+    conn->ancora_via = NIHIL;
 
     {
         constans character* causa = _contextum_parare(conn, hospes,
@@ -563,7 +566,7 @@ tls_connectere_cum_optionibus(
 #pragma clang diagnostic pop
 
     /* Tractare kSSLSessionOptionBreakOnServerAuth (ancora: iudicium) */
-    si (status == errSSLServerAuthCompleted && conn->ancorae
+    si (status == errSSLServerAuthCompleted && conn->ancora_via
         && !_fiduciam_iudicare(conn))
     {
         chorda causa = conn->erratum;
@@ -686,7 +689,7 @@ tls_gradus(TlsConnexio* connexio)
     {
         connexio->scribere_pendet = FALSUM;
         status = SSLHandshake(connexio->ssl_context);
-        si (   status == errSSLServerAuthCompleted && connexio->ancorae
+        si (   status == errSSLServerAuthCompleted && connexio->ancora_via
             && !_fiduciam_iudicare(connexio))
         {
             redde TLS_GRADUS_ERROR;
@@ -943,17 +946,6 @@ tls_claudere(TlsConnexio* connexio)
         connexio->ssl_context = NIHIL;
     }
 
-    si (connexio->ancorae)
-    {
-        CFRelease(connexio->ancorae);
-        connexio->ancorae = NULL;
-    }
-    si (connexio->hospes_cf)
-    {
-        CFRelease(connexio->hospes_cf);
-        connexio->hospes_cf = NULL;
-    }
-
     si (connexio->tcp)
     {
         tcp_claudere(connexio->tcp);
@@ -968,67 +960,15 @@ tls_claudere(TlsConnexio* connexio)
  * FUNCTIONES PUBLICAE - CERTIFICATUM HOSPITIS
  * ======================================================================== */
 
-/* CFAbsoluteTime (secunda ab 2001-01-01) -> epocha unix.
- * Valores validitatis ex SecCertificateCopyValues ut CFNumber
- * (absolutum) plerumque veniunt, ut CFDate interdum - ambo
- * tractantur ne versio systematis nos frangat. */
-interior s64
-_tempus_ex_valore(CFTypeRef valor)
-{
-    si (valor == NULL)
-    {
-        redde 0;
-    }
-    si (CFGetTypeID(valor) == CFNumberGetTypeID())
-    {
-        double absolutum = 0.0;
-
-        si (CFNumberGetValue((CFNumberRef)valor, kCFNumberDoubleType,
-                &absolutum))
-        {
-            redde (s64)(absolutum + kCFAbsoluteTimeIntervalSince1970);
-        }
-        redde 0;
-    }
-    si (CFGetTypeID(valor) == CFDateGetTypeID())
-    {
-        redde (s64)(CFDateGetAbsoluteTime((CFDateRef)valor)
-            + kCFAbsoluteTimeIntervalSince1970);
-    }
-    redde 0;
-}
-
-/* valorem ex dictionario valorum certificati:
- * { OID: { kSecPropertyKeyValue: <valor> } } */
-interior CFTypeRef
-_proprietatem_capere(CFDictionaryRef valores, CFTypeRef oid)
-{
-    CFDictionaryRef proprietas;
-
-    si (valores == NULL)
-    {
-        redde NULL;
-    }
-    proprietas = (CFDictionaryRef)CFDictionaryGetValue(valores, oid);
-    si (proprietas == NULL
-        || CFGetTypeID(proprietas) != CFDictionaryGetTypeID())
-    {
-        redde NULL;
-    }
-    redde CFDictionaryGetValue(proprietas, kSecPropertyKeyValue);
-}
-
+/* folium catenae hospitis -> fiducia_folium_describere (tempora,
+ * subiectum; tls-bearssl T2: idem codex ac vectura BearSSL) */
 b32
 tls_certificatum_obtinere(TlsConnexio* connexio,
     TlsCertificatum* exitus)
 {
-    SecTrustRef fiducia = NULL;
-    SecCertificateRef folium = NULL;
-    CFDictionaryRef valores = NULL;
-    CFArrayRef claves = NULL;
-    CFTypeRef oids[II];
-    CFStringRef summarium = NULL;
-    OSStatus status;
+    i32 numerus;
+    FiduciaCertificatum* catena;
+    FiduciaFolium ff;
 
     si (exitus == NIHIL)
     {
@@ -1045,59 +985,16 @@ tls_certificatum_obtinere(TlsConnexio* connexio,
     {
         redde FALSUM;
     }
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    status = SSLCopyPeerTrust(connexio->ssl_context, &fiducia);
-#pragma clang diagnostic pop
-    si (status != noErr || fiducia == NULL)
+    catena = _catenam_capere(connexio, &numerus);
+    si (catena == NIHIL
+        || !fiducia_folium_describere(&catena[0], &ff, connexio->piscina))
     {
         redde FALSUM;
     }
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    folium = SecTrustGetCertificateAtIndex(fiducia, 0);
-#pragma clang diagnostic pop
-    si (folium == NULL)
-    {
-        CFRelease(fiducia);
-        redde FALSUM;
-    }
-
-    oids[0] = kSecOIDX509V1ValidityNotBefore;
-    oids[I] = kSecOIDX509V1ValidityNotAfter;
-    claves = CFArrayCreate(NULL, oids, II, &kCFTypeArrayCallBacks);
-    si (claves != NULL)
-    {
-        valores = SecCertificateCopyValues(folium, claves, NULL);
-        CFRelease(claves);
-    }
-    si (valores != NULL)
-    {
-        exitus->non_ante = _tempus_ex_valore(_proprietatem_capere(
-            valores, kSecOIDX509V1ValidityNotBefore));
-        exitus->non_post = _tempus_ex_valore(_proprietatem_capere(
-            valores, kSecOIDX509V1ValidityNotAfter));
-        CFRelease(valores);
-    }
-
-    summarium = SecCertificateCopySubjectSummary(folium);
-    si (summarium != NULL)
-    {
-        character buffer[CCLVI];
-
-        si (CFStringGetCString(summarium, buffer, (CFIndex)CCLVI,
-                kCFStringEncodingUTF8))
-        {
-            exitus->subiectum = chorda_ex_literis(buffer,
-                connexio->piscina);
-        }
-        CFRelease(summarium);
-    }
-
-    CFRelease(fiducia);
-    exitus->valida = (exitus->non_post > 0);
+    exitus->valida    = ff.valida;
+    exitus->non_ante  = ff.non_ante;
+    exitus->non_post  = ff.non_post;
+    exitus->subiectum = ff.subiectum;
     redde exitus->valida;
 }
 

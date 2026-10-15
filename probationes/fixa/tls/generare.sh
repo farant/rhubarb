@@ -14,6 +14,9 @@
 #   alienus.{pem,key}     ab eadem CA, sed SAN DNS:alienus.invalid
 #   expiratus.{pem,key}   ab eadem CA, 2020-01-01 .. 2020-01-02
 #   ignotus.{pem,key}     ab CA ALIA (in fixis non servata)
+#   localhost_rsa.{pem,key}  ut localhost, clavis RSA-2048 (ECDHE_RSA;
+#                         tls-bearssl R12)
+#   <titulus>.der         omne folium etiam DER (fiducia_iudicare)
 #
 # CLAVES SOLUM PROBATIONIS - nihil verum signant.
 #
@@ -26,6 +29,7 @@ trap 'rm -rf "$T"' EXIT
 mkdir -p "$DEST"
 
 clavis () { "$OSSL" genpkey -algorithm EC -pkeyopt ec_paramgen_curve:P-256 -out "$1" 2>/dev/null; }
+clavis_rsa () { "$OSSL" genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:2048 -out "$1" 2>/dev/null; }
 
 # CA probationis
 clavis "$T/ca.key"
@@ -55,8 +59,9 @@ unique_subject = no
 commonName = supplied
 CNF
 
-hospes () {   # titulus SAN [initium finis] - sine diebus: CCCLXV ab hodie
-    clavis "$DEST/$1.key"
+hospes () {   # titulus SAN [initium finis] - sine diebus: CCCLXV ab hodie;
+              # GENUS_CLAVIS=rsa ante vocationem: folium RSA-2048
+    if [ "${GENUS_CLAVIS:-}" = rsa ]; then clavis_rsa "$DEST/$1.key"; else clavis "$DEST/$1.key"; fi
     "$OSSL" req -new -key "$DEST/$1.key" -subj "/CN=$1" \
         -addext "subjectAltName=$2" \
         -addext "extendedKeyUsage=serverAuth" -out "$T/$1.csr"
@@ -68,11 +73,13 @@ hospes () {   # titulus SAN [initium finis] - sine diebus: CCCLXV ab hodie
             -days 365 -out "$T/$1.crt" 2>/dev/null
     fi
     "$OSSL" x509 -in "$T/$1.crt" -out "$DEST/$1.pem"
+    "$OSSL" x509 -in "$DEST/$1.pem" -outform DER -out "$DEST/$1.der"
 }
 
 hospes localhost "DNS:localhost,IP:127.0.0.1"
 hospes alienus   "DNS:alienus.invalid"
 hospes expiratus "DNS:localhost,IP:127.0.0.1" 20200101000000Z 20200102000000Z
+GENUS_CLAVIS=rsa hospes localhost_rsa "DNS:localhost,IP:127.0.0.1"
 
 # ignotus: CA alia (non servata)
 clavis "$T/alia.key"
@@ -85,5 +92,6 @@ clavis "$DEST/ignotus.key"
 "$OSSL" x509 -req -in "$T/ignotus.csr" -CA "$T/alia.pem" -CAkey "$T/alia.key" \
     -CAcreateserial -days 365 -copy_extensions copy \
     -out "$DEST/ignotus.pem" 2>/dev/null
+"$OSSL" x509 -in "$DEST/ignotus.pem" -outform DER -out "$DEST/ignotus.der"
 
 echo "tls_fixa: scripta in $DEST"

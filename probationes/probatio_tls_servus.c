@@ -313,6 +313,63 @@ _sectio_obstruens (
     servum_tls_claudere(&s);
 }
 
+/* certificatum hospitis: summarium folii ex connexione aperta (per
+ * fiducia_folium_describere) */
+interior vacuum
+_sectio_certificatum (
+    CredoContextus* c)
+{
+    constans Locus* l = (constans Locus*)c->suita;
+         ServusTls  s;
+       TlsOptiones  opt = tls_optiones_default();
+       TlsResultus  tr;
+   TlsCertificatum  cert;
+               s64  dies;
+
+    opt.ancora_via = l->ancora;
+    opt.timeout_ms = V * M;
+    CREDO_NECESSE(servum_tls_incipere(&s, l->dir, l->fixa, "localhost",
+        c->piscina));
+    tr = tls_connectere_cum_optionibus("localhost", s.portus, &opt,
+        c->piscina);
+    CREDO_NECESSE(tr.successus);
+    CREDO_VERUM(tls_certificatum_obtinere(tr.connexio, &cert));
+    CREDO_VERUM(cert.valida);
+    CREDO_CHORDA_AEQUALIS_LITERIS(cert.subiectum, "localhost");
+    dies = (cert.non_post - cert.non_ante) / ((s64)LXXXVI * M + CD);
+    CREDO_VERUM(dies >= CCCLXIV && dies <= CCCLXVI);
+    tls_claudere(tr.connexio);
+    servum_tls_claudere(&s);
+}
+
+/* folium RSA-2048 (ECDHE_RSA; tls-bearssl R12): gradatim, 200 +
+ * corpus */
+interior vacuum
+_sectio_rsa (
+    CredoContextus* c)
+{
+           Reactor* r = reactor_creare(c->piscina);
+    constans Locus* l = (constans Locus*)c->suita;
+         ServusTls  s;
+        Observatio  o;
+       HttpVocatio* v;
+      HttpResultus  res;
+
+    CREDO_NECESSE(servum_tls_incipere(&s, l->dir, l->fixa,
+        "localhost_rsa",
+        c->piscina));
+    v = _petere(r, s.portus, "parvum.txt", l->ancora, &o, c->piscina);
+    CREDO_NECESSE_NON_NIHIL(v);
+    res = http_vocatio_resultus(v);
+    CREDO_AEQUALIS_I32((i32)http_vocatio_status(v),
+        (i32)HTTP_VOCATIO_FINITA);
+    CREDO_NECESSE(res.successus && res.responsum != NIHIL);
+    CREDO_AEQUALIS_I32(res.responsum->status, CC);
+    CREDO_CHORDA_AEQUALIS_LITERIS(chorda_aedificator_finire(o.corpus),
+        "salve per tls\n");
+    servum_tls_claudere(&s);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "parvum", _sectio_parvum, NIHIL, NIHIL, NIHIL, NIHIL },
     { "magnum", _sectio_magnum, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -321,6 +378,9 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "ignotus", _sectio_ignotus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "sine ancora", _sectio_sine_ancora, NIHIL, NIHIL, NIHIL, NIHIL },
     { "obstruens", _sectio_obstruens, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "certificatum", _sectio_certificatum, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "rsa", _sectio_rsa, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 
