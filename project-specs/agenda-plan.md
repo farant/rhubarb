@@ -231,10 +231,24 @@ State-model question to settle before A2 (A1 is content only).
   - **M2** batch 2: double-click row -> title prompt (DONE 2026-10-14
     with A7 inline #tags); click group heading -> filter; right-click
     context menu (from the table).
+    - **M2a** DONE 2026-10-14: agenda heading click filters by its
+      rubric (again on the active one clears; "(none)" inert); only the
+      LEFT button acts (right-click used to complete via the checkbox).
+    - **M2b** DONE 2026-10-14: `elenchus` library (include/elenchus.h,
+      header approved): house popover pattern (host popover field,
+      DIALOGUS subtree as last root child, dimissio closes), fines with
+      Mac flip + clamp, one figure, keys j/k/arrows/Return.
+    - **M2c** DONE 2026-10-14: right-click opens the menu
+      (TABULA_ELENCHORUM: item / month day / list background; omitted
+      outside the view, greyed when requisita unmet); hover, keys,
+      Esc, click outside; fields `elenchus` (popover) +
+      `elenchus_electa`. Open: derivare pairs presses across buttons.
   - **M3** generalize: commands declared in the manifest, availability
     query on the action registry, then the palette UI (after a 2nd
     widget has a table).
   - Long lists: PAGINATION, not scrolling (Fran 2026-10-13).
+    Split groups (Fran 2026-10-14, DONE): a page starting mid-group
+    repeats its heading (#tag, completion date, day "Completed").
 - **A5 — year view.**
 - **A6 — day view redesign + day documents** (Fran 2026-10-13):
   - Day view = top half list / bottom half embedded scriba (50/50 for

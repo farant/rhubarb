@@ -5,6 +5,7 @@
 #include "scriba_applicatio.h"
 #include "terminale.h"
 #include "kalendarium.h"
+#include "nomenclator.h"
 #include "iussum.h"
 #include <stdio.h>
 #include <string.h>
@@ -679,8 +680,9 @@ quaestionem_iussum (
     opera->opus.pulsare    = opus_quaestionis_pulsare;
     opera->opus.abrumpere  = opus_quaestionis_abrumpere;
     effectus->opus         = &opera->opus;
-    effectus->caput     = chorda_ex_literis("<question answered>",
-        piscina);
+    /* "<answered>" (X) brevius quam "$question<>" (XI): linea numquam
+     * crescit, ergo numquam transfluit (Franus 2026-10-14) */
+    effectus->caput     = chorda_ex_literis("<answered>", piscina);
     effectus->nuntius   = chorda_ex_literis(
         "question: streaming... (Esc cancels)", piscina);
     redde VERUM;
@@ -1328,6 +1330,7 @@ nomen structura {
                 Piscina* piscina;
     InternamentumChorda* intern;
        AgendaDocumentum* documentum;
+            FastiFontes* fontes;     /* P6: natales nomenclatoris */
         StatusSystemata* systemata;
 } ContextusKalendarii;
 
@@ -1379,7 +1382,8 @@ kalendarium_montare_in_vico (
     }
     redde kalendarium_montare((KalendariumMontatio*)sedes, piscina,
         intern, repo, id, (argumentum && argumentum[ZEPHYRUM])
-        ? argumentum : NIHIL, ck->documentum, volumen, latitudo,
+        ? argumentum : NIHIL, ck->documentum, ck->fontes, volumen,
+        latitudo,
         altitudo, hodie_vici,
         ck->vicus,
         ck->systemata);
@@ -1426,6 +1430,172 @@ kalendarium_describere (
     /* A6e: pulsus - indicium paginae notarum */
     f->pulsare      = kalendarii_pulsare;
     f->pulsare_ctx  = m;
+}
+
+/* nomenclator-plan P2: nomenclator - documentum personarum UNUM per
+ * volumen vici (spatium "personae"), pigre apertum, commune omnibus
+ * lateribus nomenclatoris */
+nomen structura {
+                  Vicus* vicus;
+                Volumen* volumen;
+                Piscina* piscina;
+    InternamentumChorda* intern;
+     PersonaeDocumentum* documentum;
+        StatusSystemata* systemata;
+} ContextusNomenclatoris;
+
+/* P6c: porta diei nomenclatoris - latus calendarii in frontem acervi,
+ * visus diei in eo die (vicus_acervo_mutare "YYYY-MM-DD"; petitio
+ * pulsus proximi); ctx = ContextusNomenclatoris* */
+interior b32
+diem_in_calendario (
+     vacuum* ctx,
+       Dies  dies)
+{
+    ContextusNomenclatoris* cn;
+                 character  iso[XVI];
+
+    cn = (ContextusNomenclatoris*)ctx;
+    si (!cn || !fasti_dies_valida(dies))
+    {
+        redde FALSUM;
+    }
+    sprintf(iso, "%04d-%02d-%02d", (integer)dies.annus,
+        (integer)dies.mensis, (integer)dies.dies);
+    redde vicus_acervo_mutare(cn->vicus, "calendarium", iso);
+}
+
+interior b32
+nomenclatorem_montare_in_vico (
+                 vacuum* sedes,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+     InsulaRepositorium* repo,
+     constans character* id,
+     constans character* argumentum,
+                    i32  latitudo,
+                    i32  altitudo,
+                 vacuum* ctx)
+{
+    ContextusNomenclatoris* cn;
+
+    cn = (ContextusNomenclatoris*)ctx;
+    si (!cn)
+    {
+        redde FALSUM;
+    }
+    si (!cn->documentum)
+    {
+        cn->documentum = personae_aperire(cn->piscina, cn->intern,
+            cn->volumen, "personae", ZEPHYRUM);
+    }
+    si (   !cn->documentum
+        || !nomenclator_montare((NomenclatorMontatio*)sedes, piscina,
+               intern, repo, id, cn->documentum, volumen, hodie_vici,
+               cn->vicus, latitudo, altitudo, cn->systemata))
+    {
+        redde FALSUM;
+    }
+    nomenclator_portam_diei_ponere((NomenclatorMontatio*)sedes,
+        diem_in_calendario, cn);
+    /* P6b: argumentum "<id>" personam aperit (malum: index manet) */
+    si (argumentum && argumentum[ZEPHYRUM])
+    {
+        (vacuum)nomenclator_argumentum_ponere(
+            (NomenclatorMontatio*)sedes, argumentum);
+    }
+    redde VERUM;
+}
+
+/* P6b: argumentum lateris mutatum (vicus_acervo_mutare) */
+interior b32
+nomenclatoris_argumentum_ponere (
+                 vacuum* ctx,
+     constans character* argumentum)
+{
+    redde nomenclator_argumentum_ponere((NomenclatorMontatio*)ctx,
+        argumentum);
+}
+
+/* P5b: pulsus lateris nomenclatoris - notae refectae */
+interior VicusPulsus
+nomenclatoris_pulsare (
+    vacuum* ctx)
+{
+    VicusPulsus p;
+
+    p.mutatum = nomenclator_reficere((NomenclatorMontatio*)ctx);
+    p.finitus = FALSUM;
+    redde p;
+}
+
+interior vacuum
+nomenclatorem_describere (
+         vacuum* montatio,
+    VicusFacies* f)
+{
+    NomenclatorMontatio* m;
+
+    m                 = (NomenclatorMontatio*)montatio;
+    f->actiones       = m->actiones;
+    f->figurae        = m->figurae;
+    f->componere      = nomenclator_componere;
+    f->componere_ctx  = m;
+    /* P5b: notae personae - gestus scribae nidificatae, pulsus */
+    f->gestum_ponere  = nomenclator_gestum_ponere;
+    f->gestum_ctx     = m;
+    f->pulsare        = nomenclatoris_pulsare;
+    f->pulsare_ctx    = m;
+    /* P6b: "<id>" personam aperit (natalis ex calendario) */
+    f->argumentum_ponere      = nomenclatoris_argumentum_ponere;
+    f->argumentum_ponere_ctx  = m;
+}
+
+/* P6: fons dierum calendarii - natales ex documento personarum
+ * communi (pigre apertum, ut nomenclatorem_montare_in_vico); ctx =
+ * ContextusNomenclatoris* */
+interior b32
+natales_legere (
+      vacuum* ctx,
+        Dies  prima,
+        Dies  ultima,
+         Xar* exitus,
+     Piscina* piscina)
+{
+    ContextusNomenclatoris* cn;
+
+    cn = (ContextusNomenclatoris*)ctx;
+    si (!cn)
+    {
+        redde FALSUM;
+    }
+    si (!cn->documentum)
+    {
+        cn->documentum = personae_aperire(cn->piscina, cn->intern,
+            cn->volumen, "personae", ZEPHYRUM);
+    }
+    redde cn->documentum && personae_fasti_legere(cn->documentum, prima,
+        ultima, exitus, piscina);
+}
+
+/* P6b: introitum natalis aperire - latus nomenclatoris in frontem
+ * acervi cum persona (vicus_acervo_mutare; petitio pulsus proximi) */
+interior b32
+natalem_aperire (
+                     vacuum* ctx,
+    constans FastiIntroitus* introitus)
+{
+    ContextusNomenclatoris* cn;
+                 character  numerus[XVI];
+
+    cn = (ContextusNomenclatoris*)ctx;
+    si (!cn || !introitus || introitus->referentia <= ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    sprintf(numerus, "%d", (integer)introitus->referentia);
+    redde vicus_acervo_mutare(cn->vicus, "nomenclator", numerus);
 }
 
 /* folium paginae novae (S2b): lateris sinistri cellulae (dimidium
@@ -1541,6 +1711,7 @@ vicus_applicatio_aedificare (
       ContextusScribae* cs;
      ContextusPictoris* cp;
    ContextusKalendarii* ck;
+ContextusNomenclatoris* cn;
   ContextusQuaestionis* cq;
        StatusSystemata* systemata;
 
@@ -1586,6 +1757,23 @@ vicus_applicatio_aedificare (
         ck->intern     = intern;
         ck->systemata  = systemata;
     }
+    /* P2: nomenclator - documentum personarum commune */
+    cn = (ContextusNomenclatoris*)piscina_allocare(piscina,
+        magnitudo(ContextusNomenclatoris));
+    si (cn)
+    {
+        memset(cn, ZEPHYRUM, magnitudo(ContextusNomenclatoris));
+        cn->vicus      = app->vicus;
+        cn->volumen    = volumen;
+        cn->piscina    = piscina;
+        cn->intern     = intern;
+        cn->systemata  = systemata;
+    }
+    /* P6: fontes dierum calendarii (natales nomenclatoris) */
+    si (ck)
+    {
+        ck->fontes = fasti_fontes_creare(piscina);
+    }
     /* $question: porta nulla donec applicatio fenestrae ponit */
     cq = (ContextusQuaestionis*)piscina_allocare(piscina,
         magnitudo(ContextusQuaestionis));
@@ -1617,6 +1805,8 @@ vicus_applicatio_aedificare (
                piscina)
         || !aperiens_fixum_registrare(cs->iussa, app->vicus, "agenda",
                "calendarium", "agenda", piscina)
+        || !aperiens_fixum_registrare(cs->iussa, app->vicus, "contacts",
+               "nomenclator", NIHIL, piscina)
         || !cyclum_registrare(cs->iussa, app->vicus, "pictor-next", I,
                piscina)
         || !cyclum_registrare(cs->iussa, app->vicus, "pictor-prev", -I,
@@ -1637,6 +1827,14 @@ vicus_applicatio_aedificare (
         || !vicus_genus_addere(app->vicus, "calendarium",
                magnitudo(KalendariumMontatio),
                kalendarium_montare_in_vico, kalendarium_describere, ck)
+        || !cn
+        || !ck->fontes
+        || !fasti_fontes_addere(ck->fontes, "nomenclator",
+               natales_legere, natalem_aperire, cn)
+        || !vicus_genus_addere(app->vicus, "nomenclator",
+               magnitudo(NomenclatorMontatio),
+               nomenclatorem_montare_in_vico, nomenclatorem_describere,
+               cn)
         || !vicus_aperire(app->vicus, INDEX_ORDINARIUS))
     {
         causa = app->vicus ? vicus_causa(app->vicus)

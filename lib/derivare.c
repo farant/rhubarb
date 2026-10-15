@@ -120,7 +120,11 @@ derivare (
         redde;
     }
 
+    /* geminus solum eiusdem bottonis: d->botton = botton pressionis
+     * PRIORIS (_tractum_derivare eum post hoc renovat) - dexter deinde
+     * sinister duplex non est (menu contextuale, M2c) */
     est_geminus = d->habet_ultimum
+          && ev->datum.mus.botton == d->botton
           && (ev->tempus - d->tempus_ultimi) <= d->intervallum_ms
           && abs_i32((s32)ev->datum.mus.x - (s32)d->ultimus.x)
               <= d->distantia

@@ -577,6 +577,96 @@ _delere_characterem_sub_cursore (
     redde status;
 }
 
+/* Jungere contentum lineae inferioris [initium, finis] ad lineam
+ * superiorem ab columna pos (J et backspace). Si totum capitur, linea
+ * inferior deletur; aliter verba sola quae capiuntur ascendunt et
+ * residuum in linea inferiore ad indentationem suam manet - nihil
+ * ultra marginem perditur. Redde VERUM si tabula mutata est (FALSUM:
+ * ne verbum quidem primum capitur). */
+hic_manens b32
+_jungere_per_verba (
+    TabulaCharacterum* tabula,
+                  i32  superior,
+                  i32  pos,
+                  i32  initium,
+                  s32  finis)
+{
+    i32 inferior;
+    i32 spatium;
+    i32 capti;
+    i32 col;
+    i32 residuum;
+    i32 dest;
+
+    inferior  = superior + I;
+    spatium   = pos < tabula->latitudo ? tabula->latitudo - pos
+        : ZEPHYRUM;
+
+    /* totum capitur (aut linea inferior vacua) */
+    si (finis < (s32)initium || (i32)finis - initium + I <= spatium)
+    {
+        per (col = initium; (s32)col <= finis; col++)
+        {
+            tabula_cellula(tabula, superior, pos + col - initium) =
+                tabula_cellula(tabula, inferior, col);
+        }
+        tabula_delere_lineam(tabula, inferior);
+        redde VERUM;
+    }
+
+    /* finis verbi ultimi quod capitur: cellula post eum vacua */
+    capti = ZEPHYRUM;
+    per (col = spatium; col > ZEPHYRUM; col--)
+    {
+        si (   tabula_est_cellula_vacua(tabula_cellula(tabula, inferior,
+                initium + col))
+            && !tabula_est_cellula_vacua(tabula_cellula(tabula,
+                inferior, initium + col - I)))
+        {
+            capti = col;
+            frange;
+        }
+    }
+    si (capti == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+
+    per (col = ZEPHYRUM; col < capti; col++)
+    {
+        tabula_cellula(tabula, superior, pos + col) =
+            tabula_cellula(tabula, inferior, initium + col);
+    }
+
+    /* residuum ad indentationem lineae inferioris trahitur (semper
+     * sinistrorsum: indentatio < residuum) */
+    residuum = initium + capti;
+    dum (   (s32)residuum <= finis
+         && tabula_est_cellula_vacua(tabula_cellula(tabula, inferior,
+            residuum)))
+    {
+        residuum++;
+    }
+    si ((s32)residuum > finis)
+    {
+        /* solum spatia (aut tabs) restant */
+        tabula_delere_lineam(tabula, inferior);
+        redde VERUM;
+    }
+    dest = tabula_invenire_initium_contenti(tabula, inferior);
+    per (col = residuum; (s32)col <= finis; col++)
+    {
+        tabula_cellula(tabula, inferior, dest) =
+            tabula_cellula(tabula, inferior, col);
+        dest++;
+    }
+    per (; dest < tabula->latitudo; dest++)
+    {
+        tabula_cellula(tabula, inferior, dest) = ' ';
+    }
+    redde VERUM;
+}
+
 hic_manens VimStatus
 _delere_characterem_ante_cursorem (
     VimStatus status)
@@ -619,43 +709,25 @@ _delere_characterem_ante_cursorem (
     }
     alioquin si (status.cursor_linea > ZEPHYRUM)
     {
-        /* Ad initium lineae - jungere cum linea superiore */
-        s32 finis_superioris;
-        s32 finis_currentis;
-        i32 linea_inferior;
-        i32 col;
+        /* Ad initium lineae - jungere cum linea superiore (verba quae
+         * non capiuntur infra manent) */
         i32 pos_junctionis;
 
-        linea_inferior = status.cursor_linea;
         status.cursor_linea--;
-        finis_superioris = _finis_lineae(status.tabula,
-            status.cursor_linea);
-        finis_currentis = _finis_lineae(status.tabula, linea_inferior);
+        pos_junctionis = (i32)(tabula_invenire_finem_contenti(
+            status.tabula, status.cursor_linea) + I);
 
-        /* Positio ubi cursor erit et ubi contentum jungitur */
-        pos_junctionis         = (i32)(finis_superioris + I);
-        status.cursor_columna  = pos_junctionis;
-
-        /* Copiare contentum lineae inferioris ad finem lineae superioris */
-        si (finis_currentis >= ZEPHYRUM)
+        si (_jungere_per_verba(status.tabula, status.cursor_linea,
+                pos_junctionis, ZEPHYRUM,
+                tabula_invenire_finem_contenti(status.tabula,
+                status.cursor_linea + I)))
         {
-            per (col = ZEPHYRUM; col <= (i32)finis_currentis; col++)
-            {
-                character c;
-
-                c = tabula_cellula(status.tabula, linea_inferior, col);
-                si (pos_junctionis + col < status.tabula->latitudo)
-                {
-                    tabula_cellula(status.tabula, status.cursor_linea,
-                        pos_junctionis + col) = c;
-                }
-            }
+            status.mutatus = VERUM;
         }
 
-        /* Delere lineam inferiorem (nunc vacuam) */
-        tabula_delere_lineam(status.tabula, linea_inferior);
-
-        status.mutatus = VERUM;
+        /* cursor ad junctionem, intra paginam */
+        status.cursor_columna = pos_junctionis < status.tabula->latitudo
+            ? pos_junctionis : status.tabula->latitudo - I;
     }
 
     redde status;
@@ -767,7 +839,7 @@ _jungere_lineas (
     s32 finis_inferioris;
     i32 initium_contenti_inferioris;
     i32 pos_junctionis;
-    i32 col;
+    b32 separator;
     i32 linea_inferior;
 
     /* Verificare si non sumus ad ultimam lineam */
@@ -786,48 +858,33 @@ _jungere_lineas (
     initium_contenti_inferioris =
         tabula_invenire_initium_contenti(status.tabula, linea_inferior);
 
-    /* Determinare positio junctionis */
-    si (finis_currentis < ZEPHYRUM)
+    /* Linea currens vacua aut inferior vacua: junctio sine spatio
+     * separatore */
+    si (finis_currentis < ZEPHYRUM || finis_inferioris < ZEPHYRUM)
     {
-        /* Linea currens vacua - junctio ad columna 0 */
-        pos_junctionis = ZEPHYRUM;
+        pos_junctionis  = (i32)(finis_currentis + I);
+        separator       = FALSUM;
     }
     alioquin
     {
-        /* Addere spatium post finem contenti currentis */
-        pos_junctionis = (i32)finis_currentis + I;
-
-        /* Inserere spatium separator (si linea inferior habet contentum) */
-        si (   finis_inferioris >= ZEPHYRUM
-            && pos_junctionis < status.tabula->latitudo - I)
-        {
-            tabula_cellula(status.tabula, status.cursor_linea,
-                pos_junctionis) = ' ';
-            pos_junctionis++;
-        }
+        /* spatium separator post finem contenti currentis */
+        pos_junctionis  = (i32)finis_currentis + II;
+        separator       = VERUM;
     }
 
-    /* Copiare contentum lineae inferioris (sine leading whitespace) */
-    si (finis_inferioris >= ZEPHYRUM)
+    /* Copiare contentum lineae inferioris (sine leading whitespace);
+     * verba quae non capiuntur infra manent */
+    si (!_jungere_per_verba(status.tabula, status.cursor_linea,
+            pos_junctionis, initium_contenti_inferioris,
+            finis_inferioris))
     {
-        per (col = initium_contenti_inferioris; col
-            <= (i32)finis_inferioris; col++)
-        {
-            i32 dest_col;
-
-            dest_col = pos_junctionis + col
-                - initium_contenti_inferioris;
-            si (dest_col < status.tabula->latitudo)
-            {
-                tabula_cellula(status.tabula, status.cursor_linea,
-                    dest_col) =
-                    tabula_cellula(status.tabula, linea_inferior, col);
-            }
-        }
+        redde status;
     }
-
-    /* Delere lineam inferiorem */
-    tabula_delere_lineam(status.tabula, linea_inferior);
+    si (separator)
+    {
+        tabula_cellula(status.tabula, status.cursor_linea,
+            pos_junctionis - I) = ' ';
+    }
 
     /* Cursor manet ad linea currenti (non mutatur) */
     status.mutatus = VERUM;

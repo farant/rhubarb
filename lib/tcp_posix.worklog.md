@@ -73,3 +73,47 @@ plagulam fert, error electus nexum verum obstruxit. Solutio plena
 missione ipsa (tcp_scribere). Pinnae portae remotae; glibc 133/136.
 Codex 86 vigilat pro Darwinismis FUTURIS - specimen primum suum
 munus implevit.
+
+## 2026-10-14 - non-blocking connect + the fd leak in tcp_claudere (http-vocatio T3)
+
+**The leak.** `tcp_recipere` sets `clausa` when `recv` returns 0 (the
+peer closed). `tcp_claudere` then skipped `close()` because its guard
+was `fd >= 0 && !clausa` - so every connection the SERVER closed first
+leaked its fd. That is every `http_exsequi` (it reads until close) and
+every TLS connection closed by the peer. Short-lived tools never
+noticed; a long-running vicus asking questions over route B would
+have run out of fds. `probatio_tcp_incipere` section `clausura paris`
+showed it live (the fd still open after `tcp_claudere`, `fcntl
+F_GETFD` != -1) before the fix. Now `tcp_claudere` always closes a
+non-negative fd and is idempotent. Possibly related: the open ledger
+question "probatio_tcp_servus fluctuans" - not checked.
+
+**Non-blocking connect** for the reactor-driven client:
+- `tcp_incipere(addressus, mensura, piscina)` - raw sockaddr bytes with
+  the port already set (nomina fills it, plan R3), so this file never
+  needs `sockaddr_in6`. Socket `O_NONBLOCK`, `SO_NOSIGPIPE`,
+  `TCP_NODELAY`, and deliberately NO `SO_RCVTIMEO/SO_SNDTIMEO`: the
+  caller's reactor timers own time. `connect` returning `EINPROGRESS`
+  (or `EINTR`, which on a non-blocking socket also means "continues
+  asynchronously") is success-pending.
+- `tcp_incipere_perficere` - call ONLY after the fd is writable:
+  `getsockopt(SO_ERROR)` 0 = connected, else a named error. Called
+  before writability it would report 0 falsely.
+- `tcp_ex_fossa` wraps an existing fd (tests over pipes/socketpairs).
+
+Lexicon: examen REICE'd this file for `EINPROGRESS` and `SO_ERROR`
+(the predicted gap); both added to `silva/fontes/systema_posix.h` with
+Darwin values and asserted in auspex (plant `EINPROGRESS 37` ->
+DISSENTIT).
+
+## 2026-10-14 - test race: accept right after the client sees "connected"
+
+The T5 commit's radix gate failed `probatio_tcp_incipere` section
+`clausura paris` (320/321): `tcp_servus_accipere` returned
+`TCP_ERROR_ITERUM`. On a non-blocking listener, accepting the moment
+the CLIENT reports the connect complete races the server side queuing
+the connection. Not reproducible locally (0 of 60 parallel runs, even
+with the old code) - it took the gate's full load. Both tests that do
+this (`probatio_tcp_incipere`, `probatio_tls_gradus`) now accept via
+`_accipere`: poll the listening fd readable, retry on ITERUM, bounded
+at II s. Cause plausible, not proven.

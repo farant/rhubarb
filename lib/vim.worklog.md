@@ -16,3 +16,34 @@ copying meant deleting.
   scriba does not flush a gesture or record a history entry.
 - Test gotcha: `G` goes to the last line of the SHEET (fixed height),
   not of the text - a `G V k k y` test selected three empty lines.
+
+## 2026-10-14 - J and backspace-join wrap by word instead of truncating
+
+Fran noticed `J` on a long lower line ate the end of the line. Verified
+it was ALWAYS so (since 37e339ca, Dec 2025 - the only later touch was
+formatting), and the legacy pagina app (lib/pagina.c) and scriba share
+this code: both copied with `si (dest_col < latitudo)` and then deleted
+the lower line, so everything past the margin vanished. Backspace at
+column 0 had the identical loop. Insert mode never had the problem
+(tabula_tractare_overflow cascades).
+
+Fix (Fran chose word boundary over character boundary):
+`_jungere_per_verba(tabula, superior, pos, initium, finis)` serves both.
+All fits -> copy + delete lower line (as before). Otherwise only whole
+words that fit move up (break = a blank cell after a non-blank one,
+tabula_est_cellula_vacua); the remainder is pulled left to the lower
+line's own indentation. No word fits -> nothing changes and `mutatus`
+stays FALSUM (J then adds no separator space; scriba records nothing).
+
+Two side bugs fixed with tests:
+- backspace onto an EMPTY line joined at column 1: `_finis_lineae`
+  returns 0 for "no content" (for cursor clamping), so pos = 0 + 1. Now
+  tabula_invenire_finem_contenti (-1) directly.
+- backspace onto a FULL line put the cursor at column `latitudo` (off
+  the page); now clamped to latitudo - 1.
+
+Gotchas: finem_contenti counts tabs as content but est_cellula_vacua
+calls '\t' blank - the skip-blanks loop is bounded by `finis` and a
+remainder of only blanks deletes the line. Test fixtures are clipped to
+the sheet width on load (tabula_ex_literis_cum_dimensionibus), so a
+fixture line longer than latitudo silently tests something else.

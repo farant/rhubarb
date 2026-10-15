@@ -18,6 +18,7 @@
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"
+#include "tcp.h"
 
 
 /* ========================================================================
@@ -95,6 +96,42 @@ TlsOptiones
 tls_optiones_default (vacuum);
 
 
+/* --- gradatim: non-blocans (http-vocatio II.3) --- */
+
+/* gradatim: nihil paratum nunc (valor idem ac TCP_ITERUM) */
+#define TLS_ITERUM (-2)
+
+nomen enumeratio {
+    TLS_GRADUS_PERFECTUS = 0,
+    TLS_GRADUS_LEGERE,        /* exspecta fossam legibilem, iterum */
+    TLS_GRADUS_SCRIBERE,      /* exspecta scribibilem, iterum */
+    TLS_GRADUS_ERROR          /* tls_gradus_error causam dat */
+} TlsGradus;
+
+/* Super TCP IAM connexam et non-blocantem (tcp_incipere + perficere):
+ * contextus paratur (SNI, TLS 1.2+, cifrae admissae, verificatio -
+ * optiones NIHIL = ordinariae), nullus octetus mittitur. Connexio
+ * GRADATIM: tls_recipere/tls_mittere TLS_ITERUM reddunt, numquam
+ * exspectant; tempus excessum numquam ponitur. tcp a TLS possidetur:
+ * tls_claudere (et defectus hic) eam claudit. */
+TlsResultus
+tls_incipere (
+             TcpConnexio* tcp,
+      constans character* hospes,
+    constans TlsOptiones* optiones,
+                 Piscina* piscina);
+
+/* Gradus unus pactionis (SSLHandshake): quid exspectandum reddit */
+TlsGradus
+tls_gradus (
+    TlsConnexio* connexio);
+
+/* Post TLS_GRADUS_ERROR: descriptio (certificatum, pactio, clausa) */
+chorda
+tls_gradus_error (
+    TlsConnexio* connexio);
+
+
 /* ========================================================================
  * FUNCTIONES - I/O
  * ======================================================================== */
@@ -102,6 +139,11 @@ tls_optiones_default (vacuum);
 /* Mittere data (encrypted)
  *
  * Redde: Numerus bytes missi, vel -1 si error
+ *
+ * Gradatim (tls_incipere): TLS_ITERUM = exspecta scribibilem et voca
+ * ITERUM cum IISDEM octetis restantibus; redditur quot procedendum
+ * (SecureTransport post errSSLWouldBlock octetos intus servat et per
+ * SSLWrite(NULL, 0) effundit - mos libcurl).
  */
 s32
 tls_mittere (
@@ -125,6 +167,10 @@ tls_mittere_omnia (
  *        0           connexio clausa ab hospite (EOF) - SOLUM tunc
  *        TCP_ITERUM  tempus receptionis excessum (vide tcp.h)
  *        -1          error
+ *
+ * Gradatim: TLS_ITERUM = nihil nunc (non tempus excessum). Vocans
+ * USQUE AD TLS_ITERUM legat in omni paratu: SecureTransport octetos
+ * decryptos tenere potest quos fossa iam non nuntiat.
  */
 s32
 tls_recipere (
@@ -132,7 +178,8 @@ tls_recipere (
              i8* buffer,
             i32  capacitas);
 
-/* Claudere connexionem */
+/* Claudere connexionem: contextus SEMPER dimittitur (etiam post
+ * clausuram paris), tcp clauditur; iterum vocare tutum */
 vacuum
 tls_claudere (
     TlsConnexio* connexio);

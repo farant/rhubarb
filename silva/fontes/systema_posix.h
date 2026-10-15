@@ -283,12 +283,14 @@ int select(int numerus, fd_set* legendi, fd_set* scribendi,
 #define EAGAIN      35
 #define EWOULDBLOCK 35
 #define EISCONN     56
+#define EINPROGRESS 36   /* connect non-blocans pergit (http-vocatio T3) */
 
 /* <sectio caput="sys/socket.h,netinet/in.h,netinet/tcp.h"/>
  * sys/socket.h + netinet/in.h + netinet/tcp.h (valores Darwin) */
 #define SOL_SOCKET   0xffff
 #define SO_REUSEADDR 0x0004
 #define SO_KEEPALIVE 0x0008
+#define SO_ERROR     0x1007  /* getsockopt: erratum connexionis pendentis */
 /* <gradus titulus="SO_NOSIGPIPE" genus="vernaculum" pro="MSG_NOSIGNAL"/>
  * Darwin solum - Linux nomen nescit (sonda 2026-08-03); via Linux =
  * MSG_NOSIGNAL per send aut SIGPIPE ignorare. Codex 86 usum flagat. */

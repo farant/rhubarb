@@ -15,6 +15,7 @@
 #include "fasti.h"
 #include "conservatio.h"
 #include "kalendarium.h"
+#include "fasti_fontes.h"
 #include "fons.h"
 #include "agenda.h"
 #include "scriba_liber.h"
@@ -47,6 +48,8 @@ nomen structura {
                   Volumen* volumen;
           StatusSystemata  systemata;
          AgendaDocumentum* documentum;
+              FastiFontes* fontes;     /* P6: dies signati */
+                      s32  apertum;    /* P6b: referentia reddita */
                       s32  latitudo;   /* A6e: superficies montat. */
                       s32  altitudo;
 } Mundus;
@@ -73,7 +76,8 @@ mundum_struere (
             x->volumen, x->repo);
     }
     si (!kalendarium_montare(&x->m, p, x->intern, x->repo, "c1",
-            argumentum, x->documentum, x->volumen, (i32)x->latitudo,
+            argumentum, x->documentum, x->fontes, x->volumen,
+            (i32)x->latitudo,
             (i32)x->altitudo, hodie_fixa, NIHIL,
             x->volumen ? &x->systemata : NIHIL))
     {
@@ -166,27 +170,40 @@ ictus_in (
         redde FALSUM;
     }
     memset(&e, ZEPHYRUM, magnitudo(Eventus));
-    e.genus        = EVENTUS_MUS_DEPRESSUS;
-    e.datum.mus.x  = c->fines.x + c->fines.latitudo / II;
-    e.datum.mus.y  = c->fines.y + c->fines.altitudo / II;
+    e.genus             = EVENTUS_MUS_DEPRESSUS;
+    e.datum.mus.x       = c->fines.x + c->fines.latitudo / II;
+    e.datum.mus.y       = c->fines.y + c->fines.altitudo / II;
+    e.datum.mus.botton  = MUS_SINISTER;
     dispensator_tractare(x->d, &e);
     redde VERUM;
 }
 
-/* ictus in puncto (spatium radicis) */
+/* ictus bottone dato in puncto (spatium radicis) */
+interior vacuum
+ictus_bottone_ad (
+          Mundus* x,
+             s32  px,
+             s32  py,
+    mus_botton_t  botton)
+{
+    Eventus e;
+
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus             = EVENTUS_MUS_DEPRESSUS;
+    e.datum.mus.x       = px;
+    e.datum.mus.y       = py;
+    e.datum.mus.botton  = botton;
+    dispensator_tractare(x->d, &e);
+}
+
+/* ictus sinister in puncto (spatium radicis) */
 interior vacuum
 ictus_ad (
     Mundus* x,
        s32  px,
        s32  py)
 {
-    Eventus e;
-
-    memset(&e, ZEPHYRUM, magnitudo(Eventus));
-    e.genus        = EVENTUS_MUS_DEPRESSUS;
-    e.datum.mus.x  = px;
-    e.datum.mus.y  = py;
-    dispensator_tractare(x->d, &e);
+    ictus_bottone_ad(x, px, py, MUS_SINISTER);
 }
 
 /* montatio: hodie electa, focus in radice, visus mensis */
@@ -2010,6 +2027,264 @@ _probare_paginas (
     CREDO_VERUM(campus_est(x, "prompta", "nova"));
 }
 
+/* P6c: argumentum "YYYY-MM-DD" - montatio et latus exstans in visum
+ * diei illius diei; malum (dies nulla, forma mala) FALSUM, status
+ * manet */
+interior vacuum
+_probare_argumentum_diei (
+    CredoContextus* c)
+{
+    Mundus* x;
+      Dies  d;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(mundum_struere(x, c->piscina, "2026-12-25"));
+    CREDO_VERUM(campus_est(x, "visus", "dies"));
+    d = kalendarium_dies_electus(&x->m);
+    CREDO_VERUM(d.annus == MMXXVI && d.mensis == XII && d.dies == XXV);
+    CREDO_VERUM(kalendarium_argumentum_ponere(&x->m, "2027-03-02"));
+    d = kalendarium_dies_electus(&x->m);
+    CREDO_VERUM(d.annus == MMXXVII && d.mensis == III && d.dies == II);
+    CREDO_VERUM(campus_est(x, "visus", "dies"));
+    CREDO_FALSUM(kalendarium_argumentum_ponere(&x->m, "2026-02-30"));
+    CREDO_FALSUM(kalendarium_argumentum_ponere(&x->m, "2026-10-2"));
+    CREDO_FALSUM(kalendarium_argumentum_ponere(&x->m, "2026-1x-02"));
+    d = kalendarium_dies_electus(&x->m);
+    CREDO_VERUM(d.annus == MMXXVII && d.mensis == III && d.dies == II);
+    /* "YYYY-MM" visum non mutat (mos prior) */
+    CREDO_VERUM(kalendarium_argumentum_ponere(&x->m, "2026-10"));
+    CREDO_VERUM(campus_est(x, "visus", "dies"));
+}
+
+/* P6c: latus in visu mensis - argumentum "YYYY-MM-DD" in visum diei
+ * vertit */
+interior vacuum
+_probare_argumentum_diei_ex_mense (
+    CredoContextus* c)
+{
+    Mundus* x;
+      Dies  d;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(mundum_struere(x, c->piscina, NIHIL));
+    CREDO_NECESSE(campus_est(x, "visus", NIHIL)
+        || campus_est(x, "visus", "mensis"));
+    CREDO_VERUM(kalendarium_argumentum_ponere(&x->m, "2026-12-25"));
+    CREDO_VERUM(campus_est(x, "visus", "dies"));
+    d = kalendarium_dies_electus(&x->m);
+    CREDO_VERUM(d.annus == MMXXVI && d.mensis == XII && d.dies == XXV);
+}
+
+/* montatio cum die mala recusatur */
+interior vacuum
+_probare_argumentum_diei_malum (
+    CredoContextus* c)
+{
+    Mundus* x;
+
+    x = (Mundus*)c->datum;
+    CREDO_FALSUM(mundum_struere(x, c->piscina, "2026-13-01"));
+}
+
+/* P6: fons fictus - Anna Rossi natalis 14 X (MCMLXXXVI), "Festa
+ * urbis" genere ignoto 14 X, Luca Bianchi natalis 20 X (sine anno),
+ * "Feriae" genere ignoto 22 X (solae) */
+nomen structura {
+     constans character* genus;
+     constans character* titulus;
+                    s32  dies;
+                    s32  origo;
+} SignumFictum;
+
+hic_manens constans SignumFictum signa_ficta[] = {
+    { "natalis", "Anna Rossi", XIV, MCMLXXXVI },
+    { "aliud", "Festa urbis", XIV, ZEPHYRUM },
+    { "natalis", "Luca Bianchi", XX, ZEPHYRUM },
+    { "aliud", "Feriae", XXII, ZEPHYRUM }
+};
+
+interior b32
+fictum_legere (
+      vacuum* ctx,
+        Dies  prima,
+        Dies  ultima,
+         Xar* exitus,
+     Piscina* piscina)
+{
+    FastiIntroitus* t;
+              Dies  d;
+               i32  i;
+
+    (vacuum)ctx;
+    per (i = ZEPHYRUM; i < IV; i++)
+    {
+        d = fasti_dies(MMXXVI, X, signa_ficta[i].dies);
+        si (   fasti_comparare(d, prima) < ZEPHYRUM
+            || fasti_comparare(d, ultima) > ZEPHYRUM)
+        {
+            perge;
+        }
+        t = (FastiIntroitus*)xar_addere(exitus);
+        memset(t, ZEPHYRUM, magnitudo(FastiIntroitus));
+        t->dies            = d;
+        t->genus           = chorda_ex_literis(signa_ficta[i].genus,
+            piscina);
+        t->titulus         = chorda_ex_literis(signa_ficta[i].titulus,
+            piscina);
+        t->annus_originis  = signa_ficta[i].origo;
+        t->referentia      = (s32)i + I;
+    }
+    redde VERUM;
+}
+
+/* P6b: referentia ultima fonti reddita in *ctx (s32; 0 = nulla) */
+interior b32
+fictum_aperire (
+                     vacuum* ctx,
+    constans FastiIntroitus* introitus)
+{
+    *(s32*)ctx = introitus->referentia;
+    redde VERUM;
+}
+
+interior FastiFontes*
+fontes_ficti (
+     Mundus* x,
+    Piscina* p)
+{
+    FastiFontes* f;
+
+    x->apertum  = ZEPHYRUM;
+    f           = fasti_fontes_creare(p);
+    redde f && fasti_fontes_addere(f, "fictus", fictum_legere,
+        fictum_aperire, &x->apertum) ? f : NIHIL;
+}
+
+/* P6: placenta natalis intra cellulam? - linea glacieris (rectangulum
+ * plenum XIII x I, linea V pictogrammatis) */
+interior b32
+natalis_in (
+    Mandata* md,
+      Fines  f)
+{
+    constans Mandatum* y;
+                  i32  i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        y = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   y->genus          == MANDATUM_RECTANGULUM && y->impletum
+            && y->fines.latitudo == XIII && y->fines.altitudo == I
+            && intra(y->fines, f))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* P6: visus mensis - signum natalis in cellulis XIV et XX; non in XV
+ * nec in XXII (genus ignotum solum) */
+interior vacuum
+_probare_natales_mensis (
+    CredoContextus* c)
+{
+     Mundus* x;
+    Mandata* md;
+
+    x          = (Mundus*)c->datum;
+    thema_initiare();
+    x->fontes  = fontes_ficti(x, c->piscina);
+    CREDO_NECESSE_NON_NIHIL(x->fontes);
+    CREDO_NECESSE(mundum_struere(x, c->piscina, NIHIL));
+    md = reddere(x, c->piscina);
+    CREDO_VERUM(natalis_in(md, cellula(x, "2026-10-14", c->piscina)));
+    CREDO_VERUM(natalis_in(md, cellula(x, "2026-10-20", c->piscina)));
+    CREDO_FALSUM(natalis_in(md, cellula(x, "2026-10-15", c->piscina)));
+    CREDO_FALSUM(natalis_in(md, cellula(x, "2026-10-22", c->piscina)));
+}
+
+/* P6: visus diei - ordines signati ("n<k>") supra res: "Anna Rossi
+ * turns 40", genus ignotum titulo solo; ictus in eis electionem non
+ * mutat; dies XX: "Luca Bianchi's birthday" */
+interior vacuum
+_probare_natales_diei (
+    CredoContextus* c)
+{
+     Mundus* x;
+    Mandata* md;
+      Fines  n0;
+      Fines  n1;
+      Fines  r1;
+     chorda* a;
+     chorda  ante;
+        i32  i;
+
+    x          = (Mundus*)c->datum;
+    thema_initiare();
+    x->fontes  = fontes_ficti(x, c->piscina);
+    CREDO_NECESSE_NON_NIHIL(x->fontes);
+    CREDO_NECESSE(agendam_parare(x, c));
+    reditus(x);
+    CREDO_VERUM(campus_est(x, "visus", "dies"));
+    n0 = fines_componentis(x, "n0", c->piscina);
+    n1 = fines_componentis(x, "n1", c->piscina);
+    r1 = fines_componentis(x, "r1", c->piscina);
+    CREDO_NECESSE(   n0.altitudo > ZEPHYRUM && n1.altitudo > ZEPHYRUM
+                  && r1.altitudo > ZEPHYRUM);
+    CREDO_VERUM(n0.y < n1.y && n1.y < r1.y);
+    md = reddere(x, c->piscina);
+    CREDO_VERUM(textus_ullus_continet(md, "Anna Rossi turns 40"));
+    CREDO_VERUM(textus_ullus_continet(md, "Festa urbis"));
+    /* placenta in ordine natalis (n1), non in genere ignoto (n0) */
+    CREDO_VERUM(natalis_in(md, n1));
+    CREDO_FALSUM(natalis_in(md, n0));
+    a = insula_ramus_attributum(&x->m.ramus, "res_electa");
+    ante = a ? chorda_transcribere(*a, c->piscina)
+             : chorda_ex_literis("", c->piscina);
+    CREDO_NECESSE(ictus_in(x, "n1", c->piscina));
+    a = insula_ramus_attributum(&x->m.ramus, "res_electa");
+    CREDO_VERUM(a ? chorda_aequalis(*a, ante) : ante.mensura
+        == ZEPHYRUM);
+    per (i = ZEPHYRUM; i < VI; i++)
+    {
+        clavis(x, 'l');
+    }
+    CREDO_VERUM(kalendarium_dies_electus(&x->m).dies == XX);
+    md = reddere(x, c->piscina);
+    CREDO_VERUM(textus_ullus_continet(md, "Luca Bianchi's birthday"));
+    CREDO_FALSUM(textus_ullus_continet(md, "Anna Rossi"));
+}
+
+/* P6b: ictus duplex in ordine signato introitum fonti suo reddit
+ * (etiam in placenta, loco capsae); ictus simplex nihil */
+interior vacuum
+_probare_signatum_aperire (
+    CredoContextus* c)
+{
+    Mundus* x;
+     Fines  f;
+
+    x          = (Mundus*)c->datum;
+    thema_initiare();
+    x->fontes  = fontes_ficti(x, c->piscina);
+    CREDO_NECESSE_NON_NIHIL(x->fontes);
+    CREDO_NECESSE(agendam_parare(x, c));
+    reditus(x);
+    CREDO_NECESSE(campus_est(x, "visus", "dies"));
+    /* n1 = Anna Rossi (referentia I); simplex nihil */
+    CREDO_NECESSE(ictus_in(x, "n1", c->piscina));
+    CREDO_AEQUALIS_S32(x->apertum, ZEPHYRUM);
+    CREDO_NECESSE(ictus_in(x, "n1", c->piscina));
+    CREDO_AEQUALIS_S32(x->apertum, I);
+    /* n0 = Festa urbis (referentia II), in placenta (x < capsa) */
+    f = fines_componentis(x, "n0", c->piscina);
+    CREDO_NECESSE(f.altitudo > ZEPHYRUM);
+    ictus_ad(x, f.x + VIII, f.y + IV);
+    ictus_ad(x, f.x + VIII, f.y + IV);
+    CREDO_AEQUALIS_S32(x->apertum, II);
+}
+
 /* notae diei (A6d-1): liber "dies/<ISO>" in dimidio infero visus
  * diei (scriba nidificata, spatium suum); liber diem sequitur */
 interior vacuum
@@ -2262,7 +2537,526 @@ _probare_rubricas_in_linea (
     CREDO_VERUM(campus_est(x, "prompta", "titulus"));
 }
 
+/* ictus dexter in medio componentis id (radicis liberi) */
+interior b32
+ictus_dexter_in (
+                 Mundus* x,
+     constans character* id,
+                Piscina* p)
+{
+    Fines f;
+
+    f = fines_componentis(x, id, p);
+    si (f.altitudo <= ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    ictus_bottone_ad(x, f.x + f.latitudo / II, f.y + f.altitudo / II,
+        MUS_DEXTER);
+    redde VERUM;
+}
+
+/* menu apertum: nodus "elenchus" (filius ULTIMUS radicis) aut NIHIL */
+interior Componens*
+elenchus_apertum (
+    Mundus* x)
+{
+    Componens* radix;
+    Componens* u;
+
+    radix = dispensator_arbor(x->d);
+    si (!radix || componens_numerus_liberorum(radix) == ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+    u = componens_liberum(radix, componens_numerus_liberorum(radix)
+        - I);
+    redde chorda_aequalis_literis(u->id, "elenchus") ? u : NIHIL;
+}
+
+/* res menu "A|B|~C" (~ = obscura: sine claudit); "" = clausum */
+interior b32
+res_elenchi_sunt (
+                 Mundus* x,
+     constans character* exspectatae)
+{
+     Componens* e;
+     Componens* r;
+     character  visae[CCLVI];
+           i32  i;
+
+    visae[ZEPHYRUM]  = '\0';
+    e                = elenchus_apertum(x);
+    per (i = ZEPHYRUM; e && i < componens_numerus_liberorum(e); i++)
+    {
+        r = componens_liberum(e, i);
+        si (i > ZEPHYRUM)
+        {
+            strcat(visae, "|");
+        }
+        si (!r->claudit)
+        {
+            strcat(visae, "~");
+        }
+        strncat(visae, (constans character*)r->titulus.datum,
+            (size_t)r->titulus.mensura);
+    }
+    si (strcmp(visae, exspectatae) != ZEPHYRUM)
+    {
+        imprimere("  res elenchi: '%s'\n", visae);
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
+/* punctum medium rei k menu (spatium radicis) */
+interior b32
+punctum_rei_elenchi (
+      Mundus* x,
+         i32  k,
+     Punctum* p)
+{
+    Componens* e;
+    Componens* r;
+
+    e = elenchus_apertum(x);
+    si (!e || k >= componens_numerus_liberorum(e))
+    {
+        redde FALSUM;
+    }
+    r     = componens_liberum(e, k);
+    p->x  = e->fines.x + r->fines.x + r->fines.latitudo / II;
+    p->y  = e->fines.y + r->fines.y + r->fines.altitudo / II;
+    redde VERUM;
+}
+
+/* ictus bottone dato iuxta menu apertum (dextrorsum si spatium est,
+ * aliter sinistrorsum) - extra menu */
+interior b32
+ictus_extra_elenchum (
+          Mundus* x,
+    mus_botton_t  botton)
+{
+     Componens* e;
+     Componens* radix;
+           s32  px;
+
+    e      = elenchus_apertum(x);
+    radix  = dispensator_arbor(x->d);
+    si (!e || !radix)
+    {
+        redde FALSUM;
+    }
+    px = e->fines.x + e->fines.latitudo + IV;
+    si (px >= radix->fines.latitudo)
+    {
+        px = e->fines.x - IV;
+    }
+    si (px < ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    ictus_bottone_ad(x, px, e->fines.y + IV, botton);
+    redde VERUM;
+}
+
+interior b32
+ictus_in_rem_elenchi (
+    Mundus* x,
+       i32  k)
+{
+    Punctum p;
+
+    si (!punctum_rei_elenchi(x, k, &p))
+    {
+        redde FALSUM;
+    }
+    ictus_ad(x, p.x, p.y);
+    redde VERUM;
+}
+
+interior b32
+motus_in_rem_elenchi (
+    Mundus* x,
+       i32  k)
+{
+    Punctum p;
+    Eventus e;
+
+    si (!punctum_rei_elenchi(x, k, &p))
+    {
+        redde FALSUM;
+    }
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus        = EVENTUS_MUS_MOTUS;
+    e.datum.mus.x  = p.x;
+    e.datum.mus.y  = p.y;
+    dispensator_tractare(x->d, &e);
+    redde VERUM;
+}
+
+/* greges et filtrum (M2a): ictus in titulo gregis rubricam eius
+ * filtrat, in titulo filtri positi tollit; "(none)" nihil agit. Botton
+ * dexter nec filtrat nec perficit (menu contextuale: M2c). */
+interior vacuum
+_probare_greges_filtrum (
+    CredoContextus* c)
+{
+                Mundus* x;
+    constans AgendaRes* r;
+                 Fines  f;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(agendam_visus_parare(x, c));
+    dispensator_recomponere(x->d);
+    CREDO_VERUM(ordines_sunt(x, "r1-0 r5-0 r5-1 r6-2"));
+    /* "#opus" (g1) */
+    CREDO_NECESSE(ictus_in(x, "g1", c->piscina));
+    CREDO_VERUM(campus_est(x, "rubrica_filtrum", "opus"));
+    CREDO_VERUM(ordines_sunt(x, "r5-0"));
+    /* titulus idem (sub filtro g0) filtrum tollit */
+    CREDO_NECESSE(ictus_in(x, "g0", c->piscina));
+    CREDO_VERUM(ordines_sunt(x, "r1-0 r5-0 r5-1 r6-2"));
+    /* "(none)" (g2): nihil */
+    CREDO_NECESSE(ictus_in(x, "g2", c->piscina));
+    CREDO_VERUM(ordines_sunt(x, "r1-0 r5-0 r5-1 r6-2"));
+    /* botton dexter in titulo: filtrum nullum */
+    f = fines_componentis(x, "g1", c->piscina);
+    CREDO_NECESSE(f.altitudo > ZEPHYRUM);
+    ictus_bottone_ad(x, f.x + f.latitudo / II, f.y + f.altitudo / II,
+        MUS_DEXTER);
+    CREDO_VERUM(ordines_sunt(x, "r1-0 r5-0 r5-1 r6-2"));
+    /* M2c: dexter menu aperuit - claudere, ne ictum sequentem
+     * deglutiat */
+    effugium(x);
+    CREDO_VERUM(res_elenchi_sunt(x, ""));
+    /* botton dexter in capsa: non perficit; sinister ibidem perficit
+     * (custodia: punctum vere in capsa est) */
+    f = fines_componentis(x, "r1-0", c->piscina);
+    CREDO_NECESSE(f.altitudo > ZEPHYRUM);
+    ictus_bottone_ad(x, f.x + X, f.y + IV, MUS_DEXTER);
+    r = agenda_res(x->documentum, I);
+    CREDO_NECESSE_NON_NIHIL(r);
+    CREDO_FALSUM(r->perfecta);
+    /* M2c: menu rei apertum (agenda: sine res_ante/post) - claudere */
+    CREDO_VERUM(res_elenchi_sunt(x, "Complete / reopen item|Edit title"
+        "|Edit rubrics|Set date|Add note|Delete item"));
+    effugium(x);
+    ictus_ad(x, f.x + X, f.y + IV);
+    r = agenda_res(x->documentum, I);
+    CREDO_VERUM(r && r->perfecta);
+}
+
+/* componens id supra omnes ordines (PARTES_ITEM) paginae ? */
+interior b32
+supra_ordines (
+                 Mundus* x,
+     constans character* id,
+                Piscina* p)
+{
+     Componens* radix;
+     Componens* l;
+         Fines  f;
+           i32  i;
+
+    f      = fines_componentis(x, id, p);
+    radix  = dispensator_arbor(x->d);
+    si (f.altitudo <= ZEPHYRUM || !radix)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < componens_numerus_liberorum(radix); i++)
+    {
+        l = componens_liberum(radix, i);
+        si (l->partes == PARTES_ITEM && l->fines.y <= f.y)
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* ordines paginae intra superficiem: omnis res II cellulas alta et
+ * supra marginem inferum (cellula una) - pagina non redundat */
+interior b32
+ordines_intra (
+    Mundus* x)
+{
+     Componens* radix;
+     Componens* l;
+           i32  i;
+
+    radix = dispensator_arbor(x->d);
+    per (i = ZEPHYRUM; radix && i < componens_numerus_liberorum(radix);
+         i++)
+    {
+        l = componens_liberum(radix, i);
+        si (   l->partes == PARTES_ITEM
+            && (   l->fines.altitudo != XVI
+                || l->fines.y + l->fines.altitudo
+                    > radix->fines.altitudo
+                   - VIII))
+        {
+            imprimere("  redundat: %.*s (%d+%d)\n",
+                (integer)l->id.mensura,
+                (constans character*)l->id.datum,
+                (integer)l->fines.y, (integer)l->fines.altitudo);
+            redde FALSUM;
+        }
+    }
+    redde radix != NIHIL;
+}
+
+/* res n novae: rubrica data (NIHIL = nulla), perfecta die data
+ * (dies.annus 0 = aperta) */
+interior vacuum
+res_addere (
+                 Mundus* x,
+                    i32  n,
+     constans character* rubrica,
+                   Dies  perfectio,
+                Piscina* p)
+{
+    s32 id;
+    i32 i;
+
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        id = agenda_rem_creare(x->documentum, chorda_ex_literis("res",
+            p));
+        si (rubrica)
+        {
+            (vacuum)agenda_rubricas_ponere(x->documentum, id,
+                chorda_ex_literis(rubrica, p));
+        }
+        si (perfectio.annus > ZEPHYRUM)
+        {
+            (vacuum)agenda_perficere(x->documentum, id, perfectio);
+        }
+    }
+}
+
+/* tituli gregum iterati (Franus 10-14): pagina in medio gregis
+ * incipiens titulum eius iterat ("<id>-c") - agenda (CCCLX x CCCXX:
+ * XV ordines per paginam). Domus: g0 + XVI res (1, 5, 7-20) - pagina I
+ * g0 + XIV, pagina II "g0-c" + 19, 20, g1, g2, p, p0 + VI perfectae;
+ * perfectae XXVI (2, 3, 21-44) die XIV: pagina III "p0-c" + XIV,
+ * pagina IV "p0-c" + VI */
+interior vacuum
+_probare_paginas_gregum (
+    CredoContextus* c)
+{
+     Mundus* x;
+    Mandata* md;
+       Dies  nulla;
+
+    x            = (Mundus*)c->datum;
+    x->latitudo  = CCCLX;
+    x->altitudo  = CCCXX;
+    thema_initiare();
+    CREDO_NECESSE(agendam_visus_parare(x, c));
+    memset(&nulla, ZEPHYRUM, magnitudo(nulla));
+    res_addere(x, XIV, "domus", nulla, c->piscina);
+    res_addere(x, XXIV, NIHIL, fasti_dies(MMXXVI, X, XIV), c->piscina);
+    dispensator_recomponere(x->d);
+    CREDO_VERUM(adest(x, "g0", c->piscina));
+    CREDO_VERUM(adest(x, "r18-0", c->piscina));
+    CREDO_VERUM(ordines_intra(x));
+    CREDO_FALSUM(adest(x, "r19-0", c->piscina));
+    CREDO_FALSUM(adest(x, "g0-c", c->piscina));
+    /* pagina II: titulus domus iteratus supra 19 */
+    clavis(x, ']');
+    CREDO_VERUM(adest(x, "g0-c", c->piscina));
+    CREDO_FALSUM(adest(x, "g0", c->piscina));
+    CREDO_VERUM(ordines_intra(x));
+    CREDO_VERUM(supra_ordines(x, "g0-c", c->piscina));
+    CREDO_VERUM(adest(x, "r20-0", c->piscina));
+    CREDO_VERUM(adest(x, "g2", c->piscina));
+    CREDO_VERUM(adest(x, "p0", c->piscina));
+    CREDO_FALSUM(adest(x, "p0-c", c->piscina));
+    md = reddere(x, c->piscina);
+    CREDO_VERUM(textus_in_continet(md, fines_componentis(x, "g0-c",
+        c->piscina), "#domus"));
+    /* pagina III: dies perfectionis iteratus */
+    clavis(x, ']');
+    CREDO_VERUM(adest(x, "p0-c", c->piscina));
+    CREDO_FALSUM(adest(x, "p", c->piscina));
+    CREDO_VERUM(ordines_intra(x));
+    CREDO_VERUM(supra_ordines(x, "p0-c", c->piscina));
+    md = reddere(x, c->piscina);
+    CREDO_VERUM(textus_in_continet(md, fines_componentis(x, "p0-c",
+        c->piscina), "Oct 14"));
+    /* pagina IV (ultima): iterum */
+    clavis(x, ']');
+    CREDO_VERUM(adest(x, "p0-c", c->piscina));
+    md = reddere(x, c->piscina);
+    CREDO_VERUM(textus_in_continet(md, fines_componentis(x,
+        "index_paginae", c->piscina), "4/4"));
+    /* titulus iteratus filtrat (M2a) */
+    clavis(x, '[');
+    clavis(x, '[');
+    CREDO_NECESSE(ictus_in(x, "g0-c", c->piscina));
+    CREDO_VERUM(campus_est(x, "rubrica_filtrum", "domus"));
+}
+
+/* titulus numquam solus in fine paginae, etiam si titulus alius
+ * sequitur (Franus 10-14): g0 + VIII res, g1, g2 = XIII ordines; "p"
+ * (XIV) et "p0" (XV) caperent, prima perfecta non - "p" cum "p0" in
+ * paginam II transit */
+interior vacuum
+_probare_titulum_solum (
+    CredoContextus* c)
+{
+    Mundus* x;
+      Dies  nulla;
+
+    x            = (Mundus*)c->datum;
+    x->latitudo  = CCCLX;
+    x->altitudo  = CCCXX;
+    CREDO_NECESSE(agendam_visus_parare(x, c));
+    memset(&nulla, ZEPHYRUM, magnitudo(nulla));
+    res_addere(x, VI, "domus", nulla, c->piscina);
+    dispensator_recomponere(x->d);
+    CREDO_VERUM(adest(x, "r6-2", c->piscina));
+    CREDO_FALSUM(adest(x, "p", c->piscina));
+    CREDO_FALSUM(adest(x, "p0", c->piscina));
+    clavis(x, ']');
+    CREDO_VERUM(adest(x, "p", c->piscina));
+    CREDO_VERUM(adest(x, "p0", c->piscina));
+    CREDO_VERUM(ordines_intra(x));
+}
+
+/* visus diei (CCCLX x CCCXX: VI ordines per paginam): r1, c, IV
+ * perfectae; pagina II incipit in perfectis - "c-c" iteratus */
+interior vacuum
+_probare_paginas_gregum_diei (
+    CredoContextus* c)
+{
+    Mundus* x;
+      Dies  nulla;
+
+    x            = (Mundus*)c->datum;
+    x->latitudo  = CCCLX;
+    x->altitudo  = CCCXX;
+    CREDO_NECESSE(agendam_parare(x, c));
+    memset(&nulla, ZEPHYRUM, magnitudo(nulla));
+    res_addere(x, VIII, NIHIL, fasti_dies(MMXXVI, X, XIV), c->piscina);
+    reditus(x);
+    CREDO_VERUM(campus_est(x, "visus", "dies"));
+    CREDO_VERUM(adest(x, "c", c->piscina));
+    CREDO_FALSUM(adest(x, "c-c", c->piscina));
+    clavis(x, ']');
+    CREDO_VERUM(adest(x, "c-c", c->piscina));
+    CREDO_FALSUM(adest(x, "c", c->piscina));
+    CREDO_VERUM(supra_ordines(x, "c-c", c->piscina));
+    CREDO_VERUM(textus_in_continet(reddere(x, c->piscina),
+        fines_componentis(x, "c-c", c->piscina), "Completed"));
+    (vacuum)nulla;
+}
+
+/* menu diei (M2c): dexter in cellula eligit et aperit; claves movent,
+ * Reditus agit et claudit; clavis alia deglutitur; ictus in re agit */
+interior vacuum
+_probare_elenchum_diei (
+    CredoContextus* c)
+{
+    Mundus* x;
+      Dies  d;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(agendam_parare(x, c));
+    CREDO_NECESSE(ictus_dexter_in(x, "2026-10-20", c->piscina));
+    d = kalendarium_dies_electus(&x->m);
+    CREDO_VERUM(d.mensis == X && d.dies == XX);
+    CREDO_VERUM(res_elenchi_sunt(x, "Open day|Go to today|Agenda"));
+    /* Deorsum bis (electa 0, 1), Reditus: Go to today, clausum */
+    clavis_specialis(x, CLAVIS_DEORSUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM);
+    CREDO_VERUM(campus_est(x, "elenchus_electa", "0"));
+    clavis_specialis(x, CLAVIS_DEORSUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM);
+    CREDO_VERUM(campus_est(x, "elenchus_electa", "1"));
+    reditus(x);
+    d = kalendarium_dies_electus(&x->m);
+    CREDO_VERUM(d.mensis == X && d.dies == XIV);
+    CREDO_VERUM(res_elenchi_sunt(x, ""));
+    /* apertum: 'l' (dies proximus) deglutitur; electa ad nullam
+     * redit */
+    CREDO_NECESSE(ictus_dexter_in(x, "2026-10-20", c->piscina));
+    CREDO_FALSUM(campus_est(x, "elenchus_electa", "1"));
+    clavis(x, 'l');
+    d = kalendarium_dies_electus(&x->m);
+    CREDO_VERUM(d.dies == XX);
+    /* ictus in "Agenda" (II): visus agendae, clausum */
+    CREDO_NECESSE(ictus_in_rem_elenchi(x, II));
+    CREDO_VERUM(campus_est(x, "visus", "agenda"));
+    CREDO_VERUM(res_elenchi_sunt(x, ""));
+}
+
+/* menu rei et vacuum (M2c): dexter in ordine eligit; motus muris
+ * illuminat; ictus agit; obscura deglutitur (menu manet); Esc claudit;
+ * titulus nihil */
+interior vacuum
+_probare_elenchum_rei (
+    CredoContextus* c)
+{
+                Mundus* x;
+    constans AgendaRes* r;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(agendam_parare(x, c));
+    reditus(x);
+    CREDO_VERUM(campus_est(x, "visus", "dies"));
+    CREDO_NECESSE(ictus_dexter_in(x, "r3", c->piscina));
+    CREDO_VERUM(campus_est(x, "res_electa", "3"));
+    /* dexter extra menu apertum: claudit et deglutitur */
+    CREDO_NECESSE(ictus_extra_elenchum(x, MUS_DEXTER));
+    CREDO_VERUM(campus_est(x, "res_electa", "3"));
+    CREDO_VERUM(res_elenchi_sunt(x, ""));
+    CREDO_NECESSE(ictus_dexter_in(x, "r1", c->piscina));
+    CREDO_VERUM(campus_est(x, "res_electa", "1"));
+    CREDO_VERUM(res_elenchi_sunt(x, "Complete / reopen item|Edit title"
+        "|Edit rubrics|Set date|Add note|Move item to previous day"
+        "|Move item to next day|Delete item"));
+    CREDO_NECESSE(motus_in_rem_elenchi(x, I));
+    CREDO_VERUM(campus_est(x, "elenchus_electa", "1"));
+    CREDO_NECESSE(ictus_in_rem_elenchi(x, ZEPHYRUM));
+    r = agenda_res(x->documentum, I);
+    CREDO_VERUM(r && r->perfecta);
+    CREDO_VERUM(res_elenchi_sunt(x, ""));
+    /* vacuum diei: sine filtris */
+    CREDO_NECESSE(ictus_dexter_in(x, "index_vacuum", c->piscina));
+    CREDO_VERUM(res_elenchi_sunt(x, "New item|Previous page|Next page"
+        "|Undo|Redo"));
+    effugium(x);
+    CREDO_VERUM(res_elenchi_sunt(x, ""));
+    CREDO_VERUM(campus_est(x, "visus", "dies"));
+    /* agenda: Clear filter obscura; ictus in ea nihil, menu manet */
+    CREDO_NECESSE(kalendarium_argumentum_ponere(&x->m, "agenda"));
+    dispensator_recomponere(x->d);
+    CREDO_NECESSE(ictus_dexter_in(x, "index_vacuum", c->piscina));
+    CREDO_VERUM(res_elenchi_sunt(x, "New item|Filter by rubric"
+        "|~Clear filter|Previous page|Next page|Undo|Redo"));
+    CREDO_NECESSE(ictus_in_rem_elenchi(x, II));
+    CREDO_VERUM(res_elenchi_sunt(x, "New item|Filter by rubric"
+        "|~Clear filter|Previous page|Next page|Undo|Redo"));
+    effugium(x);
+    /* titulus: nihil */
+    CREDO_NECESSE(ictus_dexter_in(x, "titulus", c->piscina));
+    CREDO_VERUM(res_elenchi_sunt(x, ""));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
+    { "natales_mensis", _probare_natales_mensis, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "natales_diei", _probare_natales_diei, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "signatum_aperire", _probare_signatum_aperire, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "argumentum_diei", _probare_argumentum_diei, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "argumentum_diei_malum", _probare_argumentum_diei_malum,
+        mundum_parare, mundum_purgare, NIHIL, NIHIL },
+    { "argumentum_diei_ex_mense", _probare_argumentum_diei_ex_mense,
+        mundum_parare, mundum_purgare, NIHIL, NIHIL },
     { "montatio",     _probare_montationem,   mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { "craticula",    _probare_craticulam,    mundum_parare,
@@ -2310,6 +3104,19 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "charta_notarum", _probare_chartam_notarum, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { "rubricae_in_linea", _probare_rubricas_in_linea, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "greges_filtrum", _probare_greges_filtrum, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "elenchus_diei", _probare_elenchum_diei, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "elenchus_rei", _probare_elenchum_rei, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "paginae_greges", _probare_paginas_gregum, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "paginae_greges_diei", _probare_paginas_gregum_diei,
+        mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "titulus_solus", _probare_titulum_solum, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

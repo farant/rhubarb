@@ -991,6 +991,7 @@
   <vocabulum lemma="monotonic" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="CLOCK_MONOTONIC time.h (horologium quod numquam retro it); systema_posix.h 2026-10-13 pro tools/mensor.c (analytica T2)"/>
   <vocabulum lemma="rusage" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="struct rusage / RUSAGE_* sys/resource.h (usus subsidiorum processus); systema_posix.h 2026-10-13 pro tools/mensor.c (analytica T2)"/>
   <vocabulum lemma="getrusage" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="getrusage sys/resource.h (usum subsidiorum legere); systema_posix.h 2026-10-13 pro tools/mensor.c (analytica T2)"/>
+  <vocabulum lemma="einprogress" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="EINPROGRESS errno.h (connexio non-blocans pergit); systema_posix.h 2026-10-14 pro lib/tcp_posix.c (http-vocatio T3)"/>
   <vocabulum lemma="offsetof" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="macrum ISO C89 stddef.h (typum accipit); systema_c89.h 2026-09-25 silva-migratio T16a"/>
   <vocabulum lemma="assert" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="macrum ISO C89 assert.h; systema_c89.h 2026-09-25 silva-migratio T16a"/>
   <vocabulum lemma="menu" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen rei interfaciei (menu applicationis macOS), ut plist; fenestra_menu_addere et EVENTUS_MENU 2026-09-14 (plan 8)"/>
@@ -1065,7 +1066,7 @@
   <vocabulum lemma="exeo" lingua="latina" classis="verbum" nota="forma syncopata exiit (= exivit) quam WORDS non generat (fenestra)"><forma textus="exiit"/></vocabulum>
   <vocabulum lemma="claudibilis" lingua="latina" classis="adiectivum" nota="coinage domus (pictor): qui claudi potest (fenestra)"><forma textus="claudibilis"/><forma textus="claudibile"/></vocabulum>
   <vocabulum lemma="durabilis" lingua="latina" classis="adiectivum" nota="Latina sera: qui durat (insula: durabile contra ephemera)"><forma textus="durabilis"/><forma textus="durabile"/></vocabulum>
-  <vocabulum lemma="focatus" lingua="latina" classis="adiectivum" nota="coinage domus (vicus-latera S2a, ex focus): cui focus est - latus focatum tabulae (vicus_latus_focatum)"><forma textus="focatus"/><forma textus="focatum"/></vocabulum>
+  <vocabulum lemma="focatus" lingua="latina" classis="adiectivum" nota="coinage domus (vicus-latera S2a, ex focus): cui focus est - latus focatum tabulae (vicus_latus_focatum)"><forma textus="focatus"/><forma textus="focatum"/><forma textus="focata"/></vocabulum>
   <vocabulum lemma="focusabilis" lingua="latina" classis="adiectivum" nota="coinage domus (pictor): qui focum accipere potest (componens)"><forma textus="focusabilis"/><forma textus="focusabile"/><forma textus="focusabiles"/></vocabulum>
   <vocabulum lemma="maximizabilis" lingua="latina" classis="adiectivum" nota="coinage domus (pictor): qui maximizari potest (fenestra)"><forma textus="maximizabilis"/><forma textus="maximizabile"/></vocabulum>
   <vocabulum lemma="minuibilis" lingua="latina" classis="adiectivum" nota="coinage domus (pictor): qui minui potest (fenestra)"><forma textus="minuibilis"/><forma textus="minuibile"/></vocabulum>

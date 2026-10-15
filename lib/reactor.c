@@ -30,6 +30,9 @@ nomen structura {
     ReactorCallback  callback;
              vacuum* data;
                 b32  activus;
+    /* generatio auget in omni inscriptione et remotione: dispatchus
+     * registrationem eandem agnoscit (http-vocatio II.0) */
+                i32 generatio;
 } ReactorFdEntry;
 
 /* Entry pro timer */
@@ -51,6 +54,13 @@ structura Reactor {
       ReactorFdEntry fd_entries[REACTOR_FD_MAXIMA];
     structura pollfd poll_fds[REACTOR_FD_MAXIMA];
                  i32 fd_numerus;
+
+    /* imago transitus: poll_fds[k] pertinet ad
+     * fd_entries[poll_index[k]] registrationis poll_generatio[k] -
+     * callbacks tabulam mutare possunt sine dispatcho turbato */
+                 i32 poll_index[REACTOR_FD_MAXIMA];
+                 i32 poll_generatio[REACTOR_FD_MAXIMA];
+                 i32 poll_numerus;
 
     /* Timer tracking */
     ReactorTimerEntry timers[REACTOR_TIMER_MAXIMA];
@@ -155,16 +165,23 @@ _rebuilere_poll_fds (
     i32 i;
     i32 poll_idx = 0;
 
-    per (i = 0; i < reactor->fd_numerus && poll_idx < REACTOR_FD_MAXIMA; i++)
+    per (i = 0; i < reactor->fd_numerus
+        && poll_idx < REACTOR_FD_MAXIMA; i++)
     {
         si (reactor->fd_entries[i].activus)
         {
-            reactor->poll_fds[poll_idx].fd = (integer)reactor->fd_entries[i].fd;
-            reactor->poll_fds[poll_idx].events = _eventus_ad_poll(reactor->fd_entries[i].eventus);
-            reactor->poll_fds[poll_idx].revents = 0;
+            reactor->poll_fds[poll_idx].fd =
+                (integer)reactor->fd_entries[i].fd;
+            reactor->poll_fds[poll_idx].events =
+                _eventus_ad_poll(reactor->fd_entries[i].eventus);
+            reactor->poll_fds[poll_idx].revents  = 0;
+            reactor->poll_index[poll_idx]        = i;
+            reactor->poll_generatio[poll_idx] =
+                reactor->fd_entries[i].generatio;
             poll_idx++;
         }
     }
+    reactor->poll_numerus = poll_idx;
 }
 
 
@@ -262,35 +279,46 @@ interior i32
 _processare_timers (
     Reactor* reactor)
 {
-    i64 nunc;
-    i32 i;
-    i32 processati = 0;
+               i64 nunc;
+               i32 i;
+               i32 numerus;
+               i32 processati = 0;
+    ReactorTimerId limes;
 
-    nunc = _obtinere_tempus_ms();
+    nunc     = _obtinere_tempus_ms();
+    /* timers in hoc transitu nati (id >= limes) proximum exspectant -
+     * aliter callback qui semper addit ansam numquam finiret */
+    limes    = reactor->proximus_timer_id;
+    numerus  = reactor->timer_numerus;
 
-    per (i = 0; i < reactor->timer_numerus; i++)
+    per (i = 0; i < numerus; i++)
     {
-        si (   reactor->timers[i].activus
-            && reactor->timers[i].proximus_ms <= nunc)
+           ReactorTimerEntry* t = &reactor->timers[i];
+        ReactorTimerCallback  functio;
+                      vacuum* datum;
+
+        si (!t->activus || t->proximus_ms > nunc || t->id >= limes)
         {
-            /* Vocare callback */
-            si (reactor->timers[i].callback)
-            {
-                reactor->timers[i].callback(reactor->timers[i].data);
-            }
-
-            processati++;
-
-            /* Repetere vel removere */
-            si (reactor->timers[i].repetere)
-            {
-                reactor->timers[i].proximus_ms = nunc + (i64)reactor->timers[i].interval_ms;
-            }
-            alioquin
-            {
-                reactor->timers[i].activus = FALSUM;
-            }
+            perge;
         }
+        functio  = t->callback;
+        datum    = t->data;
+        /* status ANTE callback: callback se ipsum cancellare et
+         * timerem novum (fortasse in hoc loco) addere potest - olim
+         * activus post callback exstinguebatur, novus cum eo */
+        si (t->repetere)
+        {
+            t->proximus_ms = nunc + (i64)t->interval_ms;
+        }
+        alioquin
+        {
+            t->activus = FALSUM;
+        }
+        si (functio)
+        {
+            functio(datum);
+        }
+        processati++;
     }
 
     redde processati;
@@ -312,7 +340,8 @@ reactor_creare (
         redde NIHIL;
     }
 
-    reactor = (Reactor*)piscina_allocare(piscina, (i64)magnitudo(Reactor));
+    reactor = (Reactor*)piscina_allocare(piscina,
+        (i64)magnitudo(Reactor));
     si (!reactor)
     {
         redde NIHIL;
@@ -376,7 +405,6 @@ reactor_adicere (
         reactor->fd_entries[index].eventus   = eventus;
         reactor->fd_entries[index].callback  = callback;
         reactor->fd_entries[index].data      = data;
-        _rebuilere_poll_fds(reactor);
         redde VERUM;
     }
 
@@ -408,9 +436,11 @@ reactor_adicere (
     reactor->fd_entries[index].callback  = callback;
     reactor->fd_entries[index].data      = data;
     reactor->fd_entries[index].activus   = VERUM;
+    reactor->fd_entries[index].generatio++;
 
-    _rebuilere_poll_fds(reactor);
-
+    /* nulla rebuilatio hic: reactor_poll in initio omnis transitus
+     * rebuilat, et rebuilatio intra dispatchum revents posteriorum
+     * purgabat (eventus transitus deperditi, http-vocatio II.0) */
     redde VERUM;
 }
 
@@ -434,7 +464,6 @@ reactor_modificare (
     }
 
     reactor->fd_entries[index].eventus = eventus;
-    _rebuilere_poll_fds(reactor);
 
     redde VERUM;
 }
@@ -458,7 +487,7 @@ reactor_removere (
     }
 
     reactor->fd_entries[index].activus = FALSUM;
-    _rebuilere_poll_fds(reactor);
+    reactor->fd_entries[index].generatio++;
 
     redde VERUM;
 }
@@ -583,39 +612,45 @@ reactor_poll (
             }
         }
 
-        si (active_count == 0 && reactor->timer_numerus == 0)
+        /* timers ACTIVI, non timer_numerus (summa aquae, numquam
+         * decrescit): olim post timerem primum poll() sine fossis
+         * timeout totum dormiebat */
+        si (active_count == 0 && reactor_numerus_timer(reactor) == 0)
         {
             redde 0;
         }
 
         /* Vocare poll() */
-        poll_result = poll(reactor->poll_fds, (nfds_t)active_count, (integer)timeout);
+        poll_result = poll(reactor->poll_fds,
+            (nfds_t)reactor->poll_numerus, (integer)timeout);
     }
 
-    /* Processare FD events */
+    /* Processare FD events per imaginem (vide _rebuilere_poll_fds) */
     si (poll_result > 0)
     {
-        poll_idx = 0;
-        per (i = 0; i < reactor->fd_numerus; i++)
+        i32 numerus = reactor->poll_numerus;
+
+        per (poll_idx = 0; poll_idx < numerus; poll_idx++)
         {
-            si (reactor->fd_entries[i].activus)
+            ReactorFdEntry* e;
+
+            si (reactor->poll_fds[poll_idx].revents == 0)
             {
-                si (reactor->poll_fds[poll_idx].revents != 0)
-                {
-                    i32 eventus = _poll_ad_eventus(reactor->poll_fds[poll_idx].revents);
-
-                    si (reactor->fd_entries[i].callback)
-                    {
-                        reactor->fd_entries[i].callback(
-                            reactor->fd_entries[i].fd,
-                            eventus,
-                            reactor->fd_entries[i].data);
-                    }
-
-                    events_processati++;
-                }
-                poll_idx++;
+                perge;
             }
+            e = &reactor->fd_entries[reactor->poll_index[poll_idx]];
+            /* remota aut locus reusus intra hunc transitum */
+            si (   !e->activus
+                || e->generatio != reactor->poll_generatio[poll_idx])
+            {
+                perge;
+            }
+            si (e->callback)
+            {
+                e->callback(e->fd, _poll_ad_eventus(
+                    reactor->poll_fds[poll_idx].revents), e->data);
+            }
+            events_processati++;
         }
     }
 

@@ -103,3 +103,14 @@ No unit test of its own: all logic is `quaestio_adiutor_currere`
 itself never touched by Claude. `apps/vicus/vicus.sh` builds it next
 to bin/vicus (plan ruling R4: vicus is run from the tree, not
 installed).
+
+## 2026-10-14 - request builder and response mapping public (http-vocatio T6)
+
+`petitionem_struere` -> `quaestio_petitionem_parare` and
+`responsum_reddere` -> `quaestio_responsum_ex_vate`, public in
+`quaestio.h`, so the in-process port (route B, T7) builds the identical
+request (page-shape system prompt, max_tokens) and maps the response the
+same way as `quaestio_rogare` / `_rogare_rivum` / `bin/quaestio`. No
+behaviour change; `probatio_quaestio` green. (The second rename went by
+word-boundary edit: `silva/renominare.sh` refuses a file left dirty by
+the first - "committe primum" - a deliberate revert-safety rule.)

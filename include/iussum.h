@@ -141,7 +141,7 @@ nomen structura {
     chorda error;
     chorda nuntius;     /* linea status sine errore ("quaerens...") */
     chorda caput;       /* corpus: caput '$verbum<>' hoc textu substituitur
-                         * (e.g. "<question answered>"); vacuum = ut
+                         * (e.g. "<answered>"); vacuum = ut
                          * consumit dicit */
        b32 differre;    /* vocatio prima: hospes nuntium ostendit et
                          * functionem ITERUM vocat pulsu proximo (pictura
