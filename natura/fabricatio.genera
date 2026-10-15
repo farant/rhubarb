@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/fabricatio.genera
-  Exemplar semanticum: FABRICATIO (versio 11, PLASTICUM)
+  Exemplar semanticum: FABRICATIO (versio 12, PLASTICUM)
+
+  VERSIO 12 (2026-10-15): probatio facetas duas accepit (unitates
+  codicis par. VI 7/8c): interactio (automatica/manualis - Franum
+  poscit?) et occupatio (nihil/fenestra/focus - machinam occupat?).
+  Vera de probatione ut tali: an homo adesse debeat, an eventus
+  nativi focum rapiant.
   Genera: postulatum, facultas, probatio, vitium.
 
   VERSIO 8 (2026-08-10): migratio necessitudinum - paria conversa
@@ -21,7 +27,7 @@
   potest nisi intentione consulta. Quod probat totum quadratum
   in strato intentionis vivere.
 -->
-<natura modulus="fabricatio" versio="11" lingua="latina">
+<natura modulus="fabricatio" versio="12" lingua="latina">
 
 <!-- ========== NECESSITUDINES DOMESTICAE ==========
      Paria conversa quadrati intentionis: sedes antiquae formam
@@ -308,6 +314,22 @@
   <proprietates>
     <proprietas nomen="contentum" genus="textus"
       nota="quid interrogetur, verbis (lacuna L5)"/>
+    <proprietas nomen="interactio" genus="electio"
+      ordinarius="automatica"
+      nota="manualis = homo adesse debet (spectare, eligere,
+            iudicare) - ut fumus icones -agere">
+      <optio>automatica</optio>
+      <optio>manualis</optio>
+    </proprietas>
+    <proprietas nomen="occupatio" genus="electio" ordinarius="nihil"
+      nota="quantum machinae occupet: fenestra = fenestras aperit;
+            focus = eventus nativi (manus_clavem) focum rapiunt -
+            numquam in fundo sine consensu (laboratorium, apps forum
+            et pictor fumus)">
+      <optio>nihil</optio>
+      <optio>fenestra</optio>
+      <optio>focus</optio>
+    </proprietas>
   </proprietates>
 
   <relationes>

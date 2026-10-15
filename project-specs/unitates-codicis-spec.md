@@ -302,6 +302,46 @@ family" too. BACKENDS (`_macos`, `_posix`, `_interna`, `_impl`,
 `_tabula`; 19 of 77 members) belong to their single library by a
 suffix rule, not a decision.
 
+## VI⅞d. Lifecycle split from custody (Fran 10-15)
+
+Fran: a flag for units SUPERSEDED by later generations. "Archived" is
+where a unit is in its LIFE, not how strictly it is governed - so:
+- **cura** (custody): domestica / remissa / aliena (archivata moves);
+- **vita** (lifecycle): viva (active) / **vetusta** (legacy: superseded,
+  still present, maybe still runs, not extended - names its
+  `successor`) / archivata (frozen, out of use).
+The successor link lets tools point forward (arbor v1/v2 -> silva,
+lapifex-era tests). §0b: `combinado` is an APP (Fran), not a test.
+
+## VI⅞e. U3 step 1 done: natura additions (2026-10-15)
+
+METAMODULUS read in full. Its RESIDENCE RULE (§1.4: "the library holds
+what is timelessly describable ... YOUR individuals live in application
+volumina and CITE the library") is the Q8 split; its PIEPER rule ("every
+property must be true of the kind") moved CUSTODY out of natura entirely
+(house policy; foreignness is already `/fabricatio/adscitio`, "first-
+party elsewhere, adopted here"). Already present and REUSED: `programma`
+species `applicatio`, `instrumentum_lineae`, `daemon`;
+`instrumentum_aedificationis`; `/necessitudines/substituit`,
+`continet`, `exercet`, `orta_ex`; `/laboratorium/experimentum`.
+
+Added (natura_examen SANUM, VULNERA 0, MONITA 0; 468 -> 471 genera):
+- `elementa_programmatis` v9: **`opus_programmatis`** (general kind -
+  METAMODULUS §9 "several specialised, no general"), machine `vita`
+  (viva -> vetusta per supersessio -> archivata), relations continet /
+  substituit / orta_ex; `bibliotheca` and `programma` re-parented under
+  it (addresses unchanged - §4b); **`subsystema`** (parts: build
+  declarations, suite entry point); **`opus_explorationis`** (research
+  work; exercet `/laboratorium/experimentum`); `programma` property
+  **`usus`** (homo/agens/machina, multiplex - the artefact's final
+  cause).
+- `fabricatio` v12: `probatio` properties **`interactio`**
+  (automatica/manualis) and **`occupatio`** (nihil/fenestra/focus).
+- NAME COLLISION caught by the canon monolith: `investigatio` is
+  `/iudicium/investigatio` (inquiry into the causes of an event - a
+  different kind); the research kind is `opus_explorationis`. Read
+  "investigatio" in §I/§VI⅞b above as this kind.
+
 ## VII. Interrogationes - documentation as typed questions (Fran 10-15)
 
 A unit exposes what it can do by DECLARING QUESTIONS it answers
