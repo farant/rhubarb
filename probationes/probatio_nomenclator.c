@@ -1532,6 +1532,98 @@ _probare_quaestionem_filtro (
         " p4-3"));
 }
 
+/* natalis Annae (campus f4) per promptam: aperta si clausa, vacuata,
+ * textus, Reditus */
+interior vacuum
+natalem_typare (
+                 Mundus* x,
+     constans character* textus)
+{
+    si (!campus_est(x, "prompta", "natalis"))
+    {
+        reditus(x);
+    }
+    retro(x, XX);
+    typare(x, textus);
+    reditus(x);
+}
+
+interior b32
+natalis_est (
+     Mundus* x,
+        s32  annus,
+        s32  mensis,
+        s32  dies)
+{
+    constans Persona* q;
+
+    q = personae_persona(x->documentum, I);
+    si (   !q || !q->natalis_positus || q->natalis.annus != annus
+        || q->natalis.mensis != mensis || q->natalis.dies != dies)
+    {
+        si (q)
+        {
+            imprimere("  natalis: %d %d-%d-%d\n",
+                (integer)q->natalis_positus, (integer)q->natalis.annus,
+                (integer)q->natalis.mensis, (integer)q->natalis.dies);
+        }
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
+/* natalis forma americana (Franus 10-15): M/D/YYYY et MM/DD/YYYY, M/D
+ * et MM/DD sine anno; annus IV cifris (86 ambiguum), dies vera; mala:
+ * prompta manet, natalis non mutatur */
+interior vacuum
+_probare_natalem_americanum (
+    CredoContextus* c)
+{
+    Mundus* x;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(contactus_parare(x, c->piscina));
+    CREDO_NECESSE(personam_aperire(x, "p1", c->piscina));
+    clavis(x, 'j');
+    clavis(x, 'j');
+    clavis(x, 'j');
+    clavis(x, 'j');
+    CREDO_VERUM(campus_est(x, "campus_electus", "4"));
+    natalem_typare(x, "3/2/1986");
+    CREDO_VERUM(natalis_est(x, MCMLXXXVI, III, II));
+    natalem_typare(x, "12/25");
+    CREDO_VERUM(natalis_est(x, ZEPHYRUM, XII, XXV));
+    natalem_typare(x, "07/04/1990");
+    CREDO_VERUM(natalis_est(x, MCMXC, VII, IV));
+    natalem_typare(x, "02/29");
+    CREDO_VERUM(natalis_est(x, ZEPHYRUM, II, XXIX));
+    /* mala: prompta manet, natalis (II 29) manet */
+    natalem_typare(x, "3/2/86");
+    CREDO_VERUM(campus_est(x, "prompta", "natalis"));
+    natalem_typare(x, "13/02/1986");
+    CREDO_VERUM(campus_est(x, "prompta", "natalis"));
+    natalem_typare(x, "2/30");
+    CREDO_VERUM(campus_est(x, "prompta", "natalis"));
+    natalem_typare(x, "3/2/0000");
+    CREDO_VERUM(campus_est(x, "prompta", "natalis"));
+    natalem_typare(x, "1/2/3/4");
+    CREDO_VERUM(campus_est(x, "prompta", "natalis"));
+    natalem_typare(x, "/2/1986");
+    CREDO_VERUM(campus_est(x, "prompta", "natalis"));
+    natalem_typare(x, "3//1986");
+    CREDO_VERUM(campus_est(x, "prompta", "natalis"));
+    natalem_typare(x, "3/2/");
+    CREDO_VERUM(campus_est(x, "prompta", "natalis"));
+    natalem_typare(x, "003/2");
+    CREDO_VERUM(campus_est(x, "prompta", "natalis"));
+    natalem_typare(x, "3/2/1986x");
+    CREDO_VERUM(campus_est(x, "prompta", "natalis"));
+    CREDO_VERUM(natalis_est(x, ZEPHYRUM, II, XXIX));
+    /* ISO manet */
+    natalem_typare(x, "1986-03-02");
+    CREDO_VERUM(natalis_est(x, MCMLXXXVI, III, II));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "montatio", _probare_montationem, mundum_parare, mundum_purgare,
         NIHIL, NIHIL },
@@ -1588,6 +1680,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "quaestio_commissa", _probare_quaestionem_commissam,
         mundum_parare, mundum_purgare, NIHIL, NIHIL },
     { "quaestio_filtro", _probare_quaestionem_filtro, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "natalis_americanus", _probare_natalem_americanum, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

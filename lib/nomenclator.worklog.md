@@ -258,3 +258,15 @@ then the tag filter; REQUIRIT_FILTRUM now means "filter or search".
 
 Test gotcha: a closed prompt is `prompta="nulla"`, not absent - assert
 "not quaestio", like the older prompt tests do.
+
+## 2026-10-15 - US birthday input (Fran's request)
+
+`natalem_ex_textu` hands any input containing '/' to
+`natalem_americanum`: "M/D/YYYY" / "MM/DD/YYYY" and "M/D" / "MM/DD"
+(no year). Month and day 1-2 digits; year exactly 4 digits and > 0
+("3/2/86" is ambiguous -> refused; "3/2/0000" would otherwise become
+a no-year birthday). Date validity (13/02, 2/30) stays with the
+personae document, as for ISO. An explicit "empty part" check was
+removed: a plant proved it unobservable - an empty month/day parses as
+0 and the document refuses it anyway. Display format unchanged
+("2 March 1986  40"); ISO input unchanged.

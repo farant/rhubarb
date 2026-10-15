@@ -1309,15 +1309,73 @@ nomen_dividere (
     }
 }
 
-/* natalis ex textu: "YYYY-MM-DD", "MM-DD", "--MM-DD"; FALSUM si forma
- * mala (validitas a personis iudicatur) */
+/* natalis forma americana (Franus 10-15): "M/D/YYYY" (mensis et dies
+ * I aut II cifris, annus IV cifris > 0 - "86" ambiguum) aut "M/D" sine
+ * anno; FALSUM si forma mala */
+interior b32
+natalem_americanum (
+    chorda  t,
+      Dies* d)
+{
+    s32 partes[III];
+    i32 cifrae[III];
+    i32 n;
+    i32 i;
+
+    n                 = ZEPHYRUM;
+    partes[ZEPHYRUM]  = ZEPHYRUM;
+    cifrae[ZEPHYRUM]  = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < t.mensura; i++)
+    {
+        si (t.datum[i] == '/')
+        {
+            /* pars vacua (mensis/dies 0) a personis recusatur */
+            si (n == II)
+            {
+                redde FALSUM;
+            }
+            n++;
+            partes[n] = ZEPHYRUM;
+            cifrae[n] = ZEPHYRUM;
+            perge;
+        }
+        si (t.datum[i] < '0' || t.datum[i] > '9' || cifrae[n] == IV)
+        {
+            redde FALSUM;
+        }
+        partes[n] = partes[n] * X + (s32)(t.datum[i] - '0');
+        cifrae[n]++;
+    }
+    si (   n == ZEPHYRUM || cifrae[n] == ZEPHYRUM
+        || cifrae[ZEPHYRUM] > II || cifrae[I] > II
+        || (n == II && (cifrae[II] != IV || partes[II] <= ZEPHYRUM)))
+    {
+        redde FALSUM;
+    }
+    d->annus   = n == II ? partes[II] : ZEPHYRUM;
+    d->mensis  = partes[ZEPHYRUM];
+    d->dies    = partes[I];
+    redde VERUM;
+}
+
+/* natalis ex textu: "YYYY-MM-DD", "MM-DD", "--MM-DD", forma americana
+ * ("M/D/YYYY", "M/D"); FALSUM si forma mala (validitas a personis
+ * iudicatur) */
 interior b32
 natalem_ex_textu (
     chorda  t,
       Dies* d)
 {
     s32 o;
+    i32 i;
 
+    per (i = ZEPHYRUM; i < t.mensura; i++)
+    {
+        si (t.datum[i] == '/')
+        {
+            redde natalem_americanum(t, d);
+        }
+    }
     si (t.mensura == X)
     {
         redde fasti_parsare_iso(t, d) && d->annus > ZEPHYRUM;
