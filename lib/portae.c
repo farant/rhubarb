@@ -28,7 +28,7 @@
 /* vocabulum CLAUSUM attributorum <porta> */
 hic_manens constans character* constans _portae_attributa[] = {
     "titulus", "manu", "causa", "tegit", "currit", "instrumentum",
-        "genus",
+        "genus", "gradus",
     NIHIL
 };
 
@@ -249,6 +249,23 @@ _portam_legere (
         {
             _causa(causae, via, linea, "genus ignotum '", g,
                 "' in <porta> (praeiudicium probatio)");
+            bene = FALSUM;
+        }
+    }
+    /* gradus (gradus-portarum T1): independens a genere */
+    d->gradus   = PORTA_COMMISSIO;
+    si (stml_attributum_habet(elementum, "gradus"))
+    {
+        chorda g = _valor(elementum, "gradus");
+
+        si (chorda_aequalis_literis(g, "fusio"))
+        {
+            d->gradus = PORTA_FUSIO;
+        }
+        alioquin si (!chorda_aequalis_literis(g, "commissio"))
+        {
+            _causa(causae, via, linea, "gradus ignotus '", g,
+                "' in <porta> (commissio fusio)");
             bene = FALSUM;
         }
     }
@@ -1953,6 +1970,21 @@ portae_declaratas_scribere (
                     " praeiudicium\n");
             }
         }
+        /* gradus non ordinarius (gradus-portarum T1) */
+        si (d->gradus == PORTA_FUSIO)
+        {
+            chorda_aedificator_appendere_literis(a, machina
+                ? "GRADUS" : "    gradus");
+            si (machina)
+            {
+                _campus(a, clavis);
+                chorda_aedificator_appendere_literis(a, "\tfusio\n");
+            }
+            alioquin
+            {
+                chorda_aedificator_appendere_literis(a, " fusio\n");
+            }
+        }
         per (j = ZEPHYRUM; j < xar_numerus(o->exemplaria); j++)
         {
             constans PortaeExemplar* e = (constans PortaeExemplar*)
@@ -2220,6 +2252,7 @@ portae_ordinare (
 
         o->porta       = *(chorda*)xar_obtinere(nomina, i);
         o->genus       = PORTA_PROBATIO;
+        o->gradus      = PORTA_COMMISSIO;
         o->millesimae  = -I;
         per (j = ZEPHYRUM; declaratae != NIHIL
              && j < xar_numerus(declaratae); j++)
@@ -2229,7 +2262,8 @@ portae_ordinare (
 
             si (chorda_aequalis(d->titulus, o->porta))
             {
-                o->genus = d->genus;
+                o->genus   = d->genus;
+                o->gradus  = d->gradus;
                 frange;
             }
         }
@@ -2313,6 +2347,8 @@ portae_ordinem_scribere (
             {
                 chorda_aedificator_appendere_literis(a, "\t-");
             }
+            chorda_aedificator_appendere_literis(a,
+                o->gradus == PORTA_FUSIO ? "\tfusio" : "\tcommissio");
             chorda_aedificator_appendere_character(a, '\n');
         }
         redde chorda_aedificator_finire(a);
@@ -2339,6 +2375,10 @@ portae_ordinem_scribere (
                 primus ? " " : ", ");
             primus = FALSUM;
             chorda_aedificator_appendere_chorda(a, o->porta);
+            si (o->gradus == PORTA_FUSIO)
+            {
+                chorda_aedificator_appendere_literis(a, " [fusio]");
+            }
             si (o->millesimae >= ZEPHYRUM)
             {
                 chorda_aedificator_appendere_character(a, ' ');

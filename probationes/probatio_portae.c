@@ -1495,11 +1495,11 @@ _sectio_ordo (
     CREDO_VERUM(chorda_aequalis_literis(portae_ordinem_scribere(o,
         VERUM,
         c->piscina),
-        "ORDO\tvexilla\tpraeiudicium\t100000\n"
-        "ORDO\tnova\tprobatio\t-\n"
-        "ORDO\tsera\tprobatio\t7000\n"
-        "ORDO\taequa\tprobatio\t7000\n"
-        "ORDO\tcredo\tprobatio\t20000\n"));
+        "ORDO\tvexilla\tpraeiudicium\t100000\tcommissio\n"
+        "ORDO\tnova\tprobatio\t-\tcommissio\n"
+        "ORDO\tsera\tprobatio\t7000\tcommissio\n"
+        "ORDO\taequa\tprobatio\t7000\tcommissio\n"
+        "ORDO\tcredo\tprobatio\t20000\tcommissio\n"));
     p = (constans PortaeOrdo*)xar_obtinere(o, IV);
     CREDO_AEQUALIS_I32(p->cursus, X);   /* ultimi X, fracti omissi */
     CREDO_VERUM(chorda_aequalis_literis(portae_ordinem_scribere(o,
@@ -1513,17 +1513,85 @@ _sectio_ordo (
     CREDO_VERUM(chorda_aequalis_literis(portae_ordinem_scribere(o,
         VERUM,
         c->piscina),
-        "ORDO\tvexilla\tpraeiudicium\t-\n"
-        "ORDO\tcredo\tprobatio\t-\n"
-        "ORDO\tsera\tprobatio\t-\n"
-        "ORDO\taequa\tprobatio\t-\n"
-        "ORDO\tnova\tprobatio\t-\n"));
+        "ORDO\tvexilla\tpraeiudicium\t-\tcommissio\n"
+        "ORDO\tcredo\tprobatio\t-\tcommissio\n"
+        "ORDO\tsera\tprobatio\t-\tcommissio\n"
+        "ORDO\taequa\tprobatio\t-\tcommissio\n"
+        "ORDO\tnova\tprobatio\t-\tcommissio\n"));
+}
+
+/* XV. gradus (gradus-portarum T1): 'fusio' acceptum et per GRADUS
+ * nominatum (machina et homo); 'commissio' expressum = ordinarium
+ * (nihil scribitur); valor alius recusatur nomine; genus et gradus
+ * independentes; ordo gradum fert (campus quintus, ' [fusio]') */
+interior vacuum
+_sectio_gradus (
+    CredoContextus* c)
+{
+    hic_manens constans PlagulaFicta plagulae[] = {
+        { "tools/vexilla_fumus.sh",
+          "# <porta titulus=\"vexilla\" genus=\"praeiudicium\""
+          " gradus=\"fusio\"/>\n" },
+        { "tools/credo_fumus.sh",
+          "# <porta titulus=\"credo\" gradus=\"commissio\"/>\n" },
+        { NIHIL, NIHIL }
+    };
+    hic_manens constans character* constans paria[] = {
+        "vexilla=tools/vexilla_fumus.sh", "credo=tools/credo_fumus.sh",
+        NIHIL
+    };
+    hic_manens constans character* const credo_solum[] = {
+        "credo=tools/credo_fumus.sh", NIHIL
+    };
+                         Xar* o;
+                         Xar* nomina;
+                      chorda  t;
+                      chorda  h;
+                      chorda  causa;
+                         Xar* d;
+     constans PortaDeclarata* v;
+
+    _recusatio_probare(c,
+        "# <porta titulus=\"credo\" gradus=\"fussio\"/>\n",
+        credo_solum,
+        "tools/credo_fumus.sh:1: gradus ignotus 'fussio'");
+    d = _legere_mundum(c, plagulae, paria, &causa);
+    CREDO_NECESSE_NON_NIHIL(d);
+    v = _declaratio(d, "vexilla");
+    CREDO_NECESSE_NON_NIHIL(v);
+    CREDO_AEQUALIS_I32((i32)v->gradus, (i32)PORTA_FUSIO);
+    CREDO_AEQUALIS_I32((i32)v->genus, (i32)PORTA_PRAEIUDICIUM);
+    v = _declaratio(d, "credo");
+    CREDO_NECESSE_NON_NIHIL(v);
+    CREDO_AEQUALIS_I32((i32)v->gradus, (i32)PORTA_COMMISSIO);
+    o = _derivare_mundum(c, plagulae, paria, NIHIL, NIHIL);
+    CREDO_NECESSE_NON_NIHIL(o);
+    t = portae_declaratas_scribere(o, NIHIL, VERUM, c->piscina);
+    CREDO_VERUM(chorda_continet(t, _ch(c, "GRADUS\tvexilla\tfusio\n")));
+    CREDO_VERUM(!chorda_continet(t, _ch(c, "GRADUS\tcredo")));
+    h = portae_declaratas_scribere(o, NIHIL, FALSUM, c->piscina);
+    CREDO_VERUM(chorda_continet(h, _ch(c, "    gradus fusio\n")));
+    nomina = xar_creare(c->piscina, (i32)magnitudo(chorda));
+    *(chorda*)xar_addere(nomina) = _ch(c, "credo");
+    *(chorda*)xar_addere(nomina) = _ch(c, "vexilla");
+    o = portae_ordinare(d, nomina, _ch(c, ""), c->piscina);
+    CREDO_NECESSE_NON_NIHIL(o);
+    CREDO_VERUM(chorda_aequalis_literis(portae_ordinem_scribere(o,
+        VERUM, c->piscina),
+        "ORDO\tvexilla\tpraeiudicium\t-\tfusio\n"
+        "ORDO\tcredo\tprobatio\t-\tcommissio\n"));
+    CREDO_VERUM(chorda_aequalis_literis(portae_ordinem_scribere(o,
+        FALSUM, c->piscina),
+        "ordo portarum:\n"
+        "  praeiudicia: vexilla [fusio] (nova)\n"
+        "  probationes: credo (nova)\n"));
 }
 
 hic_manens constans CredoSectio SECTIONES[] = {
     { "lectio sana", _sectio_lectio, NIHIL, NIHIL, NIHIL, NIHIL },
     { "genus portae", _sectio_genus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "ordo portarum", _sectio_ordo, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "gradus portae", _sectio_gradus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "chordae et annotationes aliae", _sectio_non_commentaria, NIHIL,
       NIHIL, NIHIL, NIHIL },
     { "recusationes", _sectio_recusationes, NIHIL, NIHIL, NIHIL,

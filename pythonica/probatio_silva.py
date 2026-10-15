@@ -2764,7 +2764,8 @@ def _fabrica_ordinis(ordines, rc=0):
     with open(via, 'w') as f:
         f.write('#!/bin/sh\nif [ "$1 $2" = "portae ordo" ]; then printf "%s"; exit %d; fi\n'
                 'printf "NOTA\\tnihil\\n"; exit 0\n'
-                % (''.join('ORDO\\t%s\\t%s\\t%s\\n' % o for o in ordines), rc))
+                % (''.join('ORDO\\t%s\\t%s\\t%s\\t%s\\n'
+                           % (tuple(o) + ('commissio',))[:4] for o in ordines), rc))
     os.chmod(via, 0o755)
     return via
 
@@ -2807,6 +2808,24 @@ try:
     credo(cursae == ['ficta-prob-2', 'ficta-prae-c'] and 'MONITUM: ordo portarum' in eff
           and err is not None and 'nec in disco' in err,
           'ordo: fabrica fracta - monitum, ordo datus, non obstat', causa=repr((cursae, eff[-300:], err)))
+    # D. gradus (gradus-portarum T1): campus quintus legitur; linea IV camporum (contractus vetus) = MONITUM
+    silva.FABRICA_BIN = _fabrica_ordinis([('ficta-m', 'probatio', '1000', 'fusio'),
+                                         ('ficta-c', 'probatio', '500')])
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        _o, _g, _gr = silva._portas_ordinare(['ficta-m', 'ficta-c'])
+    credo(_o == ['ficta-m', 'ficta-c'] and _gr == {'ficta-m': 'fusio', 'ficta-c': 'commissio'},
+          'ordo: gradus ex campo quinto', causa=repr((_o, _gr, buf.getvalue())))
+    via_vetus = os.path.join(_od, 'fabrica_ordo_vetus')
+    with open(via_vetus, 'w') as f:
+        f.write('#!/bin/sh\nprintf "ORDO\\tficta-c\\tprobatio\\t500\\n"\n')
+    os.chmod(via_vetus, 0o755)
+    silva.FABRICA_BIN = via_vetus
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        _o, _g, _gr = silva._portas_ordinare(['ficta-c'])
+    credo(_o == ['ficta-c'] and _gr == {} and 'linea extra contractum' in buf.getvalue(),
+          'ordo: linea IV camporum = monitum, ordo datus', causa=repr((_o, _gr, buf.getvalue())))
 finally:
     silva.FABRICA_BIN = _of_fb
     silva._fabricam_exigere = _of_fe

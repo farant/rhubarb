@@ -30,6 +30,10 @@
  *            fracturae SIMUL nominantur; probationes primam fracturam
  *            sistunt); sumptus ordinem intra phasim (circulus
  *            commissionis II §II-III). Valor alius = recusatio
+ *   gradus   'commissio' (ordinarium: obligatoria in omni commissione)
+ *            aut 'fusio' (obligatoria solum in fusione in main; inter
+ *            commissiones debitum rami notatur) - gradus-portarum
+ *            spec, decretum Frani ...GDFF4J. Valor alius = recusatio
  * Vocabulum CLAUSUM: attributum aliud = recusatio (error scribae).
  *
  * MACHINA PURA: ingressus et egressus per suturam (exemplar
@@ -91,6 +95,12 @@ nomen enumeratio {
     PORTA_PRAEIUDICIUM
 } PortaGenus;
 
+/* gradus portae (attributum 'gradus'; gradus-portarum T1) */
+nomen enumeratio {
+    PORTA_COMMISSIO = 0,     /* ordinarium */
+    PORTA_FUSIO
+} PortaGradus;
+
 /* porta declarata una (elementum <porta> unum) */
 nomen structura {
      chorda  via;        /* cursor: scriptum annotatum */
@@ -102,6 +112,7 @@ nomen structura {
         Xar* currit;     /* chorda: programmata */
         Xar* instrumenta; /* chorda: binaria domus possessa */
  PortaGenus  genus;      /* PORTA_PROBATIO nisi 'genus' aliter */
+PortaGradus  gradus;      /* PORTA_COMMISSIO nisi 'gradus' aliter */
 } PortaDeclarata;
 
 /* recusatio una: locus (via vacua = registrum aut fundamentum; linea
@@ -265,6 +276,7 @@ portae_debita_computare (
  *     PORTA      <porta>  <0|1 manu>  <via>  <linea>  <causa manu>
  *     INSTRUMENTUM <porta> <binarium possessum>
  *     GENUS      <porta>  praeiudicium   (solum si non ordinarium)
+ *     GRADUS     <porta>  fusio          (solum si non ordinarium)
  *     TEGIT      <porta>  <via|globus|praefixum>  <exemplar>  <ratio>
  *     CLAUSURA   <porta>  <fons>      <ratio>
  *     IGNOTUM    <porta>  <textus>
@@ -324,6 +336,7 @@ portae_declaratas_scribere (
 nomen structura {
         chorda porta;
     PortaGenus genus;
+   PortaGradus gradus;
            s32 millesimae;   /* mediana; -I = sine historia */
            i32 cursus;       /* cursus sani numerati (<= X) */
 } PortaeOrdo;
@@ -337,8 +350,9 @@ portae_ordinare (
            chorda  tempora,
           Piscina* piscina);
 
-/* ORDO <porta> <praeiudicium|probatio> <millesimae|-> per lineam
- * (machina); homo: 'ordo portarum:' + praeiudicia + probationes */
+/* ORDO <porta> <praeiudicium|probatio> <millesimae|-> <commissio|fusio>
+ * per lineam (machina); homo: 'ordo portarum:' + praeiudicia +
+ * probationes (gradus fusio: ' [fusio]' post nomen) */
 chorda
 portae_ordinem_scribere (
     constans Xar* ordo,

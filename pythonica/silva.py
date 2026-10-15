@@ -2689,7 +2689,8 @@ def _portae_debitas_addere(viae, portae, excusatae=None, binaria_out=None):
 
 def _portas_ordinare(portae):
     """ORDO PORTARUM (circulus commissionis II T5): (portae ordinatae,
-    genera {nomen: 'praeiudicium'|'probatio'}) per 'bin/fabrica portae
+    genera {nomen: 'praeiudicium'|'probatio'}, gradus {nomen:
+    'commissio'|'fusio'} - gradus-portarum T1) per 'bin/fabrica portae
     ordo -machina' (C: genus ex annotatione, mediana ultimorum X cursuum
     sanorum ex tempora.tsv, sine historia primae). Recepta umbrae (.json)
     prima manent ordine suo; ordo stabilis. Fractura quaevis = MONITUM et
@@ -2703,27 +2704,29 @@ def _portas_ordinare(portae):
         if n not in nomina:
             nomina.append(n)
     if not nomina or not os.path.exists(FABRICA_BIN):
-        return list(portae), {}
+        return list(portae), {}, {}
     try:
         textus = _portae_fabricae('ordo', nomina, True, normare=False)
     except SilvaError as ex:
         print('MONITUM: ordo portarum computari non potuit (%s) - ordo'
               ' datus' % str(ex).splitlines()[0])
-        return list(portae), {}
-    ordo, genera, sumptus = [], {}, {}
+        return list(portae), {}, {}
+    ordo, genera, sumptus, gradus = [], {}, {}, {}
     for linea in textus.splitlines():
         f = linea.split('\t')
-        if f[0] == 'ORDO' and len(f) == 4:
+        if (f[0] == 'ORDO' and len(f) == 5
+                and f[4] in ('commissio', 'fusio')):
             ordo.append(f[1])
             genera[f[1]] = f[2]
             sumptus[f[1]] = f[3]
+            gradus[f[1]] = f[4]
         else:
             print('MONITUM: ordo portarum: linea extra contractum %r - ordo'
                   ' datus' % linea)
-            return list(portae), {}
+            return list(portae), {}, {}
     if sorted(ordo) != sorted(nomina):
         print('MONITUM: ordo portarum nomina non reddidit omnia - ordo datus')
-        return list(portae), {}
+        return list(portae), {}, {}
     positio = dict((n, i) for i, n in enumerate(ordo))
     ceterae.sort(key=lambda p: positio[p if isinstance(p, str) else p[0]])
 
@@ -2733,7 +2736,7 @@ def _portas_ordinare(portae):
                          for n in ordo if genera[n] == g) or '(nullae)'
     print('ordo portarum: praeiudicia: %s | probationes: %s'
           % (_pars('praeiudicium'), _pars('probatio')))
-    return receptae + ceterae, genera
+    return receptae + ceterae, genera, gradus
 
 
 def _instrumenta_portarum_sanare(binaria):
@@ -3163,7 +3166,7 @@ def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
         with _phasis('instrumenta portarum'):
             _instrumenta_portarum_sanare(binaria)
     with _phasis('ordo portarum'):
-        portae, genera = _portas_ordinare(portae)
+        portae, genera, _gradus = _portas_ordinare(portae)
     ante = _sigilla_viarum(viae)
     # praeiudicia (circulus commissionis II T5): OMNIA currunt, fracturae
     # colliguntur et SIMUL nominantur ante probationem primam; probatio

@@ -350,3 +350,18 @@ it does not declare), and briar-fumus declares
 `currit="tools/briar.c tools/briar_spectator.c"`. Test: derivatio
 ignota fixture `tools/x_y.c` -> both candidates; plant (no hyphen form)
 red.
+
+## 2026-10-15 - gradus (two tiers of gates, T1)
+
+`gradus` = commissio (default) | fusio, parsed exactly like `genus` and
+independent of it (a pre-check can be merge-tier: vexilla in the test
+section XV is both). Only the non-default value is written (GRADUS /
+`    gradus fusio`), the same choice as GENUS, so existing goldens of
+`declaratae` stay byte-identical. ORDO is different: every line gains
+the fifth field, because the consumer (silva._portas_ordinare) needs a
+value per gate and a missing field must be distinguishable from a stale
+binary - the Python side now refuses four-field lines with the usual
+MONITUM (order as given), so a stale tree bin/fabrica degrades instead
+of silently treating everything as commit tier. Spec
+project-specs/gradus-portarum-spec.md §VII.
+
