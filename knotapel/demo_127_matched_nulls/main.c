@@ -1357,6 +1357,8 @@ static long        lin_det[SEEDS];
 
 static void register_sets (void);
 static void registry_check (void);
+static void build_jobs (void);
+static int  n_jobs (void);
 
 /* D119's frozen exact rows (D119_B zeta_8, D119_C 2I first 24): sets,
  * float, rule, robust, possible, tied; N = 3 then 4, XOR / AND / MAJ */
@@ -2046,6 +2048,7 @@ register_sets (void)
     }
     add_group(GR_H6_12, nulls12[0], SEEDS);
     add_group(GR_H5_12, nulls12[1], SEEDS);
+    build_jobs();
 }
 
 static void
@@ -2053,30 +2056,78 @@ registry_check (void)
 {
     char msg[256];
 
-    sprintf(msg, "registry: %d sets; H6 and H5 %d seeds each, 2I-R %d, sign "
-        "draws %d + %d, G/AX/AN/LIN %d each", n_sets, group_count[GR_H6],
+    sprintf(msg, "registry: %d sets, %d jobs (no own table for the 60 "
+        "control sets); H6 and H5 %d seeds each, 2I-R %d, sign "
+        "draws %d + %d, G/AX/AN/LIN %d each", n_sets, n_jobs(),
+        group_count[GR_H6],
         group_count[GR_2I_R], group_count[GR_2O_SGN],
         group_count[GR_2I_D94_SGN], group_count[GR_G]);
     check(msg, group_count[GR_H6] == 20 && group_count[GR_H5] == 20
         && group_count[GR_2I_R] == 20 && group_count[GR_2O_SGN] == 5
         && group_count[GR_2I_D94_SGN] == 5 && group_count[GR_G] == 5
-        && group_count[GR_LIN] == 5 && n_sets == 108);
+        && group_count[GR_LIN] == 5 && n_sets == 108
+        && n_jobs() == 108 * TABLES - 60);
 }
 
 static Row results[MAX_SETS][TABLES][N_ROWS][3];
 
+/* the jobs: every (set, table), except the own table of the control
+ * groups (2I-R, sign draws, H6/H5 seeds 5-19) - own-table rows are never
+ * compared across sets, so they would add time and no reading */
+static int job_set[MAX_JOBS];
+static int job_table[MAX_JOBS];
+static int jobs_built = 0;
+static int ran[MAX_SETS][TABLES];
+
+static int
+group_of (
+    int set)
+{
+    int g;
+
+    for (g = 0; g < GROUPS; g++) {
+        if (set >= group_first[g] && set < group_first[g] + group_count[g]) {
+            return g;
+        }
+    }
+    return -1;
+}
+
+static void
+build_jobs (void)
+{
+    int set;
+    int table;
+
+    jobs_built = 0;
+    for (set = 0; set < n_sets; set++) {
+        int g = group_of(set);
+        int control = g == GR_2I_R || g == GR_2O_SGN || g == GR_2I_D94_SGN
+            || ((g == GR_H6 || g == GR_H5) && set - group_first[g] >= SEEDS);
+
+        for (table = 0; table < TABLES; table++) {
+            ran[set][table] = !(table == 0 && control);
+            if (ran[set][table]) {
+                job_set[jobs_built] = set;
+                job_table[jobs_built] = table;
+                jobs_built++;
+            }
+        }
+    }
+}
+
 static int
 n_jobs (void)
 {
-    return n_sets * TABLES;
+    return jobs_built;
 }
 
 static void
 job_execute (
     int job)
 {
-    int              set = job / TABLES;
-    int              table = job % TABLES;
+    int              set = job_set[job];
+    int              table = job_table[job];
     const PointSet  *s = registry[set];
     Catalogus       *cat = as_catalog(s);
     Activatio       *act = NULL;
@@ -2105,8 +2156,8 @@ static void
 job_print (
     int job)
 {
-    int set = job / TABLES;
-    int table = job % TABLES;
+    int set = job_set[job];
+    int table = job_table[job];
     int n;
     int f;
 
@@ -2129,8 +2180,8 @@ job_parse (
     const char *text)
 {
     const char *line = strstr(text, "RESULT ");
-    int         set = job / TABLES;
-    int         table = job % TABLES;
+    int         set = job_set[job];
+    int         table = job_table[job];
     int         got;
     int         read;
     int         n;
@@ -2162,7 +2213,7 @@ static long
 job_cost (
     int job)
 {
-    return registry[job / TABLES]->n == 12 ? 1 : 10;
+    return registry[job_set[job]]->n == 12 ? 1 : 10;
 }
 
 static void
@@ -2302,17 +2353,29 @@ print_line (
 {
     int n;
 
+    int used = 0;
+    int i;
+
+    for (i = 0; i < group_count[group]; i++) {
+        used += ran[group_first[group] + i][table];
+    }
+    if (used == 0) {
+        return;                         /* not run under this table */
+    }
     printf("      %-11s", label);
     for (n = 0; n < N_ROWS; n++) {
         long lo = -1;
         long hi = -1;
-        int  i;
         char cell[48];
 
         for (i = 0; i < group_count[group]; i++) {
-            long v = field_of(&results[group_first[group] + i][table][n][f],
-                mode);
+            long v;
 
+            if (!ran[group_first[group] + i][table]) {
+                continue;
+            }
+            v = field_of(&results[group_first[group] + i][table][n][f],
+                mode);
             if (lo < 0 || v < lo) {
                 lo = v;
             }
@@ -2327,8 +2390,8 @@ print_line (
         }
         printf(" %15s", cell);
     }
-    if (group_count[group] > 1) {
-        printf("   (%d sets)", group_count[group]);
+    if (used > 1) {
+        printf("   (%d sets)", used);
     }
     printf("\n");
 }
@@ -2437,6 +2500,9 @@ same_xor (
     int n;
 
     for (table = 0; table < TABLES; table++) {
+        if (!ran[a][table] || !ran[b][table]) {
+            continue;
+        }
         for (n = 0; n <= n_high - N_LOW; n++) {
             if (memcmp(&results[a][table][n][0], &results[b][table][n][0],
                     sizeof(Row)) != 0) {
@@ -2473,7 +2539,8 @@ part_c (
 
     printf("\n=== Part C: passing subsets per N (D94 phase cell, signed "
         "encoding, k in {6, 12, 24}; N = 3-7 exhaustive) ===\n");
-    printf("  %d sets x %d tables = %d jobs\n", n_sets, TABLES, n_jobs());
+    printf("  %d sets, %d jobs (own table not run for the control sets)\n",
+        n_sets, n_jobs());
     if (n_high < N_HIGH) {
         printf("  (quick mode: N = 3-%d)\n", n_high);
     }
@@ -2496,6 +2563,9 @@ part_c (
         int points = registry[set]->n;
 
         for (table = 0; table < TABLES; table++) {
+            if (!ran[set][table]) {
+                continue;
+            }
             for (n = 0; n <= n_high - N_LOW; n++) {
                 for (f = 0; f < 3; f++) {
                     const Row *r = &results[set][table][n][f];
@@ -2597,6 +2667,9 @@ part_c (
             int set = group_first[g] + i;
 
             for (table = 0; table < TABLES; table++) {
+                if (!ran[set][table]) {
+                    continue;
+                }
                 for (n = 0; n <= n_high - N_LOW; n++) {
                     for (f = 0; f < 3; f++) {
                         long c = results[set][table][n][f].clash;

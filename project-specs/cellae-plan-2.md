@@ -274,6 +274,20 @@ Each task follows the house cycle:
   - which nulls (D126: match height, report odd-norm coincidences,
     name the encoding);
   - whether the braid-correct ζ₁₀ generators are included.
+  *(2026-10-15, done as D127, knotapel/demo_127_matched_nulls: 108
+  point sets, one exact activation, common tables T13 and R13, N = 3–7
+  exhaustive, 264 jobs in worker processes. An independent review came
+  before the findings and claims (0 H, 6 M, 6 L, 6 N, all acted on):
+  it added the entry-order, 20-seed and sign controls and the R13 and
+  D119 N = 5–6 anchors. Result:
+  - catalogs lose to generic points at every N;
+  - against height-matched spheres there is no consistent difference;
+  - 2I's standing is entry order;
+  - only XOR is a property of a point set.
+  The registered rule was underspecified, so no verdict on KC 47.1 is
+  drawn. Nodes appended: KC 19.1.2, 19.7.1, 19.9.1, 19.10, 47.1.4.1,
+  47.1.5–47.1.5.3, 48.1.1.1, 48.1.2, 48.2.1 and 48.4.6.1. Ledger P1
+  fulfilled; follow-up question …A71WQK.)*
 
 ## Gates
 
