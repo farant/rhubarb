@@ -992,6 +992,7 @@
     <debitum_scripturae membrum="probatio_filum" via="build/probatio_filum.sera" causa="sera probationis"/>
     <debitum_scripturae membrum="probatio_natura_glossae" via="build/probatio_glossae.html" causa="glossae HTML ad inspectionem"/>
     <debitum_scripturae membrum="probatio_lectiones" via="build/probatio_lectiones.tsv" causa="liber lectionum probationis"/>
+    <debitum_scripturae membrum="probatio_multiplexor" via="build/pmx/" causa="socket servitoris tmux proprii (via brevis: sun_path CIV octeti - TMPDIR portae nimis profundus)"/>
     <debitum_scripturae membrum="probatio_lectiones" via="build/probatio_lectiones_s.txt" causa="liber lectionum probationis"/>
     <debitum_scripturae membrum="probatio_ludus_imago" via="build/probatio_ludus_imago_pictor.png" causa="imago ad inspectionem"/>
     <debitum_scripturae membrum="probatio_ludus_imago" via="build/probatio_ludus_imago_quattuor.png" causa="imago ad inspectionem"/>
