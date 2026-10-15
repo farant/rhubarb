@@ -50,6 +50,7 @@ declare -a SOURCE_FILES=(
     "lib/cliens_tabularii.c"
     "lib/clonatio_macos.c"
     "lib/codificator_terminalis.c"
+    "lib/colloquia.c"
     "lib/color.c"
     "lib/coloratio.c"
     "lib/componens.c"

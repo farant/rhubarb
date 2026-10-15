@@ -78,8 +78,10 @@ phase that needs it. Header text shown to Fran before coding.*
   one O_APPEND write per event, UTF-8-safe 200-byte cut; installed via
   `installata` at the main merge. Hooks in ~/.claude/settings.json: diff
   for Fran after install.
-- T3 next: `colloquia` (sessions from the log + transcript tails +
-  multiplexor).
+- T3 DONE 2026-10-15: `colloquia` - per-session status replay, pane-
+  attached `praeco status` lines, titles from transcript tails (256 KB;
+  verified on a real 220 MB transcript), live panes via multiplexor.
+- T4 next: vicus notifications (model, toasts, center, jump-to-pane).
 
 ## V. Hook facts (Claude Code docs, checked 2026-10-15)
 
@@ -103,6 +105,9 @@ phase that needs it. Header text shown to Fran before coding.*
   code.claude.com/docs/en/channels.md and channels-reference.md.
 
 ## VI. AUDIENDA
+
+- Pane ids are per tmux server; T3 ignores `servitor` when matching
+  (one default server today).
 
 - Claude Code channels: documented (V); not tried yet (T7).
 - Hook payload fields come from the docs (V), not yet from captured
