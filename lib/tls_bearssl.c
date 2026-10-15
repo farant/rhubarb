@@ -513,6 +513,70 @@ tls_bearssl_incipere (
     redde _creare(tcp, hospes, optiones, piscina);
 }
 
+/* obstruens: tcp cum moris (timeout_ms -> moris fossae), pactio per
+ * antliam usque ad finem. 'Exspecta' in modo obstruente = tempus
+ * excessum (R9): TLS_ERROR_TCP, ut SecureTransport */
+TlsBearsslResultus
+tls_bearssl_connectere (
+      constans character* hospes,
+                     i32  portus,
+    constans TlsOptiones* optiones,
+                 Piscina* piscina)
+{
+           TcpOptiones tcp_opt = tcp_optiones_default();
+           TcpResultus tcp_res;
+    TlsBearsslResultus r;
+
+    si (hospes == NIHIL || piscina == NIHIL)
+    {
+        redde _error(TLS_ERROR_TCP, "Argumenta invalida", piscina);
+    }
+    si (optiones && optiones->timeout_ms > ZEPHYRUM)
+    {
+        tcp_opt.timeout_ms = optiones->timeout_ms;
+    }
+    tcp_res = tcp_connectere_cum_optionibus(hospes, portus, &tcp_opt,
+        piscina);
+    si (!tcp_res.successus)
+    {
+        r.successus         = FALSUM;
+        r.connexio          = NIHIL;
+        r.error             = TLS_ERROR_TCP;
+        r.error_descriptio  = tcp_res.error_descriptio;
+        redde r;
+    }
+    r = _creare(tcp_res.connexio, hospes, optiones, piscina);
+    si (!r.successus)
+    {
+        redde r;
+    }
+    commutatio (_antlia(r.connexio, BR_SSL_SENDAPP))
+    {
+        casus ANTLIA_PARATA:
+            r.connexio->pacta = VERUM;
+            redde r;
+        casus ANTLIA_LEGERE:
+        casus ANTLIA_SCRIBERE:
+            tls_bearssl_claudere(r.connexio);
+            redde _error(TLS_ERROR_TCP, "Tempus handshake excessum",
+                piscina);
+        ordinarius:
+        {
+               b32 reiecta  = r.connexio->reiecta;
+            chorda causa    = r.connexio->erratum;
+
+            tls_bearssl_claudere(r.connexio);
+            r.successus  = FALSUM;
+            r.connexio   = NIHIL;
+            r.error            = reiecta ? TLS_ERROR_CERTIFICATUM
+                                         : TLS_ERROR_HANDSHAKE;
+            r.error_descriptio = causa.mensura > ZEPHYRUM ? causa
+                : chorda_ex_literis("pactio fallita", piscina);
+            redde r;
+        }
+    }
+}
+
 TlsGradus
 tls_bearssl_gradus (
     TlsBearssl* c)
@@ -702,4 +766,34 @@ tls_bearssl_est_valida (
 {
     redde c != NIHIL && !c->clausa && c->tcp != NIHIL
         && tcp_est_valida(c->tcp);
+}
+
+/* folium catenae collectae (catena[0], in piscina post pactionem) ->
+ * fiducia_folium_describere - idem codex ac vectura SecureTransport */
+b32
+tls_bearssl_certificatum (
+          TlsBearssl* c,
+     TlsCertificatum* exitus)
+{
+    FiduciaFolium ff;
+
+    si (exitus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    memset(exitus, ZEPHYRUM, magnitudo(*exitus));
+    si (c == NIHIL || c->clausa || c->numerus == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    si (!fiducia_folium_describere(&c->catena[ZEPHYRUM], &ff,
+        c->piscina))
+    {
+        redde FALSUM;
+    }
+    exitus->valida     = ff.valida;
+    exitus->non_ante   = ff.non_ante;
+    exitus->non_post   = ff.non_post;
+    exitus->subiectum  = ff.subiectum;
+    redde exitus->valida;
 }

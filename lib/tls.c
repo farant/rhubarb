@@ -154,8 +154,8 @@ tls_connectere_cum_optionibus (
         redde _involvere_securetransport(tls_securetransport_connectere(
             hospes, portus, optiones, piscina), piscina);
     }
-    redde _error(TLS_ERROR_HANDSHAKE, "vectura bearssl nondum",
-        piscina);
+    redde _involvere_bearssl(tls_bearssl_connectere(hospes, portus,
+        optiones, piscina), piscina);
 }
 
 TlsResultus
@@ -322,14 +322,17 @@ tls_certificatum_obtinere (
         TlsConnexio* connexio,
     TlsCertificatum* exitus)
 {
-    si (connexio == NIHIL || connexio->vectura == TLS_VECTURA_BEARSSL)
+    si (connexio == NIHIL)
     {
-        /* BearSSL: tls_bearssl_certificatum in T5 */
         si (exitus)
         {
             memset(exitus, ZEPHYRUM, magnitudo(*exitus));
         }
         redde FALSUM;
+    }
+    si (connexio->vectura == TLS_VECTURA_BEARSSL)
+    {
+        redde tls_bearssl_certificatum(connexio->bearssl, exitus);
     }
     redde tls_securetransport_certificatum(connexio->securetransport,
         exitus);

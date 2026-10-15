@@ -7,7 +7,8 @@
  * ignota, sine ancora) cum causa fiduciae. Directe (tls_incipere +
  * tls_gradus super fossam non-blocantem): pactio + GET + lectio usque
  * ad finem, verificatio omissa, par in pactione claudens (ERROR
- * nominatum, numquam pendet). */
+ * nominatum, numquam pendet). Obstruens (T5): connectere + certificatum
+ * folii, tempus excessum contra servum tacentem. */
 #include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
@@ -472,6 +473,76 @@ _sectio_clausa_a_pare (
     tcp_servus_claudere(sr.servus);
 }
 
+/* obstruens (T5): ancora -> successus, vectura BEARSSL, certificatum
+ * folii (subiectum, CCCLXV dies), mittere_omnia; alienus ->
+ * TLS_ERROR_CERTIFICATUM */
+interior vacuum
+_sectio_obstruens (
+    CredoContextus* c)
+{
+     constans Locus* l = (constans Locus*)c->suita;
+          ServusTls  s;
+        TlsOptiones  opt = tls_optiones_default();
+        TlsResultus  tr;
+    TlsCertificatum  cert;
+                s64  dies;
+
+    opt.vectura     = TLS_VECTURA_BEARSSL;
+    opt.ancora_via  = l->ancora;
+    opt.timeout_ms  = V * M;
+    CREDO_NECESSE(servum_tls_incipere(&s, l->dir, l->fixa, "localhost",
+        c->piscina));
+    tr = tls_connectere_cum_optionibus("localhost", s.portus, &opt,
+        c->piscina);
+    CREDO_NECESSE(tr.successus);
+    CREDO_AEQUALIS_I32((i32)tls_vectura(tr.connexio),
+        (i32)TLS_VECTURA_BEARSSL);
+    CREDO_VERUM(tls_certificatum_obtinere(tr.connexio, &cert));
+    CREDO_CHORDA_AEQUALIS_LITERIS(cert.subiectum, "localhost");
+    dies = (cert.non_post - cert.non_ante) / ((s64)LXXXVI * M + CD);
+    CREDO_VERUM(dies >= CCCLXIV && dies <= CCCLXVI);
+    CREDO_VERUM(tls_mittere_omnia(tr.connexio,
+        (constans i8*)"GET /parvum.txt HTTP/1.0\r\n\r\n", XXVIII));
+    tls_claudere(tr.connexio);
+    servum_tls_claudere(&s);
+    CREDO_NECESSE(servum_tls_incipere(&s, l->dir, l->fixa, "alienus",
+        c->piscina));
+    tr = tls_connectere_cum_optionibus("localhost", s.portus, &opt,
+        c->piscina);
+    CREDO_FALSUM(tr.successus);
+    CREDO_AEQUALIS_I32((i32)tr.error, (i32)TLS_ERROR_CERTIFICATUM);
+    CREDO_VERUM(_continet(tr.error_descriptio,
+        "certificatum reiectum"));
+    servum_tls_claudere(&s);
+}
+
+/* tempus (T5): servus auscultat sed numquam respondet (tergum
+ * connexionem accipit) -> TLS_ERROR_TCP intra moram, numquam pendet */
+interior vacuum
+_sectio_tempus (
+    CredoContextus* c)
+{
+    TcpServusOptiones so = tcp_servus_optiones_default();
+    TcpServusResultus sr =
+        tcp_servus_creare_cum_optionibus("127.0.0.1",
+        ZEPHYRUM, &so, c->piscina);
+          TlsOptiones opt = tls_optiones_default();
+          TlsResultus tr;
+                  s64 initium;
+
+    CREDO_NECESSE(sr.successus);
+    CREDO_NECESSE(tcp_servus_auscultare(sr.servus, IV) == TCP_OK);
+    opt.vectura     = TLS_VECTURA_BEARSSL;
+    opt.timeout_ms  = D;
+    initium         = _ms_nunc();
+    tr = tls_connectere_cum_optionibus("127.0.0.1",
+        tcp_servus_obtinere_portum(sr.servus), &opt, c->piscina);
+    CREDO_FALSUM(tr.successus);
+    CREDO_AEQUALIS_I32((i32)tr.error, (i32)TLS_ERROR_TCP);
+    CREDO_VERUM(_ms_nunc() - initium < (s64)III * M);
+    tcp_servus_claudere(sr.servus);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "parvum", _sectio_parvum, NIHIL, NIHIL, NIHIL, NIHIL },
     { "rsa", _sectio_rsa, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -482,6 +553,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "omissa", _sectio_omissa, NIHIL, NIHIL, NIHIL, NIHIL },
     { "clausa a pare", _sectio_clausa_a_pare, NIHIL, NIHIL, NIHIL,
         NIHIL },
+    { "obstruens", _sectio_obstruens, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "tempus", _sectio_tempus, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

@@ -37,3 +37,22 @@ The sharper plant (EOF treated as clean close: `si (c->pacta)` -> VERUM)
 turns red against the tightened assertion "a pare clausa in pactione".
 Version floor plant (TLS10..12) is mute against s_server (negotiates 1.2):
 closed in T6 by a -tls1_1 server section.
+
+## 2026-10-15 - T5: blocking path + certificate details
+
+`tls_bearssl_connectere`: tcp_connectere_cum_optionibus (timeout_ms ->
+socket timeouts), then the SAME `_antlia` until SENDAPP. In blocking mode
+LEGERE/SCRIBERE can only mean the socket timed out -> TLS_ERROR_TCP
+"Tempus handshake excessum" (SecureTransport's category and text);
+rejection by fiducia -> TLS_ERROR_CERTIFICATUM with fiducia's reason;
+other failures -> TLS_ERROR_HANDSHAKE with the engine's named error.
+`tls_bearssl_certificatum`: catena[0] (collected by the Iudex during the
+handshake, lives in the piscina) -> fiducia_folium_describere - the same
+code path as the SecureTransport backend.
+
+Parity check (no code from T6 yet): with RHUBARB_TLS=bearssl the EXISTING
+suites pass in full - tls_servus 9/9 (incl. obstruens + certificatum),
+tls_gradus 3/3, http_vocatio 14/14. Plants: category CERTIFICATUM ->
+HANDSHAKE, timeout TCP -> HANDSHAKE, subject dropped - all red.
+Known mute (recorded in plan T5): catena[last] instead of catena[0] -
+s_server sends the leaf only; needs an intermediate-CA fixture.
