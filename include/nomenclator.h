@@ -16,6 +16,7 @@
 #include "actio.h"
 #include "figura.h"
 #include "dispensator.h"
+#include "volumen.h"
 #include "personae.h"
 #include "organum_montatio.h"
 
@@ -38,7 +39,9 @@ nomen structura {
 
 /* montare in ramo <nomenclator id="..."> repositorii: organum ex
  * manifesto infixo, actio nomenclator.agere, figurae; superficies
- * latitudo x altitudo (0 = ordinaria); systemata NIHIL licet */
+ * latitudo x altitudo (0 = ordinaria); systemata NIHIL licet. P5b:
+ * volumen = notae personae (membrum__charta, liber "persona/<id>" in
+ * dimidio infero visus personae) */
 b32
 nomenclator_montare (
      NomenclatorMontatio* m,
@@ -47,6 +50,7 @@ nomenclator_montare (
       InsulaRepositorium* repo,
       constans character* id,
       PersonaeDocumentum* documentum,
+                 Volumen* volumen,      /* P5b: NIHIL = sine notis */
         NomenclatorHodie  hodie,
                   vacuum* hodie_ctx,
                      i32  latitudo,
@@ -61,6 +65,18 @@ nomenclator_componere (
                 Piscina* piscina,
     InternamentumChorda* intern,
                  vacuum* ctx);
+
+/* P5b: pulsus vici - notae refectae (visus stalus); VERUM si mutatum */
+b32
+nomenclator_reficere (
+    NomenclatorMontatio* m);
+
+/* P5b: gestus scribae notarum Motui addicitur (focus lateris) -
+ * ctx = NomenclatorMontatio* */
+vacuum
+nomenclator_gestum_ponere (
+     Motus* motus,
+    vacuum* ctx);
 
 /* persona electa: campus persona_electa si viva, aliter prima indicis;
  * 0 si nulla */

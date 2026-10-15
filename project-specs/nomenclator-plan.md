@@ -256,6 +256,12 @@ house rule of independent composable libraries.
   test (`charta_focata`, now under the scriba branch, not "anything
   nested under the host"). Calendar moved onto it (30 + 4 sections
   unchanged). Next P5b (notes in the contact detail's bottom half).
+- **P5b DONE 2026-10-15**: notes post-it in the detail view's bottom
+  half (`nomenclator_montare` takes the volume; book "persona/<id>"
+  follows the open contact; click / Tab focus, contacts keys stand down
+  while focused, Esc steps out then back to the list); vicus wires the
+  gesture and pulse hooks. P5 complete. Next: P4 fuzzy search, P6
+  birthdays date-source port, or P7 photo - Fran to choose.
 - **P2 nomenclator list** - vicus genus `nomenclator`, command word
   `$contacts`, alphabetical list with letter headings (U1), selection, new
   contact (kind chosen at creation), open detail.

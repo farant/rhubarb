@@ -9,6 +9,7 @@
 #include "membrum__praecepta.h"
 #include "membrum__prompta.h"
 #include "membrum__elenchi.h"
+#include "membrum__charta.h"
 #include "elenchus.h"
 #include "rubrica.h"
 #include "dispositio.h"
@@ -36,6 +37,7 @@ nomen structura {
                 Piscina* scheda;
                     s32  latitudo_montationis;
                     s32  altitudo_montationis;
+                 Charta  notae;   /* P5b: liber "persona/<id>" */
 } NomenclatorFigurae;
 
 
@@ -1337,11 +1339,17 @@ agere (
                      s32  id;
 
     (vacuum)repo;
-    (vacuum)motus;
     (vacuum)des;
     m         = (NomenclatorMontatio*)ctx;
     privatum  = (NomenclatorFigurae*)m->figurae_ctx;
     si (!privatum)
+    {
+        redde FALSUM;
+    }
+    /* P5b: focus in notis - claves notis et dispensatori (Tab, Esc
+     * gradus) relinquuntur */
+    si (   ev->genus == EVENTUS_CLAVIS_DEPRESSUS
+        && charta_focata(&privatum->notae, motus))
     {
         redde FALSUM;
     }
@@ -1891,6 +1899,15 @@ figura_tabulae (
     m       = contextus->m;
     si (persona_aperta(m) > ZEPHYRUM)
     {
+        /* P5b: umbra plana chartae notarum (scriba supra pingitur) */
+        per (i = ZEPHYRUM; i < componens_numerus_liberorum(c); i++)
+        {
+            f = componens_liberum(c, i);
+            si (chorda_aequalis_literis(f->id, "notae"))
+            {
+                charta_umbram_pingere(&contextus->notae, md, f->fines);
+            }
+        }
         personam_pingere(m, md, c);
         redde;
     }
@@ -2337,7 +2354,6 @@ nomenclator_componere (
                            s32  i;
                          Fines  f;
 
-    (vacuum)repo;
     m = (NomenclatorMontatio*)ctx;
     si (!m)
     {
@@ -2401,6 +2417,20 @@ nomenclator_componere (
                 NOMENCLATOR_LINEA));
         componens_addere_liberum(radix, loc->c);
     }
+    /* P5b: notae in loco "notae" (visus personae) */
+    si (persona_aperta(m) > ZEPHYRUM && m->figurae_ctx)
+    {
+        Componens* locus;
+
+        locus = componens_invenire_per_id(radix, chorda_ex_literis(
+            "notae", piscina));
+        si (locus)
+        {
+            charta_componere(&((NomenclatorFigurae*)m->figurae_ctx)
+                ->notae, repo, motus, piscina, intern, radix,
+                locus->fines);
+        }
+    }
     /* P2b-2: menu filius ULTIMUS (super omnia) */
     {
      ContextusPraecepti  cp;
@@ -2428,6 +2458,96 @@ nomenclator_componere (
  * Montatio
  * ================================================== */
 
+/* P5b: locus notarum ex superficie (ante dispositionem): dimidium
+ * inferum corporis visus personae - radix (spatium I), barra (III),
+ * superum PARS L (pavimentum) - ut personam_disponere */
+interior vacuum
+notarum_locus (
+    constans NomenclatorMontatio* m,
+                             s32* latitudo,
+                             s32* altitudo)
+{
+    s32 corpus;
+
+    corpus     = superficies(m, FALSUM) / NOMENCLATOR_LINEA - II - III;
+    *latitudo  = (superficies(m, VERUM) / NOMENCLATOR_LITTERA - II)
+               * NOMENCLATOR_LITTERA;
+    *altitudo  = (corpus - corpus * L / C) * NOMENCLATOR_LINEA;
+}
+
+/* P5b: clavis libri personae: "persona/<id>" (buffer XXXII) */
+interior vacuum
+clavis_libri (
+          s32  id,
+    character* clavis)
+{
+    sprintf(clavis, "persona/%d", (integer)id);
+}
+
+/* P5b: liber personam apertam sequitur (index librum servat); gestus
+ * pendens prius effunditur */
+interior vacuum
+librum_aptare (
+    NomenclatorMontatio* m,
+                  Motus* motus)
+{
+    NomenclatorFigurae* ctx;
+             character  clavis[XXXII];
+                   s32  lat;
+                   s32  alt;
+
+    ctx = m ? (NomenclatorFigurae*)m->figurae_ctx : NIHIL;
+    si (!ctx || !ctx->notae.montata || persona_aperta(m) <= ZEPHYRUM)
+    {
+        redde;
+    }
+    clavis_libri(persona_aperta(m), clavis);
+    notarum_locus(m, &lat, &alt);
+    (vacuum)charta_clavem_ponere(&ctx->notae, motus, clavis, lat, alt);
+}
+
+b32
+nomenclator_reficere (
+    NomenclatorMontatio* m)
+{
+    NomenclatorFigurae* ctx;
+
+    ctx = m ? (NomenclatorFigurae*)m->figurae_ctx : NIHIL;
+    redde ctx && charta_reficere(&ctx->notae);
+}
+
+vacuum
+nomenclator_gestum_ponere (
+     Motus* motus,
+    vacuum* ctx)
+{
+    NomenclatorMontatio* m;
+
+    m = (NomenclatorMontatio*)ctx;
+    si (m && m->figurae_ctx)
+    {
+        charta_gestum_ponere(&((NomenclatorFigurae*)m->figurae_ctx)
+            ->notae, motus);
+    }
+}
+
+/* <actio/> agere et liber notarum post actum quemque (P5b) */
+interior b32
+agere_et_aptare (
+     InsulaRepositorium* repo,
+                  Motus* motus,
+    constans Destinatio* des,
+              Componens* nodus,
+       constans Eventus* ev,
+                 vacuum* ctx)
+{
+    b32 r;
+
+    r = agere(repo, motus, des, nodus, ev, ctx);
+    librum_aptare((NomenclatorMontatio*)ctx, motus);
+    redde r;
+}
+
 b32
 nomenclator_montare (
      NomenclatorMontatio* m,
@@ -2436,13 +2556,20 @@ nomenclator_montare (
       InsulaRepositorium* repo,
       constans character* id,
       PersonaeDocumentum* documentum,
+                 Volumen* volumen,
         NomenclatorHodie  hodie,
                   vacuum* hodie_ctx,
                      i32  latitudo,
                      i32  altitudo,
          StatusSystemata* systemata)
 {
-    Organum* organum;
+               Organum* organum;
+    NomenclatorFigurae* ctx;
+             character  titulus[LXIV];
+             character  clavis[XXXII];
+                   s32  lat;
+                   s32  alt;
+                   s32  persona;
 
     si (!m || !piscina || !intern || !repo)
     {
@@ -2467,9 +2594,24 @@ nomenclator_montare (
     }
     m->actiones  = actio_registrum_creare(piscina, intern);
     m->figurae   = figura_registrum_creare(piscina);
-    redde m->actiones && m->figurae
-        && praecepta_verificare(TABULA_PRAECEPTORUM)
-        && elenchi_verificare(TABULA_ELENCHORUM, TABULA_PRAECEPTORUM)
-        && actio_registrare(m->actiones, actio_nomenclatoris, agere, m)
-        && figuras_registrare(m, latitudo, altitudo);
+    si (   !m->actiones || !m->figurae
+        || !praecepta_verificare(TABULA_PRAECEPTORUM)
+        || !elenchi_verificare(TABULA_ELENCHORUM, TABULA_PRAECEPTORUM)
+        || !actio_registrare(m->actiones, actio_nomenclatoris,
+               agere_et_aptare, m)
+        || !figuras_registrare(m, latitudo, altitudo))
+    {
+        redde FALSUM;
+    }
+    /* P5b: notae - liber personae apertae, aliter electae (index:
+     * liber paratus ad Enter), aliter "persona/0" (index vacuus) */
+    ctx      = (NomenclatorFigurae*)m->figurae_ctx;
+    persona  = persona_aperta(m) > ZEPHYRUM ? persona_aperta(m)
+             : nomenclator_persona_electa(m);
+    sprintf(titulus, "%s_notae", id ? id : "nomenclator");
+    clavis_libri(persona, clavis);
+    notarum_locus(m, &lat, &alt);
+    redde charta_montare(&ctx->notae, piscina, intern, volumen,
+        &m->ramus, m->actiones, m->figurae, titulus, clavis, lat, alt,
+        systemata);
 }

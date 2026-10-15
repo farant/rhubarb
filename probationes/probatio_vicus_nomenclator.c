@@ -14,6 +14,8 @@
 #include "thema.h"
 #include "manus_ludus.h"
 #include "dispensator.h"
+#include "scriba_liber.h"
+#include "scriba_documentum.h"
 #include "credo.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -171,12 +173,89 @@ _probare_novam (
     CREDO_CHORDA_AEQUALIS_LITERIS(q->cognomen, "Rossi");
 }
 
+/* P5b: notae personae per vicum - Anna creata et aperta (Enter),
+ * ictus in charta, "ix" Esc: gestus per faciem lateris
+ * (nomenclator_gestum_ponere); 'x' in libro "persona/1" voluminis vici;
+ * Ctrl-Shift-Dextra -> pagina II, pulsus vici indicium reficit */
+interior vacuum
+_probare_notas (
+    CredoContextus* c)
+{
+                 Mundus* x;
+                  Vicus* v;
+             ManusLudus* m;
+              Componens* notae;
+                Punctum  locale;
+                Punctum  schirmus;
+            ScribaLiber* l;
+       ScribaDocumentum* d;
+                    i32  i;
+                    b32  inventa;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(aedificare(x, c));
+    v = x->app.vicus;
+    CREDO_VERUM(vicus_acervo_aperire(v, "nomenclator", NIHIL));
+    (vacuum)vicus_pulsare(v);
+    CREDO_NECESSE_NON_NIHIL(nomenclator_frontalis(v));
+    m = manus_ludus_creare(c->piscina, x->app.d);
+    dispensator_recomponere(x->app.d);
+    CREDO_NECESSE(manus_ludus_premere(m, "#nomenclator"));
+    CREDO_VERUM(manus_ludus_scribere(m, "nAnna Rossi"));
+    CREDO_VERUM(manus_ludus_clavem(m, (character)XIII, ZEPHYRUM));
+    CREDO_VERUM(manus_ludus_clavem(m, (character)XIII, ZEPHYRUM));
+    dispensator_recomponere(x->app.d);
+    notae = manus_ludus_invenire(m, "#notae");
+    CREDO_NECESSE_NON_NIHIL(notae);
+    locale.x = XL;
+    locale.y = XXX;
+    schirmus = manus_ludus_ad_schirmum(m, notae, locale);
+    CREDO_VERUM(manus_ludus_premere_ad(m, schirmus.x, schirmus.y));
+    CREDO_VERUM(manus_ludus_scribere(m, "ix"));
+    CREDO_VERUM(manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));
+    (vacuum)motus_gestum_effundere(dispensator_motus(x->app.d),
+        x->app.vicus->repo);
+    l = scriba_liber_aperire_in_spatio(c->piscina,
+        internamentum_creare(c->piscina), x->volumen, "persona/1",
+        LXXII, XXX);
+    d = l ? scriba_liber_pagina(l, chorda_ex_literis("1", c->piscina))
+          : NIHIL;
+    CREDO_NECESSE_NON_NIHIL(d);
+    inventa = FALSUM;
+    per (i = ZEPHYRUM; i < d->latitudo * d->altitudo; i++)
+    {
+        si (scriba_documentum_tabula(d)->cellulae[i] == 'x')
+        {
+            inventa = VERUM;
+        }
+    }
+    CREDO_VERUM(inventa);
+    {
+            Eventus  e;
+        InsulaRamus  rs;
+             chorda* a;
+
+        memset(&e, ZEPHYRUM, magnitudo(Eventus));
+        e.genus                      = EVENTUS_CLAVIS_DEPRESSUS;
+        e.datum.clavis.clavis        = CLAVIS_DEXTER;
+        e.datum.clavis.modificantes  = (i32)(MOD_IMPERIUM | MOD_SHIFT);
+        dispensator_tractare(x->app.d, &e);
+        (vacuum)vicus_pulsare(v);
+        rs = insula_ramus_ex_via(x->app.vicus->repo,
+            dispensator_motus(x->app.d)->spatium_intimum);
+        a  = insula_ramus_attributum(&rs, "pagina_positio");
+        CREDO_VERUM(a && chorda_aequalis_literis(*a, "2"));
+    }
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "latera", _probare_latera, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
     { "verbum", _probare_verbum, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
     { "nova", _probare_novam, mundum_parare, mundum_purgare, NIHIL,
+        NIHIL },
+    { "notae", _probare_notas, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

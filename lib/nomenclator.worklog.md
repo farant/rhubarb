@@ -157,3 +157,35 @@ Tests: aperire, campi, natalis, persona_alia (+4 sections). Plants:
 Enter not opening; empty not removing; MM-DD rejected; age not drawn;
 kind toggle a no-op; delete not closing the view; double click not
 opening - all red.
+
+## 2026-10-15 - P5b: notes post-it in the detail view (membrum__charta)
+
+`nomenclator_montare` takes a `Volumen*` (NIHIL = no notes, every old
+path unchanged); the charta lives in NomenclatorFigurae. Book key
+"persona/<id>".
+
+Which book: the action is wrapped (`agere_et_aptare`, same shape as the
+calendar's agere -> librum_aptare). The book follows `persona_aperta`
+ONLY - in the list the current book is kept, so j/k over the list does
+not create a book index per contact passed (scriba_liber_aperire writes
+the index "pagina 1" when absent). At mount: open contact, else the
+selected one, else "persona/0" (empty list).
+
+Pre-layout locus size (`notarum_locus`) must match `personam_disponere`
+cell for cell: root spacing I each side, toolbar III, upper half PARS L
+(dispositio floors: `corpus * L / C`), notes = the remainder. Pinned by
+the `charta` section (page read back from the volume: area == locus
+minus margins exactly, both ways) - if the detail layout changes, that
+section goes red before the user sees a scrolling post-it.
+
+Test gotcha: scriba paints in its OWN coordinates (text at 0,0 plus its
+status line), so "text inside the notes locus" checks on the host's
+Mandata are wrong - check the text anywhere, pin position separately.
+
+Known edge (left alone, Fran 10-15): delete keeps the notes in the
+volume (undo brings them back); ids are not reused EXCEPT create ->
+undo creation -> create again may reuse the id and inherit its notes.
+
+Plants (all red on the intended assertion): focus pass-through, book
+follows open contact, locus half-height, shadow, vicus volume, vicus
+gesture hook, vicus pulse hook.

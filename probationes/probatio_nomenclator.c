@@ -18,6 +18,9 @@
 #include "mandatum.h"
 #include "thema.h"
 #include "fons.h"
+#include "scriba_liber.h"
+#include "scriba_documentum.h"
+#include "tabula_characterum.h"
 #include "credo.h"
 #include <stdio.h>
 #include <string.h>
@@ -29,6 +32,7 @@ nomen structura {
               Dispensator* d;
                   Volumen* volumen;
        PersonaeDocumentum* documentum;
+                      b32  sine_notis;   /* P5b: sine volumine */
 } Mundus;
 
 interior vacuum
@@ -86,7 +90,8 @@ montare (
     x->repo = insula_repositorium_creare(p, x->intern, "<hospes/>");
     si (   !x->repo || !x->documentum
         || !nomenclator_montare(&x->m, p, x->intern, x->repo, "n1",
-               x->documentum, hodie_fixa, NIHIL, CCCLX, CCCXX, NIHIL))
+               x->documentum, x->sine_notis ? NIHIL : x->volumen,
+               hodie_fixa, NIHIL, CCCLX, CCCXX, NIHIL))
     {
         redde FALSUM;
     }
@@ -363,6 +368,98 @@ effugium (
     Mundus* x)
 {
     clavis_specialis(x, CLAVIS_EFFUGIUM, XXVII, ZEPHYRUM, ZEPHYRUM);
+}
+
+/* P5b: textus commissus (imprimibiles, ut fenestra; scriba "per
+ * TEXTUM venit") */
+interior vacuum
+textum_mittere (
+                 Mundus* x,
+     constans character* t)
+{
+    Eventus e;
+
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus                   = EVENTUS_TEXTUS;
+    e.datum.textus.genus      = EVENTUS_TEXTUS_COMMISSUM;
+    e.datum.textus.contentum  = chorda_ex_literis(t, x->m.piscina);
+    dispensator_tractare(x->d, &e);
+}
+
+/* P5b: pagina I libri (lectio nova ex volumine); NIHIL si abest */
+interior ScribaDocumentum*
+pagina_libri (
+                 Mundus* x,
+     constans character* praefixum,
+                Piscina* p)
+{
+    ScribaLiber* l;
+
+    l = scriba_liber_aperire_in_spatio(p, x->intern, x->volumen,
+        praefixum, LXXII, XXX);
+    redde l ? scriba_liber_pagina(l, chorda_ex_literis("1", p)) : NIHIL;
+}
+
+/* P5b: textus in initio paginae I libri committitur */
+interior b32
+librum_parare (
+                 Mundus* x,
+     constans character* praefixum,
+     constans character* textus,
+                Piscina* p)
+{
+     ScribaDocumentum* d;
+    TabulaCharacterum  folium;
+
+    d = pagina_libri(x, praefixum, p);
+    si (!d)
+    {
+        redde FALSUM;
+    }
+    tabula_initiare(&folium, p, d->latitudo, d->altitudo);
+    memcpy(folium.cellulae, scriba_documentum_tabula(d)->cellulae,
+        (memoriae_index)(d->latitudo * d->altitudo));
+    memcpy(&tabula_cellula(&folium, ZEPHYRUM, ZEPHYRUM), textus,
+        strlen(textus));
+    redde scriba_documentum_committere(d, &folium) > ZEPHYRUM;
+}
+
+/* P5b: littera in pagina I libri? */
+interior b32
+littera_in_libro (
+                 Mundus* x,
+     constans character* praefixum,
+              character  littera,
+                Piscina* p)
+{
+              ScribaDocumentum* d;
+    constans TabulaCharacterum* t;
+                           i32  i;
+
+    d = pagina_libri(x, praefixum, p);
+    si (!d)
+    {
+        redde FALSUM;
+    }
+    t = scriba_documentum_tabula(d);
+    per (i = ZEPHYRUM; i < t->latitudo * t->altitudo; i++)
+    {
+        si (t->cellulae[i] == (i8)littera)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* P5b: persona aperitur ictu duplici in ordine p<id> */
+interior b32
+personam_aperire (
+                 Mundus* x,
+     constans character* ordo,
+                Piscina* p)
+{
+    redde ictus_in(x, ordo, p) && ictus_in(x, ordo, p);
 }
 
 /* persona id: nomina (praenomen|cognomen|titulus) = "a|b|c" ? */
@@ -1015,6 +1112,162 @@ _probare_personam_aliam (
     CREDO_VERUM(campus_est(x, "persona_aperta", NIHIL));
 }
 
+/* P5b: notae - liber "persona/<id>" in dimidio infero visus personae;
+ * liber personam apertam sequitur; index notas non ostendit */
+interior vacuum
+_probare_notas (
+    CredoContextus* c)
+{
+      Mundus* x;
+     Mandata* md;
+       Fines  f;
+       Fines  totum;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(librum_parare(x, "persona/1", "quinque", c->piscina));
+    CREDO_NECESSE(contactus_parare(x, c->piscina));
+    totum.x         = ZEPHYRUM;
+    totum.y         = ZEPHYRUM;
+    totum.latitudo  = CCCLX;
+    totum.altitudo  = CCCXX;
+    CREDO_NECESSE(personam_aperire(x, "p1", c->piscina));
+    CREDO_VERUM(campus_est(x, "persona_aperta", "1"));
+    f = fines_componentis(x, "notae", c->piscina);
+    CREDO_NECESSE(f.altitudo > ZEPHYRUM);
+    /* scriba in coordinatis suis pingit: textus ubivis (locus in
+     * sectione charta probatur) */
+    md = reddere(x, c->piscina);
+    CREDO_VERUM(textus_in(md, totum, "quinque", -I));
+    /* index: notae absunt */
+    effugium(x);
+    md = reddere(x, c->piscina);
+    CREDO_FALSUM(textus_in(md, totum, "quinque", -I));
+    /* persona II: liber suus (vacuus); I redit */
+    CREDO_NECESSE(personam_aperire(x, "p2", c->piscina));
+    CREDO_VERUM(campus_est(x, "persona_aperta", "2"));
+    md = reddere(x, c->piscina);
+    CREDO_FALSUM(textus_in(md, totum, "quinque", -I));
+    effugium(x);
+    CREDO_NECESSE(personam_aperire(x, "p1", c->piscina));
+    md = reddere(x, c->piscina);
+    CREDO_VERUM(textus_in(md, totum, "quinque", -I));
+}
+
+/* P5b: umbra plana: rectangulum impletum fines (II infra-dextrorsum)
+ * exactis? */
+interior b32
+umbra_est (
+    Mandata* md,
+      Fines  area)
+{
+    constans Mandatum* x;
+                  i32  i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        x = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   x->genus == MANDATUM_RECTANGULUM && x->impletum
+            && x->fines.x == area.x + II && x->fines.y == area.y + II
+            && x->fines.latitudo == area.latitudo
+            && x->fines.altitudo == area.altitudo)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* P5b: charta cellulis exacta - pagina nova ex loco "notae" (sine
+ * volutione, sine spatio vacuo): area = (pagina + II) x (pagina + III)
+ * cellulae = locus minus margines chartae et umbra */
+interior vacuum
+_probare_chartam (
+    CredoContextus* c)
+{
+               Mundus* x;
+            Componens* scriba;
+                Fines  locus;
+     ScribaDocumentum* d;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(contactus_parare(x, c->piscina));
+    CREDO_NECESSE(personam_aperire(x, "p1", c->piscina));
+    locus   = fines_componentis(x, "notae", c->piscina);
+    scriba  = componens_invenire_per_id(dispensator_arbor(x->d),
+        chorda_ex_literis("radix", c->piscina));
+    d       = pagina_libri(x, "persona/1", c->piscina);
+    CREDO_NECESSE(scriba && d && locus.altitudo > ZEPHYRUM);
+    CREDO_AEQUALIS_S32(scriba->fines.x, locus.x + VIII);
+    CREDO_AEQUALIS_S32(scriba->fines.y, locus.y + VIII);
+    CREDO_AEQUALIS_S32(scriba->fines.latitudo, ((s32)d->latitudo + II)
+        * VI);
+    CREDO_AEQUALIS_S32(scriba->fines.altitudo, ((s32)d->altitudo + III)
+        * VIII);
+    CREDO_AEQUALIS_S32((locus.latitudo - XVIII) / VI, (s32)d->latitudo
+        + II);
+    CREDO_AEQUALIS_S32((locus.altitudo - XVIII) / VIII,
+        (s32)d->altitudo + III);
+    CREDO_VERUM(umbra_est(reddere(x, c->piscina), scriba->fines));
+}
+
+/* P5b: focus in notis - ictus in charta; claves nomenclatoris (j X t)
+ * interea nihil agunt, "ix" in librum; Esc (modus normalis), Esc ex
+ * notis (visus personae manet), Esc ad indicem */
+interior vacuum
+_probare_focum_notarum (
+    CredoContextus* c)
+{
+    Mundus* x;
+     Motus* motus;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(contactus_parare(x, c->piscina));
+    motus = dispensator_motus(x->d);
+    /* hospes gestum ponit (ut vicus in foco lateris) */
+    nomenclator_gestum_ponere(motus, &x->m);
+    CREDO_NECESSE(personam_aperire(x, "p1", c->piscina));
+    CREDO_NECESSE(ictus_in(x, "notae", c->piscina));
+    CREDO_VERUM(chorda_continet(motus->spatium_intimum,
+        chorda_ex_literis("_notae", c->piscina)));
+    textum_mittere(x, "i");
+    textum_mittere(x, "x");
+    effugium(x);
+    clavis(x, 'j');
+    clavis(x, 'X');
+    clavis(x, 't');
+    CREDO_VERUM(campus_est(x, "campus_electus", NIHIL));
+    CREDO_VERUM(persona_est(x, I, "Anna|Rossi|"));
+    CREDO_VERUM(personae_persona(x->documentum, I)->genus
+        == PERSONA_HOMO);
+    (vacuum)motus_gestum_effundere(motus, x->repo);
+    CREDO_VERUM(littera_in_libro(x, "persona/1", 'x', c->piscina));
+    effugium(x);
+    CREDO_FALSUM(chorda_continet(motus->spatium_intimum,
+        chorda_ex_literis("_notae", c->piscina)));
+    CREDO_VERUM(campus_est(x, "persona_aperta", "1"));
+    effugium(x);
+    CREDO_VERUM(campus_est(x, "persona_aperta", NIHIL));
+}
+
+/* P5b: sine volumine - visus personae sine notis (locus manet),
+ * reficere FALSUM */
+interior vacuum
+_probare_sine_volumine (
+    CredoContextus* c)
+{
+    Mundus* x;
+
+    x              = (Mundus*)c->datum;
+    x->sine_notis  = VERUM;
+    CREDO_NECESSE(contactus_parare(x, c->piscina));
+    nomenclator_gestum_ponere(dispensator_motus(x->d), &x->m);
+    CREDO_NECESSE(personam_aperire(x, "p1", c->piscina));
+    CREDO_VERUM(adest(x, "notae", c->piscina));
+    CREDO_FALSUM(componens_invenire_per_id(dispensator_arbor(x->d),
+        chorda_ex_literis("radix", c->piscina)) != NIHIL);
+    CREDO_FALSUM(nomenclator_reficere(&x->m));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "montatio", _probare_montationem, mundum_parare, mundum_purgare,
         NIHIL, NIHIL },
@@ -1051,6 +1304,14 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "natalis", _probare_natalem, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
     { "persona_alia", _probare_personam_aliam, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "notae", _probare_notas, mundum_parare, mundum_purgare, NIHIL,
+        NIHIL },
+    { "charta", _probare_chartam, mundum_parare, mundum_purgare, NIHIL,
+        NIHIL },
+    { "focus_notarum", _probare_focum_notarum, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "sine_volumine", _probare_sine_volumine, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

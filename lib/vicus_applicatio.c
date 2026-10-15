@@ -1456,7 +1456,6 @@ nomenclatorem_montare_in_vico (
 {
     ContextusNomenclatoris* cn;
 
-    (vacuum)volumen;
     (vacuum)argumentum;
     cn = (ContextusNomenclatoris*)ctx;
     si (!cn)
@@ -1470,8 +1469,20 @@ nomenclatorem_montare_in_vico (
     }
     redde cn->documentum && nomenclator_montare(
         (NomenclatorMontatio*)sedes, piscina, intern, repo, id,
-        cn->documentum, hodie_vici, cn->vicus, latitudo, altitudo,
-        cn->systemata);
+        cn->documentum, volumen, hodie_vici, cn->vicus, latitudo,
+        altitudo, cn->systemata);
+}
+
+/* P5b: pulsus lateris nomenclatoris - notae refectae */
+interior VicusPulsus
+nomenclatoris_pulsare (
+    vacuum* ctx)
+{
+    VicusPulsus p;
+
+    p.mutatum = nomenclator_reficere((NomenclatorMontatio*)ctx);
+    p.finitus = FALSUM;
+    redde p;
 }
 
 interior vacuum
@@ -1486,6 +1497,11 @@ nomenclatorem_describere (
     f->figurae        = m->figurae;
     f->componere      = nomenclator_componere;
     f->componere_ctx  = m;
+    /* P5b: notae personae - gestus scribae nidificatae, pulsus */
+    f->gestum_ponere  = nomenclator_gestum_ponere;
+    f->gestum_ctx     = m;
+    f->pulsare        = nomenclatoris_pulsare;
+    f->pulsare_ctx    = m;
 }
 
 /* folium paginae novae (S2b): lateris sinistri cellulae (dimidium
