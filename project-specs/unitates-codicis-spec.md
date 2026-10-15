@@ -78,11 +78,11 @@ Unit attributes:
   judged by house rules), exemplar/investigatio (ours, relaxed),
   archivata (frozen). Inherited by every file of the unit. Custody is
   what the nine exclusion lists of §0 are all asking.
-- **usus** (audience, tools only, MANY allowed): homo (tools Fran
+- **usus** (audience, tools only, MANY allowed; §VI⅞b): homo (tools Fran
   chooses to run - vox, quaestio), agens (LLM/developer-facing -
-  legati, natura, silva.py, mensor quaestio), aedificatio
+  legati, natura, silva.py, mensor quaestio), machina
   (build/validation - fabrica, aedilis, examen, formator, lint, gate
-  runners). mensor is agens + aedificatio.
+  runners). mensor is agens + machina.
 
 **File** properties, relative to its unit:
 - **munus** (role): fons (source), caput (header), probatio (test),
@@ -224,6 +224,29 @@ extend elementa_programmatis rather than start a parallel model.
   follow their test (`md/probationes/fixa/computus/` -> the owner of
   `probatio_md_computus`).
 
+## VI⅞b. Q5, Q6, Q7 answered (Fran 10-15)
+
+- **Q5 custody** = how strictly house rules govern the code; four
+  values: domestica (ours, all rules), remissa (ours, loose - house
+  style never blocks: knotapel, whose C99 plants unci fumus XX already
+  excludes), aliena (foreign, never judged: vendor/, oracula/),
+  archivata (frozen, no rules, no gates: archivum/). "exemplar" is a
+  KIND if ever needed, not a custody. Kind and custody stay separate
+  because units are PROMOTED: knotapel is research (default remissa),
+  yet math foundations already graduated from it into house libraries
+  - promotion changes custody, not necessarily kind.
+- **Q6 tool audience** = homo / agens / machina (multi-valued
+  property). Reuses the house caller vocabularies: tabularium `actor`
+  fran/claude/machina, mensor `vocator` homo/agens/commissio/uncus/
+  fabrica/frigida (the last four = machine callers). Free audit:
+  declared audience vs OBSERVED callers in the run record.
+- **Q7 CLI** = `bin/fabrica quid VIA` (unit, kind, role, provenance,
+  custody, language), beside the wished `bin/fabrica cur VIA`
+  (…F89); fabrica already loads the declarations and owns gate
+  derivation (the second consumer). Not natura (reusable ontology,
+  no rhubarb policy - §VI¾). Agents: the same answer as a legati MCP
+  tool `unitas {via}`.
+
 ## VII. Interrogationes - documentation as typed questions (Fran 10-15)
 
 A unit exposes what it can do by DECLARING QUESTIONS it answers
@@ -271,9 +294,9 @@ agents) - a seed corpus only if Fran moves entries over.
    library unit with files as members? Per-library units make
    "consumers of xar" a real query; one big unit is simpler.
 4. ~~Tests and fixtures~~ - answered §VI⅞ (roles in the tested unit).
-5. Custody values: are exemplar and investigatio the same thing?
-6. Tool audience names: homo / agens / aedificatio - or different?
-7. Name of the CLI (`natura quid`? `fabrica quid`? its own binary?).
+5. ~~Custody values~~ - answered §VI⅞b.
+6. ~~Tool audience names~~ - answered §VI⅞b (homo / agens / machina).
+7. ~~CLI~~ - answered §VI⅞b (`bin/fabrica quid VIA` + legati `unitas`).
 8. ~~Kind registry as natura~~ - answered §VI¾ (three layers).
 
 ## AUDIENDA (not verified)
