@@ -34,6 +34,7 @@
 #include "xar.h"
 #include "json.h"
 #include "http.h"
+#include "reactor.h"
 
 
 /* ========================================================================
@@ -253,6 +254,9 @@ nomen structura {
         HttpVecturaRivi vectura_rivi;           /* rivus (quaestio-rivus
                                                   * T4); exsequi NIHIL =
                                                   * ordinaria */
+    /* url: NIHIL = API Anthropic (probationes: servus localis,
+     * http-vocatio R6) */
+    constans character* url;
 } VatesOptiones;
 
 nomen structura Vates Vates;   /* opacum */
@@ -317,6 +321,46 @@ vates_mittere_rivum (
        VatesRivus  rivus,
            vacuum* datum,
           Piscina* piscina);
+
+/* --- per rivum NON obstruens (http-vocatio II.5) --- */
+
+nomen structura VatesVocatio VatesVocatio;   /* opacum */
+
+/* SEMEL (etiam post abrumpere, R9); numquam intra vates_vocare_rivum;
+ * piscinam vocationis NE destruat (codex post reditum currit) */
+nomen vacuum (*VatesVocatioFinis)(vacuum* datum, VatesVocatio* vocatio);
+
+/* Ut vates_mittere_rivum, NON obstruens: super reactorem vocantis
+ * (http_vocare), iteratio solum ante deltam primam, mora iterandi per
+ * timer (numquam dormit); responsum IDEM ac via obstruens pro eisdem
+ * eventis (iudicium commune). Non per vecturam rivi - herbarium et
+ * fictus viam B non vident (R10). NIHIL solum si argumenta NIHIL;
+ * ceteri defectus (etiam LIMES) per finem. */
+VatesVocatio*
+vates_vocare_rivum (
+                 Vates* vates,
+          VatesPetitio* petitio,
+                chorda  propositum,
+               Reactor* reactor,
+            VatesRivus  rivus,
+                vacuum* datum,
+     VatesVocatioFinis  finis,
+                vacuum* finis_datum,
+               Piscina* piscina);
+
+/* NIHIL ante finem */
+VatesResponsum*
+vates_vocatio_responsum (
+    constans VatesVocatio* vocatio);
+
+b32
+vates_vocatio_finita (
+    constans VatesVocatio* vocatio);
+
+/* synchronus: finis ante reditum, responsum error RETE "abruptum" */
+vacuum
+vates_vocationem_abrumpere (
+    VatesVocatio* vocatio);
 
 constans character*
 vates_error_descriptio (
