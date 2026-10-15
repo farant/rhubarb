@@ -684,6 +684,39 @@ _sub_build (
     redde FALSUM;
 }
 
+/* AURUM DEBITI (canalis lectionum T2, 2026-10-14): via plagulae quam
+ * debitum scripturae membri nominat EXTRA build/ (aurum commissum:
+ * computus basis.tsv, oraculum recusata.tsv). Debitum in vestigio
+ * membri stat (fabrica-7 T3: scriptura in modo rescribendi permissa),
+ * ergo lectio eius ut 'opus actionis' omittebatur - aurum mutatum
+ * transitum veterem servabat. In modo ordinario aurum INGRESSUS est;
+ * in modo rescribendi S id ut exitum iam excludit. Debita sub build/
+ * (scrinia probationum) et directoria ('/' finale) opus manent. */
+interior b32
+_aurum_debiti (
+    constans FabricaActio* actio,
+                   chorda  via)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; actio->debita != NIHIL
+         && i < xar_numerus(actio->debita); i++)
+    {
+        constans FabricaDebitum* d = (constans FabricaDebitum*)
+            xar_obtinere(actio->debita, i);
+
+        si (   d->via.mensura > ZEPHYRUM
+            && d->via.datum[d->via.mensura - I] != '/'
+            && !(d->via.mensura >= VI
+                 && memcmp(d->via.datum, "build/", VI) == ZEPHYRUM)
+            && chorda_aequalis(d->via, via))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
 /* VESTIGIUM TRANSITUS (spec 3 par. XII): liber cursus IN LOCO actionis
  * iudicium. Leges (generator via _lectiones_colligere manet):
  *   - via cum S in libro eodem = EXITUS cursus: L/X/A eius omittuntur
@@ -860,7 +893,8 @@ fabricae_lectiones_transitus_colligere (
              * ingressus - filii (sqlite, redirectio) S non notant
              * (plan 5 T5b). Commune alienis patet: non excusat. */
             si (   actio->vestigia != NIHIL
-                && fabricae_in_locis(actio->vestigia, via, piscina))
+                && fabricae_in_locis(actio->vestigia, via, piscina)
+                && !_aurum_debiti(actio, via))
             {
                 perge;
             }

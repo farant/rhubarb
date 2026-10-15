@@ -204,6 +204,23 @@ write only through filum (examen code clean or tolerated with reason);
 the fixture plant re-runs a member. Converting = declaration with
 `porta=`, the `fabrica.stml` line, the 4-line runner.
 
+## As built so far
+
+- **T1** (4e80dce5): code 96 + `canalis_debita.tsv` (222 files, 478
+  sites); examen, percursus, legatus apply it; colloquium follows the
+  rule (D2 script via filum, getenv bridge; interpreter gap parked
+  …AV0N8).
+- **T2 html**: 15 `fopen` in 11 test files -> `lectiones_fopen` (same
+  shape - the suggested replacement since T1); 11 debt lines deleted
+  (211 left; html's two tools stay until touched). Recorded content
+  reads of html members 1 -> 237. Proof: md fixture edit ran the
+  member (before: kept); oracle `gradus_oraculum.sh html -ref
+  1713547e^` 14/14. **Found and fixed on the way:** golden files with a
+  `<debitum_scripturae>` were dropped from the trace as the member's
+  own work - a golden edit never re-ran its test (all six computus
+  goldens + the html oracle refusals). `lib/fabrica.c` `_aurum_debiti`
+  (Fran 2026-10-14); see lib/fabrica.worklog.md.
+
 ## VII. Order (plan to follow)
 
 T1 the examen code (`genus="canalis"` rows, call check, code 96) + the

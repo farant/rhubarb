@@ -3150,3 +3150,27 @@ byte-identical before/after (computus outside ms_ columns). Plant
 (class name in oratio_registrum.c, no runner run) changed verba's
 output, restore identical. Nine radices_manu lines deleted. The runner
 (oratio/compile_probationes.sh) is the next step.
+
+## 2026-10-14 - golden debts were invisible as inputs (canalis lectionum T2)
+
+Found while migrating html's tests to lectiones_fopen: after the
+migration the md fixture edit re-ran its member, but an edit of
+html/probationes/fixa/oraculum/recusata.tsv was still "servata". The
+read WAS logged now, and then dropped by the trace rule "a read inside
+the action's OWN footprint is its own work, not an input"
+(`fabricae_lectiones_transitus_colligere`) - because a member's
+`<debitum_scripturae>` is added to its footprint (fabrica-7 T3, so the
+rewrite mode may write it). So for every committed golden file with a
+debt (the six computus basis.tsv, the html oracle refusals) an edit
+never re-ran the test that checks against it.
+Fix: `_aurum_debiti` - a read of a FILE debt outside build/ is an input.
+In normal mode the golden is read and recorded; in rewrite mode the run
+writes it, so the existing S rule ("written in this run = output")
+still excludes it. Debts under build/ and directory debts stay "own
+work" (scratch files a previous run left must not enter the key). Unit
+test VIId in probatio_fabrica_iudicium (trap there: `ordo` holds actions
+BY VALUE - a field set after `mundi_ordinare_fictas` is absent from the
+copies; the section re-orders). Plant (old drop) -> VIId red.
+Real tree: golden recorded (`L html/probationes/fixa/oraculum/
+recusata.tsv`), golden edited -> member ran and failed, restored ->
+passes; ORACULUM_SCRIBERE=1 still writes it without a footprint refusal.
