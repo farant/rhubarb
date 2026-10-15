@@ -11,6 +11,7 @@ declare -a SOURCE_FILES=(
     "lib/actio.c"
     "lib/actor.c"
     "lib/admonitiones.c"
+    "lib/admonitiones_visus.c"
     "lib/aedilis.c"
     "lib/aemulator.c"
     "lib/aemulator_hospes.c"

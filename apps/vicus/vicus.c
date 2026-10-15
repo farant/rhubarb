@@ -20,6 +20,7 @@
 #include "delineare_mandata.h"
 #include "ludus_fenestra.h"
 #include "vicus_applicatio.h"
+#include "praeconium.h"
 #include "energia.h"
 #include "clipboard_platform.h"
 #include "vicus_quaestio_porta.h"
@@ -175,6 +176,9 @@ principale (
     vicus_horologium_ponere(app.vicus, vicus_horologium_locale, NIHIL);
     /* S5: pila (IOKit; machina mensae: nulla) */
     vicus_pilam_ponere(app.vicus, pilam_systematis, NIHIL);
+    /* T4a: admonitiones ex libro praeconii (colloquia Claude Code) */
+    (vacuum)vicus_applicatio_admonitiones_aperire(&app,
+        praeconium_via(piscina));
     /* L5: Cmd+V in pictore: imago e clipboard in stratum novum */
     vicus_applicatio_imaginis_portam_ponere(&app, imaginem_glutinatam,
         NIHIL);

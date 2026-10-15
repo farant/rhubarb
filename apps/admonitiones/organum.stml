@@ -1,0 +1,24 @@
+<!-- organum.stml - manifestum centri admonitionum (colloquia-plan T4a):
+     index admonitionum in latere vici. Admonitiones ipsae in memoria
+     hospitis (sequax libri praeconii, per ligamen); lectae per campum
+     radicis admonitiones_lectae_ad (vicus) - hic solum status visus. -->
+<organum genus="admonitiones" versio="1">
+
+  <actiones>
+    <actio nomen="admonitiones.agere"/>
+  </actiones>
+
+  <status>
+    <campus nomen="electa" typus="textus" vita="transiens"
+            scriptor="admonitiones.agere"
+            nota="id admonitionis electae (stabilis dum novae
+                  adveniunt); absens aut ignota = prima paginae"/>
+    <campus nomen="pagina" typus="numerus" vita="transiens"
+            scriptor="admonitiones.agere"
+            nota="pagina indicis (0 = prima); electa paginam
+                  sequitur"/>
+  </status>
+
+  <basis genus="organum_commune"/>
+  <montationes/>
+</organum>

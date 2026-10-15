@@ -132,6 +132,13 @@ declare -a RADIX_FONTES=(
     "fasti_fontes"     # nomenclator-plan P6: fontes dierum
     "calendarium_liturgicum" # A2b: figurae calendarii (dies liturgici)
     "sanctorale"
+    # colloquia-plan T4a: centrum admonitionum in vico
+    "admonitiones_visus"
+    "admonitiones"
+    "praeconium"
+    "colloquia"
+    "multiplexor"
+    "processus_posix"
     # scriba H2: cauda documenti per historia
     "historia"
     "pictor_figurae"

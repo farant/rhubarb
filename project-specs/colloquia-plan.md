@@ -86,6 +86,13 @@ phase that needs it. Header text shown to Fran before coding.*
 - T4a library part DONE 2026-10-15: `admonitiones` (sorted index, copies,
   ex_eventu) + `praeconium_legere_ab` (incremental read). Next: vicus side
   of T4a (colloquia system + notification-center genus; manifest first).
+- T4a vicus side 2026-10-15: generic vicus hook (`vicus_systema_addere`,
+  `vicus_radicem_scribere`); `admonitiones_visus` (center genus + log
+  follower); root fields `admonitiones_non_lectae`, `admonitio_nova`,
+  `admonitiones_lectae_ad` (persistent); `$notifications` opens the
+  center; Enter / double-click selects the tmux pane (multiplexor).
+  The follower starts only via `vicus_applicatio_admonitiones_aperire`
+  (apps), never in tests. Deviations in lib/admonitiones_visus.worklog.md.
 
 ## V. Hook facts (Claude Code docs, checked 2026-10-15)
 

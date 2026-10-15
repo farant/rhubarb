@@ -7,6 +7,8 @@
 #include "kalendarium.h"
 #include "nomenclator.h"
 #include "iussum.h"
+#include "admonitiones_visus.h"
+#include "multiplexor.h"
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
@@ -1624,6 +1626,185 @@ folii_lineae (
 
 
 /* ==================================================
+ * Admonitiones (colloquia-plan T4a)
+ * ================================================== */
+
+/* index communis (centra omnia), sequax (solum post
+ * vicus_applicatio_admonitiones_aperire), systema */
+nomen structura {
+          Admonitiones* index;
+    AdmonitionumSequax  sequax;
+                   b32  sequitur;     /* sequax initiatus */
+                   b32  applicatae;   /* lectae_ad radicis applicatae */
+                   s32  non_lectae;   /* scriptum ultimum; -1 nullum */
+       StatusSystemata* systemata;
+               Piscina* piscina;
+} ContextusAdmonitionum;
+
+interior s64
+nunc_vici (
+    vacuum* ctx)
+{
+    (vacuum)ctx;
+    redde (s64)time(NIHIL) * (s64)M;
+}
+
+/* porta actionis: "panellus" -> argumentum "<panellus> <servitor>",
+ * panellus in servitore suo eligitur (T4c: latus terminalis) */
+interior b32
+admonitionem_agere (
+                vacuum* ctx,
+    constans Admonitio* x)
+{
+    ContextusAdmonitionum* ca;
+              Multiplexor  mx;
+                character  argumentum[CCLVI];
+                character* spatium;
+
+    ca = (ContextusAdmonitionum*)ctx;
+    si (   !ca || !x || !chorda_aequalis_literis(x->actio, "panellus")
+        || x->argumentum.mensura == ZEPHYRUM
+        || x->argumentum.mensura >= CCLVI)
+    {
+        redde FALSUM;
+    }
+    memcpy(argumentum, x->argumentum.datum, (size_t)
+        x->argumentum.mensura);
+    argumentum[x->argumentum.mensura] = '\0';
+    memset(&mx, ZEPHYRUM, magnitudo(mx));
+    spatium = strchr(argumentum, ' ');
+    si (spatium)
+    {
+        *spatium = '\0';
+        si (spatium[I])
+        {
+            mx.socket = spatium + I;
+        }
+    }
+    redde multiplexor_panellum_eligere(&mx,
+        chorda_ex_literis(argumentum,
+        ca->piscina), ca->piscina);
+}
+
+/* systema "admonitiones" (pulsus vici): lectae ex campo radicis semel,
+ * liber omni pulsu (legere_ab: fopen et ftell solum nisi crevit), campi
+ * radicis cum mutantur */
+interior b32
+systema_admonitionum (
+     Vicus* v,
+    vacuum* ctx)
+{
+    ContextusAdmonitionum* ca;
+                   chorda* a;
+                   chorda  recentissima;
+                      s64  lectae_ad;
+                      s32  u;
+                character  numerus[XVI];
+                      b32  mutatum;
+
+    ca       = (ContextusAdmonitionum*)ctx;
+    mutatum  = FALSUM;
+    si (!ca->sequitur)
+    {
+        redde FALSUM;
+    }
+    si (!ca->applicatae)
+    {
+        a = insula_attributum(v->repo, "admonitiones_lectae_ad");
+        si (a && chorda_ut_s64(*a, &lectae_ad))
+        {
+            (vacuum)admonitiones_lectas_notare_ad(ca->index, lectae_ad);
+        }
+        ca->applicatae = VERUM;
+    }
+    si (   admonitiones_sequi(&ca->sequax, &recentissima) > ZEPHYRUM
+        && recentissima.mensura > ZEPHYRUM)
+    {
+        (vacuum)vicus_radicem_scribere(v, "admonitiones",
+            "admonitio_nova", chorda_ut_cstr(recentissima,
+            ca->sequax.scheda));
+        mutatum = VERUM;
+    }
+    u = (s32)admonitiones_non_lectae(ca->index);
+    si (u != ca->non_lectae)
+    {
+        sprintf(numerus, "%d", (integer)u);
+        (vacuum)vicus_radicem_scribere(v, "admonitiones",
+            "admonitiones_non_lectae", numerus);
+        ca->non_lectae  = u;
+        mutatum         = VERUM;
+    }
+    redde mutatum;
+}
+
+interior b32
+admonitiones_montare_in_vico (
+                 vacuum* sedes,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+     InsulaRepositorium* repo,
+     constans character* id,
+     constans character* argumentum,
+                    i32  latitudo,
+                    i32  altitudo,
+                 vacuum* ctx)
+{
+    ContextusAdmonitionum* ca;
+     AdmonitionumMontatio* m;
+
+    (vacuum)volumen;
+    (vacuum)argumentum;
+    ca  = (ContextusAdmonitionum*)ctx;
+    m   = (AdmonitionumMontatio*)sedes;
+    si (   !ca
+        || !admonitiones_montare(m, piscina, intern, repo, id,
+               ca->index, admonitionem_agere, ca, latitudo, altitudo,
+               ca->systemata))
+    {
+        redde FALSUM;
+    }
+    m->nunc = nunc_vici;
+    redde VERUM;
+}
+
+interior vacuum
+admonitiones_describere (
+         vacuum* montatio,
+    VicusFacies* f)
+{
+    AdmonitionumMontatio* m;
+
+    m                 = (AdmonitionumMontatio*)montatio;
+    f->actiones       = m->actiones;
+    f->figurae        = m->figurae;
+    f->componere      = admonitiones_componere;
+    f->componere_ctx  = m;
+}
+
+b32
+vicus_applicatio_admonitiones_aperire (
+        VicusApplicatio* app,
+     constans character* via)
+{
+    ContextusAdmonitionum* ca;
+
+    si (!app || !app->admonitionum || !via)
+    {
+        redde FALSUM;
+    }
+    ca = (ContextusAdmonitionum*)app->admonitionum;
+    si (ca->sequitur)
+    {
+        redde FALSUM;
+    }
+    ca->sequitur = admonitiones_sequacem_initiare(&ca->sequax,
+        ca->piscina, ca->index, via, CCLVI * M);
+    redde ca->sequitur;
+}
+
+
+/* ==================================================
  * Applicatio
  * ================================================== */
 
@@ -1713,6 +1894,7 @@ vicus_applicatio_aedificare (
    ContextusKalendarii* ck;
 ContextusNomenclatoris* cn;
   ContextusQuaestionis* cq;
+ ContextusAdmonitionum* cad;
        StatusSystemata* systemata;
 
     si (!app || !piscina || !intern || !volumen)
@@ -1782,6 +1964,19 @@ ContextusNomenclatoris* cn;
         memset(cq, ZEPHYRUM, magnitudo(ContextusQuaestionis));
     }
     app->quaestionis = cq;
+    /* T4a: admonitiones - index communis; sequax post
+     * vicus_applicatio_admonitiones_aperire */
+    cad = (ContextusAdmonitionum*)piscina_allocare(piscina,
+        magnitudo(ContextusAdmonitionum));
+    si (cad)
+    {
+        memset(cad, ZEPHYRUM, magnitudo(ContextusAdmonitionum));
+        cad->index       = admonitiones_creare(piscina, CC);
+        cad->non_lectae  = -I;
+        cad->systemata   = systemata;
+        cad->piscina     = piscina;
+    }
+    app->admonitionum = cad;
     cs = (ContextusScribae*)piscina_allocare(piscina,
         magnitudo(ContextusScribae));
     cs->systemata = systemata;
@@ -1807,6 +2002,9 @@ ContextusNomenclatoris* cn;
                "calendarium", "agenda", piscina)
         || !aperiens_fixum_registrare(cs->iussa, app->vicus, "contacts",
                "nomenclator", NIHIL, piscina)
+        || !cad || !cad->index
+        || !aperiens_fixum_registrare(cs->iussa, app->vicus,
+               "notifications", "admonitiones", NIHIL, piscina)
         || !cyclum_registrare(cs->iussa, app->vicus, "pictor-next", I,
                piscina)
         || !cyclum_registrare(cs->iussa, app->vicus, "pictor-prev", -I,
@@ -1835,6 +2033,12 @@ ContextusNomenclatoris* cn;
                magnitudo(NomenclatorMontatio),
                nomenclatorem_montare_in_vico, nomenclatorem_describere,
                cn)
+        || !vicus_genus_addere(app->vicus, "admonitiones",
+               magnitudo(AdmonitionumMontatio),
+               admonitiones_montare_in_vico, admonitiones_describere,
+               cad)
+        || !vicus_systema_addere(app->vicus, "admonitiones",
+               systema_admonitionum, cad)
         || !vicus_aperire(app->vicus, INDEX_ORDINARIUS))
     {
         causa = app->vicus ? vicus_causa(app->vicus)

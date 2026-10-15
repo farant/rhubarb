@@ -203,7 +203,15 @@ nomen structura {
               VicusPila  pila;        /* S5: NIHIL = nulla */
                  vacuum* pila_ctx;
         StatusSystemata* systemata;   /* S7b: NIHIL = nulla */
+                    /* T4a: vicus_systema_addere (privatum) */
+                    Xar* systemata_hospitis;
 } Vicus;
+
+/* T4a (colloquia-plan): systema hospitis - in omni vicus_pulsare
+ * vocatur (post horologium); campos radicis per vicus_radicem_scribere
+ * sub titulo suo scribit (actio systema="verum" in manifesto radicis).
+ * VERUM = mutatum (quadrum pingendum). */
+nomen b32 (*VicusSystema)(Vicus* v, vacuum* ctx);
 
 Vicus*
 vicus_creare (
@@ -221,6 +229,23 @@ vicus_genus_addere (
           VicusMontator  montare,
         VicusDescriptor  describere,
                  vacuum* ctx);
+
+/* T4a: titulus iteratus, systema aut titulus NIHIL: FALSUM */
+b32
+vicus_systema_addere (
+                  Vicus* v,
+     constans character* titulus,
+           VicusSystema  systema,
+                 vacuum* ctx);
+
+/* campum radicis scribere scriptore dato (valor NIHIL = tollere);
+ * FALSUM si recusatum (domini) */
+b32
+vicus_radicem_scribere (
+                  Vicus* v,
+     constans character* scriptor,
+     constans character* titulus,
+     constans character* valor);
 
 /* S7b: systemata status (organum_montatio.h) - vicus_aperire ea creat
  * (conservatio, relatio, dimissio) post repositorium et radicem cum eis

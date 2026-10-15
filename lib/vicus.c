@@ -445,6 +445,13 @@ campos_mutator (
     }
 }
 
+/* T4a: systema hospitis (vicus_systema_addere) */
+nomen structura {
+          chorda  titulus;
+    VicusSystema  systema;
+          vacuum* ctx;
+} SystemaHospitis;
+
 /* S7a: radicem ut scriptor datus mutare (actio aut systema; domini ex
  * manifesto); scriptor prior restituitur */
 interior b32
@@ -1227,6 +1234,8 @@ vicus_creare (
     v->tabulae   = xar_creare(piscina, (i32)magnitudo(VicusTabula));
     v->petitiones  = xar_creare(piscina,
         (i32)magnitudo(PetitioAcervi));
+    v->systemata_hospitis = xar_creare(piscina,
+        (i32)magnitudo(SystemaHospitis));
     redde v;
 }
 
@@ -1418,6 +1427,60 @@ vicus_genus_addere (
     g->describere  = describere;
     g->ctx         = ctx;
     redde VERUM;
+}
+
+b32
+vicus_systema_addere (
+                  Vicus* v,
+     constans character* titulus,
+           VicusSystema  systema,
+                 vacuum* ctx)
+{
+    SystemaHospitis* s;
+             chorda  t;
+                i32  i;
+
+    si (!v || !v->systemata_hospitis || !titulus || !systema)
+    {
+        redde FALSUM;
+    }
+    t = internare(v, titulus);
+    per (i = ZEPHYRUM; i < xar_numerus(v->systemata_hospitis); i++)
+    {
+        si (chorda_aequalis(((SystemaHospitis*)xar_obtinere(
+            v->systemata_hospitis, i))->titulus, t))
+        {
+            redde FALSUM;
+        }
+    }
+    s = (SystemaHospitis*)xar_addere(v->systemata_hospitis);
+    si (!s)
+    {
+        redde FALSUM;
+    }
+    s->titulus  = t;
+    s->systema  = systema;
+    s->ctx      = ctx;
+    redde VERUM;
+}
+
+b32
+vicus_radicem_scribere (
+                  Vicus* v,
+     constans character* scriptor,
+     constans character* titulus,
+     constans character* valor)
+{
+    CampiRadicis c;
+
+    si (!v || !v->repo || !scriptor || !titulus)
+    {
+        redde FALSUM;
+    }
+    c.tituli[ZEPHYRUM]   = titulus;
+    c.valores[ZEPHYRUM]  = valor;
+    c.numerus            = I;
+    redde radicem_mutare(v, scriptor, campos_mutator, &c);
 }
 
 vacuum
@@ -2142,6 +2205,19 @@ vicus_pulsare (
         /* S5: pila cum minuto legitur */
         (vacuum)pilam_legere(v);
         pingendum = VERUM;
+    }
+    /* T4a: systemata hospitis */
+    per (i = ZEPHYRUM; v->systemata_hospitis
+                       && i < xar_numerus(v->systemata_hospitis); i++)
+    {
+        constans SystemaHospitis* s;
+
+        s = (constans SystemaHospitis*)xar_obtinere(
+            v->systemata_hospitis, i);
+        si (s->systema(v, s->ctx))
+        {
+            pingendum = VERUM;
+        }
     }
     /* S3c: aperitiones pendentes extra tractationem eventus */
     per (i = ZEPHYRUM; v->petitiones

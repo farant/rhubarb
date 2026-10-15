@@ -35,6 +35,7 @@ nomen structura {
                                       * (opacus) - porta imaginis */
                  vacuum* quaestionis; /* $question: contextus (opacus) -
                                        * porta quaestionis */
+                 vacuum* admonitionum; /* T4a: contextus (opacus) */
 } VicusApplicatio;
 
 
@@ -66,6 +67,16 @@ vicus_applicatio_imaginis_portam_ponere (
      VicusApplicatio* app,
         ImagoFructus (*porta)(vacuum* ctx, Piscina* piscina),
               vacuum* ctx);
+
+/* T4a (colloquia-plan): admonitiones ex libro praeconii (via;
+ * applicationes praeconium_via dant) - sequax initiatur (cauda), deinde
+ * systema 'admonitiones' eum in pulsu sequitur. Ante vocationem
+ * (probationes) centrum ($notifications) vacuum, nihil legitur.
+ * FALSUM si iam aperta. */
+b32
+vicus_applicatio_admonitiones_aperire (
+        VicusApplicatio* app,
+     constans character* via);
 
 /* porta NIHIL = nulla; copia servatur */
 vacuum
