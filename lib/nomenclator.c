@@ -8,6 +8,8 @@
 #include "membrum__album.h"
 #include "membrum__praecepta.h"
 #include "membrum__prompta.h"
+#include "membrum__elenchi.h"
+#include "elenchus.h"
 #include "rubrica.h"
 #include "dispositio.h"
 #include "fons.h"
@@ -489,6 +491,15 @@ hic_manens constans Praeceptum TABULA_PRAECEPTORUM[] = {
     { NIHIL, NIHIL, NIHIL, ZEPHYRUM, ZEPHYRUM, NIHIL }
 };
 
+/* P2b-2: menu globuli "+ New" */
+#define ELENCHUS_NOVUS  I
+
+hic_manens constans ElenchiIntroitus TABULA_ELENCHORUM[] = {
+    { ELENCHUS_NOVUS, "nomenclator.nova_persona", FALSUM },
+    { ELENCHUS_NOVUS, "nomenclator.nova_societas", FALSUM },
+    { ZEPHYRUM, NIHIL, FALSUM }
+};
+
 interior vacuum
 contextum_parare (
     NomenclatorMontatio* m,
@@ -499,6 +510,22 @@ contextum_parare (
     cp->p       = p;
     cp->l       = ordines(m, p);
     cp->electa  = nomenclator_persona_electa(m);
+}
+
+/* hospes menu: tabulae, visus, requisita, contextus paratus */
+interior vacuum
+hospitem_parare (
+    NomenclatorMontatio* m,
+                Piscina* p,
+     ContextusPraecepti* cp,
+          ElenchiHospes* h)
+{
+    contextum_parare(m, p, cp);
+    h->introitus  = TABULA_ELENCHORUM;
+    h->praecepta  = TABULA_PRAECEPTORUM;
+    h->visus      = VISUS_INDICIS;
+    h->requisita  = requisita_nomenclatoris;
+    h->ctx        = cp;
 }
 
 /* Reditus promptae: homo "verba cognomen" (verbum ultimum cognomen,
@@ -587,6 +614,20 @@ agere (
         redde FALSUM;
     }
     piscina_vacare(privatum->scheda);
+    /* P2b-2: menu apertum eventa omnia accipit */
+    {
+            Elenchus e;
+             Punctum ancora;
+       ElenchiHospes h;
+
+        hospitem_parare(m, privatum->scheda, &cp, &h);
+        si (elenchi_legere(&m->ramus, &h, privatum->scheda, &e,
+            &ancora))
+        {
+            redde elenchi_agere(&m->ramus, actio_nomenclatoris, &h, &e,
+                nodus, ev, privatum->scheda);
+        }
+    }
     /* P2b: prompta aperta claves omnes accipit */
     {
                chorda genus;
@@ -638,6 +679,17 @@ agere (
         {
             redde electionem_scribere(m, id, privatum->scheda);
         }
+    }
+    /* P2b-2: "+ New" - menu infra globulum (filius radicis: fines in
+     * spatio radicis) */
+    si (chorda_aequalis_literis(nodus->id, "nova"))
+    {
+        Punctum ancora;
+
+        ancora.x = nodus->fines.x;
+        ancora.y = nodus->fines.y + nodus->fines.altitudo;
+        redde elenchi_aperire(&m->ramus, actio_nomenclatoris,
+            ELENCHUS_NOVUS, ancora, privatum->scheda);
     }
     si (   chorda_aequalis_literis(nodus->id, "pagina-prior")
         || chorda_aequalis_literis(nodus->id, "pagina-proxima"))
@@ -852,6 +904,12 @@ figura_tabulae (
                     "societas") ? "business:" : "name:", &m->ramus);
             }
         }
+        alioquin si (chorda_aequalis_literis(f->id, "nova"))
+        {
+            figura_globulum_pingere(md, f->fines, chorda_transcribere(
+                chorda_ex_literis("+ New", md->piscina), md->piscina),
+                FIGURA_UMBRA);
+        }
         alioquin si (chorda_aequalis_literis(f->id, "pagina-prior"))
         {
             figura_sagittam_pingere(md, f->fines, -I, k <= ZEPHYRUM
@@ -890,6 +948,33 @@ figura_tabulae (
     }
 }
 
+/* P2b-2: menu - res ex statu, figura elenchi */
+interior vacuum
+figura_elenchi (
+    constans Componens* c,
+               Mandata* md,
+                   i32  thema,
+                vacuum* ctx)
+{
+     NomenclatorFigurae* contextus;
+     ContextusPraecepti  cp;
+          ElenchiHospes  h;
+               Elenchus  e;
+                Punctum  ancora;
+
+    contextus = (NomenclatorFigurae*)ctx;
+    si (!contextus || !contextus->m)
+    {
+        redde;
+    }
+    hospitem_parare(contextus->m, md->piscina, &cp, &h);
+    si (elenchi_legere(&contextus->m->ramus, &h, md->piscina, &e,
+            &ancora))
+    {
+        elenchus_figura(c, md, thema, &e);
+    }
+}
+
 interior b32
 figuras_registrare (
     NomenclatorMontatio* m,
@@ -911,7 +996,9 @@ figuras_registrare (
     contextus->altitudo_montationis  = (s32)altitudo;
     m->figurae_ctx                   = contextus;
     redde contextus->scheda && figura_registrare(m->figurae,
-        PARTES_TABULA, ZEPHYRUM, figura_tabulae, contextus);
+        PARTES_TABULA, ZEPHYRUM, figura_tabulae, contextus)
+        && figura_registrare(m->figurae, PARTES_DIALOGUS, ZEPHYRUM,
+        figura_elenchi, contextus);
 }
 
 
@@ -1062,6 +1149,8 @@ nomenclator_componere (
     caput = locum_addere(&dp, radix_d, DISPOSITIO_LINEA,
         DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_FIXA,
         NOMENCLATOR_CAPUT);
+    (vacuum)componentem_locare(&dp, caput, "nova", PARTES_BOTTONE,
+        DISPOSITIO_FIXA, VII, NOMENCLATOR_CAPUT);
     (vacuum)componentem_locare(&dp, caput, "caput", PARTES_INDEX,
         DISPOSITIO_CRESCENS, ZEPHYRUM, NOMENCLATOR_CAPUT);
     (vacuum)componentem_locare(&dp, caput, "pagina-prior",
@@ -1117,6 +1206,25 @@ nomenclator_componere (
                 NOMENCLATOR_LINEA));
         componens_addere_liberum(radix, loc->c);
     }
+    /* P2b-2: menu filius ULTIMUS (super omnia) */
+    {
+     ContextusPraecepti  cp;
+          ElenchiHospes  h;
+               Elenchus  e;
+                Punctum  ancora;
+              Componens* menu;
+
+        hospitem_parare(m, piscina, &cp, &h);
+        si (elenchi_legere(&m->ramus, &h, piscina, &e, &ancora))
+        {
+            menu = elenchus_componere(&e, elenchus_fines(&e, ancora, f),
+                actio_nomenclatoris, piscina, intern);
+            si (menu)
+            {
+                componens_addere_liberum(radix, menu);
+            }
+        }
+    }
     redde radix;
 }
 
@@ -1162,6 +1270,7 @@ nomenclator_montare (
     m->figurae   = figura_registrum_creare(piscina);
     redde m->actiones && m->figurae
         && praecepta_verificare(TABULA_PRAECEPTORUM)
+        && elenchi_verificare(TABULA_ELENCHORUM, TABULA_PRAECEPTORUM)
         && actio_registrare(m->actiones, actio_nomenclatoris, agere, m)
         && figuras_registrare(m, latitudo, altitudo);
 }

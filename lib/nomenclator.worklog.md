@@ -68,3 +68,23 @@ Enter). Plants: name not split; prompt not closed; successor not the
 next one; undo a no-op; new contact not selected; wrong prompt label -
 all red. Untested: the one-row capacity reduction while the prompt is
 open (no fixture fills a page exactly).
+
+## 2026-10-14 - P2b-2: "+ New" button and menu
+
+Fran chose option 1 (one button opening a Person / Business menu).
+Manifest (approved) gained `elenchus` (popover, context mask + anchor)
+and `elenchus_electa`. "nova" (PARTES_BOTTONE, 7 cells) sits first in
+the header row, drawn with figura_globulum_pingere + FIGURA_UMBRA like
+the agenda's; a left click opens context ELENCHUS_NOVUS anchored at the
+button's bottom-left (the button is a direct child of the root, so its
+fines are already root space - no destinatio conversion needed).
+TABULA_ELENCHORUM has the two "new" commands, so the menu shows their
+keys (n, N) from the praecepta table; mount checks it with
+elenchi_verificare. While the menu is open it takes every event first
+(before the prompt and the list), via hospitem_parare +
+elenchi_legere / elenchi_agere; the composer adds the menu as the last
+root child; figura_elenchi (PARTES_DIALOGUS) draws it.
+Tests: menu_novum (opens below the button, two items with titles, a
+click on "New business" opens the business prompt and closes the menu,
+Esc closes). Plants: button not opening; menu not added; anchor at the
+button's top - red. Screenshot (probe deleted; copy in $TMPDIR/imago).

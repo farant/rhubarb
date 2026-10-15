@@ -640,6 +640,53 @@ _probare_promptam (
         c->piscina), "business:", -I));
 }
 
+/* menu "+ New" (P2b-2): globulus aperit infra se; res "New person" /
+ * "New business" cum clavibus; ictus in "New business" promptam
+ * societatis aperit et menu claudit; Esc claudit */
+interior vacuum
+_probare_menu_novum (
+    CredoContextus* c)
+{
+        Mundus* x;
+     Componens* e;
+     Componens* r;
+         Fines  globulus;
+       Eventus  ev;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(contactus_parare(x, c->piscina));
+    CREDO_VERUM(adest(x, "nova", c->piscina));
+    globulus = fines_componentis(x, "nova", c->piscina);
+    CREDO_NECESSE(ictus_in(x, "nova", c->piscina));
+    e = componens_invenire_per_id(dispensator_arbor(x->d),
+        chorda_ex_literis("elenchus", c->piscina));
+    CREDO_NECESSE_NON_NIHIL(e);
+    CREDO_VERUM(e->fines.y >= globulus.y + globulus.altitudo);
+    CREDO_AEQUALIS_I32(componens_numerus_liberorum(e), II);
+    CREDO_CHORDA_AEQUALIS_LITERIS(componens_liberum(e,
+        ZEPHYRUM)->titulus,
+        "New person");
+    r = componens_liberum(e, I);
+    CREDO_CHORDA_AEQUALIS_LITERIS(r->titulus, "New business");
+    /* ictus in "New business": prompta societatis, menu clausum */
+    memset(&ev, ZEPHYRUM, magnitudo(Eventus));
+    ev.genus = EVENTUS_MUS_DEPRESSUS;
+    ev.datum.mus.x = e->fines.x + r->fines.x + r->fines.latitudo
+        / II;
+    ev.datum.mus.y = e->fines.y + r->fines.y + r->fines.altitudo
+        / II;
+    ev.datum.mus.botton = MUS_SINISTER;
+    dispensator_tractare(x->d, &ev);
+    CREDO_VERUM(campus_est(x, "prompta", "societas"));
+    CREDO_FALSUM(adest(x, "elenchus", c->piscina));
+    /* Esc: claudit */
+    effugium(x);
+    CREDO_NECESSE(ictus_in(x, "nova", c->piscina));
+    CREDO_VERUM(adest(x, "elenchus", c->piscina));
+    effugium(x);
+    CREDO_FALSUM(adest(x, "elenchus", c->piscina));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "montatio", _probare_montationem, mundum_parare, mundum_purgare,
         NIHIL, NIHIL },
@@ -660,6 +707,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "deletio", _probare_deletionem, mundum_parare, mundum_purgare,
         NIHIL, NIHIL },
     { "prompta", _probare_promptam, mundum_parare, mundum_purgare,
+        NIHIL, NIHIL },
+    { "menu_novum", _probare_menu_novum, mundum_parare, mundum_purgare,
         NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

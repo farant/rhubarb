@@ -32,6 +32,13 @@
                   irrepraesentabilis"/>
     <campus nomen="prompta_cursor" typus="numerus" vita="transiens"
             scriptor="nomenclator.agere"/>
+    <campus nomen="elenchus" typus="textus" vita="transiens"
+            aspectus="popover" scriptor="nomenclator.agere"
+            nota="menu apertum: '<contextus> x y' (I = globulus +
+                  New); absens = clausum"/>
+    <campus nomen="elenchus_electa" typus="numerus" vita="transiens"
+            scriptor="nomenclator.agere"
+            nota="res menu illuminata; absens = nulla"/>
   </status>
 
   <basis genus="organum_commune"/>
