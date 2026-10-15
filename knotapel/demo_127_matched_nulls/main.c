@@ -17,16 +17,26 @@
  *           closed from a BRAID-CORRECT pair of order-10 generators, 2T
  *           = the 12 rational points of 2O); the tables (T13 = 2O's 13
  *           axes as integer directions, R13 = 13 group-free random
- *           integer directions); the nulls (H6, H5: D126's height-H
- *           sphere subsets; G: D126's high-height rational points; AX:
- *           2O's axes with random angles; AN: 2O's angles on random
- *           axes; LIN: A 2O, A in GL4(Q)); the D119 anchor (own tables
- *           reproduce D119's exact rows, N = 3-4).
+ *           integer directions; it has one near-duplicate pair, about
+ *           7.2 degrees, against T13's 35.3); the nulls (H6, H5: D126's
+ *           height-H sphere subsets, 20 seeds - "height" is the lcm,
+ *           and each set holds a few points of height 1-3, some in 2T;
+ *           G: D126's high-height rational points, generic but NOT Haar,
+ *           set heights of 48-65 digits; AX: 2O's axes with random
+ *           angles; AN: 2O's angles on random axes; LIN: A 2O, A in
+ *           GL4(Q), which changes norms as well as directions); the
+ *           controls 2I-R (20 random 24-subsets of 2I: entry order) and
+ *           random sign draws of 2O and 2I-D94; the D119 anchor (own
+ *           tables reproduce D119's exact rows, N = 3-4).
  *   Part B  relation profiles (reticulum, as D126): per set the height,
  *           the norm-3 relations and the odd-norm {-1, 0, 1} relations
  *           (the only coincidences that can matter for XOR) within
  *           D126's radius (8 for N = 24, 10 for N = 12).
- *   Part C  (task T6b) capacity rows under the common tables.
+ *   Part C  passing subsets per N (not D94's "capacity", the largest N
+ *           with a pass), N = 3-7 exhaustive, every set under its own
+ *           table, T13 and R13; anchored to D119 (N = 3-6) and, for R13,
+ *           to the review's independent oracle. Only XOR is a property of
+ *           a point set: AND and MAJ depend on each weight's sign.
  *
  * Representatives: the sign of a weight matters for AND and MAJ under
  * the signed encoding (flipping q_i relabels the masks: AND becomes AND
@@ -614,7 +624,17 @@ braid_relation (
  * Nulls
  * ================================================================ */
 
-#define SEEDS 5
+#define SEEDS 5        /* G, AX, AN, LIN, and the N = 12 nulls */
+#define SEEDS_H 20     /* H6 and H5 at N = 24 (review M3: 5 were too few) */
+#define RANDOM_2I 20   /* random 24-subsets of 2I (review M2: entry order) */
+#define SIGN_DRAWS 5   /* random sign choices of 2O and 2I-D94 (review M4) */
+
+static int
+seeds_of (
+    int kind)
+{
+    return kind < 2 ? SEEDS_H : SEEDS;
+}
 #define MAX_SPHERE 4096
 
 static long sphere_v[MAX_SPHERE][4];
@@ -990,6 +1010,73 @@ null_linear (
     }
 }
 
+/* 2I-R: 24 random points of 2I (canonical), in increasing catalog order
+ * (review M2: does a "2I" result belong to 2I or to one prefix?) */
+static void
+random_2i (
+    int       seed,
+    PointSet *s)
+{
+    int idx[64];
+    int m = (int)catalogus_numerus(cat_2i_full);
+    int i;
+    int k;
+
+    rng_state = 127400L + seed;
+    for (i = 0; i < m; i++) {
+        idx[i] = i;
+    }
+    for (i = 0; i < 24; i++) {
+        int t;
+
+        k = i + (int)rng(m - i);
+        t = idx[i];
+        idx[i] = idx[k];
+        idx[k] = t;
+    }
+    for (i = 1; i < 24; i++) {
+        int x = idx[i];
+
+        for (k = i; k > 0 && idx[k - 1] > x; k--) {
+            idx[k] = idx[k - 1];
+        }
+        idx[k] = x;
+    }
+    snprintf(s->name, sizeof(s->name), "2I-R seed %d", seed);
+    s->ring = quaternio_anulus(catalogus_elementum(cat_2i_full, 0));
+    s->n = 24;
+    for (i = 0; i < 24; i++) {
+        s->p[i] = canonical(catalogus_elementum(cat_2i_full, (i32)idx[i]));
+    }
+}
+
+/* the same points, each negated with probability 1/2 (review M4: AND
+ * and MAJ depend on these signs); returns the number flipped */
+static int
+signed_copy (
+    const PointSet *base,
+    long            seed0,
+    int             seed,
+    const char     *label,
+    PointSet       *s)
+{
+    int k;
+    int flipped = 0;
+
+    *s = *base;
+    snprintf(s->name, sizeof(s->name), "%s sgn %d", label, seed);
+    rng_state = seed0 + seed;
+    for (k = 0; k < base->n; k++) {
+        /* a high bit: the LCG's lowest bit only alternates */
+        (void)rng(2);
+        if (((rng_state >> 16) & 1) == 1) {
+            s->p[k] = negate(base->p[k]);
+            flipped++;
+        }
+    }
+    return flipped;
+}
+
 /* R13: 13 random integer directions in [-9, 9]^3, pairwise non-parallel,
  * none parallel to a T13 axis; fixed seed */
 static void
@@ -1260,10 +1347,16 @@ same_profile (
  * Part A: construction and checks
  * ================================================================ */
 
-static PointSet nulls24[6][SEEDS];
+static PointSet nulls24[6][SEEDS_H];
 static PointSet nulls12[2][SEEDS];
+static PointSet rand_2i[RANDOM_2I];
+static PointSet sign_2o[SIGN_DRAWS];
+static PointSet sign_2i[SIGN_DRAWS];
 static const char *KIND_NAME[6] = { "H6", "H5", "G", "AX", "AN", "LIN" };
 static long        lin_det[SEEDS];
+
+static void register_sets (void);
+static void registry_check (void);
 
 /* D119's frozen exact rows (D119_B zeta_8, D119_C 2I first 24): sets,
  * float, rule, robust, possible, tied; N = 3 then 4, XOR / AND / MAJ */
@@ -1569,9 +1662,11 @@ part_a (void)
         int seed;
         int kind;
 
-        for (seed = 0; seed < SEEDS; seed++) {
+        for (seed = 0; seed < SEEDS_H; seed++) {
             null_height(6, 24, seed, &nulls24[0][seed]);
             null_height(5, 24, seed, &nulls24[1][seed]);
+        }
+        for (seed = 0; seed < SEEDS; seed++) {
             null_generic(seed + 1, &nulls24[2][seed]);
             null_axes(seed, &nulls24[3][seed]);
             null_angles(seed, &nulls24[4][seed]);
@@ -1580,7 +1675,7 @@ part_a (void)
             null_height(5, 12, seed, &nulls12[1][seed]);
         }
         for (kind = 0; kind < 6; kind++) {
-            for (seed = 0; seed < SEEDS; seed++) {
+            for (seed = 0; seed < seeds_of(kind); seed++) {
                 PointSet *s = &nulls24[kind][seed];
 
                 for (i = 0; i < s->n; i++) {
@@ -1610,7 +1705,7 @@ part_a (void)
         sprintf(msg, "%d null sets: N as matched, distinct up to sign "
             "(catalogus_ex_punctis accepts), canonical; unit except LIN; "
             "none closed under multiplication (%d; near-vacuous for "
-            "random sets)", 8 * SEEDS, closed);
+            "random sets)", 2 * SEEDS_H + 6 * SEEDS, closed);
         check(msg, units && canon && distinct && closed == 0);
         for (seed = 0; seed < SEEDS; seed++) {
             const PointSet *ax = &nulls24[3][seed];
@@ -1644,11 +1739,71 @@ part_a (void)
             "T13), the identity kept", ax_ok);
         check("AN: every point has its 2O point's real part (the angle "
             "multiset of 2O), and no axis parallel to a T13 axis", an_ok);
-        sprintf(msg, "LIN: det A = %ld %ld %ld %ld %ld (invertible); unit "
-            "points among 120: %d (not a unit set)", lin_det[0],
-            lin_det[1], lin_det[2], lin_det[3], lin_det[4], lin_unit);
-        check(msg, lin_det[0] != 0 && lin_unit < 120);
+        sprintf(msg, "LIN: det A = %ld %ld %ld %ld %ld, every seed "
+            "invertible; unit points among 120: %d (LIN changes norms, "
+            "not only directions)", lin_det[0], lin_det[1], lin_det[2],
+            lin_det[3], lin_det[4], lin_unit);
+        check(msg, lin_det[0] != 0 && lin_det[1] != 0 && lin_det[2] != 0
+            && lin_det[3] != 0 && lin_det[4] != 0 && lin_unit < 120);
     }
+
+    /* --- entry-order and sign controls (review M2, M4) --- */
+    {
+        int seed;
+        int ok_r = 1;
+        int ok_s = 1;
+        int best = 0;
+        int flips[2][SIGN_DRAWS];
+
+        for (seed = 0; seed < RANDOM_2I; seed++) {
+            int shared = 0;
+
+            random_2i(seed, &rand_2i[seed]);
+            ok_r = ok_r && rand_2i[seed].n == 24
+                && as_catalog(&rand_2i[seed]) != NULL;
+            for (i = 0; i < 24; i++) {
+                ok_r = ok_r && is_canonical(rand_2i[seed].p[i]);
+                shared += contains(&canon_2i_d94, rand_2i[seed].p[i]);
+            }
+            best = shared > best ? shared : best;
+        }
+        sprintf(msg, "2I-R: %d random 24-subsets of 2I (canonical, distinct,"
+            " accepted as catalogs); at most %d of 24 points shared with "
+            "2I-D94's first 24", RANDOM_2I, best);
+        check(msg, ok_r && best < 24);
+        for (seed = 0; seed < SIGN_DRAWS; seed++) {
+            flips[0][seed] = signed_copy(&canon_2o, 127500L, seed, "2O",
+                &sign_2o[seed]);
+            flips[1][seed] = signed_copy(&canon_2i_d94, 127600L, seed,
+                "2I-D94", &sign_2i[seed]);
+            {
+                int differ_o = 0;
+                int differ_i = 0;
+
+                for (i = 0; i < 24; i++) {
+                    ok_s = ok_s && quaternio_aequalis(canonical(
+                        sign_2o[seed].p[i]), canon_2o.p[i])
+                        && quaternio_aequalis(canonical(sign_2i[seed].p[i]),
+                        canon_2i_d94.p[i]);
+                    differ_o += !quaternio_aequalis(sign_2o[seed].p[i],
+                        canon_2o.p[i]);
+                    differ_i += !quaternio_aequalis(sign_2i[seed].p[i],
+                        canon_2i_d94.p[i]);
+                }
+                /* a draw that flips nothing would be no control */
+                ok_s = ok_s && differ_o == flips[0][seed] && differ_o > 0
+                    && differ_i == flips[1][seed] && differ_i > 0;
+            }
+        }
+        sprintf(msg, "sign draws: 2O and 2I-D94 with random signs (flips "
+            "%d %d %d %d %d and %d %d %d %d %d), the same points up to "
+            "sign", flips[0][0], flips[0][1], flips[0][2], flips[0][3],
+            flips[0][4], flips[1][0], flips[1][1], flips[1][2],
+            flips[1][3], flips[1][4]);
+        check(msg, ok_s);
+    }
+    register_sets();
+    registry_check();
 
     /* --- anchor (not in a worker: it only needs the sets) --- */
     if (in_worker) {
@@ -1675,15 +1830,16 @@ part_a (void)
 static const long PIN_2O_PM1[9] = { 0, 0, 0, 32, 72, 96, 704, 2592, 5976 };
 static const long PIN_2T_PM1[11] = { 0, 0, 0, 16, 36, 48, 96, 144, 156,
     112, 0 };
-static const long PIN_H6_24[3][5] = {
-    { 4559, 4561, 4427, 4459, 4346 }, { 1, 1, 1, 1, 1 },
-    { 1025, 1046, 1001, 999, 991 } };
+static const long PIN_H6_24[3][8] = {
+    { 4559, 4561, 4427, 4459, 4346, 4583, 4301, 4228 },
+    { 1, 1, 1, 1, 1, 2, 1, 1 },
+    { 1025, 1046, 1001, 999, 991, 1045, 962, 975 } };
 static const long PIN_H5_24_PM1[3] = { 1750, 1662, 1882 };
 static const long PIN_H6_12[3][5] = {
     { 12, 21, 10, 14, 6 }, { 0, 0, 0, 0, 0 }, { 0, 13, 4, 7, 0 } };
 static const long PIN_H5_12_PM1[3] = { 3, 2, 2 };
 
-static long pm1_null24[6][SEEDS];   /* +-1 relations within R (Part C) */
+static long pm1_null24[6][SEEDS_H];   /* +-1 relations within R (Part C) */
 static long pm1_null12[2][SEEDS];
 
 static void
@@ -1739,7 +1895,7 @@ part_b (void)
     check("2T's {-1, 0, 1} shells to norm 10 = D126's oracle pins", ok);
     for (kind = 0; kind < 6; kind++) {
         printf("  %s (N = 24):\n", KIND_NAME[kind]);
-        for (seed = 0; seed < SEEDS; seed++) {
+        for (seed = 0; seed < seeds_of(kind); seed++) {
             const PointSet *s = &nulls24[kind][seed];
 
             profile(s, 8, &pr);
@@ -1748,7 +1904,7 @@ part_b (void)
             sound = sound && pr.complete && pr.classified
                 && pr.rows_checked == pr.rank
                 && pr.rank == s->n - pr.ambient_rank;
-            if (kind == 0) {
+            if (kind == 0 && seed < 8) {
                 pins = pins && pr.pm1 == PIN_H6_24[0][seed]
                     && pr.by_norm[3] == PIN_H6_24[1][seed]
                     && pr.odd_pm1 == PIN_H6_24[2][seed];
@@ -1792,32 +1948,34 @@ part_b (void)
     check("every profile complete and classified; basis rows re-checked "
         "as relations in quaternion arithmetic; LIN's profile = 2O's "
         "(the whole relation lattice, D126 Part E)", sound);
-    check("H6 and H5 sets = D126 Part F's (their +-1 totals, norm-3 and "
-        "odd +-1 counts = D126's oracle pins; H5: no odd-norm relation, "
-        "by the odd-height lemma)", pins);
+    check("H6 and H5 = D126 Part F's generator: seeds 0-7 (H6) and 0-2 "
+        "(H5) match D126's oracle pins (+-1 totals, norm 3, odd +-1); "
+        "every H5 set: no odd-norm relation (the odd-height lemma)", pins);
     sprintf(msg, "G (D126 Part D's generator and seeds): no relation of "
         "norm <= 8, as D126 found (%ld)", g_total);
     check(msg, g_total == 0);
 }
 
 /* ================================================================
- * Part C: capacity rows
+ * Part C: passing subsets per N
  *
  * A JOB is one (point set, table): N = 3-7, every subset of the set
  * (exhaustive at every N, so no row mixes scales), XOR / AND / MAJ.
- * The parent runs each job in a child process (this binary, "--opus
- * J"), at most D127_OPERARII (8) at once, and reads the child's counts
- * back from one "RESULT" line. Printing reads only the result arrays,
- * in a fixed order, so the output does not depend on which child
- * finishes first. D127_SERIAL=1 runs every job in this process.
+ * The counts are numbers of PASSING SUBSETS per N, not D94's
+ * "capacity" (the largest N with a pass). The parent runs each job in
+ * a child process (this binary, "--opus J"), at most D127_OPERARII (8)
+ * at once, and reads the child's counts back from one "RESULT" line.
+ * Printing reads only the result arrays, in a fixed order, so the
+ * output does not depend on which child finishes first. D127_SERIAL=1
+ * runs every job in this process.
  * ================================================================ */
 
 #define N_LOW 3
 #define N_HIGH 7
 #define N_ROWS (N_HIGH - N_LOW + 1)
-#define SETS 48
+#define MAX_SETS 120
 #define TABLES 3
-#define JOBS (SETS * TABLES)
+#define MAX_JOBS (MAX_SETS * TABLES)
 #define FIELDS 7
 
 static const char *TABLE_NAME[TABLES] = { "own", "T13", "R13" };
@@ -1825,33 +1983,93 @@ static const char *TABLE_NAME[TABLES] = { "own", "T13", "R13" };
 /* D127_CELER=1 (plants): N = 3-4 only; children inherit it */
 static int n_high = N_HIGH;
 
-/* the 48 sets: 0-3 catalogs (canonical) 2O, 2I-D94, 2I-B, 2T; 4-7 the
- * same in D119's BFS signs; 8-37 nulls N = 24 (kind x 5 + seed); 38-47
- * nulls N = 12 (H6, H5) */
-static const PointSet *
-set_of (
-    int i)
-{
-    static const PointSet *catalogs[8];
+/* the registry: every judged set, in named groups (fixed order) */
+enum {
+    GR_2O, GR_2I_D94, GR_2I_B, GR_2T,
+    GR_2O_BFS, GR_2I_D94_BFS, GR_2I_B_BFS, GR_2T_BFS,
+    GR_2I_R, GR_2O_SGN, GR_2I_D94_SGN,
+    GR_H6, GR_H5, GR_G, GR_AX, GR_AN, GR_LIN,
+    GR_H6_12, GR_H5_12,
+    GROUPS
+};
 
-    catalogs[0] = &canon_2o;
-    catalogs[1] = &canon_2i_d94;
-    catalogs[2] = &canon_2i_b;
-    catalogs[3] = &canon_2t;
-    catalogs[4] = &set_2o;
-    catalogs[5] = &set_2i_d94;
-    catalogs[6] = &set_2i_b;
-    catalogs[7] = &set_2t;
-    if (i < 8) {
-        return catalogs[i];
+static const char *GROUP_LABEL[GROUPS] = {
+    "2O", "2I-D94", "2I-B", "2T",
+    "2O bfs", "2I-D94 bfs", "2I-B bfs", "2T bfs",
+    "2I-R", "2O sgn", "2I-D94 sgn",
+    "H6", "H5", "G", "AX", "AN", "LIN",
+    "H6", "H5"
+};
+
+static const PointSet *registry[MAX_SETS];
+static int             n_sets = 0;
+static int             group_first[GROUPS];
+static int             group_count[GROUPS];
+
+static void
+add_group (
+    int             group,
+    const PointSet *sets,
+    int             count)
+{
+    int k;
+
+    group_first[group] = n_sets;
+    group_count[group] = count;
+    for (k = 0; k < count; k++) {
+        if (n_sets >= MAX_SETS) {
+            fatal("registry full");
+        }
+        registry[n_sets++] = &sets[k];
     }
-    if (i < 38) {
-        return &nulls24[(i - 8) / SEEDS][(i - 8) % SEEDS];
-    }
-    return &nulls12[(i - 38) / SEEDS][(i - 38) % SEEDS];
 }
 
-static Row results[SETS][TABLES][N_ROWS][3];
+static void
+register_sets (void)
+{
+    int kind;
+
+    n_sets = 0;
+    add_group(GR_2O, &canon_2o, 1);
+    add_group(GR_2I_D94, &canon_2i_d94, 1);
+    add_group(GR_2I_B, &canon_2i_b, 1);
+    add_group(GR_2T, &canon_2t, 1);
+    add_group(GR_2O_BFS, &set_2o, 1);
+    add_group(GR_2I_D94_BFS, &set_2i_d94, 1);
+    add_group(GR_2I_B_BFS, &set_2i_b, 1);
+    add_group(GR_2T_BFS, &set_2t, 1);
+    add_group(GR_2I_R, rand_2i, RANDOM_2I);
+    add_group(GR_2O_SGN, sign_2o, SIGN_DRAWS);
+    add_group(GR_2I_D94_SGN, sign_2i, SIGN_DRAWS);
+    for (kind = 0; kind < 6; kind++) {
+        add_group(GR_H6 + kind, nulls24[kind], seeds_of(kind));
+    }
+    add_group(GR_H6_12, nulls12[0], SEEDS);
+    add_group(GR_H5_12, nulls12[1], SEEDS);
+}
+
+static void
+registry_check (void)
+{
+    char msg[256];
+
+    sprintf(msg, "registry: %d sets; H6 and H5 %d seeds each, 2I-R %d, sign "
+        "draws %d + %d, G/AX/AN/LIN %d each", n_sets, group_count[GR_H6],
+        group_count[GR_2I_R], group_count[GR_2O_SGN],
+        group_count[GR_2I_D94_SGN], group_count[GR_G]);
+    check(msg, group_count[GR_H6] == 20 && group_count[GR_H5] == 20
+        && group_count[GR_2I_R] == 20 && group_count[GR_2O_SGN] == 5
+        && group_count[GR_2I_D94_SGN] == 5 && group_count[GR_G] == 5
+        && group_count[GR_LIN] == 5 && n_sets == 108);
+}
+
+static Row results[MAX_SETS][TABLES][N_ROWS][3];
+
+static int
+n_jobs (void)
+{
+    return n_sets * TABLES;
+}
 
 static void
 job_execute (
@@ -1859,7 +2077,7 @@ job_execute (
 {
     int              set = job / TABLES;
     int              table = job % TABLES;
-    const PointSet  *s = set_of(set);
+    const PointSet  *s = registry[set];
     Catalogus       *cat = as_catalog(s);
     Activatio       *act = NULL;
     const Quaternio *axes = NULL;
@@ -1944,7 +2162,7 @@ static long
 job_cost (
     int job)
 {
-    return set_of(job / TABLES)->n == 12 ? 1 : 10;
+    return registry[job / TABLES]->n == 12 ? 1 : 10;
 }
 
 static void
@@ -1955,8 +2173,9 @@ jobs_run_parallel (
     static Processus *slot_p[64];
     static Piscina   *slot_pool[64];
     static int        slot_job[64];
-    static char       arg_n[JOBS][16];
-    int               order[JOBS];
+    static char       arg_n[MAX_JOBS][16];
+    static int        order[MAX_JOBS];
+    int               jobs = n_jobs();
     int               next = 0;
     int               running = 0;
     int               i;
@@ -1965,10 +2184,10 @@ jobs_run_parallel (
     if (workers > 64) {
         workers = 64;
     }
-    for (i = 0; i < JOBS; i++) {
+    for (i = 0; i < jobs; i++) {
         order[i] = i;
     }
-    for (i = 1; i < JOBS; i++) {        /* stable: cost descending */
+    for (i = 1; i < jobs; i++) {        /* stable: cost descending */
         int x = order[i];
 
         for (k = i; k > 0 && job_cost(order[k - 1]) < job_cost(x); k--) {
@@ -1979,11 +2198,11 @@ jobs_run_parallel (
     for (i = 0; i < workers; i++) {
         slot_p[i] = NULL;
     }
-    while (next < JOBS || running > 0) {
+    while (next < jobs || running > 0) {
         int reaped = 0;
 
         for (i = 0; i < workers; i++) {
-            if (slot_p[i] == NULL && next < JOBS) {
+            if (slot_p[i] == NULL && next < jobs) {
                 const char *args[4];
                 int         job = order[next++];
 
@@ -2072,27 +2291,27 @@ field_of (
 static const char *MODE_NAME[5] = { "rule", "robust", "possible", "tied",
     "concursus" };
 
-/* one line: a catalog's counts, or a null kind's min-max over seeds */
+/* one line: a group's count (one set) or min-max over its sets */
 static void
 print_line (
     const char *label,
-    int         first_set,
-    int         n_sets,
+    int         group,
     int         table,
     int         f,
     int         mode)
 {
     int n;
 
-    printf("      %-9s", label);
+    printf("      %-11s", label);
     for (n = 0; n < N_ROWS; n++) {
         long lo = -1;
         long hi = -1;
         int  i;
         char cell[48];
 
-        for (i = 0; i < n_sets; i++) {
-            long v = field_of(&results[first_set + i][table][n][f], mode);
+        for (i = 0; i < group_count[group]; i++) {
+            long v = field_of(&results[group_first[group] + i][table][n][f],
+                mode);
 
             if (lo < 0 || v < lo) {
                 lo = v;
@@ -2108,6 +2327,25 @@ print_line (
         }
         printf(" %15s", cell);
     }
+    if (group_count[group] > 1) {
+        printf("   (%d sets)", group_count[group]);
+    }
+    printf("\n");
+}
+
+static void
+print_head (
+    int points)
+{
+    int n;
+
+    printf("      %-11s", "N");
+    for (n = N_LOW; n <= N_HIGH; n++) {
+        char head[32];
+
+        sprintf(head, "%d (%ld)", n, binomial(points, n));
+        printf(" %15s", head);
+    }
     printf("\n");
 }
 
@@ -2117,26 +2355,96 @@ print_block (
     int f,
     int mode)
 {
-    int kind;
+    static const int ROWS[] = { GR_2O, GR_2I_D94, GR_2I_B, GR_2I_R, GR_H6,
+        GR_H5, GR_G, GR_AX, GR_AN, GR_LIN };
+    int r;
+
+    printf("    %s, %s, %s (N = 24 sets; passing subsets of C(24, N)):\n",
+        TABLE_NAME[table], FUNCTION_NAME[f], MODE_NAME[mode]);
+    print_head(24);
+    for (r = 0; r < (int)(sizeof(ROWS) / sizeof(ROWS[0])); r++) {
+        print_line(GROUP_LABEL[ROWS[r]], ROWS[r], table, f, mode);
+    }
+}
+
+/* D119_ZETA / D119_AUREA rows N = 5, 6 (lentus), as in Part A */
+static const long D119_ZETA_56[6][6] = {
+    { 42504, 17201, 16479, 15497, 24714, 30822 },
+    { 42504, 37835, 37309, 36707, 39072, 30822 },
+    { 42504, 18368, 17282, 16514, 25625, 30822 },
+    { 134596, 12983, 12268, 10070, 22979, 107035 },
+    { 134596, 111290, 110495, 107663, 116323, 107035 },
+    { 134596, 10031, 9635, 7911, 18245, 107035 } };
+static const long D119_AUREA_56[6][6] = {
+    { 42504, 20805, 20453, 19693, 27983, 33885 },
+    { 42504, 38688, 38702, 38044, 39557, 33885 },
+    { 42504, 24333, 24022, 23499, 31738, 33885 },
+    { 134596, 21679, 20936, 17034, 28850, 117888 },
+    { 134596, 112556, 112469, 109058, 116439, 117888 },
+    { 134596, 21237, 20998, 17547, 28484, 117888 } };
+
+/* 2O (canonical) under R13: the review's independent oracle (orac.py,
+ * recensio D127, 2026-10-14), N = 3-7 x XOR / AND / MAJ: sets, rule,
+ * robust, possible, tied, concursus */
+static const long ORACLE_2O_R13[15][6] = {
+    { 2024, 1472, 1472, 1954, 965, 32 },
+    { 2024, 1803, 1803, 1964, 965, 0 },
+    { 2024, 1466, 1466, 1962, 965, 32 },
+    { 10626, 8172, 8168, 8812, 4556, 672 },
+    { 10626, 9603, 9595, 10040, 4556, 0 },
+    { 10626, 7030, 7010, 8601, 4556, 696 },
+    { 42504, 16713, 16693, 23206, 17969, 6672 },
+    { 42504, 37695, 37574, 38737, 17969, 0 },
+    { 42504, 18020, 18004, 24708, 17969, 7104 },
+    { 134596, 10074, 10053, 16691, 58203, 40696 },
+    { 134596, 112189, 111512, 114377, 58203, 0 },
+    { 134596, 8224, 8051, 13343, 58203, 44110 },
+    { 346104, 265, 265, 940, 155535, 168864 },
+    { 346104, 252922, 250888, 257802, 155535, 0 },
+    { 346104, 3435, 3434, 7704, 155535, 184518 } };
+
+static int
+row_is (
+    const Row  *r,
+    const long *pin)
+{
+    return r->sets == pin[0] && r->rule == pin[1] && r->robust == pin[2]
+        && r->possible == pin[3] && r->tied == pin[4];
+}
+
+/* is 'set' one whose points are all canonical (first part positive)? */
+static int
+canonical_group (
+    int set)
+{
+    int g;
+
+    for (g = 0; g < GROUPS; g++) {
+        if (set >= group_first[g] && set < group_first[g] + group_count[g]) {
+            return g != GR_2O_BFS && g != GR_2I_D94_BFS && g != GR_2I_B_BFS
+                && g != GR_2T_BFS && g != GR_2O_SGN && g != GR_2I_D94_SGN;
+        }
+    }
+    return 0;
+}
+
+static int
+same_xor (
+    int a,
+    int b)
+{
+    int table;
     int n;
 
-    printf("    %s, %s, %s (N = 24 sets; counts of C(24, N)):\n",
-        TABLE_NAME[table], FUNCTION_NAME[f], MODE_NAME[mode]);
-    printf("      %-9s", "N");
-    for (n = N_LOW; n <= N_HIGH; n++) {
-        char head[32];
-
-        sprintf(head, "%d (%ld)", n, binomial(24, n));
-        printf(" %15s", head);
+    for (table = 0; table < TABLES; table++) {
+        for (n = 0; n <= n_high - N_LOW; n++) {
+            if (memcmp(&results[a][table][n][0], &results[b][table][n][0],
+                    sizeof(Row)) != 0) {
+                return 0;
+            }
+        }
     }
-    printf("\n");
-    print_line("2O", 0, 1, table, f, mode);
-    print_line("2I-D94", 1, 1, table, f, mode);
-    print_line("2I-B", 2, 1, table, f, mode);
-    for (kind = 0; kind < 6; kind++) {
-        print_line(KIND_NAME[kind], 8 + kind * SEEDS, SEEDS, table, f,
-            mode);
-    }
+    return 1;
 }
 
 static void
@@ -2147,25 +2455,31 @@ part_c (
     int  table;
     int  n;
     int  f;
-    int  kind;
-    int  seed;
+    int  g;
+    int  i;
     int  counts = 1;
     int  undecided = 0;
     int  xor_signs = 1;
     int  lin_clash = 1;
+    long lin_other_equal = 0;
+    long lin_other_rows = 0;
     int  free_clash = 1;
     int  h5_xor = 1;
+    int  and_clash = 1;
+    int  pinned = 1;
+    int  oracle = 1;
     char msg[256];
     s64  t0 = fenestra_tempus_ms();
 
-    printf("\n=== Part C: capacity rows (D94 phase cell, signed encoding,"
-        " k in {6, 12, 24}; N = 3-7 exhaustive) ===\n");
+    printf("\n=== Part C: passing subsets per N (D94 phase cell, signed "
+        "encoding, k in {6, 12, 24}; N = 3-7 exhaustive) ===\n");
+    printf("  %d sets x %d tables = %d jobs\n", n_sets, TABLES, n_jobs());
     if (n_high < N_HIGH) {
         printf("  (quick mode: N = 3-%d)\n", n_high);
     }
     if (getenv("D127_SERIAL") != NULL) {
-        for (set = 0; set < JOBS; set++) {
-            job_execute(set);
+        for (i = 0; i < n_jobs(); i++) {
+            job_execute(i);
         }
     } else {
         const char *w = getenv("D127_OPERARII");
@@ -2173,13 +2487,13 @@ part_c (
         jobs_run_parallel(argv0, w != NULL && atoi(w) > 0 ? atoi(w) : 8);
     }
     if (getenv("D127_TEMPORA") != NULL) {
-        fprintf(stderr, "  [%d jobs: %.1f s wall]\n", JOBS,
+        fprintf(stderr, "  [%d jobs: %.1f s wall]\n", n_jobs(),
             (double)(fenestra_tempus_ms() - t0) / 1000.0);
     }
 
     /* --- checks --- */
-    for (set = 0; set < SETS; set++) {
-        int points = set_of(set)->n;
+    for (set = 0; set < n_sets; set++) {
+        int points = registry[set]->n;
 
         for (table = 0; table < TABLES; table++) {
             for (n = 0; n <= n_high - N_LOW; n++) {
@@ -2190,38 +2504,109 @@ part_c (
                         n + N_LOW) && r->robust <= r->rule
                         && r->rule <= r->possible;
                     undecided += r->undecided > 0;
-                    /* the sign of a weight relabels masks: XOR's labels
-                     * all flip, so its verdicts cannot change */
-                    if (set < 4 && f == 0) {
-                        xor_signs = xor_signs
-                            && memcmp(r, &results[set + 4][table][n][f],
-                            sizeof(Row)) == 0;
-                    }
-                    /* LIN has 2O's whole relation lattice: equal sums
-                     * are equal relations, so concursus is identical */
-                    if (set >= 8 + 5 * SEEDS && set < 8 + 6 * SEEDS) {
-                        lin_clash = lin_clash && r->clash
-                            == results[0][table][n][f].clash;
+                    /* canonical points lie in one lexicographic half-
+                     * space: no nonempty sum of them vanishes, so the
+                     * all-ones mask (AND = 1) shares its sum with none */
+                    if (f == 1 && canonical_group(set)) {
+                        and_clash = and_clash && r->clash == 0;
                     }
                 }
             }
         }
     }
-    for (kind = 0; kind < 6; kind++) {
-        for (seed = 0; seed < SEEDS; seed++) {
-            int set = 8 + kind * SEEDS + seed;
+    sprintf(msg, "%d jobs: every row counts C(N_set, N) subsets, robust <= "
+        "rule <= possible", n_jobs());
+    check(msg, counts);
+    sprintf(msg, "no undecided set (SAT budget never reached): %d rows "
+        "with one", undecided);
+    check(msg, undecided == 0);
+    /* the workers' rows against D119 (BFS signs): 2O own and T13, 2I-D94
+     * own, N = 3-4, and N = 5-6 when run */
+    for (n = 0; n <= n_high - N_LOW && n < 4; n++) {
+        for (f = 0; f < 3; f++) {
+            const long *z = n < 2 ? D119_ZETA[n * 3 + f]
+                : D119_ZETA_56[(n - 2) * 3 + f];
+            const long *a = n < 2 ? D119_AUREA[n * 3 + f]
+                : D119_AUREA_56[(n - 2) * 3 + f];
+            long        zp[5];
+            long        ap[5];
+
+            for (i = 0; i < 5; i++) {
+                zp[i] = z[i == 0 ? 0 : i + 1];
+                ap[i] = a[i == 0 ? 0 : i + 1];
+            }
+            pinned = pinned
+                && row_is(&results[group_first[GR_2O_BFS]][0][n][f], zp)
+                && row_is(&results[group_first[GR_2O_BFS]][1][n][f], zp)
+                && row_is(&results[group_first[GR_2I_D94_BFS]][0][n][f],
+                    ap);
+        }
+    }
+    check("the workers' rows reproduce D119 (2O own and T13, 2I-D94 "
+        "own; BFS signs; N = 3-6): jobs, sets and tables line up",
+        pinned);
+    for (n = 0; n <= n_high - N_LOW; n++) {
+        for (f = 0; f < 3; f++) {
+            const long *pin = ORACLE_2O_R13[n * 3 + f];
+            const Row  *r = &results[group_first[GR_2O]][2][n][f];
+
+            oracle = oracle && row_is(r, pin) && r->clash == pin[5];
+        }
+    }
+    check("2O under R13 = the review's independent oracle in every row "
+        "run (sets, rule, robust, possible, tied, concursus): R13 is "
+        "anchored", oracle);
+    /* a weight's sign flips every XOR label: XOR cannot change */
+    for (g = 0; g < 4; g++) {
+        xor_signs = xor_signs && same_xor(group_first[GR_2O + g],
+            group_first[GR_2O_BFS + g]);
+    }
+    for (i = 0; i < SIGN_DRAWS; i++) {
+        xor_signs = xor_signs && same_xor(group_first[GR_2O],
+            group_first[GR_2O_SGN] + i) && same_xor(group_first[GR_2I_D94],
+            group_first[GR_2I_D94_SGN] + i);
+    }
+    check("XOR identical under every sign choice: D119's BFS signs and 5 "
+        "random sign draws each of 2O and 2I-D94, every table and N (a "
+        "weight's sign flips every XOR label)", xor_signs);
+    for (i = 0; i < group_count[GR_LIN]; i++) {
+        int lin = group_first[GR_LIN] + i;
+
+        for (table = 0; table < TABLES; table++) {
+            for (n = 0; n <= n_high - N_LOW; n++) {
+                lin_clash = lin_clash && results[lin][table][n][0].clash
+                    == results[group_first[GR_2O]][table][n][0].clash;
+                for (f = 1; f < 3; f++) {
+                    lin_other_rows++;
+                    lin_other_equal += results[lin][table][n][f].clash
+                        == results[group_first[GR_2O]][table][n][f].clash;
+                }
+            }
+        }
+    }
+    check("LIN's XOR concursus = 2O's in every row (the same relation "
+        "lattice; a coincidence's XOR clash depends only on the "
+        "relation's parity)", lin_clash);
+    printf("    observed, not a theorem: LIN's AND/MAJ concursus = 2O's in "
+        "%ld of %ld rows (the sign of each point enters; both sets are "
+        "canonical)\n", lin_other_equal, lin_other_rows);
+    for (g = GR_H6; g <= GR_LIN; g++) {
+        int kind = g - GR_H6;
+
+        for (i = 0; i < group_count[g]; i++) {
+            int set = group_first[g] + i;
 
             for (table = 0; table < TABLES; table++) {
-                for (n = 0; n < N_ROWS; n++) {
+                for (n = 0; n <= n_high - N_LOW; n++) {
                     for (f = 0; f < 3; f++) {
                         long c = results[set][table][n][f].clash;
 
                         /* a coincidence among <= 7 weights is a +-1
                          * relation of norm <= 7 <= R = 8 */
-                        if (pm1_null24[kind][seed] == 0) {
+                        if (pm1_null24[kind][i] == 0) {
                             free_clash = free_clash && c == 0;
                         }
-                        if (kind == 1 && f == 0) {
+                        if (g == GR_H5 && f == 0) {
                             h5_xor = h5_xor && c == 0;
                         }
                     }
@@ -2229,88 +2614,82 @@ part_c (
             }
         }
     }
-    sprintf(msg, "%d jobs: every row counts C(N_set, N) subsets, robust <= "
-        "rule <= possible", JOBS);
-    check(msg, counts);
-    {
-        /* the workers' rows against D119: 2O and 2I-D94 in BFS signs,
-         * own table and (2O) T13, N = 3-4 */
-        int pinned = 1;
-
-        for (n = 0; n < 2; n++) {
-            for (f = 0; f < 3; f++) {
-                const long *z = D119_ZETA[n * 3 + f];
-                const long *a = D119_AUREA[n * 3 + f];
-                int         t;
-
-                for (t = 0; t < 2; t++) {
-                    const Row *r = &results[4][t][n][f];
-
-                    pinned = pinned && r->sets == z[0] && r->rule == z[2]
-                        && r->robust == z[3] && r->possible == z[4]
-                        && r->tied == z[5];
-                }
-                pinned = pinned && results[5][0][n][f].rule == a[2]
-                    && results[5][0][n][f].robust == a[3]
-                    && results[5][0][n][f].possible == a[4]
-                    && results[5][0][n][f].tied == a[5];
-            }
-        }
-        check("the workers' rows reproduce D119 (2O own and T13, 2I-D94 "
-            "own; BFS signs; N = 3-4): jobs, sets and tables line up",
-            pinned);
-    }
-    sprintf(msg, "no undecided set (SAT budget never reached): %d rows "
-        "with one", undecided);
-    check(msg, undecided == 0);
-    check("XOR verdicts identical for the catalogs in D119's BFS signs "
-        "and in the canonical rule, every table and N (a weight's sign "
-        "flips every XOR label)", xor_signs);
-    check("LIN's concursus = 2O's in every row (the same relation lattice,"
-        " so the same coinciding sums)", lin_clash);
     check("every null with no +-1 relation within norm 8 has concursus 0 "
         "in every row (Part B and Part C agree)", free_clash);
-    check("H5: XOR concursus 0 in every row (the odd-height lemma)",
-        h5_xor);
+    check("H5: XOR concursus 0 in every row, 20 seeds (the odd-height "
+        "lemma)", h5_xor);
+    check("AND concursus 0 for every canonical set (theorem: canonical "
+        "points lie in one lexicographic half-space) - the AND concursus "
+        "rows carry no information and are not printed", and_clash);
+
+    /* --- own-table sizes --- */
+    printf("\n  Own-table sizes (axes), per group:");
+    for (g = 0; g < GROUPS; g++) {
+        int lo = 1000;
+        int hi = 0;
+
+        for (i = 0; i < group_count[g]; i++) {
+            Activatio *act = NULL;
+            int        set = group_first[g] + i;
+            int        a;
+
+            if (!activatio_creare(as_catalog(registry[set]), NULL, 0,
+                    CELLAE_CELLA_D94, 0, pool, &act)) {
+                fatal("own table");
+            }
+            a = (int)activatio_axes(act);
+            lo = a < lo ? a : lo;
+            hi = a > hi ? a : hi;
+        }
+        if (lo == hi) {
+            printf(" %s %d;", GROUP_LABEL[g], lo);
+        } else {
+            printf(" %s %d-%d;", GROUP_LABEL[g], lo, hi);
+        }
+    }
+    printf("\n");
 
     /* --- tables --- */
     for (table = 1; table < TABLES; table++) {
         printf("\n  Table %s (common to every set):\n", TABLE_NAME[table]);
-        for (f = 0; f < 3; f++) {
-            print_block(table, f, 1);
-        }
-        for (f = 0; f < 3; f++) {
-            print_block(table, f, 0);
-            print_block(table, f, 2);
-        }
+        print_block(table, 0, 1);
+        print_block(table, 0, 0);
+        print_block(table, 0, 2);
         print_block(table, 0, 3);
-        for (f = 0; f < 3; f++) {
-            print_block(table, f, 4);
-        }
+        print_block(table, 0, 4);
+        print_block(table, 2, 4);
+        printf("    (AND and MAJ below depend on the sign chosen for each "
+            "weight: not properties of the point sets)\n");
+        print_block(table, 1, 1);
+        print_block(table, 2, 1);
     }
-    printf("\n  Own tables (each set's own; cell counts differ, so no "
-        "comparison across sets):\n");
-    for (f = 0; f < 3; f++) {
-        print_block(0, f, 1);
-    }
-    printf("\n  AND and MAJ, robust, catalogs in D119's BFS signs:\n");
+    printf("\n  Own tables (sizes above differ: no comparison across "
+        "sets):\n");
+    print_block(0, 0, 1);
+    printf("\n  AND and MAJ robust under sign choices (canonical, D119's "
+        "BFS signs, 5 random draws):\n");
     for (table = 0; table < TABLES; table++) {
         for (f = 1; f < 3; f++) {
             printf("    %s, %s:\n", TABLE_NAME[table], FUNCTION_NAME[f]);
-            print_line("2O bfs", 4, 1, table, f, 1);
-            print_line("2I-D94 bfs", 5, 1, table, f, 1);
-            print_line("2I-B bfs", 6, 1, table, f, 1);
+            print_head(24);
+            print_line("2O", GR_2O, table, f, 1);
+            print_line("2O bfs", GR_2O_BFS, table, f, 1);
+            print_line("2O sgn", GR_2O_SGN, table, f, 1);
+            print_line("2I-D94", GR_2I_D94, table, f, 1);
+            print_line("2I-D94 bfs", GR_2I_D94_BFS, table, f, 1);
+            print_line("2I-D94 sgn", GR_2I_D94_SGN, table, f, 1);
         }
     }
     printf("\n  2T (N = 12) against H6 and H5 at N = 12, robust:\n");
     for (table = 0; table < TABLES; table++) {
         for (f = 0; f < 3; f++) {
-            printf("    %s, %s (counts of C(12, N), N = 3-7):\n",
+            printf("    %s, %s (passing subsets of C(12, N)):\n",
                 TABLE_NAME[table], FUNCTION_NAME[f]);
-            print_line("2T", 3, 1, table, f, 1);
-            print_line("2T bfs", 7, 1, table, f, 1);
-            print_line("H6", 38, SEEDS, table, f, 1);
-            print_line("H5", 38 + SEEDS, SEEDS, table, f, 1);
+            print_head(12);
+            print_line("2T", GR_2T, table, f, 1);
+            print_line("2T bfs", GR_2T_BFS, table, f, 1);
+            print_line("H6", GR_H6_12, table, f, 1);
+            print_line("H5", GR_H5_12, table, f, 1);
         }
     }
 }
@@ -2331,13 +2710,13 @@ main (
     if (argc == 3 && strcmp(argv[1], "--opus") == 0) {
         int job = atoi(argv[2]);
 
-        if (job < 0 || job >= JOBS) {
-            fatal("--opus: no such job");
-        }
         in_worker = 1;
         part_a();
         if (n_fail > 0) {
             fatal("--opus: Part A failed");
+        }
+        if (job < 0 || job >= n_jobs()) {
+            fatal("--opus: no such job");
         }
         job_execute(job);
         job_print(job);

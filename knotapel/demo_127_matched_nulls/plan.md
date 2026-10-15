@@ -60,10 +60,10 @@ correct generator pair (KC 53.3). It is also a second "first 24 of
 |---|---|---|
 | H6 | random rational unit points of height 6 (D126 Part F sphere) | small height, no group; has coincidences (~1,000 odd-norm at N = 24) |
 | H5 | the same at height 5 | odd height: NO odd-norm coincidence by theorem (KC 48.4.8), so no XOR coincidence at all |
-| G | high-height rational points (D126 Part D, denominators ~1e30) | generic: no relation within radius; the exact version of KR 47's Haar control |
+| G | high-height rational points (D126 Part D; per-point denominators <= ~5e7, set heights of 48-65 digits; corrected after review) | generic: no relation within radius; generic, but NOT Haar (corrected after review: inverse stereographic image of a rational box) |
 | AX | 2O's 13 axis directions with random rational angles (rational points on the conics c^2 + abs(u)^2 t^2 = 1), axis multiplicities as in 2O | 2O's directions and table, not its angles |
 | AN | 2O's angles (its real parts) on random integer axes of the right norm class | 2O's angles, not its directions |
-| LIN | A·2O for random A in GL4(Q), small integer entries | 2O's ENTIRE relation lattice (every coincidence), different geometry, not unit (D126 Part E) |
+| LIN | A·2O for random A in GL4(Q), small integer entries | 2O's ENTIRE relation lattice (every coincidence), different geometry AND norms (max/min |Ap| 2.5-5.0), not unit (D126 Part E; norms added after review) |
 
 Rational nulls are written in the compared catalog's field (Q embeds
 in each). AX, AN and LIN are 2O-specific. For 2T: H6 and H5 at
@@ -79,7 +79,9 @@ N = 12 only.
   beside 2O's.
 
 The common tables (T13, R13) are the "one fixed activation". "own" is
-reported only to connect with D119; 2I's own table (31 axes) changes
+reported only to connect with D119; own tables differ in size (2O 13,
+the first-24 2I sets 12, nulls 13-24; corrected after review from "2I's
+31 axes") and
 the cell count, so no own-table comparison across catalogs is made.
 
 ## Parts
@@ -175,4 +177,40 @@ so its points take the algebraic path; it is measured first.
   - concursus is 0 wherever Part B found no +-1 relation within norm 8;
   - H5 XOR concursus is 0 (the odd-height lemma).
 - `D127_CELER=1` (plants): N = 3-4, about 20 s.
+
+## Review (2026-10-14) and what changed
+
+An independent review (recensor-d127, its own Python Fraction oracle)
+rebuilt all 48 sets and both tables point by point, and agreed on 918
+exhaustive rows and 9,900 single subsets. It found 0 H, 6 M, 6 L and
+6 N. What changed:
+
+- **The registered rule was underspecified (M1).** It names neither
+  the "matched" nulls nor the N, and the verdict flips with both.
+  Against G and AX the catalogs lose at every N; against H5/H6 they
+  lose at N = 4 and win at N = 7. It also cannot bear on KC 47.1's
+  first clause ("not of the knots"), since no entry is a knot
+  invariant. The rule is kept as written, and findings will not say
+  "47.1 supported" or "47.1 falls". They report the second clause
+  per null and per N.
+- **Entry order (M2):** 20 random 24-subsets of 2I (2I-R) were added.
+  The review's 12 such subsets sit inside the H5/H6 range at N = 7, so
+  a "2I" statement must rest on a distribution, not on one BFS prefix.
+- **Seeds (M3):** H6 and H5 were raised to 20 seeds.
+- **Signs (M4):** AND and MAJ depend on each weight's sign. 5 random
+  sign draws each of 2O and 2I-D94 were added, and XOR is the headline
+  function. AND concursus is 0 by a theorem for canonical sets, so it
+  is asserted and not printed.
+- **Height confound (M5, M6):** the ordering at N >= 5 follows height.
+  The AX/AN contrast cannot separate angles from height, and LIN
+  changes norms as well as directions. The contrasts in section D are
+  read with these confounds named.
+- **Anchors (L2, N2):**
+  - R13 rows are pinned to the review's oracle (2O, N = 3-7);
+  - D119's N = 5-6 rows are asserted;
+  - the det check covers every seed (L3);
+  - LIN = 2O concursus is asserted for XOR only, the theorem's scope;
+    AND/MAJ are reported as observed (L1).
+- **Words:** these counts are passing subsets per N, not D94's
+  "capacity".
 
