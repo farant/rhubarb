@@ -124,3 +124,63 @@ stronger tests: L without the max in b_0 (only hand vectors tested L:
 now the loopinter oracle on random vectors), compaction (threshold not
 reached), `ansae_aequales` ignoring b (no test compared loops that
 differ only in b).
+
+## 2026-10-15 — Review of T1 and the fixes
+
+An independent reviewer (recensor-plexus-t1) reviewed eda26fc7 with
+two Python oracles written from the definitions: the Artin action,
+built as an explicit right fold, and the unreduced Burau representation
+over Z[t, t^-1] (faithful on B_3). It compared 345,888 images and
+1,827,901,184 equality verdicts, including every pair of words on B_3
+up to length 7 and on B_4 up to length 6: 0 disagreements. The limit
+contract matched exactly on 800 words, and the caller's pool was never
+moved. Findings: H 0, M 3, L 8, N 6, all acted on (summary in the
+session scratchpad, recensio_plexus_t1/findings_summary.md).
+
+- **M1 (cliff):** compaction compared pool use against 16 bytes per
+  live letter and left out the fixed cost of about 24 bytes per strand.
+  Above ~8,192 strands every letter compacted (12 ms per letter at
+  2^20). It now compacts when the pool has grown 4x since setup or the
+  last compaction (`basis`), which is amortized O(1) per allocated
+  byte. Test: 20,000 strands with 1,000 letters, 0 compactions (was
+  1,000). The same rule now drives the loop pool.
+- **M2 (test gap):** almost every "unequal" test was decided by the
+  exponent-sum or permutation prefilter, so comparing only phi(x_1)
+  survived 882 checks and the exhaustive B_3 run. The witness is
+  s2^2 s3^-2 in B_4. Added: that witness, s1^2 s3^-2 in B_5, random p
+  against q.c for pure c with exponent sum 0 (n = 4..6, both equality
+  methods), and a pool test whose r really runs the action.
+- **M3 (test gap):** plexus_creare's own upper letter bound was never
+  tested, because the parser checked first. Now tested directly. Since
+  L3, plexus_ex_chorda no longer goes through plexus_creare, so its own
+  check is tested too (the T1 "equivalent mutant" is no longer
+  equivalent).
+- **L1:** the limit boundary was tested on one side only. The test now
+  computes the minimal limit L* from the header's own definition
+  (fila; each product length before reduction; the image total after
+  each letter) and checks VERUM at L* and FALSUM at L* - 1, on 200
+  words.
+- **L2:** when r reduces to the empty word, the answer is "equal" with
+  no limit.
+- **L3:** plexus_ex_chorda builds the braid on its parse buffer, with
+  nothing else left in the caller's pool.
+- **L4:** the action's own pools use piscina_conari_allocare, so
+  running out of memory there returns FALSUM. The caller's pool and
+  Magnus still exit, as everywhere.
+- **L5:** both inclusive bounds of PLEXUS_FILA_MAXIMA are tested.
+- **L6:** `plexus_contractiones()`, a process-global counter, lets tests
+  assert that compaction happens and that it is rare.
+- **L7:** header wording: the permutation law, and what the parser
+  accepts.
+- **L8:** `plexus_validus`. Every action refuses a hand-built braid
+  with an invalid letter, and `plexus_permutatio` now returns b32.
+
+From the API notes: `plexus_imagines_liberae` returns all n images (N3
+needs them); the header states the action directions (F_n: left,
+phi_{pq} = phi_p o phi_q; loops: right, u.(pq) = (u.p).q), and both are
+tested; there is a warning about unsigned reverse loops; and
+plexus_aequales is named as the reference, with plexus_aequales_ansis
+as the faster method.
+
+Plants: the reviewer's 11 surviving mutants, re-planted against the new
+suite, are all red.

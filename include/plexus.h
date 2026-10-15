@@ -3,15 +3,22 @@
  *
  * VERBUM: litterae s32, +i = sigma_i, -i = sigma_i^-1, 1 <= i < fila;
  * verbum vacuum = identitas. Plexus valor est (fila, longitudo,
- * litterae); litterae in piscina vocantis, numquam mutantur.
+ * litterae); litterae in piscina vocantis, numquam mutantur. Structura
+ * publica est: plexus manu factus per plexus_validus probatur, et omnis
+ * actio (permutatio, imagines, aequalitas, ansae, in_maiore) plexum
+ * invalidum refutat (FALSUM), numquam extra alveum legit.
+ *
+ * CAUTIO TYPORUM: fila et longitudo i32 sunt (SINE signo), litterae
+ * s32. Gyrus retrogradus 'k = longitudo - 1; k >= 0; k--' cum k i32
+ * numquam finit: indicem s32 adhibe.
  *
  * FILA: 2 <= fila <= PLEXUS_FILA_MAXIMA (2^20); maius refutatur
  * (FALSUM), numquam truncatur.
  *
  * PERMUTATIO: sigma_i positiones i et i+1 (ab 1 numeratas) commutat,
  * litteris a sinistra ad dextram actis. plexus_permutatio ponit
- * imago[q] = filum (positione initiali, ab 0) quod in positione q (ab
- * 0) finit. Ergo imago_{pq}[q] = imago_p[imago_q[q]].
+ * imago[k] = filum (positione initiali, ab 0) quod in positione k (ab
+ * 0) finit. Ergo imago_{pq}[k] = imago_p[imago_q[k]].
  *
  * ACTIO IN F_n (Artin): x_1 ... x_n generatores liberi;
  *   sigma_i:    x_i -> x_i x_{i+1} x_i^-1,  x_{i+1} -> x_i
@@ -19,16 +26,23 @@
  *                                                      x_{i+1}
  * ceteri fixi. Plexui a_1 ... a_m automorphismus phi = phi_{a_1} o ...
  * o phi_{a_m} (compositio substitutionum), ergo phi_{pq} = phi_p o
- * phi_q. Actio FIDELIS est (Artin 1925): p = q in B_n si et solum si
- * phi_p = phi_q, ergo plexus_aequales problema verborum EXACTE solvit.
+ * phi_q (actio SINISTRA). Actio FIDELIS est (Artin 1925): p = q in B_n
+ * si et solum si phi_p = phi_q, ergo plexus_aequales problema verborum
+ * EXACTE solvit. plexus_aequales est REFERENTIA (Artin); methodus
+ * celerior per ansas: plexus_aequales_ansis.
  *
  * LIMES: imagines verborum exponentialiter crescere possunt (|phi(x)|
  * usque ad 3^m). Omnis functio actionis limitem longitudinis summae
  * accipit; limite superato FALSUM redditur, numquam responsum
  * truncatum.
  *
- * Effecta in piscina vocantis; temporaria in piscinis propriis,
- * destructis ante reditum. FALSUM -> exitus non tangitur.
+ * MEMORIA: effecta in piscina vocantis; temporaria in piscinis
+ * propriis, destructis ante reditum. Memoria propria deficiens ->
+ * FALSUM in actione in F_n; in piscina vocantis (et intra Magnus)
+ * allocatio deficiens fatalis est, ut in omni piscina. Purgamenta
+ * verborum contrahuntur cum piscina propria quater crevit post
+ * contractionem ultimam; plexus_contractiones numerat.
+ * FALSUM -> exitus non tangitur.
  *
  * USUS:
  *   Plexus p;
@@ -80,8 +94,12 @@ plexus_creare (
             Piscina* piscina,
              Plexus* exitus);
 
-/* textus: integri signati spatiis separati ("1 -2 1"); vacuus =
- * identitas. FALSUM si malformatus aut littera extra 1..fila-1 */
+/* textus: integri signati, character ' ' (solum) separati ("1 -2 1");
+ * spatia multiplicia, initialia, finalia et cifrae '0' initiales
+ * admittuntur ("-0002" = -2); '+', tabula, linea nova non. Vacuus aut
+ * spatia sola = identitas. FALSUM si malformatus aut littera extra
+ * 1..fila-1 (exitus non tangitur, piscina refecta). Plexus in alveo
+ * analysis ipso: nihil aliud in piscina relinquitur. */
 b32
 plexus_ex_chorda (
          i32  fila,
@@ -121,8 +139,15 @@ s64
 plexus_summa_exponentium (
     Plexus p);
 
-/* imago[0 .. fila-1]: vide PERMUTATIO supra */
-vacuum
+/* VERUM si plexus validus: fila 2..PLEXUS_FILA_MAXIMA, litterae non
+ * NIHIL si longitudo > 0, omnis littera 1 <= |littera| < fila. O(m). */
+b32
+plexus_validus (
+    Plexus p);
+
+/* imago[0 .. fila-1]: vide PERMUTATIO supra. FALSUM si plexus
+ * invalidus (imago non tangitur) */
+b32
 plexus_permutatio (
     Plexus  p,
        i32* imago);
@@ -143,8 +168,10 @@ plexus_dimidia_torsio (
 
 /* phi_p(x_j), 1 <= j <= fila. limes: longitudo maxima, post quamque
  * litteram, summae imaginum omnium generatorum, et cuiusque producti
- * ante reductionem (supra 2^31 - 1 non repraesentabilis). FALSUM si j
- * extra aut limes superatus. Temporaria in piscinis propriis. */
+ * ante reductionem (supra 2^31 - 1 non repraesentabilis); limes etiam
+ * memoriam propriam terminat (~ 4 * limes octeti per productum).
+ * FALSUM si plexus invalidus, j extra, limes superatus, aut memoria
+ * propria deficit. Temporaria in piscinis propriis. */
 b32
 plexus_imago_libera (
            Plexus  p,
@@ -153,10 +180,20 @@ plexus_imago_libera (
           Piscina* piscina,
     VerbumLiberum* exitus);
 
-/* *aequales = (p == q in B_n): r = reductio(p q^-1); summa exponentium
- * et permutatio r prius (necessaria), deinde phi_r = identitas. FALSUM
- * si fila diversa aut limes superatus (tunc *aequales non tangitur).
- * piscina ut alveus temporarius: ad statum initii reficitur. */
+/* imagines omnium generatorum: (*exitus)[j - 1] = phi_p(x_j), j = 1 ..
+ * fila; idem limes et eadem refutatio quae plexus_imago_libera */
+b32
+plexus_imagines_liberae (
+            Plexus   p,
+               i64   limes,
+           Piscina*  piscina,
+     VerbumLiberum** exitus);
+
+/* *aequales = (p == q in B_n): r = reductio(p q^-1); r vacuum -> VERUM
+ * statim (sine limite); summa exponentium et permutatio r prius
+ * (necessaria), deinde phi_r = identitas. FALSUM si plexus invalidus,
+ * fila diversa, aut limes superatus (tunc *aequales non tangitur).
+ * piscina ut alveus temporarius: usus ad statum initii reficitur. */
 b32
 plexus_aequales (
      Plexus  p,
@@ -172,8 +209,8 @@ verbum_liberum_ad_chordam (
           Piscina* piscina);
 
 /* plexus p (n fila) in B_fila: littera +-i -> +-(i + translatio).
- * FALSUM si fila extra 2..PLEXUS_FILA_MAXIMA aut p.fila + translatio
- * > fila */
+ * FALSUM si p invalidus, fila extra 2..PLEXUS_FILA_MAXIMA aut p.fila +
+ * translatio > fila */
 b32
 plexus_in_maiore (
      Plexus  p,
@@ -198,7 +235,9 @@ plexus_in_maiore (
  * L(u) aeq. (5)-(6), regulae aeq. (7)-(15), eaedem in appendice A.2
  * (loopsigma, loopinter) - ambae transcriptiones congruunt.
  * CONVENTIO fontis: sigma_i puncta i et i+1 HOROLOGII SENSU commutat
- * (Birman contra); verbum ansae a sinistra ad dextram adhibetur.
+ * (Birman contra); verbum ansae a sinistra ad dextram adhibetur, ergo
+ * actio DEXTRA: u . (pq) = (u . p) . q (probatum), contra actionem in
+ * F_n quae sinistra est.
  *
  * DISCUS: in D_n torsio plena Delta^2 (torsio circa marginem) omnem
  * ansam clausam fixam relinquit, ergo actio in D_n Delta^2 non videt.
@@ -232,8 +271,10 @@ ansa_circa (
      Piscina* piscina,
         Ansa* exitus);
 
-/* ansa post plexum (litterae a sinistra). FALSUM si p.fila != u.fila.
- * Temporaria in piscina propria; effectum in piscina vocantis. */
+/* ansa post plexum (litterae a sinistra; actio dextra). FALSUM si p
+ * invalidus, ansa invalida (fila < 3, coordinatae NIHIL) aut p.fila !=
+ * u.fila. Temporaria in piscina propria; effectum in piscina vocantis.
+ */
 b32
 ansa_agere (
         Ansa  u,
@@ -265,12 +306,19 @@ ansa_ad_chordam (
  * (plexus_aequales) exhaustive probata pro verbis brevibus (B_3 <= 6,
  * B_4 <= 5, B_5 <= 4 litterae; probatio_plexus); fidelitas generalis
  * hic non probatur - plexus_aequales manet referentia.
- * FALSUM si fila diversa. piscina ad statum initii reficitur. */
+ * FALSUM si plexus invalidus aut fila diversa. piscina ad statum
+ * initii reficitur. */
 b32
 plexus_aequales_ansis (
      Plexus  p,
      Plexus  q,
     Piscina* piscina,
         b32* aequales);
+
+/* contractiones piscinarum propriarum (imagines in F_n, ansae) ab
+ * initio processus: instrumentum probationis et mensurae, non status
+ * logicus (nullum effectum mutat) */
+i64
+plexus_contractiones (vacuum);
 
 #endif /* PLEXUS_H */

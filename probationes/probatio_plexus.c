@@ -1975,6 +1975,471 @@ _probare_in_maiore (
 }
 
 
+/* ==================================================
+ * Recensio T1 (recensor independens, 2026-10-15): M1-M3, L1-L8, API
+ * ================================================== */
+
+/* braida pura summa nulla, a praefiltris non decisa: s_i^2 s_j^-2
+ * (|i - j| >= 2) aut [s_i^2, s_{i+1}^2] */
+interior Plexus
+_pura (
+        Sors* s,
+         i32  n,
+     Piscina* piscina)
+{
+       s32 l[VIII];
+    Plexus c;
+       s32 i;
+
+    si (n >= IV && sors_intra(s, II) == ZEPHYRUM)
+    {
+        s32 j;
+
+        i            = (s32)sors_intra(s, n - III) + I;
+        j            = i + II + (s32)sors_intra(s, n - II - (i32)i);
+        l[ZEPHYRUM]  = i;
+        l[I]         = i;
+        l[II]        = -j;
+        l[III]       = -j;
+        (vacuum)plexus_creare(n, l, IV, piscina, &c);
+    }
+    alioquin
+    {
+        i            = (s32)sors_intra(s, n - II) + I;
+        l[ZEPHYRUM]  = i;
+        l[I]         = i;
+        l[II]        = i + I;
+        l[III]       = i + I;
+        l[IV]        = -i;
+        l[V]         = -i;
+        l[VI]        = -(i + I);
+        l[VII]       = -(i + I);
+        (vacuum)plexus_creare(n, l, VIII, piscina, &c);
+    }
+    redde c;
+}
+
+/* M2: inaequalitates quas summa et permutatio non decidunt */
+interior vacuum
+_probare_censurae_aequalitatis (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+       Sors  s;
+        i32  t;
+        i32  fracta = ZEPHYRUM;
+        b32  aequales;
+
+    CREDO_FALSUM (_aequales(_p(IV, "2 2 -3 -3", piscina), _p(IV, "",
+        piscina), piscina));
+    CREDO_FALSUM (_aequales(_p(V, "1 1 -3 -3", piscina), _p(V, "",
+        piscina), piscina));
+    CREDO_VERUM (plexus_aequales_ansis(_p(IV, "2 2 -3 -3", piscina),
+        _p(IV, "", piscina), piscina, &aequales) && !aequales);
+    sors_seminare(&s, CCCLXV, I);
+    per (t = ZEPHYRUM; t < CC; t++)
+    {
+        PiscinaNotatio nota  = piscina_notare(piscina);
+                   i32 n     = IV + sors_intra(&s, III);
+                Plexus p    = _fortuitus(&s, n, sors_intra(&s, VIII),
+                    piscina);
+                Plexus q    = _rescribere(&s, p, piscina);
+                Plexus qc;
+                   b32 per_liberum  = VERUM;
+                   b32 per_ansas    = VERUM;
+
+        (vacuum)plexus_iungere(q, _pura(&s, n, piscina), piscina, &qc);
+        si (   !plexus_aequales(p, qc, LIMES_MAGNUS, piscina,
+            &per_liberum)
+            || per_liberum
+            || !plexus_aequales_ansis(p, qc, piscina, &per_ansas)
+            || per_ansas)
+        {
+            fracta++;
+        }
+        piscina_reficere(piscina, nota);
+    }
+    CREDO_AEQUALIS_I32 (fracta, ZEPHYRUM);
+    /* piscina refecta cum r non trivialis (actio vere currit) */
+    {
+                Plexus p = _p(IV, "1 -2 3 2 -1", piscina);
+                Plexus q;
+        memoriae_index ante;
+
+        (vacuum)plexus_iungere(p, _p(IV, "2 2 -3 -3", piscina), piscina,
+            &q);
+        ante = piscina_summa_usus(piscina);
+        CREDO_VERUM (plexus_aequales(p, q, LIMES_MAGNUS, piscina,
+            &aequales) && !aequales);
+        CREDO_VERUM (plexus_aequales_ansis(p, q, piscina, &aequales)
+            && !aequales);
+        CREDO_VERUM (piscina_summa_usus(piscina) == ante);
+    }
+    /* L2: r vacuum -> VERUM etiam limite nullo */
+    aequales = FALSUM;
+    CREDO_VERUM (plexus_aequales(_p(III, "1 2 1", piscina), _p(III,
+        "1 2 1", piscina), ZEPHYRUM, piscina, &aequales) && aequales);
+    aequales = XCIX;
+    CREDO_FALSUM (plexus_aequales(_p(III, "1 2 1", piscina), _p(III,
+        "2 1 2", piscina), II, piscina, &aequales));
+    CREDO_VERUM (aequales == XCIX);
+}
+
+/* L1: limes minimus L* ex recurrentia contractus (in probatione):
+ * max(fila, longitudo producti ante reductionem, summa imaginum post
+ * quamque litteram); VERUM ad L*, FALSUM ad L* - 1 */
+interior s64
+_limes_minimus (
+     Plexus  p,
+    Piscina* piscina)
+{
+    s32** w        = (s32**)piscina_allocare(piscina,
+        (memoriae_index)p.fila * magnitudo(s32*));
+    i32* longitudo = (i32*)piscina_allocare(piscina,
+        (memoriae_index)p.fila * magnitudo(i32));
+    s64 maximum   = (s64)p.fila;
+    i32 k;
+
+    per (k = ZEPHYRUM; k < p.fila; k++)
+    {
+        w[k] = (s32*)piscina_allocare(piscina, magnitudo(s32));
+        w[k][ZEPHYRUM] = (s32)(k + I);
+        longitudo[k] = I;
+    }
+    per (k = ZEPHYRUM; k < p.longitudo; k++)
+    {
+        s32 littera = p.litterae[k];
+        i32 i = (i32)(littera > ZEPHYRUM ? littera : -littera)
+            - I;
+        s32* x   = w[i];
+        s32* y   = w[i + I];
+        i32  lx  = longitudo[i];
+        i32  ly  = longitudo[i + I];
+        s64  productum = littera > ZEPHYRUM ? II * (s64)lx + (s64)ly
+            : II * (s64)ly + (s64)lx;
+        s32* novum   = (s32*)piscina_allocare(piscina,
+            (memoriae_index)productum * magnitudo(s32));
+        i32 altitudo  = ZEPHYRUM;
+        s64 summa     = ZEPHYRUM;
+        s32 r;
+        i32 j;
+
+        si (productum > maximum)
+        {
+            maximum = productum;
+        }
+        si (littera > ZEPHYRUM)
+        {
+            /* x y x^-1 */
+            per (r = ZEPHYRUM; r < (s32)lx; r++)
+            {
+                altitudo = _impelle(novum, altitudo, x[r]);
+            }
+            per (r = ZEPHYRUM; r < (s32)ly; r++)
+            {
+                altitudo = _impelle(novum, altitudo, y[r]);
+            }
+            per (r = (s32)lx - I; r >= ZEPHYRUM; r--)
+            {
+                altitudo = _impelle(novum, altitudo, -x[r]);
+            }
+            w[i]              = novum;
+            longitudo[i]      = altitudo;
+            w[i + I]          = x;
+            longitudo[i + I]  = lx;
+        }
+        alioquin
+        {
+            /* y^-1 x y */
+            per (r = (s32)ly - I; r >= ZEPHYRUM; r--)
+            {
+                altitudo = _impelle(novum, altitudo, -y[r]);
+            }
+            per (r = ZEPHYRUM; r < (s32)lx; r++)
+            {
+                altitudo = _impelle(novum, altitudo, x[r]);
+            }
+            per (r = ZEPHYRUM; r < (s32)ly; r++)
+            {
+                altitudo = _impelle(novum, altitudo, y[r]);
+            }
+            w[i]              = y;
+            longitudo[i]      = ly;
+            w[i + I]          = novum;
+            longitudo[i + I]  = altitudo;
+        }
+        per (j = ZEPHYRUM; j < p.fila; j++)
+        {
+            summa += (s64)longitudo[j];
+        }
+        si (summa > maximum)
+        {
+            maximum = summa;
+        }
+    }
+    redde maximum;
+}
+
+interior vacuum
+_probare_censurae_limitis (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+       Sors  s;
+        i32  t;
+        i32  fracta = ZEPHYRUM;
+
+    sors_seminare(&s, DCCCXII, I);
+    per (t = ZEPHYRUM; t < CC; t++)
+    {
+        PiscinaNotatio nota  = piscina_notare(piscina);
+                   i32 n     = III + sors_intra(&s, III);
+                Plexus p    = t == ZEPHYRUM ? _p(III, "1 -2 1 -2 1",
+                    piscina) : _fortuitus(&s, n, sors_intra(&s, XIV),
+                    piscina);
+                   s64 limes = _limes_minimus(p, piscina);
+         VerbumLiberum w;
+
+        si (   !plexus_imago_libera(p, I, (i64)limes, piscina, &w)
+            || plexus_imago_libera(p, I, (i64)(limes - I), piscina, &w))
+        {
+            fracta++;
+        }
+        piscina_reficere(piscina, nota);
+    }
+    CREDO_AEQUALIS_I32 (fracta, ZEPHYRUM);
+}
+
+/* M3, L3, L5, L8: fines, alveus analysis, structura publica */
+interior vacuum
+_probare_censurae_finium (
+    CredoContextus* c)
+{
+           Piscina* piscina = c->piscina;
+            Plexus  r;
+            Plexus  malus;
+               s32  l[II];
+               s32  malae[I];
+               i32  imago[IV];
+     VerbumLiberum  w;
+     VerbumLiberum* omnes;
+              Ansa  u;
+              Ansa  v;
+               b32  aequales;
+    memoriae_index  ante;
+
+    /* M3: littera == fila per plexus_creare */
+    l[ZEPHYRUM] = III;
+    CREDO_FALSUM (plexus_creare(III, l, I, piscina, &r));
+    l[ZEPHYRUM] = -III;
+    CREDO_FALSUM (plexus_creare(III, l, I, piscina, &r));
+    /* L5: fines inclusi */
+    l[ZEPHYRUM] = I;
+    CREDO_VERUM (plexus_creare(PLEXUS_FILA_MAXIMA, l, I, piscina, &r));
+    l[ZEPHYRUM]  = PLEXUS_FILA_MAXIMA - I;
+    l[I]         = -(PLEXUS_FILA_MAXIMA - I);
+    CREDO_VERUM (plexus_creare(PLEXUS_FILA_MAXIMA, l, II, piscina, &r));
+    CREDO_VERUM (plexus_ex_chorda(PLEXUS_FILA_MAXIMA,
+        chorda_ex_literis("1048575 -1048575", piscina), piscina, &r)
+        && r.longitudo == II);
+    CREDO_FALSUM (plexus_ex_chorda(PLEXUS_FILA_MAXIMA,
+        chorda_ex_literis("1048576", piscina), piscina, &r));
+    /* L3: plexus_ex_chorda nihil praeter alveum suum relinquit */
+    {
+        chorda textus = chorda_ex_literis("1 -2 1 -2 1 -2 1 -2 1 -2",
+            piscina);
+        memoriae_index alveus = ((memoriae_index)(textus.mensura / II
+            + I) * magnitudo(s32) + VII) / VIII * VIII;
+
+        ante = piscina_summa_usus(piscina);
+        CREDO_VERUM (plexus_ex_chorda(III, textus, piscina, &r)
+            && r.longitudo == X);
+        CREDO_VERUM (piscina_summa_usus(piscina) - ante <= alveus);
+    }
+    /* L8: plexus manu factus invalidus ubique refutatur */
+    malae[ZEPHYRUM]  = III;
+    malus.fila       = III;
+    malus.longitudo  = I;
+    malus.litterae   = malae;
+    CREDO_FALSUM (plexus_validus(malus));
+    imago[ZEPHYRUM] = XCIX;
+    CREDO_FALSUM (plexus_permutatio(malus, imago));
+    CREDO_AEQUALIS_I32 (imago[ZEPHYRUM], XCIX);
+    CREDO_FALSUM (plexus_imago_libera(malus, I, LIMES_MAGNUS, piscina,
+        &w));
+    CREDO_FALSUM (plexus_imagines_liberae(malus, LIMES_MAGNUS, piscina,
+        &omnes));
+    CREDO_FALSUM (plexus_aequales(malus, malus, LIMES_MAGNUS, piscina,
+        &aequales));
+    CREDO_FALSUM (plexus_aequales_ansis(malus, malus, piscina,
+        &aequales));
+    CREDO_FALSUM (plexus_in_maiore(malus, V, I, piscina, &r));
+    (vacuum)ansa_circa(III, I, piscina, &u);
+    CREDO_FALSUM (ansa_agere(u, malus, piscina, &v));
+    malus.litterae = NIHIL;
+    CREDO_FALSUM (plexus_validus(malus));
+    malus.longitudo = ZEPHYRUM;
+    CREDO_VERUM (plexus_validus(malus));
+    malus.fila = I;
+    CREDO_FALSUM (plexus_validus(malus));
+    CREDO_VERUM (plexus_validus(_p(V, "1 -4 2", piscina)));
+    /* ansa invalida */
+    u.a = NIHIL;
+    CREDO_FALSUM (ansa_agere(u, _p(III, "1", piscina), piscina, &v));
+}
+
+/* M1, L6: contractio fit cum purgamenta crescunt, non omni littera */
+interior vacuum
+_probare_censurae_contractionis (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+        s32* litterae = (s32*)piscina_allocare(piscina,
+            (memoriae_index)6000 * magnitudo(s32));
+            Plexus p;
+     VerbumLiberum w;
+               i64 ante;
+               i32 k;
+              Ansa u;
+              Ansa v;
+
+    /* fila 20000, (s1 s1^-1)^500: imagines non crescunt, purgamenta
+     * parva; olim (recensio M1) contractio omni littera */
+    per (k = ZEPHYRUM; k < M; k += II)
+    {
+        litterae[k]      = I;
+        litterae[k + I]  = -I;
+    }
+    (vacuum)plexus_creare(20000UL, litterae, M, piscina, &p);
+    ante = plexus_contractiones();
+    CREDO_VERUM (_imago_textui(p, II, "2", piscina));
+    imprimere("  contractiones (fila 20000, M litterae): %lu\n",
+        (insignatus longus)(plexus_contractiones() - ante));
+    CREDO_VERUM (plexus_contractiones() - ante <= I);
+    /* (s1 s2)^900 in B_3: purgamenta quadratica -> contractiones */
+    per (k = ZEPHYRUM; k < 1800UL; k += II)
+    {
+        litterae[k]      = I;
+        litterae[k + I]  = II;
+    }
+    (vacuum)plexus_creare(III, litterae, 1800UL, piscina, &p);
+    ante = plexus_contractiones();
+    CREDO_VERUM (plexus_imago_libera(p, I, LIMES_MAGNUS, piscina, &w));
+    imprimere("  contractiones ((s1 s2)^900): %lu\n",
+        (insignatus longus)(plexus_contractiones() - ante));
+    CREDO_VERUM (plexus_contractiones() - ante >= I);
+    /* amortizata: contractio solum post purgamenta quater vivas
+     * imagines superantia - longe pauciores quam litterae */
+    CREDO_VERUM (plexus_contractiones() - ante < 1800UL / IV);
+    /* ansae: (s1 s2^-1)^3000 */
+    per (k = ZEPHYRUM; k < 6000UL; k += II)
+    {
+        litterae[k]      = I;
+        litterae[k + I]  = -II;
+    }
+    (vacuum)plexus_creare(III, litterae, 6000UL, piscina, &p);
+    (vacuum)ansa_circa(III, I, piscina, &u);
+    ante = plexus_contractiones();
+    CREDO_VERUM (ansa_agere(u, p, piscina, &v));
+    imprimere("  contractiones ansae ((s1 s2^-1)^3000): %lu\n",
+        (insignatus longus)(plexus_contractiones() - ante));
+    CREDO_VERUM (plexus_contractiones() - ante >= I);
+}
+
+/* API: imagines omnes; actio in F_n sinistra, actio in ansas dextra */
+interior vacuum
+_probare_censurae_actionum (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+       Sors  s;
+        i32  t;
+        i32  fracta_omnes     = ZEPHYRUM;
+        i32  fracta_sinistra  = ZEPHYRUM;
+        i32  fracta_dextra    = ZEPHYRUM;
+
+    sors_seminare(&s, DCCCLXXX, I);
+    per (t = ZEPHYRUM; t < CC; t++)
+    {
+        PiscinaNotatio nota  = piscina_notare(piscina);
+                   i32 n     = III + sors_intra(&s, IV);
+                Plexus p    = _fortuitus(&s, n, sors_intra(&s, VII),
+                    piscina);
+                Plexus q    = _fortuitus(&s, n, sors_intra(&s, VII),
+                    piscina);
+                Plexus  iunctus;
+         VerbumLiberum* omnes;
+                   i32  k;
+
+        (vacuum)plexus_iungere(p, q, piscina, &iunctus);
+        (vacuum)plexus_imagines_liberae(iunctus, LIMES_MAGNUS, piscina,
+            &omnes);
+        per (k = I; k <= n; k++)
+        {
+            VerbumLiberum  una;
+            VerbumLiberum  ex_q;
+                      s32* composita = (s32*)piscina_allocare(piscina,
+                          (memoriae_index)200000 * magnitudo(s32));
+                      i32 numerus;
+
+            (vacuum)plexus_imago_libera(iunctus, k, LIMES_MAGNUS,
+                piscina,
+                &una);
+            si (   una.longitudo != omnes[k - I].longitudo
+                || memcmp(una.litterae, omnes[k - I].litterae,
+                (size_t)una.longitudo * magnitudo(s32)) != ZEPHYRUM)
+            {
+                fracta_omnes++;
+            }
+            /* phi_{pq}(x_k) = phi_p(phi_q(x_k)) */
+            (vacuum)plexus_imago_libera(q, k, LIMES_MAGNUS, piscina,
+                &ex_q);
+            numerus = _agere_substitutione(p, ex_q.litterae,
+                ex_q.longitudo, composita, 200000UL, piscina);
+            si (   numerus != una.longitudo
+                || memcmp(composita, una.litterae, (size_t)numerus
+                * magnitudo(s32)) != ZEPHYRUM)
+            {
+                fracta_sinistra++;
+            }
+        }
+        /* u . (pq) = (u . p) . q */
+        {
+            Ansa u;
+            Ansa v;
+            Ansa w;
+            Ansa x;
+
+            (vacuum)ansa_circa(n, I + sors_intra(&s, n - I), piscina,
+                &u);
+            (vacuum)ansa_agere(u, iunctus, piscina, &v);
+            (vacuum)ansa_agere(u, p, piscina, &w);
+            (vacuum)ansa_agere(w, q, piscina, &x);
+            si (!ansae_aequales(v, x))
+            {
+                fracta_dextra++;
+            }
+        }
+        piscina_reficere(piscina, nota);
+    }
+    CREDO_AEQUALIS_I32 (fracta_omnes, ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (fracta_sinistra, ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (fracta_dextra, ZEPHYRUM);
+    /* actio dextra, non sinistra: (u . q) . p != u . (pq) */
+    {
+        Ansa u;
+        Ansa v;
+        Ansa w;
+        Ansa x;
+
+        (vacuum)ansa_circa(III, I, piscina, &u);
+        (vacuum)ansa_agere(u, _p(III, "1 -2", piscina), piscina, &v);
+        (vacuum)ansa_agere(u, _p(III, "-2", piscina), piscina, &w);
+        (vacuum)ansa_agere(w, _p(III, "1", piscina), piscina, &x);
+        CREDO_FALSUM (ansae_aequales(v, x));
+    }
+}
+
 interior CredoSectio SECTIONES[] = {
     { "verba", _probare_verba, NIHIL, NIHIL, NIHIL, NIHIL },
     { "permutatio", _probare_permutationem, NIHIL, NIHIL, NIHIL,
@@ -2016,6 +2481,18 @@ interior CredoSectio SECTIONES[] = {
     { "aequalitas per ansas", _probare_aequalitatem_ansis, NIHIL, NIHIL,
       NIHIL, NIHIL },
     { "in maiore", _probare_in_maiore, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "recensio aequalitatis", _probare_censurae_aequalitatis, NIHIL,
+      NIHIL, NIHIL, NIHIL },
+    { "recensio limitis", _probare_censurae_limitis, NIHIL, NIHIL,
+      NIHIL, NIHIL },
+    { "recensio finium", _probare_censurae_finium, NIHIL, NIHIL,
+        NIHIL,
+      NIHIL },
+    { "recensio contractionis", _probare_censurae_contractionis,
+        NIHIL,
+      NIHIL, NIHIL, NIHIL },
+    { "recensio actionum", _probare_censurae_actionum, NIHIL, NIHIL,
+      NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

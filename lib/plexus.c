@@ -23,6 +23,20 @@ _litterae (
         > ZEPHYRUM ? numerus : I) * magnitudo(s32));
 }
 
+/* contractiones piscinarum propriarum (plexus_contractiones) */
+hic_manens i64 _contractiones = ZEPHYRUM;
+
+/* sicut _litterae, sed NIHIL si memoria deficit (piscinae propriae) */
+interior s32*
+_litterae_conari (
+        i32  numerus,
+    Piscina* piscina)
+{
+    redde (s32*)piscina_conari_allocare(piscina,
+        (memoriae_index)(numerus
+        > ZEPHYRUM ? numerus : I) * magnitudo(s32));
+}
+
 /* littera valida in B_fila: 1 <= |littera| < fila */
 interior b32
 _littera_valida (
@@ -101,7 +115,6 @@ plexus_ex_chorda (
                s32* litterae;
                i32  numerus  = ZEPHYRUM;
                i32  k        = ZEPHYRUM;
-               b32  bene;
 
     si (   fila < II || fila > PLEXUS_FILA_MAXIMA
         || (textus.mensura > ZEPHYRUM && textus.datum == NIHIL))
@@ -147,14 +160,12 @@ plexus_ex_chorda (
         }
         litterae[numerus++] = signum * (s32)valor;
     }
-    /* litterae temporariae manent sub plexu (piscina non reficitur post
-     * creationem: plexus eas post notam allocat) */
-    bene = plexus_creare(fila, litterae, numerus, piscina, exitus);
-    si (!bene)
-    {
-        piscina_reficere(piscina, nota);
-    }
-    redde bene;
+    /* plexus in alveo analysis ipso: omnis littera iam probata (0 <
+     * |valor| < fila) */
+    exitus->fila       = fila;
+    exitus->longitudo  = numerus;
+    exitus->litterae   = litterae;
+    redde VERUM;
 }
 
 interior chorda
@@ -300,13 +311,39 @@ plexus_summa_exponentium (
     redde summa;
 }
 
-vacuum
+b32
+plexus_validus (
+    Plexus p)
+{
+    i32 k;
+
+    si (   p.fila < II || p.fila > PLEXUS_FILA_MAXIMA
+        || (s64)p.longitudo > PLEXUS_LONGITUDO_SUMMA
+        || (p.longitudo > ZEPHYRUM && p.litterae == NIHIL))
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < p.longitudo; k++)
+    {
+        si (!_littera_valida(p.litterae[k], p.fila))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+b32
 plexus_permutatio (
     Plexus  p,
        i32* imago)
 {
     i32 k;
 
+    si (!plexus_validus(p))
+    {
+        redde FALSUM;
+    }
     per (k = ZEPHYRUM; k < p.fila; k++)
     {
         imago[k] = k;
@@ -319,6 +356,7 @@ plexus_permutatio (
         imago[i]      = imago[i + I];
         imago[i + I]  = commutatum;
     }
+    redde VERUM;
 }
 
 b32
@@ -358,10 +396,11 @@ plexus_dimidia_torsio (
 /* imagines generatorum x_1 .. x_n (indice 0 .. n-1) in piscina propria;
  * summa = longitudo summa omnium */
 nomen structura {
-              i32  fila;
-    VerbumLiberum* imagines;
-              s64  summa;
-          Piscina* piscina;
+               i32  fila;
+     VerbumLiberum* imagines;
+               s64  summa;
+           Piscina* piscina;
+    memoriae_index  basis;      /* usus post contractionem ultimam */
 } ImaginesLiberae;
 
 /* a b c (c^-1 si c_inversum) libere reductum; FALSUM si longitudo ante
@@ -386,7 +425,11 @@ _productum (
     {
         redde FALSUM;
     }
-    acervus   = _litterae((i32)longitudo, piscina);
+    acervus   = _litterae_conari((i32)longitudo, piscina);
+    si (acervus == NIHIL)
+    {
+        redde FALSUM;
+    }
     altitudo  = _reducere_in(a->litterae, a->longitudo, acervus,
         ZEPHYRUM);
     altitudo  = _reducere_in(b->litterae, b->longitudo, acervus,
@@ -418,38 +461,55 @@ _productum (
     redde VERUM;
 }
 
-interior VerbumLiberum
+/* copia; conari: memoria deficiens -> FALSUM (piscinae propriae),
+ * aliter fatalis (piscina vocantis) */
+interior b32
 _copia (
     VerbumLiberum  w,
-          Piscina* piscina)
+              b32  conari,
+          Piscina* piscina,
+    VerbumLiberum* exitus)
 {
     VerbumLiberum c;
 
     c.longitudo  = w.longitudo;
-    c.litterae   = _litterae(w.longitudo, piscina);
+    c.litterae   = conari ? _litterae_conari(w.longitudo, piscina)
+        : _litterae(w.longitudo, piscina);
+    si (c.litterae == NIHIL)
+    {
+        redde FALSUM;
+    }
     si (w.longitudo > ZEPHYRUM)
     {
         memcpy(c.litterae, w.litterae, (size_t)w.longitudo
             * magnitudo(s32));
     }
-    redde c;
+    *exitus = c;
+    redde VERUM;
 }
 
-interior VerbumLiberum
+/* w^-1 in piscina propria; FALSUM si memoria deficit */
+interior b32
 _inversum (
     VerbumLiberum  w,
-          Piscina* piscina)
+          Piscina* piscina,
+    VerbumLiberum* exitus)
 {
     VerbumLiberum c;
               i32 k;
 
     c.longitudo  = w.longitudo;
-    c.litterae   = _litterae(w.longitudo, piscina);
+    c.litterae   = _litterae_conari(w.longitudo, piscina);
+    si (c.litterae == NIHIL)
+    {
+        redde FALSUM;
+    }
     per (k = ZEPHYRUM; k < w.longitudo; k++)
     {
         c.litterae[k] = -w.litterae[w.longitudo - I - k];
     }
-    redde c;
+    *exitus = c;
+    redde VERUM;
 }
 
 /* omnes imagines in piscinam novam transferuntur, vetus destruitur:
@@ -467,15 +527,26 @@ _contrahere (
     {
         redde FALSUM;
     }
-    imagines = (VerbumLiberum*)piscina_allocare(nova,
+    imagines = (VerbumLiberum*)piscina_conari_allocare(nova,
         (memoriae_index)m->fila * magnitudo(VerbumLiberum));
+    si (imagines == NIHIL)
+    {
+        piscina_destruere(nova);
+        redde FALSUM;
+    }
     per (k = ZEPHYRUM; k < m->fila; k++)
     {
-        imagines[k] = _copia(m->imagines[k], nova);
+        si (!_copia(m->imagines[k], VERUM, nova, &imagines[k]))
+        {
+            piscina_destruere(nova);
+            redde FALSUM;
+        }
     }
     piscina_destruere(m->piscina);
     m->piscina   = nova;
     m->imagines  = imagines;
+    m->basis     = piscina_summa_usus(nova);
+    _contractiones++;
     redde VERUM;
 }
 
@@ -493,6 +564,7 @@ _imagines_computare (
     m->summa     = (s64)p.fila;
     m->piscina   = NIHIL;
     m->imagines  = NIHIL;
+    m->basis     = ZEPHYRUM;
     si (m->summa > limes)
     {
         redde FALSUM;
@@ -502,14 +574,23 @@ _imagines_computare (
     {
         redde FALSUM;
     }
-    m->imagines = (VerbumLiberum*)piscina_allocare(m->piscina,
+    m->imagines = (VerbumLiberum*)piscina_conari_allocare(m->piscina,
         (memoriae_index)p.fila * magnitudo(VerbumLiberum));
+    si (m->imagines == NIHIL)
+    {
+        redde FALSUM;
+    }
     per (k = ZEPHYRUM; k < p.fila; k++)
     {
-        m->imagines[k].longitudo           = I;
-        m->imagines[k].litterae            = _litterae(I, m->piscina);
-        m->imagines[k].litterae[ZEPHYRUM]  = (s32)(k + I);
+        m->imagines[k].longitudo  = I;
+        m->imagines[k].litterae   = _litterae_conari(I, m->piscina);
+        si (m->imagines[k].litterae == NIHIL)
+        {
+            redde FALSUM;
+        }
+        m->imagines[k].litterae[ZEPHYRUM] = (s32)(k + I);
     }
+    m->basis = piscina_summa_usus(m->piscina);
     /* phi := phi o phi_a, littera per litteram a sinistra (W = imagines
      * ante litteram):
      *   sigma_i:    W_i' = W_i W_{i+1} W_i^-1,  W_{i+1}' = W_i
@@ -537,9 +618,12 @@ _imagines_computare (
         }
         alioquin
         {
-            VerbumLiberum secunda_inversa = _inversum(secunda,
-                m->piscina);
+            VerbumLiberum secunda_inversa;
 
+            si (!_inversum(secunda, m->piscina, &secunda_inversa))
+            {
+                redde FALSUM;
+            }
             si (!_productum(&secunda_inversa, &prima, &secunda, FALSUM,
                 limes,
                 m->piscina, &nova))
@@ -558,10 +642,10 @@ _imagines_computare (
             redde FALSUM;
         }
         m->summa = summa_nova;
-        /* purgamenta: piscina quater imagines vivas superans
-         * compactatur */
-        si ((s64)piscina_summa_usus(m->piscina) > IV * m->summa
-            * (s64)magnitudo(s32) + 65536)
+        /* purgamenta: contractio cum piscina quater crevit post
+         * initium aut contractionem ultimam (onus fixum per filum in
+         * basi: recensio M1, olim omni littera supra ~8192 fila) */
+        si (piscina_summa_usus(m->piscina) > IV * m->basis + 65536)
         {
             si (!_contrahere(m))
             {
@@ -583,14 +667,49 @@ plexus_imago_libera (
     ImaginesLiberae m;
                 b32 bene;
 
-    si (j < I || j > p.fila)
+    si (!plexus_validus(p) || j < I || j > p.fila)
     {
         redde FALSUM;
     }
     bene = _imagines_computare(p, _limes(limes), &m);
     si (bene)
     {
-        *exitus = _copia(m.imagines[j - I], piscina);
+        (vacuum)_copia(m.imagines[j - I], FALSUM, piscina, exitus);
+    }
+    si (m.piscina != NIHIL)
+    {
+        piscina_destruere(m.piscina);
+    }
+    redde bene;
+}
+
+b32
+plexus_imagines_liberae (
+            Plexus   p,
+               i64   limes,
+           Piscina*  piscina,
+     VerbumLiberum** exitus)
+{
+    ImaginesLiberae m;
+                b32 bene;
+                i32 k;
+
+    si (!plexus_validus(p))
+    {
+        redde FALSUM;
+    }
+    bene = _imagines_computare(p, _limes(limes), &m);
+    si (bene)
+    {
+        VerbumLiberum* imagines = (VerbumLiberum*)piscina_allocare(
+            piscina, (memoriae_index)p.fila * magnitudo(VerbumLiberum));
+
+        per (k = ZEPHYRUM; k < p.fila; k++)
+        {
+            (vacuum)_copia(m.imagines[k], FALSUM, piscina,
+                &imagines[k]);
+        }
+        *exitus = imagines;
     }
     si (m.piscina != NIHIL)
     {
@@ -615,7 +734,7 @@ plexus_aequales (
                      b32  idem = VERUM;
                      i32  k;
 
-    si (p.fila != q.fila)
+    si (p.fila != q.fila || !plexus_validus(p) || !plexus_validus(q))
     {
         redde FALSUM;
     }
@@ -626,6 +745,14 @@ plexus_aequales (
         redde FALSUM;
     }
     r = plexus_reducere(r, piscina);
+    /* r vacuum: aequales sine actione (recensio L2: etiam limite infra
+     * fila) */
+    si (r.longitudo == ZEPHYRUM)
+    {
+        piscina_reficere(piscina, nota);
+        *aequales = VERUM;
+        redde VERUM;
+    }
     /* invariantia necessaria (exacta): summa exponentium, permutatio */
     si (plexus_summa_exponentium(r) != ZEPHYRUM)
     {
@@ -635,7 +762,7 @@ plexus_aequales (
     {
         imago = (i32*)piscina_allocare(piscina, (memoriae_index)r.fila
             * magnitudo(i32));
-        plexus_permutatio(r, imago);
+        (vacuum)plexus_permutatio(r, imago);
         per (k = ZEPHYRUM; k < r.fila; k++)
         {
             si (imago[k] != k)
@@ -682,7 +809,7 @@ plexus_in_maiore (
     Plexus q;
        i32 k;
 
-    si (   fila < II || fila > PLEXUS_FILA_MAXIMA
+    si (   !plexus_validus(p) || fila < II || fila > PLEXUS_FILA_MAXIMA
         || (i64)p.fila + (i64)translatio > (i64)fila)
     {
         redde FALSUM;
@@ -911,6 +1038,7 @@ _ansam_contrahere (
     }
     piscina_destruere(*piscina);
     *piscina = nova;
+    _contractiones++;
     redde VERUM;
 }
 
@@ -921,15 +1049,17 @@ ansa_agere (
      Piscina* piscina,
         Ansa* exitus)
 {
-     Piscina* temporaria;
-      Magnus* a;
-      Magnus* b;
-         i32  numerus = u.fila - II;
-         i32  k;
-         i32  ab_ultima = ZEPHYRUM;
-        Ansa  v;
+          Piscina* temporaria;
+           Magnus* a;
+           Magnus* b;
+              i32  numerus = u.fila - II;
+              i32  k;
+              i32  ab_ultima = ZEPHYRUM;
+             Ansa  v;
+   memoriae_index  basis;
 
-    si (p.fila != u.fila || u.fila < III)
+    si (   p.fila != u.fila || u.fila < III || u.a == NIHIL
+        || u.b    == NIHIL || !plexus_validus(p))
     {
         redde FALSUM;
     }
@@ -949,19 +1079,24 @@ ansa_agere (
         a[k] = u.a[k];
         b[k] = u.b[k];
     }
+    basis = piscina_summa_usus(temporaria);
     per (k = ZEPHYRUM; k < p.longitudo; k++)
     {
         _ansam_littera(a, b, u.fila, p.litterae[k], temporaria);
-        /* purgamenta: contractio post 256 litteras (aut numerum) si
-         * piscina temporaria > 1 MB */
+        /* purgamenta: inspectio post 256 litteras (aut numerum);
+         * contractio cum piscina quater crevit post contractionem
+         * ultimam et 1 MB superat */
         si (++ab_ultima >= (numerus > CCLVI ? numerus : CCLVI))
         {
             ab_ultima = ZEPHYRUM;
-            si (   piscina_summa_usus(temporaria) > 1048576UL
-                && !_ansam_contrahere(a, b, numerus, &temporaria))
+            si (piscina_summa_usus(temporaria) > IV * basis + 1048576UL)
             {
-                piscina_destruere(temporaria);
-                redde FALSUM;
+                si (!_ansam_contrahere(a, b, numerus, &temporaria))
+                {
+                    piscina_destruere(temporaria);
+                    redde FALSUM;
+                }
+                basis = piscina_summa_usus(temporaria);
             }
         }
     }
@@ -1109,7 +1244,8 @@ plexus_aequales_ansis (
                i32 k;
                b32 idem = VERUM;
 
-    si (p.fila != q.fila || fila > PLEXUS_FILA_MAXIMA)
+    si (   p.fila != q.fila || fila > PLEXUS_FILA_MAXIMA
+        || !plexus_validus(p) || !plexus_validus(q))
     {
         redde FALSUM;
     }
@@ -1137,4 +1273,10 @@ plexus_aequales_ansis (
     piscina_reficere(piscina, nota);
     *aequales = idem;
     redde VERUM;
+}
+
+i64
+plexus_contractiones (vacuum)
+{
+    redde _contractiones;
 }

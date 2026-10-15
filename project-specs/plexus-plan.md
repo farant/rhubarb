@@ -226,6 +226,14 @@ for Fran's go-ahead.
   20 credo sections, 1,000 checks; sanitizers clean. 16 plants, 15 red,
   1 equivalent within the tested range (E_{n+1} redundant); three tests
   strengthened after survivors.)*
+- **T1 review (2026-10-15, done between T2 and T3).** An independent
+  reviewer with two Python oracles (Artin, and Burau over Z[t, t^-1])
+  found 0 disagreements over 1.83 billion equality verdicts and 345,888
+  images, and 3 M and 8 L findings, all fixed: the compaction cliff
+  above ~8,192 strands, prefilter-masked test gaps, untested bounds,
+  `plexus_validus`, `plexus_imagines_liberae`, and the action
+  directions stated and tested. The 11 surviving mutants are now red.
+  This does not replace T5, the full review after T4.
 - **T3. Reduced Burau.** Over Z[t, t^-1] and at t = -1; characteristic
   polynomial; `plexus_radius_burau`. Credo: oracles 4 and 5, and the
   exact (3 + √5)/2.
