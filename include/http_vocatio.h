@@ -59,6 +59,8 @@ nomen structura {
      * hospes URL per nomina resolvitur */
     constans NominaAddressus* addressus;
                          i32  addressus_numerus;
+    /* https: ancora TLS (TlsOptiones.ancora_via); NIHIL = systema */
+         constans character* tls_ancora_via;
 } HttpVocatioOptiones;
 
 /* vocatio incipit; optiones NIHIL = ordinariae. NIHIL solum si

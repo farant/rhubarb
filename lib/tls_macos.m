@@ -35,6 +35,10 @@ structura TlsConnexio {
     b32            scribere_pendet;
     size_t         scriptum_pendens;
     chorda         erratum;
+    /* ancorae: CA sola fide digna (TlsOptiones.ancora_via), NULL =
+     * repositorium systematis; hospes_cf pro politia SSL (nomen) */
+    CFArrayRef     ancorae;
+    CFStringRef    hospes_cf;
 };
 
 
@@ -286,6 +290,99 @@ _durare(SSLContextRef ssl_context, Piscina* piscina)
  * verificatio. NIHIL si bene (conn->ssl_context positum); aliter causa
  * (contextus dimissus; tcp NON clausa - vocans claudit). Communis
  * tls_connectere et tls_incipere (http-vocatio II.3). */
+/* ancora DER ex via -> conn->ancorae; NIHIL si bene, aliter causa */
+interior constans character*
+_ancoram_legere(TlsConnexio* conn, constans character* via)
+{
+    FILE* f;
+    unsigned char capsa[XVI * MXXIV];
+    size_t n;
+    CFDataRef data;
+    SecCertificateRef cert;
+
+    f = fopen(via, "rb");
+    si (!f)
+    {
+        redde "ancora legi non potest";
+    }
+    n = fread(capsa, 1, sizeof(capsa), f);
+    fclose(f);
+    data = CFDataCreate(NULL, capsa, (CFIndex)n);
+    cert = data ? SecCertificateCreateWithData(NULL, data) : NULL;
+    si (data)
+    {
+        CFRelease(data);
+    }
+    si (!cert)
+    {
+        redde "ancora non est certificatum DER";
+    }
+    {
+        constans void* valores[I];
+
+        valores[0] = cert;
+        conn->ancorae = CFArrayCreate(NULL, valores, 1,
+            &kCFTypeArrayCallBacks);
+    }
+    CFRelease(cert);
+    redde conn->ancorae ? NIHIL : "ancora: CFArrayCreate fallita";
+}
+
+/* post errSSLServerAuthCompleted cum ancoris: fiducia hospitis contra
+ * ancoras SOLAS, politia SSL cum nomine hospitis expresso (catena,
+ * tempus, nomen). VERUM si fide dignus; aliter conn->erratum */
+interior b32
+_fiduciam_iudicare(TlsConnexio* conn)
+{
+    SecTrustRef fiducia = NULL;
+    SecPolicyRef politia;
+    CFErrorRef erratum = NULL;
+    OSStatus status;
+    b32 bene;
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    status = SSLCopyPeerTrust(conn->ssl_context, &fiducia);
+#pragma clang diagnostic pop
+    si (status != noErr || fiducia == NULL)
+    {
+        conn->erratum = chorda_ex_literis("certificatum hospitis deest",
+            conn->piscina);
+        redde FALSUM;
+    }
+    politia = SecPolicyCreateSSL(true, conn->hospes_cf);
+    SecTrustSetPolicies(fiducia, politia);
+    CFRelease(politia);
+    SecTrustSetAnchorCertificates(fiducia, conn->ancorae);
+    SecTrustSetAnchorCertificatesOnly(fiducia, true);
+    bene = SecTrustEvaluateWithError(fiducia,
+        &erratum) ? VERUM : FALSUM;
+    si (!bene)
+    {
+        character nuntius[CCLVI];
+        CFStringRef descriptio =
+            erratum ? CFErrorCopyDescription(erratum)
+                                         : NULL;
+
+        strcpy(nuntius, "certificatum reiectum");
+        si (descriptio)
+        {
+            strcpy(nuntius, "certificatum reiectum: ");
+            CFStringGetCString(descriptio, nuntius + strlen(nuntius),
+                (CFIndex)(sizeof(nuntius) - strlen(nuntius)),
+                kCFStringEncodingUTF8);
+            CFRelease(descriptio);
+        }
+        conn->erratum = chorda_ex_literis(nuntius, conn->piscina);
+    }
+    si (erratum)
+    {
+        CFRelease(erratum);
+    }
+    CFRelease(fiducia);
+    redde bene;
+}
+
 interior constans character*
 _contextum_parare(TlsConnexio* conn, constans character* hospes,
     constans TlsOptiones* optiones)
@@ -329,7 +426,21 @@ _contextum_parare(TlsConnexio* conn, constans character* hospes,
         CFRelease(ssl_context);
         redde causa;
     }
-    si (optiones && !optiones->verificare_certificatum)
+    si (optiones && optiones->ancora_via)
+    {
+        causa = _ancoram_legere(conn, optiones->ancora_via);
+        si (causa)
+        {
+            CFRelease(ssl_context);
+            redde causa;
+        }
+        conn->hospes_cf = CFStringCreateWithCString(NULL, hospes,
+            kCFStringEncodingUTF8);
+    }
+    /* ancora aut verificatio omissa: pactio ad auth hospitis sistit -
+     * ancora: _fiduciam_iudicare; omissa: nihil iudicatur */
+    si (optiones && (!optiones->verificare_certificatum
+        || optiones->ancora_via))
     {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
@@ -352,6 +463,7 @@ tls_optiones_default(vacuum)
     TlsOptiones opt;
     opt.timeout_ms = XXX * M;  /* 30 seconds */
     opt.verificare_certificatum = VERUM;
+    opt.ancora_via = NIHIL;
     redde opt;
 }
 
@@ -424,6 +536,8 @@ tls_connectere_cum_optionibus(
     conn->scriptum_pendens = 0;
     conn->erratum.datum = NIHIL;
     conn->erratum.mensura = 0;
+    conn->ancorae = NULL;
+    conn->hospes_cf = NULL;
 
     {
         constans character* causa = _contextum_parare(conn, hospes,
@@ -448,7 +562,19 @@ tls_connectere_cum_optionibus(
     } dum (status == errSSLWouldBlock && !conn->tempus_excessum);
 #pragma clang diagnostic pop
 
-    /* Tractare kSSLSessionOptionBreakOnServerAuth */
+    /* Tractare kSSLSessionOptionBreakOnServerAuth (ancora: iudicium) */
+    si (status == errSSLServerAuthCompleted && conn->ancorae
+        && !_fiduciam_iudicare(conn))
+    {
+        chorda causa = conn->erratum;
+
+        tls_claudere(conn);
+        res.successus = FALSUM;
+        res.connexio = NIHIL;
+        res.error = TLS_ERROR_CERTIFICATUM;
+        res.error_descriptio = causa;
+        redde res;
+    }
     si (status == errSSLServerAuthCompleted)
     {
         /* Continuare handshake post server auth */
@@ -560,6 +686,11 @@ tls_gradus(TlsConnexio* connexio)
     {
         connexio->scribere_pendet = FALSUM;
         status = SSLHandshake(connexio->ssl_context);
+        si (   status == errSSLServerAuthCompleted && connexio->ancorae
+            && !_fiduciam_iudicare(connexio))
+        {
+            redde TLS_GRADUS_ERROR;
+        }
     } dum (status == errSSLServerAuthCompleted);
 #pragma clang diagnostic pop
     si (status == noErr)
@@ -810,6 +941,17 @@ tls_claudere(TlsConnexio* connexio)
         }
         CFRelease(connexio->ssl_context);
         connexio->ssl_context = NIHIL;
+    }
+
+    si (connexio->ancorae)
+    {
+        CFRelease(connexio->ancorae);
+        connexio->ancorae = NULL;
+    }
+    si (connexio->hospes_cf)
+    {
+        CFRelease(connexio->hospes_cf);
+        connexio->hospes_cf = NULL;
     }
 
     si (connexio->tcp)

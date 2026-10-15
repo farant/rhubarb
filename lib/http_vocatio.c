@@ -38,6 +38,7 @@ structura HttpVocatio {
           TlsConnexio* tls;               /* tcp possidet */
               integer  fossa;             /* in reactore; -1 nulla */
                   b32  est_https;
+   constans character* tls_ancora_via;    /* NIHIL = systema */
                chorda  octeti;            /* clavis intus (R2) */
                   i32  missa;
            HttpLector* lector;
@@ -479,8 +480,10 @@ _connexum (
 
     si (v->est_https)
     {
-        tr = tls_incipere(v->tcp, http_petitio_hospes(v->petitio),
-            NIHIL,
+        TlsOptiones opt = tls_optiones_default();
+
+        opt.ancora_via = v->tls_ancora_via;
+        tr = tls_incipere(v->tcp, http_petitio_hospes(v->petitio), &opt,
             v->piscina);
         si (!tr.successus)
         {
@@ -659,9 +662,10 @@ http_vocare (
             v->conatus[k].fossa = -I;
         }
     }
-    v->error_pendens  = HTTP_OK;
-    v->est_https      = http_petitio_est_https(petitio);
-    tempus            = http_petitio_tempus(petitio);
+    v->error_pendens   = HTTP_OK;
+    v->est_https       = http_petitio_est_https(petitio);
+    v->tls_ancora_via  = optiones ? optiones->tls_ancora_via : NIHIL;
+    tempus             = http_petitio_tempus(petitio);
     v->mora_connexionis_ms = (optiones && optiones->mora_connexionis_ms
         > ZEPHYRUM) ? optiones->mora_connexionis_ms
         : (tempus

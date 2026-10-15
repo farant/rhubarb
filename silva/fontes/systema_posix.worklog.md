@@ -60,3 +60,10 @@ TU nostrum DISSENTIT (assertum_174), restored -> CONSENTIT.
 examen REICE'd it (identificator ignotus). Added `AF_INET6 30` (Darwin;
 Linux is 10) next to AF_INET; auspex asserts it - CONSENTIT, plant 31
 -> DISSENTIT, restored.
+
+## 2026-10-15 - F_OK X_OK W_OK R_OK (access modes)
+
+The offline TLS server test uses `access(..., R_OK/X_OK)`; examen
+REICE'd them (unknown). Added beside the `access` prototype in the
+unistd.h sectio (Darwin = the common POSIX values 0/1/2/4); auspex
+asserts all four - CONSENTIT, plant R_OK 5 -> DISSENTIT, restored.

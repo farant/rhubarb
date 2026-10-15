@@ -50,6 +50,10 @@ nomen structura {
 nomen structura {
     i32 timeout_ms;              /* Timeout in milliseconds (0 = infinitus) */
     b32 verificare_certificatum; /* Verificare certificatum hospitis? */
+    /* ancora: via ad certificatum CA (DER) quod SOLUM fide dignum est
+     * (probationes: CA propria; postea fixatio). NIHIL = repositorium
+     * systematis. Verificatio plena manet (catena, tempus, hospes). */
+    constans character* ancora_via;
 } TlsOptiones;
 
 /* Certificatum hospitis (folium primum catenae).

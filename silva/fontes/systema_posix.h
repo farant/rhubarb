@@ -187,6 +187,11 @@ pid_t   setsid(void);
 int     execve(const char* plagula, char* const argumenta[],
                char* const ambitus[]);
 int     access(const char* via, int modus);
+/* modi access() (Darwin = POSIX communes) */
+#define F_OK 0
+#define X_OK 1
+#define W_OK 2
+#define R_OK 4
 int     faccessat(int fossa, const char* via, int modus, int vexilla);
 unsigned int alarm(unsigned int secunda);
 /* chdir: directorium infantis pseudoterminalis (B3, 2026-10-06) */

@@ -187,3 +187,36 @@ the fd. NOT verifiable offline (recorded, not planted): the context
 release itself, the gradatim `TLS_ITERUM` read of application data, and
 the `SSLWrite(NULL, 0)` flush - T5's rete file and the live check carry
 the read path.
+
+## 2026-10-15 - trust anchors + an offline TLS server for tests
+
+`TlsOptiones.ancora_via` (DER CA): the ONLY trusted root for this
+connection - for tests (our own CA) and later pinning. With an anchor
+the handshake breaks at server auth (`kSSLSessionOptionBreakOnServerAuth`)
+and `_fiduciam_iudicare` evaluates the peer trust against the anchor
+ONLY (`SecTrustSetAnchorCertificatesOnly`), with an EXPLICIT SSL policy
+carrying the host name (`SecPolicyCreateSSL(true, host)`) - chain,
+validity and name are all checked; failure = `TLS_ERROR_CERTIFICATUM`
+(blocking) / `TLS_GRADUS_ERROR` with the Security error text (stepped).
+Both paths; anchors released in `tls_claudere`.
+`HttpVocatioOptiones.tls_ancora_via` passes it through http_vocatio.
+
+**Apple rejects long-lived server certs.** First run: "certificate is
+not standards compliant" - macOS requires TLS server (leaf)
+certificates valid <= 825 days. Committed fixtures would therefore rot
+within two years, so certificates are GENERATED AT TEST TIME
+(`probationes/fixa/tls/generare.sh <dir>`: test CA, localhost valid 365
+days, alienus = wrong host, expiratus = 2020, ignotus = other CA; EC
+P-256) - and no private key is ever committed.
+
+Test `probationes/probatio_tls_servus.c` with `probationes/servus_tls.h`:
+`/opt/homebrew/bin/openssl s_server -WWW` as a child-process ORACLE
+(like bash for crusta), serving files from the suite's credo area
+(deleted automatically after the suite). Sections: parvum (full
+stepped handshake + read), magnum (256 KB: many records in one burst -
+the drain-until-ITERUM rule), alienus / expiratus / ignotus (each a
+named rejection), sine ancora (system store does not know our CA -
+verification is really on), obstruens (blocking path, same anchor).
+Before the anchor existed the four rejection sections passed for the
+WRONG reason (everything was rejected); plants on the judgement and
+the host-name policy prove each one now tests its own failure.
