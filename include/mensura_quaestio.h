@@ -199,4 +199,22 @@ cursus_quaerere_discus (
     constans Xar* introitus,
          Piscina* piscina);
 
+/* NIHIL CONGRUIT (2026-10-15): quaestio vacua cum filtro tituli
+ * (titulus aut praefixum) tacebat - 'titulus erratus' et 'nullus
+ * cursus fractus' idem videbantur (probatio_tcp_servus quaesita, sed
+ * titulus est 'probationes_radicis/probatio_tcp_servus'). *noti_out =
+ * cursus quorum titulus filtro TITULI solo congruit (status, post,
+ * nota, arbor, ramus neglecti). Si nulli: tituli SIMILES (quaesitum
+ * intra titulum, aut segmentum ultimum post '/', '#', ':' aequale),
+ * ordine numeri cursuum descendentis, maximi 'maximi' (CursusSumma:
+ * titulus, numerus). Xar vacuum si noti aut nihil simile; NIHIL si
+ * filtrum tituli nullum. */
+Xar*
+cursus_quaerere_similes (
+      constans CursusIndex* index,
+    constans CursusFiltrum* filtrum,
+                       i32  maximi,
+                       i32* noti_out,
+                   Piscina* piscina);
+
 #endif /* MENSURA_QUAESTIO_H */
