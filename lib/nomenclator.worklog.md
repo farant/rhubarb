@@ -270,3 +270,13 @@ personae document, as for ISO. An explicit "empty part" check was
 removed: a plant proved it unobservable - an empty month/day parses as
 0 and the document refuses it anyway. Display format unchanged
 ("2 March 1986  40"); ISO input unchanged.
+
+## 2026-10-15 - labels on the selected row (Fran)
+
+Dim labels (Phone, Email, Tags, Birthday, "+ phone", "+ email") were
+COLOR_TEXT_DIM, which disappears on COLOR_SELECTION. On the selected
+row they now use COLOR_BACKGROUND (Fran's suggestion - keeps the label
+distinct from its value, which is COLOR_TEXT). The list's business mark
+(rhombus) on the selected row is COLOR_TEXT, like the list's tags
+already were (calendar convention). Test helper note: Mandata polygons
+carry their geometry in `puncta`, not `fines`.

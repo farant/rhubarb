@@ -1624,6 +1624,97 @@ _probare_natalem_americanum (
     CREDO_VERUM(natalis_est(x, MCMLXXXVI, III, II));
 }
 
+/* textus partem continens colore thematis dato in finibus? */
+interior b32
+textus_colore_est (
+                 Mandata* md,
+                   Fines  f,
+      constans character* pars,
+                     i32  signum)
+{
+    constans Mandatum* y;
+                  i32  i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        y = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   y->genus == MANDATUM_TEXTUS && punctum_intra(y->fines, f)
+            && chorda_continet(y->textus, chorda_ex_literis(pars,
+                   md->piscina))
+            && y->color.genus == COLOR_MANDATI_THEMA
+            && y->color.valor == signum)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* polygonum (signum societatis) colore thematis dato in finibus? */
+interior b32
+polygonum_colore_est (
+    Mandata* md,
+      Fines  f,
+        i32  signum)
+{
+    constans Mandatum* y;
+                  i32  i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        y = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   y->genus              == MANDATUM_POLYGONUM
+            && y->numerus_punctorum > I
+            && y->puncta[ZEPHYRUM].x >= f.x
+            && y->puncta[ZEPHYRUM].y >= f.y
+            && y->puncta[ZEPHYRUM].x < f.x + f.latitudo
+            && y->puncta[ZEPHYRUM].y < f.y + f.altitudo
+            && y->color.genus        == COLOR_MANDATI_THEMA
+            && y->color.valor        == signum)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* tituli campi in ordine electo colore fundi (Franus 10-15: obscuri in
+ * fundo selectionis evanescebant), ceteri obscuri; signum societatis
+ * in ordine electo indicis non obscurum */
+interior vacuum
+_probare_titulos_electos (
+    CredoContextus* c)
+{
+     Mundus* x;
+    Mandata* md;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(contactus_parare(x, c->piscina));
+    /* index: Banca electa (signum non obscurum), 3M non electa */
+    clavis(x, 'j');
+    md = reddere(x, c->piscina);
+    CREDO_VERUM(polygonum_colore_est(md, fines_componentis(x, "p2",
+        c->piscina), (i32)COLOR_TEXT));
+    CREDO_VERUM(polygonum_colore_est(md, fines_componentis(x, "p5",
+        c->piscina), (i32)COLOR_TEXT_DIM));
+    CREDO_NECESSE(personam_aperire(x, "p1", c->piscina));
+    clavis(x, 'j');
+    clavis(x, 'j');
+    clavis(x, 'j');
+    CREDO_VERUM(campus_est(x, "campus_electus", "3"));
+    md = reddere(x, c->piscina);
+    CREDO_VERUM(textus_colore_est(md, fines_componentis(x, "f3",
+        c->piscina), "Tags", (i32)COLOR_BACKGROUND));
+    CREDO_VERUM(textus_colore_est(md, fines_componentis(x, "f4",
+        c->piscina), "Birthday", (i32)COLOR_TEXT_DIM));
+    clavis(x, 'k');
+    md = reddere(x, c->piscina);
+    CREDO_VERUM(textus_colore_est(md, fines_componentis(x, "f2",
+        c->piscina), "+ email", (i32)COLOR_BACKGROUND));
+    CREDO_VERUM(textus_colore_est(md, fines_componentis(x, "f3",
+        c->piscina), "Tags", (i32)COLOR_TEXT_DIM));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "montatio", _probare_montationem, mundum_parare, mundum_purgare,
         NIHIL, NIHIL },
@@ -1682,6 +1773,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "quaestio_filtro", _probare_quaestionem_filtro, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { "natalis_americanus", _probare_natalem_americanum, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "tituli_electi", _probare_titulos_electos, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

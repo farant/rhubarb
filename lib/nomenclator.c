@@ -1830,7 +1830,8 @@ interior vacuum
 rhombum_pingere (
     Mandata* md,
         s32  x,
-        s32  y)
+        s32  y,
+        i32  color)
 {
     Punctum p[IV];
 
@@ -1842,8 +1843,7 @@ rhombum_pingere (
     p[II].y        = y + IV;
     p[III].x       = x;
     p[III].y       = y + II;
-    mandata_polygonum(md, p, IV, figura_color_thematis(COLOR_TEXT_DIM),
-        VERUM);
+    mandata_polygonum(md, p, IV, figura_color_thematis(color), VERUM);
 }
 
 /* ordo personae: electa fundo selectionis, ceteri linea infra; nomen,
@@ -1901,7 +1901,9 @@ ordinem_pingere (
     {
         x = l->fines.x + X + (s32)(appellatio.mensura + I)
             * NOMENCLATOR_LITTERA;
-        rhombum_pingere(md, x, l->fines.y + V);
+        /* ordo electus: non obscurum (fundus selectionis) */
+        rhombum_pingere(md, x, l->fines.y + V, id == electa ? COLOR_TEXT
+            : COLOR_TEXT_DIM);
     }
 }
 
@@ -1965,7 +1967,11 @@ campum_pingere (
          Dies hodie;
           s32 aetas;
           s32 x;
+          i32 titulus_color;
 
+    /* tituli obscuri in fundo selectionis evanescunt: colore fundi
+     * (Franus 10-15) */
+    titulus_color = electus ? COLOR_BACKGROUND : COLOR_TEXT_DIM;
     si (electus)
     {
         figura_ordinem_electum_pingere(md, f->fines);
@@ -1980,29 +1986,29 @@ campum_pingere (
         casus CAMPUS_TELEPHONUM:
             textum_pingere(md, f->fines.x + IV, f->fines.y + IV,
                 chorda_ex_literis("Phone", md->piscina), ZEPHYRUM,
-                COLOR_TEXT_DIM);
+                titulus_color);
             valor = *(chorda*)xar_obtinere(q->telephona, campus->index);
             frange;
         casus CAMPUS_TELEPHONUM_NOVUM:
             textum_pingere(md, f->fines.x + IV, f->fines.y + IV,
                 chorda_ex_literis("+ phone", md->piscina), ZEPHYRUM,
-                COLOR_TEXT_DIM);
+                titulus_color);
             redde;
         casus CAMPUS_EPISTULA:
             textum_pingere(md, f->fines.x + IV, f->fines.y + IV,
                 chorda_ex_literis("Email", md->piscina), ZEPHYRUM,
-                COLOR_TEXT_DIM);
+                titulus_color);
             valor = *(chorda*)xar_obtinere(q->epistulae, campus->index);
             frange;
         casus CAMPUS_EPISTULA_NOVA:
             textum_pingere(md, f->fines.x + IV, f->fines.y + IV,
                 chorda_ex_literis("+ email", md->piscina), ZEPHYRUM,
-                COLOR_TEXT_DIM);
+                titulus_color);
             redde;
         casus CAMPUS_RUBRICAE:
             textum_pingere(md, f->fines.x + IV, f->fines.y + IV,
                 chorda_ex_literis("Tags", md->piscina), ZEPHYRUM,
-                COLOR_TEXT_DIM);
+                titulus_color);
             /* "#a #b" */
             valor = chorda_ex_literis("", md->piscina);
             {
@@ -2021,7 +2027,7 @@ campum_pingere (
         ordinarius:
             textum_pingere(md, f->fines.x + IV, f->fines.y + IV,
                 chorda_ex_literis("Birthday", md->piscina), ZEPHYRUM,
-                COLOR_TEXT_DIM);
+                titulus_color);
             si (!q->natalis_positus)
             {
                 valor = chorda_ex_literis("-", md->piscina);
