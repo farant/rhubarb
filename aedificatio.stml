@@ -1000,6 +1000,10 @@
     <ambitus variabilis="QUADRANS_AURUM_SCRIBERE"/>
     <ambitus variabilis="PLIST_AREA"/>
     <ambitus variabilis="VILLA_SSH"/>
+    <!-- vectura TLS ambitu eligitur (lib/tls.c per lectiones_ambitus,
+         tls-bearssl T3 R22): valor in clavi - RHUBARB_TLS mutatum
+         probationes TLS iterum currit, verdicta vetera non reddit -->
+    <ambitus variabilis="RHUBARB_TLS"/>
     <debitum_scripturae membrum="probatio_generare" via="build/probatio_generare_instrumenta/" causa="instrumenta generata (scratch) in build/"/>
     <debitum_scripturae membrum="probatio_natura_canones" via="build/probatio_natura_canones/" causa="canones probationis (scratch)"/>
     <debitum_scripturae membrum="probatio_silex" via="build/probatio_silex_area/" causa="area silicis (scratch)"/>

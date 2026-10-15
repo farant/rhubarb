@@ -1,5 +1,5 @@
 /* nomina_macos.m - resolutio nominum per DNSServiceGetAddrInfo (vide
- * caput). Capita systematis ANTE latina.h (ut tls_macos.m). */
+ * caput). Capita systematis ANTE latina.h (ut tls_securetransport_macos.m). */
 #include <dns_sd.h>
 #include <sys/socket.h>
 #include <netinet/in.h>

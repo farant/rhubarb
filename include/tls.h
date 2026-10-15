@@ -1,7 +1,9 @@
 /* tls.h - Bibliotheca TLS (Transport Layer Security)
  *
  * API platform-agnostica pro connexionibus securis.
- * Implementatio: tls_macos.m (macOS Security.framework)
+ * Implementatio: tls.c - vectura per connexionem (tls-bearssl II.5):
+ * tls_bearssl.c (BearSSL) aut tls_securetransport_macos.m (macOS
+ * Security.framework, vectura vetus).
  *
  * USUS:
  *   TlsResultus res = tls_connectere("httpbin.org", 443, piscina);
@@ -25,7 +27,7 @@
  * TYPI
  * ======================================================================== */
 
-/* Opaque handle - implementatio in tls_macos.m */
+/* Opaque handle - implementatio in tls.c */
 nomen structura TlsConnexio TlsConnexio;
 
 /* Error codes */
@@ -46,6 +48,16 @@ nomen structura {
          chorda  error_descriptio;
 } TlsResultus;
 
+/* Vectura (implementatio) - tls-bearssl-spec II.5. ORDINARIA:
+ * RHUBARB_TLS ('bearssl' | 'securetransport') si positum, aliter
+ * ordinaria domus. Vocantes qui optiones memset() faciunt ORDINARIAM
+ * habent. */
+nomen enumeratio {
+    TLS_VECTURA_ORDINARIA = 0,
+    TLS_VECTURA_BEARSSL,
+    TLS_VECTURA_SECURETRANSPORT
+} TlsVectura;
+
 /* Optiones */
 nomen structura {
     i32 timeout_ms;              /* Timeout in milliseconds (0 = infinitus) */
@@ -54,6 +66,8 @@ nomen structura {
      * (probationes: CA propria; postea fixatio). NIHIL = repositorium
      * systematis. Verificatio plena manet (catena, tempus, hospes). */
     constans character* ancora_via;
+    /* vectura: ORDINARIA = ambitus RHUBARB_TLS aut ordinaria domus */
+    TlsVectura vectura;
 } TlsOptiones;
 
 /* Certificatum hospitis (folium primum catenae).
@@ -98,6 +112,17 @@ tls_connectere_cum_optionibus (
 /* Optiones default */
 TlsOptiones
 tls_optiones_default (vacuum);
+
+/* vectura quam optiones (NIHIL licet) et ambitus RHUBARB_TLS eligunt -
+ * numquam ORDINARIA. Per connexionem legitur (setenv vim habet). */
+TlsVectura
+tls_vecturam_eligere (
+    constans TlsOptiones* optiones);
+
+/* vectura connexionis; ORDINARIA si connexio NIHIL */
+TlsVectura
+tls_vectura (
+    TlsConnexio* connexio);
 
 
 /* --- gradatim: non-blocans (http-vocatio II.3) --- */

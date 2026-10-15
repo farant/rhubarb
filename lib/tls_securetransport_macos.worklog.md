@@ -267,3 +267,17 @@ named reason instead of at setup (same TLS_ERROR category).
 Mute by design (offline): SecTrustSetAnchorCertificatesOnly true->false
 changes nothing - the system store knows neither the test CA nor the
 rejected certs. Only the network -badssl run (T6) checks it.
+
+## 2026-10-15 - renamed from tls_macos.m; now a backend (tls-bearssl T3)
+
+`git mv lib/tls_macos.m lib/tls_securetransport_macos.m`: aedilis maps
+`X.h` to `lib/X_macos.m` BEFORE `lib/X.c`, so with the new dispatcher
+`lib/tls.c` beside it `tls.h` would still have resolved here. The public
+names became `tls_securetransport_*` / `TlsSecuretransport*` (word-boundary
+renames inside this file only; `include/tls_securetransport.h` is the
+internal header, included only by lib/tls.c). Moved OUT to tls.c:
+`tls_optiones_default`, `tls_connectere` (no options), `tls_mittere_omnia`
+(now generic over tls_mittere, also retries TLS_ITERUM - never returned by
+this backend's blocking path, so unchanged here), `tls_error_descriptio`.
+Behaviour otherwise byte-for-byte the same; all TLS suites green before and
+after. Stale `build/tls_macos.o` deleted (renamed-lib rule).

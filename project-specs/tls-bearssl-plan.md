@@ -201,6 +201,19 @@ with this plan; this plan argues from it and records where it departs.
   3rd/4th args are positional and optional); `ignotus.der` too.
 - **R21 (T2) - fiducia reads the anchor with `filum_legere_totum`**: no
   16 KB stack buffer, and fabrica sees the read.
+- **R22 (T3) - `RHUBARB_TLS` via `lectiones_ambitus`**, not raw `getenv`:
+  the house's tracked getenv, so fabrica sees the dependency. Consequence:
+  every root test whose closure includes tls.c reads it, so it is declared
+  `<ambitus variabilis="RHUBARB_TLS"/>` on `probationes_radicis`
+  (aedificatio.stml); its value is part of each verdict's key. Without
+  that, the radix gate refused: "ambitus non declaratus: RHUBARB_TLS".
+- **R23 (T3) - backend type spelled `TlsSecuretransport` /
+  `TlsSecuretransportResultus`** (function prefix `tls_securetransport_`
+  unchanged). CamelCase `SecureTransport` splits into the real English word
+  "transport", which may never be glossaried. One proper-noun word stays,
+  and it and `bearssl` are `ignotum-permissum`. Every later
+  `TlsSecureTransport` in this plan means `TlsSecuretransport`; T4 names its
+  type `TlsBearssl`.
 
 ## Review focus
 

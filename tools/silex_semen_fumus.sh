@@ -12,8 +12,8 @@
 #
 # Consequentia MENSURATA (2026-08-14): templum vitreum ad atrium
 # versum est; atrium imperium trahit -> hospitium -> tls ->
-# tls_macos.m, quod Security poscit. Ordo genitus '-framework
-# Security' NON ligabat. Nexus deficiebat in omni proiecto novo -
+# tls_securetransport_macos.m et fiducia_macos.m, quae Security
+# poscunt. Ordo genitus '-framework Security' NON ligabat. Nexus deficiebat in omni proiecto novo -
 # et suite tota viridis manebat, quia nulla probatio semen umquam
 # aedificabat. Porta ipsa vitium primum invenit quo nata est.
 #

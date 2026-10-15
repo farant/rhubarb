@@ -1,6 +1,7 @@
-/* tls_macos.m - Implementatio TLS pro macOS (Security.framework)
- *
- * Utitur SecureTransport pro TLS.
+/* tls_securetransport_macos.m - VECTURA SecureTransport (macOS
+ * Security.framework), olim tls_macos.m: mores idem; solum lib/tls.c
+ * vocat (include/tls_securetransport.h; tls-bearssl T3). Fiducia per
+ * fiducia.h (T2).
  *
  * NOTA: Includimus headers systema ANTE latina.h quia
  * "character" macro conflictum habet cum CoreFoundation.
@@ -11,7 +12,7 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "tls.h"
+#include "tls_securetransport.h"
 #include "tcp.h"
 #include "fiducia.h"
 #include "filum.h"
@@ -21,7 +22,7 @@
  * STRUCTURA INTERNA
  * ======================================================================== */
 
-structura TlsConnexio {
+structura TlsSecuretransport {
     Piscina*       piscina;
     TcpConnexio*   tcp;           /* Connexio TCP subiacens */
     SSLContextRef  ssl_context;   /* Security.framework context */
@@ -58,7 +59,7 @@ _tls_read_callback(
     size_t*          dataLength)
 {
     /* SSLConnectionRef est const void* - debemus removere const */
-    TlsConnexio* conn;
+    TlsSecuretransport* conn;
     s32 n;
     size_t petitum;
 
@@ -116,7 +117,7 @@ _tls_write_callback(
     size_t*          dataLength)
 {
     /* SSLConnectionRef est const void* - debemus removere const */
-    TlsConnexio* conn;
+    TlsSecuretransport* conn;
     s32 n;
 
     memcpy(&conn, &connection, magnitudo(conn));
@@ -151,10 +152,10 @@ _tls_write_callback(
  * FUNCTIONES INTERNAE
  * ======================================================================== */
 
-interior TlsResultus
+interior TlsSecuretransportResultus
 _creare_error(TlsError error, constans character* msg, Piscina* piscina)
 {
-    TlsResultus res;
+    TlsSecuretransportResultus res;
     res.successus = FALSUM;
     res.connexio = NIHIL;
     res.error = error;
@@ -307,7 +308,7 @@ _copiare(constans character* s, Piscina* piscina)
 /* catena hospitis (DER, folium primum) in piscina; numerus in *numerus;
  * NIHIL si nulla */
 interior FiduciaCertificatum*
-_catenam_capere(TlsConnexio* conn, i32* numerus)
+_catenam_capere(TlsSecuretransport* conn, i32* numerus)
 {
     SecTrustRef fiducia = NULL;
     CFIndex n;
@@ -360,7 +361,7 @@ _catenam_capere(TlsConnexio* conn, i32* numerus)
  * (ancora SOLA, politia SSL cum nomine hospitis). VERUM si fide dignus;
  * aliter conn->erratum (causa fiduciae) */
 interior b32
-_fiduciam_iudicare(TlsConnexio* conn)
+_fiduciam_iudicare(TlsSecuretransport* conn)
 {
     i32 numerus;
     FiduciaCertificatum* catena = _catenam_capere(conn, &numerus);
@@ -378,9 +379,9 @@ _fiduciam_iudicare(TlsConnexio* conn)
 /* contextus SSL super conn->tcp: callbacks, connexio, SNI, durare,
  * verificatio. NIHIL si bene (conn->ssl_context positum); aliter causa
  * (contextus dimissus; tcp NON clausa - vocans claudit). Communis
- * tls_connectere et tls_incipere (http-vocatio II.3). */
+ * tls_connectere et tls_securetransport_incipere (http-vocatio II.3). */
 interior constans character*
-_contextum_parare(TlsConnexio* conn, constans character* hospes,
+_contextum_parare(TlsSecuretransport* conn, constans character* hospes,
     constans TlsOptiones* optiones)
 {
     SSLContextRef ssl_context;
@@ -460,35 +461,15 @@ _contextum_parare(TlsConnexio* conn, constans character* hospes,
  * FUNCTIONES PUBLICAE - CONNEXIO
  * ======================================================================== */
 
-TlsOptiones
-tls_optiones_default(vacuum)
-{
-    TlsOptiones opt;
-    opt.timeout_ms = XXX * M;  /* 30 seconds */
-    opt.verificare_certificatum = VERUM;
-    opt.ancora_via = NIHIL;
-    redde opt;
-}
-
-TlsResultus
-tls_connectere(
-    constans character* hospes,
-    i32                 portus,
-    Piscina*            piscina)
-{
-    TlsOptiones opt = tls_optiones_default();
-    redde tls_connectere_cum_optionibus(hospes, portus, &opt, piscina);
-}
-
-TlsResultus
-tls_connectere_cum_optionibus(
+TlsSecuretransportResultus
+tls_securetransport_connectere(
     constans character*   hospes,
     i32                   portus,
     constans TlsOptiones* optiones,
     Piscina*              piscina)
 {
-    TlsResultus res;
-    TlsConnexio* conn;
+    TlsSecuretransportResultus res;
+    TlsSecuretransport* conn;
     TcpResultus tcp_res;
     TcpOptiones tcp_opt;
     SSLContextRef ssl_context;
@@ -520,8 +501,8 @@ tls_connectere_cum_optionibus(
     }
 
     /* Allocare connexio */
-    conn = (TlsConnexio*)piscina_allocare(piscina,
-        (i64)magnitudo(TlsConnexio));
+    conn = (TlsSecuretransport*)piscina_allocare(piscina,
+        (i64)magnitudo(TlsSecuretransport));
     si (!conn)
     {
         tcp_claudere(tcp_res.connexio);
@@ -571,7 +552,7 @@ tls_connectere_cum_optionibus(
     {
         chorda causa = conn->erratum;
 
-        tls_claudere(conn);
+        tls_securetransport_claudere(conn);
         res.successus = FALSUM;
         res.connexio = NIHIL;
         res.error = TLS_ERROR_CERTIFICATUM;
@@ -628,15 +609,15 @@ tls_connectere_cum_optionibus(
 }
 
 
-TlsResultus
-tls_incipere(
+TlsSecuretransportResultus
+tls_securetransport_incipere(
     TcpConnexio*          tcp,
     constans character*   hospes,
     constans TlsOptiones* optiones,
     Piscina*              piscina)
 {
-    TlsResultus res;
-    TlsConnexio* conn;
+    TlsSecuretransportResultus res;
+    TlsSecuretransport* conn;
     constans character* causa;
 
     si (!tcp || !hospes || !piscina)
@@ -648,15 +629,15 @@ tls_incipere(
         redde _creare_error(TLS_ERROR_TCP, "Argumenta invalida",
             piscina);
     }
-    conn = (TlsConnexio*)piscina_allocare(piscina,
-        (i64)magnitudo(TlsConnexio));
+    conn = (TlsSecuretransport*)piscina_allocare(piscina,
+        (i64)magnitudo(TlsSecuretransport));
     si (!conn)
     {
         tcp_claudere(tcp);
         redde _creare_error(TLS_ERROR_TCP, "Allocatio fallita",
             piscina);
     }
-    memset(conn, 0, magnitudo(TlsConnexio));
+    memset(conn, 0, magnitudo(TlsSecuretransport));
     conn->piscina   = piscina;
     conn->tcp       = tcp;
     conn->gradatim  = VERUM;
@@ -675,7 +656,7 @@ tls_incipere(
 }
 
 TlsGradus
-tls_gradus(TlsConnexio* connexio)
+tls_securetransport_gradus(TlsSecuretransport* connexio)
 {
     OSStatus status;
 
@@ -711,7 +692,7 @@ tls_gradus(TlsConnexio* connexio)
 }
 
 chorda
-tls_gradus_error(TlsConnexio* connexio)
+tls_securetransport_gradus_error(TlsSecuretransport* connexio)
 {
     chorda vacua;
 
@@ -730,8 +711,8 @@ tls_gradus_error(TlsConnexio* connexio)
  * ======================================================================== */
 
 s32
-tls_mittere(
-    TlsConnexio*   connexio,
+tls_securetransport_mittere(
+    TlsSecuretransport*   connexio,
     constans i8*   data,
     i32            mensura)
 {
@@ -802,43 +783,9 @@ tls_mittere(
     redde (s32)processed;
 }
 
-b32
-tls_mittere_omnia(
-    TlsConnexio*   connexio,
-    constans i8*   data,
-    i32            mensura)
-{
-    i32 totalis = 0;
-    i32 restans = mensura;
-
-    si (!connexio || connexio->clausa || !data || mensura <= 0)
-    {
-        redde FALSUM;
-    }
-
-    dum (restans > 0)
-    {
-        s32 n = tls_mittere(connexio, data + totalis, restans);
-        si (n < 0)
-        {
-            redde FALSUM;
-        }
-        si (n == 0)
-        {
-            /* Breve mora et retry */
-            usleep(M);  /* 1ms */
-            perge;
-        }
-        totalis += (i32)n;
-        restans -= (i32)n;
-    }
-
-    redde VERUM;
-}
-
 s32
-tls_recipere(
-    TlsConnexio* connexio,
+tls_securetransport_recipere(
+    TlsSecuretransport* connexio,
     i8*          buffer,
     i32          capacitas)
 {
@@ -924,14 +871,14 @@ tls_recipere(
 }
 
 vacuum
-tls_claudere(TlsConnexio* connexio)
+tls_securetransport_claudere(TlsSecuretransport* connexio)
 {
     si (!connexio)
     {
         redde;
     }
 
-    /* contextus SEMPER dimittitur - clausa a tls_recipere poni potest
+    /* contextus SEMPER dimittitur - clausa a tls_securetransport_recipere poni potest
      * (par clausit) dum contextus adhuc vivit (R5) */
     si (connexio->ssl_context)
     {
@@ -963,7 +910,7 @@ tls_claudere(TlsConnexio* connexio)
 /* folium catenae hospitis -> fiducia_folium_describere (tempora,
  * subiectum; tls-bearssl T2: idem codex ac vectura BearSSL) */
 b32
-tls_certificatum_obtinere(TlsConnexio* connexio,
+tls_securetransport_certificatum(TlsSecuretransport* connexio,
     TlsCertificatum* exitus)
 {
     i32 numerus;
@@ -1004,26 +951,11 @@ tls_certificatum_obtinere(TlsConnexio* connexio,
  * ======================================================================== */
 
 b32
-tls_est_valida(TlsConnexio* connexio)
+tls_securetransport_est_valida(TlsSecuretransport* connexio)
 {
     redde connexio != NIHIL &&
            !connexio->clausa &&
            connexio->ssl_context != NIHIL &&
            connexio->tcp != NIHIL &&
            tcp_est_valida(connexio->tcp);
-}
-
-constans character*
-tls_error_descriptio(TlsError error)
-{
-    commutatio (error)
-    {
-        casus TLS_OK:                  redde "OK";
-        casus TLS_ERROR_TCP:           redde "Connexio TCP fallita";
-        casus TLS_ERROR_HANDSHAKE:     redde "TLS handshake fallita";
-        casus TLS_ERROR_CERTIFICATUM:  redde "Certificatum invalidum";
-        casus TLS_ERROR_IO:            redde "I/O error";
-        casus TLS_ERROR_CLAUSUM:       redde "Connexio clausa";
-        ordinarius:                    redde "Error ignotus";
-    }
 }

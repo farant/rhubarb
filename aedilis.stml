@@ -67,7 +67,7 @@
       <vexillum! (>-framework Security
       <vexillum! (>-framework CoreFoundation
     </regula>
-    <regula obiectum="tls_macos">
+    <regula obiectum="tls_securetransport_macos">
       <vexillum! (>-framework Security
       <vexillum! (>-framework CoreFoundation
     </regula>

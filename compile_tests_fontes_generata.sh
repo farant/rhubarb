@@ -268,6 +268,7 @@ declare -a SOURCE_FILES=(
     "lib/thema.c"
     "lib/thema_visus.c"
     "lib/thesaurus.c"
+    "lib/tls.c"
     "lib/tractator.c"
     "lib/uri.c"
     "lib/url.c"
@@ -324,6 +325,6 @@ declare -a OBJC_SOURCES=(
     "lib/fenestra_macos.m"
     "lib/fiducia_macos.m"
     "lib/nomina_macos.m"
-    "lib/tls_macos.m"
+    "lib/tls_securetransport_macos.m"
     "lib/vitrea_macos.m"
 )
