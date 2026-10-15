@@ -112,7 +112,7 @@ hic_manens constans character* constans POLITICA[] = {
     "  <genus via=\"/fabricatio/adscitio\" cura=\"aliena\"/>",
     "  <munus titulus=\"fixtura\" segmentum=\"fixa\"/>",
     "  <munus titulus=\"probatio\" segmentum=\"probationes\""
-        " extensiones=\".c .m\"/>",
+        " extensiones=\".c .m .h\"/>",
     "  <munus titulus=\"fixtura\" segmentum=\"probationes\"/>",
     "  <munus titulus=\"caput\" extensiones=\".h\"/>",
     "  <munus titulus=\"fons\" extensiones=\".c .m\"/>",
@@ -175,6 +175,7 @@ hic_manens constans PlagulaFicta MUNDUS[] = {
     { "lib/xar.worklog.md", "# xar\n", NIHIL },
     { "probationes/probatio_xar.c", "/* p */\n", NIHIL },
     { "probationes/fixa/xar/datum.c", "/* fixum */\n", NIHIL },
+    { "probationes/pictor_commune.h", "/* auxilium */\n", NIHIL },
     { "include/energia.h", "/* e */\n", NIHIL },
     { "lib/energia_macos.c", "/* e */\n", NIHIL },
     { "lib/energia_posix.c", "/* e */\n", NIHIL },
@@ -408,7 +409,13 @@ _sectio_munera (
     r = _quid(c, u, "probationes/probatio_xar.c");
     CREDO_CHORDA_AEQUALIS_LITERIS(r.munus.valor, "probatio");
     CREDO_CHORDA_AEQUALIS_LITERIS(r.munus.causa,
-        "regula munus 2 (segmentum probationes, .c .m)");
+        "regula munus 2 (segmentum probationes, .c .m .h)");
+
+    /* caput auxiliare probationum = probatio, non fixtura (lint
+     * hodie iudicat; regula prima solum .c .m dabat - inventum
+     * contra arborem veram) */
+    r = _quid(c, u, "probationes/pictor_commune.h");
+    CREDO_CHORDA_AEQUALIS_LITERIS(r.munus.valor, "probatio");
     CREDO_CHORDA_AEQUALIS_LITERIS(r.lingua.valor, "c89");
 
     r = _quid(c, u, "include/xar.h");

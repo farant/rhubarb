@@ -1666,6 +1666,10 @@ PORTAE = {
     # unum habet; debita sine annalibus computantur (clone frigidus)
     'portae-declaratae': (['./tools/portae_declaratae_fumus.sh'],
                           r'fumus portae declaratae: (sanum|FRACTUM)'),
+    # unitates codicis (U3): politica + declarationes super arborem
+    # veram - canon, lectio sine recusatione, responsa nota, iudex
+    'unitates': (['./tools/unitates_fumus.sh'],
+                 r'fumus unitatum: (sanum|FRACTUM)'),
 }
 _ANSI = re.compile(r'\x1b\[[0-9;]*m')
 

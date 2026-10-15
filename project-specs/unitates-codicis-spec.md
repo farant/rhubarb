@@ -403,6 +403,41 @@ others). Inheritance and lookup rules: `lib/unitates.worklog.md`.
 Next: `bin/fabrica quid VIA` (disk + git sutura) with a fumus over the
 REAL tree (no refusals; spot answers), then the lint pilot.
 
+**U3 step 2c (2026-10-15): `bin/fabrica quid` + gate `unitates`.**
+`bin/fabrica quid [-machina] VIA...` (every field with its cause),
+`-iudex TITULUS VIA...` (IUDICAT / NON_IUDICAT + cause; unknown judge
+= exit 2), `-omnes` (every unit). Sutura = `git ls-files -co
+--exclude-standard` + filum (`tools/fabrica_unitates.c`). Gate
+`unitates` (`tools/unitates_fumus.sh`, praeiudicium, ~1 s): canon over
+policy + every declaration (they had NO gate before - INTECTA), load
+without refusal, 10 known answers, the lint judge on one file per
+directory the lint excludes by name. Born red by 3 plants (policy
+custody, unknown value, unknown attribute).
+
+First contact with the real tree: 329 units (29 directory + 300
+libraries; 7 families nest 34 children), load 0.39 s, no refusal;
+judging all 2107 tracked .c/.h/.m files 0.39 s.
+
+**Lint preview (old name list vs `iudex lint_latinus`)** - the U4
+decision list, measured:
+- Found a RULE BUG first: test-support headers (`probationes/*.h`, 15
+  files: `pictor_commune.h`, `fabrica_mundus_fictus.h`, ...) fell to
+  the fixture rule - the test rule covered only `.c .m`. Now `.c .m .h`.
+- 43 files the lint judges TODAY that the model skips - all GENERATED
+  outside `amalgama/` (37: `silva/fontes` tables, `lib/*_lectio.c`,
+  `*_tabula.c`, `instrumenta/principalia/*_generata.h`; 6 asset
+  capsules). Open question for U4: should the Latin lint judge
+  generated code? For: a sh/python generator's emitted names are
+  checked nowhere else. Against: the fix is in the generator, and
+  amalgama is skipped today for the same reason.
+- 3 files the model judges that the lint skips today: the hand-written
+  vanilla headers inside `amalgama/` (`silva.h`, `officina.h`,
+  `tessera.h`).
+- Tool helpers are ALREADY declared: `tools/fabrica_sutura.h` names
+  its bodies with `<aedilis corpus="tools/fabrica_portae.c"/>` - the
+  "tool owns these files" fact Q1 meant to annotate exists as data;
+  the tool-unit step should read it, not add a second declaration.
+
 ## VII. Interrogationes - documentation as typed questions (Fran 10-15)
 
 A unit exposes what it can do by DECLARING QUESTIONS it answers

@@ -26,7 +26,7 @@
   <!-- munera: prima regula congruens vincit -->
   <munus titulus="fixtura"     segmentum="fixa"/>
   <munus titulus="assets"      segmentum="assets"/>
-  <munus titulus="probatio"    segmentum="probationes" extensiones=".c .m"/>
+  <munus titulus="probatio"    segmentum="probationes" extensiones=".c .m .h"/>
   <munus titulus="fixtura"     segmentum="probationes"/>
   <munus titulus="caput"       extensiones=".h"/>
   <munus titulus="fons"        extensiones=".c .m"/>
