@@ -629,8 +629,12 @@ s_v, rel_v = silva.lint_latinus_praevium(['pythonica/README.md'])
 credo(s_v and 'nihil iudicatum' in rel_v, 'lint praevius: sine plagula C nihil iudicatum')
 s_c, rel_c = silva.lint_latinus_praevium(['lib/chorda.c', 'vendor/sqlite3.c'])
 credo(s_c and 'nihil novi' in rel_c, 'lint praevius: plagula C sana -> lint vere cucurrit (nihil novi)')
-s_x, rel_x = silva.lint_latinus_praevium(['vendor/sqlite3.c', 'silva/amalgama/silva.c'])
-credo(s_x and 'nihil iudicatum' in rel_x, 'lint praevius: directoria exclusa ut uncus (vendor, amalgama)')
+# ambitus = iudex lint_latinus (unitates.stml, U4): alienum et fixtura
+# non iudicantur; GENERATUM iudicatur (Franus 2026-10-15)
+s_x, rel_x = silva.lint_latinus_praevium(['vendor/sqlite3.c', 'probationes/fixa/roundtrip/color.c'])
+credo(s_x and 'nihil iudicatum' in rel_x, 'lint praevius: iudex excludit alienum et fixturam (vendor, fixa)')
+s_g, rel_g = silva.lint_latinus_praevium(['silva/amalgama/silva.c'])
+credo(s_g and 'nihil novi' in rel_g, 'lint praevius: generatum (amalgama) iudicatur')
 # wiring: lint rubrum -> commissio ANTE portas refutat, NULLA porta currit
 _lint_verus, _porta_vera = silva.lint_latinus_praevium, silva.porta
 _cursae = []

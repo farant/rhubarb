@@ -9,9 +9,9 @@
 #   III responsa nota: vendor alienum, pars _posix ad basim, probatio
 #       applicationis per praefixum, amalgama generatum, archivum
 #       archivatum, knotapel remissum, caput auxiliare probationum
-#   IV  iudex lint_latinus: plagula una e quoque directorio quod lint
-#       hodie per nomen excludit NON iudicatur (causa nominata), lib/
-#       iudicatur; iudex ignotus = exitus 2
+#   IV  iudex lint_latinus: alienum (vendor, oracula), remissum
+#       (knotapel), archivatum, fixtura NON iudicantur (causa nominata);
+#       lib/ et generatum (amalgama) iudicantur; iudex ignotus = exitus 2
 #
 # Debetur politicae, canonibus, omni declarationi et nucleo C
 # (clausura tools/fabrica.c: lib/unitates.c) - I s, vilis.
@@ -82,9 +82,10 @@ bin/fabrica quid -iudex lint_latinus -machina lib/xar.c vendor/sqlite3.c \
 ni=$(awk -F'\t' '$2 == "IUDICAT"' "$T/o4" | wc -l | tr -d ' ')
 nn=$(awk -F'\t' '$2 == "NON_IUDICAT" && $3 != ""' "$T/o4" | wc -l | tr -d ' ')
 bin/fabrica quid -iudex nusquam lib/xar.c > "$T/o4b" 2>&1; rc4b=$?
-if [ "$rc4" -eq 0 ] && [ "$ni" -eq 1 ] && grep -q '^lib/xar.c	IUDICAT' "$T/o4" && [ "$nn" -eq 6 ] \
+if [ "$rc4" -eq 0 ] && [ "$ni" -eq 2 ] && grep -q '^lib/xar.c	IUDICAT' "$T/o4" \
+   && grep -q '^silva/amalgama/silva.c	IUDICAT' "$T/o4" && [ "$nn" -eq 5 ] \
    && [ "$rc4b" -eq 2 ] && grep -q "noti: lint_latinus" "$T/o4b"; then
-    echo "  IV  iudex lint_latinus: lib/ iudicatur, VI exclusa cum causis, iudex ignotus exitus 2 OK"
+    echo "  IV  iudex lint_latinus: lib/ et generatum iudicantur, V exclusa cum causis, iudex ignotus exitus 2 OK"
 else
     echo "  IV  FRACTUM (rc=$rc4, iudicat $ni, exclusa cum causa $nn, ignotus rc=$rc4b)"; sed 's/^/      /' "$T/o4" "$T/o4b"; fracta=1
 fi

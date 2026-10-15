@@ -438,6 +438,36 @@ decision list, measured:
   "tool owns these files" fact Q1 meant to annotate exists as data;
   the tool-unit step should read it, not add a second declaration.
 
+## VI⅞g. U4 step 1: the Latin lint asks the judge (2026-10-15)
+
+Fran: generated code stays judged (a sh/python generator's emitted
+names have no other check); fixtures are skipped (they are inputs -
+JSON, PNG, expected output, foreign-style C samples); the 3
+hand-written amalgama headers are judged.
+
+**A tenth list, and the lint was split against itself.** §0 counted
+the hook's directory list; the lint's real SCOPE was elsewhere -
+`ORATIO_VOCABULA_EXCLUSA` (knotapel vendor archivum oracula) applied to
+the nexus index. fixa/ (135 indexed files) and amalgama/ were judged
+on every run but never triggered the lint: an unknown word committed
+in a fixture passed, and the next lib/ commit was refused for it.
+
+Now ONE answer, `<iudex titulus="lint_latinus">` (domestica, viva
+vetusta, fons caput probatio, manu generatum, c89 objc), read by:
+- `oratio/instrumenta/vocabula.c` - tracked list through
+  `unitates_viae_iudicatae`; missing list or empty result = exit 2
+  (an empty filter means "all paths" downstream);
+- the oratio pin test - the same filter, so pin and lint cannot drift;
+- the commit trigger - `lint_latinus.sh` and `silva.lint_latinus_
+  praevium` ask `./oratio/vocabula.sh -iudicandae VIA...` (no regex
+  left; `bin/fabrica` is not used because bin/ is not committed).
+
+Measured: tolerated copy -44 lines (fixture-only words + 15 already
+stale), +0; NOVA 0. Plant: fixtura added to the judge's roles ->
+`NOVA 29`, exit 1; restored -> NOVA 0, evanida 0. Remaining exclusion
+sites of §0: commit formatter, the six hooks, `ORATIO_PROSA_EXCLUSA`
+(prose lint), examen/formator per-file lists - one commit each.
+
 ## VII. Interrogationes - documentation as typed questions (Fran 10-15)
 
 A unit exposes what it can do by DECLARING QUESTIONS it answers

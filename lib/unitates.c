@@ -1678,15 +1678,84 @@ unitates_iudicat (
     {
         redde UNITATES_NON_IUDICAT;
     }
-    _provenientia_legere(unitates, piscina, &r);
-    si (!_admittit(d->provenientiae, r.provenientia, "provenientia",
-            "provenientiae", iudex, piscina, causa_out))
+    /* iudex qui provenientias OMNES admittit plagulam non legit
+     * (lint: manu + generatum - MMC plagulae sine lectione) */
+    per (i = ZEPHYRUM; i < xar_numerus(unitates->provenientiae); i++)
     {
-        redde UNITATES_NON_IUDICAT;
+        si (!_in_indice(d->provenientiae, *(chorda*)xar_obtinere(
+                unitates->provenientiae, i)))
+        {
+            frange;
+        }
+    }
+    si (i < xar_numerus(unitates->provenientiae))
+    {
+        _provenientia_legere(unitates, piscina, &r);
+        si (!_admittit(d->provenientiae, r.provenientia,
+                "provenientia", "provenientiae", iudex, piscina,
+                causa_out))
+        {
+            redde UNITATES_NON_IUDICAT;
+        }
     }
     si (causa_out != NIHIL)
     {
         *causa_out = _vacua();
     }
     redde UNITATES_IUDICAT;
+}
+
+chorda
+unitates_viae_iudicatae (
+    constans Unitates* unitates,
+               chorda  iudex,
+               chorda  lista,
+              Piscina* piscina,
+                  b32* ignotus)
+{
+    ChordaAedificator* a = chorda_aedificator_creare(piscina,
+        (memoriae_index)lista.mensura + I);
+    i32 initium = ZEPHYRUM;
+    i32 i;
+
+    si (ignotus != NIHIL)
+    {
+        *ignotus = FALSUM;
+    }
+    per (i = ZEPHYRUM; i <= lista.mensura; i++)
+    {
+                  chorda via;
+        UnitatesIudicium j;
+
+        si (i < lista.mensura && lista.datum[i] != '\n')
+        {
+            perge;
+        }
+        via      = chorda_sectio(lista, initium, i);
+        initium  = i + I;
+        si (   via.mensura > ZEPHYRUM
+            && via.datum[via.mensura - I] == '\r')
+        {
+            via.mensura--;
+        }
+        si (via.mensura == ZEPHYRUM)
+        {
+            perge;
+        }
+        j = unitates_iudicat(unitates, iudex, via, piscina, NIHIL);
+        si (j == UNITATES_IUDEX_IGNOTUS)
+        {
+            si (ignotus != NIHIL)
+            {
+                *ignotus = VERUM;
+            }
+            redde _vacua();
+        }
+        si (j == UNITATES_IUDICAT)
+        {
+            chorda_aedificator_appendere_chorda(a, via);
+            chorda_aedificator_appendere_character(a, '\n');
+        }
+    }
+    redde chorda_aedificator_finire(a);
 }

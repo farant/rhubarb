@@ -131,6 +131,10 @@ hic_manens constans character* constans POLITICA[] = {
     "  <bibliothecae capita=\"include\" fontes=\"lib\""
         " probationes=\"probationes\" praefixum=\"probatio_\"",
     "                partes=\"_macos _posix\"/>",
+    "  <iudex titulus=\"omnia\" curae=\"domestica\""
+        " vitae=\"viva\" munera=\"fons\"",
+    "         provenientiae=\"manu generatum\" linguae=\"c89\""
+        " descriptio=\"o\"/>",
     "  <familia radix=\"imago\"/>",
     "</unitates>",
     NIHIL
@@ -511,7 +515,44 @@ _sectio_iudex (
         "formator", c->piscina), chorda_ex_literis("lib/xar.c",
         c->piscina), c->piscina, &causa), (i32)UNITATES_IUDEX_IGNOTUS);
     CREDO_CHORDA_AEQUALIS_LITERIS(causa,
-        "iudex 'formator' ignotus (noti: lint)");
+        "iudex 'formator' ignotus (noti: lint, omnia)");
+
+    /* iudex provenientias omnes admittens plagulam NON legit: via
+     * illegibilis iudicatur (lint indicem MMC viarum sine lectione
+     * filtrat) */
+    CREDO_AEQUALIS_I32((i32)unitates_iudicat(u, chorda_ex_literis(
+        "omnia", c->piscina), chorda_ex_literis("lib/nusquam.c",
+        c->piscina), c->piscina, &causa), (i32)UNITATES_IUDICAT);
+    CREDO_AEQUALIS_I32((i32)unitates_iudicat(u, lint, chorda_ex_literis(
+        "lib/nusquam.c", c->piscina), c->piscina, &causa),
+        (i32)UNITATES_NON_IUDICAT);
+    INCIPIT_LITERIS(causa, "provenientia nullum (plagula legi nequit)");
+}
+
+/* IX. lista viarum filtrata (corpus_tractatae.txt): eadem forma, '\r'
+ * et lineae vacuae tolerantur, iudex ignotus nominatur */
+interior vacuum
+_sectio_viae_iudicatae (
+    CredoContextus* c)
+{
+    Unitates* u = _sanum(c);
+      chorda  r;
+         b32  ignotus = VERUM;
+
+    CREDO_NECESSE_NON_NIHIL(u);
+    r = unitates_viae_iudicatae(u, chorda_ex_literis("lint",
+        c->piscina),
+        chorda_ex_literis("vendor/sqlite3.c\nlib/xar.c\r\n\n"
+            "probationes/fixa/xar/datum.c\ninclude/xar.h", c->piscina),
+        c->piscina, &ignotus);
+    CREDO_FALSUM(ignotus);
+    CREDO_CHORDA_AEQUALIS_LITERIS(r, "lib/xar.c\ninclude/xar.h\n");
+
+    r = unitates_viae_iudicatae(u, chorda_ex_literis("nusquam",
+        c->piscina), chorda_ex_literis("lib/xar.c\n", c->piscina),
+        c->piscina, &ignotus);
+    CREDO_VERUM(ignotus);
+    CREDO_CHORDA_VACUA(r);
 }
 
 /* VII. recusationes OMNES simul, cum valoribus notis */
@@ -621,6 +662,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "recusationes", _sectio_recusationes, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "radix absens", _sectio_radix_absens, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "viae iudicatae", _sectio_viae_iudicatae, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

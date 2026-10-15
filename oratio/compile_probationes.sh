@@ -74,6 +74,13 @@ declare -a RADIX_FONTES=(
     "lectiones"   # materia_coctor lectiones crudas notat (fabrica spec 3 T3)
     "partitio"
     "partitio_aestimatio"
+    # ambitus lintus Latini = iudex lint_latinus (unitates.stml; spec
+    # unitates-codicis U4): probatio pinnae unitates per arborem veram
+    # legit (git ls-files + filum)
+    "unitates"
+    "unitates_arboris"
+    "filum"
+    "processus_posix"
 )
 
 FILTER="${1:-}"

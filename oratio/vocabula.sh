@@ -2,6 +2,7 @@
 # oratio/vocabula.sh - recensio vocabulorum: identificatores et commentaria (Latine, T10) aut prosa markdown (Anglice, T15a) contra vocabularia
 #
 # Usage:  ./oratio/vocabula.sh [-symbola | -commenta | -omnia | -prosa | -nova] [-machina] [-omnes] [-omnes-viae] [-tectum N]
+#         ./oratio/vocabula.sh -iudicandae VIA...   (viae quas lint iudicat - iudex lint_latinus, unitates.stml)
 #         -nova = verba ignota NOVA contra copiam toleratam cum exitibus (ante commissionem; exitus 1 si adsunt)
 # Exit:   0 sanum | 1 fractum | 2 usus/plagula absens
 # Instrumentum ex clausura sua; binarium in oratio/build/vocabula.
@@ -41,7 +42,7 @@ git -C "$RADIX_DIR" ls-files "*.md" > "$BUILD_DIR/corpus_md.txt"
 # VOCABULA_INDEX_RENOVATUS=1: vocans (uncus) id modo fecit.
 renovandum=1
 for a in "$@"; do
-    case "$a" in -commenta|-prosa) renovandum=0 ;; esac
+    case "$a" in -commenta|-prosa|-iudicandae) renovandum=0 ;; esac
 done
 if [ "$renovandum" = 1 ] && [ "${VOCABULA_INDEX_RENOVATUS:-0}" != 1 ]; then
     mkdir -p "$RADIX_DIR/build"

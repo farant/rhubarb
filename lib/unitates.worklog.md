@@ -56,3 +56,29 @@ returns), so the caller's sutura and its datum must outlive the
 `Unitates`. The first test put them in a stack frame as `static`;
 examen's credo rule refused it (state across sections) - a plain local
 would have dangled. Allocate both in the same piscina as the result.
+
+## 2026-10-15 - U4: first consumer (the Latin lint)
+
+The lint had TWO answers, not one: the hook's trigger list
+(`lint_latinus.sh` + `silva.py _EXCLUSA_LINTRI`: skip fixa amalgama
+archivum knotapel vendor oracula) and the judged scope (nexus index ∩
+tracked − `ORATIO_VOCABULA_EXCLUSA` = knotapel vendor archivum
+oracula). fixa/ (135 indexed files) and amalgama/ were JUDGED but never
+TRIGGERED: a commit adding an unknown word to a fixture passed
+unlinted and the next lib/ commit was refused for it. Now one judge
+(`iudex lint_latinus`) answers both; Fran: generated code judged,
+fixtures not (they are inputs - JSON, PNG, foreign-style C samples).
+
+- `unitates_viae_iudicatae` filters a newline list (corpus_tractatae);
+  vocabula AND the oratio pin test call it, so pin and lint cannot drift.
+- A judge admitting every provenance never reads the file (2100 paths,
+  no I/O beyond the policy + declarations).
+- `unitates_arboris` is the shared git+disk sutura, NOT `_posix`:
+  aedilis resolves `include/X.h` to `lib/X_{macos,posix}` BEFORE
+  `lib/X.c` (variants) - an adapter named `_posix` replaces the core.
+- The hook asks `./oratio/vocabula.sh -iudicandae` (self-building
+  binary), not `bin/fabrica` (bin/ is not committed; fresh clones).
+- oratio's hand-written link list needed unitates, unitates_arboris,
+  filum, processus_posix (processus exists only as the posix variant).
+- Tolerated copy: 44 lines deleted (29 fixture-only words + 15 already
+  stale), 0 added. Plant: `munera` + fixtura -> `NOVA 29`, exit 1.

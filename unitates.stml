@@ -48,9 +48,9 @@
        quisque cum probatione congruentiae contra indicem veterem) -->
   <iudex titulus="lint_latinus"
          curae="domestica" vitae="viva vetusta"
-         munera="fons caput probatio" provenientiae="manu"
+         munera="fons caput probatio" provenientiae="manu generatum"
          linguae="c89 objc"
-         descriptio="lint Latinus identificatorum ad commissionem (tools/unci-git/lint_latinus.sh, silva.commissio)"/>
+         descriptio="lint Latinus identificatorum: ambitus (oratio vocabula, pinna portae oratio) et ansa commissionis (lint_latinus.sh, silva.commissio) - generata iudicantur (Franus 2026-10-15: nomina generatoris alibi non iudicantur), fixturae non"/>
 
   <bibliothecae capita="include" fontes="lib" probationes="probationes"
                 praefixum="probatio_"

@@ -90,7 +90,6 @@ anterior
 any
 apex1
 apex2
-appendchar
 aquinas
 arch
 arg1
@@ -101,7 +100,6 @@ argosum
 arm
 arm64
 arr
-arr2
 array
 arrays
 arrow
@@ -158,7 +156,6 @@ basename
 basic
 basim
 bayer
-baz
 bb
 bc
 bca
@@ -177,7 +174,6 @@ binary
 bind
 bita
 bitae
-bitalia
 bitalis
 bitfield
 bitfields
@@ -215,7 +211,6 @@ body
 book
 books
 boolean
-booleana
 booleanorum
 border
 bottom
@@ -283,7 +278,6 @@ census2
 census3
 center
 centered
-cents
 cert
 cf
 cfg3
@@ -847,7 +841,6 @@ gd
 ge
 gen1
 gen2
-generic
 geo
 get
 getaddrinfo
@@ -895,14 +888,12 @@ gray
 gray0
 gray1
 grays
-green
 grex2
 grid
 group
 gs
 gss
 gt
-guard
 guarded
 gutenberg
 gv
@@ -1017,7 +1008,6 @@ inclusionum
 incomingcalls
 incompleta
 incompletae
-incompletum
 incompletus
 incongruentiam
 increment
@@ -1050,7 +1040,6 @@ initializare
 initialize
 initializer
 initializor
-initiationem
 initiatore
 initiatorem
 inl
@@ -1082,7 +1071,6 @@ inst
 instr
 instructione
 instructions
-integer32
 integers
 intentional
 interfacies
@@ -1105,7 +1093,6 @@ invalid
 invalida1
 invalida2
 invalida3
-invarians
 invariantia
 invariata
 invocatio
@@ -1208,7 +1195,6 @@ lecta2
 lectionary
 left
 legibile
-legibilis
 len2
 length
 lengths
@@ -1255,7 +1241,6 @@ literalis
 literals
 ll
 llm
-llong
 ln
 load
 loc
@@ -1274,7 +1259,6 @@ longjmp
 look
 lookahead
 loopback
-loops
 lorem
 low
 lower
@@ -1315,7 +1299,6 @@ magic1
 magn
 magnitudinator
 magnitudinatorem
-make
 malachiae
 maleformatus
 malformata
@@ -1380,8 +1363,6 @@ mkdir
 mktime
 ml
 mmap
-mmmm
-mmmmxcvi
 mn
 mn2
 modf
@@ -1416,7 +1397,6 @@ musarium
 musarius
 must
 mut
-mv
 mx
 my
 myers
@@ -1542,7 +1522,6 @@ ordinalem
 ordinali
 org
 orig
-origin
 original
 oscillare
 osee
@@ -1674,7 +1653,6 @@ portal
 position
 positionale
 positionalem
-positionalis
 positionalium
 positions
 possessivum
@@ -1689,7 +1667,6 @@ pow
 powerpc
 powerpc64
 pp
-ppp
 praec
 praecedans
 praecisio
@@ -1761,7 +1738,6 @@ ptr1
 ptr2
 ptr3
 ptrdiff
-ptrs
 pumpare
 punct
 punctare
@@ -1791,7 +1767,6 @@ qres
 qs
 qsort
 quad
-quadraticus
 qual
 qual1
 qual2
@@ -1806,7 +1781,6 @@ query
 question
 quicksort
 quodlibet
-qux
 qv
 qx
 qy
@@ -1848,7 +1822,6 @@ recensio
 recentior
 rect
 rectangulum
-recursio
 recursion
 recursionem
 recursivum
@@ -1890,7 +1863,6 @@ relatio2
 relatio3
 relation
 relations
-release
 relex
 relexata
 relexatae
@@ -2124,11 +2096,9 @@ sl
 sla
 slash
 slb
-sli
 slice
 slider
 sliders
-sll
 slot
 sloti
 slotum
@@ -2177,7 +2147,6 @@ srand
 src
 src1
 src2
-ss3
 sscanf
 ssh
 ssize
@@ -2270,10 +2239,7 @@ subtractivum
 success
 suff
 suffix
-suitae
-suitarum
 suites
-summarium
 summus
 superficialiter
 superpositio
@@ -2282,7 +2248,6 @@ suseconds
 sut
 svarint
 sw
-swap
 swatch
 switch
 sx
@@ -2350,9 +2315,7 @@ terminatorem
 tern
 ternary
 test
-test1
 test2
-test3
 text
 text1
 text2
@@ -2461,9 +2424,7 @@ uev
 uid
 uint
 ul
-uli
 ulid
-ull
 ulong
 ult
 um
@@ -2477,7 +2438,6 @@ unarius
 unary
 undef
 undefinire
-undulatus
 unesc
 unescape
 unescaped
@@ -2537,7 +2497,6 @@ valor2
 value
 valutum
 var
-var2
 variadica
 variadicus
 varint
@@ -2547,15 +2506,12 @@ vcs
 vd
 vdisable
 vec
-vec3
 vectors
 venditoria
 venditorias
 vendoris
 verbatimi
 verd
-verdicta
-verdictum
 vern
 version
 verticalem

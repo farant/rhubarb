@@ -118,9 +118,15 @@ lacks (transponere, lexema, lista, xar). The runner compiles
 Glossary pass I done from the report (77 entries: house coinages and
 late Latin, house proper names, C/API/format names; common English and
 abbreviations left unknown on purpose). The lint's corpus is the
-HOUSE: `knotapel/` (English by decision), `vendor/`, `archivum/` are
-excluded in one place (`ORATIO_VOCABULA_EXCLUSA`; `-omnes-viae` scans
-all). Glossary entries carry `contextus="latinus | anglicus | ambo"`
+HOUSE, decided in ONE place since 2026-10-15: the judge `lint_latinus`
+in the root `unitates.stml` (custody domestica, not archived, roles
+source/header/test - fixtures excluded -, hand-written AND generated;
+`knotapel/` remissa, `vendor/` `oracula/` aliena, `archivum/` archived).
+`vocabula` filters the tracked list through it, the commit hook asks
+`vocabula.sh -iudicandae`, the pin test uses the same filter
+(`unitates_viae_iudicatae`); `-omnes-viae` scans all.
+`ORATIO_VOCABULA_EXCLUSA` is gone (it judged fixa/ and amalgama/ while
+the hook's own list skipped them). Glossary entries carry `contextus="latinus | anglicus | ambo"`
 (decision 26): the identifier/comment lint is the Latin context and
 ignores English-only entries; abbreviations are KEPT (36 permitted,
 contextus latinus). Identifier unknowns were PINNED as a count only

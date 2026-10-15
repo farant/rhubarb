@@ -163,6 +163,8 @@ nomen enumeratio {
 
 /* Iudicatne iudex 'iudex' viam? Plagula iudicatur sola si cura,
  * vita, munus, provenientia, lingua OMNES in indicibus iudicis sunt.
+ * Iudex qui provenientias omnes admittit plagulam NON legit (via
+ * illegibilis tum iudicatur - provenientia nihil decernit).
  * *causa_out (NIHIL licet): NON_IUDICAT -> proprietas prima quae
  * excludit cum causa sua ('cura aliena (vendor/unitas.stml) non in
  * curae iudicis lint_latinus'); IUDEX_IGNOTUS -> iudices noti. */
@@ -173,5 +175,18 @@ unitates_iudicat (
                chorda  via,
               Piscina* piscina,
                chorda* causa_out);
+
+/* Lista viarum (lineis divisa, ut corpus_tractatae.txt) -> eae solae
+ * quas iudex iudicat, eadem forma (linea una per viam, '\n' finalis).
+ * Consumptores qui viarum indicem filtrant (oratio vocabula: index
+ * symbolorum et pinna portae) responsum UNUM communicant. *ignotus
+ * (NIHIL licet) = VERUM si iudex ignotus (lista vacua tum redditur). */
+chorda
+unitates_viae_iudicatae (
+    constans Unitates* unitates,
+               chorda  iudex,
+               chorda  lista,
+              Piscina* piscina,
+                  b32* ignotus);
 
 #endif /* UNITATES_H */

@@ -18,10 +18,8 @@
  * Exitus: 0 responsum · 2 usus, iudex ignotus aut RECUSATIO
  * politicae/declarationum (causae omnes in stderr).
  *
- * Sutura vera: viae per 'git ls-files -co --exclude-standard' (tractae
- * + novae non ignoratae - declaratio nondum commissa iam valet),
- * plagulae per filum. Sutura et mundus in piscina vivunt (Unitates
- * suturam servat: provenientia pigre legitur). */
+ * Sutura vera: lib/unitates_arboris.c (git ls-files -co + filum),
+ * communis cum oratio vocabula. */
 
 #include "postulata_posix.h"
 
@@ -29,62 +27,12 @@
 #include "piscina.h"
 #include "chorda.h"
 #include "xar.h"
-#include "filum.h"
-#include "processus.h"
 #include "unitates.h"
+#include "unitates_arboris.h"
 #include "fabrica_sutura.h"
 
 #include <stdio.h>
 #include <string.h>
-
-interior Xar*
-_enumerare (
-      vacuum* datum,
-     Piscina* piscina)
-{
-    hic_manens constans character* constans argumenta[] = {
-        "git", "ls-files", "-co", "--exclude-standard", NIHIL
-    };
-        ProcessusResultus  r;
-    chorda_fissio_fructus  lineae;
-                      Xar* viae;
-                      i32  i;
-
-    (vacuum)datum;
-    r = processus_exsequi(argumenta, (i32)XXX * M, piscina);
-    si (!r.successus || r.codex_exitus != ZEPHYRUM)
-    {
-        redde NIHIL;
-    }
-    viae    = xar_creare(piscina, (i32)magnitudo(chorda));
-    lineae  = chorda_fissio(r.effusio, '\n', piscina);
-    per (i = ZEPHYRUM; i < lineae.numerus; i++)
-    {
-        si (lineae.elementa[i].mensura > ZEPHYRUM)
-        {
-            *(chorda*)xar_addere(viae) = lineae.elementa[i];
-        }
-    }
-    redde viae;
-}
-
-interior b32
-_legere (
-      vacuum* datum,
-      chorda  via,
-     Piscina* piscina,
-      chorda* textus)
-{
-    constans character* v = chorda_ut_cstr(via, piscina);
-
-    (vacuum)datum;
-    si (!filum_existit(v))
-    {
-        redde FALSUM;
-    }
-    *textus = filum_legere_totum(v, piscina);
-    redde VERUM;
-}
 
 interior vacuum
 _scribere (
@@ -254,12 +202,8 @@ suturae_quid (
         redde II;
     }
 
-    s = (UnitatesSutura*)piscina_allocare(piscina,
-        (memoriae_index)magnitudo(UnitatesSutura));
-    s->datum               = NIHIL;
-    s->plagulas_enumerare  = _enumerare;
-    s->plagulam_legere     = _legere;
-    u                      = unitates_legere(s, piscina, &causa, NIHIL);
+    s = unitates_sutura_arboris(NIHIL, piscina);
+    u = unitates_legere(s, piscina, &causa, NIHIL);
     si (u == NIHIL)
     {
         fputs("quid: RECUSATIO unitatum:\n", stderr);

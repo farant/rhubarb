@@ -2907,21 +2907,18 @@ def _instrumenta_portarum_sanare(binaria):
 # ('summare', 'mappatio'), dum lint ipse ~I s currit. Nunc ANTE portas,
 # eadem functio quam uncus currit (tools/unci-git/lint_latinus.sh,
 # UNCUS_LINT_VIAE = viae commissionis) - sedes veritatis una.
-# oracula/: glutinum circa implementationes alienas ut oracula (lingua
-# aliena necessitate, ut vendor; dispositio D0, 2026-10-03)
-_EXCLUSA_LINTRI = re.compile(
-    r'(^|/)(scratchpad|build|fixa|amalgama|archivum|knotapel|vendor'
-    r'|oracula)/')
+# Quae plagulae iudicantur: iudex lint_latinus (unitates.stml) quem
+# lint_latinus.sh rogat - nullus index viarum hic (spec unitates-codicis
+# U4, 2026-10-15).
 
 
 def lint_latinus_praevium(viae):
     """lint latinus uncI ante portas: (sana, relatio). Viae .c/.h/.m
-    commissionis (exclusis eisdem directoriis ac uncus) -> sanatio
+    commissionis (iudex lint_latinus eas in uncO filtrat) -> sanatio
     indicis symbolorum + vocabula.sh -nova (arborem TOTAM iudicat).
     Nulla plagula C = (True, 'nihil iudicatum'). Apparatus fractus =
     (False, relatio) - clamat, ut uncus."""
-    c = [v for v in viae
-         if v.endswith(_SUFFIXA_C) and not _EXCLUSA_LINTRI.search(v)]
+    c = [v for v in viae if v.endswith(_SUFFIXA_C)]
     if not c:
         return True, ('lint latinus praevius: nulla plagula .c/.h/.m'
                       ' - nihil iudicatum')
