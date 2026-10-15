@@ -60,6 +60,36 @@ full report noted on …MJ2. What changed the design:
   fixture 17 (sample programs as test input) - "has an entry point" is
   not a kind either.
 
+## 0b. Census U1 under the model (2026-10-15, scratchpad `census2.py`)
+
+- **Units found:** 54 directory units (14 subsystems, 14
+  `*/instrumenta`, 10 apps, 5 `tools/<dir>`, docs 3, foreign 2,
+  research 2, archive 1, data 1); 322 library stems in
+  `include/`+`lib/`; 57 `tools/*.c` with an entry point (+6 helpers,
+  all claimed by prefix: `fabrica_{ansae,litterae,memoria,portae,
+  sutura}` -> fabrica, `natura_canones_emissio` -> natura_canones).
+- **Library families:** 40 stems are prefixes of others (77 members).
+  19 members are BACKENDS of one library (`_macos`, `_posix`,
+  `_interna`, `_impl`, `_tabula`: `energia_macos`/`energia_posix`) -
+  a suffix rule handles them. 58 look like CHILD libraries
+  (`fabrica_sanare`, `arbor_lexema`, `imago_png`, `norma_inferre`,
+  `vicus_quaestio`) - the real decision: one family unit, or separate
+  libraries grouped under a parent?
+- **Root tests:** 295 of 335 match a library stem. Of the 40 left, 20
+  match an APP name (`probatio_pictor_*` 17, `scriba_*` 2,
+  `calendarium` 1) -> stem matching must include app/tool unit names;
+  the other 20 are legacy or cross-cutting names (`combinado`,
+  `compound`, `iteratio`, `libro`/`libri`, `lapifex_*`, `navigator`,
+  `notarius`) - per-file decisions or renames.
+- **No unit (793 files):** `probationes/` 588 (mostly `fixa/` - fixtures
+  follow their test, and fabrica's READ LOGS already know which test
+  reads which fixture: use them, do not guess), `tools/` 84 (scripts:
+  `*_fumus.sh` -> the tool's tests, `*_struere.sh` -> its build), root
+  59 (`compile_tests.sh`, `aedificatio.stml`, docs, media) -> **the
+  repository root is itself a unit** (fabrica.stml already has
+  `<subsystema via="."/>`), `.claude/` 18 (hooks: tools, audience
+  machina).
+
 ## I. The model: units, then files
 
 **Unit** (unitas) = a registered, named thing that claims paths and
