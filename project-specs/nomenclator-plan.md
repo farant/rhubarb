@@ -225,6 +225,11 @@ house rule of independent composable libraries.
   volume. Next: U3 (prompt line), then P2b (new person / business,
   delete, undo). Layout glue copied from the calendar = membrum__
   candidate (second consumer).
+- **U3 DONE 2026-10-14: `membrum__prompta`** (include/membrum__prompta.h)
+  - prompt line on the host's island branch; Home/End fixed on the way.
+  Calendar moved onto it, 30 sections unchanged. Next P2b: new person /
+  business (keys n / N + a "+ New" button - Fran to choose between a
+  menu, two buttons, or Tab in the prompt), delete, undo.
 - **P2 nomenclator list** - vicus genus `nomenclator`, command word
   `$contacts`, alphabetical list with letter headings (U1), selection, new
   contact (kind chosen at creation), open detail.

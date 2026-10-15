@@ -150,6 +150,7 @@ declare -a SOURCE_FILES=(
     "lib/matrix.c"
     "lib/membrum__album.c"
     "lib/membrum__praecepta.c"
+    "lib/membrum__prompta.c"
     "lib/mensa.c"
     "lib/mensura.c"
     "lib/mensura_quaestio.c"

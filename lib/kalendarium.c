@@ -15,6 +15,7 @@
 #include "elenchus.h"
 #include "membrum__album.h"
 #include "membrum__praecepta.h"
+#include "membrum__prompta.h"
 #include "rubrica.h"
 #include "vim.h"
 #include "scriba_applicatio.h"
@@ -33,7 +34,6 @@ hic_manens constans character actio_calendarii[] = "calendarium.agere";
 #define KALENDARIUM_LINEA            VIII     /* altitudo glyphi */
 #define KALENDARIUM_SIGNA_MAXIMA     IV
 #define KALENDARIUM_TITULI_DIEI      V        /* cellulae */
-#define KALENDARIUM_PROMPTA          CCLVI    /* octeti promptae */
 #define KALENDARIUM_CAPSA            XXIV     /* ictus capsae: x < */
 #define KALENDARIUM_MARGO_X          VI       /* mensa: cellula una, */
 #define KALENDARIUM_MARGO_Y          VIII     /* ut scriba et pictor */
@@ -704,111 +704,6 @@ ictus_mensis (
  * Prompta (A3b): linea una per vim.h (modus inserendi)
  * ================================================== */
 
-/* prompta aperta? genus in *genus (NIHIL licet) */
-interior b32
-prompta_aperta (
-    constans KalendariumMontatio* m,
-                          chorda* genus)
-{
-    chorda* a;
-
-    a = insula_ramus_attributum(&m->ramus, "prompta");
-    si (!a || chorda_aequalis_literis(*a, "nulla"))
-    {
-        redde FALSUM;
-    }
-    si (genus)
-    {
-        *genus = *a;
-    }
-    redde VERUM;
-}
-
-/* textus promptae (solutus) in exitus[KALENDARIUM_PROMPTA];
- * redde longitudinem */
-interior i32
-promptae_textus (
-     constans KalendariumMontatio* m,
-                        character* exitus)
-{
-    chorda* a;
-       s32  n;
-
-    a = insula_ramus_attributum(&m->ramus, "prompta_textus");
-    n = a ? scriba_solvere(*a, exitus, KALENDARIUM_PROMPTA) : ZEPHYRUM;
-    redde n > ZEPHYRUM ? (i32)n : ZEPHYRUM;
-}
-
-/* status promptae scribere (scriptura una): genus ("nulla" claudit),
- * textus crudus (effugitur), cursor */
-interior b32
-promptam_scribere (
-     KalendariumMontatio* m,
-      constans character* genus,
-      constans character* textus,
-                     i32  longitudo,
-                     i32  cursor,
-                 Piscina* p)
-{
-         ParCampi pares[III];
-     GrexCamporum grex;
-           chorda prior;
-           chorda effugitus;
-        character numerus[XVI];
-              b32 ok;
-
-    effugitus = scriba_effugere(textus, longitudo, p);
-    sprintf(numerus, "%d", (integer)cursor);
-    pares[ZEPHYRUM].titulus  = "prompta";
-    pares[ZEPHYRUM].valor    = genus;
-    pares[I].titulus         = "prompta_textus";
-    pares[I].valor           = longitudo > ZEPHYRUM
-                             ? chorda_ut_cstr(effugitus, p) : "";
-    pares[II].titulus  = "prompta_cursor";
-    pares[II].valor    = longitudo > ZEPHYRUM ? numerus : "";
-    grex.pares         = pares;
-    grex.numerus       = III;
-    prior              = m->ramus.repo->scriptor;
-    insula_scriptorem_ponere(m->ramus.repo, chorda_ex_literis(
-        actio_calendarii, m->piscina));
-    ok = mutare_ramum(&m->ramus, campos_ponere, &grex);
-    insula_scriptorem_ponere(m->ramus.repo, prior);
-    redde ok;
-}
-
-interior b32
-promptam_claudere (
-    KalendariumMontatio* m,
-                Piscina* p)
-{
-    redde promptam_scribere(m, "nulla", "", ZEPHYRUM, ZEPHYRUM, p);
-}
-
-/* clavis eventus -> clavis vim (nominatae et imprimibiles); 0 =
- * nulla */
-interior s32
-clavis_vim (
-    constans Eventus* ev)
-{
-    commutatio (ev->datum.clavis.clavis)
-    {
-        casus CLAVIS_RETRORSUM:  redde VIM_CLAVIS_BACKSPACE;
-        casus CLAVIS_DELERE:     redde VIM_CLAVIS_DELETE;
-        casus CLAVIS_SINISTER:   redde VIM_CLAVIS_SINISTRAM;
-        casus CLAVIS_DEXTER:     redde VIM_CLAVIS_DEXTRAM;
-        casus CLAVIS_DOMUS:      redde VIM_CLAVIS_HOME;
-        casus CLAVIS_FINIS:      redde VIM_CLAVIS_END;
-        ordinarius:              frange;
-    }
-    si (   ev->datum.clavis.producta >= ' '
-        && ev->datum.clavis.producta < CXXVII)
-    {
-        redde ev->datum.clavis.producta;
-    }
-    redde ZEPHYRUM;
-}
-
-
 /* Enter: textus in actum agendae per genus; VERUM si actum (prompta
  * tunc clauditur), FALSUM = recusatum (prompta manet) */
 /* A7: verbum in lista spatiis divisa? */
@@ -1109,75 +1004,21 @@ agere_promptam (
                  chorda  genus,
                 Piscina* p)
 {
-     TabulaCharacterum  t;
-             VimStatus  st;
-             character  textus[KALENDARIUM_PROMPTA];
-                chorda* a;
-                   s32  cursor;
-                   s32  clavis;
-                   i32  n;
-                   i32  i;
+           chorda textus;
+    PromptaExitus exitus;
 
-    si (ev->genus != EVENTUS_CLAVIS_DEPRESSUS)
+    exitus = prompta_clavem_agere(&m->ramus, actio_calendarii, ev,
+        &textus,
+        p);
+    si (exitus == PROMPTA_REDITUS)
     {
-        redde FALSUM;
-    }
-    n = promptae_textus(m, textus);
-    si (ev->datum.clavis.clavis == CLAVIS_EFFUGIUM)
-    {
-        redde promptam_claudere(m, p);
-    }
-    si (ev->datum.clavis.clavis == CLAVIS_REDITUS)
-    {
-        chorda c;
-
-        dum (n > ZEPHYRUM && textus[n - I] == ' ')
+        si (promptam_committere(m, genus, textus, p))
         {
-            n--;
-        }
-        c.datum    = (i8*)textus;
-        c.mensura  = n;
-        si (promptam_committere(m, genus, chorda_transcribere(c, p), p))
-        {
-            (vacuum)promptam_claudere(m, p);
+            (vacuum)prompta_claudere(&m->ramus, actio_calendarii, p);
         }
         redde VERUM;
     }
-    clavis = clavis_vim(ev);
-    si (   clavis == ZEPHYRUM
-        || (clavis > ZEPHYRUM && n >= KALENDARIUM_PROMPTA - I))
-    {
-        redde VERUM;   /* consumpta: prompta claves omnes capit */
-    }
-    a = insula_ramus_attributum(&m->ramus, "prompta_cursor");
-    si (   !a || !chorda_ut_s32(*a, &cursor) || cursor < ZEPHYRUM
-        || cursor > (s32)n)
-    {
-        cursor = (s32)n;
-    }
-    tabula_initiare(&t, p, KALENDARIUM_PROMPTA, I);
-    memcpy(t.cellulae, textus, (size_t)n);
-    st = vim_initiare(&t);
-    st = vim_ponere_modum(st, MODO_VIM_INSERERE);
-    st = vim_ponere_cursor(st, ZEPHYRUM, (i32)cursor);
-    st = vim_tractare_clavem(st, clavis);
-    /* longitudo: vim cellulas vacuas spatiis implet - ultima cellula
-     * non alba, aut cursor (spatium modo typatum manet donec littera
-     * sequitur; ad Enter abscinditur) */
-    n = ZEPHYRUM;
-    per (i = ZEPHYRUM; i < KALENDARIUM_PROMPTA; i++)
-    {
-        si (t.cellulae[i] != '\0' && t.cellulae[i] != ' ')
-        {
-            n = i + I;
-        }
-    }
-    si ((s32)n < (s32)st.cursor_columna)
-    {
-        n = st.cursor_columna;
-    }
-    redde promptam_scribere(m, chorda_ut_cstr(genus, p), t.cellulae, n,
-        st.cursor_columna, p);
+    redde exitus != PROMPTA_NIHIL;
 }
 
 /* visus indicis (dies, agenda): ictus in ordine ("r<id>", "r<id>-<k>")
@@ -1330,7 +1171,8 @@ capacitas_indicis (
         corpus = corpus * L / C;
     }
     /* A6e: prompta in regione indicis */
-    redde corpus - KALENDARIUM_CAPUT_LINEAE - (prompta_aperta(m, NIHIL)
+    redde corpus - KALENDARIUM_CAPUT_LINEAE - (prompta_aperta(&m->ramus,
+        NIHIL)
         ? II : ZEPHYRUM);
 }
 
@@ -1646,8 +1488,9 @@ promptam_aperire (
     constans character* genus,
                 chorda  textus)
 {
-    redde promptam_scribere(cm->m, genus, (constans character*)
-        textus.datum, textus.mensura, textus.mensura, cm->p);
+    redde prompta_aperire(&cm->m->ramus, actio_calendarii, genus,
+        textus,
+        cm->p);
 }
 
 interior b32
@@ -1656,8 +1499,8 @@ fac_novam (
 {
     ContextusMandati* cm = (ContextusMandati*)ctx;
 
-    redde promptam_scribere(cm->m, "nova", "", ZEPHYRUM, ZEPHYRUM,
-        cm->p);
+    redde prompta_aperire(&cm->m->ramus, actio_calendarii, "nova",
+        chorda_ex_literis("", cm->p), cm->p);
 }
 
 interior b32
@@ -1666,8 +1509,8 @@ fac_notam (
 {
     ContextusMandati* cm = (ContextusMandati*)ctx;
 
-    redde promptam_scribere(cm->m, "nota", "", ZEPHYRUM, ZEPHYRUM,
-        cm->p);
+    redde prompta_aperire(&cm->m->ramus, actio_calendarii, "nota",
+        chorda_ex_literis("", cm->p), cm->p);
 }
 
 interior b32
@@ -2383,7 +2226,7 @@ agere_intus (
     {
         chorda genus;
 
-        si (prompta_aperta(m, &genus))
+        si (prompta_aperta(&m->ramus, &genus))
         {
             redde agere_promptam(m, ev, genus, privatum->scheda);
         }
@@ -3222,56 +3065,30 @@ figura_promptae (
 {
      KalendariumFigurae* contextus;
                  chorda  genus;
-                  Fines  campus;
-                 chorda  textus;
-                 chorda* a;
-              character  crudus[KALENDARIUM_PROMPTA];
-     constans character* nomen_generis;
-                    s32  cursor;
-                    i32  n;
+                  Fines  f;
+     constans character* titulus_generis;
 
     (vacuum)thema;
     contextus = (KalendariumFigurae*)ctx;
-    si (   !contextus || !contextus->m || !prompta_aperta(contextus->m,
-            &genus))
+    si (   !contextus || !contextus->m
+        || !prompta_aperta(&contextus->m->ramus, &genus))
     {
         redde;
     }
-    nomen_generis = chorda_aequalis_literis(genus, "nova") ? "new:"
-                  : chorda_aequalis_literis(genus, "nota") ? "note:"
-                  : chorda_aequalis_literis(genus, "titulus") ? "title:"
-                  : chorda_aequalis_literis(genus, "rubricae")
-                  ? "rubrics:"
-                  : chorda_aequalis_literis(genus,
-                  "filtrum") ? "filter:"
-                  : "date:";
-    /* V2a: titulus generis, deinde campus (superficies, margo) cum
-     * textu et cursore tenui */
-    mandata_textus(md, IV, (c->fines.altitudo - KALENDARIUM_LINEA) / II,
-        chorda_ex_literis(nomen_generis, md->piscina), ZEPHYRUM,
-        figura_color_thematis(COLOR_TEXT_DIM));
-    campus.x         = IV + ((s32)strlen(nomen_generis) + I)
-                     * KALENDARIUM_LITTERA;
-    campus.y         = I;
-    campus.latitudo  = c->fines.latitudo - campus.x - IV;
-    campus.altitudo  = c->fines.altitudo - II;
-    figura_campum_pingere(md, campus);
-    n               = promptae_textus(contextus->m, crudus);
-    textus.datum    = (i8*)crudus;
-    textus.mensura  = n;
-    mandata_textus(md, campus.x + IV, (c->fines.altitudo
-        - KALENDARIUM_LINEA) / II,
-        praecidere(chorda_transcribere(textus,
-        md->piscina), campus.latitudo - VIII), ZEPHYRUM,
-        figura_color_thematis(COLOR_TEXT));
-    a = insula_ramus_attributum(&contextus->m->ramus, "prompta_cursor");
-    si (!a || !chorda_ut_s32(*a, &cursor) || cursor < ZEPHYRUM)
-    {
-        cursor = (s32)n;
-    }
-    rectangulum(md, campus.x + IV + cursor * KALENDARIUM_LITTERA - I,
-        campus.y + II, II, campus.altitudo - IV, figura_color_thematis(
-        COLOR_CURSOR), VERUM);
+    titulus_generis = chorda_aequalis_literis(genus, "nova") ? "new:"
+                    : chorda_aequalis_literis(genus, "nota") ? "note:"
+                    : chorda_aequalis_literis(genus, "titulus")
+                    ? "title:"
+                    : chorda_aequalis_literis(genus, "rubricae")
+                    ? "rubrics:"
+                    : chorda_aequalis_literis(genus, "filtrum")
+                    ? "filter:" : "date:";
+    /* U3: membrum__prompta in spatio componentis */
+    f.x         = ZEPHYRUM;
+    f.y         = ZEPHYRUM;
+    f.latitudo  = c->fines.latitudo;
+    f.altitudo  = c->fines.altitudo;
+    prompta_pingere(md, f, titulus_generis, &contextus->m->ramus);
 }
 
 /* titulus visus agendae: "Agenda: <n> open" (res distinctae in
@@ -4074,7 +3891,7 @@ indicem_disponere (
     (vacuum)componentem_locare(dp, regio, "index_vacuum", PARTES_NULLUM,
         DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_CRESCENS, ZEPHYRUM,
         VERUM, FALSUM);
-    si (prompta_aperta(m, NIHIL))
+    si (prompta_aperta(&m->ramus, NIHIL))
     {
         (vacuum)componentem_locare(dp, regio, "prompta", PARTES_CAMPUS,
             DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_FIXA, II, FALSUM,

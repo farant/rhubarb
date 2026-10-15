@@ -740,3 +740,15 @@ Trap: my scripted signature rewrite also matched contextum_parare's
 `ContextusMandati* cm)` parameter (30 conversions, not 29) - it still
 compiled through void*, silently losing the type; restored by hand.
 30 sections unchanged.
+
+## 2026-10-14 - U3: prompt line on `membrum__prompta`
+
+prompta_aperta (calendar-shaped), promptae_textus, promptam_scribere,
+promptam_claudere and clavis_vim are gone (the library's prompta_aperta
+takes the branch: `&m->ramus`). agere_promptam = prompta_clavem_agere
++ the calendar's own promptam_committere (close only if it acted);
+openers call prompta_aperire with actio_calendarii; figura_promptae
+keeps only the label table and calls prompta_pingere in the
+component's own space. KALENDARIUM_PROMPTA removed (PROMPTA_MAXIMA).
+Behaviour change: Home now works in the calendar's prompt (it never
+did). 30 sections unchanged.
