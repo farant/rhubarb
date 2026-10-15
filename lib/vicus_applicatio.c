@@ -679,8 +679,9 @@ quaestionem_iussum (
     opera->opus.pulsare    = opus_quaestionis_pulsare;
     opera->opus.abrumpere  = opus_quaestionis_abrumpere;
     effectus->opus         = &opera->opus;
-    effectus->caput     = chorda_ex_literis("<question answered>",
-        piscina);
+    /* "<answered>" (X) brevius quam "$question<>" (XI): linea numquam
+     * crescit, ergo numquam transfluit (Franus 2026-10-14) */
+    effectus->caput     = chorda_ex_literis("<answered>", piscina);
     effectus->nuntius   = chorda_ex_literis(
         "question: streaming... (Esc cancels)", piscina);
     redde VERUM;

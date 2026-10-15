@@ -805,6 +805,97 @@ _probare_opus_irritum (
     CREDO_VERUM(linea_est(sin, XX, "z"));
 }
 
+
+/* linea l "</>" continet? (sine memmem - non C89) */
+interior b32
+_clausuram_habet (
+    constans TabulaCharacterum* t,
+                           s32  l)
+{
+    s32 k;
+
+    per (k = ZEPHYRUM; k + II < (s32)t->latitudo; k++)
+    {
+        constans character* x = t->cellulae + (i32)l * t->latitudo
+            + (i32)k;
+
+        si (x[ZEPHYRUM] == '<' && x[I] == '/' && x[II] == '>')
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* caput longius ad marginem (Franus 2026-10-14, $question): "$mora<>"
+ * -> "<mora facta>" (+V) in linea latitudine - I transfluit; textus
+ * post '</>' VERUM (post transfluxum, re-inventum) inseri debet, et
+ * quaestio contigua manere - olim positio ANTE transfluxum computata
+ * textum inter lineam et caudam suam ponebat */
+interior vacuum
+_probare_caput_longius (
+    CredoContextus* c)
+{
+    MundusApplicationis* ms          = (MundusApplicationis*)c->datum;
+        VicusApplicatio* app         = &ms->app;
+                  Vicus* v           = ms->v;
+             ManusLudus* m           = ms->m;
+         ScribaMontatio* sin         = ms->sin;
+                    s32  vocationes  = ZEPHYRUM;
+                    s32  w           =
+                        (s32)sin->actiones_ctx.laboris.latitudo;
+                           s32  k;
+                           s32  l;
+                     character  mandatum[CCLVI];
+                     character  q[CCLVI];
+                     character  visa[DXII];
+    constans TabulaCharacterum* t = &sin->actiones_ctx.laboris;
+
+    CREDO_NECESSE(iussum_registrare(sin->actiones_ctx.iussa, "mora",
+        FALSUM, mora_iussum, &vocationes));
+    q[ZEPHYRUM] = '\0';
+    per (k = ZEPHYRUM; k < w - I - VII - III; k++)
+    {
+        strcat(q, "q");
+    }
+    sprintf(mandatum, "i$mora<>%s</>", q);
+    ictus(m, XII, ZEPHYRUM);
+    CREDO_VERUM(manus_ludus_scribere(m, mandatum));
+    CREDO_VERUM(manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));
+    CREDO_NECESSE(linea_est(sin, XII, mandatum + I));
+    ictus(m, XII, I);
+    (vacuum)vicus_pulsare(v);
+    (vacuum)vicus_pulsare(v);
+    dispensator_recomponere(app->d);
+    CREDO_AEQUALIS_S32(vocationes, II);
+    /* linea L: ubi '</>' nunc finit (XII aut XIII post transfluxum) */
+    l = XII;
+    dum (l < XX && !_clausuram_habet(t, l))
+    {
+        l++;
+    }
+    CREDO_NECESSE(l < XX);
+    /* quaestio contigua: lineae XII..l iunctae = caput + q + '</>' */
+    visa[ZEPHYRUM] = '\0';
+    per (k = XII; k <= l; k++)
+    {
+        s32 n = (s32)t->latitudo;
+
+        dum (   n > ZEPHYRUM && t->cellulae[(i32)k * t->latitudo
+            + (i32)(n - I)] == ' ')
+        {
+            n--;
+        }
+        strncat(visa, (constans character*)(t->cellulae
+            + (i32)k * t->latitudo), (size_t)n);
+    }
+    sprintf(mandatum, "<mora facta>%s</>", q);
+    CREDO_VERUM(strcmp(visa, mandatum) == ZEPHYRUM);
+    /* textus statim post lineam '</>' */
+    CREDO_VERUM(linea_est(sin, l + I, "linea una"));
+    CREDO_VERUM(linea_est(sin, l + II, "linea duo"));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "iussa in pagina scribae (scenarium I-VIII)", _probare_iussa,
       _applicationem_parare, _applicationem_purgare, NIHIL, NIHIL },
@@ -817,6 +908,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "opus esc", _probare_opus_esc, _applicationem_parare,
       _applicationem_purgare, NIHIL, NIHIL },
     { "opus irritum", _probare_opus_irritum, _applicationem_parare,
+      _applicationem_purgare, NIHIL, NIHIL },
+    { "caput longius", _probare_caput_longius, _applicationem_parare,
       _applicationem_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

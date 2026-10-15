@@ -240,3 +240,32 @@ everything around it, so any long command gets the same behaviour.
   final text on line XIII (the old "a b" was pushed to XIV) - added
   "nothing left on XIV". Plants: lock removed, restore removed, fill
   unconditional - all red.
+
+## 2026-10-14 - body answers placed after the REAL '</>' (Fran: split questions)
+
+Fran saw two `$question` layouts go wrong (pre-existing, both routes):
+a long first line + an indented continuation came out with the answer
+between the two question lines; a line near the edge came out with the
+tail on the next line and the answer between them. One cause:
+`effectum_applicare` swapped the head `$question<>` (XI) for
+`<question answered>` (XIX, +VIII), which on a long first line
+overflows - the insert cascade carries the tail into the next line, or
+onto a NEW line when the next line is indented - but the answer
+position (linea_clausurae, post_clausuram + delta) had been computed
+BEFORE that move. So the answer landed one line early.
+
+Fix, two parts: the head is now `<answered>` (X, shorter than the
+command: the line can never grow - Fran's choice, vicus_applicatio.c);
+and `effectum_applicare` re-finds the closing tag after any head swap
+(`clausuram_quaerere`: first '</>' from the head's end, scanned in row
+order - an overflowed tail stays contiguous because overflow only
+leaves FULL lines; the position comes from the '>' so a tag ending in
+the last column means "after it on that line"). The second part guards
+every body verb with a longer head. Tests:
+probatio_vicus_quaestio `prima longa` + `ad marginem` (Fran's two
+shapes), probatio_vicus_iussa `caput longius` ($mora's +V head at the
+edge: question contiguous, text right after the real '</>').
+
+Side find, parked (ledger ...A7C7K4R): the insert cascade DROPS a space
+that overflows at the edge (`of scriba` -> `ofscriba`) - in
+tabula_characterum, also reachable by ordinary typing.

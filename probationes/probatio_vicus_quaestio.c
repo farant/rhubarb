@@ -7,7 +7,7 @@
  * PLANATUS totus hactenus - portae officium, ruling R9). Ictus: nuntius
  * "asking"; pulsus II: opus incipit (pagina clausa, "streaming..."),
  * pulsus deinde: pagina crescit sine commissione; finis: caput
- * "<question answered>", commissio una, nuntius usus. Lineae et
+ * "<answered>", commissio una, nuntius usus. Lineae et
  * latitudo portae: liberae - I et latitudo - II x margo (R8). Pagina
  * plena: porta abrumpitur, praecisio ad finem sententiae. Esc:
  * "[cancelled]". Error medio: "[error: ...]"; ante textum: pagina
@@ -366,7 +366,7 @@ _sectio_responsum (
     pulsare_n(ms, I);
     CREDO_VERUM(ms->sin->actiones_ctx.opus == NIHIL);
     CREDO_CHORDA_AEQUALIS_LITERIS(linea_legere(ms->sin, III),
-        "<question answered>Why?</>");
+        "<answered>Why?</>");
     CREDO_CHORDA_AEQUALIS_LITERIS(linea_legere(ms->sin, IV),
         "  <answer>Short answer.</>");
     CREDO_CHORDA_CONTINET(nuntius(ms), chorda_ex_literis(
@@ -407,7 +407,7 @@ _sectio_crescit (
     CREDO_VERUM(ms->sin->actiones_ctx.opus == NIHIL);
     CREDO_VERUM(cursor_documenti(ms) == cursor + I);
     CREDO_CHORDA_AEQUALIS_LITERIS(linea_legere(ms->sin, III),
-        "<question answered>Why?</>");
+        "<answered>Why?</>");
     ictus(ms->m, XX, ZEPHYRUM);
     CREDO_VERUM(manus_ludus_scribere(ms->m, "u"));
     CREDO_CHORDA_AEQUALIS_LITERIS(linea_legere(ms->sin, III),
@@ -494,7 +494,7 @@ _sectio_plenum (
     CREDO_CHORDA_CONTINET(nuntius(ms), chorda_ex_literis(
         "question: page full", piscina));
     CREDO_CHORDA_AEQUALIS_LITERIS(linea_legere(ms->sin, q),
-        "<question answered>Long?</>");
+        "<answered>Long?</>");
     per (l = q + I; l < (s32)t->altitudo; l++)
     {
         CREDO_VERUM(linea_legere(ms->sin, l).mensura
@@ -525,7 +525,7 @@ _sectio_esc (
     CREDO_VERUM(ms->porta.abruptum);
     CREDO_VERUM(ms->sin->actiones_ctx.opus == NIHIL);
     CREDO_CHORDA_AEQUALIS_LITERIS(linea_legere(ms->sin, III),
-        "<question answered>Why?</>");
+        "<answered>Why?</>");
     CREDO_CHORDA_AEQUALIS_LITERIS(linea_legere(ms->sin, IV),
         "  <answer>First sentence.");
     CREDO_CHORDA_AEQUALIS_LITERIS(linea_legere(ms->sin, V), "");
@@ -549,7 +549,7 @@ _sectio_error_medio (
     ictus(ms->m, III, I);
     ad_finem(ms);
     CREDO_CHORDA_AEQUALIS_LITERIS(linea_legere(ms->sin, III),
-        "<question answered>Why?</>");
+        "<answered>Why?</>");
     CREDO_CHORDA_AEQUALIS_LITERIS(linea_legere(ms->sin, IV),
         "  <answer>Part one.");
     CREDO_CHORDA_AEQUALIS_LITERIS(linea_legere(ms->sin, VI),
@@ -638,7 +638,7 @@ _sectio_multilinea (
     CREDO_CHORDA_AEQUALIS_LITERIS(ms->porta.quaestio,
         "first line, (comma)\nsecond line");
     CREDO_CHORDA_AEQUALIS_LITERIS(linea_legere(ms->sin, III),
-        "<question answered>first line, (comma)");
+        "<answered>first line, (comma)");
     CREDO_CHORDA_AEQUALIS_LITERIS(linea_legere(ms->sin, V),
         "  <answer>ok</>");
 }
@@ -723,6 +723,66 @@ _sectio_forma (
         "  }</>");
 }
 
+
+/* Franus 2026-10-14: linea prima longa + continuatio indentata. Olim
+ * caput longius ("<question answered>", +VIII) lineam primam
+ * transfluebat, cauda in lineam NOVAM ibat, et responsum ad lineam
+ * '</>' VETEREM (iam caudam) inserebatur - quaestio in medio scissa */
+interior vacuum
+_sectio_prima_longa (
+    CredoContextus* c)
+{
+    Mundus* ms = (Mundus*)c->datum;
+
+    responsum_ponere(&ms->porta, "ok");
+    portam_ponere(&ms->app, &ms->porta);
+    /* XXXVI cellulae in pagina XXXVIII */
+    scribere(ms, III, "$question<>a question that continues");
+    scribere(ms, IV, "  across the next line</>");
+    ictus(ms->m, III, I);
+    ad_finem(ms);
+    CREDO_CHORDA_AEQUALIS_LITERIS(linea_legere(ms->sin, III),
+        "<answered>a question that continues");
+    CREDO_CHORDA_AEQUALIS_LITERIS(linea_legere(ms->sin, IV),
+        "  across the next line</>");
+    CREDO_CHORDA_AEQUALIS_LITERIS(linea_legere(ms->sin, V),
+        "  <answer>ok</>");
+}
+
+/* linea una usque ad marginem (latitudo - I): nihil transfluit,
+ * responsum statim infra */
+interior vacuum
+_sectio_ad_marginem (
+    CredoContextus* c)
+{
+       Mundus* ms  = (Mundus*)c->datum;
+          s32  w   = (s32)ms->sin->actiones_ctx.laboris.latitudo;
+          s32  k;
+    character  linea[CCLVI];
+    character  exspectata[CCLVI];
+
+    responsum_ponere(&ms->porta, "ok");
+    portam_ponere(&ms->app, &ms->porta);
+    strcpy(linea, "$question<>");
+    strcpy(exspectata, "<answered>");
+    per (k = ZEPHYRUM; k < w - I - XI - III; k++)
+    {
+        strcat(linea, "x");
+        strcat(exspectata, "x");
+    }
+    strcat(linea, "</>");
+    strcat(exspectata, "</>");
+    CREDO_NECESSE((s32)strlen(linea) == w - I);
+    scribere(ms, III, linea);
+    CREDO_CHORDA_AEQUALIS_LITERIS(linea_legere(ms->sin, III), linea);
+    ictus(ms->m, III, I);
+    ad_finem(ms);
+    CREDO_CHORDA_AEQUALIS_LITERIS(linea_legere(ms->sin, III),
+        exspectata);
+    CREDO_CHORDA_AEQUALIS_LITERIS(linea_legere(ms->sin, IV),
+        "  <answer>ok</>");
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "sine porta", _sectio_sine_porta, _parare, _purgare, NIHIL,
         NIHIL },
@@ -743,6 +803,10 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "vacua", _sectio_vacua, _parare, _purgare, NIHIL, NIHIL },
     { "forma", _sectio_forma, _parare, _purgare, NIHIL, NIHIL },
+    { "prima longa", _sectio_prima_longa, _parare, _purgare, NIHIL,
+        NIHIL },
+    { "ad marginem", _sectio_ad_marginem, _parare, _purgare, NIHIL,
+        NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 
