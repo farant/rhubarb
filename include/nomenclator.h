@@ -78,6 +78,15 @@ nomenclator_gestum_ponere (
      Motus* motus,
     vacuum* ctx);
 
+/* P6b: argumentum lateris (vicus_acervo_mutare / montatio): "<id>"
+ * personam aperit (visus personae, campus primus); "" aut NIHIL ad
+ * indicem; FALSUM si id malum aut persona ignota (status non
+ * mutatur) */
+b32
+nomenclator_argumentum_ponere (
+     NomenclatorMontatio* m,
+      constans character* argumentum);
+
 /* persona electa: campus persona_electa si viva, aliter prima indicis;
  * 0 si nulla */
 s32

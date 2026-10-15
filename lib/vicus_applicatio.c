@@ -1458,7 +1458,6 @@ nomenclatorem_montare_in_vico (
 {
     ContextusNomenclatoris* cn;
 
-    (vacuum)argumentum;
     cn = (ContextusNomenclatoris*)ctx;
     si (!cn)
     {
@@ -1469,10 +1468,30 @@ nomenclatorem_montare_in_vico (
         cn->documentum = personae_aperire(cn->piscina, cn->intern,
             cn->volumen, "personae", ZEPHYRUM);
     }
-    redde cn->documentum && nomenclator_montare(
-        (NomenclatorMontatio*)sedes, piscina, intern, repo, id,
-        cn->documentum, volumen, hodie_vici, cn->vicus, latitudo,
-        altitudo, cn->systemata);
+    si (   !cn->documentum
+        || !nomenclator_montare((NomenclatorMontatio*)sedes, piscina,
+               intern, repo, id, cn->documentum, volumen, hodie_vici,
+               cn->vicus, latitudo, altitudo, cn->systemata))
+    {
+        redde FALSUM;
+    }
+    /* P6b: argumentum "<id>" personam aperit (malum: index manet) */
+    si (argumentum && argumentum[ZEPHYRUM])
+    {
+        (vacuum)nomenclator_argumentum_ponere(
+            (NomenclatorMontatio*)sedes, argumentum);
+    }
+    redde VERUM;
+}
+
+/* P6b: argumentum lateris mutatum (vicus_acervo_mutare) */
+interior b32
+nomenclatoris_argumentum_ponere (
+                 vacuum* ctx,
+     constans character* argumentum)
+{
+    redde nomenclator_argumentum_ponere((NomenclatorMontatio*)ctx,
+        argumentum);
 }
 
 /* P5b: pulsus lateris nomenclatoris - notae refectae */
@@ -1504,6 +1523,9 @@ nomenclatorem_describere (
     f->gestum_ctx     = m;
     f->pulsare        = nomenclatoris_pulsare;
     f->pulsare_ctx    = m;
+    /* P6b: "<id>" personam aperit (natalis ex calendario) */
+    f->argumentum_ponere      = nomenclatoris_argumentum_ponere;
+    f->argumentum_ponere_ctx  = m;
 }
 
 /* P6: fons dierum calendarii - natales ex documento personarum
@@ -1531,6 +1553,25 @@ natales_legere (
     }
     redde cn->documentum && personae_fasti_legere(cn->documentum, prima,
         ultima, exitus, piscina);
+}
+
+/* P6b: introitum natalis aperire - latus nomenclatoris in frontem
+ * acervi cum persona (vicus_acervo_mutare; petitio pulsus proximi) */
+interior b32
+natalem_aperire (
+                     vacuum* ctx,
+    constans FastiIntroitus* introitus)
+{
+    ContextusNomenclatoris* cn;
+                 character  numerus[XVI];
+
+    cn = (ContextusNomenclatoris*)ctx;
+    si (!cn || !introitus || introitus->referentia <= ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    sprintf(numerus, "%d", (integer)introitus->referentia);
+    redde vicus_acervo_mutare(cn->vicus, "nomenclator", numerus);
 }
 
 /* folium paginae novae (S2b): lateris sinistri cellulae (dimidium
@@ -1765,8 +1806,7 @@ ContextusNomenclatoris* cn;
         || !cn
         || !ck->fontes
         || !fasti_fontes_addere(ck->fontes, "nomenclator",
-        natales_legere,
-               NIHIL, cn)
+               natales_legere, natalem_aperire, cn)
         || !vicus_genus_addere(app->vicus, "nomenclator",
                magnitudo(NomenclatorMontatio),
                nomenclatorem_montare_in_vico, nomenclatorem_describere,

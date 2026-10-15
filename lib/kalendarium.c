@@ -997,6 +997,39 @@ agere_promptam (
     redde exitus != PROMPTA_NIHIL;
 }
 
+/* P6b: ordo signatus "n<k>" visus diei - introitus k diei electi fonti
+ * suo redditur (fasti_fontes_aperire); FALSUM si ordo alius aut fons
+ * sine aperire */
+interior b32
+signatum_aperire (
+    KalendariumMontatio* m,
+     constans Componens* nodus,
+                Piscina* p)
+{
+     constans KalendariumFigurae* ctx;
+                             Xar* signa;
+                          chorda  n;
+                             s32  k;
+
+    ctx = (constans KalendariumFigurae*)m->figurae_ctx;
+    si (   !ctx || !nodus || nodus->partes != PARTES_ITEM
+        || nodus->id.mensura < II || nodus->id.datum[ZEPHYRUM] != 'n')
+    {
+        redde FALSUM;
+    }
+    n.datum    = nodus->id.datum + I;
+    n.mensura  = nodus->id.mensura - I;
+    si (!chorda_ut_s32(n, &k) || k < ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    signa = signati(m, kalendarium_dies_electus(m),
+        kalendarium_dies_electus(m), p);
+    redde signa && k < (s32)xar_numerus(signa) && fasti_fontes_aperire(
+        ctx->fontes, (constans FastiIntroitus*)xar_obtinere(signa,
+        (i32)k));
+}
+
 /* visus indicis (dies, agenda): ictus in ordine ("r<id>", "r<id>-<k>")
  * rem eligit; claves per tabulam mandatorum */
 interior b32
@@ -2105,6 +2138,12 @@ agere_intus (
 
         si (visus_diei(m) || visus_agendae(m))
         {
+            /* P6b: duplex in ordine signato fonti suo redditur (etiam
+             * in placenta, loco capsae) */
+            si (signatum_aperire(m, nodus, privatum->scheda))
+            {
+                redde VERUM;
+            }
             /* A7: duplex in ordine (non in capsa - ibi bis perficit)
              * titulum edit */
             si (   des && des->punctum_locale.x < KALENDARIUM_CAPSA

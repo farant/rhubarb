@@ -788,3 +788,15 @@ top-right, and a feast title on the same day is truncated before it.
 Day row: in place of the checkbox. Tests recognise it by the frosting
 row (filled 13x1 rect). If more pictograms appear, this helper is the
 candidate to move into figura.h with the sprite as data.
+
+## 2026-10-15 - P6b: double-click a dated row -> its source
+
+`signatum_aperire`: day view, PARTES_ITEM "n<k>" -> the k-th entry of the
+selected day (re-read) -> `fasti_fontes_aperire`. Checked BEFORE the A7
+"double-click in the checkbox area" early return, so double-clicking the
+cake (which sits where the checkbox is) opens too. "nova"/"notae" also
+start with 'n' but are not PARTES_ITEM / not numeric. Single clicks on
+"n" rows still do nothing. Plant gotcha seen here: `f(x) && FALSUM`
+still CALLS f - plant side-effecting calls as `FALSUM && f(x)`.
+Test fake source keeps its "last opened" in the section's Mundus (examen
+rejects a static written in a section and not reset by parare/purgare).

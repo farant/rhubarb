@@ -189,3 +189,19 @@ undo creation -> create again may reuse the id and inherit its notes.
 Plants (all red on the intended assertion): focus pass-through, book
 follows open contact, locus half-height, shadow, vicus volume, vicus
 gesture hook, vicus pulse hook.
+
+## 2026-10-15 - P6b: open a contact by argument (birthday double-click)
+
+`nomenclator_argumentum_ponere(m, "<id>")` opens the detail view (and
+the notes book follows: librum_aptare); "" / NIHIL = back to the list;
+a bad or unknown id is refused WITHOUT changing state. vicus uses it on
+both paths: at mount (`nomenclatorem_montare_in_vico` no longer ignores
+its argument; a bad one leaves the list) and as the side's
+`argumentum_ponere` (vicus_acervo_mutare on an existing side).
+
+Test lesson: the two vicus paths masked each other - vicus_acervo_mutare
+on a MISSING side mounts with the argument AND then calls
+argumentum_ponere, so planting either one stayed green. Fixed by
+testing each alone: an existing contacts side (calendar double-click on
+a second birthday) and a fresh mount via vicus_acervo_aperire (no
+argumentum_ponere call).

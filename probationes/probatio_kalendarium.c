@@ -49,6 +49,7 @@ nomen structura {
           StatusSystemata  systemata;
          AgendaDocumentum* documentum;
               FastiFontes* fontes;     /* P6: dies signati */
+                      s32  apertum;    /* P6b: referentia reddita */
                       s32  latitudo;   /* A6e: superficies montat. */
                       s32  altitudo;
 } Mundus;
@@ -2077,15 +2078,27 @@ fictum_legere (
     redde VERUM;
 }
 
+/* P6b: referentia ultima fonti reddita in *ctx (s32; 0 = nulla) */
+interior b32
+fictum_aperire (
+                     vacuum* ctx,
+    constans FastiIntroitus* introitus)
+{
+    *(s32*)ctx = introitus->referentia;
+    redde VERUM;
+}
+
 interior FastiFontes*
 fontes_ficti (
+     Mundus* x,
     Piscina* p)
 {
     FastiFontes* f;
 
-    f = fasti_fontes_creare(p);
-    redde f && fasti_fontes_addere(f, "fictus", fictum_legere, NIHIL,
-        NIHIL) ? f : NIHIL;
+    x->apertum  = ZEPHYRUM;
+    f           = fasti_fontes_creare(p);
+    redde f && fasti_fontes_addere(f, "fictus", fictum_legere,
+        fictum_aperire, &x->apertum) ? f : NIHIL;
 }
 
 /* P6: placenta natalis intra cellulam? - linea glacieris (rectangulum
@@ -2122,7 +2135,7 @@ _probare_natales_mensis (
 
     x          = (Mundus*)c->datum;
     thema_initiare();
-    x->fontes  = fontes_ficti(c->piscina);
+    x->fontes  = fontes_ficti(x, c->piscina);
     CREDO_NECESSE_NON_NIHIL(x->fontes);
     CREDO_NECESSE(mundum_struere(x, c->piscina, NIHIL));
     md = reddere(x, c->piscina);
@@ -2150,7 +2163,7 @@ _probare_natales_diei (
 
     x          = (Mundus*)c->datum;
     thema_initiare();
-    x->fontes  = fontes_ficti(c->piscina);
+    x->fontes  = fontes_ficti(x, c->piscina);
     CREDO_NECESSE_NON_NIHIL(x->fontes);
     CREDO_NECESSE(agendam_parare(x, c));
     reditus(x);
@@ -2182,6 +2195,35 @@ _probare_natales_diei (
     md = reddere(x, c->piscina);
     CREDO_VERUM(textus_ullus_continet(md, "Luca Bianchi's birthday"));
     CREDO_FALSUM(textus_ullus_continet(md, "Anna Rossi"));
+}
+
+/* P6b: ictus duplex in ordine signato introitum fonti suo reddit
+ * (etiam in placenta, loco capsae); ictus simplex nihil */
+interior vacuum
+_probare_signatum_aperire (
+    CredoContextus* c)
+{
+    Mundus* x;
+     Fines  f;
+
+    x          = (Mundus*)c->datum;
+    thema_initiare();
+    x->fontes  = fontes_ficti(x, c->piscina);
+    CREDO_NECESSE_NON_NIHIL(x->fontes);
+    CREDO_NECESSE(agendam_parare(x, c));
+    reditus(x);
+    CREDO_NECESSE(campus_est(x, "visus", "dies"));
+    /* n1 = Anna Rossi (referentia I); simplex nihil */
+    CREDO_NECESSE(ictus_in(x, "n1", c->piscina));
+    CREDO_AEQUALIS_S32(x->apertum, ZEPHYRUM);
+    CREDO_NECESSE(ictus_in(x, "n1", c->piscina));
+    CREDO_AEQUALIS_S32(x->apertum, I);
+    /* n0 = Festa urbis (referentia II), in placenta (x < capsa) */
+    f = fines_componentis(x, "n0", c->piscina);
+    CREDO_NECESSE(f.altitudo > ZEPHYRUM);
+    ictus_ad(x, f.x + VIII, f.y + IV);
+    ictus_ad(x, f.x + VIII, f.y + IV);
+    CREDO_AEQUALIS_S32(x->apertum, II);
 }
 
 /* notae diei (A6d-1): liber "dies/<ISO>" in dimidio infero visus
@@ -2947,6 +2989,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "natales_mensis", _probare_natales_mensis, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { "natales_diei", _probare_natales_diei, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "signatum_aperire", _probare_signatum_aperire, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { "montatio",     _probare_montationem,   mundum_parare,
         mundum_purgare, NIHIL, NIHIL },

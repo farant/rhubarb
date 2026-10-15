@@ -270,6 +270,13 @@ house rule of independent composable libraries.
   to-dos ("Anna Rossi turns 40" / "Anna Rossi's birthday"), vicus
   registers contacts on the shared personae document. Next P6b: click
   a birthday row opens the contact (`$contacts <id>` argument).
+- **P6b DONE 2026-10-15**: double-click a birthday row (calendar day
+  view, also on the cake) -> `fasti_fontes_aperire` -> vicus
+  `vicus_acervo_mutare("nomenclator", "<id>")` -> contacts side comes to
+  the front of the stack (replacing the calendar, Fran OK) with that
+  contact open; `nomenclator_argumentum_ponere` (mount + existing side).
+  Next P6c: arrow button / `c` by the birthday -> calendar day view on
+  the next occurrence (design approved 10-15).
 - **P2 nomenclator list** - vicus genus `nomenclator`, command word
   `$contacts`, alphabetical list with letter headings (U1), selection, new
   contact (kind chosen at creation), open detail.

@@ -1268,6 +1268,43 @@ _probare_sine_volumine (
     CREDO_FALSUM(nomenclator_reficere(&x->m));
 }
 
+/* P6b: argumentum lateris - "<id>" personam aperit (liber notarum
+ * sequitur), "" et NIHIL ad indicem; id malum aut ignotum FALSUM,
+ * status manet */
+interior vacuum
+_probare_argumentum (
+    CredoContextus* c)
+{
+      Mundus* x;
+     Mandata* md;
+       Fines  totum;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(librum_parare(x, "persona/1", "quinque", c->piscina));
+    CREDO_NECESSE(contactus_parare(x, c->piscina));
+    totum.x         = ZEPHYRUM;
+    totum.y         = ZEPHYRUM;
+    totum.latitudo  = CCCLX;
+    totum.altitudo  = CCCXX;
+    CREDO_VERUM(nomenclator_argumentum_ponere(&x->m, "1"));
+    dispensator_recomponere(x->d);
+    CREDO_VERUM(campus_est(x, "persona_aperta", "1"));
+    CREDO_VERUM(adest(x, "f0", c->piscina));
+    md = reddere(x, c->piscina);
+    CREDO_VERUM(textus_in(md, totum, "quinque", -I));
+    CREDO_VERUM(nomenclator_argumentum_ponere(&x->m, "3"));
+    CREDO_VERUM(campus_est(x, "persona_aperta", "3"));
+    CREDO_FALSUM(nomenclator_argumentum_ponere(&x->m, "99"));
+    CREDO_FALSUM(nomenclator_argumentum_ponere(&x->m, "abc"));
+    CREDO_FALSUM(nomenclator_argumentum_ponere(&x->m, "0"));
+    CREDO_VERUM(campus_est(x, "persona_aperta", "3"));
+    CREDO_VERUM(nomenclator_argumentum_ponere(&x->m, ""));
+    CREDO_VERUM(campus_est(x, "persona_aperta", NIHIL));
+    CREDO_VERUM(nomenclator_argumentum_ponere(&x->m, "2"));
+    CREDO_VERUM(nomenclator_argumentum_ponere(&x->m, NIHIL));
+    CREDO_VERUM(campus_est(x, "persona_aperta", NIHIL));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "montatio", _probare_montationem, mundum_parare, mundum_purgare,
         NIHIL, NIHIL },
@@ -1313,6 +1350,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         mundum_purgare, NIHIL, NIHIL },
     { "sine_volumine", _probare_sine_volumine, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
+    { "argumentum", _probare_argumentum, mundum_parare, mundum_purgare,
+        NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

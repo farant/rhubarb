@@ -248,6 +248,35 @@ _probare_notas (
     }
 }
 
+/* P6b: latus montatum cum argumento "<id>" personam aperit (via
+ * montationis - argumentum_ponere non vocatur) */
+interior vacuum
+_probare_argumentum (
+    CredoContextus* c)
+{
+                 Mundus* x;
+                  Vicus* v;
+     PersonaeDocumentum* doc;
+    NomenclatorMontatio* n;
+                 chorda* a;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(x && x->volumen);
+    doc = personae_aperire(c->piscina, internamentum_creare(c->piscina),
+        x->volumen, "personae", ZEPHYRUM);
+    CREDO_NECESSE(doc && personae_hominem_creare(doc, chorda_ex_literis(
+        "Anna", c->piscina), chorda_ex_literis("Rossi", c->piscina))
+        == I);
+    CREDO_NECESSE(aedificare(x, c));
+    v = x->app.vicus;
+    CREDO_VERUM(vicus_acervo_aperire(v, "nomenclator", "1"));
+    (vacuum)vicus_pulsare(v);
+    n = nomenclator_frontalis(v);
+    CREDO_NECESSE_NON_NIHIL(n);
+    a = insula_ramus_attributum(&n->ramus, "persona_aperta");
+    CREDO_VERUM(a && chorda_aequalis_literis(*a, "1"));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "latera", _probare_latera, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
@@ -257,6 +286,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "notae", _probare_notas, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
+    { "argumentum", _probare_argumentum, mundum_parare, mundum_purgare,
+        NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

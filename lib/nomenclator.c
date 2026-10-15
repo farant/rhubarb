@@ -2507,6 +2507,39 @@ librum_aptare (
 }
 
 b32
+nomenclator_argumentum_ponere (
+     NomenclatorMontatio* m,
+      constans character* argumentum)
+{
+    character numerus[XVI];
+          s32 id;
+
+    si (!m)
+    {
+        redde FALSUM;
+    }
+    si (!argumentum || argumentum[ZEPHYRUM] == '\0')
+    {
+        redde campos_scribere(m, "persona_aperta", "", "campus_electus",
+            "");
+    }
+    si (   !chorda_ut_s32(chorda_ex_literis(argumentum, m->piscina),
+        &id)
+        || id <= ZEPHYRUM || !personae_persona(m->documentum, id))
+    {
+        redde FALSUM;
+    }
+    sprintf(numerus, "%d", (integer)id);
+    si (!campos_scribere(m, "persona_aperta", numerus, "campus_electus",
+            ""))
+    {
+        redde FALSUM;
+    }
+    librum_aptare(m, NIHIL);
+    redde VERUM;
+}
+
+b32
 nomenclator_reficere (
     NomenclatorMontatio* m)
 {
