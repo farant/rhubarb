@@ -83,3 +83,33 @@ outputs that changed: the silva amalgam (vendors xar.c; now keeps
 piscina_notare/reficere/conari_allocare_ordinatum, excludes
 xar_mutare) - ties now break by insertion order, so any generator
 sorting equal keys may shift once; the gates compare regenerations.
+
+## 2026-10-15 - clz in xar_locare; what xar really costs in percursus
+
+New `tools/xar_mensura.c` (ns/op, CPU time, best of 5, 4K and 1M
+elements; M2, -O2). Before: add 2.9, sequential obtinere 3.0, random
+2.6, pointer-element ("lexemata") 3.0, flat C array 0.04. Experiments
+(scratchpad): divide->shift -10%, -flto inlining alone -15% (the call is
+NOT the cost), `__builtin_clz` for `_bitum_summum` -20..40%, clz + LTO
+1.0 ns (3x: the 15-instruction dependent scan was the chain), a walk
+segment by segment 0.05 ns (= flat array).
+
+Built: `XAR_BITUM_SUMMUM` = one clz under clang/gcc, the old C89 scan
+otherwise (`-DXAR_SINE_INTRINSECIS` forces it; both paths 34/34 sections
+of probatio_xar in a scratch build). For a power-of-two first segment
+(all house callers: I, IV, VIII, XVI) locare is now h = log2(index),
+segment h - p + 1, size 2^h, offset index - 2^h - no divide; other first
+sizes (the finium test uses III, VII) keep the divide path, exact
+capacities unchanged. After: add 2.2-2.5, sequential 2.4, random 1.8,
+lexemata 2.4 ns.
+
+Real workloads: lexer A/B no change (it only appends, ~40 ns/token);
+percursus lib A/B within noise. `sample` of percursus explains it: xar
+is ~31% of the run (obtinere 16%, numerus 5%, addere 4%, creare 4%), but
+62% of the obtinere samples come from LINEAR pointer-keyed lookups -
+silva_scribere `_extentum_quaerere` + `_extentum_continens` (every
+expanded token of an object-like macro scans all function-like
+invocations twice and finds nothing) and
+`silva_oraculum_responsum_quaerere`. The lever is an index there, not
+xar. Segment-span API (option B) still worthwhile for genuine
+sequential loops; ThinLTO would double xar again.

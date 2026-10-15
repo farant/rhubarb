@@ -444,6 +444,21 @@ principale (vacuum)
         fons = _nidum_struere(piscina, &FORMAE[II], (i32)50000, VERUM,
             &mensura);
         CREDO_NON_RUIT (_totum(fons, mensura));
+        /* MEMORIA LINEARIS (2026-10-15): uncus clausus contentum ad
+         * aperturam suam in clavem normalizabat - '[[[...]]]' L milium
+         * ~2.5 GB et ~3.5 s (quadratum; sub onere CREDO_NON_RUIT V s
+         * 'KILL'). Usus piscinae per octetum fontis: sanum ~CCVI,
+         * quadratum ~XXV milia - limes M, sine horologio */
+        {
+            Piscina* propria;
+
+            propria = piscina_generare_dynamicum("totalitas_uncus",
+                65536);
+            (vacuum)md_arbor_parsare(propria, fons, mensura);
+            CREDO_MINOR_I32 ((i32)(piscina_summa_usus(propria)
+                / (memoriae_index)mensura), (i32)M);
+            piscina_destruere(propria);
+        }
     }
 
 

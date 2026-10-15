@@ -81,6 +81,19 @@ silva_expansio_creare (
     exp->inclusiones  = xar_creare(piscina, magnitudo(SilvaInclusio));
     exp->extenta = xar_creare(piscina,
         magnitudo(SilvaExtentumInvocationis));
+    exp->indices_extentorum = (SilvaIndicesExtentorum*)piscina_allocare(
+        piscina, (memoriae_index)magnitudo(SilvaIndicesExtentorum));
+    si (exp->indices_extentorum != NIHIL)
+    {
+        exp->indices_extentorum->per_invocationem =
+            tabula_dispersa_creare_chorda(piscina, LXIV);
+        exp->indices_extentorum->indicata             = ZEPHYRUM;
+        exp->indices_extentorum->ordinata             = NIHIL;
+        exp->indices_extentorum->numerus_ordinatorum  = ZEPHYRUM;
+        exp->indices_extentorum->ordinata_ex          = -I;
+        exp->indices_extentorum->fractus              =
+            exp->indices_extentorum->per_invocationem == NIHIL;
+    }
     exp->profunditas_includendi  = ZEPHYRUM;
     exp->fons_api                = -I;
     exp->tabula_activa           = NIHIL;
@@ -1240,10 +1253,337 @@ _includendum_processare (
         redde;
     }
 
+    si (silva_includendum_lexemata(exp, incl) == NIHIL)
+    {
+        redde;  /* lexatio defecit: ut ignotum (via memorata) */
+    }
     exp->profunditas_includendi++;
     _plagulam_processare(exp, incl->lexemata, FALSUM, reliqua,
         directivae);
     exp->profunditas_includendi--;
+}
+
+Xar*
+silva_includendum_lexemata (
+       SilvaExpansio* exp,
+    SilvaIncludendum* incl)
+{
+    si (incl == NIHIL)
+    {
+        redde NIHIL;
+    }
+    si (incl->lexemata == NIHIL)
+    {
+        incl->lexemata = silva_lexare(exp->piscina, incl->textus,
+            incl->mensura, incl->fons_index);
+    }
+    redde incl->lexemata;
+}
+
+
+/* ==================================================
+ * Indices extentorum (2026-10-15)
+ * ================================================== */
+
+/* Intervallum indicis continentiae */
+nomen structura {
+     s32  fons_index;
+     s32  initium;
+     s32  finis;           /* exclusivus */
+     s32  finis_maximus;   /* maximum 'finis' eiusdem fontis usque huc */
+     i32  ordo;            /* index in exp->extenta (minimum = primum) */
+     Xar* lamina;
+} IntervallumExtenti;
+
+/* Lamina extenti ut ab extentis legitur: primum, ultimum lexema */
+interior b32
+_lamina_fines (
+    constans SilvaExtentumInvocationis*  e,
+                            SilvaToken** primum_out,
+                            SilvaToken** ultimum_out)
+{
+    si (   e                      == NIHIL || e->lamina == NIHIL
+        || xar_numerus(e->lamina) == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    *primum_out   = *(SilvaToken**)xar_obtinere(e->lamina, ZEPHYRUM);
+    *ultimum_out  = *(SilvaToken**)xar_obtinere(e->lamina,
+        (i32)(xar_numerus(e->lamina) - I));
+    redde VERUM;
+}
+
+/* Viae lineares (forma pristina silva_scribere.c) - recursus si index
+ * fractus */
+interior Xar*
+_extentum_invocationis_linearis (
+    constans SilvaExpansio* exp,
+       constans SilvaToken* invocatio)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < xar_numerus(exp->extenta); k++)
+    {
+        SilvaExtentumInvocationis* e = (SilvaExtentumInvocationis*)
+            xar_obtinere(exp->extenta, k);
+
+        si (e != NIHIL && e->invocatio == invocatio)
+        {
+            redde e->lamina;
+        }
+    }
+    redde NIHIL;
+}
+
+interior Xar*
+_extentum_continens_linearis (
+    constans SilvaExpansio* exp,
+       constans SilvaToken* radix)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < xar_numerus(exp->extenta); k++)
+    {
+        SilvaExtentumInvocationis* e = (SilvaExtentumInvocationis*)
+            xar_obtinere(exp->extenta, k);
+                       SilvaToken* primum;
+                       SilvaToken* ultimum;
+
+        si (!_lamina_fines(e, &primum, &ultimum))
+        {
+            perge;
+        }
+        si (   primum->fons_index == radix->fons_index
+            && radix->byte_offset >= primum->byte_offset
+            && radix->byte_offset
+                < ultimum->byte_offset
+                    + (s32)silva_token_longitudo(ultimum))
+        {
+            redde e->lamina;
+        }
+    }
+    redde NIHIL;
+}
+
+/* Extenta nova (post signum aquae) in tabulam identitatis */
+interior vacuum
+_extenta_indicare (
+    SilvaIndicesExtentorum* ind,
+                       Xar* extenta)
+{
+    dum (!ind->fractus && ind->indicata < xar_numerus(extenta))
+    {
+        SilvaExtentumInvocationis* e = (SilvaExtentumInvocationis*)
+            xar_obtinere(extenta, ind->indicata);
+
+        si (e != NIHIL && e->invocatio != NIHIL)
+        {
+            chorda clavis;
+
+            clavis.datum    = (i8*)&e->invocatio;
+            clavis.mensura  = (i32)magnitudo(e->invocatio);
+            si (   !tabula_dispersa_continet(ind->per_invocationem,
+                clavis)
+                && !tabula_dispersa_inserere(ind->per_invocationem,
+                clavis,
+                       (vacuum*)e))
+            {
+                ind->fractus = VERUM;
+                redde;
+            }
+        }
+        ind->indicata++;
+    }
+}
+
+Xar*
+silva_extentum_invocationis (
+    constans SilvaExpansio* exp,
+       constans SilvaToken* invocatio)
+{
+    SilvaIndicesExtentorum* ind;
+                    chorda  clavis;
+                    vacuum* valor;
+
+    si (exp == NIHIL || exp->extenta == NIHIL || invocatio == NIHIL)
+    {
+        redde NIHIL;
+    }
+    ind = exp->indices_extentorum;
+    si (ind != NIHIL)
+    {
+        _extenta_indicare(ind, exp->extenta);
+    }
+    si (ind == NIHIL || ind->fractus)
+    {
+        redde _extentum_invocationis_linearis(exp, invocatio);
+    }
+    clavis.datum    = (i8*)&invocatio;
+    clavis.mensura  = (i32)magnitudo(invocatio);
+    si (tabula_dispersa_invenire(ind->per_invocationem, clavis, &valor))
+    {
+        redde ((SilvaExtentumInvocationis*)valor)->lamina;
+    }
+    redde NIHIL;
+}
+
+interior s32
+_intervalla_comparare (
+    constans vacuum* a,
+    constans vacuum* b)
+{
+    constans IntervallumExtenti* x = (constans IntervallumExtenti*)a;
+    constans IntervallumExtenti* y = (constans IntervallumExtenti*)b;
+
+    si (x->fons_index != y->fons_index)
+    {
+        redde (x->fons_index < y->fons_index) ? -I : I;
+    }
+    si (x->initium != y->initium)
+    {
+        redde (x->initium < y->initium) ? -I : I;
+    }
+    si (x->ordo != y->ordo)
+    {
+        redde (x->ordo < y->ordo) ? -I : I;
+    }
+    redde ZEPHYRUM;
+}
+
+/* Intervalla omnium extentorum ordinata (fons, initium, ordo) +
+ * maxima finium per fontem; FALSUM si allocatio defecit */
+interior b32
+_intervalla_struere (
+    constans SilvaExpansio* exp,
+    SilvaIndicesExtentorum* ind)
+{
+                   Xar* x;
+    IntervallumExtenti* tabula;
+                   i32  n;
+                   i32  k;
+
+    n = xar_numerus(exp->extenta);
+    x = xar_creare(exp->piscina, (i32)magnitudo(IntervallumExtenti));
+    si (x == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        SilvaExtentumInvocationis* e = (SilvaExtentumInvocationis*)
+            xar_obtinere(exp->extenta, k);
+                        SilvaToken* primum;
+                        SilvaToken* ultimum;
+                IntervallumExtenti* iv;
+
+        si (!_lamina_fines(e, &primum, &ultimum))
+        {
+            perge;
+        }
+        iv = (IntervallumExtenti*)xar_addere(x);
+        si (iv == NIHIL)
+        {
+            redde FALSUM;
+        }
+        iv->fons_index  = primum->fons_index;
+        iv->initium     = primum->byte_offset;
+        iv->finis       = ultimum->byte_offset
+                        + (s32)silva_token_longitudo(ultimum);
+        iv->ordo    = k;
+        iv->lamina  = e->lamina;
+    }
+    xar_ordinare(x, _intervalla_comparare);
+    tabula = NIHIL;
+    si (xar_numerus(x) > ZEPHYRUM)
+    {
+        tabula = (IntervallumExtenti*)piscina_allocare(exp->piscina,
+            (memoriae_index)xar_numerus(x)
+            * (memoriae_index)magnitudo(IntervallumExtenti));
+        si (tabula == NIHIL)
+        {
+            redde FALSUM;
+        }
+        xar_copiare_ad_tabulam(x, tabula, ZEPHYRUM, xar_numerus(x));
+        per (k = ZEPHYRUM; k < xar_numerus(x); k++)
+        {
+            tabula[k].finis_maximus = tabula[k].finis;
+            si (   k > ZEPHYRUM
+                && tabula[k - I].fons_index == tabula[k].fons_index
+                && tabula[k - I].finis_maximus
+                    > tabula[k].finis_maximus)
+            {
+                tabula[k].finis_maximus = tabula[k - I].finis_maximus;
+            }
+        }
+    }
+    ind->ordinata             = (vacuum*)tabula;
+    ind->numerus_ordinatorum  = xar_numerus(x);
+    ind->ordinata_ex          = (s32)n;
+    redde VERUM;
+}
+
+Xar*
+silva_extentum_continens (
+    constans SilvaExpansio* exp,
+       constans SilvaToken* radix)
+{
+              SilvaIndicesExtentorum* ind;
+         constans IntervallumExtenti* tabula;
+         constans IntervallumExtenti* optimum;
+                                 i32  infra;
+                                 i32  supra;
+                                 s32  j;
+
+    si (exp == NIHIL || exp->extenta == NIHIL || radix == NIHIL)
+    {
+        redde NIHIL;
+    }
+    ind = exp->indices_extentorum;
+    si (   ind              != NIHIL && !ind->fractus
+        && ind->ordinata_ex != (s32)xar_numerus(exp->extenta)
+        && !_intervalla_struere(exp, ind))
+    {
+        ind->fractus = VERUM;
+    }
+    si (ind == NIHIL || ind->fractus)
+    {
+        redde _extentum_continens_linearis(exp, radix);
+    }
+    tabula = (constans IntervallumExtenti*)ind->ordinata;
+    /* ultimum intervallum cum (fons, initium) <= (fons radicis, offset) */
+    infra = ZEPHYRUM;
+    supra = ind->numerus_ordinatorum;
+    dum (infra < supra)
+    {
+        i32 medium = infra + (supra - infra) / II;
+
+        si (   tabula[medium].fons_index < radix->fons_index
+            || (   tabula[medium].fons_index == radix->fons_index
+                && tabula[medium].initium <= radix->byte_offset))
+        {
+            infra = medium + I;
+        }
+        alioquin
+        {
+            supra = medium;
+        }
+    }
+    /* retro dum finis maximus offset superat: continentes colligere,
+     * primum memoratum (ordo minimus) vincit - ut scansio linearis */
+    optimum = NIHIL;
+    per (j = (s32)infra - I;
+         j >= ZEPHYRUM
+             && tabula[j].fons_index == radix->fons_index
+             && tabula[j].finis_maximus > radix->byte_offset;
+         j--)
+    {
+        si (   tabula[j].finis > radix->byte_offset
+            && (optimum == NIHIL || tabula[j].ordo < optimum->ordo))
+        {
+            optimum = &tabula[j];
+        }
+    }
+    redde (optimum != NIHIL) ? optimum->lamina : NIHIL;
 }
 
 s32
@@ -1268,9 +1608,10 @@ silva_includendum_praebere (
     {
         redde -I;
     }
-    incl->fons_index = fons_index;
-    incl->lexemata = silva_lexare(exp->piscina, textus, mensura,
-        fons_index);
+    incl->fons_index  = fons_index;
+    incl->lexemata    = NIHIL;   /* pigre: silva_includendum_lexemata */
+    incl->textus      = textus;
+    incl->mensura     = mensura;
 
     fons = (SilvaFons*)xar_obtinere(exp->fontes, (i32)fons_index);
     {

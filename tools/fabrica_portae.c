@@ -232,7 +232,9 @@ _usus (vacuum)
         "VIA...\n"
         "      bin/fabrica portae tactus [-machina] -portae TSV "
         "(-omnes | VIA...)\n"
-        "      bin/fabrica portae declaratae [-machina] -portae TSV\n");
+        "      bin/fabrica portae declaratae [-machina] -portae TSV\n"
+        "      bin/fabrica portae ordo [-machina] -portae TSV"
+        " [-tempora VIA] PORTA...\n");
 }
 
 interior vacuum
@@ -254,6 +256,8 @@ suturae_portae (
                         b32  machina       = FALSUM;
                         b32  debitae;
                         b32  tactus;
+                        b32  ordo;
+         constans character* via_temporum  = "build/portae/tempora.tsv";
                         b32  omnes         = FALSUM;
                         Xar* viae;
                         Xar* declaratae;
@@ -267,13 +271,15 @@ suturae_portae (
 
     si (   argc < III || (strcmp(argv[2], "debitae") != 0
         && strcmp(argv[2], "tactus") != 0
-        && strcmp(argv[2], "declaratae") != 0))
+        && strcmp(argv[2], "declaratae") != 0
+        && strcmp(argv[2], "ordo") != 0))
     {
         _usus();
         redde II;
     }
     debitae  = strcmp(argv[2], "debitae") == 0;
     tactus   = strcmp(argv[2], "tactus") == 0;
+    ordo     = strcmp(argv[2], "ordo") == 0;
     viae     = xar_creare(piscina, (i32)magnitudo(chorda));
     per (a = III; a < argc; a++)
     {
@@ -289,7 +295,12 @@ suturae_portae (
         {
             omnes = VERUM;
         }
-        alioquin si ((debitae || tactus) && argv[a][0] != '-')
+        alioquin si (   ordo && strcmp(argv[a], "-tempora") == 0
+                     && a + I < argc)
+        {
+            via_temporum = argv[++a];
+        }
+        alioquin si ((debitae || tactus || ordo) && argv[a][0] != '-')
         {
             *(chorda*)xar_addere(viae) = chorda_ex_literis(argv[a],
                 piscina);
@@ -341,6 +352,17 @@ suturae_portae (
             : portae_declaratas_scribere(NIHIL, recusationes, machina,
                 piscina));
         redde II;
+    }
+    /* ORDO (circulus commissionis II T5): declarationes solae - genus
+     * ex annotatione, sumptus ex tempora.tsv; derivatio non poscitur.
+     * Tempora absentia = omnes sine historia (ordo nominum servatur). */
+    si (ordo)
+    {
+        chorda tempora = filum_legere_totum(via_temporum, piscina);
+
+        _scribere(portae_ordinem_scribere(portae_ordinare(declaratae,
+            viae, tempora, piscina), machina, piscina));
+        redde ZEPHYRUM;
     }
     operturae = portae_operturas_derivare(&sutura, declaratae, piscina);
     si (operturae == NIHIL)

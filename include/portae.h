@@ -22,6 +22,18 @@
  *            eorum non hereditant (infrastructura aedificandi, non
  *            subiectum); possessor et 'currit' expressum hereditant.
  *            Possessio bina = recusatio
+ *   genus    'praeiudicium' (PRAE-IUDICIUM: proprietas arboris commissae
+ *            - ratchet, registrum, generata == regeneratio, verdicta
+ *            corporis - SINE codice probando currendo) aut 'probatio'
+ *            (ordinarium: codicem currit, mores iudicat). Genus phasim
+ *            et regulam fracturae decernit (praeiudicia omnia currunt,
+ *            fracturae SIMUL nominantur; probationes primam fracturam
+ *            sistunt); sumptus ordinem intra phasim (circulus
+ *            commissionis II §II-III). Valor alius = recusatio
+ *   gradus   'commissio' (ordinarium: obligatoria in omni commissione)
+ *            aut 'fusio' (obligatoria solum in fusione in main; inter
+ *            commissiones debitum rami notatur) - gradus-portarum
+ *            spec, decretum Frani ...GDFF4J. Valor alius = recusatio
  * Vocabulum CLAUSUM: attributum aliud = recusatio (error scribae).
  *
  * MACHINA PURA: ingressus et egressus per suturam (exemplar
@@ -77,16 +89,30 @@ nomen structura {
     constans Xar* tabula_portarum;
 } PortaeSutura;
 
+/* genus portae (attributum 'genus'; circulus commissionis II T4) */
+nomen enumeratio {
+    PORTA_PROBATIO = 0,      /* ordinarium */
+    PORTA_PRAEIUDICIUM
+} PortaGenus;
+
+/* gradus portae (attributum 'gradus'; gradus-portarum T1) */
+nomen enumeratio {
+    PORTA_COMMISSIO = 0,     /* ordinarium */
+    PORTA_FUSIO
+} PortaGradus;
+
 /* porta declarata una (elementum <porta> unum) */
 nomen structura {
-    chorda  via;        /* cursor: scriptum annotatum */
-       i32  linea;      /* linea commentarii, I-basata */
-    chorda  titulus;    /* clavis PORTAE; vacua si manu */
-       b32  manu;
-    chorda  causa;      /* manu: cur homo currit; vacua aliter */
-       Xar* tegit;      /* chorda: exemplaria viarum */
-       Xar* currit;     /* chorda: programmata */
-       Xar* instrumenta; /* chorda: binaria domus possessa */
+     chorda  via;        /* cursor: scriptum annotatum */
+        i32  linea;      /* linea commentarii, I-basata */
+     chorda  titulus;    /* clavis PORTAE; vacua si manu */
+        b32  manu;
+     chorda  causa;      /* manu: cur homo currit; vacua aliter */
+        Xar* tegit;      /* chorda: exemplaria viarum */
+        Xar* currit;     /* chorda: programmata */
+        Xar* instrumenta; /* chorda: binaria domus possessa */
+ PortaGenus  genus;      /* PORTA_PROBATIO nisi 'genus' aliter */
+PortaGradus  gradus;      /* PORTA_COMMISSIO nisi 'gradus' aliter */
 } PortaDeclarata;
 
 /* recusatio una: locus (via vacua = registrum aut fundamentum; linea
@@ -154,6 +180,17 @@ nomen structura {
                         Xar* fontes_c;    /* PortaeExemplar (VIA) */
                         Xar* ignota;      /* chorda: caeca */
                         Xar* notae;       /* chorda */
+                        Xar* binaria;     /* PortaeExemplar (VIA):
+                                           * binaria arboris 'bin/x'
+                                           * quae porta CURRIT -
+                                           * exsecutio cursoris aut
+                                           * probationis, instrumentum
+                                           * possessum, 'currit
+                                           * tools/<b>.c' -> bin/<b>
+                                           * (candidatus; fabrica
+                                           * ignota praeterit).
+                                           * circulus commissionis II
+                                           * T2: praevolatus ea sanat */
 } PortaeOpertura;
 
 /* Operturae declarationum omnium (Xar de PortaeOpertura, ordine
@@ -174,9 +211,10 @@ portae_operturas_derivare (
  * currit: nominatur, numquam curritur). causa = ratio prima, '(+N
  * aliae)' si plures */
 nomen structura {
-    chorda porta;
-    chorda causa;
-       b32 manu;
+             chorda porta;
+             chorda causa;
+                b32 manu;
+    constans Xar*   binaria;   /* operturae (PortaeExemplar); NIHIL licet */
 } PortaeDebitum;
 
 /* tactus unus: via mutata portam tangit, rationes OMNES (Xar de
@@ -225,6 +263,9 @@ portae_debita_computare (
  *
  *   portae debitae:
  *     DEBITUM    <porta>  <0|1 manu>  <causa>
+ *     BINARIUM   <porta>  <bin/x>     <ratio>   (post DEBITUM suum;
+ *                portae non manu solae - binaria quae currit,
+ *                circulus commissionis II T2)
  *     INTECTUM   <via>
  *     RECUSATIO  <via>    <linea|0>   <causa>
  *   portae tactus:
@@ -234,6 +275,8 @@ portae_debita_computare (
  *   portae declaratae:
  *     PORTA      <porta>  <0|1 manu>  <via>  <linea>  <causa manu>
  *     INSTRUMENTUM <porta> <binarium possessum>
+ *     GENUS      <porta>  praeiudicium   (solum si non ordinarium)
+ *     GRADUS     <porta>  fusio          (solum si non ordinarium)
  *     TEGIT      <porta>  <via|globus|praefixum>  <exemplar>  <ratio>
  *     CLAUSURA   <porta>  <fons>      <ratio>
  *     IGNOTUM    <porta>  <textus>
@@ -275,6 +318,44 @@ chorda
 portae_declaratas_scribere (
     constans Xar* operturae,
     constans Xar* recusationes,
+             b32  machina,
+         Piscina* piscina);
+
+
+/* ==================================================
+ * ORDO PORTARUM (circulus commissionis II T5)
+ *
+ * Praeiudicia ANTE probationes (genus phasim decernit); intra genus
+ * sumptu ascendente: mediana millesimarum ultimarum X cursuum SANORUM
+ * in 'tempora' (TSV build/portae/tempora.tsv: tempus, 'porta',
+ * titulus, secundae, cucurrit 1, rc 0); porta SINE historia PRIMA
+ * (nova aut modo mutata plerumque); par = ordo nominum. Porta non
+ * declarata = probatio. Purum: textus temporum a vocante.
+ * ================================================== */
+
+nomen structura {
+        chorda porta;
+    PortaGenus genus;
+   PortaGradus gradus;
+           s32 millesimae;   /* mediana; -I = sine historia */
+           i32 cursus;       /* cursus sani numerati (<= X) */
+} PortaeOrdo;
+
+/* Xar de PortaeOrdo, ordine currendi. nomina = Xar de chorda (titulus
+ * portae). NIHIL = memoria deficit. */
+Xar*
+portae_ordinare (
+     constans Xar* declaratae,
+     constans Xar* nomina,
+           chorda  tempora,
+          Piscina* piscina);
+
+/* ORDO <porta> <praeiudicium|probatio> <millesimae|-> <commissio|fusio>
+ * per lineam (machina); homo: 'ordo portarum:' + praeiudicia +
+ * probationes (gradus fusio: ' [fusio]' post nomen) */
+chorda
+portae_ordinem_scribere (
+    constans Xar* ordo,
              b32  machina,
          Piscina* piscina);
 

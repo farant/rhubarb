@@ -11,6 +11,10 @@
 # Usus:
 #   ./tools/portae_debitae.sh [viae...]
 #       sine viis: viae mutatae contra HEAD + novae non ignoratae
+#   ./tools/portae_debitae.sh -ramus [basis]
+#       INDEX IMPACTUS (gradus-portarum T5): portae debitae rami toti
+#       (merge-base basis..HEAD + arbor; basis ordinaria main) cum gradu
+#       (commissio|fusio), sumptu, causa, debito rami - nihil currit
 #   bin/fabrica portae tactus -portae TSV VIA...   rationes OMNES
 #
 # Sumptus: via C (.c/.h/.m) clausuras fontium portarum rogat (~II s
@@ -27,6 +31,13 @@ import sys
 sys.path.insert(0, 'pythonica')
 import silva
 
+if sys.argv[1:2] == ['-ramus']:
+    try:
+        sys.stdout.write(silva.portae_debitae_ramus(*sys.argv[2:3]))
+    except silva.SilvaError as ex:
+        print('portae debitae: %s' % ex, file=sys.stderr)
+        sys.exit(2)
+    sys.exit(0)
 viae = sys.argv[1:] or silva.viae_mutatae()
 if not viae:
     print('portae debitae: nulla via mutata - nihil iudicatum',

@@ -325,3 +325,19 @@ punctum would honestly print a PAUSA report; genera[] gained
    — functio* + plana* + s32 + i32 = 24B actually, post-freeze:
    4096 × 24B = 96KB). Conclusion (L2-hot, free) unchanged at any
    of these sizes; recorded so the numbers stop drifting.
+
+## 2026-10-14 - getenv aedificatum (examen 96, canalis lectionum)
+
+Examen code 96 refuses raw fopen in house C, including code offered to a
+session; the D2 fixture script (sessio_scripta/salutatio.scriptum) now
+reads/writes through filum. Interpreted filum calls lib/lectiones.c,
+whose lectiones_notare starts with getenv("FABRICA_LECTIONES") - that
+trapped ('decipula vocata: getenv') until `_aed_getenv` was added.
+KNOWN GAP (not fixed, Fran 2026-10-14: colloquium is an untouched spike,
+nothing runs it under fabrica yet): with FABRICA_LECTIONES SET,
+lectiones_notare goes on to open/write/close (unbridged) and
+`magnitudo(_via_aperta)` (static `character _via_aperta[IV * MXXIV]`),
+which demissio's MAGNITUDO_EXPRESSIONIS lowering cannot size ->
+'magnitudo inaestimabilis' (officina_demissio.c ~2760). Bridges for
+open/write/close were drafted and backed out (no test could exercise
+them until the sizeof gap is fixed). Ledger park filed.

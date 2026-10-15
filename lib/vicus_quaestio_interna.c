@@ -91,6 +91,11 @@ _clavem_legere (
         sprintf(semita, "%s/.rhubarb/anthropic.clavis", domus);
         via = semita;
     }
+    /* clavis SECRETA tempore cursus, non ingressus aedificationis: per
+     * librum lectionum fabrica contentum eius in clavem transitus
+     * sigillaret (vestigium secreti in build/, verdictum mutata clave
+     * irritum) */
+    /* <tolera codex="CANALIS_PRAETERITUS" (>clavis secreta cursus */
     f = fopen(via, "rb");
     si (!f)
     {

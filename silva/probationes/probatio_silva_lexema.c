@@ -445,6 +445,76 @@ s32 principale (vacuum)
     }
 
 
+    /* ========================================================
+     * PROBARE: verba clausa OMNIA et propinqua (lexema_mensura
+     * 2026-10-15: quaestio verborum clausorum celerata - longitudines
+     * semel, reiectio praevia II-VIII litterarum 'a'..'w'; planta
+     * '> VII' viridis manserat: verba VIII litterarum non probabantur)
+     * ======================================================== */
+
+    {
+        hic_manens constans structura {
+            constans character* textus;
+              SilvaLexemaGenus  genus;
+        } clausa[] = {
+            { "auto", SILVA_LEX_AUTO },
+            { "break", SILVA_LEX_BREAK },
+            { "case", SILVA_LEX_CASE },
+            { "char", SILVA_LEX_CHAR },
+            { "const", SILVA_LEX_CONST },
+            { "continue", SILVA_LEX_CONTINUE },
+            { "default", SILVA_LEX_DEFAULT },
+            { "do", SILVA_LEX_DO },
+            { "double", SILVA_LEX_DOUBLE },
+            { "else", SILVA_LEX_ELSE },
+            { "enum", SILVA_LEX_ENUM },
+            { "extern", SILVA_LEX_EXTERN },
+            { "float", SILVA_LEX_FLOAT_KW },
+            { "for", SILVA_LEX_FOR },
+            { "goto", SILVA_LEX_GOTO },
+            { "if", SILVA_LEX_IF },
+            { "int", SILVA_LEX_INT },
+            { "long", SILVA_LEX_LONG },
+            { "register", SILVA_LEX_REGISTER },
+            { "return", SILVA_LEX_RETURN },
+            { "short", SILVA_LEX_SHORT },
+            { "signed", SILVA_LEX_SIGNED },
+            { "sizeof", SILVA_LEX_SIZEOF },
+            { "static", SILVA_LEX_STATIC },
+            { "struct", SILVA_LEX_STRUCT },
+            { "switch", SILVA_LEX_SWITCH },
+            { "typedef", SILVA_LEX_TYPEDEF },
+            { "union", SILVA_LEX_UNION },
+            { "unsigned", SILVA_LEX_UNSIGNED },
+            { "void", SILVA_LEX_VOID },
+            { "volatile", SILVA_LEX_VOLATILE },
+            { "while", SILVA_LEX_WHILE },
+            { NIHIL, SILVA_LEX_EOF }
+        };
+        hic_manens constans character* constans propinqua[] = {
+            "Int", "iff", "whilex", "unsignedx", "x", "a", "z", "zzz",
+            "registers", "IF", "Auto", "doo", "_if", "if_", "intx",
+                NIHIL
+        };
+        i32 i;
+
+        imprimere("\n--- Probans verba clausa omnia et propinqua ---\n");
+        per (i = ZEPHYRUM; clausa[i].textus != NIHIL; i++)
+        {
+            Xar* lexemata = _lexare(piscina, clausa[i].textus);
+
+            CREDO_AEQUALIS_I32 ((i32)_ad(lexemata, 0)->genus,
+                (i32)clausa[i].genus);
+        }
+        per (i = ZEPHYRUM; propinqua[i] != NIHIL; i++)
+        {
+            Xar* lexemata = _lexare(piscina, propinqua[i]);
+
+            CREDO_AEQUALIS_I32 ((i32)_ad(lexemata, 0)->genus,
+                (i32)SILVA_LEX_IDENTIFICATOR);
+        }
+    }
+
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
 

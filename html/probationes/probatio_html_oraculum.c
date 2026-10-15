@@ -17,6 +17,7 @@
  */
 
 #include "latina.h"
+#include "lectiones.h"   /* lectiones_fopen: canalis lectionum (examen 96) */
 #include "credo.h"
 #include "html_arbor.h"
 #include "html_coctum.h"
@@ -71,7 +72,7 @@ _plagulam_legere (
     character* memoria;
         size_t lecti;
 
-    f = fopen(via, "rb");
+    f = lectiones_fopen(via, "rb");
     si (f == NIHIL)
     {
         redde NIHIL;
@@ -691,7 +692,7 @@ principale (vacuum)
             "recusata.tsv", radix);
         si (scribere != NIHIL && strcmp(scribere, "1") == ZEPHYRUM)
         {
-            FILE* f = fopen(via_auri, "wb");
+            FILE* f = lectiones_fopen(via_auri, "wb");
 
             CREDO_NON_NIHIL (f);
             si (f != NIHIL)

@@ -75,8 +75,28 @@ fi
 #
 # Exitus 2 OBSTAT quoque: 'nihil iudicatum' significat portam non
 # cucurrisse, et porta quae currere non potest CLAMET (lex domus).
+# UNCUS_CRIBRUM=1 (circulus commissionis II T3): viae explicitae per
+# EADEM cribra ac via git (commissio praevolatus hoc uncum ANTE portas
+# vocat - regulae in sede una). Sine eo modus explicitus consulto 'sine
+# filtro' manet (fumus I).
+_cribrum_sh () {
+    if [ "${UNCUS_CRIBRUM:-}" = 1 ]; then
+        grep -vE '(^|/)(scratchpad|build|amalgama|archivum|knotapel)/' \
+            | grep -v '^probationes/fixa/' || true
+    else
+        cat
+    fi
+}
+_cribrum_c () {
+    if [ "${UNCUS_CRIBRUM:-}" = 1 ]; then
+        grep -vE '(^|/)(scratchpad|build|fixa|amalgama|archivum|oracula|knotapel)/' || true
+    else
+        cat
+    fi
+}
+
 if [ -n "${UNCUS_VIAE:-}" ]; then
-    DVIAE="$(printf '%s\n' $UNCUS_VIAE | grep -E '\.(sh|css)$' || true)"
+    DVIAE="$(printf '%s\n' $UNCUS_VIAE | grep -E '\.(sh|css)$' | _cribrum_sh || true)"
 else
     DVIAE="$(git diff --cached --name-only --diff-filter=ACMR -- '*.sh' '*.css' 2>/dev/null \
         | grep -vE '(^|/)(scratchpad|build|amalgama|archivum|knotapel)/' \
@@ -102,7 +122,7 @@ if [ -n "${UNCUS_VIAE:-}" ]; then
     # suffixo CRIBRATUR ut in via vera: illic VIAE ex '*.c' '*.m' solis
     # venit, ergo modus probationis idem praestet - aliter plagula .sh
     # explicita examini C89 traderetur et REICE fictum pareret.
-    VIAE="$(printf '%s\n' $UNCUS_VIAE | grep -E '\.(c|m)$' || true)"
+    VIAE="$(printf '%s\n' $UNCUS_VIAE | grep -E '\.(c|m)$' | _cribrum_c || true)"
 else
     VIAE="$(git diff --cached --name-only --diff-filter=ACMR -- '*.c' '*.m' 2>/dev/null \
         | grep -vE '(^|/)(scratchpad|build|fixa|amalgama|archivum|oracula|knotapel)/')"
@@ -194,7 +214,7 @@ if [ -z "${UNCUS_VIAE:-}" ]; then
     FVIAE="$(git diff --cached --name-only --diff-filter=ACMR -- '*.c' '*.h' 2>/dev/null \
         | grep -vE '(^|/)(scratchpad|build|fixa|amalgama|archivum|oracula|knotapel)/')"
 else
-    FVIAE="$(printf '%s\n' $UNCUS_VIAE | grep -E '\.(c|h)$')"
+    FVIAE="$(printf '%s\n' $UNCUS_VIAE | grep -E '\.(c|h)$' | _cribrum_c)"
 fi
 for via in $FVIAE; do
     [ -f "$via" ] || continue

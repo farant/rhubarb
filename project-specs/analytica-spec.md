@@ -117,6 +117,26 @@ by commit), `numquam` (jobs in the coverage universe without runs),
 steps), `discus` (body bytes by job). pythonica: `silva.cursus(nomen,
 **par)` returning rows (thin wrapper).
 
+**How to ask (2026-10-15, worked examples).** Titles are job identities,
+not file names: root tests `probationes_radicis/<test>`, suite members
+`<composite>/<test>`, gates `porta:<name>`, pythonica groups
+`pythonica#<group>`, commits `commissio`. `n=` limits rows; `limes=` is
+`lentescentes`' per-mille threshold, not a row count. A query whose
+title filter matches nothing says so on stderr: a known title whose runs
+the other filters excluded ("11 runs, none match status/post/...") or
+the nearest recorded titles - stdout and the exit code are unchanged.
+
+- *Is this test flaky?* `statistica praefixum=probationes_radicis/
+  probatio_tcp_servus` (n, median, max, failed), then `fracta
+  praefixum=...` and `historia praefixum=... n=20` for who ran it,
+  where, and why it ran ("SANATUM ... ingressus mutatus: ...").
+- *Did it get slower, and since when?* `tendentia
+  titulus=probationes_md/probatio_md_totalitas` (median per commit;
+  `*` = the attempt produced the commit, `+` = dirty tree).
+- *Where did a commit's time go?* `commissiones n=3` (the run id is
+  column 2 of `-machina`), then `filii id=<id>`; inside one gate,
+  `sectiones praefixum=pythonica#`.
+
 ## VI. Not in this slice
 
 The lint and its debt table (phase III of the vision); the

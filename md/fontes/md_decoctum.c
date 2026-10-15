@@ -219,16 +219,21 @@ md_clavem_normalizare (
                    s32  ab,
                    s32  ad)
 {
-    character* d = (character*)piscina_allocare(piscina,
-        (memoriae_index)(ad - ab) + I);
-       i32 n = ZEPHYRUM;
-       s32 i;
-       b32 spatium = VERUM;
-    chorda c;
+    character* d;
+          i32  n = ZEPHYRUM;
+          s32  i;
+          b32  spatium = VERUM;
+       chorda  c;
     unio { character* c; i8* m; } u;
 
     c.datum    = NIHIL;
     c.mensura  = ZEPHYRUM;
+    si (ad - ab > MD_TITULUS_MAXIMUS)
+    {
+        redde c;     /* titulus non est (par. 4.7) */
+    }
+    d = (character*)piscina_allocare(piscina,
+        (memoriae_index)(ad - ab) + I);
     si (d == NIHIL)
     {
         redde c;

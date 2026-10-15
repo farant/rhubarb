@@ -1911,6 +1911,10 @@ typedef enum {
     EXAMEN_CODEX_CREDO_SECTIO_SINE_ASSERTIONE,
     EXAMEN_CODEX_CREDO_SUITA_MUTATA,
     EXAMEN_CODEX_CREDO_TITULUS_IMPRESSUS,
+    /* 96 (2026-10-14, spec canalis-lectionum): vocatio IO cruda
+     * extra canalem lectionum (filum) - violatio domus; debita per
+     * silva_c89_semantica_debita_applicare ad domesticum */
+    EXAMEN_CODEX_CANALIS_PRAETERITUS,
     EXAMEN_CODEX_NUMERUS
 } ExamenCodex;
 
@@ -1959,6 +1963,17 @@ silva_c89_semantica_analysare_cum_systemate (
           SilvaPiscina* piscina,
     const SilvaParsura* parsura,
     const SilvaParsura* systema);
+
+/* Debita canalis (codex 96): textus = 'via<TAB>causa' per lineam
+ * ('#' commentarium, './' ignoratur); via inscripta -> 96 ad
+ * domesticum. Reddit non-nihil si inscripta. Purum. */
+#define SILVA_VIA_DEBITORUM_CANALIS \
+    "silva/probationes/fixa/examinis/canalis_debita.tsv"
+int
+silva_c89_semantica_debita_applicare (
+          SilvaSemantica* sem,
+     const SilvaChorda* via,
+     const SilvaChorda* textus);
 
 /* Symbola in oraculum fundere (typedef -> typi; cetera ->
  * NON-typi, oraculum trivalens) - praeoneratio et clausura */

@@ -23,7 +23,15 @@ source "$(dirname "${BASH_SOURCE[0]}")/cursus.sh"
 #                              [-servare]
 #   -ref      commissum mensurandum (ordinarium HEAD)
 #   -suitae   subset nominatum (ordinarium: omnes)
-#   -servare  arborem et acta non delere (ad inspiciendum)
+#   -servare  arborem et acta non delere (ad inspiciendum; signum
+#             SERVATUM in area - purgatio orphanorum eam non tangit)
+#
+# PURGATIO (parcum YAPY6G, 2026-10-15: III arbores 14 GB + rami
+# frigida-* relicti, deinde 6.8 GB post cursum rubrum): arbor et ramus
+# SEMPER delentur - etiam rubro (acta sola manent, MB; arbor ex commisso
+# iterum fit per -ref <sha> -servare) et interruptione (trap EXIT INT
+# TERM HUP). In initio orphani priores (frigida-<sha>-<pid>, pid mortuus,
+# sine SERVATUM) delentur, linea una quisque.
 #
 # Exitus: 0 omnes virides / 1 aliqua rubra (nominata) / 2 praeparatio
 # fracta.
@@ -51,18 +59,83 @@ ACTA="$AREA/acta"
 RAMUS="frigida-$BREVE-$$"
 mkdir -p "$ACTA"
 
+# acta servanda: rubrum (nomina in actis) - arbor tamen deletur
+ACTA_SERVARE=0
+PURGATUM=0
 purgare () {
+    [ "$PURGATUM" = 1 ] && return
+    PURGATUM=1
     if [ "$SERVARE" = 1 ]; then
+        : > "$AREA/SERVATUM"
         echo "frigida: servatum - arbor $ARBOR, acta $ACTA, ramus $RAMUS"
         return
     fi
     git -C "$RADIX" worktree remove --force "$ARBOR" >/dev/null 2>&1
     git -C "$RADIX" branch -D "$RAMUS" >/dev/null 2>&1
-    rm -rf "$AREA"
+    if [ "$ACTA_SERVARE" = 1 ]; then
+        rm -rf "$ARBOR"
+    else
+        rm -rf "$AREA"
+    fi
 }
 
+# ORPHANI: rami frigida-<sha>-<pid> quorum processus non vivit (pid
+# reusus: imperium eius frigida_probare non continet) - arbor (nisi
+# SERVATUM in area eius) et ramus delentur
+orphanos_purgare () {
+    local ramus pid arbor area mensura
+    for ramus in $(git -C "$RADIX" for-each-ref --format='%(refname:short)' 'refs/heads/frigida-*'); do
+        pid="${ramus##*-}"
+        case "$pid" in ''|*[!0-9]*) continue ;; esac
+        if kill -0 "$pid" 2>/dev/null \
+            && ps -p "$pid" -o command= 2>/dev/null | grep -q frigida_probare; then
+            continue
+        fi
+        arbor="$(git -C "$RADIX" worktree list --porcelain \
+            | awk -v r="refs/heads/$ramus" '/^worktree /{w=substr($0,10)} $0=="branch " r {print w}')"
+        area="$(dirname "${arbor:-/nusquam/x}")"
+        if [ -n "$arbor" ] && [ -e "$area/SERVATUM" ]; then
+            echo "frigida: orphanus SERVATUS relictus: $ramus ($arbor)"
+            continue
+        fi
+        mensura=""
+        if [ -n "$arbor" ] && [ -d "$arbor" ]; then
+            mensura="$(du -sh "$arbor" 2>/dev/null | cut -f1)"
+            git -C "$RADIX" worktree remove --force "$arbor" >/dev/null 2>&1
+            rm -rf "$arbor"
+        fi
+        git -C "$RADIX" branch -D "$ramus" >/dev/null 2>&1
+        echo "frigida: orphanus purgatus: $ramus${arbor:+ ($arbor, ${mensura:-?})}"
+    done
+    git -C "$RADIX" worktree prune >/dev/null 2>&1
+}
+
+# INTERRUPTIO: suita in fundo + 'wait' (wait signo statim redit; sine
+# eo bash trap differt donec suita finita - minuta). Arbor processuum
+# suitae necatur (non 'kill 0': vocans, e.g. fusio_probare, in eodem
+# grege processuum stat), deinde EXIT -> purgare
+NATUS=""
+matare () {
+    local p
+    for p in $(pgrep -P "$1" 2>/dev/null); do matare "$p"; done
+    kill -TERM "$1" 2>/dev/null
+}
+interrumpere () {
+    trap - INT TERM HUP
+    if [ -n "$NATUS" ]; then
+        echo "frigida: interrupta - suita necatur, arbor purgatur" >&2
+        matare "$NATUS"
+        wait "$NATUS" 2>/dev/null
+    fi
+    exit 130
+}
+
+orphanos_purgare
+trap purgare EXIT
+trap interrumpere INT TERM HUP
+
 git worktree add -q -b "$RAMUS" "$ARBOR" "$SHA" >/dev/null 2>&1 \
-    || { echo "frigida: git worktree add defecit" >&2; rm -rf "$AREA"; exit 2; }
+    || { echo "frigida: git worktree add defecit" >&2; PURGATUM=1; rm -rf "$AREA"; exit 2; }
 
 if [ -z "$SUITAE" ]; then
     SUITAE="radix"
@@ -76,13 +149,16 @@ RUBRAE=0
 for s in $SUITAE; do
     t0=$(date +%s)
     if [ "$s" = radix ]; then
-        ( cd "$ARBOR" && ./compile_tests.sh ) > "$ACTA/$s.log" 2>&1
+        ( cd "$ARBOR" && ./compile_tests.sh ) > "$ACTA/$s.log" 2>&1 &
     elif [ -x "$ARBOR/$s/compile_probationes.sh" ]; then
-        ( cd "$ARBOR" && "./$s/compile_probationes.sh" ) > "$ACTA/$s.log" 2>&1
+        ( cd "$ARBOR" && "./$s/compile_probationes.sh" ) > "$ACTA/$s.log" 2>&1 &
     else
         echo "  $s: SUITA IGNOTA"; RUBRAE=$((RUBRAE + 1)); continue
     fi
+    NATUS=$!
+    wait "$NATUS"
     rc=$?
+    NATUS=""
     dt=$(( $(date +%s) - t0 ))
     if [ "$rc" = 0 ]; then
         printf "  %-12s viridis (%ds)\n" "$s" "$dt"
@@ -101,6 +177,7 @@ if [ "$RUBRAE" = 0 ]; then
     exit 0
 fi
 echo "frigida: $RUBRAE suitae rubrae ($BREVE) - acta: $ACTA"
-SERVARE=1
+echo "frigida: arbor deleta; ad inspiciendum: ./tools/frigida_probare.sh -ref $BREVE -suitae \"<rubrae>\" -servare"
+ACTA_SERVARE=1
 purgare
 exit 1

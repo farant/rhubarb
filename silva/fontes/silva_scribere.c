@@ -94,76 +94,6 @@ _radix_probata (
     redde NIHIL;
 }
 
-/* Extentum cuius lamina offset radicis CONTINET (pro lexematibus
- * CHORDA: radix = lexema argumenti INTRA invocationem, non lexema
- * nominis - quaestio per identitatem fallit, continentia invenit).
- * Scansio linearis - numeri parvi. */
-interior Xar*
-_extentum_continens (
-    constans SilvaExpansio* expansio,
-       constans SilvaToken* radix)
-{
-    i32 k;
-
-    si (expansio == NIHIL || expansio->extenta == NIHIL)
-    {
-        redde NIHIL;
-    }
-    per (k = ZEPHYRUM; k < xar_numerus(expansio->extenta); k++)
-    {
-        SilvaExtentumInvocationis* extentum =
-            (SilvaExtentumInvocationis*)xar_obtinere(
-                expansio->extenta, k);
-        SilvaToken* primum;
-        SilvaToken* ultimum;
-
-        si (   extentum == NIHIL || extentum->lamina == NIHIL
-            || xar_numerus(extentum->lamina) == ZEPHYRUM)
-        {
-            perge;
-        }
-        primum = *(SilvaToken**)xar_obtinere(extentum->lamina,
-            ZEPHYRUM);
-        ultimum = *(SilvaToken**)xar_obtinere(extentum->lamina,
-            (i32)(xar_numerus(extentum->lamina) - I));
-        si (   primum->fons_index == radix->fons_index
-            && radix->byte_offset >= primum->byte_offset
-            && radix->byte_offset
-                < ultimum->byte_offset
-                    + (s32)silva_token_longitudo(ultimum))
-        {
-            redde extentum->lamina;
-        }
-    }
-    redde NIHIL;
-}
-
-/* Extentum invocationis functio-similis strati 0 (scansio linearis -
- * numeri parvi; radix comparatur per identitatem monstratoris) */
-interior Xar*
-_extentum_quaerere (
-    constans SilvaExpansio* expansio,
-       constans SilvaToken* radix)
-{
-    i32 k;
-
-    si (expansio == NIHIL || expansio->extenta == NIHIL)
-    {
-        redde NIHIL;
-    }
-    per (k = ZEPHYRUM; k < xar_numerus(expansio->extenta); k++)
-    {
-        SilvaExtentumInvocationis* ext = (SilvaExtentumInvocationis*)
-            xar_obtinere(expansio->extenta, k);
-
-        si (ext != NIHIL && ext->invocatio == radix)
-        {
-            redde ext->lamina;
-        }
-    }
-    redde NIHIL;
-}
-
 
 /* ==================================================
  * Unci materiae
@@ -213,10 +143,12 @@ _extentum_unci (
         (constans SilvaScribereDatum*)datum;
                              Xar* extentum;
 
-    extentum = _extentum_quaerere(d->expansio, radix);
+    /* indices expansionis (2026-10-15; olim scansiones lineares hic -
+     * omne lexema macri obiecto-similis utramque totam faciebat) */
+    extentum = silva_extentum_invocationis(d->expansio, radix);
     si (extentum == NIHIL)
     {
-        extentum = _extentum_continens(d->expansio, radix);
+        extentum = silva_extentum_continens(d->expansio, radix);
     }
     redde extentum;
 }

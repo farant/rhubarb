@@ -57,6 +57,11 @@ structura SilvaOraculum {
                                 * pigre creatum, vacatum per
                                 * ambulationem (monstratores nodorum
                                 * inter parsuras collidere possunt) */
+    TabulaDispersa* responsa_per_sedem; /* octeti campi 'sedes' ->
+                                * OraculumResponsum* (primum vincit) -
+                                * cum responsis creatum et vacatum
+                                * (2026-10-15: quaestio olim linearis,
+                                * 20% xar_obtinere percursus) */
 };
 
 SilvaOraculum*

@@ -469,12 +469,14 @@ principale (
          SilvaOraculum* oraculum;
           SilvaParsura* parsura;
         SilvaSemantica* sem;
-                   i32  violationes    = ZEPHYRUM;
-                   i32  suspecta       = ZEPHYRUM;
-                   i32  domestica      = ZEPHYRUM;
-                   i32  infra          = ZEPHYRUM;
-                   i32  provisionalia  = ZEPHYRUM;
-                   b32  reice          = FALSUM;
+                   i32  violationes           = ZEPHYRUM;
+                   i32  suspecta              = ZEPHYRUM;
+                   i32  domestica             = ZEPHYRUM;
+                   i32  infra                 = ZEPHYRUM;
+                   i32  provisionalia         = ZEPHYRUM;
+                   b32  reice                 = FALSUM;
+                   b32  inscripta_in_debitis  = FALSUM;
+                   b32  linea_delenda         = FALSUM;
 
         si (fons == NIHIL)
         {
@@ -536,6 +538,47 @@ principale (
         {
             fprintf(stderr, "examen: semantica fracta: %s\n", via);
             redde II;
+        }
+
+        /* debita canalis (codex 96, ratchet - spec canalis-lectionum
+         * §I): plagula inscripta -> 96 DOMESTICUM; inscripta SINE
+         * vocatione cruda -> REICE 'linea delenda' (tabula solum
+         * decrescit, ut radices_manu / vexilla VI). Tabula absens =
+         * nulla debita (omnis 96 violatio). */
+        {
+            character* debita;
+                  i32  mensura_debitorum = ZEPHYRUM;
+
+            debita = _plagulam_legere(piscina,
+                SILVA_VIA_DEBITORUM_CANALIS,
+                &mensura_debitorum);
+            si (debita != NIHIL)
+            {
+                chorda textus_debitorum;
+                chorda via_ch = chorda_ex_literis(via, piscina);
+                   i32 i;
+                   i32 crudae = ZEPHYRUM;
+
+                textus_debitorum.datum    = (i8*)debita;
+                textus_debitorum.mensura  = mensura_debitorum;
+                inscripta_in_debitis =
+                    silva_c89_semantica_debita_applicare(
+                    sem, &via_ch, &textus_debitorum);
+                per (i = ZEPHYRUM;
+                     i < (i32)silva_c89_diagnostica_numerus(sem); i++)
+                {
+                    constans SemanticaDiagnosticum* d =
+                        silva_c89_diagnosticum_per_indicem(sem, i);
+
+                    si (   d != NIHIL && d->codex
+                        == (s32)EXAMEN_CODEX_CANALIS_PRAETERITUS)
+                    {
+                        crudae++;
+                    }
+                }
+                linea_delenda = inscripta_in_debitis
+                    && crudae == ZEPHYRUM;
+            }
         }
 
         si (parsura->numerus_errorum > ZEPHYRUM)
@@ -653,6 +696,25 @@ principale (
             }
         }
 
+        si (linea_delenda)
+        {
+            reice = VERUM;
+            violationes++;
+            si (machina)
+            {
+                imprimere("%s\t0\t0\tviolatio\t%d\t0\tlinea delenda in"
+                    " %s: nulla vocatio IO cruda superest\t\n", via,
+                    (int)EXAMEN_CODEX_CANALIS_PRAETERITUS,
+                    SILVA_VIA_DEBITORUM_CANALIS);
+            }
+            alioquin
+            {
+                imprimere("%s: [violatio] linea delenda in %s: nulla"
+                    " vocatio IO cruda superest (debitum solutum -"
+                    " lineam dele, tabula solum decrescit)\n", via,
+                    SILVA_VIA_DEBITORUM_CANALIS);
+            }
+        }
         si (machina)
         {
             imprimere("VERDICTUM\t%s\n",
