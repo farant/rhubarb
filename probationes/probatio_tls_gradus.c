@@ -13,6 +13,7 @@
 #include "nomina.h"
 #include "tcp.h"
 #include "tls.h"
+#include <stdlib.h>
 #include <string.h>
 #include <fcntl.h>
 #include <poll.h>
@@ -250,5 +251,16 @@ hic_manens constans CredoSectio SECTIONES[] = {
 s32
 principale (vacuum)
 {
-    redde credo_suitam_currere("tls_gradus", SECTIONES);
+    s32 bearssl;
+    s32 securetransport;
+
+    /* matrix (tls-bearssl R10): sectiones EAEDEM sub vectura utraque */
+    (vacuum)setenv("RHUBARB_TLS", "bearssl", I);
+    bearssl = credo_suitam_currere("tls_gradus [bearssl]", SECTIONES);
+    (vacuum)setenv("RHUBARB_TLS", "securetransport", I);
+    securetransport =
+        credo_suitam_currere("tls_gradus [securetransport]",
+        SECTIONES);
+    (vacuum)unsetenv("RHUBARB_TLS");
+    redde bearssl != ZEPHYRUM ? bearssl : securetransport;
 }

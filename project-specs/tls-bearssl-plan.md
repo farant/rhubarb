@@ -223,6 +223,19 @@ with this plan; this plan argues from it and records where it departs.
   asserts the EOF branch's own text. Details in lib/tls_bearssl.worklog.md.
 - **R25 (T4) - `Validator` is `Iudex`** (field `iudex`, vtable
   `IUDICIS_CLASSIS`): "validator" is a real English word (lint).
+- **R26 (T6) - the floor is enforced twice in BearSSL** (versions 1.2..1.2
+  plus an AEAD-only TLS 1.2 suite list), so a version-only plant is mute
+  against a 1.1 server that offers CBC. The `tls11` section's proving
+  plant swaps the config for `br_ssl_client_init_full` (TLS 1.0-1.2, all
+  suites). The 1.1 server needs `-cipher DEFAULT:@SECLEVEL=0` (OpenSSL 3.3
+  refuses 1.1 at the default level). `servus_tls.h` gains
+  `servum_tls_incipere_cum(..., additamenta, ...)`, and the old entry
+  point wraps it.
+- **R27 (T6) - section function `_sectio_versio_vetus`** (title "tls11"):
+  `tls11` is a new word to the lint.
+- **R28 (T6) - spec status and ledger closed AFTER Fran's live check**,
+  in a separate small commit, so that check's result is recorded with
+  them.
 
 ## Review focus
 

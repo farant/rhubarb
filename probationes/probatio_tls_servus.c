@@ -370,6 +370,39 @@ _sectio_rsa (
     servum_tls_claudere(&s);
 }
 
+/* limen TLS 1.2 (tls-bearssl T6): servus TLS 1.1 SOLUS (s_server
+ * -tls1_1, SECLEVEL 0 - OpenSSL 3 aliter 1.1 recusat) -> IRRITA,
+ * CONNEXIO, causa nominata, celeriter, nihil receptum. Sub vectura
+ * utraque (matrix); plantam versionis T4 (TLS10..12) claudit */
+interior vacuum
+_sectio_versio_vetus (
+    CredoContextus* c)
+{
+           Reactor* r = reactor_creare(c->piscina);
+    constans Locus* l = (constans Locus*)c->suita;
+         ServusTls  s;
+        Observatio  o;
+       HttpVocatio* v;
+      HttpResultus  res;
+               s64  initium;
+
+    CREDO_NECESSE(servum_tls_incipere_cum(&s, l->dir, l->fixa,
+        "localhost", "-tls1_1 -cipher DEFAULT:@SECLEVEL=0",
+        c->piscina));
+    initium = _ms_nunc();
+    v = _petere(r, s.portus, "parvum.txt", l->ancora, &o, c->piscina);
+    CREDO_NECESSE_NON_NIHIL(v);
+    res = http_vocatio_resultus(v);
+    CREDO_AEQUALIS_I32((i32)http_vocatio_status(v),
+        (i32)HTTP_VOCATIO_IRRITA);
+    CREDO_AEQUALIS_I32((i32)res.error, (i32)HTTP_ERROR_CONNEXIO);
+    CREDO_VERUM(res.error_descriptio.mensura > ZEPHYRUM);
+    CREDO_VERUM(_ms_nunc() - initium < II * M);
+    CREDO_AEQUALIS_I32(chorda_aedificator_spectare(o.corpus).mensura,
+        ZEPHYRUM);
+    servum_tls_claudere(&s);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "parvum", _sectio_parvum, NIHIL, NIHIL, NIHIL, NIHIL },
     { "magnum", _sectio_magnum, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -381,12 +414,26 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "certificatum", _sectio_certificatum, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "rsa", _sectio_rsa, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "tls11", _sectio_versio_vetus, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 
 s32
 principale (vacuum)
 {
-    redde credo_suitam_currere_cum("tls_servus", SECTIONES,
+    s32 bearssl;
+    s32 securetransport;
+
+    /* matrix (tls-bearssl R10): sectiones EAEDEM sub vectura utraque -
+     * differentia = inventum */
+    (vacuum)setenv("RHUBARB_TLS", "bearssl", I);
+    bearssl = credo_suitam_currere_cum("tls_servus [bearssl]",
+        SECTIONES,
         _suitam_parare, NIHIL);
+    (vacuum)setenv("RHUBARB_TLS", "securetransport", I);
+    securetransport = credo_suitam_currere_cum(
+        "tls_servus [securetransport]", SECTIONES, _suitam_parare,
+        NIHIL);
+    (vacuum)unsetenv("RHUBARB_TLS");
+    redde bearssl != ZEPHYRUM ? bearssl : securetransport;
 }

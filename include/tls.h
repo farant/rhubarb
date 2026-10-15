@@ -2,8 +2,10 @@
  *
  * API platform-agnostica pro connexionibus securis.
  * Implementatio: tls.c - vectura per connexionem (tls-bearssl II.5):
- * tls_bearssl.c (BearSSL) aut tls_securetransport_macos.m (macOS
- * Security.framework, vectura vetus).
+ * tls_bearssl.c (BearSSL, ORDINARIA) aut tls_securetransport_macos.m
+ * (macOS Security.framework, vectura vetus:
+ * RHUBARB_TLS=securetransport; delenda postea). Fiducia utriusque per
+ * fiducia.h (platforma).
  *
  * USUS:
  *   TlsResultus res = tls_connectere("httpbin.org", 443, piscina);

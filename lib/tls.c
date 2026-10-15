@@ -15,8 +15,10 @@
 #include <string.h>
 #include <unistd.h>
 
-/* ordinaria domus (T6: TLS_VECTURA_BEARSSL) */
-#define TLS_VECTURA_DOMUS TLS_VECTURA_SECURETRANSPORT
+/* ordinaria domus: BearSSL (tls-bearssl T6). SecureTransport per
+ * RHUBARB_TLS=securetransport aut TlsOptiones.vectura - vectura vetus,
+ * delenda post tempus utriusque sine differentia */
+#define TLS_VECTURA_DOMUS TLS_VECTURA_BEARSSL
 
 structura TlsConnexio {
             TlsVectura  vectura;

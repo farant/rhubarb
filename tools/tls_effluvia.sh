@@ -38,7 +38,8 @@ for p in $PROBATIONES; do
     # leaks processum inspectum interdum suspensum relinquit: summarium
     # exspectatur (tectum CLXXX s), deinde uterque necatur
     for k in $(seq 1 180); do
-        grep -q ' leaks for ' "$log" && break
+        # log nondum creatum in primis iterationibus: tacite
+        grep -q ' leaks for ' "$log" 2>/dev/null && break
         sleep 1
     done
     pid=$(sed -n 's/^Process \([0-9]*\): .* leaks for .*/\1/p' "$log" | head -1)

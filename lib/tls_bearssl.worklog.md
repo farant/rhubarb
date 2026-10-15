@@ -56,3 +56,38 @@ tls_gradus 3/3, http_vocatio 14/14. Plants: category CERTIFICATUM ->
 HANDSHAKE, timeout TCP -> HANDSHAKE, subject dropped - all red.
 Known mute (recorded in plan T5): catena[last] instead of catena[0] -
 s_server sends the leaf only; needs an intermediate-CA fixture.
+
+## 2026-10-15 - T6: matrix, BearSSL default, 1.2 floor, leaks, network
+
+Matrix: probatio_tls_servus and probatio_tls_gradus run their whole
+section table twice (RHUBARB_TLS=bearssl, then =securetransport) -
+10/10 and 3/3 under each. Plant: fiducia skipped in the BearSSL backend
+only -> tls_servus red in its [bearssl] run (the pre-T6 suite, which
+ran SecureTransport only, would have stayed green).
+
+Default flipped: TLS_VECTURA_DOMUS = BEARSSL (lib/tls.c);
+probatio_tls_vectura changed first and seen red.
+
+1.2 floor: new section tls11 against `s_server -tls1_1 -cipher
+DEFAULT:@SECLEVEL=0` (OpenSSL 3.3 refuses 1.1 at the default level -
+"no protocols available"). Both backends refuse. The floor is enforced
+TWICE in BearSSL (versions 1.2..1.2 AND an AEAD-only TLS 1.2 suite list:
+the 1.1 server offers ECDHE-ECDSA-AES256-SHA, CBC) - so widening the
+version range alone is mute. The plant that proves the test bites
+replaces the whole config with br_ssl_client_init_full (TLS 1.0-1.2,
+all suites incl. CBC): red at IRRITA. Closes T4's mute version plant.
+
+Leaks (tools/tls_effluvia.sh, both binaries, both backends via the
+matrix): residuum 0. tls_servus 23 instances, all the tolerated Apple
+CryptKit::FEEKeyInfoProvider (one per SecTrust evaluation with an EC
+key - more evaluations now, since both backends go through fiducia and
+the suite runs twice). Runner: silenced a harmless grep race (log
+polled before `leaks` created it).
+
+Network (by hand, public hosts): rete_fumus -tls -badssl -> identical
+verdict tables under both backends (howsmyssl TLS 1.2, no insecure
+suites, "Improvable" for both - no TLS 1.3; badssl expired, wrong.host,
+self-signed, untrusted-root, tls-v1-0, tls-v1-1 refused; tls-v1-2
+accepted). The self-signed/untrusted-root rows exercise the SYSTEM-store
+path T2's offline AnchorsOnly plant could not reach. probatio_tls and
+probatio_http_vocatio_rete green under both.

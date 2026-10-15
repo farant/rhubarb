@@ -13,8 +13,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-/* ordinaria domus: T3 SECURETRANSPORT, T6 BEARSSL */
-#define VECTURA_DOMUS TLS_VECTURA_SECURETRANSPORT
+/* ordinaria domus: BEARSSL (tls-bearssl T6; T3-T5 SECURETRANSPORT) */
+#define VECTURA_DOMUS TLS_VECTURA_BEARSSL
 
 nomen structura {
     character dir[DXII];
