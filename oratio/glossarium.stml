@@ -1072,6 +1072,7 @@
   <vocabulum lemma="minuibilis" lingua="latina" classis="adiectivum" nota="coinage domus (pictor): qui minui potest (fenestra)"><forma textus="minuibilis"/><forma textus="minuibile"/></vocabulum>
   <vocabulum lemma="numericus" lingua="latina" classis="adiectivum" nota="Latina sera: ad numeros pertinens (componens, mandatum)"><forma textus="numericum"/><forma textus="numericus"/><forma textus="numerica"/></vocabulum>
   <vocabulum lemma="defocus" lingua="latina" classis="substantivum" nota="coinage domus (pictor): amissio foci (fenestra)"><forma textus="defocus"/></vocabulum>
+  <vocabulum lemma="epacta" lingua="latina" classis="substantivum" nota="Latina sera (computus): aetas lunae die I Ianuarii - computus Paschalis (probatio_calendarium)"><forma textus="epacta"/></vocabulum>
   <vocabulum lemma="ephemera" lingua="latina" classis="substantivum" nota="Graeca: res diei unius (insula: contra durabile)"><forma textus="ephemera"/></vocabulum>
   <vocabulum lemma="rotula" lingua="latina" classis="substantivum" nota="Latina: rota parva (fenestra: rotula muris)"><forma textus="rotula"/><forma textus="rotulae"/><forma textus="rotulam"/></vocabulum>
   <vocabulum lemma="schirmum" lingua="latina" classis="substantivum" nota="coinage domus (pictor, ex Germanico Schirm): screen (manus_ludus)"><forma textus="schirmum"/><forma textus="schirmi"/><forma textus="schirmus"/></vocabulum>

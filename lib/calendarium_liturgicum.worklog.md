@@ -113,3 +113,25 @@ C and I. Born red: 6, predicted 6.
 |---|---|---|
 | CP1 no `+ I` | 6 | 6 |
 | CP2 `>` for `>=` (Advent I itself left in the old year) | 4 | 4 — only the two Advent I days; 31 December stays green |
+
+## 2026-10-15 - liturgia-plan L0: guards, sections, F9
+
+Plan: `project-specs/liturgia-plan.md` (from the 10-13 review
+`project-specs/liturgia-recensio/RECENSIO.md`; US calendar). L0 first
+converts `probatio_calendarium.c` to credo II sections (16) and adds
+guards that pass today: Easter vs the published table 2000-2040, an
+independent computus (Oudin 1940, `_pascha_alterum`) 1583-4099 with
+0 mismatches, the extremes (1818/2285 Mar 22, 1943/2038 Apr 25,
+1981/2076 Apr 19), anchor relations for 2008/2011/2038/2285, and the
+review's "pass (guard)" rows as a `CasusDiei` table (principal gradus,
+colour, short title for saints; temporal titles unchecked because L2
+renames them).
+
+F9: `calendarium_finis_temporis(TEMPUS_PER_ANNUM_II, N)` used
+`calendarium_anchorae(cal, N + 1)`. The season API takes the
+LITURGICAL year N; Ordinary Time II of year N ends the day before
+Advent I of CIVIL year N (that Sunday starts year N + 1). The new
+`limites_temporum` section checks finis(t) + 1 == initium(t + 1) for
+every season of 2025/2026/2038, including PA_II(N) -> Advent(N + 1);
+only that last transition was wrong (2026: 2027-11-27 instead of
+2026-11-28). Plant `annus + I` back -> red.

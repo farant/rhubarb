@@ -279,7 +279,9 @@ calendarium_finis_temporis (
             redde anch->pentecoste;
 
         casus TEMPUS_PER_ANNUM_II:
-            anch = calendarium_anchorae(cal, annus + I);
+            /* annus liturgicus N finit pridie Adventus I anni civilis N
+             * (F9: olim annus + I) */
+            anch = calendarium_anchorae(cal, annus);
             redde fasti_addere_dies(anch->dominica_i_adventus, -I);
 
         ordinarius:
