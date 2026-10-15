@@ -49,6 +49,19 @@ plica pendet — veritas in C manet.
   sana; `silva.commissio(nuntius, viae, portae=[...])` — portae omnes
   sanae aut nihil commissum; viae vetitae refutatae; renominationes
   per `git mv` acceptae (viae NOVAE dantur); `verificare=False`
+- **gradus portarum** (2026-10-15, project-specs/gradus-portarum-spec.md):
+  portae debitae ADDITAE gradus `fusio` (annotatio `gradus="fusio"`)
+  non currunt sed DILATANTUR ('porta debita DILATA ad fusionem') in
+  `build/portae/debita_fusionis.tsv`; petitae (`portae=[X]`) semper
+  currunt; `plena=True` = omnes. Porta viridis tota debitum suum solvit
+  ('debitum rami solutum: X'). Mos agentis: `silva.porta('X')` ipse,
+  deinde `commissio(..., portae=['X'])` - receptum vivum reusum
+  ('[receptum]', in aestimatione ~0 s). Ante fusionem in main:
+  `silva.fusio_probare()` (DETACHED, >30 min: gradus ambo super
+  merge-base..HEAD + debita + frigida; viride debita purgat et 'merge
+  --ff-only' imprimit). Index: `silva.portae_debitae_ramus()` /
+  `tools/portae_debitae.sh -ramus`. `bin/fabrica iudicare` FORTASSE
+  ('supra: X STALUM' - producens supra stalus) = ut STALUM tractatur
 - `silva.planta(via, vetus, novus, porta)` — ritus culpae plantatae:
   rubra (non aedificatio fracta) -> reversio (finally) -> viridis
 - `silva.porta_umbra(nomen[, photographica=True])` — porta in umbra
