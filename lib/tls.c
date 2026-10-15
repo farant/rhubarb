@@ -1,7 +1,7 @@
 /* tls.c - tls.h: DISPATCHER vecturarum (tls-bearssl-spec II.5). Vectura
  * per connexionem eligitur (TlsOptiones.vectura; ORDINARIA ->
  * RHUBARB_TLS; aliter ordinaria domus) et in connexione servatur.
- * Vecturae: tls_securetransport_macos.m; tls_bearssl.c (T4). Ambitus
+ * Vecturae: tls_securetransport_macos.m; tls_bearssl.c. Ambitus
  * per lectiones_ambitus legitur (fabrica dependentiam videt). */
 #include "postulata_posix.h"
 #include "latina.h"
@@ -10,6 +10,7 @@
 #include "tcp.h"
 #include "tls.h"
 #include "tls_securetransport.h"
+#include "tls_bearssl.h"
 #include "lectiones.h"
 #include <string.h>
 #include <unistd.h>
@@ -20,6 +21,7 @@
 structura TlsConnexio {
             TlsVectura  vectura;
     TlsSecuretransport* securetransport;
+            TlsBearssl* bearssl;
 };
 
 TlsOptiones
@@ -101,6 +103,34 @@ _involvere_securetransport (
     redde r;
 }
 
+/* resultus vecturae BearSSL -> TlsResultus */
+interior TlsResultus
+_involvere_bearssl (
+    TlsBearsslResultus  br,
+               Piscina* piscina)
+{
+    TlsResultus r;
+
+    r.successus         = br.successus;
+    r.error             = br.error;
+    r.error_descriptio  = br.error_descriptio;
+    r.connexio          = NIHIL;
+    si (br.successus)
+    {
+        r.connexio = (TlsConnexio*)piscina_allocare(piscina,
+            (i64)magnitudo(TlsConnexio));
+        si (r.connexio == NIHIL)
+        {
+            tls_bearssl_claudere(br.connexio);
+            redde _error(TLS_ERROR_TCP, "Allocatio fallita", piscina);
+        }
+        memset(r.connexio, ZEPHYRUM, magnitudo(TlsConnexio));
+        r.connexio->vectura = TLS_VECTURA_BEARSSL;
+        r.connexio->bearssl = br.connexio;
+    }
+    redde r;
+}
+
 TlsResultus
 tls_connectere (
     constans character* hospes,
@@ -140,12 +170,8 @@ tls_incipere (
         redde _involvere_securetransport(tls_securetransport_incipere(
             tcp, hospes, optiones, piscina), piscina);
     }
-    si (tcp)
-    {
-        tcp_claudere(tcp);
-    }
-    redde _error(TLS_ERROR_HANDSHAKE, "vectura bearssl nondum",
-        piscina);
+    redde _involvere_bearssl(tls_bearssl_incipere(tcp, hospes, optiones,
+        piscina), piscina);
 }
 
 TlsVectura
@@ -163,6 +189,10 @@ tls_gradus (
     {
         redde TLS_GRADUS_ERROR;
     }
+    si (connexio->vectura == TLS_VECTURA_BEARSSL)
+    {
+        redde tls_bearssl_gradus(connexio->bearssl);
+    }
     redde tls_securetransport_gradus(connexio->securetransport);
 }
 
@@ -178,6 +208,10 @@ tls_gradus_error (
         vacua.mensura  = ZEPHYRUM;
         redde vacua;
     }
+    si (connexio->vectura == TLS_VECTURA_BEARSSL)
+    {
+        redde tls_bearssl_gradus_error(connexio->bearssl);
+    }
     redde tls_securetransport_gradus_error(connexio->securetransport);
 }
 
@@ -190,6 +224,10 @@ tls_mittere (
     si (connexio == NIHIL)
     {
         redde -I;
+    }
+    si (connexio->vectura == TLS_VECTURA_BEARSSL)
+    {
+        redde tls_bearssl_mittere(connexio->bearssl, data, mensura);
     }
     redde tls_securetransport_mittere(connexio->securetransport, data,
         mensura);
@@ -238,6 +276,11 @@ tls_recipere (
     {
         redde -I;
     }
+    si (connexio->vectura == TLS_VECTURA_BEARSSL)
+    {
+        redde tls_bearssl_recipere(connexio->bearssl, buffer,
+            capacitas);
+    }
     redde tls_securetransport_recipere(connexio->securetransport,
         buffer,
         capacitas);
@@ -251,6 +294,11 @@ tls_claudere (
     {
         redde;
     }
+    si (connexio->vectura == TLS_VECTURA_BEARSSL)
+    {
+        tls_bearssl_claudere(connexio->bearssl);
+        redde;
+    }
     tls_securetransport_claudere(connexio->securetransport);
 }
 
@@ -258,8 +306,15 @@ b32
 tls_est_valida (
     TlsConnexio* connexio)
 {
-    redde connexio != NIHIL
-        && tls_securetransport_est_valida(connexio->securetransport);
+    si (connexio == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (connexio->vectura == TLS_VECTURA_BEARSSL)
+    {
+        redde tls_bearssl_est_valida(connexio->bearssl);
+    }
+    redde tls_securetransport_est_valida(connexio->securetransport);
 }
 
 b32
@@ -267,8 +322,9 @@ tls_certificatum_obtinere (
         TlsConnexio* connexio,
     TlsCertificatum* exitus)
 {
-    si (connexio == NIHIL)
+    si (connexio == NIHIL || connexio->vectura == TLS_VECTURA_BEARSSL)
     {
+        /* BearSSL: tls_bearssl_certificatum in T5 */
         si (exitus)
         {
             memset(exitus, ZEPHYRUM, magnitudo(*exitus));

@@ -214,6 +214,15 @@ with this plan; this plan argues from it and records where it departs.
   and it and `bearssl` are `ignotum-permissum`. Every later
   `TlsSecureTransport` in this plan means `TlsSecuretransport`; T4 names its
   type `TlsBearssl`.
+- **R24 (T4) - plant set revised.** The plan's "CLAUSA -> LEGERE" plant and
+  its "pendens - 1" plant were mute by analysis: mid-handshake EOF never
+  reaches CLAUSA, and the gradus test asserts only the response. The
+  replacements: EOF treated as a clean close, `br_ssl_engine_flush`
+  dropped, `recvapp_ack` dropped. The "clausa a pare" section now has the
+  server READ the ClientHello before closing (clean FIN, not RST) and
+  asserts the EOF branch's own text. Details in lib/tls_bearssl.worklog.md.
+- **R25 (T4) - `Validator` is `Iudex`** (field `iudex`, vtable
+  `IUDICIS_CLASSIS`): "validator" is a real English word (lint).
 
 ## Review focus
 
