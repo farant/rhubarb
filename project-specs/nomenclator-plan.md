@@ -249,6 +249,13 @@ house rule of independent composable libraries.
   three forms + age via the NomenclatorHodie port; kind toggle; delete;
   photo box reserved). Next U5 (notes book out of the calendar), then
   P5b (notes in the bottom half).
+- **U5 DONE 2026-10-15: `membrum__charta`** - nested scriba book under
+  the host branch, book chosen by a KEY (volume namespace prefix:
+  "dies/<ISO>", "persona/<id>"); key change flushes the pending gesture
+  and swaps the book; cell-exact area + shadow in a host locus; focus
+  test (`charta_focata`, now under the scriba branch, not "anything
+  nested under the host"). Calendar moved onto it (30 + 4 sections
+  unchanged). Next P5b (notes in the contact detail's bottom half).
 - **P2 nomenclator list** - vicus genus `nomenclator`, command word
   `$contacts`, alphabetical list with letter headings (U1), selection, new
   contact (kind chosen at creation), open detail.
