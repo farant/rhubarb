@@ -220,3 +220,27 @@ verification is really on), obstruens (blocking path, same anchor).
 Before the anchor existed the four rejection sections passed for the
 WRONG reason (everything was rejected); plants on the judgement and
 the host-name policy prove each one now tests its own failure.
+
+## 2026-10-15 - the context leak is finally observable: tools/tls_effluvia.sh
+
+R5 (tls_claudere skipped SSLClose/CFRelease after a peer close) was
+fixed in T4 but no test could SEE it. `tools/tls_effluvia.sh` runs the
+TLS test binaries (probatio_tls_servus - a real handshake against
+s_server, which closes after answering = exactly the R5 path - and
+probatio_tls_gradus) under macOS `leaks --atExit`. Planting the old
+guard back: 24 -> ~205 leaks, reported as `ROOT CYCLE: <SSLContext>`
+(plus `malloc in SSLCreateContext`, `malloc in tls_handshake_create`).
+
+Lessons from building it:
+- our leak is a ROOT CYCLE, not a ROOT LEAK. The first runner counted
+  only `ROOT LEAK` lines and stayed GREEN with the plant in place - the
+  verdict now compares the summary's TOTAL against tolerated instances.
+- Apple leaks inside Security.framework: `CryptKit::FEEKeyInfoProvider`,
+  32 bytes per EC trust evaluation (~24 per run, count varies). Listed
+  with its reason in `tools/tls_effluvia.tolerata`; nothing of ours may
+  ever stand there.
+- `leaks` sometimes leaves the inspected process suspended (state T):
+  the runner waits for the summary (bound 180 s) then kills both; no
+  summary = exit 2 (a mute check is never green).
+- BSD sed has no `\|` in basic regexes (-E needed) - same trap as `\b`.
+Manual tool (not a gate): `./tools/tls_effluvia.sh [-aedificare]`.
