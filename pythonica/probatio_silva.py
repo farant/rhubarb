@@ -1021,7 +1021,7 @@ def _fabrica_iudicii(modus):
 
 _fb_porta_vera = silva.FABRICA_BIN
 _verdicta_vera = silva._VERDICTA_MEMORATA
-silva._VERDICTA_MEMORATA = {'ficta-v': []}
+silva._VERDICTA_MEMORATA = {'ficta-v'}
 silva.PORTAE['ficta-v'] = (['echo', 'fictum: sanum'], r'fictum: (sanum|FRACTUM)')
 _vv = os.path.join(RADIX, 'build', 'fabrica', 'verdicta', 'ficta-v.txt')
 try:
@@ -1099,14 +1099,6 @@ try:
     credo('aedilis' in silva._portae_verdictorum()
           and 'toml' not in silva._portae_verdictorum(),
           'portae verdictorum: porta_aedilis inventa, porta_toml emerita')
-    # praevia = artificia quae 'sanare' nominare potest: manifesta
-    # (directorium alterius actionis vestigium) NON (plan 5 T5b:
-    # 'sanare' exitus 2 -> porta aedilis via cruda in commissione)
-    _praevia_aed = silva._portae_verdictorum().get('aedilis')
-    credo(_praevia_aed is not None
-          and not any('clausurae' in v for v in _praevia_aed),
-          'portae verdictorum: aedilis sine manifestis in praeviis (%r)'
-          % (_praevia_aed,))
 finally:
     silva.FABRICA_BIN = _fb_porta_vera
     silva._VERDICTA_MEMORATA = _verdicta_vera
@@ -2883,6 +2875,29 @@ try:
     eff, err, cursae = _commissio_ordinis_petitae([])
     credo(cursae == ['ficta-prae-c'] and 'MONITUM: aestimatio portarum 400 s > 300 s' in eff,
           'gradus: aestimatio > 300 s = MONITUM, portae tamen currunt', causa=repr((cursae, eff[-400:])))
+    # H2. receptum vivum (parcum BEN87): porta non iterum cursa 0 s in aestimatione, MONITUM nullum
+    _rv_verum = silva.receptum_vivum
+    silva.receptum_vivum = lambda n, filtrum=None: (
+        silva.Porta(n, True, True, 'fictum: sanum [receptum vivum]', 0, '', [])
+        if n == 'ficta-prae-c' and filtrum is None else None)
+    try:
+        for _rec in (True, False):
+            buf = io.StringIO()
+            with contextlib.redirect_stdout(buf):
+                silva._portas_ordinare(['ficta-prae-c', 'ficta-prob-2'], plena=False, recepta=_rec)
+            if _rec:
+                credo('aestimatio portarum: 9 s; 1 cum recepto vivo (~0 s)' in buf.getvalue()
+                      and 'ficta-prae-c 400 s [receptum]' in buf.getvalue()
+                      and 'MONITUM' not in buf.getvalue(),
+                      'aestimatio: porta cum recepto vivo 0 s, nominata, MONITUM nullum',
+                      causa=repr(buf.getvalue()))
+            else:
+                credo('aestimatio portarum: 409 s' in buf.getvalue() and '[receptum]' not in buf.getvalue()
+                      and 'MONITUM: aestimatio portarum 409 s > 300 s' in buf.getvalue(),
+                      'aestimatio: recepta=False - recepta non consulta, MONITUM (mores veteres)',
+                      causa=repr(buf.getvalue()))
+    finally:
+        silva.receptum_vivum = _rv_verum
     # I. debitum rami: scribitur post commissionem, legitur
     _dfv = silva.DEBITA_FUSIONIS_VIA
     silva.DEBITA_FUSIONIS_VIA = os.path.join(_od, 'debita_fusionis.tsv')

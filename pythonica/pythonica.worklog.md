@@ -1263,3 +1263,30 @@ regeneration happens once (`_regenerata`). Test 'regeneratio: iudex post
 regenerationem iterum stalus -> iterum sanatur, pergit' (hand plant red).
 Also: in heredoc-written Python patches, escape `\n` inside the patch's
 own string literals (`\\n`) - a raw newline lands in the target file.
+
+## 2026-10-15 — praevia deleted; estimate honours live receipts (…BEN87)
+
+**praevia (dead code).** `_porta_per_fabricam` used to `sanare` a verdict
+gate's `build/` inputs before `iudicare`, from a Python regex over
+aedificatio.stml (one level deep) - a workaround for `iudicare` judging only
+direct inputs. Checked before deleting: the only verdict gate left is
+`porta_aedilis`, and its praevia list was EMPTY (toml's index/aurum users
+left when suites moved to gradus composites). a12bd04b made `iudicare`
+judge the chain (FORTASSE), which covers the case properly; deletion
+changes no behaviour today. `_portae_verdictorum()` now returns a set of
+names. Limit recorded in the docstring: quick mode does not judge
+non-memorabilis generators, so the chain does not pass through them - a
+future verdict gate reading the output of such a generator would need
+`-plenus` or a memorabilis producer.
+
+**Estimate.** `_portas_ordinare` summed tempora.tsv medians over every
+ordered gate, but `_portas_currere` then skipped gates with a valid live
+receipt - so the agent habit (run `porta('X')`, commit with `portae=['X']`)
+always tripped the 300 s MONITUM (478 s printed for ~1 min of work,
+a12bd04b). Now with `recepta=True` (commissio, fusio_probare) a gate whose
+every request (name, filter) has a sane `receptum_vivum` counts 0 s, is
+marked `[receptum]` in the order line, and the estimate says `N cum recepto
+vivo (~0 s)`. Same test as the runner uses, so the two cannot disagree.
+Test H2 needs `plena=False` - under the default `plena=True` MONITUM never
+prints and "no MONITUM" is vacuous (caught before running). Plant (count
+all gates) on a copy outside the tree: 409 s + MONITUM.

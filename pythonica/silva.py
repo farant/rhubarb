@@ -2103,14 +2103,14 @@ def _porta_per_gradum(nomen, vis=False, auditus=None):
 
 
 def _portae_verdictorum():
-    """nomina portarum quarum actio 'iudicium' declarata est: tituli
-    'porta_<nomen>' genere iudicium in aedificatio.stml subsystematum
-    (fabrica.stml). Lectio textus, non iudicium - iudex verus bin/fabrica
-    manet; memoratur per processum."""
+    """nomina portarum (set) quarum actio 'iudicium' declarata est:
+    tituli 'porta_<nomen>' genere iudicium in aedificatio.stml
+    subsystematum (fabrica.stml). Lectio textus, non iudicium - iudex
+    verus bin/fabrica manet; memoratur per processum."""
     global _VERDICTA_MEMORATA
     if _VERDICTA_MEMORATA is not None:
         return _VERDICTA_MEMORATA
-    nomina = {}
+    nomina = set()
     try:
         radix_stml = open(os.path.join(RADIX, 'fabrica.stml')).read()
     except (IOError, OSError):
@@ -2120,18 +2120,11 @@ def _portae_verdictorum():
             t = open(os.path.join(RADIX, sub, 'aedificatio.stml')).read()
         except (IOError, OSError):
             continue
-        for m in re.finditer(r'<actio titulus="porta_([^"]+)" genus="iudicium"'
-                             r'(.*?)</actio>', t, re.S):
-            # ingressus sub build/: artificia actionum NON commissa, in
-            # porta() ante iudicium realizanda (spec 3 XIII v5). Solum
-            # FASCICULI - artificia quae 'sanare' nominat; manifesta
-            # (directorium vestigii alieni) per fontes suos sigillantur
-            # et 'sanare' ea nominare nequit (exitus 2; plan 5 T5b)
-            nomina[m.group(1)] = [
-                v for g, v in re.findall(
-                    r'<ingressus genus="([^"]+)" via="([^"]+)"', m.group(2))
-                if g == 'fasciculus'
-                and (v.startswith('build/') or '/build/' in v)]
+        # PRAEVIA (ingressus build/ ante iudicium sanandi, spec 3 XIII v5)
+        # deleta 2026-10-15: iudicare ipse catenam iudicat (FORTASSE,
+        # parcum 190VQB) et praevia vacua erant post portas ad gradus
+        nomina.update(re.findall(
+            r'<actio titulus="porta_([^"]+)" genus="iudicium"', t))
     _VERDICTA_MEMORATA = nomina
     return nomina
 
@@ -2230,11 +2223,13 @@ def _auditum_commissionis(nomen):
 
 
 def _porta_per_fabricam(nomen, vis=False, auditus=None):
-    """porta per actionem 'iudicium' fabricae; None = via cruda. SEMPER
-    'bin/fabrica sanare <verdictum>' (spec 3 par. XIII v5): sanare
-    dependentias (toml_corpus, aurum) ordine realizat, DEINDE verdictum
-    iudicat - 'iudicare' solum verdictum iudicaret et indicem stalum
-    crederet. Nulla linea 'SANATUM porta_<nomen>' + exitus 0 + verdictum
+    """porta per actionem 'iudicium' fabricae; None = via cruda.
+    'iudicare' verdictum CUM CATENA iudicat (parcum 190VQB, a12bd04b):
+    ingressus build/ stalus supra = FORTASSE, non RECENS - tum 'sanare
+    <verdictum>' dependentias ordine realizat, DEINDE verdictum iudicat
+    (olim 'praevia' ex STML Pythonice lecta ante iudicium sanabantur,
+    gradus unus solum). Limes: celer generatores non memorabiles non
+    iudicat ('regeneratio omissa') - per eos catena non transit. Nulla linea 'SANATUM porta_<nomen>' + exitus 0 + verdictum
     praesens = transitus servatus (nihil cursum). FABRICA_AUDITUS=N:
     '-audit' - transitus RECENS tamen currit; defectus = AUDITUM DISCORS
     (fracta, lectiones novae nominatae)."""
@@ -2253,16 +2248,8 @@ def _porta_per_fabricam(nomen, vis=False, auditus=None):
             pass
     if auditus is None:
         auditus = bool(os.environ.get('FABRICA_AUDITUS'))
-    # I. ingressus build/ (artificia non commissa: index corporis, aurum)
-    # realizantur - aliter iudicium contra artificium stalum (v5)
-    praevia = _portae_verdictorum()[nomen]
-    if praevia:
-        rp = _curre([FABRICA_BIN, 'sanare'] + praevia)
-        if rp.returncode == 2:
-            print('porta %s: fabrica sanare nequit (exitus 2) - via cruda'
-                  % nomen)
-            return None
-    # II. iudicium solum (vile): RECENS = transitus servatus
+    # I. iudicium solum (vile): RECENS = transitus servatus (catena
+    # inclusa: producens supra non recens = FORTASSE -> II)
     if not vis and not auditus:
         rj = _curre([FABRICA_BIN, 'iudicare', '-omnia', '-machina', via])
         if any(o[0] == 'IUDICIUM' and len(o) >= 3 and o[1] == 'RECENS'
@@ -2276,7 +2263,7 @@ def _porta_per_fabricam(nomen, vis=False, auditus=None):
             _tempus_notare('porta', nomen + ' (transitus)', initium, True, 0)
             return Porta(nomen, True, True, '%s [transitus servatus, ante %s]'
                          % (compendium, _aetas(aetas)), 0, '', [], False)
-    # III. sanare: porta currit (auditus: etiam RECENS) et servatur
+    # II. sanare: porta currit (auditus: etiam RECENS) et servatur
     argv = ([FABRICA_BIN, 'sanare', '-machina']
             + (['-audit'] if auditus else []) + [via])
     r = _curre(argv)
@@ -2694,7 +2681,7 @@ def _portae_debitas_addere(viae, portae, excusatae=None, binaria_out=None,
     return fructus
 
 
-def _portas_ordinare(portae, additae=None, plena=True):
+def _portas_ordinare(portae, additae=None, plena=True, recepta=False):
     """ORDO PORTARUM (circulus commissionis II T5): (portae ordinatae,
     genera {nomen: 'praeiudicium'|'probatio'}, gradus {nomen:
     'commissio'|'fusio'} - gradus-portarum T1, dilatae {porta: causa})
@@ -2710,7 +2697,11 @@ def _portas_ordinare(portae, additae=None, plena=True):
     commissionem). Additae ceterae: 'porta debita addita'. Petitae
     numquam dilatantur. Ordo incomputabilis = nihil dilatatum (plus
     currit, numquam minus). Deinde 'aestimatio portarum' ex medianis;
-    supra AESTIMATIO_MONITUM s = MONITUM (non recusatio)."""
+    supra AESTIMATIO_MONITUM s = MONITUM (non recusatio). recepta=True
+    (commissio): porta cuius omnes petitiones RECEPTUM VIVUM sanum habent
+    non iterum currit (_portas_currere) - in aestimatione 0 s, in ordine
+    '[receptum]' (parcum BEN87: mos agentis 'porta ipse, deinde
+    portae=[X]' MONITUM falsum semper excitabat, 478 s pro ~1 min)."""
     additae = additae or {}
 
     def _additas_nuntiare(dilatae):
@@ -2768,18 +2759,34 @@ def _portas_ordinare(portae, additae=None, plena=True):
                    if (p if isinstance(p, str) else p[0]) not in dilatae]
     positio = dict((n, i) for i, n in enumerate(ordo))
     ceterae.sort(key=lambda p: positio[p if isinstance(p, str) else p[0]])
+    # recepta viva (BEN87): eadem probatio ac _portas_currere (sana,
+    # sigillum arboris idem) - omnes petitiones nominis receptae
+    receptae_vivae = set()
+    if recepta:
+        petitiones = {}
+        for p in ceterae:
+            n, filtrum = (p, None) if isinstance(p, str) else p
+            petitiones.setdefault(n, []).append(filtrum)
+        for n, filtra in petitiones.items():
+            vivae = [receptum_vivum(n, filtrum) for filtrum in filtra]
+            if all(f is not None and f.sana for f in vivae):
+                receptae_vivae.add(n)
 
     def _pars(g):
-        return ', '.join('%s %s' % (n, ('(nova)' if sumptus[n] == '-' else
-                                        '%d s' % ((int(sumptus[n]) + 500) // 1000)))
+        return ', '.join('%s %s%s' % (n, ('(nova)' if sumptus[n] == '-' else
+                                          '%d s' % ((int(sumptus[n]) + 500) // 1000)),
+                                      ' [receptum]' if n in receptae_vivae else '')
                          for n in ordo if genera[n] == g) or '(nullae)'
     print('ordo portarum: praeiudicia: %s | probationes: %s'
           % (_pars('praeiudicium'), _pars('probatio')))
-    notae = [int(sumptus[n]) for n in ordo if sumptus[n] != '-']
+    currendae = [n for n in ordo if n not in receptae_vivae]
+    notae = [int(sumptus[n]) for n in currendae if sumptus[n] != '-']
     secundae = (sum(notae) + 500) // 1000
-    ignotae = len(ordo) - len(notae)
-    print('aestimatio portarum: %d s%s%s%s' % (
+    ignotae = len(currendae) - len(notae)
+    print('aestimatio portarum: %d s%s%s%s%s' % (
         secundae, ', %d sine historia' % ignotae if ignotae else '',
+        '; %d cum recepto vivo (~0 s)' % len(receptae_vivae)
+        if receptae_vivae else '',
         '; dilatae ad fusionem: %d' % len(dilatae) if dilatae else '',
         ' (plena: gradus ambo)' if plena else ''))
     # plena (commissio plena, fusio_probare) gradus ambo vult: longa recte
@@ -3371,7 +3378,7 @@ def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
                                             additae_out=additae)
     with _phasis('ordo portarum'):
         portae, genera, _gradus, dilatae = _portas_ordinare(
-            portae, additae, plena)
+            portae, additae, plena, recepta)
     dilatae = {**(_dilatae or {}), **dilatae}
     if binaria is not None:
         with _phasis('instrumenta portarum'):
@@ -3522,7 +3529,8 @@ def fusio_probare(basis='main', frigida=True, recepta=True):
     with _phasis('portae debitae'):
         portae = _portae_debitas_addere(viae, portae, binaria_out=binaria)
     with _phasis('ordo portarum'):
-        portae, genera, _gradus, _ = _portas_ordinare(portae)
+        portae, genera, _gradus, _ = _portas_ordinare(portae,
+                                                      recepta=recepta)
     with _phasis('instrumenta portarum'):
         _instrumenta_portarum_sanare(binaria)
     try:
