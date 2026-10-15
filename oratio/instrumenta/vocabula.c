@@ -8,9 +8,8 @@
  *   -omnia     utraque (ordinarium)
  *   -machina   TSV omnium verborum cum capite
  *   -omnes     lista ignotorum tota (plane: tectum LX)
- *   -iudicandae VIA...  viae quas iudex lint_latinus (unitates.stml)
- *              iudicat, linea una per viam - ansa commissionis
- *              (tools/unci-git/lint_latinus.sh) idem responsum rogat
+ * Ansa commissionis (lint_latinus.sh) eundem iudicem per
+ * tools/iudex_unitatum.sh rogat.
  * AMBITUS symbolorum = viae tractatae quas iudex lint_latinus iudicat
  * (lib/unitates.c; olim praefixa ORATIO_VOCABULA_EXCLUSA, quae fixa/
  * iudicabant sed ansam non movebant - spec unitates-codicis U4).
@@ -142,7 +141,6 @@ OratioVocabulariumVitium vitium;
                                         b32  omnes_viae = FALSUM;
                     b32  nova_modus = FALSUM;
                     i32  tectum   = (i32)60;
-                integer  iudicandae = ZEPHYRUM;
 
                 integer  i;
                 clock_t  ante;
@@ -183,11 +181,6 @@ OratioVocabulariumVitium vitium;
         {
             omnes_viae = VERUM;   /* sine iudice: omnes viae indicis */
         }
-        alioquin si (strcmp(argv[i], "-iudicandae") == ZEPHYRUM)
-        {
-            iudicandae = i + I;   /* reliqua = viae */
-            frange;
-        }
         alioquin si (strcmp(argv[i], "-nova") == ZEPHYRUM)
         {
             /* verba ignota NOVA contra copiam toleratam (id quod porta
@@ -210,8 +203,7 @@ OratioVocabulariumVitium vitium;
             fprintf(stderr,
                 "usus: vocabula [-symbola | -commenta | -omnia | "
                 "-prosa | -nova] [-machina] [-omnes] [-omnes-viae] "
-                "[-tectum N]\n"
-                "       vocabula -iudicandae VIA...\n");
+                "[-tectum N]\n");
 
             redde II;
         }
@@ -222,34 +214,6 @@ OratioVocabulariumVitium vitium;
         radix = ".";
     }
     piscina = piscina_generare_dynamicum("oratio_vocabula", 536870912);
-    si (iudicandae > ZEPHYRUM)
-    {
-        Unitates* u      = _unitates_onerare(piscina, radix);
-          chorda  iudex  = chorda_ex_literis(VOCABULA_IUDEX, piscina);
-
-        si (u == NIHIL)
-        {
-            redde II;
-        }
-        per (i = iudicandae; i < argc; i++)
-        {
-            UnitatesIudicium j = unitates_iudicat(u, iudex,
-                chorda_ex_literis(argv[i], piscina), piscina, NIHIL);
-
-            si (j == UNITATES_IUDEX_IGNOTUS)
-            {
-                fprintf(stderr, "vocabula: iudex '%s' ignotus in "
-                    "unitates.stml\n", VOCABULA_IUDEX);
-                redde II;
-            }
-            si (j == UNITATES_IUDICAT)
-            {
-                imprimere("%s\n", argv[i]);
-            }
-        }
-        piscina_destruere(piscina);
-        redde ZEPHYRUM;
-    }
     sprintf(via, "%s/oratio/vocabularium/la.bin", radix);
     si (!_plagulam_legere(piscina, via, &tabula))
     {

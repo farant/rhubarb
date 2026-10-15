@@ -12,12 +12,16 @@
 #   IV  iudex lint_latinus: alienum (vendor, oracula), remissum
 #       (knotapel), archivatum, fixtura NON iudicantur (causa nominata);
 #       lib/ et generatum (amalgama) iudicantur; iudex ignotus = exitus 2
+#   V   filtrum crustae tools/iudex_unitatum.sh (formator, unci): iudex
+#       formator_commissionis lib/ solum formare sinit - vendor (alienum),
+#       amalgama (productum), generatum, fixtura omissa cum causis
+#       (-causae); lint_latinus per idem filtrum amalgama iudicat
 #
 # Debetur politicae, canonibus, omni declarationi et nucleo C
 # (clausura tools/fabrica.c: lib/unitates.c) - I s, vilis.
 #
 # Exitus: 0 sanum | 1 FRACTUM | 2 bin/fabrica aut bin/canon_examen deest.
-# <porta titulus="unitates" genus="praeiudicium" tegit="unitates.stml unitates.canon unitas.canon unitas.stml */unitas.stml canones.registrum" currit="tools/fabrica.c"/>
+# <porta titulus="unitates" genus="praeiudicium" tegit="unitates.stml unitates.canon unitas.canon unitas.stml */unitas.stml canones.registrum tools/iudex_unitatum.sh tools/iudex_unitatum.c" currit="tools/fabrica.c"/>
 set -u
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$RADIX" || exit 2
@@ -88,6 +92,21 @@ if [ "$rc4" -eq 0 ] && [ "$ni" -eq 2 ] && grep -q '^lib/xar.c	IUDICAT' "$T/o4" \
     echo "  IV  iudex lint_latinus: lib/ et generatum iudicantur, V exclusa cum causis, iudex ignotus exitus 2 OK"
 else
     echo "  IV  FRACTUM (rc=$rc4, iudicat $ni, exclusa cum causa $nn, ignotus rc=$rc4b)"; sed 's/^/      /' "$T/o4" "$T/o4b"; fracta=1
+fi
+
+# V filtrum crustae
+GENF=$(git ls-files 'lib/*.c' | while read -r v; do head -n1 "$v" | grep -qw GENERATUM && { echo "$v"; break; }; done)
+./tools/iudex_unitatum.sh -causae formator_commissionis lib/xar.c vendor/sqlite3.c \
+    silva/amalgama/silva.h "$GENF" "$FIXA" > "$T/o5" 2> "$T/o5e"; rc5=$?
+./tools/iudex_unitatum.sh lint_latinus silva/amalgama/silva.h vendor/sqlite3.c > "$T/o5b" 2>/dev/null; rc5b=$?
+if [ "$rc5" -eq 0 ] && [ "$(cat "$T/o5")" = "lib/xar.c" ] && [ -n "$GENF" ] \
+   && grep -q '^vendor/sqlite3.c: non iudicatur - cura aliena' "$T/o5e" \
+   && grep -q '^silva/amalgama/silva.h: non iudicatur - munus amalgama' "$T/o5e" \
+   && grep -q "^$GENF: non iudicatur - provenientia generatum" "$T/o5e" \
+   && [ "$rc5b" -eq 0 ] && [ "$(cat "$T/o5b")" = "silva/amalgama/silva.h" ]; then
+    echo "  V   filtrum crustae: formator lib/ solum (vendor, amalgama, generatum, fixtura cum causis), lint amalgama iudicat OK"
+else
+    echo "  V   FRACTUM (rc=$rc5/$rc5b, generatum '$GENF')"; sed 's/^/      /' "$T/o5" "$T/o5e" "$T/o5b"; fracta=1
 fi
 
 if [ "$fracta" -ne 0 ]; then echo "fumus unitatum: FRACTUM"; exit 1; fi

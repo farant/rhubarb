@@ -82,3 +82,19 @@ fixtures not (they are inputs - JSON, PNG, foreign-style C samples).
   filum, processus_posix (processus exists only as the posix variant).
 - Tolerated copy: 44 lines deleted (29 fixture-only words + 15 already
   stale), 0 added. Plant: `munera` + fixtura -> `NOVA 29`, exit 1.
+
+## 2026-10-15 - U4 step 2: commit formatter + one shell filter
+
+- `tools/iudex_unitatum.sh` replaces vocabula's `-iudicandae` for every
+  bash consumer; `-causae` puts "via: non iudicatur - <cause>" on
+  stderr. Consumers must keep NAMING skipped files (unci XIX greps the
+  GENERATUM reason) - pass only the files the consumer cares about
+  (.c/.h for the formatter) so the causes stay signal, not noise.
+- Role `amalgama` (segment rule, after fixa/assets): an amalgam is a
+  product; formatting would be a generation stage (Fran). A segment
+  role beats a per-file language exception: it covers generated .c and
+  hand headers with one rule and survives new amalgams.
+- formare_viae.sh lost its vendor changed-lines branch (Fran: vendor
+  never touched) and its own GENERATUM check (the judge's
+  provenientiae="manu" reads line 1; in -index mode partially staged
+  files are skipped, so tree = index for every file it formats).

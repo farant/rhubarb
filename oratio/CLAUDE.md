@@ -123,7 +123,7 @@ in the root `unitates.stml` (custody domestica, not archived, roles
 source/header/test - fixtures excluded -, hand-written AND generated;
 `knotapel/` remissa, `vendor/` `oracula/` aliena, `archivum/` archived).
 `vocabula` filters the tracked list through it, the commit hook asks
-`vocabula.sh -iudicandae`, the pin test uses the same filter
+`tools/iudex_unitatum.sh lint_latinus`, the pin test uses the same filter
 (`unitates_viae_iudicatae`); `-omnes-viae` scans all.
 `ORATIO_VOCABULA_EXCLUSA` is gone (it judged fixa/ and amalgama/ while
 the hook's own list skipped them). Glossary entries carry `contextus="latinus | anglicus | ambo"`

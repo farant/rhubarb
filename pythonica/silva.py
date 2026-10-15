@@ -2908,7 +2908,7 @@ def _instrumenta_portarum_sanare(binaria):
 # eadem functio quam uncus currit (tools/unci-git/lint_latinus.sh,
 # UNCUS_LINT_VIAE = viae commissionis) - sedes veritatis una.
 # Quae plagulae iudicantur: iudex lint_latinus (unitates.stml) quem
-# lint_latinus.sh rogat - nullus index viarum hic (spec unitates-codicis
+# lint_latinus.sh per tools/iudex_unitatum.sh rogat - nullus index viarum hic (spec unitates-codicis
 # U4, 2026-10-15).
 
 

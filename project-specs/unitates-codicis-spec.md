@@ -468,6 +468,39 @@ stale), +0; NOVA 0. Plant: fixtura added to the judge's roles ->
 sites of §0: commit formatter, the six hooks, `ORATIO_PROSA_EXCLUSA`
 (prose lint), examen/formator per-file lists - one commit each.
 
+## VI⅞h. U4 step 2: the commit formatter (2026-10-15)
+
+`tools/formare_viae.sh` (silva.commissio + the pre-commit hook) asks
+`<iudex titulus="formator_commissionis">` (domestica, viva vetusta, fons
+caput probatio, MANU, c89). Measured against the old rules over 1699
+files: identical except six -
+- vendor/ (3 files) was formatted on CHANGED LINES ("terra non
+  evoluta", 2026-09-01). Fran: never touch vendor (e.g. a worktree
+  building an amalgam out of bearssl - not ours to lint or format).
+  Now: custody aliena, skipped.
+- the 3 hand-written vanilla headers in `amalgama/` (590/412/205
+  divergences, never formatted). Fran: amalgams stay unformatted; if
+  ever formatted, that is a STAGE OF AMALGAM GENERATION. Modelled as a
+  ROLE, not a language: `<munus titulus="amalgama" segmentum=
+  "amalgama"/>` (the shippable product, generated .c and hand headers
+  alike). The formatter's judge omits it; the lint's judge lists it
+  (lint scope unchanged: NOVA 0, evanida 0).
+
+**One filter for shell consumers:** `tools/iudex_unitatum.sh [-causae]
+JUDGE [VIA... | stdin]` - self-building (crusta/facies.sh pattern:
+aedilis closure + bin/compilator; no bin/fabrica, which a fresh clone
+lacks), ~0.6 s warm. `-causae` names every rejected path with its
+cause on stderr (the hook's XIX stage asserts the GENERATUM file is
+NAMED as skipped - a silent skip would have been a regression). The
+lint trigger moved onto it too; vocabula's lint-only `-iudicandae`
+(U4 step 1) is gone. `bin/fabrica quid` remains the explaining CLI for
+people and agents.
+
+Plant: formator judge admits generated -> unci XIX red; restored green.
+Gate `unitates` V covers the filter. Found on the way: unci XXII
+`UNCUS_CRIBRUM: fixa praeterita` - the hook's examen filter is another
+exclusion site (next).
+
 ## VII. Interrogationes - documentation as typed questions (Fran 10-15)
 
 A unit exposes what it can do by DECLARING QUESTIONS it answers

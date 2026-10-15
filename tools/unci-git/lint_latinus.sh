@@ -10,7 +10,7 @@
 # Commissio est sedes quam nulla via editionis praeterit (ut examen).
 #
 # QUID: plagulae .c/.h/.m in indice (ACMR) quas iudex lint_latinus
-# (unitates.stml; './oratio/vocabula.sh -iudicandae') iudicat -> index
+# (unitates.stml; filtrum tools/iudex_unitatum.sh) iudicat -> index
 # symbolorum sanatus. Ansa et ambitus UNUM responsum: olim index
 # directoriorum hic (fixa/amalgama exclusa) et praefixa in oratio
 # (fixa/amalgama INCLUSA) divergebant - verbum novum in fixtura sine
@@ -44,7 +44,7 @@ lint_latinus () {
     fi
     if [ -n "$candidatae" ]; then
         # shellcheck disable=SC2086
-        if ! viae="$(./oratio/vocabula.sh -iudicandae $candidatae)"; then
+        if ! viae="$(./tools/iudex_unitatum.sh lint_latinus $candidatae)"; then
             echo "lint latinus (uncus): iudex lint_latinus (unitates.stml) NON respondit - APPARATUS FRACTUS, porta clamat, obstat" >&2
             return 1
         fi
