@@ -97,6 +97,7 @@ emittere_asserta() {
     echo "IUNGO_ASSERTA(SO_REUSEADDR == 0x0004);"
     echo "IUNGO_ASSERTA(SO_KEEPALIVE == 0x0008);"
     echo "IUNGO_ASSERTA(SO_ERROR == 0x1007);"
+    echo "IUNGO_ASSERTA(AF_INET6 == 30);"
     echo "IUNGO_ASSERTA(SO_NOSIGPIPE == 0x1022);"
     echo "IUNGO_ASSERTA(IPPROTO_TCP == 6);"
     echo "IUNGO_ASSERTA(TCP_NODELAY == 0x01);"

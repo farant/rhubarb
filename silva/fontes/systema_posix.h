@@ -303,6 +303,7 @@ int setsockopt(int fossa, int gradus, int titulus, const void* valor,
  * transcriptio verbatim, formae Darwin certificatae */
 #define AF_UNSPEC   0
 #define AF_INET     2
+#define AF_INET6    30   /* Darwin (Linux 10) - familia IPv6, nomina.h */
 #define SOCK_STREAM 1
 #define SO_RCVTIMEO 0x1006
 #define SO_SNDTIMEO 0x1005

@@ -53,3 +53,10 @@ Added `EINPROGRESS 36` to the errno.h sectio and `SO_ERROR 0x1007` to
 the sys/socket.h sectio (Darwin values). `officina/auspex_posix.sh`
 asserts both; clang agreed on the first run. Plant `EINPROGRESS 37` ->
 TU nostrum DISSENTIT (assertum_174), restored -> CONSENTIT.
+
+## 2026-10-15 - AF_INET6 (http-vocatio staggered connects)
+
+`probationes/probatio_nomina.c` (section `alternare`) names AF_INET6;
+examen REICE'd it (identificator ignotus). Added `AF_INET6 30` (Darwin;
+Linux is 10) next to AF_INET; auspex asserts it - CONSENTIT, plant 31
+-> DISSENTIT, restored.

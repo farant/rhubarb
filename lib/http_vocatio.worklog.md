@@ -45,3 +45,43 @@ authentication_error = first real DNS + stepped TLS + stepped read
 end to end; `.invalid` name -> named DNS error. The second section
 found a nomina bug (no negative answers without
 `kDNSServiceFlagsReturnIntermediates`) - see nomina_macos.worklog.md.
+
+## 2026-10-15 - staggered parallel connects ("happy eyeballs lite", RFC 8305)
+
+The latent failure Fran agreed to fix first: CONNEXIO tried addresses
+strictly one after another and moved on only when an attempt FAILED.
+An address that never answers (IPv6 on a broken network: SYNs vanish,
+no RST) held the call until the connect-phase deadline (30 s), and the
+call failed without ever trying the IPv4 address that would have
+worked.
+
+Now each address is an attempt slot (`HttpConatus`: own fd
+registration, own callback). The first starts at once; if none has
+succeeded after `mora_gradus_ms` (default CCL = RFC 8305's 250 ms
+"connection attempt delay"), the next starts IN PARALLEL, and so on. A
+failed attempt starts the next one IMMEDIATELY (RFC 8305), not at the
+next stagger tick. The first attempt to connect wins; every other
+pending attempt is removed from the reactor and closed at once (not at
+finis - a loser would otherwise hold an fd for a whole stream). The
+call fails only when every address has failed (last named error) or
+the existing connect deadline expires. Addresses are interleaved by
+family (`nomina_familias_alternare`, RFC 8305 §4) - nomina now applies
+it before finis, and it is public for pre-resolved addresses.
+
+`HttpVocatioOptiones` gained `mora_gradus_ms` and pre-resolved
+`addressus`/`addressus_numerus` (test seam - started through a 0 ms
+timer so finis is still never inside http_vocare). Callers must zero
+the struct (`memset`) - two old tests set fields one by one and would
+have read garbage in the new ones.
+
+Test trick: a local BLACKHOLE without network. macOS completes connects
+into a listener's queue until `kern.ipc.somaxconn` (128) and then drops
+SYNs silently - `_foramen_parare` fills a never-accepting listener
+until a connect really stalls, after which every new connect to that
+port hangs like a dead IPv6 address (~130 fds; default limit 256).
+Sections: foramen ([blackhole, live] finishes < M ms, and mid-call the
+loser is already gone), recusatus deinde vivus (refusal moves on < L
+ms, not at the stagger), omnes mortui (named timeout, nothing left).
+The mid-call check first expected 3 fds and saw 2: the client had sent
+before the server's accept callback ran - the assertion now counts the
+accepted client only if it exists.

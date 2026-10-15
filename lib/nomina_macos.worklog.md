@@ -50,3 +50,11 @@ answered" fast path never fired (every lookup waited the full 50 ms
 resolution delay). Flag added; checked by hand (gates only link rete
 files): without it the section is red, with it green; the offline
 suite stays 4/4.
+
+## 2026-10-15 - nomina_familias_alternare (RFC 8305 §4)
+
+Results are now interleaved by family before finis (IPv6, IPv4, ... -
+starting with the family of the first answer, order within a family
+kept), so two dead IPv6 addresses can no longer stand in front of a
+working IPv4 one. Public for addresses that come from elsewhere
+(http_vocatio's pre-resolved test seam). Pure; section `alternare`.

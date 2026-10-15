@@ -51,6 +51,15 @@ nomina_quaerere_incipere (
         Piscina* piscina,
          chorda* error);
 
+/* ordo RFC 8305 par. 4: familiae alternantur (IPv6, IPv4, ...),
+ * incipiens a familia addressus PRIMI; ordo intra familiam servatur.
+ * In loco. Finis quaestionis id iam facit - publica pro addressibus
+ * aliunde datis */
+vacuum
+nomina_familias_alternare (
+    NominaAddressus* addressus,
+                i32  numerus);
+
 /* finis numquam postea; fossa et timers e reactore; post finem aut
  * iterum vocata: nihil agit */
 vacuum
