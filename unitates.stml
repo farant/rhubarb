@@ -13,6 +13,10 @@
   <vita titulus="vetusta"   descriptio="substituta (successor nominatur), adhuc praesens, non extenditur"/>
   <vita titulus="archivata" descriptio="congelata, extra usum: nullae regulae, nullae portae"/>
 
+  <usus titulus="homo"    descriptio="Franus eligit currere (vox, quaestio)"/>
+  <usus titulus="agens"   descriptio="agentibus et elaboratoribus (legati, natura, silva.py)"/>
+  <usus titulus="machina" descriptio="aedificatio et iudicium (fabrica, examen, unci)"/>
+
   <genus via="/elementa_programmatis/bibliotheca"        cura="domestica"/>
   <genus via="/elementa_programmatis/applicatio"         cura="domestica"/>
   <genus via="/elementa_programmatis/subsystema"         cura="domestica"/>

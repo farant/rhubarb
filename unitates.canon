@@ -29,6 +29,7 @@
     <liberum nomen="genus" minimum="1"/>
     <liberum nomen="munus" minimum="1"/>
     <liberum nomen="lingua"/>
+    <liberum nomen="usus"/>
     <liberum nomen="iudex"/>
     <liberum nomen="bibliothecae" maximum="1"/>
     <liberum nomen="familia"/>
@@ -64,6 +65,13 @@
       nota="nomen directorii ullo loco viae (fixa, probationes)"/>
     <attributum nomen="extensiones" genus="textus"
       nota="index spatiis separatus (.c .m)"/>
+  </elementum>
+
+  <elementum nomen="usus"
+    nota="auditorium programmatis (proprietas naturae
+          programma.usus, multiplex)">
+    <attributum nomen="titulus"    genus="nomen" necessarium="verum"/>
+    <attributum nomen="descriptio" genus="textus" necessarium="verum"/>
   </elementum>
 
   <elementum nomen="lingua"

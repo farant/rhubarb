@@ -391,6 +391,18 @@ declarations.
   checkout), whose registry lacks the new dialects until merge - in
   quinta, judge with `bin/canon_examen` directly.
 
+**U3 step 2b (2026-10-15): reader library `unitates`** (`include/
+unitates.h`, `lib/unitates.c`, `probationes/probatio_unitates.c`, 8
+credo sections, 5 plants red). `unitates_legere` (policy + declarations
+through a sutura, every refusal at once), `unitates_quid` (innermost
+unit + custody, lifecycle, role, provenance, language, each with the
+rule that decided it), `unitates_iudicat` (judge -> IUDICAT /
+NON_IUDICAT with the first excluding property / IUDEX_IGNOTUS). The
+policy gained `<usus>` (audience values are an open set like the
+others). Inheritance and lookup rules: `lib/unitates.worklog.md`.
+Next: `bin/fabrica quid VIA` (disk + git sutura) with a fumus over the
+REAL tree (no refusals; spot answers), then the lint pilot.
+
 ## VII. Interrogationes - documentation as typed questions (Fran 10-15)
 
 A unit exposes what it can do by DECLARING QUESTIONS it answers

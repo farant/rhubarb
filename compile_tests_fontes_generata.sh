@@ -269,6 +269,7 @@ declare -a SOURCE_FILES=(
     "lib/thema_visus.c"
     "lib/thesaurus.c"
     "lib/tractator.c"
+    "lib/unitates.c"
     "lib/uri.c"
     "lib/url.c"
     "lib/utf8.c"
