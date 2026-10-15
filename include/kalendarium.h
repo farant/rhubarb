@@ -105,6 +105,7 @@
 #include "dispensator.h"
 #include "fasti.h"
 #include "agenda.h"
+#include "fasti_fontes.h"
 #include "organum_montatio.h"
 
 /* porta 'hodie': VERUM et *hodie posita, aut FALSUM (nulla lectio -
@@ -128,7 +129,9 @@ nomen structura {
 /* montare in repositorio dato: id NIHIL = radix; aliter liberum
  * <calendarium id> (creatur si abest). argumentum "YYYY-MM" aut
  * NIHIL. systemata ut pictor (conservatio: visus; NIHIL = nulla).
- * FALSUM si argumentum malum aut ramus recusatur. */
+ * FALSUM si argumentum malum aut ramus recusatur. P6: fontes dierum
+ * signatorum (natales ...) - signum in cellula mensis, ordines in visu
+ * diei; NIHIL = nulli. */
 b32
 kalendarium_montare (
      KalendariumMontatio* m,
@@ -138,6 +141,7 @@ kalendarium_montare (
       constans character* id,
       constans character* argumentum,
         AgendaDocumentum* documentum,
+    constans FastiFontes* fontes,      /* P6 (NIHIL: nulli) */
                  Volumen* volumen,     /* A6d: libri dierum (NIHIL:
                                         * sine notis) */
                      i32  latitudo,    /* A6e: superficies in

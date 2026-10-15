@@ -762,3 +762,18 @@ builds the ContextusMandati + ElenchiHospes; elenchi_legere reads).
 The right-click opener keeps its calendar logic (which node, which
 context) and calls elenchi_aperire with the mask ELENCHUS_DIEI / _REI /
 _VACUI. 30 sections and vicus_kalendarium 4/4 unchanged.
+
+## 2026-10-15 - P6a: dated entries from sources (fasti_fontes)
+
+`kalendarium_montare` takes `constans FastiFontes*` (stored privately in
+KalendariumFigurae; NIHIL = none). Month view: ONE read per frame over
+the range first..last cell of the grid (not per month - the grid spans
+three), and a 5x5 COLOR_ACCENT_SECONDARY mark in the cell's top-right
+for any `natalis` entry; unknown genera get no month mark. Day view:
+album rows "n<k>" (ALBUM_RES, height II, numerus 0) BEFORE the to-dos;
+k indexes the day's sorted entries, re-read at draw time. "n" rows are
+ignored by ictus_ordinis (selection stays on agenda items) and fall to
+the empty-area menu on right click. Text: "Anna Rossi turns 40" (year
+known and age > 0), else "Anna Rossi's birthday"; unknown genus = title.
+`ordines_pingere` no longer skips every row when documentum is NIHIL -
+only agenda rows need it.

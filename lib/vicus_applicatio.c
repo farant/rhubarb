@@ -1329,6 +1329,7 @@ nomen structura {
                 Piscina* piscina;
     InternamentumChorda* intern;
        AgendaDocumentum* documentum;
+            FastiFontes* fontes;     /* P6: natales nomenclatoris */
         StatusSystemata* systemata;
 } ContextusKalendarii;
 
@@ -1380,7 +1381,8 @@ kalendarium_montare_in_vico (
     }
     redde kalendarium_montare((KalendariumMontatio*)sedes, piscina,
         intern, repo, id, (argumentum && argumentum[ZEPHYRUM])
-        ? argumentum : NIHIL, ck->documentum, volumen, latitudo,
+        ? argumentum : NIHIL, ck->documentum, ck->fontes, volumen,
+        latitudo,
         altitudo, hodie_vici,
         ck->vicus,
         ck->systemata);
@@ -1502,6 +1504,33 @@ nomenclatorem_describere (
     f->gestum_ctx     = m;
     f->pulsare        = nomenclatoris_pulsare;
     f->pulsare_ctx    = m;
+}
+
+/* P6: fons dierum calendarii - natales ex documento personarum
+ * communi (pigre apertum, ut nomenclatorem_montare_in_vico); ctx =
+ * ContextusNomenclatoris* */
+interior b32
+natales_legere (
+      vacuum* ctx,
+        Dies  prima,
+        Dies  ultima,
+         Xar* exitus,
+     Piscina* piscina)
+{
+    ContextusNomenclatoris* cn;
+
+    cn = (ContextusNomenclatoris*)ctx;
+    si (!cn)
+    {
+        redde FALSUM;
+    }
+    si (!cn->documentum)
+    {
+        cn->documentum = personae_aperire(cn->piscina, cn->intern,
+            cn->volumen, "personae", ZEPHYRUM);
+    }
+    redde cn->documentum && personae_fasti_legere(cn->documentum, prima,
+        ultima, exitus, piscina);
 }
 
 /* folium paginae novae (S2b): lateris sinistri cellulae (dimidium
@@ -1675,6 +1704,11 @@ ContextusNomenclatoris* cn;
         cn->intern     = intern;
         cn->systemata  = systemata;
     }
+    /* P6: fontes dierum calendarii (natales nomenclatoris) */
+    si (ck)
+    {
+        ck->fontes = fasti_fontes_creare(piscina);
+    }
     /* $question: porta nulla donec applicatio fenestrae ponit */
     cq = (ContextusQuaestionis*)piscina_allocare(piscina,
         magnitudo(ContextusQuaestionis));
@@ -1729,6 +1763,10 @@ ContextusNomenclatoris* cn;
                magnitudo(KalendariumMontatio),
                kalendarium_montare_in_vico, kalendarium_describere, ck)
         || !cn
+        || !ck->fontes
+        || !fasti_fontes_addere(ck->fontes, "nomenclator",
+        natales_legere,
+               NIHIL, cn)
         || !vicus_genus_addere(app->vicus, "nomenclator",
                magnitudo(NomenclatorMontatio),
                nomenclatorem_montare_in_vico, nomenclatorem_describere,

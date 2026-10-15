@@ -15,6 +15,7 @@
 #include "fasti.h"
 #include "conservatio.h"
 #include "kalendarium.h"
+#include "fasti_fontes.h"
 #include "fons.h"
 #include "agenda.h"
 #include "scriba_liber.h"
@@ -47,6 +48,7 @@ nomen structura {
                   Volumen* volumen;
           StatusSystemata  systemata;
          AgendaDocumentum* documentum;
+              FastiFontes* fontes;     /* P6: dies signati */
                       s32  latitudo;   /* A6e: superficies montat. */
                       s32  altitudo;
 } Mundus;
@@ -73,7 +75,8 @@ mundum_struere (
             x->volumen, x->repo);
     }
     si (!kalendarium_montare(&x->m, p, x->intern, x->repo, "c1",
-            argumentum, x->documentum, x->volumen, (i32)x->latitudo,
+            argumentum, x->documentum, x->fontes, x->volumen,
+            (i32)x->latitudo,
             (i32)x->altitudo, hodie_fixa, NIHIL,
             x->volumen ? &x->systemata : NIHIL))
     {
@@ -2023,6 +2026,161 @@ _probare_paginas (
     CREDO_VERUM(campus_est(x, "prompta", "nova"));
 }
 
+/* P6: fons fictus - Anna Rossi natalis 14 X (MCMLXXXVI), "Festa
+ * urbis" genere ignoto 14 X, Luca Bianchi natalis 20 X (sine anno),
+ * "Feriae" genere ignoto 22 X (solae) */
+nomen structura {
+     constans character* genus;
+     constans character* titulus;
+                    s32  dies;
+                    s32  origo;
+} SignumFictum;
+
+hic_manens constans SignumFictum signa_ficta[] = {
+    { "natalis", "Anna Rossi", XIV, MCMLXXXVI },
+    { "aliud", "Festa urbis", XIV, ZEPHYRUM },
+    { "natalis", "Luca Bianchi", XX, ZEPHYRUM },
+    { "aliud", "Feriae", XXII, ZEPHYRUM }
+};
+
+interior b32
+fictum_legere (
+      vacuum* ctx,
+        Dies  prima,
+        Dies  ultima,
+         Xar* exitus,
+     Piscina* piscina)
+{
+    FastiIntroitus* t;
+              Dies  d;
+               i32  i;
+
+    (vacuum)ctx;
+    per (i = ZEPHYRUM; i < IV; i++)
+    {
+        d = fasti_dies(MMXXVI, X, signa_ficta[i].dies);
+        si (   fasti_comparare(d, prima) < ZEPHYRUM
+            || fasti_comparare(d, ultima) > ZEPHYRUM)
+        {
+            perge;
+        }
+        t = (FastiIntroitus*)xar_addere(exitus);
+        memset(t, ZEPHYRUM, magnitudo(FastiIntroitus));
+        t->dies            = d;
+        t->genus           = chorda_ex_literis(signa_ficta[i].genus,
+            piscina);
+        t->titulus         = chorda_ex_literis(signa_ficta[i].titulus,
+            piscina);
+        t->annus_originis  = signa_ficta[i].origo;
+        t->referentia      = (s32)i + I;
+    }
+    redde VERUM;
+}
+
+interior FastiFontes*
+fontes_ficti (
+    Piscina* p)
+{
+    FastiFontes* f;
+
+    f = fasti_fontes_creare(p);
+    redde f && fasti_fontes_addere(f, "fictus", fictum_legere, NIHIL,
+        NIHIL) ? f : NIHIL;
+}
+
+/* P6: signum natalis (rectangulum plenum COLOR_ACCENT_SECONDARY) intra
+ * cellulam? */
+interior b32
+natalis_in (
+    Mandata* md,
+      Fines  f)
+{
+    constans Mandatum* y;
+                  i32  i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        y = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   y->genus == MANDATUM_RECTANGULUM && y->impletum
+            && color_thematis_est(y->color, COLOR_ACCENT_SECONDARY)
+            && intra(y->fines, f))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* P6: visus mensis - signum natalis in cellulis XIV et XX; non in XV
+ * nec in XXII (genus ignotum solum) */
+interior vacuum
+_probare_natales_mensis (
+    CredoContextus* c)
+{
+     Mundus* x;
+    Mandata* md;
+
+    x          = (Mundus*)c->datum;
+    thema_initiare();
+    x->fontes  = fontes_ficti(c->piscina);
+    CREDO_NECESSE_NON_NIHIL(x->fontes);
+    CREDO_NECESSE(mundum_struere(x, c->piscina, NIHIL));
+    md = reddere(x, c->piscina);
+    CREDO_VERUM(natalis_in(md, cellula(x, "2026-10-14", c->piscina)));
+    CREDO_VERUM(natalis_in(md, cellula(x, "2026-10-20", c->piscina)));
+    CREDO_FALSUM(natalis_in(md, cellula(x, "2026-10-15", c->piscina)));
+    CREDO_FALSUM(natalis_in(md, cellula(x, "2026-10-22", c->piscina)));
+}
+
+/* P6: visus diei - ordines signati ("n<k>") supra res: "Anna Rossi
+ * turns 40", genus ignotum titulo solo; ictus in eis electionem non
+ * mutat; dies XX: "Luca Bianchi's birthday" */
+interior vacuum
+_probare_natales_diei (
+    CredoContextus* c)
+{
+     Mundus* x;
+    Mandata* md;
+      Fines  n0;
+      Fines  n1;
+      Fines  r1;
+     chorda* a;
+     chorda  ante;
+        i32  i;
+
+    x          = (Mundus*)c->datum;
+    thema_initiare();
+    x->fontes  = fontes_ficti(c->piscina);
+    CREDO_NECESSE_NON_NIHIL(x->fontes);
+    CREDO_NECESSE(agendam_parare(x, c));
+    reditus(x);
+    CREDO_VERUM(campus_est(x, "visus", "dies"));
+    n0 = fines_componentis(x, "n0", c->piscina);
+    n1 = fines_componentis(x, "n1", c->piscina);
+    r1 = fines_componentis(x, "r1", c->piscina);
+    CREDO_NECESSE(   n0.altitudo > ZEPHYRUM && n1.altitudo > ZEPHYRUM
+                  && r1.altitudo > ZEPHYRUM);
+    CREDO_VERUM(n0.y < n1.y && n1.y < r1.y);
+    md = reddere(x, c->piscina);
+    CREDO_VERUM(textus_ullus_continet(md, "Anna Rossi turns 40"));
+    CREDO_VERUM(textus_ullus_continet(md, "Festa urbis"));
+    a = insula_ramus_attributum(&x->m.ramus, "res_electa");
+    ante = a ? chorda_transcribere(*a, c->piscina)
+             : chorda_ex_literis("", c->piscina);
+    CREDO_NECESSE(ictus_in(x, "n1", c->piscina));
+    a = insula_ramus_attributum(&x->m.ramus, "res_electa");
+    CREDO_VERUM(a ? chorda_aequalis(*a, ante) : ante.mensura
+        == ZEPHYRUM);
+    per (i = ZEPHYRUM; i < VI; i++)
+    {
+        clavis(x, 'l');
+    }
+    CREDO_VERUM(kalendarium_dies_electus(&x->m).dies == XX);
+    md = reddere(x, c->piscina);
+    CREDO_VERUM(textus_ullus_continet(md, "Luca Bianchi's birthday"));
+    CREDO_FALSUM(textus_ullus_continet(md, "Anna Rossi"));
+}
+
 /* notae diei (A6d-1): liber "dies/<ISO>" in dimidio infero visus
  * diei (scriba nidificata, spatium suum); liber diem sequitur */
 interior vacuum
@@ -2783,6 +2941,10 @@ _probare_elenchum_rei (
 }
 
 hic_manens constans CredoSectio SECTIONES[] = {
+    { "natales_mensis", _probare_natales_mensis, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "natales_diei", _probare_natales_diei, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
     { "montatio",     _probare_montationem,   mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { "craticula",    _probare_craticulam,    mundum_parare,

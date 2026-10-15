@@ -262,6 +262,14 @@ house rule of independent composable libraries.
   while focused, Esc steps out then back to the list); vicus wires the
   gesture and pulse hooks. P5 complete. Next: P4 fuzzy search, P6
   birthdays date-source port, or P7 photo - Fran to choose.
+- **P6a DONE 2026-10-15: `fasti_fontes`** - typed date-source port
+  (sources answer a range with CONCRETE dates; yearly repeated by the
+  source via `fasti_annuum_expandere`; 29 Feb -> 28 Feb in common
+  years), `personae_fasti_legere` (birthdays; none before birth year),
+  calendar month mark (accent square, top-right) + day rows above the
+  to-dos ("Anna Rossi turns 40" / "Anna Rossi's birthday"), vicus
+  registers contacts on the shared personae document. Next P6b: click
+  a birthday row opens the contact (`$contacts <id>` argument).
 - **P2 nomenclator list** - vicus genus `nomenclator`, command word
   `$contacts`, alphabetical list with letter headings (U1), selection, new
   contact (kind chosen at creation), open detail.
@@ -279,10 +287,9 @@ house rule of independent composable libraries.
 
 ## VI. AUDIENDA (open, not decided or not verified)
 
-- **29 February** birthdays in non-leap years: show on 28 Feb or
-  1 Mar?
+- ~~29 February in non-leap years~~ - 28 Feb (Fran 2026-10-15).
 - Name handling on kind toggle (III) - proposal only.
-- Yearly entries in the date-source port: repeated by the source or by
-  the port (P6).
+- ~~Yearly entries: source or port?~~ - the SOURCE (P6a, Fran
+  2026-10-15).
 - Unverified: `similitudo` on non-ASCII names (decision 12 defers it).
 - Delete confirmation, merging duplicates, vCard import/export: later.

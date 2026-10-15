@@ -10,6 +10,7 @@
 #include "volumen.h"
 #include "fasti.h"
 #include "personae.h"
+#include "fasti_fontes.h"
 #include "credo.h"
 #include <stdio.h>
 #include <string.h>
@@ -487,6 +488,118 @@ _probare_aperitionem (
         c->piscina), lit("", c->piscina)), X);
 }
 
+/* P6: introitus fontis dierum cum referentia id; NIHIL si abest */
+interior constans FastiIntroitus*
+introitus_personae (
+    Xar* l,
+    s32  id)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; l && i < xar_numerus(l); i++)
+    {
+        si (((constans FastiIntroitus*)xar_obtinere(l, i))->referentia
+            == id)
+        {
+            redde (constans FastiIntroitus*)xar_obtinere(l, i);
+        }
+    }
+    redde NIHIL;
+}
+
+interior b32
+introitus_est (
+    constans FastiIntroitus* t,
+                        s32  annus,
+                        s32  mensis,
+                        s32  dies,
+         constans character* titulus,
+                        s32  origo)
+{
+    si (   !t || t->dies.annus != annus || t->dies.mensis != mensis
+        || t->dies.dies != dies || !chorda_aequalis_literis(t->genus,
+            FASTI_GENUS_NATALIS) || !chorda_aequalis_literis(t->titulus,
+            titulus) || t->annus_originis != origo)
+    {
+        si (t)
+        {
+            imprimere("  introitus %d: %d-%d-%d '%.*s' %d\n",
+                (integer)t->referentia, (integer)t->dies.annus,
+                (integer)t->dies.mensis, (integer)t->dies.dies,
+                (integer)t->titulus.mensura,
+                (constans character*)t->titulus.datum,
+                (integer)t->annus_originis);
+        }
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
+/* P6: fons dierum - natales in intervallo (annus ignotus: origo 0;
+ * societas sine natali; deleta et nondum nata absunt; 29 II in anno
+ * communi 28 II) */
+interior vacuum
+_probare_fastos (
+    CredoContextus* c)
+{
+    Mundus* m;
+       Xar* l;
+      Dies  d;
+
+    m = (Mundus*)c->datum;
+    CREDO_NECESSE(m && m->doc);
+    (vacuum)personae_hominem_creare(m->doc, lit("Anna", c->piscina),
+        lit("Rossi", c->piscina));
+    (vacuum)personae_hominem_creare(m->doc, lit("Luca", c->piscina),
+        lit("Bianchi", c->piscina));
+    (vacuum)personae_societatem_creare(m->doc, lit("Banca",
+        c->piscina));
+    (vacuum)personae_hominem_creare(m->doc, lit("Bruna", c->piscina),
+        lit("Verdi", c->piscina));
+    (vacuum)personae_hominem_creare(m->doc, lit("Carlo", c->piscina),
+        lit("Neri", c->piscina));
+    (vacuum)personae_hominem_creare(m->doc, lit("Futurus", c->piscina),
+        lit("Novus", c->piscina));
+    d = fasti_dies(MCMLXXXVI, III, II);
+    CREDO_NECESSE(personae_natalem_ponere(m->doc, I, &d) > ZEPHYRUM);
+    d = fasti_dies(ZEPHYRUM, XII, XXV);
+    CREDO_NECESSE(personae_natalem_ponere(m->doc, II, &d) > ZEPHYRUM);
+    d = fasti_dies(MM, II, XXIX);
+    CREDO_NECESSE(personae_natalem_ponere(m->doc, IV, &d) > ZEPHYRUM);
+    d = fasti_dies(MCMXC, III, II);
+    CREDO_NECESSE(personae_natalem_ponere(m->doc, V, &d) > ZEPHYRUM);
+    CREDO_NECESSE(personae_delere(m->doc, V) > ZEPHYRUM);
+    d = fasti_dies(MMXXVII, III, X);
+    CREDO_NECESSE(personae_natalem_ponere(m->doc, VI, &d) > ZEPHYRUM);
+    /* Martius MMXXVI: Anna sola */
+    l = xar_creare(c->piscina, (i32)magnitudo(FastiIntroitus));
+    CREDO_NECESSE(personae_fasti_legere(m->doc, fasti_dies(MMXXVI, III,
+        I), fasti_dies(MMXXVI, III, XXXI), l, c->piscina));
+    CREDO_AEQUALIS_I32(xar_numerus(l), I);
+    CREDO_VERUM(introitus_est(introitus_personae(l, I), MMXXVI, III, II,
+        "Anna Rossi", MCMLXXXVI));
+    /* XII MMXXVI - III MMXXVII: Luca (sine anno), Bruna (28 II),
+     * Anna, Futurus */
+    l = xar_creare(c->piscina, (i32)magnitudo(FastiIntroitus));
+    CREDO_NECESSE(personae_fasti_legere(m->doc, fasti_dies(MMXXVI, XII,
+        I), fasti_dies(MMXXVII, III, XXXI), l, c->piscina));
+    CREDO_AEQUALIS_I32(xar_numerus(l), IV);
+    CREDO_VERUM(introitus_est(introitus_personae(l, II), MMXXVI, XII,
+        XXV, "Luca Bianchi", ZEPHYRUM));
+    CREDO_VERUM(introitus_est(introitus_personae(l, IV), MMXXVII, II,
+        XXVIII, "Bruna Verdi", MM));
+    CREDO_VERUM(introitus_est(introitus_personae(l, I), MMXXVII, III,
+        II, "Anna Rossi", MCMLXXXVI));
+    CREDO_VERUM(introitus_est(introitus_personae(l, VI), MMXXVII, III,
+        X, "Futurus Novus", MMXXVII));
+    /* bissextilis: 29 II */
+    l = xar_creare(c->piscina, (i32)magnitudo(FastiIntroitus));
+    CREDO_NECESSE(personae_fasti_legere(m->doc, fasti_dies(MMXXVIII, II,
+        I), fasti_dies(MMXXVIII, II, XXIX), l, c->piscina));
+    CREDO_VERUM(introitus_est(introitus_personae(l, IV), MMXXVIII, II,
+        XXIX, "Bruna Verdi", MM));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "creatio", _probare_creationem, mundum_parare, mundum_purgare,
         NIHIL, NIHIL },
@@ -506,6 +619,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL, NIHIL },
     { "aperitio", _probare_aperitionem, mundum_parare, mundum_purgare,
         NIHIL, NIHIL },
+    { "fasti", _probare_fastos, mundum_parare, mundum_purgare, NIHIL,
+        NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

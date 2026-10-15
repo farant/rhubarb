@@ -10,6 +10,7 @@
 #include "vicus.h"
 #include "vicus_applicatio.h"
 #include "kalendarium.h"
+#include "personae.h"
 #include "thema.h"
 #include "manus_ludus.h"
 #include "insula.h"
@@ -357,8 +358,56 @@ _probare_elenchum (
     CREDO_VERUM(a && chorda_aequalis_literis(*a, "nova"));
 }
 
+/* P6: natales per vicum - Anna Rossi (natalis 14 X MCMLXXXVI) in
+ * documento personarum voluminis vici; calendarium (fons
+ * nomenclatoris) ordinem "n0" in visu diei XIV ostendit, nullum in
+ * XV */
+interior vacuum
+_probare_natales (
+    CredoContextus* c)
+{
+                  Mundus* x;
+                   Vicus* v;
+              ManusLudus* m;
+      PersonaeDocumentum* doc;
+                    Dies  d;
+                     s32  id;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(x && x->volumen);
+    doc = personae_aperire(c->piscina, internamentum_creare(c->piscina),
+        x->volumen, "personae", ZEPHYRUM);
+    CREDO_NECESSE_NON_NIHIL(doc);
+    id = personae_hominem_creare(doc, chorda_ex_literis("Anna",
+        c->piscina), chorda_ex_literis("Rossi", c->piscina));
+    d  = fasti_dies(MCMLXXXVI, X, XIV);
+    CREDO_NECESSE(id > ZEPHYRUM && personae_natalem_ponere(doc, id, &d)
+        > ZEPHYRUM);
+    CREDO_NECESSE(vicus_applicatio_aedificare(&x->app, c->piscina,
+        internamentum_creare(c->piscina), x->volumen, CDLXXX,
+        CDLXXX + VICUS_ALTITUDO_TABULARUM));
+    v                 = x->app.vicus;
+    x->tempus.annus   = MMXXVI;
+    x->tempus.mensis  = X;
+    x->tempus.dies    = XIV;
+    vicus_horologium_ponere(v, horologium_fictum, &x->tempus);
+    CREDO_VERUM(vicus_acervo_aperire(v, "calendarium", "2026-10"));
+    (vacuum)vicus_pulsare(v);
+    m = manus_ludus_creare(c->piscina, x->app.d);
+    dispensator_recomponere(x->app.d);
+    CREDO_NECESSE(manus_ludus_premere(m, "#kalendarium"));
+    CREDO_VERUM(manus_ludus_clavem(m, (character)XIII, ZEPHYRUM));
+    dispensator_recomponere(x->app.d);
+    CREDO_VERUM(manus_ludus_invenire(m, "#n0") != NIHIL);
+    CREDO_VERUM(manus_ludus_clavem(m, 'l', ZEPHYRUM));
+    dispensator_recomponere(x->app.d);
+    CREDO_FALSUM(manus_ludus_invenire(m, "#n0") != NIHIL);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "latera",  _probare_latera,  mundum_parare, mundum_purgare, NIHIL,
+        NIHIL },
+    { "natales", _probare_natales, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
     { "agenda",  _probare_agendam, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },

@@ -202,6 +202,16 @@ persona_aetas (
     constans Persona* p,
                 Dies  hodie);
 
+/* P6: fons dierum (fasti_fontes) - natales in [prima, ultima];
+ * ctx = PersonaeDocumentum*; titulus nomen ostensum, referentia id */
+b32
+personae_fasti_legere (
+      vacuum* ctx,
+        Dies  prima,
+        Dies  ultima,
+         Xar* exitus,
+     Piscina* piscina);
+
 /* personae vivae ordine clavis (deinde id) - Xar de (constans
  * Persona*) in piscina vocantis */
 Xar*

@@ -40,12 +40,13 @@ hic_manens constans character actio_calendarii[] = "calendarium.agere";
 /* contextus figurarum (privatus; figurae_ctx): liturgia semel creata;
  * A6d: notae diei (charta, liber "dies/<ISO>" diei currentis) */
 nomen structura {
-    KalendariumMontatio* m;
-  CalendariumLiturgicum* liturgia;
-                Piscina* scheda;     /* A3: actio una (vacatur) */
-                 Charta  notae;      /* A6d; U5: membrum__charta */
-                    s32  latitudo_montationis;   /* A6e: 0 = ignota */
-                    s32  altitudo_montationis;
+     KalendariumMontatio* m;
+   CalendariumLiturgicum* liturgia;
+                 Piscina* scheda;     /* A3: actio una (vacatur) */
+                  Charta  notae;      /* A6d; U5: membrum__charta */
+    constans FastiFontes* fontes;    /* P6: dies signati (NIHIL) */
+                     s32  latitudo_montationis;   /* A6e: 0 = ignota */
+                     s32  altitudo_montationis;
 } KalendariumFigurae;
 
 /* A6e: superficies sine superficies_* rami: montationis (si nota),
@@ -290,6 +291,21 @@ dies_aequales (
 {
     redde a.annus == b.annus && a.mensis == b.mensis
         && a.dies == b.dies;
+}
+
+/* P6: dies signati in [prima, ultima] ex fontibus (nulli: vacuum) */
+interior Xar*
+signati (
+     constans KalendariumMontatio* m,
+                             Dies  prima,
+                             Dies  ultima,
+                          Piscina* piscina)
+{
+    constans KalendariumFigurae* ctx;
+
+    ctx = (constans KalendariumFigurae*)m->figurae_ctx;
+    redde fasti_fontes_legere(ctx ? ctx->fontes : NIHIL, prima, ultima,
+        piscina);
 }
 
 /* ordines visus diei (A6b): apertae diei assignatae (ordine id),
@@ -1036,6 +1052,7 @@ ordines_indicis (
 {
                   Album* l;
                     Xar* res;
+                    Xar* signa;
                     Xar* greges;
                     Xar* perfectae;
             GrexAgendae* g;
@@ -1054,6 +1071,14 @@ ordines_indicis (
     }
     si (visus_diei(m))
     {
+        /* P6: dies signati supra res ("n<k>", ordine fontium) */
+        signa = signati(m, kalendarium_dies_electus(m),
+            kalendarium_dies_electus(m), p);
+        per (i = ZEPHYRUM; signa && i < xar_numerus(signa); i++)
+        {
+            sprintf(id, "n%d", (integer)i);
+            (vacuum)album_addere(l, id, ALBUM_RES, II, ZEPHYRUM);
+        }
         res      = ordines_diei(m, kalendarium_dies_electus(m), p);
         divisor  = FALSUM;
         per (i = ZEPHYRUM; res && i < xar_numerus(res); i++)
@@ -2255,6 +2280,27 @@ signum_diei (
     redde NIHIL;
 }
 
+/* P6: natalis inter signatos die dato? */
+interior b32
+natalis_diei (
+     Xar* signa,
+    Dies  dies)
+{
+    constans FastiIntroitus* t;
+                        i32  i;
+
+    per (i = ZEPHYRUM; signa && i < xar_numerus(signa); i++)
+    {
+        t = (constans FastiIntroitus*)xar_obtinere(signa, i);
+        si (   dies_aequales(t->dies, dies)
+            && chorda_aequalis_literis(t->genus, FASTI_GENUS_NATALIS))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
 /* cellula una (in spatio tabulae; cellulae liberi tabulae in 0,0) */
 interior vacuum
 cellulam_pingere (
@@ -2264,7 +2310,8 @@ cellulam_pingere (
                      Dies  dies,
                      Dies  electa,
                      Dies  hodierna,
-    constans AgendaSignum* signum)
+    constans AgendaSignum* signum,
+                      b32  natalis)
 {
      InformatioDiei* info;
           character  numerus[IV];
@@ -2330,6 +2377,13 @@ cellulam_pingere (
             praecidere(info->celebratio_principalis->titulus_brevis,
             f.latitudo - VI), ZEPHYRUM, figura_color_thematis(alienus
             ? COLOR_TEXT_DIM : COLOR_TEXT));
+    }
+    /* P6: natalis - quadratum accentus secundi in angulo dextro
+     * supero (numerus et color liturgicus sinistrorsum) */
+    si (natalis)
+    {
+        rectangulum(md, f.x + f.latitudo - IX, f.y + II, V, V,
+            figura_color_thematis(COLOR_ACCENT_SECONDARY), VERUM);
     }
     /* signa: plena = apertae, vacua = perfectae; IV summum, '+' */
     apertae    = signum ? signum->apertae : ZEPHYRUM;
@@ -2545,6 +2599,68 @@ greges_pingere (
     }
 }
 
+/* P6: textus ordinis signati - natalis "Anna Rossi turns 40" (annus
+ * notus) aut "Anna Rossi's birthday"; genus ignotum: titulus */
+interior chorda
+signati_textus (
+    constans FastiIntroitus* t,
+                    Piscina* p)
+{
+    character textus[XXXII];
+          s32 aetas;
+
+    si (!chorda_aequalis_literis(t->genus, FASTI_GENUS_NATALIS))
+    {
+        redde t->titulus;
+    }
+    aetas = t->annus_originis > ZEPHYRUM ? t->dies.annus
+        - t->annus_originis : ZEPHYRUM;
+    si (aetas > ZEPHYRUM)
+    {
+        sprintf(textus, " turns %d", (integer)aetas);
+        redde chorda_concatenare(t->titulus, chorda_ex_literis(textus,
+            p),
+            p);
+    }
+    redde chorda_concatenare(t->titulus,
+        chorda_ex_literis("'s birthday",
+        p), p);
+}
+
+/* P6: ordo signatus "n<k>": linea separationis, natalis quadratum
+ * accentus secundi loco capsae, textus */
+interior vacuum
+signatum_pingere (
+                Mandata* md,
+     constans Componens* l,
+                    Xar* signa,
+                    s32  k)
+{
+    constans FastiIntroitus* t;
+                    Punctum  a;
+                    Punctum  b;
+
+    si (!signa || k < ZEPHYRUM || k >= (s32)xar_numerus(signa))
+    {
+        redde;
+    }
+    t    = (constans FastiIntroitus*)xar_obtinere(signa, (i32)k);
+    a.x  = l->fines.x;
+    a.y  = l->fines.y + l->fines.altitudo - I;
+    b.x  = l->fines.x + l->fines.latitudo - I;
+    b.y  = a.y;
+    mandata_linea(md, a, b, I,
+        figura_color_thematis(COLOR_SUPERFICIES));
+    si (chorda_aequalis_literis(t->genus, FASTI_GENUS_NATALIS))
+    {
+        rectangulum(md, l->fines.x + X, l->fines.y + V, V, V,
+            figura_color_thematis(COLOR_ACCENT_SECONDARY), VERUM);
+    }
+    mandata_textus(md, l->fines.x + XXII, l->fines.y + IV, praecidere(
+        signati_textus(t, md->piscina), l->fines.latitudo - XXVI),
+        ZEPHYRUM, figura_color_thematis(COLOR_TEXT));
+}
+
 /* ordines (liberi "r<id>", in agenda "r<id>-<k>") - electio, capsa et
  * titulus, notae infra. Visus diei: res alibi assignata obscura cum
  * die sua, notae omnium. Agenda: dies ad dextrum ("-" sine die), notae
@@ -2558,6 +2674,7 @@ ordines_pingere (
       KalendariumMontatio* m;
        constans AgendaRes* r;
       constans AgendaNota* nota;
+                      Xar* signa;
                 Componens* l;
                    chorda  linea;
                    chorda  dextrum;
@@ -2578,11 +2695,17 @@ ordines_pingere (
     electa  = res_electa(m, ordines_currentes(m, md->piscina));
     /* tituli (gregum, perfectarum, capitis indicis, paginae) */
     greges_pingere(contextus, md, c);
-    per (i = ZEPHYRUM; m->documentum
-        && i < componens_numerus_liberorum(c); i++)
+    signa = agenda ? NIHIL : signati(m, dies, dies, md->piscina);
+    per (i = ZEPHYRUM; i < componens_numerus_liberorum(c); i++)
     {
         l = componens_liberum(c, i);
-        r = (   l->partes == PARTES_ITEM
+        si (l->partes == PARTES_ITEM && numerus_identitatis(l->id, 'n',
+            &id))
+        {
+            signatum_pingere(md, l, signa, id);
+            perge;
+        }
+        r = (   m->documentum && l->partes == PARTES_ITEM
              && (   numerus_identitatis(l->id, 'r', &id)
                  || numerus_identitatis(l->id, 'q', &id)))
             ? agenda_res(m->documentum, id) : NIHIL;
@@ -2712,6 +2835,10 @@ figura_tabulae (
                  Fines  prima[VII];
                    i32  columnae;
            SignaMensis  menses[III];
+                   Xar* signa;
+                  Dies  infima;
+                  Dies  suprema;
+                   b32  ulla;
                    i32  numerus;
                    i32  i;
                   Dies  electa;
@@ -2775,6 +2902,29 @@ figura_tabulae (
             numerus++;
         }
     }
+    /* P6: dies signati cellularum - semel per quadrum, intervallum
+     * cellulae primae ad ultimam */
+    ulla     = FALSUM;
+    infima   = hodierna;
+    suprema  = hodierna;
+    per (i = ZEPHYRUM; i < componens_numerus_liberorum(c); i++)
+    {
+        l = componens_liberum(c, i);
+        si (l->partes == PARTES_ITEM && fasti_parsare_iso(l->id, &dies))
+        {
+            si (!ulla || fasti_ante(dies, infima))
+            {
+                infima = dies;
+            }
+            si (!ulla || fasti_post(dies, suprema))
+            {
+                suprema = dies;
+            }
+            ulla = VERUM;
+        }
+    }
+    signa = ulla ? signati(contextus->m, infima, suprema, md->piscina)
+                 : NIHIL;
     per (i = ZEPHYRUM; i < componens_numerus_liberorum(c); i++)
     {
         l = componens_liberum(c, i);
@@ -2782,7 +2932,8 @@ figura_tabulae (
         {
             cellulam_pingere(contextus, md, l->fines, dies, electa,
                 hodierna,
-                signum_diei(menses, numerus, dies));
+                signum_diei(menses, numerus, dies), natalis_diei(signa,
+                dies));
             si (columnae < VII)
             {
                 prima[columnae++] = l->fines;
@@ -3272,6 +3423,7 @@ kalendarium_montare (
       constans character* id,
       constans character* argumentum,
         AgendaDocumentum* documentum,
+    constans FastiFontes* fontes,
                  Volumen* volumen,
                      i32  latitudo,
                      i32  altitudo,
@@ -3335,6 +3487,7 @@ kalendarium_montare (
             (s32)latitudo;
         ((KalendariumFigurae*)m->figurae_ctx)->altitudo_montationis =
             (s32)altitudo;
+        ((KalendariumFigurae*)m->figurae_ctx)->fontes = fontes;
     }
     redde ok && notas_montare(m, volumen, id, systemata);
 }

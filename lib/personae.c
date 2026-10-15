@@ -6,6 +6,7 @@
 #include "rubrica.h"
 #include "stml.h"
 #include "sigillum.h"
+#include "fasti_fontes.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -1216,6 +1217,60 @@ persona_aetas (
         a--;
     }
     redde a < ZEPHYRUM ? -I : a;
+}
+
+b32
+personae_fasti_legere (
+      vacuum* ctx,
+        Dies  prima,
+        Dies  ultima,
+         Xar* exitus,
+     Piscina* piscina)
+{
+     constans PersonaeDocumentum* doc;
+                constans Persona* p;
+                  FastiIntroitus* t;
+                            Dies  dies[XVI];
+                             i32  n;
+                             i32  i;
+                             i32  k;
+
+    doc = (constans PersonaeDocumentum*)ctx;
+    si (!doc || !exitus)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < personae_numerus(doc); i++)
+    {
+        p = personae_index(doc, i);
+        si (!p || !p->natalis_positus)
+        {
+            perge;
+        }
+        n = fasti_annuum_expandere(p->natalis.mensis, p->natalis.dies,
+            prima, ultima, dies, XVI);
+        per (k = ZEPHYRUM; k < n; k++)
+        {
+            /* ante nativitatem nullus natalis */
+            si (p->natalis.annus > dies[k].annus)
+            {
+                perge;
+            }
+            t = (FastiIntroitus*)xar_addere(exitus);
+            si (!t)
+            {
+                redde FALSUM;
+            }
+            memset(t, ZEPHYRUM, magnitudo(FastiIntroitus));
+            t->dies            = dies[k];
+            t->genus           = chorda_ex_literis(FASTI_GENUS_NATALIS,
+                piscina);
+            t->titulus         = persona_nomen(p, piscina);
+            t->annus_originis  = p->natalis.annus;
+            t->referentia      = p->id;
+        }
+    }
+    redde VERUM;
 }
 
 

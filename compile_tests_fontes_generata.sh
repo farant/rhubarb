@@ -97,6 +97,7 @@ declare -a SOURCE_FILES=(
     "lib/fabrica_sanare.c"
     "lib/fasciculum.c"
     "lib/fasti.c"
+    "lib/fasti_fontes.c"
     "lib/fenestra_tempus_macos.c"
     "lib/fenestra_textus.c"
     "lib/fictio.c"
