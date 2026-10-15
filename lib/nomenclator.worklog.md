@@ -41,3 +41,30 @@ Screenshot (headless probe, deleted; copy in $TMPDIR/imago): list with
 letter bands B C E G R S, tags right, selection. The business marker
 (5px diamond) is barely visible and lost on the selected row - revisit
 in P5.
+
+## 2026-10-14 - P2b-1: create, delete, undo by key
+
+Manifest (approved) gained the three fields membrum__prompta expects
+(prompta = nulla | homo | societas, prompta_textus, prompta_cursor).
+n / N open "name:" / "business:"; Enter commits through
+promptam_committere: person = last word -> cognomen, the rest ->
+praenomen ("Cher" = praenomen only); empty text is refused by personae
+(prompt stays); on success the prompt is CLOSED FIRST and only then the
+new contact is selected - the page of the selection is computed with
+the album, whose capacity loses a row while the prompt is open, so the
+other order could pick the wrong page. X deletes the selection
+(REQUIRIT_PERSONAM via requisita_nomenclatoris) and moves the
+selection to the next contact in index order, else the previous one;
+u / C-r undo / redo. While the prompt is open it takes every key
+(PROMPTA_EDITA consumed); non-key events fall through to the list
+(clicks still select).
+The prompt row is laid out at the bottom of the list region (spacer +
+"prompta" PARTES_CAMPUS) and drawn by the root figure with
+prompta_pingere in root space.
+Tests: probatio_nomenclator +4 sections (novus_homo, nova_societas incl.
+the new contact on page 2, deletio incl. undo/redo, prompta drawing);
+probatio_vicus_nomenclator +1 (real vicus keys: n, "Anna Rossi",
+Enter). Plants: name not split; prompt not closed; successor not the
+next one; undo a no-op; new contact not selected; wrong prompt label -
+all red. Untested: the one-row capacity reduction while the prompt is
+open (no fixture fills a page exactly).

@@ -7,6 +7,7 @@
 #include "nomenclator.h"
 #include "membrum__album.h"
 #include "membrum__praecepta.h"
+#include "membrum__prompta.h"
 #include "rubrica.h"
 #include "dispositio.h"
 #include "fons.h"
@@ -157,13 +158,14 @@ superficies (
  * ================================================== */
 
 /* capacitas indicis in cellulis: altitudo minus margines (II), titulus,
- * caput */
+ * caput, prompta (si aperta) */
 interior s32
 capacitas (
     constans NomenclatorMontatio* m)
 {
     redde superficies(m, FALSUM) / NOMENCLATOR_LINEA - II
-        - NOMENCLATOR_TITULI - NOMENCLATOR_CAPUT;
+        - NOMENCLATOR_TITULI - NOMENCLATOR_CAPUT - (prompta_aperta(
+        &m->ramus, NIHIL) ? NOMENCLATOR_ORDO : ZEPHYRUM);
 }
 
 /* album: tituli litterarum "l<L>" ("l_" = '#'), personae "p<id>",
@@ -361,6 +363,110 @@ fac_paginam_proximam (
     redde paginam_vertere((ContextusPraecepti*)ctx, I);
 }
 
+#define REQUIRIT_PERSONAM  I   /* persona electa */
+
+interior b32
+requisita_nomenclatoris (
+       i32  requisita,
+    vacuum* ctx)
+{
+    redde !(requisita & REQUIRIT_PERSONAM)
+        || ((ContextusPraecepti*)ctx)->electa > ZEPHYRUM;
+}
+
+interior b32
+fac_novam_personam (
+    vacuum* ctx)
+{
+    ContextusPraecepti* cp = (ContextusPraecepti*)ctx;
+
+    redde prompta_aperire(&cp->m->ramus, actio_nomenclatoris, "homo",
+        chorda_ex_literis("", cp->p), cp->p);
+}
+
+interior b32
+fac_novam_societatem (
+    vacuum* ctx)
+{
+    ContextusPraecepti* cp = (ContextusPraecepti*)ctx;
+
+    redde prompta_aperire(&cp->m->ramus, actio_nomenclatoris,
+        "societas",
+        chorda_ex_literis("", cp->p), cp->p);
+}
+
+/* delere: electa sequens in indice (ultima: prior) */
+interior b32
+fac_delere (
+    vacuum* ctx)
+{
+    ContextusPraecepti* cp = (ContextusPraecepti*)ctx;
+                   s32  n;
+                   s32  i;
+                   s32  index;
+                   s32  successor;
+                   s32  id;
+
+    n          = (s32)album_numerus(cp->l);
+    index      = -I;
+    successor  = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        si (res_ordinis(album_ordo(cp->l, (i32)i)) == cp->electa)
+        {
+            index = i;
+            frange;
+        }
+    }
+    per (i = index + I; index >= ZEPHYRUM && i < n && !successor; i++)
+    {
+        id = res_ordinis(album_ordo(cp->l, (i32)i));
+        si (id > ZEPHYRUM && id != cp->electa)
+        {
+            successor = id;
+        }
+    }
+    per (i = index - I; index >= ZEPHYRUM && i >= ZEPHYRUM
+        && !successor;
+         i--)
+    {
+        id = res_ordinis(album_ordo(cp->l, (i32)i));
+        si (id > ZEPHYRUM && id != cp->electa)
+        {
+            successor = id;
+        }
+    }
+    si (personae_delere(cp->m->documentum, cp->electa) <= ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    si (successor > ZEPHYRUM)
+    {
+        redde electionem_scribere(cp->m, successor, cp->p);
+    }
+    redde campos_scribere(cp->m, "persona_electa", "", "pagina", "");
+}
+
+interior b32
+fac_revocare (
+    vacuum* ctx)
+{
+    ContextusPraecepti* cp = (ContextusPraecepti*)ctx;
+
+    (vacuum)personae_revocare(cp->m->documentum);
+    redde VERUM;
+}
+
+interior b32
+fac_reficere (
+    vacuum* ctx)
+{
+    ContextusPraecepti* cp = (ContextusPraecepti*)ctx;
+
+    (vacuum)personae_reficere(cp->m->documentum);
+    redde VERUM;
+}
+
 hic_manens constans Praeceptum TABULA_PRAECEPTORUM[] = {
     { "nomenclator.proxima", "Next contact", "j", VISUS_INDICIS,
         ZEPHYRUM, fac_proximam },
@@ -370,6 +476,16 @@ hic_manens constans Praeceptum TABULA_PRAECEPTORUM[] = {
         ZEPHYRUM, fac_paginam_priorem },
     { "nomenclator.pagina_proxima", "Next page", "]", VISUS_INDICIS,
         ZEPHYRUM, fac_paginam_proximam },
+    { "nomenclator.nova_persona", "New person", "n", VISUS_INDICIS,
+        ZEPHYRUM, fac_novam_personam },
+    { "nomenclator.nova_societas", "New business", "N", VISUS_INDICIS,
+        ZEPHYRUM, fac_novam_societatem },
+    { "nomenclator.delere", "Delete contact", "X", VISUS_INDICIS,
+        REQUIRIT_PERSONAM, fac_delere },
+    { "nomenclator.revocare", "Undo", "u", VISUS_INDICIS, ZEPHYRUM,
+        fac_revocare },
+    { "nomenclator.reficere", "Redo", "C-r", VISUS_INDICIS, ZEPHYRUM,
+        fac_reficere },
     { NIHIL, NIHIL, NIHIL, ZEPHYRUM, ZEPHYRUM, NIHIL }
 };
 
@@ -383,6 +499,65 @@ contextum_parare (
     cp->p       = p;
     cp->l       = ordines(m, p);
     cp->electa  = nomenclator_persona_electa(m);
+}
+
+/* Reditus promptae: homo "verba cognomen" (verbum ultimum cognomen,
+ * cetera praenomen; verbum unum praenomen), societas titulus; nova
+ * electa, prompta clausa. FALSUM = recusatum (prompta manet). */
+interior b32
+promptam_committere (
+    NomenclatorMontatio* m,
+                 chorda  genus,
+                 chorda  textus,
+                Piscina* p)
+{
+    chorda praenomen;
+    chorda cognomen;
+       s32 id;
+       i32 i;
+
+    si (chorda_aequalis_literis(genus, "societas"))
+    {
+        id = personae_societatem_creare(m->documentum, textus);
+    }
+    alioquin
+    {
+        dum (textus.mensura > ZEPHYRUM && textus.datum[ZEPHYRUM] == ' ')
+        {
+            textus.datum++;
+            textus.mensura--;
+        }
+        i = textus.mensura;
+        dum (i > ZEPHYRUM && textus.datum[i - I] != ' ')
+        {
+            i--;
+        }
+        praenomen  = textus;
+        cognomen   = textus;
+        si (i == ZEPHYRUM)
+        {
+            cognomen.mensura = ZEPHYRUM;
+        }
+        alioquin
+        {
+            cognomen.datum     = textus.datum + i;
+            cognomen.mensura   = textus.mensura - i;
+            praenomen.mensura  = i;
+            dum (   praenomen.mensura > ZEPHYRUM
+                 && praenomen.datum[praenomen.mensura - I] == ' ')
+            {
+                praenomen.mensura--;
+            }
+        }
+        id = personae_hominem_creare(m->documentum, praenomen,
+            cognomen);
+    }
+    si (id <= ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    (vacuum)prompta_claudere(&m->ramus, actio_nomenclatoris, p);
+    redde electionem_scribere(m, id, p);
 }
 
 /* <actio/> nomenclator.agere: claves per tabulam praeceptorum; ictus
@@ -412,6 +587,29 @@ agere (
         redde FALSUM;
     }
     piscina_vacare(privatum->scheda);
+    /* P2b: prompta aperta claves omnes accipit */
+    {
+               chorda genus;
+               chorda textus;
+        PromptaExitus exitus;
+
+        si (prompta_aperta(&m->ramus, &genus))
+        {
+            exitus = prompta_clavem_agere(&m->ramus,
+                actio_nomenclatoris,
+                ev, &textus, privatum->scheda);
+            si (exitus == PROMPTA_REDITUS)
+            {
+                (vacuum)promptam_committere(m, genus, textus,
+                    privatum->scheda);
+                redde VERUM;
+            }
+            si (exitus != PROMPTA_NIHIL)
+            {
+                redde VERUM;
+            }
+        }
+    }
     si (ev->genus == EVENTUS_CLAVIS_DEPRESSUS)
     {
         t = praecepta_ad_clavem(TABULA_PRAECEPTORUM, VISUS_INDICIS, ev);
@@ -420,8 +618,9 @@ agere (
             redde FALSUM;
         }
         contextum_parare(m, privatum->scheda, &cp);
-        redde praecepta_status(t, VISUS_INDICIS, NIHIL, &cp)
-            == PRAECEPTUM_PRAESTO && t->fn(&cp);
+        redde praecepta_status(t, VISUS_INDICIS,
+            requisita_nomenclatoris,
+            &cp) == PRAECEPTUM_PRAESTO && t->fn(&cp);
     }
     si (   ev->genus            != EVENTUS_MUS_DEPRESSUS
         || ev->datum.mus.botton != MUS_SINISTER || !nodus)
@@ -640,6 +839,17 @@ figura_tabulae (
                     - (s32)strlen(textus) * NOMENCLATOR_LITTERA) / II,
                     f->fines.y + IV, chorda_ex_literis(textus,
                     md->piscina), ZEPHYRUM, COLOR_TEXT_DIM);
+            }
+        }
+        alioquin si (chorda_aequalis_literis(f->id, "prompta"))
+        {
+            chorda genus;
+
+            si (prompta_aperta(&m->ramus, &genus))
+            {
+                prompta_pingere(md, f->fines,
+                    chorda_aequalis_literis(genus,
+                    "societas") ? "business:" : "name:", &m->ramus);
             }
         }
         alioquin si (chorda_aequalis_literis(f->id, "pagina-prior"))
@@ -885,6 +1095,15 @@ nomenclator_componere (
                 : PARTES_INDEX, DISPOSITIO_CRESCENS, ZEPHYRUM,
                 o->altitudo);
         }
+    }
+    /* P2b: prompta in linea ultima regionis indicis */
+    si (prompta_aperta(&m->ramus, NIHIL))
+    {
+        (vacuum)locum_addere(&dp, regio, DISPOSITIO_LINEA,
+            DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_CRESCENS,
+            ZEPHYRUM);
+        (vacuum)componentem_locare(&dp, regio, "prompta", PARTES_CAMPUS,
+            DISPOSITIO_CRESCENS, ZEPHYRUM, NOMENCLATOR_ORDO);
     }
     dispositio_computare(dp.d, columnae, lineae, NIHIL, NIHIL);
     per (i = ZEPHYRUM; i < (s32)xar_numerus(dp.loci); i++)

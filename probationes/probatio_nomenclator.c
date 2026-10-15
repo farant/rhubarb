@@ -309,6 +309,81 @@ electum_in (
     redde FALSUM;
 }
 
+/* clavis nominata (Enter, Esc) aut Ctrl + littera */
+interior vacuum
+clavis_specialis (
+      Mundus* x,
+    clavis_t  codex,
+         s32  producta,
+         s32  runa,
+         i32  modificantes)
+{
+    Eventus e;
+
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus                      = EVENTUS_CLAVIS_DEPRESSUS;
+    e.datum.clavis.clavis        = codex;
+    e.datum.clavis.producta      = producta;
+    e.datum.clavis.runa          = runa;
+    e.datum.clavis.modificantes  = modificantes;
+    dispensator_tractare(x->d, &e);
+}
+
+interior vacuum
+typare (
+                 Mundus* x,
+     constans character* s)
+{
+    per (; *s; s++)
+    {
+        clavis(x, *s);
+    }
+}
+
+interior vacuum
+reditus (
+    Mundus* x)
+{
+    clavis_specialis(x, CLAVIS_REDITUS, XIII, ZEPHYRUM, ZEPHYRUM);
+}
+
+interior vacuum
+effugium (
+    Mundus* x)
+{
+    clavis_specialis(x, CLAVIS_EFFUGIUM, XXVII, ZEPHYRUM, ZEPHYRUM);
+}
+
+/* persona id: nomina (praenomen|cognomen|titulus) = "a|b|c" ? */
+interior b32
+persona_est (
+                 Mundus* x,
+                    s32  id,
+     constans character* exspectata)
+{
+    constans Persona* q;
+           character  visa[CXXVIII];
+
+    q = personae_persona(x->documentum, id);
+    si (!q)
+    {
+        redde FALSUM;
+    }
+    sprintf(visa, "%.*s|%.*s|%.*s", (integer)q->praenomen.mensura,
+        q->praenomen.datum ? (constans character*)q->praenomen.datum
+        : "",
+        (integer)q->cognomen.mensura, q->cognomen.datum
+        ? (constans character*)q->cognomen.datum : "",
+        (integer)q->titulus.mensura, q->titulus.datum
+        ? (constans character*)q->titulus.datum : "");
+    si (strcmp(visa, exspectata) != ZEPHYRUM)
+    {
+        imprimere("  persona %d: '%s'\n", (integer)id, visa);
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
 /* montatio: ramus, focus in radice, electa = prima ordinis */
 interior vacuum
 _probare_montationem (
@@ -446,6 +521,125 @@ _probare_figuras (
         c->piscina)));
 }
 
+/* nova persona (n): verbum ultimum cognomen, cetera praenomen; verbum
+ * unum praenomen; vacuum recusatum (prompta manet); Esc claudit; nova
+ * electa */
+interior vacuum
+_probare_novum_hominem (
+    CredoContextus* c)
+{
+    Mundus* x;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(contactus_parare(x, c->piscina));
+    clavis(x, 'n');
+    CREDO_VERUM(campus_est(x, "prompta", "homo"));
+    typare(x, "Maria Grazia Verdi");
+    reditus(x);
+    CREDO_VERUM(persona_est(x, VI, "Maria Grazia|Verdi|"));
+    CREDO_FALSUM(campus_est(x, "prompta", "homo"));
+    CREDO_VERUM(campus_est(x, "persona_electa", "6"));
+    clavis(x, 'n');
+    typare(x, "Cher");
+    reditus(x);
+    CREDO_VERUM(persona_est(x, VII, "Cher||"));
+    /* vacuum: recusatum, prompta manet; Esc claudit */
+    clavis(x, 'n');
+    reditus(x);
+    CREDO_VERUM(campus_est(x, "prompta", "homo"));
+    CREDO_AEQUALIS_I32(personae_numerus(x->documentum), VII);
+    effugium(x);
+    CREDO_FALSUM(campus_est(x, "prompta", "homo"));
+}
+
+/* nova societas (N); nova in pagina altera electa */
+interior vacuum
+_probare_novam_societatem (
+    CredoContextus* c)
+{
+       Mundus* x;
+    character  cognomen[XVI];
+          i32  i;
+       chorda* s;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(contactus_parare(x, c->piscina));
+    clavis(x, 'N');
+    CREDO_VERUM(campus_est(x, "prompta", "societas"));
+    typare(x, "Acme");
+    reditus(x);
+    CREDO_VERUM(persona_est(x, VI, "||Acme"));
+    CREDO_NECESSE_NON_NIHIL(personae_persona(x->documentum, VI));
+    CREDO_VERUM(personae_persona(x->documentum, VI)->genus
+        == PERSONA_SOCIETAS);
+    CREDO_VERUM(campus_est(x, "persona_electa", "6"));
+    /* XX "Rossi*" (paginae II): "Zeta Zulu" in pagina II electa */
+    per (i = ZEPHYRUM; i < XX; i++)
+    {
+        sprintf(cognomen, "Rossi%c", (character)('a' + i));
+        (vacuum)personae_hominem_creare(x->documentum, lit("Anna",
+            c->piscina), lit(cognomen, c->piscina));
+    }
+    clavis(x, 'n');
+    typare(x, "Zeta Zulu");
+    reditus(x);
+    s = insula_ramus_attributum(&x->m.ramus, "pagina");
+    CREDO_VERUM(s && !chorda_aequalis_literis(*s, "0"));
+    CREDO_VERUM(adest(x, "p27", c->piscina));
+}
+
+/* delere (X): electa sequens (ultima: prior); revocare u, reficere
+ * C-r */
+interior vacuum
+_probare_deletionem (
+    CredoContextus* c)
+{
+    Mundus* x;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(contactus_parare(x, c->piscina));
+    /* ordo: 5 2 3 4 1 */
+    CREDO_NECESSE(ictus_in(x, "p2", c->piscina));
+    clavis(x, 'X');
+    CREDO_NIHIL(personae_persona(x->documentum, II));
+    CREDO_VERUM(campus_est(x, "persona_electa", "3"));
+    CREDO_NECESSE(ictus_in(x, "p1", c->piscina));
+    clavis(x, 'X');
+    CREDO_NIHIL(personae_persona(x->documentum, I));
+    CREDO_VERUM(campus_est(x, "persona_electa", "4"));
+    clavis(x, 'u');
+    CREDO_NON_NIHIL(personae_persona(x->documentum, I));
+    clavis_specialis(x, (clavis_t)'r', ZEPHYRUM, 'r',
+        (i32)MOD_IMPERIUM);
+    CREDO_NIHIL(personae_persona(x->documentum, I));
+}
+
+/* prompta picta: titulus "name:" in componente prompta */
+interior vacuum
+_probare_promptam (
+    CredoContextus* c)
+{
+     Mundus* x;
+    Mandata* md;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(contactus_parare(x, c->piscina));
+    CREDO_FALSUM(adest(x, "prompta", c->piscina));
+    clavis(x, 'n');
+    typare(x, "Jo");
+    CREDO_VERUM(adest(x, "prompta", c->piscina));
+    md = reddere(x, c->piscina);
+    CREDO_VERUM(textus_in(md, fines_componentis(x, "prompta",
+        c->piscina), "name:", -I));
+    CREDO_VERUM(textus_in(md, fines_componentis(x, "prompta",
+        c->piscina), "Jo", -I));
+    effugium(x);
+    clavis(x, 'N');
+    md = reddere(x, c->piscina);
+    CREDO_VERUM(textus_in(md, fines_componentis(x, "prompta",
+        c->piscina), "business:", -I));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "montatio", _probare_montationem, mundum_parare, mundum_purgare,
         NIHIL, NIHIL },
@@ -459,6 +653,14 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "figurae", _probare_figuras, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
+    { "novus_homo", _probare_novum_hominem, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "nova_societas", _probare_novam_societatem, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "deletio", _probare_deletionem, mundum_parare, mundum_purgare,
+        NIHIL, NIHIL },
+    { "prompta", _probare_promptam, mundum_parare, mundum_purgare,
+        NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

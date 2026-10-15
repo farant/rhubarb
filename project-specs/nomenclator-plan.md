@@ -230,6 +230,10 @@ house rule of independent composable libraries.
   Calendar moved onto it, 30 sections unchanged. Next P2b: new person /
   business (keys n / N + a "+ New" button - Fran to choose between a
   menu, two buttons, or Tab in the prompt), delete, undo.
+- **P2b-1 DONE 2026-10-14**: n / N (prompt "name:" / "business:"), X
+  delete (selection moves to the next contact), u / C-r. Next P2b-2:
+  U4 (menu wiring out of the calendar) + "+ New" button opening a
+  Person / Business menu (Fran chose option 1).
 - **P2 nomenclator list** - vicus genus `nomenclator`, command word
   `$contacts`, alphabetical list with letter headings (U1), selection, new
   contact (kind chosen at creation), open detail.

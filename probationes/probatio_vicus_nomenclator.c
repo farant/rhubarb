@@ -141,10 +141,42 @@ _probare_verbum (
     CREDO_NON_NIHIL(nomenclator_frontalis(v));
 }
 
+/* P2b: in latere focato n, "Anna Rossi", Enter - persona creata,
+ * nomina divisa (manus ludus: claves verae vici) */
+interior vacuum
+_probare_novam (
+    CredoContextus* c)
+{
+                 Mundus* x;
+                  Vicus* v;
+             ManusLudus* m;
+    NomenclatorMontatio* n;
+       constans Persona* q;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(aedificare(x, c));
+    v = x->app.vicus;
+    CREDO_VERUM(vicus_acervo_aperire(v, "nomenclator", NIHIL));
+    (vacuum)vicus_pulsare(v);
+    n = nomenclator_frontalis(v);
+    CREDO_NECESSE_NON_NIHIL(n);
+    m = manus_ludus_creare(c->piscina, x->app.d);
+    dispensator_recomponere(x->app.d);
+    CREDO_NECESSE(manus_ludus_premere(m, "#nomenclator"));
+    CREDO_VERUM(manus_ludus_scribere(m, "nAnna Rossi"));
+    CREDO_VERUM(manus_ludus_clavem(m, (character)XIII, ZEPHYRUM));
+    q = personae_persona(n->documentum, I);
+    CREDO_NECESSE_NON_NIHIL(q);
+    CREDO_CHORDA_AEQUALIS_LITERIS(q->praenomen, "Anna");
+    CREDO_CHORDA_AEQUALIS_LITERIS(q->cognomen, "Rossi");
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "latera", _probare_latera, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
     { "verbum", _probare_verbum, mundum_parare, mundum_purgare, NIHIL,
+        NIHIL },
+    { "nova", _probare_novam, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
