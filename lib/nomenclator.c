@@ -170,8 +170,76 @@ capacitas (
         &m->ramus, NIHIL) ? NOMENCLATOR_ORDO : ZEPHYRUM);
 }
 
-/* album: tituli litterarum "l<L>" ("l_" = '#'), personae "p<id>",
- * ordine clavis */
+/* P3: visus "rubricae"? */
+interior b32
+visus_rubricarum (
+    constans NomenclatorMontatio* m)
+{
+    chorda* a;
+
+    a = insula_ramus_attributum(&m->ramus, "visus");
+    redde a && chorda_aequalis_literis(*a, "rubricae");
+}
+
+/* P3: rubrica filtri (NIHIL = nulla) */
+interior chorda*
+filtrum_currens (
+    constans NomenclatorMontatio* m)
+{
+    chorda* a;
+
+    a = insula_ramus_attributum(&m->ramus, "rubrica_filtrum");
+    redde (a && a->mensura > ZEPHYRUM) ? a : NIHIL;
+}
+
+/* persona in filtro (nullo filtro: omnes) */
+interior b32
+in_filtro (
+    constans NomenclatorMontatio* m,
+                constans Persona* q)
+{
+    chorda* f;
+
+    f = filtrum_currens(m);
+    redde !f || rubricam_habet(q->rubricae, *f);
+}
+
+/* P3: greges visus rubricarum - rubricae (filtro: sola eius), deinde
+ * "" = (none) (non sub filtro); Xar de chorda */
+interior Xar*
+greges (
+    constans NomenclatorMontatio* m,
+                         Piscina* p)
+{
+       Xar* g;
+       Xar* r;
+    chorda* f;
+    chorda  vacua;
+       i32  i;
+
+    g = xar_creare(p, (i32)magnitudo(chorda));
+    r = m->documentum ? personae_rubricae(m->documentum, p) : NIHIL;
+    f = filtrum_currens(m);
+    per (i = ZEPHYRUM; g && r && i < xar_numerus(r); i++)
+    {
+        si (!f || chorda_aequalis(*f, *(chorda*)xar_obtinere(r, i)))
+        {
+            *(chorda*)xar_addere(g) = *(chorda*)xar_obtinere(r, i);
+        }
+    }
+    si (g && !f)
+    {
+        vacua.datum              = NIHIL;
+        vacua.mensura            = ZEPHYRUM;
+        *(chorda*)xar_addere(g)  = vacua;
+    }
+    redde g;
+}
+
+/* album: visus indicis - tituli litterarum "l<L>" ("l_" = '#'),
+ * personae "p<id>" ordine clavis; visus rubricarum (P3) - tituli
+ * gregum "g<k>", personae "p<id>-<k>" (in gregibus pluribus pluries);
+ * filtrum in utroque */
 interior Album*
 ordines (
     constans NomenclatorMontatio* m,
@@ -188,10 +256,49 @@ ordines (
     l = album_creare(p, capacitas(m));
     personae = m->documentum ? personae_ordinatae(m->documentum, p)
                              : NIHIL;
+    si (l && personae && visus_rubricarum(m))
+    {
+           Xar* g;
+        chorda  rubrica;
+           b32  titulus;
+           i32  k;
+
+        g = greges(m, p);
+        per (k = ZEPHYRUM; g && k < xar_numerus(g); k++)
+        {
+            rubrica = *(chorda*)xar_obtinere(g, k);
+            titulus = FALSUM;
+            per (i = ZEPHYRUM; i < xar_numerus(personae); i++)
+            {
+                q = *(constans Persona**)xar_obtinere(personae, i);
+                si (  rubrica.mensura > ZEPHYRUM
+                    ? !rubricam_habet(q->rubricae, rubrica)
+                    : xar_numerus(q->rubricae) > ZEPHYRUM)
+                {
+                    perge;
+                }
+                si (!titulus)
+                {
+                    sprintf(id, "g%d", (integer)k);
+                    (vacuum)album_addere(l, id, ALBUM_TITULUS,
+                        NOMENCLATOR_ORDO, ZEPHYRUM);
+                    titulus = VERUM;
+                }
+                sprintf(id, "p%d-%d", (integer)q->id, (integer)k);
+                (vacuum)album_addere(l, id, ALBUM_RES, NOMENCLATOR_ORDO,
+                    q->id);
+            }
+        }
+        redde l;
+    }
     prior = '\0';
     per (i = ZEPHYRUM; l && personae && i < xar_numerus(personae); i++)
     {
         q        = *(constans Persona**)xar_obtinere(personae, i);
+        si (!in_filtro(m, q))
+        {
+            perge;
+        }
         littera  = persona_littera(q);
         si (littera != prior)
         {
@@ -227,7 +334,7 @@ s32
 nomenclator_persona_electa (
     constans NomenclatorMontatio* m)
 {
-         Xar* personae;
+       Album* l;
      Piscina* p;
          s32  id;
 
@@ -242,10 +349,9 @@ nomenclator_persona_electa (
     }
     p = m->figurae_ctx ? ((NomenclatorFigurae*)m->figurae_ctx)->scheda
                        : m->piscina;
-    personae = personae_ordinatae(m->documentum, p);
-    redde (personae && xar_numerus(personae) > ZEPHYRUM)
-        ? (*(constans Persona**)xar_obtinere(personae, ZEPHYRUM))->id
-        : ZEPHYRUM;
+    /* P3: prima indicis (filtro et visu) */
+    l = ordines(m, p);
+    redde l ? album_res_prima(l, ZEPHYRUM) : ZEPHYRUM;
 }
 
 /* electio: persona_electa et pagina eius */
@@ -266,6 +372,85 @@ electionem_scribere (
     sprintf(pagina, "%d", (integer)(k < ZEPHYRUM ? ZEPHYRUM : k));
     redde campos_scribere(m, "persona_electa", numerus, "pagina",
         k > ZEPHYRUM ? pagina : "");
+}
+
+/* P3: filtrum ponere ("" tollit); pagina prima, electa prima indicis
+ * novi */
+interior b32
+filtrum_ponere (
+    NomenclatorMontatio* m,
+     constans character* valor,
+                Piscina* p)
+{
+       Album* l;
+         s32  id;
+   character  numerus[XVI];
+
+    si (!campos_scribere(m, "rubrica_filtrum", valor, "pagina", ""))
+    {
+        redde FALSUM;
+    }
+    l   = ordines(m, p);
+    id  = l ? album_res_prima(l, ZEPHYRUM) : ZEPHYRUM;
+    sprintf(numerus, "%d", (integer)id);
+    redde campos_scribere(m, "persona_electa", id > ZEPHYRUM ? numerus
+        : "", NIHIL, NIHIL);
+}
+
+/* P3: visum ponere; electa manet, pagina eam sequitur */
+interior b32
+visum_ponere (
+    NomenclatorMontatio* m,
+     constans character* visus,
+                Piscina* p)
+{
+    s32 electa;
+
+    electa = nomenclator_persona_electa(m);
+    si (!campos_scribere(m, "visus", visus, "pagina", ""))
+    {
+        redde FALSUM;
+    }
+    redde electa > ZEPHYRUM ? electionem_scribere(m, electa, p) : VERUM;
+}
+
+/* id rei ex ordine "p<id>" aut "p<id>-<k>"; 0 si alius */
+interior s32
+id_ordinis (
+    chorda id)
+{
+    chorda n;
+       s32 v;
+
+    si (id.mensura < II || id.datum[ZEPHYRUM] != 'p')
+    {
+        redde ZEPHYRUM;
+    }
+    n.datum    = id.datum + I;
+    n.mensura  = ZEPHYRUM;
+    dum (   n.mensura < id.mensura - I
+         && n.datum[n.mensura] != '-')
+    {
+        n.mensura++;
+    }
+    redde chorda_ut_s32(n, &v) ? v : ZEPHYRUM;
+}
+
+/* index gregis ex titulo "g<k>"; -1 si alius */
+interior s32
+gregis_index (
+    chorda id)
+{
+    chorda n;
+       s32 v;
+
+    si (id.mensura < II || id.datum[ZEPHYRUM] != 'g')
+    {
+        redde -I;
+    }
+    n.datum    = id.datum + I;
+    n.mensura  = id.mensura - I;
+    redde (chorda_ut_s32(n, &v) && v >= ZEPHYRUM) ? v : -I;
 }
 
 
@@ -365,15 +550,75 @@ fac_paginam_proximam (
     redde paginam_vertere((ContextusPraecepti*)ctx, I);
 }
 
-#define REQUIRIT_PERSONAM  I   /* persona electa */
+#define REQUIRIT_PERSONAM  I    /* persona electa */
+#define REQUIRIT_FILTRUM   II   /* filtrum positum */
 
 interior b32
 requisita_nomenclatoris (
        i32  requisita,
     vacuum* ctx)
 {
-    redde !(requisita & REQUIRIT_PERSONAM)
-        || ((ContextusPraecepti*)ctx)->electa > ZEPHYRUM;
+    ContextusPraecepti* cp = (ContextusPraecepti*)ctx;
+
+    redde (!(requisita & REQUIRIT_PERSONAM) || cp->electa > ZEPHYRUM)
+        && (!(requisita & REQUIRIT_FILTRUM) || filtrum_currens(cp->m));
+}
+
+/* P3: filtrum (prompta, filtro currenti praeimpleta), tollere, visus */
+interior b32
+fac_filtrum (
+    vacuum* ctx)
+{
+    ContextusPraecepti* cp = (ContextusPraecepti*)ctx;
+                chorda* f;
+                chorda  textus;
+
+    f               = filtrum_currens(cp->m);
+    textus.datum    = NIHIL;
+    textus.mensura  = ZEPHYRUM;
+    si (f)
+    {
+        textus = *f;
+    }
+    redde prompta_aperire(&cp->m->ramus, actio_nomenclatoris, "filtrum",
+        textus, cp->p);
+}
+
+interior b32
+fac_filtrum_tollere (
+    vacuum* ctx)
+{
+    ContextusPraecepti* cp = (ContextusPraecepti*)ctx;
+
+    redde filtrum_ponere(cp->m, "", cp->p);
+}
+
+interior b32
+fac_visum_alternare (
+    vacuum* ctx)
+{
+    ContextusPraecepti* cp = (ContextusPraecepti*)ctx;
+
+    redde visum_ponere(cp->m, visus_rubricarum(cp->m) ? "index"
+        : "rubricae", cp->p);
+}
+
+interior b32
+fac_visum_indicis (
+    vacuum* ctx)
+{
+    ContextusPraecepti* cp = (ContextusPraecepti*)ctx;
+
+    redde visum_ponere(cp->m, "index", cp->p);
+}
+
+interior b32
+fac_visum_rubricarum (
+    vacuum* ctx)
+{
+    ContextusPraecepti* cp = (ContextusPraecepti*)ctx;
+
+    redde visum_ponere(cp->m, "rubricae", cp->p);
 }
 
 interior b32
@@ -488,6 +733,16 @@ hic_manens constans Praeceptum TABULA_PRAECEPTORUM[] = {
         fac_revocare },
     { "nomenclator.reficere", "Redo", "C-r", VISUS_INDICIS, ZEPHYRUM,
         fac_reficere },
+    { "nomenclator.filtrum", "Filter by tag", "f", VISUS_INDICIS,
+        ZEPHYRUM, fac_filtrum },
+    { "nomenclator.filtrum_tollere", "Clear filter", "Esc",
+        VISUS_INDICIS, REQUIRIT_FILTRUM, fac_filtrum_tollere },
+    { "nomenclator.visus_alternare", "Switch view", "g", VISUS_INDICIS,
+        ZEPHYRUM, fac_visum_alternare },
+    { "nomenclator.visus_indicis", "All contacts", NIHIL, VISUS_INDICIS,
+        ZEPHYRUM, fac_visum_indicis },
+    { "nomenclator.visus_rubricarum", "By tag", NIHIL, VISUS_INDICIS,
+        ZEPHYRUM, fac_visum_rubricarum },
     { NIHIL, NIHIL, NIHIL, ZEPHYRUM, ZEPHYRUM, NIHIL }
 };
 
@@ -543,6 +798,17 @@ promptam_committere (
        s32 id;
        i32 i;
 
+    /* P3: filtrum - vacuum tollit, aliter rubrica valida */
+    si (chorda_aequalis_literis(genus, "filtrum"))
+    {
+        si (textus.mensura > ZEPHYRUM && !rubrica_valida(textus))
+        {
+            redde FALSUM;
+        }
+        (vacuum)prompta_claudere(&m->ramus, actio_nomenclatoris, p);
+        redde filtrum_ponere(m, textus.mensura > ZEPHYRUM
+            ? chorda_ut_cstr(textus, p) : "", p);
+    }
     si (chorda_aequalis_literis(genus, "societas"))
     {
         id = personae_societatem_creare(m->documentum, textus);
@@ -668,17 +934,45 @@ agere (
     {
         redde FALSUM;
     }
-    si (   nodus->partes == PARTES_ITEM && nodus->id.mensura > I
-        && nodus->id.datum[ZEPHYRUM] == 'p')
+    id = nodus->partes
+        == PARTES_ITEM ? id_ordinis(nodus->id) : ZEPHYRUM;
+    si (id > ZEPHYRUM)
     {
-        chorda n;
+        redde electionem_scribere(m, id, privatum->scheda);
+    }
+    /* P3: titulus gregis filtrat (iterum tollit); "(none)" nihil */
+    si (   nodus->partes           == PARTES_INDEX
+        && gregis_index(nodus->id) >= ZEPHYRUM)
+    {
+           Xar* g;
+        chorda* f;
+        chorda  rubrica;
+           s32  k;
 
-        n.datum    = nodus->id.datum + I;
-        n.mensura  = nodus->id.mensura - I;
-        si (chorda_ut_s32(n, &id) && id > ZEPHYRUM)
+        g = greges(m, privatum->scheda);
+        k = gregis_index(nodus->id);
+        si (!g || k >= (s32)xar_numerus(g))
         {
-            redde electionem_scribere(m, id, privatum->scheda);
+            redde FALSUM;
         }
+        rubrica = *(chorda*)xar_obtinere(g, (i32)k);
+        si (rubrica.mensura == ZEPHYRUM)
+        {
+            redde FALSUM;
+        }
+        f = filtrum_currens(m);
+        redde filtrum_ponere(m, (f && chorda_aequalis(*f, rubrica)) ? ""
+            : chorda_ut_cstr(rubrica, privatum->scheda),
+            privatum->scheda);
+    }
+    /* P3: segmenta visus */
+    si (chorda_aequalis_literis(nodus->id, "visus-indicis"))
+    {
+        redde visum_ponere(m, "index", privatum->scheda);
+    }
+    si (chorda_aequalis_literis(nodus->id, "visus-rubricarum"))
+    {
+        redde visum_ponere(m, "rubricae", privatum->scheda);
     }
     /* P2b-2: "+ New" - menu infra globulum (filius radicis: fines in
      * spatio radicis) */
@@ -869,15 +1163,62 @@ figura_tabulae (
         f = componens_liberum(c, i);
         si (chorda_aequalis_literis(f->id, "titulus"))
         {
+            chorda* filtrum;
+
             textum_pingere(md, f->fines.x + IV, f->fines.y + II,
                 chorda_ex_literis("Contacts", md->piscina), FONS_TITULI,
                 COLOR_TEXT);
+            /* P3: rubrica filtri obscura iuxta */
+            filtrum = filtrum_currens(m);
+            si (filtrum)
+            {
+                textum_pingere(md, f->fines.x + IV + IX * fons_latitudo(
+                    FONS_TITULI), f->fines.y + II + NOMENCLATOR_LINEA
+                        - I,
+                    chorda_concatenare(chorda_ex_literis("#",
+                    md->piscina),
+                    *filtrum, md->piscina), ZEPHYRUM, COLOR_TEXT_DIM);
+            }
+        }
+        alioquin si (chorda_aequalis_literis(f->id, "visus-indicis"))
+        {
+            figura_segmentum_pingere(md, f->fines, chorda_transcribere(
+                chorda_ex_literis("All", md->piscina), md->piscina),
+                FIGURA_SEGMENTUM_PRIMUM, visus_rubricarum(m) ? ZEPHYRUM
+                : FIGURA_ELECTUM);
+        }
+        alioquin si (chorda_aequalis_literis(f->id, "visus-rubricarum"))
+        {
+            figura_segmentum_pingere(md, f->fines, chorda_transcribere(
+                chorda_ex_literis("Tags", md->piscina), md->piscina),
+                FIGURA_SEGMENTUM_ULTIMUM, visus_rubricarum(m)
+                ? FIGURA_ELECTUM : ZEPHYRUM);
         }
         alioquin si (chorda_aequalis_literis(f->id, "caput"))
         {
-            sprintf(textus, "%d contact%s",
-                (integer)personae_numerus(m->documentum),
-                personae_numerus(m->documentum) == I ? "" : "s");
+            s32 omnes;
+            s32 visae;
+            i32 j;
+
+            omnes = (s32)personae_numerus(m->documentum);
+            visae = ZEPHYRUM;
+            per (j = ZEPHYRUM; j < (i32)omnes; j++)
+            {
+                si (in_filtro(m, personae_index(m->documentum, j)))
+                {
+                    visae++;
+                }
+            }
+            si (filtrum_currens(m))
+            {
+                sprintf(textus, "%d of %d contact%s", (integer)visae,
+                    (integer)omnes, omnes == I ? "" : "s");
+            }
+            alioquin
+            {
+                sprintf(textus, "%d contact%s", (integer)omnes,
+                    omnes == I ? "" : "s");
+            }
             textum_pingere(md, f->fines.x + IV, f->fines.y + IV,
                 chorda_ex_literis(textus, md->piscina), ZEPHYRUM,
                 COLOR_TEXT_DIM);
@@ -901,7 +1242,8 @@ figura_tabulae (
             {
                 prompta_pingere(md, f->fines,
                     chorda_aequalis_literis(genus,
-                    "societas") ? "business:" : "name:", &m->ramus);
+                    "societas") ? "business:" : chorda_aequalis_literis(
+                    genus, "filtrum") ? "filter:" : "name:", &m->ramus);
             }
         }
         alioquin si (chorda_aequalis_literis(f->id, "nova"))
@@ -934,13 +1276,31 @@ figura_tabulae (
                 md->piscina), md->piscina), figura_color_thematis(
                 COLOR_TEXT));
         }
+        alioquin si (   f->partes           == PARTES_INDEX
+                     && gregis_index(f->id) >= ZEPHYRUM)
+        {
+               Xar* g;
+            chorda  rubrica;
+               s32  q;
+
+            g = greges(m, md->piscina);
+            q = gregis_index(f->id);
+            si (g && q < (s32)xar_numerus(g))
+            {
+                rubrica = *(chorda*)xar_obtinere(g, (i32)q);
+                figura_fasciam_pingere(md, f->fines);
+                figura_textum_audacem(md, f->fines.x + VI, f->fines.y
+                    + IV, chorda_transcribere(rubrica.mensura > ZEPHYRUM
+                    ? chorda_concatenare(chorda_ex_literis("#",
+                    md->piscina), rubrica, md->piscina)
+                    : chorda_ex_literis("(none)", md->piscina),
+                    md->piscina), figura_color_thematis(COLOR_TEXT));
+            }
+        }
         alioquin si (f->partes == PARTES_ITEM && f->id.mensura > I)
         {
-            chorda num;
-
-            num.datum    = f->id.datum + I;
-            num.mensura  = f->id.mensura - I;
-            si (chorda_ut_s32(num, &id))
+            id = id_ordinis(f->id);
+            si (id > ZEPHYRUM)
             {
                 ordinem_pingere(m, md, f, id, electa);
             }
@@ -1092,6 +1452,7 @@ nomenclator_componere (
                      s32  columnae;
                      s32  lineae;
                      s32  radix_d;
+                     s32  titulus_d;
                      s32  caput;
                      s32  regio;
                      s32  a;
@@ -1144,8 +1505,17 @@ nomenclator_componere (
     forma.spatium_superum    = I;
     forma.spatium_inferum    = I;
     radix_d                  = dispositio_addere(dp.d, -I, &forma);
-    (vacuum)componentem_locare(&dp, radix_d, "titulus", PARTES_TITULUS,
+    /* P3: titulus et segmenta visus (All | Tags) ad dextrum */
+    titulus_d = locum_addere(&dp, radix_d, DISPOSITIO_LINEA,
+        DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_FIXA,
+        NOMENCLATOR_TITULI);
+    (vacuum)componentem_locare(&dp, titulus_d, "titulus",
+        PARTES_TITULUS,
         DISPOSITIO_CRESCENS, ZEPHYRUM, NOMENCLATOR_TITULI);
+    (vacuum)componentem_locare(&dp, titulus_d, "visus-indicis",
+        PARTES_BOTTONE, DISPOSITIO_FIXA, V, II);
+    (vacuum)componentem_locare(&dp, titulus_d, "visus-rubricarum",
+        PARTES_BOTTONE, DISPOSITIO_FIXA, VI, II);
     caput = locum_addere(&dp, radix_d, DISPOSITIO_LINEA,
         DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_FIXA,
         NOMENCLATOR_CAPUT);

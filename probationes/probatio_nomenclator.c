@@ -687,6 +687,89 @@ _probare_menu_novum (
     CREDO_FALSUM(adest(x, "elenchus", c->piscina));
 }
 
+/* visus rubricarum (g): greges ordine canonico, "(none)" ultimus;
+ * persona in gregibus pluribus pluries ("p<id>-<k>") */
+interior vacuum
+_probare_greges (
+    CredoContextus* c)
+{
+    Mundus* x;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(contactus_parare(x, c->piscina));
+    clavis(x, 'g');
+    CREDO_VERUM(campus_est(x, "visus", "rubricae"));
+    /* amici: 3; familia: 1; roma: 1; (none): 5 2 4 */
+    CREDO_VERUM(ordines_sunt(x, "g0 p3-0 g1 p1-1 g2 p1-2 g3 p5-3 p2-3"
+        " p4-3"));
+    clavis(x, 'g');
+    CREDO_VERUM(campus_est(x, "visus", "index"));
+    CREDO_VERUM(ordines_sunt(x, "l_ p5 lB p2 p3 lC p4 lR p1"));
+}
+
+/* filtrum: ictus in titulo gregis filtrat (iterum tollit); f prompta;
+ * filtrum in indice; Esc tollit; malum recusatum */
+interior vacuum
+_probare_filtrum (
+    CredoContextus* c)
+{
+     Mundus* x;
+    Mandata* md;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(contactus_parare(x, c->piscina));
+    clavis(x, 'g');
+    CREDO_NECESSE(ictus_in(x, "g1", c->piscina));
+    CREDO_VERUM(campus_est(x, "rubrica_filtrum", "familia"));
+    CREDO_VERUM(ordines_sunt(x, "g0 p1-0"));
+    CREDO_VERUM(campus_est(x, "persona_electa", "1"));
+    CREDO_NECESSE(ictus_in(x, "g0", c->piscina));
+    CREDO_VERUM(campus_est(x, "rubrica_filtrum", NIHIL));
+    /* f amici, Enter; visus indicis filtratus */
+    clavis(x, 'f');
+    CREDO_VERUM(campus_est(x, "prompta", "filtrum"));
+    typare(x, "amici");
+    reditus(x);
+    CREDO_VERUM(campus_est(x, "rubrica_filtrum", "amici"));
+    clavis(x, 'g');
+    CREDO_VERUM(ordines_sunt(x, "lB p3"));
+    md = reddere(x, c->piscina);
+    CREDO_VERUM(textus_in(md, fines_componentis(x, "caput", c->piscina),
+        "1 of 5 contacts", -I));
+    /* Esc: filtrum tollit */
+    effugium(x);
+    CREDO_VERUM(campus_est(x, "rubrica_filtrum", NIHIL));
+    CREDO_VERUM(ordines_sunt(x, "l_ p5 lB p2 p3 lC p4 lR p1"));
+    /* malum: prompta manet */
+    clavis(x, 'f');
+    typare(x, "Amici");
+    reditus(x);
+    CREDO_VERUM(campus_est(x, "prompta", "filtrum"));
+    CREDO_VERUM(campus_est(x, "rubrica_filtrum", NIHIL));
+    effugium(x);
+}
+
+/* segmenta All | Tags: ictus visum mutat */
+interior vacuum
+_probare_segmenta (
+    CredoContextus* c)
+{
+     Mundus* x;
+    Mandata* md;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(contactus_parare(x, c->piscina));
+    CREDO_NECESSE(ictus_in(x, "visus-rubricarum", c->piscina));
+    CREDO_VERUM(campus_est(x, "visus", "rubricae"));
+    md = reddere(x, c->piscina);
+    CREDO_VERUM(textus_in(md, fines_componentis(x, "g0", c->piscina),
+        "#amici", -I));
+    CREDO_VERUM(textus_in(md, fines_componentis(x, "g3", c->piscina),
+        "(none)", -I));
+    CREDO_NECESSE(ictus_in(x, "visus-indicis", c->piscina));
+    CREDO_VERUM(campus_est(x, "visus", "index"));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "montatio", _probare_montationem, mundum_parare, mundum_purgare,
         NIHIL, NIHIL },
@@ -709,6 +792,12 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "prompta", _probare_promptam, mundum_parare, mundum_purgare,
         NIHIL, NIHIL },
     { "menu_novum", _probare_menu_novum, mundum_parare, mundum_purgare,
+        NIHIL, NIHIL },
+    { "greges", _probare_greges, mundum_parare, mundum_purgare, NIHIL,
+        NIHIL },
+    { "filtrum", _probare_filtrum, mundum_parare, mundum_purgare, NIHIL,
+        NIHIL },
+    { "segmenta", _probare_segmenta, mundum_parare, mundum_purgare,
         NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

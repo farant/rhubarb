@@ -88,3 +88,36 @@ Tests: menu_novum (opens below the button, two items with titles, a
 click on "New business" opens the business prompt and closes the menu,
 Esc closes). Plants: button not opening; menu not added; anchor at the
 button's top - red. Screenshot (probe deleted; copy in $TMPDIR/imago).
+
+## 2026-10-14 - P3: by tag, tag filter, view switch
+
+Manifest (approved): `visus` (index | rubricae, persistent),
+`rubrica_filtrum` (persistent), prompta option `filtrum`.
+Tag view: one group per tag (personae_rubricae, canonical order), then
+"(none)" for untagged contacts (only without a filter); heading
+"g<k>" = ALBUM_TITULUS (k = index in greges(), so a filtered list
+restarts at g0); rows "p<id>-<k>" - a contact with several tags is
+listed under each (selection highlights every copy; album_pagina_rei
+prefers the current page). The filter applies in BOTH views (index
+view skips contacts without the tag). Row ids are parsed up to '-'
+(id_ordinis) everywhere - clicks and drawing.
+Filter: heading click sets it (again on the active one clears; "(none)"
+inert), `f` opens "filter:" prefilled with the current tag (empty
+clears, invalid refused - prompt stays), Esc clears an active filter
+(command with REQUIRIT_FILTRUM; when no filter is set Esc is not
+consumed and passes up). Setting a filter selects the first visible
+contact; switching views keeps the selection and its page follows.
+Fallback selection is now the first contact of the CURRENT index
+(filter + view), not of all contacts.
+View switch: `g`, and an "All | Tags" segmented control at the right of
+the title row (figura_segmentum_pingere); "visus_indicis" /
+"visus_rubricarum" are keyless commands for the M3 palette.
+Count: "k of N contacts" under a filter; the title gets a dim "#tag".
+Tests: greges, filtrum, segmenta (+3 sections). Plants: (none) group
+dropped; filter ignored in the index view; heading click not
+toggling; invalid filter accepted; count without "of"; segment click
+ignored - all red. Screenshot of the tag view (probe deleted).
+Process slip: I started P3 edits while the P2b-2 commit's gates were
+still running; commissio refused ("plagulae commissionis mutatae DUM
+porta currebat"), I reverted and re-ran - the freeze rule exists for
+exactly this.

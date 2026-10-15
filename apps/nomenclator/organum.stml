@@ -13,6 +13,15 @@
   </actiones>
 
   <status>
+    <campus nomen="visus" typus="electio" vita="persistens"
+            absens="index" scriptor="nomenclator.agere">
+      <optio>index</optio>
+      <optio>rubricae</optio>
+    </campus>
+    <campus nomen="rubrica_filtrum" typus="textus" vita="persistens"
+            scriptor="nomenclator.agere"
+            nota="una rubrica (kebab); absens = omnes; valet in
+                  visu utroque"/>
     <campus nomen="persona_electa" typus="numerus" vita="transiens"
             scriptor="nomenclator.agere"
             nota="id personae electae; absens = prima paginae"/>
@@ -25,6 +34,7 @@
       <optio>nulla</optio>
       <optio>homo</optio>
       <optio>societas</optio>
+      <optio>filtrum</optio>
     </campus>
     <campus nomen="prompta_textus" typus="textus" vita="transiens"
             scriptor="nomenclator.agere"

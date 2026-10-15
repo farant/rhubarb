@@ -241,6 +241,9 @@ house rule of independent composable libraries.
 - **P2b-2 DONE 2026-10-14**: "+ New" button opens a Person / Business
   menu (membrum__elenchi). P2 complete; next P3 (by tag) or P5
   (detail view) - Fran to choose.
+- **P3 DONE 2026-10-14**: tag view (groups + "(none)", multi-tag
+  contacts listed per tag), tag filter in both views (heading click,
+  `f`, Esc), view switch `g` + "All | Tags" segments, "k of N".
 - **P2 nomenclator list** - vicus genus `nomenclator`, command word
   `$contacts`, alphabetical list with letter headings (U1), selection, new
   contact (kind chosen at creation), open detail.
