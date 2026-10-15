@@ -57,11 +57,6 @@ interior constans SanctoraleDatum SANCTORALE[] = {
       GRADUS_MEMORIA, ORDO_MEMORIA_GENERALIS,
       COLLIT_ALBUS, FALSUM },
 
-    /* 6 Ian - Sollemnitas (si non transfertur ad Dominicam) */
-    { FASTI_IANUARIUS, VI,
-      "The Epiphany of the Lord", "Epiphany",
-      GRADUS_SOLLEMNITAS, ORDO_PRIVILEGIATUS,
-      COLLIT_ALBUS, FALSUM },
 
     /* 7 Ian - Memoria ad libitum */
     { FASTI_IANUARIUS, VII,

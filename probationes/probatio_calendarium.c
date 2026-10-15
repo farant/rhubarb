@@ -278,12 +278,12 @@ _probare_anchorae (
     CREDO_VERUM(_dies_est(anch->dominica_i_adventus, MMXXV,
         FASTI_NOVEMBER, XXX));
 
-    /* 2026: Pascha 5 IV; Ascensio (feria V) 14 V; Cor Iesu 12 VI;
-     * Baptisma 11 I (Epiphania feria III); Christus Rex 22 XI;
+    /* 2026: Pascha 5 IV; Ascensio (USA: dominica) 17 V; Cor Iesu 12
+     * VI; Baptisma 11 I (Epiphania dominica 4 I); Christus Rex 22 XI;
      * Adventus I 29 XI */
     anch = calendarium_anchorae(cal, MMXXVI);
     CREDO_VERUM(_dies_est(anch->pascha, MMXXVI, FASTI_APRILIS, V));
-    CREDO_VERUM(_dies_est(anch->ascensio, MMXXVI, FASTI_MAIUS, XIV));
+    CREDO_VERUM(_dies_est(anch->ascensio, MMXXVI, FASTI_MAIUS, XVII));
     CREDO_VERUM(_dies_est(anch->cor_iesu, MMXXVI, FASTI_IUNIUS, XII));
     CREDO_VERUM(_dies_est(anch->baptisma_domini, MMXXVI,
         FASTI_IANUARIUS, XI));
@@ -988,8 +988,6 @@ _probare_sanctorale_ordo (
 
     CREDO_AEQUALIS_S32((s32)_ordo_sancti(FASTI_DECEMBER, XXV),
         (s32)ORDO_PRIVILEGIATUS);
-    CREDO_AEQUALIS_S32((s32)_ordo_sancti(FASTI_IANUARIUS, VI),
-        (s32)ORDO_PRIVILEGIATUS);
     CREDO_AEQUALIS_S32((s32)_ordo_sancti(FASTI_NOVEMBER, I),
         (s32)ORDO_SOLLEMNITAS_GENERALIS);
     CREDO_AEQUALIS_S32((s32)_ordo_sancti(FASTI_FEBRUARIUS, II),
@@ -1034,9 +1032,10 @@ hic_manens constans CasusOrdinis CASUS_ORDINIS[] = {
     { MMXXVI, FASTI_MARTIUS, I, ORDO_PRIVILEGIATUS },
     { MMXXVI, FASTI_DECEMBER, VI, ORDO_PRIVILEGIATUS },
     { MMXXVI, FASTI_MAIUS, III, ORDO_PRIVILEGIATUS },
-    /* Dominicae per annum et Nativitatis */
+    /* Dominica per annum (dominica Nativitatis in USA semper
+     * celebratio est - Sancta Familia, Maria Mater Dei, Epiphania,
+     * Baptisma: L2) */
     { MMXXVI, FASTI_OCTOBER, XVIII, ORDO_DOMINICA_COMMUNIS },
-    { MMXXV, FASTI_DECEMBER, XXVIII, ORDO_DOMINICA_COMMUNIS },
     /* feriae Quadragesimae, 17-24 XII, octavae Nativitatis */
     { MMXXVI, FASTI_MARTIUS, X, ORDO_FERIA_PRIVILEGIATA },
     { MMXXVI, FASTI_DECEMBER, XXI, ORDO_FERIA_PRIVILEGIATA },
@@ -1066,8 +1065,7 @@ _probare_ordo_temporalis (
         info  = calendarium_obtinere_diem(cal, fasti_dies(k->annus,
             k->mensis, k->dies), c->piscina);
         CREDO_NECESSE(info != NIHIL && info->numerus_celebrationum > 0);
-        CREDO_AEQUALIS_S32((s32)info->celebrationes[0].genus,
-            (s32)GENUS_TEMPORALE);
+        CREDO_VERUM(info->celebrationes[0].genus != GENUS_SANCTORALE);
         si (info->celebrationes[0].ordo != k->ordo)
         {
             imprimere("  ordo %d-%02d-%02d: %d\n", (integer)k->annus,
@@ -1308,6 +1306,200 @@ _probare_proprietates_ordinis (
 }
 
 
+/* ==================================================
+ * Mobilia (liturgia-plan L2: proprium de tempore, USA)
+ * ================================================== */
+
+/* anchorae USA: Epiphania dominica 2-8 I; Baptisma dominica sequens,
+ * feria II si Epiphania 7 aut 8 I; Ascensio Pascha + XLII; Corpus
+ * Christi dominica post Trinitatem; Maria Mater Ecclesiae feria II
+ * post Pentecosten; Cor Immaculatum sabbatum post Cor Iesu; Sancta
+ * Familia dominica intra octavam Nativitatis aut 30 XII */
+interior vacuum
+_probare_anchorae_usa (
+    CredoContextus* c)
+{
+    CalendariumLiturgicum* cal;
+          AnchoresMobiles* anch;
+
+    cal = calendarium_creare(c->piscina);
+
+    anch = calendarium_anchorae(cal, MMXXVI);
+    CREDO_VERUM(_dies_est(anch->epiphania, MMXXVI, FASTI_IANUARIUS,
+        IV));
+    CREDO_VERUM(_dies_est(anch->baptisma_domini, MMXXVI,
+        FASTI_IANUARIUS, XI));
+    CREDO_VERUM(_dies_est(anch->ascensio, MMXXVI, FASTI_MAIUS, XVII));
+    CREDO_VERUM(_dies_est(anch->maria_mater_ecclesiae, MMXXVI,
+        FASTI_MAIUS, XXV));
+    CREDO_VERUM(_dies_est(anch->corpus_christi, MMXXVI, FASTI_IUNIUS,
+        VII));
+    CREDO_VERUM(_dies_est(anch->cor_iesu, MMXXVI, FASTI_IUNIUS, XII));
+    CREDO_VERUM(_dies_est(anch->cor_immaculatum, MMXXVI, FASTI_IUNIUS,
+        XIII));
+    CREDO_VERUM(_dies_est(anch->sancta_familia, MMXXVI, FASTI_DECEMBER,
+        XXVII));
+
+    /* 6 I dominica (2019): Epiphania 6 I, Baptisma dominica 13 I */
+    anch = calendarium_anchorae(cal, MMXIX);
+    CREDO_VERUM(_dies_est(anch->epiphania, MMXIX, FASTI_IANUARIUS, VI));
+    CREDO_VERUM(_dies_est(anch->baptisma_domini, MMXIX, FASTI_IANUARIUS,
+        XIII));
+
+    /* Epiphania 7 I (2024): Baptisma feria II 8 I */
+    anch = calendarium_anchorae(cal, MMXXIV);
+    CREDO_VERUM(_dies_est(anch->epiphania, MMXXIV, FASTI_IANUARIUS,
+        VII));
+    CREDO_VERUM(_dies_est(anch->baptisma_domini, MMXXIV,
+        FASTI_IANUARIUS, VIII));
+
+    /* Epiphania 3 I (2027): Baptisma 10 I; Nativitas sabbato: Sancta
+     * Familia dominica 26 XII */
+    anch = calendarium_anchorae(cal, MMXXVII);
+    CREDO_VERUM(_dies_est(anch->epiphania, MMXXVII, FASTI_IANUARIUS,
+        III));
+    CREDO_VERUM(_dies_est(anch->baptisma_domini, MMXXVII,
+        FASTI_IANUARIUS, X));
+    CREDO_VERUM(_dies_est(anch->sancta_familia, MMXXVII, FASTI_DECEMBER,
+        XXVI));
+
+    /* Nativitas dominica (2022): nulla dominica in octava - 30 XII */
+    anch = calendarium_anchorae(cal, MMXXII);
+    CREDO_VERUM(_dies_est(anch->sancta_familia, MMXXII, FASTI_DECEMBER,
+        XXX));
+
+    calendarium_destruere(cal);
+}
+
+/* celebrationes mobiles: titulus, gradus, color (RECENSIO 4c, F5 F6
+ * F8 F11 - hodie fracti) */
+hic_manens constans CasusDiei CASUS_MOBILIUM[] = {
+    /* Triduum et Hebdomada Sancta 2026 */
+    { MMXXVI, FASTI_MARTIUS, XXIX, "Palm Sunday", GRADUS_DOMINICA,
+      COLLIT_RUBER },
+    { MMXXVI, FASTI_APRILIS, II, "Holy Thursday",
+        GRADUS_DIES_PECULIARIS,
+      COLLIT_ALBUS },
+    { MMXXVI, FASTI_APRILIS, III, "Good Friday", GRADUS_DIES_PECULIARIS,
+      COLLIT_RUBER },
+    { MMXXVI, FASTI_APRILIS, IV, "Holy Saturday",
+        GRADUS_DIES_PECULIARIS,
+      COLLIT_VIOLACEUS },
+    { MMXXVI, FASTI_APRILIS, V, "Easter Sunday", GRADUS_SOLLEMNITAS,
+      COLLIT_ALBUS },
+    { MMXXVI, FASTI_FEBRUARIUS, XVIII, "Ash Wednesday",
+      GRADUS_DIES_PECULIARIS, COLLIT_VIOLACEUS },
+    /* Ascensio dominica (USA); Matthias feria V celebratur */
+    { MMXXVI, FASTI_MAIUS, XVII, "Ascension", GRADUS_SOLLEMNITAS,
+      COLLIT_ALBUS },
+    { MMXXVI, FASTI_MAIUS, XIV, "St. Matthias", GRADUS_FESTUM,
+      COLLIT_RUBER },
+    { MMXXVI, FASTI_MAIUS, XXIV, "Pentecost", GRADUS_SOLLEMNITAS,
+      COLLIT_RUBER },
+    { MMXXVI, FASTI_MAIUS, XXV, "Mary, Mother of the Church",
+      GRADUS_MEMORIA, COLLIT_ALBUS },
+    { MMXXVI, FASTI_MAIUS, XXXI, "Holy Trinity", GRADUS_SOLLEMNITAS,
+      COLLIT_ALBUS },
+    { MMXXVI, FASTI_IUNIUS, VII, "Corpus Christi", GRADUS_SOLLEMNITAS,
+      COLLIT_ALBUS },
+    { MMXXVI, FASTI_IUNIUS, XII, "Sacred Heart", GRADUS_SOLLEMNITAS,
+      COLLIT_ALBUS },
+    /* Cor Immaculatum et Antonius (memoriae duae): feria */
+    { MMXXVI, FASTI_IUNIUS, XIII, NIHIL, GRADUS_FERIA, COLLIT_VIRIDIS },
+    /* Cor Iesu 24 VI 2022: Ioannes Baptista victus (translatio L3) */
+    { MMXXII, FASTI_IUNIUS, XXIV, "Sacred Heart", GRADUS_SOLLEMNITAS,
+      COLLIT_ALBUS },
+    { MMXXVI, FASTI_NOVEMBER, XXII, "Christ the King",
+        GRADUS_SOLLEMNITAS,
+      COLLIT_ALBUS },
+    /* Nativitas: Sancta Familia, Epiphania, Baptisma */
+    { MMXXV, FASTI_DECEMBER, XXVIII, "Holy Family", GRADUS_FESTUM,
+      COLLIT_ALBUS },
+    { MMXXII, FASTI_DECEMBER, XXX, "Holy Family", GRADUS_FESTUM,
+      COLLIT_ALBUS },
+    { MMXXVII, FASTI_DECEMBER, XXVI, "Holy Family", GRADUS_FESTUM,
+      COLLIT_ALBUS },
+    { MMXXVI, FASTI_IANUARIUS, IV, "Epiphany", GRADUS_SOLLEMNITAS,
+      COLLIT_ALBUS },
+    { MMXXVI, FASTI_IANUARIUS, VI, NIHIL, GRADUS_FERIA, COLLIT_ALBUS },
+    { MMXXVI, FASTI_IANUARIUS, XI, "Baptism of the Lord", GRADUS_FESTUM,
+      COLLIT_ALBUS },
+    { MMXIX, FASTI_IANUARIUS, XIII, "Baptism of the Lord",
+        GRADUS_FESTUM,
+      COLLIT_ALBUS },
+    { MMXXIV, FASTI_IANUARIUS, VIII, "Baptism of the Lord",
+      GRADUS_FESTUM, COLLIT_ALBUS }
+};
+
+interior vacuum
+_probare_mobilia (
+    CredoContextus* c)
+{
+    CalendariumLiturgicum* cal;
+           InformatioDiei* info;
+      constans Celebratio* celeb;
+
+    _casus_probare(c, CASUS_MOBILIUM, (i32)(magnitudo(CASUS_MOBILIUM)
+        / magnitudo(CASUS_MOBILIUM[0])));
+
+    cal = calendarium_creare(c->piscina);
+
+    /* dies mobilis IPSE celebratio diei est (genus mobile, primus);
+     * titulus diei plenus */
+    info = calendarium_obtinere_diem(cal, fasti_dies(MMXXVI,
+        FASTI_MARTIUS, XXIX), c->piscina);
+    CREDO_NECESSE(info != NIHIL);
+    CREDO_AEQUALIS_S32((s32)info->celebrationes[0].genus,
+        (s32)GENUS_MOBILE);
+    CREDO_CHORDA_AEQUALIS_LITERIS(info->titulus_diei,
+        "Palm Sunday of the Passion of the Lord");
+
+    /* memoriae obligatoriae duae: ambae ad libitum, feria princeps */
+    info   = calendarium_obtinere_diem(cal, fasti_dies(MMXXVI,
+        FASTI_IUNIUS, XIII), c->piscina);
+    celeb  = _celebratio_inventa(info,
+        "Immaculate Heart of Mary");
+    CREDO_NECESSE(celeb != NIHIL);
+    CREDO_VERUM(celeb->ad_libitum);
+    CREDO_AEQUALIS_S32((s32)celeb->genus, (s32)GENUS_MOBILE);
+    celeb = _celebratio_inventa(info, "St. Anthony of Padua");
+    CREDO_NECESSE(celeb != NIHIL);
+    CREDO_VERUM(celeb->ad_libitum);
+
+    /* Epiphania 6 I non iam in sanctorali (USA: mobilis) */
+    CREDO_AEQUALIS_S32((s32)_ordo_sancti(FASTI_IANUARIUS, VI),
+        (s32)ORDO_FERIA);
+    calendarium_destruere(cal);
+}
+
+/* hebdomadae per annum I a dominica in aut ante Baptisma: Baptisma
+ * feria II (2024) - dominica 14 I = II; Baptisma dominica (2019) -
+ * feria II 14 I = I, psalterium I */
+interior vacuum
+_probare_hebdomadae_baptismatis (
+    CredoContextus* c)
+{
+    CalendariumLiturgicum* cal;
+
+    cal = calendarium_creare(c->piscina);
+    CREDO_AEQUALIS_S32(_hebdomada_diei(cal, MMXXIV, FASTI_IANUARIUS,
+        IX),
+        I);
+    CREDO_AEQUALIS_S32(_hebdomada_diei(cal, MMXXIV, FASTI_IANUARIUS,
+        XIV), II);
+    CREDO_AEQUALIS_S32(_hebdomada_diei(cal, MMXIX, FASTI_IANUARIUS,
+        XIV),
+        I);
+    CREDO_AEQUALIS_S32(_psalterium_diei(cal, MMXIX, FASTI_IANUARIUS,
+        XIV), I);
+    CREDO_AEQUALIS_S32(_hebdomada_diei(cal, MMXIX, FASTI_IANUARIUS,
+        XXI),
+        II);
+    CREDO_AEQUALIS_S32((s32)calendarium_tempus(cal, fasti_dies(MMXIX,
+        FASTI_IANUARIUS, XIII)), (s32)TEMPUS_NATIVITATIS);
+    calendarium_destruere(cal);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "pascha_editum", _probare_pascha_editum, NIHIL, NIHIL, NIHIL,
       NIHIL },
@@ -1345,6 +1537,11 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "proprietates_ordinis", _probare_proprietates_ordinis, NIHIL,
         NIHIL,
       NIHIL, NIHIL },
+    { "anchorae_usa", _probare_anchorae_usa, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { "mobilia", _probare_mobilia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "hebdomadae_baptismatis", _probare_hebdomadae_baptismatis, NIHIL,
+      NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

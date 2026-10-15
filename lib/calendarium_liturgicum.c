@@ -8,6 +8,7 @@
 #include "postulata_posix.h"
 #include "calendarium_liturgicum.h"
 #include "chorda_aedificator.h"
+#include <stddef.h>
 #include <string.h>
 #include <stdio.h>
 
@@ -77,7 +78,8 @@ computare_anchorae (
 {
     AnchoresMobiles* anch;
                Dies  pascha;
-               Dies  epiphania;
+               Dies  secunda;
+               Dies  nativitas;
                 s32  dies_hebdomadae;
 
     anch = (AnchoresMobiles*)piscina_allocare(
@@ -103,11 +105,13 @@ computare_anchorae (
     anch->feria_v_in_cena_domini    = fasti_addere_dies(pascha, -III);
     anch->feria_vi_in_passione      = fasti_addere_dies(pascha, -II);
     anch->sabbatum_sanctum          = fasti_addere_dies(pascha, -I);
-    anch->ascensio                  = fasti_addere_dies(pascha, XXXIX);
+    anch->ascensio                  = fasti_addere_dies(pascha, XLII);
     anch->pentecoste                = fasti_addere_dies(pascha, XLIX);
+    anch->maria_mater_ecclesiae     = fasti_addere_dies(pascha, L);
     anch->ss_trinitas               = fasti_addere_dies(pascha, LVI);
-    anch->corpus_christi            = fasti_addere_dies(pascha, LX);
+    anch->corpus_christi            = fasti_addere_dies(pascha, LXIII);
     anch->cor_iesu                  = fasti_addere_dies(pascha, LXVIII);
+    anch->cor_immaculatum           = fasti_addere_dies(pascha, LXIX);
 
     /* Dominica I Adventus - 4 dominicae ante Nativitatem */
     /* Invenire dominicam in vel ante 24 Dec (Vigilia), haec est Dominica IV Adventus */
@@ -125,23 +129,25 @@ computare_anchorae (
     anch->christus_rex = fasti_addere_dies(anch->dominica_i_adventus,
         -VII);
 
-    /* Baptisma Domini - dominica post Epiphaniam */
-    /* Si Epiphania (6 Ian) est dominica, Baptisma est die 7 vel 8 Ian */
-    epiphania        = fasti_dies(annus, FASTI_IANUARIUS, VI);
-    dies_hebdomadae  = fasti_dies_hebdomadis(epiphania);
+    /* Epiphania (USA): dominica inter 2 et 8 Ian. Baptisma Domini:
+     * dominica post Epiphaniam, nisi Epiphania 7 aut 8 Ian - tunc
+     * feria II sequens (F8: olim Epiphania 6 Ian fixa et, ea
+     * dominica, Baptisma 7 Ian - etiam calendario generali falsum) */
+    secunda          = fasti_dies(annus, FASTI_IANUARIUS, II);
+    dies_hebdomadae  = fasti_dies_hebdomadis(secunda);
+    anch->epiphania  = fasti_addere_dies(secunda, (VII
+        - dies_hebdomadae)
+        % VII);
+    anch->baptisma_domini = fasti_addere_dies(anch->epiphania,
+        anch->epiphania.dies >= VII ? I : VII);
 
-    si (dies_hebdomadae == ZEPHYRUM)
-    {
-        /* Epiphania est dominica - Baptisma est feria II */
-        anch->baptisma_domini = fasti_dies(annus, FASTI_IANUARIUS, VII);
-    } alioquin
-    {
-        /* Baptisma est dominica proxima post Epiphaniam */
-        anch->baptisma_domini = fasti_addere_dies(
-            epiphania,
-            VII - dies_hebdomadae
-            );
-    }
+    /* Sancta Familia: dominica intra octavam Nativitatis (26-31 Dec);
+     * si Nativitas dominica est, nulla - 30 Dec */
+    nativitas        = fasti_dies(annus, FASTI_DECEMBER, XXV);
+    dies_hebdomadae  = fasti_dies_hebdomadis(nativitas);
+    anch->sancta_familia = dies_hebdomadae == ZEPHYRUM
+        ? fasti_dies(annus, FASTI_DECEMBER, XXX)
+        : fasti_addere_dies(nativitas, VII - dies_hebdomadae);
 
     redde anch;
 }
@@ -429,7 +435,10 @@ calendarium_tempus_info (
             frange;
 
         casus TEMPUS_PER_ANNUM_I:
-            initium = anch->baptisma_domini;
+            /* a dominica in aut ante Baptisma: Baptisma feria II (USA,
+             * Epiphania 7-8 I) hebdomadam I non mutat */
+            initium = fasti_addere_dies(anch->baptisma_domini,
+                -fasti_dies_hebdomadis(anch->baptisma_domini));
             dies_ab_initio = (s32)fasti_differentia(dies,
                 initium).dies_totales;
             info.hebdomada = (dies_ab_initio / VII) + I;
@@ -935,6 +944,109 @@ calendarium_nomen_celebrationum (
 
 
 /* ==================================================
+ * Proprium de Tempore - celebrationes mobiles (liturgia-plan L2)
+ *
+ * Quaeque dies ex anchoris anni civilis (offsetof in
+ * AnchoresMobiles). Non memoria: celebratio DIEI ipsa (temporale
+ * substituit); memoria: inter memorias sanctorales. Tituli Anglice ut
+ * sanctorale (Franus 10-15).
+ * ================================================== */
+
+nomen structura {
+     memoriae_index locus;    /* offsetof(AnchoresMobiles, ...) */
+    SanctoraleDatum datum;    /* mensis, dies: ZEPHYRUM (ex loco) */
+} MobileDatum;
+
+interior constans MobileDatum MOBILIA[] = {
+    { offsetof(AnchoresMobiles, pascha),
+      { ZEPHYRUM, ZEPHYRUM,
+        "Easter Sunday of the Resurrection of the Lord",
+            "Easter Sunday",
+        GRADUS_SOLLEMNITAS, ORDO_TRIDUUM, COLLIT_ALBUS, FALSUM } },
+    { offsetof(AnchoresMobiles, feria_vi_in_passione),
+      { ZEPHYRUM, ZEPHYRUM,
+        "Friday of the Passion of the Lord", "Good Friday",
+        GRADUS_DIES_PECULIARIS, ORDO_TRIDUUM, COLLIT_RUBER, FALSUM } },
+    { offsetof(AnchoresMobiles, sabbatum_sanctum),
+      { ZEPHYRUM, ZEPHYRUM, "Holy Saturday", "Holy Saturday",
+        GRADUS_DIES_PECULIARIS, ORDO_TRIDUUM, COLLIT_VIOLACEUS,
+        FALSUM } },
+    { offsetof(AnchoresMobiles, feria_v_in_cena_domini),
+      { ZEPHYRUM, ZEPHYRUM, "Holy Thursday", "Holy Thursday",
+        GRADUS_DIES_PECULIARIS, ORDO_PRIVILEGIATUS, COLLIT_ALBUS,
+        FALSUM } },
+    { offsetof(AnchoresMobiles, dominica_palmarum),
+      { ZEPHYRUM, ZEPHYRUM,
+        "Palm Sunday of the Passion of the Lord", "Palm Sunday",
+        GRADUS_DOMINICA, ORDO_PRIVILEGIATUS, COLLIT_RUBER, FALSUM } },
+    { offsetof(AnchoresMobiles, feria_iv_cinerum),
+      { ZEPHYRUM, ZEPHYRUM, "Ash Wednesday", "Ash Wednesday",
+        GRADUS_DIES_PECULIARIS, ORDO_PRIVILEGIATUS, COLLIT_VIOLACEUS,
+        FALSUM } },
+    { offsetof(AnchoresMobiles, ascensio),
+      { ZEPHYRUM, ZEPHYRUM, "The Ascension of the Lord", "Ascension",
+        GRADUS_SOLLEMNITAS, ORDO_PRIVILEGIATUS, COLLIT_ALBUS,
+            FALSUM } },
+    { offsetof(AnchoresMobiles, pentecoste),
+      { ZEPHYRUM, ZEPHYRUM, "Pentecost Sunday", "Pentecost",
+        GRADUS_SOLLEMNITAS, ORDO_PRIVILEGIATUS, COLLIT_RUBER,
+            FALSUM } },
+    { offsetof(AnchoresMobiles, epiphania),
+      { ZEPHYRUM, ZEPHYRUM, "The Epiphany of the Lord", "Epiphany",
+        GRADUS_SOLLEMNITAS, ORDO_PRIVILEGIATUS, COLLIT_ALBUS,
+            FALSUM } },
+    { offsetof(AnchoresMobiles, ss_trinitas),
+      { ZEPHYRUM, ZEPHYRUM, "The Most Holy Trinity", "Holy Trinity",
+        GRADUS_SOLLEMNITAS, ORDO_SOLLEMNITAS_GENERALIS, COLLIT_ALBUS,
+        FALSUM } },
+    { offsetof(AnchoresMobiles, corpus_christi),
+      { ZEPHYRUM, ZEPHYRUM, "The Most Holy Body and Blood of Christ",
+        "Corpus Christi", GRADUS_SOLLEMNITAS,
+            ORDO_SOLLEMNITAS_GENERALIS,
+        COLLIT_ALBUS, FALSUM } },
+    { offsetof(AnchoresMobiles, cor_iesu),
+      { ZEPHYRUM, ZEPHYRUM, "The Most Sacred Heart of Jesus",
+        "Sacred Heart", GRADUS_SOLLEMNITAS, ORDO_SOLLEMNITAS_GENERALIS,
+        COLLIT_ALBUS, FALSUM } },
+    { offsetof(AnchoresMobiles, christus_rex),
+      { ZEPHYRUM, ZEPHYRUM,
+          "Our Lord Jesus Christ, King of the Universe",
+        "Christ the King", GRADUS_SOLLEMNITAS,
+        ORDO_SOLLEMNITAS_GENERALIS, COLLIT_ALBUS, FALSUM } },
+    { offsetof(AnchoresMobiles, sancta_familia),
+      { ZEPHYRUM, ZEPHYRUM, "The Holy Family of Jesus, Mary and Joseph",
+        "Holy Family", GRADUS_FESTUM, ORDO_FESTUM_DOMINI, COLLIT_ALBUS,
+        FALSUM } },
+    { offsetof(AnchoresMobiles, baptisma_domini),
+      { ZEPHYRUM, ZEPHYRUM, "The Baptism of the Lord",
+        "Baptism of the Lord", GRADUS_FESTUM, ORDO_FESTUM_DOMINI,
+        COLLIT_ALBUS, FALSUM } },
+    { offsetof(AnchoresMobiles, maria_mater_ecclesiae),
+      { ZEPHYRUM, ZEPHYRUM,
+          "The Blessed Virgin Mary, Mother of the Church",
+        "Mary, Mother of the Church", GRADUS_MEMORIA,
+        ORDO_MEMORIA_GENERALIS, COLLIT_ALBUS, FALSUM } },
+    { offsetof(AnchoresMobiles, cor_immaculatum),
+      { ZEPHYRUM, ZEPHYRUM,
+        "The Immaculate Heart of the Blessed Virgin Mary",
+        "Immaculate Heart of Mary", GRADUS_MEMORIA,
+        ORDO_MEMORIA_GENERALIS, COLLIT_ALBUS, FALSUM } }
+};
+
+#define MOBILIA_NUMERUS \
+    ((s32)(magnitudo(MOBILIA) / magnitudo(MOBILIA[ZEPHYRUM])))
+
+/* dies anchorae entis mobilis */
+interior Dies
+dies_mobilis (
+     constans AnchoresMobiles* anch,
+         constans MobileDatum* m)
+{
+    redde *(constans Dies*)((constans character*)anch + m->locus);
+}
+
+
+/* ==================================================
  * Praecedentia Liturgica (liturgia-plan L1)
  *
  * Normae Universales de Anno Liturgico 59: OrdoTabulae (header).
@@ -1078,6 +1190,9 @@ calendarium_obtinere_diem (
                          s32  idx;
                          s32  annus_liturgicus;
                  OrdoTabulae  ordo_temp;
+             AnchoresMobiles* anch;
+                         s32  prima;
+                         s32  obligatoriae;
 
     info = (InformatioDiei*)piscina_allocare(piscina,
         magnitudo(InformatioDiei));
@@ -1112,8 +1227,10 @@ calendarium_obtinere_diem (
 
     sancta = sanctorale_obtinere(dies.mensis, dies.dies,
         &num_sanctorum);
+    anch = calendarium_anchorae(cal, dies.annus);
+    /* dies, sanctorales, memoriae mobiles (II summum) */
     celebrationes = (Celebratio*)piscina_allocare(piscina,
-        magnitudo(Celebratio) * (memoriae_index)(I + num_sanctorum));
+        magnitudo(Celebratio) * (memoriae_index)(III + num_sanctorum));
     si (celebrationes == NIHIL)
     {
         redde NIHIL;
@@ -1122,6 +1239,20 @@ calendarium_obtinere_diem (
     /* temporale primum (semper) */
     celebrationem_temporalem_ponere(cal, dies, &info->tempus_info,
         info->titulus_diei, &celebrationes[ZEPHYRUM]);
+
+    /* mobilis non memoria: dies IPSE (temporale substituit) */
+    per (i = ZEPHYRUM; i < MOBILIA_NUMERUS; i++)
+    {
+        si (   !est_memoria(MOBILIA[i].datum.gradus)
+            && fasti_comparare(dies_mobilis(anch, &MOBILIA[i]), dies)
+            == ZEPHYRUM
+            && MOBILIA[i].datum.ordo <= celebrationes[ZEPHYRUM].ordo)
+        {
+            celebrationem_sanctoralem_ponere(&MOBILIA[i].datum,
+                &celebrationes[ZEPHYRUM], piscina);
+            celebrationes[ZEPHYRUM].genus = GENUS_MOBILE;
+        }
+    }
     ordo_temp  = celebrationes[ZEPHYRUM].ordo;
     idx        = I;
 
@@ -1143,25 +1274,50 @@ calendarium_obtinere_diem (
             &celebrationes[idx++], piscina);
     }
 
-    /* memoriae: solum sub principali temporali (feria privilegiata:
-     * commemoratio; feria: plenae) */
-    per (i = ZEPHYRUM; victor < ZEPHYRUM && i < num_sanctorum; i++)
+    /* memoriae (sanctorales et mobiles): solum sub principali
+     * temporali - feria privilegiata: commemoratio; feria: plenae;
+     * obligatoriae duae eodem die: ambae ad libitum (L2) */
+    prima = idx;
+    si (   victor < ZEPHYRUM
+        && (   ordo_temp == ORDO_FERIA_PRIVILEGIATA
+            || ordo_temp == ORDO_FERIA))
     {
-        si (   !est_memoria(sancta[i].gradus)
-            || (   ordo_temp != ORDO_FERIA_PRIVILEGIATA
-                && ordo_temp != ORDO_FERIA))
+        per (i = ZEPHYRUM; i < num_sanctorum; i++)
         {
-            perge;
+            si (est_memoria(sancta[i].gradus))
+            {
+                celebrationem_sanctoralem_ponere(&sancta[i],
+                    &celebrationes[idx++], piscina);
+            }
         }
-        celebrationem_sanctoralem_ponere(&sancta[i],
-            &celebrationes[idx],
-            piscina);
-        celebrationes[idx].commemoratio  = ordo_temp
+        per (i = ZEPHYRUM; i < MOBILIA_NUMERUS; i++)
+        {
+            si (   est_memoria(MOBILIA[i].datum.gradus)
+                && fasti_comparare(dies_mobilis(anch, &MOBILIA[i]),
+                dies)
+                == ZEPHYRUM)
+            {
+                celebrationem_sanctoralem_ponere(&MOBILIA[i].datum,
+                    &celebrationes[idx], piscina);
+                celebrationes[idx++].genus = GENUS_MOBILE;
+            }
+        }
+    }
+    obligatoriae = ZEPHYRUM;
+    per (i = prima; i < idx; i++)
+    {
+        si (celebrationes[i].gradus == GRADUS_MEMORIA)
+        {
+            obligatoriae++;
+        }
+    }
+    per (i = prima; i < idx; i++)
+    {
+        celebrationes[i].commemoratio  = ordo_temp
             == ORDO_FERIA_PRIVILEGIATA;
-        celebrationes[idx].ad_libitum    =
-            !celebrationes[idx].commemoratio
-            && sancta[i].gradus == GRADUS_MEMORIA_AD_LIBITUM;
-        idx++;
+        celebrationes[i].ad_libitum    = !celebrationes[i].commemoratio
+            && (   celebrationes[i].gradus == GRADUS_MEMORIA_AD_LIBITUM
+                || obligatoriae > I);
     }
 
     info->celebrationes          = celebrationes;
@@ -1182,8 +1338,9 @@ calendarium_obtinere_diem (
     }
     info->color_diei = info->celebratio_principalis->color;
 
-    /* Si principalis est sanctorale, titulus diei est titulus sancti */
-    si (   info->celebratio_principalis->genus  == GENUS_SANCTORALE
+    /* principalis sanctoralis aut mobilis (festum et supra; Palmae
+     * dominica, Cineres dies peculiaris): titulus diei eius */
+    si (   info->celebratio_principalis->genus  != GENUS_TEMPORALE
         && info->celebratio_principalis->gradus >= GRADUS_FESTUM)
     {
         info->titulus_diei = info->celebratio_principalis->titulus;

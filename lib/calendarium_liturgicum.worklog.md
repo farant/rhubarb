@@ -173,3 +173,37 @@ No fixed date has two (checked); the first case is the Immaculate
 Heart (movable, L2), so the rule lands with it. `chorda_ex_buffer`
 takes a non-const buffer, so pointing chordae at the static sanctorale
 strings needs a const cast (-Wcast-qual): titles are still copied (L5).
+
+## 2026-10-15 - liturgia-plan L2: proprium de tempore (US)
+
+`MOBILIA[]`: 17 movable celebrations, each a `SanctoraleDatum` plus the
+`offsetof` of its date in `AnchoresMobiles` (one table, no per-feast
+code; `dies_mobilis` reads the field). A non-memorial movable entry
+REPLACES the temporal entry when its ordo <= the temporal's - the day
+becomes "Pentecost Sunday", not "Dominica VIII Paschae" plus a rival.
+The two movable memorials (Mary Mother of the Church, Immaculate
+Heart) join the sanctoral memorials; when two OBLIGATORY memorials
+survive on one day, both become ad_libitum (2026-06-13: Immaculate
+Heart + Anthony of Padua -> green weekday).
+
+US anchors: Epiphany = Sunday Jan 2-8 (Jan 6 removed from the
+sanctorale); Baptism = Sunday after, or Monday when Epiphany is Jan 7
+or 8; Ascension = Easter + 42; Corpus Christi = Easter + 63; Holy
+Family = Sunday in the Christmas octave, else Dec 30. F8 had a second
+half: Ordinary Time I counted weeks from the Baptism itself, so with a
+MONDAY Baptism the following Sunday came out week I. Now counted from
+the Sunday on or before the Baptism.
+
+`titulus_diei` follows any non-temporal principal of gradus >= FESTUM
+(Palm Sunday is DOMINICA = V, Ash Wednesday DIES_PECULIARIS = VI, both
+qualify) - so the calendar's day title is "Palm Sunday of the Passion
+of the Lord". Under the US calendar there is no plain Christmas-season
+Sunday any more (every one is Holy Family, Mary Mother of God,
+Epiphany or Baptism), so the L1 rank-VI row for one was dropped.
+Nine plants red.
+
+AUDIENDA: the "two obligatory memorials -> both optional" rule is the
+CDW practice for the Immaculate Heart; for Mary, Mother of the Church
+(Pentecost Monday) the 2018 decree may instead give it precedence over
+another memorial - not verified; no collision with a fixed obligatory
+memorial was checked across years.

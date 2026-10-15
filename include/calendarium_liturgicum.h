@@ -129,7 +129,8 @@ nomen enumeratio {
 nomen enumeratio {
     GENUS_TEMPORALE  = ZEPHYRUM,  /* Ex tempore (Dominicae, feriae) */
     GENUS_SANCTORALE = I,         /* Ex calendario sanctorum */
-    GENUS_MOBILE     = II         /* Festa mobilia (ex Paschate) */
+    GENUS_MOBILE     = II         /* Festa mobilia (ex anchoris: Pascha,
+                                   * Adventus, Nativitas, Epiphania) */
 } GenusCelebrationis;
 
 
@@ -175,9 +176,12 @@ nomen structura {
 
 /* InformatioDiei - Informationes completae pro una die
  *
- * celebrationes = temporale primum (semper), deinde sanctorales quae
- * celebrari possunt (victae omittuntur; memoriae in feria
- * privilegiata cum commemoratio). celebratio_principalis = ordo
+ * celebrationes = celebratio DIEI primum (temporalis, aut mobilis
+ * quae eam substituit - Pascha, Palmae, Pentecoste, Trinitas ...),
+ * deinde sanctorales et memoriae mobiles quae celebrari possunt
+ * (victae omittuntur; memoriae in feria privilegiata cum
+ * commemoratio; memoriae obligatoriae duae eodem die ambae ad
+ * libitum). celebratio_principalis = ordo
  * minimus inter non ad libitum nec commemoratas (numquam NIHIL);
  * color_diei = color principalis. */
 nomen structura {
@@ -192,7 +196,8 @@ nomen structura {
 } InformatioDiei;
 
 
-/* AnchoresMobiles - Dies movebiles pro anno */
+/* AnchoresMobiles - Dies movebiles pro anno CIVILI (calendarium USA:
+ * Epiphania dominica 2-8 I, Ascensio et Corpus Christi dominica) */
 nomen structura {
     s32 annus;
 
@@ -204,16 +209,24 @@ nomen structura {
     Dies feria_v_in_cena_domini;
     Dies feria_vi_in_passione;
     Dies sabbatum_sanctum;
-    Dies ascensio;
+    Dies ascensio;               /* USA: Dominica VII Paschae
+                                  * (Pascha + XLII) */
     Dies pentecoste;
+    Dies maria_mater_ecclesiae;  /* feria II post Pentecosten */
     Dies ss_trinitas;
-    Dies corpus_christi;
+    Dies corpus_christi;         /* USA: dominica post Trinitatem
+                                  * (Pascha + LXIII) */
     Dies cor_iesu;
+    Dies cor_immaculatum;        /* sabbatum post Cor Iesu */
 
     /* Adventus et Nativitas */
     Dies dominica_i_adventus;
     Dies christus_rex;
-    Dies baptisma_domini;
+    Dies epiphania;              /* USA: dominica 2-8 I */
+    Dies baptisma_domini;        /* dominica post Epiphaniam; feria II
+                                  * si Epiphania 7 aut 8 I */
+    Dies sancta_familia;         /* dominica intra octavam Nativitatis,
+                                  * aut 30 XII si nulla */
 } AnchoresMobiles;
 
 

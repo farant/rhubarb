@@ -64,9 +64,18 @@ title, season name), `lib/schirmata.c` (`calendarium_nomen_celebrationum`),
   (GRADUS_DEFUNCTORUM); 2000-2040 property sweep; 7 plants red.
   Deferred to L2: two obligatory memorials on one day -> both
   optional (first case = Immaculate Heart).
-- L2 - next.
+- L2 DONE 2026-10-15: MOBILIA (17, via offsetof into the anchors),
+  movable day replaces the temporal entry, US anchors (Epiphany Sunday
+  2-8 Jan, Baptism rule, Ascension and Corpus Christi Sunday, Holy
+  Family), OT I weeks from the Sunday on/before Baptism, two obligatory
+  memorials -> both optional; 9 plants red.
+- L3 - next (transfers).
 
 ## IV. AUDIENDA
+
+- Mary, Mother of the Church colliding with another obligatory
+  memorial: treated by the general two-memorials rule (both optional);
+  the 2018 decree may give it precedence instead. Not verified.
 
 - Psalter weeks in the Christmas season and the Easter octave: no
   authoritative source checked; the library returns 1 (RECENSIO Q6).
