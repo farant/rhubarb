@@ -2088,8 +2088,8 @@ fontes_ficti (
         NIHIL) ? f : NIHIL;
 }
 
-/* P6: signum natalis (rectangulum plenum COLOR_ACCENT_SECONDARY) intra
- * cellulam? */
+/* P6: placenta natalis intra cellulam? - linea glacieris (rectangulum
+ * plenum XIII x I, linea V pictogrammatis) */
 interior b32
 natalis_in (
     Mandata* md,
@@ -2101,8 +2101,8 @@ natalis_in (
     per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
     {
         y = (constans Mandatum*)xar_obtinere(md->elementa, i);
-        si (   y->genus == MANDATUM_RECTANGULUM && y->impletum
-            && color_thematis_est(y->color, COLOR_ACCENT_SECONDARY)
+        si (   y->genus          == MANDATUM_RECTANGULUM && y->impletum
+            && y->fines.latitudo == XIII && y->fines.altitudo == I
             && intra(y->fines, f))
         {
             redde VERUM;
@@ -2164,6 +2164,9 @@ _probare_natales_diei (
     md = reddere(x, c->piscina);
     CREDO_VERUM(textus_ullus_continet(md, "Anna Rossi turns 40"));
     CREDO_VERUM(textus_ullus_continet(md, "Festa urbis"));
+    /* placenta in ordine natalis (n1), non in genere ignoto (n0) */
+    CREDO_VERUM(natalis_in(md, n1));
+    CREDO_FALSUM(natalis_in(md, n0));
     a = insula_ramus_attributum(&x->m.ramus, "res_electa");
     ante = a ? chorda_transcribere(*a, c->piscina)
              : chorda_ex_literis("", c->piscina);

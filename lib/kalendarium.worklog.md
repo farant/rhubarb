@@ -777,3 +777,14 @@ the empty-area menu on right click. Text: "Anna Rossi turns 40" (year
 known and age > 0), else "Anna Rossi's birthday"; unknown genus = title.
 `ordines_pingere` no longer skips every row when documentum is NIHIL -
 only agenda rows need it.
+
+## 2026-10-15 - P6a follow-up: birthday cake pictogram (Fran's request)
+
+The yellow accent square became a 13x12 one-colour cake (`placenta`
+table of '#'/'.' rows; `placentam_pingere` draws each horizontal run as
+a 1-px-tall filled rectangle - no new Mandata primitive). Theme text
+colour (dim on days outside the month, like the numbers). Month cell:
+top-right, and a feast title on the same day is truncated before it.
+Day row: in place of the checkbox. Tests recognise it by the frosting
+row (filled 13x1 rect). If more pictograms appear, this helper is the
+candidate to move into figura.h with the sprite as data.

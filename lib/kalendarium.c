@@ -2254,6 +2254,61 @@ rectangulum (
     mandata_rectangulum(md, f, color, impletum);
 }
 
+/* P6: placenta natalis - pictogramma XIII x XII unius coloris ('#' =
+ * punctum; series in lineis = rectangula I alta) */
+#define KALENDARIUM_PLACENTA_LATITUDO  XIII
+#define KALENDARIUM_PLACENTA_ALTITUDO  XII
+
+hic_manens constans character* constans placenta[
+    KALENDARIUM_PLACENTA_ALTITUDO] = {
+    "...#..#..#...",
+    ".............",
+    "...#..#..#...",
+    "...#..#..#...",
+    ".###########.",
+    "#############",
+    "#.#.##.##.#.#",
+    "#...........#",
+    "#...........#",
+    "#############",
+    "#...........#",
+    "#############"
+};
+
+interior vacuum
+placentam_pingere (
+         Mandata* md,
+             s32  x,
+             s32  y,
+    ColorMandati  color)
+{
+    s32 linea;
+    s32 a;
+    s32 b;
+
+    per (linea = ZEPHYRUM; linea < KALENDARIUM_PLACENTA_ALTITUDO;
+        linea++)
+    {
+        a = ZEPHYRUM;
+        dum (a < KALENDARIUM_PLACENTA_LATITUDO)
+        {
+            si (placenta[linea][a] != '#')
+            {
+                a++;
+                perge;
+            }
+            b = a;
+            dum (   b < KALENDARIUM_PLACENTA_LATITUDO
+                 && placenta[linea][b] == '#')
+            {
+                b++;
+            }
+            rectangulum(md, x + a, y + linea, b - a, I, color, VERUM);
+            a = b;
+        }
+    }
+}
+
 /* signa (apertae, perfectae) diei ex signis mensium praesentium */
 nomen structura {
              s32 annus;
@@ -2375,15 +2430,20 @@ cellulam_pingere (
     {
         mandata_textus(md, f.x + IV, f.y + KALENDARIUM_LINEA + III,
             praecidere(info->celebratio_principalis->titulus_brevis,
-            f.latitudo - VI), ZEPHYRUM, figura_color_thematis(alienus
+            f.latitudo - VI - (natalis ? KALENDARIUM_PLACENTA_LATITUDO
+            + II : ZEPHYRUM)), ZEPHYRUM, figura_color_thematis(alienus
             ? COLOR_TEXT_DIM : COLOR_TEXT));
     }
-    /* P6: natalis - quadratum accentus secundi in angulo dextro
-     * supero (numerus et color liturgicus sinistrorsum) */
+    /* P6: natalis - placenta in angulo dextro supero (numerus et
+     * color liturgicus sinistrorsum; titulus festi ante eam
+     * praecisus) */
     si (natalis)
     {
-        rectangulum(md, f.x + f.latitudo - IX, f.y + II, V, V,
-            figura_color_thematis(COLOR_ACCENT_SECONDARY), VERUM);
+        placentam_pingere(md, f.x + f.latitudo
+            - KALENDARIUM_PLACENTA_LATITUDO
+            - II, f.y + II,
+            figura_color_thematis(alienus ? COLOR_TEXT_DIM
+            : COLOR_TEXT));
     }
     /* signa: plena = apertae, vacua = perfectae; IV summum, '+' */
     apertae    = signum ? signum->apertae : ZEPHYRUM;
@@ -2653,8 +2713,8 @@ signatum_pingere (
         figura_color_thematis(COLOR_SUPERFICIES));
     si (chorda_aequalis_literis(t->genus, FASTI_GENUS_NATALIS))
     {
-        rectangulum(md, l->fines.x + X, l->fines.y + V, V, V,
-            figura_color_thematis(COLOR_ACCENT_SECONDARY), VERUM);
+        placentam_pingere(md, l->fines.x + VI, l->fines.y + II,
+            figura_color_thematis(COLOR_TEXT));
     }
     mandata_textus(md, l->fines.x + XXII, l->fines.y + IV, praecidere(
         signati_textus(t, md->piscina), l->fines.latitudo - XXVI),
