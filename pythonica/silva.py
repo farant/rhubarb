@@ -2778,10 +2778,12 @@ def _portas_ordinare(portae, additae=None, plena=True):
     notae = [int(sumptus[n]) for n in ordo if sumptus[n] != '-']
     secundae = (sum(notae) + 500) // 1000
     ignotae = len(ordo) - len(notae)
-    print('aestimatio portarum: %d s%s%s' % (
+    print('aestimatio portarum: %d s%s%s%s' % (
         secundae, ', %d sine historia' % ignotae if ignotae else '',
-        '; dilatae ad fusionem: %d' % len(dilatae) if dilatae else ''))
-    if secundae > AESTIMATIO_MONITUM:
+        '; dilatae ad fusionem: %d' % len(dilatae) if dilatae else '',
+        ' (plena: gradus ambo)' if plena else ''))
+    # plena (commissio plena, fusio_probare) gradus ambo vult: longa recte
+    if secundae > AESTIMATIO_MONITUM and not plena:
         print('MONITUM: aestimatio portarum %d s > %d s (gradus-portarum'
               ' §II: commissio ~V min summum) - portae gradus commissionis'
               ' nimis multae aut lentae; annotatio gradus="fusio" consideranda'
@@ -3167,6 +3169,83 @@ def _lint_praevium_exigere(viae):
             + relatio)
 
 
+def _portas_currere(portae, genera, viae, recepta=True):
+    """PORTAE CURRUNTUR (ex commissio, gradus-portarum T4: commissio et
+    fusio_probare communes): praeiudicia OMNIA currunt, fracturae SIMUL
+    nominantur ante probationem primam; probatio fracta sistit
+    (SilvaError). Receptum vivum sanum non iterum currit; porta rancida
+    cum plagulis viarum mutatis = SilvaError."""
+    ante = _sigilla_viarum(viae)
+    # praeiudicia (circulus commissionis II T5): OMNIA currunt, fracturae
+    # colliguntur et SIMUL nominantur ante probationem primam; probatio
+    # fracta sistit ut antea
+    fractae_prae = []
+
+    def _praeiudicia_exigere():
+        if fractae_prae:
+            raise SilvaError(
+                'praeiudicia non sana (%d) - nihil cursum ultra, nihil'
+                ' commissum:\n%s' % (len(fractae_prae), '\n'.join(
+                    '  %s (%s, rc=%d) - acta: %s%s' % (n, ff.compendium, ff.rc,
+                                                      va, relatio_fracturarum(ff.fracturae))
+                    for n, ff, va in fractae_prae)))
+    for p in portae:
+        est_prae = (genera.get(p if isinstance(p, str) else p[0])
+                    == 'praeiudicium')
+        if not est_prae:
+            _praeiudicia_exigere()
+        if isinstance(p, str) and p.endswith('.json'):
+            f = receptum_validum(p, viae)      # porta ex umbra
+            nomen = f.nomen + ' (receptum)'
+        else:
+            nomen, filtrum = (p, None) if isinstance(p, str) else p
+            f = receptum_vivum(nomen, filtrum) if recepta else None
+            if f is not None and f.sana:
+                print('porta %s: %s - non iterum cursa' % (nomen, f.compendium))
+            else:
+                audita = filtrum is None and _auditum_commissionis(nomen)
+                f = porta(nomen, filtrum, auditus=True if audita else None)
+                if audita and f.sana:
+                    print('porta %s: %s - auditus (I ex %s)'
+                          % (nomen, f.compendium, os.environ.get(
+                              'FABRICA_AUDITUS_COMMISSIONIS',
+                              AUDITUS_COMMISSIONIS)))
+                if f.sana and '[transitus servatus' in f.compendium:
+                    # actio iudicium (fabrica spec 3 T6): vestigium idem
+                    print('porta %s: %s - non iterum cursa (digestum idem)'
+                          % (nomen, f.compendium))
+                if f.rancida:
+                    post = _sigilla_viarum(viae)
+                    mutatae = [v for v in viae if post[v] != ante[v]]
+                    if mutatae:
+                        raise SilvaError(
+                            'porta %s: plagulae commissionis mutatae DUM'
+                            ' porta currebat (%s) - verdictum de alia'
+                            ' versione; nihil commissum'
+                            % (nomen, ', '.join(mutatae[:5])))
+                    print('porta %s: arbor mutata dum currebat (plagulae'
+                          ' commissionis intactae - cetera libera);'
+                          ' receptum non valet' % nomen)
+        if not f.sana:
+            # acta portae foris currentis nusquam servata erant: fractura
+            # sine causa visibili (2026-09-03, porta pythonica sub md)
+            os.makedirs(PORTAE_DIR, exist_ok=True)
+            via_acta = os.path.join(PORTAE_DIR, re.sub(r'[^A-Za-z0-9_.-]+', '_', nomen)
+                                    + '.fracta.acta')
+            with open(via_acta, 'w') as fa:
+                fa.write(f.acta or '')
+            if est_prae:
+                print('praeiudicium %s NON sanum (%s) - cetera praeiudicia'
+                      ' currunt' % (nomen, f.compendium))
+                fractae_prae.append((nomen, f, via_acta))
+                continue
+            raise SilvaError('porta %s non sana (%s, rc=%d) - nihil'
+                             ' commissum; acta: %s%s'
+                             % (nomen, f.compendium, f.rc, via_acta,
+                                relatio_fracturarum(f.fracturae)))
+    _praeiudicia_exigere()
+
+
 @_cursu_notatum(lambda *a, **k: 'commissio',
                 lambda h: (0, 'commissum %s' % h), 'commissio')
 def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
@@ -3257,75 +3336,7 @@ def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
         with _phasis('instrumenta portarum'):
             _instrumenta_portarum_sanare(dict(
                 (n, b) for n, b in binaria.items() if n not in dilatae))
-    ante = _sigilla_viarum(viae)
-    # praeiudicia (circulus commissionis II T5): OMNIA currunt, fracturae
-    # colliguntur et SIMUL nominantur ante probationem primam; probatio
-    # fracta sistit ut antea
-    fractae_prae = []
-
-    def _praeiudicia_exigere():
-        if fractae_prae:
-            raise SilvaError(
-                'praeiudicia non sana (%d) - nihil cursum ultra, nihil'
-                ' commissum:\n%s' % (len(fractae_prae), '\n'.join(
-                    '  %s (%s, rc=%d) - acta: %s%s' % (n, ff.compendium, ff.rc,
-                                                      va, relatio_fracturarum(ff.fracturae))
-                    for n, ff, va in fractae_prae)))
-    for p in portae:
-        est_prae = (genera.get(p if isinstance(p, str) else p[0])
-                    == 'praeiudicium')
-        if not est_prae:
-            _praeiudicia_exigere()
-        if isinstance(p, str) and p.endswith('.json'):
-            f = receptum_validum(p, viae)      # porta ex umbra
-            nomen = f.nomen + ' (receptum)'
-        else:
-            nomen, filtrum = (p, None) if isinstance(p, str) else p
-            f = receptum_vivum(nomen, filtrum) if recepta else None
-            if f is not None and f.sana:
-                print('porta %s: %s - non iterum cursa' % (nomen, f.compendium))
-            else:
-                audita = filtrum is None and _auditum_commissionis(nomen)
-                f = porta(nomen, filtrum, auditus=True if audita else None)
-                if audita and f.sana:
-                    print('porta %s: %s - auditus (I ex %s)'
-                          % (nomen, f.compendium, os.environ.get(
-                              'FABRICA_AUDITUS_COMMISSIONIS',
-                              AUDITUS_COMMISSIONIS)))
-                if f.sana and '[transitus servatus' in f.compendium:
-                    # actio iudicium (fabrica spec 3 T6): vestigium idem
-                    print('porta %s: %s - non iterum cursa (digestum idem)'
-                          % (nomen, f.compendium))
-                if f.rancida:
-                    post = _sigilla_viarum(viae)
-                    mutatae = [v for v in viae if post[v] != ante[v]]
-                    if mutatae:
-                        raise SilvaError(
-                            'porta %s: plagulae commissionis mutatae DUM'
-                            ' porta currebat (%s) - verdictum de alia'
-                            ' versione; nihil commissum'
-                            % (nomen, ', '.join(mutatae[:5])))
-                    print('porta %s: arbor mutata dum currebat (plagulae'
-                          ' commissionis intactae - cetera libera);'
-                          ' receptum non valet' % nomen)
-        if not f.sana:
-            # acta portae foris currentis nusquam servata erant: fractura
-            # sine causa visibili (2026-09-03, porta pythonica sub md)
-            os.makedirs(PORTAE_DIR, exist_ok=True)
-            via_acta = os.path.join(PORTAE_DIR, re.sub(r'[^A-Za-z0-9_.-]+', '_', nomen)
-                                    + '.fracta.acta')
-            with open(via_acta, 'w') as fa:
-                fa.write(f.acta or '')
-            if est_prae:
-                print('praeiudicium %s NON sanum (%s) - cetera praeiudicia'
-                      ' currunt' % (nomen, f.compendium))
-                fractae_prae.append((nomen, f, via_acta))
-                continue
-            raise SilvaError('porta %s non sana (%s, rc=%d) - nihil'
-                             ' commissum; acta: %s%s'
-                             % (nomen, f.compendium, f.rc, via_acta,
-                                relatio_fracturarum(f.fracturae)))
-    _praeiudicia_exigere()
+    _portas_currere(portae, genera, viae, recepta)
     # renominationes/deletiones per git mv/rm iam in indice: via absens
     # in disco licet si deletio eius in indice stat (viae NOVAE dantur)
     deletae = set(_curre(['git', 'diff', '--cached', '--name-only',
@@ -3368,6 +3379,132 @@ def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
         print('opus %s: perfectum - %s'
               % (opus, opus_claudere(opus, h, nuntius, actor)))
     return h
+
+
+def _ramus_status(basis):
+    """(basis antecessor HEAD?, viae sordidae praeter VETITAS, merge-base,
+    viae rami mutatae merge-base..HEAD - deletae et renominatae utrimque)"""
+    antecessor = _curre(['git', 'merge-base', '--is-ancestor', basis,
+                         'HEAD']).returncode == 0
+    sordidae = [l[3:] for l in _curre(['git', 'status', '--porcelain']
+                                      ).stdout.splitlines()
+                if l[3:] not in VETITAE]
+    mb = _curre(['git', 'merge-base', basis, 'HEAD']).stdout.strip()
+    viae = sorted(set(v for v in _curre(['git', 'diff', '--name-only',
+                                          '--no-renames', mb, 'HEAD']
+                                         ).stdout.splitlines() if v))
+    return antecessor, sordidae, mb, viae
+
+
+def portae_debitae_ramus(basis='main'):
+    """INDEX IMPACTUS (gradus-portarum T5, spec §IV): portae debitae viarum
+    rami (merge-base..HEAD) ET arboris (viae_mutatae), quaeque cum gradu,
+    sumptu (mediana), causa, et commissionibus debiti rami. Reddit textum;
+    agens portas e eo eligit (commissio portae=[...] aut porta(X)).
+    Nihil currit."""
+    _, _, mb, viae_rami = _ramus_status(basis)
+    viae = sorted(set(viae_rami) | set(viae_mutatae()))
+    lineae = ['portae debitae rami (%s..HEAD + arbor): %d viae'
+              % (mb[:8] or basis, len(viae))]
+    if not viae:
+        return '\n'.join(lineae + ['  (nullae)']) + '\n'
+    debita, _ = portae_debitae(viae)
+    registratae = [d for d in debita if not d.manu]
+    rami = {}
+    for _, n, h, _ in debita_fusionis():
+        rami.setdefault(n, []).append(h)
+    info = {}
+    nomina = [d.porta for d in registratae]
+    if nomina and os.path.exists(FABRICA_BIN):
+        try:
+            for l in _portae_fabricae('ordo', nomina, True,
+                                      normare=False).splitlines():
+                f = l.split('\t')
+                if f[0] == 'ORDO' and len(f) == 5:
+                    info[f[1]] = (f[4], f[3])
+        except SilvaError as ex:
+            lineae.append('MONITUM: ordo incomputabilis (%s)'
+                          % str(ex).splitlines()[0])
+    summae = {'commissio': 0, 'fusio': 0}
+
+    def _clavis(d):
+        g, ms = info.get(d.porta, ('?', '-'))
+        return (g != 'commissio', -1 if ms == '-' else int(ms))
+    for d in sorted(registratae, key=_clavis):
+        gradus, ms = info.get(d.porta, ('?', '-'))
+        if ms != '-' and gradus in summae:
+            summae[gradus] += int(ms)
+        lineae.append('  %-9s %-22s %6s  %s%s' % (
+            gradus, d.porta, '(nova)' if ms == '-' else
+            '%d s' % ((int(ms) + 500) // 1000), d.causa,
+            '  [debitum rami: %s]' % ', '.join(rami[d.porta])
+            if d.porta in rami else ''))
+    for d in debita:
+        if d.manu:
+            lineae.append('  manu      %-22s         %s' % (d.porta, d.causa))
+    lineae.append('summa: commissio %d s, fusio %d s (medianae; transitus'
+                  ' servati ~0)' % ((summae['commissio'] + 500) // 1000,
+                                    (summae['fusio'] + 500) // 1000))
+    return '\n'.join(lineae) + '\n'
+
+
+def fusio_probare(basis='main', frigida=True, recepta=True):
+    """FUSIO (gradus-portarum T4, spec §III): ramus ante fusionem in basis.
+    1. basis antecessor HEAD esse debet ('merge main first'), arbor munda
+       (iudicatur COMMISSUM);
+    2. portae debitae viarum rami TOTIUS (git diff merge-base..HEAD) +
+       debita rami (debita_fusionis), GRADUS AMBO, ordine et regula
+       commissionis (praeiudicia simul, probatio prima fracta sistit);
+       transitus servati ~0, rancida iterum currunt;
+    3. frigida=True: tools/frigida_probare.sh (clone novus, ~12+ min);
+    4. viride: debita rami purgantur et ritus 'merge --ff-only' imprimitur;
+       rubrum: SilvaError porta nominata et commissiones quae eam
+       debebant (candidati bisectionis).
+    Tardum (>20 min saepe): ex Claude per processum separatum (detach)."""
+    antecessor, sordidae, mb, viae = _ramus_status(basis)
+    if not antecessor:
+        raise SilvaError('fusio: %s non antecessor HEAD - merge %s first'
+                         ' (ritus fusionis), deinde fusio_probare' % (basis, basis))
+    if sordidae:
+        raise SilvaError('fusio: arbor non munda (%d viae, e.g. %s) - fusio'
+                         ' COMMISSUM iudicat: committe aut repone prius'
+                         % (len(sordidae), sordidae[0]))
+    debita_rami = debita_fusionis()
+    print('fusio: %d viae rami (%s..HEAD), %d debita rami'
+          % (len(viae), mb[:8], len(debita_rami)))
+    portae = []
+    for n in [d[1] for d in debita_rami]:
+        if n not in portae:
+            portae.append(n)
+    binaria = {}
+    with _phasis('portae debitae'):
+        portae = _portae_debitas_addere(viae, portae, binaria_out=binaria)
+    with _phasis('ordo portarum'):
+        portae, genera, _gradus, _ = _portas_ordinare(portae)
+    with _phasis('instrumenta portarum'):
+        _instrumenta_portarum_sanare(binaria)
+    try:
+        _portas_currere(portae, genera, viae, recepta)
+    except SilvaError as ex:
+        culpae = sorted(set(d[2] for d in debita_rami if re.search(
+            r'(?<![\w-])%s(?![\w-])' % re.escape(d[1]), str(ex))))
+        raise SilvaError('%s%s' % (ex, '\nfusio: commissiones quae eam portam'
+                                   ' debebant (bisectio): %s' % ', '.join(culpae)
+                                   if culpae else ''))
+    if frigida:
+        with _phasis('frigida'):
+            r = subprocess.run([os.path.join(RADIX, 'tools', 'frigida_probare.sh')],
+                               cwd=RADIX)
+        if r.returncode != 0:
+            raise SilvaError('fusio: frigida_probare rc=%d - clone novus rubrus'
+                             ' (supra nominatum); nihil purgatum' % r.returncode)
+    if os.path.exists(DEBITA_FUSIONIS_VIA):
+        os.remove(DEBITA_FUSIONIS_VIA)
+    ramus = _curre(['git', 'rev-parse', '--abbrev-ref', 'HEAD']).stdout.strip()
+    print('FUSIO PARATA: %d portae virides%s; debita rami purgata.\n'
+          '  in arbore %s: git merge --ff-only %s'
+          % (len(portae), ' + frigida' if frigida else '', basis, ramus))
+    return portae
 
 
 # ---------------------------------------------------------------- umbra

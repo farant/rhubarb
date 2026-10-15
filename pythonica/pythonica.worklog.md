@@ -1238,3 +1238,13 @@ a dilated gate is never announced twice ('addita' then 'DILATA'). A
 commit that changes the tier logic must run `plena=True`: under its own
 rules it would dilate pythonica.
 
+
+## 2026-10-15 - T4: an insertion anchored on `def f(` steals f's decorator
+
+The T4 patch inserted `_portas_currere` "before `def commissio(`" -
+i.e. BETWEEN `@_cursu_notatum(... 'commissio' ...)` and the def. Python
+then decorated `_portas_currere`: the commissio cursus covered only the
+gate loop and every phase lost its parent. Nothing crashed; only
+probatio_silva's "phases et portae filii commissionis" caught it
+(deterministic red). Insert new functions ABOVE a function's decorator
+block (or after the function), never by anchoring on its `def` line.

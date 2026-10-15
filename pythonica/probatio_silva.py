@@ -2892,6 +2892,56 @@ try:
               'gradus: debitum rami scriptum (tab in causa purgatum), vacuum nihil scribit', causa=repr(d))
     finally:
         silva.DEBITA_FUSIONIS_VIA = _dfv
+    # J-M. fusio_probare (gradus-portarum T4): status rami fictus, frigida=False
+    _rs = silva._ramus_status
+    _dfv = silva.DEBITA_FUSIONIS_VIA
+    silva.DEBITA_FUSIONIS_VIA = os.path.join(_od, 'debita_fusionis.tsv')
+
+    def _fusio(status):
+        silva._ramus_status = lambda basis: status
+        if os.path.exists(_olog):
+            os.remove(_olog)
+        buf, err = io.StringIO(), None
+        with contextlib.redirect_stdout(buf):
+            try:
+                silva.fusio_probare(frigida=False, recepta=False)
+            except silva.SilvaError as ex:
+                err = str(ex)
+        cursae = open(_olog).read().split() if os.path.exists(_olog) else []
+        return buf.getvalue(), err, cursae
+    try:
+        eff, err, cursae = _fusio((False, [], 'ab', []))
+        credo(err is not None and 'merge main first' in err and cursae == [],
+              'fusio: basis non antecessor = recusatio, nihil cursum', causa=repr(err))
+        eff, err, cursae = _fusio((True, ['lib/x.c'], 'ab', []))
+        credo(err is not None and 'non munda' in err and 'lib/x.c' in err and cursae == [],
+              'fusio: arbor sordida = recusatio', causa=repr(err))
+        # L. viride: debitum rami + debita viarum, GRADUS AMBO currunt; debita purgata
+        silva.portae_debitae = lambda viae, *a, **k: (
+            [silva.Debitum('ficta-prae-c', 'x.c tegit', False)] if viae == ['x.c'] else [], [])
+        with contextlib.redirect_stdout(io.StringIO()):
+            silva._debita_fusionis_scribere('abc1234', {'ficta-prob-2': 'y.c tegit'})
+        silva.FABRICA_BIN = _fabrica_ordinis([('ficta-prae-c', 'praeiudicium', '500', 'commissio'),
+                                             ('ficta-prob-2', 'probatio', '9000', 'fusio')])
+        eff, err, cursae = _fusio((True, [], 'abcdef12', ['x.c']))
+        credo(err is None and cursae == ['ficta-prae-c', 'ficta-prob-2']
+              and 'DILATA' not in eff,
+              'fusio: debita rami et viarum, gradus ambo cursi', causa=repr((err, cursae, eff[-400:])))
+        credo('FUSIO PARATA' in eff and 'git merge --ff-only' in eff
+              and not os.path.exists(silva.DEBITA_FUSIONIS_VIA),
+              'fusio: viridis - debita purgata, ritus impressus', causa=repr(eff[-300:]))
+        # M. rubrum: porta debiti nominata cum commissione (bisectio); debita servata
+        with contextlib.redirect_stdout(io.StringIO()):
+            silva._debita_fusionis_scribere('c0ffee1', {'ficta-prob-1': 'z.c tegit'})
+        silva.FABRICA_BIN = _fabrica_ordinis([('ficta-prae-c', 'praeiudicium', '500', 'commissio'),
+                                             ('ficta-prob-1', 'probatio', '9000', 'fusio')])
+        eff, err, cursae = _fusio((True, [], 'abcdef12', ['x.c']))
+        credo(err is not None and 'ficta-prob-1 non sana' in err and 'bisectio): c0ffee1' in err
+              and os.path.exists(silva.DEBITA_FUSIONIS_VIA),
+              'fusio: rubra - commissio debens nominata, debita servata', causa=repr(err))
+    finally:
+        silva._ramus_status = _rs
+        silva.DEBITA_FUSIONIS_VIA = _dfv
 finally:
     silva.FABRICA_BIN = _of_fb
     silva._fabricam_exigere = _of_fe

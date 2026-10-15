@@ -12,8 +12,8 @@ deferred the merge-tier mechanism and the first cut to Claude (§II,
 §III). This deliberately relaxes the 10-12 rule "commissio runs every
 owed gate" (portae-declaratae).*
 
-*Status: APPROVED 2026-10-15 (Fran: "yes, that sounds great"); T1-T3
-built (§VII).*
+*Status: APPROVED 2026-10-15 (Fran: "yes, that sounds great"); T1-T5
+built (§VII); T6 (ritual note, measurement) open.*
 
 ## 0. Data (build/portae/tempora.tsv, last 10 healthy runs per gate; the week's 371 commits through `portae tactus`)
 
@@ -143,4 +143,25 @@ which gates exist.
   This commit itself ran with `plena=True` (it would otherwise have
   dilated pythonica, the gate that tests it). Dry run on this very diff:
   27 s commit tier, 15 dilated (the ~25 min it would have cost before).
+- **T4+T5** (2026-10-15): commissio's gate loop is now
+  `_portas_currere(portae, genera, viae, recepta)`, shared with
+  `silva.fusio_probare(basis='main', frigida=True, recepta=True)`:
+  refuses unless basis is an ancestor of HEAD ('merge main first') and
+  the tree is clean (VETITAE aside); owed gates of `git diff
+  --name-only --no-renames merge-base..HEAD` + every gate in the branch
+  debt, both tiers (`plena`), healed binaries, same run policy; then
+  `tools/frigida_probare.sh`; green = debt file removed + `git merge
+  --ff-only <ramus>` recipe; red = the gate plus the commits whose debt
+  named it (word-boundary match, `bisectio): ...`), debt kept. Git
+  queries isolated in `_ramus_status(basis)` (tests patch it). No shell
+  wrapper: it runs >20 min, so from Claude it is a detached python call
+  like the long commits. Impact list `silva.portae_debitae_ramus(basis)`
+  / `tools/portae_debitae.sh -ramus [basis]`: owed gates of the branch +
+  working tree, one line each (tier, median, cause, `[debitum rami:
+  h]`), commit tier first then cheapest first, `manu` gates last, summa
+  per tier. NOT built: "would it actually re-run" (receipt / fabrica
+  verdict per gate) - medians only. First real run on quinta (70 paths
+  since ed85fe10): commissio 286 s, fusio 1682 s. The estimate line
+  says `(plena: gradus ambo)` under plena and the >300 s MONITUM is
+  only for the commit tier.
 
