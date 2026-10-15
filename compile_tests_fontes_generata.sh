@@ -10,6 +10,7 @@ declare -a SOURCE_FILES=(
     "crusta/fontes/crusta_registrum_coctum.c"
     "lib/actio.c"
     "lib/actor.c"
+    "lib/admonitiones.c"
     "lib/aedilis.c"
     "lib/aemulator.c"
     "lib/aemulator_hospes.c"

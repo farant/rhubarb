@@ -274,6 +274,70 @@ _probare_concurrentes (
     CREDO_AEQUALIS_I32(xar_numerus(l), IV * L);
 }
 
+/* legere ab positione (T4a): eventus novi solum; linea dimidia manet
+ * legenda; liber brevior (rotatus): ab initio; absens: vacuus */
+interior vacuum
+_probare_legere_ab (
+    CredoContextus* c)
+{
+                  Area* a;
+     PraeconiumEventus  e;
+                   Xar* l;
+                   s64  positio;
+                   s64  prior;
+                   i32  i;
+
+    a = (Area*)c->datum;
+    CREDO_NECESSE(ex_fixo("stop.json", "%9", NIHIL, &e, c->piscina));
+    per (i = ZEPHYRUM; i < III; i++)
+    {
+        e.tempus = (s64)i;
+        CREDO_NECESSE(praeconium_scribere(a->liber, &e, c->piscina));
+    }
+    positio  = ZEPHYRUM;
+    l        = praeconium_legere_ab(a->liber, &positio, c->piscina);
+    CREDO_NECESSE(l != NIHIL);
+    CREDO_AEQUALIS_I32(xar_numerus(l), III);
+    CREDO_VERUM(positio > ZEPHYRUM);
+    /* nihil novi */
+    prior  = positio;
+    l      = praeconium_legere_ab(a->liber, &positio, c->piscina);
+    CREDO_AEQUALIS_I32(xar_numerus(l), ZEPHYRUM);
+    CREDO_AEQUALIS_S64(positio, prior);
+    /* duo novi */
+    per (i = III; i < V; i++)
+    {
+        e.tempus = (s64)i;
+        CREDO_NECESSE(praeconium_scribere(a->liber, &e, c->piscina));
+    }
+    l = praeconium_legere_ab(a->liber, &positio, c->piscina);
+    CREDO_NECESSE(l != NIHIL && xar_numerus(l) == II);
+    CREDO_AEQUALIS_S64(((constans PraeconiumEventus*)xar_obtinere(l,
+        ZEPHYRUM))->tempus, (s64)III);
+    /* linea dimidia: nihil, positio manet; perfecta: unus */
+    prior = positio;
+    CREDO_NECESSE(filum_appendere(a->liber, chorda_ex_literis(
+        "{\"tempus\":9,\"sessio\":\"s-x\"", c->piscina)));
+    l = praeconium_legere_ab(a->liber, &positio, c->piscina);
+    CREDO_AEQUALIS_I32(xar_numerus(l), ZEPHYRUM);
+    CREDO_AEQUALIS_S64(positio, prior);
+    CREDO_NECESSE(filum_appendere(a->liber, chorda_ex_literis(
+        ",\"eventus\":\"Stop\"}\n", c->piscina)));
+    l = praeconium_legere_ab(a->liber, &positio, c->piscina);
+    CREDO_AEQUALIS_I32(xar_numerus(l), I);
+    /* liber rotatus (brevior): ab initio */
+    CREDO_NECESSE(filum_delere(a->liber));
+    CREDO_NECESSE(praeconium_scribere(a->liber, &e, c->piscina));
+    l = praeconium_legere_ab(a->liber, &positio, c->piscina);
+    CREDO_AEQUALIS_I32(xar_numerus(l), I);
+    /* absens: vacuus, positio 0 */
+    CREDO_NECESSE(filum_delere(a->liber));
+    l = praeconium_legere_ab(a->liber, &positio, c->piscina);
+    CREDO_NECESSE(l != NIHIL);
+    CREDO_AEQUALIS_I32(xar_numerus(l), ZEPHYRUM);
+    CREDO_AEQUALIS_S64(positio, (s64)ZEPHYRUM);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "ex_hamo", _probare_ex_hamo, NIHIL, NIHIL, NIHIL, NIHIL },
     { "praecisio", _probare_praecisionem, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -282,6 +346,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
       aream_purgare, NIHIL, NIHIL },
     { "concurrentes", _probare_concurrentes, aream_parare,
       aream_purgare, NIHIL, NIHIL },
+    { "legere_ab", _probare_legere_ab, aream_parare, aream_purgare,
+      NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

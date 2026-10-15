@@ -347,3 +347,77 @@ praeconium_caudam_legere (
     }
     redde l;
 }
+
+Xar*
+praeconium_legere_ab (
+    constans character* via,
+                   s64* positio,
+               Piscina* piscina)
+{
+                      Xar* l;
+                     FILE* f;
+                      long  mensura;
+                 character* alveus;
+                    size_t  lecti;
+                       s64  finis;
+                    chorda  textus;
+    chorda_fissio_fructus  lineae;
+         PraeconiumEventus  e;
+                       i32  i;
+
+    l = xar_creare(piscina, (i32)magnitudo(PraeconiumEventus));
+    si (!l || !positio)
+    {
+        redde l;
+    }
+    f = via ? lectiones_fopen(via, "rb") : NIHIL;
+    si (!f)
+    {
+        *positio = ZEPHYRUM;
+        redde l;
+    }
+    (vacuum)fseek(f, 0L, SEEK_END);
+    mensura = ftell(f);
+    /* liber brevior quam positio (deletus, rotatus): ab initio */
+    si (mensura < 0L || *positio < ZEPHYRUM || *positio > (s64)mensura)
+    {
+        *positio = ZEPHYRUM;
+    }
+    si ((s64)mensura == *positio)
+    {
+        fclose(f);
+        redde l;
+    }
+    alveus = (character*)piscina_allocare(piscina, (memoriae_index)
+        ((s64)mensura - *positio) + I);
+    si (!alveus || fseek(f, (long)*positio, SEEK_SET) != 0)
+    {
+        fclose(f);
+        redde l;
+    }
+    lecti = fread(alveus, I, (size_t)((s64)mensura - *positio), f);
+    fclose(f);
+    /* solum usque ad lineam integram ultimam */
+    finis = (s64)lecti;
+    dum (finis > ZEPHYRUM && alveus[finis - I] != '\n')
+    {
+        finis--;
+    }
+    si (finis == ZEPHYRUM)
+    {
+        redde l;
+    }
+    textus.datum    = (i8*)alveus;
+    textus.mensura  = (i32)finis;
+    lineae          = chorda_fissio(textus, '\n', piscina);
+    per (i = ZEPHYRUM; i < lineae.numerus; i++)
+    {
+        si (   lineae.elementa[i].mensura > ZEPHYRUM
+            && ex_linea(lineae.elementa[i], &e, piscina))
+        {
+            *(PraeconiumEventus*)xar_addere(l) = e;
+        }
+    }
+    *positio += finis;
+    redde l;
+}

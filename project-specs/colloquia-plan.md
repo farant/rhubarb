@@ -81,7 +81,11 @@ phase that needs it. Header text shown to Fran before coding.*
 - T3 DONE 2026-10-15: `colloquia` - per-session status replay, pane-
   attached `praeco status` lines, titles from transcript tails (256 KB;
   verified on a real 220 MB transcript), live panes via multiplexor.
-- T4 next: vicus notifications (model, toasts, center, jump-to-pane).
+- T4 split (Fran 2026-10-15): T4a model + watcher + center, T4b toasts,
+  T4c jump (tty in pseudoterminale/terminale, terminal command argument).
+- T4a library part DONE 2026-10-15: `admonitiones` (sorted index, copies,
+  ex_eventu) + `praeconium_legere_ab` (incremental read). Next: vicus side
+  of T4a (colloquia system + notification-center genus; manifest first).
 
 ## V. Hook facts (Claude Code docs, checked 2026-10-15)
 

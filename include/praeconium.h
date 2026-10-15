@@ -66,4 +66,14 @@ praeconium_caudam_legere (
                    i32  octeti,
                Piscina* piscina);
 
+/* eventus post positionem (octeti a principio libri); *positio
+ * promovetur ad finem lineae integrae ultimae (linea dimidia manet
+ * legenda). Liber brevior quam *positio (deletus, rotatus): ab initio.
+ * Liber absens: Xar vacuus, *positio 0. (colloquia-plan T4a) */
+Xar*
+praeconium_legere_ab (
+    constans character* via,
+                   s64* positio,
+               Piscina* piscina);
+
 #endif /* PRAECONIUM_H */
