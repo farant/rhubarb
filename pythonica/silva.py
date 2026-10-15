@@ -2632,7 +2632,8 @@ def _excusatas_praeiudicare(excusatae, portae, sine_debitis):
     return causae
 
 
-def _portae_debitas_addere(viae, portae, excusatae=None, binaria_out=None):
+def _portae_debitas_addere(viae, portae, excusatae=None, binaria_out=None,
+                           additae_out=None):
     """portae petitae + DEBITAE absentes (portae_debitae), ordine: petitae,
     deinde additae ordine PORTAE. Linea una per additam cum causa sua;
     debitae manu nominantur, numquam curruntur. excusatae {porta: causa}
@@ -2643,7 +2644,10 @@ def _portae_debitas_addere(viae, portae, excusatae=None, binaria_out=None):
     numquam obstat: machina haec
     commissionem nunquam impedit). Decretum 01M38VGAK8. binaria_out
     (dict, circulus commissionis II T2) impletur {porta: [(bin, ratio)]}
-    portarum quae current (petitae et additae, non manu nec excusatae)."""
+    portarum quae current (petitae et additae, non manu nec excusatae).
+    additae_out (dict, gradus-portarum T3) impletur {porta: causa}
+    additarum (non petitarum) - 'porta debita addita' tunc NON hic
+    imprimitur sed a _portas_ordinare, post divisionem graduum."""
     global _BINARIA_ULTIMA
     _BINARIA_ULTIMA = (None, {})
     try:
@@ -2675,7 +2679,10 @@ def _portae_debitas_addere(viae, portae, excusatae=None, binaria_out=None):
             print('porta debita EXCUSATA: %s - %s' % (d.porta,
                                                       excusatae[d.porta]))
         elif d.porta not in petitae:
-            print('porta debita addita: %s - %s' % (d.porta, d.causa))
+            if additae_out is None:
+                print('porta debita addita: %s - %s' % (d.porta, d.causa))
+            else:
+                additae_out[d.porta] = d.causa
             fructus.append(d.porta)
     binaria = (_BINARIA_ULTIMA[1] if _BINARIA_ULTIMA[0] == tuple(viae)
                else {})
@@ -2687,14 +2694,29 @@ def _portae_debitas_addere(viae, portae, excusatae=None, binaria_out=None):
     return fructus
 
 
-def _portas_ordinare(portae):
+def _portas_ordinare(portae, additae=None, plena=True):
     """ORDO PORTARUM (circulus commissionis II T5): (portae ordinatae,
     genera {nomen: 'praeiudicium'|'probatio'}, gradus {nomen:
-    'commissio'|'fusio'} - gradus-portarum T1) per 'bin/fabrica portae
+    'commissio'|'fusio'} - gradus-portarum T1, dilatae {porta: causa})
+    per 'bin/fabrica portae
     ordo -machina' (C: genus ex annotatione, mediana ultimorum X cursuum
     sanorum ex tempora.tsv, sine historia primae). Recepta umbrae (.json)
     prima manent ordine suo; ordo stabilis. Fractura quaevis = MONITUM et
-    ordo datus (numquam obstat)."""
+    ordo datus (numquam obstat).
+    GRADUS (gradus-portarum T3, spec §II): additae {porta: causa} = portae
+    debitae a commissione additae (non petitae). Nisi plena, additae
+    gradus 'fusio' DILATANTUR: e portis tolluntur, linea 'porta debita
+    DILATA ad fusionem', in 'dilatae' redduntur (debitum rami post
+    commissionem). Additae ceterae: 'porta debita addita'. Petitae
+    numquam dilatantur. Ordo incomputabilis = nihil dilatatum (plus
+    currit, numquam minus). Deinde 'aestimatio portarum' ex medianis;
+    supra AESTIMATIO_MONITUM s = MONITUM (non recusatio)."""
+    additae = additae or {}
+
+    def _additas_nuntiare(dilatae):
+        for n, causa in additae.items():
+            if n not in dilatae:
+                print('porta debita addita: %s - %s' % (n, causa))
     receptae = [p for p in portae if isinstance(p, str) and p.endswith('.json')]
     ceterae = [p for p in portae
                if not (isinstance(p, str) and p.endswith('.json'))]
@@ -2704,13 +2726,15 @@ def _portas_ordinare(portae):
         if n not in nomina:
             nomina.append(n)
     if not nomina or not os.path.exists(FABRICA_BIN):
-        return list(portae), {}, {}
+        _additas_nuntiare({})
+        return list(portae), {}, {}, {}
     try:
         textus = _portae_fabricae('ordo', nomina, True, normare=False)
     except SilvaError as ex:
         print('MONITUM: ordo portarum computari non potuit (%s) - ordo'
               ' datus' % str(ex).splitlines()[0])
-        return list(portae), {}, {}
+        _additas_nuntiare({})
+        return list(portae), {}, {}, {}
     ordo, genera, sumptus, gradus = [], {}, {}, {}
     for linea in textus.splitlines():
         f = linea.split('\t')
@@ -2723,10 +2747,25 @@ def _portas_ordinare(portae):
         else:
             print('MONITUM: ordo portarum: linea extra contractum %r - ordo'
                   ' datus' % linea)
-            return list(portae), {}, {}
+            _additas_nuntiare({})
+            return list(portae), {}, {}, {}
     if sorted(ordo) != sorted(nomina):
         print('MONITUM: ordo portarum nomina non reddidit omnia - ordo datus')
-        return list(portae), {}, {}
+        _additas_nuntiare({})
+        return list(portae), {}, {}, {}
+    dilatae = {}
+    if not plena:
+        for n, causa in additae.items():
+            if gradus.get(n) == 'fusio':
+                dilatae[n] = causa
+    _additas_nuntiare(dilatae)
+    for n in ordo:
+        if n in dilatae:
+            print('porta debita DILATA ad fusionem: %s - %s' % (n, dilatae[n]))
+    if dilatae:
+        ordo = [n for n in ordo if n not in dilatae]
+        ceterae = [p for p in ceterae
+                   if (p if isinstance(p, str) else p[0]) not in dilatae]
     positio = dict((n, i) for i, n in enumerate(ordo))
     ceterae.sort(key=lambda p: positio[p if isinstance(p, str) else p[0]])
 
@@ -2736,7 +2775,47 @@ def _portas_ordinare(portae):
                          for n in ordo if genera[n] == g) or '(nullae)'
     print('ordo portarum: praeiudicia: %s | probationes: %s'
           % (_pars('praeiudicium'), _pars('probatio')))
-    return receptae + ceterae, genera, gradus
+    notae = [int(sumptus[n]) for n in ordo if sumptus[n] != '-']
+    secundae = (sum(notae) + 500) // 1000
+    ignotae = len(ordo) - len(notae)
+    print('aestimatio portarum: %d s%s%s' % (
+        secundae, ', %d sine historia' % ignotae if ignotae else '',
+        '; dilatae ad fusionem: %d' % len(dilatae) if dilatae else ''))
+    if secundae > AESTIMATIO_MONITUM:
+        print('MONITUM: aestimatio portarum %d s > %d s (gradus-portarum'
+              ' §II: commissio ~V min summum) - portae gradus commissionis'
+              ' nimis multae aut lentae; annotatio gradus="fusio" consideranda'
+              % (secundae, AESTIMATIO_MONITUM))
+    return receptae + ceterae, genera, gradus, dilatae
+
+
+def _debita_fusionis_scribere(h, dilatae):
+    """DEBITUM RAMI (gradus-portarum T3): portae dilatae commissionis h
+    in DEBITA_FUSIONIS_VIA (TSV: tempus, porta, commissio, causa)
+    appenduntur - fusio_probare eas currit et purgat. Per arborem
+    (build/ non commissum)."""
+    if not dilatae:
+        return
+    os.makedirs(os.path.dirname(DEBITA_FUSIONIS_VIA), exist_ok=True)
+    with open(DEBITA_FUSIONIS_VIA, 'a') as f:
+        for n in sorted(dilatae):
+            causa = re.sub(r'[\t\n]+', ' ', str(dilatae[n]))
+            f.write('%d\t%s\t%s\t%s\n' % (int(time.time()), n, h, causa))
+    print('debitum rami: %d portae dilatae ad fusionem (%s) - %s'
+          % (len(dilatae), ', '.join(sorted(dilatae)), DEBITA_FUSIONIS_VIA))
+
+
+def debita_fusionis():
+    """debita rami (gradus-portarum): [(tempus, porta, commissio,
+    causa)] ex DEBITA_FUSIONIS_VIA; [] si nulla."""
+    if not os.path.exists(DEBITA_FUSIONIS_VIA):
+        return []
+    fructus = []
+    for linea in open(DEBITA_FUSIONIS_VIA).read().splitlines():
+        f = linea.split('\t')
+        if len(f) == 4:
+            fructus.append((int(f[0]), f[1], f[2], f[3]))
+    return fructus
 
 
 def _instrumenta_portarum_sanare(binaria):
@@ -3093,7 +3172,7 @@ def _lint_praevium_exigere(viae):
 def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
               opus=None, actor='claude', sine_debitis=None,
               sine_fabrica=None, excusatae=None, _debitae_additae=False,
-              _fabrica_facta=False):
+              _fabrica_facta=False, plena=False, _dilatae=None):
     """gate, deinde commissio - uno vocamine, in Pythone (crusta 'set -e'
     non honorat; pipestatus fallit). portae: nomina aut (nomen,
     filtrum) aut via recepti umbrae (.json); OMNES sanae esse debent
@@ -3123,7 +3202,12 @@ def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
     commissio_umbra eas iam addidit. FABRICA (T8): post lint, ante
     portas, bin/fabrica iudicat artificia generata a viis tacta
     (_fabricam_exigere); sine_fabrica='<causa>' omittit;
-    _fabrica_facta: commissio_umbra id iam fecit."""
+    _fabrica_facta: commissio_umbra id iam fecit.
+    GRADUS (project-specs/gradus-portarum-spec.md §II): portae debitae
+    ADDITAE gradus 'fusio' non currunt sed DILATANTUR ('porta debita
+    DILATA ad fusionem') et post commissionem debitum rami fiunt
+    (debita_fusionis); petitae semper currunt; plena=True omnes currit
+    (mores ante 2026-10-15). _dilatae: commissio_umbra iam divisit."""
     causae = []
     for v in viae:
         if v in VETITAE:
@@ -3158,15 +3242,21 @@ def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
             _uncum_praevium_exigere(viae)
     if sine_debitis is not None:
         print('portae debitae OMISSAE: %s' % sine_debitis)
-    elif not _debitae_additae:
+    binaria, additae = None, {}
+    if sine_debitis is None and not _debitae_additae:
         binaria = {}
         with _phasis('portae debitae'):
             portae = _portae_debitas_addere(viae, portae, excusatae,
-                                            binaria_out=binaria)
-        with _phasis('instrumenta portarum'):
-            _instrumenta_portarum_sanare(binaria)
+                                            binaria_out=binaria,
+                                            additae_out=additae)
     with _phasis('ordo portarum'):
-        portae, genera, _gradus = _portas_ordinare(portae)
+        portae, genera, _gradus, dilatae = _portas_ordinare(
+            portae, additae, plena)
+    dilatae = {**(_dilatae or {}), **dilatae}
+    if binaria is not None:
+        with _phasis('instrumenta portarum'):
+            _instrumenta_portarum_sanare(dict(
+                (n, b) for n, b in binaria.items() if n not in dilatae))
     ante = _sigilla_viarum(viae)
     # praeiudicia (circulus commissionis II T5): OMNIA currunt, fracturae
     # colliguntur et SIMUL nominantur ante probationem primam; probatio
@@ -3272,6 +3362,7 @@ def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
                              % (r.returncode,
                                 (r.stdout + r.stderr).strip()[-600:]))
     h = _curre(['git', 'rev-parse', '--short', 'HEAD']).stdout.strip()
+    _debita_fusionis_scribere(h, dilatae)
     recepta_viva_delere()
     if opus:
         print('opus %s: perfectum - %s'
@@ -3292,6 +3383,12 @@ PORTAE_DIR = os.path.join(RADIX, 'build', 'portae')
 # filii (operarii umbrae) hereditate accipiunt
 TEMPORA_VIA = (os.environ.get('SILVA_TEMPORA_VIA')
                or os.path.join(PORTAE_DIR, 'tempora.tsv'))
+# debitum rami (gradus-portarum T3): portae gradus 'fusio' dilatae
+DEBITA_FUSIONIS_VIA = (os.environ.get('SILVA_DEBITA_FUSIONIS_VIA')
+                       or os.path.join(PORTAE_DIR, 'debita_fusionis.tsv'))
+# aestimatio portarum commissionis supra hoc (s) = MONITUM (Franus 10-15:
+# ~V minuta obligatoria inter commissiones)
+AESTIMATIO_MONITUM = 300
 Receptum = namedtuple('Receptum', 'via nomen filtrum sana cucurrit '
                       'compendium rc sigillum rancida finis fracturae '
                       'photographia', defaults=([], None))
@@ -3966,7 +4063,7 @@ def _totum_actorum(acta):
 
 def commissio_umbra(nuntius, viae, portae, verificare=True, tectum=1800,
                     siccum=False, sine_debitis=None, sine_fabrica=None,
-                    excusatae=None):
+                    excusatae=None, plena=False):
     """Portae umbrae SERIATIM (tempora non contendunt - mensurae suitae
     fidae manent), quaeque in clone photographiae suae (editio pergit),
     deinde commissio contra recepta OMNIA (plagulae viae contra blobs
@@ -3979,7 +4076,8 @@ def commissio_umbra(nuntius, viae, portae, verificare=True, tectum=1800,
     adduntur, ut in umbra quoque currant; sine_debitis et excusatae ut in
     commissio.
     Lint latinus praevius et iudicium fabricae ANTE umbras (ut in
-    commissio; sine_fabrica idem). Forma ANTE omnia (…QGT1)."""
+    commissio; sine_fabrica idem). Forma ANTE omnia (…QGT1). Gradus ut
+    in commissio: additae 'fusio' dilatae nisi plena."""
     causae = _excusatas_praeiudicare(excusatae, portae, sine_debitis)
     if causae:
         raise SilvaError('commissio_umbra RECUSATA - nihil cursum:\n  %s'
@@ -3996,8 +4094,12 @@ def commissio_umbra(nuntius, viae, portae, verificare=True, tectum=1800,
                              ' cur portae debitae omittuntur? - nihil'
                              ' cursum')
         print('portae debitae OMISSAE: %s' % sine_debitis)
+        dilatae = {}
     else:
-        portae = _portae_debitas_addere(viae, portae, excusatae)
+        additae = {}
+        portae = _portae_debitas_addere(viae, portae, excusatae,
+                                        additae_out=additae)
+        portae, _, _, dilatae = _portas_ordinare(portae, additae, plena)
     recepta = []
     for p in portae:
         nomen, filtrum = (p, None) if isinstance(p, str) else p
@@ -4025,7 +4127,7 @@ def commissio_umbra(nuntius, viae, portae, verificare=True, tectum=1800,
     if not siccum:
         h = commissio(nuntius, viae, portae=[v for v, _, _, _ in recepta],
                       verificare=verificare, _debitae_additae=True,
-                      _fabrica_facta=True)
+                      _fabrica_facta=True, _dilatae=dilatae)
     for v, _, _, _ in recepta:
         receptum_delere(v)
     return h, [(n, r.compendium, tot) for _, n, r, tot in recepta]

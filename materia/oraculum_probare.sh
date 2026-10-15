@@ -28,7 +28,7 @@
 # cursor_communis) struitur, per thesaurum - porta quae obiecta rancida
 # iudicat codicem heri, non hodie, iudicat (olim obiecta silva/build per
 # cursorem silvae, cursores ad gradus T5).
-# <porta titulus="oraculum-silvae" tegit="materia/fontes/* silva/fontes/* silva/grammatica/*"/>
+# <porta titulus="oraculum-silvae" gradus="fusio" tegit="materia/fontes/* silva/fontes/* silva/grammatica/*"/>
 
 set -u
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"

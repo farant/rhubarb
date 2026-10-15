@@ -2770,6 +2770,22 @@ def _fabrica_ordinis(ordines, rc=0):
     return via
 
 
+def _commissio_ordinis_petitae(portae):
+    # ut _commissio_ordinis sed portae petitae cum debitis additis (sine_debitis non datum)
+    if os.path.exists(_olog):
+        os.remove(_olog)
+    buf = io.StringIO()
+    err = None
+    with contextlib.redirect_stdout(buf):
+        try:
+            silva.commissio('nihil', ['pythonica/via_absens_ordinis.txt'], portae=portae,
+                            recepta=False, verificare=False)
+        except silva.SilvaError as ex:
+            err = str(ex)
+    cursae = open(_olog).read().split() if os.path.exists(_olog) else []
+    return buf.getvalue(), err, cursae
+
+
 def _commissio_ordinis(portae):
     if os.path.exists(_olog):
         os.remove(_olog)
@@ -2813,7 +2829,7 @@ try:
                                          ('ficta-c', 'probatio', '500')])
     buf = io.StringIO()
     with contextlib.redirect_stdout(buf):
-        _o, _g, _gr = silva._portas_ordinare(['ficta-m', 'ficta-c'])
+        _o, _g, _gr, _dl = silva._portas_ordinare(['ficta-m', 'ficta-c'])
     credo(_o == ['ficta-m', 'ficta-c'] and _gr == {'ficta-m': 'fusio', 'ficta-c': 'commissio'},
           'ordo: gradus ex campo quinto', causa=repr((_o, _gr, buf.getvalue())))
     via_vetus = os.path.join(_od, 'fabrica_ordo_vetus')
@@ -2823,9 +2839,59 @@ try:
     silva.FABRICA_BIN = via_vetus
     buf = io.StringIO()
     with contextlib.redirect_stdout(buf):
-        _o, _g, _gr = silva._portas_ordinare(['ficta-c'])
+        _o, _g, _gr, _dl = silva._portas_ordinare(['ficta-c'])
     credo(_o == ['ficta-c'] and _gr == {} and 'linea extra contractum' in buf.getvalue(),
           'ordo: linea IV camporum = monitum, ordo datus', causa=repr((_o, _gr, buf.getvalue())))
+    # E. gradus (gradus-portarum T3): debita addita gradus fusio DILATA (non cursa), commissionis currit
+    silva.portae_debitae = lambda viae, *a, **k: ([silva.Debitum('ficta-prob-2', 'x.c tegit', False),
+                                                  silva.Debitum('ficta-prae-c', 'y.c tegit', False)], [])
+    silva.FABRICA_BIN = _fabrica_ordinis([('ficta-prae-c', 'praeiudicium', '500', 'commissio'),
+                                         ('ficta-prob-2', 'probatio', '9000', 'fusio')])
+    eff, err, cursae = _commissio_ordinis_petitae([])
+    credo(cursae == ['ficta-prae-c'] and 'nec in disco' in (err or ''),
+          'gradus: debita fusionis NON cursa, commissionis cursa', causa=repr((cursae, err)))
+    credo('porta debita DILATA ad fusionem: ficta-prob-2 - x.c tegit' in eff
+          and 'porta debita addita: ficta-prae-c - y.c tegit' in eff
+          and 'porta debita addita: ficta-prob-2' not in eff,
+          'gradus: DILATA nominata cum causa, addita sola commissionis', causa=repr(eff[-600:]))
+    credo('aestimatio portarum: 1 s; dilatae ad fusionem: 1' in eff
+          and 'probationes: (nullae)' in eff,
+          'gradus: aestimatio sine dilatis, ordo sine dilatis', causa=repr(eff[-600:]))
+    # F. plena=True: omnes currunt (mores veteres)
+    if os.path.exists(_olog):
+        os.remove(_olog)
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        try:
+            silva.commissio('nihil', ['pythonica/via_absens_ordinis.txt'], recepta=False,
+                            verificare=False, plena=True)
+        except silva.SilvaError:
+            pass
+    cursae = open(_olog).read().split() if os.path.exists(_olog) else []
+    credo(cursae == ['ficta-prae-c', 'ficta-prob-2'] and 'DILATA' not in buf.getvalue(),
+          'gradus: plena=True currit omnes', causa=repr((cursae, buf.getvalue()[-400:])))
+    # G. petita expresse: gradus fusio tamen currit
+    eff, err, cursae = _commissio_ordinis_petitae(['ficta-prob-2'])
+    credo(cursae == ['ficta-prae-c', 'ficta-prob-2'] and 'DILATA' not in eff,
+          'gradus: porta petita numquam dilatatur', causa=repr((cursae, eff[-400:])))
+    # H. aestimatio supra AESTIMATIO_MONITUM: MONITUM, non recusatio
+    silva.FABRICA_BIN = _fabrica_ordinis([('ficta-prae-c', 'praeiudicium', '400000', 'commissio'),
+                                         ('ficta-prob-2', 'probatio', '9000', 'fusio')])
+    eff, err, cursae = _commissio_ordinis_petitae([])
+    credo(cursae == ['ficta-prae-c'] and 'MONITUM: aestimatio portarum 400 s > 300 s' in eff,
+          'gradus: aestimatio > 300 s = MONITUM, portae tamen currunt', causa=repr((cursae, eff[-400:])))
+    # I. debitum rami: scribitur post commissionem, legitur
+    _dfv = silva.DEBITA_FUSIONIS_VIA
+    silva.DEBITA_FUSIONIS_VIA = os.path.join(_od, 'debita_fusionis.tsv')
+    try:
+        with contextlib.redirect_stdout(io.StringIO()):
+            silva._debita_fusionis_scribere('abc1234', {'ficta-prob-2': 'x.c\ttegit'})
+            silva._debita_fusionis_scribere('def5678', {})
+        d = silva.debita_fusionis()
+        credo(len(d) == 1 and d[0][1:] == ('ficta-prob-2', 'abc1234', 'x.c tegit'),
+              'gradus: debitum rami scriptum (tab in causa purgatum), vacuum nihil scribit', causa=repr(d))
+    finally:
+        silva.DEBITA_FUSIONIS_VIA = _dfv
 finally:
     silva.FABRICA_BIN = _of_fb
     silva._fabricam_exigere = _of_fe

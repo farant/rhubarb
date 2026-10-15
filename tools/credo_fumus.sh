@@ -41,7 +41,7 @@
 #        et in filio creata), nulla sine usu
 #
 # Exitus 0 sanum | 1 FRACTUM | 2 nihil actum.
-# <porta titulus="credo" tegit="probationes/fixa/credo_convertere/*"/>
+# <porta titulus="credo" gradus="fusio" tegit="probationes/fixa/credo_convertere/*"/>
 set -u
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$RADIX" || exit 2

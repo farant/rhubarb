@@ -12,8 +12,8 @@ deferred the merge-tier mechanism and the first cut to Claude (§II,
 §III). This deliberately relaxes the 10-12 rule "commissio runs every
 owed gate" (portae-declaratae).*
 
-*Status: APPROVED 2026-10-15 (Fran: "yes, that sounds great"); T1 built
-(§VII).*
+*Status: APPROVED 2026-10-15 (Fran: "yes, that sounds great"); T1-T3
+built (§VII).*
 
 ## 0. Data (build/portae/tempora.tsv, last 10 healthy runs per gate; the week's 371 commits through `portae tactus`)
 
@@ -125,3 +125,22 @@ which gates exist.
   bin/fabrica = MONITUM, order as given). Tests: probatio_portae XV
   (+XIV fifth field), pythonica ordo D; plants II red (parse, ordo copy).
   No gate annotated yet (T2) - behaviour unchanged.
+- **T2+T3** (2026-10-15, one commit - T2 alone changes nothing, T3 alone
+  dilates nothing): the 15 merge-tier runners carry `gradus="fusio"`.
+  commissio: `_portae_debitas_addere(..., additae_out=)` collects the
+  ADDED gates (not the requested ones); `_portas_ordinare(portae,
+  additae, plena)` splits them - `porta debita DILATA ad fusionem: X -
+  causa` for tier fusio, `porta debita addita` for the rest - removes the
+  dilated from the order line, prints `aestimatio portarum: N s[, K sine
+  historia][; dilatae ad fusionem: M]` and a MONITUM over
+  `AESTIMATIO_MONITUM` (300 s). Order is now debts -> ordo -> instrumenta
+  (binaries healed only for gates that run). After the commit,
+  `_debita_fusionis_scribere(h, dilatae)` appends `tempus porta commissio
+  causa` to `build/portae/debita_fusionis.tsv` (`DEBITA_FUSIONIS_VIA`,
+  env `SILVA_DEBITA_FUSIONIS_VIA`); `debita_fusionis()` reads it.
+  Uncomputable order = nothing dilated (more runs, never fewer).
+  `plena=True` = old behaviour; commissio_umbra follows the same split.
+  This commit itself ran with `plena=True` (it would otherwise have
+  dilated pythonica, the gate that tests it). Dry run on this very diff:
+  27 s commit tier, 15 dilated (the ~25 min it would have cost before).
+

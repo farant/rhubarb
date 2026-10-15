@@ -24,7 +24,7 @@
 # Chorda oraculi SIGILLATA (officina-m4a-spec.md §V); versio clang
 # scribitur (linea acceptationis inter versiones movetur!).
 # <porta titulus="examen-vectis" tegit="silva/fontes/* silva/grammatica/* silva/probationes/fixa/examinis/*" currit="silva/instrumenta/principalia/examen.c"/>
-# <porta titulus="examen-corpus" genus="praeiudicium" tegit="silva/fontes/systema_c89.h silva/fontes/systema_posix.h silva/grammatica/*" currit="silva/instrumenta/principalia/examen.c"/>
+# <porta titulus="examen-corpus" gradus="fusio" genus="praeiudicium" tegit="silva/fontes/systema_c89.h silva/fontes/systema_posix.h silva/grammatica/*" currit="silva/instrumenta/principalia/examen.c"/>
 
 set -u
 SILVA_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

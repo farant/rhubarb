@@ -1221,3 +1221,20 @@ the loop goes on; before the first test (or at the end) all recorded
 pre-check failures raise ONE SilvaError naming each with its acta; a red
 test still raises at once. commissio_umbra keeps its own order (not in
 this task). Plants: no report-all, no reordering - each red.
+
+## 2026-10-15 - gradus portarum T1-T3 (two tiers of gates)
+
+T1 attempt 2 lost 11 min: a new ordo test expected Python to re-sort,
+but the order is fabrica's (the fake prints ficta-m first). Lesson: a
+change to probatio_silva.py -> run `silva.porta('pythonica')` BEFORE the
+commit (~3.5 min); the commit then reuses the live receipt - but write
+docs first, any later tree change makes the receipt stale.
+
+T3 shape: the tier split lives in `_portas_ordinare` because ordo is the
+one call that knows genus + gradus + median for every gate; it now runs
+BEFORE instrumenta so binaries of dilated gates are not healed.
+`_portae_debitas_addere(additae_out=)` stops printing 'addita' itself so
+a dilated gate is never announced twice ('addita' then 'DILATA'). A
+commit that changes the tier logic must run `plena=True`: under its own
+rules it would dilate pythonica.
+

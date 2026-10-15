@@ -36,7 +36,7 @@
 # lacunae examinis, non plantae).
 #
 # Usage: ./tools/unci-git/fumus.sh     exit 0 sanum | 1 fractum
-# <porta titulus="unci" tegit="tools/unci-git/*" currit="silva/instrumenta/principalia/examen.c"/>
+# <porta titulus="unci" gradus="fusio" tegit="tools/unci-git/*" currit="silva/instrumenta/principalia/examen.c"/>
 
 set -u
 RADIX="$(git rev-parse --show-toplevel)" || exit 2
