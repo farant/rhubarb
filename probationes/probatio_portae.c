@@ -1431,9 +1431,94 @@ _sectio_genus (
     CREDO_VERUM(chorda_continet(h, _ch(c, "    genus praeiudicium\n")));
 }
 
+/* XIV. ordo portarum (circulus commissionis II T5): praeiudicia prima;
+ * intra genus mediana ultimorum X cursuum sanorum ascendens; sine
+ * historia prima; par = ordo nominum; cursus fracti et non cursi
+ * omissi; effusio machinae et hominis octetis */
+interior vacuum
+_sectio_ordo (
+    CredoContextus* c)
+{
+    hic_manens constans PlagulaFicta plagulae[] = {
+        { "tools/vexilla_fumus.sh",
+          "# <porta titulus=\"vexilla\" genus=\"praeiudicium\"/>\n" },
+        { "tools/credo_fumus.sh", "# <porta titulus=\"credo\"/>\n" },
+        { "tools/sera_fumus.sh", "# <porta titulus=\"sera\"/>\n" },
+        { NIHIL, NIHIL }
+    };
+    hic_manens constans character* constans paria[] = {
+        "vexilla=tools/vexilla_fumus.sh", "credo=tools/credo_fumus.sh",
+        "sera=tools/sera_fumus.sh", NIHIL
+    };
+    /* credo: duo cursus antiqui ingentes (extra ultimos X) + X cursus
+     * 20 s + fractus 1 s + non cursus 1 s; sera: 5 s, 7 s, 9 s;
+     * vexilla: 100 s (praeiudicium tamen primum); aequa: 7 s (par
+     * serae, post eam ordine nominum) */
+    hic_manens constans character tempora_t[] =
+        "t\tporta\tcredo\t900.0\t1\t0\n"
+        "t\tporta\tcredo\t900.0\t1\t0\n"
+        "t\tporta\tcredo\t20.0\t1\t0\n" "t\tporta\tcredo\t20.0\t1\t0\n"
+        "t\tporta\tcredo\t20.0\t1\t0\n" "t\tporta\tcredo\t20.0\t1\t0\n"
+        "t\tporta\tcredo\t20.0\t1\t0\n" "t\tporta\tcredo\t20.0\t1\t0\n"
+        "t\tporta\tcredo\t20.0\t1\t0\n" "t\tporta\tcredo\t20.0\t1\t0\n"
+        "t\tporta\tcredo\t20.0\t1\t0\n" "t\tporta\tcredo\t20.0\t1\t0\n"
+        "t\tporta\tcredo\t1.0\t0\t1\n"
+        "t\tporta\tcredo\t1.0\t0\t0\n"
+        "t\tphasis\tforma\t1.0\t\t\n"
+        "t\tporta\tsera\t5.0\t1\t0\n"
+        "t\tporta\tsera\t9.25\t1\t0\n"
+        "t\tporta\tsera\t7.0\t1\t0\n"
+        "t\tporta\taequa\t7.0\t1\t0\n"
+        "t\tporta\tvexilla\t100.0\t1\t0\n";
+                         Xar* d;
+                         Xar* nomina;
+                         Xar* o;
+                      chorda  causa;
+         constans PortaeOrdo* p;
+
+    d = _legere_mundum(c, plagulae, paria, &causa);
+    CREDO_NECESSE_NON_NIHIL(d);
+    nomina = xar_creare(c->piscina, (i32)magnitudo(chorda));
+    *(chorda*)xar_addere(nomina) = _ch(c, "credo");
+    *(chorda*)xar_addere(nomina) = _ch(c, "sera");
+    *(chorda*)xar_addere(nomina) = _ch(c, "aequa");
+    *(chorda*)xar_addere(nomina) = _ch(c, "nova");
+    *(chorda*)xar_addere(nomina) = _ch(c, "vexilla");
+    o = portae_ordinare(d, nomina, _ch(c, tempora_t), c->piscina);
+    CREDO_NECESSE_NON_NIHIL(o);
+    CREDO_AEQUALIS_I32(xar_numerus(o), V);
+    CREDO_VERUM(chorda_aequalis_literis(portae_ordinem_scribere(o,
+        VERUM,
+        c->piscina),
+        "ORDO\tvexilla\tpraeiudicium\t100000\n"
+        "ORDO\tnova\tprobatio\t-\n"
+        "ORDO\tsera\tprobatio\t7000\n"
+        "ORDO\taequa\tprobatio\t7000\n"
+        "ORDO\tcredo\tprobatio\t20000\n"));
+    p = (constans PortaeOrdo*)xar_obtinere(o, IV);
+    CREDO_AEQUALIS_I32(p->cursus, X);   /* ultimi X, fracti omissi */
+    CREDO_VERUM(chorda_aequalis_literis(portae_ordinem_scribere(o,
+        FALSUM, c->piscina),
+        "ordo portarum:\n"
+        "  praeiudicia: vexilla 100 s\n"
+        "  probationes: nova (nova), sera 7 s, aequa 7 s, credo 20 s\n"));
+    /* sine historia omnino: ordo nominum, genus servatum */
+    o = portae_ordinare(d, nomina, _ch(c, ""), c->piscina);
+    CREDO_NECESSE_NON_NIHIL(o);
+    CREDO_VERUM(chorda_aequalis_literis(portae_ordinem_scribere(o,
+        VERUM,
+        c->piscina),
+        "ORDO\tvexilla\tpraeiudicium\t-\n"
+        "ORDO\tcredo\tprobatio\t-\n"
+        "ORDO\tsera\tprobatio\t-\n"
+        "ORDO\taequa\tprobatio\t-\n"
+        "ORDO\tnova\tprobatio\t-\n"));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "lectio sana", _sectio_lectio, NIHIL, NIHIL, NIHIL, NIHIL },
     { "genus portae", _sectio_genus, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "ordo portarum", _sectio_ordo, NIHIL, NIHIL, NIHIL, NIHIL },
     { "chordae et annotationes aliae", _sectio_non_commentaria, NIHIL,
       NIHIL, NIHIL, NIHIL },
     { "recusationes", _sectio_recusationes, NIHIL, NIHIL, NIHIL,

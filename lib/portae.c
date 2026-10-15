@@ -2050,3 +2050,293 @@ portae_tactus_scribere (
     }
     redde chorda_aedificator_finire(a);
 }
+
+
+/* ==================================================
+ * ORDO PORTARUM (circulus commissionis II T5)
+ * ================================================== */
+
+/* secundae '99.1' -> millesimae 99100 (tres decimales, ceterae
+ * omissae); -I si non numerus */
+interior s32
+_millesimae_legere (
+    chorda c)
+{
+    s32 integra  = ZEPHYRUM;
+    s32 pars     = ZEPHYRUM;
+    i32 decimae  = ZEPHYRUM;
+    b32 visa     = FALSUM;
+    b32 punctum  = FALSUM;
+    i32 i;
+
+    per (i = ZEPHYRUM; i < c.mensura; i++)
+    {
+        character ch = (character)c.datum[i];
+
+        si (ch >= '0' && ch <= '9')
+        {
+            visa = VERUM;
+            si (!punctum)
+            {
+                integra = integra * X + (s32)(ch - '0');
+            }
+            alioquin si (decimae < III)
+            {
+                pars = pars * X + (s32)(ch - '0');
+                decimae++;
+            }
+        }
+        alioquin si (ch == '.' && !punctum)
+        {
+            punctum = VERUM;
+        }
+        alioquin
+        {
+            redde -I;
+        }
+    }
+    si (!visa)
+    {
+        redde -I;
+    }
+    dum (decimae < III)
+    {
+        pars = pars * X;
+        decimae++;
+    }
+    redde integra * M + pars;
+}
+
+/* linea in campos (tabulator); numerus camporum (<= maximum) */
+interior i32
+_campos_scindere (
+     chorda  linea,
+     chorda* campi,
+        i32  maximum)
+{
+    i32 n        = ZEPHYRUM;
+    i32 initium  = ZEPHYRUM;
+    i32 i;
+
+    per (i = ZEPHYRUM; i <= linea.mensura && n < maximum; i++)
+    {
+        si (i == linea.mensura || linea.datum[i] == '\t')
+        {
+            campi[n] = chorda_sectio(linea, initium, i);
+            n++;
+            initium = i + I;
+        }
+    }
+    redde n;
+}
+
+Xar*
+portae_ordinare (
+     constans Xar* declaratae,
+     constans Xar* nomina,
+           chorda  tempora,
+          Piscina* piscina)
+{
+    Xar* ordo;
+    Xar* valores;   /* Xar de (Xar* de s32), per nomen */
+    i32  i;
+    i32  j;
+    i32  initium = ZEPHYRUM;
+
+    si (nomina == NIHIL)
+    {
+        redde NIHIL;
+    }
+    ordo     = xar_creare(piscina, (i32)magnitudo(PortaeOrdo));
+    valores  = xar_creare(piscina, (i32)magnitudo(Xar*));
+    si (ordo == NIHIL || valores == NIHIL)
+    {
+        redde NIHIL;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(nomina); i++)
+    {
+        *(Xar**)xar_addere(valores) = xar_creare(piscina,
+            (i32)magnitudo(s32));
+    }
+    /* historia: lineae 'porta' sanae (cucurrit 1, rc 0), ordine temporis */
+    per (i = ZEPHYRUM; i <= tempora.mensura; i++)
+    {
+        si (i == tempora.mensura || tempora.datum[i] == '\n')
+        {
+            chorda linea = chorda_sectio(tempora, initium, i);
+            chorda campi[VI];
+               i32 n = _campos_scindere(linea, campi, VI);
+
+            initium = i + I;
+            si (   n < VI || !chorda_aequalis_literis(campi[I], "porta")
+                || !chorda_aequalis_literis(campi[IV], "1")
+                || !chorda_aequalis_literis(campi[V], "0"))
+            {
+                perge;
+            }
+            per (j = ZEPHYRUM; j < xar_numerus(nomina); j++)
+            {
+                si (chorda_aequalis(campi[II],
+                        *(chorda*)xar_obtinere(nomina, j)))
+                {
+                    s32 ms = _millesimae_legere(campi[III]);
+
+                    si (ms >= ZEPHYRUM)
+                    {
+                        *(s32*)xar_addere(*(Xar**)xar_obtinere(valores,
+                            j)) = ms;
+                    }
+                    frange;
+                }
+            }
+        }
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(nomina); i++)
+    {
+        PortaeOrdo* o = (PortaeOrdo*)xar_addere(ordo);
+               Xar* v = *(Xar**)xar_obtinere(valores, i);
+               s32  ultimi[X];
+               i32  k = ZEPHYRUM;
+               i32  a;
+
+        o->porta       = *(chorda*)xar_obtinere(nomina, i);
+        o->genus       = PORTA_PROBATIO;
+        o->millesimae  = -I;
+        per (j = ZEPHYRUM; declaratae != NIHIL
+             && j < xar_numerus(declaratae); j++)
+        {
+            constans PortaDeclarata* d = (constans PortaDeclarata*)
+                xar_obtinere(declaratae, j);
+
+            si (chorda_aequalis(d->titulus, o->porta))
+            {
+                o->genus = d->genus;
+                frange;
+            }
+        }
+        /* ultimi X, ordinati (insertio), mediana */
+        per (j = (xar_numerus(v) > X) ? xar_numerus(v) - X : ZEPHYRUM;
+             j < xar_numerus(v); j++)
+        {
+            s32 m = *(s32*)xar_obtinere(v, j);
+
+            a = k;
+            dum (a > ZEPHYRUM && ultimi[a - I] > m)
+            {
+                ultimi[a] = ultimi[a - I];
+                a--;
+            }
+            ultimi[a] = m;
+            k++;
+        }
+        o->cursus = k;
+        si (k > ZEPHYRUM)
+        {
+            o->millesimae = (k % II == I) ? ultimi[k / II]
+                : (ultimi[k / II - I] + ultimi[k / II]) / II;
+        }
+    }
+    /* ordo stabilis (insertio): genus (praeiudicia prima), deinde
+     * millesimae (-I = sine historia, ergo prima) */
+    per (i = I; i < xar_numerus(ordo); i++)
+    {
+        PortaeOrdo t = *(PortaeOrdo*)xar_obtinere(ordo, i);
+
+        j = i;
+        dum (j > ZEPHYRUM)
+        {
+             PortaeOrdo* p = (PortaeOrdo*)xar_obtinere(ordo, j - I);
+                    b32  maior = (p->genus != t.genus)
+                        ? (p->genus == PORTA_PROBATIO
+                           && t.genus == PORTA_PRAEIUDICIUM)
+                        : (p->millesimae > t.millesimae);
+
+            si (!maior)
+            {
+                frange;
+            }
+            *(PortaeOrdo*)xar_obtinere(ordo, j) = *p;
+            j--;
+        }
+        *(PortaeOrdo*)xar_obtinere(ordo, j) = t;
+    }
+    redde ordo;
+}
+
+chorda
+portae_ordinem_scribere (
+    constans Xar* ordo,
+             b32  machina,
+         Piscina* piscina)
+{
+    ChordaAedificator* a = chorda_aedificator_creare(piscina,
+        (memoriae_index)CCLVI);
+                   i32 i;
+                   i32 g;
+
+    si (machina)
+    {
+        per (i = ZEPHYRUM; ordo != NIHIL && i < xar_numerus(ordo); i++)
+        {
+            constans PortaeOrdo* o = (constans PortaeOrdo*)xar_obtinere(
+                ordo, i);
+
+            chorda_aedificator_appendere_literis(a, "ORDO");
+            _campus(a, o->porta);
+            chorda_aedificator_appendere_literis(a,
+                o->genus == PORTA_PRAEIUDICIUM ? "\tpraeiudicium"
+                : "\tprobatio");
+            si (o->millesimae >= ZEPHYRUM)
+            {
+                _campus_numerus(a, (i32)o->millesimae);
+            }
+            alioquin
+            {
+                chorda_aedificator_appendere_literis(a, "\t-");
+            }
+            chorda_aedificator_appendere_character(a, '\n');
+        }
+        redde chorda_aedificator_finire(a);
+    }
+    chorda_aedificator_appendere_literis(a, "ordo portarum:\n");
+    per (g = ZEPHYRUM; g < II; g++)
+    {
+        PortaGenus genus = (g == ZEPHYRUM) ? PORTA_PRAEIUDICIUM
+            : PORTA_PROBATIO;
+               b32 primus = VERUM;
+
+        chorda_aedificator_appendere_literis(a, g == ZEPHYRUM
+            ? "  praeiudicia:" : "  probationes:");
+        per (i = ZEPHYRUM; ordo != NIHIL && i < xar_numerus(ordo); i++)
+        {
+            constans PortaeOrdo* o = (constans PortaeOrdo*)xar_obtinere(
+                ordo, i);
+
+            si (o->genus != genus)
+            {
+                perge;
+            }
+            chorda_aedificator_appendere_literis(a,
+                primus ? " " : ", ");
+            primus = FALSUM;
+            chorda_aedificator_appendere_chorda(a, o->porta);
+            si (o->millesimae >= ZEPHYRUM)
+            {
+                chorda_aedificator_appendere_character(a, ' ');
+                chorda_aedificator_appendere_i32(a,
+                    (i32)((o->millesimae + D) / M));
+                chorda_aedificator_appendere_literis(a, " s");
+            }
+            alioquin
+            {
+                chorda_aedificator_appendere_literis(a, " (nova)");
+            }
+        }
+        si (primus)
+        {
+            chorda_aedificator_appendere_literis(a, " (nullae)");
+        }
+        chorda_aedificator_appendere_character(a, '\n');
+    }
+    redde chorda_aedificator_finire(a);
+}

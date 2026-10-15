@@ -161,7 +161,11 @@ reused costs 0. Ordering is C: `bin/fabrica portae ordo -portae TSV
 -tempora build/portae/tempora.tsv <gates...>` prints
 `ORDO\t<porta>\t<genus>\t<secundae|ignota>`; commissio iterates it and
 prints the order before running (`ordo portarum: vexilla 1 s, ...`).
-`commissio_umbra` uses the same order.
+**As built (T5):** as above, except `commissio_umbra` keeps its own
+order (departure - it runs gates in snapshot clones; left for later).
+Ordering never blocks: any trouble prints a MONITUM and keeps the
+given order. Measured on real history: pre-checks vexilla 1 s,
+examen-corpus 180 s; tests radix 37 s, silva 165 s, pythonica 186 s.
 
 ## IV. Order of work (plan to follow)
 

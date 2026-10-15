@@ -2533,7 +2533,7 @@ def portae_tabula():
     return '\n'.join(lineae) + '\n'
 
 
-def _portae_fabricae(modus, viae, machina):
+def _portae_fabricae(modus, viae, machina, normare=True):
     """bin/fabrica portae <modus> [-machina] -portae <registrum> <viae>
     -> effusio; exitus non 0 (RECUSATIO declarationum, fabrica absens aut
     fracta) = SilvaError cum effusione tota"""
@@ -2543,7 +2543,8 @@ def _portae_fabricae(modus, viae, machina):
     try:
         argv = ([FABRICA_BIN, 'portae', modus]
                 + (['-machina'] if machina else [])
-                + ['-portae', t.name] + [_via_normata(v) for v in viae])
+                + ['-portae', t.name]
+                + [_via_normata(v) if normare else v for v in viae])
         try:
             r = _curre(argv)
         except OSError as ex:
@@ -2684,6 +2685,55 @@ def _portae_debitas_addere(viae, portae, excusatae=None, binaria_out=None):
             if porta in currentes and porta not in excusatae:
                 binaria_out[porta] = list(bina)
     return fructus
+
+
+def _portas_ordinare(portae):
+    """ORDO PORTARUM (circulus commissionis II T5): (portae ordinatae,
+    genera {nomen: 'praeiudicium'|'probatio'}) per 'bin/fabrica portae
+    ordo -machina' (C: genus ex annotatione, mediana ultimorum X cursuum
+    sanorum ex tempora.tsv, sine historia primae). Recepta umbrae (.json)
+    prima manent ordine suo; ordo stabilis. Fractura quaevis = MONITUM et
+    ordo datus (numquam obstat)."""
+    receptae = [p for p in portae if isinstance(p, str) and p.endswith('.json')]
+    ceterae = [p for p in portae
+               if not (isinstance(p, str) and p.endswith('.json'))]
+    nomina = []
+    for p in ceterae:
+        n = p if isinstance(p, str) else p[0]
+        if n not in nomina:
+            nomina.append(n)
+    if not nomina or not os.path.exists(FABRICA_BIN):
+        return list(portae), {}
+    try:
+        textus = _portae_fabricae('ordo', nomina, True, normare=False)
+    except SilvaError as ex:
+        print('MONITUM: ordo portarum computari non potuit (%s) - ordo'
+              ' datus' % str(ex).splitlines()[0])
+        return list(portae), {}
+    ordo, genera, sumptus = [], {}, {}
+    for linea in textus.splitlines():
+        f = linea.split('\t')
+        if f[0] == 'ORDO' and len(f) == 4:
+            ordo.append(f[1])
+            genera[f[1]] = f[2]
+            sumptus[f[1]] = f[3]
+        else:
+            print('MONITUM: ordo portarum: linea extra contractum %r - ordo'
+                  ' datus' % linea)
+            return list(portae), {}
+    if sorted(ordo) != sorted(nomina):
+        print('MONITUM: ordo portarum nomina non reddidit omnia - ordo datus')
+        return list(portae), {}
+    positio = dict((n, i) for i, n in enumerate(ordo))
+    ceterae.sort(key=lambda p: positio[p if isinstance(p, str) else p[0]])
+
+    def _pars(g):
+        return ', '.join('%s %s' % (n, ('(nova)' if sumptus[n] == '-' else
+                                        '%d s' % ((int(sumptus[n]) + 500) // 1000)))
+                         for n in ordo if genera[n] == g) or '(nullae)'
+    print('ordo portarum: praeiudicia: %s | probationes: %s'
+          % (_pars('praeiudicium'), _pars('probatio')))
+    return receptae + ceterae, genera
 
 
 def _instrumenta_portarum_sanare(binaria):
@@ -3112,8 +3162,27 @@ def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
                                             binaria_out=binaria)
         with _phasis('instrumenta portarum'):
             _instrumenta_portarum_sanare(binaria)
+    with _phasis('ordo portarum'):
+        portae, genera = _portas_ordinare(portae)
     ante = _sigilla_viarum(viae)
+    # praeiudicia (circulus commissionis II T5): OMNIA currunt, fracturae
+    # colliguntur et SIMUL nominantur ante probationem primam; probatio
+    # fracta sistit ut antea
+    fractae_prae = []
+
+    def _praeiudicia_exigere():
+        if fractae_prae:
+            raise SilvaError(
+                'praeiudicia non sana (%d) - nihil cursum ultra, nihil'
+                ' commissum:\n%s' % (len(fractae_prae), '\n'.join(
+                    '  %s (%s, rc=%d) - acta: %s%s' % (n, ff.compendium, ff.rc,
+                                                      va, relatio_fracturarum(ff.fracturae))
+                    for n, ff, va in fractae_prae)))
     for p in portae:
+        est_prae = (genera.get(p if isinstance(p, str) else p[0])
+                    == 'praeiudicium')
+        if not est_prae:
+            _praeiudicia_exigere()
         if isinstance(p, str) and p.endswith('.json'):
             f = receptum_validum(p, viae)      # porta ex umbra
             nomen = f.nomen + ' (receptum)'
@@ -3154,10 +3223,16 @@ def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
                                     + '.fracta.acta')
             with open(via_acta, 'w') as fa:
                 fa.write(f.acta or '')
+            if est_prae:
+                print('praeiudicium %s NON sanum (%s) - cetera praeiudicia'
+                      ' currunt' % (nomen, f.compendium))
+                fractae_prae.append((nomen, f, via_acta))
+                continue
             raise SilvaError('porta %s non sana (%s, rc=%d) - nihil'
                              ' commissum; acta: %s%s'
                              % (nomen, f.compendium, f.rc, via_acta,
                                 relatio_fracturarum(f.fracturae)))
+    _praeiudicia_exigere()
     # renominationes/deletiones per git mv/rm iam in indice: via absens
     # in disco licet si deletio eius in indice stat (viae NOVAE dantur)
     deletae = set(_curre(['git', 'diff', '--cached', '--name-only',

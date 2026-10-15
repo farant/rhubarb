@@ -1205,3 +1205,19 @@ in the hook (fumus unci XXII). After `fabrica` so regenerated files are
 judged too. The hook still runs in `git commit` (backstop for a bare
 commit). Plants: regeneration disabled -> 2 tests red; hook called
 without the filter -> 1 test red.
+
+## 2026-10-14 - gate order + pre-checks reported together (circulus commissionis II T5)
+
+Phase `ordo portarum` after `instrumenta portarum`: `_portas_ordinare`
+asks `bin/fabrica portae ordo -machina` (names passed unnormalised -
+`_portae_fabricae(..., normare=False)`), reorders stably (shadow
+receipts `.json` stay first), prints `ordo portarum: praeiudicia: ... |
+probationes: ...`. Any failure (fabrica missing, rc!=0, a line outside
+the contract, missing names) = MONITUM and the given order - ordering
+never blocks a commit; the older fake-fabrica tests exercise exactly
+that path (their fake answers NOTA). The loop: a red pre-check is
+recorded (`praeiudicium X NON sanum - cetera praeiudicia currunt`) and
+the loop goes on; before the first test (or at the end) all recorded
+pre-check failures raise ONE SilvaError naming each with its acta; a red
+test still raises at once. commissio_umbra keeps its own order (not in
+this task). Plants: no report-all, no reordering - each red.

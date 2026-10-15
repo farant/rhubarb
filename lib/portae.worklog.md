@@ -322,3 +322,18 @@ updated). Annotated: vexilla, portae-declaratae, amalgamata, generata,
 examen-corpus. The kind drives the phase and the failure policy in
 commissio (T5); cost drives order inside a phase. Plant: parser ignores
 `praeiudicium` -> genus section red (:1419).
+
+## 2026-10-14 - ordo portarum (circulus commissionis II T5)
+
+`portae_ordinare(declaratae, nomina, tempora)`: pure, text in. Kind from
+the annotation (undeclared = probatio); cost = median of the last X
+healthy runs (`porta` rows with ran=1 rc=0) in build/portae/tempora.tsv,
+durations parsed to milliseconds by hand (three decimals, no floats).
+Order: pre-checks before tests; inside a kind ascending median, no
+history (-1) first; a stable insertion sort keeps the given order on
+ties. CLI `bin/fabrica portae ordo [-machina] -portae TSV [-tempora VIA]
+PORTA...` reads declarations only (no derivation - fast), writes
+`ORDO <porta> <praeiudicium|probatio> <ms|->`. Missing tempora file =
+everything "no history" (given order kept). Plants: kind ignored, all
+history instead of the last X (only `cursus == X` catches it - the
+median is robust to two old outliers), no-history-last - each red.

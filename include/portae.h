@@ -309,4 +309,40 @@ portae_declaratas_scribere (
              b32  machina,
          Piscina* piscina);
 
+
+/* ==================================================
+ * ORDO PORTARUM (circulus commissionis II T5)
+ *
+ * Praeiudicia ANTE probationes (genus phasim decernit); intra genus
+ * sumptu ascendente: mediana millesimarum ultimarum X cursuum SANORUM
+ * in 'tempora' (TSV build/portae/tempora.tsv: tempus, 'porta',
+ * titulus, secundae, cucurrit 1, rc 0); porta SINE historia PRIMA
+ * (nova aut modo mutata plerumque); par = ordo nominum. Porta non
+ * declarata = probatio. Purum: textus temporum a vocante.
+ * ================================================== */
+
+nomen structura {
+        chorda porta;
+    PortaGenus genus;
+           s32 millesimae;   /* mediana; -I = sine historia */
+           i32 cursus;       /* cursus sani numerati (<= X) */
+} PortaeOrdo;
+
+/* Xar de PortaeOrdo, ordine currendi. nomina = Xar de chorda (titulus
+ * portae). NIHIL = memoria deficit. */
+Xar*
+portae_ordinare (
+     constans Xar* declaratae,
+     constans Xar* nomina,
+           chorda  tempora,
+          Piscina* piscina);
+
+/* ORDO <porta> <praeiudicium|probatio> <millesimae|-> per lineam
+ * (machina); homo: 'ordo portarum:' + praeiudicia + probationes */
+chorda
+portae_ordinem_scribere (
+    constans Xar* ordo,
+             b32  machina,
+         Piscina* piscina);
+
 #endif /* PORTAE_H */

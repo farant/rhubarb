@@ -2739,6 +2739,83 @@ finally:
     import shutil
     shutil.rmtree(_cd, ignore_errors=True)
 
+_grex('ordo portarum: praeiudicia simul, probationes per sumptum (circulus commissionis II T5)')
+_od = tempfile.mkdtemp(prefix='silva_ordo_')
+_olog = os.path.join(_od, 'cursae')
+_ogate = os.path.join(_od, 'porta.sh')
+open(_ogate, 'w').write('#!/bin/sh\necho "$1" >> %s\n'
+                        'if [ "$2" = rubra ]; then echo "fictum: FRACTUM"; exit 1; fi\n'
+                        'echo "fictum: sanum"\n' % _olog)
+os.chmod(_ogate, 0o755)
+os.environ['PYTHONICA_PORTAE_FICTAE'] = json.dumps(dict(
+    (n, [[_ogate, n] + (['rubra'] if r else []), r'fictum: (sanum|FRACTUM)', 'generica'])
+    for n, r in (('ficta-prae-a', True), ('ficta-prae-b', True), ('ficta-prae-c', False),
+                 ('ficta-prob', False), ('ficta-prob-1', True), ('ficta-prob-2', False))))
+silva._portae_fictae()
+_of_fb = silva.FABRICA_BIN
+_of_fe = silva._fabricam_exigere
+_of_pd = silva.portae_debitae
+silva._fabricam_exigere = lambda viae, sine_fabrica=None, **k: None
+silva.portae_debitae = lambda viae, *a, **k: ([], [])
+
+
+def _fabrica_ordinis(ordines, rc=0):
+    via = os.path.join(_od, 'fabrica_ordo_%d' % rc)
+    with open(via, 'w') as f:
+        f.write('#!/bin/sh\nif [ "$1 $2" = "portae ordo" ]; then printf "%s"; exit %d; fi\n'
+                'printf "NOTA\\tnihil\\n"; exit 0\n'
+                % (''.join('ORDO\\t%s\\t%s\\t%s\\n' % o for o in ordines), rc))
+    os.chmod(via, 0o755)
+    return via
+
+
+def _commissio_ordinis(portae):
+    if os.path.exists(_olog):
+        os.remove(_olog)
+    buf = io.StringIO()
+    err = None
+    with contextlib.redirect_stdout(buf):
+        try:
+            silva.commissio('nihil', ['pythonica/via_absens_ordinis.txt'], portae=portae,
+                            recepta=False, verificare=False, sine_debitis='probatio ordinis')
+        except silva.SilvaError as ex:
+            err = str(ex)
+    cursae = open(_olog).read().split() if os.path.exists(_olog) else []
+    return buf.getvalue(), err, cursae
+try:
+    # A. duo praeiudicia rubra + probatio viridis: utraque nominantur una recusatione, probatio NON currit
+    silva.FABRICA_BIN = _fabrica_ordinis([('ficta-prae-a', 'praeiudicium', '-'),
+                                         ('ficta-prae-b', 'praeiudicium', '2000'),
+                                         ('ficta-prob', 'probatio', '1000')])
+    eff, err, cursae = _commissio_ordinis(['ficta-prob', 'ficta-prae-b', 'ficta-prae-a'])
+    credo(cursae == ['ficta-prae-a', 'ficta-prae-b'],
+          'ordo: praeiudicia prima (ordine fabricae), probatio post rubra NON cursa', causa=repr(cursae))
+    credo(err is not None and 'praeiudicia non sana (2)' in err and 'ficta-prae-a' in err and 'ficta-prae-b' in err,
+          'ordo: praeiudicia rubra SIMUL nominantur, recusatio una', causa=repr(err))
+    credo('ordo portarum: praeiudicia: ficta-prae-a (nova), ficta-prae-b 2 s | probationes: ficta-prob 1 s' in eff,
+          'ordo: ordo impressus ante portas', causa=repr(eff[-400:]))
+    # B. praeiudicium viride, probatio rubra prima per sumptum: sistit, altera NON currit
+    silva.FABRICA_BIN = _fabrica_ordinis([('ficta-prae-c', 'praeiudicium', '500'),
+                                         ('ficta-prob-1', 'probatio', '1000'),
+                                         ('ficta-prob-2', 'probatio', '9000')])
+    eff, err, cursae = _commissio_ordinis(['ficta-prob-2', 'ficta-prob-1', 'ficta-prae-c'])
+    credo(cursae == ['ficta-prae-c', 'ficta-prob-1'] and err is not None and 'ficta-prob-1 non sana' in err,
+          'ordo: probatio vilior prima, prima rubra sistit (cetera non cursa)', causa=repr((cursae, err)))
+    # C. ordo computari nequit: MONITUM, ordo datus servatus, commissio pergit
+    silva.FABRICA_BIN = _fabrica_ordinis([], rc=2)
+    eff, err, cursae = _commissio_ordinis(['ficta-prob-2', 'ficta-prae-c'])
+    credo(cursae == ['ficta-prob-2', 'ficta-prae-c'] and 'MONITUM: ordo portarum' in eff
+          and err is not None and 'nec in disco' in err,
+          'ordo: fabrica fracta - monitum, ordo datus, non obstat', causa=repr((cursae, eff[-300:], err)))
+finally:
+    silva.FABRICA_BIN = _of_fb
+    silva._fabricam_exigere = _of_fe
+    silva.portae_debitae = _of_pd
+    os.environ.pop('PYTHONICA_PORTAE_FICTAE', None)
+    silva._portae_fictae()
+    import shutil
+    shutil.rmtree(_od, ignore_errors=True)
+
 # ---- fabrica ante portas (plan 1a T8 gradus III) ----
 print('\n--- fabrica: artificia generata tacta ante portas ---')
 _fb_verum = silva.FABRICA_BIN
