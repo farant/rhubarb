@@ -11,7 +11,7 @@ ordering". Predecessor: `circulus-commissionis-spec.md` (P3 heals ONE
 stale judge, once; P4 the tree-local briar). Principle …Z2Y555: regular
 logic in C, pythonica a thin wrapper.*
 
-*Status: DRAFT - headers for Fran's approval before any code.*
+*Status: AS BUILT (2026-10-14, quinta) - §VII; T6 (timing) deferred to the next large commit on a quiet machine.*
 
 ## 0. Census (2026-10-14, the T1 commit)
 
@@ -220,3 +220,43 @@ merge, by hand).
 - the gates that fail in under a second when their precondition is
   missing (briar-fumus exit 2) - with I in place they should never
   reach that branch; keep it as the backstop.
+
+## VII. As built (2026-10-14, quinta: T1 8d020b23, T2 69897cef, T3 fc0ee485, T4 378e6f31, T5 e2c09f69)
+
+Phase order of `silva.commissio` now: forma, lint, fabrica (judges
+healed to a fixed point; a stale generated file AMONG the commit's paths
+regenerated, outside refused with the recipe), unci (the real pre-commit
+hook, `UNCUS_VIAE` + `UNCUS_CRIBRUM=1`), portae debitae, instrumenta
+portarum (BINARIUM -> one judge call, stale `bin/` healed in-tree, never
+`~/.bin`), ordo portarum (`bin/fabrica portae ordo`), then pre-checks
+(all run, failures reported together) and tests (cheapest first,
+fail-fast).
+
+Done means, item by item:
+- attempt-4 replay: tree `bin/briar` deleted, `tools/briar_fumus.sh`
+  owes briar-fumus -> `instrumentum sanatum: bin/briar (portae:
+  briar-fumus)` before any gate (real tree, `~/.bin` byte-identical);
+- attempt-1 replay (two stale judges): test "iudices catena" (fake
+  fabrica: fabrica -> aedilis healed in one call); not replayed live;
+- two planted pre-check failures in ONE refusal: pythonica case A;
+- a raw `fopen` in an unlisted file refuses in the `unci` phase before
+  any gate: live, real hook (`tools/.canalis_sonda.c:7:15`, code 96,
+  replacement named, nothing committed) + pythonica fake-hook test;
+- a cheap test failure surfaces before the expensive tests: case B,
+  and the printed order in every commit since T5 (e.g. `praeiudicia:
+  portae-declaratae 3 s, generata 27 s | probationes: css 2 s ... silva`);
+- order and kinds computed in C (`portae_ordinare`), silva.py iterates;
+- NOT met yet: the timing measurement (T6). The night of 10-14 the
+  machine ran at 2-5x its medians (silva 735 s vs 145 s; disk 99% full -
+  ~35 GiB freed that night), so a comparison with the 717 s of attempt 5
+  would mean nothing.
+
+Departures: BINARIUM lines in `portae debitae` instead of a separate
+`portae instrumenta` command (§I); `commissio_umbra` keeps its own order
+and does not heal tools; the hook's explicit mode gained `UNCUS_CRIBRUM`
+so its directory rules stay in one place.
+
+Every task: a red-first plant through the registered gate (14 plants in
+total), worklogs in `lib/portae.worklog.md` and
+`pythonica/pythonica.worklog.md`. Ledger: …FFF0KX closed.
+
