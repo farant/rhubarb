@@ -6303,3 +6303,38 @@ Fix: drop the seating line, rely on W1 — the citation
 embedded `<claves-externae>` table, which is W1's entire purpose.
 Comment rewritten from INSCRIPTIO to CITATIO doctrine. VITIA 0,
 49/49.
+
+## 2026-10-15 — first practical consumer: units of code (elementa_programmatis v9, fabricatio v12)
+
+**What forced it.** The quinta census (spec `project-specs/unitates-codicis-spec.md`)
+showed nine house tools each answering "what kind of code is this / is it ours"
+with their own hand list. Fran: natura holds the KINDS (decree …VKVD86); rhubarb
+policy stays in a repo-local file; units are individuals declared in the repo and
+CITE natura - METAMODULUS §1.4 residence rule, read before writing.
+
+**Added.** `opus_programmatis` - the general kind libraries and programs share
+(name, members, life, succession); §9 "several specialised, no general" (the same
+signal that once coined `programma`). `bibliotheca` and `programma` re-parented
+under it (§4b: addresses unchanged). Machine `vita` (viva -> vetusta per
+supersessio -> archivata; a status is a fold of history, case II). Relations bound
+to existing necessitudines: continet (nesting, library families), substituit
+(successor), orta_ex (promotion - math foundations born from knotapel).
+`subsystema` (parts: build declarations, suite entry point). `opus_explorationis`
+(research work; exercet /laboratorium/experimentum). `programma.usus`
+(homo/agens/machina, multiplex) - justified as the artefact's FINAL CAUSE, so true
+of the kind, not a use-case field. `probatio.interactio` (automatica/manualis) and
+`probatio.occupatio` (nihil/fenestra/focus) - whether a human must be present,
+whether native events take the machine.
+
+**Refused into natura (Pieper rule).** CUSTODY (domestica/remissa/aliena) is house
+policy; foreignness was already `/fabricatio/adscitio`. Reused rather than coined:
+programma's species applicatio / instrumentum_lineae / daemon,
+instrumentum_aedificationis, /laboratorium/experimentum.
+
+**Caught on the way.** First name for the research kind was `investigatio` -
+`natura_examen` stayed SANUM (cross-model homonyms are legal, rule 19 dormant), but
+the CANON MONOLITH refused the duplicate (`individua.canon` "nomen GEMINUM").
+`/iudicium/investigatio` is an inquiry into the causes of an event - a different
+kind, so a distinct name, not a shared one: `opus_explorationis`. Lesson: SANUM
+from the examen is not the whole contract - run `tools/natura_canones.sh` (or
+`bin/fabrica iudicare -plenus -tacta`) after adding genera.
