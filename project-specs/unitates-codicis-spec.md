@@ -208,6 +208,22 @@ the interrogationes audit categories (silentium = uncovered API,
 deceptio = dead answer, ambiguitas = two units answering one question);
 extend elementa_programmatis rather than start a parallel model.
 
+## VI⅞. Q2 and Q4 answered (Fran 10-15: nesting as a general affordance; details to Claude)
+
+- **Q2.** Nesting is GENERAL: any unit may contain units (apps too -
+  …MJ2's `apps/APP/SECTIO/`). `subsystema` is a KIND whose policy says
+  "contains other units and owns the shared files that bind them"
+  (`aedificatio.stml`, `compile_probationes.sh`, README) - a kind so
+  policy can attach ("a subsystem has a suite entry point").
+- **Q4.** Tests and fixtures are ROLES inside the unit they test, not
+  units: "which tests cover xar" = a role query within `xar`. The root
+  `probationes/` is a LOCATION; `probationes/probatio_xar.c` belongs to
+  `xar` by the stem convention. Fallbacks: a test matching no unit's
+  stem (integration, e.g. `probatio_vicus_quaestio_interna`) belongs to
+  the innermost enclosing unit, else the root suite's unit; fixtures
+  follow their test (`md/probationes/fixa/computus/` -> the owner of
+  `probatio_md_computus`).
+
 ## VII. Interrogationes - documentation as typed questions (Fran 10-15)
 
 A unit exposes what it can do by DECLARING QUESTIONS it answers
@@ -250,13 +266,11 @@ agents) - a seed corpus only if Fran moves entries over.
 ## VIII. Open questions (for Fran)
 
 1. ~~Unit declarations~~ - answered §VI½ (three mechanisms).
-2. Is "subsystem" a kind, or just a unit that contains other units?
-   (silva is both a library family and a set of tools.)
+2. ~~Subsystem~~ - answered §VI⅞ (a kind; nesting general).
 3. One library = one unit (`xar`), or `include/`+`lib/` = one big
    library unit with files as members? Per-library units make
    "consumers of xar" a real query; one big unit is simpler.
-4. Tests and fixtures of a unit: role inside the unit (proposed), or
-   their own units (`probationes/` is shared by all root libraries)?
+4. ~~Tests and fixtures~~ - answered §VI⅞ (roles in the tested unit).
 5. Custody values: are exemplar and investigatio the same thing?
 6. Tool audience names: homo / agens / aedificatio - or different?
 7. Name of the CLI (`natura quid`? `fabrica quid`? its own binary?).
