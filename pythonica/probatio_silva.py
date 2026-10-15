@@ -1789,8 +1789,36 @@ orph = os.path.join(silva.UMBRAE_DIR, 'probatio-orphanus.1')
 vivus = os.path.join(silva.UMBRAE_DIR, 'probatio-vivus.1')
 seratus = os.path.join(silva.UMBRAE_DIR, 'probatio-seratus.1')
 mortuus = os.path.join(silva.UMBRAE_DIR, 'probatio-mortuus.1')
-for d in (orph, vivus, seratus, mortuus):
+# DOMINI (parcum PKM86A): UMBRAE_DIR communis omnibus arboribus
+alienus = os.path.join(silva.UMBRAE_DIR, 'probatio-alienus.1')       # receptum in arbore domini
+abiit = os.path.join(silva.UMBRAE_DIR, 'probatio-abiit.1')           # dominus non iam exstat
+vetus_sd = os.path.join(silva.UMBRAE_DIR, 'probatio-vetus-sd.1')     # sine domino, IV dies
+recens_sd = os.path.join(silva.UMBRAE_DIR, 'probatio-recens-sd.1')   # sine domino, recens
+exspiratus = os.path.join(silva.UMBRAE_DIR, 'probatio-exspiratus.1')  # receptum rubrum IV dies
+rubeus = os.path.join(silva.UMBRAE_DIR, 'probatio-rubeus.1')         # receptum rubrum recens
+for d in (orph, vivus, seratus, mortuus, alienus, abiit, vetus_sd, recens_sd, exspiratus, rubeus):
     os.makedirs(d)
+for d in (orph, vivus, seratus, mortuus, exspiratus, rubeus):
+    open(os.path.join(d, silva.UMBRA_DOMINUS), 'w').write(silva.RADIX)
+_aliena = os.path.join(T, 'arbor_aliena')
+os.makedirs(os.path.join(_aliena, 'build', 'portae'), exist_ok=True)
+open(os.path.join(alienus, silva.UMBRA_DOMINUS), 'w').write(_aliena)
+open(os.path.join(abiit, silva.UMBRA_DOMINUS), 'w').write(os.path.join(T, 'arbor_quae_abiit'))
+_quattuor = time.time() - 4 * 86400
+os.utime(vetus_sd, (_quattuor, _quattuor))
+
+
+def _receptum_umbrae(sedes, nomen, clone, finis):
+    via = os.path.join(sedes, '%s.1.json' % nomen)
+    json.dump({'nomen': nomen, 'filtrum': None, 'sana': False, 'cucurrit': True,
+               'compendium': 'fictum: FRACTUM', 'rc': 1, 'sigillum': '0' * 40,
+               'rancida': False, 'finis': finis, 'fracturae': [],
+               'photographia': {'via_operis': clone, 'arbor': '0' * 40, 'basis': '0' * 40}},
+              open(via, 'w'))
+    return via
+_rec_alienum = _receptum_umbrae(os.path.join(_aliena, 'build', 'portae'), 'probatio-alienus', alienus, time.time())
+_rec_exspiratum = _receptum_umbrae(silva.PORTAE_DIR, 'probatio-exspiratus', exspiratus, _quattuor)
+_rec_rubeum = _receptum_umbrae(silva.PORTAE_DIR, 'probatio-rubeus', rubeus, time.time())
 open(os.path.join(seratus, '.umbra.pid'), 'w').write(str(os.getpid()))
 open(os.path.join(mortuus, '.umbra.pid'), 'w').write('999999')
 open(os.path.join(silva.PORTAE_DIR, 'probatio-vivus.0.json.pendens'), 'w').write('999999\n' + vivus + '\n')
@@ -1798,10 +1826,21 @@ try:
     orphanae = silva.umbrae_orphanae()
     credo(orph in orphanae and mortuus in orphanae and vivus not in orphanae and seratus not in orphanae,
           'umbrae_orphanae: orphanus + sera mortua nominati; pendens + sera viva servati')
+    credo(alienus not in orphanae and abiit in orphanae,
+          'umbrae_orphanae: clone arboris ALTERIUS cum recepto ibi servatus; dominus absens = orphanus (PKM86A)',
+          causa=repr(orphanae))
+    credo(vetus_sd in orphanae and recens_sd not in orphanae,
+          'umbrae_orphanae: sine domino recens servatus (arbor ignota), post exspirationem orphanus',
+          causa=repr(orphanae))
     credo(any(v == orph and st == 'clone orphanus' for v, st in silva.portae_pendentes()), 'portae_pendentes: clone orphanus enumeratus')
     deletae = silva.umbrae_purgare()
-    credo(sorted(deletae) == sorted([mortuus, orph]) and not os.path.exists(orph) and os.path.isdir(vivus) and os.path.isdir(seratus),
-          'umbrae_purgare: orphani deleti, clones portae currentis et processus vivi servati')
+    credo(sorted(deletae) == sorted([mortuus, orph, abiit, vetus_sd, exspiratus]) and not os.path.exists(orph)
+          and os.path.isdir(vivus) and os.path.isdir(seratus) and os.path.isdir(alienus) and os.path.isdir(recens_sd),
+          'umbrae_purgare: orphani deleti, clones portae currentis et processus vivi servati',
+          causa=repr(sorted(deletae)))
+    credo(not os.path.exists(_rec_exspiratum) and os.path.exists(_rec_rubeum) and os.path.isdir(rubeus)
+          and os.path.exists(_rec_alienum),
+          'umbrae_purgare: receptum rubrum arboris huius post exspirationem deletum cum clone; recens et alienum servata (PKM86A)')
     # DELETIO ASYNCHRONA (S1, profilum T9: rmtree 52,9 s): nomen mutatum
     # in purgatorium statim, 'rm -rf' in fundo; purgatorium ipsum numquam
     # orphanus

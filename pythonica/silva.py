@@ -3821,17 +3821,31 @@ def photographia_materializare(ph, nomen='umbra'):
     r = _curre(['git', 'clone', '-q', '-n', RADIX, via])
     if r.returncode != 0:
         raise SilvaError('photographia: clone: %s' % r.stderr.strip()[-300:])
-    r = subprocess.run(['git', 'read-tree', '--reset', '-u', ph.arbor],
-                       cwd=via, capture_output=True, text=True)
-    if r.returncode != 0:
-        raise SilvaError('photographia: read-tree: %s'
-                         % r.stderr.strip()[-300:])
-    _clonare_ignorata(via)
-    _tempora_speculari(via, ph.arbor)
+    # DOMINUS (parcum PKM86A): UMBRAE_DIR omnibus arboribus communis -
+    # purgatio recepta DOMINI legit, non sua (alias clonem rubrum arboris
+    # alterius ad inspiciendum servatum deleret)
+    open(os.path.join(via, UMBRA_DOMINUS), 'w').write(RADIX)
+    try:
+        r = subprocess.run(['git', 'read-tree', '--reset', '-u', ph.arbor],
+                           cwd=via, capture_output=True, text=True)
+        if r.returncode != 0:
+            raise SilvaError('photographia: read-tree: %s'
+                             % r.stderr.strip()[-300:])
+        _clonare_ignorata(via)
+        _tempora_speculari(via, ph.arbor)
+    except BaseException:
+        photographia_delere(via)     # clone dimidius numquam relinquitur
+        raise
     return ph._replace(via=via)
 
 
 PURGATORIUM = '.purgatorium'
+# signum domini in clone (arbor quae eum fecit) et exspiratio: clone quem
+# solum receptum RUBRUM arboris suae tenet, aut clone sine domino (codex
+# ante PKM86A), post tot dies purgatur (parcum PKM86A: 14 GB, V clones
+# 10-05..10-14 - 'ad inspiciendum' servati, numquam inspecti)
+UMBRA_DOMINUS = '.umbra.radix'
+UMBRA_EXSPIRATIO = 3 * 86400
 
 
 def _purgatorium_vacuare(viae):
@@ -3886,6 +3900,13 @@ def porta_umbra(nomen, filtrum=None, photographica=True):
     via = _receptum_via(nomen, filtrum)      # nomina plana hic iudicata
     extra = []
     if photographica:
+        # PURGATIO SPONTE (PKM86A): clones solum cum novo nascuntur
+        # cumulantur - ibi purgantur (orphani, exspirati), linea si quid
+        purgatae = umbrae_purgare()
+        if purgatae:
+            print('umbrae purgatae: %d (%s)' % (len(purgatae), ', '.join(
+                os.path.basename(v) for v in purgatae[:3])
+                + (' +%d' % (len(purgatae) - 3) if len(purgatae) > 3 else '')))
         ph = photographia_materializare(photographia_capere(), nomen)
         extra = [ph.via, ph.arbor, ph.basis]
         # sera processus: clone vivus dum PID vivit (lanceans nunc,
@@ -4184,32 +4205,56 @@ def _clones_vivi():
     (<clone>/.umbra.pid) tenet - trans contextus: porta in clone
     currens sua recepta non videt (build/portae eius alter est), sed
     PID eius vivus est ubique (porta pythonicae in clone se ipsam
-    delevit, 2026-09-02)"""
+    delevit, 2026-09-02). DOMINI (parcum PKM86A): recepta arboris quae
+    clonem fecit (<clone>/.umbra.radix) leguntur - UMBRAE_DIR communis
+    est, build/portae non. Clone sine domino (codex vetus) RECENS
+    (< UMBRA_EXSPIRATIO) servatur: arbor eius ignota est."""
     vivi = set()
-    if os.path.isdir(PORTAE_DIR):
-        for f in os.listdir(PORTAE_DIR):
-            via = os.path.join(PORTAE_DIR, f)
-            if f.endswith('.json'):
-                try:
-                    r = receptum_legere(via)
-                    if r.photographia and r.photographia.get('via_operis'):
-                        vivi.add(r.photographia['via_operis'])
-                except (SilvaError, ValueError, KeyError):
-                    pass
-            elif f.endswith('.pendens'):
-                lineae = open(via).read().splitlines()
-                if len(lineae) > 1 and lineae[1]:
-                    vivi.add(lineae[1])
+    sedes = {PORTAE_DIR}
+    nunc = time.time()
+    clones = []
     if os.path.isdir(UMBRAE_DIR):
         for f in os.listdir(UMBRAE_DIR):
             via = os.path.join(UMBRAE_DIR, f)
-            sera = os.path.join(via, '.umbra.pid')
-            if os.path.exists(sera):
+            if f.startswith('.') or not os.path.isdir(via):
+                continue
+            clones.append(via)
+            try:
+                dominus = open(os.path.join(via, UMBRA_DOMINUS)).read().strip()
+            except (IOError, OSError):
+                dominus = None
+            if dominus is None:
                 try:
-                    if _pid_vivus(open(sera).read().strip()):
+                    if nunc - os.path.getmtime(via) < UMBRA_EXSPIRATIO:
                         vivi.add(via)
-                except (IOError, OSError):
+                except OSError:
                     pass
+            elif dominus != RADIX:
+                sedes.add(os.path.join(dominus, 'build', 'portae'))
+    for sedes_portarum in sedes:
+        if not os.path.isdir(sedes_portarum):
+            continue        # dominus abiit: clones eius orphani
+        for f in os.listdir(sedes_portarum):
+            via = os.path.join(sedes_portarum, f)
+            try:
+                if f.endswith('.json'):
+                    r = receptum_legere(via)
+                    if r.photographia and r.photographia.get('via_operis'):
+                        vivi.add(r.photographia['via_operis'])
+                elif f.endswith('.pendens'):
+                    lineae = open(via).read().splitlines()
+                    if len(lineae) > 1 and lineae[1]:
+                        vivi.add(lineae[1])
+            except (SilvaError, ValueError, KeyError, IOError, OSError):
+                pass
+    for via in clones:
+        sera = os.path.join(via, '.umbra.pid')
+        if os.path.exists(sera):
+            try:
+                if _pid_vivus(open(sera).read().strip()):
+                    vivi.add(via)
+            except (IOError, OSError):
+                pass
     return vivi
 
 
@@ -4231,6 +4276,24 @@ def umbrae_purgare():
     servat donec receptum deleatur, oblivio eos cumulat (~C MB veri
     quisque). Reddit vias deletas."""
     deletae = []
+    # EXSPIRATIO (PKM86A): receptum umbrae ARBORIS HUIUS cum clone, finitum
+    # ante UMBRA_EXSPIRATIO, deletur cum clone (receptum_delere) - 'ad
+    # inspiciendum' quod dies III nemo inspexit. Recepta aliarum arborum
+    # numquam hic deleta (dominus suam purgat).
+    if os.path.isdir(PORTAE_DIR):
+        for f in sorted(os.listdir(PORTAE_DIR)):
+            via = os.path.join(PORTAE_DIR, f)
+            if not f.endswith('.json') or f.endswith('.viva.json'):
+                continue
+            try:
+                r = receptum_legere(via)
+            except (SilvaError, ValueError, KeyError, IOError, OSError):
+                continue
+            clone = (r.photographia or {}).get('via_operis')
+            if (clone and os.path.isdir(clone)
+                    and time.time() - (r.finis or 0) > UMBRA_EXSPIRATIO):
+                receptum_delere(via)
+                deletae.append(clone)
     # reliquiae purgatorii (rm in fundo interruptum): iterum - 'rm -rf'
     # geminum innocuum
     purgatorium = os.path.join(UMBRAE_DIR, PURGATORIUM)

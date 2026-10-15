@@ -1290,3 +1290,41 @@ vivo (~0 s)`. Same test as the runner uses, so the two cannot disagree.
 Test H2 needs `plena=False` - under the default `plena=True` MONITUM never
 prints and "no MONITUM" is vacuous (caught before running). Plant (count
 all gates) on a copy outside the tree: 409 s + MONITUM.
+
+## 2026-10-15 — umbra clones: owner tag, expiry, automatic sweep (…PKM86A)
+
+**Leak.** A clone is deleted only with its receipt (`receptum_delere`).
+Red receipts keep their clone "for inspection" - forever - and the suite's
+own real clones (`porta_umbra('formator-intra')`, commissio_umbra cases)
+stay if the suite aborts before cleanup: 14 GB in five clones by 10-14,
+8.6 GB of it `ficta-petita` from a pythonica run. `umbrae_purgare()`
+existed but nothing called it.
+
+**Trap avoided.** `~/.rhubarb/umbrae` is shared by EVERY worktree, but
+`_clones_vivi` read only this tree's `build/portae`: an automatic sweep
+from quinta would have judged secunda's red inspection clone an orphan.
+So ownership first: `photographia_materializare` writes
+`<clone>/.umbra.radix` (owning RADIX) right after `git clone`, and
+`_clones_vivi` reads the receipts/pendens of every OWNER's
+`build/portae`. Owner tree gone = orphan. Untagged clones (trees still on
+old code until they merge this) are kept while younger than
+UMBRA_EXSPIRATIO (3 days) - their tree is unknown.
+
+**Expiry.** `umbrae_purgare` deletes THIS tree's umbra receipts (with
+photographia) finished more than 3 days ago, together with their clone
+(`receptum_delere`). Other trees' receipts are never deleted here - each
+owner sweeps its own.
+
+**Automatic.** `porta_umbra` (photographic) calls `umbrae_purgare()`
+before materializing - clones only pile up when new ones are made, so
+that is where disk is reclaimed; one line only when something is removed.
+Also: a half-made clone (read-tree / ignored-copy failure) is now deleted
+before re-raising.
+
+**Tests.** Hermetic orphan group gained: other tree with receipt (kept),
+owner gone (orphan), untagged old/recent (orphan/kept), own red receipt
+4 days old (receipt + clone deleted) vs recent (kept), other tree's
+receipt never deleted. Existing clones now carry an owner tag so each
+protection is tested on its own merits, not via the untagged grace
+period. Plants on silva.py copies: ignore owner / drop age rule / drop
+expiry - each turns its assertions red.
