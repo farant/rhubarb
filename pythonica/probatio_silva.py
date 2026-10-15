@@ -3116,6 +3116,40 @@ try:
     vocationes = open(_rg_argv).read().splitlines() if os.path.exists(_rg_argv) else []
     credo(err is not None and 'STALUM g/gen.c' in err and not any(v.startswith('sanare') for v in vocationes),
           'regeneratio: stalum EXTRA vias commissionis recusatur, non regeneratur', causa=repr((err, vocationes)))
+    # iudex sanatus -> regeneratio -> iudex ITERUM stalus (amalgama in
+    # clausura iudicis, 2026-10-15): sanatur iterum, pergit
+    _h1, _h2, _rg = (os.path.join(T, n) for n in ('sanatio_1', 'sanatio_2', 'regen_iudicis'))
+    _fi = os.path.join(T, 'fabrica_iudex_regenerans')
+    with open(_fi, 'w') as f:
+        f.write('#!/bin/bash\n'
+                'if [ "$1" = sanare ]; then touch %s; exit 0; fi\n'
+                'if [ -f %s ]; then printf "SUMMA\\t1\\t0\\t0\\t0\\t0\\tplenus\\n"; exit 0; fi\n'
+                'if [ -f %s ] || [ ! -f %s ]; then printf "IUDICIUM\\tNON IUDICATUM\\tg/gen.c\\tiudex fabrica non recens - sana fabrica prius\\n"; exit 1; fi\n'
+                'printf "IUDICIUM\\tSTALUM\\tg/gen.c\\tregeneratio differt\\n"; exit 1\n'
+                % (_rg, _h2, _rg, _h1))
+    os.chmod(_fi, 0o755)
+    _si = os.path.join(T, 'struere_iudicis_bis.sh')
+    with open(_si, 'w') as f:
+        f.write('#!/bin/bash\necho x >> %s\nif [ -f %s ]; then touch %s; else touch %s; fi\necho struere\n'
+                % (_vocatae, _h1, _h2, _h1))
+    os.chmod(_si, 0o755)
+    for _f in (_h1, _h2, _rg, _vocatae):
+        if os.path.exists(_f):
+            os.remove(_f)
+    silva.FABRICA_BIN = _fi
+    silva.IUDICES_STRUERE = {'fabrica': [_si]}
+    buf = io.StringIO()
+    err = None
+    try:
+        with contextlib.redirect_stdout(buf):
+            silva._fabricam_exigere(['lib/a.c', 'g/gen.c'])
+    except silva.SilvaError as ex:
+        err = str(ex)
+    n = len(open(_vocatae).read().split()) if os.path.exists(_vocatae) else 0
+    credo(err is None and n == 2 and 'regeneratum (in commissione): g/gen.c' in buf.getvalue()
+          and buf.getvalue().count('iudex sanatus: fabrica') == 2,
+          'regeneratio: iudex post regenerationem iterum stalus -> iterum sanatur, pergit',
+          causa=repr((err, n, buf.getvalue()[-400:])))
     silva.IUDICES_STRUERE = {}
     # exitus 2: iudicare nequit (sera) - obstat
     silva.FABRICA_BIN = _fabrica_ficta(2, 'fabrica: iudex plenus alius currit\n')

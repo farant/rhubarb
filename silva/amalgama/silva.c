@@ -10647,9 +10647,17 @@ structura SilvaRegio {
  * Chunk D - Includenda
  * ================================================== */
 
+/* Includendum praebitum. Lexatio PIGRA (2026-10-15, percursus: lexatio
+ * capitum 48% temporis - DLII capita repositorii omni plagulae praebita,
+ * pleraque numquam inclusa): textus servatur, lexemata ad primam
+ * petitionem per silva_includendum_lexemata gignuntur. Textus vivere
+ * debet cum exp (ut antea: lexemata visus in eum sunt). */
 nomen structura {
-    s32  fons_index;
-    SilvaXar* lexemata;      /* fluxus attachatus contenti */
+                    s32  fons_index;
+                    SilvaXar* lexemata;  /* fluxus attachatus; NIHIL donec
+                                     * primum petitum */
+     constans character* textus;
+                    i32  mensura;
 } SilvaIncludendum;
 
 /* Inclusio observata (graphum dependentiarum - "discens") */
@@ -10743,7 +10751,8 @@ silva_fons_addere (
                    b32  est_syntheticus);
 
 
-/* Praebere contentum includendum: via -> textus (lexatur statim).
+/* Praebere contentum includendum: via -> textus (lexatur PIGRE, ad
+ * primum #include resolutum - silva_includendum_lexemata).
  * Silva plagulas numquam ipsa aperit - vocans contentum praebet.
  * Reddit indicem fontis novi. */
 s32
@@ -10752,6 +10761,13 @@ silva_includendum_praebere (
     constans character* via,
     constans character* textus,
                    i32  mensura);
+
+/* Fluxus attachatus includendi: lexatur ad primam petitionem (in
+ * exp->piscina), deinde idem redditur. NIHIL si lexatio deficit. */
+SilvaXar*
+silva_includendum_lexemata (
+       SilvaExpansio* exp,
+    SilvaIncludendum* incl);
 
 
 /* ==================================================
@@ -45970,10 +45986,31 @@ _includendum_processare (
         redde;
     }
 
+    si (silva_includendum_lexemata(exp, incl) == NIHIL)
+    {
+        redde;  /* lexatio defecit: ut ignotum (via memorata) */
+    }
     exp->profunditas_includendi++;
     _plagulam_processare(exp, incl->lexemata, FALSUM, reliqua,
         directivae);
     exp->profunditas_includendi--;
+}
+
+SilvaXar*
+silva_includendum_lexemata (
+       SilvaExpansio* exp,
+    SilvaIncludendum* incl)
+{
+    si (incl == NIHIL)
+    {
+        redde NIHIL;
+    }
+    si (incl->lexemata == NIHIL)
+    {
+        incl->lexemata = silva_lexare(exp->piscina, incl->textus,
+            incl->mensura, incl->fons_index);
+    }
+    redde incl->lexemata;
 }
 
 s32
@@ -45998,9 +46035,10 @@ silva_includendum_praebere (
     {
         redde -I;
     }
-    incl->fons_index = fons_index;
-    incl->lexemata = silva_lexare(exp->piscina, textus, mensura,
-        fons_index);
+    incl->fons_index  = fons_index;
+    incl->lexemata    = NIHIL;   /* pigre: silva_includendum_lexemata */
+    incl->textus      = textus;
+    incl->mensura     = mensura;
 
     fons = (SilvaFons*)silva_xar_obtinere(exp->fontes, (i32)fons_index);
     {

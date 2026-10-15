@@ -1248,3 +1248,18 @@ gate loop and every phase lost its parent. Nothing crashed; only
 probatio_silva's "phases et portae filii commissionis" caught it
 (deterministic red). Insert new functions ABOVE a function's decorator
 block (or after the function), never by anchoring on its `def` line.
+
+## 2026-10-15 - judge healed, regenerated, stale AGAIN
+
+The lazy-lexing commit was refused in the fabrica phase: the formatter
+touched silva_expandere.h -> bin/fabrica healed ('iudex sanatus') ->
+silva/amalgama/silva.c regenerated in the commit -> bin/fabrica stale
+again (the amalgam is in its closure) -> `_sanati` already held fabrica
+-> "sana fabrica prius". The `_sanati` limit exists so a struere that
+does not heal cannot loop; a regeneration changes the judge's INPUTS,
+so it legitimately needs another heal. Fix: the recursion after a
+regeneration passes `_sanati=()`; termination still holds because
+regeneration happens once (`_regenerata`). Test 'regeneratio: iudex post
+regenerationem iterum stalus -> iterum sanatur, pergit' (hand plant red).
+Also: in heredoc-written Python patches, escape `\n` inside the patch's
+own string literals (`\\n`) - a raw newline lands in the target file.

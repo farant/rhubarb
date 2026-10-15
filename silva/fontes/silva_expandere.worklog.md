@@ -60,3 +60,24 @@ for the first time: `summare` (briar fragmenta fixtures, many pinned
 sites) → glossary entry `summo` (Medieval Latin, "to sum up") rather
 than a rename through pinned fixtures. A fix that makes more files
 readable enlarges every census that reads them.
+
+## 2026-10-15 - lazy header lexing (silva_includendum_lexemata)
+
+Profile (percursus, quinta): header provision was 59% of the run, lexing
+48% - every caller that hands silva the repository's headers (percursus:
+all 552 per file) paid a full lex of each one, though a file includes a
+dozen. `silva_includendum_praebere` now only registers the file (fons
+index, map keys, text pointer); `silva_includendum_lexemata(exp, incl)`
+lexes on the first resolved #include and caches. No new lifetime rule:
+tokens were already views into the provided text (silva_lexare never
+copies), and all four real callers read into piscina buffers. The guard
+check needs no tokens up front - `est_custos` is set by
+_plagulam_processare when the file is first processed. silva_scribere's
+EOF lookup reads `incl->lexemata` as-is: a header whose tokens are in the
+tree was included, therefore lexed; never-included = NIHIL = the old
+"no EOF" fallback.
+
+A/B same machine, best of 3 / 2 runs: percursus lib (273 files) 17.2 s
+-> 5.9 s wall (2.9x), totality unchanged (273 trees); examen chorda.c CPU
+0.16 -> 0.11 s, silva_c89_semantica.c 0.49 -> 0.45 s (examen provides
+only the file's closure, so less to skip). silva 55/55.

@@ -3114,7 +3114,12 @@ def _fabricam_exigere(viae, sine_fabrica=None, _sanati=(), _regenerata=False):
                        (r3.stdout + r3.stderr).strip()[-2000:]))
             for m in regenerandae:
                 print('regeneratum (in commissione): %s' % m)
-            return _fabricam_exigere(viae, sine_fabrica, _sanati,
+            # _sanati PURGATI: regeneratio ingressus iudicis mutare potest
+            # (amalgama silvae in clausura bin/fabrica - commissio
+            # lexationis pigrae 2026-10-15: fabrica sanata, silva.c
+            # regeneratum, fabrica iterum stala -> 'sana fabrica prius').
+            # Terminatio manet: regeneratio semel (_regenerata).
+            return _fabricam_exigere(viae, sine_fabrica, (),
                                      _regenerata=True)
         if malae and not commissae:
             print('fabrica: %d artificia NON commissa non recentia (%s) -'

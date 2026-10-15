@@ -1240,10 +1240,31 @@ _includendum_processare (
         redde;
     }
 
+    si (silva_includendum_lexemata(exp, incl) == NIHIL)
+    {
+        redde;  /* lexatio defecit: ut ignotum (via memorata) */
+    }
     exp->profunditas_includendi++;
     _plagulam_processare(exp, incl->lexemata, FALSUM, reliqua,
         directivae);
     exp->profunditas_includendi--;
+}
+
+Xar*
+silva_includendum_lexemata (
+       SilvaExpansio* exp,
+    SilvaIncludendum* incl)
+{
+    si (incl == NIHIL)
+    {
+        redde NIHIL;
+    }
+    si (incl->lexemata == NIHIL)
+    {
+        incl->lexemata = silva_lexare(exp->piscina, incl->textus,
+            incl->mensura, incl->fons_index);
+    }
+    redde incl->lexemata;
 }
 
 s32
@@ -1268,9 +1289,10 @@ silva_includendum_praebere (
     {
         redde -I;
     }
-    incl->fons_index = fons_index;
-    incl->lexemata = silva_lexare(exp->piscina, textus, mensura,
-        fons_index);
+    incl->fons_index  = fons_index;
+    incl->lexemata    = NIHIL;   /* pigre: silva_includendum_lexemata */
+    incl->textus      = textus;
+    incl->mensura     = mensura;
 
     fons = (SilvaFons*)xar_obtinere(exp->fontes, (i32)fons_index);
     {
