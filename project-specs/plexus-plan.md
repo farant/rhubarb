@@ -214,6 +214,18 @@ for Fran's go-ahead.
 - **T2. The Dynnikov action.** Read the sources first and record the
   conventions (direction, disk) in the header. `Ansa`, the update rules
   (8)–(15), `ansa_sectiones`. Credo: oracles 2 and 3.
+  *(2026-10-15, done. The paper's equations and its Matlab appendix
+  agree line by line; the test's oracle re-types the Matlab in s64.
+  Convention: the paper's (clockwise sigma_i, left to right), which
+  does not affect equality. Disk decided by oracle 3: on D_{n+2} the
+  loops E_1 .. E_{n+1} partition every word up to length 6/5/4 on
+  B_3/B_4/B_5 exactly as Artin does (577, 1,579, 1,143 classes); on D_n
+  Delta^2 is invisible. Added: `ansa_circa` (E_k), `ansa_ad_chordam`,
+  `plexus_in_maiore` (embedding), `plexus_aequales_ansis` (equality on
+  D_{n+2}). Growth matches (3 + sqrt 5)/2 and the paper's 0.83144.
+  20 credo sections, 1,000 checks; sanitizers clean. 16 plants, 15 red,
+  1 equivalent within the tested range (E_{n+1} redundant); three tests
+  strengthened after survivors.)*
 - **T3. Reduced Burau.** Over Z[t, t^-1] and at t = -1; characteristic
   polynomial; `plexus_radius_burau`. Credo: oracles 4 and 5, and the
   exact (3 + √5)/2.

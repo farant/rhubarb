@@ -46,6 +46,7 @@
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"
+#include "magnus.h"
 
 #define PLEXUS_FILA_MAXIMA              1048576
 /* Delta longitudinem n(n-1)/2 habet: n <= 65536 ut in 2^31 capiat */
@@ -169,5 +170,107 @@ chorda
 verbum_liberum_ad_chordam (
     VerbumLiberum  w,
           Piscina* piscina);
+
+/* plexus p (n fila) in B_fila: littera +-i -> +-(i + translatio).
+ * FALSUM si fila extra 2..PLEXUS_FILA_MAXIMA aut p.fila + translatio
+ * > fila */
+b32
+plexus_in_maiore (
+     Plexus  p,
+        i32  fila,
+        i32  translatio,
+    Piscina* piscina,
+     Plexus* exitus);
+
+
+/* ==================================================
+ * Actio Dynnikov in ansas (laminae integrae)
+ * ==================================================
+ *
+ * ANSA: lamina integra (multicurva) in disco cum fila punctis, per
+ * coordinatas Dynnikov u = (a_1 .. a_{n-2}, b_1 .. b_{n-2}), n = fila
+ * >= 3. Omnis vector integer laminam describit (Dynnikov 2002;
+ * citatum, non hic probatum).
+ * Valores Magnus: crescentia numquam superfluit.
+ *
+ * FONS: J.-L. Thiffeault, "Braids of entangled particle trajectories",
+ * Chaos 20, 017516 (2010), arXiv:0906.3647: coordinatae aeq. (3)-(4),
+ * L(u) aeq. (5)-(6), regulae aeq. (7)-(15), eaedem in appendice A.2
+ * (loopsigma, loopinter) - ambae transcriptiones congruunt.
+ * CONVENTIO fontis: sigma_i puncta i et i+1 HOROLOGII SENSU commutat
+ * (Birman contra); verbum ansae a sinistra ad dextram adhibetur.
+ *
+ * DISCUS: in D_n torsio plena Delta^2 (torsio circa marginem) omnem
+ * ansam clausam fixam relinquit, ergo actio in D_n Delta^2 non videt.
+ * plexus_aequales_ansis plexum in D_{n+2} (punctis mediis) agit, ubi
+ * Delta^2 punctorum mediorum non centralis est.
+ *
+ * Regulae per partes lineares sunt: f+ = max(f, 0), f- = min(f, 0);
+ * omnis generator stratum ReLU integrum est. */
+
+nomen structura {
+        i32  fila;      /* puncta, >= 3 */
+     Magnus* a;         /* fila - 2 */
+     Magnus* b;         /* fila - 2 */
+} Ansa;
+
+/* coordinatae copiantur; FALSUM si fila extra 3..PLEXUS_FILA_MAXIMA */
+b32
+ansa_ex_coordinatis (
+                i32  fila,
+    constans Magnus* a,
+    constans Magnus* b,
+            Piscina* piscina,
+               Ansa* exitus);
+
+/* ansa simplex circa puncta k et k+1 (1 <= k < fila): a = 0, b_k = 1
+ * (si k <= n-2), b_{k-1} = -1 (si k >= 2), ceterae 0 */
+b32
+ansa_circa (
+         i32  fila,
+         i32  k,
+     Piscina* piscina,
+        Ansa* exitus);
+
+/* ansa post plexum (litterae a sinistra). FALSUM si p.fila != u.fila.
+ * Temporaria in piscina propria; effectum in piscina vocantis. */
+b32
+ansa_agere (
+        Ansa  u,
+      Plexus  p,
+     Piscina* piscina,
+        Ansa* exitus);
+
+/* L(u): sectiones minimae ansae cum linea horizontali per puncta (aeq.
+ * 5-6) */
+Magnus
+ansa_sectiones (
+        Ansa  u,
+     Piscina* piscina);
+
+b32
+ansae_aequales (
+    Ansa u,
+    Ansa v);
+
+/* "(a_1 ... a_{n-2}; b_1 ... b_{n-2})" */
+chorda
+ansa_ad_chordam (
+        Ansa  u,
+     Piscina* piscina);
+
+/* *aequales = (p == q in B_n) per actionem in ansas circa puncta
+ * vicina D_{n+2}: r = p q^-1 in punctis mediis, aequales si r omnes
+ * ansas E_1 .. E_{n+1} fixas relinquit. Congruentia cum Artin
+ * (plexus_aequales) exhaustive probata pro verbis brevibus (B_3 <= 6,
+ * B_4 <= 5, B_5 <= 4 litterae; probatio_plexus); fidelitas generalis
+ * hic non probatur - plexus_aequales manet referentia.
+ * FALSUM si fila diversa. piscina ad statum initii reficitur. */
+b32
+plexus_aequales_ansis (
+     Plexus  p,
+     Plexus  q,
+    Piscina* piscina,
+        b32* aequales);
 
 #endif /* PLEXUS_H */

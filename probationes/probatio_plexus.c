@@ -19,9 +19,12 @@
 #include "chorda.h"
 #include "credo.h"
 #include "sors.h"
+#include "magnus.h"
+#include "chorda_aedificator.h"
 #include "plexus.h"
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 #define LIMES_MAGNUS  100000000UL
 
@@ -1014,6 +1017,964 @@ _probare_piscinam (
 }
 
 
+/* ==================================================
+ * T2: actio Dynnikov
+ * ================================================== */
+
+/* Oraculum fontis: appendix A.2 Thiffeault 2010 (functio Matlab
+ * 'loopsigma') verbatim in s64, cum alveis novis separatis (ap, bp
+ * fontis), indicibus fontis 1..n-2 (alveus [0] non adhibetur). Scripta
+ * ex listatione Matlab, non ex lib/plexus.c. */
+interior s64
+_pos (
+    s64 x)
+{
+    redde x > ZEPHYRUM ? x : ZEPHYRUM;
+}
+
+interior s64
+_neg (
+    s64 x)
+{
+    redde x < ZEPHYRUM ? x : ZEPHYRUM;
+}
+
+interior vacuum
+_regula_fontis (
+    s32  littera,
+    s64* a,
+    s64* b,
+    i32  n)
+{
+    s64 a_nova[XVI];
+    s64 b_nova[XVI];
+    s32 i = littera > ZEPHYRUM ? littera : -littera;
+    s64 c;
+    s64 d;
+    i32 k;
+
+    per (k = ZEPHYRUM; k < XVI; k++)
+    {
+        a_nova[k] = a[k];
+        b_nova[k] = b[k];
+    }
+    si (littera > ZEPHYRUM)
+    {
+        si (i == I)
+        {
+            b_nova[1] = a[1] + _pos(b[1]);
+            a_nova[1] = -b[1] + _pos(b_nova[1]);
+        }
+        alioquin si (i == (s32)n - I)
+        {
+            b_nova[n - 2] = a[n - 2] + _neg(b[n - 2]);
+            a_nova[n - 2] = -b[n - 2] + _neg(b_nova[n - 2]);
+        }
+        alioquin
+        {
+            c = a[i - 1] - a[i] - _pos(b[i]) + _neg(b[i - 1]);
+            a_nova[i - 1] = a[i - 1] - _pos(b[i - 1]) - _pos(_pos(b[i])
+                + c);
+            b_nova[i - 1] = b[i] + _neg(c);
+            a_nova[i] = a[i] - _neg(b[i]) - _neg(_neg(b[i - 1])
+                - c);
+            b_nova[i] = b[i - 1] - _neg(c);
+        }
+    }
+    alioquin
+    {
+        si (i == I)
+        {
+            b_nova[1] = -a[1] + _pos(b[1]);
+            a_nova[1] = b[1] - _pos(b_nova[1]);
+        }
+        alioquin si (i == (s32)n - I)
+        {
+            b_nova[n - 2] = -a[n - 2] + _neg(b[n - 2]);
+            a_nova[n - 2] = b[n - 2] - _neg(b_nova[n - 2]);
+        }
+        alioquin
+        {
+            d = a[i - 1] - a[i] + _pos(b[i]) - _neg(b[i - 1]);
+            a_nova[i - 1] = a[i - 1] + _pos(b[i - 1]) + _pos(_pos(b[i])
+                - d);
+            b_nova[i - 1] = b[i] - _pos(d);
+            a_nova[i] = a[i] + _neg(b[i]) + _neg(_neg(b[i - 1])
+                + d);
+            b_nova[i] = b[i - 1] + _pos(d);
+        }
+    }
+    per (k = ZEPHYRUM; k < XVI; k++)
+    {
+        a[k] = a_nova[k];
+        b[k] = b_nova[k];
+    }
+}
+
+/* L(u) ex appendice A.2 (functio Matlab 'loopinter') verbatim:
+ * cumb = [0 cumsum(b)]; b0 = -max(|a| + max(b,0) + cumb(1:end-1));
+ * bn = -b0 - sum(b); L = sum|b| + sum|a(2:end) - a(1:end-1)| + |a(1)|
+ * + |a(end)| + |b0| + |bn| (indices fontis 1..n-2) */
+interior s64
+_regula_sectionum (
+    constans s64* a,
+    constans s64* b,
+             i32  n)
+{
+    s64 cumulus  = ZEPHYRUM;
+    s64 summa    = ZEPHYRUM;
+    s64 maxima   = ZEPHYRUM;
+    s64 b0;
+    s64 bn;
+    s64 l      = ZEPHYRUM;
+    i32 j;
+
+    per (j = I; j <= n - II; j++)
+    {
+        s64 t = (a[j] < ZEPHYRUM ? -a[j] : a[j]) + _pos(b[j]) + cumulus;
+
+        si (j == I || t > maxima)
+        {
+            maxima = t;
+        }
+        cumulus += b[j];
+    }
+    b0 = -maxima;
+    per (j = I; j <= n - II; j++)
+    {
+        summa  += b[j];
+        l      += b[j] < ZEPHYRUM ? -b[j] : b[j];
+    }
+    bn = -b0 - summa;
+    per (j = II; j <= n - II; j++)
+    {
+        s64 d = a[j] - a[j - I];
+
+        l += d < ZEPHYRUM ? -d : d;
+    }
+    l += (a[I] < ZEPHYRUM ? -a[I] : a[I])
+        + (a[n - II] < ZEPHYRUM ? -a[n - II] : a[n - II]);
+    l += (b0 < ZEPHYRUM ? -b0 : b0) + (bn < ZEPHYRUM ? -bn : bn);
+    redde l;
+}
+
+/* ansa ex s64 (indices fontis 1..n-2) */
+interior Ansa
+_ansa_ex_s64 (
+    constans s64* a,
+    constans s64* b,
+             i32  n,
+         Piscina* piscina)
+{
+    Magnus ma[XVI];
+    Magnus mb[XVI];
+      Ansa u;
+       i32 k;
+
+    per (k = ZEPHYRUM; k + II < n; k++)
+    {
+        ma[k] = magnus_ex_s64(a[k + I]);
+        mb[k] = magnus_ex_s64(b[k + I]);
+    }
+    (vacuum)ansa_ex_coordinatis(n, ma, mb, piscina, &u);
+    redde u;
+}
+
+interior s64
+_s64 (
+    Magnus x)
+{
+    s64 v = ZEPHYRUM;
+
+    (vacuum)magnus_ad_s64(x, &v);
+    redde v;
+}
+
+interior vacuum
+_probare_ansas_formam (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+       Ansa  u;
+     Magnus  a[IV];
+     Magnus  b[IV];
+        i32  n;
+        i32  k;
+
+    /* ansae circa puncta vicina: L = 2 */
+    CREDO_VERUM (ansa_circa(III, II, piscina, &u)
+        && _textus(ansa_ad_chordam(u, piscina), "(0; -1)"));
+    CREDO_VERUM (ansa_circa(III, I, piscina, &u)
+        && _textus(ansa_ad_chordam(u, piscina), "(0; 1)"));
+    CREDO_VERUM (ansa_circa(V, III, piscina, &u)
+        && _textus(ansa_ad_chordam(u, piscina), "(0 0 0; 0 -1 1)"));
+    per (n = III; n <= VIII; n++)
+    {
+        per (k = I; k < n; k++)
+        {
+            (vacuum)ansa_circa(n, k, piscina, &u);
+            CREDO_VERUM (_s64(ansa_sectiones(u, piscina)) == II);
+        }
+    }
+    /* Thiffeault Fig. 8: n = 5, u = (-1, 1, -2, 0, -1, 0), L = 12 */
+    a[ZEPHYRUM]  = magnus_ex_s64(-I);
+    a[I]         = magnus_ex_s64(I);
+    a[II]        = magnus_ex_s64(-II);
+    b[ZEPHYRUM]  = magnus_ex_s64(ZEPHYRUM);
+    b[I]         = magnus_ex_s64(-I);
+    b[II]        = magnus_ex_s64(ZEPHYRUM);
+    CREDO_VERUM (ansa_ex_coordinatis(V, a, b, piscina, &u));
+    CREDO_VERUM (_textus(ansa_ad_chordam(u, piscina),
+        "(-1 1 -2; 0 -1 0)"));
+    CREDO_VERUM (_s64(ansa_sectiones(u, piscina)) == XII);
+    /* ansae_aequales: differentia in a sola, in b sola, fila diversa */
+    {
+        Ansa v;
+        Ansa w;
+
+        a[ZEPHYRUM] = magnus_ex_s64(-I);
+        b[ZEPHYRUM] = magnus_ex_s64(-I);
+        (vacuum)ansa_ex_coordinatis(IV, a, b, piscina, &w);
+        b[ZEPHYRUM] = magnus_ex_s64(II);
+        (vacuum)ansa_ex_coordinatis(IV, a, b, piscina, &v);
+        CREDO_FALSUM (ansae_aequales(v, w));
+        b[ZEPHYRUM]  = magnus_ex_s64(-I);
+        a[I]         = magnus_ex_s64(V);
+        (vacuum)ansa_ex_coordinatis(IV, a, b, piscina, &v);
+        CREDO_FALSUM (ansae_aequales(v, w));
+        a[I] = magnus_ex_s64(I);
+        (vacuum)ansa_ex_coordinatis(IV, a, b, piscina, &v);
+        CREDO_VERUM (ansae_aequales(v, w));
+        (vacuum)ansa_circa(III, I, piscina, &v);
+        CREDO_FALSUM (ansae_aequales(v, w));
+        (vacuum)ansa_circa(III, I, piscina, &w);
+        (vacuum)ansa_circa(III, II, piscina, &v);
+        CREDO_FALSUM (ansae_aequales(v, w));
+    }
+    /* refutationes */
+    u.fila = XCIX;
+    CREDO_FALSUM (ansa_circa(II, I, piscina, &u));
+    CREDO_FALSUM (ansa_circa(IV, ZEPHYRUM, piscina, &u));
+    CREDO_FALSUM (ansa_circa(IV, IV, piscina, &u));
+    CREDO_FALSUM (ansa_ex_coordinatis(II, a, b, piscina, &u));
+    CREDO_FALSUM (ansa_ex_coordinatis(V, NIHIL, b, piscina, &u));
+    CREDO_AEQUALIS_I32 (u.fila, XCIX);
+    (vacuum)ansa_circa(IV, I, piscina, &u);
+    {
+        Ansa v;
+
+        v.fila = XCIX;
+        CREDO_FALSUM (ansa_agere(u, _p(III, "1", piscina), piscina,
+            &v));
+        CREDO_AEQUALIS_I32 (v.fila, XCIX);
+    }
+}
+
+interior vacuum
+_probare_ansas_contra_fontem (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+       Sors  s;
+        i32  t;
+        i32  discrepantiae = ZEPHYRUM;
+
+    sors_seminare(&s, CDXLIV, I);
+    per (t = ZEPHYRUM; t < MM; t++)
+    {
+        PiscinaNotatio nota  = piscina_notare(piscina);
+                   i32 n     = III + sors_intra(&s, VI);
+                Plexus p    = _fortuitus(&s, n, sors_intra(&s, VIII),
+                    piscina);
+                   s64 a[XVI];
+                   s64 b[XVI];
+                  Ansa u;
+                  Ansa v;
+                  Ansa w;
+                   i32 k;
+
+        memset(a, ZEPHYRUM, magnitudo(a));
+        memset(b, ZEPHYRUM, magnitudo(b));
+        per (k = I; k + II <= n; k++)
+        {
+            a[k] = (s64)sors_inter(&s, -XX, XX);
+            b[k] = (s64)sors_inter(&s, -XX, XX);
+        }
+        u = _ansa_ex_s64(a, b, n, piscina);
+        (vacuum)ansa_agere(u, p, piscina, &v);
+        per (k = ZEPHYRUM; k < p.longitudo; k++)
+        {
+            _regula_fontis(p.litterae[k], a, b, n);
+        }
+        w = _ansa_ex_s64(a, b, n, piscina);
+        si (!ansae_aequales(v, w))
+        {
+            discrepantiae++;
+        }
+        /* L(u) contra loopinter */
+        si (_s64(ansa_sectiones(w, piscina)) != _regula_sectionum(a, b,
+            n))
+        {
+            discrepantiae++;
+        }
+        piscina_reficere(piscina, nota);
+    }
+    CREDO_AEQUALIS_I32 (discrepantiae, ZEPHYRUM);
+}
+
+/* relationes braidarum et inversa in ansis fortuitis (etiam magnis) */
+interior vacuum
+_probare_ansas_relationes (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+       Sors  s;
+        i32  t;
+        i32  fracta = ZEPHYRUM;
+     Magnus  scala;
+
+    (vacuum)magnus_ex_chorda(chorda_ex_literis("1180591620717411303424",
+        piscina), piscina, &scala);    /* 2^70 */
+    sors_seminare(&s, DLV, I);
+    per (t = ZEPHYRUM; t < D; t++)
+    {
+        PiscinaNotatio nota  = piscina_notare(piscina);
+                   i32 n     = III + sors_intra(&s, V);
+                Magnus a[XVI];
+                Magnus b[XVI];
+                  Ansa u;
+                  Ansa v;
+                  Ansa w;
+                   i32 i;
+                   i32 k;
+                   b32 magna = sors_intra(&s, II) == ZEPHYRUM;
+
+        per (k = ZEPHYRUM; k + II < n; k++)
+        {
+            a[k] = magnus_ex_s64((s64)sors_inter(&s, -MM, MM));
+            b[k] = magnus_ex_s64((s64)sors_inter(&s, -MM, MM));
+            si (magna)
+            {
+                a[k] = magnus_multiplica(a[k], scala, piscina);
+                b[k] = magnus_multiplica(b[k], scala, piscina);
+            }
+        }
+        (vacuum)ansa_ex_coordinatis(n, a, b, piscina, &u);
+        per (i = I; i < n; i++)
+        {
+               s32 l[III];
+            Plexus p;
+            Plexus q;
+
+            /* s_i s_i^-1 et s_i^-1 s_i */
+            l[ZEPHYRUM]  = (s32)i;
+            l[I]         = -(s32)i;
+            (vacuum)plexus_creare(n, l, II, piscina, &p);
+            (vacuum)ansa_agere(u, p, piscina, &v);
+            si (!ansae_aequales(u, v))
+            {
+                fracta++;
+            }
+            (vacuum)ansa_agere(u, plexus_inversum(p, piscina), piscina,
+                &v);
+            si (!ansae_aequales(u, v))
+            {
+                fracta++;
+            }
+            si (i + I < n)
+            {
+                /* s_i s_{i+1} s_i = s_{i+1} s_i s_{i+1} */
+                l[ZEPHYRUM]  = (s32)i;
+                l[I]         = (s32)(i + I);
+                l[II]        = (s32)i;
+                (vacuum)plexus_creare(n, l, III, piscina, &p);
+                l[ZEPHYRUM]  = (s32)(i + I);
+                l[I]         = (s32)i;
+                l[II]        = (s32)(i + I);
+                (vacuum)plexus_creare(n, l, III, piscina, &q);
+                (vacuum)ansa_agere(u, p, piscina, &v);
+                (vacuum)ansa_agere(u, q, piscina, &w);
+                si (!ansae_aequales(v, w))
+                {
+                    fracta++;
+                }
+            }
+            si (i + II < n)
+            {
+                /* s_i s_{i+2} = s_{i+2} s_i */
+                l[ZEPHYRUM]  = (s32)i;
+                l[I]         = -(s32)(i + II);
+                (vacuum)plexus_creare(n, l, II, piscina, &p);
+                l[ZEPHYRUM]  = -(s32)(i + II);
+                l[I]         = (s32)i;
+                (vacuum)plexus_creare(n, l, II, piscina, &q);
+                (vacuum)ansa_agere(u, p, piscina, &v);
+                (vacuum)ansa_agere(u, q, piscina, &w);
+                si (!ansae_aequales(v, w))
+                {
+                    fracta++;
+                }
+            }
+        }
+        piscina_reficere(piscina, nota);
+    }
+    CREDO_AEQUALIS_I32 (fracta, ZEPHYRUM);
+}
+
+/* homogeneitas positiva: (lambda u) . p = lambda (u . p), lambda = 2^70
+ * (actio per partes lineares, homogenea) */
+interior vacuum
+_probare_ansas_homogeneas (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+       Sors  s;
+        i32  t;
+        i32  fracta = ZEPHYRUM;
+     Magnus  scala;
+
+    (vacuum)magnus_ex_chorda(chorda_ex_literis("1180591620717411303424",
+        piscina), piscina, &scala);
+    sors_seminare(&s, DCLX, I);
+    per (t = ZEPHYRUM; t < CC; t++)
+    {
+        PiscinaNotatio nota  = piscina_notare(piscina);
+                   i32 n     = III + sors_intra(&s, V);
+                Plexus p    = _fortuitus(&s, n, X + sors_intra(&s, XX),
+                    piscina);
+                Magnus a[XVI];
+                Magnus b[XVI];
+                  Ansa u;
+                  Ansa u_magna;
+                  Ansa v;
+                  Ansa v_magna;
+                   i32 k;
+                   b32 idem = VERUM;
+
+        per (k = ZEPHYRUM; k + II < n; k++)
+        {
+            a[k] = magnus_ex_s64((s64)sors_inter(&s, -C, C));
+            b[k] = magnus_ex_s64((s64)sors_inter(&s, -C, C));
+        }
+        (vacuum)ansa_ex_coordinatis(n, a, b, piscina, &u);
+        per (k = ZEPHYRUM; k + II < n; k++)
+        {
+            a[k] = magnus_multiplica(a[k], scala, piscina);
+            b[k] = magnus_multiplica(b[k], scala, piscina);
+        }
+        (vacuum)ansa_ex_coordinatis(n, a, b, piscina, &u_magna);
+        (vacuum)ansa_agere(u, p, piscina, &v);
+        (vacuum)ansa_agere(u_magna, p, piscina, &v_magna);
+        per (k = ZEPHYRUM; k + II < n; k++)
+        {
+            si (   !magnus_aequalis(magnus_multiplica(v.a[k], scala,
+                piscina), v_magna.a[k])
+                || !magnus_aequalis(magnus_multiplica(v.b[k], scala,
+                piscina), v_magna.b[k]))
+            {
+                idem = FALSUM;
+            }
+        }
+        si (!idem)
+        {
+            fracta++;
+        }
+        piscina_reficere(piscina, nota);
+    }
+    CREDO_AEQUALIS_I32 (fracta, ZEPHYRUM);
+}
+
+/* ==== partitio exhaustiva: Artin contra ansas ==== */
+
+nomen structura {
+    chorda clavis_libera;
+    chorda clavis_ansarum;
+} ParClavium;
+
+interior s32
+_compara_liberam (
+    constans vacuum* x,
+    constans vacuum* y)
+{
+    constans ParClavium* p = (constans ParClavium*)x;
+    constans ParClavium* q = (constans ParClavium*)y;
+                    s32  r = chorda_comparare(p->clavis_libera,
+                        q->clavis_libera);
+
+    redde r != ZEPHYRUM ? r : chorda_comparare(p->clavis_ansarum,
+        q->clavis_ansarum);
+}
+
+interior s32
+_compara_ansarum (
+    constans vacuum* x,
+    constans vacuum* y)
+{
+    constans ParClavium* p = (constans ParClavium*)x;
+    constans ParClavium* q = (constans ParClavium*)y;
+
+    redde chorda_comparare(p->clavis_ansarum, q->clavis_ansarum);
+}
+
+/* clavis Artin: imagines omnium generatorum */
+interior chorda
+_clavis_libera (
+     Plexus  p,
+    Piscina* piscina)
+{
+     ChordaAedificator* ae = chorda_aedificator_creare(piscina, LXIV);
+                   i32  j;
+
+    per (j = I; j <= p.fila; j++)
+    {
+        VerbumLiberum w;
+
+        (vacuum)plexus_imago_libera(p, j, LIMES_MAGNUS, piscina, &w);
+        (vacuum)chorda_aedificator_appendere_chorda(ae,
+            verbum_liberum_ad_chordam(w, piscina));
+        (vacuum)chorda_aedificator_appendere_character(ae, '|');
+    }
+    redde chorda_aedificator_finire(ae);
+}
+
+/* clavis ansarum: imagines E_1 .. E_{m-1} in D_m, plexu translato */
+interior chorda
+_clavis_ansarum (
+     Plexus  p,
+        i32  fila,
+        i32  translatio,
+    Piscina* piscina)
+{
+     ChordaAedificator* ae = chorda_aedificator_creare(piscina, LXIV);
+                Plexus  maior;
+                   i32  k;
+
+    (vacuum)plexus_in_maiore(p, fila, translatio, piscina, &maior);
+    per (k = I; k < fila; k++)
+    {
+        Ansa e;
+        Ansa imago;
+
+        (vacuum)ansa_circa(fila, k, piscina, &e);
+        (vacuum)ansa_agere(e, maior, piscina, &imago);
+        (vacuum)chorda_aedificator_appendere_chorda(ae,
+            ansa_ad_chordam(imago, piscina));
+    }
+    redde chorda_aedificator_finire(ae);
+}
+
+/* omnia verba longitudinis <= l in B_n; numerus classium Artin,
+ * classium ansarum, et discrepantiae (classis Artin cum clavibus
+ * ansarum pluribus, aut clavis ansarum in classibus Artin pluribus) */
+interior vacuum
+_partitio (
+         i32  n,
+         i32  l,
+         i32  fila_disci,
+         i32  translatio,
+     Piscina* piscina,
+         i32* verba,
+         i32* classes_liberae,
+         i32* classes_ansarum,
+         i32* discrepantiae)
+{
+           i32  litterae_numerus  = II * (n - I);
+           i32  numerus           = ZEPHYRUM;
+           i32  potentia          = I;
+           i32  longitudo;
+    ParClavium* pares;
+           i32  k;
+
+    per (longitudo = ZEPHYRUM; longitudo <= l; longitudo++)
+    {
+        numerus   += potentia;
+        potentia  *= litterae_numerus;
+    }
+    pares = (ParClavium*)piscina_allocare(piscina,
+        (memoriae_index)numerus
+        * magnitudo(ParClavium));
+    k         = ZEPHYRUM;
+    potentia  = I;
+    per (longitudo = ZEPHYRUM; longitudo <= l; longitudo++)
+    {
+        i32 index;
+
+        per (index = ZEPHYRUM; index < potentia; index++)
+        {
+               s32 litterae[XVI];
+               i32 r = index;
+               i32 t;
+            Plexus p;
+
+            per (t = ZEPHYRUM; t < longitudo; t++)
+            {
+                i32 q = r % litterae_numerus;
+                s32 i = (s32)(q / II) + I;
+
+                litterae[t]  = (q % II) == ZEPHYRUM ? i : -i;
+                r            /= litterae_numerus;
+            }
+            (vacuum)plexus_creare(n, litterae, longitudo, piscina, &p);
+            pares[k].clavis_libera     = _clavis_libera(p, piscina);
+            pares[k].clavis_ansarum   = _clavis_ansarum(p, fila_disci,
+                translatio, piscina);
+            k++;
+        }
+        potentia *= litterae_numerus;
+    }
+    *verba = numerus;
+    /* ordine Artin (deinde ansarum): classis Artin cum duabus clavibus
+     * ansarum = discrepantia */
+    qsort(pares, (size_t)numerus, magnitudo(ParClavium),
+        _compara_liberam);
+    *classes_liberae  = ZEPHYRUM;
+    *discrepantiae    = ZEPHYRUM;
+    per (k = ZEPHYRUM; k < numerus; k++)
+    {
+        si (   k == ZEPHYRUM
+            || !chorda_aequalis(pares[k].clavis_libera,
+            pares[k - I].clavis_libera))
+        {
+            (*classes_liberae)++;
+        }
+        alioquin si (!chorda_aequalis(pares[k].clavis_ansarum,
+                     pares[k - I].clavis_ansarum))
+        {
+            (*discrepantiae)++;
+        }
+    }
+    qsort(pares, (size_t)numerus, magnitudo(ParClavium),
+        _compara_ansarum);
+    *classes_ansarum = ZEPHYRUM;
+    per (k = ZEPHYRUM; k < numerus; k++)
+    {
+        si (   k == ZEPHYRUM
+            || !chorda_aequalis(pares[k].clavis_ansarum,
+            pares[k - I].clavis_ansarum))
+        {
+            (*classes_ansarum)++;
+        }
+    }
+}
+
+interior vacuum
+_probare_partitionem (
+    CredoContextus* c)
+{
+    Piscina* piscina       = c->piscina;
+        i32  casus_n[III]  = { 3, 4, 5 };
+        i32  casus_l[III]  = { 6, 5, 4 };
+        i32  t;
+
+    /* D_{n+2}, punctis mediis: partitio eadem ac Artin */
+    per (t = ZEPHYRUM; t < III; t++)
+    {
+        PiscinaNotatio nota = piscina_notare(piscina);
+                   i32 verba;
+                   i32 classes_liberae;
+                   i32 classes_ansarum;
+                   i32 discrepantiae;
+
+        _partitio(casus_n[t], casus_l[t], casus_n[t] + II, I, piscina,
+            &verba, &classes_liberae, &classes_ansarum, &discrepantiae);
+        imprimere("  B_%u, verba <= %u: %u verba, %u classes Artin, %u "
+            "classes ansarum (D_%u), %u discrepantiae\n", casus_n[t],
+            casus_l[t], verba, classes_liberae, classes_ansarum,
+            casus_n[t] + II, discrepantiae);
+        CREDO_AEQUALIS_I32 (discrepantiae, ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (classes_ansarum, classes_liberae);
+        piscina_reficere(piscina, nota);
+    }
+    /* D_n ipse: classes ansarum PAUCIORES (Delta^2 non videtur), sed
+     * nulla classis Artin scinditur */
+    {
+        PiscinaNotatio nota = piscina_notare(piscina);
+                   i32 verba;
+                   i32 classes_liberae;
+                   i32 classes_ansarum;
+                   i32 discrepantiae;
+
+        _partitio(III, VI, III, ZEPHYRUM, piscina, &verba,
+            &classes_liberae,
+            &classes_ansarum, &discrepantiae);
+        imprimere("  B_3 in D_3: %u classes Artin, %u ansarum\n",
+            classes_liberae, classes_ansarum);
+        CREDO_AEQUALIS_I32 (discrepantiae, ZEPHYRUM);
+        CREDO_VERUM (classes_ansarum < classes_liberae);
+        piscina_reficere(piscina, nota);
+    }
+}
+
+interior vacuum
+_probare_torsionem_in_disco (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+        i32  n;
+
+    /* Delta^2 omnes E_k in D_n fixas relinquit, non in D_{n+2} */
+    per (n = III; n <= VII; n++)
+    {
+        Plexus delta;
+        Plexus torsio_plena;
+        Plexus maior;
+           b32 fixa_in_n       = VERUM;
+           b32 fixa_in_maiore  = VERUM;
+           i32 k;
+
+        (vacuum)plexus_dimidia_torsio(n, piscina, &delta);
+        (vacuum)plexus_iungere(delta, delta, piscina, &torsio_plena);
+        per (k = I; k < n; k++)
+        {
+            Ansa e;
+            Ansa imago;
+
+            (vacuum)ansa_circa(n, k, piscina, &e);
+            (vacuum)ansa_agere(e, torsio_plena, piscina, &imago);
+            si (!ansae_aequales(e, imago))
+            {
+                fixa_in_n = FALSUM;
+            }
+        }
+        (vacuum)plexus_in_maiore(torsio_plena, n + II, I, piscina,
+            &maior);
+        per (k = I; k < n + II; k++)
+        {
+            Ansa e;
+            Ansa imago;
+
+            (vacuum)ansa_circa(n + II, k, piscina, &e);
+            (vacuum)ansa_agere(e, maior, piscina, &imago);
+            si (!ansae_aequales(e, imago))
+            {
+                fixa_in_maiore = FALSUM;
+            }
+        }
+        CREDO_VERUM (fixa_in_n);
+        CREDO_FALSUM (fixa_in_maiore);
+    }
+}
+
+/* L(u) sub (s1 s2^-1)^m in D_3 crescit ratione (3 + sqrt 5)/2; braida
+ * IV filorum s3^-1 s2^-1 s3^-1 s2 s1: entropia ~0.83144 (Thiffeault
+ * Fig. 10), lambda = e^0.83144 = 2.2966; braida periodica (s1 s2)^3 =
+ * Delta^2 L constantem relinquit */
+interior vacuum
+_probare_incrementum (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+       Ansa  u;
+       Ansa  v;
+     Plexus  gradus;
+        s64  prior;
+        s64  nunc;
+        i32  m;
+
+    (vacuum)ansa_circa(III, I, piscina, &u);
+    gradus  = _p(III, "1 -2", piscina);
+    prior   = _s64(ansa_sectiones(u, piscina));
+    /* m <= 20: L_m^2 in s64 capit (L_20 ~ 2.3 * 10^8) */
+    per (m = I; m <= XX; m++)
+    {
+        (vacuum)ansa_agere(u, gradus, piscina, &u);
+        nunc = _s64(ansa_sectiones(u, piscina));
+        si (m >= X)
+        {
+            s64 residuum = nunc * nunc - III * nunc * prior + prior
+                * prior;
+
+            si (residuum < ZEPHYRUM)
+            {
+                residuum = -residuum;
+            }
+            CREDO_VERUM (residuum * M < prior * prior);
+        }
+        prior = nunc;
+    }
+    imprimere("  L post (s1 s2^-1)^20 = %ld\n", (longus)prior);
+    /* IV fila */
+    (vacuum)ansa_circa(IV, I, piscina, &u);
+    gradus  = _p(IV, "-3 -2 -3 2 1", piscina);
+    prior   = _s64(ansa_sectiones(u, piscina));
+    per (m = I; m <= XXX; m++)
+    {
+        (vacuum)ansa_agere(u, gradus, piscina, &u);
+        nunc = _s64(ansa_sectiones(u, piscina));
+        si (m >= XX)
+        {
+            /* |10000 L_{m+1} - 22966 L_m| <= 10 L_m (0.1%) */
+            s64 differentia = 10000L * nunc - 22966L * prior;
+
+            si (differentia < ZEPHYRUM)
+            {
+                differentia = -differentia;
+            }
+            CREDO_VERUM (differentia <= 10L * prior);
+        }
+        prior = nunc;
+    }
+    imprimere("  L post (s3^-1 s2^-1 s3^-1 s2 s1)^30 = %ld\n",
+        (longus)prior);
+    /* periodica */
+    (vacuum)ansa_circa(III, I, piscina, &u);
+    gradus = _p(III, "1 2", piscina);
+    per (m = I; m <= XXX; m++)
+    {
+        (vacuum)ansa_agere(u, gradus, piscina, &v);
+        u = v;
+        si (m % III == ZEPHYRUM)
+        {
+            CREDO_VERUM (_s64(ansa_sectiones(u, piscina)) == II);
+        }
+    }
+}
+
+/* crescentia magna (Magnus) et piscina vocantis non repleta */
+interior vacuum
+_probare_ansas_magnas (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+       Ansa  u;
+       Ansa  v;
+     Plexus  p;
+        s32* litterae = (s32*)piscina_allocare(piscina,
+            (memoriae_index)400 * magnitudo(s32));
+               i32 k;
+    memoriae_index ante;
+            Magnus longitudo;
+
+    per (k = ZEPHYRUM; k < 400UL; k += II)
+    {
+        litterae[k]      = I;
+        litterae[k + I]  = -II;
+    }
+    (vacuum)plexus_creare(III, litterae, 400UL, piscina, &p);
+    (vacuum)ansa_circa(III, I, piscina, &u);
+    ante = piscina_summa_usus(piscina);
+    CREDO_VERUM (ansa_agere(u, p, piscina, &v));
+    /* effectum solum (duo Magnus ~140 bitorum) in piscina vocantis */
+    CREDO_VERUM (piscina_summa_usus(piscina) - ante < 4096UL);
+    longitudo = ansa_sectiones(v, piscina);
+    imprimere("  L post (s1 s2^-1)^200: %u bita\n",
+        magnus_bitorum(longitudo));
+    /* (3+sqrt5)/2 ^ 200 ~ 2^277.7 */
+    CREDO_VERUM (magnus_bitorum(longitudo) >= CCLXX
+        && magnus_bitorum(longitudo) <= CCLXXXV);
+    /* (s1 s2^-1)^3000: coordinatae ~4165 bitorum, piscina temporaria
+     * contrahitur (plures MB purgamentorum); inversum E_1 exacte
+     * reddit */
+    {
+        s32* longae = (s32*)piscina_allocare(piscina,
+            (memoriae_index)6000 * magnitudo(s32));
+        Plexus q;
+          Ansa w;
+
+        per (k = ZEPHYRUM; k < 6000UL; k += II)
+        {
+            longae[k]      = I;
+            longae[k + I]  = -II;
+        }
+        (vacuum)plexus_creare(III, longae, 6000UL, piscina, &q);
+        CREDO_VERUM (ansa_agere(u, q, piscina, &w));
+        imprimere("  L post (s1 s2^-1)^3000: %u bita\n",
+            magnus_bitorum(ansa_sectiones(w, piscina)));
+        /* 3000 log2((3 + sqrt 5)/2) = 4165.2 */
+        CREDO_VERUM (magnus_bitorum(ansa_sectiones(w, piscina))
+            >= 4160UL
+            && magnus_bitorum(ansa_sectiones(w, piscina)) <= 4175UL);
+        CREDO_VERUM (ansa_agere(w, plexus_inversum(q, piscina), piscina,
+            &w) && ansae_aequales(u, w));
+    }
+    /* inversum reddit E_1 exacte (via Magnus) */
+    CREDO_VERUM (ansa_agere(v, plexus_inversum(p, piscina), piscina, &v)
+        && ansae_aequales(u, v));
+}
+
+interior vacuum
+_probare_aequalitatem_ansis (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+       Sors  s;
+        i32  t;
+        i32  discrepantiae = ZEPHYRUM;
+        b32  aequales;
+
+    sors_seminare(&s, CMXCIX, I);
+    per (t = ZEPHYRUM; t < CCC; t++)
+    {
+        PiscinaNotatio nota  = piscina_notare(piscina);
+                   i32 n     = II + sors_intra(&s, V);
+                Plexus p    = _fortuitus(&s, n, sors_intra(&s, IX),
+                    piscina);
+                Plexus q    = sors_intra(&s, II) == ZEPHYRUM
+                    ? _rescribere(&s, p, piscina)
+                    : _fortuitus(&s, n, sors_intra(&s, IX), piscina);
+                   b32 per_liberum  = FALSUM;
+                   b32 per_ansas    = FALSUM;
+
+        (vacuum)plexus_aequales(p, q, LIMES_MAGNUS, piscina,
+            &per_liberum);
+        si (   !plexus_aequales_ansis(p, q, piscina, &per_ansas)
+            || per_ansas != per_liberum)
+        {
+            discrepantiae++;
+        }
+        piscina_reficere(piscina, nota);
+    }
+    CREDO_AEQUALIS_I32 (discrepantiae, ZEPHYRUM);
+    /* Delta^2 non trivialis etiam per ansas; B_2 */
+    {
+        Plexus delta;
+        Plexus torsio_plena;
+
+        (vacuum)plexus_dimidia_torsio(IV, piscina, &delta);
+        (vacuum)plexus_iungere(delta, delta, piscina, &torsio_plena);
+        CREDO_VERUM (plexus_aequales_ansis(torsio_plena, _p(IV, "",
+            piscina), piscina, &aequales) && !aequales);
+        CREDO_VERUM (plexus_aequales_ansis(_p(II, "1 1 -1", piscina),
+            _p(II, "1", piscina), piscina, &aequales) && aequales);
+        CREDO_VERUM (plexus_aequales_ansis(_p(II, "1 1", piscina),
+            _p(II, "", piscina), piscina, &aequales) && !aequales);
+    }
+    aequales = XCIX;
+    CREDO_FALSUM (plexus_aequales_ansis(_p(III, "1", piscina), _p(IV,
+        "1", piscina), piscina, &aequales));
+    CREDO_VERUM (aequales == XCIX);
+    /* piscina refecta */
+    {
+        memoriae_index ante  = piscina_summa_usus(piscina);
+                Plexus a     = _p(V, "1 2 3 4 -1 -3", piscina);
+
+        ante = piscina_summa_usus(piscina);
+        (vacuum)plexus_aequales_ansis(a, a, piscina, &aequales);
+        CREDO_VERUM (aequales && piscina_summa_usus(piscina) == ante);
+    }
+}
+
+interior vacuum
+_probare_in_maiore (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+     Plexus  q;
+
+    CREDO_VERUM (plexus_in_maiore(_p(III, "1 -2", piscina), V, II,
+        piscina, &q) && q.fila == V
+        && _textus(plexus_ad_chordam(q, piscina), "3 -4"));
+    CREDO_VERUM (plexus_in_maiore(_p(III, "1 -2", piscina), III,
+        ZEPHYRUM, piscina, &q) && q.fila == III);
+    q.fila = XCIX;
+    CREDO_FALSUM (plexus_in_maiore(_p(III, "1", piscina), IV, II,
+        piscina, &q));
+    CREDO_FALSUM (plexus_in_maiore(_p(III, "1", piscina), I, ZEPHYRUM,
+        piscina, &q));
+    CREDO_AEQUALIS_I32 (q.fila, XCIX);
+}
+
+
 interior CredoSectio SECTIONES[] = {
     { "verba", _probare_verba, NIHIL, NIHIL, NIHIL, NIHIL },
     { "permutatio", _probare_permutationem, NIHIL, NIHIL, NIHIL,
@@ -1032,6 +1993,29 @@ interior CredoSectio SECTIONES[] = {
         NIHIL },
     { "piscina refecta", _probare_piscinam, NIHIL, NIHIL, NIHIL,
         NIHIL },
+    { "ansae forma", _probare_ansas_formam, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "ansae contra fontem",
+      _probare_ansas_contra_fontem, NIHIL, NIHIL, NIHIL,
+          NIHIL },
+    { "ansae relationes", _probare_ansas_relationes, NIHIL, NIHIL,
+        NIHIL,
+      NIHIL },
+    { "ansae homogeneae", _probare_ansas_homogeneas, NIHIL, NIHIL,
+        NIHIL,
+      NIHIL },
+    { "partitio contra Artin", _probare_partitionem, NIHIL, NIHIL,
+        NIHIL,
+      NIHIL },
+    { "torsio in disco", _probare_torsionem_in_disco, NIHIL, NIHIL,
+        NIHIL,
+      NIHIL },
+    { "incrementum", _probare_incrementum, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "ansae magnae", _probare_ansas_magnas, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "aequalitas per ansas", _probare_aequalitatem_ansis, NIHIL, NIHIL,
+      NIHIL, NIHIL },
+    { "in maiore", _probare_in_maiore, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 
