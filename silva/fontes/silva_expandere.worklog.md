@@ -81,3 +81,40 @@ A/B same machine, best of 3 / 2 runs: percursus lib (273 files) 17.2 s
 -> 5.9 s wall (2.9x), totality unchanged (273 trees); examen chorda.c CPU
 0.16 -> 0.11 s, silva_c89_semantica.c 0.49 -> 0.45 s (examen provides
 only the file's closure, so less to skip). silva 55/55.
+
+## 2026-10-15 - indices for the writer's extent lookups and the oracle's responses
+
+`sample` of percursus after the xar clz change: xar ~31% of the run, and
+62% of the `xar_obtinere` samples came from three LINEAR pointer-keyed
+lookups - silva_scribere `_extentum_quaerere` (identity) and
+`_extentum_continens` (containment), where every expanded token of an
+object-like macro (si, redde, ZEPHYRUM, Roman numerals) scanned all
+function-like invocations twice to find nothing ("numeri parvi" did
+not hold for our Latin-macro C), and `silva_oraculum_responsum_quaerere`.
+
+Now: `SilvaExpansio.indices_extentorum` (a pointer to a cache struct, so
+lookups through `constans SilvaExpansio*` update it without a cast):
+identity = tabula_dispersa keyed by the BYTES of the `invocatio` field
+inside the stable xar element (xar never moves elements, so the key
+stays valid; the query key is the bytes of the local pointer), first
+recorded wins, indexed lazily past a watermark (extenta are append-only
+and filled right after xar_addere). Containment = intervals sorted by
+(fons, start, record order) + running max of ends per fons; binary
+search to the last start <= offset, scan back while the running max
+exceeds the offset, keep the minimum record order = exactly the linear
+scan's "first recorded". Rebuilt when the count changed. Allocation
+failure -> `fractus` -> the linear code (kept as
+`_extentum_*_linearis`), never a wrong answer. Oracle: `responsa_per_sedem`
+created with responsa, cleared with them, key = bytes of `slot->sedes`.
+Public API: `silva_extentum_invocationis`, `silva_extentum_continens`.
+
+Evidence: temporary instrumentation compared every indexed answer with
+the linear one and aborted on mismatch - percursus lib + silva/fontes:
+~131K identity lookups (plus their containment fallbacks) and ~90K
+oracle lookups, zero discrepancies; totality unchanged (273 + 54 trees).
+A/B CPU: lib 4.84 -> 4.15 s (-14%), silva/fontes 1.43 -> 1.32 s.
+
+Not done (not hot in the profile): silva_frons `_silvae_extentum` and
+silva_arbor `_extentum_laminam_quaerere` are the same linear identity
+scan (frons could call silva_extentum_invocationis for expansio->extenta;
+extenta_lecta is a separate list).

@@ -180,6 +180,28 @@ nomen structura {
     b32 vacua;
 } SilvaExtentumInvocationis;
 
+/* Indices extentorum (2026-10-15): quaestiones scriptoris per
+ * IDENTITATEM et CONTINENTIAM olim lineares super exp->extenta - omne
+ * lexema expansum macri obiecto-similis (si, redde, ZEPHYRUM...) duas
+ * scansiones totas faciebat (percursus: 42% xar_obtinere). Pigri:
+ * extenta appendice sola crescunt et statim post appendicem implentur,
+ * ergo quaestio extenta nova (signum aquae) indicat. SilvaExpansio
+ * monstratorem tenet - cache per constans exp scribitur sine
+ * conversione. fractus: allocatio defecit -> scansio linearis (numquam
+ * responsum falsum). */
+nomen structura {
+    TabulaDispersa* per_invocationem; /* octeti campi 'invocatio' ->
+                                       * SilvaExtentumInvocationis*
+                                       * (primum memoratum vincit) */
+               i32  indicata;          /* extenta iam in tabula */
+            vacuum* ordinata;          /* intervalla (fons, initium) -
+                                        * forma interna silva_expandere.c */
+               i32 numerus_ordinatorum;
+               s32 ordinata_ex;       /* xar_numerus(extenta) quo structa;
+                                        * -I = numquam */
+               b32 fractus;
+} SilvaIndicesExtentorum;
+
 
 /* ==================================================
  * Contextus expansionis
@@ -199,6 +221,7 @@ structura SilvaExpansio {
                Xar* extenta;    /* Xar de SilvaExtentumInvocationis
                                  * (per valorem) - invocationes
                                  * functio-similes strati 0 */
+    SilvaIndicesExtentorum* indices_extentorum; /* cache quaestionum */
                i32  profunditas_includendi;
                s32  fons_api;   /* fons syntheticus "<api>"; -1 = nondum */
     TabulaDispersa* tabula_activa; /* tabula temporalis expansionis
@@ -248,6 +271,21 @@ silva_fons_addere (
     constans character* via,
                    b32  est_syntheticus);
 
+
+/* Lamina extenti cuius lexema nominis IPSUM est 'invocatio' (primum
+ * memoratum vincit); NIHIL si nullum. Index pigrus. */
+Xar*
+silva_extentum_invocationis (
+    constans SilvaExpansio* exp,
+       constans SilvaToken* invocatio);
+
+/* Lamina PRIMI extenti memorati cuius octeti (fons lexematis primi
+ * laminae, a primo usque ad finem ultimi) offset 'radicis' continent;
+ * NIHIL si nullum. Index pigrus (ordinatio + maxima finium). */
+Xar*
+silva_extentum_continens (
+    constans SilvaExpansio* exp,
+       constans SilvaToken* radix);
 
 /* Praebere contentum includendum: via -> textus (lexatur PIGRE, ad
  * primum #include resolutum - silva_includendum_lexemata).
