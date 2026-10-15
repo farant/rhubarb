@@ -1227,10 +1227,11 @@ _probare_commemorationes (
     calendarium_destruere(cal);
 }
 
-/* proprietates per dies omnes 2000-2040: principalis numquam NIHIL,
- * ad libitum aut commemorata; ordo eius minimus; color diei eius;
- * 2 XI = Defuncti; in feria privilegiata nulla memoria principalis;
- * sollemnitas diei victa solum a die ordinis I-II (RECENSIO 4f a-c) */
+/* proprietates per dies omnes 1970-2100 (L5; L1: 2000-2040):
+ * principalis numquam NIHIL, ad libitum aut commemorata; ordo eius
+ * minimus; color diei eius; 2 XI = Defuncti; in feria privilegiata
+ * nulla memoria principalis; sollemnitas diei victa solum a die
+ * ordinis I-II (RECENSIO 4f a-c) */
 interior vacuum
 _probare_proprietates_ordinis (
     CredoContextus* c)
@@ -1250,8 +1251,8 @@ _probare_proprietates_ordinis (
     dierum = piscina_generare_dynamicum("dies_calendarii",
         M * LXIV);
     violationes  = ZEPHYRUM;
-    dies         = fasti_dies(MM, FASTI_IANUARIUS, I);
-    finis        = fasti_dies(MMXL, FASTI_DECEMBER, XXXI);
+    dies         = fasti_dies(MCMLXX, FASTI_IANUARIUS, I);
+    finis        = fasti_dies(MMC, FASTI_DECEMBER, XXXI);
     CREDO_NECESSE(dierum != NIHIL);
     dum (fasti_comparare(dies, finis) <= ZEPHYRUM)
     {
@@ -1927,6 +1928,144 @@ _probare_proprium_usa (
     calendarium_destruere(cal);
 }
 
+
+/* ==================================================
+ * Robustitas et functiones reliquae (liturgia-plan L5)
+ * ================================================== */
+
+/* dominium: anni 1970-9999, dies valida, cal non NIHIL */
+interior vacuum
+_probare_dominium (
+    CredoContextus* c)
+{
+    CalendariumLiturgicum* cal;
+
+    cal = calendarium_creare(c->piscina);
+    CREDO_VERUM(calendarium_obtinere_diem(cal, fasti_dies(MCMLXIX,
+        FASTI_DECEMBER, XXXI), c->piscina) == NIHIL);
+    CREDO_VERUM(calendarium_obtinere_diem(cal, fasti_dies(MCMLXX,
+        FASTI_IANUARIUS, I), c->piscina) != NIHIL);
+    CREDO_VERUM(calendarium_obtinere_diem(cal, fasti_dies(IX * M
+        + CMXCIX,
+        FASTI_DECEMBER, XXXI), c->piscina) != NIHIL);
+    CREDO_VERUM(calendarium_obtinere_diem(cal, fasti_dies(X * M,
+        FASTI_IANUARIUS, I), c->piscina) == NIHIL);
+    CREDO_VERUM(calendarium_obtinere_diem(cal, fasti_dies(MMXXVI,
+        FASTI_FEBRUARIUS, XXX), c->piscina) == NIHIL);
+    CREDO_VERUM(calendarium_obtinere_diem(NIHIL, fasti_dies(MMXXVI,
+        FASTI_FEBRUARIUS, I), c->piscina) == NIHIL);
+    calendarium_destruere(cal);
+}
+
+/* dies de praecepto USA (USCCB 2025-2026): 15 VIII et 1 XI sabbato
+ * non; 8 XII feria II manet; 9 XII translata non; 1 I feria II non;
+ * Nativitas semper; dominica ordinaria non */
+interior vacuum
+_probare_obligatio (
+    CredoContextus* c)
+{
+    CalendariumLiturgicum* cal;
+
+    cal = calendarium_creare(c->piscina);
+    CREDO_FALSUM(calendarium_dies_obligationis(cal, fasti_dies(MMXXVI,
+        FASTI_AUGUSTUS, XV)));
+    CREDO_VERUM(calendarium_dies_obligationis(cal, fasti_dies(MMXXV,
+        FASTI_AUGUSTUS, XV)));
+    CREDO_FALSUM(calendarium_dies_obligationis(cal, fasti_dies(MMXXV,
+        FASTI_NOVEMBER, I)));
+    CREDO_VERUM(calendarium_dies_obligationis(cal, fasti_dies(MMXXVI,
+        FASTI_NOVEMBER, I)));
+    CREDO_VERUM(calendarium_dies_obligationis(cal, fasti_dies(MMXXV,
+        FASTI_DECEMBER, VIII)));
+    CREDO_FALSUM(calendarium_dies_obligationis(cal, fasti_dies(MMXXIV,
+        FASTI_DECEMBER, VIII)));
+    CREDO_FALSUM(calendarium_dies_obligationis(cal, fasti_dies(MMXXIV,
+        FASTI_DECEMBER, IX)));
+    CREDO_FALSUM(calendarium_dies_obligationis(cal, fasti_dies(MMXXIV,
+        FASTI_IANUARIUS, I)));
+    CREDO_VERUM(calendarium_dies_obligationis(cal, fasti_dies(MMXXVI,
+        FASTI_IANUARIUS, I)));
+    CREDO_VERUM(calendarium_dies_obligationis(cal, fasti_dies(MMXXII,
+        FASTI_DECEMBER, XXV)));
+    CREDO_FALSUM(calendarium_dies_obligationis(cal, fasti_dies(MMXXVI,
+        FASTI_OCTOBER, XVIII)));
+    CREDO_FALSUM(calendarium_dies_obligationis(NIHIL, fasti_dies(MMXXV,
+        FASTI_DECEMBER, XXV)));
+    calendarium_destruere(cal);
+}
+
+/* nomina celebrationum ex obtinere_diem (F14): translatae et victae
+ * absunt; feria sine celebratione vacua */
+interior vacuum
+_probare_nomen_celebrationum (
+    CredoContextus* c)
+{
+    CalendariumLiturgicum* cal;
+
+    cal = calendarium_creare(c->piscina);
+    CREDO_CHORDA_AEQUALIS_LITERIS(calendarium_nomen_celebrationum(cal,
+        fasti_dies(MMXXIX, FASTI_MARTIUS, XXV), c->piscina),
+        "Palm Sunday of the Passion of the Lord");
+    CREDO_CHORDA_AEQUALIS_LITERIS(calendarium_nomen_celebrationum(cal,
+        fasti_dies(MMXXVI, FASTI_MAIUS, XIV), c->piscina),
+        "Saint Matthias the Apostle");
+    CREDO_CHORDA_AEQUALIS_LITERIS(calendarium_nomen_celebrationum(cal,
+        fasti_dies(MMXXVI, FASTI_IANUARIUS, XX), c->piscina),
+        "Saint Fabian, Saint Sebastian");
+    CREDO_AEQUALIS_S32((s32)calendarium_nomen_celebrationum(cal,
+        fasti_dies(MMXXVI, FASTI_OCTOBER, XXI), c->piscina).mensura,
+        ZEPHYRUM);
+    calendarium_destruere(cal);
+}
+
+/* invenire festum per titulum: mobile, sanctorale, translatum, dies
+ * precationis in feria II (2023), ignotum */
+interior vacuum
+_probare_invenire_festum (
+    CredoContextus* c)
+{
+    CalendariumLiturgicum* cal;
+
+    cal = calendarium_creare(c->piscina);
+    CREDO_VERUM(_dies_est(calendarium_invenire_festum(cal,
+        chorda_ex_literis("Easter Sunday", c->piscina), MMXXVI), MMXXVI,
+        FASTI_APRILIS, V));
+    CREDO_VERUM(_dies_est(calendarium_invenire_festum(cal,
+        chorda_ex_literis("The Ascension of the Lord", c->piscina),
+        MMXXVI), MMXXVI, FASTI_MAIUS, XVII));
+    CREDO_VERUM(_dies_est(calendarium_invenire_festum(cal,
+        chorda_ex_literis("St. Matthias", c->piscina), MMXXVI), MMXXVI,
+        FASTI_MAIUS, XIV));
+    CREDO_VERUM(_dies_est(calendarium_invenire_festum(cal,
+        chorda_ex_literis("St. Joseph", c->piscina), MMXXIII), MMXXIII,
+        FASTI_MARTIUS, XX));
+    CREDO_VERUM(_dies_est(calendarium_invenire_festum(cal,
+        chorda_ex_literis("Day of Prayer for the Unborn", c->piscina),
+        MMXXIII), MMXXIII, FASTI_IANUARIUS, XXIII));
+    CREDO_VERUM(_dies_est(calendarium_invenire_festum(cal,
+        chorda_ex_literis("Saint Nobody", c->piscina), MMXXVI),
+        ZEPHYRUM, ZEPHYRUM, ZEPHYRUM));
+    calendarium_destruere(cal);
+}
+
+/* psalterium: Cineres ad sabbatum hebdomada IV (F12), dominica I
+ * Quadragesimae I */
+interior vacuum
+_probare_psalterium_cinerum (
+    CredoContextus* c)
+{
+    CalendariumLiturgicum* cal;
+
+    cal = calendarium_creare(c->piscina);
+    CREDO_AEQUALIS_S32(_psalterium_diei(cal, MMXXVI, FASTI_FEBRUARIUS,
+        XVIII), IV);
+    CREDO_AEQUALIS_S32(_psalterium_diei(cal, MMXXVI, FASTI_FEBRUARIUS,
+        XXI), IV);
+    CREDO_AEQUALIS_S32(_psalterium_diei(cal, MMXXVI, FASTI_FEBRUARIUS,
+        XXII), I);
+    calendarium_destruere(cal);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "pascha_editum", _probare_pascha_editum, NIHIL, NIHIL, NIHIL,
       NIHIL },
@@ -1977,6 +2116,14 @@ hic_manens constans CredoSectio SECTIONES[] = {
       NIHIL },
     { "proprium_usa", _probare_proprium_usa, NIHIL, NIHIL, NIHIL,
         NIHIL },
+    { "dominium", _probare_dominium, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "obligatio", _probare_obligatio, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "nomen_celebrationum", _probare_nomen_celebrationum, NIHIL, NIHIL,
+      NIHIL, NIHIL },
+    { "invenire_festum", _probare_invenire_festum, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { "psalterium_cinerum", _probare_psalterium_cinerum, NIHIL, NIHIL,
+      NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

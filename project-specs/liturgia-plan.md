@@ -79,7 +79,13 @@ title, season name), `lib/schirmata.c` (`calendarium_nomen_celebrationum`),
   Thanksgiving (movable), US obligatory memorials ordo XI,
   CALENDARIUM_SANCTORALE_VIGENS. Carlo Acutis not in the GRC/US
   calendar - left out (Fran); devotions source idea parked.
-- L5 - next.
+- L5 DONE 2026-10-15: domain 1970-9999 (NIHIL cal used to crash),
+  invalid dates refused, calendarium_dies_obligationis (US rules,
+  calendario_visus uses it), nomen_celebrationum on obtinere_diem
+  (status bar), invenire_festum, psalter IV after Ash Wednesday, sweep
+  1970-2100. ARC CLOSED - all review findings F1-F15 addressed or
+  deliberately parked (anchors by value, allocations, Thursday
+  Ascension provinces, Christmas psalter weeks).
 
 ## IV. AUDIENDA
 

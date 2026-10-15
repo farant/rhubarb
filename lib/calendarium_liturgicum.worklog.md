@@ -300,3 +300,39 @@ through fasti_fontes is the clean way to show him.
 move, Seton ordo, Newman rank, Day of Prayer colour). The `%s` in my
 own insertion template once wrote `COLLIT_%s` literally - the compile
 caught it; templates for data go through one format call per line.
+
+## 2026-10-15 - liturgia-plan L5: domain, obligation, names, search
+
+- Domain: `calendarium_obtinere_diem` returns NIHIL for a NIHIL
+  calendar (it used to SEGFAULT - the new `dominium` section crashed
+  the suite with exit 139 before the fix), an invalid date (Feb 30
+  used to answer with Mar 2's weekday and Feb 30's saints) or a year
+  outside `CALENDARIUM_ANNUS_PRIMUS..ULTIMUS` (1970..9999). Every
+  caller already guarded NIHIL (kalendarium.c 2487/2495/3125/3274,
+  calendario_visus.c 261).
+- `calendarium_dies_obligationis` (US): Christmas; Dec 8 unless a
+  Sunday (then transferred to Dec 9, without precept - USCCB 2025
+  shows Dec 9 2024 with no "[Holyday of Obligation]"); Jan 1, Aug 15,
+  Nov 1 unless Saturday or Monday (complementary norm to can. 1246 §2;
+  USCCB 2025/2026: Aug 15 2026 Sat, Nov 1 2025 Sat "not a Holyday of
+  Obligation this year"; Dec 8 2025 Mon keeps it). Ordinary Sundays
+  are not reported. `calendario_visus.c` now uses it instead of the
+  raw `SanctoraleDatum.dies_obligationis` flag (left as nominal data).
+- `calendarium_nomen_celebrationum` now takes the calendar and joins
+  the non-temporal entries of `obtinere_diem` (principal, options,
+  commemorations): 2029-03-25 is "Palm Sunday of the Passion of the
+  Lord", no longer "Palm Sunday, The Annunciation" (F14). The status
+  bar (schirmata.c) builds a calendar in its per-call pool.
+- `calendarium_invenire_festum` implemented: exact full or short
+  title; movable table, then this year's transfers, then the
+  sanctorale (the Day of Prayer follows its Sunday rule); 0-0-0 when
+  unknown.
+- Psalter week IV from Ash Wednesday to the Saturday after (F12).
+- The L1 property sweep now covers 1970-2100.
+
+Seven plants red (two first written as `x == x`, which -Wtautological
+rejects - planta's compile pre-check caught both before any run).
+Deliberately not done (no consumer): anchors by value, fewer
+allocations per obtinere_diem, Thursday-Ascension provinces (2026
+list: Boston, Hartford, New York, Omaha, Philadelphia), Christmas
+season psalter weeks (no source checked).

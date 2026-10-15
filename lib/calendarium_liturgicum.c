@@ -621,6 +621,14 @@ calendarium_hebdomada_psalterii (
 {
     InformatioTemporis info = calendarium_tempus_info(cal, dies);
 
+    /* Cineres ad sabbatum sequens: psalterium hebdomadae IV (F12) */
+    si (   info.tempus == TEMPUS_QUADRAGESIMAE
+        && fasti_comparare(dies, calendarium_anchorae(cal,
+        dies.annus)->dominica_i_quadragesimae) < ZEPHYRUM)
+    {
+        redde IV;
+    }
+
     /* Hebdomada psalterii 1-4 rotat */
     redde ((info.hebdomada - I) % IV) + I;
 }
@@ -714,20 +722,6 @@ calendarium_proxima_dominica (
     }
 
     redde fasti_addere_dies(dies, VII - dies_hebdomadae);
-}
-
-Dies
-calendarium_invenire_festum (
-    CalendariumLiturgicum* cal,
-                   chorda  titulus,
-                      s32  annus)
-{
-    /* TODO: Implementare post sanctorale */
-    (vacuum)cal;
-    (vacuum)titulus;
-    (vacuum)annus;
-
-    redde fasti_dies(ZEPHYRUM, ZEPHYRUM, ZEPHYRUM);
 }
 
 
@@ -912,57 +906,6 @@ calendarium_formare_titulum (
     result.mensura = (i32)longitudo;
 
     redde result;
-}
-
-chorda
-calendarium_nomen_celebrationum (
-       Dies  dies,
-    Piscina* piscina)
-{
-           ChordaAedificator* aed;
-          constans character* nomen_mobile;
-    constans SanctoraleDatum* sancta;
-                         s32  num_sanctorum;
-                         s32  i;
-                         b32  primum;
-                      chorda  result;
-
-    aed = chorda_aedificator_creare(piscina, CCLVI);
-    si (aed == NIHIL)
-    {
-        result.datum    = NIHIL;
-        result.mensura  = ZEPHYRUM;
-        redde result;
-    }
-
-    primum = VERUM;
-
-    /* Primo: festivitates mobiles (Pascha, Pentecoste, etc.) */
-    nomen_mobile = fasti_nomen_festivitatis(dies);
-    si (nomen_mobile != NIHIL)
-    {
-        chorda_aedificator_appendere_literis(aed, nomen_mobile);
-        primum = FALSUM;
-    }
-
-    /* Secundo: sanctorale (fixa) */
-    sancta = sanctorale_obtinere(dies.mensis, dies.dies,
-        &num_sanctorum);
-    si (sancta != NIHIL)
-    {
-        per (i = ZEPHYRUM; i < num_sanctorum; i++)
-        {
-            si (!primum)
-            {
-                chorda_aedificator_appendere_literis(aed, ", ");
-            }
-            chorda_aedificator_appendere_literis(aed,
-                sancta[i].titulus);
-            primum = FALSUM;
-        }
-    }
-
-    redde chorda_aedificator_finire(aed);
 }
 
 
@@ -1377,6 +1320,14 @@ calendarium_obtinere_diem (
     constans SanctoraleDatum* precatio;
                          s32  num_precationis;
 
+    /* dominium (L5): cal, dies valida, anni 1970-9999 */
+    si (   !cal || !fasti_dies_valida(dies)
+        || dies.annus < CALENDARIUM_ANNUS_PRIMUS
+        || dies.annus > CALENDARIUM_ANNUS_ULTIMUS)
+    {
+        redde NIHIL;
+    }
+
     info = (InformatioDiei*)piscina_allocare(piscina,
         magnitudo(InformatioDiei));
 
@@ -1572,4 +1523,152 @@ calendarium_obtinere_diem (
     }
 
     redde info;
+}
+
+
+/* ==================================================
+ * Quaestiones derivatae (liturgia-plan L5)
+ * ================================================== */
+
+/* nomina celebrationum non temporalium diei per ", " (F14) */
+chorda
+calendarium_nomen_celebrationum (
+    CalendariumLiturgicum* cal,
+                     Dies  dies,
+                  Piscina* piscina)
+{
+     ChordaAedificator* aed;
+        InformatioDiei* info;
+                   s32  i;
+                   b32  primum;
+                chorda  fructus;
+
+    fructus.datum    = NIHIL;
+    fructus.mensura  = ZEPHYRUM;
+    aed              = chorda_aedificator_creare(piscina, CCLVI);
+    info             = calendarium_obtinere_diem(cal, dies, piscina);
+    si (!aed || !info)
+    {
+        redde fructus;
+    }
+    primum = VERUM;
+    per (i = ZEPHYRUM; i < info->numerus_celebrationum; i++)
+    {
+        si (info->celebrationes[i].genus == GENUS_TEMPORALE)
+        {
+            perge;
+        }
+        si (!primum)
+        {
+            chorda_aedificator_appendere_literis(aed, ", ");
+        }
+        chorda_aedificator_appendere_chorda(aed,
+            info->celebrationes[i].titulus);
+        primum = FALSUM;
+    }
+    redde chorda_aedificator_finire(aed);
+}
+
+interior b32
+titulus_congruit (
+                      chorda  titulus,
+    constans SanctoraleDatum* datum)
+{
+    redde chorda_aequalis_literis(titulus, datum->titulus)
+        || chorda_aequalis_literis(titulus, datum->titulus_brevis);
+}
+
+/* festum per titulum: mobile, translatum, sanctorale (dies
+ * precationis USA: 23 I si 22 I dominica) */
+Dies
+calendarium_invenire_festum (
+    CalendariumLiturgicum* cal,
+                   chorda  titulus,
+                      s32  annus)
+{
+             AnnusComputatus* a;
+    constans SanctoraleDatum* sancta;
+                         s32  numerus;
+                         s32  mensis;
+                         s32  dies;
+                         s32  i;
+                        Dies  d;
+
+    a = cal && titulus.mensura > ZEPHYRUM ? annum_translationum(cal,
+        annus) : NIHIL;
+    si (!a)
+    {
+        redde fasti_dies(ZEPHYRUM, ZEPHYRUM, ZEPHYRUM);
+    }
+    per (i = ZEPHYRUM; i < MOBILIA_NUMERUS; i++)
+    {
+        si (titulus_congruit(titulus, &MOBILIA[i].datum))
+        {
+            redde dies_mobilis(&a->anchorae, &MOBILIA[i]);
+        }
+    }
+    per (i = ZEPHYRUM; i < a->numerus_translationum; i++)
+    {
+        si (titulus_congruit(titulus, a->translationes[i].datum))
+        {
+            redde a->translationes[i].nova;
+        }
+    }
+    per (mensis = FASTI_IANUARIUS; mensis <= FASTI_DECEMBER; mensis++)
+    {
+        per (dies = I; dies <= fasti_dies_in_mense(mensis,
+            annus); dies++)
+        {
+            sancta = sanctorale_obtinere(mensis, dies, &numerus);
+            per (i = ZEPHYRUM; sancta && i < numerus; i++)
+            {
+                si (!titulus_congruit(titulus, &sancta[i]))
+                {
+                    perge;
+                }
+                d = fasti_dies(annus, mensis, dies);
+                si (   mensis == FASTI_IANUARIUS && dies == XXII
+                    && sancta[i].ordo == ORDO_MEMORIA_PROPRIA
+                    && fasti_dies_hebdomadis(d) == FASTI_DOMINICA)
+                {
+                    d = fasti_addere_dies(d, I);
+                }
+                redde d;
+            }
+        }
+    }
+    redde fasti_dies(ZEPHYRUM, ZEPHYRUM, ZEPHYRUM);
+}
+
+/* dies de praecepto USA (dominicis ordinariis exceptis) */
+b32
+calendarium_dies_obligationis (
+    CalendariumLiturgicum* cal,
+                     Dies  dies)
+{
+    s32 hebdomadis;
+
+    si (!cal || !fasti_dies_valida(dies))
+    {
+        redde FALSUM;
+    }
+    hebdomadis = fasti_dies_hebdomadis(dies);
+    si (dies.mensis == FASTI_DECEMBER && dies.dies == XXV)
+    {
+        redde VERUM;
+    }
+    si (dies.mensis == FASTI_DECEMBER && dies.dies == VIII)
+    {
+        /* dominica: Immaculata in 9 XII translata, sine praecepto */
+        redde hebdomadis != FASTI_DOMINICA;
+    }
+    si (   (dies.mensis == FASTI_IANUARIUS && dies.dies == I)
+        || (dies.mensis == FASTI_AUGUSTUS && dies.dies == XV)
+        || (dies.mensis == FASTI_NOVEMBER && dies.dies == I))
+    {
+        /* norma complementaria ad can. 1246 §2 (USA) */
+        redde hebdomadis != FASTI_SABBATUM
+            && hebdomadis != FASTI_FERIA_II;
+    }
+    redde FALSUM;
 }

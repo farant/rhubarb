@@ -259,7 +259,13 @@ calendarium_destruere (
  * Quaestio Principalis
  * ================================================== */
 
-/* Obtinere informationes completas pro die */
+/* Annus validus calendarii (Forma Ordinaria ab Adventu 1969):
+ * extra - aut die invalida, aut cal NIHIL - obtinere_diem NIHIL
+ * reddit */
+#define CALENDARIUM_ANNUS_PRIMUS    MCMLXX
+#define CALENDARIUM_ANNUS_ULTIMUS   (IX * M + CMXCIX)
+
+/* Obtinere informationes completas pro die (NIHIL extra dominium) */
 InformatioDiei*
 calendarium_obtinere_diem (
     CalendariumLiturgicum* cal,
@@ -368,11 +374,23 @@ Dies
 calendarium_proxima_dominica (
     Dies dies);
 
+/* titulus (plenus aut brevis, exactus) celebrationis mobilis aut
+ * sanctoralis: dies eius anno dato (translata: dies nova); non
+ * inventa: dies 0-0-0 */
 Dies
 calendarium_invenire_festum (
     CalendariumLiturgicum* cal,
                    chorda  titulus,
                       s32  annus);
+
+/* Dies festus de praecepto USA (dominicis exceptis): Nativitas;
+ * Immaculata (non translata in 9 XII); 1 I, 15 VIII, 1 XI nisi
+ * sabbato aut feria II (norma complementaria ad can. 1246 §2).
+ * Ascensio in USA dominica est. */
+b32
+calendarium_dies_obligationis (
+    CalendariumLiturgicum* cal,
+                     Dies  dies);
 
 
 /* ==================================================
@@ -402,20 +420,14 @@ calendarium_formare_titulum (
                      Dies  dies,
                   Piscina* piscina);
 
-/* Obtinere nomina omnium celebrationum pro die (mobiles et fixae)
- *
- * Redde chorda cum nominibus celebrationum iunctis per ", ".
- * Si nulla celebratio, redde chorda vacua.
- *
- * dies: dies quaerenda
- * piscina: piscina pro allocare chorda
- *
- * Redde: chorda cum nominibus (e.g. "Easter", "St. Stephen", "Ss. Peter, Paul")
- */
+/* nomina celebrationum diei ex calendarium_obtinere_diem (F14):
+ * celebrationes non temporales (principalis, ad libitum,
+ * commemoratae) per ", "; vacua si nulla */
 chorda
 calendarium_nomen_celebrationum (
-       Dies  dies,
-    Piscina* piscina);
+    CalendariumLiturgicum* cal,
+                     Dies  dies,
+                  Piscina* piscina);
 
 
 /* ==================================================

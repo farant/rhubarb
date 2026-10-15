@@ -1144,8 +1144,8 @@ _reddere_tabulam_schirmarum (
             {
                 /* Obtinere nomina omnium celebrationum (mobiles et fixae) */
                 nomina_celebrationum =
-                    calendarium_nomen_celebrationum(hodie,
-                    piscina_temp);
+                    calendarium_nomen_celebrationum(calendarium_creare(
+                    piscina_temp), hodie, piscina_temp);
 
                 si (nomina_celebrationum.mensura > ZEPHYRUM)
                 {
