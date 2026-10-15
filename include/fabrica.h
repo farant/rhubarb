@@ -65,7 +65,12 @@ nomen enumeratio {
     FABRICA_RECENS = ZEPHYRUM,
     FABRICA_STALUM,
     FABRICA_IGNOTUM,
-    FABRICA_NON_IUDICATUM          /* celer: regeneratio omissa */
+    FABRICA_NON_IUDICATUM,         /* celer: regeneratio omissa */
+    FABRICA_SUPRA                  /* 'FORTASSE' (parcum 190VQB):
+                                    * artificium ipsum congruit, sed
+                                    * producens supra (arcus datorum)
+                                    * non recens - post sanationem eius
+                                    * fortasse stalum */
 } FabricaStatus;
 
 /* particula: quod ingressus ad sigillum actionis confert - via
@@ -901,8 +906,9 @@ fabrica_compositum_explicare (
            chorda* causa_out);
 
 /* Pessimum iudiciorum (Xar de FabricaIudicium) ordine RECENS <
- * NON_IUDICATUM < IGNOTUM < STALUM; causa nominat artificia pessima
- * (III, deinde "+N"). artificium = titulus. */
+ * NON_IUDICATUM < SUPRA ('FORTASSE') < IGNOTUM < STALUM; causa
+ * nominat artificia pessima (III, deinde "+N"). artificium =
+ * titulus. */
 FabricaIudicium
 fabrica_iudicia_coniungere (
      constans Xar* iudicia,

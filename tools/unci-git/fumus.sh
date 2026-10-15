@@ -36,7 +36,7 @@
 # lacunae examinis, non plantae).
 #
 # Usage: ./tools/unci-git/fumus.sh     exit 0 sanum | 1 fractum
-# <porta titulus="unci" tegit="tools/unci-git/*" currit="silva/instrumenta/principalia/examen.c"/>
+# <porta titulus="unci" gradus="fusio" tegit="tools/unci-git/*" currit="silva/instrumenta/principalia/examen.c"/>
 
 set -u
 RADIX="$(git rev-parse --show-toplevel)" || exit 2
@@ -242,6 +242,26 @@ unset GIT_INDEX_FILE
 rm -f "$KC" "$KS" "$KF" "$KD" "$T/index_knotapel"
 ./silva/nexus.sh -renovare > /dev/null 2>&1
 
+# XXII - UNCUS_CRIBRUM=1 (circulus commissionis II T3: commissio uncum
+# ANTE portas vocat cum viis commissionis): viae explicitae per cribra
+# viae git - fixa/ (et build/) praetereuntur, cetera iudicantur; sine
+# cribro modus explicitus 'sine filtro' manet (I)
+mkdir -p "$T/fixa"
+cp "$T/malum.c" "$T/fixa/malum.c"
+CRIBRATUM="tools/unci-git/.fumus_cribrum_malum.c"
+cp "$T/malum.c" "$CRIBRATUM"
+UNCUS_VIAE="$T/fixa/malum.c" "$UNCUS" > "$T/cribrum_sine.out" 2>&1; rc_sine=$?
+UNCUS_VIAE="$T/fixa/malum.c" UNCUS_CRIBRUM=1 "$UNCUS" > "$T/cribrum_fixa.out" 2>&1; rc_fixa=$?
+UNCUS_VIAE="$T/fixa/malum.c $CRIBRATUM" UNCUS_CRIBRUM=1 "$UNCUS" > "$T/cribrum_mixta.out" 2>&1; rc_mixta=$?
+rm -f "$CRIBRATUM"
+if [ "$rc_sine" -eq 1 ] && [ "$rc_fixa" -eq 0 ] && grep -q 'nihil iudicatum' "$T/cribrum_fixa.out" \
+   && [ "$rc_mixta" -eq 1 ] && grep -q 'fumus_cribrum_malum.c REICE' "$T/cribrum_mixta.out" \
+   && ! grep -q 'fixa/malum.c' "$T/cribrum_mixta.out"; then
+    echo "  XXII UNCUS_CRIBRUM: fixa praeterita, cetera iudicata OK"
+else
+    echo "  XXII FRACTUM (sine=$rc_sine fixa=$rc_fixa mixta=$rc_mixta)"; cat "$T/cribrum_fixa.out" "$T/cribrum_mixta.out"; fracta=1
+fi
+
 if [ "$fracta" -ne 0 ]; then echo "fumus unci: FRACTUM"; exit 1; fi
-echo "fumus unci: sanum (XXI/XXI)"
+echo "fumus unci: sanum (XXII/XXII)"
 exit 0

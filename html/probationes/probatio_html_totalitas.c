@@ -36,6 +36,7 @@
  */
 
 #include "latina.h"
+#include "lectiones.h"   /* lectiones_fopen: canalis lectionum (examen 96) */
 #include "credo.h"
 #include "html_arbor.h"
 #include "html_registrum.h"
@@ -97,7 +98,7 @@ _plagulam_legere (
     character* memoria;
         size_t lecti;
 
-    f = fopen(via, "rb");
+    f = lectiones_fopen(via, "rb");
     si (f == NIHIL)
     { redde NIHIL;
     }
@@ -197,7 +198,7 @@ _fractum_scribere (
         sprintf(via, "%s/html/build/totalitas_fractum.html",
             RADIX_VIAE);
     }
-    f = fopen(via, "wb");
+    f = lectiones_fopen(via, "wb");
     si (f == NIHIL)
     { redde;
     }

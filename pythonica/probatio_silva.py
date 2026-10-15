@@ -1021,7 +1021,7 @@ def _fabrica_iudicii(modus):
 
 _fb_porta_vera = silva.FABRICA_BIN
 _verdicta_vera = silva._VERDICTA_MEMORATA
-silva._VERDICTA_MEMORATA = {'ficta-v': []}
+silva._VERDICTA_MEMORATA = {'ficta-v'}
 silva.PORTAE['ficta-v'] = (['echo', 'fictum: sanum'], r'fictum: (sanum|FRACTUM)')
 _vv = os.path.join(RADIX, 'build', 'fabrica', 'verdicta', 'ficta-v.txt')
 try:
@@ -1099,14 +1099,6 @@ try:
     credo('aedilis' in silva._portae_verdictorum()
           and 'toml' not in silva._portae_verdictorum(),
           'portae verdictorum: porta_aedilis inventa, porta_toml emerita')
-    # praevia = artificia quae 'sanare' nominare potest: manifesta
-    # (directorium alterius actionis vestigium) NON (plan 5 T5b:
-    # 'sanare' exitus 2 -> porta aedilis via cruda in commissione)
-    _praevia_aed = silva._portae_verdictorum().get('aedilis')
-    credo(_praevia_aed is not None
-          and not any('clausurae' in v for v in _praevia_aed),
-          'portae verdictorum: aedilis sine manifestis in praeviis (%r)'
-          % (_praevia_aed,))
 finally:
     silva.FABRICA_BIN = _fb_porta_vera
     silva._VERDICTA_MEMORATA = _verdicta_vera
@@ -1797,8 +1789,36 @@ orph = os.path.join(silva.UMBRAE_DIR, 'probatio-orphanus.1')
 vivus = os.path.join(silva.UMBRAE_DIR, 'probatio-vivus.1')
 seratus = os.path.join(silva.UMBRAE_DIR, 'probatio-seratus.1')
 mortuus = os.path.join(silva.UMBRAE_DIR, 'probatio-mortuus.1')
-for d in (orph, vivus, seratus, mortuus):
+# DOMINI (parcum PKM86A): UMBRAE_DIR communis omnibus arboribus
+alienus = os.path.join(silva.UMBRAE_DIR, 'probatio-alienus.1')       # receptum in arbore domini
+abiit = os.path.join(silva.UMBRAE_DIR, 'probatio-abiit.1')           # dominus non iam exstat
+vetus_sd = os.path.join(silva.UMBRAE_DIR, 'probatio-vetus-sd.1')     # sine domino, IV dies
+recens_sd = os.path.join(silva.UMBRAE_DIR, 'probatio-recens-sd.1')   # sine domino, recens
+exspiratus = os.path.join(silva.UMBRAE_DIR, 'probatio-exspiratus.1')  # receptum rubrum IV dies
+rubeus = os.path.join(silva.UMBRAE_DIR, 'probatio-rubeus.1')         # receptum rubrum recens
+for d in (orph, vivus, seratus, mortuus, alienus, abiit, vetus_sd, recens_sd, exspiratus, rubeus):
     os.makedirs(d)
+for d in (orph, vivus, seratus, mortuus, exspiratus, rubeus):
+    open(os.path.join(d, silva.UMBRA_DOMINUS), 'w').write(silva.RADIX)
+_aliena = os.path.join(T, 'arbor_aliena')
+os.makedirs(os.path.join(_aliena, 'build', 'portae'), exist_ok=True)
+open(os.path.join(alienus, silva.UMBRA_DOMINUS), 'w').write(_aliena)
+open(os.path.join(abiit, silva.UMBRA_DOMINUS), 'w').write(os.path.join(T, 'arbor_quae_abiit'))
+_quattuor = time.time() - 4 * 86400
+os.utime(vetus_sd, (_quattuor, _quattuor))
+
+
+def _receptum_umbrae(sedes, nomen, clone, finis):
+    via = os.path.join(sedes, '%s.1.json' % nomen)
+    json.dump({'nomen': nomen, 'filtrum': None, 'sana': False, 'cucurrit': True,
+               'compendium': 'fictum: FRACTUM', 'rc': 1, 'sigillum': '0' * 40,
+               'rancida': False, 'finis': finis, 'fracturae': [],
+               'photographia': {'via_operis': clone, 'arbor': '0' * 40, 'basis': '0' * 40}},
+              open(via, 'w'))
+    return via
+_rec_alienum = _receptum_umbrae(os.path.join(_aliena, 'build', 'portae'), 'probatio-alienus', alienus, time.time())
+_rec_exspiratum = _receptum_umbrae(silva.PORTAE_DIR, 'probatio-exspiratus', exspiratus, _quattuor)
+_rec_rubeum = _receptum_umbrae(silva.PORTAE_DIR, 'probatio-rubeus', rubeus, time.time())
 open(os.path.join(seratus, '.umbra.pid'), 'w').write(str(os.getpid()))
 open(os.path.join(mortuus, '.umbra.pid'), 'w').write('999999')
 open(os.path.join(silva.PORTAE_DIR, 'probatio-vivus.0.json.pendens'), 'w').write('999999\n' + vivus + '\n')
@@ -1806,10 +1826,21 @@ try:
     orphanae = silva.umbrae_orphanae()
     credo(orph in orphanae and mortuus in orphanae and vivus not in orphanae and seratus not in orphanae,
           'umbrae_orphanae: orphanus + sera mortua nominati; pendens + sera viva servati')
+    credo(alienus not in orphanae and abiit in orphanae,
+          'umbrae_orphanae: clone arboris ALTERIUS cum recepto ibi servatus; dominus absens = orphanus (PKM86A)',
+          causa=repr(orphanae))
+    credo(vetus_sd in orphanae and recens_sd not in orphanae,
+          'umbrae_orphanae: sine domino recens servatus (arbor ignota), post exspirationem orphanus',
+          causa=repr(orphanae))
     credo(any(v == orph and st == 'clone orphanus' for v, st in silva.portae_pendentes()), 'portae_pendentes: clone orphanus enumeratus')
     deletae = silva.umbrae_purgare()
-    credo(sorted(deletae) == sorted([mortuus, orph]) and not os.path.exists(orph) and os.path.isdir(vivus) and os.path.isdir(seratus),
-          'umbrae_purgare: orphani deleti, clones portae currentis et processus vivi servati')
+    credo(sorted(deletae) == sorted([mortuus, orph, abiit, vetus_sd, exspiratus]) and not os.path.exists(orph)
+          and os.path.isdir(vivus) and os.path.isdir(seratus) and os.path.isdir(alienus) and os.path.isdir(recens_sd),
+          'umbrae_purgare: orphani deleti, clones portae currentis et processus vivi servati',
+          causa=repr(sorted(deletae)))
+    credo(not os.path.exists(_rec_exspiratum) and os.path.exists(_rec_rubeum) and os.path.isdir(rubeus)
+          and os.path.exists(_rec_alienum),
+          'umbrae_purgare: receptum rubrum arboris huius post exspirationem deletum cum clone; recens et alienum servata (PKM86A)')
     # DELETIO ASYNCHRONA (S1, profilum T9: rmtree 52,9 s): nomen mutatum
     # in purgatorium statim, 'rm -rf' in fundo; purgatorium ipsum numquam
     # orphanus
@@ -2513,6 +2544,60 @@ try:
         credo(False, 'involucrum: fabrica absens refutanda')
     except silva.SilvaError as ex:
         credo('fabrica_struere' in str(ex), 'involucrum: bin/fabrica absens = SilvaError cum remedio')
+    # BINARIUM (circulus commissionis II T2): binaria per portam
+    # (_portae_debitae_plenae); portae_debitae ea omittit (forma vetus)
+    silva.FABRICA_BIN = _portae_ficta(0, 'DEBITUM\tbriar-fumus\t0\tx\n'
+                                      'BINARIUM\tbriar-fumus\tbin/briar\tcurrit tools/briar.c (t:1)\n'
+                                      'BINARIUM\tbriar-fumus\tbin/fabrica\tt currit bin/fabrica\n')
+    debita, intecta, binaria = silva._portae_debitae_plenae(['x.c'])
+    credo(binaria == {'briar-fumus': [('bin/briar', 'currit tools/briar.c (t:1)'),
+                                      ('bin/fabrica', 't currit bin/fabrica')]} and len(debita) == 1,
+          'involucrum: BINARIUM -> binaria per portam', causa=repr(binaria))
+    credo(silva.portae_debitae(['x.c']) == ([silva.Debitum('briar-fumus', 'x', False)], []),
+          'involucrum: portae_debitae binaria omittit (forma vetus)')
+    # PRAEVOLATUS INSTRUMENTORUM: stala bin/ sola sanantur, ANTE portas
+    _ia = os.path.join(T, 'instrumenta_argv.txt')
+
+    def _fabrica_instrumentorum(sanare_rc, status='STALUM'):
+        via = os.path.join(T, 'fabrica_instr_%d_%s' % (sanare_rc, status))
+        with open(via, 'w') as f:
+            f.write('#!/bin/bash\necho "$@" >> %s\n' % _ia
+                    + 'if [ "$1" = iudicare ]; then printf "IUDICIUM\\t%s\\tbin/briar\\tingressus mutati\\n'
+                      'IUDICIUM\\tRECENS\\tbin/fabrica\\trelatio congruit\\n"; exit %d; fi\n'
+                    % (status, 0 if status == 'RECENS' else 1)
+                    + 'echo sanatio ficta\nexit %d\n' % sanare_rc)
+        os.chmod(via, 0o755)
+        return via
+    _bina = {'briar-fumus': [('bin/briar', 'r'), ('bin/fabrica', 'r'), ('tools/x', 'r')],
+             'radix': [('bin/fabrica', 'r')]}
+    for _rc, _status in ((0, 'STALUM'), (1, 'STALUM'), (0, 'RECENS'), (0, 'FORTASSE')):
+        _stalum = _status != 'RECENS'
+        if os.path.exists(_ia):
+            os.remove(_ia)
+        silva.FABRICA_BIN = _fabrica_instrumentorum(_rc, _status)
+        buf = io.StringIO()
+        err = None
+        try:
+            with contextlib.redirect_stdout(buf):
+                silva._instrumenta_portarum_sanare(_bina)
+        except silva.SilvaError as ex:
+            err = str(ex)
+        vocationes = open(_ia).read().splitlines() if os.path.exists(_ia) else []
+        if _rc == 0 and _stalum:
+            credo(err is None and vocationes == ['iudicare -machina bin/briar bin/fabrica',
+                                                 'sanare -machina bin/briar']
+                  and 'instrumentum sanatum: bin/briar (portae: briar-fumus)' in buf.getvalue(),
+                  'praevolatus: binarium %s sanatur ante portas (bin/ solum, recentia non)%s'
+                  % (_status, ' - producens supra non recens (parcum 190VQB)'
+                     if _status == 'FORTASSE' else ''),
+                  causa=repr((err, vocationes, buf.getvalue())))
+        elif _rc == 1:
+            credo(err is not None and 'sanari non potuerunt' in err and 'sanatio ficta' in err,
+                  'praevolatus: sanatio fracta obstat ante portas, effusionem nominans', causa=repr(err))
+        else:
+            credo(err is None and vocationes == ['iudicare -machina bin/briar bin/fabrica']
+                  and 'instrumenta portarum: 2 recentia' in buf.getvalue(),
+                  'praevolatus: omnia recentia - nihil sanatur', causa=repr((err, vocationes)))
     # arbor VIVA (invariantes): cursor ipse, manu, intectum, normatio.
     # portae FICTAE probationum priorum (cursores extra arborem, sine
     # annotatione) seponuntur - registrum verum solum
@@ -2688,6 +2773,269 @@ finally:
     import shutil
     shutil.rmtree(_cd, ignore_errors=True)
 
+_grex('ordo portarum: praeiudicia simul, probationes per sumptum (circulus commissionis II T5)')
+_od = tempfile.mkdtemp(prefix='silva_ordo_')
+_olog = os.path.join(_od, 'cursae')
+_ogate = os.path.join(_od, 'porta.sh')
+open(_ogate, 'w').write('#!/bin/sh\necho "$1" >> %s\n'
+                        'if [ "$2" = rubra ]; then echo "fictum: FRACTUM"; exit 1; fi\n'
+                        'echo "fictum: sanum"\n' % _olog)
+os.chmod(_ogate, 0o755)
+os.environ['PYTHONICA_PORTAE_FICTAE'] = json.dumps(dict(
+    (n, [[_ogate, n] + (['rubra'] if r else []), r'fictum: (sanum|FRACTUM)', 'generica'])
+    for n, r in (('ficta-prae-a', True), ('ficta-prae-b', True), ('ficta-prae-c', False),
+                 ('ficta-prob', False), ('ficta-prob-1', True), ('ficta-prob-2', False))))
+silva._portae_fictae()
+_of_fb = silva.FABRICA_BIN
+_of_fe = silva._fabricam_exigere
+_of_pd = silva.portae_debitae
+silva._fabricam_exigere = lambda viae, sine_fabrica=None, **k: None
+silva.portae_debitae = lambda viae, *a, **k: ([], [])
+
+
+def _fabrica_ordinis(ordines, rc=0):
+    via = os.path.join(_od, 'fabrica_ordo_%d' % rc)
+    with open(via, 'w') as f:
+        f.write('#!/bin/sh\nif [ "$1 $2" = "portae ordo" ]; then printf "%s"; exit %d; fi\n'
+                'printf "NOTA\\tnihil\\n"; exit 0\n'
+                % (''.join('ORDO\\t%s\\t%s\\t%s\\t%s\\n'
+                           % (tuple(o) + ('commissio',))[:4] for o in ordines), rc))
+    os.chmod(via, 0o755)
+    return via
+
+
+def _commissio_ordinis_petitae(portae):
+    # ut _commissio_ordinis sed portae petitae cum debitis additis (sine_debitis non datum)
+    if os.path.exists(_olog):
+        os.remove(_olog)
+    buf = io.StringIO()
+    err = None
+    with contextlib.redirect_stdout(buf):
+        try:
+            silva.commissio('nihil', ['pythonica/via_absens_ordinis.txt'], portae=portae,
+                            recepta=False, verificare=False)
+        except silva.SilvaError as ex:
+            err = str(ex)
+    cursae = open(_olog).read().split() if os.path.exists(_olog) else []
+    return buf.getvalue(), err, cursae
+
+
+def _commissio_ordinis(portae):
+    if os.path.exists(_olog):
+        os.remove(_olog)
+    buf = io.StringIO()
+    err = None
+    with contextlib.redirect_stdout(buf):
+        try:
+            silva.commissio('nihil', ['pythonica/via_absens_ordinis.txt'], portae=portae,
+                            recepta=False, verificare=False, sine_debitis='probatio ordinis')
+        except silva.SilvaError as ex:
+            err = str(ex)
+    cursae = open(_olog).read().split() if os.path.exists(_olog) else []
+    return buf.getvalue(), err, cursae
+try:
+    # A. duo praeiudicia rubra + probatio viridis: utraque nominantur una recusatione, probatio NON currit
+    silva.FABRICA_BIN = _fabrica_ordinis([('ficta-prae-a', 'praeiudicium', '-'),
+                                         ('ficta-prae-b', 'praeiudicium', '2000'),
+                                         ('ficta-prob', 'probatio', '1000')])
+    eff, err, cursae = _commissio_ordinis(['ficta-prob', 'ficta-prae-b', 'ficta-prae-a'])
+    credo(cursae == ['ficta-prae-a', 'ficta-prae-b'],
+          'ordo: praeiudicia prima (ordine fabricae), probatio post rubra NON cursa', causa=repr(cursae))
+    credo(err is not None and 'praeiudicia non sana (2)' in err and 'ficta-prae-a' in err and 'ficta-prae-b' in err,
+          'ordo: praeiudicia rubra SIMUL nominantur, recusatio una', causa=repr(err))
+    credo('ordo portarum: praeiudicia: ficta-prae-a (nova), ficta-prae-b 2 s | probationes: ficta-prob 1 s' in eff,
+          'ordo: ordo impressus ante portas', causa=repr(eff[-400:]))
+    # B. praeiudicium viride, probatio rubra prima per sumptum: sistit, altera NON currit
+    silva.FABRICA_BIN = _fabrica_ordinis([('ficta-prae-c', 'praeiudicium', '500'),
+                                         ('ficta-prob-1', 'probatio', '1000'),
+                                         ('ficta-prob-2', 'probatio', '9000')])
+    eff, err, cursae = _commissio_ordinis(['ficta-prob-2', 'ficta-prob-1', 'ficta-prae-c'])
+    credo(cursae == ['ficta-prae-c', 'ficta-prob-1'] and err is not None and 'ficta-prob-1 non sana' in err,
+          'ordo: probatio vilior prima, prima rubra sistit (cetera non cursa)', causa=repr((cursae, err)))
+    # C. ordo computari nequit: MONITUM, ordo datus servatus, commissio pergit
+    silva.FABRICA_BIN = _fabrica_ordinis([], rc=2)
+    eff, err, cursae = _commissio_ordinis(['ficta-prob-2', 'ficta-prae-c'])
+    credo(cursae == ['ficta-prob-2', 'ficta-prae-c'] and 'MONITUM: ordo portarum' in eff
+          and err is not None and 'nec in disco' in err,
+          'ordo: fabrica fracta - monitum, ordo datus, non obstat', causa=repr((cursae, eff[-300:], err)))
+    # D. gradus (gradus-portarum T1): campus quintus legitur; linea IV camporum (contractus vetus) = MONITUM
+    silva.FABRICA_BIN = _fabrica_ordinis([('ficta-m', 'probatio', '1000', 'fusio'),
+                                         ('ficta-c', 'probatio', '500')])
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        _o, _g, _gr, _dl = silva._portas_ordinare(['ficta-m', 'ficta-c'])
+    credo(_o == ['ficta-m', 'ficta-c'] and _gr == {'ficta-m': 'fusio', 'ficta-c': 'commissio'},
+          'ordo: gradus ex campo quinto', causa=repr((_o, _gr, buf.getvalue())))
+    via_vetus = os.path.join(_od, 'fabrica_ordo_vetus')
+    with open(via_vetus, 'w') as f:
+        f.write('#!/bin/sh\nprintf "ORDO\\tficta-c\\tprobatio\\t500\\n"\n')
+    os.chmod(via_vetus, 0o755)
+    silva.FABRICA_BIN = via_vetus
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        _o, _g, _gr, _dl = silva._portas_ordinare(['ficta-c'])
+    credo(_o == ['ficta-c'] and _gr == {} and 'linea extra contractum' in buf.getvalue(),
+          'ordo: linea IV camporum = monitum, ordo datus', causa=repr((_o, _gr, buf.getvalue())))
+    # E. gradus (gradus-portarum T3): debita addita gradus fusio DILATA (non cursa), commissionis currit
+    silva.portae_debitae = lambda viae, *a, **k: ([silva.Debitum('ficta-prob-2', 'x.c tegit', False),
+                                                  silva.Debitum('ficta-prae-c', 'y.c tegit', False)], [])
+    silva.FABRICA_BIN = _fabrica_ordinis([('ficta-prae-c', 'praeiudicium', '500', 'commissio'),
+                                         ('ficta-prob-2', 'probatio', '9000', 'fusio')])
+    eff, err, cursae = _commissio_ordinis_petitae([])
+    credo(cursae == ['ficta-prae-c'] and 'nec in disco' in (err or ''),
+          'gradus: debita fusionis NON cursa, commissionis cursa', causa=repr((cursae, err)))
+    credo('porta debita DILATA ad fusionem: ficta-prob-2 - x.c tegit' in eff
+          and 'porta debita addita: ficta-prae-c - y.c tegit' in eff
+          and 'porta debita addita: ficta-prob-2' not in eff,
+          'gradus: DILATA nominata cum causa, addita sola commissionis', causa=repr(eff[-600:]))
+    credo('aestimatio portarum: 1 s; dilatae ad fusionem: 1' in eff
+          and 'probationes: (nullae)' in eff,
+          'gradus: aestimatio sine dilatis, ordo sine dilatis', causa=repr(eff[-600:]))
+    # F. plena=True: omnes currunt (mores veteres)
+    if os.path.exists(_olog):
+        os.remove(_olog)
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        try:
+            silva.commissio('nihil', ['pythonica/via_absens_ordinis.txt'], recepta=False,
+                            verificare=False, plena=True)
+        except silva.SilvaError:
+            pass
+    cursae = open(_olog).read().split() if os.path.exists(_olog) else []
+    credo(cursae == ['ficta-prae-c', 'ficta-prob-2'] and 'DILATA' not in buf.getvalue(),
+          'gradus: plena=True currit omnes', causa=repr((cursae, buf.getvalue()[-400:])))
+    # G. petita expresse: gradus fusio tamen currit
+    eff, err, cursae = _commissio_ordinis_petitae(['ficta-prob-2'])
+    credo(cursae == ['ficta-prae-c', 'ficta-prob-2'] and 'DILATA' not in eff,
+          'gradus: porta petita numquam dilatatur', causa=repr((cursae, eff[-400:])))
+    # H. aestimatio supra AESTIMATIO_MONITUM: MONITUM, non recusatio
+    silva.FABRICA_BIN = _fabrica_ordinis([('ficta-prae-c', 'praeiudicium', '400000', 'commissio'),
+                                         ('ficta-prob-2', 'probatio', '9000', 'fusio')])
+    eff, err, cursae = _commissio_ordinis_petitae([])
+    credo(cursae == ['ficta-prae-c'] and 'MONITUM: aestimatio portarum 400 s > 300 s' in eff,
+          'gradus: aestimatio > 300 s = MONITUM, portae tamen currunt', causa=repr((cursae, eff[-400:])))
+    # H2. receptum vivum (parcum BEN87): porta non iterum cursa 0 s in aestimatione, MONITUM nullum
+    _rv_verum = silva.receptum_vivum
+    silva.receptum_vivum = lambda n, filtrum=None: (
+        silva.Porta(n, True, True, 'fictum: sanum [receptum vivum]', 0, '', [])
+        if n == 'ficta-prae-c' and filtrum is None else None)
+    try:
+        for _rec in (True, False):
+            buf = io.StringIO()
+            with contextlib.redirect_stdout(buf):
+                silva._portas_ordinare(['ficta-prae-c', 'ficta-prob-2'], plena=False, recepta=_rec)
+            if _rec:
+                credo('aestimatio portarum: 9 s; 1 cum recepto vivo (~0 s)' in buf.getvalue()
+                      and 'ficta-prae-c 400 s [receptum]' in buf.getvalue()
+                      and 'MONITUM' not in buf.getvalue(),
+                      'aestimatio: porta cum recepto vivo 0 s, nominata, MONITUM nullum',
+                      causa=repr(buf.getvalue()))
+            else:
+                credo('aestimatio portarum: 409 s' in buf.getvalue() and '[receptum]' not in buf.getvalue()
+                      and 'MONITUM: aestimatio portarum 409 s > 300 s' in buf.getvalue(),
+                      'aestimatio: recepta=False - recepta non consulta, MONITUM (mores veteres)',
+                      causa=repr(buf.getvalue()))
+    finally:
+        silva.receptum_vivum = _rv_verum
+    # I. debitum rami: scribitur post commissionem, legitur
+    _dfv = silva.DEBITA_FUSIONIS_VIA
+    silva.DEBITA_FUSIONIS_VIA = os.path.join(_od, 'debita_fusionis.tsv')
+    try:
+        with contextlib.redirect_stdout(io.StringIO()):
+            silva._debita_fusionis_scribere('abc1234', {'ficta-prob-2': 'x.c\ttegit'})
+            silva._debita_fusionis_scribere('def5678', {})
+        d = silva.debita_fusionis()
+        credo(len(d) == 1 and d[0][1:] == ('ficta-prob-2', 'abc1234', 'x.c tegit'),
+              'gradus: debitum rami scriptum (tab in causa purgatum), vacuum nihil scribit', causa=repr(d))
+    finally:
+        silva.DEBITA_FUSIONIS_VIA = _dfv
+    # J-M. fusio_probare (gradus-portarum T4): status rami fictus, frigida=False
+    _rs = silva._ramus_status
+    _dfv = silva.DEBITA_FUSIONIS_VIA
+    silva.DEBITA_FUSIONIS_VIA = os.path.join(_od, 'debita_fusionis.tsv')
+
+    def _fusio(status):
+        silva._ramus_status = lambda basis: status
+        if os.path.exists(_olog):
+            os.remove(_olog)
+        buf, err = io.StringIO(), None
+        with contextlib.redirect_stdout(buf):
+            try:
+                silva.fusio_probare(frigida=False, recepta=False)
+            except silva.SilvaError as ex:
+                err = str(ex)
+        cursae = open(_olog).read().split() if os.path.exists(_olog) else []
+        return buf.getvalue(), err, cursae
+    try:
+        eff, err, cursae = _fusio((False, [], 'ab', []))
+        credo(err is not None and 'merge main first' in err and cursae == [],
+              'fusio: basis non antecessor = recusatio, nihil cursum', causa=repr(err))
+        eff, err, cursae = _fusio((True, ['lib/x.c'], 'ab', []))
+        credo(err is not None and 'non munda' in err and 'lib/x.c' in err and cursae == [],
+              'fusio: arbor sordida = recusatio', causa=repr(err))
+        # L. viride: debitum rami + debita viarum, GRADUS AMBO currunt; debita purgata
+        silva.portae_debitae = lambda viae, *a, **k: (
+            [silva.Debitum('ficta-prae-c', 'x.c tegit', False)] if viae == ['x.c'] else [], [])
+        with contextlib.redirect_stdout(io.StringIO()):
+            silva._debita_fusionis_scribere('abc1234', {'ficta-prob-2': 'y.c tegit'})
+        silva.FABRICA_BIN = _fabrica_ordinis([('ficta-prae-c', 'praeiudicium', '500', 'commissio'),
+                                             ('ficta-prob-2', 'probatio', '9000', 'fusio')])
+        eff, err, cursae = _fusio((True, [], 'abcdef12', ['x.c']))
+        credo(err is None and cursae == ['ficta-prae-c', 'ficta-prob-2']
+              and 'DILATA' not in eff,
+              'fusio: debita rami et viarum, gradus ambo cursi', causa=repr((err, cursae, eff[-400:])))
+        credo('FUSIO PARATA' in eff and 'git merge --ff-only' in eff
+              and not os.path.exists(silva.DEBITA_FUSIONIS_VIA),
+              'fusio: viridis - debita purgata, ritus impressus', causa=repr(eff[-300:]))
+        # M. rubrum: porta debiti nominata cum commissione (bisectio); debita servata
+        with contextlib.redirect_stdout(io.StringIO()):
+            silva._debita_fusionis_scribere('c0ffee1', {'ficta-prob-1': 'z.c tegit'})
+        silva.FABRICA_BIN = _fabrica_ordinis([('ficta-prae-c', 'praeiudicium', '500', 'commissio'),
+                                             ('ficta-prob-1', 'probatio', '9000', 'fusio')])
+        eff, err, cursae = _fusio((True, [], 'abcdef12', ['x.c']))
+        credo(err is not None and 'ficta-prob-1 non sana' in err and 'bisectio): c0ffee1' in err
+              and os.path.exists(silva.DEBITA_FUSIONIS_VIA),
+              'fusio: rubra - commissio debens nominata, debita servata', causa=repr(err))
+        # N. debitum solutum: porta viridis tota in commissione lineas suas purgat, ceterae manent
+        os.remove(silva.DEBITA_FUSIONIS_VIA)
+        with contextlib.redirect_stdout(io.StringIO()):
+            silva._debita_fusionis_scribere('abc1234', {'ficta-prob-2': 'y.c tegit'})
+            silva._debita_fusionis_scribere('def5678', {'ficta-prob-1': 'z.c tegit',
+                                                        'ficta-prob-2': 'w.c tegit'})
+            virides = silva._portas_currere(['ficta-prob-2'], {'ficta-prob-2': 'probatio'},
+                                            [], recepta=False)
+            virides_filtri = silva._portas_currere([('ficta-prob-2', 'filtrum')],
+                                                   {'ficta-prob-2': 'probatio'}, [], recepta=False)
+        credo(virides == ['ficta-prob-2'] and virides_filtri == [],
+              'debitum solutum: _portas_currere virides totas reddit, filtratas non',
+              causa=repr((virides, virides_filtri)))
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            silva._debita_fusionis_purgare('feed123', virides)
+        d = silva.debita_fusionis()
+        credo([x[1:3] for x in d] == [('ficta-prob-1', 'def5678')]
+              and 'debitum rami solutum: ficta-prob-2 (2 lineae; viridis in feed123) - manent 1'
+              in buf.getvalue(),
+              'debitum solutum: lineae portae viridis deletae, ceterae manent, linea impressa',
+              causa=repr((d, buf.getvalue())))
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            silva._debita_fusionis_purgare('feed124', ['ficta-prae-c'])
+        credo(len(silva.debita_fusionis()) == 1 and buf.getvalue() == '',
+              'debitum solutum: porta sine debito - nihil mutatum, nihil impressum',
+              causa=repr(buf.getvalue()))
+    finally:
+        silva._ramus_status = _rs
+        silva.DEBITA_FUSIONIS_VIA = _dfv
+finally:
+    silva.FABRICA_BIN = _of_fb
+    silva._fabricam_exigere = _of_fe
+    silva.portae_debitae = _of_pd
+    os.environ.pop('PYTHONICA_PORTAE_FICTAE', None)
+    silva._portae_fictae()
+    import shutil
+    shutil.rmtree(_od, ignore_errors=True)
+
 # ---- fabrica ante portas (plan 1a T8 gradus III) ----
 print('\n--- fabrica: artificia generata tacta ante portas ---')
 _fb_verum = silva.FABRICA_BIN
@@ -2782,6 +3130,111 @@ try:
     eff, err, n = _iudex_casus({})
     credo(err is not None and 'sana fabrica prius' in err and n == 0,
           'iudex stalus: iudex sine struere noto -> obstat ut antea', causa=repr((err, n)))
+    # CATENA IUDICUM (circulus commissionis II T1; T1 canalis lectionum
+    # conatus 1): fabrica sanata aedilem stalum nominat - uterque sanatur
+    # in vocatione UNA (olim post primum: 'sana aedilis prius')
+    _status_b = os.path.join(T, 'iudex_sanus_b')
+    with open(_fs, 'w') as f:
+        f.write('#!/bin/bash\nif [ -f %s ]; then printf "SUMMA\\t1\\t0\\t0\\t0\\t0\\tplenus\\n"; exit 0; fi\n'
+                'if [ -f %s ]; then printf "IUDICIUM\\tNON IUDICATUM\\tg/x.c\\tiudex aedilis non recens - sana aedilis prius\\n"; exit 1; fi\n'
+                'printf "IUDICIUM\\tNON IUDICATUM\\tg/x.c\\tiudex fabrica non recens - sana fabrica prius\\n"; exit 1\n'
+                % (_status_b, _status))
+    _sb = os.path.join(T, 'struere_aedilis.sh')
+    with open(_sb, 'w') as f:
+        f.write('#!/bin/bash\necho x >> %s\ntouch %s\necho struere aedilis\n' % (_vocatae, _status_b))
+    os.chmod(_sb, 0o755)
+    if os.path.exists(_status_b):
+        os.remove(_status_b)
+    eff, err, n = _iudex_casus({'fabrica': _struere_fictum(0, True), 'aedilis': [_sb]})
+    credo(err is None and 'iudex sanatus: fabrica' in eff and 'iudex sanatus: aedilis' in eff and n == 2,
+          'iudices catena: fabrica deinde aedilis sanantur in vocatione una', causa=repr((eff[-300:], err, n)))
+    if os.path.exists(_status_b):
+        os.remove(_status_b)
+    # REGENERATIO IN COMMISSIONE (circulus commissionis II T3 (a)):
+    # stalum commissum INTER vias -> sanare + iudicium iterum; extra vias
+    # recusatur (probatio 'exitus 1 obstat' supra); sanatio fracta obstat
+    _rg_status = os.path.join(T, 'regeneratum')
+    _rg_argv = os.path.join(T, 'regeneratio_argv.txt')
+
+    def _fabrica_regenerans(sanare_rc, status='STALUM'):
+        via = os.path.join(T, 'fabrica_regenerans_%d_%s' % (sanare_rc, status))
+        with open(via, 'w') as f:
+            f.write('#!/bin/bash\necho "$@" >> %s\n' % _rg_argv
+                    + 'if [ "$1" = sanare ]; then echo sanatio ficta; [ %d -eq 0 ] && touch %s; exit %d; fi\n'
+                    % (sanare_rc, _rg_status, sanare_rc)
+                    + 'if [ -f %s ]; then printf "SUMMA\\t1\\t0\\t0\\t0\\t0\\tplenus\\n"; exit 0; fi\n' % _rg_status
+                    + 'printf "IUDICIUM\\t%s\\tg/gen.c\\tregeneratio differt\\n"; exit 1\n' % status)
+        os.chmod(via, 0o755)
+        return via
+    for _src, _st in ((0, 'STALUM'), (1, 'STALUM'), (0, 'FORTASSE')):
+        for _f in (_rg_status, _rg_argv):
+            if os.path.exists(_f):
+                os.remove(_f)
+        silva.FABRICA_BIN = _fabrica_regenerans(_src, _st)
+        buf = io.StringIO()
+        err = None
+        try:
+            with contextlib.redirect_stdout(buf):
+                silva._fabricam_exigere(['lib/a.c', 'g/gen.c'])
+        except silva.SilvaError as ex:
+            err = str(ex)
+        vocationes = open(_rg_argv).read().splitlines() if os.path.exists(_rg_argv) else []
+        if _src == 0:
+            credo(err is None and 'regeneratum (in commissione): g/gen.c' in buf.getvalue()
+                  and vocationes[1] == 'sanare -machina g/gen.c' and len(vocationes) == 3,
+                  'regeneratio: %s inter vias regeneratur, iudicium iterum, pergit' % _st,
+                  causa=repr((err, vocationes, buf.getvalue()[-200:])))
+        else:
+            credo(err is not None and 'regenerari non potuerunt' in err and 'sanatio ficta' in err,
+                  'regeneratio: sanatio fracta obstat ante portas', causa=repr(err))
+    # extra vias: idem stalum, via non in commissione -> recusatur
+    for _f in (_rg_status, _rg_argv):
+        if os.path.exists(_f):
+            os.remove(_f)
+    silva.FABRICA_BIN = _fabrica_regenerans(0)
+    err = None
+    try:
+        with contextlib.redirect_stdout(io.StringIO()):
+            silva._fabricam_exigere(['lib/a.c'])
+    except silva.SilvaError as ex:
+        err = str(ex)
+    vocationes = open(_rg_argv).read().splitlines() if os.path.exists(_rg_argv) else []
+    credo(err is not None and 'STALUM g/gen.c' in err and not any(v.startswith('sanare') for v in vocationes),
+          'regeneratio: stalum EXTRA vias commissionis recusatur, non regeneratur', causa=repr((err, vocationes)))
+    # iudex sanatus -> regeneratio -> iudex ITERUM stalus (amalgama in
+    # clausura iudicis, 2026-10-15): sanatur iterum, pergit
+    _h1, _h2, _rg = (os.path.join(T, n) for n in ('sanatio_1', 'sanatio_2', 'regen_iudicis'))
+    _fi = os.path.join(T, 'fabrica_iudex_regenerans')
+    with open(_fi, 'w') as f:
+        f.write('#!/bin/bash\n'
+                'if [ "$1" = sanare ]; then touch %s; exit 0; fi\n'
+                'if [ -f %s ]; then printf "SUMMA\\t1\\t0\\t0\\t0\\t0\\tplenus\\n"; exit 0; fi\n'
+                'if [ -f %s ] || [ ! -f %s ]; then printf "IUDICIUM\\tNON IUDICATUM\\tg/gen.c\\tiudex fabrica non recens - sana fabrica prius\\n"; exit 1; fi\n'
+                'printf "IUDICIUM\\tSTALUM\\tg/gen.c\\tregeneratio differt\\n"; exit 1\n'
+                % (_rg, _h2, _rg, _h1))
+    os.chmod(_fi, 0o755)
+    _si = os.path.join(T, 'struere_iudicis_bis.sh')
+    with open(_si, 'w') as f:
+        f.write('#!/bin/bash\necho x >> %s\nif [ -f %s ]; then touch %s; else touch %s; fi\necho struere\n'
+                % (_vocatae, _h1, _h2, _h1))
+    os.chmod(_si, 0o755)
+    for _f in (_h1, _h2, _rg, _vocatae):
+        if os.path.exists(_f):
+            os.remove(_f)
+    silva.FABRICA_BIN = _fi
+    silva.IUDICES_STRUERE = {'fabrica': [_si]}
+    buf = io.StringIO()
+    err = None
+    try:
+        with contextlib.redirect_stdout(buf):
+            silva._fabricam_exigere(['lib/a.c', 'g/gen.c'])
+    except silva.SilvaError as ex:
+        err = str(ex)
+    n = len(open(_vocatae).read().split()) if os.path.exists(_vocatae) else 0
+    credo(err is None and n == 2 and 'regeneratum (in commissione): g/gen.c' in buf.getvalue()
+          and buf.getvalue().count('iudex sanatus: fabrica') == 2,
+          'regeneratio: iudex post regenerationem iterum stalus -> iterum sanatur, pergit',
+          causa=repr((err, n, buf.getvalue()[-400:])))
     silva.IUDICES_STRUERE = {}
     # exitus 2: iudicare nequit (sera) - obstat
     silva.FABRICA_BIN = _fabrica_ficta(2, 'fabrica: iudex plenus alius currit\n')
@@ -2839,6 +3292,46 @@ try:
             err = str(ex)
     credo(err is not None and 'FABRICA (ante portas)' in err,
           'commissio: fabrica obstat ANTE portas')
+    # UNCUS PRAEVIUS (circulus commissionis II T3): uncus ipse cum viis
+    # commissionis (UNCUS_VIAE + UNCUS_CRIBRUM=1) ANTE portas
+    _uncus_verus = silva.UNCUS_PRAECOMMISSIONIS
+    _ua = os.path.join(T, 'uncus_ambitus.txt')
+
+    def _uncus_fictus(rc):
+        via = os.path.join(T, 'uncus_fictus_%d' % rc)
+        with open(via, 'w') as f:
+            f.write('#!/bin/bash\necho "$UNCUS_VIAE|$UNCUS_CRIBRUM" >> %s\n'
+                    'echo "examen (pre-commit): x REICE" >&2\nexit %d\n' % (_ua, rc))
+        os.chmod(via, 0o755)
+        return via
+    _cf = os.path.join(T, 'uncus_c.c')
+    open(_cf, 'w').write('int x;\n')
+    try:
+        for _urc in (1, 0):
+            if os.path.exists(_ua):
+                os.remove(_ua)
+            silva.UNCUS_PRAECOMMISSIONIS = _uncus_fictus(_urc)
+            err = None
+            try:
+                with contextlib.redirect_stdout(io.StringIO()):
+                    silva._uncum_praevium_exigere([_cf, 'docs/x.md', 'non/exstat.c'])
+            except silva.SilvaError as ex:
+                err = str(ex)
+            amb = open(_ua).read().strip() if os.path.exists(_ua) else ''
+            if _urc == 1:
+                credo(err is not None and 'UNCUS (ante portas)' in err and 'REICE' in err
+                      and amb.endswith('|1') and 'uncus_c.c' in amb and 'exstat' not in amb
+                      and 'x.md' not in amb,
+                      'uncus praevius: obstat ante portas (viae .c exstantes, cribrum)', causa=repr((err, amb)))
+            else:
+                credo(err is None, 'uncus praevius: uncus sanus pergit', causa=repr(err))
+        if os.path.exists(_ua):
+            os.remove(_ua)
+        with contextlib.redirect_stdout(io.StringIO()):
+            silva._uncum_praevium_exigere(['docs/x.md'])
+        credo(not os.path.exists(_ua), 'uncus praevius: nulla via C/sh - uncus non vocatur')
+    finally:
+        silva.UNCUS_PRAECOMMISSIONIS = _uncus_verus
 finally:
     silva.VIAE_COMMISSAE = _commissae_verae
     silva.FABRICA_BIN = _fb_verum

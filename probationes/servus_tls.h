@@ -17,6 +17,7 @@
 #include "piscina.h"
 #include "tcp.h"
 #include "processus.h"
+#include "filum.h"
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
@@ -82,9 +83,11 @@ servum_tls_incipere (
      constans character* argumenta[V];
                     i32  conatus;
                     i32  k;
+            FilumStatus  status;
 
     memset(s, ZEPHYRUM, magnitudo(*s));
-    si (access(SERVUS_TLS_ORACULUM, X_OK) != ZEPHYRUM)
+    si (   !filum_status(SERVUS_TLS_ORACULUM, &status)
+        || !status.potest_exsequi)
     {
         redde FALSUM;
     }

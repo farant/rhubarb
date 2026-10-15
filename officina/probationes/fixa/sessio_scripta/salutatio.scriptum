@@ -1,33 +1,27 @@
 #!/usr/bin/env colloquium
 #include "piscina.h"
 #include "chorda.h"
+#include "filum.h"
 
 integer principale(vacuum)
 {
     Piscina* p = piscina_generare_dynamicum("scriptum", 4096);
     chorda salutatio = chorda_ex_literis("ave ex scripto", p);
-    FILE* pl;
 
     printf("%.*s (%d octeti)\n", (int)salutatio.mensura,
         (constans character*)salutatio.datum,
         (int)salutatio.mensura);
 
-    pl = fopen("officina/build/salutatio_scripti.txt", "w");
-    si (pl)
+    /* per filum (canalis lectionum, examen 96): scriptura et lectio
+     * in libro lectionum notantur */
+    si (filum_scribere_literis("officina/build/salutatio_scripti.txt",
+            "scriptum scripsit\n"))
     {
-        fprintf(pl, "scriptum scripsit\n");
-        fclose(pl);
-    }
-    pl = fopen("officina/build/salutatio_scripti.txt", "r");
-    si (pl)
-    {
-        character linea[64];
+        chorda relectum = filum_legere_totum(
+            "officina/build/salutatio_scripti.txt", p);
 
-        si (fgets(linea, 64, pl))
-        {
-            printf("relectum: %s", linea);
-        }
-        fclose(pl);
+        printf("relectum: %.*s", (int)relectum.mensura,
+            (constans character*)relectum.datum);
     }
     redde 0;
 }

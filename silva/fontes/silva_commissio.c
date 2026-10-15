@@ -37,7 +37,8 @@ silva_oraculum_creare (
     {
         redde NIHIL;
     }
-    oraculum->responsa = NIHIL;  /* pigre creatum */
+    oraculum->responsa            = NIHIL;  /* pigre creatum */
+    oraculum->responsa_per_sedem  = NIHIL;
     redde oraculum;
 }
 
@@ -115,9 +116,15 @@ silva_oraculum_responsa_vacare (
     {
         oraculum->responsa = xar_creare(oraculum->piscina,
             (i32)magnitudo(OraculumResponsum));
+        oraculum->responsa_per_sedem = tabula_dispersa_creare_chorda(
+            oraculum->piscina, LXIV);
         redde;
     }
     xar_vacare(oraculum->responsa);
+    si (oraculum->responsa_per_sedem != NIHIL)
+    {
+        tabula_dispersa_vacare(oraculum->responsa_per_sedem);
+    }
 }
 
 b32
@@ -138,6 +145,22 @@ silva_oraculum_responsum_ponere (
     si (slot == NIHIL) redde FALSUM;
     slot->sedes   = sedes;
     slot->victor  = victor;
+    si (oraculum->responsa_per_sedem != NIHIL)
+    {
+        chorda clavis;
+
+        /* clavis = octeti campi in slot (xar: monstratores stabiles) */
+        clavis.datum    = (i8*)&slot->sedes;
+        clavis.mensura  = (i32)magnitudo(slot->sedes);
+        si (   !tabula_dispersa_continet(oraculum->responsa_per_sedem,
+                   clavis)
+            && !tabula_dispersa_inserere(oraculum->responsa_per_sedem,
+                   clavis, (vacuum*)slot))
+        {
+            /* allocatio defecit: tabula relinquitur, quaestio linearis */
+            oraculum->responsa_per_sedem = NIHIL;
+        }
+    }
     redde VERUM;
 }
 
@@ -153,6 +176,25 @@ silva_oraculum_responsum_quaerere (
         || sedes    == NIHIL)
     {
         redde FALSUM;
+    }
+    si (oraculum->responsa_per_sedem != NIHIL)
+    {
+        chorda  clavis;
+        vacuum* valor;
+
+        clavis.datum    = (i8*)&sedes;
+        clavis.mensura  = (i32)magnitudo(sedes);
+        si (!tabula_dispersa_invenire(oraculum->responsa_per_sedem,
+            clavis,
+                &valor))
+        {
+            redde FALSUM;
+        }
+        si (victor_out != NIHIL)
+        {
+            *victor_out = ((constans OraculumResponsum*)valor)->victor;
+        }
+        redde VERUM;
     }
     per (i = ZEPHYRUM; i < xar_numerus(oraculum->responsa); i++)
     {

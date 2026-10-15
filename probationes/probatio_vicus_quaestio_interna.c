@@ -9,6 +9,7 @@
 #include "chorda.h"
 #include "chorda_aedificator.h"
 #include "credo.h"
+#include "lectiones.h"
 #include "reactor.h"
 #include "vicus_quaestio.h"
 #include "vicus_quaestio_interna.h"
@@ -82,7 +83,7 @@ _clavem_scribere (
     via = (character*)piscina_allocare(p, D);
     sprintf(via, "%s/vqi.%d.clavis", tmp ? tmp : "/tmp",
         (integer)getpid());
-    f = fopen(via, "wb");
+    f = lectiones_fopen(via, "wb");
     si (f)
     {
         (vacuum)fputs(CLAVIS_FICTA "\n", f);

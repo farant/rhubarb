@@ -1156,3 +1156,175 @@ that hangs proves nothing, replaced with "keep only the first child"
 (finite).
 Plant 2 (finite): red on the communia unit test and the VINCULUM
 assertion. End to end: `porta_umbra('css')` in a snapshot -> 10/10, 18 s.
+
+## 2026-10-14 - judges healed to a fixed point (circulus commissionis II T1)
+
+`_fabricam_exigere` healed a stale judge only ONCE (`_iudex_sanatus`
+flag, P3 of the first slice). Seen in the canalis-lectionum T1 commit,
+attempt 1: rebuilding bin/fabrica made the NEW fabrica report
+"iudex aedilis non recens", and the flag forbade a second heal - refused
+after 140 s. Now `_sanati` tracks which judges this call healed: newly
+stale judges are healed and the judgment repeats; a judge that was
+healed and is STILL stale refuses (the struere did not take - this also
+bounds the loop by the size of IUDICES_STRUERE). Test "iudices catena"
+(fake fabrica: fabrica stale -> after its heal, aedilis stale -> after
+its heal, sane): both healed, two struere calls. Plant: the old
+one-shot condition (`not _sanati`) -> that test red, rest green.
+
+## 2026-10-14 - pre-flight heals the owed gates' binaries (circulus commissionis II T2)
+
+New phase `instrumenta portarum` between `portae debitae` and the gates:
+`_instrumenta_portarum_sanare` judges every `bin/` binary the running
+gates execute (BINARIUM lines) in ONE `bin/fabrica iudicare -machina`
+call and heals the STALUM/IGNOTUM ones with one `bin/fabrica sanare`
+call - tree-local (an action producing bin/x never installs). Heal
+failure refuses before any gate. Why: canalis-lectionum T1 attempt 4
+lost ~18 min of passing gates to briar-fumus's own precondition (tree
+bin/briar not RECENS).
+Wiring trap: tests monkeypatch `silva.portae_debitae`. A first version
+called the new parser directly from `_portae_debitas_addere`, bypassing
+the fakes - 10 commissio tests went red against the fake fabrica. Now
+`portae_debitae` stays the single entry point and leaves the binaries of
+its LAST call in `_BINARIA_ULTIMA` (keyed by the paths); a patched fake
+leaves nothing, so nothing is healed. Plant: healer never sees a stale
+binary -> the two healing tests red.
+
+## 2026-10-14 - regeneration in the commit + the hook before the gates (circulus commissionis II T3)
+
+(a) `_fabricam_exigere`: a STALUM/IGNOTUM generated artifact that is
+committed AND among the commit's own paths is regenerated through
+`bin/fabrica sanare -machina` and judged again (once, `_regenerata`);
+one that is committed but NOT among the paths still refuses with the
+recipe (auto-adding would change what is committed). Fran 2026-10-14.
+(b) phase `unci` after `fabrica`: the real pre-commit hook runs with
+`UNCUS_VIAE=<commit paths> UNCUS_CRIBRUM=1` - examen on .c/.m and
+diagnostica on .sh/.css refuse BEFORE the gates instead of inside
+`git commit` after all of them. UNCUS_CRIBRUM (new in the hook) applies
+the git-mode directory filters to the explicit list, so the rules stay
+in the hook (fumus unci XXII). After `fabrica` so regenerated files are
+judged too. The hook still runs in `git commit` (backstop for a bare
+commit). Plants: regeneration disabled -> 2 tests red; hook called
+without the filter -> 1 test red.
+
+## 2026-10-14 - gate order + pre-checks reported together (circulus commissionis II T5)
+
+Phase `ordo portarum` after `instrumenta portarum`: `_portas_ordinare`
+asks `bin/fabrica portae ordo -machina` (names passed unnormalised -
+`_portae_fabricae(..., normare=False)`), reorders stably (shadow
+receipts `.json` stay first), prints `ordo portarum: praeiudicia: ... |
+probationes: ...`. Any failure (fabrica missing, rc!=0, a line outside
+the contract, missing names) = MONITUM and the given order - ordering
+never blocks a commit; the older fake-fabrica tests exercise exactly
+that path (their fake answers NOTA). The loop: a red pre-check is
+recorded (`praeiudicium X NON sanum - cetera praeiudicia currunt`) and
+the loop goes on; before the first test (or at the end) all recorded
+pre-check failures raise ONE SilvaError naming each with its acta; a red
+test still raises at once. commissio_umbra keeps its own order (not in
+this task). Plants: no report-all, no reordering - each red.
+
+## 2026-10-15 - gradus portarum T1-T3 (two tiers of gates)
+
+T1 attempt 2 lost 11 min: a new ordo test expected Python to re-sort,
+but the order is fabrica's (the fake prints ficta-m first). Lesson: a
+change to probatio_silva.py -> run `silva.porta('pythonica')` BEFORE the
+commit (~3.5 min); the commit then reuses the live receipt - but write
+docs first, any later tree change makes the receipt stale.
+
+T3 shape: the tier split lives in `_portas_ordinare` because ordo is the
+one call that knows genus + gradus + median for every gate; it now runs
+BEFORE instrumenta so binaries of dilated gates are not healed.
+`_portae_debitas_addere(additae_out=)` stops printing 'addita' itself so
+a dilated gate is never announced twice ('addita' then 'DILATA'). A
+commit that changes the tier logic must run `plena=True`: under its own
+rules it would dilate pythonica.
+
+
+## 2026-10-15 - T4: an insertion anchored on `def f(` steals f's decorator
+
+The T4 patch inserted `_portas_currere` "before `def commissio(`" -
+i.e. BETWEEN `@_cursu_notatum(... 'commissio' ...)` and the def. Python
+then decorated `_portas_currere`: the commissio cursus covered only the
+gate loop and every phase lost its parent. Nothing crashed; only
+probatio_silva's "phases et portae filii commissionis" caught it
+(deterministic red). Insert new functions ABOVE a function's decorator
+block (or after the function), never by anchoring on its `def` line.
+
+## 2026-10-15 - judge healed, regenerated, stale AGAIN
+
+The lazy-lexing commit was refused in the fabrica phase: the formatter
+touched silva_expandere.h -> bin/fabrica healed ('iudex sanatus') ->
+silva/amalgama/silva.c regenerated in the commit -> bin/fabrica stale
+again (the amalgam is in its closure) -> `_sanati` already held fabrica
+-> "sana fabrica prius". The `_sanati` limit exists so a struere that
+does not heal cannot loop; a regeneration changes the judge's INPUTS,
+so it legitimately needs another heal. Fix: the recursion after a
+regeneration passes `_sanati=()`; termination still holds because
+regeneration happens once (`_regenerata`). Test 'regeneratio: iudex post
+regenerationem iterum stalus -> iterum sanatur, pergit' (hand plant red).
+Also: in heredoc-written Python patches, escape `\n` inside the patch's
+own string literals (`\\n`) - a raw newline lands in the target file.
+
+## 2026-10-15 — praevia deleted; estimate honours live receipts (…BEN87)
+
+**praevia (dead code).** `_porta_per_fabricam` used to `sanare` a verdict
+gate's `build/` inputs before `iudicare`, from a Python regex over
+aedificatio.stml (one level deep) - a workaround for `iudicare` judging only
+direct inputs. Checked before deleting: the only verdict gate left is
+`porta_aedilis`, and its praevia list was EMPTY (toml's index/aurum users
+left when suites moved to gradus composites). a12bd04b made `iudicare`
+judge the chain (FORTASSE), which covers the case properly; deletion
+changes no behaviour today. `_portae_verdictorum()` now returns a set of
+names. Limit recorded in the docstring: quick mode does not judge
+non-memorabilis generators, so the chain does not pass through them - a
+future verdict gate reading the output of such a generator would need
+`-plenus` or a memorabilis producer.
+
+**Estimate.** `_portas_ordinare` summed tempora.tsv medians over every
+ordered gate, but `_portas_currere` then skipped gates with a valid live
+receipt - so the agent habit (run `porta('X')`, commit with `portae=['X']`)
+always tripped the 300 s MONITUM (478 s printed for ~1 min of work,
+a12bd04b). Now with `recepta=True` (commissio, fusio_probare) a gate whose
+every request (name, filter) has a sane `receptum_vivum` counts 0 s, is
+marked `[receptum]` in the order line, and the estimate says `N cum recepto
+vivo (~0 s)`. Same test as the runner uses, so the two cannot disagree.
+Test H2 needs `plena=False` - under the default `plena=True` MONITUM never
+prints and "no MONITUM" is vacuous (caught before running). Plant (count
+all gates) on a copy outside the tree: 409 s + MONITUM.
+
+## 2026-10-15 — umbra clones: owner tag, expiry, automatic sweep (…PKM86A)
+
+**Leak.** A clone is deleted only with its receipt (`receptum_delere`).
+Red receipts keep their clone "for inspection" - forever - and the suite's
+own real clones (`porta_umbra('formator-intra')`, commissio_umbra cases)
+stay if the suite aborts before cleanup: 14 GB in five clones by 10-14,
+8.6 GB of it `ficta-petita` from a pythonica run. `umbrae_purgare()`
+existed but nothing called it.
+
+**Trap avoided.** `~/.rhubarb/umbrae` is shared by EVERY worktree, but
+`_clones_vivi` read only this tree's `build/portae`: an automatic sweep
+from quinta would have judged secunda's red inspection clone an orphan.
+So ownership first: `photographia_materializare` writes
+`<clone>/.umbra.radix` (owning RADIX) right after `git clone`, and
+`_clones_vivi` reads the receipts/pendens of every OWNER's
+`build/portae`. Owner tree gone = orphan. Untagged clones (trees still on
+old code until they merge this) are kept while younger than
+UMBRA_EXSPIRATIO (3 days) - their tree is unknown.
+
+**Expiry.** `umbrae_purgare` deletes THIS tree's umbra receipts (with
+photographia) finished more than 3 days ago, together with their clone
+(`receptum_delere`). Other trees' receipts are never deleted here - each
+owner sweeps its own.
+
+**Automatic.** `porta_umbra` (photographic) calls `umbrae_purgare()`
+before materializing - clones only pile up when new ones are made, so
+that is where disk is reclaimed; one line only when something is removed.
+Also: a half-made clone (read-tree / ignored-copy failure) is now deleted
+before re-raising.
+
+**Tests.** Hermetic orphan group gained: other tree with receipt (kept),
+owner gone (orphan), untagged old/recent (orphan/kept), own red receipt
+4 days old (receipt + clone deleted) vs recent (kept), other tree's
+receipt never deleted. Existing clones now carry an owner tag so each
+protection is tested on its own merits, not via the untagged grace
+period. Plants on silva.py copies: ignore owner / drop age rule / drop
+expiry - each turns its assertions red.

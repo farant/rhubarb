@@ -3957,9 +3957,63 @@ _legati_severitatis_verbum (
     }
 }
 
+/* debita canalis (codex 96, spec canalis-lectionum §I) - verdicta
+ * examen aequant: tabula ex radice servi lecta; plagula inscripta ->
+ * 96 domesticum; inscripta SINE vocatione cruda -> VERUM (linea
+ * delenda, REICE). Tabula absens = nulla debita. */
+interior b32
+_debita_canalis_applicare (
+           Legatus* l,
+           Piscina* pn,
+    SilvaSemantica* sem,
+         character* via_c)
+{
+             character  via_d[LEGATUS_VIA_MAXIMA];
+             character* textus;
+    insignatus integer  mensura = ZEPHYRUM;
+           SilvaChorda  v;
+           SilvaChorda  t;
+                   b32  inscripta;
+    insignatus integer  i;
+    insignatus integer  n;
+                   int  crudae = ZEPHYRUM;
+
+    si ((memoriae_index)l->radix_mensura
+            + strlen(SILVA_VIA_DEBITORUM_CANALIS) + II
+            >= magnitudo(via_d))
+    {
+        redde FALSUM;
+    }
+    sprintf(via_d, "%s/%s", l->radix, SILVA_VIA_DEBITORUM_CANALIS);
+    textus = praeparator_plagulam_legere(pn, via_d, &mensura);
+    si (textus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    v.datum    = (unsigned char*)via_c;
+    v.mensura  = (insignatus integer)strlen(via_c);
+    t.datum    = (unsigned char*)textus;
+    t.mensura  = mensura;
+    inscripta  = silva_c89_semantica_debita_applicare(sem, &v, &t) != 0;
+    n          = silva_c89_diagnostica_numerus(sem);
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        constans SemanticaDiagnosticum* d =
+            silva_c89_diagnosticum_per_indicem(sem, i);
+
+        si (   d        != NIHIL
+            && d->codex == (int)EXAMEN_CODEX_CANALIS_PRAETERITUS)
+        {
+            crudae++;
+        }
+    }
+    redde inscripta && crudae == ZEPHYRUM;
+}
+
 /* diagnostica in effusorem (forma examinis: linea syntaxis +
  * ordines OMNIUM graduum [etiam infra - LSP supprimit, examen non]
- * + verdictum cum numeris). Vocatur intra _recensere dum sem vivit. */
+ * + verdictum cum numeris). Vocatur intra _recensere dum sem vivit.
+ * linea_delenda: debitum canalis solutum (REICE, ut examen). */
 interior vacuum
 _diagnostica_effundere (
           constans character* via_c,
@@ -3968,6 +4022,7 @@ _diagnostica_effundere (
           constans character* textus,
           insignatus integer  mensura,
                 SilvaPiscina* piscina,
+                         b32  linea_delenda,
            ChordaAedificator* effusor)
 {
              character linea_b[1024];
@@ -4039,6 +4094,15 @@ _diagnostica_effundere (
             d->provisionale ? " (provisionale)" : "");
         (vacuum)chorda_aedificator_appendere_literis(effusor,
             linea_b);
+    }
+    si (linea_delenda)
+    {
+        reice = VERUM;
+        violationes++;
+        sprintf(linea_b, "%s: [violatio] linea delenda in %s: nulla"
+            " vocatio IO cruda superest\n", via_c,
+            SILVA_VIA_DEBITORUM_CANALIS);
+        (vacuum)chorda_aedificator_appendere_literis(effusor, linea_b);
     }
     sprintf(linea_b, "verdictum: %s  (violationes %d, suspecta %d,"
         " domestica %d, infra %d; provisionalia %d)\n",
@@ -4132,8 +4196,11 @@ _recensere (
             l->piscina_indicis);
         si (effusor != NIHIL)
         {
+            b32 delenda = _debita_canalis_applicare(l, pn, sem,
+                via_cum);
+
             _diagnostica_effundere(via_cum, parsura, sem, textus,
-                mensura, effimera, effusor);
+                mensura, effimera, delenda, effusor);
         }
     }
     silva_piscina_destruere(effimera);

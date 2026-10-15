@@ -20,6 +20,7 @@
 #include "http.h"
 #include "http_vocatio.h"
 #include "tls.h"
+#include "filum.h"
 #include "servus_tls.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -69,7 +70,7 @@ _suitam_parare (
       constans character* area = credo_area(c);
       constans character* argumenta[III];
                character  via[MXXIV];
-                    FILE* f;
+                  chorda  magnum;
                      i32  i;
        ProcessusResultus  pr;
 
@@ -83,20 +84,18 @@ _suitam_parare (
     argumenta[II] = NIHIL;
     pr = processus_exsequi(argumenta, XXX * M, c->piscina);
     CREDO_NECESSE(pr.successus && pr.codex_exitus == ZEPHYRUM);
-    CREDO_NECESSE(access(l->ancora, R_OK) == ZEPHYRUM);
+    CREDO_NECESSE(filum_existit(l->ancora));
     sprintf(via, "%s/parvum.txt", l->dir);
-    f = fopen(via, "wb");
-    CREDO_NECESSE_NON_NIHIL(f);
-    (vacuum)fputs("salve per tls\n", f);
-    (vacuum)fclose(f);
+    CREDO_NECESSE(filum_scribere_literis(via, "salve per tls\n"));
     sprintf(via, "%s/magnum.bin", l->dir);
-    f = fopen(via, "wb");
-    CREDO_NECESSE_NON_NIHIL(f);
+    magnum.datum    = (i8*)piscina_allocare(c->piscina, MAGNUM);
+    magnum.mensura  = MAGNUM;
+    CREDO_NECESSE_NON_NIHIL(magnum.datum);
     per (i = ZEPHYRUM; i < MAGNUM; i++)
     {
-        (vacuum)fputc(_magni_octetus(i), f);
+        magnum.datum[i] = (i8)_magni_octetus(i);
     }
-    (vacuum)fclose(f);
+    CREDO_NECESSE(filum_scribere(via, magnum));
     c->datum = l;
 }
 

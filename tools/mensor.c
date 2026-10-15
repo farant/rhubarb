@@ -1608,6 +1608,92 @@ _scripta_colligere (
     directorium_iterator_claudere(it);
 }
 
+/* USUS QUAESTIONUM (2026-10-15): 'mensor quaestio' solum nomina
+ * dabat, nec quid quaeque respondeat nec quae parametra valeant -
+ * 'limes=5' pro 'n=5' tacite neglectum, titulus nudus pro
+ * 'probationes_radicis/<probatio>' tacite vacuus */
+interior vacuum
+_quaestionum_usum_imprimere (
+    FILE* f)
+{
+    fputs(
+        "usus: mensor quaestio <nomen> par=valor ... [-machina]\n"
+        "  historia      cursus singuli, recentissimi primi\n"
+        "  ultimum       cursus ultimus\n"
+        "  fracta        cursus fracti aut interrupti\n"
+        "  acta          quod cursus effudit (id= aut ultimus)\n"
+        "  tendentia     mediana per commissum (tardiorne?)\n"
+        "  lentescentes  quae constanter tardescunt\n"
+        "  sectiones     sectiones intra cursum (membrum#)\n"
+        "  filii         cursus filii (ubi tempus ivit?)\n"
+        "  summa         per titulum: numerus, ms, parentes\n"
+        "  statistica    per titulum: n, mediana, max, fracti\n"
+        "                (fluctuatne X?)\n"
+        "  iudicia       regenerationes iudicis fabricae\n"
+        "  commissiones  commissiones cum portis suis\n"
+        "  numquam       scripta declarata numquam cursa\n"
+        "  discus        quod in diurna spatium tenet\n"
+        "parametra: titulus= (aequalis) praefixum= (incipit)\n"
+        "  n= (ordines maximi) status= post= nota= arbor=\n"
+        "  ramus= id= profunditas= radix= fenestra=\n"
+        "  limes= (lentescentes: per mille - NON ordines)\n"
+        "tituli: probationes_radicis/<probatio>,\n"
+        "  <compositum>/<probatio>, porta:<nomen>,\n"
+        "  pythonica#<grex>, commissio\n"
+        "  (tituli omnes: mensor quaestio summa)\n",
+        f);
+}
+
+/* NIHIL CONGRUIT (2026-10-15): quaestio vacua cum filtro tituli causam
+ * nominat in stderr, homini solum (-machina vacua, exitus idem) */
+interior vacuum
+_nihil_congruit_nominare (
+       constans CursusIndex* index,
+     constans CursusFiltrum* filtrum,
+                    Piscina* piscina)
+{
+       Xar* similes;
+       i32  noti = ZEPHYRUM;
+       i32  k;
+    chorda  quaesitum;
+
+    similes = cursus_quaerere_similes(index, filtrum, III, &noti,
+        piscina);
+    si (similes == NIHIL)
+    {
+        redde;
+    }
+    quaesitum = filtrum->titulus.mensura > ZEPHYRUM ? filtrum->titulus
+        : filtrum->praefixum;
+    si (noti > ZEPHYRUM)
+    {
+        fprintf(stderr, "mensor quaestio: nihil congruit - '%.*s' %d"
+            " cursus habet, nullus filtris ceteris (status, post, nota,"
+            " arbor, ramus)\n", (integer)quaesitum.mensura,
+            (constans character*)quaesitum.datum, (integer)noti);
+        redde;
+    }
+    fprintf(stderr, "mensor quaestio: nihil congruit - titulus '%.*s'"
+        " nullum cursum habet", (integer)quaesitum.mensura,
+        (constans character*)quaesitum.datum);
+    si (xar_numerus(similes) == ZEPHYRUM)
+    {
+        fputs(", nullus similis (tituli omnes: mensor quaestio"
+            " summa)\n", stderr);
+        redde;
+    }
+    fputs("; simillimi:", stderr);
+    per (k = ZEPHYRUM; k < xar_numerus(similes); k++)
+    {
+        CursusSumma* s = (CursusSumma*)xar_obtinere(similes, k);
+
+        fprintf(stderr, "%s %.*s (n=%d)", k > ZEPHYRUM ? "," : "",
+            (integer)s->titulus.mensura,
+            (constans character*)s->titulus.datum, (integer)s->numerus);
+    }
+    fputc('\n', stderr);
+}
+
 interior integer
 _quaestio (
       Piscina*  piscina,
@@ -1620,13 +1706,12 @@ _quaestio (
                 Volumen* volumen;
                     Xar* cursus;
             CursusIndex* index;
-                    Xar* ordines;
+                    Xar* ordines = NIHIL;
                     i32  k;
 
     si (argc < III)
     {
-        fprintf(stderr, "usus: mensor quaestio <nomen> par=valor ..."
-            " [-machina]\n");
+        _quaestionum_usum_imprimere(stderr);
         redde 2;
     }
     si (!_parametra_legere(argc, argv, &par, piscina))
@@ -2059,12 +2144,17 @@ _quaestio (
     }
     alioquin
     {
-        fprintf(stderr, "mensor quaestio: '%s' ignota (historia ultimum"
-            " fracta acta tendentia filii summa iudicia commissiones"
-            " statistica sectiones lentescentes numquam discus)\n",
-            nomen_q);
+        fprintf(stderr, "mensor quaestio: '%s' ignota\n", nomen_q);
+        _quaestionum_usum_imprimere(stderr);
         volumen_claudere(volumen);
         redde 2;
+    }
+    /* homini solum: -machina vacua manet (consumptores stderr saepe
+     * miscent - fumus mensor_cursus XI 'titulus=nemo -machina' = nihil) */
+    si (   !machina
+        && (ordines == NIHIL || xar_numerus(ordines) == ZEPHYRUM))
+    {
+        _nihil_congruit_nominare(index, &par.filtrum, piscina);
     }
     volumen_claudere(volumen);
     redde ZEPHYRUM;

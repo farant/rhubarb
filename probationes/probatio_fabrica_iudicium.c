@@ -1294,6 +1294,71 @@ _probare_transitum (
                 (i32)FABRICA_RECENS);
         }
 
+        /* VIId (canalis lectionum T2). AURUM DEBITI: debitum scripturae
+         * in plagulam commissam (extra build/) in vestigio stat, sed
+         * lectio eius INGRESSUS est - aurum mutatum transitum non
+         * servat. Debitum sub build/ opus manet (VIIb). */
+        {
+              FabricaLocus* locus;
+            FabricaDebitum* debitum;
+                       Xar* ordo_aurum;
+
+            mundi_ponere(&discus, "data/aurum.tsv", "aurum I\n");
+            locus = (FabricaLocus*)xar_addere(
+                actiones_transitus[0]->vestigia);
+            CREDO_NON_NIHIL(locus);
+            si (locus != NIHIL)
+            {
+                locus->forma    = FABRICA_LOCUS_PLAGULA;
+                locus->via      = chorda_ex_literis("data/aurum.tsv",
+                    piscina);
+                locus->suffixa  = chorda_ex_literis("", piscina);
+            }
+            actiones_transitus[0]->debita = xar_creare(piscina,
+                (i32)magnitudo(FabricaDebitum));
+            debitum = (FabricaDebitum*)xar_addere(
+                actiones_transitus[0]->debita);
+            CREDO_NON_NIHIL(debitum);
+            si (debitum != NIHIL)
+            {
+                debitum->membrum = chorda_ex_literis("porta_x",
+                    piscina);
+                debitum->via     = chorda_ex_literis("data/aurum.tsv",
+                    piscina);
+                debitum->causa = chorda_ex_literis("aurum", piscina);
+                debitum->sedes = chorda_ex_literis("x:1", piscina);
+            }
+            /* ordo actiones VALORE tenet: debita post ordinem posita in
+             * eo absunt - ordo iterum, post restituitur */
+            ordo_aurum = mundi_ordinare_fictas(piscina,
+                actiones_transitus,
+                I);
+            mundi_ponere(&discus, LIBER,
+                "L\tdata/fons.txt\nL\tdata/aurum.tsv\n"
+                "L\tbuild/proprium/portus.txt\n");
+            mundi_auferre(&discus, VERDICTUM);
+            sanationes = fabrica_sanare(&sutura, ordo_aurum, electa,
+                FALSUM,
+                piscina, &causa);
+            sanatio = mundi_sanatio_invenire(sanationes, "porta_x");
+            CREDO_NON_NIHIL(sanatio);
+            iudicium = fabrica_iudicare(&sutura, actiones_transitus[0],
+                exitus,
+                VERUM, piscina);
+            CREDO_AEQUALIS_I32((i32)iudicium.status,
+                (i32)FABRICA_RECENS);
+            /* aurum mutatum: lectio transitus mutata, NON servatum */
+            mundi_ponere(&discus, "data/aurum.tsv", "aurum II\n");
+            iudicium = fabrica_iudicare(&sutura, actiones_transitus[0],
+                exitus,
+                VERUM, piscina);
+            CREDO_VERUM(iudicium.status != FABRICA_RECENS);
+            CREDO_VERUM(mundi_continet(iudicium.causa, "data/aurum.tsv",
+                piscina));
+            mundi_ponere(&discus, "data/aurum.tsv", "aurum I\n");
+            actiones_transitus[0]->debita = NIHIL;
+        }
+
         /* VIIc (plan-5 T5b). radices TEMPORARIAE (/tmp, /private/tmp,
          * /var/folders): status ambientis, non ingressus sigillabilis
          * (ut effectus classis temporaria) - /tmp ipsum quoque */

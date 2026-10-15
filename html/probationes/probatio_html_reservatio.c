@@ -20,6 +20,7 @@
  */
 
 #include "latina.h"
+#include "lectiones.h"   /* lectiones_fopen: canalis lectionum (examen 96) */
 #include "credo.h"
 #include "canon.h"
 #include "chorda.h"
@@ -91,7 +92,7 @@ _plagulam_legere (
     character* memoria;
         size_t lecti;
 
-    f = fopen(via, "rb");
+    f = lectiones_fopen(via, "rb");
     si (f == NIHIL)
     { redde NIHIL;
     }

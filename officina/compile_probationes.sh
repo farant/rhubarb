@@ -3,7 +3,7 @@
 # Effusio cursus ultimi semper in build/test_logs/officina.log
 # radicis (stdout + stderr; codex exitus per PIPESTATUS
 # servatus). Ratio plena: compile_tests.sh radicis.
-# <porta titulus="officina" tegit="officina/*_fontes_generata.sh officina/fontes/* officina/instrumenta/* officina/probationes/* silva/fontes/* silva/instrumenta/*"/>
+# <porta titulus="officina" gradus="fusio" tegit="officina/*_fontes_generata.sh officina/fontes/* officina/instrumenta/* officina/probationes/* silva/fontes/* silva/instrumenta/*"/>
 if [ -z "${OFFICINA_PROBATIONES_EFFUSIO:-}" ]; then
     export OFFICINA_PROBATIONES_EFFUSIO=1
     mkdir -p "$(dirname "$0")/../build/test_logs"

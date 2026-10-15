@@ -5,7 +5,7 @@ source "$(dirname "${BASH_SOURCE[0]}")/../tools/cursus.sh"
 
 # Effusio cursus ultimi semper in build/test_logs/silva.log
 # radicis (stdout + stderr; codex exitus per PIPESTATUS servatus).
-# <porta titulus="silva" tegit="materia/fontes/* silva/*_fontes_generata.sh silva/fontes/* silva/grammatica/* silva/instrumenta/* silva/probationes/* silva/quaestiones.stml" currit="tools/fabrica.c"/>
+# <porta titulus="silva" gradus="fusio" tegit="materia/fontes/* silva/*_fontes_generata.sh silva/fontes/* silva/grammatica/* silva/instrumenta/* silva/probationes/* silva/quaestiones.stml" currit="tools/fabrica.c"/>
 if [ -z "${SILVA_PROBATIONES_EFFUSIO:-}" ]; then
     export SILVA_PROBATIONES_EFFUSIO=1
     # effusio in plagula TEMPORARIA extra arborem, post cursum in locum

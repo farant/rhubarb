@@ -14,7 +14,7 @@
 # lib/portae.c, crusta, effectus) - III s, vilis.
 #
 # Exitus: 0 sanum | 1 FRACTUM | 2 bin/fabrica deest.
-# <porta titulus="portae-declaratae" tegit="*.sh pythonica/silva.py" currit="tools/fabrica.c"/>
+# <porta titulus="portae-declaratae" genus="praeiudicium" tegit="*.sh pythonica/silva.py" currit="tools/fabrica.c"/>
 set -u
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$RADIX" || exit 2

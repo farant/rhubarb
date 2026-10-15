@@ -226,6 +226,8 @@ done
 l25=$("$M" quaestio lentescentes fenestra=2 limes=2.5 titulus=fumus/lentum -machina 2>&1 | grep -c '^LENTESCENS')
 l35=$("$M" quaestio lentescentes fenestra=2 limes=3.5 titulus=fumus/lentum -machina 2>&1 | grep -c '^LENTESCENS')
 sx=$("$M" quaestio sectiones titulus=nemo -machina 2>&1; echo "rc$?")
+# homini: quaestio vacua causam nominat (stderr; titulus nudus -> similis)
+hx=$("$M" quaestio historia titulus=xi 2>&1 >/dev/null)
 lx=$("$M" quaestio lentescentes fenestra=2 limes=1.5 -machina 2>&1; echo "rc$?")
 "$M" quaestio nulla_talis > /dev/null 2>&1; rq=$?
 "$M" quaestio historia frobnica=1 > /dev/null 2>&1; rp=$?
@@ -234,8 +236,9 @@ echo "$u" | grep -q "	porta:xi	fractus	" \
   && echo "$cm" | awk -F'\t' '$1 == "COMMISSIO" && $9 == "porta:xi"' | grep -q . \
   && echo "$nq" | grep -qx "tools/annotatum.sh" && echo "$nq" | grep -qx "tools/nudum.sh" \
   && ! echo "$nq" | grep -q "cursum.sh" && [ "$rq" -eq 2 ] && [ "$rp" -eq 2 ] \
-  && [ "$sx" = "rc0" ] && [ "${lx##*rc}" = "0" ] && [ "$l25" = "1" ] && [ "$l35" = "0" ]
-credo $? "XI   quaestiones: ultimum, acta fracti, commissiones cum culpa, numquam; ignota -> 2"
+  && [ "$sx" = "rc0" ] && [ "${lx##*rc}" = "0" ] && [ "$l25" = "1" ] && [ "$l35" = "0" ] \
+  && echo "$hx" | grep -q "nihil congruit - titulus 'xi' nullum cursum habet; simillimi: porta:xi (n=1)"
+credo $? "XI   quaestiones: ultimum, acta fracti, commissiones cum culpa, numquam; ignota -> 2; vacua homini nominat"
 
 # XII
 C="$T/cens"; mkdir -p "$C/a" "$C/m"

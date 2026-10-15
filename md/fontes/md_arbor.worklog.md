@@ -841,3 +841,32 @@ on the theory that a decoded entity never outgrows its source, but
 `&nGt;` is 5 bytes in and 6 out (two code points, three bytes each).
 The buffer is now twice the input. The computus golden moved on its
 memory columns for that reason and was regenerated with the cause.
+
+## 2026-10-15 — link-label normalization capped at 999: quadratic bracket nesting
+
+**Symptom.** `probatio_md_totalitas` line 446 ("profunditas ingens", 50 000
+nested `[`...`]`) went red under load in frigida (4be29cea): CREDO_NON_RUIT's
+fixed 5 s wall limit, `KILL (mora excessa)`. Ledger question …PQ4PWD71R had
+guessed FORMAE[0] (`> `) and "quadratic?" - measurement says line 446 is
+FORMAE[2] (`[`/`]`), and yes: 6250/12500/25000/50000 deep = 0.048/0.196/
+0.825/3.55 s CPU (x4 per doubling), arena 42 MB -> 2.52 GB.
+
+**Cause.** `_uncum_claudere` (md_inlinea.c), on every `]` without an inline
+tail, normalized the WHOLE bracket content from its opener into a reference
+key (`md_clavem_normalizare(..., apertum->ad, i)`) - one allocation of the
+full content per closer. Nested closers = sum of k = n^2 time and memory.
+`_titulus_referens` already capped full references at 1000, and the
+definition scanner (md_arbor.c) at 999; the shortcut/collapsed path had no
+cap. CommonMark 4.7: a link label has at most 999 characters inside the
+brackets - longer cannot be a label, so normalizing it was pure waste.
+
+**Fix.** `MD_TITULUS_MAXIMUS` (CMXCIX) in md_decoctum.h;
+`md_clavem_normalizare` returns an EMPTY key (datum NIHIL, nothing allocated)
+when `ad - ab` exceeds it - both callers already treat that as "no label".
+The definition scanner uses the constant instead of its literal 999. 50 000
+deep: 3.55 s -> 0.007 s, 2.52 GB -> 20.6 MB (206 B per source byte, flat).
+
+**Guard without a clock.** New assertion after the deep case: arena bytes per
+source byte < M on a fresh piscina. Fixed ~206, quadratic ~25 202 (the plant:
+HEAD md_decoctum.c -> `credo_minor ... Receptus: 25202`). Deterministic under
+any load, unlike the 5 s NON_RUIT, which now has ~700x margin anyway.

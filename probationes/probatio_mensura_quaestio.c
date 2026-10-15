@@ -5,7 +5,7 @@
  * per commissum (III), frigida ultimo transiens cum arbore et ramo
  * (IV), scripta numquam cursa (V), filtra historiae (VI), tentamina
  * commissionis cum culpa (VII, Franus 10-13), octeti per titulum
- * (VIII).
+ * (VIII), tituli similes cum quaestio vacua (XII).
  * Quaestio VI (corpus fracti ultimi) per CLI in mensor fumus probatur.
  */
 #include "latina.h"
@@ -601,6 +601,97 @@ _sectio_lentescentes_regulae (
     CREDO_AEQUALIS_I32(xar_numerus(ordines), ZEPHYRUM);
 }
 
+/* XII. nihil congruit (2026-10-15): titulus nudus -> similes (intra
+ * titulum, segmentum ultimum), ordine numeri, maximi; titulus notus
+ * filtris ceteris exclusus -> noti; nihil simile -> vacuum; sine
+ * filtro tituli -> NIHIL */
+interior vacuum
+_sectio_similes (
+    CredoContextus* c)
+{
+            Xar* omnes = _omnes(c->piscina);
+    CursusIndex* index;
+  CursusFiltrum  f = _filtrum();
+            Xar* ordines;
+    CursusSumma* s;
+            i32  noti = (i32)XCIX;
+            i32  k;
+
+    per (k = ZEPHYRUM; k < III; k++)
+    {
+        (vacuum)_cursus(omnes, "r", "",
+            "probationes_radicis/probatio_t",
+            (s64)(k + I), X, CURSUS_TRANSIIT, "", c->piscina);
+    }
+    (vacuum)_cursus(omnes, "m", "", "probationes_md/probatio_t", IV, X,
+        CURSUS_TRANSIIT, "", c->piscina);
+    (vacuum)_cursus(omnes, "g", "", "pythonica#probatio_t", V, X,
+        CURSUS_TRANSIIT, "", c->piscina);
+    (vacuum)_cursus(omnes, "x", "", "porta:aliena", VI, X,
+        CURSUS_TRANSIIT, "", c->piscina);
+    index = cursus_indicem_struere(omnes, c->piscina);
+
+    /* titulus nudus: III similes (segmentum ultimum post '/' et '#'),
+     * numero descendente, maximi II */
+    f.titulus  = chorda_ex_literis("probatio_t", c->piscina);
+    ordines    = cursus_quaerere_similes(index, &f, II, &noti,
+        c->piscina);
+    CREDO_NECESSE_NON_NIHIL(ordines);
+    CREDO_AEQUALIS_I32(noti, ZEPHYRUM);
+    CREDO_NECESSE(xar_numerus(ordines) == II);
+    s = (CursusSumma*)xar_obtinere(ordines, ZEPHYRUM);
+    CREDO_CHORDA_AEQUALIS(s->titulus, chorda_ex_literis(
+        "probationes_radicis/probatio_t", c->piscina));
+    CREDO_AEQUALIS_I32(s->numerus, III);
+    /* par numeri (I et I): ordo tituli - 'probationes_md' prius */
+    s = (CursusSumma*)xar_obtinere(ordines, I);
+    CREDO_CHORDA_AEQUALIS(s->titulus, chorda_ex_literis(
+        "probationes_md/probatio_t", c->piscina));
+
+    /* segmentum ultimum solum (quaesitum NON intra titulum): composita
+     * alia, probatio eadem */
+    f          = _filtrum();
+    f.titulus  = chorda_ex_literis("probationes_alia/probatio_t",
+        c->piscina);
+    ordines    = cursus_quaerere_similes(index, &f, ZEPHYRUM, &noti,
+        c->piscina);
+    CREDO_NECESSE_NON_NIHIL(ordines);
+    CREDO_AEQUALIS_I32(xar_numerus(ordines), III);
+
+    /* quaesitum intra titulum (praefixum partiale) */
+    f            = _filtrum();
+    f.praefixum  = chorda_ex_literis("aliena", c->piscina);
+    ordines    = cursus_quaerere_similes(index, &f, ZEPHYRUM, &noti,
+        c->piscina);
+    CREDO_NECESSE_NON_NIHIL(ordines);
+    CREDO_AEQUALIS_I32(xar_numerus(ordines), I);
+
+    /* titulus notus, status exclusit: noti = III, nulli similes */
+    f          = _filtrum();
+    f.titulus  = chorda_ex_literis("probationes_radicis/probatio_t",
+        c->piscina);
+    f.status   = CURSUS_MASCULA_FRACTUS;
+    ordines    = cursus_quaerere_similes(index, &f, III, &noti,
+        c->piscina);
+    CREDO_NECESSE_NON_NIHIL(ordines);
+    CREDO_AEQUALIS_I32(noti, III);
+    CREDO_AEQUALIS_I32(xar_numerus(ordines), ZEPHYRUM);
+
+    /* nihil simile */
+    f          = _filtrum();
+    f.titulus  = chorda_ex_literis("nihil_tale", c->piscina);
+    ordines    = cursus_quaerere_similes(index, &f, III, &noti,
+        c->piscina);
+    CREDO_NECESSE_NON_NIHIL(ordines);
+    CREDO_AEQUALIS_I32(noti, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(xar_numerus(ordines), ZEPHYRUM);
+
+    /* sine filtro tituli: NIHIL (nihil nominandum) */
+    f = _filtrum();
+    CREDO_NIHIL(cursus_quaerere_similes(index, &f, III, &noti,
+        c->piscina));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "I quo tempus ivit", _sectio_filii, NIHIL, NIHIL, NIHIL, NIHIL },
     { "II regenerationes iudicis", _sectio_iudicia, NIHIL, NIHIL, NIHIL,
@@ -623,6 +714,9 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "XI lentescentes: constantia et historia",
         _sectio_lentescentes_regulae,
       NIHIL, NIHIL, NIHIL, NIHIL },
+    { "XII nihil congruit: tituli similes", _sectio_similes, NIHIL,
+        NIHIL,
+      NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 
