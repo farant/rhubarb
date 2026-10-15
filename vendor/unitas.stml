@@ -1,0 +1,5 @@
+<unitas titulus="vendor" genus="/fabricatio/adscitio"
+        descriptio="codex alienus vendicatus (sqlite, stb_image)">
+  <origo via="sqlite3.c sqlite3.h" fons="https://sqlite.org" versio="3.53.3" licentia="dominium publicum"/>
+  <origo via="stb_image.h" fons="https://github.com/nothings/stb" versio="2.30" licentia="dominium publicum aut MIT"/>
+</unitas>

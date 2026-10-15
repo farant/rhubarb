@@ -1,0 +1,106 @@
+<!--
+  unitates.canon
+  Canon dialecti UNITATES (unitates.stml, radix repositorii) - POLITICA
+  domus de unitatibus codicis: quid rhubarb cum quoque genere,
+  custodia, vita, munere FACIT (project-specs/unitates-codicis-spec.md
+  par. VI tres-quartae, stratum II). Genera ipsa in natura vivunt
+  (ontologia reutilis); hic sola regula domus, genera per viam naturae
+  citata. Declarationes unitatum (instantiae) in unitas.stml singulis
+  (canon unitas.canon).
+
+  Copiae APERTAE (spec par. III): cura, vita, munus, lingua, genus
+  valores declarant; valor ignotus in declaratione unitatis RECUSATUR
+  cum indice notorum (praestitutum tacitum = porta mortua). Lector:
+  lib/unitates.c, qui praeterea valores INTRA indices (curae=,
+  munera=, ...) contra declaratos iudicat - regula quam canon dicere
+  non potest.
+
+  Ordo MUNERUM est ordo regularum: regula prima congruens vincit.
+  Nulla lingua expressionum (decretum Canonis): segmentum = nomen
+  directorii ullo loco viae, extensiones = indices spatiis separati.
+
+  VERSIO 1 (2026-10-15, quinta, U3 gradus 2).
+-->
+<canon dialectus="unitates" versio="1">
+
+  <elementum nomen="unitates" radix="verum">
+    <liberum nomen="cura" minimum="1"/>
+    <liberum nomen="vita" minimum="1"/>
+    <liberum nomen="genus" minimum="1"/>
+    <liberum nomen="munus" minimum="1"/>
+    <liberum nomen="lingua"/>
+    <liberum nomen="iudex"/>
+    <liberum nomen="bibliothecae" maximum="1"/>
+    <liberum nomen="familia"/>
+  </elementum>
+
+  <elementum nomen="cura"
+    nota="custodia: quam stricte regulae domus codicem regunt">
+    <attributum nomen="titulus"    genus="nomen" necessarium="verum"/>
+    <attributum nomen="descriptio" genus="textus" necessarium="verum"/>
+  </elementum>
+
+  <elementum nomen="vita"
+    nota="ubi unitas in vita sua est (viva, vetusta, archivata)">
+    <attributum nomen="titulus"    genus="nomen" necessarium="verum"/>
+    <attributum nomen="descriptio" genus="textus" necessarium="verum"/>
+  </elementum>
+
+  <elementum nomen="genus"
+    nota="genus naturae quod declarationes citare licet, cum custodia
+          praestituta (declaratio cura= eam superare potest)">
+    <attributum nomen="via"  genus="textus" necessarium="verum"
+      nota="via naturae, e.g. /elementa_programmatis/applicatio"/>
+    <attributum nomen="cura" genus="nomen"  necessarium="verum"/>
+    <attributum nomen="descriptio" genus="textus"/>
+  </elementum>
+
+  <elementum nomen="munus"
+    nota="regula muneris plagulae intra unitatem suam; prima congruens
+          vincit. Sine segmento et extensionibus = regula vacua
+          (lector recusat)">
+    <attributum nomen="titulus"     genus="nomen"  necessarium="verum"/>
+    <attributum nomen="segmentum"   genus="textus"
+      nota="nomen directorii ullo loco viae (fixa, probationes)"/>
+    <attributum nomen="extensiones" genus="textus"
+      nota="index spatiis separatus (.c .m)"/>
+  </elementum>
+
+  <elementum nomen="lingua"
+    nota="lingua plagulae ex extensione">
+    <attributum nomen="titulus"     genus="nomen"  necessarium="verum"/>
+    <attributum nomen="extensiones" genus="textus" necessarium="verum"/>
+  </elementum>
+
+  <elementum nomen="iudex"
+    nota="consumptor qui plagulas iudicat (lint, formator, unci):
+          plagula iudicatur sola si OMNES indices eam continent.
+          Indices omnes necessarii - absentia 'omnia' non significat">
+    <attributum nomen="titulus"       genus="nomen"  necessarium="verum"/>
+    <attributum nomen="curae"         genus="textus" necessarium="verum"/>
+    <attributum nomen="vitae"         genus="textus" necessarium="verum"/>
+    <attributum nomen="munera"        genus="textus" necessarium="verum"/>
+    <attributum nomen="provenientiae" genus="textus" necessarium="verum"/>
+    <attributum nomen="linguae"       genus="textus" necessarium="verum"/>
+    <attributum nomen="descriptio"    genus="textus" necessarium="verum"/>
+  </elementum>
+
+  <elementum nomen="bibliothecae"
+    nota="conventio stemmatis: stemma S vendicat CAPITA/S.h, FONTES/S.c
+          (et .m, .worklog.md), PROBATIONES/PRAEFIXUM+S.c">
+    <attributum nomen="capita"      genus="textus" necessarium="verum"/>
+    <attributum nomen="fontes"      genus="textus" necessarium="verum"/>
+    <attributum nomen="probationes" genus="textus" necessarium="verum"/>
+    <attributum nomen="praefixum"   genus="textus" necessarium="verum"/>
+    <attributum nomen="partes"      genus="textus" necessarium="verum"
+      nota="suffixa partium (_macos _posix ...): stemma S_macos ad S
+            pertinet, non unitas propria"/>
+  </elementum>
+
+  <elementum nomen="familia"
+    nota="bibliotheca radix cuius bibliothecae RADIX_* liberae sunt
+          (unitates propriae intra eam)">
+    <attributum nomen="radix" genus="nomen" necessarium="verum"/>
+  </elementum>
+
+</canon>

@@ -342,6 +342,55 @@ Added (natura_examen SANUM, VULNERA 0, MONITA 0; 468 -> 471 genera):
   different kind); the research kind is `opus_explorationis`. Read
   "investigatio" in §I/§VI⅞b above as this kind.
 
+## VI⅞f. U3 step 2a: policy file + first declarations (2026-10-15)
+
+Fran approved: policy in its own root file (not fabrica.stml, which is
+silex's repository marker); `unitas.stml` files found through git's
+file list (tracked + new), never a directory walk (a walk needs its
+own "skip build/" list - a tenth exclusion list); the PULL scope for
+declarations.
+
+- `unitates.stml` (canon `unitates.canon`): custody, lifecycle, the 5
+  kinds the declarations cite (natura addresses) with default custody,
+  ORDERED role rules (directory segment and/or extensions, first match
+  wins - no globs, no expression language), language by extension,
+  judges (`<iudex>`), library stem convention + backend suffixes,
+  families.
+- **The nine lists are three properties, not one.** The lint's list
+  decomposes: vendor/oracula = custody aliena, knotapel = remissa,
+  archivum = lifecycle archivata, fixa = role fixtura, amalgama =
+  provenance generatum, build/scratchpad = untracked. So a judge
+  declares every list it judges (`curae vitae munera provenientiae
+  linguae`, all required - absent never means "all"), and each
+  exclusion site becomes one `<iudex>` line. Only `lint_latinus` is
+  declared now; the others arrive with their consumer (U4).
+- 29 `unitas.stml` (canon `unitas.canon`): root `rhubarb`, 13
+  subsystems, 11 apps, vendor (with `<origo>`: sqlite 3.53.3, stb_image
+  2.30), oracula (subsystem, `cura="aliena"`), knotapel
+  (opus_explorationis), archivum (`vita="archivata"`).
+- **Found while declaring:**
+  - `saltuarius` calls itself "the first true APPLICATION in the
+    monorepo" - declared as an app with its own suite (nesting is
+    general, an app may have a runner), not a subsystem.
+  - Four apps share a name with a library stem (`nomenclator`,
+    `quaestio`, `terminale`, `vicus`), so unit identity = kind +
+    title. Whether an app CONTAINS its same-named library is a U5
+    (…MJ2 app layout) question.
+  - Tool units are NOT derived from `tools/*.c`: a prefix rule
+    misreads `auscultator_terminalis` and `briar_spectator` (tools of
+    their own) as helpers, and `principale` detection is text
+    guessing (`natura_quaesitor.c` spells it `main`). Q1 already says
+    single-file tools are declared by in-file annotation; they wait
+    for their consumer (the `usus` audit). Until then their files
+    fall to the root unit.
+  - `officina/amalgama/officina.h` (and silva's vanilla `silva.h`) is
+    HAND-WRITTEN inside `amalgama/`: the lint skips it by directory
+    today, the new model would judge it (manu). The first real
+    disagreement for the U4 agreement test to name.
+- The canon hook runs from the session's project directory (main
+  checkout), whose registry lacks the new dialects until merge - in
+  quinta, judge with `bin/canon_examen` directly.
+
 ## VII. Interrogationes - documentation as typed questions (Fran 10-15)
 
 A unit exposes what it can do by DECLARING QUESTIONS it answers

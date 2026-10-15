@@ -1,0 +1,65 @@
+<!-- unitates.stml - politica domus de unitatibus codicis (canon
+     unitates.canon; spec project-specs/unitates-codicis-spec.md).
+     Genera per viam naturae citantur; declarationes unitatum in
+     DIR/unitas.stml. Valor novus (cura, munus, iudex, ...) = linea
+     nova hic, nulla mutatio codicis in consumptoribus. -->
+<unitates>
+
+  <cura titulus="domestica" descriptio="nostra: regulae domus omnes valent"/>
+  <cura titulus="remissa"   descriptio="nostra, laxe recta: stilus domus numquam obstat (knotapel)"/>
+  <cura titulus="aliena"    descriptio="aliena: numquam regulis domus iudicatur (vendor, oracula)"/>
+
+  <vita titulus="viva"      descriptio="in usu, extenditur"/>
+  <vita titulus="vetusta"   descriptio="substituta (successor nominatur), adhuc praesens, non extenditur"/>
+  <vita titulus="archivata" descriptio="congelata, extra usum: nullae regulae, nullae portae"/>
+
+  <genus via="/elementa_programmatis/bibliotheca"        cura="domestica"/>
+  <genus via="/elementa_programmatis/applicatio"         cura="domestica"/>
+  <genus via="/elementa_programmatis/subsystema"         cura="domestica"/>
+  <genus via="/elementa_programmatis/opus_explorationis" cura="remissa"/>
+  <genus via="/fabricatio/adscitio"                      cura="aliena"/>
+
+  <!-- munera: prima regula congruens vincit -->
+  <munus titulus="fixtura"     segmentum="fixa"/>
+  <munus titulus="assets"      segmentum="assets"/>
+  <munus titulus="probatio"    segmentum="probationes" extensiones=".c .m"/>
+  <munus titulus="fixtura"     segmentum="probationes"/>
+  <munus titulus="caput"       extensiones=".h"/>
+  <munus titulus="fons"        extensiones=".c .m"/>
+  <munus titulus="documentum"  extensiones=".md"/>
+  <munus titulus="declaratio"  extensiones=".stml .canon .genera .census .toml .registrum"/>
+  <munus titulus="scriptum"    extensiones=".sh .py .ts .js"/>
+
+  <lingua titulus="c89"    extensiones=".c .h"/>
+  <lingua titulus="objc"   extensiones=".m"/>
+  <lingua titulus="sh"     extensiones=".sh"/>
+  <lingua titulus="python" extensiones=".py"/>
+  <lingua titulus="ts"     extensiones=".ts"/>
+  <lingua titulus="js"     extensiones=".js"/>
+  <lingua titulus="stml"   extensiones=".stml .canon .genera .census"/>
+  <lingua titulus="md"     extensiones=".md"/>
+  <lingua titulus="toml"   extensiones=".toml"/>
+
+  <!-- iudices: consumptores qui custodiam rogant (U4: unus post alium,
+       quisque cum probatione congruentiae contra indicem veterem) -->
+  <iudex titulus="lint_latinus"
+         curae="domestica" vitae="viva vetusta"
+         munera="fons caput probatio" provenientiae="manu"
+         linguae="c89 objc"
+         descriptio="lint Latinus identificatorum ad commissionem (tools/unci-git/lint_latinus.sh, silva.commissio)"/>
+
+  <bibliothecae capita="include" fontes="lib" probationes="probationes"
+                praefixum="probatio_"
+                partes="_macos _posix _interna _impl _tabula"/>
+
+  <!-- familiae: radices quarum bibliothecae RADIX_* unitates liberae
+       sunt (tres liberi aut plures, partibus exclusis; census 10-15) -->
+  <familia radix="arbor"/>
+  <familia radix="eventus"/>
+  <familia radix="fabrica"/>
+  <familia radix="fons"/>
+  <familia radix="imago"/>
+  <familia radix="norma"/>
+  <familia radix="vicus"/>
+
+</unitates>

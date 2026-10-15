@@ -1,0 +1,46 @@
+<!--
+  unitas.canon
+  Canon dialecti UNITAS (DIR/unitas.stml) - declaratio unitatis
+  DIRECTORII (applicatio, subsystema, opus explorationis, adscitio):
+  instantia generis naturae, in repositorio declarata, non in natura
+  (spec unitates-codicis par. VI dimidium, VI tres-quartae, stratum
+  III). Unitas directorium suum vendicat; plagula ad unitatem
+  INTIMAM pertinet. Unitates nidificant (par. VI septem-octavae).
+
+  Minimum declaratum: titulus, genus, descriptio. cura absens =
+  praestitutum generis (unitates.stml); vita absens = viva. Numquam
+  declarata: dependentiae (clausura aedilis), munera (regulae
+  politicae), lingua (extensio), provenientia (signum GENERATUM).
+  Valores genus/cura/vita/usus contra unitates.stml a lectore
+  (lib/unitates.c) iudicantur.
+
+  VERSIO 1 (2026-10-15, quinta, U3 gradus 2).
+-->
+<canon dialectus="unitas" versio="1">
+
+  <elementum nomen="unitas" radix="verum">
+    <attributum nomen="titulus"    genus="nomen"  necessarium="verum"
+      nota="unicum per genus (applicatio vicus et bibliotheca vicus
+            duae unitates sunt)"/>
+    <attributum nomen="genus"      genus="textus" necessarium="verum"
+      nota="via naturae in unitates.stml declarata"/>
+    <attributum nomen="descriptio" genus="textus" necessarium="verum"/>
+    <attributum nomen="cura"       genus="nomen"/>
+    <attributum nomen="vita"       genus="nomen"/>
+    <attributum nomen="successor"  genus="textus"
+      nota="vita vetusta: unitas quae eam substituit"/>
+    <attributum nomen="usus"       genus="textus"
+      nota="programmata: homo agens machina (index, plures licent)"/>
+    <liberum nomen="origo"/>
+  </elementum>
+
+  <elementum nomen="origo"
+    nota="codex alienus: unde venit, qua versione, qua licentia">
+    <attributum nomen="via"      genus="textus" necessarium="verum"
+      nota="plagula aut directorium unitati relativum"/>
+    <attributum nomen="fons"     genus="textus" necessarium="verum"/>
+    <attributum nomen="versio"   genus="textus" necessarium="verum"/>
+    <attributum nomen="licentia" genus="textus" necessarium="verum"/>
+  </elementum>
+
+</canon>
