@@ -2807,6 +2807,28 @@ def _debita_fusionis_scribere(h, dilatae):
           % (len(dilatae), ', '.join(sorted(dilatae)), DEBITA_FUSIONIS_VIA))
 
 
+def _debita_fusionis_purgare(h, virides):
+    """DEBITUM SOLUTUM: porta gradus 'fusio' quam commissio h VIRIDEM
+    TOTAM (sine filtro) cucurrit debitum rami suum solvit - lineae eius
+    (commissionum priorum, quae in arbore iudicata insunt) delentur.
+    fusio_probare portas ex diff rami TOTO iterum computat: purgatio
+    indicem impactus et candidatos bisectionis acuit, numquam portam
+    fusionis omittit."""
+    nomina = set(virides or ())
+    debita = debita_fusionis()
+    solutae = [d for d in debita if d[1] in nomina]
+    if not solutae:
+        return
+    manent = [d for d in debita if d[1] not in nomina]
+    with open(DEBITA_FUSIONIS_VIA + '.novum', 'w') as f:
+        for t, n, c, causa in manent:
+            f.write('%d\t%s\t%s\t%s\n' % (t, n, c, causa))
+    os.replace(DEBITA_FUSIONIS_VIA + '.novum', DEBITA_FUSIONIS_VIA)
+    portae_solutae = sorted(set(d[1] for d in solutae))
+    print('debitum rami solutum: %s (%d lineae; viridis in %s) - manent %d'
+          % (', '.join(portae_solutae), len(solutae), h, len(manent)))
+
+
 def debita_fusionis():
     """debita rami (gradus-portarum): [(tempus, porta, commissio,
     causa)] ex DEBITA_FUSIONIS_VIA; [] si nulla."""
@@ -3179,8 +3201,10 @@ def _portas_currere(portae, genera, viae, recepta=True):
     fusio_probare communes): praeiudicia OMNIA currunt, fracturae SIMUL
     nominantur ante probationem primam; probatio fracta sistit
     (SilvaError). Receptum vivum sanum non iterum currit; porta rancida
-    cum plagulis viarum mutatis = SilvaError."""
+    cum plagulis viarum mutatis = SilvaError. Reddit nomina portarum
+    viridium TOTARUM (sine filtro) - debitum rami earum purgabile."""
     ante = _sigilla_viarum(viae)
+    virides = []
     # praeiudicia (circulus commissionis II T5): OMNIA currunt, fracturae
     # colliguntur et SIMUL nominantur ante probationem primam; probatio
     # fracta sistit ut antea
@@ -3202,6 +3226,7 @@ def _portas_currere(portae, genera, viae, recepta=True):
         if isinstance(p, str) and p.endswith('.json'):
             f = receptum_validum(p, viae)      # porta ex umbra
             nomen = f.nomen + ' (receptum)'
+            filtrum = receptum_legere(p).filtrum
         else:
             nomen, filtrum = (p, None) if isinstance(p, str) else p
             f = receptum_vivum(nomen, filtrum) if recepta else None
@@ -3248,7 +3273,10 @@ def _portas_currere(portae, genera, viae, recepta=True):
                              ' commissum; acta: %s%s'
                              % (nomen, f.compendium, f.rc, via_acta,
                                 relatio_fracturarum(f.fracturae)))
+        if filtrum is None:
+            virides.append(f.nomen)
     _praeiudicia_exigere()
+    return virides
 
 
 @_cursu_notatum(lambda *a, **k: 'commissio',
@@ -3291,7 +3319,9 @@ def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
     ADDITAE gradus 'fusio' non currunt sed DILATANTUR ('porta debita
     DILATA ad fusionem') et post commissionem debitum rami fiunt
     (debita_fusionis); petitae semper currunt; plena=True omnes currit
-    (mores ante 2026-10-15). _dilatae: commissio_umbra iam divisit."""
+    (mores ante 2026-10-15). _dilatae: commissio_umbra iam divisit.
+    Porta viridis tota (sine filtro) debitum rami suum SOLVIT post
+    commissionem (_debita_fusionis_purgare)."""
     causae = []
     for v in viae:
         if v in VETITAE:
@@ -3341,7 +3371,7 @@ def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
         with _phasis('instrumenta portarum'):
             _instrumenta_portarum_sanare(dict(
                 (n, b) for n, b in binaria.items() if n not in dilatae))
-    _portas_currere(portae, genera, viae, recepta)
+    virides = _portas_currere(portae, genera, viae, recepta)
     # renominationes/deletiones per git mv/rm iam in indice: via absens
     # in disco licet si deletio eius in indice stat (viae NOVAE dantur)
     deletae = set(_curre(['git', 'diff', '--cached', '--name-only',
@@ -3378,6 +3408,7 @@ def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
                              % (r.returncode,
                                 (r.stdout + r.stderr).strip()[-600:]))
     h = _curre(['git', 'rev-parse', '--short', 'HEAD']).stdout.strip()
+    _debita_fusionis_purgare(h, virides)
     _debita_fusionis_scribere(h, dilatae)
     recepta_viva_delere()
     if opus:

@@ -2939,6 +2939,34 @@ try:
         credo(err is not None and 'ficta-prob-1 non sana' in err and 'bisectio): c0ffee1' in err
               and os.path.exists(silva.DEBITA_FUSIONIS_VIA),
               'fusio: rubra - commissio debens nominata, debita servata', causa=repr(err))
+        # N. debitum solutum: porta viridis tota in commissione lineas suas purgat, ceterae manent
+        os.remove(silva.DEBITA_FUSIONIS_VIA)
+        with contextlib.redirect_stdout(io.StringIO()):
+            silva._debita_fusionis_scribere('abc1234', {'ficta-prob-2': 'y.c tegit'})
+            silva._debita_fusionis_scribere('def5678', {'ficta-prob-1': 'z.c tegit',
+                                                        'ficta-prob-2': 'w.c tegit'})
+            virides = silva._portas_currere(['ficta-prob-2'], {'ficta-prob-2': 'probatio'},
+                                            [], recepta=False)
+            virides_filtri = silva._portas_currere([('ficta-prob-2', 'filtrum')],
+                                                   {'ficta-prob-2': 'probatio'}, [], recepta=False)
+        credo(virides == ['ficta-prob-2'] and virides_filtri == [],
+              'debitum solutum: _portas_currere virides totas reddit, filtratas non',
+              causa=repr((virides, virides_filtri)))
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            silva._debita_fusionis_purgare('feed123', virides)
+        d = silva.debita_fusionis()
+        credo([x[1:3] for x in d] == [('ficta-prob-1', 'def5678')]
+              and 'debitum rami solutum: ficta-prob-2 (2 lineae; viridis in feed123) - manent 1'
+              in buf.getvalue(),
+              'debitum solutum: lineae portae viridis deletae, ceterae manent, linea impressa',
+              causa=repr((d, buf.getvalue())))
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            silva._debita_fusionis_purgare('feed124', ['ficta-prae-c'])
+        credo(len(silva.debita_fusionis()) == 1 and buf.getvalue() == '',
+              'debitum solutum: porta sine debito - nihil mutatum, nihil impressum',
+              causa=repr(buf.getvalue()))
     finally:
         silva._ramus_status = _rs
         silva.DEBITA_FUSIONIS_VIA = _dfv
