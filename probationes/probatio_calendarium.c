@@ -901,6 +901,413 @@ _probare_colores_dierum (
 }
 
 
+/* ==================================================
+ * Ordo tabulae (liturgia-plan L1)
+ * ================================================== */
+
+/* ordo sanctoralis cum gradu congruit */
+interior b32
+_ordo_congruit (
+    GradusCelebrationis gradus,
+            OrdoTabulae ordo)
+{
+    commutatio (gradus)
+    {
+        casus GRADUS_SOLLEMNITAS:
+            redde ordo == ORDO_PRIVILEGIATUS
+                || ordo == ORDO_SOLLEMNITAS_GENERALIS
+                || ordo == ORDO_SOLLEMNITAS_PROPRIA;
+        casus GRADUS_FESTUM:
+            redde ordo == ORDO_FESTUM_DOMINI
+                || ordo == ORDO_FESTUM_GENERALE
+                || ordo == ORDO_FESTUM_PROPRIUM;
+        casus GRADUS_MEMORIA:
+            redde ordo == ORDO_MEMORIA_GENERALIS
+                || ordo == ORDO_MEMORIA_PROPRIA;
+        casus GRADUS_MEMORIA_AD_LIBITUM:
+            redde ordo == ORDO_MEMORIA_AD_LIBITUM;
+        casus GRADUS_DEFUNCTORUM:
+            redde ordo == ORDO_SOLLEMNITAS_GENERALIS;
+        ordinarius:
+            redde FALSUM;
+    }
+}
+
+/* ordo sanctoralis diei unius (primus introitus) */
+interior OrdoTabulae
+_ordo_sancti (
+    s32 mensis,
+    s32 dies)
+{
+    constans SanctoraleDatum* sanct;
+                         s32  numerus;
+
+    sanct = sanctorale_obtinere(mensis, dies, &numerus);
+    redde sanct ? sanct->ordo : ORDO_FERIA;
+}
+
+/* sanctorale: omnis introitus ordinem congruentem habet; exceptiones
+ * nominatae (festa Domini, Nativitas, Epiphania, Defuncti, proprium) */
+interior vacuum
+_probare_sanctorale_ordo (
+    CredoContextus* c)
+{
+    constans SanctoraleDatum* sanct;
+                         s32  numerus;
+                         s32  mensis;
+                         s32  dies;
+                         s32  i;
+                         i32  omnes;
+                         i32  errores;
+
+    (vacuum)c;
+    omnes    = ZEPHYRUM;
+    errores  = ZEPHYRUM;
+    per (mensis = FASTI_IANUARIUS; mensis <= FASTI_DECEMBER; mensis++)
+    {
+        per (dies = I; dies <= XXXI; dies++)
+        {
+            sanct = sanctorale_obtinere(mensis, dies, &numerus);
+            per (i = ZEPHYRUM; sanct && i < numerus; i++)
+            {
+                omnes++;
+                si (!_ordo_congruit(sanct[i].gradus, sanct[i].ordo))
+                {
+                    imprimere("  %d-%d %s: gradus %d ordo %d\n",
+                        (integer)mensis, (integer)dies,
+                        sanct[i].titulus_brevis,
+                        (integer)sanct[i].gradus,
+                        (integer)sanct[i].ordo);
+                    errores++;
+                }
+            }
+        }
+    }
+    CREDO_AEQUALIS_S32((s32)omnes, sanctorale_numerus());
+    CREDO_AEQUALIS_S32((s32)errores, ZEPHYRUM);
+
+    CREDO_AEQUALIS_S32((s32)_ordo_sancti(FASTI_DECEMBER, XXV),
+        (s32)ORDO_PRIVILEGIATUS);
+    CREDO_AEQUALIS_S32((s32)_ordo_sancti(FASTI_IANUARIUS, VI),
+        (s32)ORDO_PRIVILEGIATUS);
+    CREDO_AEQUALIS_S32((s32)_ordo_sancti(FASTI_NOVEMBER, I),
+        (s32)ORDO_SOLLEMNITAS_GENERALIS);
+    CREDO_AEQUALIS_S32((s32)_ordo_sancti(FASTI_FEBRUARIUS, II),
+        (s32)ORDO_FESTUM_DOMINI);
+    CREDO_AEQUALIS_S32((s32)_ordo_sancti(FASTI_AUGUSTUS, VI),
+        (s32)ORDO_FESTUM_DOMINI);
+    CREDO_AEQUALIS_S32((s32)_ordo_sancti(FASTI_SEPTEMBER, XIV),
+        (s32)ORDO_FESTUM_DOMINI);
+    CREDO_AEQUALIS_S32((s32)_ordo_sancti(FASTI_NOVEMBER, IX),
+        (s32)ORDO_FESTUM_DOMINI);
+    CREDO_AEQUALIS_S32((s32)_ordo_sancti(FASTI_OCTOBER, XVIII),
+        (s32)ORDO_FESTUM_GENERALE);
+    CREDO_AEQUALIS_S32((s32)_ordo_sancti(FASTI_DECEMBER, XII),
+        (s32)ORDO_FESTUM_PROPRIUM);
+    sanct = sanctorale_obtinere(FASTI_NOVEMBER, II, &numerus);
+    CREDO_NECESSE(sanct != NIHIL);
+    CREDO_AEQUALIS_S32((s32)sanct->gradus, (s32)GRADUS_DEFUNCTORUM);
+    CREDO_AEQUALIS_S32((s32)sanct->ordo,
+        (s32)ORDO_SOLLEMNITAS_GENERALIS);
+}
+
+/* ordo celebrationis temporalis (celebrationes[0]) */
+nomen structura {
+            s32 annus;
+            s32 mensis;
+            s32 dies;
+    OrdoTabulae ordo;
+} CasusOrdinis;
+
+hic_manens constans CasusOrdinis CASUS_ORDINIS[] = {
+    /* Triduum (Feria VI, Sabbatum Sanctum, Dominica Paschae) */
+    { MMXXVI, FASTI_APRILIS, III, ORDO_TRIDUUM },
+    { MMXXVI, FASTI_APRILIS, IV, ORDO_TRIDUUM },
+    { MMXXVI, FASTI_APRILIS, V, ORDO_TRIDUUM },
+    /* Feria V Hebdomadae Sanctae (dies; Triduum vespere incipit) */
+    { MMXXVI, FASTI_APRILIS, II, ORDO_PRIVILEGIATUS },
+    /* Cineres; Hebdomada Sancta; octava Paschae */
+    { MMXXVI, FASTI_FEBRUARIUS, XVIII, ORDO_PRIVILEGIATUS },
+    { MMXXVI, FASTI_MARTIUS, XXX, ORDO_PRIVILEGIATUS },
+    { MMXXVI, FASTI_APRILIS, VII, ORDO_PRIVILEGIATUS },
+    /* Dominicae Quadragesimae, Adventus, Paschae */
+    { MMXXVI, FASTI_MARTIUS, I, ORDO_PRIVILEGIATUS },
+    { MMXXVI, FASTI_DECEMBER, VI, ORDO_PRIVILEGIATUS },
+    { MMXXVI, FASTI_MAIUS, III, ORDO_PRIVILEGIATUS },
+    /* Dominicae per annum et Nativitatis */
+    { MMXXVI, FASTI_OCTOBER, XVIII, ORDO_DOMINICA_COMMUNIS },
+    { MMXXV, FASTI_DECEMBER, XXVIII, ORDO_DOMINICA_COMMUNIS },
+    /* feriae Quadragesimae, 17-24 XII, octavae Nativitatis */
+    { MMXXVI, FASTI_MARTIUS, X, ORDO_FERIA_PRIVILEGIATA },
+    { MMXXVI, FASTI_DECEMBER, XXI, ORDO_FERIA_PRIVILEGIATA },
+    { MMXXVI, FASTI_DECEMBER, XXIX, ORDO_FERIA_PRIVILEGIATA },
+    /* feriae: Adventus ante 17 XII, per annum, Paschales post
+     * octavam, Nativitatis post 1 I */
+    { MMXXVI, FASTI_DECEMBER, VII, ORDO_FERIA },
+    { MMXXVI, FASTI_OCTOBER, XX, ORDO_FERIA },
+    { MMXXVI, FASTI_MAIUS, XII, ORDO_FERIA },
+    { MMXXVII, FASTI_IANUARIUS, IV, ORDO_FERIA }
+};
+
+interior vacuum
+_probare_ordo_temporalis (
+    CredoContextus* c)
+{
+      CalendariumLiturgicum* cal;
+             InformatioDiei* info;
+      constans CasusOrdinis* k;
+                        i32  i;
+
+    cal = calendarium_creare(c->piscina);
+    per (i = ZEPHYRUM; i < (i32)(magnitudo(CASUS_ORDINIS)
+        / magnitudo(CASUS_ORDINIS[0])); i++)
+    {
+        k     = &CASUS_ORDINIS[i];
+        info  = calendarium_obtinere_diem(cal, fasti_dies(k->annus,
+            k->mensis, k->dies), c->piscina);
+        CREDO_NECESSE(info != NIHIL && info->numerus_celebrationum > 0);
+        CREDO_AEQUALIS_S32((s32)info->celebrationes[0].genus,
+            (s32)GENUS_TEMPORALE);
+        si (info->celebrationes[0].ordo != k->ordo)
+        {
+            imprimere("  ordo %d-%02d-%02d: %d\n", (integer)k->annus,
+                (integer)k->mensis, (integer)k->dies,
+                (integer)info->celebrationes[0].ordo);
+        }
+        CREDO_AEQUALIS_S32((s32)info->celebrationes[0].ordo,
+            (s32)k->ordo);
+    }
+    calendarium_destruere(cal);
+}
+
+/* principalis per ordinem (RECENSIO 4a: F1 F2 F3 F7 F13 - hodie
+ * fracti) */
+hic_manens constans CasusDiei CASUS_ORDINIS_PRINCIPALIS[] = {
+    /* F1: sollemnitates in dominica per annum / Nativitatis */
+    { MMXXVI, FASTI_NOVEMBER, I, "All Saints", GRADUS_SOLLEMNITAS,
+      COLLIT_ALBUS },
+    { MMXX, FASTI_NOVEMBER, I, "All Saints", GRADUS_SOLLEMNITAS,
+      COLLIT_ALBUS },
+    { MMXXV, FASTI_IUNIUS, XXIX, "Ss. Peter & Paul", GRADUS_SOLLEMNITAS,
+      COLLIT_RUBER },
+    { MMXXI, FASTI_AUGUSTUS, XV, "Assumption", GRADUS_SOLLEMNITAS,
+      COLLIT_ALBUS },
+    { MMXXIX, FASTI_IUNIUS, XXIV, "Birth of St. John Baptist",
+      GRADUS_SOLLEMNITAS, COLLIT_ALBUS },
+    { MMXXII, FASTI_DECEMBER, XXV, "Christmas", GRADUS_SOLLEMNITAS,
+      COLLIT_ALBUS },
+    { MMXXIII, FASTI_IANUARIUS, I, "Mary, Mother of God",
+      GRADUS_SOLLEMNITAS, COLLIT_ALBUS },
+    { MMXXX, FASTI_IANUARIUS, VI, "Epiphany", GRADUS_SOLLEMNITAS,
+      COLLIT_ALBUS },
+    /* F3: festa Domini in dominica per annum */
+    { MMXXV, FASTI_SEPTEMBER, XIV, "Exaltation of Holy Cross",
+      GRADUS_FESTUM, COLLIT_RUBER },
+    { MMXXV, FASTI_NOVEMBER, IX, "Lateran Basilica", GRADUS_FESTUM,
+      COLLIT_ALBUS },
+    { MMXX, FASTI_FEBRUARIUS, II, "Presentation", GRADUS_FESTUM,
+      COLLIT_ALBUS },
+    { MMXXIII, FASTI_AUGUSTUS, VI, "Transfiguration", GRADUS_FESTUM,
+      COLLIT_ALBUS },
+    /* F2: Defuncti feria II, dominica, sabbato */
+    { MMXXVI, FASTI_NOVEMBER, II, "All Souls", GRADUS_DEFUNCTORUM,
+      COLLIT_VIOLACEUS },
+    { MMXXV, FASTI_NOVEMBER, II, "All Souls", GRADUS_DEFUNCTORUM,
+      COLLIT_VIOLACEUS },
+    { MMXXIV, FASTI_NOVEMBER, II, "All Souls", GRADUS_DEFUNCTORUM,
+      COLLIT_VIOLACEUS },
+    /* F7: memoriae in feriis privilegiatis - feria principalis */
+    { MMXXV, FASTI_MARTIUS, VII, NIHIL, GRADUS_FERIA,
+        COLLIT_VIOLACEUS },
+    { MMXXVI, FASTI_FEBRUARIUS, XXIII, NIHIL, GRADUS_FERIA,
+      COLLIT_VIOLACEUS },
+    { MMXXVI, FASTI_MARTIUS, XVII, NIHIL, GRADUS_FERIA,
+      COLLIT_VIOLACEUS },
+    { MMXXVI, FASTI_FEBRUARIUS, XXI, NIHIL, GRADUS_FERIA,
+      COLLIT_VIOLACEUS },
+    { MMXXVI, FASTI_DECEMBER, XXI, NIHIL, GRADUS_FERIA,
+      COLLIT_VIOLACEUS },
+    { MMXXVI, FASTI_DECEMBER, XXIII, NIHIL, GRADUS_FERIA,
+      COLLIT_VIOLACEUS },
+    { MMXXVI, FASTI_DECEMBER, XXIX, NIHIL, GRADUS_FERIA, COLLIT_ALBUS },
+    { MMXXVI, FASTI_DECEMBER, XXXI, NIHIL, GRADUS_FERIA, COLLIT_ALBUS },
+    /* F13: memoriae ad libitum - feria principalis */
+    { MMXXVI, FASTI_IANUARIUS, XX, NIHIL, GRADUS_FERIA, COLLIT_VIRIDIS }
+};
+
+interior vacuum
+_probare_principalis_ordo (
+    CredoContextus* c)
+{
+    _casus_probare(c, CASUS_ORDINIS_PRINCIPALIS, (i32)(magnitudo(
+        CASUS_ORDINIS_PRINCIPALIS) / magnitudo(
+        CASUS_ORDINIS_PRINCIPALIS[0])));
+}
+
+/* celebratio diei per titulum brevem (NIHIL si abest) */
+interior constans Celebratio*
+_celebratio_inventa (
+    constans InformatioDiei* info,
+         constans character* titulus_brevis)
+{
+    s32 i;
+
+    per (i = ZEPHYRUM; info && i < info->numerus_celebrationum; i++)
+    {
+        si (chorda_aequalis_literis(
+            info->celebrationes[i].titulus_brevis, titulus_brevis))
+        {
+            redde &info->celebrationes[i];
+        }
+    }
+    redde NIHIL;
+}
+
+/* commemoratio et ad libitum: memoriae in feria privilegiata manent
+ * cum commemoratio; ad libitum notatae; victae omittuntur */
+interior vacuum
+_probare_commemorationes (
+    CredoContextus* c)
+{
+    hic_manens constans structura {
+                       s32  annus;
+                       s32  mensis;
+                       s32  dies;
+        constans character* titulus_brevis;
+                       b32  commemoratio;
+                       b32  ad_libitum;
+    } NOTAE[] = {
+        { MMXXV, FASTI_MARTIUS, VII, "Ss. Perpetua & Felicity", VERUM,
+          FALSUM },
+        { MMXXVI, FASTI_MARTIUS, XVII, "St. Patrick", VERUM, FALSUM },
+        { MMXXVI, FASTI_DECEMBER, XXI, "St. Peter Canisius", VERUM,
+          FALSUM },
+        { MMXXVI, FASTI_DECEMBER, XXIX, "St. Thomas Becket", VERUM,
+          FALSUM },
+        { MMXXVI, FASTI_IANUARIUS, XX, "St. Fabian", FALSUM, VERUM },
+        { MMXXVI, FASTI_IANUARIUS, XX, "St. Sebastian", FALSUM, VERUM },
+        { MMXXV, FASTI_DECEMBER, III, "St. Francis Xavier", FALSUM,
+          FALSUM }
+    };
+    CalendariumLiturgicum* cal;
+           InformatioDiei* info;
+      constans Celebratio* celeb;
+                      i32  i;
+
+    cal = calendarium_creare(c->piscina);
+    per (i = ZEPHYRUM; i < (i32)(magnitudo(NOTAE)
+        / magnitudo(NOTAE[0]));
+        i++)
+    {
+        info   = calendarium_obtinere_diem(cal,
+            fasti_dies(NOTAE[i].annus,
+            NOTAE[i].mensis, NOTAE[i].dies), c->piscina);
+        celeb  = _celebratio_inventa(info, NOTAE[i].titulus_brevis);
+        si (!celeb)
+        {
+            imprimere("  abest: %s\n", NOTAE[i].titulus_brevis);
+        }
+        CREDO_NECESSE(celeb != NIHIL);
+        CREDO_AEQUALIS_S32((s32)celeb->commemoratio,
+            (s32)NOTAE[i].commemoratio);
+        CREDO_AEQUALIS_S32((s32)celeb->ad_libitum,
+            (s32)NOTAE[i].ad_libitum);
+    }
+
+    /* Lucas in dominica per annum: victus, omissus; temporale manet */
+    info = calendarium_obtinere_diem(cal, fasti_dies(MMXXVI,
+        FASTI_OCTOBER, XVIII), c->piscina);
+    CREDO_VERUM(_celebratio_inventa(info, "St. Luke") == NIHIL);
+
+    /* Omnes Sancti in dominica: temporale primum manet in indice */
+    info = calendarium_obtinere_diem(cal, fasti_dies(MMXXVI,
+        FASTI_NOVEMBER, I), c->piscina);
+    CREDO_NECESSE(info != NIHIL && info->numerus_celebrationum == II);
+    CREDO_AEQUALIS_S32((s32)info->celebrationes[0].genus,
+        (s32)GENUS_TEMPORALE);
+    calendarium_destruere(cal);
+}
+
+/* proprietates per dies omnes 2000-2040: principalis numquam NIHIL,
+ * ad libitum aut commemorata; ordo eius minimus; color diei eius;
+ * 2 XI = Defuncti; in feria privilegiata nulla memoria principalis;
+ * sollemnitas diei victa solum a die ordinis I-II (RECENSIO 4f a-c) */
+interior vacuum
+_probare_proprietates_ordinis (
+    CredoContextus* c)
+{
+       CalendariumLiturgicum* cal;
+                     Piscina* dierum;
+              InformatioDiei* info;
+         constans Celebratio* p;
+                        Dies  dies;
+                        Dies  finis;
+                         s32  i;
+                         i32  violationes;
+                         b32  mala;
+                         b32  sollemnitas;
+
+    cal = calendarium_creare(c->piscina);
+    dierum = piscina_generare_dynamicum("dies_calendarii",
+        M * LXIV);
+    violationes  = ZEPHYRUM;
+    dies         = fasti_dies(MM, FASTI_IANUARIUS, I);
+    finis        = fasti_dies(MMXL, FASTI_DECEMBER, XXXI);
+    CREDO_NECESSE(dierum != NIHIL);
+    dum (fasti_comparare(dies, finis) <= ZEPHYRUM)
+    {
+        piscina_vacare(dierum);
+        info  = calendarium_obtinere_diem(cal, dies, dierum);
+        p     = info ? info->celebratio_principalis : NIHIL;
+        mala  = !p || p->ad_libitum || p->commemoratio
+            || info->color_diei != p->color;
+        sollemnitas = FALSUM;
+        per (i = ZEPHYRUM; !mala
+            && i < info->numerus_celebrationum; i++)
+        {
+            si (   !info->celebrationes[i].ad_libitum
+                && !info->celebrationes[i].commemoratio
+                && info->celebrationes[i].ordo < p->ordo)
+            {
+                mala = VERUM;
+            }
+            si (info->celebrationes[i].gradus == GRADUS_SOLLEMNITAS)
+            {
+                sollemnitas = VERUM;
+            }
+        }
+        si (!mala && dies.mensis == FASTI_NOVEMBER && dies.dies == II)
+        {
+            mala = p->gradus != GRADUS_DEFUNCTORUM;
+        }
+        si (   !mala && info->celebrationes[0].ordo
+            == ORDO_FERIA_PRIVILEGIATA)
+        {
+            mala = p->gradus == GRADUS_MEMORIA
+                || p->gradus == GRADUS_MEMORIA_AD_LIBITUM;
+        }
+        si (!mala && sollemnitas && p->gradus != GRADUS_SOLLEMNITAS)
+        {
+            mala = p->ordo > ORDO_PRIVILEGIATUS;
+        }
+        si (mala)
+        {
+            si (violationes < V)
+            {
+                imprimere("  violatio %d-%02d-%02d\n",
+                    (integer)dies.annus,
+                    (integer)dies.mensis, (integer)dies.dies);
+            }
+            violationes++;
+        }
+        dies = fasti_addere_dies(dies, I);
+    }
+    CREDO_AEQUALIS_S32((s32)violationes, ZEPHYRUM);
+    piscina_destruere(dierum);
+    calendarium_destruere(cal);
+}
+
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "pascha_editum", _probare_pascha_editum, NIHIL, NIHIL, NIHIL,
       NIHIL },
@@ -926,6 +1333,18 @@ hic_manens constans CredoSectio SECTIONES[] = {
       NIHIL },
     { "colores_dierum", _probare_colores_dierum, NIHIL, NIHIL, NIHIL,
       NIHIL },
+    { "sanctorale_ordo", _probare_sanctorale_ordo, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { "ordo_temporalis", _probare_ordo_temporalis, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { "principalis_ordo", _probare_principalis_ordo, NIHIL, NIHIL,
+        NIHIL,
+      NIHIL },
+    { "commemorationes", _probare_commemorationes, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { "proprietates_ordinis", _probare_proprietates_ordinis, NIHIL,
+        NIHIL,
+      NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

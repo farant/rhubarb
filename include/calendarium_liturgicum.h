@@ -41,8 +41,9 @@ nomen enumeratio {
 /* ==================================================
  * Constantae - Gradus Celebrationis
  *
- * Ordo praecedentiae celebrationum.
- * Maior numerus = maior dignitas.
+ * GENUS celebrationis ad ostendendum (sollemnitas, festum, memoria,
+ * dominica, feria). Praecedentiam NON dat - vide OrdoTabulae
+ * (liturgia-plan L1). Valores priores servati.
  * ================================================== */
 
 nomen enumeratio {
@@ -51,9 +52,44 @@ nomen enumeratio {
     GRADUS_MEMORIA             = II,        /* Memoria obligatoria */
     GRADUS_FESTUM              = III,       /* Festum */
     GRADUS_SOLLEMNITAS         = IV,        /* Sollemnitas */
-    GRADUS_DOMINICA            = V,         /* Dominica (supra memorias) */
-    GRADUS_DIES_PECULIARIS     = VI         /* Feria IV Cinerum, Hebdomada Sancta */
+    GRADUS_DOMINICA            = V,         /* Dominica */
+    GRADUS_DIES_PECULIARIS     = VI,        /* Cineres, Hebdomada Sancta,
+                                             * Triduum, Octava Paschae */
+    GRADUS_DEFUNCTORUM         = VII        /* Commemoratio omnium
+                                             * fidelium defunctorum */
 } GradusCelebrationis;
+
+
+/* ==================================================
+ * Constantae - Ordo Tabulae Dierum Liturgicorum
+ *
+ * Normae Universales de Anno Liturgico 59: tabula dierum secundum
+ * praecedentiam. MINOR numerus = MAIOR praecedentia. Celebratio
+ * principalis diei = ordo minimus inter celebrationes nec ad libitum
+ * nec commemoratas; ordine aequali temporale vincit.
+ * ================================================== */
+
+nomen enumeratio {
+    ORDO_TRIDUUM                = I,     /* Triduum Paschale */
+    ORDO_PRIVILEGIATUS          = II,    /* Nativitas, Epiphania, Ascensio,
+                                          * Pentecoste; Dominicae Adventus,
+                                          * Quadragesimae, Paschae; Cineres;
+                                          * Hebdomada Sancta II-V; Octava
+                                          * Paschae */
+    ORDO_SOLLEMNITAS_GENERALIS  = III,   /* + Commemoratio Defunctorum */
+    ORDO_SOLLEMNITAS_PROPRIA    = IV,
+    ORDO_FESTUM_DOMINI          = V,
+    ORDO_DOMINICA_COMMUNIS      = VI,    /* Dominicae Nativitatis et per
+                                          * annum */
+    ORDO_FESTUM_GENERALE        = VII,
+    ORDO_FESTUM_PROPRIUM        = VIII,
+    ORDO_FERIA_PRIVILEGIATA     = IX,    /* 17-24 XII, octava Nativitatis,
+                                          * feriae Quadragesimae */
+    ORDO_MEMORIA_GENERALIS      = X,
+    ORDO_MEMORIA_PROPRIA        = XI,
+    ORDO_MEMORIA_AD_LIBITUM     = XII,
+    ORDO_FERIA                  = XIII
+} OrdoTabulae;
 
 
 /* ==================================================
@@ -105,10 +141,18 @@ nomen enumeratio {
 nomen structura {
                  chorda titulus;        /* Titulus plenus */
                  chorda titulus_brevis; /* Titulus abbreviatus */
-    GradusCelebrationis gradus;
+    GradusCelebrationis gradus;         /* genus ad ostendendum */
+            OrdoTabulae ordo;           /* praecedentia */
         ColorLiturgicus color;
      GenusCelebrationis genus;
-                    s32 lectionarium;   /* Numerus in Lectionario (-1 si ignotus) */
+                    b32 ad_libitum;     /* hodie ad libitum (etiam memoriae
+                                         * obligatoriae duae eodem die) -
+                                         * numquam principalis */
+                    b32 commemoratio;   /* memoria in feria privilegiata:
+                                         * collecta sola - numquam
+                                         * principalis, colorem non dat */
+                    s32 lectionarium;   /* Numerus in Lectionario (-1 si
+                                         * ignotus) */
 } Celebratio;
 
 
@@ -129,7 +173,13 @@ nomen structura {
 } InformatioTemporis;
 
 
-/* InformatioDiei - Informationes completae pro una die */
+/* InformatioDiei - Informationes completae pro una die
+ *
+ * celebrationes = temporale primum (semper), deinde sanctorales quae
+ * celebrari possunt (victae omittuntur; memoriae in feria
+ * privilegiata cum commemoratio). celebratio_principalis = ordo
+ * minimus inter non ad libitum nec commemoratas (numquam NIHIL);
+ * color_diei = color principalis. */
 nomen structura {
                   Dies  dies;
     InformatioTemporis  tempus_info;
@@ -358,6 +408,7 @@ nomen structura {
      constans character* titulus;         /* English name */
      constans character* titulus_brevis;  /* Abbreviated name */
     GradusCelebrationis  gradus;
+            OrdoTabulae  ordo;              /* praecedentia (UNLY 59) */
         ColorLiturgicus  color;
                     b32  dies_obligationis;  /* US Holy Day of Obligation */
 } SanctoraleDatum;

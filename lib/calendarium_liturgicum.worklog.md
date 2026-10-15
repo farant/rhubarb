@@ -135,3 +135,41 @@ Advent I of CIVIL year N (that Sunday starts year N + 1). The new
 every season of 2025/2026/2038, including PA_II(N) -> Advent(N + 1);
 only that last transition was wrong (2026: 2027-11-27 instead of
 2026-11-28). Plant `annus + I` back -> red.
+
+## 2026-10-15 - liturgia-plan L1: precedence by OrdoTabulae
+
+The old model had a private `PRAECED_*` scale that only decided whether
+a sanctoral entry was INCLUDED, and then chose the principal by raw
+`gradus` - where `GRADUS_DOMINICA` (V) > `GRADUS_SOLLEMNITAS` (IV), so
+every Sunday swallowed every solemnity (RECENSIO F1), All Souls fell
+through an unreachable branch (F2), and memorials beat privileged
+weekdays because those were graded FERIA (F7, F13).
+
+New: public `OrdoTabulae` (UNLY 59 rows 1-13, smaller = stronger) on
+every `Celebratio` and every `SanctoraleDatum` (227 entries, scripted:
+rule from gradus + exceptions Christmas/Epiphany II, four feasts of the
+Lord V, Guadalupe VIII; All Souls gets `GRADUS_DEFUNCTORUM` and III).
+`gradus` is now only the display kind. One day = temporal entry
+(always first) + one winning solemnity/feast (ordo strictly smaller
+than the temporal; ties go to the temporal) + memorials ONLY while the
+temporal stays principal: on rank IX days with `commemoratio`, on rank
+XIII days in full (`ad_libitum` for optional ones). Principal = smallest
+ordo among entries neither ad_libitum nor commemorated; colour = the
+principal's. Temporal ranks: Easter Sunday, Good Friday, Holy Saturday
+I (UNLY 19: the Triduum closes with Easter Vespers); Holy Thursday as
+a DAY II (Holy Week Mon-Thu - the Triduum starts in the evening).
+
+Tests: sanctorale ordo/gradus consistency, temporal ranks, the 4a FAIL
+rows, commemoration/ad libitum flags, and a 2000-2040 property sweep
+(principal never NIHIL/ad lib/commemorated, minimal, colour; Nov 2 =
+All Souls; no memorial principal on rank IX; a solemnity loses only to
+rank I-II). Seven plants red (principal direction, commemoratio, octave
+not privileged, Holy Thursday in the Triduum, ad libitum, Easter rank,
+winner without rank). The sweep uses `piscina_vacare` per day on its
+own pool - obtinere_diem allocates ~1 KB per call.
+
+Not done (PULL): two obligatory memorials on one day -> both optional.
+No fixed date has two (checked); the first case is the Immaculate
+Heart (movable, L2), so the rule lands with it. `chorda_ex_buffer`
+takes a non-const buffer, so pointing chordae at the static sanctorale
+strings needs a const cast (-Wcast-qual): titles are still copied (L5).

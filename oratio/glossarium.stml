@@ -1148,6 +1148,7 @@
     <forma textus="partibus" casus="ablativus" numerus="pluralis" genus="femininum"/>
     <forma textus="partes" casus="accusativus" numerus="pluralis" genus="femininum"/>
   </vocabulum>
+  <vocabulum lemma="sanctoralis" lingua="latina" classis="adiectivum" nota="Latina ecclesiastica: ad sanctorale (proprium sanctorum) pertinens - contra temporalis (calendarium_liturgicum)"><forma textus="sanctoralis"/><forma textus="sanctorale"/><forma textus="sanctoralem"/><forma textus="sanctorales"/></vocabulum>
   <vocabulum lemma="sanctus" lingua="latina" classis="adiectivum" nota="WORDS sancio participium primum; chartae: sancti CCXXXVIII sancte LXVI diuina/sancta (LLCT dev ADJ)">
     <forma textus="sanctus" casus="nominativus" numerus="singularis" genus="masculinum"/>
     <forma textus="sancti" casus="genitivus" numerus="singularis" genus="masculinum"/>

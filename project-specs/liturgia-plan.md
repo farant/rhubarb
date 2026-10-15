@@ -59,7 +59,12 @@ title, season name), `lib/schirmata.c` (`calendarium_nomen_celebrationum`),
 - L0 DONE 2026-10-15: suite in credo II sections (16), guards
   (computus table + Oudin 1583-4099, extremes, anchor relations,
   4a-4c guard rows), F9 fixed (season symmetry red first, plant).
-- L1 - next: header text for OrdoTabulae first.
+- L1 DONE 2026-10-15: OrdoTabulae on Celebratio and SanctoraleDatum,
+  principal by rank, commemoratio / ad_libitum, All Souls
+  (GRADUS_DEFUNCTORUM); 2000-2040 property sweep; 7 plants red.
+  Deferred to L2: two obligatory memorials on one day -> both
+  optional (first case = Immaculate Heart).
+- L2 - next.
 
 ## IV. AUDIENDA
 
