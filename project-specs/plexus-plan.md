@@ -237,6 +237,19 @@ for Fran's go-ahead.
 - **T3. Reduced Burau.** Over Z[t, t^-1] and at t = -1; characteristic
   polynomial; `plexus_radius_burau`. Credo: oracles 4 and 5, and the
   exact (3 + √5)/2.
+  *(2026-10-15, done. Proper names went into the glossary as
+  ignotum-permissum entries with a "nomen proprium" note (Fran):
+  `plexus_burau`, `plexus_burau_minus_uno`, `plexus_alexander`, and
+  `plexus_burau_radix_maxima`, which is max(1, max |real eigenvalue|)
+  of B(-1), renamed from `plexus_radius_burau` because the real roots
+  give a lower bound, not the spectral radius. Burau partitions B_3
+  words exactly as Artin does, and B_4 up to length 5 too. The
+  Alexander polynomials of eight closures (3_1 to 7_1) match KnotInfo
+  via the knot table, and Markov invariance holds. (3 + sqrt 5)/2 is
+  exact, also with negative eigenvalues. The B_3 radix matches loop
+  growth within 1%. Limitation: for the paper's 4-strand braid the real
+  eigenvalues give 1. 33 sections, 1,101 checks, sanitizers clean.
+  13 plants: 12 red, 1 equivalent in practice.)*
 - **T4. Entropy by growth.** L(u) under iteration, exact; growth table;
   credo: oracle 6. *Sketch for Fran first:* the exact dilatation (the
   stabilised piecewise-linear branch gives an integer matrix whose

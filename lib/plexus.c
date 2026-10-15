@@ -1280,3 +1280,475 @@ plexus_contractiones (vacuum)
 {
     redde _contractiones;
 }
+
+
+/* ==================================================
+ * Repraesentatio Burau reducta
+ * ================================================== */
+
+/* columna c matricis (n-1) x (n-1) ordine linearum: m[r * d + c] */
+
+/* una littera: B <- B G(littera), columna una mutatur. FALSUM si
+ * exponens extra fines polynomii (2^30: verbum longissimum) */
+interior b32
+_burau_littera (
+    Polynomium* m,
+           i32  fila,
+           s32  littera,
+       Piscina* piscina)
+{
+           i32 d = fila - I;
+           i32 i = (i32)(littera > ZEPHYRUM ? littera : -littera);
+           i32 r;
+           s32 k = littera > ZEPHYRUM ? I : -I;
+    Polynomium x;
+
+    si (fila == II)
+    {
+        /* [-t] aut [-t^-1] */
+        si (!polynomium_translata(m[ZEPHYRUM], k, piscina, &x))
+        {
+            redde FALSUM;
+        }
+        m[ZEPHYRUM] = polynomium_nega(x, piscina);
+        redde VERUM;
+    }
+    per (r = ZEPHYRUM; r < d; r++)
+    {
+        Polynomium* l = m + r * d;
+
+        si (i == I)
+        {
+            /* G = [[-t, 0], [1, 1]]: c0' = c1 - t c0;
+             * G^-1 = [[-t^-1, 0], [t^-1, 1]]: c0' = t^-1 (c1 - c0) */
+            si (littera > ZEPHYRUM)
+            {
+                si (!polynomium_translata(l[ZEPHYRUM], I, piscina, &x))
+                {
+                    redde FALSUM;
+                }
+                l[ZEPHYRUM] = polynomium_subtrahe(l[I], x, piscina);
+            }
+            alioquin
+            {
+                si (!polynomium_translata(polynomium_subtrahe(l[I],
+                    l[ZEPHYRUM], piscina), -I, piscina, &x))
+                {
+                    redde FALSUM;
+                }
+                l[ZEPHYRUM] = x;
+            }
+        }
+        alioquin si (i == fila - I)
+        {
+            /* G = [[1, t], [0, -t]]: c1' = t (c0 - c1);
+             * G^-1 = [[1, 1], [0, -t^-1]]: c1' = c0 - t^-1 c1 */
+            si (littera > ZEPHYRUM)
+            {
+                si (!polynomium_translata(polynomium_subtrahe(l[d - II],
+                    l[d - I], piscina), I, piscina, &x))
+                {
+                    redde FALSUM;
+                }
+                l[d - I] = x;
+            }
+            alioquin
+            {
+                si (!polynomium_translata(l[d - I], -I, piscina, &x))
+                {
+                    redde FALSUM;
+                }
+                l[d - I] = polynomium_subtrahe(l[d - II], x, piscina);
+            }
+        }
+        alioquin
+        {
+            /* columnae i-2, i-1, i (ab 0); G: c1' = t (c0 - c1) + c2;
+             * G^-1: c1' = c0 + t^-1 (c2 - c1) */
+            i32 c0 = i - II;
+
+            si (littera > ZEPHYRUM)
+            {
+                si (!polynomium_translata(polynomium_subtrahe(l[c0],
+                    l[c0 + I], piscina), I, piscina, &x))
+                {
+                    redde FALSUM;
+                }
+                l[c0 + I] = polynomium_adde(x, l[c0 + II], piscina);
+            }
+            alioquin
+            {
+                si (!polynomium_translata(polynomium_subtrahe(l[c0
+                    + II],
+                    l[c0 + I], piscina), -I, piscina, &x))
+                {
+                    redde FALSUM;
+                }
+                l[c0 + I] = polynomium_adde(l[c0], x, piscina);
+            }
+        }
+    }
+    redde VERUM;
+}
+
+/* eadem ad t = -1 super Z: t -> -1, t^-1 -> -1 */
+interior vacuum
+_burau_littera_integra (
+     Magnus* m,
+        i32  fila,
+        s32  littera,
+    Piscina* piscina)
+{
+    i32 d = fila - I;
+    i32 i = (i32)(littera > ZEPHYRUM ? littera : -littera);
+    i32 r;
+
+    si (fila == II)
+    {
+        redde;    /* -t = -t^-1 = 1 */
+    }
+    per (r = ZEPHYRUM; r < d; r++)
+    {
+        Magnus* l = m + r * d;
+
+        si (i == I)
+        {
+            /* c0' = c0 + c1 (sigma), c0 - c1 (inversum) */
+            l[ZEPHYRUM] = littera > ZEPHYRUM
+                ? magnus_adde(l[ZEPHYRUM], l[I], piscina)
+                : magnus_subtrahe(l[ZEPHYRUM], l[I], piscina);
+        }
+        alioquin si (i == fila - I)
+        {
+            /* c1' = c1 - c0 (sigma), c0 + c1 (inversum) */
+            l[d - I] = littera > ZEPHYRUM
+                ? magnus_subtrahe(l[d - I], l[d - II], piscina)
+                : magnus_adde(l[d - II], l[d - I], piscina);
+        }
+        alioquin
+        {
+            /* c1' = c1 + c2 - c0 (sigma), c0 + c1 - c2 (inversum) */
+            i32 c0 = i - II;
+
+            l[c0 + I] = littera > ZEPHYRUM
+                ? magnus_subtrahe(magnus_adde(l[c0 + I], l[c0 + II],
+                piscina), l[c0], piscina)
+                : magnus_subtrahe(magnus_adde(l[c0], l[c0 + I],
+                piscina),
+                l[c0 + II], piscina);
+        }
+    }
+}
+
+b32
+plexus_burau (
+     Plexus  p,
+    Piscina* piscina,
+     Matrix* exitus)
+{
+       Piscina* temporaria;
+    Polynomium* m;
+           i32  d = p.fila - I;
+           i32  k;
+           i32  r;
+        Matrix  b;
+memoriae_index  basis;
+
+    si (!plexus_validus(p) || p.fila > PLEXUS_FILA_BURAU)
+    {
+        redde FALSUM;
+    }
+    temporaria = piscina_generare_dynamicum("plexus_burau", 4096);
+    si (temporaria == NIHIL)
+    {
+        redde FALSUM;
+    }
+    m = (Polynomium*)piscina_allocare(piscina, (memoriae_index)(d * d)
+        * magnitudo(Polynomium));
+    per (k = ZEPHYRUM; k < d * d; k++)
+    {
+        m[k] = (k / d == k % d)
+            ? polynomium_constans(magnus_ex_s64(I), temporaria)
+            : polynomium_nullum();
+    }
+    basis = piscina_summa_usus(temporaria);
+    per (k = ZEPHYRUM; k < p.longitudo; k++)
+    {
+        si (!_burau_littera(m, p.fila, p.litterae[k], temporaria))
+        {
+            piscina_destruere(temporaria);
+            redde FALSUM;
+        }
+        /* purgamenta: contractio cum piscina quater crevit et 1 MB
+         * superat (inspectio post LXIV litteras) */
+        si (   (k % LXIV) == LXIII
+            && piscina_summa_usus(temporaria) > IV * basis + 1048576UL)
+        {
+            Piscina* nova = piscina_generare_dynamicum("plexus_burau",
+                4096);
+
+            si (nova == NIHIL)
+            {
+                piscina_destruere(temporaria);
+                redde FALSUM;
+            }
+            per (r = ZEPHYRUM; r < d * d; r++)
+            {
+                m[r] = polynomium_transcribe(m[r], nova);
+            }
+            piscina_destruere(temporaria);
+            temporaria  = nova;
+            basis       = piscina_summa_usus(temporaria);
+            _contractiones++;
+        }
+    }
+    si (!matrix_nulla(&ANULUS_POLYNOMIORUM, d, d, piscina, &b))
+    {
+        piscina_destruere(temporaria);
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < d * d; k++)
+    {
+        Polynomium x = polynomium_transcribe(m[k], piscina);
+
+        matrix_pone(&b, k / d, k % d, &x);
+    }
+    piscina_destruere(temporaria);
+    *exitus = b;
+    redde VERUM;
+}
+
+b32
+plexus_burau_minus_uno (
+     Plexus  p,
+    Piscina* piscina,
+     Matrix* exitus)
+{
+       Piscina* temporaria;
+        Magnus* m;
+           i32  d = p.fila - I;
+           i32  k;
+           i32  r;
+        Matrix  b;
+memoriae_index  basis;
+
+    si (!plexus_validus(p) || p.fila > PLEXUS_FILA_BURAU)
+    {
+        redde FALSUM;
+    }
+    temporaria = piscina_generare_dynamicum("plexus_burau", 4096);
+    si (temporaria == NIHIL)
+    {
+        redde FALSUM;
+    }
+    m = (Magnus*)piscina_allocare(piscina, (memoriae_index)(d * d)
+        * magnitudo(Magnus));
+    per (k = ZEPHYRUM; k < d * d; k++)
+    {
+        m[k] = magnus_ex_s64(k / d == k % d ? I : ZEPHYRUM);
+    }
+    basis = piscina_summa_usus(temporaria);
+    per (k = ZEPHYRUM; k < p.longitudo; k++)
+    {
+        _burau_littera_integra(m, p.fila, p.litterae[k], temporaria);
+        si (   (k % LXIV) == LXIII
+            && piscina_summa_usus(temporaria) > IV * basis + 1048576UL)
+        {
+            Piscina* nova = piscina_generare_dynamicum("plexus_burau",
+                4096);
+
+            si (nova == NIHIL)
+            {
+                piscina_destruere(temporaria);
+                redde FALSUM;
+            }
+            per (r = ZEPHYRUM; r < d * d; r++)
+            {
+                m[r] = magnus_transcribe(m[r], nova);
+            }
+            piscina_destruere(temporaria);
+            temporaria  = nova;
+            basis       = piscina_summa_usus(temporaria);
+            _contractiones++;
+        }
+    }
+    si (!matrix_nulla(&ANULUS_INTEGRORUM, d, d, piscina, &b))
+    {
+        piscina_destruere(temporaria);
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < d * d; k++)
+    {
+        Magnus x = magnus_transcribe(m[k], piscina);
+
+        matrix_pone(&b, k / d, k % d, &x);
+    }
+    piscina_destruere(temporaria);
+    *exitus = b;
+    redde VERUM;
+}
+
+b32
+plexus_alexander (
+         Plexus  p,
+        Piscina* piscina,
+     Polynomium* exitus)
+{
+    Piscina* t;
+     Matrix  b;
+     Matrix  unitas;
+     Matrix  differentia;
+ Polynomium  determinans;
+ Polynomium  unum_minus_t;
+ Polynomium  denominator;
+ Polynomium  numerator;
+ Polynomium  quotiens;
+ Polynomium  effectum;
+ Polynomium  t_n;
+        b32  bene;
+
+    si (!plexus_validus(p) || p.fila > PLEXUS_FILA_BURAU)
+    {
+        redde FALSUM;
+    }
+    t = piscina_generare_dynamicum("plexus_alexander", 4096);
+    si (t == NIHIL)
+    {
+        redde FALSUM;
+    }
+    /* det(I - B) (1 - t) / (1 - t^n) */
+    bene = plexus_burau(p, t, &b)
+        && matrix_identitas(&ANULUS_POLYNOMIORUM, p.fila - I, t,
+        &unitas)
+        && matrix_subtrahe(unitas, b, t, &differentia)
+        && matrix_determinans(differentia, t, &determinans)
+        && polynomium_monomium(magnus_ex_s64(I), I, t, &t_n);
+    si (bene)
+    {
+        unum_minus_t = polynomium_subtrahe(polynomium_constans(
+            magnus_ex_s64(I), t), t_n, t);
+        bene = polynomium_monomium(magnus_ex_s64(I), (s32)p.fila, t,
+            &t_n)
+            && polynomium_multiplica(determinans, unum_minus_t, t,
+            &numerator);
+    }
+    si (bene)
+    {
+        denominator = polynomium_subtrahe(polynomium_constans(
+            magnus_ex_s64(I), t), t_n, t);
+        bene = polynomium_divide_exacte(numerator, denominator, t,
+            &quotiens)
+            && polynomium_normale(quotiens, t, &effectum);
+    }
+    si (bene)
+    {
+        *exitus = polynomium_transcribe(effectum, piscina);
+    }
+    piscina_destruere(t);
+    redde bene;
+}
+
+b32
+plexus_burau_radix_maxima (
+          Plexus  p,
+         Piscina* piscina,
+     RadixRealis* exitus)
+{
+         Piscina* t;
+          Matrix  b;
+          Matrix  matrix_propria;
+      Polynomium  polynomium_proprium;
+      Polynomium  polynomium_reflexum;
+      Polynomium  h;
+     RadixRealis* radices;
+     RadixRealis  unum;
+     RadixRealis  maxima;
+             i32  numerus  = ZEPHYRUM;
+             i32  d        = p.fila - I;
+             i32  k;
+             s32  signum  = ZEPHYRUM;
+             b32  bene;
+
+    si (!plexus_validus(p) || p.fila > PLEXUS_FILA_BURAU)
+    {
+        redde FALSUM;
+    }
+    t = piscina_generare_dynamicum("plexus_radix", 4096);
+    si (t == NIHIL)
+    {
+        redde FALSUM;
+    }
+    /* chi(x) = det(x I - B(-1)) super Z[x] */
+    bene = plexus_burau_minus_uno(p, t, &b)
+        && matrix_nulla(&ANULUS_POLYNOMIORUM, d, d, t,
+        &matrix_propria);
+    per (k = ZEPHYRUM; bene && k < d * d; k++)
+    {
+               i32 linea    = k / d;
+               i32 columna  = k % d;
+        Polynomium x;
+
+        x = polynomium_nega(polynomium_constans(*(constans Magnus*)
+            matrix_elementum(b, linea, columna), t), t);
+        si (linea == columna)
+        {
+            Polynomium monomium;
+
+            bene = polynomium_monomium(magnus_ex_s64(I), I, t,
+                &monomium);
+            x = polynomium_adde(x, monomium, t);
+        }
+        matrix_pone(&matrix_propria, linea, columna, &x);
+    }
+    bene = bene
+        && matrix_determinans(matrix_propria, t, &polynomium_proprium);
+    si (bene)
+    {
+        /* chi(-x): coefficientes graduum imparium negantur */
+           s32  summus = polynomium_gradus_summus(polynomium_proprium);
+        Magnus* c      = (Magnus*)piscina_allocare(t,
+            (memoriae_index)(summus + I) * magnitudo(Magnus));
+        s32 e;
+
+        per (e = ZEPHYRUM; e <= summus; e++)
+        {
+            Magnus coefficiens =
+                polynomium_coefficiens(polynomium_proprium, e);
+
+            c[e] = (e % II == I) ? magnus_nega(coefficiens, t)
+                : coefficiens;
+        }
+        bene = polynomium_ex_coefficientibus(c, (i32)(summus + I),
+            ZEPHYRUM, t, &polynomium_reflexum)
+            && polynomium_multiplica(polynomium_proprium,
+            polynomium_reflexum, t, &h)
+            && radices_reales(h, t, &radices, &numerus);
+    }
+    si (bene)
+    {
+        /* radices h = +-lambda: maxima = max |lambda| realis;
+         * minimum 1 */
+        unum    = radix_ex_fractione(fractio_ex_s64(I), t);
+        maxima  = unum;
+        si (numerus > ZEPHYRUM)
+        {
+            bene = radix_compara(radices[numerus - I], unum, t,
+                &signum);
+            si (bene && signum > ZEPHYRUM)
+            {
+                maxima = radices[numerus - I];
+            }
+        }
+    }
+    si (bene)
+    {
+        RadixRealis copia;
+
+        copia.f      = polynomium_transcribe(maxima.f, piscina);
+        copia.infra  = fractio_transcribe(maxima.infra, piscina);
+        copia.supra  = fractio_transcribe(maxima.supra, piscina);
+        *exitus      = copia;
+    }
+    piscina_destruere(t);
+    redde bene;
+}

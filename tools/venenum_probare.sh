@@ -84,7 +84,9 @@ lib/anulus.c lib/matrix.c lib/cyclotomia.c lib/extensio.c lib/quaternio.c \
 lib/friatio.c lib/tabula_dispersa.c lib/radices.c lib/surdus.c lib/cellae.c" \
     "reticulum:lib/magnus.c lib/fractio.c lib/polynomium.c lib/congruentia.c \
 lib/anulus.c lib/matrix.c lib/reticulum.c" \
-    "plexus:lib/magnus.c lib/plexus.c"; do
+    "plexus:lib/magnus.c lib/fractio.c lib/polynomium.c lib/congruentia.c \
+lib/anulus.c lib/matrix.c lib/cyclotomia.c lib/extensio.c lib/radices.c \
+lib/tabula_nodorum_data.c lib/plexus.c"; do
     titulus="${suita%%:*}"
     read -r -a fontes <<< "${suita#*:}"
     if ! clang "${VEXILLA_C89[@]}" -Wno-overlength-strings -Iinclude \

@@ -383,6 +383,8 @@
   <vocabulum lemma="gauss" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: C. F. Gauss (summae Gauss, probationes/probatio_cyclotomia.c)"/>
   <vocabulum lemma="sturm" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: J. C. F. Sturm (catena Sturm, numerus radicum realium; lib/extensio.c)"/>
   <vocabulum lemma="cauchy" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: A.-L. Cauchy (limes radicum 1 + max |f_i|; lib/extensio.c)"/>
+  <vocabulum lemma="burau" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: Werner Burau (repraesentatio Burau gregis braidarum, plexus_burau; lib/plexus.c)"/>
+  <vocabulum lemma="artin" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: Emil Artin (greges braidarum, actio in gregem liberum; lib/plexus.c)"/>
   <vocabulum lemma="oklab" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: spatium colorum OKLab (B. Ottosson 2020; color_linearis_ad_oklab, lib/color.c)"/>
   <vocabulum lemma="srgb" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: spatium colorum sRGB (IEC 61966-2-1; color_srgb_ad_linearem, lib/color.c)"/>
   <vocabulum lemma="horner" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: W. G. Horner (aestimatio polynomii per multiplicationes nidificatas; lib/extensio.c)"/>

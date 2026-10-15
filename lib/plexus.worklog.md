@@ -184,3 +184,66 @@ as the faster method.
 
 Plants: the reviewer's 11 surviving mutants, re-planted against the new
 suite, are all red.
+
+## 2026-10-15 — T3: reduced Burau, Alexander, the Burau(-1) bound
+
+**Names.** Fran approved adding the proper names to the glossary.
+`burau` and `artin` follow the house form for mathematicians
+(hopf, galois, cauchy, ...): `ignotum-permissum` with a nota "nomen
+proprium: ...". The lint accepts them in identifiers, and oratio's
+Latin lexicon is left alone. T1's `plexus_imago_libera` keeps its
+descriptive name.
+
+**Convention.** These are the transposes of the common textbook
+matrices: sigma_1 -> [[-t, 0], [1, 1]], sigma_{n-1} -> [[1, t],
+[0, -t]], middle [[1, t, 0], [0, -t, 0], [0, 1, 1]]. The braid
+relation was checked by hand for B_3 before coding: ABA = BAB =
+[[0, -t^2], [-t, 0]]. Transposition changes neither determinants nor
+characteristic polynomials, so the Alexander formula and the spectral
+data are the same. Multiplying on the right by a generator changes one
+column only, so each letter costs O(n) polynomial operations, not
+O(n^3).
+
+**Oracles, all green:**
+- the hand matrices of every generator and its inverse (n = 2, 3, 4);
+- the relations, B(pq) = B(p) B(q) on random words, and det B(p) =
+  (-t)^(exponent sum), an independent theorem;
+- the exhaustive partition: Burau groups B_3 words up to length 6
+  exactly as Artin does (577 classes, faithful). B_4 up to length 5
+  also gives 1,579 = 1,579, so Burau is not seen to be unfaithful at
+  that length (it is known to be unfaithful only for n >= 5);
+- B(-1), computed directly in integers, equals B(t) evaluated at t =
+  -1 on random words;
+- **Alexander against the knot table**, a fully independent route: the
+  table's polynomials come from `laqueus` on KnotInfo PD codes. All
+  eight closures match: 3_1 (s1^3), 4_1 ((s1 s2^-1)^2), 5_1 (s1^5),
+  and five words I gave from memory, 5_2, 6_1, 6_2, 6_3 and 7_1. A
+  match on a specific polynomial confirms the word as well as the code.
+  Also checked: Hopf link 1 - t, split link 0, unknot 1, and
+  invariance under conjugation and stabilization (Markov) on 100
+  random braids;
+- the radix: s1 s2^-1 gives (3 + sqrt 5)/2 exactly, (s1 s2^-1)^2 the
+  root of t^2 - 7t + 1, and s1 s2 gives 1. In B_3, B(-1)(Delta^2) = -I,
+  so s1 s2^-1 Delta^2 has negative eigenvalues, and the chi(x) chi(-x)
+  construction still returns (3 + sqrt 5)/2. On 18 random
+  pseudo-Anosov B_3 braids the radix matches the loop growth rate
+  L_40/L_39 within 1%.
+
+**Limitation.** For the paper's 4-strand braid (dilatation ~2.2966),
+the largest REAL eigenvalue of B(-1) is 1: the spectral radius must
+come from complex eigenvalues. `plexus_burau_radix_maxima` is honest
+about this. It is max(1, max |real eigenvalue|), which is still a lower
+bound, but there it is uninformative. An exact complex spectral radius
+(modulus of algebraic numbers) would be its own slice, if a demo needs
+it.
+
+**Memory.** Both Burau computations compact their pools: 14
+compactions for B(w w^-1) with w = (s1 s2^-1)^300, whose polynomials
+reach degree ~600 and come back exactly to I.
+
+**Plants (13).** 12 red. One equivalent mutant in practice: dropping
+the floor of 1. Among 20,000 random words on B_4..B_6, none had all
+real eigenvalues below 1 in absolute value. That is consistent with
+real eigenvalues coming in pairs (lambda, 1/lambda), because B(-1)
+preserves a bilinear form (recalled, Squier), though that is not proved
+here.

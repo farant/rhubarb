@@ -61,6 +61,9 @@
 #include "piscina.h"
 #include "chorda.h"
 #include "magnus.h"
+#include "polynomium.h"
+#include "matrix.h"
+#include "radices.h"
 
 #define PLEXUS_FILA_MAXIMA              1048576
 /* Delta longitudinem n(n-1)/2 habet: n <= 65536 ut in 2^31 capiat */
@@ -314,6 +317,66 @@ plexus_aequales_ansis (
      Plexus  q,
     Piscina* piscina,
         b32* aequales);
+
+
+/* ==================================================
+ * Repraesentatio Burau reducta
+ * ==================================================
+ *
+ * B(p) matrix (n-1) x (n-1) super Z[t, t^-1] (ANULUS_POLYNOMIORUM),
+ * B(pq) = B(p) B(q). Generatores (forma transposita formae vulgaris,
+ * eadem determinantia et polynomia characteristica):
+ *   n = 2:       sigma_1 -> [-t]
+ *   sigma_1:     columnae 1, 2 per [[-t, 0], [1, 1]]
+ *   sigma_{n-1}: columnae n-2, n-1 per [[1, t], [0, -t]]
+ *   sigma_i (1 < i < n-1): columnae i-1, i, i+1 per
+ *                [[1, t, 0], [0, -t, 0], [0, 1, 1]]
+ * ergo B(p sigma_i) ex B(p) mutatione columnae UNIUS. det B(p) =
+ * (-t)^(summa exponentium). Fidelis in B_3 (Magnus-Peluso; probatum
+ * exhaustive contra Artin), non fidelis pro n >= 5 (citatum).
+ *
+ * LIMES FILORUM: matrix (n-1)^2 polynomiorum; omnis littera O(n)
+ * operationes. fila <= PLEXUS_FILA_BURAU. */
+
+#define PLEXUS_FILA_BURAU 4096
+
+/* B(p) super Z[t, t^-1]. FALSUM si p invalidus aut fila >
+ * PLEXUS_FILA_BURAU */
+b32
+plexus_burau (
+     Plexus  p,
+    Piscina* piscina,
+     Matrix* exitus);
+
+/* B(p) ad t = -1 super Z (ANULUS_INTEGRORUM), computata directe
+ * (integri magni, sine polynomiis) */
+b32
+plexus_burau_minus_uno (
+     Plexus  p,
+    Piscina* piscina,
+     Matrix* exitus);
+
+/* polynomium Alexander clausurae p (nodi aut catenae, una variabilis):
+ * det(I - B(p)) (1 - t) / (1 - t^n), forma normalis polynomium_normale
+ * (imus 0, coefficiens imus > 0; definitum ad +-t^k). Catena
+ * disiuncta -> 0. */
+b32
+plexus_alexander (
+         Plexus  p,
+        Piscina* piscina,
+     Polynomium* exitus);
+
+/* limes inferior dilatationis: max(1, max |lambda| super valores
+ * proprios REALES lambda matricis B(p) ad t = -1), radix realis exacta.
+ * Radius spectralis B(-1) dilatationem non superat (Kolev 1989,
+ * citatum; probatum contra incrementum ansarum); maximum radicum
+ * realium radium non superat, ergo limes inferior manet. In B_3
+ * (matrix 2 x 2 integra) radius ipse et dilatatio. */
+b32
+plexus_burau_radix_maxima (
+          Plexus  p,
+         Piscina* piscina,
+     RadixRealis* exitus);
 
 /* contractiones piscinarum propriarum (imagines in F_n, ansae) ab
  * initio processus: instrumentum probationis et mensurae, non status
