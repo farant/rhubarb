@@ -197,6 +197,20 @@ for Fran's go-ahead.
   free reduction, permutation, exponent sum, `plexus_artin`,
   `plexus_aequalis`. Credo: oracle 1; refusals (bad letters, fila < 2,
   word limit reached).
+  *(2026-10-15, done. Names without proper nouns, since the Latin lint
+  rejects them: `plexus_imago_libera` (the Artin action) and
+  `plexus_aequales`; also `plexus_ex_chorda`/`plexus_ad_chordam` and
+  `plexus_dimidia_torsio` (Delta). 10 credo sections, 882 checks. The
+  main oracle is the action computed a second way in the test, by
+  substitution from the right: 1,203 images agree. Also: the product
+  x_1 ... x_n is fixed; each image is conjugate to the generator the
+  permutation names; braid relations; Delta^2 central and nontrivial;
+  Delta s_i Delta^-1 = s_{n-i}; rewritten words stay equal. Word growth
+  under (s1 s2^-1)^m tends to (3 + sqrt 5)/2, the dilatation (oracle 6
+  in another form). The image pool is compacted (long words leave
+  garbage). venenum clean. 15 plants, 14 red, 1 equivalent mutant; two
+  tests strengthened after a plant survived (compaction, running-total
+  limit).)*
 - **T2. The Dynnikov action.** Read the sources first and record the
   conventions (direction, disk) in the header. `Ansa`, the update rules
   (8)–(15), `ansa_sectiones`. Credo: oracles 2 and 3.
