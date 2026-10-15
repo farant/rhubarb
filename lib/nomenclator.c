@@ -17,6 +17,8 @@
 #include "thema.h"
 #include "motus.h"
 #include "fasti_fontes.h"
+#include "similitudo.h"
+#include "scriba_documentum.h"   /* scriba_effugere / scriba_solvere */
 
 #include <stdio.h>
 #include <string.h>
@@ -195,6 +197,40 @@ filtrum_currens (
     redde (a && a->mensura > ZEPHYRUM) ? a : NIHIL;
 }
 
+/* P4: quaestio currens in exitus[PROMPTA_MAXIMA] (soluta) - prompta
+ * "quaestio" aperta: textus eius (vivus, dum typatur); aliter campus
+ * quaestio (commissa); redde longitudinem, 0 = nulla */
+interior i32
+quaestio_currens (
+    constans NomenclatorMontatio* m,
+                       character* exitus)
+{
+     chorda  genus;
+     chorda* a;
+        s32  n;
+
+    si (   prompta_aperta(&m->ramus, &genus)
+        && chorda_aequalis_literis(genus, "quaestio"))
+    {
+        redde prompta_textus(&m->ramus, exitus);
+    }
+    a = insula_ramus_attributum(&m->ramus, "quaestio");
+    n = (a && a->mensura > ZEPHYRUM) ? scriba_solvere(*a, exitus,
+        PROMPTA_MAXIMA) : ZEPHYRUM;
+    redde n > ZEPHYRUM ? (i32)n : ZEPHYRUM;
+}
+
+/* P4: quaestio commissa (campus) posita? */
+interior b32
+quaestio_commissa (
+    constans NomenclatorMontatio* m)
+{
+    chorda* a;
+
+    a = insula_ramus_attributum(&m->ramus, "quaestio");
+    redde a && a->mensura > ZEPHYRUM;
+}
+
 /* persona in filtro (nullo filtro: omnes) */
 interior b32
 in_filtro (
@@ -259,6 +295,55 @@ ordines (
     l = album_creare(p, capacitas(m));
     personae = m->documentum ? personae_ordinatae(m->documentum, p)
                              : NIHIL;
+    /* P4: quaestio - ordo planus similitudinis nominum (filtro intra;
+     * aequales: brevius, deinde ordine clavis), sine titulis */
+    {
+                  character   quaestio[PROMPTA_MAXIMA];
+                     chorda   q_textus;
+                     chorda*  nomina;
+           constans Persona** candidati;
+          SimilitudoFructus*  fructus;
+                        i32   n;
+                        i32   k;
+
+        q_textus.mensura  = quaestio_currens(m, quaestio);
+        q_textus.datum    = (i8*)quaestio;
+        si (l && personae && q_textus.mensura > ZEPHYRUM)
+        {
+            nomina     = (chorda*)piscina_allocare(p, (memoriae_index)
+                (xar_numerus(personae) + I) * magnitudo(chorda));
+            candidati  = (constans Persona**)piscina_allocare(p,
+                (memoriae_index)(xar_numerus(personae) + I)
+                * magnitudo(constans Persona*));
+            fructus    = (SimilitudoFructus*)piscina_allocare(p,
+                (memoriae_index)(xar_numerus(personae) + I)
+                * magnitudo(SimilitudoFructus));
+            si (!nomina || !candidati || !fructus)
+            {
+                redde l;
+            }
+            n = ZEPHYRUM;
+            per (i = ZEPHYRUM; i < xar_numerus(personae); i++)
+            {
+                q = *(constans Persona**)xar_obtinere(personae, i);
+                si (in_filtro(m, q))
+                {
+                    candidati[n]  = q;
+                    nomina[n]     = persona_nomen(q, p);
+                    n++;
+                }
+            }
+            n = similitudo_optima(q_textus, nomina, n, fructus, n);
+            per (k = ZEPHYRUM; k < n; k++)
+            {
+                q = candidati[fructus[k].index];
+                sprintf(id, "p%d", (integer)q->id);
+                (vacuum)album_addere(l, id, ALBUM_RES, NOMENCLATOR_ORDO,
+                    q->id);
+            }
+            redde l;
+        }
+    }
     si (l && personae && visus_rubricarum(m))
     {
            Xar* g;
@@ -346,12 +431,26 @@ nomenclator_persona_electa (
         redde ZEPHYRUM;
     }
     id = attributum_s32(&m->ramus, "persona_electa", ZEPHYRUM);
+    p  = m->figurae_ctx ? ((NomenclatorFigurae*)m->figurae_ctx)->scheda
+                        : m->piscina;
+    /* P4: sub quaestione electa inter fructus esse debet (dum typatur
+     * electa = prima) */
+    {
+        character quaestio[PROMPTA_MAXIMA];
+
+        si (   id > ZEPHYRUM && personae_persona(m->documentum, id)
+            && quaestio_currens(m, quaestio) > ZEPHYRUM)
+        {
+            l = ordines(m, p);
+            redde (l
+                && album_pagina_rei(l, id, ZEPHYRUM) >= ZEPHYRUM) ? id
+                : (l ? album_res_prima(l, ZEPHYRUM) : ZEPHYRUM);
+        }
+    }
     si (id > ZEPHYRUM && personae_persona(m->documentum, id))
     {
         redde id;
     }
-    p = m->figurae_ctx ? ((NomenclatorFigurae*)m->figurae_ctx)->scheda
-                       : m->piscina;
     /* P3: prima indicis (filtro et visu) */
     l = ordines(m, p);
     redde l ? album_res_prima(l, ZEPHYRUM) : ZEPHYRUM;
@@ -482,6 +581,34 @@ filtrum_ponere (
    character  numerus[XVI];
 
     si (!campos_scribere(m, "rubrica_filtrum", valor, "pagina", ""))
+    {
+        redde FALSUM;
+    }
+    l   = ordines(m, p);
+    id  = l ? album_res_prima(l, ZEPHYRUM) : ZEPHYRUM;
+    sprintf(numerus, "%d", (integer)id);
+    redde campos_scribere(m, "persona_electa", id > ZEPHYRUM ? numerus
+        : "", NIHIL, NIHIL);
+}
+
+/* P4: quaestionem ponere (textus solutus; vacuus tollit); pagina
+ * prima, electa prima fructuum */
+interior b32
+quaestionem_ponere (
+    NomenclatorMontatio* m,
+                 chorda  textus,
+                Piscina* p)
+{
+       Album* l;
+         s32  id;
+   character  numerus[XVI];
+      chorda  effugitus;
+
+    effugitus = textus.mensura > ZEPHYRUM ? scriba_effugere(
+        (constans character*)textus.datum, textus.mensura, p)
+        : chorda_ex_literis("", p);
+    si (!campos_scribere(m, "quaestio", chorda_ut_cstr(effugitus, p),
+            "pagina", ""))
     {
         redde FALSUM;
     }
@@ -655,7 +782,7 @@ fac_paginam_proximam (
 }
 
 #define REQUIRIT_PERSONAM  I    /* persona electa */
-#define REQUIRIT_FILTRUM   II   /* filtrum positum */
+#define REQUIRIT_FILTRUM   II   /* filtrum aut quaestio (P4) positum */
 #define REQUIRIT_NATALEM   IV   /* P6c: persona aperta cum natali, porta
                                  * diei et hodie */
 
@@ -709,7 +836,8 @@ requisita_nomenclatoris (
     ContextusPraecepti* cp = (ContextusPraecepti*)ctx;
 
     redde (!(requisita & REQUIRIT_PERSONAM) || cp->electa > ZEPHYRUM)
-        && (!(requisita & REQUIRIT_FILTRUM) || filtrum_currens(cp->m))
+        && (   !(requisita & REQUIRIT_FILTRUM) || filtrum_currens(cp->m)
+            || quaestio_commissa(cp->m))
         && (!(requisita & REQUIRIT_NATALEM)
         || natalis_aperibilis(cp->m));
 }
@@ -734,13 +862,40 @@ fac_filtrum (
         textus, cp->p);
 }
 
+/* P4: Esc in indice - quaestio primum, deinde filtrum */
 interior b32
 fac_filtrum_tollere (
     vacuum* ctx)
 {
-    ContextusPraecepti* cp = (ContextusPraecepti*)ctx;
+     ContextusPraecepti* cp = (ContextusPraecepti*)ctx;
+                 chorda  vacua;
 
+    si (quaestio_commissa(cp->m))
+    {
+        vacua.datum    = NIHIL;
+        vacua.mensura  = ZEPHYRUM;
+        redde quaestionem_ponere(cp->m, vacua, cp->p);
+    }
     redde filtrum_ponere(cp->m, "", cp->p);
+}
+
+/* P4: quaestio (prompta "search:", quaestione commissa praeimpleta) */
+interior b32
+fac_quaestionem (
+    vacuum* ctx)
+{
+    ContextusPraecepti* cp = (ContextusPraecepti*)ctx;
+             character  quaestio[PROMPTA_MAXIMA];
+                chorda  textus;
+
+    textus.datum    = (i8*)quaestio;
+    textus.mensura  = ZEPHYRUM;
+    si (quaestio_commissa(cp->m))
+    {
+        textus.mensura = quaestio_currens(cp->m, quaestio);
+    }
+    redde prompta_aperire(&cp->m->ramus, actio_nomenclatoris,
+        "quaestio", textus, cp->p);
 }
 
 interior b32
@@ -1067,8 +1222,10 @@ hic_manens constans Praeceptum TABULA_PRAECEPTORUM[] = {
         VISUS_PERSONAE, REQUIRIT_NATALEM, fac_ad_natalem },
     { "nomenclator.filtrum", "Filter by tag", "f", VISUS_INDICIS,
         ZEPHYRUM, fac_filtrum },
-    { "nomenclator.filtrum_tollere", "Clear filter", "Esc",
+    { "nomenclator.filtrum_tollere", "Clear search / filter", "Esc",
         VISUS_INDICIS, REQUIRIT_FILTRUM, fac_filtrum_tollere },
+    { "nomenclator.quaestio", "Search", "/", VISUS_INDICIS, ZEPHYRUM,
+        fac_quaestionem },
     { "nomenclator.visus_alternare", "Switch view", "g", VISUS_INDICIS,
         ZEPHYRUM, fac_visum_alternare },
     { "nomenclator.visus_indicis", "All contacts", NIHIL, VISUS_INDICIS,
@@ -1314,6 +1471,12 @@ promptam_committere (
             }
             redde r != ZEPHYRUM;
         }
+    }
+    /* P4: quaestio - committitur (vacua tollit), prompta clauditur */
+    si (chorda_aequalis_literis(genus, "quaestio"))
+    {
+        (vacuum)prompta_claudere(&m->ramus, actio_nomenclatoris, p);
+        redde quaestionem_ponere(m, textus, p);
     }
     /* P3: filtrum - vacuum tollit, aliter rubrica valida */
     si (chorda_aequalis_literis(genus, "filtrum"))
@@ -1700,6 +1863,10 @@ titulum_promptae (
     {
         redde "filter:";
     }
+    si (chorda_aequalis_literis(genus, "quaestio"))
+    {
+        redde "search:";
+    }
     si (chorda_aequalis_literis(genus, "nomen"))
     {
         q = personae_persona(m->documentum, persona_aperta(m));
@@ -1978,21 +2145,36 @@ figura_tabulae (
         f = componens_liberum(c, i);
         si (chorda_aequalis_literis(f->id, "titulus"))
         {
-            chorda* filtrum;
+                chorda* filtrum;
+                chorda  iuxta;
+                chorda  quaestio;
+             character  quaestio_textus[PROMPTA_MAXIMA];
 
             textum_pingere(md, f->fines.x + IV, f->fines.y + II,
                 chorda_ex_literis("Contacts", md->piscina), FONS_TITULI,
                 COLOR_TEXT);
-            /* P3: rubrica filtri obscura iuxta */
-            filtrum = filtrum_currens(m);
+            /* P3: rubrica filtri obscura iuxta; P4: "/quaestio" post */
+            filtrum  = filtrum_currens(m);
+            iuxta    = chorda_ex_literis("", md->piscina);
             si (filtrum)
+            {
+                iuxta = chorda_concatenare(chorda_ex_literis("#",
+                    md->piscina), *filtrum, md->piscina);
+            }
+            quaestio.mensura  = quaestio_currens(m, quaestio_textus);
+            quaestio.datum    = (i8*)quaestio_textus;
+            si (quaestio.mensura > ZEPHYRUM)
+            {
+                iuxta = chorda_concatenare(iuxta, chorda_ex_literis(
+                    filtrum ? " /" : "/", md->piscina), md->piscina);
+                iuxta = chorda_concatenare(iuxta, quaestio,
+                    md->piscina);
+            }
+            si (iuxta.mensura > ZEPHYRUM)
             {
                 textum_pingere(md, f->fines.x + IV + IX * fons_latitudo(
                     FONS_TITULI), f->fines.y + II + NOMENCLATOR_LINEA
-                        - I,
-                    chorda_concatenare(chorda_ex_literis("#",
-                    md->piscina),
-                    *filtrum, md->piscina), ZEPHYRUM, COLOR_TEXT_DIM);
+                    - I, iuxta, ZEPHYRUM, COLOR_TEXT_DIM);
             }
         }
         alioquin si (chorda_aequalis_literis(f->id, "visus-indicis"))
@@ -2011,9 +2193,10 @@ figura_tabulae (
         }
         alioquin si (chorda_aequalis_literis(f->id, "caput"))
         {
-            s32 omnes;
-            s32 visae;
-            i32 j;
+                  s32 omnes;
+                  s32 visae;
+                  i32 j;
+            character quaestio_textus[PROMPTA_MAXIMA];
 
             omnes = (s32)personae_numerus(m->documentum);
             visae = ZEPHYRUM;
@@ -2024,7 +2207,20 @@ figura_tabulae (
                     visae++;
                 }
             }
-            si (filtrum_currens(m))
+            /* P4: sub quaestione visae = fructus */
+            si (quaestio_currens(m, quaestio_textus) > ZEPHYRUM)
+            {
+                visae = ZEPHYRUM;
+                per (j = ZEPHYRUM; l && j < album_numerus(l); j++)
+                {
+                    si (album_ordo(l, j)->genus == ALBUM_RES)
+                    {
+                        visae++;
+                    }
+                }
+            }
+            si (   filtrum_currens(m)
+                || quaestio_currens(m, quaestio_textus) > ZEPHYRUM)
             {
                 sprintf(textus, "%d of %d contact%s", (integer)visae,
                     (integer)omnes, omnes == I ? "" : "s");
@@ -2059,6 +2255,12 @@ figura_tabulae (
                     genus),
                     &m->ramus);
             }
+        }
+        alioquin si (chorda_aequalis_literis(f->id, "nihil_inventum"))
+        {
+            textum_pingere(md, f->fines.x + IV, f->fines.y + IV,
+                chorda_ex_literis("No matches", md->piscina), ZEPHYRUM,
+                COLOR_TEXT_DIM);
         }
         alioquin si (chorda_aequalis_literis(f->id, "nova"))
         {
@@ -2392,6 +2594,18 @@ indicem_disponere (
                 piscina), o->genus == ALBUM_RES ? PARTES_ITEM
                 : PARTES_INDEX, DISPOSITIO_CRESCENS, ZEPHYRUM,
                 o->altitudo);
+        }
+    }
+    /* P4: quaestio sine fructibus */
+    {
+        character quaestio[PROMPTA_MAXIMA];
+
+        si (   l && album_numerus(l) == ZEPHYRUM
+            && quaestio_currens(m, quaestio) > ZEPHYRUM)
+        {
+            (vacuum)componentem_locare(dp, regio, "nihil_inventum",
+                PARTES_INDEX, DISPOSITIO_CRESCENS, ZEPHYRUM,
+                NOMENCLATOR_ORDO);
         }
     }
     /* P2b: prompta in linea ultima regionis indicis */

@@ -282,6 +282,11 @@ house rule of independent composable libraries.
   on the next occurrence (today inclusive; 29 Feb -> 28 Feb); port
   `NomenclatorDiemAperire`, calendar argument "YYYY-MM-DD". P6
   complete. Next: P4 fuzzy search or P7 photo - Fran to choose.
+- **P4 DONE 2026-10-15**: `/` search prompt, live ranked results
+  (similitudo over display names, inside the tag filter, flat list in
+  both views), Enter commits (field `quaestio`, transient), Esc clears
+  search then filter, title "/query", "k of N", "No matches". Next: P7
+  profile picture (last planned phase).
 - **P2 nomenclator list** - vicus genus `nomenclator`, command word
   `$contacts`, alphabetical list with letter headings (U1), selection, new
   contact (kind chosen at creation), open detail.

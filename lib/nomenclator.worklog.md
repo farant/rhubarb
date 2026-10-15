@@ -229,3 +229,32 @@ then does nothing. vicus apps always set the clock.
 Formatter quirk: a long call inside `si (...)` got wrapped as
 "args,\n        hodie,\n            ultima, ..." - assigning the result
 to a local first gives a readable wrap.
+
+## 2026-10-15 - P4: fuzzy search on names (similitudo)
+
+`/` opens prompt "search:" (pre-filled with the committed query). ONE
+source of truth for "the current query": `quaestio_currens` - the live
+prompt text while the "quaestio" prompt is open, else the committed
+field `quaestio` (escaped with scriba_effugere like prompta_textus,
+read back with scriba_solvere). Everything (ordines, title "/ar",
+"k of N", "No matches", selection) reads it, so live typing and the
+committed state render the same way; Esc in the prompt just closes it
+and the committed query shows again.
+
+Ranking: `similitudo_optima` over display names (persona_nomen) of the
+contacts inside the tag filter, candidates in key order - so ties go
+shorter-name-first, then alphabetical. Results are one flat album
+(no letter/group headings) in BOTH views; the view switch only matters
+again once the search is cleared.
+
+Selection: under a query, `nomenclator_persona_electa` only keeps the
+stored selection if it is among the results, else the top result (a
+plant showed the original test could not see this - it started with no
+selection; fixed by moving to Banca first).
+
+Esc in the list: one command (the key table matches the FIRST entry for
+a key+view, so two Esc rows would shadow each other) - search first,
+then the tag filter; REQUIRIT_FILTRUM now means "filter or search".
+
+Test gotcha: a closed prompt is `prompta="nulla"`, not absent - assert
+"not quaestio", like the older prompt tests do.

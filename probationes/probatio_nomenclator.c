@@ -1413,6 +1413,125 @@ _probare_ad_natalem_absens (
     CREDO_AEQUALIS_S32(x->aperitiones, ZEPHYRUM);
 }
 
+/* P4: quaestio viva - '/' promptam "search:" aperit; dum typatur,
+ * index = ordo similitudinis (sine titulis), electa = prima; "ross"
+ * solam Annam, "ar" Annam ante Andream; Esc in prompta: quaestio
+ * nulla commissa - index plenus redit */
+interior vacuum
+_probare_quaestionem_vivam (
+    CredoContextus* c)
+{
+    Mundus* x;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(contactus_parare(x, c->piscina));
+    /* electa extra fructus (Banca): sub quaestione prima fructuum */
+    clavis(x, 'j');
+    CREDO_AEQUALIS_S32(nomenclator_persona_electa(&x->m), II);
+    clavis(x, '/');
+    CREDO_VERUM(campus_est(x, "prompta", "quaestio"));
+    typare(x, "ross");
+    CREDO_VERUM(ordines_sunt(x, "p1"));
+    CREDO_AEQUALIS_S32(nomenclator_persona_electa(&x->m), I);
+    retro(x, IV);
+    typare(x, "ar");
+    CREDO_VERUM(ordines_sunt(x, "p1 p4"));
+    CREDO_AEQUALIS_S32(nomenclator_persona_electa(&x->m), I);
+    effugium(x);
+    CREDO_FALSUM(campus_est(x, "prompta", "quaestio"));
+    CREDO_VERUM(campus_est(x, "quaestio", NIHIL));
+    CREDO_VERUM(ordines_sunt(x, "l_ p5 lB p2 p3 lC p4 lR p1"));
+}
+
+/* P4: Reditus committit (prompta clauditur, ordines manent); j et
+ * Reditus personam aperiunt; Esc ex persona ad ordines; Esc in indice
+ * quaestionem tollit; '/' quaestione praeimpleta; Esc in prompta
+ * quaestionem commissam servat */
+interior vacuum
+_probare_quaestionem_commissam (
+    CredoContextus* c)
+{
+      Mundus* x;
+     Mandata* md;
+       Fines  totum;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(contactus_parare(x, c->piscina));
+    clavis(x, '/');
+    typare(x, "ar");
+    reditus(x);
+    CREDO_FALSUM(campus_est(x, "prompta", "quaestio"));
+    CREDO_VERUM(campus_est(x, "quaestio", "ar"));
+    CREDO_VERUM(ordines_sunt(x, "p1 p4"));
+    /* titulus quaestionem ostendit, caput "2 of 5" */
+    totum.x         = ZEPHYRUM;
+    totum.y         = ZEPHYRUM;
+    totum.latitudo  = CCCLX;
+    totum.altitudo  = CCCXX;
+    md              = reddere(x, c->piscina);
+    CREDO_VERUM(textus_in(md, totum, "/ar", -I));
+    CREDO_VERUM(textus_in(md, totum, "2 of 5 contacts", -I));
+    clavis(x, 'j');
+    reditus(x);
+    CREDO_VERUM(campus_est(x, "persona_aperta", "4"));
+    effugium(x);
+    CREDO_VERUM(ordines_sunt(x, "p1 p4"));
+    /* '/' praeimpleta; Esc in prompta - commissa manet */
+    clavis(x, '/');
+    retro(x, I);
+    typare(x, "x");
+    CREDO_VERUM(ordines_sunt(x, "nihil_inventum"));
+    effugium(x);
+    CREDO_VERUM(campus_est(x, "quaestio", "ar"));
+    CREDO_VERUM(ordines_sunt(x, "p1 p4"));
+    /* Esc in indice tollit */
+    effugium(x);
+    CREDO_VERUM(campus_est(x, "quaestio", NIHIL));
+    CREDO_VERUM(ordines_sunt(x, "l_ p5 lB p2 p3 lC p4 lR p1"));
+    /* '"' effugitus: commissus, deinde praeimpletus et solutus */
+    clavis(x, '/');
+    typare(x, "ar\"");
+    reditus(x);
+    CREDO_VERUM(ordines_sunt(x, "nihil_inventum"));
+    CREDO_FALSUM(campus_est(x, "quaestio", "ar\""));
+    clavis(x, '/');
+    retro(x, I);
+    CREDO_VERUM(ordines_sunt(x, "p1 p4"));
+}
+
+/* P4: quaestio intra filtrum rubricae; Esc primum quaestionem, deinde
+ * filtrum tollit; visus rubricarum: ordo planus similitudinis */
+interior vacuum
+_probare_quaestionem_filtro (
+    CredoContextus* c)
+{
+    Mundus* x;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(contactus_parare(x, c->piscina));
+    clavis(x, 'f');
+    typare(x, "roma");
+    reditus(x);
+    clavis(x, '/');
+    typare(x, "ar");
+    reditus(x);
+    CREDO_VERUM(ordines_sunt(x, "p1"));
+    effugium(x);
+    CREDO_VERUM(campus_est(x, "quaestio", NIHIL));
+    CREDO_VERUM(campus_est(x, "rubrica_filtrum", "roma"));
+    effugium(x);
+    CREDO_VERUM(campus_est(x, "rubrica_filtrum", NIHIL));
+    clavis(x, 'g');
+    CREDO_VERUM(campus_est(x, "visus", "rubricae"));
+    clavis(x, '/');
+    typare(x, "ar");
+    reditus(x);
+    CREDO_VERUM(ordines_sunt(x, "p1 p4"));
+    effugium(x);
+    CREDO_VERUM(ordines_sunt(x, "g0 p3-0 g1 p1-1 g2 p1-2 g3 p5-3 p2-3"
+        " p4-3"));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "montatio", _probare_montationem, mundum_parare, mundum_purgare,
         NIHIL, NIHIL },
@@ -1463,6 +1582,12 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "ad_natalem", _probare_ad_natalem, mundum_parare, mundum_purgare,
         NIHIL, NIHIL },
     { "ad_natalem_absens", _probare_ad_natalem_absens, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "quaestio_viva", _probare_quaestionem_vivam, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "quaestio_commissa", _probare_quaestionem_commissam,
+        mundum_parare, mundum_purgare, NIHIL, NIHIL },
+    { "quaestio_filtro", _probare_quaestionem_filtro, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

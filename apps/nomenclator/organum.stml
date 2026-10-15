@@ -22,6 +22,11 @@
             scriptor="nomenclator.agere"
             nota="una rubrica (kebab); absens = omnes; valet in
                   visu utroque"/>
+    <campus nomen="quaestio" typus="textus" vita="transiens"
+            scriptor="nomenclator.agere"
+            nota="P4: quaestio nebulosa in nominibus (effugitus ut
+                  prompta_textus); absens = nulla - index ordine
+                  similitudinis, filtro rubricae intra"/>
     <campus nomen="persona_electa" typus="numerus" vita="transiens"
             scriptor="nomenclator.agere"
             nota="id personae electae; absens = prima paginae"/>
@@ -40,6 +45,7 @@
       <optio>epistula</optio>
       <optio>rubricae</optio>
       <optio>natalis</optio>
+      <optio>quaestio</optio>
     </campus>
     <campus nomen="prompta_textus" typus="textus" vita="transiens"
             scriptor="nomenclator.agere"
