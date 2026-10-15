@@ -684,7 +684,7 @@ _definitionem_scandere (
             non_vacuus = VERUM;
         }
     }
-    si (i >= ad || !non_vacuus || i - (ab + I) > (s32)999)
+    si (i >= ad || !non_vacuus || i - (ab + I) > MD_TITULUS_MAXIMUS)
     {
         redde FALSUM;
     }
