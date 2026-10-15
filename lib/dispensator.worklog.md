@@ -180,3 +180,30 @@ in `focus` - textus, accepted). The effusion section uses bare branches
 because the toy manifest has no pan/zoom fields (manifest text is
 Fran's call, not worth changing for this). Plant: `catenam_scribere`
 refusing every nested spatium -> catena section red, reverted green.
+
+## 2026-10-13 — A6d-2: Tab between levels, Esc leaves a nested widget
+
+The two items S8c-2 deferred "until a real widget needs it" (the
+calendar's day notes are that widget). Fran approved them as GENERAL
+dispatcher behaviour:
+- Tab: the native circuit now runs over the focusables of the PANE's
+  namespace (radix of motus.spatium), nested namespaces included
+  (`tabulam_circumire`, collecting Componens* - ids alone are ambiguous
+  across levels: the toy's three levels all say "agere"). The current
+  focus is matched by id AND namespace = spatium_intimum; landing in
+  another namespace writes the chain (`focum_ad_componentem` ->
+  catenam_scribere, fallback focus_ponere). Plain panes: pane root ==
+  innermost root, so nothing changes (all focus/Tab suites green).
+- Esc that nobody consumed, while focus is nested: focus moves to the
+  first focusable of the NEAREST ENCLOSING level - a namespace that
+  contains spatium_intimum without being it, longest wins
+  (`gradum_ascendere`). First version looked the parent up by its stamp
+  and failed when the parent is the host itself (unstamped, spatium "")
+  - "contains, longest" handles both.
+The calendar side: its action ignores key events while focus is inside
+its notes (so unused keys reach these rules instead of list commands),
+and scriba passes an IDLE Esc (normal mode, no pending key, no 'fd') -
+like its existing Tab rule. Printable characters reach scriba as
+EVENTUS_TEXTUS, not key presses (my first test sent keys and scriba
+rightly ignored them).
+Plants: Tab ring back to the innermost root -> red; Esc pop off -> red.

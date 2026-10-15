@@ -68,7 +68,33 @@ nomen structura {
      * ramus proprius (scriba sola). Hospes post montationem ponit, ut
      * liber et iussa (vicus: radix - registrum unum applicationis) */
           InsulaRamus ramus_capsae;
+    /* $question (2026-10-13): iussum DILATUM (effectus.differre) -
+     * 0 nullum, I armatum (pulsus proximus picturam sinit), II
+     * currendum (pulsus sequens verbum iterum currit) */
+                  s32 dilatum;
+               Iussum iussum_dilatum;   /* locus et verbum ictus */
+    /* opus currens (quaestio-rivus III, 2026-10-14): NIHIL nullum;
+     * dum currit pagina CLAUSA (Esc solum), folium = basis + textus */
+           IussumOpus* opus;
+               Iussum  iussum_operis;     /* locus (relocatum) */
+               chorda  caput_operis;      /* in fine applicatur */
+                  b32  consumit_operis;
+                   i8* basis_cellulae;    /* folium ante opus */
+                  s32* basis_indentatio;
+              Piscina* piscina_operis;    /* pulsus: vacatur */
 } ScribaActiones;
+
+/* A6d: visum ad librum alium vertere (scriba_librum_ponere): pagina
+ * plagulae visus si in libro novo exstat, aliter prima; via paginae
+ * ponendae (gestus effusus, folium laboris, cursor, modus normalis).
+ * Vocans scriptorem actionis scribae ponit. FALSUM si liber NIHIL aut
+ * pagina aperiri nequit. */
+b32
+scriba_actiones_librum_ponere (
+    constans InsulaRamus* ramus,
+                   Motus* motus,
+          ScribaActiones* sa,
+             ScribaLiber* liber);
 
 /* folium laboris = copia proiectionis documenti */
 vacuum
@@ -107,5 +133,23 @@ scriba_iussum_ad_punctum (
             ScribaActiones* sa,
         constans Componens* pagina,
                    Punctum  schirmi);
+
+/* pulsus (scriba_reficere): iussum dilatum (si quod) - gradus I ->
+ * II (pictura nuntii prius), gradus II: iussum in folio laboris
+ * relocatur (linea, initium, verbum idem; aliter nuntius
+ * "<verbum>: evanuit"), verbum iterum currit (iussum->iterum), effectus
+ * (caput, textus cum '\n', nuntius) in folium, commissio UNA. Redde
+ * VERUM si folium aut status mutatum (pictura repetenda) */
+b32
+scriba_iussum_dilatum_currere (
+    ScribaActiones* sa);
+
+/* pulsus (scriba_reficere, ANTE iussum dilatum - pulsus initii nuntium
+ * solum pingit): opus currens (si quod) pulsatur, folium = basis +
+ * textus hactenus; FINITUM: caput + commissio UNA; IRRITUM: basis.
+ * Redde VERUM si folium aut status mutatum */
+b32
+scriba_opus_pulsare (
+    ScribaActiones* sa);
 
 #endif /* SCRIBA_ACTIONES_H */

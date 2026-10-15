@@ -1,0 +1,14 @@
+<!-- materia/aedificatio.stml - declarationes aedificationis materiae
+     (dialectus aedificatio, aedificatio.canon; bin/fabrica per
+     fabrica.stml). Cursores ad gradus (2026-10-14; exemplar css):
+     suita materia ut compositum probationes_materia - quaeque probatio
+     actio sua (clausura aedilis, thesaurus, area, ambitus basis,
+     vestigium suum), verdictum clavatum iis quae legit. Ianua
+     materia/compile_probationes.sh et porta materia per 'bin/fabrica
+     probare probationes_materia'; oraculum conversionis
+     tools/gradus_oraculum.sh materia. -->
+<aedificatio>
+  <actio titulus="probationes_materia" genus="iudicium">
+    <probationes_c exemplar="materia/probationes/probatio_*.c"/>
+  </actio>
+</aedificatio>

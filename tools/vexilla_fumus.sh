@@ -1,4 +1,7 @@
 #!/bin/bash
+# <cursus titulus="tools/vexilla_fumus.sh" versio="I"/>
+# CHASSIS CURSUUM (analytica T6): cursus in annalibus
+source "$(dirname "${BASH_SOURCE[0]}")/cursus.sh"
 # tools/vexilla_fumus.sh - porta natalis tools/vexilla.sh
 #
 # I.   tabula compilat C89 purum et REICIT C99 ('//', -pedantic -Werror

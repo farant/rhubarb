@@ -100,6 +100,53 @@ color_aequalis (
 
 
 /* ==================================================
+ * Spatia Colorum (lux linearis, OKLab)
+ *
+ * Mixtio colorum (dithering, gradientes) in luce LINEARI fit: tabula
+ * nigro-alba alternans oculo ~188 sRGB videtur, non 128. Comparatio in
+ * OKLab (Ottosson 2020): distantia Euclidea ~ differentia percepta.
+ * Canales lineares et sRGB in [0, 1]; L OKLab in [0, 1].
+ * ================================================== */
+
+/* canalis unus */
+f64
+color_srgb_ad_linearem (
+    f64 c);
+
+f64
+color_linearis_ad_srgb (
+    f64 l);
+
+/* octetus 0..255 -> linearis (tabula interna, celer) */
+f64
+color_octetus_ad_linearem (
+    i8 octetus);
+
+/* lux linearis <-> OKLab (rgb negativa ad 0 tonduntur) */
+vacuum
+color_linearis_ad_oklab (
+    constans f64 rgb[III],
+             f64 lab[III]);
+
+vacuum
+color_oklab_ad_linearem (
+    constans f64 lab[III],
+             f64 rgb[III]);
+
+/* commoditas: Color (octeti sRGB) -> OKLab */
+vacuum
+color_ad_oklab (
+    Color color,
+      f64 lab[III]);
+
+/* distantia Euclidea in OKLab */
+f64
+color_oklab_distantia (
+    constans f64 a[III],
+    constans f64 b[III]);
+
+
+/* ==================================================
  * Predefined Colors
  * ================================================== */
 

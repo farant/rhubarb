@@ -298,17 +298,22 @@ and survives.
 ## Currere
 
 ```
-./materia/compile_probationes.sh            # omnes
+./materia/compile_probationes.sh            # omnes (fresca servata)
 ./materia/compile_probationes.sh lexicon    # filtrum substringae
+./materia/compile_probationes.sh -vis       # omnes iterum
 ```
 
 Contract 0 sanum / 1 fractae / **2 = NULLA CURSA** (bad filter — never
 gate on exit 0 alone). Log: `build/test_logs/materia.log`.
 
-**A header-only change rebuilds nothing unless the runner's header
-guard fires.** materia's runner carries that guard from birth; it
-exists because a header-only edit in silva reported 50/50 against
-six-hour-stale objects on 2026-08-27.
+Since 2026-10-14 the suite is the fabrica composite `probationes_materia`
+(`materia/aedificatio.stml`), the script a thin entry point to `bin/fabrica
+probare probationes_materia`. Each verdict is keyed on what that test
+actually read (headers included), so the old runner's hand-written
+header guard - born because a header-only edit in silva reported 50/50
+against six-hour-stale objects on 2026-08-27 - is no longer needed.
+The coctor test's rancor section writes under `$TMPDIR` (the member's
+area), never `materia/build/`.
 
 **Every CLIENT runner must list `materia/fontes` in its guard, and
 now checks itself (2026-09-17).** css, md, html, oratio and crusta

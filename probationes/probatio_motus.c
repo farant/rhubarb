@@ -223,6 +223,24 @@ s32 principale (vacuum)
     CREDO_CHORDA_AEQUALIS_LITERIS(g.scriptor, "gestus");
     CREDO_CHORDA_AEQUALIS_LITERIS(repo->scriptor, "pagina.clavis");
 
+    /* motus_ramus_focatus (mensa): sine Motu aut pro ramo radicis
+     * semper; aliter spatium Motus = via rami */
+    {
+        InsulaRamus r;
+              Motus motus_foci;
+
+        memset(&r, ZEPHYRUM, magnitudo(r));
+        memset(&motus_foci, ZEPHYRUM, magnitudo(motus_foci));
+        r.via = chorda_ex_literis("calendarium:c1", piscina);
+        CREDO_VERUM(motus_ramus_focatus(NIHIL, r));
+        motus_foci.spatium = r.via;
+        CREDO_VERUM(motus_ramus_focatus(&motus_foci, r));
+        motus_foci.spatium = chorda_ex_literis("scriba:a", piscina);
+        CREDO_FALSUM(motus_ramus_focatus(&motus_foci, r));
+        r.via.mensura = ZEPHYRUM;
+        CREDO_VERUM(motus_ramus_focatus(&motus_foci, r));
+    }
+
     credo_imprimere_compendium();
     redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
 }

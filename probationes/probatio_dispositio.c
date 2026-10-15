@@ -384,6 +384,37 @@ principale (vacuum)
         CREDO_AEQUALIS_S32 (dispositio_addere(d, -I, &f), ZEPHYRUM);
     }
 
+    /* dispositio_ad_pixela: cellulae x (cw, ch); ora superficiem
+     * tangens residuum pixelorum accipit */
+    {
+        Fines c;
+        Fines p;
+
+        /* superficies 40 x 10 cellulae, pixela 243 x 85 (cw VI, ch
+         * VIII: residuum III et V) */
+        c.x         = II;
+        c.y         = I;
+        c.latitudo  = III;
+        c.altitudo  = II;
+        p           = dispositio_ad_pixela(c, XL, X, CCXLIII, LXXXV, VI,
+            VIII);
+        CREDO_AEQUALIS_S32 (p.x, XII);
+        CREDO_AEQUALIS_S32 (p.y, VIII);
+        CREDO_AEQUALIS_S32 (p.latitudo, XVIII);
+        CREDO_AEQUALIS_S32 (p.altitudo, XVI);
+        /* ora dextra et infima: ad superficiem */
+        c.x         = XXXVIII;
+        c.y         = VIII;
+        c.latitudo  = II;
+        c.altitudo  = II;
+        p           = dispositio_ad_pixela(c, XL, X, CCXLIII, LXXXV, VI,
+            VIII);
+        CREDO_AEQUALIS_S32 (p.x, CCXXVIII);
+        CREDO_AEQUALIS_S32 (p.latitudo, XV);
+        CREDO_AEQUALIS_S32 (p.y, LXIV);
+        CREDO_AEQUALIS_S32 (p.altitudo, XXI);
+    }
+
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);

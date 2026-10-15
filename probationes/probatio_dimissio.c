@@ -157,6 +157,11 @@ actio_eligere (
     InsulaRamus r;
 
     (vacuum)motus; (vacuum)des; (vacuum)ctx;
+    /* motus: illuminatio (consumitur, nihil eligit) - menu elenchi */
+    si (ev->genus == EVENTUS_MUS_MOTUS)
+    {
+        redde VERUM;
+    }
     si (ev->genus != EVENTUS_MUS_DEPRESSUS)
     {
         redde FALSUM;
@@ -414,6 +419,21 @@ ictus (
 }
 
 interior vacuum
+motus (
+    Mundus* m,
+       s32  x,
+       s32  y)
+{
+    Eventus e;
+
+    memset(&e, ZEPHYRUM, magnitudo(e));
+    e.genus        = EVENTUS_MUS_MOTUS;
+    e.datum.mus.x  = x;
+    e.datum.mus.y  = y;
+    dispensator_tractare(m->d, &e);
+}
+
+interior vacuum
 effugium (
     Mundus* m)
 {
@@ -604,7 +624,7 @@ _probare_ictus (
 
 
 /* ==================================================
- * IV. claudit: post actionem successam
+ * IV. claudit: post actionem successam (pressionem; motus non)
  * ================================================== */
 
 interior vacuum
@@ -617,6 +637,11 @@ _probare_claudit (
     in = internamentum_creare(c->piscina);
     CREDO_NECESSE(mundum_creare(&m, c->piscina, in, VERUM));
     ictus(&m, XV, XV);
+    /* motus super optionem claudentem (consumptus: illuminatio) non
+     * claudit - solum actio vera (pressio) */
+    motus(&m, LXX, XXX);
+    CREDO_VERUM(valor_est(&m.w1, attr_palette, "colores"));
+    CREDO_VERUM(valor_est(&m.w1, "electum", NIHIL));
     ictus(&m, LXX, XXX);                       /* optio.a */
     CREDO_VERUM(valor_est(&m.w1, "electum", "a"));
     CREDO_VERUM(valor_est(&m.w1, attr_palette, NIHIL));

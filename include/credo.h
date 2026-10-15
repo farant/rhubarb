@@ -700,6 +700,11 @@ nomen structura CredoSectio {
  *           ms
  *   ORDO    suita  mixtus  semen          (credo II; ante sectiones,
  *                                         solum si CREDO_ORDO mixtus)
+ *   SECTIONES suita  numerus  (analytica T4; linea PRIMA: sectiones
+ *           declaratae, filtro respecto)
+ *   INCIPIT suita  titulus     (analytica T4; ante sectionem quamque,
+ *           EFFLUXA - ruina vera nihil effluit: incepta sine SECTIO =
+ *           sectio rupta, lector eam RUIT nominat)
  * exitus sectionis: TRANSIIT | FRACTA | VACUA (nulla assertio = non
  * transiit, ut NIHIL PROBATUM) | ABORTA (NECESSE fractum) | OMISSA
  * (signum omissum, credo II) | NOTA_FRACTA (fractura exspectata, suita

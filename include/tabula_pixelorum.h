@@ -142,6 +142,17 @@ tabula_pixelorum_pingere_chordam (
              chorda  textus,
                 i32  color);
 
+/* chorda fonte notato (FONS_PARVUS = tabula_pixelorum_pingere_chordam;
+ * FONS_TITULI 8x16) */
+vacuum
+tabula_pixelorum_pingere_chordam_fonte (
+    TabulaPixelorum* tabula,
+                i32  x,
+                i32  y,
+             chorda  textus,
+                i32  color,
+                i32  fons);
+
 /* Pingere characterem scalatum
  *
  * tabula: tabula pixelorum

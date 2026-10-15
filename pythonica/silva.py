@@ -36,8 +36,10 @@ Contractus:
     textu PRAESENTI (post editiones priores) - lineae labuntur, nomina
     manent.
 """
+import contextlib
 import difflib
 import fnmatch
+import functools
 import os
 import glob
 import random
@@ -136,7 +138,12 @@ def syntaxis(via, textus=None):
         with os.fdopen(fd, 'w') as f:
             f.write(textus)
     try:
-        r = _curre(['clang', '-fsyntax-only'] + _vexilla()
+        # caput solum compilatum: tabulae et functiones static nemini
+        # adhibentur - in contextu vero (inclusum) id non est error
+        # (fons_8x16.h: praevolatus plantae caput datorum recusabat)
+        solum = (['-Wno-unused-const-variable', '-Wno-unused-function']
+                 if via.endswith('.h') else [])
+        r = _curre(['clang', '-fsyntax-only'] + _vexilla() + solum
                    + _inclusiones_clang(via_t) + [via_t])
         if r.returncode == 0:
             return None
@@ -1524,10 +1531,11 @@ PORTAE = {
     'css': (['./css/compile_probationes.sh'],
             r'probationes_css: \d+/\d+ praeteritae'),
     'materia': (['./materia/compile_probationes.sh'],
-                r'MATERIA PROBATIONES: \d+/\d+'),
+                r'probationes_materia: \d+/\d+ praeteritae'),
     'md': (['./md/compile_probationes.sh'],
            r'probationes_md: \d+/\d+ praeteritae'),
-    'html': (['./html/compile_probationes.sh'], r'HTML PROBATIONES: \d+/\d+'),
+    'html': (['./html/compile_probationes.sh'],
+             r'probationes_html: \d+/\d+ praeteritae'),
     'crusta': (['./crusta/compile_probationes.sh'],
                r'CRUSTA PROBATIONES: \d+/\d+'),
     'toml': (['./toml/compile_probationes.sh'],
@@ -1543,7 +1551,7 @@ PORTAE = {
     'tessera': (['./tessera/compile_probationes.sh'],
                 r'TESSERA PROBATIONES: \d+/\d+'),
     'saltuarius': (['./saltuarius/compile_probationes.sh'],
-                   r'SALTUARIUS PROBATIONES: \d+/\d+'),
+                   r'probationes_saltuarius: \d+/\d+ praeteritae'),
     # modulus 013 (project-specs/ludus-tessera-plan.md A0): glutinum
     # ludus -> tessera
     'ludus_tessera': (['./ludus_tessera/compile_probationes.sh'],
@@ -1600,6 +1608,8 @@ PORTAE = {
                     r'fumus diagnostica: (sanum|FRACTUM)'),
     'mensor-suitae': (['./tools/mensor_suitae_fumus.sh'],
                       r'fumus mensor_suitae: (sanum|FRACTUM)'),
+    'mensor-cursus': (['./tools/mensor_cursus_fumus.sh'],
+                      r'fumus mensor_cursus: (sanum|FRACTUM)'),
     'vexilla': (['./tools/vexilla_fumus.sh'], r'fumus vexilla: (sanum|FRACTUM)'),
     'scribe': (['./silva/scribe_fumus.sh'], r'fumus scribe: (sanum|FRACTUM)'),
     'aequivalentia': (['./silva/aequivalentia.sh', '-conferre'],
@@ -1805,6 +1815,136 @@ def _tempus_notare(genus, titulus, initium, sana=None, rc=None):
         sys.stderr.write('tempora non notata (%s): %s' % (ex, linea))
 
 
+MENSOR_BIN = os.path.join(RADIX, 'bin', 'mensor')
+
+
+class _CursusApertus(object):
+    """cursus apertus: corpus 'with' exitum, notam et acta (corpus
+    actorum, in diurna per 'finire -acta -') ponere potest"""
+    def __init__(self):
+        self.exitus = 0
+        self.nota = ''
+        self.acta = ''
+
+
+@contextlib.contextmanager
+def _cursus(titulus, vocator_filiorum=None):
+    """CURSUS in annalibus (analytica T3): 'bin/mensor cursus incipere'
+    lineas ambitus reddit (MENSOR_PARENS = id novum + contextus), quae
+    in os.environ ponuntur DUM corpus currit - processus filii omnes
+    (portae, bin/fabrica, scripta chassis) sub hoc cursu nidificantur;
+    post corpus ambitus restituitur et 'finire' exitum + notam scribit.
+    Exceptio = exitus 1 (nota = nuntius); KeyboardInterrupt/SystemExit
+    finem NON scribit -> INTERRUPTUS, ut processus necatus. Python
+    formam nullam reimplementat (lineae, contextus in C).
+    vocator_filiorum: MENSOR_VOCATOR filiorum (commissio). CURSUS_NULLUS
+    aut bin/mensor absens = nihil notatur. Scriptura fracta cursum
+    numquam frangit - nominatur in stderr."""
+    c = _CursusApertus()
+    amb = None
+    if not os.environ.get('CURSUS_NULLUS') and os.access(MENSOR_BIN,
+                                                         os.X_OK):
+        r = subprocess.run([MENSOR_BIN, 'cursus', 'incipere', '-titulus',
+                            titulus], capture_output=True, text=True,
+                           errors='replace')
+        if r.returncode == 0:
+            amb = dict(l.split('=', 1) for l in r.stdout.splitlines()
+                       if '=' in l)
+        else:
+            sys.stderr.write('cursus non notatus (%s): %s' % (titulus,
+                                                             r.stderr))
+    if not amb or 'MENSOR_PARENS' not in amb:
+        yield c
+        return
+    if vocator_filiorum:
+        amb['MENSOR_VOCATOR'] = vocator_filiorum
+    veteres = dict((k, os.environ.get(k)) for k in amb)
+    os.environ.update(amb)
+    initium = time.monotonic()
+    finitus = False
+    try:
+        yield c
+        finitus = True
+    except Exception as ex:
+        finitus = True
+        c.exitus = c.exitus or 1
+        nuntius = '%s: %s' % (type(ex).__name__, ex)
+        c.nota = c.nota or nuntius.split('\n')[0]
+        # corpus = nuntius TOTUS (refusio integra: 'quid commissionem
+        # fregit' - Franus 10-13), non linea prima
+        c.acta = c.acta or nuntius
+        raise
+    finally:
+        for k, v in veteres.items():
+            if v is None:
+                os.environ.pop(k, None)
+            else:
+                os.environ[k] = v
+        if finitus:
+            r = subprocess.run(
+                [MENSOR_BIN, 'cursus', 'finire', '-id', amb['MENSOR_PARENS'],
+                 '-exitus', str(c.exitus), '-duratio_ms',
+                 str(int((time.monotonic() - initium) * 1000)), '-nota',
+                 c.nota] + (['-titulus', titulus, '-acta', '-'] if c.acta
+                            else []),
+                input=c.acta or None, capture_output=True, text=True,
+                errors='replace')
+            if r.returncode != 0:
+                sys.stderr.write('finis cursus non notatus (%s): %s'
+                                 % (titulus, r.stderr))
+
+
+def cursus(nomen, **par):
+    """QUAESTIO NOMINATA cursuum (analytica T5): 'bin/mensor quaestio
+    <nomen> par=valor ... -machina' - logica tota in C
+    (lib/mensura_quaestio); hic involucrum tenue. Reddit ordines (tuplae
+    camporum TSV, genere omisso); 'acta' textum corporis reddit.
+    Quaestio aut parametrum ignotum -> SilvaError cum nuntio mensoris.
+    nomina: historia ultimum fracta acta tendentia filii summa iudicia
+    commissiones numquam discus."""
+    args = [MENSOR_BIN, 'quaestio', nomen] + [
+        '%s=%s' % (k, v) for k, v in sorted(par.items())]
+    if nomen != 'acta':
+        args.append('-machina')
+    r = subprocess.run(args, capture_output=True, text=True, errors='replace')
+    if r.returncode != 0:
+        raise SilvaError('quaestio %s: %s' % (nomen, r.stderr.strip()))
+    if nomen == 'acta':
+        return r.stdout
+    return [tuple(l.split('\t')[1:]) for l in r.stdout.splitlines()
+            if '\t' in l]
+
+
+def _cursu_notatum(titulus, exitus_ex, vocator_filiorum=None):
+    """decorator: vocatio tota = cursus unus. titulus(*a, **k) -> nomen;
+    exitus_ex(fructus) -> (exitus, nota) aut (exitus, nota, acta)"""
+    def decorator(f):
+        @functools.wraps(f)
+        def involucrum(*a, **k):
+            with _cursus(titulus(*a, **k), vocator_filiorum) as c:
+                fructus = f(*a, **k)
+                e = exitus_ex(fructus)
+                c.exitus, c.nota = e[0], e[1]
+                c.acta = e[2] if len(e) > 2 else ''
+                return fructus
+        return involucrum
+    return decorator
+
+
+@contextlib.contextmanager
+def _phasis(nomen):
+    """phasis commissionis: cursus 'phasis:<nomen>' + linea temporum
+    (tempora.tsv manet ut cache, Q3) - haec solum post successum, ut
+    olim"""
+    initium = time.time()
+    with _cursus('phasis:' + nomen):
+        yield
+    _tempus_notare('phasis', nomen, initium)
+
+
+@_cursu_notatum(lambda nomen, filtrum=None, *a, **k:
+                'porta:' + nomen + ('.' + filtrum if filtrum else ''),
+                lambda p: (0 if p.sana else 1, p.compendium, p.acta or ''))
 def porta(nomen, filtrum=None, radix=None, receptum=True, vis=False,
           auditus=None):
     """portam currere. VERDICTUM (fabrica spec 3 T6): porta sine filtro in
@@ -1834,6 +1974,9 @@ def porta(nomen, filtrum=None, radix=None, receptum=True, vis=False,
 PORTAE_GRADUUM = {'toml': 'probationes_toml',
                   'css': 'probationes_css',
                   'md': 'probationes_md',
+                  'html': 'probationes_html',
+                  'saltuarius': 'probationes_saltuarius',
+                  'materia': 'probationes_materia',
                   'silva': 'probationes_silva',
                   'radix': 'probationes_radicis'}
 # RESIDUA (fabrica-7 T7): quod porta PRAETER membra probat - portae
@@ -2758,6 +2901,8 @@ def _lint_praevium_exigere(viae):
             + relatio)
 
 
+@_cursu_notatum(lambda *a, **k: 'commissio',
+                lambda h: (0, 'commissum %s' % h), 'commissio')
 def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
               opus=None, actor='claude', sine_debitis=None,
               sine_fabrica=None, excusatae=None, _debitae_additae=False,
@@ -2812,24 +2957,20 @@ def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
             ' commissum:\n  %s' % (len(causae), '\n  '.join(
                 '%d. %s' % (k + 1, c) for k, c in enumerate(causae))))
     if verificare:
-        initium = time.time()
-        _formam_custodire(viae, sine_fabrica)
-        _tempus_notare('phasis', 'forma', initium)
-        initium = time.time()
-        _lint_praevium_exigere(viae)
-        _tempus_notare('phasis', 'lint', initium)
+        with _phasis('forma'):
+            _formam_custodire(viae, sine_fabrica)
+        with _phasis('lint'):
+            _lint_praevium_exigere(viae)
         for nota in notae_convertibilium(viae):
             print(nota)
     if not _fabrica_facta:
-        initium = time.time()
-        _fabricam_exigere(viae, sine_fabrica)
-        _tempus_notare('phasis', 'fabrica', initium)
+        with _phasis('fabrica'):
+            _fabricam_exigere(viae, sine_fabrica)
     if sine_debitis is not None:
         print('portae debitae OMISSAE: %s' % sine_debitis)
     elif not _debitae_additae:
-        initium = time.time()
-        portae = _portae_debitas_addere(viae, portae, excusatae)
-        _tempus_notare('phasis', 'portae debitae', initium)
+        with _phasis('portae debitae'):
+            portae = _portae_debitas_addere(viae, portae, excusatae)
     ante = _sigilla_viarum(viae)
     for p in portae:
         if isinstance(p, str) and p.endswith('.json'):
@@ -2904,10 +3045,13 @@ def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
     if not verificare:
         args.append('--no-verify')
     args += ['-F', '-']
-    r = _curre(args, stdin=_nuntium_cum_trailer(nuntius))
-    if r.returncode != 0:
-        raise SilvaError('git commit rc=%d: %s'
-                         % (r.returncode, (r.stdout + r.stderr).strip()[-600:]))
+    # uncus pre-commit (examen, forma) hic currit - phasis sua
+    with _phasis('git commit'):
+        r = _curre(args, stdin=_nuntium_cum_trailer(nuntius))
+        if r.returncode != 0:
+            raise SilvaError('git commit rc=%d: %s'
+                             % (r.returncode,
+                                (r.stdout + r.stderr).strip()[-600:]))
     h = _curre(['git', 'rev-parse', '--short', 'HEAD']).stdout.strip()
     recepta_viva_delere()
     if opus:
@@ -2978,6 +3122,14 @@ Photographia = namedtuple('Photographia', 'arbor basis via')
 _IGNORATA_NON_CLONANDA = ('.superpowers', '.claude', '.DS_Store',
                           'tabularium.db', 'tabularium.db-wal',
                           'tabularium.db-shm')
+# THESAURUS COMMUNIS (2026-10-14, mensuratum): build/aedilis/obiecta
+# (~XCII milia rerum, thesaurus compilationis) clonare XI ex XIII,IV s
+# materializationis constabat. Thesaurus contento inscribitur (clavis ex
+# ingressibus, viae normatae: clone ictus eosdem habet - probatum),
+# scriptura atomica (temporarium + rename, lib/thesaurus.c): in clone
+# VINCULUM ad thesaurum vivum, non copia. Purgatio concurrens ictum
+# solum perdit, numquam effectum falsum (lib/thesaurus.worklog.md).
+_IGNORATA_COMMUNIA = ('build/aedilis/obiecta',)
 
 
 def photographia_capere():
@@ -3086,12 +3238,42 @@ def _ignorata_dividere(ignorata):
             sorted(l for l in ignorata if not l.endswith('/') and not tecta(l)))
 
 
+def _communia_excidere(directoria, communia, radix):
+    """directoria clonanda SINE communibus: directorium quod commune
+    continet in filios suos solvitur (gradatim) donec commune ipsum
+    seorsum stet, deinde excipitur. Commune absens aut extra directoria
+    clonanda omittitur. Reddit (directoria ordinata, communia excisa)."""
+    directoria = list(directoria)
+    excisa = []
+    for c in communia:
+        if not os.path.isdir(os.path.join(radix, c)):
+            continue
+        while True:
+            pater = next((d for d in directoria
+                          if c == d or c.startswith(d + '/')), None)
+            if pater is None:
+                break
+            directoria.remove(pater)
+            if pater == c:
+                excisa.append(c)
+                break
+            directoria.extend(pater + '/' + f for f in
+                              sorted(os.listdir(os.path.join(radix, pater))))
+    return sorted(directoria), excisa
+
+
 def _clonare_ignorata(ad):
     """res ignoratae (bin/, build/, silva/build/, book_assets/*.txt ...)
     in clone: copy-on-write (_clonare_paria: clonefile per bin/clonare,
     regressus cp -c) - spatium nullum donec scribantur. Directoria
-    PRIMUM, deinde parentes plagularum solutarum"""
+    PRIMUM, deinde parentes plagularum solutarum. _IGNORATA_COMMUNIA
+    vincula ad arborem vivam fiunt, non clonantur."""
     directoria, plagulae = _ignorata_dividere(_ignorata())
+    directoria, communia = _communia_excidere(directoria,
+                                              _IGNORATA_COMMUNIA, RADIX)
+    for c in communia:
+        os.makedirs(os.path.join(ad, os.path.dirname(c)), exist_ok=True)
+        os.symlink(os.path.join(RADIX, c), os.path.join(ad, c))
     for d in directoria:
         os.makedirs(os.path.join(ad, os.path.dirname(d)), exist_ok=True)
     _clonare_paria([(os.path.join(RADIX, d), os.path.join(ad, d))

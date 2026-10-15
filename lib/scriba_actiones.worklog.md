@@ -165,3 +165,107 @@ and vicus's one-click ictus_primus hook) pass the event through
 scriba_pagina_clavis, so one call site reads MOD_SHIFT. #next/#prev
 ignore Shift (not asked). manus_ludus_premere_ad carries no modifiers;
 probatio_vicus_nexus VII builds the Shift events by hand.
+
+## 2026-10-13 - body verbs: text goes after '</>'
+
+iussum_exsequi / substitutio_mutator: for a body command the effect's
+text is inserted at (linea_clausurae, post_clausuram), not after the
+head; a consuming body verb deletes only the head ($verb<>) - if '</>'
+is on the same line it shifts left by the head's length, handled. The
+cursor goes after the inserted text on the closer's line. Tested in
+probatio_vicus_iussa section "corpus" (two throwaway verbs, eco and
+ecoc; clicking inside the body runs nothing).
+
+## 2026-10-13 - deferred commands (effectus.differre) for $question
+
+Fran wants $question synchronous with a "loading..." message. A
+blocking call cannot paint, so a verb may DEFER: its first call returns
+differre + nuntius; iussum_exsequi shows the message and stores the
+command (sa->dilatum = I, copy of the Iussum). scriba_reficere (the
+pane pulse) calls scriba_iussum_dilatum_currere: stage I -> II returns
+VERUM (repaint: the message is now on screen), stage II relocates the
+command on the working sheet (same line, start column and verb, else
+"<verb>: evanuit"), runs the verb again with iussum->iterum, applies
+the effect and commits with scriba_documentum_committere - ONE change,
+'u' restores all. Writes to 'nuntius' (owner pagina.clavis) are made
+under that scriptor since the pulse runs outside any action.
+
+effectum_applicare is now shared by the click path and the deferred
+path: optional head replacement (effectus.caput, body verbs), then
+text whose '\n' segments become NEW lines below the insertion line.
+tabula_inserere_lineam refuses to push a non-blank last line off the
+page, so an answer can only consume trailing blank lines - extra
+segments are dropped, user text is never lost. Test: probatio_vicus_
+iussa "dilatum" (verb 'mora': message only, first pulse nothing,
+second pulse head + two lines, 'u' restores, deleted before the pulse
+-> evanuit).
+
+## 2026-10-13 — idle Esc passes through (A6d-2)
+
+In normal mode with nothing pending (no clavis_praecedens, no 'fd'
+wait) Esc is now returned unconsumed, next to the existing "Tab in
+normal mode -> dispatcher" rule. The dispatcher uses it to leave a
+nested scriba (calendar notes -> list); for top-level panes nothing
+acts on it (vicus has no Esc handling; dimissio only with an open
+popover). Esc still cancels pending commands, visual and insert mode.
+
+## 2026-10-14 — running commands: IussumOpus (quaestio-rivus T7)
+
+A verb can now return `effectus->opus` (`include/iussum.h`): scriba owns
+everything around it, so any long command gets the same behaviour.
+- Start (stage II of a deferred command): snapshot of `laboris`
+  (cells + indentation, in the doc's piscina), the relocated Iussum,
+  the final head and `consumit` are kept; a per-pulse piscina
+  (`piscina_operis`, vacated each pulse, destroyed at the end).
+- `scriba_opus_pulsare` runs in `scriba_reficere` BEFORE the deferred
+  command: the frame that starts the command only paints its status,
+  the first text appears on the next frame (deterministic, tested:
+  pulsus == 0 right after the start).
+- Each pulse with new text: restore snapshot, `effectum_applicare` with
+  NO head. FINITUM / Esc: restore, apply with the head, ONE
+  `scriba_documentum_committere` (one undo). IRRITUM (plan R7): restore
+  only, status only, nothing committed.
+- Lock: while `sa->opus`, `scriba_pagina_clavis` swallows every event
+  (before `nuntium_tollere`, so the status survives); Esc / Ctrl-[
+  calls `abrumpere` then closes as FINITUM. `scriba_iussum_ad_punctum`
+  is FALSE while running (vicus' first-click path). Page fill =
+  `COLOR_SUPERFICIES` while running (`lib/scriba_figurae.c`).
+- Status writes go under owner 'pagina.clavis' exactly like the
+  deferred path (domini refuse silently otherwise).
+- Test lessons: (1) the color probe first sampled columns 30-40, which
+  reach past the page onto the desk (always desk gray) - sample inside
+  the page; (2) clicking column 0 of a line holding `$lente` re-runs
+  the command - prove "unlocked" by typing on an empty line; (3) PLANT
+  stayed green: finish WITHOUT restoring the snapshot still showed the
+  final text on line XIII (the old "a b" was pushed to XIV) - added
+  "nothing left on XIV". Plants: lock removed, restore removed, fill
+  unconditional - all red.
+
+## 2026-10-14 - body answers placed after the REAL '</>' (Fran: split questions)
+
+Fran saw two `$question` layouts go wrong (pre-existing, both routes):
+a long first line + an indented continuation came out with the answer
+between the two question lines; a line near the edge came out with the
+tail on the next line and the answer between them. One cause:
+`effectum_applicare` swapped the head `$question<>` (XI) for
+`<question answered>` (XIX, +VIII), which on a long first line
+overflows - the insert cascade carries the tail into the next line, or
+onto a NEW line when the next line is indented - but the answer
+position (linea_clausurae, post_clausuram + delta) had been computed
+BEFORE that move. So the answer landed one line early.
+
+Fix, two parts: the head is now `<answered>` (X, shorter than the
+command: the line can never grow - Fran's choice, vicus_applicatio.c);
+and `effectum_applicare` re-finds the closing tag after any head swap
+(`clausuram_quaerere`: first '</>' from the head's end, scanned in row
+order - an overflowed tail stays contiguous because overflow only
+leaves FULL lines; the position comes from the '>' so a tag ending in
+the last column means "after it on that line"). The second part guards
+every body verb with a longer head. Tests:
+probatio_vicus_quaestio `prima longa` + `ad marginem` (Fran's two
+shapes), probatio_vicus_iussa `caput longius` ($mora's +V head at the
+edge: question contiguous, text right after the real '</>').
+
+Side find, parked (ledger ...A7C7K4R): the insert cascade DROPS a space
+that overflows at the edge (`of scriba` -> `ofscriba`) - in
+tabula_characterum, also reachable by ordinary typing.

@@ -2995,3 +2995,158 @@ exactly where producers run under the entry point. Reproduced in quinta
 fixed by tee-ing into a temp file outside the tree and moving it into
 build/test_logs/ after the run; reproduction then green. silva stayed
 green because nothing upstream of its members runs under the tee.
+
+## 2026-10-13 - every action is also a run record (analytica T3)
+
+`_cursum_inscribere` (tools/fabrica_memoria.c), the hook that fills the
+sqlite `cursus` table for SANATUM / FRACTUM / PRAEPARATUM / IUDICIUM,
+now also appends a run record to the mensura diary
+(`_cursum_annalibus_inscribere`, written first so a broken sqlite
+statement cannot hide it): titulus = action title, parent and context
+inherited from the environment (git computed once per process if
+absent, via lib/mensura_contextus), start = now - duration (written
+after the fact: an interrupted action shows through its interrupted
+parent gate), exit 1 only for FRACTUM, nota = eventus + causa + stalum.
+The CHILD environment is deliberately untouched: a step member's env is
+in its key, a run id there would make every member stale on every run.
+fabrica fumus LII (whole fumus now isolated to a temp diary).
+
+## 2026-10-13 - sections as child runs (analytica T3b)
+
+Fran asked whether per-test / per-section timing could live in credo.
+credo v2 already times every section (SECTIO ... ms in CREDO_VERDICTA =
+<area>/credo.tsv), but the file is overwritten per run. The bridge is in
+fabrica, not credo: credo pulls nothing but chorda + piscina, and the
+member's env is hermetic (a parent id there would be in its key), so a
+test cannot know its run. After a member that RAN (SANATUM/FRACTUM)
+gets its record, `_sectiones_annalibus_inscribere` reads the same file
+through `fabrica_sectiones_legere` (Memoria now carries a back-pointer
+to its sutura, set in suturae_memoriam_nectere) and writes one child
+per section: `<membrum>#<sectio>`, start = member start + earlier
+sections' ms, duration = credo ms, exit 0 for TRANSIIT / NOTA_FRACTA /
+OMISSA, nota = exitus p/t + first fracture. Synthetic files (classic
+suites, 'totum') add nothing. fumus LIII: a fake member writes the
+credo contract itself (no credo in the temp root).
+
+First real reading: probatio_mensura_cursus 221 ms as a member, its six
+sections ~13 ms together - ~94% of the test is process start + dyld of
+a binary that links everything. Only 32 of 555 suites are sectioned.
+Plants III red (synthetic not skipped, wrong parent, TRANSIIT counted as failure).
+
+## 2026-10-13 - foreign roots and the diary guard (analytica T4 step 1)
+
+Reading the T3 commit's own run tree showed fake iudicium-fumus actions
+(`gen`, `porta_x`, two FRACTUM) under quinta's tree and commit: that
+fumus runs bin/fabrica on throwaway roots, and every record inherited
+the SESSION context. A static grep for offenders cannot tell "mktemp for
+scratch while judging the real tree" from "judging a fake root", and a
+gate reading the real diary is not hermetic (the polluted records are in
+the volume forever). So two structural rules instead of a detector:
+(1) a record names the root fabrica ACTUALLY judged - if `sutura->radix`
+differs from the inherited arbor, its own context is computed once per
+process (`mensura_contextum_arboris`: HEAD/branch/dirty if a repo, blank
+if not; cached in Memoria, now zeroed in suturae_memoriam_aperire);
+(2) a root that is not a repository is a fixture by nature and writes
+run records ONLY to an explicit MENSOR_DIARIUM, never the default.
+fumus LIV (foreign root keeps its own path, alien commit not
+inherited), LV (default diary: fixture writes nothing, the same root as
+a git repo writes with its own commit). LV's first half first passed
+vacuously - the default diary's directory did not exist, so nothing
+could be written for ANY reason; the test now creates it. Verified on
+the real offender: iudicium_fumus run against the real diary adds 0
+lines. Plants III red (guard off, foreign context not applied, commit
+not read in the shared lib).
+
+## 2026-10-13 - action bodies into diurna (analytica T4 step 2b)
+
+`_acta_actionis_ponere` (tools/fabrica_memoria.c): after a SANATUM /
+FRACTUM / PRAEPARATUM action, build/fabrica/acta/TITULUS.log (which the
+next run overwrites) is stored in diurna under the action's run id;
+the run's `acta` = its SHA-256. Diurna opened once per process
+(Memoria.diurna). A fixture root needs an explicit MENSOR_DIURNA as
+well as MENSOR_DIARIUM - fumus LV runs the diary-only case explicitly
+(plant F6 survived without it). fumus LVI: a failing member's output
+is found by run id. Whole fumus exports MENSOR_DIURNA.
+
+## 2026-10-14 - crashed sections named (analytica T4 2b-ii)
+
+`fabrica_sectiones_legere` reads credo's new SECTIONES / INCIPIT lines:
+a section started but never recorded in a file without SUITA becomes a
+synthetic RUIT section, and `non_cursae = declaratae - seen`. The
+member cause names it ("sectio 'beta' RUIT; 1 non cursae"; RUIT prints
+no p/t); files without SECTIONES keep the old "SUITA absens" text.
+fumus LVII has two crashing members: r dies INSIDE beta, q dies
+BETWEEN sections (alpha recorded, beta never started). q was added by
+reasoning before planting - without it the plant "incepta not cleared"
+(R1: the last completed section reported as RUIT) would survive. Plants
+III red here + II in credo.
+
+## 2026-10-14 - html to steps (expedition …W0ZBW row, rubric v3)
+
+`probationes_html` composite (html/aedificatio.stml, subsystema in
+fabrica.stml), html/compile_probationes.sh a thin entry point (css
+template), PORTAE html + PORTAE_GRADUUM. Rubric points that applied:
+(1) THREE hidden linkers of html/build/*.o - html/arbor.sh,
+html/computus.sh, tools/runae_corpus.sh - now `cursor_instrumentum_struere`
+(arbor byte-identical incl. -sedes, computus identical outside ms_
+columns, runae_corpus regenerates the committed corpus with zero diff);
+needed `html/fontes` as an aedilis root (no header collision);
+(3) totalitas' failure file -> $TMPDIR (area) like css; (4)
+COMPUTUS_SCRIBERE / ORACULUM_OMNIA / ORACULUM_EXEMPLUM / ORACULUM_SCRIBERE
+declared, both goldens as `<debitum_scripturae>`; (9) three
+radices_manu lines deleted. No callers read the runner's output
+(domus.cruda.tsv names its old lines but is a frozen-corpus snapshot).
+Oracle 14/14. Measured: old runner 26 s / 21 s warm; composite cold
+58 s (new root = new keys), warm 1.3 s, -vis 13.4 s.
+Plant via silva.planta: FOVENTIA "table" -> red (4 members named),
+restored green. A first plant in the WHATWG 'special' list stayed GREEN
+under both runners (oracle on the planted tree: 14/14 congruent) - an
+old test gap, filed, not a conversion loss.
+
+## 2026-10-14 - saltuarius to steps; oracle reads the older runner format
+
+`probationes_saltuarius` (saltuarius/aedificatio.stml), thin entry
+point, PORTAE + PORTAE_GRADUUM; the gate's `tegit` was only
+`saltuarius/*_fontes_generata.sh` (its own sources owed nothing) - now
+`saltuarius/fontes/* saltuarius/probationes/*` + `currit="tools/fabrica.c"`
+like css. The aedilis closure picks the amalgams (silva/amalgama/silva.c,
+tessera/amalgama/tessera.c), the old runner's boundary, and the
+probationes helper saltuarius_proba.c by itself. No env vars, no goldens;
+the /tmp fixtures stay (radix precedent: fabrica traces the tree only).
+saltuarius.sh builds its own objects (not a hidden linker).
+`tools/gradus_oraculum.sh` said "cursor nihil cucurrit": it parsed only
+`--- NAME praeteriit` lines; saltuarius (and gesta) print `=== NAME ===`
+plus a final `FRACTAE:` list - fallback parser added. Oracle 13/13;
+plant (columnae separator +I -> +II) red on BOTH sides with the same
+member named, restored green. Measured: old 23 s / 20 s warm;
+composite warm 2.9 s, -vis 12.5 s.
+
+## 2026-10-14 - materia to steps
+
+`probationes_materia` (materia/aedificatio.stml), thin entry point,
+PORTAE + PORTAE_GRADUUM, radices_manu line deleted. Not an expedition
+row originally (the runner never called excubitor) - added. Rubric
+point 3 was the only one that applied: probatio_materia_coctor's rancor
+section (VI) wrote materia/build/proba.registrum.stml and its two
+generated files into the TREE; `materia_registrum_recens` reads nothing
+else under its root, so the section now uses `$TMPDIR/coctor_rancor` as
+its root (old runner: TMPDIR is always set on macOS, so it writes there
+too). Plant (branch disabled) -> red with fabrica's own words "scripsit
+extra vestigium: materia/build/proba.registrum.stml, ..." - restored
+green. Oracle 14/14. Measured (machine shared with a frigida run): old
+7.4 s / 4.1 s warm; composite warm 1.6 s, -vis 15 s.
+
+## 2026-10-14 - oratio's nine tools build from their own closures
+
+arbor, computus, formae, quaere, reticulum, sententiae, verba, vocabula,
+vocabularium (rubric point 1, before the runner itself): each linked
+EVERY object in oratio/build/*.o that the runner had last built - with
+no staleness check at all (oraculum.sh at least ran excubitor). Edit a
+library, run verba.sh without the runner: the old object. Now
+`cursor_instrumentum_struere` (aedilis closure, 8-38 objects each,
+relink only if an object changed); computus.sh named its dir `$BUILD`,
+cursor_communis needs `BUILD_DIR` - added. Eleven probes on fixtures
+byte-identical before/after (computus outside ms_ columns). Plant
+(class name in oratio_registrum.c, no runner run) changed verba's
+output, restore identical. Nine radices_manu lines deleted. The runner
+(oratio/compile_probationes.sh) is the next step.

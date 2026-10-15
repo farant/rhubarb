@@ -435,14 +435,28 @@ principale (vacuum)
     }
 
     {
-        constans character* radix = getenv("RHUBARB_RADIX");
+        constans character* radix  = getenv("RHUBARB_RADIX");
+        constans character* tmp    = getenv("TMPDIR");
+                 character  radix_temporaria[DXII];
                  character  via[1024];
              MateriaRancor  rancor;
                       FILE* f;
 
         imprimere("\n--- VI. Porta rancoris: recens, rancida, absens ---\n");
-        /* declaratio et plagulae generatae in materia/build (sedes) */
+        /* declaratio et plagulae generatae in RADIX/materia/build
+         * (sedes). Radix = TMPDIR (cursores ad gradus 2026-10-14: in
+         * gradu area membri - scriptura in arbore extra aream vetita;
+         * materia_registrum_recens nihil aliud sub radice legit), sine
+         * TMPDIR radix repositorii ut olim. */
         radix = radix != NIHIL ? radix : ".";
+        si (tmp != NIHIL && tmp[0] != '\0' && strlen(tmp) < CD)
+        {
+            sprintf(radix_temporaria, "%s/coctor_rancor", tmp);
+            sprintf(via, "mkdir -p '%s/materia/build'",
+                radix_temporaria);
+            CREDO_AEQUALIS_I32 ((i32)system(via), ZEPHYRUM);
+            radix = radix_temporaria;
+        }
         sprintf(via, "%s/materia/build/proba.registrum.stml", radix);
         f = fopen(via, "wb");
         CREDO_NON_NIHIL (f);

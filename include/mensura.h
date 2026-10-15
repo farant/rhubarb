@@ -54,6 +54,7 @@
 #include "chorda.h"
 #include "piscina.h"
 #include "volumen.h"
+#include "xar.h"
 
 
 /* ============================================================
@@ -181,5 +182,117 @@ mensura_condere (
       constans character* via_diarii,
                  Volumen* volumen,
                  Piscina* piscina);
+
+
+/* ============================================================
+ * CURSUS (analytica T1): res cum initio, fine, exitu
+ * ============================================================
+ *
+ * Lineae DUAE in diario, eodem quo mensurae (via calida = appensio):
+ *
+ *   cursus TAB initium TAB id TAB parens TAB sessio TAB titulus TAB argv
+ *       TAB vocator TAB commissum TAB sordidum(0|1) TAB ramus TAB arbor
+ *       TAB machina TAB initium(ms)
+ *   cursus TAB finis TAB id TAB momentum(ms) TAB duratio_ms TAB exitus
+ *       TAB rss_maxima TAB cpu_usoris_ms TAB cpu_systematis_ms TAB acta
+ *       TAB acta_mensura
+ *
+ * Initium SINE fine = INTERRUPTUS (necatus, pendens, concha fracta) -
+ * visibilis, non absens (spec analytica par. II). Mensurae intra cursum
+ * per parens ei adhaerent (parens = id cursus). argv sola effugitur
+ * (\\ \t \n \r): mandatum ut datum, non identitas; ceteri campi TAB
+ * aut lineam novam continentes RECUSANTUR (linea vacua). mensura_condere
+ * lineas 'cursus' genere "cursus" condit. Spec:
+ * project-specs/analytica-spec.md. */
+
+nomen structura {
+    chorda id;          /* clavis cursus (mensura_id_novum) */
+    chorda parens;      /* VACUA = radix */
+    chorda sessio;
+    chorda titulus;     /* identitas operis (titulus chassis aut via) */
+    chorda argv;        /* mandatum ut datum, non identitas */
+    chorda vocator;     /* homo|commissio|uncus|fabrica|frigida|agens */
+    chorda commissum;
+       b32 sordidum;    /* arbor operis mutata ad initium */
+    chorda ramus;       /* ramus ad cursum, aut 'detached' */
+    chorda arbor;       /* radix arboris operis (worktree) */
+    chorda machina;
+       s64 initium;     /* millisecunda ab epocha */
+} CursusInitium;
+
+nomen structura {
+    chorda id;
+       s64 momentum;            /* finis, millisecunda ab epocha */
+       s64 duratio_ms;          /* horologio monotono */
+       s32 exitus;              /* codex exitus (CXXVIII + signum) */
+       s64 rss_maxima;          /* octeti; 0 = ignota */
+       s64 cpu_usoris_ms;
+       s64 cpu_systematis_ms;
+    chorda acta;                /* referentia corporis actorum; vacua =
+                                 * nulla */
+       s64 acta_mensura;
+    chorda nota;                /* quomodo finivit, verbis (analytica
+                                 * T3): compendium portae, eventus
+                                 * fabricae; effugitur ut argv,
+                                 * praeciditur ad CURSUS_NOTA_MAXIMA
+                                 * octetos (charactere integro) */
+} CursusFinis;
+
+#define CURSUS_NOTA_MAXIMA CCLVI
+
+nomen enumeratio {
+    CURSUS_TRANSIIT = ZEPHYRUM,   /* exitus 0 */
+    CURSUS_FRACTUS,               /* exitus alius */
+    CURSUS_INTERRUPTUS            /* initium sine fine (aut adhuc
+                                   * currens) */
+} CursusStatus;
+
+nomen structura {
+    CursusInitium initium;
+      CursusFinis finis;    /* validus nisi status INTERRUPTUS */
+     CursusStatus status;
+} Cursus;
+
+/* lineae (nucleus purus); vacua si campus impurus */
+chorda
+mensura_cursus_initium_ad_lineam (
+    constans CursusInitium* initium,
+                   Piscina* piscina);
+
+chorda
+mensura_cursus_finis_ad_lineam (
+    constans CursusFinis* finis,
+                 Piscina* piscina);
+
+/* lineam cursus legere: initium aut finis (*est_finis_out dicit
+ * utrum). FALSUM si non linea cursus aut malformata. */
+b32
+mensura_cursus_ex_linea (
+           chorda  linea,
+    CursusInitium* initium_out,
+      CursusFinis* finis_out,
+              b32* est_finis_out,
+          Piscina* piscina);
+
+/* in diarium appendere (via calida, sine sqlite) */
+b32
+mensura_cursum_incipere (
+        constans character* via_diarii,
+    constans CursusInitium* initium,
+                   Piscina* piscina);
+
+b32
+mensura_cursum_finire (
+      constans character* via_diarii,
+    constans CursusFinis* finis,
+                 Piscina* piscina);
+
+/* cursus ex actis voluminis (genus "cursus"): initium et finis per id
+ * coniuncti, ordine initii (aequalitas: ordine actorum). Finis sine
+ * initio praetermittitur. Xar de Cursus; NIHIL si volumen legi nequit. */
+Xar*
+mensura_cursus_legere (
+    Volumen* volumen,
+    Piscina* piscina);
 
 #endif /* MENSURA_H */

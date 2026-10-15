@@ -145,3 +145,45 @@ api.anthropic.com still fine.
   "nullae cifrae insecurae oblatae"; with the allowlist plant that line
   is FRACT. The floor's own plant has no observable red through public
   servers (TLS 1.0 + AEAD does not exist) - kept as defense in depth.
+
+## 2026-10-14 - stepped (non-blocking) TLS + context leak (http-vocatio T4)
+
+For the reactor-driven client (route B of $question): `tls_incipere`
+takes an already-connected NON-BLOCKING `TcpConnexio` (from
+`tcp_incipere`), prepares the context and sends nothing; `tls_gradus`
+runs ONE `SSLHandshake` step and says what to wait for
+(`TLS_GRADUS_LEGERE` / `_SCRIBERE` / `_PERFECTUS` / `_ERROR`). The
+connection is marked `gradatim`; the blocking `tls_connectere` path is
+unchanged and shares the setup through `_contextum_parare` (one
+function for SNI, TLS 1.2 minimum, the cipher allow-list, verification).
+
+- **"Would block" is not "timed out".** The read callback used to set
+  `tempus_excessum` on `TCP_ITERUM`: on today's blocking sockets EAGAIN
+  means `SO_RCVTIMEO` fired. On a non-blocking socket it only means
+  "nothing yet" - in gradatim mode the flag is never set.
+- **What to wait for** comes from the callbacks: the write callback
+  sets `scribere_pendet` on EAGAIN (-> SCRIBERE), otherwise a
+  WouldBlock handshake waits for readability.
+  `errSSLServerAuthCompleted` (verification off) just steps again.
+- **Reads drain until TLS_ITERUM.** SecureTransport can hold decrypted
+  bytes the socket no longer signals; a caller that reads once per
+  readiness can stall with data sitting in the TLS buffer. Contract in
+  `tls.h`; http_vocatio (T5) drains.
+- **Writes follow the libcurl SecureTransport quirk:** after
+  `errSSLWouldBlock` with 0 processed, the data is buffered INSIDE;
+  remember its length, flush with `SSLWrite(NULL, 0)` until noErr, then
+  report the whole length. The caller re-calls with the same bytes.
+- **Context leak (plan R5):** `tls_claudere` skipped `SSLClose` AND
+  `CFRelease` when `clausa` was set - and `tls_recipere` sets it on a
+  clean peer close - so every peer-closed TLS connection leaked its
+  SSLContext. Now the context is always released (SSLClose only if we
+  did not see the close).
+
+Tests `probatio_tls_gradus.c` (no network; the local peer is not a TLS
+server): first step sends a ClientHello (record 0x16 0x03) and returns
+LEGERE at once, repeatedly, never "timeout"; garbage answer -> ERROR
+within the bound; peer close -> ERROR and `tls_claudere` really closes
+the fd. NOT verifiable offline (recorded, not planted): the context
+release itself, the gradatim `TLS_ITERUM` read of application data, and
+the `SSLWrite(NULL, 0)` flush - T5's rete file and the live check carry
+the read path.

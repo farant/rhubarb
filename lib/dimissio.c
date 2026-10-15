@@ -236,8 +236,12 @@ post (
        constans Eventus* e)
 {
     (vacuum)d;
-    (vacuum)e;
-    si (actor->claudit)
+    /* solum actio vera (pressio muris aut clavis) claudit: motus
+     * consumptus (illuminatio rei in menu, M2c) non - menu sub muris
+     * motu olim evanescebat (Franus 10-14) */
+    si (   actor->claudit
+        && (   e->genus == EVENTUS_MUS_DEPRESSUS
+            || e->genus == EVENTUS_CLAVIS_DEPRESSUS))
     {
         (vacuum)spatium_claudere((Dimissio*)ctx,
             spatium_actoris(actor));

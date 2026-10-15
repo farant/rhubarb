@@ -630,6 +630,133 @@ mittere_ad (
     differre(d, componens_spatium(c), c->id, genus, tempus);
 }
 
+/* A6d: focusabiles sub c ordine profunditatis (Componens*) */
+interior vacuum
+focusabiles_colligere (
+    Componens* c,
+          Xar* l)
+{
+    i32 i;
+
+    si (!c || !l)
+    {
+        redde;
+    }
+    si (c->focusabilis)
+    {
+        *(Componens**)xar_addere(l) = c;
+    }
+    per (i = ZEPHYRUM; i < componens_numerus_liberorum(c); i++)
+    {
+        focusabiles_colligere(componens_liberum(c, i), l);
+    }
+}
+
+/* focus ad componentem c (spatii sui): catena si spatium nidificatum
+ * sub capite, aliter focus in ramo intimo */
+interior vacuum
+focum_ad_componentem (
+    Dispensator* d,
+         chorda  focus,
+      Componens* c,
+            s64  tempus)
+{
+    mittere_ad(d, invenire_id(d, focus), EVENTUS_FOCUS_AMISSUS, tempus);
+    si (!catenam_scribere(d, componens_spatium(c), c->id))
+    {
+        dispensator_focus_ponere(d, c->id);
+    }
+    mittere_ad(d, c, EVENTUS_FOCUS_CAPTUS, tempus);
+}
+
+/* A6d: Tab - focusabiles sub radice spatii lateris (nidificati
+ * inclusi); currens = id focus in spatio intimo; proximus (gradus I)
+ * aut praecedens (-I), involvit */
+interior vacuum
+tabulam_circumire (
+    Dispensator* d,
+         chorda  focus,
+            s32  gradus,
+            s64  tempus)
+{
+    Componens* radix;
+          Xar* l;
+          s32  n;
+          s32  k;
+          s32  i;
+    Componens* c;
+
+    radix  = radix_spatii(d->arbor, d->motus.spatium);
+    l      = xar_creare(d->scratch, (i32)magnitudo(Componens*));
+    focusabiles_colligere(radix, l);
+    n = l ? (s32)xar_numerus(l) : ZEPHYRUM;
+    si (n == ZEPHYRUM)
+    {
+        redde;
+    }
+    k = -I;
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        c = *(Componens**)xar_obtinere(l, (i32)i);
+        si (   chorda_aequalis(c->id, focus)
+            && spatia_aequalia(componens_spatium(c),
+                   d->motus.spatium_intimum))
+        {
+            k = i;
+            frange;
+        }
+    }
+    k = k < ZEPHYRUM ? (gradus > ZEPHYRUM ? ZEPHYRUM : n - I)
+                     : (k + gradus + n) % n;
+    focum_ad_componentem(d, focus, *(Componens**)xar_obtinere(l,
+        (i32)k), tempus);
+}
+
+/* A6d: Esc ex spatio nidificato (intimum non caput): focus ad
+ * focusabilem primum gradus continentis proximi - spatium eius
+ * intimum continet sed non aequat; longissimum (proximum) eligitur.
+ * Radix lateris sine signo (hospes ipse) spatium "" habet - continet
+ * omnia */
+interior vacuum
+gradum_ascendere (
+    Dispensator* d,
+         chorda  focus,
+            s64  tempus)
+{
+          Xar* l;
+          i32  i;
+          s32  longitudo;
+    Componens* c;
+    Componens* electus;
+       chorda  sp;
+
+    si (   chorda_vacua(d->motus.spatium_intimum)
+        || spatia_aequalia(d->motus.spatium_intimum, d->motus.spatium))
+    {
+        redde;
+    }
+    l = xar_creare(d->scratch, (i32)magnitudo(Componens*));
+    focusabiles_colligere(radix_spatii(d->arbor, d->motus.spatium), l);
+    electus    = NIHIL;
+    longitudo  = -I;
+    per (i = ZEPHYRUM; l && i < xar_numerus(l); i++)
+    {
+        c   = *(Componens**)xar_obtinere(l, i);
+        sp  = componens_spatium(c);
+        si (   !spatia_aequalia(sp, d->motus.spatium_intimum)
+            && insula_via_continet(sp, d->motus.spatium_intimum)
+            && (s32)sp.mensura > longitudo)
+        {
+            electus    = c;
+            longitudo  = (s32)sp.mensura;
+        }
+    }
+    si (electus)
+    {
+        focum_ad_componentem(d, focus, electus, tempus);
+    }
+}
+
 vacuum
 dispensator_addressare (
      Dispensator* d,
@@ -737,9 +864,7 @@ tractare_unum (
     PiscinaNotatio  nota;
         Destinatio  des;
             chorda  focus;
-            chorda  focus_novus;
             chorda  spatium_super;
-         Componens* radix;
          Componens* destinatum;
          Componens* actor;
                b32  consumptus;
@@ -815,24 +940,22 @@ tractare_unum (
 
     /* Tab innatus per clavem LOGICAM (eventus A5): typus '\t' etiam
      * Ctrl+I fert. Shift = MOD_SHIFT (olim '& I' - qui bitus lateris
-     * Ctrl sinistri est: Ctrl+Tab retro, Shift+Tab ante ibat). */
+     * Ctrl sinistri est: Ctrl+Tab retro, Shift+Tab ante ibat).
+     * S2a + A6d: circuitus intra spatium LATERIS (motus.spatium),
+     * focusabiles spatiorum nidificatorum inclusi - focus in spatium
+     * aliud catenam scribit (Tab inter gradus, S8c-2 dilatum) */
     si (   !consumptus && e->genus == EVENTUS_CLAVIS_DEPRESSUS
         && e->datum.clavis.clavis == CLAVIS_TABULA)
     {
-        /* S2a: circuitus intra spatium activum */
-        radix = radix_spatii(d->arbor, d->motus.spatium_intimum);
-        focus_novus = !radix ? chorda_nulla()
-            : (e->datum.clavis.modificantes & MOD_SHIFT)
-            ? destinatio_focus_praecedens(radix, focus, d->scratch)
-            : destinatio_focus_proximum(radix, focus, d->scratch);
-        si (!chorda_vacua(focus_novus))
-        {
-            mittere_ad(d, invenire_id(d, focus), EVENTUS_FOCUS_AMISSUS,
-                       e->tempus);
-            dispensator_focus_ponere(d, focus_novus);
-            mittere_ad(d, invenire_id(d, focus_novus),
-                       EVENTUS_FOCUS_CAPTUS, e->tempus);
-        }
+        tabulam_circumire(d, focus, (e->datum.clavis.modificantes
+            & MOD_SHIFT) ? -I : I, e->tempus);
+    }
+    /* A6d: Esc a nemine consumptum, focus in spatio nidificato: gradus
+     * unus sursum - focusabilis primus spatii parentis */
+    si (   !consumptus && e->genus == EVENTUS_CLAVIS_DEPRESSUS
+        && e->datum.clavis.clavis == CLAVIS_EFFUGIUM)
+    {
+        gradum_ascendere(d, focus, e->tempus);
     }
 
     /* regula staleness */

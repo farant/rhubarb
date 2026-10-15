@@ -30,7 +30,9 @@
  * STML eum NOMINATIM recusat (textus non est) - assertum ut refusio,
  * non ruina.
  *
- * IN FRACTURA: fons peccans in html/build/totalitas_fractum.html.
+ * IN FRACTURA: fons peccans in $TMPDIR/totalitas_fractum.html (in
+ * gradu = area membri; sine TMPDIR html/build/) scribitur et via
+ * imprimitur, ut reproductio vocamen unum sit.
  */
 
 #include "latina.h"
@@ -180,10 +182,21 @@ _fractum_scribere (
     constans character* fons,
                    i32  mensura)
 {
-    character via[DXII];
-    FILE* f;
+              character  via[DXII];
+     constans character* tmp = getenv("TMPDIR");
+                   FILE* f;
 
-    sprintf(via, "%s/html/build/totalitas_fractum.html", RADIX_VIAE);
+    /* gradus (cursores ad gradus, exemplar css): scriptura extra aream
+     * membri vetita - TMPDIR membri est area ipsa */
+    si (tmp != NIHIL && tmp[0] != '\0' && strlen(tmp) < CD)
+    {
+        sprintf(via, "%s/totalitas_fractum.html", tmp);
+    }
+    alioquin
+    {
+        sprintf(via, "%s/html/build/totalitas_fractum.html",
+            RADIX_VIAE);
+    }
     f = fopen(via, "wb");
     si (f == NIHIL)
     { redde;

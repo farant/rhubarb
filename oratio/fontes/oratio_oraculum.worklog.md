@@ -160,3 +160,24 @@ Plants, each red on the intended law then green: `_prose` declared
 versus (the inline identity law, before the CIRCSE count could speak),
 `>=` in the document census (the 14/28 tie became versus), reader
 prefix XV for XIV (`documentum` = "hi0690.x").
+
+## 2026-10-14 - oraculum.sh builds from its own closure (13 s -> ~1 s)
+
+The pythonica group "pondera.py" took 69-76 s; measured by hand, five
+`oraculum.sh` calls cost ~13 s each while the binary itself ran 0.04 s.
+The cost was the staleness check `excubitor.sh oratio/build/ -tacitus`
+(find + stat over every .c/.h and every build dir's .o in the repo).
+`oraculum.sh` now builds through `tools/cursor_communis.sh`
+(`cursor_instrumentum_struere`: aedilis closure -> bin/compilator per
+thesaurus -> relink only if an object changed) into
+`oratio/build/instrumenta/oraculum/oraculum`, and no longer needs the
+runner's `oratio/build/*.o` (the old "obiecta absunt" refusal is gone).
+Needed: `oratio/fontes` as an include root in aedilis.stml (no header
+name collides with the other roots). Warm call ~1.1 s, all of it ~36
+cache-hit compilator calls. Output byte-identical on six probes
+(regulae/errata/nota on ab.conllu, llct, ewt -discrepantiae, circse
+-clausulae). Plant: "substantivum" -> "substantivuX" in
+oratio_registrum.c changed the output (red), restore -> identical.
+pythonica group 69 s -> 7.6 s. Note: changing aedilis.stml makes
+bin/fabrica stale (it reads it) - rebuild the judge before running
+pythonica by hand (commissio heals it itself).

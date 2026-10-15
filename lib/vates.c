@@ -9,6 +9,8 @@
 #include "filum.h"
 #include "fasti.h"
 #include "chorda_aedificator.h"
+#include "rivus_eventuum.h"
+#include "http_vocatio.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -33,6 +35,7 @@ structura VatesPetitio {
      chorda  conatus;
         b32  cogitatio_monstranda;
         b32  cauda_signata;
+        b32  rivus;         /* "stream": true (vates_mittere_rivum) */
         Xar* systema;       /* VatesBlocus */
         Xar* instrumenta;   /* VatesInstrumentum */
         Xar* nuntii;        /* VatesNuntius */
@@ -407,6 +410,12 @@ _corpus_anthropic (constans VatesPetitio* pe, Piscina* piscina)
         json_integer_creare(piscina,
         pe->signa_maxima
             > 0 ? (s64)pe->signa_maxima : (s64)VATES_SIGNA_ORDINARIA));
+    si (pe->rivus)
+    {
+        json_objectum_ponere(radix, "stream",
+            json_boolean_creare(piscina,
+            VERUM));
+    }
     si (pe->cogitatio_monstranda)
     {
         JsonValor* c = json_objectum_creare(piscina);
@@ -768,6 +777,277 @@ vates_anthropic_legere (
     redde _legere(status_http, corpus, piscina, &novitas);
 }
 
+/* ---- B'. rivus Anthropic (quaestio-rivus-spec II.4): eventa ->
+ * nuntius congregatus (forma non-rivi) -> _legere ---- */
+
+nomen structura {
+            JsonValor* blocus;      /* content_block ex start */
+    ChordaAedificator* textus;      /* text / thinking */
+    ChordaAedificator* json;        /* input_json_delta */
+               chorda  signatura;
+                  b32  signata;
+} VatesBlocusRivi;
+
+nomen structura {
+       Piscina* piscina;
+    VatesRivus  rivus;
+        vacuum* datum;
+     JsonValor* nuntius;            /* message ex message_start */
+           Xar* bloci;              /* VatesBlocusRivi */
+        chorda  causa_finis;
+           b32  causa_visa;
+           s64  output;
+           b32  output_visum;
+           b32  finitus;            /* message_stop */
+           b32  erratum;
+        chorda  error_genus;
+        chorda  error_nuntius;
+           i32  deltae;
+} VatesCollector;
+
+interior vacuum
+_collectorem_initiare (
+    VatesCollector* c,
+        VatesRivus  rivus,
+            vacuum* datum,
+           Piscina* piscina)
+{
+    memset(c, 0, magnitudo(*c));
+    c->piscina  = piscina;
+    c->rivus    = rivus;
+    c->datum    = datum;
+    c->bloci    = xar_creare(piscina, (i32)magnitudo(VatesBlocusRivi));
+}
+
+interior VatesBlocusRivi*
+_blocus_rivi (
+    VatesCollector* c,
+               s64  index)
+{
+    si (index < 0 || index >= (s64)xar_numerus(c->bloci))
+    {
+        redde NIHIL;
+    }
+    redde (VatesBlocusRivi*)xar_obtinere(c->bloci, (i32)index);
+}
+
+/* RivusEventuumFunctio: typus in data ipsa (Anthropic), nomen eventus
+ * idem */
+interior vacuum
+_eventum_anthropic (
+    vacuum* datum,
+    chorda  eventus,
+    chorda  data)
+{
+    VatesCollector* c      = (VatesCollector*)datum;
+      JsonResultus  j      = json_legere(data, c->piscina);
+            chorda  vacua  = _vacua();
+            chorda  typus;
+
+    (vacuum)eventus;
+    si (!j.successus || !json_est_objectum(j.radix))
+    {
+        redde;
+    }
+    typus = json_capere_chorda(j.radix, "type", vacua);
+    si (chorda_aequalis_literis(typus, "message_start"))
+    {
+        c->nuntius = json_objectum_capere(j.radix, "message");
+    }
+    alioquin si (chorda_aequalis_literis(typus, "content_block_start"))
+    {
+        VatesBlocusRivi* b = (VatesBlocusRivi*)xar_addere(c->bloci);
+
+        memset(b, 0, magnitudo(*b));
+        b->blocus  = json_objectum_capere(j.radix, "content_block");
+        b->textus  = chorda_aedificator_creare(c->piscina, CXXVIII);
+        b->json    = chorda_aedificator_creare(c->piscina, XXXII);
+    }
+    alioquin si (chorda_aequalis_literis(typus, "content_block_delta"))
+    {
+        VatesBlocusRivi* b  = _blocus_rivi(c,
+            json_capere_integer(j.radix, "index", -I));
+              JsonValor* d   = json_objectum_capere(j.radix, "delta");
+                 chorda  dt  = json_capere_chorda(d, "type", vacua);
+
+        si (!b)
+        {
+            redde;
+        }
+        si (chorda_aequalis_literis(dt, "text_delta"))
+        {
+            chorda t = json_capere_chorda(d, "text", vacua);
+
+            chorda_aedificator_appendere_chorda(b->textus, t);
+            c->deltae++;
+            si (c->rivus)
+            {
+                c->rivus(c->datum, t, FALSUM);
+            }
+        }
+        alioquin si (chorda_aequalis_literis(dt, "thinking_delta"))
+        {
+            chorda t = json_capere_chorda(d, "thinking", vacua);
+
+            chorda_aedificator_appendere_chorda(b->textus, t);
+            c->deltae++;
+            si (c->rivus)
+            {
+                c->rivus(c->datum, t, VERUM);
+            }
+        }
+        alioquin si (chorda_aequalis_literis(dt, "signature_delta"))
+        {
+            b->signatura  = json_capere_chorda(d, "signature", vacua);
+            b->signata    = VERUM;
+        }
+        alioquin si (chorda_aequalis_literis(dt, "input_json_delta"))
+        {
+            chorda_aedificator_appendere_chorda(b->json,
+                json_capere_chorda(d, "partial_json", vacua));
+        }
+    }
+    alioquin si (chorda_aequalis_literis(typus, "message_delta"))
+    {
+        JsonValor* d = json_objectum_capere(j.radix, "delta");
+        JsonValor* u = json_objectum_capere(j.radix, "usage");
+
+        si (   d && json_objectum_capere(d, "stop_reason")
+            && json_est_chorda(json_objectum_capere(d, "stop_reason")))
+        {
+            c->causa_finis = json_capere_chorda(d, "stop_reason",
+                vacua);
+            c->causa_visa = VERUM;
+        }
+        si (u && json_objectum_capere(u, "output_tokens"))
+        {
+            c->output = json_capere_integer(u, "output_tokens",
+                0);
+            c->output_visum = VERUM;
+        }
+    }
+    alioquin si (chorda_aequalis_literis(typus, "message_stop"))
+    {
+        c->finitus = VERUM;
+    }
+    alioquin si (chorda_aequalis_literis(typus, "error"))
+    {
+        JsonValor* e = json_objectum_capere(j.radix, "error");
+
+        c->erratum        = VERUM;
+        c->error_genus    = json_capere_chorda(e, "type", vacua);
+        c->error_nuntius  = json_capere_chorda(e, "message", vacua);
+    }
+    /* ping, content_block_stop, ignota: nihil */
+}
+
+interior VatesResponsum*
+_collectorem_finire (
+    VatesCollector* c)
+{
+     VatesResponsum* r;
+          JsonValor* content;
+             chorda  novitas;
+                i32  k;
+
+    si (c->erratum)
+    {
+        r                 = _responsum_vacuum(c->piscina);
+        r->status_http    = CC;
+        r->conatus        = I;
+        r->error          = VATES_ERROR_STATUS;
+        r->error_genus    = c->error_genus;
+        r->error_nuntius  = c->error_nuntius;
+        redde r;
+    }
+    si (!c->finitus || !c->nuntius || !json_est_objectum(c->nuntius))
+    {
+        r               = _responsum_vacuum(c->piscina);
+        r->status_http  = CC;
+        r->conatus      = I;
+        r->error        = VATES_ERROR_RETE;
+        r->error_nuntius = chorda_ex_literis(
+            "rivus truncatus (message_stop deest)", c->piscina);
+        redde r;
+    }
+    content = json_tabulatum_creare(c->piscina);
+    per (k = 0; k < xar_numerus(c->bloci); k++)
+    {
+        VatesBlocusRivi* b = (VatesBlocusRivi*)xar_obtinere(c->bloci,
+            k);
+                  chorda typus;
+
+        si (!b->blocus || !json_est_objectum(b->blocus))
+        {
+            perge;
+        }
+        typus = json_capere_chorda(b->blocus, "type", _vacua());
+        si (chorda_aequalis_literis(typus, "text"))
+        {
+            json_objectum_ponere(b->blocus, "text", json_chorda_creare(
+                c->piscina, chorda_aedificator_finire(b->textus)));
+        }
+        alioquin si (chorda_aequalis_literis(typus, "thinking"))
+        {
+            json_objectum_ponere(b->blocus, "thinking",
+                json_chorda_creare(c->piscina,
+                chorda_aedificator_finire(b->textus)));
+            si (b->signata)
+            {
+                json_objectum_ponere(b->blocus, "signature",
+                    json_chorda_creare(c->piscina, b->signatura));
+            }
+        }
+        alioquin si (chorda_aequalis_literis(typus, "tool_use"))
+        {
+                  chorda js = chorda_aedificator_finire(b->json);
+            JsonResultus ji = json_legere(js.mensura > 0 ? js
+                : chorda_ex_literis("{}", c->piscina), c->piscina);
+
+            json_objectum_ponere(b->blocus, "input", ji.successus
+                ? ji.radix : json_objectum_creare(c->piscina));
+        }
+        json_tabulatum_addere(content, b->blocus);
+    }
+    json_objectum_ponere(c->nuntius, "content", content);
+    si (c->causa_visa)
+    {
+        json_objectum_ponere(c->nuntius, "stop_reason",
+            json_chorda_creare(c->piscina, c->causa_finis));
+    }
+    si (c->output_visum && json_objectum_capere(c->nuntius, "usage"))
+    {
+        json_objectum_ponere(json_objectum_capere(c->nuntius, "usage"),
+            "output_tokens", json_integer_creare(c->piscina,
+            c->output));
+    }
+    redde _legere(CC, json_scribere(c->nuntius, c->piscina), c->piscina,
+        &novitas);
+}
+
+VatesResponsum*
+vates_anthropic_rivum_legere (
+        chorda  corpus,
+    VatesRivus  rivus,
+        vacuum* datum,
+       Piscina* piscina)
+{
+    VatesCollector  c;
+     RivusEventuum* lector_eventuum;
+
+    si (!piscina)
+    {
+        redde NIHIL;
+    }
+    _collectorem_initiare(&c, rivus, datum, piscina);
+    lector_eventuum = rivus_eventuum_creare(piscina, _eventum_anthropic,
+        &c);
+    rivus_eventuum_adicere(lector_eventuum, corpus.datum,
+        corpus.mensura);
+    rivus_eventuum_finire(lector_eventuum);
+    redde _collectorem_finire(&c);
+}
+
 
 /* ======================================================================
  * C. PROVISORES, MITTERE, RATIONARIUM, FICTUS
@@ -779,6 +1059,7 @@ vates_anthropic_legere (
 nomen structura {
        i32 status;
     chorda corpus;
+       b32 rivus;    /* corpus SSE (vates_fictus_rivum) */
 } VatesFictumResponsum;
 
 structura Vates {
@@ -787,6 +1068,7 @@ structura Vates {
          character* clavis;               /* NUL-terminata, UNA copia */
      VatesOptiones  optiones;
        HttpVectura  vectura;
+   HttpVecturaRivi  vectura_rivi;
          Herbarium* herbarium;
                b32  rationarium_defectus;
                Xar* fictus_responsa;      /* VatesFictumResponsum */
@@ -985,6 +1267,8 @@ _anthropic_struere (
     }
     v->vectura = v->optiones.vectura.exsequi ? v->optiones.vectura
                                              : http_vectura_ordinaria();
+    v->vectura_rivi = v->optiones.vectura_rivi.exsequi
+        ? v->optiones.vectura_rivi : http_vectura_rivi_ordinaria();
     redde v;
 }
 
@@ -1023,6 +1307,17 @@ _iudex_anthropic (
         sprintf(nuntius, "status inexspectatus: %u",
             (insignatus integer)responsum->status);
         redde chorda_ex_literis(nuntius, piscina);
+    }
+    /* rivus (quaestio-rivus R5): corpus SSE, non JSON - post finem
+     * iudicari nequit ut nuntius; norma rivorum postea (spec V) */
+    {
+        chorda genus = http_responsum_caput(responsum, "Content-Type");
+
+        si (   genus.mensura                                  >= XVII
+            && memcmp(genus.datum, "text/event-stream", XVII) == 0)
+        {
+            redde chorda_ex_literis("", piscina);
+        }
     }
     j = json_legere(responsum->corpus, piscina);
     si (!j.successus)
@@ -1096,6 +1391,8 @@ _herbarium_adiungere (
     optiones_herbarii.iudex = _iudex_anthropic;
     v->herbarium = herbarium_aperire(v->piscina, &optiones_herbarii);
     v->vectura = herbarium_vectura(v->herbarium, v->vectura);
+    v->vectura_rivi = herbarium_vectura_rivi(v->herbarium,
+        v->vectura_rivi);
 }
 
 Vates*
@@ -1149,6 +1446,55 @@ _fictus_exsequi (
     redde res;
 }
 
+/* rivus fictus: ut _fictus_exsequi; responsum rivi Content-Type
+ * text/event-stream, corpus 2xx per rivum in frustis V octetorum */
+interior HttpResultus
+_fictus_exsequi_rivi (
+    HttpPetitio* petitio,
+      HttpRivus  rivus,
+         vacuum* rivi_datum,
+        Piscina* piscina,
+         vacuum* datum)
+{
+           Vates* v = (Vates*)datum;
+    HttpResultus  res;
+             b32  rivus_ficti = FALSUM;
+             i32  k;
+
+    si (v->fictus_index < xar_numerus(v->fictus_responsa))
+    {
+        rivus_ficti = ((VatesFictumResponsum*)xar_obtinere(
+            v->fictus_responsa, v->fictus_index))->rivus;
+    }
+    res = _fictus_exsequi(petitio, piscina, datum);
+    si (!res.successus || !res.responsum)
+    {
+        redde res;
+    }
+    si (rivus_ficti)
+    {
+        res.responsum->capita = (HttpCaput*)piscina_allocare(piscina,
+            (i64)magnitudo(HttpCaput));
+        res.responsum->capita[0].titulus = chorda_ex_literis(
+            "Content-Type", piscina);
+        res.responsum->capita[0].valor = chorda_ex_literis(
+            "text/event-stream", piscina);
+        res.responsum->capita_numerus = I;
+    }
+    si (   rivus && res.responsum->status >= CC
+        && res.responsum->status < CCC)
+    {
+        per (k = 0; k < res.responsum->corpus.mensura; k += V)
+        {
+            i32 n = res.responsum->corpus.mensura - k < V
+                ? res.responsum->corpus.mensura - k : V;
+
+            rivus(rivi_datum, res.responsum->corpus.datum + k, n);
+        }
+    }
+    redde res;
+}
+
 Vates*
 vates_fictus_aperire (
                    Piscina* piscina,
@@ -1164,9 +1510,11 @@ vates_fictus_aperire (
     }
     v->fictus_responsa = xar_creare(piscina,
         (i32)magnitudo(VatesFictumResponsum));
-    v->fictus_petitiones  = xar_creare(piscina, (i32)magnitudo(chorda));
-    v->vectura.exsequi    = _fictus_exsequi;
-    v->vectura.datum      = v;
+    v->fictus_petitiones = xar_creare(piscina, (i32)magnitudo(chorda));
+    v->vectura.exsequi = _fictus_exsequi;
+    v->vectura.datum = v;
+    v->vectura_rivi.exsequi = _fictus_exsequi_rivi;
+    v->vectura_rivi.datum = v;
     /* acervus proprius: responsa ficta numquam inter vera */
     _herbarium_adiungere(v, "fictus");
     redde v;
@@ -1240,7 +1588,7 @@ vates_error_descriptio (
 
 /* ---- fictus: responsa in cauda ---- */
 
-interior vacuum
+interior VatesFictumResponsum*
 _fictus_ponere (
      Vates* v,
        i32  status,
@@ -1250,11 +1598,13 @@ _fictus_ponere (
 
     si (!v || !v->fictus_responsa)
     {
-        redde;
+        redde NIHIL;
     }
     f          = (VatesFictumResponsum*)xar_addere(v->fictus_responsa);
     f->status  = status;
     f->corpus  = corpus;
+    f->rivus   = FALSUM;
+    redde f;
 }
 
 interior JsonValor*
@@ -1375,6 +1725,147 @@ vates_fictus_crudum (
     }
     _fictus_ponere(vates, status_http, chorda_ex_literis(corpus_json,
         vates->piscina));
+}
+
+/* eventus SSE unus: "event: <typus>\ndata: <json>\n\n" */
+interior vacuum
+_eventum_scribere (
+    ChordaAedificator* aed,
+   constans character* typus,
+            JsonValor* obj,
+              Piscina* p)
+{
+    chorda_aedificator_appendere_literis(aed, "event: ");
+    chorda_aedificator_appendere_literis(aed, typus);
+    chorda_aedificator_appendere_literis(aed, "\ndata: ");
+    chorda_aedificator_appendere_chorda(aed, json_scribere(obj, p));
+    chorda_aedificator_appendere_literis(aed, "\n\n");
+}
+
+interior JsonValor*
+_objectum_typi (
+               Piscina* p,
+    constans character* typus)
+{
+    JsonValor* o = json_objectum_creare(p);
+
+    json_objectum_ponere(o, "type", json_chorda_creare_literis(p,
+        typus));
+    redde o;
+}
+
+/* rivus fictus: message_start (nuntius ut _fictum_nuntium, content
+ * vacuum, stop_reason null, output I), blocus textus, ping, deltae;
+ * deinde aut error aut stop + message_delta + message_stop */
+interior vacuum
+_fictum_rivum_ponere (
+                  Vates* v,
+        constans chorda* partes,
+                    i32  numerus,
+              VatesUsus  usus,
+     constans character* error_genus,
+     constans character* error_nuntius)
+{
+               Piscina* p = v->piscina;
+     ChordaAedificator* aed;
+             JsonValor* nuntius;
+             JsonValor* o;
+             JsonValor* b;
+                   i32  k;
+  VatesFictumResponsum* f;
+
+    aed      = chorda_aedificator_creare(p, D);
+    nuntius  = _fictum_nuntium(v, "end_turn", json_tabulatum_creare(p),
+        usus);
+    json_objectum_ponere(nuntius, "stop_reason", json_nullum_creare(p));
+    json_objectum_ponere(json_objectum_capere(nuntius, "usage"),
+        "output_tokens", json_integer_creare(p, I));
+    o = _objectum_typi(p, "message_start");
+    json_objectum_ponere(o, "message", nuntius);
+    _eventum_scribere(aed, "message_start", o, p);
+    o = _objectum_typi(p, "content_block_start");
+    json_objectum_ponere(o, "index", json_integer_creare(p, 0));
+    b = _objectum_typi(p, "text");
+    json_objectum_ponere(b, "text", json_chorda_creare_literis(p, ""));
+    json_objectum_ponere(o, "content_block", b);
+    _eventum_scribere(aed, "content_block_start", o, p);
+    _eventum_scribere(aed, "ping", _objectum_typi(p, "ping"), p);
+    per (k = 0; partes && k < numerus; k++)
+    {
+        o = _objectum_typi(p, "content_block_delta");
+        json_objectum_ponere(o, "index", json_integer_creare(p, 0));
+        b = _objectum_typi(p, "text_delta");
+        json_objectum_ponere(b, "text", json_chorda_creare(p,
+            partes[k]));
+        json_objectum_ponere(o, "delta", b);
+        _eventum_scribere(aed, "content_block_delta", o, p);
+    }
+    si (error_genus)
+    {
+        o = _objectum_typi(p, "error");
+        b = _objectum_typi(p, error_genus);
+        json_objectum_ponere(b, "message", json_chorda_creare_literis(p,
+            error_nuntius ? error_nuntius : ""));
+        json_objectum_ponere(o, "error", b);
+        _eventum_scribere(aed, "error", o, p);
+    }
+    alioquin
+    {
+        o = _objectum_typi(p, "content_block_stop");
+        json_objectum_ponere(o, "index", json_integer_creare(p, 0));
+        _eventum_scribere(aed, "content_block_stop", o, p);
+        o = _objectum_typi(p, "message_delta");
+        b = json_objectum_creare(p);
+        json_objectum_ponere(b, "stop_reason",
+            json_chorda_creare_literis(p, "end_turn"));
+        json_objectum_ponere(b, "stop_sequence", json_nullum_creare(p));
+        json_objectum_ponere(o, "delta", b);
+        b = json_objectum_creare(p);
+        json_objectum_ponere(b, "output_tokens", json_integer_creare(p,
+            usus.output));
+        json_objectum_ponere(o, "usage", b);
+        _eventum_scribere(aed, "message_delta", o, p);
+        _eventum_scribere(aed, "message_stop",
+            _objectum_typi(p, "message_stop"), p);
+    }
+    f = _fictus_ponere(v, CC, chorda_aedificator_finire(aed));
+    si (f)
+    {
+        f->rivus = VERUM;
+    }
+}
+
+vacuum
+vates_fictus_rivum (
+              Vates* vates,
+    constans chorda* partes,
+                i32  numerus,
+          VatesUsus  usus)
+{
+    si (!vates || !vates->fictus_responsa)
+    {
+        redde;
+    }
+    _fictum_rivum_ponere(vates, partes, numerus, usus, NIHIL, NIHIL);
+}
+
+vacuum
+vates_fictus_rivum_fractum (
+                  Vates* vates,
+        constans chorda* partes,
+                    i32  numerus,
+     constans character* error_genus,
+     constans character* error_nuntius)
+{
+    VatesUsus nullus;
+
+    si (!vates || !vates->fictus_responsa || !error_genus)
+    {
+        redde;
+    }
+    memset(&nullus, 0, magnitudo(nullus));
+    _fictum_rivum_ponere(vates, partes, numerus, nullus, error_genus,
+        error_nuntius);
 }
 
 i32
@@ -1509,7 +2000,7 @@ _petitionem_http (
                   Piscina* piscina)
 {
     HttpPetitio* hp = http_petitio_creare(piscina, HTTP_POST,
-        VATES_URL_ANTHROPIC);
+        v->optiones.url ? v->optiones.url : VATES_URL_ANTHROPIC);
             i32 i;
 
     http_petitio_caput_addere(hp, "content-type", "application/json");
@@ -1723,4 +2214,371 @@ vates_mittere (
     }
     r->conatus = conatus;
     redde r;
+}
+
+/* mittere per rivum (quaestio-rivus T4) - HttpRivus: corpus 2xx in
+ * lectorem SSE */
+interior vacuum
+_rivus_http (
+          vacuum* datum,
+     constans i8* octeti,
+             i32  n)
+{
+    rivus_eventuum_adicere((RivusEventuum*)datum, octeti, n);
+}
+
+/* conatus unus rivi iudicatur: responsum et iterandum (communis viae
+ * obstruentis et vates_vocare_rivum - ne divergant, http-vocatio
+ * II.5) */
+interior VatesResponsum*
+_rivum_iudicare (
+     VatesCollector* c,
+      RivusEventuum* lector_eventuum,
+       HttpResultus  resultus_http,
+                i32  conatus,
+            Piscina* piscina,
+                b32* iterandum)
+{
+    VatesResponsum* r;
+
+    si (!resultus_http.successus || !resultus_http.responsum)
+    {
+        r = _responsum_vacuum(piscina);
+        r->error = (resultus_http.error == HTTP_ERROR_TIMEOUT)
+            ? VATES_ERROR_TEMPUS : VATES_ERROR_RETE;
+        r->error_nuntius = resultus_http.error_descriptio;
+        /* post deltam primam numquam iteratur: textus iam visus */
+        *iterandum = c->deltae == 0
+            && (r->error == VATES_ERROR_RETE || conatus == I);
+    }
+    alioquin si (resultus_http.responsum->status != CC)
+    {
+        chorda novitas;
+
+        /* non-2xx: corpus JSON totum, rivus tacuit (R6) */
+        r = _legere(resultus_http.responsum->status,
+            resultus_http.responsum->corpus, piscina, &novitas);
+        *iterandum = _status_iterandus(r->status_http);
+    }
+    alioquin
+    {
+        rivus_eventuum_finire(lector_eventuum);
+        r = _collectorem_finire(c);
+        *iterandum = c->deltae == 0 && c->erratum
+            && (chorda_aequalis_literis(c->error_genus,
+                "overloaded_error")
+                || chorda_aequalis_literis(c->error_genus,
+                "api_error"));
+    }
+    redde r;
+}
+
+interior vacuum
+_conatum_notare (
+              Vates* vates,
+       VatesPetitio* petitio,
+             chorda  propositum,
+                i32  conatus,
+     VatesResponsum* r,
+                s64  initium,
+          VatesUsus* summa,
+                b32* pretium_notum,
+            Piscina* piscina)
+{
+    r->usus.mora_ms = _ms_nunc() - initium;
+    r->usus.pretium = _pretium(vates,
+        r->exemplar.mensura > 0 ? r->exemplar : petitio->exemplar,
+        &r->usus);
+    _rationarium_scribere(vates, petitio, propositum, conatus, r,
+        piscina);
+    _usus_addere(summa, &r->usus, pretium_notum);
+}
+
+interior vacuum
+_responsum_claudere (
+     VatesResponsum* r,
+          VatesUsus  summa,
+                b32  pretium_notum,
+                i32  conatus)
+{
+    r->usus = summa;
+    si (!pretium_notum)
+    {
+        r->usus.pretium = -I;
+    }
+    r->conatus = conatus;
+}
+
+VatesResponsum*
+vates_mittere_rivum (
+            Vates* vates,
+     VatesPetitio* petitio,
+           chorda  propositum,
+       VatesRivus  rivus,
+           vacuum* datum,
+          Piscina* piscina)
+{
+    VatesResponsum* r = NIHIL;
+         VatesUsus  summa;
+            chorda  corpus;
+               i32  conatus;
+               b32  pretium_notum = FALSUM;
+
+    si (!piscina)
+    {
+        redde NIHIL;
+    }
+    si (!vates || !petitio)
+    {
+        r         = _responsum_vacuum(piscina);
+        r->error  = VATES_ERROR_LIMES;
+        r->error_nuntius = chorda_ex_literis("vates aut petitio NIHIL",
+            piscina);
+        redde r;
+    }
+    si (_signa_numerare(petitio) > VATES_PUNCTA_THESAURI_MAXIMA)
+    {
+        r         = _responsum_vacuum(piscina);
+        r->error  = VATES_ERROR_LIMES;
+        r->error_nuntius = chorda_ex_literis(
+            "plus quam IV puncta cache (API: IV maxime)", piscina);
+        redde r;
+    }
+    memset(&summa, 0, magnitudo(summa));
+    petitio->rivus  = VERUM;
+    corpus          = vates_anthropic_corpus(petitio, piscina);
+    petitio->rivus  = FALSUM;
+    per (conatus = I; ; conatus++)
+    {
+          HttpPetitio* hp = _petitionem_http(vates, petitio, corpus,
+              piscina);
+                  s64  initium = _ms_nunc();
+       VatesCollector  c;
+        RivusEventuum* lector_eventuum;
+         HttpResultus  resultus_http;
+                  b32  iterandum;
+
+        _collectorem_initiare(&c, rivus, datum, piscina);
+        lector_eventuum = rivus_eventuum_creare(piscina,
+            _eventum_anthropic, &c);
+        resultus_http = http_vectura_rivi_exsequi(vates->vectura_rivi,
+            hp, _rivus_http, lector_eventuum, piscina);
+        r = _rivum_iudicare(&c, lector_eventuum, resultus_http, conatus,
+            piscina, &iterandum);
+        _conatum_notare(vates, petitio, propositum, conatus, r, initium,
+            &summa, &pretium_notum, piscina);
+        si (!iterandum || conatus >= vates->optiones.conatus_maximi)
+        {
+            frange;
+        }
+        _dormire(_mora_iterandi(vates, resultus_http));
+    }
+    _responsum_claudere(r, summa, pretium_notum, conatus);
+    redde r;
+}
+
+
+/* --- vocatio per rivum non obstruens (http-vocatio II.5) --- */
+
+structura VatesVocatio {
+                 Vates* vates;
+          VatesPetitio* petitio;
+                chorda  propositum;
+                chorda  corpus;
+               Reactor* reactor;
+            VatesRivus  rivus;
+                vacuum* datum;
+     VatesVocatioFinis  finis;
+                vacuum* finis_datum;
+               Piscina* piscina;
+                   i32  conatus;
+                   s64  initium;
+             VatesUsus  summa;
+                   b32  pretium_notum;
+        VatesCollector  collector;
+         RivusEventuum* lector_eventuum;
+           HttpVocatio* http;
+        ReactorTimerId  mora;
+                   b32  mora_posita;
+        VatesResponsum* responsum;
+        VatesResponsum* responsum_pendens;   /* error ante initium */
+                   b32  abrumpens;
+                   b32  finita;
+};
+
+interior vacuum
+_vocationem_finire (
+      VatesVocatio* vv,
+    VatesResponsum* r)
+{
+    si (vv->finita)
+    {
+        redde;
+    }
+    vv->finita = VERUM;
+    si (vv->mora_posita)
+    {
+        (vacuum)reactor_timer_cancellare(vv->reactor, vv->mora);
+        vv->mora_posita = FALSUM;
+    }
+    _responsum_claudere(r, vv->summa, vv->pretium_notum, vv->conatus);
+    vv->responsum = r;
+    vv->finis(vv->finis_datum, vv);
+}
+
+interior vacuum
+_conatum_incipere (
+    VatesVocatio* vv);
+
+interior vacuum
+_iterum (
+    vacuum* datum)
+{
+    VatesVocatio* vv = (VatesVocatio*)datum;
+
+    vv->mora_posita = FALSUM;
+    si (vv->finita)
+    {
+        redde;
+    }
+    si (vv->responsum_pendens)
+    {
+        _vocationem_finire(vv, vv->responsum_pendens);
+        redde;
+    }
+    vv->conatus++;
+    _conatum_incipere(vv);
+}
+
+interior vacuum
+_vocationis_http_finis (
+         vacuum* datum,
+    HttpVocatio* hv)
+{
+    VatesVocatio* vv = (VatesVocatio*)datum;
+    HttpResultus  res;
+  VatesResponsum* r;
+             b32  iterandum;
+
+    si (vv->finita || vv->abrumpens)
+    {
+        redde;
+    }
+    res = http_vocatio_resultus(hv);
+    r = _rivum_iudicare(&vv->collector, vv->lector_eventuum, res,
+        vv->conatus, vv->piscina, &iterandum);
+    _conatum_notare(vv->vates, vv->petitio, vv->propositum, vv->conatus,
+        r, vv->initium, &vv->summa, &vv->pretium_notum, vv->piscina);
+    si (!iterandum || vv->conatus >= vv->vates->optiones.conatus_maximi)
+    {
+        _vocationem_finire(vv, r);
+        redde;
+    }
+    /* mora per timer - numquam dormire in reactore */
+    vv->mora = reactor_timer_adicere(vv->reactor,
+        (i32)_mora_iterandi(vv->vates, res), FALSUM, _iterum, vv);
+    vv->mora_posita = (vv->mora != REACTOR_TIMER_ERROR);
+}
+
+interior vacuum
+_conatum_incipere (
+    VatesVocatio* vv)
+{
+    HttpPetitio* hp = _petitionem_http(vv->vates, vv->petitio,
+        vv->corpus, vv->piscina);
+
+    vv->initium = _ms_nunc();
+    _collectorem_initiare(&vv->collector, vv->rivus, vv->datum,
+        vv->piscina);
+    vv->lector_eventuum = rivus_eventuum_creare(vv->piscina,
+        _eventum_anthropic, &vv->collector);
+    vv->http = http_vocare(vv->reactor, hp, _rivus_http,
+        vv->lector_eventuum, _vocationis_http_finis, vv, NIHIL,
+        vv->piscina);
+}
+
+VatesVocatio*
+vates_vocare_rivum (
+                 Vates* vates,
+          VatesPetitio* petitio,
+                chorda  propositum,
+               Reactor* reactor,
+            VatesRivus  rivus,
+                vacuum* datum,
+     VatesVocatioFinis  finis,
+                vacuum* finis_datum,
+               Piscina* piscina)
+{
+    VatesVocatio* vv;
+
+    si (!vates || !petitio || !reactor || !finis || !piscina)
+    {
+        redde NIHIL;
+    }
+    vv = (VatesVocatio*)piscina_allocare(piscina,
+        magnitudo(VatesVocatio));
+    memset(vv, 0, magnitudo(VatesVocatio));
+    vv->vates        = vates;
+    vv->petitio      = petitio;
+    vv->propositum   = propositum;
+    vv->reactor      = reactor;
+    vv->rivus        = rivus;
+    vv->datum        = datum;
+    vv->finis        = finis;
+    vv->finis_datum  = finis_datum;
+    vv->piscina      = piscina;
+    vv->conatus      = I;
+    si (_signa_numerare(petitio) > VATES_PUNCTA_THESAURI_MAXIMA)
+    {
+        VatesResponsum* r = _responsum_vacuum(piscina);
+
+        r->error          = VATES_ERROR_LIMES;
+        r->error_nuntius  = chorda_ex_literis(
+            "plus quam IV puncta cache (API: IV maxime)", piscina);
+        vv->responsum_pendens = r;
+        vv->mora = reactor_timer_adicere(reactor, ZEPHYRUM, FALSUM,
+            _iterum, vv);
+        vv->mora_posita = VERUM;
+        redde vv;
+    }
+    petitio->rivus  = VERUM;
+    vv->corpus      = vates_anthropic_corpus(petitio, piscina);
+    petitio->rivus  = FALSUM;
+    _conatum_incipere(vv);
+    redde vv;
+}
+
+VatesResponsum*
+vates_vocatio_responsum (
+    constans VatesVocatio* vv)
+{
+    redde vv ? vv->responsum : NIHIL;
+}
+
+b32
+vates_vocatio_finita (
+    constans VatesVocatio* vv)
+{
+    redde !vv || vv->finita;
+}
+
+vacuum
+vates_vocationem_abrumpere (
+    VatesVocatio* vv)
+{
+    VatesResponsum* r;
+
+    si (!vv || vv->finita)
+    {
+        redde;
+    }
+    vv->abrumpens = VERUM;
+    si (vv->http)
+    {
+        http_vocationem_abrumpere(vv->http);
+    }
+    r                 = _responsum_vacuum(vv->piscina);
+    r->error          = VATES_ERROR_RETE;
+    r->error_nuntius  = chorda_ex_literis("abruptum", vv->piscina);
+    _vocationem_finire(vv, r);
 }

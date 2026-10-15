@@ -71,6 +71,15 @@ int gettimeofday(struct timeval* tp, void* tzp);
 int nanosleep(const struct timespec* petitum,
     struct timespec* reliquum);
 
+/* horologium monotonum (analytica T2, tools/mensor.c: duratio cursus
+ * quae horologio muri mutato non fallitur). Darwin clockid_t enum est
+ * (magnitudo int); valores Darwin, auspex_posix.sh eos certificat. */
+typedef int clockid_t;
+#define CLOCK_REALTIME  0
+#define CLOCK_MONOTONIC 6
+
+int clock_gettime(clockid_t horologium, struct timespec* tempus);
+
 
 /* ==================================================
  * <sectio caput="sys/stat.h" poscit="sys/time.h"/>
@@ -270,12 +279,14 @@ int select(int numerus, fd_set* legendi, fd_set* scribendi,
 #define EAGAIN      35
 #define EWOULDBLOCK 35
 #define EISCONN     56
+#define EINPROGRESS 36   /* connect non-blocans pergit (http-vocatio T3) */
 
 /* <sectio caput="sys/socket.h,netinet/in.h,netinet/tcp.h"/>
  * sys/socket.h + netinet/in.h + netinet/tcp.h (valores Darwin) */
 #define SOL_SOCKET   0xffff
 #define SO_REUSEADDR 0x0004
 #define SO_KEEPALIVE 0x0008
+#define SO_ERROR     0x1007  /* getsockopt: erratum connexionis pendentis */
 /* <gradus titulus="SO_NOSIGPIPE" genus="vernaculum" pro="MSG_NOSIGNAL"/>
  * Darwin solum - Linux nomen nescit (sonda 2026-08-03); via Linux =
  * MSG_NOSIGNAL per send aut SIGPIPE ignorare. Codex 86 usum flagat. */
@@ -573,3 +584,31 @@ char* dlerror(void);
  * fenestra non constantes. */
 int openpty(int* magister, int* servus, char* titulus,
             struct termios* modus, struct winsize* fenestra);
+
+/* <sectio caput="sys/resource.h" poscit="sys/time.h"/> sys/resource.h -
+ * usus processuum (analytica T2, tools/mensor.c: RSS maxima et tempus
+ * CPU prolis post messem). Forma Darwin CXLIV octeti: timeval bis,
+ * deinde XIV long. ru_maxrss in Darwin OCTETI sunt (Linux: KiB). */
+struct rusage {
+    struct timeval ru_utime;
+    struct timeval ru_stime;
+    long           ru_maxrss;
+    long           ru_ixrss;
+    long           ru_idrss;
+    long           ru_isrss;
+    long           ru_minflt;
+    long           ru_majflt;
+    long           ru_nswap;
+    long           ru_inblock;
+    long           ru_oublock;
+    long           ru_msgsnd;
+    long           ru_msgrcv;
+    long           ru_nsignals;
+    long           ru_nvcsw;
+    long           ru_nivcsw;
+};
+
+#define RUSAGE_SELF     0
+#define RUSAGE_CHILDREN (-1)
+
+int getrusage(int quis, struct rusage* usus);

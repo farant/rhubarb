@@ -113,3 +113,55 @@ click outside the canvas cancels (Fran). Mechanics:
   FALSUM), so switching tool with p/a/e/l while a line is pending
   goes through instrumentum.eligere, which now drops the pending line
   (else the brush would inherit a captured 2-point preview).
+
+## 2026-10-13 - pending paste (glutinatio pendens), UI half (Fran)
+
+Cmd+V no longer creates a layer: imaginem_glutinare prepares the
+document's pending paste (both ditherings, outside the acta) and sets
+the transient field 'glutinatio' = "B". One action, glutinatio.agere,
+owns the field and dispatches on the button id (glutinatio.A / .B /
+.confirmare / .abicere), the strata.agere pattern - so one owner ever
+writes the field. Key paths (Esc, Return, Cmd+V-again) run inside
+instrumentum.eligere, so glutinationem_scribere sets repo->scriptor to
+"glutinatio.agere" for the write and restores it (memory: domini
+refuse silently otherwise). confirmare writes stratum_activum under
+"strata.agere" exactly like the old paste did.
+
+While pending, instrumentum.eligere handles ONLY Esc / Return / Cmd+V
+and returns FALSUM for every other key (tool letters, undo) - Fran:
+the canvas ignores drawing while a paste is pending; this is where
+resize / positioning will live later.
+
+Tests: probatio_pictor_imago II rewritten for the pending flow (+ II b:
+Esc, X, Return) - written after the code, so planted twice to see red
+(canvas action kept while pending -> red; Esc not discarding -> red),
+restored with plain cp. Owner counts in probatio_pictor_canones and
+probatio_organum went XVII -> XVIII (glutinatio is a new owned field;
+probatio_organum exempts it from the frozen pre-S2 owner table the
+same way it exempts S5c palette).
+
+## 2026-10-13 — pending paste: canvas drag erases (glutinatio.agere)
+
+While pending, the tabula's action is `glutinatio.agere` (was ""), and
+`pictor_glutinatio_agere` routes nodus "tabula" to `glutinationem_radere`
+for down/move/up (captura held like ictum_tractare; last point in
+`PictorActiones.rasura`). No new action, so organum.stml and the owner
+counts did not change. Option (MOD_ALT) = restore. The mask is
+document memory outside insula, so per-event writes are fine (the insula
+is never touched mid-drag).
+
+Size = magnitudo_penicilli whatever the current tool: the pending bar
+gained `quadratum.magnitudo` after X (opens the penicillus size palette
+- componentia forces instrumentum "penicillus" while pending, palette
+allows only "magnitudo"), and `pictor_magnitudinem_ponere` treats a
+pending paste as penicillus (the spongia has no size).
+
+Test gotcha: after II's undo/redo the layer ORDER is ids 1,3,4,2, not
+by id - II c finds the new layer by stratum_activum's id. First version
+indexed by count and saw 51 "wrong" pixels that were the A layer.
+Plants: Option ignored, size override removed, tabula action "" - all
+red in probatio_pictor_imago.
+
+Fran's look (2026-10-13, ./apps/pictor/pictor.sh): Cmd+V, size square,
+drag reveals Atkinson under B, Option-drag restores, A swaps the reveal,
+OK commits as previewed - "everything seems to be working".

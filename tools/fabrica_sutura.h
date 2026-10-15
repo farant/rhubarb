@@ -22,6 +22,8 @@
 #include "fabrica.h"
 #include "provenientia.h"
 #include "sigillum.h"
+#include "mensura.h"
+#include "diurna.h"
 
 /* sanare: terminus unus per actum (briar ~3 min, obiecta radicis
  * frigida ~150 s); termini per actionem non in 1b */
@@ -29,8 +31,18 @@
 
 /* memoria verificationum (tools/fabrica_memoria.c) */
 nomen structura {
-    Scrinium* scrinium;
-     Piscina* piscina;
+                  Scrinium* scrinium;
+                   Piscina* piscina;
+    constans FabricaSutura* sutura;   /* a suturae_memoriam_nectere
+                                       * positum: lectio plagulae
+                                       * sectionum (analytica T3b) */
+            CursusInitium radix_aliena;    /* contextus radicis si ab
+                                             * arbore sessionis differt
+                                             * (T4), semel computatus */
+                      b32  radix_aliena_nota;
+                      b32  radix_repositorium;
+                   Diurna* diurna;          /* corpora actionum (T4) */
+                      b32  diurna_temptata;
 } Memoria;
 
 /* mandata (fabrica.c) */

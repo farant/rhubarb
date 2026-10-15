@@ -26,6 +26,9 @@ nomen structura {
                                 * puncti pendentis; NIHIL donec
                                 * primum */
                  s64 semen;   /* aspergillum: semen ictus currentis */
+             Punctum rasura;  /* glutinatio pendens: punctum ultimum
+                               * tractus radentis (coordinatae
+                               * tabulae) */
     /* L5: porta imaginis (Cmd+V) - NIHIL = nulla; applicationes
      * clipboard_capere_imaginem ponunt, probationes fictam */
     ImagoFructus (*imago_capere)(vacuum* ctx, Piscina* piscina);
@@ -52,6 +55,21 @@ pictor_penicillus_ictus (
  * (punctum solutionis quoque: mora ante solutionem guttas addit) */
 b32
 pictor_aspergillum_ictus (
+    InsulaRepositorium* repo,
+                 Motus* motus,
+   constans Destinatio* destinatio,
+             Componens* nodus,
+      constans Eventus* ev,
+                vacuum* ctx);
+
+/* <tractator/> glutinatio pendens: 'glutinatio.A' / 'glutinatio.B'
+ * modum eligit, 'glutinatio.confirmare' stratum novum (fit currens),
+ * 'glutinatio.abicere' abicit. Dominus 'glutinatio'. Tractus in
+ * 'tabula' RADIT (Franus 2026-10-13): discus magnitudinis penicilli
+ * per tractum modum alterum revelat, cum Optione reponit - in
+ * documento extra acta, insula intacta */
+b32
+pictor_glutinatio_agere (
     InsulaRepositorium* repo,
                  Motus* motus,
    constans Destinatio* destinatio,

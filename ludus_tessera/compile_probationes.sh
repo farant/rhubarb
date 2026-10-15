@@ -73,6 +73,7 @@ declare -a RADIX_FONTES=(
     "terminalis_posix"
     "quadrans"
     "dithering"
+    "dithering_exemplaria"
     "imago"
     "imago_opus"
     "color"
@@ -117,6 +118,20 @@ declare -a RADIX_FONTES=(
     "dimissio"         # status S5c: systema dimissionis
     "organum_montatio" # status S6: organum in ramo montare
     "organa_infixa"    # status S7c-1: manifesta infixa (GENERATUM)
+    "agenda"           # agenda-plan A1: documentum agendae
+    "rubrica"          # nomenclator-plan P1a: rubricae communes
+    "personae"         # nomenclator-plan P1b: documentum contactuum
+    "nomenclator"      # nomenclator-plan P2: index contactuum in vico
+    "kalendarium"      # agenda-plan A2: calendarium in vico
+    "elenchus"         # agenda-plan M2b: menu contextuale (calendarium)
+    "membrum__album"   # nomenclator-plan U1: index paginatus (calendarium)
+    "membrum__praecepta" # nomenclator-plan U2: tabula praeceptorum
+    "membrum__prompta" # nomenclator-plan U3: linea promptae
+    "membrum__elenchi" # nomenclator-plan U4: menu hospitis
+    "membrum__charta"  # nomenclator-plan U5: charta notarum
+    "fasti_fontes"     # nomenclator-plan P6: fontes dierum
+    "calendarium_liturgicum" # A2b: figurae calendarii (dies liturgici)
+    "sanctorale"
     # scriba H2: cauda documenti per historia
     "historia"
     "pictor_figurae"

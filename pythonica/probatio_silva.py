@@ -3,10 +3,12 @@
 Plagulae fictae in build/pythonica/; nihil in arbore tangitur.
 Exitus 0 sanum | 1 fractum. Culpae plantatae: ancora fallens plagulam
 intactam relinquit; differre substantiva verdictum negat."""
+import glob
 import os
 import re
 import subprocess
 import sys
+import time
 
 RADIX = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(RADIX, 'pythonica'))
@@ -45,6 +47,95 @@ silva.TEMPORA_VIA = os.path.join(T, 'tempora.tsv')
 os.environ['SILVA_TEMPORA_VIA'] = silva.TEMPORA_VIA
 if os.path.exists(silva.TEMPORA_VIA):
     os.unlink(silva.TEMPORA_VIA)
+
+# GREGES (analytica T6): tempus per gregem huius suitae in annalibus
+# VERIS - destinationes verae ANTE isolationem servantur (commissiones
+# fictae infra in T manent, greges ipsi cursus veri sunt)
+_GREGES_AMBITUS = dict((k, os.environ.get(k)) for k in (
+    'MENSOR_DIARIUM', 'MENSOR_VOLUMEN', 'MENSOR_ACTA', 'MENSOR_DIURNA'))
+
+# annales cursuum (analytica T3): in T, numquam in ~/.rhubarb vivo -
+# portae et commissiones fictae ibi historiam veram mentirentur
+for _k, _v in (('MENSOR_DIARIUM', 'cursus.diarium'),
+               ('MENSOR_VOLUMEN', 'cursus.volumen'),
+               ('MENSOR_ACTA', 'cursus_acta'),
+               ('MENSOR_DIURNA', 'cursus_diurna')):
+    os.environ[_k] = os.path.join(T, _v)
+# curatio separata (analytica T6c) NON in suita: commissiones fictae ut
+# cursus summi finiunt - proles detracta diarium T dum probationes legunt
+# conderet (fluxa)
+os.environ['MENSOR_CURARE_NULLUS'] = '1'
+# ambitus cursuum IN INITIO suitae (porta vera parentem legitime
+# hereditat): post cursus omnes idem esse debet. Comparatio 'ante
+# sectionem' caeca erat - commissiones priores iam effluxerant (planta
+# Y2 T3 superfuit)
+_CLAVES_CURSUS = ('MENSOR_PARENS', 'MENSOR_SESSIO', 'MENSOR_COMMISSUM',
+                  'MENSOR_SORDIDUM', 'MENSOR_RAMUS', 'MENSOR_ARBOR',
+                  'MENSOR_MACHINA', 'MENSOR_VOCATOR')
+_AMBITUS_CURSUS_INITIO = dict((k, os.environ.get(k)) for k in _CLAVES_CURSUS)
+for _f in glob.glob(os.path.join(T, 'cursus.diarium*')) + glob.glob(
+        os.path.join(T, 'cursus.volumen*')):
+    os.unlink(_f)
+
+
+# grex apertus: id cursus, initium (monotonum), fracta ante
+_GREX = {'id': None, 'initium': 0.0, 'fracta': 0}
+
+
+def _grex_ambitus():
+    """ambitus pro cursibus gregum: destinationes VERAE et contextus
+    initii suitae (parens = porta vera, si sub porta)"""
+    env = dict(os.environ)
+    for k, v in list(_GREGES_AMBITUS.items()) + list(
+            _AMBITUS_CURSUS_INITIO.items()):
+        if v is None:
+            env.pop(k, None)
+        else:
+            env[k] = v
+    return env
+
+
+def _grex_claudere():
+    """gregem apertum finire: exitus 1 si probatio ulla intra eum fracta"""
+    if _GREX['id'] is None:
+        return
+    n = len(fracta) - _GREX['fracta']
+    subprocess.run([silva.MENSOR_BIN, 'cursus', 'finire', '-id', _GREX['id'],
+                    '-exitus', '1' if n else '0', '-duratio_ms',
+                    str(int((time.monotonic() - _GREX['initium']) * 1000)),
+                    '-nota', '%d fracta' % n], env=_grex_ambitus(),
+                   capture_output=True)
+    _GREX['id'] = None
+
+
+def _grex(nomen):
+    """caput gregis (olim print('--- nomen ---')) + cursus
+    'pythonica#nomen': prior clauditur, novus aperitur. Ruina media =
+    grex INTERRUPTUS (finis numquam scriptus) - verum."""
+    print('--- %s ---' % nomen)
+    _grex_claudere()
+    if os.environ.get('CURSUS_NULLUS') or not os.access(silva.MENSOR_BIN,
+                                                        os.X_OK):
+        return
+    r = subprocess.run([silva.MENSOR_BIN, 'cursus', 'incipere', '-titulus',
+                        'pythonica#' + nomen.replace('\t', ' ')],
+                       env=_grex_ambitus(), capture_output=True, text=True,
+                       errors='replace')
+    for l in r.stdout.splitlines():
+        if l.startswith('MENSOR_PARENS='):
+            _GREX['id'] = l.split('=', 1)[1]
+            _GREX['initium'] = time.monotonic()
+            _GREX['fracta'] = len(fracta)
+
+
+def _cursus_lineae():
+    """lineae 'CURSUS' bin/mensor (columnae 0-14: CURSUS id parens titulus
+    status exitus duratio commissum sordidum ramus arbor vocator acta argv
+    nota)"""
+    r = subprocess.run([silva.MENSOR_BIN, 'cursus', 'legere', '-machina'],
+                       capture_output=True, text=True, errors='replace')
+    return [l.split('\t') for l in r.stdout.splitlines()
+            if l.startswith('CURSUS\t')]
 
 
 def _tempora_lineae():
@@ -106,7 +197,7 @@ FONS = ('#include "latina.h"\n'
 via = os.path.join(T, 'duo.c')
 open(via, 'w').write(FONS)
 
-print('--- extenta ---')
+_grex('extenta')
 x = silva.extenta(via)
 credo(len(x) == 4, 'quattuor extenta')
 credo([e.titulus for e in x] == ['a', 'b', 'a', 'b'], 'ordo fontis')
@@ -114,12 +205,12 @@ d_b = [e for e in x if e.titulus == 'b' and e.definitio][0]
 credo((d_b.linea_a, d_b.linea_nodi, d_b.linea_b) == (12, 14, 22),
       'b: extentum 12, nodus 14, finis 22')
 
-print('--- corpus ---')
+_grex('corpus')
 c = silva.corpus(via, 'b')
 credo(c.startswith('vacuum\nb (vacuum)\n{'), 'corpus b sine commentario')
 credo(c.endswith('}\n'), 'corpus b ad clausum')
 
-print('--- Editio: substituere nomine, omnia aut nihil ---')
+_grex('Editio: substituere nomine, omnia aut nihil')
 e = silva.Editio(via)
 e.substituere('b', 'vacuum\nb (vacuum)\n{\n    redde;\n}\n')
 credo(open(via).read() == FONS, 'discus intactus ante applicare')
@@ -135,7 +226,7 @@ diff = e.applicare(forma=False, iudica=False).diff
 credo('-    x  = I;' in diff and diff.startswith('--- a/'), 'diff unificatus')
 credo(open(via).read() == e.textus, 'scriptum semel')
 
-print('--- Editio: ancora tolerans spatiis ---')
+_grex('Editio: ancora tolerans spatiis')
 open(via, 'w').write(FONS)
 e = silva.Editio(via)
 e.replace('x = I;', 'x = II;')            # fons habet 'x  = I;' (duo spatia)
@@ -149,7 +240,7 @@ except silva.SilvaError:
 e.replace('redde;', 'frange;', numerus=2)
 credo(e.textus.count('frange;') == 2, 'numerus=2 ambas tangit')
 
-print('--- inserere ---')
+_grex('inserere')
 open(via, 'w').write(FONS)
 e = silva.Editio(via)
 e.inserere_post('a', 'vacuum\nc (vacuum)\n{\n    redde;\n}\n')
@@ -164,7 +255,7 @@ x3 = silva.extenta(via)
 credo([t.titulus for t in x3 if t.definitio] == ['d', 'a', 'c', 'b'],
       'd ante a (ante commentarium a)')
 
-print('--- iudicia ---')
+_grex('iudicia')
 open(via, 'w').write(FONS)
 credo(silva.examen(via) == 'ACCIPE', 'examen ACCIPE')
 lint = silva.lint(via)
@@ -177,7 +268,7 @@ credo(silva.formare(via), 'formare scripsit')
 # (glomus unius) regitur: hoc metimur
 credo('i32  x;' not in open(via).read(), 'formata (R7 glomus unius)')
 
-print('--- applicare: portae ---')
+_grex('applicare: portae')
 open(via, 'w').write(FONS)
 e = silva.Editio(via)
 e.substituere('b', 'vacuum\nb (vacuum)\n{\n    i32  y;\n\n    redde;\n}\n')
@@ -222,7 +313,7 @@ e = silva.Editio(via); e.replace('redde;', 'frange;', numerus=2)
 f = e.applicare(iudica=False, forma=False)
 credo(f.examen is None and f.differentia is None and not f.formata, 'iudica/forma seiuncta')
 
-print('--- usus + renominare ---')
+_grex('usus + renominare')
 u = silva.usus('formator_extenta')
 credo(any(x.via.endswith('silva_formator.c') for x in u.sedes), 'usus: sedes definitionis')
 credo(any(v.endswith('formator.c') for v in u.usus), 'usus: usus per plagulam')
@@ -236,7 +327,7 @@ t = open(via).read()
 credo('beta (vacuum)' in t and 'vacuum beta(vacuum);' in t and 'b (vacuum)' not in t,
       'renominare -scribere: definitio et prototypum')
 
-print('--- Refactio + prototypum_synchronizare ---')
+_grex('Refactio + prototypum_synchronizare')
 # ordo domus: custos primum, inclusiones intra (inclusio ANTE custodem
 # prototypum extentis celat - quaestio silvae, vide worklog)
 CAPUT = ('#ifndef DUO_H\n'
@@ -298,7 +389,7 @@ try:
 except silva.SilvaError:
     credo(open(via).read() == FONS and open(via_h).read() == CAPUT, 'strictum: ambae restitutae')
 
-print('--- typi: extenta + membrum_addere ---')
+_grex('typi: extenta + membrum_addere')
 FONS_T = ('#include "latina.h"\n'
           '\n'
           'nomen structura {\n'
@@ -347,7 +438,7 @@ except silva.SilvaError:
 open(via_t, 'w').write('#include "latina.h"\n\n#ifndef CUSTOS_Y\n#define CUSTOS_Y\n\nvacuum\nb (vacuum);\n\n#endif\n')
 credo([x.titulus for x in silva.extenta(via_t)] == ['b'], 'custos post inclusionem: prototypum visum')
 
-print('--- legati (pons MCP) ---')
+_grex('legati (pons MCP)')
 import time
 t0 = time.time()
 sy = silva.symbolum('formator_lint')
@@ -361,7 +452,7 @@ try:
 except silva.SilvaError:
     credo(True, 'instrumentum ignotum levat SilvaError')
 
-print('--- selecta, origo, arbor, differre_git ---')
+_grex('selecta, origo, arbor, differre_git')
 open(via, 'w').write(FONS)
 sel = silva.selecta(via, 'redde', intra='b')
 credo(len(sel) == 1 and sel[0].textus.strip() == 'redde;', 'selecta: redde intra b %r' % ((sel and sel[0][:2]),))
@@ -381,7 +472,7 @@ credo('<parsura' in silva.arbor(via), 'arbor: documentum STML')
 dg = silva.differre_git('pythonica/silva.py' if False else 'lib/piscina.c')
 credo(dg.verdictum == 'cosmetica' and dg.cosmetica_solum, 'differre_git: piscina.c == HEAD')
 
-print('--- ancorae lexematum ---')
+_grex('ancorae lexematum')
 open(via, 'w').write(FONS)
 e = silva.Editio(via)
 e.replace('vacuum b (vacuum);', 'vacuum b(i32 x);')           # plagula: 'vacuum b(vacuum);'
@@ -406,7 +497,7 @@ except silva.SilvaError:
 e = silva.Editio(via); e.replace('x  = I;', 'x = II;', tolerans='spatia')
 credo('x = II;' in e.textus, "tolerans='spatia' forma vetus manet")
 
-print('--- lex formae ancorarum tolerantium (md_arbor.c contortum, 2026-09-03) ---')
+_grex('lex formae ancorarum tolerantium (md_arbor.c contortum, 2026-09-03)')
 via_f = os.path.join(T, 'forma.c')
 FONS_F = ('#include "latina.h"\n\nvacuum f(i32 a, i32 b);\n\n'
           '/* f - explicatio longa\n * quae lineas duas tenet */\n'
@@ -452,7 +543,7 @@ credo('/* f - explicatio brevis quae lineas duas tenet */' in e.textus, "toleran
 f = e.applicare(iudica=False)
 credo(f.formata is not None and 'explicatio brevis' in open(via_f).read(), 'verba: scriptum')
 
-print('--- lex situs novi + refusio commenti + Commentum (2026-09-07) ---')
+_grex('lex situs novi + refusio commenti + Commentum (2026-09-07)')
 via_s = os.path.join(T, 'situs.c')
 FONS_S = ('#include "latina.h"\n\n'
           '/* f - explicatio longa quae lineas duas tenet et de re quadam\n'
@@ -498,7 +589,7 @@ except silva.SilvaError as ex:
 f = e.applicare(iudica=False)
 credo('nota datata. */\ninterior i32' in open(via_s).read() and '    i32 d;\n' in open(via_s).read(), 'Commentum: scriptum super plagulam iam editam')
 
-print('--- Commentum.sententia per orationem (gradus III) + refusiones (2026-09-07) ---')
+_grex('Commentum.sententia per orationem (gradus III) + refusiones (2026-09-07)')
 via_c = os.path.join(T, 'sententia.c')
 open(via_c, 'w').write('#include "latina.h"\n\n/* f - explicatio prima, e.g. cum abbreviatione. Sententia altera\n * hic stat. Tertia sequitur.\n *\n * Paragraphus alter manet intactus. */\ninterior i32\nf (\n    i32 a)\n{\n    redde a;\n}\n')
 e = silva.Editio(via_c); c = e.commentum('f')
@@ -528,7 +619,7 @@ except silva.SilvaError as ex:
     credo('VETITA' in str(ex) and 'Frani' in str(ex) and 'remove' in str(ex), 'commissio: refusio vetitae causam nominat')
 os.unlink(via_f)
 
-print('--- lint latinus praevius (fail-fast ante portas) ---')
+_grex('lint latinus praevius (fail-fast ante portas)')
 # functio vera: sine plagula C nihil iudicatum; plagula C sana -> lint
 # VERE cucurrit (relatio unci 'nihil novi'); lintrum rubrum ipsum a
 # fumo unci (gradus IX-XI) probatur - planta vera plagulam TRACTATAM
@@ -557,7 +648,7 @@ try:
 finally:
     silva.lint_latinus_praevium, silva.porta = _lint_verus, _porta_vera
 
-print('--- Textus: textus planus ---')
+_grex('Textus: textus planus')
 via_t2 = os.path.join(T, 'planus.md')
 open(via_t2, 'w').write('# titulus\n\nalpha beta\nalpha gamma\n')
 tx = silva.Textus(via_t2)
@@ -582,13 +673,13 @@ try:
 except silva.SilvaError:
     credo(True, 'Textus: lectio rancida refutatur')
 
-print('--- ancorae: commenta spatiis indifferentia ---')
+_grex('ancorae: commenta spatiis indifferentia')
 open(via, 'w').write(FONS.replace('/* b */', '/*\tb   nota\n   */'))
 e = silva.Editio(via)
 e.replace('/* b nota */\nvacuum\nb (vacuum)', '/* B */\nvacuum\nb (vacuum)')
 credo('/* B */' in e.textus and '\tb   nota' not in e.textus, 'commentum: tabulae et lineae refractae in ancora indifferentes')
 
-print('--- mensurae (volumen verum) ---')
+_grex('mensurae (volumen verum)')
 ms = silva.mensurae('', 1)
 credo(len(ms) == 1 and ms[0].mensurae.get('suita.tempus.totum', 0) > 0, 'mensurae radix: sessio plena cum toto')
 ms2 = silva.mensurae('silva.', 2)
@@ -597,7 +688,7 @@ credo(len(ms2) >= 1 and all('suita.tempus.totum' in s.mensurae for s in ms2)
 credo('totum' in silva.compendium_mensurae(ms[0]) and 'probatio_' in silva.compendium_mensurae(ms[0]), 'compendium_mensurae')
 credo(silva.mensurae('nemo.', 1) == [], 'mensurae: praefixum ignotum vacuum')
 
-print('--- replace_inter (Editio + Textus) ---')
+_grex('replace_inter (Editio + Textus)')
 open(via, 'w').write(FONS)
 e = silva.Editio(via)
 e.replace_inter('b (vacuum)\n{', 'redde;\n}', '\n    frange;\n')   # 'vacuum b (vacuum)' prototypum quoque congrueret
@@ -622,7 +713,7 @@ try:
 except silva.SilvaError as ex:
     credo('definitio' in str(ex) or 'definitiones' in str(ex), 'nuntius refusionis nominis definitiones nominat')
 
-print('--- sigillum: vetitae non sigillantur ---')
+_grex('sigillum: vetitae non sigillantur')
 vet = os.path.join('pythonica', '.vetita_probatio.tmp')
 silva.VETITAE = tuple(silva.VETITAE) + (vet,)
 s_ante = silva.sigillum_arboris()
@@ -633,7 +724,7 @@ finally:
     os.unlink(os.path.join(silva.RADIX, vet))
     silva.VETITAE = tuple(v for v in silva.VETITAE if v != vet)
 
-print('--- metiri ---')
+_grex('metiri')
 # registrum coctum (2026-09-15): involucrum tenue instrumenti C89 -
 # declaratio orationis commissa RECENS (rc 0, viae ambae nominatae);
 # declaratio mala (species ignota) RECUSATA (rc 2, nihil scriptum)
@@ -658,7 +749,7 @@ credo(mc.parsare_ms >= 0 and 'arbor_legendi' in mc.phases and int(mc.campi['nodi
 mt = silva.metiri('toml/probationes/fixa/toml-test/tests/valid/spec-example-1.toml', n=1)
 credo(mt.parsare_ms >= 0 and 'arbor_legendi' in mt.phases and mt.campi['nodi'] == '88' and mt.campi['diagnostica'] == '0' and mt.campi['sana'] == '1', 'metiri toml: semita materiae per titulos (%s nodi, coquere %s ms)' % (mt.campi['nodi'], mt.campi['ms_coquendi']))
 
-print('--- portae + commissio + planta ---')
+_grex('portae + commissio + planta')
 pp = silva.porta('formator-intra')
 credo(pp.cucurrit and pp.sana and 'sanum' in pp.compendium, 'porta formator-intra sana (%s)' % pp.compendium)
 credo(silva.porta_viae('silva/fontes/x.c') == 'silva' and silva.porta_viae('lib/x.c') == 'radix',
@@ -705,7 +796,7 @@ try:
 except silva.SilvaError as ex:
     credo(False, 'planta: erratum alienum pro fractura aedificationis habitum (%s)' % ex)
 
-print('--- umbra: receptum sigillo ligatum ---')
+_grex('umbra: receptum sigillo ligatum')
 via_r = silva.porta_umbra('formator-intra')
 credo(os.path.exists(via_r + '.pendens'), 'pendens scriptum')
 credo(any(st == 'pendens' for _, st in silva.portae_pendentes()), 'portae_pendentes: pendens')
@@ -784,7 +875,9 @@ except Exception as ex:
 # operarius umbrae ruens (porta parenti nota, operario ignota - PORTAE
 # in processu mutatae operarium non attingunt): receptum FRACTUM
 # scribitur, signum pendens tollitur - numquam 'pendens' in perpetuum
-via_u = silva.porta_umbra('ficta-octeti')
+# photographica=False: ruina operarii hic iudicatur, non clone (photographia
+# suo grege; clone ~V s, 2026-10-14)
+via_u = silva.porta_umbra('ficta-octeti', photographica=False)
 ru = silva.exspectare(via_u, tectum=60)
 credo(not ru.sana and not ru.cucurrit and 'UMBRA FRACTA' in ru.compendium
       and not os.path.exists(via_u + '.pendens'),
@@ -810,7 +903,7 @@ credo(h_u is None and len(rr) == 1 and rr[0][0] == 'formator-intra' and 'sanum' 
 post_u = set(v for v, _ in silva.portae_pendentes())
 credo(post_u <= ante_u, 'commissio_umbra: recepta sua deleta (aliena intacta)')
 
-print('--- fracturae: lectio actorum portae ---')
+_grex('fracturae: lectio actorum portae')
 import json
 ACTA_RADIX = ('Testing: probatio_x\n----\n.F\n FRACTA (credo_verum): a == b at probationes/probatio_x.c:12\n'
               '  Speratus: 1\n  Receptus: 2\n\n=== CREDO COMPENDIUM ===\nTotalis:    3\nPraeteriti: 2\n'
@@ -892,7 +985,7 @@ finally:
     del os.environ['PYTHONICA_PORTAE_FICTAE']
     os.unlink(scriptum)
 
-print('--- porta per fabricam: actio iudicium (fabrica spec 3 T6) ---')
+_grex('porta per fabricam: actio iudicium (fabrica spec 3 T6)')
 
 
 def _fabrica_iudicii(modus):
@@ -1140,6 +1233,24 @@ try:
           and '<actio titulus="probationes_silva" genus="iudicium">'
           in open(os.path.join(RADIX, 'silva', 'aedificatio.stml')).read(),
           'portae graduum: silva -> probationes_silva declaratum (cursores ad gradus T5)')
+    credo(silva.PORTAE_GRADUUM.get('html') == 'probationes_html'
+          and '<actio titulus="probationes_html" genus="iudicium">'
+          in open(os.path.join(RADIX, 'html', 'aedificatio.stml')).read()
+          and '<subsystema via="html"/>'
+          in open(os.path.join(RADIX, 'fabrica.stml')).read(),
+          'portae graduum: html -> probationes_html declaratum (expeditio W0ZBW, 2026-10-14)')
+    credo(silva.PORTAE_GRADUUM.get('saltuarius') == 'probationes_saltuarius'
+          and '<actio titulus="probationes_saltuarius" genus="iudicium">'
+          in open(os.path.join(RADIX, 'saltuarius', 'aedificatio.stml')).read()
+          and '<subsystema via="saltuarius"/>'
+          in open(os.path.join(RADIX, 'fabrica.stml')).read(),
+          'portae graduum: saltuarius -> probationes_saltuarius declaratum (expeditio W0ZBW, 2026-10-14)')
+    credo(silva.PORTAE_GRADUUM.get('materia') == 'probationes_materia'
+          and '<actio titulus="probationes_materia" genus="iudicium">'
+          in open(os.path.join(RADIX, 'materia', 'aedificatio.stml')).read()
+          and '<subsystema via="materia"/>'
+          in open(os.path.join(RADIX, 'fabrica.stml')).read(),
+          'portae graduum: materia -> probationes_materia declaratum (2026-10-14)')
     # RESIDUA (fabrica-7 T7): 'prae' ANTE sanare, 'post' POST; sana
     # solum si omnes; residua fracta nominata (residua_<gradus>)
     ordo_log = os.path.join(T, 'residua_ordo.txt')
@@ -1188,7 +1299,7 @@ finally:
         except OSError:
             pass
 
-print('--- receptum vivum: porta() sigillo ligata, commissio non iterum currit ---')
+_grex('receptum vivum: porta() sigillo ligata, commissio non iterum currit')
 import contextlib
 import io
 via_rv = silva._receptum_vivum_via('formator-intra')
@@ -1258,6 +1369,80 @@ try:
     phases = set(l[2] for l in _tempora_lineae() if l[1] == 'phasis')
     credo({'fabrica', 'portae debitae'} <= phases,
           'commissio: phases ante portas temporibus notatae (%s)' % sorted(phases))
+    # cursus (analytica T3): commissio = ARBOR cursuum - phases et
+    # portae filii eius, vocator 'commissio', commissum HEAD
+    lc = _cursus_lineae()
+    com = [l for l in lc if l[3] == 'commissio']
+    filii = [l for l in lc if com and l[2] == com[-1][1]]
+    caput = subprocess.run(['git', 'rev-parse', 'HEAD'], cwd=RADIX,
+                           capture_output=True, text=True).stdout.strip()
+    credo(len(com) >= 2 and com[-1][4] == 'fractus'
+          and com[-1][14].startswith('SilvaError: ') and com[-1][7] == caput,
+          'cursus: commissio notata (fractus, nota = refusio, commissum HEAD)')
+    credo({'phasis:fabrica', 'phasis:portae debitae', 'porta:ficta-numerans',
+           'porta:ficta-rubra2'} <= set(l[3] for l in filii)
+          and all(l[11] == 'commissio' for l in filii),
+          'cursus: phases et portae filii commissionis, vocator commissio (%s)'
+          % sorted(set(l[3] for l in filii)))
+    rubra = [l for l in filii if l[3] == 'porta:ficta-rubra2']
+    credo(rubra and rubra[0][4] == 'fractus' and rubra[0][14],
+          'cursus: porta rubra fractus, nota = compendium')
+    # corpora (T4): commissio fracta refusionem TOTAM fert (non lineam
+    # primam solam), porta effusionem suam - per 'cursus acta <id>'
+    def _acta(i):
+        return subprocess.run([silva.MENSOR_BIN, 'cursus', 'acta', i],
+                              capture_output=True, text=True,
+                              errors='replace').stdout
+    corpus_com = _acta(com[-1][1])
+    credo(corpus_com.startswith('SilvaError: ') and 'ficta-rubra2' in corpus_com
+          and len(corpus_com) > len(com[-1][14]),
+          'cursus: corpus commissionis fractae = refusio tota (%d octeti)'
+          % len(corpus_com))
+    credo(rubra and 'fictum: FRACTUM' in _acta(rubra[0][1]),
+          'cursus: corpus portae = effusio eius')
+    # quaestiones (T5): silva.cursus = involucrum tenue 'mensor quaestio'
+    tent = silva.cursus('commissiones', n=1)
+    credo(len(tent) == 1 and tent[0][0] == com[-1][1] and tent[0][7]
+          == 'porta:ficta-rubra2',
+          'silva.cursus commissiones: tentamen ultimum, culpa porta rubra (%s)'
+          % (tent[0][7] if tent else None))
+    credo('fictum: FRACTUM' in silva.cursus('acta', titulus='porta:ficta-rubra2',
+                                            status='fracta'),
+          'silva.cursus acta: corpus fracti ultimi (quaestio VI)')
+    try:
+        silva.cursus('nulla_talis')
+        credo(False, 'silva.cursus: quaestio ignota levat')
+    except silva.SilvaError as ex:
+        credo("'nulla_talis' ignota" in str(ex),
+              'silva.cursus: quaestio ignota -> SilvaError cum nuntio mensoris')
+    # _cursus ipse: nidificatio, exceptio, interruptio, ambitus restitutus
+    with silva._cursus('fumus:exterior'):
+        id_ext = os.environ.get('MENSOR_PARENS')
+        with silva._cursus('fumus:interior'):
+            pass
+    try:
+        with silva._cursus('fumus:exceptio'):
+            raise silva.SilvaError('probatio fracta\nlinea secunda')
+    except silva.SilvaError:
+        pass
+    try:
+        with silva._cursus('fumus:interruptus'):
+            raise KeyboardInterrupt()
+    except KeyboardInterrupt:
+        pass
+    lc = dict((l[3], l) for l in _cursus_lineae())
+    credo(lc.get('fumus:interior', [''] * 15)[2] == id_ext
+          and lc['fumus:exterior'][4] == 'transiit',
+          'cursus: _cursus nidificatur (parens interioris = id exterioris)')
+    credo(lc.get('fumus:exceptio', [''] * 15)[4] == 'fractus'
+          and lc['fumus:exceptio'][14] == 'SilvaError: probatio fracta',
+          'cursus: exceptio = fractus, nota linea prima')
+    credo(lc.get('fumus:interruptus', [''] * 15)[4] == 'interruptus',
+          'cursus: KeyboardInterrupt = interruptus (finis non scriptus)')
+    credo(dict((k, os.environ.get(k)) for k in _CLAVES_CURSUS)
+          == _AMBITUS_CURSUS_INITIO,
+          'cursus: ambitus post cursus omnes (commissiones incluso) idem ac'
+          ' in initio suitae')
     open(novum, 'w').write('x')
     try:
         try:
@@ -1303,7 +1488,7 @@ finally:
     for _n in ('ficta-numerans', 'ficta-rancida', 'ficta-mutans', 'ficta-rubra2'):
         silva.receptum_delere(silva._receptum_vivum_via(_n))
 
-print('--- sera: speculum Pythonicum tools/sera.sh ---')
+_grex('sera: speculum Pythonicum tools/sera.sh')
 import shutil
 via_se = os.path.join(T, 'probatio.sera')
 with silva.sera(via_se, tectum=1) as se:
@@ -1332,7 +1517,7 @@ except silva.SilvaError:
 credo(silva.sera_suitae('radix').via.endswith('/build/cursor.sera') and 'silva/build/cursor.sera' in silva.sera_suitae('silva').via,
       'sera_suitae: viae cursorum')
 
-print('--- FructusOmnes: transactio .sana ---')
+_grex('FructusOmnes: transactio .sana')
 r = silva.Refactio()
 r.editio(via).replace('x  = I;', 'x  = II;')
 fo = r.applicare()
@@ -1340,7 +1525,7 @@ credo(isinstance(fo, list) and hasattr(fo, 'sana') and fo.sana and len(fo) == 1
       and 'applicare' in str(fo), 'Refactio.applicare: lista cum .sana et str')
 open(via, 'w').write(FONS)
 
-print('--- probatio_currere: probatio una sicut cursor ---')
+_grex('probatio_currere: probatio una sicut cursor')
 credo(silva.probatio_suita('probatio_credo') == 'radix'
       and silva.probatio_suita('probatio_silva_lexema') == 'silva'
       and silva.probatio_suita('probatio_css_lexema') == 'css'
@@ -1417,7 +1602,7 @@ finally:
     except OSError:
         pass
 
-print('--- refusio ancorae lineas nominat ---')
+_grex('refusio ancorae lineas nominat')
 open(via, 'w').write(FONS)
 try:
     silva.Editio(via).replace('redde;', 'x')
@@ -1432,7 +1617,7 @@ try:
 except silva.SilvaError as ex:
     credo('lineae [1, 3]' in str(ex), 'Textus.replace: refusio lineas nominat (%s)' % str(ex)[:60])
 
-print('--- partitio: inclusivum recursione collapsa + viae ---')
+_grex('partitio: inclusivum recursione collapsa + viae')
 via_s = os.path.join(T, 'exemplum.sample.txt')
 open(via_s, 'w').write('Call graph:\n    100 Thread_1\n      100 start\n        100 main\n          60 f\n            40 g\n              30 g\n                20 g\n                  20 xar_obtinere\n          40 h\n            40 xar_obtinere\n\nTotal number in stack (recursive counted multiple, when >=5):\n')
 inc = dict((fn, n) for _, n, fn in silva.partitio_inclusivum(via_s))
@@ -1443,7 +1628,7 @@ credo(viae_x == [(40, 'h > xar_obtinere'), (20, 'f > g×3 > xar_obtinere')],
       'partitio_viae: semitae ordine ponderis, recursio compressa (%s)' % viae_x)
 credo(silva.partitio_viae(via_s, 'g') == [(40, 'f > g')], 'partitio_viae: functio recursiva semel, in summo')
 
-print('--- imagines: oraculum identitatis octetorum ---')
+_grex('imagines: oraculum identitatis octetorum')
 import shutil
 via_a = os.path.join(T, 'ia.txt'); via_b = os.path.join(T, 'ib.txt')
 open(via_a, 'w').write('alpha\n'); open(via_b, 'w').write('beta\n')
@@ -1465,7 +1650,7 @@ credo(co.diversae == [via_a, via_b], 'imago_conferre: rc diversus = diversa')
 shutil.rmtree(os.path.join(silva.IMAGINES_DIR, 'probatio-imago'), ignore_errors=True)
 shutil.rmtree(os.path.join(silva.IMAGINES_DIR, 'probatio-imago.post'), ignore_errors=True)
 
-print('--- photographia: status operis captus, arbor viva intacta ---')
+_grex('photographia: status operis captus, arbor viva intacta')
 tmpf_rel = 'pythonica/.photo_probatio.tmp'
 tmpf = os.path.join(silva.RADIX, tmpf_rel)
 open(tmpf, 'w').write('ante\n')
@@ -1492,12 +1677,17 @@ try:
           'photographia_materializare: clone cum statu capto, bin/build clonata, .git verum')
     credo(subprocess.run(['git', 'rev-parse', 'HEAD'], cwd=ph.via, capture_output=True, text=True).stdout.strip() == ph.basis,
           'photographia: HEAD in clone = basis')
+    _th = os.path.join(ph.via, 'build', 'aedilis', 'obiecta')
+    credo(os.path.islink(_th) and os.path.realpath(_th) == os.path.realpath(os.path.join(silva.RADIX, 'build', 'aedilis', 'obiecta'))
+          and not os.path.islink(os.path.join(ph.via, 'build')) and os.path.isdir(os.path.join(ph.via, 'build', 'fabrica'))
+          and not os.path.islink(os.path.join(ph.via, 'build', 'fabrica')),
+          'photographia: thesaurus build/aedilis/obiecta VINCULUM ad vivum (XI s clonationis), cetera build/ clonata', causa=repr(_th))
 finally:
     silva.photographia_delere(ph)
 credo(not os.path.exists(ph.via), 'photographia_delere: clone sublatus')
 os.unlink(tmpf)
 
-print('--- clonatio: bin/clonare (clonefile) et regressus ad cp ---')
+_grex('clonatio: bin/clonare (clonefile) et regressus ad cp')
 # pythonica S3: _clonare_paria per bin/clonare (processus unus, clonefile
 # arborum totarum); binarium absens aut par fractum -> 'cp -c [-R]' pro
 # paribus quorum destinatio nondum exstat. Area in /tmp (eadem area APFS)
@@ -1560,8 +1750,22 @@ finally:
 _dirs, _plag = silva._ignorata_dividere(['a/', 'a/f.txt', 'a/sub/', 'b.txt', 'ab.txt', 'c/d/'])
 credo(_dirs == ['a', 'c/d'] and _plag == ['ab.txt', 'b.txt'],
       'clonatio: res intra directorium ignoratum non seorsum clonatur', causa=repr((_dirs, _plag)))
+# thesaurus communis (2026-10-14): directorium continens in filios
+# solvitur, commune ipsum excisum (vinculum fit); absens/extra omittitur
+import tempfile
+_CX = tempfile.mkdtemp(prefix='silva_communia_')
+for _d in ('b/a/o/x', 'b/a/e', 'b/f', 'c'):
+    os.makedirs(os.path.join(_CX, _d))
+open(os.path.join(_CX, 'b', 'p.txt'), 'w').write('p')
+_cd_, _cc_ = silva._communia_excidere(['b', 'c'], ('b/a/o', 'nusquam/o'), _CX)
+credo(_cd_ == ['b/a/e', 'b/f', 'b/p.txt', 'c'] and _cc_ == ['b/a/o'],
+      'communia: pater solutus gradatim, commune excisum, absens omissum', causa=repr((_cd_, _cc_)))
+_cd_, _cc_ = silva._communia_excidere(['c'], ('b/a/o',), _CX)
+credo(_cd_ == ['c'] and _cc_ == [], 'communia: commune extra directoria clonanda non vinculatur', causa=repr((_cd_, _cc_)))
+import shutil as _shx
+_shx.rmtree(_CX, ignore_errors=True)
 
-print('--- custodes: nomina plana, clones orphani ---')
+_grex('custodes: nomina plana, clones orphani')
 for malum in ('a/b', '..', '.', '', 'x y'):
     try:
         silva.imago_capere(malum, ['true'], [])
@@ -1652,7 +1856,7 @@ finally:
         shutil.rmtree(_d, ignore_errors=True)
     silva.UMBRAE_DIR, silva.PORTAE_DIR = UMBRAE_VERA, PORTAE_VERA
 
-print('--- differre ---')
+_grex('differre')
 cos = FONS.replace('x  = I;', 'x = I;')
 sub = FONS.replace('x  = I;', 'x = II;')
 doc = FONS.replace('/* b */', '/* b - mutatum */')
@@ -1669,7 +1873,7 @@ credo(r.cosmetica_solum, 'documentaria gradu documentario admittitur')
 credo(any(p.status == 'MUTATA' and p.titulus == 'b' for p in r.paria),
       'par b MUTATA')
 
-print('--- Editio: parsatio mortua nominata; commentum; inserere_ante_vocationem ---')
+_grex('Editio: parsatio mortua nominata; commentum; inserere_ante_vocationem')
 via_m = os.path.join(T, 'mortua.c')
 open(via_m, 'w').write('#include "latina.h"\n\n/* f ducens */\nvacuum\nf (\n    vacuum)\n{\n}\n\n'
                        'vacuum\ng (\n    vacuum)\n{\n}\n')
@@ -1705,11 +1909,20 @@ credo(f_pa.sana and _t.index('imprimere("a")') < _t.index('imprimere("c")') < _t
       and 'imprimere("b")' not in _t,
       'probatio_addere: casus ante compendium scriptus (editio memoriae prior non scripta)')
 
-print('--- syntaxis; planta praevolatus ---')
+_grex('syntaxis; planta praevolatus')
 credo(silva.syntaxis('lib/piscina.c') is None, 'syntaxis: plagula viva sana')
 causa = silva.syntaxis(via_m, open(via_m).read())
 credo(causa is not None and 'error:' in causa and '.syntaxis_' not in causa and 'mortua.c' in causa,
       'syntaxis: copia temporaria iudicata, via data ostensa (%s)' % (causa or '')[-60:])
+# caput cum tabula static (fons_8x16.h, V3a): solum compilatum tabula
+# non adhibetur - id error non est (praevolatus plantae eam recusabat);
+# error verus in capite tamen nuntiatur
+caput = open('include/fons_8x16.h').read()
+credo(silva.syntaxis('include/fons_8x16.h', caput) is None,
+      'syntaxis: caput cum tabula static non adhibita sanum')
+causa = silva.syntaxis('include/fons_8x16.h', caput.replace('#define FONS_8X16_H', '#define FONS_8X16_H\nint x = ;'))
+credo(causa is not None and 'error:' in causa,
+      'syntaxis: error verus in capite nuntiatur (%s)' % (causa or '')[-60:])
 via_p = os.path.join(T, 'planta_prae.c')
 open(via_p, 'w').write('#include "latina.h"\n\nvacuum\nh (\n    i32 a)\n{\n    (vacuum)a;\n}\n')
 cursus = []
@@ -1730,7 +1943,7 @@ r_s, g_s = silva.planta(via_s, '<a/>', '<b/>', porta_stml)
 credo(open(via_s).read() == '<radix><a/></radix>\n', 'planta: plagula non-C sine praevolatu clang, reversa')
 os.unlink(via_s)
 
-print('--- expandere (stml) ---')
+_grex('expandere (stml)')
 ex_b = silva.expandere('<radix><a/></radix>')
 credo(ex_b.successus and '<a/>' in ex_b.textus, 'expandere: textus bonus expansus')
 ex_m = silva.expandere('<radix><#@f p="@p"><a x="&@ignotum;"/></#></radix>')
@@ -1740,7 +1953,7 @@ credo(silva.expandere('project-specs/exhibita/md-html-b1.stml').successus, 'expa
 for _f in (via_m, via_v, via_p):
     os.unlink(_f)
 
-print('--- oraculum md (ambitus ORACULUM_* involutus) ---')
+_grex('oraculum md (ambitus ORACULUM_* involutus)')
 # suita md gradus est (cursores ad gradus T4): oraculum cursum COGIT
 # (-vis); defectus nominatur, numquam suitam abrumpit
 try:
@@ -1760,7 +1973,7 @@ try:
 except silva.SilvaError as ex:
     credo(False, 'oraculum: cucurrit (%s)' % str(ex)[:160])
 
-print('--- Prosa: editio markdown per ancoras structurales (C1) ---')
+_grex('Prosa: editio markdown per ancoras structurales (C1)')
 import shutil
 # COPIA DATATA, non planum vivum (2026-09-23): lineae capitulorum pinnatae
 # sunt - planum vivum omni editione portam rubebat (doctrina 01M365VXAF)
@@ -1810,7 +2023,7 @@ except silva.SilvaError as ex:
 for _f in (via_p, via_q):
     os.unlink(_f)
 
-print('--- Prosa: incipit/continet + paragraphum_addere ---')
+_grex('Prosa: incipit/continet + paragraphum_addere')
 via_r = os.path.join(T, 'prosa3.md')
 open(via_r, 'w').write('# Doc\n\n## 9. Arc C — `Prosa` in `pythonica/silva.py`\n\nbody one\n\n## 10. Order\nbody ten\n\nSetext\n------\n\nbody s\n')
 r3 = silva.Prosa(via_r)
@@ -1834,7 +2047,7 @@ credo(b'Setext\n------\n\nunder setext\n\nbody s\n' in r3.octeti, 'paragraphum_a
 f3 = r3.applicare(); credo(f3.sana, 'Prosa: applicare post paragrapha')
 os.unlink(via_r)
 
-print('--- citata: putredo documentorum (C2) ---')
+_grex('citata: putredo documentorum (C2)')
 via_c = os.path.join(T, 'citata.md')
 open(via_c, 'w').write('See `lib/chorda.c`, `chorda.c`, `lib/nemo_hic.c`, `../../include/latina.h`,\n'
                        '`chorda_internare(`, `nemo_hic_est()`, `x = 1`.\n')
@@ -1846,7 +2059,7 @@ credo(ct.nuda[0].textus == 'chorda.c' and 'lib/chorda.c' in ct.nuda[0].sedes, 'c
 credo(ct.numeri['symbola_adsunt'] == 1 and 'ABSUNT 1' in silva.citata_textus(ct), 'citata: symbolum in nexus.tsv; textus compendii')
 os.unlink(via_c)
 
-print('--- vocabula: recensio identificatorum (T10) ---')
+_grex('vocabula: recensio identificatorum (T10)')
 vb = silva.vocabula('symbola')
 credo(vb.numeri['verba'] > 5000 and vb.numeri['sedes'] > 100000, 'vocabula: symbola corporis (verba > V milia, sedes > C milia)')
 per_verbum = dict((v.verbum, v) for v in vb.verba)
@@ -1863,7 +2076,7 @@ credo(per_verbum['the'].status == 'notum' and per_verbum['the'].classis == 'dete
 credo(per_verbum['lexema'].status == 'latinum' and per_verbum['piscina'].status == 'notum' and per_verbum['worklog'].status == 'permissum', 'vocabula: prosa - lexema latinum (glossarium Latinum), piscina notum (Moby eam novit), worklog permissum (contextus anglicus)')
 credo(per_verbum['values'].status == 'notum' and per_verbum['values'].lemma == 'value' and per_verbum['values'].regula == 'pluralis-s' and per_verbum['the'].regula == '', 'vocabula: prosa - values per regulam pluralis-s ad value, the sine regula')
 
-print('--- Oratio: quaestiones super orationem (T14) ---')
+_grex('Oratio: quaestiones super orationem (T14)')
 o = silva.Oratio('Puella rosam amat. Xyzzy virum videt. Puella xyzzy amat.\n')
 ss = o.sententiae()
 credo(len(ss) == 3 and ss[0].textus == 'Puella rosam amat.' and ss[0].forma == 'prosa' and ss[2].initium == 38 and ss[2].finis == 56 and ss[2].index == 2, 'Oratio.sententiae: III extenta cum forma et indice')
@@ -1898,7 +2111,7 @@ credo(vd[3].decisio == 'praelatio' and vd[3].auctor == 'determinans-primum-latin
 pf = ob.partitio()
 credo(pf['impletio'] == 2 and pf['praelatio'] == 2 and pf['umbra'] == 0 and pf['coactae'] == 2 and pf['una'] + pf['aperta'] == 1 and sum(pf[k] for k in silva.ORATIO_PARTITIO) == 5, 'Oratio.partitio: coactae II, praelatae II (Hoc, est), videt una/aperta - summa vocabula V')
 
-print('--- Oratio: habitus decretoris et partitio decretum (T38 c) ---')
+_grex('Oratio: habitus decretoris et partitio decretum (T38 c)')
 import os as _os2
 _os2.environ['ORATIO_DECRETOR'] = '1'
 try:
@@ -1917,7 +2130,7 @@ finally:
     _os2.environ.pop('ORATIO_DECRETOR', None)
 credo(all(v.habitus == '' for v in _oev), 'Oratio.vocabula: ORATIO_DECRETOR=0 habitus nullus (decretor abrogatus; ordinarium activus, T38 d)')
 
-print('--- pondera.py: generator tabulae ponderum decretoris (T38 b) ---')
+_grex('pondera.py: generator tabulae ponderum decretoris (T38 b)')
 import subprocess as _sp, tempfile as _tf, os as _os
 _pondera = ['python3', 'oratio/census/pondera.py']
 _p = _sp.run(_pondera + ['oratio/probationes/fixa/pondera/proba_lites.tsv'], capture_output=True, text=True)
@@ -1983,7 +2196,7 @@ credo(len(cc) == 3 and cc[0].sententia == 0 and cc[0].species == 'principalis' a
 credo(silva.Oratio('Caesar, cum venisset, urbem cepit.\n', crudus=True).clausulae() == [] and all(v.clausula is None and v.clausula_causa == '' for v in silva.Oratio('Puella amat.\n', crudus=True).vocabula()), 'Oratio(crudus): sine stampa - clausulae() vacuae, clausula None')
 credo([x.accidentia['casus'] for x in orr.analyses(1)] == ['ablativus', 'nominativus', 'vocativus'] and [x.accidentia['casus'] for x in orc.analyses(1)] == ['nominativus', 'vocativus', 'ablativus'] and orr.vocabula()[1].classes == ('substantivum',), 'Oratio resolutio (T17): cum puella - ablativus primus; crudus = ordo fontis')
 
-print('--- Prosa.sententia: delegatio Orationi (T14) ---')
+_grex('Prosa.sententia: delegatio Orationi (T14)')
 via_s = os.path.join(T, 'prosa3.md')
 open(via_s, 'w').write('# Doc\n\n## Ideas\n\nOne sentence here. Second one\nwraps here.\n\n- item one. item two.\n\n## Code\n\n```c\nx. y;\n```\n\nLast one.\n')
 r = silva.Prosa(via_s); sec = r.sectio('Ideas')
@@ -2004,7 +2217,7 @@ f4 = r.applicare()
 credo(f4.sana and 'One sentence here. Second one here.\n\n- item' in open(via_s).read() and f4.ancorae.get('sententia') == 4, 'Prosa.sententia + substituere + applicare: sanum, ancorae numeratae')
 
 
-print('--- clientes materiae: arbor ex suffixo, coctum, exemplaria (2026-09-17) ---')
+_grex('clientes materiae: arbor ex suffixo, coctum, exemplaria (2026-09-17)')
 via_sh = os.path.join(T, 'proba_crusta.sh')
 open(via_sh, 'w').write('if a; then b; fi # c\n\n')
 arb_sh = silva.arbor(via_sh)
@@ -2062,7 +2275,7 @@ except silva.SilvaError:
 # 'diagnostica_materiae' infra MANET et gradum UTRUMQUE nunc fert:
 # eadem functio, sed inventa lintris per eam iam veniunt.
 
-print('--- diagnostica_materiae (clientes materiae) ---')
+_grex('diagnostica_materiae (clientes materiae)')
 import tempfile
 _d = tempfile.mkdtemp(prefix='probatio_diagnostica_')
 try:
@@ -2160,7 +2373,7 @@ finally:
     shutil.rmtree(_d, ignore_errors=True)
 
 
-print('--- opus: commissio opus tabularii claudit (via frigida FICTA) ---')
+_grex('opus: commissio opus tabularii claudit (via frigida FICTA)')
 # Via frigida SUBSTITUITUR stipula quae argumenta sua in plagulam
 # scribit: porta pythonica NUMQUAM in tabularium vivum scribat.
 # Stipula: '-res X' -> lineam primam breviarii ex ambitu reddit;
@@ -2241,7 +2454,7 @@ finally:
     import shutil
     shutil.rmtree(_od, ignore_errors=True)
 
-print('--- linea auctoris: SEMEL ---')
+_grex('linea auctoris: SEMEL')
 _n1 = silva._nuntium_cum_trailer('titulus\n\ncorpus\n\nCo-Authored-By: Exemplar X <x@y>\n')
 credo(_n1.count('Co-Authored-By:') == 1 and 'Exemplar X' in _n1, 'nuntius lineam auctoris iam ferens: nulla altera appenditur')
 _n2 = silva._nuntium_cum_trailer('titulus\n\ncorpus\n')
@@ -2250,7 +2463,7 @@ _n3 = silva._nuntium_cum_trailer('titulus: de Co-Authored-By: in media linea loq
 credo(_n3.count('\nCo-Authored-By:') == 1, 'mentio in MEDIA linea non est linea auctoris')
 
 
-print('--- portae debitae: involucrum bin/fabrica portae (portae-declaratae T5) ---')
+_grex('portae debitae: involucrum bin/fabrica portae (portae-declaratae T5)')
 # Calculus in C (probatio_portae, fumus fabricae XLIV); hic solum
 # involucrum: contractus machinae legitur, effugia solvuntur, RECUSATIO
 # et fabrica absens = SilvaError nominatus; deinde arbor VIVA.
@@ -2320,7 +2533,7 @@ finally:
     silva.FABRICA_BIN = _fb_portae
     silva.PORTAE.update(_portae_seposita)
 
-print('--- portae debitae: tools/portae_debitae.sh (arbor VIVA) ---')
+_grex('portae debitae: tools/portae_debitae.sh (arbor VIVA)')
 _pdcli = os.path.join(RADIX, 'tools', 'portae_debitae.sh')
 credo(os.access(_pdcli, os.X_OK), 'tools/portae_debitae.sh exsistit et exsecutabilis')
 if os.access(_pdcli, os.X_OK):
@@ -2338,7 +2551,7 @@ if os.access(_pdcli, os.X_OK):
     credo(r2.returncode == 0 and r2.stdout == r.stdout,
           'CLI: sine annalibus idem responsum (tabularium non legitur)')
 
-print('--- portae debitae: commissio addit et currit (portae et debita FICTA) ---')
+_grex('portae debitae: commissio addit et currit (portae et debita FICTA)')
 # commissio NUMQUAM committit hic: via absens post portas refutatur ('via
 # nec in disco'). Porta ficta viridis signum plagulae tangit = CURSA EST.
 import contextlib
@@ -2359,6 +2572,14 @@ _pd_vera = silva.portae_debitae
 _debita_ficta = [silva.Debitum('ficta-debita', 'x.c in clausura probatio_y.c', False),
                  silva.Debitum('apps/z/fumus.sh', 'apps/z/z.c congruit apps/z/*', True)]
 silva.portae_debitae = lambda viae, *a, **k: (list(_debita_ficta), [])
+# iudicium fabricae et photographia hic NON iudicantur (greges sui: 'fabrica
+# ante portas' fictis, 'photographia'): verum iudicium ~III,VI s per
+# commissionem fictam (XIV hic), clone ~V s per portam umbrae (mensuratum
+# 2026-10-14, grex LVII s). Ordo portarum debitarum non mutatur.
+_fe_verum = silva._fabricam_exigere
+_pu_verum = silva.porta_umbra
+silva._fabricam_exigere = lambda viae, sine_fabrica=None, **k: None
+silva.porta_umbra = lambda nomen, filtrum=None, photographica=True: _pu_verum(nomen, filtrum, photographica=False)
 
 
 def _signum_tollere():
@@ -2460,6 +2681,8 @@ except (AttributeError, TypeError) as ex:
     credo(False, 'portae debitae in commissione absunt: %s' % ex)
 finally:
     silva.portae_debitae = _pd_vera
+    silva._fabricam_exigere = _fe_verum
+    silva.porta_umbra = _pu_verum
     os.environ.pop('PYTHONICA_PORTAE_FICTAE', None)
     silva._portae_fictae()
     import shutil
@@ -2847,6 +3070,31 @@ with tempfile.TemporaryDirectory() as _ll:
 credo((os.path.getsize(_TEMPORA_VERA) if os.path.exists(_TEMPORA_VERA)
        else -1) == _tempora_vera_ante,
       'tempora vera (build/portae/tempora.tsv) a probationibus intacta')
+
+# grex ipse (T6): auxiliator in diarium TEMPORARIUM probatur, status
+# gregis veri apertus servatur et restituitur
+_grex_verus = dict(_GREX)
+_greges_veri = dict(_GREGES_AMBITUS)
+_GREX['id'] = None
+for _k, _v in (('MENSOR_DIARIUM', 'greges.diarium'),
+               ('MENSOR_VOLUMEN', 'greges.volumen'),
+               ('MENSOR_DIURNA', 'greges_diurna')):
+    _GREGES_AMBITUS[_k] = os.path.join(T, _v)
+for _f in glob.glob(os.path.join(T, 'greges.*')):
+    os.unlink(_f)
+_grex('probatio gregis')
+_grex_claudere()
+_gl = subprocess.run([silva.MENSOR_BIN, 'cursus', 'legere', '-machina'],
+                     env=_grex_ambitus(), capture_output=True, text=True,
+                     errors='replace').stdout.splitlines()
+_gl = [l.split('\t') for l in _gl if l.startswith('CURSUS\t')]
+credo(len(_gl) == 1 and _gl[0][3] == 'pythonica#probatio gregis'
+      and _gl[0][4] == 'transiit' and _gl[0][14] == '0 fracta',
+      'grex: cursus pythonica#<grex> in diario destinato, transiit, nota')
+_GREGES_AMBITUS.clear()
+_GREGES_AMBITUS.update(_greges_veri)
+_GREX.update(_grex_verus)
+_grex_claudere()
 
 print()
 if fracta:

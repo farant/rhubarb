@@ -96,6 +96,32 @@ s32 principale (vacuum)
     derivare(&d, &e, effusio);
     CREDO_AEQUALIS_I32 (xar_numerus(effusio), II);
 
+    /* M2c: menu ad indicatorem aperitur - dexter deinde sinister cito
+     * in re prima duplex non est (aliter duplex sub menu clauso
+     * caderet) */
+    imprimere("\n--- Dexter deinde sinister -> nullus DUPLEX ---\n");
+    xar_vacare(effusio);
+    e                   = mus_depressus(XV * M, X, X);
+    e.datum.mus.botton  = MUS_DEXTER;
+    derivare(&d, &e, effusio);
+    e                   = mus_depressus(XV * M + C, X, X);
+    e.datum.mus.botton  = MUS_SINISTER;
+    derivare(&d, &e, effusio);
+    CREDO_AEQUALIS_I32 (xar_numerus(effusio), II);
+
+    imprimere("\n--- Dexter bis -> DUPLEX dexter ---\n");
+    xar_vacare(effusio);
+    e                   = mus_depressus(XX * M, X, X);
+    e.datum.mus.botton  = MUS_DEXTER;
+    derivare(&d, &e, effusio);
+    e                   = mus_depressus(XX * M + C, X, X);
+    e.datum.mus.botton  = MUS_DEXTER;
+    derivare(&d, &e, effusio);
+    CREDO_AEQUALIS_I32 (xar_numerus(effusio), III);
+    ultimus = (Eventus*)xar_obtinere(effusio, II);
+    CREDO_VERUM (ultimus->genus == EVENTUS_MUS_DUPLEX);
+    CREDO_VERUM (ultimus->datum.mus.botton == MUS_DEXTER);
+
     imprimere("\n--- Eventus non-mus transit immutatus ---\n");
     xar_vacare(effusio);
     memset(&e, ZEPHYRUM, magnitudo(Eventus));

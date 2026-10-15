@@ -11,7 +11,9 @@
 #   III  suita sana: exitus 0, SUITA TRANSIIT, compendium ut olim
 #   IV   filtrum CREDO_SECTIO: sectio sola; ignotum -> I, nominatum
 #   V    sine CREDO_VERDICTA: nulla plagula
-#   VI   ruina media: sectiones priores notae, linea SUITA absens
+#   VI   ruina media: sectiones priores notae, linea SUITA absens;
+#        SECTIONES (numerus declaratus) et INCIPIT ante sectionem
+#        effluxum - sectio rupta = incepta sine SECTIO (analytica T4)
 #   VII  signa (credo II): vocabulum clausum (lentus rete fenestra
 #        repositorium), CREDO_SIGNA_OMITTE -> OMISSA nominata, omnes
 #        omissae -> VACUA, signum ignotum (tabula aut ambitus) -> FRACTA
@@ -197,6 +199,7 @@ interior vacuum _ruit (CredoContextus* c)
 hic_manens constans CredoSectio SECTIONES[] = {
     { "ante", _ante, NIHIL, NIHIL, NIHIL, NIHIL },
     { "ruit", _ruit, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "post", _ante, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 
@@ -668,8 +671,9 @@ grep -q "^SECTIO	mixta	cum\\\\ttabulatione	TRANSIIT	" "$V"; credo $? "I titulus 
 [ "$(grep -c 'POST FILIUM$' "$T/o_mixta")" -eq 1 ] && [ "$(grep -c -- '--- Probans ultima ---' "$T/o_mixta")" -eq 1 ]; credo $? "I NECESSE in filio: filius exit, suita reliqua SEMEL (non in filio)"
 linea filius | grep -q "	TRANSIIT	1	1	"; credo $? "I filius: CREDO_NON_RUIT transiit (filius normaliter exiit)"
 grep -q "^SUITA	mixta	FRACTA	4	7	8	10	" "$V"; credo $? "I SUITA FRACTA 4/7 sectiones, 8/10 assertiones"
-mali=$(awk -F'\t' '($1 == "SECTIO" && NF != 11) || ($1 == "SUITA" && NF != 8) || ($1 != "SECTIO" && $1 != "SUITA")' "$V" | wc -l | tr -d ' ')
-[ "$mali" -eq 0 ] && [ "$(grep -c '^SECTIO	' "$V")" -eq 7 ]; credo $? "II campi: SECTIO XI (gradus, credo II), SUITA VIII, VII lineae SECTIO ($mali malae)"
+mali=$(awk -F'\t' '($1 == "SECTIO" && NF != 11) || ($1 == "SUITA" && NF != 8) || ($1 == "INCIPIT" && NF != 3) || ($1 == "SECTIONES" && NF != 3) || ($1 != "SECTIO" && $1 != "SUITA" && $1 != "INCIPIT" && $1 != "SECTIONES")' "$V" | wc -l | tr -d ' ')
+[ "$mali" -eq 0 ] && [ "$(grep -c '^SECTIO	' "$V")" -eq 7 ] && [ "$(grep -c '^INCIPIT	' "$V")" -eq 7 ] \
+    && [ "$(head -1 "$V")" = "SECTIONES	mixta	7" ]; credo $? "II campi: SECTIO XI (gradus, credo II), SUITA VIII, INCIPIT III per sectionem, SECTIONES III primum, VII lineae SECTIO ($mali malae)"
 grep -q -- '--- Probans fracta ---' "$T/o_mixta" && grep -q ' FRACTA (credo_aequalis): I == II at ' "$T/o_mixta" \
     && grep -q '^=== SECTIONES: ' "$T/o_mixta" && grep -q '^Totalis:' "$T/o_mixta" && grep -q '^Conditio: FRACTA$' "$T/o_mixta"; credo $? "I effusio humana ut olim (Probans, FRACTA at, compendium)"
 
@@ -693,6 +697,11 @@ CREDO_SECTIO=nulla CREDO_VERDICTA="$T/v_nulla.tsv" "$T/sana" > "$T/o_nulla" 2>&1
 # subshell: nuntius "Killed" testae ipsius tacetur (ruina consulta)
 ( CREDO_VERDICTA="$T/v_ruina.tsv" "$T/ruina" > "$T/o_ruina" 2>&1; exit $? ) 2>/dev/null; rc=$?
 [ "$rc" -ne 0 ] && grep -q "^SECTIO	ruina	ante	TRANSIIT	1	1	" "$T/v_ruina.tsv" && ! grep -q '^SUITA' "$T/v_ruina.tsv"; credo $? "VI ruina: sectio prior nota, SUITA absens (erat $rc)"
+# INCIPIT ante sectionem EFFLUXUM (SIGKILL nihil effluit): sectio rupta
+# nominabilis - incepta sine SECTIO; SECTIONES numerum declaratum dat,
+# sectio post ruinam nec incepta nec notata (analytica T4 2b-ii)
+grep -qx "SECTIONES	ruina	3" "$T/v_ruina.tsv" && grep -qx "INCIPIT	ruina	ruit" "$T/v_ruina.tsv" \
+    && ! grep -q "^SECTIO	ruina	ruit	" "$T/v_ruina.tsv" && ! grep -q "	post" "$T/v_ruina.tsv"; credo $? "VI ruina nominabilis: SECTIONES 3, INCIPIT ruit sine SECTIO, post nec incepta"
 
 # VII (credo II, T1): SIGNA - vocabulum clausum, OMISSA per
 # CREDO_SIGNA_OMITTE (nominata, numquam tacita), omnes omissae = VACUA

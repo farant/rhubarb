@@ -1110,3 +1110,49 @@ the open ledger question (…GGMGY94).
 - Live check: one comment appended to lib/portae.c made bin/fabrica stale;
   the precheck rebuilt it (~40 s) and passed on the second judgement.
 - Plants II (hand): heal disabled → red; a failed rebuild ignored → red.
+
+## 2026-10-13 — syntaxis: headers compiled alone tolerate unused statics
+
+`silva.planta` refused every plant in include/fons_8x16.h: its
+pre-check (`syntaxis`) compiles the planted copy ALONE as a .c with the
+house -Werror flags, and a header's `static const` table (or static
+function) is necessarily unused there - "unused variable 'fons_8x16'".
+Real users include the header; the gates compile it in context. Now a
+`.h` adds -Wno-unused-const-variable -Wno-unused-function for the
+pre-check only; a genuine error in the header is still reported (both
+cases in probatio_silva.py).
+
+## 2026-10-14 — snapshot clones link the compile cache; pythonica 322 s -> 158 s
+
+Measured, not guessed (analytica `sectiones` + hand timing): one
+`photographia_materializare` = 13.4 s, of which 11.0 s was clonefile of
+the ignored dirs - and 92k of build/'s 112k entries are
+`build/aedilis/obiecta`, the compile thesaurus. (clone 0.5, read-tree
+2.7, utime mirror 0.4.)
+
+The thesaurus is content-addressed with path-normalized keys (a compile
+inside a clone hits it: 0.04 s, abs and rel paths) and writes
+atomically (temp + rename, lib/thesaurus.c), so the clone now gets a
+SYMLINK to the live store instead of a copy (`_IGNORATA_COMMUNIA`;
+`_communia_excidere` splits the containing dir into its children step
+by step until the shared path stands alone). Snapshot 13.4 -> 4.9 s.
+Trade-off, stated: a gate in a snapshot now writes its new objects into
+the live store (same keys live work would write; purge-vs-writer race
+costs a miss, never a wrong object - thesaurus worklog). Deleting a
+clone (rename + rm -rf / rmtree) never follows the link: live store
+still 92001 entries after a delete.
+
+Test-side, in the "portae debitae ... FICTA" group: the real fabrica
+judge (3.6 s x 14 fake commits) and photographic umbras are replaced
+for the group (both have their own groups: "fabrica ante portas" with
+fakes, "photographia"); ficta-octeti's crash test runs
+`photographica=False`. Groups: umbra 56 -> 17 s, portae debitae
+58 -> 4 s, photographia 14 -> 4 s, fracturae 32 -> 8.7 s.
+
+Plants (hand, suite run each): `_IGNORATA_COMMUNIA = ()` -> red on the
+VINCULUM assertion only. First version of plant 2 (`extend(pater ...)`)
+HUNG instead of failing - re-adding the parent loops forever; a plant
+that hangs proves nothing, replaced with "keep only the first child"
+(finite).
+Plant 2 (finite): red on the communia unit test and the VINCULUM
+assertion. End to end: `porta_umbra('css')` in a snapshot -> 10/10, 18 s.

@@ -12,6 +12,7 @@
 #include "mensura.h"
 #include "chorda_aedificator.h"
 #include "lectiones.h"
+#include "tabula_dispersa.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -359,6 +360,25 @@ mensura_condere (
             perge;
         }
 
+        /* CURSUS (analytica T1): lineae 'cursus' genere suo */
+        si (   linea.mensura > (i32)VII
+            && memcmp(linea.datum, "cursus\t", (size_t)VII) == ZEPHYRUM)
+        {
+            CursusInitium initium;
+              CursusFinis finis;
+                      b32 est_finis;
+
+            si (   !mensura_cursus_ex_linea(linea, &initium, &finis,
+                       &est_finis, piscina)
+                || !volumen_actum_appendere(volumen, "cursus", linea))
+            {
+                malformatae++;
+                perge;
+            }
+            fructus.conditae++;
+            perge;
+        }
+
         si (!mensura_ex_linea(linea, &mensura, piscina))
         {
             malformatae++;
@@ -403,4 +423,461 @@ mensura_condere (
     }
 
     redde fructus;
+}
+
+
+/* ============================================================
+ * CURSUS (analytica T1)
+ * ============================================================ */
+
+#define CURSUS_CAMPI_INITII  XIV
+#define CURSUS_CAMPI_FINIS   XII
+
+/* argv effugere: \\ \t \n \r - mandatum ut datum servatur */
+interior vacuum
+_effugere (
+    ChordaAedificator* a,
+               chorda  c)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < c.mensura; i++)
+    {
+        commutatio (c.datum[i])
+        {
+            casus '\\': chorda_aedificator_appendere_literis(a, "\\\\");
+                frange;
+            casus '\t': chorda_aedificator_appendere_literis(a, "\\t");
+                frange;
+            casus '\n': chorda_aedificator_appendere_literis(a, "\\n");
+                frange;
+            casus '\r': chorda_aedificator_appendere_literis(a, "\\r");
+                frange;
+            ordinarius:
+                chorda_aedificator_appendere_character(a,
+                    (character)c.datum[i]);
+                frange;
+        }
+    }
+}
+
+interior chorda
+_reddere_effugium (
+     chorda  c,
+    Piscina* piscina)
+{
+    ChordaAedificator* a = chorda_aedificator_creare(piscina,
+        (memoriae_index)(c.mensura + I));
+                   i32 i;
+
+    si (a == NIHIL)
+    {
+        redde c;
+    }
+    per (i = ZEPHYRUM; i < c.mensura; i++)
+    {
+        si (c.datum[i] == '\\' && i + I < c.mensura)
+        {
+            i++;
+            commutatio (c.datum[i])
+            {
+                casus 't': chorda_aedificator_appendere_character(a,
+                               '\t');
+                    frange;
+                casus 'n': chorda_aedificator_appendere_character(a,
+                               '\n');
+                    frange;
+                casus 'r': chorda_aedificator_appendere_character(a,
+                               '\r');
+                    frange;
+                ordinarius:
+                    chorda_aedificator_appendere_character(a,
+                        (character)c.datum[i]);
+                    frange;
+            }
+            perge;
+        }
+        chorda_aedificator_appendere_character(a,
+            (character)c.datum[i]);
+    }
+    redde chorda_aedificator_finire(a);
+}
+
+interior vacuum
+_campum_addere (
+    ChordaAedificator* a,
+               chorda  c)
+{
+    chorda_aedificator_appendere_character(a, '\t');
+    chorda_aedificator_appendere_chorda(a, c);
+}
+
+interior vacuum
+_numerum_addere (
+    ChordaAedificator* a,
+                  s64  n)
+{
+    character numeri[XXXII];
+
+    sprintf(numeri, "%ld", (longus)n);
+    chorda_aedificator_appendere_character(a, '\t');
+    chorda_aedificator_appendere_literis(a, numeri);
+}
+
+chorda
+mensura_cursus_initium_ad_lineam (
+    constans CursusInitium* i,
+                   Piscina* piscina)
+{
+    ChordaAedificator* a;
+               chorda  vacua;
+
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
+    si (i == NIHIL || piscina == NIHIL)
+    {
+        redde vacua;
+    }
+    si (   !_campus_purus(i->id) || !_campus_purus(i->parens)
+        || !_campus_purus(i->sessio) || !_campus_purus(i->titulus)
+        || !_campus_purus(i->vocator) || !_campus_purus(i->commissum)
+        || !_campus_purus(i->ramus) || !_campus_purus(i->arbor)
+        || !_campus_purus(i->machina) || i->id.mensura == ZEPHYRUM)
+    {
+        redde vacua;
+    }
+    a = chorda_aedificator_creare(piscina, (memoriae_index)CCLVI);
+    si (a == NIHIL)
+    {
+        redde vacua;
+    }
+    chorda_aedificator_appendere_literis(a, "cursus\tinitium");
+    _campum_addere(a, i->id);
+    _campum_addere(a, i->parens);
+    _campum_addere(a, i->sessio);
+    _campum_addere(a, i->titulus);
+    chorda_aedificator_appendere_character(a, '\t');
+    _effugere(a, i->argv);
+    _campum_addere(a, i->vocator);
+    _campum_addere(a, i->commissum);
+    _numerum_addere(a, i->sordidum ? (s64)I : (s64)ZEPHYRUM);
+    _campum_addere(a, i->ramus);
+    _campum_addere(a, i->arbor);
+    _campum_addere(a, i->machina);
+    _numerum_addere(a, i->initium);
+    chorda_aedificator_appendere_character(a, '\n');
+    redde chorda_aedificator_finire(a);
+}
+
+/* nota ad CURSUS_NOTA_MAXIMA octetos, limite ad initium characteris
+ * UTF-8 retracto (octeti continuationis 10xxxxxx non dividuntur) */
+interior chorda
+_notam_praecidere (
+    chorda nota)
+{
+    si (nota.mensura <= (i32)CURSUS_NOTA_MAXIMA)
+    {
+        redde nota;
+    }
+    nota.mensura = (i32)CURSUS_NOTA_MAXIMA;
+    dum (   nota.mensura > ZEPHYRUM
+         && (((insignatus character)nota.datum[nota.mensura] & 0xC0)
+             == 0x80))
+    {
+        nota.mensura--;
+    }
+    redde nota;
+}
+
+chorda
+mensura_cursus_finis_ad_lineam (
+    constans CursusFinis* f,
+                 Piscina* piscina)
+{
+    ChordaAedificator* a;
+               chorda  vacua;
+
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
+    si (   f == NIHIL || piscina == NIHIL || !_campus_purus(f->id)
+        || !_campus_purus(f->acta) || f->id.mensura == ZEPHYRUM)
+    {
+        redde vacua;
+    }
+    a = chorda_aedificator_creare(piscina, (memoriae_index)CXXVIII);
+    si (a == NIHIL)
+    {
+        redde vacua;
+    }
+    chorda_aedificator_appendere_literis(a, "cursus\tfinis");
+    _campum_addere(a, f->id);
+    _numerum_addere(a, f->momentum);
+    _numerum_addere(a, f->duratio_ms);
+    _numerum_addere(a, (s64)f->exitus);
+    _numerum_addere(a, f->rss_maxima);
+    _numerum_addere(a, f->cpu_usoris_ms);
+    _numerum_addere(a, f->cpu_systematis_ms);
+    _campum_addere(a, f->acta);
+    _numerum_addere(a, f->acta_mensura);
+    chorda_aedificator_appendere_character(a, '\t');
+    _effugere(a, _notam_praecidere(f->nota));
+    chorda_aedificator_appendere_character(a, '\n');
+    redde chorda_aedificator_finire(a);
+}
+
+/* campos ad TAB scindere (maxime numerus); numerus inventus redditur */
+interior i32
+_campos_scindere (
+    chorda  linea,
+    chorda* campi,
+       i32  maximum)
+{
+    i32 n        = ZEPHYRUM;
+    i32 initium  = ZEPHYRUM;
+    i32 i;
+
+    dum (   linea.mensura > ZEPHYRUM
+         && (   linea.datum[linea.mensura - I] == '\n'
+             || linea.datum[linea.mensura - I] == '\r'))
+    {
+        linea.mensura--;
+    }
+    per (i = ZEPHYRUM; i <= linea.mensura; i++)
+    {
+        si (i == linea.mensura || linea.datum[i] == '\t')
+        {
+            si (n >= maximum)
+            {
+                redde maximum + I;   /* campi nimii */
+            }
+            campi[n].datum    = linea.datum + initium;
+            campi[n].mensura  = i - initium;
+            n++;
+            initium = i + I;
+        }
+    }
+    redde n;
+}
+
+/* numerus integer ex campo; FALSUM si non numerus totus */
+interior b32
+_numerum_legere (
+    chorda  campus,
+       s64* exitus)
+{
+    character  tabula[XXXII];
+    character* finis;
+
+    si (campus.mensura == ZEPHYRUM || campus.mensura >= (i32)XXXII)
+    {
+        redde FALSUM;
+    }
+    memcpy(tabula, campus.datum, (size_t)campus.mensura);
+    tabula[campus.mensura]  = '\0';
+    *exitus                 = (s64)strtol(tabula, &finis, X);
+    redde (finis != tabula && *finis == '\0') ? VERUM : FALSUM;
+}
+
+b32
+mensura_cursus_ex_linea (
+           chorda  linea,
+    CursusInitium* initium_out,
+      CursusFinis* finis_out,
+              b32* est_finis_out,
+          Piscina* piscina)
+{
+    chorda campi[CURSUS_CAMPI_INITII];
+       i32 n;
+       s64 numerus;
+
+    si (   linea.datum == NIHIL || initium_out == NIHIL
+        || finis_out   == NIHIL || est_finis_out == NIHIL
+        || piscina     == NIHIL)
+    {
+        redde FALSUM;
+    }
+    n = _campos_scindere(linea, campi, (i32)CURSUS_CAMPI_INITII);
+    si (n < II || !chorda_aequalis_literis(campi[ZEPHYRUM], "cursus"))
+    {
+        redde FALSUM;
+    }
+    si (chorda_aequalis_literis(campi[I], "initium"))
+    {
+        si (n != (i32)CURSUS_CAMPI_INITII)
+        {
+            redde FALSUM;
+        }
+        memset(initium_out, ZEPHYRUM, magnitudo(CursusInitium));
+        initium_out->id         = campi[II];
+        initium_out->parens     = campi[III];
+        initium_out->sessio     = campi[IV];
+        initium_out->titulus    = campi[V];
+        initium_out->argv       = _reddere_effugium(campi[VI], piscina);
+        initium_out->vocator    = campi[VII];
+        initium_out->commissum  = campi[VIII];
+        si (!_numerum_legere(campi[IX], &numerus))
+        {
+            redde FALSUM;
+        }
+        initium_out->sordidum  = (numerus != (s64)ZEPHYRUM);
+        initium_out->ramus     = campi[X];
+        initium_out->arbor     = campi[XI];
+        initium_out->machina   = campi[XII];
+        si (!_numerum_legere(campi[XIII], &initium_out->initium))
+        {
+            redde FALSUM;
+        }
+        *est_finis_out = FALSUM;
+        redde VERUM;
+    }
+    si (chorda_aequalis_literis(campi[I], "finis"))
+    {
+        si (n != (i32)CURSUS_CAMPI_FINIS)
+        {
+            redde FALSUM;
+        }
+        memset(finis_out, ZEPHYRUM, magnitudo(CursusFinis));
+        finis_out->id = campi[II];
+        si (   !_numerum_legere(campi[III], &finis_out->momentum)
+            || !_numerum_legere(campi[IV], &finis_out->duratio_ms)
+            || !_numerum_legere(campi[V], &numerus)
+            || !_numerum_legere(campi[VI], &finis_out->rss_maxima)
+            || !_numerum_legere(campi[VII], &finis_out->cpu_usoris_ms)
+            || !_numerum_legere(campi[VIII],
+                   &finis_out->cpu_systematis_ms)
+            || !_numerum_legere(campi[X], &finis_out->acta_mensura))
+        {
+            redde FALSUM;
+        }
+        finis_out->exitus  = (s32)numerus;
+        finis_out->acta    = campi[IX];
+        finis_out->nota    = _reddere_effugium(campi[XI], piscina);
+        *est_finis_out     = VERUM;
+        redde VERUM;
+    }
+    redde FALSUM;
+}
+
+interior b32
+_lineam_appendere (
+    constans character* via_diarii,
+                chorda  linea)
+{
+     FILE* plagula;
+    size_t scripta;
+
+    si (via_diarii == NIHIL || linea.mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    plagula = lectiones_fopen(via_diarii, "ab");
+    si (plagula == NIHIL)
+    {
+        redde FALSUM;
+    }
+    scripta = fwrite(linea.datum, (size_t)I, (size_t)linea.mensura,
+        plagula);
+    fclose(plagula);
+    redde (scripta == (size_t)linea.mensura) ? VERUM : FALSUM;
+}
+
+b32
+mensura_cursum_incipere (
+        constans character* via_diarii,
+    constans CursusInitium* initium,
+                   Piscina* piscina)
+{
+    redde _lineam_appendere(via_diarii,
+        mensura_cursus_initium_ad_lineam(initium, piscina));
+}
+
+b32
+mensura_cursum_finire (
+      constans character* via_diarii,
+    constans CursusFinis* finis,
+                 Piscina* piscina)
+{
+    redde _lineam_appendere(via_diarii,
+        mensura_cursus_finis_ad_lineam(finis, piscina));
+}
+
+interior s32
+_cursus_ordinare (
+    constans vacuum* a,
+    constans vacuum* b)
+{
+    s64 x = ((constans Cursus*)a)->initium.initium;
+    s64 y = ((constans Cursus*)b)->initium.initium;
+
+    redde (x < y) ? -(s32)I : (x > y) ? (s32)I : (s32)ZEPHYRUM;
+}
+
+Xar*
+mensura_cursus_legere (
+    Volumen* volumen,
+    Piscina* piscina)
+{
+               Xar* acta;
+               Xar* cursus;
+    TabulaDispersa* per_id;
+               i32  k;
+
+    si (volumen == NIHIL || piscina == NIHIL)
+    {
+        redde NIHIL;
+    }
+    acta = volumen_acta_legere(volumen, (s64)ZEPHYRUM, piscina);
+    si (acta == NIHIL)
+    {
+        redde NIHIL;
+    }
+    cursus = xar_creare(piscina, (i32)magnitudo(Cursus));
+    per_id = tabula_dispersa_creare_chorda(piscina, CCLVI);
+    si (cursus == NIHIL || per_id == NIHIL)
+    {
+        redde NIHIL;
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(acta); k++)
+    {
+        constans VolumenActum* actum = (constans VolumenActum*)
+            xar_obtinere(acta, k);
+                 CursusInitium  initium;
+                   CursusFinis  finis;
+                           b32  est_finis;
+                        vacuum* inventum;
+
+        si (   !chorda_aequalis_literis(actum->genus, "cursus")
+            || !mensura_cursus_ex_linea(actum->datum, &initium, &finis,
+                   &est_finis, piscina))
+        {
+            perge;
+        }
+        si (!est_finis)
+        {
+            Cursus* novus = (Cursus*)xar_addere(cursus);
+
+            si (novus == NIHIL)
+            {
+                redde NIHIL;
+            }
+            memset(novus, ZEPHYRUM, magnitudo(Cursus));
+            novus->initium  = initium;
+            novus->status   = CURSUS_INTERRUPTUS;
+            (vacuum)tabula_dispersa_inserere(per_id, initium.id, novus);
+            perge;
+        }
+        si (tabula_dispersa_invenire(per_id, finis.id, &inventum))
+        {
+            Cursus* r = (Cursus*)inventum;
+
+            r->finis   = finis;
+            r->status  = (finis.exitus == ZEPHYRUM) ? CURSUS_TRANSIIT
+                : CURSUS_FRACTUS;
+        }
+    }
+    /* ordo initii; xar_ordinare stabilis (aequalitas: ordine actorum).
+     * NB monstratores tabulae post ordinationem invalidi - non iam
+     * adhibentur */
+    xar_ordinare(cursus, _cursus_ordinare);
+    redde cursus;
 }

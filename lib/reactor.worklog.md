@@ -22,3 +22,54 @@ Differential proof the new churn test bites: reverted reactor.c
 to HEAD → probatio_fd_churn_reuse FRACTA at cyclus == M + CC
 (exhaustion mid-run); restored fix → 102/102. The bar is not a
 blind spot.
+
+## 2026-10-14 - dispatch safe under mutation (http-vocatio T1, spec II.0)
+
+Route B puts several independent clients (DNS, TCP, TLS, timers) on one
+reactor, and their callbacks add and remove fds and timers while the
+reactor is dispatching. Reading the code for the plan found three
+hazards; `probationes/probatio_reactor_mutatio.c` pins them (red before
+the fix: 5 of 6 sections).
+
+- **Rebuild during dispatch dropped events.** `reactor_adicere`,
+  `_modificare` and `_removere` called `_rebuilere_poll_fds`, which
+  reset every `revents` to 0. One `reactor_removere` inside a callback
+  silently lost every later fd's event in that pass (level-triggered
+  poll re-reports next pass, so it was a delay, plus a lost event for
+  anything that changed in between). The rebuild calls are gone:
+  `reactor_poll` rebuilds at the start of every pass anyway.
+- **Dispatch now walks a snapshot.** `_rebuilere_poll_fds` records for
+  each `poll_fds[k]` the entry index and that entry's `generatio`; the
+  generation bumps on every new registration and every removal. A
+  callback may add/remove anything: removed entries and REUSED slots
+  (same index, new registration) are skipped for the rest of the pass;
+  fds added mid-pass are first dispatched next pass. (Section `locus
+  reusus` passed on old code by accident - the rebuild zeroed the
+  revents - so it is guarded by a plant, not born red.)
+- **One-shot timers were switched off after their callback.** A
+  callback that cancelled itself and added a new timer got the same
+  slot back, which was then deactivated: the new timer never fired.
+  Now the state (inactive / next deadline) is set before the callback.
+- **Timers born in a pass wait for the next pass** (`id >= limes`,
+  limes = next id at pass start). Otherwise a callback that always adds
+  a 0 ms timer never lets `reactor_poll` return. Two other mechanisms
+  already cover most cases - a one-shot parent frees its slot before
+  the callback (the child reuses it, behind the loop) and the loop
+  bound is the pass-start `timer_numerus` (a child above it is never
+  visited) - so limes is load-bearing only when the child lands in a
+  HOLE: a freed slot above the parent and below the high-water mark.
+  The `limes` plant stayed green twice until section `timer natus` was
+  rebuilt as exactly that layout (repeating parent, cancelled slot, a
+  live timer above).
+- **The early return counted the high-water mark.** `timer_numerus`
+  never shrinks, so after the first timer ever, `reactor_poll(r, ms)`
+  with nothing active really slept `ms` inside a `poll()` with no fds.
+  It now counts active timers (`reactor_numerus_timer`).
+
+Test gotcha: the generation plant made the suite HANG for 10 minutes,
+not fail - a misdispatched "readable" event made `_notare` do a
+blocking `read()` on an empty pipe. The test's pipes are now
+O_NONBLOCK (`_pipam`), so a misdispatch counts instead of blocking.
+A plant must make the test fail, not wait; non-blocking fixtures are
+part of that. Second gotcha: deleting the `limes` check leaves the
+variable unused, which -Werror refuses - the plant is `(... && FALSUM)`.

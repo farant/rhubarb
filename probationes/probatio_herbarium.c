@@ -686,6 +686,160 @@ probatio_iudex(Piscina* piscina)
     _purgare(dir, piscina);
 }
 
+/* ---- quaestio-rivus T2: vectura rivi capiens et reddens ---- */
+
+nomen structura {
+    character acceptum[CCLVI];
+          i32 n;
+          i32 vocationes;
+} RivusCollectus;
+
+interior vacuum
+_rivum_colligere (
+          vacuum* datum,
+     constans i8* octeti,
+             i32  n)
+{
+    RivusCollectus* c = (RivusCollectus*)datum;
+
+    c->vocationes++;
+    si (c->n + n < (i32)magnitudo(c->acceptum))
+    {
+        memcpy(c->acceptum + c->n, octeti, (size_t)n);
+        c->n               += n;
+        c->acceptum[c->n]  = '\0';
+    }
+}
+
+/* vectura scripta rivi: responsum ut _scripta_exsequi, corpus 2xx per
+ * rivum in frustis III octetorum */
+interior HttpResultus
+_scripta_rivi_exsequi (
+    HttpPetitio* petitio,
+      HttpRivus  rivus,
+         vacuum* rivi_datum,
+        Piscina* piscina,
+         vacuum* datum)
+{
+    HttpResultus res = _scripta_exsequi(petitio, piscina, datum);
+             i32 k;
+
+    si (   res.successus && rivus && res.responsum->status >= CC
+        && res.responsum->status < CCC)
+    {
+        per (k = 0; k < res.responsum->corpus.mensura; k += III)
+        {
+            i32 n = res.responsum->corpus.mensura - k < III
+                ? res.responsum->corpus.mensura - k : III;
+            rivus(rivi_datum, res.responsum->corpus.datum + k, n);
+        }
+    }
+    redde res;
+}
+
+interior vacuum
+probatio_rivus(Piscina* piscina)
+{
+            character  dir[CCLVI];
+    ResponsumScriptum  responsa[II];
+             Scriptor  s;
+    HerbariumOptiones  o;
+     IudexProbationis  probans;
+            Herbarium* h;
+      HttpVecturaRivi  v;
+      HttpVecturaRivi  reddens;
+         HttpResultus  r;
+       RivusCollectus  c;
+                  Xar* specimina;
+                  i32  i;
+                  b32  visum_ducenti = FALSUM;
+
+    imprimere("\n--- Probans herbarium_vectura_rivi + reddens_rivi ---\n");
+    _directorium(dir, "rivus");
+    _purgare(dir, piscina);
+    /* 0: DXXIX -> premitur 'status', rivus tacet; 1: CC SSE cum 'x' ->
+     * rivus transmittit IMMUTATUM, iudex post finem premit */
+    responsa[0].status  = DXXIX;
+    responsa[0].corpus  =
+        "{\"type\":\"error\",\"error\":{\"type\":\"overloaded_error\"}}";
+    responsa[0].caput_titulus  = NIHIL;
+    responsa[0].caput_valor    = NIHIL;
+    responsa[I].status         = CC;
+    responsa[I].corpus         = "event: e\ndata: x-x-x-x\n\n";
+    responsa[I].caput_titulus  = NIHIL;
+    responsa[I].caput_valor    = NIHIL;
+    s.responsa                 = responsa;
+    s.numerus                  = II;
+    s.index                    = 0;
+    probans.vocationes         = 0;
+    o                          = herbarium_optiones_ordinariae();
+    o.directorium              = dir;
+    o.iudex                    = _iudex_x;
+    o.iudex_datum              = &probans;
+    h                          = herbarium_aperire(piscina, &o);
+    CREDO_NON_NIHIL(h);
+    v.exsequi  = _scripta_rivi_exsequi;
+    v.datum    = &s;
+    v          = herbarium_vectura_rivi(h, v);
+    per (i = 0; i < II; i++)
+    {
+        memset(&c, 0, magnitudo(c));
+        r = http_vectura_rivi_exsequi(v, _petitio(piscina),
+            _rivum_colligere, &c, piscina);
+        CREDO_VERUM(r.successus);
+        CREDO_CHORDA_AEQUALIS_LITERIS(r.responsum->corpus,
+            responsa[i].corpus);
+        si (i == 0)
+        {
+            CREDO_AEQUALIS_I32(c.vocationes, 0);
+        }
+        alioquin
+        {
+            CREDO_VERUM(strcmp(c.acceptum, responsa[I].corpus) == 0);
+            CREDO_VERUM(c.vocationes > I);
+        }
+    }
+    /* iudex pro CC solo; ambo pressa */
+    CREDO_AEQUALIS_I32(probans.vocationes, I);
+    CREDO_AEQUALIS_I32(_specimina_numerare(dir, piscina), II);
+    /* herbarium NIHIL: involuta ipsa */
+    v.exsequi  = _scripta_rivi_exsequi;
+    v.datum    = &s;
+    CREDO_VERUM(herbarium_vectura_rivi(NIHIL, v).exsequi
+        == _scripta_rivi_exsequi);
+
+    /* reddens rivi: CC per rivum in frustis, DXXIX tacet */
+    specimina = herbarium_enumerare(piscina, dir);
+    CREDO_AEQUALIS_I32(xar_numerus(specimina), II);
+    reddens = herbarium_reddens_rivi(piscina, specimina);
+    per (i = 0; i < II; i++)
+    {
+        HerbariumSpecimen* sp =
+            (HerbariumSpecimen*)xar_obtinere(specimina, i);
+
+        memset(&c, 0, magnitudo(c));
+        r = http_vectura_rivi_exsequi(reddens, _petitio(piscina),
+            _rivum_colligere, &c, piscina);
+        CREDO_VERUM(r.successus);
+        CREDO_CHORDA_AEQUALIS(r.responsum->corpus, sp->corpus);
+        si (sp->status == CC)
+        {
+            visum_ducenti = VERUM;
+            CREDO_VERUM(strcmp(c.acceptum, responsa[I].corpus) == 0);
+            CREDO_VERUM(c.vocationes > I);
+        }
+        alioquin
+        {
+            CREDO_AEQUALIS_I32(c.vocationes, 0);
+        }
+    }
+    CREDO_VERUM(visum_ducenti);
+    r = http_vectura_rivi_exsequi(reddens, _petitio(piscina),
+        _rivum_colligere, &c, piscina);
+    CREDO_FALSUM(r.successus);
+    _purgare(dir, piscina);
+}
+
 /* ambitus temporarius: valorem servat, ponit (NIHIL = removet) */
 interior character*
 _ambitum_ponere (
@@ -786,6 +940,7 @@ principale (vacuum)
     probatio_reddere(piscina);
     /* herbarium-spec-2 H1 */
     probatio_iudex(piscina);
+    probatio_rivus(piscina);
     probatio_sedes_ordinaria(piscina);
 
     credo_imprimere_compendium();

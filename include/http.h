@@ -79,6 +79,64 @@ nomen structura {
 
 
 /* ========================================================================
+ * LECTOR RESPONSI - incrementalis (quaestio-rivus-spec II.1)
+ * ========================================================================
+ * Octeti intrant, eventa exeunt; nullum I/O. Corpus decodificatum
+ * (Content-Length, chunked, aut usque ad clausuram) per rivum exit SOLUM
+ * si status 2xx; corpus TOTUM semper colligitur (responsum->corpus,
+ * limes HTTP_LECTOR_CORPUS_MAXIMUM). Fines octetorum ubicumque cadere
+ * possunt. Octeti post FINITUM neglecti. */
+
+nomen vacuum (*HttpRivus)(vacuum* datum, constans i8* octeti, i32 n);
+
+nomen enumeratio {
+    HTTP_LECTOR_CAPITA = 0,   /* capita nondum integra */
+    HTTP_LECTOR_CORPUS,       /* status notus, corpus currit */
+    HTTP_LECTOR_FINITUS,
+    HTTP_LECTOR_ERROR
+} HttpLectorStatus;
+
+nomen structura HttpLector HttpLector;   /* opacus */
+
+#define HTTP_LECTOR_CAPITA_MAXIMA   (LXIV * M)        /* octeti capitum */
+#define HTTP_LECTOR_CORPUS_MAXIMUM  (XVI * M * M)     /* octeti corporis */
+
+/* methodus HTTP_HEAD: nullum corpus. rivus NIHIL = colligere solum */
+HttpLector*
+http_lector_creare (
+         Piscina* piscina,
+    HttpMethodus  methodus,
+       HttpRivus  rivus,
+          vacuum* rivi_datum);
+
+HttpLectorStatus
+http_lector_adicere (
+      HttpLector* lector,
+     constans i8* octeti,
+             i32  n);
+
+/* EOF connexionis: corpus usque ad clausuram FINITUM; ceterum nondum
+ * finitum -> ERROR "truncatum" */
+HttpLectorStatus
+http_lector_finire (
+    HttpLector* lector);
+
+HttpLectorStatus
+http_lector_status (
+    constans HttpLector* lector);
+
+/* NIHIL ante HTTP_LECTOR_CORPUS; corpus = collectum hactenus */
+HttpResponsum*
+http_lector_responsum (
+    HttpLector* lector);
+
+/* causa si ERROR, aliter vacua */
+chorda
+http_lector_error (
+    constans HttpLector* lector);
+
+
+/* ========================================================================
  * TYPI - SERVER (REQUEST PARSING)
  * ======================================================================== */
 
@@ -175,6 +233,35 @@ http_petitio_corpus_ponere_chorda (
     HttpPetitio* petitio,
          chorda  corpus);
 
+/* --- destinatio et octeti petitionis (http-vocatio II.4: vectura extra
+ * http.c, structura opaca) --- */
+
+/* hospes NUL-terminatus in piscina petitionis */
+constans character*
+http_petitio_hospes (
+    HttpPetitio* petitio);
+
+i32
+http_petitio_portus (
+    constans HttpPetitio* petitio);
+
+b32
+http_petitio_est_https (
+    constans HttpPetitio* petitio);
+
+MoraAngusta
+http_petitio_tempus (
+    constans HttpPetitio* petitio);
+
+HttpMethodus
+http_petitio_methodus (
+    constans HttpPetitio* petitio);
+
+/* petitio tota serializata (linea, capita, corpus) */
+chorda
+http_petitio_octeti (
+    HttpPetitio* petitio);
+
 
 /* ========================================================================
  * FUNCTIONES - EXSEQUI
@@ -220,6 +307,37 @@ nomen structura {
                             vacuum* datum);
     vacuum* datum;
 } HttpVectura;
+
+/* Exsequi cum rivo: ut http_exsequi, sed corpus 2xx per rivum exit dum
+ * advenit (quaestio-rivus-spec II.2). responsum->corpus TOTUM quoque
+ * redditur (R6). Lectio finitur cum responsum finitum est (connexio
+ * non exspectatur claudi). */
+HttpResultus
+http_exsequi_rivus (
+    HttpPetitio* petitio,
+      HttpRivus  rivus,
+         vacuum* rivi_datum,
+        Piscina* piscina);
+
+nomen structura {
+    HttpResultus (*exsequi)(HttpPetitio* petitio, HttpRivus rivus,
+                            vacuum* rivi_datum, Piscina* piscina,
+                            vacuum* datum);
+    vacuum* datum;
+} HttpVecturaRivi;
+
+/* Vectura rivi ordinaria: http_exsequi_rivus, datum NIHIL. */
+HttpVecturaRivi
+http_vectura_rivi_ordinaria (vacuum);
+
+/* exsequi NIHIL -> HTTP_ERROR_CONNEXIO nominatus, numquam ruina */
+HttpResultus
+http_vectura_rivi_exsequi (
+    HttpVecturaRivi  vectura,
+        HttpPetitio* petitio,
+          HttpRivus  rivus,
+             vacuum* rivi_datum,
+            Piscina* piscina);
 
 /* Vectura ordinaria: http_exsequi, datum NIHIL. */
 HttpVectura

@@ -43,4 +43,26 @@ b32
 fons_est_mappatum (
     s32 codepoint);
 
+/* fontes notati (Mandatum.fons) */
+#define FONS_PARVUS  ZEPHYRUM   /* 6x8: HP 100LX + Alcuin (solitus) */
+#define FONS_TITULI  I          /* 8x16: Nix8810 M15, ordo CP437 */
+
+/* Unicode -> index glyphae fons_8x16 (CP437): tabula CP437 inversa
+ * (ASCII directum, signa 0x01-0x1F, Latin-1 et Graeca quae CP437
+ * habet); Latin-1 quae deest -> littera basis (A grave -> A);
+ * substitutiones ut fons_6x8 (virgulae, lineolae, ellipsis); aliter
+ * 0x7F (domus, ut TOFU) */
+i8
+fons_8x16_codepoint_ad_glypham (
+    s32 codepoint);
+
+/* metrica fontis notati (pixela; ignotus = FONS_PARVUS) */
+s32
+fons_latitudo (
+    i32 fons);
+
+s32
+fons_altitudo (
+    i32 fons);
+
 #endif /* FONS_H */

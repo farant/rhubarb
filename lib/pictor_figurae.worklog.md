@@ -32,3 +32,15 @@ run, looked at, promoted. Planted faults: the image never emitted —
 red at the image count and the black pixel; the fons comparing
 against a foreign name — red at the fons assertion. Both green on
 revert. Examen ACCIPE; formator 0 after three long lines.
+
+## 2026-10-13 - pending paste preview + text buttons
+
+figura_tabulae: titulus "glutinatio:<A|B>" -> mandata_imago with
+provenance "glutinatio:<seal of that mode's indices>" at the paste's
+own rectangle; pictor_imago_fons resolves that provenance to
+doc->glutinatio.praevisio[mode]. The rasterizer skips alpha-0 pixels
+and blends the rest, so the transparent margin shows the canvas.
+figura_quadrati: "textus:<letters>" centred (8 px glyphs), with the
+usual ":electum" accent border. probatio_pictor_glutinatio "praevisio
+in figura" composes + paints + rasterizes and checks a preview pixel
+(planted: wrong title prefix -> red).

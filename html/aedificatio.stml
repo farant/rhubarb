@@ -1,0 +1,23 @@
+<!-- html/aedificatio.stml - declarationes aedificationis html (dialectus
+     aedificatio, aedificatio.canon; bin/fabrica per fabrica.stml).
+     Cursores ad gradus (expeditio ...W0ZBW, 2026-10-14; exemplar css):
+     suita html ut compositum probationes_html - quaeque probatio actio
+     sua (clausura aedilis, thesaurus, area, ambitus basis, vestigium
+     suum), verdictum clavatum iis quae legit. Ianua
+     html/compile_probationes.sh et porta html per 'bin/fabrica probare
+     probationes_html'; oraculum conversionis tools/gradus_oraculum.sh
+     html. -->
+<aedificatio>
+  <actio titulus="probationes_html" genus="iudicium">
+    <probationes_c exemplar="html/probationes/probatio_*.c"/>
+    <!-- aurum computus rescribere (COMPUTUS_SCRIBERE=1 cum causa) -->
+    <ambitus variabilis="COMPUTUS_SCRIBERE"/>
+    <debitum_scripturae membrum="probatio_html_computus" via="html/probationes/fixa/computus/basis.tsv" causa="aurum computus (COMPUTUS_SCRIBERE=1)"/>
+    <!-- oraculum html5lib: casus omnes / exemplum unum (manu); aurum
+         recusatorum rescribere (ORACULUM_SCRIBERE=1) -->
+    <ambitus variabilis="ORACULUM_OMNIA"/>
+    <ambitus variabilis="ORACULUM_EXEMPLUM"/>
+    <ambitus variabilis="ORACULUM_SCRIBERE"/>
+    <debitum_scripturae membrum="probatio_html_oraculum" via="html/probationes/fixa/oraculum/recusata.tsv" causa="aurum recusatorum (ORACULUM_SCRIBERE=1)"/>
+  </actio>
+</aedificatio>

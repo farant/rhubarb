@@ -10,6 +10,15 @@
  * sine ')' iussum NON est (dimidium iussi numquam currit). Solum
  * verba NOTA iussa sunt (hospes respondet): cetera prosa manent
  * ('$5.00', '$foo(' - nullum effugium necessarium).
+ * CORPUS (Franus 2026-10-13): '$verbum<>corpus</>' - '<>' statim post
+ * verbum, corpus usque ad '</>' PRIMUM (eadem linea aut sequentibus,
+ * intra tabulam; nulla nidificatio). Sine '</>' iussum NON est (ut
+ * '$verbum(' sine ')': dimidium numquam currit). Corpus = argumentum
+ * unum: lineae verbatim (spatiis finalibus demptis) '\n' iunctae,
+ * spatia extrema totius dempta; commata et ')' litterae sunt. Aut
+ * '(...)' aut '<>', non ambo. ICTUS: CAPUT solum ('$verbum<>', [initium,
+ * finis) in linea) - corpus textus est, ictu editur. '$' intra corpus
+ * iussum non est (prosa).
  *
  * <purus/>: tabulam legit, nihil mutat; chordae exitus in piscina
  * (copiae - tabula postea mutari potest). */
@@ -34,6 +43,16 @@ nomen structura {
     chorda  verbum;             /* sine '$' */
        i32  numerus_argumentorum;
     chorda* argumenta;          /* in piscina; spatia extrema dempta */
+       b32  corpus;             /* forma '<>...</>': argumentum unum */
+       s32  linea_clausurae;    /* linea '</>' (corpus solum) */
+       s32  post_clausuram;     /* columna post '</>' in ea */
+    /* spatium ($question, 2026-10-13): ex tabula ipsa computatum */
+       s32 latitudo_tabulae;   /* columnae paginae */
+       s32 lineae_liberae;     /* lineae ALBAE in fine paginae infra
+                                 * lineam clausurae (aut iussi): spatium
+                                 * responsi quod nihil delet */
+       b32 iterum;             /* hospes ponit in vocatione altera
+                                 * (effectus.differre) */
 } Iussum;
 
 /* iussum quod cellulam (linea, columna) tegit (initium <= columna <
@@ -88,12 +107,49 @@ iussum_nexus_proximus (
 
 nomen structura IussumRegistrum IussumRegistrum;   /* opacum */
 
+/* OPUS CURRENS (quaestio-rivus-spec II.7): iussum longum. Hospes
+ * (scriba) paginam claudit, folium ante opus servat, per pulsum
+ * pulsare vocat et folium = basis + textus hactenus reficit; FINITUM:
+ * caput + textus, commissio UNA; IRRITUM: basis restituitur, nihil
+ * committitur (nuntius solum); Esc: abrumpere, deinde ut FINITUM. */
+nomen enumeratio {
+    IUSSUM_OPUS_CURRIT = 0,
+    IUSSUM_OPUS_FINITUM,
+    IUSSUM_OPUS_IRRITUM
+} IussumOpusStatus;
+
+nomen structura IussumOpus IussumOpus;
+
+structura IussumOpus {
+    vacuum* datum;
+    /* textus TOTUS hactenus (ut effectus->textus) in piscina data;
+     * *mutatum VERUM si textus mutatus; *nuntius vacuus = nihil novi */
+    IussumOpusStatus (*pulsare)(IussumOpus* opus, Piscina* piscina,
+                                chorda* textus, chorda* nuntius,
+                                b32* mutatum);
+    /* Esc: opus sistitur; textus finalis, nuntius */
+    vacuum (*abrumpere)(IussumOpus* opus, Piscina* piscina,
+                        chorda* textus, chorda* nuntius);
+};
+
 /* effectus iussi: textus inserendus et/aut error. textus: consumens
  * signum substituit, aliter post signum inseritur. error non vacuus:
- * nihil mutatur, nuntius ostenditur (S3b-2: linea status). */
+ * nihil mutatur, nuntius ostenditur (S3b-2: linea status).
+ * Corpus: textus post '</>' inseritur; consumens caput solum delet. */
 nomen structura {
     chorda textus;
     chorda error;
+    chorda nuntius;     /* linea status sine errore ("quaerens...") */
+    chorda caput;       /* corpus: caput '$verbum<>' hoc textu substituitur
+                         * (e.g. "<answered>"); vacuum = ut
+                         * consumit dicit */
+       b32 differre;    /* vocatio prima: hospes nuntium ostendit et
+                         * functionem ITERUM vocat pulsu proximo (pictura
+                         * iam facta) cum iussum->iterum; textus tunc
+                         * '\n' continere potest: lineae novae infra
+                         * lineam clausurae, ex lineis albis finalibus */
+    IussumOpus* opus;   /* non NIHIL: effectus CURRIT (textus per
+                         * pulsus, caput in fine applicatur) */
 } IussumEffectus;
 
 nomen b32 (*IussumFunctio)(constans Iussum* iussum, vacuum* ctx,
