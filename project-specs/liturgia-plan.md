@@ -69,7 +69,11 @@ title, season name), `lib/schirmata.c` (`calendarium_nomen_celebrationum`),
   2-8 Jan, Baptism rule, Ascension and Corpus Christi Sunday, Holy
   Family), OT I weeks from the Sunday on/before Baptism, two obligatory
   memorials -> both optional; 9 plants red.
-- L3 - next (transfers).
+- L3 DONE 2026-10-15: per-year transfers (lazy, beside the anchor
+  cache), forward to the nearest free day; Joseph in Holy Week and
+  John Baptist backward; `translata` / `dies_originis`; 1970-2100
+  sweep: each fixed solemnity once a year; 6 plants red.
+- L4 - next (sanctorale data audit).
 
 ## IV. AUDIENDA
 

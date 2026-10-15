@@ -207,3 +207,40 @@ CDW practice for the Immaculate Heart; for Mary, Mother of the Church
 (Pentecost Monday) the 2018 decree may instead give it precedence over
 another memorial - not verified; no collision with a fixed obligatory
 memorial was checked across years.
+
+## 2026-10-15 - liturgia-plan L3: transfers
+
+The anchor cache now holds `AnnusComputatus` (anchors + up to VIII
+transfers per civil year); `calendarium_anchorae` returns
+`&a->anchorae`, so the public API is unchanged. Transfers are LAZY
+(`annum_translationum`): computing them reads days of the same year
+(`ordo_diei_proprii`, `dies_libera`), which needs that year's anchors
+already in the cache - computing them inside the anchor computation
+would recurse. The flag is set BEFORE computing for the same reason.
+An evicted year stays in the pool, so old pointers stay valid.
+
+Rule: a fixed solemnity is impeded when the day's own celebration
+(temporal, or the movable that replaces it) has ordo <= its own (ties
+go to the temporal, as in L1). It moves to the nearest FREE day: own
+ordo IX or weaker, no sanctoral feast/solemnity (ordo <= VIII), no
+other transfer. Memorials do not block (2035: Joseph anticipated onto
+Mar 17 suppresses St Patrick). Direction: forward (UNLY 60), except
+Joseph in Holy Week (CDW 2008) and John the Baptist (CDW 2022: Jun 23)
+- backward. The Annunciation needs no special rule: walking forward
+from Holy Week / the octave lands on the Monday after Easter II.
+
+`dies_originis` is set for every entry at the end of obtinere_diem
+(the transfer winner gets the impeded date). Sweep 1970-2100: each of
+the 9 fixed solemnities appears exactly once per year (131 years, the
+whole suite runs in 0.5 s). 1973 exercises both June cases: Corpus
+Christi on Sun Jun 24 (US) -> John Baptist Jun 23, Sacred Heart Jun 29
+-> Peter & Paul Jun 30.
+
+Plants red: no transfer, Joseph not anticipated, John not anticipated,
+privileged weekdays not free, translata flag, ties not impeding. Not
+plantable as a red: "a feast blocks the target day" and "another
+transfer blocks the target day" - NOT planted; by reasoning, no
+date exercises them (the Annunciation lands by Apr 9 at the latest, no
+feast before St Mark; Joseph/Annunciation targets never coincide), so
+those two lines are unguarded by data, kept because UNLY 60 requires
+them.

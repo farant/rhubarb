@@ -17,9 +17,27 @@
  * Structura Interna
  * ================================================== */
 
+/* translatio sollemnitatis impeditae (L3) */
+nomen structura {
+    constans SanctoraleDatum* datum;
+                        Dies  originis;
+                        Dies  nova;
+} Translatio;
+
+#define TRANSLATIONES_MAXIMAE VIII
+
+/* annus civilis computatus: anchorae et translationes (pigrae -
+ * computatio dies anni legit, ergo anchoras in cache iam requirit) */
+nomen structura {
+    AnchoresMobiles anchorae;
+         Translatio translationes[TRANSLATIONES_MAXIMAE];
+                s32 numerus_translationum;
+                b32 translationes_computatae;
+} AnnusComputatus;
+
 structura CalendariumLiturgicum {
             Piscina* piscina;
-    AnchoresMobiles* anchorae_cache[X];  /* Cache pro annis recentibus */
+    AnnusComputatus* anni[X];            /* Cache annorum recentium */
                 s32  cache_indices[X];   /* Anni in cache */
                 s32  cache_numerus;
 };
@@ -51,8 +69,8 @@ calendarium_creare (
 
     per (i = ZEPHYRUM; i < X; i++)
     {
-        cal->anchorae_cache[i]  = NIHIL;
-        cal->cache_indices[i]   = ZEPHYRUM;
+        cal->anni[i]           = NIHIL;
+        cal->cache_indices[i]  = ZEPHYRUM;
     }
 
     redde cal;
@@ -71,26 +89,15 @@ calendarium_destruere (
  * Anchorae Mobiles - Computatio
  * ================================================== */
 
-interior AnchoresMobiles*
+interior vacuum
 computare_anchorae (
-        s32  annus,
-    Piscina* piscina)
+    AnchoresMobiles* anch,
+                s32  annus)
 {
-    AnchoresMobiles* anch;
-               Dies  pascha;
-               Dies  secunda;
-               Dies  nativitas;
-                s32  dies_hebdomadae;
-
-    anch = (AnchoresMobiles*)piscina_allocare(
-        piscina,
-        magnitudo(AnchoresMobiles)
-        );
-
-    si (anch == NIHIL)
-    {
-        redde NIHIL;
-    }
+    Dies pascha;
+    Dies secunda;
+    Dies nativitas;
+     s32 dies_hebdomadae;
 
     anch->annus = annus;
 
@@ -148,45 +155,44 @@ computare_anchorae (
     anch->sancta_familia = dies_hebdomadae == ZEPHYRUM
         ? fasti_dies(annus, FASTI_DECEMBER, XXX)
         : fasti_addere_dies(nativitas, VII - dies_hebdomadae);
-
-    redde anch;
 }
 
-AnchoresMobiles*
-calendarium_anchorae (
+interior AnnusComputatus*
+annum_obtinere (
     CalendariumLiturgicum* cal,
                       s32  annus)
 {
                 s32  i;
                 s32  index_minimus;
-    AnchoresMobiles* anch;
+    AnnusComputatus* a;
 
-    /* Quaerere in cache */
     per (i = ZEPHYRUM; i < cal->cache_numerus; i++)
     {
         si (cal->cache_indices[i] == annus)
         {
-            redde cal->anchorae_cache[i];
+            redde cal->anni[i];
         }
     }
 
-    /* Non in cache - computare */
-    anch = computare_anchorae(annus, cal->piscina);
-
-    si (anch == NIHIL)
+    a = (AnnusComputatus*)piscina_allocare(cal->piscina,
+        magnitudo(AnnusComputatus));
+    si (a == NIHIL)
     {
         redde NIHIL;
     }
+    computare_anchorae(&a->anchorae, annus);
+    a->numerus_translationum     = ZEPHYRUM;
+    a->translationes_computatae  = FALSUM;
 
-    /* Addere ad cache */
+    /* Addere ad cache (plenus: substituere minimum - annus eiectus in
+     * piscina manet, indices priores validi) */
     si (cal->cache_numerus < X)
     {
-        cal->anchorae_cache[cal->cache_numerus]  = anch;
-        cal->cache_indices[cal->cache_numerus]   = annus;
+        cal->anni[cal->cache_numerus]           = a;
+        cal->cache_indices[cal->cache_numerus]  = annus;
         cal->cache_numerus++;
     } alioquin
     {
-        /* Cache plenus - substituere minimum */
         index_minimus = ZEPHYRUM;
         per (i = I; i < X; i++)
         {
@@ -196,11 +202,22 @@ calendarium_anchorae (
                 index_minimus = i;
             }
         }
-        cal->anchorae_cache[index_minimus]  = anch;
-        cal->cache_indices[index_minimus]   = annus;
+        cal->anni[index_minimus]           = a;
+        cal->cache_indices[index_minimus]  = annus;
     }
 
-    redde anch;
+    redde a;
+}
+
+AnchoresMobiles*
+calendarium_anchorae (
+    CalendariumLiturgicum* cal,
+                      s32  annus)
+{
+    AnnusComputatus* a;
+
+    a = annum_obtinere(cal, annus);
+    redde a ? &a->anchorae : NIHIL;
 }
 
 
@@ -1126,6 +1143,8 @@ celebrationem_temporalem_ponere (
     celeb->ordo            = ordo_temporalis(cal, dies, tempus);
     celeb->ad_libitum      = FALSUM;
     celeb->commemoratio    = FALSUM;
+    celeb->translata       = FALSUM;
+    celeb->dies_originis   = dies;
     celeb->lectionarium    = -I;
 
     si (tempus->est_dominica)
@@ -1159,7 +1178,8 @@ celebrationem_sanctoralem_ponere (
     celeb->genus         = GENUS_SANCTORALE;
     celeb->ad_libitum    = FALSUM;
     celeb->commemoratio  = FALSUM;
-    celeb->lectionarium  = -I;
+    celeb->translata     = FALSUM;
+    celeb->lectionarium  = -I;   /* dies_originis: obtinere_diem */
 }
 
 interior b32
@@ -1168,6 +1188,154 @@ est_memoria (
 {
     redde gradus == GRADUS_MEMORIA
         || gradus == GRADUS_MEMORIA_AD_LIBITUM;
+}
+
+/* ordo diei proprius: temporalis, aut mobilis qui eum substituit
+ * (sine sanctoralibus et translationibus) */
+interior OrdoTabulae
+ordo_diei_proprii (
+    CalendariumLiturgicum* cal,
+                     Dies  dies)
+{
+    InformatioTemporis  tempus;
+           OrdoTabulae  ordo;
+       AnchoresMobiles* anch;
+                   s32  i;
+
+    tempus  = calendarium_tempus_info(cal, dies);
+    ordo    = ordo_temporalis(cal, dies, &tempus);
+    anch    = calendarium_anchorae(cal, dies.annus);
+    per (i = ZEPHYRUM; i < MOBILIA_NUMERUS; i++)
+    {
+        si (   !est_memoria(MOBILIA[i].datum.gradus)
+            && fasti_comparare(dies_mobilis(anch, &MOBILIA[i]), dies)
+            == ZEPHYRUM
+            && MOBILIA[i].datum.ordo <= ordo)
+        {
+            ordo = MOBILIA[i].datum.ordo;
+        }
+    }
+    redde ordo;
+}
+
+/* dies libera translationi (UNLY 60): dies non in tabula I-VIII -
+ * ordo proprius IX et infra, nullum festum aut sollemnitas
+ * sanctoralis, nulla translatio alia */
+interior b32
+dies_libera (
+          CalendariumLiturgicum* cal,
+       constans AnnusComputatus* a,
+                           Dies  dies)
+{
+    constans SanctoraleDatum* sancta;
+                         s32  numerus;
+                         s32  i;
+
+    si (ordo_diei_proprii(cal, dies) < ORDO_FERIA_PRIVILEGIATA)
+    {
+        redde FALSUM;
+    }
+    sancta = sanctorale_obtinere(dies.mensis, dies.dies, &numerus);
+    per (i = ZEPHYRUM; sancta && i < numerus; i++)
+    {
+        si (sancta[i].ordo <= ORDO_FESTUM_PROPRIUM)
+        {
+            redde FALSUM;
+        }
+    }
+    per (i = ZEPHYRUM; i < a->numerus_translationum; i++)
+    {
+        si (fasti_comparare(a->translationes[i].nova, dies) == ZEPHYRUM)
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* translationes anni: sollemnitas fixa impedita (ordo diei proprii
+ * aequalis aut maior - aequales temporale vincit) ad diem liberum
+ * proximum SEQUENTEM; Ioseph in Hebdomada Sancta (CDW 2008) et
+ * Ioannes Baptista (CDW 2022: 23 VI) ad PRIOREM */
+interior vacuum
+translationes_computare (
+    CalendariumLiturgicum* cal,
+          AnnusComputatus* a)
+{
+    constans SanctoraleDatum* sancta;
+                         s32  numerus;
+                         s32  mensis;
+                         s32  dies;
+                         s32  i;
+                         s32  passus;
+                        Dies  originis;
+                        Dies  nova;
+                         b32  retro;
+
+    per (mensis = FASTI_IANUARIUS; mensis <= FASTI_DECEMBER; mensis++)
+    {
+        per (dies = I; dies <= fasti_dies_in_mense(mensis,
+            a->anchorae.annus); dies++)
+        {
+            sancta = sanctorale_obtinere(mensis, dies, &numerus);
+            per (i = ZEPHYRUM; sancta && i < numerus; i++)
+            {
+                si (sancta[i].gradus != GRADUS_SOLLEMNITAS)
+                {
+                    perge;
+                }
+                originis = fasti_dies(a->anchorae.annus, mensis, dies);
+                si (ordo_diei_proprii(cal, originis) > sancta[i].ordo)
+                {
+                    perge;
+                }
+                retro = (   mensis == CAL_IOSEPH_M
+                    && dies == CAL_IOSEPH_D
+                         && calendarium_est_hebdomada_sancta(cal,
+                         originis))
+                    || (   mensis == CAL_NATIVITAS_IOANNIS_M
+                        && dies == CAL_NATIVITAS_IOANNIS_D);
+                nova = originis;
+                per (passus = ZEPHYRUM; passus < LX; passus++)
+                {
+                    nova = fasti_addere_dies(nova, retro ? -I : I);
+                    si (dies_libera(cal, a, nova))
+                    {
+                        frange;
+                    }
+                }
+                si (   passus < LX
+                    && a->numerus_translationum < TRANSLATIONES_MAXIMAE)
+                {
+                    a->translationes[a->numerus_translationum].datum  =
+                        &sancta[i];
+                    a->translationes[a->numerus_translationum].originis
+                        = originis;
+                    a->translationes[a->numerus_translationum].nova  =
+                        nova;
+                    a->numerus_translationum++;
+                }
+            }
+        }
+    }
+}
+
+/* annus cum translationibus (computatae semel; nota ANTE computationem
+ * - dies_libera et ordo_diei_proprii annum ipsum legunt) */
+interior AnnusComputatus*
+annum_translationum (
+    CalendariumLiturgicum* cal,
+                      s32  annus)
+{
+    AnnusComputatus* a;
+
+    a = annum_obtinere(cal, annus);
+    si (a && !a->translationes_computatae)
+    {
+        a->translationes_computatae = VERUM;
+        translationes_computare(cal, a);
+    }
+    redde a;
 }
 
 
@@ -1185,7 +1353,10 @@ calendarium_obtinere_diem (
     constans SanctoraleDatum* sancta;
                          s32  num_sanctorum;
                          s32  i;
-                         s32  victor;
+    constans SanctoraleDatum* victor;
+                         b32  translata;
+                        Dies  originis;
+             AnnusComputatus* annus;
                   Celebratio* celebrationes;
                          s32  idx;
                          s32  annus_liturgicus;
@@ -1256,29 +1427,48 @@ calendarium_obtinere_diem (
     ordo_temp  = celebrationes[ZEPHYRUM].ordo;
     idx        = I;
 
-    /* sollemnitas, festum, Defuncti: victor unus, si temporale vincit */
-    victor = -I;
+    /* sollemnitas, festum, Defuncti (et translatae huc - L3): victor
+     * unus, si temporale vincit */
+    victor     = NIHIL;
+    translata  = FALSUM;
+    originis   = dies;
     per (i = ZEPHYRUM; i < num_sanctorum; i++)
     {
         si (   !est_memoria(sancta[i].gradus)
             && sancta[i].ordo < ordo_temp
-            && (victor < ZEPHYRUM
-            || sancta[i].ordo < sancta[victor].ordo))
+            && (!victor || sancta[i].ordo < victor->ordo))
         {
-            victor = i;
+            victor = &sancta[i];
         }
     }
-    si (victor >= ZEPHYRUM)
+    annus = annum_translationum(cal, dies.annus);
+    per (i = ZEPHYRUM; annus && i < annus->numerus_translationum; i++)
     {
-        celebrationem_sanctoralem_ponere(&sancta[victor],
-            &celebrationes[idx++], piscina);
+        si (   fasti_comparare(annus->translationes[i].nova, dies)
+            == ZEPHYRUM
+            && annus->translationes[i].datum->ordo < ordo_temp
+            && (!victor || annus->translationes[i].datum->ordo
+            < victor->ordo))
+        {
+            victor     = annus->translationes[i].datum;
+            translata  = VERUM;
+            originis   = annus->translationes[i].originis;
+        }
+    }
+    si (victor)
+    {
+        celebrationem_sanctoralem_ponere(victor, &celebrationes[idx],
+            piscina);
+        celebrationes[idx].translata      = translata;
+        celebrationes[idx].dies_originis  = originis;
+        idx++;
     }
 
     /* memoriae (sanctorales et mobiles): solum sub principali
      * temporali - feria privilegiata: commemoratio; feria: plenae;
      * obligatoriae duae eodem die: ambae ad libitum (L2) */
     prima = idx;
-    si (   victor < ZEPHYRUM
+    si (   !victor
         && (   ordo_temp == ORDO_FERIA_PRIVILEGIATA
             || ordo_temp == ORDO_FERIA))
     {
@@ -1320,6 +1510,13 @@ calendarium_obtinere_diem (
                 || obligatoriae > I);
     }
 
+    per (i = ZEPHYRUM; i < idx; i++)
+    {
+        si (!celebrationes[i].translata)
+        {
+            celebrationes[i].dies_originis = dies;
+        }
+    }
     info->celebrationes          = celebrationes;
     info->numerus_celebrationum  = idx;
 

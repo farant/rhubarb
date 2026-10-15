@@ -152,6 +152,10 @@ nomen structura {
                     b32 commemoratio;   /* memoria in feria privilegiata:
                                          * collecta sola - numquam
                                          * principalis, colorem non dat */
+                    b32 translata;      /* sollemnitas impedita in hunc
+                                         * diem translata */
+                   Dies dies_originis;  /* dies propria (translata: dies
+                                         * impedita; aliter dies ipsa) */
                     s32 lectionarium;   /* Numerus in Lectionario (-1 si
                                          * ignotus) */
 } Celebratio;

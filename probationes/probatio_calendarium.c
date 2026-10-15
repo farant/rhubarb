@@ -1500,6 +1500,189 @@ _probare_hebdomadae_baptismatis (
     calendarium_destruere(cal);
 }
 
+
+/* ==================================================
+ * Translationes (liturgia-plan L3)
+ * ================================================== */
+
+/* sollemnitates impeditae in diem liberum proximum (UNLY 60);
+ * Ioseph in Hebdomada Sancta et Ioannes Baptista anticipantur
+ * (RECENSIO 4b, F4 - hodie fracti) */
+hic_manens constans CasusDiei CASUS_TRANSLATIONUM[] = {
+    /* Ioseph in dominica Quadragesimae: feria II */
+    { MMXXIII, FASTI_MARTIUS, XX, "St. Joseph", GRADUS_SOLLEMNITAS,
+      COLLIT_ALBUS },
+    { MMXXVIII, FASTI_MARTIUS, XX, "St. Joseph", GRADUS_SOLLEMNITAS,
+      COLLIT_ALBUS },
+    { MMXXXIV, FASTI_MARTIUS, XX, "St. Joseph", GRADUS_SOLLEMNITAS,
+      COLLIT_ALBUS },
+    /* Ioseph in Hebdomada Sancta: sabbatum ante Palmas (2035: non
+     * Patricius) */
+    { MMVIII, FASTI_MARTIUS, XV, "St. Joseph", GRADUS_SOLLEMNITAS,
+      COLLIT_ALBUS },
+    { MMXXXV, FASTI_MARTIUS, XVII, "St. Joseph", GRADUS_SOLLEMNITAS,
+      COLLIT_ALBUS },
+    /* Annuntiatio in Hebdomada Sancta, octava, Palmis, Paschate:
+     * feria II post Dominicam II Paschae */
+    { MMXXIV, FASTI_APRILIS, VIII, "Annunciation", GRADUS_SOLLEMNITAS,
+      COLLIT_ALBUS },
+    { MMXXIX, FASTI_APRILIS, IX, "Annunciation", GRADUS_SOLLEMNITAS,
+      COLLIT_ALBUS },
+    { MMXXXV, FASTI_APRILIS, II, "Annunciation", GRADUS_SOLLEMNITAS,
+      COLLIT_ALBUS },
+    { MMVIII, FASTI_MARTIUS, XXXI, "Annunciation", GRADUS_SOLLEMNITAS,
+      COLLIT_ALBUS },
+    { MMXXVII, FASTI_APRILIS, V, "Annunciation", GRADUS_SOLLEMNITAS,
+      COLLIT_ALBUS },
+    { MMXL, FASTI_APRILIS, IX, "Annunciation", GRADUS_SOLLEMNITAS,
+      COLLIT_ALBUS },
+    /* Immaculata in dominica Adventus: 9 XII */
+    { MMXXIV, FASTI_DECEMBER, IX, "Immaculate Conception",
+      GRADUS_SOLLEMNITAS, COLLIT_ALBUS },
+    /* Ioannes Baptista a Corde Iesu (2022) aut Corpore Christi (1973,
+     * dominica USA) impeditus: 23 VI */
+    { MMXXII, FASTI_IUNIUS, XXIII, "Birth of St. John Baptist",
+      GRADUS_SOLLEMNITAS, COLLIT_ALBUS },
+    { MCMLXXIII, FASTI_IUNIUS, XXIII, "Birth of St. John Baptist",
+      GRADUS_SOLLEMNITAS, COLLIT_ALBUS },
+    /* Petrus et Paulus a Corde Iesu (1973): 30 VI */
+    { MCMLXXIII, FASTI_IUNIUS, XXX, "Ss. Peter & Paul",
+      GRADUS_SOLLEMNITAS, COLLIT_RUBER }
+};
+
+interior vacuum
+_probare_translationes (
+    CredoContextus* c)
+{
+    CalendariumLiturgicum* cal;
+           InformatioDiei* info;
+      constans Celebratio* celeb;
+
+    _casus_probare(c, CASUS_TRANSLATIONUM, (i32)(magnitudo(
+        CASUS_TRANSLATIONUM) / magnitudo(CASUS_TRANSLATIONUM[0])));
+
+    cal = calendarium_creare(c->piscina);
+
+    /* translata notatur cum die propria; in die impedita abest */
+    info   = calendarium_obtinere_diem(cal, fasti_dies(MMXXIII,
+        FASTI_MARTIUS, XX), c->piscina);
+    celeb  = _celebratio_inventa(info, "St. Joseph");
+    CREDO_NECESSE(celeb != NIHIL);
+    CREDO_VERUM(celeb->translata);
+    CREDO_VERUM(_dies_est(celeb->dies_originis, MMXXIII, FASTI_MARTIUS,
+        XIX));
+    info = calendarium_obtinere_diem(cal, fasti_dies(MMXXIII,
+        FASTI_MARTIUS, XIX), c->piscina);
+    CREDO_VERUM(_celebratio_inventa(info, "St. Joseph") == NIHIL);
+
+    /* non translata: dies propria = dies ipsa */
+    info   = calendarium_obtinere_diem(cal, fasti_dies(MMXXV,
+        FASTI_MARTIUS, XIX), c->piscina);
+    celeb  = _celebratio_inventa(info, "St. Joseph");
+    CREDO_NECESSE(celeb != NIHIL);
+    CREDO_FALSUM(celeb->translata);
+    CREDO_VERUM(_dies_est(celeb->dies_originis, MMXXV, FASTI_MARTIUS,
+        XIX));
+
+    /* Patricius 2035 sub Ioseph translato: omissus */
+    info = calendarium_obtinere_diem(cal, fasti_dies(MMXXXV,
+        FASTI_MARTIUS, XVII), c->piscina);
+    CREDO_VERUM(_celebratio_inventa(info, "St. Patrick") == NIHIL);
+    calendarium_destruere(cal);
+}
+
+/* sollemnitas fixa quaeque semel per annum (die sua aut translata),
+ * 1970-2100 (RECENSIO 4f d) */
+interior vacuum
+_probare_sollemnitates_semel (
+    CredoContextus* c)
+{
+    constans SanctoraleDatum* sanct;
+          constans character* tituli[XVI];
+                         s32  numeri[XVI];
+                         i32  n;
+                         i32  k;
+                         s32  i;
+                         s32  j;
+                         s32  mensis;
+                         s32  dies;
+                         s32  numerus;
+                         s32  annus;
+                         i32  errores;
+       CalendariumLiturgicum* cal;
+                     Piscina* dierum;
+              InformatioDiei* info;
+                        Dies  d;
+
+    n = ZEPHYRUM;
+    per (mensis = FASTI_IANUARIUS; mensis <= FASTI_DECEMBER; mensis++)
+    {
+        per (dies = I; dies <= XXXI; dies++)
+        {
+            sanct = sanctorale_obtinere(mensis, dies, &numerus);
+            per (i = ZEPHYRUM; sanct && i < numerus && n < XVI; i++)
+            {
+                si (sanct[i].gradus == GRADUS_SOLLEMNITAS)
+                {
+                    tituli[n++] = sanct[i].titulus_brevis;
+                }
+            }
+        }
+    }
+    CREDO_AEQUALIS_S32((s32)n, IX);
+
+    cal = calendarium_creare(c->piscina);
+    dierum = piscina_generare_dynamicum("dies_sollemnitatum",
+        M * LXIV);
+    errores = ZEPHYRUM;
+    CREDO_NECESSE(dierum != NIHIL);
+    per (annus = MCMLXX; annus <= MMC; annus++)
+    {
+        per (k = ZEPHYRUM; k < n; k++)
+        {
+            numeri[k] = ZEPHYRUM;
+        }
+        d = fasti_dies(annus, FASTI_IANUARIUS, I);
+        dum (d.annus == annus)
+        {
+            piscina_vacare(dierum);
+            info = calendarium_obtinere_diem(cal, d, dierum);
+            per (j = ZEPHYRUM; info && j < info->numerus_celebrationum;
+                j++)
+            {
+                per (k = ZEPHYRUM; k < n; k++)
+                {
+                    si (   info->celebrationes[j].genus
+                        == GENUS_SANCTORALE
+                        && chorda_aequalis_literis(
+                        info->celebrationes[j].titulus_brevis,
+                        tituli[k]))
+                    {
+                        numeri[k]++;
+                    }
+                }
+            }
+            d = fasti_addere_dies(d, I);
+        }
+        per (k = ZEPHYRUM; k < n; k++)
+        {
+            si (numeri[k] != I)
+            {
+                si (errores < V)
+                {
+                    imprimere("  %d %s: %d\n", (integer)annus,
+                        tituli[k],
+                        (integer)numeri[k]);
+                }
+                errores++;
+            }
+        }
+    }
+    CREDO_AEQUALIS_S32((s32)errores, ZEPHYRUM);
+    piscina_destruere(dierum);
+    calendarium_destruere(cal);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "pascha_editum", _probare_pascha_editum, NIHIL, NIHIL, NIHIL,
       NIHIL },
@@ -1542,6 +1725,10 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "mobilia", _probare_mobilia, NIHIL, NIHIL, NIHIL, NIHIL },
     { "hebdomadae_baptismatis", _probare_hebdomadae_baptismatis, NIHIL,
       NIHIL, NIHIL, NIHIL },
+    { "translationes", _probare_translationes, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { "sollemnitates_semel", _probare_sollemnitates_semel, NIHIL, NIHIL,
+      NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 
