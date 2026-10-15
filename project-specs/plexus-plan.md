@@ -255,6 +255,15 @@ for Fran's go-ahead.
   stabilised piecewise-linear branch gives an integer matrix whose
   largest eigenvalue is the dilatation: Hall and Yurttaş,
   arXiv:1402.4378). This is optional for N1, and a bigger piece.
+  *(2026-10-15, done. `plexus_incrementum` returns exact L(u . p^m)
+  using two alternating scratch pools. Oracle 6: the ratio tends to
+  (3 + sqrt 5)/2 and to the paper's 2.2966; the twist grows linearly,
+  2 + 2m; the periodic braid stays constant; the Burau(-1) radix never
+  exceeds the growth on 40 random braids on B_3..B_5 (exact fraction
+  check). Loop growth is the primary entropy tool, because Burau's real
+  eigenvalues give only 1 for some pseudo-Anosov braids. The exact
+  dilatation stays deferred. 35 sections, 1,118 checks; 4 plants
+  red.)*
 - **T5. Review**: an independent reviewer reimplements the update rules
   and the Artin action in Python straight from the sources (not from
   our code) and compares on random and exhaustive inputs; then fixes.

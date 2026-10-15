@@ -3128,6 +3128,197 @@ _probare_burau_longum (
     CREDO_VERUM (matrix_aequalis(productum, unitas));
 }
 
+
+/* ==================================================
+ * T4: entropia per incrementum ansarum
+ * ================================================== */
+
+interior vacuum
+_probare_incrementum_functionis (
+    CredoContextus* c)
+{
+           Piscina* piscina = c->piscina;
+            Plexus  p;
+              Ansa  u;
+              Ansa  v;
+            Magnus* longitudines;
+               i32  m;
+               b32  idem = VERUM;
+    memoriae_index  ante;
+
+    /* (s1 s2^-1)^m in E_1: idem ac iteratio manu ansa_agere (T2) */
+    p = _p(III, "1 -2", piscina);
+    (vacuum)ansa_circa(III, I, piscina, &u);
+    CREDO_VERUM (plexus_incrementum(p, u, XX, piscina, &longitudines));
+    v = u;
+    per (m = ZEPHYRUM; m <= XX; m++)
+    {
+        si (!magnus_aequalis(longitudines[m], ansa_sectiones(v,
+            piscina)))
+        {
+            idem = FALSUM;
+        }
+        (vacuum)ansa_agere(v, p, piscina, &v);
+    }
+    CREDO_VERUM (idem);
+    /* ratio ad (3 + sqrt 5)/2: |L_{m+1}^2 - 3 L_{m+1} L_m + L_m^2| <
+     * L_m^2 / 1000, m = 10 .. 19 */
+    idem = VERUM;
+    per (m = X; m < XX; m++)
+    {
+        s64 a = _s64(longitudines[m]);
+        s64 b = _s64(longitudines[m + I]);
+        s64 r = b * b - III * a * b + a * a;
+
+        si ((r < ZEPHYRUM ? -r : r) * M >= a * a)
+        {
+            idem = FALSUM;
+        }
+    }
+    CREDO_VERUM (idem);
+    /* braida IV filorum Thiffeault: ratio 2.2966 (0.1%), m 20 .. 29 */
+    (vacuum)ansa_circa(IV, I, piscina, &u);
+    CREDO_VERUM (plexus_incrementum(_p(IV, "-3 -2 -3 2 1", piscina), u,
+        XXX, piscina, &longitudines));
+    idem = VERUM;
+    per (m = XX; m < XXX; m++)
+    {
+        s64 a = _s64(longitudines[m]);
+        s64 b = _s64(longitudines[m + I]);
+        s64 d = 10000L * b - 22966L * a;
+
+        si ((d < ZEPHYRUM ? -d : d) > 10L * a)
+        {
+            idem = FALSUM;
+        }
+    }
+    CREDO_VERUM (idem);
+    /* reducibilis: s1 in E_2 (torsio circa puncta 1, 2), L_m = 2 + 2m
+     * (observatum; crescentia linearis) */
+    (vacuum)ansa_circa(III, II, piscina, &u);
+    CREDO_VERUM (plexus_incrementum(_p(III, "1", piscina), u, XXX,
+        piscina, &longitudines));
+    idem = VERUM;
+    per (m = ZEPHYRUM; m <= XXX; m++)
+    {
+        si (_s64(longitudines[m]) != (s64)(II + II * m))
+        {
+            idem = FALSUM;
+        }
+    }
+    CREDO_VERUM (idem);
+    /* periodica: (s1 s2)^3 = Delta^2, L constans 2 */
+    (vacuum)ansa_circa(III, I, piscina, &u);
+    CREDO_VERUM (plexus_incrementum(_p(III, "1 2 1 2 1 2", piscina), u,
+        XX, piscina, &longitudines));
+    idem = VERUM;
+    per (m = ZEPHYRUM; m <= XX; m++)
+    {
+        si (_s64(longitudines[m]) != II)
+        {
+            idem = FALSUM;
+        }
+    }
+    CREDO_VERUM (idem);
+    /* piscina vocantis: solum longitudines (periodi + 1 Magnus) */
+    (vacuum)ansa_circa(III, I, piscina, &u);
+    ante = piscina_summa_usus(piscina);
+    CREDO_VERUM (plexus_incrementum(p, u, CC, piscina, &longitudines));
+    imprimere("  L post (s1 s2^-1)^200: %u bita; piscina +%lu octeti\n",
+        magnus_bitorum(longitudines[CC]), (insignatus longus)
+        (piscina_summa_usus(piscina) - ante));
+    CREDO_VERUM (piscina_summa_usus(piscina) - ante <= (memoriae_index)
+        CCI * magnitudo(Magnus) + CCI * LXIV + 4096UL);
+    /* refutationes */
+    longitudines = NIHIL;
+    CREDO_FALSUM (plexus_incrementum(_p(IV, "1", piscina), u, V,
+        piscina,
+        &longitudines));
+    v    = u;
+    v.a  = NIHIL;
+    CREDO_FALSUM (plexus_incrementum(p, v, V, piscina, &longitudines));
+    {
+        Plexus malus  = p;
+           s32 mala   = III;
+
+        malus.litterae   = &mala;
+        malus.longitudo  = I;
+        CREDO_FALSUM (plexus_incrementum(malus, u, V, piscina,
+            &longitudines));
+    }
+    CREDO_VERUM (longitudines == NIHIL);
+}
+
+/* oraculum 6: radix Burau(-1) incrementum non superat. g = max_k
+ * L^(k)_40 / L^(k)_30 super ansas E_k: radix^10 <= (101/100) g */
+interior vacuum
+_probare_limitem_contra_incrementum (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+       Sors  s;
+        i32  t;
+        i32  exponentiales  = ZEPHYRUM;
+        i32  fracta         = ZEPHYRUM;
+
+    sors_seminare(&s, V, I);
+    per (t = ZEPHYRUM; t < XL; t++)
+    {
+        PiscinaNotatio nota  = piscina_notare(piscina);
+                   i32 n     = III + sors_intra(&s, III);
+                Plexus p    = _fortuitus(&s, n, III + sors_intra(&s,
+                    VI),
+                    piscina);
+           RadixRealis rho;
+           RadixRealis angusta;
+               Fractio maxima = fractio_ex_s64(ZEPHYRUM);
+               Fractio decima;
+                   s32 signum;
+                   i32 k;
+
+        (vacuum)plexus_burau_radix_maxima(p, piscina, &rho);
+        per (k = I; k < n; k++)
+        {
+               Ansa  u;
+             Magnus* longitudines;
+            Fractio  ratio;
+
+            (vacuum)ansa_circa(n, k, piscina, &u);
+            (vacuum)plexus_incrementum(p, u, XL, piscina,
+                &longitudines);
+            (vacuum)fractio_ex_magnis(longitudines[XL],
+                longitudines[XXX],
+                piscina, &ratio);
+            si (fractio_compara(ratio, maxima, piscina) > ZEPHYRUM)
+            {
+                maxima = ratio;
+            }
+        }
+        /* radix > 1: pars pseudo-Anosov manifesta */
+        si (   radix_compara(rho, radix_ex_fractione(fractio_ex_s64(I),
+            piscina), piscina, &signum)
+            && signum > ZEPHYRUM)
+        {
+            exponentiales++;
+        }
+        (vacuum)radix_angusta(rho, _fractio(I, 1000000L, piscina),
+            piscina,
+            &angusta);
+        (vacuum)fractio_potentia(angusta.infra, X, piscina, &decima);
+        si (fractio_compara(decima, fractio_multiplica(maxima,
+            _fractio(CI,
+            C, piscina), piscina), piscina) > ZEPHYRUM)
+        {
+            fracta++;
+        }
+        piscina_reficere(piscina, nota);
+    }
+    imprimere("  XL braidae B_3..B_5: %u cum radice > 1, %u fractae\n",
+        exponentiales, fracta);
+    CREDO_VERUM (exponentiales >= V);
+    CREDO_AEQUALIS_I32 (fracta, ZEPHYRUM);
+}
+
 interior CredoSectio SECTIONES[] = {
     { "verba", _probare_verba, NIHIL, NIHIL, NIHIL, NIHIL },
     { "permutatio", _probare_permutationem, NIHIL, NIHIL, NIHIL,
@@ -3199,6 +3390,10 @@ interior CredoSectio SECTIONES[] = {
       NIHIL, NIHIL },
     { "burau longum", _probare_burau_longum, NIHIL, NIHIL, NIHIL,
         NIHIL },
+    { "incrementum functionis", _probare_incrementum_functionis, NIHIL,
+      NIHIL, NIHIL, NIHIL },
+    { "limes contra incrementum", _probare_limitem_contra_incrementum,
+      NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

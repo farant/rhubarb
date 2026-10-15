@@ -247,3 +247,41 @@ real eigenvalues below 1 in absolute value. That is consistent with
 real eigenvalues coming in pairs (lambda, 1/lambda), because B(-1)
 preserves a bilinear form (recalled, Squier), though that is not proved
 here.
+
+## 2026-10-15 — T4: entropy by exact growth of L(u)
+
+`plexus_incrementum(p, u, periodi)` returns the exact sequence
+L(u . p^m) for m = 0 .. periodi, in the caller's pool. Each step runs
+in the other of two scratch pools, and the previous pool is reset, so
+memory follows the live coordinates. For 200 periods of s1 s2^-1 (a
+279-bit L), it leaves +8.5 KB in the caller's pool.
+
+**Measured before writing the tests** (scratch program, not committed):
+- reducible: s1 on E_2 gives L = 2, 4, 6, ..., exactly 2 + 2m (linear,
+  a twist);
+- periodic: (s1 s2)^3 = Delta^2 keeps L = 2;
+- across 25 random braids on B_3..B_5, the Burau(-1) radix never
+  exceeds the growth max_k (L^(k)_40 / L^(k)_30)^(1/10) over the loops
+  E_k, and agrees with it to 4 digits whenever it exceeds 1. Several
+  braids have radix 1 but grow at 2.2966 or 2.618, the complex
+  eigenvalue (or Burau kernel) case already seen in T3. Loop growth is
+  the primary entropy tool; the Burau bound is a check.
+
+**Oracle 6 in the suite:**
+- the sequence equals manual iteration;
+- the ratio approaches (3 + sqrt 5)/2 (exactly, in integers) and the
+  paper's 2.2966 (within 0.1%);
+- linear L = 2 + 2m for the twist, and a constant 2 for the periodic
+  braid;
+- on 40 random braids on B_3..B_5 (16 with radix > 1), radix^10 <=
+  (101/100) max_k L^(k)_40 / L^(k)_30, with an exact fraction check
+  (radix narrowed to 10^-6, lower endpoint to the 10th power): 0
+  failures.
+
+A single loop gives only a LOWER bound on the growth, since a reducing
+loop does not grow. The test therefore takes the maximum over E_1 ..
+E_{n-1}, and the header says so. The exact dilatation (Hall and
+Yurttas train-track matrices) stays deferred, as Fran decided.
+
+**Plants (4):** all red: the loop not advancing, the wrong scratch pool
+reset, an extra application of p, and the last value dropped.

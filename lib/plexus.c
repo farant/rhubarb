@@ -1752,3 +1752,97 @@ plexus_burau_radix_maxima (
     piscina_destruere(t);
     redde bene;
 }
+
+
+/* ==================================================
+ * Entropia per incrementum ansarum
+ * ================================================== */
+
+/* ansa in piscinam transcripta (coordinatae et alvei novi) */
+interior Ansa
+_ansam_transcribere (
+        Ansa  u,
+     Piscina* piscina)
+{
+    Ansa v;
+     i32 k;
+
+    v.fila  = u.fila;
+    v.a     = (Magnus*)piscina_allocare(piscina, (memoriae_index)(u.fila
+        - II) * magnitudo(Magnus));
+    v.b     = (Magnus*)piscina_allocare(piscina, (memoriae_index)(u.fila
+        - II) * magnitudo(Magnus));
+    per (k = ZEPHYRUM; k + II < u.fila; k++)
+    {
+        v.a[k] = magnus_transcribe(u.a[k], piscina);
+        v.b[k] = magnus_transcribe(u.b[k], piscina);
+    }
+    redde v;
+}
+
+b32
+plexus_incrementum (
+     Plexus   p,
+       Ansa   u,
+        i32   periodi,
+    Piscina*  piscina,
+     Magnus** exitus)
+{
+     Piscina* prior;
+     Piscina* sequens;
+      Magnus* longitudines;
+        Ansa  currens;
+         i32  m;
+         b32  bene = VERUM;
+
+    si (   !plexus_validus(p) || u.fila < III || u.a == NIHIL
+        || u.b == NIHIL || p.fila != u.fila || periodi > 0x7FFFFFFEUL)
+    {
+        redde FALSUM;
+    }
+    prior    = piscina_generare_dynamicum("plexus_incrementum", 4096);
+    sequens  = piscina_generare_dynamicum("plexus_incrementum", 4096);
+    si (prior == NIHIL || sequens == NIHIL)
+    {
+        si (prior != NIHIL)
+        {
+            piscina_destruere(prior);
+        }
+        si (sequens != NIHIL)
+        {
+            piscina_destruere(sequens);
+        }
+        redde FALSUM;
+    }
+    longitudines = (Magnus*)piscina_allocare(piscina,
+        (memoriae_index)(periodi + I) * magnitudo(Magnus));
+    currens = _ansam_transcribere(u, prior);
+    per (m = ZEPHYRUM; bene && m <= periodi; m++)
+    {
+        longitudines[m] = magnus_transcribe(ansa_sectiones(currens,
+            prior), piscina);
+        si (m < periodi)
+        {
+               Ansa  nova;
+            Piscina* commutata;
+
+            /* u_{m+1} in 'sequens'; 'prior' vacatur et commutatur */
+            bene = ansa_agere(currens, p, sequens, &nova);
+            si (bene)
+            {
+                piscina_vacare(prior);
+                commutata  = prior;
+                prior      = sequens;
+                sequens    = commutata;
+                currens    = nova;
+            }
+        }
+    }
+    piscina_destruere(prior);
+    piscina_destruere(sequens);
+    si (bene)
+    {
+        *exitus = longitudines;
+    }
+    redde bene;
+}

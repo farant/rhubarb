@@ -378,6 +378,30 @@ plexus_burau_radix_maxima (
          Piscina* piscina,
      RadixRealis* exitus);
 
+
+/* ==================================================
+ * Entropia per incrementum ansarum
+ * ==================================================
+ *
+ * (*exitus)[m] = L(u . p^m), m = 0 .. periodi (periodi + 1 valores
+ * Magnus, exacti, in piscina vocantis). Ratio L_{m+1} / L_m ad
+ * dilatationem lambda tendit si p pseudo-Anosov est et u non reducit
+ * (Moussafir 2006; Thiffeault 2010 Sect. III B: entropia = log lambda
+ * per periodum); crescentia linearis aut nulla pro periodicis et
+ * reducibilibus. Ansa singula limitem INFERIOREM incrementi dat (ansa
+ * reducens non crescit). Dilatatio exacta (matrices viarum, Hall et
+ * Yurttas) hic non computatur (consilium: dilata). Temporaria in
+ * piscinis propriis alternantibus. FALSUM si p aut u invalidi aut
+ * fila diversa. */
+
+b32
+plexus_incrementum (
+     Plexus   p,
+       Ansa   u,
+        i32   periodi,
+    Piscina*  piscina,
+     Magnus** exitus);
+
 /* contractiones piscinarum propriarum (imagines in F_n, ansae) ab
  * initio processus: instrumentum probationis et mensurae, non status
  * logicus (nullum effectum mutat) */
