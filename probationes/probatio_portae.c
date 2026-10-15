@@ -846,12 +846,13 @@ _sectio_derivatio_ignota (
         { "silva/compile_probationes.sh",
           "# <porta titulus=\"silva\""
           " currit=\"bin/folium tools/x.c tools/y.sh"
-          " bin/nullum\"/>\n" },
+          " bin/nullum tools/x_y.c\"/>\n" },
         { "silva/probationes/probatio_a.c", "" },
         { "tools/rete_fumus.sh",
           "# <porta manu causa=\"rete\"/>\n" },
         { "tools/folium.c", "" },
         { "tools/x.c", "" },
+        { "tools/x_y.c", "" },
         { "tools/y.sh", "" },
         { NIHIL, NIHIL }
     };
@@ -887,7 +888,11 @@ _sectio_derivatio_ignota (
     CREDO_NON_NIHIL(_exemplar(p->binaria, "bin/folium"));
     CREDO_NON_NIHIL(_exemplar(p->binaria, "bin/x"));
     CREDO_NON_NIHIL(_exemplar(p->binaria, "bin/nullum"));
-    CREDO_AEQUALIS_I32(xar_numerus(p->binaria), III);
+    /* 'tools/x_y.c' -> bin/x_y ET bin/x-y (briar_spectator.c ->
+     * bin/briar-spectator) */
+    CREDO_NON_NIHIL(_exemplar(p->binaria, "bin/x_y"));
+    CREDO_NON_NIHIL(_exemplar(p->binaria, "bin/x-y"));
+    CREDO_AEQUALIS_I32(xar_numerus(p->binaria), V);
     p = _opertura(o, "tools/rete_fumus.sh");
     CREDO_NECESSE_NON_NIHIL(p);
     CREDO_NON_NIHIL(_exemplar(p->exemplaria, "tools/rete_fumus.sh"));

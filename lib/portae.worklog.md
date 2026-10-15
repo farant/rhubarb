@@ -337,3 +337,16 @@ PORTA...` reads declarations only (no derivation - fast), writes
 everything "no history" (given order kept). Plants: kind ignored, all
 history instead of the last X (only `cursus == X` catches it - the
 median is robust to two old outliers), no-history-last - each red.
+
+## 2026-10-15 - hyphenated binaries (`x_y.c` -> `bin/x-y`)
+
+The pre-flight healed 21 binaries and the commit still died on
+briar-fumus: `bin/briar-spectator` was stale and not among them. The
+fumus only PROBES it (`[ -x .../bin/briar-spectator ]` - not an
+execution), its annotation named only `tools/briar.c`, and the
+`currit tools/<b>.c` -> `bin/<b>` rule cannot produce the hyphen. Now a
+`tools/x_y.c` candidate also proposes `bin/x-y` (fabrica ignores the one
+it does not declare), and briar-fumus declares
+`currit="tools/briar.c tools/briar_spectator.c"`. Test: derivatio
+ignota fixture `tools/x_y.c` -> both candidates; plant (no hyphen form)
+red.

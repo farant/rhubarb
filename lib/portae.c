@@ -906,10 +906,29 @@ _vocatum_tractare (
                    der->piscina)))
         {
             chorda nomen_b = chorda_sectio(v, (i32)VI, v.mensura - II);
+            chorda lineatum;
+               i32 k;
 
             _exemplar_addere(der->o->binaria, _ratio(der->piscina,
                 "bin/",
                 nomen_b, "", _vacua(), ""), PORTAE_EXEMPLAR_VIA, ratio);
+            /* fons 'x_y.c' -> binarium saepe 'bin/x-y' (briar_spectator.c
+             * -> bin/briar-spectator): candidatus alter, fabrica ignotum
+             * praeterit */
+            lineatum = chorda_transcribere(nomen_b, der->piscina);
+            per (k = ZEPHYRUM; k < lineatum.mensura; k++)
+            {
+                si (lineatum.datum[k] == '_')
+                {
+                    lineatum.datum[k] = '-';
+                }
+            }
+            si (!chorda_aequalis(lineatum, nomen_b))
+            {
+                _exemplar_addere(der->o->binaria, _ratio(der->piscina,
+                    "bin/", lineatum, "", _vacua(), ""),
+                    PORTAE_EXEMPLAR_VIA, ratio);
+            }
         }
         /* probatio quae viam arboris nominat ab ea pendet (scriptum
          * vocatum, fixum lectum, fons compilatus) */

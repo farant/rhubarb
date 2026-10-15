@@ -43792,15 +43792,45 @@ _lexema_finire (
  * Verba clausa
  * ================================================== */
 
+/* longitudines verborum clausorum SEMEL computatae: olim strlen in omni
+ * comparatione - ~XXXII vocationes per identificatorem, 18% temporis
+ * lexatoris (silva/lexema_mensura.sh, 2026-10-15) */
+hic_manens i32 _longitudines_clausorum[XL];
+hic_manens b32 _longitudines_paratae = FALSUM;
+
 interior SilvaLexemaGenus
 _quaerere_verbum_clausum (
     SilvaChorda valor)
 {
-    i32 i;
+          i32 i;
+    character c;
 
+    si (!_longitudines_paratae)
+    {
+        per (i = ZEPHYRUM; VERBA_CLAUSA[i].verbum != NIHIL
+            && i < XL; i++)
+        {
+            _longitudines_clausorum[i] =
+                (i32)strlen(VERBA_CLAUSA[i].verbum);
+        }
+        _longitudines_paratae = VERUM;
+    }
+    /* verba clausa C89: II-VIII litterae minusculae, initio 'a'..'w' -
+     * cetera (numeri Romani latinae, verba Latina longa, maiuscula)
+     * statim identificatores */
+    si (valor.mensura < II || valor.mensura > VIII)
+    {
+        redde SILVA_LEX_IDENTIFICATOR;
+    }
+    c = (character)valor.datum[ZEPHYRUM];
+    si (c < 'a' || c > 'w')
+    {
+        redde SILVA_LEX_IDENTIFICATOR;
+    }
     per (i = ZEPHYRUM; VERBA_CLAUSA[i].verbum != NIHIL; i++)
     {
-        si (   (i32)strlen(VERBA_CLAUSA[i].verbum) == valor.mensura
+        si (   _longitudines_clausorum[i]       == valor.mensura
+            && VERBA_CLAUSA[i].verbum[ZEPHYRUM] == c
             && memcmp(VERBA_CLAUSA[i].verbum, valor.datum,
                    (memoriae_index)valor.mensura) == ZEPHYRUM)
         {
