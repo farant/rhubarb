@@ -855,6 +855,38 @@ _custodem_notare (
         piscina);
 }
 
+/* COLLOQUIUM (colloquia T9): cursus SUMMUS (parens nullus) sub
+ * sessione Claude (CLAUDE_CODE_SESSION_ID, in ambitu Bash hereditatum,
+ * etiam commissione detracta) mensuram 'colloquium:<id>' fert - titulus
+ * clavis est, valor I. Filii per radicem sessioni pertinent. id impurum
+ * (TAB, linea nova) a mensura_annotare recusatur: nihil scriptum. */
+interior vacuum
+_colloquium_notare (
+    constans CursusInitium* initium,
+                   Piscina* piscina)
+{
+    constans character* sessio = getenv("CLAUDE_CODE_SESSION_ID");
+               Mensura  m;
+
+    si (   initium->parens.mensura > ZEPHYRUM || sessio == NIHIL
+        || sessio[ZEPHYRUM] == '\0')
+    {
+        redde;
+    }
+    memset(&m, ZEPHYRUM, magnitudo(m));
+    m.sessio  = initium->sessio;
+    m.id      = mensura_id_novum(piscina);
+    m.parens  = initium->id;
+    m.titulus   =
+        chorda_concatenare(chorda_ex_literis(MENSURA_COLLOQUIUM,
+        piscina), chorda_ex_literis(sessio, piscina), piscina);
+    m.valor     = 1.0;
+    m.unitas    = chorda_ex_literis("colloquium", piscina);
+    m.momentum  = initium->initium;
+    (vacuum)mensura_annotare(mensura_diarium_cursuum(piscina), &m,
+        piscina);
+}
+
 /* curatio (T6c) infra definitur */
 interior b32
 _curatio_debita (
@@ -932,6 +964,7 @@ _cursum_currere (
     }
     /* involucrum prolem exspectat et finem scribit: ipsum custos */
     _custodem_notare(&initium, (s32)getpid(), piscina);
+    _colloquium_notare(&initium, piscina);
     /* proles sub hoc cursu: parens, et scriptum ipsum non iterum
      * involvitur */
     sprintf(id_tabula, "%.*s", (integer)initium.id.mensura,
@@ -1086,6 +1119,7 @@ _cursum_incipere (
     }
     /* vocans (silva.py subprocess) finem scribet: is custos est */
     _custodem_notare(&initium, (s32)getppid(), piscina);
+    _colloquium_notare(&initium, piscina);
     imprimere("MENSOR_PARENS=%.*s\n", (integer)initium.id.mensura,
         (constans character*)initium.id.datum);
     claves[ZEPHYRUM]  = "MENSOR_SESSIO";
@@ -1350,7 +1384,9 @@ _cursus (
 /* parametra 'par=valor' cognita - aliud = recusatio nominata */
 hic_manens constans character* constans PARAMETRA_QUAESTIONIS[] = {
     "titulus", "arbor", "ramus", "nota", "status", "post", "n", "id",
-    "profunditas", "radix", "praefixum", "fenestra", "limes", NIHIL
+    "profunditas", "radix", "praefixum", "fenestra", "limes",
+        "colloquium",
+    NIHIL
 };
 
 nomen structura {
@@ -1360,6 +1396,7 @@ nomen structura {
     constans character* radix;
                    i32  fenestra;
                    i32  limes_permille;
+                chorda  colloquium;   /* currentes (colloquia T9) */
 } Parametra;
 
 interior b32
@@ -1462,6 +1499,10 @@ _parametra_legere (
         alioquin si (chorda_aequalis_literis(nomen_par, "id"))
         {
             p->id = valor;
+        }
+        alioquin si (chorda_aequalis_literis(nomen_par, "colloquium"))
+        {
+            p->colloquium = valor;
         }
         alioquin si (chorda_aequalis_literis(nomen_par, "profunditas"))
         {
@@ -1798,7 +1839,8 @@ _currentem_imprimere (
     si (machina)
     {
         imprimere("CURRENS\t%d\t%.*s\t%.*s\t%.*s\t%.*s\t%.*s\t%ld\t%d\t%s"
-            "\t%d\t%d\t%d\t%d\t%d\t%ld\t%ld\n", (integer)r->profunditas,
+            "\t%d\t%d\t%d\t%d\t%d\t%ld\t%ld\t%.*s\n",
+            (integer)r->profunditas,
             (integer)i->id.mensura, (constans character*)i->id.datum,
             (integer)i->parens.mensura,
             (constans character*)i->parens.datum,
@@ -1812,7 +1854,9 @@ _currentem_imprimere (
             (integer)r->perfecti, (integer)r->fracti,
             (integer)r->debiti,
             (integer)r->iudicata, (integer)r->ambitus,
-            (longus)r->minima_ms, (longus)r->maxima_ms);
+            (longus)r->minima_ms, (longus)r->maxima_ms,
+            (integer)r->colloquium.mensura,
+            (constans character*)r->colloquium.datum);
         redde;
     }
     _moram_scribere(nunc - i->initium, mora);
@@ -1824,6 +1868,13 @@ _currentem_imprimere (
         imprimere("  %.*s@%.*s", (integer)arbor.mensura,
             (constans character*)arbor.datum, (integer)i->ramus.mensura,
             (constans character*)i->ramus.datum);
+        si (r->colloquium.mensura > ZEPHYRUM)
+        {
+            /* praefixum VIII: satis ad sessionem in $sessions noscendam */
+            imprimere("  [colloquium %.*s]", (integer)(
+                r->colloquium.mensura < VIII ? r->colloquium.mensura
+                : VIII), (constans character*)r->colloquium.datum);
+        }
     }
     imprimere("  %s", mora);
     si (r->debiti > ZEPHYRUM)
@@ -1889,6 +1940,7 @@ _currentes_imprimere (
     constans CursusIndex* index,
            constans Xar* mensurae,
     constans CursusFiltrum* filtrum,
+                  chorda  colloquium,
                     b32  machina,
                 Piscina* piscina)
 {
@@ -1917,6 +1969,14 @@ _currentes_imprimere (
 
         si (r->profunditas == ZEPHYRUM)
         {
+            /* colloquium= (T9): arbores aliarum sessionum nec
+             * ostenduntur nec numerantur */
+            si (   colloquium.mensura > ZEPHYRUM
+                && !chorda_aequalis(r->colloquium, colloquium))
+            {
+                monstranda = FALSUM;
+                perge;
+            }
             vita = _vitam_iudicare(r, piscina);
             monstranda = machina || vita == VITA_VIVA
                 || (   vita == VITA_IGNOTA
@@ -2114,7 +2174,8 @@ _quaestio (
     {
         integer codex = _currentes_imprimere(index,
             mensura_mensuras_legere(volumen, chorda_ex_literis("",
-            piscina), piscina), &par.filtrum, machina, piscina);
+            piscina), piscina), &par.filtrum, par.colloquium, machina,
+            piscina);
 
         volumen_claudere(volumen);
         redde codex;

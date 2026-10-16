@@ -1326,6 +1326,18 @@ _facta_colligere (
         {
             r->iudicata = (i32)m->valor;
         }
+        alioquin si (   m->titulus.mensura > (i32)(magnitudo(
+                         MENSURA_COLLOQUIUM) - I)
+                     && memcmp(m->titulus.datum, MENSURA_COLLOQUIUM,
+                         magnitudo(MENSURA_COLLOQUIUM) - I) == ZEPHYRUM)
+        {
+            /* colloquium (T9): id post praefixum */
+            r->colloquium.datum    = m->titulus.datum + (magnitudo(
+                MENSURA_COLLOQUIUM) - I);
+            r->colloquium.mensura  = m->titulus.mensura
+                - (i32)(magnitudo(
+                MENSURA_COLLOQUIUM) - I);
+        }
     }
 }
 
@@ -1462,6 +1474,7 @@ _currentem_addere (
             constans Xar* mensurae,
          constans Cursus* c,
                      i32  profunditas,
+                  chorda  colloquium,
                      Xar* ordines)
 {
      CursusCurrens*  r      = (CursusCurrens*)xar_addere(ordines);
@@ -1479,6 +1492,12 @@ _currentem_addere (
     r->cursus       = c;
     r->profunditas  = profunditas;
     _facta_colligere(mensurae, c->initium.id, r);
+    /* colloquium radicis filiis hereditatur (T9) */
+    si (r->colloquium.mensura == ZEPHYRUM)
+    {
+        r->colloquium = colloquium;
+    }
+    colloquium = r->colloquium;
     _filios_numerare(index, c, r);
     _historiam_colligere(index, c->initium.titulus, r);
     si (!tabula_dispersa_invenire(index->filii, c->initium.id, &locus))
@@ -1509,7 +1528,7 @@ _currentem_addere (
     per (k = ZEPHYRUM; k < n; k++)
     {
         _currentem_addere(index, mensurae, aperti[k], profunditas + I,
-            ordines);
+            colloquium, ordines);
     }
 }
 
@@ -1564,7 +1583,7 @@ cursus_quaerere_currentes (
     per (k = ZEPHYRUM; k < n; k++)
     {
         _currentem_addere(index, mensurae, radices[k], ZEPHYRUM,
-            ordines);
+            chorda_ex_literis("", piscina), ordines);
     }
     redde ordines;
 }

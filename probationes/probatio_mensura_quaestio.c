@@ -796,6 +796,8 @@ _sectio_currentes (
     _factum(mensurae, "Q", MENSURA_AMBITUS, VII, c->piscina);
     _factum(mensurae, "Q", MENSURA_IUDICATA, VII, c->piscina);
     _factum(mensurae, "Q", MENSURA_AMBITUS, IX, c->piscina);
+    /* colloquium (T9): radici R; filius P2 hereditat; Q nullum */
+    _factum(mensurae, "R", MENSURA_COLLOQUIUM "abc-123", I, c->piscina);
 
     index = cursus_indicem_struere(omnes, c->piscina);
     CREDO_NECESSE_NON_NIHIL(index);
@@ -813,10 +815,12 @@ _sectio_currentes (
     CREDO_AEQUALIS_S32(r->custos, ZEPHYRUM);
     CREDO_AEQUALIS_I32(r->ambitus, IX);
     CREDO_AEQUALIS_I32(r->iudicata, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(r->colloquium.mensura, ZEPHYRUM);
     r = _currens(currentes, II);
     CREDO_CHORDA_AEQUALIS_LITERIS(r->cursus->initium.id, "R");
     CREDO_AEQUALIS_I32(r->profunditas, ZEPHYRUM);
     CREDO_AEQUALIS_S32(r->custos, MMMDCCCXCVIII);
+    CREDO_CHORDA_AEQUALIS_LITERIS(r->colloquium, "abc-123");
     CREDO_AEQUALIS_I32(r->debiti, III);
     CREDO_AEQUALIS_I32(r->perfecti, I);
     CREDO_AEQUALIS_I32(r->fracti, ZEPHYRUM);
@@ -835,6 +839,7 @@ _sectio_currentes (
     CREDO_AEQUALIS_I32(r->iudicata, CXX);
     CREDO_AEQUALIS_S64(r->minima_ms, (s64)XX);
     CREDO_AEQUALIS_S64(r->maxima_ms, (s64)LX);
+    CREDO_CHORDA_AEQUALIS_LITERIS(r->colloquium, "abc-123");
 
     /* sine filtro: A quoque (recentissimus, primus) */
     currentes = cursus_quaerere_currentes(index, mensurae, NIHIL,

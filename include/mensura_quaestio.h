@@ -236,6 +236,8 @@ nomen structura {
                 s64 minima_ms;     /* historia tituli (V ultimi
                                      * transeuntes); ZEPHYRUM = nulla */
                 s64 maxima_ms;
+             chorda colloquium;    /* id sessionis Claude radicis;
+                                    * vacua = ignota (homo, ante T9) */
 } CursusCurrens;
 
 Xar*

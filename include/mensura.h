@@ -307,6 +307,10 @@ mensura_cursus_legere (
                                                * hucusque (per undam) */
 #define MENSURA_PORTAE    "consilium.portae"  /* commissio: portae
                                                * debitae */
+#define MENSURA_COLLOQUIUM  "colloquium:"   /* + id sessionis Claude
+                                             * (CLAUDE_CODE_SESSION_ID);
+                                             * cursui SUMMO solum, valor I
+                                             * (colloquia T9) */
 
 /* mensurae ex actis voluminis (genus "mensura") quarum titulus
  * 'praefixum' incipit (vacuum = omnes), ordine actorum. Xar de

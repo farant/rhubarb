@@ -240,6 +240,17 @@ phase that needs it. Header text shown to Fran before coding.*
   `-machina` CURRENS lines carry a life column for T10). Fumus XVI fakes
   a reused pid with `cursus factum` (a newer process as owner). Plants:
   lib 5/5, CLI 3/3.
+- GAP (seen live during T8d's own commit): judge-only gates (generata =
+  `bin/fabrica iudicare`) write no member progress - progressum_notare
+  lives in sanare only. Follow-up for T10: progress in iudicare too.
+- T9 2026-10-16 (Fran: option A): a TOP-LEVEL run started under Claude
+  Code carries a measurement titled `colloquium:<CLAUDE_CODE_SESSION_ID>`
+  (value 1; title = key, like cursus.custos). The variable survives the
+  detached double-fork commit (checked). currentes: CursusCurrens.
+  colloquium (children inherit the root's), `colloquium=<id>` filter,
+  root tag `[colloquium <8>]`, last -machina column. CLAUDE_CODE_SESSION_ID
+  is undocumented - fallback if it vanishes: praeco exports our own
+  variable at SessionStart via CLAUDE_ENV_FILE. Plants 4/4.
 - IN MAIN 2026-10-16 (ff 1dc057b6, fusio_probare green + frigida,
   installata 23/23). The 7 hooks now call `~/.bin/praeco hamus`
   (backup ~/.claude/settings.json.bak-praeco-bin-2026-10-16); the ad
