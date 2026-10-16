@@ -108,3 +108,16 @@ by reason (`bin/fabrica quid -iudex J -machina` cause column), before
 switching. The hook keeps its extension prefilter (cheap, and the
 explicit `UNCUS_VIAE` test mode stays unfiltered without
 `UNCUS_CRIBRUM=1`).
+
+## 2026-10-15 - U4 step 4: edit hooks; declarations belong to the container
+
+`_unitas_viae`: a path equal to a directory unit's own declaration
+returns that unit's PARENT (root keeps its own). Found because the
+canon hook would have stopped judging vendor/knotapel/oracula/archivum
+`unitas.stml` - files we write about foreign/frozen directories.
+Hook helper `.claude/hooks/iudex_custodum.sh`: `git -C dirname
+rev-parse` picks the file's tree; `check-ignore` replaces `*/build/*`;
+the repository test replaces `*/scratchpad/*`. Binary freshness by
+mtime against its five sources only (the closure is wider - stale
+risk accepted for an advisory hook; commit paths use the
+self-building wrapper).

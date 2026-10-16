@@ -345,6 +345,16 @@ _sectio_intima (
     r = _quid(c, u, "tools/x.sh");
     CREDO_CHORDA_AEQUALIS_LITERIS(r.unitas->titulus, "rhubarb");
 
+    /* declaratio unitatis continentis est: vendor/unitas.stml nostra
+     * (canon eam iudicat), radicis declaratio radicis manet */
+    r = _quid(c, u, "vendor/unitas.stml");
+    CREDO_CHORDA_AEQUALIS_LITERIS(r.unitas->titulus, "rhubarb");
+    CREDO_CHORDA_AEQUALIS_LITERIS(r.cura.valor, "domestica");
+    CREDO_CHORDA_AEQUALIS_LITERIS(r.unitatis_causa,
+        "declaratio unitatis vendor - continentis rhubarb");
+    r = _quid(c, u, "unitas.stml");
+    CREDO_CHORDA_AEQUALIS_LITERIS(r.unitas->titulus, "rhubarb");
+
     /* via absoluta aut vacua: FALSUM */
     CREDO_FALSUM(unitates_quid(u, chorda_ex_literis("/etc/x",
         c->piscina), c->piscina, &r));

@@ -74,6 +74,17 @@
          linguae="sh css"
          descriptio="diagnostica crustae et css super plagulas commissionis (tools/unci-git/pre-commit -> tools/diagnostica.sh)"/>
 
+  <iudex titulus="censor_latinae"
+         curae="domestica" vitae="viva vetusta"
+         munera="fons caput probatio assets" provenientiae="manu generatum"
+         linguae="c89"
+         descriptio="censor latinae: macra latina.h in positione nominis (.claude/hooks/censor-custos.sh)"/>
+  <iudex titulus="canon_custos"
+         curae="domestica" vitae="viva vetusta"
+         munera="declaratio" provenientiae="manu generatum"
+         linguae="stml"
+         descriptio="canon_examen in plagulas .stml/.canon modo scriptas (.claude/hooks/canon-custos.sh)"/>
+
   <bibliothecae capita="include" fontes="lib" probationes="probationes"
                 praefixum="probatio_"
                 partes="_macos _posix _interna _impl _tabula"/>

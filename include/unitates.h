@@ -27,7 +27,9 @@
  *                RADIX_X familiae RADIX intra RADIX nidificat, ceterae
  *                intra unitatem directorii intimam (radix: rhubarb)
  * Plagula ad unitatem INTIMAM pertinet; bibliotheca vincit
- * directorium continens. Identitas = genus + titulus (applicatio
+ * directorium continens. DIR/unitas.stml ipsa ad unitatem CONTINENTEM
+ * pertinet (tabula domus de filio: vendor/unitas.stml domestica est;
+ * radicis declaratio radicis manet). Identitas = genus + titulus (applicatio
  * vicus et bibliotheca vicus duae sunt).
  *
  * HEREDITAS: cura = declarata in unitate, aliter declarata in

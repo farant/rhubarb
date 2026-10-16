@@ -16,12 +16,17 @@
 #       formator_commissionis lib/ solum formare sinit - vendor (alienum),
 #       amalgama (productum), generatum, fixtura omissa cum causis
 #       (-causae); lint_latinus per idem filtrum amalgama iudicat
+#   VI  custodes post-editionem (.claude/hooks/iudex_custodum.sh):
+#       custos_iudicat lib/ iudicat, vendor / extra repositorium /
+#       ignorata non; examen-custos in vendor/sqlite3.c (examen nudum
+#       REICE) et censor-custos in fixtura censoris (censor nudus
+#       flagrat) TACENT - silentium filtrum per uncum verum probat
 #
 # Debetur politicae, canonibus, omni declarationi et nucleo C
 # (clausura tools/fabrica.c: lib/unitates.c) - I s, vilis.
 #
 # Exitus: 0 sanum | 1 FRACTUM | 2 bin/fabrica aut bin/canon_examen deest.
-# <porta titulus="unitates" genus="praeiudicium" tegit="unitates.stml unitates.canon unitas.canon unitas.stml */unitas.stml canones.registrum tools/iudex_unitatum.sh tools/iudex_unitatum.c" currit="tools/fabrica.c"/>
+# <porta titulus="unitates" genus="praeiudicium" tegit="unitates.stml unitates.canon unitas.canon unitas.stml */unitas.stml canones.registrum tools/iudex_unitatum.sh tools/iudex_unitatum.c .claude/hooks/iudex_custodum.sh .claude/hooks/examen-custos.sh .claude/hooks/censor-custos.sh .claude/hooks/formator-custos.sh .claude/hooks/canon-custos.sh" currit="tools/fabrica.c"/>
 set -u
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$RADIX" || exit 2
@@ -107,6 +112,23 @@ if [ "$rc5" -eq 0 ] && [ "$(cat "$T/o5")" = "lib/xar.c" ] && [ -n "$GENF" ] \
     echo "  V   filtrum crustae: formator lib/ solum (vendor, amalgama, generatum, fixtura cum causis), lint amalgama iudicat OK"
 else
     echo "  V   FRACTUM (rc=$rc5/$rc5b, generatum '$GENF')"; sed 's/^/      /' "$T/o5" "$T/o5e" "$T/o5b"; fracta=1
+fi
+
+# VI custodes post-editionem
+. "$RADIX/.claude/hooks/iudex_custodum.sh"
+c_lib=1; c_ven=0; c_ext=0; c_ign=0
+custos_iudicat examen_commissionis "$RADIX/lib/xar.c"; c_lib=$?
+custos_iudicat examen_commissionis "$RADIX/vendor/sqlite3.c"; c_ven=$?
+custos_iudicat examen_commissionis "$T/extra.c"; c_ext=$?
+custos_iudicat formator_commissionis "$RADIX/build/fumus_ignoratum.c"; c_ign=$?
+CENS=$(git ls-files 'silva/probationes/fixa/censoris/*.c' | head -1)
+h_ex=$(printf '{"tool_input":{"file_path":"%s"}}' "$RADIX/vendor/sqlite3.c" | bash "$RADIX/.claude/hooks/examen-custos.sh" 2>&1)
+h_ce=$(printf '{"tool_input":{"file_path":"%s"}}' "$RADIX/$CENS" | bash "$RADIX/.claude/hooks/censor-custos.sh" 2>&1)
+if [ "$c_lib" -eq 0 ] && [ "$c_ven" -eq 1 ] && [ "$c_ext" -eq 1 ] && [ "$c_ign" -eq 1 ] \
+   && [ -n "$CENS" ] && [ -z "$h_ex" ] && [ -z "$h_ce" ]; then
+    echo "  VI  custodes: lib/ iudicatur, vendor/extra/ignorata non; examen-custos et censor-custos tacent in vendor et fixtura OK"
+else
+    echo "  VI  FRACTUM (lib $c_lib, vendor $c_ven, extra $c_ext, ignorata $c_ign)"; printf '%s\n%s\n' "$h_ex" "$h_ce" | sed 's/^/      /' | head -10; fracta=1
 fi
 
 if [ "$fracta" -ne 0 ]; then echo "fumus unitatum: FRACTUM"; exit 1; fi

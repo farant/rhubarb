@@ -1342,6 +1342,16 @@ _unitas_viae (
         }
     }
     x = _directorium_continens(u, via, NIHIL);
+    /* declaratio unitatis (DIR/unitas.stml) CONTINENTIS est: tabula
+     * domus de filio, etiam si filius alienus aut archivatus est
+     * (vendor/unitas.stml nostra est, ut BUILD Bazel parentis) */
+    si (   chorda_aequalis(via, x->declaratio)
+        && x->parens != NIHIL)
+    {
+        *causa = _textus(piscina, "declaratio unitatis ", x->titulus,
+            " - continentis ", x->parens->titulus, "");
+        redde x->parens;
+    }
     *causa = _textus(piscina, "directorium ", x->via.mensura > ZEPHYRUM
         ? x->via : chorda_ex_literis(".", piscina), " (", x->declaratio,
         ")");

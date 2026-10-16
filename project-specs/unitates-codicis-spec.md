@@ -526,6 +526,40 @@ fell to the fixture catch-all, the same bug as the test headers -
 the test rule is now `.c .m .h .sh`. Plants: fixtures into
 diagnostics -> unci XIV red; remissa into examen -> unci XX red.
 
+## VI⅞j. U4 step 4: the post-edit hooks (2026-10-15)
+
+Four `.claude/hooks/*-custos.sh` now source `iudex_custodum.sh`
+(`custos_admittere CUSTOS JUDGE "$FILE" || exit 0`): formator ->
+`formator_commissionis`, examen -> `examen_commissionis`, censor -> new
+`censor_latinae` (domestica, fons caput probatio assets, c89), canon ->
+new `canon_custos` (declaratio, stml). The helper judges in the FILE'S
+OWN tree (its policy, its binary - ~30 ms when the built binary is
+newer than its sources, else the self-building wrapper); outside any
+repository (scratchpad) or git-ignored (build/) = not judged; a tree
+without the policy or a broken judge = ONE notice with the judge's
+error ("custos tacet"), never a silent pass. formator/examen keep their
+old "own checkout only" restriction BEFORE asking the judge (else every
+edit in an unmerged worktree would print a notice).
+
+Measured vs the old case-lists (the edit hooks judged MORE than the
+commit did, §0): censor 2101 -> 1734 (knotapel 172, fixtures 172,
+vendor/oracula 6, archivum 5, amalgama 6 leave - your decisions;
+assets kept); canon 138 -> 134 at first - and that exposed a MODEL GAP:
+`vendor/unitas.stml`, `knotapel/unitas.stml`, ... inherited the custody
+of the unit they declare. **A unit's `unitas.stml` belongs to the
+CONTAINING unit** (the container's record of its child, like a Bazel
+BUILD file) - root's stays the root's. After the rule: canon identical.
+
+Left as they are, on purpose: `excubitor-custos` (reports who includes
+an edited header - a FACT of the include graph, not a house rule; its
+fixa/ skip is "fixtures are not in the graph") and `natura-custos`
+(.genera only; skips scratchpad/build, which the helper's own
+repository/ignore checks would also skip). Gate `unitates` VI drives
+the helper and two real hooks (silent on vendor and on the censor's
+regression corpus - loud without the filter). Plants: declaration rule
+removed -> unit test red; fixtures into censor_latinae -> VI red. The
+hooks run from the session's project dir: effective after merge.
+
 ## VII. Interrogationes - documentation as typed questions (Fran 10-15)
 
 A unit exposes what it can do by DECLARING QUESTIONS it answers
