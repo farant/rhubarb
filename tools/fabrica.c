@@ -612,6 +612,34 @@ _sectiones_imprimere (
     }
 }
 
+/* artificium simul ingressus actionis suae = REGIO SPLICITA in plagula
+ * manu scripta (latina.h numeri, silva.h superficies): signum generati
+ * in capite non fert - porta generata eam per hoc agnoscit */
+interior b32
+_ingressus_proprius (
+    constans Sententia* sententia)
+{
+    i32 i;
+
+    si (   sententia->actio            == NIHIL
+        || sententia->actio->ingressus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i
+        < xar_numerus(sententia->actio->ingressus); i++)
+    {
+        constans FabricaIngressus* g = (constans FabricaIngressus*)
+            xar_obtinere(sententia->actio->ingressus, i);
+
+        si (chorda_aequalis(g->via, sententia->iudicium.artificium))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
 interior vacuum
 _sententiam_imprimere (
     constans FabricaSutura* sutura,
@@ -652,6 +680,12 @@ _sententiam_imprimere (
         _campus_literis(signum);
         suturae_campus(sententia->iudicium.artificium);
         suturae_campus(sententia->iudicium.causa);
+        /* campus V solum pro regione splicita (lineae ceterae octetim
+         * eaedem; consumptores len >= IV) */
+        si (_ingressus_proprius(sententia))
+        {
+            _campus_literis("splicita");
+        }
         putchar('\n');
         _sectiones_imprimere(sutura, sententia->iudicium.artificium,
             piscina);

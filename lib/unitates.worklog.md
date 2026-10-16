@@ -121,3 +121,13 @@ the repository test replaces `*/scratchpad/*`. Binary freshness by
 mtime against its five sources only (the closure is wider - stale
 risk accepted for an advisory hook; commit paths use the
 self-building wrapper).
+
+## 2026-10-15 - provenance: fixed position, both directions
+
+`_provenientia_legere`: line 1, or line 2 after `<?xml`/`<!doctype`
+(`_linea`, `_declaratio_prima`). Tests pin the false positive that
+killed the window idea (a header naming GENERATUM in prose on line 2)
+and the old cooker form (`/*` alone on line 1, marker on line 3 = manu).
+The reverse check lives in the generata gate, not here: only fabrica
+knows its outputs; this lib only reads the file. Splices are named by
+fabrica (`IUDICIUM ... splicita`), never by a list.

@@ -39,7 +39,9 @@
  *
  * DERIVATA (numquam declarata): munus per regulas politicae (prima
  * congruens vincit), lingua per extensionem, provenientia per
- * signum GENERATUM in linea prima (plagula per suturam lecta).
+ * SIGNUM GENERATI: 'GENERATUM' in linea prima, aut secunda si prima
+ * declaratio est quam forma poscit (<?xml, <!doctype) - positio fixa,
+ * non fenestra (caput quod GENERATUM in prosa nominat manu est).
  *
  * RECUSATIO, numquam praestitutum tacitum: genus non citabile, cura
  * vita munus lingua ignota (in declaratione AUT in indicibus

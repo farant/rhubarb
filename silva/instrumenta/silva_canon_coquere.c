@@ -1247,9 +1247,7 @@ silva_gen_canonem_scribere (
     }
 
     fprintf(pl,
-        "<!--\n"
-        "  %s.canon\n"
-        "  GENERATUM - NE MANU EDITES.\n"
+        "<!-- %s.canon - GENERATUM, NE MANU EDITES.\n"
         "\n"
         "  Fons: %s\n"
         "  Regeneratio: ./silva/generare.sh\n"

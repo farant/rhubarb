@@ -1,8 +1,8 @@
-/* css_registrum_coctum.h
+/* css_registrum_coctum.h - GENERATUM, NE MANU EDITES
  *
- * Registrum generum COCTUM grammaticae 'css' - GENERATUM, NE MANU
- * EDITES. Fons: css/grammatica/css.registrum.stml (materia/coquere.sh).
- * Genera XXI, loci XLV.
+ * Registrum generum COCTUM grammaticae 'css'. Fons:
+ * css/grammatica/css.registrum.stml (materia/coquere.sh). Genera XXI,
+ * loci XLV.
  */
 
 #ifndef CSS_REGISTRUM_COCTUM_H

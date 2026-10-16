@@ -1526,6 +1526,49 @@ _respondere (
     r->provenientia.causa = chorda_ex_literis("non lecta", piscina);
 }
 
+/* linea 'numero' (I-basata) textus; vacua si deest */
+interior chorda
+_linea (
+    chorda textus,
+       i32 numero)
+{
+    i32 initium  = ZEPHYRUM;
+    i32 n        = I;
+    i32 i;
+
+    per (i = ZEPHYRUM; i <= textus.mensura; i++)
+    {
+        si (i == textus.mensura || textus.datum[i] == '\n')
+        {
+            si (n == numero)
+            {
+                redde chorda_sectio(textus, initium, i);
+            }
+            n++;
+            initium = i + I;
+        }
+    }
+    redde _vacua();
+}
+
+/* declaratio quae lineam primam POSCIT (<?xml, <!doctype): signum
+ * generati in linea secunda stat */
+interior b32
+_declaratio_prima (
+    chorda linea)
+{
+    redde (linea.mensura >= V && memcmp(linea.datum, "<?xml", V)
+            == ZEPHYRUM)
+        || (linea.mensura >= IX && (memcmp(linea.datum, "<!doctype", IX)
+            == ZEPHYRUM || memcmp(linea.datum, "<!DOCTYPE", IX)
+            == ZEPHYRUM));
+}
+
+/* SIGNUM GENERATI (lex domus): 'GENERATUM' in linea PRIMA, aut in
+ * SECUNDA si prima declaratio est quam forma plagulae primam poscit
+ * (<?xml ...?>, <!doctype html>). Positio fixa, non fenestra: caput
+ * manu scriptum quod GENERATUM in prosa NOMINAT (include/
+ * norma_canon.h linea II) generatum non est. */
 interior vacuum
 _provenientia_legere (
              constans Unitates* u,
@@ -1533,8 +1576,8 @@ _provenientia_legere (
              UnitatisResponsum* r)
 {
     chorda textus;
-    chorda prima;
-       i32 i;
+    chorda signata;
+       i32 numerus = I;
 
     si (!u->sutura->plagulam_legere(u->sutura->datum, r->via, piscina,
             &textus))
@@ -1545,27 +1588,27 @@ _provenientia_legere (
             piscina);
         redde;
     }
-    prima = textus;
-    per (i = ZEPHYRUM; i < textus.mensura; i++)
+    signata = _linea(textus, I);
+    si (_declaratio_prima(signata))
     {
-        si (textus.datum[i] == '\n')
-        {
-            prima = chorda_sectio(textus, ZEPHYRUM, i);
-            frange;
-        }
+        signata = _linea(textus, II);
+        numerus = II;
     }
-    si (chorda_continet(prima, chorda_ex_literis("GENERATUM", piscina)))
+    si (chorda_continet(signata, chorda_ex_literis("GENERATUM",
+        piscina)))
     {
         r->provenientia.valor  = chorda_ex_literis("generatum",
             piscina);
-        r->provenientia.causa  = chorda_ex_literis("linea I: GENERATUM",
-            piscina);
+        r->provenientia.causa  = chorda_ex_literis(numerus == I
+            ? "linea I: GENERATUM"
+            : "linea II (post declarationem): GENERATUM", piscina);
     }
     alioquin
     {
         r->provenientia.valor  = chorda_ex_literis("manu", piscina);
-        r->provenientia.causa  = chorda_ex_literis("linea I sine "
-            "GENERATUM", piscina);
+        r->provenientia.causa  = chorda_ex_literis(numerus == I
+            ? "linea I sine GENERATUM"
+            : "linea II (post declarationem) sine GENERATUM", piscina);
     }
 }
 

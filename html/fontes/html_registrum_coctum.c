@@ -1,9 +1,9 @@
-/* html_registrum_coctum.c
+/* html_registrum_coctum.c - GENERATUM, NE MANU EDITES
  *
- * Registrum generum COCTUM grammaticae 'html' - GENERATUM, NE MANU
- * EDITES. Fons: html/grammatica/html.registrum.stml
- * (materia/coquere.sh). Series LOCORUM plana; quodque genus fenestram
- * suam per loci_offset + loci_numerus nominat. Genera XI, loci XXVI.
+ * Registrum generum COCTUM grammaticae 'html'. Fons:
+ * html/grammatica/html.registrum.stml (materia/coquere.sh). Series
+ * LOCORUM plana; quodque genus fenestram suam per loci_offset +
+ * loci_numerus nominat. Genera XI, loci XXVI.
  */
 
 #include "html_registrum_coctum.h"

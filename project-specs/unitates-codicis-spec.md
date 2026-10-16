@@ -560,6 +560,44 @@ regression corpus - loud without the filter). Plants: declaration rule
 removed -> unit test red; fixtures into censor_latinae -> VI red. The
 hooks run from the session's project dir: effective after merge.
 
+## VI⅞k. Provenance made true: the marker position (2026-10-15, Fran: option A)
+
+Found while measuring the prose lint: the house rule "`GENERATUM` on
+line 1" was false for ~300 generated files (267 docs pages and 36
+natura canons with the marker on line 2 because line 1 must be
+`<!doctype`/`<?xml`; 12 cooked grammar registries, silva_latina_datum.h,
+silva/c89.canon on line 3; natura/cocta/glossae.html with NO marker).
+Every reader used line 1, so the commit formatter treated the 13 C
+ones as hand-written (latent: their output happened to be conformant).
+Nothing checked the other direction (generator output carries the
+marker). A "first N lines" window was rejected: include/norma_canon.h
+names GENERATUM in prose on line 2 and is hand-written (Go's lesson:
+an exact form or position, never "the word near the top").
+
+**Rule (lib/unitates.c `_provenientia_legere`): `GENERATUM` on line 1,
+or on line 2 when line 1 is a declaration the format requires
+(`<?xml`, `<!doctype`/`<!DOCTYPE`).** Generators fixed: materia
+coctor (12 registries, its test re-pinned), silva latina_datum,
+silva canon coquere (c89.canon), natura_glossae (glossae.html).
+Splices - a generated REGION in a hand-written file (latina.h
+numerals, silva.h / hospes.c public surface; fabrica declares the file
+as its own action's input) - carry no header marker: `bin/fabrica
+iudicare -machina` now prints a 5th field `splicita` on those IUDICIUM
+lines only (other lines byte-identical).
+
+Gate `generata` now checks BOTH directions through `bin/fabrica quid`:
+marked -> has a fabrica action ("GENERATUM sine iudicio", as before
+but with the real rule) and fabrica output -> marked unless splicita
+("SINE SIGNO", new). Result: 143 judged, 0 stale, 0/0. The real rule
+exposed 268 generated docs pages (docs/*.html, Python generator
+`docs/instrumenta/regenerare.sh`) that NO fabrica action judges -
+stale pages possible unnoticed; exception with cause in the gate +
+park …PT44JPJA. Plant: splicita disabled -> exactly latina.h, silva.h,
+hospes.c "SINE SIGNO". Left: md/CENSUS.md (marker on line 3, no fabrica
+action - its input is every *.md) - with the prose lint step; the
+edit-guard hook generata-custos.sh keeps its stricter "lines 1-3 + the
+do-not-edit phrase" rule (a warning, and it already caught these).
+
 ## VII. Interrogationes - documentation as typed questions (Fran 10-15)
 
 A unit exposes what it can do by DECLARING QUESTIONS it answers

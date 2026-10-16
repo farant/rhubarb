@@ -1,9 +1,9 @@
-/* md_registrum_coctum.c
+/* md_registrum_coctum.c - GENERATUM, NE MANU EDITES
  *
- * Registrum generum COCTUM grammaticae 'md' - GENERATUM, NE MANU
- * EDITES. Fons: md/grammatica/md.registrum.stml (materia/coquere.sh).
- * Series LOCORUM plana; quodque genus fenestram suam per loci_offset +
- * loci_numerus nominat. Genera XXVIII, loci XCIV.
+ * Registrum generum COCTUM grammaticae 'md'. Fons:
+ * md/grammatica/md.registrum.stml (materia/coquere.sh). Series LOCORUM
+ * plana; quodque genus fenestram suam per loci_offset + loci_numerus
+ * nominat. Genera XXVIII, loci XCIV.
  */
 
 #include "md_registrum_coctum.h"

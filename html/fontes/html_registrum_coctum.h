@@ -1,8 +1,8 @@
-/* html_registrum_coctum.h
+/* html_registrum_coctum.h - GENERATUM, NE MANU EDITES
  *
- * Registrum generum COCTUM grammaticae 'html' - GENERATUM, NE MANU
- * EDITES. Fons: html/grammatica/html.registrum.stml
- * (materia/coquere.sh). Genera XI, loci XXVI.
+ * Registrum generum COCTUM grammaticae 'html'. Fons:
+ * html/grammatica/html.registrum.stml (materia/coquere.sh). Genera XI,
+ * loci XXVI.
  */
 
 #ifndef HTML_REGISTRUM_COCTUM_H

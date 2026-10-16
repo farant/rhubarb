@@ -193,6 +193,16 @@ hic_manens constans PlagulaFicta MUNDUS[] = {
     { "silva/amalgama/silva.c", "/* GENERATUM - noli edere */\n"
         "int x;\n", NIHIL },
     { "tools/x.sh", "#!/bin/sh\n", NIHIL },
+    { "docs/pagina.html", "<!doctype html>\n<!-- GENERATUM: g.py -->\n"
+        "<html>\n", NIHIL },
+    { "natura/cocta/a.canon",
+        "<?xml version=\"1.0\"?>\n<!-- GENERATUM a "
+        "c -->\n<canon/>\n", NIHIL },
+    { "tools/norma_canon.h", "/* norma_canon.h - caput manu\n * Corpus "
+        "lib/norma_canon.c GENERATUM est per bin/norma */\n", NIHIL },
+    { "tools/coctum.c",
+        "/*\n * coctum.c - GENERATUM, NE MANU EDITES\n */\n",
+        NIHIL },
     { "media/imago.png", "PNG", NIHIL },
     { NIHIL, NIHIL, NIHIL }
 };
@@ -465,6 +475,22 @@ _sectio_provenientia (
         "linea I: GENERATUM");
 
     r = _quid(c, u, "lib/xar.c");
+    CREDO_CHORDA_AEQUALIS_LITERIS(r.provenientia.valor, "manu");
+
+    /* post declarationem quae lineam primam poscit: linea secunda */
+    r = _quid(c, u, "docs/pagina.html");
+    CREDO_CHORDA_AEQUALIS_LITERIS(r.provenientia.valor, "generatum");
+    CREDO_CHORDA_AEQUALIS_LITERIS(r.provenientia.causa,
+        "linea II (post declarationem): GENERATUM");
+    r = _quid(c, u, "natura/cocta/a.canon");
+    CREDO_CHORDA_AEQUALIS_LITERIS(r.provenientia.valor, "generatum");
+
+    /* positio FIXA, non fenestra: caput quod GENERATUM in prosa linea
+     * II nominat manu est; signum linea III (commentum solum in linea
+     * I) NON valet - generator lineam primam signare debet */
+    r = _quid(c, u, "tools/norma_canon.h");
+    CREDO_CHORDA_AEQUALIS_LITERIS(r.provenientia.valor, "manu");
+    r = _quid(c, u, "tools/coctum.c");
     CREDO_CHORDA_AEQUALIS_LITERIS(r.provenientia.valor, "manu");
 
     r = _quid(c, u, "lib/nusquam.c");
