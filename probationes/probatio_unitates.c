@@ -187,6 +187,8 @@ hic_manens constans PlagulaFicta MUNDUS[] = {
     { "lib/xar.c", "/* xar.c - manu */\n", NIHIL },
     { "lib/xar.worklog.md", "# xar\n", NIHIL },
     { "lib/energia.phase-log.md", "# energia\n", NIHIL },
+    { "lib/xar.interrogationes.stml", "<interrogationes/>\n", NIHIL },
+    { "lib/xar.stml", "<x/>\n", NIHIL },
     { "docs/bibliothecae/xar.html", "<!doctype html>\n<p>xar</p>\n",
         NIHIL },
     { "docs/bibliothecae/index.html", "<!doctype html>\n<p>i</p>\n",
@@ -371,6 +373,13 @@ _sectio_intima (
     r = _quid(c, u, "lib/energia.phase-log.md");
     CREDO_CHORDA_AEQUALIS_LITERIS(r.unitas->titulus, "energia");
     CREDO_CHORDA_AEQUALIS_LITERIS(r.munus.valor, "documentum");
+    /* FONTES/S.<quidvis>.stml (interrogationes) ad S; S.stml sine
+     * medio stemma non est */
+    r = _quid(c, u, "lib/xar.interrogationes.stml");
+    CREDO_CHORDA_AEQUALIS_LITERIS(r.unitas->titulus, "xar");
+    CREDO_CHORDA_AEQUALIS_LITERIS(r.munus.valor, "declaratio");
+    r = _quid(c, u, "lib/xar.stml");
+    CREDO_CHORDA_AEQUALIS_LITERIS(r.unitas->titulus, "rhubarb");
     r = _quid(c, u, "docs/bibliothecae/xar.html");
     CREDO_CHORDA_AEQUALIS_LITERIS(r.unitas->titulus, "xar");
     CREDO_CHORDA_AEQUALIS_LITERIS(r.munus.valor, "documentum");

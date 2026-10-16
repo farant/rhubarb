@@ -707,8 +707,26 @@ Pool = a query, not a file: a legati/natura tool ("quaestio: how do I
 ..." with FTS, like the ledger's). Open: questions in English or Latin;
 next to the function (annotation, fresher) or in the unit's file
 (easier to audit). Pilot when U3 lands: ~5 questions each for xar and
-piscina + the dead-answer check. `FAQ.md` is Fran's (never edited by
-agents) - a seed corpus only if Fran moves entries over.
+piscina + the dead-answer check. (`FAQ.md` was an experiment, deleted
+in main 6061a54c - not a seed corpus.)
+
+**U5b slice 1 (2026-10-16, Fran):** the open questions are answered:
+one file per unit, `lib/S.interrogationes.stml` (not header
+annotations: a recipe spanning three functions has no home there, and
+an anchor implied by position can never go dead, so the audit weakens);
+questions and answers in ENGLISH (the reader types the question that
+way), markup and identifiers Latin. Dialect `interrogationes.canon`
+(registered by root `<interrogationes>`): `interrogatio genus=` is an
+`electio` in the canon (quomodo possumne cur quid - a new type = one
+`<optio>`), `<quaestio! (>` = one raw line, `<responsum symbolum= via=
+imperium=>` = text; "at least one anchor" is the gate's job (slice 3),
+the canon cannot say co-occurrence. The stem rule now claims
+`lib/S.<any>.stml` as well as `.md` (role declaratio, so canon_custos
+judges it); `lib/S.stml` with no middle segment stays with the root.
+Pilot drafts: 5 questions each for xar and piscina, every answer read
+against lib/xar.c and lib/piscina.c - Fran edits them. VETITAE lost
+`FAQ.md`. Next: slice 2 (reader + census count), slice 3 (dead-answer
+gate).
 
 ## VIII. Open questions (for Fran)
 

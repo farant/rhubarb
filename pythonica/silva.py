@@ -2381,7 +2381,7 @@ def _porta_cruda(nomen, filtrum=None, radix=None, receptum=True,
     return p
 
 
-VETITAE = ('FAQ.md', 'silva/grammatica/c89-formatted.stml')
+VETITAE = ('silva/grammatica/c89-formatted.stml',)
 
 
 def _trailer():
@@ -3395,8 +3395,7 @@ def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
     for v in viae:
         if v in VETITAE:
             causae.append('via VETITA commissioni: %s - plagula Frani in'
-                          ' cursu (FAQ, tabula, tabularium,'
-                          ' c89-formatted): Fran ipse eam committit,'
+                          ' cursu (c89-formatted): Fran ipse eam committit,'
                           ' numquam agens - e viis remove' % v)
     if opus:
         causae.extend(opus_praeiudicare(opus))

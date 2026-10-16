@@ -613,7 +613,7 @@ try:
 except silva.SilvaError as ex:
     credo('in memoria post 1 editiones; in plagula - lineae' in str(ex), 'ancora ambigua post editionem: lineae in memoria ET in plagula nominatae')
 try:
-    silva.commissio('nihil', ['FAQ.md'], portae=[])
+    silva.commissio('nihil', ['silva/grammatica/c89-formatted.stml'], portae=[])
     credo(False, 'vetita')
 except silva.SilvaError as ex:
     credo('VETITA' in str(ex) and 'Frani' in str(ex) and 'remove' in str(ex), 'commissio: refusio vetitae causam nominat')
@@ -764,7 +764,7 @@ try:
 except silva.SilvaError:
     credo(True, 'porta ignota levat SilvaError')
 try:
-    silva.commissio('nihil', ['FAQ.md'])
+    silva.commissio('nihil', ['silva/grammatica/c89-formatted.stml'])
     credo(False, 'via vetita levat')
 except silva.SilvaError:
     credo(True, 'commissio: via vetita refutata')
@@ -2449,7 +2449,7 @@ try:
 
     # CAUSAE OMNES SIMUL: via vetita ET opus ignotum responso UNO, ANTE portam ullam
     try:
-        silva.commissio('nihil', ['FAQ.md'], portae=['ficta-quae-non-est'], opus='nusquam')
+        silva.commissio('nihil', ['silva/grammatica/c89-formatted.stml'], portae=['ficta-quae-non-est'], opus='nusquam')
         credo(False, 'commissio cum causis duabus')
     except silva.SilvaError as ex:
         credo('(2 causae)' in str(ex) and 'VETITA' in str(ex) and 'non solvitur' in str(ex),

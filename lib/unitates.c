@@ -1370,16 +1370,18 @@ _unitas_viae (
         s = chorda_sectio(basis, ZEPHYRUM, basis.mensura - II);
     }
     alioquin si (   chorda_aequalis(dir, u->fontes)
-                 && _finit(basis, ".md"))
+                 && (_finit(basis, ".md") || _finit(basis, ".stml")))
     {
-        /* FONTES/S.<quidvis>.md (worklog, phase-log) ad S */
+        /* FONTES/S.<quidvis>.md (worklog, phase-log) et
+         * FONTES/S.<quidvis>.stml (interrogationes) ad S */
         i32 punctum;
+        i32 extensio = _finit(basis, ".md") ? III : V;
 
         per (punctum = ZEPHYRUM; punctum < basis.mensura
             && basis.datum[punctum] != '.'; punctum++)
         {
         }
-        si (punctum + III < basis.mensura)
+        si (punctum + extensio < basis.mensura)
         {
             s = chorda_sectio(basis, ZEPHYRUM, punctum);
         }
