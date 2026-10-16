@@ -131,6 +131,10 @@ copies its form, forced off gives 0), not by sampling.
    shape statistics; refusal on malformed programs (register out of
    range, used before defined). Tests (credo v2 sections) with oracle
    1. Plants.
+   *Done 2026-10-16:* 8 sections, 153 checks; Python oracle 3000
+   networks, 0 mismatches (outside the gates); 12 plants red; venenum
+   sana. Builders check only the header (O(1)); width = most live
+   registers. See lib/nervus.worklog.md.
 2. **T2: patterns.** Pattern keys, the affine map of a pattern,
    composition. Tests with oracles 2 and 4.
 3. **T3: plexus_nervus.** plexus emits each generator's program
