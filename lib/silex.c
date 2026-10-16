@@ -2401,8 +2401,9 @@ silex_ordinem_vitreum_fingere (
     _obiecta_venditoria_appendere(a, clausura_app);
     chorda_aedificator_appendere_literis(a,
         /* Security NON ornamentum: atrium imperium trahit ->
-         * hospitium -> tls -> tls_macos.m, quod SecPolicy...
-         * poscit. Sine eo nexus deficit, et deficiebat - vitium
+         * hospitium -> tls -> tls_securetransport_macos.m +
+         * fiducia_macos.m, quae SecPolicy... poscunt. Sine eo nexus
+         * deficit, et deficiebat - vitium
          * quod nemo vidit quia scaffoldatum numquam aedificabatur
          * (vide tools/silex_semen_fumus.sh, natum eodem die).
          * Hic ordo IDEM est quem omne binarium rhubarb ligat
@@ -2521,9 +2522,10 @@ _fumus_sh_fingere (
         " \\\n    probationes/fumus_manus.c");
     _ordinem_fontium_appendere(a, clausura_fumi, VERUM);
     _obiecta_venditoria_appendere(a, clausura_fumi);
-    /* Security: manus http trahit, quod tls_macos.m ligat. Foundation:
-     * tempus objectivum-C in eodem. Cocoa/WebKit ABSUNT - hoc binarium
-     * CONCLAVIS est, fenestram non aperit (applicatio eam aperit). */
+    /* Security: manus http trahit, quod tls (fiducia_macos.m) ligat.
+     * Foundation: tempus objectivum-C in eodem. Cocoa/WebKit ABSUNT -
+     * hoc binarium CONCLAVIS est, fenestram non aperit (applicatio eam
+     * aperit). */
     chorda_aedificator_appendere_literis(a,
         " \\\n    -framework Security -framework Foundation \\\n"
         "    -o build/fumus_manus.novum\n"

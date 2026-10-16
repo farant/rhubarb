@@ -794,15 +794,19 @@ s32 principale (vacuum)
         CREDO_VERUM(filum_existit(
             AREA "/vitreum/lib/fenestra_macos.m"));
         /* atrium: semen baculos inclusos accipit (imperium ->
-         * '-vivum'), et trahit CLAUSURAM SUAM - tls_macos.m hic
-         * est quia atrium -> imperium -> hospitium -> tls. Illa
-         * plagula est quae '-framework Security' poscit; sine
-         * ea assertio infra causam suam amitteret. */
+         * '-vivum'), et trahit CLAUSURAM SUAM - vecturae tls hic
+         * sunt quia atrium -> imperium -> hospitium -> tls (tls.c
+         * dispatcher -> tls_securetransport_macos.m + fiducia_macos.m,
+         * tls-bearssl T3). Illae plagulae '-framework Security'
+         * poscunt; sine eis assertio infra causam suam amitteret. */
         CREDO_VERUM(filum_existit(AREA "/vitreum/lib/atrium.c"));
         CREDO_VERUM(filum_existit(
             AREA "/vitreum/include/atrium.h"));
+        CREDO_VERUM(filum_existit(AREA "/vitreum/lib/tls.c"));
         CREDO_VERUM(filum_existit(
-            AREA "/vitreum/lib/tls_macos.m"));
+            AREA "/vitreum/lib/tls_securetransport_macos.m"));
+        CREDO_VERUM(filum_existit(
+            AREA "/vitreum/lib/fiducia_macos.m"));
         CREDO_VERUM(filum_existit(
             AREA "/vitreum/vendor/sqlite3.c"));
         /* clausura instrumenti: toml quod app non trahit (cliens
@@ -876,7 +880,7 @@ s32 principale (vacuum)
                 "lib/vitrea_macos.m", piscina));
             CREDO_CHORDA_CONTINET(aed, chorda_ex_literis(
                 "vendor/sqlite3.c", piscina));
-            /* Security ADEST quia tls_macos.m in clausura est
+            /* Security ADEST quia vecturae tls in clausura sunt
              * (vide supra). Hoc ANTE portam fumi deerat, et nexus
              * omnis proiecti novi deficiebat sine ulla probatione
              * rubente - quia haec probatio manifestum iudicat, non

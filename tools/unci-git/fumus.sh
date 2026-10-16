@@ -28,6 +28,7 @@
 #       octeti generatoris commissi (fabrica P2, via B, 2026-09-29)
 #   XX  knotapel/ EXCLUSA TOTA (2026-10-03): planta C99 male formata et
 #       .sh malformata ibi -> nec obstat nec formatur
+#   XXIII vendor/ EXCLUSA TOTA (tls-bearssl R5, 2026-10-15): ut XX
 #   XXI vocabula.sh -nova SOLUM (sine unco, circulus commissionis P2):
 #       plagula modo scripta cum verbo ignoto -> index renovatur ANTE
 #       iudicium, NOVA 1 (olim index stalus: 'NOVA 0' mendax)
@@ -262,6 +263,35 @@ else
     echo "  XXII FRACTUM (sine=$rc_sine fixa=$rc_fixa mixta=$rc_mixta)"; cat "$T/cribrum_fixa.out" "$T/cribrum_mixta.out"; fracta=1
 fi
 
+# XXIII - vendor/ EXCLUSA TOTA (tls-bearssl R5, 2026-10-15): arbores
+# upstream octetim idem (vendor/bearssl: CCXCIV fontes C99, duae .sh)
+# et amalgamae GENERATAE - nec examen, nec diagnostica materiae, nec
+# formator. Exemplar XX ad litteram: planta C99 (VC), planta formae C89
+# valida (VF, formator C99 tacite praeterit), .sh malformata (VS),
+# plagula domestica sana (KD) ne uncus ante formatorem exeat.
+VC="vendor/.fumus_vendor.c"
+VF="vendor/.fumus_vendor_forma.c"
+VS="vendor/.fumus_vendor.sh"
+printf 'int\nf(void)\n{\n    for (int i = 0; i < 1; i++) { }\n    return 0;\n}\n' > "$VC"
+printf '#!/bin/bash\n{ echo a\n' > "$VS"
+printf 'static int\ng(void)\n{\n    return 0;\n}\n' > "$VF"
+cp "$VC" "$T/vendor_ante.c"
+cp "$VF" "$T/vendor_forma_ante.c"
+printf '#include "latina.h"\n\ninterior vacuum\nf (vacuum)\n{\n    redde;\n}\n' > "$KD"
+export GIT_INDEX_FILE="$T/index_vendor"
+rm -f "$GIT_INDEX_FILE"
+git read-tree HEAD
+git add -f -- "$VC" "$VS" "$VF" "$KD"
+"$UNCUS" > "$T/vendor.out" 2>&1; rc=$?
+if [ "$rc" -eq 0 ] && ! grep -q 'fumus_vendor.*REICE\|REICE.*fumus_vendor' "$T/vendor.out" \
+   && ! grep -q 'DIAGNOSTICA MATERIAE' "$T/vendor.out" \
+   && ! grep -q 'fumus_vendor.*FORMATA\|fumus_vendor.*divergentiae' "$T/vendor.out" \
+   && git show ":$VC" | cmp -s - "$T/vendor_ante.c" \
+   && git show ":$VF" | cmp -s - "$T/vendor_forma_ante.c" && cmp -s "$VF" "$T/vendor_forma_ante.c"; then echo "  XXIII vendor/ exclusa (examen, diagnostica, forma) OK"; else echo "  XXIII FRACTUM (rc=$rc)"; cat "$T/vendor.out"; fracta=1; fi
+unset GIT_INDEX_FILE
+rm -f "$VC" "$VS" "$VF" "$KD" "$T/index_vendor"
+./silva/nexus.sh -renovare > /dev/null 2>&1
+
 if [ "$fracta" -ne 0 ]; then echo "fumus unci: FRACTUM"; exit 1; fi
-echo "fumus unci: sanum (XXII/XXII)"
+echo "fumus unci: sanum (XXIII/XXIII)"
 exit 0

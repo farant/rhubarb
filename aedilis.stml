@@ -63,7 +63,11 @@
     <regula obiectum="fenestra_macos">
       <vexillum! (>-framework Cocoa
     </regula>
-    <regula obiectum="tls_macos">
+    <regula obiectum="fiducia_macos">
+      <vexillum! (>-framework Security
+      <vexillum! (>-framework CoreFoundation
+    </regula>
+    <regula obiectum="tls_securetransport_macos">
       <vexillum! (>-framework Security
       <vexillum! (>-framework CoreFoundation
     </regula>
@@ -89,6 +93,11 @@
       <vexillum! (>-DSQLITE_OMIT_LOAD_EXTENSION
       <vexillum! (>-DSQLITE_OMIT_DEPRECATED
       <vexillum! (>-DSQLITE_DEFAULT_WAL_SYNCHRONOUS=1
+    </fons>
+    <!-- BearSSL amalgama (tls-bearssl-plan T1, R1): GENERATUM ex
+         vendor/bearssl (tools/bearssl_amalgamare.sh); C99 laxe -->
+    <fons via="vendor/bearssl_amalgama.c">
+      <vexillum! (>-O2
     </fons>
   </vendor>
   <!-- compilatio: vexilla per fontem nostrum, nomine obiecti lata

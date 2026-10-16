@@ -24,6 +24,8 @@
 # (Franus 2026-10-03), vendor oracula aliena (vendor olim lineis mutatis
 # formabatur - Franus 2026-10-15: numquam), archivum archivatum, fixa
 # fixturae, amalgama productum (forma eius gradus generationis esset).
+# vendor/ etiam continet arbores upstream octetim idem (vendor/bearssl)
+# et amalgamas GENERATAS (tls-bearssl R5, 2026-10-15) - cura aliena.
 # Causa cur via non formatur: bin/fabrica quid -iudex
 # formator_commissionis VIA. Scriptura semper TOTA.
 # Exitus semper 0: forma monet, non obstat (examen et lint obstant) -

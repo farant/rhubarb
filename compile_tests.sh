@@ -44,6 +44,7 @@ source "$(dirname "$0")/compile_tests_fontes_generata.sh"
 # extensions, no deprecated API.
 declare -a VENDOR_SOURCES=(
     "vendor/sqlite3.c"
+    "vendor/bearssl_amalgama.c"
 )
 declare -a VENDOR_FLAGS=(
     "-O2"

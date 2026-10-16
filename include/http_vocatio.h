@@ -30,6 +30,7 @@
 #include "chorda.h"
 #include "reactor.h"
 #include "http.h"
+#include "nomina.h"
 
 nomen enumeratio {
     HTTP_VOCATIO_NOMINA = 0,
@@ -47,9 +48,19 @@ nomen structura HttpVocatio HttpVocatio;
 /* semel per vocationem; numquam intra http_vocare */
 nomen vacuum (*HttpVocatioFinis)(vacuum* datum, HttpVocatio* vocatio);
 
+/* optiones NIHIL aut memset ZEPHYRUM = ordinariae */
 nomen structura {
     i32 mora_connexionis_ms;  /* 0 = tempus petitionis, aliter XXX s */
     i32 mora_otii_ms;         /* 0 = LX s sine octeto */
+    /* conatus gradati (RFC 8305 par. 5): post mora_gradus_ms sine
+     * successu conatus proximus PARALLELE incipit; 0 = CCL ms */
+    i32 mora_gradus_ms;
+    /* addressus iam resoluti (probationes: sine DNS); numerus 0 =
+     * hospes URL per nomina resolvitur */
+    constans NominaAddressus* addressus;
+                         i32  addressus_numerus;
+    /* https: ancora TLS (TlsOptiones.ancora_via); NIHIL = systema */
+         constans character* tls_ancora_via;
 } HttpVocatioOptiones;
 
 /* vocatio incipit; optiones NIHIL = ordinariae. NIHIL solum si
