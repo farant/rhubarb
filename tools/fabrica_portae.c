@@ -9,6 +9,9 @@
  *       viae omnes arboris; comparatio T4)
  *   bin/fabrica portae declaratae [-machina] -portae TSV
  *       tabula portarum declaratarum et opertura derivata
+ *   bin/fabrica portae relatio [-machina] -portae TSV [-tempora VIA]
+ *       portae per genera unitatum: opertura, sumptus, intecta,
+ *       rationes textus et infrastructurae (tools/fabrica_relatio.c)
  *
  * -portae TSV: registrum ab involucro traditum, linea una per portam
  * 'clavis<TAB>cursor[<TAB>directorium probationum]' (PORTAE et SUITAE
@@ -234,7 +237,9 @@ _usus (vacuum)
         "(-omnes | VIA...)\n"
         "      bin/fabrica portae declaratae [-machina] -portae TSV\n"
         "      bin/fabrica portae ordo [-machina] -portae TSV"
-        " [-tempora VIA] PORTA...\n");
+        " [-tempora VIA] PORTA...\n"
+        "      bin/fabrica portae relatio [-machina] -portae TSV"
+        " [-tempora VIA]\n");
 }
 
 interior vacuum
@@ -257,6 +262,7 @@ suturae_portae (
                         b32  debitae;
                         b32  tactus;
                         b32  ordo;
+                        b32  relatio;
          constans character* via_temporum  = "build/portae/tempora.tsv";
                         b32  omnes         = FALSUM;
                         Xar* viae;
@@ -272,7 +278,8 @@ suturae_portae (
     si (   argc < III || (strcmp(argv[2], "debitae") != 0
         && strcmp(argv[2], "tactus") != 0
         && strcmp(argv[2], "declaratae") != 0
-        && strcmp(argv[2], "ordo") != 0))
+        && strcmp(argv[2], "ordo") != 0
+        && strcmp(argv[2], "relatio") != 0))
     {
         _usus();
         redde II;
@@ -280,6 +287,7 @@ suturae_portae (
     debitae  = strcmp(argv[2], "debitae") == 0;
     tactus   = strcmp(argv[2], "tactus") == 0;
     ordo     = strcmp(argv[2], "ordo") == 0;
+    relatio  = strcmp(argv[2], "relatio") == 0;
     viae     = xar_creare(piscina, (i32)magnitudo(chorda));
     per (a = III; a < argc; a++)
     {
@@ -295,7 +303,8 @@ suturae_portae (
         {
             omnes = VERUM;
         }
-        alioquin si (   ordo && strcmp(argv[a], "-tempora") == 0
+        alioquin si (   (ordo || relatio)
+                     && strcmp(argv[a], "-tempora") == 0
                      && a + I < argc)
         {
             via_temporum = argv[++a];
@@ -370,6 +379,19 @@ suturae_portae (
         fprintf(stderr, "fabrica portae: derivatio fracta (enumeratio "
             "'git ls-files' aut memoria)\n");
         redde II;
+    }
+    si (relatio)
+    {
+        Xar* omnes_viae = _enumerare(&mundus, piscina);
+
+        si (omnes_viae == NIHIL)
+        {
+            fprintf(stderr, "fabrica portae: 'git ls-files' fractum\n");
+            redde II;
+        }
+        redde suturae_portae_relatio(&sutura, declaratae, operturae,
+            omnes_viae, filum_legere_totum(via_temporum, piscina),
+            machina, piscina);
     }
     si (!debitae && !tactus)
     {

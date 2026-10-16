@@ -151,10 +151,31 @@ nomen enumeratio {
     PORTAE_EXEMPLAR_PRAEFIXUM        /* via sic incipit */
 } PortaeExemplarGenus;
 
+/* genus RATIONIS (unitates-codicis U5, relatio portarum): unde exemplar
+ * venit - typatum, ne consumptores textum 'ratio' parsent */
+nomen enumeratio {
+    PORTAE_RATIO_CURSOR = ZEPHYRUM,  /* scriptum portae ipsum */
+    PORTAE_RATIO_TEGIT,              /* 'tegit' annotationis (manu) */
+    PORTAE_RATIO_EFFECTUS,           /* lectio/exsecutio/fontatio in
+                                      * scripto (crusta effectus) */
+    PORTAE_RATIO_SUITA,              /* probatio suitae (directorium) */
+    PORTAE_RATIO_NOMINAT,            /* probatio viam litteris
+                                      * nominat */
+    PORTAE_RATIO_CURRIT,             /* programma quod porta currit */
+    PORTAE_RATIO_CURRIT_ALIENUM,     /* 'currit' annotationis
+                                      * programmatis quod porta ALIA
+                                      * possidet
+                                      * (instrumentum=): infrastructura */
+    PORTAE_RATIO_INSTRUMENTUM,       /* binarium possessum */
+    PORTAE_RATIO_IGNOTA,             /* caeca: debetur, non tegitur */
+    PORTAE_RATIONUM_NUMERUS
+} PortaeRatioGenus;
+
 nomen structura {
                  chorda exemplar;
     PortaeExemplarGenus genus;
                  chorda ratio;     /* unde: "lectio (clang) in x.sh" */
+       PortaeRatioGenus ratio_genus;
 } PortaeExemplar;
 
 /* opertura portae declaratae unius. exemplaria = viae quas porta
@@ -225,6 +246,11 @@ nomen structura {
                         b32  manu;
                         Xar* rationes;
     constans PortaeOpertura* opertura;
+                        i32  directa;     /* (I << PortaeRatioGenus) per
+                                           * exemplar quod viam ipsam
+                                           * tegit; IGNOTA si caeca */
+                        i32 clausurae;   /* idem per fontem C cuius
+                                           * clausura viam continet */
 } PortaeTactus;
 
 /* Tactus viarum mutatarum (Xar de PortaeTactus, ordine operturarum

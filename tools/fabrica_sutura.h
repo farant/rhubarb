@@ -10,6 +10,7 @@
 /* <aedilis corpus="tools/fabrica_portae.c"/> */
 /* <aedilis corpus="tools/fabrica_unitates.c"/> */
 /* <aedilis corpus="tools/fabrica_interrogationes.c"/> */
+/* <aedilis corpus="tools/fabrica_relatio.c"/> */
 
 #ifndef FABRICA_SUTURA_H
 #define FABRICA_SUTURA_H
@@ -27,6 +28,7 @@
 #include "mensura.h"
 #include "diurna.h"
 #include "unitates.h"
+#include "portae.h"
 
 /* sanare: terminus unus per actum (briar ~3 min, obiecta radicis
  * frigida ~150 s); termini per actionem non in 1b */
@@ -189,6 +191,19 @@ suturae_quid (
           s32   argc,
     character** argv,
       Piscina*  piscina);
+
+/* portae relatio (tools/fabrica_relatio.c, unitates-codicis U5 a):
+ * portae per genera unitatum - relatio, exitus 0; 2 tactus aut unitates
+ * deficiunt */
+s32
+suturae_portae_relatio (
+    constans PortaeSutura* sutura,
+             constans Xar* declaratae,
+             constans Xar* operturae,
+             constans Xar* viae,
+                   chorda  tempora,
+                      b32  machina,
+                  Piscina* piscina);
 
 /* quid -interrogationes -quaere/-symbolum (tools/
  * fabrica_interrogationes.c): textus XOR symbolum; exitus 0 inventa,

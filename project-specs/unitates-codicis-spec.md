@@ -824,3 +824,75 @@ expectation), and whether legati should answer the same query.
   lookup, apparatus with inheritance) and the genus lists of six code
   models; METAMODULUS contract rules and how a NEW model is admitted
   were not - read `natura/METAMODULUS.md` before adding genera (U3).
+
+## VII½. U5 exploration: gates x unit kinds (2026-10-16, measured)
+
+Fran: units should carry POLICY by kind (e.g. an app's gates deferred
+to the merge); dig into the current behaviour first. Data:
+`bin/fabrica portae tactus -omnes` (14,842 file->gate debts, 12 s),
+`portae declaratae` (tier, kind, cursor), `quid -machina` on all
+10,694 tracked files, gate seconds from the 10-16 fusio run.
+
+1. C debts are ALREADY derived from aedilis include closures (finer
+   than units): xar.h owes 52 gates because ~50 gates compile something
+   that includes it. Units must not replace this.
+2. 5,711 debts rest ONLY on hand `tegit` globs - mostly a unit's
+   directories listed by hand (`crusta/fontes/* crusta/grammatica/*
+   ...`), or language globs (`*.sh` for vexilla).
+3. Coverage of hand-written domestic code (fons caput scriptum
+   probatio, not archived): libraries 907/907; subsystems 974/1072;
+   apps 78/89. 106 files in NO gate: every `SUB/instrumenta/*.c` front
+   end (crusta oratio md html gesta briar: arbor, computus, census...),
+   46 in tools/ (some installed: stml.c norma.c praeco.c
+   canon_coquere.c), app entry glue (apps/scriba/scriba.c,
+   apps/terminale/*.c, apps/vicus/vicus_terminalis.c,
+   apps/quaestio/quaestio.c, apps/mensor/mensor_ui.c,
+   saltuarius/instrumenta/principalia/saltuarius.c). Nothing compiles
+   them after a library API change.
+4. Cost per one-file change (median): library 3 gates (commit 31 s,
+   merge 131 s); subsystem 2 (10 s / 33 s); app 1 (3 s / 0). Apps are
+   ALREADY cheap leaves - deferring app gates buys nothing; the app
+   problem is coverage (logic lives in libraries, which root tests cover:
+   probatio_pictor_* x22, probatio_vicus_* x22; the entry glue is
+   uncovered).
+5. Libraries by header-change debt: 92 owe 0-3 gates, 155 owe 4-10, 27
+   owe 11-30, 23 FOUNDATION owe all 47 (xar chorda piscina stml latina
+   utf8 tabula_dispersa internamentum ...: ~305 s commit + ~1,530 s
+   merge).
+6. RUNNER-ONLY debts: a gate owed only because its runner (bin/fabrica,
+   bin/compilator, bin/mensor) links the changed file. Foundation: 5 of
+   52 (58 s). A house-tool-internal library (unitates.h, linked only by
+   bin/fabrica): 12 of 16 gates, 528 s - css html md materia toml
+   saltuarius silva ... are owed because they RUN through bin/fabrica,
+   not because they test unitates. A broken runner fails loudly (exit 2,
+   nothing ran), so these could be paid by the runner's own gate.
+7. Tiers (`gradus="fusio"`) are declared per gate for COST (silva,
+   oratio, pythonica, aedilis, credo, fabrica-fumus, ...), never derived
+   from what the gate covers.
+8. `nominat` (a test names a path in a string): 50 debts with no other
+   reason, e.g. probatio_unitates.c naming vendor/unitas.stml in its
+   in-memory world - the false-dependency question …WPMFNX.
+
+**U5 (a) built (2026-10-16): `bin/fabrica portae relatio [-machina]
+-portae TSV [-tempora VIA]`** (tools/fabrica_relatio.c) - the join above
+in C, rerunnable as before/after for every policy change (~23 s on the
+live tree): I kinds x coverage x median cost (commit/merge tier), II
+library header debts in bands + FOUNDATIONS (all automatic gates but 5),
+III uncovered hand-written domestic code per unit, IV per gate the debts
+standing ONLY on text (tegit/nominat) or ONLY on infrastructure.
+To say "only on text" without parsing reason strings, lib/portae.c now
+TYPES every reason: `PortaeRatioGenus` on each exemplar (CURSOR TEGIT
+EFFECTUS SUITA NOMINAT CURRIT CURRIT_ALIENUM INSTRUMENTUM IGNOTA) and
+two masks on each touch (`directa`, `clausurae`). CURRIT_ALIENUM = a
+hand `currit=` naming a program another gate OWNS (instrumentum=): the
+converted suites' `currit="tools/fabrica.c"` (fabrica-fumus owns
+bin/fabrica). Finding: non-annotation calls of another gate's
+instrument were already dropped ("possessor hereditat"); the
+infrastructure debts are exactly these deliberate annotations, paid
+through the runner's whole include closure - the policy question for
+(c) is whether they should be owed for the runner's OWN unit only.
+Blind gates (IGNOTA) are owed but never count as coverage (the mini
+world caught this: without crusta's command table every file "was
+covered"). Gate portae-declaratae III pins exact answers in a
+throwaway git tree; probatio_portae pins every kind and both masks
+(plant: no ALIENUM -> red at the credo assertion).
