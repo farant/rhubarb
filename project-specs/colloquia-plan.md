@@ -251,6 +251,17 @@ phase that needs it. Header text shown to Fran before coding.*
   root tag `[colloquium <8>]`, last -machina column. CLAUDE_CODE_SESSION_ID
   is undocumented - fallback if it vanishes: praeco exports our own
   variable at SessionStart via CLAUDE_ENV_FILE. Plants 4/4.
+- T10 decisions (Fran 2026-10-16): mensor installed to ~/.bin (like
+  praeco) for vicus to call; runs shown INSIDE $sessions under each
+  session; an "Other runs" group for runs with no session. vicus polls
+  `mensor quaestio currentes -machina` asynchronously (single-threaded
+  UI; the query costs 0.3-0.5 s).
+- T10a 2026-10-16: the CURRENS line is a lib contract
+  (cursus_currentem_ad_lineam / _ex_linea, 19 TAB fields, CursusVita
+  moved from mensor into the lib); CursusCurrens.fracta = failed
+  children's titles (space-joined, IUDICIUM excluded); mensor prints
+  -machina through the lib and lists failures from fracta. Plants 3/3
+  (the separator plant needed a second failed member in the fixture).
 - IN MAIN 2026-10-16 (ff 1dc057b6, fusio_probare green + frigida,
   installata 23/23). The 7 hooks now call `~/.bin/praeco hamus`
   (backup ~/.claude/settings.json.bak-praeco-bin-2026-10-16); the ad

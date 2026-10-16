@@ -255,7 +255,7 @@ credo $? "XVI  currentes: custos vivus ostenditur, mortuus et pid iterum datus c
 # XVII colloquium (colloquia T9): cursus SUMMUS sub sessione Claude
 # mensuram 'colloquium:<id>' fert; filius (MENSOR_PARENS) et cursus sine
 # variabili nullam; currentes colloquium=<id> arborem eius solam
-# ostendit, columna ultima -machina id fert
+# ostendit, columna XVIII -machina id fert (XIX: fracta, T10a)
 CLAUDE_CODE_SESSION_ID=sess-xvii "$RADIX/bin/mensor" cursus incipere -titulus fumus/colloquium > "$T/amb17"
 id17=$(sed -n 's/^MENSOR_PARENS=//p' "$T/amb17")
 env $(tr '\n' ' ' < "$T/amb17") CLAUDE_CODE_SESSION_ID=sess-xvii "$RADIX/bin/mensor" cursus incipere \
@@ -268,8 +268,8 @@ cf17=$(awk -F'\t' -v p="$idf17" '$3 == p && $4 ~ /^colloquium:/' "$MENSOR_DIARIU
 cs17=$(awk -F'\t' -v p="$ids17" '$3 == p && $4 ~ /^colloquium:/' "$MENSOR_DIARIUM" | wc -l | tr -d ' ')
 "$RADIX/bin/mensor" quaestio currentes colloquium=sess-xvii -machina > "$T/c17m" 2>&1
 "$RADIX/bin/mensor" quaestio currentes colloquium=sess-xvii > "$T/c17" 2>&1
-r17=$(awk -F'\t' '$1 == "CURRENS" && $2 == 0 { print $5 "|" $NF }' "$T/c17m" | tr '\n' ' ')
-f17=$(awk -F'\t' '$1 == "CURRENS" && $2 == 1 { print $5 "|" $NF }' "$T/c17m" | tr '\n' ' ')
+r17=$(awk -F'\t' '$1 == "CURRENS" && $2 == 0 { print $5 "|" $18 }' "$T/c17m" | tr '\n' ' ')
+f17=$(awk -F'\t' '$1 == "CURRENS" && $2 == 1 { print $5 "|" $18 }' "$T/c17m" | tr '\n' ' ')
 [ "$c17" = "1" ] && [ "$cf17" = "0" ] && [ "$cs17" = "0" ] && [ "$r17" = "fumus/colloquium|sess-xvii " ] \
   && [ "$f17" = "fumus/colloquium_filius|sess-xvii " ] && grep -q '^fumus/colloquium .*\[colloquium sess-xvi\]' "$T/c17" \
   && ! grep -q 'fumus/sine_colloquio' "$T/c17"

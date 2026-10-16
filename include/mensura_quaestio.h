@@ -238,6 +238,8 @@ nomen structura {
                 s64 maxima_ms;
              chorda colloquium;    /* id sessionis Claude radicis;
                                     * vacua = ignota (homo, ante T9) */
+             chorda fracta;        /* tituli filiorum fractorum (non
+                                    * IUDICIUM), spatiis iuncti */
 } CursusCurrens;
 
 Xar*
@@ -246,5 +248,53 @@ cursus_quaerere_currentes (
                constans Xar* mensurae,   /* Xar de Mensura */
      constans CursusFiltrum* filtrum,   /* arbor, ramus */
                     Piscina* piscina);
+
+/* VITA CUSTODIS (colloquia T10a; olim in tools/mensor.c): iudicium
+ * vocatoris (processus_vivus) - hic solum nomen et forma */
+nomen enumeratio {
+    CURSUS_VITA_VIVA = ZEPHYRUM,
+    CURSUS_VITA_MORTUA,
+    CURSUS_VITA_IGNOTA
+} CursusVita;
+
+/* LINEA CURRENTIS (colloquia T10a): contractus inter 'mensor quaestio
+ * currentes -machina' et lectores (vicus T10b) - forma in bibliotheca
+ * una. Campi TAB: CURRENS profunditas id parens titulus arbor ramus
+ * initium custos vita perfecti fracti debiti iudicata ambitus
+ * minima_ms maxima_ms colloquium fracta. */
+nomen structura {
+           i32 profunditas;
+        chorda id;
+        chorda parens;
+        chorda titulus;
+        chorda arbor;
+        chorda ramus;
+           s64 initium;
+           s32 custos;
+    CursusVita vita;
+           i32 perfecti;
+           i32 fracti;
+           i32 debiti;
+           i32 iudicata;
+           i32 ambitus;
+           s64 minima_ms;
+           s64 maxima_ms;
+        chorda colloquium;
+        chorda fracta;
+} CursusCurrensLinea;
+
+/* linea cum '\n'; vacua si campus impurus (TAB, linea nova) */
+chorda
+cursus_currentem_ad_lineam (
+    constans CursusCurrens* r,
+                CursusVita  vita,
+                   Piscina* piscina);
+
+/* FALSUM si non linea CURRENS aut deformis; chordae in lineam
+ * spectant (non copiantur) */
+b32
+cursus_currentem_ex_linea (
+                 chorda  linea,
+     CursusCurrensLinea* exitus);
 
 #endif /* MENSURA_QUAESTIO_H */

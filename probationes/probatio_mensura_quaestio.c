@@ -770,6 +770,9 @@ _sectio_currentes (
         I, CURSUS_FRACTUS, "FRACTUM - b", c->piscina);
     (vacuum)_cursus(omnes, "j", "P2", "bearssl_amalgama", M + VI, I,
         CURSUS_TRANSIIT, "IUDICIUM", c->piscina);
+    /* m3 secundum fractum (T10a): fracta spatio iuncta */
+    (vacuum)_cursus(omnes, "m3", "P2", "probationes_radicis/c", M + VII,
+        I, CURSUS_FRACTUS, "FRACTUM - c", c->piscina);
     /* Q radix aperta sine custode; X orbus (parens F finitus); S
      * finitus; A apertus arboris alienae */
     (vacuum)_cursus(omnes, "Q", "", "porta:x", MM, ZEPHYRUM,
@@ -832,8 +835,11 @@ _sectio_currentes (
     CREDO_CHORDA_AEQUALIS_LITERIS(r->cursus->initium.id, "P2");
     CREDO_AEQUALIS_I32(r->profunditas, I);
     CREDO_AEQUALIS_S32(r->custos, MMMDCCCXCVIII);
-    CREDO_AEQUALIS_I32(r->perfecti, II);
-    CREDO_AEQUALIS_I32(r->fracti, I);
+    CREDO_AEQUALIS_I32(r->perfecti, III);
+    CREDO_AEQUALIS_I32(r->fracti, II);
+    /* fracta (T10a): m2 et m3 nominata spatio iuncta, j (IUDICIUM) non */
+    CREDO_CHORDA_AEQUALIS_LITERIS(r->fracta,
+        "probationes_radicis/b probationes_radicis/c");
     CREDO_AEQUALIS_I32(r->debiti, ZEPHYRUM);
     CREDO_AEQUALIS_I32(r->ambitus, CCCLI);
     CREDO_AEQUALIS_I32(r->iudicata, CXX);
@@ -854,6 +860,102 @@ _sectio_currentes (
     CREDO_AEQUALIS_S32(_currens(currentes, II)->custos, ZEPHYRUM);
     CREDO_VERUM(cursus_quaerere_currentes(NIHIL, mensurae, &f,
         c->piscina) == NIHIL);
+}
+
+/* XIV. linea currentis (colloquia T10a): contractus 'currentes
+ * -machina' - forma exacta, circuitus ad_lineam -> ex_linea, campi
+ * vacui, campus impurus recusatus, lineae deformes */
+interior vacuum
+_sectio_linea (
+    CredoContextus* c)
+{
+                   Xar* omnes = _omnes(c->piscina);
+                Cursus* k;
+         CursusCurrens  r;
+    CursusCurrensLinea  l;
+                chorda  linea;
+
+    k = _cursus(omnes, "id-1", "par-0", "porta:radix", MMM, ZEPHYRUM,
+        CURSUS_INTERRUPTUS, "", c->piscina);
+    memset(&r, ZEPHYRUM, magnitudo(r));
+    r.cursus       = k;
+    r.profunditas  = I;
+    r.custos       = MMMDCCCXCVIII;
+    r.perfecti     = II;
+    r.fracti       = I;
+    r.debiti       = V;
+    r.iudicata     = CXX;
+    r.ambitus      = CCCLI;
+    r.minima_ms    = (s64)XX;
+    r.maxima_ms    = (s64)LX;
+    r.colloquium   = chorda_ex_literis("abc-123", c->piscina);
+    r.fracta       = chorda_ex_literis(
+        "probationes_radicis/a probationes_radicis/b", c->piscina);
+    linea = cursus_currentem_ad_lineam(&r, CURSUS_VITA_VIVA,
+        c->piscina);
+    CREDO_CHORDA_AEQUALIS_LITERIS(linea, "CURRENS\t1\tid-1\tpar-0\t"
+        "porta:radix\t/arbor\tmain\t3000\t3898\tvivus\t2\t1\t5\t120\t"
+        "351\t20\t60\tabc-123\tprobationes_radicis/a "
+        "probationes_radicis/b\n");
+    CREDO_NECESSE(cursus_currentem_ex_linea(linea, &l));
+    CREDO_AEQUALIS_I32(l.profunditas, I);
+    CREDO_CHORDA_AEQUALIS_LITERIS(l.id, "id-1");
+    CREDO_CHORDA_AEQUALIS_LITERIS(l.parens, "par-0");
+    CREDO_CHORDA_AEQUALIS_LITERIS(l.titulus, "porta:radix");
+    CREDO_CHORDA_AEQUALIS_LITERIS(l.arbor, "/arbor");
+    CREDO_CHORDA_AEQUALIS_LITERIS(l.ramus, "main");
+    CREDO_AEQUALIS_S64(l.initium, (s64)MMM);
+    CREDO_AEQUALIS_S32(l.custos, MMMDCCCXCVIII);
+    CREDO_AEQUALIS_I32((i32)l.vita, (i32)CURSUS_VITA_VIVA);
+    CREDO_AEQUALIS_I32(l.perfecti, II);
+    CREDO_AEQUALIS_I32(l.fracti, I);
+    CREDO_AEQUALIS_I32(l.debiti, V);
+    CREDO_AEQUALIS_I32(l.iudicata, CXX);
+    CREDO_AEQUALIS_I32(l.ambitus, CCCLI);
+    CREDO_AEQUALIS_S64(l.minima_ms, (s64)XX);
+    CREDO_AEQUALIS_S64(l.maxima_ms, (s64)LX);
+    CREDO_CHORDA_AEQUALIS_LITERIS(l.colloquium, "abc-123");
+    CREDO_CHORDA_AEQUALIS_LITERIS(l.fracta,
+        "probationes_radicis/a probationes_radicis/b");
+
+    /* campi vacui (homo, nihil fractum); vitae ceterae */
+    r.colloquium  = chorda_ex_literis("", c->piscina);
+    r.fracta      = chorda_ex_literis("", c->piscina);
+    linea = cursus_currentem_ad_lineam(&r, CURSUS_VITA_MORTUA,
+        c->piscina);
+    CREDO_NECESSE(cursus_currentem_ex_linea(linea, &l));
+    CREDO_AEQUALIS_I32((i32)l.vita, (i32)CURSUS_VITA_MORTUA);
+    CREDO_AEQUALIS_I32(l.colloquium.mensura, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(l.fracta.mensura, ZEPHYRUM);
+    linea = cursus_currentem_ad_lineam(&r, CURSUS_VITA_IGNOTA,
+        c->piscina);
+    CREDO_NECESSE(cursus_currentem_ex_linea(linea, &l));
+    CREDO_AEQUALIS_I32((i32)l.vita, (i32)CURSUS_VITA_IGNOTA);
+    /* linea sine '\n' finali quoque legitur */
+    CREDO_VERUM(cursus_currentem_ex_linea(chorda_ex_literis(
+        "CURRENS\t0\ta\t\tcommissio\t/r\tmain\t1\t0\tignotus\t0\t0\t0"
+        "\t0\t0\t0\t0\t\t", c->piscina), &l));
+
+    /* campus impurus: linea vacua, numquam forma fracta */
+    k->initium.titulus = chorda_ex_literis("a\tb", c->piscina);
+    CREDO_AEQUALIS_I32(cursus_currentem_ad_lineam(&r, CURSUS_VITA_VIVA,
+        c->piscina).mensura, ZEPHYRUM);
+
+    /* deformes */
+    CREDO_FALSUM(cursus_currentem_ex_linea(chorda_ex_literis(
+        "CURRENS\t1\tid", c->piscina), &l));
+    CREDO_FALSUM(cursus_currentem_ex_linea(chorda_ex_literis(
+        "HISTORIA\t0\ta\t\tcommissio\t/r\tmain\t1\t0\tignotus\t0\t0"
+        "\t0\t0\t0\t0\t0\t\t", c->piscina), &l));
+    CREDO_FALSUM(cursus_currentem_ex_linea(chorda_ex_literis(
+        "CURRENS\tx\ta\t\tcommissio\t/r\tmain\t1\t0\tignotus\t0\t0"
+        "\t0\t0\t0\t0\t0\t\t", c->piscina), &l));
+    CREDO_FALSUM(cursus_currentem_ex_linea(chorda_ex_literis(
+        "CURRENS\t0\ta\t\tcommissio\t/r\tmain\t1\t0\tquidam\t0\t0"
+        "\t0\t0\t0\t0\t0\t\t", c->piscina), &l));
+    CREDO_FALSUM(cursus_currentem_ex_linea(chorda_ex_literis(
+        "CURRENS\t0\ta\t\tcommissio\t/r\tmain\t1\t0\tignotus\t0\t0"
+        "\t0\t0\t0\t0\t0\t\t\tsuperfluum", c->piscina), &l));
 }
 
 hic_manens constans CredoSectio SECTIONES[] = {
@@ -882,6 +984,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL,
       NIHIL, NIHIL },
     { "XIII currentes", _sectio_currentes, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "XIV linea currentis", _sectio_linea, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

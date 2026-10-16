@@ -7,7 +7,9 @@
 #include "latina.h"
 #include "mensura_quaestio.h"
 #include "tabula_dispersa.h"
+#include "chorda_aedificator.h"
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -1384,6 +1386,13 @@ _filios_numerare (
         si (f->status == CURSUS_FRACTUS)
         {
             r->fracti++;
+            /* fracta nominata (T10a): tituli spatiis iuncti */
+            r->fracta = (r->fracta.mensura == ZEPHYRUM)
+                ? f->initium.titulus
+                : chorda_concatenare(chorda_concatenare(r->fracta,
+                    chorda_ex_literis(" ", index->piscina),
+                    index->piscina), f->initium.titulus,
+                    index->piscina);
         }
     }
 }
@@ -1586,4 +1595,227 @@ cursus_quaerere_currentes (
             chorda_ex_literis("", piscina), ordines);
     }
     redde ordines;
+}
+
+/* LINEA CURRENTIS (colloquia T10a) */
+
+#define CURRENS_CAMPI XIX
+
+hic_manens constans character* constans VITAE_NOMINA[] = {
+    "vivus", "mortuus", "ignotus"
+};
+
+/* campus sine TAB et linea nova */
+interior b32
+_campus_purus (
+    chorda c)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < c.mensura; k++)
+    {
+        si (   c.datum[k] == '\t' || c.datum[k] == '\n'
+            || c.datum[k] == '\r')
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+interior vacuum
+_campum_addere (
+    ChordaAedificator* a,
+               chorda  c)
+{
+    chorda_aedificator_appendere_character(a, '\t');
+    chorda_aedificator_appendere_chorda(a, c);
+}
+
+interior vacuum
+_numerum_addere (
+    ChordaAedificator* a,
+                  s64  n)
+{
+    character numeri[XXXII];
+
+    sprintf(numeri, "%ld", (longus)n);
+    chorda_aedificator_appendere_character(a, '\t');
+    chorda_aedificator_appendere_literis(a, numeri);
+}
+
+chorda
+cursus_currentem_ad_lineam (
+    constans CursusCurrens* r,
+                CursusVita  vita,
+                   Piscina* piscina)
+{
+    constans CursusInitium* i;
+         ChordaAedificator* a;
+                    chorda  vacua;
+
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
+    si (   r == NIHIL || r->cursus == NIHIL || piscina == NIHIL
+        || (i32)vita < ZEPHYRUM || (i32)vita > (i32)CURSUS_VITA_IGNOTA)
+    {
+        redde vacua;
+    }
+    i = &r->cursus->initium;
+    si (   !_campus_purus(i->id) || !_campus_purus(i->parens)
+        || !_campus_purus(i->titulus) || !_campus_purus(i->arbor)
+        || !_campus_purus(i->ramus) || !_campus_purus(r->colloquium)
+        || !_campus_purus(r->fracta))
+    {
+        redde vacua;
+    }
+    a = chorda_aedificator_creare(piscina, (memoriae_index)CCLVI);
+    si (a == NIHIL)
+    {
+        redde vacua;
+    }
+    chorda_aedificator_appendere_literis(a, "CURRENS");
+    _numerum_addere(a, (s64)r->profunditas);
+    _campum_addere(a, i->id);
+    _campum_addere(a, i->parens);
+    _campum_addere(a, i->titulus);
+    _campum_addere(a, i->arbor);
+    _campum_addere(a, i->ramus);
+    _numerum_addere(a, i->initium);
+    _numerum_addere(a, (s64)r->custos);
+    chorda_aedificator_appendere_character(a, '\t');
+    chorda_aedificator_appendere_literis(a, VITAE_NOMINA[vita]);
+    _numerum_addere(a, (s64)r->perfecti);
+    _numerum_addere(a, (s64)r->fracti);
+    _numerum_addere(a, (s64)r->debiti);
+    _numerum_addere(a, (s64)r->iudicata);
+    _numerum_addere(a, (s64)r->ambitus);
+    _numerum_addere(a, r->minima_ms);
+    _numerum_addere(a, r->maxima_ms);
+    _campum_addere(a, r->colloquium);
+    _campum_addere(a, r->fracta);
+    chorda_aedificator_appendere_character(a, '\n');
+    redde chorda_aedificator_finire(a);
+}
+
+/* numerus integer (signum licet) campi totius; FALSUM si non */
+interior b32
+_numerum_campi (
+    chorda  campus,
+       s64* valor)
+{
+    i32 k          = ZEPHYRUM;
+    b32 negativus  = FALSUM;
+
+    si (campus.mensura > ZEPHYRUM && campus.datum[ZEPHYRUM] == '-')
+    {
+        negativus  = VERUM;
+        k          = I;
+    }
+    si (k >= campus.mensura)
+    {
+        redde FALSUM;
+    }
+    *valor = (s64)ZEPHYRUM;
+    per (; k < campus.mensura; k++)
+    {
+        si (campus.datum[k] < '0' || campus.datum[k] > '9')
+        {
+            redde FALSUM;
+        }
+        *valor = *valor * (s64)X + (s64)(campus.datum[k] - '0');
+    }
+    si (negativus)
+    {
+        *valor = -*valor;
+    }
+    redde VERUM;
+}
+
+b32
+cursus_currentem_ex_linea (
+                 chorda  linea,
+     CursusCurrensLinea* exitus)
+{
+    chorda campi[CURRENS_CAMPI];
+       s64 n[XIX];
+       i32 numerus = ZEPHYRUM;
+       i32 initium = ZEPHYRUM;
+       i32 k;
+
+    si (exitus == NIHIL || linea.datum == NIHIL)
+    {
+        redde FALSUM;
+    }
+    dum (   linea.mensura > ZEPHYRUM
+         && (   linea.datum[linea.mensura - I] == '\n'
+             || linea.datum[linea.mensura - I] == '\r'))
+    {
+        linea.mensura--;
+    }
+    per (k = ZEPHYRUM; k <= linea.mensura; k++)
+    {
+        si (k == linea.mensura || linea.datum[k] == '\t')
+        {
+            si (numerus >= (i32)CURRENS_CAMPI)
+            {
+                redde FALSUM;   /* campi nimii */
+            }
+            campi[numerus].datum    = linea.datum + initium;
+            campi[numerus].mensura  = k - initium;
+            numerus++;
+            initium = k + I;
+        }
+    }
+    si (   numerus != (i32)CURRENS_CAMPI
+        || !chorda_aequalis_literis(campi[ZEPHYRUM], "CURRENS"))
+    {
+        redde FALSUM;
+    }
+    /* numeri: I, VII, VIII, X..XVI */
+    si (   !_numerum_campi(campi[I], &n[I])
+        || !_numerum_campi(campi[VII], &n[VII])
+        || !_numerum_campi(campi[VIII], &n[VIII]))
+    {
+        redde FALSUM;
+    }
+    per (k = X; k <= XVI; k++)
+    {
+        si (!_numerum_campi(campi[k], &n[k]))
+        {
+            redde FALSUM;
+        }
+    }
+    memset(exitus, ZEPHYRUM, magnitudo(CursusCurrensLinea));
+    exitus->vita = CURSUS_VITA_IGNOTA;
+    per (k = ZEPHYRUM; k <= (i32)CURSUS_VITA_IGNOTA; k++)
+    {
+        si (chorda_aequalis_literis(campi[IX], VITAE_NOMINA[k]))
+        {
+            frange;
+        }
+    }
+    si (k > (i32)CURSUS_VITA_IGNOTA)
+    {
+        redde FALSUM;
+    }
+    exitus->vita         = (CursusVita)k;
+    exitus->profunditas  = (i32)n[I];
+    exitus->id           = campi[II];
+    exitus->parens       = campi[III];
+    exitus->titulus      = campi[IV];
+    exitus->arbor        = campi[V];
+    exitus->ramus        = campi[VI];
+    exitus->initium      = n[VII];
+    exitus->custos       = (s32)n[VIII];
+    exitus->perfecti     = (i32)n[X];
+    exitus->fracti       = (i32)n[XI];
+    exitus->debiti       = (i32)n[XII];
+    exitus->iudicata     = (i32)n[XIII];
+    exitus->ambitus      = (i32)n[XIV];
+    exitus->minima_ms    = n[XV];
+    exitus->maxima_ms    = n[XVI];
+    exitus->colloquium   = campi[XVII];
+    exitus->fracta       = campi[XVIII];
+    redde VERUM;
 }
