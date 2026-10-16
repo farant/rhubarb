@@ -321,6 +321,18 @@ vicus_focum_ponere (
     Vicus* v,
       i32  latus);
 
+/* T6 (colloquia-plan): argumentum lateris servatum mutare SINE
+ * remontatione - montatio currit intacta (facies.argumentum_ponere
+ * non vocatur); dispositio scribitur, restitutio proxima eo montat.
+ * Identitas (genus + argumentum) sequitur: vicus_acervo_aperire cum
+ * eodem argumento hoc latus invenit. argumentum NIHIL aut "" =
+ * nullum. FALSUM si id ignotum. */
+b32
+vicus_latus_argumentum_ponere (
+                  Vicus* v,
+     constans character* id,
+     constans character* argumentum);
+
 /* T4c (colloquia-plan): latus per id ostendere: tabula eius activa,
  * in frontem acervi (si ibi), focus in eo; dispositio servatur.
  * FALSUM si id ignotum aut latus non montatum. */

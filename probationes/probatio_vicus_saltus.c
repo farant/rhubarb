@@ -31,6 +31,7 @@
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
+#include <sys/stat.h>
 
 nomen structura {
         Multiplexor  m;
@@ -41,11 +42,17 @@ nomen structura {
     VicusApplicatio  app;
           character  liber[CCLVI];
                 i32  admonitiones;   /* ids sessionum distincta */
+    /* T6: servitor "ordinarius" sub TMUX_TMPDIR proprio (numquam
+     * usoris); vicus alter in eodem volumine (restitutio) */
+          character tmpdir[CCLVI];
+          character communis[CCLVI];
+    VicusApplicatio altera;
 } Mundus;
 
 interior b32
-imperium_currere (
+imperium_in (
                  Mundus* s,
+     constans character* socket,
      constans character* a0,
      constans character* a1,
      constans character* a2,
@@ -59,7 +66,7 @@ imperium_currere (
 
     v[ZEPHYRUM]  = s->binarium;
     v[I]         = "-S";
-    v[II]        = s->socket;
+    v[II]        = socket;
     v[III]       = a0;
     v[IV]        = a1;
     v[V]         = a2;
@@ -69,6 +76,20 @@ imperium_currere (
     v[IX]        = NIHIL;
     r            = processus_exsequi(v, V * M, p);
     redde r.successus && r.codex_exitus == ZEPHYRUM;
+}
+
+interior b32
+imperium_currere (
+                 Mundus* s,
+     constans character* a0,
+     constans character* a1,
+     constans character* a2,
+     constans character* a3,
+     constans character* a4,
+     constans character* a5,
+                Piscina* p)
+{
+    redde imperium_in(s, s->socket, a0, a1, a2, a3, a4, a5, p);
 }
 
 interior vacuum
@@ -115,6 +136,12 @@ mundum_parare (
     sprintf(s->socket, "%s/build/pmx", radix ? radix : ".");
     (vacuum)filum_directorium_creare_si_necesse(s->socket);
     sprintf(s->socket + strlen(s->socket), "/v.%d", (integer)getpid());
+    /* T6: TMUX_TMPDIR proprium - "tmux attach" sine -S servitorem
+     * ordinarium hic quaerit, numquam usoris */
+    sprintf(s->tmpdir, "%s/build/pmx/t.%d", radix ? radix : ".",
+        (integer)getpid());
+    (vacuum)mkdir(s->tmpdir, (mode_t)0700);
+    (vacuum)setenv("TMUX_TMPDIR", s->tmpdir, I);
     s->m.binarium  = s->binarium;
     s->m.socket    = s->socket;
     area           = credo_area(c);
@@ -150,6 +177,15 @@ mundum_purgare (
         (vacuum)imperium_currere(s, "kill-server", NIHIL, NIHIL, NIHIL,
             NIHIL, NIHIL, c->piscina);
         (vacuum)filum_delere(s->socket);
+        si (s->communis[ZEPHYRUM])
+        {
+            (vacuum)imperium_in(s, s->communis, "kill-server", NIHIL,
+                NIHIL, NIHIL, NIHIL, NIHIL, c->piscina);
+            (vacuum)filum_delere(s->communis);
+            *strrchr(s->communis, '/') = '\0';
+            (vacuum)rmdir(s->communis);
+        }
+        (vacuum)rmdir(s->tmpdir);
     }
     si (s && s->volumen)
     {
@@ -233,12 +269,15 @@ admonere_et_salire (
     redde VERUM;
 }
 
-/* pulsare donec cliens tty dati sessioni adhaeret (V s) */
+/* pulsare (vicus datus) donec cliens tty dati sessioni adhaeret in
+ * servitore dato (V s) */
 interior b32
-adhaesionem_exspectare (
-       Mundus* s,
-       chorda  tty,
-      Piscina* p)
+adhaesionem_in (
+                   Vicus* v,
+    constans Multiplexor* mx,
+      constans character* sessio,
+                  chorda  tty,
+                 Piscina* p)
 {
                            Xar* l;
     constans MultiplexorCliens* k;
@@ -248,19 +287,79 @@ adhaesionem_exspectare (
 
     per (gradus = ZEPHYRUM; gradus < CCL; gradus++)
     {
-        (vacuum)vicus_pulsare(s->app.vicus);
-        l = multiplexor_clientes(&s->m, p);
+        (vacuum)vicus_pulsare(v);
+        l = multiplexor_clientes(mx, p);
         per (i = ZEPHYRUM; l && i < xar_numerus(l); i++)
         {
             k = (constans MultiplexorCliens*)xar_obtinere(l, i);
             si (   chorda_aequalis(k->tty, tty)
-                && chorda_aequalis_literis(k->sessio, "alpha"))
+                && chorda_aequalis_literis(k->sessio, sessio))
             {
                 redde VERUM;
             }
         }
         pausa.tv_sec   = ZEPHYRUM;
         pausa.tv_nsec  = XX * M * M;    /* XX ms */
+        (vacuum)nanosleep(&pausa, NIHIL);
+    }
+    redde FALSUM;
+}
+
+/* cliens tty dati in servitore dato nunc adhaeret? */
+interior b32
+adhaeret (
+    constans Multiplexor* mx,
+                  chorda  tty,
+                 Piscina* p)
+{
+                           Xar* l;
+                           i32  i;
+
+    l = multiplexor_clientes(mx, p);
+    per (i = ZEPHYRUM; l && i < xar_numerus(l); i++)
+    {
+        constans MultiplexorCliens* k;
+
+        k = (constans MultiplexorCliens*)xar_obtinere(l, i);
+        si (chorda_aequalis(k->tty, tty))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+interior b32
+adhaesionem_exspectare (
+       Mundus* s,
+       chorda  tty,
+      Piscina* p)
+{
+    redde adhaesionem_in(s->app.vicus, &s->m, "alpha", tty, p);
+}
+
+/* textus intra D ms? */
+interior b32
+textum_brevi (
+                   Vicus* v,
+     TerminaleApplicatio* t,
+      constans character* textus,
+                 Piscina* p)
+{
+                i32 gradus;
+    struct timespec  pausa;
+
+    per (gradus = ZEPHYRUM; gradus < XXV; gradus++)
+    {
+        (vacuum)vicus_pulsare(v);
+        si (chorda_continet(aemulator_textum_effundere(
+                aemulator_hospes_aemulator(t->hospes), p),
+                chorda_ex_literis(textus, p)))
+        {
+            redde VERUM;
+        }
+        pausa.tv_sec   = ZEPHYRUM;
+        pausa.tv_nsec  = XX * M * M;
         (vacuum)nanosleep(&pausa, NIHIL);
     }
     redde FALSUM;
@@ -450,11 +549,161 @@ _probare_sessiones (
     CREDO_VERUM(secunda->fenestra_activa);
 }
 
+/* T6: terminale planum, "tmux attach" manu (servitor communis sub
+ * TMUX_TMPDIR) -> argumentum notatur; vicus alter in eodem volumine
+ * iterum adhaeret; post detachmentum concha manet */
+interior vacuum
+_probare_restitutionem (
+    CredoContextus* c)
+{
+                  Mundus* s;
+                   Vicus* v;
+              VicusLatus* l;
+              VicusLatus* prima;
+                  chorda  tty_prima;
+                     b32  visum;
+     TerminaleApplicatio* t;
+             Multiplexor  communis;
+                  chorda  tty;
+               character  imperium[CCCLXXXIV];
+               character  exspectatum[XXXII];
+                     i32  gradus;
+        struct timespec  pausa;
+
+    s = (Mundus*)c->datum;
+    CREDO_NECESSE(s && s->paratus);
+    v = s->app.vicus;
+    memset(&communis, ZEPHYRUM, magnitudo(communis));
+    communis.binarium = s->binarium;
+    /* servitor "ordinarius" sine -S (TMUX_TMPDIR; tmux directorium
+     * tmux-<uid> ipse creat), deinde via socket eius */
+    {
+         constans character* v_novae[VII];
+         constans character* v_viae[VIII];
+          ProcessusResultus  r;
+
+        v_novae[ZEPHYRUM] = s->binarium;
+        v_novae[I] = "new-session";
+        v_novae[II] = "-d";
+        v_novae[III] = "-s";
+        v_novae[IV] = "beta";
+        v_novae[V] = NIHIL;
+        r = processus_exsequi(v_novae, V * M, c->piscina);
+        CREDO_NECESSE(r.successus && r.codex_exitus == ZEPHYRUM);
+        v_viae[ZEPHYRUM] = s->binarium;
+        v_viae[I] = "display-message";
+        v_viae[II] = "-p";
+        v_viae[III] = "-t";
+        v_viae[IV] = "=beta";
+        v_viae[V] = "#{socket_path}";
+        v_viae[VI] = NIHIL;
+        r = processus_exsequi(v_viae, V * M, c->piscina);
+        CREDO_NECESSE(   r.successus && r.effusio.mensura > I
+                      && r.effusio.mensura < CCL);
+        sprintf(s->communis, "%.*s", (integer)(r.effusio.mensura - I),
+            (constans character*)r.effusio.datum);
+    }
+
+    CREDO_GRADUS("I: tmux attach manu - argumentum notatur");
+    CREDO_NECESSE(vicus_activam_ponere(v, "6"));
+    CREDO_NECESSE(vicus_acervo_aperire(v, "terminale", NIHIL));
+    (vacuum)vicus_pulsare(v);
+    l = frons(v);
+    CREDO_NECESSE(l && l->montata && chorda_aequalis_literis(l->genus,
+        "terminale"));
+    CREDO_AEQUALIS_I32(l->argumentum.mensura, ZEPHYRUM);
+    t    = (TerminaleApplicatio*)l->montatio;
+    tty  = chorda_transcribere(terminale_tty(t), c->piscina);
+    sprintf(imperium, "%s attach -t =beta\r", s->binarium);
+    CREDO_NECESSE(aemulator_hospes_scribere(t->hospes,
+        (constans i8*)imperium, (i32)strlen(imperium)) > ZEPHYRUM);
+    CREDO_VERUM(adhaesionem_in(v, &communis, "beta", tty, c->piscina));
+    /* systema per V s: argumentum notatur */
+    per (gradus = ZEPHYRUM; gradus < CDL
+                            && l->argumentum.mensura == ZEPHYRUM;
+         gradus++)
+    {
+        (vacuum)vicus_pulsare(v);
+        pausa.tv_sec   = ZEPHYRUM;
+        pausa.tv_nsec  = XX * M * M;
+        (vacuum)nanosleep(&pausa, NIHIL);
+    }
+    CREDO_CHORDA_AEQUALIS_LITERIS(l->argumentum, "tmux - beta");
+    prima      = l;
+    tty_prima  = tty;
+
+    CREDO_GRADUS("II: restitutio - vicus alter iterum adhaeret");
+    CREDO_NECESSE(vicus_applicatio_aedificare(&s->altera, c->piscina,
+        internamentum_creare(c->piscina), s->volumen, CDLXXX,
+        CDLXXX + VICUS_ALTITUDO_TABULARUM));
+    l = vicus_latus(vicus_tabula(s->altera.vicus, V), VICUS_DEXTRUM);
+    CREDO_NECESSE(l && l->montata && chorda_aequalis_literis(l->genus,
+        "terminale"));
+    CREDO_CHORDA_AEQUALIS_LITERIS(l->argumentum, "tmux - beta");
+    t    = (TerminaleApplicatio*)l->montatio;
+    tty  = chorda_transcribere(terminale_tty(t), c->piscina);
+    CREDO_VERUM(adhaesionem_in(s->altera.vicus, &communis, "beta", tty,
+        c->piscina));
+
+    CREDO_GRADUS("III: detachmentum - concha manet");
+    CREDO_NECESSE(imperium_in(s, s->communis, "detach-client", "-t",
+        chorda_ut_cstr(tty, c->piscina), NIHIL, NIHIL, NIHIL,
+        c->piscina));
+    sprintf(exspectatum, "post_%s", "detachmentum");
+    sprintf(imperium, "echo post_\"\"detachmentum\r");
+    /* concha post exitum tmux: exspectare donec cliens abiit (aliter
+     * claves ad tmux exeuntem eunt), deinde textus scriptus redit */
+    per (gradus = ZEPHYRUM; gradus < CCL && adhaeret(&communis, tty,
+                            c->piscina); gradus++)
+    {
+        (vacuum)vicus_pulsare(s->altera.vicus);
+        pausa.tv_sec   = ZEPHYRUM;
+        pausa.tv_nsec  = XX * M * M;
+        (vacuum)nanosleep(&pausa, NIHIL);
+    }
+    per (gradus = ZEPHYRUM; gradus < XXV; gradus++)
+    {
+        (vacuum)vicus_pulsare(s->altera.vicus);
+        pausa.tv_sec   = ZEPHYRUM;
+        pausa.tv_nsec  = XX * M * M;
+        (vacuum)nanosleep(&pausa, NIHIL);
+    }
+    /* tmux exiens terminale cum TCSAFLUSH restituit: initus pendens
+     * abicitur - textus iteratur donec concha respondet (ut homo) */
+    visum = FALSUM;
+    per (gradus = ZEPHYRUM; gradus < X && !visum; gradus++)
+    {
+        CREDO_NECESSE(aemulator_hospes_scribere(t->hospes,
+            (constans i8*)imperium, (i32)strlen(imperium)) > ZEPHYRUM);
+        visum = textum_brevi(s->altera.vicus, t, exspectatum,
+            c->piscina);
+    }
+    CREDO_VERUM(visum);
+    CREDO_FALSUM(l->finita);
+
+    CREDO_GRADUS("IV: detachmentum in vico primo - argumentum abit");
+    CREDO_NECESSE(imperium_in(s, s->communis, "detach-client", "-t",
+        chorda_ut_cstr(tty_prima, c->piscina), NIHIL, NIHIL, NIHIL,
+        c->piscina));
+    per (gradus = ZEPHYRUM; gradus < CDL
+                            && prima->argumentum.mensura > ZEPHYRUM;
+         gradus++)
+    {
+        (vacuum)vicus_pulsare(v);
+        pausa.tv_sec   = ZEPHYRUM;
+        pausa.tv_nsec  = XX * M * M;
+        (vacuum)nanosleep(&pausa, NIHIL);
+    }
+    CREDO_AEQUALIS_I32(prima->argumentum.mensura, ZEPHYRUM);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "saltus", _probare_saltum, mundum_parare, mundum_purgare, NIHIL,
       NIHIL },
     { "sessiones", _probare_sessiones, mundum_parare, mundum_purgare,
       NIHIL, NIHIL },
+    { "restitutio", _probare_restitutionem, mundum_parare,
+      mundum_purgare, "lentus", NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

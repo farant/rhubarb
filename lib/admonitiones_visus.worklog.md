@@ -107,3 +107,32 @@ Fran approved after the look (2026-10-15: "that looks good to me!").
 - Not handled: grouped sessions (tmux new -t alpha) - different session
   name, so a new terminal opens.
 - Fran's look 2026-10-15: all five steps work ("very cool") - jump opens attached terminal on the right window/pane, second jump returns to the same tab, restart re-attaches.
+
+## 2026-10-16 - T6 re-attach on restore (incl. hand-typed `tmux attach`)
+
+- `vicus_latus_argumentum_ponere(v, id, arg)`: changes a pane's SAVED
+  argument without remounting (layout rewritten; identity genus+arg
+  follows, so jumps find the pane by argument too).
+- System "terminalia" (every 5 s, only after
+  vicus_applicatio_admonitiones_aperire - tests never touch tmux):
+  list-clients on every server the sessions report, then the default
+  server LAST (so a jump terminal's full-socket argument is not
+  rewritten to "-"); a terminal pane whose pty tty is a client gets
+  "tmux <socket|-> <session>", a "tmux ..." pane with no client is
+  cleared (you detached - don't re-attach on restore); non-tmux
+  arguments are never touched.
+- Restore runs `$SHELL -l -c '<tmux -u ... attach -t =s>; exec $SHELL
+  -l'` (each word single-quoted): detach or missing session leaves a
+  login shell - Fran's workflow (shell, then attach by hand). Applies
+  to jump terminals too (Fran 10-16: consistent).
+- Live test: TMUX_TMPDIR set into build/pmx/t.<pid>, so even "the
+  default server" is private; it is started WITHOUT -S and asked for
+  #{socket_path} (examen does not know getuid). 
+- Gotcha: a tmux client exiting restores the tty with TCSAFLUSH -
+  input typed while it shuts down is DISCARDED, even after the server
+  has dropped the client. The test resends its probe line until the
+  shell answers (a human just retypes). Passed under the runner but
+  failed 3/3 run directly before that fix: timing, not logic.
+- `ordinarius` is a latina.h macro (default) - bit again in a test
+  identifier; renamed communis.
+- Fran's look 2026-10-16: everything works (hand attach remembered, restore re-attaches, detach leaves a shell).

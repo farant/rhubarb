@@ -71,9 +71,14 @@ vicus_applicatio_imaginis_portam_ponere (
 /* T4a (colloquia-plan): fontes libri praeconii (via; applicationes
  * praeconium_via dant) - sequax admonitionum (systema 'admonitiones'
  * in pulsu) et T5 fons sessionum (lateribus $sessions visibilibus
- * pulsatus) ex cauda initiantur. Ante vocationem (probationes) centrum
- * ($notifications) et sessiones vacua, nihil legitur. FALSUM si iam
- * aperta. */
+ * pulsatus) ex cauda initiantur; T6 systema 'terminalia' (per V s)
+ * latera terminalis tmux adhaerentia notat: argumentum "tmux
+ * <servitor|-> <sessio>" (clientes servitorum sessionum, deinde
+ * ordinarii; per tty), detachata tollit. Argumentum tale montat
+ * "$SHELL -l -c '<tmux attach>; exec $SHELL -l'" (post detachmentum
+ * concha). Ante vocationem (probationes) centrum ($notifications) et
+ * sessiones vacua, nihil legitur, tmux non interrogatur. FALSUM si
+ * iam aperta. */
 b32
 vicus_applicatio_admonitiones_aperire (
         VicusApplicatio* app,

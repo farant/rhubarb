@@ -19,6 +19,7 @@
 nomen structura {
      Volumen* volumen;
        Vicus* v;
+         i32  montationes;   /* T6: montationes generis quieti */
 } Mundus;
 
 interior b32
@@ -43,7 +44,10 @@ quietum_montare (
     (vacuum)argumentum;
     (vacuum)latitudo;
     (vacuum)altitudo;
-    (vacuum)ctx;
+    si (ctx)
+    {
+        ((Mundus*)ctx)->montationes++;
+    }
     redde VERUM;
 }
 
@@ -75,7 +79,7 @@ mundum_parare (
     }
     si (   x->v
         && (   !vicus_genus_addere(x->v, "quietus", I, quietum_montare,
-                   quietum_describere, NIHIL)
+                   quietum_describere, x)
             || !vicus_aperire(x->v,
                    "<tabulae activa=\"A\"><tabula id=\"A\">"
                    "<latus genus=\"quietus\"/><acervus>"
@@ -219,6 +223,54 @@ _probare_radicem (
     CREDO_VERUM(campus_est(x->v, "admonitiones_non_lectae", "5"));
 }
 
+/* T6: argumentum lateris sine remontatione; dispositio servata;
+ * vicus novus in eodem volumine eo montat; "" tollit; id ignotum */
+interior vacuum
+_probare_argumentum (
+    CredoContextus* c)
+{
+         Mundus* x;
+          Vicus* altera;
+         chorda  servata;
+            b32  inventum;
+     VicusLatus* l;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(x->v != NIHIL);
+    CREDO_AEQUALIS_I32(x->montationes, II);
+    CREDO_VERUM(vicus_latus_argumentum_ponere(x->v, "A_dextrum_quietus",
+        "tmux - alpha"));
+    CREDO_AEQUALIS_I32(x->montationes, II);
+    l = vicus_latus(vicus_activa(x->v), VICUS_DEXTRUM);
+    CREDO_NECESSE(l != NIHIL);
+    CREDO_CHORDA_AEQUALIS_LITERIS(l->argumentum, "tmux - alpha");
+    servata = volumen_plagulam_promere(x->volumen, chorda_ex_literis(
+        "vicus/latera", c->piscina), c->piscina, &inventum);
+    CREDO_VERUM(inventum);
+    CREDO_VERUM(chorda_continet(servata, chorda_ex_literis(
+        "argumentum=\"tmux - alpha\"", c->piscina)));
+    CREDO_FALSUM(vicus_latus_argumentum_ponere(x->v, "nullum_latus",
+        "x"));
+    /* restitutio: vicus alter in eodem volumine */
+    altera = vicus_creare(c->piscina, internamentum_creare(c->piscina),
+        x->volumen, CDLXXX, CDLXXX);
+    CREDO_NECESSE(altera != NIHIL);
+    CREDO_NECESSE(vicus_genus_addere(altera, "quietus", I,
+        quietum_montare, quietum_describere, NIHIL));
+    CREDO_NECESSE(vicus_aperire(altera, "<tabulae activa=\"A\"/>"));
+    l = vicus_latus(vicus_activa(altera), VICUS_DEXTRUM);
+    CREDO_NECESSE(l != NIHIL);
+    CREDO_CHORDA_AEQUALIS_LITERIS(l->argumentum, "tmux - alpha");
+    /* "" tollit */
+    CREDO_VERUM(vicus_latus_argumentum_ponere(x->v, "A_dextrum_quietus",
+        ""));
+    servata = volumen_plagulam_promere(x->volumen, chorda_ex_literis(
+        "vicus/latera", c->piscina), c->piscina, &inventum);
+    CREDO_FALSUM(chorda_continet(servata,
+        chorda_ex_literis("argumentum",
+        c->piscina)));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "additio", _probare_additionem, mundum_parare, mundum_purgare,
       NIHIL, NIHIL },
@@ -226,6 +278,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
       NIHIL },
     { "radix", _probare_radicem, mundum_parare, mundum_purgare, NIHIL,
       NIHIL },
+    { "argumentum", _probare_argumentum, mundum_parare, mundum_purgare,
+      NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

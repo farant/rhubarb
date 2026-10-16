@@ -108,6 +108,11 @@ phase that needs it. Header text shown to Fran before coding.*
   click jumps (shared saltus). Incremental fold in colloquia
   (ColloquiaStatus). Pane liveness now per tmux server (T3 caveat
   fixed for the view).
+- T6 2026-10-16: terminals attached by hand (`tmux attach`) are noticed
+  (system "terminalia", tty -> tmux client, every 5 s) and saved as
+  "tmux <socket> <session>"; detaching clears it. Restore (and every
+  jump) runs `$SHELL -l -c 'tmux attach ...; exec $SHELL -l'`: shell
+  after detach (Fran 10-16). vicus_latus_argumentum_ponere.
 
 ## V. Hook facts (Claude Code docs, checked 2026-10-15)
 

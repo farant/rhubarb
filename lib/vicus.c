@@ -1899,6 +1899,49 @@ vicus_activam_ponere (
 }
 
 b32
+vicus_latus_argumentum_ponere (
+                  Vicus* v,
+     constans character* id,
+     constans character* argumentum)
+{
+    VicusTabula* t;
+     VicusLatus* l;
+         chorda  quaesitum;
+            i32  i;
+            i32  k;
+
+    si (!v || !id)
+    {
+        redde FALSUM;
+    }
+    quaesitum  = internare(v, id);
+    l          = NIHIL;
+    per (i = ZEPHYRUM; !l && i < xar_numerus(v->tabulae); i++)
+    {
+        t = (VicusTabula*)xar_obtinere(v->tabulae, i);
+        si (chorda_aequalis(t->sinistrum.id, quaesitum))
+        {
+            l = &t->sinistrum;
+        }
+        per (k = ZEPHYRUM; !l && k < xar_numerus(t->acervus); k++)
+        {
+            si (chorda_aequalis(((VicusLatus*)xar_obtinere(t->acervus,
+                k))->id, quaesitum))
+            {
+                l = (VicusLatus*)xar_obtinere(t->acervus, k);
+            }
+        }
+    }
+    si (!l)
+    {
+        redde FALSUM;
+    }
+    l->argumentum = (argumentum && argumentum[ZEPHYRUM])
+        ? internare(v, argumentum) : chorda_nulla_vici();
+    redde indicem_scribere(v);
+}
+
+b32
 vicus_latus_focare (
                   Vicus* v,
      constans character* id)
