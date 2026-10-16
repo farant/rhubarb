@@ -501,6 +501,31 @@ Gate `unitates` V covers the filter. Found on the way: unci XXII
 `UNCUS_CRIBRUM: fixa praeterita` - the hook's examen filter is another
 exclusion site (next).
 
+## VI⅞i. U4 step 3: the pre-commit hook (2026-10-15)
+
+`tools/unci-git/pre-commit` had FIVE copies of the directory list, and
+they disagreed with each other: examen's lacked vendor (stb_image.h
+survived only through the per-file "known noise" list), diagnostics
+excluded only the ROOT `probationes/fixa/` (crusta's fixa scripts were
+diagnosed), and the `UNCUS_CRIBRUM` copies repeated both. Now three
+judges, one filter (`_cribrum JUDGE` -> `tools/iudex_unitatum.sh`; a
+broken judge OBSTRUCTS):
+- `examen_commissionis` (domestica, viva vetusta, fons probatio ASSETS,
+  manu generatum, c89 objc) - vs today: only vendor/sqlite3.c leaves
+  (Fran: vendor never touched); generated asset capsules stay judged.
+- `diagnostica_materiae` (.sh .css; fons probatio scriptum declaratio,
+  manu generatum) - vs today: 12 oracle-input scripts under
+  `crusta/probationes/fixa/` leave (fixtures are inputs, now for EVERY
+  fixa/, not only the root one).
+- `formator_commissionis` also feeds the hook's `-delta` warning.
+
+Two RULE BUGS found by the comparison (mine): `.css` had no role (3
+stylesheets -> no role, would have left diagnostics) - now `fons`;
+shell tests in `probationes/` (`probatio_icones_iconutil.sh`, ...)
+fell to the fixture catch-all, the same bug as the test headers -
+the test rule is now `.c .m .h .sh`. Plants: fixtures into
+diagnostics -> unci XIV red; remissa into examen -> unci XX red.
+
 ## VII. Interrogationes - documentation as typed questions (Fran 10-15)
 
 A unit exposes what it can do by DECLARING QUESTIONS it answers

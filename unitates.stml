@@ -30,10 +30,10 @@
        scripta): forma eius gradus generationis esset, non formatoris
        commissionis (Franus 2026-10-15) -->
   <munus titulus="amalgama"    segmentum="amalgama"/>
-  <munus titulus="probatio"    segmentum="probationes" extensiones=".c .m .h"/>
+  <munus titulus="probatio"    segmentum="probationes" extensiones=".c .m .h .sh"/>
   <munus titulus="fixtura"     segmentum="probationes"/>
   <munus titulus="caput"       extensiones=".h"/>
-  <munus titulus="fons"        extensiones=".c .m"/>
+  <munus titulus="fons"        extensiones=".c .m .css"/>
   <munus titulus="documentum"  extensiones=".md"/>
   <munus titulus="declaratio"  extensiones=".stml .canon .genera .census .toml .registrum"/>
   <munus titulus="scriptum"    extensiones=".sh .py .ts .js"/>
@@ -47,6 +47,7 @@
   <lingua titulus="stml"   extensiones=".stml .canon .genera .census"/>
   <lingua titulus="md"     extensiones=".md"/>
   <lingua titulus="toml"   extensiones=".toml"/>
+  <lingua titulus="css"    extensiones=".css"/>
 
   <!-- iudices: consumptores qui custodiam rogant (U4: unus post alium,
        quisque cum probatione congruentiae contra indicem veterem) -->
@@ -61,6 +62,17 @@
          munera="fons caput probatio" provenientiae="manu"
          linguae="c89"
          descriptio="formator ante iudicium commissionis (tools/formare_viae.sh, silva.commissio et uncus) - generata numquam (veritas eorum generator est), amalgama numquam, vendor numquam (Franus 2026-10-15: olim lineae mutatae)"/>
+
+  <iudex titulus="examen_commissionis"
+         curae="domestica" vitae="viva vetusta"
+         munera="fons probatio assets" provenientiae="manu generatum"
+         linguae="c89 objc"
+         descriptio="examen C89 (et censor .m) super plagulas commissionis (tools/unci-git/pre-commit; capita per includentes)"/>
+  <iudex titulus="diagnostica_materiae"
+         curae="domestica" vitae="viva vetusta"
+         munera="fons probatio scriptum declaratio" provenientiae="manu generatum"
+         linguae="sh css"
+         descriptio="diagnostica crustae et css super plagulas commissionis (tools/unci-git/pre-commit -> tools/diagnostica.sh)"/>
 
   <bibliothecae capita="include" fontes="lib" probationes="probationes"
                 praefixum="probatio_"

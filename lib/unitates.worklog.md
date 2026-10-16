@@ -98,3 +98,13 @@ fixtures not (they are inputs - JSON, PNG, foreign-style C samples).
   never touched) and its own GENERATUM check (the judge's
   provenientiae="manu" reads line 1; in -index mode partially staged
   files are skipped, so tree = index for every file it formats).
+
+## 2026-10-15 - U4 step 3: pre-commit hook (5 lists -> 3 judges)
+
+The comparison caught two more of MY rule gaps (`.css` no role, shell
+tests under probationes/ as fixtures). Pattern so far: every consumer
+migration finds one policy gap - run the old-vs-new comparison FIRST,
+by reason (`bin/fabrica quid -iudex J -machina` cause column), before
+switching. The hook keeps its extension prefilter (cheap, and the
+explicit `UNCUS_VIAE` test mode stays unfiltered without
+`UNCUS_CRIBRUM=1`).
