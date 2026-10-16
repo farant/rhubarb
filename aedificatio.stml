@@ -461,6 +461,22 @@
     <ingressus genus="instrumentum" via="/opt/homebrew/bin/python3"/>
     <exitus via="lib/entitates_html_tabula.c" provenientia="regeneratio"/>
   </actio>
+  <!-- BearSSL amalgama (tls-bearssl-plan T1, R1): oraculum clang
+       (nomina interiora per -ast-dump=json), ergo identitas clang et
+       python ingressus -->
+  <actio titulus="bearssl_amalgama" genus="generator">
+    <mandatum>
+      <verbum! (>./tools/bearssl_amalgamare.sh
+    </mandatum>
+    <ingressus genus="fasciculus" via="tools/bearssl_amalgamare.sh"/>
+    <ingressus genus="fasciculus" via="tools/bearssl_amalgamare.py"/>
+    <ingressus genus="plagulae" via="vendor/bearssl/src" suffixa=".c .h"/>
+    <ingressus genus="plagulae" via="vendor/bearssl/inc" suffixa=".h"/>
+    <ingressus genus="instrumentum" via="/opt/homebrew/bin/python3"/>
+    <ingressus genus="identitas_clang" via="clang"/>
+    <exitus via="vendor/bearssl_amalgama.c" provenientia="regeneratio"/>
+    <exitus via="vendor/bearssl_amalgama.h" provenientia="regeneratio"/>
+  </actio>
   <!-- canon normae infixus (norma-plan-3 A2, regula R1): norma.canon ->
        lib/norma_canon.c, lector .norma sine plagula vivit -->
   <actio titulus="norma_canon" genus="generator">
@@ -999,6 +1015,10 @@
     <ambitus variabilis="QUADRANS_AURUM_SCRIBERE"/>
     <ambitus variabilis="PLIST_AREA"/>
     <ambitus variabilis="VILLA_SSH"/>
+    <!-- vectura TLS ambitu eligitur (lib/tls.c per lectiones_ambitus,
+         tls-bearssl T3 R22): valor in clavi - RHUBARB_TLS mutatum
+         probationes TLS iterum currit, verdicta vetera non reddit -->
+    <ambitus variabilis="RHUBARB_TLS"/>
     <debitum_scripturae membrum="probatio_generare" via="build/probatio_generare_instrumenta/" causa="instrumenta generata (scratch) in build/"/>
     <debitum_scripturae membrum="probatio_natura_canones" via="build/probatio_natura_canones/" causa="canones probationis (scratch)"/>
     <debitum_scripturae membrum="probatio_silex" via="build/probatio_silex_area/" causa="area silicis (scratch)"/>

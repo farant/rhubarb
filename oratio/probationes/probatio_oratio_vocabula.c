@@ -23,8 +23,8 @@
  *      puella LATINUM (WORDS), piscina NOTUM (Moby eam novit); lexema,
  *      est (sum), silva LATINA (glossarium Latinum); xyzzy ignotum;
  *      ambiguum nullum.
- * VII. CORPUS prosae: plagulae md tractae sine vendor/ archivum/
- *      generatis (ORATIO_PROSA_EXCLUSA), limina (plagulae > CCC, verba >
+ * VII. CORPUS prosae: plagulae md tractae quas iudex prosa_anglica
+ *      (unitates.stml) iudicat, limina (plagulae > CCC, verba >
  *      V milia, nota + permissa + latina > tertia pars) - relatio diei
  *      primi in worklog; pinna post morphologiam.
  * Culpa plantata: limes CAPITALIS in scissione sublatus (MateriaNodus
@@ -38,6 +38,8 @@
 #include "oratio_vocabularium_la.h"
 #include "oratio_vocabularium_en.h"
 #include "oratio_glossarium.h"
+#include "unitates.h"
+#include "unitates_arboris.h"
 #include "chorda.h"
 #include "piscina.h"
 #include "xar.h"
@@ -190,6 +192,12 @@ _copiam_scribere (
     fclose(f);
 }
 
+/* mechanismus praefixorum (sectio I): knotapel/ in nexu ficto omittitur
+ * - ambitus VERUS lintus in unitates.stml vivit (iudex lint_latinus) */
+hic_manens constans character* constans EXCLUSA_FICTA[] = {
+    "knotapel/", NIHIL
+};
+
 interior chorda
 _l (
     constans character* literae)
@@ -241,17 +249,17 @@ _verbum (
 s32
 principale (vacuum)
 {
-                  Piscina* piscina;
-       constans character* radix;
-                character  via[1024];
-                   chorda  tabula;
-                   chorda  fons_glossarii;
+                       Piscina* piscina;
+            constans character* radix;
+                     character  via[1024];
+                        chorda  tabula;
+                        chorda  fons_glossarii;
           OratioVocabulariumLa* voc;
-     OratioVocabulariumEn* en = NIHIL;
-                   chorda  fons_en;
- OratioVocabulariumVitium vitium;
-           OratioVocabula* vc;
-                      i32  i;
+          OratioVocabulariumEn* en = NIHIL;
+                        chorda  fons_en;
+      OratioVocabulariumVitium  vitium;
+                OratioVocabula* vc;
+                           i32  i;
 
     piscina = piscina_generare_dynamicum("probatio_oratio_vocabula",
         536870912);
@@ -303,7 +311,7 @@ principale (vacuum)
             "COLOR_MIX\tsedes\tconstans\tlib/pictor.c\t7\t9\t0\n"
             "piscina\tvocatio\tfunctio\tlib/alia.c\t1\t1\t0\n"
                                 "piscina_destruere\tsedes\tfunctio\tlib/piscina.c\t80\t1\t0\n"),
-            ORATIO_VOCABULA_EXCLUSA, _l("")));
+            EXCLUSA_FICTA, _l("")));
 
     {
                           Xar* verba = oratio_vocabula_verba(vc);
@@ -511,14 +519,32 @@ principale (vacuum)
             symbola_sola = oratio_vocabula_creare(piscina, voc);
 
             /* viae tractatae (cursor scribit): sine ea porta rubet,
-             * numquam tacite omnes vias numerat */
+             * numquam tacite omnes vias numerat. AMBITUS = iudex
+             * lint_latinus (unitates.stml) - idem filtrum ac
+             * instrumentum vocabula, ne pinna et lint divergant */
             sprintf(via, "%s/oratio/build/corpus_tractatae.txt", radix);
             si (!_plagulam_legere(piscina, via, &tractatae))
             {
                 CREDO_CULPA ("oratio/build/corpus_tractatae.txt absens - e radice per cursorem curre");
             }
-            CREDO_VERUM (oratio_vocabula_symbola(corpus, nexus,
-                ORATIO_VOCABULA_EXCLUSA, tractatae));
+            alioquin
+            {
+                  chorda  causa_u;
+                     b32  ignotus = FALSUM;
+                Unitates* u = unitates_legere(unitates_sutura_arboris(
+                    radix, piscina), piscina, &causa_u, NIHIL);
+
+                CREDO_NON_NIHIL (u);
+                si (u != NIHIL)
+                {
+                    tractatae = unitates_viae_iudicatae(u, _l(
+                        "lint_latinus"), tractatae, piscina, &ignotus);
+                }
+                CREDO_FALSUM (ignotus);
+                CREDO_MAIOR_I32 (tractatae.mensura, ZEPHYRUM);
+            }
+            CREDO_VERUM (oratio_vocabula_symbola(corpus, nexus, NIHIL,
+                tractatae));
             /* PINNA = COPIA COMMISSA super identificatores DOMUS (knotapel/
              * vendor/ archivum/ exclusa, decisio Frani 2026-09-04; viae
              * tractatae solae 2026-09-07). Verbum ignotum extra copiam =
@@ -528,7 +554,7 @@ principale (vacuum)
              * Verdictum et relatio POST commentaria (IV b). */
             CREDO_NON_NIHIL (symbola_sola);
             CREDO_VERUM (oratio_vocabula_symbola(symbola_sola, nexus,
-                ORATIO_VOCABULA_EXCLUSA, tractatae));
+                NIHIL, tractatae));
             CREDO_VERUM (oratio_vocabula_iudicare(symbola_sola));
             ignota_symbolorum = oratio_vocabula_numerus(symbola_sola,
                 ORATIO_VERBUM_IGNOTUM);
@@ -865,8 +891,13 @@ principale (vacuum)
         i32 permissa;
         i32 latina;
         i32 ignota;
+        chorda    causa_u;
+        Unitates* u_prosae = unitates_legere(
+            unitates_sutura_arboris(radix, piscina), piscina, &causa_u,
+            NIHIL);
 
         CREDO_NON_NIHIL (corpus);
+        CREDO_NECESSE_NON_NIHIL (u_prosae);
         sprintf(via, "%s/oratio/build/corpus_md.txt", radix);
         lista = fopen(via, "r");
         si (lista == NIHIL)
@@ -891,8 +922,8 @@ principale (vacuum)
                 {
                     perge;
                 }
-                si (oratio_vocabula_via_exclusa(_l(linea),
-                        ORATIO_PROSA_EXCLUSA))
+                si (unitates_iudicat(u_prosae, _l("prosa_anglica"),
+                        _l(linea), piscina, NIHIL) != UNITATES_IUDICAT)
                 {
                     exclusae = exclusae + I;
                     perge;

@@ -35,15 +35,6 @@ hic_manens constans character* TITULI_STATUUM[] = {
     "notum", "ambiguum", "permissum", "ignotum", "latinum"
 };
 
-constans character* constans ORATIO_VOCABULA_EXCLUSA[] = {
-    "knotapel/", "vendor/", "archivum/", "oracula/", NIHIL
-};
-
-constans character* constans ORATIO_PROSA_EXCLUSA[] = {
-    "vendor/", "archivum/", "gesta/annales/tabula.md", "md/CENSUS.md",
-    NIHIL
-};
-
 b32
 oratio_vocabula_via_exclusa (
                           chorda  via,

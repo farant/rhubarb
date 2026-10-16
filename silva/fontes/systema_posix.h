@@ -26,6 +26,17 @@
  * ================================================== */
 
 typedef long               intptr_t;      /* stdint.h - C99, corpus */
+/* stdint.h - typi latitudinis exactae (C99; vendor/bearssl_amalgama.h,
+ * tls-bearssl T1 R3). LP64: 64 bit ut long (praecedens intptr_t; C89
+ * 'long long' non novit). Formae per officina/auspex_posix.sh */
+typedef signed char        int8_t;
+typedef short              int16_t;
+typedef int                int32_t;
+typedef long               int64_t;
+typedef unsigned char      uint8_t;
+typedef unsigned short     uint16_t;
+typedef unsigned int       uint32_t;
+typedef unsigned long      uint64_t;
 typedef int                dev_t;
 typedef unsigned short     mode_t;
 typedef unsigned short     nlink_t;
@@ -190,6 +201,11 @@ int     execve(const char* plagula, char* const argumenta[],
                char* const ambitus[]);
 /* <gradus titulus="access" genus="canalis" pro="via_existit, filum_existit"/> (codex 96) */
 int     access(const char* via, int modus);
+/* modi access() (Darwin = POSIX communes) */
+#define F_OK 0
+#define X_OK 1
+#define W_OK 2
+#define R_OK 4
 int     faccessat(int fossa, const char* via, int modus, int vexilla);
 unsigned int alarm(unsigned int secunda);
 /* chdir: directorium infantis pseudoterminalis (B3, 2026-10-06) */
@@ -307,6 +323,7 @@ int setsockopt(int fossa, int gradus, int titulus, const void* valor,
  * transcriptio verbatim, formae Darwin certificatae */
 #define AF_UNSPEC   0
 #define AF_INET     2
+#define AF_INET6    30   /* Darwin (Linux 10) - familia IPv6, nomina.h */
 #define SOCK_STREAM 1
 #define SO_RCVTIMEO 0x1006
 #define SO_SNDTIMEO 0x1005

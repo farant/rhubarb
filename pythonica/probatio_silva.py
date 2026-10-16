@@ -629,8 +629,12 @@ s_v, rel_v = silva.lint_latinus_praevium(['pythonica/README.md'])
 credo(s_v and 'nihil iudicatum' in rel_v, 'lint praevius: sine plagula C nihil iudicatum')
 s_c, rel_c = silva.lint_latinus_praevium(['lib/chorda.c', 'vendor/sqlite3.c'])
 credo(s_c and 'nihil novi' in rel_c, 'lint praevius: plagula C sana -> lint vere cucurrit (nihil novi)')
-s_x, rel_x = silva.lint_latinus_praevium(['vendor/sqlite3.c', 'silva/amalgama/silva.c'])
-credo(s_x and 'nihil iudicatum' in rel_x, 'lint praevius: directoria exclusa ut uncus (vendor, amalgama)')
+# ambitus = iudex lint_latinus (unitates.stml, U4): alienum et fixtura
+# non iudicantur; GENERATUM iudicatur (Franus 2026-10-15)
+s_x, rel_x = silva.lint_latinus_praevium(['vendor/sqlite3.c', 'probationes/fixa/roundtrip/color.c'])
+credo(s_x and 'nihil iudicatum' in rel_x, 'lint praevius: iudex excludit alienum et fixturam (vendor, fixa)')
+s_g, rel_g = silva.lint_latinus_praevium(['silva/amalgama/silva.c'])
+credo(s_g and 'nihil novi' in rel_g, 'lint praevius: generatum (amalgama) iudicatur')
 # wiring: lint rubrum -> commissio ANTE portas refutat, NULLA porta currit
 _lint_verus, _porta_vera = silva.lint_latinus_praevium, silva.porta
 _cursae = []
@@ -2784,7 +2788,8 @@ os.chmod(_ogate, 0o755)
 os.environ['PYTHONICA_PORTAE_FICTAE'] = json.dumps(dict(
     (n, [[_ogate, n] + (['rubra'] if r else []), r'fictum: (sanum|FRACTUM)', 'generica'])
     for n, r in (('ficta-prae-a', True), ('ficta-prae-b', True), ('ficta-prae-c', False),
-                 ('ficta-prob', False), ('ficta-prob-1', True), ('ficta-prob-2', False))))
+                 ('ficta-prob', False), ('ficta-prob-1', True), ('ficta-prob-2', False),
+                 ('ficta-prob-3', True))))
 silva._portae_fictae()
 _of_fb = silva.FABRICA_BIN
 _of_fe = silva._fabricam_exigere
@@ -2993,9 +2998,47 @@ try:
         silva.FABRICA_BIN = _fabrica_ordinis([('ficta-prae-c', 'praeiudicium', '500', 'commissio'),
                                              ('ficta-prob-1', 'probatio', '9000', 'fusio')])
         eff, err, cursae = _fusio((True, [], 'abcdef12', ['x.c']))
-        credo(err is not None and 'ficta-prob-1 non sana' in err and 'bisectio): c0ffee1' in err
+        credo(err is not None and 'ficta-prob-1 non sana' in err and 'bisectio: c0ffee1' in err
               and os.path.exists(silva.DEBITA_FUSIONIS_VIA),
               'fusio: rubra - commissio debens nominata, debita servata', causa=repr(err))
+        # M2. PERGIT (…CECATG): duae probationes rubrae + viridis inter eas - OMNES
+        # cursae, ambae nominatae cum commissionibus suis, tabula una; commissio
+        # (B supra) adhuc prima rubra sistit
+        os.remove(silva.DEBITA_FUSIONIS_VIA)
+        with contextlib.redirect_stdout(io.StringIO()):
+            silva._debita_fusionis_scribere('c0ffee1', {'ficta-prob-1': 'z.c tegit'})
+            silva._debita_fusionis_scribere('beef123', {'ficta-prob-3': 'q.c tegit',
+                                                        'ficta-prob-2': 'w.c tegit'})
+        silva.FABRICA_BIN = _fabrica_ordinis([('ficta-prae-c', 'praeiudicium', '500', 'commissio'),
+                                             ('ficta-prob-1', 'probatio', '1000', 'fusio'),
+                                             ('ficta-prob-2', 'probatio', '2000', 'fusio'),
+                                             ('ficta-prob-3', 'probatio', '3000', 'fusio')])
+        eff, err, cursae = _fusio((True, [], 'abcdef12', ['x.c']))
+        credo(cursae == ['ficta-prae-c', 'ficta-prob-1', 'ficta-prob-2', 'ficta-prob-3'],
+              'fusio pergit: probationes omnes cursae post rubram', causa=repr(cursae))
+        credo(err is not None and 'FUSIO RUBRA: 2 ex 4' in err
+              and 'ficta-prob-1 non sana' in err and 'bisectio: c0ffee1' in err
+              and 'ficta-prob-3 non sana' in err and 'bisectio: beef123' in err
+              and 'ficta-prob-2 non sana' not in err
+              and os.path.exists(silva.DEBITA_FUSIONIS_VIA),
+              'fusio pergit: fractae ambae in tabula una cum commissionibus, viridis non',
+              causa=repr(err))
+        credo('ficta-prob-1 FRACTA' in eff and 'fusio pergit' in eff,
+              'fusio pergit: fractura nuntiata dum cursus pergit', causa=repr(eff[-400:]))
+        # M3. praeiudicium rubrum in fusione adhuc SISTIT (probationes ab eo pendent);
+        # debita M2 purgata - aliter portae extra ordinem fictum (genera ignota)
+        os.remove(silva.DEBITA_FUSIONIS_VIA)
+        silva.FABRICA_BIN = _fabrica_ordinis([('ficta-prae-a', 'praeiudicium', '500', 'commissio'),
+                                             ('ficta-prob-3', 'probatio', '3000', 'fusio')])
+        silva.portae_debitae = lambda viae, *a, **k: (
+            [silva.Debitum('ficta-prae-a', 'x.c tegit', False)] if viae == ['x.c'] else [], [])
+        with contextlib.redirect_stdout(io.StringIO()):
+            silva._debita_fusionis_scribere('beef123', {'ficta-prob-3': 'q.c tegit'})
+        eff, err, cursae = _fusio((True, [], 'abcdef12', ['x.c']))
+        credo(cursae == ['ficta-prae-a'] and err is not None and 'praeiudicia non sana' in err,
+              'fusio: praeiudicium rubrum sistit ante probationes', causa=repr((cursae, err)))
+        silva.portae_debitae = lambda viae, *a, **k: (
+            [silva.Debitum('ficta-prae-c', 'x.c tegit', False)] if viae == ['x.c'] else [], [])
         # N. debitum solutum: porta viridis tota in commissione lineas suas purgat, ceterae manent
         os.remove(silva.DEBITA_FUSIONIS_VIA)
         with contextlib.redirect_stdout(io.StringIO()):

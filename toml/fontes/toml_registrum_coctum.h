@@ -1,8 +1,8 @@
-/* toml_registrum_coctum.h
+/* toml_registrum_coctum.h - GENERATUM, NE MANU EDITES
  *
- * Registrum generum COCTUM grammaticae 'toml' - GENERATUM, NE MANU
- * EDITES. Fons: toml/grammatica/toml.registrum.stml
- * (materia/coquere.sh). Genera XIV, loci XXV.
+ * Registrum generum COCTUM grammaticae 'toml'. Fons:
+ * toml/grammatica/toml.registrum.stml (materia/coquere.sh). Genera XIV,
+ * loci XXV.
  */
 
 #ifndef TOML_REGISTRUM_COCTUM_H

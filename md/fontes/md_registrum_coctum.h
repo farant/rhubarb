@@ -1,8 +1,8 @@
-/* md_registrum_coctum.h
+/* md_registrum_coctum.h - GENERATUM, NE MANU EDITES
  *
- * Registrum generum COCTUM grammaticae 'md' - GENERATUM, NE MANU
- * EDITES. Fons: md/grammatica/md.registrum.stml (materia/coquere.sh).
- * Genera XXVIII, loci XCIV.
+ * Registrum generum COCTUM grammaticae 'md'. Fons:
+ * md/grammatica/md.registrum.stml (materia/coquere.sh). Genera XXVIII,
+ * loci XCIV.
  */
 
 #ifndef MD_REGISTRUM_COCTUM_H

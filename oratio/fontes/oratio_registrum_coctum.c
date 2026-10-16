@@ -1,9 +1,9 @@
-/* oratio_registrum_coctum.c
+/* oratio_registrum_coctum.c - GENERATUM, NE MANU EDITES
  *
- * Registrum generum COCTUM grammaticae 'oratio' - GENERATUM, NE MANU
- * EDITES. Fons: oratio/grammatica/oratio.registrum.stml
- * (materia/coquere.sh). Series LOCORUM plana; quodque genus fenestram
- * suam per loci_offset + loci_numerus nominat. Genera XXVI, loci CXCI.
+ * Registrum generum COCTUM grammaticae 'oratio'. Fons:
+ * oratio/grammatica/oratio.registrum.stml (materia/coquere.sh). Series
+ * LOCORUM plana; quodque genus fenestram suam per loci_offset +
+ * loci_numerus nominat. Genera XXVI, loci CXCI.
  */
 
 #include "oratio_registrum_coctum.h"

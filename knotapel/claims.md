@@ -61,7 +61,7 @@ ranked by how much it bears on KC 47.
 
 | | ledger | settles | question |
 |---|---|---|---|
-| P1 | …E72XG3 | 47, 48, 19.7 | group catalogs against knot-free point sets under one exact activation |
+| P1 | …E72XG3 | 47, 48, 19.7 | group catalogs against knot-free point sets under one exact activation (done: D127, see 47.1.5) |
 | P2 | …5BB3SQ | 18.2, 47.obj.1, 49 | is D118's Q8-coset characterization geometric or group-built? |
 | P3 | …S0E97V | 47.1.1, 53.4 | are XOR verdicts constant on knot classes? is D66's representation the TL one? |
 | P4 | …JYSRSC | 9 | exact D29 forward DKC against determinant-star and random-phase nulls |
@@ -82,6 +82,10 @@ ranked by how much it bears on KC 47.
   catalogs are not braid images at all (KC 53). Nodes were corrected
   in place and new nodes appended; no address was removed or
   renumbered.
+- **D127 (2026-10-15), audit P1.** Appended: 19.1.2, 19.7.1, 19.9.1,
+  19.10, 47.1.4.1, 47.1.5 to 47.1.5.3, 48.1.1.1, 48.1.2, 48.2.1 and
+  48.4.6.1. D127 was reviewed independently before these nodes were
+  written (its findings.md, "Review").
 
 ## Part I. Definitions
 
@@ -410,6 +414,11 @@ ranked by how much it bears on KC 47.
         of 2I); the N = 6 figures rest on main.c and D120's second
         in-house exact layer, and 2I's is a mean over 10 sampled
         subsets. Proposed audit P11 (ledger ...N4FWHD). [open]
+19.1.2. Under a common table the N = 6 advantage is not general: 20
+        random 24-subsets of 2I pass robust XOR in 7,840-14,815
+        subsets under T13 (2O: 10,070). D119's comparison used each
+        set's own table, and random 2I subsets have 16-21 own axes
+        against 2O's 13, so more cells. [exact] (D127)
 19.2. "2I wins at N = 7 (3.4x)" falls: D94 compared a scaled mean with
       a raw count. [falls] (D119 Part F)
 19.2.1. On one scale, N = 7 XOR is about even (0.97-1.12x), and
@@ -426,10 +435,22 @@ ranked by how much it bears on KC 47.
       subsets, which beat 2O: XOR at N = 6, 38,939 / 23,137 / 12,983;
       at N = 7, 3,449 / 672 / 197. "The order is the order of
       genericity." [checked] (KR 47, floats)
+19.7.1. Exactly, under one common table (T13 or R13), generic rational
+        points (G) beat every catalog at every N = 3-7. At N = 7,
+        robust XOR (T13): G 1,060-1,641, 2I-D94 754, 2O 456. The
+        ordering holds; D127 reads it as genericity (height) more
+        than group (see 47.1.5.2). [exact] (D127; G is generic but not
+        Haar)
 19.8. 2I's first 24 at N = 8: D94's single XOR success is 0 under the
       rule and robustly. [exact] (D119)
 19.9. Proposed audit P1 (ledger ...E72XG3): group catalogs against
       knot-free point sets under one exact activation. [open]
+19.9.1. Done in D127 (see 47.1.5, 48.1.2).
+19.10. "2I beats 2O" at N = 7 holds for D94's first 24 of 2I (754
+       against 456, T13), not for 2I: 20 random 24-subsets of 2I pass
+       51-283, and the braid-correct first 24 pass 257. Which 24
+       points are taken matters more than the group. [exact] (D127;
+       logically follows 19.2)
 
 20. What do D95-D97 show about the pieces of zeta_8?
 20.1. Cell B (the six quarter-turns, half-angle 45 degrees, about
@@ -840,6 +861,38 @@ ranked by how much it bears on KC 47.
 47.1.4. Every audited activation table is built from the point set
         itself (D66, D79-D84, D94; see 18.7, 22.2.2): a third
         ingredient that any test must control.
+47.1.4.1. D127 judges every set with two common tables. The comparison
+          with generic points holds under both. 2O's lead over the
+          height-matched spheres at N = 7 holds under T13 (its own
+          table) but not under R13 (265 against up to 272). [exact]
+          (D127)
+47.1.5. With one exact activation and a common table (D127: D94's
+        phase cell, signed encoding, k in {6, 12, 24}; T13 = 2O's 13
+        axes or R13 = 13 random directions), the second clause
+        resolves only per null and per N:
+        - against generic rational points the catalogs lose, at every
+          N = 3-7;
+        - against height-matched points (spheres of height 5 and 6,
+          20 seeds each) there is no consistent difference: inside or
+          below the range at N = 3-4, inside at N = 5-6 (2I-D94
+          above), above at N = 7 only for 2O under T13 and for
+          2I-D94.
+        [exact] (D127; independent oracle: every N = 3-4 row and six
+        N = 5-7 rows re-derived, 9,900 N = 5-7 subsets agree)
+47.1.5.1. P1's registered rule ("supported if no catalog beats its
+          matched nulls robustly") cannot be applied. It names
+          neither the nulls nor N, and it cannot reach the first
+          clause, since no entry is a knot invariant (see 53.4). No
+          verdict on 47.1 is drawn from D127. (D127 review M1)
+47.1.5.2. The deficit against generic points follows height at least
+          as much as group: at N = 5-6 robust XOR roughly orders by
+          height (G and AX, then AN, then catalogs and spheres, then
+          LIN). [interpretation] (D127)
+47.1.5.3. Only XOR is a property of a point set under the signed
+          encoding. AND and MAJ change with the sign chosen for each
+          weight: 2I-D94's MAJ at N = 7 is 43,620 with canonical signs,
+          23,173 with D119's, and 262-3,671 under random signs.
+          [exact] (D127)
 47.obj.1. Objection: the catalogs are not arbitrary point sets. The
           cleanest results (18.2: Q8 cosets) are group-theoretic, so
           the algebra matters.
@@ -868,12 +921,119 @@ ranked by how much it bears on KC 47.
       [open]
 48.1.1. Generic random points have no exact ties, so matching a
         catalog's tie structure needs a construction, not a sample.
+48.1.1.1. Exactly: generic points (G) have no tied subset at any N, and
+          the height-matched spheres are as tie-dense as the catalogs
+          or more (H6: 290k-303k of 346,104 tied at N = 7). [exact]
+          (D127)
+48.1.2. Done in D127, with the nulls of 48.1 plus height-matched
+        spheres, entry-order and sign controls (see 47.1.5); the
+        registered decision rule was underspecified (see 47.1.5.1).
 48.2. Float nulls already exist (see 9.3, 11.6, 19.7) and generic
       points do at least as well; the likely outcome is that group
       structure lowers capacity, through ties and coincident sums.
       [interpretation] (KR 42, 47)
+48.2.1. Not confirmed. The generic nulls differ from the catalogs in
+        height as much as in group. Among height-matched sets, more
+        coincidences did not mean fewer passes: 2O has 4-17x H6's XOR
+        concursus at N = 7 and passes more often. [exact] (D127)
 48.3. Are XOR verdicts constant on braids with the same closure?
       Proposed audit P3 (ledger ...S0E97V); KR 40 predicts no. [open]
+48.4. What do the catalogs' integer relations show (D126)?
+48.4.1. A signed coincidence (sum x_i p_i = 0, x_i in {-1, 0, 1})
+        joins two input patterns with the same sum, so no activation
+        can separate them. It is not a boundary tie, which depends on
+        the activation. [definition] (D126)
+48.4.1.1. That coefficient set is right for the signed encoding (D94,
+          D119-D123). The antipodal 0/1 encoding (D66/D118, D79-D84/
+          D124, D125) joins patterns by relations in {-2 .. 2}.
+          [checked] (D126 review F3)
+48.4.1.2. The antipodal encoding also forces coincidences in every
+          point set: x_i = 0 comes from both bits on or both off.
+          They join patterns of equal parity, so XOR is unaffected;
+          AND and MAJ are not. [checked] (D126 review R7)
+48.4.2. Every catalog has relations of norm 3 (p_a +- p_b +- p_c =
+        0): 16 in 2T, 32 in 2O, 200 in 2I. The coincidences grow
+        fast; in 2I there are 1,800, 16,392 and 169,100 at support 4,
+        5 and 6. [exact] (D126, independent oracle)
+48.4.3. No knot-free null has any relation within the catalog's radius
+        (10, 8, 5). Tested: 30 sets matched in count, either r g over
+        the catalog's own field (same relation rank) or rational.
+        [exact] (D126)
+48.4.3.1. Narrowed: those nulls have coordinate denominators near
+          10^30. At small height, random rational unit points have
+          many relations: about 4,500 with entries in {-1, 0, 1} at
+          height 6 (N = 24), against 2O's 9,472. 48.4.3 measures
+          height, not group structure. [exact] (D126 Part F, oracle)
+          [last sentence: interpretation]
+48.4.4. A null with a catalog's entire relation lattice is a linear
+        image of the catalog. A knot-free null can therefore match
+        the profile only in part (e.g. its shortest shells), and must
+        say which part. [proved] (D126) [second sentence: falls, see
+        48.4.4.1]
+48.4.4.1. The first sentence stands. The second falls for 2O: a unit
+          point set with exactly 2O's relation lattice that is not
+          congruent to 2O exists (2T u r sigma_1 2T). [exact] (D126
+          Part E, the review's counter-example) [grade corrected in
+          round two: the existence is exact; 48.4.4 is what falls]
+48.4.4.2. On the unit sphere, a whole-lattice null must be congruent
+          to 2T (its points pin every quadratic form, rank 10 of 10).
+          [proved] (D126 Part E)
+48.4.4.2.1. Precisely: over a real field, every real embedding of
+            the null is congruent to 2T. [proved] (D126 review R3)
+48.4.4.3. For 2I (quadric rank 35 of 36) this is open. [open]
+          [superseded by 48.4.4.4]
+48.4.4.4. For 2I it holds too: over a real field, a whole-lattice
+          unit null is congruent to 2I as a set (possibly through
+          the Galois twist), and no rational unit point set has
+          2I's whole lattice. The forms vanishing on 2I are exactly
+          the sqrt5 part of the norm; the two embedding norms are
+          the only positive semidefinite rank-4 forms in the span.
+          [proved] (D126 Part E; sketched by the reviewer, checked by
+          the author)
+48.4.5. So the catalogs force pairs of input patterns that no
+        activation can separate, and generic point sets have none at
+        these lengths: the coincident-sum half of 48.2's prediction.
+        [interpretation] [falls, see 48.4.5.1]
+48.4.5.1. Small height alone produces many coincidences (see
+          48.4.3.1). What separates the catalogs from height-matched
+          sets is the norm-3 relations (16, 32, 200, against at most
+          1) and the odd-norm ones (see 48.4.7): 2O has 2,720 to norm
+          8, against 0 at odd height and about 1,000 at height 6.
+          [exact] (D126 Parts B, F) ["at most 1" falls, see 48.4.5.2]
+48.4.5.2. Against random rational unit points of nearby small height
+          (the catalogs' own heights 2 and 4 have only 2T): norm-3
+          relations 2O 32 against 1-2 (H = 6, N = 24, 8 seeds); 2I
+          200 against 25-39 (H = 6, N = 60). Odd-norm: 2O 2,720
+          against 970-1,056; 2I 16,592 against 6,603-7,661. At odd
+          height the odd counts are 0 by 48.4.8. [exact] (D126 Part
+          F, oracle-pinned; review R1)
+48.4.5.3. So the catalogs have more norm-3 and more XOR-relevant
+          coincidences than these controls, by 2.2-30x depending on
+          the comparison; one sample of controls, no significance
+          test. [interpretation]
+48.4.6. Whether these coincidences lower capacity, and which matter
+        for which function, needs activations: P1. [open]
+48.4.6.1. Partly answered: coincidences alone do not decide the counts.
+          LIN has 2O's whole relation lattice (identical XOR concursus
+          in every row) yet passes 0-5 robustly at N = 7 against 2O's
+          456. LIN also changes the weights' norms (max/min |Ap|
+          2.5-5.0), so geometry and norms are not separated. [exact]
+          (D127)
+48.4.7. Only relations of odd norm join input patterns of opposite
+        parity, in both encodings, because sum x_i = sum x_i^2 (mod
+        2). So only they can matter for XOR. 2I's 1,800 four-term and
+        169,100 six-term coincidences cannot. [proved] (D126, review
+        F4)
+48.4.8. Rational unit points of odd height have no relation of odd
+        norm: |v|^2 odd forces an odd coordinate sum, so every
+        relation has an even coefficient sum. [proved] (D126 Part F)
+48.4.8.1. Stated generally: the points v_i/H share one odd
+          denominator H. Mixed odd heights are covered by taking the
+          common one. [proved] (D126 review R4)
+48.4.9. 2O's profile is 2T's squared (theta_2O = theta_2T^2): 2O = 2T
+        u sigma_1 2T in separate coordinate blocks, so 2O adds no
+        relation structure beyond two copies of 2T. [proved] (D126
+        Part E, review F11)
 
 49. Do robust XOR sets in other groups follow a subgroup structure, as
     Q8 cosets do in 2O (see 18.2)?

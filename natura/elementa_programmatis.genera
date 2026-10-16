@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/elementa_programmatis.genera
-  Exemplar semanticum: ELEMENTA PROGRAMMATIS (versio 8, PLASTICUM)
+  Exemplar semanticum: ELEMENTA PROGRAMMATIS (versio 9, PLASTICUM)
+
+  VERSIO 9 (2026-10-15): consumptor practicus primus - unitates
+  codicis (project-specs/unitates-codicis-spec.md, decretum
+  ...VKVD86). Genus commune OPUS_PROGRAMMATIS natum ('plures
+  speciales, nullum generale', METAMODULUS par. 9): bibliotheca et
+  programma sub eo, et nova subsystema, opus_explorationis. Machina vitae
+  (viva/vetusta/archivata) et successio (substituit) in genere
+  communi; programma proprietatem usus (homo/agens/machina, causa
+  finalis instrumenti) accepit. Individua (vicus, xar, silva) in
+  repositorio declarantur et haec genera citant - lex residentiae.
 
   VERSIO 5 (2026-08-10): migratio necessitudinum - paria conversa
   vitae status declarata (legit/mutat/haurit + producit), gemini
@@ -81,7 +91,7 @@
   lingua_programmandi pertinet (differentia universalis/
   specialis, inserta/externa) - editio futura illius plagulae.
 -->
-<natura modulus="elementa_programmatis" versio="8" lingua="latina">
+<natura modulus="elementa_programmatis" versio="9" lingua="latina">
 
 <!-- ========== NECESSITUDINES DOMESTICAE ==========
      Paria conversa vitae status et aedificationis: sedes formam
@@ -903,10 +913,75 @@
 </.genus>
 
 <!-- ==================================================
+     OPUS PROGRAMMATIS - opus nomine suo appellatum
+
+     Natum 2026-10-15 (versio 9): bibliotheca, programma, et quae
+     ea colligunt apparatum communem ferebant (nomen, membra,
+     vitam, successionem) sine genere communi nominato - signum
+     'plures speciales, nullum generale'. Rhymat cum opus_scriptum
+     (opus_scriptum modulus): illud legitur, hoc currit aut vocatur.
+     ================================================== -->
+
+<.genus nomen="opus_programmatis">
+
+  <definitio>
+    Opus ex elementis programmatis constans et NOMINE SUO
+    appellatum: unitas quam homo creat, nominat, curat, et tandem
+    deponit. Quod bibliotheca et programma et quae ea colligunt
+    communiter ferunt - nomen, membra, vitam, successionem - hic
+    semel describitur.
+  </definitio>
+
+  <glossa lingua="en">A work of programming: a work made of
+    program elements and called by its OWN NAME - a unit that
+    someone creates, names, maintains and eventually lays down. What
+    libraries, programs and the things that gather them have in
+    common - a name, members, a life, a succession - is described
+    here once.</glossa>
+  <glossa lingua="fr">Une oeuvre de programmation : une oeuvre faite
+    d'éléments de programme et appelée par son NOM PROPRE - une unité
+    que l'on crée, nomme, entretient et finit par déposer. Ce que les
+    bibliothèques, les programmes et ce qui les rassemble ont en
+    commun - un nom, des membres, une vie, une succession - est
+    décrit ici une seule fois.</glossa>
+
+  <machina_statuum nomen="vita" gerens="individuum"
+    nota="vita operis, non functionis (functio machinam suam habet:
+          vigens/deprecata/remota). Vetusta = a generatione
+          posteriore superata, adhuc praesens, fortasse currens, non
+          amplius aucta - successorem suum per substituit invenit">
+    <status nomen="viva"/>
+    <status nomen="vetusta"/>
+    <status nomen="archivata"/>
+    <transitus a="viva" ad="vetusta" per="supersessio"/>
+    <transitus a="vetusta" ad="archivata" per="archivatio"/>
+    <transitus a="viva" ad="archivata" per="archivatio"/>
+  </machina_statuum>
+
+  <relationes>
+    <relatio nomen="continet" ad="opus_programmatis"
+      multiplex="verum"
+      nota="nidificatio: subsystema bibliothecas et instrumenta
+            continet; familia bibliothecas filias (imago: imago_png,
+            imago_opus) - membrum suum nomen et vitam servat"/>
+    <relatio nomen="substituit" ad="opus_programmatis"
+      multiplex="verum"
+      nota="successor praedecessorem nominat (silva arborem
+            veterem); vetusta per inversam invenitur"/>
+    <relatio nomen="orta_ex" ad="opus_programmatis"
+      multiplex="verum"
+      nota="promotio: opus ex alio natum (fundamenta mathematica
+            domus ex investigatione knotapel) - genus non mutatur,
+            cura fortasse"/>
+  </relationes>
+
+</.genus>
+
+<!-- ==================================================
      BIBLIOTHECA - elementa ad usum repetendum edita
      ================================================== -->
 
-<.genus nomen="bibliotheca">
+<.genus nomen="bibliotheca" sub="opus_programmatis">
 
   <definitio>
     Collectio elementorum (functionum, constantium, typorum) ad
@@ -1304,7 +1379,7 @@
      introspectio non invenerat.)
      ================================================== -->
 
-<.genus nomen="programma">
+<.genus nomen="programma" sub="opus_programmatis">
 
   <definitio>
     Collectio elementorum cum INITIO PROPRIO: vocatum currit et
@@ -1335,6 +1410,17 @@
     </proprietas>
     <proprietas nomen="interactivum" genus="veritas"
       ordinarius="falsum"/>
+    <proprietas nomen="usus" genus="electio" multiplex="verum"
+      nota="CAUSA FINALIS: artefactum fine suo definitur - cui
+            programma fit. homo = quod homo ipse eligit currere;
+            agens = agenti (LLM, opifici) praebitum; machina = a
+            machinatione vocatum (commissio, uncus, fabrica, portae).
+            Multiplex: mensor agenti et machinae servit. Vocabula
+            domus reddit (tabularium actor, mensor vocator)">
+      <optio>homo</optio>
+      <optio>agens</optio>
+      <optio>machina</optio>
+    </proprietas>
   </proprietates>
 
   <relationes>
@@ -1500,6 +1586,74 @@
       omnia ex derivatione vivunt.
     </nota>
   </individuum>
+
+</.genus>
+
+<!-- ==================================================
+     SUBSYSTEMA - opus quod opera continet et ligat
+     ================================================== -->
+
+<.genus nomen="subsystema" sub="opus_programmatis">
+
+  <differentia>
+    Opus programmatis quod alia opera CONTINET et plagulas
+    communes possidet quae ea ligant: declarationes aedificationis
+    et ianuam suitae probationum. Nec bibliotheca nec programma,
+    sed domus eorum.
+  </differentia>
+
+  <glossa lingua="en">A subsystem: a work of programming that
+    CONTAINS other works and owns the shared files that bind them -
+    the build declarations and the entry point of its test suite.
+    Neither a library nor a program, but their house.</glossa>
+  <glossa lingua="fr">Un sous-système : une oeuvre de programmation
+    qui CONTIENT d'autres oeuvres et possède les fichiers communs qui
+    les lient - les déclarations de construction et la porte de sa
+    suite de tests. Ni bibliothèque ni programme, mais leur
+    maison.</glossa>
+
+  <partes>
+    <pars nomen="declarationes_aedificationis" necessaria="verum"
+      nota="apud nos aedificatio.stml"/>
+    <pars nomen="ianua_suitae" necessaria="verum"
+      nota="apud nos compile_probationes.sh"/>
+    <pars nomen="documenta" necessaria="falsum"/>
+  </partes>
+
+</.genus>
+
+<!-- ==================================================
+     OPUS EXPLORATIONIS - opus quod quaestionem explorat
+
+     NON 'investigatio': id nomen iudicium tenet (inquisitio in
+     causas eventus - genus aliud; monolithus canonum geminum
+     recusavit, 2026-10-15). Distinctio vera, nomen distinctum.
+     ================================================== -->
+
+<.genus nomen="opus_explorationis" sub="opus_programmatis">
+
+  <differentia>
+    Opus programmatis cuius finis est quaestionem EXPLORARE, non
+    usum praebere: programmata eius experimenta sunt, assertiones
+    audiuntur, inventa in alia opera promoventur (orta_ex).
+  </differentia>
+
+  <glossa lingua="en">A research work: a work of programming whose
+    end is to EXPLORE a question, not to provide a use - its programs
+    are experiments, its claims get audited, and what it finds is
+    promoted into other works.</glossa>
+  <glossa lingua="fr">Une oeuvre de recherche : une oeuvre de
+    programmation dont la fin est d'EXPLORER une question, non de
+    fournir un usage - ses programmes sont des expériences, ses
+    affirmations sont auditées, et ce qu'elle trouve est promu dans
+    d'autres oeuvres.</glossa>
+
+  <relationes>
+    <relatio nomen="exercet" ad="experimentum" modulus="laboratorium"
+      multiplex="verum"
+      nota="demonstratio investigationis experimentum est (knotapel
+            demo_NNN), non probatio: nihil iudicat, ostendit"/>
+  </relationes>
 
 </.genus>
 

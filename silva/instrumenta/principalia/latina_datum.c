@@ -20,13 +20,14 @@
 #define VIA_MAXIMA 4096
 
 interior constans character* constans PROOEMIUM =
-    "/* silva_latina_datum.h - Textus latina.h ut datum (Phase 7"
-    " Chunk A)\n"
+    /* SIGNUM GENERATI in linea PRIMA (lex domus; olim linea III) */
+    "/* silva_latina_datum.h - GENERATUM, NE MANU MUTES\n"
     " *\n"
-    " * GENERATUM ex include/latina.h per"
-    " silva/latina_datum_generare.sh\n"
-    " * (actio fabricae 'latina_datum') - NE MANU MUTES. Copia"
-    " compilata\n"
+    " * Textus latina.h ut datum (Phase 7 Chunk A): ex include/latina.h"
+    " per\n"
+    " * silva/latina_datum_generare.sh (actio fabricae"
+    " 'latina_datum').\n"
+    " * Copia compilata\n"
     " * definitionum latinarum: silva_contextus_latinam_addere eam"
     " praebet\n"
     " * - \"compiled-in defaults\" interview ad litteram, sine fonte\n"

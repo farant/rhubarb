@@ -118,9 +118,15 @@ lacks (transponere, lexema, lista, xar). The runner compiles
 Glossary pass I done from the report (77 entries: house coinages and
 late Latin, house proper names, C/API/format names; common English and
 abbreviations left unknown on purpose). The lint's corpus is the
-HOUSE: `knotapel/` (English by decision), `vendor/`, `archivum/` are
-excluded in one place (`ORATIO_VOCABULA_EXCLUSA`; `-omnes-viae` scans
-all). Glossary entries carry `contextus="latinus | anglicus | ambo"`
+HOUSE, decided in ONE place since 2026-10-15: the judge `lint_latinus`
+in the root `unitates.stml` (custody domestica, not archived, roles
+source/header/test - fixtures excluded -, hand-written AND generated;
+`knotapel/` remissa, `vendor/` `oracula/` aliena, `archivum/` archived).
+`vocabula` filters the tracked list through it, the commit hook asks
+`tools/iudex_unitatum.sh lint_latinus`, the pin test uses the same filter
+(`unitates_viae_iudicatae`); `-omnes-viae` scans all.
+`ORATIO_VOCABULA_EXCLUSA` is gone (it judged fixa/ and amalgama/ while
+the hook's own list skipped them). Glossary entries carry `contextus="latinus | anglicus | ambo"`
 (decision 26): the identifier/comment lint is the Latin context and
 ignores English-only entries; abbreviations are KEPT (36 permitted,
 contextus latinus). Identifier unknowns were PINNED as a count only
@@ -134,8 +140,9 @@ unknown code letters counted: `cowardic\Ne`), gate
 TEXTUS nodes only (code spans, fences, link targets, html, front matter
 never reach the lookup); `oratio_vocabula_creare_anglice` judges
 glossary-English → Moby → Latin table = status **LATINUM** (known
-Latin in prose is never a finding); corpus = house + knotapel minus
-vendor/ archivum/ generated (`ORATIO_PROSA_EXCLUSA`);
+Latin in prose is never a finding); corpus = judge `prosa_anglica` in
+`unitates.stml` (house + knotapel, minus vendor/ archivum/ generated and
+fixtures; `ORATIO_PROSA_EXCLUSA` retired 2026-10-15);
 `./oratio/vocabula.sh -prosa`, `silva.vocabula('prosa')`. Day one:
 62,524 words, 58 % unknown = regular inflections (-s -ed -ing 's) +
 house English terms. **T15b DONE (same day)**: `ORATIO_REGULAE_EN` —

@@ -303,6 +303,15 @@
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="lector" genus="referentia"/>
     <attributum nomen="contentum" genus="textus"/>
+    <attributum nomen="interactio" genus="electio">
+      <optio>automatica</optio>
+      <optio>manualis</optio>
+    </attributum>
+    <attributum nomen="occupatio" genus="electio">
+      <optio>nihil</optio>
+      <optio>fenestra</optio>
+      <optio>focus</optio>
+    </attributum>
     <attributum nomen="interrogat" genus="referentia"/>
     <liberum nomen="invenit"/>
     <liberum nomen="exercet"/>

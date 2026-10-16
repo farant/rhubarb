@@ -99,6 +99,20 @@ catalogus_pars (
              Catalogus** exitus);
 
 
+/* catalogus ex punctis datis, ORDINE dato (cellae II, T1): catalogi
+ * nulli non ex clausura oriuntur. Profunditas, torsio, gradus 0.
+ * FALSUM si numerus 0, anulus sine ordine, anuli mixti, punctum
+ * nullum, aut punctum REPETITUM ad signum (refutatur, non tacite
+ * deletur); exitus non tangitur. Puncta non copiantur: valent dum
+ * piscina eorum vivit. Unitas non postulatur. */
+b32
+catalogus_ex_punctis (
+    constans Quaternio*  puncta,
+                   i32   numerus,
+               Piscina*  piscina,
+             Catalogus** exitus);
+
+
 /* ==================================================
  * Activatio: tabula axium et cella summae (semantica D82/D84
  * combined_cell, exacte)
@@ -121,7 +135,8 @@ catalogus_pars (
  * polynomii t^2 - Tr t + N, termini tan^2(m pi/k) radices S_k(u) = sum
  * C(k, 2l+1) (-1)^l u^l per POSITIONEM (radices). Aliter FALSUM.
  * Memoria cellarum per punctum exactum (s et -s idem) in piscina
- * activationis.
+ * activationis. Nullus limes k (k distincti, k per punctum, scala
+ * quaestionis): memoria crescit (cellae II T5).
  * ================================================== */
 
 nomen structura Activatio Activatio;
@@ -132,13 +147,54 @@ nomen structura {
     constans i32* ligatae;     /* valida dum activatio vivit */
 } Cella;
 
-/* FALSUM si corpus non quadraticum ordinatum, aut catalogus sine axe */
+#define CELLAE_CELLA_D82  0    /* cella combinata (supra) */
+#define CELLAE_CELLA_D94  1    /* cella phasis (infra) */
+
+/* CELLA PHASIS (D94, D119 exacte; cellae II T2). Summa s = (a, v), h =
+ * acos(a/|s|) in [0, pi], angulus rotationis 2h in k sectores:
+ *   - s = 0: (k - 1)(nd + 1) + nd (ut D82);
+ *   - v = 0: a > 0 sector 0, a < 0 sector k - 1 (h = pi), axis nd - a <
+ *     0 ergo eadem cella ac summa nulla (D119);
+ *   - aliter: sector = #{m in 1..k-1 : cos h <= cos(m pi/k)}; in termino
+ *     (aequalitas ad m) regula m, paritas {m - 1, m}. a = 0: sector
+ *     floor(k/2), k par paritas cum k/2 - 1 (ut D82). Axis ut D82.
+ * NULLA plicatio: s et -s cellas diversas habent (D82 plicat). Via: tan^2
+ * h = |v|^2/a^2 radicibus S_k per positionem comparatur (ut D82),
+ * terminis per signum a reflexis (m = k - m'). Activationes D94 a
+ * quaestionibus antipodalibus (activatio_separat, _exhaustiva, _avida)
+ * refutantur; activatio_cella et activatio_iudica eas accipiunt. */
+
+/* FALSUM si corpus non quadraticum ordinatum, aut catalogus sine axe.
+ * = activatio_creare(catalogus, NIHIL, 0, CELLAE_CELLA_D82, ...) */
 b32
 activatio_ex_catalogo (
     constans Catalogus*  catalogus,
                    i32   axes_maximae,
                Piscina*  piscina,
              Activatio** exitus);
+
+/* activatio super 'catalogus' (cuius summas iudicat) cum tabula axium
+ * EXPRESSA (cellae II): partes vectoriae 'axes' ordine dato,
+ * antipodes et multipla idem (primus manet); NIHIL = tabula catalogi
+ * ipsius (ut activatio_ex_catalogo). Sic copia una tabula alterius
+ * iudicari potest (activatio_axis). FALSUM si axis anulo alieno aut
+ * parte vectoria nulla, numerus_axium 0 cum axibus, aut cella ignota. */
+b32
+activatio_creare (
+    constans Catalogus*  catalogus,
+    constans Quaternio*  axes,
+                   i32   numerus_axium,
+                   i32   cella,
+                   i32   axes_maximae,
+               Piscina*  piscina,
+             Activatio** exitus);
+
+/* axis i tabulae, quaternio PURUS (0, v); i extra [0, axes): quaternio
+ * cum anulo NIHIL. Valet dum piscina activationis vivit. */
+Quaternio
+activatio_axis (
+    constans Activatio* activatio,
+                   i32  i);
 
 i32
 activatio_axes (
@@ -190,6 +246,73 @@ activatio_separat (
              i32  k,
              i32  modus,
              b32* exitus);
+
+
+/* ==================================================
+ * Encodatio signata (D94, D119-D123; cellae II T3)
+ *
+ * Pondera n (indices catalogi), larva in [0, 2^n): summa = sum +-q_i,
+ * +q_i si bitum i larvae, -q_i aliter (nullus coefficiens 0). Valor
+ * desideratus tabula[larva] in {0, 1}. Separat ad k si nulla cella
+ * larvas valoris diversi continet; verdicta per k unita (aliquod k
+ * scalae transit). Cellae D82 et D94 ambae accipiuntur (D82 plicat s et
+ * -s). Modi ut supra:
+ *   regula:     cellae regulae;
+ *   robusta:    omnis resolutio paritatum;
+ *   possibilis: aliqua resolutio (per punctum exactum; D94: s et -s
+ *               puncta diversa); quaeritur solum ubi robusta deficit et
+ *               nondum possibilis.
+ * ================================================== */
+
+/* n maximum encodationis signatae (D94/D119 usque ad N = VIII);
+ * quaestio
+ * antipodalis CELLAE_N_MAXIMUS (VII) servat */
+#define CELLAE_N_SIGNATA_MAXIMA  VIII
+
+nomen structura {
+    b32 regula;
+    b32 robusta;
+    b32 possibilis;
+    b32 ligata;      /* aliqua larva, aliquod k: cella cum paritate */
+    b32 indecisa;    /* limes SAT attactus, possibilis non probata:
+                      * possibilis FALSUM ergo ignotum, non verdictum */
+    b32 concursus;   /* duae larvae valoris diversi, summa exacte eadem
+                      * (D82: aut opposita): nulla cella ullo k eas
+                      * distinguit, ergo nullus modus transit. Completum
+                      * (paria omnia), non per quaestionem SAT; 0 si
+                      * possibilis. Concursus indecisam tollit. */
+} Iudicium;
+
+/* *exitus verdicta; FALSUM si n 0 aut > CELLAE_N_SIGNATA_MAXIMA, index
+ * extra aut iteratus,
+ * scala vacua aut k < 1, tabula valore > 1 (exitus non tangitur) */
+b32
+activatio_iudica (
+       Activatio* activatio,
+    constans i32* pondera,
+             i32  n,
+    constans i32* scala_k,
+             i32  numerus_k,
+     constans i8* tabula,
+        Iudicium* exitus);
+
+/* tabulae veritatis 2^n (D94): paritas (XOR), et (AND: larva plena),
+ * maior (MAJ: plus quam n/2 bita). NIHIL si n 0 aut >
+ * CELLAE_N_SIGNATA_MAXIMA. */
+constans i8*
+cellae_paritas (
+         i32  n,
+     Piscina* piscina);
+
+constans i8*
+cellae_et (
+         i32  n,
+     Piscina* piscina);
+
+constans i8*
+cellae_maior (
+         i32  n,
+     Piscina* piscina);
 
 
 /* ==================================================
@@ -271,18 +394,41 @@ activatio_avida (
  * probant, cella decisa est et sine paritate (paritas aequalitas exacta
  * est, quam intervallum numquam excludit). Aliter via exacta (axes
  * candidatae solae si filtrum eas angustavit). Sine iactura: verdicta
- * eadem ac sine filtro (probatur).
+ * eadem ac sine filtro (probatur). Axes ante conversionem exacte
+ * normatae (pars maxima 1): scala axium quaevis. Elementum quod duplex
+ * XX decimalium non capit (|pars| >= ~1e43): filtrum abstinet, via
+ * exacta (statistica: filtro 0) - numquam FALSUM, numquam aestimatum.
  * ================================================== */
 
 nomen structura {
     i64 filtro;      /* cellae a filtro decisae */
     i64 exacte;      /* cellae per viam exactam */
     i64 ligatae;     /* exactae cum paritate (plus quam una cella) */
+    i64 imagine;     /* summae per imaginem integram nominatae */
+    i64 algebraice;  /* summae per numeros algebraicos nominatae */
+    i64 puncta;      /* puncta exacta in memoria activationis */
 } CellaeStatistica;
 
 /* filtrum (ordinarie VERUM) */
 vacuum
 activatio_filtrum (
+     Activatio* activatio,
+           b32  utere);
+
+/* IMAGO INTEGRA (cellae II T4b): ad creationem pars j elementi =
+ * (p + q alpha)/D, alpha generator corporis, D denominator communis,
+ * p, q integri |p|, |q| <= 2^40. Summa tum additiones integrorum et
+ * punctum exactum per integros nominatur (valor idem sse integri
+ * idem); numeri algebraici solum pro puncto novo. Coefficiens maior aut
+ * D extra s64: nulla imago, via algebraica (statistica: imagine 0).
+ * activatio_cella summam repraesentabilem (omnis coefficiens x D
+ * integer, |.| <= 2^62) per imaginem quoque nominat: idem valor, idem
+ * punctum. Ordinarie VERUM; FALSUM viam algebraicam priorem reddit
+ * (probationis causa: verdicta eadem). Commutatio inter vocationes
+ * licet; idem valor tum puncta duo habere potest (unum per nomen),
+ * cellis eisdem (ambae exactae). */
+vacuum
+activatio_imago (
      Activatio* activatio,
            b32  utere);
 
