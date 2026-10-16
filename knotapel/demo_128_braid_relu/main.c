@@ -11,8 +11,10 @@
  *   AFFINE  dst = sum coef * src
  *   RELU    dst = max(0, sum coef * src)
  * and f- as f - relu(f), so a braid word of length m on n strands is a
- * network of depth O(m) and width 2n - 4 in which every layer touches
- * at most 4 coordinates. Plan: plan.md (approved 2026-10-15); plexus
+ * network of depth O(m) - two ReLU layers per letter - whose state is
+ * 2n - 4 coordinates (hidden width at most 2n + 1: the state plus a
+ * middle generator's 5 ReLUs), and every letter touches at most 4
+ * coordinates. Plan: plan.md (approved 2026-10-15); plexus
  * (house library) supplies the reference action and everything else.
  *
  *   Part A  the layer programs (typed from the paper's equations, not
@@ -36,6 +38,7 @@
 #include "plexus.h"
 #include "sors.h"
 #include "chorda_aedificator.h"
+#include "cyclotomia.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -654,8 +657,9 @@ part_a (void)
     }
 
     /* shape of a word's network */
-    printf("\n  a word as a network (width = 2n - 4 coordinates; each "
-        "layer touches <= 4):\n");
+    printf("\n  a word as a network (state 2n - 4 coordinates, hidden "
+        "width <= 2n + 1, 2 ReLU layers\n  per letter, each letter "
+        "touches <= 4 coordinates):\n");
     printf("    %-34s %3s %7s %7s %9s %11s\n", "word", "n", "letters",
         "ReLUs", "depth", "ReLU depth");
     for (n = 0; n < 3; n++) {
@@ -702,10 +706,15 @@ part_a (void)
  *   P  periodic, EXACT: beta^n or beta^(n-1) equals a power of Delta^2
  *      (every periodic braid is conjugate to a power of delta = s1..s_{n-1}
  *      or epsilon = s1 delta: Brouwer, Kerekjarto, Eilenberg; cited);
- *   E  positive entropy: CERTIFIED if the Burau(-1) radix is > 1
- *      (lower bound, cited), otherwise MEASURED: max_k L^(k)_60 /
- *      L^(k)_40 > 2 over the loops E_k on D_n;
- *   Z  zero entropy, not periodic (measured: the ratio is <= 2).
+ *   E  positive entropy: CERTIFIED if Burau at t = -1 or at a primitive
+ *      cube root of unity has spectral radius > 1 (plexus: Kolev's lower
+ *      bound, cited, decided exactly with Kronecker), otherwise
+ *      MEASURED: max_k L^(k)_60 / L^(k)_40 > 2 over the loops E_k on
+ *      D_n (and then, checked, not quasi-affine and > 10^6);
+ *   Z  zero entropy, not periodic: not certified, growth quasi-affine.
+ * (periodic braids: Gonzalez-Meneses and Wiest 2004; minimal
+ * dilatations: phi^2 on B_3, Ko, Los and Song 2002 on B_4, the largest
+ * root of x^4 - 2x^3 - 2x + 1 = 2.29663...)
  * The gap is wide: a pseudo-Anosov piece on <= 4 strands has dilatation
  * >= 2.29 (minimal dilatations of B_3, B_4; cited), so its ratio over
  * 20 periods is > 10^7, while a zero-entropy braid grows at most
@@ -716,11 +725,13 @@ typedef struct {
     int    len;
     chorda key;
     int    cls;          /* CLS_P, CLS_E, CLS_Z */
-    int    certified;    /* E: Burau radix > 1 */
+    int    certified;    /* Burau(-1) radix > 1 */
+    int    cert_omega;   /* Burau at a cube root of unity: radius > 1 */
     double rate;         /* measured (L60/L40)^(1/20), display only */
     int    d106_pa;      /* D106's rule says pseudo-Anosov */
     long   tr;           /* trace, c1 of Burau(-1) (B_4 only) */
     long   c1;
+    chorda tlkey;        /* D106's TL matrix (Part C) */
 } Census;
 
 #define CLS_P 0
@@ -981,7 +992,8 @@ grows_exponentially (
     int     period,
     double *rate,
     int    *repeats,
-    int    *affine)
+    int    *affine,
+    int    *wide)
 {
     int    n = (int)p.fila;
     int    k;
@@ -990,6 +1002,7 @@ grows_exponentially (
 
     *repeats = period > 0;
     *affine = 1;
+    *wide = 0;
     for (k = 1; k < n; k++) {
         Ansa    e;
         Magnus *lengths = NULL;
@@ -1003,6 +1016,11 @@ grows_exponentially (
         if (magnus_compara(lengths[60], magnus_multiplica(lengths[40],
                 magnus_ex_s64(2), pool)) > 0) {
             expo = 1;
+        }
+        /* wide margin: lambda >= 2.29 gives lambda^20 > 1.6 * 10^7 */
+        if (magnus_compara(lengths[60], magnus_multiplica(lengths[40],
+                magnus_ex_s64(1000000), pool)) > 0) {
+            *wide = 1;
         }
         r = root20(ratio_display(lengths[60], lengths[40]));
         if (r > best) best = r;
@@ -1121,24 +1139,35 @@ classify (
         int         periodic = is_periodic(cs[i].word);
         int         repeats;
         int         affine;
+        int         wide;
         int         expo = grows_exponentially(cs[i].word, periodic,
-            &cs[i].rate, &repeats, &affine);
+            &cs[i].rate, &repeats, &affine, &wide);
 
         if (!plexus_burau_radix_maxima(cs[i].word, pool, &rho)
                 || !radix_compara(rho, radix_one(), pool, &sg)) {
             fatal("radix refused");
         }
         cs[i].certified = sg > 0;
+        {
+            b32 maior = FALSUM;
+
+            if (!plexus_burau_radius_maior(cs[i].word, 3, &maior)) {
+                fatal("certificate refused");
+            }
+            cs[i].cert_omega = maior ? 1 : 0;
+        }
         if (periodic) {
             cs[i].cls = CLS_P;
-            /* periodic: the lengths repeat with the period, radix 1 */
-            if (expo || !repeats || cs[i].certified) {
+            /* periodic: the lengths repeat with the period; no
+             * certificate (Kolev) */
+            if (expo || !repeats || cs[i].certified || cs[i].cert_omega) {
                 *consistent = 0;
             }
-        } else if (cs[i].certified || expo) {
+        } else if (cs[i].certified || cs[i].cert_omega || expo) {
             cs[i].cls = CLS_E;
-            /* a certified bound must show in the growth */
-            if (cs[i].certified && !expo) {
+            /* a certificate must show in the growth; measured growth
+             * must not be quasi-affine and must clear a wide margin */
+            if (!expo || affine || !wide) {
                 *consistent = 0;
             }
         } else {
@@ -1159,10 +1188,10 @@ census_table (
 {
     int len;
 
-    printf("    %4s %8s %8s %10s %9s %8s %9s\n", "len", "braids", "P",
-        "E (cert)", "E (meas)", "Z", "E share");
+    printf("    %4s %8s %6s %11s %11s %10s %6s %9s\n", "len", "braids",
+        "P", "E cert t=-1", "E cert t=w", "E measured", "Z", "E share");
     for (len = 0; len <= maxlen; len++) {
-        int tot = 0, p = 0, ec = 0, em = 0, z = 0;
+        int tot = 0, p = 0, ec = 0, ew = 0, em = 0, z = 0;
         int i;
 
         for (i = 0; i < count; i++) {
@@ -1171,10 +1200,11 @@ census_table (
             if (cs[i].cls == CLS_P) p++;
             else if (cs[i].cls == CLS_Z) z++;
             else if (cs[i].certified) ec++;
+            else if (cs[i].cert_omega) ew++;
             else em++;
         }
-        printf("    %4d %8d %8d %10d %9d %8d %8.1f%%\n", len, tot, p, ec,
-            em, z, tot ? 100.0 * (ec + em) / tot : 0.0);
+        printf("    %4d %8d %6d %11d %11d %10d %6d %8.1f%%\n", len, tot, p,
+            ec, ew, em, z, tot ? 100.0 * (ec + ew + em) / tot : 0.0);
     }
 }
 
@@ -1240,9 +1270,57 @@ part_b (
             word_text(cs[min_i].word));
     }
     sprintf(msg, "B_%d: periodic braids' loop lengths repeat with their "
-        "period (radix 1); certified ones grow exponentially; Z grows "
-        "quasi-affinely", n);
+        "period, uncertified; certified and measured E grow beyond "
+        "10^6 and not quasi-affinely; Z grows quasi-affinely", n);
     check(msg, consistent);
+    /* pinned per-level class counts: the D128 review's independent
+     * oracle (free-group growth, periodicity for every k <= 12) */
+    {
+        int p3[9] = { 1, 0, 4, 10, 20, 16, 34, 32, 92 };
+        int e3[9] = { 0, 0, 4, 12, 32, 92, 248, 544, 1176 };
+        int z3[9] = { 0, 4, 4, 8, 16, 40, 32, 80, 88 };
+        int p4[7] = { 1, 0, 0, 8, 24, 36, 102 };
+        int e4[7] = { 0, 0, 8, 48, 198, 802, 2958 };
+        int z4[7] = { 0, 6, 18, 42, 116, 272, 482 };
+        int same = 1;
+        int measured_only = 0;
+        int len;
+
+        for (len = 0; len <= maxlen; len++) {
+            int pp = 0, ee = 0, zz = 0;
+
+            for (i = 0; i < count; i++) {
+                if (cs[i].len != len) continue;
+                if (cs[i].cls == CLS_P) pp++;
+                else if (cs[i].cls == CLS_E) ee++;
+                else zz++;
+            }
+            if (n == 3 && (pp != p3[len] || ee != e3[len]
+                    || zz != z3[len])) {
+                same = 0;
+            }
+            if (n == 4 && (pp != p4[len] || ee != e4[len]
+                    || zz != z4[len])) {
+                same = 0;
+            }
+        }
+        for (i = 0; i < count; i++) {
+            if (cs[i].cls == CLS_E && !cs[i].certified
+                    && !cs[i].cert_omega) {
+                measured_only++;
+            }
+        }
+        sprintf(msg, "B_%d: per-level P / E / Z counts = the review's "
+            "independent counts", n);
+        check(msg, same);
+        sprintf(msg, "B_%d: every positive-entropy braid is CERTIFIED "
+            "(Burau at t = -1 or at a cube root of unity): %d measured "
+            "only", n, measured_only);
+        check(msg, measured_only == 0);
+        check(n == 3 ? "B_3: the identity is periodic"
+            : "B_4: the identity is periodic", cs[0].len == 0
+            && cs[0].cls == CLS_P);
+    }
     /* distinct classes are unequal under Artin (sample) */
     {
         Sors s;
@@ -1269,6 +1347,222 @@ part_b (
     *out_count = count;
 }
 
+/* D106's TL representation of B_4 on W_{4,2} (D106 main.c, from
+ * D100): 3x3 over Z[zeta_8], A = -zeta_8, A^-1 = conj(A);
+ * sigma_i = A I + A^-1 e_i, sigma_i^-1 = A^-1 I + A e_i with
+ * e_1 = E(0,1), e_2 = E(1,0) + E(1,2), e_3 = E(2,1). Here only to
+ * replicate D106's catalog, which deduplicated by this matrix ALONE
+ * (D106 main.c:409, "dedup by TL matrix"). */
+typedef struct {
+    Cyclotomicus m[3][3];
+} TL3;
+
+static Cyclotomia *z8;
+
+static TL3
+tl_mul (
+    const TL3 *a,
+    const TL3 *b)
+{
+    TL3 r;
+    int i;
+    int j;
+    int k;
+
+    for (i = 0; i < 3; i++) {
+        for (j = 0; j < 3; j++) {
+            Cyclotomicus sum = cyclotomicus_nullum(z8);
+
+            for (k = 0; k < 3; k++) {
+                sum = cyclotomicus_adde(sum, cyclotomicus_multiplica(
+                    a->m[i][k], b->m[k][j], pool), pool);
+            }
+            r.m[i][j] = sum;
+        }
+    }
+    return r;
+}
+
+static TL3
+tl_generator (
+    int letter)        /* +-1, +-2, +-3 */
+{
+    TL3          g;
+    Cyclotomicus a = cyclotomicus_nega(cyclotomicus_radix(z8, 1, pool),
+        pool);                                         /* -zeta */
+    Cyclotomicus ai = cyclotomicus_conjugatum(a, pool);
+    Cyclotomicus diag = letter > 0 ? a : ai;
+    Cyclotomicus off = letter > 0 ? ai : a;
+    int          i = letter > 0 ? letter : -letter;
+    int          r;
+    int          c;
+
+    for (r = 0; r < 3; r++) {
+        for (c = 0; c < 3; c++) {
+            g.m[r][c] = r == c ? diag : cyclotomicus_nullum(z8);
+        }
+    }
+    if (i == 1) {
+        g.m[0][1] = cyclotomicus_adde(g.m[0][1], off, pool);
+    } else if (i == 2) {
+        g.m[1][0] = cyclotomicus_adde(g.m[1][0], off, pool);
+        g.m[1][2] = cyclotomicus_adde(g.m[1][2], off, pool);
+    } else {
+        g.m[2][1] = cyclotomicus_adde(g.m[2][1], off, pool);
+    }
+    return g;
+}
+
+static chorda
+tl_key (
+    const TL3 *t)
+{
+    ChordaAedificator *ae = chorda_aedificator_creare(pool, 64);
+    int                r;
+    int                c;
+
+    for (r = 0; r < 3; r++) {
+        for (c = 0; c < 3; c++) {
+            (void)chorda_aedificator_appendere_chorda(ae,
+                cyclotomicus_ad_chordam(t->m[r][c], pool));
+            (void)chorda_aedificator_appendere_character(ae, '|');
+        }
+    }
+    return chorda_aedificator_finire(ae);
+}
+
+static TL3
+tl_of_word (
+    Plexus p)
+{
+    TL3 t = tl_generator(1);
+    i32 k;
+    int r;
+    int c;
+
+    for (r = 0; r < 3; r++) {
+        for (c = 0; c < 3; c++) {
+            t.m[r][c] = r == c ? cyclotomicus_integer(z8,
+                magnus_ex_s64(1), pool) : cyclotomicus_nullum(z8);
+        }
+    }
+    for (k = 0; k < p.longitudo; k++) {
+        TL3 g = tl_generator((int)p.litterae[k]);
+
+        t = tl_mul(&t, &g);
+    }
+    return t;
+}
+
+/* D106's BFS replicated: level by level, entries of the previous level
+ * in catalog order, generators in D106's order (s1, s1^-1, s2, s2^-1,
+ * s3, s3^-1), right multiplication, kept iff the TL matrix is new */
+static void
+d106_bfs (
+    int  maxdepth,
+    int *level_count,
+    int *level_pa)
+{
+    TL3    *tls = NULL;
+    Plexus *words = NULL;
+    chorda *keys = NULL;    /* unsorted, parallel to tls */
+    chorda *seen = NULL;    /* sorted */
+    int     n = 0;
+    int     cap = 4096;
+    int     nseen = 0;
+    int     start = 0;
+    int     depth;
+    int     gens[6] = { 1, -1, 2, -2, 3, -3 };
+
+    tls = (TL3 *)malloc((size_t)cap * sizeof(TL3));
+    words = (Plexus *)malloc((size_t)cap * sizeof(Plexus));
+    keys = (chorda *)malloc((size_t)cap * sizeof(chorda));
+    seen = (chorda *)malloc((size_t)cap * sizeof(chorda));
+    words[0] = braid(4, "");
+    tls[0] = tl_of_word(words[0]);
+    keys[0] = tl_key(&tls[0]);
+    seen[0] = keys[0];
+    nseen = 1;
+    n = 1;
+    level_count[0] = 1;
+    level_pa[0] = 0;
+    for (depth = 1; depth <= maxdepth; depth++) {
+        int end = n;
+        int i;
+        int g;
+
+        for (i = start; i < end; i++) {
+            for (g = 0; g < 6; g++) {
+                TL3    gen = tl_generator(gens[g]);
+                TL3    prod = tl_mul(&tls[i], &gen);
+                chorda key = tl_key(&prod);
+                s32    lit = (s32)gens[g];
+                Plexus one;
+                int    lo = 0;
+                int    hi = nseen;
+                int    found = 0;
+                int    k;
+
+                /* seen is sorted: binary search, then linear insert */
+                while (lo < hi) {
+                    int mid = (lo + hi) / 2;
+                    int cmp = (int)chorda_comparare(seen[mid], key);
+
+                    if (cmp == 0) { found = 1; break; }
+                    if (cmp < 0) lo = mid + 1; else hi = mid;
+                }
+                if (found) continue;
+                if (n == cap) {
+                    cap *= 2;
+                    tls = (TL3 *)realloc(tls, (size_t)cap * sizeof(TL3));
+                    words = (Plexus *)realloc(words, (size_t)cap
+                        * sizeof(Plexus));
+                    keys = (chorda *)realloc(keys, (size_t)cap
+                        * sizeof(chorda));
+                    seen = (chorda *)realloc(seen, (size_t)cap
+                        * sizeof(chorda));
+                }
+                (void)plexus_creare(4, &lit, 1, pool, &one);
+                (void)plexus_iungere(words[i], one, pool, &words[n]);
+                tls[n] = prod;
+                keys[n] = key;
+                for (k = nseen; k > lo; k--) {
+                    seen[k] = seen[k - 1];
+                }
+                seen[lo] = key;
+                nseen++;
+                n++;
+            }
+        }
+        level_count[depth] = n - end;
+        level_pa[depth] = 0;
+        for (i = end; i < n; i++) {
+            Census c;
+
+            memset(&c, 0, sizeof(c));
+            c.word = words[i];
+            d106_rule(&c);
+            if (c.d106_pa) level_pa[depth]++;
+        }
+        start = end;
+    }
+    free(tls);
+    free(words);
+    free(keys);
+    free(seen);
+}
+
+static int
+tlkey_cmp (
+    const void *x,
+    const void *y)
+{
+    const Census *a = (const Census *)x;
+    const Census *b = (const Census *)y;
+
+    return (int)chorda_comparare(a->tlkey, b->tlkey);
+}
+
 static void
 part_c (
     Census *cs,
@@ -1281,6 +1575,7 @@ part_c (
     int  c;
     int  first[2][3];
     char msg[256];
+    int  p1_zero = 1;
 
     printf("\n=== Part C: D106's rule against the exact classes "
         "(B_4 up to length %d) ===\n\n", maxlen);
@@ -1288,89 +1583,59 @@ part_c (
     for (r = 0; r < 2; r++) for (c = 0; c < 3; c++) first[r][c] = -1;
     for (i = 0; i < count; i++) {
         d106_rule(&cs[i]);
+        if (cs[i].c1 - cs[i].tr != 0) p1_zero = 0;
         r = cs[i].d106_pa ? 0 : 1;
         cross[r][cs[i].cls]++;
         if (first[r][cs[i].cls] < 0) first[r][cs[i].cls] = i;
     }
-    printf("    %-18s %8s %8s %8s\n", "D106 says", "P", "Z", "E");
-    printf("    %-18s %8d %8d %8d\n", "pseudo-Anosov", cross[0][CLS_P],
+    /* lemma (D128 review, L1): on B_4 at t = -1 every reduced Burau
+     * matrix has eigenvalue 1 - unreduced Burau fixes (1,1,1,1), which
+     * lies in ker (1, t, t^2, t^3) when t^4 = 1, t != 1. So p(1) = 0,
+     * D106's first branch never fires, and the other two eigenvalues
+     * are real or on the unit circle */
+    check("B_4: p(1) = 0 for the Burau(-1) of every braid (D106's first "
+        "branch never fires)", p1_zero);
+    printf("    %-24s %8s %8s %8s\n", "D106's rule says", "P", "Z", "E");
+    printf("    %-24s %8d %8d %8d\n", "pseudo-Anosov", cross[0][CLS_P],
         cross[0][CLS_Z], cross[0][CLS_E]);
-    printf("    %-18s %8d %8d %8d\n", "periodic", cross[1][CLS_P],
+    printf("    %-24s %8d %8d %8d\n", "periodic", cross[1][CLS_P],
         cross[1][CLS_Z], cross[1][CLS_E]);
     printf("  (P periodic, exact; Z zero entropy, not periodic; E positive "
-        "entropy)\n");
-    printf("  shortest disagreements (breadth-first order):\n");
-    if (first[0][CLS_P] >= 0) {
-        printf("    D106 'pA', periodic:          %s\n",
-            word_text(cs[first[0][CLS_P]].word));
-    }
-    if (first[0][CLS_Z] >= 0) {
-        printf("    D106 'pA', zero entropy:      %s\n",
-            word_text(cs[first[0][CLS_Z]].word));
-    }
-    if (first[1][CLS_E] >= 0) {
-        printf("    D106 'periodic', positive:    %s (rate %.5f)\n",
-            word_text(cs[first[1][CLS_E]].word),
-            cs[first[1][CLS_E]].rate);
-    }
-    /* anchor: D106's published table (findings.md, "Pseudo-Anosov
-     * Fraction Increases with Depth"). Depths 0-5: its catalog's counts
-     * and its rule's 'pA' counts are reproduced exactly. Depth 6: D106
-     * has 3,444 braids (2,234 'pA'), against the exact count here -
-     * its catalog deduplicated by (TL, Burau) matrices, which merges
-     * distinct braids (presumably: neither representation is faithful
-     * as specialized there). */
+        "entropy, certified)\n");
     if (maxlen >= 6) {
-        int d106_total[7] = { 1, 6, 26, 98, 338, 1110, 3444 };
-        int d106_pa[7]    = { 0, 0, 8, 32, 146, 562, 2234 };
-        int same = 1;
-        int len;
-        int tot6 = 0;
-        int pa6 = 0;
-
-        for (len = 0; len <= 6; len++) {
-            int tot = 0, pa = 0;
-
-            for (i = 0; i < count; i++) {
-                if (cs[i].len != len) continue;
-                tot++;
-                if (cs[i].d106_pa) pa++;
-            }
-            if (len <= 5 && (tot != d106_total[len]
-                    || pa != d106_pa[len])) {
-                same = 0;
-            }
-            if (len == 6) {
-                tot6 = tot;
-                pa6 = pa;
-            }
-        }
-        check("D106's table, depths 0-5 (braids and 'pA' counts), is "
-            "reproduced exactly: its catalog = the distinct braids by "
-            "shortest length, its rule as stated", same);
-        printf("  depth 6: D106 has %d braids (%d 'pA'); exact: %d "
-            "braids (%d 'pA' under its rule)\n", d106_total[6],
-            d106_pa[6], tot6, pa6);
+        check("cross table = the review's independent table: 'pA' row "
+            "0 / 0 / 3006, 'periodic' row 171 / 936 / 1008",
+            cross[0][CLS_P] == 0 && cross[0][CLS_Z] == 0
+            && cross[0][CLS_E] == 3006 && cross[1][CLS_P] == 171
+            && cross[1][CLS_Z] == 936 && cross[1][CLS_E] == 1008);
     }
-    /* what the rule is: on det-1 3x3 matrices, p(1) = 0 means p(x) =
-     * (x - 1)(x^2 + (1 - tr) x + 1), whose other roots lie ON the unit
-     * circle iff |1 - tr| <= 2. So 'pA' = "Burau(-1) has spectral radius
-     * > 1", i.e. exactly the certified set */
+    printf("  shortest disagreement (breadth-first order):\n");
+    if (first[1][CLS_E] >= 0) {
+        Census *d = &cs[first[1][CLS_E]];
+
+        printf("    D106 'periodic', positive entropy: %s (rate %.5f; "
+            "Burau(-1) char. poly (x-1)^3: tr %ld, c1 %ld; certified by "
+            "Burau at a cube root of unity: %s)\n", word_text(d->word),
+            d->rate, d->tr, d->c1, d->cert_omega ? "yes" : "no");
+    }
+    /* what the rule decides: p(1) = 0 always, so 'pA' iff |1 - tr| > 2
+     * iff an eigenvalue is real with modulus > 1 iff Burau(-1) radius
+     * > 1 - exactly the plexus certificate at t = -1 */
     {
         int same = 1;
 
         for (i = 0; i < count; i++) {
             if (cs[i].d106_pa != cs[i].certified) same = 0;
         }
-        check("D106's 'pA' = Burau(-1) radix > 1 on every braid (its rule "
-            "decides Burau's spectral radius, exactly)", same);
+        check("D106's 'pA' = Burau(-1) spectral radius > 1 on every "
+            "braid", same);
     }
-    /* by length: D106's pA share against the positive-entropy share */
+    /* by length: D106's rule on the exact set against certified E */
     {
         int len;
 
-        printf("\n    %4s %8s %12s %12s\n", "len", "braids", "D106 'pA'",
-            "E (exact)");
+        printf("\n    %4s %8s %16s %16s\n", "len", "braids",
+            "D106 rule 'pA'", "E (certified)");
         for (len = 0; len <= maxlen; len++) {
             int tot = 0, pa = 0, e = 0;
 
@@ -1380,20 +1645,108 @@ part_c (
                 if (cs[i].d106_pa) pa++;
                 if (cs[i].cls == CLS_E) e++;
             }
-            printf("    %4d %8d %11.1f%% %11.1f%%\n", len, tot,
+            printf("    %4d %8d %15.1f%% %15.1f%%\n", len, tot,
                 tot ? 100.0 * pa / tot : 0.0, tot ? 100.0 * e / tot : 0.0);
         }
+        printf("    (the 'pA' column is D106's RULE applied to the exact "
+            "braids; D106's published\n     share differs only at depth "
+            "6, where its catalog is smaller: see below)\n");
     }
-    /* P2, registered: disagreement in both directions */
-    printf("\n  P2 (registered): D106's rule calls some zero-entropy braid "
-        "'pA': %s; some positive-entropy braid 'periodic': %s\n",
-        cross[0][CLS_P] + cross[0][CLS_Z] > 0 ? "YES" : "no",
-        cross[1][CLS_E] > 0 ? "YES" : "no");
-    /* D106's claims */
+    /* D106's catalog: replicate its TL-only BFS */
+    if (maxlen >= 6) {
+        int d106_total[7] = { 1, 6, 26, 98, 338, 1110, 3444 };
+        int d106_pa[7]    = { 0, 0, 8, 32, 146, 562, 2234 };
+        int lc[7];
+        int lp[7];
+        int same = 1;
+        int len;
+        int tot6 = 0;
+        int pa6 = 0;
+
+        d106_bfs(6, lc, lp);
+        for (len = 0; len <= 6; len++) {
+            if (lc[len] != d106_total[len] || lp[len] != d106_pa[len]) {
+                same = 0;
+            }
+        }
+        for (i = 0; i < count; i++) {
+            if (cs[i].len == 6) {
+                tot6++;
+                if (cs[i].d106_pa) pa6++;
+            }
+        }
+        printf("\n  D106's catalog, replicated (TL-only dedup): %d %d %d "
+            "%d %d %d %d braids, %d %d %d %d %d %d %d 'pA'\n", lc[0],
+            lc[1], lc[2], lc[3], lc[4], lc[5], lc[6], lp[0], lp[1], lp[2],
+            lp[3], lp[4], lp[5], lp[6]);
+        check("D106's table, depths 0-6, is reproduced EXACTLY by its "
+            "TL-only breadth-first search", same);
+        check("exact census at length 6: 3542 braids, 2258 'pA' under "
+            "D106's rule", tot6 == 3542 && pa6 == 2258);
+        /* the merges: exact classes sharing a TL matrix */
+        {
+            int pairs = 0;
+            int all_len6 = 1;
+            int same_burau = 1;
+            int bigger = 0;
+
+            Census *cs_sorted = (Census *)malloc((size_t)count
+                * sizeof(Census));
+
+            for (i = 0; i < count; i++) {
+                TL3 t = tl_of_word(cs[i].word);
+
+                cs[i].tlkey = tl_key(&t);
+            }
+            /* sort a copy: the census order stays breadth-first */
+            memcpy(cs_sorted, cs, (size_t)count * sizeof(Census));
+            qsort(cs_sorted, (size_t)count, sizeof(Census), tlkey_cmp);
+            for (i = 0; i < count; ) {
+                int j = i + 1;
+
+                while (j < count && chorda_aequalis(cs_sorted[j].tlkey,
+                        cs_sorted[i].tlkey)) {
+                    j++;
+                }
+                if (j - i == 2) {
+                    pairs++;
+                    if (cs_sorted[i].len != 6 || cs_sorted[i + 1].len != 6) {
+                        all_len6 = 0;
+                    }
+                    if (cs_sorted[i].tr != cs_sorted[i + 1].tr
+                            || cs_sorted[i].c1 != cs_sorted[i + 1].c1) {
+                        same_burau = 0;
+                    }
+                    if (pairs == 1) {
+                        printf("  first merged pair: %s", word_text(
+                            cs_sorted[i].word));
+                        printf("  and  %s\n", word_text(cs_sorted[i + 1].word));
+                    }
+                } else if (j - i > 2) {
+                    bigger++;
+                }
+                i = j;
+            }
+            free(cs_sorted);
+            printf("  exact classes sharing a TL matrix: %d pairs, %d "
+                "larger groups\n", pairs, bigger);
+            check("exactly 98 pairs of distinct braids share a TL matrix, "
+                "all at length 6, with equal Burau(-1) char. poly: "
+                "3542 - 98 = 3444", pairs == 98 && bigger == 0 && all_len6
+                && same_burau);
+        }
+    }
+    /* P2, registered: both directions */
+    printf("\n  P2 (registered): zero-entropy braids called 'pA': %d (this "
+        "direction was impossible:\n      'pA' means Burau(-1) radius "
+        "> 1, which forces positive entropy by Kolev's bound);\n"
+        "      positive-entropy braids called 'periodic': %d\n",
+        cross[0][CLS_P] + cross[0][CLS_Z], cross[1][CLS_E]);
+    /* D106's depth-2 claim */
     {
-        int  len1_periodic = 1;
         int  len2_pa = 0;
         int  len2_ok = 1;
+        int  len2_reducible = 1;
         RadixRealis phi2;
         Polynomium  f;
         RadixRealis *roots;
@@ -1404,10 +1757,13 @@ part_c (
         (void)radices_reales(f, pool, &roots, &nroots);
         phi2 = roots[nroots - 1];
         for (i = 0; i < count; i++) {
-            if (cs[i].len == 1 && cs[i].d106_pa) len1_periodic = 0;
             if (cs[i].len == 2 && cs[i].d106_pa) {
                 RadixRealis rho;
                 s32         sg = 1;
+                s32         a = cs[i].word.litterae[0];
+                s32         b = cs[i].word.litterae[1];
+                s32         ia = a > 0 ? a : -a;
+                s32         ib = b > 0 ? b : -b;
 
                 len2_pa++;
                 (void)plexus_burau_radix_maxima(cs[i].word, pool, &rho);
@@ -1416,17 +1772,19 @@ part_c (
                         || cs[i].cls != CLS_E) {
                     len2_ok = 0;
                 }
+                /* two adjacent generators: a braid on 3 consecutive
+                 * strands inside B_4, hence reducible */
+                if (!(ia - ib == 1 || ib - ia == 1)) len2_reducible = 0;
             }
         }
-        printf("  D106 claim, depth 1 all 'periodic': %s (but the six "
-            "s_i are Z here: half twists, reducible)\n",
-            len1_periodic ? "holds under its rule" : "FAILS");
-        printf("  D106 claim, depth 2: %d 'pA' braids, all with "
-            "x^3 - 4x^2 + 4x - 1 and dilatation phi^2 exactly: %s\n",
-            len2_pa, len2_ok ? "holds" : "FAILS");
-        check("D106 depth-2 'pA' braids: char. poly x^3 - 4x^2 + 4x - 1, "
-            "Burau radix = (3 + sqrt 5)/2 exactly, positive entropy",
-            len2_pa > 0 && len2_ok);
+        printf("  D106's depth-2 'pA' braids: %d; each is a word in two "
+            "adjacent generators (a 3-strand braid inside B_4: REDUCIBLE, "
+            "not pseudo-Anosov); Burau bound = phi^2, exact on the "
+            "3-strand piece\n", len2_pa);
+        check("D106's depth-2 'pA' braids: char. poly x^3 - 4x^2 + 4x - 1, "
+            "Burau radix (3 + sqrt 5)/2 exactly, positive entropy, and "
+            "reducible (two adjacent generators)", len2_pa == 8 && len2_ok
+            && len2_reducible);
         sprintf(msg, "D106's rule disagrees with the exact classes on B_4 "
             "up to length %d in %d braids", maxlen,
             cross[0][CLS_P] + cross[0][CLS_Z] + cross[1][CLS_E]);
@@ -1449,6 +1807,7 @@ main (void)
     printf("KNOTAPEL DEMO 128: Braids as Exact ReLU Networks\n");
     printf("================================================\n");
     celer = getenv("D128_CELER") != NULL;
+    z8 = cyclotomia_creare(8, pool);
     part_a();
     {
         Census *b3;

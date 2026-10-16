@@ -265,14 +265,20 @@ How the outcome reaches claims.md:
     counts and its rule's 'pA' counts. Its catalog is the exact
     shortest-length enumeration up to there. At depth 6 D106 has 3,444
     braids (2,234 'pA'); the exact count is 3,542 (2,258 under its
-    rule). Its (TL, Burau) dedup presumably merged distinct braids.
+    rule). [Corrected in T6d: D106 deduplicated by the TL matrix ALONE
+    (D106 main.c:409); the demo replicates that search and gets D106's
+    table exactly. 98 pairs of distinct braids share a TL matrix, all
+    at length 6: 3,542 - 98 = 3,444.]
   - D106's rule decides exactly "Burau(-1) spectral radius > 1": on
     det-1 3x3 matrices, p(1) = 0 with |1 - tr| <= 2 puts the other
-    eigenvalues on the unit circle. Its 'pA' set equals the
+    eigenvalues on the unit circle. [T6d: and p(1) = 0 ALWAYS on B_4 at
+    t = -1, so the rule's first branch never fires; now checked.] Its 'pA' set equals the
     Burau-certified set on all 5,121 braids.
   - P2, registered in both directions: zero-entropy braids called 'pA'
     = 0 (that direction FAILS; my delta example was wrong, since the
-    rule classifies delta correctly). Positive-entropy braids called
+    rule classifies delta correctly). [T6d: it could not have held:
+    'pA' means Burau(-1) radius > 1, which forces positive entropy by
+    Kolev's bound. P2(a) was mis-registered.] Positive-entropy braids called
     'periodic' = 1,008. The shortest is s1 s3^-1 s2, rate 2.29663, the
     minimal dilatation of B_4.
   - The positive-entropy share by length on B_4 (exact) against D106's
@@ -281,8 +287,14 @@ How the outcome reaches claims.md:
     level is understated by about 20 points.
   - P4 holds: the 8 depth-2 'pA' braids have characteristic polynomial
     x^3 - 4x^2 + 4x - 1 and Burau radix exactly (3 + sqrt 5)/2.
+    [T6d: but each is a word in two adjacent generators, a 3-strand
+    braid inside B_4, so REDUCIBLE, not pseudo-Anosov. phi^2 is exact
+    on the 3-strand piece.]
   - On B_3, Burau certifies every positive-entropy braid (0 "measured
-    only"), consistent with Burau(-1) being exact on B_3. The smallest
+    only"), consistent with Burau(-1) being exact on B_3. [T6d: on B_4
+    the 1,008 "measured" braids are now all certified, by Burau at a
+    cube root of unity (plexus_burau_radius_maior, T3b); "E" is exact
+    on both censuses.] The smallest
     rates are the known minimal dilatations: 2.61803 (B_3), 2.29663
     (B_4).
 - **Plants (silva.planta, 9, quick mode):** all red. They cover
@@ -290,3 +302,59 @@ How the outcome reaches claims.md:
   certificate, D106's |1 - tr| boundary, the level dedup turned off,
   the key on D_n, an off-by-one periodicity check, and the quasi-affine
   window cut to p = 1.
+
+## Decisions made during T6d (the review's fix list)
+
+The independent review (H 0, M 4, L 6; every number correct) drove
+these changes. Full mode: 24/24 checks in 1.7 s; quick mode 20/20.
+
+- **M1, D106's catalog is now explained exactly.** Part C replicates
+  D106's breadth-first search: its TL representation on W_{4,2} over
+  Z[zeta_8] (A = -zeta_8, via cyclotomia), its generator order, right
+  multiplication, and dedup by the TL matrix alone. The replica gives
+  1, 6, 26, 98, 338, 1110, 3444 braids and 0, 0, 8, 32, 146, 562, 2234
+  'pA', which is D106's table. Among the exact classes, exactly 98 pairs
+  share a TL matrix (no larger groups), all at length 6, and each pair
+  has the same Burau(-1) characteristic polynomial, which is why the
+  rule's count drops by 24 (2,258 -> 2,234).
+- **M2, the classes are guarded.** The per-level P / E / Z counts are
+  pinned to the review's independent counts. The cross table is pinned
+  ('pA' row 0 / 0 / 3006; 'periodic' row 171 / 936 / 1008). Periodic
+  braids must be uncertified, and E needs a wide margin (L60 > 10^6
+  L40). The identity is checked as periodic.
+- **M3, every E is certified.** "E measured" is 0 on both censuses; the
+  B_4 braids that Burau(-1) misses are certified at a cube root of
+  unity.
+- **M4, the depth-2 'pA' braids are reducible** (checked: two adjacent
+  generators).
+- **L1:** the p(1) = 0 lemma is checked on every B_4 braid.
+- **L2:** P2(a) is noted as impossible by Kolev.
+- **L3:** the width is worded as state 2n - 4, hidden <= 2n + 1, two
+  ReLU layers per letter.
+- **L5** (D106's claim that Burau is faithful on B_4: open) and **L6**
+  (citations) go into findings.md and claims.md in T6c.
+- Part C sorts a COPY of the census for the TL pairs, so the census
+  order stays breadth-first for later parts.
+- **Plants (silva.planta, full mode, 4):** all red. They cover the
+  replica keeping duplicates at depth 6, the p(1) lemma inverted, the
+  reducibility test on non-adjacent generators, and the second
+  certificate moved from a cube root of unity to t = -1 (1,008
+  "measured only").
+- **Two mutants stay green; kept as findings, not plants.**
+  - At A = -zeta_8 the loop value is delta = -A^2 - A^-2 = -(i - i) = 0.
+    The TL form is then G = [[0,1,0],[1,0,1],[0,1,0]] (checked: the
+    only G, up to scale, with G e_i = e_i^T G), and it is SINGULAR. Its
+    radical is spanned by v = (1, 0, -1), and every e_i kills v
+    (e_1 v = v_1, (e_2 v)_1 = v_0 + v_2, e_3 v = v_1), so
+    rho(w) v = A^{e(w)} v, with e(w) the exponent sum.
+  - Keying on columns 0-1 or columns 1-2 of the TL matrix stays green;
+    dropping row 0 or row 2 turns it red. Reason: rho(w) v = A^{e(w)} v
+    says column 0 - column 2 = A^{e(w)} v, so either outer column is
+    the other one plus a multiple of v. (Dropping column 1 was not
+    tried.)
+  - Transposing the TL product (A B^T) stays green through length 6:
+    the mutated walk computes rho(rev w)^T. G intertwines,
+    G rho(w) = rho(rev w)^T G, but G is singular, so this is NOT a
+    proof that the two keys make the same braids equal; it is an
+    observation on 5,121 braids. D106 uses the matrix only as a dedup
+    key, so the observable (the table) cannot tell them apart there.
