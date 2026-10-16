@@ -167,6 +167,31 @@ this plan.
   bounds (see R11), cookie branch, IP test, vector length writer - all
   red, then green.
 
+- **R13 (T4)** - write keys switch to c hs AT ServerHello: alerts
+  raised while reading the server flight are sealed under c hs
+  (sequence 0); the dummy CCS is emitted lazily before our FIRST sealed
+  record (Finished flight, or such an alert). Tests open the alert with
+  the RFC's c hs secret.
+- **R14 (T4)** - extra section `data_coniuncta` (NST + two data records
+  in one feed: the second is not opened until the first is read);
+  plant 3 (`dum` -> `si`) does not compile (`frange` inside `si`) ->
+  `frange` after one message instead; extra plants: Finished compare,
+  trust-callback guard, unread-data stall. All six red, then green.
+- **R15 (T4)** - Latin lint: `ack` (spec's API, abbreviation) ->
+  `ignotum-permissum`; house word `entropia`; form `alertam` added to
+  `alerta`; renamed `hc` -> `status_hash`, `hn` -> `mensura_digesti`,
+  `ALERTA_DECRYPTIO` -> `ALERTA_VERIFICATIO`, test `rec` ->
+  `recordum_servi`, `_alimentare` -> `_ingerere`,
+  `_sectio_s7_compatibilitas` -> `_sectio_s7_ccs` (section title stays
+  `s7_compatibilitas`). `silva/renominare.sh` refuses untracked files
+  (git is its undo) - word-boundary edits on the new files instead.
+- **R16 (T4)** - beyond the plan's text: key-change boundary check (RFC
+  8446 5.1), all-zero X25519 secret rejected (7.4.2), warning
+  user_canceled ignored, unexpected messages/records -> PARAMETRUM with
+  alert 10. Deferred to T5 with their tests: alert NAMES in the causa
+  (T4 gives the number), HRR, KeyUpdate. CertificateRequest ->
+  unexpected (no client certificates, spec II.5).
+
 ## Review focus
 
 Inputs no task's tests reach that are most likely to bite, each with

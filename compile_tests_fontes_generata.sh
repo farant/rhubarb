@@ -269,6 +269,7 @@ declare -a SOURCE_FILES=(
     "lib/thema_visus.c"
     "lib/thesaurus.c"
     "lib/tls.c"
+    "lib/tls13.c"
     "lib/tls13_clavis.c"
     "lib/tls13_nuntii.c"
     "lib/tls13_recordum.c"
