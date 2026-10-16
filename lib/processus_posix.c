@@ -96,13 +96,29 @@ structura Processus {
  * FUNCTIONES INTERNAE
  * ======================================================================== */
 
+/* HOROLOGIUM VIGILANS (colloquia T8d0): tempus quo machina VIGILAT -
+ * somno non crescit. gettimeofday (murus) somnum numerabat: operculum
+ * clausum XVII min generatores sub termino DC s in experrectione
+ * necavit (2026-10-16, pmset). Usus omnes differentiae sunt (initium,
+ * terminus, mora_ms) - nullus cum muro comparatur. Darwin:
+ * CLOCK_UPTIME_RAW (CLOCK_MONOTONIC ibi somnum NUMERAT); alibi
+ * CLOCK_MONOTONIC (Linux suspensionem excludit). */
+#ifdef CLOCK_UPTIME_RAW
+#define HOROLOGIUM_VIGILANS CLOCK_UPTIME_RAW
+#else
+#define HOROLOGIUM_VIGILANS CLOCK_MONOTONIC
+#endif
+
 interior i64
 _tempus_ms (vacuum)
 {
-    structura timeval tv;
+    structura timespec t;
 
-    gettimeofday(&tv, NIHIL);
-    redde (i64)tv.tv_sec * (i64)M + (i64)tv.tv_usec / (i64)M;
+    si (clock_gettime(HOROLOGIUM_VIGILANS, &t) != 0)
+    {
+        redde (i64)ZEPHYRUM;
+    }
+    redde (i64)t.tv_sec * (i64)M + (i64)t.tv_nsec / ((i64)M * (i64)M);
 }
 
 /* reliquum termini in ms. Latus effectus: tempus_excessum ponit cum

@@ -88,6 +88,9 @@ int nanosleep(const struct timespec* petitum,
 typedef int clockid_t;
 #define CLOCK_REALTIME  0
 #define CLOCK_MONOTONIC 6
+/* horologium VIGILANS (colloquia T8d0, lib/processus_posix.c,
+ * tools/mensor.c): Darwin CLOCK_MONOTONIC somnum numerat, hoc non */
+#define CLOCK_UPTIME_RAW 8
 
 int clock_gettime(clockid_t horologium, struct timespec* tempus);
 
@@ -579,6 +582,8 @@ int uname(struct utsname* nomina);
 
 /* <sectio caput="unistd.h"/> unistd.h - identitas processus */
 pid_t getpid(void);
+/* custos cursus (colloquia T8b, tools/mensor.c): vocans incipere */
+pid_t getppid(void);
 
 /* <sectio caput="unistd.h"/> unistd.h - sysconf (Unda 4)
  * Valor _SC_NPROCESSORS_ONLN Darwin LVIII mensuratus; Linux LXXXIV

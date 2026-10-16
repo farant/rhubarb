@@ -224,6 +224,13 @@ phase that needs it. Header text shown to Fran before coding.*
   fix it (T8d0, processus + mensor on CLOCK_UPTIME_RAW), ship on code
   review; the real lid-close probe (sleep 60 under a 120 s timeout,
   lid shut ~3 min, old build red / new green) is OWED.
+- T8d0 2026-10-16: lib/processus_posix.c `_tempus_ms` and tools/mensor.c
+  `_horologium_ms` on HOROLOGIUM_VIGILANS = CLOCK_UPTIME_RAW (Darwin),
+  CLOCK_MONOTONIC elsewhere; every use is a difference. Lexicon
+  (silva/fontes/systema_posix.h) gains CLOCK_UPTIME_RAW 8 (auspex
+  certifies) - before, examen analysed the #else branch - and getppid
+  (examen suspected T8b's call as implicit). Glossary: uptime, getppid.
+  No automated test can sleep the machine: shipped on review (Fran).
 - IN MAIN 2026-10-16 (ff 1dc057b6, fusio_probare green + frigida,
   installata 23/23). The 7 hooks now call `~/.bin/praeco hamus`
   (backup ~/.claude/settings.json.bak-praeco-bin-2026-10-16); the ad

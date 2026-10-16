@@ -604,13 +604,21 @@ _condere (
 /* acta: corpus maximum per fluxum (cauda servatur) */
 #define ACTA_MAXIMA (IV * MXXIV * MXXIV)
 
-/* horologium monotonum (duratio; murus pro initio/fine) */
+/* horologium VIGILANS (duratio; murus pro initio/fine): somno non
+ * crescit (colloquia T8d0) - Darwin CLOCK_MONOTONIC somnum numerat,
+ * duratio cursus operculo clauso mentiebatur; CLOCK_UPTIME_RAW non */
+#ifdef CLOCK_UPTIME_RAW
+#define HOROLOGIUM_VIGILANS CLOCK_UPTIME_RAW
+#else
+#define HOROLOGIUM_VIGILANS CLOCK_MONOTONIC
+#endif
+
 interior s64
 _horologium_ms (vacuum)
 {
     structura timespec t;
 
-    si (clock_gettime(CLOCK_MONOTONIC, &t) != 0)
+    si (clock_gettime(HOROLOGIUM_VIGILANS, &t) != 0)
     {
         redde mensura_momentum_nunc();
     }
