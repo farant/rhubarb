@@ -823,6 +823,30 @@ _novum_effundere (
     }
 }
 
+/* CUSTOS (colloquia T8b): pid possessoris cursus ut mensura ordinaria
+ * (parens = id cursus; forma lineae cursus non mutatur - mensura.h).
+ * Cursus apertus cuius custos abiit necatus est, non currens. Scriptura
+ * fracta nihil frangit. */
+interior vacuum
+_custodem_notare (
+    constans CursusInitium* initium,
+                       s32  pid,
+                   Piscina* piscina)
+{
+    Mensura m;
+
+    memset(&m, ZEPHYRUM, magnitudo(m));
+    m.sessio    = initium->sessio;
+    m.id        = mensura_id_novum(piscina);
+    m.parens    = initium->id;
+    m.titulus   = chorda_ex_literis(MENSURA_CUSTOS, piscina);
+    m.valor     = (duplex)pid;
+    m.unitas    = chorda_ex_literis("pid", piscina);
+    m.momentum  = initium->initium;
+    (vacuum)mensura_annotare(mensura_diarium_cursuum(piscina), &m,
+        piscina);
+}
+
 /* curatio (T6c) infra definitur */
 interior b32
 _curatio_debita (
@@ -898,6 +922,8 @@ _cursum_currere (
         fprintf(stderr, "mensor cursus: initium non annotatum (%s)\n",
             diarium);
     }
+    /* involucrum prolem exspectat et finem scribit: ipsum custos */
+    _custodem_notare(&initium, (s32)getpid(), piscina);
     /* proles sub hoc cursu: parens, et scriptum ipsum non iterum
      * involvitur */
     sprintf(id_tabula, "%.*s", (integer)initium.id.mensura,
@@ -1050,6 +1076,8 @@ _cursum_incipere (
             "mensor cursus incipere: initium non annotatum\n");
         redde I;
     }
+    /* vocans (silva.py subprocess) finem scribet: is custos est */
+    _custodem_notare(&initium, (s32)getppid(), piscina);
     imprimere("MENSOR_PARENS=%.*s\n", (integer)initium.id.mensura,
         (constans character*)initium.id.datum);
     claves[ZEPHYRUM]  = "MENSOR_SESSIO";

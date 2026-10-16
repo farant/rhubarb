@@ -330,6 +330,98 @@ _sectio_legere (
     volumen_claudere(vol);
 }
 
+interior Mensura
+_mensuram_fictam (
+    constans character* id,
+    constans character* parens,
+    constans character* titulus,
+                duplex  valor,
+    constans character* unitas,
+               Piscina* piscina)
+{
+    Mensura m;
+
+    memset(&m, ZEPHYRUM, magnitudo(m));
+    m.sessio    = chorda_ex_literis("0199aabbccdd", piscina);
+    m.id        = chorda_ex_literis(id, piscina);
+    m.parens    = chorda_ex_literis(parens, piscina);
+    m.titulus   = chorda_ex_literis(titulus, piscina);
+    m.valor     = valor;
+    m.unitas    = chorda_ex_literis(unitas, piscina);
+    m.momentum  = (s64)1500;
+    redde m;
+}
+
+/* VII. facta cursuum (colloquia T8): mensurae ordinariae parenti
+ * adhaerentes; mensura_mensuras_legere per praefixum tituli, ordine
+ * actorum; cursus ipsi non inter mensuras */
+interior vacuum
+_sectio_mensurae (
+    CredoContextus* c)
+{
+     constans character* diarium = _diarium(c);
+          CursusInitium  i = _initium_fictum("c1", "", "porta:radix",
+              (s64)1000, c->piscina);
+                Mensura custos = _mensuram_fictam("m1", "c1",
+                    MENSURA_CUSTOS, (duplex)MMMDCCCXCVIII, "pid",
+                    c->piscina);
+                Mensura alia = _mensuram_fictam("m2", "c1",
+                    "compilatio",
+                    1.5, "secunda", c->piscina);
+                Mensura ambitus = _mensuram_fictam("m3", "c1",
+                    MENSURA_AMBITUS, (duplex)CCCLI, "membra",
+                    c->piscina);
+                   Volumen* vol;
+                       Xar* lectae;
+          constans Mensura* m;
+
+    CREDO_NECESSE(mensura_cursum_incipere(diarium, &i, c->piscina));
+    CREDO_NECESSE(mensura_annotare(diarium, &custos, c->piscina));
+    CREDO_NECESSE(mensura_annotare(diarium, &alia, c->piscina));
+    CREDO_NECESSE(mensura_annotare(diarium, &ambitus, c->piscina));
+    vol = volumen_temporarium(c->piscina, "probatio_mensura_cursus_m");
+    CREDO_NECESSE_NON_NIHIL(vol);
+    CREDO_NECESSE(mensura_condere(diarium, vol, c->piscina).successus);
+
+    lectae = mensura_mensuras_legere(vol, chorda_ex_literis("cursus.",
+        c->piscina), c->piscina);
+    CREDO_NECESSE_NON_NIHIL(lectae);
+    CREDO_AEQUALIS_I32(xar_numerus(lectae), I);
+    m = (constans Mensura*)xar_obtinere(lectae, ZEPHYRUM);
+    CREDO_CHORDA_AEQUALIS_LITERIS(m->titulus, MENSURA_CUSTOS);
+    CREDO_CHORDA_AEQUALIS_LITERIS(m->parens, "c1");
+    CREDO_CHORDA_AEQUALIS_LITERIS(m->unitas, "pid");
+    CREDO_VERUM(m->valor == (duplex)MMMDCCCXCVIII);
+
+    lectae = mensura_mensuras_legere(vol, chorda_ex_literis("fabrica.",
+        c->piscina), c->piscina);
+    CREDO_NECESSE_NON_NIHIL(lectae);
+    CREDO_AEQUALIS_I32(xar_numerus(lectae), I);
+    CREDO_CHORDA_AEQUALIS_LITERIS(((constans Mensura*)xar_obtinere(
+        lectae, ZEPHYRUM))->id, "m3");
+
+    /* praefixum vacuum = omnes, ordine actorum; cursus non numeratus */
+    lectae = mensura_mensuras_legere(vol, chorda_ex_literis("",
+        c->piscina), c->piscina);
+    CREDO_NECESSE_NON_NIHIL(lectae);
+    CREDO_AEQUALIS_I32(xar_numerus(lectae), III);
+    CREDO_CHORDA_AEQUALIS_LITERIS(((constans Mensura*)xar_obtinere(
+        lectae, ZEPHYRUM))->id, "m1");
+    CREDO_CHORDA_AEQUALIS_LITERIS(((constans Mensura*)xar_obtinere(
+        lectae, I))->id, "m2");
+    CREDO_CHORDA_AEQUALIS_LITERIS(((constans Mensura*)xar_obtinere(
+        lectae, II))->id, "m3");
+
+    /* praefixum nulli congruens: Xar vacuum, non NIHIL */
+    lectae = mensura_mensuras_legere(vol, chorda_ex_literis("nihil.",
+        c->piscina), c->piscina);
+    CREDO_NECESSE_NON_NIHIL(lectae);
+    CREDO_AEQUALIS_I32(xar_numerus(lectae), ZEPHYRUM);
+    CREDO_VERUM(mensura_mensuras_legere(NIHIL, chorda_ex_literis("",
+        c->piscina), c->piscina) == NIHIL);
+    volumen_claudere(vol);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "initium: lineae circuitus", _sectio_initium, NIHIL, NIHIL, NIHIL,
       NIHIL },
@@ -344,6 +436,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "finis: nota effugitur et praeciditur", _sectio_nota, NIHIL,
         NIHIL,
       NIHIL, NIHIL },
+    { "mensurae: facta cursuum", _sectio_mensurae, NIHIL, NIHIL, NIHIL,
+      NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

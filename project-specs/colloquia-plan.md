@@ -59,6 +59,13 @@ phase that needs it. Header text shown to Fran before coding.*
 | **T6** | tmux re-attach on restore: a terminal remembers its tmux session and vicus re-attaches it. |
 | **T7** | EXPERIMENT (progressive enhancement): Claude Code channels (MCP servers that push messages into a running session) - ask an agent for a status line, deliver a reply into the conversation. Verify the current mechanism against the docs first; a general `canales` library if it pans out. Nothing in T1-T6 depends on it. |
 
+### Follow-ups (Fran)
+
+- **T4f** (2026-10-16): Cmd+` toggles the notifications center (open
+  it, or pop it if it is the open pane). Check first what fenestra
+  delivers: Cmd+` is macOS's "cycle windows" chord, and every Cmd
+  chord also fires its menu equivalent (memory fenestra-cmd-keys).
+
 ### Phase 2 (Fran, 2026-10-15): gate and test progress dashboard
 
 | Phase | Content |
@@ -194,6 +201,12 @@ phase that needs it. Header text shown to Fran before coding.*
   `ps -o etime=`) and the pure `processus_aetatem_legere`. Plants 5/6
   red; the `pid <= 0` guard is unobservable (`ps -p 0` exits 1 itself)
   and stays as defence.
+- T8b 2026-10-16: `mensor cursus incipere` / `currere` write a
+  `cursus.custos` measurement (getppid / getpid) beside the run;
+  `mensura_mensuras_legere` reads measurements back by title prefix.
+  Plants: reader 1/2 red (the genus check is redundant - mensura_ex_linea
+  rejects run lines); mensor 3/3 red by hand - silva.planta does not
+  rebuild bin/mensor for the `currit` gate (false "porta muta").
 - IN MAIN 2026-10-16 (ff 1dc057b6, fusio_probare green + frigida,
   installata 23/23). The 7 hooks now call `~/.bin/praeco hamus`
   (backup ~/.claude/settings.json.bak-praeco-bin-2026-10-16); the ad

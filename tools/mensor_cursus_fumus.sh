@@ -23,6 +23,8 @@
 #        nidificatio per incipere; nota in columna XV (analytica T3:
 #        producentes sine involucro - silva.porta, commissio); '-acta -'
 #        corpus ex stdin in diurna (T4), cursus sine corpore: 'acta' exitus 1
+#   XIV  custos (colloquia T8b): incipere -> mensura 'cursus.custos' cum
+#        pid vocantis; currere -> pid involucri; una per cursum
 #   X    purgare (T4 2c): regula ex STML (tools/analytica_retentio.stml
 #        legitur), -siccum nihil mutat, purgatio vera corpus delet
 #        ('cursus acta' -> deletum), regula absens aut deformis -> 2
@@ -178,6 +180,20 @@ r=$(legere)
   && ! "$RADIX/bin/mensor" cursus acta "$id_p" > /dev/null 2>&1
 credo $? "IX   incipere/finire: ambitus prolis, nidificatio, exitus, nota, corpus ex stdin"
 
+# XIV custos (colloquia T8b): mensura 'cursus.custos' parenti adhaerens -
+# incipere: pid VOCANTIS (getppid; silva.py = processus qui finem
+# scribet); currere: pid INVOLUCRI ipsius (exspectat prolem). Diarium
+# legitur ANTE legere (quod condit)
+"$RADIX/bin/mensor" cursus incipere -titulus fumus/custos > "$T/amb14"
+id14=$(sed -n 's/^MENSOR_PARENS=//p' "$T/amb14")
+c14=$(awk -F'\t' -v p="$id14" '$3 == p && $4 == "cursus.custos" { print $5 + 0 }' "$MENSOR_DIARIUM")
+pp14=$("$RADIX/bin/mensor" cursus currere -titulus fumus/custos_currere -- /bin/sh -c 'echo $PPID')
+idc14=$(awk -F'\t' '$1 == "cursus" && $2 == "initium" && $6 == "fumus/custos_currere" { print $3 }' "$MENSOR_DIARIUM")
+cc14=$(awk -F'\t' -v p="$idc14" '$3 == p && $4 == "cursus.custos" { print $5 + 0 }' "$MENSOR_DIARIUM")
+[ -n "$id14" ] && [ "$c14" = "$$" ] && [ -n "$idc14" ] && [ -n "$pp14" ] && [ "$cc14" = "$pp14" ] \
+  && [ "$(awk -F'\t' -v p="$id14" '$3 == p && $4 == "cursus.custos"' "$MENSOR_DIARIUM" | wc -l | tr -d ' ')" = "1" ]
+credo $? "XIV  custos: incipere = pid vocantis, currere = pid involucri (mensura parenti adhaerens)"
+
 # X
 cat > "$T/regula_nulla.stml" <<'R'
 <retentio>
@@ -295,5 +311,5 @@ done
 credo $? "XIII curare: condit, purgat, notatur; intra diem non purgat; cursus summus curationem separatam excitat"
 
 echo
-if [ "$fracta" -eq 0 ]; then echo "fumus mensor_cursus: sanum (XIII/XIII)"; exit 0; fi
+if [ "$fracta" -eq 0 ]; then echo "fumus mensor_cursus: sanum (XIV/XIV)"; exit 0; fi
 echo "fumus mensor_cursus: FRACTUM ($fracta)"; exit 1
