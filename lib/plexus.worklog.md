@@ -285,3 +285,70 @@ Yurttas train-track matrices) stays deferred, as Fran decided.
 
 **Plants (4):** all red: the loop not advancing, the wrong scratch pool
 reset, an extra application of p, and the last value dropped.
+
+## 2026-10-15 — T5: the full review and the fixes
+
+An independent reviewer (recensor-plexus-t5) reviewed b0636f72 with
+oracles written from the papers and definitions. Every comparison
+showed 0 disagreements:
+- the Dynnikov rules typed from Thiffeault's equations: 25,000 pairs,
+  values up to 2^200;
+- loop equality against its own Artin oracle: exhaustive partitions on
+  B_3 up to length 8, B_4 up to 6 and B_5 up to 5, plus 234,450 library
+  verdicts, half of them near misses;
+- Burau, confirmed to be exactly the transpose of the textbook
+  convention on reversed words: 1,500 words;
+- Alexander against Fox calculus, a route that does not use Burau: 400
+  knot closures and several links. The table also matches for 8_19,
+  9_1, 10_124 and 8_20;
+- the radix against Sturm sequences: 2,110 braids;
+- incrementum: 600 cases. The paper's entropies were reproduced to 6-12
+  digits.
+
+Findings: H 0, M 3, L 6, N 5 (summary in the session scratchpad,
+recensio_plexus_t5/findings_summary.md). What changed:
+- **M1:** plexus_aequales_ansis now has the same structure as
+  plexus_aequales: an empty r answers at once, the exponent sum and
+  permutation are checked first, and each loop runs under its own pool
+  mark. Memory is O(n), down from O(n^2) (about 860 MB at n = 4000).
+  Test: the caller pool's peak stays under 8 MB at n = 4000, with
+  r = s_3997^2 s_3999^-2. The first version of this test used
+  s1^2 s3^-2, which moves E_1, so equality stopped after one loop and
+  the O(n^2) mutant survived. That was caught by a plant.
+- **M2:** the loop pool is inspected after every letter, with threshold
+  4·basis + max(1 MB, 4·numerus·sizeof(Magnus)), so the O(n)
+  transcription is amortized. At D_65536 with (s1 s2^-1)^15000 there
+  are 34 compactions and a 6.3 MB peak, against 776 MB before.
+- **M3:** invalid braids are tested on all four Burau functions, and
+  their outputs are checked to be untouched. Removing validus from
+  alexander or the radix is an equivalent mutant: both call the Burau
+  function first, which refuses.
+- **L1:** the Burau scratch matrix lives in its own pool and moves at
+  each compaction. Only the result is left in the caller's pool: at
+  n = 200, exactly 199^2 x 24 bytes.
+- **L2:** `ansa_valida`, checked at the entry of every loop function
+  (sectiones returns 0, ad_chordam returns "").
+- **L3:** the undocumented refusals are now in the header.
+- **L4:** tests for (good p, bad q) in both equality functions, the
+  upper bound of ansa_ex_coordinatis, the periodi guard, and
+  incrementum's strand check at periodi = 0. One gap remains, by cost:
+  accepting exactly PLEXUS_FILA_BURAU (4,096) would need about 400 MB
+  for the matrix.
+- **L5:** `plexus_apex_proprius()` / `plexus_apicem_purgare()`, a
+  high-water mark of plexus's own pools, recorded whenever one of them
+  is destroyed or reset (all of them go through two helpers).
+  incrementum over 1,000 periods peaks at ~1.4 KB, and a pool that is
+  never reset would reach ~250 KB.
+- **L6:** header wording. B_3 faithfulness is cited, with agreement
+  checked exhaustively up to length 6; the Kolev bound is cited and
+  compared.
+- **N1:** smaller loop families (without E_1, or on D_{n+1}) also
+  reproduce Artin's partition in the reviewer's exhaustive runs. The
+  reviewer recalled a proof sketch (the stabilizer of the chain is the
+  center, and B_n meets <Delta^2_{n+1}> trivially). It is not verified
+  here, so the full family stays and the header states only the
+  observation.
+
+Plants: the reviewer's surviving mutants plus the reversals of the
+fixes, 13 in all. 11 are red; 2 are equivalent (the validus checks in
+alexander and radix are redundant behind Burau's own check).

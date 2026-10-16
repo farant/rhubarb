@@ -26,6 +26,39 @@ _litterae (
 /* contractiones piscinarum propriarum (plexus_contractiones) */
 hic_manens i64 _contractiones = ZEPHYRUM;
 
+/* apex usus piscinarum propriarum (plexus_apex_proprius) */
+hic_manens memoriae_index _apex_proprius = ZEPHYRUM;
+
+/* omnis piscina propria per haec destruitur aut vacatur: apex eius
+ * prius notatur */
+interior vacuum
+_apicem_notare (
+    constans Piscina* piscina)
+{
+    memoriae_index apex = piscina_summa_apex_usus(piscina);
+
+    si (apex > _apex_proprius)
+    {
+        _apex_proprius = apex;
+    }
+}
+
+interior vacuum
+_propriam_destruere (
+    Piscina* piscina)
+{
+    _apicem_notare(piscina);
+    piscina_destruere(piscina);
+}
+
+interior vacuum
+_propriam_vacare (
+    Piscina* piscina)
+{
+    _apicem_notare(piscina);
+    piscina_vacare(piscina);
+}
+
 /* sicut _litterae, sed NIHIL si memoria deficit (piscinae propriae) */
 interior s32*
 _litterae_conari (
@@ -531,18 +564,18 @@ _contrahere (
         (memoriae_index)m->fila * magnitudo(VerbumLiberum));
     si (imagines == NIHIL)
     {
-        piscina_destruere(nova);
+        _propriam_destruere(nova);
         redde FALSUM;
     }
     per (k = ZEPHYRUM; k < m->fila; k++)
     {
         si (!_copia(m->imagines[k], VERUM, nova, &imagines[k]))
         {
-            piscina_destruere(nova);
+            _propriam_destruere(nova);
             redde FALSUM;
         }
     }
-    piscina_destruere(m->piscina);
+    _propriam_destruere(m->piscina);
     m->piscina   = nova;
     m->imagines  = imagines;
     m->basis     = piscina_summa_usus(nova);
@@ -678,7 +711,7 @@ plexus_imago_libera (
     }
     si (m.piscina != NIHIL)
     {
-        piscina_destruere(m.piscina);
+        _propriam_destruere(m.piscina);
     }
     redde bene;
 }
@@ -713,7 +746,7 @@ plexus_imagines_liberae (
     }
     si (m.piscina != NIHIL)
     {
-        piscina_destruere(m.piscina);
+        _propriam_destruere(m.piscina);
     }
     redde bene;
 }
@@ -787,7 +820,7 @@ plexus_aequales (
         }
         si (m.piscina != NIHIL)
         {
-            piscina_destruere(m.piscina);
+            _propriam_destruere(m.piscina);
         }
     }
     piscina_reficere(piscina, nota);
@@ -846,6 +879,14 @@ _negativa (
     Magnus f)
 {
     redde magnus_signum(f) < ZEPHYRUM ? f : magnus_ex_s64(ZEPHYRUM);
+}
+
+b32
+ansa_valida (
+    Ansa u)
+{
+    redde u.fila >= III && u.fila <= PLEXUS_FILA_MAXIMA && u.a != NIHIL
+        && u.b != NIHIL;
 }
 
 b32
@@ -1036,7 +1077,7 @@ _ansam_contrahere (
         a[k] = magnus_transcribe(a[k], nova);
         b[k] = magnus_transcribe(b[k], nova);
     }
-    piscina_destruere(*piscina);
+    _propriam_destruere(*piscina);
     *piscina = nova;
     _contractiones++;
     redde VERUM;
@@ -1054,12 +1095,11 @@ ansa_agere (
            Magnus* b;
               i32  numerus = u.fila - II;
               i32  k;
-              i32  ab_ultima = ZEPHYRUM;
              Ansa  v;
    memoriae_index  basis;
+   memoriae_index  limen;
 
-    si (   p.fila != u.fila || u.fila < III || u.a == NIHIL
-        || u.b    == NIHIL || !plexus_validus(p))
+    si (!ansa_valida(u) || p.fila != u.fila || !plexus_validus(p))
     {
         redde FALSUM;
     }
@@ -1080,20 +1120,25 @@ ansa_agere (
         b[k] = u.b[k];
     }
     basis = piscina_summa_usus(temporaria);
+    limen = (memoriae_index)numerus * IV * magnitudo(Magnus);
+    si (limen < 1048576UL)
+    {
+        limen = 1048576UL;
+    }
     per (k = ZEPHYRUM; k < p.longitudo; k++)
     {
         _ansam_littera(a, b, u.fila, p.litterae[k], temporaria);
-        /* purgamenta: inspectio post 256 litteras (aut numerum);
-         * contractio cum piscina quater crevit post contractionem
-         * ultimam et 1 MB superat */
-        si (++ab_ultima >= (numerus > CCLVI ? numerus : CCLVI))
+        /* purgamenta: inspectio omni littera (recensio T5 M2: olim
+         * post max(numerus, 256) litteras - verbum fila brevius numquam
+         * contrahebatur); contractio cum piscina quater crevit post
+         * contractionem ultimam et max(1 MB, 4 numerus Magnus) superat:
+         * transcriptio O(numerus) amortizata */
         {
-            ab_ultima = ZEPHYRUM;
-            si (piscina_summa_usus(temporaria) > IV * basis + 1048576UL)
+            si (piscina_summa_usus(temporaria) > IV * basis + limen)
             {
                 si (!_ansam_contrahere(a, b, numerus, &temporaria))
                 {
-                    piscina_destruere(temporaria);
+                    _propriam_destruere(temporaria);
                     redde FALSUM;
                 }
                 basis = piscina_summa_usus(temporaria);
@@ -1108,7 +1153,7 @@ ansa_agere (
         v.a[k] = magnus_transcribe(a[k], piscina);
         v.b[k] = magnus_transcribe(b[k], piscina);
     }
-    piscina_destruere(temporaria);
+    _propriam_destruere(temporaria);
     *exitus = v;
     redde VERUM;
 }
@@ -1118,7 +1163,7 @@ ansa_sectiones (
         Ansa  u,
      Piscina* piscina)
 {
-     Piscina* t = piscina_generare_dynamicum("plexus_sectiones", 4096);
+     Piscina* t;
          i32  m = u.fila - II;
          i32  k;
       Magnus  summa_b;
@@ -1127,7 +1172,13 @@ ansa_sectiones (
       Magnus  b_ultima;
       Magnus  longitudo;
 
+    /* ansa invalida: 0 (vide caput) */
+    si (!ansa_valida(u))
+    {
+        redde magnus_ex_s64(ZEPHYRUM);
+    }
     /* temporaria in piscina propria t (si deficit, in vocantis) */
+    t = piscina_generare_dynamicum("plexus_sectiones", 4096);
     si (t == NIHIL)
     {
         t = piscina;
@@ -1170,7 +1221,7 @@ ansa_sectiones (
     si (t != piscina)
     {
         longitudo = magnus_transcribe(longitudo, piscina);
-        piscina_destruere(t);
+        _propriam_destruere(t);
     }
     redde longitudo;
 }
@@ -1182,7 +1233,7 @@ ansae_aequales (
 {
     i32 k;
 
-    si (u.fila != v.fila)
+    si (u.fila != v.fila || !ansa_valida(u) || !ansa_valida(v))
     {
         redde FALSUM;
     }
@@ -1205,6 +1256,10 @@ ansa_ad_chordam (
      ChordaAedificator* ae;
                    i32  k;
 
+    si (!ansa_valida(u))
+    {
+        redde chorda_ex_literis("", piscina);
+    }
     ae = chorda_aedificator_creare(piscina, CXXVIII);
     (vacuum)chorda_aedificator_appendere_character(ae, '(');
     per (k = ZEPHYRUM; k + II < u.fila; k++)
@@ -1237,12 +1292,13 @@ plexus_aequales_ansis (
     Piscina* piscina,
         b32* aequales)
 {
-    PiscinaNotatio nota;
-            Plexus r;
-            Plexus maior;
-               i32 fila = p.fila + II;
-               i32 k;
-               b32 idem = VERUM;
+    PiscinaNotatio  nota;
+            Plexus  r;
+            Plexus  maior;
+               i32* imago;
+               i32  fila = p.fila + II;
+               i32  k;
+               b32  idem = VERUM;
 
     si (   p.fila != q.fila || fila > PLEXUS_FILA_MAXIMA
         || !plexus_validus(p) || !plexus_validus(q))
@@ -1250,25 +1306,62 @@ plexus_aequales_ansis (
         redde FALSUM;
     }
     nota = piscina_notare(piscina);
-    si (   !plexus_iungere(p, plexus_inversum(q, piscina), piscina, &r)
-        || !plexus_in_maiore(plexus_reducere(r, piscina), fila, I,
-        piscina, &maior))
+    si (!plexus_iungere(p, plexus_inversum(q, piscina), piscina, &r))
     {
         piscina_reficere(piscina, nota);
         redde FALSUM;
     }
+    r = plexus_reducere(r, piscina);
+    /* r vacuum, summa exponentium, permutatio: exacta, sine ansis
+     * (recensio T5 M1: structura plexus_aequales) */
+    si (r.longitudo == ZEPHYRUM)
+    {
+        piscina_reficere(piscina, nota);
+        *aequales = VERUM;
+        redde VERUM;
+    }
+    si (plexus_summa_exponentium(r) != ZEPHYRUM)
+    {
+        piscina_reficere(piscina, nota);
+        *aequales = FALSUM;
+        redde VERUM;
+    }
+    imago = (i32*)piscina_allocare(piscina, (memoriae_index)r.fila
+        * magnitudo(i32));
+    (vacuum)plexus_permutatio(r, imago);
+    per (k = ZEPHYRUM; k < r.fila; k++)
+    {
+        si (imago[k] != k)
+        {
+            idem = FALSUM;
+        }
+    }
+    si (!idem)
+    {
+        piscina_reficere(piscina, nota);
+        *aequales = FALSUM;
+        redde VERUM;
+    }
+    si (!plexus_in_maiore(r, fila, I, piscina, &maior))
+    {
+        piscina_reficere(piscina, nota);
+        redde FALSUM;
+    }
+    /* omnis ansa sub nota sua: memoria O(fila), non O(fila^2) */
     per (k = I; idem && k < fila; k++)
     {
-        Ansa e;
-        Ansa imago;
+        PiscinaNotatio nota_ansae = piscina_notare(piscina);
+                  Ansa e;
+                  Ansa imago_ansae;
 
         si (   !ansa_circa(fila, k, piscina, &e)
-            || !ansa_agere(e, maior, piscina, &imago))
+            || !ansa_agere(e, maior, piscina, &imago_ansae))
         {
             piscina_reficere(piscina, nota);
             redde FALSUM;
         }
-        idem = ansae_aequales(e, imago);
+        idem = ansae_aequales(e, imago_ansae);
+        piscina_reficere(piscina, nota_ansae);
     }
     piscina_reficere(piscina, nota);
     *aequales = idem;
@@ -1463,8 +1556,8 @@ memoriae_index  basis;
     {
         redde FALSUM;
     }
-    m = (Polynomium*)piscina_allocare(piscina, (memoriae_index)(d * d)
-        * magnitudo(Polynomium));
+    m = (Polynomium*)piscina_allocare(temporaria, (memoriae_index)(d
+        * d) * magnitudo(Polynomium));
     per (k = ZEPHYRUM; k < d * d; k++)
     {
         m[k] = (k / d == k % d)
@@ -1476,7 +1569,7 @@ memoriae_index  basis;
     {
         si (!_burau_littera(m, p.fila, p.litterae[k], temporaria))
         {
-            piscina_destruere(temporaria);
+            _propriam_destruere(temporaria);
             redde FALSUM;
         }
         /* purgamenta: contractio cum piscina quater crevit et 1 MB
@@ -1489,14 +1582,21 @@ memoriae_index  basis;
 
             si (nova == NIHIL)
             {
-                piscina_destruere(temporaria);
+                _propriam_destruere(temporaria);
                 redde FALSUM;
             }
-            per (r = ZEPHYRUM; r < d * d; r++)
             {
-                m[r] = polynomium_transcribe(m[r], nova);
+                /* alveus matricis quoque in piscinam novam */
+                Polynomium* m_nova = (Polynomium*)piscina_allocare(nova,
+                    (memoriae_index)(d * d) * magnitudo(Polynomium));
+
+                per (r = ZEPHYRUM; r < d * d; r++)
+                {
+                    m_nova[r] = polynomium_transcribe(m[r], nova);
+                }
+                m = m_nova;
             }
-            piscina_destruere(temporaria);
+            _propriam_destruere(temporaria);
             temporaria  = nova;
             basis       = piscina_summa_usus(temporaria);
             _contractiones++;
@@ -1504,7 +1604,7 @@ memoriae_index  basis;
     }
     si (!matrix_nulla(&ANULUS_POLYNOMIORUM, d, d, piscina, &b))
     {
-        piscina_destruere(temporaria);
+        _propriam_destruere(temporaria);
         redde FALSUM;
     }
     per (k = ZEPHYRUM; k < d * d; k++)
@@ -1513,7 +1613,7 @@ memoriae_index  basis;
 
         matrix_pone(&b, k / d, k % d, &x);
     }
-    piscina_destruere(temporaria);
+    _propriam_destruere(temporaria);
     *exitus = b;
     redde VERUM;
 }
@@ -1541,7 +1641,7 @@ memoriae_index  basis;
     {
         redde FALSUM;
     }
-    m = (Magnus*)piscina_allocare(piscina, (memoriae_index)(d * d)
+    m = (Magnus*)piscina_allocare(temporaria, (memoriae_index)(d * d)
         * magnitudo(Magnus));
     per (k = ZEPHYRUM; k < d * d; k++)
     {
@@ -1559,14 +1659,21 @@ memoriae_index  basis;
 
             si (nova == NIHIL)
             {
-                piscina_destruere(temporaria);
+                _propriam_destruere(temporaria);
                 redde FALSUM;
             }
-            per (r = ZEPHYRUM; r < d * d; r++)
             {
-                m[r] = magnus_transcribe(m[r], nova);
+                /* alveus matricis quoque in piscinam novam */
+                Magnus* m_nova = (Magnus*)piscina_allocare(nova,
+                    (memoriae_index)(d * d) * magnitudo(Magnus));
+
+                per (r = ZEPHYRUM; r < d * d; r++)
+                {
+                    m_nova[r] = magnus_transcribe(m[r], nova);
+                }
+                m = m_nova;
             }
-            piscina_destruere(temporaria);
+            _propriam_destruere(temporaria);
             temporaria  = nova;
             basis       = piscina_summa_usus(temporaria);
             _contractiones++;
@@ -1574,7 +1681,7 @@ memoriae_index  basis;
     }
     si (!matrix_nulla(&ANULUS_INTEGRORUM, d, d, piscina, &b))
     {
-        piscina_destruere(temporaria);
+        _propriam_destruere(temporaria);
         redde FALSUM;
     }
     per (k = ZEPHYRUM; k < d * d; k++)
@@ -1583,7 +1690,7 @@ memoriae_index  basis;
 
         matrix_pone(&b, k / d, k % d, &x);
     }
-    piscina_destruere(temporaria);
+    _propriam_destruere(temporaria);
     *exitus = b;
     redde VERUM;
 }
@@ -1644,7 +1751,7 @@ plexus_alexander (
     {
         *exitus = polynomium_transcribe(effectum, piscina);
     }
-    piscina_destruere(t);
+    _propriam_destruere(t);
     redde bene;
 }
 
@@ -1749,7 +1856,7 @@ plexus_burau_radix_maxima (
         copia.supra  = fractio_transcribe(maxima.supra, piscina);
         *exitus      = copia;
     }
-    piscina_destruere(t);
+    _propriam_destruere(t);
     redde bene;
 }
 
@@ -1795,8 +1902,8 @@ plexus_incrementum (
          i32  m;
          b32  bene = VERUM;
 
-    si (   !plexus_validus(p) || u.fila < III || u.a == NIHIL
-        || u.b == NIHIL || p.fila != u.fila || periodi > 0x7FFFFFFEUL)
+    si (   !plexus_validus(p) || !ansa_valida(u) || p.fila != u.fila
+        || periodi > 0x7FFFFFFEUL)
     {
         redde FALSUM;
     }
@@ -1806,11 +1913,11 @@ plexus_incrementum (
     {
         si (prior != NIHIL)
         {
-            piscina_destruere(prior);
+            _propriam_destruere(prior);
         }
         si (sequens != NIHIL)
         {
-            piscina_destruere(sequens);
+            _propriam_destruere(sequens);
         }
         redde FALSUM;
     }
@@ -1830,7 +1937,7 @@ plexus_incrementum (
             bene = ansa_agere(currens, p, sequens, &nova);
             si (bene)
             {
-                piscina_vacare(prior);
+                _propriam_vacare(prior);
                 commutata  = prior;
                 prior      = sequens;
                 sequens    = commutata;
@@ -1838,11 +1945,23 @@ plexus_incrementum (
             }
         }
     }
-    piscina_destruere(prior);
-    piscina_destruere(sequens);
+    _propriam_destruere(prior);
+    _propriam_destruere(sequens);
     si (bene)
     {
         *exitus = longitudines;
     }
     redde bene;
+}
+
+memoriae_index
+plexus_apex_proprius (vacuum)
+{
+    redde _apex_proprius;
+}
+
+vacuum
+plexus_apicem_purgare (vacuum)
+{
+    _apex_proprius = ZEPHYRUM;
 }

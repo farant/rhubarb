@@ -122,7 +122,7 @@ plexus_inversum (
      Plexus  p,
     Piscina* piscina);
 
-/* p deinde q; FALSUM si fila diversa */
+/* p deinde q; FALSUM si fila diversa aut longitudo summa > 2^31 - 1 */
 b32
 plexus_iungere (
      Plexus  p,
@@ -256,6 +256,13 @@ nomen structura {
      Magnus* b;         /* fila - 2 */
 } Ansa;
 
+/* VERUM si ansa valida: fila 3..PLEXUS_FILA_MAXIMA, a et b non NIHIL.
+ * Omnis functio ansarum ansam invalidam refutat (FALSUM; sectiones 0;
+ * ad_chordam ""), numquam extra alveum legit. */
+b32
+ansa_valida (
+    Ansa u);
+
 /* coordinatae copiantur; FALSUM si fila extra 3..PLEXUS_FILA_MAXIMA */
 b32
 ansa_ex_coordinatis (
@@ -286,7 +293,7 @@ ansa_agere (
         Ansa* exitus);
 
 /* L(u): sectiones minimae ansae cum linea horizontali per puncta (aeq.
- * 5-6) */
+ * 5-6); ansa invalida -> 0 */
 Magnus
 ansa_sectiones (
         Ansa  u,
@@ -308,9 +315,13 @@ ansa_ad_chordam (
  * ansas E_1 .. E_{n+1} fixas relinquit. Congruentia cum Artin
  * (plexus_aequales) exhaustive probata pro verbis brevibus (B_3 <= 6,
  * B_4 <= 5, B_5 <= 4 litterae; probatio_plexus); fidelitas generalis
- * hic non probatur - plexus_aequales manet referentia.
- * FALSUM si plexus invalidus aut fila diversa. piscina ad statum
- * initii reficitur. */
+ * hic non probatur - plexus_aequales manet referentia (familiae
+ * minores, e.g. sine E_1 aut in D_{n+1}, eandem partitionem exhaustive
+ * dant - recensio T5, N1 - sed familia plena servatur). Ut
+ * plexus_aequales:
+ * r vacuum, summa exponentium, permutatio prius; omnis ansa sub nota
+ * sua (memoria O(n)). FALSUM si plexus invalidus, fila diversa, aut
+ * fila > PLEXUS_FILA_MAXIMA - 2. piscina ad statum initii reficitur. */
 b32
 plexus_aequales_ansis (
      Plexus  p,
@@ -332,16 +343,18 @@ plexus_aequales_ansis (
  *   sigma_i (1 < i < n-1): columnae i-1, i, i+1 per
  *                [[1, t, 0], [0, -t, 0], [0, 1, 1]]
  * ergo B(p sigma_i) ex B(p) mutatione columnae UNIUS. det B(p) =
- * (-t)^(summa exponentium). Fidelis in B_3 (Magnus-Peluso; probatum
- * exhaustive contra Artin), non fidelis pro n >= 5 (citatum).
+ * (-t)^(summa exponentium). Fidelis in B_3 (Magnus-Peluso, citatum;
+ * congruentia cum Artin exhaustive probata ad longitudinem 6, B_4 ad
+ * 5), non fidelis pro n >= 5 (citatum).
  *
  * LIMES FILORUM: matrix (n-1)^2 polynomiorum; omnis littera O(n)
  * operationes. fila <= PLEXUS_FILA_BURAU. */
 
 #define PLEXUS_FILA_BURAU 4096
 
-/* B(p) super Z[t, t^-1]. FALSUM si p invalidus aut fila >
- * PLEXUS_FILA_BURAU */
+/* B(p) super Z[t, t^-1]. FALSUM si p invalidus, fila >
+ * PLEXUS_FILA_BURAU, aut exponens polynomii extra fines (verbum ~2^30
+ * litterarum) */
 b32
 plexus_burau (
      Plexus  p,
@@ -369,8 +382,9 @@ plexus_alexander (
 /* limes inferior dilatationis: max(1, max |lambda| super valores
  * proprios REALES lambda matricis B(p) ad t = -1), radix realis exacta.
  * Radius spectralis B(-1) dilatationem non superat (Kolev 1989,
- * citatum; probatum contra incrementum ansarum); maximum radicum
- * realium radium non superat, ergo limes inferior manet. In B_3
+ * citatum; comparatum cum incremento ansarum in braidis fortuitis,
+ * non probatum); maximum radicum realium radium non superat, ergo
+ * limes inferior manet. In B_3
  * (matrix 2 x 2 integra) radius ipse et dilatatio. */
 b32
 plexus_burau_radix_maxima (
@@ -391,8 +405,8 @@ plexus_burau_radix_maxima (
  * reducibilibus. Ansa singula limitem INFERIOREM incrementi dat (ansa
  * reducens non crescit). Dilatatio exacta (matrices viarum, Hall et
  * Yurttas) hic non computatur (consilium: dilata). Temporaria in
- * piscinis propriis alternantibus. FALSUM si p aut u invalidi aut
- * fila diversa. */
+ * piscinis propriis alternantibus (apex per plexus_apex_proprius).
+ * FALSUM si p aut u invalidi, fila diversa, aut periodi > 2^31 - 2. */
 
 b32
 plexus_incrementum (
@@ -407,5 +421,15 @@ plexus_incrementum (
  * logicus (nullum effectum mutat) */
 i64
 plexus_contractiones (vacuum);
+
+/* apex usus (octeti) piscinae propriae cuiusvis (imagines, ansae,
+ * Burau, incrementum) ab initio aut ultima purgatione - notatur cum
+ * piscina propria destruitur aut vacatur. Instrumentum probationis et
+ * mensurae, sicut plexus_contractiones. */
+memoriae_index
+plexus_apex_proprius (vacuum);
+
+vacuum
+plexus_apicem_purgare (vacuum);
 
 #endif /* PLEXUS_H */

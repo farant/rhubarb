@@ -267,6 +267,17 @@ for Fran's go-ahead.
 - **T5. Review**: an independent reviewer reimplements the update rules
   and the Artin action in Python straight from the sources (not from
   our code) and compares on random and exhaustive inputs; then fixes.
+  *(2026-10-15, done. An independent reviewer with oracles from the
+  papers (Dynnikov equations, Artin, textbook Burau, Fox calculus,
+  Sturm sequences) found 0 disagreements, and H 0, M 3, L 6, N 5. All
+  were fixed:
+  - plexus_aequales_ansis memory O(n), with the prefilters;
+  - loop-pool compaction checked every letter;
+  - Burau's scratch matrix in its own pool;
+  - `ansa_valida`;
+  - `plexus_apex_proprius` for testing the memory claims;
+  - the missing guard and boundary tests, and corrected wording.
+  39 sections, 1,154 checks; 13 plants, 11 red, 2 equivalent.)*
 - **T6. N1 as a demo** (D128), with its own plan for Fran's approval:
   the per-generator ReLU-layer form and operation counts; growth and
   entropy over all braid words up to length ℓ; periodic against
