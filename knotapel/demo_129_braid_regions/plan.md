@@ -99,12 +99,23 @@ The exact polyhedral count in d = 4 needs exact linear programming
 - **Part A: exact sector counts on B_3.** Every braid of D128's B_3
   census (2,589 classes up to length 8), m = 1..12: regions and pieces
   of w^m, exactly. Classes from D128's method (P exact periodicity, E
-  certified, Z the rest).
+  certified, Z the rest). *Amended (T5.0 review M1, Fran 2026-10-16):*
+  regions belong to the WORD, pieces to the braid (three geodesic
+  words of Delta sigma_1 give 12, 12 and 6 regions at m = 4, the same
+  pieces). Per class: pieces (the headline, a class invariant), and
+  regions as MIN and MAX over ALL geodesic words of the class
+  (enumerate reduced words up to length 8, group by `plexus_clavis`,
+  keep those of the class's length), plus the census
+  representative's. The min-max gap is itself a result: how much the
+  choice of word carves beyond what the function needs.
 - **Part B: the lattice bound against the exact count (B_3).** The same
   braids, shells R = 4, 16, 64, 256: how close the lower bound gets,
   and how many shell points are on walls (nullae > 0). Validates
   method 2 where method 1 is exact.
-- **Part C: B_4 lattice bounds.** D128's B_4 census up to length 4
+- **Part C: B_4 lattice bounds.** (Pieces are not countable by the
+  lattice method; Part C reports regions per word, min and max over
+  the geodesic words of each class, as in Part A.) D128's B_4 census up
+  to length 4
   (469 classes), m = 1..8, R = 4 and 8; R = 16 on a sample of 20
   braids per class (marked SAMPLED). Side question: for E braids,
   whether Part D's period-2 braids have their attracting direction
@@ -131,11 +142,18 @@ The exact polyhedral count in d = 4 needs exact linear programming
   matches an arc of method 1.
 - Homogeneity: scaling a point by 2 never changes its itinerary.
 - Monotonicity: regions(w^(m+1)) >= regions(w^m) (refinement).
+- Pieces (amended, T5.0 review M1) are NOT monotone: they count the
+  function, not a refinement. For a periodic braid w^k is the identity
+  map (beta^k a power of Delta^2 fixes every loop), so p(k) = 1 and
+  p(m + k) = p(m): pieces cycle with period k, while regions level off.
 
 ## Registered before running
 
 - **H_lin vs H_exp** (the main question), decided on Part A's exact
-  B_3 counts, per E braid, over m = 6..12:
+  B_3 counts, per E braid, over m = 6..12, applied TWICE (amended,
+  T5.0 review M1): to the pieces p(m), and to the regions r(m) of the
+  geodesic word with the most regions at m = 12. Both verdicts are
+  reported; "H_lin holds" needs both. Below, r stands for either:
   - H_lin holds for the braid if the increments r(m+1) - r(m) are
     eventually periodic with bounded values (checked: the increments
     over m = 6..12 repeat with some period <= 3);

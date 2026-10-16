@@ -319,7 +319,8 @@ nomen structura {
 nomen structura {
     NervusRadius initium;
     NervusRadius finis;
-    NervusRadius medius;      /* directio intra sectorem */
+    NervusRadius medius;      /* directio aliqua intra sectorem, non
+                               * canonica (a divisione arcuum pendet) */
      NervusForma forma;       /* nullae: argumento identice 0 */
           Matrix m;           /* exitus_numerus x II: f(x) = M x */
              i32 frustum;     /* index partis linearis, 0 .. frusta-1 */
@@ -333,7 +334,9 @@ nomen structura {
 
 /* regiones activationis retis in plano, exacte (vide REGIONES PLANI),
  * in piscina vocantis. FALSUM (exitus non tangitur) si rete invalidum,
- * introitus != II, addendum aliquod non nullum, aut memoria deficit */
+ * introitus != II, addendum aliquod non nullum, aut memoria PROPRIA
+ * deficit; in piscina vocantis allocatio deficiens fatalis est, ut in
+ * omni piscina */
 b32
 nervus_regiones_plani (
     constans Nervus* rete,

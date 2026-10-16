@@ -287,3 +287,20 @@ comments say sectores), and two-letter locals (gx, gu, vx, ...) were
 spelled out. silva's renominare refuses dirty files (git is its undo),
 so the renames were done with exact word-boundary replacements scoped
 to each function body.
+
+## 2026-10-16 — T5.0 review (recensor-plani): nervus side
+
+No defects in `nervus_regiones_plani`: the reviewer's own exact oracles
+(enumeration of all 2^R patterns with an exact nonempty-cone test, and
+a separate fixpoint) agreed field by field on ~2,500 networks (2^100
+coefficients, deep compositions, 45 real B_3 braid networks, 400 under
+ASan + UBSan); cost on the full B_3 census to length 8 at m = 1..12:
+at most 100 regions, under 10 ms per sweep. Header fixes: L1 - only
+PRIVATE memory failure gives FALSUM (caller-pool allocation is fatal,
+as in every pool); N2 - `medius` is some interior direction, not a
+canonical one (it depends on the arc subdivision), so consumers must
+not pin it. Main design finding (M1, for D129, not nervus): regions
+belong to the WORD, pieces to the function (three geodesic words of
+Delta sigma_1: 12, 12 and 6 regions at m = 4, the same pieces); the
+D129 plan now reports pieces as the headline and regions as min/max
+over all geodesic words.

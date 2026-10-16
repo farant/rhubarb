@@ -501,3 +501,55 @@ known equivalent: dropping the LAST loop E_{n+1} from the key family
 gives the same partition on these censuses (consistent with the plexus
 T5 review's N1: smaller families exhaustively give the same classes);
 the full family stays, as in plexus_aequales_ansis.
+
+## 2026-10-16 — T5.0 review (recensor-plani) and fixes
+
+**Review** (own oracles; record in the scratchpad
+recensio_plani/findings_summary.md): H 1, M 2, L 3, N 6, no wrong
+results. Census checked against the reviewer's own Artin action on F_n
+(sphere sizes B_2 to 6, B_3 to 8, B_4 to 6, B_5 to 4; representatives
+geodesic and pairwise distinct; the first-word rule exact at every
+length); plexus_periodus against a minimal-period oracle trying every k
+in 1..2n+2 on all 7,723 census words; key equality = braid equality on
+1,600 pairs. The periodic counts per length (p3, p4) are now
+independently confirmed, not only inherited from D128's method.
+
+**Fixed.**
+- H1: `plexus_enumerare` had no upper bound on the length limit; with
+  L near 2^32 the guard L < classes_maximae passed, L + 2 wrapped to 0
+  and the first write crashed (reproduced, SIGSEGV), or L = 2^32 - 3
+  asked for 16 GB. Now refused above PLEXUS_LONGITUDO_SUMMA (2^31 - 1),
+  and the `initia` allocation is fallible (conari). Tested with
+  (i32)-2 / -1, -3 / -1 and 2^31.
+- M2: the representative rule was untested. (The reviewer's example
+  mutant, looping the letters from +(n-1) down, is in fact EQUIVALENT:
+  a class is never reached twice from one parent, since w a = w b
+  forces a = b, so the first word reaching a class is fixed by the
+  PARENT order alone. The parent order is what needed testing.) It
+  matters: D129 regions depend on the word (see the D129 plan's
+  amendment). Now `_regula_primi` replays it from the census
+  itself (level l - 1 in census order x letters in order; the first
+  word reaching each class of level l must be its representative; all
+  classes reached) on B_3 <= 8 and B_4 <= 5, plus Delta sigma_1 at
+  level 4 pinned to "1 2 1 1".
+- L2: `plexus_periodus` ignored refusals from plexus_creare /
+  plexus_iungere (only reachable past 2^31 letters, where it could have
+  compared truncated products); now FALSUM. Not planted: reaching it
+  needs words of 2^31 letters.
+- L3: words and keys of new classes went into the caller's pool before
+  the class-limit check, so a refused census left partial data there.
+  They now live in a second private pool (`servata`) and are copied
+  deep into the caller's pool only on success. Tested: the caller
+  pool's usage is unchanged by a refused census.
+
+**Plants (silva.planta, 4 red).** H1 bound removed; parents taken in
+reverse order (the rule's real dependency); the first word not kept
+(a later word wins); new words copied into the caller's pool (L3). The
+first H1 test called plexus_enumerare directly, so with the bound
+removed the census never finished and the plant gate timed out instead
+of going red: the H1 cases now run in a child under CREDO_NON_PENDET
+(2 s), aborting if the census is accepted, so a hang, a crash and an
+acceptance all go red.
+
+**Gates by hand.** plexus 1,247; examen ACCIPE; formator CONFORMIS;
+Latin lint NOVA 0.

@@ -3876,6 +3876,128 @@ _probare_nervum (
  * plexus_periodus, plexus_enumerare contra numeros D128 (et
  * recensionis T5 per Artin), contra Artin ipsum in censibus brevibus,
  * et theoremata periodicitatis */
+/* in filio CREDO_NON_PENDET: abortus nisi census refutatur. Sine
+ * custodia longitudinis census prope 2^32 aut ruit aut numquam
+ * finitur: filius tunc signo aut mora frangitur, parens non pendet */
+interior vacuum
+_census_refutandus (
+    i32 fila,
+    i32 longitudo_maxima,
+    i32 classes_maximae)
+{
+         Piscina* piscina;
+    PlexusCensus  census;
+
+    piscina = piscina_generare_dynamicum("census_refutandus", IV
+        * MXXIV);
+    si (plexus_enumerare(fila, longitudo_maxima, classes_maximae,
+        piscina, &census))
+    {
+        abort();
+    }
+    piscina_destruere(piscina);
+}
+
+interior b32
+_verba_aequalia (
+    Plexus a,
+    Plexus b)
+{
+    i32 k;
+
+    si (a.fila != b.fila || a.longitudo != b.longitudo)
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < a.longitudo; k++)
+    {
+        si (a.litterae[k] != b.litterae[k])
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* regula repraesentantis (recensio T5.0, M2): gradus l ex gradu l - 1
+ * ORDINE CENSUS per litteras -(n-1) .. n-1; verbum PRIMUM quod classem
+ * gradus l attingit = repraesentans census; omnis classis gradus l
+ * attingitur */
+interior b32
+_regula_primi (
+    constans PlexusCensus* cs,
+                      i32  gradus_maximus,
+                  Piscina* piscina)
+{
+    i32 g;
+
+    per (g = I; g <= gradus_maximus; g++)
+    {
+        i32  numerus  = cs->initia[g + I] - cs->initia[g];
+         i8* attacta;
+        i32  i;
+        i32  t;
+
+        attacta = (i8*)piscina_allocare(piscina, (memoriae_index)numerus
+            + I);
+        per (t = ZEPHYRUM; t < numerus; t++)
+        {
+            attacta[t] = ZEPHYRUM;
+        }
+        per (i = cs->initia[g - I]; i < cs->initia[g]; i++)
+        {
+            s32 littera;
+
+            per (littera = -(s32)(cs->fila - I); littera
+                <= (s32)(cs->fila - I); littera++)
+            {
+                PiscinaNotatio nota;
+                        Plexus unum;
+                        Plexus verbum;
+                        chorda clavis;
+
+                si (littera == ZEPHYRUM)
+                {
+                    perge;
+                }
+                nota = piscina_notare(piscina);
+                (vacuum)plexus_creare(cs->fila, &littera, I, piscina,
+                    &unum);
+                (vacuum)plexus_iungere(cs->verba[i], unum, piscina,
+                    &verbum);
+                (vacuum)plexus_clavis(verbum, piscina, &clavis);
+                per (t = ZEPHYRUM; t < numerus; t++)
+                {
+                    si (chorda_aequalis(clavis, cs->claves[cs->initia[g]
+                        + t]))
+                    {
+                        frange;
+                    }
+                }
+                si (t < numerus && !attacta[t])
+                {
+                    attacta[t] = I;
+                    si (!_verba_aequalia(verbum, cs->verba[cs->initia[g]
+                        + t]))
+                    {
+                        piscina_reficere(piscina, nota);
+                        redde FALSUM;
+                    }
+                }
+                piscina_reficere(piscina, nota);
+            }
+        }
+        per (t = ZEPHYRUM; t < numerus; t++)
+        {
+            si (!attacta[t])
+            {
+                redde FALSUM;
+            }
+        }
+    }
+    redde VERUM;
+}
+
 interior b32
 _reductum (
     Plexus p)
@@ -4146,6 +4268,33 @@ _probare_censum (
         }
         CREDO_VERUM (inventa);
     }
+    /* regula repraesentantis: verbum primum (B_3 <= 8, B_4 <= 5); Delta
+     * sigma_1 in gradu 4 = "1 2 1 1" (verba eiusdem classis "2 2 1 2",
+     * "2 1 2 1" regiones alias in D129 dant) */
+    CREDO_VERUM (_regula_primi(&b3, VIII, piscina));
+    CREDO_VERUM (_regula_primi(&b4, V, piscina));
+    {
+        chorda clavis;
+           i32 i;
+           s32 inventus = -I;
+
+        (vacuum)plexus_clavis(_p(III, "2 1 2 1", piscina), piscina,
+            &clavis);
+        per (i = b3.initia[IV]; i < b3.initia[V]; i++)
+        {
+            si (chorda_aequalis(clavis, b3.claves[i]))
+            {
+                inventus = (s32)i;
+            }
+        }
+        CREDO_VERUM (inventus >= ZEPHYRUM);
+        si (inventus >= ZEPHYRUM)
+        {
+            CREDO_VERUM (_verba_aequalia(b3.verba[(i32)inventus],
+                _p(III,
+                "1 2 1 1", piscina)));
+        }
+    }
     /* refutationes; exitus non tangitur */
     {
         PlexusCensus intactus;
@@ -4169,6 +4318,22 @@ _probare_censum (
         }
         CREDO_AEQUALIS_I32 (intactus.numerus, XCIX);
         CREDO_FALSUM (plexus_enumerare(III, II, C, piscina, NIHIL));
+        /* recensio H1: longitudo maxima prope 2^32 (gyrus i32), in
+         * filio */
+        CREDO_NON_PENDET (_census_refutandus(III, (i32)-II, (i32)-I),
+            MM);
+        CREDO_NON_PENDET (_census_refutandus(III, (i32)-III, (i32)-I),
+            MM);
+        CREDO_NON_PENDET (_census_refutandus(III, (i32)I << XXXI,
+            (i32)-I), MM);
+        /* recensio L3: refutatio piscinam vocantis non tangit */
+        {
+            memoriae_index ante = piscina_summa_usus(piscina);
+
+            CREDO_FALSUM (plexus_enumerare(III, VIII, MMDLXXXVIII,
+                piscina, &intactus));
+            CREDO_VERUM (piscina_summa_usus(piscina) == ante);
+        }
         CREDO_FALSUM (plexus_periodus(_p(III, "1", piscina), piscina,
             NIHIL));
         CREDO_AEQUALIS_I32 (periodus, XCIX);

@@ -395,12 +395,14 @@ nomen structura {
  * nova (clavis nondum visa) verbo PRIMO quod eam attingit
  * repraesentatur (longitudo l, libere reductum); intra gradum ordine
  * clavium (chorda_comparare). Exhaustiva quatenus plexus_clavis
- * classes separat (vide supra). Omnia in piscina vocantis. FALSUM
- * (exitus non tactus) si fila extra 2..PLEXUS_FILA_MAXIMA - 2, si
- * classes > classes_maximae (numquam truncatur), aut si
- * longitudo_maxima >= classes_maximae
- * (omnis gradus classem novam addit: talis census limitem semper
- * superaret) */
+ * classes separat (vide supra). Effectum in piscina vocantis, solum
+ * post successum (classes in piscina propria usque ad finem). FALSUM
+ * (exitus non tactus, piscina vocantis intacta) si fila extra
+ * 2..PLEXUS_FILA_MAXIMA - 2, si classes > classes_maximae (numquam
+ * truncatur), si longitudo_maxima >= classes_maximae (omnis gradus
+ * classem novam addit: talis census limitem semper superaret), si
+ * longitudo_maxima > 2^31 - 1 (longitudo verbi maxima), aut si
+ * memoria propria deficit */
 b32
 plexus_enumerare (
              i32  fila,
