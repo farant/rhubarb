@@ -1,7 +1,7 @@
 /* bearssl_amalgama.h - GENERATUM a tools/bearssl_amalgamare.py ex vendor/bearssl (BearSSL 7bea48e, MIT) - NE MANU EDITES */
 /* capita: bearssl.h bearssl_aead.h bearssl_block.h bearssl_ec.h bearssl_hash.h bearssl_hmac.h bearssl_kdf.h bearssl_pem.h bearssl_prf.h bearssl_rand.h bearssl_rsa.h bearssl_ssl.h bearssl_x509.h */
 #if !defined(__STDC_VERSION__) || __STDC_VERSION__ < 199901L
-#define inline __attribute__((unused))
+#define inline __attribute__((unused)) /* <tolera codex="EXTENSIO_COMPILATORIS" (>limen C89 (tls-bearssl R2): inline -> unused; silva __attribute__ ut vacuum legit */
 #define BEARSSL_INLINE_C89
 #endif
 /*

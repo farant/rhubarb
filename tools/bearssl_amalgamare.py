@@ -174,7 +174,10 @@ def main():
         o.write('/* capita: ' + ' '.join(sorted(capita)) + ' */\n')
         o.write('#if !defined(__STDC_VERSION__) '
                 '|| __STDC_VERSION__ < 199901L\n'
-                '#define inline __attribute__((unused))\n'
+                '#define inline __attribute__((unused))'
+                ' /* <tolera codex="EXTENSIO_COMPILATORIS" (>limen C89 '
+                '(tls-bearssl R2): inline -> unused; silva __attribute__ '
+                'ut vacuum legit */\n'
                 '#define BEARSSL_INLINE_C89\n#endif\n')
         o.write(caput)
         o.write('#ifdef BEARSSL_INLINE_C89\n#undef inline\n'

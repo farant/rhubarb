@@ -236,6 +236,23 @@ with this plan; this plan argues from it and records where it departs.
 - **R28 (T6) - spec status and ledger closed AFTER Fran's live check**,
   in a separate small commit, so that check's result is recorded with
   them.
+- **R29 (merge) - examen-corpus walks `vendor/` too** (`silva/percursus.sh`
+  has its own tree walk; R5 covered only the hook and the formatter).
+  `fusio_probare` refused: about 300 upstream C99 files were REICE but not
+  pinned. Fix: percursus skips directories directly under `vendor/`
+  (upstream trees, guarded byte for byte by gate `bearssl`), while files in
+  `vendor/` itself are still walked. `vendor/bearssl_amalgama.c` is pinned in
+  `exclusiones.txt`. The generated header's shim line carries
+  `<tolera codex="EXTENSIO_COMPILATORIS">`, so the header is ACCIPE on its own.
+  Side effect: `lib/imago.c` (stb_image) is ACCIPE now thanks to R3's stdint
+  lexicon, so its pin was deleted (the ratchet shrinks).
+- **R30 (merge) - includers write `#include "../vendor/bearssl_amalgama.h"`**
+  (the sqlite precedent, `lib/scrinium.c`), not the bare name. silex finds a
+  vendored header by `vendor/` in the include text (`_vendor_basim`);
+  without it, a scaffolded project copied `lib/tls_bearssl.c` but not the
+  vendor pair, and gate `silex-semen` failed to build ('bearssl_amalgama.h'
+  file not found). A hand run of that gate needs `bin/fabrica sanare
+  bin/silex` first, because silex scaffolds from its baked-in corpus.
 
 ## Review focus
 

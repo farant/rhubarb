@@ -3,7 +3,7 @@
  * (clavis publica Alicae), entropia systematis (pactio sine ea
  * recusatur - tls-bearssl-spec II.6). KAT plenus upstream: porta
  * 'bearssl' (tools/bearssl_probare.sh). */
-#include "bearssl_amalgama.h"
+#include "../vendor/bearssl_amalgama.h"
 #include "latina.h"
 #include "credo.h"
 #include <stdio.h>

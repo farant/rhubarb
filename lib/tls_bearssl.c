@@ -16,7 +16,7 @@
  * ChaCha20-Poly1305) - idem ac SecureTransport (_cifra_admissa). Nihil
  * extra piscinam dimittendum (classis R5 hic nequit). */
 #include "postulata_posix.h"
-#include "bearssl_amalgama.h"   /* ANTE latina.h: numeri Romani nomina
+#include "../vendor/bearssl_amalgama.h"   /* ANTE latina.h: numeri Romani nomina
                                  * parametrorum vendoris frangerent */
 #include "latina.h"
 #include "piscina.h"
