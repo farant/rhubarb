@@ -10,12 +10,16 @@
  *
  * Tenue: omnis logica in lib/praeconium.c.
  */
+/* plagula provenientiae (fabrica T7): '-provenientia' respondetur -
+ * sine ea installatio (sanare installata) praeconem recusat */
+/* <aedilis obiectum="build/fabrica/provenientia/praeco.c"/> */
 #include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"
 #include "xar.h"
 #include "praeconium.h"
+#include "provenientia.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -155,6 +159,8 @@ cauda (
     redde ZEPHYRUM;
 }
 
+externus constans ProvenientiaRelatio provenientia_praeco;
+
 integer
 principale (
       integer   argc,
@@ -162,6 +168,10 @@ principale (
 {
     Piscina* piscina;
 
+    si (provenientia_respondere((s32)argc, argv, &provenientia_praeco))
+    {
+        redde ZEPHYRUM;
+    }
     piscina = piscina_generare_dynamicum("praeco", LXIV * M);
     si (!piscina || argc < II)
     {
