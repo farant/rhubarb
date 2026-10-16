@@ -408,6 +408,11 @@ nomen structura {
                                 constans FabricaSanatio* sanatio);
     b32 (*cursum_legere)(vacuum* datum, constans character* titulus,
                          i32* duratio_ms_out);
+    /* PROGRESSUS (colloquia T8): ad initium (iudicata ZEPHYRUM) et post
+     * undam quamque; via seriatim post actionem quamque (tools
+     * strangulat: linea una per secundam summum). NIHIL licet. */
+    vacuum (*progressum_notare)(vacuum* datum, i32 iudicata,
+                                i32 ambitus, i32 unda, i32 undae);
     /* vestigia lectionum (plan 2 T2): clavis = (titulus, via exitus,
      * sigillum ingressuum declaratorum, sigillum artificii) - vestigium
      * ULTIMUM per (titulus, exitus): actio exituum multorum (fragmenta

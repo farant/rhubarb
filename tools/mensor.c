@@ -1252,6 +1252,42 @@ _censura (
     character** argv);
 
 
+/* FACTUM (colloquia T8c): '-titulus T -valor N [-unitas U]' - mensura
+ * cursui APERTO (MENSOR_PARENS) adhaerens in diario CURSUUM (non
+ * /tmp/mensurae.diarium 'addere' veteris): producentes sine involucro
+ * (silva.commissio: consilium.portae) nec formam nec viam diarii
+ * reimplementant. Sine cursu aut sine -valor: exitus 2, nihil
+ * scriptum (factum sine cursu nihil significat). */
+interior integer
+_cursum_factum (
+      Piscina*  piscina,
+      integer   argc,
+    character** argv)
+{
+    constans character* titulus  = _arg(argc, argv, "-titulus");
+    constans character* valor    = _arg(argc, argv, "-valor");
+    constans character* unitas   = _arg(argc, argv, "-unitas");
+    constans character* parens   = getenv("MENSOR_PARENS");
+               Mensura  m;
+
+    si (   titulus == NIHIL || valor == NIHIL || parens == NIHIL
+        || parens[ZEPHYRUM] == '\0')
+    {
+        fprintf(stderr, "mensor cursus factum: -titulus, -valor et "
+            "MENSOR_PARENS (cursus apertus) poscuntur\n");
+        redde 2;
+    }
+    m = _mensuram_struere(piscina, argc, argv, titulus, strtod(valor,
+        NIHIL), unitas != NIHIL ? unitas : "numerus");
+    si (!mensura_annotare(mensura_diarium_cursuum(piscina), &m,
+        piscina))
+    {
+        fprintf(stderr, "mensor cursus factum: non annotatum\n");
+        redde I;
+    }
+    redde ZEPHYRUM;
+}
+
 interior integer
 _cursus (
       Piscina*  piscina,
@@ -1274,6 +1310,10 @@ _cursus (
     {
         redde _cursum_finire(piscina, argc, argv);
     }
+    si (argc >= III && strcmp(argv[II], "factum") == ZEPHYRUM)
+    {
+        redde _cursum_factum(piscina, argc, argv);
+    }
     si (argc >= III && strcmp(argv[II], "acta") == ZEPHYRUM)
     {
         redde _cursus_acta(piscina, argc, argv);
@@ -1288,6 +1328,7 @@ _cursus (
         "      mensor cursus incipere -titulus T [-argv S]\n"
         "      mensor cursus finire -id X -exitus N [-duratio_ms D]"
         " [-nota S] [-titulus T -acta via|-]\n"
+        "      mensor cursus factum -titulus T -valor N [-unitas U]\n"
         "      mensor cursus acta <id>\n"
         "      mensor cursus censura [-radix via]\n");
     redde 2;

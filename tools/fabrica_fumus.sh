@@ -1020,6 +1020,23 @@ if [ "$rcs" -eq 0 ] && [ "$rc0" -eq 0 ] && grep -q '^IUDICIUM	RECENS	c	' "$T/lvi
    && [ "$rc2" -eq 0 ] && grep -q '^IUDICIUM	RECENS	d	' "$T/lviii_2" \
    && [ "$rc3" -eq 0 ] && grep -q '^IUDICIUM	RECENS	c	' "$T/lviii_3"; then echo "  LVIII catena iudicii: c FORTASSE supra g, praecondicio non propagat, post sanare RECENS OK"; else echo "  LVIII FRACTUM (sanare rc=$rcs; c ante rc=$rc0, post a rc=$rc1, d rc=$rc2, post sanare rc=$rc3)"; for k in 0 1 2 3; do grep '^IUDICIUM' "$T/lviii_$k" | sed "s/^/      [$k] /"; done; fracta=1; fi
 
+# LIX (colloquia T8c): PROGRESSUS - sub MENSOR_PARENS eiusdem arboris
+# mensurae parenti adhaerentes: fabrica.ambitus et fabrica.undae initio,
+# fabrica.iudicata ultima = ambitus (ultima semper scribitur); radix
+# aliena sine diario expresso (custodia LV) NIHIL progressus
+radix_c
+RP=$(cd "$T/r" && pwd -P)
+(cd "$T/r" && MENSOR_PARENS=fumus-lix MENSOR_SESSIO=sessio-lix MENSOR_ARBOR="$RP" \
+    "$F" probare -vis probationes_t) > "$T/lix.e" 2>&1
+lix_a=$(awk -F'\t' '$3 == "fumus-lix" && $4 == "fabrica.ambitus" { print $5 + 0 }' "$MENSOR_DIARIUM" | tail -1)
+lix_u=$(awk -F'\t' '$3 == "fumus-lix" && $4 == "fabrica.undae" { print $5 + 0 }' "$MENSOR_DIARIUM" | tail -1)
+lix_i=$(awk -F'\t' '$3 == "fumus-lix" && $4 == "fabrica.iudicata" { print $5 + 0 }' "$MENSOR_DIARIUM" | tail -1)
+mkdir -p "$T/domus3/.rhubarb"
+(cd "$T/r" && env -u MENSOR_DIARIUM -u MENSOR_DIURNA HOME="$T/domus3" MENSOR_PARENS=fumus-lix-alienum \
+    MENSOR_ARBOR=/alibi "$F" probare -vis probationes_t) > "$T/lix.e2" 2>&1
+lix_x=$(grep -c 'fabrica\.' "$T/domus3/.rhubarb/mensurae.diarium" 2>/dev/null)
+if [ "${lix_a:-0}" -ge 1 ] && [ "${lix_u:-0}" -ge 1 ] && [ "$lix_i" = "$lix_a" ] && [ "${lix_x:-0}" = "0" ]; then echo "  LIX  progressus: ambitus et undae initio, iudicata ultima = ambitus, radix aliena nihil OK"; else echo "  LIX  FRACTUM (ambitus '${lix_a}', undae '${lix_u}', iudicata ultima '${lix_i}', lineae alienae ${lix_x:-0})"; fracta=1; fi
+
 if [ "$fracta" -ne 0 ]; then echo "fumus fabricae: FRACTUM"; exit 1; fi
-echo "fumus fabricae: sanum (LVIII/LVIII)"
+echo "fumus fabricae: sanum (LIX/LIX)"
 exit 0

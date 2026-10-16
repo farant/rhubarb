@@ -2007,6 +2007,25 @@ _tutas_agere (
     }
 }
 
+/* PROGRESSUS (colloquia T8): vocatio una si sutura eam praebet;
+ * siccum nihil agit, ergo nihil notat */
+interior vacuum
+_progressum_notare (
+    constans FabricaSutura* sutura,
+                       b32  siccum,
+                       i32  iudicata,
+                       i32  ambitus,
+                       i32  unda,
+                       i32  undae)
+{
+    si (!siccum && sutura->progressum_notare != NIHIL)
+    {
+        sutura->progressum_notare(sutura->datum, iudicata, ambitus,
+            unda,
+            undae);
+    }
+}
+
 /* SANARE PER UNDAS (plan 2 T6): undae ex actionibus ambitus (ignotae
  * excluduntur - exitus non iudicati); in unda non tutae SOLAE
  * (photographia sua), tutae (lectiones="verum") simul. Fractura: nova
@@ -2024,6 +2043,7 @@ _sanare_per_undas (
     CursusUndarum  cursus;
               Xar* membra_ambitus;
               Xar* undae;
+              i32  iudicata;
               i32  i;
               i32  w;
 
@@ -2054,6 +2074,9 @@ _sanare_per_undas (
     cursus.stala       = stala;
     cursus.sanationes  = sanationes;
     cursus.fractum     = FALSUM;
+    iudicata           = ZEPHYRUM;
+    _progressum_notare(sutura, FALSUM, ZEPHYRUM, xar_numerus(
+        membra_ambitus), ZEPHYRUM, xar_numerus(undae));
     per (w = ZEPHYRUM; w < xar_numerus(undae); w++)
     {
         Xar* membra;
@@ -2075,6 +2098,9 @@ _sanare_per_undas (
         _undam_dividere(&cursus, membra, tuta, ceteri);
         _ceteros_agere(&cursus, ceteri);
         _tutas_agere(&cursus, tuta);
+        iudicata += xar_numerus(membra);
+        _progressum_notare(sutura, FALSUM, iudicata, xar_numerus(
+            membra_ambitus), w + I, xar_numerus(undae));
     }
     redde VERUM;
 }
@@ -2093,6 +2119,8 @@ fabrica_sanare (
      StatusSanandi* status;
             chorda* stala;
                i32  numerus;
+               i32  in_ambitu;
+               i32  iudicata;
                i32  i;
                i32  j;
                b32  mutatum;
@@ -2188,6 +2216,19 @@ fabrica_sanare (
         }
         redde sanationes;
     }
+    /* via seriatim: progressus post actionem quamque ambitus */
+    in_ambitu  = ZEPHYRUM;
+    iudicata   = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        si (ambitus[i] && !_actio_ignota(*(FabricaActio**)xar_obtinere(
+            ordo, i)))
+        {
+            in_ambitu++;
+        }
+    }
+    _progressum_notare(sutura, siccum, ZEPHYRUM, in_ambitu, ZEPHYRUM,
+        ZEPHYRUM);
     per (i = ZEPHYRUM; i < numerus; i++)
     {
         constans FabricaActio* actio;
@@ -2200,10 +2241,13 @@ fabrica_sanare (
         {
             perge;   /* ignota: praecondicione sola realizatur */
         }
+        iudicata++;
         si (!_ante_agere(sutura, ordo, i, status, stala, sanationes,
             siccum,
                 piscina))
         {
+            _progressum_notare(sutura, siccum, iudicata, in_ambitu,
+                ZEPHYRUM, ZEPHYRUM);
             perge;
         }
         duratio  = ZEPHYRUM;
@@ -2213,6 +2257,9 @@ fabrica_sanare (
         _post_agere(sutura, actio, i, status, stala, sanationes, actum,
             causa,
             duratio, piscina);
+        _progressum_notare(sutura, siccum, iudicata, in_ambitu,
+            ZEPHYRUM,
+            ZEPHYRUM);
     }
     redde sanationes;
 }

@@ -1150,6 +1150,172 @@ _probare_cursum (
     }
 }
 
+/* vocatio progressus k aequalis? */
+interior b32
+_progressus_est (
+    DiscusFictus* discus,
+             i32  k,
+             i32  iudicata,
+             i32  ambitus,
+             i32  unda,
+             i32  undae)
+{
+    ProgressusFictus* p;
+
+    si (k >= xar_numerus(discus->progressus_ficti))
+    {
+        redde FALSUM;
+    }
+    p = (ProgressusFictus*)xar_obtinere(discus->progressus_ficti, k);
+    redde p->iudicata == iudicata && p->ambitus == ambitus
+        && p->unda == unda && p->undae == undae;
+}
+
+/* tres generatores stali independentes P1 P2 P3 (a -> X) */
+interior Xar*
+_tres_stala (
+     DiscusFictus* discus,
+    FabricaSutura* sutura,
+          Piscina* piscina)
+{
+    FabricaActio* actiones[III];
+
+    mundi_discum_parare(discus, sutura, piscina);
+    mundi_memorias_parare(sutura, piscina);
+    mundi_ponere(discus, "a1", "a1\n");
+    mundi_ponere(discus, "a2", "a2\n");
+    mundi_ponere(discus, "a3", "a3\n");
+    mundi_ponere(discus, "X1", "vetus\n");
+    mundi_ponere(discus, "X2", "vetus\n");
+    mundi_ponere(discus, "X3", "vetus\n");
+    mundi_scriptum_addere(discus, "gen_1", "X1", NIHIL, "n1\n", 0,
+        FALSUM);
+    mundi_scriptum_addere(discus, "gen_2", "X2", NIHIL, "n2\n", 0,
+        FALSUM);
+    mundi_scriptum_addere(discus, "gen_3", "X3", NIHIL, "n3\n", 0,
+        FALSUM);
+    actiones[0] = mundi_actio_scripta(piscina, "P1", "gen_1", "a1",
+        "X1",
+        "regeneratio");
+    actiones[1] = mundi_actio_scripta(piscina, "P2", "gen_2", "a2",
+        "X2",
+        "regeneratio");
+    actiones[2] = mundi_actio_scripta(piscina, "P3", "gen_3", "a3",
+        "X3",
+        "regeneratio");
+    redde mundi_ordinare_fictas(piscina, actiones, III);
+}
+
+/* PROGRESSUS (colloquia T8c): seriatim initium (0/N) et post actionem
+ * quamque; siccum nihil; per undas initium (0/N, undae W) et post
+ * undam quamque (cumulatim) */
+interior vacuum
+_probare_progressum (
+    CredoContextus* c)
+{
+          Piscina* piscina = c->piscina;
+     DiscusFictus  discus;
+    FabricaSutura  sutura;
+     FabricaActio* actiones[V];
+              Xar* ordo;
+           chorda  causa;
+
+    causa.datum    = NIHIL;
+    causa.mensura  = ZEPHYRUM;
+
+    /* I. seriatim (agere_simul NIHIL) */
+    ordo = _tres_stala(&discus, &sutura, piscina);
+    CREDO_NON_NIHIL(fabrica_sanare(&sutura, ordo, NIHIL, FALSUM,
+        piscina,
+        &causa));
+    CREDO_AEQUALIS_I32(xar_numerus(discus.progressus_ficti), IV);
+    CREDO_VERUM(_progressus_est(&discus, ZEPHYRUM, ZEPHYRUM, III,
+        ZEPHYRUM, ZEPHYRUM));
+    CREDO_VERUM(_progressus_est(&discus, I, I, III, ZEPHYRUM,
+        ZEPHYRUM));
+    CREDO_VERUM(_progressus_est(&discus, II, II, III, ZEPHYRUM,
+        ZEPHYRUM));
+    CREDO_VERUM(_progressus_est(&discus, III, III, III, ZEPHYRUM,
+        ZEPHYRUM));
+
+    /* Ib. membrum RECENS (P1: X1 iam generatoris effusio) quoque
+     * numeratur - ramus sine actione progressum notat */
+    ordo = _tres_stala(&discus, &sutura, piscina);
+    mundi_ponere(&discus, "X1", "n1\n");
+    CREDO_NON_NIHIL(fabrica_sanare(&sutura, ordo, NIHIL, FALSUM,
+        piscina,
+        &causa));
+    CREDO_AEQUALIS_I32(discus.acta, II);
+    CREDO_AEQUALIS_I32(xar_numerus(discus.progressus_ficti), IV);
+    CREDO_VERUM(_progressus_est(&discus, III, III, III, ZEPHYRUM,
+        ZEPHYRUM));
+
+    /* II. siccum: nihil agitur, nihil notatur */
+    ordo = _tres_stala(&discus, &sutura, piscina);
+    CREDO_NON_NIHIL(fabrica_sanare(&sutura, ordo, NIHIL, VERUM, piscina,
+        &causa));
+    CREDO_AEQUALIS_I32(xar_numerus(discus.progressus_ficti), ZEPHYRUM);
+
+    /* III. per undas: P1 P2 P3 U independentes (unda I), D ex X1
+     * (unda II) */
+    mundi_discum_parare(&discus, &sutura, piscina);
+    mundi_memorias_parare(&sutura, piscina);
+    sutura.agere_simul       = mundi_agere_simul;
+    sutura.vestigium_capere  = mundi_vestigium_capere;
+    mundi_ponere(&discus, "a3", "a3\n");
+    mundi_ponere(&discus, "a1", "a1\n");
+    mundi_ponere(&discus, "a2", "a2\n");
+    mundi_ponere(&discus, "u", "u\n");
+    mundi_ponere(&discus, "X1", "vetus\n");
+    mundi_ponere(&discus, "X2", "vetus\n");
+    mundi_ponere(&discus, "X3", "vetus\n");
+    mundi_ponere(&discus, "XU", "vetus\n");
+    mundi_ponere(&discus, "XD", "vetus\n");
+    mundi_scriptum_addere(&discus, "gen_1", "X1", NIHIL, "n1\n", 0,
+        FALSUM);
+    mundi_scriptum_addere(&discus, "gen_2", "X2", NIHIL, "n2\n", 0,
+        FALSUM);
+    mundi_scriptum_addere(&discus, "gen_3", "X3", NIHIL, "n3\n", 0,
+        FALSUM);
+    mundi_scriptum_addere(&discus, "gen_u", "XU", NIHIL, "nu\n", 0,
+        FALSUM);
+    mundi_scriptum_addere(&discus, "gen_d", "XD", NIHIL, "nd\n", 0,
+        FALSUM);
+    actiones[0] = mundi_actio_scripta(piscina, "P3", "gen_3", "a3",
+        "X3",
+        "regeneratio");
+    actiones[1] = mundi_actio_scripta(piscina, "P1", "gen_1", "a1",
+        "X1",
+        "regeneratio");
+    actiones[2] = mundi_actio_scripta(piscina, "P2", "gen_2", "a2",
+        "X2",
+        "regeneratio");
+    actiones[3] = mundi_actio_scripta(piscina, "U", "gen_u", "u", "XU",
+        "regeneratio");
+    actiones[4] = mundi_actio_scripta(piscina, "D", "gen_d", "X1", "XD",
+        "regeneratio");
+    actiones[0]->lectiones = VERUM;
+    actiones[1]->lectiones = VERUM;
+    actiones[2]->lectiones = VERUM;
+    actiones[4]->lectiones = VERUM;
+    ordo = mundi_ordinare_fictas(piscina, actiones, V);
+    CREDO_NON_NIHIL(fabrica_sanare(&sutura, ordo, NIHIL, FALSUM,
+        piscina,
+        &causa));
+    CREDO_AEQUALIS_I32(xar_numerus(discus.progressus_ficti), III);
+    CREDO_VERUM(_progressus_est(&discus, ZEPHYRUM, ZEPHYRUM, V,
+        ZEPHYRUM, II));
+    CREDO_VERUM(_progressus_est(&discus, I, IV, V, I, II));
+    CREDO_VERUM(_progressus_est(&discus, II, V, V, II, II));
+
+    /* IV. progressum_notare NIHIL licet */
+    ordo                      = _tres_stala(&discus, &sutura, piscina);
+    sutura.progressum_notare  = NIHIL;
+    CREDO_NON_NIHIL(fabrica_sanare(&sutura, ordo, NIHIL, FALSUM,
+        piscina,
+        &causa));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "sanare",
       _probare_sanare,
@@ -1159,6 +1325,9 @@ hic_manens constans CredoSectio SECTIONES[] = {
       NIHIL, NIHIL, NIHIL, NIHIL },
     { "cursum",
       _probare_cursum,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "progressus",
+      _probare_progressum,
       NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

@@ -207,6 +207,23 @@ phase that needs it. Header text shown to Fran before coding.*
   Plants: reader 1/2 red (the genus check is redundant - mensura_ex_linea
   rejects run lines); mensor 3/3 red by hand - silva.planta does not
   rebuild bin/mensor for the `currit` gate (false "porta muta").
+- T8c 2026-10-16: fabrica `progressum_notare` (FabricaSutura): start
+  (0/N, waves W), after each wave (cumulative), serial path after each
+  member; siccum never. bin/fabrica writes `fabrica.ambitus` /
+  `fabrica.undae` / `fabrica.iudicata` measurements under MENSOR_PARENS
+  (throttled to one line a second, last always; alien root without an
+  explicit diary writes nothing - LV guard). `mensor cursus factum`
+  (new CLI) writes a measurement on the open run in the RUN diary
+  (`mensor addere` defaults to /tmp/mensurae.diarium - wrong file);
+  silva.commissio records `consilium.portae`. The "last line always"
+  rule is unobservable in the fixture (members take > 1 s).
+- FOUND 2026-10-16: the ~1000 s IUDICIUM durations were a CLAMSHELL
+  SLEEP (pmset: 10:45:04-11:01:49 local). lib/processus times and
+  kills by WALL clock (gettimeofday): sleep past 600 s = generator
+  killed on wake. silva uses time.monotonic (pauses in sleep). Fran:
+  fix it (T8d0, processus + mensor on CLOCK_UPTIME_RAW), ship on code
+  review; the real lid-close probe (sleep 60 under a 120 s timeout,
+  lid shut ~3 min, old build red / new green) is OWED.
 - IN MAIN 2026-10-16 (ff 1dc057b6, fusio_probare green + frigida,
   installata 23/23). The 7 hooks now call `~/.bin/praeco hamus`
   (backup ~/.claude/settings.json.bak-praeco-bin-2026-10-16); the ad

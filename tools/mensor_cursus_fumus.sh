@@ -25,6 +25,8 @@
 #        corpus ex stdin in diurna (T4), cursus sine corpore: 'acta' exitus 1
 #   XIV  custos (colloquia T8b): incipere -> mensura 'cursus.custos' cum
 #        pid vocantis; currere -> pid involucri; una per cursum
+#   XV   factum (colloquia T8c): 'cursus factum -titulus -valor
+#        [-unitas]' mensuram cursui aperto adhaeret; sine cursu 2
 #   X    purgare (T4 2c): regula ex STML (tools/analytica_retentio.stml
 #        legitur), -siccum nihil mutat, purgatio vera corpus delet
 #        ('cursus acta' -> deletum), regula absens aut deformis -> 2
@@ -194,6 +196,28 @@ cc14=$(awk -F'\t' -v p="$idc14" '$3 == p && $4 == "cursus.custos" { print $5 + 0
   && [ "$(awk -F'\t' -v p="$id14" '$3 == p && $4 == "cursus.custos"' "$MENSOR_DIARIUM" | wc -l | tr -d ' ')" = "1" ]
 credo $? "XIV  custos: incipere = pid vocantis, currere = pid involucri (mensura parenti adhaerens)"
 
+# XV factum (colloquia T8c): 'cursus factum' = mensura cursui aperto
+# (MENSOR_PARENS) adhaerens in diario CURSUUM; sine cursu aut sine
+# -valor exitus 2, nihil scriptum
+"$RADIX/bin/mensor" cursus incipere -titulus fumus/factum > "$T/amb15"
+id15=$(sed -n 's/^MENSOR_PARENS=//p' "$T/amb15")
+env $(tr '\n' ' ' < "$T/amb15") "$RADIX/bin/mensor" cursus factum -titulus consilium.portae -valor 5 -unitas portae; r15=$?
+f15=$(awk -F'\t' -v p="$id15" '$3 == p && $4 == "consilium.portae" { print ($5 + 0) "|" $6 }' "$MENSOR_DIARIUM")
+n15a=$(wc -l < "$MENSOR_DIARIUM")
+"$RADIX/bin/mensor" cursus factum -titulus consilium.portae -valor 7 2>/dev/null; r15b=$?
+env $(tr '\n' ' ' < "$T/amb15") "$RADIX/bin/mensor" cursus factum -titulus consilium.portae 2>/dev/null; r15c=$?
+n15b=$(wc -l < "$MENSOR_DIARIUM")
+# diarium ORDINARIUM (MENSOR_DIARIUM non positum): diarium CURSUUM
+# ($HOME/.rhubarb), non /tmp/mensurae.diarium 'addere' veteris - aliter
+# factum in plagulam quam nemo condit caderet
+mkdir -p "$T/domus15/.rhubarb"
+env -u MENSOR_DIARIUM HOME="$T/domus15" MENSOR_PARENS="$id15" "$RADIX/bin/mensor" cursus factum \
+    -titulus consilium.portae -valor 3 -unitas portae; r15d=$?
+f15d=$(awk -F'\t' -v p="$id15" '$3 == p && $4 == "consilium.portae" { print $5 + 0 }' "$T/domus15/.rhubarb/mensurae.diarium" 2>/dev/null)
+[ -n "$id15" ] && [ "$r15" -eq 0 ] && [ "$f15" = "5|portae" ] && [ "$r15b" -eq 2 ] && [ "$r15c" -eq 2 ] \
+  && [ "$n15a" = "$n15b" ] && [ "$r15d" -eq 0 ] && [ "$f15d" = "3" ]
+credo $? "XV   factum: mensura cursui aperto in diario cursuum; sine cursu aut valore 2, nihil scriptum"
+
 # X
 cat > "$T/regula_nulla.stml" <<'R'
 <retentio>
@@ -311,5 +335,5 @@ done
 credo $? "XIII curare: condit, purgat, notatur; intra diem non purgat; cursus summus curationem separatam excitat"
 
 echo
-if [ "$fracta" -eq 0 ]; then echo "fumus mensor_cursus: sanum (XIV/XIV)"; exit 0; fi
+if [ "$fracta" -eq 0 ]; then echo "fumus mensor_cursus: sanum (XV/XV)"; exit 0; fi
 echo "fumus mensor_cursus: FRACTUM ($fracta)"; exit 1

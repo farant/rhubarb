@@ -44,6 +44,9 @@ nomen structura {
                       b32  radix_repositorium;
                    Diurna* diurna;          /* corpora actionum (T4) */
                       b32  diurna_temptata;
+                      s64  progressus_ultimus; /* ms lineae progressus
+                                                * ultimae (colloquia T8c,
+                                                * strangulatio) */
 } Memoria;
 
 /* mandata (fabrica.c) */
