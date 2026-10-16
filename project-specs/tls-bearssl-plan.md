@@ -253,6 +253,11 @@ with this plan; this plan argues from it and records where it departs.
   vendor pair, and gate `silex-semen` failed to build ('bearssl_amalgama.h'
   file not found). A hand run of that gate needs `bin/fabrica sanare
   bin/silex` first, because silex scaffolds from its baked-in corpus.
+- **R31 (merge) - the officina LSP test (`probatio_officina_legatus`, step
+  5) used `lib/imago.c` as its "pinned file -> empty diagnostics" example.**
+  R29 unpinned imago.c, so `fusio_probare` failed officina 14/15. The step
+  now opens `vendor/bearssl_amalgama.c`: generated C99, pinned for as long
+  as BearSSL is vendored.
 
 ## Review focus
 
