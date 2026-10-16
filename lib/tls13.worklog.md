@@ -81,3 +81,25 @@ ECDSA P-256 with a CertificateRequest).
   after. Must end its record (same key-change rule).
 - examen caught a writable `hic_manens` buffer in a test section (state
   that would survive into the next section) - made it a local.
+
+## 2026-10-16 - T8: TLS 1.3 is the house default
+
+- **Matrix III:** probatio_tls_servus (10 sections) and probatio_tls_gradus
+  (3) run under tls13, bearssl and securetransport - all green, no
+  behavioural difference. Under tls13 the default s_server negotiates
+  1.3; `tls11` (s_server -tls1_1) is refused through the fallback
+  (protocol_version -> BearSSL 1.2, which refuses 1.1).
+- **Default flip** test-first (probatio_tls_vectura VECTURA_DOMUS red,
+  then `TLS_VECTURA_DOMUS = TLS_VECTURA_TLS13`). Every http / tls suite
+  green under the new default, including probatio_http_vocatio_rete.
+- **Leaks** (`tools/tls_effluvia.sh -aedificare`, now also over
+  probatio_tls13_servus and probatio_tls13_descensus): untolerated
+  residue 0 everywhere; the tls13 suites leak 0 bytes (everything lives
+  in the connection piscina); the matrix's 27 tolerated leaks are the
+  known Apple-internal kinds.
+- **Network** (`tools/rete_fumus.sh -tls -badssl`, by hand) under all
+  three: identical verdicts - expired / wrong.host / self-signed /
+  untrusted-root / tls-v1-0 / tls-v1-1 refused, tls-v1-2:1012 accepted
+  (via the fallback under tls13). howsmyssl: **TLS 1.3** under tls13,
+  1.2 under the others; "Improvable" under all three because no session
+  tickets are offered (resumption is out of scope, spec II.5).

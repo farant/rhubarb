@@ -18,10 +18,11 @@
 #include <string.h>
 #include <unistd.h>
 
-/* ordinaria domus: BearSSL (tls-bearssl T6). SecureTransport per
- * RHUBARB_TLS=securetransport aut TlsOptiones.vectura - vectura vetus,
- * delenda post tempus utriusque sine differentia */
-#define TLS_VECTURA_DOMUS TLS_VECTURA_BEARSSL
+/* ordinaria domus: TLS 1.3 proprius (tls13 T8), hospites 1.2 per
+ * descensum BearSSL cum signo DOWNGRD. RHUBARB_TLS=bearssl: solum 1.2
+ * (vectura T6 tls-bearssl); RHUBARB_TLS=securetransport: vectura vetus,
+ * delenda post tempus sine differentia */
+#define TLS_VECTURA_DOMUS TLS_VECTURA_TLS13
 
 structura TlsConnexio {
             TlsVectura  vectura;

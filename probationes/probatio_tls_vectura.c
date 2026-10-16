@@ -1,6 +1,7 @@
 /* probatio_tls_vectura.c - electio vecturae TLS (tls-bearssl-spec II.5,
  * R7): optiones explicitae vincunt; ORDINARIA -> RHUBARB_TLS
- * ('bearssl' | 'securetransport'), aliter ordinaria domus; connexio
+ * ('tls13' | 'bearssl' | 'securetransport'), aliter ordinaria domus;
+ * connexio
  * vecturam suam meminit. */
 #include "postulata_posix.h"
 #include "latina.h"
@@ -13,8 +14,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-/* ordinaria domus: BEARSSL (tls-bearssl T6; T3-T5 SECURETRANSPORT) */
-#define VECTURA_DOMUS TLS_VECTURA_BEARSSL
+/* ordinaria domus: TLS13 (tls13 T8; BearSSL 1.2 ut descensus) - ante:
+ * BEARSSL (tls-bearssl T6), SECURETRANSPORT (T3-T5) */
+#define VECTURA_DOMUS TLS_VECTURA_TLS13
 
 nomen structura {
     character dir[DXII];
@@ -82,6 +84,9 @@ _sectio_ambitus (
     (vacuum)setenv("RHUBARB_TLS", "bearssl", I);
     CREDO_AEQUALIS_I32((i32)tls_vecturam_eligere(&opt),
         (i32)TLS_VECTURA_BEARSSL);
+    (vacuum)setenv("RHUBARB_TLS", "tls13", I);
+    CREDO_AEQUALIS_I32((i32)tls_vecturam_eligere(&opt),
+        (i32)TLS_VECTURA_TLS13);
     (vacuum)setenv("RHUBARB_TLS", "nugae", I);
     CREDO_AEQUALIS_I32((i32)tls_vecturam_eligere(&opt),
         (i32)VECTURA_DOMUS);

@@ -294,6 +294,12 @@ this plan.
   -> `_connexionem_novam_perficere`, `DOWNGRD` -> `SIGNUM_DESCENSUS`,
   test `vo` -> `optiones_vocationis`; house word `scribibilis`.
 
+- **R26 (T8)** - `tools/tls_effluvia.sh` also runs probatio_tls13_servus
+  and probatio_tls13_descensus (HRR, EOF, CertificateRequest, fallback
+  with reconnect) - beyond the plan's matrix-only list; residue 0.
+  Close-out (spec status line, ledger note on ...BWQS8H, memory) goes in
+  a SEPARATE commit after Fran's live check, as tls-bearssl R28 did.
+
 ## Review focus
 
 Inputs no task's tests reach that are most likely to bite, each with

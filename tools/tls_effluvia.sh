@@ -16,7 +16,10 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 RADIX="$(cd "$SCRIPT_DIR/.." && pwd)"
 cd "$RADIX"
 TOLERATA="$SCRIPT_DIR/tls_effluvia.tolerata"
-PROBATIONES="probatio_tls_servus probatio_tls_gradus"
+# matrix III vecturarum (tls13 T8) + suitae tls13 propriae (HRR, EOF,
+# CertificateRequest, descensus cum redintegratione)
+PROBATIONES="probatio_tls_servus probatio_tls_gradus probatio_tls13_servus
+    probatio_tls13_descensus"
 T="$(mktemp -d "${TMPDIR:-/tmp}/tls_effluvia.XXXXXX")"
 trap 'rm -rf "$T"' EXIT
 

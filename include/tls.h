@@ -1,11 +1,13 @@
 /* tls.h - Bibliotheca TLS (Transport Layer Security)
  *
  * API platform-agnostica pro connexionibus securis.
- * Implementatio: tls.c - vectura per connexionem (tls-bearssl II.5):
- * tls_bearssl.c (BearSSL TLS 1.2, ORDINARIA), tls_tls13.c (TLS 1.3
- * proprius: RHUBARB_TLS=tls13) aut tls_securetransport_macos.m (macOS
- * Security.framework, vectura vetus: RHUBARB_TLS=securetransport;
- * delenda postea). Fiducia omnium per fiducia.h (platforma).
+ * Implementatio: tls.c - vectura per connexionem (tls-bearssl II.5,
+ * tls13-spec): tls_tls13.c (TLS 1.3 proprius, ORDINARIA; hospites 1.2
+ * per descensum in BearSSL cum signo DOWNGRD inspecto), tls_bearssl.c
+ * (BearSSL TLS 1.2 solum: RHUBARB_TLS=bearssl) aut
+ * tls_securetransport_macos.m (macOS Security.framework, vectura vetus:
+ * RHUBARB_TLS=securetransport; delenda postea). Fiducia omnium per
+ * fiducia.h (platforma).
  *
  * USUS:
  *   TlsResultus res = tls_connectere("httpbin.org", 443, piscina);
