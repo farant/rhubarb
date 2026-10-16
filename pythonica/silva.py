@@ -3210,15 +3210,31 @@ def _lint_praevium_exigere(viae):
             + relatio)
 
 
-def _portas_currere(portae, genera, viae, recepta=True):
+class PortaeFractae(SilvaError):
+    """_portas_currere(pergere=True): probationes rubrae OMNES collectae
+    (fractae = [(nomen, Receptum, via_actorum)]) - fusio eas cum
+    commissionibus debentibus in tabula una nominat."""
+
+    def __init__(self, nuntius, fractae):
+        SilvaError.__init__(self, nuntius)
+        self.fractae = fractae
+
+
+def _portas_currere(portae, genera, viae, recepta=True, pergere=False):
     """PORTAE CURRUNTUR (ex commissio, gradus-portarum T4: commissio et
     fusio_probare communes): praeiudicia OMNIA currunt, fracturae SIMUL
-    nominantur ante probationem primam; probatio fracta sistit
-    (SilvaError). Receptum vivum sanum non iterum currit; porta rancida
-    cum plagulis viarum mutatis = SilvaError. Reddit nomina portarum
-    viridium TOTARUM (sine filtro) - debitum rami earum purgabile."""
+    nominantur ante probationem primam (probationes ab eis pendent - ergo
+    semper sistunt); probatio fracta sistit (SilvaError) - nisi pergere:
+    TEMPUS FUSIONIS (desideratum …CECATG, Franus 2026-10-15) probationes
+    omnes currunt etiam post rubram, fractae in fine SIMUL nominantur
+    (PortaeFractae) - cyclus longus non perditur per singulum vitium.
+    Receptum vivum sanum non iterum currit; porta rancida cum plagulis
+    viarum mutatis = SilvaError statim (etiam pergens: verdictum de alia
+    versione). Reddit nomina portarum viridium TOTARUM (sine filtro) -
+    debitum rami earum purgabile."""
     ante = _sigilla_viarum(viae)
     virides = []
+    fractae_prob = []
     # praeiudicia (circulus commissionis II T5): OMNIA currunt, fracturae
     # colliguntur et SIMUL nominantur ante probationem primam; probatio
     # fracta sistit ut antea
@@ -3283,6 +3299,12 @@ def _portas_currere(portae, genera, viae, recepta=True):
                       ' currunt' % (nomen, f.compendium))
                 fractae_prae.append((nomen, f, via_acta))
                 continue
+            if pergere:
+                print('porta %s FRACTA (%s, rc=%d) - fusio pergit (portae'
+                      ' ceterae currunt; fractae in fine nominantur)'
+                      % (nomen, f.compendium, f.rc))
+                fractae_prob.append((nomen, f, via_acta))
+                continue
             raise SilvaError('porta %s non sana (%s, rc=%d) - nihil'
                              ' commissum; acta: %s%s'
                              % (nomen, f.compendium, f.rc, via_acta,
@@ -3290,6 +3312,14 @@ def _portas_currere(portae, genera, viae, recepta=True):
         if filtrum is None:
             virides.append(f.nomen)
     _praeiudicia_exigere()
+    if fractae_prob:
+        raise PortaeFractae(
+            '%d probationes non sanae (pergens - omnes cursae):\n%s'
+            % (len(fractae_prob), '\n'.join(
+                '  %s non sana (%s, rc=%d) - acta: %s%s'
+                % (n, ff.compendium, ff.rc, va,
+                   relatio_fracturarum(ff.fracturae))
+                for n, ff, va in fractae_prob)), fractae_prob)
     return virides
 
 
@@ -3503,13 +3533,15 @@ def fusio_probare(basis='main', frigida=True, recepta=True):
     1. basis antecessor HEAD esse debet ('merge main first'), arbor munda
        (iudicatur COMMISSUM);
     2. portae debitae viarum rami TOTIUS (git diff merge-base..HEAD) +
-       debita rami (debita_fusionis), GRADUS AMBO, ordine et regula
-       commissionis (praeiudicia simul, probatio prima fracta sistit);
-       transitus servati ~0, rancida iterum currunt;
-    3. frigida=True: tools/frigida_probare.sh (clone novus, ~12+ min);
+       debita rami (debita_fusionis), GRADUS AMBO, ordine commissionis
+       (praeiudicia simul - rubra sistunt), sed probationes PERGUNT post
+       rubram (…CECATG: tempus fusionis ~L min - sistere = cyclus integer
+       perditus per vitium); transitus servati ~0, rancida iterum currunt;
+    3. frigida=True: tools/frigida_probare.sh (clone novus, ~12+ min) -
+       SOLUM si portae omnes virides;
     4. viride: debita rami purgantur et ritus 'merge --ff-only' imprimitur;
-       rubrum: SilvaError porta nominata et commissiones quae eam
-       debebant (candidati bisectionis).
+       rubrum: SilvaError cum TABULA fractarum - porta, verdictum, acta,
+       commissiones quae eam debebant (candidati bisectionis).
     Tardum (>20 min saepe): ex Claude per processum separatum (detach)."""
     antecessor, sordidae, mb, viae = _ramus_status(basis)
     if not antecessor:
@@ -3535,7 +3567,19 @@ def fusio_probare(basis='main', frigida=True, recepta=True):
     with _phasis('instrumenta portarum'):
         _instrumenta_portarum_sanare(binaria)
     try:
-        _portas_currere(portae, genera, viae, recepta)
+        _portas_currere(portae, genera, viae, recepta, pergere=True)
+    except PortaeFractae as ex:
+        lineae = []
+        for n, ff, va in ex.fractae:
+            culpae = sorted(set(d[2] for d in debita_rami if d[1] == n))
+            lineae.append('  %s non sana (%s, rc=%d) - acta: %s - bisectio: %s%s'
+                          % (n, ff.compendium, ff.rc, va,
+                             ', '.join(culpae) if culpae
+                             else '(nulla commissio notata - debitum viarum rami)',
+                             relatio_fracturarum(ff.fracturae)))
+        raise SilvaError('FUSIO RUBRA: %d ex %d portis fractae (omnes cursae;'
+                         ' frigida NON cursa, debita servata):\n%s'
+                         % (len(ex.fractae), len(portae), '\n'.join(lineae)))
     except SilvaError as ex:
         culpae = sorted(set(d[2] for d in debita_rami if re.search(
             r'(?<![\w-])%s(?![\w-])' % re.escape(d[1]), str(ex))))

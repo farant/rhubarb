@@ -59,7 +59,10 @@ plica pendet — veritas in C manet.
   ('[receptum]', in aestimatione ~0 s). Ante fusionem in main:
   `silva.fusio_probare()` (DETACHED, >30 min: gradus ambo super
   merge-base..HEAD + debita + frigida; viride debita purgat et 'merge
-  --ff-only' imprimit). Index: `silva.portae_debitae_ramus()` /
+  --ff-only' imprimit). TEMPUS FUSIONIS (…CECATG): probationes PERGUNT
+  post rubram - 'FUSIO RUBRA: N ex M' tabula una (porta, acta,
+  commissiones debentes = bisectio), frigida solum si omnes virides;
+  praeiudicia rubra adhuc sistunt; commissio prima rubra sistit ut antea. Index: `silva.portae_debitae_ramus()` /
   `tools/portae_debitae.sh -ramus`. `bin/fabrica iudicare` FORTASSE
   ('supra: X STALUM' - producens supra stalus) = ut STALUM tractatur
 - `silva.planta(via, vetus, novus, porta)` — ritus culpae plantatae:
