@@ -223,6 +223,38 @@ late passes cost more.
   B_4 interior test needs the argument forms under the point's pattern
   (decided at T5a). See lib/nervus.worklog.md.
 
+## T5a (Parts A and B, 2026-10-16)
+
+- **Built.** main.c Parts A and B, 19 checks, full mode about 2 min
+  (D129_CELER=1: B_3 up to 5, shells 4 and 16, 1.5 s). Classes on B_3
+  are exact: P by plexus_periodus, E iff |Burau(-1) trace| > 2, Z
+  otherwise; equal to D128's table at every length. All 13,121 reduced
+  words up to length 8 are keyed to their classes: 6,373 geodesic words
+  (1 to 2.8 per class). Every geodesic word is swept for m = 1..12.
+- **Registered rule:** H_lin holds for ALL 2,108 E classes, on pieces
+  and on the most-regions word; H_exp for none. Prediction HOLDS (also
+  for every P and Z class).
+- **Measured.** Pieces of w^m stay bounded: E 8 for every class and
+  m >= 2, Z 6 or 8, P cycling with p(k) = 1. Regions grow linearly,
+  5 to 8 per pass, and the slope does not follow lambda: it tracks the
+  WORD LENGTH (exploratory, post hoc: r(12) - r(6) = 6 x the cyclically
+  reduced length for 1,816 of 2,108 E classes, 196 below, 96 above).
+  No sector of any braid network has an identically-zero argument, so
+  the "interior = nullae 0" criterion is sound for braids.
+- **For T5b: the lattice bound is too weak to measure growth.** On B_3
+  the shells R <= 256 recover 13.3 of the 87.6 mean regions of E at
+  m = 12, and no E class reaches its exact count (Z 16 of 272, P all
+  209). New regions are thinner by about lambda per pass (north-south
+  dynamics), so points of height R see about log_lambda(R) of them.
+  Part C's B_4 lattice numbers as planned would measure the shell, not
+  the braid. To decide before T5b.
+- Plants (silva.planta, 10, all red): E threshold, reduced-word filter,
+  composition skipped, pieces = regions, the two rule functions, wall
+  points as interior, unrefined itineraries, the angular walk, the
+  homogeneity pairs. Three checks were added first because a plant
+  would otherwise pass: the rule's code on hand sequences, "distinct
+  itineraries = distinct sectors hit", and the homogeneity pair count.
+
 ## Out of scope
 
 - Exact polyhedral region counts in d >= 3 (exact LP).
