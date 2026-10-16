@@ -65,6 +65,7 @@
 #include "matrix.h"
 #include "radices.h"
 #include "cyclotomia.h"
+#include "nervus.h"
 
 #define PLEXUS_FILA_MAXIMA              1048576
 /* Delta longitudinem n(n-1)/2 habet: n <= 65536 ut in 2^31 capiat */
@@ -292,6 +293,20 @@ ansa_agere (
       Plexus  p,
      Piscina* piscina,
         Ansa* exitus);
+
+/* actio Dynnikov plexus p ut RETE (nervus.h), sine addendis: introitus
+ * et exitus 2n - 4, ordine (a_1 .. a_{n-2}, b_1 .. b_{n-2}). Littera
+ * per aeq. 8-15 cum f- = f - relu(f): sigma_1, sigma_{n-1} et
+ * inversae II ReLU et II affines, mediae V ReLU et VI affines;
+ * profunditas IV, profunditas ReLU II per litteram. Aestimatio retis
+ * = ansa_agere (probatum). Verbum vacuum: rete sine instructionibus,
+ * exitus = introitus. FALSUM si p invalidus, fila < 3, aut registra
+ * NERVUS_REGISTRA_MAXIMA superarent */
+b32
+plexus_nervus (
+      Plexus   p,
+     Piscina*  piscina,
+      Nervus** exitus);
 
 /* L(u): sectiones minimae ansae cum linea horizontali per puncta (aeq.
  * 5-6); ansa invalida -> 0 */

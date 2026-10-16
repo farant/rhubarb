@@ -2102,3 +2102,308 @@ plexus_burau_radius_maior (
     _propriam_destruere(t);
     redde bene;
 }
+
+
+/* ==================================================
+ * Actio Dynnikov ut rete (nervus)
+ * ================================================== */
+
+/* instructio ex terminis parvis: V paria (fons, coefficiens),
+ * coefficiens 0 terminum omittit. Registrum novum, aut -1 si *bene iam
+ * FALSUM aut constructio refutat (tunc *bene = FALSUM). */
+interior s32
+_nervus_instructio (
+          Nervus* rete,
+     NervusGenus  genus,
+             s32  f0,
+             s32  c0,
+             s32  f1,
+             s32  c1,
+             s32  f2,
+             s32  c2,
+             s32  f3,
+             s32  c3,
+             s32  f4,
+             s32  c4,
+             b32* bene)
+{
+       s32 fontes[V];
+       s32 coef[V];
+       s32 f[V];
+    Magnus c[V];
+       i32 k;
+       i32 termini  = ZEPHYRUM;
+       s32 novum    = -I;
+       b32 factum;
+
+    si (!*bene)
+    {
+        redde -I;
+    }
+    fontes[ZEPHYRUM]  = f0;
+    fontes[I]         = f1;
+    fontes[II]        = f2;
+    fontes[III]       = f3;
+    fontes[IV]        = f4;
+    coef[ZEPHYRUM]    = c0;
+    coef[I]           = c1;
+    coef[II]          = c2;
+    coef[III]         = c3;
+    coef[IV]          = c4;
+    per (k = ZEPHYRUM; k < V; k++)
+    {
+        si (coef[k] != ZEPHYRUM)
+        {
+            f[termini] = fontes[k];
+            c[termini] = magnus_ex_s64((s64)coef[k]);
+            termini++;
+        }
+    }
+    si (genus == NERVUS_RELU)
+    {
+        factum = nervus_relu(rete, termini, f, c,
+            magnus_ex_s64(ZEPHYRUM),
+            &novum);
+    }
+    alioquin
+    {
+        factum = nervus_affinis(rete, termini, f, c,
+            magnus_ex_s64(ZEPHYRUM), &novum);
+    }
+    si (!factum)
+    {
+        *bene = FALSUM;
+        redde -I;
+    }
+    redde novum;
+}
+
+/* littera una: registra currentia coordinatarum (cur: a_j in cur[j-1],
+ * b_j in cur[m+j-1]) legit et novat. Aeq. 8-15 (Thiffeault 2010),
+ * f- = f - relu(f). */
+interior b32
+_nervus_littera (
+     Nervus* rete,
+        i32  fila,
+        s32  littera,
+        s32* cur)
+{
+    i32 m     = fila - II;
+    i32 i     = (i32)(littera > ZEPHYRUM ? littera : -littera);
+    b32 bene  = VERUM;
+
+    si (i == I || i == fila - I)
+    {
+        /* sigma_1 (10, 14) et sigma_{n-1} (11, 15), indice j */
+        i32 j = i == I ? I : m;
+        s32 a = cur[j - I];
+        s32 b = cur[m + j - I];
+        s32 t1;
+        s32 nb;
+        s32 t2;
+        s32 na;
+
+        t1 = _nervus_instructio(rete, NERVUS_RELU, b, I, ZEPHYRUM,
+            ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM,
+            ZEPHYRUM, &bene);
+        si (i == I && littera > ZEPHYRUM)
+        {
+            /* b' = a + b+,  a' = -b + (b')+ */
+            nb = _nervus_instructio(rete, NERVUS_AFFINIS, a, I, t1, I,
+                ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM,
+                ZEPHYRUM, &bene);
+            t2 = _nervus_instructio(rete, NERVUS_RELU, nb, I,
+                ZEPHYRUM,
+                ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM,
+                ZEPHYRUM, ZEPHYRUM, &bene);
+            na = _nervus_instructio(rete, NERVUS_AFFINIS, b, -I, t2, I,
+                ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM,
+                ZEPHYRUM, &bene);
+        }
+        alioquin si (i == I)
+        {
+            /* b' = b+ - a,  a' = b - (b')+ */
+            nb = _nervus_instructio(rete, NERVUS_AFFINIS, t1, I, a, -I,
+                ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM,
+                ZEPHYRUM, &bene);
+            t2 = _nervus_instructio(rete, NERVUS_RELU, nb, I,
+                ZEPHYRUM,
+                ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM,
+                ZEPHYRUM, ZEPHYRUM, &bene);
+            na = _nervus_instructio(rete, NERVUS_AFFINIS, b, I, t2, -I,
+                ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM,
+                ZEPHYRUM, &bene);
+        }
+        alioquin si (littera > ZEPHYRUM)
+        {
+            /* b' = a + b-,  a' = -b + (b')-   (f- = f - f+) */
+            nb = _nervus_instructio(rete, NERVUS_AFFINIS, a, I, b, I,
+                t1,
+                -I, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, &bene);
+            t2 = _nervus_instructio(rete, NERVUS_RELU, nb, I,
+                ZEPHYRUM,
+                ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM,
+                ZEPHYRUM, ZEPHYRUM, &bene);
+            na = _nervus_instructio(rete, NERVUS_AFFINIS, b, -I, nb, I,
+                t2, -I, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, &bene);
+        }
+        alioquin
+        {
+            /* b' = b- - a,  a' = b - (b')- */
+            nb = _nervus_instructio(rete, NERVUS_AFFINIS, b, I, t1, -I,
+                a,
+                -I, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, &bene);
+            t2 = _nervus_instructio(rete, NERVUS_RELU, nb, I,
+                ZEPHYRUM,
+                ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM,
+                ZEPHYRUM, ZEPHYRUM, &bene);
+            na = _nervus_instructio(rete, NERVUS_AFFINIS, b, I, nb, -I,
+                t2, I, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, &bene);
+        }
+        cur[j - I]      = na;
+        cur[m + j - I]  = nb;
+    }
+    alioquin
+    {
+        /* mediae, p = i-1, q = i: positiva (8)-(9) cum c, negativa
+         * (12)-(13) cum d; signum sg = +1 / -1 utrumque tegit */
+        i32 p          = i - I;
+        i32 q          = i;
+        s32 a_prior    = cur[p - I];
+        s32 a_sequens  = cur[q - I];
+        s32 b_prior    = cur[m + p - I];
+        s32 b_sequens  = cur[m + q - I];
+        s32 sg         = littera > ZEPHYRUM ? I : -I;
+        s32 pos        = littera > ZEPHYRUM ? I : ZEPHYRUM;
+        s32 b_sequens_positiva;
+        s32 b_prior_positiva;
+        s32 d;
+        s32 u;
+        s32 d_positiva;
+        s32 w_positiva;
+        s32 a_prior_nova;
+        s32 b_prior_nova;
+        s32 pars;
+        s32 a_sequens_nova;
+        s32 b_sequens_nova;
+
+        b_sequens_positiva = _nervus_instructio(rete, NERVUS_RELU,
+            b_sequens, I,
+            ZEPHYRUM,
+            ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM,
+            ZEPHYRUM, &bene);
+        b_prior_positiva = _nervus_instructio(rete, NERVUS_RELU,
+            b_prior, I,
+            ZEPHYRUM,
+            ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM,
+            ZEPHYRUM, &bene);
+        /* c = a_p - a_q - b_q+ + b_p - b_p+
+         * d = a_p - a_q + b_q+ - b_p + b_p+ */
+        d = _nervus_instructio(rete, NERVUS_AFFINIS, a_prior, I,
+            a_sequens, -I,
+            b_sequens_positiva,
+            -sg, b_prior, sg, b_prior_positiva, -sg, &bene);
+        /* (b_q+ + c)+  aut  (b_q+ - d)+ */
+        u = _nervus_instructio(rete, NERVUS_RELU, b_sequens_positiva, I,
+            d, sg,
+            ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM,
+            &bene);
+        d_positiva = _nervus_instructio(rete, NERVUS_RELU, d, I,
+            ZEPHYRUM,
+            ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM,
+            ZEPHYRUM, &bene);
+        /* w = b_p - b_p+ - c  aut  b_p - b_p+ + d */
+        w_positiva = _nervus_instructio(rete, NERVUS_RELU, b_prior, I,
+            b_prior_positiva,
+            -I,
+            d, -sg, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, &bene);
+        /* a_p' = a_p - b_p+ - u  aut  a_p + b_p+ + u */
+        a_prior_nova = _nervus_instructio(rete, NERVUS_AFFINIS, a_prior,
+            I, b_prior_positiva,
+            -sg,
+            u, -sg, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, &bene);
+        /* b_p' = b_q + c - c+  aut  b_q - d+ */
+        b_prior_nova = _nervus_instructio(rete, NERVUS_AFFINIS,
+            b_sequens, I, d, pos,
+            d_positiva,
+            -I, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, &bene);
+        /* a_q' = [a_q - (b_q - b_q+) - (b_p - b_p+)] + c + w+  aut
+         *       [a_q + (b_q - b_q+) + (b_p - b_p+)] + d - w+ */
+        pars = _nervus_instructio(rete, NERVUS_AFFINIS, a_sequens, I,
+            b_sequens, -sg,
+            b_sequens_positiva, sg, b_prior, -sg, b_prior_positiva, sg,
+            &bene);
+        a_sequens_nova = _nervus_instructio(rete, NERVUS_AFFINIS, pars,
+            I, d, I,
+            w_positiva,
+            sg, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, &bene);
+        /* b_q' = b_p - c + c+  aut  b_p + d+ */
+        b_sequens_nova = _nervus_instructio(rete, NERVUS_AFFINIS,
+            b_prior, I, d, -pos,
+            d_positiva, I, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM,
+            &bene);
+        cur[p - I]      = a_prior_nova;
+        cur[m + p - I]  = b_prior_nova;
+        cur[q - I]      = a_sequens_nova;
+        cur[m + q - I]  = b_sequens_nova;
+    }
+    redde bene;
+}
+
+b32
+plexus_nervus (
+      Plexus   p,
+     Piscina*  piscina,
+      Nervus** exitus)
+{
+    Piscina* temporaria;
+     Nervus* rete;
+        s32* cur;
+        i32  m;
+        i32  k;
+        b32  bene = VERUM;
+
+    si (   !plexus_validus(p) || p.fila < III || piscina == NIHIL
+        || exitus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    m = p.fila - II;
+    /* registra: 2m + XI per litteram (plurimum) */
+    si ((memoriae_index)II * m + (memoriae_index)XI * p.longitudo
+        > (memoriae_index)NERVUS_REGISTRA_MAXIMA)
+    {
+        redde FALSUM;
+    }
+    si (!nervus_creare(II * m, piscina, &rete))
+    {
+        redde FALSUM;
+    }
+    temporaria = piscina_generare_dynamicum("plexus_nervus",
+        IV * MXXIV);
+    si (temporaria == NIHIL)
+    {
+        redde FALSUM;
+    }
+    cur = (s32*)piscina_allocare(temporaria,
+        (memoriae_index)(II * m) * magnitudo(s32));
+    per (k = ZEPHYRUM; k < II * m; k++)
+    {
+        cur[k] = (s32)k;
+    }
+    per (k = ZEPHYRUM; k < p.longitudo && bene; k++)
+    {
+        bene = _nervus_littera(rete, p.fila, p.litterae[k], cur);
+    }
+    si (bene)
+    {
+        bene = nervus_exitus(rete, II * m, cur);
+    }
+    piscina_destruere(temporaria);
+    si (!bene)
+    {
+        redde FALSUM;
+    }
+    *exitus = rete;
+    redde VERUM;
+}

@@ -237,6 +237,9 @@ How the outcome reaches claims.md:
   (63,245,986; 331,160,282) = (F_39; 2 F_41), Fibonacci numbers, in
   line with the dilatation phi^2. To be looked at in the findings, not
   asserted.
+  [Corrected 2026-10-16, nervus T3: the coordinates are (F_39; -F_38);
+  331,160,282 = 2 F_41 is L. The printf called mstr() twice with one
+  static buffer. See findings.md.]
 - **Plants (silva.planta, 8):** all red. They cover a sign in c, a sign
   in w, the inverse's b_p, sigma_1's a_1, sigma_{n-1}'s b, an
   interpreter that ignores the ReLU, swapped outputs, and a

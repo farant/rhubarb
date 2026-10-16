@@ -145,6 +145,10 @@ copies its form, forced off gives 0), not by sampling.
    (Thiffeault eq. 8-15, f- = f - relu(f)) and composes a word. D128's
    anchor becomes a plexus test (oracle 3). D128's own code is not
    changed (frozen).
+   *Done 2026-10-16:* section "nervus" in probatio_plexus (17 checks:
+   3000-word anchor incl. 2^200, per-letter shape, composition,
+   Fibonacci, refusals); 8 plants red. Found D128's Fibonacci line was a
+   print bug (corrected in its notes). Width per letter 2n - 3 / 2n + 2.
 4. **T4: independent review** with its own oracle, then fixes.
 5. **T5: N6 as demo D129**, with its own plan first (sketch below).
 

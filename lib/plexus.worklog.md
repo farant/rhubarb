@@ -396,3 +396,53 @@ is certified at orders 2 and 5. It is now a positive example.
 5 plants, all red: a single division in place of repeated division,
 the realification without zeta^j, the diagonal x misplaced, a
 Kronecker range of k <= 2, and maior always VERUM.
+
+## 2026-10-16 — plexus_nervus (nervus-plan T3)
+
+`plexus_nervus(p)` emits the Dynnikov action of a word as a nervus
+network: 2n - 4 inputs and outputs (a_1..a_{n-2}, b_1..b_{n-2}), no
+biases. Each letter follows Thiffeault eq. 8-15 with f- = f - relu(f),
+the same programs D128's Part A typed (D128's code is frozen and
+untouched; the emission here is separate and is checked against
+`ansa_agere`, which is a third, direct max/min transcription). The two
+middle cases (8)-(9) and (12)-(13) share one emission with a sign
+`sg` (+1 / -1) and a switch `pos` (the c-term in b_p' and b_q' exists
+only for positive letters); checked term by term against D128's two
+programs before the first run. Locals mirror `ansa_agere`'s names
+(a_prior, a_sequens, ...); comments keep the paper's a_p, b_q.
+
+Instruction helper: `_nervus_instructio` takes five (source,
+coefficient) pairs and returns the new register, or -1 once `bene` is
+FALSUM. The first draft chained `bene && call(..., &t1)` and examen
+rightly flagged reads of t1 when an earlier step had failed (harmless,
+but an uninitialized read); returning the register removed them.
+
+Tests (section "nervus", 17 checks): 3000 random words, n = 3..8,
+length 0..20, every fourth vector scaled by 2^200: network = ansa_agere,
+0 discrepancies. Per letter, n = 3..8: end letters 2 ReLU / 4
+instructions, middle 5 / 11; depth 4, ReLU depth 2; inputs and outputs
+2n - 4. Empty word = identity network. nervus(p) o nervus(q) =
+nervus(pq) on 200 random pairs. Refusals (fila 2, invalid letter,
+NIHIL pool / output).
+
+Width, measured: end letters 2n - 3, middle letters 2n + 2 (nervus's
+definition: live registers, so the affine temporaries d and the
+partial sum count). D128 stated "hidden width at most 2n + 1 (state
+plus a middle letter's 5 ReLUs)" - a different count (ReLUs only, as
+if the affine nodes were folded into the next layer), not a
+contradiction; the test asserts nervus's exact values.
+
+**D128's Fibonacci line was a print bug.** (s1 s2^-1)^20 on E_1 is
+(63,245,986; -39,088,169) = (F_39; -F_38), and L = 331,160,282 =
+2 F_41. D128 printed "(63245986; 331160282)" because `main.c:654`
+calls `mstr()` twice in one printf and `mstr` returns ONE static
+buffer, so the second coordinate showed L. Its exact check compared
+the right values. Correction notes in D128's findings.md and plan.md;
+the test asserts the true pair and L. Lesson: a helper returning a
+static buffer must never appear twice in one printf - the value
+printed is not the value checked.
+
+8 plants, all red: the sign of b_q+ in d, the c/d switch always on,
+sigma_1's a' = +b + (b')+, the sign of (b')- for sigma_{n-1}^-1, the
+edge write-back swapped, the sign of d in w, the sign of w+ in a_q',
+the sign of b_p+ in the partial sum.

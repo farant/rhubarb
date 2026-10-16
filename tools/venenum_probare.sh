@@ -86,7 +86,7 @@ lib/friatio.c lib/tabula_dispersa.c lib/radices.c lib/surdus.c lib/cellae.c" \
 lib/anulus.c lib/matrix.c lib/reticulum.c" \
     "plexus:lib/magnus.c lib/fractio.c lib/polynomium.c lib/congruentia.c \
 lib/anulus.c lib/matrix.c lib/cyclotomia.c lib/extensio.c lib/radices.c \
-lib/tabula_nodorum_data.c lib/plexus.c" \
+lib/tabula_nodorum_data.c lib/nervus.c lib/plexus.c" \
     "nervus:lib/magnus.c lib/fractio.c lib/polynomium.c lib/congruentia.c \
 lib/anulus.c lib/matrix.c lib/friatio.c lib/tabula_dispersa.c lib/nervus.c"; do
     titulus="${suita%%:*}"

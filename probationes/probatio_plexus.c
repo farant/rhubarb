@@ -1,6 +1,7 @@
 /* probatio_plexus.c - probationes plexus (project-specs/plexus-plan.md)
  *
- * T1: verba, permutatio, actio in F_n (Artin), aequalitas. Oracula a
+ * T1: verba, permutatio, actio in F_n (Artin), aequalitas. Sectio
+ * "nervus" (nervus-plan T3): plexus_nervus contra ansa_agere. Oracula a
  * codice independentia:
  * (1) imagines manu computatae (sigma_1, sigma_1^-1, sigma_1 sigma_2);
  * (2) actio per SUBSTITUTIONEM litterarum a dextra (algorithmus alius
@@ -3632,6 +3633,245 @@ _probare_burau_circulum (
     CREDO_AEQUALIS_I32 (fracta_incrementi, ZEPHYRUM);
 }
 
+/* plexus_nervus (nervus-plan T3): rete = ansa_agere (ancora D128 Partis
+ * A), figura per litteram, verbum vacuum, compositio = iunctio,
+ * exemplum Fibonacci, refutationes */
+interior vacuum
+_probare_nervum (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+       Sors  s;
+        i32  t;
+        i32  k;
+        i32  comparata = ZEPHYRUM;
+        i32  discrepantiae = ZEPHYRUM;
+     Magnus  scala = magnus_potentia(magnus_ex_s64(II), CC, piscina);
+
+    /* ancora: MMM verba fortuita, n = 3..8, longitudo 0..20,
+     * coordinatae |x| <= 1000, quarta quaeque scalata 2^200 */
+    sors_seminare(&s, CXXVIII, I);
+    per (t = ZEPHYRUM; t < MMM; t++)
+    {
+        PiscinaNotatio nota  = piscina_notare(piscina);
+                   i32 n     = III + sors_intra(&s, VI);
+                   i32 m     = n - II;
+                Plexus p = _fortuitus(&s, n, sors_intra(&s, XXI),
+                    piscina);
+               Nervus* rete;
+               Magnus  a[VI];
+               Magnus  b[VI];
+               Magnus  x[XII];
+               Magnus  y[XII];
+                 Ansa  u;
+                 Ansa  v;
+                  b32  idem = VERUM;
+
+        per (k = ZEPHYRUM; k < m; k++)
+        {
+            a[k] = magnus_ex_s64((s64)sors_inter(&s, -M, M));
+            b[k] = magnus_ex_s64((s64)sors_inter(&s, -M, M));
+            si (t % IV == III)
+            {
+                a[k] = magnus_multiplica(a[k], scala, piscina);
+                b[k] = magnus_multiplica(b[k], scala, piscina);
+            }
+            x[k]      = a[k];
+            x[m + k]  = b[k];
+        }
+        si (   !ansa_ex_coordinatis(n, a, b, piscina, &u)
+            || !ansa_agere(u, p, piscina, &v)
+            || !plexus_nervus(p, piscina, &rete)
+            || !nervus_aestimare(rete, x, y, NIHIL, piscina))
+        {
+            idem = FALSUM;
+        }
+        alioquin
+        {
+            per (k = ZEPHYRUM; k < m; k++)
+            {
+                si (   !magnus_aequalis(y[k], v.a[k])
+                    || !magnus_aequalis(y[m + k], v.b[k]))
+                {
+                    idem = FALSUM;
+                }
+            }
+        }
+        comparata++;
+        si (!idem)
+        {
+            discrepantiae++;
+        }
+        piscina_reficere(piscina, nota);
+    }
+    CREDO_AEQUALIS_I32 (comparata, MMM);
+    CREDO_AEQUALIS_I32 (discrepantiae, ZEPHYRUM);
+    /* figura per litteram (D128 Pars A): extremae II ReLU et IV
+     * instructiones, mediae V et XI; profunditas IV, ReLU II.
+     * Latitudo (registra viva, nervus.h): extremae 2n - 3, mediae
+     * 2n + 2 - temporaria affinia (d, pars) numerantur, dissimile
+     * "status + V ReLU" (D128) */
+    {
+        b32 recte = VERUM;
+        i32 n;
+
+        per (n = III; n <= VIII; n++)
+        {
+            s32 littera;
+
+            per (littera = -(s32)(n - I); littera <= (s32)(n - I);
+                littera++)
+            {
+                  Plexus  p;
+                  Nervus* rete;
+            NervusFigura  fig;
+                     i32  i = (i32)(littera > ZEPHYRUM ? littera
+                              : -littera);
+                     b32 extrema = i == I || i == n - I;
+
+                si (littera == ZEPHYRUM)
+                {
+                    perge;
+                }
+                si (   !plexus_creare(n, &littera, I, piscina, &p)
+                    || !plexus_nervus(p, piscina, &rete)
+                    || !nervus_figura(rete, &fig))
+                {
+                    recte = FALSUM;
+                    perge;
+                }
+                si (   fig.relu             != (extrema ? II : V)
+                    || fig.instructiones    != (extrema ? IV : XI)
+                    || fig.profunditas      != IV
+                    || fig.profunditas_relu != II
+                    || fig.latitudo != (extrema ? II * n - III : II * n
+                        + II)
+                    || rete->introitus      != II * n - IV
+                    || rete->exitus_numerus != II * n - IV)
+                {
+                    recte = FALSUM;
+                }
+            }
+        }
+        CREDO_VERUM (recte);
+    }
+    /* verbum vacuum: nullae instructiones, exitus = introitus */
+    {
+        Plexus  p = _p(IV, "", piscina);
+        Nervus* rete;
+        Magnus  x[IV];
+        Magnus  y[IV];
+
+        CREDO_VERUM (plexus_nervus(p, piscina, &rete));
+        CREDO_AEQUALIS_I32 (rete->numerus, ZEPHYRUM);
+        per (k = ZEPHYRUM; k < IV; k++)
+        {
+            x[k] = magnus_ex_s64((s64)k - II);
+        }
+        CREDO_VERUM (nervus_aestimare(rete, x, y, NIHIL, piscina));
+        CREDO_VERUM (magnus_aequalis(y[ZEPHYRUM], x[ZEPHYRUM])
+            && magnus_aequalis(y[III], x[III]));
+    }
+    /* compositio: nervus(p) o nervus(q) = nervus(iuncta) */
+    {
+        b32 recte = VERUM;
+
+        per (t = ZEPHYRUM; t < CC; t++)
+        {
+            PiscinaNotatio nota  = piscina_notare(piscina);
+                       i32 n     = III + sors_intra(&s, IV);
+                    Plexus p = _fortuitus(&s, n, sors_intra(&s, X),
+                        piscina);
+                   Plexus q = _fortuitus(&s, n, sors_intra(&s, X),
+                       piscina);
+                   Plexus  iuncta;
+                   Nervus* rete_p;
+                   Nervus* rete_q;
+                   Nervus* rete_iunctum;
+                   Nervus* compositum;
+                   Magnus  x[X];
+                   Magnus  y1[X];
+                   Magnus  y2[X];
+
+            per (k = ZEPHYRUM; k < II * n - IV; k++)
+            {
+                x[k] = magnus_ex_s64((s64)sors_inter(&s, -C, C));
+            }
+            si (   !plexus_iungere(p, q, piscina, &iuncta)
+                || !plexus_nervus(p, piscina, &rete_p)
+                || !plexus_nervus(q, piscina, &rete_q)
+                || !plexus_nervus(iuncta, piscina, &rete_iunctum)
+                || !nervus_componere(rete_p, rete_q, piscina,
+                &compositum)
+                || !nervus_aestimare(compositum, x, y1, NIHIL, piscina)
+                || !nervus_aestimare(rete_iunctum, x, y2, NIHIL,
+                piscina))
+            {
+                recte = FALSUM;
+            }
+            alioquin
+            {
+                per (k = ZEPHYRUM; k < II * n - IV; k++)
+                {
+                    si (!magnus_aequalis(y1[k], y2[k]))
+                    {
+                        recte = FALSUM;
+                    }
+                }
+            }
+            piscina_reficere(piscina, nota);
+        }
+        CREDO_VERUM (recte);
+    }
+    /* (s1 s2^-1)^20 in E_1 (n = 3) = (F_39; -F_38), L = 2 F_41
+     * (D128 linea "(F_39; 2 F_41)" L bis imprimebat: mstr alveo
+     * statico) */
+    {
+        Plexus  unum  = _p(III, "1 -2", piscina);
+        Plexus  w     = _p(III, "", piscina);
+        Nervus* rete;
+          Ansa  e1;
+        Magnus  x[II];
+        Magnus  y[II];
+
+        per (k = ZEPHYRUM; k < XX; k++)
+        {
+            (vacuum)plexus_iungere(w, unum, piscina, &w);
+        }
+        (vacuum)ansa_circa(III, I, piscina, &e1);
+        x[ZEPHYRUM]  = e1.a[ZEPHYRUM];
+        x[I]         = e1.b[ZEPHYRUM];
+        CREDO_VERUM (plexus_nervus(w, piscina, &rete));
+        CREDO_VERUM (nervus_aestimare(rete, x, y, NIHIL, piscina));
+        CREDO_VERUM (_s64(y[ZEPHYRUM]) == (s64)LXIII * M * M
+            + (s64)CCXLV * M + CMLXXXVI);
+        CREDO_VERUM (_s64(y[I]) == -((s64)XXXIX * M * M
+            + (s64)LXXXVIII * M + CLXIX));
+        {
+            Ansa fin;
+
+            (vacuum)ansa_ex_coordinatis(III, &y[ZEPHYRUM], &y[I],
+                piscina,
+                &fin);
+            CREDO_VERUM (_s64(ansa_sectiones(fin, piscina))
+                == (s64)CCCXXXI * M * M + (s64)CLX * M + CCLXXXII);
+        }
+    }
+    /* refutationes */
+    {
+        Plexus  duo    = _p(II, "1", piscina);
+        Plexus  malus  = _p(IV, "1 2", piscina);
+        Nervus* rete   = NIHIL;
+
+        CREDO_FALSUM (plexus_nervus(duo, piscina, &rete));
+        CREDO_FALSUM (plexus_nervus(malus, NIHIL, &rete));
+        CREDO_FALSUM (plexus_nervus(malus, piscina, NIHIL));
+        malus.litterae[ZEPHYRUM] = IV;
+        CREDO_FALSUM (plexus_nervus(malus, piscina, &rete));
+        CREDO_NIHIL (rete);
+    }
+}
+
 interior CredoSectio SECTIONES[] = {
     { "verba", _probare_verba, NIHIL, NIHIL, NIHIL, NIHIL },
     { "permutatio", _probare_permutationem, NIHIL, NIHIL, NIHIL,
@@ -3717,6 +3957,7 @@ interior CredoSectio SECTIONES[] = {
       NIHIL, NIHIL, NIHIL },
     { "burau circulus", _probare_burau_circulum, NIHIL, NIHIL, NIHIL,
       NIHIL },
+    { "nervus", _probare_nervum, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

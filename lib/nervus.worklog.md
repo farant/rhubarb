@@ -117,3 +117,12 @@ re-run against the refactored evaluator: all red.
 **Gates by hand.** nervus 212/212; venenum sana (nervus 212); examen
 ACCIPE; formator CONFORMIS; Latin lint NOVA 0 (glossary:
 `associativus`, Latina media).
+
+## 2026-10-16 — T3: plexus emits into nervus
+
+`plexus_nervus` (lib/plexus.c, see lib/plexus.worklog.md) is nervus's
+first real producer. plexus.h now includes nervus.h, so every plexus
+consumer (D128's live build included) links nervus; D128 still builds
+and passes 24/24 quick. venenum's plexus closure gained lib/nervus.c.
+The width of a braid letter under nervus's definition is 2n - 3 (end)
+and 2n + 2 (middle): affine temporaries count as live registers.

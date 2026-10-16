@@ -78,6 +78,15 @@ Observed, not asserted: (s1 s2^-1)^20 on E_1 gives (63,245,986;
 331,160,282) = (F_39; 2 F_41), Fibonacci numbers, as the dilatation
 phi^2 suggests.
 
+> **Correction (2026-10-16, nervus T3).** The coordinates are
+> (63,245,986; -39,088,169) = (F_39; -F_38); 331,160,282 = 2 F_41 is
+> L, the loop's crossing count. The printed line was wrong, not the
+> check: `main.c:654` calls `mstr()` twice in one `printf`, and `mstr`
+> returns one static buffer, so the second coordinate printed as L.
+> The demo's exact check (network = plexus iteration) compares the
+> right values and passed. Now asserted in `probatio_plexus.c`
+> (section "nervus"); the frozen demo code is unchanged.
+
 ## Growth census (Part B)
 
 Classes: **P** periodic, exactly: beta^n or beta^(n-1) is a power of
