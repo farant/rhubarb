@@ -67,6 +67,65 @@ phase that needs it. Header text shown to Fran before coding.*
 | **T9** | Run -> Claude session: join on cwd/worktree and the hook log (PreToolUse carries the Bash command and TMUX_PANE); fallback: `praeco` exports MENSOR_SESSIO into the session via CLAUDE_ENV_FILE at SessionStart. |
 | **T10** | vicus dashboard: per session, running gates with elapsed / estimated time, stage x/y, failures as they happen; also runs started outside any session (no link). Beside or inside the T5 sessions view. |
 
+### Phase 2 facts (research 2026-10-16, read-only)
+
+1. **Live at the outer level only.** Runs write `initium` at start and
+   `finis` at end (lib/mensura, analytica spec II): commissio, phases,
+   `porta:*`, chassis scripts - an open run = initium without finis.
+   BUT fabrica actions and credo sections (`member#section`) write BOTH
+   lines after the action ends, initium backdated
+   (tools/fabrica_memoria.c). Inside a gate, finished children stream
+   in; the running ones are invisible.
+2. **Two stores.** Lines append to ~/.rhubarb/mensurae.diarium;
+   `mensor curare` (detached) folds it into ~/.rhubarb/mensurae.volumen
+   when it passes 256 KB or daily. A 30-minute commit can be folded
+   mid-run: its initium in the volume, its finis later in the diary.
+   `mensura_cursus_legere` reads the volume only - a live view needs the
+   volume's open runs + a diary follower (as admonitiones follows
+   eventa.jsonl).
+3. **Running vs killed is indistinguishable.** CURSUS_INTERRUPTUS means
+   "no finis (or still running)". The id carries a pid, but for
+   silva.py runs (`mensor cursus incipere` subprocess) it is the
+   short-lived mensor's pid. Needs an owner pid recorded, or a
+   heartbeat.
+4. **Nesting is there.** parens via MENSOR_PARENS: commissio -> porta:X
+   -> fabrica actions -> credo sections. Real commit 1dc057b6: 206 s,
+   generata 83 s (bearssl_amalgama 53 s), radix 74 s.
+5. **Whole-gate medians are useless as estimates.** porta:radix: median
+   81 s, range 23..580 s (n=147) - bimodal by fabrica cache hits
+   ("membra cursa 0/351"). `fabrica sanare -siccum` already computes the
+   plan (N agenda, M fortasse, ~X s from each member's last run). Stage
+   "x of y" needs that plan recorded at the START of a composite - today
+   nothing records it.
+6. **T9 join is direct.** Claude Code exports `CLAUDE_CODE_SESSION_ID`
+   (= the hook's session_id) and TMUX_PANE into Bash commands; a
+   detached commissio inherits them. mensura already reads CLAUDECODE
+   (vocator agens) but records neither. Recording the session id at
+   initium replaces the CLAUDE_ENV_FILE fallback. (Verify it survives
+   the double fork.)
+
+7. **The record format is frozen by sharing.** `mensura_cursus_ex_linea`
+   demands exactly XIV (initium) / XII (finis) fields, and
+   `mensura_condere` DROPS a malformed line and then truncates the
+   diary. Every tree's bin/mensor folds the shared diary - so a new field
+   written by secunda would be silently destroyed by quinta's (or any
+   unmerged tree's) next fold. New facts about a run go in as ordinary
+   MENSURA records (sessio id parens titulus valor unitas momentum,
+   parens = run id), which every binary already accepts.
+8. **Owner pid.** `mensor cursus incipere` (silva.py runs) is a child
+   of the owner: getppid() = the Python process that will write finis.
+   `mensor cursus currere -- cmd` waits for its child: getpid(). No
+   liveness call exists; house precedent (fabrica core count) shells
+   out via processus rather than sysctl(3): `/bin/ps -o etime= -p PID`
+   gives existence + start time (start after the run's initium = pid
+   reused). Builds fork constantly, so pids wrap within hours - the
+   start-time check is needed, not optional.
+9. **fabrica has no up-front plan in a real run.** The wave path
+   (`_sanare_per_undas`, lib/fabrica_sanare.c) judges a wave, runs its
+   stale members, then judges the next; only `-siccum` judges all
+   first (71 s for radix). Known at start: the members in scope and the
+   waves (`fabrica_undas_formare`). Stale counts appear wave by wave.
+
 ## IV. Status
 
 - T1 DONE 2026-10-15: `multiplexor` (lib/multiplexor.c) - panes and
@@ -131,10 +190,15 @@ phase that needs it. Header text shown to Fran before coding.*
   native notification (Fran). Backup:
   ~/.claude/settings.json.bak-colloquia-2026-10-16. The binary is an
   AD HOC copy of secunda's bin/praeco (never ~/.bin from a worktree).
-  AFTER the main merge + `bin/fabrica sanare installata`: point the 7
-  hooks at ~/.bin/praeco and delete ~/.rhubarb/colloquia/praeco. Until
-  then a praeco change needs `rm` + `cp` by hand (code-signing note in
-  tools/praeco_struere.sh).
+- T8a 2026-10-16: `processus_vivus` (pid alive + start time via
+  `ps -o etime=`) and the pure `processus_aetatem_legere`. Plants 5/6
+  red; the `pid <= 0` guard is unobservable (`ps -p 0` exits 1 itself)
+  and stays as defence.
+- IN MAIN 2026-10-16 (ff 1dc057b6, fusio_probare green + frigida,
+  installata 23/23). The 7 hooks now call `~/.bin/praeco hamus`
+  (backup ~/.claude/settings.json.bak-praeco-bin-2026-10-16); the ad
+  hoc copy is deleted. A praeco change now ships like any house binary:
+  merge to main, then `bin/fabrica sanare installata` there.
 
 ## V. Hook facts (Claude Code docs, checked 2026-10-15)
 

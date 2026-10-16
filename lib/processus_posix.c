@@ -26,6 +26,8 @@
 #include <signal.h>
 #include <errno.h>
 #include <string.h>
+#include <stdio.h>
+#include <time.h>
 
 /* ambitus processus (POSIX; in nullo capite declaratus) - infans eum
  * ante exec substituit (ProcessusOptiones.ambitus) */
@@ -1018,4 +1020,127 @@ processus_transformare (
     u.c = argumenta;
     (vacuum)execvp(argumenta[0], u.m);
     redde FALSUM;   /* exec felix numquam huc redit */
+}
+
+/* numerus cifrarum ab *i (saltem una); FALSUM si nulla cifra */
+interior b32
+_digitos_legere (
+    chorda  c,
+       i32* i,
+       s64* valor)
+{
+    i32 initium = *i;
+
+    *valor = (s64)ZEPHYRUM;
+    dum (*i < c.mensura && c.datum[*i] >= '0' && c.datum[*i] <= '9')
+    {
+        *valor = *valor * (s64)X + (s64)(c.datum[*i] - '0');
+        (*i)++;
+    }
+    redde (*i > initium) ? VERUM : FALSUM;
+}
+
+b32
+processus_aetatem_legere (
+    chorda  textus,
+       s64* secundae_out)
+{
+    s64 partes[III];
+    s64 dies;
+    s64 summa;
+    i32 n;
+    i32 i;
+    i32 k;
+
+    si (secundae_out == NIHIL || textus.datum == NIHIL)
+    {
+        redde FALSUM;
+    }
+    i     = ZEPHYRUM;
+    dies  = (s64)ZEPHYRUM;
+    si (!_digitos_legere(textus, &i, &partes[ZEPHYRUM]))
+    {
+        redde FALSUM;
+    }
+    si (i < textus.mensura && textus.datum[i] == '-')
+    {
+        /* dd- : horae tunc necessariae (ps: dd-hh:mm:ss) */
+        dies = partes[ZEPHYRUM];
+        i++;
+        si (!_digitos_legere(textus, &i, &partes[ZEPHYRUM]))
+        {
+            redde FALSUM;
+        }
+    }
+    n = I;
+    dum (i < textus.mensura && textus.datum[i] == ':')
+    {
+        si (n >= III)
+        {
+            redde FALSUM;
+        }
+        i++;
+        si (!_digitos_legere(textus, &i, &partes[n]))
+        {
+            redde FALSUM;
+        }
+        n++;
+    }
+    si (i != textus.mensura || n < II || (dies > ZEPHYRUM && n != III))
+    {
+        redde FALSUM;
+    }
+    summa = (s64)ZEPHYRUM;
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        summa = summa * (s64)LX + partes[k];
+    }
+    *secundae_out = dies * ((s64)LXXXVI * (s64)M + (s64)CD) + summa;
+    redde VERUM;
+}
+
+b32
+processus_vivus (
+         s32  pid,
+         s64* initium_ms_out,
+     Piscina* piscina)
+{
+    constans character* argumenta[VI];
+             character  numerus[XXIV];
+     ProcessusResultus  r;
+                chorda  aetas;
+                   s64  secundae;
+
+    si (initium_ms_out != NIHIL)
+    {
+        *initium_ms_out = (s64)ZEPHYRUM;
+    }
+    si (pid <= ZEPHYRUM || piscina == NIHIL)
+    {
+        redde FALSUM;
+    }
+    sprintf(numerus, "%d", (integer)pid);
+    argumenta[0]    = "/bin/ps";
+    argumenta[I]    = "-o";
+    argumenta[II]   = "etime=";
+    argumenta[III]  = "-p";
+    argumenta[IV]   = numerus;
+    argumenta[V]    = NIHIL;
+    r               = processus_exsequi(argumenta, V * M, piscina);
+    /* ps: processus absens = exitus I, effusio vacua */
+    si (!r.successus || r.codex_exitus != ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    aetas = chorda_praecidere(r.effusio);
+    si (aetas.mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    si (   initium_ms_out != NIHIL
+        && processus_aetatem_legere(aetas, &secundae))
+    {
+        *initium_ms_out = ((s64)time(NIHIL) - secundae) * (s64)M;
+    }
+    redde VERUM;
 }

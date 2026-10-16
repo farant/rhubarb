@@ -19,6 +19,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 /* chordam ut litterae NUL-terminatas in piscina (pro strstr/strcmp) */
 interior constans character*
@@ -724,6 +725,96 @@ s32 principale (vacuum)
         CREDO_VERUM (r.successus);
         CREDO_VERUM (strcmp(_litterae_ex(piscina, r.effusio),
             "salve\n") == ZEPHYRUM);
+    }
+
+    /* XXVII. aetas 'ps -o etime=' ([[dd-]hh:]mm:ss) - colloquia T8 */
+    {
+         s64 secundae;
+
+        imprimere("\n--- XXVII. aetas ex etime ---\n");
+        CREDO_VERUM (processus_aetatem_legere(chorda_ex_literis("05:07",
+            piscina), &secundae));
+        CREDO_AEQUALIS_S64 (secundae, (s64)CCCVII);
+        CREDO_VERUM (processus_aetatem_legere(chorda_ex_literis(
+            "1:02:03", piscina), &secundae));
+        CREDO_AEQUALIS_S64 (secundae, (s64)MMMDCCXXIII);
+        CREDO_VERUM (processus_aetatem_legere(chorda_ex_literis(
+            "2-01:02:03", piscina), &secundae));
+        /* II dies (LXXXVI CD s quisque) + 01:02:03 */
+        CREDO_AEQUALIS_S64 (secundae, (s64)II * ((s64)LXXXVI * (s64)M
+            + (s64)CD) + (s64)MMMDCCXXIII);
+        CREDO_VERUM (processus_aetatem_legere(chorda_ex_literis("00:00",
+            piscina), &secundae));
+        CREDO_AEQUALIS_S64 (secundae, (s64)ZEPHYRUM);
+        /* deformes */
+        CREDO_FALSUM (processus_aetatem_legere(chorda_ex_literis("",
+            piscina), &secundae));
+        CREDO_FALSUM (processus_aetatem_legere(chorda_ex_literis("abc",
+            piscina), &secundae));
+        CREDO_FALSUM (processus_aetatem_legere(chorda_ex_literis("05",
+            piscina), &secundae));
+        CREDO_FALSUM (processus_aetatem_legere(chorda_ex_literis("05:",
+            piscina), &secundae));
+        CREDO_FALSUM (processus_aetatem_legere(chorda_ex_literis(":07",
+            piscina), &secundae));
+        CREDO_FALSUM (processus_aetatem_legere(chorda_ex_literis(
+            "1:2:3:4", piscina), &secundae));
+        CREDO_FALSUM (processus_aetatem_legere(chorda_ex_literis("5-",
+            piscina), &secundae));
+        CREDO_FALSUM (processus_aetatem_legere(chorda_ex_literis(
+            "05:7x", piscina), &secundae));
+        CREDO_FALSUM (processus_aetatem_legere(chorda_ex_literis(
+            " 05:07", piscina), &secundae));
+        /* dies sine horis: ps semper dd-hh:mm:ss */
+        CREDO_FALSUM (processus_aetatem_legere(chorda_ex_literis(
+            "2-01:02", piscina), &secundae));
+    }
+
+    /* XXVIII. vivus: processus ipse (parens conchae) exstat et nuper
+     * coepit; concha messa non exstat; pid nullus/negativus FALSUM */
+    {
+        constans character* argumenta[IV];
+         ProcessusResultus  r;
+                       s32  ipse;
+                       s32  mortuus;
+                       s64  initium;
+                       s64  nunc;
+
+        imprimere("\n--- XXVIII. vivus ---\n");
+        argumenta[0]    = "/bin/sh";
+        argumenta[I]    = "-c";
+        argumenta[II]   = "echo $PPID";
+        argumenta[III]  = NIHIL;
+        r               = processus_exsequi(argumenta, 5000, piscina);
+        CREDO_NECESSE (r.successus && r.codex_exitus == ZEPHYRUM);
+        ipse           = (s32)atoi(_litterae_ex(piscina, r.effusio));
+        argumenta[II]  = "echo $$";
+        r              = processus_exsequi(argumenta, 5000, piscina);
+        CREDO_NECESSE (r.successus && r.codex_exitus == ZEPHYRUM);
+        mortuus        = (s32)atoi(_litterae_ex(piscina, r.effusio));
+        CREDO_VERUM (ipse > ZEPHYRUM && mortuus > ZEPHYRUM);
+
+        nunc     = (s64)time(NIHIL) * (s64)M;
+        initium  = (s64)ZEPHYRUM;
+        CREDO_VERUM (processus_vivus(ipse, &initium, piscina));
+        /* probatio modo coepit: initium intra decem minuta ante nunc */
+        CREDO_VERUM (initium >= nunc - (s64)DC * (s64)M);
+        CREDO_VERUM (initium <= nunc + (s64)II * (s64)M);
+
+        /* aetas vere subtrahitur: launchd (pid I) ab initio machinae */
+        CREDO_VERUM (processus_vivus((s32)I, &initium, piscina));
+        CREDO_VERUM (initium > (s64)ZEPHYRUM);
+        CREDO_VERUM (initium < nunc - (s64)LX * (s64)M);
+
+        initium = (s64)I;
+        CREDO_FALSUM (processus_vivus(mortuus, &initium, piscina));
+        CREDO_AEQUALIS_S64 (initium, (s64)ZEPHYRUM);
+        CREDO_FALSUM (processus_vivus((s32)ZEPHYRUM, &initium,
+            piscina));
+        CREDO_FALSUM (processus_vivus(-(s32)I, &initium, piscina));
+        CREDO_FALSUM (processus_vivus(ipse, &initium, NIHIL));
+        /* initium_out NIHIL licet */
+        CREDO_VERUM (processus_vivus(ipse, NIHIL, piscina));
     }
 
     imprimere("\n");
