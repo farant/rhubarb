@@ -82,14 +82,18 @@ ranked by how much it bears on KC 47.
   catalogs are not braid images at all (KC 53). Nodes were corrected
   in place and new nodes appended; no address was removed or
   renumbered.
-- **D128 (2026-10-15).** Appended: 31.2.1, 31.4.1, 42.1.1 and Part X
-  (54, 55): D106's braid classification audited, and the braid word
-  as an exact ReLU network. D128 was reviewed independently before
-  these nodes were written (its findings.md, "Review").
 - **D127 (2026-10-15), audit P1.** Appended: 19.1.2, 19.7.1, 19.9.1,
   19.10, 47.1.4.1, 47.1.5 to 47.1.5.3, 48.1.1.1, 48.1.2, 48.2.1 and
   48.4.6.1. D127 was reviewed independently before these nodes were
   written (its findings.md, "Review").
+- **D128 (2026-10-15).** Appended: 31.2.1, 31.4.1, 42.1.1 and Part X
+  (54, 55): D106's braid classification audited, and the braid word
+  as an exact ReLU network. D128 was reviewed independently before
+  these nodes were written (its findings.md, "Review"). Revised the
+  same day after a fact-check review (1 high, 3 medium, 10 low):
+  54.2 no longer says "never wrong"; 54.1, 54.7.1 and 55.1 graded
+  [proved]; 54.3.1 separates the measured rate from the exact class;
+  54.1.3 appended.
 
 ## Part I. Definitions
 
@@ -672,8 +676,11 @@ ranked by how much it bears on KC 47.
       [checked] (KR 54)
 31.4.1. Consistent: at A = -zeta_8, A^-4 = -1, and the 98 pairs of
         distinct braids that share a TL matrix at length 6 also share
-        their Burau(-1) characteristic polynomials. [exact] (D128
-        Part C)
+        their reduced Burau(-1) matrices (none shares the unreduced
+        matrix). TL separates more braids than Burau(-1) does, through
+        the phase A^{e(w)} on the radical (see 42.1.1). [exact] (D128
+        Part C: characteristic polynomials; matrices: the D128
+        fact-check review's script)
 
 32. Does framing change zeta_12 capacity (D83)?
 32.1. Its bracket against Jones-normalized comparison (43 against 31
@@ -1077,22 +1084,40 @@ ranked by how much it bears on KC 47.
     and periodic hold? (logically follows 31)
 54.1. No. Its rule decides exactly "Burau(-1) has spectral radius
       > 1", a sufficient condition for positive entropy, not a
-      classification. [exact] (D128 Part C)
+      classification. [proved] (by 54.1.1 and 54.1.3; D128 Part C
+      checks it on 5,121 braids)
 54.1.1. On B_4 at t = -1, p(1) = 0 for every braid: unreduced Burau
         fixes (1, 1, 1, 1), which lies in the kernel of
         (1, t, t^2, t^3) when t^4 = 1 and t != 1. So the rule's first
-        branch never fires. [proved] (D128 review L1; checked on
-        5,121 braids)
+        branch never fires. With det = 1, p = (x - 1)(x^2 - (tr - 1)x
+        + 1), so |1 - tr| > 2 exactly when the radius is > 1. [proved]
+        (D128 review L1; checked on 5,121 braids)
 54.1.2. Its "pA" set equals the set with Burau(-1) radius > 1 on all
         5,121 braids of B_4 up to length 6. [exact] (D128 Part C)
-54.2. Its "pA" is never wrong: radius > 1 forces positive entropy by
-      Kolev's bound. [proved] (D128 Part C)
+54.1.3. D106's matrices are not the standard reduced Burau(-1): its
+        generators are conjugate, by diag(1, -1, 1), to the
+        inverse-transposes of the standard ones. Those have the same
+        characteristic polynomial (det 1 and p(1) = 0 give c1 = tr),
+        so 54.1.1 and 54.1 hold for D106's matrices on every braid.
+        [proved] (D128 fact-check review: the six generators, exact)
+54.2. Its "pA" never marks a zero-entropy braid: radius > 1 forces
+      positive entropy by Kolev's bound (literature, cited by the D128
+      review; not checked here). It can still mark a reducible braid
+      "pA" (see 54.7.1).
 54.3. Its "periodic" is wrong for 1,008 of the 4,014 positive-entropy
       braids of B_4 up to length 6. Of the 2,115 braids it calls
       periodic, 171 are; 936 have zero entropy without being
-      periodic. [exact] (D128 Parts B-C; the review's oracle agrees)
-54.3.1. The shortest is s1 s3^-1 s2, dilatation 2.29663..., the
-        minimum on B_4 (Ko, Los and Song 2002). [exact] (D128)
+      periodic. Both counts include the identity, which D106 lists
+      apart (2,114 and 170 without it). [exact] (D128 Parts B-C; the
+      review's oracle agrees)
+54.3.1. The first in breadth-first order (one of 16 at length 3) is
+        s1 s3^-1 s2, conjugate to s1 s2 s3^-1. Its class is exact;
+        its rate, 2.29663, is MEASURED and matches the minimal
+        dilatation of B_4, the largest root of x^4 - 2x^3 - 2x + 1
+        (literature: Song, Ko and Los 2002, proof completed by Ham
+        and Song, short proof by Lanneau and Thiffeault; cited by the
+        D128 review, not checked here). Burau certifies only 1.9577
+        at a cube root of unity. [exact] (D128: the class)
 54.3.2. Burau at a primitive cube root of unity certifies all 1,008.
         [exact] (D128, plexus_burau_radius_maior)
 54.4. D106's catalog is the exact shortest-length enumeration through
@@ -1111,22 +1136,26 @@ ranked by how much it bears on KC 47.
 54.6. Does the "pA" fraction rise with depth (D106: 0% to 77.2%)?
 54.6.1. Yes in direction: the exact positive-entropy share rises with
         length on B_3 (to 8) and B_4 (to 6). [exact] (D128 Part B)
-54.6.2. D106's level understates it by up to 20 points: 30.8, 32.7,
+54.6.2. D106's level understates it by up to 22 points (21.7 at
+        length 5): 30.8, 32.7,
         43.2, 50.6, 63.7% (its rule on exact classes) against 30.8,
         49.0, 58.6, 72.3, 83.5% at lengths 2-6. [exact] (D128)
 54.7. D106's 8 depth-2 "pA" braids have Burau radius phi^2 exactly,
       as it says. [exact] (D128 Part C)
 54.7.1. But each is a word in two adjacent generators, a 3-strand
-        braid inside B_4: reducible, not pseudo-Anosov. [exact]
-        (D128 Part C)
+        braid inside B_4: reducible, not pseudo-Anosov. The round
+        curve around its three punctures is invariant and essential
+        (the fourth puncture and the boundary lie outside). [proved]
+        (D128 Part C checks the words)
 54.8. D106 states that Burau is faithful on B_4. [falls]
 54.8.1. Faithfulness of Burau on B_4 is a known open problem; Burau
         is unfaithful for n >= 5 (Bigelow 1999 settled n = 5).
         Bigelow and Krammer proved the Lawrence-Krammer
         representation faithful. (literature, cited by the D128
         review; not checked here)
-54.8.2. Burau at t = -1, which D106 used, is not faithful on B_4:
-        Delta^2 maps to t^4 I = I. [proved]
+54.8.2. Reduced Burau at t = -1, which D106 used, is not faithful on
+        B_4: Delta^2 maps to t^4 I = I. (Unreduced Burau(-1) of
+        Delta^2 is not I.) [proved]
 54.9. Do pseudo-Anosov braids compute no better than others (see
       31.2) when the classes are exact? [open]
 
@@ -1135,8 +1164,10 @@ ranked by how much it bears on KC 47.
       8-15) is a straight-line program of affine forms and ReLUs,
       weights in {-1, 0, 1}, no biases: 2 ReLUs at the end
       generators, 5 in the middle, two ReLU stages per letter.
-      [exact] (D128 Part A: equal to ansa_agere on 4,000 random
-      pairs, n = 3..8, coordinates up to 1000 * 2^200)
+      [proved] (by construction: eq. 8-15 with f- = f - relu(f),
+      D128 main.c build_letter; the transcription is anchored against
+      ansa_agere on 4,000 random pairs, n = 3..8, coordinates up to
+      1000 * 2^200)
 55.2. Iterated on a loop, does the network settle into one linear
       region?
 55.2.1. On every orbit of B_3 up to length 8 and B_4 up to length 6
@@ -1144,8 +1175,9 @@ ranked by how much it bears on KC 47.
         within 5 passes and stayed so to pass 60. [exact-search]
         (D128 Part D: 60 passes)
 55.2.2. On each settled tail the network is one integer linear map
-        M per period: v_{s+jq} = M^j v_s exactly. [exact] (D128
-        Part D)
+        M per period: v_{s+jq} = M^j v_s exactly. Given 55.2.1 and
+        bias-free programs this follows; the check tests the
+        forced-map code. [exact] (D128 Part D)
 55.2.3. On B_4, period 2 occurs for 384 of the 4,014 positive-entropy
         braids: 328 of the 1,008 that only a cube root of unity
         certifies, 56 of the 3,006 certified at t = -1. [exact]

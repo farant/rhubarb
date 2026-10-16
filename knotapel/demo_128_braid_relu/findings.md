@@ -34,7 +34,8 @@ gives the clang line and commit).
    That is a sufficient condition for positive entropy, not a
    classification. On B_4 up to length 6 it calls 1,008 of the 4,014
    positive-entropy braids "periodic"; of the 2,115 braids it calls
-   periodic, 171 are. In D106's own first 128 catalog entries (its
+   periodic, 171 are (both counts include the identity, which D106
+   lists apart). In D106's own first 128 catalog entries (its
    contingency table), its 88 "periodic" entries are 8 periodic, 64
    zero-entropy non-periodic and 16 of positive entropy.
 4. **D106's catalog is explained exactly.** Its table is the exact
@@ -130,23 +131,37 @@ otherwise |1 - tr| > 2 means "pA"; else "periodic".
   (1, 1, 1, 1), which lies in the kernel of (1, t, t^2, t^3) when
   t^4 = 1 and t != 1, so the reduced matrix has eigenvalue 1. The
   rule's first branch never fires (checked on all 5,121).
-- So "pA" iff |1 - tr| > 2 iff the other two eigenvalues are real with
-  one of modulus > 1 iff Burau(-1) has spectral radius > 1 (checked:
-  equal sets on all 5,121).
-- Kolev's bound makes radius > 1 imply positive entropy, so the rule's
-  "pA" is never wrong. Its "periodic" is wrong whenever entropy is
-  positive but invisible at t = -1.
+- With det = 1, p = (x - 1)(x^2 - (tr - 1)x + 1). So "pA" iff
+  |1 - tr| > 2 iff the other two eigenvalues are real with one of
+  modulus > 1 iff Burau(-1) has spectral radius > 1 (checked: equal
+  sets on all 5,121).
+- D106's matrices are not the standard reduced Burau(-1): its
+  generators are conjugate, by diag(1, -1, 1), to the
+  inverse-transposes of the standard ones (fact-check review). Those
+  have the same characteristic polynomial (det 1 and p(1) = 0 give
+  c1 = tr), so all of this holds for D106's matrices on every braid,
+  not only the 5,121 checked.
+- Kolev's bound makes radius > 1 imply positive entropy, so the
+  rule's "pA" never marks a zero-entropy braid. It does mark reducible
+  braids "pA" (the depth-2 ones below), so as a pseudo-Anosov label it
+  can still be wrong. Its "periodic" is wrong whenever entropy is
+  positive but invisible at t = -1, and also for the 936 zero-entropy
+  braids that are not periodic.
 
 | D106 says | P | Z | E |
 |---|---|---|---|
 | pseudo-Anosov | 0 | 0 | 3006 |
 | periodic | 171 | 936 | 1008 |
 
-This equals the T6d review's independent table. The shortest
-disagreement is s1 s3^-1 s2: Burau(-1) characteristic polynomial
-(x - 1)^3, rate 2.29663, the minimal dilatation of B_4 (Ko, Los and
-Song 2002: the largest root of x^4 - 2x^3 - 2x + 1). Every one of the
-1,008 is certified at a cube root of unity.
+This equals the T6d review's independent table. The first
+disagreement in breadth-first order (one of 16 at length 3) is
+s1 s3^-1 s2, conjugate to s1 s2 s3^-1: Burau(-1) characteristic
+polynomial (x - 1)^3, measured rate 2.29663. That matches the minimal
+dilatation of B_4, the largest root of x^4 - 2x^3 - 2x + 1 (Song, Ko
+and Los 2002, proof completed by Ham and Song, short proof by Lanneau
+and Thiffeault; cited, not checked here). Burau at a cube root of
+unity certifies its class but bounds the rate only by 1.9577. Every
+one of the 1,008 is certified at a cube root of unity.
 
 **P2 (registered), both directions.** Zero-entropy braids called "pA":
 0. That direction could not have failed: the plan mis-registered it.
@@ -167,7 +182,8 @@ Z[zeta_8], A = -zeta_8) was new. The demo replicates that search:
 
 Exactly 98 pairs of distinct braids share a TL matrix (no larger
 groups), all at length 6, each pair with equal Burau(-1)
-characteristic polynomials (first: -3 -3 1 1 2 -1 and
+characteristic polynomials (the fact-check review found they share
+D106's reduced Burau(-1) matrices too) (first: -3 -3 1 1 2 -1 and
 -2 1 -3 2 2 -3). Hence 3,542 - 98 = 3,444, and the rule's count drops
 by 24. D106's depths 7 and 8 (10,390 and 17,355, capped at 32,768)
 are not checked here.
@@ -185,16 +201,18 @@ pseudo-Anosov" comparison was, in exact classes, mostly
 - The 8 depth-2 "pA" braids have characteristic polynomial
   x^3 - 4x^2 + 4x - 1 and Burau radius (3 + sqrt 5)/2 = phi^2 exactly
   (P4 holds). But each is a word in two adjacent generators: a 3-strand
-  braid inside B_4, so reducible, not pseudo-Anosov. phi^2 is exact on
-  the 3-strand piece.
+  braid inside B_4, so reducible, not pseudo-Anosov (the round curve
+  around its three punctures is invariant and essential). phi^2 is
+  exact on the 3-strand piece.
 - The "pA" share rises with depth (P3's direction holds) but
-  understates positive entropy by up to 20 points: D106's rule on the
+  understates positive entropy by up to 22 points (21.7 at length 5): D106's rule on the
   exact classes gives 30.8 / 32.7 / 43.2 / 50.6 / 63.7% at lengths 2-6
   against E 30.8 / 49.0 / 58.6 / 72.3 / 83.5%.
 - D106 says Burau is faithful on B_4 (citing Bigelow 1999 and Krammer
   2000). That is open: Bigelow 1999 shows Burau unfaithful for n >= 5,
   and Bigelow and Krammer proved the Lawrence-Krammer representation
-  faithful. Burau at t = -1 is plainly not faithful (the 98 pairs).
+  faithful. Reduced Burau at t = -1 is not faithful on B_4: Delta^2
+  maps to t^4 I = I.
 
 **The TL key at delta = 0.** At A = -zeta_8 the loop value is
 delta = -A^2 - A^-2 = 0. The TL form G = [[0,1,0],[1,0,1],[0,1,0]] is
@@ -210,7 +228,7 @@ observed, not proved). Details in `plan.md`, T6d.
 Each braid is iterated 60 times on every loop E_k of D_n through the
 layer programs. Each pass records which ReLUs fire (argument > 0). A
 pattern is "settled" if its last >= 20 passes repeat with some period
-q <= 12. Per braid: start and q are the largest (lcm) over its loops.
+q <= 12. Per braid: start is the largest over its loops, q their lcm.
 
 | | class | braids | settled | start (median / max) | q = 1 | q = 2 | q > 2 | regions per loop (mean) |
 |---|---|---|---|---|---|---|---|---|
@@ -240,8 +258,9 @@ E braids on B_4 by certificate and period:
 
 Before the run the plan expected E to settle mostly with q = 1. It
 does on B_3 (all) and mostly on B_4; period 2 is concentrated among
-the braids that t = -1 cannot see. Every q = 2 E braid in quick mode
-(lengths <= 4) has rate phi^2. The cause is not established.
+the braids that t = -1 cannot see. In an ad hoc debug run (not printed
+by the demo), every q = 2 E braid up to length 4 had rate phi^2. The
+cause is not established.
 
 ## Interpretation [interpretation]
 
@@ -290,8 +309,9 @@ All through `silva.planta`, all red unless listed:
   a miscounted ReLU depth.
 - T6b (9): periodicity tested with k = n only, the growth threshold,
   an ignored certificate, D106's |1 - tr| boundary, level dedup off,
-  the class key on D_n, an off-by-one periodicity check, the
-  quasi-affine window cut to p = 1.
+  the class key on D_{n+1} without the translation, the class key on
+  D_n, an off-by-one periodicity check, the quasi-affine window cut to
+  p = 1.
 - T6d (4): the replica keeping duplicates at depth 6, the p(1) lemma
   inverted, reducibility on non-adjacent generators, the second
   certificate moved to t = -1.
@@ -315,6 +335,20 @@ reducibility (M4), the p(1) = 0 lemma (L1), P2(a) as impossible (L2),
 the width wording (L3), stronger plants (L4), D106's faithfulness
 claim (L5) and the citations (L6).
 
+## Fact-check review (2026-10-16)
+
+A second reviewer checked the claims.md nodes, this file and the
+correction notes against the snapshot, D106's sources and the
+literature: H 1, M 3, L 10, N 7, every count right. Fixed: "pA" was
+called "never wrong" though it labels reducible braids (H1); "up to 20
+points" is 21.7 (M1); the B_4 minimum is a measured rate plus a
+literature value, not exact (M2); 55.1 is proved by construction
+(M3); the det = 1 step and D106's conjugacy to the inverse-transpose
+(L1); reduced Burau for Delta^2 (L2); the identity inside the 2,115
+(L3); the notes' wording (L4); the Song-Ko-Los citation (L5); line and
+plant counts (L6, L7); the Part D legend (L8, also in main.c, snapshot
+refrozen); the revisions order (L9); 54.7.1's argument (L10).
+
 ## Not covered
 
 - Exact dilatations from the settled linear maps (plexus, …VFF141H).
@@ -331,4 +365,4 @@ claim (L5) and the citations (L6).
 
 Full mode about 4 s (30 checks); `D128_CELER=1` (B_3 up to 5, B_4 up
 to 4) about 0.4 s (24 checks). The snapshot gives byte-identical
-output (165 lines).
+output (164 lines).

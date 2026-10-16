@@ -7,7 +7,7 @@
  *
  *   clang -std=c89 -pedantic -Wall -Wextra -Werror -Wconversion -Wsign-conversion -Wcast-qual -Wstrict-prototypes -Wmissing-prototypes -Wwrite-strings -Wno-long-long -Wno-overlength-strings -fbracket-depth=512 -O2 -g demo-snapshot.c -o demo-snapshot
  *
- * Commit (library closure clean): 1fd650ea4d59f3d1ab238ac4a9004ff280772f02
+ * Commit (library closure clean): e17f7f6cb97054da87534470d3cc5a762ed40cb4
  * Regenerate: ./knotapel/archive.sh knotapel/demo_128_braid_relu/main.c
  * Verified: live build and snapshot gave byte-identical output.
  * Sources (git blob hashes):
@@ -40,7 +40,7 @@
  *   9967d4ccc5d5f5e18bf84f716b4f8fb7b7964a85  lib/polynomium.c
  *   85567c63931bd36cd7ea3eb8fb64ee169ab9ac2e  lib/radices.c
  *   a1a3bbc96bc609e89e4098ef95f770c5e10a3ea5  lib/sors.c
- *   8a802fc9835a5f9d845aab249c0dda0065871cb3  knotapel/demo_128_braid_relu/main.c (uncommitted, embedded verbatim)
+ *   2f398657402e94c5c0b48cca12d7805e8b2143d3  knotapel/demo_128_braid_relu/main.c (uncommitted, embedded verbatim)
  */
 
 #line 1 "include/postulata_posix.h"
@@ -24347,9 +24347,9 @@ part_d (
             * (n - 1)) : 0.0);
     }
     printf("  (per braid: stabilized = every loop's pattern repeats over "
-        "its last >= %d passes; start\n   and q are the largest over the "
-        "loops; regions = distinct patterns per loop over %d passes)\n",
-        D_TAIL, D_PASSES);
+        "its last >= %d passes; start\n   = the largest over the loops, "
+        "q = their lcm; regions = distinct patterns per loop over %d "
+        "passes)\n", D_TAIL, D_PASSES);
     printf("  %d of %d orbits stabilized within the run (observed, not "
         "proved)\n", stable_orbits, orbits);
     printf("  E braids by certificate and settled period q:\n");

@@ -2148,9 +2148,9 @@ part_d (
             * (n - 1)) : 0.0);
     }
     printf("  (per braid: stabilized = every loop's pattern repeats over "
-        "its last >= %d passes; start\n   and q are the largest over the "
-        "loops; regions = distinct patterns per loop over %d passes)\n",
-        D_TAIL, D_PASSES);
+        "its last >= %d passes; start\n   = the largest over the loops, "
+        "q = their lcm; regions = distinct patterns per loop over %d "
+        "passes)\n", D_TAIL, D_PASSES);
     printf("  %d of %d orbits stabilized within the run (observed, not "
         "proved)\n", stable_orbits, orbits);
     printf("  E braids by certificate and settled period q:\n");
