@@ -376,7 +376,18 @@ OratioVocabulariumVitium vitium;
         {
         FILE* lista;
         character linea[512];
+        /* ambitus prosae: iudex prosa_anglica (unitates.stml) - olim
+         * ORATIO_PROSA_EXCLUSA (vendor/ archivum/ et duo generata
+         * nominatim); nunc et fixturae et generata quaelibet */
+        Unitates* u_prosae = omnes_viae ? NIHIL
+            : _unitates_onerare(piscina, radix);
+        chorda iudex_prosae = chorda_ex_literis("prosa_anglica",
+            piscina);
 
+        si (!omnes_viae && u_prosae == NIHIL)
+        {
+            redde II;
+        }
         sprintf(via, "%s/oratio/build/corpus_md.txt", radix);
         lista = fopen(via, "r");
         si (lista == NIHIL)
@@ -404,10 +415,21 @@ OratioVocabulariumVitium vitium;
             }
             v.datum    = (i8*)linea;
             v.mensura  = (i32)l;
-            si (   !omnes_viae
-                && oratio_vocabula_via_exclusa(v, ORATIO_PROSA_EXCLUSA))
+            si (!omnes_viae)
             {
-                perge;
+                UnitatesIudicium j = unitates_iudicat(u_prosae,
+                    iudex_prosae, v, piscina, NIHIL);
+
+                si (j == UNITATES_IUDEX_IGNOTUS)
+                {
+                    fprintf(stderr, "vocabula: iudex prosa_anglica "
+                        "ignotus in unitates.stml\n");
+                    redde II;
+                }
+                si (j != UNITATES_IUDICAT)
+                {
+                    perge;
+                }
             }
             p = piscina_generare_dynamicum("vocabula_plagula",
                 33554432);

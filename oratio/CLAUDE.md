@@ -140,8 +140,9 @@ unknown code letters counted: `cowardic\Ne`), gate
 TEXTUS nodes only (code spans, fences, link targets, html, front matter
 never reach the lookup); `oratio_vocabula_creare_anglice` judges
 glossary-English → Moby → Latin table = status **LATINUM** (known
-Latin in prose is never a finding); corpus = house + knotapel minus
-vendor/ archivum/ generated (`ORATIO_PROSA_EXCLUSA`);
+Latin in prose is never a finding); corpus = judge `prosa_anglica` in
+`unitates.stml` (house + knotapel, minus vendor/ archivum/ generated and
+fixtures; `ORATIO_PROSA_EXCLUSA` retired 2026-10-15);
 `./oratio/vocabula.sh -prosa`, `silva.vocabula('prosa')`. Day one:
 62,524 words, 58 % unknown = regular inflections (-s -ed -ing 's) +
 house English terms. **T15b DONE (same day)**: `ORATIO_REGULAE_EN` —

@@ -85,6 +85,12 @@
          linguae="stml"
          descriptio="canon_examen in plagulas .stml/.canon modo scriptas (.claude/hooks/canon-custos.sh)"/>
 
+  <iudex titulus="prosa_anglica"
+         curae="domestica remissa" vitae="viva vetusta"
+         munera="documentum" provenientiae="manu"
+         linguae="md"
+         descriptio="lint prosae Anglicae super markdown (oratio vocabula -prosa) - knotapel Anglice scriptum INCLUSUM (remissa), generata et fixturae non"/>
+
   <bibliothecae capita="include" fontes="lib" probationes="probationes"
                 praefixum="probatio_"
                 partes="_macos _posix _interna _impl _tabula"/>

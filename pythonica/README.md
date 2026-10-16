@@ -291,12 +291,12 @@ Porta natalis: `./pythonica/probare.sh` (probatio_silva.py).
 
 ## 2026-09-04 — census + citata (C2): instrumentum corporis
 
-- **`./md/census.sh [-machina | -citata [via.md] | -scribere]`** — numeri ex
+- **`./md/census.sh [-machina | -citata [via.md]]`** — numeri ex
   ARBORE PARSATA super `git ls-files '*.md'` (MCXXIX plagulae, XVII MB, I
   s): nodi per genus, capitula per gradum, listae/laxae/officia, saepta per
   formam et linguam (lexema derivatum), nexus per formam, lexemata/derivata/
-  lineae. `-scribere` = `md/CENSUS.md` (mensura COMMISSA, regenerabilis,
-  numquam asserta — corpus mutat); `-citata` = verbatim (code spans) omnia
+  lineae. Relatio ad petitionem in stdout (md/CENSUS.md commissum non iam
+  est, 2026-10-15); `-citata` = verbatim (code spans) omnia
   'via linea contentum'; porta `probatio_md_census`.
 - **`silva.citata(via=None, praefixa=None)`** → Citata(numeri, absentia,
   mota, nuda): citationes in code spans contra arborem (viae: adest / nudum

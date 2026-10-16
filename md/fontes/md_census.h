@@ -4,8 +4,8 @@
  * capitula per gradum, listae per genus et laxitatem, officia, saepta
  * per formam et linguam (lexema derivatum lingua), nexus per formam,
  * lexemata totalia et derivata, lineae, octeti. Consumptor: instrumentum
- * md/instrumenta/census.c (md/census.sh) quod md/CENSUS.md scribit -
- * mensura COMMISSA, regenerabilis, numquam asserta (corpus mutat).
+ * md/instrumenta/census.c (md/census.sh) - relatio ad petitionem
+ * (stdout), numquam asserta (corpus mutat).
  * Modus citatorum: verbatim (code spans) quaeque cum via et linea, pro
  * probatione citationum (pythonica citata).
  */

@@ -6070,9 +6070,9 @@ def vocabula(fons='omnia', omnes_viae=False):
     ANGLICUS: nodi TEXTUS plagularum markdown tractarum (saepta, verbatim,
     nexus, html numquam), glossarium (entria anglice licita) primum, Moby
     deinde, tabula Latina tertia -> status 'latinum' (Latine notum, NON
-    inventum); 'ambiguum' numquam; viae vendor/ archivum/ et plagulae
-    generatae (gesta/annales/tabula.md, md/CENSUS.md) exclusae, knotapel/
-    INCLUSUM. Verbum.prosa = sedes in prosa; Verbum.regula = regula
+    inventum); 'ambiguum' numquam; ambitus = iudex prosa_anglica
+    (unitates.stml): vendor/ archivum/, generata, fixturae exclusa,
+    knotapel/ INCLUSUM. Verbum.prosa = sedes in prosa; Verbum.regula = regula
     morphologica (T15b: pluralis-s, praeteritum-ed, participium-ing,
     possessivum, adverbium-ly, comparativus-er, compositum ...) qua forma
     non listata ad basin (lemma) redacta est, vacua = forma exacta."""

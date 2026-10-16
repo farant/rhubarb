@@ -598,6 +598,24 @@ action - its input is every *.md) - with the prose lint step; the
 edit-guard hook generata-custos.sh keeps its stricter "lines 1-3 + the
 do-not-edit phrase" rule (a warning, and it already caught these).
 
+## VI⅞l. U4 step 5: the prose lint; CENSUS.md retired (2026-10-15)
+
+`ORATIO_PROSA_EXCLUSA` (vendor/ archivum/ + two generated files by
+name) -> judge `prosa_anglica` (domestica REMISSA - knotapel is
+English by decision and stays judged -, viva vetusta, documentum,
+MANU, md), read by `vocabula -prosa` and the oratio corpus test.
+Measured 1490 -> 1463: the 27 leaving are markdown FIXTURES
+(commonmark samples, dependency-treebank, toml-test) - Fran's
+"fixtures are inputs" applied to prose. `gesta/annales/tabula.md` was
+already untracked (ledger left the repo 10-08): a dead entry, gone.
+
+`md/CENSUS.md` (Fran: on-demand report, nothing depended on it): no
+longer committed; `./md/census.sh` prints the report, `-scribere`
+removed; the report text says "Relatio", not GENERATUM. It was the
+last generated file whose marker sat on line 3 with no fabrica action
+(input = every *.md). Gate `unitates` V checks the prose judge
+(knotapel judged, a markdown fixture not).
+
 ## VII. Interrogationes - documentation as typed questions (Fran 10-15)
 
 A unit exposes what it can do by DECLARING QUESTIONS it answers

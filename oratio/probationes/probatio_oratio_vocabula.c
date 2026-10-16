@@ -23,8 +23,8 @@
  *      puella LATINUM (WORDS), piscina NOTUM (Moby eam novit); lexema,
  *      est (sum), silva LATINA (glossarium Latinum); xyzzy ignotum;
  *      ambiguum nullum.
- * VII. CORPUS prosae: plagulae md tractae sine vendor/ archivum/
- *      generatis (ORATIO_PROSA_EXCLUSA), limina (plagulae > CCC, verba >
+ * VII. CORPUS prosae: plagulae md tractae quas iudex prosa_anglica
+ *      (unitates.stml) iudicat, limina (plagulae > CCC, verba >
  *      V milia, nota + permissa + latina > tertia pars) - relatio diei
  *      primi in worklog; pinna post morphologiam.
  * Culpa plantata: limes CAPITALIS in scissione sublatus (MateriaNodus
@@ -891,8 +891,13 @@ principale (vacuum)
         i32 permissa;
         i32 latina;
         i32 ignota;
+        chorda    causa_u;
+        Unitates* u_prosae = unitates_legere(
+            unitates_sutura_arboris(radix, piscina), piscina, &causa_u,
+            NIHIL);
 
         CREDO_NON_NIHIL (corpus);
+        CREDO_NECESSE_NON_NIHIL (u_prosae);
         sprintf(via, "%s/oratio/build/corpus_md.txt", radix);
         lista = fopen(via, "r");
         si (lista == NIHIL)
@@ -917,8 +922,8 @@ principale (vacuum)
                 {
                     perge;
                 }
-                si (oratio_vocabula_via_exclusa(_l(linea),
-                        ORATIO_PROSA_EXCLUSA))
+                si (unitates_iudicat(u_prosae, _l("prosa_anglica"),
+                        _l(linea), piscina, NIHIL) != UNITATES_IUDICAT)
                 {
                     exclusae = exclusae + I;
                     perge;
