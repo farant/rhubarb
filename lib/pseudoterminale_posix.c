@@ -387,14 +387,16 @@ pseudoterminale_posix_creare (
 {
     PseudoterminalePosix* p;
           struct winsize  fenestra;
-                 integer magister;
-                 integer servus;
-                 integer fistula[II];
-                 integer vexilla;
-                 integer status;
-        DefectusInfantis d;
-                 ssize_t n;
-                   pid_t infans;
+                 integer  magister;
+                 integer  servus;
+                 integer  fistula[II];
+                 integer  vexilla;
+                 integer  status;
+        DefectusInfantis  d;
+                 ssize_t  n;
+                   pid_t  infans;
+               character* tty;
+               character  nomen_servi[CXXVIII];
 
     errorem_ponere(error, NIHIL, piscina, PSEUDOTERMINALE_OK, "",
         ZEPHYRUM);
@@ -418,7 +420,9 @@ pseudoterminale_posix_creare (
             ZEPHYRUM);
         redde NIHIL;
     }
-    si (openpty(&magister, &servus, NIHIL, NIHIL, &fenestra)
+    /* T4c: nomen lateris servi (tmux clientes per tty agnoscit) */
+    memset(nomen_servi, ZEPHYRUM, magnitudo(nomen_servi));
+    si (openpty(&magister, &servus, nomen_servi, NIHIL, &fenestra)
         != ZEPHYRUM)
     {
         errorem_ponere(error, descriptio, piscina,
@@ -427,6 +431,16 @@ pseudoterminale_posix_creare (
     }
     (vacuum)fcntl(magister, F_SETFD, FD_CLOEXEC);
     (vacuum)fcntl(servus, F_SETFD, FD_CLOEXEC);
+    tty = NIHIL;
+    si (nomen_servi[ZEPHYRUM])
+    {
+        tty = (character*)piscina_allocare(piscina, (memoriae_index)
+            strlen(nomen_servi) + I);
+        si (tty)
+        {
+            strcpy(tty, nomen_servi);
+        }
+    }
     si (pipe(fistula) != ZEPHYRUM)
     {
         errorem_ponere(error, descriptio, piscina,
@@ -493,5 +507,6 @@ pseudoterminale_posix_creare (
     p->pons.finitus    = posix_finitus;
     p->pons.fossa      = posix_fossa;
     p->pons.claudere   = posix_claudere;
+    p->pons.tty        = tty;
     redde &p->pons;
 }

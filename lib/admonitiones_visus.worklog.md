@@ -78,3 +78,32 @@ Fran approved after the look (2026-10-15: "that looks good to me!").
 - vicus tests never click a toast BODY: the real porta would run tmux
   select-pane on the default server.
 - Fran's look 2026-10-15: "worked!" - toasts triggered from a terminale INSIDE the vicus run (admonere.sh), badge, x, body click, center via badge.
+
+## 2026-10-15 - T4c jump to the session's terminal
+
+- Chain: notification "<pane> <socket>" -> list-panes (pane's session)
+  -> select-window + select-pane -> list-clients: a vicus terminal pane
+  (ANY tab, left or any stack position) whose pty tty is a client of
+  that session -> `vicus_latus_focare` (tab active, stack front, focus);
+  none -> `vicus_acervo_aperire(v, "terminale", "tmux <socket|-> <sess>")`
+  in the active tab (petition, next pulse). Fran 10-15: a session
+  already open in another vicus tab must be reused (finite tabs) - the
+  live test pins exactly that.
+- tty: `ttyname(servus)` in pseudoterminale_posix before the parent
+  closes the slave; copied into the arena (pons.tty, NIHIL for the
+  memory bridge). Test compares with the child's own `tty` output.
+- Terminal pane argument "tmux <socket> <session>" (session LAST: tmux
+  allows spaces) -> `multiplexor_argumenta_adhaerendi`. The layout
+  persists arguments, so these panes re-attach on vicus restart: most of
+  T6 comes free.
+- Deviation: terminal environment now REMOVES TMUX and TMUX_PANE - a
+  vicus started from inside tmux passed them on, and `tmux attach`
+  refuses to nest. Right for plain shells too (a vicus terminal is not
+  inside tmux).
+- Live test probatio_vicus_saltus: private server build/pmx/v.<pid>,
+  windows addressed by NAME ("=alpha:prima") - the user's ~/.tmux.conf
+  is loaded (base-index unknown). 15/15 stable, no socket left.
+- Jump runs 3-4 tmux processes synchronously on click (~tens of ms).
+- Not handled: grouped sessions (tmux new -t alpha) - different session
+  name, so a new terminal opens.
+- Fran's look 2026-10-15: all five steps work ("very cool") - jump opens attached terminal on the right window/pane, second jump returns to the same tab, restart re-attaches.

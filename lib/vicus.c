@@ -1898,6 +1898,74 @@ vicus_activam_ponere (
     redde indicem_scribere(v);
 }
 
+b32
+vicus_latus_focare (
+                  Vicus* v,
+     constans character* id)
+{
+    VicusTabula* t;
+     VicusLatus* l;
+     VicusLatus  frons;
+         chorda  quaesitum;
+            i32  i;
+            i32  k;
+            i32  n;
+            i32  latus;
+
+    si (!v || !id)
+    {
+        redde FALSUM;
+    }
+    quaesitum  = internare(v, id);
+    t          = NIHIL;
+    l          = NIHIL;
+    latus      = VICUS_SINISTRUM;
+    k          = ZEPHYRUM;
+    per (i = ZEPHYRUM; !l && i < xar_numerus(v->tabulae); i++)
+    {
+        t = (VicusTabula*)xar_obtinere(v->tabulae, i);
+        si (chorda_aequalis(t->sinistrum.id, quaesitum))
+        {
+            l = &t->sinistrum;
+            frange;
+        }
+        per (k = ZEPHYRUM; k < xar_numerus(t->acervus); k++)
+        {
+            si (chorda_aequalis(((VicusLatus*)xar_obtinere(t->acervus,
+                k))->id, quaesitum))
+            {
+                l      = (VicusLatus*)xar_obtinere(t->acervus, k);
+                latus  = VICUS_DEXTRUM;
+                frange;
+            }
+        }
+    }
+    si (   !l || !l->montata
+        || !vicus_activam_ponere(v, chorda_ut_cstr(t->id, v->piscina)))
+    {
+        redde FALSUM;
+    }
+    /* in frontem acervi (ut petitio S3c) */
+    n = xar_numerus(t->acervus);
+    si (latus == VICUS_DEXTRUM && k < n - I)
+    {
+        si (!motum_relinquere(v))
+        {
+            redde FALSUM;
+        }
+        frons = *l;
+        per (; k < n - I; k++)
+        {
+            *(VicusLatus*)xar_obtinere(t->acervus, k) =
+                *(VicusLatus*)xar_obtinere(t->acervus, k + I);
+        }
+        *(VicusLatus*)xar_obtinere(t->acervus, n - I) = frons;
+        registra_reficere(v);
+        motum_aptare(v);
+    }
+    redde vicus_focum_ponere(v, latus) && indicem_scribere(v);
+}
+
 ActioRegistrum*
 vicus_actiones (
     constans Vicus* v)

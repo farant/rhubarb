@@ -321,6 +321,14 @@ vicus_focum_ponere (
     Vicus* v,
       i32  latus);
 
+/* T4c (colloquia-plan): latus per id ostendere: tabula eius activa,
+ * in frontem acervi (si ibi), focus in eo; dispositio servatur.
+ * FALSUM si id ignotum aut latus non montatum. */
+b32
+vicus_latus_focare (
+                  Vicus* v,
+     constans character* id);
+
 /* activam ponere (insula et index servatus); FALSUM si id
  * ignotum */
 b32

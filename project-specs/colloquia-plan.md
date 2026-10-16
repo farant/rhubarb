@@ -98,6 +98,11 @@ phase that needs it. Header text shown to Fran before coding.*
   you, 3 max, click = action + read, x = dismiss) + unread badge in the
   tab line (click opens the center). Suppress-while-center-visible
   deferred.
+- T4c 2026-10-15: jump = select pane in tmux + focus the vicus terminal
+  attached to that session (any tab) or open one in the active tab
+  ("tmux <socket> <session>" argument - persisted, so it re-attaches on
+  restore: most of T6). pseudoterminale tty, terminale argv + tty,
+  vicus_latus_focare; terminals drop TMUX/TMUX_PANE.
 
 ## V. Hook facts (Claude Code docs, checked 2026-10-15)
 

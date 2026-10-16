@@ -64,6 +64,10 @@ structura Pseudoterminale {
     /* SIGHUP gregi infantis, magistrum claudere, metere (SIGKILL
      * post moram brevem si non exit). Idempotens. */
     vacuum (*claudere) (vacuum* datum);
+    /* T4c (colloquia-plan): nomen lateris servi ("/dev/ttys011") -
+     * tmux clientes per tty agnoscit; NIHIL si nullum (pons
+     * memoriae) */
+    constans character* tty;
 };
 
 nomen enumeratio {

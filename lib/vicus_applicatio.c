@@ -1269,9 +1269,53 @@ cyclum_registrare (
         ? novum_iussum : cyclus_iussum, cc);
 }
 
+/* T4c: argumentum lateris terminalis "tmux <servitor|-> <sessio>" ->
+ * "tmux -u [-S servitor] attach -t =<sessio>" (sessio ultima: spatia
+ * licet); aliud aut nullum -> NIHIL (concha). Servitor "-" =
+ * ordinarius. */
+interior constans character* constans*
+argumenta_terminalis (
+    constans character* argumentum,
+               Piscina* piscina)
+{
+           Multiplexor  mx;
+             character* copia;
+             character* servitor;
+             character* sessio;
+
+    si (!argumentum || strncmp(argumentum, "tmux ", V) != ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+    copia = (character*)piscina_allocare(piscina, (memoriae_index)
+        strlen(argumentum) + I);
+    si (!copia)
+    {
+        redde NIHIL;
+    }
+    strcpy(copia, argumentum + V);
+    servitor  = copia;
+    sessio    = strchr(copia, ' ');
+    si (!sessio || !sessio[I])
+    {
+        redde NIHIL;
+    }
+    *sessio++ = '\0';
+    memset(&mx, ZEPHYRUM, magnitudo(mx));
+    si (strcmp(servitor, "-") != ZEPHYRUM)
+    {
+        mx.socket = servitor;
+    }
+    redde multiplexor_argumenta_adhaerendi(&mx,
+        chorda_ex_literis(sessio,
+        piscina), piscina);
+}
+
 /* terminale (vicus-latera S1c): concha nova in omni apertura (decisio
  * aemulatoris: nihil durabile praeter ramum); volumen non legitur.
- * ctx = systemata vici (S7c-3: organum, ut scriba et pictor) */
+ * T4c: argumentum "tmux <servitor> <sessio>" sessioni adhaeret (et
+ * post restitutionem iterum). ctx = systemata vici (S7c-3: organum,
+ * ut scriba et pictor) */
 interior b32
 terminale_montare_in_vico (
                  vacuum* sedes,
@@ -1286,9 +1330,9 @@ terminale_montare_in_vico (
                  vacuum* ctx)
 {
     (vacuum)volumen;
-    (vacuum)argumentum;
     redde terminale_montare((TerminaleApplicatio*)sedes, piscina,
-        intern, repo, id, (StatusSystemata*)ctx, latitudo, altitudo);
+        intern, repo, id, argumenta_terminalis(argumentum, piscina),
+        (StatusSystemata*)ctx, latitudo, altitudo);
 }
 
 /* pulsus sine mora: ansa hospitis XVI ms ipsa exspectat */
@@ -1640,6 +1684,8 @@ nomen structura {
                    s32  non_lectae;   /* scriptum ultimum; -1 nullum */
        StatusSystemata* systemata;
                Piscina* piscina;
+                 Vicus* vicus;      /* T4c: saltus ad latus */
+               Piscina* scheda;     /* T4c: per saltum vacatur */
 } ContextusAdmonitionum;
 
 interior s64
@@ -1650,25 +1696,81 @@ nunc_vici (
     redde (s64)time(NIHIL) * (s64)M;
 }
 
-/* porta actionis: "panellus" -> argumentum "<panellus> <servitor>",
- * panellus in servitore suo eligitur (T4c: latus terminalis) */
+/* T4c: latus terminalis cuius tty cliens sessionis est; NIHIL si
+ * nullum */
+interior constans VicusLatus*
+latus_adhaerens (
+                Vicus* v,
+                  Xar* clientes,
+               chorda  sessio)
+{
+                   VicusTabula* t;
+                    VicusLatus* l;
+    constans MultiplexorCliens* c;
+                        chorda  tty;
+                           i32  i;
+                           s32  k;
+                           i32  j;
+
+    per (i = ZEPHYRUM; i < (i32)vicus_numerus_tabularum(v); i++)
+    {
+        t = vicus_tabula(v, i);
+        /* k -1 = sinistrum, deinde acervus */
+        per (k = -I; t && k < (s32)xar_numerus(t->acervus); k++)
+        {
+            l = k < ZEPHYRUM ? &t->sinistrum
+                : (VicusLatus*)xar_obtinere(t->acervus, (i32)k);
+            si (   !l->montata
+                || !chorda_aequalis_literis(l->genus, "terminale"))
+            {
+                perge;
+            }
+            tty = terminale_tty((constans TerminaleApplicatio*)
+                l->montatio);
+            per (j = ZEPHYRUM; tty.mensura > ZEPHYRUM && clientes
+                               && j < xar_numerus(clientes); j++)
+            {
+                c = (constans MultiplexorCliens*)xar_obtinere(clientes,
+                    j);
+                si (   chorda_aequalis(c->tty, tty)
+                    && chorda_aequalis(c->sessio, sessio))
+                {
+                    redde l;
+                }
+            }
+        }
+    }
+    redde NIHIL;
+}
+
+/* porta actionis: "panellus" -> argumentum "<panellus> <servitor>".
+ * T4c: panellus in sessione sua eligitur (select-window +
+ * select-pane); latus terminalis vici sessioni adhaerens (quavis
+ * tabula) ostenditur et focatur; nullum -> terminale novum in acervo
+ * tabulae activae "tmux <servitor> <sessio>" (petitio). */
 interior b32
 admonitionem_agere (
                 vacuum* ctx,
     constans Admonitio* x)
 {
-    ContextusAdmonitionum* ca;
-              Multiplexor  mx;
-                character  argumentum[CCLVI];
-                character* spatium;
+           ContextusAdmonitionum* ca;
+                     Multiplexor  mx;
+    constans MultiplexorPanellus* panellus;
+             constans VicusLatus* l;
+                       character  argumentum[CCLVI];
+                       character* spatium;
+                          chorda  sessio;
+                          chorda  aperiendum;
 
     ca = (ContextusAdmonitionum*)ctx;
-    si (   !ca || !x || !chorda_aequalis_literis(x->actio, "panellus")
+    si (   !ca || !x || !ca->scheda
+        || !chorda_aequalis_literis(x->actio, "panellus")
         || x->argumentum.mensura == ZEPHYRUM
         || x->argumentum.mensura >= CCLVI)
     {
         redde FALSUM;
     }
+    piscina_vacare(ca->scheda);
     memcpy(argumentum, x->argumentum.datum, (size_t)
         x->argumentum.mensura);
     argumentum[x->argumentum.mensura] = '\0';
@@ -1682,9 +1784,32 @@ admonitionem_agere (
             mx.socket = spatium + I;
         }
     }
-    redde multiplexor_panellum_eligere(&mx,
-        chorda_ex_literis(argumentum,
-        ca->piscina), ca->piscina);
+    panellus = multiplexor_panellum_invenire(multiplexor_panelli(&mx,
+        ca->scheda), chorda_ex_literis(argumentum, ca->scheda));
+    si (!panellus || !ca->vicus)
+    {
+        redde FALSUM;
+    }
+    sessio = panellus->sessio;
+    (vacuum)multiplexor_panellum_eligere(&mx, panellus->id, ca->scheda);
+    l = latus_adhaerens(ca->vicus, multiplexor_clientes(&mx,
+        ca->scheda), sessio);
+    si (l)
+    {
+        redde vicus_latus_focare(ca->vicus, chorda_ut_cstr(l->id,
+            ca->scheda));
+    }
+    aperiendum = chorda_concatenare(chorda_ex_literis(mx.socket
+        ? "tmux " : "tmux - ", ca->scheda), chorda_ex_literis(mx.socket
+        ? mx.socket : "", ca->scheda), ca->scheda);
+    si (mx.socket)
+    {
+        aperiendum = chorda_concatenare(aperiendum, chorda_ex_literis(
+            " ", ca->scheda), ca->scheda);
+    }
+    aperiendum = chorda_concatenare(aperiendum, sessio, ca->scheda);
+    redde vicus_acervo_aperire(ca->vicus, "terminale", chorda_ut_cstr(
+        aperiendum, ca->scheda));
 }
 
 /* systema "admonitiones" (pulsus vici): lectae ex campo radicis semel,
@@ -2035,6 +2160,9 @@ ContextusNomenclatoris* cn;
         cad->non_lectae  = -I;
         cad->systemata   = systemata;
         cad->piscina     = piscina;
+        cad->vicus       = app->vicus;
+        cad->scheda      = piscina_generare_dynamicum(
+            "admonitiones_saltus", XVI * M);
     }
     app->admonitionum = cad;
     cs = (ContextusScribae*)piscina_allocare(piscina,
@@ -2062,7 +2190,7 @@ ContextusNomenclatoris* cn;
                "calendarium", "agenda", piscina)
         || !aperiens_fixum_registrare(cs->iussa, app->vicus, "contacts",
                "nomenclator", NIHIL, piscina)
-        || !cad || !cad->index
+        || !cad || !cad->index || !cad->scheda
         || !aperiens_fixum_registrare(cs->iussa, app->vicus,
                "notifications", "admonitiones", NIHIL, piscina)
         || !cyclum_registrare(cs->iussa, app->vicus, "pictor-next", I,
