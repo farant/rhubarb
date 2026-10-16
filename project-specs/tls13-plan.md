@@ -131,6 +131,19 @@ this plan.
 - **R5 (T1)** - in a worktree, `~/.bin/scribe` judges against MAIN's
   root ("via extra repositorium", exit 4); use `./silva/scribe.sh`.
 
+- **R6 (T2)** - `tls13_aperire` copies the received tag into a local
+  before `_aead` (no const cast-away; `br_gcm_check_tag` takes a const
+  tag anyway).
+- **R7 (T2)** - Latin lint: `nonce` is English -> `vector_recordi`
+  (`_nonce` -> `_vectorem_formare`); `ignotum-permissum` gcm, chacha,
+  chacha20, poly1305, aes256, ccs, aead, aad; house words `alerta`
+  (spec's own TLS13_ERROR_ALERTA_RECEPTA) and `cifrare`.
+- **R8 (T2)** - plants must compile under -Werror: "content type ->
+  ZEPHYRUM" became `genus_contenti & ZEPHYRUM` (unused parameter),
+  "ChaCha tag check off" became `|| n > ZEPHYRUM` (self-compare
+  warning). Two extra plants beyond the plan: ChaCha tag check, MOLES
+  limit - all five red, then green.
+
 ## Review focus
 
 Inputs no task's tests reach that are most likely to bite, each with

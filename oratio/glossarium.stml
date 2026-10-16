@@ -1014,6 +1014,16 @@
   <vocabulum lemma="sha384" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="SHA-384 (FIPS 180-4) - nomen algorithmi digesti (tls13 T1, 2026-10-16)"/>
   <vocabulum lemma="hrr" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="HRR (HelloRetryRequest, RFC 8446 4.1.4) - abbreviatio normae (tls13 T1, 2026-10-16)"/>
   <vocabulum lemma="trafficus" lingua="latina" classis="substantivum" nota="vox domus: traffic (RFC 8446 'traffic secret'); secretum/claves traffici (tls13 T1, 2026-10-16)"><forma textus="traffici"/></vocabulum>
+  <vocabulum lemma="gcm" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="GCM (Galois/Counter Mode, NIST SP 800-38D) - abbreviatio; AES-GCM recordorum TLS 1.3 (tls13 T2, 2026-10-16)"/>
+  <vocabulum lemma="chacha" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="ChaCha (D. J. Bernstein) - nomen proprium cifrae (tls13 T2, 2026-10-16)"/>
+  <vocabulum lemma="chacha20" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="ChaCha20 (RFC 8439) - nomen proprium cifrae (tls13 T2, 2026-10-16)"/>
+  <vocabulum lemma="poly1305" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="Poly1305 (RFC 8439) - nomen proprium authenticatoris (tls13 T2, 2026-10-16)"/>
+  <vocabulum lemma="aes256" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="AES-256 (FIPS 197) - nomen algorithmi cum mensura clavis (tls13 T2, 2026-10-16)"/>
+  <vocabulum lemma="ccs" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="CCS (ChangeCipherSpec, RFC 8446 D.4) - abbreviatio normae (tls13 T2, 2026-10-16)"/>
+  <vocabulum lemma="aead" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="AEAD (authenticated encryption with associated data, RFC 5116) - abbreviatio (tls13 T2, 2026-10-16)"/>
+  <vocabulum lemma="aad" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="AAD (additional authenticated data, RFC 5116) - abbreviatio (tls13 T2, 2026-10-16)"/>
+  <vocabulum lemma="alerta" lingua="latina" classis="substantivum" nota="vox domus: alert TLS (RFC 8446 6, Alert) - nuntius erroris aut clausurae inter pares (tls13 T2, 2026-10-16)"><forma textus="alerta"/></vocabulum>
+  <vocabulum lemma="cifrare" lingua="latina" classis="verbum" nota="vox domus ex cifra: cifrare = encrypt (b32 directionis AEAD in tls13_recordum) (tls13 T2, 2026-10-16)"><forma textus="cifrare"/></vocabulum>
   <vocabulum lemma="inet6" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="AF_INET6 sys/socket.h (familia IPv6); systema_posix.h 2026-10-15 pro probationes/probatio_nomina.c (http-vocatio, conatus gradati)"/>
   <vocabulum lemma="offsetof" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="macrum ISO C89 stddef.h (typum accipit); systema_c89.h 2026-09-25 silva-migratio T16a"/>
   <vocabulum lemma="assert" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="macrum ISO C89 assert.h; systema_c89.h 2026-09-25 silva-migratio T16a"/>

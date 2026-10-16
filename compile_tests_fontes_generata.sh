@@ -270,6 +270,7 @@ declare -a SOURCE_FILES=(
     "lib/thesaurus.c"
     "lib/tls.c"
     "lib/tls13_clavis.c"
+    "lib/tls13_recordum.c"
     "lib/tls_bearssl.c"
     "lib/tractator.c"
     "lib/uri.c"
