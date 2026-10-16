@@ -144,6 +144,29 @@ this plan.
   warning). Two extra plants beyond the plan: ChaCha tag check, MOLES
   limit - all five red, then green.
 
+- **R9 (T3)** - RFC 8448 §5's HelloRetryRequest already carries a
+  cookie (114 octets) and its second ClientHello echoes it: section
+  `hrr_crustulum` uses the REAL exchange - our CH2's cookie extension
+  equals the RFC CH2's byte for byte - instead of a hand-spliced HRR.
+- **R10 (T3)** - `Tls13Cursor` is not public: the cursor (`Cursor`) is
+  private to lib/tls13_nuntii.c; no consumer needs it.
+- **R11 (T3)** - the truncation sweep as planned was BLIND to
+  over-reads: every reader ends with an exact-consumption check, so a
+  truncated message is rejected even with the bounds check broken, and
+  the over-read lands in the rest of the full message (valid memory).
+  The bounds plant passed `CREDO_SECTIO=praecisio`. Fix: the crash pass
+  copies each prefix flush against an UNMAPPED region (mmap 2 x 64 KiB,
+  munmap the upper half) -> an over-read is SIGSEGV -> CREDO_NON_RUIT
+  red (4 sweeps red under the plant). The verdict pass stays on the
+  full message. All seven message kinds swept.
+- **R12 (T3)** - Latin lint: `ignotum-permissum` keyupdate, ee,
+  serverhello, clienthello, nst, secp256, ip; renamed `_sh12` ->
+  `_responsum_vetus`, `ku` -> `renovatio`, `truncatio` (real Late
+  Latin: no glossary) -> `praecisio`. Sections beyond the plan: `ip`
+  (no server_name for IP literals), `keyupdate`. Plants: versio_1_2,
+  bounds (see R11), cookie branch, IP test, vector length writer - all
+  red, then green.
+
 ## Review focus
 
 Inputs no task's tests reach that are most likely to bite, each with
