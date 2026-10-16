@@ -82,6 +82,10 @@ ranked by how much it bears on KC 47.
   catalogs are not braid images at all (KC 53). Nodes were corrected
   in place and new nodes appended; no address was removed or
   renumbered.
+- **D128 (2026-10-15).** Appended: 31.2.1, 31.4.1, 42.1.1 and Part X
+  (54, 55): D106's braid classification audited, and the braid word
+  as an exact ReLU network. D128 was reviewed independently before
+  these nodes were written (its findings.md, "Review").
 - **D127 (2026-10-15), audit P1.** Appended: 19.1.2, 19.7.1, 19.9.1,
   19.10, 47.1.4.1, 47.1.5 to 47.1.5.3, 48.1.1.1, 48.1.2, 48.2.1 and
   48.4.6.1. D127 was reviewed independently before these nodes were
@@ -655,6 +659,10 @@ ranked by how much it bears on KC 47.
 31.2. D106's verdict, that pseudo-Anosov braids do not compute better,
       is unchanged under the intended hash. [intervention] (D117
       Part E)
+31.2.1. Its classes were D106's rule, not the braids' dynamics: in
+        exact classes most of its "periodic" side is not periodic
+        (see 54.5). Whether the verdict holds over exact classes is
+        open (see 54.9).
 31.3. Under the intended hash AND3 = OR3 (320,265 each), as negation
       symmetry requires; D106's "no gap above 3.7 points" is
       hash-specific (6.6 and 7.3 points, favouring periodic braids).
@@ -662,6 +670,10 @@ ranked by how much it bears on KC 47.
 31.4. Burau at t = -1 is the bracket's own W_{4,2} representation, so
       D106's entropy null is a property of the sign readout.
       [checked] (KR 54)
+31.4.1. Consistent: at A = -zeta_8, A^-4 = -1, and the 98 pairs of
+        distinct braids that share a TL matrix at length 6 also share
+        their Burau(-1) characteristic polynomials. [exact] (D128
+        Part C)
 
 32. Does framing change zeta_12 capacity (D83)?
 32.1. Its bracket against Jones-normalized comparison (43 against 31
@@ -789,6 +801,10 @@ ranked by how much it bears on KC 47.
 42.1. No. They take the radical as the vectors killed by every e_i,
       which detects only copies of the one-dimensional
       representation. [checked] (KR 52)
+42.1.1. W_{4,2} at delta = 0 has such a copy: in D106's basis
+        v = (1, 0, -1) is killed by every e_i, so each sigma_i acts on
+        it by A. The TL form [[0,1,0],[1,0,1],[0,1,0]] is singular,
+        with radical spanned by v. [proved] (D128 plan.md, T6d)
 42.2. W_{6,2} and W_{8,2} are not simple: they have proper submodules
       of dimension 4 and 14. [checked] (KR 52)
 42.3. D100's frozen radical exists for even n only. [checked] (KR 50)
@@ -1052,4 +1068,91 @@ ranked by how much it bears on KC 47.
     search (see 26.3.1)? [open]
 51.1. Proposed audit P8 (ledger ...NPCP6E), low priority: this catalog
       is not a braid image (see 53.2). [open]
+```
+
+## Part X. Braid dynamics
+
+```text
+54. Does D106's classification of 4-strand braids into pseudo-Anosov
+    and periodic hold? (logically follows 31)
+54.1. No. Its rule decides exactly "Burau(-1) has spectral radius
+      > 1", a sufficient condition for positive entropy, not a
+      classification. [exact] (D128 Part C)
+54.1.1. On B_4 at t = -1, p(1) = 0 for every braid: unreduced Burau
+        fixes (1, 1, 1, 1), which lies in the kernel of
+        (1, t, t^2, t^3) when t^4 = 1 and t != 1. So the rule's first
+        branch never fires. [proved] (D128 review L1; checked on
+        5,121 braids)
+54.1.2. Its "pA" set equals the set with Burau(-1) radius > 1 on all
+        5,121 braids of B_4 up to length 6. [exact] (D128 Part C)
+54.2. Its "pA" is never wrong: radius > 1 forces positive entropy by
+      Kolev's bound. [proved] (D128 Part C)
+54.3. Its "periodic" is wrong for 1,008 of the 4,014 positive-entropy
+      braids of B_4 up to length 6. Of the 2,115 braids it calls
+      periodic, 171 are; 936 have zero entropy without being
+      periodic. [exact] (D128 Parts B-C; the review's oracle agrees)
+54.3.1. The shortest is s1 s3^-1 s2, dilatation 2.29663..., the
+        minimum on B_4 (Ko, Los and Song 2002). [exact] (D128)
+54.3.2. Burau at a primitive cube root of unity certifies all 1,008.
+        [exact] (D128, plexus_burau_radius_maior)
+54.4. D106's catalog is the exact shortest-length enumeration through
+      depth 5. At depth 6 it has 3,444 braids where there are 3,542.
+      [exact] (D128 Part C)
+54.4.1. Why? D106 deduplicated by its TL matrix alone, and at length
+        6, 98 pairs of distinct braids share one. A replica of its
+        search reproduces its table, braids and "pA" counts, at
+        depths 0-6. [exact] (D128 Part C)
+54.4.2. Its depths 7-8 (capped at 32,768 entries) are not checked.
+        [unaudited]
+54.5. D106's contingency table (its first 128 entries) set 88
+      "periodic" against 39 "pA" entries. In exact classes the 39
+      have positive entropy; the 88 are 8 periodic, 64 zero-entropy
+      non-periodic and 16 of positive entropy. [exact] (D128 Part C)
+54.6. Does the "pA" fraction rise with depth (D106: 0% to 77.2%)?
+54.6.1. Yes in direction: the exact positive-entropy share rises with
+        length on B_3 (to 8) and B_4 (to 6). [exact] (D128 Part B)
+54.6.2. D106's level understates it by up to 20 points: 30.8, 32.7,
+        43.2, 50.6, 63.7% (its rule on exact classes) against 30.8,
+        49.0, 58.6, 72.3, 83.5% at lengths 2-6. [exact] (D128)
+54.7. D106's 8 depth-2 "pA" braids have Burau radius phi^2 exactly,
+      as it says. [exact] (D128 Part C)
+54.7.1. But each is a word in two adjacent generators, a 3-strand
+        braid inside B_4: reducible, not pseudo-Anosov. [exact]
+        (D128 Part C)
+54.8. D106 states that Burau is faithful on B_4. [falls]
+54.8.1. Faithfulness of Burau on B_4 is a known open problem; Burau
+        is unfaithful for n >= 5 (Bigelow 1999 settled n = 5).
+        Bigelow and Krammer proved the Lawrence-Krammer
+        representation faithful. (literature, cited by the D128
+        review; not checked here)
+54.8.2. Burau at t = -1, which D106 used, is not faithful on B_4:
+        Delta^2 maps to t^4 I = I. [proved]
+54.9. Do pseudo-Anosov braids compute no better than others (see
+      31.2) when the classes are exact? [open]
+
+55. Is a braid word an exact ReLU network?
+55.1. Yes. Each generator's Dynnikov update (Thiffeault 2010, eq.
+      8-15) is a straight-line program of affine forms and ReLUs,
+      weights in {-1, 0, 1}, no biases: 2 ReLUs at the end
+      generators, 5 in the middle, two ReLU stages per letter.
+      [exact] (D128 Part A: equal to ansa_agere on 4,000 random
+      pairs, n = 3..8, coordinates up to 1000 * 2^200)
+55.2. Iterated on a loop, does the network settle into one linear
+      region?
+55.2.1. On every orbit of B_3 up to length 8 and B_4 up to length 6
+        (every loop E_k), the active-ReLU pattern became periodic
+        within 5 passes and stayed so to pass 60. [exact-search]
+        (D128 Part D: 60 passes)
+55.2.2. On each settled tail the network is one integer linear map
+        M per period: v_{s+jq} = M^j v_s exactly. [exact] (D128
+        Part D)
+55.2.3. On B_4, period 2 occurs for 384 of the 4,014 positive-entropy
+        braids: 328 of the 1,008 that only a cube root of unity
+        certifies, 56 of the 3,006 certified at t = -1. [exact]
+        (D128 Part D)
+55.2.3.1. Why does period 2 concentrate there? [open]
+55.3. Can the exact dilatation be read from M on the right invariant
+      cone (Hall and Yurttas)? [open] (ledger ...VFF141H)
+55.4. Can the braid network compute Boolean functions (N2)? [open]
+      (ledger ...4291V2)
 ```

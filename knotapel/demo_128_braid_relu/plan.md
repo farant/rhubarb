@@ -358,3 +358,52 @@ these changes. Full mode: 24/24 checks in 1.7 s; quick mode 20/20.
     proof that the two keys make the same braids equal; it is an
     observation on 5,121 braids. D106 uses the matrix only as a dedup
     key, so the observable (the table) cannot tell them apart there.
+
+## Decisions made during T6c
+
+- **Part D, as built.** Iterate each census braid 60 times on every
+  loop E_k of D_n through the layer programs (Part A's interpreter),
+  recording per pass the active-ReLU pattern (argument > 0; at 0 both
+  linear pieces give 0, so ties are harmless). A pass's pattern names
+  the linear region the network is in. Reported per class (P / E / Z):
+  whether the pattern becomes periodic within the run (observed: the
+  last >= 20 passes repeat with some q <= 12), the pass s where that
+  starts, the period q, and the number of distinct regions visited.
+  Observed, not proved: 60 passes cannot show the pattern never
+  changes again.
+- **Checks (exact consequences, not expectations):**
+  - P: the loop coordinates repeat with the braid's period k (Delta^2
+    is invisible on D_n), so the pattern is periodic from pass 0 with
+    q dividing k.
+  - Every stabilized orbit: the network has no biases, so in a fixed
+    pattern it is a LINEAR map. Build M (the forced q-pass map on the
+    basis vectors, integer) and check v_{s + jq} = M^j v_s exactly on
+    the whole tail. This is the bridge to the exact dilatation (Hall
+    and Yurttas; deferred to plexus), which Part D does NOT compute.
+- **Expectation, written before the first run (not a registered P):**
+  E braids stabilize, mostly with q = 1 (the iterates converge
+  projectively to the unstable foliation, a fixed cone); Z braids also
+  stabilize (they converge to the twisting curve), possibly later; P
+  braids are periodic from pass 0.
+- **What Part D found (full mode, 30/30, about 4 s).** Every orbit
+  settled (5,178 on B_3, 15,363 on B_4), within 5 passes; both exact
+  checks hold. B_3: E and Z all q = 1, as expected. B_4: E mostly
+  q = 1, but q = 2 for 384 braids, 328 of them among the 1,008
+  certified only at a cube root of unity (56 of 3,006 certified at
+  t = -1); in quick mode every q = 2 E braid has rate phi^2. Not
+  explained. Z on B_4 also settles with q = 2 and q > 2. The per-braid
+  q is the lcm over loops (first written as the max; fixed before the
+  run).
+- **D106's first 128 entries.** Added to Part C: they are depths 0-2
+  and all but 3 of depth 3, and they split as D106 printed (identity,
+  88 "periodic", 39 "pA"). Exactly, the 88 are 8 P, 64 Z, 16 E. Three
+  other generator orders give the same split (plants stay green), so
+  the check confirms the cut, not D106's order.
+- **Plants (silva.planta, 5 red):** the forced map leaking the sign, M
+  transposed, the tail one pass late, the P period test off by one,
+  the catalog head shifted by one (red only after the exact 8/64/16
+  pin was added).
+- **Records.** findings.md; claims.md 31.2.1, 31.4.1, 42.1.1, Part X
+  (54, 55); dated correction notes in D106's findings.md, its atlas
+  entry, explorers-log and data-tables (section 68). Frozen with
+  archive.sh (demo-snapshot.c, 29 library files, output identical).

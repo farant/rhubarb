@@ -2,6 +2,8 @@
 
 ## Demo 106: Topological Entropy of XOR-Computing Braids
 
+> **Correction (2026-10-15, Demo 128, `demo_128_braid_relu`).** The entropy classification below is D106's rule, which decides exactly "Burau(-1) spectral radius > 1": a sufficient condition for positive entropy, not a classification (on B_4, p(1) = 0 for every braid, so its first branch never fires). Its "pA" is always right; its "periodic" is wrong for 1,008 of the 4,014 positive-entropy braids up to length 6 (shortest s1 s3^-1 s2, dilatation 2.29663, the B_4 minimum). In the first 128 entries the 88 "periodic" are, exactly, 8 periodic, 64 zero-entropy non-periodic and 16 of positive entropy; the 39 "pA" are all of positive entropy. The depth table is exact through depth 5; at depth 6 the TL-only dedup merged 98 pairs of distinct braids (3,444 where there are 3,542; the rule on exact classes gives 2,258 "pA", 63.7%); depths 7-8 are not checked. The exact positive-entropy share is higher: 30.8 / 49.0 / 58.6 / 72.3 / 83.5% at depths 2-6. The 8 depth-2 "pA" braids do have Burau radius phi^2, but each is a 3-strand braid inside B_4 (two adjacent generators), so reducible, not pseudo-Anosov. Burau faithfulness on B_4 is open, not established, and Burau at t = -1 is not faithful (Delta^2 maps to I). Whether the entropy null holds over exact classes is untested. See `demo_128_braid_relu/findings.md` and claims.md KC 54.
+
 - **Status**: COMPLETE (RESULT)
 - **File**: `demo_106_topological_entropy/main.c` (~1408 lines)
 - **Tests**: 20/20 pass

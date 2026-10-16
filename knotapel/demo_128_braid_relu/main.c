@@ -727,6 +727,7 @@ typedef struct {
     int    cls;          /* CLS_P, CLS_E, CLS_Z */
     int    certified;    /* Burau(-1) radix > 1 */
     int    cert_omega;   /* Burau at a cube root of unity: radius > 1 */
+    int    period;       /* P: k with beta^k a power of Delta^2 */
     double rate;         /* measured (L60/L40)^(1/20), display only */
     int    d106_pa;      /* D106's rule says pseudo-Anosov */
     long   tr;           /* trace, c1 of Burau(-1) (B_4 only) */
@@ -1148,6 +1149,7 @@ classify (
             fatal("radix refused");
         }
         cs[i].certified = sg > 0;
+        cs[i].period = periodic;
         {
             b32 maior = FALSUM;
 
@@ -1459,9 +1461,11 @@ tl_of_word (
  * s3, s3^-1), right multiplication, kept iff the TL matrix is new */
 static void
 d106_bfs (
-    int  maxdepth,
-    int *level_count,
-    int *level_pa)
+    int     maxdepth,
+    int    *level_count,
+    int    *level_pa,
+    Plexus *first,        /* out: the catalog's first nfirst words */
+    int     nfirst)
 {
     TL3    *tls = NULL;
     Plexus *words = NULL;
@@ -1547,6 +1551,9 @@ d106_bfs (
         start = end;
     }
     free(tls);
+    for (depth = 0; depth < nfirst && depth < n; depth++) {
+        first[depth] = words[depth];
+    }
     free(words);
     free(keys);
     free(seen);
@@ -1663,7 +1670,9 @@ part_c (
         int tot6 = 0;
         int pa6 = 0;
 
-        d106_bfs(6, lc, lp);
+        Plexus head[128];
+
+        d106_bfs(6, lc, lp, head, 128);
         for (len = 0; len <= 6; len++) {
             if (lc[len] != d106_total[len] || lp[len] != d106_pa[len]) {
                 same = 0;
@@ -1736,6 +1745,51 @@ part_c (
                 && same_burau);
         }
     }
+    /* D106's contingency table used its catalog's first 128 entries:
+     * depths 0-2 and all but the last 3 of depth 3 (1 + 6 + 26 + 98 =
+     * 131). Classify exactly those. The split does not depend on the
+     * generator order (plants: three other orders give the same) */
+    if (maxlen >= 6) {
+        Plexus  head[128];
+        int     lc[7];
+        int     lp[7];
+        Census *by_key = (Census *)malloc((size_t)count * sizeof(Census));
+        int     rule[2] = { 0, 0 };    /* 'pA', 'periodic' (non-identity) */
+        int     exact[2][3];
+        int     h;
+
+        memset(exact, 0, sizeof(exact));
+        memcpy(by_key, cs, (size_t)count * sizeof(Census));
+        qsort(by_key, (size_t)count, sizeof(Census), census_cmp);
+        d106_bfs(4, lc, lp, head, 128);
+        for (h = 1; h < 128; h++) {
+            Census  probe;
+            Census *hit;
+
+            memset(&probe, 0, sizeof(probe));
+            probe.key = class_key(head[h]);
+            hit = (Census *)bsearch(&probe, by_key, (size_t)count,
+                sizeof(Census), census_cmp);
+            if (hit == NULL) fatal("catalog entry not in the census");
+            r = hit->d106_pa ? 0 : 1;
+            rule[r]++;
+            exact[r][hit->cls]++;
+        }
+        free(by_key);
+        printf("\n  D106's first 128 catalog entries (its contingency "
+            "table): identity + %d 'periodic' + %d 'pA'\n", rule[1],
+            rule[0]);
+        printf("    exact classes of its 'periodic' entries: P %d, Z %d, "
+            "E %d; of its 'pA' entries: E %d\n", exact[1][CLS_P],
+            exact[1][CLS_Z], exact[1][CLS_E], exact[0][CLS_E]);
+        check("D106's first 128 entries split as its table: identity, 88 "
+            "'periodic', 39 'pA'",
+            rule[1] == 88 && rule[0] == 39 && exact[0][CLS_E] == 39);
+        /* regression pin (D128's own exact classes, not D106's) */
+        check("its 88 'periodic' entries are exactly P 8, Z 64, E 16",
+            exact[1][CLS_P] == 8 && exact[1][CLS_Z] == 64
+            && exact[1][CLS_E] == 16);
+    }
     /* P2, registered: both directions */
     printf("\n  P2 (registered): zero-entropy braids called 'pA': %d (this "
         "direction was impossible:\n      'pA' means Burau(-1) radius "
@@ -1793,6 +1847,328 @@ part_c (
 }
 
 /* ================================================================
+ * Part D: the active-ReLU pattern along each braid's iteration
+ * ================================================================
+ *
+ * Run beta on a loop again and again and record, in each pass through
+ * the word, which ReLUs fire (argument > 0; at 0 both pieces give 0).
+ * A pass's pattern names the linear region the network is in.
+ * Descriptive (plan.md, Part D): does the pattern become periodic,
+ * from which pass s, with what period q? Two exact checks: periodic
+ * braids repeat their pattern from pass 0; and on every stabilized
+ * tail the network IS one integer linear map M per q passes
+ * (v_{s+jq} = M^j v_s), since the programs have no biases. M is the
+ * bridge to the exact dilatation (Hall and Yurttas), which Part D does
+ * not compute.
+ */
+
+#define D_PASSES 60
+#define D_BITS   64
+#define D_QMAX   12
+#define D_TAIL   20
+
+/* one letter, recording ReLU activity; with force != NULL each ReLU
+ * follows force (1: identity, 0: zero) instead of its sign, which
+ * makes the letter linear. Returns the number of ReLUs. */
+static int
+run_letter_pattern (
+    const Program       *pr,
+    Magnus              *coord,
+    Magnus              *scratch,
+    unsigned char       *bits,
+    const unsigned char *force)
+{
+    int k;
+    int t;
+    int r = 0;
+    int m2 = pr->nregs - pr->ninstr;
+
+    for (k = 0; k < m2; k++) {
+        scratch[k] = coord[k];
+    }
+    for (k = 0; k < pr->ninstr; k++) {
+        const Instr *ins = &pr->in[k];
+        Magnus       sum = magnus_ex_s64(0);
+
+        for (t = 0; t < ins->nterms; t++) {
+            sum = magnus_adde(sum, magnus_multiplica(scratch[ins->src[t]],
+                magnus_ex_s64((s64)ins->coef[t]), pool), pool);
+        }
+        if (ins->op == OP_RELU) {
+            int on = force != NULL ? (int)force[r]
+                : magnus_signum(sum) > 0;
+
+            if (bits != NULL) bits[r] = (unsigned char)on;
+            if (!on) sum = magnus_ex_s64(0);
+            r++;
+        }
+        scratch[ins->dst] = sum;
+    }
+    for (k = 0; k < pr->nout; k++) {
+        coord[pr->out_coord[k]] = scratch[pr->out_reg[k]];
+    }
+    return r;
+}
+
+/* one pass through the word; returns the number of ReLUs */
+static int
+run_pass (
+    const Program       *prs,
+    int                  len,
+    Magnus              *coord,
+    unsigned char       *bits,
+    const unsigned char *force)
+{
+    Magnus scratch[64];
+    int    k;
+    int    nb = 0;
+
+    for (k = 0; k < len; k++) {
+        nb += run_letter_pattern(&prs[k], coord, scratch,
+            bits != NULL ? bits + nb : NULL,
+            force != NULL ? force + nb : NULL);
+    }
+    return nb;
+}
+
+typedef struct {
+    int stable;      /* the last >= D_TAIL passes repeat with q */
+    int start;       /* first pass of the periodic tail */
+    int period;      /* q */
+    int regions;     /* distinct patterns over all passes */
+    int linear_ok;   /* v_{s+jq} = M^j v_s on the whole tail */
+} Orbita;
+
+static void
+pattern_orbit (
+    Plexus  p,
+    int     k,          /* the loop E_k */
+    Orbita *o)
+{
+    int           n = (int)p.fila;
+    int           d = 2 * (n - 2);
+    int           len = (int)p.longitudo;
+    Program       prs[16];
+    unsigned char pat[D_PASSES][D_BITS];
+    Magnus        orbit[D_PASSES + 1][16];
+    Ansa          e;
+    int           nb = 0;
+    int           t;
+    int           j;
+    int           q;
+
+    memset(o, 0, sizeof(*o));
+    memset(pat, 0, sizeof(pat));
+    if (len > 16) fatal("word too long for Part D");
+    for (t = 0; t < len; t++) {
+        build_letter(n, (long)p.litterae[t], &prs[t]);
+    }
+    if (!ansa_circa((i32)n, (i32)k, pool, &e)) fatal("loop refused");
+    for (j = 0; j < n - 2; j++) {
+        orbit[0][j] = e.a[j];
+        orbit[0][n - 2 + j] = e.b[j];
+    }
+    for (t = 0; t < D_PASSES; t++) {
+        for (j = 0; j < d; j++) orbit[t + 1][j] = orbit[t][j];
+        nb = run_pass(prs, len, orbit[t + 1], pat[t], NULL);
+    }
+    if (nb > D_BITS) fatal("too many ReLUs for Part D");
+    /* distinct regions */
+    for (t = 0; t < D_PASSES; t++) {
+        int seen = 0;
+
+        for (j = 0; j < t && !seen; j++) {
+            if (memcmp(pat[j], pat[t], (size_t)nb) == 0) seen = 1;
+        }
+        if (!seen) o->regions++;
+    }
+    /* the smallest q whose periodic tail is long enough */
+    for (q = 1; q <= D_QMAX && !o->stable; q++) {
+        int s = 0;
+
+        for (t = D_PASSES - 1 - q; t >= 0; t--) {
+            if (memcmp(pat[t], pat[t + q], (size_t)nb) != 0) {
+                s = t + 1;
+                break;
+            }
+        }
+        if (D_PASSES - s >= D_TAIL && D_PASSES - s >= 3 * q) {
+            o->stable = 1;
+            o->start = s;
+            o->period = q;
+        }
+    }
+    if (!o->stable) return;
+    /* M: the forced q-pass map on the basis vectors (column c = M e_c),
+     * then v_{s+jq} = M^j v_s along the tail */
+    {
+        Magnus mat[16][16];
+        Magnus v[16];
+        int    c;
+        int    r;
+        int    s = o->start;
+
+        for (c = 0; c < d; c++) {
+            Magnus col[16];
+
+            for (r = 0; r < d; r++) {
+                col[r] = magnus_ex_s64(r == c ? 1 : 0);
+            }
+            for (t = 0; t < o->period; t++) {
+                (void)run_pass(prs, len, col, NULL, pat[s + t]);
+            }
+            for (r = 0; r < d; r++) mat[r][c] = col[r];
+        }
+        o->linear_ok = 1;
+        for (r = 0; r < d; r++) v[r] = orbit[s][r];
+        for (t = s + o->period; t <= D_PASSES; t += o->period) {
+            Magnus w[16];
+
+            for (r = 0; r < d; r++) {
+                Magnus sum = magnus_ex_s64(0);
+
+                for (c = 0; c < d; c++) {
+                    sum = magnus_adde(sum, magnus_multiplica(mat[r][c],
+                        v[c], pool), pool);
+                }
+                w[r] = sum;
+            }
+            for (r = 0; r < d; r++) {
+                v[r] = w[r];
+                if (!magnus_aequalis(v[r], orbit[t][r])) o->linear_ok = 0;
+            }
+        }
+    }
+}
+
+static int
+lcm_int (
+    int a,
+    int b)
+{
+    int x = a;
+    int y = b;
+
+    while (y != 0) {
+        int r = x % y;
+
+        x = y;
+        y = r;
+    }
+    return a / x * b;
+}
+
+static int
+int_cmp (
+    const void *x,
+    const void *y)
+{
+    return *(const int *)x - *(const int *)y;
+}
+
+static void
+part_d (
+    Census *cs,
+    int     count,
+    int     n,
+    int     maxlen)
+{
+    const char *names[3] = { "P", "E", "Z" };
+    int         cls;
+    int         periodic_ok = 1;
+    int         linear_ok = 1;
+    int         orbits = 0;
+    int         stable_orbits = 0;
+    int         ecross[2][3];
+    int        *starts = (int *)malloc((size_t)(count + 1) * sizeof(int));
+    char        msg[256];
+
+    memset(ecross, 0, sizeof(ecross));
+    printf("\n=== Part D: the active-ReLU pattern, B_%d up to length %d "
+        "(%d passes on every E_k) ===\n\n", n, maxlen, D_PASSES);
+    printf("    %-5s %7s %10s %9s %9s %6s %6s %6s %13s\n", "class",
+        "braids", "stabilized", "start med", "start max", "q = 1", "q = 2",
+        "q > 2", "regions mean");
+    for (cls = 0; cls < 3; cls++) {
+        int    braids = 0;
+        int    stab = 0;
+        int    q1 = 0;
+        int    q2 = 0;
+        int    qn = 0;
+        int    ns = 0;
+        long   regions = 0;
+        int    i;
+
+        for (i = 0; i < count; i++) {
+            PiscinaNotatio mark;
+            int            all_stable = 1;
+            int            start = 0;
+            int            period = 1;
+            int            k;
+
+            if (cs[i].cls != cls) continue;
+            braids++;
+            mark = piscina_notare(pool);
+            for (k = 1; k < n; k++) {
+                Orbita o;
+
+                pattern_orbit(cs[i].word, k, &o);
+                orbits++;
+                regions += o.regions;
+                if (!o.stable) {
+                    all_stable = 0;
+                    continue;
+                }
+                stable_orbits++;
+                if (!o.linear_ok) linear_ok = 0;
+                if (o.start > start) start = o.start;
+                period = lcm_int(period, o.period);
+                if (cls == CLS_P && (o.start != 0
+                        || cs[i].period % o.period != 0)) {
+                    periodic_ok = 0;
+                }
+            }
+            piscina_reficere(pool, mark);
+            if (cls == CLS_P && !all_stable) periodic_ok = 0;
+            if (!all_stable) continue;
+            if (cls == CLS_E) {
+                ecross[cs[i].certified ? 0 : 1][period == 1 ? 0
+                    : period == 2 ? 1 : 2]++;
+            }
+            stab++;
+            starts[ns++] = start;
+            if (period == 1) q1++;
+            else if (period == 2) q2++;
+            else qn++;
+        }
+        qsort(starts, (size_t)ns, sizeof(int), int_cmp);
+        printf("    %-5s %7d %10d %9d %9d %6d %6d %6d %13.1f\n", names[cls],
+            braids, stab, ns ? starts[ns / 2] : 0, ns ? starts[ns - 1] : 0,
+            q1, q2, qn, braids ? (double)regions / (double)(braids
+            * (n - 1)) : 0.0);
+    }
+    printf("  (per braid: stabilized = every loop's pattern repeats over "
+        "its last >= %d passes; start\n   and q are the largest over the "
+        "loops; regions = distinct patterns per loop over %d passes)\n",
+        D_TAIL, D_PASSES);
+    printf("  %d of %d orbits stabilized within the run (observed, not "
+        "proved)\n", stable_orbits, orbits);
+    printf("  E braids by certificate and settled period q:\n");
+    printf("    %-30s %6s %6s %6s\n", "", "q = 1", "q = 2", "q > 2");
+    printf("    %-30s %6d %6d %6d\n", "Burau(-1) radius > 1",
+        ecross[0][0], ecross[0][1], ecross[0][2]);
+    printf("    %-30s %6d %6d %6d\n", "only at a cube root of unity",
+        ecross[1][0], ecross[1][1], ecross[1][2]);
+    sprintf(msg, "B_%d: periodic braids repeat their ReLU pattern from "
+        "pass 0, with a period dividing the braid's", n);
+    check(msg, periodic_ok);
+    sprintf(msg, "B_%d: on every stabilized tail the network is ONE "
+        "integer linear map per period: v_{s+jq} = M^j v_s exactly", n);
+    check(msg, linear_ok && stable_orbits > 0);
+    free(starts);
+}
+
+/* ================================================================
  * main
  * ================================================================ */
 
@@ -1823,6 +2199,8 @@ main (void)
         part_b(3, l3, celer ? 263 : 2589, &b3, &n3);
         part_b(4, l4, celer ? 469 : 5121, &b4, &n4);
         part_c(b4, n4, l4);
+        part_d(b3, n3, 3, l3);
+        part_d(b4, n4, 4, l4);
         free(b3);
         free(b4);
     }
