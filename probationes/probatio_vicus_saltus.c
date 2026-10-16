@@ -137,10 +137,11 @@ mundum_parare (
     (vacuum)filum_directorium_creare_si_necesse(s->socket);
     sprintf(s->socket + strlen(s->socket), "/v.%d", (integer)getpid());
     /* T6: TMUX_TMPDIR proprium - "tmux attach" sine -S servitorem
-     * ordinarium hic quaerit, numquam usoris */
-    sprintf(s->tmpdir, "%s/build/pmx/t.%d", radix ? radix : ".",
-        (integer)getpid());
-    (vacuum)mkdir(s->tmpdir, (mode_t)0700);
+     * ordinarium hic quaerit, numquam usoris. build/pmx IPSUM (sine
+     * gradu "t.<pid>"): via socket "<tmpdir>/tmux-<uid>/default" in
+     * clone frigida (radix LXXI octeti) CIV octetos (sun_path macOS)
+     * excedebat - tmux new-session deficiebat (10-16) */
+    sprintf(s->tmpdir, "%s/build/pmx", radix ? radix : ".");
     (vacuum)setenv("TMUX_TMPDIR", s->tmpdir, I);
     s->m.binarium  = s->binarium;
     s->m.socket    = s->socket;
@@ -182,10 +183,7 @@ mundum_purgare (
             (vacuum)imperium_in(s, s->communis, "kill-server", NIHIL,
                 NIHIL, NIHIL, NIHIL, NIHIL, c->piscina);
             (vacuum)filum_delere(s->communis);
-            *strrchr(s->communis, '/') = '\0';
-            (vacuum)rmdir(s->communis);
         }
-        (vacuum)rmdir(s->tmpdir);
     }
     si (s && s->volumen)
     {
@@ -567,6 +565,7 @@ _probare_restitutionem (
                   chorda  tty;
                character  imperium[CCCLXXXIV];
                character  exspectatum[XXXII];
+               character  argumentum[CCCLXXXIV];
                      i32  gradus;
         struct timespec  pausa;
 
@@ -574,35 +573,28 @@ _probare_restitutionem (
     CREDO_NECESSE(s && s->paratus);
     v = s->app.vicus;
     memset(&communis, ZEPHYRUM, magnitudo(communis));
-    communis.binarium = s->binarium;
-    /* servitor "ordinarius" sine -S (TMUX_TMPDIR; tmux directorium
-     * tmux-<uid> ipse creat), deinde via socket eius */
+    communis.binarium  = s->binarium;
+    communis.socket    = s->communis;
+    /* servitor alter per -S (b.<pid> iuxta v.<pid>): via brevis - sub
+     * TMUX_TMPDIR "tmux-<uid>/default" in clone frigida CIV octetos
+     * excedebat (10-16). Sessio eius in libro praeconii: terminalia
+     * servitores sessionum interrogant */
+    strcpy(s->communis, s->socket);
+    *(strrchr(s->communis, '/') + I) = 'b';
+    si (strlen(s->communis) + VIII >= CIV)
     {
-         constans character* v_novae[VII];
-         constans character* v_viae[VIII];
-          ProcessusResultus  r;
-
-        v_novae[ZEPHYRUM] = s->binarium;
-        v_novae[I] = "new-session";
-        v_novae[II] = "-d";
-        v_novae[III] = "-s";
-        v_novae[IV] = "beta";
-        v_novae[V] = NIHIL;
-        r = processus_exsequi(v_novae, V * M, c->piscina);
-        CREDO_NECESSE(r.successus && r.codex_exitus == ZEPHYRUM);
-        v_viae[ZEPHYRUM] = s->binarium;
-        v_viae[I] = "display-message";
-        v_viae[II] = "-p";
-        v_viae[III] = "-t";
-        v_viae[IV] = "=beta";
-        v_viae[V] = "#{socket_path}";
-        v_viae[VI] = NIHIL;
-        r = processus_exsequi(v_viae, V * M, c->piscina);
-        CREDO_NECESSE(   r.successus && r.effusio.mensura > I
-                      && r.effusio.mensura < CCL);
-        sprintf(s->communis, "%.*s", (integer)(r.effusio.mensura - I),
-            (constans character*)r.effusio.datum);
+        imprimere("  via socket nimis longa: %s\n", s->communis);
     }
+    CREDO_NECESSE(imperium_in(s, s->communis, "new-session", "-d", "-s",
+        "beta", NIHIL, NIHIL, c->piscina));
+    sprintf(imperium, "{\"tempus\":%ld000,\"sessio\":\"s-beta\","
+        "\"eventus\":\"SessionStart\",\"panellus\":\"%%0\","
+        "\"servitor\":\"%s\",\"via\":\"/w/beta\",\"transcriptum\":"
+        "\"\",\"genus\":\"startup\",\"nuntius\":\"\"}\n",
+        (long)time(NIHIL), s->communis);
+    CREDO_NECESSE(filum_appendere_firmiter(s->liber, chorda_ex_literis(
+        imperium, c->piscina)));
+    sprintf(argumentum, "tmux %s beta", s->communis);
 
     CREDO_GRADUS("I: tmux attach manu - argumentum notatur");
     CREDO_NECESSE(vicus_activam_ponere(v, "6"));
@@ -614,10 +606,15 @@ _probare_restitutionem (
     CREDO_AEQUALIS_I32(l->argumentum.mensura, ZEPHYRUM);
     t    = (TerminaleApplicatio*)l->montatio;
     tty  = chorda_transcribere(terminale_tty(t), c->piscina);
-    sprintf(imperium, "%s attach -t =beta\r", s->binarium);
+    sprintf(imperium, "%s -S %s attach -t =beta\r", s->binarium,
+        s->communis);
     CREDO_NECESSE(aemulator_hospes_scribere(t->hospes,
         (constans i8*)imperium, (i32)strlen(imperium)) > ZEPHYRUM);
     CREDO_VERUM(adhaesionem_in(v, &communis, "beta", tty, c->piscina));
+    /* fons sessionum (latus visibile in tabula alia) servitorem discit;
+     * terminalia (per V s) argumentum notant */
+    CREDO_NECESSE(vicus_activam_ponere(v, "7"));
+    CREDO_NECESSE(vicus_acervo_aperire(v, "colloquia", NIHIL));
     /* systema per V s: argumentum notatur */
     per (gradus = ZEPHYRUM; gradus < CDL
                             && l->argumentum.mensura == ZEPHYRUM;
@@ -628,7 +625,7 @@ _probare_restitutionem (
         pausa.tv_nsec  = XX * M * M;
         (vacuum)nanosleep(&pausa, NIHIL);
     }
-    CREDO_CHORDA_AEQUALIS_LITERIS(l->argumentum, "tmux - beta");
+    CREDO_CHORDA_AEQUALIS_LITERIS(l->argumentum, argumentum);
     prima      = l;
     tty_prima  = tty;
 
@@ -639,7 +636,7 @@ _probare_restitutionem (
     l = vicus_latus(vicus_tabula(s->altera.vicus, V), VICUS_DEXTRUM);
     CREDO_NECESSE(l && l->montata && chorda_aequalis_literis(l->genus,
         "terminale"));
-    CREDO_CHORDA_AEQUALIS_LITERIS(l->argumentum, "tmux - beta");
+    CREDO_CHORDA_AEQUALIS_LITERIS(l->argumentum, argumentum);
     t    = (TerminaleApplicatio*)l->montatio;
     tty  = chorda_transcribere(terminale_tty(t), c->piscina);
     /* initium tardum (pictor historiam replicans, 10-16: IX s): tmux

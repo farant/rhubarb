@@ -201,3 +201,19 @@ Fran approved after the look (2026-10-15: "that looks good to me!").
   any reply after 5 s = garbage, reply split mid-sequence = garbage even
   when prompt. Our emulator flushes replies in one write - lateness was
   the cause.
+
+## 2026-10-16 - live test red in the cold clone (merge check)
+
+- frigida (fresh clone under $TMPDIR/frigida.XXXXXX/arbor, root 70-71
+  bytes) failed probatio_vicus_saltus#restitutio at `tmux new-session`:
+  the default socket under TMUX_TMPDIR
+  ("<root>/build/pmx/t.<pid>/tmux-501/default") exceeded sun_path (104
+  bytes) - and tmux realpath()s /var -> /private/var (+8). Even
+  "<root>/build/pmx/tmux-501/default" is 105 there.
+- Fix: the restore section uses an explicit `-S <root>/build/pmx/b.<pid>`
+  server (like the user's real saved arguments, which carry the full
+  socket path) + a praeco SessionStart naming it, so terminalia queries
+  it; TMUX_TMPDIR stays in build/pmx so default-server queries never
+  reach the user's tmux. Failures now NAME the cause (path printed,
+  tmux stderr printed). Verified with RHUBARB_RADIX at a frigida-length
+  path (2/2 green).
