@@ -1240,7 +1240,10 @@ montationem_probare (vacuum)
     CREDO_NON_NIHIL(repo);
     CREDO_VERUM(radicem_vici_parare(repo));
     CREDO_VERUM(terminale_montare(&app, piscina, intern, repo, "t1",
-        NIHIL, CDLXXX, CXCII));
+        NIHIL, NIHIL, CDLXXX, CXCII));
+    /* T4c: tty infantis publicum */
+    CREDO_VERUM(chorda_incipit(terminale_tty(&app), chorda_ex_literis(
+        "/dev/tty", piscina)));
     /* ramus in utroque genere; dispensator nullus (hospitis est) */
     r = insula_ramus(repo, "terminale", "t1");
     CREDO_NON_NIHIL(insula_ramus_nodus(&r));
@@ -1300,8 +1303,33 @@ montationem_probare (vacuum)
         "TERM=xterm-256color") == ZEPHYRUM);
     CREDO_VERUM(strcmp(terminale_ambitus()[II],
         "TERM_PROGRAM=terminale") == ZEPHYRUM);
-    CREDO_VERUM(terminale_ambitus()[III] == NIHIL);
+    /* T4c: TMUX et TMUX_PANE tolluntur */
+    CREDO_VERUM(strcmp(terminale_ambitus()[III], "TMUX") == ZEPHYRUM);
+    CREDO_VERUM(strcmp(terminale_ambitus()[IV], "TMUX_PANE")
+        == ZEPHYRUM);
+    CREDO_VERUM(terminale_ambitus()[V] == NIHIL);
     terminale_claudere(&app);
+
+    /* T4c: argumenta data pro concha */
+    {
+        constans character* argumenta[] = { "/bin/sh", "-c",
+            "echo argumenta_data; exec sleep 5", NIHIL };
+        TerminaleApplicatio altera;
+
+        CREDO_VERUM(terminale_montare(&altera, piscina, intern, repo,
+            "t2", argumenta, NIHIL, CDLXXX, CXCII));
+        visum = FALSUM;
+        per (k = ZEPHYRUM; k < CC && !visum; k++)
+        {
+            (vacuum)terminale_pulsare(&altera, XX);
+            textus = aemulator_textum_effundere(
+                aemulator_hospes_aemulator(altera.hospes), piscina);
+            visum = chorda_continet(textus,
+                chorda_ex_literis("argumenta_data", piscina));
+        }
+        CREDO_VERUM(visum);
+        terminale_claudere(&altera);
+    }
 }
 
 /* attributum ignotum ponere (canon recusare debet) */

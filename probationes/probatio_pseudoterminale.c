@@ -232,6 +232,8 @@ memoriam_probare (vacuum)
         (constans i8*)"salve", V, III);
     CREDO_NON_NIHIL(pt);
     CREDO_AEQUALIS_S32(pt->fossa(pt->datum), -I);
+    /* T4c: pons memoriae nullum tty habet */
+    CREDO_VERUM(pt->tty == NIHIL);
     /* effusio per partes, deinde finis */
     CREDO_AEQUALIS_S32(pt->legere(pt->datum, b, IV, ZEPHYRUM), IV);
     CREDO_VERUM(memcmp(b, "salv", IV) == ZEPHYRUM);
@@ -309,6 +311,8 @@ posix_probare (vacuum)
         "trap '' HUP; echo $$; exec sleep 100", NIHIL };
     constans character* tubus[]     = { "/bin/sh", "-c",
         "kill -PIPE $$; exit 0", NIHIL };
+    constans character* nomen_tty[] = { "/bin/sh", "-c", "tty",
+        NIHIL };
     constans character* crudus[]    = { "/bin/sh", "-c",
         "stty raw -echo; exec sleep 100", NIHIL };
 
@@ -327,6 +331,21 @@ posix_probare (vacuum)
     CREDO_VERUM(exitum_exspectare(pt, &ex));
     CREDO_AEQUALIS_I32(ex.codex, ZEPHYRUM);
     CREDO_AEQUALIS_I32(ex.signum, ZEPHYRUM);
+    pt->claudere(pt->datum);
+
+    /* T4c: tty lateris servi = quod infans 'tty' dicit */
+    pt = generare(nomen_tty, LXXX, XXIV, NIHIL, NIHIL, &e);
+    CREDO_NON_NIHIL(pt);
+    CREDO_NON_NIHIL(pt->tty);
+    si (pt->tty)
+    {
+        character exspectatum[LXIV];
+
+        CREDO_VERUM(strncmp(pt->tty, "/dev/tty", VIII) == ZEPHYRUM);
+        sprintf(exspectatum, "%.50s\r\n", pt->tty);
+        CREDO_VERUM(chorda_aequalis_literis(omnia_legere(pt),
+            exspectatum));
+    }
     pt->claudere(pt->datum);
 
     /* terminale regens (setsid + TIOCSCTTY): /dev/tty aperitur.

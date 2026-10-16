@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- GENERATUM a tools/natura_glossae.sh - NOLI MANU MUTARE -->
 <html lang="la"><head><meta charset="utf-8">
 <title>Glossae - documentatio generum</title>
 <style>
@@ -37,7 +38,7 @@
                    margin: .3rem 0 0 0; }
 </style></head><body>
 <h1>GLOSSAE - documentatio generum</h1>
-<p class="numeri">la <b>445/468</b> &middot; en <b>202/468</b> &middot; fr <b>188/468</b></p>
+<p class="numeri">la <b>448/471</b> &middot; en <b>205/471</b> &middot; fr <b>191/471</b></p>
 <p class="tabula"><a href="#acta">acta</a>
 <a href="#actus">actus</a>
 <a href="#animal">animal</a>
@@ -4116,6 +4117,8 @@ Oraculum non assertio sed successus lectoris in opere dato.</p>
 <pre>&lt;ambulatio-lectoris nomen="#nomen"
     lector="#res|.genus"
     contentum="..."
+    interactio="automatica|manualis"
+    occupatio="nihil|fenestra|focus"
     interrogat="#res|.genus"&gt;
   &lt;invenit ad="#res|.genus"/&gt;
   &lt;exercet ad="#res|.genus"/&gt;
@@ -4131,7 +4134,7 @@ Oraculum non assertio sed successus lectoris in opere dato.</p>
   &lt;glossa lingua="..."&gt;...&lt;/glossa&gt;
 &lt;/ambulatio-lectoris&gt;
 </pre></details>
-<h2 id="elementa_programmatis">elementa_programmatis <span class="numeri">la 45/45 &middot; en 21/45 &middot; fr 18/45</span></h2>
+<h2 id="elementa_programmatis">elementa_programmatis <span class="numeri">la 48/48 &middot; en 24/48 &middot; fr 21/48</span></h2>
 <h3>status</h3>
 <p class="linea">status</p>
 <p class="def"><b>la</b> Valor custoditus qui in tempore mutari potest: inter eventus
@@ -4827,8 +4830,43 @@ nuntia, tituli, formae.</p>
   &lt;glossa lingua="..."&gt;...&lt;/glossa&gt;
 &lt;/constans-textualis&gt;
 </pre></details>
+<h3>opus_programmatis</h3>
+<p class="linea">opus_programmatis</p>
+<p class="def"><b>la</b> Opus ex elementis programmatis constans et NOMINE SUO
+appellatum: unitas quam homo creat, nominat, curat, et tandem
+deponit. Quod bibliotheca et programma et quae ea colligunt
+communiter ferunt - nomen, membra, vitam, successionem - hic
+semel describitur.</p>
+<p class="glossa"><b>en</b> A work of programming: a work made of
+    program elements and called by its OWN NAME - a unit that
+    someone creates, names, maintains and eventually lays down. What
+    libraries, programs and the things that gather them have in
+    common - a name, members, a life, a succession - is described
+    here once.</p>
+<p class="glossa"><b>fr</b> Une oeuvre de programmation : une oeuvre faite
+    d'éléments de programme et appelée par son NOM PROPRE - une unité
+    que l'on crée, nomme, entretient et finit par déposer. Ce que les
+    bibliothèques, les programmes et ce qui les rassemble ont en
+    commun - un nom, des membres, une vie, une succession - est
+    décrit ici une seule fois.</p>
+<details class="syn"><summary>syntaxis</summary>
+<pre>&lt;opus-programmatis nomen="#nomen" status-vita="viva|vetusta|archivata"&gt;
+  &lt;continet ad="#res|.genus"/&gt;
+  &lt;substituit ad="#res|.genus"/&gt;
+  &lt;orta-ex ad="#res|.genus"/&gt;
+  &lt;historia&gt;
+    &lt;eventum quando="AAAA-MM-DD"
+        actio="appendere|plicare|signare|stornare|..."
+        certitudo="..."
+        fons="..."
+        nota="..."&gt;...&lt;/eventum&gt;
+  &lt;/historia&gt;
+  &lt;nota&gt;...&lt;/nota&gt;
+  &lt;glossa lingua="..."&gt;...&lt;/glossa&gt;
+&lt;/opus-programmatis&gt;
+</pre></details>
 <h3>bibliotheca</h3>
-<p class="linea">bibliotheca</p>
+<p class="linea">opus_programmatis &rarr; bibliotheca</p>
 <p class="def"><b>la</b> Collectio elementorum (functionum, constantium, typorum) ad
 usum repetendum edita: interfaciem praebet, corpus celat.
 A programmate differt quia initio proprio caret - vivit
@@ -4844,7 +4882,10 @@ vocata, numquam sponte currit.</p>
     programme en ce qu'elle n'a pas de commencement propre : elle vit
     d'être appelée et ne s'exécute jamais d'elle-même.</p>
 <details class="syn"><summary>syntaxis</summary>
-<pre>&lt;bibliotheca nomen="#nomen" gradus="0" scripta-in="#res|.genus"&gt;
+<pre>&lt;bibliotheca nomen="#nomen"
+    gradus="0"
+    scripta-in="#res|.genus"
+    status-vita="viva|vetusta|archivata"&gt;
   &lt;interfacies nota="..."/&gt;
   &lt;corpus nota="..."/&gt;
   &lt;probationes nota="..."/&gt;
@@ -4852,6 +4893,9 @@ vocata, numquam sponte currit.</p>
   &lt;praebet ad="#res|.genus"/&gt;
   &lt;dependet-ex ad="#res|.genus"/&gt;
   &lt;realizat ad="#res|.genus"/&gt;
+  &lt;continet ad="#res|.genus"/&gt;
+  &lt;substituit ad="#res|.genus"/&gt;
+  &lt;orta-ex ad="#res|.genus"/&gt;
   &lt;historia&gt;
     &lt;eventum quando="AAAA-MM-DD"
         actio="appendere|plicare|signare|stornare|..."
@@ -5210,7 +5254,7 @@ vocabularium habuimus.</p>
 &lt;/sigillum-contenti&gt;
 </pre></details>
 <h3>programma</h3>
-<p class="linea">programma</p>
+<p class="linea">opus_programmatis &rarr; programma</p>
 <p class="def"><b>la</b> Collectio elementorum cum INITIO PROPRIO: vocatum currit et
 ex se ipso pergit, ubi bibliotheca vocata solum vivit.
 Initium (principale) non est ornamentum sed differentia -
@@ -5231,8 +5275,13 @@ quod incipere potest, fatum suum habet.</p>
     modus-finiendi="terminans|perpetuum"
     interactivum="verum|falsum"
     initium="#res|.genus"
-    currit-ut="#res|.genus"&gt;
+    currit-ut="#res|.genus"
+    status-vita="viva|vetusta|archivata"&gt;
+  &lt;usus&gt;...&lt;/usus&gt;
   &lt;adhibet ad="#res|.genus"/&gt;
+  &lt;continet ad="#res|.genus"/&gt;
+  &lt;substituit ad="#res|.genus"/&gt;
+  &lt;orta-ex ad="#res|.genus"/&gt;
   &lt;historia&gt;
     &lt;eventum quando="AAAA-MM-DD"
         actio="appendere|plicare|signare|stornare|..."
@@ -5245,7 +5294,7 @@ quod incipere potest, fatum suum habet.</p>
 &lt;/programma&gt;
 </pre></details>
 <h3>instrumentum_lineae</h3>
-<p class="linea">programma &rarr; instrumentum_lineae</p>
+<p class="linea">opus_programmatis &rarr; programma &rarr; instrumentum_lineae</p>
 <p class="def"><b>la</b> Vocatur, agit, exit: compositioni per fistulas aptum
 (vide cliens.cliens_cli, quod idem ex parte ministerii
 describit).</p>
@@ -5258,8 +5307,13 @@ describit).</p>
     modus-finiendi="terminans|perpetuum"
     interactivum="verum|falsum"
     initium="#res|.genus"
-    currit-ut="#res|.genus"&gt;
+    currit-ut="#res|.genus"
+    status-vita="viva|vetusta|archivata"&gt;
+  &lt;usus&gt;...&lt;/usus&gt;
   &lt;adhibet ad="#res|.genus"/&gt;
+  &lt;continet ad="#res|.genus"/&gt;
+  &lt;substituit ad="#res|.genus"/&gt;
+  &lt;orta-ex ad="#res|.genus"/&gt;
   &lt;historia&gt;
     &lt;eventum quando="AAAA-MM-DD"
         actio="appendere|plicare|signare|stornare|..."
@@ -5272,7 +5326,7 @@ describit).</p>
 &lt;/instrumentum-lineae&gt;
 </pre></details>
 <h3>daemon</h3>
-<p class="linea">programma &rarr; daemon</p>
+<p class="linea">opus_programmatis &rarr; programma &rarr; daemon</p>
 <p class="def"><b>la</b> Perpetuum, sine terminali, petitionibus serviens: non
 finem quaerit sed statum servat.</p>
 <p class="glossa"><b>en</b> A daemon: perpetual, terminal-less,
@@ -5284,8 +5338,13 @@ finem quaerit sed statum servat.</p>
     modus-finiendi="terminans|perpetuum"
     interactivum="verum|falsum"
     initium="#res|.genus"
-    currit-ut="#res|.genus"&gt;
+    currit-ut="#res|.genus"
+    status-vita="viva|vetusta|archivata"&gt;
+  &lt;usus&gt;...&lt;/usus&gt;
   &lt;adhibet ad="#res|.genus"/&gt;
+  &lt;continet ad="#res|.genus"/&gt;
+  &lt;substituit ad="#res|.genus"/&gt;
+  &lt;orta-ex ad="#res|.genus"/&gt;
   &lt;historia&gt;
     &lt;eventum quando="AAAA-MM-DD"
         actio="appendere|plicare|signare|stornare|..."
@@ -5298,7 +5357,7 @@ finem quaerit sed statum servat.</p>
 &lt;/daemon&gt;
 </pre></details>
 <h3>applicatio</h3>
-<p class="linea">programma &rarr; applicatio</p>
+<p class="linea">opus_programmatis &rarr; programma &rarr; applicatio</p>
 <p class="def"><b>la</b> Homini praesens, fenestris aut terminali: dum homo
 adest currit.</p>
 <p class="glossa"><b>en</b> An application: present to a person,
@@ -5310,8 +5369,13 @@ adest currit.</p>
     modus-finiendi="terminans|perpetuum"
     interactivum="verum|falsum"
     initium="#res|.genus"
-    currit-ut="#res|.genus"&gt;
+    currit-ut="#res|.genus"
+    status-vita="viva|vetusta|archivata"&gt;
+  &lt;usus&gt;...&lt;/usus&gt;
   &lt;adhibet ad="#res|.genus"/&gt;
+  &lt;continet ad="#res|.genus"/&gt;
+  &lt;substituit ad="#res|.genus"/&gt;
+  &lt;orta-ex ad="#res|.genus"/&gt;
   &lt;historia&gt;
     &lt;eventum quando="AAAA-MM-DD"
         actio="appendere|plicare|signare|stornare|..."
@@ -5324,7 +5388,7 @@ adest currit.</p>
 &lt;/applicatio&gt;
 </pre></details>
 <h3>instrumentum_aedificationis</h3>
-<p class="linea">programma &rarr; instrumentum_aedificationis</p>
+<p class="linea">opus_programmatis &rarr; programma &rarr; instrumentum_aedificationis</p>
 <p class="def"><b>la</b> Programma cuius finis artefacta aedificationis ex fontibus
 derivare: graphum dependentiarum novit (quid ex quo), et
 inde vim suam - solum mutata reficit. Ab implementatione
@@ -5352,10 +5416,15 @@ ipsum aliis committit.</p>
     modus-finiendi="terminans|perpetuum"
     interactivum="verum|falsum"
     initium="#res|.genus"
-    currit-ut="#res|.genus"&gt;
+    currit-ut="#res|.genus"
+    status-vita="viva|vetusta|archivata"&gt;
   &lt;invocat ad="#res|.genus"/&gt;
   &lt;producit ad="#res|.genus"/&gt;
+  &lt;usus&gt;...&lt;/usus&gt;
   &lt;adhibet ad="#res|.genus"/&gt;
+  &lt;continet ad="#res|.genus"/&gt;
+  &lt;substituit ad="#res|.genus"/&gt;
+  &lt;orta-ex ad="#res|.genus"/&gt;
   &lt;historia&gt;
     &lt;eventum quando="AAAA-MM-DD"
         actio="appendere|plicare|signare|stornare|..."
@@ -5366,6 +5435,71 @@ ipsum aliis committit.</p>
   &lt;nota&gt;...&lt;/nota&gt;
   &lt;glossa lingua="..."&gt;...&lt;/glossa&gt;
 &lt;/instrumentum-aedificationis&gt;
+</pre></details>
+<h3>subsystema</h3>
+<p class="linea">opus_programmatis &rarr; subsystema</p>
+<p class="def"><b>la</b> Opus programmatis quod alia opera CONTINET et plagulas
+communes possidet quae ea ligant: declarationes aedificationis
+et ianuam suitae probationum. Nec bibliotheca nec programma,
+sed domus eorum.</p>
+<p class="glossa"><b>en</b> A subsystem: a work of programming that
+    CONTAINS other works and owns the shared files that bind them -
+    the build declarations and the entry point of its test suite.
+    Neither a library nor a program, but their house.</p>
+<p class="glossa"><b>fr</b> Un sous-système : une oeuvre de programmation
+    qui CONTIENT d'autres oeuvres et possède les fichiers communs qui
+    les lient - les déclarations de construction et la porte de sa
+    suite de tests. Ni bibliothèque ni programme, mais leur
+    maison.</p>
+<details class="syn"><summary>syntaxis</summary>
+<pre>&lt;subsystema nomen="#nomen" status-vita="viva|vetusta|archivata"&gt;
+  &lt;declarationes-aedificationis nota="..."/&gt;
+  &lt;ianua-suitae nota="..."/&gt;
+  &lt;documenta nota="..."/&gt;
+  &lt;continet ad="#res|.genus"/&gt;
+  &lt;substituit ad="#res|.genus"/&gt;
+  &lt;orta-ex ad="#res|.genus"/&gt;
+  &lt;historia&gt;
+    &lt;eventum quando="AAAA-MM-DD"
+        actio="appendere|plicare|signare|stornare|..."
+        certitudo="..."
+        fons="..."
+        nota="..."&gt;...&lt;/eventum&gt;
+  &lt;/historia&gt;
+  &lt;nota&gt;...&lt;/nota&gt;
+  &lt;glossa lingua="..."&gt;...&lt;/glossa&gt;
+&lt;/subsystema&gt;
+</pre></details>
+<h3>opus_explorationis</h3>
+<p class="linea">opus_programmatis &rarr; opus_explorationis</p>
+<p class="def"><b>la</b> Opus programmatis cuius finis est quaestionem EXPLORARE, non
+usum praebere: programmata eius experimenta sunt, assertiones
+audiuntur, inventa in alia opera promoventur (orta_ex).</p>
+<p class="glossa"><b>en</b> A research work: a work of programming whose
+    end is to EXPLORE a question, not to provide a use - its programs
+    are experiments, its claims get audited, and what it finds is
+    promoted into other works.</p>
+<p class="glossa"><b>fr</b> Une oeuvre de recherche : une oeuvre de
+    programmation dont la fin est d'EXPLORER une question, non de
+    fournir un usage - ses programmes sont des expériences, ses
+    affirmations sont auditées, et ce qu'elle trouve est promu dans
+    d'autres oeuvres.</p>
+<details class="syn"><summary>syntaxis</summary>
+<pre>&lt;opus-explorationis nomen="#nomen" status-vita="viva|vetusta|archivata"&gt;
+  &lt;exercet ad="#res|.genus"/&gt;
+  &lt;continet ad="#res|.genus"/&gt;
+  &lt;substituit ad="#res|.genus"/&gt;
+  &lt;orta-ex ad="#res|.genus"/&gt;
+  &lt;historia&gt;
+    &lt;eventum quando="AAAA-MM-DD"
+        actio="appendere|plicare|signare|stornare|..."
+        certitudo="..."
+        fons="..."
+        nota="..."&gt;...&lt;/eventum&gt;
+  &lt;/historia&gt;
+  &lt;nota&gt;...&lt;/nota&gt;
+  &lt;glossa lingua="..."&gt;...&lt;/glossa&gt;
+&lt;/opus-explorationis&gt;
 </pre></details>
 <h2 id="fabricatio">fabricatio <span class="numeri">la 21/21 &middot; en 12/21 &middot; fr 9/21</span></h2>
 <h3>pactum</h3>
@@ -5540,7 +5674,11 @@ iudicat (in domo nostra bibliotheca credo).</p>
     test contient les assertions par lesquelles il juge (dans cette
     maison, la bibliothèque credo).</p>
 <details class="syn"><summary>syntaxis</summary>
-<pre>&lt;probatio nomen="#nomen" contentum="..." interrogat="#res|.genus"&gt;
+<pre>&lt;probatio nomen="#nomen"
+    contentum="..."
+    interactio="automatica|manualis"
+    occupatio="nihil|fenestra|focus"
+    interrogat="#res|.genus"&gt;
   &lt;continet ad="#res|.genus"/&gt;
   &lt;exercet ad="#res|.genus"/&gt;
   &lt;historia&gt;
@@ -5562,7 +5700,11 @@ bibliothecam - unitas est bibliotheca.</p>
 <p class="deest"><b>en</b> &#9888; deest</p>
 <p class="deest"><b>fr</b> &#9888; deest</p>
 <details class="syn"><summary>syntaxis</summary>
-<pre>&lt;probatio-unitatis nomen="#nomen" contentum="..." interrogat="#res|.genus"&gt;
+<pre>&lt;probatio-unitatis nomen="#nomen"
+    contentum="..."
+    interactio="automatica|manualis"
+    occupatio="nihil|fenestra|focus"
+    interrogat="#res|.genus"&gt;
   &lt;continet ad="#res|.genus"/&gt;
   &lt;exercet ad="#res|.genus"/&gt;
   &lt;historia&gt;
@@ -5584,7 +5726,11 @@ elementorum conveniunt nec semper congruunt.</p>
 <p class="deest"><b>en</b> &#9888; deest</p>
 <p class="deest"><b>fr</b> &#9888; deest</p>
 <details class="syn"><summary>syntaxis</summary>
-<pre>&lt;probatio-integrationis nomen="#nomen" contentum="..." interrogat="#res|.genus"&gt;
+<pre>&lt;probatio-integrationis nomen="#nomen"
+    contentum="..."
+    interactio="automatica|manualis"
+    occupatio="nihil|fenestra|focus"
+    interrogat="#res|.genus"&gt;
   &lt;continet ad="#res|.genus"/&gt;
   &lt;exercet ad="#res|.genus"/&gt;
   &lt;historia&gt;
@@ -5605,7 +5751,11 @@ redeat. Orta ex re quam custodit - probatio cum historia.</p>
 <p class="deest"><b>en</b> &#9888; deest</p>
 <p class="deest"><b>fr</b> &#9888; deest</p>
 <details class="syn"><summary>syntaxis</summary>
-<pre>&lt;probatio-regressionis nomen="#nomen" contentum="..." interrogat="#res|.genus"&gt;
+<pre>&lt;probatio-regressionis nomen="#nomen"
+    contentum="..."
+    interactio="automatica|manualis"
+    occupatio="nihil|fenestra|focus"
+    interrogat="#res|.genus"&gt;
   &lt;continet ad="#res|.genus"/&gt;
   &lt;exercet ad="#res|.genus"/&gt;
   &lt;historia&gt;
@@ -5626,7 +5776,11 @@ omnia tacta. Prima post mutationem magnam, non ultima.</p>
 <p class="deest"><b>en</b> &#9888; deest</p>
 <p class="deest"><b>fr</b> &#9888; deest</p>
 <details class="syn"><summary>syntaxis</summary>
-<pre>&lt;probatio-fumi nomen="#nomen" contentum="..." interrogat="#res|.genus"&gt;
+<pre>&lt;probatio-fumi nomen="#nomen"
+    contentum="..."
+    interactio="automatica|manualis"
+    occupatio="nihil|fenestra|focus"
+    interrogat="#res|.genus"&gt;
   &lt;continet ad="#res|.genus"/&gt;
   &lt;exercet ad="#res|.genus"/&gt;
   &lt;historia&gt;

@@ -16,9 +16,6 @@ case "$FILE" in
     *.c|*.h) ;;
     *) exit 0 ;;
 esac
-case "$FILE" in
-    */scratchpad/*|*/build/*|*/fixa/*|*/amalgama/*) exit 0 ;;
-esac
 [ -f "$FILE" ] || exit 0
 
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
@@ -27,6 +24,10 @@ case "$FILE" in
     "$RADIX"/*) REL="${FILE#"$RADIX"/}" ;;
     *) exit 0 ;;   # extra repositorium
 esac
+# quae plagulae: iudex formator_commissionis (idem ac formator
+# commissionis - custos non monet de forma quam commissio non scribit)
+. "$(dirname "${BASH_SOURCE[0]}")/iudex_custodum.sh"
+custos_admittere FORMATOR formator_commissionis "$FILE" || exit 0
 
 OUT=$(cd "$RADIX" && ./silva/formator.sh "$REL" -machina 2>/dev/null)
 

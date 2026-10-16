@@ -1,0 +1,6 @@
+%0	alpha	1	prima	1	1001	/dev/ttys001	zsh	/Users/x/proj	1	1
+%3	alpha	2	cum spatiis in titulo	1	1002	/dev/ttys002	2.1.296	/Users/x/via cum spatio	0	0
+%4	alpha	2	cum spatiis in titulo	2	1003	/dev/ttys003	btop	/Users/x	1	0
+mala linea sine tabulis
+%9	beta	1	secunda	1	non_numerus	/dev/ttys004	zsh	/	1	1
+%10	beta	1	secunda	2	1005	/dev/ttys005	zsh	/tmp	0	1

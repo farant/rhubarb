@@ -9,10 +9,13 @@
 # fixtura briar main intraverunt iniudicata, una fusione post inventa.
 # Commissio est sedes quam nulla via editionis praeterit (ut examen).
 #
-# QUID: plagulae .c/.h/.m in indice (ACMR, exclusis scratchpad/build/
-# fixa/amalgama/archivum/knotapel/vendor/oracula) -> index symbolorum sanatus
-# (oracula/: glutinum circa implementationes alienas ut oracula - lingua
-# aliena necessitate, ut vendor; dispositio D0, 2026-10-03)
+# QUID: plagulae .c/.h/.m in indice (ACMR) quas iudex lint_latinus
+# (unitates.stml; filtrum tools/iudex_unitatum.sh) iudicat -> index
+# symbolorum sanatus. Ansa et ambitus UNUM responsum: olim index
+# directoriorum hic (fixa/amalgama exclusa) et praefixa in oratio
+# (fixa/amalgama INCLUSA) divergebant - verbum novum in fixtura sine
+# lint intrabat et commissionem proximam culpabat (spec
+# unitates-codicis U4, 2026-10-15)
 # (./silva/nexus.sh -renovare: incrementalis ~I s; PLENUS ~LXX s si
 # instrumentum novum aut tabula absens - nuntiatur) -> ./oratio/
 # vocabula.sh -nova (relatio: verbum, identificator, sedes, EXITUS
@@ -33,12 +36,22 @@
 # (VOCABULA_VIAE_ADDITAE) - verba plagulae novae ante portas iudicantur.
 
 lint_latinus () {
-    local viae out rc
+    local viae candidatae out rc
     if [ -n "${UNCUS_LINT_VIAE:-}" ]; then
-        viae="$UNCUS_LINT_VIAE"
+        candidatae="$UNCUS_LINT_VIAE"
     else
-        viae="$(git diff --cached --name-only --diff-filter=ACMR -- '*.c' '*.h' '*.m' 2>/dev/null \
-            | grep -vE '(^|/)(scratchpad|build|fixa|amalgama|archivum|knotapel|vendor|oracula)/')"
+        candidatae="$(git diff --cached --name-only --diff-filter=ACMR -- '*.c' '*.h' '*.m' 2>/dev/null)"
+    fi
+    if [ -n "$candidatae" ]; then
+        # shellcheck disable=SC2086
+        if ! viae="$(./tools/iudex_unitatum.sh lint_latinus $candidatae)"; then
+            echo "lint latinus (uncus): iudex lint_latinus (unitates.stml) NON respondit - APPARATUS FRACTUS, porta clamat, obstat" >&2
+            return 1
+        fi
+        viae="$(printf '%s' "$viae" | tr '\n' ' ')"
+        viae="${viae% }"
+    else
+        viae=""
     fi
     if [ -z "$viae" ]; then
         echo "lint latinus (uncus): nulla plagula .c/.h in commissione - nihil iudicatum" >&2

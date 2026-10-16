@@ -7,8 +7,10 @@
 # solae additionalContext iniciunt (informatio, non obex - turnus
 # pergit, ut diagnostica clangd).
 #
-# Exclusa: corpus regressionis censoris (flagrationes consulto
-# plantatae), scratchpad (probae consulto pravae), build/.
+# Quae plagulae: iudex censor_latinae (unitates.stml) - corpus
+# regressionis censoris (silva/probationes/fixa/censoris, flagrationes
+# consulto plantatae) fixtura est; alienum, remissum, archivatum,
+# amalgama vanilla non iudicantur.
 
 INPUT=$(cat)
 FILE=$(printf '%s' "$INPUT" | jq -r '.tool_input.file_path // empty')
@@ -17,10 +19,9 @@ case "$FILE" in
     *.c|*.h) ;;
     *) exit 0 ;;
 esac
-case "$FILE" in
-    */censoris/*|*/scratchpad/*|*/build/*) exit 0 ;;
-esac
 [ -f "$FILE" ] || exit 0
+. "$(dirname "${BASH_SOURCE[0]}")/iudex_custodum.sh"
+custos_admittere CENSOR censor_latinae "$FILE" || exit 0
 
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 OUT=$("$RADIX/silva/censor.sh" "$FILE" 2>/dev/null)

@@ -207,3 +207,34 @@ like its existing Tab rule. Printable characters reach scriba as
 EVENTUS_TEXTUS, not key presses (my first test sent keys and scriba
 rightly ignored them).
 Plants: Tab ring back to the innermost root -> red; Esc pop off -> red.
+
+## 2026-10-15 - focus chain into a hidden nested space (Fran's bug)
+
+Symptom (Fran, vicus): calendar Agenda tab, "+ New" - the "new:" prompt
+appears but typed characters never show; minutes later (after some
+other click) or after a restart it works. Headless reproduction
+(manus_ludus through the real vicus) worked on every route until the
+route went THROUGH the day view's notes: click into the notes (focus
+chain: calendar branch `focus` = "scriba:<id>_notae"), then the Agenda
+or Month BUTTON (buttons are not focusable - focus unchanged). The
+notes are not composed outside the day view, but `catenam_sequi` only
+asked whether the child BRANCH exists in the island (it always does),
+so the chain still ended in the notes space and every key went to the
+invisible scriba (scriba is modal: 'a'/'i' would start inserting into
+that day's notes). A trace showed the calendar never received a key.
+
+Fix (header text approved): `catenam_sequi` also requires the child's
+space to have a root in the composed tree; if not, the chain is cut
+there and that level's `focus` is rewritten to the root of its own
+space (here the calendar root) - writing an empty focus is not enough:
+an empty or unknown focus sends keys to the WHOLE tree's root
+(destinatio), which in vicus handles nothing. `attr_ponere` /
+`attr_scribere_in` moved above `catenam_sequi` (helpers before
+callers). A calendar-side guard (skip the notes key pass-through
+outside the day view) was tried first, proved insufficient (the keys
+never reached the calendar), and was reverted rather than kept as an
+unguarded second mechanism.
+
+Tests: probatio_vicus_kalendarium `visus_post_notas` - notes ->
+Agenda -> + New -> "pane" Enter creates the item; notes -> Month -> L
+moves to November. Plants red: no cut; cut with empty focus.

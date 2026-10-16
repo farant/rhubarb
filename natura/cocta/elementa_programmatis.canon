@@ -28,6 +28,7 @@
     <liberum nomen="constans"/>
     <liberum nomen="constans-numerica"/>
     <liberum nomen="constans-textualis"/>
+    <liberum nomen="opus-programmatis"/>
     <liberum nomen="bibliotheca"/>
     <liberum nomen="assertio"/>
     <liberum nomen="praeconditio"/>
@@ -50,6 +51,8 @@
     <liberum nomen="daemon"/>
     <liberum nomen="applicatio"/>
     <liberum nomen="instrumentum-aedificationis"/>
+    <liberum nomen="subsystema"/>
+    <liberum nomen="opus-explorationis"/>
   </elementum>
 
   <elementum nomen="status">
@@ -673,6 +676,45 @@
     <liberum nomen="eventum"/>
   </elementum>
 
+  <elementum nomen="opus-programmatis">
+    <glossa lingua="en">A work of programming: a work made of
+    program elements and called by its OWN NAME - a unit that
+    someone creates, names, maintains and eventually lays down. What
+    libraries, programs and the things that gather them have in
+    common - a name, members, a life, a succession - is described
+    here once.</glossa>
+    <glossa lingua="fr">Une oeuvre de programmation : une oeuvre faite
+    d'éléments de programme et appelée par son NOM PROPRE - une unité
+    que l'on crée, nomme, entretient et finit par déposer. Ce que les
+    bibliothèques, les programmes et ce qui les rassemble ont en
+    commun - un nom, des membres, une vie, une succession - est
+    décrit ici une seule fois.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="status-vita" genus="electio">
+      <optio>viva</optio>
+      <optio>vetusta</optio>
+      <optio>archivata</optio>
+    </attributum>
+    <liberum nomen="continet"/>
+    <liberum nomen="substituit"/>
+    <liberum nomen="orta-ex"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="continet" intra="opus-programmatis">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="substituit" intra="opus-programmatis">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="orta-ex" intra="opus-programmatis">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="opus-programmatis">
+    <liberum nomen="eventum"/>
+  </elementum>
+
   <elementum nomen="bibliotheca">
     <glossa lingua="en">A library: a collection of elements -
     functions, constants, types - published for repeated use; it
@@ -687,6 +729,11 @@
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="gradus" genus="numerus"/>
     <attributum nomen="scripta-in" genus="referentia"/>
+    <attributum nomen="status-vita" genus="electio">
+      <optio>viva</optio>
+      <optio>vetusta</optio>
+      <optio>archivata</optio>
+    </attributum>
     <liberum nomen="interfacies" maximum="1"/>
     <liberum nomen="corpus" maximum="1"/>
     <liberum nomen="probationes" maximum="1"/>
@@ -694,6 +741,9 @@
     <liberum nomen="praebet"/>
     <liberum nomen="dependet-ex"/>
     <liberum nomen="realizat"/>
+    <liberum nomen="continet"/>
+    <liberum nomen="substituit"/>
+    <liberum nomen="orta-ex"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
     <liberum nomen="glossa"/>
@@ -717,6 +767,15 @@
     <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="realizat" intra="bibliotheca">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="continet" intra="bibliotheca">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="substituit" intra="bibliotheca">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="orta-ex" intra="bibliotheca">
     <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="bibliotheca">
@@ -940,12 +999,31 @@
     <attributum nomen="interactivum" genus="veritas"/>
     <attributum nomen="initium" genus="referentia"/>
     <attributum nomen="currit-ut" genus="referentia"/>
+    <attributum nomen="status-vita" genus="electio">
+      <optio>viva</optio>
+      <optio>vetusta</optio>
+      <optio>archivata</optio>
+    </attributum>
+    <liberum nomen="usus"/>
     <liberum nomen="adhibet"/>
+    <liberum nomen="continet"/>
+    <liberum nomen="substituit"/>
+    <liberum nomen="orta-ex"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
     <liberum nomen="glossa"/>
   </elementum>
+  <elementum nomen="usus" intra="programma" textus="verum"/>
   <elementum nomen="adhibet" intra="programma">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="continet" intra="programma">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="substituit" intra="programma">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="orta-ex" intra="programma">
     <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="programma">
@@ -964,12 +1042,31 @@
     <attributum nomen="interactivum" genus="veritas"/>
     <attributum nomen="initium" genus="referentia"/>
     <attributum nomen="currit-ut" genus="referentia"/>
+    <attributum nomen="status-vita" genus="electio">
+      <optio>viva</optio>
+      <optio>vetusta</optio>
+      <optio>archivata</optio>
+    </attributum>
+    <liberum nomen="usus"/>
     <liberum nomen="adhibet"/>
+    <liberum nomen="continet"/>
+    <liberum nomen="substituit"/>
+    <liberum nomen="orta-ex"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
     <liberum nomen="glossa"/>
   </elementum>
+  <elementum nomen="usus" intra="instrumentum-lineae" textus="verum"/>
   <elementum nomen="adhibet" intra="instrumentum-lineae">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="continet" intra="instrumentum-lineae">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="substituit" intra="instrumentum-lineae">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="orta-ex" intra="instrumentum-lineae">
     <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="instrumentum-lineae">
@@ -988,12 +1085,31 @@
     <attributum nomen="interactivum" genus="veritas" ordinarius="falsum"/>
     <attributum nomen="initium" genus="referentia"/>
     <attributum nomen="currit-ut" genus="referentia"/>
+    <attributum nomen="status-vita" genus="electio">
+      <optio>viva</optio>
+      <optio>vetusta</optio>
+      <optio>archivata</optio>
+    </attributum>
+    <liberum nomen="usus"/>
     <liberum nomen="adhibet"/>
+    <liberum nomen="continet"/>
+    <liberum nomen="substituit"/>
+    <liberum nomen="orta-ex"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
     <liberum nomen="glossa"/>
   </elementum>
+  <elementum nomen="usus" intra="daemon" textus="verum"/>
   <elementum nomen="adhibet" intra="daemon">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="continet" intra="daemon">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="substituit" intra="daemon">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="orta-ex" intra="daemon">
     <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="daemon">
@@ -1012,12 +1128,31 @@
     <attributum nomen="interactivum" genus="veritas" ordinarius="verum"/>
     <attributum nomen="initium" genus="referentia"/>
     <attributum nomen="currit-ut" genus="referentia"/>
+    <attributum nomen="status-vita" genus="electio">
+      <optio>viva</optio>
+      <optio>vetusta</optio>
+      <optio>archivata</optio>
+    </attributum>
+    <liberum nomen="usus"/>
     <liberum nomen="adhibet"/>
+    <liberum nomen="continet"/>
+    <liberum nomen="substituit"/>
+    <liberum nomen="orta-ex"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
     <liberum nomen="glossa"/>
   </elementum>
+  <elementum nomen="usus" intra="applicatio" textus="verum"/>
   <elementum nomen="adhibet" intra="applicatio">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="continet" intra="applicatio">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="substituit" intra="applicatio">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="orta-ex" intra="applicatio">
     <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="applicatio">
@@ -1053,9 +1188,18 @@
     <attributum nomen="interactivum" genus="veritas"/>
     <attributum nomen="initium" genus="referentia"/>
     <attributum nomen="currit-ut" genus="referentia"/>
+    <attributum nomen="status-vita" genus="electio">
+      <optio>viva</optio>
+      <optio>vetusta</optio>
+      <optio>archivata</optio>
+    </attributum>
     <liberum nomen="invocat"/>
     <liberum nomen="producit"/>
+    <liberum nomen="usus"/>
     <liberum nomen="adhibet"/>
+    <liberum nomen="continet"/>
+    <liberum nomen="substituit"/>
+    <liberum nomen="orta-ex"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
     <liberum nomen="glossa"/>
@@ -1066,10 +1210,108 @@
   <elementum nomen="producit" intra="instrumentum-aedificationis">
     <attributum nomen="ad" genus="referentia"/>
   </elementum>
+  <elementum nomen="usus" intra="instrumentum-aedificationis" textus="verum"/>
   <elementum nomen="adhibet" intra="instrumentum-aedificationis">
     <attributum nomen="ad" genus="referentia"/>
   </elementum>
+  <elementum nomen="continet" intra="instrumentum-aedificationis">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="substituit" intra="instrumentum-aedificationis">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="orta-ex" intra="instrumentum-aedificationis">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
   <elementum nomen="historia" intra="instrumentum-aedificationis">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="subsystema">
+    <glossa lingua="en">A subsystem: a work of programming that
+    CONTAINS other works and owns the shared files that bind them -
+    the build declarations and the entry point of its test suite.
+    Neither a library nor a program, but their house.</glossa>
+    <glossa lingua="fr">Un sous-système : une oeuvre de programmation
+    qui CONTIENT d'autres oeuvres et possède les fichiers communs qui
+    les lient - les déclarations de construction et la porte de sa
+    suite de tests. Ni bibliothèque ni programme, mais leur
+    maison.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="status-vita" genus="electio">
+      <optio>viva</optio>
+      <optio>vetusta</optio>
+      <optio>archivata</optio>
+    </attributum>
+    <liberum nomen="declarationes-aedificationis" maximum="1"/>
+    <liberum nomen="ianua-suitae" maximum="1"/>
+    <liberum nomen="documenta" maximum="1"/>
+    <liberum nomen="continet"/>
+    <liberum nomen="substituit"/>
+    <liberum nomen="orta-ex"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="declarationes-aedificationis" intra="subsystema">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="ianua-suitae" intra="subsystema">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="documenta" intra="subsystema">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="continet" intra="subsystema">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="substituit" intra="subsystema">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="orta-ex" intra="subsystema">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="subsystema">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="opus-explorationis">
+    <glossa lingua="en">A research work: a work of programming whose
+    end is to EXPLORE a question, not to provide a use - its programs
+    are experiments, its claims get audited, and what it finds is
+    promoted into other works.</glossa>
+    <glossa lingua="fr">Une oeuvre de recherche : une oeuvre de
+    programmation dont la fin est d'EXPLORER une question, non de
+    fournir un usage - ses programmes sont des expériences, ses
+    affirmations sont auditées, et ce qu'elle trouve est promu dans
+    d'autres oeuvres.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="status-vita" genus="electio">
+      <optio>viva</optio>
+      <optio>vetusta</optio>
+      <optio>archivata</optio>
+    </attributum>
+    <liberum nomen="exercet"/>
+    <liberum nomen="continet"/>
+    <liberum nomen="substituit"/>
+    <liberum nomen="orta-ex"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="exercet" intra="opus-explorationis">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="continet" intra="opus-explorationis">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="substituit" intra="opus-explorationis">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="orta-ex" intra="opus-explorationis">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="opus-explorationis">
     <liberum nomen="eventum"/>
   </elementum>
 
@@ -1101,12 +1343,12 @@
            exsecutabile-ligatum promptuarium index index-inversus index-arboris
            lectio lectio-memoriae lectio-externa mutatio mutatio-memoriae
            scriptio-externa allocatio terminatio transactio functio functio-pura
-           constans constans-numerica constans-textualis bibliotheca assertio
-           praeconditio postconditio invarians assertio-statica assertio-probationis
-           commentarium explicativum documentarium monitum-futuri titulus-iuris
-           codex-sepultus annotatio-machinae identificator identificator-baptismalis
-           sigillum-contenti programma instrumentum-lineae daemon applicatio
-           instrumentum-aedificationis"/>
+           constans constans-numerica constans-textualis opus-programmatis
+           bibliotheca assertio praeconditio postconditio invarians assertio-statica
+           assertio-probationis commentarium explicativum documentarium monitum-futuri
+           titulus-iuris codex-sepultus annotatio-machinae identificator
+           identificator-baptismalis sigillum-contenti programma instrumentum-lineae
+           daemon applicatio instrumentum-aedificationis subsystema opus-explorationis"/>
 
   <!-- CITATIONES: relatio petitum resolutum ferens clavem documenti fit.
        Subsumptio COMPILATA est: petitum cum posteris omnibus in
@@ -1136,7 +1378,13 @@
   <citatio nomen="functio-pura-mutat" attributum="ad" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="functio-pura/mutat"/>
   <citatio nomen="functio-pura-efficit" attributum="ad" ad="mutatio mutatio-memoriae scriptio-externa allocatio terminatio transactio/nomen" super="functio-pura/efficit"/>
   <citatio nomen="functio-pura-haurit" attributum="ad" ad="lectio lectio-memoriae lectio-externa/nomen" super="functio-pura/haurit"/>
+  <citatio nomen="opus-programmatis-continet" attributum="ad" ad="opus-programmatis bibliotheca programma instrumentum-lineae daemon applicatio instrumentum-aedificationis subsystema opus-explorationis/nomen" super="opus-programmatis/continet"/>
+  <citatio nomen="opus-programmatis-substituit" attributum="ad" ad="opus-programmatis bibliotheca programma instrumentum-lineae daemon applicatio instrumentum-aedificationis subsystema opus-explorationis/nomen" super="opus-programmatis/substituit"/>
+  <citatio nomen="opus-programmatis-orta-ex" attributum="ad" ad="opus-programmatis bibliotheca programma instrumentum-lineae daemon applicatio instrumentum-aedificationis subsystema opus-explorationis/nomen" super="opus-programmatis/orta-ex"/>
   <citatio nomen="bibliotheca-dependet-ex" attributum="ad" ad="bibliotheca/nomen" super="bibliotheca/dependet-ex"/>
+  <citatio nomen="bibliotheca-continet" attributum="ad" ad="opus-programmatis bibliotheca programma instrumentum-lineae daemon applicatio instrumentum-aedificationis subsystema opus-explorationis/nomen" super="bibliotheca/continet"/>
+  <citatio nomen="bibliotheca-substituit" attributum="ad" ad="opus-programmatis bibliotheca programma instrumentum-lineae daemon applicatio instrumentum-aedificationis subsystema opus-explorationis/nomen" super="bibliotheca/substituit"/>
+  <citatio nomen="bibliotheca-orta-ex" attributum="ad" ad="opus-programmatis bibliotheca programma instrumentum-lineae daemon applicatio instrumentum-aedificationis subsystema opus-explorationis/nomen" super="bibliotheca/orta-ex"/>
   <citatio nomen="assertio-affirmat-de" attributum="affirmat-de" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="assertio"/>
   <citatio nomen="praeconditio-affirmat-de" attributum="affirmat-de" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="praeconditio"/>
   <citatio nomen="postconditio-affirmat-de" attributum="affirmat-de" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="postconditio"/>
@@ -1144,10 +1392,31 @@
   <citatio nomen="assertio-statica-affirmat-de" attributum="affirmat-de" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="assertio-statica"/>
   <citatio nomen="assertio-probationis-affirmat-de" attributum="affirmat-de" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="assertio-probationis"/>
   <citatio nomen="programma-initium" attributum="initium" ad="functio functio-pura/nomen" super="programma"/>
+  <citatio nomen="programma-continet" attributum="ad" ad="opus-programmatis bibliotheca programma instrumentum-lineae daemon applicatio instrumentum-aedificationis subsystema opus-explorationis/nomen" super="programma/continet"/>
+  <citatio nomen="programma-substituit" attributum="ad" ad="opus-programmatis bibliotheca programma instrumentum-lineae daemon applicatio instrumentum-aedificationis subsystema opus-explorationis/nomen" super="programma/substituit"/>
+  <citatio nomen="programma-orta-ex" attributum="ad" ad="opus-programmatis bibliotheca programma instrumentum-lineae daemon applicatio instrumentum-aedificationis subsystema opus-explorationis/nomen" super="programma/orta-ex"/>
   <citatio nomen="instrumentum-lineae-initium" attributum="initium" ad="functio functio-pura/nomen" super="instrumentum-lineae"/>
+  <citatio nomen="instrumentum-lineae-continet" attributum="ad" ad="opus-programmatis bibliotheca programma instrumentum-lineae daemon applicatio instrumentum-aedificationis subsystema opus-explorationis/nomen" super="instrumentum-lineae/continet"/>
+  <citatio nomen="instrumentum-lineae-substituit" attributum="ad" ad="opus-programmatis bibliotheca programma instrumentum-lineae daemon applicatio instrumentum-aedificationis subsystema opus-explorationis/nomen" super="instrumentum-lineae/substituit"/>
+  <citatio nomen="instrumentum-lineae-orta-ex" attributum="ad" ad="opus-programmatis bibliotheca programma instrumentum-lineae daemon applicatio instrumentum-aedificationis subsystema opus-explorationis/nomen" super="instrumentum-lineae/orta-ex"/>
   <citatio nomen="daemon-initium" attributum="initium" ad="functio functio-pura/nomen" super="daemon"/>
+  <citatio nomen="daemon-continet" attributum="ad" ad="opus-programmatis bibliotheca programma instrumentum-lineae daemon applicatio instrumentum-aedificationis subsystema opus-explorationis/nomen" super="daemon/continet"/>
+  <citatio nomen="daemon-substituit" attributum="ad" ad="opus-programmatis bibliotheca programma instrumentum-lineae daemon applicatio instrumentum-aedificationis subsystema opus-explorationis/nomen" super="daemon/substituit"/>
+  <citatio nomen="daemon-orta-ex" attributum="ad" ad="opus-programmatis bibliotheca programma instrumentum-lineae daemon applicatio instrumentum-aedificationis subsystema opus-explorationis/nomen" super="daemon/orta-ex"/>
   <citatio nomen="applicatio-initium" attributum="initium" ad="functio functio-pura/nomen" super="applicatio"/>
+  <citatio nomen="applicatio-continet" attributum="ad" ad="opus-programmatis bibliotheca programma instrumentum-lineae daemon applicatio instrumentum-aedificationis subsystema opus-explorationis/nomen" super="applicatio/continet"/>
+  <citatio nomen="applicatio-substituit" attributum="ad" ad="opus-programmatis bibliotheca programma instrumentum-lineae daemon applicatio instrumentum-aedificationis subsystema opus-explorationis/nomen" super="applicatio/substituit"/>
+  <citatio nomen="applicatio-orta-ex" attributum="ad" ad="opus-programmatis bibliotheca programma instrumentum-lineae daemon applicatio instrumentum-aedificationis subsystema opus-explorationis/nomen" super="applicatio/orta-ex"/>
   <citatio nomen="instrumentum-aedificationis-producit" attributum="ad" ad="artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum/nomen" super="instrumentum-aedificationis/producit"/>
   <citatio nomen="instrumentum-aedificationis-initium" attributum="initium" ad="functio functio-pura/nomen" super="instrumentum-aedificationis"/>
+  <citatio nomen="instrumentum-aedificationis-continet" attributum="ad" ad="opus-programmatis bibliotheca programma instrumentum-lineae daemon applicatio instrumentum-aedificationis subsystema opus-explorationis/nomen" super="instrumentum-aedificationis/continet"/>
+  <citatio nomen="instrumentum-aedificationis-substituit" attributum="ad" ad="opus-programmatis bibliotheca programma instrumentum-lineae daemon applicatio instrumentum-aedificationis subsystema opus-explorationis/nomen" super="instrumentum-aedificationis/substituit"/>
+  <citatio nomen="instrumentum-aedificationis-orta-ex" attributum="ad" ad="opus-programmatis bibliotheca programma instrumentum-lineae daemon applicatio instrumentum-aedificationis subsystema opus-explorationis/nomen" super="instrumentum-aedificationis/orta-ex"/>
+  <citatio nomen="subsystema-continet" attributum="ad" ad="opus-programmatis bibliotheca programma instrumentum-lineae daemon applicatio instrumentum-aedificationis subsystema opus-explorationis/nomen" super="subsystema/continet"/>
+  <citatio nomen="subsystema-substituit" attributum="ad" ad="opus-programmatis bibliotheca programma instrumentum-lineae daemon applicatio instrumentum-aedificationis subsystema opus-explorationis/nomen" super="subsystema/substituit"/>
+  <citatio nomen="subsystema-orta-ex" attributum="ad" ad="opus-programmatis bibliotheca programma instrumentum-lineae daemon applicatio instrumentum-aedificationis subsystema opus-explorationis/nomen" super="subsystema/orta-ex"/>
+  <citatio nomen="opus-explorationis-continet" attributum="ad" ad="opus-programmatis bibliotheca programma instrumentum-lineae daemon applicatio instrumentum-aedificationis subsystema opus-explorationis/nomen" super="opus-explorationis/continet"/>
+  <citatio nomen="opus-explorationis-substituit" attributum="ad" ad="opus-programmatis bibliotheca programma instrumentum-lineae daemon applicatio instrumentum-aedificationis subsystema opus-explorationis/nomen" super="opus-explorationis/substituit"/>
+  <citatio nomen="opus-explorationis-orta-ex" attributum="ad" ad="opus-programmatis bibliotheca programma instrumentum-lineae daemon applicatio instrumentum-aedificationis subsystema opus-explorationis/nomen" super="opus-explorationis/orta-ex"/>
 
 </canon>

@@ -381,6 +381,11 @@ superficies_scribere (
                 latitudo - ls, alt);
         }
     }
+    /* T4b: stratum superficiem totam habet */
+    si (v->stratum)
+    {
+        latus_superficiem_scribere(v, v->stratum, latitudo, altitudo);
+    }
     insula_scriptorem_ponere(v->repo, prior);
 }
 
@@ -444,6 +449,13 @@ campos_mutator (
         }
     }
 }
+
+/* T4a: systema hospitis (vicus_systema_addere) */
+nomen structura {
+          chorda  titulus;
+    VicusSystema  systema;
+          vacuum* ctx;
+} SystemaHospitis;
 
 /* S7a: radicem ut scriptor datus mutare (actio aut systema; domini ex
  * manifesto); scriptor prior restituitur */
@@ -519,6 +531,25 @@ est_imperium_tabulae (
         && ev->datum.clavis.runa >= '0' && ev->datum.clavis.runa <= '9';
 }
 
+/* T4b: spatium strati? via "<genus>:stratum_<genus>[/...]" (gradus
+ * primus; vicus solus ids "stratum_" dat) */
+interior b32
+spatium_strati (
+    chorda sp)
+{
+               hic_manens constans character praefixum[] = "stratum_";
+                                         i32 i;
+
+    per (i = ZEPHYRUM; i < sp.mensura && sp.datum[i] != ':'
+                       && sp.datum[i] != '/'; i++)
+    {
+    }
+    redde i < sp.mensura && sp.datum[i] == ':'
+        && sp.mensura - i - I >= (i32)(magnitudo(praefixum) - I)
+        && memcmp(sp.datum + i + I, praefixum, magnitudo(praefixum) - I)
+               == ZEPHYRUM;
+}
+
 /* DestinatioStrategia hospitis: Cmd+numerus ad radicem; ictus in
  * latus NON focatum (spatium destinati non sub Motus.spatium - S8c:
  * organum nidificatum in latere focato idem latus est)
@@ -546,8 +577,10 @@ destinare (
     {
         c   = destinatio_componens(&d);
         sp  = c ? componens_spatium(c) : chorda_nulla_vici();
+        /* T4b: ictus in strato ei manet (focum non mutat) */
         si (   !chorda_vacua(sp)
-            && !insula_via_continet(motus->spatium, sp))
+            && !insula_via_continet(motus->spatium, sp)
+            && !spatium_strati(sp))
         {
             redde destinatio_ex_componente(arbor, piscina);
         }
@@ -643,6 +676,46 @@ horologii_fines (
     redde VERUM;
 }
 
+/* T4b: insigne admonitionum ("* 3": signum, spatium, numerus) II
+ * cellulis sinistrorsum horologii (aut pilae, aut marginis); FALSUM
+ * si nullae non lectae (campus radicis admonitiones_non_lectae). x0
+ * inclusum, x1 exclusum */
+interior b32
+insignis_fines (
+    constans Vicus* v,
+               s32  latitudo,
+               s32* x0,
+               s32* x1,
+               s32* numerus)
+{
+    character pila[XVI];
+    character textus[XVI];
+          s32 h0;
+          s32 h1;
+
+    *numerus = attributum_radicis(v->repo, "admonitiones_non_lectae",
+        ZEPHYRUM);
+    si (*numerus <= ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    si (horologii_fines(v, latitudo, &h0, &h1))
+    {
+        *x1 = h0 - II * VICUS_CELLULA_LATITUDO;
+    }
+    alioquin
+    {
+        *x1 = latitudo - VICUS_CELLULA_LATITUDO;
+        si (pilae_textus(v, pila))
+        {
+            *x1 -= ((s32)strlen(pila) + II) * VICUS_CELLULA_LATITUDO;
+        }
+    }
+    sprintf(textus, "%d", (integer)*numerus);
+    *x0 = *x1 - ((s32)strlen(textus) + II) * VICUS_CELLULA_LATITUDO;
+    redde VERUM;
+}
+
 /* tabula per numerum ('1'..'9', '0' = decima); absens aut non montata:
  * nihil */
 interior vacuum
@@ -724,11 +797,19 @@ radicem_tractare (
                   s32 latitudo;
                   s32 x0;
                   s32 x1;
+                  s32 numerus;
          CampiRadicis c;
 
             latitudo = attributum_radicis(v->repo,
                 "superficies_latitudo",
                 (s32)v->latitudo);
+            /* T4b: insigne admonitionum centrum aperit */
+            si (   insignis_fines(v, latitudo, &x0, &x1, &numerus)
+                && ev->datum.mus.x >= x0 && ev->datum.mus.x < x1)
+            {
+                (vacuum)vicus_acervo_aperire(v, "admonitiones", NIHIL);
+                redde VERUM;
+            }
             /* S5: area horologii sola (pila ad dextrum non commutat) */
             si (   horologii_fines(v, latitudo, &x0, &x1)
                 && ev->datum.mus.x >= x0 && ev->datum.mus.x < x1)
@@ -754,6 +835,21 @@ radicem_tractare (
                 repo, motus, nodus, ev);
         }
         redde VERUM;
+    }
+    /* T4d: Esc quod latus frontale acervi (focatum, effugium_redit)
+     * non consumpsit: latus tollitur, prius redit */
+    si (   ev->genus               == EVENTUS_CLAVIS_DEPRESSUS
+        && ev->datum.clavis.clavis == CLAVIS_EFFUGIUM)
+    {
+        VicusTabula* t;
+
+        t = vicus_activa(v);
+        l = vicus_latus_focatum(v);
+        si (   t && l && t->focus == VICUS_DEXTRUM && l->montata
+            && l->facies.effugium_redit)
+        {
+            redde vicus_acervo_redire(v);
+        }
     }
     /* Cmd+numerus: tabula (depressa agit, liberata devoratur) */
     si (est_imperium_tabulae(ev))
@@ -899,6 +995,41 @@ figura_tabularum (
             mandata_textus(m, x0, ZEPHYRUM, textus, ZEPHYRUM,
                 figura_color_thematis(COLOR_TEXT));
         }
+        /* T4b: insigne admonitionum - signum (octagonum VI x VI) et
+         * numerus non lectarum */
+        {
+                  s32 numerus;
+              Punctum p[VIII];
+            character n[XVI];
+
+            si (insignis_fines(v, c->fines.latitudo, &x0, &x1,
+                &numerus))
+            {
+                p[ZEPHYRUM].x  = x0 + II;
+                p[ZEPHYRUM].y  = I;
+                p[I].x         = x0 + IV;
+                p[I].y         = I;
+                p[II].x        = x0 + VI;
+                p[II].y        = III;
+                p[III].x       = x0 + VI;
+                p[III].y       = V;
+                p[IV].x        = x0 + IV;
+                p[IV].y        = VII;
+                p[V].x         = x0 + II;
+                p[V].y         = VII;
+                p[VI].x        = x0;
+                p[VI].y        = V;
+                p[VII].x       = x0;
+                p[VII].y       = III;
+                mandata_polygonum(m, p, VIII, figura_color_thematis(
+                    COLOR_WARNING), VERUM);
+                sprintf(n, "%d", (integer)numerus);
+                mandata_textus(m, x0 + II * VICUS_CELLULA_LATITUDO,
+                    ZEPHYRUM, chorda_ex_literis(n, m->piscina),
+                    ZEPHYRUM,
+                    figura_color_thematis(COLOR_TEXT));
+            }
+        }
     }
 }
 
@@ -1028,6 +1159,8 @@ registra_reficere (
                               figura_tabularum, v);
     (vacuum)figura_registrare(v->figurae, PARTES_NULLUM, ZEPHYRUM,
                               figura_divisoris, v);
+    /* T4b: stratum in omni tabula */
+    registra_lateris_miscere(v, v->stratum);
     t = tabula_invenire(v, v->activa);
     si (!t)
     {
@@ -1227,6 +1360,8 @@ vicus_creare (
     v->tabulae   = xar_creare(piscina, (i32)magnitudo(VicusTabula));
     v->petitiones  = xar_creare(piscina,
         (i32)magnitudo(PetitioAcervi));
+    v->systemata_hospitis = xar_creare(piscina,
+        (i32)magnitudo(SystemaHospitis));
     redde v;
 }
 
@@ -1418,6 +1553,108 @@ vicus_genus_addere (
     g->describere  = describere;
     g->ctx         = ctx;
     redde VERUM;
+}
+
+b32
+vicus_stratum_addere (
+                  Vicus* v,
+     constans character* genus)
+{
+     constans VicusGenus* g;
+              VicusLatus* l;
+               character  id[LXIV];
+                     s32  latitudo;
+                     s32  altitudo;
+                  chorda  prior;
+
+    si (!v || !v->repo || v->stratum || !genus || strlen(genus) > XL)
+    {
+        redde FALSUM;
+    }
+    g = genus_invenire(v, internare(v, genus));
+    l = g ? (VicusLatus*)piscina_allocare(v->piscina,
+        magnitudo(VicusLatus)) : NIHIL;
+    si (!l)
+    {
+        redde FALSUM;
+    }
+    memset(l, ZEPHYRUM, magnitudo(VicusLatus));
+    sprintf(id, "stratum_%s", genus);
+    l->genus       = g->titulus;
+    l->id          = internare(v, id);
+    l->argumentum  = chorda_nulla_vici();
+    l->descriptio  = g;
+    latitudo = attributum_radicis(v->repo, "superficies_latitudo",
+        (s32)v->latitudo);
+    altitudo = attributum_radicis(v->repo, "superficies_altitudo",
+        (s32)v->altitudo);
+    latus_montare(v, l, latitudo, altitudo);
+    si (!l->montata)
+    {
+        redde FALSUM;
+    }
+    v->stratum  = l;
+    prior       = v->repo->scriptor;
+    insula_scriptorem_ponere(v->repo, chorda_ex_literis("dispensator",
+        v->piscina));
+    latus_superficiem_scribere(v, l, latitudo, altitudo);
+    insula_scriptorem_ponere(v->repo, prior);
+    registra_reficere(v);
+    redde VERUM;
+}
+
+b32
+vicus_systema_addere (
+                  Vicus* v,
+     constans character* titulus,
+           VicusSystema  systema,
+                 vacuum* ctx)
+{
+    SystemaHospitis* s;
+             chorda  t;
+                i32  i;
+
+    si (!v || !v->systemata_hospitis || !titulus || !systema)
+    {
+        redde FALSUM;
+    }
+    t = internare(v, titulus);
+    per (i = ZEPHYRUM; i < xar_numerus(v->systemata_hospitis); i++)
+    {
+        si (chorda_aequalis(((SystemaHospitis*)xar_obtinere(
+            v->systemata_hospitis, i))->titulus, t))
+        {
+            redde FALSUM;
+        }
+    }
+    s = (SystemaHospitis*)xar_addere(v->systemata_hospitis);
+    si (!s)
+    {
+        redde FALSUM;
+    }
+    s->titulus  = t;
+    s->systema  = systema;
+    s->ctx      = ctx;
+    redde VERUM;
+}
+
+b32
+vicus_radicem_scribere (
+                  Vicus* v,
+     constans character* scriptor,
+     constans character* titulus,
+     constans character* valor)
+{
+    CampiRadicis c;
+
+    si (!v || !v->repo || !scriptor || !titulus)
+    {
+        redde FALSUM;
+    }
+    c.tituli[ZEPHYRUM]   = titulus;
+    c.valores[ZEPHYRUM]  = valor;
+    c.numerus            = I;
+    redde radicem_mutare(v, scriptor, campos_mutator, &c);
 }
 
 vacuum
@@ -1676,6 +1913,117 @@ vicus_activam_ponere (
     redde indicem_scribere(v);
 }
 
+b32
+vicus_latus_argumentum_ponere (
+                  Vicus* v,
+     constans character* id,
+     constans character* argumentum)
+{
+    VicusTabula* t;
+     VicusLatus* l;
+         chorda  quaesitum;
+            i32  i;
+            i32  k;
+
+    si (!v || !id)
+    {
+        redde FALSUM;
+    }
+    quaesitum  = internare(v, id);
+    l          = NIHIL;
+    per (i = ZEPHYRUM; !l && i < xar_numerus(v->tabulae); i++)
+    {
+        t = (VicusTabula*)xar_obtinere(v->tabulae, i);
+        si (chorda_aequalis(t->sinistrum.id, quaesitum))
+        {
+            l = &t->sinistrum;
+        }
+        per (k = ZEPHYRUM; !l && k < xar_numerus(t->acervus); k++)
+        {
+            si (chorda_aequalis(((VicusLatus*)xar_obtinere(t->acervus,
+                k))->id, quaesitum))
+            {
+                l = (VicusLatus*)xar_obtinere(t->acervus, k);
+            }
+        }
+    }
+    si (!l)
+    {
+        redde FALSUM;
+    }
+    l->argumentum = (argumentum && argumentum[ZEPHYRUM])
+        ? internare(v, argumentum) : chorda_nulla_vici();
+    redde indicem_scribere(v);
+}
+
+b32
+vicus_latus_focare (
+                  Vicus* v,
+     constans character* id)
+{
+    VicusTabula* t;
+     VicusLatus* l;
+     VicusLatus  frons;
+         chorda  quaesitum;
+            i32  i;
+            i32  k;
+            i32  n;
+            i32  latus;
+
+    si (!v || !id)
+    {
+        redde FALSUM;
+    }
+    quaesitum  = internare(v, id);
+    t          = NIHIL;
+    l          = NIHIL;
+    latus      = VICUS_SINISTRUM;
+    k          = ZEPHYRUM;
+    per (i = ZEPHYRUM; !l && i < xar_numerus(v->tabulae); i++)
+    {
+        t = (VicusTabula*)xar_obtinere(v->tabulae, i);
+        si (chorda_aequalis(t->sinistrum.id, quaesitum))
+        {
+            l = &t->sinistrum;
+            frange;
+        }
+        per (k = ZEPHYRUM; k < xar_numerus(t->acervus); k++)
+        {
+            si (chorda_aequalis(((VicusLatus*)xar_obtinere(t->acervus,
+                k))->id, quaesitum))
+            {
+                l      = (VicusLatus*)xar_obtinere(t->acervus, k);
+                latus  = VICUS_DEXTRUM;
+                frange;
+            }
+        }
+    }
+    si (   !l || !l->montata
+        || !vicus_activam_ponere(v, chorda_ut_cstr(t->id, v->piscina)))
+    {
+        redde FALSUM;
+    }
+    /* in frontem acervi (ut petitio S3c) */
+    n = xar_numerus(t->acervus);
+    si (latus == VICUS_DEXTRUM && k < n - I)
+    {
+        si (!motum_relinquere(v))
+        {
+            redde FALSUM;
+        }
+        frons = *l;
+        per (; k < n - I; k++)
+        {
+            *(VicusLatus*)xar_obtinere(t->acervus, k) =
+                *(VicusLatus*)xar_obtinere(t->acervus, k + I);
+        }
+        *(VicusLatus*)xar_obtinere(t->acervus, n - I) = frons;
+        registra_reficere(v);
+        motum_aptare(v);
+    }
+    redde vicus_focum_ponere(v, latus) && indicem_scribere(v);
+}
+
 ActioRegistrum*
 vicus_actiones (
     constans Vicus* v)
@@ -1841,6 +2189,22 @@ vicus_componere (
         f.altitudo  = altitudo_laterum(altitudo);
         componens_ponere_fines(divisor, f);
         componens_addere_liberum(radix, divisor);
+    }
+    /* T4b: stratum ultimum (supra omnia; ictus prius), non
+     * translatum */
+    si (   v->stratum && v->stratum->montata
+        && v->stratum->facies.componere)
+    {
+        Componens* s;
+
+        s = v->stratum->facies.componere(repo, motus, piscina, intern,
+            v->stratum->facies.componere_ctx);
+        si (s)
+        {
+            componens_ponere_spatium(s, chorda_ut_cstr(via_lateris(repo,
+                v->stratum, piscina), piscina));
+            componens_addere_liberum(radix, s);
+        }
     }
     redde radix;
 }
@@ -2102,6 +2466,26 @@ petitionem_addere (
 }
 
 b32
+vicus_acervo_redire (
+    Vicus* v)
+{
+    VicusTabula* t;
+            i32  n;
+
+    t = vicus_activa(v);
+    n = t ? xar_numerus(t->acervus) : ZEPHYRUM;
+    si (n <= I || !motum_relinquere(v))
+    {
+        redde FALSUM;
+    }
+    xar_truncare(t->acervus, n - I);
+    t->focus = VICUS_DEXTRUM;
+    registra_reficere(v);
+    motum_aptare(v);
+    redde indicem_scribere(v);
+}
+
+b32
 vicus_acervo_aperire (
                   Vicus* v,
      constans character* genus,
@@ -2142,6 +2526,21 @@ vicus_pulsare (
         /* S5: pila cum minuto legitur */
         (vacuum)pilam_legere(v);
         pingendum = VERUM;
+    }
+    /* T4b: stratum semper visibile */
+    latus_pulsare(v->stratum, VERUM, &pingendum);
+    /* T4a: systemata hospitis */
+    per (i = ZEPHYRUM; v->systemata_hospitis
+                       && i < xar_numerus(v->systemata_hospitis); i++)
+    {
+        constans SystemaHospitis* s;
+
+        s = (constans SystemaHospitis*)xar_obtinere(
+            v->systemata_hospitis, i);
+        si (s->systema(v, s->ctx))
+        {
+            pingendum = VERUM;
+        }
     }
     /* S3c: aperitiones pendentes extra tractationem eventus */
     per (i = ZEPHYRUM; v->petitiones

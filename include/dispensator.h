@@ -23,6 +23,10 @@
  * eum restituit. Ramo intimo mutato pan/zoom sordida in priorem
  * effunduntur. Gestus applicationis hospitis manet (organum
  * nidificatum cum gestu proprio: postea, A6).
+ * Liberum cuius spatium in arbore composita non est (hospes eum non
+ * monstrat - notae calendarii extra visum diei): catena ibi
+ * praeciditur et focus gradus illius in radicem spatii sui scribitur,
+ * ne claves in organum invisibile cadant.
  */
 
 #ifndef DISPENSATOR_H

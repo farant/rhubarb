@@ -1,9 +1,9 @@
-/* toml_registrum_coctum.c
+/* toml_registrum_coctum.c - GENERATUM, NE MANU EDITES
  *
- * Registrum generum COCTUM grammaticae 'toml' - GENERATUM, NE MANU
- * EDITES. Fons: toml/grammatica/toml.registrum.stml
- * (materia/coquere.sh). Series LOCORUM plana; quodque genus fenestram
- * suam per loci_offset + loci_numerus nominat. Genera XIV, loci XXV.
+ * Registrum generum COCTUM grammaticae 'toml'. Fons:
+ * toml/grammatica/toml.registrum.stml (materia/coquere.sh). Series
+ * LOCORUM plana; quodque genus fenestram suam per loci_offset +
+ * loci_numerus nominat. Genera XIV, loci XXV.
  */
 
 #include "toml_registrum_coctum.h"

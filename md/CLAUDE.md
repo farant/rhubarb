@@ -31,7 +31,8 @@ polish list desideratum 01M1NBEVM0.
   `tools/cursor_communis.sh` since 2026-10-13 - no runner first):
   `arbor.sh <x.md>` projection · `html.sh <x.md> [-stml]` · `extenta.sh
   <x.md> '<selector>'` (TSV, rc 0/1/2) · `census.sh [-machina | -citata
-  [via] | -scribere]` (`-scribere` regenerates `md/CENSUS.md`) ·
+  [via]]` (on-demand report to stdout; `md/CENSUS.md` is no longer
+  committed, 2026-10-15) ·
   `computus.sh <x.md> [-machina] [-iter N]`.
 - **pythonica**: `silva.Prosa(via)` (`capitulum`, `sectio`, `elementum`,
   `saeptum`, `substituere`, `applicare` with the round-trip judge),

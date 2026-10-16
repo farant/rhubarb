@@ -2088,7 +2088,8 @@ _probare_argumentum_diei_malum (
 
 /* P6: fons fictus - Anna Rossi natalis 14 X (MCMLXXXVI), "Festa
  * urbis" genere ignoto 14 X, Luca Bianchi natalis 20 X (sine anno),
- * "Feriae" genere ignoto 22 X (solae) */
+ * "Feriae" genere ignoto 22 X (solae); P6d: Marco Verdi natalis 31 X
+ * (MM; sabbatum - columna dextra) */
 nomen structura {
      constans character* genus;
      constans character* titulus;
@@ -2100,8 +2101,12 @@ hic_manens constans SignumFictum signa_ficta[] = {
     { "natalis", "Anna Rossi", XIV, MCMLXXXVI },
     { "aliud", "Festa urbis", XIV, ZEPHYRUM },
     { "natalis", "Luca Bianchi", XX, ZEPHYRUM },
-    { "aliud", "Feriae", XXII, ZEPHYRUM }
+    { "aliud", "Feriae", XXII, ZEPHYRUM },
+    { "natalis", "Marco Verdi", XXXI, MM }
 };
+
+#define SIGNA_FICTA_NUMERUS \
+    ((i32)(magnitudo(signa_ficta) / magnitudo(signa_ficta[ZEPHYRUM])))
 
 interior b32
 fictum_legere (
@@ -2116,7 +2121,7 @@ fictum_legere (
                i32  i;
 
     (vacuum)ctx;
-    per (i = ZEPHYRUM; i < IV; i++)
+    per (i = ZEPHYRUM; i < SIGNA_FICTA_NUMERUS; i++)
     {
         d = fasti_dies(MMXXVI, X, signa_ficta[i].dies);
         si (   fasti_comparare(d, prima) < ZEPHYRUM
@@ -2202,6 +2207,163 @@ _probare_natales_mensis (
     CREDO_VERUM(natalis_in(md, cellula(x, "2026-10-20", c->piscina)));
     CREDO_FALSUM(natalis_in(md, cellula(x, "2026-10-15", c->piscina)));
     CREDO_FALSUM(natalis_in(md, cellula(x, "2026-10-22", c->piscina)));
+}
+
+/* P6d: motus muris in puncto (spatium radicis), sine bottone */
+interior vacuum
+motus_ad (
+    Mundus* x,
+       s32  px,
+       s32  py)
+{
+    Eventus e;
+
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus        = EVENTUS_MUS_MOTUS;
+    e.datum.mus.x  = px;
+    e.datum.mus.y  = py;
+    dispensator_tractare(x->d, &e);
+}
+
+/* P6d: medium placentae cellulae id (angulus dexter superus) */
+interior Punctum
+placenta_media (
+                 Mundus* x,
+     constans character* id,
+                Piscina* p)
+{
+      Fines f;
+    Punctum q;
+
+    f    = cellula(x, id, p);
+    q.x  = f.x + f.latitudo - II - XIII / II;
+    q.y  = f.y + II + XII / II;
+    redde q;
+}
+
+/* P6d: fines textus partem continentis (latitudo 0 si abest) et
+ * capsa impleta eum continens paulo ante pictus (titulus volans) */
+interior Fines
+textus_fines (
+                Mandata* md,
+     constans character* pars,
+                    b32* in_capsa)
+{
+     constans Mandatum* y;
+     constans Mandatum* z;
+                 Fines  f;
+                   i32  i;
+                   i32  k;
+
+    memset(&f, ZEPHYRUM, magnitudo(f));
+    *in_capsa = FALSUM;
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        y = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   y->genus != MANDATUM_TEXTUS
+            || !chorda_continet(y->textus, chorda_ex_literis(pars,
+                   md->piscina)))
+        {
+            perge;
+        }
+        f = y->fines;
+        per (k = i - I; k >= ZEPHYRUM && k >= i - VIII; k--)
+        {
+            z = (constans Mandatum*)xar_obtinere(md->elementa, k);
+            si (   z->genus == MANDATUM_RECTANGULUM && z->impletum
+                && f.x > z->fines.x && f.y >= z->fines.y
+                && f.x < z->fines.x + z->fines.latitudo
+                && f.y < z->fines.y + z->fines.altitudo)
+            {
+                *in_capsa = VERUM;
+            }
+        }
+        frange;
+    }
+    redde f;
+}
+
+/* P6d: titulus volans natalis - motus super placentam campum
+ * natalis_super ponit et nomina pinguntur in capsa ad dextram
+ * cursoris; extra placentam, ictus, mensis novus delent; cellula sine
+ * natali nihil; in columna dextra capsa sinistrorsum vertitur intra
+ * calendarium */
+interior vacuum
+_probare_natalis_super (
+    CredoContextus* c)
+{
+     Mundus* x;
+    Mandata* md;
+    Punctum  q;
+      Fines  f;
+      Fines  radix;
+     chorda* a;
+        b32  capsa;
+
+    x          = (Mundus*)c->datum;
+    thema_initiare();
+    x->fontes  = fontes_ficti(x, c->piscina);
+    CREDO_NECESSE_NON_NIHIL(x->fontes);
+    CREDO_NECESSE(mundum_struere(x, c->piscina, NIHIL));
+    md = reddere(x, c->piscina);
+    CREDO_FALSUM(textus_ullus_continet(md, "Anna Rossi turns 40"));
+
+    /* super placentam XIV */
+    q = placenta_media(x, "2026-10-14", c->piscina);
+    motus_ad(x, q.x, q.y);
+    a = insula_ramus_attributum(&x->m.ramus, "natalis_super");
+    CREDO_NECESSE(a != NIHIL);
+    CREDO_VERUM(chorda_incipit(*a, chorda_ex_literis("2026-10-14 ",
+        c->piscina)));
+    md  = reddere(x, c->piscina);
+    f   = textus_fines(md, "Anna Rossi turns 40", &capsa);
+    CREDO_VERUM(f.x > q.x && f.y > q.y);
+    CREDO_VERUM(capsa);
+
+    /* medium cellulae (non placenta): deletum */
+    f = cellula(x, "2026-10-14", c->piscina);
+    motus_ad(x, f.x + f.latitudo / II, f.y + f.altitudo / II);
+    a = insula_ramus_attributum(&x->m.ramus, "natalis_super");
+    CREDO_VERUM(a == NIHIL || a->mensura == ZEPHYRUM);
+    md = reddere(x, c->piscina);
+    CREDO_FALSUM(textus_ullus_continet(md, "Anna Rossi turns 40"));
+
+    /* linea placentae sed ad sinistram (numerus diei XIV): nihil */
+    motus_ad(x, f.x + IV, f.y + VIII);
+    a = insula_ramus_attributum(&x->m.ramus, "natalis_super");
+    CREDO_VERUM(a == NIHIL || a->mensura == ZEPHYRUM);
+
+    /* angulus cellulae sine natali (XV): nihil */
+    q = placenta_media(x, "2026-10-15", c->piscina);
+    motus_ad(x, q.x, q.y);
+    a = insula_ramus_attributum(&x->m.ramus, "natalis_super");
+    CREDO_VERUM(a == NIHIL || a->mensura == ZEPHYRUM);
+
+    /* XX: Luca (sine anno); ictus delet */
+    q = placenta_media(x, "2026-10-20", c->piscina);
+    motus_ad(x, q.x, q.y);
+    md = reddere(x, c->piscina);
+    CREDO_VERUM(textus_ullus_continet(md, "Luca Bianchi's birthday"));
+    CREDO_NECESSE(ictus_in(x, "2026-10-21", c->piscina));
+    a = insula_ramus_attributum(&x->m.ramus, "natalis_super");
+    CREDO_VERUM(a == NIHIL || a->mensura == ZEPHYRUM);
+
+    /* XXXI (sabbatum, columna dextra): capsa sinistrorsum, intra
+     * radicem */
+    radix  = fines_componentis(x, "kalendarium", c->piscina);
+    q      = placenta_media(x, "2026-10-31", c->piscina);
+    motus_ad(x, q.x, q.y);
+    md  = reddere(x, c->piscina);
+    f   = textus_fines(md, "Marco Verdi turns 26", &capsa);
+    CREDO_NECESSE(f.x > ZEPHYRUM);
+    CREDO_VERUM(capsa);
+    CREDO_VERUM(f.x < q.x);
+    CREDO_VERUM(f.x + (s32)XX * VI <= radix.x + radix.latitudo);
+
+    /* mensis novus (L): deletum */
+    clavis(x, 'L');
+    a = insula_ramus_attributum(&x->m.ramus, "natalis_super");
+    CREDO_VERUM(a == NIHIL || a->mensura == ZEPHYRUM);
 }
 
 /* P6: visus diei - ordines signati ("n<k>") supra res: "Anna Rossi
@@ -3045,6 +3207,8 @@ _probare_elenchum_rei (
 }
 
 hic_manens constans CredoSectio SECTIONES[] = {
+    { "natalis_super", _probare_natalis_super, mundum_parare,
+      mundum_purgare, NIHIL, NIHIL },
     { "natales_mensis", _probare_natales_mensis, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { "natales_diei", _probare_natales_diei, mundum_parare,

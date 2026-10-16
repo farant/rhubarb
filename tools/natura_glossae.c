@@ -693,7 +693,10 @@ _paginam_scribere (
     }
     ordo = _ordo_exemplarium(bib, piscina);
 
+    /* SIGNUM GENERATI in linea II (declarationem HTML prima poscit) */
     fputs("<!DOCTYPE html>\n"
+          "<!-- GENERATUM a tools/natura_glossae.sh - NOLI MANU"
+          " MUTARE -->\n"
           "<html lang=\"la\"><head><meta charset=\"utf-8\">\n"
           "<title>Glossae - documentatio generum</title>\n"
           "<style>\n"

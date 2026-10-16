@@ -1,0 +1,6 @@
+<unitas titulus="vendor" genus="/fabricatio/adscitio"
+        descriptio="codex alienus vendicatus (sqlite, stb_image, bearssl)">
+  <origo via="sqlite3.c sqlite3.h" fons="https://sqlite.org" versio="3.53.3" licentia="dominium publicum"/>
+  <origo via="stb_image.h" fons="https://github.com/nothings/stb" versio="2.30" licentia="dominium publicum aut MIT"/>
+  <origo via="bearssl bearssl_amalgama.c bearssl_amalgama.h" fons="https://www.bearssl.org/git/BearSSL" versio="7bea48e5e850ab4cafbe68d3765cdaba13a86d6f" licentia="MIT"/>
+</unitas>

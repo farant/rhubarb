@@ -67,6 +67,12 @@
             scriptor="calendarium.agere"
             nota="res menu illuminata (claves, motus muris); absens =
                   nulla; ad nullam redit cum menu aperitur"/>
+    <campus nomen="natalis_super" typus="textus" vita="transiens"
+            aspectus="popover" scriptor="calendarium.agere"
+            nota="P6d: placenta natalis sub mure (visus mensis): 'YYYY-MM-DD
+                  x y' - dies et punctum muris in spatio calendarii;
+                  absens = nulla (exitus muris, ictus, clavis, visus aut
+                  mensis mutatus, menu apertum)"/>
   </status>
 
   <basis genus="organum_commune"/>

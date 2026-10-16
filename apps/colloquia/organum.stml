@@ -1,0 +1,26 @@
+<!-- organum.stml - manifestum visus sessionum Claude Code
+     (colloquia-plan T5): sessiones per gregem status (te eget,
+     laborat, perfecit, otiosum; clausae si campus clausa). Sessiones
+     ipsae ex fonte communi (liber praeconii, per ligamen) - hic solum
+     status visus. -->
+<organum genus="colloquia" versio="1">
+
+  <actiones>
+    <actio nomen="colloquia.agere"/>
+  </actiones>
+
+  <status>
+    <campus nomen="electa" typus="textus" vita="transiens"
+            scriptor="colloquia.agere"
+            nota="session_id electae (stabilis dum ordo mutatur);
+                  absens aut ignota = prima paginae"/>
+    <campus nomen="pagina" typus="numerus" vita="transiens"
+            scriptor="colloquia.agere"/>
+    <campus nomen="clausa" typus="veritas" vita="persistens"
+            scriptor="colloquia.agere"
+            nota="sessiones clausas ostendere (grex ultimus)"/>
+  </status>
+
+  <basis genus="organum_commune"/>
+  <montationes/>
+</organum>

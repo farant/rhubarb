@@ -8,6 +8,11 @@
  *   -omnia     utraque (ordinarium)
  *   -machina   TSV omnium verborum cum capite
  *   -omnes     lista ignotorum tota (plane: tectum LX)
+ * Ansa commissionis (lint_latinus.sh) eundem iudicem per
+ * tools/iudex_unitatum.sh rogat.
+ * AMBITUS symbolorum = viae tractatae quas iudex lint_latinus iudicat
+ * (lib/unitates.c; olim praefixa ORATIO_VOCABULA_EXCLUSA, quae fixa/
+ * iudicabant sed ansam non movebant - spec unitates-codicis U4).
  * Glossarium oratio/glossarium.stml appenditur si adest. Radix per
  * RHUBARB_RADIX. Exitus: 0 relatio scripta (ignota inventa sunt, non
  * vitia) | 2 usus/tabula/nexus absens
@@ -19,6 +24,8 @@
 #include "oratio_vocabularium_la.h"
 #include "oratio_vocabularium_en.h"
 #include "oratio_glossarium.h"
+#include "unitates.h"
+#include "unitates_arboris.h"
 #include "chorda.h"
 #include "piscina.h"
 #include "xar.h"
@@ -64,6 +71,29 @@ _plagulam_legere (
     exitus->datum       = memoria;
     exitus->mensura     = (i32)longitudo;
     redde VERUM;
+}
+
+#define VOCABULA_IUDEX "lint_latinus"
+
+/* unitates arboris sub radice; NIHIL = recusatio (causae in stderr) */
+interior Unitates*
+_unitates_onerare (
+               Piscina* piscina,
+    constans character* radix)
+{
+      chorda  causa;
+    Unitates* u = unitates_legere(unitates_sutura_arboris(radix,
+        piscina),
+        piscina, &causa, NIHIL);
+
+    si (u == NIHIL)
+    {
+        fprintf(stderr,
+            "vocabula: RECUSATIO unitatum (unitates.stml) - "
+            "ambitus lintus ignotus:\n%.*s\n", (integer)causa.mensura,
+            (constans character*)causa.datum);
+    }
+    redde u;
 }
 
 interior vacuum
@@ -149,7 +179,7 @@ OratioVocabulariumVitium vitium;
         }
                 alioquin si (strcmp(argv[i], "-omnes-viae") == ZEPHYRUM)
         {
-            omnes_viae = VERUM;   /* etiam knotapel/ vendor/ archivum/ */
+            omnes_viae = VERUM;   /* sine iudice: omnes viae indicis */
         }
         alioquin si (strcmp(argv[i], "-nova") == ZEPHYRUM)
         {
@@ -170,8 +200,10 @@ OratioVocabulariumVitium vitium;
         }
         alioquin
         {
-                        fprintf(stderr,
-                            "usus: vocabula [-symbola | -commenta | -omnia | -prosa | -nova] [-machina] [-omnes] [-omnes-viae] [-tectum N]\n");
+            fprintf(stderr,
+                "usus: vocabula [-symbola | -commenta | -omnia | "
+                "-prosa | -nova] [-machina] [-omnes] [-omnes-viae] "
+                "[-tectum N]\n");
 
             redde II;
         }
@@ -255,21 +287,40 @@ OratioVocabulariumVitium vitium;
                 via);
             redde II;
         }
-        /* viae tractatae (involucrum eas scribit); -omnes-viae = sine
-         * filtro, ut exclusiones */
+        /* viae tractatae (involucrum eas scribit) per iudicem
+         * lint_latinus; -omnes-viae = sine filtro. Absentia aut lista
+         * vacua = RECUSATIO: tractatae vacuae 'omnes viae' significant
+         * (oratio_vocabula_symbola), ambitus tacite cresceret */
         tractatae.datum    = NIHIL;
         tractatae.mensura  = ZEPHYRUM;
         sprintf(via, "%s/oratio/build/corpus_tractatae.txt", radix);
-        si (   !omnes_viae
-            && !_plagulam_legere(piscina, via, &tractatae))
+        si (!omnes_viae)
         {
-            fprintf(stderr,
-                "vocabula: CAUTIO corpus_tractatae.txt absens (%s) -"
-                " omnes viae indicis numerantur\n", via);
+            Unitates* u;
+                 b32  ignotus = FALSUM;
+
+            si (!_plagulam_legere(piscina, via, &tractatae))
+            {
+                fprintf(stderr, "vocabula: corpus_tractatae.txt absens "
+                    "(%s) - ambitus lintus ignotus\n", via);
+                redde II;
+            }
+            u = _unitates_onerare(piscina, radix);
+            si (u == NIHIL)
+            {
+                redde II;
+            }
+            tractatae = unitates_viae_iudicatae(u, chorda_ex_literis(
+                VOCABULA_IUDEX, piscina), tractatae, piscina, &ignotus);
+            si (ignotus || tractatae.mensura == ZEPHYRUM)
+            {
+                fprintf(stderr, "vocabula: iudex '%s' %s\n",
+                    VOCABULA_IUDEX, ignotus ? "ignotus in unitates.stml"
+                    : "nullam viam tractatam iudicat");
+                redde II;
+            }
         }
-        si (!oratio_vocabula_symbola(vc, nexus,
-                omnes_viae ? NIHIL : ORATIO_VOCABULA_EXCLUSA,
-                tractatae))
+        si (!oratio_vocabula_symbola(vc, nexus, NIHIL, tractatae))
         {
             fprintf(stderr, "vocabula: symbola fracta\n");
             redde II;
@@ -325,7 +376,18 @@ OratioVocabulariumVitium vitium;
         {
         FILE* lista;
         character linea[512];
+        /* ambitus prosae: iudex prosa_anglica (unitates.stml) - olim
+         * ORATIO_PROSA_EXCLUSA (vendor/ archivum/ et duo generata
+         * nominatim); nunc et fixturae et generata quaelibet */
+        Unitates* u_prosae = omnes_viae ? NIHIL
+            : _unitates_onerare(piscina, radix);
+        chorda iudex_prosae = chorda_ex_literis("prosa_anglica",
+            piscina);
 
+        si (!omnes_viae && u_prosae == NIHIL)
+        {
+            redde II;
+        }
         sprintf(via, "%s/oratio/build/corpus_md.txt", radix);
         lista = fopen(via, "r");
         si (lista == NIHIL)
@@ -353,10 +415,21 @@ OratioVocabulariumVitium vitium;
             }
             v.datum    = (i8*)linea;
             v.mensura  = (i32)l;
-            si (   !omnes_viae
-                && oratio_vocabula_via_exclusa(v, ORATIO_PROSA_EXCLUSA))
+            si (!omnes_viae)
             {
-                perge;
+                UnitatesIudicium j = unitates_iudicat(u_prosae,
+                    iudex_prosae, v, piscina, NIHIL);
+
+                si (j == UNITATES_IUDEX_IGNOTUS)
+                {
+                    fprintf(stderr, "vocabula: iudex prosa_anglica "
+                        "ignotus in unitates.stml\n");
+                    redde II;
+                }
+                si (j != UNITATES_IUDICAT)
+                {
+                    perge;
+                }
             }
             p = piscina_generare_dynamicum("vocabula_plagula",
                 33554432);
@@ -466,7 +539,8 @@ OratioVocabulariumVitium vitium;
                     && commenta ? " + " : "",
                     commenta ? "commenta" : "",
                     symbola
-                    && !omnes_viae ? " (sine knotapel/ vendor/ archivum/)" : "");
+                    && !omnes_viae
+                    ? " (iudex lint_latinus, unitates.stml)" : "");
                         }
 
         imprimere("  verba distincta %d  sedes %d  plagulae %d  %.0f ms\n",

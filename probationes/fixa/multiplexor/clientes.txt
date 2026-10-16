@@ -1,0 +1,3 @@
+/dev/ttys020	alpha
+/dev/ttys021	beta
+malum

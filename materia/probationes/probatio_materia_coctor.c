@@ -76,12 +76,12 @@ hic_manens constans character* constans VIA_DECLARATIONIS =
  * 'EDITES.' lineam I ad LXXIII traheret), enumeratio cum nota generis
  * super membrum suum, comes NUMERUS_GENERUM post lineam vacuam */
 hic_manens constans character* constans CAPUT_EXSPECTATUM =
-    "/* proba_registrum_coctum.h\n"
+    "/* proba_registrum_coctum.h - GENERATUM, NE MANU EDITES\n"
     " *\n"
-    " * Registrum generum COCTUM grammaticae 'proba' - GENERATUM, "
-    "NE MANU\n"
-    " * EDITES. Fons: proba/grammatica/proba.registrum.stml\n"
-    " * (materia/coquere.sh). Genera II, loci VII.\n"
+    " * Registrum generum COCTUM grammaticae 'proba'. Fons:\n"
+    " * proba/grammatica/proba.registrum.stml (materia/coquere.sh). "
+    "Genera\n"
+    " * II, loci VII.\n"
     " */\n"
     "\n"
     "#ifndef PROBA_REGISTRUM_COCTUM_H\n"
@@ -107,15 +107,13 @@ hic_manens constans character* constans CAPUT_EXSPECTATUM =
  * super ordinem suum, comma post ordinem ultimum (C89 licet), genera
  * cum offset et numero, coctum ex magnitudinibus */
 hic_manens constans character* constans FONS_EXSPECTATUS =
-    "/* proba_registrum_coctum.c\n"
+    "/* proba_registrum_coctum.c - GENERATUM, NE MANU EDITES\n"
     " *\n"
-    " * Registrum generum COCTUM grammaticae 'proba' - GENERATUM, "
-    "NE MANU\n"
-    " * EDITES. Fons: proba/grammatica/proba.registrum.stml\n"
-    " * (materia/coquere.sh). Series LOCORUM plana; quodque genus "
-    "fenestram\n"
-    " * suam per loci_offset + loci_numerus nominat. Genera II, "
-    "loci VII.\n"
+    " * Registrum generum COCTUM grammaticae 'proba'. Fons:\n"
+    " * proba/grammatica/proba.registrum.stml (materia/coquere.sh). "
+    "Series\n"
+    " * LOCORUM plana; quodque genus fenestram suam per loci_offset +\n"
+    " * loci_numerus nominat. Genera II, loci VII.\n"
     " */\n"
     "\n"
     "#include \"proba_registrum_coctum.h\"\n"

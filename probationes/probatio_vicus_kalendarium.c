@@ -10,6 +10,7 @@
 #include "vicus.h"
 #include "vicus_applicatio.h"
 #include "kalendarium.h"
+#include "agenda.h"
 #include "personae.h"
 #include "nomenclator.h"
 #include "thema.h"
@@ -454,6 +455,103 @@ _probare_natales (
     }
 }
 
+/* focus in notis, deinde visus alius per globulum (Franus 10-15:
+ * "res nova in agenda: nihil scribi potest"): notae iam non
+ * monstrantur - claves ad calendarium redeunt (prompta in agenda
+ * textum accipit; in mense L mensem mutat) */
+interior b32
+ad_notas_focus (
+     Mundus* x,
+ ManusLudus* m)
+{
+     Componens* notae;
+       Punctum  locale;
+       Punctum  schirmus;
+
+    (vacuum)vicus_acervo_aperire(x->app.vicus, "calendarium",
+        "2026-10");
+    (vacuum)vicus_pulsare(x->app.vicus);
+    dispensator_recomponere(x->app.d);
+    /* visus mensis (latus iam in agenda esse potest) */
+    (vacuum)manus_ludus_premere(m, "#visus-mensis");
+    dispensator_recomponere(x->app.d);
+    si (   !manus_ludus_premere(m, "#kalendarium")
+        || !manus_ludus_clavem(m, (character)XIII, ZEPHYRUM))
+    {
+        redde FALSUM;
+    }
+    dispensator_recomponere(x->app.d);
+    notae = manus_ludus_invenire(m, "#notae");
+    si (!notae)
+    {
+        redde FALSUM;
+    }
+    locale.x = XL;
+    locale.y = XXX;
+    schirmus = manus_ludus_ad_schirmum(m, notae, locale);
+    redde manus_ludus_premere_ad(m, schirmus.x, schirmus.y);
+}
+
+interior vacuum
+_probare_visus_post_notas (
+    CredoContextus* c)
+{
+                 Mundus* x;
+                  Vicus* v;
+             ManusLudus* m;
+    KalendariumMontatio* k;
+                 chorda* a;
+                    i32  i;
+                    b32  inventa;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(x && x->volumen);
+    CREDO_NECESSE(vicus_applicatio_aedificare(&x->app, c->piscina,
+        internamentum_creare(c->piscina), x->volumen, CDLXXX,
+        CDLXXX + VICUS_ALTITUDO_TABULARUM));
+    v                 = x->app.vicus;
+    x->tempus.annus   = MMXXVI;
+    x->tempus.mensis  = X;
+    x->tempus.dies    = XIV;
+    vicus_horologium_ponere(v, horologium_fictum, &x->tempus);
+    m = manus_ludus_creare(c->piscina, x->app.d);
+
+    /* notae -> Agenda -> + New -> "pane" Enter */
+    CREDO_NECESSE(ad_notas_focus(x, m));
+    CREDO_NECESSE(manus_ludus_premere(m, "#visus-agenda"));
+    dispensator_recomponere(x->app.d);
+    CREDO_NECESSE(manus_ludus_premere(m, "#nova"));
+    k = kalendarium_frontale(v);
+    CREDO_NECESSE_NON_NIHIL(k);
+    a = insula_ramus_attributum(&k->ramus, "prompta");
+    CREDO_VERUM(a && chorda_aequalis_literis(*a, "nova"));
+    CREDO_VERUM(manus_ludus_scribere(m, "pane"));
+    a = insula_ramus_attributum(&k->ramus, "prompta_textus");
+    CREDO_VERUM(a && chorda_aequalis_literis(*a, "pane"));
+    CREDO_VERUM(manus_ludus_clavem(m, (character)XIII, ZEPHYRUM));
+    inventa = FALSUM;
+    per (i = ZEPHYRUM; k->documentum
+        && i < agenda_numerus_rerum(k->documentum); i++)
+    {
+        si (chorda_aequalis_literis(agenda_res_index(k->documentum,
+            i)->titulus, "pane"))
+        {
+            inventa = VERUM;
+        }
+    }
+    CREDO_VERUM(inventa);
+
+    /* notae -> Month -> L: mensis sequens */
+    CREDO_NECESSE(ad_notas_focus(x, m));
+    CREDO_NECESSE(manus_ludus_premere(m, "#visus-mensis"));
+    dispensator_recomponere(x->app.d);
+    k = kalendarium_frontale(v);
+    CREDO_NECESSE_NON_NIHIL(k);
+    CREDO_VERUM(manus_ludus_clavem(m, 'L', (i32)MOD_SHIFT));
+    CREDO_VERUM(dies_est(kalendarium_dies_electus(k), MMXXVI, XI,
+        XIV));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "latera",  _probare_latera,  mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
@@ -465,6 +563,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "elenchus", _probare_elenchum, mundum_parare, mundum_purgare,
         NIHIL, NIHIL },
+    { "visus_post_notas", _probare_visus_post_notas, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

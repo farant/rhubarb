@@ -1,7 +1,7 @@
 /* census.c - census corporis markdown (md/census.sh)
  *
  * Usus: census -corpus <lista viarum> [-nota <textus>] [-machina | -citata]
- * Sine modo: tabulae markdown (md/CENSUS.md); -machina: TSV
+ * Sine modo: tabulae markdown (relatio); -machina: TSV
  * 'clavis<tab>valor'; -citata: verbatim omnia 'via<tab>linea<tab>
  * contentum' (tabulae et lineae novae in contento spatia fiunt). Piscina
  * per plagulam (corpus XVII MB). Exitus: 0 sanum, 2 usus/lista absens.
@@ -213,9 +213,9 @@ principale (
     si (!machina)
     {
         imprimere("# Census corporis markdown\n\n");
-        imprimere("GENERATUM `./md/census.sh -scribere` (%s) - noli manu"
-                  " emendare. Numeri ex ARBORE PARSATA (md_census), non ex"
-                  " grep; corpus = `git ls-files '*.md'`.\n\n", nota);
+        imprimere("Relatio `./md/census.sh` (%s). Numeri ex ARBORE"
+                  " PARSATA (md_census), non ex grep; corpus = `git"
+                  " ls-files '*.md'`.\n\n", nota);
         imprimere("## Summa\n\n| mensura | valor |\n|---|---|\n");
     }
     _ordinem("plagulae", (longus)c.plagulae, machina);

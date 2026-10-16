@@ -13,6 +13,11 @@
     <actio nomen="horologium" systema="verum"/>
     <!-- S7b: actio lateris scribae - capsam radicis scribit -->
     <actio nomen="pagina.clavis"/>
+    <!-- T4a (colloquia-plan): systema librum praeconii sequitur;
+         actio centri admonitionum lectas notat (campus radicis, ut
+         capsa: valet etiam centro non aperto) -->
+    <actio nomen="admonitiones" systema="verum"/>
+    <actio nomen="admonitiones.agere"/>
   </actiones>
 
   <status>
@@ -49,6 +54,17 @@
             scriptor="horologium"/>
     <campus nomen="pila_oneratur" typus="veritas" vita="transiens"
             scriptor="horologium"/>
+
+    <!-- T4a: admonitiones - systema in pulsu scribit (T4b toasts et
+         signum in linea tabularum legunt) -->
+    <campus nomen="admonitiones_non_lectae" typus="numerus"
+            vita="transiens" scriptor="admonitiones"/>
+    <campus nomen="admonitio_nova" typus="textus" vita="transiens"
+            scriptor="admonitiones"
+            nota="id admonitionis recentissimae post initium"/>
+    <campus nomen="admonitiones_lectae_ad" typus="numerus"
+            vita="persistens" scriptor="admonitiones.agere"
+            nota="ms: omnes non recentiores lectae (X in centro)"/>
   </status>
 
   <basis genus="organum_commune"/>

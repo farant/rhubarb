@@ -8,6 +8,7 @@
 /* <aedilis corpus="tools/fabrica_memoria.c"/> */
 /* <aedilis corpus="tools/fabrica_ansae.c"/> */
 /* <aedilis corpus="tools/fabrica_portae.c"/> */
+/* <aedilis corpus="tools/fabrica_unitates.c"/> */
 
 #ifndef FABRICA_SUTURA_H
 #define FABRICA_SUTURA_H
@@ -176,6 +177,13 @@ suturae_compilare_gradus (
 /* bin/fabrica portae debitae|declaratae (tools/fabrica_portae.c) */
 s32
 suturae_portae (
+          s32   argc,
+    character** argv,
+      Piscina*  piscina);
+
+/* bin/fabrica quid (tools/fabrica_unitates.c) */
+s32
+suturae_quid (
           s32   argc,
     character** argv,
       Piscina*  piscina);

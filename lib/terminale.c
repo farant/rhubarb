@@ -50,6 +50,10 @@ hic_manens constans character* constans ambitus_terminalis[] = {
     "TERM=xterm-256color",
     "COLORTERM=truecolor",
     "TERM_PROGRAM=terminale",
+    /* T4c: terminale novum, non intra tmux (aliter 'tmux attach'
+     * nidificare recusat si vicus ex tmux incepit) */
+    "TMUX",
+    "TMUX_PANE",
     NIHIL
 };
 
@@ -74,6 +78,8 @@ nomen structura {
                      i32 littera_thematis;
                      i32 fundus_thematis;
                      i32 cursor_thematis;
+    /* T4c: tty infantis (vacua: pons memoriae) */
+                  chorda tty;
 } TerminaleContextus;
 
 
@@ -1197,6 +1203,8 @@ applicationem_struere (
     tc->littera_thematis  = rgb_thematis(COLOR_TEXT);
     tc->fundus_thematis   = rgb_thematis(COLOR_BACKGROUND);
     tc->cursor_thematis   = rgb_thematis(COLOR_CURSOR);
+    tc->tty               = chorda_ex_literis(pt->tty ? pt->tty : "",
+        piscina);
     app->contextus        = tc;
     aemulator_hospes_configuratio_initiare(&cfg);
     cfg.aemulator.latitudo = latitudo / CELLULA_LATITUDO > ZEPHYRUM
@@ -1280,14 +1288,15 @@ terminale_ambitus (vacuum)
 
 b32
 terminale_montare (
-    TerminaleApplicatio* app,
-                Piscina* piscina,
-    InternamentumChorda* intern,
-     InsulaRepositorium* repo,
-     constans character* id,
-        StatusSystemata* systemata,
-                    i32  latitudo,
-                    i32  altitudo)
+          TerminaleApplicatio* app,
+                      Piscina* piscina,
+          InternamentumChorda* intern,
+           InsulaRepositorium* repo,
+           constans character* id,
+    constans character* constans* argumenta,
+              StatusSystemata* systemata,
+                          i32  latitudo,
+                          i32  altitudo)
 {
     PseudoterminaleConfiguratio  cfg;
                 Pseudoterminale* pt;
@@ -1298,8 +1307,9 @@ terminale_montare (
         redde FALSUM;
     }
     pseudoterminale_configuratio_initiare(&cfg);
-    cfg.argumenta  = terminale_argumenta(piscina, ZEPHYRUM, NIHIL,
-        &fumus);
+    cfg.argumenta  =
+        argumenta ? argumenta : terminale_argumenta(piscina,
+        ZEPHYRUM, NIHIL, &fumus);
     cfg.ambitus    = ambitus_terminalis;
     cfg.latitudo   = latitudo / CELLULA_LATITUDO > ZEPHYRUM
                    ? latitudo / CELLULA_LATITUDO : I;
@@ -1312,6 +1322,21 @@ terminale_montare (
     }
     redde applicationem_struere(app, piscina, intern, pt, repo, id,
         systemata, latitudo, altitudo);
+}
+
+chorda
+terminale_tty (
+    constans TerminaleApplicatio* app)
+{
+    chorda vacua;
+
+    si (app && app->contextus)
+    {
+        redde ((constans TerminaleContextus*)app->contextus)->tty;
+    }
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
+    redde vacua;
 }
 
 /* ?1004 modo novo posito relatio status currentis statim (Ghostty

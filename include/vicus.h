@@ -110,6 +110,10 @@ nomen structura {
                           InsulaRepositorium* repo, Motus* motus,
                           Componens* arbor, constans Eventus* ev);
               vacuum* ictus_primus_ctx;
+    /* T4d (colloquia-plan): Esc non consumptum in latere frontali
+     * acervi latus tollit (vicus_acervo_redire) - latera sine
+     * processu (admonitiones, colloquia); ordinarie FALSUM */
+                 b32 effugium_redit;
     /* S3e: argumentum lateris mutatum (vicus_acervo_mutare): latus se
      * aptat (pictor: picturam aliam ostendit). NIHIL = non potest */
                  b32  (*argumentum_ponere)(vacuum* ctx,
@@ -203,7 +207,16 @@ nomen structura {
               VicusPila  pila;        /* S5: NIHIL = nulla */
                  vacuum* pila_ctx;
         StatusSystemata* systemata;   /* S7b: NIHIL = nulla */
+                    /* T4a: vicus_systema_addere (privatum) */
+                    Xar* systemata_hospitis;
+             VicusLatus* stratum;     /* T4b: NIHIL = nullum */
 } Vicus;
+
+/* T4a (colloquia-plan): systema hospitis - in omni vicus_pulsare
+ * vocatur (post horologium); campos radicis per vicus_radicem_scribere
+ * sub titulo suo scribit (actio systema="verum" in manifesto radicis).
+ * VERUM = mutatum (quadrum pingendum). */
+nomen b32 (*VicusSystema)(Vicus* v, vacuum* ctx);
 
 Vicus*
 vicus_creare (
@@ -221,6 +234,38 @@ vicus_genus_addere (
           VicusMontator  montare,
         VicusDescriptor  describere,
                  vacuum* ctx);
+
+/* T4b (colloquia-plan): stratum supra latera - montatio una generis
+ * registrati (ramus "<genus>", id "stratum_<genus>"), in OMNI tabula
+ * post latera composita (supra pingitur, ictus prius accipit) et
+ * semper pulsata; superficies tota (linea tabularum inclusa). Arbor in
+ * coordinatis superficiei; fines radicis stratum non tegunt: ictus
+ * extra liberos ad latera transeunt (radix 0 x 0). Registra in spatio
+ * rami miscentur. Numquam focum capit. FALSUM si genus ignotum aut iam
+ * stratum. Insigne (T4b): campus radicis admonitiones_non_lectae > 0
+ * -> signum et numerus sinistrorsum horologii; ictus latus
+ * 'admonitiones' in acervo aperit. */
+b32
+vicus_stratum_addere (
+                  Vicus* v,
+     constans character* genus);
+
+/* T4a: titulus iteratus, systema aut titulus NIHIL: FALSUM */
+b32
+vicus_systema_addere (
+                  Vicus* v,
+     constans character* titulus,
+           VicusSystema  systema,
+                 vacuum* ctx);
+
+/* campum radicis scribere scriptore dato (valor NIHIL = tollere);
+ * FALSUM si recusatum (domini) */
+b32
+vicus_radicem_scribere (
+                  Vicus* v,
+     constans character* scriptor,
+     constans character* titulus,
+     constans character* valor);
 
 /* S7b: systemata status (organum_montatio.h) - vicus_aperire ea creat
  * (conservatio, relatio, dimissio) post repositorium et radicem cum eis
@@ -279,6 +324,26 @@ b32
 vicus_focum_ponere (
     Vicus* v,
       i32  latus);
+
+/* T6 (colloquia-plan): argumentum lateris servatum mutare SINE
+ * remontatione - montatio currit intacta (facies.argumentum_ponere
+ * non vocatur); dispositio scribitur, restitutio proxima eo montat.
+ * Identitas (genus + argumentum) sequitur: vicus_acervo_aperire cum
+ * eodem argumento hoc latus invenit. argumentum NIHIL aut "" =
+ * nullum. FALSUM si id ignotum. */
+b32
+vicus_latus_argumentum_ponere (
+                  Vicus* v,
+     constans character* id,
+     constans character* argumentum);
+
+/* T4c (colloquia-plan): latus per id ostendere: tabula eius activa,
+ * in frontem acervi (si ibi), focus in eo; dispositio servatur.
+ * FALSUM si id ignotum aut latus non montatum. */
+b32
+vicus_latus_focare (
+                  Vicus* v,
+     constans character* id);
 
 /* activam ponere (insula et index servatus); FALSUM si id
  * ignotum */
@@ -374,6 +439,13 @@ vicus_acervo_mutare (
                  Vicus* v,
     constans character* genus,
     constans character* argumentum);
+
+/* T4d: latus frontale acervi tabulae activae tollitur, prior in
+ * frontem venit, focus ad dextrum; dispositio servatur. FALSUM si
+ * acervus unum solum habet (numquam vacuus, decisio VIII). */
+b32
+vicus_acervo_redire (
+    Vicus* v);
 
 /* S3c: latus (genus, argumentum) in acervo tabulae activae: iam
  * praesens in frontem venit, aliter montatur (id novum: id

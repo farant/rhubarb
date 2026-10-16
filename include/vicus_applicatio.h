@@ -35,6 +35,7 @@ nomen structura {
                                       * (opacus) - porta imaginis */
                  vacuum* quaestionis; /* $question: contextus (opacus) -
                                        * porta quaestionis */
+                 vacuum* admonitionum; /* T4a: contextus (opacus) */
 } VicusApplicatio;
 
 
@@ -66,6 +67,23 @@ vicus_applicatio_imaginis_portam_ponere (
      VicusApplicatio* app,
         ImagoFructus (*porta)(vacuum* ctx, Piscina* piscina),
               vacuum* ctx);
+
+/* T4a (colloquia-plan): fontes libri praeconii (via; applicationes
+ * praeconium_via dant) - sequax admonitionum (systema 'admonitiones'
+ * in pulsu) et T5 fons sessionum (lateribus $sessions visibilibus
+ * pulsatus) ex cauda initiantur; T6 systema 'terminalia' (per V s)
+ * latera terminalis tmux adhaerentia notat: argumentum "tmux
+ * <servitor|-> <sessio>" (clientes servitorum sessionum, deinde
+ * ordinarii; per tty), detachata tollit. Argumentum tale montat
+ * "/bin/sh -c '<terminale respondet>; <tmux attach>; exec $SHELL -l'"
+ * (T6b: attach solum postquam vicus terminale pulsat - tmux responsa
+ * V s solum exspectat; post detachmentum concha). Ante vocationem
+ * (probationes) centrum ($notifications) et sessiones vacua, nihil
+ * legitur, tmux non interrogatur. FALSUM si iam aperta. */
+b32
+vicus_applicatio_admonitiones_aperire (
+        VicusApplicatio* app,
+     constans character* via);
 
 /* porta NIHIL = nulla; copia servatur */
 vacuum

@@ -7,8 +7,8 @@
 # Disciplina silentii: nulla diagnostica (praeter infra) = NIHIL
 # in contextum. Exclusiones lexici (exclusiones.txt pinnatae)
 # TACENT - strepitus deorsum-lexici doceret negligere. Capita .h
-# non iudicantur sola (per includentes iudicantur); scratchpad/
-# build/fixa exclusa (probae consulto pravae).
+# non iudicantur sola (per includentes iudicantur). Quae plagulae:
+# iudex examen_commissionis (unitates.stml), idem ac uncus pre-commit.
 
 INPUT=$(cat)
 FILE=$(printf '%s' "$INPUT" | jq -r '.tool_input.file_path // empty')
@@ -16,9 +16,6 @@ FILE=$(printf '%s' "$INPUT" | jq -r '.tool_input.file_path // empty')
 case "$FILE" in
     *.c|*.m) ;;
     *) exit 0 ;;
-esac
-case "$FILE" in
-    */scratchpad/*|*/build/*|*/fixa/*|*/amalgama/*) exit 0 ;;
 esac
 [ -f "$FILE" ] || exit 0
 
@@ -28,6 +25,8 @@ case "$FILE" in
     "$RADIX"/*) REL="./${FILE#"$RADIX"/}" ;;
     *) exit 0 ;;   # extra repositorium
 esac
+. "$(dirname "${BASH_SOURCE[0]}")/iudex_custodum.sh"
+custos_admittere EXAMEN examen_commissionis "$FILE" || exit 0
 # Plagulae .m: examen ObjC non iudicat (silva dialectum non discet) -
 # censor gradus MACRO est, ergo solus iudex domesticus earum
 # (01KXZYG2SE). Suspecta tacent (macra in fracturis ObjC = usus
