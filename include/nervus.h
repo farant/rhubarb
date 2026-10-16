@@ -24,6 +24,18 @@
  * legit. Construere solum per nervus_affinis / nervus_relu /
  * nervus_exitus (quae ordinem et indices custodiunt).
  *
+ * FORMA COACTA: nervus_aestimare_coacte ReLU k bitum k formae
+ * sequi cogit (activa: argumentum ipsum, etiam negativum; non activa:
+ * 0), quacumque signo. Forma fixa rete AFFINE facit: x -> M x + c
+ * (nervus_forma_affinis, exacte, per formas affines propagatas). In
+ * regione formae (ubi aestimatio ordinaria eandem formam dat) mappa
+ * aestimationem ordinariam aequat; extra eam aestimationem coactam.
+ * Sine addendis c = 0.
+ *
+ * COMPOSITIO: nervus_componere(a, b) = b post a: exitus a introitus b
+ * fiunt; ReLU ordine a deinde b, ergo forma compositi = forma a
+ * deinde forma b.
+ *
  * MEMORIA: rete in piscina sua (data in nervus_creare) crescit;
  * coefficientes in eam transcribuntur. nervus_aestimare valores et
  * spatium operis in piscina vocantis allocat: in gyris
@@ -51,6 +63,8 @@
 #include "latina.h"
 #include "piscina.h"
 #include "magnus.h"
+#include "chorda.h"
+#include "matrix.h"
 
 /* introitus + instructiones; termini per instructionem; exitus */
 #define NERVUS_REGISTRA_MAXIMA  16777216
@@ -178,11 +192,83 @@ nervus_aestimare (
           NervusForma* forma,
               Piscina* piscina);
 
+/* aestimatio coacta (vide FORMA COACTA); FALSUM ut nervus_aestimare,
+ * aut forma NIHIL */
+b32
+nervus_aestimare_coacte (
+         constans Nervus* rete,
+    constans NervusForma* forma,
+         constans Magnus* introitus,
+                  Magnus* exitus,
+                 Piscina* piscina);
+
 /* figura retis (vide FIGURA supra); FALSUM si rete invalidum. Memoria
  * temporaria propria, ante reditum destructa */
 b32
 nervus_figura (
       constans Nervus* rete,
          NervusFigura* exitus);
+
+
+/* ==================================================
+ * Formae
+ * ================================================== */
+
+/* bitum k ponit; FALSUM si forma invalida aut k extra fines */
+b32
+nervus_forma_ponere (
+    NervusForma* forma,
+            i32  k,
+            b32  activa);
+
+/* numerus ReLU activarum; 0 si forma invalida */
+i32
+nervus_forma_activae (
+    constans NervusForma* forma);
+
+/* VERUM si numerus idem et bitus omnes idem; FALSUM si non, aut forma
+ * invalida */
+b32
+nervus_formae_aequales (
+    constans NervusForma* a,
+    constans NervusForma* b);
+
+/* clavis pro tabula_dispersa: octeti formae (bitus ultra numerum
+ * nulli), (numerus + 7) / 8 octeti; formae aequales <-> claves
+ * aequales (pro numero eodem). FALSUM si forma invalida */
+b32
+nervus_forma_clavis (
+    constans NervusForma* forma,
+                 Piscina* piscina,
+                  chorda* exitus);
+
+/* mappa affinis formae: M (exitus_numerus x introitus, super
+ * ANULUS_INTEGRORUM, elementa Magnus) et c (exitus_numerus Magnus;
+ * NIHIL si exitus nulli) in piscina vocantis. Formae affines in
+ * piscina temporaria propagantur: memoria O(registra x introitus).
+ * FALSUM si rete invalidum, forma NIHIL aut non huius retis, aut
+ * registra x (introitus + 1) > 2^27 */
+b32
+nervus_forma_affinis (
+         constans Nervus*  rete,
+    constans NervusForma*  forma,
+                 Piscina*  piscina,
+                  Matrix*  m,
+                  Magnus** c);
+
+
+/* ==================================================
+ * Compositio
+ * ================================================== */
+
+/* b post a (vide COMPOSITIO); rete novum in piscina. FALSUM si rete
+ * invalidum, a->exitus_numerus != b->introitus, aut registra
+ * NERVUS_REGISTRA_MAXIMA superant */
+b32
+nervus_componere (
+    constans Nervus*  a,
+    constans Nervus*  b,
+            Piscina*  piscina,
+             Nervus** exitus);
 
 #endif /* NERVUS_H */

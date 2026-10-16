@@ -137,6 +137,10 @@ copies its form, forced off gives 0), not by sampling.
    registers. See lib/nervus.worklog.md.
 2. **T2: patterns.** Pattern keys, the affine map of a pattern,
    composition. Tests with oracles 2 and 4.
+   *Done 2026-10-16:* plus pattern helpers and the forced evaluation
+   (`nervus_aestimare_coacte`, the independent path oracle 2 needs);
+   12 sections, 212 checks; 10 plants red (and T1's 12 again); venenum
+   sana. nervus now depends on matrix. See lib/nervus.worklog.md.
 3. **T3: plexus_nervus.** plexus emits each generator's program
    (Thiffeault eq. 8-15, f- = f - relu(f)) and composes a word. D128's
    anchor becomes a plexus test (oracle 3). D128's own code is not

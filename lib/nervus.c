@@ -296,6 +296,41 @@ nervus_validus (
  * Aestimatio
  * ================================================== */
 
+/* forma utilis: non NIHIL, bitus non NIHIL */
+interior b32
+_forma_valida (
+    constans NervusForma* forma)
+{
+    redde forma != NIHIL && forma->bitus != NIHIL;
+}
+
+interior b32
+_bitus (
+    constans NervusForma* forma,
+                     i32  k)
+{
+    redde ((forma->bitus[k >> III] >> (k & VII)) & I) != ZEPHYRUM;
+}
+
+interior vacuum
+_bitum_ponere (
+    NervusForma* forma,
+            i32  k,
+            b32  activa)
+{
+    i8 larva = (i8)(I << (k & VII));
+
+    si (activa)
+    {
+        forma->bitus[k >> III] = (i8)(forma->bitus[k >> III] | larva);
+    }
+    alioquin
+    {
+        forma->bitus[k >> III] = (i8)(forma->bitus[k >> III]
+            & (i8)~larva);
+    }
+}
+
 b32
 nervus_forma_creare (
     constans Nervus* rete,
@@ -330,20 +365,23 @@ nervus_forma_bitus (
     constans NervusForma* forma,
                      i32  k)
 {
-    si (forma == NIHIL || forma->bitus == NIHIL || k >= forma->numerus)
+    si (!_forma_valida(forma) || k >= forma->numerus)
     {
         redde FALSUM;
     }
-    redde ((forma->bitus[k >> III] >> (k & VII)) & I) != ZEPHYRUM;
+    redde _bitus(forma, k);
 }
 
-b32
-nervus_aestimare (
-    constans Nervus* rete,
-    constans Magnus* introitus,
-             Magnus* exitus,
-        NervusForma* forma,
-            Piscina* piscina)
+/* aestimatio communis: scripta (NIHIL licet) bitus accipit; coacta
+ * (NIHIL licet) ReLU regit */
+interior b32
+_aestimare (
+         constans Nervus* rete,
+         constans Magnus* introitus,
+                  Magnus* exitus,
+             NervusForma* scripta,
+    constans NervusForma* coacta,
+                 Piscina* piscina)
 {
        i32  registra;
        i32  k;
@@ -363,8 +401,13 @@ nervus_aestimare (
     {
         redde FALSUM;
     }
-    si (   forma != NIHIL
-        && (forma->numerus != rete->relu || forma->bitus == NIHIL))
+    si (   scripta != NIHIL
+        && (scripta->numerus != rete->relu || scripta->bitus == NIHIL))
+    {
+        redde FALSUM;
+    }
+    si (   coacta != NIHIL
+        && (coacta->numerus != rete->relu || coacta->bitus == NIHIL))
     {
         redde FALSUM;
     }
@@ -386,36 +429,24 @@ nervus_aestimare (
 
         instructio  = &rete->instructiones[k];
         summa       = instructio->addendum;
-
         per (j = ZEPHYRUM; j < instructio->termini; j++)
         {
             summa = magnus_adde(summa, magnus_multiplica(
                 instructio->coefficientes[j],
-                valores[instructio->fontes[j]],
-                piscina), piscina);
+                valores[instructio->fontes[j]], piscina), piscina);
         }
         si (instructio->genus == NERVUS_RELU)
         {
-            b32 activa = magnus_signum(summa) > ZEPHYRUM;
+            b32 activa = coacta != NIHIL ? _bitus(coacta, r)
+                         : magnus_signum(summa) > ZEPHYRUM;
 
             si (!activa)
             {
                 summa = magnus_ex_s64(ZEPHYRUM);
             }
-            si (forma != NIHIL)
+            si (scripta != NIHIL)
             {
-                i8 larva = (i8)(I << (r & VII));
-
-                si (activa)
-                {
-                    forma->bitus[r >> III] = (i8)(forma->bitus[r >> III]
-                        | larva);
-                }
-                alioquin
-                {
-                    forma->bitus[r >> III] = (i8)(forma->bitus[r >> III]
-                        & (i8)~larva);
-                }
+                _bitum_ponere(scripta, r, activa);
             }
             r++;
         }
@@ -426,6 +457,32 @@ nervus_aestimare (
         exitus[k] = valores[rete->exitus[k]];
     }
     redde VERUM;
+}
+
+b32
+nervus_aestimare (
+    constans Nervus* rete,
+    constans Magnus* introitus,
+             Magnus* exitus,
+        NervusForma* forma,
+            Piscina* piscina)
+{
+    redde _aestimare(rete, introitus, exitus, forma, NIHIL, piscina);
+}
+
+b32
+nervus_aestimare_coacte (
+         constans Nervus* rete,
+    constans NervusForma* forma,
+         constans Magnus* introitus,
+                  Magnus* exitus,
+                 Piscina* piscina)
+{
+    si (forma == NIHIL)
+    {
+        redde FALSUM;
+    }
+    redde _aestimare(rete, introitus, exitus, NIHIL, forma, piscina);
 }
 
 b32
@@ -544,5 +601,308 @@ nervus_figura (
     figura.latitudo = (i32)maximum;
     piscina_destruere(temporaria);
     *exitus = figura;
+    redde VERUM;
+}
+
+
+/* ==================================================
+ * Formae
+ * ================================================== */
+
+b32
+nervus_forma_ponere (
+    NervusForma* forma,
+            i32  k,
+            b32  activa)
+{
+    si (!_forma_valida(forma) || k >= forma->numerus)
+    {
+        redde FALSUM;
+    }
+    _bitum_ponere(forma, k, activa);
+    redde VERUM;
+}
+
+i32
+nervus_forma_activae (
+    constans NervusForma* forma)
+{
+    i32 k;
+    i32 numerus = ZEPHYRUM;
+
+    si (!_forma_valida(forma))
+    {
+        redde ZEPHYRUM;
+    }
+    per (k = ZEPHYRUM; k < forma->numerus; k++)
+    {
+        si (_bitus(forma, k))
+        {
+            numerus++;
+        }
+    }
+    redde numerus;
+}
+
+b32
+nervus_formae_aequales (
+    constans NervusForma* a,
+    constans NervusForma* b)
+{
+    i32 k;
+
+    si (   !_forma_valida(a) || !_forma_valida(b)
+        || a->numerus != b->numerus)
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < a->numerus; k++)
+    {
+        si (_bitus(a, k) != _bitus(b, k))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+b32
+nervus_forma_clavis (
+    constans NervusForma* forma,
+                 Piscina* piscina,
+                  chorda* exitus)
+{
+    i32  octeti;
+    i32  k;
+     i8* datum;
+
+    si (!_forma_valida(forma) || piscina == NIHIL || exitus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    octeti  = (forma->numerus + VII) / VIII;
+    datum   = (i8*)piscina_allocare(piscina,
+        (memoriae_index)(octeti > ZEPHYRUM ? octeti : I));
+    per (k = ZEPHYRUM; k < octeti; k++)
+    {
+        datum[k] = forma->bitus[k];
+    }
+    /* bitus ultra numerum nulli */
+    si ((forma->numerus & VII) != ZEPHYRUM)
+    {
+        datum[octeti - I] = (i8)(datum[octeti - I]
+            & (i8)((I << (forma->numerus & VII)) - I));
+    }
+    exitus->mensura  = octeti;
+    exitus->datum    = datum;
+    redde VERUM;
+}
+
+
+/* ==================================================
+ * Mappa affinis formae
+ * ================================================== */
+
+b32
+nervus_forma_affinis (
+         constans Nervus*  rete,
+    constans NervusForma*  forma,
+                 Piscina*  piscina,
+                  Matrix*  m,
+                  Magnus** c)
+{
+    Piscina* temporaria;
+     Matrix  matrix_effectus;
+     Magnus* cc;
+     Magnus* formae;     /* registra x (introitus + 1): coef..., c */
+        i32  latus;
+        i32  registra;
+        i32  k;
+        i32  j;
+        i32  t;
+        i32  r = ZEPHYRUM;
+
+    si (   !nervus_validus(rete) || !_forma_valida(forma)
+        || forma->numerus != rete->relu || piscina == NIHIL
+        || m              == NIHIL
+        || c              == NIHIL)
+    {
+        redde FALSUM;
+    }
+    latus     = rete->introitus + I;
+    registra  = rete->introitus + rete->numerus;
+    /* formae registra x latus Magnus; indices in i32 */
+    si ((memoriae_index)registra * (memoriae_index)latus
+        > ((memoriae_index)I << XXVII))
+    {
+        redde FALSUM;
+    }
+    temporaria = piscina_generare_dynamicum("nervus_affinis",
+        IV * MXXIV);
+    si (temporaria == NIHIL)
+    {
+        redde FALSUM;
+    }
+    formae    = (Magnus*)piscina_allocare(temporaria,
+        (memoriae_index)registra * (memoriae_index)latus
+        * magnitudo(Magnus));
+    per (k = ZEPHYRUM; k < rete->introitus; k++)
+    {
+        per (t = ZEPHYRUM; t < latus; t++)
+        {
+            formae[k * latus + t] = magnus_ex_s64(t
+                == k ? I : ZEPHYRUM);
+        }
+    }
+    per (k = ZEPHYRUM; k < rete->numerus; k++)
+    {
+        constans NervusInstructio* instructio;
+                           Magnus* ipsa;
+
+        instructio  = &rete->instructiones[k];
+        ipsa        = &formae[(rete->introitus + k) * latus];
+        per (t = ZEPHYRUM; t < rete->introitus; t++)
+        {
+            ipsa[t] = magnus_ex_s64(ZEPHYRUM);
+        }
+        ipsa[rete->introitus] = instructio->addendum;
+        per (j = ZEPHYRUM; j < instructio->termini; j++)
+        {
+            Magnus* fons = &formae[(i32)instructio->fontes[j] * latus];
+
+            per (t = ZEPHYRUM; t < latus; t++)
+            {
+                ipsa[t] = magnus_adde(ipsa[t], magnus_multiplica(
+                    instructio->coefficientes[j], fons[t], temporaria),
+                    temporaria);
+            }
+        }
+        si (instructio->genus == NERVUS_RELU)
+        {
+            si (!_bitus(forma, r))
+            {
+                per (t = ZEPHYRUM; t < latus; t++)
+                {
+                    ipsa[t] = magnus_ex_s64(ZEPHYRUM);
+                }
+            }
+            r++;
+        }
+    }
+    si (!matrix_nulla(&ANULUS_INTEGRORUM, rete->exitus_numerus,
+        rete->introitus, piscina, &matrix_effectus))
+    {
+        piscina_destruere(temporaria);
+        redde FALSUM;
+    }
+    cc = NIHIL;
+    si (rete->exitus_numerus > ZEPHYRUM)
+    {
+        cc = (Magnus*)piscina_allocare(piscina,
+            (memoriae_index)rete->exitus_numerus * magnitudo(Magnus));
+    }
+    per (k = ZEPHYRUM; k < rete->exitus_numerus; k++)
+    {
+        Magnus* ipsa = &formae[(i32)rete->exitus[k] * latus];
+
+        per (t = ZEPHYRUM; t < rete->introitus; t++)
+        {
+            Magnus v = magnus_transcribe(ipsa[t], piscina);
+
+            matrix_pone(&matrix_effectus, k, t, &v);
+        }
+        cc[k] = magnus_transcribe(ipsa[rete->introitus], piscina);
+    }
+    piscina_destruere(temporaria);
+    *m = matrix_effectus;
+    *c = cc;
+    redde VERUM;
+}
+
+
+/* ==================================================
+ * Compositio
+ * ================================================== */
+
+b32
+nervus_componere (
+    constans Nervus*  a,
+    constans Nervus*  b,
+            Piscina*  piscina,
+             Nervus** exitus)
+{
+    Piscina* temporaria;
+     Nervus* rete;
+        s32* mappa;      /* registra b -> registra compositi */
+        s32* fontes;
+        s32* exitus_novi;
+        i32  k;
+        i32  j;
+        b32  bene = VERUM;
+
+    si (   !nervus_validus(a) || !nervus_validus(b) || piscina == NIHIL
+        || exitus == NIHIL || a->exitus_numerus != b->introitus)
+    {
+        redde FALSUM;
+    }
+    si (a->introitus + a->numerus + b->numerus > NERVUS_REGISTRA_MAXIMA)
+    {
+        redde FALSUM;
+    }
+    temporaria = piscina_generare_dynamicum("nervus_componere", IV
+        * MXXIV);
+    si (temporaria == NIHIL)
+    {
+        redde FALSUM;
+    }
+    mappa = (s32*)piscina_allocare(temporaria,
+        (memoriae_index)(b->introitus + b->numerus
+            + I) * magnitudo(s32));
+    fontes = (s32*)piscina_allocare(temporaria,
+        (memoriae_index)NERVUS_TERMINI_MAXIMI * magnitudo(s32));
+    exitus_novi = (s32*)piscina_allocare(temporaria,
+        (memoriae_index)(b->exitus_numerus + I) * magnitudo(s32));
+    (vacuum)nervus_creare(a->introitus, piscina, &rete);
+    per (k = ZEPHYRUM; k < a->numerus && bene; k++)
+    {
+         constans NervusInstructio* instructio = &a->instructiones[k];
+                               s32  novum;
+
+        bene = _instructionem_addere(rete, instructio->genus,
+            instructio->termini, instructio->fontes,
+            instructio->coefficientes, instructio->addendum, &novum);
+    }
+    per (k = ZEPHYRUM; k < b->introitus; k++)
+    {
+        mappa[k] = a->exitus[k];
+    }
+    per (k = ZEPHYRUM; k < b->numerus && bene; k++)
+    {
+         constans NervusInstructio* instructio  = &b->instructiones[k];
+                               s32  novum       = -I;
+
+        per (j = ZEPHYRUM; j < instructio->termini; j++)
+        {
+            fontes[j] = mappa[instructio->fontes[j]];
+        }
+        bene = _instructionem_addere(rete, instructio->genus,
+            instructio->termini, fontes, instructio->coefficientes,
+            instructio->addendum, &novum);
+        mappa[b->introitus + k] = novum;
+    }
+    per (k = ZEPHYRUM; k < b->exitus_numerus && bene; k++)
+    {
+        exitus_novi[k] = mappa[b->exitus[k]];
+    }
+    si (bene)
+    {
+        bene = nervus_exitus(rete, b->exitus_numerus, exitus_novi);
+    }
+    piscina_destruere(temporaria);
+    si (!bene)
+    {
+        redde FALSUM;
+    }
+    *exitus = rete;
     redde VERUM;
 }
