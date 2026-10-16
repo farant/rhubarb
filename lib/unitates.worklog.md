@@ -131,3 +131,14 @@ and the old cooker form (`/*` alone on line 1, marker on line 3 = manu).
 The reverse check lives in the generata gate, not here: only fabrica
 knows its outputs; this lib only reads the file. Splices are named by
 fabrica (`IUDICIUM ... splicita`), never by a list.
+
+## 2026-10-15 - U5a census
+
+`unitates_census` reuses `_respondere` (no provenance read) over the
+enumerated list now kept in `Unitates.viae`. "Falls to the root" =
+root unit AND `unitatis_causa` starts with "directorium " (not a stem,
+not a title, not a declaration) - the same causa string the CLI shows,
+so the census and `quid` cannot disagree. Unit lookup per file is a
+linear scan over 330 units (~3M compares, 0.3 s total with git) - fine
+until it is not. Expectations are data; the only supported attribute
+is `usus` (refused otherwise, with the name).

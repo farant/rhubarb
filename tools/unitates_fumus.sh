@@ -22,6 +22,9 @@
 #       ignorata non; examen-custos in vendor/sqlite3.c (examen nudum
 #       REICE) et censor-custos in fixtura censoris (censor nudus
 #       flagrat) TACENT - silentium filtrum per uncum verum probat
+#   VII census (U5a): 'quid -census -machina' currit, SUMMA unitates
+#       = -omnes, nulla applicatio sine usu (exspectatio hodie impleta:
+#       ratchet), orphani et indeclarata nominantur
 #
 # Debetur politicae, canonibus, omni declarationi et nucleo C
 # (clausura tools/fabrica.c: lib/unitates.c) - I s, vilis.
@@ -133,6 +136,18 @@ if [ "$c_lib" -eq 0 ] && [ "$c_ven" -eq 1 ] && [ "$c_ext" -eq 1 ] && [ "$c_ign" 
     echo "  VI  custodes: lib/ iudicatur, vendor/extra/ignorata non; examen-custos et censor-custos tacent in vendor et fixtura OK"
 else
     echo "  VI  FRACTUM (lib $c_lib, vendor $c_ven, extra $c_ext, ignorata $c_ign)"; printf '%s\n%s\n' "$h_ex" "$h_ce" | sed 's/^/      /' | head -10; fracta=1
+fi
+
+# VII census
+bin/fabrica quid -census -machina > "$T/o7" 2>&1; rc7=$?
+n7=$(awk -F'\t' '$1 == "SUMMA" { print $3 }' "$T/o7")
+nomn=$(wc -l < "$T/o2" | tr -d ' ')
+app7=$(awk -F'\t' '$1 == "LACUNA" && $2 == "/elementa_programmatis/applicatio"' "$T/o7" | wc -l | tr -d ' ')
+orph7=$(awk -F'\t' '$1 == "SUMMA" { print $9 }' "$T/o7")
+if [ "$rc7" -eq 0 ] && [ "$n7" = "$nomn" ] && [ "$app7" -eq 0 ] && [ -n "$orph7" ]; then
+    echo "  VII census: $n7 unitates (= -omnes), applicationes omnes usum declarant, orphani $orph7 OK"
+else
+    echo "  VII FRACTUM (rc=$rc7, unitates '$n7' pro $nomn, applicationes sine usu $app7)"; grep -E '^(SUMMA|LACUNA	/elementa_programmatis/applicatio)' "$T/o7" | sed 's/^/      /' | head -8; fracta=1
 fi
 
 if [ "$fracta" -ne 0 ]; then echo "fumus unitatum: FRACTUM"; exit 1; fi

@@ -135,6 +135,10 @@ hic_manens constans character* constans POLITICA[] = {
         " vitae=\"viva\" munera=\"fons\"",
     "         provenientiae=\"manu generatum\" linguae=\"c89\""
         " descriptio=\"o\"/>",
+    "  <exspectatio genus=\"/elementa_programmatis/bibliotheca\""
+        " munus=\"probatio\" minimum=\"1\" descriptio=\"probatio\"/>",
+    "  <exspectatio genus=\"/elementa_programmatis/applicatio\""
+        " attributum=\"usus\" descriptio=\"usus\"/>",
     "  <familia radix=\"imago\"/>",
     "</unitates>",
     NIHIL
@@ -169,6 +173,8 @@ hic_manens constans PlagulaFicta MUNDUS[] = {
     { "archivum/materia/unitas.stml", "<unitas titulus=\"materia\""
         " genus=\"" SUB "\" descriptio=\"m\"/>", NIHIL },
     { "archivum/materia/vetus.c", "/* vetus */\n", NIHIL },
+    { "archivum/app/unitas.stml", "<unitas titulus=\"app\" genus=\"" APP
+        "\" descriptio=\"a\"/>", NIHIL },
     { "ora/unitas.stml", "<unitas titulus=\"ora\" genus=\"" SUB "\""
         " cura=\"aliena\" descriptio=\"o\"/>", NIHIL },
     { "ora/clay/unitas.stml", "<unitas titulus=\"clay\" genus=\"" SUB
@@ -261,7 +267,7 @@ _quid (
     redde r;
 }
 
-/* I. lectio sana: XIV unitates (IX directorii, V bibliothecae; partes
+/* I. lectio sana: XV unitates (X directorii, V bibliothecae; partes
  * energia_macos/posix non unitates) */
 interior vacuum
 _sectio_lectio (
@@ -290,7 +296,7 @@ _sectio_lectio (
                 "energia_macos"));
         }
     }
-    CREDO_AEQUALIS_I32(directorii, IX);
+    CREDO_AEQUALIS_I32(directorii, X);
     CREDO_AEQUALIS_I32(bibliothecae, V);
 }
 
@@ -614,6 +620,8 @@ _sectio_recusationes (
             " probationes=\"probationes\" praefixum=\"probatio_\""
             " partes=\"_macos\"/>",
         "  <familia radix=\"nusquam\"/>",
+        "  <exspectatio genus=\"/x\" munus=\"nihil\""
+            " attributum=\"usus\" descriptio=\"d\"/>",
         "  <ignotum/>",
         "</unitates>",
         NIHIL
@@ -652,6 +660,8 @@ _sectio_recusationes (
         "e/unitas.stml",
         "genus '/elementa_programmatis/bibliotheca' non citabile",
         "familia 'nusquam' sine bibliotheca propria",
+        "exspectatio generis non citabilis '/x'",
+        "exspectatio munus AUT attributum nominat",
         NIHIL
     };
       chorda  causa;
@@ -687,6 +697,65 @@ _sectio_radix_absens (
     CONTINET_LITERIS(causa, "unitas radicis abest");
 }
 
+/* X. census: exspectationes per genus (bibliotheca sine probatione,
+ * applicatio sine usu), archivata non iudicata, probatio orphana,
+ * directorium cum codice indeclaratum */
+interior vacuum
+_sectio_census (
+    CredoContextus* c)
+{
+             Unitates* u = _sanum(c);
+       UnitatesCensus* k;
+    ChordaAedificator* a;
+                  i32  i;
+                  i32  j;
+
+    CREDO_NECESSE_NON_NIHIL(u);
+    k = unitates_census(u, c->piscina);
+    CREDO_NECESSE_NON_NIHIL(k);
+    a = chorda_aedificator_creare(c->piscina, (memoriae_index)CCLVI);
+    per (i = ZEPHYRUM; i < xar_numerus(k->unitates); i++)
+    {
+        constans UnitatisCensus* summarium = (constans UnitatisCensus*)
+            xar_obtinere(k->unitates, i);
+
+        per (j = ZEPHYRUM; j < xar_numerus(summarium->desunt); j++)
+        {
+            chorda_aedificator_appendere_chorda(a,
+                summarium->unitas->titulus);
+            chorda_aedificator_appendere_character(a, ':');
+            chorda_aedificator_appendere_chorda(a,
+                *(chorda*)xar_obtinere(summarium->desunt, j));
+            chorda_aedificator_appendere_character(a, ' ');
+        }
+        /* numeri munerum: xar probationem unam habet */
+        si (chorda_aequalis_literis(summarium->unitas->titulus, "xar"))
+        {
+            CREDO_AEQUALIS_I32(xar_numerus(summarium->numeri)
+                > ZEPHYRUM, I);
+        }
+    }
+    /* ordine unitates_omnes: directorii (pictor sine usu; app
+     * archivata NON), deinde bibliothecae (energia imago imago_png
+     * sine probatione; xar et vicus habent) */
+    CREDO_CHORDA_AEQUALIS_LITERIS(chorda_aedificator_finire(a),
+        "pictor:usus energia:probatio imago:probatio "
+        "imago_png:probatio ");
+
+    CREDO_AEQUALIS_I32(xar_numerus(k->orphani), I);
+    CREDO_CHORDA_AEQUALIS_LITERIS(*(chorda*)xar_obtinere(k->orphani,
+        ZEPHYRUM), "probationes/probatio_combinado.c");
+
+    /* ordine enumerationis: silva/amalgama (politica probationis munus
+     * amalgama non habet - fons) et tools (x.sh, coctum.c,
+     * norma_canon.h) */
+    CREDO_AEQUALIS_I32(xar_numerus(k->indeclarata), II);
+    CREDO_CHORDA_AEQUALIS_LITERIS(((UnitatesDirectorium*)xar_obtinere(
+        k->indeclarata, ZEPHYRUM))->via, "silva/amalgama");
+    CREDO_CHORDA_AEQUALIS_LITERIS(((UnitatesDirectorium*)xar_obtinere(
+        k->indeclarata, I))->via, "tools");
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "lectio sana", _sectio_lectio, NIHIL, NIHIL, NIHIL, NIHIL },
     { "unitas intima", _sectio_intima, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -701,6 +770,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "viae iudicatae", _sectio_viae_iudicatae, NIHIL, NIHIL, NIHIL,
         NIHIL },
+    { "census", _sectio_census, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

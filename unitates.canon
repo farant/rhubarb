@@ -33,6 +33,7 @@
     <liberum nomen="iudex"/>
     <liberum nomen="bibliothecae" maximum="1"/>
     <liberum nomen="familia"/>
+    <liberum nomen="exspectatio"/>
   </elementum>
 
   <elementum nomen="cura"
@@ -103,6 +104,18 @@
     <attributum nomen="partes"      genus="textus" necessarium="verum"
       nota="suffixa partium (_macos _posix ...): stemma S_macos ad S
             pertinet, non unitas propria"/>
+  </elementum>
+
+  <elementum nomen="exspectatio"
+    nota="quid unitas generis habere debet (census, U5a): munus cum
+          minimo plagularum, AUT attributum declaratum (usus).
+          Unitates archivatae non iudicantur. Alterum ex duobus exacte
+          (lector recusat)">
+    <attributum nomen="genus"      genus="textus" necessarium="verum"/>
+    <attributum nomen="munus"      genus="nomen"/>
+    <attributum nomen="minimum"    genus="numerus"/>
+    <attributum nomen="attributum" genus="nomen"/>
+    <attributum nomen="descriptio" genus="textus" necessarium="verum"/>
   </elementum>
 
   <elementum nomen="familia"

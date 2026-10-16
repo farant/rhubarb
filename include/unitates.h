@@ -29,8 +29,8 @@
  * Plagula ad unitatem INTIMAM pertinet; bibliotheca vincit
  * directorium continens. DIR/unitas.stml ipsa ad unitatem CONTINENTEM
  * pertinet (tabula domus de filio: vendor/unitas.stml domestica est;
- * radicis declaratio radicis manet). Identitas = genus + titulus (applicatio
- * vicus et bibliotheca vicus duae sunt).
+ * radicis declaratio radicis manet). Identitas = genus + titulus
+ * (applicatio vicus et bibliotheca vicus duae sunt).
  *
  * HEREDITAS: cura = declarata in unitate, aliter declarata in
  * maiore proximo, aliter praestituta generis; vita = declarata,
@@ -192,5 +192,50 @@ unitates_viae_iudicatae (
                chorda  lista,
               Piscina* piscina,
                   b32* ignotus);
+
+
+/* ==================================================
+ * CENSUS (U5a): quid unitates habent, quid eis deest, quae nusquam
+ * cadunt - relatio, non porta (spec par. VI septem-octavae m)
+ * ================================================== */
+
+nomen structura {
+    chorda clavis;      /* munus aut lingua */
+       i32 numerus;
+} UnitatesNumerus;
+
+nomen structura {
+    constans Unitas* unitas;
+                Xar* numeri;   /* UnitatesNumerus per munus, ordine
+                                * primi visi */
+                Xar* desunt;   /* chorda: descriptio exspectationis
+                                * non impletae (unitates archivatae
+                                * numquam) */
+} UnitatisCensus;
+
+nomen structura {
+    chorda  via;                /* directorium */
+       Xar* numeri;            /* UnitatesNumerus per linguam */
+} UnitatesDirectorium;
+
+nomen structura {
+    Xar* unitates;     /* UnitatisCensus, ordine unitates_omnes */
+    Xar* orphani;      /* chorda: probationes radicis (PROBATIONES/
+                        * PRAEFIXUM*.c) quae nullam unitatem per
+                        * stemma aut titulum inveniunt */
+    Xar* indeclarata;  /* UnitatesDirectorium: directoria cum fontibus,
+                        * capitibus, scriptis aut probationibus quae
+                        * radici cadunt (nulla declaratio) - capita,
+                        * fontes, probationes bibliothecarum exclusa */
+} UnitatesCensus;
+
+/* Census plagularum enumeratarum (eaedem ac unitates_legere legit):
+ * quaeque plagula ad unitatem intimam cum munere numeratur, deinde
+ * exspectationes politicae (<exspectatio>) per genus iudicantur. Nihil
+ * legitur (provenientia non poscitur). */
+UnitatesCensus*
+unitates_census (
+    constans Unitates* unitates,
+              Piscina* piscina);
 
 #endif /* UNITATES_H */

@@ -10,6 +10,11 @@
  *       iudicatne iudex (unitates.stml <iudex>) viam? causa si non
  *   bin/fabrica quid -omnes [-machina]
  *       unitates omnes (genus, titulus, via, parens, declaratio)
+ *   bin/fabrica quid -census [-machina]
+ *       census (U5a): unitates cum lacunis (exspectationes politicae
+ *       per genus non impletae), probationes radicis orphanae,
+ *       directoria cum codice sine declaratione - relatio, exitus 0
+ *       unitates omnes (genus, titulus, via, parens, declaratio)
  *
  * -machina: lineae TAB separatae -
  *   quid:    via  proprietas  valor  causa
@@ -119,6 +124,102 @@ _responsum_imprimere (
 }
 
 interior vacuum
+_numeros_imprimere (
+    constans Xar* numeri)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(numeri); i++)
+    {
+        constans UnitatesNumerus* n = (constans UnitatesNumerus*)
+            xar_obtinere(numeri, i);
+
+        si (i > ZEPHYRUM)
+        {
+            fputs(", ", stdout);
+        }
+        _scribere(n->clavis);
+        printf(" %ld", (longus)n->numerus);
+    }
+}
+
+interior vacuum
+_censum_imprimere (
+    constans Unitates* u,
+                  b32  machina,
+              Piscina* piscina)
+{
+    UnitatesCensus* c          = unitates_census(u, piscina);
+               i32  lacunosae  = ZEPHYRUM;
+               i32  lacunae    = ZEPHYRUM;
+               i32  i;
+               i32  j;
+
+    si (!machina)
+    {
+        puts("UNITATES CUM LACUNIS (exspectationes unitates.stml):");
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(c->unitates); i++)
+    {
+        constans UnitatisCensus* summarium = (constans UnitatisCensus*)
+            xar_obtinere(c->unitates, i);
+
+        si (xar_numerus(summarium->desunt) == ZEPHYRUM)
+        {
+            perge;
+        }
+        lacunosae++;
+        per (j = ZEPHYRUM; j < xar_numerus(summarium->desunt); j++)
+        {
+            lacunae++;
+            fputs(machina ? "LACUNA\t" : "  ", stdout);
+            _scribere(summarium->unitas->genus);
+            fputs(machina ? "\t" : "  ", stdout);
+            _scribere(summarium->unitas->titulus);
+            fputs(machina ? "\t" : "  - ", stdout);
+            _scribere(*(chorda*)xar_obtinere(summarium->desunt, j));
+            putchar('\n');
+        }
+    }
+    si (!machina)
+    {
+        printf("ORPHANI (probationes radicis sine unitate): %ld\n",
+            (longus)xar_numerus(c->orphani));
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(c->orphani); i++)
+    {
+        fputs(machina ? "ORPHANUS\t" : "  ", stdout);
+        _scribere(*(chorda*)xar_obtinere(c->orphani, i));
+        putchar('\n');
+    }
+    si (!machina)
+    {
+        printf("INDECLARATA (directoria cum codice quae radici cadunt):"
+            " %ld\n", (longus)xar_numerus(c->indeclarata));
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(c->indeclarata); i++)
+    {
+        constans UnitatesDirectorium* d =
+            (constans UnitatesDirectorium*)
+            xar_obtinere(c->indeclarata, i);
+
+        fputs(machina ? "INDECLARATUM\t" : "  ", stdout);
+        _scribere(d->via);
+        fputs(machina ? "\t" : "  (", stdout);
+        _numeros_imprimere(d->numeri);
+        fputs(machina ? "\n" : ")\n", stdout);
+    }
+    printf(machina
+        ? "SUMMA\tunitates\t%ld\tlacunosae\t%ld\tlacunae\t%ld"
+          "\torphani\t%ld\tindeclarata\t%ld\n"
+        : "summa: %ld unitates, %ld cum lacunis (%ld lacunae), %ld"
+          " orphani, %ld directoria indeclarata\n",
+        (longus)xar_numerus(c->unitates), (longus)lacunosae,
+        (longus)lacunae, (longus)xar_numerus(c->orphani),
+        (longus)xar_numerus(c->indeclarata));
+}
+
+interior vacuum
 _omnes_imprimere (
     constans Unitates* u,
                   b32  machina,
@@ -169,6 +270,7 @@ suturae_quid (
     constans character* iudex    = NIHIL;
                    b32  machina  = FALSUM;
                    b32  omnes    = FALSUM;
+                   b32  census   = FALSUM;
                    s32  i;
                    s32  primus;
 
@@ -182,6 +284,10 @@ suturae_quid (
         {
             omnes = VERUM;
         }
+        alioquin si (strcmp(argv[i], "-census") == ZEPHYRUM)
+        {
+            census = VERUM;
+        }
         alioquin si (   strcmp(argv[i], "-iudex") == ZEPHYRUM
                      && i + I < argc)
         {
@@ -194,11 +300,13 @@ suturae_quid (
         }
     }
     primus = i;
-    si (omnes == (primus < argc) || (omnes && iudex != NIHIL))
+    si (   (omnes || census) == (primus < argc) || (omnes && census)
+        || ((omnes || census) && iudex != NIHIL))
     {
         fprintf(stderr, "usus: bin/fabrica quid [-machina] VIA...\n"
             "      bin/fabrica quid -iudex TITULUS [-machina] VIA...\n"
-            "      bin/fabrica quid -omnes [-machina]\n");
+            "      bin/fabrica quid -omnes [-machina]\n"
+            "      bin/fabrica quid -census [-machina]\n");
         redde II;
     }
 
@@ -214,6 +322,11 @@ suturae_quid (
     si (omnes)
     {
         _omnes_imprimere(u, machina, piscina);
+        redde ZEPHYRUM;
+    }
+    si (census)
+    {
+        _censum_imprimere(u, machina, piscina);
         redde ZEPHYRUM;
     }
     per (i = primus; i < argc; i++)

@@ -95,6 +95,14 @@
                 praefixum="probatio_"
                 partes="_macos _posix _interna _impl _tabula"/>
 
+  <!-- exspectationes per genus (census: bin/fabrica quid -census) -->
+  <exspectatio genus="/elementa_programmatis/bibliotheca" munus="probatio" minimum="1"
+               descriptio="bibliotheca probationem habet"/>
+  <exspectatio genus="/elementa_programmatis/bibliotheca" munus="documentum" minimum="1"
+               descriptio="bibliotheca worklog aut documentum habet"/>
+  <exspectatio genus="/elementa_programmatis/applicatio" attributum="usus"
+               descriptio="applicatio auditorium suum declarat"/>
+
   <!-- familiae: radices quarum bibliothecae RADIX_* unitates liberae
        sunt (tres liberi aut plures, partibus exclusis; census 10-15) -->
   <familia radix="arbor"/>

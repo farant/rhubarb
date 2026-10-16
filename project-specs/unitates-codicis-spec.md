@@ -616,6 +616,40 @@ last generated file whose marker sat on line 3 with no fabrica action
 (input = every *.md). Gate `unitates` V checks the prose judge
 (knotapel judged, a markdown fixture not).
 
+## VI⅞m. U5a: the unit census (2026-10-15)
+
+`bin/fabrica quid -census [-machina]` (lib `unitates_census`): every
+enumerated file counted into its innermost unit by role; policy
+`<exspectatio genus=... munus=X minimum=N | attributum="usus"
+descriptio=.../>` judged per kind (archived units never); plus ORPHAN
+root tests (`probationes/probatio_*.c` that fall to the root by the
+directory fallback) and UNDECLARED directories (source/header/script/
+test files that fall to the root; include/ lib/ probationes/ excluded).
+Report, not gate (0.3 s); gate `unitates` VII keeps "every app declares
+its audience" (true today) as a ratchet. Plants: archived judged ->
+red; orphan dropped -> red; an app without usus -> VII red.
+
+**First real-tree census:** 330 units, 137 with gaps (189):
+- 60 libraries without a test - mixed: real gaps, generated tables
+  tested through their parent (norma_canon, organum_canon,
+  organa_infixa), header-only (latina), font data (fons_6x8).
+- 129 of 300 libraries without a worklog/doc - CLAUDE.md says worklogs
+  are made "as needed", so this expectation may be too strict: Fran's
+  call whether it stays (it is one line).
+- 0 apps without an audience.
+- 20 orphan tests (U1 counted 40; app names now claim pictor/scriba
+  tests). Some have an owner the prefix rule cannot see because the
+  library name is LONGER than the test's (probatio_arbor2_lapifex ->
+  arbor2_lapifex_adaptator).
+- 25 undeclared code directories: `tools` itself (c89 67, sh 113 - the
+  single-file tools waiting for tool units, item #3), asset directories
+  named `*_assets` (the `assets` role rule matches the exact segment
+  `assets` only: lib/mensa_assets, lib/speculum_assets,
+  tools/silex_assets, probationes/*_assets), .claude/hooks, pythonica,
+  docs/instrumenta, tools/vox (TypeScript), tools/linux,
+  tools/unci-git, vim, scripts, episodes, lint, instrumenta,
+  book_assets, reference.
+
 ## VII. Interrogationes - documentation as typed questions (Fran 10-15)
 
 A unit exposes what it can do by DECLARING QUESTIONS it answers

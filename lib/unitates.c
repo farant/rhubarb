@@ -45,6 +45,15 @@ nomen structura {
        Xar* linguae;
 } UnitatesIudex;
 
+/* exspectatio generis (census U5a): munus cum minimo AUT attributum */
+nomen structura {
+    chorda genus;
+    chorda munus;        /* vacuum si attributum */
+       i32 minimum;
+    chorda attributum;   /* 'usus'; vacuum si munus */
+    chorda descriptio;
+} UnitatesExspectatio;
+
 structura Unitates {
     constans UnitatesSutura* sutura;
                         Xar* curae;            /* chorda */
@@ -65,6 +74,8 @@ structura Unitates {
                         Xar* omnes;            /* Unitas* */
                         Xar* directoria;       /* Unitas* */
              TabulaDispersa* stemmata;         /* stemma -> Unitas* */
+                        Xar* exspectationes;   /* UnitatesExspectatio */
+                        Xar* viae;             /* enumeratae */
 };
 
 
@@ -406,6 +417,9 @@ hic_manens constans character* constans _attributa_bibliothecarum[] = {
 hic_manens constans character* constans _attributa_familiae[] = {
     "radix", NIHIL
 };
+hic_manens constans character* constans _attributa_exspectationis[] = {
+    "genus", "munus", "minimum", "attributum", "descriptio", NIHIL
+};
 
 /* titulus in indicem (bis = causa) */
 interior vacuum
@@ -444,6 +458,8 @@ _politicam_legere (
     b32  bibliothecae = FALSUM;
     Xar* iudicum_nodi = xar_creare(piscina, (i32)magnitudo(StmlNodus*));
     Xar* generum_nodi = xar_creare(piscina, (i32)magnitudo(StmlNodus*));
+    Xar* exspectationum_nodi = xar_creare(piscina,
+        (i32)magnitudo(StmlNodus*));
 
     si (!chorda_aequalis_literis(*radix->titulus, "unitates"))
     {
@@ -542,6 +558,11 @@ _politicam_legere (
             *(chorda*)xar_addere(u->familiae) = _necessarium(n, "radix",
                 via, k);
         }
+        alioquin si (chorda_aequalis_literis(t, "exspectatio"))
+        {
+            _attributa_clausa(n, _attributa_exspectationis, via, k);
+            *(StmlNodus**)xar_addere(exspectationum_nodi) = n;
+        }
         alioquin
         {
             _causa(k, via, n->linea, "elementum ignotum <", t, ">");
@@ -630,6 +651,60 @@ _politicam_legere (
             d->provenientiae, u->provenientiae);
         _indicem_iudicare(k, via, n->linea, "lingua '", d->linguae,
             linguarum_tituli);
+    }
+    /* exspectationes post genera et munera: genus citabile, munus
+     * notum, attributum sustentum; alterum ex duobus exacte */
+    per (i = ZEPHYRUM; i < xar_numerus(exspectationum_nodi); i++)
+    {
+        StmlNodus* n = *(StmlNodus**)xar_obtinere(exspectationum_nodi,
+            i);
+        UnitatesExspectatio* e = (UnitatesExspectatio*)xar_addere(
+            u->exspectationes);
+        chorda minimum = _valor(n, "minimum");
+           i32 j;
+           b32 notum = FALSUM;
+
+        e->genus       = _necessarium(n, "genus", via, k);
+        e->descriptio  = _necessarium(n, "descriptio", via, k);
+        e->munus       = _valor(n, "munus");
+        e->attributum  = _valor(n, "attributum");
+        e->minimum     = I;
+        per (j = ZEPHYRUM; j < xar_numerus(u->genera); j++)
+        {
+            notum = notum || chorda_aequalis(((UnitatesGenus*)
+                xar_obtinere(u->genera, j))->via, e->genus);
+        }
+        si (e->genus.mensura > ZEPHYRUM && !notum)
+        {
+            _causa(k, via, n->linea,
+                "exspectatio generis non citabilis '",
+                e->genus, "'");
+        }
+        si ((e->munus.mensura > ZEPHYRUM) == (e->attributum.mensura
+                > ZEPHYRUM))
+        {
+            _causa(k, via, n->linea, "exspectatio munus AUT attributum "
+                "nominat (exacte alterum)", _vacua(), "");
+        }
+        si (   e->munus.mensura > ZEPHYRUM
+            && !_in_indice(u->munerum_tituli,
+                e->munus))
+        {
+            _ignotum(k, via, n->linea, "munus '", e->munus,
+                u->munerum_tituli);
+        }
+        si (   e->attributum.mensura > ZEPHYRUM
+            && !chorda_aequalis_literis(e->attributum, "usus"))
+        {
+            _causa(k, via, n->linea, "attributum exspectationis '",
+                e->attributum, "' non sustentum (nota: usus)");
+        }
+        si (   minimum.mensura > ZEPHYRUM && !chorda_ut_i32(minimum,
+                &e->minimum))
+        {
+            _causa(k, via, n->linea, "minimum non numerus: '", minimum,
+                "'");
+        }
     }
     si (!bibliothecae)
     {
@@ -1126,6 +1201,9 @@ unitates_legere (
     u->omnes        = xar_creare(piscina, (i32)magnitudo(Unitas*));
     u->directoria   = xar_creare(piscina, (i32)magnitudo(Unitas*));
     u->stemmata     = tabula_dispersa_creare_chorda(piscina, CCLVI);
+    u->exspectationes = xar_creare(piscina, (i32)magnitudo(
+        UnitatesExspectatio));
+    u->viae         = xar_creare(piscina, (i32)magnitudo(chorda));
 
     via_politicae = chorda_ex_literis(UNITATES_POLITICA, piscina);
     si (!sutura->plagulam_legere(sutura->datum, via_politicae, piscina,
@@ -1149,6 +1227,12 @@ unitates_legere (
         _causa(&k, _vacua(), ZEPHYRUM, "enumeratio plagularum fracta",
             _vacua(), "");
         viae = xar_creare(piscina, (i32)magnitudo(chorda));
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(viae); i++)
+    {
+        *(chorda*)xar_addere(u->viae) =
+            _via_norma(*(chorda*)xar_obtinere(
+            viae, i));
     }
     per (i = ZEPHYRUM; i < xar_numerus(viae); i++)
     {
@@ -1811,4 +1895,215 @@ unitates_viae_iudicatae (
         }
     }
     redde chorda_aedificator_finire(a);
+}
+
+
+/* ==================================================
+ * Census (U5a)
+ * ================================================== */
+
+/* numerum clavis in Xar de UnitatesNumerus augere (ordine primi
+ * visi) */
+interior vacuum
+_numerum_augere (
+        Xar* numeri,
+     chorda  clavis)
+{
+                i32  i;
+    UnitatesNumerus* n;
+
+    per (i = ZEPHYRUM; i < xar_numerus(numeri); i++)
+    {
+        n = (UnitatesNumerus*)xar_obtinere(numeri, i);
+        si (chorda_aequalis(n->clavis, clavis))
+        {
+            n->numerus++;
+            redde;
+        }
+    }
+    n           = (UnitatesNumerus*)xar_addere(numeri);
+    n->clavis   = clavis;
+    n->numerus  = I;
+}
+
+interior i32
+_numerus_clavis (
+    constans Xar* numeri,
+          chorda  clavis)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(numeri); i++)
+    {
+        constans UnitatesNumerus* n = (constans UnitatesNumerus*)
+            xar_obtinere(numeri, i);
+
+        si (chorda_aequalis(n->clavis, clavis))
+        {
+            redde n->numerus;
+        }
+    }
+    redde ZEPHYRUM;
+}
+
+/* unitas archivata (sua aut maioris vita) */
+interior b32
+_extra_usum (
+    constans Unitas* x)
+{
+    per (; x != NIHIL; x = x->parens)
+    {
+        si (x->vita.mensura > ZEPHYRUM)
+        {
+            redde chorda_aequalis_literis(x->vita, "archivata");
+        }
+    }
+    redde FALSUM;
+}
+
+UnitatesCensus*
+unitates_census (
+    constans Unitates* unitates,
+              Piscina* piscina)
+{
+    UnitatesCensus* c = (UnitatesCensus*)piscina_allocare(piscina,
+        (memoriae_index)magnitudo(UnitatesCensus));
+    i32 n = xar_numerus(unitates->omnes);
+    i32 i;
+    i32 j;
+
+    c->unitates  = xar_creare(piscina,
+        (i32)magnitudo(UnitatisCensus));
+    c->orphani   = xar_creare(piscina, (i32)magnitudo(chorda));
+    c->indeclarata  = xar_creare(piscina, (i32)magnitudo(
+        UnitatesDirectorium));
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        UnitatisCensus* summarium =
+            (UnitatisCensus*)xar_addere(c->unitates);
+
+        summarium->unitas = *(Unitas**)xar_obtinere(unitates->omnes, i);
+        summarium->numeri = xar_creare(piscina,
+            (i32)magnitudo(UnitatesNumerus));
+        summarium->desunt = xar_creare(piscina, (i32)magnitudo(chorda));
+    }
+
+    per (i = ZEPHYRUM; i < xar_numerus(unitates->viae); i++)
+    {
+                   chorda via;
+        UnitatisResponsum r;
+                   chorda dir;
+                   chorda basis;
+                      b32 radici_cadit;
+
+        via = *(chorda*)xar_obtinere(unitates->viae, i);
+
+        _respondere(unitates, via, piscina, &r);
+        per (j = ZEPHYRUM; j < n; j++)
+        {
+            UnitatisCensus* summarium = (UnitatisCensus*)xar_obtinere(
+                c->unitates, j);
+
+            si (summarium->unitas == r.unitas)
+            {
+                si (r.munus.valor.mensura > ZEPHYRUM)
+                {
+                    _numerum_augere(summarium->numeri, r.munus.valor);
+                }
+                frange;
+            }
+        }
+        /* radici per directorium solum cadit (nec stemma nec titulus
+         * nec declaratio) */
+        radici_cadit = r.unitas->parens == NIHIL
+            && _incipit_chorda(r.unitatis_causa, chorda_ex_literis(
+                "directorium ", piscina));
+        si (!radici_cadit)
+        {
+            perge;
+        }
+        _viam_findere(via, &dir, &basis);
+        si (   chorda_aequalis(dir, unitates->probationes)
+            && _incipit_chorda(basis, unitates->praefixum)
+            && _finit(basis, ".c"))
+        {
+            *(chorda*)xar_addere(c->orphani) = via;
+            perge;
+        }
+        si (   dir.mensura == ZEPHYRUM
+            || chorda_aequalis(dir, unitates->capita)
+            || chorda_aequalis(dir, unitates->fontes)
+            || chorda_aequalis(dir, unitates->probationes))
+        {
+            perge;
+        }
+        si (   !chorda_aequalis_literis(r.munus.valor, "fons")
+            && !chorda_aequalis_literis(r.munus.valor, "caput")
+            && !chorda_aequalis_literis(r.munus.valor, "scriptum")
+            && !chorda_aequalis_literis(r.munus.valor, "probatio"))
+        {
+            perge;
+        }
+        {
+            UnitatesDirectorium* d = NIHIL;
+
+            per (j = ZEPHYRUM; j < xar_numerus(c->indeclarata); j++)
+            {
+                UnitatesDirectorium* x = (UnitatesDirectorium*)
+                    xar_obtinere(c->indeclarata, j);
+
+                si (chorda_aequalis(x->via, dir))
+                {
+                    d = x;
+                    frange;
+                }
+            }
+            si (d == NIHIL)
+            {
+                d = (UnitatesDirectorium*)xar_addere(c->indeclarata);
+                d->via = dir;
+                d->numeri  = xar_creare(piscina, (i32)magnitudo(
+                    UnitatesNumerus));
+            }
+            _numerum_augere(d->numeri, r.lingua.valor.mensura > ZEPHYRUM
+                ? r.lingua.valor : chorda_ex_literis("?", piscina));
+        }
+    }
+
+    /* exspectationes per genus; archivatae non iudicantur */
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        UnitatisCensus* summarium =
+            (UnitatisCensus*)xar_obtinere(c->unitates,
+            i);
+
+        si (_extra_usum(summarium->unitas))
+        {
+            perge;
+        }
+        per (j = ZEPHYRUM; j
+            < xar_numerus(unitates->exspectationes); j++)
+        {
+            constans UnitatesExspectatio* e = (constans
+                UnitatesExspectatio*)xar_obtinere(
+                unitates->exspectationes, j);
+
+            si (!chorda_aequalis(e->genus, summarium->unitas->genus))
+            {
+                perge;
+            }
+            si (   e->munus.mensura > ZEPHYRUM
+                && _numerus_clavis(summarium->numeri, e->munus)
+                    < e->minimum)
+            {
+                *(chorda*)xar_addere(summarium->desunt) = e->descriptio;
+            }
+            si (   e->attributum.mensura > ZEPHYRUM
+                && summarium->unitas->usus == NIHIL)
+            {
+                *(chorda*)xar_addere(summarium->desunt) = e->descriptio;
+            }
+        }
+    }
+    redde c;
 }
