@@ -1020,6 +1020,7 @@
   <vocabulum lemma="poly1305" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="Poly1305 (RFC 8439) - nomen proprium authenticatoris (tls13 T2, 2026-10-16)"/>
   <vocabulum lemma="aes256" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="AES-256 (FIPS 197) - nomen algorithmi cum mensura clavis (tls13 T2, 2026-10-16)"/>
   <vocabulum lemma="aes128" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="AES-128 (FIPS 197) - nomen algorithmi cum mensura clavis; sectio cifrae coactae (tls13 T6, 2026-10-16)"/>
+  <vocabulum lemma="scribibilis" lingua="latina" classis="adiectivum" nota="vox domus: writable (fossa parata ad scribendum; tcp.h, tls.h exspecta scribibilem) - tls13 T7, 2026-10-16"><forma textus="scribibilis"/><forma textus="scribibilem"/></vocabulum>
   <vocabulum lemma="ccs" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="CCS (ChangeCipherSpec, RFC 8446 D.4) - abbreviatio normae (tls13 T2, 2026-10-16)"/>
   <vocabulum lemma="aead" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="AEAD (authenticated encryption with associated data, RFC 5116) - abbreviatio (tls13 T2, 2026-10-16)"/>
   <vocabulum lemma="aad" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="AAD (additional authenticated data, RFC 5116) - abbreviatio (tls13 T2, 2026-10-16)"/>

@@ -28,3 +28,25 @@ still green. The engine was already right; the backend is
   `servum_tls_incipere_modo` ("-rev" echo mode): the test reads the echo,
   then kills s_server - the kernel closes the socket with a FIN and no
   alert. That is the honest EOF test (section eof).
+
+## 2026-10-16 - T7: fallback to BearSSL 1.2 (dispatcher in lib/tls.c)
+
+- **Trigger** only SOLUM_1_2 (a 1.2 ServerHello, or protocol_version in
+  answer to our ClientHello). On a stepped connection: the 1.3 backend
+  hands its TcpConnexio back unclosed (`tls_tls13_tcp_relinquere`),
+  `tcp_redintegrare(tcp, NIHIL)` starts a new connect onto the same fd
+  number, tls_gradus returns SCRIBERE until a zero-timeout poll says
+  writable, then `tcp_incipere_perficere` and BearSSL with the sentinel
+  flag; `tls_vectura` flips to BEARSSL. Blocking: same, with the
+  caller's timeout as socket options and BearSSL's blocking handshake.
+- **Old 1.2 servers** (pre-1.3 code that ignores supported_versions)
+  would see only 1.3 cipher suites and answer handshake_failure - not a
+  trigger. So our ClientHello also offers BearSSL's six 1.2 suites
+  (R23), like browsers do: such a server picks one and answers with a
+  1.2 ServerHello -> fallback. OpenSSL 3 limited to 1.2 answers
+  protocol_version either way (checked with s_client -tls1_3).
+- **Sentinel:** after a fallback, BearSSL's server_random[24..31] is
+  checked for "DOWNGRD" + 0x00/0x01. OpenSSL 3.3.2 really sets it, so
+  the `signum` test (forced fallback against a 1.3-capable s_server)
+  sees the real thing. A connection that fails the check refuses
+  mittere/recipere too (`vetita`), not only gradus.

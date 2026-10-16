@@ -407,6 +407,96 @@ tcp_incipere_perficere (
     redde TCP_ERROR_CONNEXIO;
 }
 
+TcpResultus
+tcp_redintegrare (
+             TcpConnexio* connexio,
+    constans TcpOptiones* optiones,
+                 Piscina* piscina)
+{
+    structura sockaddr_storage  par;
+                     socklen_t mensura = (socklen_t)magnitudo(par);
+                   TcpResultus res;
+                       integer nova;
+                       integer r;
+                       integer erratum;
+
+    si (   !connexio || connexio->fd < 0
+        || getpeername(connexio->fd, (structura sockaddr*)(vacuum*)&par,
+               &mensura) != 0)
+    {
+        redde _creare_error(TCP_ERROR_CONNEXIO, "par ignotus", piscina);
+    }
+    nova = socket(((structura sockaddr*)(vacuum*)&par)->sa_family,
+        SOCK_STREAM, IPPROTO_TCP);
+    si (nova == -1)
+    {
+        redde _creare_error(TCP_ERROR_CONNEXIO, strerror(errno),
+            piscina);
+    }
+    _ponere_nosigpipe(nova);
+    si (optiones == NIHIL)
+    {
+        TcpOptiones opt;
+
+        si (_ponere_non_blocans_fd(nova, VERUM) != TCP_OK)
+        {
+            close(nova);
+            redde _creare_error(TCP_ERROR_CONNEXIO,
+                "O_NONBLOCK fallitum", piscina);
+        }
+        opt.timeout_ms  = 0;
+        opt.nodelay     = VERUM;
+        opt.keepalive   = FALSUM;
+        _applicare_optiones(nova, &opt);
+        /* EINPROGRESS = in fundo pergit (ut tcp_incipere) */
+        r = connect(nova, (structura sockaddr*)(vacuum*)&par, mensura);
+        si (r == -1 && errno != EINPROGRESS && errno != EINTR)
+        {
+            erratum = errno;
+            close(nova);
+            redde _creare_error(TCP_ERROR_CONNEXIO, strerror(erratum),
+                piscina);
+        }
+    }
+    alioquin
+    {
+        r = connect(nova, (structura sockaddr*)(vacuum*)&par, mensura);
+        dum (r == -1 && errno == EINTR)
+        {
+            r = connect(nova, (structura sockaddr*)(vacuum*)&par,
+                mensura);
+            si (r == -1 && errno == EISCONN)
+            {
+                r = 0;
+            }
+        }
+        si (r != 0)
+        {
+            erratum = errno;
+            close(nova);
+            redde _creare_error(TCP_ERROR_CONNEXIO, strerror(erratum),
+                piscina);
+        }
+        _applicare_optiones(nova, optiones);
+    }
+    /* numerus idem: dup2 fossam veterem claudit et novam ibi ponit */
+    si (dup2(nova, connexio->fd) == -1)
+    {
+        erratum = errno;
+        close(nova);
+        redde _creare_error(TCP_ERROR_CONNEXIO, strerror(erratum),
+            piscina);
+    }
+    close(nova);
+    connexio->clausa              = FALSUM;
+    res.successus                 = VERUM;
+    res.connexio                  = connexio;
+    res.error                     = TCP_OK;
+    res.error_descriptio.datum    = NIHIL;
+    res.error_descriptio.mensura  = 0;
+    redde res;
+}
+
 TcpConnexio*
 tcp_ex_fossa (
     integer  fossa,

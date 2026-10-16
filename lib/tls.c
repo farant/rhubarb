@@ -14,6 +14,7 @@
 #include "tls_bearssl.h"
 #include "tls_tls13.h"
 #include "lectiones.h"
+#include <poll.h>
 #include <string.h>
 #include <unistd.h>
 
@@ -27,6 +28,14 @@ structura TlsConnexio {
     TlsSecuretransport* securetransport;
             TlsBearssl* bearssl;
               TlsTls13* tls13;
+    /* descensus gradatim (vectura TLS13, tls13-spec II.3): quae BearSSL
+     * in eadem connexione postea requirit */
+           TcpConnexio* tcp;
+    constans character* hospes;
+           TlsOptiones  optiones;      /* copia; ancora in piscina */
+               Piscina* piscina;
+                   b32  redintegrans;  /* connexio nova pendet */
+                chorda  erratum;       /* error tls.c ipsius */
 };
 
 TlsOptiones
@@ -168,6 +177,151 @@ _involvere_tls13 (
     redde r;
 }
 
+/* optiones (NIHIL licet) in copiam: ancora in piscinam */
+interior b32
+_optiones_copiare (
+     constans TlsOptiones* optiones,
+              TlsOptiones* exitus,
+                  Piscina* piscina)
+{
+    *exitus = optiones ? *optiones : tls_optiones_default();
+    si (exitus->ancora_via != NIHIL)
+    {
+        memoriae_index  n = strlen(exitus->ancora_via) + I;
+             character* d = (character*)piscina_allocare(piscina,
+                 (i64)n);
+
+        si (d == NIHIL)
+        {
+            redde FALSUM;
+        }
+        memcpy(d, exitus->ancora_via, n);
+        exitus->ancora_via = d;
+    }
+    redde VERUM;
+}
+
+/* fossa paratane ad scribendum (connexio redintegrata perfecta)? */
+interior b32
+_scribibilis (
+    TcpConnexio* tcp)
+{
+    structura pollfd pf;
+
+    pf.fd       = (integer)tcp_obtinere_fd(tcp);
+    pf.events   = POLLOUT;
+    pf.revents  = ZEPHYRUM;
+    redde poll(&pf, I, ZEPHYRUM) > ZEPHYRUM;
+}
+
+interior chorda
+_causa (
+     constans character* praefixum,
+                 chorda  causa,
+                Piscina* piscina)
+{
+    redde chorda_concatenare(chorda_ex_literis(praefixum, piscina),
+        causa, piscina);
+}
+
+/* gradatim: hospes 1.2 -> fossa redintegratur (non-blocans), deinde
+ * _connexionem_novam_perficere (SCRIBERE donec connexa) */
+interior TlsGradus
+_descendere_gradatim (
+    TlsConnexio* c)
+{
+    TcpResultus tr;
+
+    si (c->optiones.sine_descensu)
+    {
+        c->erratum = chorda_ex_literis("hospes solum TLS 1.2 "
+            "(sine_descensu)", c->piscina);
+        redde TLS_GRADUS_ERROR;
+    }
+    c->tcp  = tls_tls13_tcp_relinquere(c->tls13);
+    tr      = tcp_redintegrare(c->tcp, NIHIL, c->piscina);
+    si (!tr.successus)
+    {
+        c->erratum = _causa("descensus: redintegratio fallit: ",
+            tr.error_descriptio, c->piscina);
+        tcp_claudere(c->tcp);
+        redde TLS_GRADUS_ERROR;
+    }
+    c->redintegrans = VERUM;
+    redde TLS_GRADUS_SCRIBERE;
+}
+
+interior TlsGradus
+_connexionem_novam_perficere (
+    TlsConnexio* c)
+{
+    TlsBearsslResultus br;
+                chorda descriptio;
+
+    si (!_scribibilis(c->tcp))
+    {
+        redde TLS_GRADUS_SCRIBERE;
+    }
+    c->redintegrans     = FALSUM;
+    descriptio.datum    = NIHIL;
+    descriptio.mensura  = ZEPHYRUM;
+    si (tcp_incipere_perficere(c->tcp, &descriptio, c->piscina)
+        != TCP_OK)
+    {
+        c->erratum = _causa("descensus: connexio nova fallit: ",
+            descriptio, c->piscina);
+        tcp_claudere(c->tcp);
+        redde TLS_GRADUS_ERROR;
+    }
+    br = tls_bearssl_incipere_signo(c->tcp, c->hospes, &c->optiones,
+        FALSUM, c->piscina);
+    si (!br.successus)
+    {
+        c->erratum = br.error_descriptio;   /* tcp a BearSSL clausa */
+        redde TLS_GRADUS_ERROR;
+    }
+    c->bearssl = br.connexio;
+    c->vectura = TLS_VECTURA_BEARSSL;
+    redde tls_bearssl_gradus(c->bearssl);
+}
+
+/* obstruens: hospes 1.2 -> fossa redintegratur cum moris, BearSSL cum
+ * signo usque ad finem */
+interior TlsResultus
+_descendere_obstruens (
+           TlsTls13Resultus  t3,
+         constans character* hospes,
+       constans TlsOptiones* o,
+                    Piscina* piscina)
+{
+    TcpConnexio* tcp  = tls_tls13_tcp_relinquere(t3.connexio);
+    TcpOptiones  to   = tcp_optiones_default();
+    TcpResultus  tr;
+
+    si (o->sine_descensu)
+    {
+        tcp_claudere(tcp);
+        redde _error(TLS_ERROR_HANDSHAKE,
+            "hospes solum TLS 1.2 (sine_descensu)", piscina);
+    }
+    si (o->timeout_ms > ZEPHYRUM)
+    {
+        to.timeout_ms = o->timeout_ms;
+    }
+    tr = tcp_redintegrare(tcp, &to, piscina);
+    si (!tr.successus)
+    {
+        TlsResultus r = _error(TLS_ERROR_TCP, "", piscina);
+
+        r.error_descriptio = _causa("descensus: redintegratio fallit: ",
+            tr.error_descriptio, piscina);
+        tcp_claudere(tcp);
+        redde r;
+    }
+    redde _involvere_bearssl(tls_bearssl_incipere_signo(tcp, hospes, o,
+        VERUM, piscina), piscina);
+}
+
 TlsResultus
 tls_connectere (
     constans character* hospes,
@@ -195,8 +349,38 @@ tls_connectere_cum_optionibus (
     }
     si (v == TLS_VECTURA_TLS13)
     {
-        redde _involvere_tls13(tls_tls13_connectere(hospes, portus,
-            optiones, piscina), piscina);
+             TlsOptiones o;
+        TlsTls13Resultus t3;
+
+        o = optiones ? *optiones : tls_optiones_default();
+        si (o.descensus_coactus)
+        {
+            /* probationes (P5): statim BearSSL cum signo */
+            TcpOptiones to = tcp_optiones_default();
+            TcpResultus tr;
+
+            si (o.timeout_ms > ZEPHYRUM)
+            {
+                to.timeout_ms = o.timeout_ms;
+            }
+            tr = tcp_connectere_cum_optionibus(hospes, portus, &to,
+                piscina);
+            si (!tr.successus)
+            {
+                TlsResultus r = _error(TLS_ERROR_TCP, "", piscina);
+
+                r.error_descriptio = tr.error_descriptio;
+                redde r;
+            }
+            redde _involvere_bearssl(tls_bearssl_incipere_signo(
+                tr.connexio, hospes, &o, VERUM, piscina), piscina);
+        }
+        t3 = tls_tls13_connectere(hospes, portus, optiones, piscina);
+        si (!t3.successus && t3.solum_1_2)
+        {
+            redde _descendere_obstruens(t3, hospes, &o, piscina);
+        }
+        redde _involvere_tls13(t3, piscina);
     }
     redde _involvere_bearssl(tls_bearssl_connectere(hospes, portus,
         optiones, piscina), piscina);
@@ -218,8 +402,40 @@ tls_incipere (
     }
     si (v == TLS_VECTURA_TLS13)
     {
-        redde _involvere_tls13(tls_tls13_incipere(tcp, hospes, optiones,
+        TlsResultus r;
+        TlsOptiones o;
+
+        si (!_optiones_copiare(optiones, &o, piscina))
+        {
+            tcp_claudere(tcp);
+            redde _error(TLS_ERROR_TCP, "Allocatio fallita", piscina);
+        }
+        si (o.descensus_coactus)
+        {
+            redde _involvere_bearssl(tls_bearssl_incipere_signo(tcp,
+                hospes, &o, FALSUM, piscina), piscina);
+        }
+        r = _involvere_tls13(tls_tls13_incipere(tcp, hospes, &o,
             piscina), piscina);
+        si (r.successus)
+        {
+            memoriae_index  n = strlen(hospes) + I;
+                 character* h = (character*)piscina_allocare(piscina,
+                     (i64)n);
+
+            si (h == NIHIL)
+            {
+                tls_claudere(r.connexio);
+                redde _error(TLS_ERROR_TCP, "Allocatio fallita",
+                    piscina);
+            }
+            memcpy(h, hospes, n);
+            r.connexio->tcp       = tcp;
+            r.connexio->hospes    = h;
+            r.connexio->optiones  = o;
+            r.connexio->piscina   = piscina;
+        }
+        redde r;
     }
     redde _involvere_bearssl(tls_bearssl_incipere(tcp, hospes, optiones,
         piscina), piscina);
@@ -230,6 +446,25 @@ tls_vectura (
     TlsConnexio* connexio)
 {
     redde connexio ? connexio->vectura : TLS_VECTURA_ORDINARIA;
+}
+
+i32
+tls_versio (
+    TlsConnexio* connexio)
+{
+    si (connexio == NIHIL)
+    {
+        redde ZEPHYRUM;
+    }
+    si (connexio->vectura == TLS_VECTURA_BEARSSL)
+    {
+        redde tls_bearssl_versio(connexio->bearssl);
+    }
+    si (connexio->vectura == TLS_VECTURA_TLS13)
+    {
+        redde tls_tls13_versio(connexio->tls13);
+    }
+    redde tls_securetransport_versio(connexio->securetransport);
 }
 
 TlsGradus
@@ -246,7 +481,23 @@ tls_gradus (
     }
     si (connexio->vectura == TLS_VECTURA_TLS13)
     {
-        redde tls_tls13_gradus(connexio->tls13);
+        TlsGradus g;
+
+        si (connexio->erratum.mensura > ZEPHYRUM)
+        {
+            redde TLS_GRADUS_ERROR;
+        }
+        si (connexio->redintegrans)
+        {
+            redde _connexionem_novam_perficere(connexio);
+        }
+        g = tls_tls13_gradus(connexio->tls13);
+        si (   g == TLS_GRADUS_ERROR
+            && tls_tls13_solum_1_2(connexio->tls13))
+        {
+            redde _descendere_gradatim(connexio);
+        }
+        redde g;
     }
     redde tls_securetransport_gradus(connexio->securetransport);
 }
@@ -262,6 +513,10 @@ tls_gradus_error (
         vacua.datum    = NIHIL;
         vacua.mensura  = ZEPHYRUM;
         redde vacua;
+    }
+    si (connexio->erratum.mensura > ZEPHYRUM)
+    {
+        redde connexio->erratum;
     }
     si (connexio->vectura == TLS_VECTURA_BEARSSL)
     {
@@ -368,6 +623,12 @@ tls_claudere (
     }
     si (connexio->vectura == TLS_VECTURA_TLS13)
     {
+        /* redintegrans: fossa iam a tls.c possessa */
+        si (connexio->redintegrans)
+        {
+            tcp_claudere(connexio->tcp);
+            connexio->redintegrans = FALSUM;
+        }
         tls_tls13_claudere(connexio->tls13);
         redde;
     }

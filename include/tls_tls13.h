@@ -14,11 +14,15 @@
 
 nomen structura TlsTls13 TlsTls13;
 
+/* solum_1_2 (cum successus FALSUM): hospes ut TLS 1.2 respondit;
+ * connexio tunc NON clausa redditur - tls.c fossam per
+ * tls_tls13_tcp_relinquere accipit (descensus, tls13-spec II.3) */
 nomen structura {
          b32  successus;
     TlsTls13* connexio;
     TlsError  error;
       chorda  error_descriptio;
+         b32  solum_1_2;
 } TlsTls13Resultus;
 
 /* obstruens: tcp cum moris (timeout_ms), pactio usque ad finem */
@@ -60,6 +64,23 @@ tls_tls13_recipere (
 
 vacuum
 tls_tls13_claudere (
+    TlsTls13* connexio);
+
+/* VERUM si pactio fallit quia hospes ut TLS 1.2 respondit (ServerHello
+ * 1.2 aut protocol_version ad ClientHello) */
+b32
+tls_tls13_solum_1_2 (
+    TlsTls13* connexio);
+
+/* fossam solvit (NON clausam, nihil mittitur) et connexionem finit -
+ * pro descensu: tcp_redintegrare in eam */
+TcpConnexio*
+tls_tls13_tcp_relinquere (
+    TlsTls13* connexio);
+
+/* 0x0304 post pactionem; 0 ante */
+i32
+tls_tls13_versio (
     TlsTls13* connexio);
 
 b32

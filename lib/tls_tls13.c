@@ -206,6 +206,7 @@ _error (
 {
     TlsTls13Resultus r;
 
+    memset(&r, ZEPHYRUM, magnitudo(r));
     r.successus         = FALSUM;
     r.connexio          = NIHIL;
     r.error             = error;
@@ -225,6 +226,7 @@ _creare (
             TlsTls13* c;
        Tls13Optiones  o;
 
+    memset(&r, ZEPHYRUM, magnitudo(r));
     si (tcp == NIHIL || hospes == NIHIL || piscina == NIHIL)
     {
         si (tcp)
@@ -316,6 +318,7 @@ tls_tls13_connectere (
          TcpResultus tcp_res;
     TlsTls13Resultus r;
 
+    memset(&r, ZEPHYRUM, magnitudo(r));
     si (hospes == NIHIL || piscina == NIHIL)
     {
         redde _error(TLS_ERROR_TCP, "Argumenta invalida", piscina);
@@ -353,6 +356,15 @@ tls_tls13_connectere (
                b32 reiecta  = r.connexio->reiecta;
             chorda causa    = r.connexio->erratum;
 
+            si (tls_tls13_solum_1_2(r.connexio))
+            {
+                /* connexio cum fossa servatur: tls.c descendit */
+                r.successus         = FALSUM;
+                r.error             = TLS_ERROR_HANDSHAKE;
+                r.error_descriptio  = causa;
+                r.solum_1_2         = VERUM;
+                redde r;
+            }
             tls_tls13_claudere(r.connexio);
             r.successus  = FALSUM;
             r.connexio   = NIHIL;
@@ -537,6 +549,38 @@ tls_tls13_claudere (
         c->tcp = NIHIL;
     }
     c->clausa = VERUM;
+}
+
+b32
+tls_tls13_solum_1_2 (
+    TlsTls13* c)
+{
+    redde c != NIHIL && c->m != NIHIL
+        && tls13_machina_error(c->m).codex == TLS13_ERROR_SOLUM_1_2;
+}
+
+TcpConnexio*
+tls_tls13_tcp_relinquere (
+    TlsTls13* c)
+{
+    TcpConnexio* tcp;
+
+    si (c == NIHIL)
+    {
+        redde NIHIL;
+    }
+    tcp        = c->tcp;
+    c->tcp     = NIHIL;
+    c->clausa  = VERUM;
+    redde tcp;
+}
+
+i32
+tls_tls13_versio (
+    TlsTls13* c)
+{
+    redde c != NIHIL && c->m != NIHIL ? tls13_machina_versio(c->m)
+                                       : ZEPHYRUM;
 }
 
 b32

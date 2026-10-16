@@ -45,7 +45,8 @@ nomen structura {
 } Tls13SalutatioParametri;
 
 /* ClientHello TOTUM (cum capite pactionis IV octetorum) in exitus:
- * cifrae 1301 1302 1303; extensiones server_name, supported_groups
+ * cifrae 1301 1302 1303 (et sex 1.2 pro descensu: c02b c02f c02c c030
+ * cca9 cca8); extensiones server_name, supported_groups
  * (x25519, secp256r1), signature_algorithms (0403 0503 0804 0805 0806),
  * supported_versions (0304), cookie (si datum), key_share. Reddit
  * longitudinem, aut 0 si capacitas deficit */

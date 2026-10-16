@@ -321,7 +321,10 @@ _sectio_salutatio (CredoContextus* c)
     CREDO_AEQUALIS_I32((i32)exitus[k], XXXII);
     CREDO_VERUM(memcmp(exitus + k + I, sessio, XXXII) == ZEPHYRUM);
     k += I + XXXII;
-    m = _ex_hex("0006130113021303", exspectatum);
+    /* cifrae 1.3, deinde sex 1.2 BearSSL (tls13-plan R23: servus 1.3
+     * ignorans ServerHello 1.2 reddit, non handshake_failure) */
+    m = _ex_hex("0012130113021303c02bc02fc02cc030cca9cca8",
+        exspectatum);
     CREDO_VERUM(memcmp(exitus + k, exspectatum, m) == ZEPHYRUM);
     k += m;
     /* compressio nulla */

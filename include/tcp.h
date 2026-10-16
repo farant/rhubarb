@@ -100,6 +100,21 @@ tcp_incipere_perficere (
          chorda* descriptio,
         Piscina* piscina);
 
+/* REDINTEGRARE (tls13-spec II.3, descensus TLS): eundem parem
+ * (getpeername) per fossam NOVAM, deinde dup2 in numerum fossae VETEREM
+ * - registrationes vocantium numero innixae (reactor poll()) manent;
+ * connexio vetus clauditur (par EOF videt). optiones NIHIL:
+ * non-blocans, connexio PENDENS - exspecta scribibilem, deinde
+ * tcp_incipere_perficere (ut tcp_incipere). Aliter: connexio obstruens
+ * (ut tcp_connectere_cum_optionibus), deinde optiones (moris fossae)
+ * applicantur. FALSUM si par ignotus (connexio clausa) aut connexio
+ * fallit - connexio tunc non mutatur. */
+TcpResultus
+tcp_redintegrare (
+             TcpConnexio* connexio,
+    constans TcpOptiones* optiones,
+                 Piscina* piscina);
+
 /* Fossam exsistentem involvit (probationes, fossae aliunde acceptae);
  * fossa a connexione possidetur - tcp_claudere eam claudit. Fossa
  * negativa -> NIHIL. */

@@ -260,6 +260,40 @@ this plan.
   Lint: `aes128` -> ignotum-permissum. Owed by hand (MANU):
   apps/forum/fumus.sh, tools/icones_fumus.sh - for Fran.
 
+- **R23 (T7)** - our ClientHello also offers BearSSL's six 1.2 suites
+  (c02b c02f c02c c030 cca9 cca8) after 0x1301-3. Without them a server
+  from before TLS 1.3 (ignores supported_versions) finds no common suite
+  and answers handshake_failure (40) - NOT a fallback trigger (spec
+  II.3) - so it would be unreachable. With them it sends a 1.2
+  ServerHello -> SOLUM_1_2 -> fallback. (OpenSSL 3 limited to 1.2
+  answers protocol_version 70 either way - checked with s_client
+  -tls1_3.) The 1.3 engine still rejects any 1.3 ServerHello choosing
+  them. T3's exact cipher vector updated; section `servus_vetus` (a fake
+  pre-1.3 server answering with a canned 1.2 ServerHello -> a second
+  accept carrying BearSSL's ClientHello) pins the behaviour.
+- **R24 (T7)** - `tcp_redintegrare` blocking path connects UNTIMED, like
+  `tcp_connectere_cum_optionibus` (P9 said "timed connect"; the house
+  blocking connect has no connect timeout), then applies the options
+  (socket timeouts). Spec AUDIENDA "dup2 keeps the reactor
+  registration": TRUE for our poll() reactor, pinned by
+  probatio_tcp_redintegrare `gradatim`; would be false under kqueue
+  (noted in lib/tcp_posix.worklog.md).
+- **R25 (T7)** - `descensus_coactus` skips the 1.3 attempt entirely and
+  starts BearSSL-with-sentinel on the ORIGINAL connection (no redial:
+  an empty first connection would only exercise s_server's error path).
+  `tls_bearssl_incipere_signo` takes `b32 obstruens` (the blocking twin
+  folded in; blocking completion shared with `tls_bearssl_connectere`
+  as `_pacisci_obstruens`). Stepped redial completion: tls.c polls
+  POLLOUT with timeout 0 before `tcp_incipere_perficere` (SO_ERROR
+  means nothing before writability). Sections beyond the plan:
+  `versio_13`, `servus_vetus`; the stepped AND blocking variants of
+  sine_descensu / signum. Plants (5, red then green): sentinel compare
+  off, dup2 replaced by use-in-place (fd changes), fallback on any
+  error, sine_descensu ignored (stepped), blocking fallback branch off.
+  Lint: `_redintegrationem_perficere` (real Latin unknown to the oracle)
+  -> `_connexionem_novam_perficere`, `DOWNGRD` -> `SIGNUM_DESCENSUS`,
+  test `vo` -> `optiones_vocationis`; house word `scribibilis`.
+
 ## Review focus
 
 Inputs no task's tests reach that are most likely to bite, each with

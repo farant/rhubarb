@@ -950,6 +950,31 @@ tls_securetransport_certificatum(TlsSecuretransport* connexio,
  * FUNCTIONES PUBLICAE - UTILITAS
  * ======================================================================== */
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+i32
+tls_securetransport_versio(TlsSecuretransport* connexio)
+{
+    SSLProtocol versio = kSSLProtocolUnknown;
+
+    si (connexio == NIHIL || connexio->ssl_context == NULL
+        || SSLGetNegotiatedProtocolVersion(connexio->ssl_context, &versio)
+           != noErr)
+    {
+        redde 0;
+    }
+    si (versio == kTLSProtocol13)
+    {
+        redde 0x0304;
+    }
+    si (versio == kTLSProtocol12)
+    {
+        redde 0x0303;
+    }
+    redde 0;
+}
+#pragma clang diagnostic pop
+
 b32
 tls_securetransport_est_valida(TlsSecuretransport* connexio)
 {

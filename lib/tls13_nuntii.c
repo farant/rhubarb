@@ -287,6 +287,16 @@ tls13_salutatio_scribere (
     _scr_u16(&s, 0x1301);
     _scr_u16(&s, 0x1302);
     _scr_u16(&s, 0x1303);
+    /* cifrae 1.2 (sex BearSSL, ECDHE + AEAD) quoque: servus 1.3
+     * ignorans unam eligit et ServerHello 1.2 reddit -> descensus
+     * (SOLUM_1_2), non handshake_failure (tls13-plan R23). Machina 1.3
+     * eas numquam pacisci potest. */
+    _scr_u16(&s, 0xc02b);
+    _scr_u16(&s, 0xc02f);
+    _scr_u16(&s, 0xc02c);
+    _scr_u16(&s, 0xc030);
+    _scr_u16(&s, 0xcca9);
+    _scr_u16(&s, 0xcca8);
     _scr_claudere(&s);
     _scr_u8(&s, I);                              /* compressio nulla */
     _scr_u8(&s, ZEPHYRUM);

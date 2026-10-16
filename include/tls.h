@@ -72,6 +72,15 @@ nomen structura {
     constans character* ancora_via;
     /* vectura: ORDINARIA = ambitus RHUBARB_TLS aut ordinaria domus */
     TlsVectura vectura;
+    /* vectura TLS13 (tls13-spec II.3): hospes qui ut TLS 1.2 respondet
+     * per BearSSL in EADEM connexione perficitur (fossa redintegrata,
+     * numerus idem), signo DOWNGRD a nobis inspecto. sine_descensu
+     * VERUM: 1.3 aut nihil - TLS_ERROR_HANDSHAKE "hospes solum TLS
+     * 1.2". */
+    b32 sine_descensu;
+    /* PROBATIONES SOLUM (tls13-plan P5): conatus 1.3 omittitur quasi
+     * hospes 1.2 respondisset - signum DOWNGRD servi 1.3 probatur */
+    b32 descensus_coactus;
 } TlsOptiones;
 
 /* Certificatum hospitis (folium primum catenae).
@@ -123,9 +132,16 @@ TlsVectura
 tls_vecturam_eligere (
     constans TlsOptiones* optiones);
 
-/* vectura connexionis; ORDINARIA si connexio NIHIL */
+/* vectura connexionis (BEARSSL post descensum); ORDINARIA si connexio
+ * NIHIL */
 TlsVectura
 tls_vectura (
+    TlsConnexio* connexio);
+
+/* versio pacta: 0x0304 (TLS 1.3), 0x0303 (TLS 1.2); 0 ante pactionem
+ * aut ignota */
+i32
+tls_versio (
     TlsConnexio* connexio);
 
 
