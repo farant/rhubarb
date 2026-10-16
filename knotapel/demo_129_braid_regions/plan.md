@@ -255,6 +255,66 @@ late passes cost more.
   would otherwise pass: the rule's code on hand sequences, "distinct
   itineraries = distinct sectors hit", and the homogeneity pair count.
 
+## T5b (Parts C and D, 2026-10-16; option 1 of the T5a note, Fran)
+
+- **Scope as decided:** Part D's nulls exact on B_3; the period-2
+  question on B_4 up to length 6; the B_4 lattice only as a labelled
+  floor. An exact d-dimensional region counter is a ledger wish, not
+  built. Full mode 34 checks, about 4 min; quick mode 6.5 s.
+- **B_4 classes** = D128's table at every length (P exact; E certified
+  at t = -1 or at a cube root; Z the rest). Settled periods per braid
+  = D128 Part D, pinned in both modes (full: E 3,630 / 384, Z 488 /
+  200 / 248, and E by certificate 2,950 / 56 and 680 / 328; quick,
+  from the frozen D128 snapshot's own quick mode: E 222 / 32, Z 92 /
+  26 / 64, 186 / 0 and 36 / 32).
+- **The floor (Part C a).** B_4 up to length 4, shells 4 and 8,
+  m = 1..8: the E mean stops at 84 from m = 4 on (P 95, Z 115). The
+  shells see nothing new after four passes, as Part B predicted.
+- **The period-2 question (Part C b), exact.** On each loop's settled
+  tail: mu = the largest real root of the tail's minimal polynomial
+  (Krylov kernel, over the braid's period Q = lcm of the loops'); an
+  argument VANISHES in the limit iff mu is not a root of its own
+  minimal polynomial (Hankel kernel; radix_signum_polynomii).
+  Dominance of mu over complex roots is assumed (north-south), not
+  proved.
+  - Period >= 2 forces a tie (continuity: a bit that alternates on a
+    sequence converging to v has its argument 0 at v). Checked per
+    argument: every bit that varies on a tail has a vanishing argument;
+    and vanishing is the same at every position of the cycle.
+  - The converse FAILS: of 4,014 E braids, 384 have q = 2 (all with a
+    tie), and 568 have q = 1 WITH a tie (476 certified at t = -1, 92
+    only at a cube root). A tie means the limit lies on a wall; q = 2
+    means a loop approaches it from both sides alternately. Loops of
+    one braid can differ: in the quick run, [1 2 -3 2] has loop 1 at
+    q = 1 (mu = phi^2) and loops 2, 3 at q = 2 (mu = phi^4), same
+    limit. The period belongs to the loop; the tie to the braid.
+    Registered prediction ("period 2 iff tie"): FAILS in the converse
+    direction; the forward direction is a theorem.
+  - 52 E braids (all certified only at a cube root, lengths 5-6) have
+    an INVARIANT loop (tail minimal polynomial t - 1): reducible
+    braids with a pseudo-Anosov piece (the D128 fact-check's E != pA).
+    That loop never reaches the attractor and is left out; found when
+    the first full run failed "same limit" on them.
+- **Nulls (Part D, B_3 exact).** (a) a linear network: 1 region, 1
+  piece (checked on every class). (b) The census word's network with
+  each instruction's coefficients permuted (same shape; 2,584 of 2,589
+  changed): regions also grow LINEARLY (H_lin 2,089 of 2,108 E-derived,
+  H_exp 0; r(12) 79 vs the braids' 88), but PIECES GROW too (p(12) 46
+  vs the braids' 8). Linear region growth is a property of the network
+  shape; bounded pieces are the braid's. (c) Letters shuffled (a
+  different braid, its type looked up and re-derived from its own
+  period and trace): growth follows the new braid's type (P flat at
+  12.7, E 82, Z 55), H_lin for all, H_exp none.
+- Plants (silva.planta, 9 red + 1 full-mode): B_4 E without the cube
+  certificate, tie test inverted, mu = smallest root, period never 1,
+  Krylov ignoring the period, B_4 homogeneity pairs (green until quick
+  mode got both shells: the check was vacuous with one), null (b) no
+  permutation, null (c) type not looked up; invariant loops treated as
+  growing (full mode). Checks added because a plant would otherwise
+  pass: the per-argument theorem (an inverted test still passed the
+  existential "q >= 2 has a tie"), position independence, pins in
+  quick mode, the null (b) change count, the null (c) type re-derived.
+
 ## Out of scope
 
 - Exact polyhedral region counts in d >= 3 (exact LP).

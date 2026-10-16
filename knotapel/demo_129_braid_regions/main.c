@@ -40,6 +40,7 @@
 #include "nervus.h"
 #include "radices.h"
 #include "tabula_dispersa.h"
+#include "sors.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -1345,6 +1346,1122 @@ part_b (void)
 }
 
 /* ================================================================
+ * Part C: B_4 - a weak lattice bound, and the period-2 question
+ * ================================================================
+ *
+ * Classes on B_4 (D128's method, all certified up to length 6): P iff
+ * plexus_periodus > 0; E iff Burau(-1) has spectral radius > 1 or
+ * Burau at a primitive cube root of unity has radius > 1 (Kolev's
+ * bound, plexus); Z the rest (D128 checked their growth is
+ * quasi-affine). */
+
+static const int pin4_P[7] = { 1, 0, 0, 8, 24, 36, 102 };
+static const int pin4_E[7] = { 0, 0, 8, 48, 198, 802, 2958 };
+static const int pin4_Z[7] = { 0, 6, 18, 42, 116, 272, 482 };
+
+typedef struct {
+    Plexus word;
+    int    len;
+    int    cls;
+    int    cube_only;      /* E certified only at a cube root */
+} Klass4;
+
+static Klass4 *k4;
+static int     nk4;
+
+static void
+build_census4 (
+    int len4)
+{
+    PlexusCensus cs;
+    int          i;
+    int          len;
+    int          ok = 1;
+
+    if (!plexus_enumerare(4, (i32)len4, 100000, pool, &cs)) {
+        fatal("B_4 census refused");
+    }
+    nk4 = (int)cs.numerus;
+    k4 = (Klass4 *)calloc((size_t)nk4, sizeof(Klass4));
+    for (i = 0; i < nk4; i++) {
+        i32         period = 0;
+        RadixRealis rho;
+        s32         sg = 0;
+        b32         cube = FALSUM;
+
+        k4[i].word = cs.verba[i];
+        k4[i].len = (int)cs.verba[i].longitudo;
+        if (!plexus_periodus(k4[i].word, pool, &period)
+                || !plexus_burau_radix_maxima(k4[i].word, pool, &rho)
+                || !radix_compara(rho, radix_ex_fractione(fractio_ex_s64(1),
+                    pool), pool, &sg)
+                || !plexus_burau_radius_maior(k4[i].word, 3, &cube)) {
+            fatal("B_4 classification refused");
+        }
+        if (period > 0) {
+            k4[i].cls = CLS_P;
+        } else if (sg > 0 || cube) {
+            k4[i].cls = CLS_E;
+            k4[i].cube_only = sg > 0 ? 0 : 1;
+        } else {
+            k4[i].cls = CLS_Z;
+        }
+    }
+    for (len = 0; len <= len4; len++) {
+        int p = 0, e = 0, z = 0;
+
+        for (i = 0; i < nk4; i++) {
+            if (k4[i].len != len) continue;
+            if (k4[i].cls == CLS_P) p++;
+            else if (k4[i].cls == CLS_E) e++;
+            else z++;
+        }
+        if (p != pin4_P[len] || e != pin4_E[len] || z != pin4_Z[len]) {
+            ok = 0;
+        }
+    }
+    check("B_4 classes per length = D128's table", ok);
+}
+
+/* ---------------- the weak lattice bound in d = 4 ---------------- */
+
+#define L4_MMAX 8
+
+static int ok4_monotone = 1;      /* refinement: count(m+1) >= count(m) */
+static int ok4_union = 1;
+static int ok4_homog = 1;         /* 2 p (shell 8) has p's itinerary */
+static long homog4_pairs = 0;
+
+/* the points of the shells max |x_i| = 4 and = 8 (shell 0 / 1) */
+static long (*pts4)[4];
+static int  *shell4;
+static int  *twice4;              /* index of 2 p, or -1 */
+static int   npts4;
+
+static int
+shell_index (
+    const long *x,
+    long        R)
+{
+    /* rank of x in the box [-R, R]^4, for the 2 p lookup */
+    long w = 2 * R + 1;
+
+    return (int)((((x[0] + R) * w + (x[1] + R)) * w + (x[2] + R)) * w
+        + (x[3] + R));
+}
+
+static long shells4[2] = { 4, 8 };   /* quick mode: 2, 4 */
+
+static void
+make_points4 (
+    int nsh)
+{
+    int   s, i;
+    int  *rank8;
+    long *sizes = shells4;
+
+    npts4 = 0;
+    for (s = 0; s < nsh; s++) {
+        long R = sizes[s];
+        long a = (2 * R + 1), b = (2 * R - 1);
+
+        npts4 += (int)(a * a * a * a - b * b * b * b);
+    }
+    pts4 = (long (*)[4])malloc((size_t)npts4 * sizeof(*pts4));
+    shell4 = (int *)malloc((size_t)npts4 * sizeof(int));
+    twice4 = (int *)malloc((size_t)npts4 * sizeof(int));
+    npts4 = 0;
+    for (s = 0; s < nsh; s++) {
+        long R = sizes[s];
+        long x[4];
+
+        for (x[0] = -R; x[0] <= R; x[0]++)
+        for (x[1] = -R; x[1] <= R; x[1]++)
+        for (x[2] = -R; x[2] <= R; x[2]++)
+        for (x[3] = -R; x[3] <= R; x[3]++) {
+            long mx = 0;
+            int  t;
+
+            for (t = 0; t < 4; t++) {
+                long a = x[t] < 0 ? -x[t] : x[t];
+
+                if (a > mx) mx = a;
+            }
+            if (mx != R) continue;
+            for (t = 0; t < 4; t++) pts4[npts4][t] = x[t];
+            shell4[npts4] = s;
+            npts4++;
+        }
+    }
+    /* 2 p for p on shell 4 lies on shell 8 */
+    {
+        long w = 2 * shells4[1] + 1;
+        long box = w * w * w * w;
+
+        rank8 = (int *)malloc((size_t)box * sizeof(int));
+        for (i = 0; i < (int)box; i++) rank8[i] = -1;
+    }
+    for (i = 0; i < npts4; i++) {
+        if (shell4[i] == 1) rank8[shell_index(pts4[i], shells4[1])] = i;
+    }
+    for (i = 0; i < npts4; i++) {
+        long y[4];
+        int  t;
+
+        twice4[i] = -1;
+        if (shell4[i] != 0 || nsh < 2) continue;
+        for (t = 0; t < 4; t++) y[t] = 2 * pts4[i][t];
+        twice4[i] = rank8[shell_index(y, shells4[1])];
+    }
+    free(rank8);
+}
+
+/* lattice counts low[s][m], m = 1..L4_MMAX, for one B_4 word */
+static void
+lattice4_class (
+    Plexus w,
+    int    nsh,
+    int    low[2][L4_MMAX + 1])
+{
+    Piscina        *cpool = piscina_generare_dynamicum("d129_c4", 1 << 16);
+    Piscina        *vpool[2];
+    Nervus         *one;
+    TabulaDispersa *tab = tabula_dispersa_creare_chorda(cpool, 4096);
+    int            *ids = (int *)malloc((size_t)npts4 * sizeof(int));
+    int            *prev = (int *)malloc((size_t)npts4 * sizeof(int));
+    int            *alive = (int *)malloc((size_t)npts4 * sizeof(int));
+    Magnus        (*v)[4] = (Magnus (*)[4])malloc((size_t)npts4
+        * sizeof(*v));
+    int            *store;
+    int            *seen;
+    int             nstore = 0;
+    int             capstore = npts4 * L4_MMAX + 1;
+    int             nrelu;
+    int             m, i, s;
+
+    vpool[0] = piscina_generare_dynamicum("d129_c4v0", 1 << 16);
+    vpool[1] = piscina_generare_dynamicum("d129_c4v1", 1 << 16);
+    if (!plexus_nervus(w, cpool, &one)) fatal("network refused");
+    nrelu = (int)one->relu;
+    store = (int *)malloc((size_t)capstore * sizeof(int));
+    seen = (int *)calloc((size_t)capstore + 1, sizeof(int));
+    for (i = 0; i < npts4; i++) {
+        int t;
+
+        ids[i] = 0;
+        alive[i] = 1;
+        for (t = 0; t < 4; t++) v[i][t] = magnus_ex_s64(pts4[i][t]);
+    }
+    for (m = 1; m <= L4_MMAX; m++) {
+        Piscina *vp = vpool[m % 2];
+
+        piscina_vacare(vp);
+        for (i = 0; i < npts4; i++) {
+            PiscinaNotatio mark = piscina_notare(pool);
+            NervusForma    f;
+            Magnus         out[4];
+            char           keybuf[16];
+            chorda         key;
+            vacuum        *val = NULL;
+            int            b, t;
+
+            if (!nervus_forma_creare(one, pool, &f)
+                    || !nervus_aestimare(one, v[i], out, &f, pool)) {
+                fatal("evaluation refused");
+            }
+            prev[i] = ids[i];
+            for (t = 0; t < 4; t++) v[i][t] = magnus_transcribe(out[t], vp);
+            if (f.nullae > 0) alive[i] = 0;
+            if (alive[i]) {
+                memcpy(keybuf, &ids[i], 4);
+                for (b = 0; b < (nrelu + 7) / 8; b++) {
+                    keybuf[4 + b] = (char)f.bitus[b];
+                }
+                if (nrelu % 8) {
+                    keybuf[4 + (nrelu - 1) / 8] = (char)(keybuf[4
+                        + (nrelu - 1) / 8] & ((1 << (nrelu % 8)) - 1));
+                }
+                key.datum = (i8 *)keybuf;
+                key.mensura = (i32)(4 + (nrelu + 7) / 8);
+                if (tabula_dispersa_invenire(tab, key, &val)) {
+                    ids[i] = *(int *)val;
+                } else {
+                    chorda copy = chorda_transcribere(key, cpool);
+
+                    if (nstore >= capstore) fatal("itinerary store full");
+                    store[nstore] = nstore + 1;
+                    tabula_dispersa_inserere(tab, copy, &store[nstore]);
+                    ids[i] = nstore + 1;
+                    nstore++;
+                }
+            }
+            piscina_reficere(pool, mark);
+        }
+        for (s = 0; s < nsh; s++) {
+            int count = 0;
+            int tag = 1 + s + 4 * m;
+
+            for (i = 0; i < npts4; i++) {
+                if (!alive[i] || shell4[i] > s) continue;
+                if (seen[ids[i]] != tag) {
+                    seen[ids[i]] = tag;
+                    count++;
+                }
+            }
+            low[s][m] = count;
+            if (s > 0 && count < low[s - 1][m]) ok4_union = 0;
+        }
+        /* refinement: among points still interior, the m-itineraries
+         * are at least as many as the (m-1)-itineraries */
+        if (m > 1) {
+            int now = 0, before = 0;
+
+            for (i = 0; i < npts4; i++) {
+                if (!alive[i]) continue;
+                if (seen[ids[i]] != -m) {
+                    seen[ids[i]] = -m;
+                    now++;
+                }
+                if (seen[prev[i]] != -m - 100) {
+                    seen[prev[i]] = -m - 100;
+                    before++;
+                }
+            }
+            if (now < before) ok4_monotone = 0;
+        }
+    }
+    for (i = 0; i < npts4; i++) {
+        int j = twice4[i];
+
+        if (j < 0) continue;
+        homog4_pairs++;
+        if (ids[j] != ids[i] || alive[j] != alive[i]) ok4_homog = 0;
+    }
+    free(seen);
+    free(store);
+    free(v);
+    free(alive);
+    free(prev);
+    free(ids);
+    piscina_destruere(vpool[0]);
+    piscina_destruere(vpool[1]);
+    piscina_destruere(cpool);
+}
+
+static void
+part_c_lattice (
+    int len4,
+    int nsh)
+{
+    long sum[3][2][L4_MMAX + 1];
+    int  ncls[3] = { 0, 0, 0 };
+    int  lin[3] = { 0, 0, 0 }, ex[3] = { 0, 0, 0 };
+    int  i, s, m, c;
+    char b1[32];
+
+    printf("\n  (a) Weak lattice LOWER bound on B_4 up to length %d, shells "
+        "R = %ld, %ld, m = 1..%d.\n  Part B showed this bound misses most "
+        "regions of E braids on B_3 (13 of 88 at\n  R <= 256): read it "
+        "as a floor, never as a count.\n", len4, shells4[0], shells4[1],
+        L4_MMAX);
+    make_points4(nsh);
+    memset(sum, 0, sizeof(sum));
+    for (i = 0; i < nk4; i++) {
+        int low[2][L4_MMAX + 1];
+        int seq[MMAX + 1];
+
+        if (k4[i].len > len4) continue;
+        lattice4_class(k4[i].word, nsh, low);
+        c = k4[i].cls;
+        ncls[c]++;
+        for (m = 1; m <= L4_MMAX; m++) {
+            for (s = 0; s < nsh; s++) sum[c][s][m] += low[s][m];
+        }
+        /* the rule's shapes on the bound (m = 4..8): increments repeat
+         * with period <= 2, or ratio >= 1.5 at m = 6..7 */
+        memset(seq, 0, sizeof(seq));
+        for (m = 1; m <= L4_MMAX; m++) seq[m] = low[nsh - 1][m];
+        {
+            int q, okq = 0;
+
+            for (q = 1; q <= 2 && !okq; q++) {
+                int t, all = 1;
+
+                for (t = 4; t + q + 1 <= L4_MMAX; t++) {
+                    if (seq[t + q + 1] - seq[t + q] != seq[t + 1] - seq[t]) {
+                        all = 0;
+                    }
+                }
+                okq = all;
+            }
+            lin[c] += okq;
+            ex[c] += 2 * seq[7] >= 3 * seq[6] && 2 * seq[8] >= 3 * seq[7];
+        }
+    }
+    check("B_4 lattice: itineraries refine (points still interior keep "
+        "at least their earlier\n        distinct itineraries), and the "
+        "shell union never decreases", ok4_monotone && ok4_union);
+    {
+        long expect = 0;
+
+        for (i = 0; i < npts4; i++) if (twice4[i] >= 0) expect++;
+        check("B_4 lattice: homogeneity, 2 p has p's itinerary (every point "
+            "of the inner shell, every class)", ok4_homog && (nsh < 2
+            || (expect > 0 && homog4_pairs == expect * (long)(ncls[0]
+            + ncls[1] + ncls[2]))));
+    }
+    printf("    %4s %8s", "type", "classes");
+    for (m = 1; m <= L4_MMAX; m++) printf(" %6d", m);
+    printf("   lin   exp\n");
+    for (c = 0; c < 3; c++) {
+        printf("    %4s %8d", cls_name[c], ncls[c]);
+        for (m = 1; m <= L4_MMAX; m++) {
+            mean_text(sum[c][nsh - 1][m], ncls[c], b1);
+            printf(" %6s", b1);
+        }
+        printf(" %5d %5d\n", lin[c], ex[c]);
+    }
+    printf("  (mean lattice count, shells <= R = %ld; lin = increments over "
+        "m = 4..8 repeat with\n  period <= 2, exp = ratio >= 1.5 at m = 6 "
+        "and 7: shapes of a FLOOR, consistent-with only)\n",
+        shells4[nsh - 1]);
+}
+
+/* ---------------- the period-2 question ---------------- */
+
+#define O_PASSES 60
+#define O_QMAX   12
+#define O_TAIL   20
+#define O_TERMS  12
+
+/* minimal polynomial of a vector sequence y_0, y_1, ... (dim rows):
+ * the first d with a kernel of [y_0 .. y_d]; FALSE if none <= dmax */
+static int
+min_poly (
+    Magnus     **y,         /* y[j][r] */
+    int          rows,
+    int          nterms,
+    int          dmax,
+    Polynomium  *out,
+    int         *deg)
+{
+    int d;
+
+    for (d = 0; d <= dmax && d < nterms; d++) {
+        Matrix a;
+        Matrix ker;
+        int    r, j;
+
+        /* scalar sequences: Hankel rows = shifts, so the relation holds
+         * for every window that fits; vectors: one window (Krylov) */
+        if (rows == 1) {
+            int nr = nterms - d;
+
+            if (nr < d + 1) return 0;
+            if (!matrix_nulla(&ANULUS_INTEGRORUM, (i32)nr, (i32)(d + 1),
+                    pool, &a)) fatal("matrix refused");
+            for (r = 0; r < nr; r++) {
+                for (j = 0; j <= d; j++) {
+                    matrix_pone(&a, (i32)r, (i32)j, &y[r + j][0]);
+                }
+            }
+        } else {
+            int nr = rows * (nterms - d);
+
+            if (!matrix_nulla(&ANULUS_INTEGRORUM, (i32)nr, (i32)(d + 1),
+                    pool, &a)) fatal("matrix refused");
+            for (r = 0; r < nr; r++) {
+                for (j = 0; j <= d; j++) {
+                    matrix_pone(&a, (i32)r, (i32)j,
+                        &y[r / rows + j][r % rows]);
+                }
+            }
+        }
+        if (!matrix_nucleus(a, pool, &ker)) fatal("kernel refused");
+        if (matrix_columnae(ker) > 0) {
+            Magnus c[8];
+
+            for (j = 0; j <= d; j++) {
+                c[j] = *(const Magnus *)matrix_elementum(ker, (i32)j, 0);
+            }
+            if (!polynomium_ex_coefficientibus(c, (i32)(d + 1), 0, pool,
+                    out)) fatal("polynomial refused");
+            *deg = d;
+            return 1;
+        }
+    }
+    return 0;
+}
+
+/* the argument of ReLU k of w as its own network (prefix, then the
+ * ReLU's sum as an output) */
+static Nervus *
+argument_net (
+    const Nervus *net,
+    int           k)
+{
+    Nervus *a;
+    int     t, r = 0;
+    s32     reg = -1;
+
+    if (!nervus_creare(net->introitus, pool, &a)) fatal("net refused");
+    for (t = 0; t < (int)net->numerus; t++) {
+        const NervusInstructio *in = &net->instructiones[t];
+
+        if (in->genus == NERVUS_RELU && r++ == k) {
+            if (!nervus_affinis(a, in->termini, in->fontes,
+                    in->coefficientes, in->addendum, &reg)) {
+                fatal("argument refused");
+            }
+            break;
+        }
+        if (!(in->genus == NERVUS_RELU ? nervus_relu : nervus_affinis)(a,
+                in->termini, in->fontes, in->coefficientes, in->addendum,
+                &reg)) {
+            fatal("copy refused");
+        }
+    }
+    if (!nervus_exitus(a, 1, &reg)) fatal("exit refused");
+    return a;
+}
+
+typedef struct {
+    int         settled;
+    int         start;
+    int         period;
+    int         tie;      /* some argument vanishes in the limit */
+    int         ok_mu;    /* mu real, > 1, simple; orbit sees it */
+    int         grows;    /* mu > 1; else the loop is invariant (its
+                           * orbit does not grow: a reducing curve) */
+    RadixRealis mu;       /* over the braid's period Q (lambda^Q) */
+    Magnus     *x[O_PASSES + 1];
+    NervusForma f[O_PASSES];  /* pattern of each pass */
+} Orbit4;
+
+static int ok_q_tie = 1;          /* theorem: q >= 2 => tie */
+static int ok_mu_all = 1;
+static int ok_same_limit = 1;     /* the loops of one braid agree */
+static int ok_recurrence = 1;     /* the tail obeys pi_x */
+static int ok_vanish_pos = 1;     /* vanishing is the same at every
+                                   * position of the cycle */
+static int ok_varies_vanish = 1;  /* a bit that varies on the tail has a
+                                   * vanishing argument */
+
+/* phase 1: the orbit of loop E_k and its settled period */
+static void
+orbit4_settle (
+    Nervus *net,
+    int     k,
+    Orbit4 *o)
+{
+    chorda pat[O_PASSES];
+    Ansa   e;
+    int    t, q;
+
+    memset(o, 0, sizeof(*o));
+    if (!ansa_circa(4, (i32)k, pool, &e)) fatal("loop refused");
+    o->x[0] = (Magnus *)malloc(4 * sizeof(Magnus));
+    o->x[0][0] = e.a[0];
+    o->x[0][1] = e.a[1];
+    o->x[0][2] = e.b[0];
+    o->x[0][3] = e.b[1];
+    for (t = 0; t < O_PASSES; t++) {
+        o->x[t + 1] = (Magnus *)malloc(4 * sizeof(Magnus));
+        if (!nervus_forma_creare(net, pool, &o->f[t])
+                || !nervus_aestimare(net, o->x[t], o->x[t + 1], &o->f[t],
+                    pool)
+                || !nervus_forma_clavis(&o->f[t], pool, &pat[t])) {
+            fatal("orbit refused");
+        }
+    }
+    for (q = 1; q <= O_QMAX && !o->settled; q++) {
+        int s = 0;
+
+        for (t = O_PASSES - 1 - q; t >= 0; t--) {
+            if (!chorda_aequalis(pat[t], pat[t + q])) {
+                s = t + 1;
+                break;
+            }
+        }
+        if (O_PASSES - s >= O_TAIL && O_PASSES - s >= 3 * q) {
+            o->settled = 1;
+            o->start = s;
+            o->period = q;
+        }
+    }
+}
+
+/* phase 2 (E): mu over the braid's period Q (a multiple of the loop's
+ * own q), and the tie test at every position of a Q-cycle */
+static void
+orbit4_limit (
+    Nervus **args,
+    int      nrelu,
+    int      start,
+    int      Q,
+    Orbit4  *o)
+{
+    Magnus      *y[O_TERMS + 1];
+    Polynomium   px;
+    Polynomium   dpx;
+    RadixRealis *roots;
+    i32          nroots = 0;
+    s32          sg;
+    int          deg = 0;
+    int          nt = 0;
+    int          j, p, kk;
+
+    for (j = 0; j <= O_TERMS && start + j * Q <= O_PASSES; j++) {
+        y[j] = o->x[start + j * Q];
+        nt++;
+    }
+    if (!min_poly(y, 4, nt, 4, &px, &deg) || deg < 1) {
+        ok_mu_all = 0;
+        return;
+    }
+    /* the relation holds on every later window */
+    for (j = 0; j + deg < nt; j++) {
+        int r;
+
+        for (r = 0; r < 4; r++) {
+            Magnus sum = magnus_ex_s64(0);
+            int    i;
+
+            for (i = 0; i <= deg; i++) {
+                sum = magnus_adde(sum, magnus_multiplica(
+                    polynomium_coefficiens(px, (s32)i), y[j + i][r], pool),
+                    pool);
+            }
+            if (magnus_signum(sum) != 0) ok_recurrence = 0;
+        }
+    }
+    if (!radices_reales(px, pool, &roots, &nroots) || nroots < 1) {
+        ok_mu_all = 0;
+        return;
+    }
+    o->mu = roots[nroots - 1];
+    if (!radix_compara(o->mu, radix_ex_fractione(fractio_ex_s64(1), pool),
+            pool, &sg)) {
+        fatal("compare refused");
+    }
+    if (sg <= 0) {
+        /* the orbit does not grow: this loop is invariant under a
+         * reducible braid (E with a pseudo-Anosov PIECE); it does not
+         * flow to the attractor and is left out of the limit */
+        o->grows = 0;
+        return;
+    }
+    o->grows = 1;
+    if (!polynomium_derivata(px, pool, &dpx)
+            || !radix_signum_polynomii(dpx, o->mu, pool, &sg) || sg == 0) {
+        ok_mu_all = 0;     /* mu must be simple */
+        return;
+    }
+    o->ok_mu = 1;
+    /* each argument at each position of the Q-cycle: if mu is not a
+     * root of its minimal polynomial, it vanishes against |x|. The
+     * argument is a continuous function of the input and every
+     * position tends to the same direction, so the answer must not
+     * depend on the position (checked). */
+    for (kk = 0; kk < nrelu; kk++) {
+        int vanish = -1;
+        int t;
+        int varies = 0;
+
+        for (p = 0; p < Q; p++) {
+            Magnus     *a[O_TERMS + 1];
+            Magnus      store[O_TERMS + 1];
+            Polynomium  pa;
+            int         zero = 1;
+            int         v;
+
+            nt = 0;
+            for (j = 0; j <= O_TERMS && start + p + j * Q < O_PASSES; j++) {
+                if (!nervus_aestimare(args[kk], o->x[start + p + j * Q],
+                        &store[j], NULL, pool)) {
+                    fatal("argument evaluation refused");
+                }
+                a[j] = &store[j];
+                if (magnus_signum(store[j]) != 0) zero = 0;
+                nt++;
+            }
+            if (zero) {
+                v = 1;
+            } else {
+                if (!min_poly(a, 1, nt, 4, &pa, &deg)) {
+                    ok_mu_all = 0;
+                    continue;
+                }
+                if (!radix_signum_polynomii(pa, o->mu, pool, &sg)) {
+                    fatal("sign refused");
+                }
+                v = sg != 0;
+            }
+            if (vanish >= 0 && v != vanish) ok_vanish_pos = 0;
+            vanish = v;
+        }
+        if (vanish == 1) o->tie = 1;
+        for (t = o->start + 1; t < O_PASSES; t++) {
+            if (nervus_forma_bitus(&o->f[t], (i32)kk)
+                    != nervus_forma_bitus(&o->f[o->start], (i32)kk)) {
+                varies = 1;
+            }
+        }
+        if (varies && vanish != 1) ok_varies_vanish = 0;
+    }
+    if (o->period >= 2 && !o->tie) ok_q_tie = 0;
+}
+
+static void
+orbit4_free (
+    Orbit4 *o)
+{
+    int t;
+
+    for (t = 0; t <= O_PASSES; t++) free(o->x[t]);
+}
+
+static int
+lcm2 (
+    int a,
+    int b)
+{
+    int x = a, y = b;
+
+    while (y) {
+        int r = x % y;
+
+        x = y;
+        y = r;
+    }
+    return a / x * b;
+}
+
+static void
+part_c_period (
+    int len4)
+{
+    int tab[2][3][2];          /* cert (0 t = -1, 1 cube only), q, tie */
+    int reducible[2] = { 0, 0 };  /* E with an invariant loop */
+    int no_growth = 0;         /* E with no growing loop at all */
+    int qcount[3][3];          /* type x (q = 1, 2, > 2) */
+    int i, c;
+    int settled_all = 1;
+
+    memset(tab, 0, sizeof(tab));
+    memset(qcount, 0, sizeof(qcount));
+    printf("\n  (b) The period-2 question (KC 55.2.3.1), B_4 up to length "
+        "%d: each braid on\n  every loop E_1..E_3, %d passes; settled period "
+        "q per braid = lcm over loops\n  (D128 Part D). For E, exactly: mu "
+        "= the largest real root of the tail's\n  minimal polynomial (dominant "
+        "by north-south dynamics; observed, not proved);\n  an argument "
+        "VANISHES in the limit iff mu is not a root of its own minimal\n  "
+        "polynomial (its mu-component is 0). Tie = some argument vanishes "
+        "at some\n  position of the cycle, on a loop whose orbit GROWS (mu > "
+        "1; a loop that does\n  not grow is invariant and never reaches the "
+        "attractor).\n", len4, O_PASSES);
+    for (i = 0; i < nk4; i++) {
+        PiscinaNotatio mark = piscina_notare(pool);
+        Nervus        *net;
+        Nervus       **args;
+        Orbit4         o[3];
+        int            k, q = 1, tie = 0, settled = 1, fixed_loop = 0;
+        int            is_e = k4[i].cls == CLS_E;
+
+        if (k4[i].len > len4) {
+            piscina_reficere(pool, mark);
+            continue;
+        }
+        if (!plexus_nervus(k4[i].word, pool, &net)) fatal("net refused");
+        args = (Nervus **)malloc((size_t)(net->relu + 1) * sizeof(Nervus *));
+        for (k = 0; k < (int)net->relu; k++) args[k] = argument_net(net, k);
+        for (k = 1; k <= 3; k++) {
+            orbit4_settle(net, k, &o[k - 1]);
+            if (!o[k - 1].settled) settled = 0;
+            else q = lcm2(q, o[k - 1].period);
+        }
+        if (is_e && settled) {
+            int start = 0;
+
+            for (k = 0; k < 3; k++) {
+                if (o[k].start > start) start = o[k].start;
+            }
+            for (k = 0; k < 3; k++) {
+                orbit4_limit(args, (int)net->relu, start, q, &o[k]);
+                if (o[k].grows) tie |= o[k].tie;
+                else fixed_loop = 1;
+            }
+        }
+        if (is_e && settled) {
+            int ref = -1;
+
+            for (k = 0; k < 3; k++) {
+                s32 sg = 1;
+
+                if (!o[k].grows) continue;
+                if (ref < 0) {
+                    ref = k;
+                    continue;
+                }
+                if (o[k].ok_mu && o[ref].ok_mu
+                        && (!radix_compara(o[k].mu, o[ref].mu, pool, &sg)
+                        || sg != 0)) {
+                    ok_same_limit = 0;
+                }
+                if (o[k].tie != o[ref].tie) ok_same_limit = 0;
+            }
+            if (ref < 0) no_growth++;
+            if (fixed_loop) reducible[k4[i].cube_only]++;
+        }
+        for (k = 0; k < 3; k++) orbit4_free(&o[k]);
+        if (!settled) settled_all = 0;
+        else {
+            qcount[k4[i].cls][q == 1 ? 0 : q == 2 ? 1 : 2]++;
+            if (is_e && q <= 2) {
+                tab[k4[i].cube_only][q - 1][tie]++;
+            }
+        }
+        free(args);
+        piscina_reficere(pool, mark);
+    }
+    check("B_4: every orbit settles within the run (as in D128)",
+        settled_all);
+    {
+        /* D128 Part D: full (length 6) and quick (length 4) runs */
+        int e6[3] = { 3630, 384, 0 }, z6[3] = { 488, 200, 248 };
+        int e4[3] = { 222, 32, 0 }, z4[3] = { 92, 26, 64 };
+        int c6[2][2] = { { 2950, 56 }, { 680, 328 } };
+        int c4[2][2] = { { 186, 0 }, { 36, 32 } };
+        int *e = len4 == 6 ? e6 : e4, *z = len4 == 6 ? z6 : z4;
+        int ok = len4 == 6 || len4 == 4;
+        int t;
+
+        for (t = 0; t < 3; t++) {
+            if (qcount[CLS_E][t] != e[t] || qcount[CLS_Z][t] != z[t]) ok = 0;
+        }
+        for (c = 0; c < 2; c++) {
+            for (t = 0; t < 2; t++) {
+                int have = tab[c][t][0] + tab[c][t][1];
+
+                if (have != (len4 == 6 ? c6[c][t] : c4[c][t])) ok = 0;
+            }
+        }
+        check("B_4 periods per braid = D128 Part D (E and Z by q, E by "
+            "certificate and q)", ok);
+    }
+    check("E tails: the minimal polynomial holds on the whole tail, its "
+        "largest real root\n        mu is > 1 and simple", ok_recurrence
+        && ok_mu_all);
+    check("theorem: every E orbit of period >= 2 has a tie (continuity at "
+        "the limit)", ok_q_tie);
+    check("theorem, per argument: a bit that varies on the settled tail "
+        "has a vanishing argument", ok_varies_vanish);
+    check("vanishing does not depend on the position in the cycle (one "
+        "limit direction)", ok_vanish_pos);
+    check("the growing loops of an E braid reach the same limit (same mu "
+        "= lambda^Q over the\n        braid's period Q, same tie)",
+        ok_same_limit);
+    check("every E braid has a growing loop", no_growth == 0);
+    printf("    E braids with an INVARIANT loop (orbit does not grow: "
+        "reducible, a pseudo-Anosov\n    piece): %d certified at t = -1, "
+        "%d only at a cube root (left out of the limit)\n", reducible[0],
+        reducible[1]);
+    printf("\n    %-32s %10s %10s %10s %10s\n", "E braids", "q=1 no tie",
+        "q=1 tie", "q=2 tie", "q=2 no tie");
+    for (c = 0; c < 2; c++) {
+        printf("    %-32s %10d %10d %10d %10d\n", c == 0
+            ? "Burau(-1) radius > 1" : "only at a cube root of unity",
+            tab[c][0][0], tab[c][0][1], tab[c][1][1], tab[c][1][0]);
+    }
+    printf("    registered prediction (period 2 iff tie): %s\n",
+        tab[0][0][1] + tab[1][0][1] == 0 && tab[0][1][0] + tab[1][1][0] == 0
+        ? "HOLDS" : "FAILS (q = 1 braids with a tie, or q = 2 without)");
+}
+
+static void
+part_c (void)
+{
+    int len4 = celer ? 4 : 6;
+    int lat = celer ? 3 : 4;
+
+    printf("\n=== Part C: B_4 ===\n");
+    build_census4(len4);
+    if (celer) {
+        shells4[0] = 2;
+        shells4[1] = 4;
+    }
+    part_c_lattice(lat, 2);
+    part_c_period(len4);
+}
+
+/* ================================================================
+ * Part D: nulls (B_3, exact)
+ * ================================================================
+ *
+ * (a) a LINEAR network (Burau(-1) of the word, two affine instructions):
+ *     one region by construction - the floor;
+ * (b) the census word's own network with each instruction's
+ *     coefficients permuted at random (same sources, same terms, same
+ *     depth and ReLU count);
+ * (c) the census word's letters in random order: a different braid,
+ *     whose type is looked up in the census. */
+
+#define D_REGION_CAP 20000
+
+static Sors srng;
+static int  shuffled_type_ok = 1;
+
+static int null_changed = 0;      /* permuted networks that differ */
+
+static Nervus *
+shuffled_net (
+    const Nervus *net)
+{
+    int changed = 0;
+
+    Nervus *a;
+    int     t;
+
+    if (!nervus_creare(net->introitus, pool, &a)) fatal("net refused");
+    for (t = 0; t < (int)net->numerus; t++) {
+        const NervusInstructio *in = &net->instructiones[t];
+        Magnus                  c[16];
+        s32                     reg;
+        int                     j;
+
+        if (in->termini > 16) fatal("too many terms");
+        for (j = 0; j < (int)in->termini; j++) c[j] = in->coefficientes[j];
+        for (j = (int)in->termini - 1; j > 0; j--) {
+            int    r = (int)sors_intra(&srng, (i32)(j + 1));
+            Magnus tmp = c[j];
+
+            c[j] = c[r];
+            c[r] = tmp;
+        }
+        for (j = 0; j < (int)in->termini; j++) {
+            if (!magnus_aequalis(c[j], in->coefficientes[j])) changed = 1;
+        }
+        if (!(in->genus == NERVUS_RELU ? nervus_relu : nervus_affinis)(a,
+                in->termini, in->fontes, c, in->addendum, &reg)) {
+            fatal("copy refused");
+        }
+    }
+    if (!nervus_exitus(a, net->exitus_numerus, net->exitus)) {
+        fatal("exit refused");
+    }
+    null_changed += changed;
+    return a;
+}
+
+/* regions and pieces of the iterates of one 2 -> 2 network; returns
+ * the last m reached (stops past D_REGION_CAP) */
+static int
+sweep_net (
+    Nervus *one,
+    int    *r,
+    int    *p)
+{
+    PiscinaNotatio mark = piscina_notare(pool);
+    Nervus        *net = one;
+    int            m;
+    int            last = 0;
+
+    for (m = 1; m <= MMAX; m++) {
+        NervusPlanum pl;
+
+        if (m > 1 && !nervus_componere(net, one, pool, &net)) {
+            fatal("composition refused");
+        }
+        if (!nervus_regiones_plani(net, pool, &pl)) fatal("sweep refused");
+        r[m] = (int)pl.numerus;
+        p[m] = (int)pl.frusta;
+        last = m;
+        if (r[m] > D_REGION_CAP) break;
+    }
+    piscina_reficere(pool, mark);
+    return last;
+}
+
+static void
+part_d (void)
+{
+    int  i, c, m;
+    int  floor_ok = 1;
+    int  shape_ok = 1;
+    long sr[3][MMAX + 1], sp[3][MMAX + 1];
+    int  n[3] = { 0, 0, 0 }, lin[3] = { 0, 0, 0 }, ex[3] = { 0, 0, 0 };
+    int  capped[3] = { 0, 0, 0 };
+    int  trans[3][3];
+    long wr[3][MMAX + 1];
+    int  wn[3] = { 0, 0, 0 }, wlin[3] = { 0, 0, 0 }, wex[3] = { 0, 0, 0 };
+    char b1[32], b2[32];
+    TabulaDispersa *index = tabula_dispersa_creare_chorda(pool, 4096);
+    int            *slot = (int *)malloc((size_t)nk * sizeof(int));
+
+    printf("\n=== Part D: nulls on B_3 (exact) ===\n");
+    sors_seminare(&srng, 129, 1);
+    memset(sr, 0, sizeof(sr));
+    memset(sp, 0, sizeof(sp));
+    memset(trans, 0, sizeof(trans));
+    memset(wr, 0, sizeof(wr));
+    for (i = 0; i < nk; i++) {
+        chorda key;
+
+        slot[i] = i;
+        plexus_clavis(ks[i].word, pool, &key);
+        tabula_dispersa_inserere(index, key, &slot[i]);
+    }
+    for (i = 0; i < nk; i++) {
+        PiscinaNotatio mark = piscina_notare(pool);
+        Nervus        *one;
+        Nervus        *sh;
+        NervusFigura   f1, f2;
+        int            r[MMAX + 1], p[MMAX + 1];
+        int            last;
+
+        c = ks[i].cls;
+        /* (a) the linear floor: Burau(-1) as two affine instructions */
+        {
+            Matrix  bm;
+            Nervus *lin_net;
+            s32     f[2] = { 0, 1 };
+            s32     out[2];
+            Magnus  row[2];
+            NervusPlanum pl;
+            int     t;
+
+            if (!plexus_burau_minus_uno(ks[i].word, pool, &bm)
+                    || !nervus_creare(2, pool, &lin_net)) {
+                fatal("linear null refused");
+            }
+            for (t = 0; t < 2; t++) {
+                row[0] = *(const Magnus *)matrix_elementum(bm, (i32)t, 0);
+                row[1] = *(const Magnus *)matrix_elementum(bm, (i32)t, 1);
+                if (!nervus_affinis(lin_net, 2, f, row, magnus_ex_s64(0),
+                        &out[t])) fatal("affine refused");
+            }
+            nervus_exitus(lin_net, 2, out);
+            if (!nervus_regiones_plani(lin_net, pool, &pl)
+                    || pl.numerus != 1 || pl.frusta != 1) {
+                floor_ok = 0;
+            }
+        }
+        /* (b) coefficients permuted */
+        if (!plexus_nervus(ks[i].word, pool, &one)) fatal("net refused");
+        sh = shuffled_net(one);
+        if (!nervus_figura(one, &f1) || !nervus_figura(sh, &f2)
+                || f1.relu != f2.relu || f1.profunditas != f2.profunditas
+                || f1.profunditas_relu != f2.profunditas_relu
+                || f1.termini != f2.termini) {
+            shape_ok = 0;
+        }
+        last = sweep_net(sh, r, p);
+        n[c]++;
+        if (last < MMAX) {
+            capped[c]++;
+        } else {
+            for (m = 1; m <= MMAX; m++) {
+                sr[c][m] += r[m];
+                sp[c][m] += p[m];
+            }
+            lin[c] += h_lin(r);
+            ex[c] += h_exp(r);
+        }
+        piscina_reficere(pool, mark);
+        /* (c) letters shuffled */
+        {
+            Plexus  w = ks[i].word;
+            s32     lt[16];
+            Plexus  ws;
+            chorda  key;
+            vacuum *val = NULL;
+            int     j, nc;
+            Nervus *wn_net;
+
+            mark = piscina_notare(pool);
+            for (j = 0; j < (int)w.longitudo; j++) lt[j] = w.litterae[j];
+            for (j = (int)w.longitudo - 1; j > 0; j--) {
+                int r2 = (int)sors_intra(&srng, (i32)(j + 1));
+                s32 tmp = lt[j];
+
+                lt[j] = lt[r2];
+                lt[r2] = tmp;
+            }
+            plexus_creare(3, lt, w.longitudo, pool, &ws);
+            plexus_clavis(ws, pool, &key);
+            if (!tabula_dispersa_invenire(index, key, &val)) {
+                fatal("shuffled word has no class");
+            }
+            nc = ks[*(int *)val].cls;
+            {
+                /* the type straight from the word (period, trace) */
+                i32  period = 0;
+                long tr = burau_trace(ws);
+                long at = tr < 0 ? -tr : tr;
+                int  direct;
+
+                if (!plexus_periodus(ws, pool, &period)) {
+                    fatal("period refused");
+                }
+                direct = period > 0 ? CLS_P : at > 2 ? CLS_E : CLS_Z;
+                if (direct != nc) shuffled_type_ok = 0;
+            }
+            trans[c][nc]++;
+            if (!plexus_nervus(ws, pool, &wn_net)) fatal("net refused");
+            (void)sweep_net(wn_net, r, p);
+            wn[nc]++;
+            for (m = 1; m <= MMAX; m++) wr[nc][m] += r[m];
+            wlin[nc] += h_lin(r);
+            wex[nc] += h_exp(r);
+            piscina_reficere(pool, mark);
+        }
+    }
+    check("(a) a linear network has one region and one piece (the floor)",
+        floor_ok);
+    check("(b) permuted coefficients keep the shape (ReLUs, depth, ReLU "
+        "depth, terms)", shape_ok);
+    printf("  (b) permuted networks that differ from the original: %d of "
+        "%d\n", null_changed, nk);
+    check("(b) the permutation changes most networks", 2 * null_changed
+        > nk);
+    check("(c) each shuffled word's type (census lookup) = its own period "
+        "and trace", shuffled_type_ok);
+    printf("\n  (b) Permuted coefficients, by the original braid's type "
+        "(mean over classes;\n  networks past %d regions are stopped and "
+        "counted apart):\n", D_REGION_CAP);
+    printf("    %4s %8s %7s %9s %9s %9s %9s %6s %6s\n", "type", "classes",
+        "capped", "r(1)", "r(6)", "r(12)", "p(12)", "lin", "exp");
+    for (c = 0; c < 3; c++) {
+        int k = n[c] - capped[c];
+        char b3[32], b4[32];
+
+        mean_text(sr[c][1], k, b1);
+        mean_text(sr[c][6], k, b2);
+        mean_text(sr[c][MMAX], k, b3);
+        mean_text(sp[c][MMAX], k, b4);
+        printf("    %4s %8d %7d %9s %9s %9s %9s %6d %6d\n", cls_name[c],
+            n[c], capped[c], b1, b2, b3, b4, lin[c], ex[c]);
+    }
+    printf("\n  (c) Letters shuffled: type of the new braid (rows: "
+        "original, columns: new):\n");
+    printf("    %4s %6s %6s %6s\n", "", "P", "E", "Z");
+    for (c = 0; c < 3; c++) {
+        printf("    %4s %6d %6d %6d\n", cls_name[c], trans[c][0],
+            trans[c][1], trans[c][2]);
+    }
+    printf("    by the NEW type: mean r(6), r(12), and the rule\n");
+    printf("    %4s %8s %9s %9s %6s %6s\n", "type", "words", "r(6)",
+        "r(12)", "lin", "exp");
+    for (c = 0; c < 3; c++) {
+        mean_text(wr[c][6], wn[c], b1);
+        mean_text(wr[c][MMAX], wn[c], b2);
+        printf("    %4s %8d %9s %9s %6d %6d\n", cls_name[c], wn[c], b1, b2,
+            wlin[c], wex[c]);
+    }
+    free(slot);
+}
+
+/* ================================================================
  * main
  * ================================================================ */
 
@@ -1363,6 +2480,8 @@ main (void)
         celer ? " (CELER)" : "");
     part_a();
     part_b();
+    part_c();
+    part_d();
     printf("\n%d passed, %d failed\n", n_pass, n_fail);
     return n_fail ? 1 : 0;
 }
