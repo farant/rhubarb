@@ -214,3 +214,30 @@ How the outcome reaches claims.md:
    compiler is N4's design question, for later.
 4. Part D as descriptive only (proposed), with the exact dilatation
    left to a future plexus slice.
+
+## Decisions made during T6a
+
+- **Layer form.** Two instructions, AFFINE and RELU (the ReLU of an
+  affine form, like handwired's gated ReLU), with f- written as
+  f - relu(f). Each letter's program reads the old coordinates and
+  writes new registers; the outputs are the next layer's neurons, so
+  the final copy is not counted as an operation.
+- **What a generator costs, as measured.** Every generator is depth 4
+  with two ReLU stages. sigma_1, sigma_{n-1} and their inverses: 2 ReLU,
+  2 affine, 2 coordinates touched. A middle sigma_i or its inverse:
+  5 ReLU, 6 affine (one a_q' sum is split in two to keep at most five
+  terms per instruction), 4 coordinates touched.
+- **Checks.** Every program for n = 3..8 touches <= 4 coordinates with
+  ReLU depth 2. sigma then sigma^-1 through the networks is the
+  identity, a group relation independent of plexus. The anchor:
+  interpreter = `ansa_agere` on 3,000 random pairs and 1,000 more with
+  coordinates up to 1000 * 2^200, 0 disagreements (P1). (s1 s2^-1)^20
+  through the network equals plexus's iteration.
+- **Observed, not claimed:** (s1 s2^-1)^20 on E_1 gives
+  (63,245,986; 331,160,282) = (F_39; 2 F_41), Fibonacci numbers, in
+  line with the dilatation phi^2. To be looked at in the findings, not
+  asserted.
+- **Plants (silva.planta, 8):** all red. They cover a sign in c, a sign
+  in w, the inverse's b_p, sigma_1's a_1, sigma_{n-1}'s b, an
+  interpreter that ignores the ReLU, swapped outputs, and a
+  miscounted ReLU depth.
