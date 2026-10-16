@@ -111,6 +111,26 @@ this plan.
   with `dup2(nova, conn->fd)`; `conn->clausa = FALSUM`.
 - **P10 - plan location `project-specs/tls13-plan.md`** (house).
 
+## Rulings made while executing
+
+- **R1 (T1)** - the RFC reader copies each line into a NUL-terminated
+  local before `strstr`/`atoi`, and builds field names from that copy
+  (`linea + VI`; `s + VI` dropped const under -Wcast-qual).
+- **R2 (T1)** - plant `k += II` -> `k += III` is an equivalent mutation
+  (hex pairs are single-space separated); replaced by stopping the
+  continuation loop 16 octets early -> red through the declared-count
+  check.
+- **R3 (T1)** - Latin lint: `ignotum-permissum` for tls13, rfc, rfc8448,
+  rfc5869, hkdf, prk, ikm, okm, sha384, hrr; house word `traffici`
+  (lemma trafficus); renamed `kc` -> `clavis_hmac`, `hc` ->
+  `status_hmac`, `th` -> `hash_transcripti`, `zeros` -> `nulli`,
+  `verify_data` -> `verificatio`. Later tasks' snippets that say
+  `zeros`/`th` use the new names.
+- **R4 (T1)** - the transcript keeps no copy of ClientHello1
+  (`primum`): `tls13_transcriptum_hrr` works from the digest.
+- **R5 (T1)** - in a worktree, `~/.bin/scribe` judges against MAIN's
+  root ("via extra repositorium", exit 4); use `./silva/scribe.sh`.
+
 ## Review focus
 
 Inputs no task's tests reach that are most likely to bite, each with

@@ -1003,6 +1003,17 @@
   <vocabulum lemma="rsa" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="RSA (Rivest-Shamir-Adleman) - algorithmus clavis publicae; folia probationis TLS et vectura BearSSL (tls-bearssl T2 R12, 2026-10-15)"/>
   <vocabulum lemma="securetransport" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="SecureTransport (Apple, Security.framework) - nomen proprium; vectura TLS vetus (tls-bearssl T3, 2026-10-15)"/>
   <vocabulum lemma="bearssl" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="BearSSL (Thomas Pornin) - nomen proprium; vectura TLS (vendor/bearssl, tls-bearssl T3, 2026-10-15)"/>
+  <vocabulum lemma="tls13" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="TLS 1.3 (RFC 8446) - nomen protocolli; cliens proprius lib/tls13*.c (tls13 T1, 2026-10-16)"/>
+  <vocabulum lemma="rfc" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="RFC (Request for Comments, IETF) - abbreviatio; textus normarum ut oracula (tls13 T1, 2026-10-16)"/>
+  <vocabulum lemma="rfc8448" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="RFC 8448 (Example Handshake Traces for TLS 1.3) - nomen normae; oraculum probationes/fixa/tls13 (tls13 T1, 2026-10-16)"/>
+  <vocabulum lemma="rfc5869" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="RFC 5869 (HKDF) - nomen normae; vectores A.1 in probatio_tls13_clavis (tls13 T1, 2026-10-16)"/>
+  <vocabulum lemma="hkdf" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="HKDF (HMAC-based Key Derivation Function, RFC 5869) - abbreviatio (tls13 T1, 2026-10-16)"/>
+  <vocabulum lemma="prk" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="PRK (pseudorandom key, RFC 5869) - abbreviatio normae (tls13 T1, 2026-10-16)"/>
+  <vocabulum lemma="ikm" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="IKM (input keying material, RFC 5869) - abbreviatio normae (tls13 T1, 2026-10-16)"/>
+  <vocabulum lemma="okm" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="OKM (output keying material, RFC 5869) - abbreviatio normae (tls13 T1, 2026-10-16)"/>
+  <vocabulum lemma="sha384" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="SHA-384 (FIPS 180-4) - nomen algorithmi digesti (tls13 T1, 2026-10-16)"/>
+  <vocabulum lemma="hrr" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="HRR (HelloRetryRequest, RFC 8446 4.1.4) - abbreviatio normae (tls13 T1, 2026-10-16)"/>
+  <vocabulum lemma="trafficus" lingua="latina" classis="substantivum" nota="vox domus: traffic (RFC 8446 'traffic secret'); secretum/claves traffici (tls13 T1, 2026-10-16)"><forma textus="traffici"/></vocabulum>
   <vocabulum lemma="inet6" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="AF_INET6 sys/socket.h (familia IPv6); systema_posix.h 2026-10-15 pro probationes/probatio_nomina.c (http-vocatio, conatus gradati)"/>
   <vocabulum lemma="offsetof" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="macrum ISO C89 stddef.h (typum accipit); systema_c89.h 2026-09-25 silva-migratio T16a"/>
   <vocabulum lemma="assert" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="macrum ISO C89 assert.h; systema_c89.h 2026-09-25 silva-migratio T16a"/>
