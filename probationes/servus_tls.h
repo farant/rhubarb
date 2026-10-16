@@ -67,16 +67,20 @@ _servi_tls_auscultat (
     redde VERUM;
 }
 
-/* s_server in directorio dir cum certificato fixo <nomen>.pem/.key et
- * vexillis additis (e.g. "-tls1_1 -cipher DEFAULT:@SECLEVEL=0": servus
- * TLS 1.1 solus, tls-bearssl T6); VERUM si intra II s auscultat. fixa:
- * via absoluta ad probationes/fixa/tls */
+/* s_server in directorio dir cum certificato fixo <nomen>.pem/.key,
+ * modo ("-WWW" fasciculos reddit; "-rev" lineas inversas remittit -
+ * servus qui post responsum NON claudit, ut probatio eum abrumpat:
+ * EOF sine close_notify, tls13 T6) et vexillis additis (e.g. "-tls1_1
+ * -cipher DEFAULT:@SECLEVEL=0": servus TLS 1.1 solus, tls-bearssl T6);
+ * VERUM si intra II s auscultat. fixa: via absoluta ad
+ * probationes/fixa/tls */
 interior b32
-servum_tls_incipere_cum (
+servum_tls_incipere_modo (
              ServusTls* s,
     constans character* dir,
     constans character* fixa,
     constans character* certificatum,
+    constans character* modus,
     constans character* additamenta,
                Piscina* p)
 {
@@ -99,8 +103,8 @@ servum_tls_incipere_cum (
         sprintf(portus_c, "%u", (insignatus integer)s->portus);
         sprintf(mandatum, "cd '%s' && exec " SERVUS_TLS_ORACULUM
             " s_server -accept %s -cert '%s/%s.pem' -key '%s/%s.key'"
-            " -WWW -quiet %s", dir, portus_c, fixa, certificatum, fixa,
-            certificatum, additamenta ? additamenta : "");
+            " %s -quiet %s", dir, portus_c, fixa, certificatum, fixa,
+            certificatum, modus, additamenta ? additamenta : "");
         argumenta[ZEPHYRUM]  = "/bin/sh";
         argumenta[I]         = "-c";
         argumenta[II]        = mandatum;
@@ -123,6 +127,20 @@ servum_tls_incipere_cum (
         s->processus = NIHIL;
     }
     redde FALSUM;
+}
+
+/* modo -WWW cum vexillis additis */
+interior b32
+servum_tls_incipere_cum (
+             ServusTls* s,
+    constans character* dir,
+    constans character* fixa,
+    constans character* certificatum,
+    constans character* additamenta,
+               Piscina* p)
+{
+    redde servum_tls_incipere_modo(s, dir, fixa, certificatum, "-WWW",
+        additamenta, p);
 }
 
 /* ut servum_tls_incipere_cum sine vexillis additis */

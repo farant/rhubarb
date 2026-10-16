@@ -2,10 +2,10 @@
  *
  * API platform-agnostica pro connexionibus securis.
  * Implementatio: tls.c - vectura per connexionem (tls-bearssl II.5):
- * tls_bearssl.c (BearSSL, ORDINARIA) aut tls_securetransport_macos.m
- * (macOS Security.framework, vectura vetus:
- * RHUBARB_TLS=securetransport; delenda postea). Fiducia utriusque per
- * fiducia.h (platforma).
+ * tls_bearssl.c (BearSSL TLS 1.2, ORDINARIA), tls_tls13.c (TLS 1.3
+ * proprius: RHUBARB_TLS=tls13) aut tls_securetransport_macos.m (macOS
+ * Security.framework, vectura vetus: RHUBARB_TLS=securetransport;
+ * delenda postea). Fiducia omnium per fiducia.h (platforma).
  *
  * USUS:
  *   TlsResultus res = tls_connectere("httpbin.org", 443, piscina);
@@ -50,14 +50,16 @@ nomen structura {
          chorda  error_descriptio;
 } TlsResultus;
 
-/* Vectura (implementatio) - tls-bearssl-spec II.5. ORDINARIA:
- * RHUBARB_TLS ('bearssl' | 'securetransport') si positum, aliter
- * ordinaria domus. Vocantes qui optiones memset() faciunt ORDINARIAM
- * habent. */
+/* Vectura (implementatio) - tls-bearssl-spec II.5, tls13-spec II.1.
+ * ORDINARIA: RHUBARB_TLS ('bearssl' | 'securetransport' | 'tls13') si
+ * positum, aliter ordinaria domus. Vocantes qui optiones memset()
+ * faciunt ORDINARIAM habent. TLS13 = cliens TLS 1.3 proprius
+ * (tls_tls13.c super machinam tls13.c). */
 nomen enumeratio {
     TLS_VECTURA_ORDINARIA = 0,
     TLS_VECTURA_BEARSSL,
-    TLS_VECTURA_SECURETRANSPORT
+    TLS_VECTURA_SECURETRANSPORT,
+    TLS_VECTURA_TLS13
 } TlsVectura;
 
 /* Optiones */

@@ -1,7 +1,8 @@
 /* tls.c - tls.h: DISPATCHER vecturarum (tls-bearssl-spec II.5). Vectura
  * per connexionem eligitur (TlsOptiones.vectura; ORDINARIA ->
  * RHUBARB_TLS; aliter ordinaria domus) et in connexione servatur.
- * Vecturae: tls_securetransport_macos.m; tls_bearssl.c. Ambitus
+ * Vecturae: tls_securetransport_macos.m; tls_bearssl.c; tls_tls13.c
+ * (TLS 1.3 proprius, tls13-spec). Ambitus
  * per lectiones_ambitus legitur (fabrica dependentiam videt). */
 #include "postulata_posix.h"
 #include "latina.h"
@@ -11,6 +12,7 @@
 #include "tls.h"
 #include "tls_securetransport.h"
 #include "tls_bearssl.h"
+#include "tls_tls13.h"
 #include "lectiones.h"
 #include <string.h>
 #include <unistd.h>
@@ -24,6 +26,7 @@ structura TlsConnexio {
             TlsVectura  vectura;
     TlsSecuretransport* securetransport;
             TlsBearssl* bearssl;
+              TlsTls13* tls13;
 };
 
 TlsOptiones
@@ -58,6 +61,10 @@ tls_vecturam_eligere (
         && strcmp(ambitus, "securetransport") == ZEPHYRUM)
     {
         redde TLS_VECTURA_SECURETRANSPORT;
+    }
+    si (ambitus != NIHIL && strcmp(ambitus, "tls13") == ZEPHYRUM)
+    {
+        redde TLS_VECTURA_TLS13;
     }
     redde TLS_VECTURA_DOMUS;
 }
@@ -133,6 +140,34 @@ _involvere_bearssl (
     redde r;
 }
 
+/* resultus vecturae TLS 1.3 -> TlsResultus */
+interior TlsResultus
+_involvere_tls13 (
+    TlsTls13Resultus  t3,
+             Piscina* piscina)
+{
+    TlsResultus r;
+
+    r.successus         = t3.successus;
+    r.error             = t3.error;
+    r.error_descriptio  = t3.error_descriptio;
+    r.connexio          = NIHIL;
+    si (t3.successus)
+    {
+        r.connexio = (TlsConnexio*)piscina_allocare(piscina,
+            (i64)magnitudo(TlsConnexio));
+        si (r.connexio == NIHIL)
+        {
+            tls_tls13_claudere(t3.connexio);
+            redde _error(TLS_ERROR_TCP, "Allocatio fallita", piscina);
+        }
+        memset(r.connexio, ZEPHYRUM, magnitudo(TlsConnexio));
+        r.connexio->vectura  = TLS_VECTURA_TLS13;
+        r.connexio->tls13    = t3.connexio;
+    }
+    redde r;
+}
+
 TlsResultus
 tls_connectere (
     constans character* hospes,
@@ -151,10 +186,17 @@ tls_connectere_cum_optionibus (
     constans TlsOptiones* optiones,
                  Piscina* piscina)
 {
-    si (tls_vecturam_eligere(optiones) == TLS_VECTURA_SECURETRANSPORT)
+    TlsVectura v = tls_vecturam_eligere(optiones);
+
+    si (v == TLS_VECTURA_SECURETRANSPORT)
     {
         redde _involvere_securetransport(tls_securetransport_connectere(
             hospes, portus, optiones, piscina), piscina);
+    }
+    si (v == TLS_VECTURA_TLS13)
+    {
+        redde _involvere_tls13(tls_tls13_connectere(hospes, portus,
+            optiones, piscina), piscina);
     }
     redde _involvere_bearssl(tls_bearssl_connectere(hospes, portus,
         optiones, piscina), piscina);
@@ -167,10 +209,17 @@ tls_incipere (
     constans TlsOptiones* optiones,
                  Piscina* piscina)
 {
-    si (tls_vecturam_eligere(optiones) == TLS_VECTURA_SECURETRANSPORT)
+    TlsVectura v = tls_vecturam_eligere(optiones);
+
+    si (v == TLS_VECTURA_SECURETRANSPORT)
     {
         redde _involvere_securetransport(tls_securetransport_incipere(
             tcp, hospes, optiones, piscina), piscina);
+    }
+    si (v == TLS_VECTURA_TLS13)
+    {
+        redde _involvere_tls13(tls_tls13_incipere(tcp, hospes, optiones,
+            piscina), piscina);
     }
     redde _involvere_bearssl(tls_bearssl_incipere(tcp, hospes, optiones,
         piscina), piscina);
@@ -195,6 +244,10 @@ tls_gradus (
     {
         redde tls_bearssl_gradus(connexio->bearssl);
     }
+    si (connexio->vectura == TLS_VECTURA_TLS13)
+    {
+        redde tls_tls13_gradus(connexio->tls13);
+    }
     redde tls_securetransport_gradus(connexio->securetransport);
 }
 
@@ -214,6 +267,10 @@ tls_gradus_error (
     {
         redde tls_bearssl_gradus_error(connexio->bearssl);
     }
+    si (connexio->vectura == TLS_VECTURA_TLS13)
+    {
+        redde tls_tls13_gradus_error(connexio->tls13);
+    }
     redde tls_securetransport_gradus_error(connexio->securetransport);
 }
 
@@ -230,6 +287,10 @@ tls_mittere (
     si (connexio->vectura == TLS_VECTURA_BEARSSL)
     {
         redde tls_bearssl_mittere(connexio->bearssl, data, mensura);
+    }
+    si (connexio->vectura == TLS_VECTURA_TLS13)
+    {
+        redde tls_tls13_mittere(connexio->tls13, data, mensura);
     }
     redde tls_securetransport_mittere(connexio->securetransport, data,
         mensura);
@@ -283,6 +344,10 @@ tls_recipere (
         redde tls_bearssl_recipere(connexio->bearssl, buffer,
             capacitas);
     }
+    si (connexio->vectura == TLS_VECTURA_TLS13)
+    {
+        redde tls_tls13_recipere(connexio->tls13, buffer, capacitas);
+    }
     redde tls_securetransport_recipere(connexio->securetransport,
         buffer,
         capacitas);
@@ -301,6 +366,11 @@ tls_claudere (
         tls_bearssl_claudere(connexio->bearssl);
         redde;
     }
+    si (connexio->vectura == TLS_VECTURA_TLS13)
+    {
+        tls_tls13_claudere(connexio->tls13);
+        redde;
+    }
     tls_securetransport_claudere(connexio->securetransport);
 }
 
@@ -315,6 +385,10 @@ tls_est_valida (
     si (connexio->vectura == TLS_VECTURA_BEARSSL)
     {
         redde tls_bearssl_est_valida(connexio->bearssl);
+    }
+    si (connexio->vectura == TLS_VECTURA_TLS13)
+    {
+        redde tls_tls13_est_valida(connexio->tls13);
     }
     redde tls_securetransport_est_valida(connexio->securetransport);
 }
@@ -335,6 +409,10 @@ tls_certificatum_obtinere (
     si (connexio->vectura == TLS_VECTURA_BEARSSL)
     {
         redde tls_bearssl_certificatum(connexio->bearssl, exitus);
+    }
+    si (connexio->vectura == TLS_VECTURA_TLS13)
+    {
+        redde tls_tls13_certificatum(connexio->tls13, exitus);
     }
     redde tls_securetransport_certificatum(connexio->securetransport,
         exitus);

@@ -240,6 +240,26 @@ this plan.
   `EXTENSIO_CLAVIUM`; examen rejected a writable static buffer in a
   test section (made local).
 
+- **R21 (T6)** - `s_server -WWW` sends close_notify (verified with
+  `s_client -msg`), so the plan's `eof` section would not have tested EOF
+  without close_notify. servus_tls.h gains `servum_tls_incipere_modo(...,
+  modus, ...)` (`-WWW` stays the default through `_cum`); section `eof`
+  uses `-rev` and KILLS the server after the echo -> FIN, no alert ->
+  read returns 0. Sections beyond the plan: `cr_optionalis` (`-verify
+  1`) and `cr_necessaria` (`-Verify 1`: handshake completes on our side,
+  then the first read is -1 with "116 (certificate_required)" in
+  `tls_gradus_error`) per R17; `hrr` also exercises R19's CCS before
+  CH2 (our session id is 32 octets). `omissa` uses the default (1.2+1.3)
+  s_server so the plain `servum_tls_incipere` stays used.
+- **R22 (T6)** - EOF rule keyed on `tls13_machina_versio != 0` (engine
+  state) instead of a backend `pacta` flag; `tls_tls13_gradus_error`
+  also carries post-handshake read errors. Plants (5, red then green):
+  trust always VERUM, EOF rule inverted, FIDUCIA dropped from the
+  CERTIFICATUM mapping, dispatcher "tls13" misspelt, pump not sending
+  first (run with CREDO_SECTIO=gradus - it deadlocks every section).
+  Lint: `aes128` -> ignotum-permissum. Owed by hand (MANU):
+  apps/forum/fumus.sh, tools/icones_fumus.sh - for Fran.
+
 ## Review focus
 
 Inputs no task's tests reach that are most likely to bite, each with
