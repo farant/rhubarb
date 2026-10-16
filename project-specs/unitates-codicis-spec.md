@@ -749,6 +749,34 @@ throwaway git tree gives exit 1 with both errors NAMED (born red by a
 plant: an anchorless answer in lib/xar.interrogationes.stml). Anchors
 are still not resolved - slice 3.
 
+**U5b slice 3 (2026-10-16): gate `interrogationes`** (`tools/
+interrogationes_fumus.sh`, praeiudicium, ~8 s; Fran: the census
+expectation waits until more libraries have questions). Dead answer =
+red, NAMED as `path:line kind value - reason`:
+- `symbolum`: one `silva/nexus.sh -renovare`, then ONE pass over
+  build/nexus.tsv for every anchored symbol (per-symbol nexus.sh calls
+  would cost ~1.75 s each). Alive only if a `sedes` lies in a file whose
+  role is caput/fons AND provenance manu - asked of `bin/fabrica quid`,
+  no path list. A copy in a fixture or the amalgam keeps a deleted
+  symbol forever and would hide the death ("sedes solum extra fontem
+  manu scriptum" names those copies).
+- `via`: exists in the tree. `imperium`: first word with `/` =
+  executable file under the root; bare word = on PATH.
+Also red: any reader error (exit 1 of `quid -interrogationes`); exit 2
+(cannot judge) when bin/fabrica is missing, the nexus table is broken,
+or there are no questions at all (a gate that judges nothing is dead).
+`tegit` includes `include/*`: a header rename owes the gate. Born red
+by five plants (renamed symbol, fixture-only symbol, dead path, missing
+script, command not on PATH), each naming its own cause. Gotcha: the
+gate-declaration reader (lib/portae.c via portae-declaratae) sees only
+TRACKED files - a new, untracked gate script reads as "sine
+annotatione" until `git add -N`.
+
+Next (U5b slice 4, not started): the pool query - "how do I ..." ->
+matching entries across units (a legati tool or `bin/fabrica rogare`;
+NOT named `quaestio`, taken three times), reverse lookup by symbol, API
+coverage report per header.
+
 ## VIII. Open questions (for Fran)
 
 1. ~~Unit declarations~~ - answered §VI½ (three mechanisms).

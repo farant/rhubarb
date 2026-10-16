@@ -1695,6 +1695,10 @@ PORTAE = {
     # veram - canon, lectio sine recusatione, responsa nota, iudex
     'unitates': (['./tools/unitates_fumus.sh'],
                  r'fumus unitatum: (sanum|FRACTUM)'),
+    # interrogationes (U5b gradus 3): responsum mortuum - omnis ancora
+    # (symbolum in fonte manu scripto, via, imperium) rem veram nominat
+    'interrogationes': (['./tools/interrogationes_fumus.sh'],
+                        r'fumus interrogationum: (sanum|FRACTUM)'),
 }
 _ANSI = re.compile(r'\x1b\[[0-9;]*m')
 
