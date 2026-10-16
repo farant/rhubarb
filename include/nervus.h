@@ -14,10 +14,19 @@
  * dant, ergo valor non pendet a conventione; forma pendet, et haec
  * est). Bitus k in bitus[k >> 3], positione (k & 7).
  *
- * FIGURA: profunditas = catena longissima instructionum ab introitu
- * (introitus profunditatis 0); profunditas_relu = plurimae ReLU in
- * catena; latitudo = registra viva plurima post instructionem
- * quamque (vivum: definitum et postea lectum aut exitus).
+ * NULLAE: forma post nervus_aestimare numerum ReLU fert quarum
+ * argumentum EXACTE 0 erat. Tale punctum in pariete regionis iacet:
+ * forma eius est cellae dimensionis inferioris, non regionis apertae
+ * (|x| in x = 0: forma propria, sed |x| duas regiones habet). Retia
+ * sine addendis parietes per originem habent, ergo puncta integra in
+ * parietibus frequentia sunt: regiones numerans puncta cum nullae > 0
+ * separet. Claves et aequalitas formarum nullas ignorant.
+ *
+ * FIGURA: profunditas registri = 1 + maxima profunditas fontium (0
+ * si fontes nulli; introitus profunditatis 0), profunditas retis =
+ * maxima; profunditas_relu idem ReLU numerans; latitudo = registra
+ * viva plurima, ante primam instructionem et post quamque (vivum:
+ * definitum et postea lectum aut exitus).
  *
  * STRUCTURA PUBLICA: rete manu factum per nervus_validus probatur;
  * omnis functio rete invalidum refutat (FALSUM), numquam extra alveum
@@ -40,7 +49,9 @@
  * coefficientes in eam transcribuntur. nervus_aestimare valores et
  * spatium operis in piscina vocantis allocat: in gyris
  * piscina_notare / piscina_reficere circum vocationem, exitus per
- * magnus_transcribe servandi. FALSUM -> exitus non tangitur.
+ * magnus_transcribe servandi. Exitus membra cum introitu (exitus qui
+ * introitus est) aut cum addendis retis (instructio constans) PARTIRI
+ * potest, ut in magnus. FALSUM -> exitus non tangitur.
  *
  * CAUTIO TYPORUM: numeri i32 (SINE signo), indices registrorum s32.
  *
@@ -97,6 +108,7 @@ nomen structura {
 nomen structura {
      i32  numerus;     /* ReLU */
       i8* bitus;       /* (numerus + 7) / 8 octeti */
+     i32  nullae;      /* ReLU argumento exacte 0 (vide NULLAE) */
 } NervusForma;
 
 nomen structura {
@@ -181,7 +193,7 @@ nervus_forma_bitus (
                        i32  k);
 
 /* introitus[0 .. introitus-1] -> exitus[0 .. exitus_numerus-1],
- * exacte; forma (NIHIL licet) bitus accipit. FALSUM si rete
+ * exacte; forma (NIHIL licet) bitus et nullas accipit. FALSUM si rete
  * invalidum, alveus necessarius NIHIL, aut forma non huius retis
  * (numerus differt) */
 b32
@@ -197,9 +209,9 @@ nervus_aestimare (
 b32
 nervus_aestimare_coacte (
          constans Nervus* rete,
-    constans NervusForma* forma,
          constans Magnus* introitus,
                   Magnus* exitus,
+    constans NervusForma* forma,
                  Piscina* piscina);
 
 /* figura retis (vide FIGURA supra); FALSUM si rete invalidum. Memoria

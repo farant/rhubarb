@@ -126,3 +126,68 @@ consumer (D128's live build included) links nervus; D128 still builds
 and passes 24/24 quick. venenum's plexus closure gained lib/nervus.c.
 The width of a braid letter under nervus's definition is 2n - 3 (end)
 and 2n + 2 (middle): affine temporaries count as live registers.
+
+## 2026-10-16 — T4: independent review and fixes
+
+**Review** (recensor-nervus, own oracles; record in the scratchpad
+recensio_nervus/findings_summary.md): H 0, M 3, L 5, N 5. Python
+evaluator from the header on 26,000 random networks (3000 under ASan +
+UBSan; coefficients to 2^80, biases to 2^90, inputs to 2^200, 0..7
+outputs incl. repeats and inputs), its own affine map (forced
+evaluation on basis vectors), brute-force width, keys, composition:
+0 mismatches. plexus_nervus against a Python Dynnikov action from
+Thiffeault eq. 8-15 on 14,000 words (n = 3..9, 2^220): 0 mismatches;
+braid relations on the C networks themselves, 44k checks, an oracle
+that kills all 38 single-sign mutants of its own rules.
+
+**What it found: test gaps, not wrong results.**
+- M1: the copy of M and c out of the private pool was untested beyond
+  s64 (mutants dropping `magnus_transcribe` passed all 212, even under
+  ASan, since small Magnus have no heap limbs). Now tested with 2^100
+  coefficients and a 2^90 bias, reading M and c after REUSING the freed
+  memory (256 KiB of 0xA5 from a fresh pool) - the plain build catches
+  the mutant, not only ASan.
+- M2: key masking untested at ReLU counts that are multiples of 8 (a
+  mutant masking full bytes zeroes the last byte: different patterns,
+  same key - N6 would undercount). Now 8 and 16 ReLUs, patterns
+  differing only in bit 7 / 15.
+- M3: promised refusals untested (pattern equality across sizes and
+  forced evaluation with a foreign pattern - both out-of-bounds reads
+  if the check went; forma_creare on an invalid network). Now tested;
+  plus the 2^27 guard (2^24 - 1 inputs) and composition at exactly
+  2^24 registers (accepted, valid) and 2^24 + 1 (refused).
+- L1/L2: header wording for width (sampled BEFORE the first
+  instruction too) and depth (1 + max over sources, 0 if none). L3:
+  the plexus section has 18 checks. L4: plexus_nervus now counts
+  registers exactly (4 per end letter, 11 per middle) instead of 11
+  for all. L5: the dense forms in the affine map use
+  piscina_conari_allocare, so a failed huge allocation returns FALSUM
+  instead of aborting.
+
+**API changes made before any consumer exists.**
+- N2: one argument order for both evaluators:
+  nervus_aestimare_coacte(rete, introitus, exitus, forma, piscina).
+- N1: `NervusForma.nullae` counts the ReLUs whose argument was EXACTLY
+  0 in the last evaluation. Counting patterns at lattice points is not
+  counting linear regions: a point on a wall gets the pattern of a
+  lower-dimensional cell (|x|: 3 patterns, 2 regions), and bias-free
+  networks (braids) have every wall through the origin. N6 can count
+  only points with nullae = 0, or both. Keys and equality ignore it.
+- N3 (partly): composition sizes its source buffer to b's largest
+  instruction instead of a fixed 256 KiB. N5: header says outputs may
+  share limbs with inputs or biases.
+
+**Deferred to their consumers.** A validated-once handle / unchecked
+evaluation (N2's search, once measured); joining per-pass patterns of
+w^m into one key (N6's plan); lifting M to t I - M over polynomials
+(plexus v2, exact dilatation).
+
+**Plants (8, red):** the reviewer's mutants (M and c not transcribed,
+the full-byte mask, equality without the size check, a foreign pattern
+accepted, forma_creare weakened to a NIHIL check) and two for the tie
+count. Not planted, by reason: raising the 2^27 guard (the fallible
+allocation now also refuses, so the test still sees FALSUM - the guard
+protects i32 indexing between 2^27 and 2^32 elements, which needs a
+multi-GB allocation to reach) and the composition limit (redundant with
+the builder's refusal, as the reviewer noted). L4's exact count is not
+tested on the accepting side: that needs a ~4M-letter network.

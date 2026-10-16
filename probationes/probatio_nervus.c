@@ -17,6 +17,9 @@
  * affinis contra aestimationem coactam (formae fortuitae) et
  * ordinariam (forma realizata), compositio contra b(a(x)) et
  * associativitatem.
+ * T4 (recensio): mappa affinis cum valoribus 2^100 (transcriptio ex
+ * piscina privata), claves cum VIII et XVI ReLU, refutationes a capite
+ * promissae, fines compositionis exacti, nullae.
  * Oraculum Pythonicum (ex definitione) semel extra portas currit:
  * vide lib/nervus.worklog.md.
  */
@@ -1121,26 +1124,26 @@ _probare_coactam (
         x[ZEPHYRUM] = _m(t);
         (vacuum)nervus_forma_ponere(&forma, ZEPHYRUM, VERUM);
         (vacuum)nervus_forma_ponere(&forma, I, VERUM);
-        si (!nervus_aestimare_coacte(absolutum, &forma, x, y, piscina)
+        si (!nervus_aestimare_coacte(absolutum, x, y, &forma, piscina)
             || !_est(y[ZEPHYRUM], ZEPHYRUM))
         {
             omnes = FALSUM;
         }
         (vacuum)nervus_forma_ponere(&forma, I, FALSUM);
-        si (!nervus_aestimare_coacte(absolutum, &forma, x, y, piscina)
+        si (!nervus_aestimare_coacte(absolutum, x, y, &forma, piscina)
             || !_est(y[ZEPHYRUM], t))
         {
             omnes = FALSUM;
         }
         (vacuum)nervus_forma_ponere(&forma, ZEPHYRUM, FALSUM);
         (vacuum)nervus_forma_ponere(&forma, I, VERUM);
-        si (!nervus_aestimare_coacte(absolutum, &forma, x, y, piscina)
+        si (!nervus_aestimare_coacte(absolutum, x, y, &forma, piscina)
             || !_est(y[ZEPHYRUM], -t))
         {
             omnes = FALSUM;
         }
         (vacuum)nervus_forma_ponere(&forma, I, FALSUM);
-        si (!nervus_aestimare_coacte(absolutum, &forma, x, y, piscina)
+        si (!nervus_aestimare_coacte(absolutum, x, y, &forma, piscina)
             || !_est(y[ZEPHYRUM], ZEPHYRUM))
         {
             omnes = FALSUM;
@@ -1148,7 +1151,7 @@ _probare_coactam (
     }
     CREDO_VERUM (omnes);
     y[ZEPHYRUM] = _m(XCIX);
-    CREDO_FALSUM (nervus_aestimare_coacte(absolutum, NIHIL, x, y,
+    CREDO_FALSUM (nervus_aestimare_coacte(absolutum, x, y, NIHIL,
         piscina));
     CREDO_VERUM (_est(y[ZEPHYRUM], XCIX));
     /* forma realizata coacta = aestimatio ordinaria */
@@ -1170,7 +1173,7 @@ _probare_coactam (
         }
         (vacuum)nervus_forma_creare(rete, piscina, &realis);
         si (   !nervus_aestimare(rete, xx, exitus_a, &realis, piscina)
-            || !nervus_aestimare_coacte(rete, &realis, xx, exitus_b,
+            || !nervus_aestimare_coacte(rete, xx, exitus_b, &realis,
             piscina))
         {
             omnes = FALSUM;
@@ -1300,7 +1303,7 @@ _probare_affinem (
                 x[k] = _m((s64)sors_inter(&s, -L, L));
             }
             _affinem_applicare(m, cc, x, exitus_a, piscina);
-            si (!nervus_aestimare_coacte(rete, &fortuita, x, exitus_b,
+            si (!nervus_aestimare_coacte(rete, x, exitus_b, &fortuita,
                 piscina))
             {
                 coactae = FALSUM;
@@ -1456,6 +1459,227 @@ _probare_compositionem (
     }
 }
 
+/* T4 (recensio): mappa affinis cum valoribus extra s64 (transcriptio
+ * ex piscina privata), claves cum VIII et XVI ReLU, refutationes a
+ * capite promissae, nullae (argumenta exacte 0) */
+interior vacuum
+_probare_censuram (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+
+    /* M1: coefficientes 2^100, addendum 2^90; M et c post vocationem
+     * legi, piscina privata destructa et memoria iterum adhibita */
+    {
+             Nervus* rete;
+                s32  f[II];
+             Magnus  cc[II];
+                s32  r;
+                s32  e;
+        NervusForma  forma;
+             Matrix  m;
+             Magnus* cv;
+             Magnus  magnum    = magnus_potentia(_m(II), C, piscina);
+             Magnus  addendum  = magnus_potentia(_m(II), XC, piscina);
+             Magnus  tres = magnus_multiplica(_m(-III), magnum,
+                 piscina);
+            Piscina* turba;
+
+        (vacuum)nervus_creare(II, piscina, &rete);
+        f[ZEPHYRUM]   = ZEPHYRUM;
+        f[I]          = I;
+        cc[ZEPHYRUM]  = magnum;
+        cc[I]         = tres;
+        (vacuum)nervus_relu(rete, II, f, cc, addendum, &r);
+        f[ZEPHYRUM]   = r;
+        cc[ZEPHYRUM]  = magnum;
+        (vacuum)nervus_affinis(rete, I, f, cc, _m(ZEPHYRUM), &e);
+        (vacuum)nervus_exitus(rete, I, &e);
+        (vacuum)nervus_forma_creare(rete, piscina, &forma);
+        (vacuum)nervus_forma_ponere(&forma, ZEPHYRUM, VERUM);
+        CREDO_VERUM (nervus_forma_affinis(rete, &forma, piscina, &m,
+            &cv));
+        /* memoria liberata iterum scribitur */
+        turba = piscina_generare_dynamicum("turba", IV * MXXIV);
+        {
+            i32 k;
+
+            per (k = ZEPHYRUM; k < LXIV; k++)
+            {
+                 i8* q = (i8*)piscina_allocare(turba, IV * MXXIV);
+                i32  t;
+
+                per (t = ZEPHYRUM; t < IV * MXXIV; t++)
+                {
+                    q[t] = (i8)0xA5;
+                }
+            }
+        }
+        CREDO_VERUM (magnus_aequalis(_elementum(m, ZEPHYRUM, ZEPHYRUM),
+            magnus_multiplica(magnum, magnum, piscina)));
+        CREDO_VERUM (magnus_aequalis(_elementum(m, ZEPHYRUM, I),
+            magnus_multiplica(magnum, tres, piscina)));
+        CREDO_VERUM (magnus_aequalis(cv[ZEPHYRUM], magnus_multiplica(
+            magnum, addendum, piscina)));
+        piscina_destruere(turba);
+    }
+    /* M2: VIII et XVI ReLU (octeti pleni): formae solo bitu ultimo
+     * differentes claves diversas habent */
+    {
+        i32 numeri[II];
+        i32 n;
+
+        numeri[ZEPHYRUM]  = VIII;
+        numeri[I]         = XVI;
+        per (n = ZEPHYRUM; n < II; n++)
+        {
+                 Nervus* rete;
+                    s32  f[I];
+                 Magnus  cc[I];
+                    s32  r;
+                    i32  k;
+            NervusForma  a;
+            NervusForma  b;
+                 chorda  clavis_a;
+                 chorda  clavis_b;
+
+            (vacuum)nervus_creare(I, piscina, &rete);
+            f[ZEPHYRUM]   = ZEPHYRUM;
+            cc[ZEPHYRUM]  = _m(I);
+            per (k = ZEPHYRUM; k < numeri[n]; k++)
+            {
+                (vacuum)nervus_relu(rete, I, f, cc, _m(-(s64)k), &r);
+            }
+            (vacuum)nervus_exitus(rete, I, &r);
+            (vacuum)nervus_forma_creare(rete, piscina, &a);
+            (vacuum)nervus_forma_creare(rete, piscina, &b);
+            per (k = ZEPHYRUM; k < numeri[n]; k++)
+            {
+                (vacuum)nervus_forma_ponere(&a, k, VERUM);
+                (vacuum)nervus_forma_ponere(&b, k, k + I < numeri[n]);
+            }
+            CREDO_VERUM (nervus_forma_clavis(&a, piscina, &clavis_a));
+            CREDO_VERUM (nervus_forma_clavis(&b, piscina, &clavis_b));
+            CREDO_AEQUALIS_I32 (clavis_a.mensura, numeri[n] / VIII);
+            CREDO_FALSUM (chorda_aequalis(clavis_a, clavis_b));
+            CREDO_FALSUM (nervus_formae_aequales(&a, &b));
+            (vacuum)nervus_forma_ponere(&b, numeri[n] - I, VERUM);
+            CREDO_VERUM (nervus_forma_clavis(&b, piscina, &clavis_b));
+            CREDO_VERUM (chorda_aequalis(clavis_a, clavis_b));
+        }
+    }
+    /* M3: refutationes */
+    {
+             Nervus* portae     = _portae(piscina);
+             Nervus* absolutum  = _absolutum(piscina);
+        NervusForma  forma_portarum;
+        NervusForma  forma_absoluti;
+        NervusForma  intacta;
+             Magnus  x[II];
+             Magnus  y[III];
+
+        (vacuum)nervus_forma_creare(portae, piscina, &forma_portarum);
+        (vacuum)nervus_forma_creare(absolutum, piscina,
+            &forma_absoluti);
+        /* aequalitas numeris diversis */
+        CREDO_FALSUM (nervus_formae_aequales(&forma_portarum,
+            &forma_absoluti));
+        /* coacta cum forma alius retis; exitus non tangitur */
+        x[ZEPHYRUM]  = _m(III);
+        x[I]         = _m(I);
+        y[ZEPHYRUM]  = _m(XCIX);
+        CREDO_FALSUM (nervus_aestimare_coacte(absolutum, x, y,
+            &forma_portarum, piscina));
+        CREDO_FALSUM (nervus_aestimare_coacte(portae, x, y,
+            &forma_absoluti, piscina));
+        CREDO_VERUM (_est(y[ZEPHYRUM], XCIX));
+        /* forma_creare in rete invalido; exitus non tangitur */
+        intacta.numerus  = XCIX;
+        intacta.bitus    = NIHIL;
+        portae->relu     = II;
+        CREDO_FALSUM (nervus_forma_creare(portae, piscina, &intacta));
+        CREDO_AEQUALIS_I32 (intacta.numerus, XCIX);
+        portae->relu = I;
+        CREDO_VERUM (nervus_validus(portae));
+    }
+    /* custos 2^27 mappae affinis; fines compositionis exacti */
+    {
+          Nervus* latum;
+          Nervus* a;
+          Nervus* b;
+          Nervus* compositum = NIHIL;
+     NervusForma  forma;
+          Matrix  m;
+          Magnus* cv = NIHIL;
+             s32  r;
+             s32  s;
+             s32  f[I];
+          Magnus  cc[I];
+
+        (vacuum)nervus_creare(NERVUS_REGISTRA_MAXIMA - I, piscina,
+            &latum);
+        (vacuum)nervus_affinis(latum, ZEPHYRUM, NIHIL, NIHIL, _m(I),
+            &r);
+        (vacuum)nervus_exitus(latum, I, &r);
+        (vacuum)nervus_forma_creare(latum, piscina, &forma);
+        CREDO_FALSUM (nervus_forma_affinis(latum, &forma, piscina, &m,
+            &cv));
+        CREDO_NIHIL (cv);
+        /* a: 2^24 - 2 introitus, una instructio (2^24 - 1 registra) */
+        (vacuum)nervus_creare(NERVUS_REGISTRA_MAXIMA - II, piscina, &a);
+        (vacuum)nervus_affinis(a, ZEPHYRUM, NIHIL, NIHIL, _m(V), &r);
+        (vacuum)nervus_exitus(a, I, &r);
+        /* b: II instructiones -> 2^24 + 1: refutatur */
+        (vacuum)nervus_creare(I, piscina, &b);
+        f[ZEPHYRUM]   = ZEPHYRUM;
+        cc[ZEPHYRUM]  = _m(II);
+        (vacuum)nervus_affinis(b, I, f, cc, _m(ZEPHYRUM), &s);
+        f[ZEPHYRUM] = s;
+        (vacuum)nervus_affinis(b, I, f, cc, _m(ZEPHYRUM), &s);
+        (vacuum)nervus_exitus(b, I, &s);
+        CREDO_FALSUM (nervus_componere(a, b, piscina, &compositum));
+        CREDO_NIHIL (compositum);
+        /* b una instructione -> 2^24 exacte: accipitur */
+        (vacuum)nervus_creare(I, piscina, &b);
+        f[ZEPHYRUM] = ZEPHYRUM;
+        (vacuum)nervus_affinis(b, I, f, cc, _m(ZEPHYRUM), &s);
+        (vacuum)nervus_exitus(b, I, &s);
+        CREDO_VERUM (nervus_componere(a, b, piscina, &compositum));
+        CREDO_VERUM (nervus_validus(compositum));
+        CREDO_AEQUALIS_I32 (compositum->introitus + compositum->numerus,
+            NERVUS_REGISTRA_MAXIMA);
+    }
+    /* nullae: |x| in 0 -> II (ambae ReLU argumento 0), in 5 -> 0;
+     * portae in (0,0): argumentum -1 -> 0; forma nova -> 0 */
+    {
+             Nervus* absolutum  = _absolutum(piscina);
+             Nervus* portae     = _portae(piscina);
+        NervusForma  forma;
+        NervusForma  fp;
+             Magnus  x[II];
+             Magnus  y[III];
+
+        (vacuum)nervus_forma_creare(absolutum, piscina, &forma);
+        CREDO_AEQUALIS_I32 (forma.nullae, ZEPHYRUM);
+        x[ZEPHYRUM] = _m(ZEPHYRUM);
+        CREDO_VERUM (nervus_aestimare(absolutum, x, y, &forma,
+            piscina));
+        CREDO_AEQUALIS_I32 (forma.nullae, II);
+        x[ZEPHYRUM] = _m(V);
+        CREDO_VERUM (nervus_aestimare(absolutum, x, y, &forma,
+            piscina));
+        CREDO_AEQUALIS_I32 (forma.nullae, ZEPHYRUM);
+        (vacuum)nervus_forma_creare(portae, piscina, &fp);
+        x[ZEPHYRUM]  = _m(ZEPHYRUM);
+        x[I]         = _m(ZEPHYRUM);
+        CREDO_VERUM (nervus_aestimare(portae, x, y, &fp, piscina));
+        CREDO_AEQUALIS_I32 (fp.nullae, ZEPHYRUM);
+        x[ZEPHYRUM] = _m(I);
+        CREDO_VERUM (nervus_aestimare(portae, x, y, &fp, piscina));
+        CREDO_AEQUALIS_I32 (fp.nullae, I);
+    }
+}
+
 interior CredoSectio SECTIONES[] = {
     { "constructio", _probare_constructionem, NIHIL, NIHIL, NIHIL,
         NIHIL },
@@ -1473,6 +1697,7 @@ interior CredoSectio SECTIONES[] = {
     { "affinis", _probare_affinem, NIHIL, NIHIL, NIHIL, NIHIL },
     { "compositio", _probare_compositionem, NIHIL, NIHIL, NIHIL,
         NIHIL },
+    { "recensio", _probare_censuram, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

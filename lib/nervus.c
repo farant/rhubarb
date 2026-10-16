@@ -357,6 +357,7 @@ nervus_forma_creare (
     }
     exitus->numerus  = rete->relu;
     exitus->bitus    = bitus;
+    exitus->nullae   = ZEPHYRUM;
     redde VERUM;
 }
 
@@ -386,7 +387,8 @@ _aestimare (
        i32  registra;
        i32  k;
        i32  j;
-       i32  r = ZEPHYRUM;
+       i32  r       = ZEPHYRUM;
+       i32  nullae  = ZEPHYRUM;
     Magnus* valores;
 
     si (!nervus_validus(rete) || piscina == NIHIL)
@@ -440,6 +442,10 @@ _aestimare (
             b32 activa = coacta != NIHIL ? _bitus(coacta, r)
                          : magnus_signum(summa) > ZEPHYRUM;
 
+            si (magnus_signum(summa) == ZEPHYRUM)
+            {
+                nullae++;
+            }
             si (!activa)
             {
                 summa = magnus_ex_s64(ZEPHYRUM);
@@ -455,6 +461,10 @@ _aestimare (
     per (k = ZEPHYRUM; k < rete->exitus_numerus; k++)
     {
         exitus[k] = valores[rete->exitus[k]];
+    }
+    si (scripta != NIHIL)
+    {
+        scripta->nullae = nullae;
     }
     redde VERUM;
 }
@@ -473,9 +483,9 @@ nervus_aestimare (
 b32
 nervus_aestimare_coacte (
          constans Nervus* rete,
-    constans NervusForma* forma,
          constans Magnus* introitus,
                   Magnus* exitus,
+    constans NervusForma* forma,
                  Piscina* piscina)
 {
     si (forma == NIHIL)
@@ -743,9 +753,15 @@ nervus_forma_affinis (
     {
         redde FALSUM;
     }
-    formae    = (Magnus*)piscina_allocare(temporaria,
+    /* alveus magnus: conari, ut defectus FALSUM reddat, non abortum */
+    formae    = (Magnus*)piscina_conari_allocare(temporaria,
         (memoriae_index)registra * (memoriae_index)latus
         * magnitudo(Magnus));
+    si (formae == NIHIL)
+    {
+        piscina_destruere(temporaria);
+        redde FALSUM;
+    }
     per (k = ZEPHYRUM; k < rete->introitus; k++)
     {
         per (t = ZEPHYRUM; t < latus; t++)
@@ -858,8 +874,20 @@ nervus_componere (
     mappa = (s32*)piscina_allocare(temporaria,
         (memoriae_index)(b->introitus + b->numerus
             + I) * magnitudo(s32));
-    fontes = (s32*)piscina_allocare(temporaria,
-        (memoriae_index)NERVUS_TERMINI_MAXIMI * magnitudo(s32));
+    /* alveus fontium ad terminos plurimos instructionis b */
+    {
+        i32 plurimi = I;
+
+        per (k = ZEPHYRUM; k < b->numerus; k++)
+        {
+            si (b->instructiones[k].termini > plurimi)
+            {
+                plurimi = b->instructiones[k].termini;
+            }
+        }
+        fontes = (s32*)piscina_allocare(temporaria,
+            (memoriae_index)plurimi * magnitudo(s32));
+    }
     exitus_novi = (s32*)piscina_allocare(temporaria,
         (memoriae_index)(b->exitus_numerus + I) * magnitudo(s32));
     (vacuum)nervus_creare(a->introitus, piscina, &rete);

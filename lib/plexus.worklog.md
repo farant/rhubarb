@@ -417,7 +417,7 @@ FALSUM. The first draft chained `bene && call(..., &t1)` and examen
 rightly flagged reads of t1 when an earlier step had failed (harmless,
 but an uninitialized read); returning the register removed them.
 
-Tests (section "nervus", 17 checks): 3000 random words, n = 3..8,
+Tests (section "nervus", 18 checks; first written "17", corrected by the T4 review): 3000 random words, n = 3..8,
 length 0..20, every fourth vector scaled by 2^200: network = ansa_agere,
 0 discrepancies. Per letter, n = 3..8: end letters 2 ReLU / 4
 instructions, middle 5 / 11; depth 4, ReLU depth 2; inputs and outputs

@@ -2369,11 +2369,22 @@ plexus_nervus (
         redde FALSUM;
     }
     m = p.fila - II;
-    /* registra: 2m + XI per litteram (plurimum) */
-    si ((memoriae_index)II * m + (memoriae_index)XI * p.longitudo
-        > (memoriae_index)NERVUS_REGISTRA_MAXIMA)
+    /* registra exacte: 2m, deinde IV per litteram extremam (sigma_1,
+     * sigma_{n-1}), XI per mediam */
     {
-        redde FALSUM;
+        memoriae_index registra = (memoriae_index)II * m;
+
+        per (k = ZEPHYRUM; k < p.longitudo; k++)
+        {
+            s32 littera = p.litterae[k];
+            i32 i = (i32)(littera > ZEPHYRUM ? littera : -littera);
+
+            registra += (i == I || i == p.fila - I) ? IV : XI;
+        }
+        si (registra > (memoriae_index)NERVUS_REGISTRA_MAXIMA)
+        {
+            redde FALSUM;
+        }
     }
     si (!nervus_creare(II * m, piscina, &rete))
     {
