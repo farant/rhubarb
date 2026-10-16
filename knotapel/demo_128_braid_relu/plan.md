@@ -241,3 +241,52 @@ How the outcome reaches claims.md:
   in w, the inverse's b_p, sigma_1's a_1, sigma_{n-1}'s b, an
   interpreter that ignores the ReLU, swapped outputs, and a
   miscounted ReLU depth.
+
+## Decisions made during T6b
+
+- **The census is breadth-first over exact classes.** Each braid's level
+  is its shortest word length. The class key is the loop images on
+  D_{n+2}. The counts equal the T5 review's independent Artin counts:
+  2,589 (B_3 up to 8) and 5,121 (B_4 up to 6). Quick mode anchors on the
+  same prefixes (263, 469). A plant that keyed on D_n (where Delta^2 is
+  invisible) survived quick mode until those prefix anchors were added.
+- **"Periodic" in D106 means zero entropy.** D106 called the six
+  generators "periodic", but a generator is a half twist (class Z),
+  not periodic. The fair comparison is therefore D106 'pA' against
+  positive entropy, and D106 'periodic' against zero entropy (P or Z).
+- **The consistency checks are exact characterizations, not bounds.**
+  For a periodic braid, the loop lengths repeat with its period k. For
+  a Z braid, the lengths become quasi-affine (for some p <= 24,
+  L_{m+p} - L_m is constant from m = 30). The first version used a
+  linear bound, 4 L_0 + 4m, which was wrong: conjugates of periodic
+  braids and steep twists exceed it.
+- **What the run found (full mode, 2.4 s, 14/14):**
+  - D106's table is reproduced EXACTLY at depths 0-5, both the braid
+    counts and its rule's 'pA' counts. Its catalog is the exact
+    shortest-length enumeration up to there. At depth 6 D106 has 3,444
+    braids (2,234 'pA'); the exact count is 3,542 (2,258 under its
+    rule). Its (TL, Burau) dedup presumably merged distinct braids.
+  - D106's rule decides exactly "Burau(-1) spectral radius > 1": on
+    det-1 3x3 matrices, p(1) = 0 with |1 - tr| <= 2 puts the other
+    eigenvalues on the unit circle. Its 'pA' set equals the
+    Burau-certified set on all 5,121 braids.
+  - P2, registered in both directions: zero-entropy braids called 'pA'
+    = 0 (that direction FAILS; my delta example was wrong, since the
+    rule classifies delta correctly). Positive-entropy braids called
+    'periodic' = 1,008. The shortest is s1 s3^-1 s2, rate 2.29663, the
+    minimal dilatation of B_4.
+  - The positive-entropy share by length on B_4 (exact) against D106's
+    'pA' share: 2: 30.8 / 30.8; 3: 49.0 / 32.7; 4: 58.6 / 43.2;
+    5: 72.3 / 50.6; 6: 83.5 / 63.7. D106's trend (P3) holds, but its
+    level is understated by about 20 points.
+  - P4 holds: the 8 depth-2 'pA' braids have characteristic polynomial
+    x^3 - 4x^2 + 4x - 1 and Burau radix exactly (3 + sqrt 5)/2.
+  - On B_3, Burau certifies every positive-entropy braid (0 "measured
+    only"), consistent with Burau(-1) being exact on B_3. The smallest
+    rates are the known minimal dilatations: 2.61803 (B_3), 2.29663
+    (B_4).
+- **Plants (silva.planta, 9, quick mode):** all red. They cover
+  periodicity tested only with k = n, the growth threshold, an ignored
+  certificate, D106's |1 - tr| boundary, the level dedup turned off,
+  the key on D_n, an off-by-one periodicity check, and the quasi-affine
+  window cut to p = 1.
