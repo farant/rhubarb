@@ -45,6 +45,25 @@
  * fiunt; ReLU ordine a deinde b, ergo forma compositi = forma a
  * deinde forma b.
  *
+ * REGIONES PLANI: rete sine addendis cum II introitibus positive
+ * homogeneum est, ergo regiones eius CONI ab origine sunt: sectores
+ * inter radios rationales (muros). Puncta formae eiusdem regionem
+ * CONVEXAM faciunt (sub forma priorum argumentum cuiusque ReLU
+ * lineare est, ergo condicio eius semiplanum), ergo forma una sectorem
+ * unum dat, angulus <= pi, formae sectorum diversae. Murus: radius ubi
+ * forma mutatur. Sectores contra horologium; primus incipit a muro
+ * primo ab (1, 0) inclusive. Nulli muri: sector unus, totum planum,
+ * initium = finis = (1, 0). NULLAE sectoris: ReLU quarum argumentum in
+ * sectore IDENTICE 0 est - bitus 0, et nervus_aestimare in omni puncto
+ * interiore easdem nullas reddit (puncta interiora numerans talem
+ * sectorem non videt). FRUSTUM (pars linearis): sectores contigui
+ * eadem matrice coniuncti; frusta <= sectores. Algorithmus: circulus
+ * in IV arcus per axes divisus; per instructionem forma linearis
+ * cuiusque registri in quoque arcu; ad ReLU arcus ubi argumentum g
+ * signum STRICTE mutat in radio |g(v)| u + |g(u)| v (exacte,
+ * primitivo) dividitur; arcus semper < pi; postremo arcus contigui
+ * forma eadem coniunguntur. Sumptus O(arcus x registra) Magnus.
+ *
  * MEMORIA: rete in piscina sua (data in nervus_creare) crescit;
  * coefficientes in eam transcribuntur. nervus_aestimare valores et
  * spatium operis in piscina vocantis allocat: in gyris
@@ -282,5 +301,43 @@ nervus_componere (
     constans Nervus*  b,
             Piscina*  piscina,
              Nervus** exitus);
+
+
+/* ==================================================
+ * Regiones plani (sine addendis, II introitus)
+ * ================================================== */
+
+/* directio ab origine: (x, y) integri primitivi (divisor communis 1),
+ * non ambo nulli */
+nomen structura {
+    Magnus x;
+    Magnus y;
+} NervusRadius;
+
+/* regio aperta inter murum initium et murum finis, contra horologium
+ * (vide REGIONES PLANI) */
+nomen structura {
+    NervusRadius initium;
+    NervusRadius finis;
+    NervusRadius medius;      /* directio intra sectorem */
+     NervusForma forma;       /* nullae: argumento identice 0 */
+          Matrix m;           /* exitus_numerus x II: f(x) = M x */
+             i32 frustum;     /* index partis linearis, 0 .. frusta-1 */
+} NervusSector;
+
+nomen structura {
+             i32  numerus;     /* sectores = regiones */
+    NervusSector* regiones;
+             i32  frusta;      /* partes lineares */
+} NervusPlanum;
+
+/* regiones activationis retis in plano, exacte (vide REGIONES PLANI),
+ * in piscina vocantis. FALSUM (exitus non tangitur) si rete invalidum,
+ * introitus != II, addendum aliquod non nullum, aut memoria deficit */
+b32
+nervus_regiones_plani (
+    constans Nervus* rete,
+            Piscina* piscina,
+       NervusPlanum* exitus);
 
 #endif /* NERVUS_H */

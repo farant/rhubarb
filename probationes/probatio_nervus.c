@@ -1680,6 +1680,1102 @@ _probare_censuram (
     }
 }
 
+
+/* ==================================================
+ * Regiones plani: auxilia
+ * ================================================== */
+
+interior NervusRadius
+_radius (
+    s64 x,
+    s64 y)
+{
+    NervusRadius radius;
+
+    radius.x = magnus_ex_s64(x);
+    radius.y = magnus_ex_s64(y);
+    redde radius;
+}
+
+interior b32
+_radius_est (
+    NervusRadius radius,
+             s64 x,
+             s64 y)
+{
+    redde _est(radius.x, x) && _est(radius.y, y);
+}
+
+interior b32
+_radius_aequat (
+    NervusRadius radius,
+          Magnus x,
+          Magnus y)
+{
+    redde magnus_aequalis(radius.x, x) && magnus_aequalis(radius.y, y);
+}
+
+interior b32
+_bitus_regionis (
+    constans NervusPlanum* planum,
+                      i32  k,
+                      i32  b)
+{
+    redde nervus_forma_bitus(&planum->regiones[k].forma, b);
+}
+
+interior b32
+_radii_aequales (
+    NervusRadius a,
+    NervusRadius b)
+{
+    redde magnus_aequalis(a.x, b.x) && magnus_aequalis(a.y, b.y);
+}
+
+/* u_x v_y - u_y v_x */
+interior s32
+_crux (
+    NervusRadius  u,
+    NervusRadius  v,
+         Piscina* piscina)
+{
+    redde magnus_signum(magnus_subtrahe(magnus_multiplica(u.x, v.y,
+        piscina), magnus_multiplica(u.y, v.x, piscina), piscina));
+}
+
+interior s32
+_productum (
+    NervusRadius  u,
+    NervusRadius  v,
+         Piscina* piscina)
+{
+    redde magnus_signum(magnus_adde(magnus_multiplica(u.x, v.x,
+        piscina), magnus_multiplica(u.y, v.y, piscina), piscina));
+}
+
+/* 0: angulus in [0, pi), 1: in [pi, 2 pi) */
+interior i32
+_dimidium (
+    NervusRadius u)
+{
+    si (   magnus_signum(u.y) > ZEPHYRUM
+        || (magnus_signum(u.y) == ZEPHYRUM
+        && magnus_signum(u.x) > ZEPHYRUM))
+    {
+        redde ZEPHYRUM;
+    }
+    redde I;
+}
+
+/* angulus u < angulus v in [0, 2 pi) */
+interior b32
+_ante (
+    NervusRadius  u,
+    NervusRadius  v,
+         Piscina* piscina)
+{
+    si (_dimidium(u) != _dimidium(v))
+    {
+        redde _dimidium(u) < _dimidium(v);
+    }
+    redde _crux(u, v, piscina) > ZEPHYRUM;
+}
+
+interior b32
+_primitivus_est (
+    NervusRadius  u,
+         Piscina* piscina)
+{
+    redde _est(magnus_divisor_communis(u.x, u.y, piscina), I);
+}
+
+/* p intra sectorem apertum (u, w) contra horologium; sector unus
+ * (planum) cum u == w et numerus 1 */
+interior b32
+_intra_regionem (
+    constans NervusSector* sector,
+                      i32  numerus,
+             NervusRadius  p,
+                  Piscina* piscina)
+{
+    s32 ab_initio;
+    s32 ad_finem;
+    s32 amplitudo;
+
+    si (numerus == I)
+    {
+        redde VERUM;
+    }
+    ab_initio  = _crux(sector->initium, p, piscina);
+    ad_finem   = _crux(p, sector->finis, piscina);
+    amplitudo  = _crux(sector->initium, sector->finis, piscina);
+    si (amplitudo == ZEPHYRUM)
+    {
+        /* semiplanum */
+        redde ab_initio > ZEPHYRUM;
+    }
+    redde ab_initio > ZEPHYRUM && ad_finem > ZEPHYRUM;
+}
+
+/* p in muro (radius sectoris) */
+interior b32
+_in_muro (
+    constans NervusSector* sector,
+             NervusRadius  p,
+                  Piscina* piscina)
+{
+    redde _crux(sector->initium, p, piscina) == ZEPHYRUM
+        && _productum(sector->initium, p, piscina) > ZEPHYRUM;
+}
+
+/* rete II introitus sine addendis, II exitus (ultima registra) */
+interior Nervus*
+_fortuitum_planum (
+        Sors* s,
+     Piscina* piscina)
+{
+    Nervus* rete = _fortuitum_latum(s, II, VERUM, piscina);
+       s32  e[II];
+       i32  registra = rete->introitus + rete->numerus;
+
+    e[ZEPHYRUM]  = (s32)(registra - I);
+    e[I]         = (s32)(registra >= III ? registra - II : ZEPHYRUM);
+    (vacuum)nervus_exitus(rete, II, e);
+    redde rete;
+}
+
+
+/* ==================================================
+ * Oraculum plani: punctum fixum (algorithmus alter)
+ *
+ * Radii candidati, ordine anguli. In quoque arcu (u, v) forma ad
+ * medium u + v per nervus_aestimare; sub ea formae argumentorum
+ * propagantur (hic, non per bibliothecam); radius zero cuiusque
+ * argumenti signum intra arcum STRICTE mutantis additur. Repetitur
+ * donec nihil additur: tunc sub forma media nullum argumentum in arcu
+ * signum mutat, ergo forma in toto arcu aperto constans. Muri: radii
+ * inter arcus formarum diversarum.
+ * ================================================== */
+
+#define ORACULUM_RADII MMM
+
+nomen structura {
+             i32  numerus;          /* sectores */
+    NervusRadius* muri;
+     NervusForma* formae;
+} OraculumPlani;
+
+/* argumenta ReLU sub forma (bitus), lineares in (x, y) */
+interior vacuum
+_argumenta (
+         constans Nervus* rete,
+    constans NervusForma* forma,
+                  Magnus* argumenta,    /* relu x II */
+                 Piscina* piscina)
+{
+    Magnus* formae_x;
+    Magnus* formae_y;
+       i32  registra = rete->introitus + rete->numerus;
+       i32  k;
+       i32  j;
+       i32  r = ZEPHYRUM;
+
+    formae_x = (Magnus*)piscina_allocare(piscina,
+        (memoriae_index)registra * magnitudo(Magnus));
+    formae_y = (Magnus*)piscina_allocare(piscina,
+        (memoriae_index)registra * magnitudo(Magnus));
+    formae_x[ZEPHYRUM]  = _m(I);
+    formae_y[ZEPHYRUM]  = _m(ZEPHYRUM);
+    formae_x[I]         = _m(ZEPHYRUM);
+    formae_y[I]         = _m(I);
+    per (k = ZEPHYRUM; k < rete->numerus; k++)
+    {
+         constans NervusInstructio* instructio;
+                            Magnus  summa_x = _m(ZEPHYRUM);
+                            Magnus  summa_y = _m(ZEPHYRUM);
+
+        instructio = &rete->instructiones[k];
+        per (j = ZEPHYRUM; j < instructio->termini; j++)
+        {
+            s32 f = instructio->fontes[j];
+
+            summa_x = magnus_adde(summa_x, magnus_multiplica(
+                instructio->coefficientes[j], formae_x[f], piscina),
+                piscina);
+            summa_y = magnus_adde(summa_y, magnus_multiplica(
+                instructio->coefficientes[j], formae_y[f], piscina),
+                piscina);
+        }
+        si (instructio->genus == NERVUS_RELU)
+        {
+            argumenta[II * r]      = summa_x;
+            argumenta[II * r + I]  = summa_y;
+            si (!nervus_forma_bitus(forma, r))
+            {
+                summa_x = _m(ZEPHYRUM);
+                summa_y = _m(ZEPHYRUM);
+            }
+            r++;
+        }
+        formae_x[II + k] = summa_x;
+        formae_y[II + k] = summa_y;
+    }
+}
+
+/* forma (et nullae) ad u + v */
+interior b32
+_forma_media (
+    constans Nervus* rete,
+       NervusRadius  u,
+       NervusRadius  v,
+        NervusForma* forma,
+            Piscina* piscina)
+{
+    Magnus  x[II];
+    Magnus* y;
+
+    y = (Magnus*)piscina_allocare(piscina,
+        (memoriae_index)(rete->exitus_numerus + I) * magnitudo(Magnus));
+    x[ZEPHYRUM]  = magnus_adde(u.x, v.x, piscina);
+    x[I]         = magnus_adde(u.y, v.y, piscina);
+    redde nervus_forma_creare(rete, piscina, forma)
+        && nervus_aestimare(rete, x, y, forma, piscina);
+}
+
+interior b32
+_oraculum_plani (
+    constans Nervus* rete,
+            Piscina* piscina,
+      OraculumPlani* exitus)
+{
+    NervusRadius* radii;
+    NervusRadius* novi;
+     NervusForma* formae;
+          Magnus* argumenta;
+             i32  numerus = IV;
+             i32  k;
+             i32  j;
+
+    radii = (NervusRadius*)piscina_allocare(piscina,
+        ORACULUM_RADII * magnitudo(NervusRadius));
+    novi = (NervusRadius*)piscina_allocare(piscina,
+        ORACULUM_RADII * magnitudo(NervusRadius));
+    argumenta = (Magnus*)piscina_allocare(piscina,
+        (memoriae_index)(II * rete->relu + I) * magnitudo(Magnus));
+    radii[ZEPHYRUM]  = _radius(I, ZEPHYRUM);
+    radii[I]         = _radius(ZEPHYRUM, I);
+    radii[II]        = _radius(-I, ZEPHYRUM);
+    radii[III]       = _radius(ZEPHYRUM, -I);
+    per (;;)
+    {
+        i32 numerus_novorum = ZEPHYRUM;
+
+        per (k = ZEPHYRUM; k < numerus; k++)
+        {
+            NervusRadius u = radii[k];
+            NervusRadius v = radii[(k + I) % numerus];
+             NervusForma forma;
+
+            si (!_forma_media(rete, u, v, &forma, piscina))
+            {
+                redde FALSUM;
+            }
+            _argumenta(rete, &forma, argumenta, piscina);
+            per (j = ZEPHYRUM; j < rete->relu; j++)
+            {
+                 constans Magnus* g   = &argumenta[II * j];
+                          Magnus  ad_u  = magnus_adde(magnus_multiplica(
+                                        g[ZEPHYRUM], u.x, piscina),
+                                        magnus_multiplica(g[I], u.y,
+                                        piscina), piscina);
+                          Magnus ad_v  = magnus_adde(magnus_multiplica(
+                                        g[ZEPHYRUM], v.x, piscina),
+                                        magnus_multiplica(g[I], v.y,
+                                        piscina), piscina);
+
+                si (magnus_signum(ad_u) * magnus_signum(ad_v)
+                    < ZEPHYRUM)
+                {
+                    Magnus au = magnus_absolutum(ad_u, piscina);
+                    Magnus av = magnus_absolutum(ad_v, piscina);
+                    Magnus radius_x = magnus_adde(magnus_multiplica(av,
+                        u.x,
+                        piscina), magnus_multiplica(au, v.x, piscina),
+                        piscina);
+                    Magnus radius_y = magnus_adde(magnus_multiplica(av,
+                        u.y,
+                        piscina), magnus_multiplica(au, v.y, piscina),
+                        piscina);
+                    Magnus d  = magnus_divisor_communis(radius_x,
+                        radius_y,
+                        piscina);
+                       i32 t;
+                       b32 iam = FALSUM;
+
+                    si (numerus_novorum >= ORACULUM_RADII)
+                    {
+                        redde FALSUM;
+                    }
+                    (vacuum)magnus_divide(radius_x, d, piscina,
+                        &novi[numerus_novorum].x, NIHIL);
+                    (vacuum)magnus_divide(radius_y, d, piscina,
+                        &novi[numerus_novorum].y, NIHIL);
+                    per (t = ZEPHYRUM; t < numerus_novorum; t++)
+                    {
+                        si (_radii_aequales(novi[t],
+                            novi[numerus_novorum]))
+                        {
+                            iam = VERUM;
+                        }
+                    }
+                    si (!iam)
+                    {
+                        numerus_novorum++;
+                    }
+                }
+            }
+        }
+        si (numerus_novorum == ZEPHYRUM)
+        {
+            frange;
+        }
+        /* insertio ordine anguli (novi intra arcus, ergo non iam
+         * inter radios) */
+        si (numerus + numerus_novorum > ORACULUM_RADII)
+        {
+            redde FALSUM;
+        }
+        per (j = ZEPHYRUM; j < numerus_novorum; j++)
+        {
+            i32 locus = numerus;
+
+            dum (   locus > ZEPHYRUM && _ante(novi[j], radii[locus - I],
+                piscina))
+            {
+                radii[locus] = radii[locus - I];
+                locus--;
+            }
+            radii[locus] = novi[j];
+            numerus++;
+        }
+    }
+    formae = (NervusForma*)piscina_allocare(piscina,
+        (memoriae_index)numerus * magnitudo(NervusForma));
+    per (k = ZEPHYRUM; k < numerus; k++)
+    {
+        (vacuum)_forma_media(rete, radii[k], radii[(k + I) % numerus],
+            &formae[k], piscina);
+    }
+    exitus->muri = (NervusRadius*)piscina_allocare(piscina,
+        (memoriae_index)numerus * magnitudo(NervusRadius));
+    exitus->formae = (NervusForma*)piscina_allocare(piscina,
+        (memoriae_index)numerus * magnitudo(NervusForma));
+    exitus->numerus = ZEPHYRUM;
+    per (k = ZEPHYRUM; k < numerus; k++)
+    {
+        si (!nervus_formae_aequales(&formae[(k + numerus - I)
+            % numerus],
+            &formae[k]))
+        {
+            exitus->muri[exitus->numerus]    = radii[k];
+            exitus->formae[exitus->numerus]  = formae[k];
+            exitus->numerus++;
+        }
+    }
+    si (exitus->numerus == ZEPHYRUM)
+    {
+        exitus->muri[ZEPHYRUM]    = radii[ZEPHYRUM];
+        exitus->formae[ZEPHYRUM]  = formae[ZEPHYRUM];
+        exitus->numerus           = I;
+    }
+    redde VERUM;
+}
+
+/* planum contra oraculum et theoremata; VERUM si omnia conveniunt */
+interior b32
+_planum_verificare (
+          constans Nervus* rete,
+    constans NervusPlanum* planum,
+                  Piscina* piscina)
+{
+    OraculumPlani oraculum;
+              i32 k;
+              i32 j;
+              i32 mutationes = ZEPHYRUM;
+
+    si (!_oraculum_plani(rete, piscina, &oraculum))
+    {
+        imprimere("oraculum defecit\n");
+        redde FALSUM;
+    }
+    si (oraculum.numerus != planum->numerus)
+    {
+        imprimere("numerus %u contra oraculum %u\n", planum->numerus,
+            oraculum.numerus);
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < planum->numerus; k++)
+    {
+        constans NervusSector* sector = &planum->regiones[k];
+        constans NervusSector* sequens = &planum->regiones[(k + I)
+            % planum->numerus];
+                       Matrix  m;
+                       Magnus* cv;
+                  NervusForma  ad_medium;
+
+        /* muri, formae, nullae contra oraculum */
+        si (   !_radii_aequales(sector->initium, oraculum.muri[k])
+            || !nervus_formae_aequales(&sector->forma,
+            &oraculum.formae[k])
+            || sector->forma.nullae != oraculum.formae[k].nullae)
+        {
+            imprimere("sector %u differt ab oraculo\n", k);
+            redde FALSUM;
+        }
+        /* finis = initium sequentis; radii primitivi; ordo anguli */
+        si (   !_radii_aequales(sector->finis, sequens->initium)
+            || !_primitivus_est(sector->initium, piscina)
+            || !_primitivus_est(sector->medius, piscina))
+        {
+            redde FALSUM;
+        }
+        si (   k > ZEPHYRUM && !_ante(planum->regiones[k - I].initium,
+            sector->initium, piscina))
+        {
+            redde FALSUM;
+        }
+        /* angulus <= pi */
+        si (   planum->numerus > I
+            && _crux(sector->initium, sector->finis, piscina)
+                < ZEPHYRUM)
+        {
+            redde FALSUM;
+        }
+        /* medius intra; aestimatio ibi formam et nullas dat */
+        si (!_intra_regionem(sector, planum->numerus, sector->medius,
+            piscina))
+        {
+            redde FALSUM;
+        }
+        si (   !_forma_media(rete, sector->medius, _radius(ZEPHYRUM,
+            ZEPHYRUM), &ad_medium, piscina)
+            || !nervus_formae_aequales(&ad_medium, &sector->forma)
+            || ad_medium.nullae != sector->forma.nullae)
+        {
+            redde FALSUM;
+        }
+        /* matrix = mappa affinis formae */
+        si (   !nervus_forma_affinis(rete, &sector->forma, piscina, &m,
+            &cv) || !matrix_aequalis(m, sector->m))
+        {
+            redde FALSUM;
+        }
+        /* formae sectorum diversae (convexitas) */
+        per (j = ZEPHYRUM; j < k; j++)
+        {
+            si (nervus_formae_aequales(&planum->regiones[j].forma,
+                &sector->forma))
+            {
+                redde FALSUM;
+            }
+        }
+        /* frusta: contigui eiusdem frusti iff matrix eadem */
+        si (planum->numerus > I)
+        {
+            b32 eadem = matrix_aequalis(sector->m, sequens->m);
+
+            si (!eadem)
+            {
+                mutationes++;
+            }
+            si (   planum->frusta > I && eadem != (sector->frustum
+                == sequens->frustum))
+            {
+                redde FALSUM;
+            }
+        }
+        si (sector->frustum >= planum->frusta)
+        {
+            redde FALSUM;
+        }
+    }
+    si (planum->numerus == I && (!_radius_est(planum->regiones[ZEPHYRUM]
+        .initium, I, ZEPHYRUM)
+            || !_radius_est(planum->regiones[ZEPHYRUM]
+        .finis, I, ZEPHYRUM)))
+    {
+        redde FALSUM;
+    }
+    /* frusta = mutationes circum (aut 1) */
+    si (planum->frusta != (mutationes > ZEPHYRUM ? mutationes : I))
+    {
+        imprimere("frusta %u, mutationes %u\n", planum->frusta,
+            mutationes);
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
+/* puncta testae max(|x|, |y|) = R: intra sectorem -> forma eius; in
+ * muro -> valor = M p utriusque sectoris */
+interior b32
+_testam_verificare (
+          constans Nervus* rete,
+    constans NervusPlanum* planum,
+                      s64  testa,
+                  Piscina* piscina)
+{
+    s64 t;
+    i32 latus;
+
+    per (latus = ZEPHYRUM; latus < IV; latus++)
+    {
+        per (t = -testa; t < testa; t++)
+        {
+            NervusRadius  p;
+             NervusForma  forma;
+                  Magnus  x[II];
+                  Magnus* y;
+                     i32  k;
+                     i32  intra = ZEPHYRUM;
+
+            commutatio (latus)
+            {
+                casus ZEPHYRUM: p = _radius(testa, t);   frange;
+                casus I:        p = _radius(-t, testa);  frange;
+                casus II:       p = _radius(-testa, -t); frange;
+                ordinarius:     p = _radius(t, -testa);  frange;
+            }
+            x[ZEPHYRUM]  = p.x;
+            x[I]         = p.y;
+            y = (Magnus*)piscina_allocare(piscina,
+                (memoriae_index)(rete->exitus_numerus + I)
+                * magnitudo(Magnus));
+            (vacuum)nervus_forma_creare(rete, piscina, &forma);
+            si (!nervus_aestimare(rete, x, y, &forma, piscina))
+            {
+                redde FALSUM;
+            }
+            per (k = ZEPHYRUM; k < planum->numerus; k++)
+            {
+                constans NervusSector* sector = &planum->regiones[k];
+
+                si (_intra_regionem(sector, planum->numerus, p,
+                    piscina))
+                {
+                    intra++;
+                    si (   !nervus_formae_aequales(&forma,
+                        &sector->forma)
+                        || forma.nullae != sector->forma.nullae)
+                    {
+                        redde FALSUM;
+                    }
+                }
+                si (   (planum->numerus > I && _in_muro(sector, p,
+                    piscina))
+                    || _intra_regionem(sector, planum->numerus, p,
+                    piscina))
+                {
+                    Magnus  nulla[II];
+                    Magnus* mp;
+                       i32  o;
+
+                    nulla[ZEPHYRUM]  = _m(ZEPHYRUM);
+                    nulla[I]         = _m(ZEPHYRUM);
+                    mp = (Magnus*)piscina_allocare(piscina,
+                        (memoriae_index)(rete->exitus_numerus + I)
+                        * magnitudo(Magnus));
+                    _affinem_applicare(sector->m, nulla, x, mp,
+                        piscina);
+                    per (o = ZEPHYRUM; o < rete->exitus_numerus; o++)
+                    {
+                        si (!magnus_aequalis(mp[o], y[o]))
+                        {
+                            redde FALSUM;
+                        }
+                    }
+                }
+            }
+            /* in uno sectore aut in muro */
+            si (intra > I)
+            {
+                redde FALSUM;
+            }
+        }
+    }
+    redde VERUM;
+}
+
+
+/* ==================================================
+ * Sectio: regiones plani
+ * ================================================== */
+
+interior vacuum
+_probare_plana (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+
+    /* manu: relu(x) -> muri (0, 1), (0, -1); sector 0 (x < 0) inactivus
+     * matrice 0, sector 1 per (1, 0) activus matrice [1, 0] */
+    {
+              Nervus* rete;
+                 s32  f[II];
+                 s64  cs[II];
+                 s32  e;
+        NervusPlanum  planum;
+
+        (vacuum)nervus_creare(II, piscina, &rete);
+        f[ZEPHYRUM]   = ZEPHYRUM;
+        cs[ZEPHYRUM]  = I;
+        e             = _adde(rete, NERVUS_RELU, I, f, cs, ZEPHYRUM);
+        (vacuum)nervus_exitus(rete, I, &e);
+        CREDO_VERUM (nervus_regiones_plani(rete, piscina, &planum));
+        CREDO_AEQUALIS_I32 (planum.numerus, II);
+        CREDO_AEQUALIS_I32 (planum.frusta, II);
+        CREDO_VERUM (_radius_est(planum.regiones[ZEPHYRUM].initium,
+            ZEPHYRUM, I));
+        CREDO_VERUM (_radius_est(planum.regiones[ZEPHYRUM].finis,
+            ZEPHYRUM, -I));
+        CREDO_VERUM (_radius_est(planum.regiones[I].initium, ZEPHYRUM,
+            -I));
+        CREDO_FALSUM (_bitus_regionis(&planum, ZEPHYRUM, ZEPHYRUM));
+        CREDO_VERUM (_bitus_regionis(&planum, I, ZEPHYRUM));
+        CREDO_VERUM (_est(_elementum(planum.regiones[I].m, ZEPHYRUM,
+            ZEPHYRUM), I));
+        CREDO_VERUM (_est(_elementum(planum.regiones[I].m, ZEPHYRUM, I),
+            ZEPHYRUM));
+        CREDO_VERUM (_est(_elementum(planum.regiones[ZEPHYRUM].m,
+            ZEPHYRUM, ZEPHYRUM), ZEPHYRUM));
+        CREDO_VERUM (_planum_verificare(rete, &planum, piscina));
+    }
+    /* max(x, y) = y + relu(x - y): muri (1, 1), (-1, -1) - axes non
+     * muri (arcus coniuncti) */
+    {
+              Nervus* rete;
+                 s32  f[II];
+                 s64  cs[II];
+                 s32  a;
+                 s32  e;
+        NervusPlanum  planum;
+
+        (vacuum)nervus_creare(II, piscina, &rete);
+        f[ZEPHYRUM]   = ZEPHYRUM;
+        f[I]          = I;
+        cs[ZEPHYRUM]  = I;
+        cs[I]         = -I;
+        a             = _adde(rete, NERVUS_RELU, II, f, cs, ZEPHYRUM);
+        f[ZEPHYRUM]   = I;
+        f[I]          = a;
+        cs[I]         = I;
+        e = _adde(rete, NERVUS_AFFINIS, II, f, cs,
+            ZEPHYRUM);
+        (vacuum)nervus_exitus(rete, I, &e);
+        CREDO_VERUM (nervus_regiones_plani(rete, piscina, &planum));
+        CREDO_AEQUALIS_I32 (planum.numerus, II);
+        CREDO_AEQUALIS_I32 (planum.frusta, II);
+        CREDO_VERUM (_radius_est(planum.regiones[ZEPHYRUM].initium, I,
+            I));
+        CREDO_VERUM (_radius_est(planum.regiones[I].initium, -I, -I));
+        /* sector 0: x < y, max = y */
+        CREDO_VERUM (_est(_elementum(planum.regiones[ZEPHYRUM].m,
+            ZEPHYRUM, I), I));
+        CREDO_VERUM (_planum_verificare(rete, &planum, piscina));
+    }
+    /* |x| + |y|: IV quadrantes, muri axes, IV frusta */
+    {
+              Nervus* rete;
+                 s32  f[IV];
+                 s64  cs[IV];
+                 s32  e;
+        NervusPlanum  planum;
+
+        (vacuum)nervus_creare(II, piscina, &rete);
+        f[ZEPHYRUM]   = ZEPHYRUM;
+        cs[ZEPHYRUM]  = I;
+        (vacuum)_adde(rete, NERVUS_RELU, I, f, cs, ZEPHYRUM);
+        cs[ZEPHYRUM]  = -I;
+        (vacuum)_adde(rete, NERVUS_RELU, I, f, cs, ZEPHYRUM);
+        f[ZEPHYRUM]   = I;
+        cs[ZEPHYRUM]  = I;
+        (vacuum)_adde(rete, NERVUS_RELU, I, f, cs, ZEPHYRUM);
+        cs[ZEPHYRUM]  = -I;
+        (vacuum)_adde(rete, NERVUS_RELU, I, f, cs, ZEPHYRUM);
+        f[ZEPHYRUM] = II;
+        f[I] = III;
+        f[II] = IV;
+        f[III] = V;
+        cs[ZEPHYRUM] = cs[I] = cs[II] = cs[III] = I;
+        e = _adde(rete, NERVUS_AFFINIS, IV, f, cs, ZEPHYRUM);
+        (vacuum)nervus_exitus(rete, I, &e);
+        CREDO_VERUM (nervus_regiones_plani(rete, piscina, &planum));
+        CREDO_AEQUALIS_I32 (planum.numerus, IV);
+        CREDO_AEQUALIS_I32 (planum.frusta, IV);
+        CREDO_VERUM (_radius_est(planum.regiones[ZEPHYRUM].initium, I,
+            ZEPHYRUM));
+        CREDO_VERUM (_radius_est(planum.regiones[III].initium, ZEPHYRUM,
+            -I));
+        CREDO_VERUM (_planum_verificare(rete, &planum, piscina));
+    }
+    /* x = relu(x) - relu(-x): II regiones, frustum I (identitas) */
+    {
+              Nervus* rete;
+                 s32  f[II];
+                 s64  cs[II];
+                 s32  e;
+        NervusPlanum  planum;
+
+        (vacuum)nervus_creare(II, piscina, &rete);
+        f[ZEPHYRUM]   = ZEPHYRUM;
+        cs[ZEPHYRUM]  = I;
+        (vacuum)_adde(rete, NERVUS_RELU, I, f, cs, ZEPHYRUM);
+        cs[ZEPHYRUM]  = -I;
+        (vacuum)_adde(rete, NERVUS_RELU, I, f, cs, ZEPHYRUM);
+        f[ZEPHYRUM] = II;
+        f[I] = III;
+        cs[ZEPHYRUM] = I;
+        cs[I] = -I;
+        e = _adde(rete, NERVUS_AFFINIS, II, f, cs, ZEPHYRUM);
+        (vacuum)nervus_exitus(rete, I, &e);
+        CREDO_VERUM (nervus_regiones_plani(rete, piscina, &planum));
+        CREDO_AEQUALIS_I32 (planum.numerus, II);
+        CREDO_AEQUALIS_I32 (planum.frusta, I);
+        CREDO_AEQUALIS_I32 (planum.regiones[ZEPHYRUM].frustum,
+            ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (planum.regiones[I].frustum, ZEPHYRUM);
+        CREDO_VERUM (_planum_verificare(rete, &planum, piscina));
+    }
+    /* sine ReLU: sector unus, initium = finis = (1, 0); exitus nulli */
+    {
+              Nervus* rete;
+                 s32  f[II];
+                 s64  cs[II];
+        NervusPlanum  planum;
+
+        (vacuum)nervus_creare(II, piscina, &rete);
+        f[ZEPHYRUM]   = ZEPHYRUM;
+        f[I]          = I;
+        cs[ZEPHYRUM]  = II;
+        cs[I]         = -III;
+        (vacuum)_adde(rete, NERVUS_AFFINIS, II, f, cs, ZEPHYRUM);
+        CREDO_VERUM (nervus_regiones_plani(rete, piscina, &planum));
+        CREDO_AEQUALIS_I32 (planum.numerus, I);
+        CREDO_AEQUALIS_I32 (planum.frusta, I);
+        CREDO_VERUM (_radius_est(planum.regiones[ZEPHYRUM].initium, I,
+            ZEPHYRUM));
+        CREDO_VERUM (_radius_est(planum.regiones[ZEPHYRUM].finis, I,
+            ZEPHYRUM));
+        CREDO_AEQUALIS_I32 (matrix_lineae(planum.regiones[ZEPHYRUM].m),
+            ZEPHYRUM);
+        CREDO_VERUM (_planum_verificare(rete, &planum, piscina));
+    }
+    /* relu(x - x): argumentum identice 0 -> sector unus, nullae I,
+     * bitus 0 */
+    {
+              Nervus* rete;
+                 s32  f[II];
+                 s64  cs[II];
+                 s32  e;
+        NervusPlanum  planum;
+
+        (vacuum)nervus_creare(II, piscina, &rete);
+        f[ZEPHYRUM]   = ZEPHYRUM;
+        f[I]          = ZEPHYRUM;
+        cs[ZEPHYRUM]  = I;
+        cs[I]         = -I;
+        e             = _adde(rete, NERVUS_RELU, II, f, cs, ZEPHYRUM);
+        (vacuum)nervus_exitus(rete, I, &e);
+        CREDO_VERUM (nervus_regiones_plani(rete, piscina, &planum));
+        CREDO_AEQUALIS_I32 (planum.numerus, I);
+        CREDO_AEQUALIS_I32 (planum.regiones[ZEPHYRUM].forma.nullae, I);
+        CREDO_FALSUM (_bitus_regionis(&planum, ZEPHYRUM, ZEPHYRUM));
+        CREDO_VERUM (_planum_verificare(rete, &planum, piscina));
+    }
+    /* relu(relu(x) - y): muri (1, 1), (0, 1), (-1, 0), (0, -1);
+     * matrices 0, 0, [0, -1], [1, -1] -> IV regiones, III frusta (murus
+     * (0, 1) formam mutat, non mappam) */
+    {
+              Nervus* rete;
+                 s32  f[II];
+                 s64  cs[II];
+                 s32  a;
+                 s32  e;
+        NervusPlanum  planum;
+
+        (vacuum)nervus_creare(II, piscina, &rete);
+        f[ZEPHYRUM]   = ZEPHYRUM;
+        cs[ZEPHYRUM]  = I;
+        a             = _adde(rete, NERVUS_RELU, I, f, cs, ZEPHYRUM);
+        f[ZEPHYRUM]   = a;
+        f[I]          = I;
+        cs[I]         = -I;
+        e             = _adde(rete, NERVUS_RELU, II, f, cs, ZEPHYRUM);
+        (vacuum)nervus_exitus(rete, I, &e);
+        CREDO_VERUM (nervus_regiones_plani(rete, piscina, &planum));
+        CREDO_AEQUALIS_I32 (planum.numerus, IV);
+        CREDO_AEQUALIS_I32 (planum.frusta, III);
+        CREDO_VERUM (_radius_est(planum.regiones[ZEPHYRUM].initium, I,
+            I));
+        CREDO_VERUM (_radius_est(planum.regiones[I].initium, ZEPHYRUM,
+            I));
+        CREDO_VERUM (_radius_est(planum.regiones[II].initium, -I,
+            ZEPHYRUM));
+        CREDO_VERUM (_radius_est(planum.regiones[III].initium, ZEPHYRUM,
+            -I));
+        CREDO_AEQUALIS_I32 (planum.regiones[ZEPHYRUM].frustum,
+            planum.regiones[I].frustum);
+        CREDO_VERUM (_est(_elementum(planum.regiones[II].m, ZEPHYRUM,
+            I),
+            -I));
+        CREDO_VERUM (_est(_elementum(planum.regiones[III].m, ZEPHYRUM,
+            ZEPHYRUM), I));
+        CREDO_VERUM (_planum_verificare(rete, &planum, piscina));
+    }
+    /* relu(4x - 6y): radius zero (6, 4) primitivus (3, 2) */
+    {
+              Nervus* rete;
+                 s32  f[II];
+                 s64  cs[II];
+                 s32  e;
+        NervusPlanum  planum;
+
+        (vacuum)nervus_creare(II, piscina, &rete);
+        f[ZEPHYRUM]   = ZEPHYRUM;
+        f[I]          = I;
+        cs[ZEPHYRUM]  = IV;
+        cs[I]         = -VI;
+        e             = _adde(rete, NERVUS_RELU, II, f, cs, ZEPHYRUM);
+        (vacuum)nervus_exitus(rete, I, &e);
+        CREDO_VERUM (nervus_regiones_plani(rete, piscina, &planum));
+        CREDO_AEQUALIS_I32 (planum.numerus, II);
+        CREDO_VERUM (_radius_est(planum.regiones[ZEPHYRUM].initium, III,
+            II));
+        CREDO_VERUM (_radius_est(planum.regiones[I].initium, -III,
+            -II));
+        CREDO_VERUM (_planum_verificare(rete, &planum, piscina));
+    }
+    /* refutationes: introitus I aut III, addendum, NIHIL; exitus non
+     * tangitur */
+    {
+              Nervus* unum;
+              Nervus* tria;
+              Nervus* addito;
+                 s32  f[I];
+                 s64  cs[I];
+        NervusPlanum  planum;
+
+        planum.numerus = XCIX;
+        (vacuum)nervus_creare(I, piscina, &unum);
+        (vacuum)nervus_creare(III, piscina, &tria);
+        (vacuum)nervus_creare(II, piscina, &addito);
+        f[ZEPHYRUM]   = ZEPHYRUM;
+        cs[ZEPHYRUM]  = I;
+        (vacuum)_adde(addito, NERVUS_AFFINIS, I, f, cs, ZEPHYRUM);
+        (vacuum)_adde(addito, NERVUS_RELU, I, f, cs, -I);
+        CREDO_FALSUM (nervus_regiones_plani(unum, piscina, &planum));
+        CREDO_FALSUM (nervus_regiones_plani(tria, piscina, &planum));
+        CREDO_FALSUM (nervus_regiones_plani(addito, piscina, &planum));
+        CREDO_FALSUM (nervus_regiones_plani(NIHIL, piscina, &planum));
+        CREDO_FALSUM (nervus_regiones_plani(unum, NIHIL, &planum));
+        CREDO_AEQUALIS_I32 (planum.numerus, XCIX);
+        addito->relu = ZEPHYRUM;      /* invalidum */
+        CREDO_FALSUM (nervus_regiones_plani(addito, piscina, &planum));
+        addito->relu = I;
+        CREDO_FALSUM (nervus_regiones_plani(addito, piscina, NIHIL));
+    }
+    /* 2^100: relu(2^100 x - 3 y), exitus 2^100 relu; radii et M post
+     * piscinam privatam destructam et memoriam iterum scriptam */
+    {
+              Nervus* rete;
+                 s32  f[II];
+              Magnus  cc[II];
+                 s32  a;
+                 s32  e;
+        NervusPlanum  planum;
+              Magnus  magnum = magnus_potentia(_m(II), C, piscina);
+             Piscina* turba;
+                 i32  k;
+
+        (vacuum)nervus_creare(II, piscina, &rete);
+        f[ZEPHYRUM]   = ZEPHYRUM;
+        f[I]          = I;
+        cc[ZEPHYRUM]  = magnum;
+        cc[I]         = _m(-III);
+        (vacuum)nervus_relu(rete, II, f, cc, _m(ZEPHYRUM), &a);
+        f[ZEPHYRUM]   = a;
+        (vacuum)nervus_affinis(rete, I, f, cc, _m(ZEPHYRUM), &e);
+        (vacuum)nervus_exitus(rete, I, &e);
+        CREDO_VERUM (nervus_regiones_plani(rete, piscina, &planum));
+        turba = piscina_generare_dynamicum("turba", IV * MXXIV);
+        per (k = ZEPHYRUM; k < LXIV; k++)
+        {
+             i8* q = (i8*)piscina_allocare(turba, IV * MXXIV);
+            i32  t;
+
+            per (t = ZEPHYRUM; t < IV * MXXIV; t++)
+            {
+                q[t] = (i8)0xA5;
+            }
+        }
+        CREDO_AEQUALIS_I32 (planum.numerus, II);
+        CREDO_VERUM (_radius_aequat(planum.regiones[ZEPHYRUM].initium,
+            _m(III), magnum));
+        CREDO_VERUM (_radius_aequat(planum.regiones[I].initium,
+            _m(-III),
+            magnus_nega(magnum, piscina)));
+        CREDO_VERUM (magnus_aequalis(_elementum(planum.regiones[I].m,
+            ZEPHYRUM, ZEPHYRUM), magnus_multiplica(magnum, magnum,
+            piscina)));
+        CREDO_VERUM (magnus_aequalis(_elementum(planum.regiones[I].m,
+            ZEPHYRUM, I), magnus_multiplica(magnum, _m(-III),
+            piscina)));
+        CREDO_VERUM (_planum_verificare(rete, &planum, piscina));
+        piscina_destruere(turba);
+    }
+    /* contra oraculum: CD retia fortuita; testa R = 12 in centenis */
+    {
+        Sors s;
+         i32 k;
+         i32 plura            = ZEPHYRUM;    /* >= IV sectores */
+         i32 frusta_pauciora  = ZEPHYRUM;  /* frusta < sectores */
+         i32 nullae           = ZEPHYRUM;    /* sector cum nullis */
+         i32 maximus          = ZEPHYRUM;
+         b32 omnes            = VERUM;
+         b32 testae           = VERUM;
+
+        sors_seminare(&s, (i64)MMXXVI + V, I);
+        per (k = ZEPHYRUM; k < CD; k++)
+        {
+            PiscinaNotatio nota = piscina_notare(piscina);
+
+            {
+                      Nervus* rete = _fortuitum_planum(&s, piscina);
+                NervusPlanum  planum;
+                         i32  j;
+
+                si (   !nervus_regiones_plani(rete, piscina, &planum)
+                    || !_planum_verificare(rete, &planum, piscina))
+                {
+                    omnes = FALSUM;
+                }
+                alioquin
+                {
+                    plura += planum.numerus >= IV ? I : ZEPHYRUM;
+                    frusta_pauciora += planum.frusta < planum.numerus
+                        ? I : ZEPHYRUM;
+                    si (planum.numerus > maximus)
+                    {
+                        maximus = planum.numerus;
+                    }
+                    per (j = ZEPHYRUM; j < planum.numerus; j++)
+                    {
+                        si (planum.regiones[j].forma.nullae > ZEPHYRUM)
+                        {
+                            nullae++;
+                            frange;
+                        }
+                    }
+                    si (k < C && !_testam_verificare(rete, &planum, XII,
+                        piscina))
+                    {
+                        testae = FALSUM;
+                    }
+                }
+            }
+            piscina_reficere(piscina, nota);
+        }
+        imprimere("  plana: >= IV sectores %u, frusta < sectores %u, "
+            "cum nullis %u, maximus %u\n", plura, frusta_pauciora,
+            nullae,
+            maximus);
+        CREDO_VERUM (omnes);
+        CREDO_VERUM (testae);
+        CREDO_VERUM (plura > L);
+        CREDO_VERUM (frusta_pauciora > X);
+        CREDO_VERUM (nullae > ZEPHYRUM);
+    }
+    /* iterata a^m (m = 1..5): regiones non decrescunt; sector a^(m+1)
+     * in sectore a^m cum forma eius ut praefixo */
+    {
+        Sors s;
+         i32 k;
+         b32 omnes       = VERUM;
+         i32 crescentes  = ZEPHYRUM;
+
+        sors_seminare(&s, (i64)MMXXVI + VI, I);
+        per (k = ZEPHYRUM; k < XL; k++)
+        {
+            PiscinaNotatio nota = piscina_notare(piscina);
+
+            {
+                      Nervus* a        = _fortuitum_planum(&s, piscina);
+                      Nervus* iterata  = a;
+                NervusPlanum  prius;
+                         i32  m;
+
+                (vacuum)nervus_regiones_plani(iterata, piscina, &prius);
+                per (m = II; m <= V && omnes; m++)
+                {
+                    NervusPlanum planum;
+                             i32 j;
+
+                    (vacuum)nervus_componere(iterata, a, piscina,
+                        &iterata);
+                    si (   !nervus_regiones_plani(iterata, piscina,
+                        &planum)
+                        || !_planum_verificare(iterata, &planum,
+                        piscina)
+                        || planum.numerus < prius.numerus)
+                    {
+                        omnes = FALSUM;
+                        frange;
+                    }
+                    crescentes += planum.numerus > prius.numerus ? I
+                        : ZEPHYRUM;
+                    per (j = ZEPHYRUM; j < planum.numerus; j++)
+                    {
+                        i32 t;
+                        i32 b;
+                        i32 in = ZEPHYRUM;
+
+                        per (t = ZEPHYRUM; t < prius.numerus; t++)
+                        {
+                            si (_intra_regionem(&prius.regiones[t],
+                                prius.numerus,
+                                planum.regiones[j].medius,
+                                piscina))
+                            {
+                                in++;
+                                per (b = ZEPHYRUM; b < prius.regiones[t]
+                                    .forma.numerus; b++)
+                                {
+                                    si (nervus_forma_bitus(
+                                        &prius.regiones[t].forma, b)
+                                        != nervus_forma_bitus(
+                                        &planum.regiones[j].forma, b))
+                                    {
+                                        omnes = FALSUM;
+                                    }
+                                }
+                            }
+                        }
+                        si (in != I)
+                        {
+                            omnes = FALSUM;
+                        }
+                    }
+                    prius = planum;
+                }
+            }
+            piscina_reficere(piscina, nota);
+        }
+        imprimere("  iterata: crescentes %u\n", crescentes);
+        CREDO_VERUM (omnes);
+        CREDO_VERUM (crescentes > X);
+    }
+}
+
 interior CredoSectio SECTIONES[] = {
     { "constructio", _probare_constructionem, NIHIL, NIHIL, NIHIL,
         NIHIL },
@@ -1698,6 +2794,7 @@ interior CredoSectio SECTIONES[] = {
     { "compositio", _probare_compositionem, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "recensio", _probare_censuram, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "plana", _probare_plana, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

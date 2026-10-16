@@ -191,6 +191,19 @@ late passes cost more.
   word reaching a class represents it; within a level sorted by key).
   Checked against D128's pinned counts and, on short censuses,
   against Artin directly. See lib/plexus.worklog.md.
+- **T5.0a (planar sweep):** `nervus_regiones_plani(rete, piscina,
+  &planum)` returns `NervusPlanum {numerus, regiones, frusta}`, each
+  `NervusSector` with walls `initium` / `finis` (primitive integer
+  rays, ccw, the first wall at or after (1, 0)), an interior direction
+  `medius`, the pattern, the exitus x 2 matrix and its piece index.
+  One sector per pattern (regions are convex), so "regions = distinct
+  patterns" in the plane. `forma.nullae` of a sector counts ReLUs whose
+  argument is IDENTICALLY 0 there. **Consequence for Parts B/C:** 345
+  of 400 random networks have such a sector, and the lattice criterion
+  "interior = nullae == 0" never sees it. Part B measures whether braid
+  networks have any (exact sweep vs lattice on B_3); if they do, the
+  B_4 interior test needs the argument forms under the point's pattern
+  (decided at T5a). See lib/nervus.worklog.md.
 
 ## Out of scope
 

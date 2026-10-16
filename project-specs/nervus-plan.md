@@ -156,6 +156,10 @@ copies its form, forced off gives 0), not by sampling.
    lattice patterns are not regions - matters for N6). 13 sections,
    253 checks; 8 plants red. See lib/nervus.worklog.md.
 5. **T5: N6 as demo D129**, with its own plan first (sketch below).
+   *T5.0a done 2026-10-16:* `nervus_regiones_plani` (exact sectors of a
+   bias-free 2-input network: walls, patterns, matrices, pieces);
+   section "plana" (81 checks, suite 334) against an independent
+   fixpoint oracle; 16 plants red. See lib/nervus.worklog.md.
 
 ## N6 / D129 sketch (its own plan settles these)
 

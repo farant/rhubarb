@@ -934,3 +934,463 @@ nervus_componere (
     *exitus = rete;
     redde VERUM;
 }
+
+
+/* ==================================================
+ * Regiones plani
+ * ================================================== */
+
+/* arcus elementarius: ab initio ad initium arcus sequentis, angulus
+ * < pi. formae: registra x II, forma linearis (coefficientes x, y)
+ * cuiusque registri iam computati in arcu */
+nomen structura {
+    NervusRadius  initium;
+          Magnus* formae;
+              i8* bitus;
+             i32  nullae;
+} ArcusPlani;
+
+/* g(u) = g_x u_x + g_y u_y */
+interior Magnus
+_applicare (
+     constans Magnus* g,
+        NervusRadius  u,
+             Piscina* piscina)
+{
+    redde magnus_adde(magnus_multiplica(g[ZEPHYRUM], u.x, piscina),
+        magnus_multiplica(g[I], u.y, piscina), piscina);
+}
+
+/* radius primitivus ex vectore non nullo */
+interior NervusRadius
+_primitivus (
+      Magnus  x,
+      Magnus  y,
+     Piscina* piscina)
+{
+    NervusRadius radius;
+          Magnus d = magnus_divisor_communis(x, y, piscina);
+
+    (vacuum)magnus_divide(x, d, piscina, &radius.x, NIHIL);
+    (vacuum)magnus_divide(y, d, piscina, &radius.y, NIHIL);
+    redde radius;
+}
+
+interior NervusRadius
+_radium_transcribere (
+    NervusRadius  radius,
+         Piscina* piscina)
+{
+    NervusRadius copia;
+
+    copia.x = magnus_transcribe(radius.x, piscina);
+    copia.y = magnus_transcribe(radius.y, piscina);
+    redde copia;
+}
+
+/* arcus novus ab initio; formae registrorum 0 .. definita-1, bitus et
+ * nullae ex exemplari copiantur */
+interior b32
+_arcum_creare (
+             ArcusPlani* arcus,
+           NervusRadius  initium,
+    constans ArcusPlani* exemplar,
+                    i32  registra,
+                    i32  definita,
+                    i32  octeti,
+                Piscina* piscina)
+{
+    i32 k;
+
+    arcus->formae = (Magnus*)piscina_conari_allocare(piscina,
+        (memoriae_index)registra * II * magnitudo(Magnus));
+    arcus->bitus = (i8*)piscina_conari_allocare(piscina,
+        (memoriae_index)octeti);
+    si (arcus->formae == NIHIL || arcus->bitus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < II * definita; k++)
+    {
+        arcus->formae[k] = exemplar->formae[k];
+    }
+    per (k = ZEPHYRUM; k < octeti; k++)
+    {
+        arcus->bitus[k] = exemplar->bitus[k];
+    }
+    arcus->initium  = initium;
+    arcus->nullae   = exemplar->nullae;
+    redde VERUM;
+}
+
+/* forma registri ipse = summa c_j formae[f_j] (sine addendo) */
+interior vacuum
+_formam_computare (
+                   ArcusPlani* arcus,
+    constans NervusInstructio* instructio,
+                          i32  ipse,
+                      Piscina* piscina)
+{
+    Magnus summa_x = magnus_ex_s64(ZEPHYRUM);
+    Magnus summa_y = magnus_ex_s64(ZEPHYRUM);
+       i32 j;
+
+    per (j = ZEPHYRUM; j < instructio->termini; j++)
+    {
+        constans Magnus* fons = &arcus->formae[II
+            * (i32)instructio->fontes[j]];
+
+        summa_x = magnus_adde(summa_x, magnus_multiplica(
+            instructio->coefficientes[j], fons[ZEPHYRUM], piscina),
+            piscina);
+        summa_y = magnus_adde(summa_y, magnus_multiplica(
+            instructio->coefficientes[j], fons[I], piscina), piscina);
+    }
+    arcus->formae[II * ipse]      = summa_x;
+    arcus->formae[II * ipse + I]  = summa_y;
+}
+
+/* ReLU r in arcu: activa -> forma manet, aliter 0; bitus r */
+interior vacuum
+_relu_in_arcu (
+    ArcusPlani* arcus,
+           i32  ipse,
+           i32  r,
+           b32  activa)
+{
+    NervusForma forma;
+
+    si (!activa)
+    {
+        arcus->formae[II * ipse]      = magnus_ex_s64(ZEPHYRUM);
+        arcus->formae[II * ipse + I]  = magnus_ex_s64(ZEPHYRUM);
+    }
+    forma.bitus = arcus->bitus;
+    _bitum_ponere(&forma, r, activa);
+}
+
+interior b32
+_bitus_aequales (
+    constans i8* a,
+    constans i8* b,
+            i32  octeti)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < octeti; k++)
+    {
+        si (a[k] != b[k])
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* arcus post omnes instructiones (temporaria); FALSUM si memoria
+ * deficit */
+interior b32
+_arcus_plani (
+    constans Nervus*  rete,
+                i32   octeti,
+            Piscina*  temporaria,
+         ArcusPlani** exitus,
+                i32*  numerus_exitus)
+{
+    constans s64 axes[IV][II] = {
+        { I, ZEPHYRUM }, { ZEPHYRUM, I }, { -I, ZEPHYRUM },
+        { ZEPHYRUM, -I }
+    };
+          ArcusPlani* vetera;
+          ArcusPlani* nova;
+          ArcusPlani  initialis;
+                 i32  numerus            = IV;
+                 i32  capacitas_veterum  = VIII;
+                 i32  capacitas_novorum  = VIII;
+                 i32  registra           = II + rete->numerus;
+                 i32  k;
+                 i32  a;
+                 i32  r          = ZEPHYRUM;
+
+    vetera = (ArcusPlani*)piscina_conari_allocare(temporaria,
+        (memoriae_index)capacitas_veterum * magnitudo(ArcusPlani));
+    nova = (ArcusPlani*)piscina_conari_allocare(temporaria,
+        (memoriae_index)capacitas_novorum * magnitudo(ArcusPlani));
+    initialis.formae = (Magnus*)piscina_conari_allocare(temporaria,
+        IV * magnitudo(Magnus));
+    initialis.bitus = (i8*)piscina_conari_allocare(temporaria,
+        (memoriae_index)octeti);
+    si (   vetera == NIHIL || nova == NIHIL || initialis.formae == NIHIL
+        || initialis.bitus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    /* introitus: x -> (1, 0), y -> (0, 1) */
+    initialis.formae[ZEPHYRUM]  = magnus_ex_s64(I);
+    initialis.formae[I]         = magnus_ex_s64(ZEPHYRUM);
+    initialis.formae[II]        = magnus_ex_s64(ZEPHYRUM);
+    initialis.formae[III]       = magnus_ex_s64(I);
+    per (k = ZEPHYRUM; k < octeti; k++)
+    {
+        initialis.bitus[k] = ZEPHYRUM;
+    }
+    initialis.nullae = ZEPHYRUM;
+    per (a = ZEPHYRUM; a < IV; a++)
+    {
+        NervusRadius axis;
+
+        axis.x = magnus_ex_s64(axes[a][ZEPHYRUM]);
+        axis.y = magnus_ex_s64(axes[a][I]);
+        si (!_arcum_creare(&vetera[a], axis, &initialis, registra, II,
+            octeti, temporaria))
+        {
+            redde FALSUM;
+        }
+    }
+    per (k = ZEPHYRUM; k < rete->numerus; k++)
+    {
+        constans NervusInstructio* instructio =
+            &rete->instructiones[k];
+                               i32 ipse  = II + k;
+                               i32 m     = ZEPHYRUM;
+
+        si (instructio->genus == NERVUS_AFFINIS)
+        {
+            per (a = ZEPHYRUM; a < numerus; a++)
+            {
+                _formam_computare(&vetera[a], instructio, ipse,
+                    temporaria);
+            }
+            perge;
+        }
+        /* quisque arcus in duos ad summum */
+        si (II * numerus > capacitas_novorum)
+        {
+            capacitas_novorum = II * numerus;
+            nova = (ArcusPlani*)piscina_conari_allocare(temporaria,
+                (memoriae_index)capacitas_novorum
+                * magnitudo(ArcusPlani));
+            si (nova == NIHIL)
+            {
+                redde FALSUM;
+            }
+        }
+        per (a = ZEPHYRUM; a < numerus; a++)
+        {
+              ArcusPlani* arcus  = &vetera[a];
+            NervusRadius  v      = vetera[(a + I) % numerus].initium;
+                  Magnus  ad_initium;
+                  Magnus  ad_finem;
+                     s32  su;
+                     s32  sv;
+
+            _formam_computare(arcus, instructio, ipse, temporaria);
+            ad_initium  = _applicare(&arcus->formae[II * ipse],
+                arcus->initium,
+                temporaria);
+            ad_finem = _applicare(&arcus->formae[II * ipse], v,
+                temporaria);
+            su = magnus_signum(ad_initium);
+            sv = magnus_signum(ad_finem);
+            si (su * sv < ZEPHYRUM)
+            {
+                /* radius zero: |g(v)| u + |g(u)| v, intra arcum */
+                      Magnus au = magnus_absolutum(ad_initium,
+                          temporaria);
+                      Magnus av = magnus_absolutum(ad_finem,
+                          temporaria);
+                NervusRadius z;
+
+                z = _primitivus(
+                    magnus_adde(magnus_multiplica(av, arcus->initium.x,
+                    temporaria), magnus_multiplica(au, v.x, temporaria),
+                    temporaria),
+                    magnus_adde(magnus_multiplica(av, arcus->initium.y,
+                    temporaria), magnus_multiplica(au, v.y, temporaria),
+                    temporaria), temporaria);
+                si (!_arcum_creare(&nova[m + I], z, arcus, registra,
+                    ipse + I, octeti, temporaria))
+                {
+                    redde FALSUM;
+                }
+                nova[m] = *arcus;
+                _relu_in_arcu(&nova[m], ipse, r, su > ZEPHYRUM);
+                _relu_in_arcu(&nova[m + I], ipse, r, sv > ZEPHYRUM);
+                m += II;
+            }
+            alioquin
+            {
+                si (su == ZEPHYRUM && sv == ZEPHYRUM)
+                {
+                    arcus->nullae++;
+                }
+                nova[m] = *arcus;
+                _relu_in_arcu(&nova[m], ipse, r, su + sv > ZEPHYRUM);
+                m++;
+            }
+        }
+        {
+            ArcusPlani* permutata = vetera;
+                   i32  capacitas = capacitas_veterum;
+
+            vetera             = nova;
+            nova               = permutata;
+            capacitas_veterum  = capacitas_novorum;
+            capacitas_novorum  = capacitas;
+            numerus            = m;
+        }
+        r++;
+    }
+    *exitus          = vetera;
+    *numerus_exitus  = numerus;
+    redde VERUM;
+}
+
+b32
+nervus_regiones_plani (
+    constans Nervus* rete,
+            Piscina* piscina,
+       NervusPlanum* exitus)
+{
+         Piscina* temporaria;
+      ArcusPlani* arcus;
+    NervusSector* regiones;
+             i32* muri;
+             i32  numerus_arcuum;
+             i32  numerus_murorum  = ZEPHYRUM;
+             i32  numerus;
+             i32  octeti;
+             i32  frusta;
+             i32  k;
+             i32  a;
+             i32  o;
+
+    si (   !nervus_validus(rete) || rete->introitus != II
+        || piscina == NIHIL || exitus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < rete->numerus; k++)
+    {
+        si (magnus_signum(rete->instructiones[k].addendum) != ZEPHYRUM)
+        {
+            redde FALSUM;
+        }
+    }
+    octeti = (rete->relu + VII) / VIII;
+    si (octeti == ZEPHYRUM)
+    {
+        octeti = I;
+    }
+    temporaria = piscina_generare_dynamicum("nervus_regiones_plani",
+        IV * MXXIV);
+    si (temporaria == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (!_arcus_plani(rete, octeti, temporaria, &arcus,
+        &numerus_arcuum))
+    {
+        piscina_destruere(temporaria);
+        redde FALSUM;
+    }
+    /* murus ante arcum a: forma arcus prioris differt */
+    muri = (i32*)piscina_conari_allocare(temporaria,
+        (memoriae_index)numerus_arcuum * magnitudo(i32));
+    si (muri == NIHIL)
+    {
+        piscina_destruere(temporaria);
+        redde FALSUM;
+    }
+    per (a = ZEPHYRUM; a < numerus_arcuum; a++)
+    {
+        i32 prior = (a + numerus_arcuum - I) % numerus_arcuum;
+
+        si (!_bitus_aequales(arcus[prior].bitus, arcus[a].bitus,
+            octeti))
+        {
+            muri[numerus_murorum++] = a;
+        }
+    }
+    /* murus unus impossibilis (forma circum rediret); nulli: sector
+     * unus ab arcu 0, cuius initium (1, 0) est */
+    numerus = numerus_murorum > ZEPHYRUM ? numerus_murorum : I;
+    si (numerus_murorum == ZEPHYRUM)
+    {
+        muri[ZEPHYRUM] = ZEPHYRUM;
+    }
+    regiones = (NervusSector*)piscina_allocare(piscina,
+        (memoriae_index)numerus * magnitudo(NervusSector));
+    per (k = ZEPHYRUM; k < numerus; k++)
+    {
+        NervusSector* sector = &regiones[k];
+          ArcusPlani* primus = &arcus[muri[k]];
+        NervusRadius  sequens  = arcus[(muri[k] + I)
+                                 % numerus_arcuum].initium;
+                 i8* bitus;
+
+        sector->initium = _radium_transcribere(primus->initium,
+            piscina);
+        sector->finis = _radium_transcribere(arcus[muri[(k + I)
+            % numerus]].initium, piscina);
+        /* arcus primus < pi: u + v intra eum */
+        sector->medius = _radium_transcribere(_primitivus(
+            magnus_adde(primus->initium.x, sequens.x, temporaria),
+            magnus_adde(primus->initium.y, sequens.y, temporaria),
+            temporaria), piscina);
+        bitus = (i8*)piscina_allocare(piscina, (memoriae_index)octeti);
+        per (o = ZEPHYRUM; o < octeti; o++)
+        {
+            bitus[o] = primus->bitus[o];
+        }
+        sector->forma.numerus  = rete->relu;
+        sector->forma.bitus    = bitus;
+        sector->forma.nullae   = primus->nullae;
+        si (!matrix_nulla(&ANULUS_INTEGRORUM, rete->exitus_numerus, II,
+            piscina, &sector->m))
+        {
+            piscina_destruere(temporaria);
+            redde FALSUM;
+        }
+        per (o = ZEPHYRUM; o < rete->exitus_numerus; o++)
+        {
+            constans Magnus* forma;
+                     Magnus  valor_x;
+                     Magnus  valor_y;
+
+            forma    = &primus->formae[II * (i32)rete->exitus[o]];
+            valor_x  = magnus_transcribe(forma[ZEPHYRUM], piscina);
+            valor_y  = magnus_transcribe(forma[I], piscina);
+            matrix_pone(&sector->m, o, ZEPHYRUM, &valor_x);
+            matrix_pone(&sector->m, o, I, &valor_y);
+        }
+    }
+    piscina_destruere(temporaria);
+    /* frusta: regiones contiguae matrice eadem; cursus ultimus cum
+     * primo coniungitur si matrix eadem (circulus) */
+    regiones[ZEPHYRUM].frustum = ZEPHYRUM;
+    per (k = I; k < numerus; k++)
+    {
+        regiones[k].frustum = regiones[k - I].frustum
+            + (matrix_aequalis(regiones[k].m, regiones[k - I].m)
+            ? ZEPHYRUM : I);
+    }
+    frusta = regiones[numerus - I].frustum + I;
+    si (   frusta > I
+        && matrix_aequalis(regiones[numerus - I].m,
+        regiones[ZEPHYRUM].m))
+    {
+        per (k = ZEPHYRUM; k < numerus; k++)
+        {
+            si (regiones[k].frustum == frusta - I)
+            {
+                regiones[k].frustum = ZEPHYRUM;
+            }
+        }
+        frusta--;
+    }
+    exitus->numerus   = numerus;
+    exitus->regiones  = regiones;
+    exitus->frusta    = frusta;
+    redde VERUM;
+}

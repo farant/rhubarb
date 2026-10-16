@@ -191,3 +191,99 @@ protects i32 indexing between 2^27 and 2^32 elements, which needs a
 multi-GB allocation to reach) and the composition limit (redundant with
 the builder's refusal, as the reviewer noted). L4's exact count is not
 tested on the accepting side: that needs a ~4M-letter network.
+
+## 2026-10-16 — T5.0a: exact planar regions (D129 task 0)
+
+**Built.** `nervus_regiones_plani(rete, piscina, &planum)`: the activation
+regions of a bias-free network with 2 inputs, exactly. Types
+`NervusRadius` (primitive integer direction), `NervusSector` (walls
+`initium` / `finis`, an interior direction `medius`, the pattern, the
+exitus x 2 matrix, the index of its linear piece `frustum`),
+`NervusPlanum` (`numerus` regions, `regiones`, `frusta` pieces).
+
+**Algorithm.** Four quarter arcs between the axes. Per instruction, each
+arc carries the linear form (x, y coefficients) of every register; at a
+ReLU an arc whose argument g changes sign STRICTLY between its ends u, v
+splits at the ray |g(v)| u + |g(u)| v (reduced to primitive). Arcs stay
+< pi, so u + v is always interior and the endpoint signs decide the
+interior sign. At the end, walls = arc boundaries where the pattern
+changes; adjacent arcs with the same pattern (only possible across an
+axis that is not a wall) merge. Cost O(arcs x registers) Magnus; the
+arc buffers are double-buffered with separate capacities (a first draft
+kept one capacity across the swap, which would have overrun the smaller
+buffer - caught on reading, before running).
+
+**Facts the API relies on (stated in the header).**
+- A pattern's region is CONVEX (each ReLU condition is a half-plane
+  under the earlier bits), so one pattern = one sector, angle <= pi,
+  and the sectors' patterns are pairwise distinct. Tested.
+- Exactly one wall is impossible (the pattern would come back around),
+  so walls are 0 or >= 2; no walls = one sector, the whole plane, with
+  initium = finis = (1, 0).
+- `forma.nullae` of a sector = ReLUs whose argument is IDENTICALLY 0 on
+  it (bit 0 by the > 0 convention). nervus_aestimare at any interior
+  point returns the same nullae - tested on every sector and on every
+  lattice point inside one.
+- Pieces: consecutive sectors with equal matrices, cyclically (the run
+  through (1, 0) joins piece 0).
+
+**Finding for D129 (not a bug): identically-zero arguments are common.**
+345 of 400 random bias-free networks have a sector where some ReLU's
+argument is identically 0 (typically a ReLU reading a dead register).
+Every point of such a sector has nullae > 0, so the plan's lattice
+criterion "interior = nullae == 0" (Part B / C) never counts that
+sector. The lower bound stays a lower bound, but it can miss whole
+regions, not just thin ones. Whether braid networks have such sectors
+is a D129 measurement (Part B can compare with the exact sweep on
+B_3); for B_4 the fix would be "interior = no argument vanishes that is
+not identically zero under the point's own pattern", which needs the
+argument forms under a pattern (a possible nervus helper, for T5b).
+
+**Oracles (section "plana", 81 checks; suite 334).**
+- Hand networks: relu(x) (half-planes, walls on the axis), max(x, y)
+  (axes merged away), |x| + |y| (4 quadrants, 4 pieces),
+  relu(x) - relu(-x) (2 regions, 1 piece), no ReLU (1 sector, 0 x 2
+  matrix), relu(x - x) (nullae 1), relu(relu(x) - y) (4 regions, 3
+  pieces: the wall (0, 1) changes the pattern, not the map),
+  relu(4x - 6y) (ray (6, 4) reduced to (3, 2)), 2^100 coefficients
+  (rays and M read after the private pool is freed and its memory
+  rewritten with 0xA5).
+- A second algorithm in the test, a FIXPOINT: candidate rays; on each
+  arc evaluate (nervus_aestimare) at u + v, propagate the ReLU argument
+  forms under that pattern in the test's own code, add every zero ray
+  of an argument that changes sign strictly inside the arc; repeat
+  until nothing is added (then no argument changes sign inside any arc
+  under its midpoint pattern, so the pattern is constant on it). It
+  shares nothing with the sweep. On 400 random networks: walls,
+  patterns, nullae equal; plus M = nervus_forma_affinis of the pattern,
+  primitive rays, strict ccw order, angle <= pi, distinct patterns,
+  pieces = cyclic matrix changes.
+- Lattice: on the shell max(|x|, |y|) = 12 of 100 networks, a point
+  inside a sector evaluates to its pattern and nullae, a point on a
+  wall gives M p for both neighbours, no point in two sectors.
+- Refinement: a^m for m = 1..5 by composition on 40 networks: regions
+  never decrease, every sector of a^(m+1) lies in one sector of a^m
+  whose pattern is its prefix.
+
+**Plants (silva.planta, 16, all red).** Split ray with the coefficients
+swapped; ray not reduced to primitive; an identically-zero argument
+counted active; split sides swapped; nullae counted when only one end
+is zero; walls compared with the NEXT arc; an inactive form not zeroed;
+a bias accepted; three inputs accepted; the wrap-around piece not
+merged; the wrap merge applied to a single piece; medius = the end of
+the sector's first raw arc (interior only when the sector spans several
+arcs); M and a ray coordinate not transcribed out of the private pool
+(caught only by the 2^100 test after the 0xA5 rewrite); splitting also
+at a zero end. "Second arc misses the new form" goes red by SEGFAULT:
+the mutant itself reads an uninitialized Magnus inside the library (not
+a test reading a refused result), so it stays as is. A first version of
+the medius plant did not compile (-Werror: unused variable) and was
+replaced by the sharper one above.
+
+**Gates by hand.** nervus 334/334; examen ACCIPE; formator CONFORMIS;
+Latin lint NOVA 0 - `sector` is real Latin AND English, so instead of a
+glossary entry the member is `regiones` (the type stays NervusSector;
+comments say sectores), and two-letter locals (gx, gu, vx, ...) were
+spelled out. silva's renominare refuses dirty files (git is its undo),
+so the renames were done with exact word-boundary replacements scoped
+to each function body.
