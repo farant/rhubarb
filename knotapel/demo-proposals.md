@@ -251,3 +251,101 @@ eliminating.
 **Status.** Oratio is paused (since 2026-09-15). This belongs to oratio
 rather than knotapel and is listed here because it came out of the same
 discussion; its desideratum sits in the oratio region.
+
+## 2026-10-15: after D128 (tentative: D128's review is still running)
+
+### Where these come from
+
+D128 (T6a-T6b, commits 7754f701, eb02efb5) found three things:
+
+- **A braid word is an exact, untrained ReLU network.** On Dynnikov
+  coordinates every crossing is a depth-4 block with two ReLU stages
+  that touches at most 4 coordinates. The anchor against plexus held on
+  4,000 random inputs, including coordinates up to 2^200.
+- **The collapsed linear version is blind to much of what the network
+  carries.** Burau(-1) is a product of matrices, so the depth is
+  multiplied away. It misses the positive entropy of 1,008 of the
+  ~4,000 positive-entropy braids on B_4 up to length 6. The shortest is
+  s1 s3^-1 s2, at B_4's minimal dilatation 2.29663. The piecewise-
+  linear action sees all of them. This is the conversation's "keep the
+  depth" point, now measured.
+- **D106's entropy classes were Burau's classes.** Its rule decides
+  "Burau(-1) radius > 1", so about a quarter of its "periodic" braids
+  have positive entropy. D106's comparison "pA braids don't compute
+  better" (KC 31.2) rests on those classes.
+
+If D128's review confirms these, the seam to explore is the one between
+dynamics (entropy) and computation (what the network can express).
+
+| | ledger | proposal | depends on | settles or opens |
+|---|---|---|---|---|
+| N6 | …N84R01 | the linear-region census: is entropy expressive capacity? | D128 | the dynamics-computation link D106 tried to test, on the right object; tells N2 which braids could compute parity |
+| N7 | …SKVB0QC9 | re-cut KC 31.2 with exact classes | D128 | whether "pA braids don't compute better" survives correct labels |
+
+The exact dilatation (the plexus slice deferred in T4, Hall-Yurttas
+via the stabilized activation pattern) is infrastructure that N6
+benefits from, not a demo. It has its own ledger entry under plexus
+(…VFF141H).
+D128 Part D will show whether the pattern stabilizes.
+
+### N6. The linear-region census: is entropy expressive capacity?
+
+**Why.** The standard measure of what a ReLU network CAN compute is the
+number of its linear regions: the pieces into which its activation
+patterns cut the input space. Deep networks can make exponentially more
+regions than shallow ones of the same size (Montufar, Pascanu, Cho and
+Bengio, "On the number of linear regions of deep neural networks",
+NeurIPS 2014; to read before the plan). Braid networks are exact and
+integer, so their regions can be counted exactly, over integer points
+or as polyhedra. The question D106 asked ("does chaos help computing?")
+then has a precise form: does a braid's dilatation set the rate at
+which its network carves the input space? D106 could not answer it: it
+measured bracket values (a linear quotient that erases the dynamics,
+KC 31.4) under Burau's classes (about a quarter mislabeled, D128).
+
+**Hypothesis to register.** For pseudo-Anosov braids, the number of
+distinct activation patterns over a fixed box of loop coordinates,
+under w^m, grows exponentially in m, at a rate tied to lambda. For
+periodic braids it stays bounded, and for zero-entropy reducible braids
+it grows polynomially. A negative result matters too: if entropy does
+not buy regions, the ReLU structure of braids is computationally inert,
+and N2 should be rethought before any search for parity.
+
+**Design (to settle in the plan).**
+- The input space is the integer box [-R, R]^(2n-4) of Dynnikov
+  coordinates (every integer vector is a lamination), or a projective
+  slice of it.
+- The activation pattern of a point is the vector of ReLU signs
+  (positive vs zero) along the network, from D128's layer programs.
+- Count distinct patterns for w^m, m = 1..M, for every braid of the
+  D128 census, by class (P, Z, E) and against the measured rate.
+- Exactness: patterns are integer sign data, so counts on a lattice box
+  are exact. A count of polyhedral regions (not lattice points) is a
+  different object; the plan says which one is reported and why.
+- Nulls: the same words through Burau (one linear region, by
+  construction); random PL maps of the same shape; and shuffled words.
+- Size: the box grows as (2R+1)^(2n-4). B_3 (2 coordinates) and B_4 (4)
+  are cheap at moderate R; B_5 needs sampling, marked as SAMPLED.
+
+**What it would settle.** Whether exact entropy predicts expressive
+capacity, the precise version of D106's question. It also gives N2 its
+candidates: the braids whose networks have enough regions to compute
+3-input parity.
+
+### N7. Re-cut KC 31.2 with exact classes
+
+**Why.** KC 31.2 records D106's verdict that pseudo-Anosov braids do not
+compute better, which holds under the intended hash (D117). Its classes
+were Burau's. D128 shows about a quarter of the "periodic" ones have
+positive entropy. Re-splitting D106's bracket-value results by D128's
+exact classes (P, Z, E) tells whether the verdict survives correct
+labels. This is a small audit node (a re-run of D106's comparison with
+the corrected hash from D117 and the classes from plexus), not a new
+direction.
+
+**Design.** Rebuild D106's catalog to depth 5 (D128 shows it equals the
+exact shortest-length enumeration there), take its bracket-value
+computing scores (the D117 intended hash), and compare across P / Z / E.
+Report the change against D106's two-class table. Its TL representation
+at zeta_8 has to come from a house library or a frozen D106 snapshot;
+the plan settles which.
