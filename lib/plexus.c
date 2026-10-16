@@ -2,7 +2,9 @@
  */
 #include "plexus.h"
 #include "chorda_aedificator.h"
+#include "tabula_dispersa.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 /* longitudo maxima verbi repraesentabilis */
@@ -2416,5 +2418,370 @@ plexus_nervus (
         redde FALSUM;
     }
     *exitus = rete;
+    redde VERUM;
+}
+
+
+/* ==================================================
+ * Census: clavis classis, periodicitas, enumeratio
+ * ================================================== */
+
+/* clavis in piscina data (temporaria vocantis) */
+interior b32
+_clavis (
+      Plexus  p,
+     Piscina* piscina,
+      chorda* exitus)
+{
+                i32  fila = p.fila + II;
+             Plexus  maior;
+  ChordaAedificator* aedificator;
+                i32  k;
+
+    si (!plexus_validus(p) || p.fila > PLEXUS_FILA_MAXIMA - II)
+    {
+        redde FALSUM;
+    }
+    si (!plexus_in_maiore(p, fila, I, piscina, &maior))
+    {
+        redde FALSUM;
+    }
+    aedificator = chorda_aedificator_creare(piscina, LXIV);
+    per (k = I; k < fila; k++)
+    {
+        Ansa e;
+        Ansa imago;
+
+        si (   !ansa_circa(fila, k, piscina, &e)
+            || !ansa_agere(e, maior, piscina, &imago))
+        {
+            redde FALSUM;
+        }
+        (vacuum)chorda_aedificator_appendere_chorda(aedificator,
+            ansa_ad_chordam(imago, piscina));
+    }
+    *exitus = chorda_aedificator_finire(aedificator);
+    redde VERUM;
+}
+
+b32
+plexus_clavis (
+      Plexus  p,
+     Piscina* piscina,
+      chorda* exitus)
+{
+    Piscina* temporaria;
+     chorda  clavis;
+        b32  bene;
+
+    si (piscina == NIHIL || exitus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    temporaria = piscina_generare_dynamicum("plexus_clavis",
+        IV * MXXIV);
+    si (temporaria == NIHIL)
+    {
+        redde FALSUM;
+    }
+    bene = _clavis(p, temporaria, &clavis);
+    si (bene)
+    {
+        *exitus = chorda_transcribere(clavis, piscina);
+    }
+    piscina_destruere(temporaria);
+    redde bene;
+}
+
+b32
+plexus_periodus (
+      Plexus  p,
+     Piscina* piscina,
+         i32* periodus)
+{
+    PiscinaNotatio nota;
+               i32 n;
+               s64 e;
+               s64 torsiones;
+               i32 k;
+            Plexus torsio;
+            Plexus plena;
+
+    si (   !plexus_validus(p) || piscina == NIHIL || periodus == NIHIL
+        || p.fila > PLEXUS_FILA_DIMIDIAE_TORSIONIS)
+    {
+        redde FALSUM;
+    }
+    n = p.fila;
+    e = plexus_summa_exponentium(p);
+    /* summa exponentium Delta^2 */
+    torsiones  = (s64)n * (s64)(n - I);
+    nota       = piscina_notare(piscina);
+    si (   !plexus_dimidia_torsio(n, piscina, &torsio)
+        || !plexus_iungere(torsio, torsio, piscina, &plena))
+    {
+        piscina_reficere(piscina, nota);
+        redde FALSUM;
+    }
+    per (k = I; k <= n; k++)
+    {
+        PiscinaNotatio nota_k;
+                   s64 j;
+                Plexus sinistra;
+                Plexus dextra;
+                Plexus basis;
+                   b32 aequales = FALSUM;
+                   i32 t;
+
+        si (n % k != ZEPHYRUM && (n - I) % k != ZEPHYRUM)
+        {
+            perge;
+        }
+        si (((s64)k * e) % torsiones != ZEPHYRUM)
+        {
+            perge;
+        }
+        j       = ((s64)k * e) / torsiones;
+        nota_k  = piscina_notare(piscina);
+        (vacuum)plexus_creare(n, NIHIL, ZEPHYRUM, piscina, &sinistra);
+        per (t = ZEPHYRUM; t < k; t++)
+        {
+            (vacuum)plexus_iungere(sinistra, p, piscina, &sinistra);
+        }
+        (vacuum)plexus_creare(n, NIHIL, ZEPHYRUM, piscina, &dextra);
+        basis = j >= ZEPHYRUM ? plena : plexus_inversum(plena, piscina);
+        per (t = ZEPHYRUM; (s64)t < (j >= ZEPHYRUM ? j : -j); t++)
+        {
+            (vacuum)plexus_iungere(dextra, basis, piscina, &dextra);
+        }
+        si (!plexus_aequales_ansis(sinistra, dextra, piscina,
+            &aequales))
+        {
+            piscina_reficere(piscina, nota);
+            redde FALSUM;
+        }
+        piscina_reficere(piscina, nota_k);
+        si (aequales)
+        {
+            piscina_reficere(piscina, nota);
+            *periodus = k;
+            redde VERUM;
+        }
+    }
+    piscina_reficere(piscina, nota);
+    *periodus = ZEPHYRUM;
+    redde VERUM;
+}
+
+/* ordo intra gradum: paria (clavis, index) per claves */
+nomen structura {
+    chorda clavis;
+       i32 index;
+} ParClavisPlexus;
+
+interior s32
+_comparare_paria (
+    constans vacuum* a,
+    constans vacuum* b)
+{
+    redde (s32)chorda_comparare(((constans ParClavisPlexus*)a)->clavis,
+        ((constans ParClavisPlexus*)b)->clavis);
+}
+
+b32
+plexus_enumerare (
+             i32  fila,
+             i32  longitudo_maxima,
+             i32  classes_maximae,
+         Piscina* piscina,
+    PlexusCensus* exitus)
+{
+              Piscina* temporaria;
+       TabulaDispersa* visae;
+               Plexus* verba;
+               chorda* claves;
+                  i32* initia;
+      ParClavisPlexus* paria;
+               Plexus* verba_tmp;
+               chorda* claves_tmp;
+                  i32  capacitas  = CCLVI;
+                  i32  numerus    = ZEPHYRUM;
+                  i32  gradus;
+                  i32  k;
+                  b32  bene = VERUM;
+               Plexus  vacuum_verbum;
+               chorda  clavis;
+
+    si (   fila < II || fila > PLEXUS_FILA_MAXIMA - II
+        || piscina == NIHIL
+        || exitus  == NIHIL || longitudo_maxima >= classes_maximae)
+    {
+        redde FALSUM;
+    }
+    temporaria = piscina_generare_dynamicum("plexus_enumerare", LXIV
+        * MXXIV);
+    si (temporaria == NIHIL)
+    {
+        redde FALSUM;
+    }
+    visae   = tabula_dispersa_creare_chorda(temporaria, MXXIV);
+    verba   = (Plexus*)piscina_allocare(temporaria,
+        (memoriae_index)capacitas * magnitudo(Plexus));
+    claves  = (chorda*)piscina_allocare(temporaria,
+        (memoriae_index)capacitas * magnitudo(chorda));
+    initia  = (i32*)piscina_allocare(temporaria,
+        (memoriae_index)(longitudo_maxima + II) * magnitudo(i32));
+    /* gradus 0: identitas */
+    (vacuum)plexus_creare(fila, NIHIL, ZEPHYRUM, piscina,
+        &vacuum_verbum);
+    {
+        PiscinaNotatio nota = piscina_notare(temporaria);
+
+        bene = _clavis(vacuum_verbum, temporaria, &clavis);
+        si (bene)
+        {
+            clavis = chorda_transcribere(clavis, piscina);
+        }
+        piscina_reficere(temporaria, nota);
+    }
+    si (!bene)
+    {
+        piscina_destruere(temporaria);
+        redde FALSUM;
+    }
+    verba[ZEPHYRUM]   = vacuum_verbum;
+    claves[ZEPHYRUM]  = clavis;
+    (vacuum)tabula_dispersa_inserere(visae, clavis, NIHIL);
+    numerus           = I;
+    initia[ZEPHYRUM]  = ZEPHYRUM;
+    per (gradus = I; gradus <= longitudo_maxima && bene; gradus++)
+    {
+        i32 initium_prius  = initia[gradus - I];
+        i32 finis_prius    = numerus;
+        i32 i;
+        s32 littera;
+
+        initia[gradus] = numerus;
+        per (i = initium_prius; i < finis_prius && bene; i++)
+        {
+            per (littera = -(s32)(fila - I); littera <= (s32)(fila - I)
+                && bene; littera++)
+            {
+                PiscinaNotatio nota;
+                        Plexus unum;
+                        Plexus verbum;
+
+                si (littera == ZEPHYRUM)
+                {
+                    perge;
+                }
+                nota = piscina_notare(temporaria);
+                (vacuum)plexus_creare(fila, &littera, I, temporaria,
+                    &unum);
+                (vacuum)plexus_iungere(verba[i], unum, temporaria,
+                    &verbum);
+                si (!_clavis(verbum, temporaria, &clavis))
+                {
+                    bene = FALSUM;
+                    piscina_reficere(temporaria, nota);
+                    frange;
+                }
+                si (tabula_dispersa_continet(visae, clavis))
+                {
+                    piscina_reficere(temporaria, nota);
+                    perge;
+                }
+                /* classis nova: verbum et clavis vocanti */
+                clavis = chorda_transcribere(clavis, piscina);
+                (vacuum)plexus_creare(fila, verbum.litterae,
+                    verbum.longitudo, piscina, &verbum);
+                piscina_reficere(temporaria, nota);
+                si (numerus >= classes_maximae)
+                {
+                    bene = FALSUM;
+                    frange;
+                }
+                si (numerus == capacitas)
+                {
+                    i32 nova = II * capacitas;
+                    i32 t;
+
+                    verba_tmp = (Plexus*)piscina_allocare(temporaria,
+                        (memoriae_index)nova * magnitudo(Plexus));
+                    claves_tmp = (chorda*)piscina_allocare(temporaria,
+                        (memoriae_index)nova * magnitudo(chorda));
+                    per (t = ZEPHYRUM; t < numerus; t++)
+                    {
+                        verba_tmp[t]   = verba[t];
+                        claves_tmp[t]  = claves[t];
+                    }
+                    verba      = verba_tmp;
+                    claves     = claves_tmp;
+                    capacitas  = nova;
+                }
+                verba[numerus]   = verbum;
+                claves[numerus]  = clavis;
+                (vacuum)tabula_dispersa_inserere(visae, clavis, NIHIL);
+                numerus++;
+            }
+        }
+        /* gradus novus ordine clavium */
+        si (bene && numerus > initia[gradus])
+        {
+            i32  m = numerus - initia[gradus];
+            i32  t;
+         Plexus* v;
+         chorda* c;
+
+            paria = (ParClavisPlexus*)piscina_allocare(temporaria,
+                (memoriae_index)m * magnitudo(ParClavisPlexus));
+            v = (Plexus*)piscina_allocare(temporaria,
+                (memoriae_index)m * magnitudo(Plexus));
+            c = (chorda*)piscina_allocare(temporaria,
+                (memoriae_index)m * magnitudo(chorda));
+            per (t = ZEPHYRUM; t < m; t++)
+            {
+                paria[t].clavis  = claves[initia[gradus] + t];
+                paria[t].index   = initia[gradus] + t;
+            }
+            qsort(paria, (memoriae_index)m, magnitudo(ParClavisPlexus),
+                _comparare_paria);
+            per (t = ZEPHYRUM; t < m; t++)
+            {
+                v[t] = verba[paria[t].index];
+                c[t] = claves[paria[t].index];
+            }
+            per (t = ZEPHYRUM; t < m; t++)
+            {
+                verba[initia[gradus] + t]   = v[t];
+                claves[initia[gradus] + t]  = c[t];
+            }
+        }
+    }
+    si (!bene)
+    {
+        piscina_destruere(temporaria);
+        redde FALSUM;
+    }
+    initia[longitudo_maxima + I]  = numerus;
+    exitus->fila                  = fila;
+    exitus->longitudo_maxima      = longitudo_maxima;
+    exitus->numerus               = numerus;
+    exitus->verba   = (Plexus*)piscina_allocare(piscina,
+        (memoriae_index)numerus * magnitudo(Plexus));
+    exitus->claves  = (chorda*)piscina_allocare(piscina,
+        (memoriae_index)numerus * magnitudo(chorda));
+    exitus->initia  = (i32*)piscina_allocare(piscina,
+        (memoriae_index)(longitudo_maxima + II) * magnitudo(i32));
+    per (k = ZEPHYRUM; k < numerus; k++)
+    {
+        exitus->verba[k]   = verba[k];
+        exitus->claves[k]  = claves[k];
+    }
+    per (k = ZEPHYRUM; k <= longitudo_maxima + I; k++)
+    {
+        exitus->initia[k] = initia[k];
+    }
+    piscina_destruere(temporaria);
     redde VERUM;
 }

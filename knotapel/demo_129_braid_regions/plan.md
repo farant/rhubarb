@@ -182,6 +182,16 @@ late passes cost more.
 3. **T5c:** findings.md, claims.md node(s), ledger, archive.sh.
 4. **T5d:** independent review with its own oracle, then fixes.
 
+## Decisions made during task 0
+
+- **T5.0b (census helpers):** `plexus_clavis`, `plexus_periodus`
+  (renamed from the proposed `plexus_periodicus`: the noun is a known
+  word; it returns the MINIMAL period, testing every divisor of n and
+  n-1, where D128 tried only n and n-1), `plexus_enumerare` (first
+  word reaching a class represents it; within a level sorted by key).
+  Checked against D128's pinned counts and, on short censuses,
+  against Artin directly. See lib/plexus.worklog.md.
+
 ## Out of scope
 
 - Exact polyhedral region counts in d >= 3 (exact LP).

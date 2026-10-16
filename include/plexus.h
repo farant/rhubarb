@@ -347,6 +347,70 @@ plexus_aequales_ansis (
 
 
 /* ==================================================
+ * Census: clavis classis, periodicitas, enumeratio
+ * ================================================== */
+
+/* clavis classis: imagines ansarum E_1 .. E_{n+1} plexus in D_{n+2}
+ * (translatio 1) concatenatae, familia plexus_aequales_ansis. p = q in
+ * B_n -> claves aequales; claves aequales -> p = q quatenus familia
+ * ansarum fidelis est (exhaustive contra Artin probata pro verbis
+ * brevibus, vide plexus_aequales_ansis; generaliter hic non probata).
+ * Clavis in piscina vocantis, temporaria propria. FALSUM si p
+ * invalidus aut fila > PLEXUS_FILA_MAXIMA - 2 */
+b32
+plexus_clavis (
+      Plexus  p,
+     Piscina* piscina,
+      chorda* exitus);
+
+/* periodicitas EXACTA: *periodus = minimum k >= 1 cum beta^k potentia
+ * Delta^2 (centri generator), aut 0 si beta non periodicus. Braidae
+ * periodicae potentiis delta = sigma_1 ... sigma_{n-1} aut epsilon =
+ * sigma_1 delta coniugatae sunt (Brouwer, Kerekjarto, Eilenberg; vide
+ * Gonzalez-Meneses et Wiest 2004), ordinum n et n-1 modulo centro:
+ * ergo k divisor n aut n-1 est, et soli hi probantur, ordine
+ * crescente; j = k e / (n(n-1)) integer esse debet (e summa
+ * exponentium). Aequalitas per plexus_aequales_ansis. FALSUM si p
+ * invalidus, fila > PLEXUS_FILA_DIMIDIAE_TORSIONIS aut aequalitas
+ * refutat */
+b32
+plexus_periodus (
+      Plexus  p,
+     Piscina* piscina,
+         i32* periodus);
+
+nomen structura {
+        i32  fila;
+        i32  longitudo_maxima;
+        i32  numerus;      /* classes */
+     Plexus* verba;        /* repraesentantes, per latitudinem */
+     chorda* claves;       /* plexus_clavis cuiusque */
+        i32* initia;       /* L + 2: initia[l] = prima classis gradus l,
+                            * initia[L + 1] = numerus */
+} PlexusCensus;
+
+/* enumeratio per latitudinem omnium classium B_n longitudinis <= L
+ * (longitudo = verbum brevissimum in sigma_i^{+-1}). Gradus l ex gradu
+ * l - 1 (ordine suo) per litteras -(n-1) .. n-1 (0 omissa); classis
+ * nova (clavis nondum visa) verbo PRIMO quod eam attingit
+ * repraesentatur (longitudo l, libere reductum); intra gradum ordine
+ * clavium (chorda_comparare). Exhaustiva quatenus plexus_clavis
+ * classes separat (vide supra). Omnia in piscina vocantis. FALSUM
+ * (exitus non tactus) si fila extra 2..PLEXUS_FILA_MAXIMA - 2, si
+ * classes > classes_maximae (numquam truncatur), aut si
+ * longitudo_maxima >= classes_maximae
+ * (omnis gradus classem novam addit: talis census limitem semper
+ * superaret) */
+b32
+plexus_enumerare (
+             i32  fila,
+             i32  longitudo_maxima,
+             i32  classes_maximae,
+         Piscina* piscina,
+    PlexusCensus* exitus);
+
+
+/* ==================================================
  * Repraesentatio Burau reducta
  * ==================================================
  *

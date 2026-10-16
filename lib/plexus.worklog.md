@@ -446,3 +446,58 @@ printed is not the value checked.
 sigma_1's a' = +b + (b')+, the sign of (b')- for sigma_{n-1}^-1, the
 edge write-back swapped, the sign of d in w, the sign of w+ in a_q',
 the sign of b_p+ in the partial sum.
+
+## 2026-10-16 — census helpers out of D128 (nervus-plan T5.0b)
+
+D129 needs D128's census again; by the knotapel rule general braid
+algorithms belong in plexus, so three functions moved here (D128's
+frozen code untouched):
+- `plexus_clavis(p)`: the class key - images of E_1..E_{n+1} of p
+  embedded in D_{n+2} (translation 1), concatenated; the
+  plexus_aequales_ansis family, with its caveat (complete as far as
+  that family is faithful: exhaustive against Artin for short words,
+  not proved in general).
+- `plexus_periodus(p, &k)`: the MINIMAL k >= 1 with beta^k a power of
+  Delta^2, or 0. D128's test tried k = n and n-1 only; here every
+  divisor of n or n-1 in increasing order (periodic braids are
+  conjugate to powers of delta or epsilon, orders n and n-1 mod the
+  centre), j = k e / (n(n-1)) must be an integer. First named
+  `plexus_periodicus`; renamed to the noun (a known word) instead of
+  glossing a new adjective.
+- `plexus_enumerare(n, L, limit)`: breadth-first over exact classes;
+  a new class is represented by the FIRST word that reaches it (D128
+  kept whichever duplicate an unstable qsort left - same classes,
+  possibly different representatives); within a level, sorted by key;
+  never truncated (more classes than the limit -> FALSUM, nothing
+  written); refuses L >= limit up front (every level of an infinite
+  group adds a class). Seen keys in a tabula_dispersa (new plexus
+  dependency: friatio, tabula_dispersa); level sorting by (key, index)
+  pairs with qsort, no file-level state (a first draft used a static
+  pointer for the comparator).
+
+Tests (section "census", 49 checks): D128's pinned counts per level
+(B_3 <= 8: 1 4 12 30 68 148 314 656 1356 = 2,589; B_4 <= 6: 1 6 26 98
+338 1110 3542 = 5,121) - the plexus T5 review's independent Artin
+counts; representatives of length = level, freely reduced, own key;
+keys strictly increasing within a level; per-level periodic counts =
+D128's (B_3 1 0 4 10 20 16 34 32 92; B_4 1 0 0 8 24 36 102); every
+periodic class returns every loop E_j after k passes (theorem); hand
+periods (identity, Delta^2 and its inverse 1; delta 4, epsilon 3,
+delta^2 and Delta 2 on B_4; a conjugate of delta 4; B_2: s1 2, s1^2 1;
+s1, s1 s3^-1 s2, s1 s2^-1: 0); AGAINST ARTIN (faithful): all 34,453
+pairs of B_3 classes up to length 5 unequal; 300 random B_4 words of
+length <= 6 each Artin-equal to the class its key finds, at a level
+<= its length; keys equal under braid relations, Delta^2 != identity
+on D_{n+2}; refusals; the class limit at exactly 2,589 (accepted) and
+2,588 (refused); B_2 to length 5 has 11 classes.
+
+Plants (silva.planta): 7 red (divisors of n-1 skipped, search from
+k = 2, twist sign swapped, new classes not marked seen, level not
+sorted, limit off by one, key on D_n). Two first went red by SEGFAULT:
+the test read the census struct after a refused enumeration; it now
+returns early when an enumeration fails (its failure already
+recorded), and both go red by assertion. One survives and is kept as a
+known equivalent: dropping the LAST loop E_{n+1} from the key family
+gives the same partition on these censuses (consistent with the plexus
+T5 review's N1: smaller families exhaustively give the same classes);
+the full family stays, as in plexus_aequales_ansis.

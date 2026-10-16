@@ -3872,6 +3872,312 @@ _probare_nervum (
     }
 }
 
+/* census (nervus-plan T5.0b, auxilia D129 ex D128): plexus_clavis,
+ * plexus_periodus, plexus_enumerare contra numeros D128 (et
+ * recensionis T5 per Artin), contra Artin ipsum in censibus brevibus,
+ * et theoremata periodicitatis */
+interior b32
+_reductum (
+    Plexus p)
+{
+    i32 k;
+
+    per (k = I; k < p.longitudo; k++)
+    {
+        si (p.litterae[k] == -p.litterae[k - I])
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+interior i32
+_periodus (
+                   i32  fila,
+    constans character* textus,
+               Piscina* piscina)
+{
+    i32 k = DCCCLXXXVIII;
+
+    si (!plexus_periodus(_p(fila, textus, piscina), piscina, &k))
+    {
+        redde DCCCLXXXVIII;
+    }
+    redde k;
+}
+
+interior vacuum
+_probare_censum (
+    CredoContextus* c)
+{
+       Piscina* piscina = c->piscina;
+           i32  gradus_tria[IX] = { I, IV, XII, XXX, LXVIII, CXLVIII,
+               CCCXIV,
+                             DCLVI, MCCCLVI };
+        i32 gradus_quattuor[VII] = { I, VI, XXVI, XCVIII, CCCXXXVIII,
+            MCX,
+                              MMMDXLII };
+        i32 p3[IX] = { I, ZEPHYRUM, IV, X, XX, XVI, XXXIV, XXXII,
+            XCII };
+        i32 p4[VII] = { I, ZEPHYRUM, ZEPHYRUM, VIII, XXIV, XXXVI,
+            CII };
+  PlexusCensus b3;
+  PlexusCensus b4;
+           b32 b3_bonus;
+           b32 b4_bonus;
+
+    /* periodicitas manu */
+    CREDO_AEQUALIS_I32 (_periodus(III, "", piscina), I);
+    CREDO_AEQUALIS_I32 (_periodus(III, "1 2 1 1 2 1", piscina), I);
+    CREDO_AEQUALIS_I32 (_periodus(III, "-1 -2 -1 -1 -2 -1", piscina),
+        I);
+    CREDO_AEQUALIS_I32 (_periodus(IV, "1 2 3", piscina), IV);
+    CREDO_AEQUALIS_I32 (_periodus(IV, "1 1 2 3", piscina), III);
+    CREDO_AEQUALIS_I32 (_periodus(IV, "1 2 3 1 2 3", piscina), II);
+    CREDO_AEQUALIS_I32 (_periodus(IV, "1 2 1 3 2 1", piscina), II);
+    CREDO_AEQUALIS_I32 (_periodus(IV, "2 1 2 3 -2", piscina), IV);
+    CREDO_AEQUALIS_I32 (_periodus(II, "1", piscina), II);
+    CREDO_AEQUALIS_I32 (_periodus(II, "1 1", piscina), I);
+    CREDO_AEQUALIS_I32 (_periodus(III, "1", piscina), ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (_periodus(IV, "1 -3 2", piscina), ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (_periodus(III, "1 -2", piscina), ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (_periodus(V,
+        "1 2 3 4 1 2 3 4 1 2 3 4 1 2 3 4 1 2 "
+        "3 4", piscina), I);
+    /* claves */
+    {
+        chorda clavis_a;
+        chorda clavis_b;
+
+        CREDO_VERUM (plexus_clavis(_p(III, "1 2 1", piscina), piscina,
+            &clavis_a));
+        CREDO_VERUM (plexus_clavis(_p(III, "2 1 2", piscina), piscina,
+            &clavis_b));
+        CREDO_VERUM (chorda_aequalis(clavis_a, clavis_b));
+        CREDO_VERUM (plexus_clavis(_p(III, "1", piscina), piscina,
+            &clavis_a));
+        CREDO_VERUM (plexus_clavis(_p(III, "2", piscina), piscina,
+            &clavis_b));
+        CREDO_FALSUM (chorda_aequalis(clavis_a, clavis_b));
+        /* Delta^2 in D_n invisibilis, in D_{n+2} non */
+        CREDO_VERUM (plexus_clavis(_p(III, "1 2 1 1 2 1", piscina),
+            piscina, &clavis_a));
+        CREDO_VERUM (plexus_clavis(_p(III, "", piscina), piscina,
+            &clavis_b));
+        CREDO_FALSUM (chorda_aequalis(clavis_a, clavis_b));
+        CREDO_FALSUM (plexus_clavis(_p(III, "1", piscina), piscina,
+            NIHIL));
+    }
+    /* enumeratio: numeri D128 per gradum */
+    b3_bonus = plexus_enumerare(III, VIII, IV * M, piscina, &b3);
+    b4_bonus = plexus_enumerare(IV, VI, X * M, piscina, &b4);
+    CREDO_VERUM (b3_bonus);
+    CREDO_VERUM (b4_bonus);
+    /* census non factus: cetera legerent structuram non scriptam */
+    si (!b3_bonus || !b4_bonus)
+    {
+        redde;
+    }
+    CREDO_AEQUALIS_I32 (b3.numerus, MMDLXXXIX);
+    CREDO_AEQUALIS_I32 (b4.numerus, V * M + CXXI);
+    {
+        b32 gradus_recti    = VERUM;
+        b32 verba_recta     = VERUM;
+        b32 ordinata        = VERUM;
+        b32 periodi_rectae  = VERUM;
+        b32 redeunt         = VERUM;
+        i32 l;
+
+        per (l = ZEPHYRUM; l <= VIII; l++)
+        {
+            si (b3.initia[l + I] - b3.initia[l] != gradus_tria[l])
+            {
+                gradus_recti = FALSUM;
+            }
+        }
+        per (l = ZEPHYRUM; l <= VI; l++)
+        {
+            si (b4.initia[l + I] - b4.initia[l] != gradus_quattuor[l])
+            {
+                gradus_recti = FALSUM;
+            }
+        }
+        CREDO_VERUM (gradus_recti);
+        /* repraesentantes: longitudo = gradus, libere reducti, clavis
+         * sua; claves intra gradum crescentes; numeri P per gradum;
+         * periodici ansas post k transitus restituunt */
+        per (l = ZEPHYRUM; l < II; l++)
+        {
+            PlexusCensus* cs = l == ZEPHYRUM ? &b3 : &b4;
+                     i32  g;
+
+            per (g = ZEPHYRUM; g <= cs->longitudo_maxima; g++)
+            {
+                i32 pp = ZEPHYRUM;
+                i32 i;
+
+                per (i = cs->initia[g]; i < cs->initia[g + I]; i++)
+                {
+                    PiscinaNotatio nota = piscina_notare(piscina);
+                            chorda clavis;
+                               i32 periodus = XCIX;
+
+                    si (   cs->verba[i].longitudo != g
+                        || !_reductum(cs->verba[i])
+                        || !plexus_clavis(cs->verba[i], piscina,
+                        &clavis)
+                        || !chorda_aequalis(clavis, cs->claves[i]))
+                    {
+                        verba_recta = FALSUM;
+                    }
+                    si (   i > cs->initia[g] && chorda_comparare(
+                        cs->claves[i - I], cs->claves[i]) >= ZEPHYRUM)
+                    {
+                        ordinata = FALSUM;
+                    }
+                    si (!plexus_periodus(cs->verba[i], piscina,
+                        &periodus))
+                    {
+                        periodi_rectae = FALSUM;
+                    }
+                    si (periodus > ZEPHYRUM)
+                    {
+                        i32 j;
+                        i32 t;
+
+                        pp++;
+                        per (j = I; j < cs->fila; j++)
+                        {
+                            Ansa e;
+                            Ansa v;
+
+                            (vacuum)ansa_circa(cs->fila < III ? III
+                                : cs->fila, j, piscina, &e);
+                            si (cs->fila < III)
+                            {
+                                frange;
+                            }
+                            v = e;
+                            per (t = ZEPHYRUM; t < periodus; t++)
+                            {
+                                (vacuum)ansa_agere(v, cs->verba[i],
+                                    piscina,
+                                    &v);
+                            }
+                            si (!ansae_aequales(v, e))
+                            {
+                                redeunt = FALSUM;
+                            }
+                        }
+                    }
+                    piscina_reficere(piscina, nota);
+                }
+                si (pp != (l == ZEPHYRUM ? p3[g] : p4[g]))
+                {
+                    periodi_rectae = FALSUM;
+                }
+            }
+        }
+        CREDO_VERUM (verba_recta);
+        CREDO_VERUM (ordinata);
+        CREDO_VERUM (periodi_rectae);
+        CREDO_VERUM (redeunt);
+    }
+    /* contra Artin (fidelis): B_3 <= 5 omnia paria inaequalia */
+    {
+        i32 n5 = b3.initia[VI];
+        i32 i;
+        i32 j;
+        b32 inaequalia = VERUM;
+
+        CREDO_AEQUALIS_I32 (n5, CCLXIII);
+        per (i = ZEPHYRUM; i < n5; i++)
+        {
+            per (j = i + I; j < n5; j++)
+            {
+                PiscinaNotatio nota      = piscina_notare(piscina);
+                           b32 aequales  = VERUM;
+
+                si (   !plexus_aequales(b3.verba[i], b3.verba[j],
+                    LIMES_MAGNUS, piscina, &aequales) || aequales)
+                {
+                    inaequalia = FALSUM;
+                }
+                piscina_reficere(piscina, nota);
+            }
+        }
+        CREDO_VERUM (inaequalia);
+    }
+    /* verba fortuita B_4 longitudinis <= 6: classis gradus <= longitudo
+     * invenitur (clavis), et Artin aequalitatem confirmat */
+    {
+        Sors s;
+         i32 t;
+         b32 inventa = VERUM;
+
+        sors_seminare(&s, CXXIX, I);
+        per (t = ZEPHYRUM; t < CCC; t++)
+        {
+            PiscinaNotatio nota = piscina_notare(piscina);
+                       i32 longitudo = sors_intra(&s, VII);
+                    Plexus w = _fortuitus(&s, IV, longitudo, piscina);
+                    chorda clavis;
+                       i32 i;
+                       b32 hic = FALSUM;
+
+            (vacuum)plexus_clavis(w, piscina, &clavis);
+            per (i = ZEPHYRUM; i < b4.initia[longitudo + I]
+                && !hic; i++)
+            {
+                si (chorda_aequalis(clavis, b4.claves[i]))
+                {
+                    b32 aequales = FALSUM;
+
+                    hic = plexus_aequales(w, b4.verba[i], LIMES_MAGNUS,
+                        piscina, &aequales) && aequales;
+                }
+            }
+            si (!hic)
+            {
+                inventa = FALSUM;
+            }
+            piscina_reficere(piscina, nota);
+        }
+        CREDO_VERUM (inventa);
+    }
+    /* refutationes; exitus non tangitur */
+    {
+        PlexusCensus intactus;
+                 i32 periodus = XCIX;
+
+        intactus.numerus = XCIX;
+        CREDO_FALSUM (plexus_enumerare(I, III, C, piscina, &intactus));
+        CREDO_FALSUM (plexus_enumerare(III, C, C, piscina, &intactus));
+        CREDO_FALSUM (plexus_enumerare(III, VIII, MM, piscina,
+            &intactus));
+        /* fines exacti limitis classium */
+        CREDO_FALSUM (plexus_enumerare(III, VIII, MMDLXXXVIII, piscina,
+            &intactus));
+        CREDO_AEQUALIS_I32 (intactus.numerus, XCIX);
+        {
+            PlexusCensus plenus;
+
+            CREDO_VERUM (plexus_enumerare(III, VIII, MMDLXXXIX, piscina,
+                &plenus));
+            CREDO_AEQUALIS_I32 (plenus.numerus, MMDLXXXIX);
+        }
+        CREDO_AEQUALIS_I32 (intactus.numerus, XCIX);
+        CREDO_FALSUM (plexus_enumerare(III, II, C, piscina, NIHIL));
+        CREDO_FALSUM (plexus_periodus(_p(III, "1", piscina), piscina,
+            NIHIL));
+        CREDO_AEQUALIS_I32 (periodus, XCIX);
+        /* B_2: Z, classes 1 + 2 per gradum */
+        CREDO_VERUM (plexus_enumerare(II, V, C, piscina, &intactus));
+        CREDO_AEQUALIS_I32 (intactus.numerus, XI);
+    }
+}
+
 interior CredoSectio SECTIONES[] = {
     { "verba", _probare_verba, NIHIL, NIHIL, NIHIL, NIHIL },
     { "permutatio", _probare_permutationem, NIHIL, NIHIL, NIHIL,
@@ -3958,6 +4264,7 @@ interior CredoSectio SECTIONES[] = {
     { "burau circulus", _probare_burau_circulum, NIHIL, NIHIL, NIHIL,
       NIHIL },
     { "nervus", _probare_nervum, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "census", _probare_censum, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 
