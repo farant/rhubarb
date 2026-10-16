@@ -64,6 +64,7 @@
 #include "polynomium.h"
 #include "matrix.h"
 #include "radices.h"
+#include "cyclotomia.h"
 
 #define PLEXUS_FILA_MAXIMA              1048576
 /* Delta longitudinem n(n-1)/2 habet: n <= 65536 ut in 2^31 capiat */
@@ -391,6 +392,33 @@ plexus_burau_radix_maxima (
           Plexus  p,
          Piscina* piscina,
      RadixRealis* exitus);
+
+
+/* Certificatum entropiae per Burau in radicibus unitatis: VERUM in
+ * *maior si radius spectralis B(zeta) > 1 pro aliqua radice primitiva
+ * zeta ordinis 'ordo' (2 <= ordo <= 12), EXACTE. Tunc entropia > 0:
+ * radius spectralis B(zeta), |zeta| = 1, dilatationem non superat
+ * (Kolev 1989; Band et Boyland 2007; citatum).
+ * Via: B(t) in Z[zeta] reducitur (cyclotomia) et per restrictionem
+ * scalarium matrix integra R ((n-1) phi(ordo) quadrata) fit, cuius
+ * valores proprii sunt valores B(zeta^k) omnium coniugatorum
+ * Galois; polynomium characteristicum R monicum est, terminus
+ * constans +-1 (det B = (-t)^e unitas). Kronecker (1857): polynomium
+ * monicum integrum cuius radices omnes in disco unitatis iacent
+ * productum polynomiorum cyclotomicorum est - ergo factoribus
+ * cyclotomicis divisis residuum non trivialum radicem |z| > 1 habet.
+ * ordo 2 = t = -1 (in B_4 idem ac plexus_burau_radix_maxima > 1, quia
+ * p(1) = 0 semper; in B_n generali non). FALSUM si p invalidus, ordo
+ * extra 2..12, aut (fila - 1) phi(ordo) > PLEXUS_BURAU_CIRCULI (tunc
+ * *maior non tangitur). Temporaria in piscina propria; nihil in
+ * vocantis. */
+#define PLEXUS_BURAU_CIRCULI 22
+
+b32
+plexus_burau_radius_maior (
+     Plexus  p,
+        i32  ordo,
+        b32* maior);
 
 
 /* ==================================================

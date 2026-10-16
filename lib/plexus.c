@@ -1965,3 +1965,140 @@ plexus_apicem_purgare (vacuum)
 {
     _apex_proprius = ZEPHYRUM;
 }
+
+
+/* ==================================================
+ * Certificatum per Burau in radicibus unitatis
+ * ================================================== */
+
+/* phi(k) per divisionem (k parvus) */
+interior i32
+_phi (
+    i32 k)
+{
+    i32 r = k;
+    i32 n = k;
+    i32 d;
+
+    per (d = II; d * d <= n; d++)
+    {
+        si (n % d == ZEPHYRUM)
+        {
+            dum (n % d == ZEPHYRUM)
+            {
+                n /= d;
+            }
+            r -= r / d;
+        }
+    }
+    si (n > I)
+    {
+        r -= r / n;
+    }
+    redde r;
+}
+
+b32
+plexus_burau_radius_maior (
+     Plexus  p,
+        i32  ordo,
+        b32* maior)
+{
+        Piscina* t;
+     Cyclotomia* anulus;
+         Matrix  b;
+         Matrix  propria;
+     Polynomium  proprium;
+            i32  d = p.fila - I;
+            i32  g;
+            i32  dim;
+            i32  a;
+            i32  c;
+            i32  i;
+            i32  j;
+            i32  k;
+            b32  bene;
+     Polynomium  monomium;
+
+    si (!plexus_validus(p) || ordo < II || ordo > XII)
+    {
+        redde FALSUM;
+    }
+    g = _phi(ordo);
+    si ((i64)d * (i64)g > (i64)PLEXUS_BURAU_CIRCULI)
+    {
+        redde FALSUM;
+    }
+    dim  = d * g;
+    t    = piscina_generare_dynamicum("plexus_circulus", 4096);
+    si (t == NIHIL)
+    {
+        redde FALSUM;
+    }
+    anulus = cyclotomia_creare(ordo, t);
+    bene = anulus != NIHIL && plexus_burau(p, t, &b)
+        && matrix_nulla(&ANULUS_POLYNOMIORUM, dim, dim, t, &propria)
+        && polynomium_monomium(magnus_ex_s64(I), I, t, &monomium);
+    /* xI - R: R[(a,i),(c,j)] = coefficiens zeta^i in B[a][c] zeta^j */
+    per (a = ZEPHYRUM; bene && a < d; a++)
+    {
+        per (c = ZEPHYRUM; bene && c < d; c++)
+        {
+            Cyclotomicus elementum;
+
+            bene = cyclotomicus_ex_polynomio(anulus,
+                *(constans Polynomium*)matrix_elementum(b, a, c), I, t,
+                &elementum);
+            per (j = ZEPHYRUM; bene && j < g; j++)
+            {
+                Cyclotomicus columna =
+                    cyclotomicus_multiplica(elementum,
+                    cyclotomicus_radix(anulus, (s32)j, t), t);
+
+                per (i = ZEPHYRUM; i < g; i++)
+                {
+                    Polynomium x = polynomium_nega(polynomium_constans(
+                        cyclotomicus_coefficiens(columna, i), t), t);
+
+                    si (a == c && i == j)
+                    {
+                        x = polynomium_adde(x, monomium, t);
+                    }
+                    matrix_pone(&propria, a * g + i, c * g + j, &x);
+                }
+            }
+        }
+    }
+    bene = bene && matrix_determinans(propria, t, &proprium);
+    /* Kronecker: factores cyclotomici dividuntur; residuum gradus > 0
+     * -> radix |z| > 1 */
+    per (k = I; bene && k <= II * (i32)dim * (i32)dim + II; k++)
+    {
+        Polynomium phi_k;
+        Polynomium quotiens;
+               i32 gradus_k = _phi(k);
+
+        si ((s32)gradus_k > polynomium_gradus_summus(proprium))
+        {
+            perge;
+        }
+        si (!polynomium_cyclotomicum(k, t, &phi_k))
+        {
+            bene = FALSUM;
+            frange;
+        }
+        dum (   polynomium_gradus_summus(proprium)
+            >= (s32)gradus_k
+             && polynomium_divide_exacte(proprium, phi_k, t,
+             &quotiens))
+        {
+            proprium = quotiens;
+        }
+    }
+    si (bene)
+    {
+        *maior = polynomium_gradus_summus(proprium) > ZEPHYRUM;
+    }
+    _propriam_destruere(t);
+    redde bene;
+}

@@ -352,3 +352,47 @@ recensio_plexus_t5/findings_summary.md). What changed:
 Plants: the reviewer's surviving mutants plus the reversals of the
 fixes, 13 in all. 11 are red; 2 are equivalent (the validus checks in
 alexander and radix are redundant behind Burau's own check).
+
+## 2026-10-16 — T3b: an exact Burau certificate at roots of unity
+
+This was prompted by the D128 review (M3). On B_4, 1,008 braids up to
+length 6 have measured exponential loop growth, yet Burau(-1) is blind
+to them: its characteristic polynomial for s1 s3^-1 s2 is (x-1)^3. The
+reviewer found numerically that Burau at t = e^{2 pi i/3} has spectral
+radius >= 1.957 on all of them. Kolev's bound (radius of B(zeta) <=
+dilatation for |zeta| = 1; restated in Band and Boyland 2007) then
+certifies positive entropy. Fran approved doing it exactly in plexus.
+
+`plexus_burau_radius_maior(p, ordo, &maior)`, ordo 2..12:
+- B(t) is reduced into Z[zeta_ordo] with `cyclotomia`.
+- Restriction of scalars gives an integer matrix R of size
+  (n-1) phi(ordo), whose eigenvalues are those of B(zeta^k) for every
+  Galois conjugate. Kolev holds at each one, so the certificate is
+  "some primitive root of that order".
+- chi_R is monic with constant term +-1 (det B = (-t)^e is a unit).
+- Kronecker (1857): a monic integer polynomial whose roots all lie in
+  the closed unit disk is a product of cyclotomic polynomials. So after
+  every Phi_k with phi(k) <= deg is divided out (k <= 2 D^2 + 2, since
+  phi(k) >= sqrt(k/2)), a remainder of degree > 0 means some root has
+  modulus > 1.
+- The dimension limit is D = (n-1) phi(ordo) <= 22, so that every
+  needed Phi_k lies within cyclotomia's range (k <= 1000).
+
+Tests:
+- Zero-entropy braids give FALSUM at orders 2..6 (the contrapositive of
+  Kolev): delta, epsilon, Delta^2, the twists s1 and s1^5, and s1 s3.
+- s1 s3^-1 s2 is FALSUM at order 2 and VERUM at order 3, and so is
+  Thiffeault's braid at order 3.
+- On 150 random braids on B_3/B_4: order 2 equals
+  `plexus_burau_radix_maxima` > 1 (on B_4 because p(1) = 0 always,
+  the review's lemma), and the certificate always implies exponential
+  loop growth. 8 of the 150 are certified only at order 3.
+
+A mistake of mine the test caught: I listed s2^2 s1^-2 as zero entropy.
+It is twists about intersecting curves with opposite signs (Penner),
+which is pseudo-Anosov. Its loops grow to ~10^23 in 30 periods, and it
+is certified at orders 2 and 5. It is now a positive example.
+
+5 plants, all red: a single division in place of repeated division,
+the realification without zeta^j, the diagonal x misplaced, a
+Kronecker range of k <= 2, and maior always VERUM.

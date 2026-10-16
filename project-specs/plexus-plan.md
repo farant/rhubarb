@@ -250,6 +250,13 @@ for Fran's go-ahead.
   growth within 1%. Limitation: for the paper's 4-strand braid the real
   eigenvalues give 1. 33 sections, 1,101 checks, sanitizers clean.
   13 plants: 12 red, 1 equivalent in practice.)*
+- **T3b (2026-10-16, done; after the D128 review): an exact Burau
+  certificate at roots of unity.** `plexus_burau_radius_maior(p, ordo)`
+  combines Kolev (cited) with Kronecker, applied to the realified
+  integer matrix of B(zeta). It certifies positive entropy where
+  Burau(-1) is blind (s1 s3^-1 s2 at order 3). Zero-entropy braids are
+  refused at orders 2..6, and certification always implies loop growth.
+  40 sections, 1,171 checks; 5 plants red.
 - **T4. Entropy by growth.** L(u) under iteration, exact; growth table;
   credo: oracle 6. *Sketch for Fran first:* the exact dilatation (the
   stabilised piecewise-linear branch gives an integer matrix whose

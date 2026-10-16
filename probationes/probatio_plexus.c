@@ -28,6 +28,7 @@
 #include "anulus.h"
 #include "radices.h"
 #include "tabula_nodorum.h"
+#include "cyclotomia.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -3509,6 +3510,128 @@ _probare_censurae_burau_piscinam (
         <= (memoriae_index)CXCIX * CXCIX * magnitudo(Magnus) + 65536UL);
 }
 
+
+/* ==================================================
+ * Certificatum Burau in radicibus unitatis (D128 recensio M3)
+ * ================================================== */
+
+interior vacuum
+_probare_burau_circulum (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+    constans character* nullae[VI] = { "1 2 3", "1 1 2 3",
+        "1 2 3 1 2 1 1 2 3 1 2 1",
+        "1", "1 1 1 1 1", "1 3" };
+     i32 k;
+     b32 maior;
+    Sors s;
+     i32 t;
+     i32 fracta_paris       = ZEPHYRUM;
+     i32 fracta_incrementi  = ZEPHYRUM;
+     i32 certificatae       = ZEPHYRUM;
+
+    /* entropia nulla -> FALSUM (Kolev contrapositive), ordo 2 .. 6 */
+    per (k = ZEPHYRUM; k < VI; k++)
+    {
+        i32 ordo;
+        b32 nulla = VERUM;
+
+        per (ordo = II; ordo <= VI; ordo++)
+        {
+            maior = XCIX;
+            si (   !plexus_burau_radius_maior(_p(IV, nullae[k],
+                piscina),
+                ordo, &maior)
+                || maior)
+            {
+                nulla = FALSUM;
+            }
+        }
+        CREDO_VERUM (nulla);
+    }
+    /* s1 s3^-1 s2: Burau(-1) caecus ((x-1)^3), Burau(omega) certificat;
+     * s3^-1 s2^-1 s3^-1 s2 s1 (Thiffeault) idem */
+    CREDO_VERUM (plexus_burau_radius_maior(_p(IV, "1 -3 2", piscina),
+        II,
+        &maior) && !maior);
+    CREDO_VERUM (plexus_burau_radius_maior(_p(IV, "1 -3 2", piscina),
+        III,
+        &maior) && maior);
+    CREDO_VERUM (plexus_burau_radius_maior(_p(IV, "-3 -2 -3 2 1",
+        piscina), III, &maior) && maior);
+    /* s2^2 s1^-2: torsiones circa curvas secantes signis oppositis
+     * (constructio Penner): pseudo-Anosov, certificatum ad ordinem 2 */
+    CREDO_VERUM (plexus_burau_radius_maior(_p(IV, "2 2 -1 -1", piscina),
+        II, &maior) && maior);
+    /* B_3: s1 s2^-1 ordo 2 */
+    CREDO_VERUM (plexus_burau_radius_maior(_p(III, "1 -2", piscina), II,
+        &maior) && maior);
+    /* refutationes, maior non tactus */
+    maior = XCIX;
+    CREDO_FALSUM (plexus_burau_radius_maior(_p(IV, "1", piscina), I,
+        &maior));
+    CREDO_FALSUM (plexus_burau_radius_maior(_p(IV, "1", piscina), XIII,
+        &maior));
+    CREDO_FALSUM (plexus_burau_radius_maior(_p(XXIV, "1", piscina), III,
+        &maior));
+    CREDO_VERUM (maior == XCIX);
+    /* fortuita: ordo 2 = radix_maxima > 1 in B_3, B_4 (p(1) = 0);
+     * certificatum (ordo 2 aut 3) -> incrementum exponentiale */
+    sors_seminare(&s, CCCLV, I);
+    per (t = ZEPHYRUM; t < CL; t++)
+    {
+        PiscinaNotatio nota  = piscina_notare(piscina);
+                   i32 n     = III + sors_intra(&s, II);
+                Plexus p    = _fortuitus(&s, n, II + sors_intra(&s, VI),
+                    piscina);
+           RadixRealis rho;
+                   s32 signum     = ZEPHYRUM;
+                   b32 maior_ii   = FALSUM;
+                   b32 maior_iii  = FALSUM;
+                   i32 r;
+                   b32 crescit = FALSUM;
+
+        (vacuum)plexus_burau_radix_maxima(p, piscina, &rho);
+        (vacuum)radix_compara(rho, radix_ex_fractione(fractio_ex_s64(I),
+            piscina), piscina, &signum);
+        (vacuum)plexus_burau_radius_maior(p, II, &maior_ii);
+        (vacuum)plexus_burau_radius_maior(p, III, &maior_iii);
+        si (maior_ii != (signum > ZEPHYRUM))
+        {
+            fracta_paris++;
+        }
+        per (r = I; r < n; r++)
+        {
+              Ansa  u;
+            Magnus* longitudines;
+
+            (vacuum)ansa_circa(n, r, piscina, &u);
+            (vacuum)plexus_incrementum(p, u, LX, piscina,
+                &longitudines);
+            si (magnus_compara(longitudines[LX], magnus_multiplica(
+                longitudines[XL], magnus_ex_s64(II), piscina))
+                    > ZEPHYRUM)
+            {
+                crescit = VERUM;
+            }
+        }
+        si ((maior_ii || maior_iii) && !crescit)
+        {
+            fracta_incrementi++;
+        }
+        si (maior_iii && !maior_ii)
+        {
+            certificatae++;
+        }
+        piscina_reficere(piscina, nota);
+    }
+    imprimere("  CL braidae: %u certificatae solum ad ordinem 3\n",
+        certificatae);
+    CREDO_AEQUALIS_I32 (fracta_paris, ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (fracta_incrementi, ZEPHYRUM);
+}
+
 interior CredoSectio SECTIONES[] = {
     { "verba", _probare_verba, NIHIL, NIHIL, NIHIL, NIHIL },
     { "permutatio", _probare_permutationem, NIHIL, NIHIL, NIHIL,
@@ -3592,6 +3715,8 @@ interior CredoSectio SECTIONES[] = {
       NIHIL },
     { "censura burau piscinae", _probare_censurae_burau_piscinam, NIHIL,
       NIHIL, NIHIL, NIHIL },
+    { "burau circulus", _probare_burau_circulum, NIHIL, NIHIL, NIHIL,
+      NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 
