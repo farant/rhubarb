@@ -9,6 +9,7 @@
 #include "iussum.h"
 #include "admonitiones_visus.h"
 #include "admonitiones_volantes.h"
+#include "colloquia_visus.h"
 #include "multiplexor.h"
 #include <stdio.h>
 #include <string.h>
@@ -1680,12 +1681,16 @@ nomen structura {
           Admonitiones* index;
     AdmonitionumSequax  sequax;
                    b32  sequitur;     /* sequax initiatus */
-                   b32  applicatae;   /* lectae_ad radicis applicatae */
+                   b32  applicatae;   /* lectae_ad radicis applicata */
                    s32  non_lectae;   /* scriptum ultimum; -1 nullum */
        StatusSystemata* systemata;
                Piscina* piscina;
                  Vicus* vicus;      /* T4c: saltus ad latus */
                Piscina* scheda;     /* T4c: per saltum vacatur */
+    /* T5: fons sessionum (si sequitur); multiplexor = exemplar
+     * (binarium; socket per sessionem) */
+       ColloquiorumFons fons;
+            Multiplexor multiplexor;
 } ContextusAdmonitionum;
 
 interior s64
@@ -1743,50 +1748,37 @@ latus_adhaerens (
     redde NIHIL;
 }
 
-/* porta actionis: "panellus" -> argumentum "<panellus> <servitor>".
- * T4c: panellus in sessione sua eligitur (select-window +
- * select-pane); latus terminalis vici sessioni adhaerens (quavis
- * tabula) ostenditur et focatur; nullum -> terminale novum in acervo
- * tabulae activae "tmux <servitor> <sessio>" (petitio). */
+/* T4c/T5: saltus ad panellum (in servitore; vacuus = ordinarius):
+ * panellus in sessione sua eligitur (select-window + select-pane);
+ * latus terminalis vici sessioni adhaerens (quavis tabula) ostenditur
+ * et focatur; nullum -> terminale novum in acervo tabulae activae
+ * "tmux <servitor|-> <sessio>" (petitio). */
 interior b32
-admonitionem_agere (
-                vacuum* ctx,
-    constans Admonitio* x)
+saltus (
+    ContextusAdmonitionum* ca,
+                   chorda  panellus_id,
+                   chorda  servitor)
 {
-           ContextusAdmonitionum* ca;
                      Multiplexor  mx;
     constans MultiplexorPanellus* panellus;
              constans VicusLatus* l;
-                       character  argumentum[CCLVI];
-                       character* spatium;
                           chorda  sessio;
                           chorda  aperiendum;
 
-    ca = (ContextusAdmonitionum*)ctx;
-    si (   !ca || !x || !ca->scheda
-        || !chorda_aequalis_literis(x->actio, "panellus")
-        || x->argumentum.mensura == ZEPHYRUM
-        || x->argumentum.mensura >= CCLVI)
+    si (   !ca || !ca->scheda || !ca->vicus
+        || panellus_id.mensura == ZEPHYRUM)
     {
         redde FALSUM;
     }
     piscina_vacare(ca->scheda);
-    memcpy(argumentum, x->argumentum.datum, (size_t)
-        x->argumentum.mensura);
-    argumentum[x->argumentum.mensura] = '\0';
     memset(&mx, ZEPHYRUM, magnitudo(mx));
-    spatium = strchr(argumentum, ' ');
-    si (spatium)
+    si (servitor.mensura > ZEPHYRUM)
     {
-        *spatium = '\0';
-        si (spatium[I])
-        {
-            mx.socket = spatium + I;
-        }
+        mx.socket = chorda_ut_cstr(servitor, ca->scheda);
     }
     panellus = multiplexor_panellum_invenire(multiplexor_panelli(&mx,
-        ca->scheda), chorda_ex_literis(argumentum, ca->scheda));
-    si (!panellus || !ca->vicus)
+        ca->scheda), panellus_id);
+    si (!panellus)
     {
         redde FALSUM;
     }
@@ -1810,6 +1802,48 @@ admonitionem_agere (
     aperiendum = chorda_concatenare(aperiendum, sessio, ca->scheda);
     redde vicus_acervo_aperire(ca->vicus, "terminale", chorda_ut_cstr(
         aperiendum, ca->scheda));
+}
+
+/* porta actionis admonitionum: "panellus" -> argumentum "<panellus>
+ * <servitor>" -> saltus */
+interior b32
+admonitionem_agere (
+                vacuum* ctx,
+    constans Admonitio* x)
+{
+    chorda panellus;
+    chorda servitor;
+       i32 i;
+
+    si (   !ctx || !x || !chorda_aequalis_literis(x->actio, "panellus")
+        || x->argumentum.mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    panellus = x->argumentum;
+    per (i = ZEPHYRUM; i < panellus.mensura && panellus.datum[i] != ' ';
+         i++)
+    {
+    }
+    servitor.datum    = panellus.datum + i;
+    servitor.mensura  = panellus.mensura - i;
+    panellus.mensura  = i;
+    si (servitor.mensura > ZEPHYRUM)
+    {
+        servitor.datum++;
+        servitor.mensura--;
+    }
+    redde saltus((ContextusAdmonitionum*)ctx, panellus, servitor);
+}
+
+/* T5: porta visus sessionum -> saltus ad panellum sessionis */
+interior b32
+colloquium_agere (
+                 vacuum* ctx,
+    constans Colloquium* c)
+{
+    redde c && saltus((ContextusAdmonitionum*)ctx, c->panellus,
+        c->servitor);
 }
 
 /* systema "admonitiones" (pulsus vici): lectae ex campo radicis semel,
@@ -1967,6 +2001,65 @@ volantes_describere (
     f->pulsare_ctx    = m;
 }
 
+/* T5: visus sessionum - fons communis (si sequitur), saltus */
+interior b32
+colloquia_montare_in_vico (
+                 vacuum* sedes,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+     InsulaRepositorium* repo,
+     constans character* id,
+     constans character* argumentum,
+                    i32  latitudo,
+                    i32  altitudo,
+                 vacuum* ctx)
+{
+    ContextusAdmonitionum* ca;
+     ColloquiorumMontatio* m;
+
+    (vacuum)volumen;
+    (vacuum)argumentum;
+    ca  = (ContextusAdmonitionum*)ctx;
+    m   = (ColloquiorumMontatio*)sedes;
+    si (   !ca
+        || !colloquia_visus_montare(m, piscina, intern, repo, id,
+               ca->sequitur ? &ca->fons : NIHIL, colloquium_agere, ca,
+               latitudo, altitudo, ca->systemata))
+    {
+        redde FALSUM;
+    }
+    m->nunc = nunc_vici;
+    redde VERUM;
+}
+
+interior VicusPulsus
+colloquia_pulsare_in_vico (
+    vacuum* ctx)
+{
+    VicusPulsus p;
+
+    p.mutatum = colloquia_visus_reficere((ColloquiorumMontatio*)ctx);
+    p.finitus = FALSUM;
+    redde p;
+}
+
+interior vacuum
+colloquia_describere (
+         vacuum* montatio,
+    VicusFacies* f)
+{
+    ColloquiorumMontatio* m;
+
+    m                 = (ColloquiorumMontatio*)montatio;
+    f->actiones       = m->actiones;
+    f->figurae        = m->figurae;
+    f->componere      = colloquia_visus_componere;
+    f->componere_ctx  = m;
+    f->pulsare        = colloquia_pulsare_in_vico;
+    f->pulsare_ctx    = m;
+}
+
 b32
 vicus_applicatio_admonitiones_aperire (
         VicusApplicatio* app,
@@ -1984,7 +2077,9 @@ vicus_applicatio_admonitiones_aperire (
         redde FALSUM;
     }
     ca->sequitur = admonitiones_sequacem_initiare(&ca->sequax,
-        ca->piscina, ca->index, via, CCLVI * M);
+        ca->piscina, ca->index, via, CCLVI * M)
+        && colloquia_visus_fontem_initiare(&ca->fons, ca->piscina, via,
+               CCLVI * M, &ca->multiplexor);
     redde ca->sequitur;
 }
 
@@ -2193,6 +2288,8 @@ ContextusNomenclatoris* cn;
         || !cad || !cad->index || !cad->scheda
         || !aperiens_fixum_registrare(cs->iussa, app->vicus,
                "notifications", "admonitiones", NIHIL, piscina)
+        || !aperiens_fixum_registrare(cs->iussa, app->vicus,
+               "sessions", "colloquia", NIHIL, piscina)
         || !cyclum_registrare(cs->iussa, app->vicus, "pictor-next", I,
                piscina)
         || !cyclum_registrare(cs->iussa, app->vicus, "pictor-prev", -I,
@@ -2225,6 +2322,10 @@ ContextusNomenclatoris* cn;
                magnitudo(AdmonitionumMontatio),
                admonitiones_montare_in_vico, admonitiones_describere,
                cad)
+        || !vicus_genus_addere(app->vicus, "colloquia",
+               magnitudo(ColloquiorumMontatio),
+               colloquia_montare_in_vico,
+               colloquia_describere, cad)
         || !vicus_genus_addere(app->vicus, "volantes",
                magnitudo(VolantiumMontatio), volantes_montare_in_vico,
                volantes_describere, cad)

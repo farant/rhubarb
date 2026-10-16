@@ -68,6 +68,29 @@ colloquia_ex_eventibus (
          Xar* eventus,
      Piscina* piscina);
 
+/* T5: replicatio INCREMENTALIS (sessiones vivae in vico) - status
+ * plicae opacus; eventus ordine scripturae applicantur, chordae in
+ * piscinam status COPIANTUR (eventus ex scheda legi possunt).
+ * colloquia_ex_eventibus = creare + applicare + legere. */
+nomen structura ColloquiaStatus ColloquiaStatus;
+
+ColloquiaStatus*
+colloquia_status_creare (
+    Piscina* piscina);
+
+/* eventus NIHIL aut vacuus: nihil (VERUM) */
+b32
+colloquia_status_applicare (
+    ColloquiaStatus* st,
+                Xar* eventus);
+
+/* instantanea: Xar de Colloquium (recentissimum primum) in piscina
+ * data; chordae in piscina status */
+Xar*
+colloquia_status_legere (
+    constans ColloquiaStatus* st,
+                     Piscina* piscina);
+
 /* titulus ex cauda transcripti (CCLVI K): custom-title, aliter
  * ai-title; vacuus si nullus */
 chorda

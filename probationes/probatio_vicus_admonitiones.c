@@ -14,6 +14,7 @@
 #include "vicus.h"
 #include "vicus_applicatio.h"
 #include "admonitiones_visus.h"
+#include "colloquia_visus.h"
 #include "thema.h"
 #include "manus_ludus.h"
 #include "dispensator.h"
@@ -383,6 +384,44 @@ _probare_volantes (
     CREDO_VERUM(campus_est(v, "admonitiones_non_lectae", "5"));
 }
 
+/* T5: latus sessionum: sine libro vacuum; cum libro fons communis
+ * (IV sessiones fixi) */
+interior vacuum
+_probare_sessiones (
+    CredoContextus* c)
+{
+                  Mundus* x;
+                   Vicus* v;
+      constans character* via;
+              VicusLatus* l;
+    ColloquiorumMontatio* m;
+
+    x    = (Mundus*)c->datum;
+    via  = librum_parare(c);
+    CREDO_NECESSE(via != NIHIL);
+    CREDO_NECESSE(aedificare(x, c));
+    v = x->app.vicus;
+    /* sine libro: latus montatur, fons nullus */
+    CREDO_VERUM(vicus_acervo_aperire(v, "colloquia", NIHIL));
+    (vacuum)vicus_pulsare(v);
+    l = vicus_latus(vicus_activa(v), VICUS_DEXTRUM);
+    CREDO_NECESSE(l && l->montata && chorda_aequalis_literis(l->genus,
+        "colloquia"));
+    CREDO_VERUM(((ColloquiorumMontatio*)l->montatio)->fons == NIHIL);
+    /* cum libro: latus novum in tabula alia fontem videt */
+    CREDO_VERUM(vicus_applicatio_admonitiones_aperire(&x->app, via));
+    CREDO_NECESSE(vicus_activam_ponere(v, "4"));
+    CREDO_VERUM(vicus_acervo_aperire(v, "colloquia", NIHIL));
+    (vacuum)vicus_pulsare(v);
+    l = vicus_latus(vicus_activa(v), VICUS_DEXTRUM);
+    CREDO_NECESSE(l && l->montata && chorda_aequalis_literis(l->genus,
+        "colloquia"));
+    m = (ColloquiorumMontatio*)l->montatio;
+    CREDO_NECESSE(m->fons != NIHIL);
+    CREDO_AEQUALIS_I32(xar_numerus(colloquia_visus_fontis(m->fons,
+        c->piscina)), IV);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "verbum", _probare_verbum, mundum_parare, mundum_purgare, NIHIL,
       NIHIL },
@@ -397,6 +436,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "insigne", _probare_insigne, mundum_parare, mundum_purgare, NIHIL,
       NIHIL },
     { "volantes", _probare_volantes, mundum_parare, mundum_purgare,
+      NIHIL, NIHIL },
+    { "sessiones", _probare_sessiones, mundum_parare, mundum_purgare,
       NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

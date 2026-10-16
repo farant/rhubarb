@@ -262,6 +262,114 @@ _probare_legere (
     CREDO_AEQUALIS_I32(xar_numerus(l), ZEPHYRUM);
 }
 
+/* T5: replicatio incrementalis = semel; chordae copiantur (eventus in
+ * piscina temporaria, deleta post applicationem) */
+interior vacuum
+_probare_gradatim (
+    CredoContextus* c)
+{
+                    Xar* omnes;
+                    Xar* semel;
+                    Xar* gradatim;
+                Piscina* t;
+        ColloquiaStatus* st;
+    constans Colloquium* a;
+    constans Colloquium* b;
+                    i32  fines[IV];
+                    i32  i;
+                    i32  j;
+
+    omnes = eventus_fixi(c->piscina);
+    CREDO_NECESSE(omnes != NIHIL && xar_numerus(omnes) == XV);
+    semel = colloquia_ex_eventibus(omnes, c->piscina);
+    CREDO_NECESSE(semel != NIHIL);
+    st = colloquia_status_creare(c->piscina);
+    CREDO_NECESSE(st != NIHIL);
+    /* partes: [0,4) [4,10) [10,15) - "status" sine sessione (5) in
+     * parte secunda, panellus eius in prima notatus */
+    fines[ZEPHYRUM]  = ZEPHYRUM;
+    fines[I]         = IV;
+    fines[II]        = X;
+    fines[III]       = XV;
+    per (i = ZEPHYRUM; i < III; i++)
+    {
+        Xar* pars;
+
+        t     = piscina_generare_dynamicum("probatio_colloquia_pars",
+            XVI * M);
+        CREDO_NECESSE(t != NIHIL);
+        pars  = xar_creare(t, (i32)magnitudo(PraeconiumEventus));
+        per (j = fines[i]; j < fines[i + I]; j++)
+        {
+            PraeconiumEventus* e;
+
+            e   = (PraeconiumEventus*)xar_addere(pars);
+            *e  = *(PraeconiumEventus*)xar_obtinere(omnes, j);
+            /* chordae in piscinam temporariam (deinde deletam) */
+            e->sessio        = chorda_transcribere(e->sessio, t);
+            e->eventus       = chorda_transcribere(e->eventus, t);
+            e->panellus      = chorda_transcribere(e->panellus, t);
+            e->servitor      = chorda_transcribere(e->servitor, t);
+            e->via           = chorda_transcribere(e->via, t);
+            e->transcriptum  = chorda_transcribere(e->transcriptum, t);
+            e->genus         = chorda_transcribere(e->genus, t);
+            e->nuntius       = chorda_transcribere(e->nuntius, t);
+        }
+        CREDO_VERUM(colloquia_status_applicare(st, pars));
+        /* memoria temporaria deleta: superscripta, ut chorda non
+         * copiata vere mutetur (memoria libera saepe manet) */
+        piscina_vacare(t);
+        memset(piscina_allocare(t, IV * M), 'Z', IV * M);
+        piscina_destruere(t);
+    }
+    gradatim = colloquia_status_legere(st, c->piscina);
+    CREDO_NECESSE(gradatim != NIHIL);
+    CREDO_AEQUALIS_I32(xar_numerus(gradatim), xar_numerus(semel));
+    per (i = ZEPHYRUM; i < xar_numerus(semel); i++)
+    {
+        a = (constans Colloquium*)xar_obtinere(semel, i);
+        b = (constans Colloquium*)xar_obtinere(gradatim, i);
+        CREDO_VERUM(chorda_aequalis(a->sessio, b->sessio));
+        CREDO_AEQUALIS_S32((s32)a->status, (s32)b->status);
+        CREDO_VERUM(chorda_aequalis(a->linea, b->linea));
+        CREDO_VERUM(chorda_aequalis(a->panellus, b->panellus));
+        CREDO_VERUM(chorda_aequalis(a->servitor, b->servitor));
+        CREDO_VERUM(chorda_aequalis(a->via, b->via));
+        CREDO_VERUM(chorda_aequalis(a->transcriptum, b->transcriptum));
+        CREDO_AEQUALIS_S64(a->tempus, b->tempus);
+    }
+    /* sessio cuius eventus ultimus promptum est (linea derivata ex
+     * prompto in memoria temporaria) */
+    t = piscina_generare_dynamicum("probatio_colloquia_pars", XVI * M);
+    CREDO_NECESSE(t != NIHIL);
+    {
+                      Xar* pars;
+        PraeconiumEventus* e;
+
+        pars  = xar_creare(t, (i32)magnitudo(PraeconiumEventus));
+        e     = (PraeconiumEventus*)xar_addere(pars);
+        memset(e, ZEPHYRUM, magnitudo(*e));
+        e->tempus   = (s64)D;
+        e->sessio   = chorda_ex_literis("s-e", t);
+        e->eventus  = chorda_ex_literis("UserPromptSubmit", t);
+        e->nuntius  = chorda_ex_literis("promptum ultimum", t);
+        CREDO_VERUM(colloquia_status_applicare(st, pars));
+    }
+    piscina_vacare(t);
+    memset(piscina_allocare(t, IV * M), 'Z', IV * M);
+    piscina_destruere(t);
+    gradatim = colloquia_status_legere(st, c->piscina);
+    CREDO_NECESSE(gradatim != NIHIL);
+    b = (constans Colloquium*)xar_obtinere(gradatim, ZEPHYRUM);
+    CREDO_CHORDA_AEQUALIS_LITERIS(b->sessio, "s-e");
+    CREDO_CHORDA_AEQUALIS_LITERIS(b->linea, "promptum ultimum");
+    CREDO_AEQUALIS_S32((s32)b->status, (s32)COLLOQUIUM_LABORAT);
+    /* applicare iterum (nihil novi) nihil mutat; NIHIL tolerat */
+    CREDO_VERUM(colloquia_status_applicare(st, NIHIL));
+    CREDO_AEQUALIS_I32(xar_numerus(colloquia_status_legere(st,
+        c->piscina)), xar_numerus(semel) + I);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "transitus", _probare_transitus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "stop_linea", _probare_stop_lineam, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -271,6 +379,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "tituli", _probare_titulos, NIHIL, NIHIL, NIHIL, NIHIL },
     { "panelli", _probare_panellos, NIHIL, NIHIL, NIHIL, NIHIL },
     { "legere", _probare_legere, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "incrementalis", _probare_gradatim, NIHIL, NIHIL, NIHIL,
+      NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

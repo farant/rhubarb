@@ -135,6 +135,7 @@ declare -a RADIX_FONTES=(
     # colloquia-plan T4a: centrum admonitionum in vico
     "admonitiones_visus"
     "admonitiones_volantes"
+    "colloquia_visus"
     "admonitiones"
     "praeconium"
     "colloquia"

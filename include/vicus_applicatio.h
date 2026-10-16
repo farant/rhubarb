@@ -68,11 +68,12 @@ vicus_applicatio_imaginis_portam_ponere (
         ImagoFructus (*porta)(vacuum* ctx, Piscina* piscina),
               vacuum* ctx);
 
-/* T4a (colloquia-plan): admonitiones ex libro praeconii (via;
- * applicationes praeconium_via dant) - sequax initiatur (cauda), deinde
- * systema 'admonitiones' eum in pulsu sequitur. Ante vocationem
- * (probationes) centrum ($notifications) vacuum, nihil legitur.
- * FALSUM si iam aperta. */
+/* T4a (colloquia-plan): fontes libri praeconii (via; applicationes
+ * praeconium_via dant) - sequax admonitionum (systema 'admonitiones'
+ * in pulsu) et T5 fons sessionum (lateribus $sessions visibilibus
+ * pulsatus) ex cauda initiantur. Ante vocationem (probationes) centrum
+ * ($notifications) et sessiones vacua, nihil legitur. FALSUM si iam
+ * aperta. */
 b32
 vicus_applicatio_admonitiones_aperire (
         VicusApplicatio* app,

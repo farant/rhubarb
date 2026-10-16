@@ -22,7 +22,9 @@
 #include "vicus.h"
 #include "vicus_applicatio.h"
 #include "terminale.h"
+#include "colloquia_visus.h"
 #include "thema.h"
+#include "manus_ludus.h"
 #include "credo.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -354,9 +356,105 @@ _probare_saltum (
     CREDO_VERUM(secunda->fenestra_activa);
 }
 
+/* T5: Enter in latere sessionum -> saltus ad panellum sessionis
+ * (terminale novum adhaerens, fenestra secunda activa) */
+interior vacuum
+_probare_sessiones (
+    CredoContextus* c)
+{
+                          Mundus* s;
+                           Vicus* v;
+    constans MultiplexorPanellus* secunda;
+                          chorda  id;
+                       character  linea[DXII];
+                      VicusLatus* l;
+                      ManusLudus* m;
+                             i32  k;
+
+    s = (Mundus*)c->datum;
+    CREDO_NECESSE(s && s->paratus);
+    v        = s->app.vicus;
+    secunda  = panellus_fenestrae(s, "secunda", c->piscina);
+    CREDO_NECESSE(secunda != NIHIL);
+    id = chorda_transcribere(secunda->id, c->piscina);
+    /* sessio laborans in panello secundae */
+    sprintf(linea, "{\"tempus\":%ld000,\"sessio\":\"s-viva\","
+        "\"eventus\":\"UserPromptSubmit\",\"panellus\":\"%.*s\","
+        "\"servitor\":\"%s\",\"via\":\"/w/alpha\",\"transcriptum\":"
+        "\"\",\"genus\":\"\",\"nuntius\":\"working\"}\n",
+        (long)time(NIHIL), (integer)id.mensura,
+        (constans character*)id.datum, s->socket);
+    CREDO_NECESSE(filum_appendere_firmiter(s->liber, chorda_ex_literis(
+        linea, c->piscina)));
+    /* sessio altera in panello quod in servitore non est: clausa */
+    sprintf(linea, "{\"tempus\":%ld000,\"sessio\":\"s-mortua\","
+        "\"eventus\":\"UserPromptSubmit\",\"panellus\":\"%%99\","
+        "\"servitor\":\"%s\",\"via\":\"/w/beta\",\"transcriptum\":"
+        "\"\",\"genus\":\"\",\"nuntius\":\"gone\"}\n",
+        (long)time(NIHIL) - I, s->socket);
+    CREDO_NECESSE(filum_appendere_firmiter(s->liber, chorda_ex_literis(
+        linea, c->piscina)));
+    CREDO_NECESSE(vicus_activam_ponere(v, "5"));
+    CREDO_NECESSE(vicus_acervo_aperire(v, "colloquia", NIHIL));
+    per (k = ZEPHYRUM; k < V; k++)
+    {
+        (vacuum)vicus_pulsare(v);
+    }
+    l = frons(v);
+    CREDO_NECESSE(l && chorda_aequalis_literis(l->genus, "colloquia"));
+    /* vivi per servitorem suum: s-viva vivit, s-mortua clausa */
+    {
+                         Xar* sessiones;
+         constans Colloquium* k;
+                         i32  j;
+
+        sessiones = colloquia_visus_fontis(((ColloquiorumMontatio*)
+            l->montatio)->fons, c->piscina);
+        CREDO_NECESSE(sessiones != NIHIL
+            && xar_numerus(sessiones) == II);
+        per (j = ZEPHYRUM; j < II; j++)
+        {
+            k = (constans Colloquium*)xar_obtinere(sessiones, j);
+            si (chorda_aequalis_literis(k->sessio, "s-viva"))
+            {
+                CREDO_VERUM(k->panellus_vivit);
+                CREDO_AEQUALIS_S32((s32)k->status,
+                    (s32)COLLOQUIUM_LABORAT);
+            }
+            alioquin
+            {
+                CREDO_FALSUM(k->panellus_vivit);
+                CREDO_AEQUALIS_S32((s32)k->status,
+                    (s32)COLLOQUIUM_CLAUSUM);
+            }
+        }
+    }
+    CREDO_NECESSE(vicus_focum_ponere(v, VICUS_DEXTRUM));
+    dispensator_recomponere(s->app.d);
+    /* sessio viva (panellus in servitore SUO) - non clausa: ordo r1;
+     * ictus in eo (focus et electa), deinde Enter */
+    m = manus_ludus_creare(c->piscina, s->app.d);
+    CREDO_NECESSE(m != NIHIL);
+    CREDO_NECESSE(manus_ludus_premere(m, "#r1"));
+    CREDO_VERUM(manus_ludus_clavem(m, (character)XIII, ZEPHYRUM));
+    (vacuum)vicus_pulsare(v);
+    l = frons(v);
+    CREDO_NECESSE(l && l->montata);
+    CREDO_CHORDA_AEQUALIS_LITERIS(l->genus, "terminale");
+    CREDO_VERUM(adhaesionem_exspectare(s, chorda_transcribere(
+        terminale_tty((TerminaleApplicatio*)l->montatio), c->piscina),
+        c->piscina));
+    secunda = multiplexor_panellum_invenire(multiplexor_panelli(&s->m,
+        c->piscina), id);
+    CREDO_NECESSE(secunda != NIHIL);
+    CREDO_VERUM(secunda->fenestra_activa);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "saltus", _probare_saltum, mundum_parare, mundum_purgare, NIHIL,
       NIHIL },
+    { "sessiones", _probare_sessiones, mundum_parare, mundum_purgare,
+      NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

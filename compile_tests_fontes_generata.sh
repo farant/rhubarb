@@ -54,6 +54,7 @@ declare -a SOURCE_FILES=(
     "lib/clonatio_macos.c"
     "lib/codificator_terminalis.c"
     "lib/colloquia.c"
+    "lib/colloquia_visus.c"
     "lib/color.c"
     "lib/coloratio.c"
     "lib/componens.c"

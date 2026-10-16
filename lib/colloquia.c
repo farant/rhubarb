@@ -26,6 +26,24 @@ nomen structura {
     chorda sessio;
 } Panellus;
 
+/* T5: status plicae - chordae in piscina sua */
+structura ColloquiaStatus {
+    Piscina* piscina;
+        Xar* status;     /* Xar de Status */
+        Xar* panelli;    /* Xar de Panellus */
+};
+
+/* copia nisi aequalis (via, servitor: raro mutantur) */
+interior chorda
+copia_si_nova (
+      chorda  vetus,
+      chorda  nova,
+     Piscina* piscina)
+{
+    redde chorda_aequalis(vetus, nova) ? vetus
+        : chorda_transcribere(nova, piscina);
+}
+
 interior b32
 eventus_est (
                  chorda  eventus,
@@ -36,8 +54,9 @@ eventus_est (
 
 interior Status*
 statum_invenire (
-       Xar* status,
-    chorda  sessio)
+         Xar* status,
+      chorda  sessio,
+     Piscina* piscina)
 {
     Status* s;
        i32  i;
@@ -54,7 +73,7 @@ statum_invenire (
     si (s)
     {
         memset(s, ZEPHYRUM, magnitudo(*s));
-        s->c.sessio = sessio;
+        s->c.sessio = chorda_transcribere(sessio, piscina);
         s->c.status = COLLOQUIUM_IGNOTUM;
     }
     redde s;
@@ -62,9 +81,10 @@ statum_invenire (
 
 interior vacuum
 panellum_notare (
-       Xar* panelli,
-    chorda  panellus,
-    chorda  sessio)
+         Xar* panelli,
+      chorda  panellus,
+      chorda  sessio,
+     Piscina* piscina)
 {
     Panellus* p;
          i32  i;
@@ -78,15 +98,15 @@ panellum_notare (
         p = (Panellus*)xar_obtinere(panelli, i);
         si (chorda_aequalis(p->panellus, panellus))
         {
-            p->sessio = sessio;
+            p->sessio = copia_si_nova(p->sessio, sessio, piscina);
             redde;
         }
     }
     p = (Panellus*)xar_addere(panelli);
     si (p)
     {
-        p->panellus  = panellus;
-        p->sessio    = sessio;
+        p->panellus  = chorda_transcribere(panellus, piscina);
+        p->sessio    = chorda_transcribere(sessio, piscina);
     }
 }
 
@@ -165,16 +185,19 @@ eventum_applicare (
     s->c.tempus = e->tempus;
     si (e->via.mensura > ZEPHYRUM)
     {
-        s->c.via = e->via;
+        s->c.via = copia_si_nova(s->c.via, e->via, piscina);
     }
     si (e->transcriptum.mensura > ZEPHYRUM)
     {
-        s->c.transcriptum = e->transcriptum;
+        s->c.transcriptum = copia_si_nova(s->c.transcriptum,
+            e->transcriptum, piscina);
     }
     si (e->panellus.mensura > ZEPHYRUM)
     {
-        s->c.panellus = e->panellus;
-        s->c.servitor = e->servitor;
+        s->c.panellus = copia_si_nova(s->c.panellus, e->panellus,
+            piscina);
+        s->c.servitor = copia_si_nova(s->c.servitor, e->servitor,
+            piscina);
     }
     si (eventus_est(e->eventus, "SessionStart"))
     {
@@ -184,20 +207,21 @@ eventum_applicare (
     {
         s->c.status        = COLLOQUIUM_LABORAT;
         s->tempus_prompti  = e->tempus;
-        s->linea_derivata  = e->nuntius;
+        s->linea_derivata  = chorda_transcribere(e->nuntius, piscina);
     }
     alioquin si (eventus_est(e->eventus, "PreToolUse"))
     {
         s->c.status        = COLLOQUIUM_LABORAT;
-        s->linea_derivata  = linea_instrumenti(e->genus, e->nuntius,
-            piscina);
+        s->linea_derivata  = chorda_transcribere(linea_instrumenti(
+            e->genus, e->nuntius, piscina), piscina);
     }
     alioquin si (eventus_est(e->eventus, "Notification"))
     {
         si (eget_te(e->genus))
         {
-            s->c.status        = COLLOQUIUM_EXSPECTAT;
-            s->linea_derivata  = e->nuntius;
+            s->c.status = COLLOQUIUM_EXSPECTAT;
+            s->linea_derivata = chorda_transcribere(e->nuntius,
+                piscina);
         }
         alioquin si (chorda_aequalis_literis(e->genus, "idle_prompt"))
         {
@@ -207,12 +231,14 @@ eventum_applicare (
     alioquin si (eventus_est(e->eventus, "Stop"))
     {
         s->c.status        = COLLOQUIUM_PERFECIT;
-        s->linea_derivata  = linea_prima(e->nuntius);
+        s->linea_derivata  =
+            chorda_transcribere(linea_prima(e->nuntius),
+            piscina);
     }
     alioquin si (eventus_est(e->eventus, "StopFailure"))
     {
         s->c.status        = COLLOQUIUM_EXSPECTAT;
-        s->linea_derivata  = e->nuntius;
+        s->linea_derivata  = chorda_transcribere(e->nuntius, piscina);
     }
     alioquin si (eventus_est(e->eventus, "SessionEnd"))
     {
@@ -233,27 +259,37 @@ ordo_recentium (
     redde x > y ? -I : x < y ? I : ZEPHYRUM;
 }
 
-Xar*
-colloquia_ex_eventibus (
-         Xar* eventus,
-     Piscina* piscina)
+ColloquiaStatus*
+colloquia_status_creare (
+    Piscina* piscina)
 {
-                           Xar* status;
-                           Xar* panelli;
-                           Xar* exitus;
-                    Colloquium* plani;
+    ColloquiaStatus* st;
+
+    st = piscina ? (ColloquiaStatus*)piscina_allocare(piscina,
+        magnitudo(ColloquiaStatus)) : NIHIL;
+    si (!st)
+    {
+        redde NIHIL;
+    }
+    st->piscina  = piscina;
+    st->status   = xar_creare(piscina, (i32)magnitudo(Status));
+    st->panelli  = xar_creare(piscina, (i32)magnitudo(Panellus));
+    redde (st->status && st->panelli) ? st : NIHIL;
+}
+
+b32
+colloquia_status_applicare (
+    ColloquiaStatus* st,
+                Xar* eventus)
+{
     constans PraeconiumEventus* e;
                         Status* s;
                         chorda  sessio;
                            i32  i;
-                           i32  n;
 
-    status   = xar_creare(piscina, (i32)magnitudo(Status));
-    panelli  = xar_creare(piscina, (i32)magnitudo(Panellus));
-    exitus   = xar_creare(piscina, (i32)magnitudo(Colloquium));
-    si (!status || !panelli || !exitus)
+    si (!st)
     {
-        redde NIHIL;
+        redde FALSUM;
     }
     per (i = ZEPHYRUM; eventus && i < xar_numerus(eventus); i++)
     {
@@ -262,17 +298,18 @@ colloquia_ex_eventibus (
             == ZEPHYRUM)
         {
             /* status explicitus: sessio ultima eius panelli */
-            sessio = sessio_panelli(panelli, e->panellus);
+            sessio = sessio_panelli(st->panelli, e->panellus);
             si (sessio.mensura == ZEPHYRUM)
             {
                 perge;
             }
-            s = statum_invenire(status, sessio);
+            s = statum_invenire(st->status, sessio, st->piscina);
             si (s)
             {
                 s->c.tempus           = e->tempus;
                 s->tempus_explicitae  = e->tempus;
-                s->linea_explicita    = e->nuntius;
+                s->linea_explicita    = chorda_transcribere(e->nuntius,
+                    st->piscina);
             }
             perge;
         }
@@ -280,14 +317,35 @@ colloquia_ex_eventibus (
         {
             perge;
         }
-        panellum_notare(panelli, e->panellus, e->sessio);
-        s = statum_invenire(status, e->sessio);
+        panellum_notare(st->panelli, e->panellus, e->sessio,
+            st->piscina);
+        s = statum_invenire(st->status, e->sessio, st->piscina);
         si (s)
         {
-            eventum_applicare(e, s, piscina);
+            eventum_applicare(e, s, st->piscina);
         }
     }
-    n = xar_numerus(status);
+    redde VERUM;
+}
+
+Xar*
+colloquia_status_legere (
+    constans ColloquiaStatus* st,
+                     Piscina* piscina)
+{
+                Xar* exitus;
+         Colloquium* plani;
+    constans Status* s;
+                i32  i;
+                i32  n;
+
+    exitus = (st && piscina) ? xar_creare(piscina,
+        (i32)magnitudo(Colloquium)) : NIHIL;
+    si (!exitus)
+    {
+        redde NIHIL;
+    }
+    n = xar_numerus(st->status);
     si (n == ZEPHYRUM)
     {
         redde exitus;
@@ -300,11 +358,11 @@ colloquia_ex_eventibus (
     }
     per (i = ZEPHYRUM; i < n; i++)
     {
-        s         = (Status*)xar_obtinere(status, i);
-        s->c.linea = (s->linea_explicita.mensura > ZEPHYRUM
+        s         = (constans Status*)xar_obtinere(st->status, i);
+        plani[i]  = s->c;
+        plani[i].linea = (s->linea_explicita.mensura > ZEPHYRUM
             && s->tempus_explicitae > s->tempus_prompti)
             ? s->linea_explicita : s->linea_derivata;
-        plani[i]  = s->c;
     }
     qsort(plani, (size_t)n, magnitudo(Colloquium), ordo_recentium);
     per (i = ZEPHYRUM; i < n; i++)
@@ -312,6 +370,21 @@ colloquia_ex_eventibus (
         *(Colloquium*)xar_addere(exitus) = plani[i];
     }
     redde exitus;
+}
+
+Xar*
+colloquia_ex_eventibus (
+         Xar* eventus,
+     Piscina* piscina)
+{
+    ColloquiaStatus* st;
+
+    st = colloquia_status_creare(piscina);
+    si (!st || !colloquia_status_applicare(st, eventus))
+    {
+        redde NIHIL;
+    }
+    redde colloquia_status_legere(st, piscina);
 }
 
 /* valor chordae clavis in linea JSON (vacuus si non) */

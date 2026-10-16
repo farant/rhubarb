@@ -103,6 +103,11 @@ phase that needs it. Header text shown to Fran before coding.*
   ("tmux <socket> <session>" argument - persisted, so it re-attaches on
   restore: most of T6). pseudoterminale tty, terminale argv + tty,
   vicus_latus_focare; terminals drop TMUX/TMUX_PANE.
+- T5 2026-10-15: `$sessions` pane (colloquia_visus) - groups Needs you
+  / Working / Done / Idle (Closed with 'c'), status line, Enter/double
+  click jumps (shared saltus). Incremental fold in colloquia
+  (ColloquiaStatus). Pane liveness now per tmux server (T3 caveat
+  fixed for the view).
 
 ## V. Hook facts (Claude Code docs, checked 2026-10-15)
 
