@@ -142,3 +142,23 @@ so the census and `quid` cannot disagree. Unit lookup per file is a
 linear scan over 330 units (~3M compares, 0.3 s total with git) - fine
 until it is not. Expectations are data; the only supported attribute
 is `usus` (refused otherwise, with the name).
+
+## 2026-10-16 - U5b interrogationes reader
+
+Role, not path code: the policy rule `<munus titulus="interrogationes"
+extensiones=".interrogationes.stml"/>` (before `declaratio`) works with
+no C change because `_extensio_congruit` is a SUFFIX match on the
+basename - a multi-dot "extension" is just a longer suffix. The census
+counts these files per unit for free (munus counts, no read);
+per-TYPE counts need a read, so they live in `unitates_interrogationes`
+and `quid -interrogationes`, keeping the census read-free.
+
+Text = `stml_textus_fluxus`, not `_internus`: the house stml formatter
+rewrites the hand form (`<responsum ...>text</responsum>`) into the
+capture form (`<responsum ... (>` + indented text, no close tag). The
+test pins BOTH forms to the same string; a plant of `_internus` went red
+there. The reader never refuses the whole read: errors are per file,
+and an entry with a question and an answer is still returned (the gate
+decides). examen gotcha met twice in one sitting: a tag in a COMMENT
+(`/* <interrogatio> */`) is an annotation to examen ("ancorata sed non
+parsabilis") - write tags in comments without angle brackets.

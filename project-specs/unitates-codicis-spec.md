@@ -728,6 +728,27 @@ against lib/xar.c and lib/piscina.c - Fran edits them. VETITAE lost
 `FAQ.md`. Next: slice 2 (reader + census count), slice 3 (dead-answer
 gate).
 
+**U5b slice 2 (2026-10-16, Fran: reader in lib/unitates):** role
+`interrogationes` in the policy (`extensiones=".interrogationes.stml"`,
+before `declaratio` - suffix match, no C rule code; canon_custos judges
+it). `unitates_interrogationes(u, piscina)` -> entries {unit, path,
+line, type, question, answer, symbols, paths, command} + per-file
+errors (foreign root, `unitas=` not the owner, unknown element or
+attribute, question/answer missing, twice or empty, answer without an
+anchor, illegible STML); never refuses the whole read. Text is the
+flow reading (`stml_textus_fluxus`), so the hand form and the
+formatter's capture form read identically (pinned). CLI `bin/fabrica
+quid -interrogationes [-machina] [UNITAS...]`: entries, per-type counts
+per unit and in total, errors; exit 1 on any error, 2 on an unknown
+unit. The census counts interrogationes FILES per unit (role count, no
+read); the expectation "library answers >= 1 question" is NOT added
+yet (it would add ~250 gaps beside the 61 test gaps - Fran's call).
+Gate `unitates` stage VIII: canon on every `*.interrogationes.stml`,
+reader 0 errors, no empty question/answer, and a bad file in a
+throwaway git tree gives exit 1 with both errors NAMED (born red by a
+plant: an anchorless answer in lib/xar.interrogationes.stml). Anchors
+are still not resolved - slice 3.
+
 ## VIII. Open questions (for Fran)
 
 1. ~~Unit declarations~~ - answered §VI½ (three mechanisms).

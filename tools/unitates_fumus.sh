@@ -25,12 +25,17 @@
 #   VII census (U5a): 'quid -census -machina' currit, SUMMA unitates
 #       = -omnes, nulla applicatio sine usu (exspectatio hodie impleta:
 #       ratchet), orphani et indeclarata nominantur
+#   VIII interrogationes (U5b): omnis *.interrogationes.stml canonem
+#       transit; 'quid -interrogationes -machina' sine vitio, quaestio
+#       et responsum cuiusque non vacua; in arbore git TEMPORARIA
+#       plagula mala (unitas aliena, responsum sine ancora) exitum 1 et
+#       vitia NOMINATA dat - lector et CLI per portam veram
 #
 # Debetur politicae, canonibus, omni declarationi et nucleo C
 # (clausura tools/fabrica.c: lib/unitates.c) - I s, vilis.
 #
 # Exitus: 0 sanum | 1 FRACTUM | 2 bin/fabrica aut bin/canon_examen deest.
-# <porta titulus="unitates" genus="praeiudicium" tegit="unitates.stml unitates.canon unitas.canon unitas.stml */unitas.stml canones.registrum tools/iudex_unitatum.sh tools/iudex_unitatum.c .claude/hooks/iudex_custodum.sh .claude/hooks/examen-custos.sh .claude/hooks/censor-custos.sh .claude/hooks/formator-custos.sh .claude/hooks/canon-custos.sh" currit="tools/fabrica.c"/>
+# <porta titulus="unitates" genus="praeiudicium" tegit="unitates.stml unitates.canon unitas.canon unitas.stml */unitas.stml canones.registrum interrogationes.canon *.interrogationes.stml tools/iudex_unitatum.sh tools/iudex_unitatum.c .claude/hooks/iudex_custodum.sh .claude/hooks/examen-custos.sh .claude/hooks/censor-custos.sh .claude/hooks/formator-custos.sh .claude/hooks/canon-custos.sh" currit="tools/fabrica.c"/>
 set -u
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$RADIX" || exit 2
@@ -149,6 +154,36 @@ if [ "$rc7" -eq 0 ] && [ "$n7" = "$nomn" ] && [ "$app7" -eq 0 ] && [ -n "$orph7"
     echo "  VII census: $n7 unitates (= -omnes), applicationes omnes usum declarant, orphani $orph7 OK"
 else
     echo "  VII FRACTUM (rc=$rc7, unitates '$n7' pro $nomn, applicationes sine usu $app7)"; grep -E '^(SUMMA|LACUNA	/elementa_programmatis/applicatio)' "$T/o7" | sed 's/^/      /' | head -8; fracta=1
+fi
+
+# VIII interrogationes
+git ls-files -co --exclude-standard '*.interrogationes.stml' > "$T/i8"
+n8f=$(wc -l < "$T/i8" | tr -d ' ')
+rc8c=0
+if [ "$n8f" -gt 0 ]; then
+    # shellcheck disable=SC2046
+    bin/canon_examen $(cat "$T/i8") > "$T/o8c" 2>&1; rc8c=$?
+fi
+bin/fabrica quid -interrogationes -machina > "$T/o8" 2>&1; rc8=$?
+n8=$(awk -F'\t' '$1 == "SUMMA" { print $3 }' "$T/o8")
+v8=$(awk -F'\t' '$1 == "SUMMA" { print $7 }' "$T/o8")
+vac8=$(awk -F'\t' '$1 == "INTERROGATIO" && ($6 == "" || $7 == "")' "$T/o8" | wc -l | tr -d ' ')
+M="$T/mundus8"
+mkdir -p "$M/include" "$M/lib"
+grep -v '<familia' unitates.stml > "$M/unitates.stml"
+: > "$M/fabrica.stml"; : > "$M/aedilis.stml"
+printf '<unitas titulus="m" genus="/elementa_programmatis/subsystema" descriptio="m"/>\n' > "$M/unitas.stml"
+echo '/* a */' > "$M/include/a.h"
+printf '<interrogationes unitas="b">\n  <interrogatio genus="quomodo">\n    <quaestio! (>how?\n    <responsum>no anchor</responsum>\n  </interrogatio>\n</interrogationes>\n' > "$M/lib/a.interrogationes.stml"
+(cd "$M" && git init -q && "$RADIX/bin/fabrica" quid -interrogationes -machina) > "$T/o8m" 2>&1; rc8m=$?
+m8=$(grep -c -E "^VITIUM	lib/a.interrogationes.stml	(1	unitas 'b' non est possessor|4	responsum sine ancora)" "$T/o8m")
+if [ "$n8f" -gt 0 ] && [ "$rc8c" -eq 0 ] && [ "$rc8" -eq 0 ] && [ "${n8:-0}" -gt 0 ] \
+   && [ "$v8" = "0" ] && [ "$vac8" -eq 0 ] && [ "$rc8m" -eq 1 ] && [ "$m8" -eq 2 ]; then
+    echo "  VIII interrogationes: $n8f plagulae canonem transeunt, $n8 interrogationes sine vitio; plagula mala exitum 1 et vitia II nominata dat OK"
+else
+    echo "  VIII FRACTUM (plagulae $n8f, canon rc=$rc8c, rc=$rc8, interrogationes '$n8', vitia '$v8', vacuae $vac8; mala rc=$rc8m, nominata $m8/2)"
+    cat "$T/o8c" 2>/dev/null | sed 's/^/      /' | head -5
+    grep -E '^(VITIUM|SUMMA)' "$T/o8" "$T/o8m" | sed 's/^/      /' | head -8; fracta=1
 fi
 
 if [ "$fracta" -ne 0 ]; then echo "fumus unitatum: FRACTUM"; exit 1; fi

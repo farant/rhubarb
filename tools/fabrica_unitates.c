@@ -14,14 +14,21 @@
  *       census (U5a): unitates cum lacunis (exspectationes politicae
  *       per genus non impletae), probationes radicis orphanae,
  *       directoria cum codice sine declaratione - relatio, exitus 0
- *       unitates omnes (genus, titulus, via, parens, declaratio)
+ *   bin/fabrica quid -interrogationes [-machina] [UNITAS...]
+ *       interrogationes (U5b): quaestiones typatae unitatum (omnium,
+ *       aut nominatarum) cum responsis et ancoris, numeri per genus,
+ *       vitia plagularum - exitus 1 si vitium aliquod
  *
  * -machina: lineae TAB separatae -
  *   quid:    via  proprietas  valor  causa
  *   -iudex:  via  IUDICAT|NON_IUDICAT  causa
  *   -omnes:  genus  titulus  via  parens  declaratio
- * Exitus: 0 responsum · 2 usus, iudex ignotus aut RECUSATIO
- * politicae/declarationum (causae omnes in stderr).
+ *   -interrogationes: INTERROGATIO  unitas  via  linea  genus  quaestio
+ *            responsum  symbola  viae  imperium (indices spatiis);
+ *            VITIUM  via  linea  causa; SUMMA  ...
+ * Exitus: 0 responsum · 1 vitia interrogationum · 2 usus, iudex aut
+ * unitas ignota, aut RECUSATIO politicae/declarationum (causae omnes
+ * in stderr).
  *
  * Sutura vera: lib/unitates_arboris.c (git ls-files -co + filum),
  * communis cum oratio vocabula. */
@@ -219,6 +226,216 @@ _censum_imprimere (
         (longus)xar_numerus(c->indeclarata));
 }
 
+/* clavis += 1 in Xar de UnitatesNumerus (ordine primi visi) */
+interior vacuum
+_numerum_augere (
+       Xar* numeri,
+    chorda  clavis)
+{
+    UnitatesNumerus* n;
+                i32  i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(numeri); i++)
+    {
+        n = (UnitatesNumerus*)xar_obtinere(numeri, i);
+        si (chorda_aequalis(n->clavis, clavis))
+        {
+            n->numerus++;
+            redde;
+        }
+    }
+    n           = (UnitatesNumerus*)xar_addere(numeri);
+    n->clavis   = clavis;
+    n->numerus  = I;
+}
+
+interior vacuum
+_indicem_scribere (
+    constans Xar* verba)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(verba); i++)
+    {
+        si (i > ZEPHYRUM)
+        {
+            putchar(' ');
+        }
+        _scribere(*(chorda*)xar_obtinere(verba, i));
+    }
+}
+
+interior b32
+_unitas_eligitur (
+    constans Unitas*  x,
+                s32   argc,
+          character** argv,
+                s32   primus)
+{
+    s32 i;
+
+    si (primus >= argc)
+    {
+        redde VERUM;
+    }
+    per (i = primus; i < argc; i++)
+    {
+        si (chorda_aequalis_literis(x->titulus, argv[i]))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+interior s32
+_interrogationes_imprimere (
+    constans Unitates*  u,
+                  s32   argc,
+            character** argv,
+                  s32   primus,
+                  b32   machina,
+              Piscina*  piscina)
+{
+    UnitatesInterrogationes* res = unitates_interrogationes(u, piscina);
+                        Xar* genera = xar_creare(piscina,
+                            (i32)magnitudo(UnitatesNumerus));
+                         Xar* propria   = NIHIL;
+             constans Unitas* prior     = NIHIL;
+                         i32  numerus   = ZEPHYRUM;
+                         i32  unitates  = ZEPHYRUM;
+                         i32  vitia     = ZEPHYRUM;
+                         s32  i;
+                         i32  j;
+
+    /* nomina eligenda notae esse debent: unitas ignota = usus */
+    per (i = primus; i < argc; i++)
+    {
+        constans Xar* omnes  = unitates_omnes(u);
+                 b32  nota   = FALSUM;
+
+        per (j = ZEPHYRUM; j < xar_numerus(omnes) && !nota; j++)
+        {
+            nota = chorda_aequalis_literis(
+                (*(Unitas**)xar_obtinere(omnes, j))->titulus, argv[i]);
+        }
+        si (!nota)
+        {
+            fprintf(stderr, "quid: unitas ignota '%s'\n", argv[i]);
+            redde II;
+        }
+    }
+    per (j = ZEPHYRUM; j <= xar_numerus(res->interrogationes); j++)
+    {
+        constans UnitatisInterrogatio* x = j < xar_numerus(
+            res->interrogationes) ? (constans UnitatisInterrogatio*)
+            xar_obtinere(res->interrogationes, j) : NIHIL;
+
+        si (   x != NIHIL && !_unitas_eligitur(x->unitas, argc, argv,
+                primus))
+        {
+            perge;
+        }
+        /* unitas nova (aut finis): numeri unitatis prioris */
+        si (   !machina && prior != NIHIL
+            && (x == NIHIL || x->unitas != prior))
+        {
+            fputs("  numeri: ", stdout);
+            _numeros_imprimere(propria);
+            fputs("\n\n", stdout);
+        }
+        si (x == NIHIL)
+        {
+            frange;
+        }
+        si (x->unitas != prior)
+        {
+            prior    = x->unitas;
+            propria  = xar_creare(piscina,
+                (i32)magnitudo(UnitatesNumerus));
+            unitates++;
+            si (!machina)
+            {
+                _scribere(x->unitas->titulus);
+                fputs("  (", stdout);
+                _scribere(x->via);
+                fputs(")\n", stdout);
+            }
+        }
+        numerus++;
+        _numerum_augere(genera, x->genus);
+        _numerum_augere(propria, x->genus);
+        si (machina)
+        {
+            fputs("INTERROGATIO\t", stdout);
+            _scribere(x->unitas->titulus);
+            putchar('\t');
+            _scribere(x->via);
+            printf("\t%ld\t", (longus)x->linea);
+            _scribere(x->genus);
+            putchar('\t');
+            _scribere(x->quaestio);
+            putchar('\t');
+            _scribere(x->responsum);
+            putchar('\t');
+            _indicem_scribere(x->symbola);
+            putchar('\t');
+            _indicem_scribere(x->viae);
+            putchar('\t');
+            _scribere(x->imperium);
+            putchar('\n');
+            perge;
+        }
+        printf("  %-9.*s ", (integer)x->genus.mensura,
+            (constans character*)x->genus.datum);
+        _scribere(x->quaestio);
+        fputs("\n            -> ", stdout);
+        _scribere(x->responsum);
+        putchar('\n');
+        si (xar_numerus(x->symbola) > ZEPHYRUM)
+        {
+            fputs("            symbolum: ", stdout);
+            _indicem_scribere(x->symbola);
+            putchar('\n');
+        }
+        si (xar_numerus(x->viae) > ZEPHYRUM)
+        {
+            fputs("            via: ", stdout);
+            _indicem_scribere(x->viae);
+            putchar('\n');
+        }
+        si (x->imperium.mensura > ZEPHYRUM)
+        {
+            fputs("            imperium: ", stdout);
+            _scribere(x->imperium);
+            putchar('\n');
+        }
+    }
+    si (!machina && xar_numerus(res->recusationes) > ZEPHYRUM)
+    {
+        puts("VITIA:");
+    }
+    per (j = ZEPHYRUM; j < xar_numerus(res->recusationes); j++)
+    {
+        constans UnitatesRecusatio* r = (constans UnitatesRecusatio*)
+            xar_obtinere(res->recusationes, j);
+
+        vitia++;
+        fputs(machina ? "VITIUM\t" : "  ", stdout);
+        _scribere(r->via);
+        printf(machina ? "\t%ld\t" : ":%ld: ", (longus)r->linea);
+        _scribere(r->causa);
+        putchar('\n');
+    }
+    fputs(machina ? "SUMMA\tinterrogationes\t" : "summa: ", stdout);
+    printf(machina ? "%ld\tunitates\t%ld\tvitia\t%ld\tgenera\t"
+        : "%ld interrogationes, %ld unitates, %ld vitia (",
+        (longus)numerus, (longus)unitates, (longus)vitia);
+    _numeros_imprimere(genera);
+    fputs(machina ? "\n" : ")\n", stdout);
+    redde vitia > ZEPHYRUM ? I : ZEPHYRUM;
+}
+
 interior vacuum
 _omnes_imprimere (
     constans Unitates* u,
@@ -271,6 +488,7 @@ suturae_quid (
                    b32  machina  = FALSUM;
                    b32  omnes    = FALSUM;
                    b32  census   = FALSUM;
+                   b32  rogatae  = FALSUM;
                    s32  i;
                    s32  primus;
 
@@ -288,6 +506,10 @@ suturae_quid (
         {
             census = VERUM;
         }
+        alioquin si (strcmp(argv[i], "-interrogationes") == ZEPHYRUM)
+        {
+            rogatae = VERUM;
+        }
         alioquin si (   strcmp(argv[i], "-iudex") == ZEPHYRUM
                      && i + I < argc)
         {
@@ -300,13 +522,16 @@ suturae_quid (
         }
     }
     primus = i;
-    si (   (omnes || census) == (primus < argc) || (omnes && census)
-        || ((omnes || census) && iudex != NIHIL))
+    si (   (!rogatae && (omnes || census) == (primus < argc))
+        || (s32)omnes + (s32)census + (s32)rogatae > I
+        || ((omnes || census || rogatae) && iudex != NIHIL))
     {
         fprintf(stderr, "usus: bin/fabrica quid [-machina] VIA...\n"
             "      bin/fabrica quid -iudex TITULUS [-machina] VIA...\n"
             "      bin/fabrica quid -omnes [-machina]\n"
-            "      bin/fabrica quid -census [-machina]\n");
+            "      bin/fabrica quid -census [-machina]\n"
+            "      bin/fabrica quid -interrogationes [-machina]"
+            " [UNITAS...]\n");
         redde II;
     }
 
@@ -328,6 +553,11 @@ suturae_quid (
     {
         _censum_imprimere(u, machina, piscina);
         redde ZEPHYRUM;
+    }
+    si (rogatae)
+    {
+        redde _interrogationes_imprimere(u, argc, argv, primus, machina,
+            piscina);
     }
     per (i = primus; i < argc; i++)
     {
