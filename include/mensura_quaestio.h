@@ -217,4 +217,32 @@ cursus_quaerere_similes (
                        i32* noti_out,
                    Piscina* piscina);
 
+/* CURRENTES (colloquia T8): cursus APERTI (initium sine fine) ut
+ * arbor, cum custode et progressu. Purum: vitam custodis vocator
+ * iudicat (mensor: processus_vivus) - hic solum pid. Radices
+ * recentissimae primum, praeordine. */
+nomen structura {
+    constans Cursus* cursus;
+                i32  profunditas;   /* radix aperta ZEPHYRUM */
+                s32  custos;        /* pid; ZEPHYRUM = ignotus (ante T8) */
+                i32  perfecti;      /* filii finiti: portae sub
+                                     * commissione, membra acta (nota non
+                                     * IUDICIUM) sub porta */
+                i32 fracti;        /* ex perfectis */
+                i32 debiti;        /* consilium.portae; ZEPHYRUM = ignoti */
+                i32 iudicata;      /* fabrica.iudicata ultima */
+                i32 ambitus;       /* fabrica.ambitus; ZEPHYRUM = non
+                                     * fabrica */
+                s64 minima_ms;     /* historia tituli (V ultimi
+                                     * transeuntes); ZEPHYRUM = nulla */
+                s64 maxima_ms;
+} CursusCurrens;
+
+Xar*
+cursus_quaerere_currentes (
+       constans CursusIndex* index,
+               constans Xar* mensurae,   /* Xar de Mensura */
+     constans CursusFiltrum* filtrum,   /* arbor, ramus */
+                    Piscina* piscina);
+
 #endif /* MENSURA_QUAESTIO_H */

@@ -1689,6 +1689,276 @@ _scripta_colligere (
  * dabat, nec quid quaeque respondeat nec quae parametra valeant -
  * 'limes=5' pro 'n=5' tacite neglectum, titulus nudus pro
  * 'probationes_radicis/<probatio>' tacite vacuus */
+/* CURRENTES (colloquia T8d): quid NUNC currit. Vita custodis hic
+ * iudicatur (bibliotheca pura est): processus_vivus, et processus POST
+ * cursum natus = pid iterum datus (fabrica furcat assidue). Radix
+ * mortua cum arbore sua celatur et numeratur; radix sine custode (ante
+ * T8) per diem ostenditur, deinde celatur. -machina omnes reddit cum
+ * columna vitae. */
+#define CURRENTES_IGNOTI_MS ((s64)LXXXVI * (s64)M * (s64)M \
+    + (s64)CD * (s64)M)
+
+nomen enumeratio {
+    VITA_VIVA = ZEPHYRUM,
+    VITA_MORTUA,
+    VITA_IGNOTA
+} VitaCustodis;
+
+interior VitaCustodis
+_vitam_iudicare (
+    constans CursusCurrens* r,
+                   Piscina* piscina)
+{
+    s64 natus = (s64)ZEPHYRUM;
+
+    si (r->custos <= ZEPHYRUM)
+    {
+        redde VITA_IGNOTA;
+    }
+    si (!processus_vivus(r->custos, &natus, piscina))
+    {
+        redde VITA_MORTUA;
+    }
+    /* etime secundis tantum: II s laxitas */
+    si (natus > r->cursus->initium.initium + (s64)MM)
+    {
+        redde VITA_MORTUA;
+    }
+    redde VITA_VIVA;
+}
+
+interior constans character*
+_vitae_nomen (
+    VitaCustodis vita)
+{
+    redde (vita == VITA_VIVA) ? "vivus" : (vita == VITA_MORTUA)
+        ? "mortuus" : "ignotus";
+}
+
+/* mora humana: "15h11m", "4m12s" aut "37s" */
+interior vacuum
+_moram_scribere (
+          s64  ms,
+    character* alveus)
+{
+    s64 secundae = (ms > (s64)ZEPHYRUM) ? ms / (s64)M : (s64)ZEPHYRUM;
+
+    si (secundae >= (s64)MMMDC)
+    {
+        sprintf(alveus, "%ldh%02ldm", (longus)(secundae / (s64)MMMDC),
+            (longus)((secundae % (s64)MMMDC) / (s64)LX));
+    }
+    alioquin si (secundae >= (s64)LX)
+    {
+        sprintf(alveus, "%ldm%02lds", (longus)(secundae / (s64)LX),
+            (longus)(secundae % (s64)LX));
+    }
+    alioquin
+    {
+        sprintf(alveus, "%lds", (longus)secundae);
+    }
+}
+
+/* segmentum ultimum viae arboris (rhubarb-secunda) */
+interior chorda
+_arboris_nomen (
+    chorda arbor)
+{
+    i32 k;
+
+    per (k = arbor.mensura; k > ZEPHYRUM; k--)
+    {
+        si (arbor.datum[k - I] == '/')
+        {
+            arbor.datum    += k;
+            arbor.mensura  -= k;
+            frange;
+        }
+    }
+    redde arbor;
+}
+
+interior vacuum
+_currentem_imprimere (
+      constans CursusIndex* index,
+    constans CursusCurrens* r,
+              VitaCustodis  vita,
+                       s64  nunc,
+                       b32  machina,
+                   Piscina* piscina)
+{
+    constans CursusInitium* i = &r->cursus->initium;
+                 character  mora[XXXII];
+                 character  minima[XXXII];
+                 character  maxima[XXXII];
+                    chorda  arbor = _arboris_nomen(i->arbor);
+                       Xar* filii;
+                       i32  k;
+
+    si (machina)
+    {
+        imprimere("CURRENS\t%d\t%.*s\t%.*s\t%.*s\t%.*s\t%.*s\t%ld\t%d\t%s"
+            "\t%d\t%d\t%d\t%d\t%d\t%ld\t%ld\n", (integer)r->profunditas,
+            (integer)i->id.mensura, (constans character*)i->id.datum,
+            (integer)i->parens.mensura,
+            (constans character*)i->parens.datum,
+            (integer)i->titulus.mensura,
+            (constans character*)i->titulus.datum,
+            (integer)i->arbor.mensura,
+            (constans character*)i->arbor.datum,
+            (integer)i->ramus.mensura,
+            (constans character*)i->ramus.datum,
+            (longus)i->initium, (integer)r->custos, _vitae_nomen(vita),
+            (integer)r->perfecti, (integer)r->fracti,
+            (integer)r->debiti,
+            (integer)r->iudicata, (integer)r->ambitus,
+            (longus)r->minima_ms, (longus)r->maxima_ms);
+        redde;
+    }
+    _moram_scribere(nunc - i->initium, mora);
+    imprimere("%*s%.*s", (integer)(II * r->profunditas), "",
+        (integer)i->titulus.mensura,
+        (constans character*)i->titulus.datum);
+    si (r->profunditas == ZEPHYRUM)
+    {
+        imprimere("  %.*s@%.*s", (integer)arbor.mensura,
+            (constans character*)arbor.datum, (integer)i->ramus.mensura,
+            (constans character*)i->ramus.datum);
+    }
+    imprimere("  %s", mora);
+    si (r->debiti > ZEPHYRUM)
+    {
+        imprimere("  portae %d/%d", (integer)r->perfecti,
+            (integer)r->debiti);
+    }
+    si (r->ambitus > ZEPHYRUM)
+    {
+        imprimere("  membra %d/%d iudicata, %d acta",
+            (integer)r->iudicata,
+            (integer)r->ambitus, (integer)r->perfecti);
+    }
+    si (r->fracti > ZEPHYRUM)
+    {
+        imprimere(", %d fracta", (integer)r->fracti);
+    }
+    si (r->maxima_ms > (s64)ZEPHYRUM)
+    {
+        _moram_scribere(r->minima_ms, minima);
+        _moram_scribere(r->maxima_ms, maxima);
+        imprimere("  (ultimi V: %s-%s)", minima, maxima);
+    }
+    si (r->profunditas == ZEPHYRUM)
+    {
+        si (vita == VITA_VIVA)
+        {
+            imprimere("  (custos %d)", (integer)r->custos);
+        }
+        alioquin
+        {
+            imprimere("  (custos ignotus)");
+        }
+    }
+    imprimere("\n");
+    si (r->fracti == ZEPHYRUM)
+    {
+        redde;
+    }
+    /* fracta nominata: filii directi fracti (regenerationes iudicis
+     * praeter) */
+    filii = cursus_quaerere_filii(index, i->id, I, piscina);
+    per (k = I; filii != NIHIL && k < xar_numerus(filii); k++)
+    {
+        constans Cursus* f = ((CursusNodus*)xar_obtinere(filii,
+            k))->cursus;
+
+        si (   f->status == CURSUS_FRACTUS
+            && !chorda_incipit(f->finis.nota,
+            chorda_ex_literis("IUDICIUM",
+                piscina)))
+        {
+            imprimere("%*sfractum: %.*s\n",
+                (integer)(II * (r->profunditas + I)), "",
+                (integer)f->initium.titulus.mensura,
+                (constans character*)f->initium.titulus.datum);
+        }
+    }
+}
+
+interior integer
+_currentes_imprimere (
+    constans CursusIndex* index,
+           constans Xar* mensurae,
+    constans CursusFiltrum* filtrum,
+                    b32  machina,
+                Piscina* piscina)
+{
+             Xar* ordines;
+             s64  nunc        = mensura_momentum_nunc();
+    VitaCustodis  vita        = VITA_IGNOTA;
+             b32  monstranda  = FALSUM;
+             i32  mortui      = ZEPHYRUM;
+             i32  vetusti     = ZEPHYRUM;
+             i32  monstrati   = ZEPHYRUM;
+             i32  k;
+
+    ordines = cursus_quaerere_currentes(index, mensurae, filtrum,
+        piscina);
+    si (ordines == NIHIL)
+    {
+        fprintf(stderr,
+            "mensor quaestio currentes: legi non possunt\n");
+        redde I;
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(ordines); k++)
+    {
+        constans CursusCurrens* r =
+            (constans CursusCurrens*)xar_obtinere(
+            ordines, k);
+
+        si (r->profunditas == ZEPHYRUM)
+        {
+            vita = _vitam_iudicare(r, piscina);
+            monstranda = machina || vita == VITA_VIVA
+                || (   vita == VITA_IGNOTA
+                    && nunc - r->cursus->initium.initium
+                       < CURRENTES_IGNOTI_MS);
+            si (!monstranda)
+            {
+                si (vita == VITA_MORTUA)
+                {
+                    mortui++;
+                }
+                alioquin
+                {
+                    vetusti++;
+                }
+                perge;
+            }
+            monstrati++;
+        }
+        si (monstranda)
+        {
+            _currentem_imprimere(index, r, vita, nunc, machina,
+                piscina);
+        }
+    }
+    si (machina)
+    {
+        redde ZEPHYRUM;
+    }
+    si (monstrati == ZEPHYRUM)
+    {
+        imprimere("nullus cursus currit\n");
+    }
+    si (mortui > ZEPHYRUM || vetusti > ZEPHYRUM)
+    {
+        imprimere("celati: %d mortui (custos abiit), %d sine custode ultra"
+            " diem - mensor quaestio fracta status=interruptus\n",
+            (integer)mortui, (integer)vetusti);
+    }
+    redde ZEPHYRUM;
+}
+
 interior vacuum
 _quaestionum_usum_imprimere (
     FILE* f)
@@ -1708,6 +1978,7 @@ _quaestionum_usum_imprimere (
         "                (fluctuatne X?)\n"
         "  iudicia       regenerationes iudicis fabricae\n"
         "  commissiones  commissiones cum portis suis\n"
+        "  currentes     quid NUNC currit (cursus aperti, custos vivus)\n"
         "  numquam       scripta declarata numquam cursa\n"
         "  discus        quod in diurna spatium tenet\n"
         "parametra: titulus= (aequalis) praefixum= (incipit)\n"
@@ -1838,6 +2109,15 @@ _quaestio (
         fprintf(stderr, "mensor quaestio: cursus legi non possunt\n");
         volumen_claudere(volumen);
         redde I;
+    }
+    si (strcmp(nomen_q, "currentes") == ZEPHYRUM)
+    {
+        integer codex = _currentes_imprimere(index,
+            mensura_mensuras_legere(volumen, chorda_ex_literis("",
+            piscina), piscina), &par.filtrum, machina, piscina);
+
+        volumen_claudere(volumen);
+        redde codex;
     }
     si (   strcmp(nomen_q, "historia") == ZEPHYRUM
         || strcmp(nomen_q, "ultimum")  == ZEPHYRUM

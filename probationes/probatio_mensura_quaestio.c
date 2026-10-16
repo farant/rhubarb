@@ -692,6 +692,165 @@ _sectio_similes (
         c->piscina));
 }
 
+/* mensuram fictam addere (facta cursuum, colloquia T8) */
+interior vacuum
+_factum (
+                   Xar* mensurae,
+    constans character* parens,
+    constans character* titulus,
+                   i32  valor,
+               Piscina* piscina)
+{
+    Mensura* m = (Mensura*)xar_addere(mensurae);
+
+    memset(m, ZEPHYRUM, magnitudo(Mensura));
+    m->id       = chorda_ex_literis("m", piscina);
+    m->parens   = chorda_ex_literis(parens, piscina);
+    m->titulus  = chorda_ex_literis(titulus, piscina);
+    m->valor    = (duplex)valor;
+    m->unitas   = chorda_ex_literis("numerus", piscina);
+}
+
+interior constans CursusCurrens*
+_currens (
+    constans Xar* currentes,
+             i32  k)
+{
+    redde (constans CursusCurrens*)xar_obtinere(currentes, k);
+}
+
+/* XIII. currentes (colloquia T8d): aperti ut arbor, radices
+ * recentissimae primum; custos, consilium, progressus post ambitum
+ * ULTIMUM, filii finiti (portae sub commissione; membra non IUDICIUM
+ * sub porta), historia V ultimorum transeuntium; filtrum arboris */
+interior vacuum
+_sectio_currentes (
+    CredoContextus* c)
+{
+                       Xar* omnes = _omnes(c->piscina);
+                       Xar* mensurae = xar_creare(c->piscina,
+                           (i32)magnitudo(Mensura));
+               CursusIndex* index;
+             CursusFiltrum  f = _filtrum();
+                       Xar* currentes;
+    constans CursusCurrens* r;
+                    Cursus* alienus;
+
+    /* historia porta:radix: H0 vetustissimus, H7 fractus - ultimi V
+     * transeuntes H2..H6 (XX..LX) */
+    (vacuum)_cursus(omnes, "H0", "", "porta:radix", V, V,
+        CURSUS_TRANSIIT, "", c->piscina);
+    (vacuum)_cursus(omnes, "H1", "", "porta:radix", X, X,
+        CURSUS_TRANSIIT, "", c->piscina);
+    (vacuum)_cursus(omnes, "H2", "", "porta:radix", XX, XX,
+        CURSUS_TRANSIIT, "", c->piscina);
+    (vacuum)_cursus(omnes, "H3", "", "porta:radix", XXX, XXX,
+        CURSUS_TRANSIIT, "", c->piscina);
+    (vacuum)_cursus(omnes, "H4", "", "porta:radix", XL, XL,
+        CURSUS_TRANSIIT, "", c->piscina);
+    (vacuum)_cursus(omnes, "H5", "", "porta:radix", L, L,
+        CURSUS_TRANSIIT, "", c->piscina);
+    (vacuum)_cursus(omnes, "H6", "", "porta:radix", LX, LX,
+        CURSUS_TRANSIIT, "", c->piscina);
+    (vacuum)_cursus(omnes, "H7", "", "porta:radix", LXX, CMXCIX,
+        CURSUS_FRACTUS, "", c->piscina);
+    /* commissio aperta R: P1 finita, Ph phasis finita (non porta), P2
+     * aperta cum membris m1 (sanum), m2 (fractum), j (IUDICIUM) */
+    (vacuum)_cursus(omnes, "R", "", "commissio", M, ZEPHYRUM,
+        CURSUS_INTERRUPTUS, "", c->piscina);
+    (vacuum)_cursus(omnes, "Ph", "R", "phasis:fabrica", M + I, V,
+        CURSUS_TRANSIIT, "", c->piscina);
+    (vacuum)_cursus(omnes, "P1", "R", "porta:aedilis", M + II, X,
+        CURSUS_TRANSIIT, "PORTA AEDILIS", c->piscina);
+    (vacuum)_cursus(omnes, "P2", "R", "porta:radix", M + III, ZEPHYRUM,
+        CURSUS_INTERRUPTUS, "", c->piscina);
+    (vacuum)_cursus(omnes, "m1", "P2", "probationes_radicis/a", M + IV,
+        I, CURSUS_TRANSIIT, "SANATUM", c->piscina);
+    (vacuum)_cursus(omnes, "m2", "P2", "probationes_radicis/b", M + V,
+        I, CURSUS_FRACTUS, "FRACTUM - b", c->piscina);
+    (vacuum)_cursus(omnes, "j", "P2", "bearssl_amalgama", M + VI, I,
+        CURSUS_TRANSIIT, "IUDICIUM", c->piscina);
+    /* Q radix aperta sine custode; X orbus (parens F finitus); S
+     * finitus; A apertus arboris alienae */
+    (vacuum)_cursus(omnes, "Q", "", "porta:x", MM, ZEPHYRUM,
+        CURSUS_INTERRUPTUS, "", c->piscina);
+    (vacuum)_cursus(omnes, "F", "", "commissio", MM + C, V,
+        CURSUS_TRANSIIT, "", c->piscina);
+    (vacuum)_cursus(omnes, "X", "F", "porta:orba", MMM, ZEPHYRUM,
+        CURSUS_INTERRUPTUS, "", c->piscina);
+    (vacuum)_cursus(omnes, "S", "", "porta:s", MMM + C, V,
+        CURSUS_TRANSIIT, "", c->piscina);
+    alienus = _cursus(omnes, "A", "", "commissio", MMM + CC, ZEPHYRUM,
+        CURSUS_INTERRUPTUS, "", c->piscina);
+    alienus->initium.arbor = chorda_ex_literis("/alibi", c->piscina);
+
+    _factum(mensurae, "R", MENSURA_CUSTOS, I, c->piscina);
+    _factum(mensurae, "R", MENSURA_CUSTOS, MMMDCCCXCVIII, c->piscina);
+    _factum(mensurae, "R", MENSURA_PORTAE, III, c->piscina);
+    _factum(mensurae, "P2", MENSURA_CUSTOS, MMMDCCCXCVIII, c->piscina);
+    _factum(mensurae, "P2", MENSURA_AMBITUS, V, c->piscina);
+    _factum(mensurae, "P2", MENSURA_IUDICATA, V, c->piscina);
+    _factum(mensurae, "P2", MENSURA_AMBITUS, CCCLI, c->piscina);
+    _factum(mensurae, "P2", MENSURA_IUDICATA, C, c->piscina);
+    _factum(mensurae, "P2", MENSURA_IUDICATA, CXX, c->piscina);
+    _factum(mensurae, "Q", MENSURA_AMBITUS, VII, c->piscina);
+    _factum(mensurae, "Q", MENSURA_IUDICATA, VII, c->piscina);
+    _factum(mensurae, "Q", MENSURA_AMBITUS, IX, c->piscina);
+
+    index = cursus_indicem_struere(omnes, c->piscina);
+    CREDO_NECESSE_NON_NIHIL(index);
+    f.arbor   = chorda_ex_literis("/arbor", c->piscina);
+    currentes = cursus_quaerere_currentes(index, mensurae, &f,
+        c->piscina);
+    CREDO_NECESSE_NON_NIHIL(currentes);
+    /* X (MMM), Q (MM), R (M) cum P2 sub eo; A filtro exclusus */
+    CREDO_NECESSE(xar_numerus(currentes) == IV);
+    r = _currens(currentes, ZEPHYRUM);
+    CREDO_CHORDA_AEQUALIS_LITERIS(r->cursus->initium.id, "X");
+    CREDO_AEQUALIS_I32(r->profunditas, ZEPHYRUM);
+    r = _currens(currentes, I);
+    CREDO_CHORDA_AEQUALIS_LITERIS(r->cursus->initium.id, "Q");
+    CREDO_AEQUALIS_S32(r->custos, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(r->ambitus, IX);
+    CREDO_AEQUALIS_I32(r->iudicata, ZEPHYRUM);
+    r = _currens(currentes, II);
+    CREDO_CHORDA_AEQUALIS_LITERIS(r->cursus->initium.id, "R");
+    CREDO_AEQUALIS_I32(r->profunditas, ZEPHYRUM);
+    CREDO_AEQUALIS_S32(r->custos, MMMDCCCXCVIII);
+    CREDO_AEQUALIS_I32(r->debiti, III);
+    CREDO_AEQUALIS_I32(r->perfecti, I);
+    CREDO_AEQUALIS_I32(r->fracti, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(r->ambitus, ZEPHYRUM);
+    /* historia commissionis: F (V ms) solus transiens */
+    CREDO_AEQUALIS_S64(r->minima_ms, (s64)V);
+    CREDO_AEQUALIS_S64(r->maxima_ms, (s64)V);
+    r = _currens(currentes, III);
+    CREDO_CHORDA_AEQUALIS_LITERIS(r->cursus->initium.id, "P2");
+    CREDO_AEQUALIS_I32(r->profunditas, I);
+    CREDO_AEQUALIS_S32(r->custos, MMMDCCCXCVIII);
+    CREDO_AEQUALIS_I32(r->perfecti, II);
+    CREDO_AEQUALIS_I32(r->fracti, I);
+    CREDO_AEQUALIS_I32(r->debiti, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(r->ambitus, CCCLI);
+    CREDO_AEQUALIS_I32(r->iudicata, CXX);
+    CREDO_AEQUALIS_S64(r->minima_ms, (s64)XX);
+    CREDO_AEQUALIS_S64(r->maxima_ms, (s64)LX);
+
+    /* sine filtro: A quoque (recentissimus, primus) */
+    currentes = cursus_quaerere_currentes(index, mensurae, NIHIL,
+        c->piscina);
+    CREDO_NECESSE_NON_NIHIL(currentes);
+    CREDO_AEQUALIS_I32(xar_numerus(currentes), V);
+    CREDO_CHORDA_AEQUALIS_LITERIS(_currens(currentes,
+        ZEPHYRUM)->cursus->initium.id, "A");
+    /* mensurae NIHIL licent: custos et progressus ignoti */
+    currentes = cursus_quaerere_currentes(index, NIHIL, &f, c->piscina);
+    CREDO_NECESSE_NON_NIHIL(currentes);
+    CREDO_AEQUALIS_S32(_currens(currentes, II)->custos, ZEPHYRUM);
+    CREDO_VERUM(cursus_quaerere_currentes(NIHIL, mensurae, &f,
+        c->piscina) == NIHIL);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "I quo tempus ivit", _sectio_filii, NIHIL, NIHIL, NIHIL, NIHIL },
     { "II regenerationes iudicis", _sectio_iudicia, NIHIL, NIHIL, NIHIL,
@@ -717,6 +876,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "XII nihil congruit: tituli similes", _sectio_similes, NIHIL,
         NIHIL,
       NIHIL, NIHIL },
+    { "XIII currentes", _sectio_currentes, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

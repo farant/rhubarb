@@ -231,6 +231,15 @@ phase that needs it. Header text shown to Fran before coding.*
   certifies) - before, examen analysed the #else branch - and getppid
   (examen suspected T8b's call as implicit). Glossary: uptime, getppid.
   No automated test can sleep the machine: shipped on review (Fran).
+- T8d 2026-10-16: `cursus_quaerere_currentes` (open runs as a tree;
+  owner, gates x/y, members judged after the LATEST scope, finished
+  children - gates under a commit, non-IUDICIUM under a gate - and the
+  last five passing runs' range) and `mensor quaestio currentes`
+  (liveness in the CLI: processus_vivus + born-after-the-run = reused
+  pid; dead roots hidden and counted; pre-T8 roots shown one day;
+  `-machina` CURRENS lines carry a life column for T10). Fumus XVI fakes
+  a reused pid with `cursus factum` (a newer process as owner). Plants:
+  lib 5/5, CLI 3/3.
 - IN MAIN 2026-10-16 (ff 1dc057b6, fusio_probare green + frigida,
   installata 23/23). The 7 hooks now call `~/.bin/praeco hamus`
   (backup ~/.claude/settings.json.bak-praeco-bin-2026-10-16); the ad

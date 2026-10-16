@@ -27,6 +27,8 @@
 #        pid vocantis; currere -> pid involucri; una per cursum
 #   XV   factum (colloquia T8c): 'cursus factum -titulus -valor
 #        [-unitas]' mensuram cursui aperto adhaeret; sine cursu 2
+#   XVI  currentes (colloquia T8d): custos vivus ostenditur, mortuus
+#        celatur (numeratus), -machina columna vitae
 #   X    purgare (T4 2c): regula ex STML (tools/analytica_retentio.stml
 #        legitur), -siccum nihil mutat, purgatio vera corpus delet
 #        ('cursus acta' -> deletum), regula absens aut deformis -> 2
@@ -218,6 +220,33 @@ f15d=$(awk -F'\t' -v p="$id15" '$3 == p && $4 == "consilium.portae" { print $5 +
   && [ "$n15a" = "$n15b" ] && [ "$r15d" -eq 0 ] && [ "$f15d" = "3" ]
 credo $? "XV   factum: mensura cursui aperto in diario cursuum; sine cursu aut valore 2, nihil scriptum"
 
+# XVI currentes (colloquia T8d): cursus cuius custos VIVIT (concha
+# dormiens) ostenditur cum custode; cuius custos ABIIT celatur et in
+# -machina 'mortuus' fert. 'bash -c ...; true' furcam cogit (concha
+# ultimum mandatum aliter exsequitur et custos = fumus ipse)
+bash -c '"$0" cursus incipere -titulus fumus/mortuus > "$1"; true' "$RADIX/bin/mensor" "$T/amb16m"
+bash -c '"$0" cursus incipere -titulus fumus/vivus > "$1"; sleep 30' "$RADIX/bin/mensor" "$T/amb16v" &
+pv16=$!
+n=0; until [ -s "$T/amb16v" ] || [ $n -ge 50 ]; do sleep 0.1; n=$((n + 1)); done
+# pid ITERUM DATUS: custos (factum ultimum vincit) = processus vivus
+# sed POST cursum natus (III s > laxitas II s) - mortuus iudicandus
+"$RADIX/bin/mensor" cursus incipere -titulus fumus/iteratus > "$T/amb16i"
+sleep 3
+sleep 30 &
+pn16=$!
+MENSOR_PARENS=$(sed -n 's/^MENSOR_PARENS=//p' "$T/amb16i") "$RADIX/bin/mensor" cursus factum \
+    -titulus cursus.custos -valor "$pn16" -unitas pid
+"$RADIX/bin/mensor" quaestio currentes > "$T/c16" 2>&1; rc16=$?
+"$RADIX/bin/mensor" quaestio currentes -machina > "$T/c16m" 2>&1
+kill "$pv16" "$pn16" 2>/dev/null; wait "$pv16" "$pn16" 2>/dev/null
+vi16=$(awk -F'\t' '$1 == "CURRENS" && $5 == "fumus/iteratus" { print $9 "|" $10 }' "$T/c16m")
+vm16=$(awk -F'\t' '$1 == "CURRENS" && $5 == "fumus/mortuus" { print $10 }' "$T/c16m")
+vv16=$(awk -F'\t' '$1 == "CURRENS" && $5 == "fumus/vivus" { print $9 "|" $10 }' "$T/c16m")
+[ "$rc16" -eq 0 ] && grep -q "^fumus/vivus .*(custos $pv16)" "$T/c16" && ! grep -q 'fumus/mortuus' "$T/c16" \
+  && grep -q '^celati: [1-9][0-9]* mortui' "$T/c16" && [ "$vm16" = "mortuus" ] && [ "$vv16" = "$pv16|vivus" ] \
+  && [ "$vi16" = "$pn16|mortuus" ] && ! grep -q 'fumus/iteratus' "$T/c16"
+credo $? "XVI  currentes: custos vivus ostenditur, mortuus et pid iterum datus celantur, -machina vitam fert"
+
 # X
 cat > "$T/regula_nulla.stml" <<'R'
 <retentio>
@@ -335,5 +364,5 @@ done
 credo $? "XIII curare: condit, purgat, notatur; intra diem non purgat; cursus summus curationem separatam excitat"
 
 echo
-if [ "$fracta" -eq 0 ]; then echo "fumus mensor_cursus: sanum (XV/XV)"; exit 0; fi
+if [ "$fracta" -eq 0 ]; then echo "fumus mensor_cursus: sanum (XVI/XVI)"; exit 0; fi
 echo "fumus mensor_cursus: FRACTUM ($fracta)"; exit 1
