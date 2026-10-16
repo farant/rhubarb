@@ -205,6 +205,7 @@ nomen structura {
         StatusSystemata* systemata;   /* S7b: NIHIL = nulla */
                     /* T4a: vicus_systema_addere (privatum) */
                     Xar* systemata_hospitis;
+             VicusLatus* stratum;     /* T4b: NIHIL = nullum */
 } Vicus;
 
 /* T4a (colloquia-plan): systema hospitis - in omni vicus_pulsare
@@ -229,6 +230,21 @@ vicus_genus_addere (
           VicusMontator  montare,
         VicusDescriptor  describere,
                  vacuum* ctx);
+
+/* T4b (colloquia-plan): stratum supra latera - montatio una generis
+ * registrati (ramus "<genus>", id "stratum_<genus>"), in OMNI tabula
+ * post latera composita (supra pingitur, ictus prius accipit) et
+ * semper pulsata; superficies tota (linea tabularum inclusa). Arbor in
+ * coordinatis superficiei; fines radicis stratum non tegunt: ictus
+ * extra liberos ad latera transeunt (radix 0 x 0). Registra in spatio
+ * rami miscentur. Numquam focum capit. FALSUM si genus ignotum aut iam
+ * stratum. Insigne (T4b): campus radicis admonitiones_non_lectae > 0
+ * -> signum et numerus sinistrorsum horologii; ictus latus
+ * 'admonitiones' in acervo aperit. */
+b32
+vicus_stratum_addere (
+                  Vicus* v,
+     constans character* genus);
 
 /* T4a: titulus iteratus, systema aut titulus NIHIL: FALSUM */
 b32

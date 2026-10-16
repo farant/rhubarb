@@ -134,6 +134,7 @@ declare -a RADIX_FONTES=(
     "sanctorale"
     # colloquia-plan T4a: centrum admonitionum in vico
     "admonitiones_visus"
+    "admonitiones_volantes"
     "admonitiones"
     "praeconium"
     "colloquia"

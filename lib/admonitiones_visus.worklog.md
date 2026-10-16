@@ -48,3 +48,33 @@ event onto it. Copies in tests append "\n" first (a real log is always
 whole lines: one write() per event).
 
 Fran approved after the look (2026-10-15: "that looks good to me!").
+
+## 2026-10-15 - T4b toasts (admonitiones_volantes) + badge
+
+- Generic vicus layer `vicus_stratum_addere(v, genus)`: one mount of a
+  registered genus, composed LAST (drawn on top, hit first), in every
+  tab, pulsed every pulse, full surface. Root of the layer is 0 x 0 at
+  the origin: hit-testing (destinatio.c `invenire`) walks children last
+  to first and only returns a container when the point is inside it, so
+  clicks between toasts fall through to the panes.
+- Host `destinare` redirects a click in a non-focused space to the root
+  (that's how clicking a pane focuses it). The layer is exempt by its
+  path: vicus alone assigns ids "stratum_<genus>", so `spatium_strati`
+  checks the first id segment. Clicking a toast never moves focus.
+- A fake genus in tests needs its own canon before
+  insula_ramum_initiare ("liberum hic non licet" otherwise): real genera
+  get it from organum_ramum_parare.
+- Toast visibility is DERIVED (unread, not dismissed, age < 8 s NUNTIUS /
+  30 s ATTENTIO, 3 newest) - no timers in state. `dimissae` is pruned on
+  every dismissal to ids that could still fly.
+- Badge in the tab line reads root `admonitiones_non_lectae`; click
+  opens genus "admonitiones" (small accepted coupling; Fran 10-15).
+- Card widened 40 -> 49 cells after the headless render: "...use Edit"
+  was cut. Suppressing toasts while the center is visible: deferred.
+- One UNREPRODUCED red run of probatio_vicus_admonitiones by hand right
+  after the width change (output lost - the next run overwrote it); 40
+  direct + 6 runner + 120 runs (half CREDO_ORDO=mixtus) all green, no
+  leaked volumes. If it recurs in a gate, mensor names the section.
+- vicus tests never click a toast BODY: the real porta would run tmux
+  select-pane on the default server.
+- Fran's look 2026-10-15: "worked!" - toasts triggered from a terminale INSIDE the vicus run (admonere.sh), badge, x, body click, center via badge.

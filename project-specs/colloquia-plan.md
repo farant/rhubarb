@@ -93,6 +93,11 @@ phase that needs it. Header text shown to Fran before coding.*
   center; Enter / double-click selects the tmux pane (multiplexor).
   The follower starts only via `vicus_applicatio_admonitiones_aperire`
   (apps), never in tests. Deviations in lib/admonitiones_visus.worklog.md.
+- T4b 2026-10-15: generic vicus layer (`vicus_stratum_addere`) +
+  `admonitiones_volantes` (toasts top-right: 8 s finished / 30 s needs
+  you, 3 max, click = action + read, x = dismiss) + unread badge in the
+  tab line (click opens the center). Suppress-while-center-visible
+  deferred.
 
 ## V. Hook facts (Claude Code docs, checked 2026-10-15)
 

@@ -8,6 +8,7 @@
 #include "nomenclator.h"
 #include "iussum.h"
 #include "admonitiones_visus.h"
+#include "admonitiones_volantes.h"
 #include "multiplexor.h"
 #include <stdio.h>
 #include <string.h>
@@ -1782,6 +1783,65 @@ admonitiones_describere (
     f->componere_ctx  = m;
 }
 
+/* T4b: volantes (toasts) - stratum vici, index et porta communes */
+interior b32
+volantes_montare_in_vico (
+                 vacuum* sedes,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+     InsulaRepositorium* repo,
+     constans character* id,
+     constans character* argumentum,
+                    i32  latitudo,
+                    i32  altitudo,
+                 vacuum* ctx)
+{
+    ContextusAdmonitionum* ca;
+        VolantiumMontatio* m;
+
+    (vacuum)volumen;
+    (vacuum)argumentum;
+    ca  = (ContextusAdmonitionum*)ctx;
+    m   = (VolantiumMontatio*)sedes;
+    si (   !ca
+        || !volantes_montare(m, piscina, intern, repo, id, ca->index,
+               admonitionem_agere, ca, latitudo, altitudo,
+               ca->systemata))
+    {
+        redde FALSUM;
+    }
+    m->nunc = nunc_vici;
+    redde VERUM;
+}
+
+interior VicusPulsus
+volantes_pulsare_in_vico (
+    vacuum* ctx)
+{
+    VicusPulsus p;
+
+    p.mutatum = volantes_pulsare((VolantiumMontatio*)ctx);
+    p.finitus = FALSUM;
+    redde p;
+}
+
+interior vacuum
+volantes_describere (
+         vacuum* montatio,
+    VicusFacies* f)
+{
+    VolantiumMontatio* m;
+
+    m                 = (VolantiumMontatio*)montatio;
+    f->actiones       = m->actiones;
+    f->figurae        = m->figurae;
+    f->componere      = volantes_componere;
+    f->componere_ctx  = m;
+    f->pulsare        = volantes_pulsare_in_vico;
+    f->pulsare_ctx    = m;
+}
+
 b32
 vicus_applicatio_admonitiones_aperire (
         VicusApplicatio* app,
@@ -2037,9 +2097,13 @@ ContextusNomenclatoris* cn;
                magnitudo(AdmonitionumMontatio),
                admonitiones_montare_in_vico, admonitiones_describere,
                cad)
+        || !vicus_genus_addere(app->vicus, "volantes",
+               magnitudo(VolantiumMontatio), volantes_montare_in_vico,
+               volantes_describere, cad)
         || !vicus_systema_addere(app->vicus, "admonitiones",
                systema_admonitionum, cad)
-        || !vicus_aperire(app->vicus, INDEX_ORDINARIUS))
+        || !vicus_aperire(app->vicus, INDEX_ORDINARIUS)
+        || !vicus_stratum_addere(app->vicus, "volantes"))
     {
         causa = app->vicus ? vicus_causa(app->vicus)
                            : chorda_ex_literis("vicus_creare", piscina);

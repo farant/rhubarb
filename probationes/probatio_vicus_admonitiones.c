@@ -17,10 +17,14 @@
 #include "thema.h"
 #include "manus_ludus.h"
 #include "dispensator.h"
+#include "componens.h"
+#include "figura.h"
+#include "mandatum.h"
 #include "credo.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #define VIA_FIXI "probationes/fixa/colloquia/eventa.jsonl"
 
@@ -259,6 +263,126 @@ _probare_omnes_legere (
     CREDO_VERUM(campus_est(v, "admonitiones_non_lectae", "0"));
 }
 
+/* x textus in linea tabularum, aut -1 */
+interior s32
+textus_lineae (
+                Mundus* x,
+    constans character* quaesitus,
+               Piscina* p)
+{
+      Mandata* md;
+     Mandatum* m;
+          i32  i;
+
+    dispensator_recomponere(x->app.d);
+    md = mandata_creare(p, x->app.intern);
+    pingere(dispensator_arbor(x->app.d), vicus_figurae(x->app.vicus),
+        ZEPHYRUM, md);
+    per (i = ZEPHYRUM; i < mandata_numerus(md); i++)
+    {
+        m = mandata_obtinere(md, i);
+        si (   m->genus == MANDATUM_TEXTUS
+            && m->fines.y < VICUS_ALTITUDO_TABULARUM
+            && chorda_aequalis_literis(m->textus, quaesitus))
+        {
+            redde m->fines.x;
+        }
+    }
+    redde -I;
+}
+
+interior vacuum
+ictus_ad (
+    Mundus* x,
+       s32  px,
+       s32  py)
+{
+    Eventus e;
+
+    dispensator_recomponere(x->app.d);
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus             = EVENTUS_MUS_DEPRESSUS;
+    e.tempus            = M;
+    e.datum.mus.x       = px;
+    e.datum.mus.y       = py;
+    e.datum.mus.botton  = MUS_SINISTER;
+    dispensator_tractare(x->app.d, &e);
+    e.genus = EVENTUS_MUS_LIBERATUS;
+    dispensator_tractare(x->app.d, &e);
+}
+
+/* T4b insigne: numerus non lectarum ad dextrum lineae (nullum
+ * horologium: margo); ictus centrum aperit; 0 nihil */
+interior vacuum
+_probare_insigne (
+    CredoContextus* c)
+{
+    Mundus* x;
+     Vicus* v;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(aedificare(x, c));
+    v = x->app.vicus;
+    /* "12": nulla tabula sic inscribitur (tabulae 1-10) */
+    CREDO_VERUM(textus_lineae(x, "12", c->piscina) < ZEPHYRUM);
+    CREDO_VERUM(vicus_radicem_scribere(v, "admonitiones",
+        "admonitiones_non_lectae", "12"));
+    /* x1 = CDLXXX - VI; x0 = x1 - IV cellulae; numerus post II */
+    CREDO_AEQUALIS_S32(textus_lineae(x, "12", c->piscina),
+        CDLXXX - VI - XXIV + XII);
+    ictus_ad(x, CDLXXX - VI - XXIV + II, IV);
+    (vacuum)vicus_pulsare(v);
+    CREDO_NON_NIHIL(centrum_frontale(v));
+    CREDO_VERUM(vicus_radicem_scribere(v, "admonitiones",
+        "admonitiones_non_lectae", "0"));
+    CREDO_VERUM(textus_lineae(x, "0", c->piscina) < ZEPHYRUM);
+}
+
+/* T4b volantes: nova (nunc) volat ad dextrum; 'x' dimittit, non
+ * legit (corpus non tangitur: porta tmux verum vocaret) */
+interior vacuum
+_probare_volantes (
+    CredoContextus* c)
+{
+                 Mundus* x;
+                  Vicus* v;
+     constans character* via;
+              Componens* t;
+              character  linea[CCCLXXXIV];
+
+    x    = (Mundus*)c->datum;
+    via  = librum_parare(c);
+    CREDO_NECESSE(via != NIHIL);
+    CREDO_NECESSE(aedificare(x, c));
+    v = x->app.vicus;
+    CREDO_VERUM(vicus_applicatio_admonitiones_aperire(&x->app, via));
+    (vacuum)vicus_pulsare(v);
+    dispensator_recomponere(x->app.d);
+    /* fixa vetera: nulla volat */
+    CREDO_VERUM(componens_invenire_per_id(dispensator_arbor(x->app.d),
+        chorda_ex_literis("v1", c->piscina)) == NIHIL);
+    sprintf(linea, "{\"tempus\":%ld000,\"sessio\":\"s-c\","
+        "\"eventus\":\"Notification\",\"panellus\":\"%%1\","
+        "\"servitor\":\"\",\"via\":\"/w/gamma\",\"transcriptum\":"
+        "\"\",\"genus\":\"permission_prompt\",\"nuntius\":\"Claude "
+        "needs your permission to use Edit\"}\n", (long)time(NIHIL));
+    CREDO_NECESSE(filum_appendere_firmiter(via, chorda_ex_literis(linea,
+        c->piscina)));
+    CREDO_VERUM(vicus_pulsare(v));
+    dispensator_recomponere(x->app.d);
+    t = componens_invenire_per_id(dispensator_arbor(x->app.d),
+        chorda_ex_literis("x1", c->piscina));
+    CREDO_NECESSE(t != NIHIL);
+    CREDO_AEQUALIS_S32(t->fines.x + t->fines.latitudo, CDLXXX - VI);
+    ictus_ad(x, t->fines.x + t->fines.latitudo / II, t->fines.y
+        + t->fines.altitudo / II);
+    dispensator_recomponere(x->app.d);
+    CREDO_VERUM(componens_invenire_per_id(dispensator_arbor(x->app.d),
+        chorda_ex_literis("v1", c->piscina)) == NIHIL);
+    (vacuum)vicus_pulsare(v);
+    CREDO_VERUM(campus_est(v, "admonitiones_non_lectae", "5"));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "verbum", _probare_verbum, mundum_parare, mundum_purgare, NIHIL,
       NIHIL },
@@ -270,6 +394,10 @@ hic_manens constans CredoSectio SECTIONES[] = {
       NIHIL, NIHIL },
     { "omnes_legere", _probare_omnes_legere, mundum_parare,
       mundum_purgare, NIHIL, NIHIL },
+    { "insigne", _probare_insigne, mundum_parare, mundum_purgare, NIHIL,
+      NIHIL },
+    { "volantes", _probare_volantes, mundum_parare, mundum_purgare,
+      NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 
