@@ -103,3 +103,7 @@ ECDSA P-256 with a CertificateRequest).
   (via the fallback under tls13). howsmyssl: **TLS 1.3** under tls13,
   1.2 under the others; "Improvable" under all three because no session
   tickets are offered (resumption is out of scope, spec II.5).
+- **Live (Fran, 2026-10-16):** vicus `$question` (route B -> http_vocatio
+  -> tls -> our TLS 1.3 client -> api.anthropic.com) works under the new
+  default. Hand-run smoke tests owed since T6/T7 green:
+  apps/forum/fumus.sh (FUMUS PLENUS), tools/icones_fumus.sh (sanum).

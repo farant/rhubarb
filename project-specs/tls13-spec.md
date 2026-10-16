@@ -1,5 +1,17 @@
 # tls13 - our own TLS 1.3 client behind tls.h, BearSSL 1.2 as checked fallback (spec)
 
+**STATUS: IMPLETUM 2026-10-16** (quarta b2567819..632ee6cf, plan
+`project-specs/tls13-plan.md` T1-T8, rulings R1-R26). Our TLS 1.3
+client is the house default; 1.2 servers are reached through the BearSSL
+backend with the DOWNGRD sentinel checked by us; `RHUBARB_TLS=bearssl`
+(1.2 only) and `=securetransport` (old, park ...GP4S) stay selectable.
+RFC 8448 §3, §5, §6 and §7 replay byte for byte. Fran's live `$question`
+in vicus works under the new default (2026-10-16). Not yet in main.
+Departures from this text are in the plan's rulings - notably R17/R18
+(CertificateRequest answered without identity; client identity = wish
+...WM3G2R) and R23 (the ClientHello also offers 1.2 suites, so pre-1.3
+servers reach the fallback).
+
 *Fran 2026-10-15/16, right after BearSSL became the default (main
 f423bcca): "my main concern with 1.3 is if we would end up in a
 situation where 1.2 client is deprecated or can't function properly" -
