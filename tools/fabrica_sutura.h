@@ -9,6 +9,7 @@
 /* <aedilis corpus="tools/fabrica_ansae.c"/> */
 /* <aedilis corpus="tools/fabrica_portae.c"/> */
 /* <aedilis corpus="tools/fabrica_unitates.c"/> */
+/* <aedilis corpus="tools/fabrica_interrogationes.c"/> */
 
 #ifndef FABRICA_SUTURA_H
 #define FABRICA_SUTURA_H
@@ -25,6 +26,7 @@
 #include "sigillum.h"
 #include "mensura.h"
 #include "diurna.h"
+#include "unitates.h"
 
 /* sanare: terminus unus per actum (briar ~3 min, obiecta radicis
  * frigida ~150 s); termini per actionem non in 1b */
@@ -187,6 +189,25 @@ suturae_quid (
           s32   argc,
     character** argv,
       Piscina*  piscina);
+
+/* quid -interrogationes -quaere/-symbolum (tools/
+ * fabrica_interrogationes.c): textus XOR symbolum; exitus 0 inventa,
+ * 1 nihil congruit, 2 quaestio sine verbis */
+s32
+suturae_interrogationes_quaerere (
+    constans UnitatesInterrogationes* res,
+                  constans character* textus,
+                  constans character* symbolum,
+                                 b32  machina,
+                             Piscina* piscina);
+
+/* quid -interrogationes -html VIA: pagina (docs/faq.html); exitus 0
+ * scripta, 1 vitia interrogationum (nihil scriptum), 2 scribi nequit */
+s32
+suturae_interrogationes_paginam_scribere (
+    constans UnitatesInterrogationes* res,
+                  constans character* via,
+                             Piscina* piscina);
 
 b32
 suturae_in_area_currere (

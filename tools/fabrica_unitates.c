@@ -18,6 +18,15 @@
  *       interrogationes (U5b): quaestiones typatae unitatum (omnium,
  *       aut nominatarum) cum responsis et ancoris, numeri per genus,
  *       vitia plagularum - exitus 1 si vitium aliquod
+ *   bin/fabrica quid -interrogationes -quaere "TEXTUS" [-machina]
+ *       [UNITAS...]
+ *       piscina quaestionum: interrogationes ordine punctorum (U5b
+ *       gradus 4, tools/fabrica_interrogationes.c) - exitus 1 nihil
+ *   bin/fabrica quid -interrogationes -symbolum X [-machina]
+ *       [UNITAS...]
+ *       lectio inversa: interrogationes quarum responsum X ancorat
+ *   bin/fabrica quid -interrogationes -html VIA
+ *       pagina docs/faq.html (tools/interrogationes_pagina.sh)
  *
  * -machina: lineae TAB separatae -
  *   quid:    via  proprietas  valor  causa
@@ -288,6 +297,56 @@ _unitas_eligitur (
     redde FALSUM;
 }
 
+/* interrogationes unitatum nominatarum (nullae nominatae = omnes);
+ * NIHIL = unitas ignota (nuntiata) */
+interior UnitatesInterrogationes*
+_interrogationes_eligere (
+           constans Unitates*  u,
+     UnitatesInterrogationes*  res,
+                         s32   argc,
+                   character** argv,
+                         s32   primus,
+                     Piscina*  piscina)
+{
+     UnitatesInterrogationes* electae;
+                         s32  i;
+                         i32  j;
+
+    per (i = primus; i < argc; i++)
+    {
+        constans Xar* omnes  = unitates_omnes(u);
+                 b32  nota   = FALSUM;
+
+        per (j = ZEPHYRUM; j < xar_numerus(omnes) && !nota; j++)
+        {
+            nota = chorda_aequalis_literis(
+                (*(Unitas**)xar_obtinere(omnes, j))->titulus, argv[i]);
+        }
+        si (!nota)
+        {
+            fprintf(stderr, "quid: unitas ignota '%s'\n", argv[i]);
+            redde NIHIL;
+        }
+    }
+    electae = (UnitatesInterrogationes*)piscina_allocare(piscina,
+        (memoriae_index)magnitudo(UnitatesInterrogationes));
+    electae->recusationes     = res->recusationes;
+    electae->interrogationes  = xar_creare(piscina,
+        (i32)magnitudo(UnitatisInterrogatio));
+    per (j = ZEPHYRUM; j < xar_numerus(res->interrogationes); j++)
+    {
+        constans UnitatisInterrogatio* x = (constans
+            UnitatisInterrogatio*)xar_obtinere(res->interrogationes, j);
+
+        si (_unitas_eligitur(x->unitas, argc, argv, primus))
+        {
+            *(UnitatisInterrogatio*)xar_addere(electae->interrogationes)
+                = *x;
+        }
+    }
+    redde electae;
+}
+
 interior s32
 _interrogationes_imprimere (
     constans Unitates*  u,
@@ -484,11 +543,14 @@ suturae_quid (
         UnitatesSutura* s;
               Unitates* u;
                 chorda  causa;
-    constans character* iudex    = NIHIL;
-                   b32  machina  = FALSUM;
-                   b32  omnes    = FALSUM;
-                   b32  census   = FALSUM;
-                   b32  rogatae  = FALSUM;
+    constans character* iudex     = NIHIL;
+                   b32  machina   = FALSUM;
+                   b32  omnes     = FALSUM;
+                   b32  census    = FALSUM;
+                   b32  rogatae   = FALSUM;
+    constans character* quaere    = NIHIL;
+    constans character* symbolum  = NIHIL;
+    constans character* html      = NIHIL;
                    s32  i;
                    s32  primus;
 
@@ -510,6 +572,21 @@ suturae_quid (
         {
             rogatae = VERUM;
         }
+        alioquin si (   strcmp(argv[i], "-quaere") == ZEPHYRUM
+                     && i + I < argc)
+        {
+            quaere = argv[++i];
+        }
+        alioquin si (   strcmp(argv[i], "-symbolum") == ZEPHYRUM
+                     && i + I < argc)
+        {
+            symbolum = argv[++i];
+        }
+        alioquin si (   strcmp(argv[i], "-html") == ZEPHYRUM
+                     && i + I < argc)
+        {
+            html = argv[++i];
+        }
         alioquin si (   strcmp(argv[i], "-iudex") == ZEPHYRUM
                      && i + I < argc)
         {
@@ -524,14 +601,23 @@ suturae_quid (
     primus = i;
     si (   (!rogatae && (omnes || census) == (primus < argc))
         || (s32)omnes + (s32)census + (s32)rogatae > I
-        || ((omnes || census || rogatae) && iudex != NIHIL))
+        || ((omnes || census || rogatae) && iudex != NIHIL)
+        || (!rogatae && (quaere || symbolum || html))
+        || (s32)(quaere != NIHIL) + (s32)(symbolum != NIHIL)
+            + (s32)(html != NIHIL) > I
+        || (html != NIHIL && primus < argc))
     {
         fprintf(stderr, "usus: bin/fabrica quid [-machina] VIA...\n"
             "      bin/fabrica quid -iudex TITULUS [-machina] VIA...\n"
             "      bin/fabrica quid -omnes [-machina]\n"
             "      bin/fabrica quid -census [-machina]\n"
             "      bin/fabrica quid -interrogationes [-machina]"
-            " [UNITAS...]\n");
+            " [UNITAS...]\n"
+            "      bin/fabrica quid -interrogationes -quaere TEXTUS"
+            " [-machina] [UNITAS...]\n"
+            "      bin/fabrica quid -interrogationes -symbolum X"
+            " [-machina] [UNITAS...]\n"
+            "      bin/fabrica quid -interrogationes -html VIA\n");
         redde II;
     }
 
@@ -553,6 +639,28 @@ suturae_quid (
     {
         _censum_imprimere(u, machina, piscina);
         redde ZEPHYRUM;
+    }
+    si (   rogatae
+        && (quaere != NIHIL || symbolum != NIHIL || html != NIHIL))
+    {
+        UnitatesInterrogationes* res = unitates_interrogationes(u,
+            piscina);
+        UnitatesInterrogationes* electae;
+
+        si (html != NIHIL)
+        {
+            redde suturae_interrogationes_paginam_scribere(res, html,
+                piscina);
+        }
+        electae = _interrogationes_eligere(u, res, argc, argv, primus,
+            piscina);
+        si (electae == NIHIL)
+        {
+            redde II;
+        }
+        redde suturae_interrogationes_quaerere(electae, quaere,
+            symbolum,
+            machina, piscina);
     }
     si (rogatae)
     {

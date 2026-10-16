@@ -772,10 +772,33 @@ gate-declaration reader (lib/portae.c via portae-declaratae) sees only
 TRACKED files - a new, untracked gate script reads as "sine
 annotatione" until `git add -N`.
 
-Next (U5b slice 4, not started): the pool query - "how do I ..." ->
-matching entries across units (a legati tool or `bin/fabrica rogare`;
-NOT named `quaestio`, taken three times), reverse lookup by symbol, API
-coverage report per header.
+**U5b slice 4 (2026-10-16, Fran: plus a generated docs/faq.html linked
+from docs/index.html):** all in `bin/fabrica quid -interrogationes`
+(tools/fabrica_interrogationes.c, an aedilis corpus of bin/fabrica):
+- `-quaere "TEXT"`: word overlap, question 3 / symbol 2 / answer 1 per
+  query word (counted once, best place); English stop words dropped;
+  identifiers also split on `_`; match = equal, or a common prefix of
+  >= 4 that covers the shorter word but its last 2 letters
+  (pointer/pointers, compare/comparing). Exit 1 = nothing matched, 2 =
+  only stop words. Honest overlap, not semantics: "allocation fails"
+  does not find "fatal".
+- `-symbolum X`: the reverse lookup (the questions naming X ARE its docs).
+- `-html VIA`: one deterministic page; refuses (exit 1, writes nothing)
+  while any question file has an error. Fabrica action
+  `interrogationes_pagina` (aedificatio.stml, `lectiones="verum"`):
+  inputs = lib/*.interrogationes.stml, the NAMES of include/ (stems =
+  owners), unitates.stml, the script, bin/fabrica by provenance + its
+  manifest; what filum reads is supplied by the read book. Correctness
+  does not hang on the key: generata regenerates under -plenus and
+  compares bytes (plant: an edited question -> `STALUM docs/faq.html`).
+  docs/index.html links it under Bibliothecae.
+- API coverage = `tools/interrogationes_fumus.sh -tegmen [include/X.h]`
+  (needs the nexus table, so it lives beside the gate): today piscina
+  11/17, xar 8/33 functions anchored, the rest named.
+Gate unitates VIII also pins -quaere, -symbolum, -html (line-2 marker,
+HTML escaping) and the refusal on a bad file, in a throwaway git tree.
+U5b is complete; open: more libraries' questions (then the census
+expectation), and whether legati should answer the same query.
 
 ## VIII. Open questions (for Fran)
 

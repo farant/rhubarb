@@ -162,3 +162,16 @@ and an entry with a question and an answer is still returned (the gate
 decides). examen gotcha met twice in one sitting: a tag in a COMMENT
 (`/* <interrogatio> */`) is an annotation to examen ("ancorata sed non
 parsabilis") - write tags in comments without angle brackets.
+
+## 2026-10-16 - U5b slice 4: query and docs/faq.html
+
+The query and page live in bin/fabrica (tools/fabrica_interrogationes.c),
+not in this lib: ranking and HTML are front-end policy, the lib returns
+entries. Two matcher lessons from the gate's own test: a plain "shorter
+word is a prefix" rule misses compare/comparing (diverge at the 7th
+letter), and identifiers are single tokens unless split on `_`
+(piscina_allocare never met "allocation"). fabrica input pairs: there is
+no plagulae+nomina kind; NAMES of a directory = `genus="directorium"`.
+The reader's git ls-files enumeration is invisible to the read book, so
+the action declares the files it depends on by name and leans on the
+generata gate's byte comparison for the rest.

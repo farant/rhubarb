@@ -1,0 +1,55 @@
+<!doctype html>
+<!-- GENERATUM: bin/fabrica quid -interrogationes -html (tools/interrogationes_pagina.sh) - noli manu mutare; quaestiones in lib/S.interrogationes.stml -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Interrogationes</title>
+<link rel="stylesheet" href="stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="index.html">Rhubarb</a></p>
+<h1>Interrogationes</h1>
+<p class="subtitulus">Questions the code answers: how do I, can I, why, what is</p>
+
+<p>Each unit declares the questions it answers in <code>lib/S.interrogationes.stml</code> (canon <code>interrogationes.canon</code>). Every answer is anchored to a symbol, a path or a command, and the gate <code>interrogationes</code> turns red when an anchor dies. From the terminal: <code>bin/fabrica quid -interrogationes -quaere "how do I ..."</code>, or <code>-symbolum xar_addere</code> for the questions that name a symbol.</p>
+
+<p class="nota">10 questions in 2 units · possumne 4 · quomodo 4 · quid 1 · cur 1</p>
+<ul>
+<li><a href="#piscina">piscina</a> <span class="nota">5</span></li>
+<li><a href="#xar">xar</a> <span class="nota">5</span></li>
+</ul>
+
+<h2 id="piscina">piscina</h2>
+<p class="nota"><a href="../include/piscina.h"><code>include/piscina.h</code></a> · <a href="../lib/piscina.interrogationes.stml"><code>lib/piscina.interrogationes.stml</code></a></p>
+<ol class="quaestiones">
+<li id="piscina-1"><span class="status">possumne</span>can I free a single allocation from a piscina?
+<div class="responsum">No: a piscina is an arena and frees everything at once. piscina_destruere releases all of it, piscina_vacare keeps the blocks and empties them for reuse, and piscina_notare with piscina_reficere rolls back everything allocated after the mark.<br><span class="nota">symbolum <code>piscina_destruere</code> <code>piscina_vacare</code> <code>piscina_notare</code> <code>piscina_reficere</code></span></div></li>
+<li id="piscina-2"><span class="status">quomodo</span>how do I use temporary scratch memory in a loop without the piscina growing every iteration?
+<div class="responsum">Take a mark with piscina_notare before the temporaries and call piscina_reficere after. Everything allocated after the mark becomes invalid, but the memory is neither freed nor cleared, so a stale read usually still sees the old values and the bug is silent. Build with -DPISCINA_VENENUM=1 to fill released bytes with 0xA5 (the venenum gate does this).<br><span class="nota">symbolum <code>piscina_notare</code> <code>piscina_reficere</code> · via <a href="../tools/venenum_probare.sh"><code>tools/venenum_probare.sh</code></a></span></div></li>
+<li id="piscina-3"><span class="status">quomodo</span>how do I handle running out of memory instead of the program exiting?
+<div class="responsum">piscina_allocare is fatal: if no block can be found or created it prints the piscina's name and exits the process. piscina_conari_allocare (and _ordinatum) return NIHIL in the same situation, so the caller can recover.<br><span class="nota">symbolum <code>piscina_allocare</code> <code>piscina_conari_allocare</code> <code>piscina_conari_allocare_ordinatum</code></span></div></li>
+<li id="piscina-4"><span class="status">possumne</span>can I put a hard cap on how much memory a piscina uses?
+<div class="responsum">Yes: piscina_generare_certae_magnitudinis makes one buffer that never grows; an allocation that does not fit is fatal through piscina_allocare or NIHIL through piscina_conari_allocare. piscina_potesne_allocare asks first. piscina_generare_dynamicum instead adds blocks (twice the initial size, or the request size plus the initial size when larger).<br><span class="nota">symbolum <code>piscina_generare_certae_magnitudinis</code> <code>piscina_potesne_allocare</code> <code>piscina_generare_dynamicum</code></span></div></li>
+<li id="piscina-5"><span class="status">quid</span>what alignment does piscina_allocare give, and how do I pack bytes tightly?
+<div class="responsum">Eight bytes (PISCINA_ORDINATIO_ORDINARIA), enough for every house type including pointers, i64 and f64, like malloc. For byte-only data such as text, piscina_allocare_ordinatum(piscina, mensura, I) packs with no padding. Before 2026-10-05 the default was one byte, which left wider members misaligned.<br><span class="nota">symbolum <code>piscina_allocare</code> <code>piscina_allocare_ordinatum</code></span></div></li>
+</ol>
+
+<h2 id="xar">xar</h2>
+<p class="nota"><a href="../include/xar.h"><code>include/xar.h</code></a> · <a href="../lib/xar.interrogationes.stml"><code>lib/xar.interrogationes.stml</code></a></p>
+<ol class="quaestiones">
+<li id="xar-1"><span class="status">quomodo</span>how do I keep pointers into an array valid while it grows?
+<div class="responsum">Use a Xar: it grows by adding segments (each twice the size of the last) and never reallocates, so a pointer from xar_addere or xar_obtinere stays valid for the life of the piscina. New elements are zeroed unless the array was created with XAR_VEXILLUM_SINE_ZEPHYRUM.<br><span class="nota">symbolum <code>xar_addere</code> <code>xar_obtinere</code></span></div></li>
+<li id="xar-2"><span class="status">possumne</span>can I treat a xar as a flat C array (memcpy, qsort, pointer arithmetic)?
+<div class="responsum">No. The segments are not contiguous: xar_obtinere(x, 0) points into the first segment only. Copy a range out with xar_copiare_ad_tabulam, sort in place with xar_ordinare, and index every element through xar_obtinere.<br><span class="nota">symbolum <code>xar_copiare_ad_tabulam</code> <code>xar_ordinare</code> <code>xar_obtinere</code></span></div></li>
+<li id="xar-3"><span class="status">quomodo</span>how do I remove an element from the middle of a xar quickly?
+<div class="responsum">xar_removere_cum_ultimo moves the last element into the hole: O(1), but the order is not kept. At the end, xar_removere_ultimum drops the last element and xar_tollere copies it out first. There is no order-preserving removal from the middle.<br><span class="nota">symbolum <code>xar_removere_cum_ultimo</code> <code>xar_removere_ultimum</code> <code>xar_tollere</code></span></div></li>
+<li id="xar-4"><span class="status">possumne</span>can a xar hold more than about 33 million elements?
+<div class="responsum">Not the ordinary one: its segment table has XXIV entries (about XXXIII M elements with the default first segment of IV), and past that xar_addere prints a refusal to stderr and returns NIHIL rather than truncating silently. Create the array with xar_creare_magnum (LXIV segments) when it really is that large.<br><span class="nota">symbolum <code>xar_creare_magnum</code> <code>xar_addere</code></span></div></li>
+<li id="xar-5"><span class="status">cur</span>why must a comparator passed to xar_ordinare not allocate from the array's piscina?
+<div class="responsum">xar_ordinare is a stable merge sort whose scratch space (2n elements) comes from the array's own piscina between piscina_notare and piscina_reficere. Anything the comparator allocates there is rolled back with the scratch when the sort returns. On a fixed-size piscina with no room left it falls back to an in-place insertion sort (O(n^2), no allocation).<br><span class="nota">symbolum <code>xar_ordinare</code> <code>piscina_notare</code> <code>piscina_reficere</code></span></div></li>
+</ol>
+
+</body>
+</html>

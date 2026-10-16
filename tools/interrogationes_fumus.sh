@@ -19,7 +19,13 @@
 # unitates gradus VIII). Mortua NOMINANTUR (via:linea, genus ancorae,
 # valor); numerus solus non sufficit.
 #
-# Usus: ./tools/interrogationes_fumus.sh
+# -tegmen [include/X.h ...]: RELATIO (non porta) - functiones quas caput
+# declarat (tabula nexus, sedes generis functio) quae nullam ancoram
+# 'symbolum' habent: aut opus scribendum, aut non vere publicae. Sine
+# capitibus: capita unitatum quae iam interrogationes habent. Exitus 0
+# (relatio), 2 iudicare nequit.
+#
+# Usus: ./tools/interrogationes_fumus.sh [-tegmen [CAPUT...]]
 # Exitus: 0 sanum · 1 FRACTUM (responsum mortuum aut vitium lectionis)
 #         · 2 iudicare nequit (bin/fabrica deest, tabula nexus fracta,
 #         nulla interrogatio - porta quae nihil iudicat mortua est)
@@ -38,6 +44,35 @@ if [ "$rc" -eq 2 ]; then
     _fractum "bin/fabrica quid -interrogationes nequit (exitus 2)"
 fi
 n=$(awk -F'\t' '$1 == "SUMMA" { print $3 }' "$T/i")
+
+if [ "${1:-}" = "-tegmen" ]; then
+    shift
+    capita=("$@")
+    if [ "${#capita[@]}" -eq 0 ]; then
+        # capita possessorum: stemma S -> include/S.h (si exstat)
+        while IFS= read -r t; do
+            [ -f "include/$t.h" ] && capita+=("include/$t.h")
+        done < <(awk -F'\t' '$1 == "INTERROGATIO" { print $2 }' "$T/i" | sort -u)
+    fi
+    [ "${#capita[@]}" -gt 0 ] || _fractum "nulla capita (-tegmen include/X.h)"
+    ./silva/nexus.sh -renovare > "$T/renovatio" 2>&1 \
+        || { sed 's/^/      /' "$T/renovatio" | tail -5; _fractum "silva/nexus.sh -renovare fractum"; }
+    awk -F'\t' '$1 == "INTERROGATIO" { k = split($8, s, " "); for (j = 1; j <= k; j++) print s[j] }' \
+        "$T/i" | sort -u > "$T/ancorata"
+    printf '%s\n' "${capita[@]}" > "$T/capita"
+    awk -F'\t' 'NR == FNR { c[$1] = 1; next }
+        $2 == "sedes" && $3 == "functio" && ($4 in c) { print $4 "\t" $1 }' \
+        "$T/capita" build/nexus.tsv | sort -u > "$T/functiones"
+    for caput in "${capita[@]}"; do
+        omnes=$(awk -F'\t' -v c="$caput" '$1 == c' "$T/functiones" | wc -l | tr -d ' ')
+        nudae=$(awk -F'\t' -v c="$caput" 'NR == FNR { a[$1] = 1; next } $1 == c && !($2 in a) { print $2 }' \
+            "$T/ancorata" "$T/functiones")
+        tectae=$((omnes - $(printf '%s' "$nudae" | grep -c .)))
+        echo "$caput: $tectae/$omnes functiones ancoratae"
+        [ -n "$nudae" ] && printf '%s\n' "$nudae" | sed 's/^/  sine interrogatione: /'
+    done
+    exit 0
+fi
 [ "${n:-0}" -gt 0 ] || _fractum "nulla interrogatio iudicata"
 fracta=0
 if [ "$rc" -ne 0 ]; then
