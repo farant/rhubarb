@@ -315,6 +315,16 @@ late passes cost more.
   existential "q >= 2 has a tie"), position independence, pins in
   quick mode, the null (b) change count, the null (c) type re-derived.
 
+## T5c (findings, claims, ledger, freeze; 2026-10-16)
+
+- findings.md written; claims.md: 31.2.2, 55.2.3.1.1-4, node 56
+  (Revisions entry: the demo's review T5d follows). D128's findings
+  get a dated note at its open period-2 question. Ledger: N6
+  impletum with a results note; the exact-dilatation wish (…VFF141H)
+  noted (mu = lambda^Q from the tail, given dominance); the d >= 3
+  counter wish (…QK7A9) linked to N6. Frozen with archive.sh:
+  demo-snapshot.c, 35 library files, output identical (237 lines).
+
 ## Out of scope
 
 - Exact polyhedral region counts in d >= 3 (exact LP).

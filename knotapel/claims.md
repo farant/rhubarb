@@ -94,6 +94,11 @@ ranked by how much it bears on KC 47.
   54.2 no longer says "never wrong"; 54.1, 54.7.1 and 55.1 graded
   [proved]; 54.3.1 separates the measured rate from the exact class;
   54.1.3 appended.
+- **D129 (2026-10-16).** Appended: 31.2.2, 55.2.3.1.1 to
+  55.2.3.1.4, and 56 (linear regions of braid networks). Its library
+  pieces (nervus_regiones_plani, the plexus census helpers) were
+  reviewed independently before the demo; the demo's own independent
+  review (task T5d) follows these nodes.
 
 ## Part I. Definitions
 
@@ -667,6 +672,8 @@ ranked by how much it bears on KC 47.
         exact classes most of its "periodic" side is not periodic
         (see 54.5). Whether the verdict holds over exact classes is
         open (see 54.9).
+31.2.2. On capacity (linear regions, not computation), positive
+        entropy buys no exponential growth on B_3: see 56.
 31.3. Under the intended hash AND3 = OR3 (320,265 each), as negation
       symmetry requires; D106's "no gap above 3.7 points" is
       hash-specific (6.6 and 7.3 points, favouring periodic braids).
@@ -1183,8 +1190,67 @@ ranked by how much it bears on KC 47.
         certifies, 56 of the 3,006 certified at t = -1. [exact]
         (D128 Part D)
 55.2.3.1. Why does period 2 concentrate there? [open]
+55.2.3.1.1. Partly: period >= 2 forces the limit direction onto a
+            wall. A bit that alternates along an orbit converging to
+            v has its argument > 0 on one subsequence and <= 0 on the
+            other, so 0 at v. [proved] (D129 Part C checks it per
+            argument on B_4 up to length 6)
+55.2.3.1.2. The converse fails: 568 positive-entropy braids of B_4 up
+            to length 6 end on a wall with period 1 (476 certified at
+            t = -1, 92 only at a cube root). [exact] (D129 Part C;
+            assumes the largest real root of the tail dominates)
+55.2.3.1.3. The period belongs to the loop, the tie to the braid:
+            loops of one braid can settle with periods 1 and 2 at the
+            same limit, and all growing loops agree on the tie.
+            [exact] (D129 Part C)
+55.2.3.1.4. Why the braids certified only at a cube root end on walls
+            more often (420 of 1,008, against 532 of 3,006) is open.
+            [open]
 55.3. Can the exact dilatation be read from M on the right invariant
       cone (Hall and Yurttas)? [open] (ledger ...VFF141H)
 55.4. Can the braid network compute Boolean functions (N2)? [open]
       (ledger ...4291V2)
+
+56. How many linear regions does the network of w^m carve, and does
+    the braid's entropy decide it? (logically follows 55)
+56.1. On B_3 they grow linearly in m for every braid, never
+      exponentially: over every class up to length 8, m = 1..12, the
+      registered rule gives H_lin and not H_exp for all 2,108
+      positive-entropy classes (and every periodic and zero-entropy
+      one). [exact] (D129 Part A: exact sector counts,
+      nervus_regiones_plani)
+56.1.1. The linear pieces of w^m stay bounded: 8 for every
+        positive-entropy class at every m >= 2; for periodic braids
+        they cycle, 1 at m = k (w^k is the identity map). [exact]
+        (D129 Part A)
+56.1.2. Why bounded? A conjugate of the SL(2, Z) matrix by a fixed
+        piecewise-linear change of coordinates would explain it.
+        [interpretation] (D129 findings)
+56.1.3. The regions added per pass do not grow with lambda: they top
+        out at 8, the longest word, for lambda up to about 47. Over
+        m = 6..12 the most-regions word adds 6 x its cyclically
+        reduced length for 1,816 of 2,108 positive-entropy classes.
+        [exact] (D129 Part A; the cyclic-length pattern was noticed
+        after the run, not registered)
+56.2. Regions belong to the word, pieces to the braid: geodesic words
+      of Delta sigma_1 carve 12, 12 and 6 regions at m = 4 with the
+      same pieces; 408 positive-entropy classes have words with
+      different counts at m = 12. [exact] (D129 Part A)
+56.3. Is linear region growth special to braids?
+56.3.1. No. Networks of the same shape with each instruction's
+        coefficients permuted also grow linearly (H_lin 2,089 of
+        2,108, H_exp none), but their pieces grow (46 at m = 12
+        against 8). [exact] (D129 Part D)
+56.3.2. So what braids add is bounded functional complexity, not more
+        regions. [interpretation]
+56.4. Does the lattice lower bound (interior integer points of the
+      shells max |x_i| = R) measure the growth?
+56.4.1. No. At m = 12 and R <= 256 it finds 13.3 of the 87.6 mean
+        regions of positive-entropy classes on B_3, and no such
+        class's full count; on B_4 it stops growing after m = 4.
+        [exact] (D129 Parts B and C)
+56.4.2. New regions thin by about lambda per pass, toward the
+        repelling direction. [interpretation]
+56.5. Do the same laws hold on B_4? [open] (needs exact counts in
+      d >= 3; ledger ...QK7A9)
 ```

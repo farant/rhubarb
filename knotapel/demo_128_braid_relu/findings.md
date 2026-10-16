@@ -271,6 +271,13 @@ the braids that t = -1 cannot see. In an ad hoc debug run (not printed
 by the demo), every q = 2 E braid up to length 4 had rate phi^2. The
 cause is not established.
 
+> **Note (2026-10-16, Demo 129 Part C).** Period >= 2 forces the
+> limit direction onto a wall of the network (an argument vanishes
+> there), proved by continuity and checked exactly per argument. The
+> converse fails: 568 E braids of B_4 up to length 6 end on a wall with
+> period 1. Why the cube-root-only braids alternate more often remains
+> open. See `demo_129_braid_regions/findings.md` and KC 55.2.3.1.
+
 ## Interpretation [interpretation]
 
 - A braid word is a deep, narrow, sparse ReLU network with weights in
