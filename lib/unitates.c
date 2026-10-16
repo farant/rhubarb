@@ -20,8 +20,10 @@
 
 /* regula muneris una (ordine politicae) */
 nomen structura {
-    chorda  titulus;
-    chorda  segmentum;     /* vacuum = quodvis */
+    chorda titulus;
+    chorda segmentum;     /* vacuum = quodvis */
+    chorda segmenti_suffixum; /* '_assets': segmentum ita finiens
+                                * quoque congruit; vacuum = nullum */
        Xar* extensiones;   /* chorda; vacuus = quaevis */
        i32  ordo;          /* I-basatus */
 } UnitatesMunus;
@@ -69,6 +71,10 @@ structura Unitates {
                      chorda  fontes;
                      chorda  probationes;
                      chorda  praefixum;
+                     chorda  paginae;     /* docs/bibliothecae: S.html
+                                           * ad S; vacuum = nullae */
+                     chorda bona;        /* '_assets': FONTES/S_assets/
+                                           * ad S; vacuum = nulla */
                         Xar* partes;           /* chorda */
                         Xar* familiae;         /* chorda */
                         Xar* omnes;            /* Unitas* */
@@ -401,7 +407,7 @@ hic_manens constans character* constans _attributa_generis[] = {
     "via", "cura", "descriptio", NIHIL
 };
 hic_manens constans character* constans _attributa_muneris[] = {
-    "titulus", "segmentum", "extensiones", NIHIL
+    "titulus", "segmentum", "segmenti_suffixum", "extensiones", NIHIL
 };
 hic_manens constans character* constans _attributa_linguae[] = {
     "titulus", "extensiones", NIHIL
@@ -412,7 +418,9 @@ hic_manens constans character* constans _attributa_iudicis[] = {
     NIHIL
 };
 hic_manens constans character* constans _attributa_bibliothecarum[] = {
-    "capita", "fontes", "probationes", "praefixum", "partes", NIHIL
+    "capita", "fontes", "probationes", "praefixum", "partes", "paginae",
+        "bona",
+    NIHIL
 };
 hic_manens constans character* constans _attributa_familiae[] = {
     "radix", NIHIL
@@ -503,12 +511,14 @@ _politicam_legere (
                    chorda  ext  = _valor(n, "extensiones");
 
             _attributa_clausa(n, _attributa_muneris, via, k);
-            m->titulus      = _necessarium(n, "titulus", via, k);
-            m->segmentum    = _valor(n, "segmentum");
-            m->extensiones  = _verba(ext, piscina);
-            m->ordo         = ++ordo;
-            si (   m->segmentum.mensura        == ZEPHYRUM
-                && xar_numerus(m->extensiones) == ZEPHYRUM)
+            m->titulus            = _necessarium(n, "titulus", via, k);
+            m->segmentum          = _valor(n, "segmentum");
+            m->segmenti_suffixum  = _valor(n, "segmenti_suffixum");
+            m->extensiones        = _verba(ext, piscina);
+            m->ordo               = ++ordo;
+            si (   m->segmentum.mensura         == ZEPHYRUM
+                && m->segmenti_suffixum.mensura == ZEPHYRUM
+                && xar_numerus(m->extensiones)  == ZEPHYRUM)
             {
                 _causa(k, via, n->linea, "regula munus '", m->titulus,
                     "' vacua (nec segmentum nec extensiones)");
@@ -551,6 +561,8 @@ _politicam_legere (
             u->praefixum    = _necessarium(n, "praefixum", via, k);
             u->partes       = _verba(_necessarium(n, "partes", via, k),
                 piscina);
+            u->paginae  = _valor(n, "paginae");
+            u->bona     = _valor(n, "bona");
         }
         alioquin si (chorda_aequalis_literis(t, "familia"))
         {
@@ -1196,6 +1208,8 @@ unitates_legere (
     u->fontes       = _vacua();
     u->probationes  = _vacua();
     u->praefixum    = _vacua();
+    u->paginae      = _vacua();
+    u->bona         = _vacua();
     u->partes       = xar_creare(piscina, (i32)magnitudo(chorda));
     u->familiae     = xar_creare(piscina, (i32)magnitudo(chorda));
     u->omnes        = xar_creare(piscina, (i32)magnitudo(Unitas*));
@@ -1356,9 +1370,54 @@ _unitas_viae (
         s = chorda_sectio(basis, ZEPHYRUM, basis.mensura - II);
     }
     alioquin si (   chorda_aequalis(dir, u->fontes)
-                 && _finit(basis, ".worklog.md"))
+                 && _finit(basis, ".md"))
     {
-        s = chorda_sectio(basis, ZEPHYRUM, basis.mensura - XI);
+        /* FONTES/S.<quidvis>.md (worklog, phase-log) ad S */
+        i32 punctum;
+
+        per (punctum = ZEPHYRUM; punctum < basis.mensura
+            && basis.datum[punctum] != '.'; punctum++)
+        {
+        }
+        si (punctum + III < basis.mensura)
+        {
+            s = chorda_sectio(basis, ZEPHYRUM, punctum);
+        }
+    }
+    alioquin si (   u->paginae.mensura > ZEPHYRUM
+                 && chorda_aequalis(dir, u->paginae)
+                 && _finit(basis, ".html"))
+    {
+        /* PAGINAE/S.html (folium inventarii redditum) ad S */
+        s = chorda_sectio(basis, ZEPHYRUM, basis.mensura - V);
+    }
+    alioquin si (   u->bona.mensura > ZEPHYRUM
+                 && dir.mensura > u->fontes.mensura + I
+                 && _incipit_chorda(dir, u->fontes)
+                 && dir.datum[u->fontes.mensura] == '/')
+    {
+        /* condicio DIRECTORIUM sub fontibus poscit: plagula fontium
+         * ipsa (lib/X.c) ramum sequentem attingere debet */
+        /* FONTES/S<bona>/... (lib/mensa_assets/fontes/x.js) ad S */
+        chorda reliqua = chorda_sectio(via, u->fontes.mensura + I,
+            via.mensura);
+        i32 j;
+
+        per (j = ZEPHYRUM; j < reliqua.mensura
+            && reliqua.datum[j] != '/'; j++)
+        {
+        }
+        si (j < reliqua.mensura)
+        {
+            chorda primum = chorda_sectio(reliqua, ZEPHYRUM, j);
+
+            si (   primum.mensura > u->bona.mensura
+                && _finit_chorda(primum, u->bona))
+            {
+                s = chorda_sectio(primum, ZEPHYRUM,
+                    primum.mensura - u->bona.mensura);
+            }
+        }
     }
     alioquin si (   chorda_aequalis(dir, u->fontes)
                  && (_finit(basis, ".c") || _finit(basis, ".m")))
@@ -1442,10 +1501,13 @@ _unitas_viae (
     redde x;
 }
 
+/* directorium viae aequale 'segmentum' (vacuum = non rogatur) aut in
+ * 'suffixum' finiens (vacuum = non rogatur) */
 interior b32
 _segmentum_habet (
     chorda via,
-    chorda segmentum)
+    chorda segmentum,
+    chorda suffixum)
 {
     i32 initium = ZEPHYRUM;
     i32 i;
@@ -1454,8 +1516,13 @@ _segmentum_habet (
     {
         si (via.datum[i] == '/')
         {
-            si (chorda_aequalis(chorda_sectio(via, initium, i),
-                    segmentum))
+            chorda s = chorda_sectio(via, initium, i);
+
+            si (   (segmentum.mensura > ZEPHYRUM
+                    && chorda_aequalis(s, segmentum))
+                || (suffixum.mensura > ZEPHYRUM
+                    && s.mensura > suffixum.mensura
+                    && _finit_chorda(s, suffixum)))
             {
                 redde VERUM;
             }
@@ -1545,8 +1612,10 @@ _respondere (
     per (i = ZEPHYRUM; i < xar_numerus(u->munera); i++)
     {
         UnitatesMunus* m = (UnitatesMunus*)xar_obtinere(u->munera, i);
-                  b32  congruit = (m->segmentum.mensura == ZEPHYRUM
-                      || _segmentum_habet(via, m->segmentum))
+                  b32  congruit = ((m->segmentum.mensura == ZEPHYRUM
+                      && m->segmenti_suffixum.mensura == ZEPHYRUM)
+                      || _segmentum_habet(via, m->segmentum,
+                          m->segmenti_suffixum))
                       && (xar_numerus(m->extensiones) == ZEPHYRUM
                       || _extensio_congruit(m->extensiones, basis,
                       NIHIL));
@@ -1559,10 +1628,18 @@ _respondere (
             chorda_aedificator_appendere_literis(c, "regula munus ");
             chorda_aedificator_appendere_i32(c, m->ordo);
             chorda_aedificator_appendere_literis(c, " (");
-            si (m->segmentum.mensura > ZEPHYRUM)
+            si (   m->segmentum.mensura > ZEPHYRUM
+                || m->segmenti_suffixum.mensura > ZEPHYRUM)
             {
                 chorda_aedificator_appendere_literis(c, "segmentum ");
                 chorda_aedificator_appendere_chorda(c, m->segmentum);
+                si (m->segmenti_suffixum.mensura > ZEPHYRUM)
+                {
+                    chorda_aedificator_appendere_literis(c,
+                        m->segmentum.mensura > ZEPHYRUM ? "|*" : "*");
+                    chorda_aedificator_appendere_chorda(c,
+                        m->segmenti_suffixum);
+                }
                 si (xar_numerus(m->extensiones) > ZEPHYRUM)
                 {
                     chorda_aedificator_appendere_literis(c, ", ");

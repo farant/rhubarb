@@ -2307,7 +2307,6 @@ temp
 temp1
 temp2
 template
-templates
 tenuti
 tergale
 term

@@ -64,6 +64,9 @@
     <attributum nomen="titulus"     genus="nomen"  necessarium="verum"/>
     <attributum nomen="segmentum"   genus="textus"
       nota="nomen directorii ullo loco viae (fixa, probationes)"/>
+    <attributum nomen="segmenti_suffixum" genus="textus"
+      nota="directorium in hoc finiens quoque congruit ('_assets':
+            lib/mensa_assets, tools/silex_assets)"/>
     <attributum nomen="extensiones" genus="textus"
       nota="index spatiis separatus (.c .m)"/>
   </elementum>
@@ -104,6 +107,11 @@
     <attributum nomen="partes"      genus="textus" necessarium="verum"
       nota="suffixa partium (_macos _posix ...): stemma S_macos ad S
             pertinet, non unitas propria"/>
+    <attributum nomen="paginae"     genus="textus"
+      nota="directorium foliorum bibliothecarum: PAGINAE/S.html ad S
+            (docs/bibliothecae - folium inventarii redditum)"/>
+    <attributum nomen="bona"        genus="textus"
+      nota="suffixum directorii bonorum: FONTES/S_assets/... ad S"/>
   </elementum>
 
   <elementum nomen="exspectatio"

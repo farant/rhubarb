@@ -25,7 +25,7 @@
 
   <!-- munera: prima regula congruens vincit -->
   <munus titulus="fixtura"     segmentum="fixa"/>
-  <munus titulus="assets"      segmentum="assets"/>
+  <munus titulus="assets"      segmentum="assets" segmenti_suffixum="_assets"/>
   <!-- amalgama = productum distribuendum (generatum + capita vanilla manu
        scripta): forma eius gradus generationis esset, non formatoris
        commissionis (Franus 2026-10-15) -->
@@ -34,7 +34,7 @@
   <munus titulus="fixtura"     segmentum="probationes"/>
   <munus titulus="caput"       extensiones=".h"/>
   <munus titulus="fons"        extensiones=".c .m .css"/>
-  <munus titulus="documentum"  extensiones=".md"/>
+  <munus titulus="documentum"  extensiones=".md .html"/>
   <munus titulus="declaratio"  extensiones=".stml .canon .genera .census .toml .registrum"/>
   <munus titulus="scriptum"    extensiones=".sh .py .ts .js"/>
 
@@ -93,13 +93,15 @@
 
   <bibliothecae capita="include" fontes="lib" probationes="probationes"
                 praefixum="probatio_"
-                partes="_macos _posix _interna _impl _tabula"/>
+                partes="_macos _posix _interna _impl _tabula"
+                paginae="docs/bibliothecae" bona="_assets"/>
 
   <!-- exspectationes per genus (census: bin/fabrica quid -census) -->
   <exspectatio genus="/elementa_programmatis/bibliotheca" munus="probatio" minimum="1"
                descriptio="bibliotheca probationem habet"/>
-  <exspectatio genus="/elementa_programmatis/bibliotheca" munus="documentum" minimum="1"
-               descriptio="bibliotheca worklog aut documentum habet"/>
+  <!-- 'bibliotheca documentum habet' remota (Franus 2026-10-15: worklogs
+       ex usu nata, aetas ante eos; documentatio vera redit cum
+       interrogationibus U5b) -->
   <exspectatio genus="/elementa_programmatis/applicatio" attributum="usus"
                descriptio="applicatio auditorium suum declarat"/>
 

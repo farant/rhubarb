@@ -82,8 +82,9 @@ expectare "$ARCH" vita archivata || mala=1
 expectare "$KNOT" cura remissa || mala=1
 expectare probationes/pictor_commune.h munus probatio || mala=1
 expectare lib/fabrica_sanare.c catena "fabrica_sanare < fabrica < rhubarb" || mala=1
+expectare "$(git ls-files 'lib/mensa_assets/*' | head -1)" unitas "mensa (/elementa_programmatis/bibliotheca)" || mala=1
 if [ "$mala" -eq 0 ]; then
-    echo "  III responsa nota (X) OK"
+    echo "  III responsa nota (XI) OK"
 else
     echo "  III FRACTUM"; fracta=1
 fi

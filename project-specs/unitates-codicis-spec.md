@@ -650,6 +650,27 @@ red; orphan dropped -> red; an app without usus -> VII red.
   tools/unci-git, vim, scripts, episodes, lint, instrumenta,
   book_assets, reference.
 
+**U5a follow-up (2026-10-15, Fran):** the "library has a worklog/doc"
+expectation is DROPPED (worklogs are made as needed; many libraries
+predate them) - documentation returns with U5b's typed questions.
+Ownership fixed instead: a stem claims `lib/S.<any>.md` (worklog AND
+phase-log - 7 phase-logs used to fall to the root), `docs/bibliothecae/
+S.html` (`<bibliothecae paginae=...>`; those pages are RENDERED from
+the ledger's library inventory + the header's first sentence, 4 are
+fully hand-written - see park …PT44JPJA note …8T3RF) and `lib/S_assets/`
+(`bona="_assets"`). Role rules gained `segmenti_suffixum`: `assets` now
+matches `assets` OR `*_assets` (14 capsule directories: html/js/css +
+toml manifest + generated .c/.h; Fran preferred the suffix over an
+`asset__` filename prefix). `.html` joins the documentation role.
+Census after: 60 gaps (all "library without a test"), 20 orphans, 16
+undeclared dirs (was 137/20/25). Side effect: test asset capsules are
+role assets, so the Latin lint no longer judges them (one tolerated
+word, `templates`, left the pinned copy). A bug of mine caught by the
+unit test and gate III: the `S_assets` branch preceded the plain
+`lib/S.c` branch in an else-if chain and swallowed every lib/ file.
+Ledger: `tasks/` folder vision filed …HMFZB2KA (doc-drift linter ->
+task; overlaps the ledger's expeditio - decide the home first).
+
 ## VII. Interrogationes - documentation as typed questions (Fran 10-15)
 
 A unit exposes what it can do by DECLARING QUESTIONS it answers

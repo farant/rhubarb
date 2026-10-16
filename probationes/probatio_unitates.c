@@ -111,12 +111,14 @@ hic_manens constans character* constans POLITICA[] = {
         " cura=\"remissa\"/>",
     "  <genus via=\"/fabricatio/adscitio\" cura=\"aliena\"/>",
     "  <munus titulus=\"fixtura\" segmentum=\"fixa\"/>",
+    "  <munus titulus=\"assets\" segmentum=\"assets\""
+        " segmenti_suffixum=\"_assets\"/>",
     "  <munus titulus=\"probatio\" segmentum=\"probationes\""
         " extensiones=\".c .m .h\"/>",
     "  <munus titulus=\"fixtura\" segmentum=\"probationes\"/>",
     "  <munus titulus=\"caput\" extensiones=\".h\"/>",
     "  <munus titulus=\"fons\" extensiones=\".c .m\"/>",
-    "  <munus titulus=\"documentum\" extensiones=\".md\"/>",
+    "  <munus titulus=\"documentum\" extensiones=\".md .html\"/>",
     "  <munus titulus=\"declaratio\" extensiones=\".stml\"/>",
     "  <munus titulus=\"scriptum\" extensiones=\".sh\"/>",
     "  <lingua titulus=\"c89\" extensiones=\".c .h\"/>",
@@ -130,7 +132,8 @@ hic_manens constans character* constans POLITICA[] = {
         " descriptio=\"l\"/>",
     "  <bibliothecae capita=\"include\" fontes=\"lib\""
         " probationes=\"probationes\" praefixum=\"probatio_\"",
-    "                partes=\"_macos _posix\"/>",
+    "                partes=\"_macos _posix\""
+        " paginae=\"docs/bibliothecae\" bona=\"_assets\"/>",
     "  <iudex titulus=\"omnia\" curae=\"domestica\""
         " vitae=\"viva\" munera=\"fons\"",
     "         provenientiae=\"manu generatum\" linguae=\"c89\""
@@ -183,6 +186,13 @@ hic_manens constans PlagulaFicta MUNDUS[] = {
     { "include/xar.h", "/* xar */\n", NIHIL },
     { "lib/xar.c", "/* xar.c - manu */\n", NIHIL },
     { "lib/xar.worklog.md", "# xar\n", NIHIL },
+    { "lib/energia.phase-log.md", "# energia\n", NIHIL },
+    { "docs/bibliothecae/xar.html", "<!doctype html>\n<p>xar</p>\n",
+        NIHIL },
+    { "docs/bibliothecae/index.html", "<!doctype html>\n<p>i</p>\n",
+        NIHIL },
+    { "lib/xar_assets/a.js", "var a;\n", NIHIL },
+    { "probationes/q_assets/c.c", "/* capsula */\n", NIHIL },
     { "probationes/probatio_xar.c", "/* p */\n", NIHIL },
     { "probationes/fixa/xar/datum.c", "/* fixum */\n", NIHIL },
     { "probationes/pictor_commune.h", "/* auxilium */\n", NIHIL },
@@ -356,6 +366,26 @@ _sectio_intima (
     CREDO_CHORDA_AEQUALIS_LITERIS(r.unitas->titulus, "pictor");
     INCIPIT_LITERIS(r.unitatis_causa, "probatio unitatis pictor");
 
+    /* FONTES/S.<quidvis>.md, PAGINAE/S.html, FONTES/S_assets/ ad S;
+     * index.html nullius stemmatis radici cadit */
+    r = _quid(c, u, "lib/energia.phase-log.md");
+    CREDO_CHORDA_AEQUALIS_LITERIS(r.unitas->titulus, "energia");
+    CREDO_CHORDA_AEQUALIS_LITERIS(r.munus.valor, "documentum");
+    r = _quid(c, u, "docs/bibliothecae/xar.html");
+    CREDO_CHORDA_AEQUALIS_LITERIS(r.unitas->titulus, "xar");
+    CREDO_CHORDA_AEQUALIS_LITERIS(r.munus.valor, "documentum");
+    r = _quid(c, u, "docs/bibliothecae/index.html");
+    CREDO_CHORDA_AEQUALIS_LITERIS(r.unitas->titulus, "rhubarb");
+    r = _quid(c, u, "lib/xar_assets/a.js");
+    CREDO_CHORDA_AEQUALIS_LITERIS(r.unitas->titulus, "xar");
+    CREDO_CHORDA_AEQUALIS_LITERIS(r.munus.valor, "assets");
+
+    /* suffixum segmenti: probationes/q_assets/ assets, non probatio */
+    r = _quid(c, u, "probationes/q_assets/c.c");
+    CREDO_CHORDA_AEQUALIS_LITERIS(r.munus.valor, "assets");
+    CREDO_CHORDA_AEQUALIS_LITERIS(r.munus.causa,
+        "regula munus 2 (segmentum assets|*_assets)");
+
     r = _quid(c, u, "probationes/probatio_combinado.c");
     CREDO_CHORDA_AEQUALIS_LITERIS(r.unitas->titulus, "rhubarb");
     r = _quid(c, u, "tools/x.sh");
@@ -439,7 +469,7 @@ _sectio_munera (
     r = _quid(c, u, "probationes/probatio_xar.c");
     CREDO_CHORDA_AEQUALIS_LITERIS(r.munus.valor, "probatio");
     CREDO_CHORDA_AEQUALIS_LITERIS(r.munus.causa,
-        "regula munus 2 (segmentum probationes, .c .m .h)");
+        "regula munus 3 (segmentum probationes, .c .m .h)");
 
     /* caput auxiliare probationum = probatio, non fixtura (lint
      * hodie iudicat; regula prima solum .c .m dabat - inventum
