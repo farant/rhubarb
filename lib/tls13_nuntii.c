@@ -334,6 +334,13 @@ tls13_salutatio_scribere (
     _scr_u16(&s, 0x0804);
     _scr_u16(&s, 0x0805);
     _scr_u16(&s, 0x0806);
+    /* rsa_pkcs1_sha256/384/512: solum pro servis 1.2 (ServerKeyExchange
+     * cum folio RSA) - in 1.3 CertificateVerify eas reicit
+     * (_classis_schematis); sine eis servus 1.2 strictus
+     * handshake_failure reddit, non ServerHello (recensio I2) */
+    _scr_u16(&s, 0x0401);
+    _scr_u16(&s, 0x0501);
+    _scr_u16(&s, 0x0601);
     _scr_claudere(&s);
     _scr_claudere(&s);
     /* supported_versions */

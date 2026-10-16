@@ -100,8 +100,8 @@ tcp_incipere_perficere (
          chorda* descriptio,
         Piscina* piscina);
 
-/* REDINTEGRARE (tls13-spec II.3, descensus TLS): eundem parem
- * (getpeername) per fossam NOVAM, deinde dup2 in numerum fossae VETEREM
+/* REDINTEGRARE (tls13-spec II.3, descensus TLS): eundem parem (ad
+ * connexionem memoratum; getpeername si ignotus) per fossam NOVAM, deinde dup2 in numerum fossae VETEREM
  * - registrationes vocantium numero innixae (reactor poll()) manent;
  * connexio vetus clauditur (par EOF videt). optiones NIHIL:
  * non-blocans, connexio PENDENS - exspecta scribibilem, deinde

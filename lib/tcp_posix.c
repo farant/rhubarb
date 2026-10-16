@@ -36,7 +36,29 @@ structura TcpConnexio {
     Piscina* piscina;
     integer  fd;              /* Socket file descriptor (signed!) */
         b32  clausa;          /* Connexio clausa? */
+    /* par ad connexionem memoratus (tcp_redintegrare): getpeername post
+     * RST fallit; par_n 0 = ignotus */
+    structura sockaddr_storage  par;
+                     socklen_t par_n;
 };
+
+/* parem memorare (addressus crudus) */
+interior vacuum
+_parem_memorare (
+                 TcpConnexio* conn,
+    constans structura sockaddr* sa,
+                    socklen_t  n)
+{
+    si (sa != NIHIL && n > 0 && n <= (socklen_t)magnitudo(conn->par))
+    {
+        memcpy(&conn->par, sa, (size_t)n);
+        conn->par_n = n;
+    }
+    alioquin
+    {
+        conn->par_n = 0;
+    }
+}
 
 
 /* ========================================================================
@@ -166,6 +188,8 @@ tcp_connectere_cum_optionibus (
              character portus_str[VIII];
                integer status;
                integer fd;
+    structura sockaddr_storage par;
+                     socklen_t par_n;
 
     /* Validare argumenta */
     si (!hospes || !piscina)
@@ -218,6 +242,8 @@ tcp_connectere_cum_optionibus (
 
     /* Probare omnes addresses */
     fd = -1;
+    memset(&par, 0, magnitudo(par));
+    par_n = 0;
     per (rp = result; rp != NIHIL; rp = rp->ai_next)
     {
         fd = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
@@ -243,7 +269,12 @@ tcp_connectere_cum_optionibus (
             }
             si (r == 0)
             {
-                /* Successus! */
+                /* Successus! - par memoratur ante freeaddrinfo */
+                si (rp->ai_addrlen <= (socklen_t)magnitudo(par))
+                {
+                    memcpy(&par, rp->ai_addr, (size_t)rp->ai_addrlen);
+                    par_n = rp->ai_addrlen;
+                }
                 frange;
             }
         }
@@ -277,6 +308,8 @@ tcp_connectere_cum_optionibus (
     conn->piscina  = piscina;
     conn->fd       = fd;
     conn->clausa   = FALSUM;
+    _parem_memorare(conn, (constans structura sockaddr*)(vacuum*)&par,
+        par_n);
 
     res.successus                 = VERUM;
     res.connexio                  = conn;
@@ -311,6 +344,7 @@ _connexionem_creare (
     conn->piscina  = piscina;
     conn->fd       = fd;
     conn->clausa   = FALSUM;
+    conn->par_n    = 0;
     redde conn;
 }
 
@@ -370,6 +404,7 @@ tcp_incipere (
         redde _creare_error(TCP_ERROR_CONNEXIO, "Allocatio fallita",
             piscina);
     }
+    _parem_memorare(conn, sa, (socklen_t)mensura);
     res.successus                 = VERUM;
     res.connexio                  = conn;
     res.error                     = TCP_OK;
@@ -420,9 +455,18 @@ tcp_redintegrare (
                        integer r;
                        integer erratum;
 
-    si (   !connexio || connexio->fd < 0
-        || getpeername(connexio->fd, (structura sockaddr*)(vacuum*)&par,
-               &mensura) != 0)
+    si (!connexio || connexio->fd < 0)
+    {
+        redde _creare_error(TCP_ERROR_CONNEXIO, "par ignotus", piscina);
+    }
+    /* par memoratus primum (getpeername post RST fallit), deinde fossa */
+    si (connexio->par_n > 0)
+    {
+        memcpy(&par, &connexio->par, (size_t)connexio->par_n);
+        mensura = connexio->par_n;
+    }
+    alioquin si (getpeername(connexio->fd,
+                 (structura sockaddr*)(vacuum*)&par, &mensura) != 0)
     {
         redde _creare_error(TCP_ERROR_CONNEXIO, "par ignotus", piscina);
     }
@@ -502,11 +546,23 @@ tcp_ex_fossa (
     integer  fossa,
     Piscina* piscina)
 {
+    TcpConnexio* conn;
+
     si (fossa < 0 || !piscina)
     {
         redde NIHIL;
     }
-    redde _connexionem_creare(fossa, piscina);
+    conn = _connexionem_creare(fossa, piscina);
+    si (conn)
+    {
+        conn->par_n = (socklen_t)magnitudo(conn->par);
+        si (getpeername(fossa, (structura sockaddr*)(vacuum*)&conn->par,
+            &conn->par_n) != 0)
+        {
+            conn->par_n = 0;
+        }
+    }
+    redde conn;
 }
 
 
@@ -1046,6 +1102,8 @@ tcp_servus_accipere (
     conn->piscina  = piscina;
     conn->fd       = client_fd;
     conn->clausa   = FALSUM;
+    _parem_memorare(conn, (constans structura sockaddr*)(vacuum*)
+        &client_addr, addr_len);
 
     res.successus                 = VERUM;
     res.connexio                  = conn;

@@ -295,11 +295,13 @@ _sectio_salutatio (CredoContextus* c)
     ext[I].typus         = 0x000a;
     ext[I].hex           = "0004001d0017";
     ext[II].typus        = 0x000d;
-    ext[II].hex          = "000a0403050308040805" "0806";
-    ext[III].typus       = 0x002b;
-    ext[III].hex         = "020304";
-    ext[IV].typus        = 0x0033;
-    ext[IV].hex          = "0024001d0020";
+    /* rsa_pkcs1_* (0401 0501 0601) pro servis 1.2 (recensio I2) */
+    ext[II].hex          = "00100403050308040805" "080604010501"
+                           "0601";
+    ext[III].typus  = 0x002b;
+    ext[III].hex    = "020304";
+    ext[IV].typus   = 0x0033;
+    ext[IV].hex     = "0024001d0020";
     memset(temere, 0x22, XXXII);
     memset(sessio, 0x33, XXXII);
     memset(&sp, ZEPHYRUM, magnitudo(sp));

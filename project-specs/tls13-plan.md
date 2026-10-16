@@ -300,6 +300,67 @@ this plan.
   Close-out (spec status line, ledger note on ...BWQS8H, memory) goes in
   a SEPARATE commit after Fran's live check, as tls-bearssl R28 did.
 
+## Final review (fresh reviewer, Opus, read-only; report in the plan workspace)
+
+Verdict "merge with fixes", no Critical. One fix pass, each fix RED then
+GREEN, then TLS/TCP/HTTP suites 20/20, effluvia green, rete_fumus
+unchanged:
+- Final: fixed **I1** cookie-only HelloRetryRequest (RFC 8446 4.1.4: no
+  key_share) was rejected as "group not offered" - now CH2 resends the
+  SAME x25519 share plus the cookie, no P-256 draw, and the following
+  x25519 ServerHello is accepted; an HRR changing nothing -> 47. Test
+  `hrr_solum_crustulum` (machina) RED->GREEN; plant "always P-256" red.
+  (`s_server -stateless` was tried first: it sends NO HRR to us at all,
+  so that section proved nothing and was removed.) ClientHello buffer
+  1 KiB -> 16 KiB (one plaintext record) so long cookies fit (M6 part).
+- Final: fixed **I2** signature_algorithms lacked rsa_pkcs1_sha256/384/512
+  (strict 1.2 servers with RSA leaves answer handshake_failure, not a
+  1.2 ServerHello, so the fallback never triggers) - appended 0401 0501
+  0601; CertificateVerify still refuses them in 1.3. T3 `salutatio`
+  RED->GREEN; plant red.
+- Final: fixed **M1** (re-graded up: RFC 8446 4.1.3 MUST) - a 1.2
+  ServerHello carrying DOWNGRD now aborts with illegal_parameter (47) and
+  NO fallback. Test `signum_1_2` RED->GREEN; plant red.
+- Final: fixed **M4** (re-graded up: a 1.2 server that alerts and then
+  RSTs would be unreachable) - TcpConnexio remembers its peer at
+  connect/accept/tcp_ex_fossa; tcp_redintegrare uses it, getpeername only
+  as fallback. Test `post_rst` (unread data -> RST) RED->GREEN; plant red.
+- Final: minor (deferred): M2 BearSSL sentinel failure closes with
+  close_notify, not alert 47.
+- Final: minor (deferred): M3 BearSSL sentinel checked in gradus/blocking
+  only - a caller doing mittere/recipere without tls_gradus after a
+  fallback skips it (tls.c's stepped path always goes through gradus).
+- Final: minor (deferred): M5 tls_tls13_recipere can return ITERUM with
+  decrypted data waiting when the write side would block (inherited
+  BearSSL pump pattern).
+- Final: minor (deferred): M6 rest - oversized handshake message
+  reported as record_overflow; >16 certificates as decode_error.
+- Final: minor (deferred): M7 lenient RFC MUST-aborts (duplicate /
+  unsolicited extensions, SH legacy_version, 1.2 SH after HRR, record
+  interleaving, unbounded CCS).
+- Final: minor (deferred): M8 plaintext alert after keys loses its name.
+- Final: minor (deferred): M9 memcmp length 0 on possibly-NULL session id
+  (test path only).
+- Final: Ruling: EOF without close_notify after the handshake = clean 0,
+  and a bare FIN instead of alert 116 likewise - house contract shared
+  by all backends (tls.h) - cost if wrong: a truncation attack on a
+  length-less body goes unnoticed (HTTP framing is the defence).
+- Final: Ruling: excluded groups / schemes / RSA > 4096, no 0-RTT / PSK /
+  tickets, no AEAD usage limits, no half-close writes - spec II.5 / IV
+  floor - cost if wrong: some exotic servers unreachable; very
+  long-lived connections never rekey on our side.
+- Final: Ruling: the padding scan in tls13_aperire is not constant time -
+  it runs only on an authenticated plaintext - cost if wrong: none known.
+- Final: Ruling: fallback on an unauthenticated protocol_version alert
+  stays - the sentinel (now also checked by the engine, M1) is the
+  defence - cost if wrong: one wasted reconnect per forced alert.
+- Final: Ruling: R24 untimed reconnect and the kqueue caveat stand
+  (documented) - cost if wrong: a hung reconnect under a black-holed
+  network until the socket timeout.
+- Review focus 2 correction: RFC 8448 §5's HRR carries BOTH key_share
+  and cookie; the cookie-only shape is pinned only since I1's
+  `hrr_solum_crustulum`.
+
 ## Review focus
 
 Inputs no task's tests reach that are most likely to bite, each with

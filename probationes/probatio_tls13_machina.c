@@ -12,12 +12,14 @@
 #include "fiducia.h"
 #include "tls13.h"
 #include "tls13_clavis.h"
+#include "tls13_nuntii.h"
 #include "tls13_recordum.h"
 #include "rfc8448.h"
 #include <string.h>
 
 #define VIA_RFC "probationes/fixa/tls13/rfc8448.txt"
 #define CAPSA   (VIII * MXXIV)
+#define CAPUT_RECORDI V
 
 #define S_HS "derive secret \"tls13 s hs traffic\""
 #define C_HS "derive secret \"tls13 c hs traffic\""
@@ -1078,6 +1080,184 @@ _sectio_cr_contextus (CredoContextus* c)
         planum.mensura + I), TLS13_ERROR_PARAMETRUM, XLVII);
 }
 
+/* ServerHello 1.2 cum signo DOWNGRD\1 in temere: RFC 8446 4.1.3 -
+ * cliens ABORTARE debet cum illegal_parameter; NULLUS descensus
+ * (recensio M1) */
+interior vacuum
+_sectio_signum_1_2 (CredoContextus* c)
+{
+                    Scaena s;
+                        i8 capsa[CAPSA];
+                        i8 responsum[XLVII];
+                       i32 n = ZEPHYRUM;
+                       i32 k;
+    hic_manens constans i8 CAPUT[XI] = {
+        XXII, III, III, ZEPHYRUM, XLII,
+        II, ZEPHYRUM, ZEPHYRUM, XXXVIII,
+        III, III
+    };
+    hic_manens constans i8 SIGNUM[VIII] = {
+        0x44, 0x4f, 0x57, 0x4e, 0x47, 0x52, 0x44, 0x01
+    };
+
+    memcpy(responsum, CAPUT, XI);
+    n = XI;
+    per (k = ZEPHYRUM; k < XXIV; k++)
+    {
+        responsum[n++] = (i8)(k + I);
+    }
+    memcpy(responsum + n, SIGNUM, VIII);
+    n               += VIII;
+    responsum[n++]  = ZEPHYRUM;                  /* sessio vacua */
+    responsum[n++]  = 0xc0;
+    responsum[n++]  = 0x2b;
+    responsum[n++]  = ZEPHYRUM;                  /* compressio */
+    _scaenam_parare(c, &s, III);
+    (vacuum)_exhaurire(s.m, capsa, CAPSA);
+    CREDO_AEQUALIS_I32(_ingerere(s.m, responsum, n, FALSUM), n);
+    n = _exhaurire(s.m, capsa, CAPSA);
+    CREDO_AEQUALIS_I32(tls13_machina_error(s.m).codex,
+        TLS13_ERROR_PARAMETRUM);
+    CREDO_AEQUALIS_I32(tls13_machina_error(s.m).alerta, XLVII);
+    CREDO_AEQUALIS_S32(_alerta_plana(capsa, n), XLVII);
+    CREDO_CHORDA_CONTINET(tls13_machina_error(s.m).causa,
+        chorda_ex_literis("descensus vetitus", c->piscina));
+}
+
+/* index extensionis 'typus' in ClientHello toto (caput IV, versio II,
+ * temere XXXII, sessio, cifrae, compressio, extensiones); -I si
+ * abest */
+interior s32
+_extensio (
+    constans i8* ch,
+            i32  n,
+            i32  typus,
+            i32* mensura)
+{
+    i32 k = IV + II + XXXII;
+    i32 finis;
+
+    /* sessio, cifrae, compressio, deinde vector extensionum */
+    k      += I + (i32)ch[k];
+    k      += II + (((i32)ch[k] << VIII) | (i32)ch[k + I]);
+    k      += I + (i32)ch[k];
+    finis  = k + II + (((i32)ch[k] << VIII) | (i32)ch[k + I]);
+    k      += II;
+    dum (k + IV <= finis && finis <= n)
+    {
+        i32 t = ((i32)ch[k] << VIII) | (i32)ch[k + I];
+        i32 l = ((i32)ch[k + II] << VIII) | (i32)ch[k + III];
+
+        si (t == typus)
+        {
+            *mensura = l;
+            redde (s32)(k + IV);
+        }
+        k += IV + l;
+    }
+    redde -I;
+}
+
+/* HelloRetryRequest cum crustulo SOLO, sine key_share (RFC 8446 4.1.4,
+ * servi 'stateless'): CH2 EANDEM clavem x25519 cum crustulo mittit,
+ * nulla clavis P-256 a forte; ServerHello x25519 (§3) postea
+ * admittitur
+ * (recensio I1) */
+interior vacuum
+_sectio_hrr_solum_crustulum (CredoContextus* c)
+{
+     Scaena s;
+         i8 capsa[CAPSA];
+         i8 hrr[CXXVIII];
+        i32 n = ZEPHYRUM;
+        i32 m;
+        i32 initium_ext;
+        s32 k;
+     chorda temere_hrr = _octeti(c, V, 's', "construct a ServerHello",
+         ZEPHYRUM, "ServerHello");
+     chorda publica = _octeti(c, III, 'c',
+         "create an ephemeral x25519 key pair", ZEPHYRUM, "public key");
+     chorda sh = _octeti(c, III, 's', "send handshake record", ZEPHYRUM,
+         "complete record");
+    hic_manens constans i8 CRUSTULUM[V] = { 'c', 'r', 'u', 's', 't' };
+    hic_manens constans i8 POST[XIV] = {
+        ZEPHYRUM, I, ZEPHYRUM,                     /* sessio, 1301 */
+        ZEPHYRUM,                                  /* compressio */
+        ZEPHYRUM, XV,                              /* extensiones */
+        /* supported_versions */
+        ZEPHYRUM, 0x2b, ZEPHYRUM, II, III, IV,
+        ZEPHYRUM, 0x2c                             /* cookie ... */
+    };
+
+    /* recordum: caput V; nuntius: II 00 00 L; corpus: 03 03 temere */
+    hrr[n++] = XXII;
+    hrr[n++] = III;
+    hrr[n++] = III;
+    hrr[n++] = ZEPHYRUM;
+    hrr[n++] = ZEPHYRUM;                          /* infra */
+    hrr[n++] = II;
+    hrr[n++] = ZEPHYRUM;
+    hrr[n++] = ZEPHYRUM;
+    hrr[n++] = ZEPHYRUM;                          /* infra */
+    /* 03 03 + temere constans HRR */
+    memcpy(hrr + n, temere_hrr.datum + IV, II + XXXII);
+    n            += II + XXXII;
+    hrr[n++]     = POST[ZEPHYRUM];                    /* sessio vacua */
+    hrr[n++]     = 0x13;
+    hrr[n++]     = 0x01;
+    hrr[n++]     = ZEPHYRUM;                          /* compressio */
+    initium_ext  = n;
+    hrr[n++]     = ZEPHYRUM;                          /* infra */
+    hrr[n++]     = ZEPHYRUM;
+    memcpy(hrr + n, POST + VI, VIII);             /* supported_versions,
+                                                   * typus cookie */
+    n         += VIII;
+    hrr[n++]  = ZEPHYRUM;                          /* cookie */
+    hrr[n++]  = II + V;
+    hrr[n++]  = ZEPHYRUM;
+    hrr[n++]  = V;
+    memcpy(hrr + n, CRUSTULUM, V);
+    n                     += V;
+    hrr[IV]               = (i8)(n - V);
+    hrr[VIII]             = (i8)(n - V - IV);
+    hrr[initium_ext + I]  = (i8)(n - initium_ext - II);
+    _scaenam_parare(c, &s, III);
+    (vacuum)_exhaurire(s.m, capsa, CAPSA);
+    CREDO_AEQUALIS_I32(_ingerere(s.m, hrr, n, FALSUM), n);
+    m = _exhaurire(s.m, capsa, CAPSA);
+    CREDO_AEQUALIS_I32(tls13_machina_error(s.m).codex,
+        TLS13_ERROR_NULLUS);
+    CREDO_NECESSE(m > CAPUT_RECORDI && capsa[ZEPHYRUM] == XXII);
+    /* CH2: key_share = x25519 eadem; cookie = crustulum */
+    {
+        i32 l = ZEPHYRUM;
+
+        k = _extensio(capsa + CAPUT_RECORDI, m - CAPUT_RECORDI, 0x0033,
+            &l);
+        CREDO_NECESSE(k >= ZEPHYRUM);
+        CREDO_AEQUALIS_I32(l, II + II + II + XXXII);
+        CREDO_AEQUALIS_I32(((i32)capsa[CAPUT_RECORDI + (i32)k + II]
+            << VIII) | (i32)capsa[CAPUT_RECORDI + (i32)k + III],
+            TLS13_GREX_X25519);
+        CREDO_VERUM(memcmp(capsa + CAPUT_RECORDI + (i32)k + VI,
+            publica.datum, XXXII) == ZEPHYRUM);
+        k = _extensio(capsa + CAPUT_RECORDI, m - CAPUT_RECORDI, 0x002c,
+            &l);
+        CREDO_NECESSE(k >= ZEPHYRUM);
+        CREDO_AEQUALIS_I32(l, II + V);
+        CREDO_VERUM(memcmp(capsa + CAPUT_RECORDI + (i32)k + II,
+            CRUSTULUM, V) == ZEPHYRUM);
+    }
+    CREDO_AEQUALIS_I32(s.fors.vocationes, I);    /* nulla P-256 */
+    /* ServerHello x25519 post HRR crustuli: admittitur */
+    CREDO_AEQUALIS_I32(_ingerere(s.m, sh.datum, sh.mensura, FALSUM),
+        sh.mensura);
+    CREDO_AEQUALIS_I32(tls13_machina_error(s.m).codex,
+        TLS13_ERROR_NULLUS);
+    CREDO_VERUM((tls13_machina_status(s.m) & TLS13_RECORDA_EXSPECTAT)
+        != ZEPHYRUM);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "s3_salutatio", _sectio_s3_salutatio, NIHIL, NIHIL, NIHIL,
         NIHIL },
@@ -1112,6 +1292,9 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "cr_forma", _sectio_cr_forma, NIHIL, NIHIL, NIHIL, NIHIL },
     { "cr_contextus", _sectio_cr_contextus, NIHIL, NIHIL, NIHIL,
         NIHIL },
+    { "signum_1_2", _sectio_signum_1_2, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "hrr_solum_crustulum", _sectio_hrr_solum_crustulum, NIHIL, NIHIL,
+        NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

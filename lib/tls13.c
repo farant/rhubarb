@@ -27,7 +27,8 @@
 #include <string.h>
 
 #define PACTIO_MAXIMA     (LXIV * MXXIV)   /* nuntius coniunctus */
-#define SALUTATIO_MAXIMA  MXXIV
+#define SALUTATIO_MAXIMA  (XVI * MXXIV)  /* recordum planum unum: CH2
+                                         * cum crustulo longo */
 #define DATA_MAXIMA       (XVI * MXXIV)   /* 2^14: recordum unum */
 #define EXITUS_MAXIMUM    (II * TLS13_RECORDUM_MAXIMUM)
 #define CATENA_MAXIMA     XVI
@@ -77,6 +78,7 @@ structura Tls13Machina {
                          i8  privata_p256[XXXII];
                          i8  temere[XXXII];
                         b32  hrr_visa;
+                        i32  grex_hrr;          /* grex CH2 */
                         b32  cr_visa;          /* CertificateRequest */
                          i8  secretum_pactionis[TLS13_HASH_MAXIMUS];
                          i8  c_hs[TLS13_HASH_MAXIMUS];
@@ -377,6 +379,7 @@ _hrr (
 {
               i8  publica[LXV];
              i32  conatus = ZEPHYRUM;
+             i32  clavis_n;
              i32  n;
      constans i8* fixa = m->opt.salutationes_fixae[I];
 
@@ -386,12 +389,22 @@ _hrr (
             "HelloRetryRequest secundum");
         redde;
     }
-    si (r->grex != TLS13_GREX_SECP256R1)
+    /* sine key_share: grex idem (x25519), solum crustulum mutat (RFC
+     * 8446 4.1.4; servi 'stateless') - HRR nihil mutans vetitum */
+    si (r->grex == ZEPHYRUM && r->crustulum_n == ZEPHYRUM)
+    {
+        _errorem(m, TLS13_ERROR_PARAMETRUM, ALERTA_PARAMETRUM,
+            "HelloRetryRequest nihil mutat");
+        redde;
+    }
+    si (r->grex != ZEPHYRUM && r->grex != TLS13_GREX_SECP256R1)
     {
         _errorem(m, TLS13_ERROR_PARAMETRUM, ALERTA_PARAMETRUM,
             "grex HelloRetryRequest non oblatus aut iam missus");
         redde;
     }
+    m->grex_hrr = r->grex == ZEPHYRUM ? TLS13_GREX_X25519
+                                      : TLS13_GREX_SECP256R1;
     m->hrr_visa      = VERUM;
     m->cifra         = r->cifra;
     m->genus         = tls13_cifra_genus(r->cifra);
@@ -406,21 +419,37 @@ _hrr (
         m->salutatio_n);
     tls13_transcriptum_hrr(m->transcriptum);
     tls13_transcriptum_addere(m->transcriptum, crudum, crudi_n);
-    /* clavis P-256 (ORDO FORTIS 4): iterata si extra ordinem curvae */
-    fac
+    si (m->grex_hrr == TLS13_GREX_X25519)
     {
-        _fors(m, m->privata_p256, XXXII);
-        n = (i32)br_ec_get_default()->mulgen(publica, m->privata_p256,
-            XXXII, BR_EC_secp256r1);
-        conatus++;
+        /* key_share idem: clavis x25519 prima */
+        si (!_x25519_publica(m->privata_x25519, publica))
+        {
+            _errorem(m, TLS13_ERROR_PARAMETRUM, ALERTA_INTERNA,
+                "clavis x25519 computari non potest");
+            redde;
+        }
+        n = XXXII;
     }
-    dum (n != LXV && conatus < IV);
-    si (n != LXV)
+    alioquin
     {
-        _errorem(m, TLS13_ERROR_ENTROPIA, ALERTA_INTERNA,
-            "clavis P-256 generari non potest");
-        redde;
+        /* clavis P-256 (ORDO FORTIS 4): iterata si extra ordinem
+         * curvae */
+        fac
+        {
+            _fors(m, m->privata_p256, XXXII);
+            n = (i32)br_ec_get_default()->mulgen(publica,
+                m->privata_p256, XXXII, BR_EC_secp256r1);
+            conatus++;
+        }
+        dum (n != LXV && conatus < IV);
+        si (n != LXV)
+        {
+            _errorem(m, TLS13_ERROR_ENTROPIA, ALERTA_INTERNA,
+                "clavis P-256 generari non potest");
+            redde;
+        }
     }
+    clavis_n = n;
     si (fixa != NIHIL)
     {
         n = m->opt.salutationes_fixae_n[I];
@@ -441,9 +470,9 @@ _hrr (
         p.temere          = m->temere;
         p.sessio          = m->sessio;
         p.sessio_n        = m->sessio_n;
-        p.grex            = TLS13_GREX_SECP256R1;
+        p.grex            = m->grex_hrr;
         p.clavis_publica  = publica;
-        p.clavis_n        = LXV;
+        p.clavis_n        = clavis_n;
         p.crustulum       = r->crustulum;
         p.crustulum_n     = r->crustulum_n;
         n = tls13_salutatio_scribere(&p, m->salutatio,
@@ -500,6 +529,14 @@ _responsum (
     }
     si (r.versio_1_2)
     {
+        /* RFC 8446 4.1.3: servus qui 1.3 novit sed 1.2 respondet signum
+         * ponit - impetus descensus: abortare, NON descendere */
+        si (r.signum_descensus)
+        {
+            _errorem(m, TLS13_ERROR_PARAMETRUM, ALERTA_PARAMETRUM,
+                "descensus vetitus: ServerHello 1.2 cum signo DOWNGRD");
+            redde;
+        }
         _errorem(m, TLS13_ERROR_SOLUM_1_2, ZEPHYRUM,
             "hospes ut TLS 1.2 respondit");
         redde;
@@ -529,7 +566,7 @@ _responsum (
         _hrr(m, &r, crudum, crudi_n);
         redde;
     }
-    si (m->hrr_visa)
+    si (m->hrr_visa && m->grex_hrr == TLS13_GREX_SECP256R1)
     {
         si (r.grex != TLS13_GREX_SECP256R1 || r.clavis_n != LXV)
         {

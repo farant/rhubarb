@@ -107,3 +107,14 @@ ECDSA P-256 with a CertificateRequest).
   -> tls -> our TLS 1.3 client -> api.anthropic.com) works under the new
   default. Hand-run smoke tests owed since T6/T7 green:
   apps/forum/fumus.sh (FUMUS PLENUS), tools/icones_fumus.sh (sanum).
+
+## 2026-10-16 - final review fixes (fresh Opus reviewer)
+
+No Critical findings. Fixed with RED->GREEN tests: cookie-only HRR
+(reuse the x25519 share - `s_server -stateless` turned out NOT to send an
+HRR to us, so the test is engine-level with a hand-built HRR whose random
+comes from RFC 8448 §5), rsa_pkcs1 signature algorithms for strict 1.2
+servers, the engine's own DOWNGRD check on a 1.2 ServerHello (RFC MUST:
+abort 47, no fallback), and tcp_redintegrare after an RST (peer address
+remembered at connect). Deferred minors and rulings: plan, "Final
+review".

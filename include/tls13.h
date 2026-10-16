@@ -16,8 +16,9 @@
  *   (1) clavis privata x25519, XXXII octeti - semper;
  *   (2) temere clientis, XXXII - solum sine salutatione fixa;
  *   (3) legacy_session_id, XXXII - idem;
- *   (4) post HelloRetryRequest clavis privata P-256, XXXII (iterata si
- *       invalida).
+ *   (4) post HelloRetryRequest quae P-256 petit: clavis privata P-256,
+ *       XXXII (iterata si invalida). HRR cum crustulo solo (sine
+ *       key_share) clavem x25519 primam iterum adhibet - nulla vocatio.
  *
  * Omnia in piscina vocantis; capsae fixae (recordum maximum utrimque);
  * post creationem sola DER catenae servatur in piscina. */

@@ -211,10 +211,60 @@ _sectio_clausa (CredoContextus* c)
     tcp_servus_claudere(servus);
 }
 
+/* par connexionem RST abrumpit (claudit cum datis non lectis - nucleus
+ * RST mittit): getpeername fossae veteris tunc fallit (ENOTCONN) -
+ * redintegratio parem ex connexione memoratum adhibet (recensio M4) */
+interior vacuum
+_sectio_abrupta (CredoContextus* c)
+{
+         TcpServus* servus = _servum_creare(c->piscina);
+       TcpResultus  r;
+       TcpResultus  prima;
+       TcpResultus  secunda;
+                i8  octetus[IV];
+               s32  n = I;
+               i32  k;
+
+    r = tcp_connectere("127.0.0.1", tcp_servus_obtinere_portum(servus),
+        c->piscina);
+    CREDO_NECESSE(r.successus);
+    (vacuum)tcp_ponere_non_blocans(r.connexio, VERUM);
+    prima = _accipere(servus, c->piscina);
+    CREDO_NECESSE(prima.successus);
+    /* datum servo missum, numquam lectum: close() -> RST */
+    CREDO_VERUM(tcp_mittere_omnia(r.connexio, (constans i8*)"z", I));
+    (vacuum)poll(NIHIL, ZEPHYRUM, L);
+    tcp_claudere(prima.connexio);
+    per (k = ZEPHYRUM; k < XX && n > ZEPHYRUM; k++)
+    {
+        _exspectare((integer)tcp_obtinere_fd(r.connexio), FALSUM);
+        n = tcp_recipere(r.connexio, octetus, IV);
+        si (n == TCP_ITERUM)
+        {
+            n = I;
+        }
+    }
+    CREDO_VERUM(n <= ZEPHYRUM);
+    r = tcp_redintegrare(r.connexio, NIHIL, c->piscina);
+    CREDO_NECESSE(r.successus);
+    _exspectare((integer)tcp_obtinere_fd(r.connexio), VERUM);
+    CREDO_AEQUALIS_I32((i32)tcp_incipere_perficere(r.connexio, NIHIL,
+        c->piscina), (i32)TCP_OK);
+    secunda = _accipere(servus, c->piscina);
+    CREDO_VERUM(secunda.successus);
+    tcp_claudere(r.connexio);
+    si (secunda.successus)
+    {
+        tcp_claudere(secunda.connexio);
+    }
+    tcp_servus_claudere(servus);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "gradatim", _sectio_gradatim, NIHIL, NIHIL, NIHIL, NIHIL },
     { "obstruens", _sectio_obstruens, NIHIL, NIHIL, NIHIL, NIHIL },
     { "clausa", _sectio_clausa, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "post_rst", _sectio_abrupta, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 
