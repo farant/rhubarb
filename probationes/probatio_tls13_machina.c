@@ -11,6 +11,7 @@
 #include "credo.h"
 #include "fiducia.h"
 #include "tls13.h"
+#include "tls13_clavis.h"
 #include "tls13_recordum.h"
 #include "rfc8448.h"
 #include <string.h>
@@ -21,6 +22,7 @@
 #define S_HS "derive secret \"tls13 s hs traffic\""
 #define C_HS "derive secret \"tls13 c hs traffic\""
 #define S_AP "derive secret \"tls13 s ap traffic\""
+#define C_AP "derive secret \"tls13 c ap traffic\""
 
 interior vacuum
 _suitam_parare (CredoContextus* c)
@@ -129,6 +131,18 @@ _scaenam_parare (CredoContextus* c, Scaena* s, i32 sectio)
     s->fors.numerus       = I;
     s->fiducia.responsum  = VERUM;
     memset(&o, ZEPHYRUM, magnitudo(o));
+    si (sectio == V)
+    {
+        chorda ch2 = _octeti(c, V, 'c', "construct a ClientHello", I,
+            "ClientHello");
+
+        s->fors.octeti[I] = _octeti(c, V, 'c',
+            "create an ephemeral P-256 key pair", ZEPHYRUM,
+            "private key");
+        s->fors.numerus            = II;
+        o.salutationes_fixae[I]    = ch2.datum;
+        o.salutationes_fixae_n[I]  = ch2.mensura;
+    }
     o.hospes = "server";
     o.verificare = VERUM;
     o.fiducia = _fiducia_ficta;
@@ -242,8 +256,8 @@ _volatus (
     CredoContextus* c,
                i32  sectio)
 {
-    redde _octeti(c, sectio, 's', "send handshake record", I,
-        "complete record");
+    redde _octeti(c, sectio, 's', "send handshake record",
+        sectio == V ? II : I, "complete record");
 }
 
 interior vacuum
@@ -494,64 +508,91 @@ _sectio_s7_ccs (
     _pactionem_verificare(c, &s, VII, FALSUM);
 }
 
-/* volatus §3 a probatione resignatus sub s hs traffic (sequentia 0):
- * octetus 'mutare' nuntii 'typus' (ab initio corporis) flectitur; -I =
- * nihil mutatum (tunc = RFC, quod probatio ipsa verificat) */
+/* planum volatus servi sectionis sub s hs traffic obsignatum
+ * (sequentia 0) */
 interior chorda
-_volatum_resignare (CredoContextus* c, i32 typus, s32 mutare)
+_sigillare (CredoContextus* c, i32 sectio, constans i8* planum, i32 n)
 {
-          chorda planum = _octeti(c, III, 's', "send handshake record",
-              I,
-              "payload");
-          chorda s_hs = _octeti(c, III, 's', S_HS, ZEPHYRUM,
-              "expanded");
-              i8* p = (i8*)piscina_allocare(c->piscina,
-                  (memoriae_index)planum.mensura);
-                i8* ex = (i8*)piscina_allocare(c->piscina, CAPSA);
-    Tls13Protectio* pr = tls13_protectio_creare(
-        TLS13_AES_128_GCM_SHA256, s_hs.datum, c->piscina);
-             i32 k = ZEPHYRUM;
-             i32 n;
-          chorda r;
+             chorda s_hs = _octeti(c, sectio, 's', S_HS, ZEPHYRUM,
+                 "expanded");
+                 i8* ex = (i8*)piscina_allocare(c->piscina, CAPSA);
+     Tls13Protectio* pr = tls13_protectio_creare(
+         TLS13_AES_128_GCM_SHA256, s_hs.datum, c->piscina);
+                i32 k;
 
-    CREDO_NECESSE(p != NIHIL && ex != NIHIL && pr != NIHIL);
-    memcpy(p, planum.datum, planum.mensura);
-    dum (mutare >= ZEPHYRUM && k + IV <= planum.mensura)
+    CREDO_NECESSE(ex != NIHIL && pr != NIHIL);
+    k = tls13_obsignare(pr, TLS13_CONTENTUM_PACTIO, planum, n, ex,
+        CAPSA);
+    CREDO_NECESSE(k > ZEPHYRUM);
+    redde chorda_ex_buffer(ex, k);
+}
+
+/* index nuntii 'typus' in plano volatus (caput IV octetorum); -I si
+ * abest */
+interior s32
+_nuntium_invenire (
+    constans i8* p,
+            i32  n,
+            i32  typus)
+{
+    i32 k = ZEPHYRUM;
+
+    dum (k + IV <= n)
     {
-        i32 longitudo = ((i32)p[k + I] << XVI) | ((i32)p[k + II]
-            << VIII)
-            | (i32)p[k + III];
-
         si ((i32)p[k] == typus)
         {
-            CREDO_NECESSE((i32)mutare < longitudo);
-            p[k + IV + (i32)mutare] ^= 0x01;
-            frange;
+            redde (s32)k;
         }
-        k += IV + longitudo;
+        k += IV + (((i32)p[k + I] << XVI) | ((i32)p[k + II] << VIII)
+            | (i32)p[k + III]);
     }
-    n = tls13_obsignare(pr, TLS13_CONTENTUM_PACTIO, p, planum.mensura,
-        ex, CAPSA);
-    CREDO_NECESSE(n > ZEPHYRUM);
-    r = chorda_ex_buffer(ex, n);
+    redde -I;
+}
+
+/* volatus sectionis a probatione resignatus: octetus 'mutare' corporis
+ * nuntii 'typus' flectitur; -I = nihil mutatum (tunc = RFC, quod
+ * probatio ipsa verificat) */
+interior chorda
+_volatum_resignare (CredoContextus* c, i32 sectio, i32 typus,
+    s32 mutare)
+{
+    chorda planum = _octeti(c, sectio, 's', "send handshake record",
+        sectio == V ? II : I, "payload");
+       i8* p = (i8*)piscina_allocare(c->piscina,
+           (memoriae_index)planum.mensura);
+    chorda r;
+
+    CREDO_NECESSE_NON_NIHIL(p);
+    memcpy(p, planum.datum, planum.mensura);
+    si (mutare >= ZEPHYRUM)
+    {
+        s32 k = _nuntium_invenire(p, planum.mensura, typus);
+
+        CREDO_NECESSE(k >= ZEPHYRUM);
+        p[(i32)k + IV + (i32)mutare] ^= 0x01;
+    }
+    r = _sigillare(c, sectio, p, planum.mensura);
     si (mutare < ZEPHYRUM)
     {
-        CREDO_NECESSE(chorda_aequalis(r, _volatus(c, III)));
+        CREDO_NECESSE(chorda_aequalis(r, _volatus(c, sectio)));
     }
     redde r;
 }
 
-/* exitus = unum recordum alertae sub c hs traffic: descriptio */
+/* exitus = unum recordum alertae fatalis sub 'secretum' sectionis:
+ * descriptio */
 interior s32
-_alerta_missa (CredoContextus* c, constans i8* exitus, i32 n)
+_alerta_missa (CredoContextus* c, i32 sectio,
+    constans character* secretum, constans i8* exitus, i32 n)
 {
-            chorda c_hs = _octeti(c, III, 's', C_HS, ZEPHYRUM,
-                "expanded");
+             chorda clavis = _octeti(c, sectio, 's', secretum,
+                 ZEPHYRUM,
+                 "expanded");
     Tls13Protectio* pr = tls13_protectio_creare(
-        TLS13_AES_128_GCM_SHA256, c_hs.datum, c->piscina);
-                i8 planum[LXIV];
-               i32 genus = ZEPHYRUM;
-               s32 m;
+        TLS13_AES_128_GCM_SHA256, clavis.datum, c->piscina);
+                 i8 planum[LXIV];
+                i32 genus = ZEPHYRUM;
+                s32 m;
 
     CREDO_NECESSE_NON_NIHIL(pr);
     m = tls13_aperire(pr, exitus, n, planum, LXIV, &genus);
@@ -565,18 +606,35 @@ _alerta_missa (CredoContextus* c, constans i8* exitus, i32 n)
     redde (s32)planum[I];
 }
 
+/* exitus = alerta fatalis plana (ante claves): descriptio, aut -I */
+interior s32
+_alerta_plana (
+    constans i8* exitus,
+            i32  n)
+{
+    hic_manens constans i8 caput[VI] = { XXI, III, III, ZEPHYRUM, II,
+        II };
+
+    si (n != VII || memcmp(exitus, caput, VI) != ZEPHYRUM)
+    {
+        redde -I;
+    }
+    redde (s32)exitus[VI];
+}
+
 interior vacuum
-_errorem_verificare (CredoContextus* c, Scaena* s, chorda volatus,
-    Tls13ErrorCodex codex, i32 alerta)
+_errorem_verificare (CredoContextus* c, Scaena* s, i32 sectio,
+    chorda volatus, Tls13ErrorCodex codex, i32 alerta)
 {
             i8 capsa[CAPSA];
-           i32 n   = _pactio(c, s, III, volatus, FALSUM, capsa);
+           i32 n   = _pactio(c, s, sectio, volatus, FALSUM, capsa);
     Tls13Error e   = tls13_machina_error(s->m);
            i32 st  = tls13_machina_status(s->m);
 
     CREDO_AEQUALIS_I32(e.codex, codex);
     CREDO_AEQUALIS_I32(e.alerta, alerta);
-    CREDO_AEQUALIS_S32(_alerta_missa(c, capsa, n), (s32)alerta);
+    CREDO_AEQUALIS_S32(_alerta_missa(c, sectio, C_HS, capsa, n),
+        (s32)alerta);
     CREDO_VERUM((st & (TLS13_DATA_MITTI_POSSUNT
         | TLS13_RECORDA_EXSPECTAT))
         == ZEPHYRUM);
@@ -590,7 +648,7 @@ _sectio_subscriptio_falsa (CredoContextus* c)
 
     _scaenam_parare(c, &s, III);
     /* CertificateVerify: schema II, longitudo II, subscriptio... */
-    _errorem_verificare(c, &s, _volatum_resignare(c, XV, XIV),
+    _errorem_verificare(c, &s, III, _volatum_resignare(c, III, XV, XIV),
         TLS13_ERROR_SUBSCRIPTIO, LI);
     CREDO_AEQUALIS_I32(s.fiducia.vocationes, I);
 }
@@ -602,7 +660,8 @@ _sectio_fiducia_negata (CredoContextus* c)
 
     _scaenam_parare(c, &s, III);
     s.fiducia.responsum = FALSUM;
-    _errorem_verificare(c, &s, _volatum_resignare(c, ZEPHYRUM, -I),
+    _errorem_verificare(c, &s, III, _volatum_resignare(c, III, ZEPHYRUM,
+        -I),
         TLS13_ERROR_FIDUCIA, XLII);
     CREDO_CHORDA_CONTINET(tls13_machina_error(s.m).causa,
         chorda_ex_literis("ficta", c->piscina));
@@ -615,8 +674,408 @@ _sectio_finis_falsus (
     Scaena s;
 
     _scaenam_parare(c, &s, III);
-    _errorem_verificare(c, &s, _volatum_resignare(c, XX, XXXI),
+    _errorem_verificare(c, &s, III, _volatum_resignare(c, III, XX,
+        XXXI),
         TLS13_ERROR_FINIS, LI);
+}
+
+/* §5: CH1 -> HelloRetryRequest (P-256) -> CH2 fixum -> ServerHello
+ * -> volatus -> Finished nostrum = RFC; transcriptum cum message_hash
+ * (tls13_transcriptum_hrr) */
+interior vacuum
+_sectio_s5_hrr (CredoContextus* c)
+{
+    Scaena s;
+        i8 capsa[CAPSA];
+       i32 n;
+    chorda hrr = _octeti(c, V, 's', "send handshake record", ZEPHYRUM,
+        "complete record");
+    chorda sh = _octeti(c, V, 's', "send handshake record", I,
+        "complete record");
+    chorda volatus = _volatus(c, V);
+
+    _scaenam_parare(c, &s, V);
+    n = _exhaurire(s.m, capsa, CAPSA);
+    CREDO_VERUM(_aequales(capsa, n, _octeti(c, V, 'c',
+        "send handshake record", ZEPHYRUM, "complete record")));
+    CREDO_AEQUALIS_I32(_ingerere(s.m, hrr.datum, hrr.mensura, FALSUM),
+        hrr.mensura);
+    n = _exhaurire(s.m, capsa, CAPSA);
+    CREDO_VERUM(_aequales(capsa, n, _octeti(c, V, 'c',
+        "send handshake record", I, "complete record")));
+    CREDO_AEQUALIS_I32(s.fors.vocationes, II);
+    CREDO_AEQUALIS_I32(_ingerere(s.m, sh.datum, sh.mensura, FALSUM),
+        sh.mensura);
+    CREDO_AEQUALIS_I32(_ingerere(s.m, volatus.datum, volatus.mensura,
+        FALSUM), volatus.mensura);
+    n = _exhaurire(s.m, capsa, CAPSA);
+    CREDO_AEQUALIS_I32(tls13_machina_error(s.m).codex,
+        TLS13_ERROR_NULLUS);
+    CREDO_VERUM(_aequales(capsa, n, _octeti(c, V, 'c',
+        "send handshake record", II, "complete record")));
+    CREDO_AEQUALIS_I32(tls13_machina_versio(s.m), 0x0304);
+    CREDO_AEQUALIS_I32(s.fiducia.vocationes, I);
+    CREDO_AEQUALIS_I32(s.fors.vocationes, II);
+    CREDO_FALSUM(s.fors.inopinata);
+    tls13_machina_claudere(s.m);
+    n = _exhaurire(s.m, capsa, CAPSA);
+    CREDO_VERUM(_aequales(capsa, n, _octeti(c, V, 'c',
+        "send alert record", ZEPHYRUM, "complete record")));
+}
+
+/* §5 usque ad CH2 missum; reddit machinam */
+interior vacuum
+_post_hrr (CredoContextus* c, Scaena* s)
+{
+        i8 capsa[CAPSA];
+    chorda hrr = _octeti(c, V, 's', "send handshake record", ZEPHYRUM,
+        "complete record");
+
+    _scaenam_parare(c, s, V);
+    (vacuum)_exhaurire(s->m, capsa, CAPSA);
+    CREDO_AEQUALIS_I32(_ingerere(s->m, hrr.datum, hrr.mensura, FALSUM),
+        hrr.mensura);
+    CREDO_NECESSE(_exhaurire(s->m, capsa, CAPSA) > ZEPHYRUM);
+}
+
+/* HelloRetryRequest secundum: unexpected_message (RFC 8446 4.1.4) */
+interior vacuum
+_sectio_hrr_bis (CredoContextus* c)
+{
+    Scaena s;
+        i8 capsa[CAPSA];
+       i32 n;
+    chorda hrr = _octeti(c, V, 's', "send handshake record", ZEPHYRUM,
+        "complete record");
+
+    _post_hrr(c, &s);
+    CREDO_AEQUALIS_I32(_ingerere(s.m, hrr.datum, hrr.mensura, FALSUM),
+        hrr.mensura);
+    n = _exhaurire(s.m, capsa, CAPSA);
+    CREDO_AEQUALIS_I32(tls13_machina_error(s.m).codex,
+        TLS13_ERROR_PARAMETRUM);
+    CREDO_AEQUALIS_I32(tls13_machina_error(s.m).alerta, X);
+    CREDO_AEQUALIS_S32(_alerta_plana(capsa, n), X);
+}
+
+/* HRR cum grege 'grex' loco secp256r1 -> PARAMETRUM, alerta 47 */
+interior vacuum
+_hrr_grex (CredoContextus* c, i32 grex)
+{
+     Scaena s;
+         i8 capsa[CAPSA];
+         i8 mutatum[CCLVI];
+        i32 n;
+        i32 k;
+        b32 inventum = FALSUM;
+     chorda hrr = _octeti(c, V, 's', "send handshake record", ZEPHYRUM,
+         "complete record");
+    hic_manens constans i8 EXTENSIO_CLAVIUM[VI] = {
+        ZEPHYRUM, 0x33, ZEPHYRUM, II, ZEPHYRUM, 0x17
+    };
+
+    CREDO_NECESSE(hrr.mensura <= CCLVI);
+    memcpy(mutatum, hrr.datum, hrr.mensura);
+    per (k = ZEPHYRUM; k + VI <= hrr.mensura; k++)
+    {
+        si (memcmp(mutatum + k, EXTENSIO_CLAVIUM, VI) == ZEPHYRUM)
+        {
+            mutatum[k + IV]  = (i8)(grex >> VIII);
+            mutatum[k + V]   = (i8)grex;
+            inventum         = VERUM;
+            frange;
+        }
+    }
+    CREDO_NECESSE(inventum);
+    _scaenam_parare(c, &s, V);
+    (vacuum)_exhaurire(s.m, capsa, CAPSA);
+    CREDO_AEQUALIS_I32(_ingerere(s.m, mutatum, hrr.mensura, FALSUM),
+        hrr.mensura);
+    n = _exhaurire(s.m, capsa, CAPSA);
+    CREDO_AEQUALIS_I32(tls13_machina_error(s.m).codex,
+        TLS13_ERROR_PARAMETRUM);
+    CREDO_AEQUALIS_S32(_alerta_plana(capsa, n), XLVII);
+    CREDO_AEQUALIS_I32(s.fors.vocationes, I);
+}
+
+interior vacuum
+_sectio_hrr_grex_ignotus (
+    CredoContextus* c)
+{
+    _hrr_grex(c, 0x0018);   /* secp384r1: non oblatus */
+    _hrr_grex(c, 0x001d);   /* x25519: iam missus */
+}
+
+/* alerta plana in responsum ClientHello */
+interior Tls13Error
+_alerta_accepta (CredoContextus* c, Scaena* s, i32 descriptio,
+    i32* exitus_n)
+{
+    i8 capsa[CAPSA];
+    i8 alerta[VII];
+
+    alerta[ZEPHYRUM]  = XXI;
+    alerta[I]         = III;
+    alerta[II]        = III;
+    alerta[III]       = ZEPHYRUM;
+    alerta[IV]        = II;
+    alerta[V]         = II;
+    alerta[VI]        = (i8)descriptio;
+    _scaenam_parare(c, s, III);
+    (vacuum)_exhaurire(s->m, capsa, CAPSA);
+    CREDO_AEQUALIS_I32(_ingerere(s->m, alerta, VII, FALSUM), VII);
+    *exitus_n = _exhaurire(s->m, capsa, CAPSA);
+    redde tls13_machina_error(s->m);
+}
+
+/* protocol_version ad CH1 -> SOLUM_1_2, nihil remissum */
+interior vacuum
+_sectio_alerta_70 (CredoContextus* c)
+{
+        Scaena s;
+           i32 n = ZEPHYRUM;
+    Tls13Error e = _alerta_accepta(c, &s, LXX, &n);
+
+    CREDO_AEQUALIS_I32(e.codex, TLS13_ERROR_SOLUM_1_2);
+    CREDO_AEQUALIS_I32(n, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(tls13_machina_status(s.m), ZEPHYRUM);
+}
+
+interior vacuum
+_sectio_alerta_40 (CredoContextus* c)
+{
+        Scaena s;
+           i32 n = ZEPHYRUM;
+    Tls13Error e = _alerta_accepta(c, &s, XL, &n);
+
+    CREDO_AEQUALIS_I32(e.codex, TLS13_ERROR_ALERTA_RECEPTA);
+    CREDO_AEQUALIS_I32(e.alerta, XL);
+    CREDO_CHORDA_CONTINET(e.causa, chorda_ex_literis(
+        "40 (handshake_failure)", c->piscina));
+    CREDO_AEQUALIS_I32(n, ZEPHYRUM);
+}
+
+/* KeyUpdate(update_requested) sub s ap: claves lectionis renovatae;
+ * KeyUpdate(update_not_requested) noster sub c ap VETERE; deinde
+ * scriptio sub c ap nova. Postea KeyUpdate(non rogatum): solum
+ * lectio. */
+interior vacuum
+_sectio_keyupdate (CredoContextus* c)
+{
+             Scaena s;
+                 i8 capsa[CAPSA];
+                 i8 recordum[CAPSA];
+                 i8 planum[CAPSA];
+             chorda s_ap = _octeti(c, III, 's', S_AP, ZEPHYRUM,
+                 "expanded");
+             chorda c_ap = _octeti(c, III, 's', C_AP, ZEPHYRUM,
+                 "expanded");
+    Tls13Protectio* servus = tls13_protectio_creare(
+        TLS13_AES_128_GCM_SHA256, s_ap.datum, c->piscina);
+    Tls13Protectio* cliens = tls13_protectio_creare(
+        TLS13_AES_128_GCM_SHA256, c_ap.datum, c->piscina);
+    hic_manens constans i8 ROGATUM[V] = { XXIV, ZEPHYRUM, ZEPHYRUM, I,
+        I };
+    hic_manens constans i8 NON_ROGATUM[V] = { XXIV, ZEPHYRUM, ZEPHYRUM,
+        I, ZEPHYRUM };
+    hic_manens constans i8  POST[IV] = { 'p', 'o', 's', 't' };
+                       i32  n;
+                       i32  genus = ZEPHYRUM;
+                       s32  k;
+                        i8* d;
+
+    CREDO_NECESSE(servus != NIHIL && cliens != NIHIL);
+    _scaenam_parare(c, &s, III);
+    _pactionem_verificare(c, &s, III, FALSUM);
+    n = tls13_obsignare(servus, TLS13_CONTENTUM_PACTIO, ROGATUM, V,
+        recordum, CAPSA);
+    CREDO_AEQUALIS_I32(_ingerere(s.m, recordum, n, FALSUM), n);
+    n = _exhaurire(s.m, capsa, CAPSA);
+    k = tls13_aperire(cliens, capsa, n, planum, CAPSA, &genus);
+    CREDO_AEQUALIS_S32(k, V);
+    CREDO_AEQUALIS_I32(genus, TLS13_CONTENTUM_PACTIO);
+    CREDO_VERUM(k == V && memcmp(planum, NON_ROGATUM, V) == ZEPHYRUM);
+    tls13_protectio_renovare(servus);
+    tls13_protectio_renovare(cliens);
+    /* data servi sub s ap nova */
+    n = tls13_obsignare(servus, TLS13_CONTENTUM_DATA, POST, IV,
+        recordum, CAPSA);
+    CREDO_AEQUALIS_I32(_ingerere(s.m, recordum, n, FALSUM), n);
+    n = ZEPHYRUM;
+    d = tls13_data_introitus(s.m, &n);
+    CREDO_NECESSE_NON_NIHIL(d);
+    CREDO_VERUM(n == IV && memcmp(d, POST, IV) == ZEPHYRUM);
+    tls13_data_introitus_ack(s.m, n);
+    /* data nostra sub c ap nova */
+    d = tls13_data_exitus(s.m, &n);
+    CREDO_NECESSE(d != NIHIL && n >= IV);
+    memcpy(d, POST, IV);
+    tls13_data_exitus_ack(s.m, IV);
+    tls13_data_effundere(s.m);
+    n = _exhaurire(s.m, capsa, CAPSA);
+    k = tls13_aperire(cliens, capsa, n, planum, CAPSA, &genus);
+    CREDO_AEQUALIS_S32(k, IV);
+    CREDO_AEQUALIS_I32(genus, TLS13_CONTENTUM_DATA);
+    /* KeyUpdate non rogatum: nihil mittitur, lectio renovatur */
+    n = tls13_obsignare(servus, TLS13_CONTENTUM_PACTIO, NON_ROGATUM, V,
+        recordum, CAPSA);
+    CREDO_AEQUALIS_I32(_ingerere(s.m, recordum, n, FALSUM), n);
+    CREDO_AEQUALIS_I32(_exhaurire(s.m, capsa, CAPSA), ZEPHYRUM);
+    tls13_protectio_renovare(servus);
+    n = tls13_obsignare(servus, TLS13_CONTENTUM_DATA, POST, IV,
+        recordum, CAPSA);
+    CREDO_AEQUALIS_I32(_ingerere(s.m, recordum, n, FALSUM), n);
+    n = ZEPHYRUM;
+    CREDO_NON_NIHIL(tls13_data_introitus(s.m, &n));
+    CREDO_AEQUALIS_I32(n, IV);
+    CREDO_AEQUALIS_I32(tls13_machina_error(s.m).codex,
+        TLS13_ERROR_NULLUS);
+}
+
+/* post ServerHello: caput recordi 2^14 + 257 -> MOLES, alerta 22 */
+interior vacuum
+_sectio_recordum_moles (
+    CredoContextus* c)
+{
+           Scaena s;
+               i8 caput[V] = { XVII, III, III, 0x41, I };
+
+    _scaenam_parare(c, &s, III);
+    _errorem_verificare(c, &s, III, chorda_ex_buffer(caput, V),
+        TLS13_ERROR_MOLES, XXII);
+}
+
+/* volatus cum signo (tag) flexo -> MAC, alerta 20 */
+interior vacuum
+_sectio_recordum_mac (CredoContextus* c)
+{
+    Scaena  s;
+    chorda  v = _volatus(c, III);
+        i8* mutatum = (i8*)piscina_allocare(c->piscina,
+            (memoriae_index)v.mensura);
+
+    CREDO_NECESSE_NON_NIHIL(mutatum);
+    memcpy(mutatum, v.datum, v.mensura);
+    mutatum[v.mensura - I] ^= 0x01;
+    _scaenam_parare(c, &s, III);
+    _errorem_verificare(c, &s, III, chorda_ex_buffer(mutatum,
+        v.mensura), TLS13_ERROR_MAC, XX);
+}
+
+/* §6: CertificateRequest sine identitate - Certificate vacuum +
+ * Finished (a probatione computatum); clausura nostra = RFC octetim
+ * (c ap a certificato clientis non pendet). Servus ECDSA P-256. */
+interior vacuum
+_sectio_s6_sine_identitate (CredoContextus* c)
+{
+                Scaena s;
+                    i8 capsa[CAPSA];
+                    i8 planum[CAPSA];
+                    i8 hash_transcripti[XXXII];
+                    i8 exspectata[XLIV];
+                   i32 n;
+                   i32 genus = ZEPHYRUM;
+                   s32 k;
+                chorda c_hs = _octeti(c, VI, 's', C_HS, ZEPHYRUM,
+                    "expanded");
+       Tls13Protectio* pr = tls13_protectio_creare(
+           TLS13_AES_128_GCM_SHA256, c_hs.datum, c->piscina);
+    Tls13Transcriptum* t = tls13_transcriptum_creare(TLS13_SHA256,
+        c->piscina);
+    hic_manens constans i8 VACUUM[VIII] = { XI, ZEPHYRUM, ZEPHYRUM, IV,
+        ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM };
+    hic_manens constans character* constans NUNTII[VII][II] = {
+        { "construct a ClientHello", "ClientHello" },
+        { "construct a ServerHello", "ServerHello" },
+        { "construct an EncryptedExtensions", "EncryptedExtensions" },
+        { "construct a CertificateRequest", "CertificateRequest" },
+        { "construct a Certificate ", "Certificate" },
+        { "construct a CertificateVerify", "CertificateVerify" },
+        { "construct a Finished", "Finished" }
+    };
+                   i32 j;
+
+    CREDO_NECESSE(pr != NIHIL && t != NIHIL);
+    _scaenam_parare(c, &s, VI);
+    n = _pactio(c, &s, VI, _volatus(c, VI), FALSUM, capsa);
+    CREDO_AEQUALIS_I32(tls13_machina_error(s.m).codex,
+        TLS13_ERROR_NULLUS);
+    CREDO_AEQUALIS_I32(tls13_machina_versio(s.m), 0x0304);
+    CREDO_AEQUALIS_I32(s.fiducia.vocationes, I);
+    /* Finished exspectatum: transcriptum RFC + Certificate vacuum */
+    per (j = ZEPHYRUM; j < VII; j++)
+    {
+        chorda m = _octeti(c, VI, j == ZEPHYRUM ? 'c' : 's',
+            NUNTII[j][ZEPHYRUM], ZEPHYRUM, NUNTII[j][I]);
+
+        tls13_transcriptum_addere(t, m.datum, m.mensura);
+    }
+    tls13_transcriptum_addere(t, VACUUM, VIII);
+    tls13_transcriptum_digerere(t, hash_transcripti);
+    exspectata[ZEPHYRUM]  = XX;
+    exspectata[I]         = ZEPHYRUM;
+    exspectata[II]        = ZEPHYRUM;
+    exspectata[III]       = XXXII;
+    tls13_finis_calculare(TLS13_SHA256, c_hs.datum, hash_transcripti,
+        exspectata + IV);
+    k = tls13_aperire(pr, capsa, n, planum, CAPSA, &genus);
+    CREDO_AEQUALIS_S32(k, (s32)(VIII + XXXVI));
+    CREDO_AEQUALIS_I32(genus, TLS13_CONTENTUM_PACTIO);
+    CREDO_VERUM(k == (s32)(VIII + XXXVI)
+        && memcmp(planum, VACUUM, VIII) == ZEPHYRUM);
+    CREDO_VERUM(k == (s32)(VIII + XXXVI)
+        && memcmp(planum + VIII, exspectata, XXXVI) == ZEPHYRUM);
+    tls13_machina_claudere(s.m);
+    n = _exhaurire(s.m, capsa, CAPSA);
+    CREDO_VERUM(_aequales(capsa, n, _octeti(c, VI, 'c',
+        "send alert record", ZEPHYRUM, "complete record")));
+}
+
+/* CertificateRequest cum vectore extensionum longiore quam reliquum
+ * -> FORMA, alerta 50 */
+interior vacuum
+_sectio_cr_forma (
+    CredoContextus* c)
+{
+    Scaena s;
+
+    _scaenam_parare(c, &s, VI);
+    /* corpus: contextus I, longitudo extensionum II (0x0024 -> 25) */
+    _errorem_verificare(c, &s, VI, _volatum_resignare(c, VI, XIII, II),
+        TLS13_ERROR_FORMA, L);
+}
+
+/* contextus CertificateRequest in pactione vacuus esse DEBET (RFC 8446
+ * 4.3.2) -> PARAMETRUM, alerta 47 */
+interior vacuum
+_sectio_cr_contextus (CredoContextus* c)
+{
+    Scaena s;
+    chorda planum = _octeti(c, VI, 's', "send handshake record", I,
+        "payload");
+       i8* p = (i8*)piscina_allocare(c->piscina,
+           (memoriae_index)planum.mensura + I);
+       s32 k;
+       i32 j;
+       i32 longitudo;
+
+    CREDO_NECESSE_NON_NIHIL(p);
+    k = _nuntium_invenire(planum.datum, planum.mensura, XIII);
+    CREDO_NECESSE(k >= ZEPHYRUM);
+    j = (i32)k;
+    /* contextus unius octeti 0xab post longitudinem eius inseritur */
+    memcpy(p, planum.datum, j + V);
+    p[j + V] = 0xab;
+    memcpy(p + j + VI, planum.datum + j + V, planum.mensura - j - V);
+    p[j + IV] = I;
+    longitudo = (((i32)p[j + I] << XVI) | ((i32)p[j + II] << VIII)
+        | (i32)p[j + III]) + I;
+    p[j + I]    = (i8)(longitudo >> XVI);
+    p[j + II]   = (i8)(longitudo >> VIII);
+    p[j + III]  = (i8)longitudo;
+    _scaenam_parare(c, &s, VI);
+    _errorem_verificare(c, &s, VI, _sigillare(c, VI, p,
+        planum.mensura + I), TLS13_ERROR_PARAMETRUM, XLVII);
 }
 
 hic_manens constans CredoSectio SECTIONES[] = {
@@ -636,6 +1095,22 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "fiducia_negata", _sectio_fiducia_negata, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "finis_falsus", _sectio_finis_falsus, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "s5_hrr", _sectio_s5_hrr, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "hrr_bis", _sectio_hrr_bis, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "hrr_grex_ignotus", _sectio_hrr_grex_ignotus, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "alerta_70", _sectio_alerta_70, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "alerta_40", _sectio_alerta_40, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "keyupdate", _sectio_keyupdate, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "recordum_moles", _sectio_recordum_moles, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "recordum_mac", _sectio_recordum_mac, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "s6_sine_identitate", _sectio_s6_sine_identitate, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "cr_forma", _sectio_cr_forma, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "cr_contextus", _sectio_cr_contextus, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

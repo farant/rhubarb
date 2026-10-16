@@ -192,6 +192,54 @@ this plan.
   (T4 gives the number), HRR, KeyUpdate. CertificateRequest ->
   unexpected (no client certificates, spec II.5).
 
+- **R17 (T5 scope, Fran 2026-10-16)** - CertificateRequest answered
+  WITHOUT a client identity (RFC 8446 4.4.2: empty Certificate, no
+  CertificateVerify). Engine: CR parsed in stadium CERT (context <= 255,
+  extensions well-formed, transcript add), `cr_visa` + context kept;
+  after the server Finished our flight = (CCS) + Certificate `0b 00 00
+  04 || ctx_len ctx || 00 00 00` + Finished, both under c hs, the
+  transcript for OUR Finished including our Certificate (c ap / s ap
+  stay on the transcript through the SERVER Finished). Tests in T5:
+  - `s6_sine_identitate`: RFC 8448 §6 replay (its CH fixed, its x25519
+    key) - server flight EE || CR || Certificate || CV || Finished
+    accepted (real signature, real Finished); our records opened with
+    §6's c hs secret = empty Certificate + a Finished the TEST computes
+    with T1 (transcript from the RFC's messages + our Certificate);
+    then `tls13_machina_claudere` output = §6 {client} "send alert
+    record" `complete record` BYTE FOR BYTE (c ap does not depend on
+    the client's certificate).
+  - `cr_forma`: CR with a truncated extension vector -> FORMA, alert 50.
+  - T6: s_server `-verify 1` (optional) handshake succeeds; `-Verify 1`
+    (required) -> ALERTA_RECEPTA naming certificate_required (116).
+  Plants: our Certificate left out of the transcript -> s6 red; CR
+  context not echoed (always empty) -> a cr test with a non-empty
+  context red. Real client identities (signing callback, key in
+  Keychain / Secure Enclave / card, never in the engine) = ledger
+  wish, not this arc.
+
+- **R18 (T5)** - corrects R17: RFC 8446 4.3.2 - in the handshake the
+  CertificateRequest context SHALL be empty -> a non-empty one is
+  PARAMETRUM / illegal_parameter (47), not echoed; section `cr_contextus`
+  inserts one byte into §6's CR and re-seals (the check precedes the
+  signature). Found while building it: §6's SERVER is ECDSA P-256 (CV
+  0x0403) - §2's RSA key is §6's CLIENT key - so §6 is also our ECDSA
+  verification oracle, and a re-signed §6 flight is impossible.
+- **R19 (T5)** - second HelloRetryRequest -> alert 10 unexpected_message
+  (RFC 8446 4.1.4), not 47; HRR groups other than secp256r1 (0x0018, and
+  0x001d already sent) -> 47. KeyUpdate: one octet of another value ->
+  47, other lengths -> 50. CCS before CH2 when the session id is
+  non-empty: untestable on RFC 8448 (empty ids), owed to T6 `-groups
+  P-256`.
+- **R20 (T5)** - recordum_moles, recordum_mac, alerta_70 and
+  hrr_grex_ignotus were already green at RED (T4 behaviour) - kept as
+  pins. Plants (8, all red then green): HRR once-guard, KeyUpdate send
+  rotation, T1's 0xfe -> 0xff (red via s5_hrr: R2's mute-by-design plant
+  closed), our Certificate out of the transcript, CR context check,
+  P-256 x offset, `tls13_transcriptum_hrr` call, alert name. Lint
+  renames `xn`/`xo` -> `longitudo_x`/`locus_x`, `KEY_SHARE` ->
+  `EXTENSIO_CLAVIUM`; examen rejected a writable static buffer in a
+  test section (made local).
+
 ## Review focus
 
 Inputs no task's tests reach that are most likely to bite, each with

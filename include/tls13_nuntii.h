@@ -25,6 +25,7 @@
 #define TLS13_NUNTIUS_NST           IV
 #define TLS13_NUNTIUS_EE            VIII
 #define TLS13_NUNTIUS_CERTIFICATUM  XI
+#define TLS13_NUNTIUS_CR            XIII  /* CertificateRequest */
 #define TLS13_NUNTIUS_CV            XV
 #define TLS13_NUNTIUS_FINIS         XX
 #define TLS13_NUNTIUS_KEYUPDATE     XXIV

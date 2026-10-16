@@ -74,6 +74,10 @@ structura Tls13Machina {
                         b32 claves_mutatae;    /* nuntius ultimus
                                                   * claves mutavit */
                          i8  privata_x25519[XXXII];
+                         i8  privata_p256[XXXII];
+                         i8  temere[XXXII];
+                        b32  hrr_visa;
+                        b32  cr_visa;          /* CertificateRequest */
                          i8  secretum_pactionis[TLS13_HASH_MAXIMUS];
                          i8  c_hs[TLS13_HASH_MAXIMUS];
                          i8  s_hs[TLS13_HASH_MAXIMUS];
@@ -100,6 +104,11 @@ structura Tls13Machina {
 };
 
 hic_manens constans i8 NULLI[TLS13_HASH_MAXIMUS] = { ZEPHYRUM };
+
+/* Certificate sine catena: contextus vacuus, lista vacua */
+hic_manens constans i8 CERTIFICATUM_VACUUM[VIII] = {
+    XI, ZEPHYRUM, ZEPHYRUM, IV, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM
+};
 
 hic_manens constans character CONTEXTUS_CV[] =
     "TLS 1.3, server CertificateVerify";
@@ -330,6 +339,143 @@ _aequalia_tempore_constanti (
  * Nuntii pactionis
  * ================================================== */
 
+/* P-256: secretum communis = coordinata x de mul(alienum, privata) */
+interior b32
+_p256_communis (
+    constans i8* privata,
+    constans i8* alienum,
+             i8* exitus)
+{
+     constans br_ec_impl* ec = br_ec_get_default();
+                      i8  punctum[LXV];
+                  size_t  longitudo_x = ZEPHYRUM;
+                  size_t  locus_x;
+
+    memcpy(punctum, alienum, LXV);
+    si (ec->mul(punctum, LXV, privata, XXXII, BR_EC_secp256r1) != I)
+    {
+        redde FALSUM;
+    }
+    locus_x = ec->xoff(BR_EC_secp256r1, &longitudo_x);
+    si (longitudo_x != XXXII)
+    {
+        redde FALSUM;
+    }
+    memcpy(exitus, punctum + locus_x, XXXII);
+    redde VERUM;
+}
+
+/* HelloRetryRequest (RFC 8446 4.1.4): semel; grex secp256r1 solus
+ * (oblatus, non missus); transcriptum cum message_hash; CH2 cum clave
+ * P-256 et crustulo */
+interior vacuum
+_hrr (
+                     Tls13Machina* m,
+     constans Tls13ResponsumServi* r,
+                      constans i8* crudum,
+                              i32  crudi_n)
+{
+              i8  publica[LXV];
+             i32  conatus = ZEPHYRUM;
+             i32  n;
+     constans i8* fixa = m->opt.salutationes_fixae[I];
+
+    si (m->hrr_visa)
+    {
+        _errorem(m, TLS13_ERROR_PARAMETRUM, ALERTA_INOPINATUM,
+            "HelloRetryRequest secundum");
+        redde;
+    }
+    si (r->grex != TLS13_GREX_SECP256R1)
+    {
+        _errorem(m, TLS13_ERROR_PARAMETRUM, ALERTA_PARAMETRUM,
+            "grex HelloRetryRequest non oblatus aut iam missus");
+        redde;
+    }
+    m->hrr_visa      = VERUM;
+    m->cifra         = r->cifra;
+    m->genus         = tls13_cifra_genus(r->cifra);
+    m->transcriptum  = tls13_transcriptum_creare(m->genus, m->piscina);
+    si (m->transcriptum == NIHIL)
+    {
+        _errorem(m, TLS13_ERROR_PARAMETRUM, ALERTA_INTERNA,
+            "piscina exhausta");
+        redde;
+    }
+    tls13_transcriptum_addere(m->transcriptum, m->salutatio,
+        m->salutatio_n);
+    tls13_transcriptum_hrr(m->transcriptum);
+    tls13_transcriptum_addere(m->transcriptum, crudum, crudi_n);
+    /* clavis P-256 (ORDO FORTIS 4): iterata si extra ordinem curvae */
+    fac
+    {
+        _fors(m, m->privata_p256, XXXII);
+        n = (i32)br_ec_get_default()->mulgen(publica, m->privata_p256,
+            XXXII, BR_EC_secp256r1);
+        conatus++;
+    }
+    dum (n != LXV && conatus < IV);
+    si (n != LXV)
+    {
+        _errorem(m, TLS13_ERROR_ENTROPIA, ALERTA_INTERNA,
+            "clavis P-256 generari non potest");
+        redde;
+    }
+    si (fixa != NIHIL)
+    {
+        n = m->opt.salutationes_fixae_n[I];
+        si (n > SALUTATIO_MAXIMA)
+        {
+            _errorem(m, TLS13_ERROR_PARAMETRUM, ALERTA_INTERNA,
+                "salutatio fixa nimis longa");
+            redde;
+        }
+        memcpy(m->salutatio, fixa, n);
+    }
+    alioquin
+    {
+        Tls13SalutatioParametri p;
+
+        memset(&p, ZEPHYRUM, magnitudo(p));
+        p.hospes          = m->opt.hospes;
+        p.temere          = m->temere;
+        p.sessio          = m->sessio;
+        p.sessio_n        = m->sessio_n;
+        p.grex            = TLS13_GREX_SECP256R1;
+        p.clavis_publica  = publica;
+        p.clavis_n        = LXV;
+        p.crustulum       = r->crustulum;
+        p.crustulum_n     = r->crustulum_n;
+        n = tls13_salutatio_scribere(&p, m->salutatio,
+            SALUTATIO_MAXIMA);
+        si (n == ZEPHYRUM)
+        {
+            _errorem(m, TLS13_ERROR_PARAMETRUM, ALERTA_INTERNA,
+                "ClientHello secundum non scribitur");
+            redde;
+        }
+    }
+    m->salutatio_n = n;
+    /* CCS fictum ante CH2 (RFC 8446 D.4), si sessio non vacua */
+    si (m->sessio_n > ZEPHYRUM && !m->ccs_missa)
+    {
+        hic_manens constans i8 unum[I] = { I };
+
+        (vacuum)_recordum_planum(m, TLS13_CONTENTUM_CCS, III, unum, I);
+        m->ccs_missa = VERUM;
+    }
+    si (!_recordum_planum(m, TLS13_CONTENTUM_PACTIO, III, m->salutatio,
+        m->salutatio_n))
+    {
+        _errorem(m, TLS13_ERROR_PARAMETRUM, ALERTA_INTERNA,
+            "exitus plenus");
+        redde;
+    }
+    tls13_transcriptum_addere(m->transcriptum, m->salutatio,
+        m->salutatio_n);
+    m->claves_mutatae = VERUM;   /* nihil post HRR in eodem recordo */
+}
+
 interior vacuum
 _responsum (
     Tls13Machina* m,
@@ -358,28 +504,17 @@ _responsum (
             "hospes ut TLS 1.2 respondit");
         redde;
     }
-    si (r.hrr)
-    {
-        _errorem(m, TLS13_ERROR_PARAMETRUM, ALERTA_PARAMETRUM,
-            "HelloRetryRequest nondum sustinetur");
-        redde;
-    }
     si (r.versio != 0x0304)
     {
         _errorem(m, TLS13_ERROR_PARAMETRUM, ALERTA_PARAMETRUM,
             "supported_versions non 0x0304");
         redde;
     }
-    si (tls13_cifra_genus(r.cifra) == ZEPHYRUM)
+    si (   tls13_cifra_genus(r.cifra) == ZEPHYRUM
+        || (m->hrr_visa && r.cifra != m->cifra))
     {
         _errorem(m, TLS13_ERROR_PARAMETRUM, ALERTA_PARAMETRUM,
             "cifra non oblata");
-        redde;
-    }
-    si (r.grex != TLS13_GREX_X25519 || r.clavis_n != XXXII)
-    {
-        _errorem(m, TLS13_ERROR_PARAMETRUM, ALERTA_PARAMETRUM,
-            "key_share servi non x25519");
         redde;
     }
     si (   r.sessio_n                               != m->sessio_n
@@ -389,24 +524,57 @@ _responsum (
             "legacy_session_id_echo alienum");
         redde;
     }
-    si (!_x25519_communis(m->privata_x25519, r.clavis, communis))
+    si (r.hrr)
     {
-        _errorem(m, TLS13_ERROR_PARAMETRUM, ALERTA_PARAMETRUM,
-            "clavis x25519 servi invalida");
+        _hrr(m, &r, crudum, crudi_n);
         redde;
     }
-    m->cifra         = r.cifra;
-    m->genus         = tls13_cifra_genus(r.cifra);
-    h                = tls13_hash_mensura(m->genus);
-    m->transcriptum  = tls13_transcriptum_creare(m->genus, m->piscina);
+    si (m->hrr_visa)
+    {
+        si (r.grex != TLS13_GREX_SECP256R1 || r.clavis_n != LXV)
+        {
+            _errorem(m, TLS13_ERROR_PARAMETRUM, ALERTA_PARAMETRUM,
+                "key_share servi non grex HelloRetryRequest");
+            redde;
+        }
+        si (!_p256_communis(m->privata_p256, r.clavis, communis))
+        {
+            _errorem(m, TLS13_ERROR_PARAMETRUM, ALERTA_PARAMETRUM,
+                "clavis P-256 servi invalida");
+            redde;
+        }
+    }
+    alioquin
+    {
+        si (r.grex != TLS13_GREX_X25519 || r.clavis_n != XXXII)
+        {
+            _errorem(m, TLS13_ERROR_PARAMETRUM, ALERTA_PARAMETRUM,
+                "key_share servi non x25519");
+            redde;
+        }
+        si (!_x25519_communis(m->privata_x25519, r.clavis, communis))
+        {
+            _errorem(m, TLS13_ERROR_PARAMETRUM, ALERTA_PARAMETRUM,
+                "clavis x25519 servi invalida");
+            redde;
+        }
+    }
+    m->cifra  = r.cifra;
+    m->genus  = tls13_cifra_genus(r.cifra);
+    h         = tls13_hash_mensura(m->genus);
     si (m->transcriptum == NIHIL)
     {
-        _errorem(m, TLS13_ERROR_PARAMETRUM, ALERTA_INTERNA,
-            "piscina exhausta");
-        redde;
+        m->transcriptum = tls13_transcriptum_creare(m->genus,
+            m->piscina);
+        si (m->transcriptum == NIHIL)
+        {
+            _errorem(m, TLS13_ERROR_PARAMETRUM, ALERTA_INTERNA,
+                "piscina exhausta");
+            redde;
+        }
+        tls13_transcriptum_addere(m->transcriptum, m->salutatio,
+            m->salutatio_n);
     }
-    tls13_transcriptum_addere(m->transcriptum, m->salutatio,
-        m->salutatio_n);
     tls13_transcriptum_addere(m->transcriptum, crudum, crudi_n);
 
     /* RFC 8446 7.1: early -> handshake */
@@ -620,7 +788,8 @@ _finis (
      i8 magister[TLS13_HASH_MAXIMUS];
      i8 c_ap[TLS13_HASH_MAXIMUS];
      i8 s_ap[TLS13_HASH_MAXIMUS];
-     i8 finis[IV + TLS13_HASH_MAXIMUS];
+     i8 volatus[VIII + IV + TLS13_HASH_MAXIMUS];
+    i32 v = ZEPHYRUM;
     i32 h = tls13_hash_mensura(m->genus);
 
     si (n != h)
@@ -652,20 +821,30 @@ _finis (
     tls13_secretum_derivare(m->genus, magister, "s ap traffic",
         hash_transcripti, s_ap);
 
-    /* volatus noster sub c hs: (CCS) + Finished */
-    finis[ZEPHYRUM]  = TLS13_NUNTIUS_FINIS;
-    finis[I]         = ZEPHYRUM;
-    finis[II]        = ZEPHYRUM;
-    finis[III]       = (i8)h;
+    /* volatus noster sub c hs: (CCS) + [Certificate vacuum, si
+     * petitum - RFC 8446 4.4.2] + Finished; transcriptum Finished
+     * nostri Certificate nostrum continet, secreta applicationis non */
+    si (m->cr_visa)
+    {
+        memcpy(volatus, CERTIFICATUM_VACUUM, VIII);
+        tls13_transcriptum_addere(m->transcriptum, volatus, VIII);
+        tls13_transcriptum_digerere(m->transcriptum, hash_transcripti);
+        v = VIII;
+    }
+    volatus[v]        = TLS13_NUNTIUS_FINIS;
+    volatus[v + I]    = ZEPHYRUM;
+    volatus[v + II]   = ZEPHYRUM;
+    volatus[v + III]  = (i8)h;
     tls13_finis_calculare(m->genus, m->c_hs, hash_transcripti,
-        finis + IV);
-    si (!_recordum_mittere(m, TLS13_CONTENTUM_PACTIO, finis, IV + h))
+        volatus + v + IV);
+    si (!_recordum_mittere(m, TLS13_CONTENTUM_PACTIO, volatus,
+        v + IV + h))
     {
         _errorem(m, TLS13_ERROR_PARAMETRUM, ALERTA_INTERNA,
             "exitus plenus");
         redde;
     }
-    tls13_transcriptum_addere(m->transcriptum, finis, IV + h);
+    tls13_transcriptum_addere(m->transcriptum, volatus + v, IV + h);
     m->legere    = tls13_protectio_creare(m->cifra, s_ap, m->piscina);
     m->scribere  = tls13_protectio_creare(m->cifra, c_ap, m->piscina);
     si (m->legere == NIHIL || m->scribere == NIHIL)
@@ -678,6 +857,74 @@ _finis (
     m->versio          = 0x0304;
     m->claves_mutatae  = VERUM;
     m->stadium         = STADIUM_APERTA;
+}
+
+/* CertificateRequest (RFC 8446 4.3.2): contextus in pactione vacuus;
+ * respondetur sine identitate (tls13-plan R17) */
+interior vacuum
+_petitionem (
+    Tls13Machina* m,
+     constans i8* corpus,
+             i32  n,
+     constans i8* crudum,
+             i32  crudi_n)
+{
+    si (n >= I && corpus[ZEPHYRUM] != ZEPHYRUM)
+    {
+        _errorem(m, TLS13_ERROR_PARAMETRUM, ALERTA_PARAMETRUM,
+            "certificate_request_context non vacuum");
+        redde;
+    }
+    si (n < I || !tls13_extensiones_legere(corpus + I, n - I))
+    {
+        _errorem(m, TLS13_ERROR_FORMA, ALERTA_FORMA,
+            "CertificateRequest male formatum");
+        redde;
+    }
+    tls13_transcriptum_addere(m->transcriptum, crudum, crudi_n);
+    m->cr_visa = VERUM;
+}
+
+/* KeyUpdate (RFC 8446 4.6.3): claves lectionis renovantur; si rogatur,
+ * KeyUpdate noster sub clave VETERE, deinde scriptio renovatur */
+interior vacuum
+_renovationem (
+    Tls13Machina* m,
+     constans i8* corpus,
+             i32  n)
+{
+    hic_manens constans i8 NON_ROGATUM[V] = {
+        XXIV, ZEPHYRUM, ZEPHYRUM, I, ZEPHYRUM
+    };
+    b32 rogatur = FALSUM;
+
+    si (!tls13_keyupdate_legere(corpus, n, &rogatur))
+    {
+        si (n == I)
+        {
+            _errorem(m, TLS13_ERROR_PARAMETRUM, ALERTA_PARAMETRUM,
+                "KeyUpdate valore alieno");
+        }
+        alioquin
+        {
+            _errorem(m, TLS13_ERROR_FORMA, ALERTA_FORMA,
+                "KeyUpdate male formatum");
+        }
+        redde;
+    }
+    tls13_protectio_renovare(m->legere);
+    m->claves_mutatae = VERUM;
+    si (rogatur && !m->clausura_missa)
+    {
+        si (!_recordum_mittere(m, TLS13_CONTENTUM_PACTIO, NON_ROGATUM,
+            V))
+        {
+            _errorem(m, TLS13_ERROR_PARAMETRUM, ALERTA_INTERNA,
+                "exitus plenus");
+            redde;
+        }
+        tls13_protectio_renovare(m->scribere);
+    }
 }
 
 interior vacuum
@@ -723,6 +970,11 @@ _nuntius (
             m->stadium = STADIUM_CERT;
             redde;
         casus STADIUM_CERT:
+            si (typus == TLS13_NUNTIUS_CR && !m->cr_visa)
+            {
+                _petitionem(m, corpus, n, crudum, crudi_n);
+                redde;
+            }
             si (typus != TLS13_NUNTIUS_CERTIFICATUM)
             {
                 _inopinatum(m);
@@ -750,7 +1002,11 @@ _nuntius (
             redde;
         casus STADIUM_APERTA:
             /* NewSessionTicket: sine resumptione omittitur */
-            si (typus != TLS13_NUNTIUS_NST)
+            si (typus == TLS13_NUNTIUS_KEYUPDATE)
+            {
+                _renovationem(m, corpus, n);
+            }
+            alioquin si (typus != TLS13_NUNTIUS_NST)
             {
                 _inopinatum(m);
             }
@@ -804,6 +1060,43 @@ _pactio_addere (
     }
 }
 
+/* AlertDescription -> titulus RFC 8446 6 (causa erroris) */
+interior constans character*
+_alerta_titulus (
+    i32 descriptio)
+{
+    commutatio (descriptio)
+    {
+        casus X:     redde "unexpected_message";
+        casus XX:    redde "bad_record_mac";
+        casus XXII:  redde "record_overflow";
+        casus XL:    redde "handshake_failure";
+        casus XLII:  redde "bad_certificate";
+        casus XLIII: redde "unsupported_certificate";
+        casus XLIV:  redde "certificate_revoked";
+        casus XLV:   redde "certificate_expired";
+        casus XLVI:  redde "certificate_unknown";
+        casus XLVII: redde "illegal_parameter";
+        casus XLVIII: redde "unknown_ca";
+        casus XLIX:  redde "access_denied";
+        casus L:     redde "decode_error";
+        casus LI:    redde "decrypt_error";
+        casus LXX:   redde "protocol_version";
+        casus LXXI:  redde "insufficient_security";
+        casus LXXX:  redde "internal_error";
+        casus LXXXVI: redde "inappropriate_fallback";
+        casus XC:    redde "user_canceled";
+        casus CIX:   redde "missing_extension";
+        casus CX:    redde "unsupported_extension";
+        casus CXII:  redde "unrecognized_name";
+        casus CXIII: redde "bad_certificate_status_response";
+        casus CXV:   redde "unknown_psk_identity";
+        casus CXVI:  redde "certificate_required";
+        casus CXX:   redde "no_application_protocol";
+        ordinarius:  redde "ignota";
+    }
+}
+
 interior vacuum
 _alerta (
     Tls13Machina* m,
@@ -836,8 +1129,8 @@ _alerta (
             "protocol_version ad ClientHello");
         redde;
     }
-    sprintf(causa, "nuntius fatalis a pare: %u",
-        (insignatus)descriptio);
+    sprintf(causa, "nuntius fatalis a pare: %u (%s)",
+        (insignatus)descriptio, _alerta_titulus(descriptio));
     _errorem(m, TLS13_ERROR_ALERTA_RECEPTA, ZEPHYRUM, causa);
     m->error.alerta = descriptio;
 }
@@ -1026,10 +1319,9 @@ tls13_machina_creare (
     alioquin
     {
         Tls13SalutatioParametri p;
-                             i8 temere[XXXII];
                              i8 publica[XXXII];
 
-        _fors(m, temere, XXXII);
+        _fors(m, m->temere, XXXII);
         _fors(m, m->sessio, XXXII);
         m->sessio_n = XXXII;
         si (!_x25519_publica(m->privata_x25519, publica))
@@ -1038,7 +1330,7 @@ tls13_machina_creare (
         }
         memset(&p, ZEPHYRUM, magnitudo(p));
         p.hospes          = m->opt.hospes;
-        p.temere          = temere;
+        p.temere          = m->temere;
         p.sessio          = m->sessio;
         p.sessio_n        = XXXII;
         p.grex            = TLS13_GREX_X25519;

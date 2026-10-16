@@ -43,3 +43,41 @@ Not yet (T5): HelloRetryRequest (now PARAMETRUM), KeyUpdate (now
 unexpected), alert names in the causa (now the number only).
 CertificateRequest is "unexpected" - no client certificates in the spec;
 a server asking for OPTIONAL client auth would fail the handshake.
+
+## 2026-10-16 - T5: HelloRetryRequest, CertificateRequest, KeyUpdate, alerts
+
+21/21 on the first run after implementing. Three RFC 8448 traces now
+replay byte for byte through the engine: §3 (RSA-PSS), §5 (HRR -> P-256,
+the `message_hash` substitution exercised for real) and §6 (server
+ECDSA P-256 with a CertificateRequest).
+
+- **§6 surprise:** the §6 SERVER certificate is ECDSA P-256 ("ecdsa256",
+  CV 0x0403). RFC 8448 §2's RSA private key is the §6 CLIENT's key. So
+  the §6 replay is our ECDSA verification oracle (T4 only had RSA-PSS),
+  and a modified §6 flight cannot be re-signed (EC key unpublished).
+- **CertificateRequest context must be empty in the handshake** (RFC
+  8446 4.3.2; non-empty contexts are post-handshake auth, which we
+  never offer). We reject a non-empty one with illegal_parameter rather
+  than echo it - this replaced the "echo" design of R17, and the check
+  sits before the signature, so its test only re-seals a modified flight.
+- **Answer without identity:** empty Certificate `0b 00 00 04 00 00 00
+  00` + Finished in ONE record under c hs. Order in `_finis`: derive c ap
+  / s ap from the transcript through the SERVER Finished first, then add
+  our Certificate, then compute our Finished. The test checks the
+  consequence that proves the order: our close_notify equals §6's client
+  alert record byte for byte even though our Finished differs from the
+  RFC client's (which sent a real certificate).
+- **HRR:** once only (a second = unexpected_message, RFC 8446 4.1.4);
+  the only acceptable group is secp256r1 (offered, not sent). CH2 reuses
+  CH1's random and session id; the dummy CCS goes before CH2 when the
+  session id is non-empty (RFC 8446 D.4) - §5 has an empty one, so that
+  branch waits for the s_server `-groups P-256` interop test (T6).
+  Nothing may follow the HRR in the same record (treated like a key
+  change).
+- **P-256 shared secret** = x coordinate of `mul(peer, priv)` at
+  `xoff()`; the plant shifting that offset by one goes red in §5.
+- **KeyUpdate:** receive keys rotate at once; when requested we send
+  KeyUpdate(update_not_requested) under the OLD write key and rotate
+  after. Must end its record (same key-change rule).
+- examen caught a writable `hic_manens` buffer in a test section (state
+  that would survive into the next section) - made it a local.
