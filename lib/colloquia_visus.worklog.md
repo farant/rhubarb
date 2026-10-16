@@ -33,3 +33,18 @@
 - Jump shared with notifications: `saltus(ca, pane, socket)` in
   vicus_applicatio (T4c chain), both portae call it.
 - Fran's look 2026-10-15: everything worked (groups, colours, j/k skip headers, c toggles Closed, Enter jumps to a real tmux pane via admonere.sh hic).
+
+## 2026-10-16 - restored sessions pane stayed empty (Fran)
+
+- A sessions pane saved in the layout is mounted inside vicus_aperire
+  (vicus_applicatio_aedificare), BEFORE the app calls
+  vicus_applicatio_admonitiones_aperire - the wiring passed the source
+  only `ca->sequitur ? &ca->fons : NIHIL`, so the restored pane kept
+  NIHIL forever; a pane opened later got the live source.
+- Fix: always pass &ca->fons; an uninitialised (zeroed) source already
+  reads as empty (fontis: !status -> NIHIL; pulsare: !scheda -> FALSE),
+  and fills once opened. The notification center never had this: its
+  index exists from aedificare and only the follower starts later.
+- Test now mirrors the restore order (mount, then open sources, same
+  pane sees the sessions); red before, plant restores the conditional.
+- Fran's look 2026-10-16: restored sessions pane works.

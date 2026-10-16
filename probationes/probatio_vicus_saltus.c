@@ -642,8 +642,50 @@ _probare_restitutionem (
     CREDO_CHORDA_AEQUALIS_LITERIS(l->argumentum, "tmux - beta");
     t    = (TerminaleApplicatio*)l->montatio;
     tty  = chorda_transcribere(terminale_tty(t), c->piscina);
+    /* initium tardum (pictor historiam replicans, 10-16: IX s): tmux
+     * responsa quaestionum suarum (DA1 DA2 XTVERSION) V s solum
+     * exspectat, deinde ut claves in panellum mittit */
+    pausa.tv_sec   = VI;
+    pausa.tv_nsec  = ZEPHYRUM;
+    (vacuum)nanosleep(&pausa, NIHIL);
     CREDO_VERUM(adhaesionem_in(s->altera.vicus, &communis, "beta", tty,
         c->piscina));
+    /* nulla responsa ut claves in panello */
+    per (gradus = ZEPHYRUM; gradus < XXV; gradus++)
+    {
+        (vacuum)vicus_pulsare(s->altera.vicus);
+        pausa.tv_sec   = ZEPHYRUM;
+        pausa.tv_nsec  = XX * M * M;
+        (vacuum)nanosleep(&pausa, NIHIL);
+    }
+    {
+         constans character* v_capturae[VIII];
+          ProcessusResultus  r;
+
+        v_capturae[ZEPHYRUM]  = s->binarium;
+        v_capturae[I]         = "-S";
+        v_capturae[II]        = s->communis;
+        v_capturae[III]       = "capture-pane";
+        v_capturae[IV]        = "-p";
+        v_capturae[V]         = "-t";
+        /* "=beta" panellum non invenit: effusio vacua */
+        v_capturae[VI] = "=beta:";
+        v_capturae[VII] = NIHIL;
+        r = processus_exsequi(v_capturae, V * M, c->piscina);
+        /* captura vera (non vacua): aliter assertio infra caeca */
+        CREDO_NECESSE(r.successus && r.codex_exitus == ZEPHYRUM
+                      && r.effusio.mensura > ZEPHYRUM);
+        si (chorda_continet(r.effusio, chorda_ex_literis("aemulator",
+            c->piscina)))
+        {
+            imprimere("  panellus: %.*s\n", (integer)r.effusio.mensura,
+                (constans character*)r.effusio.datum);
+        }
+        CREDO_FALSUM(chorda_continet(r.effusio, chorda_ex_literis(
+            "aemulator", c->piscina)));
+        CREDO_FALSUM(chorda_continet(r.effusio, chorda_ex_literis(
+            "62;22c", c->piscina)));
+    }
 
     CREDO_GRADUS("III: detachmentum - concha manet");
     CREDO_NECESSE(imperium_in(s, s->communis, "detach-client", "-t",

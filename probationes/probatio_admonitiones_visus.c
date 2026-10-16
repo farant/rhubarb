@@ -449,12 +449,36 @@ _probare_centrum (
     CREDO_VERUM(textus_pictus(md, "t2", (s32)COLOR_ACCENT_PRIMARY));
     CREDO_VERUM(textus_pictus(md, "5m", -I));
     CREDO_VERUM(textus_pictus(md, "corpus", -I));
-    /* x: electa (prima) lecta -> color textus */
+    /* x: electa (prima) lecta - T4e: celatur, electa ad proximam */
     clavis(w, 'x');
     md = reddere(w, c->piscina);
-    CREDO_VERUM(textus_pictus(md, "t2", (s32)COLOR_TEXT));
+    CREDO_FALSUM(textus_pictus(md, "t2", -I));
     CREDO_VERUM(textus_pictus(md, "t1", (s32)COLOR_ACCENT_PRIMARY));
+    CREDO_VERUM(textus_pictus(md, "2 unread, 1 read (r)", -I));
+    CREDO_VERUM(campus_est(&w->m.ramus, "electa", "a1"));
+    CREDO_VERUM(fines_componentis(w, "r1", c->piscina).altitudo
+        == ZEPHYRUM);
+    /* r: lectae ostenduntur (colore textus) */
+    clavis(w, 'r');
+    CREDO_VERUM(campus_est(&w->m.ramus, "lectae", "verum"));
+    md = reddere(w, c->piscina);
+    CREDO_VERUM(textus_pictus(md, "t2", (s32)COLOR_TEXT));
     CREDO_VERUM(textus_pictus(md, "2 unread of 3", -I));
+    /* x in modo ostenso: lecta manet visibilis et electa */
+    clavis(w, 'x');
+    CREDO_VERUM(campus_est(&w->m.ramus, "electa", "a1"));
+    clavis(w, 'r');
+    md = reddere(w, c->piscina);
+    CREDO_VERUM(textus_pictus(md, "1 unread, 2 read (r)", -I));
+    /* visibilis sola a0 (r3); a1 a2 lectae celantur */
+    CREDO_VERUM(fines_componentis(w, "r3", c->piscina).altitudo
+        > ZEPHYRUM);
+    CREDO_VERUM(fines_componentis(w, "r2", c->piscina).altitudo
+        == ZEPHYRUM);
+    /* electa servata (a1) celata est: Enter visibilem agit (a0) */
+    reditus(w);
+    CREDO_AEQUALIS_I32(w->actae, I);
+    CREDO_VERUM(strcmp(w->acta, "a0") == ZEPHYRUM);
 }
 
 /* j k: electa per id; Enter porta et lecta; X omnes et campus radicis;
@@ -483,6 +507,12 @@ _probare_claves (
     CREDO_AEQUALIS_I32(admonitiones_non_lectae(w->index), ZEPHYRUM);
     radix = insula_ramus_radix(w->repo);
     CREDO_VERUM(campus_est(&radix, "admonitiones_lectae_ad", "3000"));
+    /* T4e: omnes celatae */
+    CREDO_VERUM(fines_componentis(w, "r3", c->piscina).altitudo
+        == ZEPHYRUM);
+    CREDO_VERUM(textus_pictus(reddere(w, c->piscina),
+        "No unread notifications", -I));
+    clavis(w, 'r');
     /* ictus duplex in r3 (a0) */
     CREDO_VERUM(ictus(w, "r3", EVENTUS_MUS_DEPRESSUS, c->piscina));
     CREDO_VERUM(campus_est(&w->m.ramus, "electa", "a0"));

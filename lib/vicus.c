@@ -836,6 +836,21 @@ radicem_tractare (
         }
         redde VERUM;
     }
+    /* T4d: Esc quod latus frontale acervi (focatum, effugium_redit)
+     * non consumpsit: latus tollitur, prius redit */
+    si (   ev->genus               == EVENTUS_CLAVIS_DEPRESSUS
+        && ev->datum.clavis.clavis == CLAVIS_EFFUGIUM)
+    {
+        VicusTabula* t;
+
+        t = vicus_activa(v);
+        l = vicus_latus_focatum(v);
+        si (   t && l && t->focus == VICUS_DEXTRUM && l->montata
+            && l->facies.effugium_redit)
+        {
+            redde vicus_acervo_redire(v);
+        }
+    }
     /* Cmd+numerus: tabula (depressa agit, liberata devoratur) */
     si (est_imperium_tabulae(ev))
     {
@@ -2448,6 +2463,26 @@ petitionem_addere (
                    : chorda_nulla_vici();
     p->mutare      = mutare;
     redde VERUM;
+}
+
+b32
+vicus_acervo_redire (
+    Vicus* v)
+{
+    VicusTabula* t;
+            i32  n;
+
+    t = vicus_activa(v);
+    n = t ? xar_numerus(t->acervus) : ZEPHYRUM;
+    si (n <= I || !motum_relinquere(v))
+    {
+        redde FALSUM;
+    }
+    xar_truncare(t->acervus, n - I);
+    t->focus = VICUS_DEXTRUM;
+    registra_reficere(v);
+    motum_aptare(v);
+    redde indicem_scribere(v);
 }
 
 b32

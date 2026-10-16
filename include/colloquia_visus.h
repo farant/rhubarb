@@ -81,7 +81,8 @@ nomen structura {
              InsulaRamus  ramus;
           ActioRegistrum* actiones;
          FiguraRegistrum* figurae;
-        ColloquiorumFons* fons;       /* ligamen (communis) */
+        ColloquiorumFons* fons;       /* ligamen (communis); nondum
+                                       * initiatus (nullus) = vacuus */
           ColloquiiActio  agere;
                   vacuum* agere_ctx;
         ColloquiorumNunc  nunc;       /* post montationem; NIHIL =

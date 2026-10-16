@@ -401,15 +401,24 @@ _probare_sessiones (
     CREDO_NECESSE(via != NIHIL);
     CREDO_NECESSE(aedificare(x, c));
     v = x->app.vicus;
-    /* sine libro: latus montatur, fons nullus */
+    /* ante fontes (ut latus restitutum, in vicus_aperire montatum):
+     * vacuum; fontibus apertis IDEM latus sessiones videt (Franus
+     * 10-16: latus restitutum vacuum manebat) */
     CREDO_VERUM(vicus_acervo_aperire(v, "colloquia", NIHIL));
     (vacuum)vicus_pulsare(v);
     l = vicus_latus(vicus_activa(v), VICUS_DEXTRUM);
     CREDO_NECESSE(l && l->montata && chorda_aequalis_literis(l->genus,
         "colloquia"));
-    CREDO_VERUM(((ColloquiorumMontatio*)l->montatio)->fons == NIHIL);
-    /* cum libro: latus novum in tabula alia fontem videt */
+    m = (ColloquiorumMontatio*)l->montatio;
+    CREDO_VERUM(   !m->fons
+                || xar_numerus(colloquia_visus_fontis(m->fons,
+                       c->piscina)) == ZEPHYRUM);
     CREDO_VERUM(vicus_applicatio_admonitiones_aperire(&x->app, via));
+    (vacuum)vicus_pulsare(v);
+    CREDO_NECESSE(m->fons != NIHIL);
+    CREDO_AEQUALIS_I32(xar_numerus(colloquia_visus_fontis(m->fons,
+        c->piscina)), IV);
+    /* latus novum in tabula alia idem videt */
     CREDO_NECESSE(vicus_activam_ponere(v, "4"));
     CREDO_VERUM(vicus_acervo_aperire(v, "colloquia", NIHIL));
     (vacuum)vicus_pulsare(v);
@@ -420,6 +429,61 @@ _probare_sessiones (
     CREDO_NECESSE(m->fons != NIHIL);
     CREDO_AEQUALIS_I32(xar_numerus(colloquia_visus_fontis(m->fons,
         c->piscina)), IV);
+}
+
+/* T4d: Esc in centro (et sessionibus) latus tollit, prius redit;
+ * latus quod non optat (nomenclator) manet */
+interior vacuum
+_probare_redire (
+    CredoContextus* c)
+{
+                 Mundus* x;
+                  Vicus* v;
+             ManusLudus* m;
+            VicusTabula* t;
+     constans character* via;
+                    i32  n;
+
+    x    = (Mundus*)c->datum;
+    via  = librum_parare(c);
+    CREDO_NECESSE(via != NIHIL);
+    CREDO_NECESSE(aedificare(x, c));
+    v = x->app.vicus;
+    /* fontes aperti: latera claves vere tractant (sine fonte sessiones
+     * nihil tractant - Esc sola transiret) */
+    CREDO_NECESSE(vicus_applicatio_admonitiones_aperire(&x->app, via));
+    CREDO_NECESSE(vicus_activam_ponere(v, "3"));
+    t = vicus_activa(v);
+    n = xar_numerus(t->acervus);
+    CREDO_VERUM(vicus_acervo_aperire(v, "admonitiones", NIHIL));
+    (vacuum)vicus_pulsare(v);
+    CREDO_NON_NIHIL(centrum_frontale(v));
+    m = manus_ludus_creare(c->piscina, x->app.d);
+    dispensator_recomponere(x->app.d);
+    CREDO_NECESSE(manus_ludus_premere(m, "#admonitiones"));
+    CREDO_VERUM(manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));
+    (vacuum)vicus_pulsare(v);
+    CREDO_AEQUALIS_I32(xar_numerus(t->acervus), n);
+    CREDO_VERUM(centrum_frontale(v) == NIHIL);
+    CREDO_CHORDA_AEQUALIS_LITERIS(vicus_latus(t, VICUS_DEXTRUM)->genus,
+        "scriba");
+    CREDO_AEQUALIS_I32(t->focus, VICUS_DEXTRUM);
+    /* sessiones idem */
+    CREDO_VERUM(vicus_acervo_aperire(v, "colloquia", NIHIL));
+    (vacuum)vicus_pulsare(v);
+    dispensator_recomponere(x->app.d);
+    CREDO_NECESSE(manus_ludus_premere(m, "#colloquia"));
+    CREDO_VERUM(manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));
+    (vacuum)vicus_pulsare(v);
+    CREDO_AEQUALIS_I32(xar_numerus(t->acervus), n);
+    /* nomenclator non optat: Esc latus non tollit */
+    CREDO_VERUM(vicus_acervo_aperire(v, "nomenclator", NIHIL));
+    (vacuum)vicus_pulsare(v);
+    dispensator_recomponere(x->app.d);
+    CREDO_NECESSE(manus_ludus_premere(m, "#nomenclator"));
+    CREDO_VERUM(manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));
+    (vacuum)vicus_pulsare(v);
+    CREDO_AEQUALIS_I32(xar_numerus(t->acervus), n + I);
 }
 
 hic_manens constans CredoSectio SECTIONES[] = {
@@ -439,6 +503,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
       NIHIL, NIHIL },
     { "sessiones", _probare_sessiones, mundum_parare, mundum_purgare,
       NIHIL, NIHIL },
+    { "redire", _probare_redire, mundum_parare, mundum_purgare, NIHIL,
+      NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

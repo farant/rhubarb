@@ -110,6 +110,10 @@ nomen structura {
                           InsulaRepositorium* repo, Motus* motus,
                           Componens* arbor, constans Eventus* ev);
               vacuum* ictus_primus_ctx;
+    /* T4d (colloquia-plan): Esc non consumptum in latere frontali
+     * acervi latus tollit (vicus_acervo_redire) - latera sine
+     * processu (admonitiones, colloquia); ordinarie FALSUM */
+                 b32 effugium_redit;
     /* S3e: argumentum lateris mutatum (vicus_acervo_mutare): latus se
      * aptat (pictor: picturam aliam ostendit). NIHIL = non potest */
                  b32  (*argumentum_ponere)(vacuum* ctx,
@@ -435,6 +439,13 @@ vicus_acervo_mutare (
                  Vicus* v,
     constans character* genus,
     constans character* argumentum);
+
+/* T4d: latus frontale acervi tabulae activae tollitur, prior in
+ * frontem venit, focus ad dextrum; dispositio servatur. FALSUM si
+ * acervus unum solum habet (numquam vacuus, decisio VIII). */
+b32
+vicus_acervo_redire (
+    Vicus* v);
 
 /* S3c: latus (genus, argumentum) in acervo tabulae activae: iam
  * praesens in frontem venit, aliter montatur (id novum: id

@@ -113,6 +113,28 @@ phase that needs it. Header text shown to Fran before coding.*
   "tmux <socket> <session>"; detaching clears it. Restore (and every
   jump) runs `$SHELL -l -c 'tmux attach ...; exec $SHELL -l'`: shell
   after detach (Fran 10-16). vicus_latus_argumentum_ponere.
+- T4d 2026-10-16 (Fran): Esc in the notifications or sessions pane pops
+  it (vicus_acervo_redire; opt-in VicusFacies.effugium_redit), the
+  previous pane returns.
+- T4e 2026-10-16 (Fran): read notifications hidden by default, `r`
+  toggles (persistent); x moves the selection to the next unread.
+- T5b 2026-10-16: a sessions pane restored from the layout (mounted
+  before the log sources open) stayed empty - the source is now always
+  passed and fills once opened.
+- T6b 2026-10-16: restored/jump tmux terminals wait until vicus answers
+  a DSR query before `tmux attach` (tmux forwards query replies later
+  than 5 s as keystrokes; vicus startup is 9-13 s because pictor
+  replays its history - parked …GCKD0W2).
+- HOOKS LIVE 2026-10-16: ~/.claude/settings.json calls
+  `~/.rhubarb/colloquia/praeco hamus` (async) on 7 events; notify.sh
+  replaced by plain `afplay` (Ping on permission, Glass on Stop) - no
+  native notification (Fran). Backup:
+  ~/.claude/settings.json.bak-colloquia-2026-10-16. The binary is an
+  AD HOC copy of secunda's bin/praeco (never ~/.bin from a worktree).
+  AFTER the main merge + `bin/fabrica sanare installata`: point the 7
+  hooks at ~/.bin/praeco and delete ~/.rhubarb/colloquia/praeco. Until
+  then a praeco change needs `rm` + `cp` by hand (code-signing note in
+  tools/praeco_struere.sh).
 
 ## V. Hook facts (Claude Code docs, checked 2026-10-15)
 

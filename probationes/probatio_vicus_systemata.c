@@ -271,6 +271,42 @@ _probare_argumentum (
         c->piscina)));
 }
 
+/* T4d: redire - acervus unius recusatur; latus frontale tollitur,
+ * prius in fronte, focus dexter, dispositio servata */
+interior vacuum
+_probare_redire (
+    CredoContextus* c)
+{
+          Mundus* x;
+     VicusTabula* t;
+          chorda  servata;
+             b32  inventum;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(x->v != NIHIL);
+    t = vicus_activa(x->v);
+    CREDO_AEQUALIS_I32(xar_numerus(t->acervus), I);
+    CREDO_FALSUM(vicus_acervo_redire(x->v));
+    CREDO_AEQUALIS_I32(xar_numerus(t->acervus), I);
+    CREDO_NECESSE(vicus_acervo_aperire(x->v, "quietus", "secundum"));
+    (vacuum)vicus_pulsare(x->v);
+    CREDO_AEQUALIS_I32(xar_numerus(t->acervus), II);
+    CREDO_CHORDA_AEQUALIS_LITERIS(vicus_latus(t, VICUS_DEXTRUM)
+        ->argumentum, "secundum");
+    CREDO_NECESSE(vicus_focum_ponere(x->v, VICUS_SINISTRUM));
+    CREDO_VERUM(vicus_acervo_redire(x->v));
+    CREDO_AEQUALIS_I32(xar_numerus(t->acervus), I);
+    CREDO_AEQUALIS_I32(vicus_latus(t,
+        VICUS_DEXTRUM)->argumentum.mensura,
+        ZEPHYRUM);
+    CREDO_AEQUALIS_I32(t->focus, VICUS_DEXTRUM);
+    servata = volumen_plagulam_promere(x->volumen, chorda_ex_literis(
+        "vicus/latera", c->piscina), c->piscina, &inventum);
+    CREDO_VERUM(inventum);
+    CREDO_FALSUM(chorda_continet(servata, chorda_ex_literis("secundum",
+        c->piscina)));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "additio", _probare_additionem, mundum_parare, mundum_purgare,
       NIHIL, NIHIL },
@@ -280,6 +316,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
       NIHIL },
     { "argumentum", _probare_argumentum, mundum_parare, mundum_purgare,
       NIHIL, NIHIL },
+    { "redire", _probare_redire, mundum_parare, mundum_purgare, NIHIL,
+      NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

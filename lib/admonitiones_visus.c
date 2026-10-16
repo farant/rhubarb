@@ -382,7 +382,19 @@ capacitas (
         - ADMONITIONES_TITULI - ADMONITIONES_CAPUT;
 }
 
-/* ordines: res = index + 1, id "r<res>" */
+/* T4e: lectae ostenduntur (campus lectae, 'r')? */
+interior b32
+lectae_ostensae (
+    constans AdmonitionumMontatio* m)
+{
+    chorda* a;
+
+    a = insula_ramus_attributum(&m->ramus, "lectae");
+    redde a && chorda_aequalis_literis(*a, "verum");
+}
+
+/* ordines: res = index + 1, id "r<res>"; T4e: lectae solum si
+ * ostensae */
 interior Album*
 ordines (
     constans AdmonitionumMontatio* m,
@@ -390,11 +402,17 @@ ordines (
 {
         Album* l;
           i32  i;
+          b32  omnes;
     character  id[XVI];
 
-    l = album_creare(p, capacitas(m));
+    l      = album_creare(p, capacitas(m));
+    omnes  = lectae_ostensae(m);
     per (i = ZEPHYRUM; l && i < admonitiones_numerus(m->index); i++)
     {
+        si (!omnes && admonitio(m->index, i)->lecta)
+        {
+            perge;
+        }
         sprintf(id, "r%d", (integer)(i + I));
         (vacuum)album_addere(l, id, ALBUM_RES, ADMONITIONES_ORDO,
             (s32)(i + I));
@@ -411,8 +429,8 @@ pagina_currens (
         ZEPHYRUM));
 }
 
-/* index electae: campus electa si in indice, aliter prima paginae; -1
- * si nulla */
+/* index electae: campus electa si in albo (T4e: lecta celata non),
+ * aliter prima paginae; -1 si nulla */
 interior s32
 electa (
     constans AdmonitionumMontatio* m,
@@ -422,9 +440,11 @@ electa (
         i32  i;
 
     a = insula_ramus_attributum(&m->ramus, "electa");
-    per (i = ZEPHYRUM; a && i < admonitiones_numerus(m->index); i++)
+    per (i = ZEPHYRUM; a && l
+        && i < admonitiones_numerus(m->index); i++)
     {
-        si (chorda_aequalis(admonitio(m->index, i)->id, *a))
+        si (   chorda_aequalis(admonitio(m->index, i)->id, *a)
+            && album_pagina_rei(l, (s32)(i + I), ZEPHYRUM) >= ZEPHYRUM)
         {
             redde (s32)i;
         }
@@ -497,6 +517,32 @@ requisita_admonitionum (
     redde !(requisita & REQUIRIT_ELECTAM) || cp->electa >= ZEPHYRUM;
 }
 
+/* T4e: res albi proxima (gradus +1 / -1) post electam: index, aut
+ * -1 si nulla (ordines celati non numerantur) */
+interior s32
+vicina (
+    ContextusPraecepti* cp,
+                   s32  gradus)
+{
+    s32 i;
+    s32 n;
+    s32 locus;
+
+    n      = (s32)album_numerus(cp->l);
+    locus  = -I;
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        si (album_ordo(cp->l, (i32)i)->res == cp->electa + I)
+        {
+            locus = i;
+            frange;
+        }
+    }
+    i = locus + gradus;
+    redde (locus >= ZEPHYRUM && i >= ZEPHYRUM && i < n)
+        ? album_ordo(cp->l, (i32)i)->res - I : -I;
+}
+
 interior b32
 movere (
     ContextusPraecepti* cp,
@@ -504,8 +550,8 @@ movere (
 {
     s32 i;
 
-    i = cp->electa + gradus;
-    si (i < ZEPHYRUM || i >= (s32)admonitiones_numerus(cp->m->index))
+    i = vicina(cp, gradus);
+    si (i < ZEPHYRUM)
     {
         redde VERUM;   /* in fine: consumpta, nihil */
     }
@@ -557,16 +603,43 @@ fac_paginam_proximam (
     redde paginam_vertere((ContextusPraecepti*)ctx, I);
 }
 
+/* x: lecta; T4e: lectis celatis electa ad vicinam (proximam, aliter
+ * priorem) transit */
 interior b32
 fac_legere (
     vacuum* ctx)
 {
     ContextusPraecepti* cp;
+                   s32  sequens;
 
-    cp = (ContextusPraecepti*)ctx;
+    cp       = (ContextusPraecepti*)ctx;
+    sequens  = vicina(cp, I);
+    si (sequens < ZEPHYRUM)
+    {
+        sequens = vicina(cp, -I);
+    }
     (vacuum)admonitionem_legere_notare(cp->m->index, admonitio(
         cp->m->index, (i32)cp->electa)->id);
-    redde VERUM;
+    si (lectae_ostensae(cp->m))
+    {
+        redde VERUM;
+    }
+    redde sequens >= ZEPHYRUM ? electionem_scribere(cp->m, cp->l,
+        sequens, cp->p) : campos_scribere(cp->m, &cp->m->ramus,
+        "electa",
+        "", "pagina", "");
+}
+
+/* r (T4e): lectas ostendere / celare */
+interior b32
+fac_lectas (
+    vacuum* ctx)
+{
+    ContextusPraecepti* cp;
+
+    cp = (ContextusPraecepti*)ctx;
+    redde campos_scribere(cp->m, &cp->m->ramus, "lectae",
+        lectae_ostensae(cp->m) ? "falsum" : "verum", "pagina", "");
 }
 
 /* X: omnes lectae; campus radicis (persistens in vico) */
@@ -610,6 +683,15 @@ fac_agere (
     redde VERUM;
 }
 
+/* T4d: Esc - hospes (vicus) latus tollit; hic non consumitur */
+interior b32
+fac_redire (
+    vacuum* ctx)
+{
+    (vacuum)ctx;
+    redde FALSUM;
+}
+
 hic_manens constans Praeceptum TABULA_PRAECEPTORUM[] = {
     { "admonitiones.proxima", "Next notification", "j", VISUS_INDICIS,
         ZEPHYRUM, fac_proximam },
@@ -625,6 +707,10 @@ hic_manens constans Praeceptum TABULA_PRAECEPTORUM[] = {
         ZEPHYRUM, fac_omnes_legere },
     { "admonitiones.agere", "Go to session", "Enter", VISUS_INDICIS,
         REQUIRIT_ELECTAM, fac_agere },
+    { "admonitiones.lectae", "Show / hide read", "r", VISUS_INDICIS,
+        ZEPHYRUM, fac_lectas },
+    { "admonitiones.redire", "Back", "Esc", VISUS_INDICIS, ZEPHYRUM,
+        fac_redire },
     { NIHIL, NIHIL, NIHIL, ZEPHYRUM, ZEPHYRUM, NIHIL }
 };
 
@@ -941,7 +1027,13 @@ figura_tabulae (
 
             u      = admonitiones_non_lectae(m->index);
             omnes  = admonitiones_numerus(m->index);
-            si (u > ZEPHYRUM)
+            /* T4e: lectis celatis numerus earum cum clave */
+            si (!lectae_ostensae(m) && omnes > u)
+            {
+                sprintf(textus, "%d unread, %d read (r)", (integer)u,
+                    (integer)(omnes - u));
+            }
+            alioquin si (u > ZEPHYRUM)
             {
                 sprintf(textus, "%d unread of %d", (integer)u,
                     (integer)omnes);
@@ -979,7 +1071,9 @@ figura_tabulae (
         alioquin si (chorda_aequalis_literis(f->id, "nihil"))
         {
             textum_pingere(md, f->fines.x + IV, f->fines.y + IV,
-                chorda_ex_literis("No notifications", md->piscina),
+                chorda_ex_literis(lectae_ostensae(m)
+                ? "No notifications" : "No unread notifications",
+                md->piscina),
                 ZEPHYRUM, COLOR_TEXT_DIM);
         }
         alioquin si (f->partes == PARTES_ITEM)

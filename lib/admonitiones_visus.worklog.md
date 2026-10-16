@@ -136,3 +136,68 @@ Fran approved after the look (2026-10-15: "that looks good to me!").
 - `ordinarius` is a latina.h macro (default) - bit again in a test
   identifier; renamed communis.
 - Fran's look 2026-10-16: everything works (hand attach remembered, restore re-attaches, detach leaves a shell).
+
+## 2026-10-16 - T4d Esc pops the center / sessions pane (Fran)
+
+- `vicus_acervo_redire(v)`: drops the front pane of the active tab's
+  stack (refused when it is the only one - decision VIII: never empty),
+  previous pane comes to the front with focus, layout saved.
+- Opt-in per genus: `VicusFacies.effugium_redit`. The pane's own
+  praeceptum "Esc / Back" returns FALSE (documents the key, does not
+  consume it), the key falls through to the vicus root handler, which
+  pops when the focused right pane opted in. Only panes WITHOUT a
+  process opt in (center, sessions): dropping a terminal would leak its
+  shell - there is no unmount hook in VicusFacies.
+- Test gap found by a plant: with no praeconium source the sessions
+  pane's action returns before reading keys, so Esc fell through no
+  matter what the pane did - the Esc section now opens the sources
+  first (a pane that ignores ALL keys proves nothing about one key).
+- Fran's look 2026-10-16: Esc pop works.
+
+## 2026-10-16 - T4e read notifications hidden by default (Fran, option 1)
+
+- Read notifications leave the list; `r` shows / hides them (field
+  `lectae`, persistent, like the sessions pane's `c`). Caption "N unread,
+  M read (r)" while hidden. `x` (and Enter) on a row moves the selection
+  to the next visible row (else the previous) when read rows are hidden.
+- j/k now walk the album rows (`vicina`), not raw indices - hidden rows
+  must be skipped.
+- A saved selection can point at a row that is now hidden (toggle `r`
+  off after marking it read): `electa()` accepts it only if it is in the
+  album, else falls back to the first visible row - plant P6 showed
+  Enter would otherwise act on an invisible notification.
+- PROCESS SLIP: the T4d commit's gates were running when I started this
+  (silent log, no monitor event yet) and I edited files in that commit.
+  Killed that commit (only this tree's commissio + fabrica; quinta's
+  untouched), nothing staged; T4d and T4e land together after Fran's
+  look. Memory commit-gates-freeze updated.
+
+## 2026-10-16 - T6b stray tmux query replies in restored shells (Fran's screenshot)
+
+- Symptom: after a restore, shell panes showed "[?62;22c[>1;0;0cP>|aemulator 0.1\" -
+  our emulator's replies to tmux's attach-time queries (DA1, DA2,
+  XTVERSION), arriving as typed text.
+- tmux 3.4 source (tty.c TTY_QUERY_TIMEOUT 5; tty-keys.c): it waits 5 s
+  for those replies, then sets TTY_ALL_REQUEST_FLAGS and forwards later
+  replies to the pane as keys.
+- Why late: timestamps + `sample` on Fran's launch - vicus_applicatio_
+  aedificare took 9-13 s, ~89% in pictor replaying its picture's entire
+  brush history pixel by pixel at mount time (parked for the pictor
+  line, ledger ...GCKD0W2). Restored terminals spawn ~0.04 s into that.
+- Fix: restored/jump terminals run `/bin/sh -c '<wait>; <tmux attach>;
+  exec $SHELL -l'`, the wait asking the terminal DSR 5 (`ESC[5n`) and
+  reading the 4-byte answer with echo off and a 5 s per-read timeout -
+  attach only once vicus is actually pumping the pty. Independent of
+  WHAT makes startup slow.
+- Probing pitfalls hit on the way: (1) `capture-pane -t =beta` is NOT a
+  pane target ("can't find pane", empty output) - `=beta:` is; my first
+  red test passed vacuously because of it, now it asserts a non-empty
+  capture. (2) python pty.fork gives a 0x0 window - tmux shrinks the
+  session to nothing; set TIOCSWINSZ in the child. (3) a headless probe
+  on a COPY of Fran's layout still attached to his real sessions - the
+  saved arguments carry explicit sockets, TMUX_TMPDIR does not redirect
+  them; strip tmux arguments from copies next time.
+- Probe matrix (tmux 3.4, escape-time 10): whole reply prompt = clean,
+  any reply after 5 s = garbage, reply split mid-sequence = garbage even
+  when prompt. Our emulator flushes replies in one write - lateness was
+  the cause.

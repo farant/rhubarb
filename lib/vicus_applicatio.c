@@ -1292,11 +1292,22 @@ citatum_appendere (
     chorda_aedificator_appendere_literis(a, "'");
 }
 
+/* T6b: ante 'tmux attach' terminale interrogatur (DSR 5, responsum
+ * "ESC[0n" IV octeti, sine echo) donec respondet - id est donec vicus
+ * terminale pulsat. tmux quaestiones suas (DA1 DA2 XTVERSION) V s
+ * solum exspectat, deinde responsa ut claves in panellum mittit
+ * (initium tardum, pictor 10-16: IX-XIII s). Lectio quaeque V s ad
+ * summum (time 50): numquam pendet. */
+hic_manens constans character exspectatio_terminalis[] =
+    "s=$(stty -g); stty -echo -icanon min 0 time 50; "
+    "printf '\\033[5n'; dd bs=1 count=4 >/dev/null 2>&1; stty \"$s\"";
+
 /* T4c/T6: argumentum lateris terminalis "tmux <servitor|-> <sessio>"
- * -> concha "$SHELL -l -c '<tmux -u [-S servitor] attach -t
+ * -> "/bin/sh -c '<exspectatio>; <tmux -u [-S servitor] attach -t
  * =<sessio>>; exec $SHELL -l'" (verba citata; sessio ultima: spatia
- * licet): post detachmentum aut sessione absente concha manet. Aliud
- * aut nullum -> NIHIL (concha). Servitor "-" = ordinarius. */
+ * licet): post detachmentum aut sessione absente concha (login)
+ * manet. Aliud aut nullum -> NIHIL (concha). Servitor "-" =
+ * ordinarius. */
 interior constans character* constans*
 argumenta_terminalis (
     constans character* argumentum,
@@ -1346,6 +1357,8 @@ argumenta_terminalis (
     {
         redde NIHIL;
     }
+    chorda_aedificator_appendere_literis(a, exspectatio_terminalis);
+    chorda_aedificator_appendere_literis(a, "; ");
     per (i = ZEPHYRUM; adhaerere[i]; i++)
     {
         si (i > ZEPHYRUM)
@@ -1357,12 +1370,11 @@ argumenta_terminalis (
     chorda_aedificator_appendere_literis(a, "; exec ");
     citatum_appendere(a, concha);
     chorda_aedificator_appendere_literis(a, " -l");
-    v[ZEPHYRUM]  = concha;
-    v[I]         = "-l";
-    v[II]        = "-c";
-    v[III] = chorda_ut_cstr(chorda_aedificator_finire(a),
+    v[ZEPHYRUM]  = "/bin/sh";
+    v[I]         = "-c";
+    v[II] = chorda_ut_cstr(chorda_aedificator_finire(a),
         piscina);
-    v[IV] = NIHIL;
+    v[III] = NIHIL;
     redde v;
 }
 
@@ -1997,6 +2009,8 @@ admonitiones_describere (
     f->figurae        = m->figurae;
     f->componere      = admonitiones_componere;
     f->componere_ctx  = m;
+    /* T4d: Esc ad latus prius */
+    f->effugium_redit = VERUM;
 }
 
 /* T4b: volantes (toasts) - stratum vici, index et porta communes */
@@ -2211,7 +2225,9 @@ systema_terminalium (
     redde FALSUM;
 }
 
-/* T5: visus sessionum - fons communis (si sequitur), saltus */
+/* T5: visus sessionum - fons communis, saltus. Fons SEMPER datur
+ * (latus restitutum in vicus_aperire montatur, ante fontes apertos):
+ * nondum initiatus = vacuus, deinde impletur (10-16) */
 interior b32
 colloquia_montare_in_vico (
                  vacuum* sedes,
@@ -2234,7 +2250,7 @@ colloquia_montare_in_vico (
     m   = (ColloquiorumMontatio*)sedes;
     si (   !ca
         || !colloquia_visus_montare(m, piscina, intern, repo, id,
-               ca->sequitur ? &ca->fons : NIHIL, colloquium_agere, ca,
+               &ca->fons, colloquium_agere, ca,
                latitudo, altitudo, ca->systemata))
     {
         redde FALSUM;
@@ -2268,6 +2284,8 @@ colloquia_describere (
     f->componere_ctx  = m;
     f->pulsare        = colloquia_pulsare_in_vico;
     f->pulsare_ctx    = m;
+    /* T4d: Esc ad latus prius */
+    f->effugium_redit = VERUM;
 }
 
 b32

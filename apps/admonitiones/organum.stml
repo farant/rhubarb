@@ -17,6 +17,9 @@
             scriptor="admonitiones.agere"
             nota="pagina indicis (0 = prima); electa paginam
                   sequitur"/>
+    <campus nomen="lectae" typus="veritas" vita="persistens"
+            scriptor="admonitiones.agere"
+            nota="T4e: lectas ostendere ('r'); ordinarie celantur"/>
   </status>
 
   <basis genus="organum_commune"/>

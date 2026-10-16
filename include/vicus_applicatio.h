@@ -75,10 +75,11 @@ vicus_applicatio_imaginis_portam_ponere (
  * latera terminalis tmux adhaerentia notat: argumentum "tmux
  * <servitor|-> <sessio>" (clientes servitorum sessionum, deinde
  * ordinarii; per tty), detachata tollit. Argumentum tale montat
- * "$SHELL -l -c '<tmux attach>; exec $SHELL -l'" (post detachmentum
- * concha). Ante vocationem (probationes) centrum ($notifications) et
- * sessiones vacua, nihil legitur, tmux non interrogatur. FALSUM si
- * iam aperta. */
+ * "/bin/sh -c '<terminale respondet>; <tmux attach>; exec $SHELL -l'"
+ * (T6b: attach solum postquam vicus terminale pulsat - tmux responsa
+ * V s solum exspectat; post detachmentum concha). Ante vocationem
+ * (probationes) centrum ($notifications) et sessiones vacua, nihil
+ * legitur, tmux non interrogatur. FALSUM si iam aperta. */
 b32
 vicus_applicatio_admonitiones_aperire (
         VicusApplicatio* app,

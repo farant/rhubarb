@@ -768,6 +768,15 @@ fac_agere (
     redde VERUM;
 }
 
+/* T4d: Esc - hospes (vicus) latus tollit; hic non consumitur */
+interior b32
+fac_redire (
+    vacuum* ctx)
+{
+    (vacuum)ctx;
+    redde FALSUM;
+}
+
 hic_manens constans Praeceptum TABULA_PRAECEPTORUM[] = {
     { "colloquia.proxima", "Next session", "j", VISUS_INDICIS,
         ZEPHYRUM, fac_proximam },
@@ -781,6 +790,8 @@ hic_manens constans Praeceptum TABULA_PRAECEPTORUM[] = {
         ZEPHYRUM, fac_clausas },
     { "colloquia.agere", "Go to session", "Enter", VISUS_INDICIS,
         REQUIRIT_ELECTAM, fac_agere },
+    { "colloquia.redire", "Back", "Esc", VISUS_INDICIS, ZEPHYRUM,
+        fac_redire },
     { NIHIL, NIHIL, NIHIL, ZEPHYRUM, ZEPHYRUM, NIHIL }
 };
 

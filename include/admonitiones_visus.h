@@ -7,7 +7,9 @@
  * vacuum), titulus, aetas; corpus infra; non lectae colore accentus.
  * Claves: j k (electa), [ ] (paginae), x (lecta), X (omnes lectae:
  * campus radicis admonitiones_lectae_ad), Enter aut ictus duplex
- * (porta actionis; lecta fit).
+ * (porta actionis; lecta fit), r (T4e: lectae ostenduntur - ordinarie
+ * celantur; lecta celata electam ad vicinam movet), Esc (T4d: latus
+ * tollitur, per vicum).
  *
  * SEQUAX: index ex cauda libri, deinde per praeconium_legere_ab in
  * pulsu; tituli per sessionem in memoria (transcriptum, aliter nomen
