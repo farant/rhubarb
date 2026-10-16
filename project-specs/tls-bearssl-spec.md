@@ -1,5 +1,16 @@
 # tls bearssl - BearSSL's TLS 1.2 engine behind tls.h, SecureTransport retired (spec)
 
+**STATUS: IMPLETUM 2026-10-15** (quarta 659d0e38..98ac4871, plan
+`project-specs/tls-bearssl-plan.md` T1-T6, rulings R1-R28). BearSSL is
+the default backend; SecureTransport is selectable
+(`RHUBARB_TLS=securetransport`), and its deletion is ledger park …GP4S.
+Fran's live `$question` in vicus works under both backends (2026-10-15).
+Not yet in main. Departures from this text are in the plan's rulings,
+most visibly: generated amalgamation `vendor/bearssl_amalgama.{c,h}`
+instead of a directory vendor form (R1, R13), `inline` ->
+`__attribute__((unused))` (R2), and `FiduciaFolium` instead of
+`TlsCertificatum` in fiducia.h (R6).
+
 *Fran 2026-10-15, after the in-process HTTP client (route B,
 http-vocatio) shipped and the offline TLS test server existed: "should
 we look at step 0 first?" - step 0 of the TLS staging (ledger wish
