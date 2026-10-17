@@ -568,3 +568,20 @@ Fingerprint (Fran 2026-10-17): HEAD + source status, build/ and
 ignored output excluded - computed by the consumer (git), compared by
 the library. Still pure: the file itself is S5c's (`-agere
 -resumere`). credo XVI-XVIII; four plants red.
+
+## XIX. S5c1 built (2026-10-17): `bin/fabrica consilium -agere`
+
+`bin/fabrica consilium [-machina] -agere [-pergere] [-resumere] VIA`
+runs each step's `<mandatum>` (argv, no shell; consilium.canon version
+2; part of the seal) through `consilium_exsequi`. Observed: the tree
+(fabrica's own snapshot, now `suturae_photographare`), `~/.bin`, and
+the directories of `~/...` effects. Diary
+build/consilium/acta/<titulus>.tsv, per-step logs beside it. Exit 0 all
+done, 1 nothing done (refused, step without mandatum, resume refused),
+2 usage/unreadable, 3 done with a failure. fabrica-fumus LXI: killed
+mid-plan then resumed, changed tree refused, undeclared `~/.bin` write
+FRACTUM, step without mandatum refused; four plants red.
+
+Limit: STML attribute values are raw - an argument containing `"`
+cannot be written. Next: S5c2 (commissio onto `-agere`, Python wave
+loop and `_classis_viae` removed, reader infers `classis`).

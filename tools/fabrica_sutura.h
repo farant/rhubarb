@@ -119,6 +119,14 @@ suturae_ultimae_lineae (
     chorda textus,
        i32 numerus);
 
+/* photographia arboris (cwd) et directoriorum '~/X' (Xar de chorda;
+ * NIHIL licet): FabricaVestigium ordinata per viam (consilium S5c1) */
+b32
+suturae_photographare (
+    constans Xar*  directoria_extra,
+         Piscina*  piscina,
+             Xar** vestigia_out);
+
 /* memoria (fabrica_memoria.c) */
 
 constans character*

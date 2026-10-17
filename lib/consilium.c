@@ -90,6 +90,8 @@ consilium_gradum_addere (
             (i32)magnitudo(chorda));
         g->auctores    = xar_creare(consilium->piscina,
             (i32)magnitudo(chorda));
+        g->mandatum    = xar_creare(consilium->piscina,
+            (i32)magnitudo(chorda));
         g->caecus = FALSUM;
         g->sumptus_ms = -I;
         g->ordo_additionis = xar_numerus(consilium->gradus);
@@ -1706,6 +1708,12 @@ consilium_sigillum (
             chorda_aedificator_appendere_character(a, 'V');
             _canon_campus(a, *(chorda*)xar_obtinere(g->vestigium, j));
         }
+        /* mandatum mutatum = consilium mutatum (S5c1) */
+        per (j = ZEPHYRUM; j < xar_numerus(g->mandatum); j++)
+        {
+            chorda_aedificator_appendere_character(a, 'M');
+            _canon_campus(a, *(chorda*)xar_obtinere(g->mandatum, j));
+        }
     }
     per (i = ZEPHYRUM; regulae != NIHIL
         && i < xar_numerus(regulae); i++)
@@ -2067,6 +2075,9 @@ hic_manens constans character* constans _ATTR_SEQUITUR[] = {
 hic_manens constans character* constans _ATTR_VESTIGII[] = {
     "exemplar", NIHIL
 };
+hic_manens constans character* constans _ATTR_ARGUMENTI[] = {
+    "valor", NIHIL
+};
 hic_manens constans character* constans _ATTR_RADICIS[] = {
     NIHIL
 };
@@ -2264,6 +2275,54 @@ _nomen_enumeratum (
     redde _enumeratum(k, n, attributum, tabula, praestitutum);
 }
 
+/* <mandatum> (S5c1): argv ex <argumentum valor=".."/>, ordine; unum per
+ * gradum, non vacuum */
+interior vacuum
+_mandatum_legere (
+     ConsiliumGradus* g,
+           StmlNodus* n,
+     ConsiliumCausae* k)
+{
+    i32 i;
+
+    _attributa_clausa(k, n, _ATTR_RADICIS);
+    si (xar_numerus(g->mandatum) > ZEPHYRUM)
+    {
+        _causa(k, n->linea, "mandatum duplex in gradu ", g->titulus,
+            "");
+        redde;
+    }
+    per (i = ZEPHYRUM; i < stml_numerus_liberorum(n); i++)
+    {
+        StmlNodus* a = stml_liberum_ad_indicem(n, i);
+           chorda* v;
+
+        si (a->genus != STML_NODUS_ELEMENTUM)
+        {
+            perge;
+        }
+        si (!chorda_aequalis_literis(*a->titulus, "argumentum"))
+        {
+            _causa(k, a->linea, "elementum ignotum <", *a->titulus,
+                "> in <mandatum>");
+            perge;
+        }
+        _attributa_clausa(k, a, _ATTR_ARGUMENTI);
+        v = stml_attributum_capere(a, "valor");
+        si (v == NIHIL)
+        {
+            (vacuum)_necessarium(k, a, "valor");
+            perge;
+        }
+        *(chorda*)xar_addere(g->mandatum) = *v;
+    }
+    si (xar_numerus(g->mandatum) == ZEPHYRUM)
+    {
+        _causa(k, n->linea, "mandatum vacuum in gradu ", g->titulus,
+            "");
+    }
+}
+
 interior vacuum
 _gradum_legere (
             Consilium* c,
@@ -2360,6 +2419,10 @@ _gradum_legere (
             {
                 *(chorda*)xar_addere(g->vestigium) = x;
             }
+        }
+        alioquin si (chorda_aequalis_literis(*m->titulus, "mandatum"))
+        {
+            _mandatum_legere(g, m, k);
         }
         alioquin
         {

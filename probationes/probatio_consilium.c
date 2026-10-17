@@ -473,7 +473,7 @@ _sectio_domus (
 nomen structura {
        CredoContextus* c;
                   Xar* res;          /* ConsiliumObservatio, ordinata */
-                  i64  horologium;
+                  s64  horologium;
     ChordaAedificator* acta;       /* tituli actorum, '|' separati */
    constans character* fractus;      /* hic codicem II reddit */
  constans character* constans* scripturae;  /* paria, NIHIL finis */
@@ -1147,6 +1147,78 @@ _sectio_resumptio (
     CREDO_AEQUALIS_I32(xar_numerus(facta), ZEPHYRUM);
 }
 
+hic_manens constans character* constans DOCUMENTUM_MANDATI[] = {
+    "<consilium>",
+    "  <gradus titulus=\"sana\">",
+    "    <mandatum>",
+    "      <argumentum valor=\"tools/fabrica_struere.sh\"/>",
+    "      <argumentum valor=\"cum spatio\"/>",
+    "    </mandatum>",
+    "  </gradus>",
+    "</consilium>",
+    NIHIL
+};
+
+hic_manens constans character* constans DOCUMENTUM_MANDATI_MALI[] = {
+    "<consilium>",
+    "  <gradus titulus=\"duplex\">",
+    "    <mandatum><argumentum valor=\"a\"/></mandatum>",
+    "    <mandatum><argumentum valor=\"b\"/></mandatum>",
+    "  </gradus>",
+    "  <gradus titulus=\"vacuum\"><mandatum/></gradus>",
+    "  <gradus titulus=\"malum\">",
+    "    <mandatum><arg valor=\"a\"/><argumentum/></mandatum>",
+    "  </gradus>",
+    "</consilium>",
+    NIHIL
+};
+
+/* XIX. mandatum: argv ordine (spatia tuta), causae omnes; mandatum in
+ * sigillo */
+interior vacuum
+_sectio_mandatum (
+    CredoContextus* c)
+{
+             chorda  causa;
+          Consilium* k = consilium_legere(_documentum(c,
+              DOCUMENTUM_MANDATI), c->piscina, NIHIL, &causa);
+          Consilium* k2;
+    ConsiliumGradus* g;
+             chorda  s1;
+
+    CREDO_NECESSE_NON_NIHIL(k);
+    g = consilium_gradum_invenire(k, CH("sana"));
+    CREDO_NECESSE_NON_NIHIL(g);
+    CREDO_AEQUALIS_I32(xar_numerus(g->mandatum), II);
+    CREDO_CHORDA_AEQUALIS_LITERIS(*(chorda*)xar_obtinere(g->mandatum,
+        ZEPHYRUM), "tools/fabrica_struere.sh");
+    CREDO_CHORDA_AEQUALIS_LITERIS(*(chorda*)xar_obtinere(g->mandatum,
+        I),
+        "cum spatio");
+    s1 = consilium_sigillum(k, NIHIL, c->piscina);
+    k2 = consilium_legere(_documentum(c, DOCUMENTUM_MANDATI),
+        c->piscina,
+        NIHIL, &causa);
+    CREDO_CHORDA_AEQUALIS(consilium_sigillum(k2, NIHIL, c->piscina),
+        s1);
+    *(chorda*)xar_obtinere(consilium_gradum_invenire(k2,
+        CH("sana"))->mandatum, I) = CH("aliud");
+    CREDO_VERUM(!chorda_aequalis(consilium_sigillum(k2, NIHIL,
+        c->piscina), s1));
+
+    CREDO_NIHIL(consilium_legere(_documentum(c,
+        DOCUMENTUM_MANDATI_MALI),
+        c->piscina, NIHIL, &causa));
+    CREDO_VERUM(chorda_continet(causa, CH("mandatum duplex in gradu "
+        "duplex")));
+    CREDO_VERUM(chorda_continet(causa, CH("mandatum vacuum in gradu "
+        "vacuum")));
+    CREDO_VERUM(chorda_continet(causa, CH("elementum ignotum <arg> in "
+        "<mandatum>")));
+    CREDO_VERUM(chorda_continet(causa, CH("attributum necessarium "
+        "'valor' abest")));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "ordo ex datis", _sectio_data, NIHIL, NIHIL, NIHIL, NIHIL },
     { "lectio sua et absentia", _sectio_lectio_sua, NIHIL, NIHIL, NIHIL,
@@ -1172,6 +1244,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "sigillum", _sectio_sigillum, NIHIL, NIHIL, NIHIL, NIHIL },
     { "diarium", _sectio_diarium, NIHIL, NIHIL, NIHIL, NIHIL },
     { "resumptio", _sectio_resumptio, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "mandatum", _sectio_mandatum, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

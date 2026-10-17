@@ -21,10 +21,12 @@
  *   bin/fabrica quid [-machina] [-iudex TITULUS] VIA... | -omnes
  *       quid est plagula: unitas, cura, vita, munus, provenientia,
  *       lingua cum causis (tools/fabrica_unitates.c, lib/unitates.c).
- *   bin/fabrica consilium [-machina] VIA
+ *   bin/fabrica consilium [-machina] [-agere [-pergere] [-resumere]]
+ *       VIA
  *       consilium (documentum consilium.canon) iudicatum: undae,
- *       conflictus, sententiae politicae (tools/fabrica_consilium.c,
- *       lib/consilium.c).
+ *       conflictus, sententiae politicae; -agere: mandata graduum
+ *       exsequuntur observata, cum diario et resumptione
+ *       (tools/fabrica_consilium.c, lib/consilium.c).
  *
  * Exitus: 0 nihil stalum aut ignotum · 1 stalum aut ignotum
  * aliquod · 2 nihil iudicatum (declarationes absentes/fractae,

@@ -101,9 +101,12 @@ structura ConsiliumGradus {
                             * PERMISSAE; vacuum = nulla restrictio */
         Xar* auctores;     /* chorda: qui eum proposuerunt
                             * (deduplicatio) */
-         b32 caecus;       /* effectus ignoti: murus */
-         s32 sumptus_ms;   /* -I = ignotus */
-         i32 ordo_additionis;
+         b32  caecus;       /* effectus ignoti: murus */
+         s32  sumptus_ms;   /* -I = ignotus */
+         i32  ordo_additionis;
+         Xar* mandatum;     /* chorda: argv exsecutionis (S5c1;
+                            * <mandatum><argumentum valor=../>);
+                            * vacuum = gradus non exsequibilis */
 };
 
 nomen structura Consilium Consilium;
@@ -315,8 +318,8 @@ nomen enumeratio {
 /* res una photographiae */
 nomen structura {
     chorda via;
-       i64 tempus_ns;
-       i64 mensura;
+       s64 tempus_ns;
+       s64 mensura;
 } ConsiliumObservatio;
 
 /* quod sutura->agere reddit */

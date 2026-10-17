@@ -87,3 +87,33 @@ A plant taught something: removing only the sequitur FIELD from the
 seal left the 'S' marker byte, so the hash still differed and the test
 stayed green ("porta muta"). The test was right; the plant was too
 weak. Neutralizing the whole loop went red.
+
+## 2026-10-17 - S5c1: `bin/fabrica consilium -agere`
+
+The first consumer that really runs things. `<mandatum><argumentum
+valor=".."/>` is the step's argv (no shell: processus_exsequi vector) and
+is part of the plan seal. STML attribute values are RAW both ways (only
+text decodes entities): `&&` is written as is, `&amp;` would reach sh
+literally (the first smoke run failed exactly so) - and an argument
+containing `"` cannot be written at all. Known limit; commissio's paths
+never carry quotes (pythonica already refuses them).
+
+Observation reuses fabrica's own snapshot (`suturae_photographare`,
+exported from tools/fabrica_sutura.c: same walk, thesaurus and
+residents skipped) plus `~/.bin` always and the directories of any
+`~/...` effect. The executor's own diary and logs live under
+build/consilium/acta/ and are filtered out - they are written between
+the two snapshots (INCEPIT line), so without the filter every step
+would have "written" the diary.
+
+Header written lazily (first INCEPIT/ACTUS): a plan refused by
+consilium_exsequi leaves nothing in the diary. Fingerprint = HEAD +
+`git diff HEAD --binary` + untracked-not-ignored names and contents;
+no git -> 'ignota' and -resumere refuses.
+
+Real interruption tested in fumus LXI: step B kills its parent (the
+executor, kill -9) - resume carries A, reruns B and C. Plants (each
+red on its own condition): resume ignored (A ran twice), ~/.bin not
+observed (undeclared write passed), diff left out of the fingerprint
+(changed tree resumed), mandatum check skipped (empty argv ran: 3
+instead of 1).

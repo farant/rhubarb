@@ -11,8 +11,10 @@
   nominatur cum notis) - canon formam dicit, lector valores.
 
   VERSIO 1 (2026-10-16, quinta, consilium S3a).
+  VERSIO 2 (2026-10-17, consilium S5c1): <mandatum> gradus - argv
+  exsecutionis (bin/fabrica consilium -agere), pars sigilli consilii.
 -->
-<canon dialectus="consilium" versio="1">
+<canon dialectus="consilium" versio="2">
 
   <elementum nomen="consilium" radix="verum">
     <liberum nomen="regula"/>
@@ -44,6 +46,7 @@
     <liberum nomen="effectus"/>
     <liberum nomen="sequitur"/>
     <liberum nomen="vestigium"/>
+    <liberum nomen="mandatum"/>
   </elementum>
 
   <elementum nomen="effectus">
@@ -77,6 +80,16 @@
 
   <elementum nomen="sequitur">
     <attributum nomen="titulus" genus="textus" necessarium="verum"/>
+  </elementum>
+
+  <elementum nomen="mandatum"
+    nota="argv exsecutionis (nulla concha: elementa ut vector); unum
+          per gradum, non vacuum; sine eo gradus non exsequibilis">
+    <liberum nomen="argumentum"/>
+  </elementum>
+
+  <elementum nomen="argumentum">
+    <attributum nomen="valor" genus="textus" necessarium="verum"/>
   </elementum>
 
   <elementum nomen="vestigium"
