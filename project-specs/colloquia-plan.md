@@ -281,6 +281,11 @@ phase that needs it. Header text shown to Fran before coding.*
   j/k never select them. colloquia_visus_cursus_textus is the pure,
   tested piece. Plants 7/7 (two re-planted; the selectability test
   first passed by fixture coincidence - c4's number = r4's).
+- PHASE 2 IN MAIN 2026-10-16 (ff d2ccd129, after main 58bf676d merged
+  in as d2ccd129): fusio_probare 37 gates + frigida green (first try
+  stopped: tertia's post-ff installata rewrote ~/.bin/briar+silex mid-
+  check - benign, retried); installata 24/24 incl. institutio_mensor
+  -> ~/.bin/mensor. Owed: lid-close probe (T8d0), iudicare progress.
 - IN MAIN 2026-10-16 (ff 1dc057b6, fusio_probare green + frigida,
   installata 23/23). The 7 hooks now call `~/.bin/praeco hamus`
   (backup ~/.claude/settings.json.bak-praeco-bin-2026-10-16); the ad

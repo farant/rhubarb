@@ -367,6 +367,12 @@ d(0x221A, '.....#','.....#','....#.','....#.','.#.#..','..##..','...#..')  # √
 d(0x221B, '.##..#','..#..#','.##.#.','....#.','.#.#..','..##..','...#..')  # ∛
 d(0x226A, B,'...#.#','..#.#.','.#.#..','..#.#.','...#.#')                  # ≪
 d(0x226B, B,'.#.#..','..#.#.','...#.#','..#.#.','.#.#..')                  # ≫
+d(0x2295, '..###.','.#.#.#','.#.#.#','.#####','.#.#.#','.#.#.#','..###.')  # ⊕ (2026-10-16)
+d(0x2297, '..###.','.#...#','.##.##','.#.#.#','.##.##','.#...#','..###.')  # ⊗ (2026-10-16)
+d(0x2296, '..###.','.#...#','.#...#','.#####','.#...#','.#...#','..###.')  # ⊖ (2026-10-16)
+d(0x2298, '..###.','.#...#','.#..##','.#.#.#','.##..#','.#...#','..###.')  # ⊘ (2026-10-16)
+d(0x2299, '..###.','.#...#','.#...#','.#.#.#','.#...#','.#...#','..###.')  # ⊙ (2026-10-16)
+d(0x203B, '...#..',B,'..#.#.','.#.#.#','..#.#.',B,'...#..')                 # ※ (2026-10-16)
 import unicodedata, sys
 out=[]
 for cp in sorted(S):
@@ -388,4 +394,15 @@ with open('/private/tmp/claude-501/-Users-francisarant-Documents-projects-rhubar
         for r in range(8): f.write('  '.join(S[c][r] for c in grp)+'\n')
         f.write('  '.join(('U+%04X'%c)[2:].ljust(6) for c in grp)+'\n\n')
 ```
+
+## 2026-10-16 - ⊗ ⊕ ⊖ ⊘ ⊙ ※ (circled operators, reference mark)
+
+Fran saw tofu for ⊗ in vicus (Claude Code output). Drawn like ◯ (seven
+rows, columns I-V) with the X's arms touching the rim - at 6x8 a 3x3 X
+inside the five-row ○ merges into a blob. Added to symbola.py above
+(table regenerable) and to the v3 test section (exact picture). ⊕ the
+same way right after Fran's look (plus arms touch the rim too).
+Then ⊖ ⊘ ⊙ in the same large-circle style (⊘'s slash upper right to
+lower left, touching the rim) and ※: a SMALL X (3x3) with a dot in each
+gap - a full 5x5 X with dots between its arms is a checkerboard at 6x8.
 
