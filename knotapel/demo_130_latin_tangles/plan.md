@@ -192,6 +192,13 @@ n = 7 (5,040 orders). Seconds.
 1. **T1a:** the house libraries `conllu` and `dependentia` (API
    sketch below), their suites, plants; oratio switched to `conllu`,
    oratio's copy deleted; owes the oratio gate.
+   *T1a done 2026-10-17:* sketch approved by Fran as written (plus
+   `dependentia_omittere` refuses an omitted root; counters s64);
+   suites dependentia (90 checks: every tree n <= 6 against brute
+   oracles, Cayley and projective counts, the 1/3 law over all orders)
+   and conllu (109, the five vendored treebanks against FONTES.md);
+   23 plants red; worklogs lib/dependentia.worklog.md,
+   lib/conllu.worklog.md.
    **T1b:** Parts A and B, checks, plants.
 2. **T2:** Parts C and D, checks, plants.
 3. **T3:** findings.md, claims.md, ledger, archive.sh.

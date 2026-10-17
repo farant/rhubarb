@@ -57,6 +57,8 @@ declare -a RADIX_FONTES=(
     "chorda_aedificator"
     "numerus_romanus"
     "xar"
+    "dependentia"   # conllu.h includit (D130, 2026-10-17)
+    "conllu"        # lector CoNLL-U, ex oratio/fontes translatus
     "friatio"
     "tabula_dispersa"
     "internamentum"
