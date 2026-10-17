@@ -143,6 +143,7 @@ conllu_legere (
 
     si (sententiae == NIHIL)
     {
+        _vitium(vitium, ZEPHYRUM, "memoria");
         redde NIHIL;
     }
     dum (cursor < fons.mensura)
@@ -177,6 +178,7 @@ conllu_legere (
             s = (ConlluSententia*)xar_addere(sententiae);
             si (s == NIHIL)
             {
+                _vitium(vitium, linea, "memoria");
                 redde NIHIL;
             }
             memset(s, ZEPHYRUM, magnitudo(*s));
@@ -186,6 +188,7 @@ conllu_legere (
             s->documentum  = documentum;   /* T38 a */
             si (s->lexemata == NIHIL)
             {
+                _vitium(vitium, linea, "memoria");
                 redde NIHIL;
             }
         }
@@ -254,6 +257,7 @@ conllu_legere (
             t = (ConlluLexema*)xar_addere(s->lexemata);
             si (t == NIHIL)
             {
+                _vitium(vitium, linea, "memoria");
                 redde NIHIL;
             }
             t->a             = na;

@@ -59,7 +59,8 @@ nomen structura {
 } ConlluSententia;
 
 /* Fontem legere: Xar de ConlluSententia (sententiae vacuae omissae).
- * NIHIL = vitium (linea, causa) aut memoria. */
+ * NIHIL = vitium (linea, causa); causa "memoria" si allocatio fallit
+ * (vitium semper ponitur cum NIHIL redditur, nisi vitium NIHIL). */
 Xar*
 conllu_legere (
          Piscina* piscina,

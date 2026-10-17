@@ -75,9 +75,9 @@ interior vacuum
 _probare_lectionem (
     CredoContextus* c)
 {
-                     Piscina* piscina = c->piscina;
-                ConlluVitium  vitium;
-                         Xar* s = _fixura(piscina, &vitium);
+                     Piscina* piscina  = c->piscina;
+                ConlluVitium  vitium   = { ZEPHYRUM, NIHIL };
+                         Xar* s        = _fixura(piscina, &vitium);
     constans ConlluSententia* a;
     constans ConlluSententia* b;
 
@@ -126,9 +126,9 @@ interior vacuum
 _probare_textum (
     CredoContextus* c)
 {
-                     Piscina* piscina = c->piscina;
-                ConlluVitium  vitium;
-                         Xar* s = _fixura(piscina, &vitium);
+                     Piscina* piscina  = c->piscina;
+                ConlluVitium  vitium   = { ZEPHYRUM, NIHIL };
+                         Xar* s        = _fixura(piscina, &vitium);
 
     CREDO_NECESSE_NON_NIHIL (s);
     CREDO_VERUM (_aequalis(conllu_textus(piscina,
@@ -155,8 +155,8 @@ interior vacuum
 _probare_vitia (
     CredoContextus* c)
 {
-         Piscina* piscina = c->piscina;
-    ConlluVitium  vitium;
+         Piscina* piscina  = c->piscina;
+    ConlluVitium  vitium   = { ZEPHYRUM, NIHIL };
              Xar* s;
 
     vitium.linea = ZEPHYRUM;
@@ -214,9 +214,9 @@ interior vacuum
 _probare_arborem (
     CredoContextus* c)
 {
-                     Piscina* piscina = c->piscina;
-                ConlluVitium  vitium;
-                         Xar* s = _fixura(piscina, &vitium);
+                     Piscina* piscina  = c->piscina;
+                ConlluVitium  vitium   = { ZEPHYRUM, NIHIL };
+                         Xar* s        = _fixura(piscina, &vitium);
                  ConlluArbor  arbor;
                          Xar* t;
 
@@ -296,13 +296,20 @@ _probare_fixuras (
         character  via[512];
            chorda  fons;
               Xar* s;
-     ConlluVitium  vitium;
+     ConlluVitium  vitium = { ZEPHYRUM, NIHIL };
               i32  k;
               i32  verba   = ZEPHYRUM;
               i32  rangae  = ZEPHYRUM;
               i32  sanae   = ZEPHYRUM;
 
         (vacuum)c;
+        si (strlen(radix) + strlen(exspectata[f].plagula) + XL
+            >= magnitudo(via))
+        {
+            CREDO_CULPA ("RHUBARB_RADIX nimis longa");
+            piscina_destruere(p);
+            perge;
+        }
         sprintf(via, "%s/oratio/probationes/fixa/ud/%s", radix,
             exspectata[f].plagula);
         fons = filum_legere_totum(via, p);
@@ -318,7 +325,8 @@ _probare_fixuras (
         si (s == NIHIL)
         {
             imprimere("  %s: linea %u: %s\n", exspectata[f].plagula,
-                (insignatus integer)vitium.linea, vitium.causa);
+                (insignatus integer)vitium.linea,
+                vitium.causa != NIHIL ? vitium.causa : "?");
             piscina_destruere(p);
             perge;
         }

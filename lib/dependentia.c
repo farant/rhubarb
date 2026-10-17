@@ -184,7 +184,7 @@ _dominat (
         && s->egressus[v] <= s->egressus[u]);
 }
 
-b32
+DependentiaOmissa
 dependentia_omittere (
                       Piscina* piscina,
     constans DependentiaArbor* arbor,
@@ -202,13 +202,20 @@ dependentia_omittere (
     si (   dependentia_validare(arbor) != DEPENDENTIA_SANA
         || omittere                    == NIHIL || exitus == NIHIL)
     {
-        redde FALSUM;
+        redde DEPENDENTIA_OMISSA_NON_SANA;
     }
-    n      = arbor->numerus;
-    novus  = (i32*)_allocare(piscina, n + I, (i32)magnitudo(i32));
+    n = arbor->numerus;
+    per (k = I; k <= n; k++)
+    {
+        si (omittere[k - I] && arbor->capita[k - I] == ZEPHYRUM)
+        {
+            redde DEPENDENTIA_OMISSA_RADIX;
+        }
+    }
+    novus = (i32*)_allocare(piscina, n + I, (i32)magnitudo(i32));
     si (novus == NIHIL)
     {
-        redde FALSUM;
+        redde DEPENDENTIA_OMISSA_MEMORIA;
     }
     per (k = I; k <= n; k++)
     {
@@ -217,15 +224,11 @@ dependentia_omittere (
             m         = m + I;
             novus[k]  = m;
         }
-        alioquin si (arbor->capita[k - I] == ZEPHYRUM)
-        {
-            redde FALSUM;   /* radix omissa */
-        }
     }
     capita = (i32*)_allocare(piscina, m, (i32)magnitudo(i32));
     si (capita == NIHIL)
     {
-        redde FALSUM;
+        redde DEPENDENTIA_OMISSA_MEMORIA;
     }
     per (k = I; k <= n; k++)
     {
@@ -255,7 +258,7 @@ dependentia_omittere (
     {
         *contractiones = mutata;
     }
-    redde VERUM;
+    redde DEPENDENTIA_OMISSA_FACTA;
 }
 
 b32
@@ -386,6 +389,40 @@ _alternant (
     redde FALSUM;
 }
 
+/* gradus arcus in verbum u (Def. 9; 0 pro radice): in intervallo
+ * arcus radix componentis est verbum cuius caput extra intervallum
+ * iacet (subgraphum arboris inductum); numerantur radices a capite
+ * arcus non dominatae */
+interior i32
+_gradus_arcus (
+    constans Structura* s,
+                   i32  u)
+{
+    i32 h       = s->capita[u - I];
+    i32 initium;
+    i32 finis;
+    i32 p;
+    i32 gradus  = ZEPHYRUM;
+
+    si (h == ZEPHYRUM)
+    {
+        redde ZEPHYRUM;
+    }
+    initium  = h < u ? h : u;
+    finis    = h < u ? u : h;
+    per (p = initium; p <= finis; p++)
+    {
+        i32 c = s->capita[p - I];
+
+        si (   (c == ZEPHYRUM || c < initium || c > finis)
+            && !_dominat(s, h, p))
+        {
+            gradus = gradus + I;
+        }
+    }
+    redde gradus;
+}
+
 b32
 dependentia_mensurare (
                       Piscina* piscina,
@@ -488,36 +525,83 @@ dependentia_mensurare (
         }
     }
 
-    /* gradus arcuum (Def. 9): in intervallo arcus radix componentis est
-     * verbum cuius caput extra intervallum iacet (subgraphum arboris
-     * inductum); numerantur radices a capite arcus non dominatae */
     per (u = I; u <= n; u++)
     {
-        i32 h = arbor->capita[u - I];
-        i32 initium;
-        i32 finis;
-        i32 gradus = ZEPHYRUM;
+        i32 gradus = _gradus_arcus(&s, u);
+
+        si (gradus > exitus->gradus_arcuum)
+        {
+            exitus->gradus_arcuum = gradus;
+        }
+    }
+    redde VERUM;
+}
+
+b32
+dependentia_arcus (
+                      Piscina* piscina,
+    constans DependentiaArbor* arbor,
+             DependentiaArcus* arcus)
+{
+    Structura s;
+          i32 n;
+          i32 k;
+          i32 q;
+
+    si (   dependentia_validare(arbor) != DEPENDENTIA_SANA
+        || arcus                       == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (!_structura(piscina, arbor, &s))
+    {
+        redde FALSUM;
+    }
+    n = arbor->numerus;
+    memset(arcus, ZEPHYRUM, (size_t)n * magnitudo(DependentiaArcus));
+    per (k = I; k <= n; k++)
+    {
+        i32 h = arbor->capita[k - I];
+        i32 a;
+        i32 b;
+        i32 p;
 
         si (h == ZEPHYRUM)
         {
             perge;
         }
-        initium  = h < u ? h : u;
-        finis    = h < u ? u : h;
-        per (p = initium; p <= finis; p++)
+        a = h < k ? h : k;
+        b = h < k ? k : h;
+        /* arcus radicis (0, radix): 0 < a < radix < b */
+        arcus[k - I].secat_radicem = (b32)(a < s.radix && s.radix < b);
+        per (q = k + I; q <= n; q++)
         {
-            i32 c = arbor->capita[p - I];
+            i32 g = arbor->capita[q - I];
+            i32 c;
+            i32 e;
 
-            si (   (c == ZEPHYRUM || c < initium || c > finis)
-                && !_dominat(&s, h, p))
+            si (g == ZEPHYRUM)
             {
-                gradus = gradus + I;
+                perge;
+            }
+            c = g < q ? g : q;
+            e = g < q ? q : g;
+            si ((a < c && c < b && b < e) || (c < a && a < e && e < b))
+            {
+                arcus[k - I].cruces = arcus[k - I].cruces + I;
+                arcus[q - I].cruces = arcus[q - I].cruces + I;
             }
         }
-        si (gradus > exitus->gradus_arcuum)
+        /* non proiectivus: verbum interius a capite non dominatum */
+        per (p = a + I; p < b; p++)
         {
-            exitus->gradus_arcuum = gradus;
+            si (!_dominat(&s, h, p))
+            {
+                arcus[k - I].non_proiectivus = VERUM;
+                frange;
+            }
         }
+        arcus[k - I].gradus = _gradus_arcus(&s, k);
     }
     redde VERUM;
 }
@@ -534,7 +618,8 @@ dependentia_nucleus_planaris (
     i32* dextri;
     s32* f;           /* f[(i - 1) n + (j - 1)] = optimum intra [i, j] */
 
-    si (dependentia_validare(arbor) != DEPENDENTIA_SANA)
+    si (   dependentia_validare(arbor) != DEPENDENTIA_SANA
+        || arbor->numerus > (i32)0xFFFF)
     {
         redde (s32)-I;
     }

@@ -40,3 +40,15 @@ Suite: 7 sections, 109 checks, including the five vendored treebanks
 (sentences, syntactic words, ranges equal FONTES.md; every sentence a
 sound tree). Plants: 5, all red. Clean under ASan/UBSan + poisoned pool
 (by hand; not in venenum, whose closures stay math-tier).
+
+## 2026-10-17 — T1a review fixes
+
+- L3: `conllu_legere` left the error unset on its allocation-failure
+  returns and callers printed it uninitialized: every NIHIL return now
+  sets causa "memoria", and every caller initializes its ConlluVitium
+  ({ 0, NIHIL }). In practice those exits are unreachable: `xar_creare`
+  and `xar_addere` allocate with the FATAL piscina_allocare (a tiny
+  fixed pool aborts, "ALLOCATIO PISCINAE FRACTA"), so no test can drive
+  them; the setting is defensive.
+- L5: the suite checks the RHUBARB_RADIX path length before sprintf
+  into its 512-byte buffer.

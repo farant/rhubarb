@@ -62,3 +62,48 @@ equivalent mutant: the cycle walk bound `passus <= n` -> `< n` (n steps
 always reach the root of a sound tree, so the original allows one spare
 step); sharpened to `passus + 1 < n`, red. venenum: suite added
 (ASan/UBSan + poisoned pool), clean.
+
+## 2026-10-17 — T1a review fixes (independent review, H 0 · M 1 · L 5 · N 4)
+
+Reviewer's own Python oracle (from the K&N text) agreed with the library
+on all 2,097,152 head arrays n <= 7, 20,000 random trees n <= 40 and all
+11,426 sentences of the nine treebanks: no wrong results. Fixes:
+
+- **M1: per-arc measures.** The plan used "non-projective arcs" without
+  defining it and the API only counted non-planar (crossed) arcs; on
+  CIRCSE 2,750 arcs are crossed but 1,284 non-projective - in a crossing
+  pair usually only the hyperbaton arc is non-projective. New
+  `dependentia_arcus` (per arc: crossings, crosses root arc,
+  non-projective, edge degree). Non-projective (h, d) = some word
+  strictly inside the span not dominated by h; this equals edge degree
+  > 0 (a word not dominated by h lies in a component whose root is not
+  dominated by h, and conversely), which the suite checks per arc.
+  Identities checked on every tree: sum of per-arc crossings = 2 *
+  cruces, arcs with a crossing = arcus_secti, max degree =
+  gradus_arcuum, tree projective iff no non-projective arc. Gradus
+  factored into `_gradus_arcus`, shared by mensurare and arcus.
+- **L2:** `dependentia_omittere` returns `DependentiaOmissa` (FACTA,
+  NON_SANA, RADIX, MEMORIA) instead of one FALSUM for three causes; the
+  root check now runs before any allocation. (Enum named from `omissa`:
+  `omissio` is real Latin missing from the lexicon, and a glossary entry
+  would shadow oratio's oracle.)
+- **L1:** the test's edge-degree oracle had reduced to the library's
+  own rule ("head outside the span"); it now takes the component root
+  as the member dominating every other member (head walks).
+- **N1:** Def. 9 with endpoints included and the interior reading give
+  the same degree for every tree (the reviewer's interior-span mutant
+  was byte-identical on all inputs): the earlier note "literally,
+  ENDPOINTS INCLUDED" is not a design choice; header says so.
+- **N2:** pinned planar counts 1, 2, 9, 48, 275, 1638 (n * A001764(n-1))
+  and well-nested 1, 2, 9, 64, 605, 6996 (two independent oracles agree;
+  sequence not identified); edge degree 0 <=> projective as a third
+  projectivity route.
+- **N3:** nucleus refuses n > 65535 (i32 index i * n). Not tested: at
+  that size the n^2 table fails to allocate anyway, so no cheap test can
+  tell the guard from the allocation failure.
+- **N4 (correction to the note above):** in C(n-1, 2) - sum_v C(deg v,
+  2), deg counts REAL arcs only (the root arc excluded).
+
+Suite 105 checks; 6 new plants (per-arc crossings, root crossing,
+dominance by the wrong end, degree of the wrong word, two swapped
+statuses) all red; clean under ASan/UBSan + poisoned pool.

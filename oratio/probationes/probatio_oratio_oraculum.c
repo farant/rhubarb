@@ -432,7 +432,7 @@ _thesaurus_arborum (
                    character  via[1024];
                       chorda  fons;
                          Xar* sententiae;
-                ConlluVitium  vitium;
+                ConlluVitium  vitium = { ZEPHYRUM, NIHIL };
         OratioOraculumCensus  census;
                      clock_t  ante;
                          i32  tecta_permille;
@@ -1390,7 +1390,7 @@ principale (vacuum)
        constans character* radix;
         OratioVocabularia  vocabularia;
  OratioVocabulariumVitium  vitium;
-             ConlluVitium  vitium_conllu;
+             ConlluVitium  vitium_conllu = { ZEPHYRUM, NIHIL };
       InternamentumChorda* intern;
           OratioProgramma* programma;
 

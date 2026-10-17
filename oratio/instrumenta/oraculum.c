@@ -1164,7 +1164,8 @@ principale (
                               character  via[1024];
                       OratioVocabularia  vocabularia;
                OratioVocabulariumVitium  vitium;
-                           ConlluVitium  vitium_conllu;
+                           ConlluVitium  vitium_conllu = { ZEPHYRUM,
+                               NIHIL };
                                     b32  machina        = FALSUM;
                                     b32  exempla        = FALSUM;
                                     b32  discrepantiae  = FALSUM;

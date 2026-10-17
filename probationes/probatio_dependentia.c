@@ -221,8 +221,9 @@ _o_radix_collectionis (
 }
 
 /* gradus arcus in verbum d: componentes subgraphi inducti per
- * collectiones disiunctas; radix componentis = verbum cuius caput non
- * in eadem componente */
+ * collectiones disiunctas; radix componentis = membrum quod membra
+ * omnia componentis dominatur (per viam capitum; non per regulam
+ * bibliothecae 'caput extra intervallum') */
 interior i32
 _o_gradus_arcus (
     constans i32* capita,
@@ -253,17 +254,75 @@ _o_gradus_arcus (
     }
     per (p = initium; p <= finis; p++)
     {
-        i32 c        = capita[p - I];
-        b32 radix_c  = (b32)(c == ZEPHYRUM || c < initium || c > finis
-            || _o_radix_collectionis(parens, c)
-            != _o_radix_collectionis(parens, p));
+        i32 q;
+        b32 radix_c = VERUM;
 
+        per (q = initium; q <= finis; q++)
+        {
+            si (   _o_radix_collectionis(parens, q)
+                == _o_radix_collectionis(parens, p)
+                && !_o_dominat(capita, p, q))
+            {
+                radix_c = FALSUM;
+                frange;
+            }
+        }
         si (radix_c && !_o_dominat(capita, h, p))
         {
             gradus = gradus + I;
         }
     }
     redde gradus;
+}
+
+/* mensurae per arcum oraculi: cruces per paria, arcus non proiectivus
+ * per verba interiora et viam capitum */
+interior vacuum
+_o_arcus (
+        constans i32* capita,
+                 i32  n,
+    DependentiaArcus* arcus)
+{
+    i32 k;
+    i32 q;
+    i32 radix = ZEPHYRUM;
+
+    per (k = I; k <= n; k++)
+    {
+        si (capita[k - I] == ZEPHYRUM)
+        {
+            radix = k;
+        }
+    }
+    memset(arcus, ZEPHYRUM, (size_t)n * magnitudo(DependentiaArcus));
+    per (k = I; k <= n; k++)
+    {
+        i32 h = capita[k - I];
+        i32 p;
+
+        si (h == ZEPHYRUM)
+        {
+            perge;
+        }
+        per (q = I; q <= n; q++)
+        {
+            si (   q != k && capita[q - I] != ZEPHYRUM
+                && _o_secant(h, k, capita[q - I], q))
+            {
+                arcus[k - I].cruces = arcus[k - I].cruces + I;
+            }
+        }
+        arcus[k - I].secat_radicem = _o_secant(h, k, ZEPHYRUM, radix);
+        per (p = I; p <= n; p++)
+        {
+            si (   ((h < p && p < k) || (k < p && p < h))
+                && !_o_dominat(capita, h, p))
+            {
+                arcus[k - I].non_proiectivus = VERUM;
+            }
+        }
+        arcus[k - I].gradus = _o_gradus_arcus(capita, n, k);
+    }
 }
 
 interior vacuum
@@ -489,6 +548,12 @@ _comparare (
                    i32 lacunae_oraculi[MAXIMUS];
                    s32 componens[MAXIMUS];
                    s32 componens_oraculi[MAXIMUS];
+      DependentiaArcus arcus[MAXIMUS];
+      DependentiaArcus arcus_oraculi[MAXIMUS];
+                   s64 summa     = ZEPHYRUM;
+                   i32 secti     = ZEPHYRUM;
+                   i32 maximus   = ZEPHYRUM;
+                   b32 inventus  = FALSUM;
                    i32 k;
                    b32 bona = VERUM;
 
@@ -536,6 +601,46 @@ _comparare (
     }
     si (   nucleus && dependentia_nucleus_planaris(piscina, &a)
         != _o_nucleus(capita, n))
+    {
+        bona = FALSUM;
+    }
+    /* per arcum: contra oraculum, et identitates cum summis arboris */
+    si (!dependentia_arcus(piscina, &a, arcus))
+    {
+        redde FALSUM;
+    }
+    _o_arcus(capita, n, arcus_oraculi);
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        si (   arcus[k].cruces != arcus_oraculi[k].cruces
+            || arcus[k].secat_radicem
+                != arcus_oraculi[k].secat_radicem
+            || arcus[k].non_proiectivus
+                != arcus_oraculi[k].non_proiectivus
+            || arcus[k].gradus != arcus_oraculi[k].gradus
+            || arcus[k].non_proiectivus != (b32)(arcus[k].gradus
+                > ZEPHYRUM))
+        {
+            bona = FALSUM;
+        }
+        summa = summa + arcus[k].cruces;
+        si (arcus[k].cruces > ZEPHYRUM)
+        {
+            secti = secti + I;
+        }
+        si (arcus[k].gradus > maximus)
+        {
+            maximus = arcus[k].gradus;
+        }
+        si (arcus[k].non_proiectivus)
+        {
+            inventus = VERUM;
+        }
+    }
+    si (   summa    != (s64)II * c.cruces
+        || secti    != c.arcus_secti
+        || maximus  != m.gradus_arcuum
+        || inventus == m.proiectiva)
     {
         bona = FALSUM;
     }
@@ -712,11 +817,20 @@ _probare_oracula (
              i32 viae           = ZEPHYRUM;
     constans i32 exspectatae[VII] = { ZEPHYRUM, I, II, VII, XXX, CXLIII,
         DCCXXVIII };
+    /* planares = n * A001764(n - 1) (arbores sine cruce, radix
+     * quaelibet); bene nidificatae ex duobus oraculis independentibus
+     * (hoc et recensionis T1a, Python), sequentia non identificata */
+    constans i32 planares[VII] = { ZEPHYRUM, I, II, IX, XLVIII, CCLXXV,
+        MDCXXXVIII };
+    constans i32 nidificatae[VII] = { ZEPHYRUM, I, II, IX, LXIV, DCV,
+        (i32)(II * MMMCDXCVIII) };   /* 6996 */
 
     (vacuum)c;
     per (n = I; n <= VI; n++)
     {
-        i32 numerus = ZEPHYRUM;
+        i32 numerus     = ZEPHYRUM;
+        i32 plani       = ZEPHYRUM;
+        i32 nidificati  = ZEPHYRUM;
 
         memset(capita, ZEPHYRUM, magnitudo(capita));
         fac
@@ -736,9 +850,19 @@ _probare_oracula (
             }
             dependentia_cruces(p, &a, &x);
             dependentia_mensurare(p, &a, NIHIL, &m);
-            si (x.proiectiva != m.proiectiva)
+            /* viae tres: cruces cum radice, proventus, gradus arcuum 0 */
+            si (   x.proiectiva != m.proiectiva
+                || m.proiectiva != (b32)(m.gradus_arcuum == ZEPHYRUM))
             {
                 viae = viae + I;
+            }
+            si (x.planaris)
+            {
+                plani = plani + I;
+            }
+            si (m.bene_nidificata)
+            {
+                nidificati = nidificati + I;
             }
             si (   (x.proiectiva && !x.planaris)
                 || (x.planaris && !m.bene_nidificata))
@@ -752,6 +876,8 @@ _probare_oracula (
         }
         dum (_sequens(capita, n));
         CREDO_AEQUALIS_I32 (numerus, exspectatae[n]);
+        CREDO_AEQUALIS_I32 (plani, planares[n]);
+        CREDO_AEQUALIS_I32 (nidificati, nidificatae[n]);
     }
     CREDO_AEQUALIS_I32 (discrepantiae, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (viae, ZEPHYRUM);
@@ -1017,8 +1143,8 @@ _probare_verba_omissa (
     DependentiaArbor e;
                  i32 contractiones = (i32)XCIX;
 
-    CREDO_VERUM (dependentia_omittere(piscina, &a, tertium, &e,
-        &contractiones));
+    CREDO_AEQUALIS_S32 ((s32)dependentia_omittere(piscina, &a, tertium,
+        &e, &contractiones), (s32)DEPENDENTIA_OMISSA_FACTA);
     CREDO_AEQUALIS_I32 (e.numerus, IV);
     CREDO_AEQUALIS_I32 (contractiones, II);
     CREDO_AEQUALIS_I32 (e.capita[ZEPHYRUM], II);
@@ -1028,16 +1154,28 @@ _probare_verba_omissa (
     CREDO_AEQUALIS_S32 ((s32)dependentia_validare(&e),
         (s32)DEPENDENTIA_SANA);
     /* folia omissa: nulla contractio, renumeratio */
-    CREDO_VERUM (dependentia_omittere(piscina, &a, folia, &e,
-        &contractiones));
+    CREDO_AEQUALIS_S32 ((s32)dependentia_omittere(piscina, &a, folia,
+        &e,
+        &contractiones), (s32)DEPENDENTIA_OMISSA_FACTA);
     CREDO_AEQUALIS_I32 (e.numerus, III);
     CREDO_AEQUALIS_I32 (contractiones, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (e.capita[ZEPHYRUM], ZEPHYRUM);   /* olim 2 */
     CREDO_AEQUALIS_I32 (e.capita[I], I);                 /* olim 3 */
     CREDO_AEQUALIS_I32 (e.capita[II], II);               /* olim 5 */
-    /* radix omissa: FALSUM */
-    CREDO_FALSUM (dependentia_omittere(piscina, &a, radix, &e,
-        &contractiones));
+    /* causae distinctae: radix omissa, memoria (piscina parva) */
+    CREDO_AEQUALIS_S32 ((s32)dependentia_omittere(piscina, &a, radix,
+        &e,
+        &contractiones), (s32)DEPENDENTIA_OMISSA_RADIX);
+    {
+        Piscina* parva = piscina_generare_certae_magnitudinis("parva",
+            (memoriae_index)XVI);
+
+        CREDO_NECESSE_NON_NIHIL (parva);
+        CREDO_AEQUALIS_S32 ((s32)dependentia_omittere(parva, &a,
+            tertium,
+            &e, &contractiones), (s32)DEPENDENTIA_OMISSA_MEMORIA);
+        piscina_destruere(parva);
+    }
 }
 
 interior vacuum
@@ -1052,6 +1190,7 @@ _probare_limites (
     DependentiaCruces  x;
    DependentiaMensura  m;
                   s32  componens[III];
+     DependentiaArcus  arcus[III];
 
     CREDO_FALSUM (dependentia_cruces(piscina, &a, &x));
     CREDO_FALSUM (dependentia_mensurare(piscina, &a, NIHIL, &m));
@@ -1059,8 +1198,11 @@ _probare_limites (
         (s32)-I);
     CREDO_AEQUALIS_S32 (dependentia_componentes(piscina, &a, componens),
         (s32)-I);
-    CREDO_FALSUM (dependentia_omittere(piscina, &a, nulla, &e, NIHIL));
+    CREDO_AEQUALIS_S32 ((s32)dependentia_omittere(piscina, &a, nulla,
+        &e,
+        NIHIL), (s32)DEPENDENTIA_OMISSA_NON_SANA);
     CREDO_FALSUM (dependentia_cruces(piscina, NIHIL, &x));
+    CREDO_FALSUM (dependentia_arcus(piscina, &a, arcus));
 }
 
 hic_manens constans CredoSectio SECTIONES[] = {

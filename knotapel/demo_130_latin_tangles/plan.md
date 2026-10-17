@@ -54,6 +54,18 @@ measure whether real Latin looks like it.
   number of the arc diagram drawn above the sentence); crossings with
   the root arc are reported in their own column. **Non-planar arcs** =
   real arcs in at least one crossing.
+- **Non-projective arc** (the standard per-arc notion, e.g. Nivre and
+  Nilsson 2005): arc (h, d) is non-projective iff some word strictly
+  between h and d is not dominated by h. Equivalently its edge degree
+  (Def. 9) is > 0; a tree is projective iff it has no non-projective
+  arc. Parts B and C and prediction P2 use THIS notion; non-planar arcs
+  are reported beside it. The two differ: in a crossing pair usually
+  only one arc is non-projective (the hyperbaton arc), its partner
+  projective. (Defined 2026-10-17, after the T1a review, before any
+  census ran: the plan used the term without defining it, and the API
+  then counted only non-planar arcs. The reviewer reported that the two
+  counts differ by about 2x on the repo treebanks; no agreement or
+  relation figure has been computed by anyone.)
 - **Mild non-projectivity** (Kuhlmann and Nivre, "Mildly Non-Projective
   Dependency Structures", COLING/ACL 2006 poster sessions, pp. 507-514;
   definitions checked against the paper in task 0): a GAP is a pair of
@@ -71,7 +83,8 @@ measure whether real Latin looks like it.
   al. 2005), so "bounded crossings" gets a formal-language meaning.
   Reference points from the paper (Table 1): Czech PDT 76.85%
   projective, 99.89% well-nested; Danish DDT 84.95% projective, 99.89%
-  well-nested.
+  well-nested (their counts are over dependency FORESTS, several roots
+  allowed, so they are yardsticks, not like-for-like with UD trees).
 - **Planar core** = the largest set of arcs with no crossing pair (a
   maximum independent set of the crossing graph; arcs on a line form a
   circle graph, where this is polynomial by interval dynamic
@@ -82,6 +95,11 @@ measure whether real Latin looks like it.
 - **Punctuation.** UD attaches punctuation by convention, which can add
   crossings that are not syntax. Every count is reported WITHOUT
   PUNCT arcs as the headline, and with them as a second column.
+  Removing a PUNCT word re-attaches any dependents to its head
+  (`dependentia_omittere`, counted). A sentence whose ROOT is PUNCT (45
+  all-punctuation sentences in EWT; none in the Latin repo treebanks)
+  cannot lose it and stay a tree: it is set aside in the headline and
+  the number set aside is reported per treebank.
 
 **The exact null: random word order.** For a fixed tree and a uniformly
 random order of its words, two arcs with four distinct endpoints cross
@@ -113,7 +131,7 @@ FONTES.md's policy for the NC treebanks: fetched and referenced only,
 
 ## Parts
 
-- **Part A: trees.** Read every treebank (`oratio_conllu_legere`);
+- **Part A: trees.** Read every treebank (`conllu_legere`);
   sentence and token counts against FONTES.md; trees validated; the
   two projectivity definitions agree on every tree; hand-built trees
   with known crossings, gap degree and well-nestedness.
@@ -123,8 +141,9 @@ FONTES.md's policy for the NC treebanks: fetched and referenced only,
   order (exact), overall and by sentence length; planar core deficit.
 - **Part C: which relations cross, and do they agree.** Per relation
   (amod, det, nmod, obj, obl, nsubj, advmod, ...): its share of all arcs
-  vs its share of non-projective arcs; for crossing arcs vs all arcs,
-  the share with Case / Gender / Number agreement; the same for
+  vs its share of non-projective arcs; for non-projective arcs vs all
+  arcs (and non-planar arcs beside), the share with Case / Gender /
+  Number agreement; the same for
   amod/det arcs alone (the hyperbaton case).
 - **Part D: mildness and shape.** Gap degree and well-nestedness
   distributions; edge degree; the crossing graph's components (how many
@@ -199,6 +218,12 @@ n = 7 (5,040 orders). Seconds.
    and conllu (109, the five vendored treebanks against FONTES.md);
    23 plants red; worklogs lib/dependentia.worklog.md,
    lib/conllu.worklog.md.
+   *T1a review 2026-10-17:* independent oracle, 0 mismatches (all trees
+   n <= 7, 20,000 random, nine treebanks); H 0, M 1, L 5, N 4, all
+   fixed: "non-projective arc" defined (above) with per-arc measures
+   `dependentia_arcus`; `dependentia_omittere` returns a status
+   (`DependentiaOmissa`); PUNCT-root rule stated; oracle for edge
+   degree made independent; planar and well-nested counts pinned.
    **T1b:** Parts A and B, checks, plants.
 2. **T2:** Parts C and D, checks, plants.
 3. **T3:** findings.md, claims.md, ledger, archive.sh.

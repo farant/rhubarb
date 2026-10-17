@@ -29,7 +29,15 @@
  *         in una, l2, r2 in altera).
  *   GRADUS ARCUS (Def. 9): numerus componentium nexarum subgraphi ab
  *         intervallo arcus inducti (termini inclusi) quarum radix a
- *         capite arcus non dominatur; arboris = maximum.
+ *         capite arcus non dominatur; arboris = maximum. In arboribus
+ *         lectio cum terminis et lectio interior idem dant (termini
+ *         componentes solum per verba a capite dominata iungunt) -
+ *         non electio, sed una mensura.
+ *   ARCUS NON PROIECTIVUS: arcus (h, d) cuius intervallum verbum tenet
+ *         ab h non dominatum (notio usitata, e.g. Nivre et Nilsson
+ *         2005); aequivalenter gradus arcus > 0. Arbor proiectiva sine
+ *         arcu non proiectivo. Arcus SECTUS (non planaris) alia res: in
+ *         pari secantium saepe unus solus non proiectivus est.
  *   NUCLEUS PLANARIS: plurimi arcus reales quorum nulli duo se secant
  *         (programma dynamicum intervallorum, exactum).
  *
@@ -70,12 +78,20 @@ DependentiaStatus
 dependentia_validare (
     constans DependentiaArbor* arbor);
 
+nomen enumeratio {
+    DEPENDENTIA_OMISSA_FACTA = ZEPHYRUM,
+    DEPENDENTIA_OMISSA_NON_SANA,     /* arbor data non sana (aut NIHIL) */
+    DEPENDENTIA_OMISSA_RADIX,        /* radix omitteretur: arbor non
+                                       * maneret */
+    DEPENDENTIA_OMISSA_MEMORIA
+} DependentiaOmissa;
+
 /* Arbor sine verbis notatis (omittere[k - 1] VERUM): reliqua ordine
  * renumerantur; filii verbi omissi capiti eius proximo non omisso
  * adhaerent (*contractiones = verba quorum caput sic mutatum est).
- * FALSUM si arbor non sana, si radix omittitur (arbor non maneret), aut
- * memoria; capita exitus in piscina. */
-b32
+ * Status causam nominat (radix omissa a memoria distinguitur); capita
+ * exitus in piscina, exitus tantum si FACTA. */
+DependentiaOmissa
 dependentia_omittere (
                       Piscina* piscina,
     constans DependentiaArbor* arbor,
@@ -117,8 +133,28 @@ dependentia_mensurare (
                           i32* lacunae,
            DependentiaMensura* exitus);
 
+nomen structura {
+    s32 cruces;            /* arcus reales quos hic arcus secat */
+    b32 secat_radicem;     /* arcum radicis (0, r) secat */
+    b32 non_proiectivus;   /* verbum intra intervallum a capite non
+                            * dominatum (== gradus > 0) */
+    i32 gradus;            /* gradus arcus (Def. 9) */
+} DependentiaArcus;
+
+/* Mensurae per arcum: arcus[k - 1] = arcus in verbum k (vocans n
+ * elementa praebet); verbum radicis (arcus realis nullus): omnia 0.
+ * Summa crucium = II * cruces arboris; arcus cum cruce = arcus_secti;
+ * maximum graduum = gradus_arcuum. FALSUM si arbor non sana aut
+ * memoria. */
+b32
+dependentia_arcus (
+                      Piscina* piscina,
+    constans DependentiaArbor* arbor,
+             DependentiaArcus* arcus);
+
 /* Nucleus planaris: plurimi arcus reales sine cruce inter se. -1 si
- * arbor non sana aut memoria. */
+ * arbor non sana, aut memoria, aut numerus > 65535 (tabula n^2 et
+ * indices i32 eam non ferunt). */
 s32
 dependentia_nucleus_planaris (
                       Piscina* piscina,
