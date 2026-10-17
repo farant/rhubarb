@@ -225,6 +225,21 @@ n = 7 (5,040 orders). Seconds.
    (`DependentiaOmissa`); PUNCT-root rule stated; oracle for edge
    degree made independent; planar and well-nested counts pinned.
    **T1b:** Parts A and B, checks, plants.
+   *T1b done 2026-10-17:* main.c Parts A and B, 0.5 s full (34 checks),
+   quick mode `D130_CELER=1` (repo treebanks, 30 checks). NC files read
+   from `$D130_UD_NC` (main's oratio/build/ud, fetched 2026-09-08:
+   PROIEL 1,289,508 bytes, Perseus 1,153,778, ITTB 3,184,535, UDante
+   1,319,582), aggregates only. Part B totals of the repo treebanks
+   pinned from an independent Python count (`oracle_partb.py`, said so
+   in the checks); planar core checked against an independent
+   branching search on 19,698 trees (<= 24 arcs, plan said 16); the
+   1/3 law over all orders of 2,194 repo trees (<= 7 words). 17 plants
+   red (one equivalent mutant re-planted: lowest-first branching never
+   reads lower neighbours). Verdicts: **P1 HOLDS** (obs/exp 0.0065
+   LLCT to 0.1022 Perseus, all < 1/4; EWT 0.0010 below all); **P4
+   HOLDS** (crossings per word CIRCSE 0.1885 > Perseus 0.1433, PROIEL
+   0.0533 > LLCT 0.0502 - the PROIEL/LLCT step is narrow). Part C/D
+   figures (P2, P3) not yet computed.
 2. **T2:** Parts C and D, checks, plants.
 3. **T3:** findings.md, claims.md, ledger, archive.sh.
 4. **T4:** independent review with its own oracle, then fixes.
