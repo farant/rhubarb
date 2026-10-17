@@ -262,6 +262,15 @@ phase that needs it. Header text shown to Fran before coding.*
   children's titles (space-joined, IUDICIUM excluded); mensor prints
   -machina through the lib and lists failures from fracta. Plants 3/3
   (the separator plant needed a second failed member in the fixture).
+- T10b 2026-10-16: ColloquiorumFons polls `mensor quaestio currentes
+  -machina` in a child process (processus incremental path: never
+  blocks), every 5 s while pulsed, 30 s query timeout; keeps only trees
+  whose root owner is ALIVE (children follow the root); FNV signature ->
+  VERUM on change; a failing mensor keeps the old snapshot.
+  `colloquia_visus_fontem_mensorem_ponere` / `colloquia_visus_cursus`.
+  vicus resolves RHUBARB_MENSOR, then ~/.bin/mensor (untested until the
+  T10c display test). aedificatio: institutio_mensor in installata
+  (installs from MAIN after the merge). Plants 4/4.
 - IN MAIN 2026-10-16 (ff 1dc057b6, fusio_probare green + frigida,
   installata 23/23). The 7 hooks now call `~/.bin/praeco hamus`
   (backup ~/.claude/settings.json.bak-praeco-bin-2026-10-16); the ad

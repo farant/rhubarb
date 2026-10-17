@@ -3,6 +3,7 @@
  * directorium), pulsus cum eventu novo. Visus: greges ("Needs you",
  * "Idle"; "Closed" solum cum 'c'), caput, j k inter greges, Enter et
  * ictus duplex (porta), electa stabilis dum ordo mutatur, pictura. */
+#include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"
@@ -18,9 +19,11 @@
 #include "thema.h"
 #include "colloquia.h"
 #include "colloquia_visus.h"
+#include "processus.h"
 #include "credo.h"
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 
 #define VIA_FIXI "probationes/fixa/colloquia/eventa.jsonl"
 
@@ -431,12 +434,191 @@ _probare_picturam (
     CREDO_VERUM(signum_coloris(md, COLOR_WARNING));
 }
 
+/* T10b: mensor fictus - scriptum quod lineae.tsv (iuxta se) reddit,
+ * post moram secundarum datam; codex exitus datus */
+interior constans character*
+mensor_fictus (
+     CredoContextus* c,
+                i32  mora,
+                i32  codex)
+{
+    constans character* argumenta[IV];
+             character* via;
+             character  corpus[CCLVI];
+
+    via = (character*)piscina_allocare(c->piscina, (memoriae_index)
+        strlen(credo_area(c)) + XXXII);
+    sprintf(via, "%s/mensor_%d_%d", credo_area(c), (integer)mora,
+        (integer)codex);
+    sprintf(corpus, "#!/bin/sh\n[ \"$1 $2 $3\" = \"quaestio currentes "
+        "-machina\" ] || exit 9\nsleep %d\ncat \"$(dirname \"$0\")/"
+        "lineae.tsv\"\nexit %d\n", (integer)mora, (integer)codex);
+    si (!filum_scribere(via, chorda_ex_literis(corpus, c->piscina)))
+    {
+        redde NIHIL;
+    }
+    argumenta[0]    = "/bin/chmod";
+    argumenta[I]    = "+x";
+    argumenta[II]   = via;
+    argumenta[III]  = NIHIL;
+    (vacuum)processus_exsequi(argumenta, V * M, c->piscina);
+    redde via;
+}
+
+interior b32
+lineas_ponere (
+         CredoContextus* c,
+     constans character* lineae)
+{
+    character via[DXII];
+
+    sprintf(via, "%s/lineae.tsv", credo_area(c));
+    redde filum_scribere(via, chorda_ex_literis(lineae, c->piscina));
+}
+
+/* pulsare (nunc fixo) donec quaestio messa; VERUM si pulsus ullus
+ * mutatum reddidit */
+interior b32
+messem_exspectare (
+    ColloquiorumFons* f,
+                 s64  nunc)
+{
+    structura timespec  mora;
+                   b32 mutatum = FALSUM;
+                   i32 k;
+
+    mora.tv_sec   = ZEPHYRUM;
+    mora.tv_nsec  = X * M * M;
+    per (k = ZEPHYRUM; k < D; k++)
+    {
+        si (colloquia_visus_fontem_pulsare(f, nunc))
+        {
+            mutatum = VERUM;
+        }
+        si (f->quaestio == NIHIL)
+        {
+            frange;
+        }
+        (vacuum)nanosleep(&mora, NIHIL);
+    }
+    redde mutatum;
+}
+
+interior constans CursusCurrensLinea*
+cursus_k (
+    constans ColloquiorumFons* f,
+                          i32  k)
+{
+    constans Xar* l = colloquia_visus_cursus(f);
+
+    redde (l && k < xar_numerus(l))
+        ? (constans CursusCurrensLinea*)xar_obtinere(l, k) : NIHIL;
+}
+
+#define LINEAE_I \
+    "CURRENS\t0\tr1\t\tcommissio\t/w/secunda\trhubarb-secunda\t1000\t" \
+    "4242\tvivus\t1\t0\t5\t0\t0\t7000\t595000\tsess-a\t\n" \
+    "CURRENS\t1\tp1\tr1\tporta:radix\t/w/secunda\trhubarb-secunda\t" \
+    "1100\t4242\tvivus\t0\t0\t0\t120\t351\t74000\t96000\tsess-a\t\n" \
+    "CURRENS\t0\tr2\t\tcommissio\t/w/quinta\tquinta\t900\t77\t" \
+    "mortuus\t0\t0\t0\t0\t0\t0\t0\t\t\n" \
+    "CURRENS\t1\tp2\tr2\tporta:aedilis\t/w/quinta\tquinta\t950\t77\t" \
+    "mortuus\t0\t0\t0\t0\t0\t0\t0\t\t\n" \
+    "CURRENS\t0\tr3\t\tcommissio\t/w/tertia\ttertia\t800\t0\t" \
+    "ignotus\t0\t0\t0\t0\t0\t0\t0\t\t\n" \
+    "linea aliena\n"
+
+/* CURSUS (colloquia T10b): mensor nullus -> NIHIL; quaestio in processu
+ * filio, pulsus non obstat; radices vivae solae cum filiis; V s inter
+ * quaestiones; mutatio -> VERUM; mensor fractus -> instantanea vetus */
+interior vacuum
+_probare_cursus (
+    CredoContextus* c)
+{
+                 Mundus* w = mundus(c);
+     constans character* lentus;
+     constans character* fractus;
+                    s64  nunc = (s64)C * (s64)M;
+                clock_t  ante;
+                    b32  mutatum;
+
+    CREDO_NECESSE(w != NIHIL);
+    /* I. sine mensore: nihil */
+    (vacuum)colloquia_visus_fontem_pulsare(&w->fons, nunc);
+    CREDO_VERUM(colloquia_visus_cursus(&w->fons) == NIHIL);
+    CREDO_VERUM(w->fons.quaestio == NIHIL);
+
+    /* II. quaestio prima: incipitur, messa, vivae solae */
+    CREDO_NECESSE(lineas_ponere(c, LINEAE_I));
+    colloquia_visus_fontem_mensorem_ponere(&w->fons, mensor_fictus(c,
+        ZEPHYRUM, ZEPHYRUM));
+    mutatum = messem_exspectare(&w->fons, nunc);
+    CREDO_VERUM(mutatum);
+    CREDO_NECESSE(colloquia_visus_cursus(&w->fons) != NIHIL);
+    CREDO_AEQUALIS_I32(xar_numerus(colloquia_visus_cursus(&w->fons)),
+        II);
+    CREDO_CHORDA_AEQUALIS_LITERIS(cursus_k(&w->fons, ZEPHYRUM)->id,
+        "r1");
+    CREDO_CHORDA_AEQUALIS_LITERIS(cursus_k(&w->fons,
+        ZEPHYRUM)->colloquium,
+        "sess-a");
+    CREDO_CHORDA_AEQUALIS_LITERIS(cursus_k(&w->fons, I)->titulus,
+        "porta:radix");
+    CREDO_AEQUALIS_I32(cursus_k(&w->fons, I)->iudicata, CXX);
+
+    /* III. intra V s: nulla quaestio nova, lineae mutatae non visae */
+    CREDO_NECESSE(lineas_ponere(c,
+        "CURRENS\t0\tr9\t\tcommissio\t/w/s\ts"
+        "\t1\t1\tvivus\t0\t0\t0\t0\t0\t0\t0\tsess-b\t\n"));
+    CREDO_FALSUM(colloquia_visus_fontem_pulsare(&w->fons,
+        nunc + (s64)IV * (s64)M));
+    CREDO_VERUM(w->fons.quaestio == NIHIL);
+    CREDO_CHORDA_AEQUALIS_LITERIS(cursus_k(&w->fons, ZEPHYRUM)->id,
+        "r1");
+
+    /* IV. post V s: quaestio nova, mutatio VERUM */
+    mutatum = messem_exspectare(&w->fons, nunc + (s64)V * (s64)M);
+    CREDO_VERUM(mutatum);
+    CREDO_AEQUALIS_I32(xar_numerus(colloquia_visus_cursus(&w->fons)),
+        I);
+    CREDO_CHORDA_AEQUALIS_LITERIS(cursus_k(&w->fons, ZEPHYRUM)->id,
+        "r9");
+    /* eadem iterum: non mutatum */
+    mutatum = messem_exspectare(&w->fons, nunc + (s64)X * (s64)M);
+    CREDO_FALSUM(mutatum);
+
+    /* V. mensor lentus (II s): pulsus non obstat */
+    lentus = mensor_fictus(c, II, ZEPHYRUM);
+    colloquia_visus_fontem_mensorem_ponere(&w->fons, lentus);
+    ante = clock();
+    (vacuum)colloquia_visus_fontem_pulsare(&w->fons,
+        nunc + (s64)XX * (s64)M);
+    (vacuum)colloquia_visus_fontem_pulsare(&w->fons,
+        nunc + (s64)XX * (s64)M);
+    CREDO_VERUM(w->fons.quaestio != NIHIL);
+    CREDO_VERUM((clock() - ante) < (clock_t)(CLOCKS_PER_SEC / II));
+    (vacuum)messem_exspectare(&w->fons, nunc + (s64)XX * (s64)M);
+    CREDO_VERUM(w->fons.quaestio == NIHIL);
+
+    /* VI. mensor fractus (exitus I): instantanea vetus servatur */
+    fractus = mensor_fictus(c, ZEPHYRUM, I);
+    colloquia_visus_fontem_mensorem_ponere(&w->fons, fractus);
+    CREDO_NECESSE(lineas_ponere(c,
+        "CURRENS\t0\tr7\t\tcommissio\t/w/s\ts"
+        "\t1\t1\tvivus\t0\t0\t0\t0\t0\t0\t0\t\t\n"));
+    (vacuum)messem_exspectare(&w->fons, nunc + (s64)XXX * (s64)M);
+    CREDO_NECESSE(colloquia_visus_cursus(&w->fons) != NIHIL);
+    CREDO_CHORDA_AEQUALIS_LITERIS(cursus_k(&w->fons, ZEPHYRUM)->id,
+        "r9");
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "fons", _probare_fontem, NIHIL, NIHIL, NIHIL, NIHIL },
     { "greges", _probare_greges, NIHIL, NIHIL, NIHIL, NIHIL },
     { "claves", _probare_claves, NIHIL, NIHIL, NIHIL, NIHIL },
     { "stabilitas", _probare_stabilitatem, NIHIL, NIHIL, NIHIL, NIHIL },
     { "pictura", _probare_picturam, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "cursus", _probare_cursus, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

@@ -1094,6 +1094,17 @@
     <ingressus genus="fasciculus" via="tools/instituere.sh"/>
     <exitus via="~/.bin/praeco" scriptura="praeco" provenientia="regeneratio"/>
   </actio>
+  <!-- colloquia T10b (Franus 2026-10-16): vicus 'mensor quaestio
+       currentes -machina' vocat - ~/.bin/mensor, ut praeco -->
+  <actio titulus="institutio_mensor" genus="institutio" memorabilis="verum" celer="verum">
+    <mandatum>
+      <verbum! (>./tools/instituere.sh
+      <verbum! (>bin/mensor
+    </mandatum>
+    <ingressus genus="fasciculus" via="bin/mensor"/>
+    <ingressus genus="fasciculus" via="tools/instituere.sh"/>
+    <exitus via="~/.bin/mensor" scriptura="mensor" provenientia="regeneratio"/>
+  </actio>
   <actio titulus="institutio_stml" genus="institutio" memorabilis="verum" celer="verum">
     <mandatum>
       <verbum! (>./tools/instituere.sh
@@ -1126,6 +1137,7 @@
     <pars actio="institutio_stml"/>
     <pars actio="praeco"/>
     <pars actio="institutio_praeco"/>
+    <pars actio="institutio_mensor"/>
   </compositum>
   <compositum titulus="briar">
     <pars actio="corpus_silicis"/>

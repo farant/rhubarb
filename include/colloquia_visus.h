@@ -31,6 +31,8 @@
 #include "organum_montatio.h"
 #include "multiplexor.h"
 #include "colloquia.h"
+#include "processus.h"
+#include "mensura_quaestio.h"
 
 /* porta saltus (vicus: ut admonitiones T4c); VERUM si acta */
 nomen b32 (*ColloquiiActio)(vacuum* ctx, constans Colloquium* c);
@@ -53,6 +55,17 @@ nomen structura {
                     Xar* tituli;
                 Piscina* piscina;       /* diuturna */
                 Piscina* scheda;
+    /* T10b: cursus currentes - 'mensor quaestio currentes -machina'
+     * in processu filio (facies filum unum habet; quaestio 0.3-0.5 s),
+     * per V s dum latus visibile pulsat. Arbores solae quarum radix
+     * custodem VIVUM habet servantur. mensor NIHIL = sine cursibus. */
+     constans character* mensor;      /* binarium; NIHIL = nullum */
+              Processus* quaestio;    /* currens aut NIHIL */
+                    s64  cursus_ad;  /* ms incepti ultimi */
+                    Xar* cursus;     /* CursusCurrensLinea (cursuum) */
+                Piscina* cursuum;    /* per lectionem vacatur */
+                Piscina* quaestionis; /* processus; post messem vacatur */
+                    i64  signum_cursuum;  /* FNV linearum */
 } ColloquiorumFons;
 
 b32
@@ -63,12 +76,27 @@ colloquia_visus_fontem_initiare (
                    i32  octeti_initiales,
   constans Multiplexor* m);
 
-/* pulsus: eventus novi; panelli si V s praeterierunt (nunc ms). VERUM
- * si mutatum (eventus novi, panelli mutati) */
+/* pulsus: eventus novi; panelli si V s praeterierunt (nunc ms);
+ * cursus (T10b): quaestio incipitur si V s praeterierunt, metitur si
+ * parata (numquam obstat). VERUM si mutatum (eventus novi, panelli aut
+ * cursus mutati) */
 b32
 colloquia_visus_fontem_pulsare (
     ColloquiorumFons* f,
                  s64  nunc);
+
+/* binarium mensoris ponere (vicus: RHUBARB_MENSOR, deinde ~/.bin/mensor
+ * si exstat); NIHIL = cursus nulli. Pulsus sequens quaestionem incipit */
+vacuum
+colloquia_visus_fontem_mensorem_ponere (
+       ColloquiorumFons* f,
+     constans character* binarium);
+
+/* instantanea cursuum: Xar de CursusCurrensLinea (chordae in piscina
+ * fontis - valent usque ad lectionem proximam); NIHIL = nondum lecti */
+constans Xar*
+colloquia_visus_cursus (
+    constans ColloquiorumFons* f);
 
 /* instantanea: colloquia cum titulis et panellis applicatis (Xar de
  * Colloquium in piscina data) */

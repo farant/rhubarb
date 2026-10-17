@@ -26,6 +26,8 @@
 #define COLLOQUIA_GREX       II       /* lineae tituli gregis */
 #define COLLOQUIA_ORDO       IV       /* lineae ordinis */
 #define COLLOQUIA_PANELLI_MS ((s64)V * (s64)M)
+#define COLLOQUIA_CURSUS_MS  ((s64)V * (s64)M)   /* T10b: inter quaestiones */
+#define COLLOQUIA_QUAESTIO_MS (XXX * M)          /* terminus quaestionis */
 
 hic_manens constans character actio_colloquiorum[] = "colloquia.agere";
 
@@ -202,6 +204,165 @@ panellos_legere (
     redde ministri;
 }
 
+vacuum
+colloquia_visus_fontem_mensorem_ponere (
+       ColloquiorumFons* f,
+    constans character* binarium)
+{
+    character* copia;
+
+    si (!f || !f->piscina)
+    {
+        redde;
+    }
+    f->mensor = NIHIL;
+    si (!binarium || !binarium[ZEPHYRUM])
+    {
+        redde;
+    }
+    copia = (character*)piscina_allocare(f->piscina, (memoriae_index)
+        strlen(binarium) + I);
+    si (!f->cursuum)
+    {
+        f->cursuum = piscina_generare_dynamicum("colloquia_cursus",
+            XVI * M);
+    }
+    si (!f->quaestionis)
+    {
+        f->quaestionis = piscina_generare_dynamicum(
+            "colloquia_quaestio", XVI * M);
+    }
+    si (!copia || !f->cursuum || !f->quaestionis)
+    {
+        redde;
+    }
+    strcpy(copia, binarium);
+    f->mensor     = copia;
+    /* pulsus proximus quaestionem statim incipit */
+    f->cursus_ad  = -COLLOQUIA_CURSUS_MS;
+}
+
+constans Xar*
+colloquia_visus_cursus (
+    constans ColloquiorumFons* f)
+{
+    redde f ? f->cursus : NIHIL;
+}
+
+/* effusionem 'currentes -machina' legere: lineae in piscinam cursuum
+ * copiatae; arbores solae quarum radix custodem VIVUM habet (filii
+ * sententiam radicis sequuntur). Signum FNV linearum servatarum. */
+interior Xar*
+cursus_legere (
+     ColloquiorumFons* f,
+               chorda  effusio,
+                  i64* signum)
+{
+                    Xar* l;
+     CursusCurrensLinea* novus;
+                 chorda  linea;
+                 chorda  copia;
+                    b32  viva     = FALSUM;
+                    i32  initium  = ZEPHYRUM;
+                    i32  k;
+
+    *signum = (i64)CCLXI * (i64)M;
+    l = xar_creare(f->cursuum, (i32)magnitudo(CursusCurrensLinea));
+    per (k = ZEPHYRUM; l && k <= effusio.mensura; k++)
+    {
+        CursusCurrensLinea lecta;
+
+        si (k < effusio.mensura && effusio.datum[k] != '\n')
+        {
+            perge;
+        }
+        linea.datum    = effusio.datum + initium;
+        linea.mensura  = k - initium;
+        initium        = k + I;
+        si (   linea.mensura == ZEPHYRUM
+            || !cursus_currentem_ex_linea(linea, &lecta))
+        {
+            perge;
+        }
+        si (lecta.profunditas == ZEPHYRUM)
+        {
+            viva = (lecta.vita == CURSUS_VITA_VIVA);
+        }
+        si (!viva)
+        {
+            perge;
+        }
+        copia = chorda_transcribere(linea, f->cursuum);
+        novus = (CursusCurrensLinea*)xar_addere(l);
+        si (!novus || !cursus_currentem_ex_linea(copia, novus))
+        {
+            redde NIHIL;
+        }
+        *signum = fnv_addere(*signum, copia);
+    }
+    redde l;
+}
+
+/* T10b: quaestio incipitur (V s post ultimam) aut metitur si parata;
+ * numquam obstat. VERUM si cursus mutati. Mensor fractus (exitus non
+ * 0, exec fallitus) instantaneam veterem servat. */
+interior b32
+cursus_pulsare (
+    ColloquiorumFons* f,
+                 s64  nunc)
+{
+     constans character* argumenta[V];
+      ProcessusResultus  r;
+                    Xar* novi;
+                    i64  signum;
+
+    si (!f->mensor)
+    {
+        redde FALSUM;
+    }
+    si (!f->quaestio)
+    {
+        si (nunc - f->cursus_ad < COLLOQUIA_CURSUS_MS)
+        {
+            redde FALSUM;
+        }
+        piscina_vacare(f->quaestionis);
+        argumenta[0]    = f->mensor;
+        argumenta[I]    = "quaestio";
+        argumenta[II]   = "currentes";
+        argumenta[III]  = "-machina";
+        argumenta[IV]   = NIHIL;
+        f->quaestio   = processus_incipere(argumenta,
+            COLLOQUIA_QUAESTIO_MS, f->quaestionis);
+        f->cursus_ad  = nunc;
+        redde FALSUM;
+    }
+    si (processus_pulsare(f->quaestio) != PROCESSUS_PARATUS)
+    {
+        redde FALSUM;
+    }
+    r            = processus_metere(f->quaestio);
+    f->quaestio  = NIHIL;
+    si (!r.successus || r.codex_exitus != ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    piscina_vacare(f->cursuum);
+    novi = cursus_legere(f, r.effusio, &signum);
+    si (!novi)
+    {
+        f->cursus = NIHIL;
+        redde VERUM;
+    }
+    f->cursus = novi;
+    si (signum == f->signum_cursuum)
+    {
+        redde FALSUM;
+    }
+    f->signum_cursuum = signum;
+    redde VERUM;
+}
+
 b32
 colloquia_visus_fontem_pulsare (
     ColloquiorumFons* f,
@@ -237,8 +398,13 @@ colloquia_visus_fontem_pulsare (
             mutatum               = VERUM;
         }
     }
+    si (cursus_pulsare(f, nunc))
+    {
+        mutatum = VERUM;
+    }
     redde mutatum;
 }
+
 
 /* nomen directorii ultimum ("/w/alpha" -> "alpha") */
 interior chorda
