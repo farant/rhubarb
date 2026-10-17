@@ -30,20 +30,25 @@ FUNCTION, regions count what the NETWORK carves (pieces <= regions).
 
 ## Result
 
-1. **Regions grow linearly, never exponentially (B_3, exact).** For
-   every one of the 2,589 classes up to length 8, m = 1..12, the
-   registered rule gives H_lin and not H_exp, on pieces and on the
-   word with the most regions. The prediction (H_lin for >= 90% of E,
+1. **Regions grow linearly, not exponentially (B_3 up to length 8,
+   m <= 12, exact).** For every one of the 2,589 classes up to length
+   8, m = 1..12, the registered rule gives H_lin and not H_exp, on
+   pieces and on the word with the most regions. The prediction (H_lin for >= 90% of E,
    H_exp for none) HOLDS, for P and Z too.
-2. **Pieces stay bounded; regions grow.** Every E class has exactly 8
-   pieces for every m >= 2 (Z: 6 or 8; P: they cycle, with 1 piece at
-   m = k because w^k is the identity map). Regions of E grow by 5 to 8
-   per pass.
+2. **Pieces stay flat; regions grow.** Every E class up to length 8
+   has exactly 8 pieces at every m = 2..12 (Z: 6 or 8 from m = 3; P:
+   they cycle, with 1 piece at m = k because w^k is the identity map).
+   That they stay bounded for all m is not proved. Regions of E grow
+   by 2 to 8 per pass per class (means 5.3 to 8.0 by |tr|).
 3. **The growth rate follows the word, not lambda.** The regions added
    per pass level off at 8.0 for large |tr| (lambda up to about 47)
    and are smaller for short words. Exploratory (post hoc): over
    m = 6..12 the most-regions word adds exactly 6 x its cyclically
-   reduced length for 1,816 of 2,108 E classes (196 fewer, 96 more).
+   reduced length for 1,816 of 2,108 E classes (196 fewer, 96 more),
+   taking the FIRST most-regions word in enumeration order; over the
+   other choices in the 32 tied classes the count ranges from 1,804
+   to 1,836 (T5d review). In 1,572 classes every geodesic word
+   satisfies it.
 4. **Regions belong to the word, pieces to the braid.** Geodesic
    words of one class can differ: Delta sigma_1 as [1 2 1 1] and
    [2 2 1 2] reaches 12 regions, as [2 1 2 1] stays at 6, all with
@@ -52,20 +57,24 @@ FUNCTION, regions count what the NETWORK carves (pieces <= regions).
    geodesic word of every class.
 5. **The nulls separate the two counts.** Networks with the same
    shape but each instruction's coefficients permuted at random also
-   grow their regions linearly (H_lin 2,089 of 2,108, H_exp 0), but
-   their PIECES grow too: 46 at m = 12 against the braids' 8. Linear
+   grow their regions linearly (one draw, seed 129: H_lin 2,089 of
+   2,108, H_exp 0), but their PIECES grow too: 46 at m = 12 against
+   the braids' 8 (the reviewer's own draw: 2,088 and 47.5). Linear
    region growth is a property of this network shape; bounded pieces
    are what the braid adds.
 6. **The lattice method cannot see the growth.** Interior integer
    points on the shells max |x_i| <= 256 find on average 13.3 of the
-   87.6 regions of E at m = 12, and no E class's full count. New
-   regions are thinner by about lambda per pass. On B_4 the same floor
+   87.6 regions of E at m = 12, and no E class's full count. The
+   newest sectors narrow by lambda^2 per pass, so the lattice height
+   needed to reach them grows by lambda (T5d review). On B_4 the same floor
    stops growing after m = 4. B_4 region growth is therefore left
    open (an exact d >= 3 counter is ledger wish …QK7A9).
 7. **Period 2 means the limit lies on a wall; the converse fails.** On
    B_4 up to length 6, every E orbit of period >= 2 ends on a wall
    (an argument of w vanishes at the limit direction), as continuity
-   forces. But 568 E braids with period 1 end on a wall too. The
+   forces once the orbit converges to one direction (north-south for
+   pseudo-Anosov braids; for these braids checked numerically by the
+   T5d review). But 568 E braids with period 1 end on a wall too. The
    registered prediction "period 2 iff tie" FAILS in that direction.
    The period belongs to the loop (from which side it approaches),
    the tie to the braid.
@@ -130,6 +139,12 @@ for every m in 8..11.
 | E | 2,108 | 2,108 | 2,108 | 2,108 | 0 | 0 |
 | Z | 272 | 272 | 272 | 272 | 0 | 0 |
 
+The registered Z prediction (linear too, slope smaller than typical
+E) HOLDS: over m = 6..12 the most-regions word adds 5.3 regions per
+pass on average for Z against 7.1 for E (from the means above). H_lin
+with period 3 compares only 3 of the 6 increments, a weak test; it
+was applied as registered, and H_exp fails everywhere.
+
 **Growth against lambda.** E classes by |tr| (lambda = (|tr| +
 sqrt(tr^2 - 4)) / 2), mean regions added per pass by the most-regions
 word over m = 6..12: |tr| 3: 5.3, 4: 5.4, 5: 6.4, 6: 6.4, 7: 7.1,
@@ -163,8 +178,8 @@ geodesic word), largest gap 12; E 408 of 2,108 (880), gap 24; Z 88 of
 The census word, the 2,720 points of the shells max(|x|, |y|) = 4,
 16, 64, 256, itineraries by refinement (id_m = intern(id_{m-1},
 pattern of pass m)), counting only interior points (no argument
-exactly 0 in any pass so far): 79,348 of 7,042,080 point-passes ended
-on walls. Mean regions at m = 12:
+exactly 0 in any pass so far): 79,348 of the 7,042,080 (class,
+point) pairs had ended on a wall by m = 12. Mean regions at m = 12:
 
 | type | classes | exact | R <= 4 | R <= 16 | R <= 64 | R <= 256 |
 |---|---|---|---|---|---|---|
@@ -186,7 +201,9 @@ cube root of unity; Z the rest, D128 checked their growth).
 
 **(a) The lattice floor**, B_4 up to length 4, shells 4 and 8,
 m = 1..8, mean counts: E 49.5, 76.4, 83.1, then 84.1 from m = 4 on;
-P 94.8 from m = 3; Z rises to 115.3. A floor only: the shells see
+P 94.8 from m = 3; Z reaches 115.4 at m = 7 and 115.3 at m = 8 (the
+count can dip as points die on walls; a running maximum is also a
+floor). A floor only: the shells see
 nothing new after four passes, as Part B predicts for E. Its "shapes"
 (H_lin-like 238 of 254 E, H_exp-like 0) say nothing about the braids.
 
@@ -200,9 +217,12 @@ own quick-mode table).
 For each E loop whose orbit GROWS, exactly:
 - mu = the largest real root of the minimal polynomial of the settled
   tail, sampled every Q passes (Q = the braid's period; Krylov
-  kernel). Checked: the polynomial holds on the whole tail, and mu is
-  > 1 and simple. That mu dominates the complex roots is assumed
-  (north-south dynamics), not proved.
+  kernel, one window). Checked: the polynomial found on the first
+  window holds on the whole tail (the tail is one linear map), and mu
+  is > 1 and simple. That mu dominates the complex roots is ASSUMED
+  (north-south dynamics), not checked by the demo; the T5d review
+  supports it numerically (at pass 240 the vanishing arguments are
+  below 1e-88 of |x|, the others above 1e-2).
 - An argument of w VANISHES at the limit iff mu is not a root of the
   minimal polynomial of its own values along the tail (Hankel kernel;
   `radix_signum_polynomii`). A tie = some argument vanishes.
@@ -212,22 +232,29 @@ For each E loop whose orbit GROWS, exactly:
 | Burau(-1) radius > 1 (3,006) | 2,474 | 476 | 56 | 0 |
 | only at a cube root (1,008) | 588 | 92 | 328 | 0 |
 
-- **Period >= 2 forces a tie.** If two positions of the cycle have
-  different bits for ReLU k, its argument is > 0 on one subsequence
-  and <= 0 on the other, both converging to the limit direction v, so
-  it is 0 at v. Checked per argument: every bit that varies on a
-  settled tail has a vanishing argument. Vanishing is also the same at
-  every position of the cycle (one limit direction).
-- **The converse fails:** 568 period-1 braids also end on a wall,
-  approached from one side. The registered prediction "period 2 iff
+- **Period >= 2 forces a tie, given one limit direction.** If the
+  whole orbit converges to one direction v (with w(v) parallel to v),
+  and two positions of the cycle have different bits for ReLU k, its
+  argument is > 0 on one subsequence and <= 0 on the other, so it is
+  0 at v. The premise holds for pseudo-Anosov braids (north-south
+  dynamics); the demo does not test it, and the 52 reducible braids
+  below are not covered by that theorem. The T5d review checked it
+  numerically on all 11,990 growing loops (direction change below
+  1e-6 per pass by pass 240). Checked per argument: every bit that
+  varies on a settled tail has a vanishing argument; vanishing is the
+  same at every position of the cycle.
+- **The converse fails:** 568 period-1 braids also end on a wall:
+  566 approach it from one side, and 2 (certified at t = -1) lie ON
+  it, their only tie an argument that is exactly 0 at every pass of
+  the settled orbit (T5d review). The registered prediction "period 2 iff
   tie" FAILS. Within a braid, loops can differ in period and agree on
   the limit: in the quick run, [1 2 -3 2] has loop E_1 at q = 1 (mu =
   phi^2 per pass) and E_2, E_3 at q = 2 (phi^4 per two passes). All
   growing loops of every E braid reach the same mu and the same tie
   (checked).
 - **52 E braids have an invariant loop** (all certified only at a cube
-  root, lengths 5-6): that loop's tail polynomial is t - 1, it does
-  not grow. These braids have positive entropy and an invariant curve:
+  root, lengths 5-6): that loop's tail polynomial is t - 1 (checked:
+  every non-growing loop is fixed on its tail), it does not grow. These braids have positive entropy and an invariant curve:
   reducible, with a pseudo-Anosov piece (D128's fact-check: E is not
   pA). The loop never reaches the attractor and is left out; the
   first full run caught them by failing "same limit".
@@ -239,7 +266,9 @@ For each E loop whose orbit GROWS, exactly:
 
 - **(a) A linear network** (Burau(-1) of the word as two affine
   instructions) has 1 region and 1 piece, on every class: the floor.
-- **(b) Coefficients permuted** within each instruction of the census
+- **(b) Coefficients permuted** (one draw, `sors` seed 129; the T5d
+  reviewer's own draw gives E r(12) 79.8, p(12) 47.5, H_lin 2,088)
+  within each instruction of the census
   word's network (same sources, terms, depth, ReLU count; 2,584 of
   2,589 networks changed), m = 1..12, means at m = 12 (none passed
   the 20,000-region stop):
@@ -268,9 +297,9 @@ For each E loop whose orbit GROWS, exactly:
 - The network does not know that. Each pass cuts its own walls: a
   wall of pass j is the preimage of a fixed wall under w^(j-1), so the
   walls accumulate toward the repelling direction, a few new ones per
-  pass (north-south dynamics). That gives linear growth, and thinner
-  sectors by about lambda per pass, which is exactly what the lattice
-  cannot see. The number of new walls per pass depends on the word's
+  pass (north-south dynamics). That gives linear growth, and sectors
+  narrower by lambda^2 per pass (the lattice height needed grows by
+  lambda), which is exactly what the lattice cannot see. The number of new walls per pass depends on the word's
   ReLUs, which is why the rate tracks the word and not lambda.
 - So D106's question "does chaos help computing?" gets a clean answer
   for capacity on B_3: no. Positive entropy does not buy exponential
@@ -286,7 +315,7 @@ For each E loop whose orbit GROWS, exactly:
 
 ## Checks
 
-Full mode 34 (quick 34), all exact:
+Full mode 35 (quick 35), all exact:
 - Part A (14): classes = D128's table; the trace law; radius > 1 iff
   |tr| > 2; every reduced word finds its class; census levels
   geodesic; each representative among its geodesic words; regions
@@ -298,11 +327,13 @@ Full mode 34 (quick 34), all exact:
 - Part B (5): bound <= exact; interior points in their sector;
   distinct itineraries = sectors hit; shell union monotone;
   homogeneity on every inner-shell point.
-- Part C (11): B_4 classes; lattice refinement and union; lattice
+- Part C (12): B_4 classes; lattice refinement and union; lattice
   homogeneity; orbits settle; periods = D128 (both modes); the tail
-  polynomial and mu; period >= 2 => tie; per argument: varying bit =>
-  vanishing argument; vanishing independent of position; same limit
-  for growing loops; every E braid has a growing loop.
+  polynomial (one Krylov window, rechecked on the whole tail) and mu;
+  period >= 2 => tie; per argument: varying bit => vanishing
+  argument; vanishing independent of position; same limit for
+  growing loops; every E braid has a growing loop; a non-growing loop
+  is fixed (t - 1).
 - Part D (4): linear floor; permuted shape; permutation changes most
   networks; shuffled-word type re-derived.
 
@@ -313,16 +344,43 @@ All through `silva.planta`, all red:
   composed, pieces = regions, H_lin with no period, H_exp strict at
   1.5, wall points counted interior, itineraries not refined, the
   angular walk reversed, homogeneity pairs never found.
-- T5b (10): B_4 E without the cube-root certificate, the tie test
+- T5b (9): B_4 E without the cube-root certificate, the tie test
   inverted, mu = the smallest root, period never 1, Krylov ignoring
   the period, B_4 homogeneity pairs, null (b) without a permutation,
   null (c) without the lookup, and (full mode) invariant loops treated
   as growing.
+- T5d (2): a tail that is not a Krylov sequence (the recheck now
+  fails; before the review it could not), growing loops filed as
+  invariant.
 - Checks were added where a plant would otherwise have passed: the
   rule's code, "itineraries = sectors hit", the homogeneity pair
   counts (the B_4 one was vacuous in quick mode with one shell), the
   per-argument theorem (an inverted tie test still passed "q >= 2 has
   a tie"), quick-mode period pins, the two null assertions.
+
+## Review (T5d, 2026-10-16)
+
+An independent reviewer (recensor-d129) re-derived the demo with its
+own Python oracles: a Dynnikov action transcribed from Thiffeault
+2010 (appendix A.2), its own classes (faithful reduced Burau on B_3;
+Artin's action on F_4 for the B_4 census), its own sweep, lattice and
+tie test (exact orbits to 240 passes). Zero mismatches: regions and
+pieces of all 6,373 geodesic words at m = 1..12, Part B's lattice
+counts for all 2,589 classes, every loop of the period-2 table (4,014
+braids, 12,042 loops), the B_4 floor for all 469 braids; Part D
+reproduced statistically with its own draws. H 0, M 3, L 9, N 5, all
+about scope, grades, wording and two checks that could not fail.
+Fixed: the claims bounded to what was computed (M1); the per-class
+growth range 2 to 8 (M2); the premise of the period-2 argument stated
+(M3); dominance labelled assumed in the program (L3); the tail's
+minimal polynomial from ONE Krylov window so its recheck can fail,
+and non-growing loops checked to be fixed (L4); lambda^2 for sector
+angles, lambda for lattice height (L5); the tie-break and range of
+the cyclic count (L6); plan amendments for the period-2 method and the
+Z verdict (L7); "Z 6 or 8" from m = 3 (L8); the null's seed (L9); the
+(class, point) pairs and the output line count (L1, L2); the 2
+period-1 braids ON a wall (N1); the B_4 floor's dip (N2); key-size
+guards (N4).
 
 ## Not covered
 
@@ -330,6 +388,8 @@ All through `silva.planta`, all red:
   programming; ledger …QK7A9). Part C (a) is a floor only.
 - Why period 2 concentrates among braids certified only at a cube
   root (KC 55.2.3.1).
+- The premises of Part C: that mu dominates and that each orbit has
+  one limit direction (assumed; supported numerically by the review).
 - Proof that the pieces stay bounded on B_3 (the interpretation
   above), and the rate-equals-cyclic-length hypothesis.
 - Computing with the network (N2, ledger …4291V2).
@@ -341,7 +401,7 @@ All through `silva.planta`, all red:
   bash build/aedilis/main/struere.sh && ./build/aedilis/main/main
 ```
 
-Full mode about 4 min (34 checks); `D129_CELER=1` (B_3 up to 5, B_4
+Full mode about 4 min (35 checks); `D129_CELER=1` (B_3 up to 5, B_4
 lattice up to 3 on shells 2 and 4, period question up to 4) about
-7 s (34 checks). The snapshot gives byte-identical output (237
-lines).
+7 s (35 checks). The snapshot gives byte-identical output (237
+lines by wc -l; archive.sh reports 238, counting one more).

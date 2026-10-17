@@ -1114,6 +1114,7 @@ lattice_class (
     vpool[1] = piscina_generare_dynamicum("d129_v1", 1 << 16);
     if (!plexus_nervus(kl->word, cpool, &one)) fatal("network refused");
     nrelu = (int)one->relu;
+    if (sizeof(int) != 4 || nrelu > 96) fatal("itinerary key too small");
     width = nrelu * MMAX;
     bits = (unsigned char *)malloc((size_t)npts * (size_t)(width + 1));
     store = (int *)malloc((size_t)capstore * sizeof(int));
@@ -1543,6 +1544,7 @@ lattice4_class (
     vpool[1] = piscina_generare_dynamicum("d129_c4v1", 1 << 16);
     if (!plexus_nervus(w, cpool, &one)) fatal("network refused");
     nrelu = (int)one->relu;
+    if (sizeof(int) != 4 || nrelu > 96) fatal("itinerary key too small");
     store = (int *)malloc((size_t)capstore * sizeof(int));
     seen = (int *)calloc((size_t)capstore + 1, sizeof(int));
     for (i = 0; i < npts4; i++) {
@@ -1753,7 +1755,10 @@ min_poly (
         int    r, j;
 
         /* scalar sequences: Hankel rows = shifts, so the relation holds
-         * for every window that fits; vectors: one window (Krylov) */
+         * for every window that fits. Vectors: ONE window, the Krylov
+         * vectors y_0 .. y_d themselves; if the tail is one linear map,
+         * the first dependency is its minimal polynomial and holds on
+         * every later window (the caller rechecks that) */
         if (rows == 1) {
             int nr = nterms - d;
 
@@ -1766,14 +1771,11 @@ min_poly (
                 }
             }
         } else {
-            int nr = rows * (nterms - d);
-
-            if (!matrix_nulla(&ANULUS_INTEGRORUM, (i32)nr, (i32)(d + 1),
+            if (!matrix_nulla(&ANULUS_INTEGRORUM, (i32)rows, (i32)(d + 1),
                     pool, &a)) fatal("matrix refused");
-            for (r = 0; r < nr; r++) {
+            for (r = 0; r < rows; r++) {
                 for (j = 0; j <= d; j++) {
-                    matrix_pone(&a, (i32)r, (i32)j,
-                        &y[r / rows + j][r % rows]);
+                    matrix_pone(&a, (i32)r, (i32)j, &y[j][r]);
                 }
             }
         }
@@ -1842,6 +1844,8 @@ static int ok_q_tie = 1;          /* theorem: q >= 2 => tie */
 static int ok_mu_all = 1;
 static int ok_same_limit = 1;     /* the loops of one braid agree */
 static int ok_recurrence = 1;     /* the tail obeys pi_x */
+static int ok_invariant = 1;      /* a loop that does not grow is fixed:
+                                   * tail polynomial t - 1 */
 static int ok_vanish_pos = 1;     /* vanishing is the same at every
                                    * position of the cycle */
 static int ok_varies_vanish = 1;  /* a bit that varies on the tail has a
@@ -1947,7 +1951,13 @@ orbit4_limit (
     if (sg <= 0) {
         /* the orbit does not grow: this loop is invariant under a
          * reducible braid (E with a pseudo-Anosov PIECE); it does not
-         * flow to the attractor and is left out of the limit */
+         * flow to the attractor and is left out of the limit. Invariant
+         * means x fixed on the tail: the polynomial is t - 1 exactly
+         * (a Jordan block at 1 would grow linearly; checked) */
+        if (deg != 1 || !magnus_aequalis(polynomium_coefficiens(px, 0),
+                magnus_nega(polynomium_coefficiens(px, 1), pool))) {
+            ok_invariant = 0;
+        }
         o->grows = 0;
         return;
     }
@@ -2054,7 +2064,7 @@ part_c_period (
         "%d: each braid on\n  every loop E_1..E_3, %d passes; settled period "
         "q per braid = lcm over loops\n  (D128 Part D). For E, exactly: mu "
         "= the largest real root of the tail's\n  minimal polynomial (dominant "
-        "by north-south dynamics; observed, not proved);\n  an argument "
+        "by north-south dynamics: ASSUMED, not checked);\n  an argument "
         "VANISHES in the limit iff mu is not a root of its own minimal\n  "
         "polynomial (its mu-component is 0). Tie = some argument vanishes "
         "at some\n  position of the cycle, on a loop whose orbit GROWS (mu > "
@@ -2162,6 +2172,8 @@ part_c_period (
         "= lambda^Q over the\n        braid's period Q, same tie)",
         ok_same_limit);
     check("every E braid has a growing loop", no_growth == 0);
+    check("a loop that does not grow is fixed on its tail (polynomial "
+        "t - 1)", ok_invariant);
     printf("    E braids with an INVARIANT loop (orbit does not grow: "
         "reducible, a pseudo-Anosov\n    piece): %d certified at t = -1, "
         "%d only at a cube root (left out of the limit)\n", reducible[0],

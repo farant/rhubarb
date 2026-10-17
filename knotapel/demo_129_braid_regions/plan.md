@@ -235,8 +235,9 @@ late passes cost more.
   and on the most-regions word; H_exp for none. Prediction HOLDS (also
   for every P and Z class).
 - **Measured.** Pieces of w^m stay bounded: E 8 for every class and
-  m >= 2, Z 6 or 8, P cycling with p(k) = 1. Regions grow linearly,
-  5 to 8 per pass, and the slope does not follow lambda: it tracks the
+  m >= 2, Z 6 or 8 (from m = 3), P cycling with p(k) = 1. Regions
+  grow linearly, 2 to 8 per pass per class (means 5.3 to 8.0 by |tr|;
+  corrected after T5d, M2), and the slope does not follow lambda: it tracks the
   WORD LENGTH (exploratory, post hoc: r(12) - r(6) = 6 x the cyclically
   reduced length for 1,816 of 2,108 E classes, 196 below, 96 above).
   No sector of any braid network has an identically-zero argument, so
@@ -244,8 +245,10 @@ late passes cost more.
 - **For T5b: the lattice bound is too weak to measure growth.** On B_3
   the shells R <= 256 recover 13.3 of the 87.6 mean regions of E at
   m = 12, and no E class reaches its exact count (Z 16 of 272, P all
-  209). New regions are thinner by about lambda per pass (north-south
-  dynamics), so points of height R see about log_lambda(R) of them.
+  209). The newest sectors narrow by lambda^2 per pass (north-south
+  dynamics; "lambda" corrected after T5d, L5), so the lattice height
+  needed grows by lambda and points of height R see about
+  log_lambda(R) of them.
   Part C's B_4 lattice numbers as planned would measure the shell, not
   the braid. To decide before T5b.
 - Plants (silva.planta, 10, all red): E threshold, reduced-word filter,
@@ -305,7 +308,8 @@ late passes cost more.
   different braid, its type looked up and re-derived from its own
   period and trace): growth follows the new braid's type (P flat at
   12.7, E 82, Z 55), H_lin for all, H_exp none.
-- Plants (silva.planta, 9 red + 1 full-mode): B_4 E without the cube
+- Plants (silva.planta, 9 red: 8 in quick mode, 1 in full mode): B_4
+  E without the cube
   certificate, tie test inverted, mu = smallest root, period never 1,
   Krylov ignoring the period, B_4 homogeneity pairs (green until quick
   mode got both shells: the check was vacuous with one), null (b) no
@@ -323,7 +327,30 @@ late passes cost more.
   impletum with a results note; the exact-dilatation wish (…VFF141H)
   noted (mu = lambda^Q from the tail, given dominance); the d >= 3
   counter wish (…QK7A9) linked to N6. Frozen with archive.sh:
-  demo-snapshot.c, 35 library files, output identical (237 lines).
+  demo-snapshot.c, 35 library files, output identical (236 lines;
+  "237" corrected after T5d, L2).
+
+## T5d (independent review and fixes, 2026-10-16)
+
+- recensor-d129, own Python oracles, zero mismatches (findings.md,
+  "Review (T5d)"; record in the scratchpad recensio_d129/). H 0, M 3,
+  L 9, N 5; all fixed.
+- **Amendments the review asked to record (L7).**
+  - The period-2 method: registered as "exact computation on the
+    settled map's dominant direction where it is rational, otherwise
+    undecided". Used instead: the tail's minimal polynomial (Krylov)
+    and, per argument, whether mu is a root of the argument's own
+    minimal polynomial (Hankel). Exact given dominance, and never
+    undecided, so no braid was set aside. Dominance is assumed.
+  - The registered Z prediction ("linear as well, slope smaller than
+    typical E") gets its verdict: HOLDS, 5.3 regions per pass for Z
+    against 7.1 for E (most-regions word, m = 6..12, means).
+- Code: the tail's minimal polynomial from one Krylov window (its
+  recheck could not fail before); non-growing loops checked to be
+  fixed (t - 1); dominance printed as assumed; key-size guards. 35
+  checks; 2 new plants red. Refrozen: 35 library files, output
+  identical, 237 lines by wc -l (archive.sh counts 238: it counts one
+  more than wc -l, which is where "237" for the T5c output came from).
 
 ## Out of scope
 
