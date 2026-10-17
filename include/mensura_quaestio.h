@@ -217,4 +217,84 @@ cursus_quaerere_similes (
                        i32* noti_out,
                    Piscina* piscina);
 
+/* CURRENTES (colloquia T8): cursus APERTI (initium sine fine) ut
+ * arbor, cum custode et progressu. Purum: vitam custodis vocator
+ * iudicat (mensor: processus_vivus) - hic solum pid. Radices
+ * recentissimae primum, praeordine. */
+nomen structura {
+    constans Cursus* cursus;
+                i32  profunditas;   /* radix aperta ZEPHYRUM */
+                s32  custos;        /* pid; ZEPHYRUM = ignotus (ante T8) */
+                i32  perfecti;      /* filii finiti: portae sub
+                                     * commissione, membra acta (nota non
+                                     * IUDICIUM) sub porta */
+                i32 fracti;        /* ex perfectis */
+                i32 debiti;        /* consilium.portae; ZEPHYRUM = ignoti */
+                i32 iudicata;      /* fabrica.iudicata ultima */
+                i32 ambitus;       /* fabrica.ambitus; ZEPHYRUM = non
+                                     * fabrica */
+                s64 minima_ms;     /* historia tituli (V ultimi
+                                     * transeuntes); ZEPHYRUM = nulla */
+                s64 maxima_ms;
+             chorda colloquium;    /* id sessionis Claude radicis;
+                                    * vacua = ignota (homo, ante T9) */
+             chorda fracta;        /* tituli filiorum fractorum (non
+                                    * IUDICIUM), spatiis iuncti */
+} CursusCurrens;
+
+Xar*
+cursus_quaerere_currentes (
+       constans CursusIndex* index,
+               constans Xar* mensurae,   /* Xar de Mensura */
+     constans CursusFiltrum* filtrum,   /* arbor, ramus */
+                    Piscina* piscina);
+
+/* VITA CUSTODIS (colloquia T10a; olim in tools/mensor.c): iudicium
+ * vocatoris (processus_vivus) - hic solum nomen et forma */
+nomen enumeratio {
+    CURSUS_VITA_VIVA = ZEPHYRUM,
+    CURSUS_VITA_MORTUA,
+    CURSUS_VITA_IGNOTA
+} CursusVita;
+
+/* LINEA CURRENTIS (colloquia T10a): contractus inter 'mensor quaestio
+ * currentes -machina' et lectores (vicus T10b) - forma in bibliotheca
+ * una. Campi TAB: CURRENS profunditas id parens titulus arbor ramus
+ * initium custos vita perfecti fracti debiti iudicata ambitus
+ * minima_ms maxima_ms colloquium fracta. */
+nomen structura {
+           i32 profunditas;
+        chorda id;
+        chorda parens;
+        chorda titulus;
+        chorda arbor;
+        chorda ramus;
+           s64 initium;
+           s32 custos;
+    CursusVita vita;
+           i32 perfecti;
+           i32 fracti;
+           i32 debiti;
+           i32 iudicata;
+           i32 ambitus;
+           s64 minima_ms;
+           s64 maxima_ms;
+        chorda colloquium;
+        chorda fracta;
+} CursusCurrensLinea;
+
+/* linea cum '\n'; vacua si campus impurus (TAB, linea nova) */
+chorda
+cursus_currentem_ad_lineam (
+    constans CursusCurrens* r,
+                CursusVita  vita,
+                   Piscina* piscina);
+
+/* FALSUM si non linea CURRENS aut deformis; chordae in lineam
+ * spectant (non copiantur) */
+b32
+cursus_currentem_ex_linea (
+                 chorda  linea,
+     CursusCurrensLinea* exitus);
+
 #endif /* MENSURA_QUAESTIO_H */

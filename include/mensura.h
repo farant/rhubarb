@@ -295,4 +295,30 @@ mensura_cursus_legere (
     Volumen* volumen,
     Piscina* piscina);
 
+/* FACTA CURSUUM (colloquia T8): facta numerica de cursu ut MENSURAE
+ * ordinariae (parens = id cursus). Forma lineae 'cursus' NON mutatur:
+ * diarium commune omnium arborum est, et binarium vetus lineam
+ * deformem in conditione ABICIT (campi XIV/XII stricti) - campus novus
+ * ab arbore non conflata deleretur. */
+#define MENSURA_CUSTOS    "cursus.custos"     /* pid possessoris */
+#define MENSURA_AMBITUS   "fabrica.ambitus"   /* membra in ambitu */
+#define MENSURA_UNDAE     "fabrica.undae"     /* undae formatae */
+#define MENSURA_IUDICATA  "fabrica.iudicata"  /* membra iudicata
+                                               * hucusque (per undam) */
+#define MENSURA_PORTAE    "consilium.portae"  /* commissio: portae
+                                               * debitae */
+#define MENSURA_COLLOQUIUM  "colloquium:"   /* + id sessionis Claude
+                                             * (CLAUDE_CODE_SESSION_ID);
+                                             * cursui SUMMO solum, valor I
+                                             * (colloquia T9) */
+
+/* mensurae ex actis voluminis (genus "mensura") quarum titulus
+ * 'praefixum' incipit (vacuum = omnes), ordine actorum. Xar de
+ * Mensura; NIHIL si volumen legi nequit. */
+Xar*
+mensura_mensuras_legere (
+     Volumen* volumen,
+      chorda  praefixum,
+     Piscina* piscina);
+
 #endif /* MENSURA_H */

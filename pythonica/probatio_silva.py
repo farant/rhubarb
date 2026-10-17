@@ -1362,6 +1362,11 @@ try:
     except silva.SilvaError:
         pass
     credo(cursus_n() == 2, 'commissio recepta=False: porta iterum cursa')
+    # consilium (colloquia T8c): commissio portas debitas cursui suo
+    # adhaeret (mensura 'consilium.portae') - diarium crudum ANTE
+    # legere (quod condit)
+    consilia = [l.split('\t') for l in open(os.environ['MENSOR_DIARIUM'])
+                .read().splitlines() if '\tconsilium.portae\t' in l]
     phases = set(l[2] for l in _tempora_lineae() if l[1] == 'phasis')
     credo({'fabrica', 'portae debitae'} <= phases,
           'commissio: phases ante portas temporibus notatae (%s)' % sorted(phases))
@@ -1375,6 +1380,10 @@ try:
     credo(len(com) >= 2 and com[-1][4] == 'fractus'
           and com[-1][14].startswith('SilvaError: ') and com[-1][7] == caput,
           'cursus: commissio notata (fractus, nota = refusio, commissum HEAD)')
+    credo(any(c[2] == com[-1][1] and float(c[4]) == 2 and c[5] == 'portae'
+              for c in consilia) and len(consilia) >= 2,
+          'cursus: consilium.portae commissioni adhaerens (portae II; %r)'
+          % [(c[2], c[4]) for c in consilia])
     credo({'phasis:fabrica', 'phasis:portae debitae', 'porta:ficta-numerans',
            'porta:ficta-rubra2'} <= set(l[3] for l in filii)
           and all(l[11] == 'commissio' for l in filii),

@@ -11,6 +11,7 @@
 #include "admonitiones_volantes.h"
 #include "colloquia_visus.h"
 #include "multiplexor.h"
+#include "filum.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -2288,6 +2289,34 @@ colloquia_describere (
     f->effugium_redit = VERUM;
 }
 
+/* T10b: mensor pro cursibus currentibus - RHUBARB_MENSOR (probationes,
+ * arbores), deinde ~/.bin/mensor si exstat; NIHIL = sine cursibus */
+interior constans character*
+mensorem_quaerere (
+    Piscina* piscina)
+{
+    constans character* ambitus  = getenv("RHUBARB_MENSOR");
+    constans character* domus    = getenv("HOME");
+             character* via;
+
+    si (ambitus && ambitus[ZEPHYRUM])
+    {
+        redde ambitus;
+    }
+    si (!domus || !domus[ZEPHYRUM])
+    {
+        redde NIHIL;
+    }
+    via = (character*)piscina_allocare(piscina, (memoriae_index)
+        strlen(domus) + XVI);
+    si (!via)
+    {
+        redde NIHIL;
+    }
+    sprintf(via, "%s/.bin/mensor", domus);
+    redde filum_existit(via) ? via : NIHIL;
+}
+
 b32
 vicus_applicatio_admonitiones_aperire (
         VicusApplicatio* app,
@@ -2308,6 +2337,11 @@ vicus_applicatio_admonitiones_aperire (
         ca->piscina, ca->index, via, CCLVI * M)
         && colloquia_visus_fontem_initiare(&ca->fons, ca->piscina, via,
                CCLVI * M, &ca->multiplexor);
+    si (ca->sequitur)
+    {
+        colloquia_visus_fontem_mensorem_ponere(&ca->fons,
+            mensorem_quaerere(ca->piscina));
+    }
     redde ca->sequitur;
 }
 

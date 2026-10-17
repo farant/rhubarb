@@ -1968,6 +1968,19 @@ def _cursu_notatum(titulus, exitus_ex, vocator_filiorum=None):
     return decorator
 
 
+def _factum_notare(titulus, valor, unitas):
+    """FACTUM CURSUS (colloquia T8c): 'bin/mensor cursus factum' -
+    mensura cursui aperto (MENSOR_PARENS) adhaerens; forma et via
+    diarii in C. Sine cursu aut sine mensore nihil; scriptura fracta
+    nihil frangit."""
+    if (os.environ.get('CURSUS_NULLUS') or not os.environ.get('MENSOR_PARENS')
+            or not os.access(MENSOR_BIN, os.X_OK)):
+        return
+    subprocess.run([MENSOR_BIN, 'cursus', 'factum', '-titulus', titulus,
+                    '-valor', str(valor), '-unitas', unitas],
+                   capture_output=True)
+
+
 @contextlib.contextmanager
 def _phasis(nomen):
     """phasis commissionis: cursus 'phasis:<nomen>' + linea temporum
@@ -3698,6 +3711,8 @@ def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
     with _phasis('ordo portarum'):
         portae, genera, _gradus, dilatae = _portas_ordinare(
             portae, additae, plena, recepta)
+    # consilium (colloquia T8c): portae debitae - 'stadium x ex y'
+    _factum_notare('consilium.portae', len(portae), 'portae')
     dilatae = {**(_dilatae or {}), **dilatae}
     if binaria is not None:
         with _phasis('instrumenta portarum'):

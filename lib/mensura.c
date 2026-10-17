@@ -881,3 +881,47 @@ mensura_cursus_legere (
     xar_ordinare(cursus, _cursus_ordinare);
     redde cursus;
 }
+
+Xar*
+mensura_mensuras_legere (
+     Volumen* volumen,
+      chorda  praefixum,
+     Piscina* piscina)
+{
+    Xar* acta;
+    Xar* lectae;
+    i32  k;
+
+    si (volumen == NIHIL || piscina == NIHIL)
+    {
+        redde NIHIL;
+    }
+    acta    = volumen_acta_legere(volumen, (s64)ZEPHYRUM, piscina);
+    lectae  = xar_creare(piscina, (i32)magnitudo(Mensura));
+    si (acta == NIHIL || lectae == NIHIL)
+    {
+        redde NIHIL;
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(acta); k++)
+    {
+        constans VolumenActum* actum = (constans VolumenActum*)
+            xar_obtinere(acta, k);
+                       Mensura  m;
+                       Mensura* locus;
+
+        si (   !chorda_aequalis_literis(actum->genus, "mensura")
+            || !mensura_ex_linea(actum->datum, &m, piscina)
+            || (   praefixum.mensura > ZEPHYRUM
+                && !chorda_incipit(m.titulus, praefixum)))
+        {
+            perge;
+        }
+        locus = (Mensura*)xar_addere(lectae);
+        si (locus == NIHIL)
+        {
+            redde NIHIL;
+        }
+        *locus = m;
+    }
+    redde lectae;
+}

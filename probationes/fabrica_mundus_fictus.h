@@ -62,7 +62,17 @@ nomen structura {
                                        * hunc indicem non incipiunt */
                    Xar* particulae_servatae; /* ParticulaeFictae (plan-5
                                               * T1) */
+                   Xar* progressus_ficti; /* ProgressusFictus (colloquia
+                                           * T8c) */
 } DiscusFictus;
+
+/* progressus fictus (colloquia T8c): vocatio progressum_notare una */
+nomen structura {
+    i32 iudicata;
+    i32 ambitus;
+    i32 unda;
+    i32 undae;
+} ProgressusFictus;
 
 /* particulae transitus servatae (plan-5 T1): ultimae per (titulus,
  * exitus) */
@@ -197,6 +207,15 @@ vacuum
 mundi_cursum_inscribere (
                      vacuum* datum,
     constans FabricaSanatio* sanatio);
+
+/* progressus fictus (colloquia T8c): vocationes in progressus_ficti */
+vacuum
+mundi_progressum_notare (
+    vacuum* datum,
+       i32  iudicata,
+       i32  ambitus,
+       i32  unda,
+       i32  undae);
 
 /* duratio cursus ULTIMI SANATI aut PRAEPARATI tituli (ut SQL verum) */
 b32

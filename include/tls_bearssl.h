@@ -35,6 +35,23 @@ tls_bearssl_incipere (
     constans TlsOptiones* optiones,
                  Piscina* piscina);
 
+/* descensus TLS13 (tls13-spec II.3): super tcp IAM connexam; signum
+ * DOWNGRD in server_random post pactionem inspicitur (inventum ->
+ * "descensus vetitus: hospes TLS 1.3 novit"). obstruens VERUM: tcp
+ * obstruens cum moris, pactio hic usque ad finem (ut connectere) */
+TlsBearsslResultus
+tls_bearssl_incipere_signo (
+             TcpConnexio* tcp,
+      constans character* hospes,
+    constans TlsOptiones* optiones,
+                     b32  obstruens,
+                 Piscina* piscina);
+
+/* 0x0303 post pactionem; 0 ante */
+i32
+tls_bearssl_versio (
+    TlsBearssl* connexio);
+
 TlsGradus
 tls_bearssl_gradus (
     TlsBearssl* connexio);

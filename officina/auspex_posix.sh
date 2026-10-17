@@ -200,6 +200,8 @@ emittere_asserta() {
     echo "IUNGO_ASSERTA(EINTR == 4 && EAGAIN == 35 && EISCONN == 56);"
     # analytica T2 (2026-10-13): horologium monotonum + usus prolis
     echo "IUNGO_ASSERTA(CLOCK_REALTIME == 0 && CLOCK_MONOTONIC == 6);"
+    # colloquia T8d0 (2026-10-16): horologium vigilans (somno non crescit)
+    echo "IUNGO_ASSERTA(CLOCK_UPTIME_RAW == 8);"
     echo "IUNGO_ASSERTA(sizeof(clockid_t) == 4);"
     echo "IUNGO_ASSERTA(RUSAGE_SELF == 0 && RUSAGE_CHILDREN == -1);"
     echo "IUNGO_ASSERTA(sizeof(struct rusage) == 144);"

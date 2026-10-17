@@ -1,0 +1,412 @@
+# Demo 128: Braids as exact ReLU networks; a growth census; an audit of D106's classification (plan)
+
+Status: approved by Fran (2026-10-15), with all four proposals in "Open
+for Fran": the scope B_3 up to 8 and B_4 up to 6; the D106 audit
+included; the layer interpreter in the demo; Part D descriptive only.
+Task T6 of
+`project-specs/plexus-plan.md`. Proposal N1 in
+`knotapel/demo-proposals.md` (ledger …AKY6Z7). First demo built on
+`plexus`.
+
+## Question
+
+Three questions, in order:
+
+1. **N1: is a braid word an exact, untrained ReLU network?** Each Artin
+   generator acts on Dynnikov coordinates by a piecewise-linear update
+   built from max(0, x) and min(0, x) (Thiffeault 2010, eq. 8-15).
+   Written as an explicit program of affine operations and ReLUs, a
+   braid word of length m on n strands is a network of depth O(m) and
+   width 2n - 4, in which each layer touches at most 4 coordinates.
+   The demo writes that program, evaluates it, and checks it against
+   `ansa_agere` exactly.
+2. **What does exact loop growth say about braids, by word length?**
+   For every distinct braid up to a given length: is it periodic
+   (decided exactly), of positive entropy (certified, or measured), or
+   neither (zero entropy, not periodic)?
+3. **Does D106's classification survive?** D106 sorted 4-strand braids
+   into "pseudo-Anosov" and "periodic" using the characteristic
+   polynomial p of reduced Burau at t = -1. Its rule: p(1) != 0 means
+   pseudo-Anosov; otherwise |1 - tr| > 2 means pseudo-Anosov, else
+   periodic. Its "pA fraction by depth" table (0% at depth 1 to 77.2%
+   at depth 8) and its "Fibonacci" claim rest on that rule. KC 31 does
+   not cover them: KC 31 audits only D106's sign hash.
+
+**Not in scope:** computing Boolean functions with the braid network.
+That is N2 (ledger …4291V2), which gets its own plan once D128 has
+shown what the network is and how it behaves.
+
+## Why the D106 rule is in doubt (before any run)
+
+- **Burau(-1) is only a lower bound.** Its spectral radius does not
+  exceed the dilatation (Kolev 1989; Band and Boyland 2007, cited in
+  D106 itself). A braid can have positive entropy while every
+  eigenvalue of Burau(-1) has modulus 1. plexus T3 and T4 found such
+  braids: s3^-1 s2^-1 s3^-1 s2 s1 (Thiffeault's example, entropy
+  0.83144) has largest real eigenvalue 1. Such braids are "periodic"
+  under D106's second branch only if |1 - tr| <= 2; the first branch
+  catches any with p(1) != 0.
+- **"p(1) != 0 means pseudo-Anosov" is false as stated.** A periodic
+  braid such as delta = s1 s2 s3 (delta^4 = Delta^2) has Burau(-1)
+  eigenvalues that are roots of unity other than 1 (to be checked
+  exactly), so p(1) != 0, and the rule calls it pseudo-Anosov.
+- **Neither branch separates pseudo-Anosov from reducible.** A reducible
+  braid with a pseudo-Anosov piece has positive entropy without being
+  pseudo-Anosov. This demo does not separate those two either (see
+  "Classes" below), and says so.
+
+## Classes (exact where possible, measured where not)
+
+For each distinct braid beta in B_n:
+
+- **Periodic: exact.** Every periodic braid is conjugate to a power of
+  delta = s1 ... s_{n-1} (delta^n = Delta^2) or of
+  epsilon = s1 delta (epsilon^(n-1) = Delta^2) (Brouwer, Kerekjarto,
+  Eilenberg; recalled, to cite properly in the findings). So beta is
+  periodic iff beta^n or beta^(n-1) equals a power of Delta^2. The
+  exponent sum fixes which power: beta^k = Delta^(2j) needs
+  k e(beta) = j n (n - 1). That gives an exact test with
+  `plexus_aequales_ansis`, cross-checked against `plexus_aequales`
+  (Artin) on a sample.
+- **Positive entropy, certified:** Burau(-1) radix > 1
+  (`plexus_burau_radix_maxima`, exact; the lower bound is cited, as in
+  plexus).
+- **Positive entropy, measured:** not certified, but the loop growth is
+  clearly exponential. The measured rate is
+  lambda_hat = max_k (L^(k)_60 / L^(k)_40)^(1/20) over the loops E_k,
+  all exact integers. The threshold is stated in the output, and the
+  class is marked "measured".
+- **Zero entropy, not periodic:** not periodic, and growth at most
+  polynomial (measured, threshold stated). These are reducible braids
+  with only periodic pieces, e.g. a twist (L = 2 + 2m).
+
+Pseudo-Anosov and reducible-with-a-pseudo-Anosov-piece both fall under
+"positive entropy". Telling them apart needs reduction curves or train
+tracks, which are not in plexus (deferred).
+
+## Parts
+
+**A. The layer program (N1).**
+- Each generator's update, written as a straight-line program over
+  integer registers with three instructions:
+  - affine (sum of registers times small integer coefficients);
+  - relu (max(0, x));
+  - copy.
+
+  min(0, x) is written as x - relu(x).
+- An interpreter in the demo runs the program on Magnus registers.
+- Check: interpreter equals `ansa_agere` on random words and vectors,
+  n = 3..8, including large values (exact). This is the demo's anchor.
+- Report, per generator type (sigma_1, sigma_{n-1}, middle sigma_i, and
+  the three inverses): ReLU count, affine operation count, depth, and
+  registers touched. Then the shape of a word's network: depth = sum
+  over letters, width 2n - 4, sparsity.
+
+**B. Growth census.**
+- Every braid word up to length l on B_3 (l = 8) and B_4 (l = 6),
+  deduplicated exactly (key: loop images on D_{n+2}, plexus T2).
+- Classify each distinct braid as above. Report by word length:
+  distinct braids, periodic (exact), positive entropy (certified or
+  measured), and zero-entropy non-periodic.
+- For each braid also report the rate lambda_hat, the Burau bound, and
+  their agreement where the bound is above 1. The bound must never
+  exceed the rate, which is asserted.
+
+**C. Audit of D106.** On the same B_4 braids:
+- apply D106's rule exactly (characteristic polynomial of Burau(-1));
+- cross-tabulate it against the classes of Part B;
+- list every braid where the rule disagrees, in each direction, with
+  the shortest examples.
+
+Then check D106's specific claims:
+- depth 1 is all periodic;
+- the depth-2 "pseudo-Anosov" braids all have characteristic polynomial
+  x^3 - 4x^2 + 4x - 1 and dilatation phi^2, i.e. entropy per crossing
+  log phi;
+- the pseudo-Anosov fraction rises with length.
+
+D106's catalog was a dual breadth-first search with dedup on
+(TL, Burau) matrices and a 32,768 cap, so its counts are not
+reproducible here without its TL representation. The audit therefore
+judges the RULE on an exhaustive word set, and the claims that do not
+depend on the catalog.
+
+**D. Network statistics (descriptive).** Along each braid's iteration,
+record which ReLUs are active (the linear region) for each letter. For
+positive-entropy braids, report whether the pattern per period becomes
+periodic within the run. That is the ReLU-network view of Hall and
+Yurttas's stabilization. It is reported only; no exact dilatation is
+derived from it (see Out of scope).
+
+## Checks (assert characterizations, not counts)
+
+- Part A interpreter = `ansa_agere` on every tested input.
+- Every word's class key equals its equality class: a sample of pairs
+  checked against `plexus_aequales` (Artin).
+- Periodic braids: the exact power test succeeds, the loop lengths
+  stay bounded, and the Burau radix is 1 (consistency in both
+  directions).
+- Burau radix <= measured rate for every braid.
+- delta = s1 s2 s3 and epsilon = s1 s1 s2 s3 are classified periodic.
+  s3^-1 s2^-1 s3^-1 s2 s1 has positive entropy, with rate 2.2966
+  (within 0.1%).
+- Plants for each check (silva.planta), quick mode for the plants.
+
+## Registered before running
+
+- **P1:** the layer program equals `ansa_agere` exactly on every input.
+- **P2:** D106's rule disagrees with the exact classes in BOTH
+  directions on B_4 up to length 6: some periodic braid is called
+  "pseudo-Anosov", and some positive-entropy braid is called
+  "periodic". If either direction has zero cases, P2 fails for that
+  direction and the findings say so.
+- **P3:** the fraction of distinct braids with positive entropy rises
+  with word length on B_3 and B_4.
+- **P4:** the length-2 positive-entropy braids on B_4 have dilatation
+  exactly phi^2: certified by Burau, since on these braids the bound
+  should be tight.
+
+How the outcome reaches claims.md:
+- If P2 holds in either direction, D106's findings 3-5 get a
+  [not-reproduced] or [falls] node with the exact counts, and the
+  "pA fraction" is restated over the classes defined here.
+- KC 31.2 (pseudo-Anosov braids do not compute better) is not touched:
+  its classes would change, but re-running D106's computing comparison
+  is outside this demo. A note says so.
+
+## Size and time (estimate)
+
+- B_3 up to length 8 has 87,381 words, and B_4 up to length 6 has
+  55,987. Distinct braids: 2,589 and 5,121 (from the plexus T5
+  review).
+- Per distinct braid: growth over 60 periods on n - 1 loops, the
+  periodic power test, and the Burau radix. About 1-5 minutes total;
+  no workers needed.
+- Quick mode `D128_CELER=1` (B_3 up to 5, B_4 up to 4) for the plants.
+
+## Tasks (one per turn, Fran's go-ahead each)
+
+1. **T6a:** Part A (layer program, interpreter, anchor, operation
+   counts), with checks and plants.
+2. **T6b:** Parts B and C (census, D106 audit), with checks and plants.
+3. **T6c:** Part D, then findings.md, claims.md (new nodes for D106's
+   classification), the ledger, and the freeze with archive.sh.
+4. **T6d:** an independent review with its own oracle, then fixes.
+
+## Out of scope
+
+- The exact dilatation from the stabilized pattern (Hall-Yurttas
+  train-track matrices). This is the deferred plexus T4 piece. It is
+  general code, so it belongs in plexus, not in a demo; Part D only
+  reports whether stabilization happens.
+- Telling pseudo-Anosov from reducible.
+- Computing with the network (N2).
+- Re-running D106's Boolean-function comparison.
+
+## Open for Fran
+
+1. The census scope: B_3 up to 8 and B_4 up to 6 (proposed), or larger
+   (B_5 up to 5 is 37,449 words, 4,743 classes).
+2. Including the D106 audit (proposed: yes; it is the part with
+   consequences for claims.md).
+3. The layer-program interpreter lives in the demo (proposed), as
+   scaffolding for counting. A general "logic to exact layers"
+   compiler is N4's design question, for later.
+4. Part D as descriptive only (proposed), with the exact dilatation
+   left to a future plexus slice.
+
+## Decisions made during T6a
+
+- **Layer form.** Two instructions, AFFINE and RELU (the ReLU of an
+  affine form, like handwired's gated ReLU), with f- written as
+  f - relu(f). Each letter's program reads the old coordinates and
+  writes new registers; the outputs are the next layer's neurons, so
+  the final copy is not counted as an operation.
+- **What a generator costs, as measured.** Every generator is depth 4
+  with two ReLU stages. sigma_1, sigma_{n-1} and their inverses: 2 ReLU,
+  2 affine, 2 coordinates touched. A middle sigma_i or its inverse:
+  5 ReLU, 6 affine (one a_q' sum is split in two to keep at most five
+  terms per instruction), 4 coordinates touched.
+- **Checks.** Every program for n = 3..8 touches <= 4 coordinates with
+  ReLU depth 2. sigma then sigma^-1 through the networks is the
+  identity, a group relation independent of plexus. The anchor:
+  interpreter = `ansa_agere` on 3,000 random pairs and 1,000 more with
+  coordinates up to 1000 * 2^200, 0 disagreements (P1). (s1 s2^-1)^20
+  through the network equals plexus's iteration.
+- **Observed, not claimed:** (s1 s2^-1)^20 on E_1 gives
+  (63,245,986; 331,160,282) = (F_39; 2 F_41), Fibonacci numbers, in
+  line with the dilatation phi^2. To be looked at in the findings, not
+  asserted.
+  [Corrected 2026-10-16, nervus T3: the coordinates are (F_39; -F_38);
+  331,160,282 = 2 F_41 is L. The printf called mstr() twice with one
+  static buffer. See findings.md.]
+- **Plants (silva.planta, 8):** all red. They cover a sign in c, a sign
+  in w, the inverse's b_p, sigma_1's a_1, sigma_{n-1}'s b, an
+  interpreter that ignores the ReLU, swapped outputs, and a
+  miscounted ReLU depth.
+
+## Decisions made during T6b
+
+- **The census is breadth-first over exact classes.** Each braid's level
+  is its shortest word length. The class key is the loop images on
+  D_{n+2}. The counts equal the T5 review's independent Artin counts:
+  2,589 (B_3 up to 8) and 5,121 (B_4 up to 6). Quick mode anchors on the
+  same prefixes (263, 469). A plant that keyed on D_n (where Delta^2 is
+  invisible) survived quick mode until those prefix anchors were added.
+- **"Periodic" in D106 means zero entropy.** D106 called the six
+  generators "periodic", but a generator is a half twist (class Z),
+  not periodic. The fair comparison is therefore D106 'pA' against
+  positive entropy, and D106 'periodic' against zero entropy (P or Z).
+- **The consistency checks are exact characterizations, not bounds.**
+  For a periodic braid, the loop lengths repeat with its period k. For
+  a Z braid, the lengths become quasi-affine (for some p <= 24,
+  L_{m+p} - L_m is constant from m = 30). The first version used a
+  linear bound, 4 L_0 + 4m, which was wrong: conjugates of periodic
+  braids and steep twists exceed it.
+- **What the run found (full mode, 2.4 s, 14/14):**
+  - D106's table is reproduced EXACTLY at depths 0-5, both the braid
+    counts and its rule's 'pA' counts. Its catalog is the exact
+    shortest-length enumeration up to there. At depth 6 D106 has 3,444
+    braids (2,234 'pA'); the exact count is 3,542 (2,258 under its
+    rule). [Corrected in T6d: D106 deduplicated by the TL matrix ALONE
+    (D106 main.c:409); the demo replicates that search and gets D106's
+    table exactly. 98 pairs of distinct braids share a TL matrix, all
+    at length 6: 3,542 - 98 = 3,444.]
+  - D106's rule decides exactly "Burau(-1) spectral radius > 1": on
+    det-1 3x3 matrices, p(1) = 0 with |1 - tr| <= 2 puts the other
+    eigenvalues on the unit circle. [T6d: and p(1) = 0 ALWAYS on B_4 at
+    t = -1, so the rule's first branch never fires; now checked.] Its 'pA' set equals the
+    Burau-certified set on all 5,121 braids.
+  - P2, registered in both directions: zero-entropy braids called 'pA'
+    = 0 (that direction FAILS; my delta example was wrong, since the
+    rule classifies delta correctly). [T6d: it could not have held:
+    'pA' means Burau(-1) radius > 1, which forces positive entropy by
+    Kolev's bound. P2(a) was mis-registered.] Positive-entropy braids called
+    'periodic' = 1,008. The shortest is s1 s3^-1 s2, rate 2.29663, the
+    minimal dilatation of B_4.
+  - The positive-entropy share by length on B_4 (exact) against D106's
+    'pA' share: 2: 30.8 / 30.8; 3: 49.0 / 32.7; 4: 58.6 / 43.2;
+    5: 72.3 / 50.6; 6: 83.5 / 63.7. D106's trend (P3) holds, but its
+    level is understated by about 20 points.
+  - P4 holds: the 8 depth-2 'pA' braids have characteristic polynomial
+    x^3 - 4x^2 + 4x - 1 and Burau radix exactly (3 + sqrt 5)/2.
+    [T6d: but each is a word in two adjacent generators, a 3-strand
+    braid inside B_4, so REDUCIBLE, not pseudo-Anosov. phi^2 is exact
+    on the 3-strand piece.]
+  - On B_3, Burau certifies every positive-entropy braid (0 "measured
+    only"), consistent with Burau(-1) being exact on B_3. [T6d: on B_4
+    the 1,008 "measured" braids are now all certified, by Burau at a
+    cube root of unity (plexus_burau_radius_maior, T3b); "E" is exact
+    on both censuses.] The smallest
+    rates are the known minimal dilatations: 2.61803 (B_3), 2.29663
+    (B_4).
+- **Plants (silva.planta, 9, quick mode):** all red. They cover
+  periodicity tested only with k = n, the growth threshold, an ignored
+  certificate, D106's |1 - tr| boundary, the level dedup turned off,
+  the key on D_n, an off-by-one periodicity check, and the quasi-affine
+  window cut to p = 1.
+
+## Decisions made during T6d (the review's fix list)
+
+The independent review (H 0, M 4, L 6; every number correct) drove
+these changes. Full mode: 24/24 checks in 1.7 s; quick mode 20/20.
+
+- **M1, D106's catalog is now explained exactly.** Part C replicates
+  D106's breadth-first search: its TL representation on W_{4,2} over
+  Z[zeta_8] (A = -zeta_8, via cyclotomia), its generator order, right
+  multiplication, and dedup by the TL matrix alone. The replica gives
+  1, 6, 26, 98, 338, 1110, 3444 braids and 0, 0, 8, 32, 146, 562, 2234
+  'pA', which is D106's table. Among the exact classes, exactly 98 pairs
+  share a TL matrix (no larger groups), all at length 6, and each pair
+  has the same Burau(-1) characteristic polynomial, which is why the
+  rule's count drops by 24 (2,258 -> 2,234).
+- **M2, the classes are guarded.** The per-level P / E / Z counts are
+  pinned to the review's independent counts. The cross table is pinned
+  ('pA' row 0 / 0 / 3006; 'periodic' row 171 / 936 / 1008). Periodic
+  braids must be uncertified, and E needs a wide margin (L60 > 10^6
+  L40). The identity is checked as periodic.
+- **M3, every E is certified.** "E measured" is 0 on both censuses; the
+  B_4 braids that Burau(-1) misses are certified at a cube root of
+  unity.
+- **M4, the depth-2 'pA' braids are reducible** (checked: two adjacent
+  generators).
+- **L1:** the p(1) = 0 lemma is checked on every B_4 braid.
+- **L2:** P2(a) is noted as impossible by Kolev.
+- **L3:** the width is worded as state 2n - 4, hidden <= 2n + 1, two
+  ReLU layers per letter.
+- **L5** (D106's claim that Burau is faithful on B_4: open) and **L6**
+  (citations) go into findings.md and claims.md in T6c.
+- Part C sorts a COPY of the census for the TL pairs, so the census
+  order stays breadth-first for later parts.
+- **Plants (silva.planta, full mode, 4):** all red. They cover the
+  replica keeping duplicates at depth 6, the p(1) lemma inverted, the
+  reducibility test on non-adjacent generators, and the second
+  certificate moved from a cube root of unity to t = -1 (1,008
+  "measured only").
+- **Two mutants stay green; kept as findings, not plants.**
+  - At A = -zeta_8 the loop value is delta = -A^2 - A^-2 = -(i - i) = 0.
+    The TL form is then G = [[0,1,0],[1,0,1],[0,1,0]] (checked: the
+    only G, up to scale, with G e_i = e_i^T G), and it is SINGULAR. Its
+    radical is spanned by v = (1, 0, -1), and every e_i kills v
+    (e_1 v = v_1, (e_2 v)_1 = v_0 + v_2, e_3 v = v_1), so
+    rho(w) v = A^{e(w)} v, with e(w) the exponent sum.
+  - Keying on columns 0-1 or columns 1-2 of the TL matrix stays green;
+    dropping row 0 or row 2 turns it red. Reason: rho(w) v = A^{e(w)} v
+    says column 0 - column 2 = A^{e(w)} v, so either outer column is
+    the other one plus a multiple of v. (Dropping column 1 was not
+    tried.)
+  - Transposing the TL product (A B^T) stays green through length 6:
+    the mutated walk computes rho(rev w)^T. G intertwines,
+    G rho(w) = rho(rev w)^T G, but G is singular, so this is NOT a
+    proof that the two keys make the same braids equal; it is an
+    observation on 5,121 braids. D106 uses the matrix only as a dedup
+    key, so the observable (the table) cannot tell them apart there.
+
+## Decisions made during T6c
+
+- **Part D, as built.** Iterate each census braid 60 times on every
+  loop E_k of D_n through the layer programs (Part A's interpreter),
+  recording per pass the active-ReLU pattern (argument > 0; at 0 both
+  linear pieces give 0, so ties are harmless). A pass's pattern names
+  the linear region the network is in. Reported per class (P / E / Z):
+  whether the pattern becomes periodic within the run (observed: the
+  last >= 20 passes repeat with some q <= 12), the pass s where that
+  starts, the period q, and the number of distinct regions visited.
+  Observed, not proved: 60 passes cannot show the pattern never
+  changes again.
+- **Checks (exact consequences, not expectations):**
+  - P: the loop coordinates repeat with the braid's period k (Delta^2
+    is invisible on D_n), so the pattern is periodic from pass 0 with
+    q dividing k.
+  - Every stabilized orbit: the network has no biases, so in a fixed
+    pattern it is a LINEAR map. Build M (the forced q-pass map on the
+    basis vectors, integer) and check v_{s + jq} = M^j v_s exactly on
+    the whole tail. This is the bridge to the exact dilatation (Hall
+    and Yurttas; deferred to plexus), which Part D does NOT compute.
+- **Expectation, written before the first run (not a registered P):**
+  E braids stabilize, mostly with q = 1 (the iterates converge
+  projectively to the unstable foliation, a fixed cone); Z braids also
+  stabilize (they converge to the twisting curve), possibly later; P
+  braids are periodic from pass 0.
+- **What Part D found (full mode, 30/30, about 4 s).** Every orbit
+  settled (5,178 on B_3, 15,363 on B_4), within 5 passes; both exact
+  checks hold. B_3: E and Z all q = 1, as expected. B_4: E mostly
+  q = 1, but q = 2 for 384 braids, 328 of them among the 1,008
+  certified only at a cube root of unity (56 of 3,006 certified at
+  t = -1); in quick mode every q = 2 E braid has rate phi^2. Not
+  explained. Z on B_4 also settles with q = 2 and q > 2. The per-braid
+  q is the lcm over loops (first written as the max; fixed before the
+  run).
+- **D106's first 128 entries.** Added to Part C: they are depths 0-2
+  and all but 3 of depth 3, and they split as D106 printed (identity,
+  88 "periodic", 39 "pA"). Exactly, the 88 are 8 P, 64 Z, 16 E. Three
+  other generator orders give the same split (plants stay green), so
+  the check confirms the cut, not D106's order.
+- **Plants (silva.planta, 5 red):** the forced map leaking the sign, M
+  transposed, the tail one pass late, the P period test off by one,
+  the catalog head shifted by one (red only after the exact 8/64/16
+  pin was added).
+- **Records.** findings.md; claims.md 31.2.1, 31.4.1, 42.1.1, Part X
+  (54, 55); dated correction notes in D106's findings.md, its atlas
+  entry, explorers-log and data-tables (section 68). Frozen with
+  archive.sh (demo-snapshot.c, 29 library files, output identical).

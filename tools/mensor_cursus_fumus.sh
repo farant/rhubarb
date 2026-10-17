@@ -23,6 +23,14 @@
 #        nidificatio per incipere; nota in columna XV (analytica T3:
 #        producentes sine involucro - silva.porta, commissio); '-acta -'
 #        corpus ex stdin in diurna (T4), cursus sine corpore: 'acta' exitus 1
+#   XIV  custos (colloquia T8b): incipere -> mensura 'cursus.custos' cum
+#        pid vocantis; currere -> pid involucri; una per cursum
+#   XV   factum (colloquia T8c): 'cursus factum -titulus -valor
+#        [-unitas]' mensuram cursui aperto adhaeret; sine cursu 2
+#   XVI  currentes (colloquia T8d): custos vivus ostenditur, mortuus
+#        celatur (numeratus), -machina columna vitae
+#   XVII colloquium (colloquia T9): cursus summus 'colloquium:<id>'
+#        (CLAUDE_CODE_SESSION_ID); currentes colloquium=<id> filtrat
 #   X    purgare (T4 2c): regula ex STML (tools/analytica_retentio.stml
 #        legitur), -siccum nihil mutat, purgatio vera corpus delet
 #        ('cursus acta' -> deletum), regula absens aut deformis -> 2
@@ -58,6 +66,9 @@ export MENSOR_DIARIUM="$T/diarium.tsv" MENSOR_VOLUMEN="$T/v.volumen" MENSOR_DIUR
 # solvit
 export MENSOR_CURARE_NULLUS=1
 unset MENSOR_SESSIO MENSOR_PARENS MENSOR_COMMISSUM MENSOR_RAMUS MENSOR_ARBOR MENSOR_SORDIDUM MENSOR_MACHINA MENSOR_VOCATOR CURSUS_INTUS CURSUS_NULLUS
+# fumus sub Claude Code currens sessionem eius hereditaret (T9) - XVII
+# eam expresse ponit
+unset CLAUDE_CODE_SESSION_ID
 fracta=0
 credo () { if [ "$1" -eq 0 ]; then echo "  ok   $2"; else echo "  FRACTUM $2"; fracta=$((fracta + 1)); fi; }
 legere () { "$RADIX/bin/mensor" cursus legere -machina 2>/dev/null; }
@@ -178,6 +189,92 @@ r=$(legere)
   && ! "$RADIX/bin/mensor" cursus acta "$id_p" > /dev/null 2>&1
 credo $? "IX   incipere/finire: ambitus prolis, nidificatio, exitus, nota, corpus ex stdin"
 
+# XIV custos (colloquia T8b): mensura 'cursus.custos' parenti adhaerens -
+# incipere: pid VOCANTIS (getppid; silva.py = processus qui finem
+# scribet); currere: pid INVOLUCRI ipsius (exspectat prolem). Diarium
+# legitur ANTE legere (quod condit)
+"$RADIX/bin/mensor" cursus incipere -titulus fumus/custos > "$T/amb14"
+id14=$(sed -n 's/^MENSOR_PARENS=//p' "$T/amb14")
+c14=$(awk -F'\t' -v p="$id14" '$3 == p && $4 == "cursus.custos" { print $5 + 0 }' "$MENSOR_DIARIUM")
+pp14=$("$RADIX/bin/mensor" cursus currere -titulus fumus/custos_currere -- /bin/sh -c 'echo $PPID')
+idc14=$(awk -F'\t' '$1 == "cursus" && $2 == "initium" && $6 == "fumus/custos_currere" { print $3 }' "$MENSOR_DIARIUM")
+cc14=$(awk -F'\t' -v p="$idc14" '$3 == p && $4 == "cursus.custos" { print $5 + 0 }' "$MENSOR_DIARIUM")
+[ -n "$id14" ] && [ "$c14" = "$$" ] && [ -n "$idc14" ] && [ -n "$pp14" ] && [ "$cc14" = "$pp14" ] \
+  && [ "$(awk -F'\t' -v p="$id14" '$3 == p && $4 == "cursus.custos"' "$MENSOR_DIARIUM" | wc -l | tr -d ' ')" = "1" ]
+credo $? "XIV  custos: incipere = pid vocantis, currere = pid involucri (mensura parenti adhaerens)"
+
+# XV factum (colloquia T8c): 'cursus factum' = mensura cursui aperto
+# (MENSOR_PARENS) adhaerens in diario CURSUUM; sine cursu aut sine
+# -valor exitus 2, nihil scriptum
+"$RADIX/bin/mensor" cursus incipere -titulus fumus/factum > "$T/amb15"
+id15=$(sed -n 's/^MENSOR_PARENS=//p' "$T/amb15")
+env $(tr '\n' ' ' < "$T/amb15") "$RADIX/bin/mensor" cursus factum -titulus consilium.portae -valor 5 -unitas portae; r15=$?
+f15=$(awk -F'\t' -v p="$id15" '$3 == p && $4 == "consilium.portae" { print ($5 + 0) "|" $6 }' "$MENSOR_DIARIUM")
+n15a=$(wc -l < "$MENSOR_DIARIUM")
+"$RADIX/bin/mensor" cursus factum -titulus consilium.portae -valor 7 2>/dev/null; r15b=$?
+env $(tr '\n' ' ' < "$T/amb15") "$RADIX/bin/mensor" cursus factum -titulus consilium.portae 2>/dev/null; r15c=$?
+n15b=$(wc -l < "$MENSOR_DIARIUM")
+# diarium ORDINARIUM (MENSOR_DIARIUM non positum): diarium CURSUUM
+# ($HOME/.rhubarb), non /tmp/mensurae.diarium 'addere' veteris - aliter
+# factum in plagulam quam nemo condit caderet
+mkdir -p "$T/domus15/.rhubarb"
+env -u MENSOR_DIARIUM HOME="$T/domus15" MENSOR_PARENS="$id15" "$RADIX/bin/mensor" cursus factum \
+    -titulus consilium.portae -valor 3 -unitas portae; r15d=$?
+f15d=$(awk -F'\t' -v p="$id15" '$3 == p && $4 == "consilium.portae" { print $5 + 0 }' "$T/domus15/.rhubarb/mensurae.diarium" 2>/dev/null)
+[ -n "$id15" ] && [ "$r15" -eq 0 ] && [ "$f15" = "5|portae" ] && [ "$r15b" -eq 2 ] && [ "$r15c" -eq 2 ] \
+  && [ "$n15a" = "$n15b" ] && [ "$r15d" -eq 0 ] && [ "$f15d" = "3" ]
+credo $? "XV   factum: mensura cursui aperto in diario cursuum; sine cursu aut valore 2, nihil scriptum"
+
+# XVI currentes (colloquia T8d): cursus cuius custos VIVIT (concha
+# dormiens) ostenditur cum custode; cuius custos ABIIT celatur et in
+# -machina 'mortuus' fert. 'bash -c ...; true' furcam cogit (concha
+# ultimum mandatum aliter exsequitur et custos = fumus ipse)
+bash -c '"$0" cursus incipere -titulus fumus/mortuus > "$1"; true' "$RADIX/bin/mensor" "$T/amb16m"
+bash -c '"$0" cursus incipere -titulus fumus/vivus > "$1"; sleep 30' "$RADIX/bin/mensor" "$T/amb16v" &
+pv16=$!
+n=0; until [ -s "$T/amb16v" ] || [ $n -ge 50 ]; do sleep 0.1; n=$((n + 1)); done
+# pid ITERUM DATUS: custos (factum ultimum vincit) = processus vivus
+# sed POST cursum natus (III s > laxitas II s) - mortuus iudicandus
+"$RADIX/bin/mensor" cursus incipere -titulus fumus/iteratus > "$T/amb16i"
+sleep 3
+sleep 30 &
+pn16=$!
+MENSOR_PARENS=$(sed -n 's/^MENSOR_PARENS=//p' "$T/amb16i") "$RADIX/bin/mensor" cursus factum \
+    -titulus cursus.custos -valor "$pn16" -unitas pid
+"$RADIX/bin/mensor" quaestio currentes > "$T/c16" 2>&1; rc16=$?
+"$RADIX/bin/mensor" quaestio currentes -machina > "$T/c16m" 2>&1
+kill "$pv16" "$pn16" 2>/dev/null; wait "$pv16" "$pn16" 2>/dev/null
+vi16=$(awk -F'\t' '$1 == "CURRENS" && $5 == "fumus/iteratus" { print $9 "|" $10 }' "$T/c16m")
+vm16=$(awk -F'\t' '$1 == "CURRENS" && $5 == "fumus/mortuus" { print $10 }' "$T/c16m")
+vv16=$(awk -F'\t' '$1 == "CURRENS" && $5 == "fumus/vivus" { print $9 "|" $10 }' "$T/c16m")
+[ "$rc16" -eq 0 ] && grep -q "^fumus/vivus .*(custos $pv16)" "$T/c16" && ! grep -q 'fumus/mortuus' "$T/c16" \
+  && grep -q '^celati: [1-9][0-9]* mortui' "$T/c16" && [ "$vm16" = "mortuus" ] && [ "$vv16" = "$pv16|vivus" ] \
+  && [ "$vi16" = "$pn16|mortuus" ] && ! grep -q 'fumus/iteratus' "$T/c16"
+credo $? "XVI  currentes: custos vivus ostenditur, mortuus et pid iterum datus celantur, -machina vitam fert"
+
+# XVII colloquium (colloquia T9): cursus SUMMUS sub sessione Claude
+# mensuram 'colloquium:<id>' fert; filius (MENSOR_PARENS) et cursus sine
+# variabili nullam; currentes colloquium=<id> arborem eius solam
+# ostendit, columna XVIII -machina id fert (XIX: fracta, T10a)
+CLAUDE_CODE_SESSION_ID=sess-xvii "$RADIX/bin/mensor" cursus incipere -titulus fumus/colloquium > "$T/amb17"
+id17=$(sed -n 's/^MENSOR_PARENS=//p' "$T/amb17")
+env $(tr '\n' ' ' < "$T/amb17") CLAUDE_CODE_SESSION_ID=sess-xvii "$RADIX/bin/mensor" cursus incipere \
+    -titulus fumus/colloquium_filius > "$T/amb17f"
+idf17=$(sed -n 's/^MENSOR_PARENS=//p' "$T/amb17f")
+"$RADIX/bin/mensor" cursus incipere -titulus fumus/sine_colloquio > "$T/amb17s"
+ids17=$(sed -n 's/^MENSOR_PARENS=//p' "$T/amb17s")
+c17=$(awk -F'\t' -v p="$id17" '$3 == p && $4 == "colloquium:sess-xvii"' "$MENSOR_DIARIUM" | wc -l | tr -d ' ')
+cf17=$(awk -F'\t' -v p="$idf17" '$3 == p && $4 ~ /^colloquium:/' "$MENSOR_DIARIUM" | wc -l | tr -d ' ')
+cs17=$(awk -F'\t' -v p="$ids17" '$3 == p && $4 ~ /^colloquium:/' "$MENSOR_DIARIUM" | wc -l | tr -d ' ')
+"$RADIX/bin/mensor" quaestio currentes colloquium=sess-xvii -machina > "$T/c17m" 2>&1
+"$RADIX/bin/mensor" quaestio currentes colloquium=sess-xvii > "$T/c17" 2>&1
+r17=$(awk -F'\t' '$1 == "CURRENS" && $2 == 0 { print $5 "|" $18 }' "$T/c17m" | tr '\n' ' ')
+f17=$(awk -F'\t' '$1 == "CURRENS" && $2 == 1 { print $5 "|" $18 }' "$T/c17m" | tr '\n' ' ')
+[ "$c17" = "1" ] && [ "$cf17" = "0" ] && [ "$cs17" = "0" ] && [ "$r17" = "fumus/colloquium|sess-xvii " ] \
+  && [ "$f17" = "fumus/colloquium_filius|sess-xvii " ] && grep -q '^fumus/colloquium .*\[colloquium sess-xvi\]' "$T/c17" \
+  && ! grep -q 'fumus/sine_colloquio' "$T/c17"
+credo $? "XVII colloquium: cursus summus id sessionis fert, filius et sine variabili nullum; currentes colloquium= filtrat"
+
 # X
 cat > "$T/regula_nulla.stml" <<'R'
 <retentio>
@@ -295,5 +392,5 @@ done
 credo $? "XIII curare: condit, purgat, notatur; intra diem non purgat; cursus summus curationem separatam excitat"
 
 echo
-if [ "$fracta" -eq 0 ]; then echo "fumus mensor_cursus: sanum (XIII/XIII)"; exit 0; fi
+if [ "$fracta" -eq 0 ]; then echo "fumus mensor_cursus: sanum (XVII/XVII)"; exit 0; fi
 echo "fumus mensor_cursus: FRACTUM ($fracta)"; exit 1
