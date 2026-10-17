@@ -478,9 +478,11 @@ nomen structura {
    constans character* fractus;      /* hic codicem II reddit */
  constans character* constans* scripturae;  /* paria, NIHIL finis */
  constans character* constans* notatae;     /* paria, NIHIL finis */
-                 b32 caecitas;     /* observare deficit */
-                 i32 notationes;
-                 i32 incepta;
+                  b32  caecitas;     /* observare deficit */
+                  i32  notationes;
+                  i32  incepta;
+    ChordaAedificator* diarium;    /* S5b: NIHIL = sine diario */
+   constans character* arbor;      /* vestigium arboris (S5b) */
 } Mundus;
 
 interior vacuum
@@ -617,9 +619,14 @@ _mundus_incipit (
   constans ConsiliumGradus* gradus,
                        i32  unda)
 {
-    (vacuum)gradus;
-    (vacuum)unda;
-    ((Mundus*)datum)->incepta++;
+    Mundus* m = (Mundus*)datum;
+
+    m->incepta++;
+    si (m->diarium != NIHIL)
+    {
+        chorda_aedificator_appendere_chorda(m->diarium,
+            consilium_diarium_incepti(gradus, unda, m->c->piscina));
+    }
 }
 
 interior vacuum
@@ -627,8 +634,15 @@ _mundus_notare (
                    vacuum* datum,
   constans ConsiliumActus* actus)
 {
-    (vacuum)actus;
-    ((Mundus*)datum)->notationes++;
+    Mundus* m = (Mundus*)datum;
+
+    m->notationes++;
+    si (m->diarium != NIHIL)
+    {
+        chorda_aedificator_appendere_chorda(m->diarium,
+            consilium_diarium_actus(actus, chorda_ex_literis(m->arbor,
+            m->c->piscina), m->c->piscina));
+    }
 }
 
 interior ConsiliumSutura
@@ -687,7 +701,7 @@ _sectio_exsecutio (
     _mundum_parare(c, &m);
     m.scripturae  = scripturae;
     s             = _sutura(&m);
-    acta  = consilium_exsequi(k, NIHIL, &s, CONSILIUM_SISTERE,
+    acta  = consilium_exsequi(k, NIHIL, &s, CONSILIUM_SISTERE, NIHIL,
         c->piscina,
         &causa);
     CREDO_NECESSE_NON_NIHIL(acta);
@@ -745,7 +759,7 @@ _sectio_fractura (
     m.fractus  = "A";
     s          = _sutura(&m);
     acta  = consilium_exsequi(_consilium_fracturae(c), NIHIL, &s,
-        CONSILIUM_SISTERE, c->piscina, &causa);
+        CONSILIUM_SISTERE, NIHIL, c->piscina, &causa);
     CREDO_NECESSE_NON_NIHIL(acta);
     CREDO_CHORDA_AEQUALIS_LITERIS(chorda_aedificator_finire(m.acta),
         "A");
@@ -768,7 +782,7 @@ _sectio_fractura (
     m.fractus  = "A";
     s          = _sutura(&m);
     acta  = consilium_exsequi(_consilium_fracturae(c), NIHIL, &s,
-        CONSILIUM_PERGERE, c->piscina, &causa);
+        CONSILIUM_PERGERE, NIHIL, c->piscina, &causa);
     CREDO_CHORDA_AEQUALIS_LITERIS(chorda_aedificator_finire(m.acta),
         "A|C");
     CREDO_AEQUALIS_I32((i32)_actus(acta, "C")->eventus,
@@ -825,7 +839,7 @@ _sectio_extra_propositum (
     m.scripturae  = scripturae;
     m.notatae     = notatae;
     s             = _sutura(&m);
-    acta  = consilium_exsequi(k, NIHIL, &s, CONSILIUM_PERGERE,
+    acta  = consilium_exsequi(k, NIHIL, &s, CONSILIUM_PERGERE, NIHIL,
         c->piscina, &causa);
     CREDO_NECESSE_NON_NIHIL(acta);
     CREDO_AEQUALIS_I32((i32)_actus(acta, "S")->eventus,
@@ -883,7 +897,7 @@ _sectio_recusatio (
     e = consilium_effectus(CONSILIUM_INSTITUERE, CH("~/.bin/x"));
     e.classis = CONSILIUM_DOMUS;
     consilium_effectum_addere(k, a, e);
-    acta = consilium_exsequi(k, regulae, &s, CONSILIUM_SISTERE,
+    acta = consilium_exsequi(k, regulae, &s, CONSILIUM_SISTERE, NIHIL,
         c->piscina, &causa);
     CREDO_NIHIL(acta);
     CREDO_VERUM(chorda_continet(causa,
@@ -895,7 +909,7 @@ _sectio_recusatio (
     b                                  = _gradus(c, k, "B");
     *(chorda*)xar_addere(a->sequitur)  = CH("B");
     *(chorda*)xar_addere(b->sequitur)  = CH("A");
-    acta = consilium_exsequi(k, NIHIL, &s, CONSILIUM_SISTERE,
+    acta = consilium_exsequi(k, NIHIL, &s, CONSILIUM_SISTERE, NIHIL,
         c->piscina,
         &causa);
     CREDO_NIHIL(acta);
@@ -906,7 +920,7 @@ _sectio_recusatio (
     b = _gradus(c, k, "B");
     _effectus(c, k, a, CONSILIUM_SCRIBERE, "build/x");
     _effectus(c, k, b, CONSILIUM_SCRIBERE, "build/x");
-    acta = consilium_exsequi(k, NIHIL, &s, CONSILIUM_SISTERE,
+    acta = consilium_exsequi(k, NIHIL, &s, CONSILIUM_SISTERE, NIHIL,
         c->piscina,
         &causa);
     CREDO_NIHIL(acta);
@@ -918,7 +932,7 @@ _sectio_recusatio (
     m.caecitas  = VERUM;
     k           = consilium_creare(c->piscina);
     a           = _gradus(c, k, "A");
-    acta = consilium_exsequi(k, NIHIL, &s, CONSILIUM_SISTERE,
+    acta = consilium_exsequi(k, NIHIL, &s, CONSILIUM_SISTERE, NIHIL,
         c->piscina,
         &causa);
     CREDO_NECESSE_NON_NIHIL(acta);
@@ -943,7 +957,7 @@ _sectio_acta (
     m.fractus  = "A";
     s          = _sutura(&m);
     acta  = consilium_exsequi(_consilium_fracturae(c), NIHIL, &s,
-        CONSILIUM_SISTERE, c->piscina, &causa);
+        CONSILIUM_SISTERE, NIHIL, c->piscina, &causa);
     CREDO_CHORDA_AEQUALIS_LITERIS(consilium_acta_scribere(acta, VERUM,
         c->piscina),
         "ACTUS\t1\tA\tFRACTUM\t2\t0\texitus 2: fracta\n"
@@ -952,6 +966,185 @@ _sectio_acta (
         "ACTUS\t2\tB\tOMISSUM\t-1\t0\tdependentia fracta: A\n"
         "ACTUS\t3\tD\tOMISSUM\t-1\t0\tdependentia fracta: B\n"
         "SUMMA\tacta\t0\tfracta\t1\tomissa\t3\n");
+}
+
+/* consilium catenae: A -> B -> C (data) */
+interior Consilium*
+_consilium_catenae (
+    CredoContextus* c)
+{
+          Consilium* k = consilium_creare(c->piscina);
+    ConsiliumGradus* a = _gradus(c, k, "A");
+    ConsiliumGradus* b = _gradus(c, k, "B");
+    ConsiliumGradus* x = _gradus(c, k, "C");
+
+    _effectus(c, k, a, CONSILIUM_SCRIBERE, "build/a");
+    _effectus(c, k, b, CONSILIUM_LEGERE, "build/a");
+    _effectus(c, k, b, CONSILIUM_SCRIBERE, "build/b");
+    _effectus(c, k, x, CONSILIUM_LEGERE, "build/b");
+    redde k;
+}
+
+/* XVI. sigillum: idem consilium = idem; res, sequitur, regula mutant;
+ * auctor non mutat */
+interior vacuum
+_sectio_sigillum (
+    CredoContextus* c)
+{
+          Consilium* k1 = _consilium_catenae(c);
+          Consilium* k2 = _consilium_catenae(c);
+          Consilium* k3 = _consilium_catenae(c);
+          Consilium* k4 = _consilium_catenae(c);
+                Xar* regulae = xar_creare(c->piscina,
+                    (i32)magnitudo(ConsiliumRegula));
+             chorda s1;
+
+    s1 = consilium_sigillum(k1, NIHIL, c->piscina);
+    CREDO_AEQUALIS_I32(s1.mensura, LXIV);
+    (vacuum)consilium_gradum_addere(k2, CH("A"), CH("generator"),
+        CH("auctor alius"));
+    CREDO_CHORDA_AEQUALIS(consilium_sigillum(k2, NIHIL, c->piscina),
+        s1);
+    _effectus(c, k3, consilium_gradum_invenire(k3, CH("C")),
+        CONSILIUM_SCRIBERE, "build/c");
+    CREDO_VERUM(!chorda_aequalis(consilium_sigillum(k3, NIHIL,
+        c->piscina), s1));
+    *(chorda*)xar_addere(consilium_gradum_invenire(k4,
+        CH("C"))->sequitur) = CH("A");
+    CREDO_VERUM(!chorda_aequalis(consilium_sigillum(k4, NIHIL,
+        c->piscina), s1));
+    *(ConsiliumRegula*)xar_addere(regulae) =
+        consilium_regula_arboris_secundariae(c->piscina);
+    CREDO_VERUM(!chorda_aequalis(consilium_sigillum(k1, regulae,
+        c->piscina), s1));
+}
+
+/* XVII. diarium: lineae per incipit/notare, campi purgati */
+interior vacuum
+_sectio_diarium (
+    CredoContextus* c)
+{
+             Mundus  m;
+    ConsiliumSutura  s;
+                Xar* acta;
+             chorda  causa;
+
+    _mundum_parare(c, &m);
+    m.fractus  = "B";
+    m.arbor    = "f1";
+    m.diarium  = chorda_aedificator_creare(c->piscina,
+        (memoriae_index)CCLVI);
+    chorda_aedificator_appendere_chorda(m.diarium,
+        consilium_diarium_caput(CH("s1"), CH("f1"), FALSUM,
+        c->piscina));
+    s     = _sutura(&m);
+    acta  = consilium_exsequi(_consilium_catenae(c), NIHIL, &s,
+        CONSILIUM_SISTERE, NIHIL, c->piscina, &causa);
+    CREDO_NECESSE_NON_NIHIL(acta);
+    CREDO_CHORDA_AEQUALIS_LITERIS(chorda_aedificator_finire(m.diarium),
+        "CONSILIUM\ts1\tf1\tnovum\n"
+        "INCEPIT\t1\tA\n"
+        "ACTUS\t1\tA\tACTUM\t0\t0\t\n"
+        "ARBOR\tf1\n"
+        "INCEPIT\t2\tB\n"
+        "ACTUS\t2\tB\tFRACTUM\t2\t0\texitus 2: fracta\n"
+        "ARBOR\tf1\n"
+        "ACTUS\t3\tC\tOMISSUM\t-1\t0\tdependentia fracta: B\n"
+        "ARBOR\tf1\n");
+    CREDO_CHORDA_AEQUALIS_LITERIS(consilium_diarium_caput(CH("a\tb"),
+        CH("x\ny"), VERUM, c->piscina),
+        "CONSILIUM\ta b\tx y\tresumptum\n");
+}
+
+/* XVIII. resumptio: interruptus resumitur sine actu iterato; catena
+ * cursuum resumptorum; consilium aut arbor mutata, acta vacua,
+ * deformis, cursus novus non hereditat, linea interrupta neglecta */
+interior vacuum
+_sectio_resumptio (
+    CredoContextus* c)
+{
+          Consilium* k    = _consilium_catenae(c);
+             chorda  sig  = consilium_sigillum(k, NIHIL, c->piscina);
+             Mundus  m;
+    ConsiliumSutura  s;
+                Xar* acta;
+                Xar* facta;
+             chorda  causa;
+             chorda  diarium;
+             chorda  primum;
+
+    /* cursus primus: A actum, B fractus (interruptus) */
+    _mundum_parare(c, &m);
+    m.fractus  = "B";
+    m.arbor    = "f1";
+    m.diarium  = chorda_aedificator_creare(c->piscina,
+        (memoriae_index)CCLVI);
+    chorda_aedificator_appendere_chorda(m.diarium,
+        consilium_diarium_caput(sig, CH("f0"), FALSUM, c->piscina));
+    s = _sutura(&m);
+    (vacuum)consilium_exsequi(k, NIHIL, &s, CONSILIUM_SISTERE, NIHIL,
+        c->piscina, &causa);
+    primum = chorda_aedificator_finire(m.diarium);
+    CREDO_VERUM(consilium_diarium_resumere(primum, sig, CH("f1"),
+        c->piscina, &facta, &causa));
+    CREDO_AEQUALIS_I32(xar_numerus(facta), I);
+    CREDO_CHORDA_AEQUALIS_LITERIS(*(chorda*)xar_obtinere(facta,
+        ZEPHYRUM), "A");
+
+    /* resumptio: A non agitur, B et C aguntur */
+    _mundum_parare(c, &m);
+    m.arbor    = "f2";
+    m.diarium  = chorda_aedificator_creare(c->piscina,
+        (memoriae_index)CCLVI);
+    chorda_aedificator_appendere_chorda(m.diarium, primum);
+    chorda_aedificator_appendere_chorda(m.diarium,
+        consilium_diarium_caput(sig, CH("f1"), VERUM, c->piscina));
+    s     = _sutura(&m);
+    acta  = consilium_exsequi(k, NIHIL, &s, CONSILIUM_SISTERE, facta,
+        c->piscina, &causa);
+    CREDO_NECESSE_NON_NIHIL(acta);
+    CREDO_CHORDA_AEQUALIS_LITERIS(chorda_aedificator_finire(m.acta),
+        "B|C");
+    CREDO_CHORDA_AEQUALIS_LITERIS(_actus(acta, "A")->causa,
+        "ex actis: actum ante");
+    CREDO_AEQUALIS_I32((i32)_actus(acta, "C")->eventus,
+        (i32)CONSILIUM_ACTUM);
+    CREDO_AEQUALIS_I32(m.incepta, II);
+    CREDO_AEQUALIS_I32(m.notationes, III);
+    diarium = chorda_aedificator_finire(m.diarium);
+
+    /* catena: cursus resumptus + primus = A B C */
+    CREDO_VERUM(consilium_diarium_resumere(diarium, sig, CH("f2"),
+        c->piscina, &facta, &causa));
+    CREDO_AEQUALIS_I32(xar_numerus(facta), III);
+
+    /* arbor mutata post ultimum actum; consilium mutatum */
+    CREDO_FALSUM(consilium_diarium_resumere(diarium, sig, CH("f9"),
+        c->piscina, &facta, &causa));
+    CREDO_CHORDA_INCIPIT(causa, CH("arbor mutata post ultimum actum "
+        "(acta f2, nunc f9)"));
+    CREDO_FALSUM(consilium_diarium_resumere(diarium, CH("aliud"),
+        CH("f2"), c->piscina, &facta, &causa));
+    CREDO_CHORDA_INCIPIT(causa, CH("consilium mutatum post initium"));
+
+    /* acta vacua; linea deformis; linea interrupta neglecta */
+    CREDO_FALSUM(consilium_diarium_resumere(CH(""), sig, CH("f0"),
+        c->piscina, &facta, &causa));
+    CREDO_CHORDA_AEQUALIS_LITERIS(causa,
+        "acta vacua: nihil resumendum");
+    CREDO_FALSUM(consilium_diarium_resumere(chorda_concatenare(primum,
+        CH("QUID\tx\n"), c->piscina), sig, CH("f1"), c->piscina, &facta,
+        &causa));
+    CREDO_CHORDA_INCIPIT(causa, CH("linea 10 deformis: QUID"));
+    CREDO_VERUM(consilium_diarium_resumere(chorda_concatenare(primum,
+        CH("ARBOR\tf7"), c->piscina), sig, CH("f1"), c->piscina, &facta,
+        &causa));
+
+    /* cursus NOVUS post primum: A primi non hereditatur */
+    CREDO_VERUM(consilium_diarium_resumere(chorda_concatenare(primum,
+        consilium_diarium_caput(sig, CH("f1"), FALSUM, c->piscina),
+        c->piscina), sig, CH("f1"), c->piscina, &facta, &causa));
+    CREDO_AEQUALIS_I32(xar_numerus(facta), ZEPHYRUM);
 }
 
 hic_manens constans CredoSectio SECTIONES[] = {
@@ -976,6 +1169,9 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "recusatio ante actum", _sectio_recusatio, NIHIL, NIHIL, NIHIL,
       NIHIL },
     { "acta", _sectio_acta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sigillum", _sectio_sigillum, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "diarium", _sectio_diarium, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "resumptio", _sectio_resumptio, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

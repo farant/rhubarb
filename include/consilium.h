@@ -365,7 +365,9 @@ nomen structura {
  * nominans): cyclus, sequitur ignotum, conflictus, sententia non
  * LICET sub 'regulae' (approbatio ROGANDI vocantis est). Aliter Xar de
  * ConsiliumActus, ordine exsecutionis; gradus omnes adsunt (OMISSI
- * quoque). */
+ * quoque). 'facta' (S5b, ex consilium_diarium_resumere): gradus iam
+ * acti non aguntur - ACTUM 'ex actis' (codex 0, sine incipit; notare
+ * vocatur), dependentes procedunt. */
 Xar*
 consilium_exsequi (
           constans Consilium* consilium,
@@ -373,6 +375,8 @@ consilium_exsequi (
                                           * licet */
     constans ConsiliumSutura* sutura,
               ConsiliumModus  modus,
+                constans Xar* facta,      /* chorda tituli; NIHIL =
+                                          * nulli */
                      Piscina* piscina,
                       chorda* causa_out);
 
@@ -397,6 +401,70 @@ consilium_acta_scribere (
     constans Xar* acta,      /* ConsiliumActus */
              b32  machina,
          Piscina* piscina);
+
+
+/* ==================================================
+ * DIARIUM (gradus S5b): acta exsecutionis, appendenda solum
+ *
+ * Lineae TSV (campi sine tab aut linea nova - purgantur in spatia):
+ *   CONSILIUM  sigillum  arbor  novum|resumptum
+ *   INCEPIT    unda  titulus
+ *   ACTUS      unda  titulus  eventus  codex  duratio_ms  causa
+ *   EXTRA      titulus  via
+ *   ARBOR      arbor              (post quemque gradum)
+ * 'arbor' = vestigium arboris a CONSUMPTORE computatum (HEAD + status
+ * fontium; build/ et ignorata neglecta - Franus 2026-10-17):
+ * bibliotheca id comparat solum. Pura: lineas componit et legit;
+ * plagula consumptoris est.
+ * ================================================== */
+
+/* sigillum consilii (hex LXIV): gradus ordine additionis (titulus,
+ * genus, caecus, effectus omnes, sequitur, vestigium) et regulae -
+ * identitas eius quod agitur. Auctores, sumptus, causae extra (non
+ * mutant quod agitur). */
+chorda
+consilium_sigillum (
+    constans Consilium* consilium,
+          constans Xar* regulae,   /* NIHIL licet */
+               Piscina* piscina);
+
+/* linea CONSILIUM (initium cursus) */
+chorda
+consilium_diarium_caput (
+      chorda  sigillum,
+      chorda  arbor,
+         b32  resumptum,
+     Piscina* piscina);
+
+/* linea INCEPIT */
+chorda
+consilium_diarium_incepti (
+    constans ConsiliumGradus* gradus,
+                         i32  unda,
+                     Piscina* piscina);
+
+/* lineae ACTUS, EXTRA (quaeque), ARBOR */
+chorda
+consilium_diarium_actus (
+    constans ConsiliumActus* actus,
+                     chorda  arbor,
+                    Piscina* piscina);
+
+/* RESUMPTIO: gradus iam ACTI ('facta', Xar de chorda tituli) si
+ * cursus ultimus idem consilium agit (sigillum) et arbor non mutata
+ * est post lineam ARBOR ultimam (aut caput, si nulla). Catena: cursus
+ * ultimus et priores 'resumptum' retro usque ad 'novum' primum
+ * (inclusum) - cursus novus priores non hereditat. Linea ultima sine
+ * '\n' (scriptura interrupta) neglegitur. FALSUM + causa: acta vacua,
+ * consilium mutatum, arbor mutata, linea deformis (numerata). */
+b32
+consilium_diarium_resumere (
+      chorda   textus,
+      chorda   sigillum,
+      chorda   arbor,
+     Piscina*  piscina,
+         Xar** facta_out,
+      chorda*  causa_out);
 
 
 /* ==================================================

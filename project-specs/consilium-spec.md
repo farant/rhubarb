@@ -551,3 +551,20 @@ Decided while building: dependents follow every arc - data, explicit
 promised (not blind, writers PLENA). credo XI-XV on an in-memory
 world; four plants red. No consumer yet - S5b (journal) and S5c
 (`bin/fabrica consilium -agere`, commissio) are next.
+
+## XVIII. S5b built (2026-10-17): journal and resume
+
+`consilium_sigillum(c, regulae)` (SHA-256 hex of a length-prefixed
+canonical form: steps, effects, sequitur, vestigium, rules - not
+authors, costs, causes); diary lines `consilium_diarium_caput`
+(CONSILIUM seal fingerprint novum|resumptum), `_incepti` (INCEPIT),
+`_actus` (ACTUS, EXTRA, ARBOR after every step);
+`consilium_diarium_resumere(textus, seal, fingerprint)` -> done steps,
+or FALSUM naming why (empty, plan changed, tree changed since the last
+ARBOR line, malformed line N). `consilium_exsequi` gained `facta`:
+done steps are not run (ACTUM 'ex actis'), their dependents proceed.
+
+Fingerprint (Fran 2026-10-17): HEAD + source status, build/ and
+ignored output excluded - computed by the consumer (git), compared by
+the library. Still pure: the file itself is S5c's (`-agere
+-resumere`). credo XVI-XVIII; four plants red.

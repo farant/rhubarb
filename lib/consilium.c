@@ -8,6 +8,7 @@
 #include "consilium.h"
 #include "chorda_aedificator.h"
 #include "numerus_romanus.h"
+#include "sigillum.h"
 #include "tabula_dispersa.h"
 #include "iter_directoria.h"
 #include "internamentum.h"
@@ -1436,6 +1437,7 @@ consilium_exsequi (
                 constans Xar* regulae,
     constans ConsiliumSutura* sutura,
               ConsiliumModus  modus,
+                constans Xar* facta,
                      Piscina* piscina,
                       chorda* causa_out)
 {
@@ -1493,7 +1495,15 @@ consilium_exsequi (
             actus->actum.notata = NIHIL;
             actus->observata = NIHIL;
             actus->extra = xar_creare(piscina, (i32)magnitudo(chorda));
-            si (_dependentia_fracta(&k, g, &prior))
+            si (facta != NIHIL && _continet(facta, g->titulus))
+            {
+                actus->eventus      = CONSILIUM_ACTUM;
+                actus->actum.codex  = ZEPHYRUM;
+                actus->causa        =
+                    chorda_ex_literis("ex actis: actum "
+                    "ante", piscina);
+            }
+            alioquin si (_dependentia_fracta(&k, g, &prior))
             {
                 actus->eventus  = CONSILIUM_OMISSUM;
                 actus->causa    = _ratio(piscina,
@@ -1620,6 +1630,405 @@ consilium_acta_scribere (
     chorda_aedificator_appendere_i32(a, numeri[CONSILIUM_OMISSUM]);
     chorda_aedificator_appendere_character(a, '\n');
     redde chorda_aedificator_finire(a);
+}
+
+
+/* ==================================================
+ * Diarium (S5b)
+ * ================================================== */
+
+/* forma canonica sigilli: campus = mensura ':' octeti (sine
+ * ambiguitate, etiam cum tab in re) */
+interior vacuum
+_canon_campus (
+    ChordaAedificator* a,
+               chorda  v)
+{
+    chorda_aedificator_appendere_i32(a, v.mensura);
+    chorda_aedificator_appendere_character(a, ':');
+    chorda_aedificator_appendere_chorda(a, v);
+}
+
+interior vacuum
+_canon_numerus (
+    ChordaAedificator* a,
+                  s32  n)
+{
+    chorda_aedificator_appendere_s32(a, n);
+    chorda_aedificator_appendere_character(a, ';');
+}
+
+chorda
+consilium_sigillum (
+    constans Consilium* consilium,
+          constans Xar* regulae,
+               Piscina* piscina)
+{
+    ChordaAedificator* a = chorda_aedificator_creare(piscina,
+        (memoriae_index)M);
+               chorda textus;
+             Sigillum s;
+            character hex[SIGILLUM_HEX_MENSURA];
+                  i32 i;
+                  i32 j;
+
+    per (i = ZEPHYRUM; i < xar_numerus(consilium->gradus); i++)
+    {
+        constans ConsiliumGradus* g = *(ConsiliumGradus**)xar_obtinere(
+            consilium->gradus, i);
+
+        chorda_aedificator_appendere_character(a, 'G');
+        _canon_campus(a, g->titulus);
+        _canon_campus(a, g->genus);
+        _canon_numerus(a, (s32)g->caecus);
+        per (j = ZEPHYRUM; j < xar_numerus(g->effectus); j++)
+        {
+            constans ConsiliumEffectus* e =
+                (constans ConsiliumEffectus*)
+                xar_obtinere(g->effectus, j);
+
+            chorda_aedificator_appendere_character(a, 'E');
+            _canon_numerus(a, (s32)e->verbum);
+            _canon_campus(a, e->res);
+            _canon_numerus(a, (s32)e->forma);
+            _canon_numerus(a, (s32)e->classis);
+            _canon_numerus(a, (s32)e->certitudo);
+            _canon_numerus(a, (s32)e->cognitio);
+            _canon_numerus(a, (s32)e->exstat);
+        }
+        per (j = ZEPHYRUM; j < xar_numerus(g->sequitur); j++)
+        {
+            chorda_aedificator_appendere_character(a, 'S');
+            _canon_campus(a, *(chorda*)xar_obtinere(g->sequitur, j));
+        }
+        per (j = ZEPHYRUM; j < xar_numerus(g->vestigium); j++)
+        {
+            chorda_aedificator_appendere_character(a, 'V');
+            _canon_campus(a, *(chorda*)xar_obtinere(g->vestigium, j));
+        }
+    }
+    per (i = ZEPHYRUM; regulae != NIHIL
+        && i < xar_numerus(regulae); i++)
+    {
+        constans ConsiliumRegula* r = (constans ConsiliumRegula*)
+            xar_obtinere(regulae, i);
+
+        chorda_aedificator_appendere_character(a, 'R');
+        _canon_campus(a, r->titulus);
+        _canon_numerus(a, r->verbum);
+        _canon_numerus(a, r->classis);
+        _canon_campus(a, r->exemplar);
+        _canon_numerus(a, (s32)r->sententia);
+    }
+    textus  = chorda_aedificator_finire(a);
+    s       = sigillum_computare(textus.datum,
+        (memoriae_index)textus.mensura);
+    sigillum_hex(&s, hex);
+    redde chorda_ex_literis(hex, piscina);
+}
+
+/* campus diarii: tab et lineae novae in spatia */
+interior vacuum
+_campum_appendere (
+    ChordaAedificator* a,
+               chorda  v)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < v.mensura; i++)
+    {
+        character x = (character)v.datum[i];
+
+        chorda_aedificator_appendere_character(a, x == '\t' || x == '\n'
+            || x == '\r' ? ' ' : x);
+    }
+}
+
+chorda
+consilium_diarium_caput (
+      chorda  sigillum,
+      chorda  arbor,
+         b32  resumptum,
+     Piscina* piscina)
+{
+    ChordaAedificator* a = chorda_aedificator_creare(piscina,
+        (memoriae_index)CXXVIII);
+
+    chorda_aedificator_appendere_literis(a, "CONSILIUM\t");
+    _campum_appendere(a, sigillum);
+    chorda_aedificator_appendere_character(a, '\t');
+    _campum_appendere(a, arbor);
+    chorda_aedificator_appendere_literis(a, resumptum ? "\tresumptum\n"
+        : "\tnovum\n");
+    redde chorda_aedificator_finire(a);
+}
+
+chorda
+consilium_diarium_incepti (
+    constans ConsiliumGradus* gradus,
+                         i32  unda,
+                     Piscina* piscina)
+{
+    ChordaAedificator* a = chorda_aedificator_creare(piscina,
+        (memoriae_index)LXIV);
+
+    chorda_aedificator_appendere_literis(a, "INCEPIT\t");
+    chorda_aedificator_appendere_i32(a, unda);
+    chorda_aedificator_appendere_character(a, '\t');
+    _campum_appendere(a, gradus->titulus);
+    chorda_aedificator_appendere_character(a, '\n');
+    redde chorda_aedificator_finire(a);
+}
+
+chorda
+consilium_diarium_actus (
+    constans ConsiliumActus* actus,
+                     chorda  arbor,
+                    Piscina* piscina)
+{
+    ChordaAedificator* a = chorda_aedificator_creare(piscina,
+        (memoriae_index)CCLVI);
+                  i32 j;
+
+    chorda_aedificator_appendere_literis(a, "ACTUS\t");
+    chorda_aedificator_appendere_i32(a, actus->unda);
+    chorda_aedificator_appendere_character(a, '\t');
+    _campum_appendere(a, actus->gradus->titulus);
+    chorda_aedificator_appendere_character(a, '\t');
+    chorda_aedificator_appendere_literis(a,
+        consilium_eventus_titulus(actus->eventus));
+    chorda_aedificator_appendere_character(a, '\t');
+    chorda_aedificator_appendere_s32(a, actus->actum.codex);
+    chorda_aedificator_appendere_character(a, '\t');
+    chorda_aedificator_appendere_i32(a, actus->actum.duratio_ms);
+    chorda_aedificator_appendere_character(a, '\t');
+    _campum_appendere(a, actus->causa);
+    chorda_aedificator_appendere_character(a, '\n');
+    per (j = ZEPHYRUM; actus->extra != NIHIL
+         && j < xar_numerus(actus->extra); j++)
+    {
+        chorda_aedificator_appendere_literis(a, "EXTRA\t");
+        _campum_appendere(a, actus->gradus->titulus);
+        chorda_aedificator_appendere_character(a, '\t');
+        _campum_appendere(a, *(chorda*)xar_obtinere(actus->extra, j));
+        chorda_aedificator_appendere_character(a, '\n');
+    }
+    chorda_aedificator_appendere_literis(a, "ARBOR\t");
+    _campum_appendere(a, arbor);
+    chorda_aedificator_appendere_character(a, '\n');
+    redde chorda_aedificator_finire(a);
+}
+
+/* campi lineae per tab (Xar de chorda) */
+interior Xar*
+_campi (
+     chorda  versus,
+    Piscina* piscina)
+{
+    Xar* campi    = xar_creare(piscina, (i32)magnitudo(chorda));
+    i32  initium  = ZEPHYRUM;
+    i32  i;
+
+    per (i = ZEPHYRUM; i <= versus.mensura; i++)
+    {
+        si (i == versus.mensura || versus.datum[i] == '\t')
+        {
+            *(chorda*)xar_addere(campi) = chorda_sectio(versus, initium,
+                i);
+            initium = i + I;
+        }
+    }
+    redde campi;
+}
+
+/* cursus unus diarii */
+nomen structura {
+    chorda  sigillum;
+       b32  resumptum;
+       Xar* acti;       /* chorda tituli ACTUM */
+} ConsiliumCursusDiarii;
+
+/* praefixum XII characterum (in causis) */
+interior chorda
+_breviter (
+    chorda v)
+{
+    redde v.mensura > XII ? chorda_sectio(v, ZEPHYRUM, XII) : v;
+}
+
+b32
+consilium_diarium_resumere (
+      chorda   textus,
+      chorda   sigillum,
+      chorda   arbor,
+     Piscina*  piscina,
+         Xar** facta_out,
+      chorda*  causa_out)
+{
+                   Xar* cursus = xar_creare(piscina,
+                       (i32)magnitudo(ConsiliumCursusDiarii));
+                   Xar* facta;
+                chorda  arbor_ultima;
+     ChordaAedificator* causa = chorda_aedificator_creare(piscina,
+         (memoriae_index)CXXVIII);
+ ConsiliumCursusDiarii* ultimus  = NIHIL;
+                   i32  initium  = ZEPHYRUM;
+                   i32  linea    = ZEPHYRUM;
+                   i32  i;
+                   s32  j;
+
+    arbor_ultima.datum    = NIHIL;
+    arbor_ultima.mensura  = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < textus.mensura; i++)
+    {
+                chorda  versus;
+                   Xar* campi;
+                chorda  genus;
+                   b32  deformis = FALSUM;
+
+        si (textus.datum[i] != '\n')
+        {
+            perge;
+        }
+        versus   = chorda_sectio(textus, initium, i);
+        initium  = i + I;
+        linea++;
+        si (versus.mensura == ZEPHYRUM)
+        {
+            perge;
+        }
+        campi = _campi(versus, piscina);
+        genus = *(chorda*)xar_obtinere(campi, ZEPHYRUM);
+        si (chorda_aequalis_literis(genus, "CONSILIUM"))
+        {
+            chorda modus;
+
+            si (xar_numerus(campi) != IV)
+            {
+                deformis = VERUM;
+            }
+            alioquin
+            {
+                modus = *(chorda*)xar_obtinere(campi, III);
+                ultimus = (ConsiliumCursusDiarii*)xar_addere(cursus);
+                ultimus->sigillum = *(chorda*)xar_obtinere(campi, I);
+                ultimus->resumptum  = chorda_aequalis_literis(modus,
+                    "resumptum");
+                ultimus->acti = xar_creare(piscina,
+                    (i32)magnitudo(chorda));
+                arbor_ultima = *(chorda*)xar_obtinere(campi, II);
+                deformis = !ultimus->resumptum
+                    && !chorda_aequalis_literis(modus, "novum");
+            }
+        }
+        alioquin si (ultimus == NIHIL)
+        {
+            deformis = VERUM;
+        }
+        alioquin si (chorda_aequalis_literis(genus, "ACTUS"))
+        {
+            si (xar_numerus(campi) != VII)
+            {
+                deformis = VERUM;
+            }
+            alioquin si (chorda_aequalis_literis(*(chorda*)xar_obtinere(
+                         campi, III), "ACTUM")
+                         && !_continet(ultimus->acti,
+                         *(chorda*)xar_obtinere(campi, II)))
+            {
+                *(chorda*)xar_addere(ultimus->acti) =
+                    *(chorda*)xar_obtinere(campi, II);
+            }
+        }
+        alioquin si (chorda_aequalis_literis(genus, "ARBOR"))
+        {
+            si (xar_numerus(campi) != II)
+            {
+                deformis = VERUM;
+            }
+            alioquin
+            {
+                arbor_ultima = *(chorda*)xar_obtinere(campi, I);
+            }
+        }
+        alioquin si (   chorda_aequalis_literis(genus, "INCEPIT")
+                     || chorda_aequalis_literis(genus, "EXTRA"))
+        {
+            deformis = xar_numerus(campi) != III;
+        }
+        alioquin
+        {
+            deformis = VERUM;
+        }
+        si (deformis)
+        {
+            chorda_aedificator_appendere_literis(causa, "linea ");
+            chorda_aedificator_appendere_i32(causa, linea);
+            chorda_aedificator_appendere_literis(causa, " deformis: ");
+            chorda_aedificator_appendere_chorda(causa,
+                _breviter(versus));
+            *causa_out = chorda_aedificator_finire(causa);
+            redde FALSUM;
+        }
+    }
+    si (ultimus == NIHIL)
+    {
+        *causa_out = chorda_ex_literis("acta vacua: nihil resumendum",
+            piscina);
+        redde FALSUM;
+    }
+    si (!chorda_aequalis(ultimus->sigillum, sigillum))
+    {
+        chorda_aedificator_appendere_literis(causa, "consilium mutatum "
+            "post initium (acta ");
+        chorda_aedificator_appendere_chorda(causa,
+            _breviter(ultimus->sigillum));
+        chorda_aedificator_appendere_literis(causa, ", nunc ");
+        chorda_aedificator_appendere_chorda(causa, _breviter(sigillum));
+        chorda_aedificator_appendere_literis(causa, ")");
+        *causa_out = chorda_aedificator_finire(causa);
+        redde FALSUM;
+    }
+    si (!chorda_aequalis(arbor_ultima, arbor))
+    {
+        chorda_aedificator_appendere_literis(causa, "arbor mutata post "
+            "ultimum actum (acta ");
+        chorda_aedificator_appendere_chorda(causa,
+            _breviter(arbor_ultima));
+        chorda_aedificator_appendere_literis(causa, ", nunc ");
+        chorda_aedificator_appendere_chorda(causa, _breviter(arbor));
+        chorda_aedificator_appendere_literis(causa, ")");
+        *causa_out = chorda_aedificator_finire(causa);
+        redde FALSUM;
+    }
+    facta = xar_creare(piscina, (i32)magnitudo(chorda));
+    per (j = (s32)xar_numerus(cursus) - I; j >= ZEPHYRUM; j--)
+    {
+        constans ConsiliumCursusDiarii* x = (constans
+            ConsiliumCursusDiarii*)xar_obtinere(cursus, (i32)j);
+
+        si (!chorda_aequalis(x->sigillum, sigillum))
+        {
+            frange;
+        }
+        per (i = ZEPHYRUM; i < xar_numerus(x->acti); i++)
+        {
+            chorda t = *(chorda*)xar_obtinere(x->acti, i);
+
+            si (!_continet(facta, t))
+            {
+                *(chorda*)xar_addere(facta) = t;
+            }
+        }
+        si (!x->resumptum)
+        {
+            frange;
+        }
+    }
+    *facta_out          = facta;
+    causa_out->datum    = NIHIL;
+    causa_out->mensura  = ZEPHYRUM;
+    redde VERUM;
 }
 
 

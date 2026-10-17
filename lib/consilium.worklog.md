@@ -59,3 +59,31 @@ per-step snapshots make attribution exact; the wave-wide unknown
 writer rule needs simultaneous waves (S5d). Four plants (dependency
 propagation, SISTERE, extra check, refusal) each red at its own
 assertion.
+
+## 2026-10-17 - S5b: the journal (diarium) and resume
+
+Fran's call: the tree fingerprint ignores build/ and other gitignored
+output (builds rewrite it constantly). The library never computes it -
+the consumer passes it in; the library only compares. Comparison is
+against the LAST recorded fingerprint (an ARBOR line after every step,
+or the header), not the run's start: steps that write tracked files
+(generators) legitimately move the fingerprint, and what matters for
+resume is "nobody changed the tree since the journal last spoke". A
+step interrupted mid-write of a tracked file moves it too - resume then
+refuses, which is the conservative answer.
+
+Runs chain: the last run plus earlier `resumptum` runs back to the
+first `novum` (included). A fresh (`novum`) run never inherits an older
+run's done steps, even for the same plan. Carried steps still go
+through `notare` (journaled again as ACTUM 'ex actis'), so the journal
+of a resumed run reads complete on its own.
+
+The plan seal uses length-prefixed fields (`N:bytes`) so a tab or colon
+inside a path cannot make two different plans hash alike. S5c MUST add
+`mandatum` (the argv) to the seal when it lands - changing the command
+is changing the plan.
+
+A plant taught something: removing only the sequitur FIELD from the
+seal left the 'S' marker byte, so the hash still differed and the test
+stayed green ("porta muta"). The test was right; the plant was too
+weak. Neutralizing the whole loop went red.
