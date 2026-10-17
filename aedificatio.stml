@@ -796,6 +796,13 @@
     <mandatum>
       <verbum! (>./tools/natura_canones.sh
     </mandatum>
+    <!-- instrumentum quod generator currit DECLARATUM (quaestio …HTQC94,
+         consilium S3d): sine eo fabrica 'sana natura prius' nescit et
+         generator 'bin/natura_canones STALUS' recusat - artificia omnia
+         IGNOTA. Exemplar lectores_cocti: praecondicio ordinem dat,
+         instrumentum_domus clavem per provenientiam binarii -->
+    <praecondicio actio="natura"/>
+    <ingressus genus="instrumentum_domus" via="bin/natura_canones"/>
     <vestigium via="silva/build" communis="verum"/>
     <ingressus genus="plagulae" via="natura" suffixa=".genera"/>
     <ingressus genus="fasciculus" via="tools/natura_canones.sh"/>
@@ -867,6 +874,9 @@
       <verbum! (>./tools/natura_glossae.sh
       <verbum! (>-pagina
     </mandatum>
+    <!-- instrumentum declaratum (…HTQC94, consilium S3d) -->
+    <praecondicio actio="natura"/>
+    <ingressus genus="instrumentum_domus" via="bin/natura_glossae"/>
     <ingressus genus="plagulae" via="natura" suffixa=".genera"/>
     <ingressus genus="fasciculus" via="tools/natura_glossae.sh"/>
     <ingressus genus="manifestum" via="build/aedilis/natura_glossae/manifestum.stml"/>

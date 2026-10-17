@@ -414,3 +414,42 @@ Not yet (S3d): the SECOND refusal case of 2026-10-16 - a tool edit
 made the tool binary stale, its GENERATOR refused, everything
 downstream IGNOTUM (`_fabricam_exigere`). Same shape: heal the tool,
 then regenerate, as one plan.
+
+## XIV. S3d built (2026-10-16): the generator blocked by a stale tool
+
+The second refusal of the day, reproduced: a comment edit in
+tools/natura_canones.h made bin/natura_canones stale; `iudicare -plenus
+-tacta` reported 37 IGNOTUM canons ("generator fractus ... bin/
+natura_canones STALUS") and bin/natura_canones itself NOT AT ALL.
+
+Two layers, both needed:
+
+1. **Declarations (root cause, ledger …HTQC94).** `canones_cocti`
+   ran bin/natura_canones without declaring it (only the tool's
+   manifest, its sources, was an input), so fabrica could not know
+   "heal natura first". Now `canones_cocti` and `glossae_pagina` declare
+   `<praecondicio actio="natura"/>` + `<ingressus genus="instrumentum_domus"
+   via="bin/natura_*"/>` - the existing `lectores_cocti` pattern. After
+   it, `bin/fabrica sanare -siccum` plans wave I `natura`, wave II
+   `canones_cocti`.
+2. **Facts for the planner from fabrica, not Python.** `sanare -siccum
+   -machina` now also prints `EXITUS actio via` for every output of
+   every planned action (tools/fabrica.c); commissio reads actions,
+   outputs and waves from there instead of parsing aedificatio.stml.
+
+`silva._consilium_producentium`: from that dry run, PRODUCERS = planned
+actions whose outputs are all uncommitted and tree-local (bin/, build/);
+actions writing committed artifacts are NOT in the plan (re-judgment
+finds them fresh when the bytes do not change; otherwise the old refusal
+stands - no silent additions to a commit). The plan (build/consilium/
+producentes.stml, same policy as §XIII) is judged and run with the S3c
+executor; then `_fabricam_exigere` re-judges once (`_producentes`). It
+is the LAST resort before the refusal: the older rules (regenerate
+committed artifacts inside the commit, ignore uncommitted ones) run
+first and unchanged. End to end: "producentes stali per consilium in
+arbore sanati (bin/natura_examen ...)", then 37 RECENS, commit proceeds.
+
+Tests (pythonica): producers healed, the committed regenerator and a
+home install left out; committed outputs = no producer; three existing
+call-order tests now ignore the read-only dry-run line. A plant
+dropping the committed-output filter went red.

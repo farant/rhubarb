@@ -85,7 +85,8 @@
 
 /* MACHINA (fabrica-6 H1): '-machina' in iudicare et sanare - lineae
  * TSV, genus in campo primo (IUDICIUM, COMPOSITUM, VERDICTUM, SANANDA,
- * ORPHANUM, BINARIA, PRAECONDICIO, SANATIO, AGITUR, UNDA, NOTA, SUMMA)
+ * ORPHANUM, BINARIA, PRAECONDICIO, SANATIO, EXITUS, AGITUR, UNDA, NOTA,
+ * SUMMA)
  * pro consumptoribus (pythonica/silva.py, instrumenta); homines formam
  * ordinariam legunt. Errata (exitus 2) in stderr manent. */
 b32 suturae_machina = FALSUM;
@@ -2091,6 +2092,18 @@ _sanare_eventum (
         _campus_numerus((longus)sanatio->duratio_ms);
         suturae_campus(sanatio->causa);
         putchar('\n');
+        /* EXITUS actio via (consilium S3d): artificia actionis agendae -
+         * consumptor (silva.commissio) effectus scripturae inde proponit
+         * (commissum? in arbore?) sine aedificatione.stml parsata */
+        per (j = ZEPHYRUM; agenda && j < xar_numerus(
+                 sanatio->actio->exitus); j++)
+        {
+            fputs("EXITUS", stdout);
+            suturae_campus(sanatio->actio->titulus);
+            suturae_campus(((FabricaExitus*)xar_obtinere(
+                sanatio->actio->exitus, j))->via);
+            putchar('\n');
+        }
         redde;
     }
     printf("%-11s %.*s", suturae_eventus_titulus(sanatio->eventus),

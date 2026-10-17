@@ -3242,7 +3242,11 @@ try:
     except silva.SilvaError as ex:
         err = str(ex)
     vocationes = open(_rg_argv).read().splitlines() if os.path.exists(_rg_argv) else []
-    credo(err is not None and 'STALUM g/gen.c' in err and not any(v.startswith('sanare') for v in vocationes),
+    # consilium S3d: ante recusationem 'sanare -siccum' (LECTIO sola,
+    # producentes quaeruntur) licet; sanatio SCRIBENS nulla
+    credo(err is not None and 'STALUM g/gen.c' in err
+          and not any(v.startswith('sanare') and not v.startswith('sanare -siccum')
+                      for v in vocationes),
           'regeneratio: stalum EXTRA vias commissionis recusatur, non regeneratur', causa=repr((err, vocationes)))
     # iudex sanatus -> regeneratio -> iudex ITERUM stalus (amalgama in
     # clausura iudicis, 2026-10-15): sanatur iterum, pergit
@@ -3411,6 +3415,9 @@ try:
             except Exception:
                 pass
         _ordo = open(_acta_ordinis).read().splitlines() if os.path.exists(_acta_ordinis) else []
+        # consilium S3d: 'sanare -siccum' ante recusationem lectio sola est
+        # (producentes quaeruntur) - ordo ceterorum idem
+        _ordo = [o for o in _ordo if not o.startswith('fabrica sanare -siccum')]
         if _verificare:
             # 'fabrica iudicare' primum = custodia installatorum (…ET4262)
             credo(_ordo == ['fabrica iudicare -machina',
@@ -3670,6 +3677,42 @@ if os.path.exists(silva.FABRICA_BIN):
           and silva._classis_viae('/usr/local/x') == 'externa'
           and silva._classis_viae('lib/x.c') == 'arbor',
           'consilium: classis viarum')
+    # S3d: producentes - fabrica ficta 'sanare -siccum' facta dat
+    # (SANATIO EXITUS UNDA), 'consilium' ad binarium VERUM transit
+    _fb_vera = silva.FABRICA_BIN
+    _facta = ('SANATIO\tAGENDUM\tnatura\t100\tbin/natura_canones stalum\n'
+              'EXITUS\tnatura\tbin/natura_canones\n'
+              'EXITUS\tnatura\tbin/natura_glossae\n'
+              'SANATIO\tAGENDUM\tcanones_cocti\t50\tgenerator fractus\n'
+              'EXITUS\tcanones_cocti\tnatura/cocta/a.canon\n'
+              'SANATIO\tAGENDUM\tinstitue\t5\tdomus\n'
+              'EXITUS\tinstitue\t~/.bin/natura\n'
+              'UNDA\t1\tnatura\nUNDA\t2\tcanones_cocti\nUNDA\t1\tinstitue\n')
+    _ficta_s3d = os.path.join(T, 'fabrica_s3d')
+    with open(_ficta_s3d, 'w') as _f:
+        _f.write('#!/bin/bash\nif [ "$1" = sanare ]; then printf %%s %s; exit 0;'
+                 ' fi\nexec %s "$@"\n' % (repr(_facta).replace('\\t', '\t')
+                                            .replace('\\n', '\n'), _fb_vera))
+    os.chmod(_ficta_s3d, 0o755)
+    _vc_vera = silva.VIAE_COMMISSAE
+    silva.VIAE_COMMISSAE = lambda viae: set(v for v in viae
+                                            if v.startswith('natura/'))
+    silva.FABRICA_BIN = _ficta_s3d
+    _c = silva._consilium_producentium(['natura/cocta/a.canon'])
+    silva.FABRICA_BIN = _fb_vera
+    silva.VIAE_COMMISSAE = _vc_vera
+    credo(_c is not None and _c[0] == 0
+          and [x[2] for x in _c[1] if x[0] == 'UNDA']
+          == ['sana bin/natura_canones', 'iudicium'],
+          'consilium producentium: instrumentum sanatur, regenerator'
+          ' commissorum et institutio domus NON in consilio', _c)
+    silva.FABRICA_BIN = _ficta_s3d
+    silva.VIAE_COMMISSAE = lambda viae: set(viae)
+    _c = silva._consilium_producentium(['natura/cocta/a.canon'])
+    silva.FABRICA_BIN = _fb_vera
+    silva.VIAE_COMMISSAE = _vc_vera
+    credo(_c is None, 'consilium producentium: exitus commissi = nullus'
+          ' producens (recusatio antiqua valet)')
 else:
     credo(False, 'consilium formae: bin/fabrica deest (nihil iudicatum)')
 silva.FABRICA_BIN = _fb_ficta_consilii
