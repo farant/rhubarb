@@ -271,6 +271,16 @@ phase that needs it. Header text shown to Fran before coding.*
   vicus resolves RHUBARB_MENSOR, then ~/.bin/mensor (untested until the
   T10c display test). aedificatio: institutio_mensor in installata
   (installs from MAIN after the merge). Plants 4/4.
+- T10c 2026-10-16 (Fran's look: both joins seen): $sessions shows one
+  line per running root under its session ("commit rhubarb-secunda 1m40s
+  | gates 2/7 | radix 1m10s 120/351 (1m14s-1m36s) | failed: x", failed
+  part in the warning colour); the row grows by one line per run.
+  "Other runs" (g5) = roots whose session is not SHOWN - including a
+  closed session while Closed is hidden (a commit outliving its
+  session must not vanish). Its title and rows are ALBUM_FASCIA, so
+  j/k never select them. colloquia_visus_cursus_textus is the pure,
+  tested piece. Plants 7/7 (two re-planted; the selectability test
+  first passed by fixture coincidence - c4's number = r4's).
 - IN MAIN 2026-10-16 (ff 1dc057b6, fusio_probare green + frigida,
   installata 23/23). The 7 hooks now call `~/.bin/praeco hamus`
   (backup ~/.claude/settings.json.bak-praeco-bin-2026-10-16); the ad

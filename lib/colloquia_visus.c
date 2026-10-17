@@ -13,6 +13,7 @@
 #include "fons.h"
 #include "thema.h"
 #include "motus.h"
+#include "chorda_aedificator.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -406,6 +407,178 @@ colloquia_visus_fontem_pulsare (
 }
 
 
+/* T10c: nomen cursus anglice (pagina anglica, ut ceterae) */
+interior chorda
+cursus_nomen (
+      chorda  titulus,
+     Piscina* piscina)
+{
+    si (chorda_aequalis_literis(titulus, "commissio"))
+    {
+        redde chorda_ex_literis("commit", piscina);
+    }
+    si (chorda_incipit(titulus, chorda_ex_literis("porta:", piscina)))
+    {
+        titulus.datum    += VI;
+        titulus.mensura  -= VI;
+        redde titulus;
+    }
+    si (chorda_incipit(titulus, chorda_ex_literis("phasis:", piscina)))
+    {
+        titulus.datum    += VII;
+        titulus.mensura  -= VII;
+        redde chorda_concatenare(chorda_ex_literis("phase ", piscina),
+            titulus, piscina);
+    }
+    redde titulus;
+}
+
+/* mora humana: "1h02m", "4m12s", "37s" (ut mensor) */
+interior vacuum
+moram_addere (
+    ChordaAedificator* a,
+                  s64  ms)
+{
+    character textus[XXXII];
+          s64 s = (ms > (s64)ZEPHYRUM) ? ms / (s64)M : (s64)ZEPHYRUM;
+
+    si (s >= (s64)MMMDC)
+    {
+        sprintf(textus, "%ldh%02ldm", (longus)(s / (s64)MMMDC),
+            (longus)((s % (s64)MMMDC) / (s64)LX));
+    }
+    alioquin si (s >= (s64)LX)
+    {
+        sprintf(textus, "%ldm%02lds", (longus)(s / (s64)LX),
+            (longus)(s % (s64)LX));
+    }
+    alioquin
+    {
+        sprintf(textus, "%lds", (longus)s);
+    }
+    chorda_aedificator_appendere_literis(a, textus);
+}
+
+/* segmentum ultimum viae ("/w/rhubarb-secunda" -> "rhubarb-secunda") */
+interior chorda
+arboris_nomen (
+    chorda via)
+{
+    i32 k;
+
+    per (k = via.mensura; k > ZEPHYRUM; k--)
+    {
+        si (via.datum[k - I] == '/')
+        {
+            via.datum    += k;
+            via.mensura  -= k;
+            frange;
+        }
+    }
+    redde via;
+}
+
+/* historia " (min-max)" si nota */
+interior vacuum
+historiam_addere (
+              ChordaAedificator* a,
+    constans CursusCurrensLinea* r)
+{
+    si (r->maxima_ms <= (s64)ZEPHYRUM)
+    {
+        redde;
+    }
+    chorda_aedificator_appendere_literis(a, " (");
+    moram_addere(a, r->minima_ms);
+    chorda_aedificator_appendere_character(a, '-');
+    moram_addere(a, r->maxima_ms);
+    chorda_aedificator_appendere_character(a, ')');
+}
+
+chorda
+colloquia_visus_cursus_textus (
+    constans Xar* cursus,
+             i32  index,
+             s64  nunc,
+         Piscina* piscina)
+{
+      constans CursusCurrensLinea* r;
+      constans CursusCurrensLinea* d = NIHIL;
+      constans CursusCurrensLinea* x;
+                ChordaAedificator* a;
+                           chorda  fracta;
+                        character  numeri[XXXII];
+                              i32  k;
+
+    fracta = chorda_ex_literis("", piscina);
+    si (!cursus || index >= xar_numerus(cursus))
+    {
+        redde fracta;
+    }
+    r = (constans CursusCurrensLinea*)xar_obtinere(cursus, index);
+    a = chorda_aedificator_creare(piscina, (memoriae_index)CXXVIII);
+    si (r->profunditas != ZEPHYRUM || !a)
+    {
+        redde fracta;
+    }
+    /* filius apertus profundissimus; fracta totius arboris */
+    fracta = r->fracta;
+    per (k = index + I; k < xar_numerus(cursus); k++)
+    {
+        x = (constans CursusCurrensLinea*)xar_obtinere(cursus, k);
+        si (x->profunditas == ZEPHYRUM)
+        {
+            frange;
+        }
+        si (!d || x->profunditas >= d->profunditas)
+        {
+            d = x;
+        }
+        si (x->fracta.mensura > ZEPHYRUM)
+        {
+            fracta = (fracta.mensura == ZEPHYRUM) ? x->fracta
+                : chorda_concatenare(chorda_concatenare(fracta,
+                    chorda_ex_literis(" ", piscina), piscina),
+                    x->fracta,
+                    piscina);
+        }
+    }
+    chorda_aedificator_appendere_chorda(a, cursus_nomen(r->titulus,
+        piscina));
+    chorda_aedificator_appendere_character(a, ' ');
+    chorda_aedificator_appendere_chorda(a, arboris_nomen(r->arbor));
+    chorda_aedificator_appendere_character(a, ' ');
+    moram_addere(a, nunc - r->initium);
+    si (r->debiti > ZEPHYRUM)
+    {
+        sprintf(numeri, " | gates %d/%d", (integer)r->perfecti,
+            (integer)r->debiti);
+        chorda_aedificator_appendere_literis(a, numeri);
+    }
+    x = d ? d : r;
+    si (d)
+    {
+        chorda_aedificator_appendere_literis(a, " | ");
+        chorda_aedificator_appendere_chorda(a, cursus_nomen(d->titulus,
+            piscina));
+        chorda_aedificator_appendere_character(a, ' ');
+        moram_addere(a, nunc - d->initium);
+    }
+    si (x->ambitus > ZEPHYRUM)
+    {
+        sprintf(numeri, " %d/%d", (integer)x->iudicata,
+            (integer)x->ambitus);
+        chorda_aedificator_appendere_literis(a, numeri);
+    }
+    historiam_addere(a, x);
+    si (fracta.mensura > ZEPHYRUM)
+    {
+        chorda_aedificator_appendere_literis(a, " | failed: ");
+        chorda_aedificator_appendere_chorda(a, fracta);
+    }
+    redde chorda_aedificator_finire(a);
+}
+
 /* nomen directorii ultimum ("/w/alpha" -> "alpha") */
 interior chorda
 directorium_ultimum (
@@ -680,20 +853,73 @@ capacitas (
         - COLLOQUIA_TITULI - COLLOQUIA_CAPUT;
 }
 
-/* ordines: tituli gregum "g<k>", res "r<n>" (n = index + 1 in l) */
+/* T10c: radices cursuum sessionis datae */
+interior i32
+radices_sessionis (
+    constans Xar* cursus,
+          chorda  sessio)
+{
+    constans CursusCurrensLinea* r;
+                            i32  n = ZEPHYRUM;
+                            i32  k;
+
+    per (k = ZEPHYRUM; cursus && sessio.mensura > ZEPHYRUM
+         && k < xar_numerus(cursus); k++)
+    {
+        r = (constans CursusCurrensLinea*)xar_obtinere(cursus, k);
+        si (   r->profunditas == ZEPHYRUM
+            && chorda_aequalis(r->colloquium, sessio))
+        {
+            n++;
+        }
+    }
+    redde n;
+}
+
+/* sessio OSTENSA cui cursus adhaeret? Clausa celata (Closed sine c)
+ * non numeratur: commissio post sessionem finitam currens in "Other
+ * runs" apparet, non evanescit */
+interior b32
+sessio_nota (
+       Xar* l,
+    chorda  colloquium,
+       b32  clausae)
+{
+    constans Colloquium* k;
+                    i32  i;
+
+    per (i = ZEPHYRUM; l && colloquium.mensura > ZEPHYRUM
+         && i < xar_numerus(l); i++)
+    {
+        k = (constans Colloquium*)xar_obtinere(l, i);
+        si (   chorda_aequalis(k->sessio, colloquium)
+            && (clausae || k->status != COLLOQUIUM_CLAUSUM))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* ordines: tituli gregum "g<k>", res "r<n>" (n = index + 1 in l);
+ * T10c: ordo sessionis II unitatibus per cursum altior; grex "Other
+ * runs" (g5) cum radicibus sine sessione nota (c<k>, k = index + 1 in
+ * cursibus) - fasciae, numquam eligendae */
 interior Album*
 ordines (
     constans ColloquiorumMontatio* m,
                               Xar* l,
                           Piscina* p)
 {
-     Album* a;
-       i32  g;
-       i32  i;
-       b32  titulus;
- character  id[XVI];
+       Album* a;
+         i32  g;
+         i32  i;
+         b32  titulus;
+   character  id[XVI];
+constans Xar* cursus;
 
-    a = album_creare(p, capacitas(m));
+    cursus  = m->fons ? colloquia_visus_cursus(m->fons) : NIHIL;
+    a       = album_creare(p, capacitas(m));
     per (g = ZEPHYRUM; a && g < V; g++)
     {
         si (   ordo_gregum[g] == COLLOQUIUM_CLAUSUM
@@ -717,9 +943,30 @@ ordines (
                 titulus = VERUM;
             }
             sprintf(id, "r%d", (integer)(i + I));
-            (vacuum)album_addere(a, id, ALBUM_RES, COLLOQUIA_ORDO,
-                (s32)(i + I));
+            (vacuum)album_addere(a, id, ALBUM_RES, COLLOQUIA_ORDO
+                + II * (s32)radices_sessionis(cursus, ((constans
+                Colloquium*)xar_obtinere(l, i))->sessio), (s32)(i + I));
         }
+    }
+    titulus = FALSUM;
+    per (i = ZEPHYRUM; a && cursus && i < xar_numerus(cursus); i++)
+    {
+        constans CursusCurrensLinea* r = (constans CursusCurrensLinea*)
+            xar_obtinere(cursus, i);
+
+        si (   r->profunditas != ZEPHYRUM
+            || sessio_nota(l, r->colloquium, clausae_ostensae(m)))
+        {
+            perge;
+        }
+        si (!titulus)
+        {
+            (vacuum)album_addere(a, "g5", ALBUM_FASCIA, COLLOQUIA_GREX,
+                ZEPHYRUM);
+            titulus = VERUM;
+        }
+        sprintf(id, "c%d", (integer)(i + I));
+        (vacuum)album_addere(a, id, ALBUM_FASCIA, II, ZEPHYRUM);
     }
     redde a;
 }
@@ -1151,6 +1398,47 @@ aetas (
 
 /* ordo sessionis: electa fundo selectionis; signum coloris status,
  * titulus, aetas ad dextrum; linea status infra */
+/* T10c: linea cursus: caput obscurum, "failed: ..." colore monitionis
+ * (separatim pictum, post caput si integrum est) */
+interior vacuum
+cursum_pingere (
+     Mandata* md,
+         s32  x,
+         s32  y,
+         s32  latitudo,
+      chorda  textus,
+         b32  electa_est)
+{
+    chorda caput = textus;
+    chorda cauda;
+    chorda visum;
+       i32 k;
+
+    cauda.datum    = NIHIL;
+    cauda.mensura  = ZEPHYRUM;
+    per (k = ZEPHYRUM; k + VIII <= textus.mensura; k++)
+    {
+        si (memcmp(textus.datum + k, "failed: ", (size_t)VIII)
+            == ZEPHYRUM)
+        {
+            caput.mensura  = k;
+            cauda.datum    = textus.datum + k;
+            cauda.mensura  = textus.mensura - k;
+            frange;
+        }
+    }
+    visum = praecidere(caput, latitudo);
+    textum_pingere(md, x, y, visum, ZEPHYRUM, electa_est ? COLOR_TEXT
+        : COLOR_TEXT_DIM);
+    si (cauda.mensura > ZEPHYRUM && visum.mensura == caput.mensura)
+    {
+        textum_pingere(md, x + (s32)caput.mensura * COLLOQUIA_LITTERA,
+            y,
+            praecidere(cauda, latitudo - (s32)caput.mensura
+            * COLLOQUIA_LITTERA), ZEPHYRUM, COLOR_WARNING);
+    }
+}
+
 interior vacuum
 ordinem_pingere (
      ColloquiorumMontatio* m,
@@ -1213,6 +1501,31 @@ ordinem_pingere (
     textum_pingere(md, f->fines.x + XIV, f->fines.y + IV + II
         * COLLOQUIA_LINEA - II, praecidere(c->linea, f->fines.latitudo
         - XX), ZEPHYRUM, electa_est ? COLOR_TEXT : COLOR_TEXT_DIM);
+    /* T10c: cursus sessionis, linea una quisque sub linea status */
+    {
+        constans Xar* cursus = m->fons ? colloquia_visus_cursus(m->fons)
+            : NIHIL;
+                  i32 k;
+                  s32 n = ZEPHYRUM;
+
+        per (k = ZEPHYRUM; cursus && k < xar_numerus(cursus); k++)
+        {
+            constans CursusCurrensLinea* r = (constans
+                CursusCurrensLinea*)xar_obtinere(cursus, k);
+
+            si (   r->profunditas != ZEPHYRUM
+                || !chorda_aequalis(r->colloquium, c->sessio))
+            {
+                perge;
+            }
+            cursum_pingere(md, f->fines.x + XIV, f->fines.y + IV + (II
+                * COLLOQUIA_LINEA - II) * (II + n), f->fines.latitudo
+                - XX, colloquia_visus_cursus_textus(cursus, k, m->nunc
+                ? m->nunc(m->nunc_ctx) : (s64)ZEPHYRUM, md->piscina),
+                electa_est);
+            n++;
+        }
+    }
 }
 
 interior vacuum
@@ -1337,7 +1650,15 @@ figura_tabulae (
         {
             /* "g<k>" aut "g<k>-c" (iteratus): k cifra una */
             r = (s32)(f->id.datum[I] - '0');
-            si (r >= ZEPHYRUM && r < V)
+            si (r == V)
+            {
+                /* T10c: grex cursuum sine sessione ostensa */
+                figura_fasciam_pingere(md, f->fines);
+                figura_textum_audacem(md, f->fines.x + VI, f->fines.y
+                    + IV, chorda_ex_literis("Other runs", md->piscina),
+                    figura_color_thematis(COLOR_TEXT));
+            }
+            alioquin si (r >= ZEPHYRUM && r < V)
             {
                 figura_fasciam_pingere(md, f->fines);
                 figura_textum_audacem(md, f->fines.x + VI, f->fines.y
@@ -1345,6 +1666,15 @@ figura_tabulae (
                     tituli_gregum[r], md->piscina), md->piscina),
                     figura_color_thematis(COLOR_TEXT));
             }
+        }
+        alioquin si (numerus_id(f->id, 'c') > ZEPHYRUM)
+        {
+            /* T10c: fascia cursus sine sessione (c<k>) */
+            cursum_pingere(md, f->fines.x + XIV, f->fines.y + II,
+                f->fines.latitudo - XX, colloquia_visus_cursus_textus(
+                colloquia_visus_cursus(m->fons), (i32)(numerus_id(f->id,
+                'c') - I), m->nunc ? m->nunc(m->nunc_ctx)
+                : (s64)ZEPHYRUM, md->piscina), FALSUM);
         }
         alioquin si (f->partes == PARTES_ITEM)
         {

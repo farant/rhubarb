@@ -48,3 +48,21 @@
 - Test now mirrors the restore order (mount, then open sources, same
   pane sees the sessions); red before, plant restores the conditional.
 - Fran's look 2026-10-16: restored sessions pane works.
+
+## 2026-10-16 - running jobs in the pane (colloquia-plan T10b/T10c)
+
+The source polls `mensor quaestio currentes -machina` in a child process
+(processus incremental path) every 5 s while pulsed; only trees whose
+root owner is ALIVE are kept. A failing mensor keeps the old snapshot.
+
+Two layout decisions worth remembering:
+- A run belongs under its session only while that session's row is
+  SHOWN. A closed session (Closed hidden) sends its runs to "Other
+  runs" - otherwise a commit that outlives its Claude session would
+  disappear from the pane exactly when it matters.
+- "Other runs" title and rows are ALBUM_FASCIA, not ALBUM_RES: movement
+  only stops on ALBUM_RES, so no special-casing in movere/electa. Test
+  the property directly (componens partes != PARTES_ITEM) - a j-press
+  test passed by coincidence when the plant made them RES (the last
+  strip's res number equalled the last session row's).
+

@@ -98,6 +98,18 @@ constans Xar*
 colloquia_visus_cursus (
     constans ColloquiorumFons* f);
 
+/* T10c: linea cursus (pura, probabilis): radix et filius apertus
+ * profundissimus - "commit 1m42s | gates 2/7 | generata 1m00s
+ * (1m53s-2m42s) | failed: probatio_git". cursus: Xar de
+ * CursusCurrensLinea (colloquia_visus_cursus); index = radix
+ * (profunditas 0); nunc ms ab epocha. Vacua si index non radix. */
+chorda
+colloquia_visus_cursus_textus (
+    constans Xar* cursus,
+             i32  index,
+             s64  nunc,
+         Piscina* piscina);
+
 /* instantanea: colloquia cum titulis et panellis applicatis (Xar de
  * Colloquium in piscina data) */
 Xar*

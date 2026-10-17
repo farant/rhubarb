@@ -63,10 +63,11 @@ nunc_fictum (
 }
 
 /* liber in area (copia fixi + '\n'); fons sine tmux; visus montatus
- * (CCLXXX x CCCLX) */
+ * (latitudo x CCCLX; ordinarie CCLXXX) */
 interior Mundus*
-mundus (
-    CredoContextus* c)
+mundus_latum (
+     CredoContextus* c,
+                i32  latitudo)
 {
                  Mundus* w;
      constans character* area;
@@ -99,7 +100,7 @@ mundus (
         "<hospes/>");
     si (   !w->repo
         || !colloquia_visus_montare(&w->m, c->piscina, w->intern,
-               w->repo, "v1", &w->fons, porta_ficta, w, CCLXXX, CCCLX,
+               w->repo, "v1", &w->fons, porta_ficta, w, latitudo, CCCLX,
                NIHIL))
     {
         redde NIHIL;
@@ -115,6 +116,13 @@ mundus (
     motus->ramus  = w->m.ramus;
     dispensator_recomponere(w->d);
     redde w;
+}
+
+interior Mundus*
+mundus (
+    CredoContextus* c)
+{
+    redde mundus_latum(c, CCLXXX);
 }
 
 interior constans Colloquium*
@@ -612,6 +620,242 @@ _probare_cursus (
         "r9");
 }
 
+/* T10c: cursus ficti (nunc_fictum = CCCXX ms + V min): r1 sub s-a cum
+ * porta aperta; r2 sine sessione cum fracto; r3 sessionis ignotae
+ * (s-zz); r4 sub s-b, arbor III graduum cum filio fracto */
+#define LINEAE_T10C \
+    "CURRENS\t0\tr1\t\tcommissio\t/w/rhubarb-secunda\trhubarb-secunda" \
+    "\t200320\t4242\tvivus\t2\t0\t7\t0\t0\t7000\t595000\ts-a\t\n" \
+    "CURRENS\t1\tp1\tr1\tporta:radix\t/w/rhubarb-secunda\t" \
+    "rhubarb-secunda\t230320\t4242\tvivus\t3\t0\t0\t120\t351\t74000" \
+    "\t96000\ts-a\t\n" \
+    "CURRENS\t0\tr2\t\tcommissio\t/w/rhubarb-quinta\trhubarb-quinta" \
+    "\t100320\t77\tvivus\t4\t1\t9\t0\t0\t0\t0\t\t" \
+    "probationes_radicis/probatio_git\n" \
+    "CURRENS\t0\tr3\t\tporta:aedilis\t/w/rhubarb-tertia\trhubarb-tertia" \
+    "\t290320\t88\tvivus\t0\t0\t0\t0\t0\t5000\t251000\ts-zz\t\n" \
+    "CURRENS\t0\tr4\t\tcommissio\t/w/rhubarb-secunda\trhubarb-secunda" \
+    "\t280320\t4242\tvivus\t0\t0\t0\t0\t0\t0\t0\ts-b\t\n" \
+    "CURRENS\t1\tp4\tr4\tporta:pythonica\t/w/rhubarb-secunda\t" \
+    "rhubarb-secunda\t290320\t4242\tvivus\t1\t1\t0\t0\t0\t0\t0\ts-b\t" \
+    "pythonica#x\n" \
+    "CURRENS\t2\tq4\tp4\tpythonica#umbra\t/w/rhubarb-secunda\t" \
+    "rhubarb-secunda\t295320\t4242\tvivus\t0\t0\t0\t0\t0\t0\t0\ts-b" \
+    "\t\n"
+
+/* Xar de CursusCurrensLinea ex lineis (ut fons legit) */
+interior Xar*
+cursus_ficti (
+    Piscina* piscina)
+{
+                    Xar* l;
+              character* lineae;
+                 chorda  linea;
+                    i32  initium = ZEPHYRUM;
+                    i32  k;
+                    i32  n = (i32)strlen(LINEAE_T10C);
+
+    /* copia mutabilis: chordae lineae in eam spectant */
+    lineae = (character*)piscina_allocare(piscina, (memoriae_index)n
+        + I);
+    si (!lineae)
+    {
+        redde NIHIL;
+    }
+    strcpy(lineae, LINEAE_T10C);
+    l = xar_creare(piscina, (i32)magnitudo(CursusCurrensLinea));
+    per (k = ZEPHYRUM; l && k < n; k++)
+    {
+        si (lineae[k] != '\n')
+        {
+            perge;
+        }
+        linea          = chorda_ex_literis("", piscina);
+        linea.datum    = (i8*)(lineae + initium);
+        linea.mensura  = k - initium;
+        initium        = k + I;
+        si (!cursus_currentem_ex_linea(linea,
+            (CursusCurrensLinea*)xar_addere(l)))
+        {
+            redde NIHIL;
+        }
+    }
+    redde l;
+}
+
+#define NUNC_T10C ((s64)CCCXX + (s64)V * (s64)LX * (s64)M)
+
+/* linea cursus (T10c): radix + filius profundissimus apertus, portae,
+ * progressus membrorum, historia, fracta totius arboris; filius et
+ * index extra -> vacua */
+interior vacuum
+_probare_cursus_textum (
+    CredoContextus* c)
+{
+    Xar* l = cursus_ficti(c->piscina);
+
+    CREDO_NECESSE(l != NIHIL);
+    CREDO_AEQUALIS_I32(xar_numerus(l), VII);
+    CREDO_CHORDA_AEQUALIS_LITERIS(colloquia_visus_cursus_textus(l,
+        ZEPHYRUM, NUNC_T10C, c->piscina), "commit rhubarb-secunda 1m40s"
+        " | gates 2/7 | radix 1m10s 120/351 (1m14s-1m36s)");
+    CREDO_CHORDA_AEQUALIS_LITERIS(colloquia_visus_cursus_textus(l, II,
+        NUNC_T10C, c->piscina),
+        "commit rhubarb-quinta 3m20s | gates 4/9"
+        " | failed: probationes_radicis/probatio_git");
+    CREDO_CHORDA_AEQUALIS_LITERIS(colloquia_visus_cursus_textus(l, III,
+        NUNC_T10C, c->piscina),
+        "aedilis rhubarb-tertia 10s (5s-4m11s)");
+    CREDO_CHORDA_AEQUALIS_LITERIS(colloquia_visus_cursus_textus(l, IV,
+        NUNC_T10C, c->piscina), "commit rhubarb-secunda 20s | "
+        "pythonica#umbra 5s | failed: pythonica#x");
+    CREDO_AEQUALIS_I32(colloquia_visus_cursus_textus(l, I, NUNC_T10C,
+        c->piscina).mensura, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(colloquia_visus_cursus_textus(l, VII, NUNC_T10C,
+        c->piscina).mensura, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(colloquia_visus_cursus_textus(NIHIL, ZEPHYRUM,
+        NUNC_T10C, c->piscina).mensura, ZEPHYRUM);
+}
+
+/* altitudo ordinis id dati in arbore (-1 si absens) */
+interior s32
+altitudo_ordinis (
+                 Mundus* w,
+     constans character* id)
+{
+     Componens* radix;
+     Componens* f;
+           i32  i;
+
+    dispensator_recomponere(w->d);
+    radix = dispensator_arbor(w->d);
+    per (i = ZEPHYRUM; radix && i < componens_numerus_liberorum(radix);
+         i++)
+    {
+        f = componens_liberum(radix, i);
+        si (chorda_aequalis_literis(f->id, id))
+        {
+            redde f->fines.altitudo;
+        }
+    }
+    redde -I;
+}
+
+/* partes ordinis id dati in arbore (-1 si absens) */
+interior s32
+partes_ordinis (
+                 Mundus* w,
+     constans character* id)
+{
+     Componens* radix;
+     Componens* f;
+           i32  i;
+
+    dispensator_recomponere(w->d);
+    radix = dispensator_arbor(w->d);
+    per (i = ZEPHYRUM; radix && i < componens_numerus_liberorum(radix);
+         i++)
+    {
+        f = componens_liberum(radix, i);
+        si (chorda_aequalis_literis(f->id, id))
+        {
+            redde (s32)f->partes;
+        }
+    }
+    redde -I;
+}
+
+/* id ordinis "r<n>" sessionis datae */
+interior constans character*
+ordo_sessionis (
+                Mundus* w,
+    constans character* sessio,
+               Piscina* piscina)
+{
+          Xar* l   = colloquia_visus_fontis(&w->fons, piscina);
+    character* id  = (character*)piscina_allocare(piscina, XVI);
+          i32  i;
+
+    per (i = ZEPHYRUM; l && id && i < xar_numerus(l); i++)
+    {
+        si (chorda_aequalis_literis(((constans Colloquium*)xar_obtinere(l,
+            i))->sessio, sessio))
+        {
+            sprintf(id, "r%d", (integer)(i + I));
+            redde id;
+        }
+    }
+    redde "";
+}
+
+/* ordines cum cursibus (T10c): grex "Other runs" (g5) cum radicibus
+ * sine sessione nota (c<n>); ordo sessionis cum cursu altior; pictura
+ * latae superficiei: linea cursus et "failed:" separatim; j numquam
+ * in c<n> */
+interior vacuum
+_probare_cursus_ordines (
+    CredoContextus* c)
+{
+                Mundus* w = mundus_latum(c, DCCC);
+               Mandata* md;
+    constans character* sb;
+    constans character* sc;
+                   i32  k;
+
+    CREDO_NECESSE(w != NIHIL);
+    w->fons.cursus = cursus_ficti(c->piscina);
+    CREDO_NECESSE(w->fons.cursus != NIHIL);
+    /* s-a clausa (Closed celatur): cursus eius in "Other runs" (c1) */
+    CREDO_VERUM(ordines_sunt(w, "g0 r3 g3 r1 r4 g5 c1 c3 c4"));
+    sb = ordo_sessionis(w, "s-b", c->piscina);
+    sc = ordo_sessionis(w, "s-c", c->piscina);
+    /* radix una (r4): linea una (II unitates = XVI px) altior - filii
+     * (p4, q4) non numerantur */
+    CREDO_AEQUALIS_S32(altitudo_ordinis(w, sb) - altitudo_ordinis(w,
+        sc),
+        XVI);
+    md = reddere(w, c->piscina);
+    CREDO_VERUM(textus_pictus(md, "Other runs"));
+    CREDO_VERUM(textus_pictus(md,
+        "commit rhubarb-secunda 1m40s | gates "
+        "2/7 | radix 1m10s 120/351 (1m14s-1m36s)"));
+    CREDO_VERUM(textus_pictus(md,
+        "commit rhubarb-quinta 3m20s | gates 4/9"
+        " | "));
+    CREDO_VERUM(textus_pictus(md,
+        "failed: probationes_radicis/probatio_git"));
+    /* sub s-b: linea cursus et fracta separatim */
+    CREDO_VERUM(textus_pictus(md, "commit rhubarb-secunda 20s | "
+        "pythonica#umbra 5s | "));
+    CREDO_VERUM(textus_pictus(md, "failed: pythonica#x"));
+    /* clausae ostensae: s-a (r2) cursum suum sub se habet, non in g5 */
+    clavis(w, 'c');
+    CREDO_VERUM(ordines_sunt(w, "g0 r3 g3 r1 r4 g4 r2 g5 c3 c4"));
+    CREDO_AEQUALIS_S32(altitudo_ordinis(w, "r2") - altitudo_ordinis(w,
+        sc), XVI);
+    clavis(w, 'c');
+    /* fasciae cursuum eligi nequeunt (non PARTES_ITEM) */
+    CREDO_VERUM(partes_ordinis(w, "c3") >= ZEPHYRUM
+        && partes_ordinis(w, "c3") != (s32)PARTES_ITEM);
+    CREDO_VERUM(partes_ordinis(w, "c4") != (s32)PARTES_ITEM);
+    /* j ultra ultimam sessionem: electa in r4 (l[III]) manet, numquam
+     * in c<n> */
+    per (k = ZEPHYRUM; k < X; k++)
+    {
+        clavis(w, 'j');
+    }
+    {
+        constans Colloquium* ultima =
+            (constans Colloquium*)xar_obtinere(
+            colloquia_visus_fontis(&w->fons, c->piscina), III);
+                  character sessio[LXIV];
+
+        sprintf(sessio, "%.*s", (integer)ultima->sessio.mensura,
+            (constans character*)ultima->sessio.datum);
+        CREDO_VERUM(campus_est(&w->m.ramus, "electa", sessio));
+    }
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "fons", _probare_fontem, NIHIL, NIHIL, NIHIL, NIHIL },
     { "greges", _probare_greges, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -619,6 +863,10 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "stabilitas", _probare_stabilitatem, NIHIL, NIHIL, NIHIL, NIHIL },
     { "pictura", _probare_picturam, NIHIL, NIHIL, NIHIL, NIHIL },
     { "cursus", _probare_cursus, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "cursus textus", _probare_cursus_textum, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { "cursus ordines", _probare_cursus_ordines, NIHIL, NIHIL, NIHIL,
+      NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

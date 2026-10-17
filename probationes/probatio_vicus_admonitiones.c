@@ -21,6 +21,7 @@
 #include "componens.h"
 #include "figura.h"
 #include "mandatum.h"
+#include "processus.h"
 #include "credo.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -431,6 +432,105 @@ _probare_sessiones (
         c->piscina)), IV);
 }
 
+/* T10b/c: mensor ex ambitu - RHUBARB_MENSOR (scriptum fictum lineam
+ * CURRENS vivam reddens) -> latus sessionum cursum videt post pulsus;
+ * sine RHUBARB_MENSOR et HOME sine .bin/mensor -> mensor nullus */
+interior vacuum
+_probare_cursus (
+    CredoContextus* c)
+{
+                  Mundus* x;
+                   Vicus* v;
+      constans character* via;
+              VicusLatus* l;
+    ColloquiorumMontatio* m;
+               character* mensor;
+      constans character* argumenta[IV];
+       structura timespec  mora;
+                      i32 k;
+
+    x    = (Mundus*)c->datum;
+    via  = librum_parare(c);
+    CREDO_NECESSE(via != NIHIL);
+    mensor = (character*)piscina_allocare(c->piscina, (memoriae_index)
+        strlen(credo_area(c)) + XXXII);
+    sprintf(mensor, "%s/mensor_fictus", credo_area(c));
+    CREDO_NECESSE(filum_scribere(mensor, chorda_ex_literis("#!/bin/sh\n"
+        "printf 'CURRENS\\t0\\tr1\\t\\tcommissio\\t/w/rhubarb-quinta"
+        "\\tquinta\\t1\\t1\\tvivus\\t0\\t0\\t3\\t0\\t0\\t0\\t0"
+        "\\t\\t\\n'\n", c->piscina)));
+    argumenta[0]    = "/bin/chmod";
+    argumenta[I]    = "+x";
+    argumenta[II]   = mensor;
+    argumenta[III]  = NIHIL;
+    (vacuum)processus_exsequi(argumenta, V * M, c->piscina);
+    CREDO_NECESSE(aedificare(x, c));
+    v = x->app.vicus;
+    (vacuum)setenv("RHUBARB_MENSOR", mensor, 1);
+    CREDO_VERUM(vicus_applicatio_admonitiones_aperire(&x->app, via));
+    (vacuum)unsetenv("RHUBARB_MENSOR");
+    CREDO_VERUM(vicus_acervo_aperire(v, "colloquia", NIHIL));
+    (vacuum)vicus_pulsare(v);
+    l = vicus_latus(vicus_activa(v), VICUS_DEXTRUM);
+    CREDO_NECESSE(l && l->montata && chorda_aequalis_literis(l->genus,
+        "colloquia"));
+    m = (ColloquiorumMontatio*)l->montatio;
+    CREDO_NECESSE(m->fons != NIHIL);
+    CREDO_CHORDA_AEQUALIS_LITERIS(chorda_ex_literis(m->fons->mensor
+        ? m->fons->mensor : "", c->piscina), mensor);
+    mora.tv_sec   = ZEPHYRUM;
+    mora.tv_nsec  = X * M * M;
+    per (k = ZEPHYRUM; k < D && !colloquia_visus_cursus(m->fons); k++)
+    {
+        (vacuum)vicus_pulsare(v);
+        (vacuum)nanosleep(&mora, NIHIL);
+    }
+    CREDO_NECESSE(colloquia_visus_cursus(m->fons) != NIHIL);
+    CREDO_AEQUALIS_I32(xar_numerus(colloquia_visus_cursus(m->fons)), I);
+
+}
+
+/* T10b: sine RHUBARB_MENSOR et HOME sine .bin/mensor -> mensor nullus
+ * (cursus nulli, nihil incipitur) */
+interior vacuum
+_probare_cursus_nullos (
+    CredoContextus* c)
+{
+                  Mundus* x;
+      constans character* via;
+              VicusLatus* l;
+    ColloquiorumMontatio* m;
+               character* domus_vetus = NIHIL;
+
+    x    = (Mundus*)c->datum;
+    via  = librum_parare(c);
+    CREDO_NECESSE(via != NIHIL);
+    si (getenv("HOME"))
+    {
+        domus_vetus = (character*)piscina_allocare(c->piscina,
+            (memoriae_index)strlen(getenv("HOME")) + I);
+        CREDO_NECESSE(domus_vetus != NIHIL);
+        strcpy(domus_vetus, getenv("HOME"));
+    }
+    (vacuum)unsetenv("RHUBARB_MENSOR");
+    (vacuum)setenv("HOME", credo_area(c), 1);
+    CREDO_NECESSE(aedificare(x, c));
+    CREDO_VERUM(vicus_applicatio_admonitiones_aperire(&x->app, via));
+    si (domus_vetus)
+    {
+        (vacuum)setenv("HOME", domus_vetus, 1);
+    }
+    CREDO_VERUM(vicus_acervo_aperire(x->app.vicus, "colloquia", NIHIL));
+    (vacuum)vicus_pulsare(x->app.vicus);
+    l = vicus_latus(vicus_activa(x->app.vicus), VICUS_DEXTRUM);
+    CREDO_NECESSE(l && l->montata);
+    m = (ColloquiorumMontatio*)l->montatio;
+    CREDO_NECESSE(m->fons != NIHIL);
+    CREDO_VERUM(m->fons->mensor == NIHIL);
+    CREDO_VERUM(m->fons->quaestio == NIHIL);
+    CREDO_VERUM(colloquia_visus_cursus(m->fons) == NIHIL);
+}
+
 /* T4d: Esc in centro (et sessionibus) latus tollit, prius redit;
  * latus quod non optat (nomenclator) manet */
 interior vacuum
@@ -505,6 +605,10 @@ hic_manens constans CredoSectio SECTIONES[] = {
       NIHIL, NIHIL },
     { "redire", _probare_redire, mundum_parare, mundum_purgare, NIHIL,
       NIHIL },
+    { "cursus", _probare_cursus, mundum_parare, mundum_purgare, NIHIL,
+      NIHIL },
+    { "cursus_nulli", _probare_cursus_nullos, mundum_parare,
+      mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 
