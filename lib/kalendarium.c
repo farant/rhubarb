@@ -36,6 +36,8 @@ hic_manens constans character actio_calendarii[] = "calendarium.agere";
 #define KALENDARIUM_CAPSA            XXIV     /* ictus capsae: x < */
 #define KALENDARIUM_MARGO_X          VI       /* mensa: cellula una, */
 #define KALENDARIUM_MARGO_Y          VIII     /* ut scriba et pictor */
+#define KALENDARIUM_PLACENTA_LATITUDO  XIII   /* placenta (P6) */
+#define KALENDARIUM_PLACENTA_ALTITUDO  XII
 
 /* contextus figurarum (privatus; figurae_ctx): liturgia semel creata;
  * A6d: notae diei (charta, liber "dies/<ISO>" diei currentis) */
@@ -2200,6 +2202,96 @@ librum_aptare (
     KalendariumMontatio* m,
                   Motus* motus);
 
+/* P6d: placenta natalis sub mure (visus mensis, menu clausum) ->
+ * campus natalis_super "YYYY-MM-DD x y" (punctum muris in spatio
+ * calendarii); motus alibi, ictus, clavis, rotula, exitus delent.
+ * Scribitur solum si mutatur (motus vulgaris statum non tangit).
+ * VERUM: motus in cellula mensis consumptus - aliter dispensator eum
+ * ad radicem effundit, quae (non cellula) campum statim deleret.
+ * Exitus cellulae (dispensator eum POST motum in cellulam novam
+ * mittit) delet solum si campus eius diei est; et consumitur. */
+interior b32
+natalem_super_aptare (
+     KalendariumMontatio* m,
+     constans Destinatio* des,
+               Componens* nodus,
+        constans Eventus* ev)
+{
+                  character  valor[XLVIII];
+                       Dies  d;
+                    Punctum  q;
+                  Componens* radix;
+                     chorda* a;
+                        Xar* signa;
+         KalendariumFigurae* privatum;
+    constans FastiIntroitus* t;
+                        i32  i;
+                        b32  cellula;
+
+    si (   ev->genus != EVENTUS_MUS_MOTUS
+        && ev->genus != EVENTUS_MUS_DEPRESSUS
+        && ev->genus != EVENTUS_MUS_DUPLEX
+        && ev->genus != EVENTUS_MUS_ROTULA
+        && ev->genus != EVENTUS_MUS_EXIIT
+        && ev->genus != EVENTUS_CLAVIS_DEPRESSUS)
+    {
+        redde FALSUM;
+    }
+    cellula          = FALSUM;
+    valor[ZEPHYRUM]  = '\0';
+    si (   ev->genus == EVENTUS_MUS_EXIIT && nodus
+        && fasti_parsare_iso(nodus->id, &d))
+    {
+        a = insula_ramus_attributum(&m->ramus, "natalis_super");
+        si (a && chorda_incipit(*a, nodus->id))
+        {
+            (vacuum)campum_scribere(m, "natalis_super", "");
+        }
+        redde VERUM;
+    }
+    privatum  = (KalendariumFigurae*)m->figurae_ctx;
+    a         = insula_ramus_attributum(&m->ramus, "elenchus");
+    si (   ev->genus == EVENTUS_MUS_MOTUS && des && nodus && privatum
+        && privatum->scheda && !visus_diei(m) && !visus_agendae(m)
+        && !(a && a->mensura > ZEPHYRUM)
+        && (cellula = fasti_parsare_iso(nodus->id, &d))
+        && des->punctum_locale.x >= nodus->fines.latitudo
+            - KALENDARIUM_PLACENTA_LATITUDO - IV
+        && des->punctum_locale.y < KALENDARIUM_PLACENTA_ALTITUDO + IV)
+    {
+        signa = signati(m, d, d, privatum->scheda);
+        per (i = ZEPHYRUM; signa && i < xar_numerus(signa); i++)
+        {
+            t = (constans FastiIntroitus*)xar_obtinere(signa, i);
+            si (chorda_aequalis_literis(t->genus, FASTI_GENUS_NATALIS))
+            {
+                radix = nodus;
+                dum (   radix->parens
+                     && !chorda_aequalis_literis(radix->id,
+                         "kalendarium"))
+                {
+                    radix = radix->parens;
+                }
+                q.x  = ev->datum.mus.x;
+                q.y  = ev->datum.mus.y;
+                q    = destinatio_ad_locale(radix, q);
+                sprintf(valor, "%04d-%02d-%02d %d %d", (integer)d.annus,
+                    (integer)d.mensis, (integer)d.dies, (integer)q.x,
+                    (integer)q.y);
+                frange;
+            }
+        }
+    }
+    a = insula_ramus_attributum(&m->ramus, "natalis_super");
+    si (   (a && chorda_aequalis_literis(*a, valor))
+        || (!a && valor[ZEPHYRUM] == '\0'))
+    {
+        redde cellula;
+    }
+    (vacuum)campum_scribere(m, "natalis_super", valor);
+    redde cellula;
+}
+
 interior b32
 agere (
      InsulaRepositorium* repo,
@@ -2211,6 +2303,7 @@ agere (
 {
     KalendariumMontatio* m;
                     b32  r;
+                    b32  cellula_mota;
 
     m = (KalendariumMontatio*)ctx;
     /* A6d-2: focus in notis: claves notis et dispensatori (Tab, Esc
@@ -2221,7 +2314,8 @@ agere (
     {
         redde FALSUM;
     }
-    r = agere_intus(repo, motus, des, nodus, ev, ctx);
+    cellula_mota = natalem_super_aptare(m, des, nodus, ev);
+    r = agere_intus(repo, motus, des, nodus, ev, ctx) || cellula_mota;
     librum_aptare(m, motus);
     redde r;
 }
@@ -2323,9 +2417,8 @@ rectangulum (
 }
 
 /* P6: placenta natalis - pictogramma XIII x XII unius coloris ('#' =
- * punctum; series in lineis = rectangula I alta) */
-#define KALENDARIUM_PLACENTA_LATITUDO  XIII
-#define KALENDARIUM_PLACENTA_ALTITUDO  XII
+ * punctum; series in lineis = rectangula I alta); magnitudo supra
+ * (P6d: titulus volans eam in agere probat) */
 
 hic_manens constans character* constans placenta[
     KALENDARIUM_PLACENTA_ALTITUDO] = {
@@ -2948,6 +3041,92 @@ ordines_pingere (
     }
 }
 
+/* P6d: titulus volans natalium (campus natalis_super): nomina diei in
+ * capsa ad dextram infra cursorem (umbra, superficies, margo); ad
+ * marginem calendarii sinistrorsum aut sursum vertitur */
+interior vacuum
+natalium_titulum_pingere (
+    KalendariumFigurae* contextus,
+               Mandata* md,
+    constans Componens* c,
+                   Xar* signa)
+{
+                     chorda* a;
+      chorda_fissio_fructus  partes;
+                     chorda  lineae[VIII];
+                       Dies  d;
+                        s32  px;
+                        s32  py;
+                        s32  latitudo;
+                        s32  altitudo;
+                      Fines  capsa;
+                        i32  n;
+                        i32  i;
+    constans FastiIntroitus* t;
+
+    a = insula_ramus_attributum(&contextus->m->ramus, "natalis_super");
+    si (!a || a->mensura == ZEPHYRUM || !signa)
+    {
+        redde;
+    }
+    partes = chorda_fissio(*a, ' ', md->piscina);
+    si (   partes.numerus != III
+        || !fasti_parsare_iso(partes.elementa[ZEPHYRUM], &d)
+        || !chorda_ut_s32(partes.elementa[I], &px)
+        || !chorda_ut_s32(partes.elementa[II], &py))
+    {
+        redde;
+    }
+    n         = ZEPHYRUM;
+    latitudo  = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < xar_numerus(signa) && n < VIII; i++)
+    {
+        t = (constans FastiIntroitus*)xar_obtinere(signa, i);
+        si (   !dies_aequales(t->dies, d)
+            || !chorda_aequalis_literis(t->genus, FASTI_GENUS_NATALIS))
+        {
+            perge;
+        }
+        lineae[n] = signati_textus(t, md->piscina);
+        si ((s32)lineae[n].mensura * KALENDARIUM_LITTERA > latitudo)
+        {
+            latitudo = (s32)lineae[n].mensura * KALENDARIUM_LITTERA;
+        }
+        n++;
+    }
+    si (n == ZEPHYRUM)
+    {
+        redde;
+    }
+    latitudo        += VIII;
+    altitudo        = (s32)n * (KALENDARIUM_LINEA + II) + IV;
+    capsa.x         = px + VIII;
+    capsa.y         = py + XII;
+    capsa.latitudo  = latitudo;
+    capsa.altitudo  = altitudo;
+    si (capsa.x + latitudo > c->fines.latitudo - II)
+    {
+        capsa.x = px - IV - latitudo;
+    }
+    si (capsa.y + altitudo > c->fines.altitudo - II)
+    {
+        capsa.y = py - IV - altitudo;
+    }
+    capsa.x = capsa.x < II ? II : capsa.x;
+    capsa.y = capsa.y < II ? II : capsa.y;
+    figura_umbram_pingere(md, capsa);
+    rectangulum(md, capsa.x, capsa.y, latitudo, altitudo,
+        figura_color_thematis(COLOR_SUPERFICIES), VERUM);
+    rectangulum(md, capsa.x, capsa.y, latitudo, altitudo,
+        figura_color_thematis(COLOR_TEXT_DIM), FALSUM);
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        mandata_textus(md, capsa.x + IV, capsa.y + III + (s32)i
+            * (KALENDARIUM_LINEA + II), lineae[i], ZEPHYRUM,
+            figura_color_thematis(COLOR_TEXT));
+    }
+}
+
 /* <figura/> <purus/> tabula: fundus et cellulae omnes (liberi
  * PARTES_ITEM quorum id = dies ISO); dies liturgici et signa semel per
  * quadrum */
@@ -3093,6 +3272,8 @@ figura_tabulae (
                 figura_color_thematis(COLOR_TEXT_DIM));
         }
     }
+    /* P6d: titulus volans natalium super omnia */
+    natalium_titulum_pingere(contextus, md, c, signa);
 }
 
 /* titulus visus diei: dies plena; quadratum coloris et celebratio;

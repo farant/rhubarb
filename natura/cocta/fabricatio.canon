@@ -171,6 +171,15 @@
     maison, la bibliothèque credo).</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="contentum" genus="textus"/>
+    <attributum nomen="interactio" genus="electio">
+      <optio>automatica</optio>
+      <optio>manualis</optio>
+    </attributum>
+    <attributum nomen="occupatio" genus="electio">
+      <optio>nihil</optio>
+      <optio>fenestra</optio>
+      <optio>focus</optio>
+    </attributum>
     <attributum nomen="interrogat" genus="referentia"/>
     <liberum nomen="continet"/>
     <liberum nomen="exercet"/>
@@ -191,6 +200,15 @@
   <elementum nomen="probatio-unitatis">
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="contentum" genus="textus"/>
+    <attributum nomen="interactio" genus="electio">
+      <optio>automatica</optio>
+      <optio>manualis</optio>
+    </attributum>
+    <attributum nomen="occupatio" genus="electio">
+      <optio>nihil</optio>
+      <optio>fenestra</optio>
+      <optio>focus</optio>
+    </attributum>
     <attributum nomen="interrogat" genus="referentia"/>
     <liberum nomen="continet"/>
     <liberum nomen="exercet"/>
@@ -211,6 +229,15 @@
   <elementum nomen="probatio-integrationis">
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="contentum" genus="textus"/>
+    <attributum nomen="interactio" genus="electio">
+      <optio>automatica</optio>
+      <optio>manualis</optio>
+    </attributum>
+    <attributum nomen="occupatio" genus="electio">
+      <optio>nihil</optio>
+      <optio>fenestra</optio>
+      <optio>focus</optio>
+    </attributum>
     <attributum nomen="interrogat" genus="referentia"/>
     <liberum nomen="continet"/>
     <liberum nomen="exercet"/>
@@ -231,6 +258,15 @@
   <elementum nomen="probatio-regressionis">
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="contentum" genus="textus"/>
+    <attributum nomen="interactio" genus="electio">
+      <optio>automatica</optio>
+      <optio>manualis</optio>
+    </attributum>
+    <attributum nomen="occupatio" genus="electio">
+      <optio>nihil</optio>
+      <optio>fenestra</optio>
+      <optio>focus</optio>
+    </attributum>
     <attributum nomen="interrogat" genus="referentia"/>
     <liberum nomen="continet"/>
     <liberum nomen="exercet"/>
@@ -251,6 +287,15 @@
   <elementum nomen="probatio-fumi">
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="contentum" genus="textus"/>
+    <attributum nomen="interactio" genus="electio">
+      <optio>automatica</optio>
+      <optio>manualis</optio>
+    </attributum>
+    <attributum nomen="occupatio" genus="electio">
+      <optio>nihil</optio>
+      <optio>fenestra</optio>
+      <optio>focus</optio>
+    </attributum>
     <attributum nomen="interrogat" genus="referentia"/>
     <liberum nomen="continet"/>
     <liberum nomen="exercet"/>

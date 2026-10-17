@@ -118,19 +118,17 @@ oratio_vocabula_identificatorem_addere (
     constans character* via,
                    i32  linea);
 
-/* Viae EXCLUSAE lintus Latini (decisio Frani 2026-09-04): knotapel/
- * (Anglicum consulto, laboratorium mathematicum), vendor/ (alienum),
- * archivum/ (generationes praecedentes), oracula/ (glutinum circa
- * implementationes alienas ut oracula - identificatores alieni
- * necessitate; dispositio D0, 2026-10-03). Series praefixorum NIHIL
- * terminata; instrumentum -omnes-viae eam praeterit. */
-externus constans character* constans ORATIO_VOCABULA_EXCLUSA[];
+/* Ambitus lintus Latini NON hic: iudex lint_latinus in unitates.stml
+ * (lib/unitates.c, spec unitates-codicis U4, 2026-10-15) - knotapel/
+ * remissum, vendor/ oracula/ aliena, archivum/ archivatum, fixa
+ * fixturae (decisiones Frani 2026-09-04, 2026-10-03, 2026-10-15).
+ * Instrumentum (oratio/instrumenta/vocabula.c) viae tractatas per
+ * unitates_viae_iudicatae filtrat et 'exclusa' NIHIL dat. */
 
-/* Viae EXCLUSAE lintus Anglici (prosa; decisio Frani 2026-09-04):
- * vendor/ et archivum/ ut supra, et plagulae GENERATAE (gesta/annales/
- * tabula.md = proiectio tabularii, md/CENSUS.md); knotapel/ INCLUSUM
- * (Anglicum est). */
-externus constans character* constans ORATIO_PROSA_EXCLUSA[];
+/* Ambitus lintus Anglici (prosa) NON hic: iudex prosa_anglica in
+ * unitates.stml (decisio Frani 2026-09-04: vendor/ archivum/ generata
+ * exclusa, knotapel/ INCLUSUM - cura remissa; 2026-10-15: fixturae
+ * quoque exclusae). */
 
 /* An via praefixo aliquo seriei (NIHIL terminatae; NIHIL = nullae)
  * incipiat. */

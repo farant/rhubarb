@@ -636,6 +636,9 @@
   <vocabulum lemma="cfg" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio"/>
   <vocabulum lemma="fn" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio"/>
   <vocabulum lemma="err" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio"/>
+  <vocabulum lemma="multiplexor" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen alienum technicum: tmux = terminal multiplexor (bibliotheca multiplexor, colloquia-plan T1)"/>
+  <vocabulum lemma="tmux" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen programmatis (terminal multiplexor); ambitus TMUX in hamis (praeconium)"/>
+  <vocabulum lemma="tty" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio: teletypewriter, terminale (/dev/ttys011)"/>
   <vocabulum lemma="val" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio"/>
   <vocabulum lemma="msg" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio"/>
   <vocabulum lemma="op" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio"/>
@@ -997,6 +1000,50 @@
   <vocabulum lemma="rusage" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="struct rusage / RUSAGE_* sys/resource.h (usus subsidiorum processus); systema_posix.h 2026-10-13 pro tools/mensor.c (analytica T2)"/>
   <vocabulum lemma="getrusage" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="getrusage sys/resource.h (usum subsidiorum legere); systema_posix.h 2026-10-13 pro tools/mensor.c (analytica T2)"/>
   <vocabulum lemma="einprogress" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="EINPROGRESS errno.h (connexio non-blocans pergit); systema_posix.h 2026-10-14 pro lib/tcp_posix.c (http-vocatio T3)"/>
+  <vocabulum lemma="int8" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="int8_t stdint.h (C99 latitudo exacta); systema_posix.h 2026-10-15 pro vendor/bearssl_amalgama.h (tls-bearssl T1 R3)"/>
+  <vocabulum lemma="int16" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="int16_t stdint.h (C99 latitudo exacta); systema_posix.h 2026-10-15 pro vendor/bearssl_amalgama.h (tls-bearssl T1 R3)"/>
+  <vocabulum lemma="int32" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="int32_t stdint.h (C99 latitudo exacta); systema_posix.h 2026-10-15 pro vendor/bearssl_amalgama.h (tls-bearssl T1 R3)"/>
+  <vocabulum lemma="int64" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="int64_t stdint.h (C99 latitudo exacta); systema_posix.h 2026-10-15 pro vendor/bearssl_amalgama.h (tls-bearssl T1 R3)"/>
+  <vocabulum lemma="uint8" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="uint8_t stdint.h (C99 latitudo exacta); systema_posix.h 2026-10-15 pro vendor/bearssl_amalgama.h (tls-bearssl T1 R3)"/>
+  <vocabulum lemma="uint16" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="uint16_t stdint.h (C99 latitudo exacta); systema_posix.h 2026-10-15 pro vendor/bearssl_amalgama.h (tls-bearssl T1 R3)"/>
+  <vocabulum lemma="uint32" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="uint32_t stdint.h (C99 latitudo exacta); systema_posix.h 2026-10-15 pro vendor/bearssl_amalgama.h (tls-bearssl T1 R3)"/>
+  <vocabulum lemma="uint64" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="uint64_t stdint.h (C99 latitudo exacta); systema_posix.h 2026-10-15 pro vendor/bearssl_amalgama.h (tls-bearssl T1 R3)"/>
+  <vocabulum lemma="rsa" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="RSA (Rivest-Shamir-Adleman) - algorithmus clavis publicae; folia probationis TLS et vectura BearSSL (tls-bearssl T2 R12, 2026-10-15)"/>
+  <vocabulum lemma="securetransport" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="SecureTransport (Apple, Security.framework) - nomen proprium; vectura TLS vetus (tls-bearssl T3, 2026-10-15)"/>
+  <vocabulum lemma="bearssl" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="BearSSL (Thomas Pornin) - nomen proprium; vectura TLS (vendor/bearssl, tls-bearssl T3, 2026-10-15)"/>
+  <vocabulum lemma="tls13" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="TLS 1.3 (RFC 8446) - nomen protocolli; cliens proprius lib/tls13*.c (tls13 T1, 2026-10-16)"/>
+  <vocabulum lemma="rfc" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="RFC (Request for Comments, IETF) - abbreviatio; textus normarum ut oracula (tls13 T1, 2026-10-16)"/>
+  <vocabulum lemma="rfc8448" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="RFC 8448 (Example Handshake Traces for TLS 1.3) - nomen normae; oraculum probationes/fixa/tls13 (tls13 T1, 2026-10-16)"/>
+  <vocabulum lemma="rfc5869" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="RFC 5869 (HKDF) - nomen normae; vectores A.1 in probatio_tls13_clavis (tls13 T1, 2026-10-16)"/>
+  <vocabulum lemma="hkdf" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="HKDF (HMAC-based Key Derivation Function, RFC 5869) - abbreviatio (tls13 T1, 2026-10-16)"/>
+  <vocabulum lemma="prk" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="PRK (pseudorandom key, RFC 5869) - abbreviatio normae (tls13 T1, 2026-10-16)"/>
+  <vocabulum lemma="ikm" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="IKM (input keying material, RFC 5869) - abbreviatio normae (tls13 T1, 2026-10-16)"/>
+  <vocabulum lemma="okm" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="OKM (output keying material, RFC 5869) - abbreviatio normae (tls13 T1, 2026-10-16)"/>
+  <vocabulum lemma="sha384" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="SHA-384 (FIPS 180-4) - nomen algorithmi digesti (tls13 T1, 2026-10-16)"/>
+  <vocabulum lemma="hrr" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="HRR (HelloRetryRequest, RFC 8446 4.1.4) - abbreviatio normae (tls13 T1, 2026-10-16)"/>
+  <vocabulum lemma="trafficus" lingua="latina" classis="substantivum" nota="vox domus: traffic (RFC 8446 'traffic secret'); secretum/claves traffici (tls13 T1, 2026-10-16)"><forma textus="traffici"/></vocabulum>
+  <vocabulum lemma="gcm" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="GCM (Galois/Counter Mode, NIST SP 800-38D) - abbreviatio; AES-GCM recordorum TLS 1.3 (tls13 T2, 2026-10-16)"/>
+  <vocabulum lemma="chacha" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="ChaCha (D. J. Bernstein) - nomen proprium cifrae (tls13 T2, 2026-10-16)"/>
+  <vocabulum lemma="chacha20" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="ChaCha20 (RFC 8439) - nomen proprium cifrae (tls13 T2, 2026-10-16)"/>
+  <vocabulum lemma="poly1305" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="Poly1305 (RFC 8439) - nomen proprium authenticatoris (tls13 T2, 2026-10-16)"/>
+  <vocabulum lemma="aes256" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="AES-256 (FIPS 197) - nomen algorithmi cum mensura clavis (tls13 T2, 2026-10-16)"/>
+  <vocabulum lemma="aes128" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="AES-128 (FIPS 197) - nomen algorithmi cum mensura clavis; sectio cifrae coactae (tls13 T6, 2026-10-16)"/>
+  <vocabulum lemma="scribibilis" lingua="latina" classis="adiectivum" nota="vox domus: writable (fossa parata ad scribendum; tcp.h, tls.h exspecta scribibilem) - tls13 T7, 2026-10-16"><forma textus="scribibilis"/><forma textus="scribibilem"/></vocabulum>
+  <vocabulum lemma="ccs" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="CCS (ChangeCipherSpec, RFC 8446 D.4) - abbreviatio normae (tls13 T2, 2026-10-16)"/>
+  <vocabulum lemma="aead" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="AEAD (authenticated encryption with associated data, RFC 5116) - abbreviatio (tls13 T2, 2026-10-16)"/>
+  <vocabulum lemma="aad" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="AAD (additional authenticated data, RFC 5116) - abbreviatio (tls13 T2, 2026-10-16)"/>
+  <vocabulum lemma="alerta" lingua="latina" classis="substantivum" nota="vox domus: alert TLS (RFC 8446 6, Alert) - nuntius erroris aut clausurae inter pares (tls13 T2, 2026-10-16)"><forma textus="alerta"/><forma textus="alertam"/></vocabulum>
+  <vocabulum lemma="cifrare" lingua="latina" classis="verbum" nota="vox domus ex cifra: cifrare = encrypt (b32 directionis AEAD in tls13_recordum) (tls13 T2, 2026-10-16)"><forma textus="cifrare"/></vocabulum>
+  <vocabulum lemma="keyupdate" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="KeyUpdate (RFC 8446 4.6.3) - nomen nuntii normae (tls13 T3, 2026-10-16)"/>
+  <vocabulum lemma="ee" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="EE (EncryptedExtensions, RFC 8446 4.3.1) - abbreviatio normae (tls13 T3, 2026-10-16)"/>
+  <vocabulum lemma="serverhello" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="ServerHello (RFC 8446 4.1.3) - nomen nuntii normae (tls13 T3, 2026-10-16)"/>
+  <vocabulum lemma="clienthello" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="ClientHello (RFC 8446 4.1.2) - nomen nuntii normae (tls13 T3, 2026-10-16)"/>
+  <vocabulum lemma="nst" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="NST (NewSessionTicket, RFC 8446 4.6.1) - abbreviatio normae (tls13 T3, 2026-10-16)"/>
+  <vocabulum lemma="secp256" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="secp256r1 (SEC 2, P-256) - nomen curvae; NamedGroup 0x0017 (tls13 T3, 2026-10-16)"/>
+  <vocabulum lemma="ip" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="IP (Internet Protocol) - abbreviatio; hospes litteralis sine server_name (tls13 T3, 2026-10-16)"/>
+  <vocabulum lemma="ack" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="ack (acknowledge) - abbreviatio API machinae more BearSSL: *_ack(n) n octetos consumptos nuntiat (tls13 T4, 2026-10-16)"/>
+  <vocabulum lemma="entropia" lingua="latina" classis="substantivum" nota="vox domus (Latina scientifica): entropy - semen fortis systematis (TLS13_ERROR_ENTROPIA, tls13 T4, 2026-10-16)"><forma textus="entropia"/></vocabulum>
+  <vocabulum lemma="inet6" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="AF_INET6 sys/socket.h (familia IPv6); systema_posix.h 2026-10-15 pro probationes/probatio_nomina.c (http-vocatio, conatus gradati)"/>
   <vocabulum lemma="offsetof" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="macrum ISO C89 stddef.h (typum accipit); systema_c89.h 2026-09-25 silva-migratio T16a"/>
   <vocabulum lemma="assert" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="macrum ISO C89 assert.h; systema_c89.h 2026-09-25 silva-migratio T16a"/>
   <vocabulum lemma="menu" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen rei interfaciei (menu applicationis macOS), ut plist; fenestra_menu_addere et EVENTUS_MENU 2026-09-14 (plan 8)"/>
@@ -1077,6 +1124,7 @@
   <vocabulum lemma="minuibilis" lingua="latina" classis="adiectivum" nota="coinage domus (pictor): qui minui potest (fenestra)"><forma textus="minuibilis"/><forma textus="minuibile"/></vocabulum>
   <vocabulum lemma="numericus" lingua="latina" classis="adiectivum" nota="Latina sera: ad numeros pertinens (componens, mandatum)"><forma textus="numericum"/><forma textus="numericus"/><forma textus="numerica"/></vocabulum>
   <vocabulum lemma="defocus" lingua="latina" classis="substantivum" nota="coinage domus (pictor): amissio foci (fenestra)"><forma textus="defocus"/></vocabulum>
+  <vocabulum lemma="epacta" lingua="latina" classis="substantivum" nota="Latina sera (computus): aetas lunae die I Ianuarii - computus Paschalis (probatio_calendarium)"><forma textus="epacta"/></vocabulum>
   <vocabulum lemma="ephemera" lingua="latina" classis="substantivum" nota="Graeca: res diei unius (insula: contra durabile)"><forma textus="ephemera"/></vocabulum>
   <vocabulum lemma="rotula" lingua="latina" classis="substantivum" nota="Latina: rota parva (fenestra: rotula muris)"><forma textus="rotula"/><forma textus="rotulae"/><forma textus="rotulam"/></vocabulum>
   <vocabulum lemma="schirmum" lingua="latina" classis="substantivum" nota="coinage domus (pictor, ex Germanico Schirm): screen (manus_ludus)"><forma textus="schirmum"/><forma textus="schirmi"/><forma textus="schirmus"/></vocabulum>
@@ -1152,6 +1200,11 @@
     <forma textus="partibus" casus="ablativus" numerus="pluralis" genus="femininum"/>
     <forma textus="partes" casus="accusativus" numerus="pluralis" genus="femininum"/>
   </vocabulum>
+  <vocabulum lemma="obligatorius" lingua="latina" classis="adiectivum" nota="Latina sera/ecclesiastica: qui obligat - memoria obligatoria (calendarium_liturgicum)"><forma textus="obligatorius"/><forma textus="obligatoria"/><forma textus="obligatoriae"/><forma textus="obligatorium"/></vocabulum>
+  <vocabulum lemma="panellus" lingua="latina" classis="substantivum" nota="Latina sera (pannus): tabella parva - panellus tmux (pane; multiplexor)"><forma textus="panellus"/><forma textus="panelli"/><forma textus="panellum"/><forma textus="panellos"/><forma textus="panellorum"/><forma textus="panello"/></vocabulum>
+  <vocabulum lemma="recentissimus" lingua="latina" classis="adiectivum" nota="Latina (recens, superlativus; Cicero): novissimus tempore - admonitio recentissima (admonitiones_visus, colloquia-plan T4a)"><forma textus="recentissima"/><forma textus="recentissimae"/><forma textus="recentissimum"/><forma textus="recentissimus"/></vocabulum>
+  <vocabulum lemma="volabilis" lingua="latina" classis="adiectivum" nota="Latina (Ovidius; volare): quod volat, fugax - admonitio volabilis = quae ut volans (toast) ostendi potest (admonitiones_volantes, colloquia-plan T4b)"><forma textus="volabilis"/></vocabulum>
+  <vocabulum lemma="sanctoralis" lingua="latina" classis="adiectivum" nota="Latina ecclesiastica: ad sanctorale (proprium sanctorum) pertinens - contra temporalis (calendarium_liturgicum)"><forma textus="sanctoralis"/><forma textus="sanctorale"/><forma textus="sanctoralem"/><forma textus="sanctorales"/></vocabulum>
   <vocabulum lemma="sanctus" lingua="latina" classis="adiectivum" nota="WORDS sancio participium primum; chartae: sancti CCXXXVIII sancte LXVI diuina/sancta (LLCT dev ADJ)">
     <forma textus="sanctus" casus="nominativus" numerus="singularis" genus="masculinum"/>
     <forma textus="sancti" casus="genitivus" numerus="singularis" genus="masculinum"/>

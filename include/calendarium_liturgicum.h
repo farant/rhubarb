@@ -41,8 +41,9 @@ nomen enumeratio {
 /* ==================================================
  * Constantae - Gradus Celebrationis
  *
- * Ordo praecedentiae celebrationum.
- * Maior numerus = maior dignitas.
+ * GENUS celebrationis ad ostendendum (sollemnitas, festum, memoria,
+ * dominica, feria). Praecedentiam NON dat - vide OrdoTabulae
+ * (liturgia-plan L1). Valores priores servati.
  * ================================================== */
 
 nomen enumeratio {
@@ -51,9 +52,44 @@ nomen enumeratio {
     GRADUS_MEMORIA             = II,        /* Memoria obligatoria */
     GRADUS_FESTUM              = III,       /* Festum */
     GRADUS_SOLLEMNITAS         = IV,        /* Sollemnitas */
-    GRADUS_DOMINICA            = V,         /* Dominica (supra memorias) */
-    GRADUS_DIES_PECULIARIS     = VI         /* Feria IV Cinerum, Hebdomada Sancta */
+    GRADUS_DOMINICA            = V,         /* Dominica */
+    GRADUS_DIES_PECULIARIS     = VI,        /* Cineres, Hebdomada Sancta,
+                                             * Triduum, Octava Paschae */
+    GRADUS_DEFUNCTORUM         = VII        /* Commemoratio omnium
+                                             * fidelium defunctorum */
 } GradusCelebrationis;
+
+
+/* ==================================================
+ * Constantae - Ordo Tabulae Dierum Liturgicorum
+ *
+ * Normae Universales de Anno Liturgico 59: tabula dierum secundum
+ * praecedentiam. MINOR numerus = MAIOR praecedentia. Celebratio
+ * principalis diei = ordo minimus inter celebrationes nec ad libitum
+ * nec commemoratas; ordine aequali temporale vincit.
+ * ================================================== */
+
+nomen enumeratio {
+    ORDO_TRIDUUM                = I,     /* Triduum Paschale */
+    ORDO_PRIVILEGIATUS          = II,    /* Nativitas, Epiphania, Ascensio,
+                                          * Pentecoste; Dominicae Adventus,
+                                          * Quadragesimae, Paschae; Cineres;
+                                          * Hebdomada Sancta II-V; Octava
+                                          * Paschae */
+    ORDO_SOLLEMNITAS_GENERALIS  = III,   /* + Commemoratio Defunctorum */
+    ORDO_SOLLEMNITAS_PROPRIA    = IV,
+    ORDO_FESTUM_DOMINI          = V,
+    ORDO_DOMINICA_COMMUNIS      = VI,    /* Dominicae Nativitatis et per
+                                          * annum */
+    ORDO_FESTUM_GENERALE        = VII,
+    ORDO_FESTUM_PROPRIUM        = VIII,
+    ORDO_FERIA_PRIVILEGIATA     = IX,    /* 17-24 XII, octava Nativitatis,
+                                          * feriae Quadragesimae */
+    ORDO_MEMORIA_GENERALIS      = X,
+    ORDO_MEMORIA_PROPRIA        = XI,
+    ORDO_MEMORIA_AD_LIBITUM     = XII,
+    ORDO_FERIA                  = XIII
+} OrdoTabulae;
 
 
 /* ==================================================
@@ -93,7 +129,8 @@ nomen enumeratio {
 nomen enumeratio {
     GENUS_TEMPORALE  = ZEPHYRUM,  /* Ex tempore (Dominicae, feriae) */
     GENUS_SANCTORALE = I,         /* Ex calendario sanctorum */
-    GENUS_MOBILE     = II         /* Festa mobilia (ex Paschate) */
+    GENUS_MOBILE     = II         /* Festa mobilia (ex anchoris: Pascha,
+                                   * Adventus, Nativitas, Epiphania) */
 } GenusCelebrationis;
 
 
@@ -105,10 +142,22 @@ nomen enumeratio {
 nomen structura {
                  chorda titulus;        /* Titulus plenus */
                  chorda titulus_brevis; /* Titulus abbreviatus */
-    GradusCelebrationis gradus;
+    GradusCelebrationis gradus;         /* genus ad ostendendum */
+            OrdoTabulae ordo;           /* praecedentia */
         ColorLiturgicus color;
      GenusCelebrationis genus;
-                    s32 lectionarium;   /* Numerus in Lectionario (-1 si ignotus) */
+                    b32 ad_libitum;     /* hodie ad libitum (etiam memoriae
+                                         * obligatoriae duae eodem die) -
+                                         * numquam principalis */
+                    b32 commemoratio;   /* memoria in feria privilegiata:
+                                         * collecta sola - numquam
+                                         * principalis, colorem non dat */
+                    b32 translata;      /* sollemnitas impedita in hunc
+                                         * diem translata */
+                   Dies dies_originis;  /* dies propria (translata: dies
+                                         * impedita; aliter dies ipsa) */
+                    s32 lectionarium;   /* Numerus in Lectionario (-1 si
+                                         * ignotus) */
 } Celebratio;
 
 
@@ -129,7 +178,16 @@ nomen structura {
 } InformatioTemporis;
 
 
-/* InformatioDiei - Informationes completae pro una die */
+/* InformatioDiei - Informationes completae pro una die
+ *
+ * celebrationes = celebratio DIEI primum (temporalis, aut mobilis
+ * quae eam substituit - Pascha, Palmae, Pentecoste, Trinitas ...),
+ * deinde sanctorales et memoriae mobiles quae celebrari possunt
+ * (victae omittuntur; memoriae in feria privilegiata cum
+ * commemoratio; memoriae obligatoriae duae eodem die ambae ad
+ * libitum). celebratio_principalis = ordo
+ * minimus inter non ad libitum nec commemoratas (numquam NIHIL);
+ * color_diei = color principalis. */
 nomen structura {
                   Dies  dies;
     InformatioTemporis  tempus_info;
@@ -142,7 +200,8 @@ nomen structura {
 } InformatioDiei;
 
 
-/* AnchoresMobiles - Dies movebiles pro anno */
+/* AnchoresMobiles - Dies movebiles pro anno CIVILI (calendarium USA:
+ * Epiphania dominica 2-8 I, Ascensio et Corpus Christi dominica) */
 nomen structura {
     s32 annus;
 
@@ -154,16 +213,28 @@ nomen structura {
     Dies feria_v_in_cena_domini;
     Dies feria_vi_in_passione;
     Dies sabbatum_sanctum;
-    Dies ascensio;
+    Dies ascensio;               /* USA: Dominica VII Paschae
+                                  * (Pascha + XLII) */
     Dies pentecoste;
+    Dies maria_mater_ecclesiae;  /* feria II post Pentecosten */
     Dies ss_trinitas;
-    Dies corpus_christi;
+    Dies corpus_christi;         /* USA: dominica post Trinitatem
+                                  * (Pascha + LXIII) */
     Dies cor_iesu;
+    Dies cor_immaculatum;        /* sabbatum post Cor Iesu */
 
     /* Adventus et Nativitas */
     Dies dominica_i_adventus;
     Dies christus_rex;
-    Dies baptisma_domini;
+    Dies epiphania;              /* USA: dominica 2-8 I */
+    Dies baptisma_domini;        /* dominica post Epiphaniam; feria II
+                                  * si Epiphania 7 aut 8 I */
+    Dies sancta_familia;         /* dominica intra octavam Nativitatis,
+                                  * aut 30 XII si nulla */
+
+    /* Proprium USA */
+    Dies gratiarum_actio;        /* Thanksgiving: feria V quarta
+                                  * Novembris */
 } AnchoresMobiles;
 
 
@@ -188,7 +259,13 @@ calendarium_destruere (
  * Quaestio Principalis
  * ================================================== */
 
-/* Obtinere informationes completas pro die */
+/* Annus validus calendarii (Forma Ordinaria ab Adventu 1969):
+ * extra - aut die invalida, aut cal NIHIL - obtinere_diem NIHIL
+ * reddit */
+#define CALENDARIUM_ANNUS_PRIMUS    MCMLXX
+#define CALENDARIUM_ANNUS_ULTIMUS   (IX * M + CMXCIX)
+
+/* Obtinere informationes completas pro die (NIHIL extra dominium) */
 InformatioDiei*
 calendarium_obtinere_diem (
     CalendariumLiturgicum* cal,
@@ -297,11 +374,23 @@ Dies
 calendarium_proxima_dominica (
     Dies dies);
 
+/* titulus (plenus aut brevis, exactus) celebrationis mobilis aut
+ * sanctoralis: dies eius anno dato (translata: dies nova); non
+ * inventa: dies 0-0-0 */
 Dies
 calendarium_invenire_festum (
     CalendariumLiturgicum* cal,
                    chorda  titulus,
                       s32  annus);
+
+/* Dies festus de praecepto USA (dominicis exceptis): Nativitas;
+ * Immaculata (non translata in 9 XII); 1 I, 15 VIII, 1 XI nisi
+ * sabbato aut feria II (norma complementaria ad can. 1246 §2).
+ * Ascensio in USA dominica est. */
+b32
+calendarium_dies_obligationis (
+    CalendariumLiturgicum* cal,
+                     Dies  dies);
 
 
 /* ==================================================
@@ -331,25 +420,25 @@ calendarium_formare_titulum (
                      Dies  dies,
                   Piscina* piscina);
 
-/* Obtinere nomina omnium celebrationum pro die (mobiles et fixae)
- *
- * Redde chorda cum nominibus celebrationum iunctis per ", ".
- * Si nulla celebratio, redde chorda vacua.
- *
- * dies: dies quaerenda
- * piscina: piscina pro allocare chorda
- *
- * Redde: chorda cum nominibus (e.g. "Easter", "St. Stephen", "Ss. Peter, Paul")
- */
+/* nomina celebrationum diei ex calendarium_obtinere_diem (F14):
+ * celebrationes non temporales (principalis, ad libitum,
+ * commemoratae) per ", "; vacua si nulla */
 chorda
 calendarium_nomen_celebrationum (
-       Dies  dies,
-    Piscina* piscina);
+    CalendariumLiturgicum* cal,
+                     Dies  dies,
+                  Piscina* piscina);
 
 
 /* ==================================================
  * Sanctorale - Data Structure
  * ================================================== */
+
+/* Sanctorale vigens ad: calendarium USA (USCCB 2026) et decretum
+ * ultimum inscriptum - S. Ioannes Henricus Newman (9 X; Dicasterium
+ * de Cultu Divino, 9 XI 2025). Fons et excerpta:
+ * probationes/fixa/liturgia/usccb_sanctorale.tsv (liturgia-plan L4) */
+#define CALENDARIUM_SANCTORALE_VIGENS "2026-02"
 
 /* SanctoraleDatum - Entry in the sanctorale table */
 nomen structura {
@@ -358,6 +447,7 @@ nomen structura {
      constans character* titulus;         /* English name */
      constans character* titulus_brevis;  /* Abbreviated name */
     GradusCelebrationis  gradus;
+            OrdoTabulae  ordo;              /* praecedentia (UNLY 59) */
         ColorLiturgicus  color;
                     b32  dies_obligationis;  /* US Holy Day of Obligation */
 } SanctoraleDatum;

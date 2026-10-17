@@ -1,0 +1,2 @@
+%1	main	1	secunda	1	100	/dev/ttys001	2.1.296	/w/alpha	1	1
+%2	main	2	beta	1	101	/dev/ttys002	2.1.296	/w/beta	1	0

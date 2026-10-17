@@ -282,6 +282,9 @@ house rule of independent composable libraries.
   on the next occurrence (today inclusive; 29 Feb -> 28 Feb); port
   `NomenclatorDiemAperire`, calendar argument "YYYY-MM-DD". P6
   complete. Next: P4 fuzzy search or P7 photo - Fran to choose.
+- **P6d DONE 2026-10-15** (Fran): hovering the cake on the calendar's
+  month view shows a tooltip with that day's birthdays (transient field
+  `natalis_super`; flips at the edges; no delay).
 - **P4 DONE 2026-10-15**: `/` search prompt, live ranked results
   (similitudo over display names, inside the tag filter, flat list in
   both views), Enter commits (field `quaestio`, transient), Esc clears

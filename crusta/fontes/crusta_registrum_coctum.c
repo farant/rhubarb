@@ -1,9 +1,9 @@
-/* crusta_registrum_coctum.c
+/* crusta_registrum_coctum.c - GENERATUM, NE MANU EDITES
  *
- * Registrum generum COCTUM grammaticae 'crusta' - GENERATUM, NE MANU
- * EDITES. Fons: crusta/grammatica/crusta.registrum.stml
- * (materia/coquere.sh). Series LOCORUM plana; quodque genus fenestram
- * suam per loci_offset + loci_numerus nominat. Genera L, loci CLXXVI.
+ * Registrum generum COCTUM grammaticae 'crusta'. Fons:
+ * crusta/grammatica/crusta.registrum.stml (materia/coquere.sh). Series
+ * LOCORUM plana; quodque genus fenestram suam per loci_offset +
+ * loci_numerus nominat. Genera L, loci CLXXVI.
  */
 
 #include "crusta_registrum_coctum.h"

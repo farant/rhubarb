@@ -809,3 +809,35 @@ the day view on that day ("YYYY-MM" keeps the old behaviour: selects a
 day, view unchanged). Test gap found by a plant: the first test started
 IN day view, so dropping `visum_ponere("dies")` from argumentum_ponere
 stayed green - added a case starting from the month view.
+
+## 2026-10-15 - P6d: birthday tooltip on the month view (Fran)
+
+Hovering a cell's cake shows a small box with that day's birthdays
+("Anna Rossi turns 40", one line each - same text as the day-view rows),
+below-right of the cursor, flipped left/up at the calendar's edges
+(theme surface, 1 px dim border, the post-it shadow). State is the
+transient field `natalis_super` = "YYYY-MM-DD x y" (manifest, approved),
+written by `natalem_super_aptare` in `agere` before the inner dispatch,
+only when it changes; drawn last in the month figure
+(`natalium_titulum_pingere`). Shown immediately (no hover delay - would
+need the dispatcher's quiet timer; follow-up if it feels jumpy).
+
+Two dispatcher facts found while making it work (trace, then fix):
+- Motion over a cell that the action does not CONSUME bubbles to the
+  root; the root is not a date cell, so it cleared the field right
+  after the cell set it. Motion over a month cell is now consumed.
+- `MUS_EXIIT` for the PREVIOUS cell is delivered AFTER the motion that
+  entered the new one (dispensator derives enter/exit from motion), so
+  "any exit clears" wiped the new tooltip. A cell's exit now clears
+  only if the field belongs to that cell's date (and is consumed);
+  an exit of anything else clears.
+
+Tests (`natalis_super`, fixture gains Marco Verdi Oct 31 - Saturday,
+rightmost column): set over the cake, box drawn right of the cursor;
+cleared at the cell centre and at the cake's row left edge; nothing on
+a cell without birthdays; Luca (no year) after moving cake to cake;
+click clears; Oct 31 flips left and stays inside; `L` clears. Six
+plants red (one survivor first: widening the hit area horizontally -
+the "off the cake" point was below the cake; a left-edge point now
+guards it). Headless screenshots: $TMPDIR/imago/p6d_2026-10-14.png and
+p6d_2026-10-31.png (two birthdays, flipped).

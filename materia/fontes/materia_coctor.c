@@ -700,8 +700,11 @@ _involvere (
     _linea_nova(a);
 }
 
-/* commentarium capitis plagulae: nomen plagulae, linea vacua, prosa
- * ('Registrum generum COCTUM ... Fons ... ratio, Genera R, loci R.') */
+/* commentarium capitis plagulae: nomen plagulae cum SIGNO GENERATI in
+ * linea PRIMA (lex domus - formator, iudices unitatum, porta generata
+ * lineam primam legunt; olim signum in linea III stabat et plagula ut
+ * manu scripta videbatur), linea vacua, prosa ('Registrum generum
+ * COCTUM ... Fons ... ratio, Genera R, loci R.') */
 interior b32
 _caput_plagulae (
          ChordaAedificator* a,
@@ -722,12 +725,13 @@ _caput_plagulae (
     _chordam(a, coctio->grammatica);
     _literis(a, STIRPS);
     _literis(a, suffixum);
+    _literis(a, " - GENERATUM, NE MANU EDITES");
     _linea_nova(a);
     _literis(a, " *");
     _linea_nova(a);
     _literis(p, "Registrum generum COCTUM grammaticae '");
     _chordam(p, coctio->grammatica);
-    _literis(p, "' - GENERATUM, NE MANU EDITES. Fons: ");
+    _literis(p, "'. Fons: ");
     _literis(p, via_declarationis);
     _literis(p, " (materia/coquere.sh). ");
     _literis(p, ratio);

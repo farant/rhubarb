@@ -213,15 +213,18 @@ _reddere_details (
     color_lectionary  = color_ad_pixelum(color_ex_palette(VI)); /* #6 */
 
     /* Creare piscina temporaria pro informatione diei */
-    piscina_temp = piscina_generare_dynamicum("calendario_temp", M * LXIV);
+    piscina_temp = piscina_generare_dynamicum("calendario_temp",
+        M * LXIV);
     si (piscina_temp == NIHIL)
     {
         redde;
     }
 
     /* Obtinere informationes diei selecti */
-    dies_sel = fasti_dies(visus->annus_visus, visus->mensis_visus, visus->dies_selectus);
-    info = calendarium_obtinere_diem(visus->cal, dies_sel, piscina_temp);
+    dies_sel = fasti_dies(visus->annus_visus, visus->mensis_visus,
+        visus->dies_selectus);
+    info = calendarium_obtinere_diem(visus->cal, dies_sel,
+        piscina_temp);
 
     linea_pixel = offset_y;
 
@@ -235,7 +238,8 @@ _reddere_details (
         aed = chorda_aedificator_creare(piscina_temp, CXXVIII);
         si (aed != NIHIL)
         {
-            fasti_scribere_diem(aed, dies_sel, FASTI_FORMA_ANGLICA_LONGA);
+            fasti_scribere_diem(aed, dies_sel,
+                FASTI_FORMA_ANGLICA_LONGA);
 
             /* Addere hebdomadam anni */
             hebdomada = fasti_hebdomada_anni(dies_sel);
@@ -245,7 +249,8 @@ _reddere_details (
             chorda_date = chorda_aedificator_spectare(aed);
 
             pixel_y = linea_pixel;
-            per (col = ZEPHYRUM; col < (i32)chorda_date.mensura && col < latitudo; col++)
+            per (col = ZEPHYRUM; col < (i32)chorda_date.mensura
+                && col < latitudo; col++)
             {
                 pixel_x = offset_x + col * char_width;
                 tabula_pixelorum_pingere_characterem_scalatum(
@@ -262,7 +267,8 @@ _reddere_details (
     {
         /* Obtinere colorem liturgicum - eodem modo ac grilla */
         ColorLiturgicus lit_color_temp;
-        lit_color_temp = calendarium_color_temporis(visus->cal, dies_sel);
+        lit_color_temp = calendarium_color_temporis(visus->cal,
+            dies_sel);
         color_tempus = _color_liturgicus_ad_pixelum(lit_color_temp);
 
         /* Linea 4: Tempus liturgicum (Anglice) - liturgical color */
@@ -272,13 +278,20 @@ _reddere_details (
 
             commutatio (info->tempus_info.tempus)
             {
-                casus TEMPUS_ADVENTUS:      nomen_anglicum = "Advent"; frange;
-                casus TEMPUS_NATIVITATIS:   nomen_anglicum = "Christmas"; frange;
-                casus TEMPUS_PER_ANNUM_I:   nomen_anglicum = "Ordinary Time"; frange;
-                casus TEMPUS_QUADRAGESIMAE: nomen_anglicum = "Lent"; frange;
-                casus TEMPUS_TRIDUUM_SACRUM: nomen_anglicum = "Sacred Triduum"; frange;
-                casus TEMPUS_PASCHALE:      nomen_anglicum = "Easter"; frange;
-                casus TEMPUS_PER_ANNUM_II:  nomen_anglicum = "Ordinary Time"; frange;
+                casus TEMPUS_ADVENTUS:      nomen_anglicum =
+                                                "Advent"; frange;
+                casus TEMPUS_NATIVITATIS:   nomen_anglicum =
+                                                "Christmas"; frange;
+                casus TEMPUS_PER_ANNUM_I:   nomen_anglicum =
+                                                "Ordinary Time"; frange;
+                casus TEMPUS_QUADRAGESIMAE: nomen_anglicum =
+                                                "Lent"; frange;
+                casus TEMPUS_TRIDUUM_SACRUM: nomen_anglicum =
+                                                 "Sacred Triduum"; frange;
+                casus TEMPUS_PASCHALE:      nomen_anglicum =
+                                                "Easter"; frange;
+                casus TEMPUS_PER_ANNUM_II:  nomen_anglicum =
+                                                "Ordinary Time"; frange;
                 ordinarius:                 nomen_anglicum = ""; frange;
             }
 
@@ -286,7 +299,8 @@ _reddere_details (
             si (nomen_len > ZEPHYRUM)
             {
                 pixel_y = linea_pixel;
-                per (col = ZEPHYRUM; col < nomen_len && col < latitudo; col++)
+                per (col = ZEPHYRUM; col < nomen_len
+                    && col < latitudo; col++)
                 {
                     pixel_x = offset_x + col * char_width;
                     tabula_pixelorum_pingere_characterem_scalatum(
@@ -314,7 +328,8 @@ _reddere_details (
                 info->cyclus.hebdomada_psalterii);
 
             pixel_y = linea_pixel;
-            per (col = ZEPHYRUM; col < (i32)longitudo && col < latitudo; col++)
+            per (col = ZEPHYRUM; col < (i32)longitudo
+                && col < latitudo; col++)
             {
                 pixel_x = offset_x + col * char_width;
                 tabula_pixelorum_pingere_characterem_scalatum(
@@ -327,7 +342,8 @@ _reddere_details (
 
         /* Linea speciale: Festivitas mobilis (si adest) - yellow #11 */
         {
-            constans character* nomen_fest = fasti_nomen_festivitatis(dies_sel);
+            constans character* nomen_fest =
+                fasti_nomen_festivitatis(dies_sel);
             si (nomen_fest != NIHIL)
             {
                 i32 fest_len = (i32)strlen(nomen_fest);
@@ -346,14 +362,17 @@ _reddere_details (
         }
 
         /* Linea 6: Celebrationes sanctorales - yellow #11 */
-        si (info->numerus_celebrationum > I && info->celebrationes != NIHIL)
+        si (   info->numerus_celebrationum > I
+            && info->celebrationes != NIHIL)
         {
             i32 idx;
             i32 max_pixel_y = altitudo * char_height;
-            per (idx = I; idx < (i32)info->numerus_celebrationum && linea_pixel < max_pixel_y; idx++)
+            per (idx = I; idx < (i32)info->numerus_celebrationum
+                && linea_pixel < max_pixel_y; idx++)
             {
                 Celebratio* celeb = &info->celebrationes[idx];
-                si (celeb->titulus.mensura > ZEPHYRUM && celeb->titulus.datum != NIHIL)
+                si (   celeb->titulus.mensura > ZEPHYRUM
+                    && celeb->titulus.datum != NIHIL)
                 {
                     i32 max_chars      = latitudo - II;
                     i32 chars_to_copy  = celeb->titulus.mensura;
@@ -368,7 +387,8 @@ _reddere_details (
                         pixel_x = offset_x + col * char_width;
                         tabula_pixelorum_pingere_characterem_scalatum(
                             tabula, pixel_x, pixel_y,
-                            (character)celeb->titulus.datum[col], color_feast, scala
+                            (character)celeb->titulus.datum[col],
+                            color_feast, scala
                             );
                     }
                     linea_pixel += char_height;
@@ -429,9 +449,10 @@ _reddere_grid (
     padding_header  = V;  /* 5 pixels inter header et grillam */
 
     /* Latitudo cellae in pixelibus (minus padding sinister et dexter) / 7 */
-    latitudo_pixel_effectiva = ((s32)latitudo * char_width) - padding_left - padding_right;
-    cell_pixel_width = latitudo_pixel_effectiva / VII;
-    cell_height = ((s32)altitudo - I) / VII;  /* -1 pro header, /7 pro 6 rows + header */
+    latitudo_pixel_effectiva = ((s32)latitudo * char_width)
+        - padding_left - padding_right;
+    cell_pixel_width  = latitudo_pixel_effectiva / VII;
+    cell_height       = ((s32)altitudo - I) / VII;  /* -1 pro header, /7 pro 6 rows + header */
 
     si (cell_height < I) cell_height = I;
 
@@ -489,7 +510,8 @@ _reddere_grid (
     /* Reddere header (Su Mo Tu We Th Fr Sa) - offset 25px deorsum */
     per (i = ZEPHYRUM; i < VII; i++)
     {
-        pixel_x = (i32)((s32)x * char_width + padding_left + i * cell_pixel_width);
+        pixel_x = (i32)((s32)x * char_width + padding_left
+            + i * cell_pixel_width);
         pixel_y = (i32)((s32)y * char_height) + XLV;
 
         tabula_pixelorum_pingere_characterem_scalatum(
@@ -525,7 +547,8 @@ _reddere_grid (
         s32 col;
 
         grid_x0 = (i32)((s32)x * char_width + padding_left);
-        grid_y0 = (i32)(((s32)y + I) * char_height + padding_header) + XLV;
+        grid_y0 = (i32)(((s32)y + I) * char_height + padding_header)
+            + XLV;
 
         first_col  = visus->primus_dies_hebdomadae;
         last_pos   = visus->numerus_dierum + first_col - I;
@@ -550,13 +573,15 @@ _reddere_grid (
 
             /* Linea superior ordinis */
             ly = grid_y0 + (i32)(row * cell_pixel_height);
-            delineare_lineam_horizontalem(ctx_delin, lx0, lx1, ly, color_grid);
+            delineare_lineam_horizontalem(ctx_delin, lx0, lx1, ly,
+                color_grid);
 
             /* Linea inferior ordinis (solum pro ultimo ordine) */
             si (row == last_row)
             {
                 ly = grid_y0 + (i32)((row + I) * cell_pixel_height);
-                delineare_lineam_horizontalem(ctx_delin, lx0, lx1, ly, color_grid);
+                delineare_lineam_horizontalem(ctx_delin, lx0, lx1, ly,
+                    color_grid);
             }
         }
 
@@ -566,16 +591,19 @@ _reddere_grid (
             i32 lx0  = grid_x0;
             i32 lx1  = grid_x0 + (i32)(first_col * cell_pixel_width);
             i32 ly   = grid_y0 + (i32)(I * cell_pixel_height);
-            delineare_lineam_horizontalem(ctx_delin, lx0, lx1, ly, color_grid);
+            delineare_lineam_horizontalem(ctx_delin, lx0, lx1, ly,
+                color_grid);
         }
 
         /* Gradus dexter: si ultimus dies non in columna 6 */
         si (last_col < VI && last_row > ZEPHYRUM)
         {
-            i32 lx0 = grid_x0 + (i32)((last_col + I) * cell_pixel_width);
-            i32 lx1 = grid_x0 + (i32)(VII * cell_pixel_width);
-            i32 ly = grid_y0 + (i32)(last_row * cell_pixel_height);
-            delineare_lineam_horizontalem(ctx_delin, lx0, lx1, ly, color_grid);
+            i32 lx0 = grid_x0 + (i32)((last_col
+                + I) * cell_pixel_width);
+            i32 lx1  = grid_x0 + (i32)(VII * cell_pixel_width);
+            i32 ly   = grid_y0 + (i32)(last_row * cell_pixel_height);
+            delineare_lineam_horizontalem(ctx_delin, lx0, lx1, ly,
+                color_grid);
         }
 
         /* Lineae verticales - per columnam */
@@ -597,17 +625,20 @@ _reddere_grid (
             {
                 /* Margo sinister columnae 0 */
                 start_row = (first_col == ZEPHYRUM) ? ZEPHYRUM : I;
-                end_row = (ZEPHYRUM <= last_col) ? last_row : last_row - I;
+                end_row = (ZEPHYRUM <= last_col) ? last_row : last_row
+                    - I;
             } alioquin si (col < first_col)
             {
                 /* Columnae 1 ad first_col-1: non habent dies in ordine 0 */
                 start_row = I;
-                end_row = ((col - I) <= last_col) ? last_row : last_row - I;
+                end_row = ((col - I) <= last_col) ? last_row : last_row
+                    - I;
             } alioquin si (col <= VI)
             {
                 /* Columnae first_col+1 ad 6: habent dies in ordine 0 */
                 start_row = ZEPHYRUM;
-                end_row = ((col - I) <= last_col) ? last_row : last_row - I;
+                end_row = ((col - I) <= last_col) ? last_row : last_row
+                    - I;
             } alioquin
             {
                 /* Margo dexter (col == 7) */
@@ -617,39 +648,40 @@ _reddere_grid (
 
             si (start_row <= end_row && end_row >= ZEPHYRUM)
             {
-                lx = grid_x0 + (i32)(col * cell_pixel_width);
-                ly0 = grid_y0 + (i32)(start_row * cell_pixel_height);
-                ly1 = grid_y0 + (i32)((end_row + I) * cell_pixel_height);
-                delineare_lineam_verticalem(ctx_delin, lx, ly0, ly1, color_grid);
+                lx   = grid_x0 + (i32)(col * cell_pixel_width);
+                ly0  = grid_y0 + (i32)(start_row * cell_pixel_height);
+                ly1 = grid_y0 + (i32)((end_row
+                    + I) * cell_pixel_height);
+                delineare_lineam_verticalem(ctx_delin, lx, ly0, ly1,
+                    color_grid);
             }
         }
     }
 
     /* Obtinere diem hodiernam et festivitates pro comparatione */
     {
-        Dies hodie = fasti_dies_hodie();
-        Dies pascha = fasti_computus(visus->annus_visus);
-        Dies feria_vi = fasti_feria_vi(visus->annus_visus);
-        Dies feria_iv_cinerum = fasti_feria_iv_cinerum(visus->annus_visus);
+        Dies hodie     = fasti_dies_hodie();
+        Dies pascha    = fasti_computus(visus->annus_visus);
+        Dies feria_vi  = fasti_feria_vi(visus->annus_visus);
+        Dies feria_iv_cinerum =
+            fasti_feria_iv_cinerum(visus->annus_visus);
         Dies pentecoste = fasti_pentecoste(visus->annus_visus);
-        Dies dominica_palmarum = fasti_dominica_palmarum(visus->annus_visus);
+        Dies dominica_palmarum =
+            fasti_dominica_palmarum(visus->annus_visus);
 
         /* Reddere dies mensis */
         per (dies = I; dies <= visus->numerus_dierum; dies++)
         {
-                                Dies  dies_obj;
-                     ColorLiturgicus  lit_color;
-            constans SanctoraleDatum* sanctorale_data;
-                                 s32  num_sanctorale;
-                                 b32  est_hodie;
-                                 b32  ante_hodie;
-                                 b32  est_dies_obligationis;
-                                 b32  est_pascha;
-                                 b32  est_feria_vi;
-                                 b32  est_feria_iv_cinerum;
-                                 b32  est_pentecoste;
-                                 b32  est_dominica_palmarum;
-                                 s32  sanct_idx;
+                                Dies dies_obj;
+                     ColorLiturgicus lit_color;
+                                 b32 est_hodie;
+                                 b32 ante_hodie;
+                                 b32 est_dies_obligationis;
+                                 b32 est_pascha;
+                                 b32 est_feria_vi;
+                                 b32 est_feria_iv_cinerum;
+                                 b32 est_pentecoste;
+                                 b32 est_dominica_palmarum;
 
             /* Computare positio in grilla */
             dies_pos  = dies + visus->primus_dies_hebdomadae - I;
@@ -657,24 +689,17 @@ _reddere_grid (
             row_idx   = dies_pos / VII;
 
             /* Obtinere colorem liturgicum */
-            dies_obj = fasti_dies(visus->annus_visus, visus->mensis_visus, dies);
-            lit_color = calendarium_color_temporis(visus->cal, dies_obj);
+            dies_obj = fasti_dies(visus->annus_visus,
+                visus->mensis_visus, dies);
+            lit_color = calendarium_color_temporis(visus->cal,
+                dies_obj);
             color_dies = _color_liturgicus_ad_pixelum(lit_color);
 
             /* Verificare si est dies obligationis */
-            est_dies_obligationis = FALSUM;
-            sanctorale_data = sanctorale_obtinere(visus->mensis_visus, dies, &num_sanctorale);
-            si (sanctorale_data != NIHIL)
-            {
-                per (sanct_idx = ZEPHYRUM; sanct_idx < num_sanctorale; sanct_idx++)
-                {
-                    si (sanctorale_data[sanct_idx].dies_obligationis)
-                    {
-                        est_dies_obligationis = VERUM;
-                        frange;
-                    }
-                }
-            }
+            /* liturgia-plan L5: regulae USA (abrogatio sabbato / feria
+             * II, Immaculata translata), non signum tabulae nudum */
+            est_dies_obligationis = calendarium_dies_obligationis(
+                visus->cal, dies_obj);
 
             /* Si dies obligationis, numerus semper albus */
             si (est_dies_obligationis)
@@ -705,7 +730,8 @@ _reddere_grid (
             }
 
             /* Verificare si est Feria IV Cinerum (Ash Wednesday) */
-            est_feria_iv_cinerum = (dies_obj.annus == feria_iv_cinerum.annus
+            est_feria_iv_cinerum = (dies_obj.annus
+                == feria_iv_cinerum.annus
                 && dies_obj.mensis == feria_iv_cinerum.mensis
                 && dies_obj.dies == feria_iv_cinerum.dies);
 
@@ -727,7 +753,8 @@ _reddere_grid (
             }
 
             /* Verificare si est Dominica Palmarum (Palm Sunday) */
-            est_dominica_palmarum = (dies_obj.annus == dominica_palmarum.annus
+            est_dominica_palmarum = (dies_obj.annus
+                == dominica_palmarum.annus
                 && dies_obj.mensis == dominica_palmarum.mensis
                 && dies_obj.dies == dominica_palmarum.dies);
 
@@ -744,11 +771,15 @@ _reddere_grid (
             ante_hodie = fasti_ante(dies_obj, hodie);
 
             /* Positio in pixelibus */
-            pixel_x = (i32)((s32)x * char_width + padding_left + col_idx * cell_pixel_width);
-            pixel_y = (i32)(((s32)y + I + row_idx * cell_height) * char_height + padding_header) + XLV;
+            pixel_x = (i32)((s32)x * char_width + padding_left
+                + col_idx * cell_pixel_width);
+            pixel_y = (i32)(((s32)y + I
+                + row_idx * cell_height) * char_height + padding_header)
+                + XLV;
 
             /* Si dies selectus et focused, pingere background selectus (prioritas maxima) */
-            si (dies == visus->dies_selectus && focused && ctx_delin != NIHIL)
+            si (   dies      == visus->dies_selectus && focused
+                && ctx_delin != NIHIL)
             {
                 Color color_sel_bg;
                 Color color_sel_fg;
@@ -769,8 +800,10 @@ _reddere_grid (
 
                 /* Secundo: superponere exemplar cum colore foreground */
                 delineare_ponere_modum(ctx_delin, MODUS_EXEMPLAR);
-                delineare_ponere_exemplar_internum(ctx_delin, EXEMPLAR_PUNCTA_REGULARIA);
-                delineare_ponere_offset_exemplaris(ctx_delin, pixel_x + I, pixel_y + I);
+                delineare_ponere_exemplar_internum(ctx_delin,
+                    EXEMPLAR_PUNCTA_REGULARIA);
+                delineare_ponere_offset_exemplaris(ctx_delin, pixel_x
+                    + I, pixel_y + I);
                 delineare_rectangulum_plenum(
                     ctx_delin,
                     pixel_x + I,
@@ -806,8 +839,10 @@ _reddere_grid (
 
                 /* Secundo: superponere exemplar cum colore aureo */
                 delineare_ponere_modum(ctx_delin, MODUS_EXEMPLAR);
-                delineare_ponere_exemplar_internum(ctx_delin, EXEMPLAR_PUNCTA_DUPLICIA);
-                delineare_ponere_offset_exemplaris(ctx_delin, pixel_x + I, pixel_y + I);
+                delineare_ponere_exemplar_internum(ctx_delin,
+                    EXEMPLAR_PUNCTA_DUPLICIA);
+                delineare_ponere_offset_exemplaris(ctx_delin, pixel_x
+                    + I, pixel_y + I);
                 delineare_rectangulum_plenum(
                     ctx_delin,
                     pixel_x + I,
@@ -842,8 +877,10 @@ _reddere_grid (
 
                 /* Secundo: superponere exemplar 22 cum colore foreground */
                 delineare_ponere_modum(ctx_delin, MODUS_EXEMPLAR);
-                delineare_ponere_exemplar_internum(ctx_delin, EXEMPLAR_PUNCTA_DUPLICIA);
-                delineare_ponere_offset_exemplaris(ctx_delin, pixel_x + I, pixel_y + I);
+                delineare_ponere_exemplar_internum(ctx_delin,
+                    EXEMPLAR_PUNCTA_DUPLICIA);
+                delineare_ponere_offset_exemplaris(ctx_delin, pixel_x
+                    + I, pixel_y + I);
                 delineare_rectangulum_plenum(
                     ctx_delin,
                     pixel_x + I,
@@ -878,8 +915,10 @@ _reddere_grid (
 
                 /* Secundo: superponere exemplar 31 (LINEA_RHOMBUS) */
                 delineare_ponere_modum(ctx_delin, MODUS_EXEMPLAR);
-                delineare_ponere_exemplar_internum(ctx_delin, EXEMPLAR_LINEA_RHOMBUS);
-                delineare_ponere_offset_exemplaris(ctx_delin, pixel_x + I, pixel_y + I);
+                delineare_ponere_exemplar_internum(ctx_delin,
+                    EXEMPLAR_LINEA_RHOMBUS);
+                delineare_ponere_offset_exemplaris(ctx_delin, pixel_x
+                    + I, pixel_y + I);
                 delineare_rectangulum_plenum(
                     ctx_delin,
                     pixel_x + I,
@@ -914,8 +953,10 @@ _reddere_grid (
 
                 /* Secundo: superponere exemplar 20 (RARISSIMUS) */
                 delineare_ponere_modum(ctx_delin, MODUS_EXEMPLAR);
-                delineare_ponere_exemplar_internum(ctx_delin, EXEMPLAR_RARISSIMUS);
-                delineare_ponere_offset_exemplaris(ctx_delin, pixel_x + I, pixel_y + I);
+                delineare_ponere_exemplar_internum(ctx_delin,
+                    EXEMPLAR_RARISSIMUS);
+                delineare_ponere_offset_exemplaris(ctx_delin, pixel_x
+                    + I, pixel_y + I);
                 delineare_rectangulum_plenum(
                     ctx_delin,
                     pixel_x + I,
@@ -952,7 +993,8 @@ _reddere_grid (
                     delineare_lineam_verticalem(ctx_delin,
                         center_x, crux_top, crux_bottom, color_crux);
                     delineare_lineam_verticalem(ctx_delin,
-                        center_x + I, crux_top, crux_bottom, color_crux);
+                        center_x + I, crux_top, crux_bottom,
+                        color_crux);
                     /* Linea horizontalis (2px alta) */
                     delineare_lineam_horizontalem(ctx_delin,
                         center_x - crux_semi_l, center_x + crux_semi_l,
@@ -987,8 +1029,10 @@ _reddere_grid (
 
                 /* Secundo: superponere exemplar 8 (DISPERSUS) */
                 delineare_ponere_modum(ctx_delin, MODUS_EXEMPLAR);
-                delineare_ponere_exemplar_internum(ctx_delin, EXEMPLAR_DISPERSUS);
-                delineare_ponere_offset_exemplaris(ctx_delin, pixel_x + I, pixel_y + I);
+                delineare_ponere_exemplar_internum(ctx_delin,
+                    EXEMPLAR_DISPERSUS);
+                delineare_ponere_offset_exemplaris(ctx_delin, pixel_x
+                    + I, pixel_y + I);
                 delineare_rectangulum_plenum(
                     ctx_delin,
                     pixel_x + I,
@@ -1023,8 +1067,10 @@ _reddere_grid (
 
                 /* Secundo: superponere exemplar 35 (MIXTUS_GRAVIS) */
                 delineare_ponere_modum(ctx_delin, MODUS_EXEMPLAR);
-                delineare_ponere_exemplar_internum(ctx_delin, EXEMPLAR_MIXTUS_GRAVIS);
-                delineare_ponere_offset_exemplaris(ctx_delin, pixel_x + I, pixel_y + I);
+                delineare_ponere_exemplar_internum(ctx_delin,
+                    EXEMPLAR_MIXTUS_GRAVIS);
+                delineare_ponere_offset_exemplaris(ctx_delin, pixel_x
+                    + I, pixel_y + I);
                 delineare_rectangulum_plenum(
                     ctx_delin,
                     pixel_x + I,
@@ -1059,8 +1105,10 @@ _reddere_grid (
 
                 /* Secundo: superponere exemplar 16 (MIXTUS) */
                 delineare_ponere_modum(ctx_delin, MODUS_EXEMPLAR);
-                delineare_ponere_exemplar_internum(ctx_delin, EXEMPLAR_MIXTUS);
-                delineare_ponere_offset_exemplaris(ctx_delin, pixel_x + I, pixel_y + I);
+                delineare_ponere_exemplar_internum(ctx_delin,
+                    EXEMPLAR_MIXTUS);
+                delineare_ponere_offset_exemplaris(ctx_delin, pixel_x
+                    + I, pixel_y + I);
                 delineare_rectangulum_plenum(
                     ctx_delin,
                     pixel_x + I,
@@ -1151,7 +1199,8 @@ calendario_visus_creare (
     CalendarioVisus* visus;
                Dies  hodie;
 
-    visus = (CalendarioVisus*)piscina_allocare(piscina, magnitudo(CalendarioVisus));
+    visus = (CalendarioVisus*)piscina_allocare(piscina,
+        magnitudo(CalendarioVisus));
 
     si (visus == NIHIL)
     {
@@ -1214,10 +1263,12 @@ calendario_visus_reddere (
     altitudo_grid     = altitudo - altitudo_details;
 
     /* Reddere pars superior: detalia */
-    _reddere_details(visus, tabula, x, y, latitudo, altitudo_details, scala);
+    _reddere_details(visus, tabula, x, y, latitudo, altitudo_details,
+        scala);
 
     /* Reddere pars inferior: grilla */
-    _reddere_grid(visus, tabula, x, y + altitudo_details, latitudo, altitudo_grid, scala, focused);
+    _reddere_grid(visus, tabula, x, y + altitudo_details, latitudo,
+        altitudo_grid, scala, focused);
 }
 
 
@@ -1295,21 +1346,26 @@ calendario_visus_tractare_eventum (
     si (   eventus->genus            == EVENTUS_MUS_DEPRESSUS
         && eventus->datum.mus.botton == MUS_SINISTER)
     {
-        s32 mus_x = (s32)eventus->datum.mus.x;
-        s32 mus_y = (s32)eventus->datum.mus.y;
-        s32 char_width = VI * (s32)visus->scala;
-        s32 char_height = VIII * (s32)visus->scala;
-        s32 padding_left = X;    /* 10 pixels - debet esse idem ac in _reddere_grid */
-        s32 padding_right = V;   /* 5 pixels */
-        s32 padding_header = V;  /* 5 pixels */
-        s32 altitudo_details = (s32)visus->altitudo / III;
-        s32 altitudo_grid = (s32)visus->altitudo - altitudo_details;
-        s32 grid_y_start = ((s32)visus->widget_y + altitudo_details) * char_height + char_height + padding_header + XLV;
-        s32 grid_x_start = (s32)visus->widget_x * char_width + padding_left;
-        s32 latitudo_pixel_effectiva = ((s32)visus->latitudo * char_width) - padding_left - padding_right;
-        s32 cell_pixel_width = latitudo_pixel_effectiva / VII;
-        s32 cell_height = (altitudo_grid - I) / VII;
-        s32 cell_pixel_height = cell_height * char_height;
+        s32 mus_x             = (s32)eventus->datum.mus.x;
+        s32 mus_y             = (s32)eventus->datum.mus.y;
+        s32 char_width        = VI * (s32)visus->scala;
+        s32 char_height       = VIII * (s32)visus->scala;
+        s32 padding_left      = X;    /* 10 pixels - debet esse idem ac in _reddere_grid */
+        s32 padding_right     = V;   /* 5 pixels */
+        s32 padding_header    = V;  /* 5 pixels */
+        s32 altitudo_details  = (s32)visus->altitudo / III;
+        s32 altitudo_grid     = (s32)visus->altitudo - altitudo_details;
+        s32 grid_y_start = ((s32)visus->widget_y
+            + altitudo_details) * char_height + char_height
+            + padding_header + XLV;
+        s32 grid_x_start = (s32)visus->widget_x * char_width
+            + padding_left;
+        s32 latitudo_pixel_effectiva =
+            ((s32)visus->latitudo * char_width) - padding_left
+                - padding_right;
+        s32 cell_pixel_width   = latitudo_pixel_effectiva / VII;
+        s32 cell_height        = (altitudo_grid - I) / VII;
+        s32 cell_pixel_height  = cell_height * char_height;
         s32 rel_x;
         s32 rel_y;
         s32 col_clicked;
@@ -1324,17 +1380,20 @@ calendario_visus_tractare_eventum (
             rel_x = mus_x - grid_x_start;
             rel_y = mus_y - grid_y_start; /* grid_y_start iam includit header */
 
-            si (rel_y >= ZEPHYRUM && cell_pixel_width > ZEPHYRUM && cell_pixel_height > ZEPHYRUM)
+            si (   rel_y >= ZEPHYRUM && cell_pixel_width > ZEPHYRUM
+                && cell_pixel_height > ZEPHYRUM)
             {
                 col_clicked = rel_x / cell_pixel_width;
                 row_clicked = rel_y / cell_pixel_height;
 
                 /* Computare dies ex positione */
                 dies_pos = row_clicked * VII + col_clicked;
-                dies_clicked = dies_pos - visus->primus_dies_hebdomadae + I;
+                dies_clicked = dies_pos - visus->primus_dies_hebdomadae
+                    + I;
 
                 /* Verificare si dies est validus */
-                si (dies_clicked >= I && dies_clicked <= visus->numerus_dierum)
+                si (   dies_clicked >= I
+                    && dies_clicked <= visus->numerus_dierum)
                 {
                     visus->dies_selectus = dies_clicked;
                     redde VERUM;

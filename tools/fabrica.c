@@ -18,6 +18,9 @@
  *   bin/fabrica portae debitae|declaratae [-machina] -portae TSV ...
  *       portae debitae ex declarationibus <porta>
  *       (tools/fabrica_portae.c, lib/portae.c).
+ *   bin/fabrica quid [-machina] [-iudex TITULUS] VIA... | -omnes
+ *       quid est plagula: unitas, cura, vita, munus, provenientia,
+ *       lingua cum causis (tools/fabrica_unitates.c, lib/unitates.c).
  *
  * Exitus: 0 nihil stalum aut ignotum · 1 stalum aut ignotum
  * aliquod · 2 nihil iudicatum (declarationes absentes/fractae,
@@ -609,6 +612,34 @@ _sectiones_imprimere (
     }
 }
 
+/* artificium simul ingressus actionis suae = REGIO SPLICITA in plagula
+ * manu scripta (latina.h numeri, silva.h superficies): signum generati
+ * in capite non fert - porta generata eam per hoc agnoscit */
+interior b32
+_ingressus_proprius (
+    constans Sententia* sententia)
+{
+    i32 i;
+
+    si (   sententia->actio            == NIHIL
+        || sententia->actio->ingressus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i
+        < xar_numerus(sententia->actio->ingressus); i++)
+    {
+        constans FabricaIngressus* g = (constans FabricaIngressus*)
+            xar_obtinere(sententia->actio->ingressus, i);
+
+        si (chorda_aequalis(g->via, sententia->iudicium.artificium))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
 interior vacuum
 _sententiam_imprimere (
     constans FabricaSutura* sutura,
@@ -649,6 +680,12 @@ _sententiam_imprimere (
         _campus_literis(signum);
         suturae_campus(sententia->iudicium.artificium);
         suturae_campus(sententia->iudicium.causa);
+        /* campus V solum pro regione splicita (lineae ceterae octetim
+         * eaedem; consumptores len >= IV) */
+        si (_ingressus_proprius(sententia))
+        {
+            _campus_literis("splicita");
+        }
         putchar('\n');
         _sectiones_imprimere(sutura, sententia->iudicium.artificium,
             piscina);
@@ -3269,6 +3306,8 @@ _usus (vacuum)
         "      bin/fabrica portae debitae [-machina] -portae TSV "
         "VIA...\n"
         "      bin/fabrica portae declaratae [-machina] -portae TSV\n"
+        "      bin/fabrica quid [-machina] [-iudex TITULUS] VIA... "
+        "| -omnes\n"
         "(ex radice repositorii; exitus 0 sanum, 1 stalum/ignotum, "
         "2 nihil iudicatum)\n");
 }
@@ -3355,6 +3394,10 @@ principale (
     alioquin si (strcmp(argv[1], "portae") == 0)
     {
         exitus = suturae_portae(argc, argv, piscina);
+    }
+    alioquin si (strcmp(argv[1], "quid") == 0)
+    {
+        exitus = suturae_quid(argc, argv, piscina);
     }
     alioquin
     {

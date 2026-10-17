@@ -1,0 +1,20 @@
+<!-- organum.stml - manifestum admonitionum volantium (toasts;
+     colloquia-plan T4b): stratum vici supra latera. Visibiles ex indice
+     admonitionum (communi centro) et tempore derivantur - nullum
+     tempus in statu; hic solum quae homo dimisit. -->
+<organum genus="volantes" versio="1">
+
+  <actiones>
+    <actio nomen="volantes.agere"/>
+  </actiones>
+
+  <status>
+    <campus nomen="dimissae" typus="textus" vita="transiens"
+            scriptor="volantes.agere"
+            nota="ids admonitionum dimissarum (spatio separata); solum
+                  quae adhuc volare possent servantur"/>
+  </status>
+
+  <basis genus="organum_commune"/>
+  <montationes/>
+</organum>

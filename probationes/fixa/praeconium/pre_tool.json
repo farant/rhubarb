@@ -1,0 +1,1 @@
+{"session_id":"s-222","transcript_path":"/t/s-222.jsonl","cwd":"/Users/x/proj","hook_event_name":"PreToolUse","tool_name":"Bash","tool_input":{"command":"./compile_tests.sh kalendarium","description":"Run calendar suites"},"tool_use_id":"tu-1"}

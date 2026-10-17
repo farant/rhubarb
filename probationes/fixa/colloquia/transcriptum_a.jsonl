@@ -1,0 +1,5 @@
+"cauda fracta","type":"user"}
+{"type":"ai-title","aiTitle":"Old AI title","sessionId":"s-a"}
+{"type":"custom-title","customTitle":"secunda","sessionId":"s-a"}
+{"type":"assistant","message":"x"}
+{"type":"ai-title","aiTitle":"Newer AI title","sessionId":"s-a"}

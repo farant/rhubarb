@@ -49,6 +49,22 @@ plica pendet — veritas in C manet.
   sana; `silva.commissio(nuntius, viae, portae=[...])` — portae omnes
   sanae aut nihil commissum; viae vetitae refutatae; renominationes
   per `git mv` acceptae (viae NOVAE dantur); `verificare=False`
+- **gradus portarum** (2026-10-15, project-specs/gradus-portarum-spec.md):
+  portae debitae ADDITAE gradus `fusio` (annotatio `gradus="fusio"`)
+  non currunt sed DILATANTUR ('porta debita DILATA ad fusionem') in
+  `build/portae/debita_fusionis.tsv`; petitae (`portae=[X]`) semper
+  currunt; `plena=True` = omnes. Porta viridis tota debitum suum solvit
+  ('debitum rami solutum: X'). Mos agentis: `silva.porta('X')` ipse,
+  deinde `commissio(..., portae=['X'])` - receptum vivum reusum
+  ('[receptum]', in aestimatione ~0 s). Ante fusionem in main:
+  `silva.fusio_probare()` (DETACHED, >30 min: gradus ambo super
+  merge-base..HEAD + debita + frigida; viride debita purgat et 'merge
+  --ff-only' imprimit). TEMPUS FUSIONIS (…CECATG): probationes PERGUNT
+  post rubram - 'FUSIO RUBRA: N ex M' tabula una (porta, acta,
+  commissiones debentes = bisectio), frigida solum si omnes virides;
+  praeiudicia rubra adhuc sistunt; commissio prima rubra sistit ut antea. Index: `silva.portae_debitae_ramus()` /
+  `tools/portae_debitae.sh -ramus`. `bin/fabrica iudicare` FORTASSE
+  ('supra: X STALUM' - producens supra stalus) = ut STALUM tractatur
 - `silva.planta(via, vetus, novus, porta)` — ritus culpae plantatae:
   rubra (non aedificatio fracta) -> reversio (finally) -> viridis
 - `silva.porta_umbra(nomen[, photographica=True])` — porta in umbra
@@ -278,12 +294,12 @@ Porta natalis: `./pythonica/probare.sh` (probatio_silva.py).
 
 ## 2026-09-04 — census + citata (C2): instrumentum corporis
 
-- **`./md/census.sh [-machina | -citata [via.md] | -scribere]`** — numeri ex
+- **`./md/census.sh [-machina | -citata [via.md]]`** — numeri ex
   ARBORE PARSATA super `git ls-files '*.md'` (MCXXIX plagulae, XVII MB, I
   s): nodi per genus, capitula per gradum, listae/laxae/officia, saepta per
   formam et linguam (lexema derivatum), nexus per formam, lexemata/derivata/
-  lineae. `-scribere` = `md/CENSUS.md` (mensura COMMISSA, regenerabilis,
-  numquam asserta — corpus mutat); `-citata` = verbatim (code spans) omnia
+  lineae. Relatio ad petitionem in stdout (md/CENSUS.md commissum non iam
+  est, 2026-10-15); `-citata` = verbatim (code spans) omnia
   'via linea contentum'; porta `probatio_md_census`.
 - **`silva.citata(via=None, praefixa=None)`** → Citata(numeri, absentia,
   mota, nuda): citationes in code spans contra arborem (viae: adest / nudum

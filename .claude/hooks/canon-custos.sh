@@ -31,10 +31,12 @@ case "$FILE" in
             2>/dev/null || exit 0
         ;;
 esac
-case "$FILE" in
-    */scratchpad/*|*/build/*|*/probationes/*) exit 0 ;;
-esac
 [ -f "$FILE" ] || exit 0
+# quae plagulae: iudex canon_custos (unitates.stml) - fixturae
+# (probationes/: STML consulto malum) non iudicantur; declaratio
+# unitatis continentis est (vendor/unitas.stml domestica)
+. "$(dirname "${BASH_SOURCE[0]}")/iudex_custodum.sh"
+custos_admittere CANON canon_custos "$FILE" || exit 0
 
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 PORTA="$RADIX/bin/canon_examen"

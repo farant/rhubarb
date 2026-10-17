@@ -63,6 +63,21 @@
     <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
     <exitus via="bin/manus" provenientia="relatio"/>
   </actio>
+  <!-- praeco (colloquia-plan T2): acta colloquiorum Claude Code ex
+       hamis (praeco hamus / status / cauda) -->
+  <actio titulus="praeco" genus="institutio">
+    <mandatum>
+      <verbum! (>./tools/praeco_struere.sh
+    </mandatum>
+    <praecondicio actio="aedilis"/>
+    <vestigium via="build/aedilis/praeco"/>
+    <vestigium via="build/aedilis/obiecta" communis="verum"/>
+    <ingressus genus="manifestum" via="build/aedilis/praeco/manifestum.stml"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="fasciculus" via="tools/praeco_struere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
+    <exitus via="bin/praeco" provenientia="relatio"/>
+  </actio>
   <!-- clonare (pythonica S3): clonefile(2) arborum pro photographiis
        silvae (silva._clonare_ignorata) -->
   <actio titulus="clonare" genus="institutio">
@@ -445,6 +460,22 @@
     <ingressus genus="fasciculus" via="tools/entitates_html_generare.sh"/>
     <ingressus genus="instrumentum" via="/opt/homebrew/bin/python3"/>
     <exitus via="lib/entitates_html_tabula.c" provenientia="regeneratio"/>
+  </actio>
+  <!-- BearSSL amalgama (tls-bearssl-plan T1, R1): oraculum clang
+       (nomina interiora per -ast-dump=json), ergo identitas clang et
+       python ingressus -->
+  <actio titulus="bearssl_amalgama" genus="generator">
+    <mandatum>
+      <verbum! (>./tools/bearssl_amalgamare.sh
+    </mandatum>
+    <ingressus genus="fasciculus" via="tools/bearssl_amalgamare.sh"/>
+    <ingressus genus="fasciculus" via="tools/bearssl_amalgamare.py"/>
+    <ingressus genus="plagulae" via="vendor/bearssl/src" suffixa=".c .h"/>
+    <ingressus genus="plagulae" via="vendor/bearssl/inc" suffixa=".h"/>
+    <ingressus genus="instrumentum" via="/opt/homebrew/bin/python3"/>
+    <ingressus genus="identitas_clang" via="clang"/>
+    <exitus via="vendor/bearssl_amalgama.c" provenientia="regeneratio"/>
+    <exitus via="vendor/bearssl_amalgama.h" provenientia="regeneratio"/>
   </actio>
   <!-- canon normae infixus (norma-plan-3 A2, regula R1): norma.canon ->
        lib/norma_canon.c, lector .norma sine plagula vivit -->
@@ -984,6 +1015,10 @@
     <ambitus variabilis="QUADRANS_AURUM_SCRIBERE"/>
     <ambitus variabilis="PLIST_AREA"/>
     <ambitus variabilis="VILLA_SSH"/>
+    <!-- vectura TLS ambitu eligitur (lib/tls.c per lectiones_ambitus,
+         tls-bearssl T3 R22): valor in clavi - RHUBARB_TLS mutatum
+         probationes TLS iterum currit, verdicta vetera non reddit -->
+    <ambitus variabilis="RHUBARB_TLS"/>
     <debitum_scripturae membrum="probatio_generare" via="build/probatio_generare_instrumenta/" causa="instrumenta generata (scratch) in build/"/>
     <debitum_scripturae membrum="probatio_natura_canones" via="build/probatio_natura_canones/" causa="canones probationis (scratch)"/>
     <debitum_scripturae membrum="probatio_silex" via="build/probatio_silex_area/" causa="area silicis (scratch)"/>
@@ -992,6 +1027,7 @@
     <debitum_scripturae membrum="probatio_filum" via="build/probatio_filum.sera" causa="sera probationis"/>
     <debitum_scripturae membrum="probatio_natura_glossae" via="build/probatio_glossae.html" causa="glossae HTML ad inspectionem"/>
     <debitum_scripturae membrum="probatio_lectiones" via="build/probatio_lectiones.tsv" causa="liber lectionum probationis"/>
+    <debitum_scripturae membrum="probatio_multiplexor" via="build/pmx/" causa="socket servitoris tmux proprii (via brevis: sun_path CIV octeti - TMPDIR portae nimis profundus)"/>
     <debitum_scripturae membrum="probatio_lectiones" via="build/probatio_lectiones_s.txt" causa="liber lectionum probationis"/>
     <debitum_scripturae membrum="probatio_ludus_imago" via="build/probatio_ludus_imago_pictor.png" causa="imago ad inspectionem"/>
     <debitum_scripturae membrum="probatio_ludus_imago" via="build/probatio_ludus_imago_quattuor.png" causa="imago ad inspectionem"/>
@@ -1049,6 +1085,15 @@
     <ingressus genus="fasciculus" via="tools/instituere.sh"/>
     <exitus via="~/.bin/terminale" scriptura="terminale" provenientia="regeneratio"/>
   </actio>
+  <actio titulus="institutio_praeco" genus="institutio" memorabilis="verum" celer="verum">
+    <mandatum>
+      <verbum! (>./tools/instituere.sh
+      <verbum! (>bin/praeco
+    </mandatum>
+    <ingressus genus="fasciculus" via="bin/praeco"/>
+    <ingressus genus="fasciculus" via="tools/instituere.sh"/>
+    <exitus via="~/.bin/praeco" scriptura="praeco" provenientia="regeneratio"/>
+  </actio>
   <actio titulus="institutio_stml" genus="institutio" memorabilis="verum" celer="verum">
     <mandatum>
       <verbum! (>./tools/instituere.sh
@@ -1079,6 +1124,8 @@
     <pars actio="institutio_briar_spectator"/>
     <pars actio="institutio_silex"/>
     <pars actio="institutio_stml"/>
+    <pars actio="praeco"/>
+    <pars actio="institutio_praeco"/>
   </compositum>
   <compositum titulus="briar">
     <pars actio="corpus_silicis"/>

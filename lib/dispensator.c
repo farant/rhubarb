@@ -155,42 +155,6 @@ liberum_ex_segmento (
     redde insula_ramus_liberi(parens, elementum, id);
 }
 
-/* S8c: catena foci - a capite (Motus.ramus; nullus = radix) per
- * segmenta 'focus' descendit usque ad ramum cuius focus id est, aut
- * vacuus, aut cuius liberum abest. Spatium capitis = Motus.spatium
- * (ab hospite datum), inferiorum = via sua. */
-interior vacuum
-catenam_sequi (
-    Dispensator* d)
-{
-    InsulaRamus  r;
-    InsulaRamus  liber;
-         chorda  spatium;
-         chorda* f;
-            i32  gradus;
-
-    r        = d->motus.ramus.repo ? d->motus.ramus
-                                   : insula_ramus_radix(d->repo);
-    spatium  = d->motus.spatium;
-    per (gradus = ZEPHYRUM; gradus < XVI; gradus++)
-    {
-        f = insula_ramus_attributum(&r, "focus");
-        si (!f || !segmentum_est(*f))
-        {
-            frange;
-        }
-        liber = liberum_ex_segmento(&r, *f);
-        si (!liber.repo || !insula_ramus_nodus(&liber))
-        {
-            frange;
-        }
-        r        = liber;
-        spatium  = liber.via;
-    }
-    d->motus.ramus_intimus    = r;
-    d->motus.spatium_intimum  = spatium;
-}
-
 interior vacuum
 attr_ponere (
               StmlNodus* radix,
@@ -213,6 +177,71 @@ attr_ponere (
                              chorda_ut_cstr(a->valor, p));
 }
 
+interior vacuum
+attr_scribere_in (
+             Dispensator* d,
+    constans InsulaRamus* ramus,
+      constans character* titulus,
+                  chorda  valor)
+{
+    AttrCtx a;
+
+    a.titulus  = titulus;
+    a.valor    = valor;
+    insula_scriptorem_ponere(d->repo, chorda_ex_literis("dispensator",
+        d->piscina));
+    (vacuum)mutare_ramum(ramus, attr_ponere, &a);
+    insula_scriptorem_ponere(d->repo, chorda_nulla());
+}
+
+/* S8c: catena foci - a capite (Motus.ramus; nullus = radix) per
+ * segmenta 'focus' descendit usque ad ramum cuius focus id est, aut
+ * vacuus, aut cuius liberum abest. Spatium capitis = Motus.spatium
+ * (ab hospite datum), inferiorum = via sua. Liberum cuius spatium in
+ * arbore composita NON est (hospes eum non monstrat - notae calendarii
+ * extra visum diei): catena hic praeciditur, focus gradus huius in
+ * radicem spatii sui scribitur - claves aliter in organum invisibile
+ * cadebant (Franus 10-15: prompta agendae nihil accipiebat). */
+interior vacuum
+catenam_sequi (
+    Dispensator* d)
+{
+    InsulaRamus  r;
+    InsulaRamus  liber;
+         chorda  spatium;
+         chorda* f;
+            i32  gradus;
+      Componens* radix;
+
+    r        = d->motus.ramus.repo ? d->motus.ramus
+                                   : insula_ramus_radix(d->repo);
+    spatium  = d->motus.spatium;
+    per (gradus = ZEPHYRUM; gradus < XVI; gradus++)
+    {
+        f = insula_ramus_attributum(&r, "focus");
+        si (!f || !segmentum_est(*f))
+        {
+            frange;
+        }
+        liber = liberum_ex_segmento(&r, *f);
+        si (!liber.repo || !insula_ramus_nodus(&liber))
+        {
+            frange;
+        }
+        si (d->arbor && !radicem_spatii_quaerere(d->arbor, liber.via))
+        {
+            radix = radix_spatii(d->arbor, spatium);
+            attr_scribere_in(d, &r, "focus", radix ? radix->id
+                : chorda_nulla());
+            frange;
+        }
+        r        = liber;
+        spatium  = liber.via;
+    }
+    d->motus.ramus_intimus    = r;
+    d->motus.spatium_intimum  = spatium;
+}
+
 interior chorda
 attr_legere (
            Dispensator* d,
@@ -231,23 +260,6 @@ attr_legere (
 }
 
 /* attributum in ramo dato, scriptore "dispensator" */
-interior vacuum
-attr_scribere_in (
-             Dispensator* d,
-    constans InsulaRamus* ramus,
-      constans character* titulus,
-                  chorda  valor)
-{
-    AttrCtx a;
-
-    a.titulus  = titulus;
-    a.valor    = valor;
-    insula_scriptorem_ponere(d->repo, chorda_ex_literis("dispensator",
-        d->piscina));
-    (vacuum)mutare_ramum(ramus, attr_ponere, &a);
-    insula_scriptorem_ponere(d->repo, chorda_nulla());
-}
-
 interior vacuum
 attr_scribere (
            Dispensator* d,

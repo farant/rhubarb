@@ -1,8 +1,8 @@
-/* oratio_registrum_coctum.h
+/* oratio_registrum_coctum.h - GENERATUM, NE MANU EDITES
  *
- * Registrum generum COCTUM grammaticae 'oratio' - GENERATUM, NE MANU
- * EDITES. Fons: oratio/grammatica/oratio.registrum.stml
- * (materia/coquere.sh). Genera XXVI, loci CXCI.
+ * Registrum generum COCTUM grammaticae 'oratio'. Fons:
+ * oratio/grammatica/oratio.registrum.stml (materia/coquere.sh). Genera
+ * XXVI, loci CXCI.
  */
 
 #ifndef ORATIO_REGISTRUM_COCTUM_H

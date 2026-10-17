@@ -1,0 +1,244 @@
+# Calendarium proprium dioecesium Civitatum Foederatarum: celebrationes
+# diebus fixis (liturgia-plan L4). Fons: USCCB, Liturgical Calendar for
+# the Dioceses of the United States of America 2025 (emendatio II 2025)
+# et 2026, excerpta 2026-10-15 (dies, gradus, color, nomen - non textus
+# documenti). Anni duo: sanctus in dominica unius anni in altero apparet.
+# Mobilia (Gratiarum Actio, Cor Immaculatum) non hic. nota '-' = ex fonte.
+# mensis	dies	gradus	color	proprium	nomen	nota
+1	1	SOLLEMNITAS	ALBUS	-	SOLEMNITY OF MARY, THE HOLY MOTHER OF GOD	-
+1	2	MEMORIA	ALBUS	-	Saints Basil the Great and Gregory Nazianzen, Bishops and Doctors of the Church	-
+1	3	MEMORIA_AD_LIBITUM	ALBUS	-	The Most Holy Name of Jesus	-
+1	4	MEMORIA	ALBUS	USA	Saint Elizabeth Ann Seton, Religious	-
+1	5	MEMORIA	ALBUS	USA	Saint John Neumann, Bishop	-
+1	6	MEMORIA_AD_LIBITUM	ALBUS	USA	Saint André Bessette, Religious	-
+1	7	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Raymond of Penyafort, Priest	-
+1	13	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Hilary, Bishop and Doctor of the Church	-
+1	17	MEMORIA	ALBUS	-	Saint Anthony, Abbot	-
+1	20	MEMORIA_AD_LIBITUM	RUBER	-	Saint Fabian, Pope and Martyr	-
+1	20	MEMORIA_AD_LIBITUM	RUBER	-	Saint Sebastian, Martyr	-
+1	21	MEMORIA	RUBER	-	Saint Agnes, Virgin and Martyr	-
+1	22	MEMORIA	VIOLACEUS	USA	Day of Prayer for the Legal Protection of Unborn Children	adaptatio: sine gradu in fonte ("white or violet"), IGMR 373 USA "shall be observed" - memoria propria violacea; 23 I si 22 I dominica
+1	23	MEMORIA_AD_LIBITUM	ALBUS	USA	Saint Marianne Cope, Virgin	-
+1	23	MEMORIA_AD_LIBITUM	RUBER	USA	Saint Vincent, Deacon and Martyr	-
+1	24	MEMORIA	ALBUS	-	Saint Francis de Sales, Bishop and Doctor of the Church	-
+1	25	FESTUM	ALBUS	-	The Conversion of Saint Paul the Apostle	-
+1	26	MEMORIA	ALBUS	-	Saints Timothy and Titus, Bishops	-
+1	27	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Angela Merici, Virgin	-
+1	28	MEMORIA	ALBUS	-	Saint Thomas Aquinas, Priest and Doctor of the Church	-
+1	31	MEMORIA	ALBUS	-	Saint John Bosco, Priest	-
+2	2	FESTUM	ALBUS	-	The Presentation of the Lord	-
+2	3	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Ansgar, Bishop	-
+2	3	MEMORIA_AD_LIBITUM	RUBER	-	Saint Blaise, Bishop and Martyr	-
+2	5	MEMORIA	RUBER	-	Saint Agatha, Virgin and Martyr	-
+2	6	MEMORIA	RUBER	-	Saint Paul Miki and Companions, Martyrs	-
+2	8	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Jerome Emiliani	-
+2	8	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Josephine Bakhita, Virgin	-
+2	10	MEMORIA	ALBUS	-	Saint Scholastica, Virgin	-
+2	11	MEMORIA_AD_LIBITUM	ALBUS	-	Our Lady of Lourdes	-
+2	14	MEMORIA	ALBUS	-	Saints Cyril, Monk, and Methodius, Bishop	-
+2	17	MEMORIA_AD_LIBITUM	ALBUS	-	The Seven Holy Founders of the Servite Order	-
+2	21	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Peter Damian, Bishop and Doctor of the Church	-
+2	22	FESTUM	ALBUS	-	The Chair of Saint Peter the Apostle	-
+2	23	MEMORIA?	-	-	Saint Polycarp, Bishop and Martyr	ordo non visibilis 2025-2026 (Quadragesima, 17-24 XII, octava); color non visibilis
+2	27	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Gregory of Narek, Abbot and Doctor of the Church	-
+3	3	MEMORIA_AD_LIBITUM	ALBUS	USA	Saint Katharine Drexel, Virgin	-
+3	4	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Casimir	-
+3	7	MEMORIA?	-	-	Saints Perpetua and Felicity, Martyrs	ordo non visibilis 2025-2026 (Quadragesima, 17-24 XII, octava); color non visibilis
+3	8	MEMORIA?	-	-	Saint John of God, Religious	ordo non visibilis 2025-2026 (Quadragesima, 17-24 XII, octava); color non visibilis
+3	9	MEMORIA?	-	-	Saint Frances of Rome, Religious	ordo non visibilis 2025-2026 (Quadragesima, 17-24 XII, octava); color non visibilis
+3	17	MEMORIA?	-	-	Saint Patrick, Bishop	ordo non visibilis 2025-2026 (Quadragesima, 17-24 XII, octava); color non visibilis
+3	18	MEMORIA?	-	-	Saint Cyril of Jerusalem, Bishop and Doctor of the Church	ordo non visibilis 2025-2026 (Quadragesima, 17-24 XII, octava); color non visibilis
+3	19	SOLLEMNITAS	ALBUS	-	SAINT JOSEPH, SPOUSE OF THE BLESSED VIRGIN MARY	-
+3	23	MEMORIA?	-	-	Saint Turibius of Mogrovejo, Bishop	ordo non visibilis 2025-2026 (Quadragesima, 17-24 XII, octava); color non visibilis
+3	25	SOLLEMNITAS	ALBUS	-	THE ANNUNCIATION OF THE LORD	-
+4	2	MEMORIA?	-	-	Saint Francis of Paola, Hermit	ordo non visibilis 2025-2026 (Quadragesima, 17-24 XII, octava); color non visibilis
+4	4	MEMORIA?	-	-	Saint Isidore, Bishop and Doctor of the Church	ordo non visibilis 2025-2026 (Quadragesima, 17-24 XII, octava); color non visibilis
+4	5	MEMORIA?	-	-	Saint Vincent Ferrer, Priest	ordo non visibilis 2025-2026 (Quadragesima, 17-24 XII, octava); color non visibilis
+4	7	MEMORIA?	-	-	Saint John Baptist de la Salle, Priest	ordo non visibilis 2025-2026 (Quadragesima, 17-24 XII, octava); color non visibilis
+4	11	MEMORIA?	-	-	Saint Stanislaus, Bishop and Martyr	ordo non visibilis 2025-2026 (Quadragesima, 17-24 XII, octava); color non visibilis
+4	13	MEMORIA_AD_LIBITUM	RUBER	-	Saint Martin I, Pope and Martyr	-
+4	21	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Anselm, Bishop and Doctor of the Church	-
+4	23	MEMORIA_AD_LIBITUM	RUBER	-	Saint Adalbert, Bishop and Martyr	-
+4	23	MEMORIA_AD_LIBITUM	RUBER	-	Saint George, Martyr	-
+4	24	MEMORIA_AD_LIBITUM	RUBER	-	Saint Fidelis of Sigmaringen, Priest and Martyr	-
+4	25	FESTUM	RUBER	-	Saint Mark, Evangelist	-
+4	28	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Louis Grignion de Montfort, Priest	-
+4	28	MEMORIA_AD_LIBITUM	RUBER	-	Saint Peter Chanel, Priest and Martyr	-
+4	29	MEMORIA	ALBUS	-	Saint Catherine of Siena, Virgin and Doctor of the Church	-
+4	30	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Pius V, Pope	-
+5	1	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Joseph the Worker	-
+5	2	MEMORIA	ALBUS	-	Saint Athanasius, Bishop and Doctor of the Church	-
+5	3	FESTUM	RUBER	-	Saints Philip and James, Apostles	-
+5	10	MEMORIA_AD_LIBITUM	ALBUS	USA	Saint Damien de Veuster, Priest	-
+5	10	MEMORIA_AD_LIBITUM	ALBUS	-	Saint John of Avila, Priest and Doctor of the Church	-
+5	12	MEMORIA_AD_LIBITUM	RUBER	-	Saint Pancras, Martyr	-
+5	12	MEMORIA_AD_LIBITUM	RUBER	-	Saints Nereus and Achilleus, Martyrs	-
+5	13	MEMORIA_AD_LIBITUM	ALBUS	-	Our Lady of Fatima	-
+5	14	FESTUM	RUBER	-	Saint Matthias, Apostle	-
+5	15	MEMORIA_AD_LIBITUM	ALBUS	USA	Saint Isidore	-
+5	18	MEMORIA_AD_LIBITUM	RUBER	-	Saint John I, Pope and Martyr	-
+5	20	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Bernardine of Siena, Priest	-
+5	21	MEMORIA_AD_LIBITUM	RUBER	-	Saint Christopher Magallanes, Priest, and Companions, Martyrs	-
+5	22	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Rita of Cascia, Religious	-
+5	25	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Bede the Venerable, Priest and Doctor of the Church	non visibilis 2025 (dominica), 2026 (Maria Mater Ecclesiae) - Calendarium Romanum Generale
+5	25	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Gregory VII, Pope	idem
+5	25	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Mary Magdalene de' Pazzi, Virgin	idem
+5	26	MEMORIA	ALBUS	-	Saint Philip Neri, Priest	-
+5	27	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Augustine of Canterbury, Bishop	-
+5	29	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Paul VI, Pope	-
+5	31	FESTUM	ALBUS	-	The Visitation of the Blessed Virgin Mary	-
+6	1	MEMORIA	RUBER	-	Saint Justin, Martyr	-
+6	2	MEMORIA_AD_LIBITUM	RUBER	-	Saints Marcellinus and Peter, Martyrs	-
+6	3	MEMORIA	RUBER	-	Saint Charles Lwanga and Companions, Martyrs	-
+6	5	MEMORIA	RUBER	-	Saint Boniface, Bishop and Martyr	-
+6	6	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Norbert, Bishop	-
+6	9	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Ephrem, Deacon and Doctor of the Church	-
+6	11	MEMORIA	RUBER	-	Saint Barnabas, Apostle	-
+6	13	MEMORIA	ALBUS	-	Saint Anthony of Padua, Priest and Doctor of the Church	-
+6	19	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Romuald, Abbot	-
+6	21	MEMORIA	ALBUS	-	Saint Aloysius Gonzaga, Religious	-
+6	22	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Paulinus of Nola, Bishop	-
+6	22	MEMORIA_AD_LIBITUM	RUBER	-	Saints John Fisher, Bishop, and Thomas More, Martyrs	-
+6	24	SOLLEMNITAS	ALBUS	-	THE NATIVITY OF SAINT JOHN THE BAPTIST	-
+6	27	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Cyril of Alexandria, Bishop and Doctor of the Church	-
+6	28	MEMORIA	RUBER	-	Saint Irenaeus, Bishop, Martyr, and Doctor of the Church	2025 cum Corde Immaculato ad libitum; 2026 dominica - ordo generalis
+6	29	SOLLEMNITAS	RUBER	-	SAINTS PETER AND PAUL, APOSTLES	-
+6	30	MEMORIA_AD_LIBITUM	RUBER	-	The First Martyrs of the Holy Roman Church	-
+7	1	MEMORIA_AD_LIBITUM	ALBUS	USA	Saint Junípero Serra, Priest	-
+7	3	FESTUM	RUBER	-	Saint Thomas, Apostle	-
+7	4	MEMORIA_AD_LIBITUM	ALBUS	USA	Independence Day	-
+7	5	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Anthony Zaccaria, Priest	-
+7	5	MEMORIA_AD_LIBITUM	ALBUS	USA	Saint Elizabeth of Portugal	-
+7	6	MEMORIA_AD_LIBITUM	RUBER	-	Saint Maria Goretti, Virgin and Martyr	-
+7	9	MEMORIA_AD_LIBITUM	RUBER	-	Saint Augustine Zhao Rong, Priest, and Companions, Martyrs	-
+7	11	MEMORIA	ALBUS	-	Saint Benedict, Abbot	-
+7	13	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Henry	-
+7	14	MEMORIA	ALBUS	USA	Saint Kateri Tekakwitha, Virgin	-
+7	15	MEMORIA	ALBUS	-	Saint Bonaventure, Bishop and Doctor of the Church	-
+7	16	MEMORIA_AD_LIBITUM	ALBUS	-	Our Lady of Mount Carmel	-
+7	18	MEMORIA_AD_LIBITUM	ALBUS	USA	Saint Camillus de Lellis, Priest	-
+7	20	MEMORIA_AD_LIBITUM	RUBER	-	Saint Apollinaris, Bishop and Martyr	-
+7	21	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Lawrence of Brindisi, Priest and Doctor of the Church	-
+7	22	FESTUM	ALBUS	-	Saint Mary Magdalene	-
+7	23	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Bridget, Religious	-
+7	24	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Sharbel Makhlūf, Priest	-
+7	25	FESTUM	RUBER	-	Saint James, Apostle	-
+7	26	MEMORIA	ALBUS	-	Saints Joachim and Anne, Parents of the Blessed Virgin Mary	-
+7	29	MEMORIA	ALBUS	-	Saints Martha, Mary, and Lazarus	-
+7	30	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Peter Chrysologus, Bishop and Doctor of the Church	-
+7	31	MEMORIA	ALBUS	-	Saint Ignatius of Loyola, Priest	-
+8	1	MEMORIA	ALBUS	-	Saint Alphonsus Liguori, Bishop and Doctor of the Church	-
+8	2	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Eusebius of Vercelli, Bishop	-
+8	2	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Peter Julian Eymard, Priest	-
+8	4	MEMORIA	ALBUS	-	Saint John Vianney, Priest	-
+8	5	MEMORIA_AD_LIBITUM	ALBUS	-	The Dedication of the Basilica of Saint Mary Major	-
+8	6	FESTUM	ALBUS	-	The Transfiguration of the Lord	-
+8	7	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Cajetan, Priest	-
+8	7	MEMORIA_AD_LIBITUM	RUBER	-	Saint Sixtus II, Pope, and Companions, Martyrs	-
+8	8	MEMORIA	ALBUS	-	Saint Dominic, Priest	-
+8	9	MEMORIA_AD_LIBITUM	RUBER	-	Saint Teresa Benedicta of the Cross, Virgin and Martyr	-
+8	10	FESTUM	RUBER	-	Saint Lawrence, Deacon and Martyr	-
+8	11	MEMORIA	ALBUS	-	Saint Clare, Virgin	-
+8	12	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Jane Frances de Chantal, Religious	-
+8	13	MEMORIA_AD_LIBITUM	RUBER	-	Saints Pontian, Pope, and Hippolytus, Priest, Martyrs	-
+8	14	MEMORIA	RUBER	-	Saint Maximilian Kolbe, Priest and Martyr	-
+8	15	SOLLEMNITAS	ALBUS	-	THE ASSUMPTION OF THE BLESSED VIRGIN MARY	-
+8	16	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Stephen of Hungary	-
+8	19	MEMORIA_AD_LIBITUM	ALBUS	-	Saint John Eudes, Priest	-
+8	20	MEMORIA	ALBUS	-	Saint Bernard, Abbot and Doctor of the Church	-
+8	21	MEMORIA	ALBUS	-	Saint Pius X, Pope	-
+8	22	MEMORIA	ALBUS	-	The Queenship of the Blessed Virgin Mary	-
+8	23	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Rose of Lima, Virgin	-
+8	24	FESTUM	RUBER	-	Saint Bartholomew, Apostle	-
+8	25	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Joseph Calasanz, Priest	-
+8	25	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Louis	-
+8	27	MEMORIA	ALBUS	-	Saint Monica	-
+8	28	MEMORIA	ALBUS	-	Saint Augustine, Bishop and Doctor of the Church	-
+8	29	MEMORIA	RUBER	-	The Passion of Saint John the Baptist	-
+9	3	MEMORIA	ALBUS	-	Saint Gregory the Great, Pope and Doctor of the Church	-
+9	5	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Teresa of Calcutta, Virgin	-
+9	8	FESTUM	ALBUS	-	The Nativity of the Blessed Virgin Mary	-
+9	9	MEMORIA	ALBUS	USA	Saint Peter Claver, Priest	-
+9	12	MEMORIA_AD_LIBITUM	ALBUS	-	The Most Holy Name of Mary	-
+9	13	MEMORIA	ALBUS	-	Saint John Chrysostom, Bishop and Doctor of the Church	-
+9	14	FESTUM	RUBER	-	The Exaltation of the Holy Cross	-
+9	15	MEMORIA	ALBUS	-	Our Lady of Sorrows	-
+9	16	MEMORIA	RUBER	-	Saints Cornelius, Pope, and Cyprian, Bishop, Martyrs	-
+9	17	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Hildegard of Bingen, Virgin and Doctor of the Church	-
+9	17	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Robert Bellarmine, Bishop and Doctor of the Church	-
+9	19	MEMORIA_AD_LIBITUM	RUBER	-	Saint Januarius, Bishop and Martyr	-
+9	20	MEMORIA	RUBER	-	Saints Andrew Kim Tae-gŏn, Priest, and Paul Chŏng Ha-sang, and Companions, Martyrs	-
+9	21	FESTUM	RUBER	-	Saint Matthew, Apostle and Evangelist	-
+9	23	MEMORIA	ALBUS	-	Saint Pius of Pietrelcina, Priest	-
+9	26	MEMORIA_AD_LIBITUM	RUBER	-	Saints Cosmas and Damian, Martyrs	-
+9	27	MEMORIA	ALBUS	-	Saint Vincent de Paul, Priest	-
+9	28	MEMORIA_AD_LIBITUM	RUBER	-	Saint Lawrence Ruiz and Companions, Martyrs	-
+9	28	MEMORIA_AD_LIBITUM	RUBER	-	Saint Wenceslaus, Martyr	-
+9	29	FESTUM	ALBUS	-	Saints Michael, Gabriel and Raphael, Archangels	-
+9	30	MEMORIA	ALBUS	-	Saint Jerome, Priest and Doctor of the Church	-
+10	1	MEMORIA	ALBUS	-	Saint Thérèse of the Child Jesus, Virgin and Doctor of the Church	-
+10	2	MEMORIA	ALBUS	-	The Holy Guardian Angels	-
+10	4	MEMORIA	ALBUS	-	Saint Francis of Assisi	-
+10	5	MEMORIA_AD_LIBITUM	ALBUS	USA	Blessed Francis Xavier Seelos, Priest	-
+10	5	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Faustina Kowalska, Virgin	-
+10	6	MEMORIA_AD_LIBITUM	ALBUS	USA	Blessed Marie Rose Durocher, Virgin	-
+10	6	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Bruno, Priest	-
+10	7	MEMORIA	ALBUS	-	Our Lady of the Rosary	-
+10	9	MEMORIA_AD_LIBITUM	RUBER	-	Saint Denis, Bishop, and Companions, Martyrs	-
+10	9	MEMORIA_AD_LIBITUM	ALBUS	-	Saint John Henry Newman, Priest and Doctor of the Church	-
+10	9	MEMORIA_AD_LIBITUM	ALBUS	-	Saint John Leonardi, Priest	-
+10	11	MEMORIA_AD_LIBITUM	ALBUS	-	Saint John XXIII, Pope	-
+10	14	MEMORIA_AD_LIBITUM	RUBER	-	Saint Callistus I, Pope and Martyr	-
+10	15	MEMORIA	ALBUS	-	Saint Teresa of Jesus, Virgin and Doctor of the Church	-
+10	16	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Hedwig, Religious	-
+10	16	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Margaret Mary Alacoque, Virgin	-
+10	17	MEMORIA	RUBER	-	Saint Ignatius of Antioch, Bishop and Martyr	-
+10	18	FESTUM	RUBER	-	Saint Luke, Evangelist	-
+10	19	MEMORIA	RUBER	USA	Saints John de Brébeuf and Isaac Jogues, Priests, and Companions, Martyrs	-
+10	20	MEMORIA_AD_LIBITUM	ALBUS	USA	Saint Paul of the Cross, Priest	-
+10	22	MEMORIA_AD_LIBITUM	ALBUS	-	Saint John Paul II, Pope	-
+10	23	MEMORIA_AD_LIBITUM	ALBUS	-	Saint John of Capistrano, Priest	-
+10	24	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Anthony Mary Claret, Bishop	-
+10	28	FESTUM	RUBER	-	Saints Simon and Jude, Apostles	-
+11	1	SOLLEMNITAS	ALBUS	-	ALL SAINTS	-
+11	2	DEFUNCTORUM	VIOLACEUS	-	The Commemoration of All the Faithful Departed	sine gradu in fonte; tabula UNLY 59 n. 3
+11	3	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Martin de Porres, Religious	-
+11	4	MEMORIA	ALBUS	-	Saint Charles Borromeo, Bishop	-
+11	9	FESTUM	ALBUS	-	The Dedication of the Lateran Basilica	-
+11	10	MEMORIA	ALBUS	-	Saint Leo the Great, Pope and Doctor of the Church	-
+11	11	MEMORIA	ALBUS	-	Saint Martin of Tours, Bishop	-
+11	12	MEMORIA	RUBER	-	Saint Josaphat, Bishop and Martyr	-
+11	13	MEMORIA	ALBUS	USA	Saint Frances Xavier Cabrini, Virgin	-
+11	15	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Albert the Great, Bishop and Doctor of the Church	-
+11	16	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Gertrude, Virgin	-
+11	16	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Margaret of Scotland	-
+11	17	MEMORIA	ALBUS	-	Saint Elizabeth of Hungary, Religious	-
+11	18	MEMORIA_AD_LIBITUM	ALBUS	USA	Saint Rose Philippine Duchesne, Virgin	-
+11	18	MEMORIA_AD_LIBITUM	ALBUS	-	The Dedication of the Basilicas of Saints Peter and Paul, Apostles	-
+11	21	MEMORIA	ALBUS	-	The Presentation of the Blessed Virgin Mary	-
+11	22	MEMORIA	RUBER	-	Saint Cecilia, Virgin and Martyr	-
+11	23	MEMORIA_AD_LIBITUM	RUBER	USA	Blessed Miguel Agustín Pro, Priest and Martyr	-
+11	23	MEMORIA_AD_LIBITUM	RUBER	-	Saint Clement I, Pope and Martyr	-
+11	23	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Columban, Abbot	-
+11	24	MEMORIA	RUBER	-	Saint Andrew Dũng-Lạc, Priest, and Companions, Martyrs	-
+11	25	MEMORIA_AD_LIBITUM	RUBER	-	Saint Catherine of Alexandria, Virgin and Martyr	-
+11	30	FESTUM	RUBER	-	Saint Andrew, Apostle	-
+12	3	MEMORIA	ALBUS	-	Saint Francis Xavier, Priest	-
+12	4	MEMORIA_AD_LIBITUM	ALBUS	-	Saint John Damascene, Priest and Doctor of the Church	-
+12	6	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Nicholas, Bishop	-
+12	7	MEMORIA	ALBUS	-	Saint Ambrose, Bishop and Doctor of the Church	-
+12	8	SOLLEMNITAS	ALBUS	-	THE IMMACULATE CONCEPTION OF THE BLESSED VIRGIN MARY (Patronal Feastday of the United States of America)	-
+12	9	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Juan Diego Cuauhtlatoatzin	-
+12	10	MEMORIA_AD_LIBITUM	ALBUS	-	Our Lady of Loreto	-
+12	11	MEMORIA_AD_LIBITUM	ALBUS	-	Saint Damasus I, Pope	-
+12	12	FESTUM	ALBUS	USA	Our Lady of Guadalupe	-
+12	13	MEMORIA	RUBER	-	Saint Lucy, Virgin and Martyr	-
+12	14	MEMORIA	ALBUS	-	Saint John of the Cross, Priest and Doctor of the Church	-
+12	21	MEMORIA?	-	-	Saint Peter Canisius, Priest and Doctor of the Church	ordo non visibilis 2025-2026 (Quadragesima, 17-24 XII, octava); color non visibilis
+12	23	MEMORIA?	-	-	Saint John of Kanty, Priest	ordo non visibilis 2025-2026 (Quadragesima, 17-24 XII, octava); color non visibilis
+12	25	SOLLEMNITAS	ALBUS	-	The Nativity of the Lord	titulus temporalis in fonte
+12	26	FESTUM	RUBER	-	Saint Stephen, The First Martyr	-
+12	27	FESTUM	ALBUS	-	Saint John, Apostle and Evangelist	-
+12	28	FESTUM	RUBER	-	The Holy Innocents, Martyrs	-
+12	29	MEMORIA?	-	-	Saint Thomas Becket, Bishop and Martyr	ordo non visibilis 2025-2026 (Quadragesima, 17-24 XII, octava); color non visibilis
+12	31	MEMORIA?	-	-	Saint Sylvester I, Pope	ordo non visibilis 2025-2026 (Quadragesima, 17-24 XII, octava); color non visibilis

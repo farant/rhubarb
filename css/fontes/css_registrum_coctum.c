@@ -1,8 +1,8 @@
-/* css_registrum_coctum.c
+/* css_registrum_coctum.c - GENERATUM, NE MANU EDITES
  *
- * Registrum generum COCTUM grammaticae 'css' - GENERATUM, NE MANU
- * EDITES. Fons: css/grammatica/css.registrum.stml (materia/coquere.sh).
- * Series LOCORUM plana; quodque genus fenestram suam per loci_offset +
+ * Registrum generum COCTUM grammaticae 'css'. Fons:
+ * css/grammatica/css.registrum.stml (materia/coquere.sh). Series
+ * LOCORUM plana; quodque genus fenestram suam per loci_offset +
  * loci_numerus nominat. Genera XXI, loci XLV.
  */
 

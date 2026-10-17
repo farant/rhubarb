@@ -1,0 +1,118 @@
+<!-- unitates.stml - politica domus de unitatibus codicis (canon
+     unitates.canon; spec project-specs/unitates-codicis-spec.md).
+     Genera per viam naturae citantur; declarationes unitatum in
+     DIR/unitas.stml. Valor novus (cura, munus, iudex, ...) = linea
+     nova hic, nulla mutatio codicis in consumptoribus. -->
+<unitates>
+
+  <cura titulus="domestica" descriptio="nostra: regulae domus omnes valent"/>
+  <cura titulus="remissa"   descriptio="nostra, laxe recta: stilus domus numquam obstat (knotapel)"/>
+  <cura titulus="aliena"    descriptio="aliena: numquam regulis domus iudicatur (vendor, oracula)"/>
+
+  <vita titulus="viva"      descriptio="in usu, extenditur"/>
+  <vita titulus="vetusta"   descriptio="substituta (successor nominatur), adhuc praesens, non extenditur"/>
+  <vita titulus="archivata" descriptio="congelata, extra usum: nullae regulae, nullae portae"/>
+
+  <usus titulus="homo"    descriptio="Franus eligit currere (vox, quaestio)"/>
+  <usus titulus="agens"   descriptio="agentibus et elaboratoribus (legati, natura, silva.py)"/>
+  <usus titulus="machina" descriptio="aedificatio et iudicium (fabrica, examen, unci)"/>
+
+  <genus via="/elementa_programmatis/bibliotheca"        cura="domestica"/>
+  <genus via="/elementa_programmatis/applicatio"         cura="domestica"/>
+  <genus via="/elementa_programmatis/subsystema"         cura="domestica"/>
+  <genus via="/elementa_programmatis/opus_explorationis" cura="remissa"/>
+  <genus via="/fabricatio/adscitio"                      cura="aliena"/>
+
+  <!-- munera: prima regula congruens vincit -->
+  <munus titulus="fixtura"     segmentum="fixa"/>
+  <munus titulus="assets"      segmentum="assets" segmenti_suffixum="_assets"/>
+  <!-- amalgama = productum distribuendum (generatum + capita vanilla manu
+       scripta): forma eius gradus generationis esset, non formatoris
+       commissionis (Franus 2026-10-15) -->
+  <munus titulus="amalgama"    segmentum="amalgama"/>
+  <munus titulus="probatio"    segmentum="probationes" extensiones=".c .m .h .sh"/>
+  <munus titulus="fixtura"     segmentum="probationes"/>
+  <munus titulus="caput"       extensiones=".h"/>
+  <munus titulus="fons"        extensiones=".c .m .css"/>
+  <munus titulus="documentum"  extensiones=".md .html"/>
+  <munus titulus="declaratio"  extensiones=".stml .canon .genera .census .toml .registrum"/>
+  <munus titulus="scriptum"    extensiones=".sh .py .ts .js"/>
+
+  <lingua titulus="c89"    extensiones=".c .h"/>
+  <lingua titulus="objc"   extensiones=".m"/>
+  <lingua titulus="sh"     extensiones=".sh"/>
+  <lingua titulus="python" extensiones=".py"/>
+  <lingua titulus="ts"     extensiones=".ts"/>
+  <lingua titulus="js"     extensiones=".js"/>
+  <lingua titulus="stml"   extensiones=".stml .canon .genera .census"/>
+  <lingua titulus="md"     extensiones=".md"/>
+  <lingua titulus="toml"   extensiones=".toml"/>
+  <lingua titulus="css"    extensiones=".css"/>
+
+  <!-- iudices: consumptores qui custodiam rogant (U4: unus post alium,
+       quisque cum probatione congruentiae contra indicem veterem) -->
+  <iudex titulus="lint_latinus"
+         curae="domestica" vitae="viva vetusta"
+         munera="fons caput probatio amalgama" provenientiae="manu generatum"
+         linguae="c89 objc"
+         descriptio="lint Latinus identificatorum: ambitus (oratio vocabula, pinna portae oratio) et ansa commissionis (lint_latinus.sh, silva.commissio) - generata iudicantur (Franus 2026-10-15: nomina generatoris alibi non iudicantur), fixturae non"/>
+
+  <iudex titulus="formator_commissionis"
+         curae="domestica" vitae="viva vetusta"
+         munera="fons caput probatio" provenientiae="manu"
+         linguae="c89"
+         descriptio="formator ante iudicium commissionis (tools/formare_viae.sh, silva.commissio et uncus) - generata numquam (veritas eorum generator est), amalgama numquam, vendor numquam (Franus 2026-10-15: olim lineae mutatae)"/>
+
+  <iudex titulus="examen_commissionis"
+         curae="domestica" vitae="viva vetusta"
+         munera="fons probatio assets" provenientiae="manu generatum"
+         linguae="c89 objc"
+         descriptio="examen C89 (et censor .m) super plagulas commissionis (tools/unci-git/pre-commit; capita per includentes)"/>
+  <iudex titulus="diagnostica_materiae"
+         curae="domestica" vitae="viva vetusta"
+         munera="fons probatio scriptum declaratio" provenientiae="manu generatum"
+         linguae="sh css"
+         descriptio="diagnostica crustae et css super plagulas commissionis (tools/unci-git/pre-commit -> tools/diagnostica.sh)"/>
+
+  <iudex titulus="censor_latinae"
+         curae="domestica" vitae="viva vetusta"
+         munera="fons caput probatio assets" provenientiae="manu generatum"
+         linguae="c89"
+         descriptio="censor latinae: macra latina.h in positione nominis (.claude/hooks/censor-custos.sh)"/>
+  <iudex titulus="canon_custos"
+         curae="domestica" vitae="viva vetusta"
+         munera="declaratio" provenientiae="manu generatum"
+         linguae="stml"
+         descriptio="canon_examen in plagulas .stml/.canon modo scriptas (.claude/hooks/canon-custos.sh)"/>
+
+  <iudex titulus="prosa_anglica"
+         curae="domestica remissa" vitae="viva vetusta"
+         munera="documentum" provenientiae="manu"
+         linguae="md"
+         descriptio="lint prosae Anglicae super markdown (oratio vocabula -prosa) - knotapel Anglice scriptum INCLUSUM (remissa), generata et fixturae non"/>
+
+  <bibliothecae capita="include" fontes="lib" probationes="probationes"
+                praefixum="probatio_"
+                partes="_macos _posix _interna _impl _tabula"
+                paginae="docs/bibliothecae" bona="_assets"/>
+
+  <!-- exspectationes per genus (census: bin/fabrica quid -census) -->
+  <exspectatio genus="/elementa_programmatis/bibliotheca" munus="probatio" minimum="1"
+               descriptio="bibliotheca probationem habet"/>
+  <!-- 'bibliotheca documentum habet' remota (Franus 2026-10-15: worklogs
+       ex usu nata, aetas ante eos; documentatio vera redit cum
+       interrogationibus U5b) -->
+  <exspectatio genus="/elementa_programmatis/applicatio" attributum="usus"
+               descriptio="applicatio auditorium suum declarat"/>
+
+  <!-- familiae: radices quarum bibliothecae RADIX_* unitates liberae
+       sunt (tres liberi aut plures, partibus exclusis; census 10-15) -->
+  <familia radix="arbor"/>
+  <familia radix="eventus"/>
+  <familia radix="fabrica"/>
+  <familia radix="fons"/>
+  <familia radix="imago"/>
+  <familia radix="norma"/>
+  <familia radix="vicus"/>
+
+</unitates>

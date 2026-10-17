@@ -414,13 +414,15 @@ probatio_ordo_plenus (
         _radix());
     _scribe(intra, p, corpus);
 
-    /* 5: didOpen plagulae EXCLUSAE (lib/imago.c pinnata - venditum
-     * stb_image; uuid.c olim, re-pinnatione 2026-07-27 sanata) cum
-     * textu fracto - nihilominus vacua publicanda */
+    /* 5: didOpen plagulae EXCLUSAE (vendor/bearssl_amalgama.c pinnata -
+     * C99 generata, numquam C89) cum textu fracto - nihilominus vacua
+     * publicanda. Olim lib/imago.c (stb_image; sanata per stdint,
+     * tls-bearssl R3/R29 2026-10-15) et uuid.c (re-pinnatione
+     * 2026-07-27 sanata). */
     sprintf(corpus,
         "{\"jsonrpc\":\"2.0\",\"method\":\"textDocument/didOpen\","
         "\"params\":{\"textDocument\":{\"uri\":"
-        "\"file://%s/lib/imago.c\",\"version\":1,"
+        "\"file://%s/vendor/bearssl_amalgama.c\",\"version\":1,"
         "\"languageId\":\"c\",\"text\":\"quisquiliae (((\"}}}",
         _radix());
     _scribe(intra, p, corpus);

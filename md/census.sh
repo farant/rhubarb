@@ -1,12 +1,14 @@
 #!/bin/bash
 # md/census.sh - census corporis markdown (C2): numeri ex arbore parsata
 #
-# Usage:  ./md/census.sh [-machina | -citata [via.md] | -scribere]
-#   (nihil)    tabulae markdown in stdout
+# Usage:  ./md/census.sh [-machina | -citata [via.md]]
+#   (nihil)    tabulae markdown in stdout (RELATIO AD PETITIONEM)
 #   -machina   TSV 'clavis<tab>valor'
 #   -citata    verbatim (code spans) omnia: 'via<tab>linea<tab>contentum'
 #              (via data = plagula illa sola, etiam extra git)
-#   -scribere  md/CENSUS.md scribit (mensura COMMISSA, regenerabilis)
+# md/CENSUS.md commissum NON iam est (Franus 2026-10-15): mensura corporis
+# totius relatio est, non fons - signum generati in linea III ferebat et
+# actionem fabricae nullam habebat (ingressus = omnis *.md).
 # Corpus = git ls-files '*.md' (ambulatio directoriorum scripta
 # invenit). Exit: 0 sanum | 2 fractura. Instrumentum ex clausura SUA
 # (tools/cursor_communis.sh; cursores ad gradus T4).
@@ -18,8 +20,8 @@ BIN="$BUILD_DIR/census"
 SRC="$MD_DIR/instrumenta/census.c"
 MODUS="${1:-}"
 PLAGULA="${2:-}"
-case "$MODUS" in ""|-machina|-citata|-scribere) ;; *)
-    echo "usus: ./md/census.sh [-machina | -citata [via.md] | -scribere]" >&2; exit 2 ;;
+case "$MODUS" in ""|-machina|-citata) ;; *)
+    echo "usus: ./md/census.sh [-machina | -citata [via.md]]" >&2; exit 2 ;;
 esac
 source "$RADIX_DIR/tools/cursor_communis.sh"
 cursor_instrumenta_parare >&2 || exit 2
@@ -34,7 +36,6 @@ else
 fi
 NOTA="$(date +%Y-%m-%d) HEAD $(git rev-parse --short HEAD 2>/dev/null || echo '?')"
 case "$MODUS" in
-    -scribere) "$BIN" -corpus "$LISTA" -nota "$NOTA" > "$MD_DIR/CENSUS.md" && echo "census: md/CENSUS.md scriptum" ;;
     "")        "$BIN" -corpus "$LISTA" -nota "$NOTA" ;;
     *)         "$BIN" -corpus "$LISTA" "$MODUS" ;;
 esac

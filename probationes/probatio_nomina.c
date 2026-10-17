@@ -183,11 +183,59 @@ _sectio_vacuus (
     CREDO_AEQUALIS_I32(reactor_numerus_fd(r), ZEPHYRUM);
 }
 
+
+interior NominaAddressus
+_addressus_familiae (
+    s32 familia,
+    i32 nota)
+{
+    NominaAddressus a;
+
+    memset(&a, ZEPHYRUM, magnitudo(a));
+    a.familia = familia;
+    a.mensura = nota;      /* signum ordinis (non sockaddr verum) */
+    redde a;
+}
+
+/* RFC 8305 par. 4: familiae alternantur, incipiens a familia PRIMA
+ * responsi; ordo intra familiam servatur */
+interior vacuum
+_sectio_alternare (
+    CredoContextus* c)
+{
+    NominaAddressus a[V];
+
+    (vacuum)c;
+    a[ZEPHYRUM]  = _addressus_familiae(AF_INET6, I);
+    a[I]         = _addressus_familiae(AF_INET6, II);
+    a[II]        = _addressus_familiae(AF_INET6, III);
+    a[III]       = _addressus_familiae(AF_INET, IV);
+    a[IV]        = _addressus_familiae(AF_INET, V);
+    nomina_familias_alternare(a, V);
+    CREDO_AEQUALIS_I32(a[ZEPHYRUM].mensura, I);
+    CREDO_AEQUALIS_I32(a[I].mensura, IV);
+    CREDO_AEQUALIS_I32(a[II].mensura, II);
+    CREDO_AEQUALIS_I32(a[III].mensura, V);
+    CREDO_AEQUALIS_I32(a[IV].mensura, III);
+    /* IPv4 primum: idem, ab IPv4 */
+    a[ZEPHYRUM]  = _addressus_familiae(AF_INET, I);
+    a[I]         = _addressus_familiae(AF_INET, II);
+    a[II]        = _addressus_familiae(AF_INET6, III);
+    nomina_familias_alternare(a, III);
+    CREDO_AEQUALIS_I32(a[ZEPHYRUM].mensura, I);
+    CREDO_AEQUALIS_I32(a[I].mensura, III);
+    CREDO_AEQUALIS_I32(a[II].mensura, II);
+    /* familia una aut numerus parvus: immutatum */
+    nomina_familias_alternare(a, I);
+    CREDO_AEQUALIS_I32(a[ZEPHYRUM].mensura, I);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "localhost", _sectio_hospes_localis, NIHIL, NIHIL, NIHIL, NIHIL },
     { "litteralis", _sectio_litteralis, NIHIL, NIHIL, NIHIL, NIHIL },
     { "abruptum", _sectio_abruptum, NIHIL, NIHIL, NIHIL, NIHIL },
     { "vacuus", _sectio_vacuus, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "alternare", _sectio_alternare, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

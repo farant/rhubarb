@@ -81,7 +81,8 @@ terminale_argumenta (
          b32*  fumus);
 
 /* Ambitus infantis (vicus-latera S1c): TERM=xterm-256color,
- * COLORTERM=truecolor, TERM_PROGRAM=terminale; vector NIHIL-
+ * COLORTERM=truecolor, TERM_PROGRAM=terminale; TMUX et TMUX_PANE
+ * tolluntur (T4c: terminale novum, non intra tmux); vector NIHIL-
  * terminatus, staticus - principalia eum in pseudoterminale dant,
  * terminale_montare ipsa. */
 constans character* constans*
@@ -102,21 +103,29 @@ terminale_applicatio_aedificare (
 
 /* vicus-latera S1b, status-plan S7c: montare in repositorium hospitis
  * (vicus): ramus <terminale id=…> per organum (manifestum infixum,
- * genus terminale: canon generatus, domini, status servatus); concha
- * nova ($SHELL -l, ambitus TERM/COLORTERM/TERM_PROGRAM ex
- * bibliotheca); dispensator NULLUS - hospes suum habet. systemata
- * NIHIL = nulla. latitudo/altitudo in pixelis nostris. FALSUM si
- * concha non generatur aut ramus recusatur. */
+ * genus terminale: canon generatus, domini, status servatus); infans
+ * = argumenta (T4c; vector NIHIL-terminatus) aut, NIHIL, concha nova
+ * ($SHELL -l), ambitus TERM/COLORTERM/TERM_PROGRAM ex bibliotheca;
+ * dispensator NULLUS - hospes suum habet. systemata NIHIL = nulla.
+ * latitudo/altitudo in pixelis nostris. FALSUM si infans non
+ * generatur aut ramus recusatur. */
 b32
 terminale_montare (
-    TerminaleApplicatio* app,
-                Piscina* piscina,
-    InternamentumChorda* intern,
-     InsulaRepositorium* repo,
-     constans character* id,
-        StatusSystemata* systemata,
-                    i32  latitudo,
-                    i32  altitudo);
+          TerminaleApplicatio* app,
+                      Piscina* piscina,
+          InternamentumChorda* intern,
+           InsulaRepositorium* repo,
+           constans character* id,
+    constans character* constans* argumenta,
+              StatusSystemata* systemata,
+                          i32  latitudo,
+                          i32  altitudo);
+
+/* T4c (colloquia-plan): tty infantis ("/dev/ttys011") - tmux clientes
+ * per tty agnoscit; vacua si nulla (pons memoriae) */
+chorda
+terminale_tty (
+    constans TerminaleApplicatio* app);
 
 /* componere hospitis (dispensator.h Componere), ctx =
  * TerminaleApplicatio* */

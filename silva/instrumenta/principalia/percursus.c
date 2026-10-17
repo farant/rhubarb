@@ -1021,6 +1021,22 @@ _praetermittendum (
         ? VERUM : FALSUM;
 }
 
+/* via = directorium vendicatum ('vendor' aut '.../vendor')? Arbores
+ * upstream SUB eo (vendor/<titulus>/) numquam iudicantur: alienae,
+ * octetim upstream, porta sua eas custodit (tls-bearssl R5: vendor/
+ * bearssl, porta 'bearssl'). Plagulae in vendor/ IPSO (amalgamae,
+ * capita singula) percurruntur et exclusionibus pinnantur. */
+hic_manens b32
+_est_vendor (
+    constans character* via)
+{
+    memoriae_index n = strlen(via);
+
+    redde (   n >= VI && strcmp(via + n - VI, "vendor") == ZEPHYRUM
+           && (n == VI || via[n - VII] == '/'))
+        ? VERUM : FALSUM;
+}
+
 hic_manens vacuum
 _directorium_percurrere (
     constans character* via)
@@ -1044,7 +1060,10 @@ _directorium_percurrere (
 
         si (introitus->d_type == DT_DIR)
         {
-            _directorium_percurrere(via_plena);
+            si (!_est_vendor(via))
+            {
+                _directorium_percurrere(via_plena);
+            }
         }
         alioquin si (_est_fons_c(introitus->d_name))
         {
