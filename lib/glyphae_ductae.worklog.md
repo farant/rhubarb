@@ -373,6 +373,10 @@ d(0x2296, '..###.','.#...#','.#...#','.#####','.#...#','.#...#','..###.')  # ⊖
 d(0x2298, '..###.','.#...#','.#..##','.#.#.#','.##..#','.#...#','..###.')  # ⊘ (2026-10-16)
 d(0x2299, '..###.','.#...#','.#...#','.#.#.#','.#...#','.#...#','..###.')  # ⊙ (2026-10-16)
 d(0x203B, '...#..',B,'..#.#.','.#.#.#','..#.#.',B,'...#..')                 # ※ (2026-10-16)
+d(0x2282, B,'..####','.#....','.#....','.#....','..####',B)                 # ⊂ (2026-10-17)
+d(0x2283, B,'.####.','.....#','.....#','.....#','.####.',B)                 # ⊃ (2026-10-17)
+d(0x2286, '..####','.#....','.#....','.#....','..####',B,'.#####')           # ⊆ (2026-10-17)
+d(0x2287, '.####.','.....#','.....#','.....#','.####.',B,'.#####')           # ⊇ (2026-10-17)
 import unicodedata, sys
 out=[]
 for cp in sorted(S):
@@ -406,3 +410,12 @@ Then ⊖ ⊘ ⊙ in the same large-circle style (⊘'s slash upper right to
 lower left, touching the rim) and ※: a SMALL X (3x3) with a dot in each
 gap - a full 5x5 X with dots between its arms is a checkerboard at 6x8.
 
+
+## 2026-10-17 - ⊂ ⊃ (subset, superset)
+
+Fran saw tofu for ⊂ in vicus; ⊃ drawn with it as the mirror. Five rows
+(1-5) like ≡, open side flat: the vertical sits in column I (⊂) or V
+(⊃) and the arms run four pixels to the other side, so the curve is
+only implied by the arms starting one column in.
+Then ⊆ ⊇: the same shape lifted to rows 0-4 with a full bar on row 6
+(one empty row between, as in ≤ ≥).

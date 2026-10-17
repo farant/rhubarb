@@ -538,7 +538,8 @@ graeca_probare (vacuum)
         0x2078, 0x2079, 0x207A, 0x207B, 0x207F, 0x2080, 0x2081,
         0x2082, 0x2083, 0x2084, 0x2085, 0x2086, 0x2087, 0x2088,
         0x2089, 0x221A, 0x221B, 0x226A, 0x226B, 0x2295, 0x2297,
-        0x2296, 0x2298, 0x2299, 0x203B, ZEPHYRUM };
+        0x2296, 0x2298, 0x2299, 0x203B, 0x2282, 0x2283,
+        0x2286, 0x2287, ZEPHYRUM };
     /* Franus 2026-10-16 (tofu in vico): circulus magnus ut U+25EF,
      * brachia X et + limbum tangunt */
     constans character* circulus_plus[] = {
@@ -558,6 +559,19 @@ graeca_probare (vacuum)
     constans character* nota_relationis[] = {
         "...#..", "......", "..#.#.", ".#.#.#",
         "..#.#.", "......", "...#..", "......" };
+    /* Franus 2026-10-17 (tofu in vico): contentum et continens */
+    constans character* contentum[] = {
+        "......", "..####", ".#....", ".#....",
+        ".#....", "..####", "......", "......" };
+    constans character* continens[] = {
+        "......", ".####.", ".....#", ".....#",
+        ".....#", ".####.", "......", "......" };
+    constans character* contentum_aequale[] = {
+        "..####", ".#....", ".#....", ".#....",
+        "..####", "......", ".#####", "......" };
+    constans character* continens_aequale[] = {
+        ".####.", ".....#", ".....#", ".....#",
+        ".####.", "......", ".#####", "......" };
     constans character* circulus_x[] = {
         "..###.", ".#...#", ".##.##", ".#.#.#",
         ".##.##", ".#...#", "..###.", "......" };
@@ -581,6 +595,10 @@ graeca_probare (vacuum)
     CREDO_VERUM(pictura_est(0x2298, circulus_obliquus));
     CREDO_VERUM(pictura_est(0x2299, circulus_punctum));
     CREDO_VERUM(pictura_est(0x203B, nota_relationis));
+    CREDO_VERUM(pictura_est(0x2282, contentum));
+    CREDO_VERUM(pictura_est(0x2283, continens));
+    CREDO_VERUM(pictura_est(0x2286, contentum_aequale));
+    CREDO_VERUM(pictura_est(0x2287, continens_aequale));
     omnia = VERUM;
     situs = VERUM;
     per (k = ZEPHYRUM; nova[k]; k++)
@@ -615,7 +633,7 @@ graeca_probare (vacuum)
     }
     CREDO_VERUM(omnia);
     CREDO_VERUM(situs);
-    CREDO_AEQUALIS_I32(k, LXVII);
+    CREDO_AEQUALIS_I32(k, LXXI);
     /* similia Latinis per fons; vicini non assignati */
     CREDO_FALSUM(glyphae_ductae_est(0x0391));
     CREDO_FALSUM(glyphae_ductae_est(0x03BF));
