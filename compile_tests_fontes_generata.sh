@@ -168,6 +168,7 @@ declare -a SOURCE_FILES=(
     "lib/moneta.c"
     "lib/motus.c"
     "lib/multipart.c"
+    "lib/multipartita.c"
     "lib/multiplexor.c"
     "lib/natura.c"
     "lib/navigator_entitatum.c"

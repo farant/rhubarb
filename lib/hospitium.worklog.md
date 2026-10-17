@@ -87,3 +87,29 @@ escaping in listing titles; OPTIONS has no automatic handler
   cancels its vigilia timer so the app's reactor stays clean.
 - **Test harness:** client recv timeout 20 ms. With 2 s the test client
   blocked while the single-threaded server (same process) needed pumping.
+
+## 2026-10-17 - hospitium v3 T3: request bodies by stream
+
+- **Parser seam:** connections create their parser with
+  `http_parser_capita_solum(VERUM)`; at the empty line with
+  Content-Length > 0 it stops (CAPITA_COMPLETA) and hands over the
+  bytes already buffered (`http_parser_corpus_initium`). From then on
+  `_legere` feeds raw reads to the body sink, not the parser.
+- **Sinks:** multipart -> multipartita with callbacks (fields in a
+  chorda_aedificator, file parts to temp files with SHA-256 per write);
+  other bodies <= `corpus_in_memoria_maximum` -> one piscina buffer
+  (`petitio->corpus` as before); bigger -> temp file
+  (`petitio->corpus_via`).
+- **Temp-file lifetime:** paths live in the request piscina, so
+  `_corpus_purgare` MUST run before `piscina_reficere` (in
+  `_paratus_novae`) and before `piscina_destruere` (in
+  `_connexionem_claudere`). `fila_numerus++` happens BEFORE the temp
+  file is opened so a failure mid-open is still purged.
+- **Bytes past Content-Length** (pipelining) set `reliquiae_corporis` ->
+  keep-alive off, same honest close as the old parser path.
+- **petitio_maxima now means body size** in this mode; headers have
+  their own 64 KB cap (431). The parser's existing CL > petitio_maxima
+  check gives the 413 before any body byte is read.
+- The whole body is streamed even when the route will 404 - routing
+  happens after the body. Cheap to change later (route at
+  CAPITA_COMPLETA) if anonymous uploads to unknown paths ever matter.

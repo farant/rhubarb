@@ -1752,5 +1752,13 @@
     <forma textus="stilizatae" tempus="perfectum" vox="passiva" forma-verbi="participium"/>
     <forma textus="stilizatum" tempus="perfectum" vox="passiva" forma-verbi="participium"/>
   </vocabulum>
+  <vocabulum lemma="multipartitus" lingua="latina" classis="adiectivum" nota="Latina sera (ut bipartitus, tripartitus): multipartitus, in partes multas divisus - multipart/form-data (lib/multipartita.c); WORDS caret">
+    <forma textus="multipartitus" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="multipartita" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="multipartitum" casus="nominativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="multipartiti" casus="genitivus" numerus="singularis" genus="masculinum"/>
+    <forma textus="multipartitae" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="multipartito" casus="ablativus" numerus="singularis" genus="neutrum"/>
+  </vocabulum>
 
 </glossarium>

@@ -122,6 +122,14 @@ filum_scriptor_scribere (
      FilumScriptor* scriptor,
             chorda  contentum);
 
+/* Scribere octetos (binarios, constans - e.g. capsa parseris aliena)
+ * ad filum apertum; n 0 = nihil, VERUM */
+b32
+filum_scriptor_octetos_scribere (
+     FilumScriptor* scriptor,
+       constans i8* octeti,
+               i32  n);
+
 /* Scribere literas C ad filum apertum */
 b32
 filum_scriptor_scribere_literis (

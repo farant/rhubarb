@@ -605,6 +605,34 @@ filum_scriptor_scribere (
 }
 
 b32
+filum_scriptor_octetos_scribere (
+    FilumScriptor* scriptor,
+      constans i8* octeti,
+              i32  n)
+{
+    memoriae_index scriptus;
+
+    si (!scriptor || !scriptor->descriptum || (n > ZEPHYRUM && !octeti))
+    {
+        _filum_error_ponere("scriptor invalidus");
+        redde FALSUM;
+    }
+    si (n == ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    _filum_error_purgare();
+    scriptus = fwrite(octeti, I, (memoriae_index)n,
+        scriptor->descriptum);
+    si (scriptus != (memoriae_index)n)
+    {
+        _filum_error_ponere("fwrite fracta");
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
+b32
 filum_scriptor_scribere_literis (
          FilumScriptor* scriptor,
     constans character* contentum)

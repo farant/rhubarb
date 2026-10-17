@@ -14,6 +14,13 @@
  * ut abitum clientis videat (EOF -> clausura -> manubrium irritum).
  * Fons corporis: post caudam capitum, partes CAPSAE_FONTIS ex fonte
  * trahuntur dum fossa haurit.
+ *
+ * Corpus petitionis (T3): parser in modo capita_solum sistit post
+ * capita; corpus hic per rivum ad 'sentinam' (memoria, filum
+ * temporarium, parser multipartitus) usque ad Content-Length. Fila
+ * temporaria in piscina petitionis nominata; _corpus_purgare ea delet
+ * ANTE refectionem et ante destructionem piscinae (etiam cliente
+ * abeunte, termino, sistere).
  */
 
 #include "hospitium.h"
@@ -27,6 +34,9 @@
 #include "iter_directoria.h"
 #include "tempus.h"
 #include "chorda_aedificator.h"
+#include "multipartita.h"
+#include "moneta.h"
+#include "lectiones.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -37,6 +47,8 @@
 #define HOSPITIUM_BUFFER_LECTIONIS    (IV * MXXIV)
 #define HOSPITIUM_PISCINA_CONNEXIONIS (LXIV * M)
 #define HOSPITIUM_CAPSA_FONTIS        (XVI * MXXIV)
+#define HOSPITIUM_CORPUS_MEMORIA      (MXXIV * MXXIV)
+#define HOSPITIUM_PARTES_MAXIMAE      LXIV
 
 /* Responsum plenitudinis - sine piscina, ante admissionem missum */
 hic_manens constans character* RESPONSUM_PLENITUDINIS =
@@ -62,6 +74,14 @@ nomen enumeratio {
     CONNEXIO_SCRIBENS,
     CONNEXIO_EXSPECTANS      /* responsum dilatum */
 } ConnexioStatus;
+
+/* sentina corporis petitionis */
+nomen enumeratio {
+    CORPUS_NULLUM = 0,
+    CORPUS_MEMORIA,
+    CORPUS_FILUM,
+    CORPUS_MULTIPARTITUM
+} CorpusModus;
 
 nomen structura ConnexioHospitii ConnexioHospitii;
 
@@ -115,6 +135,26 @@ structura ConnexioHospitii {
     HospitiumFons  fons;
                i8* capsa_fontis;
               i64  fons_missa;
+
+    /* corpus petitionis per rivum (omnia in piscina petitionis) */
+            CorpusModus  corpus_modus;
+                    i64  corpus_reliquum;
+                     i8* corpus_memoria;
+                    i32  corpus_acceptum;
+          FilumScriptor* corpus_scriptor;
+     constans character* corpus_via;
+                    b32  reliquiae_corporis;   /* octeti post corpus */
+                    i32  corpus_status;        /* error sentinae */
+     MultipartitaParser* multipartita;
+         HospitiumFilum* fila;
+                    b32* fila_retenta;
+                    i32  fila_numerus;
+          FilumScriptor* filum_scriptor;       /* pars fili currens */
+      SigillumContextus  filum_sigillum;
+        HospitiumCampus* campi;
+                    i32  campi_numerus;
+      ChordaAedificator* campus_aedificator;
+                    b32  pars_est_filum;
 };
 
 nomen structura {
@@ -156,6 +196,10 @@ structura Hospitium {
     b32 molliter;
     f64 molliter_terminus;
     b32 sistit;
+
+    /* corpora per rivum */
+                    i32  corpus_in_memoria_maximum;
+     constans character* directorium_temporarium;
 };
 
 
@@ -224,6 +268,9 @@ _directorium_tentare (
       ConnexioHospitii* conn,
     HttpPetitioServeri* petitio,
                    b32  est_caput);
+interior vacuum
+_corpus_purgare (
+    ConnexioHospitii* conn);
 
 
 /* ========================================================================
@@ -278,6 +325,7 @@ _connexionem_claudere (
         }
         conn->fons_activus = FALSUM;
     }
+    _corpus_purgare(conn);   /* fila temporaria ante piscinam */
     reactor_removere(h->reactor, conn->fd);
     tcp_claudere(conn->tcp);
     piscina_destruere(conn->piscina_connexionis);
@@ -300,9 +348,11 @@ _paratus_novae (
 {
     f64 nunc;
 
+    _corpus_purgare(conn);   /* viae in piscina: ANTE refectionem */
     piscina_reficere(conn->piscina_connexionis, conn->basis);
     conn->parser = http_parser_creare_cum_limitibus(
         conn->piscina_connexionis, h->petitio_maxima, h->uri_maxima);
+    http_parser_capita_solum(conn->parser, VERUM);
 
     conn->scribenda       = _chorda_vacua();
     conn->offset          = 0;
@@ -923,7 +973,7 @@ _petitionem_expedire (
     /* reliquiae = pipelining differtur: servire, respondere, claudere */
     reliquiae         = http_parser_reliquiae(conn->parser);
     conn->keep_alive  = petitio->keep_alive;
-    si (reliquiae > 0)
+    si (reliquiae > 0 || conn->reliquiae_corporis)
     {
         conn->keep_alive    = FALSUM;
         conn->ob_reliquias  = VERUM;
@@ -966,6 +1016,485 @@ _petitionem_expedire (
 
 
 /* ========================================================================
+ * CORPUS PETITIONIS PER RIVUM
+ * ======================================================================== */
+
+/* Caput petitionis (titulus sine casu); vacua si absens */
+interior chorda
+_caput_petitionis (
+    constans HttpPetitioServeri* petitio,
+             constans character* titulus)
+{
+    i32 n = (i32)strlen(titulus);
+    i32 i;
+    i32 k;
+
+    per (i = 0; i < petitio->capita_numerus; i++)
+    {
+        chorda t = petitio->capita[i].titulus;
+
+        si (t.mensura != n)
+        {
+            perge;
+        }
+        per (k = 0; k < n; k++)
+        {
+            character a = (character)t.datum[k];
+            character b = titulus[k];
+
+            si (a >= 'A' && a <= 'Z')
+            {
+                a = (character)(a - 'A' + 'a');
+            }
+            si (b >= 'A' && b <= 'Z')
+            {
+                b = (character)(b - 'A' + 'a');
+            }
+            si (a != b)
+            {
+                frange;
+            }
+        }
+        si (k == n)
+        {
+            redde petitio->capita[i].valor;
+        }
+    }
+    redde _chorda_vacua();
+}
+
+/* praefixum (minusculis datum) sine casu */
+interior b32
+_incipit_ignora_casus (
+                chorda  s,
+    constans character* praefixum)
+{
+    i32 n = (i32)strlen(praefixum);
+    i32 i;
+
+    si (s.mensura < n)
+    {
+        redde FALSUM;
+    }
+    per (i = 0; i < n; i++)
+    {
+        character a = (character)s.datum[i];
+
+        si (a >= 'A' && a <= 'Z')
+        {
+            a = (character)(a - 'A' + 'a');
+        }
+        si (a != praefixum[i])
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* Directorium temporarium resolutum (NIHIL -> $TMPDIR -> /tmp), sine
+ * '/' finali, in piscina servi */
+interior constans character*
+_directorium_temporarium (
+                Piscina* piscina,
+     constans character* datum)
+{
+     constans character* dir = datum;
+              character* copia;
+                 size_t  n;
+
+    si (dir == NIHIL)
+    {
+        dir = lectiones_ambitus("TMPDIR");
+    }
+    si (dir == NIHIL || dir[0] == '\0')
+    {
+        dir = "/tmp";
+    }
+    n      = strlen(dir);
+    copia  = (character*)piscina_allocare(piscina, (i64)(n + I));
+    strcpy(copia, dir);
+    si (n > I && copia[n - I] == '/')
+    {
+        copia[n - I] = '\0';   /* $TMPDIR macOS '/' finit */
+    }
+    redde copia;
+}
+
+/* Via fili temporarii nova (nanoid) in piscina petitionis */
+interior constans character*
+_via_temporaria (
+           Hospitium* h,
+    ConnexioHospitii* conn)
+{
+     character  signa[MONETA_NANOID_MENSURA];
+     character* via;
+
+    si (!moneta_nanoid(signa))
+    {
+        redde NIHIL;
+    }
+    via = (character*)piscina_allocare(conn->piscina_connexionis,
+        (i64)(strlen(h->directorium_temporarium) + XLVIII));
+    sprintf(via, "%s/hospitium-%s.tmp", h->directorium_temporarium,
+        signa);
+    redde via;
+}
+
+/* Fila temporaria delere (nisi retenta), scriptores claudere, statum
+ * sentinae purgare. Tuta iterum. */
+interior vacuum
+_corpus_purgare (
+    ConnexioHospitii* conn)
+{
+    i32 i;
+
+    si (conn->corpus_scriptor)
+    {
+        filum_scriptor_claudere(conn->corpus_scriptor);
+    }
+    si (conn->filum_scriptor)
+    {
+        filum_scriptor_claudere(conn->filum_scriptor);
+    }
+    si (conn->corpus_via)
+    {
+        (vacuum)filum_delere(conn->corpus_via);
+    }
+    per (i = 0; i < conn->fila_numerus; i++)
+    {
+        si (!conn->fila_retenta[i] && conn->fila[i].via)
+        {
+            (vacuum)filum_delere(conn->fila[i].via);
+        }
+    }
+    conn->corpus_modus        = CORPUS_NULLUM;
+    conn->corpus_reliquum     = 0;
+    conn->corpus_memoria      = NIHIL;
+    conn->corpus_acceptum     = 0;
+    conn->corpus_scriptor     = NIHIL;
+    conn->corpus_via          = NIHIL;
+    conn->reliquiae_corporis  = FALSUM;
+    conn->corpus_status       = 0;
+    conn->multipartita        = NIHIL;
+    conn->fila                = NIHIL;
+    conn->fila_retenta        = NIHIL;
+    conn->fila_numerus        = 0;
+    conn->filum_scriptor      = NIHIL;
+    conn->campi               = NIHIL;
+    conn->campi_numerus       = 0;
+    conn->campus_aedificator  = NIHIL;
+    conn->pars_est_filum      = FALSUM;
+}
+
+/* Error sentinae: responsum + clausura; lectio corporis desinit */
+interior vacuum
+_corpus_errare (
+           Hospitium* h,
+    ConnexioHospitii* conn,
+                 i32  status)
+{
+    h->fructus.petitiones_reiectae++;
+    conn->corpus_modus    = CORPUS_NULLUM;
+    conn->keep_alive      = FALSUM;
+    conn->claudenda_post  = VERUM;
+    _respondere_simplex(h, conn, status, FALSUM);
+}
+
+/* ---- reditus multipartiti ---- */
+
+interior b32
+_mp_initium (
+     vacuum* datum,
+     chorda  campus,
+     chorda  titulus_fili,
+        b32  est_filum,
+     chorda  mimen)
+{
+    ConnexioHospitii* conn  = (ConnexioHospitii*)datum;
+           Hospitium* h     = conn->hospitium;
+
+    conn->pars_est_filum = est_filum;
+    si (est_filum)
+    {
+             HospitiumFilum* f;
+         constans character* via;
+
+        si (conn->fila_numerus >= HOSPITIUM_PARTES_MAXIMAE)
+        {
+            redde FALSUM;
+        }
+        via = _via_temporaria(h, conn);
+        si (via == NIHIL)
+        {
+            conn->corpus_status = D;
+            redde FALSUM;
+        }
+        f = &conn->fila[conn->fila_numerus];
+        memset(f, 0, magnitudo(*f));
+        f->campus                               = campus;
+        f->titulus_fili                         = titulus_fili;
+        f->mimen                                = mimen;
+        f->via                                  = via;
+        conn->fila_retenta[conn->fila_numerus]  = FALSUM;
+        conn->fila_numerus++;   /* ante aperturam: purgare videt */
+        conn->filum_scriptor = filum_scriptor_aperire(via,
+            FILUM_MODUS_CREARE, conn->piscina_connexionis);
+        si (conn->filum_scriptor == NIHIL)
+        {
+            conn->corpus_status = D;
+            redde FALSUM;
+        }
+        sigillum_incipere(&conn->filum_sigillum);
+        redde VERUM;
+    }
+    si (conn->campi_numerus >= HOSPITIUM_PARTES_MAXIMAE)
+    {
+        redde FALSUM;
+    }
+    conn->campi[conn->campi_numerus].campus  = campus;
+    conn->campi[conn->campi_numerus].valor   = _chorda_vacua();
+    conn->campi_numerus++;
+    conn->campus_aedificator = chorda_aedificator_creare(
+        conn->piscina_connexionis, LXIV);
+    redde conn->campus_aedificator != NIHIL;
+}
+
+interior b32
+_mp_data (
+         vacuum* datum,
+    constans i8* octeti,
+            i32  n)
+{
+    ConnexioHospitii* conn = (ConnexioHospitii*)datum;
+                 i32  i;
+
+    si (conn->pars_est_filum)
+    {
+        HospitiumFilum* f = &conn->fila[conn->fila_numerus - I];
+
+        si (!filum_scriptor_octetos_scribere(conn->filum_scriptor,
+            octeti, n))
+        {
+            conn->corpus_status = D;
+            redde FALSUM;
+        }
+        sigillum_addere(&conn->filum_sigillum, octeti,
+            (memoriae_index)n);
+        f->mensura += (i64)n;
+        redde VERUM;
+    }
+    per (i = 0; i < n; i++)
+    {
+        si (!chorda_aedificator_appendere_character(
+            conn->campus_aedificator, (character)octeti[i]))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+interior b32
+_mp_finis (
+    vacuum* datum)
+{
+    ConnexioHospitii* conn = (ConnexioHospitii*)datum;
+
+    si (conn->pars_est_filum)
+    {
+        HospitiumFilum* f = &conn->fila[conn->fila_numerus - I];
+              Sigillum  s;
+
+        filum_scriptor_claudere(conn->filum_scriptor);
+        conn->filum_scriptor  = NIHIL;
+        s                     = sigillum_finire(&conn->filum_sigillum);
+        sigillum_hex(&s, f->sigillum_hex);
+        redde VERUM;
+    }
+    conn->campi[conn->campi_numerus - I].valor =
+        chorda_aedificator_finire(conn->campus_aedificator);
+    conn->campus_aedificator = NIHIL;
+    redde VERUM;
+}
+
+/* Capita completa: sentinam eligere. FALSUM = responsum iam missum
+ * (error) - lectio desinit. */
+interior b32
+_corpus_incipere (
+           Hospitium* h,
+    ConnexioHospitii* conn)
+{
+    HttpPetitioServeri* pet =
+        http_parser_obtinere_petitio(conn->parser);
+                Piscina* p = conn->piscina_connexionis;
+                 chorda  typus = _caput_petitionis(pet, "Content-Type");
+                 chorda  expectatio = _caput_petitionis(pet, "Expect");
+
+    conn->capita_legens    = FALSUM;   /* corpus: otium solum */
+    conn->corpus_reliquum  = (i64)pet->content_length;
+
+    si (_incipit_ignora_casus(typus, "multipart/form-data"))
+    {
+                     chorda limes =
+                         multipartita_limes_ex_typo(typus,
+                         p);
+        MultipartitaReditus r;
+
+        si (limes.mensura == 0)
+        {
+            _corpus_errare(h, conn, CD);
+            redde FALSUM;
+        }
+        conn->fila = (HospitiumFilum*)piscina_allocare(p,
+            (i64)(HOSPITIUM_PARTES_MAXIMAE
+                  * (i32)magnitudo(HospitiumFilum)));
+        conn->fila_retenta = (b32*)piscina_allocare(p,
+            (i64)(HOSPITIUM_PARTES_MAXIMAE * (i32)magnitudo(b32)));
+        conn->campi = (HospitiumCampus*)piscina_allocare(p,
+            (i64)(HOSPITIUM_PARTES_MAXIMAE
+                  * (i32)magnitudo(HospitiumCampus)));
+        r.initium           = _mp_initium;
+        r.data              = _mp_data;
+        r.finis             = _mp_finis;
+        r.datum             = conn;
+        conn->multipartita  = multipartita_creare(limes, NIHIL, r, p);
+        si (   !conn->fila || !conn->fila_retenta || !conn->campi
+            || !conn->multipartita)
+        {
+            _corpus_errare(h, conn, D);
+            redde FALSUM;
+        }
+        conn->corpus_modus = CORPUS_MULTIPARTITUM;
+    }
+    alioquin si (conn->corpus_reliquum
+                 <= (i64)h->corpus_in_memoria_maximum)
+    {
+        conn->corpus_memoria = (i8*)piscina_allocare(p,
+            conn->corpus_reliquum);
+        si (!conn->corpus_memoria)
+        {
+            _corpus_errare(h, conn, D);
+            redde FALSUM;
+        }
+        conn->corpus_modus = CORPUS_MEMORIA;
+    }
+    alioquin
+    {
+        conn->corpus_via = _via_temporaria(h, conn);
+        conn->corpus_scriptor = conn->corpus_via
+            ? filum_scriptor_aperire(conn->corpus_via,
+            FILUM_MODUS_CREARE,
+                  p)
+            : NIHIL;
+        si (!conn->corpus_scriptor)
+        {
+            _corpus_errare(h, conn, D);
+            redde FALSUM;
+        }
+        conn->corpus_modus = CORPUS_FILUM;
+    }
+
+    /* cliens (curl > 1 MB) exspectat: statim 100 */
+    si (   pet->versio >= XI
+        && _incipit_ignora_casus(expectatio, "100-continue"))
+    {
+        constans character* centum = "HTTP/1.1 100 Continue\r\n\r\n";
+
+        (vacuum)tcp_mittere(conn->tcp, (constans i8*)centum,
+            (i32)strlen(centum));
+    }
+    redde VERUM;
+}
+
+/* Corpus totum acceptum: sentinam claudere, petitionem expedire */
+interior vacuum
+_corpus_finire (
+           Hospitium* h,
+    ConnexioHospitii* conn)
+{
+    HttpPetitioServeri* pet =
+        http_parser_obtinere_petitio(conn->parser);
+
+    commutatio (conn->corpus_modus)
+    {
+        casus CORPUS_MEMORIA:
+            pet->corpus.datum      = conn->corpus_memoria;
+            pet->corpus.mensura    = conn->corpus_acceptum;
+            pet->corpus_longitudo  = conn->corpus_acceptum;
+            frange;
+        casus CORPUS_FILUM:
+            filum_scriptor_claudere(conn->corpus_scriptor);
+            conn->corpus_scriptor  = NIHIL;
+            pet->corpus_via        = conn->corpus_via;
+            frange;
+        casus CORPUS_MULTIPARTITUM:
+            si (!multipartita_finire(conn->multipartita))
+            {
+                _corpus_errare(h, conn, CD);
+                redde;
+            }
+            frange;
+        casus CORPUS_NULLUM:
+            frange;
+    }
+    conn->corpus_modus = CORPUS_NULLUM;
+    _petitionem_expedire(h, conn);
+}
+
+/* Octeti corporis ad sentinam (ad Content-Length). VERUM = lege
+ * plura; FALSUM = petitio expedita aut error. */
+interior b32
+_corpus_adicere (
+           Hospitium* h,
+    ConnexioHospitii* conn,
+         constans i8* octeti,
+                 i32  n)
+{
+    i32 m = n;
+
+    si ((i64)m > conn->corpus_reliquum)
+    {
+        m                         = (i32)conn->corpus_reliquum;
+        conn->reliquiae_corporis  = VERUM;   /* pipelining: claudere post */
+    }
+    commutatio (conn->corpus_modus)
+    {
+        casus CORPUS_MEMORIA:
+            memcpy(conn->corpus_memoria + conn->corpus_acceptum, octeti,
+                (size_t)m);
+            conn->corpus_acceptum += m;
+            frange;
+        casus CORPUS_FILUM:
+            si (!filum_scriptor_octetos_scribere(conn->corpus_scriptor,
+                octeti, m))
+            {
+                _corpus_errare(h, conn, D);
+                redde FALSUM;
+            }
+            frange;
+        casus CORPUS_MULTIPARTITUM:
+            si (!multipartita_adicere(conn->multipartita, octeti, m))
+            {
+                _corpus_errare(h, conn, conn->corpus_status
+                    ? conn->corpus_status : (i32)CD);
+                redde FALSUM;
+            }
+            frange;
+        casus CORPUS_NULLUM:
+            redde FALSUM;
+    }
+    conn->corpus_reliquum -= (i64)m;
+    si (conn->corpus_reliquum == 0)
+    {
+        _corpus_finire(h, conn);
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
+
+/* ========================================================================
  * VOCAMINA REACTORIS
  * ======================================================================== */
 
@@ -996,6 +1525,15 @@ _legere (
         conn->terminus_otii   = tempus_nunc() + h->otium_maximum;
         conn->octeti_accepti  = VERUM;
 
+        si (conn->corpus_modus != CORPUS_NULLUM)
+        {
+            si (!_corpus_adicere(h, conn, buffer, (i32)n))
+            {
+                redde;
+            }
+            perge;
+        }
+
         res = http_parser_adicere(conn->parser,
                                   (constans character*)buffer, (i32)n);
 
@@ -1008,6 +1546,24 @@ _legere (
                 res.status_suggestus ? res.status_suggestus : (i32)CD,
                 FALSUM);
             redde;
+        }
+
+        si (res.capita_completa)
+        {
+            chorda initium;
+
+            si (!_corpus_incipere(h, conn))
+            {
+                redde;
+            }
+            initium = http_parser_corpus_initium(conn->parser);
+            si (   initium.mensura > 0
+                && !_corpus_adicere(h, conn, initium.datum,
+                    initium.mensura))
+            {
+                redde;
+            }
+            perge;
         }
 
         si (res.completa)
@@ -1161,6 +1717,7 @@ _auscultator_callback (
         conn->basis = piscina_notare(p);   /* TcpConnexio ANTE basim */
         conn->parser = http_parser_creare_cum_limitibus(
             p, h->petitio_maxima, h->uri_maxima);
+        http_parser_capita_solum(conn->parser, VERUM);
         conn->status      = CONNEXIO_LEGENS;
         conn->keep_alive  = VERUM;
 
@@ -1274,6 +1831,10 @@ hospitium_creare (
     h->acta_accessus  = cfg.acta_accessus;
     h->responsum_maximum = (cfg.responsum_maximum_ms > 0)
         ? ((f64)cfg.responsum_maximum_ms / (f64)M) : (f64)XXX;
+    h->corpus_in_memoria_maximum = cfg.corpus_in_memoria_maximum
+        ? cfg.corpus_in_memoria_maximum : HOSPITIUM_CORPUS_MEMORIA;
+    h->directorium_temporarium = _directorium_temporarium(piscina,
+        cfg.directorium_temporarium);
 
     opt = tcp_servus_optiones_default();  /* non_blocans VERUM */
     servus_res = tcp_servus_creare_cum_optionibus(
@@ -1750,4 +2311,80 @@ dilatum_colloquium (
     redde dilatum_valet(dilatum)
         ? &dilatum.hospitium->connexiones[dilatum.locus].colloquium
         : NIHIL;
+}
+
+i32
+colloquium_fila (
+         HospitiumColloquium*  colloquium,
+     constans HospitiumFilum** fila)
+{
+    si (fila)
+    {
+        *fila = NIHIL;
+    }
+    si (!colloquium || !colloquium->connexio)
+    {
+        redde 0;
+    }
+    si (fila)
+    {
+        *fila = colloquium->connexio->fila;
+    }
+    redde colloquium->connexio->fila_numerus;
+}
+
+b32
+colloquium_filum_retinere (
+        HospitiumColloquium* colloquium,
+    constans HospitiumFilum* filum,
+         constans character* via_nova)
+{
+    ConnexioHospitii* conn;
+                 s64  index;
+           character* copia;
+
+    si (!colloquium || !filum || !via_nova || !colloquium->connexio)
+    {
+        redde FALSUM;
+    }
+    conn   = colloquium->connexio;
+    si (!conn->fila)
+    {
+        redde FALSUM;
+    }
+    index  = (s64)(filum - conn->fila);
+    si (index < 0 || index >= (s64)conn->fila_numerus)
+    {
+        redde FALSUM;
+    }
+    si (!filum_movere(conn->fila[index].via, via_nova))
+    {
+        redde FALSUM;
+    }
+    copia = (character*)piscina_allocare(conn->piscina_connexionis,
+        (i64)(strlen(via_nova) + I));
+    strcpy(copia, via_nova);
+    conn->fila[index].via      = copia;
+    conn->fila_retenta[index]  = VERUM;
+    redde VERUM;
+}
+
+i32
+colloquium_campi (
+          HospitiumColloquium*  colloquium,
+     constans HospitiumCampus** campi)
+{
+    si (campi)
+    {
+        *campi = NIHIL;
+    }
+    si (!colloquium || !colloquium->connexio)
+    {
+        redde 0;
+    }
+    si (campi)
+    {
+        *campi = colloquium->connexio->campi;
+    }
+    redde colloquium->connexio->campi_numerus;
 }

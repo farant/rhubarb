@@ -23,14 +23,24 @@
  * RESPONSUM DILATUM (hospitium-v3-spec II.1): tractator
  * colloquium_differre vocat et MANUBRIUM (valorem, non indicem)
  * servat; postea (labor reactoris, responsum alienum)
- * dilatum_colloquium colloquium reddit - aut NIHIL si connexio interim finita est (cliens
- * abiit, terminus responsi, sistere): manubrium vetus numquam
+ * dilatum_colloquium colloquium reddit - aut NIHIL si connexio interim
+ * finita est (cliens abiit, terminus responsi, sistere): manubrium
+ * vetus numquam
  * petitionem alienam attingit (generatio loci). Reactor communis
  * (configuratio.reactor) applicationem et servum ansa UNA agit.
  *
  * FONTES CORPORIS: colloquium_respondere_fontem / _filum - capita cum
  * Content-Length vero, corpus per partes dum fossa haurit (numquam
  * totum in memoria).
+ *
+ * CORPORA PER RIVUM (II.1, T3): post capita hospitium corpus ipse
+ * legit. multipart/form-data -> parser multipartitus: campi in
+ * memoria (colloquium_campi), partes fili in fila temporaria cum
+ * SHA-256 in itinere (colloquium_fila); corpus aliud <=
+ * corpus_in_memoria_maximum in memoria (petitio->corpus), maius in
+ * filum temporarium (petitio->corpus_via). Fila temporaria deletur ad
+ * finem petitionis (etiam cliente abeunte), nisi
+ * colloquium_filum_retinere. "Expect: 100-continue" -> 100 statim.
  */
 
 #ifndef HOSPITIUM_H
@@ -41,6 +51,7 @@
 #include "chorda.h"
 #include "http.h"
 #include "reactor.h"
+#include "sigillum.h"
 
 
 /* ========================================================================
@@ -70,6 +81,12 @@ nomen structura {
               Reactor* reactor;
     /* 0 = 30000 - terminus responsi dilati, deinde 503 */
            MoraAngusta responsum_maximum_ms;
+    /* 0 = 1 MB - corpus maius (non multipartitum) in filum
+     * temporarium (petitio->corpus_via) */
+                   i32 corpus_in_memoria_maximum;
+    /* NIHIL = $TMPDIR aut /tmp. Fila temporaria hic; idem systema
+     * filorum ac destinatio colloquium_filum_retinere (rename) */
+    constans character* directorium_temporarium;
 } HospitiumConfiguratio;
 
 /* Manubrium responsi dilati - VALOR (copia libera); irritum fit cum
@@ -88,6 +105,23 @@ nomen structura {
     vacuum (*claudere)(vacuum* datum);
     vacuum* datum;
 } HospitiumFons;
+
+/* Pars fili multipartiti, in filo temporario dum advenit (SHA-256 in
+ * itinere). Deletur post petitionem nisi retentum. */
+nomen structura {
+                 chorda  campus;
+                 chorda  titulus_fili;   /* clientis; nomen, numquam via */
+                 chorda  mimen;
+     constans character* via;            /* filum temporarium */
+                    i64  mensura;
+              character  sigillum_hex[SIGILLUM_HEX_MENSURA];
+} HospitiumFilum;
+
+/* Pars non-fili multipartiti (valor in memoria, campus_maximus) */
+nomen structura {
+    chorda campus;
+    chorda valor;
+} HospitiumCampus;
 
 /* Numeratores - decisiones perf haec legunt */
 nomen structura {
@@ -237,6 +271,28 @@ colloquium_respondere_filum (
                     i32  status,
      constans character* mimen,
      constans character* via);
+
+/* Fila partium multipartitarum (vita petitionis): numerus, *fila =
+ * tabula. Corpus multipartitum petitio->corpus NON implet. */
+i32
+colloquium_fila (
+         HospitiumColloquium*  colloquium,
+     constans HospitiumFilum** fila);
+
+/* Filum servare: movetur (rename) ad via_nova, non deletur post
+ * petitionem; filum->via deinde via_nova. FALSUM si movere fallit
+ * (e.g. systema filorum aliud) - filum tunc temporarium manet. */
+b32
+colloquium_filum_retinere (
+        HospitiumColloquium* colloquium,
+    constans HospitiumFilum* filum,
+         constans character* via_nova);
+
+/* Campi (partes non fila) multipartiti, ordine adventus */
+i32
+colloquium_campi (
+          HospitiumColloquium*  colloquium,
+     constans HospitiumCampus** campi);
 
 /* Responsum differre: tractator redit sine responso; manubrium
  * servandum. Terminus: responsum_maximum_ms (503). */

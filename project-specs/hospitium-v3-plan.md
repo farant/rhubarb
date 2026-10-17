@@ -146,6 +146,37 @@ with this plan.
   (the handler cannot forget it); (d) filum gained a sequential byte
   reader (`filum_octeti_aperire/legere/claudere`, via `lectiones_fopen`)
   - file sources stream 16 KB at a time and never load whole.
+- **R8 (T3)** - multipart FIELDS get an accessor in T3:
+  `HospitiumCampus {campus, valor}` + `colloquium_campi(col, &campi)`
+  beside `colloquium_fila`. The plan's T3 interface stored fields but
+  exposed nothing, while T3's own tests (and curl's) must read them;
+  T4's `colloquium_forma` reads the same array.
+- **R9 (T3)** - the boundary matcher is KMP over D = CRLF "--" limes:
+  the held bytes ARE a prefix of D, so there is no lookbehind buffer to
+  shorten. The plan's "lookbehind - 1" plant became the failure it was
+  aiming at: "flush the held prefix as data at a fragment end" ->
+  `secta` red. A full D is followed by a short PROSPECTUS ("--", LWSP*
+  CRLF, else data), so `\r\n--limesX` is data. The 413 plant removed
+  the parser's existing Content-Length check (hospitium has none of its
+  own) -> `nimis_magnum` red. The filename* plant keeps the decode call
+  (else -Wunused-function) and discards its result.
+- **R10 (T3)** - semantics: in `capita_solum` mode `petitio_maxima`
+  bounds the BODY (Content-Length, 413 before reading) and the header
+  block has its own cap `HTTP_CAPITA_SOLUM_MAXIMA` 64 KB -> 431 (an app
+  setting 64 MB must not allow 64 MB of headers). The v1 suite stays
+  green. Multipart bodies leave `petitio->corpus` empty (fields +
+  files instead). `Expect: 100-continue` is answered at once (curl -F
+  above 1 MB otherwise waits 1 s) - latency only, no red plant.
+- **R11 (T3)** - `filum_scriptor_octetos_scribere(scriptor, constans
+  i8*, n)` joins the T2 byte reader instead of casting away const.
+  Temp files: `<directorium_temporarium>/hospitium-<nanoid>.tmp` via
+  filum (mode from umask) - the droplet app sets a private 0700
+  directory on the same filesystem as its storage (rename). Client
+  filenames: last segment after `/` or `\`, control bytes dropped, "."
+  and ".." -> empty. Lint: `multipartitus` glossed (Late Latin, like
+  bipartitus/tripartitus); `charset` -> `codex_signorum`,
+  `Transcriptio` -> `Vestigium`, `_sectio_curl` ->
+  `_sectio_cliens_alienus` (curl is real English - the taylor lesson).
 
 ## Review focus
 
