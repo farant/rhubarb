@@ -554,6 +554,11 @@ struct sigaction {
 #define SIGCHLD  20
 #define SIGTTIN  21
 #define SIGTTOU  22
+/* reactor signa (hospitium v3 T1, 2026-10-16): signa usoris et
+ * restitutio vocationum (valores Darwin, ut ceteri) */
+#define SIGUSR1  30
+#define SIGUSR2  31
+#define SA_RESTART 0x0002
 
 int sigaction(int signum, const struct sigaction* actio,
               struct sigaction* pristina);

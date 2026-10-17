@@ -73,3 +73,28 @@ O_NONBLOCK (`_pipam`), so a misdispatch counts instead of blocking.
 A plant must make the test fail, not wait; non-blocking fixtures are
 part of that. Second gotcha: deleting the `limes` check leaves the
 variable unused, which -Werror refuses - the plant is `(... && FALSUM)`.
+
+## 2026-10-16 - cooperative jobs and signals (hospitium v3 T1)
+
+- **Jobs** (`reactor_laborem_adicere`): one step per `reactor_poll` cycle,
+  after fds and timers; any pending job forces the poll wait to 0, and
+  the "nothing registered -> return 0" check counts jobs too. A job added
+  during a pass runs from the NEXT cycle - decided by the cycle it was
+  born in (`cyclus_natalis`), which covers both an appended job and one
+  that reuses a slot freed earlier in the same pass (section
+  `locus_reusus`). The loop's snapshot bound is therefore redundant
+  (removing it is an equivalent mutation - plan R1).
+- **Signals** (`reactor_signum_adicere`): self-pipe. The handler only
+  writes the signal number byte (errno saved); the read end is an
+  INTERNAL fd entry - not counted by `reactor_numerus_fd` (tests assert
+  0 fds after requests) but it keeps `poll()` blocking for a reactor
+  whose only registration is a signal. One process-wide pipe and owner
+  (signals are process-wide); `reactor_destruere` restores SIG_DFL and
+  closes the pipe so another reactor can take over.
+- **EINTR finding:** a signal interrupts `poll()` with EINTR, and
+  `SA_RESTART` does NOT restart `poll()` (Darwin and Linux). Without
+  care the signal waits a whole cycle; now the pipe is drained right
+  there (section `signum_solum`, plant red).
+- examen's POSIX surface (`silva/fontes/systema_posix.h`) lacked
+  SIGUSR1/SIGUSR2/SA_RESTART - added (Darwin values, like its neighbours)
+  rather than tolerated.

@@ -106,6 +106,29 @@ with this plan.
   parser), `crustula` (cookies), `blake2b`, `argon2id`, `custodia`,
   `oceanus` (DigitalOcean DNS), `exemplar` (app).
 
+## Rulings made while executing
+
+- **R1 (T1)** - "pass snapshot dropped" is an EQUIVALENT mutation: the
+  per-cycle birth check (`cyclus_natalis`) already skips every job born
+  in the current cycle, appended or in a reused slot. Section beyond the
+  plan: `locus_reusus` (a job reusing a freed slot ahead of the loop
+  cursor) - the case the birth check exists for; its plant is red.
+- **R2 (T1)** - `poll()` returns EINTR on a signal even with SA_RESTART
+  (Darwin and Linux): `reactor_poll` drains the signal pipe on EINTR;
+  `signum_solum` pins it.
+- **R3 (T1)** - the signal pipe is an internal fd entry (`internus`):
+  excluded from `reactor_numerus_fd`, still polled; `reactor_destruere`
+  releases signal ownership (SIG_DFL restored, pipe closed).
+- **R4 (T1)** - examen's POSIX model gained SIGUSR1/SIGUSR2/SA_RESTART
+  (Darwin values) instead of tolerating the code; the test's static
+  became a struct field (examen's credo rule: no state across
+  sections).
+- **R5 (T1)** - Latin lint: `reusus` (coinage) -> `locus_iteratus`;
+  POSIX names `SIGUSR1`, `SIGUSR2`, `SA_RESTART` go to the tolerated copy
+  (system words live there, like cloexec/nonblock/sigwinch - not the
+  glossary): deliberate regeneration, diff exactly +restart +sigusr1
+  +sigusr2 and the two reported evanida (-hebd -sanctorale).
+
 ## Review focus
 
 Inputs no task's spec-derived tests would otherwise reach, most likely to
