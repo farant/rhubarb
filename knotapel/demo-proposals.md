@@ -388,6 +388,7 @@ exact first; each settles something cheaply before the larger ones):
 | N11 | …0TNHGT | a relational skeleton settling: rigidity and frustration | matrix (exact) | Fran's "a new rule settles the statistics differently", exactly |
 | N12 | …NSR9XG | braid networks under FP32 contracts | nervus, plexus | where float evaluation of a braid network first goes wrong; a bridge to handwired |
 | N13 | …KVA8DGY | gauge-invariant path products of braid networks | nervus, plexus | are the network's holonomies the knot's invariants? |
+| N14 | …9XK1EA (oratio region) | toy Latin Sudoku: slot library, exact propagation and settling | matrix/fractio (exact); oratio's ideas, not its code | the laboratory version of oratio's sudoku doctrine; precursor of N5 |
 
 ### N8. Farey steps and D129's slope (B_3)
 
@@ -574,4 +575,50 @@ networks (standard), and whether any known result relates Dynnikov or
 train-track transition matrices to Burau (Bestvina–Handel train tracks
 give the dilatation as a Perron–Frobenius eigenvalue; the link to Burau
 is through Kolev's bound and is known to be inexact).
+
+### N14. Toy Latin Sudoku: slot library, exact propagation and settling
+
+*Added later the same day (brainstorm XI).*
+
+**Why.** Fran's refinement of the skeleton: not syllogisms or facts but
+"a library of things that can take different kinds of slots, and an
+iterative process arriving at the most likely classification for a set
+of candidates" — a force settling, and literally oratio's task. Latin
+makes the slots visible (case endings are slot-type labels on the
+word), and the structure is Sudoku: cells = words, candidates = their
+analyses, constraints = slot frames (valency, agreement), propagation
+eliminates, statistics order what stays open. The brainstorm (XI)
+connects this to relaxation labeling, belief propagation, transformer
+layers and Mercury-style diffusion as one settling picture, and to
+knots through tensor networks and braided monoidal categories
+(DisCoCat: planar string diagrams for projective analyses, a braiding
+for crossings).
+
+**Design.**
+- A toy world with exact ground truth: a few verbs with case-valency
+  frames, a few agreeing adjectives, a few nouns with deliberately
+  ambiguous endings; EVERY grammatical sentence up to 5–6 words in all
+  word orders, with a hyperbaton dial (0 = strictly projective ... free
+  order) and an order-preference knob for the statistics.
+- Oracle: exact constraint propagation (the forced cells) and full
+  enumeration (the solution set per sentence).
+- Settler: relaxation labeling or belief propagation in exact rationals
+  (small factor graphs keep denominators manageable), producing the
+  ordering of open cells; its fixed point compared with the oracle's
+  marginals.
+- Measured: the forced | ordered | open profile per sentence and per
+  dial setting; settling depth (rounds until stable); a left-to-right
+  (autoregressive) analyser against parallel settling; the rule-change
+  knob (add one valency frame, record which cells flip from open to
+  forced, and where frustration appears).
+
+**Register before the run:** which settler, which statistics, and the
+verdicts tested (e.g. "settling never contradicts a forced cell", "the
+settled ordering ranks the oracle's true analysis first in at least X%
+of open cells at dial d").
+
+**Relation to oratio.** This is the laboratory version of oratio's
+sudoku doctrine on a world small enough to enumerate. It borrows
+oratio's ideas, not its code (oratio is paused); its findings would tell
+N5 what a relaxation can and cannot do before it meets real Latin.
 

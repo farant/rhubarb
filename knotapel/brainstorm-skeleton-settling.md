@@ -1,6 +1,7 @@
 # The skeleton and the settling — knots, ratios, grammar and weights
 
-*Brainstorm, 2026-10-16, after D129. A conversation between Fran and
+*Brainstorm, 2026-10-16, after D129 (sections IX–XI added later the
+same day). A conversation between Fran and
 Claude (Opus 5.5) that started from "what do you think of the last demos"
 and ran through handwired, ratio graphs, grammar compilation, LLMs and
 the nominalist/realist question. Recorded so a later session can pick
@@ -261,7 +262,164 @@ statistics settle differently.
   the braid/YBE structure is a real candidate there; for plain
   inclusion logic a lattice may be enough.
 
-## IX. Threads, in one line each
+## IX. Test worlds: small, exhaustive, exact
+
+What makes a world good for testing these ideas: a SKELETON (explicit
+rules), EXHAUSTIVE enumeration (every instance up to a size), an EXACT
+oracle, a STATISTICS knob (a distribution over instances), and a
+RULE-CHANGE knob (add or remove one rule, see what moves). With those,
+the same experiments (compile, train, settle, regions vs pieces,
+rigidity and frustration) run across worlds and compare.
+
+- **Logic skeleton.** The syllogism world: Aristotelian categorical
+  logic over N terms; a model = which of the 2^N Venn regions are
+  non-empty (N = 4: 2^16 models, enumerable); exact entailment and
+  inconsistency by brute force. Kinship / family trees (Hinton 1986
+  *(recalled)*: the first demonstration that distributed
+  representations recover real structure — generation, branch).
+- **Nesting and crossing.** Bounded Dyck-k (pure nesting, TL structure);
+  crossed Dyck (a bounded number of allowed crossings); "toy Latin"
+  (a tiny lexicon, 3 cases, 2 genders, 2 numbers, agreement rules,
+  EVERY grammatical sentence up to 5–6 words in every order) with a
+  HYPERBATON DIAL (0 = strictly projective ... full free order) and an
+  order-preference knob.
+- **Relations as group elements.** Modular arithmetic as CALIBRATION:
+  networks trained on a + b mod p converge on a discrete Fourier
+  representation *(recalled: Power et al., grokking; Nanda et al.,
+  progress measures)* — the cleanest existing evidence of "training
+  converges on an ideal form"; reproduce it first so our measurements
+  can detect convergence. Small groups' Cayley graphs (S_3, Q_8, D_4);
+  rational tangles (tangles <-> fractions, continued fractions as ground
+  truth).
+- **Knots and braids directly.** The braid word problem on B_3 (13,121
+  words, 2,589 classes up to length 8) and B_4 (5,121 classes): tasks
+  "same braid?", period, type P/E/Z, Burau trace. Unique property: the
+  IDEAL network is known (`plexus_nervus` computes the Dynnikov action
+  exactly), so a trained network's convergence toward the true form can
+  be measured (regions, pieces).
+- **Others.** Elementary cellular automata (256 local rules, global
+  statistics; iteration is w^m); 4x4 Sudoku / Latin squares of order 4
+  (576; N4's suggestion).
+- **Where to start:** the syllogism world (smallest, perfect oracle,
+  direct test of skeleton + settling); toy Latin with the hyperbaton
+  dial; the B_3 word problem with plexus as the known ideal, after
+  modular arithmetic as calibration. A shared HARNESS (a world supplies
+  rules, enumerator, oracle, two knobs; experiments run unchanged)
+  would keep the comparison fair.
+
+## X. Corpora, Markov chains, generation and settling
+
+- **A corpus is the compiled form of the rules** (Fran): the generator
+  executed many times and written down, the rules UNROLLED. A model
+  learned from text is a DECOMPILATION: recovering the program from its
+  execution traces. Many-to-one, so lossy; learning needs priors, and
+  the skeleton is the prior that matters. Each text is a presentation;
+  the grammar is what is invariant across them (section VII).
+- **Markov chains diagnose the skeleton's class.** A finite-order Markov
+  chain (n-gram) corresponds to a regular language. Mutual information
+  between symbols at distance d decays EXPONENTIALLY for Markov
+  processes and as a POWER LAW for hierarchical (context-free)
+  generators *(recalled: Lin and Tegmark 2017; natural language shows
+  the power law)*. In toy Latin, turning the hyperbaton dial should move
+  that curve in a characteristic way.
+- **Irreducibility, and when you can jump ahead** (Fran: to get from
+  three words to five you have to generate the fourth). Autoregressive
+  generation is iteration of one network, w^m again. D129 shows it is
+  not automatically irreducible: on B_3 the FUNCTION w^m has bounded
+  pieces, so jumping ahead is cheap (piecewise matrix powers, repeated
+  squaring); the NETWORK keeps carving regions, which belongs to the
+  presentation. "Can you get from three words to five without the
+  fourth?" becomes: does the generator's iterated map stay simple
+  (bounded pieces, shortcuts exist) or grow complex (no shortcut)? Braids
+  on B_3 are the first kind; language presumably the second; measurable
+  in the toy worlds.
+- **Diffusion language models are settling.** Mercury (Inception Labs)
+  is the one Fran meant; Gemini Diffusion, LLaDA and Dream are others
+  *(recalled)*. A diffusion LM starts from noise over ALL positions and
+  refines in parallel over a fixed number of steps: global relaxation
+  toward a configuration consistent with the constraints. The
+  irreducibility does not vanish; it moves from left-to-right steps to
+  refinement steps. Autoregressive = generation (unrolled in time, a
+  Markov chain with memory); diffusion = settling (unrolled in
+  relaxation, force-directed). The skeleton plausibly decides which is
+  natural: constraint-heavy structure suits parallel settling, strongly
+  sequential dependence suits generation.
+- **Measurements:** MI decay in toy Latin vs the dial; the jump-ahead
+  question per world (does the k-step map's piece count stay bounded?);
+  an autoregressive sampler vs a relaxation sampler on the same world
+  (which reaches valid outputs with less depth).
+
+## XI. The slot library: Sudoku as the model of the skeleton
+
+Fran's refinement of section VIII: the skeleton is less like syllogisms
+or facts and more like "a library of things that can take different
+kinds of slots, and an iterative process arriving at the most likely
+classification for a set of candidates" — itself a force settling, and
+literally what oratio does (classify words optimally from context, the
+sudoku doctrine). And the model is GENERAL: it extends beyond words to
+almost any data — world models, scenes, perception.
+
+- **Lexicalized grammar is a slot library.** Each word or construction
+  carries typed slots: a Latin verb's valency frame wants a nominative
+  subject and an accusative object; an adjective's slot must agree in
+  case, gender, number. Analysis = filling every slot consistently.
+  Latin is near ideal: CASE ENDINGS ARE SLOT-TYPE LABELS written on the
+  word.
+- **It is Sudoku:** cells = words; candidates = a word's possible
+  analyses ("rosa": nominative, ablative, vocative ...); constraints =
+  slot frames; propagation eliminates; statistics order what stays open
+  — oratio's forced | ordered | open tiers.
+- **Settling has a theory:** relaxation labeling (Rosenfeld, Hummel and
+  Zucker 1976; N5); belief propagation (messages between cells and
+  constraints until the candidate marginals settle; solves Sudoku
+  reasonably *(recalled)*); transformer layers read as iterative
+  reclassification of every token in context; Mercury-style diffusion
+  as parallel refinement of all slots. One picture: candidates per slot,
+  a constraint library, iterative settling.
+- **Knots: tensor networks and braided categories.** A slot-typed item
+  is a node with typed legs (a tensor whose indices are its slots);
+  filling slots = joining legs of matching type; evaluating = contracting
+  the network. A knot diagram is exactly such a network: each crossing
+  a 4-legged tensor (an R-matrix), strands typed ("coloured"), the
+  invariant the contraction (Reshetikhin–Turaev *(recalled)*), the
+  Yang–Baxter equation the rule that makes it independent of the order
+  of contraction.
+- **Prior art (recalled):** DisCoCat (Coecke, Sadrzadeh and Clark, ~2010):
+  grammatical types as slot types, meanings as tensors, sentence
+  meaning = contraction along the grammatical reduction, drawn as STRING
+  DIAGRAMS in monoidal categories — the graphical calculus of braid and
+  knot diagrams. Projective analyses are PLANAR string diagrams
+  (TL-like); crossed dependencies (hyperbaton) need a BRAIDING: a
+  braided monoidal category, the algebraic setting of knot invariants.
+- **The full picture:** skeleton = lexicon of slot-typed generators;
+  analysis = string diagram, planar where the order is regular, braided
+  where it crosses; statistics = tensor entries; settling = BP or
+  relaxation on the diagram; knot invariants come out of the same
+  calculus with Yang–Baxter as the consistency law. The most concrete
+  reason in the conversation that knot mathematics might be the NATIVE
+  language for this, not an analogy.
+- **Generality (Fran).** The same structure covers scene understanding
+  (objects with slots: agent, patient, location; parts with slots in
+  part-whole hierarchies), world models (entities with typed attributes
+  and relations; physical constraints), sensor fusion, program
+  synthesis. Prior art on the perception side *(recalled)*: Slot
+  Attention (Locatello et al. 2020), iterative attention binding
+  features to object slots — settling into slots, learned. Caution: a
+  framework general enough to fit everything explains nothing until it
+  predicts something; the KNOT part earns its place where the structure
+  has planarity, crossings, and order-consistency (Yang–Baxter), which
+  is a testable property of a domain.
+- **Test world: toy Latin Sudoku** (proposal N14, linked to N5): a small
+  slot library (verbs with case valency, agreeing adjectives, nouns
+  with ambiguous endings); every sentence up to 5–6 words in all orders
+  with the crossing dial; an exact oracle (propagation gives forced
+  cells, enumeration the full solution set); an exact settler
+  (relaxation or BP in rationals) for the ordering of what stays open;
+  measured: the forced/ordered/open profile, settling depth, generation
+  vs parallel settling; the rule-change knob (add one valency frame,
+  watch which cells flip from open to forced).
+
+## XII. Threads, in one line each
 
 1. Farey steps explain D129's slope? (N8)
 2. Latin dependency trees as tangles: how often, and how, do they
@@ -278,6 +436,13 @@ statistics settle differently.
    independent of proof order"?
 8. Not yet a demo: the shortest braid or tangle realizing a target
    ratio graph (knot as shorthand, as a search problem).
+9. Toy Latin Sudoku: a slot library, exact propagation and settling, the
+   crossing dial and the rule-change knob. (N14; section XI)
+10. Not yet a demo: a shared test-world harness (section IX) and the
+    calibration run on modular arithmetic.
+11. Not yet a demo: mutual-information decay and the jump-ahead question
+    across the test worlds; autoregressive vs relaxation samplers
+    (section X).
 
 ## AUDIENDA
 
@@ -295,3 +460,10 @@ conversation; check before relying on any):
 - The "apparent gaps" in section V (needs a literature search; the
   deep-research skill is the tool).
 - handwired was READ (README, docs/execution-model.md), not run.
+- Sections IX–XI (added the same day): Hinton's family trees, grokking
+  and the Fourier circuits of modular addition, Lin and Tegmark's
+  mutual-information decay, the diffusion LMs named (Mercury, Gemini
+  Diffusion, LLaDA, Dream), belief propagation on Sudoku,
+  Reshetikhin–Turaev, DisCoCat and its braided extensions, Slot
+  Attention — all recalled; DisCoCat in particular goes on the
+  literature-search list before anything leans on it.
