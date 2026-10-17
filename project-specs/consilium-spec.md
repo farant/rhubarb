@@ -327,3 +327,40 @@ effectus, not beside it.
   Fran 2026-10-05, effectus.canon header); `consilium` for the plan
   dialect and the library.
 - Neither is decided here.
+
+## XII. S2 built (2026-10-16): lib/consilium (pure core)
+
+include/consilium.h + lib/consilium.c + probationes/probatio_consilium.c
+(8 credo sections). The record of §XI.1 as a C struct
+(`ConsiliumEffectus`: verbum, res, forma, classis incl. DOMUS,
+certitudo, cognitio, exstat, causa); steps (`ConsiliumGradus`: titulus =
+identity, genus, effectus, sequitur, vestigium, auctores, caecus,
+sumptus_ms). No sutura was needed: everything the core reasons about is
+in the plan; world questions belong to S3's expansion.
+
+- **ordo**: data arcs (writer -> reader, absence probes included, M3),
+  explicit `sequitur`, blind steps as walls; Kahn waves in insertion
+  order; a cycle is returned NAMED (its members in arc order), unknown
+  `sequitur` targets as refusals. Every arc carries its reason ("A
+  scribit R quod legitur", "absentia: ...", "sequitur expresse",
+  "murus gradus caeci").
+- **M1** implemented: a step's read of what it writes itself is not an
+  input. **M2** decided for the API: delete + delete is not a conflict;
+  any other pair of writers to one resource without an ordering path is.
+- **res matching**: path equal; prefix; glob via
+  `directorium_titulus_congruit` (same semantics as portae); an
+  enumeration of a directory covers everything under it; pattern vs
+  pattern conservatively by literal prefixes.
+- **deduplicatio**: same title = same step (proposers collected in
+  `auctores`); same effect twice = once.
+- **politica**: `ConsiliumRegula` {titulus, verbum|OMNIA, classis|OMNIA,
+  exemplar, sententia, causa}; first match wins, an explicit LICET
+  stops; a step's `vestigium` forbids writes outside it ("vestigium").
+- **effusio**: human text or TSV (UNDA ARCUS CYCLUS RECUSATIO
+  CONFLICTUS IUDICIUM).
+
+Tests pin the arbor collision of §I.3 as a conflict and the worktree
+rule of §V as a VETITUM verdict. Born red three times (M1 removed,
+delete+delete counted, wall removed), each at its own assertion. Not in
+S2 (by PULL): STML reading/writing of plans, a CLI, cost/critical path,
+plan diff - S3 needs the first two.
