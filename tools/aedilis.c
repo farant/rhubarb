@@ -696,6 +696,9 @@ principale (
         "Scriptum emissum statim exsequi");
     argumenta_addere_optionem(parser, NIHIL, "--scribere",
         "Scriptum etiam ad viam datam servare");
+    argumenta_addere_optionem(parser, NIHIL, "--obiecta",
+        "Thesaurus obiectorum scripti pro build/aedilis/obiecta (porta "
+        "instrumentorum: obiecta communia non tanguntur)");
     argumenta_addere_optionem(parser, NIHIL, "--exitus",
         "Directorium manifesti, scriptorum et binarii pro "
         "build/aedilis/<basis> (porta instrumentorum: manifesta "
@@ -1054,13 +1057,17 @@ principale (
         {
                         chorda  scriptum;
                         chorda  via_scripti;
+                        chorda  obiecta;
             constans character* commissum;
 
             commissum = _commissum_obtinere(piscina);
+            obiecta = argumenta_obtinere_optionem(lecta, "--obiecta",
+                piscina);
             scriptum = aedilis_scriptum_scribere_ad(fructus,
                 configuratio, piscina, FALSUM, commissum,
                 exitus.mensura > 0 ? chorda_ut_cstr(exitus, piscina)
-                : NIHIL);
+                : NIHIL, obiecta.mensura > 0 ? chorda_ut_cstr(obiecta,
+                piscina) : NIHIL);
             aedificator = chorda_aedificator_creare(piscina, 160);
             chorda_aedificator_appendere_chorda(aedificator,
                 directorium);
@@ -1086,7 +1093,7 @@ principale (
                 solitarium = aedilis_scriptum_scribere_ad(fructus,
                     configuratio, piscina, VERUM, commissum,
                     exitus.mensura > 0 ? chorda_ut_cstr(exitus,
-                    piscina) : NIHIL);
+                    piscina) : NIHIL, NIHIL);
                 aedificator = chorda_aedificator_creare(piscina,
                     160);
                 chorda_aedificator_appendere_chorda(aedificator,

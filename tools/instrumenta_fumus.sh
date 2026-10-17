@@ -15,7 +15,10 @@
 #   C        introitus (principale/main) per recipe AEDILIS ipsum:
 #            'bin/aedilis F --exitus D' (manifestum, scriptum, binarium
 #            in build/instrumenta_fumus/<via>/ - basis communis numquam
-#            obruitur; obiecta in thesauro communi viis nominata), deinde
+#            obruitur; obiecta in thesauro PROPRIO --obiecta (communis
+#            build/aedilis/obiecta numquam tangitur: obiecta provenientiae
+#            ibi nata ab installatoribus deleta 'scripsit extra vestigium'
+#            in fusione 2026-10-17 fecerunt)), deinde
 #            'sh D/struere.sh'. NUMQUAM curritur.
 #   thistle  'bin/briar -f RADIX -struere', deinde regio
 #            munus="probatio" (si adest) per -probatio - auctor eam
@@ -64,7 +67,7 @@ fracta=0; notae=0; structa=0; probatae=0
 while IFS= read -r f; do
     D="$B/$(echo "$f" | sed 's|/|__|g; s|\.c$||')"
     mkdir -p "$D"
-    if ! bin/aedilis "$f" --exitus "$D" --thesaurus "$FABRICA_THESAURUS" > "$D/aedilis.log" 2>&1; then
+    if ! bin/aedilis "$f" --exitus "$D" --obiecta "$B/obiecta" --thesaurus "$FABRICA_THESAURUS" > "$D/aedilis.log" 2>&1; then
         echo "  FRACTUM $f - aedilis: $(grep -m1 -E 'RECUSAT|error' "$D/aedilis.log" | cut -c1-140)"
         fracta=$((fracta + 1)); continue
     fi

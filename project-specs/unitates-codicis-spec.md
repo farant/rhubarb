@@ -930,3 +930,18 @@ policy; C entries = files with `principale(`/`main(`.
 - Result: 148 C + 4 thistle, 151 built, 4 test regions pass, 1 NOTA.
   Born red twice: an undefined symbol linked from tools/xar_mensura.c
   (a tool no other gate covers), and a thistle test assertion.
+
+**U5 (b) follow-up (2026-10-17, found by fusio_probare):** the gate was
+only half isolated. `--exitus` kept manifest, script and binary
+private, but the generated script still compiled into the SHARED object
+cache build/aedilis/obiecta - including provenance objects
+(`build__fabrica__provenientia__<tool>.o`) for tools whose installers
+are hand-written. Those installers correctly invalidate that object
+(tools/provenientia_scribere.sh `rm -f`) when provenance changes;
+before the gate nobody had created it, so the rm was a no-op. The
+merge's preflight heal of bin/briar deleted one: "scripsit extra
+vestigium: build/aedilis/obiecta/build__fabrica__provenientia__briar.o"
+- fabrica right, my gate wrong. Fix: aedilis `--obiecta DIR` (default
+byte-identical); the gate uses build/instrumenta_fumus/obiecta; the 14
+stray shared objects removed. Cold rerun green in 2 min with zero new
+objects in the shared cache.

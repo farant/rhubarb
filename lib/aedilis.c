@@ -1843,7 +1843,7 @@ aedilis_scriptum_scribere (
               constans character* commissum)
 {
     redde aedilis_scriptum_scribere_ad(fructus, configuratio, piscina,
-        solitarius, commissum, NIHIL);
+        solitarius, commissum, NIHIL, NIHIL);
 }
 
 /* directorium exitus in scripto: datum, aut build/aedilis/<basis> */
@@ -1869,7 +1869,8 @@ aedilis_scriptum_scribere_ad (
                          Piscina* piscina,
                              b32  solitarius,
               constans character* commissum,
-              constans character* exitus)
+              constans character* exitus,
+              constans character* obiecta)
 {
     ChordaAedificator* s;
                chorda  basis;
@@ -1928,8 +1929,8 @@ aedilis_scriptum_scribere_ad (
     }
     alioquin
     {
-        chorda_aedificator_appendere_literis(s,
-            "build/aedilis/obiecta");
+        chorda_aedificator_appendere_literis(s, obiecta != NIHIL
+            ? obiecta : "build/aedilis/obiecta");
     }
     chorda_aedificator_appendere_literis(s, "\"\nEXITUS_DIR=\"");
     _exitum_appendere(s, basis, exitus);
