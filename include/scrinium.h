@@ -55,6 +55,21 @@ scrinium_aperire (
                Piscina* piscina,
     constans character* via);
 
+/* optiones aperiendi (memset 0 = mos domus) */
+nomen structura {
+    /* synchronous=FULL pro NORMAL: commissum superstat etiam defectum
+     * potentiae (fsync ad omnem commissionem; NORMAL sub WAL solum
+     * corruptionem vitat) */
+    b32 synchronus_plenus;
+} ScriniumOptiones;
+
+/* aperire cum optionibus; NIHIL optiones = scrinium_aperire */
+Scrinium*
+scrinium_aperire_cum (
+                      Piscina* piscina,
+           constans character* via,
+    constans ScriniumOptiones* optiones);
+
 vacuum
 scrinium_claudere (
     Scrinium* scrinium);
@@ -104,6 +119,14 @@ scrinium_ligare_massam (
     ScriniumEnuntiatum* enuntiatum,
                integer  index,
                 chorda  massa);
+
+/* zeroblob(mensura): massa nullis impleta, deinde per
+ * scrinium_massam_scribere per partes implenda (rivus) */
+b32
+scrinium_ligare_massam_nullam (
+    ScriniumEnuntiatum* enuntiatum,
+               integer  index,
+                   i32  mensura);
 
 integer
 scrinium_gradi (
@@ -166,6 +189,44 @@ scrinium_migrare (
     Scrinium*                     scrinium,
     constans character* constans* migrationes,
     integer                       numerus);
+
+/* MASSA PER PARTES (sqlite3_blob): ordo (rowid) tabulae, columna
+ * BLOB - legere/scribere per offset sine copia tota in memoria.
+ * Scriptio mensuram NON mutat (zeroblob prius). CAVE: ansa aperta =
+ * lectio pendens (snapshot WAL tenetur): checkpoint interim deficit
+ * et WAL crescit - ansam breviter tene (per partem aperi et claude)
+ * in lectionibus longis. */
+nomen structura ScriniumMassa ScriniumMassa;
+
+ScriniumMassa*
+scrinium_massam_aperire (
+              Scrinium* scrinium,
+    constans character* tabula,
+    constans character* columna,
+                   s64  ordo,
+                   b32  scribere);
+
+i32
+scrinium_massae_mensura (
+    ScriniumMassa* massa);
+
+b32
+scrinium_massam_legere (
+    ScriniumMassa* massa,
+               i8* capsa,
+              i32  n,
+              i32  offset);
+
+b32
+scrinium_massam_scribere (
+    ScriniumMassa* massa,
+      constans i8* octeti,
+              i32  n,
+              i32  offset);
+
+vacuum
+scrinium_massam_claudere (
+    ScriniumMassa* massa);
 
 #define SCRINIUM_ULID_MENSURA 27   /* 26 characteres + terminator */
 

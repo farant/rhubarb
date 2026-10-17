@@ -20,10 +20,23 @@ structura ScriniumEnuntiatum {
         Scrinium* scrinium;
 };
 
+structura ScriniumMassa {
+    sqlite3_blob* ansa;
+};
+
 Scrinium*
 scrinium_aperire (
                Piscina* piscina,
     constans character* via)
+{
+    redde scrinium_aperire_cum(piscina, via, NIHIL);
+}
+
+Scrinium*
+scrinium_aperire_cum (
+                      Piscina* piscina,
+           constans character* via,
+    constans ScriniumOptiones* optiones)
 {
     Scrinium* s;
      sqlite3* ansa = NIHIL;
@@ -47,7 +60,9 @@ scrinium_aperire (
      * lectoribus paralleliis, NORMAL tutum sub WAL */
     (vacuum)scrinium_exsequi(s, "PRAGMA journal_mode = WAL");
     (vacuum)scrinium_exsequi(s, "PRAGMA busy_timeout = 5000");
-    (vacuum)scrinium_exsequi(s, "PRAGMA synchronous = NORMAL");
+    (vacuum)scrinium_exsequi(s, (optiones
+        && optiones->synchronus_plenus)
+        ? "PRAGMA synchronous = FULL" : "PRAGMA synchronous = NORMAL");
     (vacuum)scrinium_exsequi(s, "PRAGMA foreign_keys = ON");
     redde s;
 }
@@ -165,6 +180,16 @@ scrinium_ligare_massam (
     redde sqlite3_bind_blob(enuntiatum->ansa, index,
         (constans vacuum*)massa.datum, (int)massa.mensura,
         SQLITE_TRANSIENT) == SQLITE_OK ? VERUM : FALSUM;
+}
+
+b32
+scrinium_ligare_massam_nullam (
+    ScriniumEnuntiatum* enuntiatum,
+               integer  index,
+                   i32  mensura)
+{
+    redde sqlite3_bind_zeroblob(enuntiatum->ansa, index, (int)mensura)
+        == SQLITE_OK ? VERUM : FALSUM;
 }
 
 integer
@@ -352,7 +377,8 @@ scrinium_migrare (
         }
         e = scrinium_praeparare(scrinium,
             "INSERT INTO _migrationes (versio) VALUES (?)");
-        si (   e                 == NIHIL || !scrinium_ligare_numerum(e, I, (s64)k)
+        si (   e                 == NIHIL
+            || !scrinium_ligare_numerum(e, I, (s64)k)
             || scrinium_gradi(e) != SCRINIUM_FACTUM)
         {
             scrinium_finire(e);
@@ -362,6 +388,79 @@ scrinium_migrare (
         scrinium_finire(e);
     }
     redde scrinium_exsequi(scrinium, "COMMIT");
+}
+
+/* massa per partes (sqlite3_blob) - involucrum ex sqlite3_malloc ut
+ * enuntiata (vita brevis, piscina non ligata) */
+ScriniumMassa*
+scrinium_massam_aperire (
+              Scrinium* scrinium,
+    constans character* tabula,
+    constans character* columna,
+                   s64  ordo,
+                   b32  scribere)
+{
+    ScriniumMassa* m;
+     sqlite3_blob* ansa = NIHIL;
+
+    si (sqlite3_blob_open(scrinium->ansa, "main", tabula, columna,
+        (sqlite3_int64)ordo, scribere ? I : 0, &ansa) != SQLITE_OK)
+    {
+        si (ansa != NIHIL)
+        {
+            sqlite3_blob_close(ansa);
+        }
+        redde NIHIL;
+    }
+    m = (ScriniumMassa*)sqlite3_malloc((int)magnitudo(ScriniumMassa));
+    si (m == NIHIL)
+    {
+        sqlite3_blob_close(ansa);
+        redde NIHIL;
+    }
+    m->ansa = ansa;
+    redde m;
+}
+
+i32
+scrinium_massae_mensura (
+    ScriniumMassa* massa)
+{
+    redde (i32)sqlite3_blob_bytes(massa->ansa);
+}
+
+b32
+scrinium_massam_legere (
+    ScriniumMassa* massa,
+               i8* capsa,
+              i32  n,
+              i32  offset)
+{
+    redde sqlite3_blob_read(massa->ansa, capsa, (int)n, (int)offset)
+        == SQLITE_OK ? VERUM : FALSUM;
+}
+
+b32
+scrinium_massam_scribere (
+    ScriniumMassa* massa,
+      constans i8* octeti,
+              i32  n,
+              i32  offset)
+{
+    redde sqlite3_blob_write(massa->ansa, octeti, (int)n, (int)offset)
+        == SQLITE_OK ? VERUM : FALSUM;
+}
+
+vacuum
+scrinium_massam_claudere (
+    ScriniumMassa* massa)
+{
+    si (massa == NIHIL)
+    {
+        redde;
+    }
+    sqlite3_blob_close(massa->ansa);
+    sqlite3_free(massa);
 }
 
 /* ULID: delegatio ad monetam (cusio una repositorii - lib/moneta.c;

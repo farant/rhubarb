@@ -221,6 +221,23 @@ with this plan.
   ignotum-permissum (the sha256/hmac precedent); helpers renamed
   (`_le32*` -> `_quaterni*`, `_le64` -> `_octoni_legere`, `ROTR64` ->
   `CIRCUMVOLVERE`, `_hprime` -> `_digestum_varium`).
+- **R17 (T6)** - the incremental blob API lives in SCRINIUM
+  (`ScriniumMassa`: `scrinium_massam_aperire/legere/scribere/claudere`,
+  `scrinium_ligare_massam_nullam` = zeroblob), not as raw sqlite3 calls
+  in volumen: volumen never sees sqlite3.h, the layering stays.
+  `volumen_scrinium(vol)` added (the test reads `PRAGMA synchronous`;
+  apps will want `VACUUM INTO` for backups). The streamed insert runs in
+  a SAVEPOINT, so a refusal inside the caller's transaction does not
+  undo the caller's work (tested). The parameter is `sigillum_notum`
+  (the plan's `sigillum_hex` shadowed the function `sigillum_hex()`).
+  Extra section `mensura_mendax` (file longer, shorter, missing).
+- **R18 (T6)** - the blob READER opens and closes the sqlite3_blob per
+  chunk. My first reason (an open handle would delay autocommit
+  commits) was WRONG - a plant holding the handle stayed green, modern
+  SQLite commits with reads pending. The real cost of a held handle is
+  a pinned WAL snapshot: `PRAGMA wal_checkpoint(TRUNCATE)` fails during
+  a long download and the WAL grows. The section
+  `scriptio_inter_lectionem` now pins that (held handle -> red).
 
 ## Review focus
 

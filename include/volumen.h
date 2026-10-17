@@ -34,6 +34,7 @@
 #include "chorda.h"
 #include "xar.h"
 #include "sigillum.h"
+#include "scrinium.h"
 
 nomen structura Volumen Volumen;
 
@@ -65,6 +66,26 @@ Volumen*
 volumen_aperire_aut_creare (
                Piscina* piscina,
     constans character* via);
+
+/* optiones (memset 0 = mos domus) */
+nomen structura {
+    /* synchronous=FULL: "servatum" superstat defectum potentiae
+     * (applicationes cum usoribus; tardius ad commissionem) */
+    b32 durabilitas_plena;
+} VolumenOptiones;
+
+/* aperire_aut_creare cum optionibus; NIHIL = sine */
+Volumen*
+volumen_aperire_aut_creare_cum (
+                     Piscina* piscina,
+          constans character* via,
+    constans VolumenOptiones* optiones);
+
+/* Scrinium subiectum: pragmata, copia (VACUUM INTO), quaestiones
+ * legendi propriae. Transactiones voluminis NE praeterieris. */
+Scrinium*
+volumen_scrinium (
+    Volumen* volumen);
 
 /* VOLUMEN SCRATCH - status qui probationem non superstat.
  *
@@ -168,6 +189,44 @@ volumen_massam_condere (
       Volumen* volumen,
        chorda  contentum,
     character* sigillum_hex_exitus);
+
+/* MASSA EX FILO PER RIVUM: sigillum_notum (64 hex minusculae),
+ * in itinere computatum (hospitium). Si massa iam est: VERUM, filum
+ * NON legitur (dedup). Aliter, in savepoint (intra transactionem
+ * vocatoris quoque tutum): zeroblob(mensura), filum per partes LXIV
+ * KB in massam, SHA-256 iterum computatum et comparatum - discrepantia
+ * aut mensura mendax = FALSUM, nihil manet (volumen_error causam
+ * nominat). */
+b32
+volumen_massam_condere_ex_filo (
+               Volumen* volumen,
+    constans character* via_fili,
+                   i64  mensura,
+    constans character* sigillum_notum);
+
+/* MASSA PER PARTES LEGERE (fons secundus hospitii): NIHIL si sigillum
+ * ignotum; *mensura = longitudo. Ansa sqlite per partem aperitur et
+ * clauditur: download longus nullum snapshot WAL tenet (checkpoint
+ * interim perficitur, WAL non crescit). */
+nomen structura VolumenMassaLector VolumenMassaLector;
+
+VolumenMassaLector*
+volumen_massam_aperire (
+    Volumen* volumen,
+     chorda  sigillum_hex,
+        i64* mensura,
+    Piscina* piscina);
+
+/* >0 octeti, 0 finis, -1 error */
+s32
+volumen_massam_legere (
+    VolumenMassaLector* lector,
+                    i8* capsa,
+                   i32  n);
+
+vacuum
+volumen_massam_claudere (
+    VolumenMassaLector* lector);
 
 /* massam promere sigillo (hex); *inventum FALSUM si ignotum */
 chorda
