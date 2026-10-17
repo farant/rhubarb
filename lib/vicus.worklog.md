@@ -599,3 +599,14 @@ home always the bottom, id after xar_addere, unknown type accepted).
 GREEN, unobservable: dropping the `destinare` route for Cmd+[ ] - the
 focused panes (scriba, pictor) pass the chord up unconsumed and the
 root handler sees it anyway; kept as the same guard Cmd+digits have.
+
+## 2026-10-17 - T4f: agenda in the cycle (entries = type + argument)
+
+Fran wanted the agenda as the last stop. `$agenda` is calendarium with
+argument "agenda", so a type-only cycle would open the plain calendar
+and count ANY calendar pane (a month view kept as home) as a cycle
+pane. Cycle entries are now `LatusCycli` (genus + argumentum, the S3c
+identity) everywhere: membership, the home skip, and the open request.
+Plants (4, all red): identity ignoring the argument, argument not
+passed to the open, `argumenta` ignored by vicus_cyclum_ponere, home
+skip by type only.

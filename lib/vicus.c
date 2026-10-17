@@ -39,6 +39,12 @@ nomen structura {
                          * ZEPHYRUM = aperitio */
 } PetitioAcervi;
 
+/* T4f: latus cycli - identitas ut petitio (genus + argumentum) */
+nomen structura {
+    chorda genus;
+    chorda argumentum;   /* vacuum = sine argumento */
+} LatusCycli;
+
 interior chorda
 chorda_nulla_vici (vacuum)
 {
@@ -2327,18 +2333,22 @@ id_novum (
     redde c;
 }
 
-/* T4f: positio generis in cyclo; -I si non in cyclo */
+/* T4f: positio lateris (genus + argumentum) in cyclo; -I si non in
+ * cyclo */
 interior s32
-genus_in_cyclo (
+latus_in_cyclo (
     constans Vicus* v,
-            chorda  genus)
+            chorda  genus,
+            chorda  argumentum)
 {
-    i32 k;
+    constans LatusCycli* c;
+                    i32  k;
 
     per (k = ZEPHYRUM; v->cyclus && k < xar_numerus(v->cyclus); k++)
     {
-        si (chorda_aequalis(*(chorda*)xar_obtinere(v->cyclus, k),
-            genus))
+        c = (constans LatusCycli*)xar_obtinere(v->cyclus, k);
+        si (   chorda_aequalis(c->genus, genus)
+            && chorda_aequalis(c->argumentum, argumentum))
         {
             redde (s32)k;
         }
@@ -2353,12 +2363,13 @@ domus_acervi (
           constans Vicus* v,
     constans VicusTabula* t)
 {
-    s32 k;
+    constans VicusLatus* l;
+                    s32  k;
 
     per (k = (s32)xar_numerus(t->acervus) - I; k >= ZEPHYRUM; k--)
     {
-        si (genus_in_cyclo(v, ((VicusLatus*)xar_obtinere(t->acervus,
-                (i32)k))->genus) < ZEPHYRUM)
+        l = (constans VicusLatus*)xar_obtinere(t->acervus, (i32)k);
+        si (latus_in_cyclo(v, l->genus, l->argumentum) < ZEPHYRUM)
         {
             redde (i32)k;
         }
@@ -2558,7 +2569,9 @@ cyclum_applicare (
 {
       VicusTabula* t;
     PetitioAcervi  q;
-           chorda  genus_domus;
+       VicusLatus* domus_latus;
+       VicusLatus* frons;
+       LatusCycli* c;
               s32  positio;
               s32  n;
               i32  domus;
@@ -2571,27 +2584,32 @@ cyclum_applicare (
     {
         redde FALSUM;
     }
-    domus = domus_acervi(v, t);
-    genus_domus = ((VicusLatus*)xar_obtinere(t->acervus,
-        domus))->genus;
+    domus        = domus_acervi(v, t);
+    domus_latus  = (VicusLatus*)xar_obtinere(t->acervus, domus);
+    frons        = frons_acervi(t);
     positio      = (domus == xar_numerus(t->acervus) - I) ? -I
-                 : genus_in_cyclo(v, frons_acervi(t)->genus);
+                 : latus_in_cyclo(v, frons->genus, frons->argumentum);
+    c            = NIHIL;
     per (k = ZEPHYRUM; k <= (i32)n; k++)
     {
         positio = (positio + I + p->gradus + n + I) % (n + I) - I;
-        si (   positio < ZEPHYRUM
-            || !chorda_aequalis(*(chorda*)xar_obtinere(v->cyclus,
-                   (i32)positio), genus_domus))
+        si (positio < ZEPHYRUM)
+        {
+            frange;
+        }
+        c = (LatusCycli*)xar_obtinere(v->cyclus, (i32)positio);
+        si (   !chorda_aequalis(c->genus, domus_latus->genus)
+            || !chorda_aequalis(c->argumentum, domus_latus->argumentum))
         {
             frange;
         }
     }
-    si (positio >= ZEPHYRUM)
+    si (positio >= ZEPHYRUM && c)
     {
         memset(&q, ZEPHYRUM, magnitudo(PetitioAcervi));
         q.tabula      = p->tabula;
-        q.genus       = *(chorda*)xar_obtinere(v->cyclus, (i32)positio);
-        q.argumentum  = chorda_nulla_vici();
+        q.genus       = c->genus;
+        q.argumentum  = c->argumentum;
         redde petitionem_applicare(v, &q);
     }
     activa = chorda_aequalis(t->id, v->activa);
@@ -2633,26 +2651,35 @@ b32
 vicus_cyclum_ponere (
                            Vicus* v,
     constans character* constans* genera,
+    constans character* constans* argumenta,
                              i32  numerus)
 {
-       Xar* cyclus;
-    chorda  g;
-       i32  k;
+                    Xar* cyclus;
+             LatusCycli* c;
+                 chorda  g;
+     constans character* a;
+                    i32  k;
 
     si (!v || (numerus > ZEPHYRUM && !genera))
     {
         redde FALSUM;
     }
-    cyclus = xar_creare(v->piscina, (i32)magnitudo(chorda));
+    cyclus = xar_creare(v->piscina, (i32)magnitudo(LatusCycli));
     per (k = ZEPHYRUM; k < numerus; k++)
     {
         g = genera[k] ? internare(v, genera[k]) : chorda_nulla_vici();
-        si (   chorda_vacua(g) || !genus_invenire(v, g) || !cyclus
-            || !xar_addere(cyclus))
+        c = (!chorda_vacua(g) && genus_invenire(v, g) && cyclus)
+            ? (LatusCycli*)xar_addere(cyclus) : NIHIL;
+        si (!c)
         {
             redde FALSUM;
         }
-        *(chorda*)xar_obtinere(cyclus, xar_numerus(cyclus) - I) = g;
+        a         = argumenta ? argumenta[k] : NIHIL;
+        c->genus  = g;
+        c->argumentum  = (a && a[ZEPHYRUM] != '\0')
+                       ? chorda_transcribere(chorda_ex_literis(a,
+                             v->piscina), v->piscina)
+                       : chorda_nulla_vici();
     }
     v->cyclus = numerus > ZEPHYRUM ? cyclus : NIHIL;
     redde VERUM;

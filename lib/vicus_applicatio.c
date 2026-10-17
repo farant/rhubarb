@@ -2422,9 +2422,11 @@ vicus_applicatio_imaginis_portam_ponere (
 }
 
 /* T4f (colloquia-plan): Cmd+] / Cmd+[ - domus -> admonitiones ->
- * colloquia -> domus */
+ * colloquia -> agenda -> domus */
 hic_manens constans character* cyclus_dexter[] = {
-    "admonitiones", "colloquia" };
+    "admonitiones", "colloquia", "calendarium" };
+hic_manens constans character* argumenta_cycli[] = {
+    NIHIL, NIHIL, "agenda" };
 
 b32
 vicus_applicatio_aedificare (
@@ -2595,7 +2597,8 @@ ContextusNomenclatoris* cn;
                magnitudo(ColloquiorumMontatio),
                colloquia_montare_in_vico,
                colloquia_describere, cad)
-        || !vicus_cyclum_ponere(app->vicus, cyclus_dexter, II)
+        || !vicus_cyclum_ponere(app->vicus, cyclus_dexter,
+               argumenta_cycli, III)
         || !vicus_genus_addere(app->vicus, "volantes",
                magnitudo(VolantiumMontatio), volantes_montare_in_vico,
                volantes_describere, cad)

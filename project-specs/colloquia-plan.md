@@ -76,6 +76,12 @@ phase that needs it. Header text shown to Fran before coding.*
   frame = two steps). API: `vicus_cyclum_ponere`, `vicus_cyclo_gradi`
   (include/vicus.h). Tests: probatio_vicus_acervus VIII-XIII.
   STATUS 10-17: green, 7 plants red; Fran's look OK.
+  ADDED 10-17 (Fran): the agenda as the last stop - home ->
+  notifications -> sessions -> agenda -> home. The agenda is
+  calendarium with argument "agenda", so cycle entries became type +
+  argument (identity as vicus_acervo_aperire): `vicus_cyclum_ponere(v,
+  genera, argumenta, numerus)`. A calendarium pane without an argument
+  stays home (test XIII). 4 more plants red. Fran's look OK.
 
 ### Phase 2 (Fran, 2026-10-15): gate and test progress dashboard
 

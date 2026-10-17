@@ -212,7 +212,8 @@ nomen structura {
                     /* T4a: vicus_systema_addere (privatum) */
                     Xar* systemata_hospitis;
              VicusLatus* stratum;     /* T4b: NIHIL = nullum */
-                    Xar* cyclus;      /* T4f: chorda (genera); NIHIL
+                    Xar* cyclus;      /* T4f: latera cycli (genus,
+                                       * argumentum; privatum); NIHIL
                                        * aut vacuus = nullus */
 } Vicus;
 
@@ -445,17 +446,20 @@ vicus_acervo_mutare (
     constans character* argumentum);
 
 /* T4f (colloquia-plan): cyclus lateris dextri - Cmd+] (directio +I)
- * aut Cmd+[ (-I) in tabula activa: domus -> genera[0] -> ... ->
- * genera[n-1] -> domus. Domus = latus summum acervi quod in cyclo non
- * est (nullum: imum). Gradus ad genus = ut vicus_acervo_aperire (focus
- * dexter); gradus ad domum = latera cycli supra domum tolluntur (ut
- * Esc), focus redit quo erat cum latus cycli domum texit. Genera
- * copiantur; numerus ZEPHYRUM = cyclus nullus. FALSUM si genus
- * ignotum. */
+ * aut Cmd+[ (-I) in tabula activa: domus -> latus[0] -> ... ->
+ * latus[n-1] -> domus. Latus cycli = genera[k] cum argumenta[k]
+ * (identitas ut vicus_acervo_aperire, S3c; argumenta NIHIL aut
+ * argumenta[k] NIHIL = sine argumento). Domus = latus summum acervi
+ * quod in cyclo non est (nullum: imum). Gradus ad latus = ut
+ * vicus_acervo_aperire (focus dexter); gradus ad domum = latera cycli
+ * supra domum tolluntur (ut Esc), focus redit quo erat cum latus cycli
+ * domum texit. Copiantur; numerus ZEPHYRUM = cyclus nullus. FALSUM si
+ * genus ignotum. */
 b32
 vicus_cyclum_ponere (
                            Vicus* v,
     constans character* constans* genera,
+    constans character* constans* argumenta,
                              i32  numerus);
 
 /* gradus cycli (+I aut -I): PETITIO, applicatur in vicus_pulsare
