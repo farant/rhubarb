@@ -3632,6 +3632,48 @@ _GREGES_AMBITUS.update(_greges_veri)
 _GREX.update(_grex_verus)
 _grex_claudere()
 
+# CONSILIUM (consilium S3c): forma quae binaria stala fecit - consilium
+# sanationis per bin/fabrica VERUM iudicatum: iudex ipse primus, deinde
+# ceteri, portae ultimae; institutio domus in arbore secundaria VETITA,
+# in principali ROGANDA - commissio numquam sponte instituit
+_fb_ficta_consilii = silva.FABRICA_BIN
+silva.FABRICA_BIN = os.path.join(silva.RADIX, 'bin', 'fabrica')
+if os.path.exists(silva.FABRICA_BIN):
+    _t = silva._consilium_formae(['lib/aedilis.c'],
+                                 ['bin/aedilis', 'bin/fabrica'], True)
+    _rc, _o, _v = silva._consilium_iudicare(_t, 'probatio_forma')
+    _undae = dict((x[2], int(x[1])) for x in _o if x[0] == 'UNDA')
+    credo(_rc == 0 and _undae.get('forma') == 1
+          and _undae.get('sana bin/fabrica') == 2
+          and _undae.get('sana bin/aedilis') == 3
+          and _undae.get('portae') == 4,
+          'consilium formae: forma, iudex ipse, ceteri, portae', _o)
+    _t = silva._consilium_formae(['lib/aedilis.c'], ['~/.bin/aedilis'], True)
+    _rc, _o, _v = silva._consilium_iudicare(_t, 'probatio_forma')
+    credo(_rc == 1 and any(x[0] == 'IUDICIUM' and x[4] == 'ROGANDUM'
+                           and x[5] == 'institutio_rogata' for x in _o),
+          'consilium formae: institutio domus ROGANDA (regula prima)', _o)
+    _t = silva._consilium_formae(['lib/aedilis.c'], ['~/.rhubarb/x'], True)
+    _rc, _o, _v = silva._consilium_iudicare(_t, 'probatio_forma')
+    credo(_rc == 1 and any(x[0] == 'IUDICIUM' and x[4] == 'VETITUM'
+                           and x[5] == 'arbor_secundaria' for x in _o),
+          'consilium formae: in arbore secundaria domus VETITA', _o)
+    _t = silva._consilium_formae(['lib/aedilis.c'], ['~/.rhubarb/x'], False)
+    _rc, _o, _v = silva._consilium_iudicare(_t, 'probatio_forma')
+    credo(_rc == 1 and not any(x[0] == 'IUDICIUM' and x[4] == 'VETITUM'
+                               for x in _o),
+          'consilium formae: in arbore principali regula secundaria abest',
+          _o)
+    credo(silva._classis_viae('bin/x') == 'instrumentum_domus'
+          and silva._classis_viae('build/a.o') == 'build'
+          and silva._classis_viae('~/.bin/x') == 'domus'
+          and silva._classis_viae('/usr/local/x') == 'externa'
+          and silva._classis_viae('lib/x.c') == 'arbor',
+          'consilium: classis viarum')
+else:
+    credo(False, 'consilium formae: bin/fabrica deest (nihil iudicatum)')
+silva.FABRICA_BIN = _fb_ficta_consilii
+
 print()
 if fracta:
     print('PYTHONICA: FRACTA %d' % len(fracta))

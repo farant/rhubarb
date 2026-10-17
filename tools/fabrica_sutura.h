@@ -11,6 +11,7 @@
 /* <aedilis corpus="tools/fabrica_unitates.c"/> */
 /* <aedilis corpus="tools/fabrica_interrogationes.c"/> */
 /* <aedilis corpus="tools/fabrica_relatio.c"/> */
+/* <aedilis corpus="tools/fabrica_consilium.c"/> */
 
 #ifndef FABRICA_SUTURA_H
 #define FABRICA_SUTURA_H
@@ -181,6 +182,15 @@ suturae_compilare_gradus (
 /* bin/fabrica portae debitae|declaratae (tools/fabrica_portae.c) */
 s32
 suturae_portae (
+          s32   argc,
+    character** argv,
+      Piscina*  piscina);
+
+/* bin/fabrica consilium (tools/fabrica_consilium.c, consilium S3b):
+ * documentum consilii iudicatum - exitus 0 licet, 1 non sine iudicio,
+ * 2 usus aut illegibile */
+s32
+suturae_consilium (
           s32   argc,
     character** argv,
       Piscina*  piscina);

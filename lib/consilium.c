@@ -9,6 +9,8 @@
 #include "chorda_aedificator.h"
 #include "tabula_dispersa.h"
 #include "iter_directoria.h"
+#include "internamentum.h"
+#include "stml.h"
 #include <string.h>
 
 structura Consilium {
@@ -875,7 +877,8 @@ consilium_scribere (
             }
             alioquin
             {
-                chorda_aedificator_appendere_character(a, ' ');
+                chorda_aedificator_appendere_literis(a, j == ZEPHYRUM
+                    ? " " : " | ");
                 chorda_aedificator_appendere_chorda(a, g->titulus);
             }
         }
@@ -975,4 +978,450 @@ consilium_scribere (
         chorda_aedificator_appendere_character(a, '\n');
     }
     redde chorda_aedificator_finire(a);
+}
+
+
+/* ==================================================
+ * Documentum (consilium.canon, S3a)
+ * ================================================== */
+
+hic_manens constans character* constans _FORMAE[] = {
+    "via", "praefixum", "globus", NIHIL
+};
+hic_manens constans character* constans _CERTITUDINES[] = {
+    "plena", "partialis", "nulla", NIHIL
+};
+hic_manens constans character* constans _COGNITIONES[] = {
+    "propositum", "declaratum", "derivatum", "observatum", NIHIL
+};
+hic_manens constans character* constans _SENTENTIAE[] = {
+    "licet", "rogandum", "vetitum", NIHIL
+};
+
+hic_manens constans character* constans _ATTR_REGULAE[] = {
+    "titulus", "verbum", "classis", "exemplar", "sententia", "causa",
+        NIHIL
+};
+hic_manens constans character* constans _ATTR_GRADUS[] = {
+    "titulus", "genus", "auctor", "caecus", "sumptus_ms", NIHIL
+};
+hic_manens constans character* constans _ATTR_EFFECTUS[] = {
+    "verbum", "res", "forma", "classis", "certitudo", "cognitio",
+        "exstat",
+    "causa", NIHIL
+};
+hic_manens constans character* constans _ATTR_SEQUITUR[] = {
+    "titulus", NIHIL
+};
+hic_manens constans character* constans _ATTR_VESTIGII[] = {
+    "exemplar", NIHIL
+};
+hic_manens constans character* constans _ATTR_RADICIS[] = {
+    NIHIL
+};
+
+nomen structura {
+    ChordaAedificator* textus;
+                  i32  numerus;
+              Piscina* piscina;
+} ConsiliumCausae;
+
+interior vacuum
+_causa (
+        ConsiliumCausae* k,
+                    i32  linea,
+     constans character* ante,
+                 chorda  medium,
+     constans character* post)
+{
+    si (k->numerus > ZEPHYRUM)
+    {
+        chorda_aedificator_appendere_character(k->textus, '\n');
+    }
+    k->numerus++;
+    chorda_aedificator_appendere_literis(k->textus, "linea ");
+    chorda_aedificator_appendere_i32(k->textus, linea);
+    chorda_aedificator_appendere_literis(k->textus, ": ");
+    chorda_aedificator_appendere_literis(k->textus, ante);
+    chorda_aedificator_appendere_chorda(k->textus, medium);
+    chorda_aedificator_appendere_literis(k->textus, post);
+}
+
+interior chorda
+_valor (
+             StmlNodus* n,
+    constans character* titulus)
+{
+    chorda* v = stml_attributum_capere(n, titulus);
+    chorda  vacua;
+
+    si (v != NIHIL)
+    {
+        redde *v;
+    }
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
+    redde vacua;
+}
+
+/* index nominis in tabula (NIHIL terminata); -I = ignotum */
+interior s32
+_index (
+                     chorda  v,
+    constans character* constans* tabula)
+{
+    s32 i;
+
+    per (i = ZEPHYRUM; tabula[i] != NIHIL; i++)
+    {
+        si (chorda_aequalis_literis(v, tabula[i]))
+        {
+            redde i;
+        }
+    }
+    redde -I;
+}
+
+/* valor tabulae aut causa ('verbum 'x' ignotum (nota: a, b)'); vacuus =
+ * praestitutum */
+interior s32
+_enumeratum (
+       ConsiliumCausae* k,
+            StmlNodus* n,
+    constans character* attributum,
+    constans character* constans* tabula,
+                   s32  praestitutum)
+{
+    chorda v = _valor(n, attributum);
+       s32 i;
+
+    si (v.mensura == ZEPHYRUM)
+    {
+        redde praestitutum;
+    }
+    i = _index(v, tabula);
+    si (i < ZEPHYRUM)
+    {
+        ChordaAedificator* a = chorda_aedificator_creare(k->piscina,
+            (memoriae_index)LXIV);
+                       s32 j;
+
+        chorda_aedificator_appendere_literis(a, attributum);
+        chorda_aedificator_appendere_literis(a, " '");
+        chorda_aedificator_appendere_chorda(a, v);
+        chorda_aedificator_appendere_literis(a, "' ignotum (nota:");
+        per (j = ZEPHYRUM; tabula[j] != NIHIL; j++)
+        {
+            chorda_aedificator_appendere_character(a, ' ');
+            chorda_aedificator_appendere_literis(a, tabula[j]);
+        }
+        chorda_aedificator_appendere_literis(a, ")");
+        _causa(k, n->linea, "", chorda_aedificator_finire(a), "");
+        redde praestitutum;
+    }
+    redde i;
+}
+
+interior b32
+_veritas (
+       ConsiliumCausae* k,
+             StmlNodus* n,
+    constans character* attributum,
+                   b32  praestitutum)
+{
+    chorda v = _valor(n, attributum);
+
+    si (v.mensura == ZEPHYRUM)
+    {
+        redde praestitutum;
+    }
+    si (   chorda_aequalis_literis(v, "verum")
+        || chorda_aequalis_literis(v, "true"))
+    {
+        redde VERUM;
+    }
+    si (chorda_aequalis_literis(v, "falsum"))
+    {
+        redde FALSUM;
+    }
+    _causa(k, n->linea, "veritas mala '", v, "' (verum aut falsum)");
+    redde praestitutum;
+}
+
+interior vacuum
+_attributa_clausa (
+       ConsiliumCausae* k,
+            StmlNodus* n,
+    constans character* constans* nota)
+{
+    i32 i;
+
+    si (n->attributa == NIHIL)
+    {
+        redde;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(n->attributa); i++)
+    {
+        StmlAttributum* at = (StmlAttributum*)xar_obtinere(n->attributa,
+            i);
+
+        si (_index(*at->titulus, nota) < ZEPHYRUM)
+        {
+            _causa(k, n->linea, "attributum ignotum '", *at->titulus,
+                "'");
+        }
+    }
+}
+
+interior chorda
+_necessarium (
+       ConsiliumCausae* k,
+             StmlNodus* n,
+    constans character* attributum)
+{
+    chorda v = _valor(n, attributum);
+
+    si (v.mensura == ZEPHYRUM)
+    {
+        _causa(k, n->linea, "attributum necessarium '",
+            chorda_ex_literis(attributum, k->piscina), "' abest");
+    }
+    redde v;
+}
+
+/* verbum aut classis cum titulis consilium.h */
+interior s32
+_nomen_enumeratum (
+        ConsiliumCausae* k,
+              StmlNodus* n,
+     constans character* attributum,
+                    b32  verbum,
+                    s32  praestitutum)
+{
+    constans character* tabula[XVI];
+                   s32  numerus = verbum ? (s32)CONSILIUM_VERBA_NUMERUS
+                       : (s32)CONSILIUM_CLASSES_NUMERUS;
+                   s32 i;
+
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        tabula[i] =
+            verbum ? consilium_verbum_titulus((ConsiliumVerbum)i)
+            : consilium_classis_titulus((ConsiliumClassis)i);
+    }
+    tabula[numerus] = NIHIL;
+    redde _enumeratum(k, n, attributum, tabula, praestitutum);
+}
+
+interior vacuum
+_gradum_legere (
+            Consilium* c,
+            StmlNodus* n,
+      ConsiliumCausae* k)
+{
+    ConsiliumGradus* g;
+             chorda  titulus;
+             chorda  sumptus;
+                i32  i;
+
+    _attributa_clausa(k, n, _ATTR_GRADUS);
+    titulus = _necessarium(k, n, "titulus");
+    si (titulus.mensura == ZEPHYRUM)
+    {
+        redde;
+    }
+    g = consilium_gradum_addere(c, titulus, _valor(n, "genus"),
+        _valor(n, "auctor"));
+    g->caecus  = _veritas(k, n, "caecus", g->caecus);
+    sumptus    = _valor(n, "sumptus_ms");
+    si (sumptus.mensura > ZEPHYRUM)
+    {
+        s32 v = ZEPHYRUM;
+
+        per (i = ZEPHYRUM; i < sumptus.mensura; i++)
+        {
+            si (sumptus.datum[i] < '0' || sumptus.datum[i] > '9')
+            {
+                _causa(k, n->linea, "sumptus_ms non numerus '", sumptus,
+                    "'");
+                v = -I;
+                frange;
+            }
+            v = v * X + (s32)(sumptus.datum[i] - '0');
+        }
+        g->sumptus_ms = v;
+    }
+    per (i = ZEPHYRUM; i < stml_numerus_liberorum(n); i++)
+    {
+        StmlNodus* m = stml_liberum_ad_indicem(n, i);
+
+        si (m->genus != STML_NODUS_ELEMENTUM)
+        {
+            perge;
+        }
+        si (chorda_aequalis_literis(*m->titulus, "effectus"))
+        {
+            ConsiliumEffectus e;
+                       chorda res;
+
+            _attributa_clausa(k, m, _ATTR_EFFECTUS);
+            res = _necessarium(k, m, "res");
+            si (_valor(m, "verbum").mensura == ZEPHYRUM)
+            {
+                (vacuum)_necessarium(k, m, "verbum");
+                perge;
+            }
+            e = consilium_effectus((ConsiliumVerbum)_nomen_enumeratum(k,
+                m, "verbum", VERUM, (s32)CONSILIUM_LEGERE), res);
+            e.forma      = (ConsiliumForma)_enumeratum(k, m, "forma",
+                _FORMAE, (s32)CONSILIUM_VIA);
+            e.classis    = (ConsiliumClassis)_nomen_enumeratum(k, m,
+                "classis", FALSUM, (s32)CONSILIUM_ARBOR);
+            e.certitudo  = (ConsiliumCertitudo)_enumeratum(k, m,
+                "certitudo", _CERTITUDINES, (s32)CONSILIUM_PLENA);
+            e.cognitio   = (ConsiliumCognitio)_enumeratum(k, m,
+                "cognitio", _COGNITIONES, (s32)CONSILIUM_PROPOSITUM);
+            e.exstat  = _veritas(k, m, "exstat", VERUM);
+            e.causa   = _valor(m, "causa");
+            si (res.mensura > ZEPHYRUM)
+            {
+                consilium_effectum_addere(c, g, e);
+            }
+        }
+        alioquin si (chorda_aequalis_literis(*m->titulus, "sequitur"))
+        {
+            chorda t;
+
+            _attributa_clausa(k, m, _ATTR_SEQUITUR);
+            t = _necessarium(k, m, "titulus");
+            si (t.mensura > ZEPHYRUM)
+            {
+                *(chorda*)xar_addere(g->sequitur) = t;
+            }
+        }
+        alioquin si (chorda_aequalis_literis(*m->titulus, "vestigium"))
+        {
+            chorda x;
+
+            _attributa_clausa(k, m, _ATTR_VESTIGII);
+            x = _necessarium(k, m, "exemplar");
+            si (x.mensura > ZEPHYRUM)
+            {
+                *(chorda*)xar_addere(g->vestigium) = x;
+            }
+        }
+        alioquin
+        {
+            _causa(k, m->linea, "elementum ignotum <", *m->titulus,
+                "> in <gradus>");
+        }
+    }
+}
+
+interior vacuum
+_regulam_legere (
+            StmlNodus* n,
+                  Xar* regulae,
+      ConsiliumCausae* k)
+{
+    ConsiliumRegula r;
+
+    _attributa_clausa(k, n, _ATTR_REGULAE);
+    r.titulus   = _necessarium(k, n, "titulus");
+    r.verbum    = _valor(n, "verbum").mensura > ZEPHYRUM
+        ? _nomen_enumeratum(k, n, "verbum", VERUM, CONSILIUM_OMNIA)
+        : CONSILIUM_OMNIA;
+    r.classis   = _valor(n, "classis").mensura > ZEPHYRUM
+        ? _nomen_enumeratum(k, n, "classis", FALSUM, CONSILIUM_OMNIA)
+        : CONSILIUM_OMNIA;
+    r.exemplar  = _valor(n, "exemplar");
+    si (_valor(n, "sententia").mensura == ZEPHYRUM)
+    {
+        (vacuum)_necessarium(k, n, "sententia");
+    }
+    r.sententia = (ConsiliumSententia)_enumeratum(k, n, "sententia",
+        _SENTENTIAE, (s32)CONSILIUM_LICET);
+    r.causa                                 = _valor(n, "causa");
+    *(ConsiliumRegula*)xar_addere(regulae)  = r;
+}
+
+Consilium*
+consilium_legere (
+      chorda   textus,
+     Piscina*  piscina,
+         Xar** regulae_out,
+      chorda*  causa_out)
+{
+          ConsiliumCausae  k;
+                Consilium* c;
+                      Xar* regulae;
+             StmlResultus  r;
+                      i32  i;
+
+    k.textus = chorda_aedificator_creare(piscina,
+        (memoriae_index)CCLVI);
+    k.numerus = ZEPHYRUM;
+    k.piscina = piscina;
+    c = consilium_creare(piscina);
+    regulae = xar_creare(piscina, (i32)magnitudo(ConsiliumRegula));
+    r = stml_legere(textus, piscina, internamentum_creare(piscina));
+    si (!r.successus || r.elementum_radix == NIHIL)
+    {
+        _causa(&k, r.linea_erroris, "STML illegibile",
+            chorda_ex_literis(
+            "", piscina), "");
+    }
+    alioquin si (!chorda_aequalis_literis(*r.elementum_radix->titulus,
+                 "consilium"))
+    {
+        _causa(&k, r.elementum_radix->linea,
+            "radix non est <consilium>: <",
+            *r.elementum_radix->titulus, ">");
+    }
+    alioquin
+    {
+        StmlNodus* radix = r.elementum_radix;
+
+        _attributa_clausa(&k, radix, _ATTR_RADICIS);
+        per (i = ZEPHYRUM; i < stml_numerus_liberorum(radix); i++)
+        {
+            StmlNodus* n = stml_liberum_ad_indicem(radix, i);
+
+            si (n->genus != STML_NODUS_ELEMENTUM)
+            {
+                perge;
+            }
+            si (chorda_aequalis_literis(*n->titulus, "gradus"))
+            {
+                _gradum_legere(c, n, &k);
+            }
+            alioquin si (chorda_aequalis_literis(*n->titulus, "regula"))
+            {
+                _regulam_legere(n, regulae, &k);
+            }
+            alioquin
+            {
+                _causa(&k, n->linea, "elementum ignotum <", *n->titulus,
+                    ">");
+            }
+        }
+    }
+    si (k.numerus > ZEPHYRUM)
+    {
+        si (causa_out != NIHIL)
+        {
+            *causa_out = chorda_aedificator_finire(k.textus);
+        }
+        redde NIHIL;
+    }
+    si (causa_out != NIHIL)
+    {
+        causa_out->datum    = NIHIL;
+        causa_out->mensura  = ZEPHYRUM;
+    }
+    si (regulae_out != NIHIL)
+    {
+        *regulae_out = regulae;
+    }
+    redde c;
 }

@@ -1,0 +1,88 @@
+<!--
+  consilium.canon
+  Canon dialecti CONSILIUM (project-specs/consilium-spec.md par. XI-XIII):
+  consilium = gradus qui effectus suos PROPONUNT antequam fiunt, cum
+  regulis politicae. Lector lib/consilium.c (consilium_legere); iudex
+  bin/fabrica consilium (ordo, conflictus, sententiae).
+
+  Recordum effectus = vocabularium effectus.canon extensum (par. XI.1):
+  verba nova instituere rete committere, classis domus. Valores contra
+  enumerationes consilium.h a lectore iudicantur (nomen ignotum
+  nominatur cum notis) - canon formam dicit, lector valores.
+
+  VERSIO 1 (2026-10-16, quinta, consilium S3a).
+-->
+<canon dialectus="consilium" versio="1">
+
+  <elementum nomen="consilium" radix="verum">
+    <liberum nomen="regula"/>
+    <liberum nomen="gradus"/>
+  </elementum>
+
+  <elementum nomen="regula"
+    nota="politica: prima congruens vincit; licet expressum cessat">
+    <attributum nomen="titulus"  genus="nomen" necessarium="verum"/>
+    <attributum nomen="verbum"   genus="nomen" nota="absens = quodlibet"/>
+    <attributum nomen="classis"  genus="nomen" nota="absens = quaelibet"/>
+    <attributum nomen="exemplar" genus="textus" nota="globus super res"/>
+    <attributum nomen="sententia" genus="electio" necessarium="verum">
+      <optio>licet</optio>
+      <optio>rogandum</optio>
+      <optio>vetitum</optio>
+    </attributum>
+    <attributum nomen="causa"    genus="textus"/>
+  </elementum>
+
+  <elementum nomen="gradus">
+    <attributum nomen="titulus" genus="textus" necessarium="verum"
+      nota="identitas in consilio (gradus idem bis = unus)"/>
+    <attributum nomen="genus"   genus="nomen"
+      nota="generator formatio institutio iudicium ..."/>
+    <attributum nomen="auctor"  genus="textus"/>
+    <attributum nomen="caecus"  genus="veritas"/>
+    <attributum nomen="sumptus_ms" genus="numerus"/>
+    <liberum nomen="effectus"/>
+    <liberum nomen="sequitur"/>
+    <liberum nomen="vestigium"/>
+  </elementum>
+
+  <elementum nomen="effectus">
+    <attributum nomen="verbum" genus="nomen" necessarium="verum"
+      nota="legere inspicere enumerare scribere delere movere exsequi
+            fontare ambitum_legere instituere rete committere"/>
+    <attributum nomen="res"    genus="textus" necessarium="verum"/>
+    <attributum nomen="forma"  genus="electio">
+      <optio>via</optio>
+      <optio>praefixum</optio>
+      <optio>globus</optio>
+    </attributum>
+    <attributum nomen="classis" genus="nomen"
+      nota="arbor build instrumentum_domus domus externa systema
+            temporaria; absens = arbor"/>
+    <attributum nomen="certitudo" genus="electio">
+      <optio>plena</optio>
+      <optio>partialis</optio>
+      <optio>nulla</optio>
+    </attributum>
+    <attributum nomen="cognitio" genus="electio">
+      <optio>propositum</optio>
+      <optio>declaratum</optio>
+      <optio>derivatum</optio>
+      <optio>observatum</optio>
+    </attributum>
+    <attributum nomen="exstat" genus="veritas"
+      nota="falsum = res probata ABSENS (dependentia absentiae)"/>
+    <attributum nomen="causa"  genus="textus"/>
+  </elementum>
+
+  <elementum nomen="sequitur">
+    <attributum nomen="titulus" genus="textus" necessarium="verum"/>
+  </elementum>
+
+  <elementum nomen="vestigium"
+    nota="scriptura PERMISSA gradus (globus); vestigium nullum = nulla
+          restrictio">
+    <attributum nomen="exemplar" genus="textus" necessarium="verum"/>
+  </elementum>
+
+</canon>

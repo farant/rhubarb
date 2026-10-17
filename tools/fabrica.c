@@ -21,6 +21,10 @@
  *   bin/fabrica quid [-machina] [-iudex TITULUS] VIA... | -omnes
  *       quid est plagula: unitas, cura, vita, munus, provenientia,
  *       lingua cum causis (tools/fabrica_unitates.c, lib/unitates.c).
+ *   bin/fabrica consilium [-machina] VIA
+ *       consilium (documentum consilium.canon) iudicatum: undae,
+ *       conflictus, sententiae politicae (tools/fabrica_consilium.c,
+ *       lib/consilium.c).
  *
  * Exitus: 0 nihil stalum aut ignotum · 1 stalum aut ignotum
  * aliquod · 2 nihil iudicatum (declarationes absentes/fractae,
@@ -3398,6 +3402,10 @@ principale (
     alioquin si (strcmp(argv[1], "quid") == 0)
     {
         exitus = suturae_quid(argc, argv, piscina);
+    }
+    alioquin si (strcmp(argv[1], "consilium") == 0)
+    {
+        exitus = suturae_consilium(argc, argv, piscina);
     }
     alioquin
     {

@@ -257,6 +257,22 @@ consilium_scribere (
                         b32  machina,
                     Piscina* piscina);
 
+
+/* ==================================================
+ * DOCUMENTUM (consilium.canon, gradus S3a)
+ * ================================================== */
+
+/* consilium ex textu STML legere. NIHIL = RECUSATIO: *causa_out causas
+ * OMNES nominat ('linea N: ...', valores ignoti cum notis).
+ * *regulae_out (NIHIL licet) = Xar de ConsiliumRegula, ordine
+ * documenti */
+Consilium*
+consilium_legere (
+      chorda   textus,
+     Piscina*  piscina,
+         Xar** regulae_out,
+      chorda*  causa_out);
+
 constans character*
 consilium_verbum_titulus (
     ConsiliumVerbum verbum);

@@ -364,3 +364,53 @@ rule of §V as a VETITUM verdict. Born red three times (M1 removed,
 delete+delete counted, wall removed), each at its own assertion. Not in
 S2 (by PULL): STML reading/writing of plans, a CLI, cost/critical path,
 plan diff - S3 needs the first two.
+
+## XIII. S3 built (2026-10-16): dialect, CLI, commissio pilot
+
+**S3a** `consilium.canon` (registered `<consilium>`): `<regula>` and
+`<gradus>` children; `<gradus>` holds `<effectus>` (the record's names,
+values as in effectus where shared: `partialis` in STML maps to
+CONSILIUM_EX_PARTE), `<sequitur>`, `<vestigium>`. Reader
+`consilium_legere` validates every value against the C enumerations
+and names EVERY error with its line ("linea 5: verbum 'volare' ignotum
+(nota: legere ...)"); the test caught a real gap - unknown attributes on
+the root were not checked.
+
+**S3b** `bin/fabrica consilium [-machina] VIA` (tools/fabrica_consilium.c):
+waves, arcs with reasons, cycle, refusals, conflicts, verdicts, SUMMA.
+Exit 0 = may run as is; 1 = not without a decision (conflict, cycle,
+refusal, VETITUM or ROGANDUM); 2 = unreadable.
+
+**S3c** pilot in `silva._formam_custodire`: when formatting makes house
+binaries stale, commissio no longer refuses outright. It writes the plan
+(build/consilium/forma.stml: `forma` writes the formatted sources;
+`sana X` reads them - conservatively all of them - and writes X; `portae`
+execute X), has bin/fabrica judge it, and if allowed runs the heals
+WAVE BY WAVE, batched (one `bin/fabrica sanare` per wave, tree-local,
+never installing), re-judges, and continues. If the planner says no, it
+refuses as before but with the rule named. Policy written by commissio:
+`institutio_rogata` (any install needs approval - commissio never
+installs on its own) and, in a git worktree (`--git-dir` differs from
+`--git-common-dir`), `arbor_secundaria` (home writes VETITUM).
+
+The first real run taught the planner a fact: THE JUDGE CANNOT HEAL
+ITSELF - `bin/fabrica sanare bin/fabrica ...` refuses ("iudex ipse non
+recens"). The plan now gives bin/fabrica its own step (genus `iudex`,
+built by tools/fabrica_struere.sh, which installs nothing) and every
+other heal `sequitur` it: forma -> sana bin/fabrica -> sana bin/aedilis
+-> portae. End-to-end (format-only edit of lib/aedilis.c after building
+both binaries from the misformatted bytes): "forma: 2 artificia stala
+per consilium in arbore sanata (bin/fabrica, bin/aedilis)", both RECENS,
+the source back to its original bytes. A second run had hit the known
+false "scripsit extra vestigium ~/.bin/mensor" while another session
+installed (ledger …VJPN3WT, ictus added).
+
+Tests: credo section IX (reader, good and bad documents); pythonica:
+plan order (judge first), install ROGANDA, worktree home VETITA, main
+without the worktree rule, scope classes; a plant dropping the
+judge-first edge went red.
+
+Not yet (S3d): the SECOND refusal case of 2026-10-16 - a tool edit
+made the tool binary stale, its GENERATOR refused, everything
+downstream IGNOTUM (`_fabricam_exigere`). Same shape: heal the tool,
+then regenerate, as one plan.

@@ -9,6 +9,7 @@
 #include "xar.h"
 #include "credo.h"
 #include "consilium.h"
+#include "chorda_aedificator.h"
 #include <string.h>
 
 #define CH(s) chorda_ex_literis((s), c->piscina)
@@ -307,6 +308,126 @@ _sectio_politica (
     CREDO_VERUM(!chorda_continet(s, CH("build/a/x.c")));
 }
 
+/* documentum ex lineis (litterae C89 > DIX octetis vetitae) */
+interior chorda
+_documentum (
+              CredoContextus* c,
+    constans character* constans* lineae)
+{
+    ChordaAedificator* a = chorda_aedificator_creare(c->piscina,
+        (memoriae_index)M);
+                   i32 i;
+
+    per (i = ZEPHYRUM; lineae[i] != NIHIL; i++)
+    {
+        chorda_aedificator_appendere_literis(a, lineae[i]);
+        chorda_aedificator_appendere_character(a, '\n');
+    }
+    redde chorda_aedificator_finire(a);
+}
+
+hic_manens constans character* constans DOCUMENTUM_SANUM[] = {
+    "<consilium>",
+    "  <regula titulus=\"arbor_secundaria\" classis=\"domus\"",
+    "          sententia=\"vetitum\" causa=\"nihil extra arborem\"/>",
+    "  <gradus titulus=\"forma\" genus=\"formatio\""
+        " auctor=\"commissio\">",
+    "    <effectus verbum=\"scribere\" res=\"lib/aedilis.c\"/>",
+    "  </gradus>",
+    "  <gradus titulus=\"sana bin/aedilis\" genus=\"institutio\"",
+    "          auctor=\"forma\" sumptus_ms=\"4100\">",
+    "    <effectus verbum=\"legere\" res=\"lib/*.c\""
+        " forma=\"globus\"/>",
+    "    <effectus verbum=\"scribere\" res=\"bin/aedilis\"",
+    "              classis=\"instrumentum_domus\""
+        " cognitio=\"declaratum\"/>",
+    "    <vestigium exemplar=\"bin/*\"/>",
+    "  </gradus>",
+    "  <gradus titulus=\"institue\" genus=\"institutio\""
+        " caecus=\"falsum\">",
+    "    <effectus verbum=\"instituere\" res=\"~/.bin/aedilis\"",
+    "              classis=\"domus\"/>",
+    "    <sequitur titulus=\"sana bin/aedilis\"/>",
+    "  </gradus>",
+    "</consilium>",
+    NIHIL
+};
+
+hic_manens constans character* constans DOCUMENTUM_MALUM[] = {
+    "<consilium color=\"x\">",
+    "  <regula titulus=\"r\" sententia=\"fortasse\"/>",
+    "  <gradus genus=\"g\"/>",
+    "  <gradus titulus=\"a\" caecus=\"saepe\">",
+    "    <effectus verbum=\"volare\" res=\"x\"/>",
+    "    <effectus verbum=\"legere\" res=\"y\" classis=\"luna\"/>",
+    "    <effectus res=\"z\"/>",
+    "    <nota/>",
+    "  </gradus>",
+    "  <aliud/>",
+    "</consilium>",
+    NIHIL
+};
+
+/* IX. documentum: lectio sana (omnia attributa), deinde ordo idem ac
+ * per API; documentum malum causas OMNES cum lineis nominat */
+interior vacuum
+_sectio_documentum (
+    CredoContextus* c)
+{
+                Xar* regulae = NIHIL;
+             chorda  causa;
+          Consilium* k = consilium_legere(_documentum(c,
+              DOCUMENTUM_SANUM),
+                         c->piscina, &regulae, &causa);
+    ConsiliumGradus* g;
+      ConsiliumOrdo* o;
+                Xar* j;
+
+    CREDO_NECESSE_NON_NIHIL(k);
+    CREDO_AEQUALIS_I32(xar_numerus(consilium_gradus(k)), III);
+    CREDO_AEQUALIS_I32(xar_numerus(regulae), I);
+    g = consilium_gradum_invenire(k, CH("sana bin/aedilis"));
+    CREDO_NECESSE_NON_NIHIL(g);
+    CREDO_AEQUALIS_I32((i32)g->sumptus_ms, (i32)4100);
+    CREDO_AEQUALIS_I32(xar_numerus(g->effectus), II);
+    CREDO_AEQUALIS_I32((i32)((constans ConsiliumEffectus*)xar_obtinere(
+        g->effectus, ZEPHYRUM))->forma, (i32)CONSILIUM_GLOBUS);
+    CREDO_AEQUALIS_I32((i32)((constans ConsiliumEffectus*)xar_obtinere(
+        g->effectus, I))->classis, (i32)CONSILIUM_INSTRUMENTUM_DOMUS);
+    CREDO_AEQUALIS_I32(xar_numerus(g->vestigium), I);
+    o = consilium_ordinare(k, c->piscina);
+    CREDO_AEQUALIS_I32(_unda(o, "forma"), I);
+    CREDO_AEQUALIS_I32(_unda(o, "sana bin/aedilis"), II);
+    CREDO_AEQUALIS_I32(_unda(o, "institue"), III);
+    j = consilium_iudicare(k, regulae, c->piscina);
+    CREDO_AEQUALIS_I32(xar_numerus(j), I);
+    CREDO_CHORDA_AEQUALIS_LITERIS(((constans ConsiliumIudicium*)
+        xar_obtinere(j, ZEPHYRUM))->regula, "arbor_secundaria");
+
+    k = consilium_legere(_documentum(c, DOCUMENTUM_MALUM), c->piscina,
+        NIHIL, &causa);
+    CREDO_NIHIL(k);
+    CREDO_VERUM(chorda_continet(causa, CH("linea 1: attributum ignotum "
+        "'color'")));
+    CREDO_VERUM(chorda_continet(causa,
+        CH("linea 2: sententia 'fortasse'"
+        " ignotum (nota: licet rogandum vetitum)")));
+    CREDO_VERUM(chorda_continet(causa, CH("linea 3: attributum "
+        "necessarium 'titulus' abest")));
+    CREDO_VERUM(chorda_continet(causa, CH("linea 4: veritas mala "
+        "'saepe'")));
+    CREDO_VERUM(chorda_continet(causa, CH("linea 5: verbum 'volare' "
+        "ignotum (nota: legere")));
+    CREDO_VERUM(chorda_continet(causa, CH("linea 6: classis 'luna' "
+        "ignotum")));
+    CREDO_VERUM(chorda_continet(causa, CH("linea 7: attributum "
+        "necessarium 'verbum' abest")));
+    CREDO_VERUM(chorda_continet(causa, CH("linea 8: elementum ignotum "
+        "<nota> in <gradus>")));
+    CREDO_VERUM(chorda_continet(causa, CH("linea 10: elementum ignotum "
+        "<aliud>")));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "ordo ex datis", _sectio_data, NIHIL, NIHIL, NIHIL, NIHIL },
     { "lectio sua et absentia", _sectio_lectio_sua, NIHIL, NIHIL, NIHIL,
@@ -320,6 +441,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "politica et vestigium", _sectio_politica, NIHIL, NIHIL, NIHIL,
       NIHIL },
+    { "documentum", _sectio_documentum, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

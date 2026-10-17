@@ -18,3 +18,16 @@ assertion. Plants must compile under -Werror: neutralize with
 is an error). Three words the lint did not know were renamed to known
 ones instead of glossary entries: PARTIALIS -> EX_PARTE, QUODVIS ->
 OMNIA, deduplicatio section -> semel.
+
+## 2026-10-16 - S3: dialect, CLI, commissio pilot
+
+`ordinarius` is a latina macro (default) - hit while writing the
+reader's `_enumeratum(..., ordinarius)`; renamed `praestitutum`. The
+reader test caught unknown root attributes going unchecked. The pilot's
+first end-to-end run failed for the right reason: fabrica refuses to
+heal while the judge (bin/fabrica) is itself stale - the plan now
+bootstraps the judge in its own wave and orders every other heal after
+it. The setup of that test matters: lib/aedilis.c is in BOTH bin/aedilis'
+and bin/fabrica's closures, so both must be rebuilt from the
+misformatted bytes before the guard runs, or both are stale BEFORE
+formatting and the guard (rightly) does nothing.
