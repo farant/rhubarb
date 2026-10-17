@@ -160,6 +160,11 @@ copies its form, forced off gives 0), not by sampling.
    bias-free 2-input network: walls, patterns, matrices, pieces);
    section "plana" (81 checks, suite 334) against an independent
    fixpoint oracle; 16 plants red. See lib/nervus.worklog.md.
+   *T5 done 2026-10-16:* demo D129 (knotapel/demo_129_braid_regions,
+   T5a-T5d: 5824e2ab, fc53f746, a0c54453, 11703060); findings.md, KC
+   56 and 55.2.3.1.x. On B_3 regions of w^m grow linearly, pieces stay
+   flat; B_4 needs exact counts in d >= 3 (wish …QK7A9). Reviewed
+   independently (H 0), all fixed. The plan is complete.
 
 ## N6 / D129 sketch (its own plan settles these)
 
