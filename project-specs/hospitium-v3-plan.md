@@ -202,6 +202,25 @@ with this plan.
   `_sectio_vas_crustulorum`. The first header plant was mis-written (my
   mutation broke the compare loop instead of making it case-sensitive,
   so it stayed green); rewritten as a plain byte compare -> red.
+- **R15 (T5)** - `argon2id_digestum(opus, exitus)` as the plan has it
+  (the spec's extra `n` dropped: the length is `parametri.longitudo`).
+  Salt 8..64 bytes, tag 4..64 (RFC 9106 allows longer tags; one BLAKE2b
+  output is plenty for passwords). The work memory and H0 are zeroed
+  after the digest. The RFC test checks the pre-hashing digest H0 -
+  recomputed IN THE TEST from the RFC formula with blake2b, so no
+  test-only API - and the final tag; the RFC's per-pass block dumps are
+  not compared. Production parameters (19 MiB, t=2, p=1) take ~25-35 ms
+  on the Mac.
+- **R16 (T5)** - (a) the "resume off by one" plant skips one block
+  forward on each pause; a backward step loops forever at slice size 1
+  (first attempt hung, was killed, its "red" discarded). (b) RFC text
+  trap: "5.3.  Argon2id Test Vectors" also appears in the table of
+  contents, and the scan from there read section 5.1 (Argon2d: same
+  inputs, different digest) - the reader anchors at the heading line.
+  (c) Lint: blake2b, blake2, argon2id, argon2, phc, blamka ->
+  ignotum-permissum (the sha256/hmac precedent); helpers renamed
+  (`_le32*` -> `_quaterni*`, `_le64` -> `_octoni_legere`, `ROTR64` ->
+  `CIRCUMVOLVERE`, `_hprime` -> `_digestum_varium`).
 
 ## Review focus
 

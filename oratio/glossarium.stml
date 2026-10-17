@@ -602,6 +602,12 @@
   <vocabulum lemma="gitdir" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum - git: plagula .git arboris operis"/>
   <vocabulum lemma="sha256" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
   <vocabulum lemma="hmac" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (RFC 2104; sigillum_hmac)"/>
+  <vocabulum lemma="blake2b" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (RFC 7693; lib/blake2b.c)"/>
+  <vocabulum lemma="blake2" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (RFC 7693, familia BLAKE2)"/>
+  <vocabulum lemma="argon2id" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (RFC 9106; lib/argon2id.c)"/>
+  <vocabulum lemma="argon2" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (RFC 9106, familia Argon2)"/>
+  <vocabulum lemma="blamka" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (BlaMka, compressio G Argon2, RFC 9106 par. 3.6)"/>
+  <vocabulum lemma="phc" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (Password Hashing Competition, forma $argon2id$...)"/>
   <vocabulum lemma="stbi" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
   <vocabulum lemma="macho" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
   <vocabulum lemma="sqlite" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
