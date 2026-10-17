@@ -1842,6 +1842,35 @@ aedilis_scriptum_scribere (
                              b32  solitarius,
               constans character* commissum)
 {
+    redde aedilis_scriptum_scribere_ad(fructus, configuratio, piscina,
+        solitarius, commissum, NIHIL);
+}
+
+/* directorium exitus in scripto: datum, aut build/aedilis/<basis> */
+interior vacuum
+_exitum_appendere (
+     ChordaAedificator* s,
+                chorda  basis,
+    constans character* exitus)
+{
+    si (exitus != NIHIL)
+    {
+        chorda_aedificator_appendere_literis(s, exitus);
+        redde;
+    }
+    chorda_aedificator_appendere_literis(s, "build/aedilis/");
+    chorda_aedificator_appendere_chorda(s, basis);
+}
+
+chorda
+aedilis_scriptum_scribere_ad (
+         constans AedilisFructus* fructus,
+    constans AedilisConfiguratio* configuratio,
+                         Piscina* piscina,
+                             b32  solitarius,
+              constans character* commissum,
+              constans character* exitus)
+{
     ChordaAedificator* s;
                chorda  basis;
             character  tempus_litterae[32];
@@ -1894,9 +1923,7 @@ aedilis_scriptum_scribere (
         "\"\nOBIECTA_DIR=\"");
     si (solitarius)
     {
-        chorda_aedificator_appendere_literis(s,
-            "build/aedilis/");
-        chorda_aedificator_appendere_chorda(s, basis);
+        _exitum_appendere(s, basis, exitus);
         chorda_aedificator_appendere_literis(s, "/solitarius");
     }
     alioquin
@@ -1904,9 +1931,8 @@ aedilis_scriptum_scribere (
         chorda_aedificator_appendere_literis(s,
             "build/aedilis/obiecta");
     }
-    chorda_aedificator_appendere_literis(s,
-        "\"\nEXITUS_DIR=\"build/aedilis/");
-    chorda_aedificator_appendere_chorda(s, basis);
+    chorda_aedificator_appendere_literis(s, "\"\nEXITUS_DIR=\"");
+    _exitum_appendere(s, basis, exitus);
     chorda_aedificator_appendere_literis(s,
         "\"\nmkdir -p \"$OBIECTA_DIR\" \"$EXITUS_DIR\"\n\n");
 

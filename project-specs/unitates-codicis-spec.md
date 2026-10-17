@@ -896,3 +896,37 @@ world caught this: without crusta's command table every file "was
 covered"). Gate portae-declaratae III pins exact answers in a
 throwaway git tree; probatio_portae pins every kind and both masks
 (plant: no ALIENUM -> red at the credo assertion).
+
+**U5 (b) built (2026-10-16, Fran: merge tier; thistle compiled AND
+test region run): gate `instrumenta`** (tools/instrumenta_fumus.sh,
+`gradus="fusio"`, ~42 s warm, 2-4 min after a foundation header change).
+Every domestic hand-written program is BUILT, never run: the files come
+from a new judge `instrumenta` in unitates.stml (domestica, viva/vetusta,
+fons/scriptum, manu, c89/thistle) - vendor, research, archive, fixtures
+(briar's `adversa`, which must fail) and generated code drop out by
+policy; C entries = files with `principale(`/`main(`.
+- C: the CANONICAL recipe - `bin/aedilis F --exitus D` then `sh
+  D/struere.sh`. New aedilis option `--exitus DIR` (lib
+  `aedilis_scriptum_scribere_ad`; default output byte-identical): plain
+  aedilis writes build/aedilis/<basename>/, shared by 7 `arbor.c` and 8
+  `computus.c` and holding 20 manifests fabrica keys on - building
+  briar/instrumenta/fabrica.c would have overwritten bin/fabrica's own.
+- thistle: policy gained `<lingua thistle>` and `.thistle` in role
+  `scriptum` (fixtures stay `fixtura` by rule 1); the gate runs the
+  TREE's bin/briar `-f RADIX -struere`, then `-probatio` when the script
+  has a `munus="probatio"` region (author-declared safe to run), with a
+  temporary HOME so briar's cache (~/.rhubarb/briar) is never touched.
+- Probe before the gate: helper-built 100/148 (helper limits:
+  frameworks, basename collisions); canonical recipe 143/148. The 5:
+  tools/fons_merge.c REAL ROT (52 wrong `(signed char)` casts in an
+  `unsigned char` table - fixed, Fran); tools/natura_canones.c closure
+  gap (emissio source linked by hand only - `<aedilis corpus>` in
+  tools/natura_canones.h); tools/briar.c and tools/briar_spectator.c
+  annotated 1 of 5 and 0 of 2 of their generated capsules (`<aedilis
+  obiectum>` added; briar_struere.sh's own clang line and fabrica's
+  hand-listed capsule inputs still compensate - cleanup later);
+  apps/forum/forum.c needs a generated capsule -> named NOTA, not red
+  (the gate never runs fabrica sanare itself: fabrica's lock).
+- Result: 148 C + 4 thistle, 151 built, 4 test regions pass, 1 NOTA.
+  Born red twice: an undefined symbol linked from tools/xar_mensura.c
+  (a tool no other gate covers), and a thistle test assertion.

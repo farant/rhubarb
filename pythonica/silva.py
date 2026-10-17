@@ -1699,6 +1699,10 @@ PORTAE = {
     # (symbolum in fonte manu scripto, via, imperium) rem veram nominat
     'interrogationes': (['./tools/interrogationes_fumus.sh'],
                         r'fumus interrogationum: (sanum|FRACTUM)'),
+    # instrumenta (U5 b): omnis programma domesticus (C per aedilis,
+    # thistle per briar -struere/-probatio) aedificatur - gradus fusio
+    'instrumenta': (['./tools/instrumenta_fumus.sh'],
+                    r'fumus instrumentorum: (sanum|FRACTUM)'),
 }
 _ANSI = re.compile(r'\x1b\[[0-9;]*m')
 

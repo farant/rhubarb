@@ -73,15 +73,19 @@ externus constans CapsulaEmbed capsula_corpus_silicis;
  * includitur - silva inclusionem citatam cum '..' solvere nequit
  * (regula speculi, nota tabularii 01KY0T6T64): symbolum est
  * contractus. */
+/* <aedilis obiectum="build/capsula_facies_briar.c"/> */
 externus constans CapsulaEmbed capsula_facies_briar;
 /* icon ordinarius '-app' (build/capsula_icon_briar.c, par. 4.8):
  * symbolum contractus est, caput genitum non includitur */
+/* <aedilis obiectum="build/capsula_icon_briar.c"/> */
 externus constans CapsulaEmbed capsula_icon_briar;
 /* charta mutationum (build/capsula_mutationes_briar.c): versio
  * binarii EX ea legitur - numerus alibi non scribitur */
+/* <aedilis obiectum="build/capsula_mutationes_briar.c"/> */
 externus constans CapsulaEmbed capsula_mutationes_briar;
 /* identitas aedificationis (build/briar_aedificatio.c, generatum a
  * tools/briar_struere.sh omni aedificatione) */
+/* <aedilis obiectum="build/briar_aedificatio.c"/> */
 externus constans character briar_aedificatio_tempus[];
 externus constans character briar_aedificatio_fontes[];
 externus constans character briar_aedificatio_commissum[];

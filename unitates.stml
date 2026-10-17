@@ -40,7 +40,7 @@
   <munus titulus="interrogationes" extensiones=".interrogationes.stml"/>
   <munus titulus="documentum"  extensiones=".md .html"/>
   <munus titulus="declaratio"  extensiones=".stml .canon .genera .census .toml .registrum"/>
-  <munus titulus="scriptum"    extensiones=".sh .py .ts .js"/>
+  <munus titulus="scriptum"    extensiones=".sh .py .ts .js .thistle"/>
 
   <lingua titulus="c89"    extensiones=".c .h"/>
   <lingua titulus="objc"   extensiones=".m"/>
@@ -52,6 +52,9 @@
   <lingua titulus="md"     extensiones=".md"/>
   <lingua titulus="toml"   extensiones=".toml"/>
   <lingua titulus="css"    extensiones=".css"/>
+  <!-- thistle: scripta litterata briar (prosa + STML + regiones <c!>) -
+       non C pro iudicibus C; briar ipse regiones contexit et compilat -->
+  <lingua titulus="thistle" extensiones=".thistle"/>
 
   <!-- iudices: consumptores qui custodiam rogant (U4: unus post alium,
        quisque cum probatione congruentiae contra indicem veterem) -->
@@ -94,6 +97,12 @@
          munera="documentum" provenientiae="manu"
          linguae="md"
          descriptio="lint prosae Anglicae super markdown (oratio vocabula -prosa) - knotapel Anglice scriptum INCLUSUM (remissa), generata et fixturae non"/>
+
+  <iudex titulus="instrumenta"
+         curae="domestica" vitae="viva vetusta"
+         munera="fons scriptum" provenientiae="manu"
+         linguae="c89 thistle"
+         descriptio="porta instrumentorum (unitates-codicis U5 b): omnis introitus programmatis domesticus manu scriptus aedificatur - C per recipe aedilis (--exitus, numquam curritur), thistle per briar -struere et regio probationis per -probatio; fixturae (adversa) non"/>
 
   <bibliothecae capita="include" fontes="lib" probationes="probationes"
                 praefixum="probatio_"
