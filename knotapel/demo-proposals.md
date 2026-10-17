@@ -89,6 +89,8 @@ The proposals, in the order I would take them:
 
 ### N1. Braids as exact ReLU networks
 
+*Became D128 (2026-10-15; KC 55).*
+
 **Why.** A braid word is naturally deep: one crossing per step. The
 representations knotapel used are linear, so the word collapses to one
 matrix. There is a known action of the braid group that keeps the
@@ -290,6 +292,8 @@ D128 Part D will show whether the pattern stabilizes.
 
 ### N6. The linear-region census: is entropy expressive capacity?
 
+*Became D129 (2026-10-16; KC 56).*
+
 **Why.** The standard measure of what a ReLU network CAN compute is the
 number of its linear regions: the pieces into which its activation
 patterns cut the input space. Deep networks can make exponentially more
@@ -349,3 +353,225 @@ computing scores (the D117 intended hash), and compare across P / Z / E.
 Report the change against D106's two-class table. Its TL representation
 at zeta_8 has to come from a house library or a frozen D106 snapshot;
 the plan settles which.
+
+## 2026-10-16: after D129 — the skeleton and the settling
+
+### Where these come from
+
+D129 (KC 56) found that on B_3 the regions of w^m grow linearly while
+its pieces stay flat, that regions belong to the word and pieces to the
+braid, and that random networks of the same shape grow regions linearly
+too but grow pieces as well. The conversation that followed (recorded
+in full in `brainstorm-skeleton-settling.md`) placed this against
+handwired, ratio graphs and holonomy, B_3 continued fractions,
+Temperley–Lieb nesting and the Dyck language, Latin hyperbaton as
+crossings, the prior art of compiling grammars into weights, the
+nominalist/realist question about what training converges to, and
+Fran's picture of a logical skeleton that statistics settle around
+(with the Yang–Baxter link: knot invariants are statistics settled on
+an algebraic skeleton). Read that file first; each proposal below names
+its section.
+
+Inherited from D119–D129: exact arithmetic; the verdict rule registered
+before the run, naming its nulls; an independent oracle for every
+headline number; plants; and from D129, never read capacity off region
+counts alone (count the function's pieces too).
+
+The proposals, in the order I would take them (smallest and most
+exact first; each settles something cheaply before the larger ones):
+
+| | ledger | proposal | depends on | settles or opens |
+|---|---|---|---|---|
+| N8 | …D8JX2V | Farey steps and D129's slope (B_3) | D129 | a law with a reason for KC 56.1.3's post-hoc pattern |
+| N9 | …3X58Q9 | Latin dependency trees as tangles | oratio's CoNLL-U reader | how often and how Latin crosses; the tangle picture tested on real data |
+| N10 | …HD428V | ideal vs verbose compilation: bounded Dyck | nervus, nervus_regiones_plani (2 inputs) or the d >= 3 counter | a measurable "ideal"; first half exact, second half (training) to plan |
+| N11 | …0TNHGT | a relational skeleton settling: rigidity and frustration | matrix (exact) | Fran's "a new rule settles the statistics differently", exactly |
+| N12 | …NSR9XG | braid networks under FP32 contracts | nervus, plexus | where float evaluation of a braid network first goes wrong; a bridge to handwired |
+| N13 | …KVA8DGY | gauge-invariant path products of braid networks | nervus, plexus | are the network's holonomies the knot's invariants? |
+
+### N8. Farey steps and D129's slope (B_3)
+
+**Why.** D129's exploratory pattern (KC 56.1.3): over m = 6..12 the
+most-regions word adds 6 x its cyclically reduced length in 1,816 of
+2,108 positive-entropy classes (196 fewer, 96 more; 1,804–1,836 over
+tie choices). A post-hoc pattern with exceptions wants a reason. On B_3
+the braid acts through SL(2, Z); a pseudo-Anosov braid's repelling and
+attracting directions are quadratic irrationals with periodic continued
+fractions, and new walls of w^m pile up toward the repeller. Approaching
+it is a walk in the Stern–Brocot (Farey) tree. Hypothesis: regions
+added per pass = the number of Farey steps (the sum of the partial
+quotients) per period, and the exceptions are words whose letters and
+Farey steps disagree. (Brainstorm III.)
+
+**Recalled, to verify first:** the correspondence between B_3 words and
+continued-fraction expansions of the eigen-directions (sign and
+orientation conventions), and the Farey interpretation of the walls.
+
+**Design.** For every E class of D129's census (and every geodesic
+word): the exact repelling direction (a quadratic irrational from the
+SL(2, Z) matrix, via `radices`), its continued-fraction period, the
+number of Farey steps per period; compare with the exact regions added
+per pass from D129 (`nervus_regiones_plani`, already exact). Register
+the rule before the run: "equal for every E word" or "equal except on a
+named set", with the exceptions characterized.
+
+**Oracle.** The continued fraction computed two ways (from the matrix's
+eigenvector, and by iterating the PL map on a point near the repeller);
+D129's frozen counts.
+
+**Output.** A law (or its failure) for the growth rate of regions on
+B_3, replacing the post-hoc cyclic-length pattern.
+
+### N9. Latin dependency trees as tangles
+
+**Why.** Brainstorm IV: a Latin sentence's syntax looks like a tangle
+— a planar (projective, TL-like) skeleton, crossings where hyperbaton
+separates words that belong together, agreement as labels carried
+along strands. Before compiling anything, measure whether real Latin
+looks like that: how many arcs cross, how crossings are distributed,
+whether they are bounded (as mildly context-sensitive formalisms
+assume), and which relations cross.
+
+**Design.**
+- Data: the Latin UD treebanks in the repo
+  (`oratio/probationes/fixa/ud/la_llct-*`, `la_circse-*`; `oraculum.sh`
+  fetches ITTB, PROIEL, Perseus, UDante), read with oratio's CoNLL-U
+  reader (`oratio_conllu.h`). English EWT (also present) as the
+  contrast: an order-rigid language.
+- Per sentence: the arc diagram of its dependency tree; crossing pairs;
+  the crossing number of the arc diagram; whether the tree is
+  projective; which relation labels (amod, nmod, obj, ...) take part in
+  crossings; whether the crossing arcs carry agreement (shared case,
+  gender, number in the features column).
+- Map each sentence to a tangle word: the arcs as strands, each crossing
+  as a signed generator (the convention fixed in the plan), and report
+  the distribution of word lengths and of the planar (TL) part.
+
+**Questions it would answer.** Is Latin's non-projectivity rare and
+shallow (a few crossings per sentence) or pervasive? Are crossings
+concentrated in agreement relations (adjective–noun hyperbaton), which
+is where the "labels along strands" picture predicts them? How does
+this compare with English?
+
+**Nulls.** Random trees with the same degree sequence, and the same
+trees with words shuffled under a fixed head-direction model: are
+Latin's crossings more structured than chance?
+
+**Note.** This sits between knotapel and oratio (paused). It needs no
+new library: oratio's reader plus counting. Exact by nature (counts).
+
+### N10. Ideal vs verbose compilation: bounded Dyck
+
+**Why.** Brainstorm VII: current compilers compile the presentation
+(one unit per rule) and carve walls the function does not need; D129's
+two counts give a measurable notion of "ideal" — a compiled network
+whose region complexity approaches its function's piece complexity.
+Bounded Dyck (balanced parentheses of depth <= D) is the cleanest test:
+the prototypical nesting language, with a TL/Catalan structure.
+
+**Design (first half, exact, buildable now).**
+- Two compilations of a bounded-Dyck recognizer (or a depth tracker)
+  into nervus networks: a VERBOSE one in the style of the compilers of
+  brainstorm V (a counter with one gate per condition), and a
+  STRUCTURED one built from the TL/nesting structure (the plan designs
+  it; the question is whether one exists that is smaller and carves
+  fewer walls).
+- For inputs encodable in 2 coordinates, count regions and pieces
+  exactly with `nervus_regiones_plani`; beyond 2 inputs this needs the
+  d >= 3 counter (ledger …QK7A9) or an exact restriction to 2-dimensional
+  slices (the plan says which).
+- Measure: size, depth, regions, pieces, and the ratio regions/pieces,
+  as the depth bound D grows.
+
+**Second half (to plan separately; it involves training).** Train
+small networks on the same language and compare their representations
+with the structured compilation modulo the network's symmetries
+(rescaling, permutations). Convergence toward the structured encoding
+as models improve would be evidence for "converging on a real form";
+scattered results would favour the nominalist reading. Training is
+floating point: the plan must say where floats enter and how the
+comparison is made exact (e.g. exact analysis of the trained network's
+activation patterns and pieces).
+
+### N11. A relational skeleton settling: rigidity and frustration
+
+**Why.** Fran's picture (brainstorm VIII): the logical skeleton is
+fixed; the statistics settle around it; a new rule makes them settle
+differently. In rigidity theory that is exact: a framework's skeleton
+either determines its shape or leaves it flexible; one more edge can
+rigidify it or over-constrain it (stress); in spin-glass terms a cycle
+of constraints that cannot all hold is frustrated. N5 proposed the same
+objects for oratio (rigid directions = forced cells, frustration =
+contradiction); N11 is the clean, small version first.
+
+**Design.**
+- Skeletons: small relational graphs from syllogism-style facts ("all
+  A are B", "no B is C", ...), encoded as constraints on vectors
+  (inclusion as a signed inner-product constraint, or relations as
+  rotations around cycles, RotatE/QuatE style — the plan picks one
+  and says why).
+- Settling: minimize a quadratic energy (constraints as springs), so
+  the equilibrium is a linear system solved EXACTLY over the rationals
+  (`matrix`). Rigidity = rank of the rigidity matrix (exact); stresses =
+  its left kernel; frustration = the residual around each cycle (the
+  holonomy of brainstorm III).
+- Experiment: add one rule at a time (consistent, redundant,
+  contradictory) and record how the equilibrium moves: rigidification,
+  new stress, or frustration localized to a cycle. Compare with a
+  discrete logic oracle (which conclusions follow; which rule set is
+  inconsistent).
+
+**Questions it would answer.** Do "follows from the facts" and "rigid
+in the settled configuration" coincide? Does a contradiction show up as
+frustration on exactly the cycles a logician would name? This is the
+smallest test of skeleton-plus-settling, and the road to N4 and N5.
+
+### N12. Braid networks under FP32 contracts
+
+**Why.** Brainstorm II: handwired is exact in FP32 within declared
+ranges and grids; braid orbits grow like lambda^m, and their structure
+concentrates near walls. Where does float evaluation of a braid network
+first go wrong, and does handwired-style contract reasoning predict it?
+Cheap, practical, and the concrete bridge between the two projects.
+
+**Design.** For the D128/D129 censuses: evaluate w^m in FP32 (round
+after every operation, handwired's rule: f(bias + f(f(c) x v)) per
+term) and exactly (Magnus), on the loops E_k and on lattice points;
+record the first pass where (a) a value differs, (b) an activation
+pattern differs, (c) the settled period or the tie verdict of D129 Part
+C would change. Compare with the prediction log_lambda(2^24 / |x_0|) for
+(a), and with the distance to the nearest wall for (b).
+
+**Output.** A table of failure passes by lambda and starting height,
+and a statement of which contract (range, grid) would have made FP32
+evaluation exact for how many passes. handwired itself is not run; its
+rounding rule is reimplemented in the demo (or a house helper) from its
+documentation.
+
+### N13. Gauge-invariant path products of braid networks
+
+**Why.** Brainstorm III: a ReLU network's function is unchanged by
+rescaling a hidden neuron's inputs by c and outputs by 1/c, so its
+gauge-invariant content is products of weights along paths (the
+path-norm literature). A knot's invariants come from labels on arcs
+made consistent at crossings. Are a braid network's path products (per
+activation pattern, or for the settled linear map of D128 Part D)
+related to the braid's Burau matrix, its Alexander polynomial, or the
+dilatation? A positive answer would make "the network's holonomies are
+the knot's invariants" precise; a negative one would say the ReLU
+structure carries something the linear invariants do not.
+
+**Design.** For each braid of the B_3 and B_4 censuses: the network's
+path-product generating function per pattern (paths from input to
+output weighted by coefficient products, exact via `nervus` and a
+small path enumeration), the settled map's characteristic polynomial
+(D129 Part C's machinery), and Burau / Alexander from `plexus`.
+Register before the run which identities are tested (e.g. "the settled
+map's characteristic polynomial divides / equals Burau's at some t").
+
+**Recalled, to verify first:** the rescaling symmetry for bias-free ReLU
+networks (standard), and whether any known result relates Dynnikov or
+train-track transition matrices to Burau (Bestvina–Handel train tracks
+give the dilatation as a Perron–Frobenius eigenvalue; the link to Burau
+is through Kolev's bound and is known to be inexact).
+
