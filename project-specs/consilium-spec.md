@@ -483,3 +483,71 @@ Tests: credo section X (scopes, rule); fabrica-fumus LX (a world with an
 install action into a temporary HOME: worktree refuses and writes
 nothing, main tree is not judged). Plant: the check disabled ->
 LX red with "scriptum 1" - the worktree run DID write into the home.
+
+## XVI. S5 plan (2026-10-17): executor and journal
+
+Read in full before planning: lib/fabrica_sanare.c (the executor) and
+commissio's `_consilium_sanare` (pythonica/silva.py, a 60-line Python
+copy of the generic half - against "pythonica = thin wrapper").
+
+**Generic half of fabrica's loop** (moves to lib/consilium): waves in
+order; SISTERE ('post fracturam: nova non incipiuntur') or PERGERE
+(name every failure - gradus members today); dependents of a failed
+step OMISSUM ('dependentia fracta: X'); observed vs proposed (snapshot
+before/after, a write outside the declared footprint fails the step);
+in a simultaneous wave, a write is pinned on the member whose book
+recorded it, a write claimed by nobody breaks the wave ('scriptor
+ignotus'); timings, progress. **fabrica's own half** (stays, as sutura
+callbacks in S5d): freshness before/after, auditus, verdicts from logs,
+gradus areas, saved read-records of passes.
+
+Slices (Fran 2026-10-17: recommendations on 1 and 2 accepted):
+
+- **S5a** executor core `consilium_exsequi` - pure, credo on an
+  in-memory world. Sutura: `agere` (exit code, tail, duration, the
+  step's own recorded writes), `observare` (snapshot, optional),
+  `incipit`/`notare` (journal, progress). Refuses BEFORE anything runs:
+  cycle, unknown `sequitur`, conflict, any non-LICET verdict (approval
+  of ROGANDUM is the caller's; no consumer runs one today). Serial in
+  S5a: one snapshot pair per step makes attribution exact; the
+  wave-wide unknown-writer rule arrives with simultaneous waves (S5d).
+- **S5b** journal `build/consilium/acta/<titulus>.tsv`, append-only,
+  keyed by the plan's hash AND a tree fingerprint (HEAD + status hash):
+  `-resumere` skips steps journaled ACTUM only when both match - the
+  "interrupted, nothing changed" case (2026-10-16 laptop sleep). After
+  a code fix, resume refuses ('arbor mutata post initium'); freshness
+  (fabrica) is the tool for that case, not the journal.
+- **S5c** consumer one: `<mandatum><argumentum>..` in the dialect (an
+  argv as data, judgeable by policy); `bin/fabrica consilium -agere
+  [-pergere] [-resumere] VIA`; commissio's Python loop deleted; the
+  reader infers `classis` from `res` when absent (pythonica's
+  `_classis_viae` deleted). A judge rebuilding itself mid-plan is safe:
+  tools/fabrica_struere.sh does rm then cp (the running image keeps
+  its inode).
+- **S5d** consumer two: fabrica `sanare`'s wave loop onto the executor;
+  `agere_simul` becomes a sutura capability; fabrica-fumus + probatio
+  fabrica prove behavior unchanged. Riskiest, last.
+
+What does NOT improve: speed (serial until S5d); blind steps stay
+blind; observation costs a snapshot pair per step. Observation sees the
+tree (snapshot) and house tools anywhere (lectiones books); a bare `cp`
+out of the tree is invisible UNLESS the consumer's `observare` also
+lists the out-of-tree directories policy cares about (`~/.bin` - one
+directory listing; the 2026-10-13 silex clobber).
+
+## XVII. S5a built (2026-10-17): the executor core
+
+`include/consilium.h` EXSECUTIO: `consilium_exsequi(c, regulae,
+sutura, modus, piscina, &causa)` -> Xar of `ConsiliumActus` (step,
+wave, ACTUM/FRACTUM/OMISSUM, exit code, duration, cause, observed
+writes, writes beyond the proposal), or NIHIL + every refusal named
+(cycle, unknown sequitur, conflict, non-LICET verdict) with nothing
+run. Sutura: `agere`, `observare` (optional snapshot), `incipit`,
+`notare`. `consilium_observata_comparare` (snapshot diff),
+`consilium_acta_scribere` (human / `ACTUS`, `EXTRA`, `SUMMA` TSV).
+
+Decided while building: dependents follow every arc - data, explicit
+`sequitur`, the blind wall; extra writes fail only a step that
+promised (not blind, writers PLENA). credo XI-XV on an in-memory
+world; four plants red. No consumer yet - S5b (journal) and S5c
+(`bin/fabrica consilium -agere`, commissio) are next.

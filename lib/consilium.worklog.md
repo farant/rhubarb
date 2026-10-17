@@ -31,3 +31,31 @@ it. The setup of that test matters: lib/aedilis.c is in BOTH bin/aedilis'
 and bin/fabrica's closures, so both must be rebuilt from the
 misformatted bytes before the guard runs, or both are stale BEFORE
 formatting and the guard (rightly) does nothing.
+
+## 2026-10-17 - S5a: the executor core
+
+`consilium_exsequi` judges the plan itself (cycle, unknown sequitur,
+conflict, non-LICET verdicts) and refuses BEFORE any `agere` - so a
+caller cannot run a plan it forgot to judge. Dependents are found
+through `ordo->arcus`, which means explicit `sequitur` and the blind
+wall are dependencies too (a step after a failed blind step is
+OMISSUM): conservative on purpose - `sequitur` is used today for "heal
+the judge first", where running after a failed judge build is wrong.
+The first test of a blind step put it LAST and it was (correctly)
+omitted behind the failed steps; the test now adds it first.
+
+Second test-side catch: a step whose own proposed write lies outside
+its `vestigium` is VETITUM at judgment - the plan was refused and the
+section crashed on a NIHIL acta. Fixed the test (vestigium build/*),
+and the sections now use CREDO_NECESSE_NON_NIHIL(acta) so a refusal
+stops the section instead of segfaulting it.
+
+Observed writes = snapshot diff + the step's own recorded writes
+(`actum.notata`, a lectiones book) - the second is the only way to see
+house-tool writes outside the snapshot. Extra writes fail only a step
+that PROMISED (not blind, every writer effect PLENA); otherwise they
+are reported ('extra propositum, non promissum'). Serial only:
+per-step snapshots make attribution exact; the wave-wide unknown
+writer rule needs simultaneous waves (S5d). Four plants (dependency
+propagation, SISTERE, extra check, refusal) each red at its own
+assertion.

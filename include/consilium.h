@@ -283,6 +283,123 @@ consilium_regula_arboris_secundariae (
 
 
 /* ==================================================
+ * EXSECUTIO (gradus S5a): consilium agere, observare, comparare
+ *
+ * Undae ordine, intra undam ordo additionis, gradus SERIATIM. Ante
+ * quodque actum photographia (si sutura observat), post actum iterum:
+ * scripturae observatae (photographiae differentia + scripturae a
+ * gradu ipso notatae) EXTRA propositum gradus (effectus scriptores et
+ * vestigium) = FRACTUM 'scripsit extra propositum'. Gradus caecus aut
+ * cum effectu non PLENO extra nominat, non frangitur (nihil
+ * promisit). Viae observatae in forma eadem ac res effectuum
+ * (relativae ad radicem; domus '~/...') - consumptoris est.
+ * ================================================== */
+
+nomen enumeratio {
+    CONSILIUM_ACTUM = ZEPHYRUM,  /* actum, codex 0, nihil extra
+                                  * propositum */
+    CONSILIUM_FRACTUM,           /* non incepit, codex != 0, scripsit
+                                  * extra propositum, observatio
+                                  * deficit */
+    CONSILIUM_OMISSUM            /* dependentia fracta aut post
+                                  * fracturam (SISTERE) */
+} ConsiliumEventus;
+
+nomen enumeratio {
+    CONSILIUM_SISTERE = ZEPHYRUM,  /* post fracturam nihil novum
+                                    * incipitur */
+    CONSILIUM_PERGERE              /* independentes pergunt: fracturae
+                                    * omnes nominantur */
+} ConsiliumModus;
+
+/* res una photographiae */
+nomen structura {
+    chorda via;
+       i64 tempus_ns;
+       i64 mensura;
+} ConsiliumObservatio;
+
+/* quod sutura->agere reddit */
+nomen structura {
+       s32  codex;        /* exitus; -I = non incepit */
+       i32  duratio_ms;
+    chorda  cauda;        /* effusionis cauda aut causa non incepti */
+       Xar* notata;      /* chorda: scripturae a gradu ipso notatae
+                          * (liber lectionum) - etiam extra
+                          * photographiam; NIHIL = nullae */
+} ConsiliumActum;
+
+nomen structura {
+    constans ConsiliumGradus* gradus;
+            ConsiliumEventus  eventus;
+                         i32  unda;       /* I-basata */
+              ConsiliumActum  actum;      /* OMISSUM: codex -I */
+                      chorda  causa;      /* 'exitus 2: ...',
+                                           * 'dependentia fracta: X',
+                                           * 'post fracturam ...',
+                                           * 'scripsit extra
+                                           * propositum: a, b +N' */
+                         Xar* observata;  /* chorda: scripturae
+                                           * observatae; NIHIL = non
+                                           * observatum */
+                         Xar* extra;      /* chorda: observatae extra
+                                           * propositum (vacua =
+                                           * sanum) */
+} ConsiliumActus;
+
+nomen structura {
+    vacuum* datum;
+    /* gradum agere; FALSUM = non incepit (actum->cauda causam dicit) */
+    b32 (*agere)(vacuum* datum, constans ConsiliumGradus* gradus,
+        Piscina* piscina, ConsiliumActum* actum);
+    /* photographia: Xar de ConsiliumObservatio ORDINATA per via;
+     * NIHIL (functio) = sine observatione; FALSUM = deficit */
+    b32 (*observare)(vacuum* datum, Piscina* piscina, Xar** out);
+    /* ante actum / post eventum (acta, progressus); NIHIL licet */
+    vacuum (*incipit)(vacuum* datum, constans ConsiliumGradus* gradus,
+        i32 unda);
+    vacuum (*notare)(vacuum* datum, constans ConsiliumActus* actus);
+} ConsiliumSutura;
+
+/* consilium agere. RECUSATIO ante quodvis actum (NIHIL + causa omnes
+ * nominans): cyclus, sequitur ignotum, conflictus, sententia non
+ * LICET sub 'regulae' (approbatio ROGANDI vocantis est). Aliter Xar de
+ * ConsiliumActus, ordine exsecutionis; gradus omnes adsunt (OMISSI
+ * quoque). */
+Xar*
+consilium_exsequi (
+          constans Consilium* consilium,
+                constans Xar* regulae,    /* ConsiliumRegula; NIHIL
+                                          * licet */
+    constans ConsiliumSutura* sutura,
+              ConsiliumModus  modus,
+                     Piscina* piscina,
+                      chorda* causa_out);
+
+/* viae mutatae inter photographias (ordinatas): novae, deletae,
+ * tempore aut mensura mutatae - Xar de chorda, ordine viae */
+Xar*
+consilium_observata_comparare (
+    constans Xar* ante,
+    constans Xar* post,
+         Piscina* piscina);
+
+constans character*
+consilium_eventus_titulus (
+    ConsiliumEventus eventus);
+
+/* acta legibilia (homo) aut TSV (machina):
+ *   ACTUS unda titulus eventus codex duratio_ms causa
+ *   EXTRA titulus via
+ * summa ultima: 'SUMMA acta N fracta N omissa N' */
+chorda
+consilium_acta_scribere (
+    constans Xar* acta,      /* ConsiliumActus */
+             b32  machina,
+         Piscina* piscina);
+
+
+/* ==================================================
  * DOCUMENTUM (consilium.canon, gradus S3a)
  * ================================================== */
 

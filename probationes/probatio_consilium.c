@@ -1,7 +1,8 @@
 /* probatio_consilium.c - CONSILIUM (spec consilium S2): nucleus purus -
  * ordo ex datis, M1 (lectio sua), M3 (absentia), formae rerum, murus
  * caeci, cyclus nominatus, conflictus, deduplicatio, politica,
- * vestigium, effusio machinae.
+ * vestigium, effusio machinae; exsecutio (S5a): ordo actorum, fractura
+ * SISTERE/PERGERE, observata contra propositum, recusatio ante actum.
  */
 #include "latina.h"
 #include "piscina.h"
@@ -467,6 +468,492 @@ _sectio_domus (
     CREDO_AEQUALIS_I32((i32)r.classis, (i32)CONSILIUM_DOMUS);
 }
 
+/* MUNDUS IN MEMORIA (S5a): photographia = res ordinatae per viam;
+ * gradus agit secundum tabulas {titulus, via} ('-via' = delere) */
+nomen structura {
+       CredoContextus* c;
+                  Xar* res;          /* ConsiliumObservatio, ordinata */
+                  i64  horologium;
+    ChordaAedificator* acta;       /* tituli actorum, '|' separati */
+   constans character* fractus;      /* hic codicem II reddit */
+ constans character* constans* scripturae;  /* paria, NIHIL finis */
+ constans character* constans* notatae;     /* paria, NIHIL finis */
+                 b32 caecitas;     /* observare deficit */
+                 i32 notationes;
+                 i32 incepta;
+} Mundus;
+
+interior vacuum
+_mundum_parare (
+    CredoContextus* c,
+            Mundus* m)
+{
+    memset(m, ZEPHYRUM, magnitudo(Mundus));
+    m->c = c;
+    m->res = xar_creare(c->piscina,
+        (i32)magnitudo(ConsiliumObservatio));
+    m->acta = chorda_aedificator_creare(c->piscina,
+        (memoriae_index)LXIV);
+}
+
+/* via scribitur (tempus novum) aut deletur ('-'); ordo servatur */
+interior vacuum
+_mundo_scribere (
+             Mundus* m,
+ constans character* via)
+{
+    b32  delere = via[ZEPHYRUM] == '-';
+ chorda  v = chorda_ex_literis(delere ? via + I : via, m->c->piscina);
+    Xar* nova = xar_creare(m->c->piscina,
+        (i32)magnitudo(ConsiliumObservatio));
+    b32 positum = FALSUM;
+    i32 i;
+
+    m->horologium++;
+    per (i = ZEPHYRUM; i <= xar_numerus(m->res); i++)
+    {
+        ConsiliumObservatio* x = i < xar_numerus(m->res)
+            ? (ConsiliumObservatio*)xar_obtinere(m->res, i) : NIHIL;
+                         s32 ordo = x == NIHIL ? I
+                             : chorda_comparare(x->via, v);
+
+        si (!positum && ordo >= ZEPHYRUM)
+        {
+            positum = VERUM;
+            si (!delere)
+            {
+                ConsiliumObservatio* y = (ConsiliumObservatio*)
+                    xar_addere(nova);
+
+                y->via        = v;
+                y->tempus_ns  = m->horologium;
+                y->mensura    = I;
+            }
+            si (ordo == ZEPHYRUM)
+            {
+                perge;   /* vetus substitutum aut deletum */
+            }
+        }
+        si (x != NIHIL)
+        {
+            *(ConsiliumObservatio*)xar_addere(nova) = *x;
+        }
+    }
+    m->res = nova;
+}
+
+interior b32
+_mundus_agere (
+                    vacuum* datum,
+  constans ConsiliumGradus* gradus,
+                   Piscina* piscina,
+            ConsiliumActum* actum)
+{
+    Mundus* m = (Mundus*)datum;
+       i32  i;
+
+    si (chorda_aedificator_longitudo(m->acta) > ZEPHYRUM)
+    {
+        chorda_aedificator_appendere_character(m->acta, '|');
+    }
+    chorda_aedificator_appendere_chorda(m->acta, gradus->titulus);
+    per (i = ZEPHYRUM; m->scripturae != NIHIL
+         && m->scripturae[i] != NIHIL; i += II)
+    {
+        si (chorda_aequalis_literis(gradus->titulus, m->scripturae[i]))
+        {
+            _mundo_scribere(m, m->scripturae[i + I]);
+        }
+    }
+    per (i = ZEPHYRUM; m->notatae != NIHIL
+         && m->notatae[i] != NIHIL; i += II)
+    {
+        si (chorda_aequalis_literis(gradus->titulus, m->notatae[i]))
+        {
+            si (actum->notata == NIHIL)
+            {
+                actum->notata = xar_creare(piscina,
+                    (i32)magnitudo(chorda));
+            }
+            *(chorda*)xar_addere(actum->notata) = chorda_ex_literis(
+                m->notatae[i + I], piscina);
+        }
+    }
+    actum->codex = m->fractus != NIHIL
+        && chorda_aequalis_literis(gradus->titulus, m->fractus) ? II
+        : ZEPHYRUM;
+    actum->cauda = chorda_ex_literis(actum->codex != ZEPHYRUM ? "fracta"
+        : "", piscina);
+    redde VERUM;
+}
+
+interior b32
+_mundus_observare (
+     vacuum*  datum,
+    Piscina*  piscina,
+        Xar** out)
+{
+    Mundus* m = (Mundus*)datum;
+       Xar* copia;
+       i32  i;
+
+    si (m->caecitas)
+    {
+        redde FALSUM;
+    }
+    copia = xar_creare(piscina, (i32)magnitudo(ConsiliumObservatio));
+    per (i = ZEPHYRUM; i < xar_numerus(m->res); i++)
+    {
+        *(ConsiliumObservatio*)xar_addere(copia) =
+            *(ConsiliumObservatio*)xar_obtinere(m->res, i);
+    }
+    *out = copia;
+    redde VERUM;
+}
+
+interior vacuum
+_mundus_incipit (
+                    vacuum* datum,
+  constans ConsiliumGradus* gradus,
+                       i32  unda)
+{
+    (vacuum)gradus;
+    (vacuum)unda;
+    ((Mundus*)datum)->incepta++;
+}
+
+interior vacuum
+_mundus_notare (
+                   vacuum* datum,
+  constans ConsiliumActus* actus)
+{
+    (vacuum)actus;
+    ((Mundus*)datum)->notationes++;
+}
+
+interior ConsiliumSutura
+_sutura (
+    Mundus* m)
+{
+    ConsiliumSutura s;
+
+    s.datum      = m;
+    s.agere      = _mundus_agere;
+    s.observare  = _mundus_observare;
+    s.incipit    = _mundus_incipit;
+    s.notare     = _mundus_notare;
+    redde s;
+}
+
+/* actus gradus nominati (NIHIL si abest) */
+interior constans ConsiliumActus*
+_actus (
+          constans Xar* acta,
+    constans character* titulus)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; acta != NIHIL && i < xar_numerus(acta); i++)
+    {
+        constans ConsiliumActus* x = (constans ConsiliumActus*)
+            xar_obtinere(acta, i);
+
+        si (chorda_aequalis_literis(x->gradus->titulus, titulus))
+        {
+            redde x;
+        }
+    }
+    redde NIHIL;
+}
+
+/* XI. exsecutio ordine undarum (ex datis, non additionis); observata */
+interior vacuum
+_sectio_exsecutio (
+    CredoContextus* c)
+{
+          Consilium* k = consilium_creare(c->piscina);
+    ConsiliumGradus* b = _gradus(c, k, "lege");
+    ConsiliumGradus* a = _gradus(c, k, "scribe");
+             Mundus  m;
+    ConsiliumSutura  s;
+                Xar* acta;
+             chorda  causa;
+    constans character* constans scripturae[] = {
+        "scribe", "build/x.o", NIHIL
+    };
+
+    _effectus(c, k, b, CONSILIUM_LEGERE, "build/x.o");
+    _effectus(c, k, a, CONSILIUM_SCRIBERE, "build/x.o");
+    _mundum_parare(c, &m);
+    m.scripturae  = scripturae;
+    s             = _sutura(&m);
+    acta  = consilium_exsequi(k, NIHIL, &s, CONSILIUM_SISTERE,
+        c->piscina,
+        &causa);
+    CREDO_NECESSE_NON_NIHIL(acta);
+    CREDO_AEQUALIS_I32(xar_numerus(acta), II);
+    CREDO_CHORDA_AEQUALIS_LITERIS(chorda_aedificator_finire(m.acta),
+        "scribe|lege");
+    CREDO_AEQUALIS_I32(_actus(acta, "scribe")->unda, I);
+    CREDO_AEQUALIS_I32(_actus(acta, "lege")->unda, II);
+    CREDO_AEQUALIS_I32((i32)_actus(acta, "scribe")->eventus,
+        (i32)CONSILIUM_ACTUM);
+    CREDO_AEQUALIS_I32((i32)_actus(acta, "lege")->eventus,
+        (i32)CONSILIUM_ACTUM);
+    CREDO_AEQUALIS_I32(xar_numerus(_actus(acta, "scribe")->observata),
+        I);
+    CREDO_CHORDA_AEQUALIS_LITERIS(*(chorda*)xar_obtinere(
+        _actus(acta, "scribe")->observata, ZEPHYRUM), "build/x.o");
+    CREDO_AEQUALIS_I32(xar_numerus(_actus(acta, "lege")->observata),
+        ZEPHYRUM);
+    CREDO_AEQUALIS_I32(m.incepta, II);
+    CREDO_AEQUALIS_I32(m.notationes, II);
+}
+
+/* plan fracturae: A (fractus) scribit build/a; B legit build/a et
+ * scribit build/b; D legit build/b; C independens */
+interior Consilium*
+_consilium_fracturae (
+    CredoContextus* c)
+{
+          Consilium* k = consilium_creare(c->piscina);
+    ConsiliumGradus* a = _gradus(c, k, "A");
+    ConsiliumGradus* x = _gradus(c, k, "C");
+    ConsiliumGradus* b = _gradus(c, k, "B");
+    ConsiliumGradus* d = _gradus(c, k, "D");
+
+    _effectus(c, k, a, CONSILIUM_SCRIBERE, "build/a");
+    _effectus(c, k, x, CONSILIUM_SCRIBERE, "build/c");
+    _effectus(c, k, b, CONSILIUM_LEGERE, "build/a");
+    _effectus(c, k, b, CONSILIUM_SCRIBERE, "build/b");
+    _effectus(c, k, d, CONSILIUM_LEGERE, "build/b");
+    redde k;
+}
+
+/* XII. fractura: SISTERE (nova non incipiuntur) et PERGERE
+ * (independentes pergunt); dependentes OMISSI cum priore nominato */
+interior vacuum
+_sectio_fractura (
+    CredoContextus* c)
+{
+             Mundus  m;
+    ConsiliumSutura  s;
+                Xar* acta;
+             chorda  causa;
+
+    _mundum_parare(c, &m);
+    m.fractus  = "A";
+    s          = _sutura(&m);
+    acta  = consilium_exsequi(_consilium_fracturae(c), NIHIL, &s,
+        CONSILIUM_SISTERE, c->piscina, &causa);
+    CREDO_NECESSE_NON_NIHIL(acta);
+    CREDO_CHORDA_AEQUALIS_LITERIS(chorda_aedificator_finire(m.acta),
+        "A");
+    CREDO_AEQUALIS_I32((i32)_actus(acta, "A")->eventus,
+        (i32)CONSILIUM_FRACTUM);
+    CREDO_CHORDA_AEQUALIS_LITERIS(_actus(acta, "A")->causa,
+        "exitus 2: fracta");
+    CREDO_AEQUALIS_I32((i32)_actus(acta, "C")->eventus,
+        (i32)CONSILIUM_OMISSUM);
+    CREDO_CHORDA_AEQUALIS_LITERIS(_actus(acta, "C")->causa,
+        "post fracturam: nova non incipiuntur");
+    CREDO_CHORDA_AEQUALIS_LITERIS(_actus(acta, "B")->causa,
+        "dependentia fracta: A");
+    CREDO_CHORDA_AEQUALIS_LITERIS(_actus(acta, "D")->causa,
+        "dependentia fracta: B");
+    CREDO_AEQUALIS_I32(m.notationes, IV);
+    CREDO_AEQUALIS_I32(m.incepta, I);
+
+    _mundum_parare(c, &m);
+    m.fractus  = "A";
+    s          = _sutura(&m);
+    acta  = consilium_exsequi(_consilium_fracturae(c), NIHIL, &s,
+        CONSILIUM_PERGERE, c->piscina, &causa);
+    CREDO_CHORDA_AEQUALIS_LITERIS(chorda_aedificator_finire(m.acta),
+        "A|C");
+    CREDO_AEQUALIS_I32((i32)_actus(acta, "C")->eventus,
+        (i32)CONSILIUM_ACTUM);
+    CREDO_AEQUALIS_I32((i32)_actus(acta, "B")->eventus,
+        (i32)CONSILIUM_OMISSUM);
+    CREDO_CHORDA_AEQUALIS_LITERIS(_actus(acta, "D")->causa,
+        "dependentia fracta: B");
+    CREDO_AEQUALIS_S32(_actus(acta, "D")->actum.codex, -I);
+}
+
+/* XIII. observata contra propositum: extra = FRACTUM nominatum;
+ * vestigium permittit; notata (liber) numerantur; deletio scriptura;
+ * caecus et non PLENUS nominant sed non franguntur */
+interior vacuum
+_sectio_extra_propositum (
+    CredoContextus* c)
+{
+          Consilium* k   = consilium_creare(c->piscina);
+    ConsiliumGradus* k1  = _gradus(c, k, "K");   /* caecus PRIMUS: murus
+                                                 * post fractos eum
+                                                 * omitteret */
+    ConsiliumGradus* s1 = _gradus(c, k, "S");
+    ConsiliumGradus* n1 = _gradus(c, k, "N");
+    ConsiliumGradus* d1 = _gradus(c, k, "D");
+    ConsiliumGradus* p1 = _gradus(c, k, "P");
+  ConsiliumEffectus  e;
+             Mundus  m;
+    ConsiliumSutura  s;
+                Xar* acta;
+             chorda  causa;
+             chorda  t;
+    constans character* constans scripturae[] = {
+        "S", "build/x.o", "S", "build/tmp/y", "S", "~/.bin/z",
+        "D", "-build/vetus",
+        "P", "build/p/q", "P", "lib/r.c",
+        "K", "lib/q.c", NIHIL
+    };
+    constans character* constans notatae[] = {
+        "N", "~/.rhubarb/q", NIHIL
+    };
+
+    _effectus(c, k, s1, CONSILIUM_SCRIBERE, "build/x.o");
+    *(chorda*)xar_addere(s1->vestigium) = CH("build/*");
+    _effectus(c, k, d1, CONSILIUM_DELERE, "build/vetus");
+    e = consilium_effectus(CONSILIUM_SCRIBERE, CH("build/p/"));
+    e.forma = CONSILIUM_PRAEFIXUM;
+    e.certitudo = CONSILIUM_EX_PARTE;
+    consilium_effectum_addere(k, p1, e);
+    k1->caecus = VERUM;
+    (vacuum)n1;
+    _mundum_parare(c, &m);
+    _mundo_scribere(&m, "build/vetus");
+    m.scripturae  = scripturae;
+    m.notatae     = notatae;
+    s             = _sutura(&m);
+    acta  = consilium_exsequi(k, NIHIL, &s, CONSILIUM_PERGERE,
+        c->piscina, &causa);
+    CREDO_NECESSE_NON_NIHIL(acta);
+    CREDO_AEQUALIS_I32((i32)_actus(acta, "S")->eventus,
+        (i32)CONSILIUM_FRACTUM);
+    CREDO_CHORDA_AEQUALIS_LITERIS(_actus(acta, "S")->causa,
+        "scripsit extra propositum: ~/.bin/z");
+    CREDO_AEQUALIS_I32(xar_numerus(_actus(acta, "S")->observata), III);
+    CREDO_AEQUALIS_I32((i32)_actus(acta, "N")->eventus,
+        (i32)CONSILIUM_FRACTUM);
+    CREDO_CHORDA_AEQUALIS_LITERIS(_actus(acta, "N")->causa,
+        "scripsit extra propositum: ~/.rhubarb/q");
+    CREDO_AEQUALIS_I32((i32)_actus(acta, "D")->eventus,
+        (i32)CONSILIUM_ACTUM);
+    CREDO_CHORDA_AEQUALIS_LITERIS(*(chorda*)xar_obtinere(
+        _actus(acta, "D")->observata, ZEPHYRUM), "build/vetus");
+    CREDO_AEQUALIS_I32((i32)_actus(acta, "P")->eventus,
+        (i32)CONSILIUM_ACTUM);
+    CREDO_AEQUALIS_I32(xar_numerus(_actus(acta, "P")->extra), I);
+    CREDO_AEQUALIS_I32((i32)_actus(acta, "K")->eventus,
+        (i32)CONSILIUM_ACTUM);
+    CREDO_AEQUALIS_I32(xar_numerus(_actus(acta, "K")->extra), I);
+    t = consilium_acta_scribere(acta, FALSUM, c->piscina);
+    CREDO_VERUM(chorda_continet(t,
+        CH("extra propositum, non promissum: "
+        "lib/q.c")));
+    t = consilium_acta_scribere(acta, VERUM, c->piscina);
+    CREDO_VERUM(chorda_continet(t, CH("EXTRA\tS\t~/.bin/z\n")));
+    CREDO_VERUM(chorda_continet(t, CH("SUMMA\tacta\t3\tfracta\t2"
+        "\tomissa\t0\n")));
+}
+
+/* XIV. recusatio ante quodvis actum: VETITUM, cyclus, conflictus;
+ * observatio deficiens = non incepit */
+interior vacuum
+_sectio_recusatio (
+    CredoContextus* c)
+{
+          Consilium* k;
+    ConsiliumGradus* a;
+    ConsiliumGradus* b;
+  ConsiliumEffectus  e;
+                Xar* regulae = xar_creare(c->piscina,
+                    (i32)magnitudo(ConsiliumRegula));
+             Mundus  m;
+    ConsiliumSutura  s;
+                Xar* acta;
+             chorda  causa;
+
+    _mundum_parare(c, &m);
+    s = _sutura(&m);
+    *(ConsiliumRegula*)xar_addere(regulae) =
+        consilium_regula_arboris_secundariae(c->piscina);
+    k = consilium_creare(c->piscina);
+    a = _gradus(c, k, "institue");
+    e = consilium_effectus(CONSILIUM_INSTITUERE, CH("~/.bin/x"));
+    e.classis = CONSILIUM_DOMUS;
+    consilium_effectum_addere(k, a, e);
+    acta = consilium_exsequi(k, regulae, &s, CONSILIUM_SISTERE,
+        c->piscina, &causa);
+    CREDO_NIHIL(acta);
+    CREDO_VERUM(chorda_continet(causa,
+        CH("VETITUM: institue instituere "
+        "~/.bin/x <- arbor_secundaria")));
+
+    k                                  = consilium_creare(c->piscina);
+    a                                  = _gradus(c, k, "A");
+    b                                  = _gradus(c, k, "B");
+    *(chorda*)xar_addere(a->sequitur)  = CH("B");
+    *(chorda*)xar_addere(b->sequitur)  = CH("A");
+    acta = consilium_exsequi(k, NIHIL, &s, CONSILIUM_SISTERE,
+        c->piscina,
+        &causa);
+    CREDO_NIHIL(acta);
+    CREDO_VERUM(chorda_continet(causa, CH("cyclus:")));
+
+    k = consilium_creare(c->piscina);
+    a = _gradus(c, k, "A");
+    b = _gradus(c, k, "B");
+    _effectus(c, k, a, CONSILIUM_SCRIBERE, "build/x");
+    _effectus(c, k, b, CONSILIUM_SCRIBERE, "build/x");
+    acta = consilium_exsequi(k, NIHIL, &s, CONSILIUM_SISTERE,
+        c->piscina,
+        &causa);
+    CREDO_NIHIL(acta);
+    CREDO_VERUM(chorda_continet(causa, CH("conflictus: A et B scribunt "
+        "build/x")));
+    CREDO_CHORDA_AEQUALIS_LITERIS(chorda_aedificator_finire(m.acta),
+        "");
+
+    m.caecitas  = VERUM;
+    k           = consilium_creare(c->piscina);
+    a           = _gradus(c, k, "A");
+    acta = consilium_exsequi(k, NIHIL, &s, CONSILIUM_SISTERE,
+        c->piscina,
+        &causa);
+    CREDO_NECESSE_NON_NIHIL(acta);
+    CREDO_AEQUALIS_I32((i32)_actus(acta, "A")->eventus,
+        (i32)CONSILIUM_FRACTUM);
+    CREDO_CHORDA_INCIPIT(_actus(acta, "A")->causa,
+        CH("observatio ante actum deficit"));
+    CREDO_AEQUALIS_I32(m.incepta, ZEPHYRUM);
+}
+
+/* XV. acta machinae: ordo exsecutionis, codex -1 omissorum, summa */
+interior vacuum
+_sectio_acta (
+    CredoContextus* c)
+{
+             Mundus  m;
+    ConsiliumSutura  s;
+                Xar* acta;
+             chorda  causa;
+
+    _mundum_parare(c, &m);
+    m.fractus  = "A";
+    s          = _sutura(&m);
+    acta  = consilium_exsequi(_consilium_fracturae(c), NIHIL, &s,
+        CONSILIUM_SISTERE, c->piscina, &causa);
+    CREDO_CHORDA_AEQUALIS_LITERIS(consilium_acta_scribere(acta, VERUM,
+        c->piscina),
+        "ACTUS\t1\tA\tFRACTUM\t2\t0\texitus 2: fracta\n"
+        "ACTUS\t1\tC\tOMISSUM\t-1\t0\tpost fracturam: nova non "
+        "incipiuntur\n"
+        "ACTUS\t2\tB\tOMISSUM\t-1\t0\tdependentia fracta: A\n"
+        "ACTUS\t3\tD\tOMISSUM\t-1\t0\tdependentia fracta: B\n"
+        "SUMMA\tacta\t0\tfracta\t1\tomissa\t3\n");
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "ordo ex datis", _sectio_data, NIHIL, NIHIL, NIHIL, NIHIL },
     { "lectio sua et absentia", _sectio_lectio_sua, NIHIL, NIHIL, NIHIL,
@@ -482,6 +969,13 @@ hic_manens constans CredoSectio SECTIONES[] = {
       NIHIL },
     { "documentum", _sectio_documentum, NIHIL, NIHIL, NIHIL, NIHIL },
     { "domus", _sectio_domus, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "exsecutio", _sectio_exsecutio, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "fractura", _sectio_fractura, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "extra propositum", _sectio_extra_propositum, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { "recusatio ante actum", _sectio_recusatio, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { "acta", _sectio_acta, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 
