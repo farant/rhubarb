@@ -244,3 +244,86 @@ Only what two consumers both need enters the library:
 - Whether static effects of scripts (crusta) are precise enough to plan
   on, versus only to owe gates, was not measured; blind steps must stay
   blind (owed, never trusted).
+
+## XI. S1 result: the four dialects mapped (2026-10-16)
+
+Read in full: effectus.canon (all nine elements), include/lectiones.h,
+aedificatio.canon (actio, ingressus, exitus, vestigium, praecondicio),
+include/portae.h (`PortaeRatioGenus`). Finding first: **effectus
+already carries most per-effect fields, under the same names** - the
+§III sketch was too thin and too new. The record should GROW OUT OF
+effectus, not beside it.
+
+### XI.1 Record v0.2 (per effect)
+
+| field | values | from |
+|---|---|---|
+| verbum | legere, inspicere, enumerare, scribere, delere, movere, exsequi, fontare, ambitum_legere, instituere, rete, committere | effectus elements (lectio, probatio, enumeratio, scriptura, exsecutio, fontatio, ambitus_lectio); lectiones L/X/D/S/E; the last three NEW (no dialect has them) |
+| res + forma | path; via / globus / praefixum | effectus `via`, `forma` |
+| classis (scope) | arbor, build, instrumentum_domus, domus, externa, systema, temporaria | effectus `classis`; `domus` NEW (split out of externa, §XI.3 M5) |
+| certitudo | plena / partialis / nulla | effectus `resolutio`; `ignotum` element = a BLIND step (portae IGNOTA) |
+| cognitio (how we know) | declaratum / derivatum / observatum / propositum | fabrica (declared), crusta + portae (derived), lectiones (observed), the planner's input (proposed); effectus `per=observatum` is one case of it |
+| per (mechanism) | redirectio, aedificium, mandatum | effectus `per` (minus observatum, which moved to cognitio) |
+| condicio | the guard under which the effect happens | effectus `custodia` ('[ -x P ] \|\| S') - generalized |
+| exstat | verum / falsum, for reads | lectiones `A` (asked, ABSENT): a dependency on ABSENCE - creating the file changes the step |
+| clavis (reads) | contentum, nomina, clausura, provenientia, identitas, effectus, commissum | fabrica `ingressus clavis` - HOW staleness of this input is judged; optional |
+| provenientia (writes) | regeneratio, relatio, ignota, verdictum | fabrica `exitus` - reproducible / reported by the binary / unknown / a gate verdict; gives `idempotens` for free (regeneratio) |
+| locus | plagula, sedes, octeti | effectus (where the claim is grounded in source) |
+| auctor, causa | step title; words | portae `ratio` strings, unitates causae habit |
+
+### XI.2 Step-level fields (per step, not per effect)
+
+| field | from |
+|---|---|
+| genus: generator / formatio / institutio / iudicium | fabrica `actio genus` |
+| sequitur (explicit order) | fabrica `praecondicio` |
+| vestigium (PERMITTED writes) - a POLICY, not an effect | fabrica `vestigium` (+ `communis`) |
+| sumptus, memorabilis, celer (verification cost and mode) | fabrica attributes; build/portae/tempora.tsv |
+| caecus (blind: effects unknown) | effectus `ignotum`, portae IGNOTA |
+
+### XI.3 Misfits (what the record must decide)
+
+- **M1 intra-step data flow.** effectus `scripta_in_ambitu` (a read of
+  something the same process wrote) and `ambitus_lectio assignatum` are
+  NOT inputs. The planner must drop reads satisfied inside the step, or
+  every generator looks like it depends on its own output.
+- **M2 write kinds folded.** lectiones `S` = written, deleted or moved;
+  effectus `scriptura` = '>' '>>' rm alike. Conflict detection needs at
+  least scribere vs delere (two deletes do not conflict; write + delete
+  do). Options: new letters in lectiones (W/R/M), or keep folded and
+  treat any two as a conflict. APERTUM.
+- **M3 absence as input** (lectiones `A`): the record needs `exstat`;
+  a plan that CREATES a file another step probed as absent must order
+  them (or report the change in behaviour).
+- **M4 portae reasons are relations, not effects.** CURSOR, SUITA,
+  CURRIT, EFFECTUS are cognitio x verbum on the gate's own effects;
+  TEGIT is a hand-declared read (cognitio declaratum, certitudo
+  partialis); NOMINAT a possible read; INSTRUMENTUM and CURRIT_ALIENUM
+  are OWNERSHIP of a program by a step - a step-level relation the
+  record lacks ("possessor"). Needed by the policy for runners (U5 c).
+- **M5 home vs elsewhere.** effectus `externa` = any absolute path
+  outside the tree (effectus-spec.md:202), so ~/.bin and ~/.rhubarb are
+  lumped with /usr/local or another repo. The worktree policy needs
+  `domus` apart.
+- **M6 the outward verbs are missing everywhere.** No dialect records
+  network access, git commit/push or ledger writes; crusta sees `git`
+  only as an external command (ignotum or mandatum). These are exactly
+  the effects an approval policy cares most about. Emitters for them
+  will have to be declarations (cognitio declaratum), not analysis.
+- **M7 certainty is per effect, blindness per step.** A partial effect
+  (glob, unresolved variable) is still useful; a blind step is owed and
+  never trusted. Keep both levels.
+
+### XI.4 What this suggests for §X questions 1-2
+
+- **Q2 (one dialect or two):** EXTEND effectus (a version 2: the NEW
+  verbs, `domus`, `cognitio`, `exstat`, `clavis`, `provenientia`,
+  `condicio`; `per=observatum` moves to cognitio) for the per-effect
+  record, and add a SMALL new dialect for plans - steps (genus,
+  sequitur, vestigium, possessor, sumptus, caecus) whose children are
+  effectus records. One vocabulary for effects, a second only for what
+  is genuinely about steps and plans.
+- **Q1 (names):** keep `effectus` for the record (already approved by
+  Fran 2026-10-05, effectus.canon header); `consilium` for the plan
+  dialect and the library.
+- Neither is decided here.
