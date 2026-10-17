@@ -35,6 +35,8 @@ nomen structura {
     chorda genus;
     chorda argumentum;
        b32 mutare;
+       s32 gradus;      /* T4f: +I / -I = gradus cycli (genus nullum);
+                         * ZEPHYRUM = aperitio */
 } PetitioAcervi;
 
 interior chorda
@@ -531,6 +533,19 @@ est_imperium_tabulae (
         && ev->datum.clavis.runa >= '0' && ev->datum.clavis.runa <= '9';
 }
 
+/* T4f: Cmd+] / Cmd+[ = cyclus lateris dextri (Franus 2026-10-17) */
+interior b32
+est_imperium_cycli (
+    constans Eventus* ev)
+{
+    redde ev
+        && (   ev->genus == EVENTUS_CLAVIS_DEPRESSUS
+            || ev->genus == EVENTUS_CLAVIS_LIBERATUS)
+        && (ev->datum.clavis.modificantes & MOD_SUPER)
+        && (ev->datum.clavis.runa == ']'
+        || ev->datum.clavis.runa == '[');
+}
+
 /* T4b: spatium strati? via "<genus>:stratum_<genus>[/...]" (gradus
  * primus; vicus solus ids "stratum_" dat) */
 interior b32
@@ -567,7 +582,7 @@ destinare (
       Componens* c;
          chorda  sp;
 
-    si (arbor && est_imperium_tabulae(ev))
+    si (arbor && (est_imperium_tabulae(ev) || est_imperium_cycli(ev)))
     {
         redde destinatio_ex_componente(arbor, piscina);
     }
@@ -857,6 +872,17 @@ radicem_tractare (
         si (ev->genus == EVENTUS_CLAVIS_DEPRESSUS)
         {
             tabulam_numero_ponere(v, ev->datum.clavis.runa);
+        }
+        redde VERUM;
+    }
+    /* T4f: Cmd+] / Cmd+[ - gradus cycli (depressa agit, liberata
+     * devoratur) */
+    si (est_imperium_cycli(ev))
+    {
+        si (ev->genus == EVENTUS_CLAVIS_DEPRESSUS)
+        {
+            (vacuum)vicus_cyclo_gradi(v,
+                ev->datum.clavis.runa == ']' ? I : -I);
         }
         redde VERUM;
     }
@@ -1262,8 +1288,9 @@ tabulam_legere (
     a            = stml_attributum_capere(n, "focus");
     t->focus  = (a && chorda_aequalis_literis(*a, "dextrum"))
               ? VICUS_DEXTRUM : VICUS_SINISTRUM;
-    t->acervus  = xar_creare(v->piscina, (i32)magnitudo(VicusLatus));
-    sinistri    = chorda_nulla_vici();
+    t->focus_domus = VICUS_DEXTRUM;
+    t->acervus = xar_creare(v->piscina, (i32)magnitudo(VicusLatus));
+    sinistri = chorda_nulla_vici();
     per (i = ZEPHYRUM; i < stml_numerus_liberorum(n); i++)
     {
         filius = stml_liberum_ad_indicem(n, i);
@@ -2300,6 +2327,45 @@ id_novum (
     redde c;
 }
 
+/* T4f: positio generis in cyclo; -I si non in cyclo */
+interior s32
+genus_in_cyclo (
+    constans Vicus* v,
+            chorda  genus)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; v->cyclus && k < xar_numerus(v->cyclus); k++)
+    {
+        si (chorda_aequalis(*(chorda*)xar_obtinere(v->cyclus, k),
+            genus))
+        {
+            redde (s32)k;
+        }
+    }
+    redde -I;
+}
+
+/* T4f: domus acervi = latus summum quod in cyclo non est; nullum ->
+ * imum (ZEPHYRUM) */
+interior i32
+domus_acervi (
+          constans Vicus* v,
+    constans VicusTabula* t)
+{
+    s32 k;
+
+    per (k = (s32)xar_numerus(t->acervus) - I; k >= ZEPHYRUM; k--)
+    {
+        si (genus_in_cyclo(v, ((VicusLatus*)xar_obtinere(t->acervus,
+                (i32)k))->genus) < ZEPHYRUM)
+        {
+            redde (i32)k;
+        }
+    }
+    redde ZEPHYRUM;
+}
+
 /* S3c: petitio applicata - praesens in frontem (ceteri ordinem
  * servant), aliter montatur; focus ad dextrum. Relinquens (si activa)
  * prius effunditur. FALSUM (causa) si effusio aut montatio deficit. */
@@ -2312,6 +2378,9 @@ petitionem_applicare (
       VicusLatus* l;
       VicusLatus  frons;
           chorda  prior;
+          chorda  frons_prior;
+          chorda  id_novi;
+             b32  domus_in_fronte;
              b32  activa;
              s32  ls;
              i32  k;
@@ -2322,6 +2391,11 @@ petitionem_applicare (
     {
         redde FALSUM;
     }
+    /* T4f: domus in fronte nunc? (focus eius servatur si tegitur) */
+    l            = frons_acervi(t);
+    frons_prior  = l ? l->id : chorda_nulla_vici();
+    domus_in_fronte  = l
+        && domus_acervi(v, t) == xar_numerus(t->acervus) - I;
     activa = chorda_aequalis(t->id, v->activa);
     si (activa && !motum_relinquere(v))
     {
@@ -2387,13 +2461,16 @@ petitionem_applicare (
     }
     si (k == n)
     {
-        l = (VicusLatus*)xar_addere(t->acervus);
+        /* id ANTE xar_addere: locus post truncationem (Esc, T4f)
+         * reddit latus vetus non vacuatum - id eius '_2' cogebat */
+        id_novi  = id_novum(v, t, p->genus);
+        l        = (VicusLatus*)xar_addere(t->acervus);
         si (!l)
         {
             redde FALSUM;
         }
-        latus_initiare(v, l, t->id, VICUS_DEXTRUM, p->genus,
-            id_novum(v, t, p->genus), p->argumentum);
+        latus_initiare(v, l, t->id, VICUS_DEXTRUM, p->genus, id_novi,
+            p->argumentum);
         ls = latitudo_sinistri((s32)v->latitudo);
         latus_montare(v, l, (s32)v->latitudo - ls,
             altitudo_laterum((s32)v->altitudo));
@@ -2420,6 +2497,11 @@ petitionem_applicare (
                 l->facies.argumentum_ponere_ctx,
                 chorda_ut_cstr(p->argumentum, v->piscina));
         }
+    }
+    l = frons_acervi(t);
+    si (domus_in_fronte && l && !chorda_aequalis(l->id, frons_prior))
+    {
+        t->focus_domus = t->focus;
     }
     t->focus = VICUS_DEXTRUM;
     si (activa)
@@ -2461,8 +2543,70 @@ petitionem_addere (
                    ? chorda_transcribere(chorda_ex_literis(argumentum,
                          v->piscina), v->piscina)
                    : chorda_nulla_vici();
-    p->mutare      = mutare;
+    p->mutare = mutare;
+    p->gradus = ZEPHYRUM;
     redde VERUM;
+}
+
+/* T4f: gradus cycli applicatus - positio ex fronte VERA (petitiones
+ * priores iam applicatae); genus domus praeteritur (latus cycli imum);
+ * domus: latera supra eam tolluntur, focus domus redit */
+interior b32
+cyclum_applicare (
+                     Vicus* v,
+    constans PetitioAcervi* p)
+{
+      VicusTabula* t;
+    PetitioAcervi  q;
+           chorda  genus_domus;
+              s32  positio;
+              s32  n;
+              i32  domus;
+              i32  k;
+              b32  activa;
+
+    t = tabula_invenire(v, p->tabula);
+    n = v->cyclus ? (s32)xar_numerus(v->cyclus) : ZEPHYRUM;
+    si (!t || n == ZEPHYRUM || xar_numerus(t->acervus) == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    domus = domus_acervi(v, t);
+    genus_domus = ((VicusLatus*)xar_obtinere(t->acervus,
+        domus))->genus;
+    positio      = (domus == xar_numerus(t->acervus) - I) ? -I
+                 : genus_in_cyclo(v, frons_acervi(t)->genus);
+    per (k = ZEPHYRUM; k <= (i32)n; k++)
+    {
+        positio = (positio + I + p->gradus + n + I) % (n + I) - I;
+        si (   positio < ZEPHYRUM
+            || !chorda_aequalis(*(chorda*)xar_obtinere(v->cyclus,
+                   (i32)positio), genus_domus))
+        {
+            frange;
+        }
+    }
+    si (positio >= ZEPHYRUM)
+    {
+        memset(&q, ZEPHYRUM, magnitudo(PetitioAcervi));
+        q.tabula      = p->tabula;
+        q.genus       = *(chorda*)xar_obtinere(v->cyclus, (i32)positio);
+        q.argumentum  = chorda_nulla_vici();
+        redde petitionem_applicare(v, &q);
+    }
+    activa = chorda_aequalis(t->id, v->activa);
+    si (activa && !motum_relinquere(v))
+    {
+        redde FALSUM;
+    }
+    xar_truncare(t->acervus, domus + I);
+    t->focus = t->focus_domus;
+    si (activa)
+    {
+        registra_reficere(v);
+        motum_aptare(v);
+    }
+    redde indicem_scribere(v);
 }
 
 b32
@@ -2483,6 +2627,61 @@ vicus_acervo_redire (
     registra_reficere(v);
     motum_aptare(v);
     redde indicem_scribere(v);
+}
+
+b32
+vicus_cyclum_ponere (
+                           Vicus* v,
+    constans character* constans* genera,
+                             i32  numerus)
+{
+       Xar* cyclus;
+    chorda  g;
+       i32  k;
+
+    si (!v || (numerus > ZEPHYRUM && !genera))
+    {
+        redde FALSUM;
+    }
+    cyclus = xar_creare(v->piscina, (i32)magnitudo(chorda));
+    per (k = ZEPHYRUM; k < numerus; k++)
+    {
+        g = genera[k] ? internare(v, genera[k]) : chorda_nulla_vici();
+        si (   chorda_vacua(g) || !genus_invenire(v, g) || !cyclus
+            || !xar_addere(cyclus))
+        {
+            redde FALSUM;
+        }
+        *(chorda*)xar_obtinere(cyclus, xar_numerus(cyclus) - I) = g;
+    }
+    v->cyclus = numerus > ZEPHYRUM ? cyclus : NIHIL;
+    redde VERUM;
+}
+
+b32
+vicus_cyclo_gradi (
+    Vicus* v,
+      s32  directio)
+{
+    PetitioAcervi* p;
+
+    si (   !v || !v->cyclus || xar_numerus(v->cyclus) == ZEPHYRUM
+        || (directio != I && directio != -I) || !vicus_activa(v)
+        || !v->petitiones)
+    {
+        redde FALSUM;
+    }
+    p = (PetitioAcervi*)xar_addere(v->petitiones);
+    si (!p)
+    {
+        redde FALSUM;
+    }
+    memset(p, ZEPHYRUM, magnitudo(PetitioAcervi));
+    p->tabula      = v->activa;
+    p->genus       = chorda_nulla_vici();
+    p->argumentum  = chorda_nulla_vici();
+    p->gradus      = directio;
+    redde VERUM;
 }
 
 b32
@@ -2546,8 +2745,11 @@ vicus_pulsare (
     per (i = ZEPHYRUM; v->petitiones
                        && i < xar_numerus(v->petitiones); i++)
     {
-        (vacuum)petitionem_applicare(v,
-            (constans PetitioAcervi*)xar_obtinere(v->petitiones, i));
+        constans PetitioAcervi* p;
+
+        p = (constans PetitioAcervi*)xar_obtinere(v->petitiones, i);
+        (vacuum)(p->gradus != ZEPHYRUM ? cyclum_applicare(v, p)
+                                       : petitionem_applicare(v, p));
         pingendum = VERUM;
     }
     si (v->petitiones)

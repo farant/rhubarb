@@ -61,10 +61,21 @@ phase that needs it. Header text shown to Fran before coding.*
 
 ### Follow-ups (Fran)
 
-- **T4f** (2026-10-16): Cmd+` toggles the notifications center (open
-  it, or pop it if it is the open pane). Check first what fenestra
-  delivers: Cmd+` is macOS's "cycle windows" chord, and every Cmd
-  chord also fires its menu equivalent (memory fenestra-cmd-keys).
+- **T4f** (2026-10-16, revised 10-17): ~~Cmd+` toggles the
+  notifications center~~ - Cmd+` is macOS's "Move focus to next window"
+  (on by default), so Fran chose Cmd+] / Cmd+[ (free in macOS, vicus,
+  pictor, terminale and fenestra's menus) and a CYCLE of the active
+  tab's right pane: home -> notifications -> sessions -> home, Cmd+[
+  reversed. Home = topmost non-cycle pane in the right stack (none: the
+  bottom one). A step to notifications/sessions opens it or brings it
+  to the top (as the badge does), focus right. A step home closes the
+  cycle panes above home (as Esc) and restores the focus home had when
+  a cycle pane first covered it - by Cmd+], the badge or
+  `$notifications`, so a cycle can start from the badge. Steps are
+  queued and applied in vicus_pulsare in order (two presses in one
+  frame = two steps). API: `vicus_cyclum_ponere`, `vicus_cyclo_gradi`
+  (include/vicus.h). Tests: probatio_vicus_acervus VIII-XIII.
+  STATUS 10-17: green, 7 plants red; Fran's look OK.
 
 ### Phase 2 (Fran, 2026-10-15): gate and test progress dashboard
 

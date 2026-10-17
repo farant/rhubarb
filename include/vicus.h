@@ -158,6 +158,8 @@ nomen structura {
                               * in fronte; numquam vacuus (decisio
                               * VIII) */
            i32 focus;       /* VICUS_SINISTRUM aut VICUS_DEXTRUM */
+           i32 focus_domus; /* T4f: focus cum latus cycli domum texit
+                             * (ordinarium VICUS_DEXTRUM) */
 } VicusTabula;
 
 /* S4 (Franus 2026-10-09): horologium in linea tabularum, ad dextrum
@@ -210,6 +212,8 @@ nomen structura {
                     /* T4a: vicus_systema_addere (privatum) */
                     Xar* systemata_hospitis;
              VicusLatus* stratum;     /* T4b: NIHIL = nullum */
+                    Xar* cyclus;      /* T4f: chorda (genera); NIHIL
+                                       * aut vacuus = nullus */
 } Vicus;
 
 /* T4a (colloquia-plan): systema hospitis - in omni vicus_pulsare
@@ -439,6 +443,27 @@ vicus_acervo_mutare (
                  Vicus* v,
     constans character* genus,
     constans character* argumentum);
+
+/* T4f (colloquia-plan): cyclus lateris dextri - Cmd+] (directio +I)
+ * aut Cmd+[ (-I) in tabula activa: domus -> genera[0] -> ... ->
+ * genera[n-1] -> domus. Domus = latus summum acervi quod in cyclo non
+ * est (nullum: imum). Gradus ad genus = ut vicus_acervo_aperire (focus
+ * dexter); gradus ad domum = latera cycli supra domum tolluntur (ut
+ * Esc), focus redit quo erat cum latus cycli domum texit. Genera
+ * copiantur; numerus ZEPHYRUM = cyclus nullus. FALSUM si genus
+ * ignotum. */
+b32
+vicus_cyclum_ponere (
+                           Vicus* v,
+    constans character* constans* genera,
+                             i32  numerus);
+
+/* gradus cycli (+I aut -I): PETITIO, applicatur in vicus_pulsare
+ * proximo (ut vicus_acervo_aperire). FALSUM si cyclus nullus. */
+b32
+vicus_cyclo_gradi (
+    Vicus* v,
+      s32  directio);
 
 /* T4d: latus frontale acervi tabulae activae tollitur, prior in
  * frontem venit, focus ad dextrum; dispositio servatur. FALSUM si

@@ -573,3 +573,29 @@ gate run said the vates_responsum generator "wrote nothing" while
 the generator's output was byte-identical and the gate passed alone
 right after - transient, likely bin/norma rebuilt mid-gate by a
 parallel gate. Not chased.
+
+## 2026-10-17 - T4f: Cmd+] / Cmd+[ cycle the right stack
+
+`vicus_cyclum_ponere` registers the cycle types (vicus_applicatio:
+admonitiones, colloquia); Cmd+] / Cmd+[ queue a PetitioAcervi with
+`gradus` +1/-1, applied in vicus_pulsare in order, so each step reads
+the real stack (two presses in one frame = two steps). Home = topmost
+non-cycle pane (none: the bottom one; a step to the home's own type is
+skipped). Going home truncates the cycle panes above it (like Esc) and
+restores `focus_domus`, which `petitionem_applicare` records whenever
+a request moves the front off home - so the badge and
+`$notifications` start a cycle too.
+
+Pre-existing bug found on the way: `petitionem_applicare` called
+`id_novum` AFTER `xar_addere`, and after a truncation (Esc, or the
+cycle going home) the reused slot still holds the old pane - so its id
+was "taken" and a reopened notifications pane became
+`3_dextrum_admonitiones_2` (fresh mount, new ramus). id now chosen
+before the slot is added.
+
+Plants (silva.planta, radix filtrum vicus_acervus): 7 red (focus not
+restored / not recorded, home type not skipped, direction inverted,
+home always the bottom, id after xar_addere, unknown type accepted).
+GREEN, unobservable: dropping the `destinare` route for Cmd+[ ] - the
+focused panes (scriba, pictor) pass the chord up unconsumed and the
+root handler sees it anyway; kept as the same guard Cmd+digits have.

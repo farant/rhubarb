@@ -10,7 +10,10 @@
  * '3_dextrum_scriba_2', pagina 'notae' condita et visa. V:
  * '$pictor(x)'. VI: errores ('$scriba(Mala)', '$terminale(a, b)')
  * nihil petunt. VII: reapertura - ordo, ids, argumenta, pagina visus
- * servantur. */
+ * servantur. VIII-XIII (colloquia-plan T4f): cyclus Cmd+] / Cmd+[ -
+ * domus -> admonitiones -> colloquia -> domus, retrorsum, focus domus
+ * restitutus, cyclus ab insigni coeptus, gradus duo in pulsu uno,
+ * latus cycli imum, API recusat. */
 #include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
@@ -103,15 +106,40 @@ index_continet (
         piscina));
 }
 
+interior b32
+focus_est (
+    Vicus* v,
+      i32  latus)
+{
+    redde vicus_latus_focatum(v) == vicus_latus(vicus_activa(v), latus);
+}
+
+/* T4f: Cmd+] aut Cmd+[ premitur (petitio), deinde pulsus applicat */
+interior vacuum
+gradus (
+          Vicus* v,
+     ManusLudus* m,
+      character  clavis)
+{
+    (vacuum)manus_ludus_clavem(m, clavis, MOD_SUPER);
+    (vacuum)vicus_pulsare(v);
+}
+
 s32 principale (vacuum)
 {
-           Volumen* vol;
-   VicusApplicatio  app;
-   VicusApplicatio  app_altera;
-             Vicus* v;
-        ManusLudus* m;
-            vacuum* terminale;
-    ScribaMontatio* sm;
+                          Volumen* vol;
+                  VicusApplicatio  app;
+                  VicusApplicatio  app_altera;
+                            Vicus* v;
+                       ManusLudus* m;
+                           vacuum* terminale;
+                   ScribaMontatio* sm;
+                          Volumen* vol_imum;
+                  VicusApplicatio  app_imum;
+    hic_manens constans character* cyclus[] = {
+        "admonitiones", "colloquia" };
+    hic_manens constans character* cyclus_malus[] = {
+        "admonitiones", "ignotum" };
 
     piscina = piscina_generare_dynamicum("probatio_vicus_acervus",
         LXIV * M);
@@ -240,6 +268,116 @@ s32 principale (vacuum)
     /* errores (VI) in sinistro: ictus focum ibi reliquit */
     CREDO_VERUM(vicus_latus_focatum(v)
         == vicus_latus(vicus_activa(v), VICUS_SINISTRUM));
+
+    imprimere("\n--- VIII: Cmd+] - domus et cyclus ---\n");
+    m = manus_ludus_creare(piscina, app_altera.d);
+    dispensator_recomponere(app_altera.d);
+    /* domus = pictor, focus sinister (VII) */
+    CREDO_VERUM(manus_ludus_clavem(m, ']', MOD_SUPER));
+    /* petitio: nihil intra tractationem */
+    CREDO_AEQUALIS_I32(numerus_acervi(v), IV);
+    (vacuum)vicus_pulsare(v);
+    CREDO_AEQUALIS_I32(numerus_acervi(v), V);
+    CREDO_VERUM(frons_est(v, "3_dextrum_admonitiones"));
+    CREDO_VERUM(focus_est(v, VICUS_DEXTRUM));
+    gradus(v, m, ']');
+    CREDO_AEQUALIS_I32(numerus_acervi(v), VI);
+    CREDO_VERUM(frons_est(v, "3_dextrum_colloquia"));
+    CREDO_VERUM(focus_est(v, VICUS_DEXTRUM));
+    gradus(v, m, ']');
+    CREDO_AEQUALIS_I32(numerus_acervi(v), IV);
+    CREDO_VERUM(frons_est(v, "3_dextrum_pictor"));
+    CREDO_VERUM(focus_est(v, VICUS_SINISTRUM));
+
+    imprimere("\n--- IX: Cmd+[ - retrorsum ---\n");
+    gradus(v, m, '[');
+    CREDO_AEQUALIS_I32(numerus_acervi(v), V);
+    CREDO_VERUM(frons_est(v, "3_dextrum_colloquia"));
+    gradus(v, m, '[');
+    CREDO_AEQUALIS_I32(numerus_acervi(v), VI);
+    CREDO_VERUM(frons_est(v, "3_dextrum_admonitiones"));
+    CREDO_CHORDA_AEQUALIS_LITERIS(acervi(v, IV)->id,
+        "3_dextrum_colloquia");
+    gradus(v, m, '[');
+    CREDO_AEQUALIS_I32(numerus_acervi(v), IV);
+    CREDO_VERUM(frons_est(v, "3_dextrum_pictor"));
+    CREDO_VERUM(focus_est(v, VICUS_SINISTRUM));
+    /* focus dexter in domo: dexter redit */
+    CREDO_VERUM(vicus_focum_ponere(v, VICUS_DEXTRUM));
+    gradus(v, m, ']');
+    CREDO_VERUM(frons_est(v, "3_dextrum_admonitiones"));
+    gradus(v, m, '[');
+    CREDO_AEQUALIS_I32(numerus_acervi(v), IV);
+    CREDO_VERUM(frons_est(v, "3_dextrum_pictor"));
+    CREDO_VERUM(focus_est(v, VICUS_DEXTRUM));
+
+    imprimere("\n--- X: cyclus ab insigni coeptus ---\n");
+    CREDO_VERUM(vicus_focum_ponere(v, VICUS_SINISTRUM));
+    CREDO_VERUM(vicus_acervo_aperire(v, "admonitiones", NIHIL));
+    (vacuum)vicus_pulsare(v);
+    CREDO_VERUM(frons_est(v, "3_dextrum_admonitiones"));
+    gradus(v, m, ']');
+    CREDO_VERUM(frons_est(v, "3_dextrum_colloquia"));
+    gradus(v, m, ']');
+    CREDO_AEQUALIS_I32(numerus_acervi(v), IV);
+    CREDO_VERUM(frons_est(v, "3_dextrum_pictor"));
+    CREDO_VERUM(focus_est(v, VICUS_SINISTRUM));
+
+    imprimere("\n--- XI: gradus duo in pulsu uno ---\n");
+    CREDO_VERUM(manus_ludus_clavem(m, ']', MOD_SUPER));
+    CREDO_VERUM(manus_ludus_clavem(m, ']', MOD_SUPER));
+    (vacuum)vicus_pulsare(v);
+    CREDO_AEQUALIS_I32(numerus_acervi(v), VI);
+    CREDO_VERUM(frons_est(v, "3_dextrum_colloquia"));
+    gradus(v, m, ']');
+    CREDO_AEQUALIS_I32(numerus_acervi(v), IV);
+    CREDO_VERUM(focus_est(v, VICUS_SINISTRUM));
+
+    imprimere("\n--- XII: API recusat ---\n");
+    CREDO_FALSUM(vicus_cyclo_gradi(v, II));
+    CREDO_FALSUM(vicus_cyclum_ponere(v, cyclus_malus, II));
+    /* cyclus prior manet */
+    CREDO_VERUM(vicus_cyclo_gradi(v, I));
+    (vacuum)vicus_pulsare(v);
+    CREDO_VERUM(frons_est(v, "3_dextrum_admonitiones"));
+    CREDO_VERUM(vicus_cyclum_ponere(v, NIHIL, ZEPHYRUM));
+    CREDO_FALSUM(vicus_cyclo_gradi(v, -I));
+    CREDO_VERUM(vicus_cyclum_ponere(v, cyclus, II));
+    CREDO_VERUM(vicus_cyclo_gradi(v, -I));
+    (vacuum)vicus_pulsare(v);
+    CREDO_AEQUALIS_I32(numerus_acervi(v), IV);
+    CREDO_VERUM(frons_est(v, "3_dextrum_pictor"));
+
+    imprimere("\n--- XIII: latus cycli imum acervi ---\n");
+    vol_imum = volumen_temporarium(piscina, "probatio_vicus_acervus");
+    CREDO_VERUM(volumen_plagulam_condere(vol_imum,
+        chorda_ex_literis("vicus/latera", piscina),
+        chorda_ex_literis("<tabulae activa=\"1\"><tabula id=\"1\" "
+            "focus=\"sinistrum\"><latus genus=\"scriba\" "
+            "id=\"1_sinistrum_scriba\"/><acervus><latus "
+            "genus=\"admonitiones\" id=\"1_dextrum_admonitiones\"/>"
+            "</acervus></tabula></tabulae>", piscina), "vicus:latera"));
+    CREDO_VERUM(vicus_applicatio_aedificare(&app_imum, piscina, intern,
+        vol_imum, CDLXXX, CDLXXX + VICUS_ALTITUDO_TABULARUM));
+    v = app_imum.vicus;
+    m = manus_ludus_creare(piscina, app_imum.d);
+    dispensator_recomponere(app_imum.d);
+    CREDO_AEQUALIS_I32(numerus_acervi(v), I);
+    CREDO_VERUM(frons_est(v, "1_dextrum_admonitiones"));
+    /* domus = admonitiones: gradus ad genus domus praeteritur */
+    gradus(v, m, ']');
+    CREDO_AEQUALIS_I32(numerus_acervi(v), II);
+    CREDO_VERUM(frons_est(v, "1_dextrum_colloquia"));
+    gradus(v, m, ']');
+    CREDO_AEQUALIS_I32(numerus_acervi(v), I);
+    CREDO_VERUM(frons_est(v, "1_dextrum_admonitiones"));
+    CREDO_VERUM(focus_est(v, VICUS_SINISTRUM));
+    gradus(v, m, '[');
+    CREDO_VERUM(frons_est(v, "1_dextrum_colloquia"));
+    gradus(v, m, '[');
+    CREDO_AEQUALIS_I32(numerus_acervi(v), I);
+    CREDO_VERUM(frons_est(v, "1_dextrum_admonitiones"));
+    volumen_claudere(vol_imum);
 
     imprimere("\n");
     credo_imprimere_compendium();
