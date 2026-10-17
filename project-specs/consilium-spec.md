@@ -582,6 +582,11 @@ done, 1 nothing done (refused, step without mandatum, resume refused),
 mid-plan then resumed, changed tree refused, undeclared `~/.bin` write
 FRACTUM, step without mandatum refused; four plants red.
 
-Limit: STML attribute values are raw - an argument containing `"`
-cannot be written. Next: S5c2 (commissio onto `-agere`, Python wave
+Quoting (corrected 2026-10-17, Fran): inline attribute values are raw
+(`&&` as is), and an argument containing `"` is written as an
+attribute-element, `<argumentum><@valor=>dic "x" &amp;&amp; y</></argumentum>`
+(stml-reference par. 5.3: text law, entities decoded) - the reader needs
+nothing new (`stml_attributum_capere` scans the child prefix); credo XIX
+asserts it. Writers should pick the spelling automatically (an STML
+builder - Fran). Next: S5c2 (commissio onto `-agere`, Python wave
 loop and `_classis_viae` removed, reader infers `classis`).

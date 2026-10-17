@@ -1153,6 +1153,7 @@ hic_manens constans character* constans DOCUMENTUM_MANDATI[] = {
     "    <mandatum>",
     "      <argumentum valor=\"tools/fabrica_struere.sh\"/>",
     "      <argumentum valor=\"cum spatio\"/>",
+    "      <argumentum><@valor=>dic \"salve\" &amp;&amp; vale</></argumentum>",
     "    </mandatum>",
     "  </gradus>",
     "</consilium>",
@@ -1173,8 +1174,8 @@ hic_manens constans character* constans DOCUMENTUM_MANDATI_MALI[] = {
     NIHIL
 };
 
-/* XIX. mandatum: argv ordine (spatia tuta), causae omnes; mandatum in
- * sigillo */
+/* XIX. mandatum: argv ordine (spatia tuta; '"' per <@valor=>), causae
+ * omnes; mandatum in sigillo */
 interior vacuum
 _sectio_mandatum (
     CredoContextus* c)
@@ -1189,12 +1190,16 @@ _sectio_mandatum (
     CREDO_NECESSE_NON_NIHIL(k);
     g = consilium_gradum_invenire(k, CH("sana"));
     CREDO_NECESSE_NON_NIHIL(g);
-    CREDO_AEQUALIS_I32(xar_numerus(g->mandatum), II);
+    CREDO_AEQUALIS_I32(xar_numerus(g->mandatum), III);
     CREDO_CHORDA_AEQUALIS_LITERIS(*(chorda*)xar_obtinere(g->mandatum,
         ZEPHYRUM), "tools/fabrica_struere.sh");
     CREDO_CHORDA_AEQUALIS_LITERIS(*(chorda*)xar_obtinere(g->mandatum,
         I),
         "cum spatio");
+    /* '"' per elementum attributi (stml par. 5.3): textus, entia
+     * soluta - valor inline CRUDUS manet */
+    CREDO_CHORDA_AEQUALIS_LITERIS(*(chorda*)xar_obtinere(g->mandatum,
+        II), "dic \"salve\" && vale");
     s1 = consilium_sigillum(k, NIHIL, c->piscina);
     k2 = consilium_legere(_documentum(c, DOCUMENTUM_MANDATI),
         c->piscina,

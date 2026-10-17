@@ -117,3 +117,17 @@ red on its own condition): resume ignored (A ran twice), ~/.bin not
 observed (undeclared write passed), diff left out of the fingerprint
 (changed tree resumed), mandatum check skipped (empty argv ran: 3
 instead of 1).
+
+## 2026-10-17 - correction: `"` in arguments IS writable
+
+The S5c1 entry above says an argument containing `"` cannot be written.
+Wrong (Fran): STML spells any attribute as an attribute-element,
+`<argumentum><@valor=>dic "salve" &amp;&amp; vale</></argumentum>`
+(docs/stml-reference.md par. 5.3) - content follows text law, so `"` is
+fine and entities decode; inline values stay raw. `stml_attributum_capere`
+already scans the child prefix, so the reader needed no change; credo
+XIX now asserts it, and a live `-agere` run passed a quoted `sh -c`
+string through. Lesson: I read the stml.h header line about inline
+values and stopped - the reference's element-family table lists `<@a=>`
+on the same page. Fran's follow-up wish: a builder that chooses the
+spelling itself, so writers never have to.
