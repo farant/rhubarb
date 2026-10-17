@@ -428,6 +428,45 @@ _sectio_documentum (
         "<aliud>")));
 }
 
+/* X. domus (S4): classis ex via - '~', domus absoluta, externa, radix
+ * absoluta, bin/ build/ .../build/; regula arboris secundariae */
+interior vacuum
+_sectio_domus (
+    CredoContextus* c)
+{
+    constans character* radix = "/u/r/rhubarb-quinta";
+    constans character* domus = "/u/r";
+       ConsiliumRegula  r;
+
+    CREDO_AEQUALIS_I32((i32)consilium_classis_viae(CH("~/.bin/briar"),
+        radix, domus), (i32)CONSILIUM_DOMUS);
+    CREDO_AEQUALIS_I32((i32)consilium_classis_viae(CH("~"), radix,
+        domus), (i32)CONSILIUM_DOMUS);
+    CREDO_AEQUALIS_I32((i32)consilium_classis_viae(CH("~x/y"), radix,
+        domus), (i32)CONSILIUM_ARBOR);
+    CREDO_AEQUALIS_I32((i32)consilium_classis_viae(
+        CH("/u/r/.rhubarb/a"), radix, domus), (i32)CONSILIUM_DOMUS);
+    CREDO_AEQUALIS_I32((i32)consilium_classis_viae(CH("/usr/local/x"),
+        radix, domus), (i32)CONSILIUM_EXTERNA);
+    CREDO_AEQUALIS_I32((i32)consilium_classis_viae(
+        CH("/u/r/rhubarb-quinta/bin/fabrica"), radix, domus),
+        (i32)CONSILIUM_INSTRUMENTUM_DOMUS);
+    CREDO_AEQUALIS_I32((i32)consilium_classis_viae(CH("build/a.o"),
+        radix,
+        domus), (i32)CONSILIUM_BUILD);
+    CREDO_AEQUALIS_I32((i32)consilium_classis_viae(
+        CH("silva/build/x.o"), radix, domus), (i32)CONSILIUM_BUILD);
+    CREDO_AEQUALIS_I32((i32)consilium_classis_viae(CH("lib/xar.c"),
+        NIHIL,
+        NIHIL), (i32)CONSILIUM_ARBOR);
+    CREDO_AEQUALIS_I32((i32)consilium_classis_viae(CH("/x/y"), NIHIL,
+        NIHIL), (i32)CONSILIUM_EXTERNA);
+    r = consilium_regula_arboris_secundariae(c->piscina);
+    CREDO_CHORDA_AEQUALIS_LITERIS(r.titulus, "arbor_secundaria");
+    CREDO_AEQUALIS_I32((i32)r.sententia, (i32)CONSILIUM_VETITUM);
+    CREDO_AEQUALIS_I32((i32)r.classis, (i32)CONSILIUM_DOMUS);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "ordo ex datis", _sectio_data, NIHIL, NIHIL, NIHIL, NIHIL },
     { "lectio sua et absentia", _sectio_lectio_sua, NIHIL, NIHIL, NIHIL,
@@ -442,6 +481,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "politica et vestigium", _sectio_politica, NIHIL, NIHIL, NIHIL,
       NIHIL },
     { "documentum", _sectio_documentum, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "domus", _sectio_domus, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

@@ -453,3 +453,33 @@ Tests (pythonica): producers healed, the committed regenerator and a
 home install left out; committed outputs = no producer; three existing
 call-order tests now ignore the read-only dry-run line. A plant
 dropping the committed-output filter went red.
+
+## XV. S4 built (2026-10-17): the second consumer - bin/fabrica sanare
+
+Consumer two is fabrica's own `sanare`, in C, through the library API
+(no document). In a git worktree (`.git` is a file), after the judge
+stage (judges fresh, so the plan is complete) and BEFORE anything runs,
+`_sanare_consilium` (tools/fabrica.c) takes fabrica's dry-run plan,
+builds a consilium (one step per planned action, its outputs as
+effects - `~` and outside-the-tree paths as `instituere`, scope from
+the path), and judges it with the worktree rule. Any VETITUM = exit 2,
+nothing done, every blocked install named. In the main tree nothing is
+judged (installing is its ritual) - zero cost there.
+
+Before: "never `bin/fabrica sanare installata` from a worktree" lived in
+memory and discipline. Now (sandbox HOME): "consilium in arbore
+secundaria VETITUM - nihil actum ... VETITUM: institutio_briar
+instituere ~/.bin/briar <- arbor_secundaria ...", real ~/.bin untouched;
+tree-local heals (`sanare bin/praeco`) unaffected; `-siccum` unaffected.
+
+Rule of three, applied: what BOTH consumers need moved into the
+library - `consilium_classis_viae` (path -> scope; `~` and home =
+DOMUS, `bin/` = INSTRUMENTUM_DOMUS, `build/` and `.../build/` = BUILD)
+and `consilium_regula_arboris_secundariae`. pythonica's `_classis_viae`
+is now a duplicate of the C function (left for S5: commissio's plan
+documents could omit `classis` and let the reader infer it).
+
+Tests: credo section X (scopes, rule); fabrica-fumus LX (a world with an
+install action into a temporary HOME: worktree refuses and writes
+nothing, main tree is not judged). Plant: the check disabled ->
+LX red with "scriptum 1" - the worktree run DID write into the home.

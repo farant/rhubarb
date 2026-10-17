@@ -982,6 +982,87 @@ consilium_scribere (
 
 
 /* ==================================================
+ * Domus (S4)
+ * ================================================== */
+
+interior b32
+_sub (
+                 chorda  via,
+     constans character* radix)
+{
+    i32 n;
+
+    si (radix == NIHIL)
+    {
+        redde FALSUM;
+    }
+    n = (i32)strlen(radix);
+    redde via.mensura > n && memcmp(via.datum, radix, (size_t)n)
+        == ZEPHYRUM && via.datum[n] == '/';
+}
+
+ConsiliumClassis
+consilium_classis_viae (
+                  chorda  via,
+      constans character* radix,
+      constans character* domus)
+{
+    chorda relativa = via;
+       i32 i;
+
+    si (   via.mensura >= I && via.datum[ZEPHYRUM] == '~'
+        && (via.mensura == I || via.datum[I] == '/'))
+    {
+        redde CONSILIUM_DOMUS;
+    }
+    si (via.mensura > ZEPHYRUM && via.datum[ZEPHYRUM] == '/')
+    {
+        si (!_sub(via, radix))
+        {
+            redde _sub(via,
+                domus) ? CONSILIUM_DOMUS : CONSILIUM_EXTERNA;
+        }
+        relativa = chorda_sectio(via, (i32)strlen(radix) + I,
+            via.mensura);
+    }
+    si (   relativa.mensura >= IV && memcmp(relativa.datum, "bin/", IV)
+        == ZEPHYRUM)
+    {
+        redde CONSILIUM_INSTRUMENTUM_DOMUS;
+    }
+    si (relativa.mensura >= VI && memcmp(relativa.datum, "build/", VI)
+        == ZEPHYRUM)
+    {
+        redde CONSILIUM_BUILD;
+    }
+    per (i = ZEPHYRUM; i + VII <= relativa.mensura; i++)
+    {
+        si (memcmp(relativa.datum + i, "/build/", VII) == ZEPHYRUM)
+        {
+            redde CONSILIUM_BUILD;
+        }
+    }
+    redde CONSILIUM_ARBOR;
+}
+
+ConsiliumRegula
+consilium_regula_arboris_secundariae (
+    Piscina* piscina)
+{
+    ConsiliumRegula r;
+
+    r.titulus    = chorda_ex_literis("arbor_secundaria", piscina);
+    r.verbum     = CONSILIUM_OMNIA;
+    r.classis    = (s32)CONSILIUM_DOMUS;
+    r.exemplar   = chorda_ex_literis("", piscina);
+    r.sententia  = CONSILIUM_VETITUM;
+    r.causa      = chorda_ex_literis("in arbore secundaria nihil extra "
+        "arborem scribitur (institutiones ex main solo)", piscina);
+    redde r;
+}
+
+
+/* ==================================================
  * Documentum (consilium.canon, S3a)
  * ================================================== */
 

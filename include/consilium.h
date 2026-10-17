@@ -259,6 +259,30 @@ consilium_scribere (
 
 
 /* ==================================================
+ * DOMUS (gradus S4): quae consumptores duo (silva.commissio,
+ * bin/fabrica sanare) communicant
+ * ================================================== */
+
+/* classis effectus ex via: '~' aut '~/...' = DOMUS; absoluta sub domus
+ * (extra radicem) = DOMUS; absoluta alibi extra radicem = EXTERNA;
+ * 'bin/...' = INSTRUMENTUM_DOMUS; 'build/...' aut '.../build/...' =
+ * BUILD; ceterum ARBOR. radix et domus absolutae sine '/' finali; NIHIL
+ * licet (tum ea comparatio omittitur) */
+ConsiliumClassis
+consilium_classis_viae (
+                  chorda  via,
+      constans character* radix,
+      constans character* domus);
+
+/* regula 'arbor_secundaria': in arbore secundaria (git worktree) nihil
+ * extra arborem scribitur - classis DOMUS VETITA (Franus: institutiones
+ * ex main solo, 'bin/fabrica sanare installata' in main) */
+ConsiliumRegula
+consilium_regula_arboris_secundariae (
+    Piscina* piscina);
+
+
+/* ==================================================
  * DOCUMENTUM (consilium.canon, gradus S3a)
  * ================================================== */
 

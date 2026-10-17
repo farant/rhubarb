@@ -1037,6 +1037,25 @@ mkdir -p "$T/domus3/.rhubarb"
 lix_x=$(grep -c 'fabrica\.' "$T/domus3/.rhubarb/mensurae.diarium" 2>/dev/null)
 if [ "${lix_a:-0}" -ge 1 ] && [ "${lix_u:-0}" -ge 1 ] && [ "$lix_i" = "$lix_a" ] && [ "${lix_x:-0}" = "0" ]; then echo "  LIX  progressus: ambitus et undae initio, iudicata ultima = ambitus, radix aliena nihil OK"; else echo "  LIX  FRACTUM (ambitus '${lix_a}', undae '${lix_u}', iudicata ultima '${lix_i}', lineae alienae ${lix_x:-0})"; fracta=1; fi
 
+# LX (consilium S4): CONSILIUM ANTE ACTUM - in arbore secundaria ('.git'
+# plagula) sanatio cuius exitus extra arborem (~) iacet VETATUR ante
+# actum (regula 'arbor_secundaria', exitus 2, nihil scriptum in domo);
+# in arbore principali ('.git' directorium) consilium non iudicatur.
+# HOME temporarium: domus vera numquam tangitur.
+radix '<fabrica titulus="t"><subsystema via="."/></fabrica>'
+printf 'unum\n' > "$T/r/a"
+printf 'mkdir -p "$HOME/.consilium_fumus"; cp a "$HOME/.consilium_fumus/x"\n' > "$T/r/inst.sh"
+printf '<aedificatio>\n  <actio titulus="inst" genus="institutio">\n    <mandatum>\n      <verbum! (>sh\n      <verbum! (>inst.sh\n    </mandatum>\n    <ingressus genus="fasciculus" via="a"/>\n    <exitus via="~/.consilium_fumus/x" provenientia="regeneratio"/>\n  </actio>\n</aedificatio>\n' > "$T/r/aedificatio.stml"
+mkdir -p "$T/domus_lx"
+printf 'gitdir: /nusquam\n' > "$T/r/.git"
+(cd "$T/r" && HOME="$T/domus_lx" "$F" sanare) > "$T/lx_s" 2>&1; rcs=$?
+scriptum_s=0; [ -e "$T/domus_lx/.consilium_fumus/x" ] && scriptum_s=1
+rm -f "$T/r/.git"; mkdir -p "$T/r/.git"
+(cd "$T/r" && HOME="$T/domus_lx" "$F" sanare) > "$T/lx_p" 2>&1; rcp=$?
+if [ "$rcs" -eq 2 ] && [ "$scriptum_s" -eq 0 ] \
+   && grep -q 'VETITUM: inst instituere ~/.consilium_fumus/x <- arbor_secundaria' "$T/lx_s" \
+   && ! grep -q 'arbor_secundaria' "$T/lx_p"; then echo "  LX   consilium ante actum: arbor secundaria institutionem VETAT (nihil actum), principalis non iudicat OK"; else echo "  LX   FRACTUM (secundaria rc=$rcs scriptum $scriptum_s, principalis rc=$rcp)"; sed 's/^/      [s] /' "$T/lx_s" | head -6; sed 's/^/      [p] /' "$T/lx_p" | head -4; fracta=1; fi
+
 if [ "$fracta" -ne 0 ]; then echo "fumus fabricae: FRACTUM"; exit 1; fi
-echo "fumus fabricae: sanum (LIX/LIX)"
+echo "fumus fabricae: sanum (LX/LX)"
 exit 0
