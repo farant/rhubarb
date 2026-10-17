@@ -270,6 +270,24 @@ paths); the .db is a rebuildable projection of it
 
 
 
+COLLOQUIA STATUS
+
+vicus shows every claude session running in tmux in its $sessions pane,
+with a status line. hooks fill it automatically (prompt, tool, waiting
+for permission, done) but they can't say what you are actually doing.
+you can:
+
+    praeco status "T8 headers: waiting for fran's ok"
+
+run it when you start a distinct piece of work, and when the automatic
+line would mislead (a 30-minute gate run, waiting on fran, stuck on a
+bug). one short line, under ~60 characters. it lasts until fran's next
+prompt, so set it again when the work changes. outside tmux it is
+harmless and shows nowhere.
+
+/COLLOQUIA STATUS
+
+
 
 
 

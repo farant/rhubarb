@@ -1,10 +1,12 @@
 /* tls.h - Bibliotheca TLS (Transport Layer Security)
  *
  * API platform-agnostica pro connexionibus securis.
- * Implementatio: tls.c - vectura per connexionem (tls-bearssl II.5):
- * tls_bearssl.c (BearSSL, ORDINARIA) aut tls_securetransport_macos.m
- * (macOS Security.framework, vectura vetus:
- * RHUBARB_TLS=securetransport; delenda postea). Fiducia utriusque per
+ * Implementatio: tls.c - vectura per connexionem (tls-bearssl II.5,
+ * tls13-spec): tls_tls13.c (TLS 1.3 proprius, ORDINARIA; hospites 1.2
+ * per descensum in BearSSL cum signo DOWNGRD inspecto), tls_bearssl.c
+ * (BearSSL TLS 1.2 solum: RHUBARB_TLS=bearssl) aut
+ * tls_securetransport_macos.m (macOS Security.framework, vectura vetus:
+ * RHUBARB_TLS=securetransport; delenda postea). Fiducia omnium per
  * fiducia.h (platforma).
  *
  * USUS:
@@ -50,14 +52,16 @@ nomen structura {
          chorda  error_descriptio;
 } TlsResultus;
 
-/* Vectura (implementatio) - tls-bearssl-spec II.5. ORDINARIA:
- * RHUBARB_TLS ('bearssl' | 'securetransport') si positum, aliter
- * ordinaria domus. Vocantes qui optiones memset() faciunt ORDINARIAM
- * habent. */
+/* Vectura (implementatio) - tls-bearssl-spec II.5, tls13-spec II.1.
+ * ORDINARIA: RHUBARB_TLS ('bearssl' | 'securetransport' | 'tls13') si
+ * positum, aliter ordinaria domus. Vocantes qui optiones memset()
+ * faciunt ORDINARIAM habent. TLS13 = cliens TLS 1.3 proprius
+ * (tls_tls13.c super machinam tls13.c). */
 nomen enumeratio {
     TLS_VECTURA_ORDINARIA = 0,
     TLS_VECTURA_BEARSSL,
-    TLS_VECTURA_SECURETRANSPORT
+    TLS_VECTURA_SECURETRANSPORT,
+    TLS_VECTURA_TLS13
 } TlsVectura;
 
 /* Optiones */
@@ -70,6 +74,15 @@ nomen structura {
     constans character* ancora_via;
     /* vectura: ORDINARIA = ambitus RHUBARB_TLS aut ordinaria domus */
     TlsVectura vectura;
+    /* vectura TLS13 (tls13-spec II.3): hospes qui ut TLS 1.2 respondet
+     * per BearSSL in EADEM connexione perficitur (fossa redintegrata,
+     * numerus idem), signo DOWNGRD a nobis inspecto. sine_descensu
+     * VERUM: 1.3 aut nihil - TLS_ERROR_HANDSHAKE "hospes solum TLS
+     * 1.2". */
+    b32 sine_descensu;
+    /* PROBATIONES SOLUM (tls13-plan P5): conatus 1.3 omittitur quasi
+     * hospes 1.2 respondisset - signum DOWNGRD servi 1.3 probatur */
+    b32 descensus_coactus;
 } TlsOptiones;
 
 /* Certificatum hospitis (folium primum catenae).
@@ -121,9 +134,16 @@ TlsVectura
 tls_vecturam_eligere (
     constans TlsOptiones* optiones);
 
-/* vectura connexionis; ORDINARIA si connexio NIHIL */
+/* vectura connexionis (BEARSSL post descensum); ORDINARIA si connexio
+ * NIHIL */
 TlsVectura
 tls_vectura (
+    TlsConnexio* connexio);
+
+/* versio pacta: 0x0304 (TLS 1.3), 0x0303 (TLS 1.2); 0 ante pactionem
+ * aut ignota */
+i32
+tls_versio (
     TlsConnexio* connexio);
 
 

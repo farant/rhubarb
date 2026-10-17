@@ -117,3 +117,19 @@ with the old code) - it took the gate's full load. Both tests that do
 this (`probatio_tcp_incipere`, `probatio_tls_gradus`) now accept via
 `_accipere`: poll the listening fd readable, retry on ITERUM, bounded
 at II s. Cause plausible, not proven.
+
+## 2026-10-16 - tcp_redintegrare (tls13 T7)
+
+Reconnect to the same peer (getpeername) on a NEW socket, then
+`dup2(nova, old_fd)`: the old connection is closed by dup2 (the peer
+sees EOF) and the caller's fd number now names the new connection.
+Proven in probatio_tcp_redintegrare: a reactor registration made on the
+old fd fires for data arriving on the new connection. That holds
+because our reactor is poll()-based - keyed by fd NUMBER. A kqueue
+reactor would lose the registration (kqueue drops kevents when the
+underlying file is closed, and dup2 closes it); if the reactor ever
+moves to kqueue, tls.c's fallback must re-register or the test above
+goes red. Blocking variant connects untimed like
+tcp_connectere_cum_optionibus and then applies the options (socket
+timeouts); stepped variant is tcp_incipere's EINPROGRESS dance. On any
+failure the old connection is left as it was.

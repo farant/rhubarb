@@ -61,6 +61,9 @@ structura TlsBearssl {
                         b32  pacta;       /* pactio perfecta */
                         b32  clausa;
                         b32  reiecta;     /* fiducia catenam reiecit */
+                        b32  signum;      /* descensus: DOWNGRD
+                                           * inspiciendum */
+                        b32  vetita;      /* signum inventum */
         FiduciaCertificatum  catena[CATENA_MAXIMA];
                         i32  numerus;     /* certificata perfecta */
                          i8* scribendum;  /* certificatum currens */
@@ -362,6 +365,33 @@ _antlia (
     }
 }
 
+/* descensus (tls13-spec II.3): servus qui 1.3 novit sed 1.2 pactus est
+ * temere suum signo finit (RFC 8446 4.1.3: 44 4f 57 4e 47 52 44 01 aut
+ * 00). Post descensum hoc impetum significat - nos inspicimus, BearSSL
+ * (solum 1.2) non. VERUM si pactio stare potest. */
+interior b32
+_signum_inspicere (
+    TlsBearssl* c)
+{
+    hic_manens constans i8 SIGNUM_DESCENSUS[VII] = {
+        0x44, 0x4f, 0x57, 0x4e, 0x47, 0x52, 0x44
+    };
+    constans i8* t = c->cc.eng.server_random;
+
+    si (!c->signum)
+    {
+        redde VERUM;
+    }
+    si (   memcmp(t + XXIV, SIGNUM_DESCENSUS, VII) == ZEPHYRUM
+        && (t[XXXI] == ZEPHYRUM || t[XXXI] == I))
+    {
+        _errorem_ponere(c, "descensus vetitus: hospes TLS 1.3 novit");
+        c->vetita = VERUM;
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
 /* ---- praeparatio ---- */
 
 interior constans character*
@@ -513,6 +543,83 @@ tls_bearssl_incipere (
     redde _creare(tcp, hospes, optiones, piscina);
 }
 
+/* pactio obstruens usque ad finem super connexionem creatam: tempus
+ * excessum -> TLS_ERROR_TCP; fiducia -> CERTIFICATUM; cetera (et signum
+ * SIGNUM_DESCENSUS) -> HANDSHAKE */
+interior TlsBearsslResultus
+_pacisci_obstruens (
+    TlsBearsslResultus  r,
+               Piscina* piscina)
+{
+    commutatio (_antlia(r.connexio, BR_SSL_SENDAPP))
+    {
+        casus ANTLIA_PARATA:
+            si (_signum_inspicere(r.connexio))
+            {
+                r.connexio->pacta = VERUM;
+                redde r;
+            }
+            {
+                chorda causa = r.connexio->erratum;
+
+                tls_bearssl_claudere(r.connexio);
+                r.successus         = FALSUM;
+                r.connexio          = NIHIL;
+                r.error             = TLS_ERROR_HANDSHAKE;
+                r.error_descriptio  = causa;
+                redde r;
+            }
+        casus ANTLIA_LEGERE:
+        casus ANTLIA_SCRIBERE:
+            tls_bearssl_claudere(r.connexio);
+            redde _error(TLS_ERROR_TCP, "Tempus handshake excessum",
+                piscina);
+        ordinarius:
+        {
+               b32 reiecta  = r.connexio->reiecta;
+            chorda causa    = r.connexio->erratum;
+
+            tls_bearssl_claudere(r.connexio);
+            r.successus  = FALSUM;
+            r.connexio   = NIHIL;
+            r.error            = reiecta ? TLS_ERROR_CERTIFICATUM
+                                         : TLS_ERROR_HANDSHAKE;
+            r.error_descriptio = causa.mensura > ZEPHYRUM ? causa
+                : chorda_ex_literis("pactio fallita", piscina);
+            redde r;
+        }
+    }
+}
+
+TlsBearsslResultus
+tls_bearssl_incipere_signo (
+             TcpConnexio* tcp,
+      constans character* hospes,
+    constans TlsOptiones* optiones,
+                     b32  obstruens,
+                 Piscina* piscina)
+{
+    TlsBearsslResultus r = _creare(tcp, hospes, optiones, piscina);
+
+    si (!r.successus)
+    {
+        redde r;
+    }
+    r.connexio->signum = VERUM;
+    redde obstruens ? _pacisci_obstruens(r, piscina) : r;
+}
+
+i32
+tls_bearssl_versio (
+    TlsBearssl* c)
+{
+    si (c == NIHIL || !c->pacta)
+    {
+        redde ZEPHYRUM;
+    }
+    redde (i32)br_ssl_engine_get_version(&c->cc.eng);
+}
+
 /* obstruens: tcp cum moris (timeout_ms -> moris fossae), pactio per
  * antliam usque ad finem. 'Exspecta' in modo obstruente = tempus
  * excessum (R9): TLS_ERROR_TCP, ut SecureTransport */
@@ -550,44 +657,24 @@ tls_bearssl_connectere (
     {
         redde r;
     }
-    commutatio (_antlia(r.connexio, BR_SSL_SENDAPP))
-    {
-        casus ANTLIA_PARATA:
-            r.connexio->pacta = VERUM;
-            redde r;
-        casus ANTLIA_LEGERE:
-        casus ANTLIA_SCRIBERE:
-            tls_bearssl_claudere(r.connexio);
-            redde _error(TLS_ERROR_TCP, "Tempus handshake excessum",
-                piscina);
-        ordinarius:
-        {
-               b32 reiecta  = r.connexio->reiecta;
-            chorda causa    = r.connexio->erratum;
-
-            tls_bearssl_claudere(r.connexio);
-            r.successus  = FALSUM;
-            r.connexio   = NIHIL;
-            r.error            = reiecta ? TLS_ERROR_CERTIFICATUM
-                                         : TLS_ERROR_HANDSHAKE;
-            r.error_descriptio = causa.mensura > ZEPHYRUM ? causa
-                : chorda_ex_literis("pactio fallita", piscina);
-            redde r;
-        }
-    }
+    redde _pacisci_obstruens(r, piscina);
 }
 
 TlsGradus
 tls_bearssl_gradus (
     TlsBearssl* c)
 {
-    si (c == NIHIL || c->clausa)
+    si (c == NIHIL || c->clausa || c->vetita)
     {
         redde TLS_GRADUS_ERROR;
     }
     commutatio (_antlia(c, BR_SSL_SENDAPP))
     {
         casus ANTLIA_PARATA:
+            si (!_signum_inspicere(c))
+            {
+                redde TLS_GRADUS_ERROR;
+            }
             c->pacta = VERUM;
             redde TLS_GRADUS_PERFECTUS;
         casus ANTLIA_LEGERE:
@@ -626,7 +713,7 @@ tls_bearssl_mittere (
     br_ssl_engine_context* e;
                    Antlia  a;
 
-    si (c == NIHIL || c->clausa)
+    si (c == NIHIL || c->clausa || c->vetita)
     {
         redde -I;
     }
@@ -684,7 +771,7 @@ tls_bearssl_recipere (
 {
     br_ssl_engine_context* e;
 
-    si (c == NIHIL || c->clausa)
+    si (c == NIHIL || c->clausa || c->vetita)
     {
         redde -I;
     }

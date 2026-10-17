@@ -421,19 +421,29 @@ hic_manens constans CredoSectio SECTIONES[] = {
 s32
 principale (vacuum)
 {
-    s32 bearssl;
-    s32 securetransport;
+    hic_manens constans character* constans VECTURAE[III][II] = {
+        { "tls13", "tls_servus [tls13]" },
+        { "bearssl", "tls_servus [bearssl]" },
+        { "securetransport", "tls_servus [securetransport]" }
+    };
+    s32 exitus = ZEPHYRUM;
+    i32 k;
 
-    /* matrix (tls-bearssl R10): sectiones EAEDEM sub vectura utraque -
-     * differentia = inventum */
-    (vacuum)setenv("RHUBARB_TLS", "bearssl", I);
-    bearssl = credo_suitam_currere_cum("tls_servus [bearssl]",
-        SECTIONES,
-        _suitam_parare, NIHIL);
-    (vacuum)setenv("RHUBARB_TLS", "securetransport", I);
-    securetransport = credo_suitam_currere_cum(
-        "tls_servus [securetransport]", SECTIONES, _suitam_parare,
-        NIHIL);
+    /* matrix (tls-bearssl R10, tls13 T8): sectiones EAEDEM sub vectura
+     * quaque - differentia = inventum. tls13: servus ordinarius 1.3
+     * pacisci; tls11 per descensum a BearSSL reicitur */
+    per (k = ZEPHYRUM; k < III; k++)
+    {
+        s32 r;
+
+        (vacuum)setenv("RHUBARB_TLS", VECTURAE[k][ZEPHYRUM], I);
+        r = credo_suitam_currere_cum(VECTURAE[k][I], SECTIONES,
+            _suitam_parare, NIHIL);
+        si (exitus == ZEPHYRUM)
+        {
+            exitus = r;
+        }
+    }
     (vacuum)unsetenv("RHUBARB_TLS");
-    redde bearssl != ZEPHYRUM ? bearssl : securetransport;
+    redde exitus;
 }

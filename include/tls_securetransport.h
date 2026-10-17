@@ -62,6 +62,12 @@ b32
 tls_securetransport_est_valida (
     TlsSecuretransport* connexio);
 
+/* versio pacta (SSLGetNegotiatedProtocolVersion): 0x0303 / 0x0304; 0
+ * ante pactionem */
+i32
+tls_securetransport_versio (
+    TlsSecuretransport* connexio);
+
 b32
 tls_securetransport_certificatum (
     TlsSecuretransport* connexio,
