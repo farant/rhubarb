@@ -113,3 +113,21 @@ escaping in listing titles; OPTIONS has no automatic handler
 - The whole body is streamed even when the route will 404 - routing
   happens after the body. Cheap to change later (route at
   CAPITA_COMPLETA) if anonymous uploads to unknown paths ever matter.
+
+## 2026-10-17 - hospitium v3 T4: request helpers, cookies, proxy trust
+
+- **One door for response headers:** `_caput_ponere` (title token,
+  value without CR/LF/NUL, cap 32 + 2 reserved). Anything refused bumps
+  `fructus.capita_abiecta` and the access log line ends with
+  `capita_abiecta=N (Title)`. The colloquium counter is reset in
+  `_paratus_novae` because router 404s never memset the colloquium.
+- **Lazy caches in the colloquium** (quaestiones, forma, cliens, par):
+  all in the request piscina, so they die with the request; the
+  colloquium memset at handler entry clears them.
+- **Proxy trust is double-gated:** config `procurator_fidus` AND the
+  socket peer is 127.*. Only then X-Forwarded-For (last header, last
+  hop) and X-Forwarded-Proto. The default cookie options read
+  `colloquium_schema`, so behind nginx with https the session cookie
+  gets `Secure` automatically.
+- Testing the access log: the test swaps fd 2 for a pipe with
+  dup/dup2 around the requests, then reads the pipe - no file needed.

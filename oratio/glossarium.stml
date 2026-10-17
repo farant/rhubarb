@@ -1760,5 +1760,8 @@
     <forma textus="multipartitae" casus="genitivus" numerus="singularis" genus="femininum"/>
     <forma textus="multipartito" casus="ablativus" numerus="singularis" genus="neutrum"/>
   </vocabulum>
+  <vocabulum lemma="redirigo" lingua="latina" classis="verbum" nota="vox domus (re + dirigere): petitionem alio dirigere (HTTP redirect, colloquium_redirigere); WORDS caret">
+    <forma textus="redirigere" tempus="praesens" modus="infinitivus" vox="activa" forma-verbi="infinitivum"/>
+  </vocabulum>
 
 </glossarium>

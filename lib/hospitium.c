@@ -43,7 +43,8 @@
 
 #define HOSPITIUM_CONNEXIONES_TECTUM  CXXVIII
 #define HOSPITIUM_DIRECTORIA_MAXIMA   VIII
-#define HOSPITIUM_CAPITA_MAXIMA       XVI
+#define HOSPITIUM_CAPITA_MAXIMA       XXXII
+#define HOSPITIUM_CAPITA_RESERVATA    II    /* Content-Type, Location */
 #define HOSPITIUM_BUFFER_LECTIONIS    (IV * MXXIV)
 #define HOSPITIUM_PISCINA_CONNEXIONIS (LXIV * M)
 #define HOSPITIUM_CAPSA_FONTIS        (XVI * MXXIV)
@@ -93,10 +94,23 @@ structura HospitiumColloquium {
                 vacuum* datum;
                    b32  est_caput;   /* HEAD - corpus omittendum */
 
-    HttpCaput capita[HOSPITIUM_CAPITA_MAXIMA];
+    HttpCaput capita[HOSPITIUM_CAPITA_MAXIMA
+                     + HOSPITIUM_CAPITA_RESERVATA];
           i32 capita_numerus;
           b32 respondit;
           b32 differtur;
+
+    /* capita abiecta (tectum, CR/LF) - acta accessus nominant */
+       i32 capita_abiecta;
+    chorda primum_abiectum;
+
+    /* auxilia petitionis pigre resoluta (piscina petitionis) */
+          b32 quaestiones_parsae;
+    UrlParams quaestiones;
+          b32 forma_parsa;
+    UrlParams forma;
+       chorda cliens;       /* datum NIHIL = nondum */
+       chorda par;          /* IP paris (socket) */
 };
 
 structura ConnexioHospitii {
@@ -200,6 +214,8 @@ structura Hospitium {
     /* corpora per rivum */
                     i32  corpus_in_memoria_maximum;
      constans character* directorium_temporarium;
+
+    b32 procurator_fidus;
 };
 
 
@@ -354,14 +370,15 @@ _paratus_novae (
         conn->piscina_connexionis, h->petitio_maxima, h->uri_maxima);
     http_parser_capita_solum(conn->parser, VERUM);
 
-    conn->scribenda       = _chorda_vacua();
-    conn->offset          = 0;
-    conn->status          = CONNEXIO_LEGENS;
-    conn->keep_alive      = VERUM;
-    conn->claudenda_post  = FALSUM;
-    conn->ob_reliquias    = FALSUM;
-    conn->octeti_accepti  = FALSUM;
-    conn->dilatum         = FALSUM;
+    conn->scribenda                  = _chorda_vacua();
+    conn->offset                     = 0;
+    conn->status                     = CONNEXIO_LEGENS;
+    conn->keep_alive                 = VERUM;
+    conn->claudenda_post             = FALSUM;
+    conn->ob_reliquias               = FALSUM;
+    conn->octeti_accepti             = FALSUM;
+    conn->dilatum                    = FALSUM;
+    conn->colloquium.capita_abiecta  = 0;
 
     nunc                    = tempus_nunc();
     conn->capita_legens     = VERUM;
@@ -492,11 +509,21 @@ _responsum_parare (
             http_parser_obtinere_petitio(conn->parser);
         si (petitio)
         {
-            fprintf(stderr, "[hospitium] %s %.*s %u %luB\n",
+            HospitiumColloquium* col = &conn->colloquium;
+
+            fprintf(stderr, "[hospitium] %s %.*s %u %luB",
                 http_methodus_nomen(petitio->methodus),
                 (int)petitio->via.mensura,
                 (constans character*)petitio->via.datum,
                 responsum->status, (insignatus longus)longitudo);
+            si (col->capita_abiecta > 0)
+            {
+                fprintf(stderr, " capita_abiecta=%u (%.*s)",
+                    col->capita_abiecta,
+                    (int)col->primum_abiectum.mensura,
+                    (constans character*)col->primum_abiectum.datum);
+            }
+            fprintf(stderr, "\n");
         }
     }
 }
@@ -1835,6 +1862,7 @@ hospitium_creare (
         ? cfg.corpus_in_memoria_maximum : HOSPITIUM_CORPUS_MEMORIA;
     h->directorium_temporarium = _directorium_temporarium(piscina,
         cfg.directorium_temporarium);
+    h->procurator_fidus = cfg.procurator_fidus;
 
     opt = tcp_servus_optiones_default();  /* non_blocans VERUM */
     servus_res = tcp_servus_creare_cum_optionibus(
@@ -2110,29 +2138,74 @@ colloquium_datum (
     redde colloquium->datum;
 }
 
+/* Caput responsi ponere. Titulus token (sine spatio, ':', CTL),
+ * valor sine CR, LF, NUL (injectio capitum); tectum
+ * HOSPITIUM_CAPITA_MAXIMA, reservatum (Content-Type, Location) +
+ * RESERVATA. Abiectum numeratur et in actis accessus nominatur. */
+interior b32
+_caput_ponere (
+    HospitiumColloquium* colloquium,
+     constans character* titulus,
+                 chorda  valor,
+                    b32  reservatum)
+{
+    ConnexioHospitii* conn = colloquium->connexio;
+                 i32  tectum = HOSPITIUM_CAPITA_MAXIMA
+                     + (reservatum ? HOSPITIUM_CAPITA_RESERVATA : 0);
+                 b32 bonum = titulus[0] != '\0'
+                     && colloquium->capita_numerus < tectum;
+    constans character* t;
+                   i32  i;
+
+    per (t = titulus; bonum && *t; t++)
+    {
+        insignatus character c = (insignatus character)*t;
+
+        si (c <= 0x20 || c >= 0x7F || c == ':')
+        {
+            bonum = FALSUM;
+        }
+    }
+    per (i = 0; bonum && i < valor.mensura; i++)
+    {
+        si (   valor.datum[i] == '\r' || valor.datum[i] == '\n'
+            || valor.datum[i] == '\0')
+        {
+            bonum = FALSUM;
+        }
+    }
+    si (!bonum)
+    {
+        si (colloquium->capita_abiecta == 0)
+        {
+            colloquium->primum_abiectum = chorda_ex_literis(titulus,
+                conn->piscina_connexionis);
+        }
+        colloquium->capita_abiecta++;
+        colloquium->hospitium->fructus.capita_abiecta++;
+        redde FALSUM;
+    }
+    colloquium->capita[colloquium->capita_numerus].titulus =
+        chorda_ex_literis(titulus, conn->piscina_connexionis);
+    colloquium->capita[colloquium->capita_numerus].valor = valor;
+    colloquium->capita_numerus++;
+    redde VERUM;
+}
+
 vacuum
 colloquium_caput_addere (
     HospitiumColloquium* colloquium,
      constans character* titulus,
      constans character* valor)
 {
-    Piscina* p;
-
     si (!colloquium || colloquium->respondit || !titulus || !valor)
     {
         redde;
     }
-    si (colloquium->capita_numerus >= HOSPITIUM_CAPITA_MAXIMA)
-    {
-        redde;
-    }
-
-    p = colloquium->connexio->piscina_connexionis;
-    colloquium->capita[colloquium->capita_numerus].titulus =
-        chorda_ex_literis(titulus, p);
-    colloquium->capita[colloquium->capita_numerus].valor =
-        chorda_ex_literis(valor, p);
-    colloquium->capita_numerus++;
+    (vacuum)_caput_ponere(colloquium, titulus,
+        chorda_ex_literis(valor,
+        colloquium->connexio->piscina_connexionis),
+        FALSUM);
 }
 
 vacuum
@@ -2156,14 +2229,10 @@ colloquium_respondere (
     conn  = colloquium->connexio;
     p     = conn->piscina_connexionis;
 
-    si (   mimen_typus
-        && colloquium->capita_numerus < HOSPITIUM_CAPITA_MAXIMA)
+    si (mimen_typus)
     {
-        colloquium->capita[colloquium->capita_numerus].titulus =
-            chorda_ex_literis("Content-Type", p);
-        colloquium->capita[colloquium->capita_numerus].valor =
-            chorda_ex_literis(mimen_typus, p);
-        colloquium->capita_numerus++;
+        (vacuum)_caput_ponere(colloquium, "Content-Type",
+            chorda_ex_literis(mimen_typus, p), VERUM);
     }
 
     colloquium->respondit  = VERUM;
@@ -2227,14 +2296,10 @@ colloquium_respondere_fontem (
         redde;
     }
     p = colloquium->connexio->piscina_connexionis;
-    si (   mimen_typus
-        && colloquium->capita_numerus < HOSPITIUM_CAPITA_MAXIMA)
+    si (mimen_typus)
     {
-        colloquium->capita[colloquium->capita_numerus].titulus =
-            chorda_ex_literis("Content-Type", p);
-        colloquium->capita[colloquium->capita_numerus].valor =
-            chorda_ex_literis(mimen_typus, p);
-        colloquium->capita_numerus++;
+        (vacuum)_caput_ponere(colloquium, "Content-Type",
+            chorda_ex_literis(mimen_typus, p), VERUM);
     }
     colloquium->respondit          = VERUM;
     colloquium->connexio->dilatum  = FALSUM;
@@ -2387,4 +2452,330 @@ colloquium_campi (
         *campi = colloquium->connexio->campi;
     }
     redde colloquium->connexio->campi_numerus;
+}
+
+
+/* ========================================================================
+ * AUXILIA PETITIONIS (II.2) - pigre, in piscina petitionis
+ * ======================================================================== */
+
+/* valor praesens sed vacuus: datum non NIHIL (absens = NIHIL) */
+interior chorda
+_valor_praesens (
+      chorda  v,
+     Piscina* p)
+{
+    si (v.datum == NIHIL)
+    {
+        v.datum    = (i8*)piscina_allocare(p, I);
+        v.mensura  = 0;
+    }
+    redde v;
+}
+
+interior chorda
+_param_quaerere (
+             UrlParams  params,
+    constans character* clavis,
+               Piscina* p)
+{
+    i32 i;
+
+    per (i = 0; i < params.numerus; i++)
+    {
+        si (chorda_aequalis_literis(params.claves[i], clavis))
+        {
+            redde _valor_praesens(params.valores[i], p);
+        }
+    }
+    redde _chorda_vacua();
+}
+
+UrlParams
+colloquium_quaestiones (
+    HospitiumColloquium* colloquium)
+{
+    si (!colloquium->quaestiones_parsae)
+    {
+        colloquium->quaestiones = url_params_parse(
+            colloquium->petitio->quaestio,
+            colloquium->connexio->piscina_connexionis);
+        colloquium->quaestiones_parsae = VERUM;
+    }
+    redde colloquium->quaestiones;
+}
+
+chorda
+colloquium_quaestio (
+    HospitiumColloquium* colloquium,
+     constans character* clavis)
+{
+    si (!colloquium || !clavis)
+    {
+        redde _chorda_vacua();
+    }
+    redde _param_quaerere(colloquium_quaestiones(colloquium), clavis,
+        colloquium->connexio->piscina_connexionis);
+}
+
+chorda
+colloquium_caput (
+    HospitiumColloquium* colloquium,
+     constans character* titulus)
+{
+    si (!colloquium || !titulus)
+    {
+        redde _chorda_vacua();
+    }
+    redde _caput_petitionis(colloquium->petitio, titulus);
+}
+
+chorda
+colloquium_forma (
+    HospitiumColloquium* colloquium,
+     constans character* campus)
+{
+     ConnexioHospitii* conn;
+               chorda  typus;
+                  i32  i;
+
+    si (!colloquium || !campus)
+    {
+        redde _chorda_vacua();
+    }
+    conn   = colloquium->connexio;
+    typus  = _caput_petitionis(colloquium->petitio, "Content-Type");
+    si (_incipit_ignora_casus(typus,
+        "application/x-www-form-urlencoded"))
+    {
+        si (!colloquium->forma_parsa)
+        {
+            colloquium->forma =
+                url_params_parse(colloquium->petitio->corpus,
+                conn->piscina_connexionis);
+            colloquium->forma_parsa = VERUM;
+        }
+        redde _param_quaerere(colloquium->forma, campus,
+            conn->piscina_connexionis);
+    }
+    per (i = 0; i < conn->campi_numerus; i++)
+    {
+        si (chorda_aequalis_literis(conn->campi[i].campus, campus))
+        {
+            redde _valor_praesens(conn->campi[i].valor,
+                conn->piscina_connexionis);
+        }
+    }
+    redde _chorda_vacua();
+}
+
+chorda
+colloquium_crustulum (
+    HospitiumColloquium* colloquium,
+     constans character* titulus)
+{
+    constans HttpPetitioServeri* pet;
+                            i32  i;
+
+    si (!colloquium || !titulus)
+    {
+        redde _chorda_vacua();
+    }
+    pet = colloquium->petitio;
+    per (i = 0; i < pet->capita_numerus; i++)
+    {
+        si (chorda_aequalis_case_insensitivus(pet->capita[i].titulus,
+            chorda_ex_literis("Cookie",
+                colloquium->connexio->piscina_connexionis)))
+        {
+            chorda v = crustulum_valor(pet->capita[i].valor, titulus);
+
+            si (v.datum != NIHIL)
+            {
+                redde v;
+            }
+        }
+    }
+    redde _chorda_vacua();
+}
+
+/* par socket, et an loopback sit */
+interior b32
+_par_loopback (
+    HospitiumColloquium* colloquium)
+{
+    si (colloquium->par.datum == NIHIL)
+    {
+        TcpAddress a = tcp_obtinere_peer_address(
+            colloquium->connexio->tcp);
+
+        colloquium->par = chorda_ex_literis(a.hospes,
+            colloquium->connexio->piscina_connexionis);
+    }
+    redde colloquium->par.mensura >= IV
+        && memcmp(colloquium->par.datum, "127.", IV) == 0;
+}
+
+interior b32
+_procurator_creditur (
+    HospitiumColloquium* colloquium)
+{
+    redde colloquium->hospitium->procurator_fidus
+        && _par_loopback(colloquium);
+}
+
+interior chorda
+_amputare (
+    chorda s)
+{
+    dum (s.mensura > 0 && (s.datum[0] == ' ' || s.datum[0] == '\t'))
+    {
+        s.datum++;
+        s.mensura--;
+    }
+    dum (   s.mensura > 0
+         && (s.datum[s.mensura - I] == ' '
+             || s.datum[s.mensura - I] == '\t'))
+    {
+        s.mensura--;
+    }
+    redde s;
+}
+
+chorda
+colloquium_cliens (
+    HospitiumColloquium* colloquium)
+{
+    si (!colloquium)
+    {
+        redde _chorda_vacua();
+    }
+    si (colloquium->cliens.datum != NIHIL)
+    {
+        redde colloquium->cliens;
+    }
+    (vacuum)_par_loopback(colloquium);
+    colloquium->cliens = colloquium->par;
+    si (_procurator_creditur(colloquium))
+    {
+         constans HttpPetitioServeri* pet        = colloquium->petitio;
+                              chorda  procurati  = _chorda_vacua();
+                                 i32  i;
+
+        /* caput ULTIMUM, saltus ULTIMUS: quem nginx ipse addidit */
+        per (i = 0; i < pet->capita_numerus; i++)
+        {
+            si (chorda_aequalis_case_insensitivus(pet->capita[i].titulus,
+                chorda_ex_literis("X-Forwarded-For",
+                    colloquium->connexio->piscina_connexionis)))
+            {
+                procurati = pet->capita[i].valor;
+            }
+        }
+        si (procurati.datum != NIHIL)
+        {
+            chorda ultimus = procurati;
+
+            per (i = 0; i < procurati.mensura; i++)
+            {
+                si (procurati.datum[i] == ',')
+                {
+                    ultimus.datum    = procurati.datum + i + I;
+                    ultimus.mensura  = procurati.mensura - i - I;
+                }
+            }
+            ultimus = _amputare(ultimus);
+            si (ultimus.mensura > 0)
+            {
+                colloquium->cliens = ultimus;
+            }
+        }
+    }
+    redde colloquium->cliens;
+}
+
+chorda
+colloquium_schema (
+    HospitiumColloquium* colloquium)
+{
+    Piscina* p;
+
+    si (!colloquium)
+    {
+        redde _chorda_vacua();
+    }
+    p = colloquium->connexio->piscina_connexionis;
+    si (_procurator_creditur(colloquium))
+    {
+        chorda proto = _amputare(_caput_petitionis(colloquium->petitio,
+            "X-Forwarded-Proto"));
+
+        si (   proto.mensura == V
+            && _incipit_ignora_casus(proto, "https"))
+        {
+            redde chorda_ex_literis("https", p);
+        }
+    }
+    redde chorda_ex_literis("http", p);
+}
+
+b32
+colloquium_crustulum_ponere (
+           HospitiumColloquium* colloquium,
+            constans character* titulus,
+                        chorda  valor,
+    constans CrustulumOptiones* optiones)
+{
+    CrustulumOptiones o;
+               chorda c;
+
+    si (!colloquium || colloquium->respondit || !titulus)
+    {
+        redde FALSUM;
+    }
+    si (optiones)
+    {
+        o = *optiones;
+    }
+    alioquin
+    {
+        chorda schema = colloquium_schema(colloquium);
+
+        memset(&o, 0, magnitudo(o));
+        o.max_aetas_s  = -I;
+        o.http_solum   = VERUM;
+        o.securum      = schema.mensura == V;   /* "https" */
+        o.eadem        = CRUSTULUM_EADEM_LAXA;
+    }
+    c = crustulum_scribere(titulus, valor, &o,
+        colloquium->connexio->piscina_connexionis);
+    si (c.mensura == 0)
+    {
+        redde FALSUM;
+    }
+    redde _caput_ponere(colloquium, "Set-Cookie", c, FALSUM);
+}
+
+vacuum
+colloquium_redirigere (
+    HospitiumColloquium* colloquium,
+                    i32  status,
+     constans character* locus)
+{
+    Piscina* p;
+
+    si (!colloquium || colloquium->respondit)
+    {
+        redde;
+    }
+    p = colloquium->connexio->piscina_connexionis;
+    si (   !locus || locus[0] == '\0'
+        || !_caput_ponere(colloquium, "Location",
+               chorda_ex_literis(locus, p), VERUM))
+    {
+        /* locus malus (CR/LF): error servi, nulla injectio */
+        colloquium_respondere(colloquium, D, NIHIL, _chorda_vacua());
+        redde;
+    }
+    colloquium_respondere(colloquium, status, NIHIL, _chorda_vacua());
 }

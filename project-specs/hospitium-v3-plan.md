@@ -177,6 +177,31 @@ with this plan.
   bipartitus/tripartitus); `charset` -> `codex_signorum`,
   `Transcriptio` -> `Vestigium`, `_sectio_curl` ->
   `_sectio_cliens_alienus` (curl is real English - the taylor lesson).
+- **R12 (T4)** - header injection guard (not in the plan): every
+  response header goes through one `_caput_ponere` - the title must be
+  a token, the value may not contain CR, LF or NUL (before T4
+  `colloquium_caput_addere` passed CR/LF through). Refused or over-cap
+  headers are counted (`HospitiumFructus.capita_abiecta`, new) and the
+  first is named in the access log. Cap = 32 app headers + 2 reserved
+  slots (Content-Type, Location), so a full set never loses its
+  Content-Type. `colloquium_redirigere` with CR/LF in the location ->
+  500, never an injected header. A fourth plant pins it (CR/LF check
+  removed -> `capita_tectum` red).
+- **R13 (T4)** - crustula beyond the plan: `__Secure-` / `__Host-`
+  prefix rules enforced; Path/Domain refused with `;` or CTL (attribute
+  injection). Absent vs present-empty: absent = `datum NIHIL`, present
+  but empty = non-NIHIL with mensura 0 (crustulum_valor,
+  colloquium_quaestio, colloquium_forma). All `Cookie` headers are read.
+  `colloquium_cliens` takes the LAST X-Forwarded-For header's last hop
+  (what nginx appended); loopback = peer "127.*" (IPv4 -
+  `tcp_obtinere_peer_address` is AF_INET only). `colloquium_forma`
+  parses urlencoded only from an in-memory body.
+- **R14 (T4)** - lint: `redirigere` glossed as a house verb (spec name
+  kept); renames `caput_cookie` -> `caput_crustulorum`, `xff` ->
+  `procurati`, `_injectio` -> `_locus_malus`, `_sectio_curl_vas` ->
+  `_sectio_vas_crustulorum`. The first header plant was mis-written (my
+  mutation broke the compare loop instead of making it case-sensitive,
+  so it stayed green); rewritten as a plain byte compare -> red.
 
 ## Review focus
 

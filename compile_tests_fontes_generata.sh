@@ -63,6 +63,7 @@ declare -a SOURCE_FILES=(
     "lib/conservatio.c"
     "lib/copia_terminalis.c"
     "lib/credo.c"
+    "lib/crustula.c"
     "lib/css_lexema.c"
     "lib/cursor.c"
     "lib/cursus.c"
