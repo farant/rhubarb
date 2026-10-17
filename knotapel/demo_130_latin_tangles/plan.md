@@ -5,7 +5,10 @@ Status: approved by Fran (2026-10-17), with "Open for Fran" decided:
 sentences or excerpts quoted, the files stay fetched (never copied into
 the repo); (2) the tree measures go in a small library beside oratio's
 CoNLL-U reader (location and name settled in task 0, with the lint),
-tested on its own; (3) the registered thresholds as written. Proposal
+tested on its own; (3) the registered thresholds as written; (4, task
+0) option (a): the CoNLL-U reader MOVES into the house tier and the
+tree measures go beside it there (decision 2 superseded, since
+archive.sh cannot freeze oratio/fontes; API sketch below). Proposal
 N9 in
 `knotapel/demo-proposals.md` (ledger …3X58Q9); context
 `knotapel/brainstorm-skeleton-settling.md` sections IV, XI.
@@ -38,19 +41,37 @@ measure whether real Latin looks like it.
 - **Arc** (h, d) spans the interval between h and d. **Two arcs cross**
   iff their endpoints interleave strictly (a < c < b < e for arcs {a, b},
   {c, e}). Arcs sharing a word never cross.
-- **Projective** = no crossing arcs (root arc included). Equivalently,
-  every word's yield (its subtree) is a contiguous interval; both
-  definitions are computed and must agree (a check).
-- **Crossings** = number of crossing pairs (the crossing number of the
-  arc diagram drawn with all arcs on one side). **Non-projective arcs**
-  = arcs in at least one crossing.
-- **Mild non-projectivity** *(recalled: Kuhlmann and Nivre 2006,
-  "Mildly non-projective dependency structures"; verify the definitions
-  from the source in task 0)*: gap degree (the most gaps in any word's
-  yield), well-nestedness (no two disjoint subtrees interleave), edge
-  degree. Gap degree <= 1 + well-nested corresponds to the
-  tree-adjoining-grammar level of mild context sensitivity, so
-  "bounded crossings" gets a formal-language meaning.
+- **Projective** (Kuhlmann and Nivre's Def. 3) = every word's yield
+  (its subtree) is an interval. Equivalently, no two arcs cross once the
+  artificial root arc (0 -> root word) is added; both are computed and
+  must agree (a check).
+- **Planar** (their Def. 4) = no two REAL arcs cross when all are drawn
+  above the sentence, WITHOUT the root arc. Planar is strictly weaker
+  than projective (their Fig. 2a: planar, yet a yield is not an
+  interval); they avoid the root arc because it "obscures the
+  distinction between projectivity and planarity". Both are reported.
+- **Crossings** = number of crossing pairs among real arcs (the crossing
+  number of the arc diagram drawn above the sentence); crossings with
+  the root arc are reported in their own column. **Non-planar arcs** =
+  real arcs in at least one crossing.
+- **Mild non-projectivity** (Kuhlmann and Nivre, "Mildly Non-Projective
+  Dependency Structures", COLING/ACL 2006 poster sessions, pp. 507-514;
+  definitions checked against the paper in task 0): a GAP is a pair of
+  adjacent nodes in a word's sorted yield that differ by more than 1;
+  the gap degree of a word is its number of gaps, of a tree the maximum
+  (Defs. 6-7). Two subtrees are disjoint if neither root dominates the
+  other; they INTERLEAVE if l1 < l2 < r1 < r2 for l1, r1 in one and l2,
+  r2 in the other; a tree is WELL-NESTED if no two disjoint subtrees
+  interleave (Def. 8). The degree of an edge = the number of connected
+  components of the subgraph induced by its span whose root is not
+  dominated by the edge's head; edge degree of a tree = the maximum
+  (Def. 9). Hierarchy: projective < planar < well-nested < unrestricted
+  (checked on every tree). Gap degree and well-nestedness characterize
+  derivations in Tree Adjoining Grammar (the paper, citing Bodirsky et
+  al. 2005), so "bounded crossings" gets a formal-language meaning.
+  Reference points from the paper (Table 1): Czech PDT 76.85%
+  projective, 99.89% well-nested; Danish DDT 84.95% projective, 99.89%
+  well-nested.
 - **Planar core** = the largest set of arcs with no crossing pair (a
   maximum independent set of the crossing graph; arcs on a line form a
   circle graph, where this is polynomial by interval dynamic
@@ -116,8 +137,12 @@ FONTES.md's policy for the NC treebanks: fetched and referenced only,
 ## Checks (characterizations, not counts)
 
 - Reader: counts equal FONTES.md for the repo treebanks.
-- Projective by crossings == projective by contiguous yields, on every
-  tree (two independent definitions).
+- Projective by crossings (root arc included) == projective by
+  interval yields, on every tree (two independent definitions); and the
+  hierarchy projective => planar => well-nested holds on every tree.
+- Kuhlmann and Nivre's Figure 3 (gap degrees 0, 1, 2; edge degrees 0,
+  1, 1; the third not well-nested) and Figure 2a (planar, not
+  projective) reproduced as hand trees.
 - The random-order law: for every tree with n <= 7 words in the repo
   treebanks, the expected crossings by the 1/3 formula equal the mean
   over ALL n! orders, exactly.
@@ -164,10 +189,144 @@ n = 7 (5,040 orders). Seconds.
    (closure outside include/ and lib/; check conflator's client roots);
    verify the mild non-projectivity definitions from Kuhlmann and
    Nivre; settle Open for Fran 1–3.
-1. **T1:** Parts A and B, checks, plants.
+1. **T1a:** the house libraries `conllu` and `dependentia` (API
+   sketch below), their suites, plants; oratio switched to `conllu`,
+   oratio's copy deleted; owes the oratio gate.
+   **T1b:** Parts A and B, checks, plants.
 2. **T2:** Parts C and D, checks, plants.
 3. **T3:** findings.md, claims.md, ledger, archive.sh.
 4. **T4:** independent review with its own oracle, then fixes.
+
+## Task 0 findings (2026-10-17)
+
+- **Definitions** checked against Kuhlmann and Nivre 2006 (text above,
+  with definition numbers). Correction to the draft: projective and
+  planar are different (the draft counted crossings with the root arc,
+  which is projectivity, and called it planar); both are now reported.
+- **Building:** aedilis builds a knotapel demo that includes
+  `oratio/fontes/oratio_conllu.h` (a probe resolved oratio_conllu.c and
+  oratio_vocabularium.c, built and read a sentence).
+- **Freezing: archive.sh REFUSES** such a demo: its conflator accepts
+  closure files only from include/, lib/ and the client roots
+  `RADICES_CLIENTIUM = (materia/fontes toml/fontes)`
+  (tools/corpus_infixum.sh:47), which must equal silex's
+  `SILEX_RADICES_CLIENTIUM` (lib/silex.c; briar uses it). Widening the
+  roots is out of proportion for a demo; an archive-only root would
+  leave oratio's file-local statics unrenamed (the statics table comes
+  from the same roots). So decision 2 ("beside oratio's reader") needs
+  revisiting; options in "Open for Fran" 4.
+
+## API sketch (decision 4 (a); awaiting Fran's approval)
+
+Two house libraries. `dependentia` knows nothing of CoNLL-U (a head
+array in, measures out); `conllu` is the format reader and builds a
+`DependentiaArbor` from a sentence. The name: the Modistae (Thomas of
+Erfurt, *Grammatica speculativa*) built every construction from a
+*dependens* and a *terminans*, so dependent and head are already
+scholastic grammar terms.
+
+`include/dependentia.h`, `lib/dependentia.c`:
+
+    nomen structura {
+                       i32  numerus;   /* verba 1..numerus */
+        constans       i32* capita;    /* capita[k-1] = caput verbi k;
+                                          0 = radix artificialis */
+    } DependentiaArbor;
+
+    nomen enumeratio {
+        DEPENDENTIA_SANA = ZEPHYRUM,
+        DEPENDENTIA_VACUA,          /* numerus 0 */
+        DEPENDENTIA_CAPUT_EXTRA,    /* caput extra 0..numerus, aut sui */
+        DEPENDENTIA_RADIX_NULLA,
+        DEPENDENTIA_RADICES_PLURES,
+        DEPENDENTIA_CYCLUS
+    } DependentiaStatus;
+
+    DependentiaStatus dependentia_validare (constans DependentiaArbor*);
+
+    /* Arbor sine verbis notatis (omittere[k-1]); reliqua ordine
+     * renumerantur, filii verbi omissi capiti eius adhaerent
+     * (*contractiones = filii translati). Arbor sana requiritur. */
+    b32 dependentia_omittere (Piscina*, constans DependentiaArbor*,
+        constans b32* omittere, DependentiaArbor* exitus,
+        i32* contractiones);
+
+    nomen structura {
+        i64 cruces;           /* paria arcuum realium se secantium */
+        i64 cruces_radicis;   /* arcus reales arcum radicis secantes */
+        i32 arcus_secti;      /* arcus reales in cruce aliqua */
+        i64 paria_disiuncta;  /* paria sine verbo communi: ordine
+                                 fortuito E[cruces] = paria / 3 */
+        b32 planaris;         /* cruces == 0 (Def. 4) */
+        b32 proiectiva;       /* et cruces_radicis == 0 (Def. 3) */
+    } DependentiaCruces;
+
+    b32 dependentia_cruces (Piscina*, constans DependentiaArbor*,
+        DependentiaCruces* exitus);
+
+    nomen structura {
+        i32 gradus_lacunarum;  /* Def. 7 */
+        i32 gradus_arcuum;     /* Def. 9 */
+        b32 bene_nidificata;   /* Def. 8 */
+        b32 proiectiva;        /* proventus omnes intervalla (Def. 3) */
+    } DependentiaMensura;
+
+    /* lacunae[k-1] = lacunae proventus verbi k (aut NIHIL) */
+    b32 dependentia_mensurare (Piscina*, constans DependentiaArbor*,
+        i32* lacunae, DependentiaMensura* exitus);
+
+    /* plurimi arcus reales sine cruce; -1 = memoria */
+    s32 dependentia_nucleus_planaris (Piscina*,
+        constans DependentiaArbor*);
+
+    /* graphum crucium: componens[k-1] = componens arcus in verbum k
+     * (singuli inclusi); redde numerum componentium; -1 = memoria */
+    s32 dependentia_componentes (Piscina*, constans DependentiaArbor*,
+        i32* componens);
+
+The two projectivity definitions live in different functions on
+purpose (crossings with the root arc in `dependentia_cruces`, interval
+yields in `dependentia_mensurare`), so the check compares independent
+code.
+
+`include/conllu.h`, `lib/conllu.c` (moved from
+`oratio/fontes/oratio_conllu.{h,c}`; behaviour unchanged, the oratio
+prefix dropped):
+
+    nomen structura {
+                       i32  linea;
+        constans character* causa;
+    } ConlluVitium;           /* loco OratioVocabulariumVitium */
+
+    ConlluLexema              /* campi ut nunc, et: */
+        s32 caput;            /* HEAD numerus; -1 si '_' aut non numerus */
+    ConlluSententia           /* ut nunc */
+
+    Xar*   conllu_legere (Piscina*, chorda fons, ConlluVitium*);
+    chorda conllu_textus (Piscina*, constans ConlluSententia*);
+    b32    conllu_spatium_post (chorda misc);
+
+    /* FEATS: valor clavis ("Case" -> "Nom"); vacua si absens */
+    chorda conllu_proprietas (chorda feats, constans character* clavis);
+
+    nomen structura {
+        DependentiaArbor       arbor;
+        constans ConlluLexema** verba;  /* verba[k-1] = lexema verbi k */
+    } ConlluArbor;
+
+    /* verba syntactica (rangae omissae); FALSUM si ID non 1..n
+     * consecutivi aut memoria; arbor NON validatur */
+    b32 conllu_arbor (Piscina*, constans ConlluSententia*,
+        ConlluArbor* exitus);
+
+oratio's three consumers (oratio_oraculum.{h,c},
+instrumenta/oraculum.c, probatio_oratio_oraculum.c) switch names; they
+read only `vitium.linea` and `vitium.causa`, so the new error type is a
+drop-in. The reader's own tests move from probatio_oratio_oraculum.c
+to `probationes/probatio_conllu.c`; `probationes/probatio_dependentia.c`
+holds the hand trees (Kuhlmann and Nivre's Figures 2a and 3), the
+planar core against brute force, the 1/3 law by enumerating every
+order of small trees, and reversal invariance.
 
 ## Out of scope
 
@@ -198,3 +357,18 @@ n = 7 (5,040 orders). Seconds.
    oratio needs it.
 3. **The registered thresholds** (P1 1/4, P2 1.5x, P3 95%) as written,
    or different.
+4. **(task 0) Where the reader and the measures live, given that
+   archive.sh cannot freeze oratio/fontes.**
+   (a) Proposed: MOVE the CoNLL-U reader into the house tier
+   (`include/` + `lib/`, its own small error type instead of
+   OratioVocabulariumVitium, which today drags in oratio_vocabularium.c),
+   and put the tree measures beside it in the house tier (input: a head
+   array, independent of CoNLL-U). oratio's three consumers
+   (oratio_oraculum.c, instrumenta/oraculum.c, the oraculum test) switch
+   to it; owes the oratio gate. A data-format reader is house-tier
+   material like json and toml, and one home is kept.
+   (b) The same, but COPY the reader and leave oratio untouched for now
+   (a ledger wish to switch oratio later): quicker, temporary
+   duplication.
+   (c) Keep decision 2 as made and do not freeze D130 (live only,
+   findings cite commits): breaks the knotapel freeze rule.
