@@ -128,6 +128,24 @@ with this plan.
   (system words live there, like cloexec/nonblock/sigwinch - not the
   glossary): deliberate regeneration, diff exactly +restart +sigusr1
   +sigusr2 and the two reported evanida (-hebd -sanctorale).
+- **R6 (T2)** - deferral is a VALUE handle `HospitiumDilatum {hospitium,
+  locus, generatio}`, not a colloquium pointer + `colloquium_valet`: the
+  colloquium lives inside its connection slot, so a stale pointer to a
+  reused slot would look valid. `dilatum_valet` / `dilatum_colloquium`
+  compare the slot's generation (bumped at accept, at each request, at
+  close, and at the 503 deadline). The `generatio` section defers a
+  SECOND request in the same slot - with an immediate second response
+  the slot's `dilatum` flag alone rejects the old handle and the plant
+  was mute; strengthened until red.
+- **R7 (T2)** - (a) the test client's receive timeout is 20 ms (was 2 s):
+  the harness pumps the server between reads, a blocking client starved
+  it (expiratum/molliter failed on the harness, not the code); (b) a
+  waiting (EXSPECTANS) connection keeps read interest so a client that
+  leaves invalidates the handle at once instead of at the deadline;
+  (c) `colloquium_respondere_filum` returns b32 and sends the 404 itself
+  (the handler cannot forget it); (d) filum gained a sequential byte
+  reader (`filum_octeti_aperire/legere/claudere`, via `lectiones_fopen`)
+  - file sources stream 16 KB at a time and never load whole.
 
 ## Review focus
 

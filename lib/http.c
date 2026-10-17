@@ -9,6 +9,7 @@
 #include "chorda_aedificator.h"
 #include "via.h"
 
+#include <stdio.h>
 #include <string.h>
 
 
@@ -1657,12 +1658,15 @@ http_status_descriptio (
     }
 }
 
+/* longitudo: NIHIL = corpus.mensura (et corpus adiungitur); aliter
+ * Content-Length datus, capita SOLA (corpus per fontem, hospitium) */
 interior chorda
 _serialize_impl (
-    HttpResponsum* responsum,
-              b32  emittere_connexionem,
-              b32  keep_alive,
-          Piscina* piscina)
+         HttpResponsum* responsum,
+                   b32  emittere_connexionem,
+                   b32  keep_alive,
+    constans character* longitudo,
+               Piscina* piscina)
 {
      ChordaAedificator* aed;
     constans character* status_text;
@@ -1714,8 +1718,15 @@ _serialize_impl (
     si (!_http_corpus_prohibitum(responsum->status))
     {
         chorda_aedificator_appendere_literis(aed, "Content-Length: ");
-        chorda_aedificator_appendere_i32(aed,
-            responsum->corpus.mensura);
+        si (longitudo != NIHIL)
+        {
+            chorda_aedificator_appendere_literis(aed, longitudo);
+        }
+        alioquin
+        {
+            chorda_aedificator_appendere_i32(aed,
+                responsum->corpus.mensura);
+        }
         chorda_aedificator_appendere_literis(aed, "\r\n");
     }
 
@@ -1729,8 +1740,8 @@ _serialize_impl (
     /* Finis capitum */
     chorda_aedificator_appendere_literis(aed, "\r\n");
 
-    /* Corpus si praesens */
-    si (responsum->corpus.mensura > 0)
+    /* Corpus si praesens (non cum longitudine data: fons sequitur) */
+    si (longitudo == NIHIL && responsum->corpus.mensura > 0)
     {
         chorda_aedificator_appendere_chorda(aed, responsum->corpus);
     }
@@ -1743,7 +1754,7 @@ http_responsum_serialize (
     HttpResponsum* responsum,
           Piscina* piscina)
 {
-    redde _serialize_impl(responsum, FALSUM, FALSUM, piscina);
+    redde _serialize_impl(responsum, FALSUM, FALSUM, NIHIL, piscina);
 }
 
 chorda
@@ -1752,7 +1763,21 @@ http_responsum_serialize_cum_conexione (
               b32  keep_alive,
           Piscina* piscina)
 {
-    redde _serialize_impl(responsum, VERUM, keep_alive, piscina);
+    redde _serialize_impl(responsum, VERUM, keep_alive, NIHIL, piscina);
+}
+
+chorda
+http_responsum_capita_serialize (
+    HttpResponsum* responsum,
+              b32  keep_alive,
+              i64  longitudo_corporis,
+          Piscina* piscina)
+{
+    character longitudo[XXIV];
+
+    sprintf(longitudo, "%lu", (insignatus longus)longitudo_corporis);
+    redde _serialize_impl(responsum, VERUM, keep_alive, longitudo,
+        piscina);
 }
 
 

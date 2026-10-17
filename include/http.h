@@ -420,6 +420,16 @@ http_responsum_serialize_cum_conexione (
               b32  keep_alive,
           Piscina* piscina);
 
+/* Capita SOLA cum Content-Length dato - corpus postea per fontem
+ * mittitur (hospitium-v3-spec II.1, corpora magna per partes).
+ * corpus responsi neglegitur; Connection ut supra */
+chorda
+http_responsum_capita_serialize (
+    HttpResponsum* responsum,
+              b32  keep_alive,
+              i64  longitudo_corporis,
+          Piscina* piscina);
+
 
 /* ========================================================================
  * FUNCTIONES - UTILITAS

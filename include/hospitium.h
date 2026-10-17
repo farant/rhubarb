@@ -19,6 +19,18 @@
  * VITA MEMORIAE: omnia ex colloquio (petitio, params, piscina)
  * vivunt usque ad finem petitionis SOLUM - post responsum missum
  * piscina connexionis reficitur.
+ *
+ * RESPONSUM DILATUM (hospitium-v3-spec II.1): tractator
+ * colloquium_differre vocat et MANUBRIUM (valorem, non indicem)
+ * servat; postea (labor reactoris, responsum alienum)
+ * dilatum_colloquium colloquium reddit - aut NIHIL si connexio interim finita est (cliens
+ * abiit, terminus responsi, sistere): manubrium vetus numquam
+ * petitionem alienam attingit (generatio loci). Reactor communis
+ * (configuratio.reactor) applicationem et servum ansa UNA agit.
+ *
+ * FONTES CORPORIS: colloquium_respondere_fontem / _filum - capita cum
+ * Content-Length vero, corpus per partes dum fossa haurit (numquam
+ * totum in memoria).
  */
 
 #ifndef HOSPITIUM_H
@@ -28,6 +40,7 @@
 #include "piscina.h"
 #include "chorda.h"
 #include "http.h"
+#include "reactor.h"
 
 
 /* ========================================================================
@@ -52,7 +65,29 @@ nomen structura {
            MoraAngusta  capita_maxima_ms;    /* 0 = 10000 */
                    b32  acao;                        /* Access-Control-Allow-Origin: * */
                    b32  acta_accessus;               /* linea per petitionem ad stderr */
+    /* NIHIL = reactor proprius; aliter communis (hospitium eum non
+     * destruit) */
+              Reactor* reactor;
+    /* 0 = 30000 - terminus responsi dilati, deinde 503 */
+           MoraAngusta responsum_maximum_ms;
 } HospitiumConfiguratio;
+
+/* Manubrium responsi dilati - VALOR (copia libera); irritum fit cum
+ * connexio finitur aut petitio respondetur */
+nomen structura {
+     Hospitium* hospitium;
+           i32  locus;
+           i32  generatio;
+} HospitiumDilatum;
+
+/* Fons corporis: mensura = Content-Length; legere: >0 octeti, 0 finis,
+ * <0 error (connexio clauditur); claudere (NIHIL licet) semel vocatur */
+nomen structura {
+       i64 mensura;
+       s32 (*legere)(vacuum* datum, i8* capsa, i32 n);
+    vacuum (*claudere)(vacuum* datum);
+    vacuum* datum;
+} HospitiumFons;
 
 /* Numeratores - decisiones perf haec legunt */
 nomen structura {
@@ -126,6 +161,24 @@ HospitiumFructus
 hospitium_fructus (
     constans Hospitium* hospitium);
 
+/* Reactor quo servus agitur (proprius aut communis) */
+Reactor*
+hospitium_reactor (
+    Hospitium* hospitium);
+
+/* Sistere molliter: auscultator clauditur (connexiones novae
+ * recusantur), petitiones currentes (et dilatae) perficiuntur usque ad
+ * mora_ms, deinde omnia clauduntur; hospitium_gressus postea FALSUM */
+vacuum
+hospitium_sistere_molliter (
+    Hospitium* hospitium,
+          i32  mora_ms);
+
+/* VERUM postquam sistere molliter perfectum est */
+b32
+hospitium_sistit (
+    constans Hospitium* hospitium);
+
 
 /* ========================================================================
  * FUNCTIONES - INTRA TRACTATOREM (vita petitionis solum)
@@ -166,5 +219,40 @@ colloquium_respondere (
                     i32  status,
      constans character* mimen,
                  chorda  corpus);
+
+/* Respondere cum fonte corporis (capita + corpus per partes); HEAD:
+ * capita sola, fons statim clauditur */
+vacuum
+colloquium_respondere_fontem (
+     HospitiumColloquium* colloquium,
+                     i32  status,
+      constans character* mimen,
+           HospitiumFons  fons);
+
+/* Respondere cum filo per fontem; FALSUM (et 404 missum) si filum
+ * aperiri nequit */
+b32
+colloquium_respondere_filum (
+    HospitiumColloquium* colloquium,
+                    i32  status,
+     constans character* mimen,
+     constans character* via);
+
+/* Responsum differre: tractator redit sine responso; manubrium
+ * servandum. Terminus: responsum_maximum_ms (503). */
+HospitiumDilatum
+colloquium_differre (
+    HospitiumColloquium* colloquium);
+
+/* VERUM si responsum dilatum adhuc dari potest */
+b32
+dilatum_valet (
+    HospitiumDilatum dilatum);
+
+/* Colloquium dilati, aut NIHIL si non valet (cliens abiit, terminus,
+ * iam responsum) */
+HospitiumColloquium*
+dilatum_colloquium (
+    HospitiumDilatum dilatum);
 
 #endif /* HOSPITIUM_H */

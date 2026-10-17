@@ -57,3 +57,33 @@ listing reached without trailing slash resolves siblings wrong —
 proper fix is a 301 redirect to the slashed path); no HTML
 escaping in listing titles; OPTIONS has no automatic handler
 (405/404 path; Allow already renders it).
+
+## 2026-10-16 - hospitium v3 T2: deferred responses, shared reactor, body sources, soft stop
+
+- **The colloquium now lives inside its connection slot** (was a stack
+  value per request). Needed so a deferred response can outlive the
+  handler call. Consequence: a pointer to it is NOT a safe handle - the
+  slot is reused by the next connection, and an old pointer would then
+  address a live, unrelated request. Hence `HospitiumDilatum` (slot +
+  generation) and the generation bump at accept / request / close /
+  503 deadline. If you ever add a new path that ends or restarts a
+  request, bump `generatio` there too.
+- **Plant lesson:** the first `generatio` test was mute - B's request was
+  answered immediately, so `conn->dilatum == FALSUM` already rejected
+  the old handle. Only a second DEFERRED request in the same slot needs
+  the generation. Test now asserts `y.d.locus == x.d.locus` so it
+  provably exercises reuse.
+- **EXSPECTANS keeps reading:** a deferred connection still polls for
+  read. EOF -> close (handle invalid immediately). Bytes (pipelined next
+  request) -> `claudenda_post` + interest 0; we do not queue a second
+  request behind a deferred one.
+- **Body sources** pull HOSPITIUM_CAPSA_FONTIS (16 KB) per write
+  opportunity. A source that errors or ends short of its `mensura`
+  closes the connection: the client sees a truncated body, never a
+  wrong-but-complete one. Directory serving goes through the file
+  source now (big files no longer loaded whole).
+- **Shared reactor:** `configuratio.reactor` non-NIHIL -> the server
+  never destroys it; `hospitium_destruere` removes the listening fd and
+  cancels its vigilia timer so the app's reactor stays clean.
+- **Test harness:** client recv timeout 20 ms. With 2 s the test client
+  blocked while the single-threaded server (same process) needed pumping.

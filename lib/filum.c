@@ -445,6 +445,80 @@ filum_lector_claudere (
  * FilumScriptor - Scriptio Continua
  * ================================================== */
 
+
+/* ==================================================
+ * FilumOctetorumLector - Lectio Binaria per Partes
+ * ================================================== */
+
+structura FilumOctetorumLector {
+    FILUM* descriptum;
+};
+
+FilumOctetorumLector*
+filum_octeti_aperire (
+    constans character* via,
+               Piscina* piscina)
+{
+    FilumOctetorumLector* lector;
+
+    si (!via || !piscina)
+    {
+        _filum_error_ponere("via vel piscina est NIHIL");
+        redde NIHIL;
+    }
+    _filum_error_purgare();
+    lector = (FilumOctetorumLector*)piscina_allocare(piscina,
+        magnitudo(FilumOctetorumLector));
+    si (!lector)
+    {
+        _filum_error_ponere("piscina_allocare fracta");
+        redde NIHIL;
+    }
+    /* lectiones_fopen ipsa L aut A notat */
+    lector->descriptum = lectiones_fopen(via, "rb");
+    si (!lector->descriptum)
+    {
+        _filum_error_ponere("fopen fracta");
+        redde NIHIL;
+    }
+    redde lector;
+}
+
+s32
+filum_octeti_legere (
+    FilumOctetorumLector* lector,
+                      i8* capsa,
+                     i32  n)
+{
+    size_t lecta;
+
+    si (!lector || !lector->descriptum || !capsa)
+    {
+        redde -I;
+    }
+    si (n == ZEPHYRUM)
+    {
+        redde ZEPHYRUM;
+    }
+    lecta = fread(capsa, I, (size_t)n, lector->descriptum);
+    si (lecta == ZEPHYRUM && ferror(lector->descriptum))
+    {
+        redde -I;
+    }
+    redde (s32)lecta;
+}
+
+vacuum
+filum_octeti_claudere (
+    FilumOctetorumLector* lector)
+{
+    si (lector && lector->descriptum)
+    {
+        fclose(lector->descriptum);
+        lector->descriptum = NIHIL;
+    }
+}
+
 FilumScriptor*
 filum_scriptor_aperire (
      constans character* via,
