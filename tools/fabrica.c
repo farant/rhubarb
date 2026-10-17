@@ -972,6 +972,12 @@ nomen structura {
                i32  ignota;
                i32  non_iudicata;
                i32  supra;         /* FORTASSE: producens non recens */
+               /* PROGRESSUS (colloquia T10d): per actionem ordinis */
+               b32* tangit;        /* -tacta: actio tacta; NIHIL =
+                                    * omnes */
+               b32* numeranda;     /* exitus iudicandus aliquis */
+               i32  ambitus;       /* actiones numerandae */
+               i32  iudicata;
 } CursusIudicandi;
 
 /* vexilla iudicandi et viae tactae. FALSUM = vexillum ignotum */
@@ -1197,6 +1203,114 @@ _iudicare_iudices (
     }
 }
 
+/* exitus in stadio sententiarum iudicandus (aut sub iudice stalo NON
+ * IUDICATUS) - regula UNA sententiarum et progressus (T10d) */
+interior b32
+_exitus_iudicandus (
+           constans CursusIudicandi* t,
+             constans FabricaExitus* exitus,
+              constans FabricaActio* actio)
+{
+    si (!exitus->strategia->iudicatur)
+    {
+        redde FALSUM;
+    }
+    si (t->tacta)
+    {
+        /* commissa generata solum: strategia quae octetis comparat */
+        si (!exitus->strategia->octetis_comparat)
+        {
+            redde FALSUM;
+        }
+    }
+    alioquin si (!_electum(t->cursus.electa, exitus->via))
+    {
+        redde FALSUM;
+    }
+    /* iudicium (porta, spec 3 par. XII) solum NOMINATUM iudicatur:
+     * verritio sine argumentis id omittit */
+    redde t->cursus.electa != NIHIL
+        || actio->genus != FABRICA_ACTIO_IUDICIUM;
+}
+
+/* PROGRESSUS (colloquia T10d): actiones ordinis quibus exitus
+ * iudicandus est (ambitus) - semel ante praevisionem; tactio (-tacta)
+ * hic semel computatur, sententiae eam legunt. Notatio initialis
+ * (iudicata ZEPHYRUM, undae nullae: iudex undas non habet) */
+interior vacuum
+_iudicare_ambitum (
+    CursusIudicandi* t)
+{
+    CursusFabricae* c = &t->cursus;
+               i32  n;
+               i32  i;
+               i32  j;
+
+    n             = xar_numerus(c->ordo);
+    t->numeranda  = (b32*)piscina_allocare(c->piscina,
+        (memoriae_index)(n * magnitudo(b32) + I));
+    t->tangit     = t->tacta ? (b32*)piscina_allocare(c->piscina,
+        (memoriae_index)(n * magnitudo(b32) + I)) : NIHIL;
+    si (t->numeranda == NIHIL || (t->tacta && t->tangit == NIHIL))
+    {
+        t->numeranda  = NIHIL;
+        redde;
+    }
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        FabricaActio* actio;
+
+        actio            = *(FabricaActio**)xar_obtinere(c->ordo, i);
+        t->numeranda[i]  = FALSUM;
+        si (t->tangit)
+        {
+            t->tangit[i] = fabrica_actio_tacta(&c->sutura, actio,
+                t->viae_tactae, c->piscina);
+            si (!t->tangit[i])
+            {
+                perge;
+            }
+        }
+        per (j = ZEPHYRUM; j < xar_numerus(actio->exitus); j++)
+        {
+            si (_exitus_iudicandus(t, (FabricaExitus*)xar_obtinere(
+                    actio->exitus, j), actio))
+            {
+                t->numeranda[i] = VERUM;
+            }
+        }
+        si (t->numeranda[i])
+        {
+            t->ambitus++;
+        }
+    }
+    si (c->sutura.progressum_notare != NIHIL)
+    {
+        c->sutura.progressum_notare(c->sutura.datum, ZEPHYRUM,
+            t->ambitus, ZEPHYRUM, ZEPHYRUM);
+    }
+}
+
+/* actio ordinis i perfecta: iudicata (si numeranda) notantur */
+interior vacuum
+_iudicatam_notare (
+    CursusIudicandi* t,
+                i32  i)
+{
+    CursusFabricae* c = &t->cursus;
+
+    si (t->numeranda == NIHIL || !t->numeranda[i])
+    {
+        redde;
+    }
+    t->iudicata++;
+    si (c->sutura.progressum_notare != NIHIL)
+    {
+        c->sutura.progressum_notare(c->sutura.datum, t->iudicata,
+            t->ambitus, ZEPHYRUM, ZEPHYRUM);
+    }
+}
+
 /* sententiae ordine dependentiae: electa (aut tacta generata); sub
  * iudice stalo ceterae NON IUDICATAE */
 interior vacuum
@@ -1214,11 +1328,13 @@ _iudicare_sententias (
         actio = *(FabricaActio**)xar_obtinere(c->ordo, i);
         si (actio == t->iudex_actio)
         {
+            _iudicatam_notare(t, i);
             perge;   /* sententia eius iam prima */
         }
         si (   t->tacta
-            && !fabrica_actio_tacta(&c->sutura, actio, t->viae_tactae,
-            c->piscina))
+            && (t->tangit != NIHIL ? !t->tangit[i]
+                : !fabrica_actio_tacta(&c->sutura, actio,
+                      t->viae_tactae, c->piscina)))
         {
             perge;
         }
@@ -1249,23 +1365,7 @@ _iudicare_sententias (
                 }
                 perge;
             }
-            si (t->tacta)
-            {
-                /* commissa generata solum: strategia quae octetis
-                 * comparat */
-                si (!exitus->strategia->octetis_comparat)
-                {
-                    perge;
-                }
-            }
-            alioquin si (!_electum(c->electa, exitus->via))
-            {
-                perge;
-            }
-            /* iudicium (porta, spec 3 par. XII) solum NOMINATUM
-             * iudicatur: verritio sine argumentis id omittit */
-            si (   c->electa    == NIHIL
-                && actio->genus == FABRICA_ACTIO_IUDICIUM)
+            si (!_exitus_iudicandus(t, exitus, actio))
             {
                 perge;
             }
@@ -1283,6 +1383,7 @@ _iudicare_sententias (
             sententia->iudicium = fabrica_iudicare(&c->sutura, actio,
                 exitus, t->plenus, c->piscina);
         }
+        _iudicatam_notare(t, i);
     }
 }
 
@@ -1764,6 +1865,7 @@ _iudicare (
         _cursum_finire(&t.cursus);
         redde II;
     }
+    _iudicare_ambitum(&t);
     _iudicare_praevidere(&t);
     _iudicare_iudices(&t);
     _iudicare_sententias(&t);

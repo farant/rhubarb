@@ -3218,3 +3218,24 @@ stale (sanare heals upstream in order). Not yet: delete `praevia` + regex in
 `_porta_per_fabricam` (follow-up). Over-reporting narrowing ideas (per-exitus
 edges, cache-resolved FORTASSE in quick mode, hypothetical judgment against
 scratch output in plenus, measure first) are on the park.
+
+## 2026-10-17 - colloquia T10d: progress from `bin/fabrica iudicare`
+
+Judge-only gates (generata = `iudicare -plenus -omnia`) wrote no
+progress: `progressum_notare` was called from sanare only. A real
+generata run (139 s) spent ~131 s re-running 42 generators SERIALLY in
+`_iudicare_sententias` (bearssl_amalgama 59 s), so the count lives
+there: actions judged / actions to judge. One rule for "is this output
+judged" (`_exitus_iudicandus`, tools/fabrica.c) now serves both the
+sentence loop and the count, so they cannot drift. `_iudicare_ambitum`
+runs once before the prefetch: it computes per-action `numeranda` (and,
+under -tacta, `tangit`, so fabrica_actio_tacta is not called twice) and
+records `0/ambitus`; every action leaving the loop (including the stale
+judge's own, skipped there) records `iudicata/ambitus` through the
+existing throttled recorder. No waves: undae 0. The parallel prefetch
+(lectiones actions) runs before any count moves - the row sits at 0/N
+meanwhile, which is true.
+Fumus LX (g/h/k world of LVIII): -omnia 3/3, electum c 1/1 (g judged by
+the chain, not counted), no MENSOR_PARENS -> nothing. Hand plants 3/3
+red (no initial line, no per-action line, ambitus ignoring the
+selection). Unobservable in the fixture: the stale-judge branch.

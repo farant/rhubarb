@@ -116,6 +116,10 @@
 #        RECENS - h contra b stalum iudicabatur); arcus DATORUM solum
 #        (k cum praecondicione g, sine ingressu eius = RECENS); post
 #        sanare c RECENS
+#   LX   progressus iudicis (colloquia T10d): 'iudicare -plenus' sub
+#        MENSOR_PARENS fabrica.ambitus (actiones iudicandae) initio et
+#        fabrica.iudicata ultima = ambitus; electum 'c' = I (g per
+#        catenam non numeratur); sine MENSOR_PARENS nihil
 #
 # Exitus: 0 sanum · 1 fractum · 2 bin/fabrica deest.
 # <porta titulus="fabrica-fumus" gradus="fusio" instrumentum="bin/fabrica" tegit="*/aedificatio.stml aedificatio.canon fabrica.canon tools/fabrica_struere.sh"/>
@@ -1037,6 +1041,31 @@ mkdir -p "$T/domus3/.rhubarb"
 lix_x=$(grep -c 'fabrica\.' "$T/domus3/.rhubarb/mensurae.diarium" 2>/dev/null)
 if [ "${lix_a:-0}" -ge 1 ] && [ "${lix_u:-0}" -ge 1 ] && [ "$lix_i" = "$lix_a" ] && [ "${lix_x:-0}" = "0" ]; then echo "  LIX  progressus: ambitus et undae initio, iudicata ultima = ambitus, radix aliena nihil OK"; else echo "  LIX  FRACTUM (ambitus '${lix_a}', undae '${lix_u}', iudicata ultima '${lix_i}', lineae alienae ${lix_x:-0})"; fracta=1; fi
 
+# LX (colloquia T10d): PROGRESSUS IUDICIS - porta iudicans tantum
+# (generata = 'iudicare -plenus -omnia') nullum progressum scribebat
+# (progressum_notare in sanare solo); nunc actiones iudicatae ex
+# iudicandis. Mundus LVIII (g, h, k) iterum conditur.
+radix '<fabrica titulus="t"><subsystema via="."/></fabrica>'
+printf 'unum\n' > "$T/r/a"; printf 'e\n' > "$T/r/e"
+printf '<aedificatio>\n  <actio titulus="g" genus="generator">\n    <mandatum>\n      <verbum! (>sh\n      <verbum! (>gen_b.sh\n    </mandatum>\n    <ingressus genus="fasciculus" via="a"/>\n    <exitus via="b" provenientia="regeneratio"/>\n  </actio>\n  <actio titulus="h" genus="generator">\n    <mandatum>\n      <verbum! (>sh\n      <verbum! (>gen_c.sh\n    </mandatum>\n    <ingressus genus="fasciculus" via="b"/>\n    <exitus via="c" provenientia="regeneratio"/>\n  </actio>\n  <actio titulus="k" genus="generator">\n    <mandatum>\n      <verbum! (>sh\n      <verbum! (>gen_d.sh\n    </mandatum>\n    <praecondicio actio="g"/>\n    <ingressus genus="fasciculus" via="e"/>\n    <exitus via="d" provenientia="regeneratio"/>\n  </actio>\n</aedificatio>\n' > "$T/r/aedificatio.stml"
+printf 'D="${FABRICA_SCRIPTURA:-.}"; printf "b:%%s" "$(cat a)" > "$D/b"\n' > "$T/r/gen_b.sh"
+printf 'D="${FABRICA_SCRIPTURA:-.}"; printf "c:%%s" "$(cat b)" > "$D/c"\n' > "$T/r/gen_c.sh"
+printf 'D="${FABRICA_SCRIPTURA:-.}"; printf "d:%%s" "$(cat e)" > "$D/d"\n' > "$T/r/gen_d.sh"
+(cd "$T/r" && "$F" sanare) > "$T/lx_s" 2>&1
+RP=$(cd "$T/r" && pwd -P)
+(cd "$T/r" && MENSOR_PARENS=fumus-lx MENSOR_SESSIO=sessio-lx MENSOR_ARBOR="$RP" \
+    "$F" iudicare -plenus -omnia) > "$T/lx_o" 2>&1
+(cd "$T/r" && MENSOR_PARENS=fumus-lx-c MENSOR_SESSIO=sessio-lx MENSOR_ARBOR="$RP" \
+    "$F" iudicare -plenus c) > "$T/lx_c" 2>&1
+lx_n0=$(grep -c 'fabrica\.' "$MENSOR_DIARIUM")
+(cd "$T/r" && MENSOR_ARBOR="$RP" "$F" iudicare -plenus -omnia) > "$T/lx_n" 2>&1
+lx_n1=$(grep -c 'fabrica\.' "$MENSOR_DIARIUM")
+lx_a=$(awk -F'\t' '$3 == "fumus-lx" && $4 == "fabrica.ambitus" { print $5 + 0 }' "$MENSOR_DIARIUM" | tail -1)
+lx_i=$(awk -F'\t' '$3 == "fumus-lx" && $4 == "fabrica.iudicata" { print $5 + 0 }' "$MENSOR_DIARIUM" | tail -1)
+lx_ca=$(awk -F'\t' '$3 == "fumus-lx-c" && $4 == "fabrica.ambitus" { print $5 + 0 }' "$MENSOR_DIARIUM" | tail -1)
+lx_ci=$(awk -F'\t' '$3 == "fumus-lx-c" && $4 == "fabrica.iudicata" { print $5 + 0 }' "$MENSOR_DIARIUM" | tail -1)
+if [ "${lx_a:-x}" = "3" ] && [ "${lx_i:-x}" = "3" ] && [ "${lx_ca:-x}" = "1" ] && [ "${lx_ci:-x}" = "1" ] && [ "$lx_n0" = "$lx_n1" ]; then echo "  LX   progressus iudicis: ambitus 3, iudicata 3; electum c 1/1; sine parente nihil OK"; else echo "  LX   FRACTUM (omnia '${lx_a:-}'/'${lx_i:-}', c '${lx_ca:-}'/'${lx_ci:-}', sine parente lineae ${lx_n0} -> ${lx_n1})"; fracta=1; fi
+
 if [ "$fracta" -ne 0 ]; then echo "fumus fabricae: FRACTUM"; exit 1; fi
-echo "fumus fabricae: sanum (LIX/LIX)"
+echo "fumus fabricae: sanum (LX/LX)"
 exit 0

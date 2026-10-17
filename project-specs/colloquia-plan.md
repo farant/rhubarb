@@ -303,6 +303,13 @@ phase that needs it. Header text shown to Fran before coding.*
   stopped: tertia's post-ff installata rewrote ~/.bin/briar+silex mid-
   check - benign, retried); installata 24/24 incl. institutio_mensor
   -> ~/.bin/mensor. Owed: lid-close probe (T8d0), iudicare progress.
+- T10d 2026-10-17: `bin/fabrica iudicare` records progress too (the
+  GAP above): actions judged / actions to judge, counted by the same
+  rule that picks the sentences (`_exitus_iudicandus`, tools/fabrica.c);
+  0/N before the prefetch, then one line per action through the T8c
+  recorder (throttled, last always). generata's row now reads
+  "generata 1m20s 31/42 (...)". Fumus LX; hand plants 3/3.
+  Owed now: lid-close probe (T8d0) only.
 - IN MAIN 2026-10-16 (ff 1dc057b6, fusio_probare green + frigida,
   installata 23/23). The 7 hooks now call `~/.bin/praeco hamus`
   (backup ~/.claude/settings.json.bak-praeco-bin-2026-10-16); the ad
