@@ -103,7 +103,11 @@ _legere (
          i8  c;
 
     (vacuum)eventus;
-    (vacuum)read(fd, &c, I);
+    {
+        ssize_t lecta = read(fd, &c, I);   /* glibc warn_unused_result */
+
+        (vacuum)lecta;
+    }
     l->vocationes++;
     l->gradus_laboris = l->labor != NIHIL ? l->labor->gradus : ZEPHYRUM;
 }

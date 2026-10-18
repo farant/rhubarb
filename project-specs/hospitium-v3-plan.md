@@ -296,6 +296,43 @@ with this plan.
   thread and argon2id advances one step per reactor cycle, so the first
   version (20 ms client timeout, one pump per wait) took 675 s; the
   client now waits 1 ms and pumps 20 cycles between reads -> ~10 s.
+- **R25 (T9)** - portability findings, each fixed at its source:
+  - glibc `_FORTIFY_SOURCE` (Ubuntu gcc at -O2) marks read/write
+    `warn_unused_result`, which gcc does NOT silence with `(vacuum)`:
+    best-effort calls now assign to a variable (`lib/lectiones.c`,
+    `lib/processus_posix.c` x2, `probatio_reactor_labores.c`). Same
+    pattern remains outside T9's closures (`lib/pseudoterminale_posix.c`,
+    `probatio_manus.c`, `probatio_reactor_mutatio.c`) - untouched.
+  - musl's FD_SET macros trip -Wsign-conversion: `processus_posix.c`
+    moved from select() to poll() (also lifts FD_SETSIZE 1024; same
+    API as the reactor). Its musl pin in `exspectata_musl.txt` became
+    VANA and was removed.
+  - `lib/credo.c` -Wformat-overflow (gcc -O2 cannot see the length
+    check through sprintf): memcpy after the existing check.
+  - No POSIX variants existed for three macOS-only units; added
+    `lib/fenestra_tempus_posix.c` (real: clock_gettime MONOTONIC,
+    nanosleep), `lib/fiducia_posix.c` and `lib/tls_securetransport_posix.c`
+    (honest refusals with named reasons - outbound HTTPS from Linux is
+    out of scope, spec IV). aedilis picks them by the `_posix` suffix;
+    the macOS closure is unchanged (source list identical).
+  - `lib/http.c`: reason phrase for 303 ("See Other") was missing
+    ("303 Unknown" on the wire).
+- **R26 (T9)** - runner and build: `tools/linux/probatio.sh` gained
+  `-musl`, `--varians posix` closures, include roots from `bin/aedilis
+  --radices` (apps/ included), vendor objects with the compile_tests
+  vendor flags, and -O2. Both images gained curl (glibc too, so the
+  differential sections run there as well). BearSSL's amalgam bakes in
+  `inner.h` once, before any x86 intrinsics file can set
+  `BR_ENABLE_INTRINSICS`, so on amd64 `BR_TARGETS_X86_DOWN` is
+  undefined; the Linux vendor build passes `-DBR_ENABLE_INTRINSICS=1`
+  (the generated amalgam is not hand-edited; secunda is working on its
+  generator). Plain alpine has no curl - the in-container check uses
+  busybox wget.
+- **R27 (T9)** - `./porta_linux.sh -musl` is RED with 11-12 fractures in
+  files T9 never touched (missing include roots in the porta runner,
+  *_macos.c compiled on Linux, macOS util.h, -Wformat-overflow in
+  diurna.c, thesaurus.c ...): drift since 2026-08-03, parked
+  (...JWP9A), not fixed here.
 
 ## Review focus
 

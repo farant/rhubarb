@@ -1629,6 +1629,7 @@ http_status_descriptio (
         casus CCC:   redde "Multiple Choices";
         casus CCCI:  redde "Moved Permanently";
         casus CCCII: redde "Found";
+        casus CCCIII: redde "See Other";
         casus CCCIV: redde "Not Modified";
         casus CCCVII: redde "Temporary Redirect";
         casus CCCVIII: redde "Permanent Redirect";
