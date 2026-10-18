@@ -112,6 +112,15 @@ ranked by how much it bears on KC 47.
   the demo (T1a: zero mismatches against the reviewer's oracle on all
   trees of <= 7 words and nine treebanks). The demo's own review is
   task T4, after these nodes were written.
+- **D130 review (T4, 2026-10-17).** The reviewer's own oracle matched
+  every number in 57 for all seven treebanks (zero mismatches), and
+  found that P2's operand had been changed after registration and the
+  change misdescribed (H1). Marked [falls] with corrected children:
+  57.3.3 and 57.3.3.1 (falling ratio = normalisation, not locality),
+  57.5.1, 57.5.2, 57.5.3. Appended: 57.1.1 (the operand history),
+  57.3.1.1-2, 57.3.3.2-3, 57.4.1.1 (Perseus by work), 57.5.1.1,
+  57.5.2.2, 57.5.3.1, 57.5.4.1, 57.7.1. No address removed or
+  renumbered.
 
 ## Part I. Definitions
 
@@ -1295,8 +1304,8 @@ ranked by how much it bears on KC 47.
     the picture is knotapel/brainstorm-skeleton-settling.md IV, XI.
     Grades: [exact] counts are over gold UD trees; the repo treebanks
     CIRCSE, LLCT, EWT are re-derived by D130's own independent Python
-    oracles, the NC treebanks PROIEL, Perseus, ITTB, UDante by the
-    T4 review)
+    oracles, and all seven treebanks by the T4 review's own oracle,
+    zero mismatches)
 57.1. Two arcs CROSS when their endpoints interleave strictly; a tree
       is PLANAR when no two real arcs cross (Kuhlmann and Nivre 2006,
       Def. 4, root arc not added), PROJECTIVE when every yield is an
@@ -1304,6 +1313,14 @@ ranked by how much it bears on KC 47.
       inside its span is not dominated by its head; a tree is MILD
       when its gap degree is <= 1 and it is well-nested (Defs. 6-8).
       [definition]
+57.1.1. P2 (57.5) was REGISTERED on a different operand: "arcs in at
+        least one crossing", root arc included (plan 1c4c1b0c). Task 0
+        renamed that sentence "non-planar arcs", leaving P2's term
+        undefined; the per-arc notion of 57.1 was adopted after a review
+        reported the term undefined, which Claude passed on to Fran as
+        "never defined" - false. P2 is decided on the registered
+        operand, the per-arc one reported beside it. [definition] (D130
+        plan.md; found by the T4 review)
 57.2. Under a uniformly random order of a tree's words, two arcs with
       four distinct endpoints cross with probability exactly 1/3, so
       the expected crossings are (disjoint arc pairs) / 3. [proved]
@@ -1319,39 +1336,88 @@ ranked by how much it bears on KC 47.
         below the registered 1/4; English 0.0010, below every Latin
         one. Registered P1 holds. [exact] (D130 Part B, without
         punctuation)
+57.3.1.1. The ratio is POOLED over each treebank, so long sentences
+          dominate (in LLCT the 51+-word bin holds 84% of the pairs).
+          The unweighted mean of per-tree ratios is 0.2745 in CIRCSE,
+          above 1/4, and its 1-10-word sentences reach 0.3235; the
+          other Latin means are 0.0148 to 0.1541. [exact] (D130 Part B
+          and verdicts; T4)
+57.3.1.2. Uniform random order ignores the pressure toward short
+          dependencies, so the margin is weak evidence of crossing
+          avoidance as such. [interpretation]
 57.3.2. But crossed sentences are common: 40.9% (UDante) to 72.9%
         (PROIEL) of Latin trees are projective, against 98.5% in
         English. [exact] (D130 Part B)
 57.3.3. Observed / expected falls with sentence length in every Latin
         treebank (CIRCSE 0.32 for 1-10 words to 0.03 for 51+; LLCT
-        rises once, 0.012 to 0.038, then falls). [exact] (D130 Part B)
+        rises once, 0.012 to 0.038, then falls). [falls] (contradicts
+        itself: see 57.3.3.2)
 57.3.3.1. So the skeleton is planar at large scale and the crossings
-          live inside phrases. [interpretation]
+          live inside phrases. [falls] (see 57.3.3.3)
+57.3.3.2. Pooled observed / expected falls with length in five Latin
+          treebanks; LLCT rises once (0.012 to 0.038) before falling.
+          [exact] (D130 Part B; T4)
+57.3.3.3. The fall is the null's normalisation: the pairs that could
+          cross grow like n^2 (CIRCSE 6.2 per tree for 1-10 words,
+          2,432 for 51+), while crossings per word RISE with length
+          (CIRCSE 0.117 to 0.310, Perseus 0.080 to 0.296, PROIEL 0.029
+          to 0.101, LLCT 0.007 to 0.059). Locality was not measured.
+          [exact] (D130 Part B; T4)
 57.4. Is the non-projectivity mild?
 57.4.1. Yes in prose: 95.96% (UDante) to 98.57% (ITTB) of trees are
         mild in LLCT, PROIEL, ITTB and UDante; registered P3 holds.
         Verse is less so: CIRCSE 88.13%, Perseus (not split by genre)
         94.04%, both without prediction. [exact] (D130 Part D)
+57.4.1.1. Perseus splits by the work code of its sent_id: its prose
+          (Petronius) is 97.99% mild and enters P3, which still holds;
+          its verse (Ovid, Phaedrus, Vergil) is 88.52%, like CIRCSE.
+          57.4.1's "verse is less so" wrongly counted all of Perseus as
+          verse. [exact] (D130 Part D; T4)
 57.5. Are the crossings agreement, as in hyperbaton?
 57.5.1. In literary Latin, yes: in CIRCSE, Perseus, PROIEL, ITTB and
         UDante the share of non-projective arcs agreeing in Case,
         Gender and Number is 1.80x to 3.29x the share among all arcs,
         and amod + det are 18% to 55% of non-projective arcs against
-        8% to 15% of all arcs. [exact] (D130 Part C)
+        8% to 15% of all arcs. [falls] (the figures are exact for the
+        per-arc operand only; see 57.5.1.1)
+57.5.1.1. Under the registered operand (57.1.1) only CIRCSE (x1.613)
+          and Perseus (x1.614) pass; PROIEL x1.046, ITTB x0.967, UDante
+          x0.851 fail, and the amod + det half fails in UDante. Under
+          the per-arc operand the figures of 57.5.1 hold, the PROIEL
+          and UDante passes narrowly (bootstrap lower bounds 1.52,
+          1.55). So: the verse-heavy treebanks agree under both
+          readings; beyond them it depends on which arcs are counted.
+          [exact] (D130 verdicts; T4)
 57.5.2. In the charters, no: in LLCT agreement among non-projective
         arcs is 0.93x the baseline and amod + det are rarer among
         them (10.7% against 17.3%); its non-projective arcs are obl
         26.7%, advmod 11.2%, obj 9.2%, advcl 8.2%. Registered P2
-        (every Latin treebank) falls on LLCT alone. [exact] (D130
-        Part C)
+        (every Latin treebank) falls on LLCT alone. [falls] (true of
+        the per-arc operand only; see 57.5.2.2)
 57.5.2.1. Why do the charters cross? [open] (formulaic order is a
           guess; not examined)
+57.5.2.2. P2 falls under both operands: under the registered one in
+          LLCT, PROIEL, ITTB and UDante, under the per-arc one in LLCT
+          alone. The LLCT failure is robust (per-arc x0.931, bootstrap
+          [0.81, 1.06]; each file alone; x1.091 with punctuation kept).
+          [exact] (D130 verdicts; T4)
 57.5.3. So agreement-driven crossing is a property of the literary
-        register, not of Latin as such. [interpretation]
+        register, not of Latin as such. [falls] (see 57.5.3.1)
+57.5.3.1. Not established: "literary" was the complement of LLCT,
+          chosen after the run; under the registered operand Aquinas,
+          Dante and PROIEL fail too; and the charter side is one
+          treebank from one annotation team whose relation profile
+          looks convention-driven (det 11.7% of its arcs against 3.7%
+          to 5.0% elsewhere). Register and convention cannot be
+          separated here. [interpretation]
 57.5.4. Counting arcs in ANY crossing (non-planar) instead of
         non-projective arcs dilutes the agreement signal (CIRCSE
         33.1% against 64.6%): a crossed projective partner seldom
         agrees. [exact] (D130 Part C)
+57.5.4.1. Crossed but projective arcs agree in all three features only
+          1.2% (ITTB) to 6.8% (CIRCSE) of the time, which is why the
+          registered and per-arc operands differ about 2x. [exact]
+          (T4)
 57.6. How large are the tangles?
 57.6.1. Small: in the six Latin treebanks 37% to 67% of crossing
         components (two or more arcs, connected by crossings) are a
@@ -1362,6 +1428,11 @@ ranked by how much it bears on KC 47.
       (verse) 0.1885 > Perseus 0.1433 > PROIEL 0.0533 > LLCT 0.0502;
       registered P4 holds, with a narrow PROIEL / LLCT step. [exact]
       (D130 Part B)
+57.7.1. The PROIEL > LLCT step is not robust: it reverses with
+        punctuation kept (LLCT 0.0551 > PROIEL 0.0533), PROIEL's test
+        split is 58% Vulgate, which alone (0.0276) is below LLCT, and a
+        sentence bootstrap puts PROIEL above LLCT in 77% of resamples.
+        [exact] (D130 Part B; T4, bootstrap and work split)
 57.8. Can a sentence be given a canonical braid or tangle word whose
       crossings are the sentence's? [open] (D130 measures what such
       an encoding must carry: 57.6.1; proposal N14)

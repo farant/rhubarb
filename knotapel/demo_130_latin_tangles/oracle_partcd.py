@@ -1,5 +1,5 @@
-"""D130 Parts C and D oracle (repo treebanks, headline = without
-PUNCT), independent of the C demo and of lib/dependentia.c: own
+"""D130 Parts C and D oracle (repo treebanks; headline = without PUNCT,
+and annotated), independent of the C demo and of lib/dependentia.c: own
 CoNLL-U and FEATS parsing, non-projective arcs by head walks,
 well-nestedness over ALL disjoint subtree pairs (no sibling reduction),
 edge degree by union-find components of the induced subgraph with the
@@ -144,10 +144,19 @@ def analyse(ws, tot):
         tot['size'][0 if sz == 2 else 1 if sz == 3 else 2 if sz == 4
                     else 3 if sz <= 8 else 4] += 1
         tot['ccross'] += cr.get(r, 0)
-    # relations and agreement
-    for a, b, h, d in arcs:
+    # relations and agreement; crossed = in a crossing with a real arc;
+    # reg = P2's registered operand (plan 1c4c1b0c): crossed, or crossing
+    # the root arc (0, root)
+    crossed = set()
+    for i, j in crossing:
+        crossed.add(i)
+        crossed.add(j)
+    root = heads.index(0) + 1
+    for idx, (a, b, h, d) in enumerate(arcs):
         w, hw = ws[d - 1], ws[h - 1]
         nonproj = any(not dom(h, x) for x in range(a + 1, b))
+        nplan = idx in crossed
+        reg = nplan or a < root < b
         agree = [f in w['feats'] and f in hw['feats']
                  and w['feats'][f] == hw['feats'][f] for f in FEATS]
         agree.append(all(agree))
@@ -160,20 +169,30 @@ def analyse(ws, tot):
                 tot['ad_agr_all'][k] += agree[k]
                 if nonproj:
                     tot['ad_agr_np'][k] += agree[k]
+            if nplan:
+                tot['agr_nplan'][k] += agree[k]
+            if reg:
+                tot['agr_reg'][k] += agree[k]
         tot['ad_all'] += ad
         tot['ad_np'] += ad and nonproj
+        tot['reg'] += reg
+        tot['ad_reg'] += ad and reg
         tot['amod_np'] += w['rel'] == 'amod' and nonproj
         tot['det_np'] += w['rel'] == 'det' and nonproj
 
 
 for name, files in BANKS:
-    tot = dict(gd=[0] * 4, ed=[0] * 4, wn=0, mild=0, comps=0, size=[0] * 5,
-               ccross=0, agr_all=[0] * 4, agr_np=[0] * 4, ad_all=0, ad_np=0,
-               ad_agr_all=[0] * 4, ad_agr_np=[0] * 4, amod_np=0, det_np=0)
-    for fn in files:
-        for s in sentences(UD + fn):
-            ws = strip(s)
-            if ws is not None:
-                analyse(ws, tot)
-    print(name, ' '.join('%s=%s' % (k, v) for k, v in tot.items()))
-    sys.stdout.flush()
+    for col in (0, 1):
+        tot = dict(gd=[0] * 4, ed=[0] * 4, wn=0, mild=0, comps=0,
+                   size=[0] * 5, ccross=0, agr_all=[0] * 4, agr_np=[0] * 4,
+                   ad_all=0, ad_np=0, ad_agr_all=[0] * 4, ad_agr_np=[0] * 4,
+                   amod_np=0, det_np=0, agr_nplan=[0] * 4, agr_reg=[0] * 4,
+                   reg=0, ad_reg=0)
+        for fn in files:
+            for s in sentences(UD + fn):
+                ws = strip(s) if col == 0 else s
+                if ws is not None:
+                    analyse(ws, tot)
+        print(name, 'headline' if col == 0 else 'annotated',
+              ' '.join('%s=%s' % (k, v) for k, v in tot.items()))
+        sys.stdout.flush()

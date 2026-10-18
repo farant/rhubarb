@@ -54,18 +54,27 @@ measure whether real Latin looks like it.
   number of the arc diagram drawn above the sentence); crossings with
   the root arc are reported in their own column. **Non-planar arcs** =
   real arcs in at least one crossing.
-- **Non-projective arc** (the standard per-arc notion, e.g. Nivre and
-  Nilsson 2005): arc (h, d) is non-projective iff some word strictly
-  between h and d is not dominated by h. Equivalently its edge degree
-  (Def. 9) is > 0; a tree is projective iff it has no non-projective
-  arc. Parts B and C and prediction P2 use THIS notion; non-planar arcs
-  are reported beside it. The two differ: in a crossing pair usually
-  only one arc is non-projective (the hyperbaton arc), its partner
-  projective. (Defined 2026-10-17, after the T1a review, before any
-  census ran: the plan used the term without defining it, and the API
-  then counted only non-planar arcs. The reviewer reported that the two
-  counts differ by about 2x on the repo treebanks; no agreement or
-  relation figure has been computed by anyone.)
+- **Non-projective arc: two operands, disclosed (corrected after the T4
+  review).**
+  - REGISTERED (the plan Fran approved, 1c4c1b0c): "**Non-projective
+    arcs** = arcs in at least one crossing", with the root arc included
+    among the arcs. P2 was registered on THIS operand, and its verdict
+    decides P2.
+  - What happened to it: task 0 (fb6e2532), correcting planar against
+    projective, renamed that sentence "Non-planar arcs" and so left P2's
+    term without a definition. The T1a library review then reported the
+    term as undefined, and Claude passed that on to Fran as "the plan
+    never defines it" - which was false: it had been defined, and
+    Claude had orphaned it. On that basis Fran approved, in ce8816c8,
+    an AMENDED operand: the standard per-arc notion (e.g. Nivre and
+    Nilsson 2005) - arc (h, d) is non-projective iff some word strictly
+    between h and d is not dominated by h (equivalently edge degree > 0).
+    The amendment was made before any census ran; the T1a reviewer had
+    reported only that crossed and per-arc counts differ by about 2x.
+  - Both are computed and reported. Parts B and C print the per-arc
+    shares; P2 is decided on the registered operand, with the amended
+    one beside it as a disclosed amendment. Non-planar arcs (real
+    crossings only, root arc not counted) are printed too.
 - **Mild non-projectivity** (Kuhlmann and Nivre, "Mildly Non-Projective
   Dependency Structures", COLING/ACL 2006 poster sessions, pp. 507-514;
   definitions checked against the paper in task 0): a GAP is a pair of
@@ -220,7 +229,9 @@ n = 7 (5,040 orders). Seconds.
    lib/conllu.worklog.md.
    *T1a review 2026-10-17:* independent oracle, 0 mismatches (all trees
    n <= 7, 20,000 random, nine treebanks); H 0, M 1, L 5, N 4, all
-   fixed: "non-projective arc" defined (above) with per-arc measures
+   fixed: "non-projective arc" given the per-arc meaning (above; this
+   note originally said "defined", which T4 showed was a redefinition
+   of a registered operand) with per-arc measures
    `dependentia_arcus`; `dependentia_omittere` returns a status
    (`DependentiaOmissa`); PUNCT-root rule stated; oracle for edge
    degree made independent; planar and well-nested counts pinned.
@@ -246,7 +257,9 @@ n = 7 (5,040 orders). Seconds.
    count (`oracle_partcd.py`: well-nestedness over all disjoint pairs,
    least-depth component roots); the registered rules are functions,
    checked on the repo totals against hand-computed answers. 16 plants
-   red. Decision recorded: Perseus is not split by genre here (the only
+   red. Decision recorded (superseded by the T4 fixes: Perseus IS
+   separable by the work code of its sent_id, and its prose now enters
+   P3): Perseus is not split by genre here (the only
    classifier is oratio's, outside the freezable tiers), so it is
    reported against P3's threshold without a prediction, like CIRCSE.
    Relations = universal DEPREL before ':'. Verdicts: **P2 FAILS**, on
@@ -265,6 +278,27 @@ n = 7 (5,040 orders). Seconds.
    12217e0c (demo-snapshot.c, 15,462 lines, 18 library files, output
    identical, run with D130_UD_NC set).
 4. **T4:** independent review with its own oracle, then fixes.
+   *T4 review 2026-10-17 (recensor-d130):* own Python oracle, 0 number
+   mismatches over all seven treebanks and both columns. H 1, M 4, L 5,
+   N. Fixed (Fran approved the framing): **H1** P2 decided on the
+   REGISTERED operand (above) and reported with the amended one: both
+   FAIL - registered in LLCT, PROIEL, ITTB, UDante (x0.542 to x1.046;
+   only CIRCSE x1.613 and Perseus x1.614 pass), amended in LLCT alone;
+   the false history corrected here, in findings and in claims. **M1**
+   P4's PROIEL > LLCT step caveated (bootstrap, reversal with
+   punctuation, 58% Vulgate). **M2** crossings per word by length
+   printed: they RISE with length, so the falling obs/exp is the null's
+   n^2 normalisation, not locality. **M3** P1 labelled pooled, with the
+   per-tree mean printed (CIRCSE 0.2745 > 1/4). **M4** register reading
+   caveated (annotation convention; "literary" = not LLCT, post hoc).
+   **L1** Perseus split by sent_id work code: Petronius (prose) enters
+   P3 (97.99%, P3 still HOLDS), verse 88.52%. **L2** grades cite T4.
+   **L3** Parts C and D print both columns and are pinned in both.
+   **L4** wording. **L5** the informative 1/3-law count (880). The
+   independent planar-core search now covers every tree (per crossing
+   component; 22,807 analyses, none skipped). Checks 50 (full), 44
+   (quick); 13 new plants red (one survivor - a threshold the repo data
+   cannot see - led to the threshold check, then went red).
 
 ## Task 0 findings (2026-10-17)
 

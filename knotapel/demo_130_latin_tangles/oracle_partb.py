@@ -103,7 +103,7 @@ def dist_bin(c):
 
 for name, files in BANKS:
     for col in (0, 1):
-        lens = [[0, 0, 0] for _ in range(5)]   # trees, crossings, pairs
+        lens = [[0, 0, 0, 0] for _ in range(5)]   # trees, crossings, pairs, words
         dist = [0] * 6
         tot = dict(trees=0, aside=0, words=0, cross=0, pairs=0, rootc=0,
                    nonplan=0, nonproj=0, proj=0, planar=0)
@@ -121,6 +121,7 @@ for name, files in BANKS:
                 lens[b][0] += 1
                 lens[b][1] += m['cross']
                 lens[b][2] += m['pairs']
+                lens[b][3] += m['words']
                 dist[dist_bin(m['cross'])] += 1
                 for k in ('words', 'cross', 'pairs', 'rootc', 'nonplan',
                           'nonproj', 'proj', 'planar'):
@@ -130,6 +131,6 @@ for name, files in BANKS:
                        ('trees', 'aside', 'words', 'cross', 'pairs', 'rootc',
                         'nonproj', 'nonplan', 'proj', 'planar')))
         if col == 0:
-            print('  lens', ' '.join('%d/%d/%d' % tuple(x) for x in lens))
+            print('  lens', ' '.join('%d/%d/%d/%d' % tuple(x) for x in lens))
             print('  dist', ' '.join(str(x) for x in dist))
         sys.stdout.flush()
