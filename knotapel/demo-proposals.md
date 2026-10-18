@@ -425,6 +425,9 @@ B_3, replacing the post-hoc cyclic-length pattern.
 
 ### N9. Latin dependency trees as tangles
 
+*Became D130 (2026-10-17; KC 57): literary Latin crosses as
+agreement, the charters do not (P2 falls on LLCT); tangles are small.*
+
 **Why.** Brainstorm IV: a Latin sentence's syntax looks like a tangle
 — a planar (projective, TL-like) skeleton, crossings where hyperbaton
 separates words that belong together, agreement as labels carried

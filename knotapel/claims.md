@@ -106,6 +106,12 @@ ranked by how much it bears on KC 47.
   dominance assumption; 56.1.3 gives the per-class range and the
   tie-break; 56.3.1 is one random draw ([exact-search]); 56.4.2 says
   lambda^2 for angles.
+- **D130 (2026-10-17).** Appended Part XI (57): Latin dependency
+  trees as tangles, the first claims about language. Its two house
+  libraries (dependentia, conllu) were reviewed independently before
+  the demo (T1a: zero mismatches against the reviewer's oracle on all
+  trees of <= 7 words and nine treebanks). The demo's own review is
+  task T4, after these nodes were written.
 
 ## Part I. Definitions
 
@@ -1278,4 +1284,85 @@ ranked by how much it bears on KC 47.
         classes)
 56.5. Do the same laws hold on B_4? [open] (needs exact counts in
       d >= 3; ledger ...QK7A9)
+```
+
+## Part XI. Language: dependency trees
+
+```text
+57. Does Latin syntax look like a tangle: a mostly planar skeleton
+    of nested dependencies, with few and small crossings where word
+    order separates words that belong together? (D130, proposal N9;
+    the picture is knotapel/brainstorm-skeleton-settling.md IV, XI.
+    Grades: [exact] counts are over gold UD trees; the repo treebanks
+    CIRCSE, LLCT, EWT are re-derived by D130's own independent Python
+    oracles, the NC treebanks PROIEL, Perseus, ITTB, UDante by the
+    T4 review)
+57.1. Two arcs CROSS when their endpoints interleave strictly; a tree
+      is PLANAR when no two real arcs cross (Kuhlmann and Nivre 2006,
+      Def. 4, root arc not added), PROJECTIVE when every yield is an
+      interval (Def. 3); an arc is NON-PROJECTIVE when a word strictly
+      inside its span is not dominated by its head; a tree is MILD
+      when its gap degree is <= 1 and it is well-nested (Defs. 6-8).
+      [definition]
+57.2. Under a uniformly random order of a tree's words, two arcs with
+      four distinct endpoints cross with probability exactly 1/3, so
+      the expected crossings are (disjoint arc pairs) / 3. [proved]
+      (of the 24 relative orders of four endpoints, 8 nest, 8 sit
+      side by side, 8 cross; D130 checks the sum over ALL n! orders
+      on 2,194 real trees of <= 7 words, lib dependentia on every
+      tree of <= 5 words)
+57.2.1. Projective => planar => well-nested. [proved] (K&N p. 511;
+        D130 checks it on every tree, both columns)
+57.3. Is crossing rare in Latin?
+57.3.1. Yes, against random order: observed / expected crossings is
+        0.0065 (LLCT) to 0.1022 (Perseus) in six Latin treebanks, all
+        below the registered 1/4; English 0.0010, below every Latin
+        one. Registered P1 holds. [exact] (D130 Part B, without
+        punctuation)
+57.3.2. But crossed sentences are common: 40.9% (UDante) to 72.9%
+        (PROIEL) of Latin trees are projective, against 98.5% in
+        English. [exact] (D130 Part B)
+57.3.3. Observed / expected falls with sentence length in every Latin
+        treebank (CIRCSE 0.32 for 1-10 words to 0.03 for 51+; LLCT
+        rises once, 0.012 to 0.038, then falls). [exact] (D130 Part B)
+57.3.3.1. So the skeleton is planar at large scale and the crossings
+          live inside phrases. [interpretation]
+57.4. Is the non-projectivity mild?
+57.4.1. Yes in prose: 95.96% (UDante) to 98.57% (ITTB) of trees are
+        mild in LLCT, PROIEL, ITTB and UDante; registered P3 holds.
+        Verse is less so: CIRCSE 88.13%, Perseus (not split by genre)
+        94.04%, both without prediction. [exact] (D130 Part D)
+57.5. Are the crossings agreement, as in hyperbaton?
+57.5.1. In literary Latin, yes: in CIRCSE, Perseus, PROIEL, ITTB and
+        UDante the share of non-projective arcs agreeing in Case,
+        Gender and Number is 1.80x to 3.29x the share among all arcs,
+        and amod + det are 18% to 55% of non-projective arcs against
+        8% to 15% of all arcs. [exact] (D130 Part C)
+57.5.2. In the charters, no: in LLCT agreement among non-projective
+        arcs is 0.93x the baseline and amod + det are rarer among
+        them (10.7% against 17.3%); its non-projective arcs are obl
+        26.7%, advmod 11.2%, obj 9.2%, advcl 8.2%. Registered P2
+        (every Latin treebank) falls on LLCT alone. [exact] (D130
+        Part C)
+57.5.2.1. Why do the charters cross? [open] (formulaic order is a
+          guess; not examined)
+57.5.3. So agreement-driven crossing is a property of the literary
+        register, not of Latin as such. [interpretation]
+57.5.4. Counting arcs in ANY crossing (non-planar) instead of
+        non-projective arcs dilutes the agreement signal (CIRCSE
+        33.1% against 64.6%): a crossed projective partner seldom
+        agrees. [exact] (D130 Part C)
+57.6. How large are the tangles?
+57.6.1. Small: in the six Latin treebanks 37% to 67% of crossing
+        components (two or more arcs, connected by crossings) are a
+        single crossing pair, components average 1.7 to 3.6
+        crossings, and components of 9 or more arcs are at most 5.0%.
+        [exact] (D130 Part D)
+57.7. Does genre order the density? Yes: crossings per word CIRCSE
+      (verse) 0.1885 > Perseus 0.1433 > PROIEL 0.0533 > LLCT 0.0502;
+      registered P4 holds, with a narrow PROIEL / LLCT step. [exact]
+      (D130 Part B)
+57.8. Can a sentence be given a canonical braid or tangle word whose
+      crossings are the sentence's? [open] (D130 measures what such
+      an encoding must carry: 57.6.1; proposal N14)
 ```

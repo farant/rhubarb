@@ -258,6 +258,12 @@ n = 7 (5,040 orders). Seconds.
    of all). **P3 HOLDS** (mild 95.96% UDante to 98.57% ITTB; CIRCSE
    88.13% and Perseus 94.04% without prediction).
 3. **T3:** findings.md, claims.md, ledger, archive.sh.
+   *T3 done 2026-10-17:* findings.md; KC Part XI (57, the first
+   claims about language) and a Revisions entry; ledger note on N9
+   (stays open until T4) and question …V3QKWX (why the charters
+   cross); demo-proposals N9 marked; frozen with archive.sh at
+   12217e0c (demo-snapshot.c, 15,462 lines, 18 library files, output
+   identical, run with D130_UD_NC set).
 4. **T4:** independent review with its own oracle, then fixes.
 
 ## Task 0 findings (2026-10-17)
