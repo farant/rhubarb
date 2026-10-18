@@ -241,6 +241,22 @@ n = 7 (5,040 orders). Seconds.
    0.0533 > LLCT 0.0502 - the PROIEL/LLCT step is narrow). Part C/D
    figures (P2, P3) not yet computed.
 2. **T2:** Parts C and D, checks, plants.
+   *T2 done 2026-10-17:* Parts C and D in main.c (42 checks full, 38
+   quick, 0.6 s). Repo totals pinned from a second independent Python
+   count (`oracle_partcd.py`: well-nestedness over all disjoint pairs,
+   least-depth component roots); the registered rules are functions,
+   checked on the repo totals against hand-computed answers. 16 plants
+   red. Decision recorded: Perseus is not split by genre here (the only
+   classifier is oratio's, outside the freezable tiers), so it is
+   reported against P3's threshold without a prediction, like CIRCSE.
+   Relations = universal DEPREL before ':'. Verdicts: **P2 FAILS**, on
+   LLCT alone (all-three agreement 21.1% of non-projective arcs vs
+   22.6% of all, x0.93; amod + det 10.7% of non-projective vs 17.3% of
+   all - charter non-projectivity is obl 26.7%, advmod 11.2%, obj 9.2%,
+   advcl 8.2%); in the other five Latin treebanks both halves hold
+   (x1.80 to x3.29; amod + det 18-55% of non-projective arcs vs 8-15%
+   of all). **P3 HOLDS** (mild 95.96% UDante to 98.57% ITTB; CIRCSE
+   88.13% and Perseus 94.04% without prediction).
 3. **T3:** findings.md, claims.md, ledger, archive.sh.
 4. **T4:** independent review with its own oracle, then fixes.
 

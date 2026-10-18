@@ -22,8 +22,16 @@
  *           expected crossings under random word order (exact null:
  *           E = disjoint arc pairs / 3), by sentence length, planar core
  *           deficit. Registered predictions P1 and P4.
- *   Part C  (T2) relations and agreement (P2).
- *   Part D  (T2) mildness and shape (P3).
+ *   Part C  (T2) which relations are non-projective (and non-planar),
+ *           and whether those arcs agree in Case, Gender, Number;
+ *           amod + det (hyperbaton). Registered prediction P2.
+ *   Part D  (T2) gap degree, well-nestedness, MILD (gap degree <= 1 and
+ *           well-nested), edge degree; the crossing graph's components
+ *           (size, single crossing pairs). Registered prediction P3
+ *           (prose Latin; Perseus is not split by genre here, so it is
+ *           reported like CIRCSE, without a prediction).
+ * Repo totals of Parts B-D are pinned from oracle_partb.py and
+ * oracle_partcd.py (independent Python counts, in this directory).
  *
  * Headline = trees WITHOUT punctuation (UPOS PUNCT removed, dependents
  * re-attached to its head, dependentia_omittere); a sentence whose root
@@ -153,6 +161,7 @@ ratio_print (
 #define N_BANKS   7
 #define N_LEN     5    /* sentence-length bins */
 #define N_DIST    6    /* crossing-count bins */
+#define N_REL     21   /* relations reported (last = other) */
 
 typedef struct {
     const char *file;
@@ -213,6 +222,27 @@ typedef struct {
     s64  len_cross[N_LEN];
     s64  len_pairs[N_LEN];
     long len_trees[N_LEN];
+    /* Part C: per relation (all arcs, non-projective, non-planar) */
+    long rel_all[N_REL];
+    long rel_np[N_REL];
+    long rel_nplan[N_REL];
+    /* agreement (Case, Gender, Number, all three) on all, non-projective,
+     * non-planar arcs; and on amod + det arcs (all, non-projective) */
+    long agr_all[4];
+    long agr_np[4];
+    long agr_nplan[4];
+    long ad_all, ad_np;
+    long ad_agr_all[4];
+    long ad_agr_np[4];
+    /* Part D */
+    long gd[4];            /* trees with gap degree 0, 1, 2, 3+ */
+    long ed[4];            /* trees with edge degree 0, 1, 2, 3+ */
+    long mild;             /* gap degree <= 1 and well-nested */
+    long comps;            /* crossing-graph components with >= 2 arcs */
+    long comp_size[5];     /* 2, 3, 4, 5-8, 9+ arcs */
+    long comp_pair;        /* exactly two arcs and one crossing */
+    long comp_arcs;
+    s64  comp_cross;
 } Stats;
 
 static Stats stats[N_BANKS][2];
@@ -233,6 +263,62 @@ len_bin (
 static const char *const len_names[N_LEN] = {
     "1-10", "11-20", "21-30", "31-50", "51+"
 };
+
+static const char *const rel_names[N_REL] = {
+    "nsubj", "obj", "iobj", "obl", "advmod", "advcl", "amod", "det",
+    "nmod", "acl", "conj", "cc", "case", "mark", "cop", "aux", "xcomp",
+    "ccomp", "appos", "nummod", "other"
+};
+
+#define REL_AMOD 6
+#define REL_DET  7
+
+/* universal relation = DEPREL up to ':' (obl:arg -> obl) */
+static int
+rel_index (
+    chorda deprel)
+{
+    int i;
+    i32 n = 0;
+
+    while (n < deprel.mensura && deprel.datum[n] != ':') n++;
+    for (i = 0; i < N_REL - 1; i++)
+        if ((i32)strlen(rel_names[i]) == n
+            && memcmp(deprel.datum, rel_names[i], (size_t)n) == 0)
+            return i;
+    return N_REL - 1;
+}
+
+static const char *const feat_names[3] = { "Case", "Gender", "Number" };
+
+/* agree[0..2]: head and dependent both carry the feature, values equal;
+ * agree[3]: all three */
+static void
+agreement (
+    const ConlluLexema *h,
+    const ConlluLexema *d,
+    int                *agree)
+{
+    int f;
+
+    agree[3] = 1;
+    for (f = 0; f < 3; f++) {
+        chorda a = conllu_proprietas(h->feats, feat_names[f]);
+        chorda b = conllu_proprietas(d->feats, feat_names[f]);
+
+        agree[f] = a.mensura > 0 && b.mensura > 0 && chorda_aequalis(a, b);
+        if (!agree[f]) agree[3] = 0;
+    }
+}
+
+static int
+size_bin (
+    long n)
+{
+    if (n <= 4) return (int)n - 2;
+    if (n <= 8) return 3;
+    return 4;
+}
 
 static int
 dist_bin (
@@ -376,13 +462,18 @@ third_law (
 }
 
 /* analyse one sound tree into stats[bank][col]; per-tree checks */
+static long comp_bad = 0;        /* crossing components vs tree totals */
+
+/* analyse one sound tree into stats[bank][col]; w[k - 1] = lexeme of
+ * word k; per-tree checks */
 static void
 analyse (
-    Piscina                *scratch,
-    const DependentiaArbor *t,
-    int                     bank,
-    int                     col,
-    int                     law)
+    Piscina                   *scratch,
+    const DependentiaArbor    *t,
+    const ConlluLexema *const *w,
+    int                        bank,
+    int                        col,
+    int                        law)
 {
     Stats             *s = &stats[bank][col];
     DependentiaCruces  x, xr;
@@ -464,6 +555,80 @@ analyse (
     s->len_cross[b] += x.cruces;
     s->len_pairs[b] += x.paria_disiuncta;
     s->len_trees[b]++;
+
+    /* Part C accumulation: relation and agreement per real arc */
+    for (k = 1; k <= n; k++) {
+        i32 h = t->capita[k - 1];
+        int r, f, agree[4], ad;
+
+        if (h == 0) continue;
+        r = rel_index(w[k - 1]->deprel);
+        agreement(w[h - 1], w[k - 1], agree);
+        ad = r == REL_AMOD || r == REL_DET;
+        s->rel_all[r]++;
+        if (ad) s->ad_all++;
+        for (f = 0; f < 4; f++) {
+            s->agr_all[f] += agree[f];
+            if (ad) s->ad_agr_all[f] += agree[f];
+        }
+        if (arcs[k - 1].non_proiectivus) {
+            s->rel_np[r]++;
+            if (ad) s->ad_np++;
+            for (f = 0; f < 4; f++) {
+                s->agr_np[f] += agree[f];
+                if (ad) s->ad_agr_np[f] += agree[f];
+            }
+        }
+        if (arcs[k - 1].cruces > 0) {
+            s->rel_nplan[r]++;
+            for (f = 0; f < 4; f++) s->agr_nplan[f] += agree[f];
+        }
+    }
+
+    /* Part D accumulation */
+    s->gd[m.gradus_lacunarum < 3 ? m.gradus_lacunarum : 3]++;
+    s->ed[m.gradus_arcuum < 3 ? m.gradus_arcuum : 3]++;
+    if (m.gradus_lacunarum <= 1 && m.bene_nidificata) s->mild++;
+    {
+        s32  *comp = (s32 *)piscina_allocare(scratch,
+            (memoriae_index)n * sizeof(s32));
+        s32   nc = dependentia_componentes(scratch, t, comp);
+        long *size, *cr;
+        long  sum_arcs = 0;
+        s64   sum_cross = 0;
+        int   bad = 0;
+        s32   c;
+
+        if (nc < 0) fatal("componentes");
+        size = (long *)piscina_allocare(scratch,
+            (memoriae_index)(nc + 1) * sizeof(long));
+        cr = (long *)piscina_allocare(scratch,
+            (memoriae_index)(nc + 1) * sizeof(long));
+        for (c = 0; c < nc; c++) size[c] = cr[c] = 0;
+        for (k = 0; k < n; k++) {
+            if (comp[k] < 0) continue;
+            size[comp[k]]++;
+            cr[comp[k]] += (long)arcs[k].cruces;   /* each crossing twice */
+        }
+        for (c = 0; c < nc; c++) {
+            if (size[c] < 2) {
+                if (cr[c] != 0) bad = 1;
+                continue;
+            }
+            if (cr[c] % 2 != 0) bad = 1;
+            cr[c] /= 2;
+            if (size[c] == 2 && cr[c] != 1) bad = 1;
+            s->comps++;
+            s->comp_size[size_bin(size[c])]++;
+            if (size[c] == 2) s->comp_pair++;
+            s->comp_arcs += size[c];
+            s->comp_cross += cr[c];
+            sum_arcs += size[c];
+            sum_cross += cr[c];
+        }
+        if (bad || sum_arcs != (long)x.arcus_secti || sum_cross != x.cruces)
+            comp_bad++;
+    }
 }
 
 /* ================================================================
@@ -536,7 +701,7 @@ read_file (
         }
         words += a.arbor.numerus;
         /* column 1: as annotated (the 1/3 law runs on repo trees) */
-        analyse(scratch, &a.arbor, bank, 1, !f->nc);
+        analyse(scratch, &a.arbor, a.verba, bank, 1, !f->nc);
         /* column 0: without PUNCT */
         punct = (b32 *)piscina_allocare(scratch,
             (memoriae_index)a.arbor.numerus * sizeof(b32));
@@ -553,8 +718,17 @@ read_file (
             } else if (r != DEPENDENTIA_OMISSA_FACTA) {
                 fatal("omittere");
             } else {
+                /* kept words in order: the renumbering of omittere */
+                const ConlluLexema **kw = (const ConlluLexema **)
+                    piscina_allocare(scratch, (memoriae_index)e.numerus
+                    * sizeof(const ConlluLexema *));
+                i32 q = 0;
+
+                for (k = 0; k < a.arbor.numerus; k++)
+                    if (!punct[k]) kw[q++] = a.verba[k];
+                if (q != e.numerus) fatal("kept words");
                 stats[bank][0].contractions += (long)moved;
-                analyse(scratch, &e, bank, 0, 0);
+                analyse(scratch, &e, kw, bank, 0, 0);
             }
         }
     }
@@ -644,6 +818,9 @@ part_a (void)
         sprintf(msg, "reversing word order keeps crossings, root crossings,"
             " gap and edge degree, well-nestedness, planar core");
         check(msg, rev_bad == 0);
+        check("crossing components: arcs and crossings sum to the tree's "
+            "non-planar arcs and crossings; every 2-arc component is one "
+            "crossing", comp_bad == 0);
         sprintf(msg, "1/3 law: sum of crossings over all n! orders == n! "
             "x pairs / 3, on %ld repo trees with <= %d words",
             third_checked, quick ? 5 : 7);
@@ -849,17 +1026,262 @@ part_b (void)
 }
 
 /* ================================================================
- * Registered predictions decided by Part B
+ * Part C: which relations cross, and do they agree
  * ================================================================ */
+
+static double
+pct (
+    long a,
+    long b)
+{
+    return b == 0 ? 0.0 : 100.0 * (double)a / (double)b;
+}
+
+/* headline Parts C and D totals of the repo treebanks pinned from
+ * oracle_partcd.py (independent Python: own FEATS parsing, head walks,
+ * well-nestedness over ALL disjoint subtree pairs, edge degree by
+ * union-find with least-depth roots) - constants, said so */
+typedef struct {
+    long gd[4], ed[4], wn, mild, comps, size[5];
+    s64  ccross;
+    long agr_all[4], agr_np[4], ad_all, ad_np, ad_agr_all[4], ad_agr_np[4];
+    long amod_np, det_np;
+} PinCD;
+
+static const PinCD pins_cd[3] = {
+    { { 375, 458, 58, 2 }, { 375, 440, 65, 13 }, 828, 787, 782,
+      { 339, 170, 122, 126, 25 }, 2168,
+      { 2582, 2537, 6261, 2193 }, { 930, 877, 1034, 829 }, 1561, 702,
+      { 1521, 1479, 1531, 1464 }, { 693, 666, 693, 662 }, 447, 255 },
+    { { 1248, 445, 38, 3 }, { 1248, 463, 17, 6 }, 1732, 1692, 576,
+      { 256, 103, 59, 132, 26 }, 2080,
+      { 12139, 12883, 22840, 8990 }, { 306, 298, 364, 251 }, 6883, 128,
+      { 5772, 5814, 6651, 5211 }, { 125, 127, 126, 124 }, 95, 33 },
+    { { 3973, 60, 0, 0 }, { 3973, 59, 1, 0 }, 4033, 4033, 56,
+      { 37, 10, 3, 6, 0 }, 92,
+      { 3, 0, 7941, 0 }, { 0, 0, 13, 0 }, 6268, 0,
+      { 0, 0, 273, 0 }, { 0, 0, 0, 0 }, 0, 0 }
+};
+
+static int
+same4 (
+    const long *a,
+    const long *b,
+    int         n)
+{
+    int i;
+
+    for (i = 0; i < n; i++)
+        if (a[i] != b[i]) return 0;
+    return 1;
+}
+
+static void
+pinned_cd (void)
+{
+    int b;
+
+    for (b = 0; b < 3; b++) {
+        const Stats *s = &stats[b][0];
+        const PinCD *q = &pins_cd[b];
+        char         msg[200];
+
+        sprintf(msg, "%s headline: Part C (relations, agreement) = "
+            "oracle_partcd.py", bank_short[b]);
+        check(msg, same4(s->agr_all, q->agr_all, 4)
+            && same4(s->agr_np, q->agr_np, 4) && s->ad_all == q->ad_all
+            && s->ad_np == q->ad_np && same4(s->ad_agr_all, q->ad_agr_all, 4)
+            && same4(s->ad_agr_np, q->ad_agr_np, 4)
+            && s->rel_np[REL_AMOD] == q->amod_np
+            && s->rel_np[REL_DET] == q->det_np);
+        sprintf(msg, "%s headline: Part D (gap and edge degree, "
+            "well-nested, mild, components) = oracle_partcd.py",
+            bank_short[b]);
+        check(msg, same4(s->gd, q->gd, 4) && same4(s->ed, q->ed, 4)
+            && s->well_nested == q->wn && s->mild == q->mild
+            && s->comps == q->comps && same4(s->comp_size, q->size, 5)
+            && s->comp_cross == q->ccross && s->comp_pair == q->size[0]);
+    }
+}
+
+static void
+part_c (void)
+{
+    int b, r, f;
+
+    printf("\n=== Part C: which relations cross, and do they agree ===\n");
+    printf("\n  headline; per relation: share of NON-PROJECTIVE arcs / share "
+        "of ALL real arcs (%%)\n  %-7s", "rel");
+    for (b = 0; b < N_BANKS; b++)
+        if (bank_present[b]) printf(" %12s", bank_short[b]);
+    printf("\n");
+    for (r = 0; r < N_REL; r++) {
+        printf("  %-7s", rel_names[r]);
+        for (b = 0; b < N_BANKS; b++) {
+            const Stats *s = &stats[b][0];
+
+            if (!bank_present[b]) continue;
+            printf("  %5.1f/%5.1f", pct(s->rel_np[r], s->nonproj_arcs),
+                pct(s->rel_all[r], s->arcs));
+        }
+        printf("\n");
+    }
+    printf("\n  headline; per relation: share of NON-PLANAR (crossed) arcs "
+        "(%%), beside\n  %-7s", "rel");
+    for (b = 0; b < N_BANKS; b++)
+        if (bank_present[b]) printf(" %8s", bank_short[b]);
+    printf("\n");
+    for (r = 0; r < N_REL; r++) {
+        printf("  %-7s", rel_names[r]);
+        for (b = 0; b < N_BANKS; b++)
+            if (bank_present[b])
+                printf(" %8.1f", pct(stats[b][0].rel_nplan[r],
+                    stats[b][0].nonplanar_arcs));
+        printf("\n");
+    }
+
+    printf("\n  headline; agreement = head and dependent both carry the "
+        "feature, values equal (%% of arcs)\n");
+    printf("  %-8s %-27s %-27s %8s %15s\n", "", "all arcs: Case Gend Numb all3",
+        "non-proj: Case Gend Numb all3", "nonplan", "amod+det all3");
+    for (b = 0; b < N_BANKS; b++) {
+        const Stats *s = &stats[b][0];
+
+        if (!bank_present[b]) continue;
+        printf("  %-8s          ", bank_short[b]);
+        for (f = 0; f < 4; f++) printf(" %4.1f", pct(s->agr_all[f], s->arcs));
+        printf("           ");
+        for (f = 0; f < 4; f++)
+            printf(" %4.1f", pct(s->agr_np[f], s->nonproj_arcs));
+        printf("   %5.1f    %5.1f / %5.1f\n",
+            pct(s->agr_nplan[3], s->nonplanar_arcs),
+            pct(s->ad_agr_all[3], s->ad_all), pct(s->ad_agr_np[3], s->ad_np));
+    }
+    printf("\n  amod + det: share of all real arcs vs of non-projective arcs "
+        "(%%)\n");
+    for (b = 0; b < N_BANKS; b++) {
+        const Stats *s = &stats[b][0];
+
+        if (!bank_present[b]) continue;
+        printf("  %-8s %5.1f -> %5.1f   (amod %5.1f -> %5.1f, det %5.1f -> "
+            "%5.1f)\n", bank_short[b], pct(s->ad_all, s->arcs),
+            pct(s->ad_np, s->nonproj_arcs),
+            pct(s->rel_all[REL_AMOD], s->arcs),
+            pct(s->rel_np[REL_AMOD], s->nonproj_arcs),
+            pct(s->rel_all[REL_DET], s->arcs),
+            pct(s->rel_np[REL_DET], s->nonproj_arcs));
+    }
+    printf("\n");
+    pinned_cd();
+}
+
+/* ================================================================
+ * Part D: mildness and shape
+ * ================================================================ */
+
+static void
+part_d (void)
+{
+    int b, i;
+
+    printf("\n=== Part D: mildness and shape ===\n");
+    printf("\n  headline; %% of trees by gap degree (0 1 2 3+), well-nested, "
+        "MILD = gap degree <= 1 and well-nested,\n  by edge degree "
+        "(0 1 2 3+)\n");
+    printf("  %-8s %5s %5s %5s %5s %6s %6s   %5s %5s %5s %5s\n", "bank",
+        "gd0", "gd1", "gd2", "gd3+", "wn", "MILD", "ed0", "ed1", "ed2",
+        "ed3+");
+    for (b = 0; b < N_BANKS; b++) {
+        const Stats *s = &stats[b][0];
+
+        if (!bank_present[b]) continue;
+        printf("  %-8s", bank_short[b]);
+        for (i = 0; i < 4; i++) printf(" %5.1f", pct(s->gd[i], s->trees));
+        printf(" %6.2f %6.2f  ", pct(s->well_nested, s->trees),
+            pct(s->mild, s->trees));
+        for (i = 0; i < 4; i++) printf(" %5.1f", pct(s->ed[i], s->trees));
+        printf("\n");
+    }
+    printf("\n  headline; crossing-graph components (>= 2 arcs): number, per "
+        "100 words, by size in arcs\n  (2 3 4 5-8 9+, %% of components), "
+        "share that are ONE crossing pair, crossings per component\n");
+    printf("  %-8s %6s %7s %5s %5s %5s %5s %5s %6s %8s\n", "bank", "comps",
+        "/100w", "2", "3", "4", "5-8", "9+", "pair%", "cross/c");
+    for (b = 0; b < N_BANKS; b++) {
+        const Stats *s = &stats[b][0];
+
+        if (!bank_present[b]) continue;
+        printf("  %-8s %6ld %7.3f", bank_short[b], s->comps,
+            100.0 * (double)s->comps / (double)s->words);
+        for (i = 0; i < 5; i++) printf(" %5.1f", pct(s->comp_size[i], s->comps));
+        printf(" %6.1f %8.3f\n", pct(s->comp_pair, s->comps),
+            s->comps == 0 ? 0.0 : (double)s->comp_cross / (double)s->comps);
+    }
+}
+
+/* ================================================================
+ * Registered predictions
+ * ================================================================ */
+
+/* the registered rules, per treebank (exact integer comparisons) */
+static int
+p1_rule (
+    const Stats *s)
+{
+    return 12 * s->crossings < s->pairs;    /* 3c / pairs < 1/4 */
+}
+
+static int
+p2_agree_rule (
+    const Stats *s)
+{
+    return 2 * (s64)s->agr_np[3] * (s64)s->arcs
+        >= 3 * (s64)s->agr_all[3] * (s64)s->nonproj_arcs;
+}
+
+static int
+p2_ad_rule (
+    const Stats *s)
+{
+    return (s64)s->ad_np * (s64)s->arcs > (s64)s->ad_all * (s64)s->nonproj_arcs;
+}
+
+static int
+p3_rule (
+    const Stats *s)
+{
+    return 20 * s->mild >= 19 * s->trees;
+}
+
+/* the rules on the pinned repo totals, against answers computed by hand
+ * from oracle_partb.py / oracle_partcd.py:
+ *   P1 CIRCSE 12 * 2168 = 26016 < 105998; LLCT 24960 < 960319
+ *   P2 agreement CIRCSE 2 * 829 * 10610 >= 3 * 2193 * 1284 (yes),
+ *     LLCT 2 * 251 * 39729 = 19.9M < 3 * 8990 * 1191 = 32.1M (no)
+ *   P2 amod+det CIRCSE 702 * 10610 > 1561 * 1284 (yes),
+ *     LLCT 128 * 39729 = 5.09M < 6883 * 1191 = 8.20M (no)
+ *   P3 LLCT 20 * 1692 = 33840 >= 19 * 1734 = 32946 (yes),
+ *     CIRCSE 20 * 787 = 15740 < 19 * 893 = 16967 (no) */
+static void
+rules_check (void)
+{
+    check("registered rules on the repo totals give the hand-computed "
+        "answers (P1 yes/yes, P2 agreement yes/no, P2 amod+det yes/no, "
+        "P3 LLCT yes, CIRCSE no)",
+        p1_rule(&stats[0][0]) && p1_rule(&stats[1][0])
+        && p2_agree_rule(&stats[0][0]) && !p2_agree_rule(&stats[1][0])
+        && p2_ad_rule(&stats[0][0]) && !p2_ad_rule(&stats[1][0])
+        && p3_rule(&stats[1][0]) && !p3_rule(&stats[0][0]));
+}
 
 static void
 verdicts (void)
 {
-    int   b, all = 1, missing = 0, english_lower = 1;
-    Ratio quarter = ratio(1, 4);
+    int   b, i, all = 1, missing = 0, english_lower = 1;
     Ratio en;
 
-    printf("\n=== Registered predictions (Part B) ===\n\n");
+    printf("\n=== Registered predictions ===\n\n");
+    rules_check();
     for (b = 0; b < N_BANKS; b++)
         if (bank_latin[b] && !bank_present[b]) missing = 1;
     if (!bank_present[2]) missing = 1;
@@ -875,7 +1297,7 @@ verdicts (void)
 
         if (!bank_latin[b] || !bank_present[b]) continue;
         oe = obs_exp(&stats[b][0]);
-        if (!ratio_less(oe, quarter)) all = 0;
+        if (!p1_rule(&stats[b][0])) all = 0;
         if (bank_present[2] && !ratio_less(en, oe)) english_lower = 0;
     }
     printf("  P1 (rarity): obs/exp < 1/4 in every Latin treebank: %s; "
@@ -901,6 +1323,60 @@ verdicts (void)
                 ok ? "yes" : "NO", ok ? "HOLDS" : "FAILS");
         }
     }
+
+    /* P2: non-projective arcs agree in all three >= 1.5 x all arcs, and
+     * amod + det are a larger share of non-projective arcs than of all
+     * arcs, in every Latin treebank */
+    {
+        int agree_ok = 1, ad_ok = 1;
+
+        for (b = 0; b < N_BANKS; b++) {
+            const Stats *s = &stats[b][0];
+
+            if (!bank_latin[b] || !bank_present[b]) continue;
+            if (!p2_agree_rule(s)) agree_ok = 0;
+            if (!p2_ad_rule(s)) ad_ok = 0;
+            printf("  P2 %-8s all-three agreement: non-proj %5.1f%% vs all "
+                "%5.1f%% (x%.2f); amod+det %5.1f%% vs %5.1f%%\n",
+                bank_short[b], pct(s->agr_np[3], s->nonproj_arcs),
+                pct(s->agr_all[3], s->arcs),
+                s->agr_all[3] == 0 ? 0.0
+                : ((double)s->agr_np[3] / (double)s->nonproj_arcs)
+                  / ((double)s->agr_all[3] / (double)s->arcs),
+                pct(s->ad_np, s->nonproj_arcs), pct(s->ad_all, s->arcs));
+        }
+        printf("  P2 (agreement): >= 1.5x in every Latin treebank: %s; amod "
+            "+ det over-represented in every one: %s.  P2 %s\n",
+            agree_ok ? "yes" : "NO", ad_ok ? "yes" : "NO",
+            agree_ok && ad_ok ? "HOLDS" : "FAILS");
+    }
+
+    /* P3: >= 95% of trees mild in every PROSE Latin treebank (LLCT,
+     * PROIEL, ITTB, UDante; Perseus not separable here, so reported
+     * without a prediction, like CIRCSE) */
+    {
+        static const int prose[4] = { 1, 3, 5, 6 };
+        int              ok = 1, any = 0;
+
+        for (i = 0; i < 4; i++) {
+            const Stats *s = &stats[prose[i]][0];
+
+            if (!bank_present[prose[i]]) continue;
+            any = 1;
+            if (!p3_rule(s)) ok = 0;
+            printf("  P3 %-8s mild %6.2f%% (%ld of %ld)\n",
+                bank_short[prose[i]], pct(s->mild, s->trees), s->mild,
+                s->trees);
+        }
+        for (b = 0; b < N_BANKS; b++)
+            if ((b == 0 || b == 4) && bank_present[b])
+                printf("  (no prediction) %-8s mild %6.2f%%\n", bank_short[b],
+                    pct(stats[b][0].mild, stats[b][0].trees));
+        if (any)
+            printf("  P3 (mildness): >= 95%% mild in every prose Latin "
+                "treebank: %s.  P3 %s\n", ok ? "yes" : "NO",
+                ok ? "HOLDS" : "FAILS");
+    }
 }
 
 int
@@ -911,6 +1387,8 @@ main (void)
         quick ? " (QUICK MODE: repo treebanks only)" : "");
     part_a();
     part_b();
+    part_c();
+    part_d();
     verdicts();
     printf("\n=== %d pass, %d fail ===\n", n_pass, n_fail);
     return n_fail == 0 ? 0 : 1;
