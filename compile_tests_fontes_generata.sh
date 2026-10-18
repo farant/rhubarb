@@ -231,6 +231,8 @@ declare -a SOURCE_FILES=(
     "lib/rubrica.c"
     "lib/runae.c"
     "lib/runae_tabulae.c"
+    "lib/sancti.c"
+    "lib/sancti_canon.c"
     "lib/sanctorale.c"
     "lib/schirmata.c"
     "lib/scriba_actiones.c"

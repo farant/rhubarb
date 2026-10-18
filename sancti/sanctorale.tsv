@@ -1,0 +1,5 @@
+# sancti/sanctorale.tsv - iunctura: celebratio calendarii (lib/sanctorale.c,
+# titulus verbatim) -> ids sanctorum (spatiis separati); - = sine sancto
+# (festa Domini, dedicationes). project-specs/sancti-plan.md S1.
+# mensis	dies	titulus	ids
+1	21	Saint Agnes	agnes-of-rome

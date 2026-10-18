@@ -57,3 +57,7 @@
 <normae>	norma.canon
 <organum>	organum.canon
 .norma	norma.canon
+
+# Bibliotheca sanctorum (project-specs/sancti-plan.md par. II, 2026-10-17):
+# plagulae .sanctus, una per sanctum aut coetum.
+.sanctus	sancti.canon

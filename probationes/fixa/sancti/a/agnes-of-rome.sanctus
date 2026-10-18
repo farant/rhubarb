@@ -1,0 +1,28 @@
+<sanctus id="agnes-of-rome" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Agnes of Rome</nomen>
+  <nomen lingua="la" principale="verum">Agnes</nomen>
+  <obitus locus="Rome" martyrium="verum" fontes="mr ce"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="1" dies="21" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="1" dies="21" fontes="mr"/>
+  <munus fontes="mr">virgin</munus>
+  <munus fontes="mr">martyr</munus>
+  <descriptio>
+    <paragraphus fontes="ce">No virgin martyr of Rome was held in higher honour by the early Church. Her feast on 21 January stands in the oldest Roman calendar of martyrs, from 354, which also names the Via Nomentana, near which she was buried. The oldest witnesses agree only on her youth: Ambrose gives her age as twelve, Augustine as thirteen.</paragraphus>
+    <paragraphus fontes="mr ce">The year of her death is not known with certainty; it was once placed in the persecution of Diocletian (c. 304). The Martyrology relates that she was thrown into the fire and, when it was put out by her prayers, struck with the sword. She is shown with a lamb, the symbol of her innocence.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="21 January">
+    <excerptum>the passion of St. Agnes, virgin, who under Symphronius, governor of the city, was thrown into the fire, but as it was extinguished by her prayers, she was struck with the sword.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. Agnes of Rome" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Agnes_of_Rome">
+    <excerptum>Of all the virgin martyrs of Rome none was held in such high honour by the primitive church, since the fourth century, as St. Agnes.</excerptum>
+    <excerptum>her feast is assigned to 21 January, to which is added a detail as to the name of the road (Via Nomentana) near which her grave was located.</excerptum>
+    <excerptum>St. Ambrose gives her age as twelve</excerptum>
+    <excerptum>St. Augustine as thirteen</excerptum>
+    <excerptum>We do not know with certainty in which persecution the courageous virgin won the martyr's crown. Formerly it was customary to assign her death to the persecution of Diocletian (c. 304)</excerptum>
+    <excerptum>Agnes has been represented with a lamb, the symbol of her virginal innocence.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="21 January">
+    <excerptum>Saint Agnes, Virgin and Martyr</excerptum>
+  </fons>
+</sanctus>

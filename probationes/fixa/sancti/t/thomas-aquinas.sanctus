@@ -1,0 +1,15 @@
+<sanctus id="thomas-aquinas" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Thomas Aquinas</nomen>
+  <nomen lingua="la" principale="verum">Thomas de Aquino</nomen>
+  <nomen lingua="it">Tommaso d'Aquino</nomen>
+  <ortus annus="1225" circa="verum" fontes="x"/>
+  <obitus annus="1274" mensis="3" dies="7" locus="Fossanova" fontes="x"/>
+  <canonizatio modus="formalis" annus="1323" mensis="7" dies="18" papa="John XXII" fontes="x"/>
+  <festum calendarium="generale" mensis="1" dies="28" gradus="memoria" fontes="x"/>
+  <festum calendarium="generale-1962" mensis="3" dies="7" fontes="x"/>
+  <munus fontes="x">priest</munus>
+  <patrocinium fontes="x">schools</patrocinium>
+  <fons id="x" opus="ce1913" locus="St. Thomas Aquinas">
+    <excerptum>fixtura probationis</excerptum>
+  </fons>
+</sanctus>
