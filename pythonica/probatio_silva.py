@@ -3648,10 +3648,12 @@ _GREGES_AMBITUS.update(_greges_veri)
 _GREX.update(_grex_verus)
 _grex_claudere()
 
-# CONSILIUM (consilium S3c): forma quae binaria stala fecit - consilium
-# sanationis per bin/fabrica VERUM iudicatum: iudex ipse primus, deinde
-# ceteri, portae ultimae; institutio domus in arbore secundaria VETITA,
-# in principali ROGANDA - commissio numquam sponte instituit
+# CONSILIUM (consilium S3c, S5c2): forma quae binaria stala fecit -
+# consilium sanationis per bin/fabrica VERUM iudicatum: forma FACTUM
+# (iudicatur, non agitur), iudex ipse primus (fabrica_struere), ceteri
+# 'bin/fabrica sanare X'; portae extra consilium; domus in arbore
+# secundaria VETITA, in principali ROGANDA, externa ROGANDA - classis a
+# lectore C inferta, pythonica vias non classificat
 _fb_ficta_consilii = silva.FABRICA_BIN
 silva.FABRICA_BIN = os.path.join(silva.RADIX, 'bin', 'fabrica')
 if os.path.exists(silva.FABRICA_BIN):
@@ -3662,32 +3664,32 @@ if os.path.exists(silva.FABRICA_BIN):
     credo(_rc == 0 and _undae.get('forma') == 1
           and _undae.get('sana bin/fabrica') == 2
           and _undae.get('sana bin/aedilis') == 3
-          and _undae.get('portae') == 4,
-          'consilium formae: forma, iudex ipse, ceteri, portae', _o)
-    _t = silva._consilium_formae(['lib/aedilis.c'], ['~/.bin/aedilis'], True)
-    _rc, _o, _v = silva._consilium_iudicare(_t, 'probatio_forma')
-    credo(_rc == 1 and any(x[0] == 'IUDICIUM' and x[4] == 'ROGANDUM'
-                           and x[5] == 'institutio_rogata' for x in _o),
-          'consilium formae: institutio domus ROGANDA (regula prima)', _o)
-    _t = silva._consilium_formae(['lib/aedilis.c'], ['~/.rhubarb/x'], True)
-    _rc, _o, _v = silva._consilium_iudicare(_t, 'probatio_forma')
-    credo(_rc == 1 and any(x[0] == 'IUDICIUM' and x[4] == 'VETITUM'
-                           and x[5] == 'arbor_secundaria' for x in _o),
-          'consilium formae: in arbore secundaria domus VETITA', _o)
-    _t = silva._consilium_formae(['lib/aedilis.c'], ['~/.rhubarb/x'], False)
-    _rc, _o, _v = silva._consilium_iudicare(_t, 'probatio_forma')
-    credo(_rc == 1 and not any(x[0] == 'IUDICIUM' and x[4] == 'VETITUM'
-                               for x in _o),
-          'consilium formae: in arbore principali regula secundaria abest',
-          _o)
-    credo(silva._classis_viae('bin/x') == 'instrumentum_domus'
-          and silva._classis_viae('build/a.o') == 'build'
-          and silva._classis_viae('~/.bin/x') == 'domus'
-          and silva._classis_viae('/usr/local/x') == 'externa'
-          and silva._classis_viae('lib/x.c') == 'arbor',
-          'consilium: classis viarum')
-    # S3d: producentes - fabrica ficta 'sanare -siccum' facta dat
-    # (SANATIO EXITUS UNDA), 'consilium' ad binarium VERUM transit
+          and 'portae' not in _undae,
+          'consilium formae: forma, iudex ipse, ceteri; portae extra', _o)
+    credo('factum="verum"' in _t
+          and '<argumentum valor="tools/fabrica_struere.sh"/>' in _t
+          and '<argumentum valor="bin/fabrica"/><argumentum valor="sanare"/>'
+              '<argumentum valor="bin/aedilis"/>' in _t,
+          'consilium formae: forma factum, mandata iudicis et sanationis', _t)
+
+    def _sententia(t):
+        _r, _x, _ = silva._consilium_iudicare(t, 'probatio_forma')
+        return _r, [(x[4], x[5]) for x in _x if x[0] == 'IUDICIUM']
+    credo(_sententia(silva._consilium_formae(['lib/aedilis.c'],
+                                             ['~/.bin/aedilis'], True))
+          == (1, [('VETITUM', 'arbor_secundaria')]),
+          'consilium formae: in arbore secundaria domus VETITA')
+    credo(_sententia(silva._consilium_formae(['lib/aedilis.c'],
+                                             ['~/.bin/aedilis'], False))
+          == (1, [('ROGANDUM', 'domus_roganda')]),
+          'consilium formae: in arbore principali domus ROGANDA')
+    credo(_sententia(silva._consilium_formae(['lib/aedilis.c'],
+                                             ['/usr/local/x'], False))
+          == (1, [('ROGANDUM', 'externa_roganda')]),
+          'consilium formae: externa ROGANDA')
+    # S3d, S5c2: producentes - fabrica ficta 'sanare -siccum' facta dat
+    # (SANATIO EXITUS UNDA), 'consilium' ad binarium VERUM transit;
+    # politica (non pythonica) institutionem domus omittit
     _fb_vera = silva.FABRICA_BIN
     _facta = ('SANATIO\tAGENDUM\tnatura\t100\tbin/natura_canones stalum\n'
               'EXITUS\tnatura\tbin/natura_canones\n'
@@ -3709,12 +3711,17 @@ if os.path.exists(silva.FABRICA_BIN):
     silva.FABRICA_BIN = _ficta_s3d
     _c = silva._consilium_producentium(['natura/cocta/a.canon'])
     silva.FABRICA_BIN = _fb_vera
-    silva.VIAE_COMMISSAE = _vc_vera
-    credo(_c is not None and _c[0] == 0
-          and [x[2] for x in _c[1] if x[0] == 'UNDA']
-          == ['sana bin/natura_canones', 'iudicium'],
-          'consilium producentium: instrumentum sanatur, regenerator'
-          ' commissorum et institutio domus NON in consilio', _c)
+    _cr = silva._consilium_iudicare(_c, 'probatio_producentes') \
+        if _c is not None else (None, [], None)
+    credo(_c is not None and _cr[0] == 0
+          and [x[2] for x in _cr[1] if x[0] == 'UNDA']
+          == ['sana bin/natura_canones']
+          and 'res="bin/natura_glossae"' in _c
+          and '<argumentum valor="sanare"/><argumentum'
+              ' valor="bin/natura_canones"/>' in _c,
+          'consilium producentium: instrumentum sanatur (exitus omnes),'
+          ' regenerator commissorum NON, institutio domus a politica'
+          ' omissa', _c)
     silva.FABRICA_BIN = _ficta_s3d
     silva.VIAE_COMMISSAE = lambda viae: set(viae)
     _c = silva._consilium_producentium(['natura/cocta/a.canon'])
@@ -3722,6 +3729,27 @@ if os.path.exists(silva.FABRICA_BIN):
     silva.VIAE_COMMISSAE = _vc_vera
     credo(_c is None, 'consilium producentium: exitus commissi = nullus'
           ' producens (recusatio antiqua valet)')
+    # S5c2: exsecutio VERA per '-agere' (arbor viva, build/ solum):
+    # scriptura proposita ACTUM, non proposita FRACTUM nominata (3)
+    _d = 'build/consilium/probatio_agere'
+
+    def _doc_agere(scribit, scriptum):
+        return ('<consilium>\n  <gradus titulus="sana %s/x">\n'
+                '    <mandatum><argumentum valor="sh"/><argumentum'
+                ' valor="-c"/><argumentum valor="mkdir -p %s; echo x > %s"/>'
+                '</mandatum>\n    <effectus verbum="scribere" res="%s"/>\n'
+                '  </gradus>\n</consilium>\n' % (_d, _d, scriptum, scribit))
+    _rc, _a, _e, _v = silva._consilium_agere(
+        _doc_agere(_d + '/x', _d + '/x'), 'probatio_agere')
+    credo(_rc == 0 and silva._consilium_acta(_a) == [_d + '/x'],
+          'consilium -agere: scriptura proposita ACTUM', (_rc, _a, _e))
+    _rc, _a, _e, _v = silva._consilium_agere(
+        _doc_agere(_d + '/x', _d + '/y'), 'probatio_agere')
+    credo(_rc == 3 and silva._consilium_acta(_a) == []
+          and 'EXTRA sana %s/x %s/y' % (_d, _d)
+          in silva._consilium_fracturae(_a, _e),
+          'consilium -agere: scriptura non proposita FRACTUM nominata',
+          (_rc, _a, _e))
 else:
     credo(False, 'consilium formae: bin/fabrica deest (nihil iudicatum)')
 silva.FABRICA_BIN = _fb_ficta_consilii

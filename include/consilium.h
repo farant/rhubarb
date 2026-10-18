@@ -101,7 +101,9 @@ structura ConsiliumGradus {
                             * PERMISSAE; vacuum = nulla restrictio */
         Xar* auctores;     /* chorda: qui eum proposuerunt
                             * (deduplicatio) */
-         b32  caecus;       /* effectus ignoti: murus */
+         b32 caecus;       /* effectus ignoti: murus */
+         b32 factum;       /* iam actum ANTE consilium (S5c2):
+                             * iudicatur, numquam agitur */
          s32  sumptus_ms;   /* -I = ignotus */
          i32  ordo_additionis;
          Xar* mandatum;     /* chorda: argv exsecutionis (S5c1;
@@ -370,7 +372,8 @@ nomen structura {
  * ConsiliumActus, ordine exsecutionis; gradus omnes adsunt (OMISSI
  * quoque). 'facta' (S5b, ex consilium_diarium_resumere): gradus iam
  * acti non aguntur - ACTUM 'ex actis' (codex 0, sine incipit; notare
- * vocatur), dependentes procedunt. */
+ * vocatur), dependentes procedunt. Gradus 'factum' (S5c2) idem: ACTUM
+ * 'factum ante consilium'. */
 Xar*
 consilium_exsequi (
           constans Consilium* consilium,

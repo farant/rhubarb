@@ -368,7 +368,7 @@ _agere_consilium (
         constans ConsiliumGradus* g = *(ConsiliumGradus**)xar_obtinere(
             consilium_gradus(c), i);
 
-        si (xar_numerus(g->mandatum) == ZEPHYRUM)
+        si (xar_numerus(g->mandatum) == ZEPHYRUM && !g->factum)
         {
             *(chorda*)xar_addere(sine) = g->titulus;
         }

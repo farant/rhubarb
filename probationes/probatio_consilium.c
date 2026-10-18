@@ -1153,7 +1153,8 @@ hic_manens constans character* constans DOCUMENTUM_MANDATI[] = {
     "    <mandatum>",
     "      <argumentum valor=\"tools/fabrica_struere.sh\"/>",
     "      <argumentum valor=\"cum spatio\"/>",
-    "      <argumentum><@valor=>dic \"salve\" &amp;&amp; vale</></argumentum>",
+    "      <argumentum><@valor=>dic \"salve\" &amp;&amp; vale</>"
+    "</argumentum>",
     "    </mandatum>",
     "  </gradus>",
     "</consilium>",
@@ -1224,6 +1225,78 @@ _sectio_mandatum (
         "'valor' abest")));
 }
 
+hic_manens constans character* constans DOCUMENTUM_FACTI[] = {
+    "<consilium>",
+    "  <gradus titulus=\"forma\" factum=\"verum\">",
+    "    <effectus verbum=\"scribere\" res=\"lib/x.c\"/>",
+    "  </gradus>",
+    "  <gradus titulus=\"sana\">",
+    "    <mandatum><argumentum valor=\"sh\"/></mandatum>",
+    "    <effectus verbum=\"legere\" res=\"lib/x.c\"/>",
+    "    <effectus verbum=\"scribere\" res=\"bin/x\"/>",
+    "    <effectus verbum=\"scribere\" res=\"~/.bin/x\"/>",
+    "    <effectus verbum=\"scribere\" res=\"build/x.o\""
+    " classis=\"arbor\"/>",
+    "  </gradus>",
+    "</consilium>",
+    NIHIL
+};
+
+/* classis effectus n gradus */
+interior ConsiliumClassis
+_classis (
+    constans ConsiliumGradus* g,
+                         i32  n)
+{
+    redde ((constans ConsiliumEffectus*)xar_obtinere(g->effectus,
+        n))->classis;
+}
+
+/* XX. factum (S5c2): iudicatur et ordinat, numquam agitur; ACTUM
+ * 'factum ante consilium', dependentes procedunt; in sigillo. Classis
+ * absens ex re inferitur, expressa manet */
+interior vacuum
+_sectio_factum (
+    CredoContextus* c)
+{
+             chorda  causa;
+          Consilium* k = consilium_legere(_documentum(c,
+              DOCUMENTUM_FACTI), c->piscina, NIHIL, &causa);
+    ConsiliumGradus* g;
+             Mundus  m;
+    ConsiliumSutura  s;
+                Xar* acta;
+             chorda  s1;
+
+    CREDO_NECESSE_NON_NIHIL(k);
+    CREDO_VERUM(consilium_gradum_invenire(k, CH("forma"))->factum);
+    g = consilium_gradum_invenire(k, CH("sana"));
+    CREDO_AEQUALIS_I32((i32)_classis(g, ZEPHYRUM),
+        (i32)CONSILIUM_ARBOR);
+    CREDO_AEQUALIS_I32((i32)_classis(g, I),
+        (i32)CONSILIUM_INSTRUMENTUM_DOMUS);
+    CREDO_AEQUALIS_I32((i32)_classis(g, II), (i32)CONSILIUM_DOMUS);
+    CREDO_AEQUALIS_I32((i32)_classis(g, III), (i32)CONSILIUM_ARBOR);
+    _mundum_parare(c, &m);
+    s     = _sutura(&m);
+    acta  = consilium_exsequi(k, NIHIL, &s, CONSILIUM_SISTERE, NIHIL,
+        c->piscina, &causa);
+    CREDO_NECESSE_NON_NIHIL(acta);
+    CREDO_CHORDA_AEQUALIS_LITERIS(chorda_aedificator_finire(m.acta),
+        "sana");
+    CREDO_CHORDA_AEQUALIS_LITERIS(_actus(acta, "forma")->causa,
+        "factum ante consilium");
+    CREDO_AEQUALIS_I32(_actus(acta, "sana")->unda, II);
+    CREDO_AEQUALIS_I32((i32)_actus(acta, "sana")->eventus,
+        (i32)CONSILIUM_ACTUM);
+    CREDO_AEQUALIS_I32(m.incepta, I);
+    CREDO_AEQUALIS_I32(m.notationes, II);
+    s1 = consilium_sigillum(k, NIHIL, c->piscina);
+    consilium_gradum_invenire(k, CH("forma"))->factum = FALSUM;
+    CREDO_VERUM(!chorda_aequalis(consilium_sigillum(k, NIHIL,
+        c->piscina), s1));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "ordo ex datis", _sectio_data, NIHIL, NIHIL, NIHIL, NIHIL },
     { "lectio sua et absentia", _sectio_lectio_sua, NIHIL, NIHIL, NIHIL,
@@ -1250,6 +1323,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "diarium", _sectio_diarium, NIHIL, NIHIL, NIHIL, NIHIL },
     { "resumptio", _sectio_resumptio, NIHIL, NIHIL, NIHIL, NIHIL },
     { "mandatum", _sectio_mandatum, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "factum", _sectio_factum, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

@@ -13,8 +13,11 @@
   VERSIO 1 (2026-10-16, quinta, consilium S3a).
   VERSIO 2 (2026-10-17, consilium S5c1): <mandatum> gradus - argv
   exsecutionis (bin/fabrica consilium -agere), pars sigilli consilii.
+  VERSIO 3 (2026-10-17, consilium S5c2): gradus factum="verum" (iam
+  actum ante consilium: iudicatur, numquam agitur); classis effectus
+  absens ex re inferitur (consilium_classis_viae).
 -->
-<canon dialectus="consilium" versio="2">
+<canon dialectus="consilium" versio="3">
 
   <elementum nomen="consilium" radix="verum">
     <liberum nomen="regula"/>
@@ -42,6 +45,8 @@
       nota="generator formatio institutio iudicium ..."/>
     <attributum nomen="auctor"  genus="textus"/>
     <attributum nomen="caecus"  genus="veritas"/>
+    <attributum nomen="factum"  genus="veritas"
+      nota="iam actum ante consilium: iudicatur, numquam agitur"/>
     <attributum nomen="sumptus_ms" genus="numerus"/>
     <liberum nomen="effectus"/>
     <liberum nomen="sequitur"/>
@@ -61,7 +66,9 @@
     </attributum>
     <attributum nomen="classis" genus="nomen"
       nota="arbor build instrumentum_domus domus externa systema
-            temporaria; absens = arbor"/>
+            temporaria; absens = ex re ('~/' domus, bin/
+            instrumentum_domus, build/ build, absoluta externa, cetera
+            arbor)"/>
     <attributum nomen="certitudo" genus="electio">
       <optio>plena</optio>
       <optio>partialis</optio>

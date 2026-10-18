@@ -590,3 +590,22 @@ nothing new (`stml_attributum_capere` scans the child prefix); credo XIX
 asserts it. Writers should pick the spelling automatically (an STML
 builder - Fran). Next: S5c2 (commissio onto `-agere`, Python wave
 loop and `_classis_viae` removed, reader infers `classis`).
+
+## XX. S5c2 built (2026-10-17): commissio executes through `-agere`
+
+Fran 2026-10-17: `factum="verum"` for steps already done before the plan
+(judged, sealed, never run - ACTUM 'factum ante consilium'); the gates
+step leaves commissio's plan. The reader infers `classis` from `res`
+when absent (consilium.canon version 3). pythonica: `_consilium_sanare`
+and `_classis_viae` deleted; `_consilium_agere` runs a document through
+`bin/fabrica consilium -agere -machina`; rules are scope rules
+(`arbor_secundaria` domus VETITUM in a worktree, `domus_roganda`,
+`externa_roganda`); the producer plan is chosen by POLICY (judge all
+candidates, drop non-LICET steps), not by Python path tests. Heal steps:
+mandatum + vestigium `bin/*` `build/*` + their outputs.
+
+Tests: credo XX (factum, inference); pythonica (plan shapes, the three
+scope verdicts, policy-chosen producers, a live `-agere` with a proposed
+write ACTUM and an unproposed one FRACTUM 3). Plants red: factum branch,
+inference, policy filter. Remaining in S5: S5d (fabrica's own sanare
+loop onto the executor).

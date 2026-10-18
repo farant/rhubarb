@@ -131,3 +131,29 @@ string through. Lesson: I read the stml.h header line about inline
 values and stopped - the reference's element-family table lists `<@a=>`
 on the same page. Fran's follow-up wish: a builder that chooses the
 spelling itself, so writers never have to.
+
+## 2026-10-17 - S5c2: commissio onto `-agere`
+
+commissio no longer executes plans: `_consilium_sanare` (the Python
+wave loop) and `_classis_viae` (the Python copy of the scope
+classifier) are gone. Plans carry mandata (`tools/fabrica_struere.sh`
+for the judge, `bin/fabrica sanare X` for the rest), the already-done
+format step is `factum="verum"` (judged and sealed, never run, ACTUM
+'factum ante consilium'), and the gates step left the plan (gate
+scheduling has its own judge). `_consilium_agere` writes the document
+and calls `bin/fabrica consilium -agere -machina`.
+
+The reader now infers `classis` from `res` when absent (only the reader:
+`consilium_effectus()` keeps ARBOR for programmatic callers), so policy
+rules moved from verbs to scopes: `arbor_secundaria` (domus VETITUM,
+worktree only, FIRST), `domus_roganda`, `externa_roganda`. The producer
+plan used to filter "outputs all in bin/ or build/" in Python; now it
+judges a plan of ALL candidates and drops the steps policy does not
+allow - the C classifier decides, and the rule that blocks is the
+reason a producer is left out.
+
+Heal steps get vestigium `bin/*`, `build/*` plus every declared output:
+`bin/fabrica sanare X` legitimately builds preconditions (objects,
+capsules, other tree binaries), and without the vestigium every such
+write would be "extra propositum". A write anywhere else (a committed
+source, home) still fails the step - which is the point.

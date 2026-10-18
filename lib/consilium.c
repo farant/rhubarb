@@ -93,6 +93,7 @@ consilium_gradum_addere (
         g->mandatum    = xar_creare(consilium->piscina,
             (i32)magnitudo(chorda));
         g->caecus = FALSUM;
+        g->factum = FALSUM;
         g->sumptus_ms = -I;
         g->ordo_additionis = xar_numerus(consilium->gradus);
         *(ConsiliumGradus**)xar_addere(consilium->gradus) = g;
@@ -1497,7 +1498,14 @@ consilium_exsequi (
             actus->actum.notata = NIHIL;
             actus->observata = NIHIL;
             actus->extra = xar_creare(piscina, (i32)magnitudo(chorda));
-            si (facta != NIHIL && _continet(facta, g->titulus))
+            si (g->factum)
+            {
+                actus->eventus      = CONSILIUM_ACTUM;
+                actus->actum.codex  = ZEPHYRUM;
+                actus->causa        = chorda_ex_literis("factum ante "
+                    "consilium", piscina);
+            }
+            alioquin si (facta != NIHIL && _continet(facta, g->titulus))
             {
                 actus->eventus      = CONSILIUM_ACTUM;
                 actus->actum.codex  = ZEPHYRUM;
@@ -1683,6 +1691,7 @@ consilium_sigillum (
         _canon_campus(a, g->titulus);
         _canon_campus(a, g->genus);
         _canon_numerus(a, (s32)g->caecus);
+        _canon_numerus(a, (s32)g->factum);
         per (j = ZEPHYRUM; j < xar_numerus(g->effectus); j++)
         {
             constans ConsiliumEffectus* e =
@@ -2062,7 +2071,8 @@ hic_manens constans character* constans _ATTR_REGULAE[] = {
         NIHIL
 };
 hic_manens constans character* constans _ATTR_GRADUS[] = {
-    "titulus", "genus", "auctor", "caecus", "sumptus_ms", NIHIL
+    "titulus", "genus", "auctor", "caecus", "factum", "sumptus_ms",
+    NIHIL
 };
 hic_manens constans character* constans _ATTR_EFFECTUS[] = {
     "verbum", "res", "forma", "classis", "certitudo", "cognitio",
@@ -2343,6 +2353,7 @@ _gradum_legere (
     g = consilium_gradum_addere(c, titulus, _valor(n, "genus"),
         _valor(n, "auctor"));
     g->caecus  = _veritas(k, n, "caecus", g->caecus);
+    g->factum  = _veritas(k, n, "factum", g->factum);
     sumptus    = _valor(n, "sumptus_ms");
     si (sumptus.mensura > ZEPHYRUM)
     {
@@ -2385,8 +2396,13 @@ _gradum_legere (
                 m, "verbum", VERUM, (s32)CONSILIUM_LEGERE), res);
             e.forma      = (ConsiliumForma)_enumeratum(k, m, "forma",
                 _FORMAE, (s32)CONSILIUM_VIA);
+            /* classis absens ex re inferitur (S5c2): '~/' domus, bin/
+             * instrumentum_domus, build/ build, absoluta externa -
+             * scriptores documentorum eam non computant */
             e.classis    = (ConsiliumClassis)_nomen_enumeratum(k, m,
-                "classis", FALSUM, (s32)CONSILIUM_ARBOR);
+                "classis", FALSUM, (s32)consilium_classis_viae(res,
+                NIHIL,
+                NIHIL));
             e.certitudo  = (ConsiliumCertitudo)_enumeratum(k, m,
                 "certitudo", _CERTITUDINES, (s32)CONSILIUM_PLENA);
             e.cognitio   = (ConsiliumCognitio)_enumeratum(k, m,
