@@ -2,6 +2,7 @@
 # unio clausurarum omnium principalium suite (necte-omnia)
 # regeneratio: ./tools/compile_tests_fontes_generare.sh
 declare -a SOURCE_FILES=(
+    "apps/exemplar/exemplar_nucleus.c"
     "book_assets/capsula_libri.c"
     "crusta/fontes/crusta_arbor.c"
     "crusta/fontes/crusta_arithmetica.c"

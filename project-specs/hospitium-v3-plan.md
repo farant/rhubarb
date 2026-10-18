@@ -266,6 +266,36 @@ with this plan.
 - **R21 (T7)** - the plan's `DCCCC` is `CM` (900); `csrf` glossed as
   ignotum-permissum. "Constant-time compare used" is by construction
   (OR-accumulated XOR over the full length), not timing-tested.
+- **R22 (T8)** - naming:
+  - CLI flags are single-dash like every house app (`-data -portus
+    -hospes -invitatio -procurator -acta`), not the spec's `--data`.
+  - Config gained `acta_accessus` and `frenum_conatus` (0 = V; the test
+    uses III so "delayed then refused" takes 7 attempts, not 11).
+  - The test is `probatio_exemplar_applicatio.c`: `probatio_exemplar.c`
+    already EXISTS (lib `exemplar`, the pattern library) and my first
+    `scribe` overwrote it - caught in `git diff HEAD`, restored from
+    HEAD, source list regenerated (lib/exemplar.c had dropped out).
+    Also: compile_tests' filter is a substring, so `exemplar` matched
+    five suites and broke `CREDO_SECTIO` plants (ledger park ...GF9X).
+  - OPEN for Fran: the app's `exemplar_*` functions share the prefix of
+    lib `exemplar` (pattern matching). No symbol clash today; a rename
+    of the app code is cheap (`renominare.sh`) if wanted.
+- **R23 (T8)** - behaviour choices:
+  - Session expiry uses wall-clock `time()` (persisted across
+    restarts); `tempus_nunc` is monotonic per process. Absolute 30-day
+    lifetime only - the spec's idle limit is NOT implemented (deferred).
+  - Downloads are always `application/octet-stream` + `attachment` +
+    nosniff + `CSP: sandbox`, whatever MIME the uploader claimed. Pages
+    carry `CSP default-src 'none'; style-src 'unsafe-inline';
+    form-action 'self'; frame-ancestors 'none'`, nosniff,
+    Referrer-Policy same-origin.
+  - No session, unknown file and someone else's file all answer the
+    same 404. Throttle delays are reactor timers (deferred, never
+    blocking); both the client IP and the account name are keys.
+- **R24 (T8)** - test harness: the client and the server share one
+  thread and argon2id advances one step per reactor cycle, so the first
+  version (20 ms client timeout, one pump per wait) took 675 s; the
+  client now waits 1 ms and pumps 20 cycles between reads -> ~10 s.
 
 ## Review focus
 
