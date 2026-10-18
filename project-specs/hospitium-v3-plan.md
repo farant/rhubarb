@@ -238,6 +238,34 @@ with this plan.
   a pinned WAL snapshot: `PRAGMA wal_checkpoint(TRUNCATE)` fails during
   a long download and the WAL grows. The section
   `scriptio_inter_lectionem` now pins that (held handle -> red).
+- **R19 (T7)** - the server secret is read and written RAW (open /
+  read / fstat / write / fsync; create with O_CREAT|O_EXCL|O_NOFOLLOW,
+  0600; refuse a wider mode, a non-regular file, a size other than
+  32), NOT through filum as T7's step said: P1 and the global
+  constraint win - a path lectiones records gets its CONTENT sealed by
+  fabrica, and this is a secret. Two `<tolera
+  codex="CANALIS_PRAETERITUS">` (the anthropic.clavis precedent).
+  examen's POSIX model gained O_EXCL, O_NOFOLLOW (Darwin values), fstat
+  and fsync; the tolerated-word copy was regenerated deliberately:
+  exactly +excl +fstat +fsync +nofollow.
+- **R20 (T7)** - API and policy details:
+  - `custodia_tesseram_hashare` -> `custodia_tesseram_digerere` (lint:
+    "hashare" is a coinage; digerere is Latin and matches digestum).
+  - The unknown-user hash uses the CONFIGURED parameters (production by
+    default), not a fixed PHC string, so it always costs what a real
+    current verify costs; a PHC that does not parse, or asks for more
+    than m 256 MiB / t 10 / p 8, is treated the same way (a corrupt
+    row cannot make the server allocate gigabytes).
+  - Jobs live in a fixed table of 64 (running + waiting); a full table
+    returns FALSUM (the app answers 503) - memory stays bounded.
+  - Throttle: delay 250 ms doubling from the N-th failure, refusal
+    from 2N, window counted from the LAST failure; fixed table of 1024
+    entries keyed by SHA-256(key), expired or oldest entry evicted.
+  - Test hooks: `custodia_opera_currentia` (plan) and
+    `custodia_gradus_summa` (step count for the unknown-user check).
+- **R21 (T7)** - the plan's `DCCCC` is `CM` (900); `csrf` glossed as
+  ignotum-permissum. "Constant-time compare used" is by construction
+  (OR-accumulated XOR over the full length), not timing-tested.
 
 ## Review focus
 

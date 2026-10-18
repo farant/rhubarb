@@ -602,6 +602,7 @@
   <vocabulum lemma="gitdir" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum - git: plagula .git arboris operis"/>
   <vocabulum lemma="sha256" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
   <vocabulum lemma="hmac" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (RFC 2104; sigillum_hmac)"/>
+  <vocabulum lemma="csrf" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (cross-site request forgery; lib/custodia.c)"/>
   <vocabulum lemma="blake2b" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (RFC 7693; lib/blake2b.c)"/>
   <vocabulum lemma="blake2" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (RFC 7693, familia BLAKE2)"/>
   <vocabulum lemma="argon2id" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (RFC 9106; lib/argon2id.c)"/>

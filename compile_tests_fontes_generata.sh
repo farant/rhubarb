@@ -69,6 +69,7 @@ declare -a SOURCE_FILES=(
     "lib/css_lexema.c"
     "lib/cursor.c"
     "lib/cursus.c"
+    "lib/custodia.c"
     "lib/cyclotomia.c"
     "lib/delineare.c"
     "lib/delineare_mandata.c"

@@ -150,6 +150,9 @@ int lstat(const char* via, struct stat* sedes);
  * oraculum effectuum eam interponit (effectus T5, 2026-10-05) */
 int fstatat(int fossa, const char* via, struct stat* sedes,
     int vexilla);
+/* fstat: per fossam iam apertam - via nulla, ergo non canalis
+ * (custodia_secretum_parare, 2026-10-17) */
+int fstat(int fossa, struct stat* sedes);
 
 
 /* ==================================================
@@ -184,6 +187,9 @@ int     pipe(int* fossae);
 ssize_t read(int fossa, void* sedes, size_t mensura);
 ssize_t write(int fossa, const void* datum, size_t mensura);
 int     close(int fossa);
+/* fsync: datum in disco ante reditum (filum_appendere_firmiter,
+ * custodia_secretum_parare) */
+int     fsync(int fossa);
 void    _exit(int status);
 /* <gradus titulus="usleep" genus="obsoletum" pro="nanosleep"/>
  * XSI obsoletum: XPG7 sustulit - sub postulatis strictis glibc/musl
@@ -257,6 +263,8 @@ int WTERMSIG(int status);
 #define O_APPEND   0x0008
 #define O_CREAT    0x0200
 #define O_TRUNC    0x0400
+#define O_EXCL     0x0800
+#define O_NOFOLLOW 0x0100
 #define F_GETFL    3
 #define F_SETFL    4
 #define F_SETFD    2
