@@ -3239,3 +3239,16 @@ Fumus LX (g/h/k world of LVIII): -omnia 3/3, electum c 1/1 (g judged by
 the chain, not counted), no MENSOR_PARENS -> nothing. Hand plants 3/3
 red (no initial line, no per-action line, ambitus ignoring the
 selection). Unobservable in the fixture: the stale-judge branch.
+
+## 2026-10-17 - `bin/fabrica digestum` lacked the judge's input readers
+
+`_digestum` (tools/fabrica.c) prepared only the reading seam, so any
+action with an identitas_clang / ambitus / species / effectus /
+repositorium input was refused ("sutura sine identitate clang") although
+its comment promises "the same function as the judge". Now it calls
+`suturae_iudicii_parare` too. House digests (provenientia_scribere.sh
+uses digestum: compilator, manus, clonare, ...) checked byte-identical
+before/after. Fumus LXI (generator with an explicit identitas_clang
+input -> 64 hex); hand plant red. First LXI draft used radix_c's
+probationes_t and stayed GREEN under the plant - that action's key has
+no clang identity (the members carry it).

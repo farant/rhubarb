@@ -3087,6 +3087,10 @@ _digestum (
         redde II;
     }
     suturae_legentem_parare(&sutura);
+    /* lectores ingressuum IUDICIS (identitas clang, ambitus, species,
+     * effectus, repositorium): sine eis actio cum tali ingressu 'sutura
+     * sine identitate clang' recusabatur (bearssl_amalgama, 10-17) */
+    suturae_iudicii_parare(&sutura, actiones, piscina);
     /* memoria sigillorum per cursum: communis semel sigillatur */
     sutura.sigilla    = tabula_dispersa_creare_chorda(piscina, 1024);
     per (i = ZEPHYRUM; i < xar_numerus(actiones); i++)

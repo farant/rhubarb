@@ -120,6 +120,9 @@
 #        MENSOR_PARENS fabrica.ambitus (actiones iudicandae) initio et
 #        fabrica.iudicata ultima = ambitus; electum 'c' = I (g per
 #        catenam non numeratur); sine MENSOR_PARENS nihil
+#   LXI  digestum lectores iudicis habet: actio cum ingressu
+#        identitas_clang LXIV hex (olim 'sutura sine
+#        identitate clang', exitus 1 - bearssl_amalgama 2026-10-17)
 #
 # Exitus: 0 sanum · 1 fractum · 2 bin/fabrica deest.
 # <porta titulus="fabrica-fumus" gradus="fusio" instrumentum="bin/fabrica" tegit="*/aedificatio.stml aedificatio.canon fabrica.canon tools/fabrica_struere.sh"/>
@@ -1066,6 +1069,17 @@ lx_ca=$(awk -F'\t' '$3 == "fumus-lx-c" && $4 == "fabrica.ambitus" { print $5 + 0
 lx_ci=$(awk -F'\t' '$3 == "fumus-lx-c" && $4 == "fabrica.iudicata" { print $5 + 0 }' "$MENSOR_DIARIUM" | tail -1)
 if [ "${lx_a:-x}" = "3" ] && [ "${lx_i:-x}" = "3" ] && [ "${lx_ca:-x}" = "1" ] && [ "${lx_ci:-x}" = "1" ] && [ "$lx_n0" = "$lx_n1" ]; then echo "  LX   progressus iudicis: ambitus 3, iudicata 3; electum c 1/1; sine parente nihil OK"; else echo "  LX   FRACTUM (omnia '${lx_a:-}'/'${lx_i:-}', c '${lx_ca:-}'/'${lx_ci:-}', sine parente lineae ${lx_n0} -> ${lx_n1})"; fracta=1; fi
 
+# LXI (2026-10-17): DIGESTUM CUM LECTORIBUS IUDICIS - 'bin/fabrica
+# digestum' suturam legentem SOLAM parabat: actio cum ingressu
+# identitas_clang (ambitus, species...) recusabatur, quamvis iudex eam
+# sigillaret. Mundus: generator unus cum ingressu identitas_clang
+# expresso (ut bearssl_amalgama).
+radix '<fabrica titulus="t"><subsystema via="."/></fabrica>'
+printf 'a\n' > "$T/r/a"
+printf '<aedificatio>\n  <actio titulus="gc" genus="generator">\n    <mandatum>\n      <verbum! (>sh\n      <verbum! (>gen.sh\n    </mandatum>\n    <ingressus genus="fasciculus" via="a"/>\n    <ingressus genus="identitas_clang" via="clang"/>\n    <exitus via="b" provenientia="regeneratio"/>\n  </actio>\n</aedificatio>\n' > "$T/r/aedificatio.stml"
+(cd "$T/r" && "$F" digestum gc) > "$T/lxi" 2>&1; rc=$?
+if [ "$rc" -eq 0 ] && grep -qE '^[0-9a-f]{64}$' "$T/lxi"; then echo "  LXI  digestum actionis cum identitate clang: LXIV hex OK"; else echo "  LXI  FRACTUM (rc=$rc)"; sed 's/^/      /' "$T/lxi" | head -3; fracta=1; fi
+
 if [ "$fracta" -ne 0 ]; then echo "fumus fabricae: FRACTUM"; exit 1; fi
-echo "fumus fabricae: sanum (LX/LX)"
+echo "fumus fabricae: sanum (LXI/LXI)"
 exit 0

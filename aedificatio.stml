@@ -463,14 +463,32 @@
   </actio>
   <!-- BearSSL amalgama (tls-bearssl-plan T1, R1): oraculum clang
        (nomina interiora per -ast-dump=json), ergo identitas clang et
-       python ingressus -->
-  <actio titulus="bearssl_amalgama" genus="generator">
+       python ingressus. Arbor src gradu UNO profunda (XII
+       subdirectoria; generator os.walk): plagulae gradu 0 solum
+       tegunt, ergo subdirectorium quodque nominatur; directorium src
+       nomina tegit - subdirectorium novum clavem mutat. Ingressus sic
+       pleni: memorabilis (olim regeneratio LXXXI s omni iudicio
+       pleno; 2026-10-17) -->
+  <actio titulus="bearssl_amalgama" genus="generator" memorabilis="verum">
     <mandatum>
       <verbum! (>./tools/bearssl_amalgamare.sh
     </mandatum>
     <ingressus genus="fasciculus" via="tools/bearssl_amalgamare.sh"/>
     <ingressus genus="fasciculus" via="tools/bearssl_amalgamare.py"/>
     <ingressus genus="plagulae" via="vendor/bearssl/src" suffixa=".c .h"/>
+    <ingressus genus="plagulae" via="vendor/bearssl/src/aead" suffixa=".c .h"/>
+    <ingressus genus="plagulae" via="vendor/bearssl/src/codec" suffixa=".c .h"/>
+    <ingressus genus="plagulae" via="vendor/bearssl/src/ec" suffixa=".c .h"/>
+    <ingressus genus="plagulae" via="vendor/bearssl/src/hash" suffixa=".c .h"/>
+    <ingressus genus="plagulae" via="vendor/bearssl/src/int" suffixa=".c .h"/>
+    <ingressus genus="plagulae" via="vendor/bearssl/src/kdf" suffixa=".c .h"/>
+    <ingressus genus="plagulae" via="vendor/bearssl/src/mac" suffixa=".c .h"/>
+    <ingressus genus="plagulae" via="vendor/bearssl/src/rand" suffixa=".c .h"/>
+    <ingressus genus="plagulae" via="vendor/bearssl/src/rsa" suffixa=".c .h"/>
+    <ingressus genus="plagulae" via="vendor/bearssl/src/ssl" suffixa=".c .h"/>
+    <ingressus genus="plagulae" via="vendor/bearssl/src/symcipher" suffixa=".c .h"/>
+    <ingressus genus="plagulae" via="vendor/bearssl/src/x509" suffixa=".c .h"/>
+    <ingressus genus="directorium" via="vendor/bearssl/src"/>
     <ingressus genus="plagulae" via="vendor/bearssl/inc" suffixa=".h"/>
     <ingressus genus="instrumentum" via="/opt/homebrew/bin/python3"/>
     <ingressus genus="identitas_clang" via="clang"/>
