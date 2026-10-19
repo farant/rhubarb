@@ -130,6 +130,16 @@ with this plan.
   deletes the binary, and after the plant run the generator source is
   touched and rebuilt. Parked as ...RN9 (silva.planta should bump
   mtime or delete the object).
+- **R5 (T3)** - no currency has exponent 1 (ISO 2026-09-17: exponents
+  0, 2, 3, 4), and `pecunia_ad_unitatem` takes the exponent from the
+  currency: the oracle writes `U` lines for exponents {0, 2, 3, 4}
+  only (3320 `M` + 1560 `U` lines). Cost if wrong: an exponent-1
+  currency added by ISO is untested until the oracle is extended.
+- **R6 (T3)** - `pecunia_ad_unitatem` computes in s64 (divisor <= 10^4,
+  hand Euclidean step) instead of `Magnus`; the plan's Step 4 said
+  "the same rounding routine" - the DECISION is shared (`_sursum`), the
+  arithmetic is not, because the API has no piscina and the first draft
+  allocated one per call.
 
 ## Review focus
 

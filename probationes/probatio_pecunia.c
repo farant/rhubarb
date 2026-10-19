@@ -2,7 +2,10 @@
  * GENERATA ex indicibus ISO 4217 fixis (probationes/fixa/iso4217/)
  * + supplementum, quaestio codicum (sine casu, nihil aliud
  * condonatur), vitia nominata; arithmetica quae recusat (T2:
- * superfluxus, monetae diversae, exitus intactus, proprietates). */
+ * superfluxus, monetae diversae, exitus intactus, proprietates);
+ * rotundatio (T3) contra oraculum decimal Pythonis FIXUM
+ * (probationes/fixa/pecunia/rotundatio.txt, sha256 infra; scriptum a
+ * tools/pecunia_rotundatio_oraculum.py), solvibilis, cambium. */
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"
@@ -10,6 +13,10 @@
 #include "pecunia.h"
 #include "pecunia_monetae.h"
 #include "sors.h"
+#include "fractio.h"
+#include "filum.h"
+#include "sigillum.h"
+#include <stdio.h>
 #include <string.h>
 
 interior chorda
@@ -398,6 +405,254 @@ _sectio_proprietates (CredoContextus* c)
     }
 }
 
+#define VIA_ROTUNDATIO "probationes/fixa/pecunia/rotundatio.txt"
+#define SIGILLUM_ROTUNDATIONIS \
+    "e6982f3be39d530ddf75aa789b8ddf2f152fae176b41baafd5e744183cc722ba"
+
+/* verbum proximum lineae (spatiis separatum) */
+interior chorda
+_verbum (
+    chorda  linea,
+       s32* positio)
+{
+    s32 a;
+
+    dum (   *positio < (s32)linea.mensura
+         && linea.datum[*positio] == ' ')
+    {
+        (*positio)++;
+    }
+    a = *positio;
+    dum (   *positio < (s32)linea.mensura
+         && linea.datum[*positio] != ' ')
+    {
+        (*positio)++;
+    }
+    redde chorda_sectio(linea, (i32)a, (i32)*positio);
+}
+
+interior b32
+_modus (
+          chorda  t,
+    PecuniaModus* m)
+{
+    si (chorda_aequalis_literis(t, "PAR"))
+    {
+        *m = PECUNIA_PAR;
+    }
+    alioquin si (chorda_aequalis_literis(t, "DIMIDIUM_SURSUM"))
+    {
+        *m = PECUNIA_DIMIDIUM_SURSUM;
+    }
+    alioquin si (chorda_aequalis_literis(t, "VERSUS_NIHIL"))
+    {
+        *m = PECUNIA_VERSUS_NIHIL;
+    }
+    alioquin si (chorda_aequalis_literis(t, "SOLUM"))
+    {
+        *m = PECUNIA_SOLUM;
+    }
+    alioquin si (chorda_aequalis_literis(t, "TECTUM"))
+    {
+        *m = PECUNIA_TECTUM;
+    }
+    alioquin
+    {
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
+/* exspectatum: integer aut SUPERFLUXUS; effectus cum eo congruit? */
+interior b32
+_congruit (
+                chorda  exspectatum,
+         PecuniaVitium  v,
+               Pecunia  x,
+    constans character* codex)
+{
+    s64 e;
+
+    si (chorda_aequalis_literis(exspectatum, "SUPERFLUXUS"))
+    {
+        redde v == PECUNIA_VITIUM_SUPERFLUXUS && _intactum(x);
+    }
+    si (!chorda_ut_s64(exspectatum, &e))
+    {
+        redde FALSUM;
+    }
+    redde v == PECUNIA_BENE && x.quantitas == e
+        && memcmp(x.moneta.codex, codex, IV) == ZEPHYRUM;
+}
+
+interior constans character*
+_moneta_exponentis (
+    s64 e)
+{
+    redde e == ZEPHYRUM ? "JPY" : e == II ? "USD" : e == III ? "KWD"
+        : e == IV ? "CLF" : "ZZZ";
+}
+
+interior vacuum
+_sectio_oraculum (CredoContextus* c)
+{
+      Piscina* p = c->piscina;
+       chorda  t = filum_legere_totum(VIA_ROTUNDATIO, p);
+     Sigillum  s;
+    character  hex[SIGILLUM_HEX_MENSURA];
+          s32  initium = ZEPHYRUM;
+          s32  i;
+          s32  multiplicationes  = ZEPHYRUM;
+          s32  unitates          = ZEPHYRUM;
+          s32  errores           = ZEPHYRUM;
+
+    CREDO_NECESSE(t.mensura > ZEPHYRUM);
+    s = sigillum_computare(t.datum, (memoriae_index)t.mensura);
+    sigillum_hex(&s, hex);
+    CREDO_VERUM(strcmp(hex, SIGILLUM_ROTUNDATIONIS) == ZEPHYRUM);
+
+    per (i = ZEPHYRUM; i < (s32)t.mensura; i++)
+    {
+              chorda linea;
+                 s32 pos = ZEPHYRUM;
+              chorda genus;
+        PecuniaModus modus;
+                 b32 bene;
+
+        si (t.datum[i] != '\n')
+        {
+            continue;
+        }
+        linea    = chorda_sectio(t, (i32)initium, (i32)i);
+        initium  = i + I;
+        si (linea.mensura == ZEPHYRUM || linea.datum[ZEPHYRUM] == '#')
+        {
+            continue;
+        }
+        genus = _verbum(linea, &pos);
+        CREDO_NECESSE(_modus(_verbum(linea, &pos), &modus));
+        si (chorda_aequalis_literis(genus, "M"))
+        {
+                s64 q;
+            Fractio f;
+            Pecunia x = _signum_intactum();
+
+            CREDO_NECESSE(chorda_ut_s64(_verbum(linea, &pos), &q));
+            CREDO_NECESSE(fractio_ex_chorda(_verbum(linea, &pos), p,
+                &f));
+            bene = _congruit(_verbum(linea, &pos), pecunia_multiplica(
+                _p(q, "USD", p), f, modus, p, &x), x, "USD");
+            multiplicationes++;
+        }
+        alioquin
+        {
+                           s64  e;
+                           s64  q;
+                       Pecunia  x = _signum_intactum();
+            constans character* codex;
+
+            CREDO_NECESSE(chorda_aequalis_literis(genus, "U"));
+            CREDO_NECESSE(chorda_ut_s64(_verbum(linea, &pos), &e));
+            CREDO_NECESSE(chorda_ut_s64(_verbum(linea, &pos), &q));
+            codex = _moneta_exponentis(e);
+            bene = _congruit(_verbum(linea, &pos), pecunia_ad_unitatem(
+                _p(q, codex, p), modus, &x), x, codex);
+            unitates++;
+        }
+        si (!bene)
+        {
+            imprimere("  oraculum discrepat: %.*s\n",
+                (integer)linea.mensura,
+                linea.datum);
+            errores++;
+        }
+    }
+    CREDO_AEQUALIS_S32(errores, ZEPHYRUM);
+    /* numeri ex fixura: nulla linea tacite praetermissa */
+    CREDO_AEQUALIS_S32(multiplicationes, MMMCCCXX);
+    CREDO_AEQUALIS_S32(unitates, MDLX);
+}
+
+interior vacuum
+_sectio_solvibilis (CredoContextus* c)
+{
+    Piscina* p = c->piscina;
+
+    CREDO_VERUM(pecunia_solvibilis(_p(XXXIV * M + DC, "USD", p)));
+    CREDO_VERUM(pecunia_solvibilis(_p(-(XXXIV * M + DC), "USD", p)));
+    CREDO_FALSUM(pecunia_solvibilis(_p(XXXIV * M + DXC, "USD", p)));
+    CREDO_VERUM(pecunia_solvibilis(_p(CXX * M, "JPY", p)));
+    CREDO_FALSUM(pecunia_solvibilis(_p(CXX * M + I, "JPY", p)));
+    CREDO_VERUM(pecunia_solvibilis(_p(XII * M + CCCXL, "KWD", p)));
+    CREDO_FALSUM(pecunia_solvibilis(_p(XII * M + CCCXLV, "KWD", p)));
+    CREDO_VERUM(pecunia_solvibilis(_p(XII * M + CCCXLV, "CLF", p)));
+    CREDO_VERUM(pecunia_solvibilis(_p(ZEPHYRUM, "USD", p)));
+}
+
+interior vacuum
+_sectio_cambium (CredoContextus* c)
+{
+         Piscina* p = c->piscina;
+         Fractio  f;
+         Pecunia  x;
+         Pecunia  y = _signum_intactum();
+    PecuniaModus  modi[V];
+             s64  exspectata[V];
+             s32  i;
+
+    CREDO_NECESSE(fractio_ex_chorda(_c("9/10", p), p, &f));
+    CREDO_AEQUALIS_S32((s32)pecunia_convertere(_p(M * M, "USD", p), f,
+        _moneta("EUR", p), PECUNIA_PAR, p, &x), (s32)PECUNIA_BENE);
+    CREDO_AEQUALIS_S64(x.quantitas, (s64)(CM * M));
+    CREDO_VERUM(memcmp(x.moneta.codex, "EUR", IV) == ZEPHYRUM);
+
+    /* USD 1.0000 ad 1/3: 0.3333... per modos */
+    modi[ZEPHYRUM]  = PECUNIA_PAR;
+    modi[I]         = PECUNIA_DIMIDIUM_SURSUM;
+    modi[II]        = PECUNIA_VERSUS_NIHIL;
+    modi[III]       = PECUNIA_SOLUM;
+    modi[IV]        = PECUNIA_TECTUM;
+    per (i = ZEPHYRUM; i < IV; i++)
+    {
+        exspectata[i] = (s64)MMMCCCXXXIII;
+    }
+    exspectata[IV] = (s64)MMMCCCXXXIV;
+    CREDO_NECESSE(fractio_ex_chorda(_c("1/3", p), p, &f));
+    per (i = ZEPHYRUM; i < V; i++)
+    {
+        CREDO_AEQUALIS_S32((s32)pecunia_convertere(_p(X * M, "USD", p),
+            f,
+            _moneta("EUR", p), modi[i], p, &x), (s32)PECUNIA_BENE);
+        CREDO_AEQUALIS_S64(x.quantitas, exspectata[i]);
+    }
+
+    /* cambium nullum aut negativum: FORMA, exitus intactus */
+    CREDO_NECESSE(fractio_ex_chorda(_c("0", p), p, &f));
+    CREDO_AEQUALIS_S32((s32)pecunia_convertere(_p(X * M, "USD", p), f,
+        _moneta("EUR", p), PECUNIA_PAR, p, &y),
+        (s32)PECUNIA_VITIUM_FORMA);
+    CREDO_NECESSE(fractio_ex_chorda(_c("-1", p), p, &f));
+    CREDO_AEQUALIS_S32((s32)pecunia_convertere(_p(X * M, "USD", p), f,
+        _moneta("EUR", p), PECUNIA_PAR, p, &y),
+        (s32)PECUNIA_VITIUM_FORMA);
+    CREDO_VERUM(_intactum(y));
+    /* moneta destinata ignota */
+    CREDO_NECESSE(fractio_ex_chorda(_c("2", p), p, &f));
+    CREDO_AEQUALIS_S32((s32)pecunia_convertere(_p(X * M, "USD", p), f,
+        _moneta("ZZZ", p), PECUNIA_PAR, p, &y),
+        (s32)PECUNIA_VITIUM_MONETA_IGNOTA);
+    /* superfluxus */
+    CREDO_AEQUALIS_S32((s32)pecunia_convertere(_p(MAXIMA, "USD", p), f,
+        _moneta("EUR", p), PECUNIA_PAR, p, &y),
+        (s32)PECUNIA_VITIUM_SUPERFLUXUS);
+    CREDO_VERUM(_intactum(y));
+    /* multiplica monetam servat */
+    CREDO_AEQUALIS_S32((s32)pecunia_multiplica(_p(X * M, "KWD", p), f,
+        PECUNIA_PAR, p, &x), (s32)PECUNIA_BENE);
+    CREDO_AEQUALIS_S64(x.quantitas, (s64)(XX * M));
+    CREDO_VERUM(memcmp(x.moneta.codex, "KWD", IV) == ZEPHYRUM);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "tabula", _sectio_tabula, NIHIL, NIHIL, NIHIL, NIHIL },
     { "codices", _sectio_codices, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -407,6 +662,9 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "summa_mixta", _sectio_summa_mixta, NIHIL, NIHIL, NIHIL, NIHIL },
     { "proprietates", _sectio_proprietates, NIHIL, NIHIL, NIHIL,
         NIHIL },
+    { "oraculum", _sectio_oraculum, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "solvibilis", _sectio_solvibilis, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "cambium", _sectio_cambium, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

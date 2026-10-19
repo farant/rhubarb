@@ -337,3 +337,179 @@ pecunia_aequalis (
     redde a.quantitas == b.quantitas
         && pecunia_moneta_aequalis(a.moneta, b.moneta);
 }
+
+
+/* ==================================================
+ * Rotundatio, multiplicatio, unitates, cambium
+ * ================================================== */
+
+/* Decisio rotundationis: valor = quotiens (solum) + r/den, r >= 0.
+ * VERUM = quotiens + 1. dimidium = signum(2r - den). Communis viae
+ * Magni (multiplica) et viae s64 (ad_unitatem). */
+interior b32
+_sursum (
+    PecuniaModus modus,
+             b32 residuum_nullum,
+             s32 dimidium,
+             b32 quotiens_negativus,
+             b32 quotiens_impar)
+{
+    si (residuum_nullum)
+    {
+        redde FALSUM;
+    }
+    commutatio (modus)
+    {
+        casus PECUNIA_SOLUM:
+            redde FALSUM;
+        casus PECUNIA_TECTUM:
+            redde VERUM;
+        casus PECUNIA_VERSUS_NIHIL:
+            /* negativus: versus nihil = sursum */
+            redde quotiens_negativus;
+        casus PECUNIA_DIMIDIUM_SURSUM:
+            redde dimidium > ZEPHYRUM
+                || (dimidium == ZEPHYRUM && !quotiens_negativus);
+        ordinarius:   /* PECUNIA_PAR */
+            redde dimidium > ZEPHYRUM
+                || (dimidium == ZEPHYRUM && quotiens_impar);
+    }
+}
+
+/* numerator / denominator (> 0) ad integrum per modum, EXACTE:
+ * magnus_divide Euclideum (0 <= r < den), ergo quotiens iam solum
+ * est. FALSUM si effectus extra s64. */
+interior b32
+_rotundare (
+          Magnus  numerator,
+          Magnus  denominator,
+    PecuniaModus  modus,
+         Piscina* p,
+             s64* exitus)
+{
+    Magnus quotiens;
+    Magnus residuum;
+
+    si (!magnus_divide(numerator, denominator, p, &quotiens, &residuum))
+    {
+        redde FALSUM;
+    }
+    si (_sursum(modus, magnus_signum(residuum) == ZEPHYRUM,
+        magnus_compara(magnus_adde(residuum, residuum, p), denominator),
+        magnus_signum(quotiens) < ZEPHYRUM,
+        magnus_residuum_parvum(quotiens, II) == I))
+    {
+        quotiens = magnus_adde(quotiens, magnus_ex_s64(I), p);
+    }
+    redde magnus_ad_s64(quotiens, exitus);
+}
+
+PecuniaVitium
+pecunia_multiplica (
+         Pecunia  a,
+         Fractio  f,
+    PecuniaModus  modus,
+         Piscina* piscina,
+         Pecunia* exitus)
+{
+    s64 r;
+
+    si (!_rotundare(magnus_multiplica(magnus_ex_s64(a.quantitas),
+        fractio_numerator(f), piscina), fractio_denominator(f), modus,
+        piscina, &r))
+    {
+        redde PECUNIA_VITIUM_SUPERFLUXUS;
+    }
+    exitus->quantitas  = r;
+    exitus->moneta     = a.moneta;
+    redde PECUNIA_BENE;
+}
+
+PecuniaVitium
+pecunia_ad_unitatem (
+         Pecunia  a,
+    PecuniaModus  modus,
+        Pecunia* exitus)
+{
+    s32 exponens = pecunia_moneta_exponens(a.moneta);
+    s64 factor;
+    s64 quotiens;
+    s64 residuum;
+    s64 limes;
+
+    si (exponens < ZEPHYRUM)
+    {
+        redde PECUNIA_VITIUM_MONETA_IGNOTA;
+    }
+    factor = _factor_unitatis(exponens);
+    /* via s64 (sine piscina): divisio Euclidea manu - '/' et '%'
+     * negativorum C89 incerta, sed a == q*f + r semper; r < 0
+     * corrigitur. |2r| < 2f <= 20000: nullus superfluxus. */
+    quotiens = a.quantitas / factor;
+    residuum = a.quantitas % factor;
+    si (residuum < ZEPHYRUM)
+    {
+        quotiens -= I;
+        residuum += factor;
+    }
+    si (_sursum(modus, residuum == ZEPHYRUM,
+        II * residuum < factor ? -I : II * residuum > factor ? I
+            : ZEPHYRUM,
+        quotiens < ZEPHYRUM, (quotiens % II) != ZEPHYRUM))
+    {
+        quotiens += I;    /* quotiens <= MAXIMA / f: capit */
+    }
+    /* rotundatio sursum prope margines: quotiens * factor extra s64 */
+    limes = PECUNIA_QUANTITAS_MAXIMA / factor;
+    si (factor > I && (quotiens > limes || quotiens < -limes))
+    {
+        redde PECUNIA_VITIUM_SUPERFLUXUS;
+    }
+    exitus->quantitas  = quotiens * factor;
+    exitus->moneta     = a.moneta;
+    redde PECUNIA_BENE;
+}
+
+b32
+pecunia_solvibilis (
+    Pecunia a)
+{
+    s32 exponens = pecunia_moneta_exponens(a.moneta);
+
+    si (exponens < ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    /* % negativi C89 signo incerto, sed nihil manet nihil */
+    redde a.quantitas % _factor_unitatis(exponens) == ZEPHYRUM;
+}
+
+PecuniaVitium
+pecunia_convertere (
+          Pecunia  a,
+          Fractio  cambium,
+    PecuniaMoneta  ad,
+     PecuniaModus  modus,
+          Piscina* piscina,
+          Pecunia* exitus)
+{
+    PecuniaVitium v;
+          Pecunia r;
+
+    si (fractio_signum(cambium) <= ZEPHYRUM)
+    {
+        redde PECUNIA_VITIUM_FORMA;
+    }
+    si (pecunia_moneta_exponens(ad) < ZEPHYRUM)
+    {
+        redde PECUNIA_VITIUM_MONETA_IGNOTA;
+    }
+    v = pecunia_multiplica(a, cambium, modus, piscina, &r);
+    si (v != PECUNIA_BENE)
+    {
+        redde v;
+    }
+    r.moneta  = ad;
+    *exitus   = r;
+    redde PECUNIA_BENE;
+}

@@ -21,6 +21,8 @@
 
 #include "latina.h"
 #include "chorda.h"
+#include "piscina.h"
+#include "fractio.h"
 
 /* quantitas in decimillesimis: USD 12.34 = 123400 */
 #define PECUNIA_SCALA (X * M)
@@ -164,5 +166,54 @@ b32
 pecunia_aequalis (
     Pecunia a,
     Pecunia b);
+
+
+/* ==================================================
+ * Rotundatio, multiplicatio, unitates solvibiles, cambium
+ * ================================================== */
+
+/* Modus SEMPER explicitus - nullus ordinarius tacitus. */
+nomen enumeratio {
+    PECUNIA_PAR = ZEPHYRUM,    /* dimidium ad par (argentariorum) */
+    PECUNIA_DIMIDIUM_SURSUM,   /* dimidium a nihilo: 2.5->3, -2.5->-3 */
+    PECUNIA_VERSUS_NIHIL,      /* truncatio */
+    PECUNIA_SOLUM,             /* versus -infinitum */
+    PECUNIA_TECTUM             /* versus +infinitum */
+} PecuniaModus;
+
+/* quantitas * f exacte (Magnus), rotundatio UNA ad scalam; moneta
+ * servatur. 8.875% = 71/800. Extra s64 -> SUPERFLUXUS. */
+PecuniaVitium
+pecunia_multiplica (
+         Pecunia  a,
+         Fractio  f,
+    PecuniaModus  modus,
+         Piscina* piscina,
+         Pecunia* exitus);
+
+/* ad unitatem minorem monetae (USD 3.4590 -> 3.46 sub PAR; JPY ad
+ * yen integros); effectus in scala IV */
+PecuniaVitium
+pecunia_ad_unitatem (
+         Pecunia  a,
+    PecuniaModus  modus,
+         Pecunia* exitus);
+
+/* VERUM si quantitas multiplex unitatis minoris est */
+b32
+pecunia_solvibilis (
+    Pecunia a);
+
+/* cambium = unitates monetae 'ad' per unitatem a.moneta, > 0 (aliter
+ * FORMA); productum exactum, rotundatio una ad scalam (non ad
+ * unitatem - vocans pecunia_ad_unitatem postea vocat si vult) */
+PecuniaVitium
+pecunia_convertere (
+          Pecunia  a,
+          Fractio  cambium,
+    PecuniaMoneta  ad,
+     PecuniaModus  modus,
+          Piscina* piscina,
+          Pecunia* exitus);
 
 #endif /* PECUNIA_H */

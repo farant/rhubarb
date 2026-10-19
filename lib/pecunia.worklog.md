@@ -83,3 +83,42 @@ in a budget is a data error worth surfacing.
 
 Plants: `_adde_tutum` upper check disabled -> `arithmetica` red; summa's
 currency check only on element 0 -> `summa_mixta` red.
+
+## 2026-10-19 - T3: rounding, multiplication, payable amounts, conversion
+
+**Oracle:** `tools/pecunia_rotundatio_oraculum.py` (Python `decimal`,
+precision 80, stdlib only) writes `probationes/fixa/pecunia/rotundatio.txt`
+once; the C test pins its sha256 and checks that it consumed exactly
+3320 `M` (multiply) and 1560 `U` (round to payable) lines, so a
+truncated or half-parsed fixture cannot pass quietly. Two runs of the
+script give the same bytes. The fixture's first line deliberately does
+NOT say GENERATUM - that word in line 1 makes the `generata` gate demand
+a fabrica generator action, and this file is a pinned oracle, not a
+build artifact.
+
+**No currency has exponent 1** in the 2026-09-17 ISO list (0, 2, 3, 4
+only), and `pecunia_ad_unitatem` takes the exponent from the currency,
+so exponent-1 lines could not be tested through the API - the oracle
+writes exponents {0, 2, 3, 4} only (plan R5). If ISO ever adds one, the
+`_factor_unitatis` case for I already exists; extend the oracle then.
+
+**One rounding decision, two arithmetic paths.** `_sursum(modus,
+residuum_nullum, dimidium, quotiens_negativus, quotiens_impar)` decides
+"floor + 1 or not" from the floor quotient and remainder. `multiplica`
+/ `convertere` feed it from `Magnus` (`magnus_divide` is Euclidean, so
+the quotient is already the floor and `2r` vs `den` gives the half
+test); `ad_unitatem` feeds it from s64 directly (divisor <= 10^4) with
+a hand Euclidean step - C89 leaves `/` and `%` of negatives
+implementation-defined, but `a == q*f + r` always holds, so a negative
+`r` is corrected (`q -= 1; r += f`). The first draft of `ad_unitatem`
+went through Magnus and created a piscina per call for values that
+always fit in s64; the API has no piscina parameter, so the s64 path is
+the honest one.
+
+**Half-away-from-zero** = Python's ROUND_HALF_UP: on a tie, step up when
+the floor quotient is >= 0 (value q + 0.5, positive), stay when it is
+negative (q + 0.5 <= -0.5, so q is the one further from zero).
+
+All 4880 oracle lines agreed on the first run. Plants: PAR made to
+behave like half-up; the s64 negative-floor correction removed;
+VERSUS_NIHIL made SOLUM for negatives - each `oraculum` red.
