@@ -213,4 +213,19 @@ sancti_celebrationis (
                    chorda  titulus,
                   Piscina* piscina);
 
+/* AETAS (vita): "1762–1804", "c. 1225–1274", "1225–c. 1274",
+ * "d. 304", "d. c. 304", "b. 1920" (ortus solus), "4th century"
+ * (saeculum solum), "10 BC–30" (ante Christum); vacua si nihil notum.
+ * Annus vincit saeculum; lineola = U+2013. */
+chorda
+sancti_aetas_textus (
+    constans Sanctus* s,
+             Piscina* piscina);
+
+/* festum primum: generale, deinde usa, deinde martyrologium; NIHIL
+ * si nullum (ordo calendarii et linea indicis) */
+constans SanctiFestum*
+sancti_festum_primum (
+    constans Sanctus* s);
+
 #endif /* SANCTI_H */

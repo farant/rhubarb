@@ -1,0 +1,52 @@
+<!-- organum.stml - manifestum bibliothecae sanctorum (genus "sancti";
+     iussum $saints): index paginatus et visus sancti. Contentum
+     (corpus sanctorum, directorium sancti/) per ligamen a parente,
+     commune omnibus lateribus - hic solum status visus. -->
+<organum genus="sancti" versio="1">
+
+  <ligamina>
+    <ligamen nomen="corpus" genus="sancti" a="parens"/>
+  </ligamina>
+
+  <actiones>
+    <actio nomen="sancti.agere"/>
+  </actiones>
+
+  <status>
+    <campus nomen="visus" typus="electio" vita="persistens"
+            absens="index" scriptor="sancti.agere">
+      <optio>index</optio>
+      <optio>sanctus</optio>
+    </campus>
+    <campus nomen="ordo" typus="electio" vita="persistens"
+            absens="calendarium" scriptor="sancti.agere">
+      <optio>calendarium</optio>
+      <optio>nomen</optio>
+      <optio>aetas</optio>
+    </campus>
+    <campus nomen="electus" typus="textus" vita="persistens"
+            scriptor="sancti.agere"
+            nota="id sancti electi; absens = primus a hodie (ordo
+                  calendarii) aut primus indicis"/>
+    <campus nomen="pagina" typus="numerus" vita="transiens"
+            scriptor="sancti.agere" nota="electus paginam sequitur"/>
+    <campus nomen="quaestio" typus="textus" vita="transiens"
+            scriptor="sancti.agere" nota="absens = nulla"/>
+    <campus nomen="sanctus_apertus" typus="textus" vita="persistens"
+            scriptor="sancti.agere" nota="id in visu sancti"/>
+    <campus nomen="pagina_textus" typus="numerus" vita="transiens"
+            scriptor="sancti.agere"/>
+    <campus nomen="prompta" typus="electio" vita="transiens"
+            absens="nulla" scriptor="sancti.agere">
+      <optio>nulla</optio>
+      <optio>quaestio</optio>
+    </campus>
+    <campus nomen="prompta_textus" typus="textus" vita="transiens"
+            scriptor="sancti.agere"/>
+    <campus nomen="prompta_cursor" typus="numerus" vita="transiens"
+            scriptor="sancti.agere"/>
+  </status>
+
+  <basis genus="organum_commune"/>
+  <montationes/>
+</organum>

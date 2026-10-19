@@ -8,6 +8,8 @@
 #include "credo.h"
 #include "sancti.h"
 #include "filum.h"
+#include "chorda_aedificator.h"
+#include <stdio.h>
 #include <string.h>
 
 #define FIXA "probationes/fixa/sancti"
@@ -345,12 +347,141 @@ _sectio_corpus_vitia (
         c->piscina, internamentum_creare(c->piscina)) == NIHIL);
 }
 
+/* sanctus ex corpore brevi (campi inter nomen et fontem) */
+interior constans Sanctus*
+_ex_campis (
+         CredoContextus* c,
+    constans character* campi)
+{
+    ChordaAedificator* a;
+
+    a = chorda_aedificator_creare(c->piscina, CCLVI);
+    chorda_aedificator_appendere_literis(a, CAPUT NOMEN);
+    chorda_aedificator_appendere_literis(a, campi);
+    chorda_aedificator_appendere_literis(a, FONS);
+    redde sancti_legere(chorda_aedificator_finire(a),
+        chorda_ex_literis("s/x.sanctus", c->piscina), c->piscina,
+        internamentum_creare(c->piscina),
+        xar_creare(c->piscina, (i32)magnitudo(SanctiVitium)));
+}
+
+/* aetas sancti ex campis aequat textum? */
+interior b32
+_aetas_est (
+         CredoContextus* c,
+     constans character* campi,
+     constans character* textus)
+{
+     constans Sanctus* s;
+               chorda  aetas;
+
+    s = _ex_campis(c, campi);
+    si (s == NIHIL)
+    {
+        imprimere("  campi non lecti: %s\n", campi);
+        redde FALSUM;
+    }
+    aetas = sancti_aetas_textus(s, c->piscina);
+    si (!chorda_aequalis_literis(aetas, textus))
+    {
+        imprimere("  aetas '%.*s' pro '%s'\n", (integer)aetas.mensura,
+            aetas.datum ? (constans character*)aetas.datum : "",
+            textus);
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
+#define LINEOLA "\342\200\223"
+
+interior vacuum
+_sectio_aetas (
+    CredoContextus* c)
+{
+    CREDO_VERUM(_aetas_est(c, "<ortus annus=\"1762\" fontes=\"f\"/>"
+        "<obitus annus=\"1804\" fontes=\"f\"/>",
+        "1762" LINEOLA "1804"));
+    CREDO_VERUM(_aetas_est(c, "<ortus annus=\"1225\" circa=\"verum\" "
+        "fontes=\"f\"/><obitus annus=\"1274\" fontes=\"f\"/>",
+        "c. 1225" LINEOLA "1274"));
+    CREDO_VERUM(_aetas_est(c, "<ortus annus=\"1225\" fontes=\"f\"/>"
+        "<obitus annus=\"1274\" circa=\"verum\" fontes=\"f\"/>",
+        "1225" LINEOLA "c. 1274"));
+    CREDO_VERUM(_aetas_est(c, "<obitus annus=\"304\" fontes=\"f\"/>",
+        "d. 304"));
+    CREDO_VERUM(_aetas_est(c, "<obitus annus=\"304\" circa=\"verum\" "
+        "fontes=\"f\"/>", "d. c. 304"));
+    CREDO_VERUM(_aetas_est(c, "<ortus annus=\"1920\" fontes=\"f\"/>",
+        "b. 1920"));
+    CREDO_VERUM(_aetas_est(c, "<obitus saeculum=\"4\" fontes=\"f\"/>",
+        "4th century"));
+    CREDO_VERUM(_aetas_est(c, "<obitus saeculum=\"1\" circa=\"verum\" "
+        "fontes=\"f\"/>", "c. 1st century"));
+    CREDO_VERUM(_aetas_est(c, "<obitus saeculum=\"12\" fontes=\"f\"/>",
+        "12th century"));
+    CREDO_VERUM(_aetas_est(c, "<obitus saeculum=\"11\" fontes=\"f\"/>",
+        "11th century"));
+    CREDO_VERUM(_aetas_est(c, "<obitus saeculum=\"21\" fontes=\"f\"/>",
+        "21st century"));
+    CREDO_VERUM(_aetas_est(c, "<obitus saeculum=\"3\" fontes=\"f\"/>",
+        "3rd century"));
+    CREDO_VERUM(_aetas_est(c, "<ortus annus=\"-10\" fontes=\"f\"/>"
+        "<obitus annus=\"30\" fontes=\"f\"/>", "10 BC" LINEOLA "30"));
+    /* annus vincit saeculum; locus solus nihil dat */
+    CREDO_VERUM(_aetas_est(c, "<obitus annus=\"258\" saeculum=\"3\" "
+        "fontes=\"f\"/>", "d. 258"));
+    CREDO_VERUM(_aetas_est(c, "<obitus locus=\"Rome\" fontes=\"f\"/>",
+        ""));
+    CREDO_VERUM(_aetas_est(c, "", ""));
+}
+
+interior vacuum
+_sectio_festum_primum (
+    CredoContextus* c)
+{
+         constans Sanctus* s;
+    constans SanctiFestum* f;
+
+    s = _ex_campis(c,
+        "<festum calendarium=\"martyrologium\" mensis=\"1\" "
+        "dies=\"20\" fontes=\"f\"/><festum calendarium=\"usa\" "
+        "mensis=\"1\" dies=\"22\" fontes=\"f\"/><festum "
+        "calendarium=\"generale\" mensis=\"1\" dies=\"21\" "
+        "fontes=\"f\"/>");
+    CREDO_NECESSE_NON_NIHIL(s);
+    f = sancti_festum_primum(s);
+    CREDO_NECESSE_NON_NIHIL(f);
+    CREDO_VERUM(f->calendarium == SANCTI_CALENDARIUM_GENERALE);
+    CREDO_AEQUALIS_S32(f->dies, XXI);
+    s = _ex_campis(c,
+        "<festum calendarium=\"martyrologium\" mensis=\"1\" "
+        "dies=\"20\" fontes=\"f\"/><festum calendarium=\"usa\" "
+        "mensis=\"1\" dies=\"22\" fontes=\"f\"/>");
+    CREDO_NECESSE_NON_NIHIL(s);
+    CREDO_AEQUALIS_S32(sancti_festum_primum(s)->dies, XXII);
+    s = _ex_campis(c,
+        "<festum calendarium=\"generale-1962\" mensis=\"3\" "
+        "dies=\"7\" fontes=\"f\"/><festum "
+        "calendarium=\"martyrologium\" "
+        "mensis=\"1\" dies=\"20\" fontes=\"f\"/>");
+    CREDO_NECESSE_NON_NIHIL(s);
+    CREDO_AEQUALIS_S32(sancti_festum_primum(s)->dies, XX);
+    s = _ex_campis(c,
+        "<festum calendarium=\"generale-1962\" mensis=\"3\" "
+        "dies=\"7\" fontes=\"f\"/>");
+    CREDO_NECESSE_NON_NIHIL(s);
+    CREDO_VERUM(sancti_festum_primum(s) == NIHIL);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "plena", _sectio_plena, NIHIL, NIHIL, NIHIL, NIHIL },
     { "dies", _sectio_dies, NIHIL, NIHIL, NIHIL, NIHIL },
     { "vitia", _sectio_vitia, NIHIL, NIHIL, NIHIL, NIHIL },
     { "corpus", _sectio_corpus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "celebratio", _sectio_celebratio, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "aetas", _sectio_aetas, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "festum_primum", _sectio_festum_primum, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { "corpus_vitia", _sectio_corpus_vitia, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }

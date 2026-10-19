@@ -10,6 +10,7 @@
 #include "admonitiones_visus.h"
 #include "admonitiones_volantes.h"
 #include "colloquia_visus.h"
+#include "sancti_visus.h"
 #include "multiplexor.h"
 #include "filum.h"
 #include <stdio.h>
@@ -2421,6 +2422,118 @@ vicus_applicatio_imaginis_portam_ponere (
     cp->porta_ctx  = ctx;
 }
 
+/* bibliotheca sanctorum (sancti_visus): corpus UNUM per vicum, pigre
+ * apertum ex RHUBARB_SANCTI aut "sancti" (radix repositorii - vicus.sh
+ * ibi currit), commune omnibus lateribus; absens = latus "No saints
+ * found" dicit */
+nomen structura {
+                  Vicus* vicus;
+                Piscina* piscina;
+    InternamentumChorda* intern;
+           SanctiCorpus* corpus;
+                    b32  temptatum;
+        StatusSystemata* systemata;
+} ContextusSanctorum;
+
+/* porta hodie sanctorum: horologium vici; nullum = FALSUM */
+interior b32
+hodie_sanctorum (
+    vacuum* ctx,
+       s32* mensis,
+       s32* dies)
+{
+          Vicus* v;
+    VicusTempus  t;
+
+    v = (Vicus*)ctx;
+    si (!v || !v->horologium)
+    {
+        redde FALSUM;
+    }
+    memset(&t, ZEPHYRUM, magnitudo(t));
+    v->horologium(v->horologium_ctx, &t);
+    si (t.mensis < I || t.dies < I)
+    {
+        redde FALSUM;
+    }
+    *mensis  = t.mensis;
+    *dies    = t.dies;
+    redde VERUM;
+}
+
+interior b32
+sanctos_montare_in_vico (
+                 vacuum* sedes,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+     InsulaRepositorium* repo,
+     constans character* id,
+     constans character* argumentum,
+                    i32  latitudo,
+                    i32  altitudo,
+                 vacuum* ctx)
+{
+     ContextusSanctorum* cs;
+     constans character* directorium;
+
+    (vacuum)volumen;
+    cs = (ContextusSanctorum*)ctx;
+    si (!cs)
+    {
+        redde FALSUM;
+    }
+    si (!cs->temptatum)
+    {
+        directorium    = getenv("RHUBARB_SANCTI");
+        cs->corpus     = sancti_corpus_aperire(directorium
+            && directorium[ZEPHYRUM] ? directorium : "sancti",
+            cs->piscina, cs->intern);
+        cs->temptatum  = VERUM;
+    }
+    si (!sancti_visus_montare((SanctorumMontatio*)sedes, piscina,
+        intern,
+            repo, id, cs->corpus, hodie_sanctorum, cs->vicus, latitudo,
+            altitudo, cs->systemata))
+    {
+        redde FALSUM;
+    }
+    /* "<id>" sanctum aperit (ignotum: index manet) */
+    si (argumentum && argumentum[ZEPHYRUM])
+    {
+        (vacuum)sancti_visus_argumentum_ponere(
+            (SanctorumMontatio*)sedes, argumentum);
+    }
+    redde VERUM;
+}
+
+interior b32
+sanctorum_argumentum_ponere (
+                 vacuum* ctx,
+     constans character* argumentum)
+{
+    redde sancti_visus_argumentum_ponere((SanctorumMontatio*)ctx,
+        argumentum);
+}
+
+interior vacuum
+sanctos_describere (
+         vacuum* montatio,
+    VicusFacies* f)
+{
+    SanctorumMontatio* m;
+
+    m                         = (SanctorumMontatio*)montatio;
+    f->actiones               = m->actiones;
+    f->figurae                = m->figurae;
+    f->componere              = sancti_visus_componere;
+    f->componere_ctx          = m;
+    f->argumentum_ponere      = sanctorum_argumentum_ponere;
+    f->argumentum_ponere_ctx  = m;
+    /* Esc quod index non consumpsit (quaestio nulla): latus prius */
+    f->effugium_redit         = VERUM;
+}
+
 /* T4f (colloquia-plan): Cmd+] / Cmd+[ - domus -> admonitiones ->
  * colloquia -> agenda -> domus */
 hic_manens constans character* cyclus_dexter[] = {
@@ -2444,6 +2557,7 @@ vicus_applicatio_aedificare (
 ContextusNomenclatoris* cn;
   ContextusQuaestionis* cq;
  ContextusAdmonitionum* cad;
+    ContextusSanctorum* sanctorum;
        StatusSystemata* systemata;
 
     si (!app || !piscina || !intern || !volumen)
@@ -2499,6 +2613,17 @@ ContextusNomenclatoris* cn;
         cn->piscina    = piscina;
         cn->intern     = intern;
         cn->systemata  = systemata;
+    }
+    /* bibliotheca sanctorum - corpus commune, pigre apertum */
+    sanctorum = (ContextusSanctorum*)piscina_allocare(piscina,
+        magnitudo(ContextusSanctorum));
+    si (sanctorum)
+    {
+        memset(sanctorum, ZEPHYRUM, magnitudo(ContextusSanctorum));
+        sanctorum->vicus      = app->vicus;
+        sanctorum->piscina    = piscina;
+        sanctorum->intern     = intern;
+        sanctorum->systemata  = systemata;
     }
     /* P6: fontes dierum calendarii (natales nomenclatoris) */
     si (ck)
@@ -2561,6 +2686,9 @@ ContextusNomenclatoris* cn;
                "notifications", "admonitiones", NIHIL, piscina)
         || !aperiens_fixum_registrare(cs->iussa, app->vicus,
                "sessions", "colloquia", NIHIL, piscina)
+        || !sanctorum
+        || !aperiens_fixum_registrare(cs->iussa, app->vicus, "saints",
+               "sancti", NIHIL, piscina)
         || !cyclum_registrare(cs->iussa, app->vicus, "pictor-next", I,
                piscina)
         || !cyclum_registrare(cs->iussa, app->vicus, "pictor-prev", -I,
@@ -2593,6 +2721,9 @@ ContextusNomenclatoris* cn;
                magnitudo(AdmonitionumMontatio),
                admonitiones_montare_in_vico, admonitiones_describere,
                cad)
+        || !vicus_genus_addere(app->vicus, "sancti",
+               magnitudo(SanctorumMontatio), sanctos_montare_in_vico,
+               sanctos_describere, sanctorum)
         || !vicus_genus_addere(app->vicus, "colloquia",
                magnitudo(ColloquiorumMontatio),
                colloquia_montare_in_vico,

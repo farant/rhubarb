@@ -127,3 +127,9 @@ excerpt found verbatim in its source).
   source, not under the cited day/volume heading - one reviewer checked
   every Martyrology locus by hand; a locus check is a possible tool
   improvement before S2.
+- 2026-10-19 V1 (Fran's request, outside S0-S4): `$saints` pane in
+  vicus - include/sancti_visus.h + lib/sancti_visus.c, manifest
+  apps/sancti/organum.stml; index one row per saint with feast,
+  lifetime and roles, sorts calendar (default, opens on today) / name /
+  lifetime, search, record view with paged description and sources.
+  Detail: lib/sancti_visus.worklog.md.

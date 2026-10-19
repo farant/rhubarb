@@ -11,6 +11,7 @@
 #include "filum.h"
 #include "iter_directoria.h"
 #include "tabula_dispersa.h"
+#include "chorda_aedificator.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -1016,6 +1017,139 @@ sancti_celebrationis (
             }
         }
         redde fructus;
+    }
+    redde NIHIL;
+}
+
+/* "c. " si circa; annus ante Christum "N BC" */
+interior vacuum
+_annum_appendere (
+    ChordaAedificator* a,
+                  s32  annus,
+                  b32  circa)
+{
+    character numerus[XXIV];
+
+    si (circa)
+    {
+        chorda_aedificator_appendere_literis(a, "c. ");
+    }
+    si (annus < ZEPHYRUM)
+    {
+        sprintf(numerus, "%d BC", (integer)-annus);
+    }
+    alioquin
+    {
+        sprintf(numerus, "%d", (integer)annus);
+    }
+    chorda_aedificator_appendere_literis(a, numerus);
+}
+
+/* suffixum ordinale anglicum: 1st 2nd 3rd 4th ... 11th 12th 13th
+ * 21st */
+interior constans character*
+_ordinale (
+    s32 n)
+{
+    si (n % C >= XI && n % C <= XIII)
+    {
+        redde "th";
+    }
+    commutatio (n % X)
+    {
+        casus I:
+            redde "st";
+        casus II:
+            redde "nd";
+        casus III:
+            redde "rd";
+        ordinarius:
+            redde "th";
+    }
+}
+
+chorda
+sancti_aetas_textus (
+    constans Sanctus* s,
+             Piscina* piscina)
+{
+        ChordaAedificator* a;
+                      b32  ortus;
+                      b32  obitus;
+      constans SanctiDies* d;
+                character  numerus[XLVIII];
+
+    a       = chorda_aedificator_creare(piscina, LXIV);
+    ortus   = s->ortus.notus && s->ortus.annus != ZEPHYRUM;
+    obitus  = s->obitus.notus && s->obitus.annus != ZEPHYRUM;
+    si (a == NIHIL)
+    {
+        redde _chorda_nulla();
+    }
+    si (ortus && obitus)
+    {
+        _annum_appendere(a, s->ortus.annus, s->ortus.circa);
+        chorda_aedificator_appendere_literis(a, "\342\200\223");
+        _annum_appendere(a, s->obitus.annus, s->obitus.circa);
+    }
+    alioquin si (obitus)
+    {
+        chorda_aedificator_appendere_literis(a, "d. ");
+        _annum_appendere(a, s->obitus.annus, s->obitus.circa);
+    }
+    alioquin si (ortus)
+    {
+        chorda_aedificator_appendere_literis(a, "b. ");
+        _annum_appendere(a, s->ortus.annus, s->ortus.circa);
+    }
+    alioquin
+    {
+        d = (s->obitus.notus && s->obitus.saeculum != ZEPHYRUM)
+            ? &s->obitus
+            : (s->ortus.notus && s->ortus.saeculum != ZEPHYRUM)
+            ? &s->ortus : NIHIL;
+        si (d == NIHIL)
+        {
+            redde _chorda_nulla();
+        }
+        si (d->circa)
+        {
+            chorda_aedificator_appendere_literis(a, "c. ");
+        }
+        sprintf(numerus, "%d%s century%s",
+            (integer)(d->saeculum
+                < ZEPHYRUM ? -d->saeculum : d->saeculum),
+            _ordinale(d->saeculum
+                < ZEPHYRUM ? -d->saeculum : d->saeculum),
+            d->saeculum < ZEPHYRUM ? " BC" : "");
+        chorda_aedificator_appendere_literis(a, numerus);
+    }
+    redde chorda_aedificator_finire(a);
+}
+
+constans SanctiFestum*
+sancti_festum_primum (
+    constans Sanctus* s)
+{
+    hic_manens constans SanctiCalendarium ordo[III] = {
+        SANCTI_CALENDARIUM_GENERALE, SANCTI_CALENDARIUM_USA,
+        SANCTI_CALENDARIUM_MARTYROLOGIUM
+    };
+    i32 k;
+    i32 j;
+
+    per (k = ZEPHYRUM; k < III; k++)
+    {
+        per (j = ZEPHYRUM; s && j < xar_numerus(s->festa); j++)
+        {
+            constans SanctiFestum* f = (constans SanctiFestum*)
+                xar_obtinere(s->festa, j);
+
+            si (f->calendarium == ordo[k])
+            {
+                redde f;
+            }
+        }
     }
     redde NIHIL;
 }

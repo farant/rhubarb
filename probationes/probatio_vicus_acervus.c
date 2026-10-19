@@ -153,6 +153,7 @@ s32 principale (vacuum)
     intern = internamentum_creare(piscina);
     thema_initiare();
     (vacuum)setenv("SHELL", "/bin/sh", I);
+    (vacuum)setenv("RHUBARB_SANCTI", "probationes/fixa/sancti", I);
     vol = volumen_temporarium(piscina, "probatio_vicus_acervus");
     CREDO_VERUM(vicus_applicatio_aedificare(&app, piscina, intern, vol,
         CDLXXX, CDLXXX + VICUS_ALTITUDO_TABULARUM));
@@ -414,6 +415,19 @@ s32 principale (vacuum)
     gradus(v, m, '[');
     CREDO_AEQUALIS_I32(numerus_acervi(v), I);
     CREDO_VERUM(frons_est(v, "1_dextrum_admonitiones"));
+    imprimere("\n--- XV: sancti (bibliotheca, $saints) ---\n");
+    /* corpus fixturae; argumentum sanctum aperit */
+    CREDO_VERUM(vicus_acervo_aperire(v, "sancti", "thomas-aquinas"));
+    (vacuum)vicus_pulsare(v);
+    CREDO_VERUM(frons_est(v, "1_dextrum_sancti"));
+    {
+        InsulaRamus  r;
+             chorda* a;
+
+        r = insula_ramus(v->repo, "sancti", "1_dextrum_sancti");
+        a = insula_ramus_attributum(&r, "sanctus_apertus");
+        CREDO_VERUM(a && chorda_aequalis_literis(*a, "thomas-aquinas"));
+    }
     volumen_claudere(vol_imum);
 
     imprimere("\n");
