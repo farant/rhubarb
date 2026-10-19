@@ -64,8 +64,12 @@ for the first two):
 - **json does not keep number text** (`include/json.h:86`): fractional
   numbers arrive as `f64`. pecunia never reads JSON; this matters only
   for the Lunch Money client (sub-project D, see section IV).
-- **Name check:** no `Pecunia`, `Moneta` or `pecunia_*` symbols outside
-  sputnik's own `SPUTNIK_*` names and its static `_parsere_pecuniam`.
+- **Name check:** no `Pecunia` or `pecunia_*` symbols outside sputnik's
+  own `SPUTNIK_*` names and its static `_parsere_pecuniam`. **The
+  `moneta_` prefix is TAKEN** - `include/moneta.h` is the house identity
+  mint (ULID, nanoid, `moneta_octeti_fortuiti`) - so every currency name
+  here lives under `pecunia_` (corrected 2026-10-19 while writing the
+  remote-MCP spec).
 
 **ISO data as measured 2026-10-19:**
 - `list-one.xml` (current), published 2026-09-17: 178 codes; minor
@@ -87,12 +91,11 @@ for the first two):
 
 nomen structura {
     character codex[IV];             /* "USD": majusculae, NUL */
-} Moneta;
+} PecuniaMoneta;
 
 nomen structura {
-          s64  quantitas;            /* decimillesimae: USD 12.34
-                                      * = 123400 */
-       Moneta  moneta;
+          s64  quantitas;    /* decimillesimae: USD 12.34 = 123400 */
+PecuniaMoneta  moneta;
 } Pecunia;
 ```
 
@@ -101,8 +104,8 @@ nomen structura {
 - The currency is held by **code, not table index**: equality never
   depends on the generated table's order, and debuggers show `"USD"`.
   The table is consulted only for lookups (binary search by code).
-- A `Moneta` is only ever built by `moneta_ex_codice`, so every `Moneta`
-  in a `Pecunia` names a row of the table.
+- A `PecuniaMoneta` is only ever built by `pecunia_moneta_ex_codice`,
+  so every one inside a `Pecunia` names a row of the table.
 
 ### II.2 Errors
 
@@ -134,33 +137,34 @@ pecunia_vitium_titulus (
 
 ```c
 nomen enumeratio {
-    MONETA_CURRENS = 0,               /* in indice ISO uno */
-    MONETA_HISTORICA,                 /* in indice ISO tertio solum */
-    MONETA_EXTRA_ISO                  /* GGP IMP JEP */
-} MonetaStatus;
+    PECUNIA_MONETA_CURRENS = 0,   /* in indice ISO uno */
+    PECUNIA_MONETA_HISTORICA,     /* in indice ISO tertio solum */
+    PECUNIA_MONETA_EXTRA_ISO      /* GGP IMP JEP */
+} PecuniaMonetaStatus;
 
 nomen structura {
-    constans character* codex;        /* "USD" */
-                   s32  numerus;      /* 840; 0 si EXTRA_ISO */
-                   s32  exponens;     /* 0..IV */
-          MonetaStatus  status;
-    constans character* titulus;      /* "US Dollar" */
-} MonetaInformatio;
+    constans character*  codex;     /* "USD" */
+                    s32  numerus;   /* 840; 0 si EXTRA_ISO */
+                    s32  exponens;  /* 0..IV */
+    PecuniaMonetaStatus  status;
+    constans character*  titulus;   /* "US Dollar" */
+} PecuniaMonetaInformatio;
 
-PecuniaVitium moneta_ex_codice (chorda codex, Moneta* exitus);
+PecuniaVitium pecunia_moneta_ex_codice (chorda codex,
+                                        PecuniaMoneta* exitus);
                               /* sine casu: "usd" == "USD" */
-constans MonetaInformatio* moneta_informatio (Moneta m);
-s32           moneta_exponens (Moneta m);
-b32           moneta_aequalis (Moneta a, Moneta b);
+constans PecuniaMonetaInformatio* pecunia_moneta_informatio (PecuniaMoneta m);
+s32           pecunia_moneta_exponens (PecuniaMoneta m);
+b32           pecunia_moneta_aequalis (PecuniaMoneta a, PecuniaMoneta b);
 ```
 
 ### II.4 Construction and arithmetic
 
 ```c
-PecuniaVitium pecunia_ex_unitatibus (s64 unitates, Moneta m,
+PecuniaVitium pecunia_ex_unitatibus (s64 unitates, PecuniaMoneta m,
                                      Pecunia* exitus);
                      /* -1234 USD -> USD -12.3400 (unitas minor) */
-Pecunia       pecunia_nihil (Moneta m);
+Pecunia       pecunia_nihil (PecuniaMoneta m);
 PecuniaVitium pecunia_adde (Pecunia a, Pecunia b, Pecunia* exitus);
 PecuniaVitium pecunia_subtrahe (Pecunia a, Pecunia b, Pecunia* exitus);
 PecuniaVitium pecunia_nega (Pecunia a, Pecunia* exitus);
@@ -235,7 +239,7 @@ PecuniaVitium pecunia_dividere (Pecunia totum, memoriae_index n,
 
 ```c
 PecuniaVitium pecunia_convertere (Pecunia a, Fractio cambium,
-                                  Moneta ad, PecuniaModus modus,
+                                  PecuniaMoneta ad, PecuniaModus modus,
                                   Piscina* p, Pecunia* exitus);
 ```
 
@@ -263,7 +267,7 @@ PecuniaVitium pecunia_ex_textu (chorda textus, Pecunia* exitus);
 
 ```c
 chorda        pecunia_numerus (Pecunia a, Piscina* p);  /* "-12.3400" */
-PecuniaVitium pecunia_ex_numero (chorda textus, Moneta m,
+PecuniaVitium pecunia_ex_numero (chorda textus, PecuniaMoneta m,
                                  Pecunia* exitus);
 ```
 
@@ -287,7 +291,7 @@ vacuum        pecunia_forma_ordinaria (PecuniaForma* forma);
               /* unitas minor, PAR, ",", ".", "-", codex ante */
 chorda        pecunia_formare (Pecunia a, constans PecuniaForma* f,
                                Piscina* p);
-PecuniaVitium pecunia_ex_ingressu (chorda textus, Moneta m,
+PecuniaVitium pecunia_ex_ingressu (chorda textus, PecuniaMoneta m,
                                    constans PecuniaForma* f,
                                    Pecunia* exitus);
 ```
@@ -338,7 +342,7 @@ PecuniaVitium pecunia_ex_ingressu (chorda textus, Moneta m,
 
 - `include/pecunia.h`, `lib/pecunia.c` - types, arithmetic, text.
 - `lib/pecunia_monetae.c` - GENERATED table (internal; reached through
-  `moneta_*`).
+  `pecunia_moneta_*`).
 - `tools/pecunia_monetae_generare.c`, `tools/pecunia_monetae_generare.sh`.
 - `probationes/fixa/iso4217/...` as above; `probationes/fixa/pecunia/
   rotundatio.txt` (section III).
