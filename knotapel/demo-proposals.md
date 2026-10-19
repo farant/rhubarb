@@ -779,3 +779,7 @@ D133 directly: displaced adjectives against genitives in foreign words
 (L1, L1u), and within adjectives, unique against shared labels (L3, the
 discriminating test). The first plan to have a design review before
 approval - now the standard step.*
+*D133 done (KC 60): L1, L1u and L3 all FAIL - displaced adjectives and
+genitives wait through the same short distance (mostly one foreign
+word), and a unique label waits no longer than a shared one. Labels
+decide which head, not how far.*

@@ -265,6 +265,16 @@ why L3 is the test the findings will lean on.
      flag, because those particles always carry UPOS PART, CCONJ or ADV
      here, which the flag already catches.
 3. **T3:** findings, claims (beside 59), ledger, archive.
+   *T3 done 2026-10-19:* findings.md; KC 60 in Part XI (an objection
+   slot on power, left [open]) and a Revisions entry; ledger note on
+   N19; demo-proposals N19 marked; frozen with archive.sh
+   (demo-snapshot.c, 18,123 lines, 22 library files, output identical,
+   116 lines, run with D133_UD_NC set).
+   - Found while writing the findings: the descriptive excess table
+     printed a signed point difference with the sign of its integer
+     part, so -0.85 showed as +0.85 (CIRCSE and LLCT adjectives). The
+     print was fixed (sign apart) before freezing; no check or verdict
+     used it.
 4. **T4:** independent review, then fixes.
 
 ## Open for Fran

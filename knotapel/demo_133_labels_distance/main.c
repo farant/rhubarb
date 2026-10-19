@@ -1733,11 +1733,18 @@ part_b (void)
                 snprintf(s2, sizeof s2, "%lld.%02lld", (long long)(orx / 100),
                     (long long)(orx % 100));
             }
-            printf("  %-8s %-10s %5ld %8s %7lld.%02lld%% %+5lld.%02lld %10s\n",
-                bank_names[b], kind == 0 ? "adjective" : "genitive", nn, s1,
-                (long long)(e4 / 100), (long long)(e4 % 100),
-                (long long)(pts / 100), (long long)(pts < 0 ? -pts % 100
-                : pts % 100), s2);
+            {
+                s64  ap = pts < 0 ? -pts : pts;  /* sign printed apart:
+                                                    -0.85 is not +0.85 */
+                char sp_[24];
+
+                snprintf(sp_, sizeof sp_, "%c%lld.%02lld", pts < 0 ? '-' : '+',
+                    (long long)(ap / 100), (long long)(ap % 100));
+                printf("  %-8s %-10s %5ld %8s %7lld.%02lld%% %8s %10s\n",
+                    bank_names[b], kind == 0 ? "adjective" : "genitive", nn,
+                    s1, (long long)(e4 / 100), (long long)(e4 % 100), sp_,
+                    s2);
+            }
         }
     }
 

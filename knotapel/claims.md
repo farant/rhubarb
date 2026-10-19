@@ -153,6 +153,11 @@ ranked by how much it bears on KC 47.
   (grades), 59.3.3 (precision, grade), 59.3.obj.1.1 (resolved). No
   address removed or renumbered.
 
+- **D133 (2026-10-19).** Appended 60 to Part XI: labels do not buy
+  distance (registered L1, L1u, L3 all fail). The first knotapel plan
+  with a design review before any data. The demo's own review is task
+  T4, after these nodes were written.
+
 ## Part I. Definitions
 
 ```text
@@ -1711,4 +1716,53 @@ ranked by how much it bears on KC 47.
       whole re-hung tree projective. With non-crossing alternatives
       instead of per-arc projective ones, S would be 42 / 3 / 29 / 25 /
       42 / 22 (CIRCSE passing G2). [checked] (T4 review M3)
+60. Do labels buy distance: can a displaced word that carries agreement
+    (a head label) wait through more foreign material than one that
+    does not? (D133, proposal N19; the six Latin treebanks of 57-59,
+    headline without punctuation; the first plan reviewed before any
+    data. Grades: [exact] counts and exact p-values over gold trees,
+    pinned from D133's independent oracle, oracle_d133.py; the demo's
+    own review is T4)
+60.1. F, the foreign words of an arc, are the words strictly inside its
+      span that its head does not dominate (the witnesses of its
+      non-projectivity, 57.1). The exact test permutes group labels
+      within strata (treebank, Perseus split by genre; direction;
+      sentence length <= 10, 11-20, > 20) and compares the group's
+      total of min(F, 10) with its exact permutation distribution.
+      Populations: genitives (nmod, Case=Gen, noun head, relatives
+      excluded) and adjectives (amod ADJ with Case, Gender, Number, noun
+      head). [definition]
+60.2. Do displaced adjectives wait longer than displaced genitives?
+60.2.1. No. Their total min(F, 10) is 1,151 against an expected
+        1,143.26, p = 0.2086; registered L1 FAILS (its per-treebank
+        clause, four of five, holds - a clause chance alone meets with
+        P 0.183). On dependent-first arcs only, p = 0.3991 (L1u FAILS).
+        [exact] (D133 Part B)
+60.2.2. Both kinds are displaced short: mean min(F, 10) 1.43 for
+        adjectives (69.5% at one foreign word); genitives similar.
+        [exact] (D133 Part B for the adjectives; the genitives' 1.33 and
+        78.6% from the oracle's items, not pinned)
+60.3. Does a unique label (no other agreeing noun) let an adjective wait
+      longer than a shared one?
+60.3.1. No. 787 against an expected 788.80, p = 0.6104; registered L3
+        FAILS. [exact] (D133 Part B)
+60.4. Every sensitivity agrees: one arc per sentence (L1 p 0.2142, L3
+      0.1852), function-word-only arcs removed (0.2752, 0.5932), raw
+      distance (0.9715, 0.4988), Perseus as one stratum (0.2083,
+      0.5680). [exact] (D133 Part B)
+60.5. So labels tell a reader which head a displaced word belongs to
+      (58.4.3) but do not let it travel farther; Latin displaces
+      everything short, and D132's short genitives (59.3.1.1) are that
+      general shortness, not a constraint on unlabelled words.
+      [interpretation] (dependency length minimisation would predict
+      it, recalled)
+60.5.obj.1. Objection: a null result on short displacements says little;
+            the test may lack the power to see a modest effect.
+60.5.obj.1.1. Reply: partly granted. The design was hardened before any
+              data (relatives excluded, particle splits flagged, strata
+              by direction and length, the foreign-word operand), and
+              every variant agrees, but no power analysis was registered,
+              and long-distance or cross-clause displacement - where a
+              label might matter most - is rare in these treebanks.
+              [open]
 ```
