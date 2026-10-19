@@ -770,3 +770,12 @@ words, if the oracle can follow.
 
 **Register before the run:** the direction of the change in A and B,
 per kind of displacement.
+
+### N19. Labels buy distance (D133)
+
+*Added and approved 2026-10-19, from the reading of D130-D132 (KC 57-59):
+a labelled umbra can wait, an unlabelled one must close soon. Became
+D133 directly: displaced adjectives against genitives in foreign words
+(L1, L1u), and within adjectives, unique against shared labels (L3, the
+discriminating test). The first plan to have a design review before
+approval - now the standard step.*
