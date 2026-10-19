@@ -1,0 +1,143 @@
+<interrogationes unitas="json">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I parse a JSON text and read a field out of it?
+    <responsum symbolum="json_legere json_legere_literis json_objectum_capere json_capere_integer json_capere_chorda">Call
+      json_legere (a chorda) or json_legere_literis (a C string) with a
+      piscina and check res.successus before touching res.radix. Read
+      fields with json_objectum_capere plus a json_ad_* accessor, or in
+      one step with json_capere_integer / json_capere_chorda /
+      json_capere_boolean, which take a default returned when the
+      object is NIHIL, the key is absent, the value is null or of
+      another type.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I find out why and where a parse failed?
+    <responsum symbolum="json_legere JsonResultus">On
+      failure successus is FALSUM, radix is always NIHIL (never a
+      partial tree), and res.error, res.linea and res.columna give the
+      cause and position (both 1-based; columns count characters, not
+      bytes). When the parser stopped on a lexer error the cause is
+      appended, e.g. 'Clavis chorda expectata: Chorda non terminata'.
+      Only a NIHIL piscina (or a NIHIL input to json_legere_literis)
+      fails with an empty error and position 0.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can json_legere accept two values on one line, trailing garbage, comments or trailing commas?
+    <responsum symbolum="json_legere">No.
+      The whole input must be ONE value with only space, tab, CR or LF
+      around it; anything after it ('1 2', '{}}', '01', a NUL byte) is
+      refused as 'Contentum post valorem radicis'. Trailing commas,
+      comments, duplicate keys in one object, invalid escapes, raw
+      control characters in strings and invalid UTF-8 are all refused
+      (RFC 8259 strict). Split newline-framed input yourself and parse
+      each line.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I read a number that may be written either as 3 or as 3.0?
+    <responsum symbolum="json_est_integer json_ad_integer json_ad_fluitans" via="lib/norma.c">Branch
+      on the type: json_est_integer(v) ? (f64)json_ad_integer(v) :
+      json_ad_fluitans(v). A number with '.', 'e' or 'E' is parsed as
+      JSON_FLUITANS and json_ad_integer returns 0 for it (and
+      json_capere_integer returns its default), so '3.0' is not an
+      integer. There is no json_capere_fluitans; lib/norma.c uses the
+      branch above.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I parse integers bigger than 2^63 or numbers like 1e400?
+    <responsum symbolum="json_legere json_integer_creare">No,
+      they are refused instead of silently wrapped or rounded: an
+      integer outside -2^63 .. 2^63-1 fails with 'Integer extra s64',
+      and a float that overflows f64 fails with 'Numerus extra f64'.
+      Underflow (1e-400) is accepted as the nearest value. Large ids
+      that must survive exactly should travel as JSON strings.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I reach a nested value by a dotted path like a.b.0.c?
+    <responsum symbolum="json_via json_objectum_capere">json_via(radix,
+      "a.b.0.c"): a segment of digits indexes an array (0-based), any
+      other segment is an object key, compared byte for byte (json_via
+      interns nothing). It returns NIHIL if any segment is missing, an
+      index is out of range, a segment is empty ("a..b", "a.", ".a")
+      or the path walks through a scalar. Known bug: the index
+      overflow guard is vacuous, so a digit string of 2^32 or more
+      wraps around ("a.4294967296" on ["zero"] returns "zero"). A key
+      that itself contains a '.' cannot be reached this way; use
+      json_objectum_capere for it.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I iterate over all key/value pairs of an object?
+    <responsum symbolum="json_objectum_iterator json_objectum_iterator_proxima json_objectum_par_obtinere json_objectum_numerus">Make
+      an iterator with json_objectum_iterator(obj) and loop while
+      json_objectum_iterator_proxima(&amp;it, &amp;clavis, &amp;valor)
+      is VERUM; pairs come back in insertion order. Or index directly
+      with json_objectum_numerus and json_objectum_par_obtinere. The key
+      is an interned chorda: treat it as NOT NUL-terminated and compare
+      by mensura (the empty key has mensura 0).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what memory does a parsed JSON tree live in, and does it point into my input?
+    <responsum symbolum="json_legere internamentum_globale">Every
+      value, string and container is allocated in the piscina you pass,
+      and strings are copied (and unescaped), so the input buffer can be
+      freed after json_legere returns. Object keys are the exception:
+      they are interned in internamentum_globale(), which lives for the whole
+      process and outlives every piscina. A lookup by key
+      (json_objectum_capere, _capere_chorda, _habet, json_capere_*)
+      interns the key even when it is absent; json_via compares bytes
+      and interns nothing. Built trees differ: json_chorda_creare keeps
+      the chorda you pass without copying it (json_chorda_creare_literis
+      copies).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I build a JSON document and serialize it?
+    <responsum symbolum="json_objectum_creare json_tabulatum_creare json_objectum_ponere json_tabulatum_addere json_scribere json_scribere_pulchrum">Create
+      containers with json_objectum_creare / json_tabulatum_creare and
+      leaves with json_integer_creare, json_chorda_creare_literis and
+      friends, link them with json_objectum_ponere and
+      json_tabulatum_addere, then call json_scribere (compact) or
+      json_scribere_pulchrum (two-space indentation) to get a chorda in
+      the piscina. Keys keep insertion order; a NIHIL element is
+      written as null.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can json_objectum_ponere add a second value under a key that already exists?
+    <responsum symbolum="json_objectum_ponere json_objectum_ponere_chorda json_legere">No:
+      the builder overwrites the existing value in place (the key keeps
+      its position). The parser is stricter and refuses a document that
+      repeats a key in one object ('Clavis duplicata'), so what you
+      build and what you can read back agree.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I write NaN, infinity or arbitrary bytes through json_scribere?
+    <responsum symbolum="json_scribere json_fluitans_creare json_chorda_creare">NaN
+      and infinities are written as null (JSON has neither). A float
+      that looks like an integer gets '.0' appended so it re-reads as
+      JSON_FLUITANS, and the shortest exact form is chosen (0.1, not
+      0.10000000000000001). Strings are NOT checked for valid UTF-8 on
+      the way out: bytes put into a chorda are emitted as given, so a
+      builder can produce output that json_legere itself refuses.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why does the parser stop at 256 levels of nesting but the builder does not?
+    <responsum symbolum="json_legere json_tabulatum_addere" via="lib/json.worklog.md">The
+      parser is recursive, so JSON_PROFUNDITAS_MAXIMA (CCLVI) stops
+      hostile input like two million '[' from exhausting the stack
+      ('Nidificatio nimis profunda'); every MCP resident parses client
+      JSON with it. The limit guards reading only. The builder checks
+      neither depth nor cycles: a value placed inside itself sends
+      json_scribere into infinite recursion.</responsum>
+  </interrogatio>
+
+</interrogationes>

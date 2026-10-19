@@ -1,0 +1,83 @@
+<interrogationes unitas="widget">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I put several widgets in one window and route keys and clicks to them?
+    <responsum symbolum="manager_widget_creare manager_widget_registrare manager_widget_tractare_eventum manager_widget_reddere">Create
+      a ManagerWidget with manager_widget_creare(piscina), register
+      each widget with its datum, a FunctioReddere, a
+      FunctioTractareEventum and a rectangle in CHARACTER cells
+      (manager_widget_registrare), then call
+      manager_widget_tractare_eventum for every event and
+      manager_widget_reddere every frame. Widgets are painted in
+      registration order, each told whether it has focus. schirmata.c
+      and layout.c are the in-tree users. The header's EXEMPLUM shows
+      an older registrare call with no reddere or tractare_eventum
+      arguments; follow the prototype instead.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I register more than sixteen widgets with one manager?
+    <responsum symbolum="manager_widget_registrare ManagerWidget">No.
+      The manager holds a fixed array of XVI Widget slots and
+      manager_widget_registrare returns -1 when it is full (or the
+      manager is NIHIL). Check that return value: layout.c ignores it,
+      so a seventeenth widget would silently never draw or receive
+      events. There is no call to unregister or replace a widget:
+      schirmata.c swaps one by writing the datum, reddere and
+      tractare_eventum fields of manager-&gt;widgets[i]
+      directly.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how does focus move between widgets?
+    <responsum symbolum="manager_widget_ponere_focus manager_widget_focus_proximum manager_widget_focus_praecedens manager_widget_focus_ad_punctum manager_widget_tractare_eventum" via="lib/fenestra_macos.m">The
+      first widget registered gets focus. A mouse-down focuses the
+      first widget whose cell rectangle contains the click
+      (manager_widget_focus_ad_punctum), and a Tab key the focused
+      widget did not consume moves focus to the next widget, wrapping
+      (manager_widget_focus_proximum). The manager checks only that the
+      key is CLAVIS_TABULA, never the modifiers, and the macOS
+      fenestra maps the Tab key to CLAVIS_TABULA with or without
+      Shift, so an unconsumed Shift-Tab also moves focus FORWARD: to go
+      back, consume Shift-Tab in your widget and call
+      manager_widget_focus_praecedens. A click outside every widget
+      leaves focus where it was, and the event still goes to the
+      focused widget. Out-of-range indices to ponere_focus are
+      ignored.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I rely on click-to-focus when the font is drawn at scale 2 or more?
+    <responsum symbolum="manager_widget_tractare_eventum manager_widget_reddere">No.
+      manager_widget_reddere passes your scala to the widgets, but
+      manager_widget_tractare_eventum converts the mouse position to
+      cells with a fixed six by eight pixels (scale I), so at any
+      other scale clicks focus the wrong widget. The only in-tree
+      renderer (concha via schirmata_reddere) draws at scale
+      I.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I detect a double click in a widget?
+    <responsum symbolum="manager_widget_tractare_eventum">The
+      manager does it: a mouse-down within DUPLEX_CLICK_TEMPUS (0.3 s)
+      and DUPLEX_CLICK_DISTANTIA (XII pixels) of the previous one is
+      delivered to the focused widget as EVENTUS_MUS_DUPLEX INSTEAD of
+      EVENTUS_MUS_DEPRESSUS, so the widget does not see a second
+      press. The timer then resets, so a third click starts a new
+      pair. Mouse coordinates reach the widget in window pixels, not
+      relative to the widget.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what is a ContextusWidget and does the manager use it?
+    <responsum symbolum="contextus_widget_creare ContextusWidget">A
+      bundle of shared services handed to widget constructors and
+      factories: piscina, intern, and optionally the entity
+      repository, command registry, widget registry and a mode-switch
+      callback. contextus_widget_creare returns NIHIL only when
+      piscina or intern is NIHIL. The ManagerWidget never reads it; it
+      only needs a piscina.</responsum>
+  </interrogatio>
+
+</interrogationes>

@@ -1,0 +1,71 @@
+<interrogationes unitas="similitudo">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I rank a list of identifiers against a short fuzzy query, like fzf?
+    <responsum symbolum="similitudo_optima SimilitudoFructus">Pass the
+      query, an array of chordae and an output array of
+      SimilitudoFructus to similitudo_optima. A candidate matches only
+      if the query is a case-insensitive subsequence of it. Up to
+      maxima results are written, best first (score descending, then
+      the shorter candidate, then the lower index), and the count
+      written is returned; each result's index points back into your
+      candidate array.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I suggest "did you mean" names for a mistyped full identifier?
+    <responsum symbolum="similitudo_optima_decurtata similitudo_optima">Use
+      similitudo_optima_decurtata, not similitudo_optima. A wrongly
+      guessed full name is usually a subsequence of nothing, so plain
+      matching returns zero results. decurtata scores each candidate
+      by its best prefix of the query of length III or more, so a
+      wrong tail no longer kills the match. A query shorter than III
+      characters returns ZEPHYRUM results.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what does a similitudo score reward and punish?
+    <responsum symbolum="similitudo_punctare">Each matched character
+      gains XVI at a word start (position 0, after one of _ - . / :
+      or a space, or a lowercase-to-uppercase step), VIII when it
+      directly follows the previous match, and I when its case is
+      exact. A gap between two matches costs III plus I per skipped
+      character beyond the first; characters skipped before the first
+      match cost nothing. Scores can be negative (sparse matches). Larger
+      means more similar; an empty query matches everything with
+      score ZEPHYRUM.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I count on similitudo finding the best-scoring alignment of the query?
+    <responsum symbolum="similitudo_punctare">No. The walk is greedy:
+      each query character takes the leftmost candidate character
+      that matches, and it never backtracks. The optimal alignment
+      (dynamic programming) is a named deferral in the header; the
+      API would stay the same if it were added.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I fuzzy-match non-ASCII text case-insensitively with similitudo?
+    <responsum symbolum="similitudo_punctare">No. Only ASCII A-Z is
+      folded to lowercase; every other byte, including UTF-8
+      sequences, must match exactly, byte for byte. Word boundaries
+      are ASCII-only as well. The functions are pure: no piscina, no
+      allocation and no state, so they are safe to call
+      anywhere.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why does similitudo_optima_decurtata merge all prefix lengths instead of using the longest prefix that matches?
+    <responsum symbolum="similitudo_optima_decurtata" via="lib/similitudo.worklog.md">Stopping
+      at the longest matching prefix let one extra character of a
+      guess's wrong tail win: 'legatus_tractare' suggested sloppy
+      LEGATUS_* macros and never legatus_currere. The tail is the
+      least trustworthy part of a guess, so every prefix from III up
+      is scored in the same single greedy walk and the best score
+      counts. A messy tail match lowers the score by itself, so no
+      extra penalty term is needed (worklog
+      2026-07-30).</responsum>
+  </interrogatio>
+
+</interrogationes>

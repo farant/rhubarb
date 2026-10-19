@@ -1,0 +1,102 @@
+<interrogationes unitas="delineare_mandata">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I render a Mandata list to pixels without opening a window?
+    <responsum symbolum="tabula_pixelorum_creare_nuda delineare_mandata imago_ex_tabula imago_png_scribere">tabula_pixelorum_creare_nuda(piscina,
+      latitudo, altitudo) gives a window-free table (scale 1), then
+      delineare_mandata(m, tabula, fons, ctx). imago_ex_tabula views the
+      result as an Imago without copying (the packed pixels already lie
+      in memory as R, G, B, A), ready for imago_png_scribere. The new
+      table is zeroed, i.e. black with alpha 0, so paint a background
+      rectangle first if the PNG should not be transparent.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I get pictures drawn for MANDATUM_IMAGO elements?
+    <responsum symbolum="ImagoFons delineare_mandata mandata_imago">Mandata
+      never carry pixels: mandata_imago stores a name in textus, and the
+      ImagoFons callback you pass to delineare_mandata turns that name
+      into a constans Imago* (pictor uses the projection's sigillum).
+      A NIHIL fons or a NIHIL result skips the element. The picture is
+      cropped to the element's fines, scaled by the group's integer
+      scale, pixels with alpha 0 are skipped, and every other pixel is
+      copied as is - no blending.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what colour does a ColorMandati turn into when rasterized?
+    <responsum symbolum="color_ex_mandato thema_color thema_color_ex_indice_colorationis color_ex_pixelum">color_ex_mandato
+      decides: COLOR_MANDATI_THEMA goes through thema_color, so
+      thema_initiare must have run; COLOR_MANDATI_INDEX through
+      thema_color_ex_indice_colorationis, so its value is a syntax
+      colouring index (ColoratioIndex), not a raw palette slot;
+      COLOR_MANDATI_RGBA (and any other genus) is the
+      packed table pixel a &lt;&lt; 24 | b &lt;&lt; 16 | g &lt;&lt; 8 |
+      r read by color_ex_pixelum - not a literal 0xRRGGBBAA.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can text and lines follow a group's clip, scale and line thickness?
+    <responsum symbolum="delineare_mandata tabula_pixelorum_pingere_chordam_fonte" via="lib/delineare_mandata.worklog.md">Not
+      in this V1 rasterizer. Text is placed at the group's origin and
+      scale but drawn at the font's native cell size by
+      tabula_pixelorum_pingere_chordam_fonte, and it ignores the group's
+      sectio clip. Lines are always one pixel thick (crassitudo is
+      ignored) and use only their first two points. Rectangles, lines,
+      polygons and images do honour the clip, and their geometry
+      follows the scale.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can mandata have negative coordinates, for content panned off the left or top?
+    <responsum symbolum="delineare_mandata delineare_ponere_praecisionem" via="lib/delineare_mandata.worklog.md">Yes
+      for the primitives: rectangles, lines and polygons that reach into
+      negative space are clipped in signed arithmetic before the
+      unsigned delineare calls (which would vanish or hang otherwise).
+      One gap remains: a group with sectio whose clip box starts left of
+      or above 0 hands that origin to delineare_ponere_praecisionem,
+      which raises it to 0 without shrinking the box, so the clip comes
+      out wider or taller than the group by the overhang.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I rasterize only some of the primitives in a Mandata list?
+    <responsum symbolum="delineare_mandata_selecta DelineareFiltrum">delineare_mandata_selecta
+      with a DelineareFiltrum: return VERUM to paint an element. The
+      filter judges primitives only; groups are always walked, so
+      transforms and clips stay exact for whatever you keep. A NIHIL
+      filter paints everything, the same as delineare_mandata.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I nest groups (coetus) as deeply as I like?
+    <responsum symbolum="delineare_mandata mandata_coetus_incipere">Up
+      to 63 levels below the root (the frame stack is LXIV). A deeper
+      group is not pushed, without any warning: its contents are drawn
+      in the enclosing group's origin, scale and clip, while the
+      element counting still pops the outer frames
+      correctly.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I rasterize the same Mandata every frame without its piscina growing?
+    <responsum symbolum="delineare_mandata delineare_creare_contextum mandata_vacare piscina_notare piscina_reficere">Not
+      for free: every call allocates a ContextusDelineandi from the
+      Mandata's own piscina (m-&gt;piscina), and every polygon three
+      scratch arrays, none released. Rebuild the list per frame in a
+      piscina you empty, or bracket the call with piscina_notare and
+      piscina_reficere on that piscina.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what are delineare_mandata_modulus and delineare_mandata_mensor for?
+    <responsum symbolum="delineare_mandata_modulus delineare_mandata_mensor modulus_creare">They
+      declare this rasterizer's native scope for tessellation: the
+      Modulus has the window's text cell as its cell and the table as
+      its extent, and the ModulusMensor says text is measured by the
+      font, one cell per rune (fons_6x8), grapheme policy. Text this
+      rasterizer paints stays inside what that module
+      measures.</responsum>
+  </interrogatio>
+
+</interrogationes>

@@ -1,0 +1,75 @@
+<interrogationes unitas="sigillum">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I compute the SHA-256 of a buffer and print it as hex?
+    <responsum symbolum="sigillum_computare sigillum_hex">Sigillum
+      s = sigillum_computare(datum, mensura); then sigillum_hex(&amp;s,
+      hex) with a buffer of at least SIGILLUM_HEX_MENSURA (65) bytes:
+      it writes 64 lowercase hex digits plus a NUL. For a chorda pass
+      c.datum and c.mensura; no NUL is needed and none is read. The
+      raw 32 bytes are in s.octeti.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I hash data that arrives in pieces?
+    <responsum symbolum="sigillum_incipere sigillum_addere sigillum_finire">Declare
+      a SigillumContextus on the stack, call sigillum_incipere, then
+      sigillum_addere for each piece (any sizes; the result equals the
+      one-shot hash of the concatenation) and sigillum_finire once.
+      finire pads the context in place and leaves massa_mensura at 64,
+      so the context is spent: a further sigillum_addere or a second
+      sigillum_finire on it writes past the 64-byte partial block (out
+      of bounds, not just a wrong digest). Call sigillum_incipere again
+      before reusing it. Nothing is allocated.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I hash a shared prefix once and then finish several different digests from it?
+    <responsum symbolum="sigillum_addere sigillum_finire SigillumContextus">Yes:
+      SigillumContextus is a plain struct with no pointers (state,
+      partial block, length), so copying it with = forks the hash.
+      Feed the prefix, copy the context for each branch, add the
+      branch data and finish each copy.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I compare two digests, for example to check a token or MAC?
+    <responsum symbolum="sigillum_aequale">sigillum_aequale(&amp;a,
+      &amp;b). It runs in constant time (it ORs the XOR of all 32
+      bytes instead of stopping at the first difference like memcmp),
+      so it is safe where the digest guards a secret. Either pointer
+      NIHIL gives FALSUM.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I compute an HMAC-SHA256, for example to sign an AWS SigV4 request?
+    <responsum symbolum="sigillum_hmac">sigillum_hmac(clavis,
+      mensura_clavis, datum, mensura_datorum) implements RFC 2104: a
+      key longer than 64 bytes is hashed first, a shorter one is
+      zero-padded, and an empty key is allowed. Verified against RFC
+      4231 vectors. It is one-shot; there is no incremental HMAC
+      context.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I parse a 64-character hex string back into a Sigillum?
+    <responsum symbolum="sigillum_hex" via="lib/thesaurus.c">Not
+      with this library: it only goes from digest to hex. lib/thesaurus.c
+      has its own private _ex_hex (64 LOWERCASE hex digits, refusing
+      anything else); copy that pattern or ask for a public
+      sigillum_ex_hex rather than writing another private
+      one.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why is there both sigillum and friatio, two hash libraries?
+    <responsum symbolum="sigillum_computare" via="include/friatio.h lib/sigillum.worklog.md">friatio
+      hashes to DISPERSE keys over hash-table buckets, where speed
+      matters and a collision only costs a probe. sigillum hashes to
+      IDENTIFY content (content-addressed stores, ledger entities,
+      versions of reducers), where a collision would merge two
+      different things, so collision resistance is load-bearing and
+      SHA-256 is used.</responsum>
+  </interrogatio>
+
+</interrogationes>

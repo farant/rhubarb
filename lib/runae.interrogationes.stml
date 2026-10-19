@@ -1,0 +1,90 @@
+<interrogationes unitas="runae">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I measure how many terminal columns a UTF-8 string takes?
+    <responsum symbolum="runae_latitudo_textus runae_unitas_proxima">runae_latitudo_textus(initium,
+      finis, politica) sums the widths of the drawable units in the
+      byte range [initium, finis); the range is a chorda's datum and
+      datum + mensura, no NUL needed. It walks with
+      runae_unitas_proxima, so a grapheme cluster counts as one unit of
+      0, 1 or 2 columns. Pass RUNAE_POLITICA_GRAPHEMATUM unless you are
+      matching Terminal.app.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why does runae_latitudo give 0 for a tab or control character while runae_latitudo_textus counts it as 1?
+    <responsum symbolum="runae_latitudo runae_unitas_proxima runae_latitudo_textus">runae_latitudo
+      is the true Unicode answer for a single rune: controls (Cc) are
+      width 0. The text functions follow the house DRAWABLE UNIT rule
+      (Fran 2026-09-29): a C0 control byte or DEL, and every invalid
+      byte, is its own one-byte unit of one column, because the house
+      painters draw a substitute for it (tessera '?', excerptum and
+      saltuarius ' '). So "\r\n" measures 2 columns. The rule covers
+      single BYTES only: a C1 control (U+0080 to U+009F, two bytes in
+      UTF-8) is a valid rune and still measures 0 in text. Expand tabs
+      yourself before measuring.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I walk a string one grapheme cluster at a time?
+    <responsum symbolum="runae_graphema_proximum runae_graphema_ex_politica runae_unitas_proxima">Loop
+      p = runae_graphema_proximum(p, finis, &amp;latitudo) until p
+      reaches finis; each call returns the end of the next extended
+      grapheme cluster (UAX #29, Unicode 15.1) and its width. It is NOT
+      streaming: give it the whole cluster or the logical end of the
+      text, or a cluster split across buffers is measured as two. An
+      invalid UTF-8 sequence is its own cluster of width I. For drawing
+      prefer runae_unitas_proxima, which also splits off control bytes
+      as one-column units.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I find which character sits under a given column, for cursor placement or clicks?
+    <responsum symbolum="runae_columnam_quaerere">runae_columnam_quaerere(initium,
+      finis, politica, columna, &amp;columna_initii) returns the start
+      of the unit covering that column and that unit's starting column.
+      A column inside a wide (two-cell) grapheme snaps to the grapheme's
+      start, zero-width units are skipped, and a column past the end
+      returns finis with columna_initii set to the full text
+      width.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what is the difference between RUNAE_POLITICA_GRAPHEMATUM and RUNAE_POLITICA_SIMPLEX?
+    <responsum symbolum="runae_graphema_ex_politica runae_unitas_proxima" via="lib/runae.worklog.md tessera/fontes/tessera_opus.h">GRAPHEMATUM
+      is Ghostty's rule (mode 2027, the default): a ZWJ emoji sequence
+      is one cluster, at most 2 columns. SIMPLEX imitates Terminal.app:
+      ZWJ does not join pictographs, so each emoji of a family is its
+      own cluster; everything else, including spacing marks (Mc)
+      widening a cluster to 2, is the same. SIMPLEX was derived from
+      Terminal.app observations, not documentation. tessera does not
+      detect the terminal; an app opts in through
+      tessera_politicam_ponere with tessera_politica_ambitus().</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I test grapheme boundaries rune by rune myself?
+    <responsum symbolum="runae_rupturam_initiare runae_rumpitur RunaeRuptura">Initialize
+      a caller-owned RunaeRuptura with runae_rupturam_initiare, then call
+      runae_rumpitur(prior, runa, &amp;ruptura) for EVERY adjacent pair
+      in order; it returns VERUM where a boundary falls between them.
+      The small state (regional-indicator parity, emoji ZWJ and Indic
+      conjunct sequences) is updated from prior on each call, so
+      skipping a pair or reusing the state on another string gives
+      wrong answers. Invalid runes break on both sides, like
+      controls.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I get case mapping, normalization or line breaking from runae?
+    <responsum symbolum="runae_latitudo RUNAE_VERSIO" via="tools/runae_generare.sh probationes/fixa/runae/aurum_icu.txt">Not
+      yet: today runae holds cell width and grapheme breaks only.
+      Normalization, case, line breaks and bidi are planned here when
+      needed; locale behaviour (collation, forms) never will be. The
+      tables are generated from fixed Unicode RUNAE_VERSIO (15.1.0) data
+      by tools/runae_generare.sh and checked against an ICU snapshot on
+      every codepoint. Nothing allocates and there is no global state;
+      the only mutable state is the caller-owned RunaeRuptura.</responsum>
+  </interrogatio>
+
+</interrogationes>

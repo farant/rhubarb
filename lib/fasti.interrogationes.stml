@@ -1,0 +1,123 @@
+<interrogationes unitas="fasti">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I get today's date and print it?
+    <responsum symbolum="fasti_dies_hodie fasti_nunc fasti_formare_diem fasti_scribere_diem">fasti_dies_hodie
+      returns a Dies and fasti_nunc a DiesHora, both read from the
+      system clock through localtime, so they are LOCAL wall-clock
+      time. Turn a Dies into text with fasti_formare_diem(dies,
+      FASTI_FORMA_ISO, piscina), or append it to a builder with
+      fasti_scribere_diem; the FASTI_FORMA_* constants name the
+      styles (ISO, European, American, Latin long and short,
+      liturgical, English long).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I pass fasti_nunc() to fasti_ad_iso or fasti_ad_unix to get the current UTC time?
+    <responsum symbolum="fasti_nunc fasti_ad_iso fasti_ad_unix fasti_ex_unix mensura_momentum_nunc">No:
+      fasti_nunc is local time, while fasti_ad_unix and fasti_ad_iso
+      treat the DiesHora they are given as UTC, so the result is off
+      by your UTC offset and fasti_ad_iso still writes a 'Z'. fasti has
+      no UTC "now"; take the epoch from mensura_momentum_nunc
+      (milliseconds) and convert it: fasti_ex_unix(mensura_momentum_nunc()
+      / M). Caution (audit 2026-10-18, unfixed): fasti_ad_unix and
+      fasti_ex_unix currently take 1980-01-01 as their epoch (MCMX + LXX
+      in lib/fasti.c, where MCMLXX was meant), so their results are ten
+      years off until that is fixed.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I add days or months to a date, and how many days lie between two dates?
+    <responsum symbolum="fasti_addere_dies fasti_addere_menses fasti_addere_annos fasti_differentia fasti_ad_iulianum">fasti_addere_dies
+      goes through the Julian day number (fasti_ad_iulianum), so any
+      count crosses months and years correctly. fasti_addere_menses and
+      fasti_addere_annos clamp the day to the target month: 31 January
+      2024 plus one month is 29 February 2024, and 29 February plus one
+      year is 28 February. fasti_differentia(prima, secunda) returns an
+      Intervallum whose dies_totales is prima minus secunda (positive
+      when prima is later).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I build a Dies like 30 February, and what does the library do with it?
+    <responsum symbolum="fasti_dies fasti_hora fasti_dies_valida fasti_hora_valida fasti_formare_diem">fasti_dies
+      and fasti_hora never validate; call fasti_dies_valida and
+      fasti_hora_valida yourself. Arithmetic simply runs the day
+      through the Julian number, so 30 February 2024 plus zero days
+      comes back as 1 March. Validate before formatting: the
+      month-name styles of fasti_formare_diem index their name tables
+      with mensis - 1 unchecked, so a month outside 1..12 reads past
+      the table. Caution (audit 2026-10-18, unfixed): validating is not
+      enough for FASTI_FORMA_LITURGICA and FASTI_FORMA_ANGLICA_LONGA,
+      because a valid Dies in year -4713 or earlier (negative Julian day
+      number) gets a negative weekday and reads before the start of the
+      weekday name table.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I parse or write an ISO-8601 date or timestamp?
+    <responsum symbolum="fasti_parsare_iso fasti_ex_iso fasti_ad_iso fasti_parsare_diem">fasti_parsare_iso
+      reads YYYY-MM-DD (four-digit year, optional leading '-') and
+      validates the date; it reads only the first ten bytes (eleven
+      with the sign), so trailing text such as "2024-03-15xyz" is not
+      refused. fasti_ex_iso reads a full instant
+      ending in 'Z' or a +HH:MM / -HH:MM offset and converts it to UTC;
+      fractional seconds are refused on purpose. fasti_ad_iso writes
+      the 20-byte YYYY-MM-DDTHH:MM:SSZ form and returns an empty chorda
+      for invalid values or a year outside 0..9999. fasti_parsare_diem
+      currently tries ISO only.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I read back the text that fasti_formare_diem wrote with FASTI_FORMA_ISO?
+    <responsum symbolum="fasti_formare_diem fasti_parsare_iso fasti_ad_iso fasti_ex_iso">Only
+      when the year has exactly four digits (1000..9999, or -1000..-9999
+      with the sign). The ISO style writes the year as a plain number
+      without zero padding, so 25 December 800 comes out as 800-12-25
+      and 15 March -44 as -44-03-15, and fasti_parsare_iso refuses both
+      because it wants exactly four year digits; a five-digit year is
+      refused too. For a fixed-width form that always round-trips
+      (years 0..9999), use fasti_ad_iso with fasti_ex_iso.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what numbering do fasti use for weekdays, months, weeks and years?
+    <responsum symbolum="fasti_dies_hebdomadis fasti_hebdomada_anni fasti_dies_anni fasti_est_bissextilis">Weekdays
+      run 0 = Sunday (FASTI_DOMINICA) to 6 = Saturday, the Roman and
+      liturgical order, from fasti_dies_hebdomadis. Months are
+      1-indexed (FASTI_IANUARIUS = I). fasti_hebdomada_anni is the ISO
+      week (Monday start, 1..53) and fasti_dies_anni the day of the
+      year (1..366). Years are proleptic Gregorian with a year 0 (a
+      leap year), i.e. astronomical numbering, so year 0 is 1 BC and
+      -1 is 2 BC. Caution (audit 2026-10-18, unfixed): for dates in year
+      -4713 and earlier fasti_dies_hebdomadis returns -6..0 instead of
+      0..6, since it takes C's % of a negative Julian day number.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I compute the date of Easter and the moveable feasts?
+    <responsum symbolum="fasti_computus fasti_feria_vi fasti_feria_iv_cinerum fasti_dominica_palmarum fasti_pentecoste fasti_nomen_festivitatis calendarium_obtinere_diem">fasti_computus(annus)
+      gives Easter Sunday by the anonymous Gregorian algorithm (Meeus,
+      Jones, Butcher). Good Friday (-2), Ash Wednesday (-46), Palm
+      Sunday (-7) and Pentecost (+49) are offsets from it, and
+      fasti_nomen_festivitatis returns an English name for those five
+      days or NIHIL. For the full liturgical calendar (ranks, seasons,
+      colours) use calendarium_liturgicum, which is built on fasti.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what are Momentum, MomentumSec, Mora and DiesIulianus?
+    <responsum symbolum="Momentum MomentumSec Mora DiesIulianus fasti_ad_unix fasti_ad_iulianum">Signed
+      s64 typedefs that carry a time unit. Momentum (a point) and Mora
+      (a duration) are milliseconds, the house's canonical unit;
+      MomentumSec and MoraSec are Unix seconds (fasti_ad_unix returns a
+      MomentumSec); DiesIulianus and MoraDierum count days. Each typedef
+      carries a contractus annotation, so the house checker reports
+      mixing scales (the classic x1000 bug) as a type error. Point minus
+      point is a duration of the same scale. Caution (audit 2026-10-18,
+      unfixed): the MomentumSec from fasti_ad_unix (and the input of
+      fasti_ex_unix) is counted from 1980-01-01, not the Unix epoch
+      1970-01-01, so real Unix seconds are off by 3652 days.</responsum>
+  </interrogatio>
+
+</interrogationes>

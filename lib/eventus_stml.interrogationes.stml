@@ -1,0 +1,108 @@
+<interrogationes unitas="eventus_stml">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I save a sequence of input events to a file and replay it later?
+    <responsum symbolum="eventus_scribere_stml eventus_legere_stml" via="tools/auscultator.c probationes/probatio_iteratio.c">Collect
+      the events in a Xar of Eventus and call
+      eventus_scribere_stml(eventus, piscina, intern, pulchrum): it
+      returns one STML document as a chorda, an
+      &lt;eventus_index&gt; with one &lt;eventus genus=".." tempus=".."/&gt;
+      per event. eventus_legere_stml parses such a document back into
+      a new Xar of Eventus allocated in your piscina. pulchrum VERUM
+      indents the output; FALSUM gives one line, which is what
+      tools/auscultator.c prints per event.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I pass the chorda I read from a file straight to eventus_legere_stml?
+    <responsum symbolum="eventus_legere_stml eventus_notata_legere_stml chorda_ut_cstr" via="probationes/probatio_iteratio.c">No:
+      both readers take a NUL-terminated constans character*, and a
+      chorda is not NUL-terminated. Convert first with
+      chorda_ut_cstr(fons, piscina), as probatio_iteratio.c does. They
+      return NIHIL only when the STML does not parse or has no root
+      element.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what happens to an event whose genus name the reader does not know?
+    <responsum symbolum="eventus_genus_ex_titulo eventus_genus_titulus eventus_legere_stml">It
+      is still read, as genus EVENTUS_NIHIL: eventus_genus_ex_titulo
+      maps every unknown title to EVENTUS_NIHIL, and the reader turns
+      every child element of the root into one Eventus, whatever its
+      tag. In the other direction eventus_genus_titulus returns
+      "ignotum" for a genus beyond the title table, which reads back as
+      EVENTUS_NIHIL. The table follows the order of eventus_genus_t in
+      eventus.h, so new genera must be added at the end of both
+      together.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can tempus values beyond the s32 range survive a round trip?
+    <responsum symbolum="eventus_scribere_stml eventus_legere_stml" via="lib/eventus_stml.worklog.md">Yes,
+      up to 2^53. tempus is s64 and is written through f64 with no
+      decimals; an earlier draft used chorda_ex_s32, which truncated
+      after about 24 days of uptime. The test plants a value beyond s32
+      and reads it back.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why are some attributes missing from the written events?
+    <responsum symbolum="eventus_scribere_stml" via="probationes/probatio_eventus_stml.c">Attributes
+      added after the first format are written ONLY when they differ
+      from their default (indicator, indicator_genus, pressio, runa,
+      codex, actio, and the wheel's dx/dy/genus_rotulae, x/y and
+      modificantes), so old replay files
+      are rewritten byte for byte. The reader supplies the default for
+      each absent attribute: 0 for numbers, the first title for enums,
+      and EVENTUS_PRESSIO_IGNOTA (-1) for a missing pressio. So a
+      pressio of exactly 0, although valid (the range is 0..M), is not
+      written and reads back as -1: that round trip is lossy.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I still read old replay files that use typus, delta_x and delta_y?
+    <responsum symbolum="eventus_legere_stml">Yes.
+      For a key event the reader takes producta, and falls back to the
+      old typus attribute (the ASCII code) when producta is absent. For
+      a wheel event it takes dx/dy, and falls back to rounding the old
+      f32 delta_x/delta_y to the nearest integer (halves away from
+      zero). The writer only produces producta and dx/dy, so the
+      example in the header comment, which still shows typus and
+      delta_x, is the old format.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how is text with quotes, newlines or control bytes stored in an attribute?
+    <responsum symbolum="eventus_scribere_stml eventus_legere_stml">The
+      text fields (contentum of a text event, viae of a drop event) are
+      percent-escaped: '%', '"' and bytes below 0x20 or equal to 0x7F
+      become %XX in upper-case hex; everything else, UTF-8 included,
+      is kept verbatim. This is needed because an STML attribute value
+      cannot contain a double quote. On reading, the text is unescaped
+      into a fresh copy in the piscina.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I record which widget each event was aimed at?
+    <responsum symbolum="eventus_notata_scribere_stml eventus_notata_legere_stml EventusNotatum" via="probationes/probatio_notarius.c">Use
+      the notata pair with a Xar of EventusNotatum: an Eventus plus
+      scopus (the target component's id) and scopus_x/scopus_y (the
+      point in its space). The scopus attributes are written only when
+      scopus is non-empty, so a file without targets is identical to a
+      plain one, and a plain file reads as notata with empty scopus.
+      The scopus chorda read back is the attribute value itself (the
+      code comments it as interned), not a fresh copy.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I convert a physical key code to a name like "KeyA"?
+    <responsum symbolum="eventus_codex_titulus eventus_codex_ex_titulo EventusCodex">eventus_codex_titulus
+      returns the W3C name ("KeyA", "ArrowLeft", "F12", "CapsLock"),
+      and "Unidentified" for EVENTUS_CODEX_IGNOTUS or any code past the
+      table. eventus_codex_ex_titulo maps a name back, giving
+      EVENTUS_CODEX_IGNOTUS for an unknown one. Key events store the
+      code as that name in the codex attribute, omitted when
+      IGNOTUS.</responsum>
+  </interrogatio>
+
+</interrogationes>

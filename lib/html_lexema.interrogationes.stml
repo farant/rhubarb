@@ -1,0 +1,119 @@
+<interrogationes unitas="html_lexema">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I tokenize an HTML document?
+    <responsum symbolum="html_lexare HtmlLexema html_lexema_genus_nomen" via="html/fontes/html_arbor.c">Call
+      html_lexare(piscina, fons, mensura). It returns a Xar of
+      HtmlLexema stored BY VALUE (xar_obtinere gives an HtmlLexema*),
+      always ending with one HTML_LEX_FINIS token whose valor is empty
+      and whose offset is mensura. Each token has genus, valor (the
+      exact bytes), a byte offset, and a 1-based linea and columna
+      (columns count bytes). html_lexema_genus_nomen names a genus for
+      debugging. It returns NIHIL only when memory runs out; the tree
+      builder in html/fontes/html_arbor.c is the main consumer.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I free the source buffer after lexing?
+    <responsum symbolum="html_lexare HtmlLexema">No.
+      The source is not copied: every valor points into fons, so the
+      buffer must live as long as the tokens. fons need not be
+      NUL-terminated (only mensura bytes are read), and the valor
+      chordas are not NUL-terminated either. They are read-only views
+      even though chorda.datum is non-const.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what does the lexer do with malformed or truncated HTML?
+    <responsum symbolum="html_lexare html_lexemata_emittere">It
+      never fails and never drops a byte. A construct cut off by EOF
+      gets the matching _IMPERFECTUS/_IMPERFECTUM/_IMPERFECTA genus (an
+      unclosed comment, doctype, CDATA, quoted value or raw text);
+      anomalies such as '&lt;/&gt;', '&lt;/3&gt;', '&lt;?x&gt;' or
+      '&lt;!x&gt;' become one HTML_LEX_COMMENTARIUM_PRAVUM token up to and
+      including the first '&gt;' (or to EOF); for '&lt;/&gt;' the spec
+      would emit nothing at all. A tag left open
+      at EOF ('&lt;div cl') gives complete tokens with no TAG_FINIS. A
+      bare '&lt;' or '&amp;' that starts nothing stays in TEXTUS.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I check that the lexer did not lose or change any bytes?
+    <responsum symbolum="html_lexemata_emittere html_lexare">html_lexemata_emittere
+      concatenates every valor into a new chorda in the piscina; for
+      any input it equals the source byte for byte. The tokens tile
+      the source because every lexer step consumes at least one byte.
+      Note this oracle cannot see a wrong token boundary, such as a
+      script cut short, which still concatenates to the same
+      bytes.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I get decoded attribute values and resolved character references from the lexer?
+    <responsum symbolum="html_lexare HtmlLexema">No:
+      everything stays verbatim. Tag and attribute names keep their
+      original case, an attribute value token includes its quotes,
+      and references are not decoded. HTML_LEX_REFERENTIA is split out
+      only in data mode and only in the strict form '&amp;name;',
+      '&amp;#dd;' or '&amp;#xhh;' (the name or digits are scanned at most
+      64 bytes ahead);
+      without the ';' it stays text. Inside attribute values and raw
+      text the references remain part of the larger token. Decoding
+      is the tree's job.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what is raw text, and which elements switch the lexer into it?
+    <responsum symbolum="html_lexare" via="lib/html_lexema.worklog.md">After
+      the start tag of script, style, xmp, iframe, noembed, noframes
+      (RAWTEXT) or title, textarea (RCDATA), everything up to the
+      matching '&lt;/name' followed by space, '/' or '&gt;' is ONE
+      HTML_LEX_TEXTUS_CRUDUS token (case-insensitive; '&lt;/scripty' does
+      not close). RAWTEXT and RCDATA are lexed the same; they differ
+      only in decoding. Empty content gives no raw token at all, just
+      the close tag. '&lt;script/&gt;' still enters raw mode, as in
+      browsers. After '&lt;plaintext&gt;' the rest of the file is one raw
+      token, PERFECT rather than imperfect, since no close tag
+      exists.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why does a script containing an HTML comment with a nested script tag not end at the first close tag?
+    <responsum symbolum="html_lexare" via="lib/html_lexema.worklog.md">HTML5
+      keeps escape states inside script: '&lt;!--' opens the escaped
+      state, where a '&lt;script' opens the double-escaped state in which
+      '&lt;/script&gt;' is just text, and '--&gt;' returns. So
+      '&lt;script&gt;&lt;!--&lt;script&gt;&lt;/script&gt;&lt;/script&gt;'
+      gives one raw token that runs up to the last close tag. The
+      html5lib oracle
+      found real pages cut short before this was added
+      (2026-09-15); style, title and textarea have no escape
+      states.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why is <a href=/> not a self-closing tag?
+    <responsum symbolum="html_lexare" via="lib/html_lexema.worklog.md">Inside
+      a tag the lexer tests for an attribute value (after '=') BEFORE
+      it tests for '/&gt;'. So '&lt;a href=/&gt;' gives the value '/' and
+      a normal TAG_FINIS, and '&lt;a href=x/&gt;' gives the value 'x/',
+      because '/' is legal in an unquoted value. This matches the spec
+      and browsers; swapping the order of the checks silently makes
+      both self-closing.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what tokens does the inside of a tag produce?
+    <responsum symbolum="html_lexare HtmlLexema">'&lt;div'
+      is HTML_LEX_TAG_APERTURA and '&lt;/div' HTML_LEX_TAG_CLAUSURA (the
+      angle bracket plus the name). Then come SPATIA runs,
+      ATTRIBUTUM_NOMEN, AEQUALE for '=', ATTRIBUTUM_VALOR (the token
+      after an AEQUALE, spaces aside, is always a value unless it is
+      '&gt;', so 'b==c' gives AEQUALE then the value '=c'; quoted
+      values may contain newlines; only EOF truncates them to
+      ATTRIBUTUM_VALOR_IMPERFECTUS), DELIM for a stray '/', and finally
+      TAG_FINIS '&gt;' or TAG_FINIS_SOLUS '/&gt;'. Close tags are lexed
+      the same way, attributes included.</responsum>
+  </interrogatio>
+
+</interrogationes>

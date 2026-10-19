@@ -1,0 +1,193 @@
+<interrogationes unitas="silex">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I scaffold a new project from the fabrica in code?
+    <responsum symbolum="silex_novum SilexNovumOptiones SilexNovumFructus silex_fons_disci">Fill
+      a SilexNovumOptiones (fons, destinatio = parent directory,
+      titulus, vitrea) and call silex_novum. It refuses an empty
+      titulus, one containing '/' or '.', a '-' when vitrea is set (the
+      titulus becomes a C symbol), and a destinatio/titulus that
+      already exists. Nothing else is checked: the titulus is pasted
+      raw into generated C string literals and shell scripts, so keep
+      it to letters, digits and '_' (a quote breaks fontes/&lt;t&gt;.c,
+      a space breaks the vitrea scripts). It vendors the closure of latina.h piscina.h
+      chorda.h credo.h (vitrea: the closures of its own templates),
+      generates the sources and scripts, records everything in
+      &lt;destinatio&gt;/&lt;titulus&gt;/&lt;titulus&gt;.volumen with a birth
+      conditio, then writes the tree by reading it back from the
+      volumen. On failure successus is FALSUM and erratum says why;
+      a directory created before the failure is left behind, so the
+      next attempt is refused until you delete it.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I get every library file a set of headers depends on?
+    <responsum symbolum="silex_clausuram_colligere silex_clausuram_e_contentis SilexRes">silex_clausuram_colligere
+      takes header names as they are cited ('chorda.h') and does a BFS
+      over quoted includes, returning a Xar of SilexRes (via,
+      contentum, origo 'vendicata:...'). For each include/X.h it adds
+      lib/X.c, or failing that lib/X_macos.m, _macos.c, _posix.c,
+      _impl.c, and then every lib/ file named by an aedilis corpus
+      annotation in the header. Headers missing from include/ are
+      looked up in SILEX_RADICES_CLIENTIUM; vendor/ files are leaves
+      whose includes are never scanned. A NIHIL fons gives NIHIL.
+      silex_clausuram_e_contentis does the same with seeds read from
+      the include lines of source texts you pass, skipping the
+      template's own &lt;t&gt;_pipa.h and capsula_* headers.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can an include that is commented out or inside #if 0 still pull a file into the closure?
+    <responsum symbolum="silex_clausuram_colligere silex_monitiones_tacere">Yes
+      for #if 0 and for a line inside a multi-line /* */ comment: the
+      include scan is textual, line by line, and any line whose first
+      non-blank character is '#' followed by include and a quoted name
+      ending in .h counts, whatever surrounds it. A line that starts
+      with something else (// #include, /* #include) is not seen, nor
+      is an angle-bracket include. A cited header
+      that does not exist in the source only prints a warning to stderr
+      and is skipped (real dependencies always exist; phantom mentions
+      do not); a header whose implementation is not found is kept and
+      also warns.
+      silex_monitiones_tacere(VERUM) silences those warnings (briar
+      does).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what is a SilexFons, and what is the difference between DISCUS and CORPUS?
+    <responsum symbolum="SilexFons silex_fons_disci silex_fons_corporis silex_fons_legere silex_fons_enumerare">The
+      one reader every verb uses for library sources. DISCUS
+      (silex_fons_disci) reads a fabrica checkout on disk; it only
+      checks that include/ exists and keeps your path pointer without
+      copying it. CORPUS (silex_fons_corporis) opens a capsula embedded
+      in the binary and takes its titulus from the key corpus.versio.
+      silex_fons_legere sets *inventum FALSUM for an unknown path.
+      silex_fons_enumerare lists names directly in one directory with a
+      suffix, sorted so both kinds agree; a missing directory gives an
+      empty Xar, NIHIL only when memory runs out.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how does silex find the fabrica when I do not pass one?
+    <responsum symbolum="silex_fabricam_invenire" via="tools/silex.c fabrica.stml">silex_fabricam_invenire
+      climbs from the starting directory (at most 64 levels) and
+      returns the first absolute path holding include/latina.h, a lib/
+      directory and fabrica.stml, or NIHIL. The declared marker
+      fabrica.stml matters: scaffolded projects carry latina.h and lib/
+      too and once found themselves. The CLI tries -f/--fabrica first
+      (an invalid one is an error, not a fallback), then this ascent
+      from the current directory, then the embedded
+      corpus.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>which volumen file does silex use for a project directory?
+    <responsum symbolum="silex_volumen_viam_invenire">silex_volumen_viam_invenire
+      first tries &lt;dir&gt;/&lt;basename of dir&gt;.volumen; if that is
+      absent, a single *.volumen in the directory wins (so a renamed
+      copy still opens). Two or more prints an ambiguity message to
+      stderr and returns NIHIL; silex_status, silex_condere,
+      silex_proicere, silex_renovare and the differentia verbs then
+      fail with 'volumen deest', silex_historia returns NIHIL, and
+      silex_partes falls back to the project's own files
+      only.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what is a commit in silex, and what does silex status ignore?
+    <responsum symbolum="silex_condere silex_status silex_historia SilexConditio">A
+      commit is not an object: it is a named point, an actum
+      'conditio', in the volumen's event log. silex_condere runs
+      silex_status, refuses an empty change, and absorbs every MUTATA,
+      NOVA and ABSENS file plus the conditio in ONE transaction (all or
+      nothing). silex_status never writes; it skips the project's
+      top-level bin/ and build/, every *.volumen with its -wal and
+      -shm, and every hidden file or directory (name starting with
+      '.'), so dotfiles are invisible to the VCS. silex_historia lists the
+      volumen's birth ('(ortus voluminis)') and then the conditiones,
+      each with the number of file events since the previous one;
+      SilexConditio.renovatio is read from the act's data, not its
+      message.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I put the working tree back the way it was at an earlier commit?
+    <responsum symbolum="silex_proicere SilexProiciendaStatus silex_condere">silex_proicere(piscina,
+      dir, ad_seq, scribere): ad_seq at or below 0 is the present
+      manifest, N is the tree as of seq N. Without scribere it only
+      plans. With scribere it refuses everything if any file it would
+      overwrite holds content found in no stored massa (OBEX, 'conde
+      prima'),
+      then writes the SCRIBENDA and CREANDA files. Files on disk that
+      the fold does not know (ALIENA) are listed but never touched or
+      deleted, so files added after N stay. The log does not move;
+      silex_condere afterwards makes the old tree a NEW point.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I update vendored libraries after they change in the fabrica?
+    <responsum symbolum="silex_renovare SilexRenovatioStatus">silex_renovare
+      compares three sigilla per vendored file: the last vendicata
+      record in the log, the disk today, and the fabrica today through
+      a recomputed closure (seeds = includes of your own files on disk
+      plus the vendored headers). RENOVANDA (untouched by you, upstream
+      moved) and ADDENDA (in the closure, never vendored) are written
+      with scribere and recorded in one volumen transaction, plus a
+      conditio whose data has renovatae (only if something was
+      written). VULNUS (you edited or deleted it, upstream did not
+      move), CONFLICTUS (both moved, or your own file in the way) and
+      DERELICTA (dropped upstream) are only named, never touched, and
+      do not block the rest. Timestamps are never used. Two limits:
+      each file hits the disk before it is recorded, so a failure
+      midway rolls back the volumen but not the files already
+      written; and a vendored file whose removal you committed comes
+      back as ADDENDA if its header is still in the
+      closure.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I get a text diff of what changed in a silex project?
+    <responsum symbolum="silex_differentia_laborans silex_differentia_plicarum SilexDifferentiaRes">silex_differentia_laborans
+      diffs a fold (a_seq, at or below 0 = present) against the disk;
+      silex_differentia_plicarum diffs two folds. Results come sorted
+      by via with MUTATA/NOVA/ABSENS, a DifferentiaSumma, and the raw
+      textus_vetus and textus_novus; identical files are only counted
+      in aequales. textus is a unified diff (III lines of context,
+      headers a/via b/via) only when cum_textu is VERUM; the summa is
+      computed either way.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I check which vendored files a project needs and whether they are present?
+    <responsum symbolum="silex_partes SilexPartesRes">silex_partes(piscina,
+      dir, fons, plagula) computes the closure of the project's own
+      files (plus the vendored headers in its manifest) or, when
+      plagula is given, of that one file, and returns SilexPartesRes
+      with adest = present on disk. An entry with adest FALSUM is what
+      the header calls the files 'renovare -scribere' would vendor (one
+      exception: a vendored file you deleted by hand while upstream did
+      not move is VULNUS there and is not rewritten). It returns NIHIL
+      for a NIHIL fons, when the given plagula is not on disk (so a
+      typo looks like a broken fabrica), and when the closure cannot be
+      collected.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I generate a build script for my sources and their closure?
+    <responsum symbolum="silex_ordinem_fingere silex_ordinem_probandi_fingere silex_ordinem_vitreum_fingere silex_ordinem_probandi_vitreum_fingere SILEX_VEXILLA_COMPILATIONIS">silex_ordinem_fingere
+      returns a /bin/sh script compiling your fontes with
+      SILEX_VEXILLA_COMPILATIONIS and -Iinclude into bin/&lt;titulus&gt;.
+      Passing clausura NIHIL links the glob lib/*.c; passing a closure
+      lists its lib .c and .m files (and client-root .c files)
+      explicitly, adds -I for each client root it touches, and
+      adds the Cocoa, Security and WebKit frameworks if any .m is
+      present. silex_ordinem_probandi_fingere builds and execs
+      bin/probatio_&lt;titulus&gt;. silex_ordinem_vitreum_fingere emits
+      the four-stage vitrea build (capsula tool, vendor objects, app
+      with frameworks, rm before mv) with SILEX_VEXILLA_VITREA and
+      always an explicit file list, and
+      silex_ordinem_probandi_vitreum_fingere the vitrea test
+      build.</responsum>
+  </interrogatio>
+
+</interrogationes>

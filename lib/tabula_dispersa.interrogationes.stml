@@ -1,0 +1,92 @@
+<interrogationes unitas="tabula_dispersa">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I make a string-keyed map and look a key up?
+    <responsum symbolum="tabula_dispersa_creare_chorda tabula_dispersa_inserere tabula_dispersa_invenire tabula_dispersa_continet">tabula_dispersa_creare_chorda(piscina,
+      capacitas) gives an open-addressing table with FNV-1a hashing and
+      byte comparison; the capacity is rounded up to a power of two
+      (at least XVI). Values are vacuum*. tabula_dispersa_invenire
+      returns VERUM and writes *valor_out only when the key is present
+      (valor_out may be NIHIL); tabula_dispersa_continet is the same
+      test without the value. A stored NIHIL value is still "found",
+      so test the return value, not the pointer.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I reuse or free the key's bytes after inserting it?
+    <responsum symbolum="tabula_dispersa_inserere chorda_transcribere chorda_internare">No.
+      The table stores the chorda by value, so it keeps the pointer to
+      your bytes, not a copy. If those bytes are a stack buffer, are
+      rolled back with piscina_reficere, or are overwritten, lookups
+      quietly stop matching. Copy the key first (chorda_transcribere into
+      a piscina that lives as long as the table) or intern it
+      (chorda_internare).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what happens when I insert a key that is already in the table?
+    <responsum symbolum="tabula_dispersa_inserere">Only the value is
+      replaced. The key chorda stored the first time stays (with its
+      pointer), the count does not change, and the call returns VERUM.
+      Empty keys (mensura 0) are refused: inserere, invenire and delere
+      all return FALSUM for them.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I look up with a C string literal instead of building a chorda?
+    <responsum symbolum="tabula_dispersa_invenire_literis tabula_dispersa_continet_literis tabula_dispersa_creare_chorda">Yes,
+      with tabula_dispersa_invenire_literis and
+      tabula_dispersa_continet_literis, but only on a table made by
+      tabula_dispersa_creare_chorda. The _literis path always hashes
+      with FNV-1a and compares raw bytes, whatever friatio and
+      comparatio the table was created with. On a table with a custom
+      hash (tabula_friare_multiplicatio, or your own) it never finds
+      anything.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I key a table by something other than string contents, such as pointer identity?
+    <responsum symbolum="tabula_dispersa_creare TabulaFriatio TabulaComparatio" via="lib/insula.c">Pass
+      your own TabulaFriatio and TabulaComparatio to
+      tabula_dispersa_creare (it returns NIHIL if either is NIHIL). The
+      comparator must return 0 for equal keys and is only called when
+      the cached hashes match, so hash and equality must agree.
+      lib/insula.c keys a table by the address and length of a chorda
+      (friatio_sedis, comparatio_sedis).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I walk every entry, and can I change the table while iterating?
+    <responsum symbolum="tabula_dispersa_iterator_initium tabula_dispersa_iterator_proximum tabula_dispersa_delere">tabula_dispersa_iterator_initium
+      then tabula_dispersa_iterator_proximum until FALSUM; entries come
+      in slot order, not insertion order (sort them yourself if the
+      output must be stable). Deleting during the walk is safe:
+      tabula_dispersa_delere only marks the slot as a tombstone.
+      Inserting is not: an insert can rehash into a new slot array and
+      the iterator, which holds only the table and a slot index, then
+      skips or repeats entries; even without a rehash a new entry is
+      visited or not depending on its slot.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why does a table with few live entries keep using more memory as I insert and delete?
+    <responsum symbolum="tabula_dispersa_delere tabula_dispersa_inserere tabula_dispersa_vacare tabula_dispersa_factor_deletorum">Deletion
+      leaves a tombstone (SLOT_DELETUM). When live entries pass 75% of
+      capacity, or tombstones pass 25%, the next insert rehashes into a
+      new array of DOUBLE the capacity, even when the rehash was caused
+      only by tombstones. The old array stays in the piscina (it is an
+      arena), so heavy insert/delete churn grows memory with the number
+      of operations, not with the live count. tabula_dispersa_vacare
+      empties every slot in place without allocating.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can tabula_dispersa_inserere fail because memory ran out?
+    <responsum symbolum="tabula_dispersa_inserere piscina_allocare">Not
+      in a way you can handle: growth allocates with piscina_allocare,
+      which exits the process when memory runs out, so the "FALSUM on
+      allocation failure" path in the header never actually runs.
+      FALSUM in practice means a NIHIL table or an empty key.</responsum>
+  </interrogatio>
+
+</interrogationes>

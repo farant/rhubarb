@@ -1,0 +1,108 @@
+<interrogationes unitas="capsula">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I embed asset files in a binary and read them at runtime?
+    <responsum symbolum="capsula_aperire capsula_legere CapsulaEmbed" via="tools/capsula_generare.c probationes/test_capsula.toml tools/capsula_regenerare.sh">List
+      the files in a TOML file as top-level keys X_files = [...] (paths
+      or * glob patterns, relative to the TOML's directory) and
+      X_compress = true|false (default false). Not [X] tables with
+      files/compress, whatever the generator's top comment and usage
+      text say: those generate nothing. bin/capsula_generare writes
+      capsula_X.c/.h next to the TOML, defining constans CapsulaEmbed
+      capsula_X; tools/capsula_regenerare.sh runs it. At runtime
+      capsula_aperire(&amp;capsula_X, piscina) then capsula_legere(cap,
+      "path/relative/to/the/toml", piscina), checking .status ==
+      CAPSULA_OK.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what do I get back from capsula_legere, and who owns the bytes?
+    <responsum symbolum="capsula_legere capsula_legere_chorda CapsulaFructus">A
+      CapsulaFructus: status plus datum, a chorda (NOT NUL-terminated,
+      use chorda_ut_cstr if you need a C string). Every call allocates a
+      fresh copy (or a fresh decompression) in the piscina you pass,
+      even for uncompressed entries, because the embedded blob is const.
+      Reading the same file in a loop therefore grows that piscina;
+      read once and keep the chorda.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I serve assets from a directory during development without rebuilding?
+    <responsum symbolum="capsula_aperire_e_disco capsula_legere capsula_habet" via="lib/atrium.c">capsula_aperire_e_disco(radix,
+      piscina) returns a Capsula with the same handle API, reading the
+      directory instead of the blob (atrium uses it for -radix).
+      capsula_legere, _chorda and capsula_habet go to disk on every
+      call, so an edited file is seen at once. It returns NIHIL if radix
+      is not a directory. Paths that normalize outside radix ("../x")
+      are refused as CAPSULA_NON_INVENTUM. Nothing is compressed. An
+      existing empty file is CAPSULA_OK with mensura 0. Note that in
+      this mode capsula_habet builds the full path in the piscina given
+      to capsula_aperire_e_disco on every call (it takes no piscina of
+      its own), so calling it per request slowly grows that
+      piscina. Caution (audit 2026-10-18, unfixed): if a file appears
+      under radix while capsula_aperire_e_disco is opening it (between
+      its counting walk and its filling walk), the fill writes one
+      CapsulaIndexum past the end of the index allocation, a heap
+      overflow in the piscina.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I list files that were added after capsula_aperire_e_disco opened the directory?
+    <responsum symbolum="capsula_aperire_e_disco capsula_numerus capsula_indexum capsula_iter capsula_invenire capsula_legere">No.
+      capsula_numerus, capsula_indexum, capsula_iter and capsula_invenire
+      use the index taken when the directory was opened. A file added
+      later can be read with capsula_legere but is not listed until you
+      open it again. The index also skips hidden entries (dot-files),
+      though capsula_legere still reads them by path.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I find out why capsula_aperire failed?
+    <responsum symbolum="capsula_aperire capsula_status_nuntium CapsulaStatus">No:
+      capsula_aperire returns only NIHIL, whether embed or piscina is
+      NIHIL, the blob is under XII bytes, or the magic or version is
+      wrong. CAPSULA_FRACTA_MAGICA and CAPSULA_FRACTA_VERSIO are never
+      produced anywhere, and CAPSULA_FRACTA_DATUM only by the separate
+      capsula_caudae library; in capsula.c only capsula_legere and
+      capsula_legere_chorda return a status (CAPSULA_NON_INVENTUM,
+      CAPSULA_FRACTA_INFLATIO, CAPSULA_FRACTA_ALLOCATIO).
+      capsula_status_nuntium turns a status into text. The TOC is not
+      bounds-checked against the blob, so only open blobs that
+      capsula_generare produced.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I walk every file in a capsula?
+    <responsum symbolum="capsula_numerus capsula_indexum CapsulaIndexum capsula_legere_chorda" via="lib/speculum.c">Loop
+      i from 0 to capsula_numerus(cap) - 1, take capsula_indexum(cap, i)
+      and read it with capsula_legere_chorda(cap, entry-&gt;via,
+      piscina), as lib/speculum.c does. capsula_iter and
+      capsula_iter_proximus also exist, but after proximus the current
+      entry is capsula_indexum(cap, iter.positus - 1): positus is
+      1-based once advanced.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I tell whether an entry is stored compressed, and what is mensura_compressa for an uncompressed file?
+    <responsum symbolum="CapsulaIndexum capsula_aperire capsula_aperire_e_disco" via="tools/capsula_generare.c">Read
+      the compressa flag, not mensura_compressa. The header says
+      mensura_compressa is 0 when uncompressed, but for an embedded
+      capsula the generator writes it EQUAL to mensura_cruda and
+      capsula_aperire sets compressa = (mensura_compressa !=
+      mensura_cruda); only disk mode stores 0. mensura_cruda is the
+      uncompressed size (in disk mode, the size when the index was
+      taken; capsula_legere returns the file as it is now).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why does disk mode exist instead of serving assets over a local HTTP server?
+    <responsum symbolum="capsula_aperire_e_disco">The page keeps the same
+      scheme, URL and origin (capsula://radix/...) and cannot tell
+      which mode it runs in, so development and release differ only in
+      which files exist. An HTTP server would also change port, origin,
+      transport and cwd. And nothing listens: no port that any process
+      on the machine could read (header comment on
+      capsula_aperire_e_disco).</responsum>
+  </interrogatio>
+
+</interrogationes>

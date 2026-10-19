@@ -1,0 +1,141 @@
+<interrogationes unitas="norma">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I declare a schema for a JSON object and check a parsed value against it?
+    <responsum symbolum="norma_objectum norma_campus norma_integer norma_intra norma_iudicare" via="tools/norma.c">Build
+      nodes with the builders (norma_objectum, then norma_campus(obj,
+      titulus, valor, requiritur) per field, with norma_integer,
+      norma_textus and the rest as values; modifiers like norma_intra
+      return the node so they nest). Then norma_iudicare(n, valor,
+      piscina) returns a NormaIudicium: validum, and vitia listing
+      EVERY problem (not just the first) as NormaVitium with a path
+      such as $.content[2].input.n, a causa and a nuntius (up to
+      CCLVI, see the cap). The xars, paths and messages are allocated
+      in the piscina you pass; the one exception is a
+      NORMA_CAUSA_SCHEMA_PRAVA nuntius, which is the node's own string
+      in the builders' piscina.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I find out that I misused a builder, like norma_intra on a norma_numerus?
+    <responsum symbolum="norma_iudicare norma_visus norma_intra norma_json_schema">Builders
+      never fail loudly: they record the first misuse on the node they
+      were called on and return it (a bad norma_campus or
+      norma_variatio marks the object or union, not the field). norma_iudicare walks the whole schema first and, if
+      any node is marked, returns a single NORMA_CAUSA_SCHEMA_PRAVA at
+      $ (the nuntius says what) and judges nothing.
+      norma_visus(n).error_schematis shows the mark on one node.
+      norma_json_schema does NOT check the marks: it exports a
+      misbuilt schema without complaint.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can a JSON value like 7.0 pass a norma_integer?
+    <responsum symbolum="norma_integer norma_numerus norma_intra norma_intra_fluitans">No:
+      INTEGER accepts only values the JSON parser read as integers,
+      and the parser reads any number containing '.', 'e' or 'E' as a
+      float, so 7.0, 7.5 and 1e3 all fail with NORMA_CAUSA_GENUS. Use
+      norma_numerus to accept both. Bounds are typed to match:
+      norma_intra (s64) works only on an integer node and
+      norma_intra_fluitans (f64) only on a numerus node; the wrong
+      pairing marks the schema as misbuilt.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I let an object have keys the schema does not declare?
+    <responsum symbolum="norma_modus norma_iudicare NormaIudicium">norma_modus(obj,
+      m). NORMA_CLAUSUM (the default) makes each extra key an error
+      (NORMA_CAUSA_EXTRA). NORMA_APERTUM allows them silently.
+      NORMA_NOTANDUM allows them but reports each in j.notae, and the
+      value stays valid. The same modes govern unknown tags on a
+      discriminated union. Notes stop silently after CCLVI.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I validate a tagged union like content blocks with a type field?
+    <responsum symbolum="norma_discrimen norma_variatio norma_modus" via="lib/vates_responsum_norma.c">norma_discrimen(p,
+      "type"), then norma_variatio(d, "text", obj) once per tag value.
+      Each variant must be a norma_objectum, and the tag key counts as
+      declared in it, so CLAUSUM does not reject it. A missing or
+      non-string tag gives NORMA_CAUSA_DISCRIMEN, and an unknown tag
+      gives NORMA_CAUSA_VARIATIO (subject to norma_modus); both point
+      at the tag's path. vates judges Anthropic responses this way
+      (lib/vates_responsum_norma.c).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I turn a norma into a JSON Schema for a tool's input_schema?
+    <responsum symbolum="norma_json_schema VatesInstrumentum">norma_json_schema(n,
+      p) returns a JsonValor with a fixed key order and no $schema
+      key. additionalProperties false is written only for CLAUSUM
+      objects, and norma_aut_nullum becomes "type": [X, "null"] (on a
+      union, an extra {"type": "null"} branch in oneOf). A
+      discriminated union becomes oneOf over its variants with the tag
+      as a const, whatever its modus: an unknown tag that an APERTUM
+      or NOTANDUM judge accepts is still rejected by the exported
+      schema.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can a schema contain itself, for a recursive JSON shape?
+    <responsum symbolum="norma_campus norma_tabulatum norma_iudicare">No:
+      the header says recursion is not supported yet. A node may be
+      shared by several parents (a DAG), but nothing detects a cycle.
+      norma_campus(o, "x", o, FALSUM) is accepted, and norma_iudicare
+      on it then recurses without end in its schema walk.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what does norma_longitudo count, bytes or characters?
+    <responsum symbolum="norma_longitudo utf8_numerare_runas">For
+      a textus it counts runes (code points, via utf8_numerare_runas;
+      malformed UTF-8 is counted, not rejected: a stray byte counts as
+      one rune); for a tabulatum it counts
+      elements. It is an error on any other genus. Bounds are i32 and
+      inclusive.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>which norma_forma names does the judge actually check?
+    <responsum symbolum="norma_forma fasti_ex_iso norma_gignere">Four:
+      date-time (must parse with fasti_ex_iso), uuid (8-4-4-4-12 hex),
+      email (exactly one @, not first; the last dot after it is
+      neither right after the @ nor the final character) and uri (a
+      scheme, a colon, then something). Any other name is never judged
+      and is only a hint for the generator (norma_gignere). These are
+      shape checks, not full RFC validation.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why does a norma error message never show the bad value, and why does judging stop at 256 errors?
+    <responsum symbolum="norma_iudicare NormaVitium" via="project-specs/norma-spec.md lib/norma.worklog.md">The
+      judged value may be huge or secret, so nuntius describes the
+      problem and its path but never echoes the value. The cap of
+      CCLVI means a hostile value cannot produce a hostile number of
+      issues: after it, one NORMA_CAUSA_LIMES at $ is added and judging
+      stops (a 1000-element wrong-typed array gives 257 records, not
+      1000).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can a field be missing or null without failing?
+    <responsum symbolum="norma_campus norma_aut_nullum norma_liberum">Missing
+      and null are different. An absent field fails (NORMA_CAUSA_DEEST)
+      only if norma_campus was called with requiritur VERUM. A field
+      that is present with JSON null fails with NORMA_CAUSA_GENUS
+      unless its node has norma_aut_nullum, or is norma_nullum or
+      norma_liberum (liberum accepts anything).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>how is a key that is not a plain identifier written in a NormaVitium path?
+    <responsum symbolum="NormaVitium norma_iudicare chorda_aedificator_appendere_evasus_json">A
+      key matching [A-Za-z_][A-Za-z0-9_]* is appended as .clavis;
+      any other key (empty, with a dot, a quote or a non-ASCII rune)
+      is written as ["..."] with JSON escaping, so $["a.b"] and
+      $["q\""]. Array elements are [i]. DEEST and EXTRA point at the
+      key's path, DISCRIMEN and VARIATIO at the tag's, LIMES and
+      SCHEMA_PRAVA at $.</responsum>
+  </interrogatio>
+
+</interrogationes>

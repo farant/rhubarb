@@ -1,0 +1,172 @@
+<interrogationes unitas="aemulator">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I feed program output into the terminal emulator and read the screen back?
+    <responsum symbolum="aemulator_configuratio_initiare aemulator_creare aemulator_scribere aemulator_cellula aemulator_textum_effundere">Fill
+      an AemulatorConfiguratio with aemulator_configuratio_initiare
+      (always start from it, so fields added later get defaults),
+      change what you need, and call aemulator_creare. Pass the
+      program's bytes to aemulator_scribere, then read cells with
+      aemulator_cellula(a, x, y, &amp;cellula) or the whole screen as
+      plain text with aemulator_textum_effundere. aemulator_creare
+      returns NIHIL if a side is outside 1..IV * MXXIV cells or the
+      piscina runs out.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I send the emulator's replies (DA, DSR, cursor position) back to the program?
+    <responsum symbolum="AemulatorEffectus aemulator_scribere aemulator_hospes_creare">Set
+      effectus.responsum (with effectus.datum) in the configuration.
+      It is called synchronously from inside aemulator_scribere with
+      the reply bytes, and you must not call back into the emulator
+      from it. If the field is NIHIL, replies are simply dropped. BEL
+      and OSC 0/2 titles arrive the same way through campana and
+      titulus; the title chorda is valid only during that call.
+      aemulator_hospes takes over effectus.responsum and queues the
+      replies to the child's Pseudoterminale; campana and titulus
+      still go to you.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I pass bytes in arbitrary chunks, splitting escape sequences or UTF-8 characters?
+    <responsum symbolum="aemulator_scribere">Yes.
+      Parser state is kept between calls: a sequence may be split
+      anywhere, and up to III trailing bytes of a split UTF-8 rune are
+      carried over to the next call. If a control or escape sequence
+      arrives while a rune is still incomplete, the rune becomes
+      U+FFFD and the sequence is then handled normally. One known
+      flaw: the carried rune is completed with the next call's first
+      bytes without checking that they are continuation bytes, so
+      "\xE6" then "AB" shows a single U+FFFD and loses A and B (sent
+      in one call, the same bytes show U+FFFD A B).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what does a cell's latitudo mean, and what does an empty graphema mean?
+    <responsum symbolum="aemulator_cellula AemulatorCellula AemulatorLatitudo">AEMULATOR_ANGUSTA
+      is one cell. AEMULATOR_LATA is a wide character, followed by an
+      AEMULATOR_CAUDA cell that must not be painted. AEMULATOR_CAPUT
+      is the empty last-column cell left when a wide character wrapped
+      to the next line. An empty graphema means no text: never written
+      OR erased (ED/EL/ECH), since the two are not distinguished. The
+      graphema points into the emulator's own cell storage: it is not
+      NUL-terminated and is valid only until the next
+      aemulator_scribere or aemulator_amplitudo.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can a cell hold a character with combining marks or another multi-codepoint grapheme?
+    <responsum symbolum="aemulator_scribere aemulator_cellula">Not
+      yet: a cell holds exactly one rune (up to IV UTF-8 bytes).
+      Zero-width runes such as combining accents are dropped when
+      printed, so e followed by U+0301 shows as a plain e.
+      Multi-codepoint graphemes are planned for a version II of the
+      core.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I let the user scroll back through history?
+    <responsum symbolum="aemulator_visum_movere aemulator_visus aemulator_historia aemulator_visus_cellula aemulator_visum_effundere">aemulator_visum_movere(a,
+      delta): delta greater than 0 moves up into history, less than 0
+      moves down, clamped to [0, aemulator_historia(a)] (the sum is
+      formed in s32 before clamping, so to jump to the top pass
+      aemulator_historia(a) - aemulator_visus(a), not a huge constant);
+      aemulator_visus returns the current offset (0 = live screen).
+      Paint with aemulator_visus_cellula. aemulator_cellula, the cursor
+      and aemulator_textum_effundere always read the LIVE screen. While
+      output arrives the view keeps showing the same lines. Only the
+      primary screen has history. A line enters it when it scrolls
+      off the TOP row: LF or IND at the bottom of a scroll region that
+      starts at row 0 (the full screen or a DECSTBM region from the
+      top, as in Ghostty), SU, or a height shrink. A region that
+      starts lower, IL/DL and the alternate screen never add any. The
+      header comment's 'whole screen only' wording is stale; the
+      worklog (C2) has the rule.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I bound how much memory the emulator uses?
+    <responsum symbolum="aemulator_configuratio_initiare aemulator_amplitudo aemulator_scribere">Set
+      historia_octeti: history lives in pages of LXIV * MXXIV bytes,
+      the limit is rounded up to whole pages (at least one), the
+      default is X MB, and 0 means no history. Once the limit is
+      reached the oldest page is recycled and nothing more is
+      allocated. The screen keeps its capacity: resizing within it
+      allocates nothing, and growing past it makes the capacity half
+      again larger (never smaller); the old line storage is not given
+      back, since everything comes from the caller's
+      piscina.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I know which keyboard and mouse encodings the program asked for?
+    <responsum symbolum="aemulator_modi AemulatorModi aemulator_modus">aemulator_modi
+      returns a snapshot by value (application cursor keys and keypad,
+      mouse mode and format, bracketed paste, focus reports, LNM, kitty
+      keyboard flags, wheel-as-arrows, reverse screen). Read it again
+      after every aemulator_scribere. aemulator_modus(a, numerus,
+      privatus) gives the raw bit of one mode as DECRQM reports it;
+      modes outside the table read FALSUM.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I find out whether the emulator ignored sequences the program sent?
+    <responsum symbolum="aemulator_ignota aemulator_scribere">aemulator_ignota
+      counts every sequence consumed but not understood since
+      creation. Unknown input is never fatal and is never printed as
+      text. Over-long OSC bodies (titles over the lexer's 2048-byte
+      cap) are dropped whole and counted, not truncated. CSI 21 t and
+      DECRQCRA with lectio_schirmi FALSUM are counted here too. The tessera loopback test requires the count
+      to stay 0, since tessera emits nothing the emulator should not
+      understand.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I resize the emulator, and does text reflow?
+    <responsum symbolum="aemulator_amplitudo">aemulator_amplitudo(a,
+      latitudo, altitudo). There is no reflow: wider lines are padded
+      and narrower ones cut. Shrinking first drops blank rows below
+      the cursor, and the rest of the excess scrolls into history.
+      Growing pulls lines back from history only when the cursor is on
+      the bottom row. The scroll region and tab stops are reset. On
+      FALSUM (bad size, or the piscina ran out) the state is
+      unchanged.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why is screen readback (DECRQCRA) off by default, and why is the title report CSI 21 t never answered?
+    <responsum symbolum="aemulator_configuratio_initiare aemulator_creare" via="lib/aemulator.worklog.md include/aemulator.h">Two
+      separate decisions. DECRQCRA lets a program checksum screen
+      cells; lectio_schirmi is FALSUM by default (decision IX: Ghostty
+      does not have it, iTerm2 ships it closed) and only the esctest
+      driver (tools/aemulator_esctest.c) and the unit tests turn it
+      on; closed, the sequence is unknown and gets no reply. CSI 21 t would echo the window title back as if typed,
+      and a title echoed as input is an injection path, so it is
+      refused on purpose and counted as unknown.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why does the emulator core do no I/O and keep no clock?
+    <responsum symbolum="aemulator_scribere aemulator_hospes_pulsare" via="lib/aemulator_hospes.c">The
+      core is PURE (decision X): bytes in, screen state out, replies
+      and events through the effect callbacks; no files, no time, no
+      threads, no mutable statics, all memory from the caller's
+      piscina, so it can be built for wasm. The read loop and reply
+      queue live in aemulator_hospes (aemulator_hospes_pulsare), which
+      touches the child only through a Pseudoterminale table, so it
+      is pure too; the real pty is behind that table.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I read the colors the program set with OSC 4, 10, 11 or 12?
+    <responsum symbolum="aemulator_color AemulatorConfiguratio">aemulator_color(a,
+      index) returns 0xRRGGBB: 0-CCLV is the palette,
+      AEMULATOR_COLOR_LITTERAE, AEMULATOR_COLOR_FUNDI and
+      AEMULATOR_COLOR_CURSORIS the foreground, background and cursor.
+      A cursor without its own color reports the current foreground.
+      An index above AEMULATOR_COLOR_CURSORIS returns 0, which is
+      indistinguishable from black. Resets (OSC 104/110/111/112) go
+      back to the configured values.</responsum>
+  </interrogatio>
+
+</interrogationes>

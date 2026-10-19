@@ -1,0 +1,133 @@
+<interrogationes unitas="vicus">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I build a vicus host with my own app kinds?
+    <responsum symbolum="vicus_creare vicus_genus_addere vicus_systemata_ponere vicus_aperire vicus_stratum_addere vicus_dispensatorem_ligare vicus_pulsare" via="lib/vicus_applicatio.c">In
+      this order: vicus_creare; vicus_genus_addere for each kind (the
+      byte size of its mount struct, a VicusMontator, a
+      VicusDescriptor and a ctx handed to every mount);
+      vicus_systemata_ponere BEFORE opening; vicus_aperire with the
+      default layout; vicus_stratum_addere only after vicus_aperire
+      (it needs the repository). Then create the dispensator over
+      v-&gt;repo with vicus_actiones(v) and vicus_componere (ctx = v),
+      call vicus_dispensatorem_ligare once, and call vicus_pulsare
+      every frame.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what are a tabula, a latus and the acervus in vicus?
+    <responsum symbolum="VicusTabula VicusLatus VICUS_TABULAE vicus_latus">A
+      tabula is a tab (at most VICUS_TABULAE, X, are read) holding two
+      sides: the left latus and a right acervus (stack) whose LAST
+      element is the visible front and which is never empty. Each
+      latus is one app mount; its id, by default
+      "&lt;tab&gt;_&lt;side&gt;_&lt;kind&gt;" (for example "3_sinistrum_scriba")
+      and stored in the layout, is also its branch id, and its
+      branch path "&lt;kind&gt;:&lt;id&gt;" is its scope for actions, figures
+      and Motus.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I open a pane from inside a command or event handler?
+    <responsum symbolum="vicus_acervo_aperire vicus_acervo_mutare vicus_pulsare">Call
+      vicus_acervo_aperire(v, genus, argumentum): it only QUEUES a
+      request on the active tab (FALSUM only for an unknown kind or no
+      active tab), and the next vicus_pulsare applies it: an existing
+      pane with the same kind and argument comes to the front, else a
+      new one is mounted with the default id, or that id plus _2,
+      _3... if taken; focus goes right. Swapping registries and the
+      Motus gesture in the middle of a dispatch would break the
+      handler that is running. vicus_pulsare ignores a failed
+      request (a failed mount only sets vicus_causa). A new pane is
+      mounted at the size given to vicus_creare, not the current
+      window size. vicus_acervo_mutare instead gives the front pane of
+      that kind a new argument through facies.argumentum_ponere and
+      brings it to the front (or mounts one if none).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I keep a VicusLatus pointer across vicus_pulsare or a focus change?
+    <responsum symbolum="vicus_latus vicus_latus_focatum vicus_acervo_redire vicus_latus_focare">No.
+      Panes live by value in the acervus Xar: bringing one to the
+      front copies the VicusLatus structs down one slot, and
+      vicus_acervo_redire truncates the front away, so the same
+      address can hold a different pane afterwards. Look the pane up
+      again with vicus_latus or vicus_latus_focatum. The mount struct
+      (VicusLatus.montatio) never moves.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what is a VicusFacies and what happens to fields my kind does not fill?
+    <responsum symbolum="VicusFacies VicusDescriptor">It is what the host
+      takes from a mounted pane: action and figure registries,
+      componere and its ctx, an image source, gesture, pulse,
+      first-click and argument hooks, and flags such as
+      vivit_in_fundo and focus_in_apertura. vicus zeroes the whole
+      struct before calling your VicusDescriptor, so any field you
+      leave out simply means absent (no gesture, no pulse,
+      not living in the background).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why does the first click on an unfocused pane only focus it?
+    <responsum symbolum="vicus_focum_ponere VicusFacies" via="lib/vicus.worklog.md">The
+      dispatch strategy sends a press whose component scope is not
+      under Motus.spatium to the host root, and the root handler
+      focuses the side under x (left half or right). Only after focus
+      has moved (Motus already set to the new pane) does it call the
+      pane's optional ictus_primus hook, so a kind such as scriba can
+      choose to act on that first click; without the hook the click
+      only focuses. The hook runs inside the root's action, so it must
+      set repo-&gt;scriptor to its own action name for the call, or the
+      pane's owner rules silently refuse its writes.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how does a background system write a field on the vicus root?
+    <responsum symbolum="vicus_systema_addere vicus_radicem_scribere" via="apps/vicus/organum.stml">Register
+      it with vicus_systema_addere(v, titulus, fn, ctx); it is called
+      on every vicus_pulsare and returns VERUM when a frame must be
+      drawn. Inside, write with vicus_radicem_scribere(v, scriptor,
+      titulus, valor), valor NIHIL removing the field. The writer must
+      own the field in the root manifest, otherwise the write is
+      refused and the call returns FALSUM.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why does vicus write the pane surface sizes as writer "dispensator"?
+    <responsum symbolum="vicus_aperire vicus_componere" via="lib/vicus.worklog.md">Each
+      app reads superficies_latitudo and superficies_altitudo from its
+      OWN branch, and the apps' owner rules give those fields to
+      "dispensator". In vicus the host plays the dispensator for its
+      mounts: it saves repo-&gt;scriptor, writes as "dispensator", and
+      restores. Under any other writer the owner check refuses the
+      write without an error and the branch keeps no surface.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I show a clock and battery in the vicus tab bar, and keep tests stable?
+    <responsum symbolum="vicus_horologium_ponere vicus_horologium_locale vicus_pilam_ponere vicus_pulsare">Yes.
+      By default there is no clock (NIHIL), so tests and golden images
+      do not change every minute. App mains call
+      vicus_horologium_ponere(v, vicus_horologium_locale, NIHIL) and
+      vicus_pilam_ponere with a battery port; tests pass a fake
+      clock. Readings are stored as root fields (tempus_*,
+      pila_centesimae, pila_oneratur); the battery is read again only
+      when the clock reading changes, and the clock makes vicus_pulsare
+      return VERUM only when the minute or the day changed.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I find out why a vicus pane did not appear?
+    <responsum symbolum="vicus_causa vicus_aperire">Read vicus_causa(v);
+      it holds only the LAST message. A pane whose kind is not registered (for example a volume saved
+      by a newer host) is kept in the layout but not mounted
+      ("genus ignotum, latus non montatum: ..."), and a mount function
+      that returns FALSUM gives "montatio defecit: &lt;id&gt;". When
+      vicus_aperire itself fails it says "manifestum hospitis malum" or
+      "dispositio tabularum mala". The layout
+      itself lives in volume plagula 'vicus/latera' and is overwritten
+      on each change; it is configuration, not history.</responsum>
+  </interrogatio>
+
+</interrogationes>

@@ -1,0 +1,81 @@
+<interrogationes unitas="arbor2_token">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I find the source line and column a macro-expanded token came from?
+    <responsum symbolum="arbor2_token_radix Arbor2OrigoMeta" via="lib/arbor2_glr.c">Walk
+      the chain with arbor2_token_radix, which follows origo_token
+      until it is NIHIL, and read radix-&gt;origo_meta-&gt;linea,
+      columna and via_file. For a token expanded from a macro the
+      root is the source token of the outermost invocation, so the
+      position is the call site, not the macro body; arbor2_glr does
+      exactly this to give every node its location. Tokens of a macro
+      ARGUMENT are not rewrapped: arbor2_expandere copies the caller's
+      own tokens into the expansion, so they resolve to their own
+      place inside the argument list. A token that is already a source
+      token (or an API token) is its own root.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I get both input tokens of a ## paste?
+    <responsum symbolum="arbor2_token_pasta arbor2_token_ex_pasta Arbor2OrigoPasta">arbor2_token_pasta
+      returns the token's origo_meta as an Arbor2OrigoPasta (sinister
+      and dexter) when its genus is ARBOR2_ORIGO_PASTA, NIHIL
+      otherwise. The ordinary chain (origo_token, and so
+      arbor2_token_radix) follows only the LEFT token: the right one
+      is reachable only through dexter.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can origo_meta or nomen_macro be NIHIL on a token?
+    <responsum symbolum="arbor2_token_ex_lexema arbor2_token_ex_expansione arbor2_token_ex_api">origo_meta,
+      never, for tokens made by the arbor2_token_ex_* constructors: it
+      is always allocated with piscina_allocare (fatal on
+      failure: the process exits), so no NIHIL checks are needed.
+      nomen_macro is NIHIL for source tokens; via_file may be NIHIL
+      (arbor2_token_ex_api allows it, and expansions copy whatever the
+      macro definition stored). The constructors copy neither the
+      lexema nor the chordae: the token points at the caller's, so
+      they must live as long as the token.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what is the difference between arbor2_token_est_fons, layer_index and arbor2_token_profunditas?
+    <responsum symbolum="arbor2_token_est_fons arbor2_token_profunditas arbor2_origo_genus_nomen Arbor2OrigoGenus">arbor2_token_est_fons
+      tests the genus (ARBOR2_ORIGO_FONS), not the layer, despite the
+      header's "(layer 0)" comment; argument tokens copied into an
+      expansion are still FONS, so it is VERUM for them.
+      layer_index is a number the caller passes in (source tokens get
+      0). arbor2_token_profunditas counts the origo_token links back
+      to the root (0 for a source or API token). For log output,
+      arbor2_origo_genus_nomen turns a genus into FONS, EXPANSIO,
+      PASTA, CHORDA or API (IGNOTUM when out of range).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>where do linea and columna of an expanded or stringified token come from?
+    <responsum symbolum="arbor2_token_ex_expansione arbor2_token_ex_chorda arbor2_token_ex_lexema">From
+      origo_token-&gt;lexema (the invoking token's own lexeme position,
+      1-based), or 0 when origo_token is NIHIL; a ## result takes the
+      left token's. For a macro called from source that is the call
+      site, but when the invoking token itself came from an outer
+      macro's body, its lexeme position is where the name sits in the
+      outer #define. Use arbor2_token_radix for the call site.
+      arbor2_token_ex_lexema
+      takes linea and columna explicitly, and callers pass
+      lexema-&gt;linea and lexema-&gt;columna. API tokens always get
+      0.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I tell from a token that it came from a macro added through the API?
+    <responsum symbolum="arbor2_token_ex_api arbor2_expansion_addere_macro arbor2_expansion_addere_macro_functio Arbor2MacroDef">Not
+      from the token: nothing calls arbor2_token_ex_api, so no token
+      ever has genus ARBOR2_ORIGO_API. Macros added with
+      arbor2_expansion_addere_macro or _functio expand through
+      arbor2_token_ex_expansione like any other, giving EXPANSIO
+      tokens whose via_file is NIHIL when no file was passed. The
+      flag lives on the definition instead: Arbor2MacroDef ex_api is
+      VERUM for API macros.</responsum>
+  </interrogatio>
+
+</interrogationes>

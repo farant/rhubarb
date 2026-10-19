@@ -1,0 +1,264 @@
+<interrogationes unitas="stml">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I parse an STML document and tell whether it succeeded?
+    <responsum symbolum="stml_legere stml_legere_ex_literis StmlResultus">Call
+      stml_legere(input, piscina, intern) (or stml_legere_ex_literis for
+      a NUL-terminated C string). It returns an StmlResultus by value:
+      check successus (status == STML_SUCCESSUS). radix is the DOCUMENTUM
+      node and elementum_radix its first element child. On failure
+      status names the class, linea_erroris and columna_erroris locate
+      the FIRST error (later ones are treated as its cascade). The
+      error chorda is filled only by the named refusals (MULTILINEA and
+      the attribute-element ATTRIBUTUM ones); most errors, including a
+      single-quoted value (ATTRIBUTUM), leave it empty. radix is still
+      set after a parse error (a partial tree), so test successus, not
+      radix; empty input gives STML_ERROR_VACUUM_INPUT with radix NIHIL.
+      CRLF is turned into LF once on entry (crlf_canonicalizatum says
+      so). Caution (audit 2026-10-18, unfixed): some malformed inputs still give successus
+      with a silently corrupted tree (a closer missing '&gt;' as in
+      &lt;a&gt;t&lt;/a, a non-name byte in a tag name as in
+      &lt;a+b&gt;x&lt;/a+b&gt;, the fake doctype
+      &lt;!D&gt;&lt;a/&gt;b&gt;&lt;c/&gt;, capture operators missing
+      '=&gt;' or '&gt;'), and nesting about 100000 levels deep kills the
+      process with SIGSEGV instead of returning an error.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I empty the piscina I parsed into and keep the strings I read from the tree?
+    <responsum symbolum="stml_legere chorda_internare internamentum_creare piscina_vacare chorda_ut_cstr" via="lib/agenda.c">Yes
+      for the strings, no for the nodes. Nodes, their Xars, the error
+      chorda and the results of the text accessors live in the piscina
+      you pass in. Every titulus, valor, attribute value and trivia
+      chorda is interned, and an InternamentumChorda copies into its OWN
+      piscina (the one given to internamentum_creare), so those chordae
+      survive piscina_vacare on the parse piscina (agenda.c reparses
+      into a scratch piscina this way). They are chorda, not C strings:
+      not NUL-terminated, so compare with chorda_aequalis_literis and
+      convert with chorda_ut_cstr.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I read an attribute, and how do I tell a boolean attribute from a missing one?
+    <responsum symbolum="stml_attributum_capere stml_attributum_habet stml_strictum">stml_attributum_capere(nodus,
+      "name") returns the interned chorda* or NIHIL when absent. A
+      boolean attribute (&lt;a x&gt;) stores the interned value "true",
+      so &lt;a x&gt; and &lt;a x="true"&gt; are the same thing and the
+      writer emits both as bare x, in both modes. Values are RAW: no
+      entity decoding. With a duplicated attribute the FIRST one wins
+      (stml_strictum reports it). If no inline attribute matches, capere
+      also looks at attribute ELEMENTS (&lt;@name=&gt;text&lt;/&gt;) at
+      the start of the children and returns their text; an empty one is
+      a tombstone and reads as NIHIL. stml_attributum_habet is just
+      capere != NIHIL, so an attribute written v="" also reads as
+      absent (see the next question).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I store an empty string or a double quote in an attribute value?
+    <responsum symbolum="stml_attributum_addere stml_attributum_capere chorda_internare stml_scribere stml_elementum_creare" via="lib/agenda.c lib/personae.c">Neither
+      works inline. An empty chorda is never interned (chorda_internare
+      returns NIHIL), so &lt;a v=""/&gt; parses with valor NIHIL:
+      stml_attributum_capere returns NIHIL as if v were absent, and the
+      writer emits bare v, which reads back as "true". A '"' cannot be
+      written because inline values are raw and always wrapped in '"';
+      stml_attributum_addere does not check, and what stml_scribere
+      emits either fails to parse or silently re-splits
+      (v="x"y" reads back as v="x" plus a boolean y). For a value with
+      '"' use an attribute element &lt;@name=&gt;text&lt;/&gt; (its
+      text child decodes entities). No constructor exists: like
+      titulum_addere in lib/agenda.c or nomen_addere in lib/personae.c,
+      call stml_elementum_creare(p, in, "@"), set attributum_titulus to
+      the interned name, give it one text child, and place it before
+      every other child. Only that leading run is read as attributes,
+      and the parser refuses an attribute element that comes after any
+      other child (a comment counts) unless it follows a template call
+      &lt;&lt;#@...&gt;&gt;; nothing checks this when you build or write
+      the tree.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I find elements by tag name, or loop over all children of a node?
+    <responsum symbolum="stml_invenire_liberum stml_invenire_omnes_liberos stml_quaerere stml_quaerere_omnes stml_numerus_liberorum stml_liberum_ad_indicem stml_frater_proximus">stml_invenire_liberum
+      and stml_invenire_omnes_liberos look at DIRECT children only and
+      match element nodes by exact name. For descendants or CSS-style
+      selectors (tag, #id, .label, [attr=val], &gt;, +, ~,
+      :first-child, :last-child, :empty) use stml_quaerere /
+      stml_quaerere_omnes from selectio.h. To walk children, loop i over
+      stml_numerus_liberorum with stml_liberum_ad_indicem and check
+      genus: text, comment and element nodes are mixed, and attribute
+      elements (&lt;@name=&gt;) are element children too, with titulus
+      "@". Avoid stml_frater_proximus in a loop: each call rescans the
+      parent's children to find its own index.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I get the text inside an element, and which of the four text accessors should I use?
+    <responsum symbolum="stml_textus_valor stml_textus_fluxus stml_textus_normalizatus stml_textus_internus" via="project-specs/stml-trivia-spec.md lib/stml.worklog.md">Use
+      stml_textus_valor for data: the text nodes concatenated in order,
+      comments and layout trivia excluded. It is stable under the
+      fidelity writer and for raw or '\' content, but the pretty writer
+      re-wraps flow prose, which changes the newlines inside a text
+      value. stml_textus_fluxus reads prose: a whitespace run that holds
+      a newline becomes one space, so it survives that re-wrap.
+      stml_textus_normalizatus removes common indentation and
+      leading/trailing blank lines from hand-indented blocks.
+      stml_textus_internus rebuilds the layout bytes (trivia) as well;
+      despite the header's wording, entities come back DECODED
+      (x&amp;amp;y reads x&amp;y). All four allocate in the piscina you
+      pass and return a chorda that is not NUL-terminated. Caution (audit 2026-10-18, unfixed): the
+      pretty writer drops a newline-bearing whitespace run after an
+      inline child element or comment, so
+      &lt;p&gt;one &lt;b&gt;two&lt;/b&gt;\n  three&lt;/p&gt; reads back
+      with fluxus "one twothree" and &lt;p&gt;a&lt;!--c--&gt;\n
+      b&lt;/p&gt; with "ab".</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I write a tree back to text, and what is the difference between pretty and non-pretty output?
+    <responsum symbolum="stml_scribere stml_scribere_ad_aedificator stml_scribere_sedibus" via="project-specs/stml-trivia-spec.md">stml_scribere(nodus,
+      piscina, pulchrum). With pulchrum FALSUM it re-emits the stored
+      trivia, so a parsed document round-trips byte for byte over the
+      LF-canonicalized input, apart from attributes: spaces around '='
+      are dropped, unquoted values gain quotes, x="true" becomes bare x
+      and v="" becomes bare v. With pulchrum VERUM it is a reformatter:
+      trivia are ignored and layout is regenerated (two-space indent,
+      capture forms, prose re-filled to LXXII columns, wider when deeply
+      nested). A tree built in code has no trivia, so FALSUM writes it
+      on one line; use VERUM. stml_scribere_ad_aedificator appends to a
+      ChordaAedificator, and stml_scribere_sedibus also records where
+      each element landed in the output. Caution (audit 2026-10-18, unfixed): pulchrum VERUM
+      loses the space where a newline follows an inline child
+      (&lt;p&gt;one &lt;b&gt;two&lt;/b&gt;\n  three&lt;/p&gt; is written
+      &lt;p&gt;one &lt;b&gt;two&lt;/b&gt;three&lt;/&gt;), and a tree
+      nested about 100000 deep crashes stml_scribere with
+      SIGSEGV.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why does the pretty writer emit </> and <a(> forms instead of named closing tags?
+    <responsum symbolum="stml_scribere" via="lib/stml.worklog.md">The
+      pretty-layout decrees (worklog 2026-08-19 to 2026-08-25). A
+      repeated name is noise while the open tag is still on screen, so
+      the closer is the anonymous &lt;/&gt; until the content passes
+      XXX lines (STML_CLAUSURA_TACITA_LINEAE). This cannot oscillate
+      because both closers take the same number of lines. Eligible
+      single-child chains collapse to capture form (&lt;a(&gt;
+      &lt;b(&gt; text), and elements whose two or three children are
+      all simple elements, within XII lines, use &lt;t((&gt; /
+      &lt;t(((&gt; with the children stacked, so closing tags remain
+      only on the multi-child block form. Raw elements always keep
+      their named closer, and attribute elements always close with
+      &lt;/&gt;. Non-pretty output keeps the author's own
+      form.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what are the capture operators <tag (>, <) tag>, <= tag => and <tag! (>?
+    <responsum symbolum="StmlCaptioDirectio stml_legere">Ways
+      to give an element children without a closing tag; they are
+      resolved after parsing. &lt;tag (&gt; takes the next N
+      non-comment siblings, one per paren (chains such as
+      &lt;a(&gt; &lt;b(&gt; x nest), and comments in between become its
+      children too. &lt;) tag&gt; takes the previous N (comments in
+      between stay siblings), &lt;= tag =&gt; one before and one after.
+      &lt;tag! (&gt; captures the rest of the LINE raw (no tags, no
+      entities, newline excluded). Fragments capture too (&lt;#id
+      (&gt;, sugar &lt;(&gt;). The node records captio_directio and
+      captio_numerus. Known gap: a comment between &lt;= tag =&gt; and
+      its following captee is dropped. Caution (audit 2026-10-18, unfixed): STML_ERROR_CAPTIO
+      is never set, so a malformed operator (&lt;r&gt;x &lt;= s
+      y&lt;/r&gt; with no '=&gt;', &lt;) z with no '&gt;') or a captor
+      with too few siblings (&lt;r&gt;&lt;a (&gt;&lt;/r&gt;) parses with
+      status 0 and the writer invents the missing terminator.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can a raw <tag!> element contain its own closing sequence </tag>?
+    <responsum symbolum="stml_crudi_sequentia_est stml_crudi_terminator_est stml_crudi_terminatorem_fert">Yes,
+      through the escape ladder. A raw region ends at &lt;/T followed by
+      &gt;, ! or whitespace. The writer escapes such a sequence in the
+      value by adding a backslash (&lt;\/T&gt;), and one more for each
+      level already present; the reader removes one. Scanner and writer
+      share one definition (stml_crudi_sequentia_est), and
+      stml_crudi_terminatorem_fert tells you whether a value carries a
+      terminator. One limit: a raw value that STARTS with &lt;/T
+      followed by a name character (&lt;code!&gt;&lt;/codex...) is not
+      escaped and fails to parse, because the check at the very start
+      of raw content compares only the &lt;/T prefix.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I build an element in code with attributes, text and children?
+    <responsum symbolum="stml_elementum_creare stml_attributum_addere stml_attributum_boolean_addere stml_textum_addere stml_liberum_addere stml_praeponere stml_duplicare_superficialiter">stml_elementum_creare
+      gives an element with empty attributa and liberi Xars; then
+      stml_attributum_addere (or _chorda, _boolean_addere),
+      stml_textum_addere and stml_liberum_addere. Names and values are
+      interned, so the C strings can be temporary. The add functions
+      return FALSUM when the target Xar is NIHIL, as on any node from
+      stml_duplicare_superficialiter (liberi is always NIHIL), on
+      stml_duplicare copies of nodes that had no children or no
+      attributes, and on parsed &lt;#x/&gt; fragments. stml_praeponere
+      creates a missing liberi; nothing creates a missing
+      attributa. Caution (audit 2026-10-18, unfixed): no name is validated, so
+      stml_elementum_creare with "a b", "", "9bad" or "-x" and
+      stml_attributum_addere with ".k", a NIHIL titulus or a NIHIL
+      valor all succeed, yet the written tree reads back changed or
+      fails (titulus "" is written &lt;/&gt; and closes the parent; a
+      NIHIL valor is written as bare k while capere on the built node
+      returns NIHIL).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I move a node to another parent with stml_liberum_addere or stml_inserere_post?
+    <responsum symbolum="stml_removere stml_liberum_addere stml_inserere_ante stml_inserere_post stml_substituere">Only
+      after detaching it. No insert function (nor stml_substituere for
+      its new node) removes the node from its old parent: it overwrites
+      parens, the old parent still lists the node, and it is written
+      twice. Call stml_removere first (it finds the parent through
+      parens). stml_praeponere, stml_inserere_ante, stml_inserere_post
+      and stml_removere build a NEW liberi Xar on every call (O(n),
+      allocated from the piscina), so a pointer to the old
+      parent-&gt;liberi goes stale; stml_liberum_addere and
+      stml_substituere work in place. Nodes made with the creare
+      functions carry no trivia, so non-pretty output glues them to
+      their neighbours; moved or cloned parsed nodes keep their
+      own.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I map byte positions in STML text to tokens or nodes, for highlighting or jump-to?
+    <responsum symbolum="stml_lexemata_colligere StmlLexema StmlNodus stml_scribere_sedibus StmlSedesNodi">For
+      tokens, stml_lexemata_colligere returns a Xar of StmlLexema
+      (genus, valor, initium/finis byte offsets [inclusive, exclusive),
+      1-based linea and byte columna) for ANY input, even half-typed
+      text, with no parse and no error; it returns NIHIL for empty
+      input or a NIHIL piscina/intern, and STML_TOKEN_FINIS is not
+      added. Paint by the extent, not by valor (text token valor is the
+      raw source slice). For parsed nodes, positus_initium and
+      positus_finis span the opening tag through the closing tag, and
+      linea is the start line; they are ZEPHYRUM on built nodes, and a
+      captor's span covers only its own tag. All these offsets refer to
+      the CRLF-to-LF canonicalized text. For written output,
+      stml_scribere_sedibus fills a caller-made Xar of StmlSedesNodi for
+      elements only, in post-order.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what does stml_strictum check that stml_legere lets through?
+    <responsum symbolum="stml_strictum stml_strictum_nuntius StmlStrictumGenus">The
+      parser is deliberately lenient; stml_strictum(result.radix,
+      piscina) judges the parsed DOCUMENT node and returns a Xar of
+      StmlStrictumVitium: duplicated inline attribute, more than one
+      root element, non-whitespace text outside the root, and a nameless
+      element (&lt; &gt;, with a space; &lt;&gt; is an anonymous
+      fragment). stml_strictum_nuntius gives the message. Accepted on
+      purpose: unknown entities stay literal text (only &amp;lt;
+      &amp;gt; &amp;amp; &amp;quot; &amp;apos; decode, so &amp;#60; is
+      kept as written), and unquoted values. Unquoted values may only
+      use letters, digits, '-' and '_': &lt;a v=1.5&gt; reads as v="1"
+      and the rest of the tag becomes text, which stml_strictum does
+      not catch.</responsum>
+  </interrogatio>
+
+</interrogationes>

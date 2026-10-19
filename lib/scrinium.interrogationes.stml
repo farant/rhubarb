@@ -1,0 +1,142 @@
+<interrogationes unitas="scrinium">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I open a SQLite database and run a query with parameters?
+    <responsum symbolum="scrinium_aperire scrinium_praeparare scrinium_ligare_textum scrinium_gradi scrinium_columna_textus scrinium_finire scrinium_claudere">scrinium_aperire(piscina,
+      via) opens or creates the file, then scrinium_praeparare compiles
+      one statement. Bind with scrinium_ligare_textum / _numerum /
+      _nihil / _massam (bind indices start at 1), step with
+      scrinium_gradi until it stops returning SCRINIUM_ORDO, and read
+      columns with scrinium_columna_* (column indices start at 0).
+      Release the statement with scrinium_finire and the database with
+      scrinium_claudere. Statements with no result rows can go through
+      scrinium_exsequi in one call.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I open an in-memory database for a test?
+    <responsum symbolum="scrinium_aperire" via="probationes/probatio_scrinium.c">Pass
+      ":memory:" (SQLite's own name). The header comment says
+      ":memoria:", but the path goes to sqlite3_open unchanged, so
+      ":memoria:" would create a file of that name in the current
+      directory. The tests use ":memory:".</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I bind a chorda directly, even though it is not NUL-terminated?
+    <responsum symbolum="scrinium_ligare_textum scrinium_ligare_massam">Yes.
+      scrinium_ligare_textum passes (datum, mensura) to
+      sqlite3_bind_text with SQLITE_TRANSIENT, so a slice from the
+      middle of a buffer binds correctly and SQLite copies it at once:
+      the chorda may die right after the call. One trap: a chorda with
+      datum NIHIL (the usual empty chorda) is passed as a NULL pointer,
+      which SQLite binds as SQL NULL, not as ''. scrinium_ligare_massam
+      does the same for a BLOB but guards that case: an empty massa
+      (mensura 0 or datum NIHIL) binds an empty blob, not NULL.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what do the column readers return, and who owns the memory?
+    <responsum symbolum="scrinium_columna_textus scrinium_columna_massa scrinium_columna_nihil_est scrinium_columna_numerus">scrinium_columna_textus
+      and scrinium_columna_massa COPY into the piscina you pass, so the
+      chorda stays valid after the next scrinium_gradi; it is not
+      NUL-terminated. An empty value and SQL NULL both come back as an
+      empty chorda (datum NIHIL, mensura 0) for text as well as blobs:
+      ask scrinium_columna_nihil_est first when the difference
+      matters. scrinium_columna_numerus returns s64 (0 for
+      NULL).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why are statements not allocated from my piscina?
+    <responsum symbolum="scrinium_praeparare scrinium_finire" via="lib/scrinium.worklog.md">Statements
+      are short-lived, and tying them to a piscina would keep their
+      memory until the whole piscina dies. The wrapper is allocated
+      with sqlite3_malloc beside SQLite's own statement memory (one
+      allocator for ephemeral objects), so every scrinium_praeparare
+      needs a scrinium_finire. Only the Scrinium handle lives in the
+      piscina. scrinium_finire(NIHIL) is safe.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I reuse a prepared statement for many rows?
+    <responsum symbolum="scrinium_retexere scrinium_gradi scrinium_ligare_numerum">After
+      scrinium_gradi has finished, call scrinium_retexere: it resets
+      the statement AND clears every binding (sqlite3_reset plus
+      sqlite3_clear_bindings), so bind all parameters again before the
+      next step. For a bulk insert wrap the loop in
+      scrinium_incipere / scrinium_committere.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I add a schema migration?
+    <responsum symbolum="scrinium_migrare" via="lib/volumen.c">Append
+      a new SQL string to the END of your migrations array and pass the
+      new count to scrinium_migrare. Migrations are numbered by array
+      index (0-based) and the highest applied index is stored in the
+      _migrationes table (one row per applied index); each call runs
+      every migration after it once, all inside one BEGIN/COMMIT, and
+      any failure rolls the
+      whole batch back. Never edit, reorder or delete an applied entry:
+      there are no down migrations. It returns VERUM when nothing is
+      new.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I call scrinium_migrare or nest scrinium_incipere inside my own transaction?
+    <responsum symbolum="scrinium_migrare scrinium_incipere scrinium_committere scrinium_revolvere">No.
+      scrinium_incipere, scrinium_committere and scrinium_revolvere
+      are plain BEGIN, COMMIT and ROLLBACK through scrinium_exsequi,
+      with no nesting or savepoints, so a second scrinium_incipere
+      fails. scrinium_migrare issues its own BEGIN whenever there is a
+      migration to apply; inside an open transaction that BEGIN fails
+      and the call returns FALSUM (with nothing new it returns VERUM
+      before reaching BEGIN).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I find out why a scrinium call failed?
+    <responsum symbolum="scrinium_error scrinium_gradi scrinium_praeparare scrinium_aperire">Calls
+      report failure by FALSUM, NIHIL or SCRINIUM_ERROR (0) from
+      scrinium_gradi; then scrinium_error returns SQLite's message for
+      the last error, owned by SQLite and valid only until the next
+      call. scrinium_aperire returns NIHIL with no message, because
+      the handle is already closed. After a failed scrinium_migrare
+      the message is gone too: it runs a ROLLBACK through
+      sqlite3_exec, which resets the error state when it
+      succeeds.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why may only one process write to a scrinium database?
+    <responsum symbolum="scrinium_aperire" via="lib/scrinium.worklog.md">The
+      vendored SQLite is built THREADSAFE=0 under the house
+      single-writer rule. scrinium_aperire sets journal_mode=WAL,
+      busy_timeout=5000, synchronous=NORMAL and foreign_keys=ON, so
+      other processes can read in parallel and a second writer waits
+      up to five seconds for the lock. The pragma results are not
+      checked.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I generate a ULID for a new row?
+    <responsum symbolum="scrinium_ulid moneta_ulid SCRINIUM_ULID_MENSURA">Give
+      scrinium_ulid a character buffer of at least
+      SCRINIUM_ULID_MENSURA (27) bytes: it writes 26 Crockford base32
+      characters plus a NUL. It delegates to moneta_ulid, which keeps
+      static state: within one process, ids made in the same
+      millisecond (or after the clock steps back) increment the random
+      part, so they sort in creation order. Use it for row identity; content identity is
+      a hash (sigillum).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can FTS5 full-text search match Latin word forms?
+    <responsum symbolum="scrinium_aperire" via="lib/scrinium.worklog.md">FTS5
+      is compiled in, but the porter stemmer only knows English, so
+      'parsuram' does not match 'parsura'. The working idiom for Latin
+      text is a prefix query ('parsur*') with the unicode61
+      tokenizer.</responsum>
+  </interrogatio>
+
+</interrogationes>

@@ -1,0 +1,120 @@
+<interrogationes unitas="magnus">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I compute with integers too big for s64 without silent overflow?
+    <responsum symbolum="magnus_ex_s64 magnus_adde magnus_multiplica magnus_potentia magnus_ad_chordam">Wrap
+      inputs with magnus_ex_s64 (or parse them), combine them with
+      magnus_adde, magnus_subtrahe, magnus_multiplica, magnus_divide
+      and magnus_potentia, and print with magnus_ad_chordam. Values are
+      immutable like chorda: each operation returns a new Magnus.
+      Values that fit in s64 stay inside the struct and need no
+      allocation; larger ones keep 32-bit limbs in the piscina you
+      pass. Always pass a real piscina: small inputs can still give a
+      large result (S64 overflow, negating the most negative
+      s64).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I reset or destroy a scratch piscina and keep a Magnus computed in it?
+    <responsum symbolum="magnus_transcribe magnus_nega magnus_absolutum">Only
+      after copying it out with magnus_transcribe(valor, piscina_mea),
+      which gives the value fresh limbs (values that fit in s64 need
+      none). Limbs are never written after creation, so results may
+      SHARE limbs with their arguments: magnus_nega only flips the sign
+      over the same limbs, and magnus_absolutum can return its argument
+      as is. A result is valid only while the piscinae of its arguments
+      and of the result are alive.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why does magnus_divide give a positive remainder for a negative dividend?
+    <responsum symbolum="magnus_divide magnus_residuum_parvum" via="lib/magnus.worklog.md">Division
+      is Euclidean: a = quotiens * divisor + residuum with 0 &lt;=
+      residuum &lt; |divisor|, always. C89 leaves the sign of % with
+      negative operands to the implementation, so magnus defines it:
+      -7 divided by 2 gives quotient -4 and remainder 1. It returns
+      FALSUM for a zero divisor without touching the outputs, and
+      either output pointer may be NIHIL.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I convert between a Magnus and decimal text or an s64?
+    <responsum symbolum="magnus_ex_chorda magnus_ad_chordam magnus_ad_s64">magnus_ex_chorda
+      accepts decimal digits with an optional leading '-' (no '+', no
+      spaces, no other bases) and returns FALSUM, leaving the output
+      untouched, for anything else. Parsing always allocates limbs,
+      even for small values. magnus_ad_chordam prints decimal into the
+      piscina (the chorda is not guaranteed to be NUL-terminated).
+      magnus_ad_s64 returns VERUM and the value only when it fits in
+      s64.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I pass a negative exponent to magnus_potentia?
+    <responsum symbolum="magnus_potentia">No.
+      The exponent is an i32, which is UNSIGNED in this house, so -1
+      becomes 4294967295 and, for any base other than 0, 1 and -1, the
+      call tries to compute a power with billions of bits (repeated
+      squaring, no size check). There are no rational results here (fractio builds them on
+      top of magnus); 0^0 is defined as 1.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I get a gcd together with Bezout coefficients?
+    <responsum symbolum="magnus_divisor_communis magnus_divisor_communis_testatus magnus_apex_alternarum">magnus_divisor_communis(a,
+      b, piscina) returns the gcd, always &gt;= 0, with gcd(0, 0) = 0.
+      magnus_divisor_communis_testatus also fills u and v with
+      g = u*a + v*b, a certificate anyone can check without this
+      library (u and v may be NIHIL). For large operands (more than IV
+      limbs, about 38 digits: both of them for the plain gcd, either
+      one for the witness variant) Euclid runs in two internal scratch
+      piscinae used alternately, so the caller's piscina only receives
+      the result; smaller ones run in the caller's piscina.
+      magnus_apex_alternarum reports the peak scratch usage of the
+      most recent gcd call (every call resets it; 0 when the caller's
+      piscina was used). It is one static counter for the whole
+      process.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I reduce a big integer modulo a word-sized number without allocating?
+    <responsum symbolum="magnus_residuum_parvum magnus_bitorum">magnus_residuum_parvum(a,
+      n) returns a mod n (Euclidean, 0 &lt;= r &lt; n) for 1 &lt;= n
+      &lt; 2^32, walking the limbs with no piscina; n == 0 returns 0.
+      For a size bound without allocation, magnus_bitorum gives the
+      bit length of |a| (0 for 0).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I compare two Magnus values with == or memcmp?
+    <responsum symbolum="magnus_aequalis magnus_compara magnus_signum">No:
+      use magnus_aequalis or magnus_compara (-1, 0, +1). The form is
+      canonical and unique (a value that fits in s64 is always stored
+      inline, a larger one has at least two limbs and a non-zero top
+      limb), but equal large values usually sit in different limb
+      arrays, so comparing the struct bytes compares pointers. The
+      fields are private.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can magnus do shifts, bit operations, square roots or modular exponentiation?
+    <responsum symbolum="magnus_potentia magnus_divide" via="lib/magnus.worklog.md">Not
+      yet. The worklog lists shifts and bit operations, square root,
+      modular exponentiation, Karatsuba multiplication and an in-place
+      API as deferred, each addable without changing the existing API.
+      Today, multiply or divide by a power of two from magnus_potentia
+      instead of shifting.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why does magnus use no floating point, even for sizing the decimal output?
+    <responsum symbolum="magnus_ad_chordam" via="lib/magnus.worklog.md">Fran's
+      explicit rule, so that the result is identical on every machine
+      and at every optimization level. Decimal output divides
+      repeatedly by 10^9 in integers and sizes its buffer from the
+      number of nine-digit chunks instead of a log10; quotient digits
+      in long division are estimated by integer division (Knuth's
+      algorithm D).</responsum>
+  </interrogatio>
+
+</interrogationes>

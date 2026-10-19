@@ -1,0 +1,73 @@
+<interrogationes unitas="sors">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I get a random integer in a range that is the same on every run?
+    <responsum symbolum="sors_seminare sors_intra sors_inter">Declare
+      a plain Sors value, seed it once with sors_seminare(&amp;s, semen,
+      series), then draw. sors_intra(&amp;s, n) gives [0, n) with no
+      modulo bias (Lemire multiply-and-reject; n of 0 gives 0) and
+      sors_inter(&amp;s, imum, summum) gives the inclusive signed range
+      (imum &gt;= summum gives imum). The generator is integer-only
+      PCG32 seeded through SplitMix64, so the same seed gives the same
+      series on every machine and compiler.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I use a Sors without calling sors_seminare first?
+    <responsum symbolum="sors_seminare sors_proximum Sors">No.
+      A zeroed Sors has incrementum 0 (the header says it must always
+      be odd) and status 0, and PCG then stays at 0: every
+      sors_proximum returns 0 forever. Always seed it; seed 0 is fine,
+      SplitMix64 mixes it.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I give each stroke, asset or test case its own independent random stream?
+    <responsum symbolum="sors_derivare sors_seminare">sors_derivare(&amp;parens,
+      clavis) returns a child Sors and does not touch the parent, so
+      child k is the same no matter how many other children were
+      derived before it. It does depend on the parent's CURRENT
+      state: derive before drawing from the parent, or after the same
+      number of draws, if you want the same child back. For fixed
+      parallel streams from one seed, sors_seminare's series argument
+      (0, 1, 2 ...) also gives disjoint streams.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I use sors for ids, tokens or anything that must be unguessable?
+    <responsum symbolum="moneta_octeti_fortuiti moneta_ulid sors_seminare" via="include/moneta.h">No.
+      sors is deliberately seedable and predictable (for replay,
+      procedural assets and fuzzing). Use moneta, which reads
+      /dev/urandom and cannot be seeded: moneta_ulid for unique ids
+      (it falls back to a time mix if /dev/urandom fails, which keeps
+      ids unique but not unguessable), and moneta_octeti_fortuiti for
+      secrets, which has no fallback and returns FALSUM, leaving the
+      output untouched, so the caller must refuse.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I get a random float, a coin flip or a shuffle?
+    <responsum symbolum="sors_f64 sors_f32 sors_casu sors_miscere">sors_f64
+      gives [0, 1) from LIII bits (two draws) and sors_f32 [0, 1) from
+      XXIV bits. sors_casu(&amp;s, numerator, denominator) is VERUM with
+      probability numerator/denominator (denominator 0 gives FALSUM).
+      sors_miscere is an in-place Fisher-Yates shuffle that swaps the
+      raw bytes of numerus elements of magnitudo_elementi bytes each,
+      allocating nothing.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why does sors keep the old 1103515245 + 12345 LCG?
+    <responsum symbolum="sors_lcg_classicus sors_intra" via="lib/sors.worklog.md">sors_lcg_classicus
+      is a legacy bridge: several fuzz suites had inline copies of
+      the classic ANSI LCG, and keeping it under a name lets a suite
+      move to the library without its generated cases changing
+      (the migration rubric: use it only if the fixed cases must stay).
+      In practice the fuzz suites migrated to sors_seminare and
+      sors_intra instead, accepting that every generated case
+      changed, and today only probatio_sors calls it. New code should use sors_intra: % n on
+      the LCG's output is biased, and sors_intra is
+      not.</responsum>
+  </interrogatio>
+
+</interrogationes>

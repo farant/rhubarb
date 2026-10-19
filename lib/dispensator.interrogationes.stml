@@ -1,0 +1,145 @@
+<interrogationes unitas="dispensator">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I wire an app's event loop through the dispensator?
+    <responsum symbolum="dispensator_creare dispensator_tractare dispensator_pulsare dispensator_arbor dispensator_finire" via="lib/ludus_fenestra.c">Create
+      it once with dispensator_creare(piscina, intern, repo, actiones,
+      componere, ctx, quies_ms) - NIHIL if any of the first five is
+      NIHIL - which composes frame 0 at once. Feed every input event to
+      dispensator_tractare, call dispensator_pulsare(d, now) once per
+      frame, paint dispensator_arbor(d), and call dispensator_finire
+      after the loop ends. ludus_fenestra.c is the window glue that does
+      exactly this.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I keep the Componens* from dispensator_arbor across events?
+    <responsum symbolum="dispensator_arbor dispensator_recomponere dispensator_numerus_compositionum">No.
+      Trees live in two ping-pong piscinae and each recomposition
+      empties the older one; every handled event or pulse recomposes at
+      least once (twice when derived events were delivered), so a node
+      pointer is good only until the next dispensator_tractare,
+      dispensator_pulsare or dispensator_recomponere. Keep the id
+      instead: component ids are interned and outlive the tree.
+      dispensator_numerus_compositionum counts compositions.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what is the staleness rule, and how often does my componere function run?
+    <responsum symbolum="dispensator_tractare dispensator_recomponere Componere" via="lib/dispensator.worklog.md">After
+      every dispatched event, including pulses and events no action
+      consumed, the tree is recomposed from the island and Motus, and
+      again after any derived events are delivered. Painting is
+      separate and happens once per frame outside this library. A
+      Componere must only read: it builds the tree into the piscina it
+      is given and writes nothing to the island.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I set, push and pop keyboard focus from code?
+    <responsum symbolum="dispensator_focus dispensator_focus_ponere dispensator_focus_impellere dispensator_focus_extrahere insula_attributum_tollere">dispensator_focus_ponere
+      writes a component id; dispensator_focus_impellere pushes the
+      current focus and sets a new one; dispensator_focus_extrahere pops
+      it back. They are the attributes focus and focus_acervus (a
+      comma-separated list) in the innermost branch of the focus chain,
+      so an island restore restores them. Setting an empty id removes
+      the attribute, since the interner refuses empty strings. A focus
+      id missing from the new tree is offered to the root as
+      focus_petitus, and cleared if it is still missing after
+      that.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why do focus_captus, mus_intravit and other derived events arrive after the tree is recomposed?
+    <responsum symbolum="dispensator_addressare dispensator_tractare" via="lib/dispensator.worklog.md">They
+      are queued and delivered at the boundary (limen): after the
+      current event's actions and the staleness recompose, against the
+      NEW tree, so a derived event sees the world its cause produced.
+      The queue is copied before delivery, so addressing from inside a
+      handler is safe and waits for the next boundary. The cost is a
+      second composition for events that produce derived
+      ones.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I send an event to one component by its id?
+    <responsum symbolum="dispensator_addressare componens_invenire_in_spatio">dispensator_addressare(d,
+      id, genus, tempus). The innermost focus space is taken at the
+      call; the id is looked up in that space at the next boundary,
+      against the new tree, and an id that is empty or not found there
+      is dropped silently. The id chorda is stored, not
+      copied, so pass an interned or otherwise long-lived one. Events
+      delivered at the boundary skip the ante/post middleware
+      hooks.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I intercept every event before the actions see it?
+    <responsum symbolum="dispensator_medium_ponere DispensatorAnte DispensatorPost">Yes,
+      with one pair of hooks: dispensator_medium_ponere(d, ante, post,
+      ctx). ante runs before the actions and returning VERUM consumes
+      the event (no action runs); post runs after the action that
+      consumed it, with that component as actor. NIHIL removes a hook.
+      They see the raw event and what derivare makes from it, but not
+      the events queued for the boundary (hover, focus captured or lost,
+      focus_petitus, dispensator_addressare).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why must I call dispensator_finire when the app exits?
+    <responsum symbolum="dispensator_finire motus_effundere motus_gestum_effundere" via="lib/dispensator.worklog.md">Pan/zoom
+      and the app's gesture are flushed into the island at a quiet
+      seat: when an event or pulse arrives quies_ms (or the gesture's
+      own interval) after the last movement, measured on event time so
+      a replay flushes at the same events (pan/zoom also flushes when
+      focus moves into another nested space). Whatever is still
+      pending when the loop ends is lost unless dispensator_finire
+      flushes it without waiting.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what happens with Tab and Escape that no action consumed?
+    <responsum symbolum="dispensator_tractare dispensator_focus">The
+      dispatcher handles them itself. Tab (Shift+Tab backwards) cycles
+      focus over every focusable component under the pane's root
+      (motus.spatium), nested spaces included, wrapping at the ends.
+      Escape while focus is inside a nested space moves focus to the
+      first focusable of the nearest enclosing level. Consume the key in
+      an action to override either.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how does my app learn the window size?
+    <responsum symbolum="dispensator_tractare insula_ramus_attributum">On
+      EVENTUS_MUTARE_MAGNITUDINEM the dispatcher writes
+      superficies_latitudo and superficies_altitudo (our pixels) into
+      the island root as writer "dispensator", before targeting and
+      composition, and the componere function reads them there. The
+      app's canon must declare both attributes as numbers owned by
+      "dispensator", otherwise the island refuses the
+      write.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I record the raw events a dispensator receives, for replay or tests?
+    <responsum symbolum="dispensator_notarium_ponere EventusNotatum eventus_notata_scribere_stml">dispensator_notarium_ponere(d,
+      xar) with a Xar of EventusNotatum: every raw event, pulses
+      included, is appended (not the events derivare makes from it).
+      Mouse down, up and move also get scopus, the id of the component
+      they were targeted at (copied into the dispatcher's piscina), and
+      scopus_x/y in its local space; other events have no scopus.
+      eventus_notata_scribere_stml writes the list; NIHIL stops
+      recording.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I destroy a dispensator and free its memory?
+    <responsum symbolum="dispensator_creare piscina_destruere">No:
+      there is no dispensator_destruere. dispensator_creare makes three
+      piscinae of its own (arbor_a and arbor_b, LXIV * M bytes each to
+      start, and destinatio_scratch, XVI * M) that nothing frees, besides what it
+      takes from the piscina you pass. Create one per app and keep it
+      for the process lifetime.</responsum>
+  </interrogatio>
+
+</interrogationes>

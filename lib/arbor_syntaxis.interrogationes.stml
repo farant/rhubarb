@@ -1,0 +1,145 @@
+<interrogationes unitas="arbor_syntaxis">
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I build new C tooling on arbor_syntaxis?
+    <responsum symbolum="arbor_syntaxis_creare arbor_syntaxis_parsere" via="project-specs/generationes-praecedentes-archivandae.md silva/CLAUDE.md">You
+      should not. arbor v1 (this recursive-descent parser) is the
+      first of four generations: arbor v1, then arbor2 (hand-written
+      GLR), then lapifex (generated LALR), then silva (GLR, generated
+      tables). silva is the house C parser behind the LSP, the MCP
+      server and the formatter. arbor v1 and its suites are parked
+      for archival (ledger 01M0FT8AE7VP). Outside the arbor files
+      themselves, its only consumers are lint/lint_probatio.c and
+      tools/glr_quaestio.c, and neither is built. Read
+      it to understand old tests or the archive. New work goes to
+      silva.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I parse a C file into an arbor AST?
+    <responsum symbolum="arbor_parsere_filum arbor_parsere_fontem arbor_syntaxis_parsere_fontem arbor_optiones_default">Use
+      arbor_parsere_filum or arbor_parsere_fontem from arbor.h with
+      NIHIL options. They run the preprocessor in HYBRID mode (follow
+      includes, keep directives and Latin keyword text), install its
+      keyword-macro and typedef tables on the parser, and return the
+      token stream that the formatter needs. The lower-level
+      arbor_syntaxis_parsere_fontem uses the preprocessor's default
+      PROCESSARE mode: macros are expanded, so latina.h keywords come
+      back as plain C, no table is installed and no lexemata are
+      returned.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what does successus mean, and what is in errores?
+    <responsum symbolum="ArborSyntaxisResultus ArborError arbor_error_formare arbor_syntaxis_parsere">successus
+      is VERUM only when there is a root AND zero errors. With errors
+      you usually still get a radix, with ERROR nodes where the parser
+      resynchronized at ';', '}' or a statement keyword. errores is a
+      Xar of ArborError* POINTERS, despite the header comment's "Xar
+      of ArborError": read it with *(ArborError**)xar_obtinere(...).
+      via_file is always empty, even when you passed a path.
+      arbor_error_formare gives "linea:columna: nuntius". If lexing
+      or preprocessing fails inside arbor_syntaxis_parsere_fontem,
+      the result has errores NIHIL, so check for NIHIL before you
+      iterate.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I walk a declarator to find the name, pointers, array sizes and parameters?
+    <responsum symbolum="ArborNodus arbor_nodus_imprimere">Iterate
+      DECLARATOR's datum.genericum.liberi. The children come in
+      order: zero or more POINTER nodes (qualifiers in
+      datum.pointer.qualifiers), then either an IDENTIFIER or a nested
+      DECLARATOR for a parenthesized declarator, then ARRAY_DECLARATOR
+      nodes (datum.array.size, NIHIL for []), then at most one
+      FUNCTION_DECLARATOR. The FUNCTION_DECLARATOR's own
+      genericum.liberi are PARAMETER_DECLARATION nodes; no
+      PARAMETER_LIST node is ever built. f() has no children, and
+      f(void) has one PARAMETER_DECLARATION whose only specifier is a
+      void TYPE_SPECIFIER and whose declarator is NIHIL. The header's pointer.inner
+      and array.inner fields are never set. Do not follow them.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what node kinds does the parser actually produce for commas, postfix ++, casts and parentheses?
+    <responsum symbolum="ArborNodusGenus arbor_nodus_genus_nomen">Several
+      enum members are never built. A comma operator is a
+      BINARY_EXPRESSION with operator ARBOR_LEXEMA_COMMA, not
+      COMMA_EXPRESSION. Postfix ++ and -- are UNARY_EXPRESSION with
+      est_postfix VERUM, not POSTFIX_EXPRESSION. Initializers are the
+      expression itself or an INITIALIZER_LIST, never INITIALIZER.
+      The type-name in a cast or sizeof is a PARAMETER_DECLARATION.
+      Parentheses get no node at all: see the trivia question.
+      arbor_nodus_genus_nomen has no case for DIRECTIVE, so it
+      returns "unknown" for directive nodes.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why are parentheses, commas and keyword spellings missing from the tree, and where did they go?
+    <responsum symbolum="ArborTrivia arbor_formator_emittere_fidelis" via="lib/arbor_syntaxis.worklog.md">For
+      byte-exact roundtrip. Punctuation and the original keyword text
+      (such as "si" for if) are stored as SYNTHETIC trivia entries in
+      the neighbouring nodes' trivia_ante or trivia_post, and
+      arbor_formator_emittere_fidelis prints them back. A synthetic
+      entry has linea ZEPHYRUM and est_commentum FALSUM, while real
+      whitespace and comments carry their 1-based line, so filter on
+      linea when you collect comments. The trivia Xars hold
+      ArborTrivia* pointers. They are often the very Xars owned by the
+      tokens, and the parser appends to them, so the token stream's
+      trivia changes as you parse.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can it parse variadic prototypes and K&R-style function definitions?
+    <responsum symbolum="arbor_syntaxis_parsere ArborNodus">No.
+      The parser never handles the ... token (ARBOR_LEXEMA_ELLIPSIS),
+      so int f(int a, ...); fails with "Expectabatur )". The K&amp;R
+      field datum.functio.old_params is always NIHIL ("not supported
+      yet"). The worklog's open TODOs also list array type-names and
+      function-pointer type-names in casts.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why does a statement like a * b; parse as a declaration?
+    <responsum symbolum="arbor_syntaxis_ponere_typedef_nomina arbor_syntaxis_ponere_keyword_macros" via="lib/arbor_syntaxis.worklog.md">Typedef
+      names come from three places: typedef declarations seen during
+      the parse (one global table with no block scope), the table you
+      merge in with arbor_syntaxis_ponere_typedef_nomina, and a
+      heuristic. The heuristic treats an unknown identifier as a type
+      when the next token is '*' or another identifier. It was added
+      so that PRESERVARE mode, which does not follow includes, does
+      not loop on i32 x. Its cost is the classic ambiguity: a * b;
+      becomes a declaration of b. A registered typedef name is taken
+      as a type even after another type, so a block-scope int T; that
+      shadows typedef int T; parses as specifiers only and declares
+      nothing. Any identifier starting with __ in
+      specifier position becomes an EXTENSION node.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what do literal nodes hold, are escapes decoded?
+    <responsum symbolum="ArborNodus">textus
+      is the raw source spelling (quotes, prefixes, suffixes and
+      escapes all kept), interned and NOT NUL-terminated. For integers,
+      valor is an i64 (unsigned in this house) computed with no
+      overflow check, plus est_unsigned and est_long. For characters,
+      valor decodes only \n \t \r \0 \\ and \'. Any other escape
+      yields the character after the backslash: '\x41' gives 'x', not
+      65, and '\012' gives 0, not 10. Adjacent string literals form
+      ONE node whose textus is the first piece only. partes then
+      lists every ArborLexema*.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I reuse one ArborSyntaxis for several files, and how deep can code nest?
+    <responsum symbolum="arbor_syntaxis_creare arbor_syntaxis_parsere">Reuse
+      works: each arbor_syntaxis_parsere resets the position and the
+      error list. The typedef table persists, though, so names from
+      earlier files leak into later ones; make one parser per file,
+      as arbor_index does. Statements and compound blocks stop at
+      CCLVI levels with "Recursio nimis profunda". Expressions,
+      parentheses, declarators and initializer lists have no limit,
+      so very deep nesting there can overflow the C stack.</responsum>
+  </interrogatio>
+
+</interrogationes>

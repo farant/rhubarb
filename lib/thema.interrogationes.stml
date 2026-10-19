@@ -1,0 +1,60 @@
+<interrogationes unitas="thema">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I get the RGB colour for a semantic UI colour like the background or text?
+    <responsum symbolum="thema_initiare thema_color color_ex_palette">Call
+      thema_initiare once at startup, then thema_color(COLOR_BACKGROUND)
+      (or any ColorThema). It returns a Color struct, not a packed
+      integer: semantic colour -&gt; palette index -&gt; Color. The palette
+      stores 6-bit components (0x00 to 0x3F) and color_ex_palette
+      scales them to 8 bits (times CCLV, divided by LXIII) with alpha
+      CCLV.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I call thema_color without calling thema_initiare first?
+    <responsum symbolum="thema_initiare thema_color thema_palette_index">You
+      can, but every colour comes out black: the semantic map is a
+      zeroed static array until thema_initiare fills it, so every
+      ColorThema maps to palette index 0 (PALETTE_BLACK). The theme is
+      one process-wide global, not per window, and calling
+      thema_initiare again resets the map to the defaults.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I switch to a different palette with thema_ponere_palette?
+    <responsum symbolum="thema_ponere_palette thema_ponere_mappam color_ex_palette thema_palette_aquinas">Not
+      today. thema_ponere_palette copies the 48 bytes into a private
+      array that nothing reads: thema_color goes through
+      color_ex_palette, which always reads thema_palette_aquinas. What
+      does take effect is remapping a semantic colour to another of the
+      16 palette indices with thema_ponere_mappam, because thema_color
+      reads that map.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what is the difference between a ColorThema, a palette index and a coloratio index?
+    <responsum symbolum="ColorThema thema_palette_index thema_color_ex_indice_colorationis color_ex_mandato">A
+      ColorThema (COLOR_BACKGROUND ... COLOR_SUPERFICIES, COLOR_COUNT
+      entries) is a semantic role. A palette index (PALETTE_BLACK ...
+      PALETTE_WARM_GRAY, 0 to 15) is a slot in the 16-colour palette;
+      thema_palette_index maps a role to its slot. A coloratio index is
+      a syntax-highlighting class from coloratio.h, resolved by
+      thema_color_ex_indice_colorationis; 0 and any unknown value give
+      the COLOR_TEXT colour. In drawing commands, ColorMandati of genus
+      COLOR_MANDATI_THEMA carries a ColorThema and COLOR_MANDATI_INDEX
+      a coloratio index; color_ex_mandato resolves both.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can a bad colour value make thema read out of bounds?
+    <responsum symbolum="thema_color thema_ponere_mappam thema_palette_index color_ex_palette">Yes,
+      nothing is range-checked. thema_color, thema_palette_index and
+      thema_ponere_mappam index the semantic map directly, so a value at
+      or past COLOR_COUNT reads or writes past it. A palette index
+      above 15 given to thema_ponere_mappam makes color_ex_palette read
+      past the 48-byte palette. Keep roles below COLOR_COUNT and slots
+      within 0 to 15.</responsum>
+  </interrogatio>
+
+</interrogationes>

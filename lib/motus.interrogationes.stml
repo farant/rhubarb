@@ -1,0 +1,102 @@
+<interrogationes unitas="motus">
+
+  <interrogatio genus="quid">
+    <quaestio! (>what is a Motus and why does it not write to the insula on every event?
+    <responsum symbolum="Motus mutare_motum motus_effundere" via="lib/motus.worklog.md">The
+      mobile tier: state that changes on every event (pan, zoom,
+      pointer capture, the pending stroke, an app's gesture) lives in a
+      plain struct in memory, and only the quiet point writes it to the
+      insula. Painting happens per event, writing happens IN QUIET:
+      mutare_motum is the one gate for changes and never touches the
+      insula; motus_effundere is the one quiet-time write (lint L4
+      allows writes of the mobile fields only from its quies
+      seat).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I change pan or zoom from an event handler so it gets saved later?
+    <responsum symbolum="mutare_motum MotusMutator motus_quies motus_effundere dispensator_motus">Write
+      a MotusMutator (vacuum fn(Motus*, vacuum* ctx)) that edits
+      motus->pan or motus->zoom, and run it through
+      mutare_motum(motus, fn, ctx, ev->tempus): it records the time and
+      marks the Motus dirty. The dispensator then checks motus_quies
+      with its own quies_ms on each event and calls motus_effundere,
+      which writes pan_x, pan_y and zoom with insula_attributum_ponere
+      (replacing, so a second flush does not double them) and clears
+      the dirty flag when the write was accepted. Get the
+      dispatcher's Motus with dispensator_motus.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I save an in-progress edit debounced, with its own quiet interval, and never lose it on quit?
+    <responsum symbolum="motus_gestum_ponere mutare_gestum motus_gestus_quies motus_gestum_effundere dispensator_finire scriba_gestum_ponere">Attach
+      the app's state once with motus_gestum_ponere(motus, status,
+      effusor, ctx, quies_ms) (scriba uses SCRIBA_QUIES_MS, one
+      second). Change it only through mutare_gestum, which does
+      nothing if no gesture is attached. The dispatcher calls
+      motus_gestum_effundere when motus_gestus_quies says the gesture's
+      own interval has passed, and again in dispensator_finire. The
+      gesture's dirty flag is separate from pan/zoom's: changing one
+      never dirties the other.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why does my gesture stay dirty after motus_gestum_effundere?
+    <responsum symbolum="motus_gestum_effundere MotusGestusEffusor" via="lib/vicus.c">The
+      effusor returned FALSUM. A refusing effusor leaves the gesture
+      dirty on purpose so the next quiet point tries again (and vicus
+      refuses to switch away from an app whose dirty gesture will not
+      flush, since the text would be lost). The call also returns
+      FALSUM, and does nothing, when no gesture is attached, no
+      effusor was given, or nothing changed since the last
+      flush.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I flush the Motus from inside an action without losing the action's writer name?
+    <responsum symbolum="motus_gestum_effundere motus_effundere insula_scriptorem_ponere" via="lib/motus.worklog.md">For
+      the gesture, yes: motus_gestum_effundere sets the writer to
+      "gestus" for the effusor and then restores the previous writer
+      (fixed 2026-10-05, because scriba flushes on Esc and dd inside
+      an action). motus_effundere does not: it writes as "motus" and
+      then sets the writer to an empty chorda, so later writes in the
+      same action are anonymous and owned attributes refuse them
+      silently. Set the writer again after calling it. The
+      dispatcher also calls motus_effundere itself when focus moves
+      into another branch while pan/zoom is dirty.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I rely on the pending stroke in ictus_pendens being saved at quiet time?
+    <responsum symbolum="motus_effundere motus_initiare">No.
+      motus_effundere writes only pan_x, pan_y and zoom. The pending
+      stroke (a Xar of Punctum created by motus_initiare) never reaches
+      the insula; a finished stroke leaves through a document action,
+      which goes into history. Capture and stroke are thrown away when
+      vicus switches away from an app (xar_vacare on
+      ictus_pendens).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I know which insula branch motus_effundere writes into?
+    <responsum symbolum="motus_effundere insula_ramus_radix mutare_ramum">It
+      takes the first one set: motus->ramus_intimus (the innermost
+      focused branch the dispatcher found along the focus chain), else
+      motus->ramus (the active branch the host set, for example the
+      focused side in vicus), else insula_ramus_radix(repo). A branch
+      counts as set when its repo is not NIHIL; motus_initiare zeroes
+      both, so a standalone app writes to the root.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how does a component tell whether its branch has focus?
+    <responsum symbolum="motus_ramus_focatus">Call
+      motus_ramus_focatus(motus, ramus). It is VERUM when there is no
+      Motus, when the branch is the root (empty via, an app on its
+      own), or when motus->spatium equals the branch's via. The
+      scriba, pictor, kalendarium, nomenclator, colloquia and
+      admonitiones panes use it to decide whether to draw their focus
+      indication.</responsum>
+  </interrogatio>
+
+</interrogationes>

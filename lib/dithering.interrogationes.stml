@@ -1,0 +1,93 @@
+<interrogationes unitas="dithering">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I dither an RGBA image to the Aquinas palette and get displayable pixels back?
+    <responsum symbolum="dithering_praeparare_omnes dithering_atkinson_colorum dithering_indices_ad_rgba DitheringFructus">Fill
+      a b32 colores[XVI] with dithering_praeparare_omnes (or another
+      preset), call dithering_atkinson_colorum(rgba, latitudo,
+      altitudo, colores, piscina) and check fructus.successus. The
+      result is one palette index (0-15) per pixel in
+      fructus.indices, allocated in the piscina you passed. To show
+      it, give dithering_indices_ad_rgba a buffer of latitudo *
+      altitudo * 4 bytes that you allocated yourself; it writes the
+      palette RGB and alpha 255 for every pixel.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I limit the dither to a subset of the sixteen colors?
+    <responsum symbolum="dithering_praeparare_griseum dithering_praeparare_calidus dithering_praeparare_frigidus dithering_praeparare_monochromaticus dithering_atkinson_colorum">Yes:
+      colores_activi is XVI b32 flags, one per palette entry. The
+      presets fill it for you: griseum (0 1 3 4 5 15), calidus
+      (0 5 6 9 10 11 15), frigidus (0 1 5 7 12 13 14) and
+      monochromaticus (0 5). The indices in the result are still
+      full-palette numbers, not positions in your subset. With no
+      flag set, both dither functions return successus FALSUM and
+      indices NIHIL.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I dither an image with transparency and keep the transparent pixels?
+    <responsum symbolum="dithering_atkinson_colorum dithering_indices_ad_rgba pictor_imaginem_aptare">Not
+      by itself: the alpha byte of every input pixel is ignored and
+      dithering_indices_ad_rgba always writes alpha 255. Masking is
+      the caller's job. pictor_imaginem_aptare, for example, dithers
+      with dithering_atkinson_colorum and then overwrites the index
+      with 0xFF (CCLV) wherever the scaled pixel's alpha is below
+      CXXVIII. Do not feed such indices back
+      into dithering_indices_ad_rgba: it clamps any index above XV
+      to XV, so 0xFF comes out as opaque Griseus Calidus.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what is the difference between dithering_atkinson_colorum and dithering_atkinson_griseum?
+    <responsum symbolum="dithering_atkinson_colorum dithering_atkinson_griseum">colorum
+      picks the nearest active color by squared RGB distance and
+      diffuses the RGB error. griseum works on luminance only
+      ((77R + 150G + 28B) &gt;&gt; 8): it sorts the active colors by
+      luminance and assigns buckets with the three thresholds in
+      puncta. A pixel below puncta[j] gets sorted color j, otherwise
+      it gets the brightest. So griseum can reach at most IV colors:
+      with the six-color griseum preset, colors 3 and 4 are never
+      emitted. Its error is measured against an evenly spaced target
+      (bucket * 255 / (n - 1)), not the chosen color's real
+      luminance. Both spread 6/8 of the error over six neighbours
+      (Atkinson).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I pass NIHIL for puncta to get the default thresholds {64, 128, 192}?
+    <responsum symbolum="dithering_atkinson_griseum importatio_visus_creare">No.
+      The header's "default" is only the recommended value: the code
+      reads puncta[0..2] without checking for NIHIL, so NIHIL
+      crashes whenever two or more colors are active. Pass your own array, as importatio_visus does
+      ({LXIV, CXXVIII, CXCII}). The thresholds should rise, because
+      the first one that the pixel is below wins.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how much memory does a dither call take, and how do I re-dither repeatedly without the piscina growing?
+    <responsum symbolum="dithering_atkinson_colorum dithering_atkinson_griseum piscina_vacare piscina_notare piscina_reficere">Each
+      call allocates the index buffer (latitudo * altitudo bytes)
+      plus scratch in the same piscina, and frees nothing. colorum's
+      scratch is three rows of s16 RGB error (latitudo * 18 bytes).
+      griseum's is a whole-image s32 luminance buffer (latitudo *
+      altitudo * 4 bytes). The scratch sits after the indices, so you
+      cannot roll it back alone. For interactive re-dithering, use a
+      dedicated piscina and piscina_vacare it (or take a mark with
+      piscina_notare and piscina_reficere) before each call, once
+      the previous indices are no longer needed.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what is in AQUINAS_PALETTE and how do I read a color's RGB safely?
+    <responsum symbolum="AQUINAS_PALETTE AQUINAS_NOMINA dithering_color_ex_indice AQUINAS_COLORUM_NUMERUS">AQUINAS_PALETTE
+      is XVI rows of {r, g, b} as i8 (unsigned character in this
+      house, so values read 0-255 without sign trouble), and
+      AQUINAS_NOMINA holds the Latin name of each entry for
+      debugging. dithering_color_ex_indice(index, &amp;r, &amp;g, &amp;b)
+      copies one entry, and any output pointer may be NIHIL. It
+      silently clamps an out-of-range index to 0 or XV, so a bad
+      index returns black or warm gray instead of failing.</responsum>
+  </interrogatio>
+
+</interrogationes>
