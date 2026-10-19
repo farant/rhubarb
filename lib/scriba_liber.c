@@ -71,6 +71,54 @@ indicem_scribere (
         chorda_aedificator_finire(a), "scriba:paginae");
 }
 
+/* nomina paginarum ex plagula indicis (lectio sola): Xar de chorda;
+ * *inventum FALSUM si plagula absens; NIHIL si index malus */
+interior Xar*
+nomina_legere (
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+                 chorda  via_indicis,
+                    b32* inventum)
+{
+          chorda  index;
+    StmlResultus  res;
+       StmlNodus* n;
+          chorda* a;
+             Xar* nomina;
+             i32  i;
+
+    nomina = xar_creare(piscina, (i32)magnitudo(chorda));
+    index  = volumen_plagulam_promere(volumen, via_indicis, piscina,
+        inventum);
+    si (!nomina || !*inventum)
+    {
+        redde nomina;
+    }
+    res = stml_legere_ex_literis(chorda_ut_cstr(index, piscina),
+        piscina,
+        intern);
+    si (!res.successus || !res.elementum_radix)
+    {
+        redde NIHIL;
+    }
+    per (i = ZEPHYRUM; i < stml_numerus_liberorum(res.elementum_radix);
+         i++)
+    {
+        n = stml_liberum_ad_indicem(res.elementum_radix, i);
+        si (n->genus != STML_NODUS_ELEMENTUM)
+        {
+            perge;
+        }
+        a = stml_attributum_capere(n, "nomen");
+        si (a && a->mensura > ZEPHYRUM)
+        {
+            *(chorda*)xar_addere(nomina) = *a;
+        }
+    }
+    redde nomina;
+}
+
 /* liber cum viis datis (index, praefixum paginarum) */
 interior ScribaLiber*
 librum_aperire (
@@ -83,11 +131,8 @@ librum_aperire (
                     i32  altitudo)
 {
      ScribaLiber* l;
-          chorda  index;
+             Xar* nomina;
              b32  inventum;
-    StmlResultus  res;
-       StmlNodus* n;
-          chorda* a;
              i32  i;
 
     si (!piscina || !intern || !volumen)
@@ -110,33 +155,20 @@ librum_aperire (
         (i32)magnitudo(ScribaDocumentum*));
     l->index    = via_indicis;
     l->spatium  = spatium_paginarum;
-    index = volumen_plagulam_promere(volumen,
-        l->index, piscina, &inventum);
+    nomina = nomina_legere(piscina, intern, volumen, l->index,
+        &inventum);
     si (!inventum)
     {
         nomen_addere(l, chorda_ex_literis("1", piscina));
         redde indicem_scribere(l) ? l : NIHIL;
     }
-    res = stml_legere_ex_literis(chorda_ut_cstr(index, piscina),
-        piscina,
-        intern);
-    si (!res.successus || !res.elementum_radix)
+    si (!nomina)
     {
         redde NIHIL;
     }
-    per (i = ZEPHYRUM; i < stml_numerus_liberorum(res.elementum_radix);
-         i++)
+    per (i = ZEPHYRUM; i < xar_numerus(nomina); i++)
     {
-        n = stml_liberum_ad_indicem(res.elementum_radix, i);
-        si (n->genus != STML_NODUS_ELEMENTUM)
-        {
-            perge;
-        }
-        a = stml_attributum_capere(n, "nomen");
-        si (a && a->mensura > ZEPHYRUM)
-        {
-            nomen_addere(l, *a);
-        }
+        nomen_addere(l, *(chorda*)xar_obtinere(nomina, i));
     }
     si (xar_numerus(l->nomina) == ZEPHYRUM)
     {
@@ -313,4 +345,108 @@ scriba_liber_paginam_condere (
         }
     }
     redde scriba_liber_pagina(l, titulus);
+}
+
+/* linea folii ut textus: cellulae usque ad finem contenti, vacuae et
+ * continuationes tabulae ut spatia; vacua si spatia sola */
+interior chorda
+lineam_legere (
+    constans TabulaCharacterum* t,
+                          i32  linea,
+                      Piscina* piscina)
+{
+    chorda c;
+       s32 finis;
+       i32 k;
+       b32 plena;
+
+    c.datum    = NIHIL;
+    c.mensura  = ZEPHYRUM;
+    finis      = tabula_invenire_finem_contenti(t, linea);
+    si (finis < ZEPHYRUM)
+    {
+        redde c;
+    }
+    c.datum = (i8*)piscina_allocare(piscina, (memoriae_index)finis + I);
+    si (!c.datum)
+    {
+        redde c;
+    }
+    plena = FALSUM;
+    per (k = ZEPHYRUM; k <= (i32)finis; k++)
+    {
+        character x = tabula_cellula(t, linea, k);
+
+        /* '\0' tutela sola: proiectio reaperta spatia scribit */
+        si (x == '\0' || x == TAB_CONTINUATIO || x == '\t')
+        {
+            x = ' ';
+        }
+        si (x != ' ')
+        {
+            plena = VERUM;
+        }
+        c.datum[k] = (i8)x;
+    }
+    c.mensura = plena ? (i32)finis + I : ZEPHYRUM;
+    redde c;
+}
+
+b32
+scriba_liber_lineas_legere (
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+     constans character* praefixum,
+                    i32  maximum,
+                    Xar* exitus)
+{
+    chorda  basis;
+       Xar* nomina;
+       b32  inventum;
+       i32  i;
+       i32  linea;
+
+    si (!piscina || !intern || !volumen || !praefixum || !exitus)
+    {
+        redde FALSUM;
+    }
+    basis = chorda_concatenare(chorda_ex_literis(praefixum, piscina),
+        chorda_ex_literis("/paginae", piscina), piscina);
+    nomina = nomina_legere(piscina, intern, volumen, basis, &inventum);
+    si (!inventum)
+    {
+        redde VERUM;
+    }
+    si (!nomina)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(nomina); i++)
+    {
+                  ScribaDocumentum* doc;
+        constans TabulaCharacterum* t;
+
+        /* aperire solum: documentum absens non creatur */
+        doc = scriba_documentum_aperire(piscina, intern, volumen,
+            chorda_ut_cstr(chorda_concatenare(basis, chorda_concatenare(
+            chorda_ex_literis("/", piscina), *(chorda*)xar_obtinere(
+            nomina, i), piscina), piscina), piscina));
+        t = doc ? scriba_documentum_tabula(doc) : NIHIL;
+        per (linea = ZEPHYRUM; t && linea < t->altitudo; linea++)
+        {
+            chorda c = lineam_legere(t, linea, piscina);
+
+            si (c.mensura == ZEPHYRUM)
+            {
+                perge;
+            }
+            si (maximum > ZEPHYRUM && xar_numerus(exitus) >= maximum)
+            {
+                redde VERUM;
+            }
+            *(chorda*)xar_addere(exitus) = c;
+        }
+    }
+    redde VERUM;
 }

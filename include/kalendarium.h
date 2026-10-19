@@ -75,6 +75,20 @@
  * Argumentum "YYYY-MM": dies I eius mensis (aut hodie si in eo);
  * "agenda": visus agendae.
  *
+ * VISUS HEBDOMADIS (visus="hebdomas"; globulus "Week" inter Month et
+ * Day): hebdomas diei electi, dominica prima - radix > "titulus"
+ * ("Week of October 18, 2026") + dies VII (PARTES_ITEM, id = dies
+ * ISO, lineae altitudine aequa). In die: linea prima "Wed 14" (hodie
+ * inversus), quadratum coloris, celebratio principalis (memoria ad
+ * libitum aut maior); deinde natales (fontes dierum), res apertae
+ * diei ("[ ] titulus"; perfectae non), lineae libri diei
+ * (scriba_liber_lineas_legere - LECTIO SOLA, vacuae omissae; paginae
+ * ordine; indentatio communis notarum remota, relativa manet).
+ * Plures quam capiuntur: ultima linea "+n" ad dextrum. Electa fundo
+ * selectionis. CLAVES: j/k dies +1/-1, J/K hebdomas +1/-1, t
+ * hodie, Enter diem aperit (visus diei), Esc ad mensem; < > hebdomas.
+ * ICTUS diem eligit, DUPLEX aperit (ut cellula mensis).
+ *
  * FIGURAE (visus agendae, A4c): titulus = "Agenda: <n> open" (et
  * "#rubrica" sub filtro); titulus gregis "#rubrica" aut "(none)";
  * ordo = "[ ]" et titulus, dies ad dextrum ("Oct 14" aut "-"); res

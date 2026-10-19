@@ -1,7 +1,8 @@
 <!-- organum.stml - manifestum calendarii (agenda-plan A2). Pagina una
-     (genus calendarium) cuius visus mutatur: mensis (A2), dies (A3),
-     annus (A5). Contentum (res, perfectio) in documento agendae
-     (volumen vici, spatium "agenda"), commune omnibus lateribus
+     (genus calendarium) cuius visus mutatur: mensis (A2), hebdomas
+     (dies VII cum rebus apertis et notis diei), dies (A3), annus (A5).
+     Contentum (res, perfectio) in documento agendae (volumen vici,
+     spatium "agenda"), commune omnibus lateribus
      calendarii et agendae - hic solum status visus. Hodie ex porta
      horologii (radix vici, tempus_*), numquam ex systemate. -->
 <organum genus="calendarium" versio="1">
@@ -23,6 +24,7 @@
     <campus nomen="visus" typus="electio" vita="persistens"
             absens="mensis" scriptor="calendarium.agere">
       <optio>mensis</optio>
+      <optio>hebdomas</optio>
       <optio>dies</optio>
       <optio>annus</optio>
       <optio>agenda</optio>

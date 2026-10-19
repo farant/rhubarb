@@ -841,3 +841,40 @@ plants red (one survivor first: widening the hit area horizontally -
 the "off the cake" point was below the cake; a left-edge point now
 guards it). Headless screenshots: $TMPDIR/imago/p6d_2026-10-14.png and
 p6d_2026-10-31.png (two birthdays, flipped).
+
+## 2026-10-19 — Week view (Fran: Sunday first, open todos only, notes after todos)
+
+- `visus="hebdomas"`, button "Week" between Month and Day. Seven day
+  blocks (PARTES_ITEM, ISO ids) in equal-height rows, Sunday first.
+  Because the ids are ISO dates, the month cell's click (select),
+  double-click (open day) and right-click menu (ELENCHUS_DIEI) work
+  unchanged - only the command masks gained VISUS_HEBDOMADIS.
+- Block: "Wed 14" (today inverted, as in the month), colour square,
+  celebration; then birthdays (genus natalis only - saints are not
+  repeated, the celebration line covers the day), open todos "[ ]",
+  day-book lines via `scriba_liber_lineas_legere` (read-only).
+  Overflow: the last visible line carries "+n" (lines not shown).
+- Celebration rule: the principal celebration when it is at least an
+  optional memorial (Sundays included); on a plain feria the first
+  celebration in `celebrationes[1..]` that may be kept (optional
+  memorials - Oct 14 St. Callistus is not the principal). Sunday
+  titles come from calendarium_liturgicum in Latin ("Dominica XXIX
+  per Annum"), same strings the day view shows.
+- Keys: j/k day, J/K week, t, Enter (day view), Esc (month); < > move
+  a week (GlobulusTituli gained `mandatum_hebdomadis`).
+- The P6d birthday hover was keyed on "not day, not agenda" - it would
+  have fired in the week; now `visus_currens == VISUS_MENSIS`.
+- "+n" in COLOR_TEXT_DIM vanished on the selection fill (seen in the
+  headless screenshot); now COLOR_TEXT. Capacity first reserved a
+  spare row; now (h - 2 - glyph) / 10.
+- Cost: 0.88 ms per recompose+paint for the week vs 0.97 ms for the
+  month (sample data, 100 frames) - no cache.
+- Test trap: day books are mounted for the SELECTED day at mount, so
+  "book absent stays absent" is checked on another day (Oct 12).
+- Dedent (Fran, same day): the day's note lines lose their common
+  leading spaces (relative indent kept), across all pages of the day;
+  todos and birthdays are not part of the computation (a todo has no
+  indent and would cancel it - tested with a todo on the same day).
+  Local helper `indentationem_communem_tollere`: stml.c has a dedent, but static and
+  over one '\n'-joined string; a shared one in chorda.h would owe ~29
+  gates for a dozen lines. Plants 3 red.
