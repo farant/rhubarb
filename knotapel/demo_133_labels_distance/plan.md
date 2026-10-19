@@ -246,6 +246,24 @@ why L3 is the test the findings will lean on.
      demo as the approved plan says, with a ledger note to promote it to
      a house library when a second consumer appears.
 2. **T2:** the oracle; pins; rules on constructed totals; plants.
+   *T2 done 2026-10-19:* `oracle_d133.py` (its own reader and PUNCT
+   removal; F from ancestor sets; the exact test from VALUE MULTISETS -
+   sums over compositions of binomials with math.comb, strata convolved
+   as integer dictionaries - where main.c runs an item-by-item DP in
+   magnus; the nulls by rebuilding moved sentences; 4 s) reproduces
+   every number main.c printed in T1. Pinned in main.c: populations,
+   exclusions and nested baselines; L1, L1u, L3 and the eight
+   sensitivities (T, N, group, strata, exact E_perm, p to 1e-9) in both
+   modes; L1 per treebank and the clause's chance; the descriptive
+   excess (N, S, exact E_near) and the percentile sums. Checks 34 full,
+   29 quick.
+   - Plants: 7 red (relatives kept; agreement on the first value only;
+     length bins; direction; F capped at 9; the first-arc flag; Perseus
+     verse as prose). Two were re-planted as one-line edits (the plant
+     tool keeps line counts); two needed the full data. One survives,
+     IDLE ON THIS DATA: the particle lemma list in the function-word
+     flag, because those particles always carry UPOS PART, CCONJ or ADV
+     here, which the flag already catches.
 3. **T3:** findings, claims (beside 59), ledger, archive.
 4. **T4:** independent review, then fixes.
 

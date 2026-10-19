@@ -1288,7 +1288,257 @@ print_result (
         (long long)(p6 / 1000000), (long long)(p6 % 1000000));
 }
 
-static Result res_l1, res_l1u, res_l3;
+/* oracle_d133.py (independent: own reader, ancestor sets, the exact test from value
+ * multisets with math.comb, rebuilt nulls). Populations per treebank: genitives all,
+ * relative, personal, non-noun head, population, displaced; adjectives all, incomplete,
+ * multi-gender, non-noun head, population, displaced; nested adjectives n, raw sum;
+ * nested genitives n, raw sum */
+static const long opop[N_BANKS][16] = {
+    { 477, 6, 10, 22, 449, 77, 1031, 0, 8, 19, 1012, 434, 578, 807, 372, 495 },
+    { 2382, 0, 125, 11, 2371, 5, 2179, 142, 0, 3, 2034, 68, 1966, 2517, 2366, 4170 },
+    { 458, 2, 6, 50, 406, 26, 421, 58, 74, 15, 348, 28, 320, 389, 380, 460 },
+    { 255, 9, 11, 27, 219, 39, 510, 1, 0, 42, 467, 168, 299, 357, 180, 212 },
+    { 1098, 41, 142, 101, 956, 59, 880, 0, 0, 65, 815, 72, 743, 792, 897, 1129 },
+    { 438, 9, 36, 47, 382, 28, 416, 1, 0, 27, 388, 34, 354, 447, 354, 460 }
+};
+
+/* tests in order L1, L1u, L3, then the sensitivities (L1, L3) x (first, no function
+ * words, raw distance, Perseus merged): [quick][test] = t, n, group, strata, p x 1e9;
+ * the E_perm fractions in otest_e */
+static const long otest[2][11][5] = {
+    { { 1151, 1038, 804, 38, 208602648 },
+      { 878, 714, 603, 18, 399106026 },
+      { 787, 736, 535, 17, 610425788 },
+      { 824, 807, 588, 38, 214220090 },
+      { 596, 522, 405, 17, 185228691 },
+      { 1008, 819, 669, 36, 275173317 },
+      { 682, 602, 435, 17, 593188498 },
+      { 2077, 1038, 804, 38, 971548159 },
+      { 1403, 736, 535, 17, 498774165 },
+      { 1151, 1038, 804, 32, 208268876 },
+      { 787, 736, 535, 14, 567966752 } },
+    { { 716, 584, 502, 9, 205608111 },
+      { 555, 432, 389, 4, 198252812 },
+      { 452, 434, 300, 3, 270035527 },
+      { 474, 407, 336, 9, 244260070 },
+      { 320, 270, 209, 3, 135685347 },
+      { 673, 528, 463, 9, 440679725 },
+      { 421, 396, 273, 3, 300719701 },
+      { 1286, 584, 502, 9, 844157822 },
+      { 791, 434, 300, 3, 234668118 },
+      { 716, 584, 502, 9, 205608111 },
+      { 452, 434, 300, 3, 270035527 } }
+};
+static const char *const otest_e[2][11] = {
+    { "402325005647/351911560",
+      "462132923621/527867340",
+      "62118880409/78751530",
+      "59359824949233323/72675623110860",
+      "12272706852107/20815165140",
+      "464130262319866/462963231675",
+      "1088131446068263/1592285402400",
+      "25287093687521/12035375352",
+      "2098269820381/1496279070",
+      "77035683121/67387320",
+      "237846060238/301880865" },
+    { "23935284511/33693660",
+      "1426004143/2591820",
+      "177844242/397735",
+      "3777782726779/8048241762",
+      "218072697/695090",
+      "6613957270456/9850281525",
+      "127561909/306016",
+      "1556238413/1203345",
+      "312111454/397735",
+      "23935284511/33693660",
+      "177844242/397735" }
+};
+
+/* L1 per treebank: T, P(T > E) x 1e6; E fractions; the clause chance x 1e6 */
+static const long otb[N_BANKS][2] = {
+    { 644, 542458 },
+    { 72, 470808 },
+    { 46, 516957 },
+    { 273, 515911 },
+    { 73, 490108 },
+    { 43, 421997 }
+};
+static const char *const otb_e[N_BANKS] = {
+    "1266421223/1981980",
+    "1214/17",
+    "444257/10920",
+    "13516480/50337",
+    "20515/252",
+    "5579/132"
+};
+static const long ochance_e6 = 183311;
+
+/* L2: per treebank and kind (adjective, genitive): N, S; E_near fractions */
+static const long ol2[N_BANKS][2][2] = {
+    { { 434, 154 }, { 77, 34 } },
+    { { 68, 0 }, { 5, 3 } },
+    { { 28, 19 }, { 26, 16 } },
+    { { 168, 78 }, { 39, 26 } },
+    { { 72, 54 }, { 59, 40 } },
+    { { 34, 26 }, { 28, 21 } }
+};
+static const char *const ol2_e[N_BANKS][2] = {
+    { "397319/2520", "27497/840" },
+    { "1/2", "31/21" },
+    { "248/15", "14" },
+    { "1453/20", "9557/420" },
+    { "299/6", "4661/120" },
+    { "2773/120", "77/4" }
+};
+
+/* percentiles: per treebank, groups adjective unique, shared, genitive: n; sum fractions */
+static const long opct_n[N_BANKS][3] = {
+    { 300, 134, 77 },
+    { 1, 67, 5 },
+    { 22, 6, 26 },
+    { 133, 35, 39 },
+    { 56, 16, 59 },
+    { 24, 10, 28 }
+};
+static const char *const opct_s[N_BANKS][3] = {
+    { "1861080296353288361486579/38485808494589819563200",
+      "174503545949829676229059/16891485528174628971600",
+      "2847582556370605697731/212769629065198164960" },
+    { "1/21",
+      "1107554010312227/349522365376800",
+      "1147587/1241200" },
+    { "21838241/4564560",
+      "461177/1310540",
+      "372586622039/83462979600" },
+    { "3275932909105/138139105104",
+      "20734642716377/4658179125600",
+      "8655833863/1338557220" },
+    { "3647772384539/691975884600",
+      "37214039/30630600",
+      "98776089829/10351509168" },
+    { "436671459825613/303705829627200",
+      "24169615673/37095374160",
+      "239313405679/109412503200" }
+};
+
+static Result  res_l1, res_l1u, res_l3, sens[8];
+static Fractio chance4;
+
+static int
+fraction_is (
+    Fractio     x,
+    const char *text)
+{
+    Fractio f;
+
+    if (!fractio_ex_chorda(chorda_ex_literis(text, fpool), fpool, &f))
+        fatal("pin fraction");
+    return fractio_aequalis(x, f);
+}
+
+static void
+pinned_checks (void)
+{
+    const Result *all[11];
+    int           q = quick ? 1 : 0, b, i, ok, rows = 0;
+    char          msg[300];
+
+    all[0] = &res_l1; all[1] = &res_l1u; all[2] = &res_l3;
+    for (i = 0; i < 8; i++) all[3 + i] = &sens[i];
+    ok = 1;
+    for (b = 0; b < N_BANKS; b++) {
+        const Stats *s = &stats[b];
+        const long  *o = opop[b];
+
+        if (!bank_present[b]) continue;
+        rows++;
+        if (s->gen_all != o[0] || s->gen_rel != o[1] || s->gen_prs != o[2]
+            || s->gen_nonnoun != o[3] || s->gen_pop != o[4]
+            || s->gen_disp != o[5] || s->adj_all != o[6]
+            || s->adj_incomplete != o[7] || s->adj_multigender != o[8]
+            || s->adj_nonnoun != o[9] || s->adj_pop != o[10]
+            || s->adj_disp != o[11] || s->nest_n[0] != o[12]
+            || s->nest_dist[0] != o[13] || s->nest_n[1] != o[14]
+            || s->nest_dist[1] != o[15])
+            ok = 0;
+    }
+    snprintf(msg, sizeof msg, "populations, exclusions and nested "
+        "baselines == oracle_d133.py, %d treebanks (a pin)", rows);
+    check(msg, ok && rows > 0);
+    ok = 1;
+    for (i = 0; i < 11; i++) {
+        const Result *r = all[i];
+        const long   *o = otest[q][i];
+
+        if (r->t_obs != o[0] || r->n_pop != o[1] || r->n_grp != o[2]
+            || r->strata != (int)o[3]
+            || scaled(r->p, 1000000000, 1) != (s64)o[4]
+            || !fraction_is(r->e_perm, otest_e[q][i]))
+            ok = 0;
+    }
+    snprintf(msg, sizeof msg, "L1, L1u, L3 and the eight sensitivities: T, "
+        "N, group, strata, exact E_perm and p (to 1e-9) == oracle_d133.py "
+        "(%s; a pin)", quick ? "repo treebanks" : "six treebanks");
+    check(msg, ok);
+    if (!quick) {
+        ok = 1;
+        for (b = 0; b < N_BANKS; b++) {
+            if (res_l1.tb_t[b] != otb[b][0]
+                || scaled(res_l1.tb_q[b], 1000000, 1) != (s64)otb[b][1]
+                || !fraction_is(res_l1.tb_e[b], otb_e[b]))
+                ok = 0;
+        }
+        if (scaled(chance4, 1000000, 1) != (s64)ochance_e6) ok = 0;
+        check("L1 per treebank (T, exact E, P(T > E)) and the clause's chance "
+            "== oracle_d133.py (a pin)", ok);
+    }
+    ok = 1;
+    for (b = 0; b < N_BANKS; b++) {
+        int kind, grp;
+
+        if (!bank_present[b]) continue;
+        for (kind = 0; kind < 2; kind++) {
+            long    nn = 0, ss = 0, j;
+            Fractio e = fractio_ex_s64(0), t;
+
+            for (j = 0; j < n_items; j++) {
+                const Item *it = &items[j];
+                if (it->bank != b || it->kind != kind) continue;
+                nn++;
+                ss += it->safe;
+                if (!fractio_ex_s64_s64((s64)it->kn, (s64)it->mn, fpool, &t))
+                    fatal("fractio");
+                e = fractio_adde(e, t, fpool);
+            }
+            if (nn != ol2[b][kind][0] || ss != ol2[b][kind][1]
+                || !fraction_is(e, ol2_e[b][kind]))
+                ok = 0;
+        }
+        for (grp = 0; grp < 3; grp++) {
+            long    cnt = 0, j;
+            Fractio sum = fractio_ex_s64(0), t;
+
+            for (j = 0; j < n_items; j++) {
+                const Item *it = &items[j];
+                int match;
+                if (it->bank != b) continue;
+                match = grp == 2 ? it->kind == 1 : it->kind == 0
+                    && it->unique == (grp == 0);
+                if (!match) continue;
+                cnt++;
+                if (!fractio_ex_s64_s64((s64)(2 * it->pl + it->pe),
+                    (s64)(2 * it->pm), fpool, &t))
+                    fatal("fractio");
+                sum = fractio_adde(sum, t, fpool);
+            }
+            if (cnt != opct_n[b][grp] || !fraction_is(sum, opct_s[b][grp]))
+                ok = 0;
+        }
+    }
+    check("the excess beyond distance (N, S, exact E_near) and the "
+        "percentile sums, per treebank and kind == oracle_d133.py (a pin)",
+        ok);
+}
 
 static void
 part_b (void)
@@ -1365,6 +1615,7 @@ part_b (void)
         chance = fractio_ex_s64(0);
         for (j = 4; j <= nb; j++) chance = fractio_adde(chance, dist[j],
             fpool);
+        chance4 = chance;
         c6 = scaled(chance, 1000000, 1);
         printf("     clause (b) chance under the null, P(>= 4 of %d): "
             "%lld.%06lld\n", nb, (long long)(c6 / 1000000),
@@ -1426,6 +1677,7 @@ part_b (void)
                 if (v == 2) sp.raw = 1;
                 if (v == 3) sp.merge_perseus = 1;
                 r = run_test(&sp, fpool);
+                sens[v * 2 + which] = r;
                 snprintf(title, sizeof title, "%s, %s", which == 0 ? "L1"
                     : "L3", names[v]);
                 print_result(title, &r);
@@ -1548,6 +1800,9 @@ part_b (void)
         }
         printf("\n");
     }
+
+    printf("\n--- pins ---\n");
+    pinned_checks();
 
     printf("\n--- the registered rules on constructed values ---\n");
     {
