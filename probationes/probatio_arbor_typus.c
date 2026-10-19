@@ -35,8 +35,6 @@ probatio_typus_int(Piscina* piscina, InternamentumChorda* intern)
     ArborTypus* typus;
     chorda* titulus;
 
-    imprimere("\n--- Primitive Types ---\n");
-
     ast = _parsere(piscina, intern, "int x;");
     CREDO_VERUM(ast.successus);
 
@@ -157,8 +155,6 @@ probatio_typus_pointer(Piscina* piscina, InternamentumChorda* intern)
     ArborTypus* typus;
     chorda* titulus;
 
-    imprimere("\n--- Pointer Types ---\n");
-
     ast = _parsere(piscina, intern, "int *p;");
     CREDO_VERUM(ast.successus);
 
@@ -236,8 +232,6 @@ probatio_typus_array(Piscina* piscina, InternamentumChorda* intern)
     ArborTypus* typus;
     chorda* titulus;
 
-    imprimere("\n--- Array Types ---\n");
-
     ast = _parsere(piscina, intern, "int arr[10];");
     CREDO_VERUM(ast.successus);
 
@@ -287,8 +281,6 @@ probatio_typus_functio(Piscina* piscina, InternamentumChorda* intern)
     ArborSyntaxisResultus ast;
     ArborTypus* typus;
     chorda* titulus;
-
-    imprimere("\n--- Function Types ---\n");
 
     ast = _parsere(piscina, intern, "int f(int x, char c) { return 0; }");
     CREDO_VERUM(ast.successus);
@@ -345,8 +337,6 @@ probatio_typus_functio_parametra(Piscina* piscina, InternamentumChorda* intern)
     ArborTypus* param_typus;
     chorda* titulus;
     i32 n;
-
-    imprimere("\n--- Function Parameter Types ---\n");
 
     ast = _parsere(piscina, intern, "int f(int x, char c, long *p) { return 0; }");
     CREDO_VERUM(ast.successus);
@@ -448,8 +438,6 @@ probatio_typus_struct(Piscina* piscina, InternamentumChorda* intern)
     ArborTypusResolver* res;
     ArborSyntaxisResultus ast;
 
-    imprimere("\n--- Struct Types ---\n");
-
     ast = _parsere(piscina, intern, "struct Point { int x; int y; };");
     CREDO_VERUM(ast.successus);
 
@@ -491,8 +479,6 @@ probatio_typus_struct_membra(Piscina* piscina, InternamentumChorda* intern)
     ArborMembrum** membrum_ptr;
     chorda* titulus;
     i32 n;
-
-    imprimere("\n--- Struct Member Types ---\n");
 
     ast = _parsere(piscina, intern, "struct S { int x; char *name; long arr[10]; } s;");
     CREDO_VERUM(ast.successus);
@@ -558,8 +544,6 @@ probatio_typus_union_membra(Piscina* piscina, InternamentumChorda* intern)
     chorda* titulus;
     i32 n;
 
-    imprimere("\n--- Union Member Types ---\n");
-
     ast = _parsere(piscina, intern, "union Value { int i; float f; char *s; } v;");
     CREDO_VERUM(ast.successus);
 
@@ -614,8 +598,6 @@ probatio_typus_typedef(Piscina* piscina, InternamentumChorda* intern)
     ArborTypusResolver* res;
     ArborSyntaxisResultus ast;
 
-    imprimere("\n--- Typedef ---\n");
-
     ast = _parsere(piscina, intern, "typedef int Int32;");
     CREDO_VERUM(ast.successus);
 
@@ -648,8 +630,6 @@ probatio_typus_typedef_usage(Piscina* piscina, InternamentumChorda* intern)
     ArborTypus* typus;
     chorda* titulus;
 
-    imprimere("\n--- Typedef Usage ---\n");
-
     /* typedef int MyInt; MyInt x; */
     ast = _parsere(piscina, intern, "typedef int MyInt; MyInt x;");
     CREDO_VERUM(ast.successus);
@@ -676,8 +656,6 @@ probatio_typus_typedef_in_struct(Piscina* piscina, InternamentumChorda* intern)
     ArborTypus* typus;
     ArborMembrum* membrum;
     chorda* titulus;
-
-    imprimere("\n--- Typedef in Struct Members ---\n");
 
     /* typedef long Size; struct S { Size len; } s; */
     ast = _parsere(piscina, intern,
@@ -751,8 +729,6 @@ probatio_typus_utilities(vacuum)
 {
     constans character* genus_str;
 
-    imprimere("\n--- Type Utilities ---\n");
-
     /* Test genus nomen */
     genus_str = arbor_typus_genus_nomen(ARBOR_TYPUS_INT);
     CREDO_VERUM(strcmp(genus_str, "int") == ZEPHYRUM);
@@ -794,8 +770,6 @@ probatio_typus_scope(Piscina* piscina, InternamentumChorda* intern)
     ArborTypus* typus;
     chorda* titulus;
 
-    imprimere("\n--- Scope ---\n");
-
     /* Function with local scope */
     ast = _parsere(piscina, intern,
         "int f(void) { int x; { int y; } return x; }");
@@ -824,8 +798,6 @@ probatio_typus_aequalis(Piscina* piscina, InternamentumChorda* intern)
     ArborTypus* typus_x;
     ArborTypus* typus_y;
     chorda* titulus;
-
-    imprimere("\n--- Type Equality ---\n");
 
     ast = _parsere(piscina, intern, "int x; int y;");
     CREDO_VERUM(ast.successus);
@@ -857,8 +829,6 @@ probatio_typus_float(Piscina* piscina, InternamentumChorda* intern)
     ArborTypus* typus;
     chorda* titulus;
 
-    imprimere("\n--- Float Types ---\n");
-
     ast = _parsere(piscina, intern, "float f; double d;");
     CREDO_VERUM(ast.successus);
 
@@ -882,96 +852,191 @@ probatio_typus_float(Piscina* piscina, InternamentumChorda* intern)
 }
 
 /* ==================================================
- * Main
+ * Sectiones
  * ================================================== */
 
-integer principale(vacuum)
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-    Piscina* piscina;
     InternamentumChorda* intern;
-    b32 praeteritus;
 
-    imprimere("===========================================\n");
-    imprimere("PROBATIO ARBOR TYPUS\n");
-    imprimere("===========================================\n");
+    intern = internamentum_creare(c->piscina);
+    probatio_typus_int(c->piscina, intern);
+    probatio_typus_char(c->piscina, intern);
+    probatio_typus_void(c->piscina, intern);
+    probatio_typus_unsigned(c->piscina, intern);
+    probatio_typus_long(c->piscina, intern);
+}
 
-    piscina = piscina_generare_dynamicum("probatio_arbor_typus", M * LXIV);
-    si (piscina == NIHIL)
-    {
-        imprimere("FRACTA: piscina_generare_dynamicum\n");
-        redde I;
-    }
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    InternamentumChorda* intern;
 
-    intern = internamentum_creare(piscina);
-    si (intern == NIHIL)
-    {
-        imprimere("FRACTA: internamentum_creare\n");
-        piscina_destruere(piscina);
-        redde I;
-    }
+    intern = internamentum_creare(c->piscina);
+    probatio_typus_float(c->piscina, intern);
+}
 
-    credo_aperire(piscina);
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    InternamentumChorda* intern;
 
-    /* Primitive types */
-    probatio_typus_int(piscina, intern);
-    probatio_typus_char(piscina, intern);
-    probatio_typus_void(piscina, intern);
-    probatio_typus_unsigned(piscina, intern);
-    probatio_typus_long(piscina, intern);
+    intern = internamentum_creare(c->piscina);
+    probatio_typus_pointer(c->piscina, intern);
+    probatio_typus_pointer_duplex(c->piscina, intern);
+    probatio_typus_const_pointer(c->piscina, intern);
+}
 
-    /* Float types */
-    probatio_typus_float(piscina, intern);
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    InternamentumChorda* intern;
 
-    /* Pointer types */
-    probatio_typus_pointer(piscina, intern);
-    probatio_typus_pointer_duplex(piscina, intern);
-    probatio_typus_const_pointer(piscina, intern);
+    intern = internamentum_creare(c->piscina);
+    probatio_typus_array(c->piscina, intern);
+    probatio_typus_array_unsized(c->piscina, intern);
+}
 
-    /* Array types */
-    probatio_typus_array(piscina, intern);
-    probatio_typus_array_unsized(piscina, intern);
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    InternamentumChorda* intern;
 
-    /* Function types */
-    probatio_typus_functio(piscina, intern);
-    probatio_typus_functio_pointer(piscina, intern);
-    probatio_typus_functio_parametra(piscina, intern);
-    probatio_typus_param_in_scope(piscina, intern);
+    intern = internamentum_creare(c->piscina);
+    probatio_typus_functio(c->piscina, intern);
+    probatio_typus_functio_pointer(c->piscina, intern);
+}
 
-    /* Struct types */
-    probatio_typus_struct(piscina, intern);
-    probatio_typus_struct_variabilis(piscina, intern);
-    probatio_typus_struct_membra(piscina, intern);
-    probatio_typus_union_membra(piscina, intern);
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    InternamentumChorda* intern;
 
-    /* Typedef */
-    probatio_typus_typedef(piscina, intern);
-    probatio_typus_typedef_pointer(piscina, intern);
-    probatio_typus_typedef_usage(piscina, intern);
-    probatio_typus_typedef_in_struct(piscina, intern);
+    intern = internamentum_creare(c->piscina);
+    probatio_typus_functio_parametra(c->piscina, intern);
+    probatio_typus_param_in_scope(c->piscina, intern);
+}
 
-    /* Utilities */
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    InternamentumChorda* intern;
+
+    intern = internamentum_creare(c->piscina);
+    probatio_typus_struct(c->piscina, intern);
+    probatio_typus_struct_variabilis(c->piscina, intern);
+}
+
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    InternamentumChorda* intern;
+
+    intern = internamentum_creare(c->piscina);
+    probatio_typus_struct_membra(c->piscina, intern);
+}
+
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+    InternamentumChorda* intern;
+
+    intern = internamentum_creare(c->piscina);
+    probatio_typus_union_membra(c->piscina, intern);
+}
+
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+    InternamentumChorda* intern;
+
+    intern = internamentum_creare(c->piscina);
+    probatio_typus_typedef(c->piscina, intern);
+    probatio_typus_typedef_pointer(c->piscina, intern);
+}
+
+interior vacuum
+_sectio_decima_prima (
+    CredoContextus* c)
+{
+    InternamentumChorda* intern;
+
+    intern = internamentum_creare(c->piscina);
+    probatio_typus_typedef_usage(c->piscina, intern);
+}
+
+interior vacuum
+_sectio_decima_secunda (
+    CredoContextus* c)
+{
+    InternamentumChorda* intern;
+
+    intern = internamentum_creare(c->piscina);
+    probatio_typus_typedef_in_struct(c->piscina, intern);
+}
+
+interior vacuum
+_sectio_decima_tertia (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probatio_typus_utilities();
     probatio_typus_est_integer();
+}
 
-    /* Scope */
-    probatio_typus_scope(piscina, intern);
+interior vacuum
+_sectio_decima_quarta (
+    CredoContextus* c)
+{
+    InternamentumChorda* intern;
 
-    /* Type equality */
-    probatio_typus_aequalis(piscina, intern);
+    intern = internamentum_creare(c->piscina);
+    probatio_typus_scope(c->piscina, intern);
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
+interior vacuum
+_sectio_decima_quinta (
+    CredoContextus* c)
+{
+    InternamentumChorda* intern;
 
-    praeteritus = credo_omnia_praeterierunt();
+    intern = internamentum_creare(c->piscina);
+    probatio_typus_aequalis(c->piscina, intern);
+}
 
-    piscina_destruere(piscina);
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "Primitive Types", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Float Types", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Pointer Types", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Array Types", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Function Types", _sectio_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Function Parameter Types", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Struct Types", _sectio_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Struct Member Types", _sectio_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Union Member Types", _sectio_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Typedef", _sectio_decima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Typedef Usage", _sectio_decima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Typedef in Struct Members", _sectio_decima_secunda,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Type Utilities", _sectio_decima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Scope", _sectio_decima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Type Equality", _sectio_decima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("arbor_typus", SECTIONES);
 }

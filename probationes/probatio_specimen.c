@@ -99,26 +99,18 @@ _viam (
 
 /* ============================================================ */
 
-s32 principale (vacuum)
-{
-        b32  praeteritus;
-    Piscina* piscina;
-
-    piscina = piscina_generare_dynamicum("probatio_specimen",
-        M * M * IV);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
 
     /* ========================================================
      * I. Titulus semitam continere non potest
      * ======================================================== */
 
-    imprimere("\n--- I. Titulus invalidus ---\n");
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
                   Imago captura;
         SpecimenFructus f;
@@ -140,13 +132,20 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_S32((s32)f.sententia,
             (s32)SPECIMEN_TITULUS_INVALIDUS);
     }
+}
 
 
     /* ========================================================
      * II. Exemplar absens FRANGIT (numquam tacite creat)
      * ======================================================== */
 
-    imprimere("\n--- II. Exemplar abest ---\n");
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
                      Imago  captura;
            SpecimenFructus  f;
@@ -176,13 +175,20 @@ s32 principale (vacuum)
 
         _purgare(titulus);
     }
+}
 
 
     /* ========================================================
      * III. Ritus acceptionis: motus plagulae SOLUS
      * ======================================================== */
 
-    imprimere("\n--- III. Acceptio per motum ---\n");
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
                   Imago captura;
         SpecimenFructus f;
@@ -213,13 +219,20 @@ s32 principale (vacuum)
 
         _purgare(titulus);
     }
+}
 
 
     /* ========================================================
      * IV. Mensurae discrepantes: sententia PROPRIA
      * ======================================================== */
 
-    imprimere("\n--- IV. Mensurae discrepantes ---\n");
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         Imago           parva, magna;
         SpecimenFructus f;
@@ -247,13 +260,20 @@ s32 principale (vacuum)
 
         _purgare(titulus);
     }
+}
 
 
     /* ========================================================
      * V. Discrepantia: candidatus ET pictura scribuntur
      * ======================================================== */
 
-    imprimere("\n--- V. Discrepantia ---\n");
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         Imago           exemplar_imago, mutata;
         SpecimenFructus f;
@@ -301,7 +321,7 @@ s32 principale (vacuum)
          * status` in perpetuum relinqueret.
          * ==================================================== */
 
-        imprimere("\n--- VI. Limes tollit artificia ---\n");
+        CREDO_GRADUS("VI. Limes tollit artificia");
 
         regula.collatio.pixela_ferenda = (i32)I;
         f = specimen_iudicare(&mutata, titulus, regula, piscina);
@@ -314,13 +334,20 @@ s32 principale (vacuum)
 
         _purgare(titulus);
     }
+}
 
 
     /* ========================================================
      * VII. Scrinium inaccessum
      * ======================================================== */
 
-    imprimere("\n--- VII. Scrinium inaccessum ---\n");
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
                   Imago captura;
         SpecimenFructus f;
@@ -336,13 +363,20 @@ s32 principale (vacuum)
                            (s32)SPECIMEN_SCRINIUM_INACCESSUM);
         CREDO_CHORDA_NON_VACUA(f.causa);
     }
+}
 
 
     /* ========================================================
      * VIII. Nomina sententiarum
      * ======================================================== */
 
-    imprimere("\n--- VIII. Nomina sententiarum ---\n");
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         CREDO_CHORDA_AEQUALIS_LITERIS(
             chorda_ex_literis(
@@ -359,25 +393,27 @@ s32 principale (vacuum)
                 piscina),
             "SPECIMEN_MENSURAE_DISCREPANT");
     }
+}
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I. Titulus invalidus", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "II. Exemplar abest", _sectio_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "III. Acceptio per motum", _sectio_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "IV. Mensurae discrepantes", _sectio_quarta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "V. Discrepantia", _sectio_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "VII. Scrinium inaccessum", _sectio_sexta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "VIII. Nomina sententiarum", _sectio_septima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    /* ========================================================
-     * Compendium
-     * ======================================================== */
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-
-    piscina_destruere(piscina);
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("specimen", SECTIONES);
 }

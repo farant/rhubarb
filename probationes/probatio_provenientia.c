@@ -8,85 +8,88 @@
 #include <stdio.h>
 #include <string.h>
 
-s32 principale (vacuum)
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
 {
-                     b32  praeteritus;
-                 Piscina* piscina;
-     ProvenientiaRelatio  relatio;
+    ProvenientiaRelatio* relatio;
 
-    piscina = piscina_generare_dynamicum("probatio_provenientia",
-        16384);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-    relatio.artificium = "bin/manus";
-    relatio.ingressus = "0123456789abcdef0123456789abcdef"
+    relatio = (ProvenientiaRelatio*)piscina_allocare(c->piscina,
+        magnitudo(ProvenientiaRelatio));
+    relatio->artificium = "bin/manus";
+    relatio->ingressus = "0123456789abcdef0123456789abcdef"
         "0123456789abcdef0123456789abcdef";
-    relatio.commissum = "abc12345 SORDIDUM";
+    relatio->commissum  = "abc12345 SORDIDUM";
+    c->datum            = relatio;
+}
 
 
-    /* ==================================================
-     * PROBARE: textus - quattuor lineae exactae
-     * ================================================== */
+/* ==================================================
+ * PROBARE: textus - quattuor lineae exactae
+ * ================================================== */
 
-    {
-        chorda textus;
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    constans ProvenientiaRelatio* relatio =
+        (constans ProvenientiaRelatio*)c->suita;
+                           chorda textus;
 
-        imprimere("\n--- Probans textum ---\n");
-        textus = provenientia_textus(&relatio, piscina);
-        CREDO_CHORDA_AEQUALIS_LITERIS(textus,
-            "provenientia 1\n"
-            "artificium bin/manus\n"
-            "ingressus 0123456789abcdef0123456789abcdef"
-            "0123456789abcdef0123456789abcdef\n"
-            "commissum abc12345 SORDIDUM\n");
-    }
+    textus = provenientia_textus(relatio, c->piscina);
+    CREDO_CHORDA_AEQUALIS_LITERIS(textus,
+        "provenientia 1\n"
+        "artificium bin/manus\n"
+        "ingressus 0123456789abcdef0123456789abcdef"
+        "0123456789abcdef0123456789abcdef\n"
+        "commissum abc12345 SORDIDUM\n");
+}
 
 
-    /* ==================================================
-     * PROBARE: respondere - vexillum solum, argumentum unicum
-     * ================================================== */
+/* ==================================================
+ * PROBARE: respondere - vexillum solum, argumentum unicum
+ * ================================================== */
 
-    {
-        character* sine[II];
-        character* cum[II];
-        character* cum_alio[III];
-        character  nomen_binarii[16];
-        character  vexillum[16];
-        character  aliud[16];
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    constans ProvenientiaRelatio* relatio =
+        (constans ProvenientiaRelatio*)c->suita;
+                       character* sine[II];
+                       character* cum[II];
+                       character* cum_alio[III];
+                       character  nomen_binarii[16];
+                       character  vexillum[16];
+                       character  aliud[16];
 
-        imprimere("\n--- Probans respondere ---\n");
-        strcpy(nomen_binarii, "bin/manus");
-        strcpy(vexillum, "-provenientia");
-        strcpy(aliud, "-versio");
-        sine[0]      = nomen_binarii;
-        sine[1]      = aliud;
-        cum[0]       = nomen_binarii;
-        cum[1]       = vexillum;
-        cum_alio[0]  = nomen_binarii;
-        cum_alio[1]  = vexillum;
-        cum_alio[2]  = aliud;
+    strcpy(nomen_binarii, "bin/manus");
+    strcpy(vexillum, "-provenientia");
+    strcpy(aliud, "-versio");
+    sine[0]      = nomen_binarii;
+    sine[1]      = aliud;
+    cum[0]       = nomen_binarii;
+    cum[1]       = vexillum;
+    cum_alio[0]  = nomen_binarii;
+    cum_alio[1]  = vexillum;
+    cum_alio[2]  = aliud;
 
-        CREDO_FALSUM(provenientia_respondere(I, sine, &relatio));
-        CREDO_FALSUM(provenientia_respondere(II, sine, &relatio));
-        /* vexillum cum argumentis aliis = usus alius, non relatio */
-        CREDO_FALSUM(provenientia_respondere(III, cum_alio, &relatio));
-        CREDO_VERUM(provenientia_respondere(II, cum, &relatio));
-    }
+    CREDO_FALSUM(provenientia_respondere(I, sine, relatio));
+    CREDO_FALSUM(provenientia_respondere(II, sine, relatio));
+    /* vexillum cum argumentis aliis = usus alius, non relatio */
+    CREDO_FALSUM(provenientia_respondere(III, cum_alio, relatio));
+    CREDO_VERUM(provenientia_respondere(II, cum, relatio));
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "textum", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "respondere", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("provenientia", SECTIONES,
+        _suitam_parare, NIHIL);
 }

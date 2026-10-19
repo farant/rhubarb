@@ -51,21 +51,6 @@ _summam_probare (
     CREDO_AEQUALIS_I32 (e->puritas_intra, puritas_intra);
 }
 
-s32
-principale (vacuum)
-{
-    Piscina* piscina;
-        b32  praeteritus;
-
-    piscina = piscina_generare_dynamicum("probatio_partitio_aestimatio",
-        65536);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
 
     /* ==================================================
      * CRATIS I - interactio (XII ordines, sortes A B C)
@@ -78,6 +63,13 @@ principale (vacuum)
      *   limen III: greges infimi suffragium non ferunt
      * ================================================== */
 
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans i32 numeri_notae[XII] = {
             I, ZEPHYRUM, ZEPHYRUM, I,
@@ -109,7 +101,6 @@ principale (vacuum)
                           i32  s;
                           i32  g;
 
-        imprimere("\n--- Probans cratem I (interactio) ---\n");
         columna_numeri = partitio_ex_notis(piscina, XII, numeri_notae);
         columna_formae = partitio_ex_notis(piscina, XII, formae_notae);
         aurum = partitio_ex_notis(piscina, XII, auri_notae);
@@ -314,6 +305,7 @@ principale (vacuum)
             }
         }
     }
+}
 
 
     /* ==================================================
@@ -329,6 +321,13 @@ principale (vacuum)
      *   catena sine veto: divisio accepta, deinde 0 -> I
      * ================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans i32 divisionis_notae[XXVI] = {
             ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, I, I, I, I, I,
@@ -354,7 +353,6 @@ principale (vacuum)
        PartitioCatenaOptiones  o;
                           i32  s;
 
-        imprimere("\n--- Probans cratem II (vetum sortium) ---\n");
         divisio  = partitio_ex_notis(piscina, XXVI, divisionis_notae);
         aurum    = partitio_ex_notis(piscina, XXVI, auri_notae);
         sortes   = partitio_ex_notis(piscina, XXVI, sortium_notae);
@@ -448,6 +446,7 @@ principale (vacuum)
             }
         }
     }
+}
 
 
     /* ==================================================
@@ -462,6 +461,13 @@ principale (vacuum)
      *   omni sorte -> S ubique -> recti II + 0 + I = III
      * ================================================== */
 
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans i32 auri_notae[VI] = {
             ZEPHYRUM, ZEPHYRUM, I, I, ZEPHYRUM, I };
@@ -473,7 +479,6 @@ principale (vacuum)
                     Partitio* una;
           PartitioAestimatio* e;
 
-        imprimere("\n--- Probans cratem III (paritates) ---\n");
         aurum   = partitio_ex_notis(piscina, VI, auri_notae);
         sortes  = partitio_ex_notis(piscina, VI, sortium_notae);
         una     = partitio_una(piscina, VI);
@@ -503,6 +508,7 @@ principale (vacuum)
             CREDO_AEQUALIS_I32 (e->margo[II], ZEPHYRUM);
         }
     }
+}
 
 
     /* ==================================================
@@ -523,6 +529,13 @@ principale (vacuum)
      *   habitus x apertus (A sine suffragio), y ordinatus
      * ================================================== */
 
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans i32 columnae_notae[XI] = {
             ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, I, I, I, I, I, I, I, I };
@@ -545,7 +558,6 @@ principale (vacuum)
           PartitioAestimatio* e;
                          i32  s;
 
-        imprimere("\n--- Probans cratem IV (grex captivus) ---\n");
         columna  = partitio_ex_notis(piscina, XI, columnae_notae);
         aurum    = partitio_ex_notis(piscina, XI, auri_notae);
         sortes   = partitio_ex_notis(piscina, XI, sortium_notae);
@@ -599,6 +611,7 @@ principale (vacuum)
             CREDO_FALSUM (e->inaestimabilis);
         }
     }
+}
 
 
     /* ==================================================
@@ -606,6 +619,13 @@ principale (vacuum)
      * NIHIL, semen ordinum inaequalium
      * ================================================== */
 
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
          constans Partitio* nulla[I] = { NIHIL };
          constans Partitio* unae[I];
@@ -613,7 +633,6 @@ principale (vacuum)
                   Partitio* b;
     PartitioCatenaOptiones  o;
 
-        imprimere("\n--- Probans recusationes ---\n");
         a = partitio_una(piscina, IV);
         b = partitio_una(piscina, III);
         CREDO_NON_NIHIL (a);
@@ -634,19 +653,23 @@ principale (vacuum)
         CREDO_NIHIL (partitio_catenam_struere(piscina, unae, I, a, a,
             &o));
     }
+}
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "cratem I (interactio)", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "cratem II (vetum sortium)", _sectio_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "cratem III (paritates)", _sectio_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "cratem IV (grex captivus)", _sectio_quarta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "recusationes", _sectio_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    /* ==================================================
-     * Compendium
-     * ================================================== */
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    redde I;
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("partitio_aestimatio", SECTIONES);
 }

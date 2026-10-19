@@ -25,8 +25,6 @@
 #include <stdio.h>
 #include <string.h>
 
-hic_manens Piscina* piscina;
-
 /* litterae in chorda (non NUL-terminata) */
 interior b32
 continet (
@@ -50,7 +48,8 @@ continet (
 /* legere donec finis (-1) aut silentium trium secundorum */
 interior chorda
 omnia_legere (
-    Pseudoterminale* pt)
+    Pseudoterminale* pt,
+            Piscina* piscina)
 {
      chorda c;
         s32 r;
@@ -132,7 +131,8 @@ generare (
                               i32  altitudo,
     constans character* constans* ambitus,
               constans character* directorium,
-            PseudoterminaleError* error)
+            PseudoterminaleError* error,
+                         Piscina* piscina)
 {
     PseudoterminaleConfiguratio cfg;
 
@@ -198,7 +198,6 @@ configurationem_probare (vacuum)
 {
     PseudoterminaleConfiguratio cfg;
 
-    imprimere("\n--- I: configuratio ---\n");
     pseudoterminale_configuratio_initiare(&cfg);
     CREDO_NIHIL(cfg.argumenta);
     CREDO_NIHIL(cfg.directorium);
@@ -219,7 +218,8 @@ configurationem_probare (vacuum)
 }
 
 interior vacuum
-memoriam_probare (vacuum)
+memoriam_probare (
+    Piscina* piscina)
 {
           Pseudoterminale* pt;
     PseudoterminaleExitus  ex;
@@ -227,7 +227,6 @@ memoriam_probare (vacuum)
                       i32  lat;
                       i32  alt;
 
-    imprimere("\n--- II: pons memoriae ---\n");
     pt = pseudoterminale_memoriae_creare(piscina,
         (constans i8*)"salve", V, III);
     CREDO_NON_NIHIL(pt);
@@ -267,7 +266,8 @@ memoriam_probare (vacuum)
 }
 
 interior vacuum
-posix_probare (vacuum)
+posix_probare (
+    Piscina* piscina)
 {
           Pseudoterminale* pt;
     PseudoterminaleExitus  ex;
@@ -316,15 +316,15 @@ posix_probare (vacuum)
     constans character* crudus[]    = { "/bin/sh", "-c",
         "stty raw -echo; exec sleep 100", NIHIL };
 
-    imprimere("\n--- III: pons posix (infantes veri) ---\n");
     fossae_ante = fossas_numerare();
 
     /* effusio per terminalem: onlcr facit \r\n */
-    pt = generare(effusio, LXXX, XXIV, NIHIL, NIHIL, &e);
+    pt = generare(effusio, LXXX, XXIV, NIHIL, NIHIL, &e,
+        piscina);
     CREDO_NON_NIHIL(pt);
     CREDO_AEQUALIS_I32((i32)e, (i32)PSEUDOTERMINALE_OK);
     CREDO_VERUM(pt->fossa(pt->datum) >= ZEPHYRUM);
-    c = omnia_legere(pt);
+    c = omnia_legere(pt, piscina);
     CREDO_VERUM(chorda_aequalis_literis(c, "a\r\nb"));
     /* finis: -1, non 0 (nihil paratum) */
     CREDO_AEQUALIS_S32(pt->legere(pt->datum, b, XVI, C), -I);
@@ -334,7 +334,8 @@ posix_probare (vacuum)
     pt->claudere(pt->datum);
 
     /* T4c: tty lateris servi = quod infans 'tty' dicit */
-    pt = generare(nomen_tty, LXXX, XXIV, NIHIL, NIHIL, &e);
+    pt = generare(nomen_tty, LXXX, XXIV, NIHIL, NIHIL, &e,
+        piscina);
     CREDO_NON_NIHIL(pt);
     CREDO_NON_NIHIL(pt->tty);
     si (pt->tty)
@@ -343,7 +344,7 @@ posix_probare (vacuum)
 
         CREDO_VERUM(strncmp(pt->tty, "/dev/tty", VIII) == ZEPHYRUM);
         sprintf(exspectatum, "%.50s\r\n", pt->tty);
-        CREDO_VERUM(chorda_aequalis_literis(omnia_legere(pt),
+        CREDO_VERUM(chorda_aequalis_literis(omnia_legere(pt, piscina),
             exspectatum));
     }
     pt->claudere(pt->datum);
@@ -351,30 +352,36 @@ posix_probare (vacuum)
     /* terminale regens (setsid + TIOCSCTTY): /dev/tty aperitur.
      * SINE CONCHA: /bin/sh terminale regens SUA SPONTE capit, ergo
      * probatio per sh vitium TIOCSCTTY celabat (planta B3 P2). */
-    pt = generare(regens, LXXX, XXIV, NIHIL, NIHIL, &e);
-    CREDO_VERUM(chorda_aequalis_literis(omnia_legere(pt), "24 80\r\n"));
+    pt = generare(regens, LXXX, XXIV, NIHIL, NIHIL, &e,
+        piscina);
+    CREDO_VERUM(chorda_aequalis_literis(omnia_legere(pt, piscina),
+        "24 80\r\n"));
     pt->claudere(pt->datum);
 
     /* magnitudo creationis */
-    pt = generare(mensura, XXX, VII, NIHIL, NIHIL, &e);
+    pt = generare(mensura, XXX, VII, NIHIL, NIHIL, &e,
+        piscina);
     CREDO_NON_NIHIL(pt);
-    CREDO_VERUM(chorda_aequalis_literis(omnia_legere(pt), "7 30\r\n"));
+    CREDO_VERUM(chorda_aequalis_literis(omnia_legere(pt, piscina),
+        "7 30\r\n"));
     pt->claudere(pt->datum);
 
     /* mutatio magnitudinis ante 'stty size' */
-    pt = generare(mutata, XXX, VII, NIHIL, NIHIL, &e);
+    pt = generare(mutata, XXX, VII, NIHIL, NIHIL, &e,
+        piscina);
     CREDO_NON_NIHIL(pt);
     CREDO_VERUM(pt->amplitudo(pt->datum, XL, IX, ZEPHYRUM, ZEPHYRUM));
     CREDO_FALSUM(pt->amplitudo(pt->datum, ZEPHYRUM, IX, ZEPHYRUM,
                                ZEPHYRUM));
     CREDO_AEQUALIS_S32(pt->scribere(pt->datum, (constans i8*)"x\n", II),
                        II);
-    CREDO_VERUM(continet(omnia_legere(pt), "9 40\r\n"));
+    CREDO_VERUM(continet(omnia_legere(pt, piscina), "9 40\r\n"));
     pt->claudere(pt->datum);
 
     /* codex exitus; signum */
-    pt = generare(codex, LXXX, XXIV, NIHIL, NIHIL, &e);
-    (vacuum)omnia_legere(pt);
+    pt = generare(codex, LXXX, XXIV, NIHIL, NIHIL, &e,
+        piscina);
+    (vacuum)omnia_legere(pt, piscina);
     CREDO_VERUM(exitum_exspectare(pt, &ex));
     CREDO_AEQUALIS_I32(ex.codex, III);
     CREDO_AEQUALIS_I32(ex.signum, ZEPHYRUM);
@@ -382,49 +389,59 @@ posix_probare (vacuum)
     CREDO_VERUM(pt->finitus(pt->datum, &ex));
     CREDO_AEQUALIS_I32(ex.codex, III);
     pt->claudere(pt->datum);
-    pt = generare(signum, LXXX, XXIV, NIHIL, NIHIL, &e);
-    (vacuum)omnia_legere(pt);
+    pt = generare(signum, LXXX, XXIV, NIHIL, NIHIL, &e,
+        piscina);
+    (vacuum)omnia_legere(pt, piscina);
     CREDO_VERUM(exitum_exspectare(pt, &ex));
     CREDO_AEQUALIS_I32(ex.signum, SIGTERM);
     CREDO_AEQUALIS_I32(ex.codex, ZEPHYRUM);
     pt->claudere(pt->datum);
 
     /* ambitus: positus, sublatus; ordinarius ex initiare */
-    pt = generare(ambitus_a, LXXX, XXIV, ambitus_m, NIHIL, &e);
-    CREDO_VERUM(chorda_aequalis_literis(omnia_legere(pt),
+    pt = generare(ambitus_a, LXXX, XXIV, ambitus_m, NIHIL, &e,
+        piscina);
+    CREDO_VERUM(chorda_aequalis_literis(omnia_legere(pt, piscina),
         "xterm-256color|salve|absens"));
     pt->claudere(pt->datum);
-    pt = generare(ordinarii, LXXX, XXIV, NIHIL, NIHIL, &e);
-    CREDO_VERUM(chorda_aequalis_literis(omnia_legere(pt),
+    pt = generare(ordinarii, LXXX, XXIV, NIHIL, NIHIL, &e,
+        piscina);
+    CREDO_VERUM(chorda_aequalis_literis(omnia_legere(pt, piscina),
         "xterm-256color|truecolor"));
     pt->claudere(pt->datum);
 
     /* directorium */
-    pt = generare(locus, LXXX, XXIV, NIHIL, "/", &e);
-    CREDO_VERUM(chorda_aequalis_literis(omnia_legere(pt), "/\r\n"));
+    pt = generare(locus, LXXX, XXIV, NIHIL, "/", &e,
+        piscina);
+    CREDO_VERUM(chorda_aequalis_literis(omnia_legere(pt, piscina),
+        "/\r\n"));
     pt->claudere(pt->datum);
 
     /* exec fractum: NIHIL et EXEC; exitus 127 verus: creatur */
     e   = PSEUDOTERMINALE_OK;
-    pt  = generare(absens, LXXX, XXIV, NIHIL, NIHIL, &e);
+    pt  = generare(absens, LXXX, XXIV, NIHIL, NIHIL, &e,
+        piscina);
     CREDO_NIHIL(pt);
     CREDO_AEQUALIS_I32((i32)e, (i32)PSEUDOTERMINALE_ERROR_EXEC);
-    pt = generare(exitus_absentis, LXXX, XXIV, NIHIL, NIHIL, &e);
+    pt = generare(exitus_absentis, LXXX, XXIV, NIHIL, NIHIL, &e,
+        piscina);
     CREDO_NON_NIHIL(pt);
-    (vacuum)omnia_legere(pt);
+    (vacuum)omnia_legere(pt, piscina);
     CREDO_VERUM(exitum_exspectare(pt, &ex));
     CREDO_AEQUALIS_I32(ex.codex, CXXVII);
     pt->claudere(pt->datum);
     /* argumenta mala; magnitudo mala */
-    pt = generare(NIHIL, LXXX, XXIV, NIHIL, NIHIL, &e);
+    pt = generare(NIHIL, LXXX, XXIV, NIHIL, NIHIL, &e,
+        piscina);
     CREDO_NIHIL(pt);
     CREDO_AEQUALIS_I32((i32)e, (i32)PSEUDOTERMINALE_ERROR_ARGUMENTA);
-    pt = generare(effusio, ZEPHYRUM, XXIV, NIHIL, NIHIL, &e);
+    pt = generare(effusio, ZEPHYRUM, XXIV, NIHIL, NIHIL, &e,
+        piscina);
     CREDO_NIHIL(pt);
     CREDO_AEQUALIS_I32((i32)e, (i32)PSEUDOTERMINALE_ERROR_ARGUMENTA);
 
     /* claudere infantem currentem: messus, fossa clausa */
-    pt   = generare(dormiens, LXXX, XXIV, NIHIL, NIHIL, &e);
+    pt   = generare(dormiens, LXXX, XXIV, NIHIL, NIHIL, &e,
+        piscina);
     pid  = numerum_legere(pt);
     CREDO_VERUM(pid > I);
     f = (integer)pt->fossa(pt->datum);
@@ -438,7 +455,8 @@ posix_probare (vacuum)
     CREDO_AEQUALIS_S32(pt->scribere(pt->datum, (constans i8*)"x", I),
                        -I);
     /* infans SIGHUP ignorans: post moram SIGKILL */
-    pt   = generare(surdus, LXXX, XXIV, NIHIL, NIHIL, &e);
+    pt   = generare(surdus, LXXX, XXIV, NIHIL, NIHIL, &e,
+        piscina);
     pid  = numerum_legere(pt);
     CREDO_VERUM(pid > I);
     pt->claudere(pt->datum);
@@ -447,9 +465,10 @@ posix_probare (vacuum)
 
     /* SIGPIPE ignoratum in hospite non hereditatur */
     pristinus  = signal(SIGPIPE, SIG_IGN);
-    pt         = generare(tubus, LXXX, XXIV, NIHIL, NIHIL, &e);
+    pt         = generare(tubus, LXXX, XXIV, NIHIL, NIHIL, &e,
+        piscina);
     (vacuum)signal(SIGPIPE, pristinus);
-    (vacuum)omnia_legere(pt);
+    (vacuum)omnia_legere(pt, piscina);
     CREDO_VERUM(exitum_exspectare(pt, &ex));
     CREDO_AEQUALIS_I32(ex.signum, SIGPIPE);
     pt->claudere(pt->datum);
@@ -458,7 +477,8 @@ posix_probare (vacuum)
      * ~MXXIV octetos plenus) numquam obstat: custodia prius in
      * filio; deinde, si nihil pependit, in parente acceptos numerat
      * (partim acceptum, non totum) */
-    pt = generare(crudus, LXXX, XXIV, NIHIL, NIHIL, &e);
+    pt = generare(crudus, LXXX, XXIV, NIHIL, NIHIL, &e,
+        piscina);
     (vacuum)pt->legere(pt->datum, b, XVI, CC);
     CREDO_NON_PENDET((vacuum)multum_scribere(pt), V * M);
     si (credo_omnia_praeterierunt())
@@ -473,18 +493,39 @@ posix_probare (vacuum)
     CREDO_AEQUALIS_I32(fossas_numerare(), fossae_ante);
 }
 
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    configurationem_probare();
+}
+
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    memoriam_probare(c->piscina);
+}
+
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    posix_probare(c->piscina);
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I: configuratio", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "II: pons memoriae", _sectio_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "III: pons posix (infantes veri)", _sectio_tertia, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
 s32
 principale (vacuum)
 {
-    piscina = piscina_generare_dynamicum("probatio_pseudoterminale",
-        LXIV * MXXIV);
-    credo_aperire(piscina);
-
-    configurationem_probare();
-    memoriam_probare();
-    posix_probare();
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+    redde credo_suitam_currere("pseudoterminale", SECTIONES);
 }

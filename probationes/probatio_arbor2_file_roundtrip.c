@@ -266,17 +266,26 @@ _probare_roundtrip_fasciculum(Piscina* p, InternamentumChorda* intern,
  * Main
  * ================================================== */
 
-s32 principale(vacuum)
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
     Piscina* piscina;
     InternamentumChorda* intern;
     Arbor2Expansion* expansion;
 
+    /* piscina propria (IV MB, ut olim), non c->piscina: arbor2_glr nodos
+     * per piscina_allocare (non nullatos) creat et campos quosdam
+     * (commenta_ante, extra_specifiers) non ponit - in memoria reddita
+     * (sectiones plures, alvei novi sub ASan 0xbe) lectio campi non
+     * positi ruit. Vitium bibliothecae, non probationis; ergo sectio
+     * una cum gradibus, non sectiones XVI. */
+    (vacuum)c;
     piscina = piscina_generare_dynamicum("probatio_file_roundtrip", 4194304);
     si (!piscina)
     {
         imprimere("FRACTA: piscina_generatio\n");
-        redde I;
+        redde;
     }
 
     intern = internamentum_creare(piscina);
@@ -286,13 +295,11 @@ s32 principale(vacuum)
      * Files using latina.h macros would need GLR forking on unknown identifiers
      * to parse without expansion. For now, we test simpler C files. */
 
-    credo_aperire(piscina);
-
     /* ========================================================
      * PROBARE: Minimal files
      * ======================================================== */
     {
-        imprimere("\n--- Probans minimal files ---\n");
+        CREDO_GRADUS("minimal files");
 
         CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
             "probationes/fixa/roundtrip/minimal3.c"));
@@ -308,7 +315,7 @@ s32 principale(vacuum)
      * PROBARE: Simple file with control flow
      * ======================================================== */
     {
-        imprimere("\n--- Probans simple file ---\n");
+        CREDO_GRADUS("simple file");
 
         CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
             "probationes/fixa/roundtrip/simple.c"));
@@ -318,7 +325,7 @@ s32 principale(vacuum)
      * PROBARE: Multiple structs
      * ======================================================== */
     {
-        imprimere("\n--- Probans two structs ---\n");
+        CREDO_GRADUS("two structs");
 
         CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
             "probationes/fixa/roundtrip/two_structs.c"));
@@ -328,7 +335,7 @@ s32 principale(vacuum)
      * PROBARE: Struct member specifiers (Phase 3.5 validation)
      * ======================================================== */
     {
-        imprimere("\n--- Probans struct member specifiers ---\n");
+        CREDO_GRADUS("struct member specifiers");
 
         CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
             "probationes/fixa/roundtrip/struct_member_specifiers.c"));
@@ -338,7 +345,7 @@ s32 principale(vacuum)
      * PROBARE: Enums
      * ======================================================== */
     {
-        imprimere("\n--- Probans enum file ---\n");
+        CREDO_GRADUS("enum file");
 
         CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
             "probationes/fixa/roundtrip/enum_test.c"));
@@ -348,7 +355,7 @@ s32 principale(vacuum)
      * PROBARE: Typedef declarations
      * ======================================================== */
     {
-        imprimere("\n--- Probans typedef files ---\n");
+        CREDO_GRADUS("typedef files");
 
         CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
             "probationes/fixa/roundtrip/typedef_simple.c"));
@@ -361,7 +368,7 @@ s32 principale(vacuum)
      * PROBARE: Struct definition + simple function
      * ======================================================== */
     {
-        imprimere("\n--- Probans struct + function ---\n");
+        CREDO_GRADUS("struct + function");
 
         CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
             "probationes/fixa/roundtrip/test_debug.c"));
@@ -375,7 +382,7 @@ s32 principale(vacuum)
      * the stack arithmetic correct for P43 (param -> type declarator).
      * ======================================================== */
     {
-        imprimere("\n--- Probans struct/union/enum parameters ---\n");
+        CREDO_GRADUS("struct/union/enum parameters");
 
         CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
             "probationes/fixa/roundtrip/struct_param.c"));
@@ -395,7 +402,7 @@ s32 principale(vacuum)
      * GOTO entries to STATUS_26_GOTO pointing to state 4.
      * ======================================================== */
     {
-        imprimere("\n--- Probans local struct variable declarations ---\n");
+        CREDO_GRADUS("local struct variable declarations");
 
         CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
             "probationes/fixa/roundtrip/local_struct_var.c"));
@@ -409,7 +416,7 @@ s32 principale(vacuum)
      * Tests: p->x access pattern
      * ======================================================== */
     {
-        imprimere("\n--- Probans pointer-to-member (arrow) expressions ---\n");
+        CREDO_GRADUS("pointer-to-member (arrow) expressions");
 
         /* Debug 1: simple pointer deref */
         CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
@@ -447,7 +454,7 @@ s32 principale(vacuum)
      * PROBARE: Qualified parameters (const/volatile)
      * ======================================================== */
     {
-        imprimere("\n--- Probans qualified parameters ---\n");
+        CREDO_GRADUS("qualified parameters");
 
         CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
             "probationes/fixa/roundtrip/const_param.c"));
@@ -457,7 +464,7 @@ s32 principale(vacuum)
      * PROBARE: Cast expressions in declaration initializers
      * ======================================================== */
     {
-        imprimere("\n--- Probans cast in initializers ---\n");
+        CREDO_GRADUS("cast in initializers");
 
         CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
             "probationes/fixa/roundtrip/cast_init.c"));
@@ -494,7 +501,7 @@ s32 principale(vacuum)
      * Now supported with preprocessor roundtrip implementation!
      * ======================================================== */
     {
-        imprimere("\n--- Probans files with preprocessor ---\n");
+        CREDO_GRADUS("files with preprocessor");
 
         /* Simple include + declaration */
         CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
@@ -514,7 +521,7 @@ s32 principale(vacuum)
      * Tests comments inside expressions for exact roundtrip.
      * ======================================================== */
     {
-        imprimere("\n--- Probans expression interior comments ---\n");
+        CREDO_GRADUS("expression interior comments");
 
         CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
             "probationes/fixa/roundtrip/comment_expr_basic.c"));
@@ -569,7 +576,7 @@ s32 principale(vacuum)
      *          self-loop approach parses but loses earlier IDs in output.
      * ======================================================== */
     {
-        imprimere("\n--- Probans identifier chains (GLR fork) ---\n");
+        CREDO_GRADUS("identifier chains (GLR fork)");
 
         /* Phase 1: Two identifiers (ID ID) */
         CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
@@ -587,7 +594,7 @@ s32 principale(vacuum)
      *       these without expansion. For now, test simpler files.
      * ======================================================== */
     {
-        imprimere("\n--- Probans arbor v1 files ---\n");
+        CREDO_GRADUS("arbor v1 files");
 
         CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
             "probationes/fixa/roundtrip/arrow_simple.c"));
@@ -647,10 +654,17 @@ s32 principale(vacuum)
             "probationes/fixa/roundtrip/base64.c")); */
     }
 
-    /* Print summary */
-    credo_imprimere_compendium();
-
     piscina_destruere(piscina);
 
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "roundtrip fasciculorum", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("arbor2_file_roundtrip", SECTIONES);
 }

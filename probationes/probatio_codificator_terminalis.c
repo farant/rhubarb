@@ -540,25 +540,16 @@ _aequat (
                    == ZEPHYRUM);
 }
 
-s32 principale (vacuum)
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
              Piscina* piscina;
- InternamentumChorda* intern;
      CodificatorModi  modi;
                  i32  i;
 
-    piscina = piscina_generare_dynamicum(
-        "probatio_codificator_terminalis", M * M);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    credo_aperire(piscina);
+    piscina = c->piscina;
     memset(&modi, ZEPHYRUM, magnitudo(CodificatorModi));
-
-    imprimere("\n--- I. vectores Ghostty (%d) ---\n",
-        (int)VECTORUM_NUMERUS);
     per (i = ZEPHYRUM; i < VECTORUM_NUMERUS; i++)
     {
         constans Vector* v = &VECTORES[i];
@@ -588,8 +579,17 @@ s32 principale (vacuum)
             _mensura(v->titulus, v->expectatum)));
         CREDO_AEQUALIS_I32 (consumpta, n);
     }
+}
 
-    imprimere("\n--- II. consumptio: clavis sine TEXTU sequente ---\n");
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+             Piscina* piscina;
+     CodificatorModi  modi;
+
+    piscina = c->piscina;
+    memset(&modi, ZEPHYRUM, magnitudo(CodificatorModi));
     {
                   Eventus  e[II];
         ChordaAedificator* a = chorda_aedificator_creare(piscina, LXIV);
@@ -602,8 +602,16 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (codificator_eventa(&modi, e, ZEPHYRUM, a),
             ZEPHYRUM);
     }
+}
 
-    imprimere("\n--- III. reditus: octeti, rivus, codificator ---\n");
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+             Piscina* piscina;
+                 i32  i;
+
+    piscina = c->piscina;
     per (i = ZEPHYRUM; i < VECTORUM_NUMERUS; i++)
     {
         constans Vector* v = &VECTORES[i];
@@ -623,8 +631,17 @@ s32 principale (vacuum)
         }
         CREDO_VERUM (_octeti_aequales(c, v->expectatum, n));
     }
+}
 
-    imprimere("\n--- IV. oraculum tabulae: claves B4b iterum ---\n");
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+             Piscina* piscina;
+ InternamentumChorda* intern;
+                 i32  i;
+
+    piscina = c->piscina;
     {
         chorda  fons    = filum_legere_totum(TABULA, piscina);
            Xar* tabula;
@@ -669,8 +686,15 @@ s32 principale (vacuum)
         /* VIII scaenae x II profila (B6a-ii: et mus) */
         CREDO_AEQUALIS_I32 (probati, XVI);
     }
+}
 
-    imprimere("\n--- V. mus SGR (cellula X x XX, Modulus) ---\n");
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         CodificatorModi modi_muris;
                 Eventus e;
@@ -751,7 +775,7 @@ s32 principale (vacuum)
         CREDO_VERUM (_aequat(_codificare(&modi_muris, &e, piscina),
             ""));
 
-        imprimere("\n--- VI. focus (?1004) ---\n");
+        CREDO_GRADUS("VI. focus (?1004)");
         memset(&e, ZEPHYRUM, magnitudo(Eventus));
         e.genus = EVENTUS_FOCUS;
         CREDO_VERUM (_aequat(_codificare(&modi_muris, &e, piscina),
@@ -763,7 +787,7 @@ s32 principale (vacuum)
         CREDO_VERUM (_aequat(_codificare(&modi_muris, &e, piscina),
             "\033[O"));
 
-        imprimere("\n--- VII. glutinum (paste.zig) ---\n");
+        CREDO_GRADUS("VII. glutinum (paste.zig)");
         e = _glutinum(EVENTUS_TEXTUS, "a\nb");
         CREDO_VERUM (_aequat(_codificare(&modi_muris, &e, piscina),
             "a\rb"));
@@ -795,8 +819,15 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (codificator_eventa(&modi_muris, fl, II,
             chorda_aedificator_creare(piscina, VIII)), I);
     }
+}
 
-    imprimere("\n--- VIII. reditus: mus, focus, glutinum ---\n");
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans character* octeti[] = {
             "\033[<0;3;3M\033[<0;3;3m",
@@ -827,8 +858,15 @@ s32 principale (vacuum)
             CREDO_VERUM (_aequat(c, octeti[j]));
         }
     }
+}
 
-    imprimere("\n--- IX. modi D6: X10, formae, DECCKM, LNM ---\n");
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         CodificatorModi m;
                 Eventus e;
@@ -987,8 +1025,28 @@ s32 principale (vacuum)
         m.lnm = FALSUM;
         CREDO_VERUM (_aequat(_codificare(&m, &e, piscina), "a\rb\rc"));
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I. vectores Ghostty", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "II. consumptio: clavis sine TEXTU sequente", _sectio_secunda,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "III. reditus: octeti, rivus, codificator", _sectio_tertia, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "IV. oraculum tabulae: claves B4b iterum", _sectio_quarta, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "V. mus SGR (cellula X x XX, Modulus)", _sectio_quinta, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "VIII. reditus: mus, focus, glutinum", _sectio_sexta, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "IX. modi D6: X10, formae, DECCKM, LNM", _sectio_septima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("codificator_terminalis", SECTIONES);
 }

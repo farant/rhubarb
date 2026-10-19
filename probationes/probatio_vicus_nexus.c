@@ -31,9 +31,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-hic_manens Piscina*             piscina;
-hic_manens InternamentumChorda* intern;
-
 /* ictus in cellulam (linea, columna) paginae sinistrae */
 interior vacuum
 ictus (
@@ -50,14 +47,14 @@ interior vacuum
 ictus_retro (
     Dispensator* d,
             s32  linea,
-            s32  columna)
+            s32  columna,
+            s64* tempus)
 {
-    hic_manens s64 tempus = CM * M;
-           Eventus e;
+    Eventus e;
 
     memset(&e, ZEPHYRUM, magnitudo(Eventus));
     e.genus        = EVENTUS_MUS_DEPRESSUS;
-    e.tempus       = tempus;
+    e.tempus       = *tempus;
     e.datum.mus.x  = VI + columna * VI + III;
     e.datum.mus.y            = VICUS_ALTITUDO_TABULARUM + VIII
                              + linea * VIII + IV;
@@ -65,9 +62,9 @@ ictus_retro (
     e.datum.mus.modificantes  = MOD_SHIFT;
     dispensator_tractare(d, &e);
     e.genus   = EVENTUS_MUS_LIBERATUS;
-    e.tempus  = tempus + X;
+    e.tempus  = *tempus + X;
     dispensator_tractare(d, &e);
-    tempus += C;
+    *tempus += C;
 }
 
 /* linea scribitur: ictus ad initium, inserere, Esc */
@@ -103,13 +100,18 @@ pagina_est (
                 Volumen* vol,
      constans character* nomen_paginae)
 {
-    chorda c;
-       b32 inventum;
+     Piscina* piscina;
+      chorda  c;
+         b32  inventum;
 
+    piscina = piscina_generare_dynamicum("probatio_vicus_nexus",
+        M);
     c = volumen_plagulam_promere(vol, chorda_ex_literis(
         "scriba/visus/3_sinistrum_scriba", piscina), piscina,
         &inventum);
-    redde inventum && chorda_aequalis_literis(c, nomen_paginae);
+    inventum = inventum && chorda_aequalis_literis(c, nomen_paginae);
+    piscina_destruere(piscina);
+    redde inventum;
 }
 
 interior chorda*
@@ -121,7 +123,8 @@ attributum (
     InsulaRamus  r;
 
     l = vicus_latus(vicus_activa(v), VICUS_SINISTRUM);
-    r = insula_ramus(v->repo, "scriba", chorda_ut_cstr(l->id, piscina));
+    r = insula_ramus(v->repo, "scriba", chorda_ut_cstr(l->id,
+        v->piscina));
     redde insula_ramus_attributum(&r, titulus);
 }
 
@@ -168,9 +171,9 @@ pixela_coloris (
                 s32  y;
                 i32  n;
 
-    tp = tabula_pixelorum_creare_nuda(piscina, CDLXXX, CDLXXX
+    tp = tabula_pixelorum_creare_nuda(app->piscina, CDLXXX, CDLXXX
         + VICUS_ALTITUDO_TABULARUM);
-    lf = ludus_fenestra_creare(piscina, app->d,
+    lf = ludus_fenestra_creare(app->piscina, app->d,
         vicus_figurae(app->vicus),
         ZEPHYRUM, vicus_imago_fons, app->vicus, tp);
     si (!lf)
@@ -195,21 +198,22 @@ pixela_coloris (
     redde n;
 }
 
-s32 principale (vacuum)
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-           Volumen* vol;
-   VicusApplicatio  app;
-             Vicus* v;
-        ManusLudus* m;
-               i32  secundus;
+                Piscina* piscina;
+    InternamentumChorda* intern;
+                    s64  tempus;
+                Volumen* vol;
+        VicusApplicatio  app;
+                  Vicus* v;
+             ManusLudus* m;
+                    i32  secundus;
 
-    piscina = piscina_generare_dynamicum("probatio_vicus_nexus",
-        LXIV * M);
-    si (!piscina)
-    { imprimere("FRACTA: piscina\n"); redde I;
-    }
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
+    piscina  = c->piscina;
+    tempus   = CM * M;
+    intern   = internamentum_creare(piscina);
     thema_initiare();
     (vacuum)setenv("SHELL", "/bin/sh", I);
     vol = volumen_temporarium(piscina, "probatio_vicus_nexus");
@@ -229,7 +233,6 @@ s32 principale (vacuum)
     paginam_mutare(app.d, CLAVIS_SINISTER);
     CREDO_VERUM(pagina_est(vol, "1"));
 
-    imprimere("\n--- I: '#2' - pagina id II ---\n");
     ictus(m, I, ZEPHYRUM);
     CREDO_VERUM(pagina_est(vol, "2"));
     CREDO_VERUM(cursor_est(v, ZEPHYRUM, ZEPHYRUM));
@@ -248,13 +251,13 @@ s32 principale (vacuum)
     CREDO_VERUM(cursor_est(v, I, VI));
 
     imprimere("\n--- VII: Shift+ictus - tag retro ---\n");
-    ictus_retro(app.d, I, VII);
+    ictus_retro(app.d, I, VII, &tempus);
     CREDO_VERUM(pagina_est(vol, "3"));
     CREDO_VERUM(cursor_est(v, IV, II));
-    ictus_retro(app.d, IV, III);
+    ictus_retro(app.d, IV, III, &tempus);
     CREDO_VERUM(pagina_est(vol, "2"));
     CREDO_VERUM(cursor_est(v, III, V));
-    ictus_retro(app.d, III, VI);
+    ictus_retro(app.d, III, VI, &tempus);
     CREDO_VERUM(pagina_est(vol, "1"));
     CREDO_VERUM(cursor_est(v, I, VI));
 
@@ -297,9 +300,17 @@ s32 principale (vacuum)
     CREDO_VERUM(pixela_coloris(&app, III, V, XI, secundus) > ZEPHYRUM);
     CREDO_AEQUALIS_I32(pixela_coloris(&app, III, ZEPHYRUM, V, secundus),
         ZEPHYRUM);
-
-    imprimere("\n");
-    credo_imprimere_compendium();
     volumen_claudere(vol);
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I: '#2' - pagina id II", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("vicus_nexus", SECTIONES);
 }

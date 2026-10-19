@@ -179,18 +179,31 @@ _commercium (
     redde n;
 }
 
+/* parare: suturae falsae ad initium reponuntur (suita sectionem unam
+ * habet, ergo parare sectionis idem ac suitae) */
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    aestimator_falsus.numerus            = ZEPHYRUM;
+    aestimator_falsus.ultimum[ZEPHYRUM]  = '\0';
+    imaginator_via[ZEPHYRUM]             = '\0';
+    imaginator_numerus                   = ZEPHYRUM;
+    magnitudinator_lat_petita            = ZEPHYRUM;
+    magnitudinator_alt_petita            = ZEPHYRUM;
+    magnitudinator_numerus               = ZEPHYRUM;
+}
+
 
 /* ========================================================================
- * PRINCIPALE
+ * SECTIO: iter totum (tesserae ordine crescunt - una sectio)
  * ======================================================================== */
 
-s32
-principale (vacuum);
-
-s32
-principale (vacuum)
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-                      b32  praeteritus;
                   Piscina* piscina;
                   Piscina* pv;
     HospitiumConfiguratio  figura;
@@ -200,18 +213,8 @@ principale (vacuum)
           ImperiumFructus  fructus;
                 character  buffer[8192];
 
-    piscina = piscina_generare_dynamicum("probatio_imperium", 4194304);
-    pv = piscina_generare_dynamicum("probatio_imperium_v",
-        1048576);
-    si (!piscina || !pv)
-    {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-    aestimator_falsus.numerus            = ZEPHYRUM;
-    aestimator_falsus.ultimum[ZEPHYRUM]  = '\0';
+    piscina  = c->piscina;
+    pv       = c->piscina;
 
     memset(&figura, 0, magnitudo(figura));
     figura.portus  = ZEPHYRUM;
@@ -450,11 +453,17 @@ principale (vacuum)
         vivarium_gressus(&v);
     }
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-
     hospitium_destruere(hospitium);
-    piscina_destruere(pv);
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "ansa imperandi", _sectio_prima, _suitam_parare, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("imperium", SECTIONES);
 }

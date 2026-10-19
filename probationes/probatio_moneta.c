@@ -122,116 +122,127 @@ _numerare (
     redde extra;
 }
 
-s32
-principale (vacuum)
+/* ---- ULID: forma et unicitas ---- */
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-    Piscina* piscina;
-        b32  praeteritus;
+    character a[MONETA_ULID_MENSURA];
+    character b[MONETA_ULID_MENSURA];
 
-    piscina = piscina_generare_dynamicum("probatio_moneta", 65536);
-    si (piscina == NIHIL)
+    (vacuum)c;
+    moneta_ulid(a);
+    moneta_ulid(b);
+
+    CREDO_AEQUALIS_I32((i32)strlen(a), XXVI);
+    CREDO_AEQUALIS_I32((i32)strlen(b), XXVI);
+    /* monotonia intra ms eundem: a <= b semper */
+    CREDO_VERUM(strcmp(a, b) <= ZEPHYRUM);
+    CREDO_VERUM(strcmp(a, b) != ZEPHYRUM);
+}
+
+/* ---- ULID fortuitum: sine monotonia, cauda differt ---- */
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    character a[MONETA_ULID_MENSURA];
+    character b[MONETA_ULID_MENSURA];
+
+    (vacuum)c;
+    moneta_ulid_fortuita(a);
+    moneta_ulid_fortuita(b);
+
+    CREDO_AEQUALIS_I32((i32)strlen(a), XXVI);
+    CREDO_VERUM(strcmp(a, b) != ZEPHYRUM);
+    /* praefixum temporis (X characteres) idem intra ms eundem,
+     * cauda fortuita differt - id ipsum est cur haec varians
+     * exsistit (praefixa brevia discernenda) */
+    CREDO_VERUM(strncmp(a + X, b + X, XVI) != ZEPHYRUM);
+}
+
+/* ---- octeti fortuiti: fons secretorum ---- */
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+     i8 a[32];
+     i8 b[32];
+     i8 sentinella[8];
+    i32 i;
+    i32 differentiae = ZEPHYRUM;
+
+    (vacuum)c;
+
+    memset(a, ZEPHYRUM, magnitudo(a));
+    memset(b, ZEPHYRUM, magnitudo(b));
+    CREDO_VERUM(moneta_octeti_fortuiti(a, XXXII));
+    CREDO_VERUM(moneta_octeti_fortuiti(b, XXXII));
+
+    /* duae vocationes differant (probabilitas collisionis
+     * 2^-256 - si haec cadit, fons fractus est, non fortuna) */
+    per (i = ZEPHYRUM; i < XXXII; i++)
     {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-    /* ---- ULID: forma et unicitas ---- */
-    {
-        character a[MONETA_ULID_MENSURA];
-        character b[MONETA_ULID_MENSURA];
-
-        imprimere("\n--- Probans moneta_ulid ---\n");
-        moneta_ulid(a);
-        moneta_ulid(b);
-
-        CREDO_AEQUALIS_I32((i32)strlen(a), XXVI);
-        CREDO_AEQUALIS_I32((i32)strlen(b), XXVI);
-        /* monotonia intra ms eundem: a <= b semper */
-        CREDO_VERUM(strcmp(a, b) <= ZEPHYRUM);
-        CREDO_VERUM(strcmp(a, b) != ZEPHYRUM);
-    }
-
-    /* ---- ULID fortuitum: sine monotonia, cauda differt ---- */
-    {
-        character a[MONETA_ULID_MENSURA];
-        character b[MONETA_ULID_MENSURA];
-
-        imprimere("\n--- Probans moneta_ulid_fortuita ---\n");
-        moneta_ulid_fortuita(a);
-        moneta_ulid_fortuita(b);
-
-        CREDO_AEQUALIS_I32((i32)strlen(a), XXVI);
-        CREDO_VERUM(strcmp(a, b) != ZEPHYRUM);
-        /* praefixum temporis (X characteres) idem intra ms eundem,
-         * cauda fortuita differt - id ipsum est cur haec varians
-         * exsistit (praefixa brevia discernenda) */
-        CREDO_VERUM(strncmp(a + X, b + X, XVI) != ZEPHYRUM);
-    }
-
-    /* ---- octeti fortuiti: fons secretorum ---- */
-    {
-         i8 a[32];
-         i8 b[32];
-         i8 sentinella[8];
-        i32 i;
-        i32 differentiae = ZEPHYRUM;
-
-        imprimere("\n--- Probans moneta_octeti_fortuiti ---\n");
-
-        memset(a, ZEPHYRUM, magnitudo(a));
-        memset(b, ZEPHYRUM, magnitudo(b));
-        CREDO_VERUM(moneta_octeti_fortuiti(a, XXXII));
-        CREDO_VERUM(moneta_octeti_fortuiti(b, XXXII));
-
-        /* duae vocationes differant (probabilitas collisionis
-         * 2^-256 - si haec cadit, fons fractus est, non fortuna) */
-        per (i = ZEPHYRUM; i < XXXII; i++)
+        si (a[i] != b[i])
         {
-            si (a[i] != b[i])
-            {
-                differentiae++;
-            }
-        }
-        CREDO_VERUM(differentiae > ZEPHYRUM);
-
-        /* non omnes zephyri (fons mutus id daret) */
-        differentiae = ZEPHYRUM;
-        per (i = ZEPHYRUM; i < XXXII; i++)
-        {
-            si (a[i] != ZEPHYRUM)
-            {
-                differentiae++;
-            }
-        }
-        CREDO_VERUM(differentiae > ZEPHYRUM);
-
-        /* argumenta mala: FALSUM, effusio INTACTA */
-        memset(sentinella, 0x5A, magnitudo(sentinella));
-        CREDO_FALSUM(moneta_octeti_fortuiti(NIHIL, VIII));
-        CREDO_FALSUM(moneta_octeti_fortuiti(sentinella, ZEPHYRUM));
-        per (i = ZEPHYRUM; i < VIII; i++)
-        {
-            CREDO_AEQUALIS_I32((i32)(i8)sentinella[i], 0x5A);
+            differentiae++;
         }
     }
+    CREDO_VERUM(differentiae > ZEPHYRUM);
 
-    /* ---- nanoid et nanoid plagulae: forma ---- */
-    imprimere("\n--- Probans moneta_nanoid ---\n");
+    /* non omnes zephyri (fons mutus id daret) */
+    differentiae = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < XXXII; i++)
+    {
+        si (a[i] != ZEPHYRUM)
+        {
+            differentiae++;
+        }
+    }
+    CREDO_VERUM(differentiae > ZEPHYRUM);
+
+    /* argumenta mala: FALSUM, effusio INTACTA */
+    memset(sentinella, 0x5A, magnitudo(sentinella));
+    CREDO_FALSUM(moneta_octeti_fortuiti(NIHIL, VIII));
+    CREDO_FALSUM(moneta_octeti_fortuiti(sentinella, ZEPHYRUM));
+    per (i = ZEPHYRUM; i < VIII; i++)
+    {
+        CREDO_AEQUALIS_I32((i32)(i8)sentinella[i], 0x5A);
+    }
+}
+
+/* ---- nanoid et nanoid plagulae: forma ---- */
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     _probare_formam(moneta_nanoid, _signum_nanoid, XXI, LXIV);
-    imprimere("\n--- Probans moneta_nanoid_plagulae ---\n");
+}
+
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     _probare_formam(moneta_nanoid_plagulae, _signum_plagulae, XII,
                     XXXVI);
+}
 
-    /* ---- nanoid configurabile: uniformitas (larva, non modulus) ----
-     *
-     * 144 x 1000 signa ex 0-9 A-Z (36). P = summa signorum primorum
-     * quattuor, binomialis (144000, 1/9): media 16000, sigma ~119.
-     * D = 9P - 144000: sub uniformitate 0 +- ~1073; sub modulo P =
-     * 144000 x 32/256 = 18000, ergo D = 18000. Limen |D| minus 8000
-     * (~7.5 sigma): casu numquam fallit, modulum semper capit.
-     * Fascia 3400..4600 singulorum (sigma ~62, ~9.6 sigma) larvam
-     * nimis parvam capit (signa ultima numquam apparent). */
+/* ---- nanoid configurabile: uniformitas (larva, non modulus) ----
+ *
+ * 144 x 1000 signa ex 0-9 A-Z (36). P = summa signorum primorum
+ * quattuor, binomialis (144000, 1/9): media 16000, sigma ~119.
+ * D = 9P - 144000: sub uniformitate 0 +- ~1073; sub modulo P =
+ * 144000 x 32/256 = 18000, ergo D = 18000. Limen |D| minus 8000
+ * (~7.5 sigma): casu numquam fallit, modulum semper capit.
+ * Fascia 3400..4600 singulorum (sigma ~62, ~9.6 sigma) larvam
+ * nimis parvam capit (signa ultima numquam apparent). */
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         character effusio[M + I];
               i32 numeri[XXXVI];
@@ -244,7 +255,6 @@ principale (vacuum)
               s32 differentia;
         character c;
 
-        imprimere("\n--- Probans uniformitatem nanoid ---\n");
         memset(numeri, ZEPHYRUM, magnitudo(numeri));
         per (i = ZEPHYRUM; i < CXLIV; i++)
         {
@@ -285,100 +295,122 @@ principale (vacuum)
         CREDO_AEQUALIS_I32(extra_fasciam, ZEPHYRUM);
         CREDO_VERUM(differentia < 8000 && differentia > -8000);
     }
+}
 
-    /* ---- nanoid configurabile: alphabeta extrema ---- */
+/* ---- nanoid configurabile: alphabeta extrema ---- */
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    character effusio[M + I];
+    character alphabetum[CCLVI];
+          i32 numeri[III];
+          i32 i;
+
+    (vacuum)c;
+
+    /* "01": larva 1, nihil abicitur */
+    memset(numeri, ZEPHYRUM, magnitudo(numeri));
+    CREDO_VERUM(moneta_nanoid_alphabeto(effusio, M, "01"));
+    CREDO_AEQUALIS_I32((i32)strlen(effusio), M);
+    CREDO_AEQUALIS_I32(_numerare(effusio, M, '0', '1', numeri),
+                       ZEPHYRUM);
+    CREDO_VERUM(numeri[ZEPHYRUM] > ZEPHYRUM);
+    CREDO_VERUM(numeri[I] > ZEPHYRUM);
+
+    /* "012": larva 3, index 3 abicitur (alioquin terminator in
+     * medio identitatis - strlen breviorem videret) */
+    memset(numeri, ZEPHYRUM, magnitudo(numeri));
+    CREDO_VERUM(moneta_nanoid_alphabeto(effusio, M, "012"));
+    CREDO_AEQUALIS_I32((i32)strlen(effusio), M);
+    CREDO_AEQUALIS_I32(_numerare(effusio, M, '0', '2', numeri),
+                       ZEPHYRUM);
+    CREDO_VERUM(numeri[ZEPHYRUM] > ZEPHYRUM);
+    CREDO_VERUM(numeri[I] > ZEPHYRUM);
+    CREDO_VERUM(numeri[II] > ZEPHYRUM);
+
+    /* octeti 1..255 distincti: larva 255, index 255 abicitur;
+     * octeti supra 127 per (i8) in visa legunt */
+    per (i = ZEPHYRUM; i < CCLV; i++)
     {
-        character effusio[M + I];
-        character alphabetum[CCLVI];
-              i32 numeri[III];
-              i32 i;
-
-        imprimere("\n--- Probans alphabeta extrema nanoid ---\n");
-
-        /* "01": larva 1, nihil abicitur */
-        memset(numeri, ZEPHYRUM, magnitudo(numeri));
-        CREDO_VERUM(moneta_nanoid_alphabeto(effusio, M, "01"));
-        CREDO_AEQUALIS_I32((i32)strlen(effusio), M);
-        CREDO_AEQUALIS_I32(_numerare(effusio, M, '0', '1', numeri),
-                           ZEPHYRUM);
-        CREDO_VERUM(numeri[ZEPHYRUM] > ZEPHYRUM);
-        CREDO_VERUM(numeri[I] > ZEPHYRUM);
-
-        /* "012": larva 3, index 3 abicitur (alioquin terminator in
-         * medio identitatis - strlen breviorem videret) */
-        memset(numeri, ZEPHYRUM, magnitudo(numeri));
-        CREDO_VERUM(moneta_nanoid_alphabeto(effusio, M, "012"));
-        CREDO_AEQUALIS_I32((i32)strlen(effusio), M);
-        CREDO_AEQUALIS_I32(_numerare(effusio, M, '0', '2', numeri),
-                           ZEPHYRUM);
-        CREDO_VERUM(numeri[ZEPHYRUM] > ZEPHYRUM);
-        CREDO_VERUM(numeri[I] > ZEPHYRUM);
-        CREDO_VERUM(numeri[II] > ZEPHYRUM);
-
-        /* octeti 1..255 distincti: larva 255, index 255 abicitur;
-         * octeti supra 127 per (i8) in visa legunt */
-        per (i = ZEPHYRUM; i < CCLV; i++)
-        {
-            alphabetum[i] = (character)(i + I);
-        }
-        alphabetum[CCLV] = '\0';
-        CREDO_VERUM(moneta_nanoid_alphabeto(effusio, M, alphabetum));
-        CREDO_AEQUALIS_I32((i32)strlen(effusio), M);
+        alphabetum[i] = (character)(i + I);
     }
+    alphabetum[CCLV] = '\0';
+    CREDO_VERUM(moneta_nanoid_alphabeto(effusio, M, alphabetum));
+    CREDO_AEQUALIS_I32((i32)strlen(effusio), M);
+}
 
-    /* ---- nanoid configurabile: terminus et recusationes ---- */
+/* ---- nanoid configurabile: terminus et recusationes ---- */
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    character effusio[XVI];
+          i32 i;
+          i32 intacta = ZEPHYRUM;
+
+    (vacuum)c;
+
+    /* terminus: longitudo V scribit V signa + terminatorem,
+     * nihil ultra */
+    memset(effusio, 'Q', magnitudo(effusio));
+    CREDO_VERUM(moneta_nanoid_alphabeto(effusio, V, "ABC"));
+    CREDO_AEQUALIS_I32((i32)strlen(effusio), V);
+    per (i = VI; i < XVI; i++)
     {
-        character effusio[XVI];
-              i32 i;
-              i32 intacta = ZEPHYRUM;
-
-        imprimere("\n--- Probans recusationes nanoid ---\n");
-
-        /* terminus: longitudo V scribit V signa + terminatorem,
-         * nihil ultra */
-        memset(effusio, 'Q', magnitudo(effusio));
-        CREDO_VERUM(moneta_nanoid_alphabeto(effusio, V, "ABC"));
-        CREDO_AEQUALIS_I32((i32)strlen(effusio), V);
-        per (i = VI; i < XVI; i++)
+        si (effusio[i] == 'Q')
         {
-            si (effusio[i] == 'Q')
-            {
-                intacta++;
-            }
+            intacta++;
         }
-        CREDO_AEQUALIS_I32(intacta, X);
-
-        /* recusationes: FALSUM, effusio "" (numquam dimidia). Gemellus
-         * positivus supra ("ABC" in eodem buffer) mechanismum vivum
-         * probat; "ABCA" ab eo solo signo duplicato differt. */
-        CREDO_FALSUM(moneta_nanoid_alphabeto(NIHIL, V, "ABC"));
-
-        memset(effusio, 'Q', magnitudo(effusio));
-        CREDO_FALSUM(moneta_nanoid_alphabeto(effusio, V, NIHIL));
-        CREDO_AEQUALIS_I32((i32)(i8)effusio[ZEPHYRUM], ZEPHYRUM);
-
-        memset(effusio, 'Q', magnitudo(effusio));
-        CREDO_FALSUM(moneta_nanoid_alphabeto(effusio, ZEPHYRUM, "ABC"));
-        CREDO_AEQUALIS_I32((i32)(i8)effusio[ZEPHYRUM], ZEPHYRUM);
-
-        memset(effusio, 'Q', magnitudo(effusio));
-        CREDO_FALSUM(moneta_nanoid_alphabeto(effusio, V, "A"));
-        CREDO_AEQUALIS_I32((i32)(i8)effusio[ZEPHYRUM], ZEPHYRUM);
-
-        memset(effusio, 'Q', magnitudo(effusio));
-        CREDO_FALSUM(moneta_nanoid_alphabeto(effusio, V, ""));
-        CREDO_AEQUALIS_I32((i32)(i8)effusio[ZEPHYRUM], ZEPHYRUM);
-
-        memset(effusio, 'Q', magnitudo(effusio));
-        CREDO_FALSUM(moneta_nanoid_alphabeto(effusio, V, "ABCA"));
-        CREDO_AEQUALIS_I32((i32)(i8)effusio[ZEPHYRUM], ZEPHYRUM);
     }
+    CREDO_AEQUALIS_I32(intacta, X);
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    credo_claudere();
-    piscina_destruere(piscina);
+    /* recusationes: FALSUM, effusio "" (numquam dimidia). Gemellus
+     * positivus supra ("ABC" in eodem buffer) mechanismum vivum
+     * probat; "ABCA" ab eo solo signo duplicato differt. */
+    CREDO_FALSUM(moneta_nanoid_alphabeto(NIHIL, V, "ABC"));
 
-    redde praeteritus ? ZEPHYRUM : I;
+    memset(effusio, 'Q', magnitudo(effusio));
+    CREDO_FALSUM(moneta_nanoid_alphabeto(effusio, V, NIHIL));
+    CREDO_AEQUALIS_I32((i32)(i8)effusio[ZEPHYRUM], ZEPHYRUM);
+
+    memset(effusio, 'Q', magnitudo(effusio));
+    CREDO_FALSUM(moneta_nanoid_alphabeto(effusio, ZEPHYRUM, "ABC"));
+    CREDO_AEQUALIS_I32((i32)(i8)effusio[ZEPHYRUM], ZEPHYRUM);
+
+    memset(effusio, 'Q', magnitudo(effusio));
+    CREDO_FALSUM(moneta_nanoid_alphabeto(effusio, V, "A"));
+    CREDO_AEQUALIS_I32((i32)(i8)effusio[ZEPHYRUM], ZEPHYRUM);
+
+    memset(effusio, 'Q', magnitudo(effusio));
+    CREDO_FALSUM(moneta_nanoid_alphabeto(effusio, V, ""));
+    CREDO_AEQUALIS_I32((i32)(i8)effusio[ZEPHYRUM], ZEPHYRUM);
+
+    memset(effusio, 'Q', magnitudo(effusio));
+    CREDO_FALSUM(moneta_nanoid_alphabeto(effusio, V, "ABCA"));
+    CREDO_AEQUALIS_I32((i32)(i8)effusio[ZEPHYRUM], ZEPHYRUM);
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "moneta_ulid", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "moneta_ulid_fortuita", _sectio_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "moneta_octeti_fortuiti", _sectio_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "moneta_nanoid", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "moneta_nanoid_plagulae", _sectio_quinta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "uniformitatem nanoid", _sectio_sexta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "alphabeta extrema nanoid", _sectio_septima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "recusationes nanoid", _sectio_octava, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("moneta", SECTIONES);
 }

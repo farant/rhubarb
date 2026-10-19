@@ -26,8 +26,6 @@
 #define VIA_PICTORIS "build/probatio_ludus_imago_pictor.png"
 #define VIA_PROBAE   "build/probatio_ludus_imago_quattuor.png"
 
-hic_manens Piscina* piscina;
-
 interior b32
 octeti_sunt (
     constans Imago* im,
@@ -45,15 +43,17 @@ octeti_sunt (
 }
 
 interior vacuum
-conversionem_probare (vacuum)
+_sectio_prima (
+    CredoContextus* c)
 {
+            Piscina* piscina;
     TabulaPixelorum* t;
               Imago  im;
        ImagoFructus  lecta;
          PngFructus  scripta;
 
-    imprimere("\n--- I: tabula in imaginem ---\n");
-    t = tabula_pixelorum_creare_nuda(piscina, II, II);
+    piscina  = c->piscina;
+    t        = tabula_pixelorum_creare_nuda(piscina, II, II);
     CREDO_NON_NIHIL(t);
     tabula_pixelorum_ponere_pixelum(t, ZEPHYRUM, ZEPHYRUM,
         RGB(CCLV, ZEPHYRUM, ZEPHYRUM));
@@ -72,7 +72,7 @@ conversionem_probare (vacuum)
     CREDO_VERUM(octeti_sunt(&im, III, X, XX, XXX, XL));
     CREDO_FALSUM(tabula_pixelorum_in_imaginem(NIHIL, piscina, &im));
 
-    imprimere("\n--- II: PNG scriptum et relectum ---\n");
+    CREDO_GRADUS("II: PNG scriptum et relectum");
     scripta = imago_png_scribere(&im, VIA_PROBAE, piscina);
     CREDO_VERUM(scripta.successus);
     lecta = imago_caricare_ex_file(VIA_PROBAE, piscina);
@@ -83,8 +83,10 @@ conversionem_probare (vacuum)
 }
 
 interior vacuum
-pictorem_probare (vacuum)
+_sectio_secunda (
+    CredoContextus* c)
 {
+                Piscina* piscina;
     InternamentumChorda* intern;
                 Volumen* vol;
        PictorApplicatio  app;
@@ -94,8 +96,8 @@ pictorem_probare (vacuum)
                     i32  i;
                     i32  diversi;
 
-    imprimere("\n--- III: pictor sine fenestra ---\n");
-    intern = internamentum_creare(piscina);
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     thema_initiare();
     vol = volumen_temporarium(piscina, "probatio_ludus_imago");
     CREDO_NON_NIHIL(vol);
@@ -131,17 +133,16 @@ pictorem_probare (vacuum)
     volumen_claudere(vol);
 }
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I: tabula in imaginem", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "III: pictor sine fenestra", _sectio_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
 s32
 principale (vacuum)
 {
-    piscina = piscina_generare_dynamicum("probatio_ludus_imago",
-        LXIV * MXXIV * MXXIV);
-    credo_aperire(piscina);
-
-    conversionem_probare();
-    pictorem_probare();
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+    redde credo_suitam_currere("ludus_imago", SECTIONES);
 }

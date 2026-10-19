@@ -130,42 +130,37 @@ arithmetica_reductio(
     }
 }
 
-s32 principale(vacuum)
-{
-    Piscina*              piscina;
-    InternamentumChorda*  intern;
-    LapifexGrammatica*    g;
-    LapifexTabula*        t;
-    s32 NUMBER_IDX;
-    s32 EOF_IDX;
+/* ========================================================
+ * PROBARE I: Simplex numerus — "42"
+ * ======================================================== */
 
-    piscina = piscina_generare_dynamicum("probatio_lapifex_lexere", IV * MXXIV);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    intern = internamentum_creare(piscina);
-    credo_aperire(piscina);
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+      LapifexGrammatica* g;
+          LapifexTabula* t;
+                     s32 NUMBER_IDX;
+                     s32 EOF_IDX;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
 
     /* Praeparare tabulam et indices */
     t = tabulam_praeparare(piscina, intern, &g);
     si (!t)
     {
         imprimere("FRACTA: tabula non constructa\n");
-        redde I;
+        redde;
     }
 
     NUMBER_IDX = invenire_symbolum(g, "NUMBER");
     EOF_IDX    = invenire_symbolum(g, "EOF");
 
-    /* ========================================================
-     * PROBARE I: Simplex numerus — "42"
-     * ======================================================== */
     {
         LapifexLexFructus f;
-
-        imprimere("\n--- Probans I: simplex numerus \"42\" ---\n");
 
         f = lapifex_lexere(g, "42", II, piscina);
         CREDO_VERUM(f.successus);
@@ -176,15 +171,40 @@ s32 principale(vacuum)
         imprimere("  signa: NUMBER(%lld), EOF\n",
             (longus longus)f.signa[0].valor);
     }
+}
 
-    /* ========================================================
-     * PROBARE II: Additio — "2 + 3"
-     * ======================================================== */
+/* ========================================================
+ * PROBARE II: Additio — "2 + 3"
+ * ======================================================== */
+
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+      LapifexGrammatica* g;
+          LapifexTabula* t;
+                     s32 NUMBER_IDX;
+                     s32 EOF_IDX;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
+
+    /* Praeparare tabulam et indices */
+    t = tabulam_praeparare(piscina, intern, &g);
+    si (!t)
+    {
+        imprimere("FRACTA: tabula non constructa\n");
+        redde;
+    }
+
+    NUMBER_IDX = invenire_symbolum(g, "NUMBER");
+    EOF_IDX    = invenire_symbolum(g, "EOF");
+
     {
         LapifexLexFructus f;
         s32 PLUS_IDX;
-
-        imprimere("\n--- Probans II: additio \"2 + 3\" ---\n");
 
         PLUS_IDX = invenire_symbolum(g, "PLUS");
         f = lapifex_lexere(g, "2 + 3", V, piscina);
@@ -198,15 +218,40 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_S32(f.signa[3].terminalis, EOF_IDX);
         imprimere("  signa: NUMBER(2), PLUS, NUMBER(3), EOF\n");
     }
+}
 
-    /* ========================================================
-     * PROBARE III: Sine spatiis — "2+3"
-     * ======================================================== */
+/* ========================================================
+ * PROBARE III: Sine spatiis — "2+3"
+ * ======================================================== */
+
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+      LapifexGrammatica* g;
+          LapifexTabula* t;
+                     s32 NUMBER_IDX;
+                     s32 EOF_IDX;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
+
+    /* Praeparare tabulam et indices */
+    t = tabulam_praeparare(piscina, intern, &g);
+    si (!t)
+    {
+        imprimere("FRACTA: tabula non constructa\n");
+        redde;
+    }
+
+    NUMBER_IDX = invenire_symbolum(g, "NUMBER");
+    EOF_IDX    = invenire_symbolum(g, "EOF");
+
     {
         LapifexLexFructus f;
         s32 PLUS_IDX;
-
-        imprimere("\n--- Probans III: sine spatiis \"2+3\" ---\n");
 
         PLUS_IDX = invenire_symbolum(g, "PLUS");
         f = lapifex_lexere(g, "2+3", III, piscina);
@@ -220,14 +265,39 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_S32(f.signa[3].terminalis, EOF_IDX);
         imprimere("  signa: NUMBER(2), PLUS, NUMBER(3), EOF\n");
     }
+}
 
-    /* ========================================================
-     * PROBARE IV: Multi-cifra — "123"
-     * ======================================================== */
+/* ========================================================
+ * PROBARE IV: Multi-cifra — "123"
+ * ======================================================== */
+
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+      LapifexGrammatica* g;
+          LapifexTabula* t;
+                     s32 NUMBER_IDX;
+                     s32 EOF_IDX;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
+
+    /* Praeparare tabulam et indices */
+    t = tabulam_praeparare(piscina, intern, &g);
+    si (!t)
+    {
+        imprimere("FRACTA: tabula non constructa\n");
+        redde;
+    }
+
+    NUMBER_IDX = invenire_symbolum(g, "NUMBER");
+    EOF_IDX    = invenire_symbolum(g, "EOF");
+
     {
         LapifexLexFructus f;
-
-        imprimere("\n--- Probans IV: multi-cifra \"123\" ---\n");
 
         f = lapifex_lexere(g, "123", III, piscina);
         CREDO_VERUM(f.successus);
@@ -238,16 +308,41 @@ s32 principale(vacuum)
         imprimere("  signa: NUMBER(%lld), EOF\n",
             (longus longus)f.signa[0].valor);
     }
+}
 
-    /* ========================================================
-     * PROBARE V: Expressio plena — "2 + 3 * 4"
-     * ======================================================== */
+/* ========================================================
+ * PROBARE V: Expressio plena — "2 + 3 * 4"
+ * ======================================================== */
+
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+      LapifexGrammatica* g;
+          LapifexTabula* t;
+                     s32 NUMBER_IDX;
+                     s32 EOF_IDX;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
+
+    /* Praeparare tabulam et indices */
+    t = tabulam_praeparare(piscina, intern, &g);
+    si (!t)
+    {
+        imprimere("FRACTA: tabula non constructa\n");
+        redde;
+    }
+
+    NUMBER_IDX = invenire_symbolum(g, "NUMBER");
+    EOF_IDX    = invenire_symbolum(g, "EOF");
+
     {
         LapifexLexFructus f;
         s32 PLUS_IDX;
         s32 STAR_IDX;
-
-        imprimere("\n--- Probans V: expressio plena \"2 + 3 * 4\" ---\n");
 
         PLUS_IDX = invenire_symbolum(g, "PLUS");
         STAR_IDX = invenire_symbolum(g, "STAR");
@@ -265,18 +360,43 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_S32(f.signa[5].terminalis, EOF_IDX);
         imprimere("  signa: NUMBER(2), PLUS, NUMBER(3), STAR, NUMBER(4), EOF\n");
     }
+}
 
-    /* ========================================================
-     * PROBARE VI: Parentheses — "(2+3)*4"
-     * ======================================================== */
+/* ========================================================
+ * PROBARE VI: Parentheses — "(2+3)*4"
+ * ======================================================== */
+
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+      LapifexGrammatica* g;
+          LapifexTabula* t;
+                     s32 NUMBER_IDX;
+                     s32 EOF_IDX;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
+
+    /* Praeparare tabulam et indices */
+    t = tabulam_praeparare(piscina, intern, &g);
+    si (!t)
+    {
+        imprimere("FRACTA: tabula non constructa\n");
+        redde;
+    }
+
+    NUMBER_IDX = invenire_symbolum(g, "NUMBER");
+    EOF_IDX    = invenire_symbolum(g, "EOF");
+
     {
         LapifexLexFructus f;
         s32 PLUS_IDX;
         s32 STAR_IDX;
         s32 LPAREN_IDX;
         s32 RPAREN_IDX;
-
-        imprimere("\n--- Probans VI: parentheses \"(2+3)*4\" ---\n");
 
         PLUS_IDX   = invenire_symbolum(g, "PLUS");
         STAR_IDX   = invenire_symbolum(g, "STAR");
@@ -298,15 +418,40 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_S32(f.signa[7].terminalis, EOF_IDX);
         imprimere("  signa: LPAREN, NUMBER(2), PLUS, NUMBER(3), RPAREN, STAR, NUMBER(4), EOF\n");
     }
+}
 
-    /* ========================================================
-     * PROBARE VII: Spatium copiosum — "  42  +  3  "
-     * ======================================================== */
+/* ========================================================
+ * PROBARE VII: Spatium copiosum — "  42  +  3  "
+ * ======================================================== */
+
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+      LapifexGrammatica* g;
+          LapifexTabula* t;
+                     s32 NUMBER_IDX;
+                     s32 EOF_IDX;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
+
+    /* Praeparare tabulam et indices */
+    t = tabulam_praeparare(piscina, intern, &g);
+    si (!t)
+    {
+        imprimere("FRACTA: tabula non constructa\n");
+        redde;
+    }
+
+    NUMBER_IDX = invenire_symbolum(g, "NUMBER");
+    EOF_IDX    = invenire_symbolum(g, "EOF");
+
     {
         LapifexLexFructus f;
         s32 PLUS_IDX;
-
-        imprimere("\n--- Probans VII: spatium copiosum \"  42  +  3  \" ---\n");
 
         PLUS_IDX = invenire_symbolum(g, "PLUS");
         f = lapifex_lexere(g, "  42  +  3  ", XII, piscina);
@@ -320,14 +465,37 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_S32(f.signa[3].terminalis, EOF_IDX);
         imprimere("  signa: NUMBER(42), PLUS, NUMBER(3), EOF\n");
     }
+}
 
-    /* ========================================================
-     * PROBARE VIII: Vacuum — ""
-     * ======================================================== */
+/* ========================================================
+ * PROBARE VIII: Vacuum — ""
+ * ======================================================== */
+
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+      LapifexGrammatica* g;
+          LapifexTabula* t;
+                     s32 EOF_IDX;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
+
+    /* Praeparare tabulam et indices */
+    t = tabulam_praeparare(piscina, intern, &g);
+    si (!t)
+    {
+        imprimere("FRACTA: tabula non constructa\n");
+        redde;
+    }
+
+    EOF_IDX    = invenire_symbolum(g, "EOF");
+
     {
         LapifexLexFructus f;
-
-        imprimere("\n--- Probans VIII: vacuum \"\" ---\n");
 
         f = lapifex_lexere(g, "", ZEPHYRUM, piscina);
         CREDO_VERUM(f.successus);
@@ -335,14 +503,34 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_S32(f.signa[0].terminalis, EOF_IDX);
         imprimere("  signa: EOF\n");
     }
+}
 
-    /* ========================================================
-     * PROBARE IX: Error — character ignotus "2 @ 3"
-     * ======================================================== */
+/* ========================================================
+ * PROBARE IX: Error — character ignotus "2 @ 3"
+ * ======================================================== */
+
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+      LapifexGrammatica* g;
+          LapifexTabula* t;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
+
+    /* Praeparare tabulam et indices */
+    t = tabulam_praeparare(piscina, intern, &g);
+    si (!t)
+    {
+        imprimere("FRACTA: tabula non constructa\n");
+        redde;
+    }
+
     {
         LapifexLexFructus f;
-
-        imprimere("\n--- Probans IX: error character ignotus \"2 @ 3\" ---\n");
 
         f = lapifex_lexere(g, "2 @ 3", V, piscina);
         CREDO_FALSUM(f.successus);
@@ -353,14 +541,34 @@ s32 principale(vacuum)
             (int)f.error_positio, (int)f.error_linea,
             (int)f.error_columna);
     }
+}
 
-    /* ========================================================
-     * PROBARE X: End-to-end lex+parse "2+3*4" = 14
-     * ======================================================== */
+/* ========================================================
+ * PROBARE X: End-to-end lex+parse "2+3*4" = 14
+ * ======================================================== */
+
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+      LapifexGrammatica* g;
+          LapifexTabula* t;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
+
+    /* Praeparare tabulam et indices */
+    t = tabulam_praeparare(piscina, intern, &g);
+    si (!t)
+    {
+        imprimere("FRACTA: tabula non constructa\n");
+        redde;
+    }
+
     {
         LapifexParsaturaFructus f;
-
-        imprimere("\n--- Probans X: lex+parse \"2+3*4\" = 14 ---\n");
 
         f = lapifex_lexere_et_parsare(t, "2+3*4", V,
             arithmetica_reductio, NIHIL);
@@ -368,14 +576,34 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_S64(f.valor, (s64)XIV);
         imprimere("  2+3*4 = %lld\n", (longus longus)f.valor);
     }
+}
 
-    /* ========================================================
-     * PROBARE XI: End-to-end lex+parse "(1+2)*(3+4)" = 21
-     * ======================================================== */
+/* ========================================================
+ * PROBARE XI: End-to-end lex+parse "(1+2)*(3+4)" = 21
+ * ======================================================== */
+
+interior vacuum
+_sectio_decima_prima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+      LapifexGrammatica* g;
+          LapifexTabula* t;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
+
+    /* Praeparare tabulam et indices */
+    t = tabulam_praeparare(piscina, intern, &g);
+    si (!t)
+    {
+        imprimere("FRACTA: tabula non constructa\n");
+        redde;
+    }
+
     {
         LapifexParsaturaFructus f;
-
-        imprimere("\n--- Probans XI: lex+parse \"(1+2)*(3+4)\" = 21 ---\n");
 
         f = lapifex_lexere_et_parsare(t, "(1+2)*(3+4)", XI,
             arithmetica_reductio, NIHIL);
@@ -383,10 +611,22 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_S64(f.valor, (s64)XXI);
         imprimere("  (1+2)*(3+4) = %lld\n", (longus longus)f.valor);
     }
+}
 
-    /* ========================================================
-     * PROBARE XII: Regressio — grammatica sine exemplis
-     * ======================================================== */
+/* ========================================================
+ * PROBARE XII: Regressio — grammatica sine exemplis
+ * ======================================================== */
+
+interior vacuum
+_sectio_decima_secunda (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
+
     {
         constans character* GRAMMATICA_SINE_EXEMPLIS =
             "<grammatica>"
@@ -404,8 +644,6 @@ s32 principale(vacuum)
             "  <initium>expr</initium>"
             "</grammatica>";
         LapifexGrammatica* g2;
-
-        imprimere("\n--- Probans XII: regressio grammatica sine exemplis ---\n");
 
         g2 = lapifex_grammaticam_legere(piscina, intern,
             GRAMMATICA_SINE_EXEMPLIS);
@@ -428,14 +666,26 @@ s32 principale(vacuum)
             imprimere("  grammatica sine exemplis: omnia exempla NIHIL\n");
         }
     }
+}
 
-    /* ========================================================
-     * Compendium
-     * ======================================================== */
-    imprimere("\n");
-    credo_imprimere_compendium();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I: simplex numerus \"42\"", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "II: additio \"2 + 3\"", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "III: sine spatiis \"2+3\"", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "IV: multi-cifra \"123\"", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "V: expressio plena \"2 + 3 * 4\"", _sectio_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "VI: parentheses \"(2+3)*4\"", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "VII: spatium copiosum \"  42  +  3  \"", _sectio_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "VIII: vacuum \"\"", _sectio_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "IX: error character ignotus \"2 @ 3\"", _sectio_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "X: lex+parse \"2+3*4\" = 14", _sectio_decima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "XI: lex+parse \"(1+2)*(3+4)\" = 21", _sectio_decima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "XII: regressio grammatica sine exemplis", _sectio_decima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    piscina_destruere(piscina);
-
-    redde (credo_omnia_praeterierunt() ? ZEPHYRUM : I);
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("lapifex_lexere", SECTIONES);
 }

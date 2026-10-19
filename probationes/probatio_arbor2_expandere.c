@@ -9,34 +9,24 @@
 #include <stdio.h>
 #include <string.h>
 
-s32 principale(vacuum)
-{
-    Piscina* piscina;
-    InternamentumChorda* intern;
-    b32 praeteritus;
-
-    /* Aperire credo et piscina */
-    piscina = piscina_generare_dynamicum("probatio_arbor2_expandere", 131072);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    intern = internamentum_creare(piscina);
-    credo_aperire(piscina);
-
-
     /* ========================================================
      * PROBARE: Object-like macro expansion
      * ======================================================== */
 
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Expansion* exp;
         Xar* result;
         Arbor2Token* tok;
-
-        imprimere("\n--- Probans object-like macro expansion ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
         arbor2_expansion_addere_macro(exp, "FOO", "42", NIHIL);
@@ -65,19 +55,26 @@ s32 principale(vacuum)
         tok = *(Arbor2Token**)xar_obtinere(result, IV);
         CREDO_AEQUALIS_I32(tok->lexema->genus, ARBOR2_LEXEMA_SEMICOLON);
     }
-
+}
 
     /* ========================================================
      * PROBARE: #define in source creates segment
      * ======================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Expansion* exp;
         Xar* result;
         Xar* segmenta;
-
-        imprimere("\n--- Probans #define creates segment ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
 
@@ -93,20 +90,27 @@ s32 principale(vacuum)
          * second at line where #define appears */
         (vacuum)result;
     }
-
+}
 
     /* ========================================================
      * PROBARE: Macro provenance chain
      * ======================================================== */
 
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Expansion* exp;
         Xar* result;
         Arbor2Token* tok;
         Arbor2Token* radix;
-
-        imprimere("\n--- Probans macro provenance chain ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
         arbor2_expansion_addere_macro(exp, "NUM", "123", NIHIL);
@@ -127,19 +131,26 @@ s32 principale(vacuum)
         CREDO_NON_NIHIL(radix);
         CREDO_AEQUALIS_I32(radix->origo_meta->genus, ARBOR2_ORIGO_FONS);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Nested macro expansion
      * ======================================================== */
 
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Expansion* exp;
         Xar* result;
         Arbor2Token* tok;
-
-        imprimere("\n--- Probans nested macro expansion ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
         arbor2_expansion_addere_macro(exp, "A", "B", NIHIL);
@@ -152,12 +163,21 @@ s32 principale(vacuum)
         tok = *(Arbor2Token**)xar_obtinere(result, ZEPHYRUM);
         CREDO_AEQUALIS_I32(tok->lexema->genus, ARBOR2_LEXEMA_INTEGER);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Query macro at line
      * ======================================================== */
 
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Expansion* exp;
@@ -167,8 +187,6 @@ s32 principale(vacuum)
         chorda nomen_ch;
         vacuum* valor;
         unio { constans character* c; i8* m; } u;
-
-        imprimere("\n--- Probans query macro at line ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
 
@@ -190,18 +208,25 @@ s32 principale(vacuum)
             CREDO_NON_NIHIL(def);
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: est_typedef query
      * ======================================================== */
 
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         Arbor2Expansion* exp;
         chorda nomen_ch;
         unio { constans character* c; i8* m; } u;
-
-        imprimere("\n--- Probans est_typedef query ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
         arbor2_expansion_addere_typedef(exp, "MyType");
@@ -218,12 +243,21 @@ s32 principale(vacuum)
 
         CREDO_AEQUALIS_I32((i32)arbor2_expansion_est_typedef(exp, nomen_ch), FALSUM);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Simple typedef detection
      * ======================================================== */
 
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Expansion* exp;
@@ -231,8 +265,6 @@ s32 principale(vacuum)
         Arbor2TypedefInfo* info;
         chorda nomen_ch;
         unio { constans character* c; i8* m; } u;
-
-        imprimere("\n--- Probans simple typedef detection ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
         fons = "typedef int MyInt;";
@@ -250,12 +282,21 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32((i32)info->est_certum, (i32)VERUM);
         CREDO_AEQUALIS_I32((i32)info->layer_discovered, (i32)ZEPHYRUM);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Latin nomen typedef detection
      * ======================================================== */
 
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Expansion* exp;
@@ -263,8 +304,6 @@ s32 principale(vacuum)
         Arbor2TypedefInfo* info;
         chorda nomen_ch;
         unio { constans character* c; i8* m; } u;
-
-        imprimere("\n--- Probans nomen (Latin typedef) detection ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
         fons = "nomen int MeusInt;";
@@ -282,20 +321,27 @@ s32 principale(vacuum)
         /* est_certum is VERUM because lexer recognizes 'nomen' as TYPEDEF keyword */
         CREDO_AEQUALIS_I32((i32)info->est_certum, (i32)VERUM);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Struct typedef detection
      * ======================================================== */
 
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Expansion* exp;
         Xar* result;
         chorda nomen_ch;
         unio { constans character* c; i8* m; } u;
-
-        imprimere("\n--- Probans struct typedef detection ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
         fons = "typedef struct { int x; int y; } Point;";
@@ -315,20 +361,27 @@ s32 principale(vacuum)
 
         CREDO_AEQUALIS_I32((i32)arbor2_expansion_est_typedef(exp, nomen_ch), FALSUM);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Function pointer typedef detection
      * ======================================================== */
 
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Expansion* exp;
         Xar* result;
         chorda nomen_ch;
         unio { constans character* c; i8* m; } u;
-
-        imprimere("\n--- Probans function pointer typedef detection ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
         fons = "typedef int (*Callback)(int, int);";
@@ -341,12 +394,21 @@ s32 principale(vacuum)
 
         CREDO_AEQUALIS_I32((i32)arbor2_expansion_est_typedef(exp, nomen_ch), VERUM);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Typedef with origo information
      * ======================================================== */
 
+interior vacuum
+_sectio_decima_prima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Expansion* exp;
@@ -354,8 +416,6 @@ s32 principale(vacuum)
         Arbor2TypedefInfo* info;
         chorda nomen_ch;
         unio { constans character* c; i8* m; } u;
-
-        imprimere("\n--- Probans typedef origo information ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
         fons = "typedef int TestType;";
@@ -371,20 +431,27 @@ s32 principale(vacuum)
         CREDO_NON_NIHIL(info->origo);
         CREDO_AEQUALIS_I32(info->origo->linea, I);  /* First line */
     }
-
+}
 
     /* ========================================================
      * PROBARE: Function-like macro simple substitution
      * ======================================================== */
 
+interior vacuum
+_sectio_decima_secunda (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Expansion* exp;
         Xar* result;
         Arbor2Token* tok;
         constans character* parametra_add[] = {"a", "b", NIHIL};
-
-        imprimere("\n--- Probans function-like macro simple substitution ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
         arbor2_expansion_addere_macro_functio(exp, "ADD", parametra_add, "((a)+(b))", NIHIL);
@@ -428,12 +495,21 @@ s32 principale(vacuum)
         tok = *(Arbor2Token**)xar_obtinere(result, VIII);
         CREDO_AEQUALIS_I32(tok->lexema->genus, ARBOR2_LEXEMA_PAREN_CLAUSA);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Function-like macro with nested parens in args
      * ======================================================== */
 
+interior vacuum
+_sectio_decima_tertia (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Expansion* exp;
@@ -441,8 +517,6 @@ s32 principale(vacuum)
         Arbor2Token* tok;
         constans character* parametra_add[] = {"a", "b", NIHIL};
         i32 i;
-
-        imprimere("\n--- Probans function-like macro with nested parens ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
         arbor2_expansion_addere_macro_functio(exp, "ADD", parametra_add, "((a)+(b))", NIHIL);
@@ -467,20 +541,27 @@ s32 principale(vacuum)
         /* Should have found 1 */
         CREDO_AEQUALIS_I32(tok->lexema->valor.mensura, I);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Function-like macro empty params
      * ======================================================== */
 
+interior vacuum
+_sectio_decima_quarta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Expansion* exp;
         Xar* result;
         Arbor2Token* tok;
         constans character* parametra_empty[] = {NIHIL};
-
-        imprimere("\n--- Probans function-like macro empty params ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
         arbor2_expansion_addere_macro_functio(exp, "EMPTY", parametra_empty, "x", NIHIL);
@@ -493,12 +574,21 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32(tok->lexema->genus, ARBOR2_LEXEMA_IDENTIFICATOR);
         CREDO_AEQUALIS_I32(tok->lexema->valor.mensura, I);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Function-like macro MAX with conditional
      * ======================================================== */
 
+interior vacuum
+_sectio_decima_quinta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Expansion* exp;
@@ -507,8 +597,6 @@ s32 principale(vacuum)
         constans character* parametra_max[] = {"a", "b", NIHIL};
         b32 found_question;
         i32 i;
-
-        imprimere("\n--- Probans function-like macro MAX ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
         /* MAX(a,b) ((a)>(b)?(a):(b)) */
@@ -531,19 +619,26 @@ s32 principale(vacuum)
         }
         CREDO_VERUM(found_question);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Function-like macro via #define in source
      * ======================================================== */
 
+interior vacuum
+_sectio_decima_sexta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Expansion* exp;
         Xar* result;
         Arbor2Token* tok;
-
-        imprimere("\n--- Probans function-like macro via #define ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
 
@@ -587,20 +682,27 @@ s32 principale(vacuum)
         tok = *(Arbor2Token**)xar_obtinere(result, VIII);
         CREDO_AEQUALIS_I32(tok->lexema->genus, ARBOR2_LEXEMA_PAREN_CLAUSA);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Stringification basic
      * ======================================================== */
 
+interior vacuum
+_sectio_decima_septima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Expansion* exp;
         Xar* result;
         Arbor2Token* tok;
         constans character* parametra_str[] = {"x", NIHIL};
-
-        imprimere("\n--- Probans stringification basic ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
         arbor2_expansion_addere_macro_functio(exp, "STR", parametra_str, "#x", NIHIL);
@@ -612,20 +714,27 @@ s32 principale(vacuum)
         tok = *(Arbor2Token**)xar_obtinere(result, ZEPHYRUM);
         CREDO_AEQUALIS_I32(tok->lexema->genus, ARBOR2_LEXEMA_STRING_LIT);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Stringification with numeric
      * ======================================================== */
 
+interior vacuum
+_sectio_decima_octava (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Expansion* exp;
         Xar* result;
         Arbor2Token* tok;
         constans character* parametra_str[] = {"x", NIHIL};
-
-        imprimere("\n--- Probans stringification numeric ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
         arbor2_expansion_addere_macro_functio(exp, "STR", parametra_str, "#x", NIHIL);
@@ -637,12 +746,21 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32(tok->lexema->genus, ARBOR2_LEXEMA_STRING_LIT);
         /* Should contain "123" */
     }
-
+}
 
     /* ========================================================
      * PROBARE: Stringification with escaping
      * ======================================================== */
 
+interior vacuum
+_sectio_decima_nona (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Expansion* exp;
@@ -651,8 +769,6 @@ s32 principale(vacuum)
         constans character* parametra_str[] = {"x", NIHIL};
         b32 has_backslash;
         i32 j;
-
-        imprimere("\n--- Probans stringification escaping ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
         arbor2_expansion_addere_macro_functio(exp, "STR", parametra_str, "#x", NIHIL);
@@ -676,19 +792,26 @@ s32 principale(vacuum)
         }
         CREDO_VERUM(has_backslash);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Stringification via #define
      * ======================================================== */
 
+interior vacuum
+_sectio_vicesima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Expansion* exp;
         Xar* result;
         Arbor2Token* tok;
-
-        imprimere("\n--- Probans stringification via #define ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
 
@@ -700,20 +823,27 @@ s32 principale(vacuum)
         tok = *(Arbor2Token**)xar_obtinere(result, ZEPHYRUM);
         CREDO_AEQUALIS_I32(tok->lexema->genus, ARBOR2_LEXEMA_STRING_LIT);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Token pasting basic
      * ======================================================== */
 
+interior vacuum
+_sectio_vicesima_prima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Expansion* exp;
         Xar* result;
         Arbor2Token* tok;
         constans character* parametra_paste[] = {"a", "b", NIHIL};
-
-        imprimere("\n--- Probans token pasting basic ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
         arbor2_expansion_addere_macro_functio(exp, "PASTE", parametra_paste, "a##b", NIHIL);
@@ -726,20 +856,27 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32(tok->lexema->genus, ARBOR2_LEXEMA_IDENTIFICATOR);
         CREDO_AEQUALIS_I32(tok->lexema->valor.mensura, VI);  /* "foobar" = 6 */
     }
-
+}
 
     /* ========================================================
      * PROBARE: Token pasting prefix
      * ======================================================== */
 
+interior vacuum
+_sectio_vicesima_secunda (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Expansion* exp;
         Xar* result;
         Arbor2Token* tok;
         constans character* parametra_var[] = {"n", NIHIL};
-
-        imprimere("\n--- Probans token pasting prefix ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
         /* VAR(n) -> var_##n */
@@ -753,20 +890,27 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32(tok->lexema->genus, ARBOR2_LEXEMA_IDENTIFICATOR);
         CREDO_AEQUALIS_I32(tok->lexema->valor.mensura, V);  /* "var_1" = 5 */
     }
-
+}
 
     /* ========================================================
      * PROBARE: Token pasting numeric
      * ======================================================== */
 
+interior vacuum
+_sectio_vicesima_tertia (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Expansion* exp;
         Xar* result;
         Arbor2Token* tok;
         constans character* parametra_paste[] = {"a", "b", NIHIL};
-
-        imprimere("\n--- Probans token pasting numeric ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
         arbor2_expansion_addere_macro_functio(exp, "PASTE", parametra_paste, "a##b", NIHIL);
@@ -779,19 +923,26 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32(tok->lexema->genus, ARBOR2_LEXEMA_INTEGER);
         CREDO_AEQUALIS_I32(tok->lexema->valor.mensura, IV);  /* "1234" = 4 */
     }
-
+}
 
     /* ========================================================
      * PROBARE: Token pasting via #define
      * ======================================================== */
 
+interior vacuum
+_sectio_vicesima_quarta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Expansion* exp;
         Xar* result;
         Arbor2Token* tok;
-
-        imprimere("\n--- Probans token pasting via #define ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
 
@@ -804,20 +955,27 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32(tok->lexema->genus, ARBOR2_LEXEMA_IDENTIFICATOR);
         CREDO_AEQUALIS_I32(tok->lexema->valor.mensura, X);  /* "helloworld" = 10 */
     }
-
+}
 
     /* ========================================================
      * PROBARE: Variadic macro basic
      * ======================================================== */
 
+interior vacuum
+_sectio_vicesima_quinta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Expansion* exp;
         Xar* result;
         Arbor2Token* tok;
         constans character* parametra_var[] = {"...", NIHIL};
-
-        imprimere("\n--- Probans variadic macro basic ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
         arbor2_expansion_addere_macro_functio(exp, "VARIADIC", parametra_var,
@@ -850,20 +1008,27 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32(tok->lexema->genus, ARBOR2_LEXEMA_IDENTIFICATOR);
         CREDO_AEQUALIS_I32(tok->lexema->valor.mensura, I);  /* "c" */
     }
-
+}
 
     /* ========================================================
      * PROBARE: Variadic macro with prefix
      * ======================================================== */
 
+interior vacuum
+_sectio_vicesima_sexta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Expansion* exp;
         Xar* result;
         Arbor2Token* tok;
         constans character* parametra_fmt[] = {"f", "...", NIHIL};
-
-        imprimere("\n--- Probans variadic macro with prefix ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
         arbor2_expansion_addere_macro_functio(exp, "FMT", parametra_fmt,
@@ -880,19 +1045,26 @@ s32 principale(vacuum)
         tok = *(Arbor2Token**)xar_obtinere(result, I);
         CREDO_AEQUALIS_I32(tok->lexema->genus, ARBOR2_LEXEMA_PAREN_APERTA);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Variadic macro via #define
      * ======================================================== */
 
+interior vacuum
+_sectio_vicesima_septima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Expansion* exp;
         Xar* result;
         Arbor2Token* tok;
-
-        imprimere("\n--- Probans variadic macro via #define ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
 
@@ -923,19 +1095,26 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32(tok->lexema->genus, ARBOR2_LEXEMA_IDENTIFICATOR);
         CREDO_AEQUALIS_I32(tok->lexema->valor.mensura, I);  /* "z" */
     }
-
+}
 
     /* ========================================================
      * PROBARE: Recursion prevention - direct
      * ======================================================== */
 
+interior vacuum
+_sectio_vicesima_octava (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Expansion* exp;
         Xar* result;
         Arbor2Token* tok;
-
-        imprimere("\n--- Probans recursion prevention direct ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
         /* SELF expands to SELF - should not loop infinitely */
@@ -949,19 +1128,26 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32(tok->lexema->genus, ARBOR2_LEXEMA_IDENTIFICATOR);
         CREDO_AEQUALIS_I32(tok->lexema->valor.mensura, IV);  /* "SELF" = 4 */
     }
-
+}
 
     /* ========================================================
      * PROBARE: Recursion prevention - mutual
      * ======================================================== */
 
+interior vacuum
+_sectio_vicesima_nona (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Expansion* exp;
         Xar* result;
         Arbor2Token* tok;
-
-        imprimere("\n--- Probans recursion prevention mutual ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
         /* A -> B, B -> A: should stop, not loop */
@@ -975,19 +1161,26 @@ s32 principale(vacuum)
         tok = *(Arbor2Token**)xar_obtinere(result, ZEPHYRUM);
         CREDO_AEQUALIS_I32(tok->lexema->genus, ARBOR2_LEXEMA_IDENTIFICATOR);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Recursion prevention via #define
      * ======================================================== */
 
+interior vacuum
+_sectio_tricesima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Expansion* exp;
         Xar* result;
         i32 num;
-
-        imprimere("\n--- Probans recursion prevention via #define ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
 
@@ -999,12 +1192,21 @@ s32 principale(vacuum)
         num = xar_numerus(result);
         CREDO_MAIOR_I32(num, ZEPHYRUM);
     }
-
+}
 
     /* ========================================================
      * PROBARE: #undef stops expansion
      * ======================================================== */
 
+interior vacuum
+_sectio_tricesima_prima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Expansion* exp;
@@ -1013,8 +1215,6 @@ s32 principale(vacuum)
         b32 found_integer;
         b32 found_identifier;
         i32 i;
-
-        imprimere("\n--- Probans #undef stops expansion ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
 
@@ -1045,12 +1245,21 @@ s32 principale(vacuum)
         /* Should have at least one identifier (second TEMP not expanded) */
         CREDO_VERUM(found_identifier);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Re-define after #undef
      * ======================================================== */
 
+interior vacuum
+_sectio_tricesima_secunda (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Expansion* exp;
@@ -1058,8 +1267,6 @@ s32 principale(vacuum)
         Arbor2Token* tok;
         i32 integer_count;
         i32 i;
-
-        imprimere("\n--- Probans re-define after #undef ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
 
@@ -1079,18 +1286,25 @@ s32 principale(vacuum)
         /* Should have at least one integer (macro expansion working) */
         CREDO_MAIOR_I32(integer_count, ZEPHYRUM);
     }
-
+}
 
     /* ========================================================
      * PROBARE: #undef non-existent macro (no error)
      * ======================================================== */
 
+interior vacuum
+_sectio_tricesima_tertia (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Expansion* exp;
         Xar* result;
-
-        imprimere("\n--- Probans #undef non-existent macro ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
 
@@ -1101,12 +1315,21 @@ s32 principale(vacuum)
         /* Should still have tokens */
         CREDO_MAIOR_I32(xar_numerus(result), ZEPHYRUM);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Variadic macro - zero arguments
      * ======================================================== */
 
+interior vacuum
+_sectio_tricesima_quarta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Expansion* exp;
@@ -1115,8 +1338,6 @@ s32 principale(vacuum)
         b32 found_eof_only;
         i32 i;
         Arbor2Token* tok;
-
-        imprimere("\n--- Probans variadic macro zero arguments ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
 
@@ -1139,19 +1360,26 @@ s32 principale(vacuum)
         /* Vel vacuum vel solum EOF */
         CREDO_VERUM(num == ZEPHYRUM || found_eof_only);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Variadic macro - single argument
      * ======================================================== */
 
+interior vacuum
+_sectio_tricesima_quinta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Expansion* exp;
         Xar* result;
         Arbor2Token* tok;
-
-        imprimere("\n--- Probans variadic macro single argument ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
 
@@ -1164,12 +1392,21 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32(tok->lexema->genus, ARBOR2_LEXEMA_IDENTIFICATOR);
         CREDO_AEQUALIS_I32(tok->lexema->valor.mensura, I);  /* "x" = 1 */
     }
-
+}
 
     /* ========================================================
      * PROBARE: Variadic macro - __VA_ARGS__ used twice
      * ======================================================== */
 
+interior vacuum
+_sectio_tricesima_sexta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Expansion* exp;
@@ -1177,8 +1414,6 @@ s32 principale(vacuum)
         Arbor2Token* tok;
         i32 comma_count;
         i32 i;
-
-        imprimere("\n--- Probans __VA_ARGS__ used twice ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
 
@@ -1200,12 +1435,21 @@ s32 principale(vacuum)
         /* Duo commas (unum in primo __VA_ARGS__, unum in secundo) */
         CREDO_AEQUALIS_I32(comma_count, II);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Nested macro invocation - macro arg is macro call
      * ======================================================== */
 
+interior vacuum
+_sectio_tricesima_septima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Expansion* exp;
@@ -1213,8 +1457,6 @@ s32 principale(vacuum)
         Arbor2Token* tok;
         i32 plus_count;
         i32 i;
-
-        imprimere("\n--- Probans nested macro - arg is macro call ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
 
@@ -1236,12 +1478,21 @@ s32 principale(vacuum)
         }
         CREDO_AEQUALIS_I32(plus_count, I);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Nested macro invocation - chained function macros
      * ======================================================== */
 
+interior vacuum
+_sectio_tricesima_octava (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Expansion* exp;
@@ -1249,8 +1500,6 @@ s32 principale(vacuum)
         Arbor2Token* tok;
         b32 found_identifier;
         i32 i;
-
-        imprimere("\n--- Probans chained function macros ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
 
@@ -1274,19 +1523,26 @@ s32 principale(vacuum)
         }
         CREDO_VERUM(found_identifier);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Object-like macro via #define - simple
      * ======================================================== */
 
+interior vacuum
+_sectio_tricesima_nona (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Expansion* exp;
         Xar* result;
         Arbor2Token* tok;
-
-        imprimere("\n--- Probans object-like macro via #define simple ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
 
@@ -1299,19 +1555,26 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32(tok->lexema->genus, ARBOR2_LEXEMA_INTEGER);
         CREDO_AEQUALIS_I32(tok->lexema->valor.mensura, II);  /* "42" = 2 */
     }
-
+}
 
     /* ========================================================
      * PROBARE: Object-like macro via #define - multi-token
      * ======================================================== */
 
+interior vacuum
+_sectio_quadragesima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Expansion* exp;
         Xar* result;
         Arbor2Token* tok;
-
-        imprimere("\n--- Probans object-like macro multi-token ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
 
@@ -1331,19 +1594,26 @@ s32 principale(vacuum)
         tok = *(Arbor2Token**)xar_obtinere(result, II);
         CREDO_AEQUALIS_I32(tok->lexema->genus, ARBOR2_LEXEMA_INTEGER);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Stringification - empty argument
      * ======================================================== */
 
+interior vacuum
+_sectio_quadragesima_prima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Expansion* exp;
         Xar* result;
         Arbor2Token* tok;
-
-        imprimere("\n--- Probans stringification empty argument ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
 
@@ -1357,19 +1627,26 @@ s32 principale(vacuum)
         /* Mensura debet esse II pro "" (duae quotes) */
         CREDO_AEQUALIS_I32(tok->lexema->valor.mensura, II);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Stringification - multiple tokens
      * ======================================================== */
 
+interior vacuum
+_sectio_quadragesima_secunda (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Expansion* exp;
         Xar* result;
         Arbor2Token* tok;
-
-        imprimere("\n--- Probans stringification multiple tokens ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
 
@@ -1383,19 +1660,26 @@ s32 principale(vacuum)
         /* Mensura maior quam simplex token */
         CREDO_MAIOR_I32(tok->lexema->valor.mensura, III);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Token pasting - create operator
      * ======================================================== */
 
+interior vacuum
+_sectio_quadragesima_tertia (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Expansion* exp;
         Xar* result;
         Arbor2Token* tok;
-
-        imprimere("\n--- Probans token pasting create operator ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
 
@@ -1408,18 +1692,25 @@ s32 principale(vacuum)
         /* += debet esse PLUS_ASSIGN */
         CREDO_AEQUALIS_I32(tok->lexema->genus, ARBOR2_LEXEMA_PLUS_ASSIGN);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Token pasting - empty left argument
      * ======================================================== */
 
+interior vacuum
+_sectio_quadragesima_quarta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Expansion* exp;
         Xar* result;
-
-        imprimere("\n--- Probans token pasting empty left arg ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
 
@@ -1432,19 +1723,26 @@ s32 principale(vacuum)
         /* Verificare quod processatio non fregit et producit tokens */
         CREDO_MAIOR_I32(xar_numerus(result), ZEPHYRUM);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Triple nested macro expansion
      * ======================================================== */
 
+interior vacuum
+_sectio_quadragesima_quinta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Expansion* exp;
         Xar* result;
         Arbor2Token* tok;
-
-        imprimere("\n--- Probans triple nested macro expansion ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
 
@@ -1457,19 +1755,26 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32(tok->lexema->genus, ARBOR2_LEXEMA_INTEGER);
         CREDO_AEQUALIS_I32(tok->lexema->valor.mensura, III);  /* "999" = 3 */
     }
-
+}
 
     /* ========================================================
      * PROBARE: Lookahead genus - simple INT macro
      * ======================================================== */
 
+interior vacuum
+_sectio_quadragesima_sexta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         Arbor2Expansion* exp;
         Arbor2LexemaGenus genus;
         chorda nomen_ch;
         unio { constans character* c; i8* m; } u;
-
-        imprimere("\n--- Probans lookahead genus simple INT macro ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
         arbor2_expansion_addere_macro(exp, "TYPUS", "int", NIHIL);
@@ -1481,19 +1786,26 @@ s32 principale(vacuum)
         genus = arbor2_expansion_lookahead_genus(exp, nomen_ch);
         CREDO_AEQUALIS_I32((i32)genus, (i32)ARBOR2_LEXEMA_INT);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Lookahead genus - unknown macro returns ERROR
      * ======================================================== */
 
+interior vacuum
+_sectio_quadragesima_septima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         Arbor2Expansion* exp;
         Arbor2LexemaGenus genus;
         chorda nomen_ch;
         unio { constans character* c; i8* m; } u;
-
-        imprimere("\n--- Probans lookahead genus unknown macro ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
 
@@ -1504,19 +1816,26 @@ s32 principale(vacuum)
         genus = arbor2_expansion_lookahead_genus(exp, nomen_ch);
         CREDO_AEQUALIS_I32((i32)genus, (i32)ARBOR2_LEXEMA_ERROR);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Lookahead genus - empty macro returns EOF
      * ======================================================== */
 
+interior vacuum
+_sectio_quadragesima_octava (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         Arbor2Expansion* exp;
         Arbor2LexemaGenus genus;
         chorda nomen_ch;
         unio { constans character* c; i8* m; } u;
-
-        imprimere("\n--- Probans lookahead genus empty macro ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
         arbor2_expansion_addere_macro(exp, "VACUUM", "", NIHIL);
@@ -1528,19 +1847,26 @@ s32 principale(vacuum)
         genus = arbor2_expansion_lookahead_genus(exp, nomen_ch);
         CREDO_AEQUALIS_I32((i32)genus, (i32)ARBOR2_LEXEMA_EOF);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Lookahead extended - macro expanding to macro
      * ======================================================== */
 
+interior vacuum
+_sectio_quadragesima_nona (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         Arbor2Expansion* exp;
         Arbor2ExpansionLookahead lookahead;
         chorda nomen_ch;
         unio { constans character* c; i8* m; } u;
-
-        imprimere("\n--- Probans lookahead extended recursive macro ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
         arbor2_expansion_addere_macro(exp, "INNER", "42", NIHIL);
@@ -1558,19 +1884,26 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32((i32)lookahead.est_recursivum, (i32)VERUM);
         CREDO_AEQUALIS_I32((i32)lookahead.est_vacuum, (i32)FALSUM);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Lookahead extended - empty macro est_vacuum
      * ======================================================== */
 
+interior vacuum
+_sectio_quinquagesima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         Arbor2Expansion* exp;
         Arbor2ExpansionLookahead lookahead;
         chorda nomen_ch;
         unio { constans character* c; i8* m; } u;
-
-        imprimere("\n--- Probans lookahead extended empty macro est_vacuum ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
         arbor2_expansion_addere_macro(exp, "EMPTY", "", NIHIL);
@@ -1585,19 +1918,26 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32((i32)lookahead.est_vacuum, (i32)VERUM);
         CREDO_AEQUALIS_I32((i32)lookahead.est_recursivum, (i32)FALSUM);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Lookahead extended - non-recursive identifier
      * ======================================================== */
 
+interior vacuum
+_sectio_quinquagesima_prima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         Arbor2Expansion* exp;
         Arbor2ExpansionLookahead lookahead;
         chorda nomen_ch;
         unio { constans character* c; i8* m; } u;
-
-        imprimere("\n--- Probans lookahead extended non-recursive identifier ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
         /* Macro expandit ad identificator qui NON est macro */
@@ -1614,19 +1954,26 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32((i32)lookahead.est_recursivum, (i32)FALSUM);
         CREDO_AEQUALIS_I32((i32)lookahead.est_vacuum, (i32)FALSUM);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Lookahead genus - integer literal
      * ======================================================== */
 
+interior vacuum
+_sectio_quinquagesima_secunda (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         Arbor2Expansion* exp;
         Arbor2LexemaGenus genus;
         chorda nomen_ch;
         unio { constans character* c; i8* m; } u;
-
-        imprimere("\n--- Probans lookahead genus integer literal ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
         arbor2_expansion_addere_macro(exp, "NUMERUS", "42", NIHIL);
@@ -1638,16 +1985,23 @@ s32 principale(vacuum)
         genus = arbor2_expansion_lookahead_genus(exp, nomen_ch);
         CREDO_AEQUALIS_I32((i32)genus, (i32)ARBOR2_LEXEMA_INTEGER);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Include path management - add paths
      * ======================================================== */
 
+interior vacuum
+_sectio_quinquagesima_tertia (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         Arbor2Expansion* exp;
-
-        imprimere("\n--- Probans include path management ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
 
@@ -1659,12 +2013,21 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32(xar_numerus(exp->system_viae), I);
         CREDO_AEQUALIS_I32(xar_numerus(exp->local_viae), I);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Local include - extract macros
      * ======================================================== */
 
+interior vacuum
+_sectio_quinquagesima_quarta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Expansion* exp;
@@ -1673,8 +2036,6 @@ s32 principale(vacuum)
         chorda nomen_ch;
         vacuum* val_ptr;
         unio { constans character* c; i8* m; } u;
-
-        imprimere("\n--- Probans local include macro extraction ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
         arbor2_expansion_addere_local_via(exp, "./probationes/fixa");
@@ -1692,20 +2053,27 @@ s32 principale(vacuum)
         def = (Arbor2MacroDef*)val_ptr;
         CREDO_NON_NIHIL(def);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Local include - extract typedefs
      * ======================================================== */
 
+interior vacuum
+_sectio_quinquagesima_quinta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Expansion* exp;
         Xar* result;
         chorda nomen_ch;
         unio { constans character* c; i8* m; } u;
-
-        imprimere("\n--- Probans local include typedef extraction ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
         arbor2_expansion_addere_local_via(exp, "./probationes/fixa");
@@ -1721,12 +2089,21 @@ s32 principale(vacuum)
 
         CREDO_AEQUALIS_I32((i32)arbor2_expansion_est_typedef(exp, nomen_ch), VERUM);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Nested include - extract from nested
      * ======================================================== */
 
+interior vacuum
+_sectio_quinquagesima_sexta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Expansion* exp;
@@ -1734,8 +2111,6 @@ s32 principale(vacuum)
         chorda nomen_ch;
         vacuum* val_ptr;
         unio { constans character* c; i8* m; } u;
-
-        imprimere("\n--- Probans nested include extraction ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
         arbor2_expansion_addere_local_via(exp, "./probationes/fixa");
@@ -1758,18 +2133,25 @@ s32 principale(vacuum)
 
         CREDO_VERUM(tabula_dispersa_invenire(exp->macros, nomen_ch, &val_ptr));
     }
-
+}
 
     /* ========================================================
      * PROBARE: Include guard - no double processing
      * ======================================================== */
 
+interior vacuum
+_sectio_quinquagesima_septima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Expansion* exp;
         Xar* result;
-
-        imprimere("\n--- Probans include guard ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
         arbor2_expansion_addere_local_via(exp, "./probationes/fixa");
@@ -1781,18 +2163,25 @@ s32 principale(vacuum)
         /* Test passes if it completes without infinite loop */
         CREDO_NON_NIHIL(result);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Unresolved include - graceful handling
      * ======================================================== */
 
+interior vacuum
+_sectio_quinquagesima_octava (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Expansion* exp;
         Xar* result;
-
-        imprimere("\n--- Probans unresolved include ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
         /* No paths added - file won't be found */
@@ -1803,18 +2192,25 @@ s32 principale(vacuum)
         /* Processing should complete despite missing file */
         CREDO_NON_NIHIL(result);
     }
-
+}
 
     /* ========================================================
      * PROBARE: System include syntax
      * ======================================================== */
 
+interior vacuum
+_sectio_quinquagesima_nona (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Expansion* exp;
         Xar* result;
-
-        imprimere("\n--- Probans system include syntax ---\n");
 
         exp = arbor2_expansion_creare(piscina, intern);
 
@@ -1825,23 +2221,73 @@ s32 principale(vacuum)
         /* Processing should complete */
         CREDO_NON_NIHIL(result);
     }
+}
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "object-like macro expansion", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "#define creates segment", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "macro provenance chain", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "nested macro expansion", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "query macro at line", _sectio_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "est_typedef query", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "simple typedef detection", _sectio_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "nomen (Latin typedef) detection", _sectio_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "struct typedef detection", _sectio_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "function pointer typedef detection", _sectio_decima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "typedef origo information", _sectio_decima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "function-like macro simple substitution", _sectio_decima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "function-like macro with nested parens", _sectio_decima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "function-like macro empty params", _sectio_decima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "function-like macro MAX", _sectio_decima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "function-like macro via #define", _sectio_decima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "stringification basic", _sectio_decima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "stringification numeric", _sectio_decima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "stringification escaping", _sectio_decima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "stringification via #define", _sectio_vicesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "token pasting basic", _sectio_vicesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "token pasting prefix", _sectio_vicesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "token pasting numeric", _sectio_vicesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "token pasting via #define", _sectio_vicesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "variadic macro basic", _sectio_vicesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "variadic macro with prefix", _sectio_vicesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "variadic macro via #define", _sectio_vicesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "recursion prevention direct", _sectio_vicesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "recursion prevention mutual", _sectio_vicesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "recursion prevention via #define", _sectio_tricesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "#undef stops expansion", _sectio_tricesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "re-define after #undef", _sectio_tricesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "#undef non-existent macro", _sectio_tricesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "variadic macro zero arguments", _sectio_tricesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "variadic macro single argument", _sectio_tricesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "__VA_ARGS__ used twice", _sectio_tricesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "nested macro - arg is macro call", _sectio_tricesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "chained function macros", _sectio_tricesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "object-like macro via #define simple", _sectio_tricesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "object-like macro multi-token", _sectio_quadragesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "stringification empty argument", _sectio_quadragesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "stringification multiple tokens", _sectio_quadragesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "token pasting create operator", _sectio_quadragesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "token pasting empty left arg", _sectio_quadragesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "triple nested macro expansion", _sectio_quadragesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "lookahead genus simple INT macro", _sectio_quadragesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "lookahead genus unknown macro", _sectio_quadragesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "lookahead genus empty macro", _sectio_quadragesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "lookahead extended recursive macro", _sectio_quadragesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "lookahead extended empty macro est_vacuum", _sectio_quinquagesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "lookahead extended non-recursive identifier", _sectio_quinquagesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "lookahead genus integer literal", _sectio_quinquagesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "include path management", _sectio_quinquagesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "local include macro extraction", _sectio_quinquagesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "local include typedef extraction", _sectio_quinquagesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "nested include extraction", _sectio_quinquagesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "include guard", _sectio_quinquagesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "unresolved include", _sectio_quinquagesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "system include syntax", _sectio_quinquagesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    /* Compendium */
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-
-    credo_claudere();
-    piscina_destruere(piscina);
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("arbor2_expandere", SECTIONES);
 }

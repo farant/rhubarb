@@ -14,14 +14,13 @@
  * ======================================================================== */
 
 interior vacuum
-probatio_crc32_vector(Piscina* piscina)
+_sectio_prima (
+    CredoContextus* c)
 {
             i32  crc;
     constans i8* testum;
 
-    (vacuum)piscina;
-
-    printf("--- Probans CRC-32 vector ---\n");
+    (vacuum)c;
 
     /* Notum vector: "123456789" -> 0xCBF43926 */
     testum  = (constans i8*)"123456789";
@@ -35,13 +34,12 @@ probatio_crc32_vector(Piscina* piscina)
 
 
 interior vacuum
-probatio_crc32_vacuus(Piscina* piscina)
+_sectio_secunda (
+    CredoContextus* c)
 {
     i32 crc;
 
-    (vacuum)piscina;
-
-    printf("--- Probans CRC-32 vacuus ---\n");
+    (vacuum)c;
 
     crc = flatura_crc32((constans i8*)"", 0);
     printf("  CRC-32 de \"\": 0x%08X\n", crc);
@@ -52,14 +50,13 @@ probatio_crc32_vacuus(Piscina* piscina)
 
 
 interior vacuum
-probatio_crc32_incrementalis(Piscina* piscina)
+_sectio_tertia (
+    CredoContextus* c)
 {
     i32 crc;
     i32 crc_totalis;
 
-    (vacuum)piscina;
-
-    printf("--- Probans CRC-32 incrementalis ---\n");
+    (vacuum)c;
 
     /* Calculare in partibus */
     crc = 0xFFFFFFFF;
@@ -83,14 +80,16 @@ probatio_crc32_incrementalis(Piscina* piscina)
  * ======================================================================== */
 
 interior vacuum
-probatio_round_trip_parvus(Piscina* piscina)
+_sectio_quarta (
+    CredoContextus* c)
 {
+           Piscina* piscina;
     FlaturaFructus  compressa;
     FlaturaFructus  decompressa;
        constans i8* originalis;
                i32  mensura;
 
-    printf("--- Probans round-trip parvus ---\n");
+    piscina = c->piscina;
 
     originalis  = (constans i8*)"Hello, World!";
     mensura     = XIII;
@@ -121,15 +120,17 @@ probatio_round_trip_parvus(Piscina* piscina)
 
 
 interior vacuum
-probatio_round_trip_magnus(Piscina* piscina)
+_sectio_quinta (
+    CredoContextus* c)
 {
+           Piscina* piscina;
     FlaturaFructus  compressa;
     FlaturaFructus  decompressa;
                 i8* originalis;
                i32  mensura;
                i32  i;
 
-    printf("--- Probans round-trip magnus ---\n");
+    piscina = c->piscina;
 
     /* Generare datum repetitivum (bonus pro compressione) */
     mensura = IV * MXXIV;  /* 4096 */
@@ -168,14 +169,16 @@ probatio_round_trip_magnus(Piscina* piscina)
 
 
 interior vacuum
-probatio_stored_block(Piscina* piscina)
+_sectio_sexta (
+    CredoContextus* c)
 {
+           Piscina* piscina;
     FlaturaFructus  compressa;
     FlaturaFructus  decompressa;
        constans i8* originalis;
                i32  mensura;
 
-    printf("--- Probans stored block (sine compressione) ---\n");
+    piscina = c->piscina;
 
     originalis  = (constans i8*)"Testum";
     mensura     = VI;
@@ -205,14 +208,16 @@ probatio_stored_block(Piscina* piscina)
  * ======================================================================== */
 
 interior vacuum
-probatio_gzip_round_trip(Piscina* piscina)
+_sectio_octava (
+    CredoContextus* c)
 {
+           Piscina* piscina;
     FlaturaFructus  compressa;
     FlaturaFructus  decompressa;
        constans i8* originalis;
                i32  mensura;
 
-    printf("--- Probans gzip round-trip ---\n");
+    piscina = c->piscina;
 
     originalis =
         (constans i8*)"Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
@@ -249,14 +254,16 @@ probatio_gzip_round_trip(Piscina* piscina)
 
 
 interior vacuum
-probatio_gzip_crc_invalidus(Piscina* piscina)
+_sectio_nona (
+    CredoContextus* c)
 {
+           Piscina* piscina;
     FlaturaFructus  compressa;
     FlaturaFructus  decompressa;
        constans i8* originalis;
                i32  mensura;
 
-    printf("--- Probans gzip CRC invalidus ---\n");
+    piscina = c->piscina;
 
     originalis  = (constans i8*)"Test CRC";
     mensura     = VIII;
@@ -286,12 +293,14 @@ probatio_gzip_crc_invalidus(Piscina* piscina)
  * ======================================================================== */
 
 interior vacuum
-probatio_datum_vacuus(Piscina* piscina)
+_sectio_septima (
+    CredoContextus* c)
 {
-    FlaturaFructus compressa;
-    FlaturaFructus decompressa;
+           Piscina* piscina;
+    FlaturaFructus  compressa;
+    FlaturaFructus  decompressa;
 
-    printf("--- Probans datum vacuus ---\n");
+    piscina = c->piscina;
 
     compressa = flatura_deflare((constans i8*)"", 0,
                                 FLATURA_COMPRESSIO_ORDINARIA, piscina);
@@ -310,11 +319,13 @@ probatio_datum_vacuus(Piscina* piscina)
 
 
 interior vacuum
-probatio_nullum_argumenta(Piscina* piscina)
+_sectio_decima (
+    CredoContextus* c)
 {
-    FlaturaFructus fructus;
+           Piscina* piscina;
+    FlaturaFructus  fructus;
 
-    printf("--- Probans nullum argumenta ---\n");
+    piscina = c->piscina;
 
     fructus = flatura_deflare(NIHIL, X, FLATURA_COMPRESSIO_ORDINARIA,
         piscina);
@@ -337,13 +348,12 @@ probatio_nullum_argumenta(Piscina* piscina)
 
 
 interior vacuum
-probatio_status_nuntia(Piscina* piscina)
+_sectio_decima_prima (
+    CredoContextus* c)
 {
     constans character* nuntium;
 
-    (vacuum)piscina;
-
-    printf("--- Probans status nuntia ---\n");
+    (vacuum)c;
 
     nuntium = flatura_status_nuntium(FLATURA_STATUS_OK);
     CREDO_NON_NIHIL(nuntium);
@@ -362,13 +372,12 @@ probatio_status_nuntia(Piscina* piscina)
 
 
 interior vacuum
-probatio_maxima_magnitudo(Piscina* piscina)
+_sectio_decima_secunda (
+    CredoContextus* c)
 {
     i32 max_mag;
 
-    (vacuum)piscina;
-
-    printf("--- Probans maxima magnitudo ---\n");
+    (vacuum)c;
 
     max_mag = flatura_maxima_magnitudo_compressa(M);
     printf("  Maxima pro 1000 bytes: %d\n", max_mag);
@@ -387,14 +396,16 @@ probatio_maxima_magnitudo(Piscina* piscina)
  * ======================================================================== */
 
 interior vacuum
-probatio_compressio_repetitiva(Piscina* piscina)
+_sectio_decima_tertia (
+    CredoContextus* c)
 {
+           Piscina* piscina;
     FlaturaFructus  compressa;
                 i8* originalis;
                i32  mensura;
                i32  i;
 
-    printf("--- Probans compressio repetitiva ---\n");
+    piscina = c->piscina;
 
     /* Datum valde repetitivum - debet esse valde compressibile */
     mensura = IV * MXXIV;
@@ -426,54 +437,30 @@ probatio_compressio_repetitiva(Piscina* piscina)
  * PRINCIPALE
  * ======================================================================== */
 
-integer
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "CRC-32 vector", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "CRC-32 vacuus", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "CRC-32 incrementalis", _sectio_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "round-trip parvus", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "round-trip magnus", _sectio_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "stored block (sine compressione)", _sectio_sexta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "datum vacuus", _sectio_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "gzip round-trip", _sectio_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "gzip CRC invalidus", _sectio_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "nullum argumenta", _sectio_decima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "status nuntia", _sectio_decima_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "maxima magnitudo", _sectio_decima_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "compressio repetitiva", _sectio_decima_tertia, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
 principale (vacuum)
 {
-    Piscina* piscina;
-        b32  successus;
-
-    printf("\n");
-    printf("========================================\n");
-    printf("PROBATIONES FLATURA (DEFLATE/GZIP)\n");
-    printf("========================================\n");
-    printf("\n");
-
-    piscina = piscina_generare_dynamicum("probatio_flatura",
-        CXXVIII * M);
-    credo_aperire(piscina);
-
-    /* CRC-32 */
-    probatio_crc32_vector(piscina);
-    probatio_crc32_vacuus(piscina);
-    probatio_crc32_incrementalis(piscina);
-
-    /* Deflate/Inflate */
-    probatio_round_trip_parvus(piscina);
-    probatio_round_trip_magnus(piscina);
-    probatio_stored_block(piscina);
-    probatio_datum_vacuus(piscina);
-
-    /* Gzip */
-    probatio_gzip_round_trip(piscina);
-    probatio_gzip_crc_invalidus(piscina);
-
-    /* Limites et errores */
-    probatio_nullum_argumenta(piscina);
-    probatio_status_nuntia(piscina);
-    probatio_maxima_magnitudo(piscina);
-
-    /* Efficacia */
-    probatio_compressio_repetitiva(piscina);
-
-    credo_imprimere_compendium();
-
-    printf("========================================\n");
-    printf("\n");
-
-    successus = credo_omnia_praeterierunt();
-
-    credo_claudere();
-    piscina_destruere(piscina);
-
-    redde successus ? 0 : I;
+    redde credo_suitam_currere("flatura", SECTIONES);
 }

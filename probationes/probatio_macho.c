@@ -6,32 +6,23 @@
 #include "credo.h"
 #include <stdio.h>
 
-s32 principale(vacuum)
-{
-    Piscina* piscina;
-        b32  praeteritus;
-
-    /* Aperire credo et piscina */
-    piscina = piscina_generare_dynamicum("test_macho", 1024 * 1024);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
 
     /* ==================================================
 	 * Probare macho_aperire cum fixture "simplex"
 	 * ================================================== */
 
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans character* via = "probationes/fixa/simplex";
                      MachO* macho;
                        i32  genus_cpu;
                        i32  numerus_mandatorum;
-
-        imprimere("\n--- Probans macho_aperire (simplex) ---\n");
 
         macho = macho_aperire(via, piscina);
         CREDO_NON_NIHIL(macho);
@@ -55,18 +46,24 @@ s32 principale(vacuum)
         imprimere("  Load commands: %d\n", numerus_mandatorum);
         CREDO_VERUM(numerus_mandatorum > ZEPHYRUM);
     }
+}
 
 
     /* ==================================================
 	 * Probare macho_aperire cum fixture "cum_functione"
 	 * ================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans character* via = "probationes/fixa/cum_functione";
                      MachO* macho;
                        i32  numerus_mandatorum;
-
-        imprimere("\n--- Probans macho_aperire (cum_functione) ---\n");
 
         macho = macho_aperire(via, piscina);
         CREDO_NON_NIHIL(macho);
@@ -83,12 +80,20 @@ s32 principale(vacuum)
         imprimere("  Load commands: %d\n", numerus_mandatorum);
         CREDO_VERUM(numerus_mandatorum > ZEPHYRUM);
     }
+}
 
 
     /* ==================================================
 	 * Probare iterationem mandatorum oneris
 	 * ================================================== */
 
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
            constans character* via = "probationes/fixa/simplex";
                         MachO* macho;
@@ -98,8 +103,6 @@ s32 principale(vacuum)
                           b32  invenit_segment_64;
                           b32  invenit_symtab;
                           b32  invenit_dysymtab;
-
-        imprimere("\n--- Probans iterationem mandatorum oneris ---\n");
 
         macho = macho_aperire(via, piscina);
         CREDO_NON_NIHIL(macho);
@@ -151,19 +154,25 @@ s32 principale(vacuum)
         imprimere("  Invenit LC_DYSYMTAB: %s\n",
             invenit_dysymtab ? "sic" : "non");
     }
+}
 
 
     /* ==================================================
 	 * Probare macho_iterator_mandatorum_finis
 	 * ================================================== */
 
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
            constans character* via = "probationes/fixa/simplex";
                         MachO* macho;
         MachoIteratorMandatum  iter;
               MandatumOnustum* cmd;
-
-        imprimere("\n--- Probans macho_iterator_mandatorum_finis ---\n");
 
         macho = macho_aperire(via, piscina);
         CREDO_NON_NIHIL(macho);
@@ -186,20 +195,26 @@ s32 principale(vacuum)
         cmd = macho_iterator_mandatorum_proximum(&iter);
         CREDO_NIHIL(cmd);
     }
+}
 
 
     /* ==================================================
 	 * Probare concordantiam mandatum_datum
 	 * ================================================== */
 
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
            constans character* via = "probationes/fixa/simplex";
                         MachO* macho;
         MachoIteratorMandatum  iter;
               MandatumOnustum* cmd;
                           i32  numerus_verificatus;
-
-        imprimere("\n--- Probans concordantiam mandatum_datum ---\n");
 
         macho = macho_aperire(via, piscina);
         CREDO_NON_NIHIL(macho);
@@ -221,12 +236,20 @@ s32 principale(vacuum)
         imprimere("  Verificatus: %d mandata\n", numerus_verificatus);
         CREDO_VERUM(numerus_verificatus > ZEPHYRUM);
     }
+}
 
 
     /* ==================================================
 	 * Probare macho_filum_aperire
 	 * ================================================== */
 
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans character* via = "probationes/fixa/simplex";
                 MachoFilum* filum;
@@ -234,8 +257,6 @@ s32 principale(vacuum)
                        i32  numerus;
                        i32  genus_cpu;
                        i32  subgenus_cpu;
-
-        imprimere("\n--- Probans macho_filum_aperire ---\n");
 
         filum = macho_filum_aperire(via, piscina);
         CREDO_NON_NIHIL(filum);
@@ -264,17 +285,23 @@ s32 principale(vacuum)
         /* Verificare imago ex filum concordat cum macho_aperire */
         CREDO_AEQUALIS_I32(macho_genus_processoris(imago), genus_cpu);
     }
+}
 
 
     /* ==================================================
 	 * Probare NIHIL handling
 	 * ================================================== */
 
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
              MachO* macho;
         MachoFilum* filum;
-
-        imprimere("\n--- Probans NIHIL handling ---\n");
 
         /* macho_aperire cum via NIHIL */
         macho = macho_aperire(NIHIL, piscina);
@@ -293,18 +320,24 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32(macho_numerus_mandatorum(NIHIL), ZEPHYRUM);
         CREDO_FALSUM(macho_est_64bit(NIHIL));
     }
+}
 
 
     /* ==================================================
 	 * Probare filum non existens
 	 * ================================================== */
 
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans character* via = "probationes/fixa/non_existens";
                      MachO* macho;
         constans character* error;
-
-        imprimere("\n--- Probans filum non existens ---\n");
 
         macho = macho_aperire(via, piscina);
         CREDO_NIHIL(macho);
@@ -313,19 +346,25 @@ s32 principale(vacuum)
         imprimere("  Error: %s\n", error ? error : "(nullus)");
         CREDO_NON_NIHIL(error);
     }
+}
 
 
     /* ==================================================
 	 * Probare ambos fixtures habent structuram similem
 	 * ================================================== */
 
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         MachO* simplex;
         MachO* cum_functione;
           i32  num_simplex;
           i32  num_functione;
-
-        imprimere("\n--- Comparans ambos fixtures ---\n");
 
         simplex = macho_aperire("probationes/fixa/simplex", piscina);
         cum_functione = macho_aperire("probationes/fixa/cum_functione",
@@ -358,27 +397,31 @@ s32 principale(vacuum)
         /* Nota: non verificamus num_functione > num_simplex quia
 		 * compiler potest optimizare similiter */
     }
+}
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "macho_aperire (simplex)", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "macho_aperire (cum_functione)", _sectio_secunda, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "iterationem mandatorum oneris", _sectio_tertia, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "macho_iterator_mandatorum_finis", _sectio_quarta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "concordantiam mandatum_datum", _sectio_quinta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "macho_filum_aperire", _sectio_sexta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "NIHIL handling", _sectio_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "filum non existens", _sectio_octava, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "Comparans ambos fixtures", _sectio_nona, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    /* =================================================
-	 * Compendium
-	 * ================================================== */
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-
-    /* Destructio */
-    credo_claudere();
-    piscina_destruere(piscina);
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("macho", SECTIONES);
 }

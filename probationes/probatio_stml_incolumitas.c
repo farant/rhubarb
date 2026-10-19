@@ -69,28 +69,16 @@ probatio_stml_incolumitas_status (
     redde status;
 }
 
-s32
-principale (vacuum)
-{
-         b32  praeteritus;
-     Piscina* piscina;
-
-    piscina = piscina_generare_dynamicum("probatio_stml_incolumitas",
-                                         65536);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
 
     /* ==================================================
      * GYRI porta I: contentum crudum non clausum
      * ================================================== */
 
-    imprimere("\n--- Gyri I: contentum crudum non clausum ---\n");
-
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    (vacuum)c;
     CREDO_NON_PENDET(probatio_stml_incolumitas_parsare("<x!>a"), 3000);
     CREDO_NON_PENDET(probatio_stml_incolumitas_parsare("<x!>a</y>"),
                      3000);
@@ -98,6 +86,7 @@ principale (vacuum)
                      3000);
     CREDO_NON_PENDET(probatio_stml_incolumitas_parsare("<x!>a</#>"),
                      3000);
+}
 
 
     /* ==================================================
@@ -107,8 +96,11 @@ principale (vacuum)
      * lexantur, deinde in portam I cadunt.
      * ================================================== */
 
-    imprimere("\n--- Gyri II: lapsus '<!' ---\n");
-
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    (vacuum)c;
     CREDO_NON_PENDET(probatio_stml_incolumitas_parsare("<!x>"), 3000);
     CREDO_NON_PENDET(probatio_stml_incolumitas_parsare("<!!>"), 3000);
     CREDO_NON_PENDET(
@@ -117,20 +109,25 @@ principale (vacuum)
         probatio_stml_incolumitas_parsare("<![CDATA[x]]>"), 3000);
     CREDO_NON_PENDET(
         probatio_stml_incolumitas_parsare("<!ENTITY a \"b\">"), 3000);
+}
 
 
     /* ==================================================
      * CUSTODES: haec parsare DEBENT, ante et post
      * ================================================== */
 
-    imprimere("\n--- Custodes gyrorum ---\n");
-
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    (vacuum)c;
     CREDO_NON_PENDET(
         probatio_stml_incolumitas_parsare("<!DOCTYPE html>"), 3000);
     CREDO_NON_PENDET(probatio_stml_incolumitas_parsare("<!-- x -->"),
                      3000);
     CREDO_NON_PENDET(probatio_stml_incolumitas_parsare("<x!>a</x>"),
                      3000);
+}
 
 
     /* ==================================================
@@ -141,14 +138,18 @@ principale (vacuum)
      * chorda_internare dereferenciabat. V octeti sufficiebant.
      * ================================================== */
 
-    imprimere("\n--- Ruinae: commentum / processio non clausa ---\n");
-
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     CREDO_NON_RUIT(probatio_stml_incolumitas_parsare("<!--x"));
     CREDO_NON_RUIT(probatio_stml_incolumitas_parsare("<?x"));
     CREDO_NON_RUIT(
         probatio_stml_incolumitas_parsare("<r><!-- x</r>"));
     CREDO_NON_RUIT(
         probatio_stml_incolumitas_parsare("<r><?php echo 1; </r>"));
+}
 
 
     /* ==================================================
@@ -160,8 +161,11 @@ principale (vacuum)
      * duo alia sequi debent.
      * ================================================== */
 
-    imprimere("\n--- Custodes commentorum ---\n");
-
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     CREDO_NON_RUIT(probatio_stml_incolumitas_parsare("<!-- x -->"));
     CREDO_NON_RUIT(probatio_stml_incolumitas_parsare("<!-- x --->"));
     CREDO_NON_RUIT(probatio_stml_incolumitas_parsare("<!-- x ---->"));
@@ -170,6 +174,7 @@ principale (vacuum)
     CREDO_NON_RUIT(probatio_stml_incolumitas_parsare("<!---->"));
     CREDO_NON_RUIT(probatio_stml_incolumitas_parsare("<r><?x?></r>"));
     CREDO_NON_RUIT(probatio_stml_incolumitas_parsare("<!DOCTYPE x"));
+}
 
 
     /* ==================================================
@@ -180,11 +185,15 @@ principale (vacuum)
      * dereferenciabat. Prosa vulgaris hoc producit.
      * ================================================== */
 
-    imprimere("\n--- Ruinae: tagum sine nomine ---\n");
-
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     CREDO_NON_RUIT(probatio_stml_incolumitas_parsare("<p>a < b</p>"));
     CREDO_NON_RUIT(probatio_stml_incolumitas_parsare("<p>x < 10</p>"));
     CREDO_NON_RUIT(probatio_stml_incolumitas_parsare("<p>a < </p>"));
+}
 
 
     /* ==================================================
@@ -196,8 +205,11 @@ principale (vacuum)
      * frangeret (IX usus in probatio_stml_macros.c solo).
      * ================================================== */
 
-    imprimere("\n--- Custodes formarum anonymarum ---\n");
-
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    (vacuum)c;
     CREDO_NON_RUIT(
         probatio_stml_incolumitas_parsare("<r><a>x</></r>"));
     CREDO_NON_RUIT(probatio_stml_incolumitas_parsare("<r><>a</></r>"));
@@ -208,6 +220,7 @@ principale (vacuum)
     CREDO_NON_RUIT(probatio_stml_incolumitas_parsare("<p>a <b</p>"));
     CREDO_NON_RUIT(
         probatio_stml_incolumitas_parsare("<p>5 &lt; 3</p>"));
+}
 
 
     /* ==================================================
@@ -223,8 +236,11 @@ principale (vacuum)
      * Nunc omnia quattuor consentiunt.
      * ================================================== */
 
-    imprimere("\n--- Recusationes: non clausum = erratum ---\n");
-
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    (vacuum)c;
     /* norma iam exsistens - custos ne mutetur */
     CREDO_AEQUALIS_S32(
         probatio_stml_incolumitas_status("<a>x"),
@@ -249,14 +265,18 @@ principale (vacuum)
     CREDO_AEQUALIS_S32(
         probatio_stml_incolumitas_status("<!DOCTYPE x"),
         (s32)STML_ERROR_TAG_NON_CLAUSUM);
+}
 
 
     /* ==================================================
      * CUSTODES: formae CLAUSAE succedere DEBENT
      * ================================================== */
 
-    imprimere("\n--- Custodes recusationum ---\n");
-
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+    (vacuum)c;
     CREDO_AEQUALIS_S32(
         probatio_stml_incolumitas_status("<a>x</a>"), ZEPHYRUM);
     CREDO_AEQUALIS_S32(
@@ -269,23 +289,31 @@ principale (vacuum)
         probatio_stml_incolumitas_status("<!DOCTYPE html>"), ZEPHYRUM);
     CREDO_AEQUALIS_S32(
         probatio_stml_incolumitas_status("<x!>a</x><y/>"), ZEPHYRUM);
+}
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "Gyri I: contentum crudum non clausum", _sectio_prima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "Gyri II: lapsus '<!'", _sectio_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "Custodes gyrorum", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Ruinae: commentum / processio non clausa", _sectio_quarta, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "Custodes commentorum", _sectio_quinta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "Ruinae: tagum sine nomine", _sectio_sexta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "Custodes formarum anonymarum", _sectio_septima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "Recusationes: non clausum = erratum", _sectio_octava, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "Custodes recusationum", _sectio_nona, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    /* ==================================================
-     * Compendium
-     * ================================================== */
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("stml_incolumitas", SECTIONES);
 }

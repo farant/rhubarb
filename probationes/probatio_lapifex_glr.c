@@ -176,25 +176,19 @@ terminalem_invenire(
  * Probationes
  * ================================================ */
 
-s32 principale(vacuum)
-{
-    b32                  praeteritus;
-    Piscina*             piscina;
-    InternamentumChorda* intern;
-
-    piscina = piscina_generare_dynamicum("probatio_lapifex_glr", IV * MXXIV);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina non creata\n");
-        redde I;
-    }
-
-    intern = internamentum_creare(piscina);
-    credo_aperire(piscina);
-
     /* ========================================================
      * PROBARE: Grammatica simplex (non ambigua)
      * ======================================================== */
+
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         GrammaticaParata gp;
         LapifexGLR*      glr;
@@ -203,8 +197,6 @@ s32 principale(vacuum)
         s32              idx_a;
         s32              idx_b;
         s32              idx_eof;
-
-        imprimere("\n--- Probans grammaticam simplicem ---\n");
 
         gp = grammaticam_parare(piscina, intern, GRAMMATICA_SIMPLEX);
         CREDO_NON_NIHIL(gp.tabula);
@@ -241,11 +233,22 @@ s32 principale(vacuum)
         CREDO_NON_NIHIL(fructus.valori);
         CREDO_AEQUALIS_S64(fructus.valori[ZEPHYRUM], XXX);
     }
+}
 
     /* ========================================================
      * PROBARE: GLR cum grammatica ambigua - "id + id * id"
      * Debet producere plures parsationes
      * ======================================================== */
+
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         GrammaticaParata  gp;
         LapifexGLR*       glr;
@@ -255,8 +258,6 @@ s32 principale(vacuum)
         s32               idx_plus;
         s32               idx_mult;
         s32               idx_eof;
-
-        imprimere("\n--- Probans grammaticam ambiguam (id + id * id) ---\n");
 
         gp = grammaticam_parare(piscina, intern, GRAMMATICA_AMBIGUA);
         CREDO_NON_NIHIL(gp.tabula);
@@ -318,11 +319,22 @@ s32 principale(vacuum)
             CREDO_VERUM(invenit_xiv);
         }
     }
+}
 
     /* ========================================================
      * PROBARE: GLR cum grammatica ambigua - "id" singulare
      * Debet producere unam parsationem (non ambigua)
      * ======================================================== */
+
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         GrammaticaParata  gp;
         LapifexGLR*       glr;
@@ -330,8 +342,6 @@ s32 principale(vacuum)
         LapifexSignum     signa[II];
         s32               idx_id;
         s32               idx_eof;
-
-        imprimere("\n--- Probans singulare id ---\n");
 
         gp = grammaticam_parare(piscina, intern, GRAMMATICA_AMBIGUA);
         CREDO_NON_NIHIL(gp.tabula);
@@ -356,10 +366,21 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_S32(fructus.numerus_fructuum, I);
         CREDO_AEQUALIS_S64(fructus.valori[ZEPHYRUM], XLII);
     }
+}
 
     /* ========================================================
      * PROBARE: Error - signum invalidum
      * ======================================================== */
+
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         GrammaticaParata  gp;
         LapifexGLR*       glr;
@@ -367,8 +388,6 @@ s32 principale(vacuum)
         LapifexSignum     signa[II];
         s32               idx_plus;
         s32               idx_eof;
-
-        imprimere("\n--- Probans errorem (signum invalidum) ---\n");
 
         gp = grammaticam_parare(piscina, intern, GRAMMATICA_AMBIGUA);
         CREDO_NON_NIHIL(gp.tabula);
@@ -391,10 +410,21 @@ s32 principale(vacuum)
         CREDO_FALSUM(fructus.successus);
         CREDO_VERUM(fructus.error.est_error);
     }
+}
 
     /* ========================================================
      * PROBARE: "id + id" (ambigua grammatica, sed non ambiguus initus)
      * ======================================================== */
+
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         GrammaticaParata  gp;
         LapifexGLR*       glr;
@@ -403,8 +433,6 @@ s32 principale(vacuum)
         s32               idx_id;
         s32               idx_plus;
         s32               idx_eof;
-
-        imprimere("\n--- Probans id + id ---\n");
 
         gp = grammaticam_parare(piscina, intern, GRAMMATICA_AMBIGUA);
         CREDO_NON_NIHIL(gp.tabula);
@@ -434,35 +462,38 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_S32(fructus.numerus_fructuum, I);
         CREDO_AEQUALIS_S64(fructus.valori[ZEPHYRUM], VIII);
     }
+}
 
     /* ========================================================
      * PROBARE: Motor NIHIL tutela
      * ======================================================== */
+
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         LapifexGLRFructus fructus;
-
-        imprimere("\n--- Probans tutelas NIHIL ---\n");
 
         fructus = lapifex_glr_parsare(NIHIL, NIHIL, ZEPHYRUM, NIHIL, NIHIL);
         CREDO_FALSUM(fructus.successus);
         CREDO_VERUM(fructus.error.est_error);
     }
+}
 
-    /* ========================================================
-     * Compendium
-     * ======================================================== */
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "grammaticam simplicem", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "grammaticam ambiguam (id + id * id)", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "singulare id", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "errorem (signum invalidum)", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "id + id", _sectio_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "tutelas NIHIL", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("lapifex_glr", SECTIONES);
 }

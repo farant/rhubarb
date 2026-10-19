@@ -41,32 +41,24 @@ _campus_obtinere (
     redde *locus;
 }
 
-s32 principale(vacuum)
-{
-               Piscina* piscina;
-    NuntiumSchemaNodus* radix;
-
-    piscina = piscina_generare_dynamicum("probatio_nuntium_schema",
-        IV * MXXIV);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
 
     /* ========================================================
      * PROBARE I: Nuntium simplex cum uno campo
      * ======================================================== */
 
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
+        NuntiumSchemaNodus* radix;
         constans character* fons =
             "nuntium Persona { textus identificator = 1; }";
         NuntiumSchemaNodus* def;
         NuntiumSchemaNodus* campus;
-
-        imprimere("\n--- Probans I: nuntium simplex cum uno campo ---\n");
 
         radix = nuntium_schema_legere(piscina, fons, (s32)strlen(fons));
         CREDO_NON_NIHIL(radix);
@@ -95,13 +87,22 @@ s32 principale(vacuum)
 
         imprimere("  nuntium Persona { textus identificator = 1; } -> OK\n");
     }
+}
 
 
     /* ========================================================
      * PROBARE II: Nuntium cum campis multiplicibus
      * ======================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
+        NuntiumSchemaNodus* radix;
         constans character* fons =
             "nuntium Persona {"
             "  textus identificator = 1;"
@@ -112,8 +113,6 @@ s32 principale(vacuum)
         NuntiumSchemaNodus* c0;
         NuntiumSchemaNodus* c1;
         NuntiumSchemaNodus* c2;
-
-        imprimere("\n--- Probans II: nuntium cum campis multiplicibus ---\n");
 
         radix = nuntium_schema_legere(piscina, fons, (s32)strlen(fons));
         CREDO_NON_NIHIL(radix);
@@ -148,13 +147,22 @@ s32 principale(vacuum)
 
         imprimere("  3 campi: textus, varint, textus -> OK\n");
     }
+}
 
 
     /* ========================================================
      * PROBARE III: Nuntia multiplicia
      * ======================================================== */
 
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
+        NuntiumSchemaNodus* radix;
         constans character* fons =
             "nuntium Persona {"
             "  textus id = 1;"
@@ -166,8 +174,6 @@ s32 principale(vacuum)
             "}";
         NuntiumSchemaNodus* def0;
         NuntiumSchemaNodus* def1;
-
-        imprimere("\n--- Probans III: nuntia multiplicia ---\n");
 
         radix = nuntium_schema_legere(piscina, fons, (s32)strlen(fons));
         CREDO_NON_NIHIL(radix);
@@ -190,13 +196,22 @@ s32 principale(vacuum)
 
         imprimere("  Persona + Ordo -> OK\n");
     }
+}
 
 
     /* ========================================================
      * PROBARE IV: Omnia VIII genera camporum
      * ======================================================== */
 
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
+        NuntiumSchemaNodus* radix;
         constans character* fons =
             "nuntium Omnia {"
             "  textus  a = 1;"
@@ -210,8 +225,6 @@ s32 principale(vacuum)
             "}";
         NuntiumSchemaNodus* def;
         NuntiumSchemaNodus* c;
-
-        imprimere("\n--- Probans IV: omnia VIII genera camporum ---\n");
 
         radix = nuntium_schema_legere(piscina, fons, (s32)strlen(fons));
         CREDO_NON_NIHIL(radix);
@@ -263,13 +276,22 @@ s32 principale(vacuum)
 
         imprimere("  textus, varint, svarint, fixum32, fixum64, bytes, f32, f64 -> OK\n");
     }
+}
 
 
     /* ========================================================
      * PROBARE V: Tag numeri maiores
      * ======================================================== */
 
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
+        NuntiumSchemaNodus* radix;
         constans character* fons =
             "nuntium Magnum {"
             "  varint campus_primus = 100;"
@@ -278,8 +300,6 @@ s32 principale(vacuum)
         NuntiumSchemaNodus* def;
         NuntiumSchemaNodus* c0;
         NuntiumSchemaNodus* c1;
-
-        imprimere("\n--- Probans V: tag numeri maiores ---\n");
 
         radix = nuntium_schema_legere(piscina, fons, (s32)strlen(fons));
         CREDO_NON_NIHIL(radix);
@@ -295,14 +315,22 @@ s32 principale(vacuum)
 
         imprimere("  tag 100, 255 -> OK\n");
     }
+}
 
 
     /* ========================================================
      * PROBARE VI: Input vacuum -> NIHIL
      * ======================================================== */
 
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
-        imprimere("\n--- Probans VI: input vacuum -> NIHIL ---\n");
+        NuntiumSchemaNodus* radix;
 
         radix = nuntium_schema_legere(piscina, "", ZEPHYRUM);
         CREDO_NIHIL(radix);
@@ -312,55 +340,76 @@ s32 principale(vacuum)
 
         imprimere("  vacuum -> NIHIL -> OK\n");
     }
+}
 
 
     /* ========================================================
      * PROBARE VII: Error — semicolon deficiens
      * ======================================================== */
 
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
+        NuntiumSchemaNodus* radix;
         constans character* fons =
             "nuntium Persona { textus id = 1 }";
-
-        imprimere("\n--- Probans VII: semicolon deficiens -> error ---\n");
 
         radix = nuntium_schema_legere(piscina, fons, (s32)strlen(fons));
         CREDO_NIHIL(radix);
 
         imprimere("  semicolon deficiens -> NIHIL -> OK\n");
     }
+}
 
 
     /* ========================================================
      * PROBARE VIII: Error — character ignotus
      * ======================================================== */
 
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
+        NuntiumSchemaNodus* radix;
         constans character* fons =
             "nuntium Persona { textus id @ 1; }";
-
-        imprimere("\n--- Probans VIII: character ignotus -> error ---\n");
 
         radix = nuntium_schema_legere(piscina, fons, (s32)strlen(fons));
         CREDO_NIHIL(radix);
 
         imprimere("  character ignotus -> NIHIL -> OK\n");
     }
+}
 
 
     /* ========================================================
      * PROBARE IX: Spatium copiosum et lineae novae
      * ======================================================== */
 
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
+        NuntiumSchemaNodus* radix;
         constans character* fons =
             "\n\n  nuntium  Persona  {\n"
             "    textus   id   =   1  ;\n"
             "    varint   aetas   =   2  ;\n"
             "  }\n\n";
         NuntiumSchemaNodus* def;
-
-        imprimere("\n--- Probans IX: spatium copiosum et lineae novae ---\n");
 
         radix = nuntium_schema_legere(piscina, fons, (s32)strlen(fons));
         CREDO_NON_NIHIL(radix);
@@ -373,13 +422,22 @@ s32 principale(vacuum)
 
         imprimere("  spatium copiosum -> OK\n");
     }
+}
 
 
     /* ========================================================
      * PROBARE X: Tria nuntia (end-to-end complexus)
      * ======================================================== */
 
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
+        NuntiumSchemaNodus* radix;
         constans character* fons =
             "nuntium Eventum {"
             "  varint genus_eventum = 1;"
@@ -400,8 +458,6 @@ s32 principale(vacuum)
         NuntiumSchemaNodus* def1;
         NuntiumSchemaNodus* def2;
         NuntiumSchemaNodus* c;
-
-        imprimere("\n--- Probans X: tria nuntia (end-to-end) ---\n");
 
         radix = nuntium_schema_legere(piscina, fons, (s32)strlen(fons));
         CREDO_NON_NIHIL(radix);
@@ -451,16 +507,34 @@ s32 principale(vacuum)
 
         imprimere("  Eventum(4) + Persona(3) + Ordo(2) -> OK\n");
     }
+}
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I: nuntium simplex cum uno campo", _sectio_prima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "II: nuntium cum campis multiplicibus", _sectio_secunda, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "III: nuntia multiplicia", _sectio_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "IV: omnia VIII genera camporum", _sectio_quarta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "V: tag numeri maiores", _sectio_quinta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "VI: input vacuum -> NIHIL", _sectio_sexta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "VII: semicolon deficiens -> error", _sectio_septima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "VIII: character ignotus -> error", _sectio_octava, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "IX: spatium copiosum et lineae novae", _sectio_nona, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "X: tria nuntia (end-to-end)", _sectio_decima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    /* ========================================================
-     * Compendium
-     * ======================================================== */
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    piscina_destruere(piscina);
-
-    redde (credo_omnia_praeterierunt() ? ZEPHYRUM : I);
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("nuntium_schema", SECTIONES);
 }

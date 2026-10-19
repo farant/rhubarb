@@ -24,12 +24,11 @@
 #include "quaternio.h"
 #include <stdio.h>
 
-hic_manens Piscina* piscina;
-
 interior Quaternio
 _q (
        constans Anulus* anulus,
-    constans character* textus)
+    constans character* textus,
+               Piscina* piscina)
 {
     Quaternio q;
 
@@ -45,7 +44,8 @@ _q (
 interior b32
 _aequalis_textui (
              Quaternio  q,
-    constans character* textus)
+    constans character* textus,
+               Piscina* piscina)
 {
     redde chorda_aequalis_literis(quaternio_ad_chordam(q, piscina),
         textus);
@@ -53,8 +53,9 @@ _aequalis_textui (
 
 interior Quaternio
 _productum (
-    Quaternio p,
-    Quaternio q)
+    Quaternio  p,
+    Quaternio  q,
+      Piscina* piscina)
 {
     Quaternio r;
 
@@ -65,7 +66,8 @@ _productum (
 
 interior Quaternio
 _fortuitus (
-    Sors* s)
+       Sors* s,
+    Piscina* piscina)
 {
        Magnus partes[IV];
           i32 k;
@@ -86,7 +88,8 @@ interior i32
 _ordo_clausurae (
     constans Quaternio* generatores,
                    i32  numerus,
-                   i32  limes)
+                   i32  limes,
+               Piscina* piscina)
 {
     Quaternio* elementa = (Quaternio*)piscina_allocare(piscina,
         (memoriae_index)limes * magnitudo(Quaternio));
@@ -100,7 +103,8 @@ _ordo_clausurae (
     {
         per (g = ZEPHYRUM; g < numerus; g++)
         {
-            Quaternio x = _productum(elementa[cursor], generatores[g]);
+            Quaternio x = _productum(elementa[cursor], generatores[g],
+                piscina);
                   i32 j;
                   b32 novum = VERUM;
 
@@ -126,67 +130,74 @@ _ordo_clausurae (
     redde n;
 }
 
-s32 principale (vacuum)
+
+/* ==================================================
+ * TABULA HAMILTON
+ * ================================================== */
+
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
     constans Anulus* z = &ANULUS_INTEGRORUM;
     constans Anulus* q = &ANULUS_RATIONALIUM;
+            Piscina* piscina;
 
-    piscina = piscina_generare_dynamicum("probatio_quaternio", 1048576);
-    si (!piscina)
+    piscina = c->piscina;
     {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
+        Quaternio i = _q(z, "[0, 1, 0, 0]", piscina);
+        Quaternio j = _q(z, "[0, 0, 1, 0]", piscina);
+        Quaternio k = _q(z, "[0, 0, 0, 1]", piscina);
 
-
-    /* ==================================================
-     * TABULA HAMILTON
-     * ================================================== */
-
-    {
-        Quaternio i = _q(z, "[0, 1, 0, 0]");
-        Quaternio j = _q(z, "[0, 0, 1, 0]");
-        Quaternio k = _q(z, "[0, 0, 0, 1]");
-
-        imprimere("\n--- Tabula Hamilton ---\n");
-        CREDO_VERUM (_aequalis_textui(_productum(i, i),
-            "[-1, 0, 0, 0]"));
-        CREDO_VERUM (_aequalis_textui(_productum(j, j),
-            "[-1, 0, 0, 0]"));
-        CREDO_VERUM (_aequalis_textui(_productum(k, k),
-            "[-1, 0, 0, 0]"));
-        CREDO_VERUM (_aequalis_textui(_productum(_productum(i, j), k),
-            "[-1, 0, 0, 0]"));
-        CREDO_VERUM (_aequalis_textui(_productum(i, j),
-            "[0, 0, 0, 1]"));
-        CREDO_VERUM (_aequalis_textui(_productum(j, i),
-            "[0, 0, 0, -1]"));
-        CREDO_VERUM (_aequalis_textui(_productum(j, k),
-            "[0, 1, 0, 0]"));
-        CREDO_VERUM (_aequalis_textui(_productum(k, j),
-            "[0, -1, 0, 0]"));
-        CREDO_VERUM (_aequalis_textui(_productum(k, i),
-            "[0, 0, 1, 0]"));
-        CREDO_VERUM (_aequalis_textui(_productum(i, k),
-            "[0, 0, -1, 0]"));
+        CREDO_VERUM (_aequalis_textui(_productum(i, i, piscina),
+            "[-1, 0, 0, 0]", piscina));
+        CREDO_VERUM (_aequalis_textui(_productum(j, j, piscina),
+            "[-1, 0, 0, 0]", piscina));
+        CREDO_VERUM (_aequalis_textui(_productum(k, k, piscina),
+            "[-1, 0, 0, 0]", piscina));
+        CREDO_VERUM (_aequalis_textui(_productum(_productum(i, j,
+            piscina), k, piscina),
+            "[-1, 0, 0, 0]", piscina));
+        CREDO_VERUM (_aequalis_textui(_productum(i, j, piscina),
+            "[0, 0, 0, 1]", piscina));
+        CREDO_VERUM (_aequalis_textui(_productum(j, i, piscina),
+            "[0, 0, 0, -1]", piscina));
+        CREDO_VERUM (_aequalis_textui(_productum(j, k, piscina),
+            "[0, 1, 0, 0]", piscina));
+        CREDO_VERUM (_aequalis_textui(_productum(k, j, piscina),
+            "[0, -1, 0, 0]", piscina));
+        CREDO_VERUM (_aequalis_textui(_productum(k, i, piscina),
+            "[0, 0, 1, 0]", piscina));
+        CREDO_VERUM (_aequalis_textui(_productum(i, k, piscina),
+            "[0, 0, -1, 0]", piscina));
         {
             Quaternio x;
 
             CREDO_FALSUM (quaternio_ex_chorda(q, chorda_ex_literis(
                 " [ 1/2 ,a, -3,0 ] ", piscina), piscina, &x));
         }
-        CREDO_VERUM (_aequalis_textui(_q(q, " [ 1/2 , -3 ,0, 7/4 ] "),
-            "[1/2, -3, 0, 7/4]"));
-        CREDO_VERUM (_aequalis_textui(_q(q, "[1/2, -3, 0, 7/4]"),
-            "[1/2, -3, 0, 7/4]"));
+        CREDO_VERUM (_aequalis_textui(_q(q, " [ 1/2 , -3 ,0, 7/4 ] ",
+            piscina),
+            "[1/2, -3, 0, 7/4]", piscina));
+        CREDO_VERUM (_aequalis_textui(_q(q, "[1/2, -3, 0, 7/4]",
+            piscina),
+            "[1/2, -3, 0, 7/4]", piscina));
     }
+}
 
 
-    /* ==================================================
-     * IDENTITATES (elementa fortuita in Z)
-     * ================================================== */
+/* ==================================================
+ * IDENTITATES (elementa fortuita in Z)
+ * ================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    constans Anulus* z = &ANULUS_INTEGRORUM;
+            Piscina* piscina;
+
+    piscina = c->piscina;
     {
         Sors s;
          b32 norma_bene       = VERUM;
@@ -196,14 +207,13 @@ s32 principale (vacuum)
          b32 rotatio_bene     = VERUM;
          i32 iteratio;
 
-        imprimere("\n--- Identitates in Z ---\n");
         sors_seminare(&s, CCCXXXIII, I);
         per (iteratio = ZEPHYRUM; iteratio < C; iteratio++)
         {
             PiscinaNotatio nota  = piscina_notare(piscina);
-                 Quaternio a     = _fortuitus(&s);
-                 Quaternio b     = _fortuitus(&s);
-                 Quaternio c     = _fortuitus(&s);
+                 Quaternio a     = _fortuitus(&s, piscina);
+                 Quaternio b     = _fortuitus(&s, piscina);
+                 Quaternio c     = _fortuitus(&s, piscina);
                  Quaternio ca;
                  Quaternio cb;
                  Quaternio c_ab;
@@ -214,24 +224,27 @@ s32 principale (vacuum)
             /* N(ab) = N(a) N(b) */
             (vacuum)quaternio_norma(a, piscina, &na);
             (vacuum)quaternio_norma(b, piscina, &nb);
-            (vacuum)quaternio_norma(_productum(a, b), piscina, &n_ab);
+            (vacuum)quaternio_norma(_productum(a, b, piscina), piscina,
+                &n_ab);
             si (!magnus_aequalis(n_ab, magnus_multiplica(na, nb,
                 piscina)))
             {
                 norma_bene = FALSUM;
             }
             /* (ab)c = a(bc) */
-            si (!quaternio_aequalis(_productum(_productum(a, b), c),
-                _productum(a, _productum(b, c))))
+            si (!quaternio_aequalis(_productum(_productum(a, b,
+                piscina), c, piscina),
+                _productum(a, _productum(b, c, piscina), piscina)))
             {
                 triplex_bene = FALSUM;
             }
             /* conj(ab) = conj(b) conj(a); a conj(a) = N(a) */
             (vacuum)quaternio_conjugatum(a, piscina, &ca);
             (vacuum)quaternio_conjugatum(b, piscina, &cb);
-            (vacuum)quaternio_conjugatum(_productum(a, b), piscina,
+            (vacuum)quaternio_conjugatum(_productum(a, b, piscina),
+                piscina,
                 &c_ab);
-            si (!quaternio_aequalis(c_ab, _productum(cb, ca)))
+            si (!quaternio_aequalis(c_ab, _productum(cb, ca, piscina)))
             {
                 conjugatum_bene = FALSUM;
             }
@@ -241,7 +254,7 @@ s32 principale (vacuum)
 
                 (vacuum)quaternio_ex_partibus(z, &na, &nullum, &nullum,
                     &nullum, piscina, &n);
-                si (!quaternio_aequalis(_productum(a, ca), n))
+                si (!quaternio_aequalis(_productum(a, ca, piscina), n))
                 {
                     conjugatum_bene = FALSUM;
                 }
@@ -310,36 +323,50 @@ s32 principale (vacuum)
         CREDO_VERUM (matrix_bene);
         CREDO_VERUM (rotatio_bene);
     }
+}
 
 
-    /* ==================================================
-     * INVERSUM SUPER Q; REFUTATIONES
-     * ================================================== */
+/* ==================================================
+ * INVERSUM SUPER Q; REFUTATIONES
+ * ================================================== */
 
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    constans Anulus* z = &ANULUS_INTEGRORUM;
+    constans Anulus* q = &ANULUS_RATIONALIUM;
+            Piscina* piscina;
+
+    piscina = c->piscina;
     {
-        Quaternio a = _q(q, "[1/2, -3, 2/7, 5]");
+        Quaternio a = _q(q, "[1/2, -3, 2/7, 5]", piscina);
         Quaternio inv;
         Quaternio unum;
         Quaternio x;
 
-        imprimere("\n--- Inversum, refutationes ---\n");
         (vacuum)quaternio_unum(q, piscina, &unum);
         CREDO_VERUM (quaternio_inversum(a, piscina, &inv)
-            && quaternio_aequalis(_productum(a, inv), unum)
-            && quaternio_aequalis(_productum(inv, a), unum));
-        CREDO_FALSUM (quaternio_inversum(_q(q, "[0, 0, 0, 0]"), piscina,
+            && quaternio_aequalis(_productum(a, inv, piscina), unum)
+            && quaternio_aequalis(_productum(inv, a, piscina), unum));
+        CREDO_FALSUM (quaternio_inversum(_q(q, "[0, 0, 0, 0]", piscina),
+            piscina,
             &x));
         /* Z non corpus */
         /* Z non corpus: etiam unitas (N = 1) refutatur */
-        CREDO_FALSUM (quaternio_inversum(_q(z, "[0, 1, 0, 0]"), piscina,
+        CREDO_FALSUM (quaternio_inversum(_q(z, "[0, 1, 0, 0]", piscina),
+            piscina,
             &inv));
-        CREDO_FALSUM (quaternio_inversum(_q(z, "[1, 1, 0, 0]"), piscina,
+        CREDO_FALSUM (quaternio_inversum(_q(z, "[1, 1, 0, 0]", piscina),
+            piscina,
             &x));
         /* anuli mixti */
-        CREDO_FALSUM (quaternio_multiplica(_q(z, "[1, 0, 0, 0]"), a,
+        CREDO_FALSUM (quaternio_multiplica(_q(z, "[1, 0, 0, 0]",
+            piscina), a,
             piscina, &x));
-        CREDO_FALSUM (quaternio_aequalis(_q(z, "[1, 0, 0, 0]"), _q(q,
-            "[1, 0, 0, 0]")));
+        CREDO_FALSUM (quaternio_aequalis(_q(z, "[1, 0, 0, 0]", piscina),
+            _q(q,
+            "[1, 0, 0, 0]", piscina)));
         CREDO_FALSUM (quaternio_ex_chorda(z, chorda_ex_literis(
             "[1, 2, 3]", piscina), piscina, &x));
         CREDO_FALSUM (quaternio_ex_chorda(z, chorda_ex_literis(
@@ -349,40 +376,51 @@ s32 principale (vacuum)
         CREDO_FALSUM (quaternio_ex_chorda(z, chorda_ex_literis(
             "[1/2, 0, 0, 0]", piscina), piscina, &x));
     }
+}
 
 
-    /* ==================================================
-     * GRUPPI FINITI PER CLAUSURAM EXACTAM
-     * ================================================== */
+/* ==================================================
+ * GRUPPI FINITI PER CLAUSURAM EXACTAM
+ * ================================================== */
 
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    constans Anulus* q = &ANULUS_RATIONALIUM;
+            Piscina* piscina;
+
+    piscina = c->piscina;
     {
               Quaternio  generatores[II];
                Extensio* k5 = extensio_quadratica(V, piscina);
         constans Anulus* q5 = extensio_anulus(k5);
 
-        imprimere("\n--- Gruppi finiti ---\n");
         /* tetraedricus binarius: i et (1 + i + j + k)/2 (Hurwitz) */
-        generatores[ZEPHYRUM]  = _q(q, "[0, 1, 0, 0]");
-        generatores[I]         = _q(q, "[1/2, 1/2, 1/2, 1/2]");
-        CREDO_AEQUALIS_I32 (_ordo_clausurae(generatores, II, C), XXIV);
+        generatores[ZEPHYRUM]  = _q(q, "[0, 1, 0, 0]", piscina);
+        generatores[I]         = _q(q, "[1/2, 1/2, 1/2, 1/2]", piscina);
+        CREDO_AEQUALIS_I32 (_ordo_clausurae(generatores, II, C,
+            piscina), XXIV);
         /* quaternio sine ordine finito: (1 + 2i) generat infinitum */
-        generatores[ZEPHYRUM] = _q(q, "[3/5, 4/5, 0, 0]");
-        CREDO_AEQUALIS_I32 (_ordo_clausurae(generatores, I, C),
+        generatores[ZEPHYRUM] = _q(q, "[3/5, 4/5, 0, 0]", piscina);
+        CREDO_AEQUALIS_I32 (_ordo_clausurae(generatores, I, C, piscina),
             ZEPHYRUM);
         /* icosaedricus binarius: i et (phi + phi^-1 i + j)/2, phi =
          * (1 + sqrt 5)/2, phi^-1 = (sqrt 5 - 1)/2 */
-        generatores[ZEPHYRUM] = _q(q5, "[0, 1, 0, 0]");
-        generatores[I] = _q(q5, "[(a + 1)/4, (a - 1)/4, 1/2, 0]");
-        CREDO_AEQUALIS_I32 (_ordo_clausurae(generatores, II, CC), CXX);
+        generatores[ZEPHYRUM] = _q(q5, "[0, 1, 0, 0]", piscina);
+        generatores[I] = _q(q5, "[(a + 1)/4, (a - 1)/4, 1/2, 0]",
+            piscina);
+        CREDO_AEQUALIS_I32 (_ordo_clausurae(generatores, II, CC,
+            piscina), CXX);
         /* FALSUM -> exitus non tangitur (recensio Q1 M1): pars
          * aliena (alia Q(sqrt 5)) in loco II - operatio in medio
          * refutat */
         {
                    Extensio* alia  = extensio_quadratica(V,
                        piscina);
-                   Quaternio x     = _q(q5, "[1, a, 1/2, 0]");
+                   Quaternio x     = _q(q5, "[1, a, 1/2, 0]", piscina);
                    Quaternio alienum   = _q(extensio_anulus(alia),
-                       "[a, 0, 0, 0]");
+                       "[a, 0, 0, 0]", piscina);
                    Quaternio mixtum;
                    Quaternio vestigium;
                       Matrix m;
@@ -418,17 +456,18 @@ s32 principale (vacuum)
         /* geometria nihil in piscina relinquit (recensio Q1 P):
          * directiones icosianae, partes reales non nullae */
         {
-                 Quaternio v = _q(q5, "[0, 1, a, 3]");
+                 Quaternio v = _q(q5, "[0, 1, a, 3]", piscina);
                  Quaternio u[II];
-                 Quaternio w = _q(q5, "[(a + 1)/4, (a - 1)/4, 1/2, 0]");
-                       i32 index = VII;
-                       s32 s = VII;
+                 Quaternio w = _q(q5, "[(a + 1)/4, (a - 1)/4, 1/2, 0]",
+                     piscina);
+                       i32 index  = VII;
+                       s32 s      = VII;
             memoriae_index ante;
             memoriae_index post;
                        b32 responsa[IV];
 
             u[ZEPHYRUM]  = generatores[I];
-            u[I]         = _q(q5, "[1/2, 1/2, 1/2, 1/2]");
+            u[I]         = _q(q5, "[1/2, 1/2, 1/2, 1/2]", piscina);
             /* credo in eadem piscina notat: mensura ante CREDO */
             ante                   = piscina_summa_usus(piscina);
             responsa[ZEPHYRUM]     = quaternio_proximus(v, u, II,
@@ -448,105 +487,129 @@ s32 principale (vacuum)
             CREDO_VERUM (post == ante);
         }
     }
+}
 
 
-    /* ==================================================
-     * GEOMETRIA
-     * ================================================== */
+/* ==================================================
+ * GEOMETRIA
+ * ================================================== */
 
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    constans Anulus* z = &ANULUS_INTEGRORUM;
+    constans Anulus* q = &ANULUS_RATIONALIUM;
+            Piscina* piscina;
+
+    piscina = c->piscina;
     {
-        Quaternio i = _q(z, "[0, 1, 0, 0]");
-        Quaternio j = _q(z, "[0, 0, 1, 0]");
-        Quaternio k = _q(z, "[0, 0, 0, 1]");
+        Quaternio i = _q(z, "[0, 1, 0, 0]", piscina);
+        Quaternio j = _q(z, "[0, 0, 1, 0]", piscina);
+        Quaternio k = _q(z, "[0, 0, 0, 1]", piscina);
         Quaternio directiones[III];
               i32 index  = VII;
               s32 s      = VII;
 
-        imprimere("\n--- Geometria ---\n");
         /* eadem rotatio: q, -q, 2q */
-        CREDO_VERUM (quaternio_eadem_rotatio(_q(z, "[1, 2, 3, 4]"),
+        CREDO_VERUM (quaternio_eadem_rotatio(_q(z, "[1, 2, 3, 4]",
+            piscina),
             _q(z,
-            "[-2, -4, -6, -8]"), piscina));
-        CREDO_FALSUM (quaternio_eadem_rotatio(_q(z, "[1, 2, 3, 4]"),
+            "[-2, -4, -6, -8]", piscina), piscina));
+        CREDO_FALSUM (quaternio_eadem_rotatio(_q(z, "[1, 2, 3, 4]",
+            piscina),
             _q(z,
-            "[1, 2, 3, 5]"), piscina));
-        CREDO_FALSUM (quaternio_eadem_rotatio(_q(z, "[0, 0, 0, 0]"), i,
+            "[1, 2, 3, 5]", piscina), piscina));
+        CREDO_FALSUM (quaternio_eadem_rotatio(_q(z, "[0, 0, 0, 0]",
+            piscina), i,
             piscina));
-        CREDO_FALSUM (quaternio_eadem_rotatio(i, _q(z, "[0, 0, 0, 0]"),
+        CREDO_FALSUM (quaternio_eadem_rotatio(i, _q(z, "[0, 0, 0, 0]",
+            piscina),
             piscina));
         /* minor quisque necessarius: (c, b) solus et (c, a) solus non
          * nulli */
-        CREDO_FALSUM (quaternio_eadem_rotatio(_q(z, "[0, 1, 1, 0]"),
-            _q(z, "[0, 1, 2, 0]"), piscina));
-        CREDO_FALSUM (quaternio_eadem_rotatio(_q(z, "[1, 0, 1, 0]"),
-            _q(z, "[2, 0, 1, 0]"), piscina));
+        CREDO_FALSUM (quaternio_eadem_rotatio(_q(z, "[0, 1, 1, 0]",
+            piscina),
+            _q(z, "[0, 1, 2, 0]", piscina), piscina));
+        CREDO_FALSUM (quaternio_eadem_rotatio(_q(z, "[1, 0, 1, 0]",
+            piscina),
+            _q(z, "[2, 0, 1, 0]", piscina), piscina));
         /* eadem axis: i et 3 - 5i; non i et j; non partes reales
          * solae */
-        CREDO_VERUM (quaternio_eadem_axis(i, _q(z, "[3, -5, 0, 0]"),
+        CREDO_VERUM (quaternio_eadem_axis(i, _q(z, "[3, -5, 0, 0]",
+            piscina),
             piscina));
-        CREDO_VERUM (quaternio_eadem_axis(_q(z, "[1, 1, 2, 3]"), _q(z,
-            "[7, -2, -4, -6]"), piscina));
+        CREDO_VERUM (quaternio_eadem_axis(_q(z, "[1, 1, 2, 3]",
+            piscina), _q(z,
+            "[7, -2, -4, -6]", piscina), piscina));
         CREDO_FALSUM (quaternio_eadem_axis(i, j, piscina));
         /* i, k: solum minor (b, d) non nullus */
         CREDO_FALSUM (quaternio_eadem_axis(i, k, piscina));
         CREDO_FALSUM (quaternio_eadem_axis(j, k, piscina));
-        CREDO_FALSUM (quaternio_eadem_axis(_q(z, "[5, 0, 0, 0]"), i,
+        CREDO_FALSUM (quaternio_eadem_axis(_q(z, "[5, 0, 0, 0]",
+            piscina), i,
             piscina));
-        CREDO_FALSUM (quaternio_eadem_axis(i, _q(z, "[5, 0, 0, 0]"),
+        CREDO_FALSUM (quaternio_eadem_axis(i, _q(z, "[5, 0, 0, 0]",
+            piscina),
             piscina));
         /* anguli: 1 (0), 1 + i (90), i (180) */
-        CREDO_VERUM (quaternio_compara_angulum(_q(z, "[1, 1, 0, 0]"), i,
+        CREDO_VERUM (quaternio_compara_angulum(_q(z, "[1, 1, 0, 0]",
+            piscina), i,
             piscina, &s) && s == -I);
-        CREDO_VERUM (quaternio_compara_angulum(_q(z, "[1, 0, 0, 0]"),
+        CREDO_VERUM (quaternio_compara_angulum(_q(z, "[1, 0, 0, 0]",
+            piscina),
             _q(z,
-            "[1, 1, 0, 0]"), piscina, &s) && s == -I);
-        CREDO_VERUM (quaternio_compara_angulum(_q(z, "[1, 1, 0, 0]"),
+            "[1, 1, 0, 0]", piscina), piscina, &s) && s == -I);
+        CREDO_VERUM (quaternio_compara_angulum(_q(z, "[1, 1, 0, 0]",
+            piscina),
             _q(z,
-            "[-3, 0, 3, 0]"), piscina, &s) && s == ZEPHYRUM);
-        CREDO_VERUM (quaternio_compara_angulum(j, _q(z, "[1, 0, 0, 1]"),
+            "[-3, 0, 3, 0]", piscina), piscina, &s) && s == ZEPHYRUM);
+        CREDO_VERUM (quaternio_compara_angulum(j, _q(z, "[1, 0, 0, 1]",
+            piscina),
             piscina, &s) && s == I);
-        CREDO_FALSUM (quaternio_compara_angulum(_q(z, "[0, 0, 0, 0]"),
+        CREDO_FALSUM (quaternio_compara_angulum(_q(z, "[0, 0, 0, 0]",
+            piscina),
             i,
             piscina, &s));
         CREDO_FALSUM (quaternio_compara_angulum(i, _q(z,
-            "[0, 0, 0, 0]"),
+            "[0, 0, 0, 0]", piscina),
             piscina, &s));
         /* directio proxima */
         directiones[ZEPHYRUM]  = i;
         directiones[I]         = j;
         directiones[II]        = k;
-        CREDO_VERUM (quaternio_proximus(_q(z, "[0, 2, 1, 0]"),
+        CREDO_VERUM (quaternio_proximus(_q(z, "[0, 2, 1, 0]", piscina),
             directiones,
             III, FALSUM, piscina, &index) && index == ZEPHYRUM);
-        CREDO_VERUM (quaternio_proximus(_q(z, "[0, -3, 1, 0]"),
+        CREDO_VERUM (quaternio_proximus(_q(z, "[0, -3, 1, 0]", piscina),
             directiones,
             III, VERUM, piscina, &index) && index == ZEPHYRUM);
-        CREDO_VERUM (quaternio_proximus(_q(z, "[0, -3, 1, 0]"),
+        CREDO_VERUM (quaternio_proximus(_q(z, "[0, -3, 1, 0]", piscina),
             directiones,
             III, FALSUM, piscina, &index) && index == I);
-        CREDO_VERUM (quaternio_proximus(_q(z, "[9, 1, 1, 5]"),
+        CREDO_VERUM (quaternio_proximus(_q(z, "[9, 1, 1, 5]", piscina),
             directiones,
             III, FALSUM, piscina, &index) && index == II);
         /* paritas: v = (0, 1, 1, 0) inter i et j aequaliter - index
          * primus */
-        CREDO_VERUM (quaternio_proximus(_q(z, "[0, 1, 1, 0]"),
+        CREDO_VERUM (quaternio_proximus(_q(z, "[0, 1, 1, 0]", piscina),
             directiones,
             II, FALSUM, piscina, &index) && index == ZEPHYRUM);
         /* directiones non normatae: (0, 10, 0, 0) contra (0, 1, 1, 0)
          * pro v = (0, 1, 1, 0) - cos 1/sqrt 2 contra 1 */
-        directiones[ZEPHYRUM]  = _q(z, "[0, 10, 0, 0]");
-        directiones[I]         = _q(z, "[0, 1, 1, 0]");
-        CREDO_VERUM (quaternio_proximus(_q(z, "[0, 1, 1, 0]"),
+        directiones[ZEPHYRUM]  = _q(z, "[0, 10, 0, 0]", piscina);
+        directiones[I]         = _q(z, "[0, 1, 1, 0]", piscina);
+        CREDO_VERUM (quaternio_proximus(_q(z, "[0, 1, 1, 0]", piscina),
             directiones,
             II, FALSUM, piscina, &index) && index == I);
         /* partes reales directionum ignorantur: (2, 1, 0) cos 2/sqrt 5
          * contra (1, 1, 0) cos 1/sqrt 2, utroque ordine */
-        directiones[ZEPHYRUM]  = _q(z, "[100, 2, 1, 0]");
-        directiones[I]         = _q(z, "[0, 1, 1, 0]");
+        directiones[ZEPHYRUM]  = _q(z, "[100, 2, 1, 0]", piscina);
+        directiones[I]         = _q(z, "[0, 1, 1, 0]", piscina);
         CREDO_VERUM (quaternio_proximus(i, directiones, II, FALSUM,
             piscina, &index) && index == ZEPHYRUM);
-        directiones[ZEPHYRUM]  = _q(z, "[0, 1, 1, 0]");
-        directiones[I]         = _q(z, "[-100, 2, 1, 0]");
+        directiones[ZEPHYRUM]  = _q(z, "[0, 1, 1, 0]", piscina);
+        directiones[I]         = _q(z, "[-100, 2, 1, 0]", piscina);
         CREDO_VERUM (quaternio_proximus(i, directiones, II, FALSUM,
             piscina, &index) && index == I);
         /* omnes proximi (paritas exacta): i, j, k; v = (1, 1, 0) inter
@@ -560,56 +623,64 @@ s32 principale (vacuum)
             tres[ZEPHYRUM]  = i;
             tres[I]         = j;
             tres[II]        = k;
-            CREDO_VERUM (quaternio_proximi(_q(z, "[0, 1, 1, 0]"), tres,
+            CREDO_VERUM (quaternio_proximi(_q(z, "[0, 1, 1, 0]",
+                piscina), tres,
                 III,
                 FALSUM, piscina, proximi, &numerus_proximi)
                     && numerus_proximi == II
                 && proximi[ZEPHYRUM] == ZEPHYRUM && proximi[I] == I);
-            CREDO_VERUM (quaternio_proximi(_q(z, "[5, 1, 1, 1]"), tres,
+            CREDO_VERUM (quaternio_proximi(_q(z, "[5, 1, 1, 1]",
+                piscina), tres,
                 III,
                 FALSUM, piscina, proximi, &numerus_proximi)
                     && numerus_proximi == III
                 && proximi[II] == II);
-            CREDO_VERUM (quaternio_proximi(_q(z, "[0, 2, 1, 0]"), tres,
+            CREDO_VERUM (quaternio_proximi(_q(z, "[0, 2, 1, 0]",
+                piscina), tres,
                 III,
                 FALSUM, piscina, proximi, &numerus_proximi)
                     && numerus_proximi == I
                 && proximi[ZEPHYRUM] == ZEPHYRUM);
             /* antipodes: (1, -1, 0) - cum |cos| i et j aequales, sine
              * |cos| i solus (cos j negativum) */
-            CREDO_VERUM (quaternio_proximi(_q(z, "[0, 1, -1, 0]"), tres,
+            CREDO_VERUM (quaternio_proximi(_q(z, "[0, 1, -1, 0]",
+                piscina), tres,
                 III,
                 VERUM, piscina, proximi, &numerus_proximi)
                     && numerus_proximi == II);
-            CREDO_VERUM (quaternio_proximi(_q(z, "[0, 1, -1, 0]"), tres,
+            CREDO_VERUM (quaternio_proximi(_q(z, "[0, 1, -1, 0]",
+                piscina), tres,
                 III,
                 FALSUM, piscina, proximi, &numerus_proximi)
                     && numerus_proximi == I
                 && proximi[ZEPHYRUM] == ZEPHYRUM);
-            /* paritas IRRATIONALIS in Q(sqrt 2): v = (1, sqrt2 - 1, 0) ab
-             * axibus (1, 0, 0) et (1, 1, 0) aequaliter distat (cos pi/8
-             * utrimque); (0, 1, 0) longius. Primus = quaternio_proximus. */
+            /* paritas IRRATIONALIS in Q(sqrt 2): v = (1, sqrt2 - 1, 0)
+             * ab axibus (1, 0, 0) et (1, 1, 0) aequaliter distat (cos
+             * pi/8 utrimque); (0, 1, 0) longius. Primus =
+             * quaternio_proximus. */
             {
                        Extensio* k2 = extensio_quadratica(II,
                            piscina);
                 constans Anulus* q2      = extensio_anulus(k2);
                             i32  primus  = XCIX;
 
-                axes[ZEPHYRUM]  = _q(q2, "[0, 0, 1, 0]");
-                axes[I]         = _q(q2, "[0, 1, 0, 0]");
-                axes[II]        = _q(q2, "[0, 1, 1, 0]");
+                axes[ZEPHYRUM]  = _q(q2, "[0, 0, 1, 0]", piscina);
+                axes[I]         = _q(q2, "[0, 1, 0, 0]", piscina);
+                axes[II]        = _q(q2, "[0, 1, 1, 0]", piscina);
                 CREDO_VERUM (quaternio_proximi(_q(q2,
-                    "[0, 1, a - 1, 0]"),
+                    "[0, 1, a - 1, 0]", piscina),
                     axes, III, VERUM, piscina, proximi,
                     &numerus_proximi)
                     && numerus_proximi == II && proximi[ZEPHYRUM] == I
                     && proximi[I] == II);
                 CREDO_VERUM (quaternio_proximus(_q(q2,
-                    "[0, 1, a - 1, 0]"),
+                    "[0, 1, a - 1, 0]", piscina),
                     axes, III, VERUM, piscina, &primus) && primus == I);
-                /* paulo aliter: (1, sqrt2 - 1 + 1/100, 0) ad (1, 1, 0) */
+                /* paulo aliter: (1, sqrt2 - 1 + 1/100, 0) ad (1, 1,
+                 * 0) */
                 CREDO_VERUM (quaternio_proximi(_q(q2,
-                    "[0, 1, (100a - 99)/100, 0]"), axes, III, VERUM,
+                    "[0, 1, (100a - 99)/100, 0]", piscina), axes, III,
+                    VERUM,
                     piscina,
                     proximi, &numerus_proximi) && numerus_proximi == I
                         && proximi[ZEPHYRUM]
@@ -617,33 +688,36 @@ s32 principale (vacuum)
             }
             /* FALSUM -> exitus non tangitur: directio vectore nullo in
              * loco ultimo */
-            tres[II]           = _q(z, "[1, 0, 0, 0]");
+            tres[II]           = _q(z, "[1, 0, 0, 0]", piscina);
             numerus_proximi    = XCIX;
             proximi[ZEPHYRUM]  = XCIX;
-            CREDO_FALSUM (quaternio_proximi(_q(z, "[0, 1, 1, 0]"), tres,
+            CREDO_FALSUM (quaternio_proximi(_q(z, "[0, 1, 1, 0]",
+                piscina), tres,
                 III, FALSUM, piscina, proximi, &numerus_proximi));
             CREDO_VERUM (numerus_proximi == XCIX
                 && proximi[ZEPHYRUM] == XCIX);
         }
         /* directio sine parte vectoria (+-1 in 2I) refutatur; anulus
          * directionis alienus refutatur */
-        directiones[ZEPHYRUM]  = _q(z, "[1, 0, 0, 0]");
+        directiones[ZEPHYRUM]  = _q(z, "[1, 0, 0, 0]", piscina);
         directiones[I]         = j;
         CREDO_FALSUM (quaternio_proximus(i, directiones, II, FALSUM,
             piscina, &index));
         directiones[ZEPHYRUM]  = j;
-        directiones[I]         = _q(q, "[0, 1, 0, 0]");
+        directiones[I]         = _q(q, "[0, 1, 0, 0]", piscina);
         CREDO_FALSUM (quaternio_proximus(i, directiones, II, FALSUM,
             piscina, &index));
         /* refutationes: sine ordine (Z[t]), v nullum, numerus 0 */
-        CREDO_FALSUM (quaternio_proximus(_q(z, "[1, 0, 0, 0]"),
+        CREDO_FALSUM (quaternio_proximus(_q(z, "[1, 0, 0, 0]", piscina),
             directiones, II, FALSUM, piscina, &index));
         CREDO_FALSUM (quaternio_proximus(i, directiones, ZEPHYRUM,
             FALSUM,
             piscina, &index));
         {
-            Quaternio p_i = _q(&ANULUS_POLYNOMIORUM, "[0, t, 0, 0]");
-            Quaternio p_j = _q(&ANULUS_POLYNOMIORUM, "[0, 0, 1, 0]");
+            Quaternio p_i = _q(&ANULUS_POLYNOMIORUM, "[0, t, 0, 0]",
+                piscina);
+            Quaternio p_j = _q(&ANULUS_POLYNOMIORUM, "[0, 0, 1, 0]",
+                piscina);
 
             directiones[ZEPHYRUM] = p_i;
             CREDO_FALSUM (quaternio_proximus(p_j, directiones, I,
@@ -654,16 +728,23 @@ s32 principale (vacuum)
             /* eadem axis sine ordine licet */
             CREDO_VERUM (quaternio_eadem_axis(p_i,
                 _q(&ANULUS_POLYNOMIORUM,
-                "[1, t^2, 0, 0]"), piscina));
+                "[1, t^2, 0, 0]", piscina), piscina));
         }
     }
+}
 
-    credo_imprimere_compendium();
-    {
-        b32 praeteritus = credo_omnia_praeterierunt();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "Tabula Hamilton", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Identitates in Z", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Inversum, refutationes", _sectio_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "Gruppi finiti", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Geometria", _sectio_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-        credo_claudere();
-        piscina_destruere(piscina);
-        redde praeteritus ? ZEPHYRUM : I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("quaternio", SECTIONES);
 }

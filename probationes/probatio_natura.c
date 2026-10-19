@@ -262,29 +262,21 @@ monita_regulae (
     redde numerus;
 }
 
-s32 principale (vacuum)
-{
-             b32  praeteritus;
-         Piscina* piscina;
-
-    piscina = piscina_generare_dynamicum("probatio_natura", 65536);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
 
     /* ========================================================
      * PROBARE: bibliotheca sana - legere + nectere
      * ======================================================== */
 
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         NaturaBibliotheca* bib;
                       i32  vulnera;
-
-        imprimere("\n--- Probans lectionem sanam ---\n");
 
         bib = natura_bibliotheca_creare(piscina);
         CREDO_NON_NIHIL (bib);
@@ -616,17 +608,23 @@ s32 principale (vacuum)
             CREDO_AEQUALIS_PTR (auctor_valoris, rosa);
         }
     }
+}
 
 
     /* ========================================================
      * PROBARE: necessitudines - registratio et regulae novae
      * ======================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         NaturaBibliotheca* bib;
                       i32  vulnera;
-
-        imprimere("\n--- Probans necessitudines (registratio) ---\n");
 
         bib = natura_bibliotheca_creare(piscina);
         CREDO_NON_NIHIL (bib);
@@ -717,11 +715,18 @@ s32 principale (vacuum)
             CREDO_AEQUALIS_I32 (termini_numerus, II);
         }
     }
+}
 
+
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         NaturaBibliotheca* bib;
-
-        imprimere("\n--- Probans fines (regula XXII) ---\n");
 
         bib = natura_bibliotheca_creare(piscina);
         CREDO_NON_NIHIL (bib);
@@ -782,12 +787,18 @@ s32 principale (vacuum)
          * innominata, monitum in declaratione */
         CREDO_AEQUALIS_I32 (monita_regulae(bib, XXIV), III);
     }
+}
 
+
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         NaturaBibliotheca* bib;
-
-        imprimere("\n--- Probans directionem citationis"
-                  " (regula XXII) ---\n");
 
         bib = natura_bibliotheca_creare(piscina);
         CREDO_NON_NIHIL (bib);
@@ -866,12 +877,18 @@ s32 principale (vacuum)
             CREDO_AEQUALIS_I32 (excedit_n, I);
         }
     }
+}
 
+
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         NaturaBibliotheca* bib;
-
-        imprimere("\n--- Probans superpositionem finis"
-                  " (angustatio) ---\n");
 
         bib = natura_bibliotheca_creare(piscina);
         CREDO_NON_NIHIL (bib);
@@ -902,11 +919,18 @@ s32 principale (vacuum)
         CREDO_VERUM (!natura_finem_superponere(bib, "mordet",
                                                "ad", "animal_p"));
     }
+}
 
+
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         NaturaBibliotheca* bib;
-
-        imprimere("\n--- Probans munus geminum (regula XXIII) ---\n");
 
         bib = natura_bibliotheca_creare(piscina);
         CREDO_NON_NIHIL (bib);
@@ -934,11 +958,18 @@ s32 principale (vacuum)
          * regula XXIV tacet */
         CREDO_AEQUALIS_I32 (monita_regulae(bib, XXIV), ZEPHYRUM);
     }
+}
 
+
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         NaturaBibliotheca* bib;
-
-        imprimere("\n--- Probans regulam XXV (modulus vacuus) ---\n");
 
         bib = natura_bibliotheca_creare(piscina);
         CREDO_NON_NIHIL (bib);
@@ -952,11 +983,18 @@ s32 principale (vacuum)
 
         CREDO_AEQUALIS_I32 (vulnera_regulae(bib, XXV), I);
     }
+}
 
+
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         NaturaBibliotheca* bib;
-
-        imprimere("\n--- Probans foramen II (ad= necessitudinem) ---\n");
 
         bib = natura_bibliotheca_creare(piscina);
         CREDO_NON_NIHIL (bib);
@@ -976,17 +1014,23 @@ s32 principale (vacuum)
         (vacuum)natura_nectere(bib);
         CREDO_AEQUALIS_I32 (vulnera_regulae(bib, II), I);
     }
+}
 
 
     /* ========================================================
      * PROBARE: fixtura vitiosa - regulae singulae
      * ======================================================== */
 
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         NaturaBibliotheca* bib;
                       i32  vulnera;
-
-        imprimere("\n--- Probans regulas contractus ---\n");
 
         bib = natura_bibliotheca_creare(piscina);
         CREDO_NON_NIHIL (bib);
@@ -1050,6 +1094,7 @@ s32 principale (vacuum)
             CREDO_AEQUALIS_I32 (monita, ZEPHYRUM);
         }
     }
+}
 
 
     /* ========================================================
@@ -1061,10 +1106,15 @@ s32 principale (vacuum)
      * tacere non licet.
      * ======================================================== */
 
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         NaturaBibliotheca* bib;
-
-        imprimere("\n--- Probans strictum in regula I ---\n");
 
         bib = natura_bibliotheca_creare(piscina);
         CREDO_NON_NIHIL (bib);
@@ -1080,16 +1130,22 @@ s32 principale (vacuum)
 
         CREDO_AEQUALIS_I32 (vulnera_regulae(bib, I), I);
     }
+}
 
 
     /* ========================================================
      * PROBARE: parsatio fracta (regula I)
      * ======================================================== */
 
+interior vacuum
+_sectio_decima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         NaturaBibliotheca* bib;
-
-        imprimere("\n--- Probans parsationem fractam ---\n");
 
         bib = natura_bibliotheca_creare(piscina);
         CREDO_NON_NIHIL (bib);
@@ -1105,23 +1161,34 @@ s32 principale (vacuum)
             chorda_ex_literis("<alia/>", piscina), "alia"));
         CREDO_AEQUALIS_I32 (vulnera_regulae(bib, I), II);
     }
+}
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "lectionem sanam", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "necessitudines (registratio)", _sectio_secunda, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "fines (regula XXII)", _sectio_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "directionem citationis (regula XXII)", _sectio_quarta, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "superpositionem finis (angustatio)", _sectio_quinta, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "munus geminum (regula XXIII)", _sectio_sexta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "regulam XXV (modulus vacuus)", _sectio_septima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "foramen II (ad= necessitudinem)", _sectio_octava, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "regulas contractus", _sectio_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "strictum in regula I", _sectio_decima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "parsationem fractam", _sectio_decima_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    /* ========================================================
-     * Compendium
-     * ======================================================== */
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("natura", SECTIONES);
 }

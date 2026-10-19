@@ -41,7 +41,13 @@ _motum (
     redde e;
 }
 
-s32 principale (vacuum)
+/* Cauda UNA per omnes gradus I-XI transit: gradus quisque statum
+ * caudae a priore relictum accipit (IV et IX 'vacua: vacatur' textum et
+ * exempla priorum gradus vacare probant), ergo sectio una cum
+ * CREDO_GRADUS, non sectiones separatae */
+interior vacuum
+_sectio_prima (
+    CredoContextus* contextus)
 {
           Piscina* piscina;
      EventusCauda* c;
@@ -51,20 +57,13 @@ s32 principale (vacuum)
            chorda  visus;
         character  fons[XVI];
 
-    piscina = piscina_generare_dynamicum("probatio_eventus_cauda",
-        M * M);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    credo_aperire(piscina);
+    piscina = contextus->piscina;
     c = (EventusCauda*)piscina_allocare_ordinatum(piscina,
         magnitudo(EventusCauda), VIII);
     CREDO_NON_NIHIL (c);
     eventus_caudam_initiare(c);
 
-    imprimere("\n--- I. FIFO ---\n");
+    CREDO_GRADUS("I. FIFO");
     e = _eventum(EVENTUS_MUS_DEPRESSUS, I);
     CREDO_VERUM (eventus_caudae_impellere(c, &e));
     e = _eventum(EVENTUS_MUS_LIBERATUS, II);
@@ -75,7 +74,7 @@ s32 principale (vacuum)
     CREDO_VERUM (e.genus == EVENTUS_MUS_LIBERATUS);
     CREDO_FALSUM (eventus_caudae_extrahere(c, &e));
 
-    imprimere("\n--- II. plena -> amissa ---\n");
+    CREDO_GRADUS("II. plena -> amissa");
     per (k = ZEPHYRUM; k < EVENTUS_CAUDA_CAPACITAS; k++)
     {
         e = _eventum(EVENTUS_MUS_MOTUS, (s64)k);
@@ -91,7 +90,7 @@ s32 principale (vacuum)
     }
     CREDO_VERUM (e.tempus == (s64)(EVENTUS_CAUDA_CAPACITAS - I));
 
-    imprimere("\n--- III. textus COPIATUS ---\n");
+    CREDO_GRADUS("III. textus COPIATUS");
     eventus_cauda_lectio_incipit(c);
     strcpy(fons, "a\xC3\xA9 \"x\"");                 /* 'aé "x"' */
     CREDO_VERUM (eventus_caudae_textum_impellere(c, V,
@@ -109,7 +108,7 @@ s32 principale (vacuum)
         (constans i8*)"",
         ZEPHYRUM, EVENTUS_ORIGO_SCRIPTA));
 
-    imprimere("\n--- IV. vita visuum: cauda non vacua servat ---\n");
+    CREDO_GRADUS("IV. vita visuum: cauda non vacua servat");
     eventus_cauda_lectio_incipit(c);            /* vacua: vacatur */
     CREDO_AEQUALIS_I32 (c->textus_mensura, ZEPHYRUM);
     CREDO_VERUM (eventus_caudae_textum_impellere(c, VII,
@@ -127,7 +126,7 @@ s32 principale (vacuum)
     CREDO_VERUM (e.datum.textus.origo == EVENTUS_ORIGO_GLUTINATA);
     CREDO_VERUM (chorda_aequalis_literis(visus, "primum")); /* adhuc */
 
-    imprimere("\n--- V. truncatio ---\n");
+    CREDO_GRADUS("V. truncatio");
     eventus_cauda_lectio_incipit(c);
     {
         i8* magnum = (i8*)piscina_allocare(piscina,
@@ -143,7 +142,7 @@ s32 principale (vacuum)
             EVENTUS_CAUDA_TEXTUS);
     }
 
-    imprimere("\n--- VI. motus coalitus: X -> I cum IX exemplis ---\n");
+    CREDO_GRADUS("VI. motus coalitus: X -> I cum IX exemplis");
     dum (eventus_caudae_extrahere(c, &e))
     {
     }
@@ -168,7 +167,7 @@ s32 principale (vacuum)
         && e.datum.mus.exempla[VIII].y == XVI
         && e.datum.mus.exempla[VIII].tempus == (s64)(C + VIII));
 
-    imprimere("\n--- VII. coalitio terminos servat ---\n");
+    CREDO_GRADUS("VII. coalitio terminos servat");
     eventus_cauda_lectio_incipit(c);
     /* modificantes diversi: duo eventa */
     e = _motum(I, I, I, ZEPHYRUM);
@@ -199,7 +198,7 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (e.datum.mus.numerus_exemplorum, ZEPHYRUM);
     }
 
-    imprimere("\n--- VIII. LXIV exempla: antiquissima servantur ---\n");
+    CREDO_GRADUS("VIII. LXIV exempla: antiquissima servantur");
     eventus_cauda_lectio_incipit(c);
     per (k = ZEPHYRUM; k < C; k++)
     {
@@ -213,7 +212,7 @@ s32 principale (vacuum)
     CREDO_VERUM (e.datum.mus.exempla[0].x == 0);
     CREDO_VERUM (e.datum.mus.exempla[LXIII].x == LXIII);
 
-    imprimere("\n--- IX. vita exemplorum per lectionem ---\n");
+    CREDO_GRADUS("IX. vita exemplorum per lectionem");
     eventus_cauda_lectio_incipit(c);            /* vacua: vacatur */
     CREDO_AEQUALIS_I32 (c->exempla_mensura, ZEPHYRUM);
     per (k = ZEPHYRUM; k < III; k++)
@@ -245,7 +244,7 @@ s32 principale (vacuum)
     eventus_cauda_lectio_incipit(c);
     CREDO_AEQUALIS_I32 (c->exempla_mensura, ZEPHYRUM);
 
-    imprimere("\n--- X. residuum rotulae ---\n");
+    CREDO_GRADUS("X. residuum rotulae");
     {
         f64 r = 0.0;
 
@@ -259,7 +258,7 @@ s32 principale (vacuum)
         CREDO_VERUM (r > 0.69 && r < 0.71);
     }
 
-    imprimere("\n--- XI. depositio: viae COPIATAE (eventus B3b) ---\n");
+    CREDO_GRADUS("XI. depositio: viae COPIATAE (eventus B3b)");
     {
         character viae[XVI];
 
@@ -295,8 +294,16 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (c->numerus, ZEPHYRUM);
         eventus_cauda_lectio_incipit(c);
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "cauda una per gradus I-XI", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("eventus_cauda", SECTIONES);
 }

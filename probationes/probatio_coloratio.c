@@ -790,19 +790,13 @@ probare_tag_cum_commando(Piscina* piscina)
  * Main
  * ================================================== */
 
-integer
-principale (vacuum)
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
     Piscina* piscina;
-        b32  praeteritus;
 
-    piscina = piscina_generare_dynamicum("probatio_coloratio",
-        M * LXIV);
-
-    credo_aperire(piscina);
-
-    imprimere("\n--- Probatio Coloratio ---\n");
-
+    piscina = c->piscina;
     /* Creation */
     probare_creare(piscina);
     probare_creare_ex_tabula(piscina);
@@ -841,20 +835,15 @@ principale (vacuum)
     probare_tag_boolean_attr(piscina);
     probare_tag_bare_value(piscina);
     probare_tag_cum_commando(piscina);
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "Probatio Coloratio", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    praeteritus = credo_omnia_praeterierunt();
-
-    piscina_destruere(piscina);
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("coloratio", SECTIONES);
 }

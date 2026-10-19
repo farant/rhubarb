@@ -34,9 +34,6 @@
 #define ORIGO_X VI
 #define ORIGO_Y VIII
 
-hic_manens Piscina*             piscina;
-hic_manens InternamentumChorda* intern;
-
 /* eventus muris ad punctum TABULAE (x, y) tempore t, modificantibus */
 interior vacuum
 mus (
@@ -90,20 +87,21 @@ clavis_z (
     dispensator_recomponere(app->d);
 }
 
-s32 principale (vacuum)
+/* scaena una: documentum idem per gradus I-IV mutatur (revocatio
+ * ictus priorum), ergo sectio una cum gradibus */
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-              Volumen* vol;
-     PictorApplicatio  app;
-           ManusLudus* m;
-     PictorDocumentum* doc;
+                 Piscina* piscina;
+     InternamentumChorda* intern;
+                 Volumen* vol;
+        PictorApplicatio  app;
+              ManusLudus* m;
+        PictorDocumentum* doc;
 
-    piscina = piscina_generare_dynamicum("probatio_pictor_revocare",
-        CXXVIII * M);
-    si (!piscina)
-    { imprimere("FRACTA: piscina\n"); redde I;
-    }
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     thema_initiare();
     vol = volumen_temporarium(piscina, "probatio_pictor_revocare");
     CREDO_VERUM(pictor_applicatio_aedificare(&app, piscina, intern, vol,
@@ -111,7 +109,7 @@ s32 principale (vacuum)
     m    = manus_ludus_creare(piscina, app.d);
     doc  = app.doc;
 
-    imprimere("\n--- I: revocatio multiplex, refectio ---\n");
+    CREDO_GRADUS("I: revocatio multiplex, refectio");
     premere(app.d, L, L, M, ZEPHYRUM);
     premere(app.d, C, C, MM, ZEPHYRUM);
     CREDO_AEQUALIS_I32(pictor_documentum_numerus_vivorum(doc), II);
@@ -128,11 +126,11 @@ s32 principale (vacuum)
     clavis_z(&app, MOD_SUPER | MOD_SHIFT);
     CREDO_AEQUALIS_I32(pictor_documentum_numerus_vivorum(doc), II);
 
-    imprimere("\n--- II: 'z' sine Cmd ---\n");
+    CREDO_GRADUS("II: 'z' sine Cmd");
     clavis_z(&app, ZEPHYRUM);
     CREDO_AEQUALIS_I32(pictor_documentum_numerus_vivorum(doc), II);
 
-    imprimere("\n--- III: linea pendens - Cmd+Z abicit solum ---\n");
+    CREDO_GRADUS("III: linea pendens - Cmd+Z abicit solum");
     CREDO_VERUM(manus_ludus_clavem(m, 'l', ZEPHYRUM));
     premere(app.d, CC, CC, MMM, ZEPHYRUM);
     CREDO_VERUM(!chorda_vacua(dispensator_motus(app.d)->captura));
@@ -140,7 +138,7 @@ s32 principale (vacuum)
     CREDO_VERUM(chorda_vacua(dispensator_motus(app.d)->captura));
     CREDO_AEQUALIS_I32(pictor_documentum_numerus_vivorum(doc), II);
 
-    imprimere("\n--- IV: stratum novum revocatur ---\n");
+    CREDO_GRADUS("IV: stratum novum revocatur");
     CREDO_VERUM(pictor_documentum_actum(doc, chorda_ex_literis(
         "<stratum actio=\"novum\" id=\"2\" supra=\"1\"/>", piscina))
         > ZEPHYRUM);
@@ -150,8 +148,18 @@ s32 principale (vacuum)
     clavis_z(&app, MOD_SUPER | MOD_SHIFT);
     CREDO_AEQUALIS_I32(pictor_documentum_numerus_stratorum(doc), II);
 
-    imprimere("\n");
-    credo_imprimere_compendium();
     volumen_claudere(vol);
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "revocatio et refectio (Cmd+Z, Cmd+Shift+Z)", _sectio_prima,
+        NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("pictor_revocare", SECTIONES);
 }

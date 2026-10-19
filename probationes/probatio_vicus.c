@@ -24,9 +24,6 @@
 #include <stdio.h>
 #include <string.h>
 
-hic_manens Piscina*             piscina;
-hic_manens InternamentumChorda* intern;
-
 interior b32
 scribam_montare (
                  vacuum* sedes,
@@ -107,7 +104,9 @@ pictorem_describere (
 interior Vicus*
 vicum_aperire_cum (
                 Volumen* vol,
-    constans character* dispositio)
+    constans character* dispositio,
+                Piscina* piscina,
+    InternamentumChorda* intern)
 {
     Vicus* v;
 
@@ -125,9 +124,11 @@ vicum_aperire_cum (
 
 interior Vicus*
 vicum_aperire (
-    Volumen* vol)
+                Volumen* vol,
+                Piscina* piscina,
+    InternamentumChorda* intern)
 {
-    redde vicum_aperire_cum(vol, DISPOSITIO);
+    redde vicum_aperire_cum(vol, DISPOSITIO, piscina, intern);
 }
 
 interior b32
@@ -172,32 +173,44 @@ campum_ponere (
 
 interior chorda
 lit (
-    constans character* s)
+    constans character* s,
+               Piscina* piscina)
 {
     redde chorda_ex_literis(s, piscina);
 }
 
-s32 principale (vacuum)
+/* thema semel ante sectiones (ut olim ante probationes) */
+interior vacuum
+_suitam_parare (
+    CredoContextus* contextus)
 {
-             Volumen* vol;
-               Vicus* v;
-         VicusTabula* t;
-      ScribaMontatio* sm;
-         InsulaRamus  radix;
-              chorda  index;
-                 b32  inventum;
-
-    piscina = piscina_generare_dynamicum("probatio_vicus", LXIV * M);
-    si (!piscina)
-    { imprimere("FRACTA: piscina\n"); redde I;
-    }
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
+    (vacuum)contextus;
     thema_initiare();
-    vol = volumen_temporarium(piscina, "probatio_vicus");
+}
 
-    imprimere("\n--- I: volumen novum - dispositio data ---\n");
-    v = vicum_aperire(vol);
+/* I-V volumen UNUM per gradus transeunt: IV reaperit quod I et II
+ * scripserunt (focus, documentum), V dispositionem eius mutat - ergo
+ * sectio una cum CREDO_GRADUS, non sectiones separatae */
+interior vacuum
+_sectio_prima (
+    CredoContextus* contextus)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+                Volumen* vol;
+                  Vicus* v;
+            VicusTabula* t;
+         ScribaMontatio* sm;
+            InsulaRamus  radix;
+                 chorda  index;
+                    b32  inventum;
+
+    piscina  = contextus->piscina;
+    intern   = internamentum_creare(piscina);
+    vol      = volumen_temporarium(piscina, "probatio_vicus");
+
+    CREDO_GRADUS("I: volumen novum - dispositio data");
+    v = vicum_aperire(vol, piscina, intern);
     CREDO_AEQUALIS_I32(vicus_numerus_tabularum(v), II);
     t = vicus_tabula(v, ZEPHYRUM);
     CREDO_CHORDA_AEQUALIS_LITERIS(t->id, "s1");
@@ -219,16 +232,17 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_I32(stml_numerus_liberorum(insula_radix(v->repo)),
         IV);
     /* dispositio scripta, forma nova (S3c: id cuiusque lateris) */
-    index = volumen_plagulam_promere(vol, lit("vicus/latera"), piscina,
+    index = volumen_plagulam_promere(vol, lit("vicus/latera", piscina),
+        piscina,
         &inventum);
     CREDO_VERUM(inventum);
     CREDO_VERUM(chorda_continet(index, lit(
         "<tabula id=\"p1\" focus=\"sinistrum\">"
         "<latus genus=\"pictor\" id=\"p1_sinistrum_pictor\"/>"
         "<acervus><latus genus=\"pictor\" id=\"p1_dextrum_pictor\"/>"
-        "</acervus></tabula>")));
+        "</acervus></tabula>", piscina)));
 
-    imprimere("\n--- II: focus et documentum servantur ---\n");
+    CREDO_GRADUS("II: focus et documentum servantur");
     CREDO_FALSUM(vicus_focum_ponere(v, II));
     CREDO_VERUM(vicus_focum_ponere(v, VICUS_DEXTRUM));
     CREDO_VERUM(vicus_latus_focatum(v)
@@ -239,7 +253,7 @@ s32 principale (vacuum)
     CREDO_VERUM(scriba_documentum_committere(sm->doc,
         &sm->actiones_ctx.laboris) > ZEPHYRUM);
 
-    imprimere("\n--- III: canon hospitis ---\n");
+    CREDO_GRADUS("III: canon hospitis");
     radix = insula_ramus_radix(v->repo);
     CREDO_FALSUM(mutare_ramum(&radix, ignotum_ponere,
         NIHIL));
@@ -251,15 +265,15 @@ s32 principale (vacuum)
         c.titulus  = "activa";
         c.valor    = "p1";
         CREDO_FALSUM(mutare_ramum(&radix, campum_ponere, &c));
-        insula_scriptorem_ponere(v->repo, lit("horologium"));
+        insula_scriptorem_ponere(v->repo, lit("horologium", piscina));
         CREDO_FALSUM(mutare_ramum(&radix, campum_ponere, &c));
         c.titulus  = "tempus_hora";
         c.valor    = "7";
-        insula_scriptorem_ponere(v->repo, lit("vicus.radix"));
+        insula_scriptorem_ponere(v->repo, lit("vicus.radix", piscina));
         CREDO_FALSUM(mutare_ramum(&radix, campum_ponere, &c));
-        insula_scriptorem_ponere(v->repo, lit("horologium"));
+        insula_scriptorem_ponere(v->repo, lit("horologium", piscina));
         CREDO_VERUM(mutare_ramum(&radix, campum_ponere, &c));
-        insula_scriptorem_ponere(v->repo, lit(""));
+        insula_scriptorem_ponere(v->repo, lit("", piscina));
         /* hospes ipse ut dominus scribit */
         CREDO_VERUM(vicus_activam_ponere(v, "p1"));
         a = insula_attributum(v->repo, "activa");
@@ -271,8 +285,8 @@ s32 principale (vacuum)
         CREDO_VERUM(vicus_activam_ponere(v, "s1"));
     }
 
-    imprimere("\n--- IV: reapertio - dispositio, focus, documenta\n");
-    v = vicum_aperire(vol);
+    CREDO_GRADUS("IV: reapertio - dispositio, focus, documenta");
+    v = vicum_aperire(vol, piscina, intern);
     CREDO_AEQUALIS_I32(vicus_numerus_tabularum(v), II);
     CREDO_AEQUALIS_I32(vicus_tabula(v, ZEPHYRUM)->focus, VICUS_DEXTRUM);
     sm = (ScribaMontatio*)vicus_latus(vicus_tabula(v, ZEPHYRUM),
@@ -280,7 +294,7 @@ s32 principale (vacuum)
     CREDO_VERUM(tabula_cellula(scriba_documentum_tabula(sm->doc),
         ZEPHYRUM, ZEPHYRUM) == 'q');
 
-    imprimere("\n--- IVb: registra in spatiis laterum ---\n");
+    CREDO_GRADUS("IVb: registra in spatiis laterum");
     {
                ActioFn  fn;
                 vacuum* ctx;
@@ -289,23 +303,27 @@ s32 principale (vacuum)
         PictorMontatio* pm;
 
         CREDO_VERUM(actio_invenire_in_spatio(vicus_actiones(v),
-            lit("scriba:s1_sinistrum_scriba"), lit("pagina.clavis"),
+            lit("scriba:s1_sinistrum_scriba", piscina),
+            lit("pagina.clavis", piscina),
             &fn,
             &ctx));
         CREDO_VERUM(ctx == &sm->actiones_ctx);
         CREDO_VERUM(actio_invenire_in_spatio(vicus_actiones(v),
-            lit("pictor:s1_dextrum_pictor"), lit("penicillus.ictus"),
+            lit("pictor:s1_dextrum_pictor", piscina),
+            lit("penicillus.ictus", piscina),
             &fn,
             &ctx));
         /* nomen nudum (hospes) applicationes non videt */
         CREDO_FALSUM(actio_invenire(vicus_actiones(v),
-            lit("pagina.clavis"), &fn, &ctx));
+            lit("pagina.clavis", piscina), &fn, &ctx));
         CREDO_VERUM(figura_invenire_in_spatio(vicus_figurae(v),
-            lit("scriba:s1_sinistrum_scriba"), PARTES_CAMPUS, ZEPHYRUM,
+            lit("scriba:s1_sinistrum_scriba", piscina), PARTES_CAMPUS,
+            ZEPHYRUM,
             &ff,
             &fc));
         CREDO_FALSUM(figura_invenire_in_spatio(vicus_figurae(v),
-            lit("scriba:s1_sinistrum_scriba"), PARTES_TABULA, ZEPHYRUM,
+            lit("scriba:s1_sinistrum_scriba", piscina), PARTES_TABULA,
+            ZEPHYRUM,
             &ff,
             &fc));
         /* fons imaginum: latus dextrum (pictor) respondet */
@@ -317,23 +335,26 @@ s32 principale (vacuum)
         /* commutatio: registra sequuntur */
         CREDO_VERUM(vicus_activam_ponere(v, "p1"));
         CREDO_VERUM(actio_invenire_in_spatio(vicus_actiones(v),
-            lit("pictor:p1_sinistrum_pictor"), lit("penicillus.ictus"),
+            lit("pictor:p1_sinistrum_pictor", piscina),
+            lit("penicillus.ictus", piscina),
             &fn,
             &ctx));
         CREDO_FALSUM(actio_invenire_in_spatio(vicus_actiones(v),
-            lit("scriba:s1_sinistrum_scriba"), lit("pagina.clavis"),
+            lit("scriba:s1_sinistrum_scriba", piscina),
+            lit("pagina.clavis", piscina),
             &fn,
             &ctx));
         CREDO_VERUM(vicus_activam_ponere(v, "s1"));
     }
 
-    imprimere("\n--- V: genus ignotum - latus praeteritum ---\n");
-    CREDO_VERUM(volumen_plagulam_condere(vol, lit("vicus/latera"), lit(
+    CREDO_GRADUS("V: genus ignotum - latus praeteritum");
+    CREDO_VERUM(volumen_plagulam_condere(vol, lit("vicus/latera",
+        piscina), lit(
         "<tabulae activa=\"s1\">"
         "<tabula id=\"s1\"><latus genus=\"scriba\"/>"
         "<acervus><latus genus=\"lyra\"/></acervus></tabula>"
-        "</tabulae>"), "probatio"));
-    v = vicum_aperire(vol);
+        "</tabulae>", piscina), "probatio"));
+    v = vicum_aperire(vol, piscina, intern);
     CREDO_AEQUALIS_I32(vicus_numerus_tabularum(v), I);
     CREDO_FALSUM(vicus_latus(vicus_tabula(v, ZEPHYRUM),
         VICUS_DEXTRUM)->montata);
@@ -344,31 +365,53 @@ s32 principale (vacuum)
     CREDO_FALSUM(vicus_focum_ponere(v, VICUS_DEXTRUM));
     volumen_claudere(vol);
 
-    imprimere("\n--- VI: plures quam decem tabulae: X leguntur ---\n");
+}
+
+interior vacuum
+_sectio_secunda (
+    CredoContextus* contextus)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+                Volumen* vol_decem;
+                  Vicus* v;
+                 chorda  d;
+                    i32  k;
+
+    piscina  = contextus->piscina;
+    intern   = internamentum_creare(piscina);
+
+    d = lit("<tabulae activa=\"1\">", piscina);
+    per (k = I; k <= XI; k++)
     {
-        Volumen* vol_decem;
-         chorda  d;
-            i32  k;
-
-        d = lit("<tabulae activa=\"1\">");
-        per (k = I; k <= XI; k++)
-        {
-            d = chorda_concatenare(d, lit("<tabula id=\""), piscina);
-            d = chorda_concatenare(d, chorda_ex_s32((s32)k, piscina),
-                piscina);
-            d = chorda_concatenare(d, lit("\"><latus genus=\"pictor\"/>"
-                "</tabula>"), piscina);
-        }
-        d = chorda_concatenare(d, lit("</tabulae>"), piscina);
-        vol_decem = volumen_temporarium(piscina,
-            "probatio_vicus_decem");
-        v = vicum_aperire_cum(vol_decem, chorda_ut_cstr(d, piscina));
-        CREDO_AEQUALIS_I32(vicus_numerus_tabularum(v), VICUS_TABULAE);
-        CREDO_CHORDA_AEQUALIS_LITERIS(vicus_tabula(v, IX)->id, "10");
-        volumen_claudere(vol_decem);
+        d = chorda_concatenare(d, lit("<tabula id=\"", piscina),
+            piscina);
+        d = chorda_concatenare(d, chorda_ex_s32((s32)k, piscina),
+            piscina);
+        d = chorda_concatenare(d, lit("\"><latus genus=\"pictor\"/>"
+            "</tabula>", piscina), piscina);
     }
+    d = chorda_concatenare(d, lit("</tabulae>", piscina), piscina);
+    vol_decem = volumen_temporarium(piscina,
+        "probatio_vicus_decem");
+    v = vicum_aperire_cum(vol_decem, chorda_ut_cstr(d, piscina),
+        piscina, intern);
+    CREDO_AEQUALIS_I32(vicus_numerus_tabularum(v), VICUS_TABULAE);
+    CREDO_CHORDA_AEQUALIS_LITERIS(vicus_tabula(v, IX)->id, "10");
+    volumen_claudere(vol_decem);
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I-V: volumen unum per gradus", _sectio_prima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "VI: plures quam decem tabulae: X leguntur", _sectio_secunda,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("vicus", SECTIONES, _suitam_parare,
+        NIHIL);
 }

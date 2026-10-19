@@ -5,20 +5,17 @@
 #include "credo.h"
 #include <stdio.h>
 
-/* Piscina globalis pro probationes */
-hic_manens Piscina* g_piscina = NIHIL;
-
 
 /* ==================================================
  * Test: Initiatio
  * ================================================== */
 
 hic_manens vacuum
-probans_initiare(vacuum)
+probans_initiare(CredoContextus* c)
 {
     TabulaCharacterum tabula;
 
-    tabula_initiare(&tabula, g_piscina, TABULA_LATITUDO_DEFALTA,
+    tabula_initiare(&tabula, c->piscina, TABULA_LATITUDO_DEFALTA,
         TABULA_ALTITUDO_DEFALTA);
 
     CREDO_VERUM(tabula_est_vacua(&tabula));
@@ -31,77 +28,77 @@ probans_initiare(vacuum)
  * ================================================== */
 
 hic_manens vacuum
-probans_invenire_finem_contenti(vacuum)
+probans_invenire_finem_contenti(CredoContextus* c)
 {
     TabulaCharacterum tabula;
 
     /* Linea vacua */
-    tabula_initiare(&tabula, g_piscina, TABULA_LATITUDO_DEFALTA,
+    tabula_initiare(&tabula, c->piscina, TABULA_LATITUDO_DEFALTA,
         TABULA_ALTITUDO_DEFALTA);
     CREDO_AEQUALIS_S32(tabula_invenire_finem_contenti(&tabula,
         ZEPHYRUM), -I);
 
     /* Linea cum uno charactere */
-    tabula_ex_literis(&tabula, g_piscina, "a");
+    tabula_ex_literis(&tabula, c->piscina, "a");
     CREDO_AEQUALIS_S32(tabula_invenire_finem_contenti(&tabula,
         ZEPHYRUM), ZEPHYRUM);
 
     /* Linea cum characteribus */
-    tabula_ex_literis(&tabula, g_piscina, "hello");
+    tabula_ex_literis(&tabula, c->piscina, "hello");
     CREDO_AEQUALIS_S32(tabula_invenire_finem_contenti(&tabula,
         ZEPHYRUM), IV);
 
     /* Linea cum spatiis post contentum - spatia non sunt contentum */
-    tabula_ex_literis(&tabula, g_piscina, "hi   ");
+    tabula_ex_literis(&tabula, c->piscina, "hi   ");
     CREDO_AEQUALIS_S32(tabula_invenire_finem_contenti(&tabula,
         ZEPHYRUM), I);
 }
 
 hic_manens vacuum
-probans_invenire_initium_contenti(vacuum)
+probans_invenire_initium_contenti(CredoContextus* c)
 {
     TabulaCharacterum tabula;
 
     /* Linea vacua */
-    tabula_initiare(&tabula, g_piscina, TABULA_LATITUDO_DEFALTA,
+    tabula_initiare(&tabula, c->piscina, TABULA_LATITUDO_DEFALTA,
         TABULA_ALTITUDO_DEFALTA);
     CREDO_AEQUALIS_I32(tabula_invenire_initium_contenti(&tabula,
         ZEPHYRUM), tabula.latitudo);
 
     /* Linea sine indentation */
-    tabula_ex_literis(&tabula, g_piscina, "hello");
+    tabula_ex_literis(&tabula, c->piscina, "hello");
     CREDO_AEQUALIS_I32(tabula_invenire_initium_contenti(&tabula,
         ZEPHYRUM), ZEPHYRUM);
 
     /* Linea cum indentation */
-    tabula_ex_literis(&tabula, g_piscina, "    hello");
+    tabula_ex_literis(&tabula, c->piscina, "    hello");
     CREDO_AEQUALIS_I32(tabula_invenire_initium_contenti(&tabula,
         ZEPHYRUM), IV);
 }
 
 hic_manens vacuum
-probans_invenire_obicem(vacuum)
+probans_invenire_obicem(CredoContextus* c)
 {
     TabulaCharacterum tabula;
 
     /* Linea vacua - nulla obex */
-    tabula_initiare(&tabula, g_piscina, TABULA_LATITUDO_DEFALTA,
+    tabula_initiare(&tabula, c->piscina, TABULA_LATITUDO_DEFALTA,
         TABULA_ALTITUDO_DEFALTA);
     CREDO_AEQUALIS_S32(tabula_invenire_obicem(&tabula, ZEPHYRUM,
         ZEPHYRUM), -I);
 
     /* Contentum ad initium */
-    tabula_ex_literis(&tabula, g_piscina, "hello");
+    tabula_ex_literis(&tabula, c->piscina, "hello");
     CREDO_AEQUALIS_S32(tabula_invenire_obicem(&tabula, ZEPHYRUM,
         ZEPHYRUM), ZEPHYRUM);
 
     /* Spatia ante contentum */
-    tabula_ex_literis(&tabula, g_piscina, "ab   hello");
+    tabula_ex_literis(&tabula, c->piscina, "ab   hello");
     CREDO_AEQUALIS_S32(tabula_invenire_obicem(&tabula, ZEPHYRUM, II),
         V);
 
     /* Nulla contentum post columnam */
-    tabula_ex_literis(&tabula, g_piscina, "hi");
+    tabula_ex_literis(&tabula, c->piscina, "hi");
     CREDO_AEQUALIS_S32(tabula_invenire_obicem(&tabula, ZEPHYRUM, V),
         -I);
 }
@@ -112,20 +109,20 @@ probans_invenire_obicem(vacuum)
  * ================================================== */
 
 hic_manens vacuum
-probans_trudere_dextram(vacuum)
+probans_trudere_dextram(CredoContextus* c)
 {
     TabulaCharacterum tabula;
             character overflow;
 
     /* Trudere in linea cum spatio */
-    tabula_ex_literis(&tabula, g_piscina, "hello");
+    tabula_ex_literis(&tabula, c->piscina, "hello");
     overflow = tabula_trudere_dextram(&tabula, ZEPHYRUM, II);
     CREDO_AEQUALIS_I32((i32)overflow, (i32)' ');  /* Grid impleta cum spatiis */
-    tabula_asserere(&tabula, g_piscina, "he llo",
+    tabula_asserere(&tabula, c->piscina, "he llo",
         "trudere dextram in hello");
 
     /* Trudere cum overflow */
-    tabula_ex_literis(&tabula, g_piscina, "");
+    tabula_ex_literis(&tabula, c->piscina, "");
     /* Implere lineam */
     {
         i32 i;
@@ -138,7 +135,7 @@ probans_trudere_dextram(vacuum)
     CREDO_AEQUALIS_I32((i32)overflow, (i32)'x');
 
     /* Cum dimensionibus parvis (8x2) - overflow facilius testare */
-    tabula_ex_literis_cum_dimensionibus(&tabula, g_piscina, VIII, II,
+    tabula_ex_literis_cum_dimensionibus(&tabula, c->piscina, VIII, II,
         "abcdefgh");
     CREDO_AEQUALIS_I32(tabula.latitudo, VIII);
     overflow = tabula_trudere_dextram(&tabula, ZEPHYRUM, ZEPHYRUM);
@@ -152,20 +149,20 @@ probans_trudere_dextram(vacuum)
 }
 
 hic_manens vacuum
-probans_inserere_lineam(vacuum)
+probans_inserere_lineam(CredoContextus* c)
 {
     TabulaCharacterum tabula;
                   b32 successus;
 
-    tabula_ex_literis(&tabula, g_piscina, "line0\nline1\nline2");
+    tabula_ex_literis(&tabula, c->piscina, "line0\nline1\nline2");
 
     successus = tabula_inserere_lineam(&tabula, I);
     CREDO_VERUM(successus);
-    tabula_asserere(&tabula, g_piscina, "line0\n\nline1\nline2",
+    tabula_asserere(&tabula, c->piscina, "line0\n\nline1\nline2",
         "inserere lineam ad 1");
 
     /* Cum dimensionibus parvis (10x4) */
-    tabula_ex_literis_cum_dimensionibus(&tabula, g_piscina, X, IV,
+    tabula_ex_literis_cum_dimensionibus(&tabula, c->piscina, X, IV,
         "aa\nbb\ncc");
     CREDO_AEQUALIS_I32(tabula.altitudo, IV);
     successus = tabula_inserere_lineam(&tabula, I);
@@ -181,18 +178,18 @@ probans_inserere_lineam(vacuum)
 }
 
 hic_manens vacuum
-probans_delere_lineam(vacuum)
+probans_delere_lineam(CredoContextus* c)
 {
     TabulaCharacterum tabula;
 
-    tabula_ex_literis(&tabula, g_piscina, "line0\nline1\nline2");
+    tabula_ex_literis(&tabula, c->piscina, "line0\nline1\nline2");
 
     tabula_delere_lineam(&tabula, I);
-    tabula_asserere(&tabula, g_piscina, "line0\nline2",
+    tabula_asserere(&tabula, c->piscina, "line0\nline2",
         "delere lineam 1");
 
     /* Idem cum dimensionibus parvis (8x4) */
-    tabula_ex_literis_cum_dimensionibus(&tabula, g_piscina, VIII, IV,
+    tabula_ex_literis_cum_dimensionibus(&tabula, c->piscina, VIII, IV,
         "aa\nbb\ncc\ndd");
     CREDO_AEQUALIS_I32(tabula.altitudo, IV);
 
@@ -214,21 +211,21 @@ probans_delere_lineam(vacuum)
  * ================================================== */
 
 hic_manens vacuum
-probans_inserere_characterem_simplex(vacuum)
+probans_inserere_characterem_simplex(CredoContextus* c)
 {
     TabulaCharacterum tabula;
 
     /* Inserere in tabula vacua */
-    tabula_initiare(&tabula, g_piscina, TABULA_LATITUDO_DEFALTA,
+    tabula_initiare(&tabula, c->piscina, TABULA_LATITUDO_DEFALTA,
         TABULA_ALTITUDO_DEFALTA);
     tabula_inserere_characterem(&tabula, ZEPHYRUM, ZEPHYRUM, 'H');
-    tabula_asserere(&tabula, g_piscina, "H", "inserere H in vacua");
+    tabula_asserere(&tabula, c->piscina, "H", "inserere H in vacua");
 
     tabula_inserere_characterem(&tabula, ZEPHYRUM, I, 'i');
-    tabula_asserere(&tabula, g_piscina, "Hi", "inserere i post H");
+    tabula_asserere(&tabula, c->piscina, "Hi", "inserere i post H");
 
     /* Idem cum dimensionibus parvis (6x2) */
-    tabula_initiare(&tabula, g_piscina, VI, II);
+    tabula_initiare(&tabula, c->piscina, VI, II);
     CREDO_AEQUALIS_I32(tabula.latitudo, VI);
     CREDO_AEQUALIS_I32(tabula.altitudo, II);
 
@@ -246,64 +243,67 @@ probans_inserere_characterem_simplex(vacuum)
 }
 
 hic_manens vacuum
-probans_inserere_characterem_consumere_whitespace (vacuum)
+probans_inserere_characterem_consumere_whitespace (
+    CredoContextus* c)
 {
     TabulaCharacterum tabula;
 
     /* Inserere in whitespace cushion - solum pingere (consumere whitespace) */
-    tabula_ex_literis(&tabula, g_piscina, "   hello");
+    tabula_ex_literis(&tabula, c->piscina, "   hello");
     tabula_inserere_characterem(&tabula, ZEPHYRUM, ZEPHYRUM, 'X');
-    tabula_asserere(&tabula, g_piscina, "X  hello",
+    tabula_asserere(&tabula, c->piscina, "X  hello",
         "inserere X consumit whitespace");
 
     /* Inserere in medio whitespace cushion */
-    tabula_ex_literis(&tabula, g_piscina, "ab   hello");
+    tabula_ex_literis(&tabula, c->piscina, "ab   hello");
     tabula_inserere_characterem(&tabula, ZEPHYRUM, II, 'X');
-    tabula_asserere(&tabula, g_piscina, "abX  hello",
+    tabula_asserere(&tabula, c->piscina, "abX  hello",
         "inserere X in whitespace cushion");
 }
 
 hic_manens vacuum
-probans_inserere_characterem_ad_barrier (vacuum)
+probans_inserere_characterem_ad_barrier (
+    CredoContextus* c)
 {
     TabulaCharacterum tabula;
 
     /* Inserere ad barrier (immediate ante contentum) - debet trudere */
-    tabula_ex_literis(&tabula, g_piscina, "ab hello");  /* 1 space = barrier */
+    tabula_ex_literis(&tabula, c->piscina, "ab hello");  /* 1 space = barrier */
     tabula_inserere_characterem(&tabula, ZEPHYRUM, II, 'X');
-    tabula_asserere(&tabula, g_piscina, "abX hello",
+    tabula_asserere(&tabula, c->piscina, "abX hello",
         "inserere X ad barrier trudere");
 
     /* Inserere directe ante contentum (cursor ad ultimum whitespace) */
-    tabula_ex_literis(&tabula, g_piscina, "  hello");  /* 2 spaces */
+    tabula_ex_literis(&tabula, c->piscina, "  hello");  /* 2 spaces */
     tabula_inserere_characterem(&tabula, ZEPHYRUM, I, 'X');
-    tabula_asserere(&tabula, g_piscina, " X hello",
+    tabula_asserere(&tabula, c->piscina, " X hello",
         "inserere X ad barrier (1 space ante)");
 }
 
 hic_manens vacuum
-probans_inserere_characterem_post_contentum (vacuum)
+probans_inserere_characterem_post_contentum (
+    CredoContextus* c)
 {
     TabulaCharacterum tabula;
 
     /* Inserere post contentum - solum pingere, non trudere */
-    tabula_ex_literis(&tabula, g_piscina, "ab");
+    tabula_ex_literis(&tabula, c->piscina, "ab");
     tabula_inserere_characterem(&tabula, ZEPHYRUM, V, 'X');
-    tabula_asserere(&tabula, g_piscina, "ab   X",
+    tabula_asserere(&tabula, c->piscina, "ab   X",
         "inserere X post contentum (solum pingere)");
 }
 
 hic_manens vacuum
-probans_delere_characterem(vacuum)
+probans_delere_characterem(CredoContextus* c)
 {
     TabulaCharacterum tabula;
 
-    tabula_ex_literis(&tabula, g_piscina, "hello");
+    tabula_ex_literis(&tabula, c->piscina, "hello");
     tabula_delere_characterem(&tabula, ZEPHYRUM, II);
-    tabula_asserere(&tabula, g_piscina, "helo", "delere 'l' ex hello");
+    tabula_asserere(&tabula, c->piscina, "helo", "delere 'l' ex hello");
 
     /* Delere in linea vacua - nihil facit */
-    tabula_initiare(&tabula, g_piscina, TABULA_LATITUDO_DEFALTA,
+    tabula_initiare(&tabula, c->piscina, TABULA_LATITUDO_DEFALTA,
         TABULA_ALTITUDO_DEFALTA);
     tabula_delere_characterem(&tabula, ZEPHYRUM, ZEPHYRUM);
     CREDO_VERUM(tabula_est_vacua(&tabula));
@@ -315,26 +315,26 @@ probans_delere_characterem(vacuum)
  * ================================================== */
 
 hic_manens vacuum
-probans_ex_literis(vacuum)
+probans_ex_literis(CredoContextus* c)
 {
     TabulaCharacterum tabula;
 
     /* Una linea */
-    tabula_ex_literis(&tabula, g_piscina, "hello");
+    tabula_ex_literis(&tabula, c->piscina, "hello");
     CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM),
         (i32)'h');
     CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, IV),
         (i32)'o');
 
     /* Plures lineae */
-    tabula_ex_literis(&tabula, g_piscina, "line1\nline2");
+    tabula_ex_literis(&tabula, c->piscina, "line1\nline2");
     CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM),
         (i32)'l');
     CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM),
         (i32)'l');
 
     /* Cum dimensionibus parvis (10x3) */
-    tabula_ex_literis_cum_dimensionibus(&tabula, g_piscina, X, III,
+    tabula_ex_literis_cum_dimensionibus(&tabula, c->piscina, X, III,
         "abc\nde");
     CREDO_AEQUALIS_I32(tabula.latitudo, X);
     CREDO_AEQUALIS_I32(tabula.altitudo, III);
@@ -348,15 +348,15 @@ probans_ex_literis(vacuum)
 }
 
 hic_manens vacuum
-probans_aequalis_literis(vacuum)
+probans_aequalis_literis(CredoContextus* c)
 {
     TabulaCharacterum tabula;
 
-    tabula_ex_literis(&tabula, g_piscina, "hello");
+    tabula_ex_literis(&tabula, c->piscina, "hello");
     CREDO_VERUM(tabula_aequalis_literis(&tabula, "hello"));
     CREDO_FALSUM(tabula_aequalis_literis(&tabula, "world"));
 
-    tabula_ex_literis(&tabula, g_piscina, "line1\nline2");
+    tabula_ex_literis(&tabula, c->piscina, "line1\nline2");
     CREDO_VERUM(tabula_aequalis_literis(&tabula, "line1\nline2"));
 }
 
@@ -366,13 +366,13 @@ probans_aequalis_literis(vacuum)
  * ================================================== */
 
 hic_manens vacuum
-probans_inserere_tab_simplex(vacuum)
+probans_inserere_tab_simplex(CredoContextus* c)
 {
     TabulaCharacterum tabula;
                   b32 successus;
 
     /* Inserere tab in tabula vacua ad columna 0 */
-    tabula_initiare(&tabula, g_piscina, TABULA_LATITUDO_DEFALTA,
+    tabula_initiare(&tabula, c->piscina, TABULA_LATITUDO_DEFALTA,
         TABULA_ALTITUDO_DEFALTA);
     successus = tabula_inserere_tab(&tabula, ZEPHYRUM, ZEPHYRUM);
     CREDO_VERUM(successus);
@@ -388,7 +388,7 @@ probans_inserere_tab_simplex(vacuum)
         (i32)' ');
 
     /* Idem cum dimensionibus parvis (6x2) - tab requirit 2 cellulas */
-    tabula_initiare(&tabula, g_piscina, VI, II);
+    tabula_initiare(&tabula, c->piscina, VI, II);
     CREDO_AEQUALIS_I32(tabula.latitudo, VI);
 
     successus = tabula_inserere_tab(&tabula, ZEPHYRUM, ZEPHYRUM);
@@ -408,13 +408,13 @@ probans_inserere_tab_simplex(vacuum)
 }
 
 hic_manens vacuum
-probans_inserere_tab_ante_contentum(vacuum)
+probans_inserere_tab_ante_contentum(CredoContextus* c)
 {
     TabulaCharacterum tabula;
                   b32 successus;
 
     /* Inserere "hello" deinde tab ad initium - debet trudere */
-    tabula_ex_literis(&tabula, g_piscina, "hello");
+    tabula_ex_literis(&tabula, c->piscina, "hello");
     successus = tabula_inserere_tab(&tabula, ZEPHYRUM, ZEPHYRUM);
     CREDO_VERUM(successus);
 
@@ -431,7 +431,7 @@ probans_inserere_tab_ante_contentum(vacuum)
         (i32)'o');
 
     /* Idem cum dimensionibus parvis (8x2) - tab trudit "ab" */
-    tabula_ex_literis_cum_dimensionibus(&tabula, g_piscina, VIII, II,
+    tabula_ex_literis_cum_dimensionibus(&tabula, c->piscina, VIII, II,
         "ab");
     CREDO_AEQUALIS_I32(tabula.latitudo, VIII);
 
@@ -450,13 +450,13 @@ probans_inserere_tab_ante_contentum(vacuum)
 }
 
 hic_manens vacuum
-probans_inserere_tab_in_medio(vacuum)
+probans_inserere_tab_in_medio(CredoContextus* c)
 {
     TabulaCharacterum tabula;
                   b32 successus;
 
     /* Inserere "ab" deinde tab deinde "cd" */
-    tabula_ex_literis(&tabula, g_piscina, "abcd");
+    tabula_ex_literis(&tabula, c->piscina, "abcd");
     successus = tabula_inserere_tab(&tabula, ZEPHYRUM, II);
     CREDO_VERUM(successus);
 
@@ -476,12 +476,12 @@ probans_inserere_tab_in_medio(vacuum)
 }
 
 hic_manens vacuum
-probans_delere_tab(vacuum)
+probans_delere_tab(CredoContextus* c)
 {
     TabulaCharacterum tabula;
 
     /* Creare tab manuali */
-    tabula_initiare(&tabula, g_piscina, TABULA_LATITUDO_DEFALTA,
+    tabula_initiare(&tabula, c->piscina, TABULA_LATITUDO_DEFALTA,
         TABULA_ALTITUDO_DEFALTA);
     tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM) = '\t';
     tabula_cellula(&tabula, ZEPHYRUM, I) = TAB_CONTINUATIO;
@@ -499,12 +499,12 @@ probans_delere_tab(vacuum)
 }
 
 hic_manens vacuum
-probans_delere_ad_tab_continuatio(vacuum)
+probans_delere_ad_tab_continuatio(CredoContextus* c)
 {
     TabulaCharacterum tabula;
 
     /* Creare "ab" + tab + "cd" */
-    tabula_initiare(&tabula, g_piscina, TABULA_LATITUDO_DEFALTA,
+    tabula_initiare(&tabula, c->piscina, TABULA_LATITUDO_DEFALTA,
         TABULA_ALTITUDO_DEFALTA);
     tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM) = 'a';
     tabula_cellula(&tabula, ZEPHYRUM, I) = 'b';
@@ -528,11 +528,11 @@ probans_delere_ad_tab_continuatio(vacuum)
 }
 
 hic_manens vacuum
-probans_est_tab_continuatio(vacuum)
+probans_est_tab_continuatio(CredoContextus* c)
 {
     TabulaCharacterum tabula;
 
-    tabula_initiare(&tabula, g_piscina, TABULA_LATITUDO_DEFALTA,
+    tabula_initiare(&tabula, c->piscina, TABULA_LATITUDO_DEFALTA,
         TABULA_ALTITUDO_DEFALTA);
     tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM) = 'a';
     tabula_cellula(&tabula, ZEPHYRUM, I) = '\t';
@@ -552,14 +552,15 @@ probans_est_tab_continuatio(vacuum)
  * ================================================== */
 
 hic_manens vacuum
-probans_dimensiones_parvae(vacuum)
+probans_dimensiones_parvae(CredoContextus* c)
 {
     TabulaCharacterum tabula;
                   i32 parva_latitudo = X;   /* 10 */
                   i32 parva_altitudo = V;   /* 5 */
 
     /* Initiare cum dimensionibus parvis */
-    tabula_initiare(&tabula, g_piscina, parva_latitudo, parva_altitudo);
+    tabula_initiare(&tabula, c->piscina, parva_latitudo,
+        parva_altitudo);
     CREDO_AEQUALIS_I32(tabula.latitudo, parva_latitudo);
     CREDO_AEQUALIS_I32(tabula.altitudo, parva_altitudo);
     CREDO_VERUM(tabula_est_vacua(&tabula));
@@ -581,14 +582,14 @@ probans_dimensiones_parvae(vacuum)
 }
 
 hic_manens vacuum
-probans_dimensiones_minimae(vacuum)
+probans_dimensiones_minimae(CredoContextus* c)
 {
     TabulaCharacterum tabula;
     i32 minima_latitudo = IV;   /* 4 - minima pro tab (2) + aliquid */
     i32 minima_altitudo = II;   /* 2 */
 
     /* Initiare cum dimensionibus minimis */
-    tabula_initiare(&tabula, g_piscina, minima_latitudo,
+    tabula_initiare(&tabula, c->piscina, minima_latitudo,
         minima_altitudo);
     CREDO_AEQUALIS_I32(tabula.latitudo, minima_latitudo);
     CREDO_AEQUALIS_I32(tabula.altitudo, minima_altitudo);
@@ -607,14 +608,15 @@ probans_dimensiones_minimae(vacuum)
 }
 
 hic_manens vacuum
-probans_dimensiones_asymmetricae(vacuum)
+probans_dimensiones_asymmetricae(CredoContextus* c)
 {
     TabulaCharacterum tabula;
                   i32 lata_latitudo    = C;   /* 100 - multa lata */
                   i32 brevis_altitudo  = III; /* 3 - paucae lineae */
 
     /* Initiare cum latitudine magna et altitudine parva */
-    tabula_initiare(&tabula, g_piscina, lata_latitudo, brevis_altitudo);
+    tabula_initiare(&tabula, c->piscina, lata_latitudo,
+        brevis_altitudo);
     CREDO_AEQUALIS_I32(tabula.latitudo, lata_latitudo);
     CREDO_AEQUALIS_I32(tabula.altitudo, brevis_altitudo);
 
@@ -638,14 +640,14 @@ probans_dimensiones_asymmetricae(vacuum)
 }
 
 hic_manens vacuum
-probans_dimensiones_trudere_ad_limitem(vacuum)
+probans_dimensiones_trudere_ad_limitem(CredoContextus* c)
 {
     TabulaCharacterum tabula;
                   i32 latitudo = VIII;   /* 8 */
                   i32 altitudo = II;     /* 2 */
             character overflow;
 
-    tabula_initiare(&tabula, g_piscina, latitudo, altitudo);
+    tabula_initiare(&tabula, c->piscina, latitudo, altitudo);
 
     /* Implere lineam prope finem */
     tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM) = 'a';
@@ -673,110 +675,224 @@ probans_dimensiones_trudere_ad_limitem(vacuum)
  * Main
  * ================================================== */
 
-integer
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    probans_initiare(c);
+}
+
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    probans_invenire_finem_contenti(c);
+}
+
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    probans_invenire_initium_contenti(c);
+}
+
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    probans_invenire_obicem(c);
+}
+
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    probans_trudere_dextram(c);
+}
+
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    probans_inserere_lineam(c);
+}
+
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    probans_delere_lineam(c);
+}
+
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    probans_inserere_characterem_simplex(c);
+}
+
+/* <tolera codex="CREDO_SECTIO_SINE_ASSERTIONE" (>in tabula_asserere */
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+    probans_inserere_characterem_consumere_whitespace(c);
+}
+
+/* <tolera codex="CREDO_SECTIO_SINE_ASSERTIONE" (>in tabula_asserere */
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+    probans_inserere_characterem_ad_barrier(c);
+}
+
+/* <tolera codex="CREDO_SECTIO_SINE_ASSERTIONE" (>in tabula_asserere */
+interior vacuum
+_sectio_decima_prima (
+    CredoContextus* c)
+{
+    probans_inserere_characterem_post_contentum(c);
+}
+
+interior vacuum
+_sectio_decima_secunda (
+    CredoContextus* c)
+{
+    probans_delere_characterem(c);
+}
+
+interior vacuum
+_sectio_decima_tertia (
+    CredoContextus* c)
+{
+    probans_ex_literis(c);
+}
+
+interior vacuum
+_sectio_decima_quarta (
+    CredoContextus* c)
+{
+    probans_aequalis_literis(c);
+}
+
+interior vacuum
+_sectio_decima_quinta (
+    CredoContextus* c)
+{
+    probans_inserere_tab_simplex(c);
+}
+
+interior vacuum
+_sectio_decima_sexta (
+    CredoContextus* c)
+{
+    probans_inserere_tab_ante_contentum(c);
+}
+
+interior vacuum
+_sectio_decima_septima (
+    CredoContextus* c)
+{
+    probans_inserere_tab_in_medio(c);
+}
+
+interior vacuum
+_sectio_decima_octava (
+    CredoContextus* c)
+{
+    probans_delere_tab(c);
+}
+
+interior vacuum
+_sectio_decima_nona (
+    CredoContextus* c)
+{
+    probans_delere_ad_tab_continuatio(c);
+}
+
+interior vacuum
+_sectio_vicesima (
+    CredoContextus* c)
+{
+    probans_est_tab_continuatio(c);
+}
+
+interior vacuum
+_sectio_vicesima_prima (
+    CredoContextus* c)
+{
+    probans_dimensiones_parvae(c);
+}
+
+interior vacuum
+_sectio_vicesima_secunda (
+    CredoContextus* c)
+{
+    probans_dimensiones_minimae(c);
+}
+
+interior vacuum
+_sectio_vicesima_tertia (
+    CredoContextus* c)
+{
+    probans_dimensiones_asymmetricae(c);
+}
+
+interior vacuum
+_sectio_vicesima_quarta (
+    CredoContextus* c)
+{
+    probans_dimensiones_trudere_ad_limitem(c);
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "initiare", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "invenire_finem_contenti", _sectio_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "invenire_initium_contenti", _sectio_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "invenire_obicem", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "trudere_dextram", _sectio_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "inserere_lineam", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "delere_lineam", _sectio_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "inserere_characterem_simplex", _sectio_octava, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "inserere_characterem_consumere_whitespace", _sectio_nona, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "inserere_characterem_ad_barrier", _sectio_decima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "inserere_characterem_post_contentum", _sectio_decima_prima,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "delere_characterem", _sectio_decima_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "ex_literis", _sectio_decima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "aequalis_literis", _sectio_decima_quarta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "inserere_tab_simplex", _sectio_decima_quinta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "inserere_tab_ante_contentum", _sectio_decima_sexta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "inserere_tab_in_medio", _sectio_decima_septima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "delere_tab", _sectio_decima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "delere_ad_tab_continuatio", _sectio_decima_nona, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "est_tab_continuatio", _sectio_vicesima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "dimensiones_parvae", _sectio_vicesima_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "dimensiones_minimae", _sectio_vicesima_secunda, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "dimensiones_asymmetricae", _sectio_vicesima_tertia, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "dimensiones_trudere_ad_limitem", _sectio_vicesima_quarta, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
 principale (vacuum)
 {
-    Piscina* piscina;
-        b32  praeteritus;
-
-    /* Aperire credo et piscina */
-    piscina = piscina_generare_dynamicum("test_tabula_characterum", M);  /* 1MB - pro multis tabulis */
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    g_piscina = piscina;
-    credo_aperire(piscina);
-
-    printf("--- Probans initiare ---\n");
-    probans_initiare();
-
-    printf("--- Probans invenire_finem_contenti ---\n");
-    probans_invenire_finem_contenti();
-
-    printf("--- Probans invenire_initium_contenti ---\n");
-    probans_invenire_initium_contenti();
-
-    printf("--- Probans invenire_obicem ---\n");
-    probans_invenire_obicem();
-
-    printf("--- Probans trudere_dextram ---\n");
-    probans_trudere_dextram();
-
-    printf("--- Probans inserere_lineam ---\n");
-    probans_inserere_lineam();
-
-    printf("--- Probans delere_lineam ---\n");
-    probans_delere_lineam();
-
-    printf("--- Probans inserere_characterem_simplex ---\n");
-    probans_inserere_characterem_simplex();
-
-    printf("--- Probans inserere_characterem_consumere_whitespace ---\n");
-    probans_inserere_characterem_consumere_whitespace();
-
-    printf("--- Probans inserere_characterem_ad_barrier ---\n");
-    probans_inserere_characterem_ad_barrier();
-
-    printf("--- Probans inserere_characterem_post_contentum ---\n");
-    probans_inserere_characterem_post_contentum();
-
-    printf("--- Probans delere_characterem ---\n");
-    probans_delere_characterem();
-
-    printf("--- Probans ex_literis ---\n");
-    probans_ex_literis();
-
-    printf("--- Probans aequalis_literis ---\n");
-    probans_aequalis_literis();
-
-    printf("--- Probans inserere_tab_simplex ---\n");
-    probans_inserere_tab_simplex();
-
-    printf("--- Probans inserere_tab_ante_contentum ---\n");
-    probans_inserere_tab_ante_contentum();
-
-    printf("--- Probans inserere_tab_in_medio ---\n");
-    probans_inserere_tab_in_medio();
-
-    printf("--- Probans delere_tab ---\n");
-    probans_delere_tab();
-
-    printf("--- Probans delere_ad_tab_continuatio ---\n");
-    probans_delere_ad_tab_continuatio();
-
-    printf("--- Probans est_tab_continuatio ---\n");
-    probans_est_tab_continuatio();
-
-    printf("--- Probans dimensiones_parvae ---\n");
-    probans_dimensiones_parvae();
-
-    printf("--- Probans dimensiones_minimae ---\n");
-    probans_dimensiones_minimae();
-
-    printf("--- Probans dimensiones_asymmetricae ---\n");
-    probans_dimensiones_asymmetricae();
-
-    printf("--- Probans dimensiones_trudere_ad_limitem ---\n");
-    probans_dimensiones_trudere_ad_limitem();
-
-    /* Compendium */
-    printf("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-
-    /* Destructio */
-    credo_claudere();
-    piscina_destruere(piscina);
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+    redde credo_suitam_currere("tabula_characterum", SECTIONES);
 }

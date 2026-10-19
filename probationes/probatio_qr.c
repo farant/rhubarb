@@ -5,28 +5,17 @@
 #include "credo.h"
 #include <stdio.h>
 
-s32 principale (vacuum)
-{
-         b32  praeteritus;
-     Piscina* piscina;
-
-    /* Aperire credo et piscina */
-    piscina = piscina_generare_dynamicum("probatio_qr", 65536);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
 
     /* ========================================================
      * PROBARE: qr_amplitudo_versionis
      * ======================================================== */
 
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
-        imprimere("\n--- Probans qr_amplitudo_versionis ---\n");
-
         /* Versio 1 = 21 moduli */
         CREDO_AEQUALIS_I32 (qr_amplitudo_versionis(I), XXI);
 
@@ -43,15 +32,19 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (qr_amplitudo_versionis(ZEPHYRUM), ZEPHYRUM);
         CREDO_AEQUALIS_I32 (qr_amplitudo_versionis(XLI), ZEPHYRUM);
     }
+}
 
 
     /* ========================================================
      * PROBARE: qr_versio_minima
      * ======================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
-        imprimere("\n--- Probans qr_versio_minima ---\n");
-
         /* Parvum datum -> versio 1 */
         CREDO_AEQUALIS_I32 (qr_versio_minima(V, QR_ECC_M), I);
 
@@ -64,17 +57,23 @@ s32 principale (vacuum)
         /* ECC-H habet minus capacitatis */
         CREDO_AEQUALIS_I32 (qr_versio_minima(X, QR_ECC_H), II);
     }
+}
 
 
     /* ========================================================
      * PROBARE: qr_generare - generatio basica
      * ======================================================== */
 
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
             QR qr;
         chorda test_data;
-
-        imprimere("\n--- Probans qr_generare (basica) ---\n");
 
         test_data  = chorda_ex_literis("HELLO", piscina);
         qr         = qr_generare(test_data, QR_ECC_M, piscina);
@@ -87,17 +86,23 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (qr.versio, I);
         CREDO_AEQUALIS_I32 (qr.amplitudo, XXI);
     }
+}
 
 
     /* ========================================================
      * PROBARE: qr_generare - input vacuus
      * ======================================================== */
 
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
             QR qr;
         chorda vacua;
-
-        imprimere("\n--- Probans qr_generare (vacuus) ---\n");
 
         /* Chorda vacua: datum = NIHIL, mensura = 0 */
         vacua.datum    = NIHIL;
@@ -108,17 +113,23 @@ s32 principale (vacuum)
         CREDO_FALSUM (qr.successus);
         CREDO_NIHIL  (qr.moduli);
     }
+}
 
 
     /* ========================================================
      * PROBARE: qr_modulus - finder patterns
      * ======================================================== */
 
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
             QR qr;
         chorda test_data;
-
-        imprimere("\n--- Probans finder patterns ---\n");
 
         test_data  = chorda_ex_literis("TEST", piscina);
         qr         = qr_generare(test_data, QR_ECC_M, piscina);
@@ -147,18 +158,24 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_S32 (qr_modulus(&qr, ZEPHYRUM, XX), I);
         CREDO_AEQUALIS_S32 (qr_modulus(&qr, ZEPHYRUM, XIV), I);
     }
+}
 
 
     /* ========================================================
      * PROBARE: qr_modulus - timing patterns
      * ======================================================== */
 
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
             QR qr;
         chorda test_data;
         s32    m8, m9, m10, m11, m12;
-
-        imprimere("\n--- Probans timing patterns ---\n");
 
         test_data  = chorda_ex_literis("TEST", piscina);
         qr         = qr_generare(test_data, QR_ECC_M, piscina);
@@ -187,17 +204,23 @@ s32 principale (vacuum)
         CREDO_INAEQUALITAS_S32 (m8, m9);
         CREDO_AEQUALIS_S32 (m8, m10);
     }
+}
 
 
     /* ========================================================
      * PROBARE: alignment patterns (V2+)
      * ======================================================== */
 
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
             QR qr;
         chorda test_data;
-
-        imprimere("\n--- Probans alignment patterns ---\n");
 
         /* Generare V2 QR (necessitas >= 15 bytes ad M) */
         test_data  = chorda_ex_literis("12345678901234567890", piscina);
@@ -225,17 +248,23 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_S32 (qr_modulus(&qr, XVI, XX), I);
         CREDO_AEQUALIS_S32 (qr_modulus(&qr, XX, XX), I);
     }
+}
 
 
     /* ========================================================
      * PROBARE: qr_modulus - fines
      * ======================================================== */
 
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
             QR qr;
         chorda test_data;
-
-        imprimere("\n--- Probans qr_modulus fines ---\n");
 
         test_data  = chorda_ex_literis("TEST", piscina);
         qr         = qr_generare(test_data, QR_ECC_M, piscina);
@@ -251,17 +280,23 @@ s32 principale (vacuum)
         /* NIHIL qr */
         CREDO_AEQUALIS_S32 (qr_modulus(NIHIL, ZEPHYRUM, ZEPHYRUM), -I);
     }
+}
 
 
     /* ========================================================
      * PROBARE: qr_generare - URL typica
      * ======================================================== */
 
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
             QR qr;
         chorda url;
-
-        imprimere("\n--- Probans URL typica ---\n");
 
         url = chorda_ex_literis("https://example.com/?token=abc123",
             piscina);
@@ -275,17 +310,23 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (qr.versio, III);
         CREDO_AEQUALIS_I32 (qr.amplitudo, XXIX);
     }
+}
 
 
     /* ========================================================
      * PROBARE: qr_generare - ECC levels
      * ======================================================== */
 
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         QR     qr_l, qr_m, qr_q, qr_h;
         chorda datum;
-
-        imprimere("\n--- Probans ECC levels ---\n");
 
         /* 15 bytes datum */
         datum = chorda_ex_literis("123456789012345", piscina);
@@ -308,6 +349,7 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (qr_q.versio, II);
         CREDO_AEQUALIS_I32 (qr_h.versio, III);
     }
+}
 
 
     /* ========================================================
@@ -319,14 +361,17 @@ s32 principale (vacuum)
      * eadem tabula haurit nihil probat.
      * ======================================================== */
 
+interior vacuum
+_sectio_decima_prima (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         /* codewords totales per versionem (ISO 18004 tabula 1) */
         interior constans i32 totales[10] = {
             26, 44, 70, 100, 134, 172, 196, 242, 292, 346
         };
         i32 v, e;
-
-        imprimere("\n--- Probans qr_structura (XL compositiones) ---\n");
 
         per (v = I; v <= X; v++)
         {
@@ -358,25 +403,30 @@ s32 principale (vacuum)
             CREDO_AEQUALIS_I32(sentinella, 12345);
         }
     }
+}
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "qr_amplitudo_versionis", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "qr_versio_minima", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "qr_generare (basica)", _sectio_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "qr_generare (vacuus)", _sectio_quarta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "finder patterns", _sectio_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "timing patterns", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "alignment patterns", _sectio_septima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "qr_modulus fines", _sectio_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "URL typica", _sectio_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "ECC levels", _sectio_decima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "qr_structura (XL compositiones)", _sectio_decima_prima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    /* ========================================================
-     * Compendium
-     * ======================================================== */
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-
-    piscina_destruere(piscina);
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("qr", SECTIONES);
 }
