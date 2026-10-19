@@ -427,6 +427,11 @@ B_3, replacing the post-hoc cyclic-length pattern.
 
 *Became D130 (2026-10-17; KC 57): literary Latin crosses as
 agreement, the charters do not (P2 falls on LLCT); tangles are small.*
+*Corrected after D130's T4 review (15e6df92): that note used the
+amended operand. On the REGISTERED operand P2 falls in four treebanks
+(LLCT, PROIEL, ITTB, UDante); only the verse-heavy CIRCSE and Perseus
+pass. The displaced strand of a crossing carries agreement; its
+partner seldom does (brainstorm XIII).*
 
 **Why.** Brainstorm IV: a Latin sentence's syntax looks like a tangle
 — a planar (projective, TL-like) skeleton, crossings where hyperbaton
@@ -582,6 +587,10 @@ is through Kolev's bound and is known to be inexact).
 ### N14. Toy Latin Sudoku: slot library, exact propagation and settling
 
 *Added later the same day (brainstorm XI).*
+*Slice 1 = D131 (plan approved 2026-10-19): does morphology pay for
+crossing? Real endings at four morphology levels, readers with and
+without crossings, exact. Slice 2 (the settler at three temperatures,
+brainstorm XIV) still open.*
 
 **Why.** Fran's refinement of the skeleton: not syllogisms or facts but
 "a library of things that can take different kinds of slots, and an
