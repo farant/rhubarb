@@ -180,6 +180,37 @@ O(n^2) per position at most, small. Seconds. Exact rationals for E via
 1. **T1:** Part A (trees, genitive arcs, the hand walk-through, cycle
    and containment checks) and Part B (S, E, N per treebank, G1 and G2,
    reports); checks; plants.
+   *T1 done 2026-10-19:* main.c, 23 checks full (0.25 s), 19 quick
+   (`D132_CELER=1`, repo treebanks, verdicts not decided).
+   - Implementation: per sentence a dominance matrix; a FAST arc test
+     (moving one word changes positions, not dominance; re-hanging the
+     genitive under a host adds its subtree to the host's dominance),
+     checked against `dependentia_arcus` on every arc of every headline
+     tree (105,928). E exact via `fractio` from the per-genitive shares
+     grouped by denominator.
+   - Checks: FONTES counts; every sentence a sound tree; the null
+     contains every displaced genitive (273) at its own position with
+     its own verdict; reversal keeps every verdict and null share; the
+     plan's hand walk-through (a)-(d) plus (e), a genitive whose own
+     dependent sits between it and a host (the re-hanging rule); the
+     rules on constructed totals at each threshold.
+   - **Verdicts: G1 HOLDS (S > E in 6 of 6), G2 HOLDS (S / N >= 1/2 in
+     5 of 6; CIRCSE 45.00% fails).** Displaced genitives are few: N =
+     80 (CIRCSE), 5 (LLCT), 44 (PROIEL), 42 (Perseus), 71 (ITTB), 31
+     (UDante); S / N against E / N: 45.00 / 35.27, 60.00 / 10.94,
+     65.91 / 54.58, 64.29 / 45.28, 66.20 / 45.38, 74.19 / 50.54 (%).
+     The small N (T0 caution) is the main caveat; T2 adds an exact
+     tail probability per treebank (descriptive, not registered).
+   - Adjective contrast (reported): agreement-filtered, 93.6-100% of
+     displaced adjectives are safe, but in 70-82% of them (LLCT 1.5%)
+     no other agreeing noun exists at all (the degeneracy from T0).
+   - Plants: 8 red (fast test's dominance; null's last position; own
+     placement; re-hung subtree, after adding hand tree (e); S > E
+     strictness; G2 threshold; G1 count; E's denominator). Two were
+     the plant's fault: the span endpoints (< vs <=) are equivalent,
+     since only the arc's own words sit there; excluding the true head
+     from the hosts is logically redundant (a displaced arc is never a
+     nested alternative), so that plant has no observable effect.
 2. **T2:** the Python oracle; pins; rules on constructed totals;
    plants.
 3. **T3:** findings.md, claims.md, ledger, archive.sh.
