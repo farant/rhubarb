@@ -10,7 +10,10 @@
       per event. eventus_legere_stml parses such a document back into
       a new Xar of Eventus allocated in your piscina. pulchrum VERUM
       indents the output; FALSUM gives one line, which is what
-      tools/auscultator.c prints per event.</responsum>
+      tools/auscultator.c prints per event. Caution (audit 2026-10-18,
+      unfixed): the replay is not exact for a mouse or pen event with
+      pressio exactly 0, which is not written and reads back as
+      EVENTUS_PRESSIO_IGNOTA (-1).</responsum>
   </interrogatio>
 
   <interrogatio genus="possumne">

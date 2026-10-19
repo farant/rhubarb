@@ -84,11 +84,13 @@
       state, where a '&lt;script' opens the double-escaped state in which
       '&lt;/script&gt;' is just text, and '--&gt;' returns. So
       '&lt;script&gt;&lt;!--&lt;script&gt;&lt;/script&gt;&lt;/script&gt;'
-      gives one raw token that runs up to the last close tag. The
-      html5lib oracle
-      found real pages cut short before this was added
-      (2026-09-15); style, title and textarea have no escape
-      states.</responsum>
+      gives one raw token that runs up to the last close tag. Before
+      this was added (2026-09-15) the html5lib oracle showed such
+      scripts cut short, which the byte-fidelity check cannot see;
+      real pages carry '&lt;!--' in scripts as a browser-hiding idiom.
+      Only script has escape states: in style, title, textarea and
+      the other raw elements the first matching close tag
+      ends the text.</responsum>
   </interrogatio>
 
   <interrogatio genus="cur">
@@ -97,9 +99,11 @@
       a tag the lexer tests for an attribute value (after '=') BEFORE
       it tests for '/&gt;'. So '&lt;a href=/&gt;' gives the value '/' and
       a normal TAG_FINIS, and '&lt;a href=x/&gt;' gives the value 'x/',
-      because '/' is legal in an unquoted value. This matches the spec
-      and browsers; swapping the order of the checks silently makes
-      both self-closing.</responsum>
+      because the unquoted-value loop stops only at a space or '&gt;'
+      ('/' is legal in an unquoted value). This matches the spec and
+      browsers. Testing '/&gt;' first would turn '&lt;a href=/&gt;' into
+      a self-closing tag with no value; the 'x/' case rests on the
+      value loop, not on the order of the checks.</responsum>
   </interrogatio>
 
   <interrogatio genus="quid">

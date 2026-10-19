@@ -21,7 +21,9 @@
       the reply bytes, and you must not call back into the emulator
       from it. If the field is NIHIL, replies are simply dropped. BEL
       and OSC 0/2 titles arrive the same way through campana and
-      titulus; the title chorda is valid only during that call.
+      titulus (a CSI 23 t title-stack pop re-announces the restored
+      title through titulus too); the title chorda is valid only
+      during that call.
       aemulator_hospes takes over effectus.responsum and queues the
       replies to the child's Pseudoterminale; campana and titulus
       still go to you.</responsum>
@@ -69,19 +71,24 @@
     <responsum symbolum="aemulator_visum_movere aemulator_visus aemulator_historia aemulator_visus_cellula aemulator_visum_effundere">aemulator_visum_movere(a,
       delta): delta greater than 0 moves up into history, less than 0
       moves down, clamped to [0, aemulator_historia(a)] (the sum is
-      formed in s32 before clamping, so to jump to the top pass
-      aemulator_historia(a) - aemulator_visus(a), not a huge constant);
-      aemulator_visus returns the current offset (0 = live screen).
-      Paint with aemulator_visus_cellula. aemulator_cellula, the cursor
-      and aemulator_textum_effundere always read the LIVE screen. While
-      output arrives the view keeps showing the same lines. Only the
-      primary screen has history. A line enters it when it scrolls
-      off the TOP row: LF or IND at the bottom of a scroll region that
-      starts at row 0 (the full screen or a DECSTBM region from the
-      top, as in Ghostty), SU, or a height shrink. A region that
-      starts lower, IL/DL and the alternate screen never add any. The
-      header comment's 'whole screen only' wording is stale; the
-      worklog (C2) has the rule.</responsum>
+      formed in s32 before clamping, so a huge positive delta
+      overflows: to jump to the top pass aemulator_historia(a) -
+      aemulator_visus(a), to the bottom pass the negated
+      aemulator_visus(a)). aemulator_visus returns the current offset
+      (0 = live screen). Paint with aemulator_visus_cellula.
+      aemulator_cellula, the cursor and aemulator_textum_effundere
+      always read the LIVE screen. While scrolled back (offset above
+      0), new output does not move what you see: each line pushed
+      into history raises the offset by one; at 0 the view follows
+      the live screen. Entering the alternate screen resets the
+      offset to 0. Only the primary screen has history. A line enters
+      it when it scrolls off the TOP row of a scroll region whose top
+      is row 0 (the full screen or a DECSTBM region from the top, as
+      in Ghostty): LF or IND at the region's bottom, SU, or a height
+      shrink. A region that starts lower, IL/DL, ED 2 and the
+      alternate screen never add any. The header comment's 'whole
+      screen only' wording is stale; the worklog (C2) has the
+      rule.</responsum>
   </interrogatio>
 
   <interrogatio genus="quomodo">
@@ -93,7 +100,8 @@
       reached the oldest page is recycled and nothing more is
       allocated. The screen keeps its capacity: resizing within it
       allocates nothing, and growing past it makes the capacity half
-      again larger (never smaller); the old line storage is not given
+      again larger, or exactly the new size if that is bigger, capped
+      at IV * MXXIV (never smaller); the old line storage is not given
       back, since everything comes from the caller's
       piscina.</responsum>
   </interrogatio>
@@ -114,11 +122,12 @@
     <responsum symbolum="aemulator_ignota aemulator_scribere">aemulator_ignota
       counts every sequence consumed but not understood since
       creation. Unknown input is never fatal and is never printed as
-      text. Over-long OSC bodies (titles over the lexer's 2048-byte
-      cap) are dropped whole and counted, not truncated. CSI 21 t and
-      DECRQCRA with lectio_schirmi FALSUM are counted here too. The tessera loopback test requires the count
-      to stay 0, since tessera emits nothing the emulator should not
-      understand.</responsum>
+      text. An OSC whose body (number, ';' and text together) exceeds
+      the lexer's SERIES_CHORDA_MAXIMA (II * MXXIV bytes) is dropped
+      whole and counted, not truncated. CSI 21 t and DECRQCRA with
+      lectio_schirmi FALSUM are counted here too. The tessera loopback
+      harness requires the count to stay 0 (worklog A3), since tessera
+      emits nothing the emulator should not understand.</responsum>
   </interrogatio>
 
   <interrogatio genus="quomodo">
@@ -128,7 +137,9 @@
       and narrower ones cut. Shrinking first drops blank rows below
       the cursor, and the rest of the excess scrolls into history.
       Growing pulls lines back from history only when the cursor is on
-      the bottom row. The scroll region and tab stops are reset. On
+      the bottom row. Rows that scroll off the alternate screen are
+      lost (only the primary has history). The scroll region and tab
+      stops are reset. On
       FALSUM (bad size, or the piscina ran out) the state is
       unchanged.</responsum>
   </interrogatio>
@@ -166,7 +177,20 @@
       A cursor without its own color reports the current foreground.
       An index above AEMULATOR_COLOR_CURSORIS returns 0, which is
       indistinguishable from black. Resets (OSC 104/110/111/112) go
-      back to the configured values.</responsum>
+      back to the configured values (OSC 110/111/112 with a parameter
+      do nothing, as in Ghostty).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I read the current window title back from the emulator?
+    <responsum symbolum="AemulatorEffectus aemulator_creare">No:
+      there is no getter. The title reaches you only through
+      effectus.titulus, called for OSC 0 and OSC 2 (even an empty
+      title) and again when CSI 23 t pops the title stack; keep your
+      own copy, since the chorda is valid only during the call. The
+      callback gets the whole OSC text, while the core keeps only the
+      first CCLVI bytes for its own title stack (X deep). A program
+      cannot read it back either: CSI 21 t is refused.</responsum>
   </interrogatio>
 
 </interrogationes>

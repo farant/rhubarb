@@ -95,4 +95,18 @@
       copy.</responsum>
   </interrogatio>
 
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I see which type a property was last parsed as, or parse it by a type name?
+    <responsum symbolum="entitas_proprietas_capere_plena Proprietas proprietas_parsare_ut_typum typus_literalis_ex_chorda">entitas_proprietas_capere_plena
+      returns the Proprietas* itself: typus_literalis and
+      parsitus_validus tell what the cache holds (TYPUS_NIHIL and
+      FALSUM after a fresh entitas_proprietas_ponere; TYPUS_BLOBUM
+      for a blob). To parse by name, map the text with
+      typus_literalis_ex_chorda ("chorda", "s32", "s64", "f64", "b32",
+      "tempus", and also "blobum", which the header omits; anything
+      else gives TYPUS_NIHIL) and call proprietas_parsare_ut_typum.
+      It caches on success and returns FALSUM on a parse failure, and
+      also for TYPUS_BLOBUM, which it does not handle.</responsum>
+  </interrogatio>
+
 </interrogationes>

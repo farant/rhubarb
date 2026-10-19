@@ -11,8 +11,10 @@
       to your glue (ludus_fenestra or ludus_tessera).
       pictor_volumen_aperire returns NIHIL if the volume cannot be
       opened; pictor_applicatio_aedificare returns FALSUM if any part
-      (repository, mount, dispensator) fails - only the document
-      failure prints a reason ("pictor: documentum") itself.</responsum>
+      (repository, mount, dispensator) fails or an argument is NIHIL.
+      The header promises a reason on stderr, but lib/pictor_applicatio.c
+      itself prints one only when the document cannot be opened or
+      created ("pictor: documentum").</responsum>
   </interrogatio>
 
   <interrogatio genus="quomodo">
@@ -37,17 +39,23 @@
       canvas. pictor_picturam_condere(m, spatium) creates a blank one
       at the pane's new-canvas size and shows it; it returns FALSUM if
       the name is empty or already listed by
-      pictor_documenta_enumerare.</responsum>
+      pictor_documenta_enumerare. Caution (audit 2026-10-18, unfixed):
+      when the pane is a PictorApplicatio's montatio, either call leaves
+      app.doc pointing at the old document, so read app.montatio.doc
+      afterwards.</responsum>
   </interrogatio>
 
   <interrogatio genus="possumne">
     <quaestio! (>can I keep using PictorApplicatio.doc after the shown drawing changes?
-    <responsum symbolum="PictorApplicatio pictor_picturam_ponere">No:
-      PictorApplicatio.doc, .actiones and .figurae are copies taken
-      once in pictor_applicatio_aedificare. pictor_picturam_ponere
-      re-points montatio.doc and the action, figure and composition
-      contexts, but not the app copy. Read app.montatio.doc for the
-      drawing on screen.</responsum>
+    <responsum symbolum="PictorApplicatio pictor_picturam_ponere pictor_applicatio_aedificare">No:
+      despite its header comment "= montatio.doc", PictorApplicatio.doc
+      is a copy taken once in pictor_applicatio_aedificare.
+      pictor_picturam_ponere re-points montatio.doc and the doc of the
+      action, figure and composition contexts, but not app.doc, so
+      read app.montatio.doc for the drawing on screen. app.actiones and
+      app.figurae stay valid: a swap changes the contexts, never the
+      registries. The standalone app never swaps by itself (worklog:
+      only vicus panes do).</responsum>
   </interrogatio>
 
   <interrogatio genus="quid">

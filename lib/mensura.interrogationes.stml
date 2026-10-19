@@ -9,7 +9,11 @@
       with mensura_annotare: one TSV line in a plain diary file, no
       sqlite. After the run, mensura_condere moves the whole diary
       into the volumen in one transaction and then truncates the
-      diary.</responsum>
+      diary. Caution (audit 2026-10-18, unfixed): a line that
+      volumen_actum_appendere fails to store (e.g. another writer holds
+      the volume past busy_timeout) is counted as malformed, the
+      transaction still commits and the diary is still truncated, so
+      that line is lost while successus is VERUM.</responsum>
   </interrogatio>
 
   <interrogatio genus="cur">
@@ -41,7 +45,8 @@
       truncates the file, with no lock, so a line appended between the
       last read and the truncation is lost. bin/mensor's run fold
       (_cursus_condere) avoids this by renaming the diary first and
-      folding the renamed copy (later appenders create a new file);
+      folding the renamed copy (later appenders create a new file;
+      it removes that copy afterwards even when the fold failed);
       'mensor condere' folds the live measurement diary directly and
       has the race. Truncation after success is what stops the next
       fold from counting everything twice.</responsum>
@@ -50,13 +55,15 @@
   <interrogatio genus="quid">
     <quaestio! (>what does MensuraFructus report after mensura_condere?
     <responsum symbolum="MensuraFructus mensura_condere">successus,
-      conditae (lines stored) and causa. successus is VERUM even when
+      conditae (lines stored, measurement and run lines together) and
+      causa. successus is VERUM even when
       some lines were malformed or could not be appended: those are
       skipped and counted in causa ("N lineae malformatae
       praeteritae"), never silently dropped - but they are gone once
       the diary is truncated. successus is FALSUM if an argument is
-      NIHIL, the diary cannot be opened, or the transaction cannot
-      start or commit; then nothing is truncated. A failed truncation
+      NIHIL, the diary cannot be opened (also when it does not exist
+      yet: causa "Diarium aperiri non potest"), or the transaction
+      cannot start or commit; then nothing is truncated. A failed truncation
       is NOT reported: successus stays VERUM and the next fold stores
       the same lines again.</responsum>
   </interrogatio>
@@ -65,12 +72,15 @@
     <quaestio! (>can a diary line be arbitrarily long?
     <responsum symbolum="mensura_condere mensura_cursus_initium_ad_lineam">No.
       mensura_condere reads lines with fgets into a buffer of IV *
-      MXXIV bytes, so a longer line arrives in pieces and the pieces
-      are counted malformed (then truncated away). The writers do not
+      MXXIV bytes (MENSURA_LINEA_MAXIMA in lib/mensura.c), so a line
+      with more than IV * MXXIV - I bytes before its newline arrives
+      in pieces; the pieces fail to parse, are counted malformed, and
+      are then truncated away with the rest of the diary. The writers do not
       enforce this: nota is
       capped at CURSUS_NOTA_MAXIMA bytes, but argv is not capped at
-      all, so a run started with a very long command line is lost at
-      fold time.</responsum>
+      all, so a run started with a very long command line loses its
+      start line at fold time, and mensura_cursus_legere then skips
+      its end line too (an end without a start is dropped).</responsum>
   </interrogatio>
 
   <interrogatio genus="quomodo">
@@ -82,7 +92,12 @@
       mensura_condere, mensura_cursus_legere pairs them by id into a
       Xar of Cursus in start order: exit 0 is CURSUS_TRANSIIT, any
       other is CURSUS_FRACTUS, and a start with no end is
-      CURSUS_INTERRUPTUS (killed, hung, or still running).</responsum>
+      CURSUS_INTERRUPTUS (killed, hung, or still running). Caution
+      (audit 2026-10-18, unfixed): argv is not length-capped, so a run
+      whose start line exceeds IV * MXXIV - I bytes is split by
+      mensura_condere, counted malformed and truncated away, and its
+      end line is then skipped: the run does not show up at
+      all.</responsum>
   </interrogatio>
 
   <interrogatio genus="possumne">

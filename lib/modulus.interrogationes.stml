@@ -1,0 +1,80 @@
+<interrogationes unitas="modulus">
+
+  <interrogatio genus="quid">
+    <quaestio! (>what is a modulus, and which of its three coordinate spaces do drawing commands use?
+    <responsum symbolum="modulus_creare delineare_mandata_modulus">A
+      Modulus is the cell size in our pixels plus the surface extent
+      (also in our pixels), and two screen ratios schirmus_x and
+      schirmus_y. Drawing commands are in OUR pixels; cells are derived
+      from them, and screen pixels would come from the ratios, which
+      are reserved: modulus_creare sets them to 1/1 and no function
+      reads them yet. The window takes its modulus from its font
+      (delineare_mandata_modulus, VI x VIII); the terminal accepts
+      any.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I convert a pixel coordinate to a cell column or line?
+    <responsum symbolum="modulus_columna modulus_linea modulus_columna_proxima modulus_linea_proxima">For
+      the cell that CONTAINS a point use modulus_columna / modulus_linea:
+      they take the floor, so x = -1 gives column -1, not 0. For an EDGE
+      (filled rectangles, clipping) use modulus_columna_proxima /
+      modulus_linea_proxima, which round to the nearest cell boundary,
+      half up: with a cell width of 6, x = 9 gives 2 and x = 8 gives 1.
+      Both are exact for negative coordinates because the library does
+      the floor division by hand instead of trusting C89 division of
+      negatives. The _proxima functions compute 2x + cell in s32, so
+      keep coordinates well below 2^30 or the sum overflows.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I measure how big a string will be on screen?
+    <responsum symbolum="modulus_textum_metiri delineare_mandata_mensor tessellatio_mensor">Call
+      modulus_textum_metiri with a ModulusMensor. Width = columns of the
+      longest line times cellula_latitudo; height = number of lines
+      times cellula_altitudo, where lines = 1 + the count of newlines
+      (so text ending in a newline has an extra empty line, and empty
+      text is 0 x 0). Take the mensor from the target scope:
+      delineare_mandata_mensor for the window (one cell per decoded
+      UTF-8 step, invalid bytes included) or tessellatio_mensor for
+      the terminal (rune widths under a RunaePolitica, wide = 2).
+      The text is a chorda, so it need not be NUL-terminated.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why does the same CJK character measure 6 pixels in the window but 12 in the terminal?
+    <responsum symbolum="modulus_textum_metiri runae_latitudo_textus">Text
+      is measured by the scope that draws it. The window's 6x8 font
+      paints every rune in exactly one cell (ASCII and Latin-1 only,
+      everything else is a TOFU box, combining marks included), so the
+      FONTIS mensor counts one cell per rune. The terminal gives wide
+      runes two cells, so the RUNARUM mensor uses
+      runae_latitudo_textus. Measuring with the wrong mensor makes
+      layout disagree with what is painted.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I fill in a Modulus struct by hand instead of calling modulus_creare?
+    <responsum symbolum="modulus_creare modulus_columna modulus_extensio_cellularum">You
+      can, but then nothing protects you: modulus_creare clamps a cell
+      size of 0 or less to 1 and a negative extent to 0, and the
+      conversion functions (modulus_columna, modulus_linea, the two
+      _proxima functions and modulus_extensio_cellularum) divide by the
+      cell size without checking. A hand-built Modulus with
+      cellula_latitudo 0 divides by zero in all of them. The library
+      allocates nothing and keeps no state, so modulus_creare is cheap
+      to call.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I find how many whole cells fit on the surface?
+    <responsum symbolum="modulus_extensio_cellularum modulus_creare">Call
+      modulus_extensio_cellularum(m, &amp;columnae, &amp;lineae): it divides the
+      extent by the cell size, so a partial cell at the right or bottom
+      edge is not counted (a 100-pixel-wide surface with 6-pixel cells
+      gives 16 columns). After modulus_creare the extent is never
+      negative and the cell size is at least 1, so this plain division
+      is the floor.</responsum>
+  </interrogatio>
+
+</interrogationes>

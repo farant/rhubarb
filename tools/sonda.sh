@@ -17,6 +17,17 @@
 # privata (migratio suitarum: ante/post conversionem idem iudicium).
 # Substitutio probatur (transformatio tacita nihil probat).
 #
+# CUSTODIAE (2026-10-19: sondae involutionis i32 GB veros tangebant, una
+# XXXIV horas pendebat; probatio_arbor_syntaxis conversa XLIX G
+# COMPRESSA tenebat cum RSS CCLXI M): vestigium memoriae (MEM ex top:
+# residens + compressa - macOS comprimit, RSS mentitur) > SONDA_MEMORIA_MB
+# (IV M MB)
+# -> SIGKILL et 'memoria excessa'; tempus > SONDA_MORA s (CXX) ->
+# 'mora excessa'. Sub ASan etiam hard_rss_limit_mb/malloc_limit_mb (ASan
+# ipse nominat allocationem nimiam). Sonda quae limitem tangit vitium
+# ostendit SINE GB veris: mensuram involutionis demonstra (summa,
+# allocatio parva), non scripturam totam.
+#
 # Usus: ./tools/sonda.sh [-nudus | -domus] VIA.c [argumenta...]
 # Effusio: sondae effusio, deinde linea
 #   SONDA: exitus N · ASan: <genus @ functio plagula:linea | nulla> ·
@@ -62,14 +73,33 @@ fi
 grep -E 'warning:' "$D/struere.log" | grep -F "$VIA" | head -5 >&2
 EXE="$D/$T"
 [ -x "$EXE" ] || { echo "sonda: binarium absens ($EXE)" >&2; exit 2; }
-ASAN_OPTIONS="detect_leaks=0:abort_on_error=0" UBSAN_OPTIONS="print_stacktrace=1:halt_on_error=0" \
-    "$EXE" "$@" > "$D/effusio.log" 2>&1
+LIMES_MB="${SONDA_MEMORIA_MB:-4096}"
+MORA="${SONDA_MORA:-120}"
+ASAN_OPTIONS="detect_leaks=0:abort_on_error=0:hard_rss_limit_mb=$LIMES_MB:malloc_limit_mb=$LIMES_MB" \
+UBSAN_OPTIONS="print_stacktrace=1:halt_on_error=0" \
+    "$EXE" "$@" > "$D/effusio.log" 2>&1 &
+PID=$!
+custodia=""
+initium=$(date +%s)
+while kill -0 "$PID" 2>/dev/null; do
+    mem=$(top -l 1 -pid "$PID" -stats mem 2>/dev/null | tail -1 | tr -d ' +-')
+    mb=$(echo "$mem" | awk '/[0-9]+K$/ {printf "%d", $0/1024} /[0-9]+M$/ {printf "%d", $0+0} /[0-9]+G$/ {printf "%d", ($0+0)*1024} /[0-9]+T$/ {printf "%d", ($0+0)*1048576}')
+    if [ -n "$mb" ] && [ "$mb" -gt "$LIMES_MB" ]; then
+        kill -9 "$PID" 2>/dev/null; custodia="memoria excessa ($mem > $LIMES_MB MB, residens + compressa)"; break
+    fi
+    if [ $(( $(date +%s) - initium )) -gt "$MORA" ]; then
+        kill -9 "$PID" 2>/dev/null; custodia="mora excessa (> $MORA s)"; break
+    fi
+    sleep 0.5
+done
+wait "$PID" 2>/dev/null
 rc=$?
+[ -n "$custodia" ] && echo "SONDA CUSTODIA: $custodia - sonda occisa" >> "$D/effusio.log"
 cat "$D/effusio.log"
 asan=$(grep -m1 -oE 'ERROR: AddressSanitizer: [a-z-]+' "$D/effusio.log" | sed 's/ERROR: AddressSanitizer: //')
 locus=$(grep -A40 'ERROR: AddressSanitizer' "$D/effusio.log" \
     | grep -m1 -oE 'in [A-Za-z_][A-Za-z0-9_]* [A-Za-z0-9_]+\.[cm]:[0-9]+' | sed 's/^in //')
 ub=$(grep -cE 'runtime error:' "$D/effusio.log")
 [ -n "$asan" ] && asan="$asan @ $locus" || asan=nulla
-echo "SONDA: exitus $rc · ASan: $asan · UBSan: $ub sedes"
+echo "SONDA: exitus $rc · ASan: $asan · UBSan: $ub sedes${custodia:+ · CUSTODIA: $custodia}"
 exit "$rc"

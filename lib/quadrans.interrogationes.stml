@@ -1,0 +1,95 @@
+<interrogationes unitas="quadrans">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I draw an image in a terminal with quadrant block characters?
+    <responsum symbolum="quadrans_optiones_ordinariae quadrans_mensurare quadrans_computare QuadransCellula" via="lib/tessellatio.c">Take
+      quadrans_optiones_ordinariae (quadrants, MEDIA colours, black
+      fundus), ask quadrans_mensurare how many cells the pixel region
+      needs, allocate that many QuadransCellula yourself, then call
+      quadrans_computare. Each cell gives a runa (a codepoint, not a
+      UTF-8 string) and two 0x00RRGGBB colours, foreground and
+      background, in row order. tessellatio scales its pixel layer to
+      columns * 2 by lines * 2 pixels with imago_scalare and then calls
+      quadrans_computare, which yields exactly one cell per terminal
+      cell.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I size an image so it fits a cell area without looking stretched?
+    <responsum symbolum="quadrans_aptare QuadransModus" via="tessera/instrumenta/principalia/effigies.c">quadrans_aptare(img_lat,
+      img_alt, max_lat, max_alt, modus, aspectus, &amp;sub_lat,
+      &amp;sub_alt) gives the pixel size to scale the image to (up or
+      down), keeping its proportions for a cell whose width / height is
+      aspectus hundredths (QUADRANS_ASPECTUS_ORDINARIUS is L, i.e. 1:2).
+      It does not scale anything: resize the image yourself (the
+      effigies viewer uses imago_scalare with IMAGO_SCALA_AREA) and
+      then call quadrans_computare. Any zero input gives 0 x 0.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I get exact colours instead of two colours per 2x2 block?
+    <responsum symbolum="QuadransModus quadrans_computare" via="lib/quadrans.phase-log.md">Yes,
+      with modus QUADRANS_DIMIDIUM: each cell is 1x2 pixels, the top
+      pixel is the foreground under U+2580 and the bottom the
+      background, so colours are exact but horizontal resolution is
+      halved. Measured on two photographs at the same terminal size
+      (phase-log Q3) the quadrant mode had 3.8 and 7.3 times less error
+      than half-blocks, which is why quadrants are the default.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why is MEDIA the default colouring rather than the extreme pair OpenTUI uses?
+    <responsum symbolum="quadrans_optiones_ordinariae QuadransColores quadrans_error" via="lib/quadrans.phase-log.md probationes/fixa/quadrans/aurum_errores.txt">For
+      a fixed split of the four pixels the mean of each group minimises
+      the squared error, so QUADRANS_MEDIA is never worse than
+      QUADRANS_EXTREMA, which uses the same split. quadrans_error
+      measured MEDIA at about 46% of EXTREMA's error on the
+      photographs; the numbers are a ratchet in aurum_errores.txt.
+      Whether EXTREMA looks sharper is a matter of taste, so it stays
+      selectable.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what does quadrans do with transparent pixels and pixels outside the image?
+    <responsum symbolum="quadrans_computare QuadransOptiones">Both
+      become QuadransOptiones.fundus. Alpha is composited against
+      fundus FIRST, because terminal cells have no alpha, and pixels
+      outside the image or past the region (an odd width or height, a
+      region partly off the image) read as fundus. A NIHIL imago gives
+      cells that are all fundus. Set fundus to the terminal background
+      colour, as tessellatio does.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why does a block of four equal pixels come out as a space instead of a full block?
+    <responsum symbolum="quadrans_computare QuadransCellula">A
+      uniform block (and in half-block mode two equal pixels) becomes
+      U+0020 with that colour as the background, because a glyph drawn
+      by the terminal font can leave a visible seam where a space with
+      a background colour cannot. So runa 0x2588 never appears; a
+      space cell carries its colour in color_fundi (color_litterae is
+      the same value).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I measure how faithful a quadrant rendering is?
+    <responsum symbolum="quadrans_error quadrans_computare">quadrans_error
+      takes the same image, region and options plus the cells
+      quadrans_computare produced, rebuilds the pixels from each cell's
+      pattern and returns the mean squared error per channel in
+      hundredths (0 is perfect, an empty region is 0). Passing cells
+      computed with different options or a different region gives a
+      meaningless number; nothing checks it.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can quadrans allocate the output or keep state between frames?
+    <responsum symbolum="quadrans_computare quadrans_mensurare" via="include/quadrans.h">No,
+      by design it is pure: no allocation, no state, and it depends only
+      on latina.h and imago_typus.h, so tessera, the terminal emulator
+      and a window can share it. The caller provides the
+      QuadransCellula array sized by quadrans_mensurare, and turns runa
+      into UTF-8 and colours into its own cell format.</responsum>
+  </interrogatio>
+
+</interrogationes>

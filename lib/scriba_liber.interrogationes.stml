@@ -27,7 +27,10 @@
       scriba_documentum_creare. The cache belongs to the ScribaLiber, so open the book ONCE
       per volume and prefix and share that pointer: a second book on
       the same index has its own cache and would hand out a second
-      document for the same page.</responsum>
+      document for the same page. It also keeps its own name list and
+      rewrites the whole index from it, so pages added through one
+      book are dropped from the index when the other one adds a
+      page.</responsum>
   </interrogatio>
 
   <interrogatio genus="quomodo">
@@ -36,11 +39,14 @@
       appends a page named with a number, starting at count + 1 and
       skipping names already used ("1", "3" gives "4"), rewrites the
       index and returns the new name. It returns an empty chorda and
-      rolls the name back if the index write fails.
+      rolls the name back if the index write fails. It adds only the
+      name: the page's document is made on the first
+      scriba_liber_pagina for it.
       scriba_liber_paginam_condere(l, titulus) returns the document
       of a named page and appends the page first if it is new. The
       name must match [a-z0-9_-]+, otherwise it returns NIHIL; it
-      also returns NIHIL when the index write fails. New pages always
+      also returns NIHIL when the index write fails or the document
+      can be neither opened nor created. New pages always
       go at the end: index order is navigation order.</responsum>
   </interrogatio>
 

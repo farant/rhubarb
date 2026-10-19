@@ -9,13 +9,21 @@
       of ArborLexema POINTERS: read each with *(ArborLexema**)
       xar_obtinere(x, i). Or call arbor_lexema_proximum in a loop until
       genus is ARBOR_LEXEMA_EOF. Every token is allocated in the
-      piscina.</responsum>
+      piscina. Caution (audit 2026-10-18, unfixed): arbor_lexema_omnia
+      stops at the first ERROR token (a backslash line continuation,
+      form feed, vertical tab, a byte of 0x80 and above, or @, $, `
+      outside literals), so the Xar then has no EOF and silently lacks
+      the rest of the input.</responsum>
   </interrogatio>
 
   <interrogatio genus="possumne">
     <quaestio! (>can I free the source buffer while I still use the tokens?
-    <responsum symbolum="arbor_lexator_creare chorda_internare">Yes for
-      the text: every token valor and trivia valor is interned
+    <responsum symbolum="arbor_lexator_creare arbor_lexema_omnia chorda_internare">Only
+      once lexing is finished: the lexer keeps a pointer to fons and
+      reads it lazily on each arbor_lexema_proximum call, so keep it
+      until you have reached EOF (or arbor_lexema_omnia has returned).
+      After that, yes for the text: every token valor and trivia valor
+      is interned
       through chorda_internare, which copies it, so it lives as long
       as the intern table. byte_offset and longitudo still refer to
       the original buffer, so anything that slices the source by
@@ -43,7 +51,11 @@
       It is an unimplemented stub (a TODO in lib/arbor_lexema.c) that
       always returns NIHIL, whatever the header says. Tokenize
       everything with arbor_lexema_omnia and index the Xar
-      instead.</responsum>
+      instead. Caution (audit 2026-10-18, unfixed): that Xar ends at
+      the first ERROR token (backslash-newline, form feed, a byte of
+      0x80 and above, @, $, `) with no EOF, so on such input collect
+      the tokens with your own arbor_lexema_proximum loop to
+      EOF.</responsum>
   </interrogatio>
 
   <interrogatio genus="cur">
@@ -86,15 +98,27 @@
 
   <interrogatio genus="quid">
     <quaestio! (>which code uses arbor_lexema, and is it the lexer silva uses?
-    <responsum symbolum="arbor_praeparator_creare arbor2_lexator_creare" via="lib/arbor.c lib/arbor_praeparator.c lib/arbor_syntaxis.c">It
+    <responsum symbolum="arbor_praeparator_creare arbor2_lexator_creare" via="lib/arbor.c lib/arbor_praeparator.c lib/arbor_syntaxis.c lib/arbor_formator.c">It
       feeds the first arbor pipeline: arbor.c, the preprocessor in
       arbor_praeparator (which also lexes macro values and included
-      files with it) and arbor_syntaxis. No silva source file
-      includes it. arbor2_lexema is a separate fork for arbor-v2 that
+      files with it) and arbor_syntaxis call the lexer, and
+      arbor_formator reads its ArborLexema and ArborTrivia. No silva
+      source file includes it. arbor2_lexema is a separate fork for arbor-v2 that
       adds newline tokens and line-continuation tracking. Here linea
       and columna are 1-based and count bytes, and the standard field
       is always ARBOR_STANDARD_C89 (nothing sets another
       value).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I print the name of a token kind while debugging?
+    <responsum symbolum="arbor_lexema_genus_nomen">arbor_lexema_genus_nomen(genus)
+      returns a static upper-case name without the prefix, such as
+      IDENTIFICATOR, SEMICOLON or EOF. Its bounds check stops at
+      ARBOR_LEXEMA_ERROR, so ARBOR_LEXEMA_TYPEDEF_MACRO (the last enum
+      member, a pseudo-kind the lexer never produces but arbor_syntaxis
+      compares against) and any out-of-range value come back as
+      IGNOTUM.</responsum>
   </interrogatio>
 
 </interrogationes>

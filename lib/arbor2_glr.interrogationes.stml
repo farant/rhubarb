@@ -11,11 +11,16 @@
       arbor2_glr_parsere_translation_unit. The radix is a
       TRANSLATION_UNIT node; datum.translation_unit.declarationes holds
       one node per top-level item (declaration, function, directive,
-      ERROR), plus any floating comments it promoted. Lexing directly
+      ERROR), plus any floating comments it promoted (appended after
+      the item they stand in front of). Lexing directly
       does no macro expansion, which is what a byte-exact roundtrip
       wants: the parser consults the expansion only for typedef and
       macro lookahead, #if/#ifdef evaluation and recording the typedefs
-      it parses.</responsum>
+      it parses. Caution (audit 2026-10-18, unfixed): inside a function
+      body every GLR fork appends in place to one shared CORPUS
+      sententiae Xar, so an ambiguous statement such as foo * bar; with
+      foo unknown is stored once per surviving interpretation, and the
+      statements after it are duplicated too.</responsum>
   </interrogatio>
 
   <interrogatio genus="quomodo">
@@ -25,11 +30,19 @@
       kept token with its spatia_ante and spatia_post (whitespace and
       comments), returning a chorda* that is NOT NUL-terminated; the
       roundtrip suite compares it with the input for the fixtures it
-      lists (some, such as color.c, are commented out). ERROR nodes are
-      skipped, so the tokens of an item that failed to parse are
-      missing from the output; an AMBIGUUS node prints its first
+      lists (color.c, utf8.c and base64.c are commented out). ERROR
+      nodes are skipped, so the tokens of an item that failed to parse
+      are missing from the output; an AMBIGUUS node prints its first
       interpretation; a CONDITIONALIS prints the raw tokens of its
-      branches, not their parsed trees.</responsum>
+      branches, not their parsed trees. A COMMENTUM node that the
+      parser promoted into declarationes (a floating comment) is
+      written as well, although the same comment is still in the next
+      token's spatia_ante, so such a comment comes out twice. Caution
+      (audit 2026-10-18, unfixed): an ambiguous statement inside a
+      function body (foo * bar; with foo unknown) is stored once per
+      surviving fork in the shared CORPUS, so arbor2_scribere prints it,
+      and the statements after it, more than once and the output is not
+      byte-identical to the input.</responsum>
   </interrogatio>
 
   <interrogatio genus="quomodo">
@@ -39,23 +52,30 @@
       becomes an ERROR node (datum.error.lexemata_saltata = its tokens up
       to and including the ';' or '}' that ends it, datum.error.nuntius =
       a chorda* such as 'Inexpectatum X, exspectata: ...' built from
-      arbor2_glr_exspectata_pro_statu) and parsing resumes at the next
-      item. Check res.errores: NIHIL when no item failed, otherwise a Xar
-      of chorda*. Only when more than ARBOR2_GLR_MAX_ERRORES (X) items
-      have failed does it give up with successus FALSUM and the partial
-      TRANSLATION_UNIT. Caveats in the current code: every ERROR node's
-      nuntius is element 0 of the shared message list, so usually the
-      first failure's message rather than its own, and parsing a
-      non-empty #if branch clears that list and the failure count, so
-      an earlier failure can leave res.errores NIHIL. Walking
-      declarationes for ERROR nodes is the reliable check.</responsum>
+      arbor2_glr_exspectata_pro_statu, or NIHIL when no message was
+      recorded) and parsing resumes at the next item. res.errores is
+      NIHIL when the failure count is zero, otherwise the Xar of
+      chorda* messages. Only when more than ARBOR2_GLR_MAX_ERRORES (X)
+      items have failed does it give up with successus FALSUM and the
+      partial TRANSLATION_UNIT. Caveats in the current code: every
+      ERROR node's nuntius is element 0 of the shared message list, so
+      from the second failure on it is normally the first failure's
+      message, not its own; and each non-empty branch of an #if, #ifdef or
+      #ifndef block is parsed by a nested call that clears that list
+      and the failure count, so a failure before the block can leave
+      res.errores NIHIL. The reliable check is to walk declarationes,
+      and the parsed TRANSLATION_UNIT of every conditional branch, for
+      ERROR nodes.</responsum>
   </interrogatio>
 
   <interrogatio genus="quid">
     <quaestio! (>what is an AMBIGUUS node and where do I find them after a parse?
     <responsum symbolum="arbor2_glr_parsere_translation_unit arbor2_glr_parsere_expressio">When
-      two fork paths reach the same state (or both accept) with values
-      that compare unequal, the parser keeps both:
+      two fork paths reach the same state after a shift with values
+      that compare unequal, the parser keeps both. When several paths
+      accept at the end they are judged first: a bare IDENTIFICATOR loses
+      to the other value, between two TERNARIUS the one with a ternary
+      in its falsum wins, and only otherwise both are kept.
       datum.ambiguus.interpretationes is a Xar of Arbor2Nodus* with two
       entries, a third interpretation nests another AMBIGUUS inside, and
       datum.ambiguus.identificator is a chorda* copy of the last token
@@ -68,7 +88,11 @@
       ARBOR2_AMBIG_TYPEDEF_IGNOTUM today. The translation-unit result's
       ambigui is NIHIL (except on the give-up path), so walk the tree or
       read glr->ambigui, which collects every AMBIGUUS that parser ever
-      made, including ones on fork paths that later died.</responsum>
+      made, including ones on fork paths that later died. Caution (audit
+      2026-10-18, unfixed): inside a function body the forks also append
+      to one shared CORPUS sententiae Xar in place, so foo * bar; there
+      is stored once per surviving interpretation and the statements
+      after it are duplicated too.</responsum>
   </interrogatio>
 
   <interrogatio genus="quomodo">
@@ -91,14 +115,15 @@
 
   <interrogatio genus="possumne">
     <quaestio! (>can I reuse one Arbor2GLR or Arbor2Expansion for several parses?
-    <responsum symbolum="arbor2_glr_creare arbor2_glr_parsere_expressio arbor2_glr_parsere_translation_unit arbor2_expansion_addere_typedef" via="probationes/probatio_arbor2_glr.c">Yes,
+    <responsum symbolum="arbor2_glr_creare arbor2_glr_parsere_expressio arbor2_glr_parsere_translation_unit arbor2_expansion_addere_typedef" via="probationes/probatio_arbor2_file_roundtrip.c">Yes,
       but state carries over. arbor2_glr_parsere_expressio never clears
       glr->errores, glr->ambigui or the counters num_furcae, num_mergae
-      and max_frons (the tests zero the counters by hand), so a later
-      result's errores still lists earlier failures; only the
-      translation-unit parser clears errores and num_errores. There is
-      no reset function. Typedefs learned from one file stay registered
-      in the Arbor2Expansion. Nothing is freed: each table lookup
+      and max_frons, so a later result's errores still lists earlier
+      failures; only the translation-unit parser clears errores and
+      num_errores, and nothing ever clears glr->ambigui. There is no
+      reset function. Typedefs learned from one file stay registered
+      in the Arbor2Expansion (the roundtrip suite shares one expansion
+      across all its fixtures). Nothing is freed: each table lookup
       allocates a new Xar and the GSS punctum_salutis marks are never
       rolled back, so memory grows with the input until the piscina
       goes. A fresh parser and expansion per file is the safe
@@ -171,13 +196,16 @@
 
   <interrogatio genus="possumne">
     <quaestio! (>can a brace initializer be followed by more declarators, as in int a[2] = {1, 2}, b; ?
-    <responsum symbolum="arbor2_glr_parsere_translation_unit" via="lib/arbor2_glr.c">Not
+    <responsum symbolum="arbor2_glr_parsere_translation_unit arbor2_glr_parsere" via="lib/arbor2_glr.c probationes/probatio_arbor2_glr.c">Not
       at top level today. The item boundary finder ends an item at a '}'
       that returns brace depth to zero unless the next token is ';' or
       an identifier or '*' with no '(' in the next five tokens. A ','
       after the initializer therefore cuts the item after '}', and the
-      rest (, b;) becomes an ERROR node. int a[2] = {1, 2}; alone is
-      fine; write the declarators as separate declarations.</responsum>
+      rest (, b;) becomes an ERROR node. The grammar itself accepts the
+      form: probationes/probatio_arbor2_glr.c parses int a[] = {1}, b[]
+      = {2} with arbor2_glr_parsere. In a whole file, int a[2] = {1,
+      2}; alone is fine; write the declarators as separate
+      declarations.</responsum>
   </interrogatio>
 
   <interrogatio genus="possumne">
@@ -187,8 +215,8 @@
       datum.membrum.membrum, datum.declarator.titulus,
       *datum.ambiguus.identificator - holding the lexer's interned copy
       of the token text, with datum and mensura but no terminating NUL.
-      Print it with "%.*s", (integer)c.mensura, c.datum as
-      tools/glr_debug.c does. The helpers arbor2_nodus_genus_nomen,
+      Print it with "%.*s", (integer)c.mensura, c.datum, the %.*s form
+      tools/glr_debug.c uses. The helpers arbor2_nodus_genus_nomen,
       arbor2_nt_nomen and arbor2_actio_genus_nomen do return C strings;
       they answer "IGNOTUM" for values they do not list (INCLUDE, DEFINE,
       UNDEF and PRAGMA among the node genera, and fifteen non-terminals

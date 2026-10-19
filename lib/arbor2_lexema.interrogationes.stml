@@ -82,9 +82,13 @@
       suffixes (either case, LLU too), and decimal floats with a
       fraction or exponent and an optional f/F/l/L suffix. A float
       must start with a digit and have a digit after the point: '.5'
-      lexes as PUNCTUM then INTEGER, '1.' (and '1.e5') as INTEGER then
-      PUNCTUM, and an octal-looking '012.5' as INTEGER 012, PUNCTUM,
-      INTEGER 5. There is no error for these splits. An unterminated string or character
+      lexes as PUNCTUM then INTEGER, '1.' as INTEGER then PUNCTUM, and
+      '1.e5' as INTEGER 1, PUNCTUM, IDENTIFICATOR e5 ('1e5' without
+      the point is a FLOAT_LIT). A 0 followed by 0-7 takes the octal
+      path, which never looks for a fraction, so '012.5' is INTEGER
+      012, PUNCTUM, INTEGER 5; a 0 followed by 8 or 9 ends at the 0,
+      so '09' is INTEGER 0 then INTEGER 9. There is no error for these splits. An
+      unterminated string or character
       literal ends at the newline and is still returned as STRING_LIT
       or CHAR_LIT, with no error token.</responsum>
   </interrogatio>
@@ -95,7 +99,7 @@
       and columna are 1-based and count bytes; byte_offset is 0-based.
       A \r\n or a bare \r is one NOVA_LINEA, but only \n advances
       linea: after a bare \r the next token still reports the same
-      line. One known defect: a //
+      line. One defect: a //
       comment that lands in spatia_ante (a comment on its own line)
       includes its newline and advances linea twice, so tokens after
       it report a line one too high. standard is always

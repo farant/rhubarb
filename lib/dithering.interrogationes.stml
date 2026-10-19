@@ -5,7 +5,9 @@
     <responsum symbolum="dithering_praeparare_omnes dithering_atkinson_colorum dithering_indices_ad_rgba DitheringFructus">Fill
       a b32 colores[XVI] with dithering_praeparare_omnes (or another
       preset), call dithering_atkinson_colorum(rgba, latitudo,
-      altitudo, colores, piscina) and check fructus.successus. The
+      altitudo, colores, piscina) and check fructus.successus (FALSUM
+      for a NIHIL rgba or piscina, a zero side, no active color, or a
+      failed allocation). The
       result is one palette index (0-15) per pixel in
       fructus.indices, allocated in the piscina you passed. To show
       it, give dithering_indices_ad_rgba a buffer of latitudo *
@@ -22,7 +24,10 @@
       monochromaticus (0 5). The indices in the result are still
       full-palette numbers, not positions in your subset. With no
       flag set, both dither functions return successus FALSUM and
-      indices NIHIL.</responsum>
+      indices NIHIL. Caution (audit 2026-10-18, unfixed):
+      dithering_atkinson_griseum emits at most four of the active
+      colors, so with the six-color griseum preset colors 3 and 4
+      never appear and the output tone is biased.</responsum>
   </interrogatio>
 
   <interrogatio genus="possumne">
@@ -88,6 +93,17 @@
       copies one entry, and any output pointer may be NIHIL. It
       silently clamps an out-of-range index to 0 or XV, so a bad
       index returns black or warm gray instead of failing.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I dither a sub-rectangle or an image whose rows have padding (a stride)?
+    <responsum symbolum="dithering_atkinson_colorum dithering_atkinson_griseum DitheringFructus">No.
+      Neither function takes a stride: rgba must be latitudo * altitudo
+      pixels packed row after row, 4 bytes each, with pixel (x, y) at
+      byte (y * latitudo + x) * 4. To dither part of an image or a
+      padded buffer, copy the pixels into a packed buffer first. The
+      result is packed the same way: one index byte per pixel, row
+      after row.</responsum>
   </interrogatio>
 
 </interrogationes>

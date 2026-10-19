@@ -101,21 +101,26 @@
       scrinium_gradi; then scrinium_error returns SQLite's message for
       the last error, owned by SQLite and valid only until the next
       call. scrinium_aperire returns NIHIL with no message, because
-      the handle is already closed. After a failed scrinium_migrare
-      the message is gone too: it runs a ROLLBACK through
-      sqlite3_exec, which resets the error state when it
-      succeeds.</responsum>
+      the handle is already closed. When one migration (or its
+      _migrationes insert) fails, scrinium_migrare then runs ROLLBACK
+      through sqlite3_exec, and a successful exec resets the error
+      state, so the message of the failing migration is gone by the
+      time the call returns FALSUM.</responsum>
   </interrogatio>
 
   <interrogatio genus="cur">
     <quaestio! (>why may only one process write to a scrinium database?
-    <responsum symbolum="scrinium_aperire" via="lib/scrinium.worklog.md">The
-      vendored SQLite is built THREADSAFE=0 under the house
-      single-writer rule. scrinium_aperire sets journal_mode=WAL,
-      busy_timeout=5000, synchronous=NORMAL and foreign_keys=ON, so
-      other processes can read in parallel and a second writer waits
-      up to five seconds for the lock. The pragma results are not
-      checked.</responsum>
+    <responsum symbolum="scrinium_aperire" via="lib/scrinium.worklog.md">It
+      is a house discipline, not something scrinium enforces: one
+      process writes, others only read. The vendored SQLite is built
+      THREADSAFE=0 under the same rule, so one handle must also never
+      be shared between threads. scrinium_aperire sets
+      journal_mode=WAL, busy_timeout=5000, synchronous=NORMAL and
+      foreign_keys=ON: readers in other processes run in parallel
+      with the writer, and a second writer that does turn up waits up
+      to five seconds for the lock and fails only if it is still
+      held. The pragma
+      results are not checked.</responsum>
   </interrogatio>
 
   <interrogatio genus="quomodo">

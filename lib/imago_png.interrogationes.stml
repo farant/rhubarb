@@ -16,11 +16,11 @@
 
   <interrogatio genus="quomodo">
     <quaestio! (>how do I get the PNG bytes in memory without touching the filesystem?
-    <responsum symbolum="imago_png_codificare">imago_png_codificare(imago,
+    <responsum symbolum="imago_png_codificare piscina_reficere">imago_png_codificare(imago,
       piscina) is pure: no file is read or written. The bytes
       (datum, mensura) are allocated in the piscina and need no
-      freeing; they live until the piscina is destroyed or rolled
-      back. imago_png_scribere is only this call followed by
+      freeing; they live until the piscina is destroyed, emptied, or
+      rolled back past them with piscina_reficere. imago_png_scribere is only this call followed by
       lectiones_fopen, one fwrite and fclose.</responsum>
   </interrogatio>
 
@@ -58,13 +58,15 @@
 
   <interrogatio genus="possumne">
     <quaestio! (>can I pass a NIHIL piscina or an empty image to the encoder?
-    <responsum symbolum="imago_png_codificare">You get successus FALSUM
+    <responsum symbolum="imago_png_codificare piscina_allocare">You get successus FALSUM
       either way. A NIHIL image or NIHIL pixela gives Imago abest, a
       zero latitudo or altitudo gives Imago vacua. A NIHIL piscina also gives
       successus FALSUM, but error is EMPTY, because there is nowhere
-      to allocate the message. Allocations go through
-      piscina_allocare, so running out of memory exits the process
-      instead of returning an error.</responsum>
+      to allocate the message, despite the header's promise that error
+      is always named. The encoder's own buffers come from
+      piscina_allocare, which is fatal on failure, so running out of
+      memory exits the process and the Allocatio fracta messages in
+      the code never appear.</responsum>
   </interrogatio>
 
   <interrogatio genus="possumne">

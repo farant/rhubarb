@@ -22,25 +22,35 @@
       NIHIL options. They run the preprocessor in HYBRID mode (follow
       includes, keep directives and Latin keyword text), install its
       keyword-macro and typedef tables on the parser, and return the
-      token stream that the formatter needs. The lower-level
+      token stream that the formatter needs. The default include path
+      is "include" (arbor_optiones_default). The lower-level
       arbor_syntaxis_parsere_fontem uses the preprocessor's default
-      PROCESSARE mode: macros are expanded, so latina.h keywords come
-      back as plain C, no table is installed and no lexemata are
-      returned.</responsum>
+      PROCESSARE mode (macros expanded), installs no table, returns no
+      lexemata and adds NO include path: only a quoted include that
+      sits beside via_file is found, so a lib/ file that includes
+      latina.h keeps its Latin keywords as plain identifiers.
+      Preprocessor errors, such as an include that was not found,
+      never reach res.errores. Caution (audit 2026-10-18, unfixed): a
+      file containing a variadic prototype such as int f(int a, ...);
+      never finishes parsing (no error, memory grows without
+      limit).</responsum>
   </interrogatio>
 
   <interrogatio genus="quid">
     <quaestio! (>what does successus mean, and what is in errores?
     <responsum symbolum="ArborSyntaxisResultus ArborError arbor_error_formare arbor_syntaxis_parsere">successus
       is VERUM only when there is a root AND zero errors. With errors
-      you usually still get a radix, with ERROR nodes where the parser
-      resynchronized at ';', '}' or a statement keyword. errores is a
+      you usually still get a radix. Some errors also leave an ERROR
+      node where the parser skipped ahead to just past a ';', or to a
+      '}' or a statement keyword; others (a missing ')' or ';') only
+      add an entry to errores. errores is a
       Xar of ArborError* POINTERS, despite the header comment's "Xar
       of ArborError": read it with *(ArborError**)xar_obtinere(...).
       via_file is always empty, even when you passed a path.
-      arbor_error_formare gives "linea:columna: nuntius". If lexing
-      or preprocessing fails inside arbor_syntaxis_parsere_fontem,
-      the result has errores NIHIL, so check for NIHIL before you
+      arbor_error_formare gives "linea:columna: nuntius". errores is
+      NIHIL when arbor_syntaxis_parsere gets a NIHIL parser or token
+      Xar, and when lexing or preprocessing fails inside
+      arbor_syntaxis_parsere_fontem, so check for NIHIL before you
       iterate.</responsum>
   </interrogatio>
 
@@ -49,8 +59,9 @@
     <responsum symbolum="ArborNodus arbor_nodus_imprimere">Iterate
       DECLARATOR's datum.genericum.liberi. The children come in
       order: zero or more POINTER nodes (qualifiers in
-      datum.pointer.qualifiers), then either an IDENTIFIER or a nested
-      DECLARATOR for a parenthesized declarator, then ARRAY_DECLARATOR
+      datum.pointer.qualifiers), then an IDENTIFIER, or a nested
+      DECLARATOR for a parenthesized declarator, or nothing for an
+      abstract declarator, then ARRAY_DECLARATOR
       nodes (datum.array.size, NIHIL for []), then at most one
       FUNCTION_DECLARATOR. The FUNCTION_DECLARATOR's own
       genericum.liberi are PARAMETER_DECLARATION nodes; no
@@ -77,13 +88,15 @@
   <interrogatio genus="cur">
     <quaestio! (>why are parentheses, commas and keyword spellings missing from the tree, and where did they go?
     <responsum symbolum="ArborTrivia arbor_formator_emittere_fidelis" via="lib/arbor_syntaxis.worklog.md">For
-      byte-exact roundtrip. Punctuation and the original keyword text
-      (such as "si" for if) are stored as SYNTHETIC trivia entries in
-      the neighbouring nodes' trivia_ante or trivia_post, and
+      byte-exact roundtrip. Punctuation and the keyword text as the
+      token spells it (such as "si" for if, when the preprocessor kept
+      it) are stored as SYNTHETIC trivia entries in the neighbouring
+      nodes' trivia_ante or trivia_post, and
       arbor_formator_emittere_fidelis prints them back. A synthetic
       entry has linea ZEPHYRUM and est_commentum FALSUM, while real
-      whitespace and comments carry their 1-based line, so filter on
-      linea when you collect comments. The trivia Xars hold
+      whitespace and comments carry their 1-based line. So
+      est_commentum VERUM finds the comments, and linea ZEPHYRUM tells
+      synthetic text from real whitespace. The trivia Xars hold
       ArborTrivia* pointers. They are often the very Xars owned by the
       tokens, and the parser appends to them, so the token stream's
       trivia changes as you parse.</responsum>
@@ -96,23 +109,26 @@
       so int f(int a, ...); fails with "Expectabatur )". The K&amp;R
       field datum.functio.old_params is always NIHIL ("not supported
       yet"). The worklog's open TODOs also list array type-names and
-      function-pointer type-names in casts.</responsum>
+      function-pointer type-names in casts. Caution (audit 2026-10-18,
+      unfixed): int f(int a, ...); does not fail with "Expectabatur )";
+      the parse never returns and memory grows without limit.</responsum>
   </interrogatio>
 
   <interrogatio genus="cur">
     <quaestio! (>why does a statement like a * b; parse as a declaration?
     <responsum symbolum="arbor_syntaxis_ponere_typedef_nomina arbor_syntaxis_ponere_keyword_macros" via="lib/arbor_syntaxis.worklog.md">Typedef
-      names come from three places: typedef declarations seen during
+      names come from four places: typedef declarations seen during
       the parse (one global table with no block scope), the table you
-      merge in with arbor_syntaxis_ponere_typedef_nomina, and a
-      heuristic. The heuristic treats an unknown identifier as a type
+      merge in with arbor_syntaxis_ponere_typedef_nomina, keyword
+      macros of kind ARBOR_LEXEMA_TYPEDEF_MACRO from
+      arbor_syntaxis_ponere_keyword_macros, and a heuristic. The heuristic treats an unknown identifier as a type
       when the next token is '*' or another identifier. It was added
       so that PRESERVARE mode, which does not follow includes, does
       not loop on i32 x. Its cost is the classic ambiguity: a * b;
       becomes a declaration of b. A registered typedef name is taken
       as a type even after another type, so a block-scope int T; that
       shadows typedef int T; parses as specifiers only and declares
-      nothing. Any identifier starting with __ in
+      nothing, with no error. Any identifier starting with __ in
       specifier position becomes an EXTENSION node.</responsum>
   </interrogatio>
 
@@ -132,14 +148,19 @@
 
   <interrogatio genus="possumne">
     <quaestio! (>can I reuse one ArborSyntaxis for several files, and how deep can code nest?
-    <responsum symbolum="arbor_syntaxis_creare arbor_syntaxis_parsere">Reuse
+    <responsum symbolum="arbor_syntaxis_creare arbor_syntaxis_parsere" via="lib/arbor_index.c">Reuse
       works: each arbor_syntaxis_parsere resets the position and the
       error list. The typedef table persists, though, so names from
       earlier files leak into later ones; make one parser per file,
-      as arbor_index does. Statements and compound blocks stop at
-      CCLVI levels with "Recursio nimis profunda". Expressions,
-      parentheses, declarators and initializer lists have no limit,
-      so very deep nesting there can overflow the C stack.</responsum>
+      as arbor_index does. The depth counter goes up once per
+      statement and once per compound block and stops at CCLVI with
+      "Recursio nimis profunda", so about CXXVIII nested { } blocks
+      (each is a statement AND a block) or CCLVI nested ifs.
+      arbor_syntaxis_creare never initializes that counter and
+      piscina_allocare does not zero memory, so it starts at whatever
+      the piscina hands out. Expressions, parentheses, declarators and
+      initializer lists have no limit, so very deep nesting there can
+      overflow the C stack.</responsum>
   </interrogatio>
 
 </interrogationes>

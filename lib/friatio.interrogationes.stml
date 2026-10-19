@@ -19,7 +19,14 @@
       piece (any sizes), then sha256_finire to get the 32 raw bytes
       (SHA256_DIGEST_MENSURA). sha256_friare does all three for one
       buffer. finire does not reset the context: call initiare again
-      before reusing it. SHA-1 (sha1_*) has the same shape.</responsum>
+      before reusing it. SHA-1 (sha1_*) has the same shape.
+      Caution (audit 2026-10-18, unfixed): sha256_addere and
+      sha1_addere write past the context buffer (heap overflow, SEGV)
+      when a piece of 2^32 - j bytes or more arrives while j = 1..63
+      bytes are already buffered, and an empty piece with a NIHIL
+      pointer (e.g. sha256_friare_chorda or sha1_friare_chorda on the
+      empty chorda {0, NIHIL}) is undefined behavior that UBSan flags,
+      though the digest is correct.</responsum>
   </interrogatio>
 
   <interrogatio genus="possumne">

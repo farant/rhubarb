@@ -31,8 +31,8 @@
     <quaestio! (>how do I open a pane from inside a command or event handler?
     <responsum symbolum="vicus_acervo_aperire vicus_acervo_mutare vicus_pulsare">Call
       vicus_acervo_aperire(v, genus, argumentum): it only QUEUES a
-      request on the active tab (FALSUM only for an unknown kind or no
-      active tab), and the next vicus_pulsare applies it: an existing
+      request on the active tab (FALSUM for an unknown kind, no active
+      tab or a NIHIL argument), and the next vicus_pulsare applies it: an existing
       pane with the same kind and argument comes to the front, else a
       new one is mounted with the default id, or that id plus _2,
       _3... if taken; focus goes right. Swapping registries and the
@@ -40,9 +40,13 @@
       handler that is running. vicus_pulsare ignores a failed
       request (a failed mount only sets vicus_causa). A new pane is
       mounted at the size given to vicus_creare, not the current
-      window size. vicus_acervo_mutare instead gives the front pane of
-      that kind a new argument through facies.argumentum_ponere and
-      brings it to the front (or mounts one if none).</responsum>
+      window size. vicus_acervo_mutare instead gives the frontmost pane
+      of that kind in the stack a new argument through
+      facies.argumentum_ponere and brings it to the front without moving
+      focus; only when the stack has no pane of that kind does it mount
+      one (focus then goes right). If that pane has no
+      argumentum_ponere hook, or the hook returns FALSUM, the request
+      fails and nothing new is mounted.</responsum>
   </interrogatio>
 
   <interrogatio genus="possumne">
@@ -88,9 +92,12 @@
       it with vicus_systema_addere(v, titulus, fn, ctx); it is called
       on every vicus_pulsare and returns VERUM when a frame must be
       drawn. Inside, write with vicus_radicem_scribere(v, scriptor,
-      titulus, valor), valor NIHIL removing the field. The writer must
-      own the field in the root manifest, otherwise the write is
-      refused and the call returns FALSUM.</responsum>
+      titulus, valor), valor NIHIL removing the field. The writer is
+      normally the system's own titulus, declared in the root manifest
+      as an actio with systema="verum" (as horologium and admonitiones
+      are); it must own the field there, otherwise the write is refused
+      and the call returns FALSUM. vicus_systema_addere returns FALSUM
+      for a titulus already registered.</responsum>
   </interrogatio>
 
   <interrogatio genus="cur">
@@ -113,8 +120,10 @@
       vicus_pilam_ponere with a battery port; tests pass a fake
       clock. Readings are stored as root fields (tempus_*,
       pila_centesimae, pila_oneratur); the battery is read again only
-      when the clock reading changes, and the clock makes vicus_pulsare
-      return VERUM only when the minute or the day changed.</responsum>
+      when the clock reading changes (so with no clock it is read only by
+      vicus_pilam_ponere itself, which reads nothing before
+      vicus_aperire has made the repository), and the clock makes vicus_pulsare return
+      VERUM only when the minute or the day changed.</responsum>
   </interrogatio>
 
   <interrogatio genus="quomodo">

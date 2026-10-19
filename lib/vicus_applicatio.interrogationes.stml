@@ -1,0 +1,125 @@
+<interrogationes unitas="vicus_applicatio">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I start the vicus host app in a window or a terminal?
+    <responsum symbolum="vicus_volumen_aperire vicus_applicatio_aedificare vicus_figurae vicus_imago_fons thema_initiare volumen_claudere" via="apps/vicus/vicus.c apps/vicus/vicus_terminalis.c">Call
+      thema_initiare, open the volume with vicus_volumen_aperire
+      (-fumus = temporary volume, -volumen PATH, default vicus.volumen),
+      then vicus_applicatio_aedificare(&amp;app, piscina, intern, vol,
+      latitudo, altitudo) with the size in our pixels. Hand the glue
+      app.d, vicus_figurae(app.vicus) and vicus_imago_fons with ctx
+      app.vicus; these never change afterwards. Close the volume with
+      volumen_claudere at exit.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what does a fresh vicus open with, and which pane kinds can it show?
+    <responsum symbolum="vicus_applicatio_aedificare vicus_genus_addere vicus_aperire">Ten
+      tabs: 1 is scriba beside terminale, 2 scriba beside pictor, 3-10
+      scriba beside scriba, plus the volantes (toast) layer on top. The
+      registered kinds are scriba, pictor, terminale, calendarium,
+      nomenclator, admonitiones, colloquia and volantes (the header's
+      opening comment still lists only the first three). A tab whose
+      kind is unknown or whose mount fails is skipped with its reason
+      on stderr; the rest still run.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I open another pane or app from a scriba page in vicus?
+    <responsum symbolum="vicus_applicatio_aedificare vicus_acervo_aperire iussum_registrare">Type
+      a command on the page: $terminale, $scriba(name), $pictor(name),
+      $calendarium, $agenda, $contacts, $notifications or $sessions
+      opens that kind in the active tab's stack on the next pulse;
+      $pictor-next, $pictor-prev and $pictor-new cycle or create
+      pictures. A scriba page name may only use a-z, 0-9, _ and -.
+      $dies or $dies(N) inserts the date N days from today as
+      MM/DD/YYYY.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I make $question work, and why does it say there is no API port?
+    <responsum symbolum="vicus_applicatio_quaestionis_portam_ponere VicusPortaQuaestionis" via="apps/vicus/vicus.c">The
+      window app must give a port with
+      vicus_applicatio_quaestionis_portam_ponere(&amp;app, &amp;porta):
+      a VicusPortaQuaestionis with incipere, pulsare and abrumpere. The
+      struct is copied. A NIHIL port, or one missing any of the three
+      functions, clears it, and $question then reports "no API port
+      (window app only)", which is what the terminal twin and the tests
+      see.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why does vicus_applicatio not call the model API or parse Markdown itself?
+    <responsum symbolum="VicusPortaQuaestionis quaestio_textum_planare" via="lib/vicus_applicatio.worklog.md include/vicus_quaestio.h">Plan
+      ruling R9: the PORT plans the answer into logical lines
+      (quaestio_textum_planare). If this file did it, it would include
+      quaestio, vates and http/TLS, and the terminal twin and
+      ludus_tessera's hand-made link list would drag in the whole API
+      stack. The port types live in vicus_quaestio.h so the port can
+      be built without including the whole app.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what happens on the page while $question streams an answer?
+    <responsum symbolum="vicus_quaestio_disponere" via="lib/vicus_applicatio.worklog.md">The
+      command is $question&lt;&gt;...&lt;/&gt; with free lines below it
+      (otherwise "no free lines below"). The first call only defers
+      ("asking ..."); the second starts the port and returns a job that
+      each pulse lays out with vicus_quaestio_disponere into the FREE
+      lines below the command, never beyond, and the command's head
+      becomes &lt;answered&gt;. When the page is full the port is
+      aborted and the text is cut at the last sentence or line end that
+      fits (else at a word, with "..."); Esc adds [cancelled]; an error
+      after some text adds [error: ...]; an error or an empty answer
+      before any text leaves the page untouched. Caution (audit
+      2026-10-18, unfixed): the per-pulse layout is not always bounded -
+      an answer line whose indentation plus list/quote marker reaches
+      the pane's inner width makes vicus_quaestio_disponere loop
+      forever, and a hanging-indent answer can lay out to about 4x its
+      length and overflow the responsum_aptare buffer (heap
+      write past the piscina allocation).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I pass any text to vicus_quaestio_disponere?
+    <responsum symbolum="vicus_quaestio_disponere quaestio_textum_planare">Planned
+      text only (what quaestio_textum_planare gives): logical lines, a
+      leading tab marks verbatim code that is hard-broken but never
+      reflowed, and a list or quote marker after the indentation gets a
+      hanging indent. It returns a newline, then &lt;answer&gt; ...
+      &lt;/&gt; wrapped to width w with two columns of margin on each
+      side (none below 24 columns), cut to fit l lines. Keep each
+      line's indentation plus marker narrower than the inner width (w
+      minus the margins): at or above it the wrapper stops advancing
+      and the call never returns. Very deep indentation can also lay
+      out longer than the buffer responsum_aptare allocates (input
+      length x 2 + w x 4 + 64 bytes). Caution (audit 2026-10-18,
+      unfixed): deep indentation is not needed - an ordinary hanging
+      indent (a list or quote marker) can lay out to about 4x the input,
+      and the second disponere pass in responsum_aptare then writes past
+      its piscina allocation (heap overflow).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I let pictor panes paste images from the clipboard?
+    <responsum symbolum="vicus_applicatio_imaginis_portam_ponere" via="apps/vicus/vicus.c">Call
+      vicus_applicatio_imaginis_portam_ponere(&amp;app, porta, ctx) with
+      a function returning an ImagoFructus. All pictor panes share one
+      context and read the port at the moment of the paste, so panes
+      mounted before the call see it too. NIHIL means no image source
+      (the terminal twin has no Cocoa).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I turn on notifications, the sessions pane and tmux tracking?
+    <responsum symbolum="vicus_applicatio_admonitiones_aperire">Call
+      vicus_applicatio_admonitiones_aperire(&amp;app, via) once with the
+      path of the praeconium log. Until then $notifications and
+      $sessions are empty, nothing is read and tmux is never asked.
+      Afterwards each pulse follows the log, and every 5 seconds
+      terminal panes attached to tmux sessions are recorded (so a
+      restore re-attaches) and detached ones forgotten. FALSUM if it is
+      already open or the log cannot be followed.</responsum>
+  </interrogatio>
+
+</interrogationes>

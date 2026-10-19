@@ -35,8 +35,12 @@
       fidelity and so tools can query comments. CSS_LEX_SPATIA,
       CSS_LEX_COMMENTARIUM and CSS_LEX_COMMENTARIUM_IMPERFECTUM stay
       in the stream; a consumer that wants spec behaviour filters them
-      out. css_arbor_parsare (css/fontes) instead attaches them as
-      trivia to the surrounding tokens.</responsum>
+      out. css_arbor_parsare (css/fontes) keeps them too: between
+      rules it attaches them as trivia to the neighbouring token,
+      while inside preludes and declaration values every space and
+      comment stays a content leaf of its own (moving a comment
+      between two kept values onto a token would reorder
+      bytes).</responsum>
   </interrogatio>
 
   <interrogatio genus="quid">
@@ -59,8 +63,9 @@
       understood only far enough to find token boundaries, and valor
       stays verbatim (\41 stays three bytes, plus the one whitespace
       byte after a hex escape, which belongs to it). The header assigns
-      decoding to the tree stage, but css_arbor_parsare
-      (css/fontes) keeps valores verbatim too. One consequence: url(
+      decoding to the tree stage, but nothing in css/fontes decodes
+      escapes yet either: css_arbor_parsare keeps valores
+      verbatim. One consequence: url(
       is recognised by its raw three bytes (any case), so an escaped spelling such as u\72l(
       lexes as CSS_LEX_FUNCTIO, not CSS_LEX_URL.</responsum>
   </interrogatio>

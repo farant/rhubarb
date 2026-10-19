@@ -4,7 +4,8 @@
     <quaestio! (>how do I send one message to Claude and read the text of the reply?
     <responsum symbolum="vates_aperire vates_petitio_creare vates_nuntium_addere vates_textum_addere vates_mittere" via="lib/quaestio.c">Open
       a provider with vates_aperire(piscina, provisor, clavis,
-      &amp;optiones) (provisor anthropic or fictus), build a request
+      &amp;optiones) (provisor anthropic or fictus; an unknown name
+      returns NIHIL and lists the known ones on stderr), build a request
       with vates_petitio_creare(piscina, exemplar), add a user turn
       with vates_nuntium_addere(p, VATES_USOR) and
       vates_textum_addere, then call vates_mittere(v, p, propositum,
@@ -17,8 +18,9 @@
   <interrogatio genus="quomodo">
     <quaestio! (>how do I run a tool-use loop with vates?
     <responsum symbolum="vates_instrumentum_addere vates_responsum_addere vates_effectum_addere vates_nuntium_addere">Declare
-      tools with vates_instrumentum_addere (titulus, descriptio, a JSON
-      Schema JsonValor). When r-&gt;causa_finis is
+      tools with vates_instrumentum_addere(p, &amp;instrumentum), a
+      VatesInstrumentum holding titulus, descriptio and a JSON Schema
+      JsonValor (copied by value, so the chordae must outlive p). When r-&gt;causa_finis is
       VATES_FINIS_INSTRUMENTUM, append the reply with
       vates_responsum_addere(p, r) (every block, OPACUM included,
       becomes an assistant turn), then open a VATES_USOR turn and add
@@ -82,7 +84,9 @@
       writes) and pretia_numerus. Prices come from the caller because
       they change; they are never compiled in. r-&gt;usus.pretium is
       then the cost in micro-dollars, or -I when the model is not in
-      the table. Set rationarium_via to also append one JSON line per
+      the table; the model is matched exactly against the name the API
+      returns (r-&gt;exemplar), falling back to the request's
+      exemplar. Set rationarium_via to also append one JSON line per
       attempt (time, model, purpose, status, tokens, price, latency),
       written with fsync.</responsum>
   </interrogatio>
@@ -111,8 +115,8 @@
       the first delta; a stream that ends without message_stop is
       VATES_ERROR_RETE, and an error event is VATES_ERROR_STATUS.
       vates_vocare_rivum does the same on your Reactor without
-      blocking (retry waits are reactor timers) and reports every
-      failure, LIMES included, through finis; then read
+      blocking (retry waits are reactor timers); it returns NIHIL only
+      when an argument is NIHIL and reports every failure, LIMES included, through finis; then read
       vates_vocatio_responsum. finis is meant to run exactly once
       (vates_vocationem_abrumpere calls it synchronously), but if the
       reactor has no free timer slot when a retry or the LIMES
@@ -122,7 +126,7 @@
 
   <interrogatio genus="quomodo">
     <quaestio! (>how do I test code that calls vates without the network?
-    <responsum symbolum="vates_fictus_aperire vates_fictus_textum vates_fictus_instrumentum vates_fictus_crudum vates_fictus_rivum vates_fictus_petitio">Open
+    <responsum symbolum="vates_fictus_aperire vates_fictus_textum vates_fictus_instrumentum vates_fictus_crudum vates_fictus_rivum vates_fictus_petitio vates_vocare_rivum">Open
       the fictus provider (vates_fictus_aperire, or vates_aperire with
       provisor fictus), queue replies with vates_fictus_textum,
       vates_fictus_instrumentum, vates_fictus_crudum (any status and
@@ -132,6 +136,9 @@
       is a network error (fictus exhaustum), which IS retried: each
       retry sleeps mora_iterandi_ms (II s when 0) and records one more
       request, so set conatus_maximi to I or mora_iterandi_ms to I.
+      Fictus only intercepts vates_mittere and vates_mittere_rivum:
+      vates_vocare_rivum calls http_vocare directly, so on a fictus
+      Vates it goes to the real URL.
       Set sine_herbario too, or any reply the judge finds unusual
       (non-CC status, unknown field or block) is captured to disk
       under host fictus.</responsum>
@@ -144,7 +151,8 @@
       response that is not an ordinary 200 (other status, non-JSON
       body, unknown stop_reason, a field or block the declared schema
       in lib/vates_responsum.norma does not know) as a specimen before
-      vates reads it; streamed bodies are not judged yet. The
+      vates reads it; a CC text/event-stream body is not judged
+      yet. The
       directory is herbarium_via used as given, else
       $RHUBARB_HERBARIUM or ~/.rhubarb/herbarium plus /host. The host
       is always that of the built-in API URL (api.anthropic.com), even

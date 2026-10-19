@@ -42,8 +42,10 @@
     <quaestio! (>what is the difference between arbor2_token_est_fons, layer_index and arbor2_token_profunditas?
     <responsum symbolum="arbor2_token_est_fons arbor2_token_profunditas arbor2_origo_genus_nomen Arbor2OrigoGenus">arbor2_token_est_fons
       tests the genus (ARBOR2_ORIGO_FONS), not the layer, despite the
-      header's "(layer 0)" comment; argument tokens copied into an
-      expansion are still FONS, so it is VERUM for them.
+      header's "(layer 0)" comment. Argument tokens are copied into an
+      expansion unchanged and keep their own genus, so a source token
+      passed as a macro argument is still FONS and the test is VERUM
+      for it.
       layer_index is a number the caller passes in (source tokens get
       0). arbor2_token_profunditas counts the origo_token links back
       to the root (0 for a source or API token). For log output,
@@ -68,14 +70,20 @@
 
   <interrogatio genus="possumne">
     <quaestio! (>can I tell from a token that it came from a macro added through the API?
-    <responsum symbolum="arbor2_token_ex_api arbor2_expansion_addere_macro arbor2_expansion_addere_macro_functio Arbor2MacroDef">Not
+    <responsum symbolum="arbor2_token_ex_api arbor2_expansion_addere_macro arbor2_expansion_addere_macro_functio Arbor2MacroDef arbor2_expansion_quaerere_macro">Not
       from the token: nothing calls arbor2_token_ex_api, so no token
       ever has genus ARBOR2_ORIGO_API. Macros added with
       arbor2_expansion_addere_macro or _functio expand through
       arbor2_token_ex_expansione like any other, giving EXPANSIO
       tokens whose via_file is NIHIL when no file was passed. The
       flag lives on the definition instead: Arbor2MacroDef ex_api is
-      VERUM for API macros.</responsum>
+      VERUM for API macros. For a token whose nomen_macro is not
+      NIHIL, look the macro up by name with
+      arbor2_expansion_quaerere_macro(exp,
+      *tok-&gt;origo_meta-&gt;nomen_macro) and read ex_api. That
+      describes the definition in the table NOW: after a #undef the
+      lookup returns NIHIL, and after a redefinition it is the new
+      one.</responsum>
   </interrogatio>
 
 </interrogationes>

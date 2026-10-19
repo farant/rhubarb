@@ -1,0 +1,119 @@
+<interrogationes unitas="dispositio">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I lay out a widget tree (header, growing body, footer) without hand pixel arithmetic?
+    <responsum symbolum="dispositio_creare dispositio_formam_initiare dispositio_addere dispositio_computare dispositio_fines" via="lib/kalendarium.c">Create
+      a Dispositio from a piscina, fill a DispositioForma per node
+      (start from dispositio_formam_initiare, then set directio, the
+      latitudo and altitudo DispositioMensura, spacing, gap and
+      alignment), add it with dispositio_addere under its parent's
+      index (-1 for the root), call dispositio_computare with the
+      surface size in cells, then read each node's rectangle with
+      dispositio_fines(d, index). It is the Clay model: fit, grow,
+      fixed and percent sizes per axis.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what units does dispositio work in, and how do I get pixel rectangles for a window?
+    <responsum symbolum="dispositio_ad_pixela dispositio_fines Fines">Everything
+      is integer CELLS, so every edge lands on a cell boundary by
+      construction. dispositio_ad_pixela(fines, columnae, lineae,
+      latitudo, altitudo, cw, ch) multiplies by the cell size, and a
+      node that reaches the right or bottom edge of the cell grid is
+      stretched to the surface's real pixel edge, since a window is
+      usually not an exact multiple of the cell size.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what is the implicit root, and what does parent -1 mean?
+    <responsum symbolum="dispositio_addere dispositio_computare">As
+      in Clay there is a hidden root: a row (DISPOSITIO_LINEA) fixed
+      at the surface size given to dispositio_computare, with no
+      padding and no gap. Nodes added with parent -1 are its
+      children, laid out left to right. Usually you add a single
+      top-level node there with CRESCENS on both axes and build under
+      it.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I make a child take the remaining space, or a fixed or percentage size?
+    <responsum symbolum="DispositioMensura DispositioGenus">Set
+      the axis DispositioMensura: DISPOSITIO_CRESCENS grows into what is
+      left (bounded by minimum and maximum, 0 meaning no maximum),
+      DISPOSITIO_FIXA takes valor cells, DISPOSITIO_PARS takes valor
+      hundredths of the parent's inner size (after padding and, along
+      the parent's direction, gaps; rounded down), and DISPOSITIO_APTA fits the content. minimum and
+      maximum apply to APTA and CRESCENS only. Several growing
+      children share the space Clay-style: the smallest grow first,
+      and an uneven remainder is spread across them, not given to the
+      first.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can a node hold text and size itself to fit it?
+    <responsum symbolum="dispositio_computare DispositioMensor DispositioForma">Yes,
+      one line of it: set forma.textus and pass a DispositioMensor to
+      dispositio_computare that returns the width of a chorda in cells
+      (wide runes may count II in a terminal). The text becomes a
+      virtual first child one line high, and its minimum is the widest
+      space-separated word. With a NIHIL mensor the text is ignored.
+      Newlines and wrapping are not supported yet.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I free the text I put in forma.textus right after dispositio_addere?
+    <responsum symbolum="dispositio_addere dispositio_computare">No.
+      dispositio_addere copies the DispositioForma, but the chorda in
+      textus is copied by value, so it still points at your bytes, and
+      the mensor reads them during dispositio_computare. Keep the text
+      alive until computare returns.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I re-run layout every frame without the piscina growing?
+    <responsum symbolum="dispositio_vacare dispositio_computare">dispositio_vacare
+      removes all nodes and keeps the memory, so the next frame's
+      dispositio_addere calls reuse it; indices restart at 0. Calling
+      dispositio_computare again on the same tree with a new surface
+      size simply recomputes every rectangle.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I know dispositio_addere failed, and what does dispositio_fines give for a bad index?
+    <responsum symbolum="dispositio_addere dispositio_fines dispositio_numerus">dispositio_addere
+      returns -1 when d or forma is NIHIL, when parens is below -1, or
+      when the parent index does not exist yet (a parent must be added
+      before its children); otherwise
+      it returns the node's index in order of addition.
+      dispositio_fines for an unknown index returns an all-zero Fines
+      rather than failing, so check the index first (dispositio_numerus
+      gives the count).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what happens when children do not fit in their parent?
+    <responsum symbolum="dispositio_computare DispositioForma">Along
+      the parent's direction, APTA and CRESCENS children shrink
+      (largest first) down to their content minimum; FIXA and PARS
+      never shrink. If the parent has praecidere set on that axis
+      nothing is compressed and the children simply overflow. Along
+      the main axis an overflowing row is placed from the start even
+      when alignment is MEDIUM or FINIS; across it, a too-big child
+      centred with MEDIUM gets a negative offset (rounded down, as
+      -3/2 gives -2).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why are dispositio results not identical to Clay's?
+    <responsum symbolum="dispositio_computare" via="include/dispositio.h tools/dispositio_oraculum.sh">Clay
+      uses floats; dispositio is integer and names its divergences in
+      the header: centring rounds down (even when negative), percent
+      sizes round down, and when grow or shrink space does not divide
+      evenly each edge is the floor of the exact edge, so the remainder
+      is spread instead of going to the first children. Everything
+      else is meant to match, and tools/dispositio_oraculum.sh runs
+      the real Clay (a ../clay clone pinned at e6cc369; exit 2 if it is
+      missing) on the same STML tree as the oracle.</responsum>
+  </interrogatio>
+
+</interrogationes>

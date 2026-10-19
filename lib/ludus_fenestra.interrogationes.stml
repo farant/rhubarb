@@ -31,8 +31,9 @@
   <interrogatio genus="possumne">
     <quaestio! (>can I keep lf->mandata or anything from the previous frame across ludus_quadrum calls?
     <responsum symbolum="ludus_quadrum ludus_fenestra_imaginem_scribere piscina_vacare">No.
-      Each ludus_quadrum starts with piscina_vacare on the per-frame
-      piscina and builds a fresh Mandata there, so lf-&gt;mandata and
+      Each ludus_quadrum pulses the dispatcher, then calls
+      piscina_vacare on the per-frame piscina and builds a fresh
+      Mandata there, so lf-&gt;mandata and
       everything allocated for the last frame (including the PNG
       buffers of ludus_fenestra_imaginem_scribere) is valid only
       until the next frame. Copy out anything you need first.</responsum>
@@ -105,13 +106,15 @@
 
   <interrogatio genus="possumne">
     <quaestio! (>can I destroy a LudusFenestra and free its frame memory?
-    <responsum symbolum="ludus_fenestra_creare piscina_generare_dynamicum piscina_destruere">No.
-      There is no destroy function. The struct lives in your piscina,
-      but ludus_fenestra_creare also makes its own dynamic piscina
-      for frames ("ludus_quadrum", LXIV * M initial), and nothing
-      ever destroys it. Destroying your piscina does not release it.
-      Apps create one per process, so this only matters for code that
-      creates many, such as tests.</responsum>
+    <responsum symbolum="ludus_fenestra_creare piscina_generare_dynamicum piscina_destruere">Not
+      through the API: there is no destroy function. The struct lives
+      in your piscina, but ludus_fenestra_creare also makes its own
+      dynamic piscina for frames ("ludus_quadrum", LXIV * M initial),
+      and nothing ever destroys it. Destroying your piscina does not
+      release it. The field is public, so code that creates many (such
+      as tests) can call piscina_destruere(lf-&gt;piscina_quadri) itself
+      once it is done with lf; nothing in the tree does today. Apps
+      create one per process.</responsum>
   </interrogatio>
 
 </interrogationes>

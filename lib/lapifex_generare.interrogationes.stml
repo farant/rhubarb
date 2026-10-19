@@ -34,9 +34,9 @@
       trimming, silently, so an empty alternative simply disappears
       from the grammar. FIRST and FOLLOW do handle epsilon
       (habet_epsilon, productions with an empty right side), but no
-      STML grammar can produce one. Express optional parts with an
-      extra non-terminal that has non-empty alternatives
-      instead.</responsum>
+      STML grammar can produce one. Write an optional part out as two
+      alternatives instead: A -&gt; B C and A -&gt; C rather than
+      A -&gt; opt_B C with an empty opt_B.</responsum>
   </interrogatio>
 
   <interrogatio genus="cur">
@@ -122,7 +122,8 @@
       FIRST(beta a) for the lookaheads), so lapifex_first_computare is
       required and lapifex_follow_computare is not; FOLLOW sets are only
       read by lapifex_follow_obtinere and lapifex_follow_imprimere. Both
-      sets are Xar of s32 terminal indices. The end marker -1 appears
+      sets are Xar of s32 terminal indices (the header comment on
+      lapifex_first_obtinere says i32; the elements are s32). The end marker -1 appears
       only in FOLLOW sets (lapifex_follow_computare seeds it into the
       start symbol's FOLLOW); a symbol's FIRST set holds real terminal
       indices only.</responsum>

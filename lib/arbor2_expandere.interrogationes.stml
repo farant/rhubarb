@@ -1,0 +1,155 @@
+<interrogationes unitas="arbor2_expandere">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I macro-expand a C source buffer into tokens with provenance?
+    <responsum symbolum="arbor2_expansion_creare arbor2_expansion_processare Arbor2Token">Create
+      a context with arbor2_expansion_creare(piscina, intern), add any
+      predefined macros, then call arbor2_expansion_processare(exp,
+      fons, mensura, via_file). It lexes the buffer into layer 0 and
+      expands layer by layer until nothing changes (at most C = 100
+      layers), returning the last layer as a Xar of Arbor2Token*
+      (ending with the EOF token - or with an ERROR token: lexing stops
+      at the first one, so the rest of the buffer is dropped). Each
+      token carries where it came from (source or which macro, at which
+      layer).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I make Latin house code (si, redde, nomen) expand to plain C keywords?
+    <responsum symbolum="arbor2_includere_latina arbor2_expansion_addere_macro">Call
+      arbor2_includere_latina(exp) before processing. It registers a
+      fixed table of the keyword, type, qualifier and storage macros
+      (si -&gt; if, nomen -&gt; typedef, interior -&gt; static, NIHIL
+      -&gt; NULL, VERUM 1, FALSUM 0). Despite its comment it does NOT
+      register everything in latina.h: ZEPHYRUM, the Roman numerals
+      (I .. MMMCMXCIX), principale, imprimere, liberare,
+      memoriae_allocare, exire and FILUM are missing, so add those with
+      arbor2_expansion_addere_macro if you need them expanded.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I predefine object-like and function-like macros from code?
+    <responsum symbolum="arbor2_expansion_addere_macro arbor2_expansion_addere_macro_functio">arbor2_expansion_addere_macro(exp,
+      name, value, via_file) lexes the value string as the body;
+      arbor2_expansion_addere_macro_functio takes a NIHIL-terminated
+      array of parameter names (an entry "..." makes it variadic) and a
+      body string. via_file may be NIHIL. Both mark the definition
+      ex_api with linea_def -1, and replace any macro of the same
+      name.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can it handle #if, #ifdef and #ifndef include guards?
+    <responsum symbolum="arbor2_expansion_processare">No.
+      The expander acts only on #define, #undef and #include (a # that
+      is the first token or has whitespace before it, followed by one
+      of those words; the check does not require a newline). Every other
+      directive, including #if, #ifdef, #ifndef, #else and #endif,
+      passes through as ordinary tokens and both branches are
+      expanded, so a #define inside a false branch still takes
+      effect.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I make #include find and expand header files?
+    <responsum symbolum="arbor2_expansion_addere_local_via arbor2_expansion_addere_system_via arbor2_expansion_resolvere_include">Add
+      search directories with arbor2_expansion_addere_local_via (for
+      "...") and arbor2_expansion_addere_system_via (for &lt;...&gt;).
+      A quoted include is tried next to the current file first, then in
+      the local paths, then the system paths; an angle include only in
+      the system paths. An unresolved include is skipped silently and
+      its directive tokens are dropped from the output. The
+      genus constants ARBOR2_INCLUDE_LOCAL and ARBOR2_INCLUDE_SYSTEM
+      live in arbor2_glr.h, not in this header. Caution (audit
+      2026-10-18, unfixed): in the default ARBOR2_INCLUDE_RESET_PER_PARSE
+      mode the nested processare call wipes the already-included mark,
+      so a header included twice is expanded twice and a header that
+      includes itself (directly or through another) recurses until the
+      stack overflows; set ARBOR2_INCLUDE_PERSISTENT first.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what is the difference between learning mode and full mode for includes?
+    <responsum symbolum="arbor2_expansion_processare Arbor2Expansion">Both
+      read and expand the included file, so its macros and typedefs
+      enter the shared tables. In full mode its tokens are also spliced
+      into the result in place of the directive; in learning mode they
+      are thrown away. By default system (&lt;&gt;) includes are
+      learning (system_learning_default VERUM) and local ("") includes
+      are full; change the two fields on the context to switch.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can the default include mode skip a header that was already included?
+    <responsum symbolum="arbor2_expansion_ponere_include_modum arbor2_expansion_processare">Not
+      reliably. ARBOR2_INCLUDE_RESET_PER_PARSE (the default) replaces
+      the included-files table at the start of EVERY
+      arbor2_expansion_processare call, and an include runs processare
+      recursively on the header, which wipes the mark it just set. So
+      the same header included twice is processed twice, and a header
+      that includes itself (directly or through another) recurses
+      without end. Set ARBOR2_INCLUDE_PERSISTENT with
+      arbor2_expansion_ponere_include_modum to get skipping; the table
+      then also survives across processare calls, so a header already
+      read for an earlier file is skipped for the next one.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can a self-referential macro like define F (1+F) expand correctly?
+    <responsum symbolum="arbor2_expansion_processare arbor2_expansion_obtinere_layers">No.
+      The recursion guard (macro_stack) only holds a name while that
+      one macro's body is being copied; the copied F is expanded again
+      on the NEXT layer, where the stack is empty. Expansion stops only
+      at the cap of C (100) layers, silently, so F ends up nested about
+      100 deep instead of C's (1+F). A plain define SELF SELF ends as
+      SELF, but only after running all 100 layers.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I ask which macros were defined at a given source line?
+    <responsum symbolum="arbor2_expansion_macros_ad_lineam arbor2_expansion_obtinere_segmenta Arbor2Segmentum">Not
+      really. Segments are opened at each #define and #undef, but every
+      segment stores a pointer to the one live macro table, not a copy
+      (the code says so: true isolation would need a copy function).
+      arbor2_expansion_macros_ad_lineam therefore returns the table as
+      it stands after processing, whatever line you ask for. Segment
+      line numbers also do not say which file they belong to.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I check whether an identifier is a typedef name?
+    <responsum symbolum="arbor2_expansion_est_typedef arbor2_expansion_quaerere_typedef arbor2_expansion_addere_typedef Arbor2TypedefInfo">arbor2_expansion_est_typedef(exp,
+      name) after processing; arbor2_expansion_quaerere_typedef returns
+      an Arbor2TypedefInfo with the layer and source position. Typedefs
+      are detected on every layer from a typedef keyword (est_certum
+      VERUM) or an unexpanded nomen identifier (heuristic, est_certum
+      FALSUM): the name is the (*NAME) of a function pointer, else the
+      last identifier at depth 0 before the semicolon. The first
+      detection wins (a detected name never overwrites an existing
+      entry), so a nomen typedef keeps est_certum FALSUM even after nomen
+      expands to typedef on a later layer. Add names by hand with
+      arbor2_expansion_addere_typedef (layer -1, est_certum
+      VERUM).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what does arbor2_expansion_lookahead tell the GLR parser?
+    <responsum symbolum="arbor2_expansion_lookahead arbor2_expansion_lookahead_genus Arbor2ExpansionLookahead" via="lib/arbor2_glr.c">The
+      genus of the first token of a macro's body without expanding it:
+      ARBOR2_LEXEMA_ERROR if the name is not a macro, ARBOR2_LEXEMA_EOF
+      (est_vacuum VERUM) for an empty body. est_recursivum is VERUM when
+      that first token is itself a macro name, so the caller must look
+      further.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I reuse one Arbor2Expansion for many files?
+    <responsum symbolum="arbor2_expansion_processare arbor2_expansion_obtinere_layers arbor2_expansion_obtinere_segmenta">Yes,
+      and macros and typedefs carry over between calls (that is how a
+      header's definitions reach the next file). But the layers and
+      segments are never reset: those of every call, including nested
+      include calls, accumulate in the same Xars, and everything lives
+      in the context's piscina until you drop it.</responsum>
+  </interrogatio>
+
+</interrogationes>

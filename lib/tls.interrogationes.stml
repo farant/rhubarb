@@ -1,0 +1,107 @@
+<interrogationes unitas="tls">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I open an HTTPS-style connection, send a request and read the reply?
+    <responsum symbolum="tls_connectere tls_mittere_omnia tls_recipere tls_claudere">Call
+      tls_connectere(hospes, portus, piscina) with a DNS name (it is
+      sent as SNI and checked against the certificate) and test
+      .successus; on failure .error and .error_descriptio say why. Send
+      with tls_mittere_omnia, then loop tls_recipere until it returns
+      0 (clean EOF) or a negative value, and always finish with
+      tls_claudere, which frees the context and closes the TCP socket
+      and may be called twice. Most callers want http.h instead.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I set a timeout, trust a private CA, or turn off certificate checks?
+    <responsum symbolum="tls_optiones_default tls_connectere_cum_optionibus TlsOptiones">Start
+      from tls_optiones_default() (timeout_ms XXX * M, verification on,
+      system trust store) and pass it to tls_connectere_cum_optionibus.
+      ancora_via names a DER CA certificate that becomes the ONLY trust
+      anchor (chain, dates and host name are still checked).
+      verificare_certificatum FALSUM skips the trust decision. A
+      zero-filled TlsOptiones selects the default transport but also
+      means no verification.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I get a connection with no timeout by setting timeout_ms to 0?
+    <responsum symbolum="TlsOptiones tcp_optiones_default">No,
+      despite the header comment. Every transport copies timeout_ms
+      into the TCP options only when it is greater than 0, so 0 leaves
+      the TCP default from tcp_optiones_default, which is XXX * M ms
+      (30 seconds). Pass a large value if you need a long wait.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what is a TLS vectura and which one do I get?
+    <responsum symbolum="tls_vecturam_eligere tls_vectura tls_versio TlsVectura">The
+      backend that carries the connection. TlsOptiones.vectura wins
+      when not ORDINARIA; otherwise the RHUBARB_TLS environment
+      variable (bearssl, securetransport or tls13), read on every
+      connection; otherwise the house default, the in-house TLS 1.3
+      client. tls_vecturam_eligere tells you the choice in advance,
+      tls_vectura the backend actually in use, tls_versio the
+      negotiated version (0x0304 or 0x0303, 0 before the
+      handshake).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why does tls_vectura say BEARSSL when I asked for the TLS 1.3 client?
+    <responsum symbolum="tls_vectura tls_versio tls_tls13_tcp_relinquere" via="lib/tls_tls13.worklog.md project-specs/tls13-spec.md">The
+      server answered as TLS 1.2 only. The 1.3 client then hands the
+      socket back, the dispatcher reconnects on the same fd number and
+      finishes with BearSSL TLS 1.2, checking the DOWNGRD sentinel in
+      the server random so a downgrade attack is refused. Set
+      sine_descensu VERUM to get TLS_ERROR_HANDSHAKE instead of the
+      fallback.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I do a non-blocking TLS handshake inside an event loop?
+    <responsum symbolum="tls_incipere tls_gradus tls_gradus_error tcp_incipere tcp_incipere_perficere" via="lib/http_vocatio.c">Connect
+      TCP yourself (tcp_incipere, then tcp_incipere_perficere), then
+      call tls_incipere; nothing is sent yet. Call tls_gradus whenever
+      the socket is ready: LEGERE or SCRIBERE says what to wait for
+      next, PERFECTUS means done, ERROR means read tls_gradus_error.
+      The TLS connection owns the TcpConnexio from then on, and on
+      failure tls_incipere has already closed it, so do not close it
+      again (http_vocatio.c is the real example).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I tell a receive timeout apart from would-block when tls_recipere returns -2?
+    <responsum symbolum="tls_recipere tls_mittere">Not
+      by the value: TLS_ITERUM and TCP_ITERUM are both -2. On a
+      blocking connection (tls_connectere) it means the receive
+      timeout expired; on a stepped one (tls_incipere) it means nothing
+      is ready now. A stepped caller must keep reading until
+      TLS_ITERUM on each wakeup, because decrypted bytes can be held
+      inside the backend where the socket no longer signals them.
+      Only 0 means the peer closed; -1 is an error.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I send a partial buffer with tls_mittere and continue later?
+    <responsum symbolum="tls_mittere tls_mittere_omnia">Yes:
+      tls_mittere returns how many bytes it took (or -1); on TLS_ITERUM
+      call it again with the SAME remaining bytes once the socket is
+      writable. tls_mittere_omnia loops for you, sleeping 1 ms on 0 or
+      TLS_ITERUM, with no overall deadline: on a blocking connection a
+      send that times out also comes back as TLS_ITERUM, so a peer that
+      stops reading keeps it looping. It returns FALSUM for an empty
+      buffer (mensura 0), the same answer as an error.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I read the server certificate's expiry date?
+    <responsum symbolum="tls_certificatum_obtinere TlsCertificatum">Call
+      tls_certificatum_obtinere while the connection is still open
+      (after tls_claudere nothing is left). It fills a TlsCertificatum
+      with the leaf's notBefore and notAfter as Unix epoch seconds and
+      the subject CN as a chorda allocated in the connection's piscina;
+      days left = (non_post - now) / 86400. FALSUM, with valida FALSUM,
+      when the certificate could not be read.</responsum>
+  </interrogatio>
+
+</interrogationes>

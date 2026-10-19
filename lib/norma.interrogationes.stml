@@ -56,7 +56,9 @@
     <responsum symbolum="norma_discrimen norma_variatio norma_modus" via="lib/vates_responsum_norma.c">norma_discrimen(p,
       "type"), then norma_variatio(d, "text", obj) once per tag value.
       Each variant must be a norma_objectum, and the tag key counts as
-      declared in it, so CLAUSUM does not reject it. A missing or
+      declared in it, so CLAUSUM does not reject it. Extra keys inside
+      a matched variant follow the VARIANT object's own norma_modus;
+      the union's modus governs only unknown tags. A missing or
       non-string tag gives NORMA_CAUSA_DISCRIMEN, and an unknown tag
       gives NORMA_CAUSA_VARIATIO (subject to norma_modus); both point
       at the tag's path. vates judges Anthropic responses this way
@@ -65,7 +67,7 @@
 
   <interrogatio genus="quomodo">
     <quaestio! (>how do I turn a norma into a JSON Schema for a tool's input_schema?
-    <responsum symbolum="norma_json_schema VatesInstrumentum">norma_json_schema(n,
+    <responsum symbolum="norma_json_schema VatesInstrumentum norma_electio norma_aut_nullum">norma_json_schema(n,
       p) returns a JsonValor with a fixed key order and no $schema
       key. additionalProperties false is written only for CLAUSUM
       objects, and norma_aut_nullum becomes "type": [X, "null"] (on a
@@ -73,16 +75,20 @@
       discriminated union becomes oneOf over its variants with the tag
       as a const, whatever its modus: an unknown tag that an APERTUM
       or NOTANDUM judge accepts is still rejected by the exported
-      schema.</responsum>
+      schema. Same kind of gap for norma_electio plus norma_aut_nullum:
+      the judge accepts null, but the export writes "type": ["string",
+      "null"] next to an enum that does not list null, so a JSON Schema
+      validator rejects null.</responsum>
   </interrogatio>
 
   <interrogatio genus="possumne">
     <quaestio! (>can a schema contain itself, for a recursive JSON shape?
-    <responsum symbolum="norma_campus norma_tabulatum norma_iudicare">No:
+    <responsum symbolum="norma_campus norma_tabulatum norma_iudicare norma_json_schema">No:
       the header says recursion is not supported yet. A node may be
       shared by several parents (a DAG), but nothing detects a cycle.
       norma_campus(o, "x", o, FALSUM) is accepted, and norma_iudicare
-      on it then recurses without end in its schema walk.</responsum>
+      on it then recurses without end in its schema walk (so does
+      norma_json_schema).</responsum>
   </interrogatio>
 
   <interrogatio genus="quid">
