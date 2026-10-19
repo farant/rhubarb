@@ -85,6 +85,13 @@ for s in "${BIBLIOTHECAE[@]}"; do
     fons="lib/$s.c"
     [ -f "$fons" ] || { _sine "$s" "lib/$s.c deest"; continue; }
     [ -f "$suita" ] || { _sine "$s" "sine suita ($suita)"; continue; }
+    # programma fenestrae (fenestram aperit, nihil per credo asserit):
+    # demonstratio, non suita - compile_tests.sh id struit solum, et
+    # currens in gyro eventuum suo mora excessa pendet (delineare,
+    # dithering sub -sanitare 2026-10-19 "tempus excessum" visa)
+    if grep -q 'fenestra_creare' "$suita" && ! grep -q 'CREDO_' "$suita"; then
+        _sine "$s" "programma fenestrae sine credo ($suita) - demonstratio, non suita"; continue
+    fi
     B="$RADIX/build/$GENUS/$s"
     rm -rf "$B"; mkdir -p "$B"
     if ! bin/aedilis "$suita" --exitus "$B" --obiecta "$OBIECTA" > "$B/aedilis.log" 2>&1; then
