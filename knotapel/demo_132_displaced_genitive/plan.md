@@ -171,7 +171,8 @@ O(n^2) per position at most, small. Seconds. Exact rationals for E via
 
 ## Tasks (one per turn, Fran's go-ahead each)
 
-0. **Labels and sources:** how each treebank marks genitive attributes
+0. *Done 2026-10-19 (Task 0 findings below).* **Labels and sources:**
+   how each treebank marks genitive attributes
    (relation, subtypes, Case=Gen), counted as TOTALS ONLY (genitive arcs
    per treebank, share with NOUN / PROPN heads), never split by
    displacement; the hand trees run through `dependentia`; `fractio`
@@ -183,6 +184,40 @@ O(n^2) per position at most, small. Seconds. Exact rationals for E via
    plants.
 3. **T3:** findings.md, claims.md, ledger, archive.sh.
 4. **T4:** independent review with its own oracle, then fixes.
+
+## Task 0 findings (2026-10-19)
+
+- **Labels (totals only, annotated trees; no projectivity computed).**
+  In all six Latin treebanks genitive attributes are plain `nmod` with
+  `Case=Gen`; every `nmod` dependent with a case is mostly genitive,
+  and no genitive-specific subtype is used. Genitive nmod arcs: CIRCSE
+  477, LLCT 2,382, PROIEL 458, Perseus 255, ITTB 1,098, UDante 438.
+  Other relations carry Case=Gen too (amod, det, conj: agreeing words,
+  not genitive attributes) and are not counted.
+- **Heads.** The true head is NOUN or PROPN in 95.4% (CIRCSE), 99.5%
+  (LLCT), 88.6% (PROIEL), 88.6% (Perseus), 89.6% (ITTB), 89.0%
+  (UDante) of genitive nmod arcs; the rest are ADJ, DET, PRON, NUM,
+  VERB (e.g. partitives after numerals and pronouns). As approved, the
+  population is EVERY genitive nmod arc; the noun-headed subset is
+  reported beside it, not decided on.
+- **Dependents** are mostly NOUN and PROPN, also PRON (*eius*) and some
+  ADJ, DET, VERB (substantivised, gerunds); all count.
+- **The hand walk-through through `dependentia`** (scratch probe,
+  compiled against lib/dependentia.c): (a) not displaced; (b) displaced,
+  1 nested alternative, UNSAFE, null 1/2; (c) displaced, SAFE, null
+  1/2; (d) agreement-filtered SAFE with null 2/2, unfiltered UNSAFE with
+  null 1/2. All as the plan states. New: with agreement filtering, a
+  sentence with no other agreeing noun makes every placement safe, so
+  the adjective contrast's null is 1 there; the contrast is reported
+  only, and this degeneracy will be stated with it.
+- **Exact E:** `fractio` (`fractio_ex_s64_s64`, `fractio_adde`,
+  `fractio_compara`) covers the per-genitive shares and their sums; G1
+  compares S with E exactly.
+- **A caution, before any result:** the genitive totals are small in
+  CIRCSE (477) and Perseus (255); their displaced subsets will be
+  smaller still, so G1's per-treebank comparisons there can turn on a
+  few sentences. The rules are fixed; findings will report N beside
+  every verdict.
 
 ## Disclosed before registering
 
