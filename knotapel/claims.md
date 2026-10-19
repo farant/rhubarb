@@ -122,6 +122,12 @@ ranked by how much it bears on KC 47.
   57.5.2.2, 57.5.3.1, 57.5.4.1, 57.7.1. No address removed or
   renumbered.
 
+- **D131 (2026-10-19).** Appended 58 to Part XI: a toy Latin world
+  testing whether morphology pays for crossing. Both registered
+  predictions failed (58.3.1, 58.4.2); the descriptive split by what
+  is displaced (58.4.3-4) was made after the run and is graded so.
+  The demo's own review is task T4, after these nodes were written.
+
 ## Part I. Definitions
 
 ```text
@@ -1436,4 +1442,72 @@ ranked by how much it bears on KC 47.
 57.8. Can a sentence be given a canonical braid or tangle word whose
       crossings are the sentence's? [open] (D130 measures what such
       an encoding must carry: 57.6.1; proposal N14)
+58. Does morphology pay for crossing: do agreement endings let a
+    reader reconnect a displaced word, so that a grammar with endings
+    can afford crossings? (D131, proposal N14 slice 1; brainstorm
+    XIII, XIV. A toy Latin world, exhaustive up to five words: four
+    nouns, two adjectives, four verbs, real endings from Bennett's
+    New Latin Grammar checked against Whitaker's INFLECTS.LAT. Grades:
+    [exact] counts are pinned from D131's independent Python oracle,
+    oracle_partb.py; the demo's own review is T4)
+58.1. A PAIR is a string with one of its analyses (a head and a
+      reading per position); each analysis yields one string per
+      morphology level, so the 6,752,640 pairs are the same at every
+      level. Levels: L1 every reading its own form; L0 Latin's real
+      paradigms; L2 one form per gender and number; L3 as L2 with
+      invariant adjectives. R_P reads the projective analyses of a
+      string if any exist, else all of them. A displaced word is the
+      dependent of a non-projective arc (57.1). [definition]
+58.2. In this world every non-projective arc is NP-internal: an
+      adjective's or a genitive's, never a verb dependent's. [proved]
+      (the root word dominates every word; D131 checks it on every
+      pair)
+58.3. Does licensing crossings cost Latin more ambiguity than ideal
+      endings would?
+58.3.1. No. Attachment cells open under all analyses but forced under
+        the projective ones, over projective pairs: L1 6.49%, L0
+        6.45%, L2 7.29%, L3 7.31% (numerators 884,736, 878,568,
+        993,296, 996,352 over 13,631,616 cells). Registered Q1 FAILS
+        on A(L1) <= A(L0); its other clauses hold. [exact] (D131
+        Part B)
+58.3.1.1. The measure is a difference, and syncretism opens cells
+          under the projective reading too: open under all analyses
+          L0 2,209,476 against L1 1,953,792, under the projective ones
+          1,330,908 against 1,069,056. [exact] (D131 T2 probe with
+          the oracle's functions; the numerators of 58.3.1 are pinned)
+58.4. Do endings protect a nesting-first reader from garden paths on
+      crossed sentences?
+58.4.1. Yes, as a whole: R_P misreads L1 57.08%, L0 60.24%, L2 86.38%,
+        L3 95.90% of the 4,018,176 crossed pairs. Latin sits near the
+        ideal. [exact] (D131 Part B)
+58.4.2. But not through the displaced word's own syncretism: at L0 a
+        syncretic displaced word gives 45.54% garden paths, unambiguous
+        ones 70.63%. Registered Q2 FAILS on that clause; B(L0) < B(L2)
+        holds. [exact] (D131 Part B)
+58.4.3. Displaced ADJECTIVES are what endings pay for: crossed pairs
+        displacing only adjectives (663,552) are misread 0% at L1,
+        6.49% at L0 (syncretic 7.28%, unambiguous 1.13%), 35.70% at L2,
+        78.86% at L3. [exact] (D131 Part B, descriptive: the split was
+        made after the run)
+58.4.4. Displaced GENITIVES are not: crossed pairs displacing a
+        genitive (3,354,624) are misread 68.38% at L1, 70.87% at L0,
+        96.40% at L2, 99.27% at L3; they are 96.4% of Q2's
+        "unambiguous" side at L0. [exact] (D131 Part B, descriptive)
+58.4.5. Agreement says which word a word goes with; a case ending
+        alone says only its role. An adjective carries agreement with
+        its noun, a genitive carries none, so endings can reconnect a
+        displaced adjective and cannot place a displaced genitive.
+        [interpretation] (fits 57.5.4.1: in real Latin the crossing arc
+        is usually a displaced agreeing word)
+58.4.5.obj.1. Objection: the split of 58.4.3-4 was chosen after the
+              registered split failed, so it may be the one cut that
+              tells the hoped-for story.
+58.4.5.obj.1.1. Reply: the split is forced by the grammar (58.2: an
+                NP-internal crossing displaces an adjective or a
+                genitive, nothing else), not chosen among many; but as
+                a prediction it is untested until a new world (other
+                lemmas, six words) is registered against it.
+58.5. Can a nesting-first reader, with any endings, place a displaced
+      genitive without statistics or order preference? [open] (slice 2
+      of N14: the exact settler, brainstorm XIV)
 ```

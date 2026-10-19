@@ -591,6 +591,11 @@ is through Kolev's bound and is known to be inexact).
 crossing? Real endings at four morphology levels, readers with and
 without crossings, exact. Slice 2 (the settler at three temperatures,
 brainstorm XIV) still open.*
+*D131 done (KC 58): both registered predictions failed (measure
+design); descriptively, endings pay for displaced ADJECTIVES (garden
+paths 0% / 6.5% / 35.7% / 78.9% from ideal to bare) and not for
+displaced GENITIVES (68-99% at every level). Slice 2's settler has
+the genitive as its target.*
 
 **Why.** Fran's refinement of the skeleton: not syllogisms or facts but
 "a library of things that can take different kinds of slots, and an

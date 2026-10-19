@@ -256,6 +256,11 @@ once per word multiset (it ignores order); P and M filter it per order
      unambiguous forms like *regis*) dominate its "unambiguous" side.
 3. **T3:** findings.md, claims.md, ledger (N14 stays open for slice
    2), archive.sh.
+   *T3 done 2026-10-19:* findings.md; KC 58 in Part XI (with an
+   objection slot on the post-hoc split) and a Revisions entry; ledger
+   note on N14 (open for slice 2); demo-proposals N14 marked; frozen
+   with archive.sh (demo-snapshot.c, 13,615 lines, 14 library files,
+   output identical, 118 lines).
 4. **T4:** independent review with its own oracle, then fixes.
 
 ## Task 0 findings (2026-10-19)
