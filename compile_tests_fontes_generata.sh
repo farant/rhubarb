@@ -189,6 +189,7 @@ declare -a SOURCE_FILES=(
     "lib/nuntium.c"
     "lib/nuntium_schema.c"
     "lib/nuntium_schema_generare.c"
+    "lib/oceanus.c"
     "lib/organa_infixa.c"
     "lib/organum.c"
     "lib/organum_canon.c"

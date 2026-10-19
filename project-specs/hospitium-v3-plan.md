@@ -333,6 +333,39 @@ with this plan.
   *_macos.c compiled on Linux, macOS util.h, -Wformat-overflow in
   diurna.c, thesaurus.c ...): drift since 2026-08-03, parked
   (...JWP9A), not fixed here.
+- **R28 (T10)** - deployment shape:
+  - The spec's ExecStart has no invite code, which would leave
+    registration closed. exemplar gained `-invitatio-via <file>`; the
+    unit passes `/var/lib/exemplar/invitatio`, which the setup script
+    creates with a random code ON THE DROPLET (0600, owner exemplar) -
+    never in the unit, in `ps`, or on the Mac. Fran reads it with
+    `ssh smaragda sudo cat /var/lib/exemplar/invitatio`.
+  - Scripts use scp (rsync may be absent) into /tmp, then `sudo install`
+    with owner and mode; `-siccum` is the default and prints every
+    local and remote command; the deploy dry run also prints the
+    rollback it would run. On the very first deploy there is no
+    `.prior`, so a failed health check cannot roll back - the script
+    says so by name.
+  - The unit adds hardening beyond the spec list (PrivateDevices,
+    ProtectKernel*, ProtectControlGroups, RestrictAddressFamilies,
+    MemoryMax 256M - two argon2id jobs at 19 MiB fit easily).
+- **R29 (T10)** - oceanus safety: the next-page URL must start with
+  the configured base (otherwise error, not followed - the token is
+  never sent to another host); two records with the same type and name
+  -> ERROR, nothing touched; IDEM compares data AND ttl; the domain is
+  validated `[a-z0-9.-]` before it enters a URL; the token file is
+  opened O_NOFOLLOW, must be regular, mode `& 077 == 0`, prefix
+  `dop_v1_`; the Bearer value is zeroed right after the request copies
+  it. The parameter is `scheda` (`registrum` is a latina.h macro).
+  The hostname split is "first label / rest" (exemplar | golden.earth),
+  enough for this domain; multi-label public suffixes would need
+  explicit arguments.
+- **R30 (T10)** - tests: the fake DigitalOcean API is hospitium in a
+  forked child, seeded before the fork, counting writes behind `GET
+  /_contator`. Lint: `ttl` glossed (DNS abbreviation); renames
+  `_scriptiones` -> `_scripta_numerare`, `_sectio_crud` ->
+  `_sectio_cyclus`. The first mode plant was a tautology clang refused
+  to compile; rewritten as a never-set mode bit -> red.
 
 ## Review focus
 

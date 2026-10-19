@@ -1,7 +1,11 @@
 /* exemplar.c - applicatio probans hospitii v3 (exemplar.golden.earth)
  *
  *   exemplar -data <dir> [-portus N] [-hospes 127.0.0.1]
- *            [-invitatio <codex>] [-procurator] [-acta]
+ *            [-invitatio <codex> | -invitatio-via <filum>]
+ *            [-procurator] [-acta]
+ *
+ * -invitatio-via: codex ex filo (spatia finalia abiecta) - in
+ * productione (systemd), ne codex in 'ps' aut in unitate appareat.
  *
  * Principale tenue: argumenta, reactor UNUS (servus, labores
  * argon2id, signa), SIGTERM/SIGINT -> sistere molliter (X s), deinde
@@ -13,6 +17,8 @@
 #include "reactor.h"
 #include "hospitium.h"
 #include "exemplar_nucleus.h"
+#include "filum.h"
+#include "chorda.h"
 
 #include <signal.h>
 #include <stdio.h>
@@ -35,7 +41,8 @@ interior s32
 _usus (vacuum)
 {
     fprintf(stderr, "usus: exemplar -data <dir> [-portus N] "
-        "[-hospes H] [-invitatio C] [-procurator] [-acta]\n");
+        "[-hospes H] [-invitatio C | -invitatio-via F] [-procurator] "
+        "[-acta]\n");
     redde II;
 }
 
@@ -49,6 +56,7 @@ principale (
                  Reactor* r;
                 Exemplar* e;
                  integer  k;
+      constans character* via_invitationis = NIHIL;
 
     memset(&cfg, ZEPHYRUM, magnitudo(cfg));
     per (k = I; k < argc; k++)
@@ -71,6 +79,11 @@ principale (
                      && k + I < argc)
         {
             cfg.invitatio = argv[++k];
+        }
+        alioquin si (   strcmp(argv[k], "-invitatio-via") == ZEPHYRUM
+                     && k + I < argc)
+        {
+            via_invitationis = argv[++k];
         }
         alioquin si (strcmp(argv[k], "-procurator") == ZEPHYRUM)
         {
@@ -95,6 +108,26 @@ principale (
     si (!r)
     {
         redde I;
+    }
+    si (via_invitationis)
+    {
+        chorda c = filum_legere_totum(via_invitationis, p);
+
+        dum (   c.mensura > 0 && (c.datum[c.mensura - I] == '\n'
+             || c.datum[c.mensura - I] == '\r'
+             || c.datum[c.mensura - I] == ' '))
+        {
+            c.mensura--;
+        }
+        si (c.mensura == 0)
+        {
+            fprintf(stderr, "exemplar: invitatio %s legi nequit - "
+                "inscriptio clausa\n", via_invitationis);
+        }
+        alioquin
+        {
+            cfg.invitatio = chorda_ut_cstr(c, p);
+        }
     }
     cfg.reactor  = r;
     e            = exemplar_creare(&cfg, p);
