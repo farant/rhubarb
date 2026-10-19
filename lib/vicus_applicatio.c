@@ -2461,6 +2461,152 @@ hodie_sanctorum (
     redde VERUM;
 }
 
+/* corpus pigre apertum (semel temptatum); NIHIL si absens */
+interior SanctiCorpus*
+corpus_sanctorum (
+    ContextusSanctorum* cs)
+{
+    constans character* directorium;
+
+    si (!cs->temptatum)
+    {
+        directorium    = getenv("RHUBARB_SANCTI");
+        cs->corpus     = sancti_corpus_aperire(directorium
+            && directorium[ZEPHYRUM] ? directorium : "sancti",
+            cs->piscina, cs->intern);
+        cs->temptatum  = VERUM;
+    }
+    redde cs->corpus;
+}
+
+/* festum generale aut usa? (calendaria visus diei) */
+interior b32
+festum_diei (
+    constans SanctiFestum* f)
+{
+    redde f->calendarium == SANCTI_CALENDARIUM_GENERALE
+        || f->calendarium == SANCTI_CALENDARIUM_USA;
+}
+
+/* titulus ordinis calendarii: nomen et aetas ("Thomas Aquinas ·
+ * c. 1225–1274"); aetate ignota nomen solum */
+interior chorda
+_titulum_sancti (
+    constans Sanctus* s,
+             Piscina* piscina)
+{
+    chorda aetas;
+
+    aetas = sancti_aetas_textus(s, piscina);
+    si (aetas.mensura == ZEPHYRUM)
+    {
+        redde s->titulus;
+    }
+    redde chorda_concatenare(chorda_concatenare(s->titulus,
+        chorda_ex_literis(" \302\267 ", piscina), piscina), aetas,
+        piscina);
+}
+
+/* sancti-plan V2: fons dierum calendarii - sancti quorum festum
+ * (generale aut usa) in [prima, ultima] cadit;
+ * titulus "Thomas Aquinas · c. 1225–1274", referentia = index in
+ * corpore; ctx = ContextusSanctorum* */
+interior b32
+sanctos_legere (
+      vacuum* ctx,
+        Dies  prima,
+        Dies  ultima,
+         Xar* exitus,
+     Piscina* piscina)
+{
+    ContextusSanctorum* cs;
+          SanctiCorpus* corpus;
+                  Dies  dies[XVI];
+                   i32  i;
+                   i32  j;
+                   i32  k;
+                   i32  n;
+
+    cs = (ContextusSanctorum*)ctx;
+    si (!cs || !exitus)
+    {
+        redde FALSUM;
+    }
+    corpus = corpus_sanctorum(cs);
+    si (!corpus)
+    {
+        redde VERUM;   /* bibliotheca absens: dies sine sanctis */
+    }
+    per (i = ZEPHYRUM; i < sancti_numerus(corpus); i++)
+    {
+        constans Sanctus* s = sancti_ad_indicem(corpus, i);
+                  chorda  titulus;
+
+        titulus.datum    = NIHIL;
+        titulus.mensura  = ZEPHYRUM;
+        per (j = ZEPHYRUM; j < xar_numerus(s->festa); j++)
+        {
+            constans SanctiFestum* f = (constans SanctiFestum*)
+                xar_obtinere(s->festa, j);
+
+            si (!festum_diei(f))
+            {
+                perge;
+            }
+            n = fasti_annuum_expandere(f->mensis, f->dies, prima,
+                ultima,
+                dies, XVI);
+            per (k = ZEPHYRUM; k < n; k++)
+            {
+                FastiIntroitus* t = (FastiIntroitus*)xar_addere(exitus);
+
+                si (!t)
+                {
+                    redde FALSUM;
+                }
+                si (!titulus.datum)
+                {
+                    titulus = _titulum_sancti(s, piscina);
+                }
+                memset(t, ZEPHYRUM, magnitudo(FastiIntroitus));
+                t->dies        = dies[k];
+                t->genus       = chorda_ex_literis("sanctus", piscina);
+                t->titulus     = titulus;
+                t->referentia  = (s32)i;
+            }
+        }
+    }
+    redde VERUM;
+}
+
+/* introitum sancti aperire: latus sanctorum in frontem acervi cum
+ * sancto (vicus_acervo_mutare; origo argumentum - Esc calendarium
+ * reddit) */
+interior b32
+sanctum_aperire (
+                     vacuum* ctx,
+    constans FastiIntroitus* introitus)
+{
+    ContextusSanctorum* cs;
+      constans Sanctus* s;
+             character  id[CXXVIII];
+
+    cs = (ContextusSanctorum*)ctx;
+    si (!cs || !introitus || introitus->referentia < ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    s = sancti_ad_indicem(corpus_sanctorum(cs),
+        (i32)introitus->referentia);
+    si (!s || s->id.mensura >= (i32)magnitudo(id))
+    {
+        redde FALSUM;
+    }
+    memcpy(id, s->id.datum, (memoriae_index)s->id.mensura);
+    id[s->id.mensura] = '\0';
+    redde vicus_acervo_mutare(cs->vicus, "sancti", id);
+}
+
 interior b32
 sanctos_montare_in_vico (
                  vacuum* sedes,
@@ -2474,8 +2620,7 @@ sanctos_montare_in_vico (
                     i32  altitudo,
                  vacuum* ctx)
 {
-     ContextusSanctorum* cs;
-     constans character* directorium;
+    ContextusSanctorum* cs;
 
     (vacuum)volumen;
     cs = (ContextusSanctorum*)ctx;
@@ -2483,14 +2628,7 @@ sanctos_montare_in_vico (
     {
         redde FALSUM;
     }
-    si (!cs->temptatum)
-    {
-        directorium    = getenv("RHUBARB_SANCTI");
-        cs->corpus     = sancti_corpus_aperire(directorium
-            && directorium[ZEPHYRUM] ? directorium : "sancti",
-            cs->piscina, cs->intern);
-        cs->temptatum  = VERUM;
-    }
+    (vacuum)corpus_sanctorum(cs);
     si (!sancti_visus_montare((SanctorumMontatio*)sedes, piscina,
         intern,
             repo, id, cs->corpus, hodie_sanctorum, cs->vicus, latitudo,
@@ -2713,6 +2851,9 @@ ContextusNomenclatoris* cn;
         || !ck->fontes
         || !fasti_fontes_addere(ck->fontes, "nomenclator",
                natales_legere, natalem_aperire, cn)
+        || !sanctorum
+        || !fasti_fontes_addere(ck->fontes, "sancti", sanctos_legere,
+               sanctum_aperire, sanctorum)
         || !vicus_genus_addere(app->vicus, "nomenclator",
                magnitudo(NomenclatorMontatio),
                nomenclatorem_montare_in_vico, nomenclatorem_describere,

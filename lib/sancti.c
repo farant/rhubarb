@@ -12,6 +12,9 @@
 #include "iter_directoria.h"
 #include "tabula_dispersa.h"
 #include "chorda_aedificator.h"
+#include "quaerere.h"
+#include "runae.h"
+#include "utf8.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -978,6 +981,171 @@ sancti_quaerere (
                 frange;
             }
         }
+    }
+    redde fructus;
+}
+
+/* textus plicatus: runa quaeque ad litteram basis (runae_basis),
+ * ASCII in minusculas; octeti invalidi omittuntur */
+interior chorda
+_plicare (
+      chorda  textus,
+     Piscina* piscina)
+{
+         chorda  exitus;
+    constans i8* cursor;
+    constans i8* finis;
+
+    exitus.mensura  = ZEPHYRUM;
+    exitus.datum    = (i8*)piscina_allocare(piscina,
+        (memoriae_index)textus.mensura * II + IV);
+    si (!exitus.datum)
+    {
+        redde exitus;
+    }
+    cursor  = textus.datum;
+    finis   = textus.datum + textus.mensura;
+    dum (cursor < finis)
+    {
+        s32 runa = utf8_decodere(&cursor, finis);
+
+        si (runa < ZEPHYRUM)
+        {
+            perge;
+        }
+        runa = runae_basis(runa);
+        si (runa >= 'A' && runa <= 'Z')
+        {
+            runa += 'a' - 'A';
+        }
+        exitus.mensura += (i32)utf8_codere(runa, exitus.datum
+            + exitus.mensura);
+    }
+    redde exitus;
+}
+
+/* puncta termini omnium in scopo (summa); FALSUM si terminus aliquis
+ * non congruit */
+interior b32
+_terminos_concordare (
+      constans Xar* termini,
+            chorda  scopus,
+               s32* puncta,
+           Piscina* piscina)
+{
+    i32 k;
+
+    *puncta = ZEPHYRUM;
+    per (k = ZEPHYRUM; k < xar_numerus(termini); k++)
+    {
+        QuaerereFructus r = quaerere_concordare(
+            *(chorda*)xar_obtinere(termini, k), scopus, piscina);
+
+        si (r.status != QUAERERE_OK)
+        {
+            redde FALSUM;
+        }
+        *puncta += r.puncta;
+    }
+    redde VERUM;
+}
+
+nomen structura {
+    constans Sanctus* sanctus;
+                 s32  puncta;
+} SanctusCongruens;
+
+interior s32
+_comparare_congruentes (
+    constans vacuum* a,
+    constans vacuum* b)
+{
+    constans SanctusCongruens* x = (constans SanctusCongruens*)a;
+    constans SanctusCongruens* y = (constans SanctusCongruens*)b;
+
+    si (x->puncta != y->puncta)
+    {
+        redde x->puncta > y->puncta ? -I : I;
+    }
+    redde chorda_comparare(x->sanctus->id, y->sanctus->id);
+}
+
+Xar*
+sancti_congruentes (
+    constans SanctiCorpus* corpus,
+                   chorda  quaestio,
+                  Piscina* piscina)
+{
+       Xar* termini;
+       Xar* congruentes;
+       Xar* fructus;
+    chorda  q;
+       i32  i;
+       i32  j;
+       i32  initium;
+
+    termini = xar_creare(piscina, (i32)magnitudo(chorda));
+    congruentes = xar_creare(piscina,
+        (i32)magnitudo(SanctusCongruens));
+    fructus = xar_creare(piscina, (i32)magnitudo(Sanctus*));
+    si (!termini || !congruentes || !fructus || !corpus)
+    {
+        redde fructus;
+    }
+    /* termini: spatiis divisi, plicati */
+    q        = _plicare(quaestio, piscina);
+    initium  = ZEPHYRUM;
+    per (i = ZEPHYRUM; i <= q.mensura; i++)
+    {
+        si (i == q.mensura || q.datum[i] == ' ')
+        {
+            si (i > initium)
+            {
+                chorda* t = (chorda*)xar_addere(termini);
+
+                t->datum    = q.datum + initium;
+                t->mensura  = i - initium;
+            }
+            initium = i + I;
+        }
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(corpus->sancti); i++)
+    {
+        constans Sanctus* s = *(Sanctus**)xar_obtinere(corpus->sancti,
+            i);
+                     b32 inventum;
+                     s32 optima;
+                     s32 puncta;
+
+        inventum  = _terminos_concordare(termini, _plicare(s->id,
+            piscina), &optima, piscina);
+        per (j = ZEPHYRUM; j < xar_numerus(s->nomina); j++)
+        {
+            constans SanctiNomen* n = (constans SanctiNomen*)
+                xar_obtinere(s->nomina, j);
+
+            si (   _terminos_concordare(termini, _plicare(n->textus,
+                       piscina), &puncta, piscina)
+                && (!inventum || puncta > optima))
+            {
+                inventum  = VERUM;
+                optima    = puncta;
+            }
+        }
+        si (inventum)
+        {
+            SanctusCongruens* c = (SanctusCongruens*)xar_addere(
+                congruentes);
+
+            c->sanctus  = s;
+            c->puncta   = optima;
+        }
+    }
+    xar_ordinare(congruentes, _comparare_congruentes);
+    per (i = ZEPHYRUM; i < xar_numerus(congruentes); i++)
+    {
+        *(constans Sanctus**)xar_addere(fructus) = ((SanctusCongruens*)
+            xar_obtinere(congruentes, i))->sanctus;
     }
     redde fructus;
 }

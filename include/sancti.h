@@ -202,6 +202,18 @@ sancti_quaerere (
                    chorda  fragmentum,
                   Piscina* piscina);
 
+/* sancti quorum nomen aliquod (aut id) quaestioni congruit modo fzf
+ * (quaerere.h: subsequentia; litterae basis, sine discrimine
+ * maiusculi) - Xar de (constans Sanctus*) ordine congruentiae
+ * (puncta optima inter nomina), deinde id. Termini spatiis divisi
+ * omnes in nomine eodem congruere debent (puncta summantur);
+ * quaestio sine terminis: omnes, ordine id */
+Xar*
+sancti_congruentes (
+    constans SanctiCorpus* corpus,
+                   chorda  quaestio,
+                  Piscina* piscina);
+
 /* sancti celebrationis sanctoralis (mensis, dies, titulus ut in
  * lib/sanctorale.c): Xar de (constans Sanctus*); vacuum si celebratio
  * sine sancto ('-'); NIHIL si celebratio in sanctorale.tsv absens */

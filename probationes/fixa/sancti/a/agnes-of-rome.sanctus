@@ -1,6 +1,7 @@
 <sanctus id="agnes-of-rome" versio="1" genus="persona" status="sanctus">
   <nomen lingua="en" principale="verum">Agnes of Rome</nomen>
   <nomen lingua="la" principale="verum">Agnes</nomen>
+  <nomen lingua="es">Inés de Roma</nomen>
   <obitus locus="Rome" martyrium="verum" fontes="mr ce"/>
   <canonizatio modus="ante-congregationem"/>
   <festum calendarium="generale" mensis="1" dies="21" gradus="memoria" fontes="us"/>

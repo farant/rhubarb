@@ -133,3 +133,10 @@ excerpt found verbatim in its source).
   lifetime and roles, sorts calendar (default, opens on today) / name /
   lifetime, search, record view with paged description and sources.
   Detail: lib/sancti_visus.worklog.md.
+- 2026-10-19 V2 (Fran: "yes, those all sound like good approaches"):
+  fuzzy live search (`sancti_congruentes`, accent-blind through the new
+  `runae_basis`), best-match order (`ordo` congruentia), and a
+  calendar link - the day view lists each saint whose general/US feast
+  falls on that date, double-click opens the record, Esc returns to the
+  calendar (`origo` argumentum). Detail: lib/sancti_visus.worklog.md,
+  lib/runae.worklog.md.

@@ -19,10 +19,21 @@
       <optio>sanctus</optio>
     </campus>
     <campus nomen="ordo" typus="electio" vita="persistens"
-            absens="calendarium" scriptor="sancti.agere">
+            absens="calendarium" scriptor="sancti.agere"
+            nota="congruentia (optimum primum) solum cum quaestione;
+                  sine ea ut calendarium">
       <optio>calendarium</optio>
       <optio>nomen</optio>
       <optio>aetas</optio>
+      <optio>congruentia</optio>
+    </campus>
+    <campus nomen="origo" typus="electio" vita="transiens"
+            absens="index" scriptor="sancti.agere"
+            nota="unde visus sancti apertus: index (Esc ad indicem) aut
+                  argumentum ($saints(id), calendarium - Esc latus
+                  reddit, prius redit)">
+      <optio>index</optio>
+      <optio>argumentum</optio>
     </campus>
     <campus nomen="electus" typus="textus" vita="persistens"
             scriptor="sancti.agere"

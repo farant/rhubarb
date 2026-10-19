@@ -76,7 +76,10 @@ _sectio_plena (
     CREDO_VERUM(s->status == SANCTI_SANCTUS);
     CREDO_CHORDA_AEQUALIS_LITERIS(s->titulus, "Agnes of Rome");
     CREDO_CHORDA_AEQUALIS_LITERIS(s->titulus_latinus, "Agnes");
-    CREDO_AEQUALIS_I32(xar_numerus(s->nomina), II);
+    CREDO_AEQUALIS_I32(xar_numerus(s->nomina), III);
+    /* nomen alienum cum signo (UTF-8 integrum; quaestio congruentes) */
+    CREDO_CHORDA_AEQUALIS_LITERIS(((SanctiNomen*)xar_obtinere(s->nomina,
+        II))->textus, "In\303\251s de Roma");
     CREDO_VERUM(!s->ortus.notus);
     CREDO_VERUM(s->obitus.notus);
     CREDO_VERUM(s->martyr);
@@ -267,6 +270,72 @@ _sectio_corpus (
         "agnes-of-rome", "charles-lwanga-and-companions") == FALSUM);
     CREDO_AEQUALIS_I32(xar_numerus(sancti_quaerere(corpus,
         chorda_ex_literis("a", c->piscina), c->piscina)), III);
+}
+
+/* congruentes: modo fzf (subsequentia), signa diacritica et maiusculae
+ * neglecta, termini (spatiis divisi) omnes in nomine eodem, ordo
+ * congruentiae */
+interior Xar*
+_congruentes (
+          SanctiCorpus* corpus,
+    constans character* quaestio,
+               Piscina* piscina)
+{
+    redde sancti_congruentes(corpus, chorda_ex_literis(quaestio,
+        piscina),
+        piscina);
+}
+
+interior vacuum
+_sectio_congruentes (
+    CredoContextus* c)
+{
+    SanctiCorpus* corpus;
+
+    corpus = sancti_corpus_aperire(FIXA, c->piscina,
+        internamentum_creare(c->piscina));
+    CREDO_NECESSE_NON_NIHIL(corpus);
+    /* subsequentia, non fragmentum contiguum */
+    CREDO_VERUM(_ids_sunt(_congruentes(corpus, "thaq", c->piscina),
+        "thomas-aquinas", NIHIL));
+    /* nomen alienum cum signo: quaestio sine signo, cum signo,
+     * maiuscula */
+    CREDO_VERUM(_ids_sunt(_congruentes(corpus, "ines", c->piscina),
+        "agnes-of-rome", NIHIL));
+    CREDO_VERUM(_ids_sunt(_congruentes(corpus, "In\303\251s",
+        c->piscina),
+        "agnes-of-rome", NIHIL));
+    CREDO_VERUM(_ids_sunt(_congruentes(corpus, "INES", c->piscina),
+        "agnes-of-rome", NIHIL));
+    /* termini quolibet ordine, omnes in nomine uno */
+    CREDO_VERUM(_ids_sunt(_congruentes(corpus, "rome agnes",
+        c->piscina),
+        "agnes-of-rome", NIHIL));
+    CREDO_VERUM(_ids_sunt(_congruentes(corpus, "lwanga comp",
+        c->piscina), "charles-lwanga-and-companions", NIHIL));
+    /* "agnes" (en) et "roma" (es): nomina diversa - nulla */
+    CREDO_VERUM(_ids_sunt(_congruentes(corpus, "agnes roma",
+        c->piscina),
+        NIHIL, NIHIL));
+    /* id quoque quaeritur */
+    CREDO_VERUM(_ids_sunt(_congruentes(corpus, "of-rome", c->piscina),
+        "agnes-of-rome", NIHIL));
+    /* ordo congruentiae, non id: "an" contiguum in "lwANga", "ANd"
+     * (charles) melius quam a..n dispersa (agnes, thomas) */
+    {
+        Xar* x = _congruentes(corpus, "an", c->piscina);
+
+        CREDO_AEQUALIS_I32(xar_numerus(x), III);
+        CREDO_CHORDA_AEQUALIS_LITERIS((*(constans Sanctus**)
+            xar_obtinere(x, ZEPHYRUM))->id,
+            "charles-lwanga-and-companions");
+    }
+    CREDO_VERUM(_ids_sunt(_congruentes(corpus, "zzz", c->piscina),
+        NIHIL,
+        NIHIL));
+    /* quaestio vacua (aut spatia sola): omnes, ordine id */
+    CREDO_AEQUALIS_I32(xar_numerus(_congruentes(corpus, "  ",
+        c->piscina)), III);
 }
 
 interior vacuum
@@ -478,6 +547,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "dies", _sectio_dies, NIHIL, NIHIL, NIHIL, NIHIL },
     { "vitia", _sectio_vitia, NIHIL, NIHIL, NIHIL, NIHIL },
     { "corpus", _sectio_corpus, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "congruentes", _sectio_congruentes, NIHIL, NIHIL, NIHIL, NIHIL },
     { "celebratio", _sectio_celebratio, NIHIL, NIHIL, NIHIL, NIHIL },
     { "aetas", _sectio_aetas, NIHIL, NIHIL, NIHIL, NIHIL },
     { "festum_primum", _sectio_festum_primum, NIHIL, NIHIL, NIHIL,

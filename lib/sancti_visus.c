@@ -283,12 +283,49 @@ _comparare_aetas (
         < clavis_secunda ? -I : I) : _titulos_comparare(a, b);
 }
 
-/* ordo currens: 0 calendarium, 1 nomen, 2 aetas */
+/* quaestio activa: littera aliqua praeter spatia */
+interior b32
+_activa (
+    chorda q)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < q.mensura; i++)
+    {
+        si (q.datum[i] != ' ')
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* quaestio currens: prompta aperta = textus vivus (dum scribitur),
+ * aliter quaestio commissa; textus in exitus[PROMPTA_MAXIMA] */
+interior chorda
+_quaestio (
+    constans SanctorumMontatio* m,
+                     character* exitus)
+{
+    chorda q;
+
+    si (prompta_aperta(&m->ramus, NIHIL))
+    {
+        q.datum    = (i8*)exitus;
+        q.mensura  = prompta_textus(&m->ramus, exitus);
+        redde q;
+    }
+    redde _campus(m, "quaestio");
+}
+
+/* ordo currens: 0 calendarium, 1 nomen, 2 aetas, 3 congruentia (solum
+ * cum quaestione activa; sine ea calendarium) */
 interior s32
 _ordo (
     constans SanctorumMontatio* m)
 {
-    chorda o;
+       chorda o;
+    character textus[PROMPTA_MAXIMA];
 
     o = _campus(m, "ordo");
     si (chorda_aequalis_literis(o, "nomen"))
@@ -299,24 +336,34 @@ _ordo (
     {
         redde II;
     }
+    si (   chorda_aequalis_literis(o, "congruentia")
+        && _activa(_quaestio(m, textus)))
+    {
+        redde III;
+    }
     redde ZEPHYRUM;
 }
 
-/* sancti indicis (quaestione filtrati) ordine currenti - Xar de
- * (constans Sanctus*) */
+/* sancti indicis (quaestione currenti filtrati, fzf) ordine currenti
+ * - Xar de (constans Sanctus*); congruentia: ordo sancti_congruentes */
 interior Xar*
 _sancti (
     constans SanctorumMontatio* m,
                        Piscina* p)
 {
-    chorda  q;
-       Xar* x;
-       i32  i;
+       chorda  q;
+          Xar* x;
+          i32  i;
+    character  textus[PROMPTA_MAXIMA];
 
-    q = _campus(m, "quaestio");
-    si (q.mensura > ZEPHYRUM)
+    q = _quaestio(m, textus);
+    si (_activa(q))
     {
-        x = sancti_quaerere(m->corpus, q, p);
+        x = sancti_congruentes(m->corpus, q, p);
+        si (x && _ordo(m) == III)
+        {
+            redde x;
+        }
     }
     alioquin
     {
@@ -1054,15 +1101,25 @@ fac_aperire (
     redde _aperire(cp, cp->electus);
 }
 
-/* /: quaestio (prompta, quaestione currenti praeimpleta) */
+/* /: quaestio (prompta, quaestione currenti praeimpleta); ordo
+ * congruentiae (index scribendo filtratur, optimum primum) */
 interior b32
 fac_quaestionem (
     vacuum* ctx)
 {
     ContextusPraecepti* cp = (ContextusPraecepti*)ctx;
+    constans character* tituli[III];
+    constans character* valores[III];
 
-    redde prompta_aperire(&cp->m->ramus, actio_sanctorum, "quaestio",
-        _campus(cp->m, "quaestio"), cp->p);
+    tituli[ZEPHYRUM]   = "ordo";
+    valores[ZEPHYRUM]  = "congruentia";
+    tituli[I]          = "electus";
+    valores[I]         = "";
+    tituli[II]         = "pagina";
+    valores[II]        = "";
+    redde _campos_scribere(cp->m, tituli, valores, III)
+        && prompta_aperire(&cp->m->ramus, actio_sanctorum, "quaestio",
+               _campus(cp->m, "quaestio"), cp->p);
 }
 
 /* t: ad hodie (electus praestitutus ordinis currentis) */
@@ -1075,19 +1132,22 @@ fac_hodie (
     redde _praestitutum_scribere(cp->m, cp->p);
 }
 
-/* s: ordo calendarium -> nomen -> aetas -> calendarium */
+/* s: ordo calendarium -> nomen -> aetas -> calendarium; cum quaestione
+ * activa aetas -> congruentia -> calendarium */
 interior b32
 fac_ordinem (
     vacuum* ctx)
 {
-     ContextusPraecepti* cp = (ContextusPraecepti*)ctx;
-     constans character* tituli[III];
-     constans character* valores[III];
-                    s32  o;
+      ContextusPraecepti* cp = (ContextusPraecepti*)ctx;
+      constans character* tituli[III];
+      constans character* valores[III];
+                     s32  o;
+               character  textus[PROMPTA_MAXIMA];
 
     o                 = _ordo(cp->m);
     tituli[ZEPHYRUM]  = "ordo";
     valores[ZEPHYRUM]  = o == ZEPHYRUM ? "nomen" : o == I ? "aetas"
+        : (o == II && _activa(_quaestio(cp->m, textus))) ? "congruentia"
         : "calendarium";
     tituli[I]    = "electus";
     valores[I]   = "";
@@ -1097,15 +1157,15 @@ fac_ordinem (
         && _praestitutum_scribere(cp->m, cp->p);
 }
 
-/* Esc in indice: quaestio primum; deinde non consumitur (vicus latus
- * tollit) */
+/* Esc in indice: quaestio primum (ordo calendarii redit); deinde non
+ * consumitur (vicus latus tollit) */
 interior b32
 fac_redire_indice (
     vacuum* ctx)
 {
     ContextusPraecepti* cp = (ContextusPraecepti*)ctx;
-    constans character* tituli[III];
-    constans character* valores[III];
+    constans character* tituli[IV];
+    constans character* valores[IV];
 
     si (_campus(cp->m, "quaestio").mensura == ZEPHYRUM)
     {
@@ -1117,7 +1177,9 @@ fac_redire_indice (
     valores[I]         = "";
     tituli[II]         = "pagina";
     valores[II]        = "";
-    redde _campos_scribere(cp->m, tituli, valores, III)
+    tituli[III]        = "ordo";
+    valores[III]       = "calendarium";
+    redde _campos_scribere(cp->m, tituli, valores, IV)
         && _praestitutum_scribere(cp->m, cp->p);
 }
 
@@ -1193,7 +1255,9 @@ fac_sanctum_priorem (
     redde _sanctum_vertere((ContextusPraecepti*)ctx, -I);
 }
 
-/* Esc in visu sancti: ad indicem (electus = apertus) */
+/* Esc in visu sancti: ad indicem (electus = apertus); sanctus per
+ * argumentum apertus (origo) - non consumitur: vicus latus tollit,
+ * prius (calendarium) redit */
 interior b32
 fac_ad_indicem (
     vacuum* ctx)
@@ -1201,6 +1265,11 @@ fac_ad_indicem (
     ContextusPraecepti* cp = (ContextusPraecepti*)ctx;
     constans character* tituli[III];
     constans character* valores[III];
+
+    si (chorda_aequalis_literis(_campus(cp->m, "origo"), "argumentum"))
+    {
+        redde FALSUM;
+    }
 
     tituli[ZEPHYRUM]   = "visus";
     valores[ZEPHYRUM]  = "index";
@@ -1253,8 +1322,8 @@ _promptam_committere (
                chorda  textus,
               Piscina* p)
 {
-     constans character* tituli[III];
-     constans character* valores[III];
+     constans character* tituli[IV];
+     constans character* valores[IV];
               character* q;
                     i32  i;
                     i32  n;
@@ -1282,7 +1351,12 @@ _promptam_committere (
     valores[I]         = "";
     tituli[II]         = "pagina";
     valores[II]        = "";
-    redde _campos_scribere(m, tituli, valores, III)
+    /* quaestio vacua: ordo calendarii (ut Esc quaestionem tollens) */
+    tituli[III]        = "ordo";
+    valores[III]       = _activa(chorda_ex_literis(q,
+        p)) ? "congruentia"
+        : "calendarium";
+    redde _campos_scribere(m, tituli, valores, IV)
         && _praestitutum_scribere(m, p);
 }
 
@@ -1478,13 +1552,14 @@ _indicem_pingere (
            i32  i;
         chorda  q;
      character  textus[CXXVIII];
+     character  vivus[PROMPTA_MAXIMA];
 
     x = _sancti(m, md->piscina);
     l = _album(m, x, md->piscina);
     e = _electus(m, x);
     k = _pagina(l, e);
     n = album_paginae(l);
-    q = _campus(m, "quaestio");
+    q = _quaestio(m, vivus);
     per (i = ZEPHYRUM; i < componens_numerus_liberorum(c); i++)
     {
         f = componens_liberum(c, i);
@@ -1511,7 +1586,7 @@ _indicem_pingere (
                     (integer)(q.mensura > XL ? XL : q.mensura),
                     (constans character*)q.datum, _ordo(m) == I
                     ? "by name" : _ordo(m) == II ? "by lifetime"
-                    : "by date");
+                    : _ordo(m) == III ? "best match" : "by date");
             }
             alioquin
             {
@@ -2012,8 +2087,8 @@ sancti_visus_argumentum_ponere (
       constans character* argumentum)
 {
       constans Sanctus* s;
-    constans character* tituli[IV];
-    constans character* valores[IV];
+    constans character* tituli[V];
+    constans character* valores[V];
 
     si (!m || !m->corpus)
     {
@@ -2023,7 +2098,9 @@ sancti_visus_argumentum_ponere (
     {
         tituli[ZEPHYRUM]   = "visus";
         valores[ZEPHYRUM]  = "index";
-        redde _campos_scribere(m, tituli, valores, I);
+        tituli[I]          = "origo";
+        valores[I]         = "index";
+        redde _campos_scribere(m, tituli, valores, II);
     }
     s = sancti_invenire(m->corpus, chorda_ex_literis(argumentum,
         m->piscina));
@@ -2039,5 +2116,7 @@ sancti_visus_argumentum_ponere (
     valores[II]        = argumentum;
     tituli[III]        = "pagina_textus";
     valores[III]       = "";
-    redde _campos_scribere(m, tituli, valores, IV);
+    tituli[IV]         = "origo";
+    valores[IV]        = "argumentum";
+    redde _campos_scribere(m, tituli, valores, V);
 }
