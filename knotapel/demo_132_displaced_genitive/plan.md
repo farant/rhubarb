@@ -241,8 +241,30 @@ O(n^2) per position at most, small. Seconds. Exact rationals for E via
    genitives, answered for the registered rules) and a Revisions entry;
    ledger note on N15; demo-proposals N15 marked; frozen with
    archive.sh (demo-snapshot.c, 17,345 lines, 22 library files, output
-   identical, 126 lines, run with D132_UD_NC set).
+   identical, 126 lines, run with D132_UD_NC set) [T4: 125 by wc -l;
+   archive.sh counts one more].
 4. **T4:** independent review with its own oracle, then fixes.
+   *T4 review 2026-10-19 (recensor-d132):* own oracle (descendant
+   bitmasks, an analytic null, binomial grouping for the tail) and
+   descriptive scripts; zero mismatches; rules unchanged; verdicts
+   follow; no H. M 6, L 7, N 5, all acted on (findings "Review"); Fran
+   approved the list. The substantive one, **M2**: two stricter nulls.
+   Moving the whole subtree changes nothing; keeping the genitive no
+   farther from its head than observed raises E / N most of the way to
+   S / N (S > E still in six of six, by 2-7 points, tails 0.11-0.29):
+   the registered null's margin is mostly DISTANCE. Headline,
+   interpretation and KC 59 changed accordingly (59.3.1, 59.3.obj.2.1,
+   59.5.2 [falls] with corrected children). Both nulls, the genitives
+   with no host (M6) and the nearest-alternative distances (L1, the
+   report this plan promised) are now computed in main.c and pinned
+   from oracle_d132.py; the rules' null rates (M1), the implausible
+   alternatives (L2), the whole-tree view (M3) and the blockers (N1)
+   are the review's scripts, cited as such. Reversal relabelled a
+   symmetry sanity check (L3). Checks 27 full, 23 quick; 5 new plants
+   red. Snapshot re-frozen.
+   - Lesson: the hand walk-through tests a MEASURE; a NULL needs its own
+     question before registering - what else, besides the hypothesis,
+     makes the observed placements special? Here: distance.
 
 ## Task 0 findings (2026-10-19)
 
@@ -256,7 +278,8 @@ O(n^2) per position at most, small. Seconds. Exact rationals for E via
 - **Heads.** The true head is NOUN or PROPN in 95.4% (CIRCSE), 99.5%
   (LLCT), 88.6% (PROIEL), 88.6% (Perseus), 89.6% (ITTB), 89.0%
   (UDante) of genitive nmod arcs; the rest are ADJ, DET, PRON, NUM,
-  VERB (e.g. partitives after numerals and pronouns). As approved, the
+  VERB (e.g. partitives after numerals and pronouns) [T4: also ADV and
+  one CCONJ]. As approved, the
   population is EVERY genitive nmod arc; the noun-headed subset is
   reported beside it, not decided on.
 - **Dependents** are mostly NOUN and PROPN, also PRON (*eius*) and some

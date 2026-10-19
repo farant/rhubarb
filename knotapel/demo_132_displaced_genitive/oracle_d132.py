@@ -145,15 +145,53 @@ def moved(heads, host, g, p):
     return nh, nhost, newpos[g]
 
 
-def null_share(heads, host, g):
+def null_share(heads, host, g, maxdist=None):
+    """maxdist: keep only placements no farther from the head than that
+    (the distance-limited null, T4 review)"""
     m = k = 0
     for p in range(len(heads)):
         nh, nhost, ng = moved(heads, host, g, p)
+        if maxdist is not None and abs(ng - nh[ng - 1]) > maxdist:
+            continue
         if nonproj(nh, ng):
             m += 1
             if n_alternatives(nh, ng, nhost) == 0:
                 k += 1
     return m, k
+
+
+def null_block(heads, host, g):
+    """the genitive's whole subtree moved as a block through every gap"""
+    n = len(heads)
+    sub = sorted(descendants(heads, g))
+    others = [w for w in range(1, n + 1) if w not in sub]
+    m = k = 0
+    for p in range(len(others) + 1):
+        order = others[:p] + sub + others[p:]
+        newpos = {w: i + 1 for i, w in enumerate(order)}
+        nh = [0] * n
+        nhost = [False] * n
+        for w in range(1, n + 1):
+            nh[newpos[w] - 1] = 0 if heads[w - 1] == 0 else newpos[heads[w - 1]]
+            nhost[newpos[w] - 1] = host[w - 1]
+        if nonproj(nh, newpos[g]):
+            m += 1
+            k += n_alternatives(nh, newpos[g], nhost) == 0
+    return m, k
+
+
+def nearest_alt(heads, g, host):
+    sub = descendants(heads, g)
+    best = 0
+    for c in range(1, len(heads) + 1):
+        if not host[c - 1] or c == heads[g - 1] or c in sub:
+            continue
+        h2 = list(heads)
+        h2[g - 1] = c
+        if not nonproj(h2, g):
+            d = abs(c - g)
+            best = d if best == 0 else min(best, d)
+    return best
 
 
 def tail(probs, s):
@@ -177,7 +215,8 @@ def new_row():
     return dict(trees=0, gen=0, gen_nh=0, nested=0, N=0, S=0, E=Fraction(0),
                 probs=[], nhN=0, nhS=0, nhE=Fraction(0), alt=[0, 0, 0, 0],
                 adj=0, aN=0, adeg=0, aS=0, aE=Fraction(0), auS=0,
-                auE=Fraction(0))
+                auE=Fraction(0), nearE=Fraction(0), nearp=[],
+                blkE=Fraction(0), gdeg=0, adist=[0] * 6)
 
 
 def genre(sid):
@@ -219,6 +258,12 @@ def main():
                     if disp:
                         alt = n_alternatives(heads, g, noun)
                         m, k = null_share(heads, noun, g)
+                        mn, kn = null_share(heads, noun, g, abs(g - h))
+                        mb, kb = null_block(heads, noun, g)
+                        sub = descendants(heads, g)
+                        nohost = not any(noun[c - 1] and c != h and c not in sub
+                                         for c in range(1, n + 1))
+                        dn = nearest_alt(heads, g, noun) if alt else 0
                     for t in targets:
                         r = rows[t]
                         r['gen'] += 1
@@ -232,6 +277,12 @@ def main():
                             r['alt'][min(alt, 4) - 1] += 1
                         r['E'] += Fraction(k, m)
                         r['probs'].append(Fraction(k, m))
+                        r['nearE'] += Fraction(kn, mn)
+                        r['nearp'].append(Fraction(kn, mn))
+                        r['blkE'] += Fraction(kb, mb)
+                        r['gdeg'] += nohost
+                        if alt:
+                            r['adist'][5 if dn >= 10 else 4 if dn >= 5 else dn - 1] += 1
                         if noun[h - 1]:
                             r['nhN'] += 1
                             r['nhS'] += alt == 0
@@ -262,13 +313,17 @@ def main():
         if r['trees'] == 0:
             continue
         p = tail(r['probs'], r['S'])
+        pn = tail(r['nearp'], r['S'])
         print('%-14s trees=%d gen=%d gen_nh=%d nested=%d N=%d S=%d E=%s '
               'nhN=%d nhS=%d nhE=%s alt=%s adj=%d aN=%d adeg=%d aS=%d aE=%s '
-              'auS=%d auE=%s tail_e6=%d'
+              'auS=%d auE=%s tail_e6=%d nearE=%s near_tail_e6=%d blkE=%s '
+              'gdeg=%d adist=%s'
               % (name, r['trees'], r['gen'], r['gen_nh'], r['nested'], r['N'],
                  r['S'], r['E'], r['nhN'], r['nhS'], r['nhE'],
                  ','.join(map(str, r['alt'])), r['adj'], r['aN'], r['adeg'],
-                 r['aS'], r['aE'], r['auS'], r['auE'], round(p * 1000000)))
+                 r['aS'], r['aE'], r['auS'], r['auE'], round(p * 1000000),
+                 r['nearE'], round(pn * 1000000), r['blkE'], r['gdeg'],
+                 ','.join(map(str, r['adist']))))
 
 
 if __name__ == '__main__':

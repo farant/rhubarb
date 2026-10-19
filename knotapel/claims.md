@@ -144,6 +144,15 @@ ranked by how much it bears on KC 47.
   G2 hold). The demo's own review is task T4, after these nodes were
   written.
 
+- **D132 review (T4, 2026-10-19).** The reviewer's own oracle matched
+  every number in 59 (zero mismatches); no rule changed; no H finding.
+  Marked [falls] with corrected children: 59.3.1 (59.3.1.1: the excess
+  is mostly distance), 59.3.obj.2.1 (59.3.obj.2.2), 59.5.2 (59.5.2.1).
+  Appended: 59.3.1.1, 59.3.2.1, 59.3.obj.1.2, 59.3.obj.2.2, 59.4.1,
+  59.4.2, 59.5.2.1, 59.6.1, 59.7, 59.8. Corrected in place: the header
+  (grades), 59.3.3 (precision, grade), 59.3.obj.1.1 (resolved). No
+  address removed or renumbered.
+
 ## Part I. Definitions
 
 ```text
@@ -1576,7 +1585,9 @@ ranked by how much it bears on KC 47.
     ending cannot name its head (58.4.4)? (D132, proposal N15; six
     Latin UD treebanks as D130, headline without punctuation. Grades:
     [exact] counts over gold trees, pinned from D132's independent
-    oracle, oracle_d132.py; the demo's own review is T4)
+    oracle, oracle_d132.py, and re-derived by the T4 review's own
+    oracle, zero mismatches; [checked] here = the T4 review's scripts,
+    not a committed demo)
 59.1. A genitive arc is nmod with Case=Gen on the dependent; it is
       DISPLACED when per-arc non-projective (57.1). A candidate host is
       a NOUN or PROPN other than the true head, outside the genitive's
@@ -1594,15 +1605,30 @@ ranked by how much it bears on KC 47.
         35.27%, LLCT 60.00% vs 10.94%, PROIEL 65.91% vs 54.58%, Perseus
         64.29% vs 45.28%, ITTB 66.20% vs 45.38%, UDante 74.19% vs
         50.54%. Registered G1 (S > E in at least five of six) HOLDS in
-        six of six. [exact] (D132 Part B)
+        six of six. [exact] (D132 Part B) [falls: the "Yes" overstates;
+        see 59.3.1.1]
+59.3.1.1. Than the registered positional null: S > E in six of six,
+          registered G1 HOLDS. But G1 is a sign rule chance meets with
+          P 0.075 (six of six: 0.009), and against a null that keeps the
+          genitive no farther from its head than observed the margins
+          shrink to 2-7 points (LLCT 30) with tails 0.11-0.29
+          (59.3.obj.1.2): the excess over the registered null is mostly
+          DISTANCE - displaced genitives are short, and short is safe.
+          [exact] (D132 Part B, the stricter null pinned since the T4
+          fixes; the rules' null rates [checked])
 59.3.2. Most displaced genitives are safe: registered G2 (S / N >= 1/2
         in at least five of six) HOLDS in five of six; CIRCSE (Seneca,
         verse) fails at 45.00%. [exact] (D132 Part B)
+59.3.2.1. It turns on one LLCT genitive (S = 3 of N = 5; one fewer and
+          G2 holds in four of six), and LLCT's five are about four
+          instances of one charter formula. Without the genitives that
+          have no candidate host at all (59.7), G2 still holds in five
+          of six. [exact] (D132 Part B; T4 review M4)
 59.3.3. Under the null, each treebank's safe count alone is unlikely:
         P(null >= S) is 0.0278 (CIRCSE), 0.0084 (LLCT), 0.0368
-        (PROIEL), 0.0033 (Perseus), 0.000001 (ITTB), 0.0016 (UDante).
-        [exact] (D132 Part B; descriptive, added after the verdicts;
-        the null treats genitives as independent)
+        (PROIEL), 0.0033 (Perseus), 1.2e-6 (ITTB), 0.0016 (UDante).
+        [exact, under the independence model] (D132 Part B;
+        descriptive, added after the verdicts)
 59.3.obj.1. Objection: moving one word through every position makes
             orders no Latin writer would produce, so the null is easy to
             beat.
@@ -1610,15 +1636,40 @@ ranked by how much it bears on KC 47.
               position fixed, so it isolates where the genitive sits;
               but a stricter null (moving whole subtrees, or only to
               positions attested for genitives) is not run, and the
-              margin could shrink under it. [open]
+              margin could shrink under it. [open] (resolved by
+              59.3.obj.1.2)
+59.3.obj.1.2. Reply (T4): two stricter nulls were run. Moving the whole
+              subtree changes almost nothing (E / N CIRCSE 35.31%,
+              ITTB 45.44%, ...). Keeping the genitive no farther from
+              its head than observed raises E / N to 42.69% (CIRCSE),
+              29.52% (LLCT), 60.80% (PROIEL), 57.75% (Perseus), 62.49%
+              (ITTB), 68.55% (UDante): S > E survives in six of six,
+              with tails 0.11-0.29 (Perseus verse 0.047). The objection
+              stands in substance: most of the margin is distance.
+              [exact] (D132 Part B, pinned since the T4 fixes)
 59.3.obj.2. Objection: genitives are not independent - one author, one
             text, often one sentence - so the tails overstate.
 59.3.obj.2.1. Reply: granted for 59.3.3, which is descriptive; the
               registered G1 and G2 compare exact counts and make no
-              independence claim.
+              independence claim. [falls: evasive - the inferential
+              "more than chance" rested on 59.3.3; see 59.3.obj.2.2]
+59.3.obj.2.2. Reply: granted. G1 alone is weak evidence (59.3.1.1);
+              the tails carry the inference and assume independence,
+              which several sentences with two or more displaced
+              genitives and LLCT's repeated formula strain. (T4 review
+              M1)
 59.4. The unsafe displaced genitives mostly have one competitor: 86 of
       108 have exactly one nested alternative host, 18 two, 4 three.
       [exact] (D132 Part B)
+59.4.1. The nearest alternative is adjacent in 57 of the 108, two words
+        away in 20, three in 10, four in 4, five to nine in 12, ten or
+        more in 5. [exact] (D132 Part B, pinned since the T4 fixes)
+59.4.2. Not every alternative is a plausible misreading: in 19 of the
+        108 it is the sentence's root (a nominal predicate, a nested
+        alternative wherever the genitive sits), in 35 only ancestors
+        of the genitive are alternatives. "Unsafe" over-counts; with
+        PRON, ADJ and DET hosts excluded, "safe" may over-count.
+        [checked] (T4 review L2)
 59.5. Agreement and position divide the work. [interpretation]
 59.5.1. Displaced adjectives are safe by agreement in 93.6-100% of
         cases, but in 70-82% of them (LLCT 1.5%) no other agreeing noun
@@ -1631,7 +1682,33 @@ ranked by how much it bears on KC 47.
         use positional safety where morphology cannot pay (genitives),
         verse takes the most risk, and the charters avoid displacing
         genitives altogether. [interpretation] (rests on small N; 59.2)
+        [falls: positional safety is not distinguished from short
+        displacement (59.3.1.1), and "verse takes the most risk" rests on
+        CIRCSE alone; see 59.5.2.1]
+59.5.2.1. So a displaced word is recoverable through a head label
+          (agreement, 58.4.5) or, for genitives, by short displacement
+          that leaves few other nouns in reach of a nested reading,
+          often with a verb in between (59.6.1); whether writers choose
+          the safe placement beyond that is not shown. CIRCSE takes the
+          most risk (45% safe); verse displaces genitives more often
+          (Perseus verse 26.1%, prose 5.1%); the charters avoid
+          displacing them (0.2%). [interpretation] (T4 review M2, M5)
 59.6. What blocks the nested alternatives - the verb standing between
       the genitive and the other nouns, as in the plan's hand sentences,
       or something else? [open]
+59.6.1. Partly a verb: of the 131 safe genitives with candidate hosts,
+        a VERB or AUX is among the blocking words of every alternative
+        in 93; the root blocks every alternative in 41. Only 6 of the
+        273 displaced genitives are displaced solely by covering the
+        root. [checked] (T4 review N1)
+59.7. Some safe genitives are trivially safe: 34 of the 165 have no
+      candidate host at all (CIRCSE 5, LLCT 0, PROIEL 9, Perseus 3, ITTB
+      15, UDante 2). [exact] (D132 Part B, pinned since the T4 fixes)
+59.8. "Safe" is a property of one attachment, not of D131's R_P, which
+      keeps analyses projective as WHOLE trees: 84 of the 165 safe
+      genitives sit in gold trees with another non-projective arc, and
+      of the 108 unsafe ones only 33 have an alternative making the
+      whole re-hung tree projective. With non-crossing alternatives
+      instead of per-arc projective ones, S would be 42 / 3 / 29 / 25 /
+      42 / 22 (CIRCSE passing G2). [checked] (T4 review M3)
 ```
