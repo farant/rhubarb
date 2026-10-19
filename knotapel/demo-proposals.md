@@ -669,6 +669,10 @@ pooling; an independent oracle; plants; an independent review.
 
 ### N15. Real Latin and the displaced genitive
 
+*Became D132 (plan approved 2026-10-19): are displaced genitives SAFE
+(no other noun could host them with a nested arc) more often than a
+per-sentence positional null? G1, G2 registered.*
+
 **Why.** D131 says a displaced genitive cannot be placed by its ending.
 Real Latin displaces genitives anyway: D130's Part C table already
 shows nmod over-represented among per-arc non-projective arcs in five
