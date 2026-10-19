@@ -1,7 +1,7 @@
 # The skeleton and the settling — knots, ratios, grammar and weights
 
 *Brainstorm, 2026-10-16, after D129 (sections IX–XI added later the
-same day). A conversation between Fran and
+same day; section XIII on 2026-10-19, after D130). A conversation between Fran and
 Claude (Opus 5.5) that started from "what do you think of the last demos"
 and ran through handwired, ratio graphs, grammar compilation, LLMs and
 the nominalist/realist question. Recorded so a later session can pick
@@ -443,6 +443,101 @@ almost any data — world models, scenes, perception.
 11. Not yet a demo: mutual-information decay and the jump-ahead question
     across the test worlds; autoregressive vs relaxation samplers
     (section X).
+12. What lets LLCT's charters cross without agreement labels on the
+    displaced strand? (open question …V3QKWX; section XIII)
+13. Agreement-paid crossings in toy Latin: does a crossing whose
+    displaced strand carries agreement leave the forced/ordered/open
+    profile unchanged? (N14; section XIII)
+
+## XIII. What D130 measured, read against these premises
+
+*Added 2026-10-19, after D130 (KC node 57;
+`demo_130_latin_tangles/findings.md`, commit 15e6df92). The numbers
+here are measured; the readings are not. Sections IV, VII, VIII and XI
+are the premises in question.*
+
+- **The planar skeleton holds per ARC, not per tree.** A largest
+  crossing-free set of arcs keeps 90–98% of real arcs (core deficit
+  2.0% in LLCT to 10.1% in CIRCSE), yet only 41–74% of Latin trees are
+  planar (English 98.6%). Most Latin sentences are a planar skeleton
+  with a few crossings on it. "A Temperley–Lieb skeleton with
+  exceptions" describes the arcs; at the level of trees the exception
+  is common.
+- **Mildness is the tighter constraint.** Every prose treebank is at
+  least 95.96% mild (well-nested, gap degree <= 1); the verse about 88%
+  (CIRCSE 88.13%, Perseus's verse 88.52%). Well-nestedness alone:
+  92.7% (CIRCSE) to 99.95% (ITTB).
+- **Against chance, weaker than it looks.** Pooled obs/exp is 0.0065
+  to 0.1022 against uniform random order, but that null ignores the
+  pressure toward short dependencies *(recalled: dependency length
+  minimisation, Futrell, Mahowald and Gibson 2015)*, which alone
+  removes most crossings; and CIRCSE's unweighted per-tree mean is
+  0.27. D130 shows Latin crosses far less than a shuffle, not that it
+  avoids crossings as such.
+- **Planarity is soft, with a large weight (section VIII).** A quarter
+  of CIRCSE's arcs sit in a crossing. In the energy-landscape picture
+  that is a heavily weighted soft constraint, broken when another force
+  pays for it. Verse crosses more: metre as one more force, the order
+  settling elsewhere — the rule-change knob in natural data. Confounded
+  with genre and annotation team, so a reading, not evidence.
+- **The braided part is small, but not local.** 37–67% of crossing
+  components (two or more arcs) are a single pair; components of 9 or
+  more arcs are at most 5.0%. But crossings per word RISE with length
+  (CIRCSE 0.117 to 0.310 across the length bins; LLCT 0.007 to 0.059):
+  longer sentences hold more small tangles, not bigger ones. In knot
+  terms, a planar diagram with independent single crossings inserted,
+  their number growing with the sentence.
+- **The Yang–Baxter premise is untouched.** D130 shows the crossings
+  exist and are small. It says nothing about whether they behave like
+  braidings (order-consistency). Section VIII's "deepest link" and
+  section XI's braided categories should not cite D130.
+- **Agreement along a strand: true of the displaced strand, diluted by
+  its partner.** Under the registered operand (every arc in a
+  crossing, root arc included) only the verse-heavy treebanks pass
+  (CIRCSE x1.613, Perseus x1.614). Under the per-arc operand (the arc
+  whose span holds a word it does not dominate, i.e. the displaced one)
+  five of six pass (x1.80 to x3.29; PROIEL and UDante marginally), and
+  LLCT fails robustly (x0.931). What reconciles them (T4): a crossing
+  pair usually holds one non-projective, often agreeing arc and one
+  projective partner that seldom agrees (all three features in 1.2% to
+  6.8% of crossed-but-projective arcs). So section IV's picture
+  survives in its precise form — the label rides the DISPLACED strand —
+  and fails in the loose form "a crossing is an agreement relation".
+- **Where the loose form came from.** "Hyperbaton = agreement" was
+  pictured from verse (the golden line, Vergil and Horace
+  *(recalled)*), and it holds most strongly there.
+- **Hypothesis, not a finding: morphology pays for crossing.** Where
+  Latin crosses freely, the displaced strand carries the slot-type
+  label (section XI: case endings as slot types) that lets a reader
+  reconnect it. LLCT is the counter-case: charter Latin crosses, and
+  its displaced arcs are LESS often adjectives or determiners than its
+  arcs at large (10.7% against 17.3%). What makes those crossings cheap
+  to resolve (formulae, annotation conventions) is unexamined (thread
+  12).
+- **Presentation and substance (section VII), in miniature.** Several
+  results moved with the annotation, not with the language: P4's PROIEL
+  / LLCT step reverses when punctuation is kept; the "literary vs
+  charter register" contrast is confounded with one team's conventions;
+  PROIEL's test split, registered as classical prose, is 58% Vulgate.
+  Each treebank is one compilation of Latin, and some of what D130
+  measured belongs to the compilation — regions belong to the word.
+- **For handwired-style compilation (section II).** A compiled Latin
+  parser could take a Dyck/stack core for the planar skeleton and a
+  bounded swap for the rest *(recalled: Nivre 2009's swap transition)*;
+  well-nested gap degree <= 1 is a mildly context-sensitive class with
+  polynomial parsing *(recalled: Kuhlmann; Gómez-Rodríguez, Carroll and
+  Weir, about O(n^7))*. The length result sets the contract: **budget
+  the size of each tangle, not the number of tangles.** A fixed
+  crossing budget per sentence breaks on long sentences; a budget per
+  crossing component does not, since large components are rare.
+- **For N14 (toy Latin Sudoku).** Set the crossing dial to "number of
+  independent single-pair hyperbata, each with one displaced strand",
+  not a slide toward fully free order. The sharp test (thread 13): a
+  crossing whose displaced strand carries agreement should leave the
+  forced / ordered / open profile unchanged; one without agreement
+  labels should push cells from forced to open. If it holds, the
+  hypothesis above becomes a mechanism in the toy world (still not in
+  Latin).
 
 ## AUDIENDA
 
@@ -467,3 +562,9 @@ conversation; check before relying on any):
   Reshetikhin–Turaev, DisCoCat and its braided extensions, Slot
   Attention — all recalled; DisCoCat in particular goes on the
   literature-search list before anything leans on it.
+- Section XIII (2026-10-19): dependency length minimisation (Futrell,
+  Mahowald and Gibson 2015), Nivre's swap transition (2009), the
+  parsing complexity of well-nested gap-degree-1 structures and their
+  place among mildly context-sensitive formalisms, the golden line —
+  all recalled. Its NUMBERS are D130's and are checked; its readings
+  are not.
