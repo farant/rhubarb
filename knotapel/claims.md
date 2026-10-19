@@ -139,6 +139,11 @@ ranked by how much it bears on KC 47.
   58.4.5's citation (57.5.4, not 57.5.4.1). No address removed or
   renumbered.
 
+- **D132 (2026-10-19).** Appended 59 to Part XI: displaced genitives
+  in real Latin are positionally safe above chance (registered G1 and
+  G2 hold). The demo's own review is task T4, after these nodes were
+  written.
+
 ## Part I. Definitions
 
 ```text
@@ -1567,4 +1572,66 @@ ranked by how much it bears on KC 47.
 58.5. Can a nesting-first reader, with any endings, place a displaced
       genitive without statistics or order preference? [open] (slice 2
       of N14: the exact settler, brainstorm XIV)
+59. How does real Latin make a displaced genitive recoverable, when its
+    ending cannot name its head (58.4.4)? (D132, proposal N15; six
+    Latin UD treebanks as D130, headline without punctuation. Grades:
+    [exact] counts over gold trees, pinned from D132's independent
+    oracle, oracle_d132.py; the demo's own review is T4)
+59.1. A genitive arc is nmod with Case=Gen on the dependent; it is
+      DISPLACED when per-arc non-projective (57.1). A candidate host is
+      a NOUN or PROPN other than the true head, outside the genitive's
+      subtree; a NESTED ALTERNATIVE is one whose arc to the genitive
+      would be projective with the genitive re-hung under it; a
+      displaced genitive with none is SAFE. The positional null moves
+      the genitive alone through every position of its sentence; its
+      share is the safe fraction of the placements that stay displaced,
+      and E sums the shares. [definition]
+59.2. Displaced genitives are few: 80 of 477 genitive arcs in CIRCSE,
+      5 of 2,382 in LLCT, 44 of 458 in PROIEL, 42 of 255 in Perseus, 71
+      of 1,098 in ITTB, 31 of 438 in UDante. [exact] (D132 Part B)
+59.3. Are displaced genitives placed safely more often than chance?
+59.3.1. Yes. Safe against the null's expectation: CIRCSE 45.00% vs
+        35.27%, LLCT 60.00% vs 10.94%, PROIEL 65.91% vs 54.58%, Perseus
+        64.29% vs 45.28%, ITTB 66.20% vs 45.38%, UDante 74.19% vs
+        50.54%. Registered G1 (S > E in at least five of six) HOLDS in
+        six of six. [exact] (D132 Part B)
+59.3.2. Most displaced genitives are safe: registered G2 (S / N >= 1/2
+        in at least five of six) HOLDS in five of six; CIRCSE (Seneca,
+        verse) fails at 45.00%. [exact] (D132 Part B)
+59.3.3. Under the null, each treebank's safe count alone is unlikely:
+        P(null >= S) is 0.0278 (CIRCSE), 0.0084 (LLCT), 0.0368
+        (PROIEL), 0.0033 (Perseus), 0.000001 (ITTB), 0.0016 (UDante).
+        [exact] (D132 Part B; descriptive, added after the verdicts;
+        the null treats genitives as independent)
+59.3.obj.1. Objection: moving one word through every position makes
+            orders no Latin writer would produce, so the null is easy to
+            beat.
+59.3.obj.1.1. Reply: the null holds everything but the genitive's
+              position fixed, so it isolates where the genitive sits;
+              but a stricter null (moving whole subtrees, or only to
+              positions attested for genitives) is not run, and the
+              margin could shrink under it. [open]
+59.3.obj.2. Objection: genitives are not independent - one author, one
+            text, often one sentence - so the tails overstate.
+59.3.obj.2.1. Reply: granted for 59.3.3, which is descriptive; the
+              registered G1 and G2 compare exact counts and make no
+              independence claim.
+59.4. The unsafe displaced genitives mostly have one competitor: 86 of
+      108 have exactly one nested alternative host, 18 two, 4 three.
+      [exact] (D132 Part B)
+59.5. Agreement and position divide the work. [interpretation]
+59.5.1. Displaced adjectives are safe by agreement in 93.6-100% of
+        cases, but in 70-82% of them (LLCT 1.5%) no other agreeing noun
+        exists at all; ignoring agreement, prose treebanks (PROIEL,
+        ITTB, UDante) also place them positionally safe far above
+        chance, verse near chance, the charters never. [exact] (D132
+        Part B, reported, not registered)
+59.5.2. So a displaced word is recoverable through a head label
+        (agreement, 58.4.5) or through positional safety; Latin writers
+        use positional safety where morphology cannot pay (genitives),
+        verse takes the most risk, and the charters avoid displacing
+        genitives altogether. [interpretation] (rests on small N; 59.2)
+59.6. What blocks the nested alternatives - the verb standing between
+      the genitive and the other nouns, as in the plan's hand sentences,
+      or something else? [open]
 ```

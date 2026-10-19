@@ -672,6 +672,10 @@ pooling; an independent oracle; plants; an independent review.
 *Became D132 (plan approved 2026-10-19): are displaced genitives SAFE
 (no other noun could host them with a nested arc) more often than a
 per-sentence positional null? G1, G2 registered.*
+*D132 done (KC 59): G1 HOLDS (safe above the null in 6 of 6
+treebanks), G2 HOLDS (most safe in 5 of 6; CIRCSE 45% fails). Small N
+(5-80 displaced genitives per treebank); the charters almost never
+displace a genitive (5 of 2,382).*
 
 **Why.** D131 says a displaced genitive cannot be placed by its ending.
 Real Latin displaces genitives anyway: D130's Part C table already

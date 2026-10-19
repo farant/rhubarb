@@ -236,6 +236,12 @@ O(n^2) per position at most, small. Seconds. Exact rationals for E via
      from the degenerate test changes nothing because no agreeing noun
      sits in a displaced adjective's subtree in these treebanks.
 3. **T3:** findings.md, claims.md, ledger, archive.sh.
+   *T3 done 2026-10-19:* findings.md; KC 59 in Part XI (two objection
+   slots: the null's realism, left [open]; the independence of
+   genitives, answered for the registered rules) and a Revisions entry;
+   ledger note on N15; demo-proposals N15 marked; frozen with
+   archive.sh (demo-snapshot.c, 17,345 lines, 22 library files, output
+   identical, 126 lines, run with D132_UD_NC set).
 4. **T4:** independent review with its own oracle, then fixes.
 
 ## Task 0 findings (2026-10-19)
