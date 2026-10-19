@@ -1,5 +1,15 @@
 # hospitium v3 - web apps on the droplet: a small app with login, end to end (spec)
 
+**Status: IMPLETUM 2026-10-19** - live at https://exemplar.golden.earth,
+checked by Fran from his phone (register, log in, note with photo,
+download, delete, log out). Plan `project-specs/hospitium-v3-plan.md`
+T1-T11, rulings R1-R31 (deviations recorded there); commits T1 4d1b89aa,
+T2 c937ef0a, T3 98ceaff4, T4 0b715910, T5 7e05964d, T6 69ba6bd1, T7
+dbcca414, T8 e219d0c8, T9 7e6256fc, T10 5a60230d, T11 close-out. Open:
+session idle limit (R23), app prefix `exemplar_` shared with lib
+`exemplar` (R22, Fran's call), `porta_linux.sh` drift (park ...JWP9A);
+not yet in main.
+
 *Fran 2026-10-16, right after TLS 1.3 reached main (ff e1a26869): "being
 able to write and deploy web apps to a droplet (maybe behind nginx for
 now) ... cookies, file uploads ... mcp servers on droplet, possibly

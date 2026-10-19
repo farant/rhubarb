@@ -366,6 +366,21 @@ with this plan.
   `_scriptiones` -> `_scripta_numerare`, `_sectio_crud` ->
   `_sectio_cyclus`. The first mode plant was a tautology clang refused
   to compile; rewritten as a never-set mode bit -> red.
+- **R31 (T11, live, 2026-10-19)** - certbot needs Fran's email on a
+  terminal the tool does not have: `praeparare_hospitem.sh` gained
+  `-sine-certbot` (prints the command; default and committed dry-run
+  fixture unchanged); Fran ran certbot himself (Let's Encrypt, valid to
+  2027-01-17, http -> 301 https). Setup ran once with `-agere`: DNS
+  `CREATUM`, a second `assecurare` `IDEM`, the record resolved at once
+  on ns1/1.1.1.1/8.8.8.8. The first deploy attempt stopped at its local
+  build step (OrbStack not running) - nothing remote ran; the retry
+  deployed, `/salus` green on the droplet. Live measurements: `/salus`
+  155-180 ms round trip (TLS to NYC), unknown-user login 250-350 ms ->
+  ~90-180 ms of argon2id on the single CPU (target ~150 ms met, no
+  parameter change); RSS ~2.2 MB idle; `systemctl restart` -> SIGTERM,
+  `sistere molliter`, `clausum`, deactivated cleanly, back in < 1 s.
+  Fetched `/salus` through the house client (TLS 1.3 default AND
+  `RHUBARB_TLS=bearssl` 1.2) and curl. Fran's phone check: all good.
 
 ## Review focus
 
