@@ -86,7 +86,15 @@ lectiones_notare (
     linea[I] = '\t';
     memcpy(linea + II, via, mensura_viae);
     linea[II + mensura_viae] = '\n';
-    (vacuum)write(_descriptor, linea, mensura_viae + III);
+    {
+        /* optima conatio: defectus hic tractari nequit. Valor ad
+         * variabilem, non (vacuum) solum: glibc cum _FORTIFY_SOURCE
+         * write() warn_unused_result notat, quod gcc mittendo in
+         * vacuum NON tacet (hospitium v3 T9) */
+        ssize_t scripta = write(_descriptor, linea, mensura_viae + III);
+
+        (vacuum)scripta;
+    }
 }
 
 constans character*

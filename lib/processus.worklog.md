@@ -299,3 +299,16 @@ INTERNORUM MACRONUM LIBC - fons idem, vexilla eadem, libc alia,
 verdictum aliud. Optiones posteriores: sutura macro domus cum casto,
 aut tolera, aut vexilla laxata per-platformam. CONSULTO non sanatum
 (stratum diagnosticum ante emendationes - decretum Franis).
+
+## 2026-10-17 - select() -> poll() (hospitium v3 T9, Linux/musl)
+
+- `_ansam_pulsare` now polls the stdout/stderr pipes with `poll()`.
+  Cause: musl's FD_SET/FD_ISSET macros divide an int fd by
+  `8*sizeof(long)`, which -Wsign-conversion turns into an error under
+  -Werror; select() also cannot watch fds >= FD_SETSIZE (1024). The
+  reactor already uses poll, so one I/O-wait idiom for the house.
+- POLLHUP/POLLERR are treated like POLLIN: the drain function reads,
+  sees EOF/error and closes the side - same outcome as select marking
+  the fd readable on a closed pipe.
+- Child-side `write(errno)` before `_exit`: value assigned to a
+  variable (glibc _FORTIFY_SOURCE warn_unused_result).

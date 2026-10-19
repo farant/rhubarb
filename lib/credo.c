@@ -1160,7 +1160,16 @@ _credo_arborem_delere (
             bene = FALSUM;
             perge;
         }
-        sprintf(filius, "%s/%s", via, e->d_name);
+        /* memcpy, non sprintf: longitudo supra probata, sed gcc -O2
+         * (-Wformat-overflow) eam per sprintf non videt (musl T9) */
+        {
+            size_t lv = strlen(via);
+            size_t ln = strlen(e->d_name);
+
+            memcpy(filius, via, lv);
+            filius[lv] = '/';
+            memcpy(filius + lv + I, e->d_name, ln + I);
+        }
         si (!_credo_arborem_delere(filius))
         {
             bene = FALSUM;

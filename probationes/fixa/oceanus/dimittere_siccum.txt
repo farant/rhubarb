@@ -1,0 +1,8 @@
+[locale] tools/linux/aedificare.sh apps/exemplar/exemplar.c
+[locale] scp -q build/linux/exemplar smaragda:/tmp/exemplar.new
+[smaragda] sudo install -o root -g root -m 0755 /tmp/exemplar.new /opt/exemplar/exemplar.new && rm -f /tmp/exemplar.new
+[smaragda] if [ -f /opt/exemplar/exemplar ]; then sudo cp -p /opt/exemplar/exemplar /opt/exemplar/exemplar.prior; fi
+[smaragda] sudo mv /opt/exemplar/exemplar.new /opt/exemplar/exemplar
+[smaragda] sudo systemctl restart exemplar
+[smaragda] sleep 2; curl -fsS http://127.0.0.1:3010/salus
+[si salus fallit] [smaragda] sudo mv /opt/exemplar/exemplar.prior /opt/exemplar/exemplar && sudo systemctl restart exemplar

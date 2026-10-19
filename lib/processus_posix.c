@@ -19,7 +19,7 @@
 
 #include <sys/types.h>
 #include <sys/wait.h>
-#include <sys/select.h>
+#include <poll.h>
 #include <sys/time.h>
 #include <unistd.h>
 #include <fcntl.h>
@@ -329,14 +329,18 @@ _fistulam_haurire (
 
 /* GRADUS UNUS ansae - corpus quod AMBAE semitae communicant.
  *
- * mora_gradus_ms = ZEPHYRUM : select non obstat (pulsus faciei).
- * mora_gradus_ms > ZEPHYRUM : select ad summum tot ms obstat.
+ * mora_gradus_ms = ZEPHYRUM : poll non obstat (pulsus faciei).
+ * mora_gradus_ms > ZEPHYRUM : poll ad summum tot ms obstat.
+ *
+ * poll(), non select(): FD_SET musl intus signa permutat (-Wsign-
+ * conversion sub -Werror), et select FD_SETSIZE (MXXIV) fossas non
+ * excedit - poll neutrum habet (ut reactor). hospitium v3 T9.
  *
  * GRADUS TERMINATUS, NON INFINITUS, etiam in semita obstante: sic
  * vocator inter gradus infantem inspicere potest. Ansa quae in
  * aeternum EOF exspectat nepotem fistulam tenentem numquam videt
  * (vide _perficere). Terminus TOTALIS hic semper custoditur,
- * ergo 'select redidit ZEPHYRUM' significat solum 'nihil in hoc
+ * ergo 'poll redidit ZEPHYRUM' significat solum 'nihil in hoc
  * gradu' - quae ambiguitas prior hic habitabat.
  */
 interior vacuum
@@ -344,33 +348,33 @@ _ansam_pulsare (
     Processus* p,
           i32  mora_gradus_ms)
 {
-               fd_set legendi;
-    structura timeval  mora;
-    structura timeval* mora_ptr  = NIHIL;
-              integer maximus    = -I;
-              integer paratus;
+    structura pollfd  fossae[II];
+              nfds_t numerus   = 0;
+             integer index_ef  = -I;
+             integer index_er  = -I;
+             integer mora_ms;
+             integer paratus;
 
     si (!p->ef_apertus && !p->er_apertus)
     {
         redde;
     }
 
-    FD_ZERO(&legendi);
     si (p->ef_apertus)
     {
-        FD_SET(p->fd_ef, &legendi);
-        si (p->fd_ef > maximus)
-        {
-            maximus = p->fd_ef;
-        }
+        fossae[numerus].fd       = p->fd_ef;
+        fossae[numerus].events   = POLLIN;
+        fossae[numerus].revents  = 0;
+        index_ef                 = (integer)numerus;
+        numerus++;
     }
     si (p->er_apertus)
     {
-        FD_SET(p->fd_er, &legendi);
-        si (p->fd_er > maximus)
-        {
-            maximus = p->fd_er;
-        }
+        fossae[numerus].fd       = p->fd_er;
+        fossae[numerus].events   = POLLIN;
+        fossae[numerus].revents  = 0;
+        index_er                 = (integer)numerus;
+        numerus++;
     }
 
     /* TERMINUS TOTALIS semper primo - vocator tardus processum
@@ -391,14 +395,10 @@ _ansam_pulsare (
         {
             gradus = (i64)reliquum;
         }
-        /* tv_usec est int in Darwin, longus alibi - conversio per
-         * typum campi ipsius, non per typum coniectum */
-        mora.tv_sec   = (time_t)(gradus / (i64)M);
-        mora.tv_usec  = (integer)((gradus % (i64)M) * (i64)M);
-        mora_ptr      = &mora;
+        mora_ms = (integer)gradus;
     }
 
-    paratus = select(maximus + I, &legendi, NIHIL, NIHIL, mora_ptr);
+    paratus = poll(fossae, numerus, mora_ms);
     si (paratus < 0)
     {
         si (errno == EINTR)
@@ -414,11 +414,14 @@ _ansam_pulsare (
         redde;   /* nihil in hoc gradu; terminus supra custoditur */
     }
 
-    si (p->ef_apertus && FD_ISSET(p->fd_ef, &legendi))
+    /* POLLHUP/POLLERR quoque: fistula clausa EOF legendo nuntiat */
+    si (   p->ef_apertus && index_ef >= 0
+        && (fossae[index_ef].revents & (POLLIN | POLLHUP | POLLERR)))
     {
         _fistulam_haurire(p, p->fd_ef, &p->ef_apertus, &p->sac_ef);
     }
-    si (p->er_apertus && FD_ISSET(p->fd_er, &legendi))
+    si (   p->er_apertus && index_er >= 0
+        && (fossae[index_er].revents & (POLLIN | POLLHUP | POLLERR)))
     {
         _fistulam_haurire(p, p->fd_er, &p->er_apertus, &p->sac_er);
     }
@@ -852,7 +855,13 @@ _incipere_cum (
             && chdir(optiones->directorium) != 0)
         {
             e = errno;
-            (vacuum)write(fistula_exec[I], &e, magnitudo(e));
+            {
+                /* infans moriturus: nihil tractandum (vide infra) */
+                ssize_t scripta = write(fistula_exec[I], &e,
+                    magnitudo(e));
+
+                (vacuum)scripta;
+            }
             _exit(CXXVII);
         }
         si (optiones != NIHIL && optiones->ambitus != NIHIL)
@@ -871,7 +880,13 @@ _incipere_cum (
 
         /* exec fefellit: errno per fistulam tertiam */
         e = errno;
-        (vacuum)write(fistula_exec[I], &e, magnitudo(e));
+        {
+            /* valor ad variabilem: glibc _FORTIFY_SOURCE
+             * warn_unused_result, quem (vacuum) sub gcc non tacet */
+            ssize_t scripta = write(fistula_exec[I], &e, magnitudo(e));
+
+            (vacuum)scripta;
+        }
         _exit(CXXVII);
     }
 

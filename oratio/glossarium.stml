@@ -602,6 +602,14 @@
   <vocabulum lemma="gitdir" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum - git: plagula .git arboris operis"/>
   <vocabulum lemma="sha256" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
   <vocabulum lemma="hmac" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (RFC 2104; sigillum_hmac)"/>
+  <vocabulum lemma="ttl" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (DNS time-to-live; lib/oceanus.c)"/>
+  <vocabulum lemma="csrf" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (cross-site request forgery; lib/custodia.c)"/>
+  <vocabulum lemma="blake2b" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (RFC 7693; lib/blake2b.c)"/>
+  <vocabulum lemma="blake2" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (RFC 7693, familia BLAKE2)"/>
+  <vocabulum lemma="argon2id" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (RFC 9106; lib/argon2id.c)"/>
+  <vocabulum lemma="argon2" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (RFC 9106, familia Argon2)"/>
+  <vocabulum lemma="blamka" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (BlaMka, compressio G Argon2, RFC 9106 par. 3.6)"/>
+  <vocabulum lemma="phc" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (Password Hashing Competition, forma $argon2id$...)"/>
   <vocabulum lemma="stbi" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
   <vocabulum lemma="macho" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
   <vocabulum lemma="sqlite" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
@@ -1751,6 +1759,17 @@
     <forma textus="stilizata" tempus="perfectum" vox="passiva" forma-verbi="participium"/>
     <forma textus="stilizatae" tempus="perfectum" vox="passiva" forma-verbi="participium"/>
     <forma textus="stilizatum" tempus="perfectum" vox="passiva" forma-verbi="participium"/>
+  </vocabulum>
+  <vocabulum lemma="multipartitus" lingua="latina" classis="adiectivum" nota="Latina sera (ut bipartitus, tripartitus): multipartitus, in partes multas divisus - multipart/form-data (lib/multipartita.c); WORDS caret">
+    <forma textus="multipartitus" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="multipartita" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="multipartitum" casus="nominativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="multipartiti" casus="genitivus" numerus="singularis" genus="masculinum"/>
+    <forma textus="multipartitae" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="multipartito" casus="ablativus" numerus="singularis" genus="neutrum"/>
+  </vocabulum>
+  <vocabulum lemma="redirigo" lingua="latina" classis="verbum" nota="vox domus (re + dirigere): petitionem alio dirigere (HTTP redirect, colloquium_redirigere); WORDS caret">
+    <forma textus="redirigere" tempus="praesens" modus="infinitivus" vox="activa" forma-verbi="infinitivum"/>
   </vocabulum>
 
 </glossarium>

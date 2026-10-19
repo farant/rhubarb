@@ -1,3 +1,2 @@
 # exspectata_musl.txt - fracturae EXSPECTATAE portae Linux (musl)
-lib/processus_posix.c	FD_SET interna musl signum trahunt (classis D mensurata 2026-08-03) - fons innocens
 lib/imago.c	stb_image venditum in capite - interna classis D
