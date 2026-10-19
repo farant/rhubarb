@@ -213,6 +213,28 @@ O(n^2) per position at most, small. Seconds. Exact rationals for E via
      nested alternative), so that plant has no observable effect.
 2. **T2:** the Python oracle; pins; rules on constructed totals;
    plants.
+   *T2 done 2026-10-19:* `oracle_d132.py` (independent: its own reader
+   and PUNCT removal, non-projectivity by ancestor walks, alternatives
+   by re-attaching and re-testing the tree, the null by REBUILDING each
+   moved sentence, `fractions.Fraction`; 1.8 s) matches every count
+   main.c printed in T1, and every E as an exact fraction. Pinned in
+   main.c for all eight rows (quick mode: CIRCSE and LLCT): counts, E
+   (registered, noun-headed, adjectives filtered and unfiltered) as
+   exact fractions, and the null tail. Checks 26 full, 22 quick.
+   - **Null tail (descriptive, not registered):** under the null each
+     displaced genitive is safe independently with its own share, so
+     the safe count is Poisson-binomial; P(null >= S), exact (fractio
+     DP), is CIRCSE 0.027751, LLCT 0.008446, PROIEL 0.036797, Perseus
+     0.003280, ITTB 0.000001, UDante 0.001644 (Perseus prose 0.3839,
+     verse 0.004141). Each treebank alone is below 0.05 despite the
+     small N; the independence of genitives is the null's assumption.
+   - Plants: 10 red (genitive read as accusative; hosts NOUN only;
+     PUNCT kept; the tail's p and 1 - p, and its strict bound; adjective
+     gender; the Perseus code; the noun head read from the genitive;
+     the noun-headed null; the degenerate count). One survivor, idle on
+     THIS data, not equivalent: excluding the adjective's own subtree
+     from the degenerate test changes nothing because no agreeing noun
+     sits in a displaced adjective's subtree in these treebanks.
 3. **T3:** findings.md, claims.md, ledger, archive.sh.
 4. **T4:** independent review with its own oracle, then fixes.
 

@@ -297,9 +297,14 @@ typedef struct {
     long adj_arcs, a_disp, a_safe, a_k[MAXN + 1];      /* filtered */
     long au_safe, au_k[MAXN + 1];                      /* unfiltered */
     long a_degenerate;    /* filtered: no other agreeing noun at all */
+    int  pk[64], pm[64], np;   /* this sentence's displaced genitives:
+                                  null share pk / pm each */
 } Stats;
 
 static Stats stats[N_ROWS];
+
+/* per row, every displaced genitive's null share (for the tail) */
+static int row_pk[N_ROWS][MAXN], row_pm[N_ROWS][MAXN], row_np[N_ROWS];
 
 /* per-run checks */
 static long arcs_checked = 0, arcs_mismatch = 0;
@@ -382,6 +387,12 @@ add_row (
     s->a_safe += t->a_safe;
     s->au_safe += t->au_safe;
     s->a_degenerate += t->a_degenerate;
+    for (i = 0; i < t->np; i++) {
+        if (row_np[r] == MAXN) fatal("too many displaced genitives");
+        row_pk[r][row_np[r]] = t->pk[i];
+        row_pm[r][row_np[r]] = t->pm[i];
+        row_np[r]++;
+    }
     for (i = 0; i <= MAXN; i++) {
         s->k_null[i] += t->k_null[i];
         s->nh_k[i] += t->nh_k[i];
@@ -455,6 +466,10 @@ analyse (
                 own_checked++;
                 if (!od || os != (alt == 0) || m < 1) own_mismatch++;
                 tstat.k_null[m] += k;
+                if (tstat.np == 64) fatal("too many in one sentence");
+                tstat.pk[tstat.np] = k;
+                tstat.pm[tstat.np] = m;
+                tstat.np++;
                 if (nh) {
                     tstat.nh_disp++;
                     tstat.nh_safe += alt == 0;
@@ -754,6 +769,35 @@ scaled (
     return v;
 }
 
+/* P(null safe count >= s): each displaced genitive of the row safe
+ * independently with its own share pk / pm (Poisson-binomial), exact */
+static Fractio
+null_tail (
+    int  r,
+    long s_safe)
+{
+    static Fractio dist[MAXN + 2];
+    Fractio        one = fractio_ex_s64(1), p, q, t;
+    int            i, j, len = 1;
+
+    dist[0] = one;
+    for (i = 0; i < row_np[r]; i++) {
+        if (!fractio_ex_s64_s64((s64)row_pk[r][i], (s64)row_pm[r][i], fpool,
+            &p))
+            fatal("fractio");
+        q = fractio_subtrahe(one, p, fpool);
+        dist[len] = fractio_ex_s64(0);
+        for (j = len; j >= 1; j--)
+            dist[j] = fractio_adde(fractio_multiplica(dist[j], q, fpool),
+                fractio_multiplica(dist[j - 1], p, fpool), fpool);
+        dist[0] = fractio_multiplica(dist[0], q, fpool);
+        len++;
+    }
+    t = fractio_ex_s64(0);
+    for (j = (int)s_safe; j < len; j++) t = fractio_adde(t, dist[j], fpool);
+    return t;
+}
+
 /* S > E, exactly */
 static int
 safe_above_null (
@@ -810,6 +854,108 @@ row_line (
         : "<");
 }
 
+/* oracle_d132.py (independent: own reader, re-attachment and rebuilt
+ * sentences, fractions.Fraction); totals per row, E exact */
+typedef struct {
+    long        trees, gen, gen_nh, nested, n_disp, s_safe;
+    const char *e;
+    long        nh_disp, nh_safe;
+    const char *nh_e;
+    long        alt[4];
+    long        adj, a_disp, a_deg, a_safe;
+    const char *a_e;
+    long        au_safe;
+    const char *au_e;
+    long        tail_e6;
+} OraclePin;
+
+static const OraclePin opin[N_ROWS] = {
+    { 893, 477, 455, 397, 80, 36,
+      "65257973812397468891/2312713359404327880", 79, 35,
+      "62945260452993141011/2312713359404327880", { 35, 8, 1, 0 },
+      1031, 445, 312, 438,
+      "14363459706565846076047249/33782971056349257943200", 158,
+      "232693883939639515209720061/1587799639648415123330400", 27751 },
+    { 1734, 2382, 2371, 2377, 5, 3, "169727/310300", 5, 3,
+      "169727/310300", { 2, 0, 0, 0 }, 2037, 68, 1, 67,
+      "6642024128343551/116507455125600", 0,
+      "971255450747/656996927400", 8446 },
+    { 1260, 458, 406, 414, 44, 29, "12847568178043/534972952800", 26, 16,
+      "3537559619/286322400", { 10, 4, 1, 0 }, 363, 28, 23, 28,
+      "161884/5957", 19, "4043114837/323703380", 36797 },
+    { 939, 255, 226, 213, 42, 27, "7832985187/411863760", 39, 26,
+      "7174003171/411863760", { 11, 3, 1, 0 }, 509, 178, 142, 175,
+      "18963551615351/110909026800", 84, "677482550438741/9104622836400",
+      3280 },
+    { 2101, 1098, 984, 1027, 71, 47, "2501476656761/77636318760", 61, 42,
+      "2170967756897/77636318760", { 21, 2, 1, 0 }, 880, 78, 62, 73,
+      "13682737/196350", 58, "53156601053671/1383951769200", 1 },
+    { 421, 438, 390, 407, 31, 23, "2700854729/172393650", 28, 21,
+      "1258803332/86196825", { 7, 1, 0, 0 }, 415, 34, 24, 34,
+      "817646261999/24730249440", 26,
+      "12307977539138734151/756531221601355200", 1644 },
+    { 547, 117, 101, 111, 6, 4, "671/210", 4, 3, "67/42", { 2, 0, 0, 0 },
+      202, 30, 23, 29, "2066201/73080", 17, "1495478923/118438320",
+      383900 },
+    { 392, 138, 125, 102, 36, 23, "6516982411/411863760", 35, 23,
+      "6516982411/411863760", { 9, 3, 1, 0 }, 307, 148, 119, 146,
+      "3820504723103/26771144400", 67, "106685147498827/1726738813800",
+      4141 }
+};
+
+static int
+fraction_is (
+    Fractio     x,
+    const char *text)
+{
+    Fractio f;
+
+    if (!fractio_ex_chorda(chorda_ex_literis(text, fpool), fpool, &f))
+        fatal("pin fraction");
+    return fractio_aequalis(x, f);
+}
+
+static void
+pinned_checks (void)
+{
+    int  r, counts_ok = 1, e_ok = 1, tail_ok = 1, rows = 0, i;
+    char msg[300];
+
+    for (r = 0; r < N_ROWS; r++) {
+        const Stats     *s = &stats[r];
+        const OraclePin *o = &opin[r];
+
+        if (r < N_BANKS && !bank_present[r]) continue;
+        if (r >= N_BANKS && !bank_present[3]) continue;
+        rows++;
+        if (s->trees != o->trees || s->gen_arcs != o->gen
+            || s->gen_noun_head != o->gen_nh || s->nested != o->nested
+            || s->n_disp != o->n_disp || s->s_safe != o->s_safe
+            || s->nh_disp != o->nh_disp || s->nh_safe != o->nh_safe
+            || s->adj_arcs != o->adj || s->a_disp != o->a_disp
+            || s->a_degenerate != o->a_deg || s->a_safe != o->a_safe
+            || s->au_safe != o->au_safe)
+            counts_ok = 0;
+        for (i = 0; i < 4; i++)
+            if (s->alt_hist[i] != o->alt[i]) counts_ok = 0;
+        if (!fraction_is(expected(s->k_null), o->e)
+            || !fraction_is(expected(s->nh_k), o->nh_e)
+            || !fraction_is(expected(s->a_k), o->a_e)
+            || !fraction_is(expected(s->au_k), o->au_e))
+            e_ok = 0;
+        if (scaled(null_tail(r, s->s_safe), 1000000, 1) != (s64)o->tail_e6)
+            tail_ok = 0;
+    }
+    snprintf(msg, sizeof msg, "every count (trees, genitive arcs, nested, N, "
+        "S, the noun-headed subset, the alternatives, the adjective "
+        "contrast) == oracle_d132.py, %d rows (a pin)", rows);
+    check(msg, counts_ok && rows > 0);
+    check("every E (registered, noun-headed, adjectives filtered and "
+        "unfiltered) == oracle_d132.py's exact fraction (a pin)", e_ok);
+    check("the null tail probabilities, rounded to 1e-6, == "
+        "oracle_d132.py's (a pin)", tail_ok);
+}
+
 static void
 part_b (void)
 {
@@ -836,6 +982,18 @@ part_b (void)
         if (r >= N_BANKS && !bank_present[3]) continue;
         row_line(row_names[r], stats[r].n_disp, stats[r].s_safe,
             stats[r].k_null);
+    }
+    printf("\n  P(the null's safe count >= S), exact, rounded to 1e-6 (each "
+        "displaced genitive\n  safe independently with its own null share; "
+        "descriptive, not registered)\n");
+    for (r = 0; r < N_ROWS; r++) {
+        s64 t6;
+
+        if (r < N_BANKS && !bank_present[r]) continue;
+        if (r >= N_BANKS && !bank_present[3]) continue;
+        t6 = scaled(null_tail(r, stats[r].s_safe), 1000000, 1);
+        printf("  %-16s %lld.%06lld\n", row_names[r], (long long)(t6 / 1000000),
+            (long long)(t6 % 1000000));
     }
     printf("\n  noun-headed displaced genitives (reported, not decided)\n");
     for (r = 0; r < N_ROWS; r++) {
@@ -866,6 +1024,8 @@ part_b (void)
         row_line("   agreeing hosts", s->a_disp, s->a_safe, s->a_k);
         row_line("   every noun", s->a_disp, s->au_safe, s->au_k);
     }
+
+    pinned_checks();
 
     printf("\n--- the registered rules on constructed totals ---\n");
     {
