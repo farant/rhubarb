@@ -79,7 +79,9 @@ interior constans Renominatio TYPI_EXACTI[] = {
      * tangunt - sine his symbola globalia cum hospite runae
      * collideret (nm mensuratum, runae U5) */
     { "RUNAE_GRADUS_PRIMUS",   "TESSERA_RUNAE_GRADUS_PRIMUS" },
-    { "RUNAE_GRADUS_SECUNDUS", "TESSERA_RUNAE_GRADUS_SECUNDUS" }
+    { "RUNAE_GRADUS_SECUNDUS", "TESSERA_RUNAE_GRADUS_SECUNDUS" },
+    { "RUNAE_BASES",           "TESSERA_RUNAE_BASES" },
+    { "RUNAE_BASES_NUMERUS",   "TESSERA_RUNAE_BASES_NUMERUS" }
 };
 
 /* Longissimum primum! */

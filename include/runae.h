@@ -30,6 +30,15 @@ i32
 runae_latitudo (
     s32 runa);
 
+/* Littera basis (decompositio canonica UnicodeData, iterata usque ad
+ * runam primam): é -> e, Ŏ -> O, ạ -> a, ǖ -> u; runa sine
+ * decompositione aut invalida immutata (Hangul quoque: decompositio
+ * eius algorithmica, non in UnicodeData). Ad quaestiones sine signis
+ * diacriticis (sancti, nomenclator). */
+s32
+runae_basis (
+    s32 runa);
+
 
 /* ==================================================
  * Graphemata (UAX #29 15.1, graphemata extensa)

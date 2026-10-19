@@ -151,3 +151,22 @@
   mistake became visible. SIMPLEX keeps only the ZWJ rule. Lesson: one
   screenshot row with two clusters can't say WHICH cluster disagreed;
   isolate the clusters (one per row) when measuring a terminal.
+
+## 2026-10-19 — runae_basis (accent-blind search; Fran approved for the saints search)
+
+- `runae_basis(runa)`: canonical decomposition from UnicodeData.txt,
+  iterated to the first rune (ǖ -> ü -> u, ệ -> ẹ -> e, Å sign -> Å ->
+  A). Hangul unchanged (its decomposition is algorithmic, not in the
+  file). ł, ø, đ have no decomposition and stay.
+- Data: UnicodeData.txt 15.1.0 added to probationes/fixa/unicode/
+  15.1.0/ (sha256 in PROVENIENTIA.md). Generator emits RUNAE_BASES
+  (2061 sorted pairs, only where basis != runa); lookup is a binary
+  search.
+- Oracle: Python 3 unicodedata (Unicode 15.0) NFD first char over
+  every code point except surrogates and Hangul: 2061 = 2061, 0
+  differences. Independent derivation (Python's tables vs our parse).
+- Generator touched -> migrated off raw fopen to lectiones_fopen (its
+  canalis_debita line said "migrate on next touch"; lectiones.c has no
+  house deps, so the script links it) and the debt line is deleted.
+  The fabrica action also gained two inputs it was already reading
+  but not declaring: emoji-variation-sequences.txt, runae_tabulae.h.

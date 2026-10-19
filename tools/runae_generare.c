@@ -9,6 +9,7 @@
  *   GraphemeBreakProperty.txt     - Grapheme_Cluster_Break (totum)
  *   emoji-data.txt                - Emoji_Modifier, Extended_Pictographic
  *   emoji-variation-sequences.txt - bases variationis emoji
+ *   UnicodeData.txt               - decompositio canonica (runae_basis)
  * et scribit lib/runae_tabulae.c (tabula duorum graduum; dispositio
  * valoris in include/runae_tabulae.h, capite COMMUNI). Lineae
  * '# @missing:' ut lineae datorum tractantur (valor ordinarius) et ANTE
@@ -26,6 +27,7 @@
  */
 #include "latina.h"
 #include "runae_tabulae.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -75,6 +77,10 @@ hic_manens i8  valores[RUNAE_NUMERUS];
 hic_manens i16 gradus_primus[TRUNCI_PRIMI];
 hic_manens i16 trunci_unici[TRUNCI_PRIMI];   /* index trunci primi */
 hic_manens i32 numerus_unicorum = ZEPHYRUM;
+
+/* runae_basis: runa prima decompositionis canonicae (UnicodeData campus
+ * V sine "<tag>"); 0 = nulla (NUL numquam in decompositione) */
+hic_manens s32 primae[RUNAE_NUMERUS];
 
 
 /* ==================================================
@@ -199,7 +205,7 @@ _filum_legere (
           i32 numerus_linea = ZEPHYRUM;
 
     sprintf(via, "%s/%s", radix, titulus);
-    f = fopen(via, "r");
+    f = lectiones_fopen(via, "r");
     si (f == NIHIL)
     {
         fprintf(stderr, "runae_generare: legi non potest: %s\n", via);
@@ -427,6 +433,110 @@ _variationes (
     redde V_BASIS_VARIATIONIS;
 }
 
+/* UnicodeData.txt: "0041;NAME;Lu;0;L;DECOMPOSITIO;..." - campus V
+ * decompositio; "<compat> ..." (non canonica) et vacuus praetereuntur.
+ * Intervalla ("<..., First>") decompositionem non habent. */
+interior b32
+_formas_canonicas_legere (
+    constans character* radix)
+{
+    character via[LINEA_MAXIMA];
+    character linea[LINEA_MAXIMA];
+        FILE* f;
+          i32 numerus_linea = ZEPHYRUM;
+
+    sprintf(via, "%s/UnicodeData.txt", radix);
+    f = lectiones_fopen(via, "r");
+    si (f == NIHIL)
+    {
+        fprintf(stderr, "runae_generare: legi non potest: %s\n", via);
+        redde FALSUM;
+    }
+    dum (fgets(linea, LINEA_MAXIMA, f) != NIHIL)
+    {
+        character* campus = linea;
+        character* sep;
+        character* spatium;
+              i32  k;
+              s32  runa;
+              s32  prima;
+
+        numerus_linea++;
+        sep = strchr(campus, ';');
+        si (sep == NIHIL)
+        {
+            perge;
+        }
+        *sep = '\0';
+        si (!_hex(campus, &runa))
+        {
+            fprintf(stderr, "runae_generare: %s:%u: runa mala\n", via,
+                (insignatus integer)numerus_linea);
+            fclose(f);
+            redde FALSUM;
+        }
+        /* campi I-IV praetereuntur, V = decompositio */
+        campus = sep + I;
+        per (k = ZEPHYRUM; k < IV && campus != NIHIL; k++)
+        {
+            campus = strchr(campus, ';');
+            campus = (campus != NIHIL) ? campus + I : NIHIL;
+        }
+        si (campus == NIHIL)
+        {
+            fprintf(stderr, "runae_generare: %s:%u: campi pauci\n", via,
+                (insignatus integer)numerus_linea);
+            fclose(f);
+            redde FALSUM;
+        }
+        sep = strchr(campus, ';');
+        si (sep != NIHIL)
+        {
+            *sep = '\0';
+        }
+        si (campus[ZEPHYRUM] == '\0' || campus[ZEPHYRUM] == '<')
+        {
+            perge;
+        }
+        spatium = strchr(campus, ' ');
+        si (spatium != NIHIL)
+        {
+            *spatium = '\0';
+        }
+        si (!_hex(campus, &prima) || prima == ZEPHYRUM)
+        {
+            fprintf(stderr,
+                "runae_generare: %s:%u: decompositio mala\n",
+                via, (insignatus integer)numerus_linea);
+            fclose(f);
+            redde FALSUM;
+        }
+        primae[runa] = prima;
+    }
+    fclose(f);
+    redde VERUM;
+}
+
+/* basis: decompositio iterata usque ad runam sine decompositione */
+interior s32
+_basis (
+    s32 runa)
+{
+    i32 gradus = ZEPHYRUM;
+
+    dum (primae[runa] != ZEPHYRUM)
+    {
+        runa = primae[runa];
+        si (++gradus > XVI)
+        {
+            fprintf(stderr, "runae_generare: decompositio circularis "
+                "ad U+%04X\n", (insignatus integer)runa);
+            exit(I);
+        }
+    }
+    redde runa;
+}
+
 
 /* ==================================================
  * Regula latitudinis (Ghostty)
@@ -630,8 +740,10 @@ _emittere (
     FILE* f;
      i32  t;
      i32  k;
+     s32  runa;
+     i32  numerus_basium;
 
-    f = fopen(via, "w");
+    f = lectiones_fopen(via, "w");
     si (f == NIHIL)
     {
         fprintf(stderr, "runae_generare: scribi non potest: %s\n", via);
@@ -644,6 +756,7 @@ _emittere (
         " * graduum (include/runae_tabulae.h): %u trunci unici CCLVI octetorum.\n"
         " * Valor: bits 0-1 latitudo (regula Ghostty, lib/runae.phase-log.md U2),\n"
         " * bits 2-6 classis rupturae, bit 7 basis variationis (runae_tabulae.h).\n"
+        " * RUNAE_BASES: litterae basis ex UnicodeData (runae_basis).\n"
         " */\n"
         "\n"
         "#include \"runae_tabulae.h\"\n"
@@ -677,6 +790,23 @@ _emittere (
         }
     }
     fprintf(f, "};\n");
+    /* runae_basis: pares (runa, basis) ordine runae, basis != runa */
+    fprintf(f, "\nconstans s32 RUNAE_BASES[][II] = {\n");
+    numerus_basium = ZEPHYRUM;
+    per (runa = ZEPHYRUM; runa < RUNAE_NUMERUS; runa++)
+    {
+        s32 basis = _basis(runa);
+
+        si (basis != runa)
+        {
+            fprintf(f, "%s{ 0x%04X, 0x%04X }", numerus_basium > ZEPHYRUM
+                ? ",\n    " : "    ", (insignatus integer)runa,
+                (insignatus integer)basis);
+            numerus_basium++;
+        }
+    }
+    fprintf(f, "\n};\n\nconstans i32 RUNAE_BASES_NUMERUS = %u;\n",
+        (insignatus integer)numerus_basium);
     fclose(f);
     redde VERUM;
 }
@@ -707,7 +837,8 @@ principale (
                _ruptura_graphematis)
         || !_filum_legere(argv[I], "emoji-data.txt", _emoji)
         || !_filum_legere(argv[I], "emoji-variation-sequences.txt",
-               _variationes))
+               _variationes)
+        || !_formas_canonicas_legere(argv[I]))
     {
         redde I;
     }

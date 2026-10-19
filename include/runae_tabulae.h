@@ -52,4 +52,10 @@ nomen enumeratio {
 externus constans i16 RUNAE_GRADUS_PRIMUS[RUNAE_TRUNCI_PRIMI];
 externus constans i8  RUNAE_GRADUS_SECUNDUS[];
 
+/* runae_basis: pares { runa, basis } ordine runae crescente (quaestio
+ * binaria), solum ubi basis != runa; basis = decompositio canonica
+ * UnicodeData iterata usque ad runam primam */
+externus constans s32 RUNAE_BASES[][II];
+externus constans i32 RUNAE_BASES_NUMERUS;
+
 #endif /* RUNAE_TABULAE_H */

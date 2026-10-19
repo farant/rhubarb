@@ -405,6 +405,11 @@
     <ingressus genus="fasciculus" via="probationes/fixa/unicode/15.1.0/EastAsianWidth.txt"/>
     <ingressus genus="fasciculus" via="probationes/fixa/unicode/15.1.0/GraphemeBreakProperty.txt"/>
     <ingressus genus="fasciculus" via="probationes/fixa/unicode/15.1.0/emoji-data.txt"/>
+    <ingressus genus="fasciculus" via="probationes/fixa/unicode/15.1.0/emoji-variation-sequences.txt"/>
+    <ingressus genus="fasciculus" via="probationes/fixa/unicode/15.1.0/UnicodeData.txt"/>
+    <ingressus genus="fasciculus" via="include/runae_tabulae.h"/>
+    <ingressus genus="fasciculus" via="lib/lectiones.c"/>
+    <ingressus genus="fasciculus" via="include/lectiones.h"/>
     <exitus via="lib/runae_tabulae.c" provenientia="regeneratio"/>
   </actio>
   <!-- tabula nodorum: polynomia per laqueus ex codicibus PD extracti
