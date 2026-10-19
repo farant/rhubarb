@@ -1,7 +1,7 @@
 # The skeleton and the settling — knots, ratios, grammar and weights
 
 *Brainstorm, 2026-10-16, after D129 (sections IX–XI added later the
-same day; section XIII on 2026-10-19, after D130). A conversation between Fran and
+same day; sections XIII–XIV on 2026-10-19, after D130). A conversation between Fran and
 Claude (Opus 5.5) that started from "what do you think of the last demos"
 and ran through handwired, ratio graphs, grammar compilation, LLMs and
 the nominalist/realist question. Recorded so a later session can pick
@@ -448,6 +448,11 @@ almost any data — world models, scenes, perception.
 13. Agreement-paid crossings in toy Latin: does a crossing whose
     displaced strand carries agreement leave the forced/ordered/open
     profile unchanged? (N14; section XIII)
+14. One settler, three temperatures: sum-product, integer beta,
+    max-product on toy Latin — where do cells become forced as the
+    temperature drops? (N14; section XIV)
+15. The agreement check compiled into nervus: pieces vs regions of a
+    network that categorizes words. (N10 or N14; section XIV)
 
 ## XIII. What D130 measured, read against these premises
 
@@ -539,6 +544,82 @@ are the premises in question.*
   hypothesis above becomes a mechanism in the toy world (still not in
   Latin).
 
+## XIV. The non-linearity: selection, matching and temperature
+
+*Added 2026-10-19. Fran: the non-linear (activation) layer seems
+critical to this kind of categorization — do our models touch it yet?
+The synthesis below is Claude's; facts from the literature are marked.*
+
+- **Where we stand.** `include/nervus.h` IS a library of the
+  non-linearity: exact ReLU networks over Magnus, an ACTIVATION PATTERN
+  of one bit per ReLU, regions and pieces (frusta). D128 compiled braid
+  words into it (`plexus_nervus`); D129 measured how the ReLUs carve the
+  input space (regions belong to the word, pieces to the braid). But
+  every network so far computes a braid action, none categorizes words.
+  D130 only counts; oratio's elimination is a hard non-linearity in
+  effect (forced / ordered / open) but is not written as a network.
+- **Why categorization needs it.** Linear layers compose to one linear
+  map, and a linear map cannot decide: it cannot say "nominative OR
+  ablative", nor compute AND or XOR (Minsky and Papert *(recalled)*).
+  A ReLU carves the input space into regions with one linear rule each;
+  the activation pattern NAMES the region the input fell into. A ReLU
+  network categorizes as a by-product of computing. D129's split
+  carries over: pieces = the function's real categories, surplus
+  regions = the presentation's.
+- **Tropical: the zero-temperature limit.** max(0, x) is the T -> 0
+  limit of softplus T log(1 + e^(x/T)); log-sum-exp tends to max,
+  softmax to argmax. Max-plus is the tropical semiring, and ReLU
+  networks are exactly tropical rational maps *(recalled: Zhang,
+  Naitzat and Lim 2018)*. Dynnikov's formulas are max/min of sums —
+  tropical *(recalled: the Dynnikov action as a tropicalization)* —
+  plausibly WHY braids compile exactly into ReLU nets (D128).
+- **One grammar, two semirings.** The same limit turns a partition
+  function into a maximum: the Kauffman bracket's sum over states into
+  a max over states; a grammar's inside algorithm (the probability of
+  every analysis) into Viterbi (the single best). Sum-product gives the
+  distribution over readings, max-product the category. So section
+  VIII's skeleton and settling may be one object at two temperatures:
+  **logic is the zero-temperature limit of the statistics**, and
+  categorizing is taking the tropical limit.
+- **An exact temperature dial.** Softmax needs e^x, which is not
+  rational, so it is out of reach of exact arithmetic. Two exact ways
+  remain: work with probabilities, not logits, and sharpen by an
+  INTEGER power — p^beta / sum p^beta is rational for integer beta and
+  tends to argmax as beta grows; or work at zero temperature in
+  max-plus, exact as it stands.
+- **Two non-linearities in slot filling.**
+  1. SELECTION (max, ReLU, softmax): pick one candidate — the forced /
+     ordered / open settling of section XI.
+  2. MATCHING (products and gates: handwired's ReGLU, attention's
+     QK^T): does this word's label fit that slot? With case, gender and
+     number one-hot, agreement is a dot product (bilinear). nervus has
+     no products by design but can still match on 0/1 indicators, at a
+     cost in size: AND(a, b) = relu(a + b - 1), |x - y| = relu(x - y) +
+     relu(y - x).
+- **Mechanism for section XIII's hypothesis.** A crossing's cost
+  depends on the mechanism. A stack parser (Dyck) pays for every
+  crossing. Content-addressed matching — attention: the query says
+  what the slot wants, the key what label the word carries, softmax
+  picks — pays nothing for distance or crossing, as long as the labels
+  tell the candidates apart. "Morphology pays for crossing", stated
+  mechanically: case endings make content addressing possible, and
+  content addressing frees word order. A language without the labels
+  would have to stay planar; English's obs/exp of 0.0010 in D130 points
+  that way, heavily confounded.
+- **Aside (Claude).** Softmax attention matching queries against keys
+  is what the model writing this is made of; reconnecting a displaced
+  Latin adjective to its noun is presumably a fuzzy version of the
+  mechanism above. Which suggests a transformer finds hyperbaton
+  easier than a stack parser does, for exactly this reason.
+- **Where it would go.**
+  - N14: run the exact settler at beta = 1 (sum-product), at integer
+    beta and at max-product on the same toy Latin; watch where cells
+    become forced as the temperature drops, and whether crossings that
+    carry agreement settle as easily as planar ones (thread 14).
+  - N10, or a slice of N14: compile the agreement check itself into
+    nervus and count its pieces against its regions — the first time
+    nervus categorizes language rather than braids (thread 15).
+
 ## AUDIENDA
 
 Not verified in this repo (all recalled from memory during the
@@ -568,3 +649,9 @@ conversation; check before relying on any):
   place among mildly context-sensitive formalisms, the golden line —
   all recalled. Its NUMBERS are D130's and are checked; its readings
   are not.
+- Section XIV (2026-10-19): Minsky and Papert on XOR, ReLU networks as
+  tropical rational maps (Zhang, Naitzat and Lim 2018), the Dynnikov
+  action as a tropicalization — all recalled. The limits (softplus to
+  ReLU, log-sum-exp to max, sum-product to max-product) are elementary
+  and need no source; "logic is the zero-temperature limit of the
+  statistics" is a synthesis, not a result.
