@@ -57,3 +57,29 @@ at the edges would hide behind the handful of named codes).
 
 **Lint:** `solvibilis` (Medieval Latin, from solvere "to pay") added to
 the glossary; WORDS lacks it.
+
+## 2026-10-19 - T2: the value type and refusing arithmetic
+
+`Pecunia` = s64 ten-thousandths + `PecuniaMoneta`, 16 bytes, by value.
+`PECUNIA_QUANTITAS_MAXIMA/MINIMA` are exported (every house lib defines
+its own s64 limit - magnus, polynomium, surdus - there is no shared one).
+
+**Overflow is checked BEFORE the operation**, never by inspecting a
+wrapped result (signed overflow is undefined in C). `pecunia_subtrahe`
+has its own two-sided check rather than `adde(a, nega(b))`, because
+`nega(MINIMA)` is itself out of range while `0 - MINIMA` must be
+refused and `-1 - MAXIMA` must succeed (it equals MINIMA exactly).
+
+**`pecunia_ex_unitatibus` bound:** `|unitates| <= MAXIMA / factor` on
+both sides. The lower bound is not `MINIMA / factor`: C89 leaves the
+rounding of negative division implementation-defined, and the true
+bound is `ceil(MINIMA / f) = -(MAXIMA / f)` because every factor > 1 is
+a multiple of 5 and never divides 2^63. CLF (factor 1) takes any s64.
+
+**`pecunia_summa` refuses overflow mid-way** even when the final sum
+would fit (`MAXIMA + 1 - 1`): reordering to dodge it would make the
+result depend on more than the input, and a partial sum out of range
+in a budget is a data error worth surfacing.
+
+Plants: `_adde_tutum` upper check disabled -> `arithmetica` red; summa's
+currency check only on element 0 -> `summa_mixta` red.

@@ -52,6 +52,16 @@ nomen enumeratio {
     PECUNIA_MONETA_EXTRA_ISO            /* GGP IMP JEP */
 } PecuniaMonetaStatus;
 
+/* Quantitas cum moneta - VALOR (XVI octeti), nulla allocatio. */
+nomen structura {
+              s64 quantitas;   /* decimillesimae */
+    PecuniaMoneta moneta;
+} Pecunia;
+
+/* margines quantitatis (+-922337203685477.5807 unitatum) */
+#define PECUNIA_QUANTITAS_MAXIMA ((s64)0x7FFFFFFFFFFFFFFFLL)
+#define PECUNIA_QUANTITAS_MINIMA (-PECUNIA_QUANTITAS_MAXIMA - I)
+
 nomen structura {
      constans character* codex;         /* "USD" */
                     s32  numerus;       /* 840; 0 si EXTRA_ISO */
@@ -92,5 +102,67 @@ b32
 pecunia_moneta_aequalis (
     PecuniaMoneta a,
     PecuniaMoneta b);
+
+
+/* ==================================================
+ * Valor et arithmetica (recusat, numquam circumvolvit)
+ * ================================================== */
+
+/* ex unitatibus minoribus: -1234 USD -> USD -12.3400; moneta non
+ * ex pecunia_moneta_ex_codice -> MONETA_IGNOTA */
+PecuniaVitium
+pecunia_ex_unitatibus (
+              s64  unitates,
+    PecuniaMoneta  m,
+          Pecunia* exitus);
+
+Pecunia
+pecunia_nihil (
+    PecuniaMoneta m);
+
+/* monetae diversae -> MONETAE_DIVERSAE (numquam conversio);
+ * extra s64 -> SUPERFLUXUS */
+PecuniaVitium
+pecunia_adde (
+     Pecunia  a,
+     Pecunia  b,
+     Pecunia* exitus);
+
+PecuniaVitium
+pecunia_subtrahe (
+     Pecunia  a,
+     Pecunia  b,
+     Pecunia* exitus);
+
+/* nega(MINIMA) -> SUPERFLUXUS */
+PecuniaVitium
+pecunia_nega (
+     Pecunia  a,
+     Pecunia* exitus);
+
+/* summa ordine dato (superfluxus in medio cursu recusatur etsi summa
+ * finalis caperet); n == 0 -> FORMA */
+PecuniaVitium
+pecunia_summa (
+     constans Pecunia* a,
+       memoriae_index  n,
+              Pecunia* exitus);
+
+/* *exitus -I, 0, +I; monetae diversae -> MONETAE_DIVERSAE */
+PecuniaVitium
+pecunia_compara (
+    Pecunia  a,
+    Pecunia  b,
+        s32* exitus);
+
+s32
+pecunia_signum (
+    Pecunia a);
+
+/* eadem moneta et quantitas */
+b32
+pecunia_aequalis (
+    Pecunia a,
+    Pecunia b);
 
 #endif /* PECUNIA_H */

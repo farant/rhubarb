@@ -137,3 +137,203 @@ pecunia_moneta_aequalis (
 {
     redde memcmp(a.codex, b.codex, IV) == ZEPHYRUM;
 }
+
+
+/* ==================================================
+ * Valor et arithmetica
+ * ================================================== */
+
+/* decimillesimae per unitatem minorem: 10^(IV - exponens) */
+interior s64
+_factor_unitatis (
+    s32 exponens)
+{
+    commutatio (exponens)
+    {
+        casus ZEPHYRUM: redde (s64)(X * M);
+        casus I:        redde (s64)M;
+        casus II:       redde (s64)C;
+        casus III:      redde (s64)X;
+        ordinarius:     redde (s64)I;
+    }
+}
+
+/* a + b sine circumvolutione; FALSUM si extra s64 */
+interior b32
+_adde_tutum (
+     s64  a,
+     s64  b,
+    s64* exitus)
+{
+    si (b > ZEPHYRUM && a > PECUNIA_QUANTITAS_MAXIMA - b)
+    {
+        redde FALSUM;
+    }
+    si (b < ZEPHYRUM && a < PECUNIA_QUANTITAS_MINIMA - b)
+    {
+        redde FALSUM;
+    }
+    *exitus = a + b;
+    redde VERUM;
+}
+
+PecuniaVitium
+pecunia_ex_unitatibus (
+              s64  unitates,
+    PecuniaMoneta  m,
+         Pecunia* exitus)
+{
+    s32 exponens = pecunia_moneta_exponens(m);
+    s64 factor;
+    s64 limes;
+
+    si (exponens < ZEPHYRUM)
+    {
+        redde PECUNIA_VITIUM_MONETA_IGNOTA;
+    }
+    factor = _factor_unitatis(exponens);
+    /* |unitates * factor| <= MAXIMA; inferne idem limes valet quia
+     * factor (> I) 2^63 non dividit:
+     * ceil(MINIMA / f) = -(MAXIMA / f) */
+    limes = PECUNIA_QUANTITAS_MAXIMA / factor;
+    si (factor > I && (unitates > limes || unitates < -limes))
+    {
+        redde PECUNIA_VITIUM_SUPERFLUXUS;
+    }
+    exitus->quantitas  = unitates * factor;
+    exitus->moneta     = m;
+    redde PECUNIA_BENE;
+}
+
+Pecunia
+pecunia_nihil (
+    PecuniaMoneta m)
+{
+    Pecunia x;
+
+    x.quantitas  = ZEPHYRUM;
+    x.moneta     = m;
+    redde x;
+}
+
+PecuniaVitium
+pecunia_adde (
+     Pecunia  a,
+     Pecunia  b,
+     Pecunia* exitus)
+{
+    s64 r;
+
+    si (!pecunia_moneta_aequalis(a.moneta, b.moneta))
+    {
+        redde PECUNIA_VITIUM_MONETAE_DIVERSAE;
+    }
+    si (!_adde_tutum(a.quantitas, b.quantitas, &r))
+    {
+        redde PECUNIA_VITIUM_SUPERFLUXUS;
+    }
+    exitus->quantitas  = r;
+    exitus->moneta     = a.moneta;
+    redde PECUNIA_BENE;
+}
+
+PecuniaVitium
+pecunia_subtrahe (
+     Pecunia  a,
+     Pecunia  b,
+    Pecunia* exitus)
+{
+    si (!pecunia_moneta_aequalis(a.moneta, b.moneta))
+    {
+        redde PECUNIA_VITIUM_MONETAE_DIVERSAE;
+    }
+    /* a - b: b > 0 infra, b < 0 supra (etiam b = MINIMA) */
+    si (   b.quantitas > ZEPHYRUM
+        && a.quantitas < PECUNIA_QUANTITAS_MINIMA + b.quantitas)
+    {
+        redde PECUNIA_VITIUM_SUPERFLUXUS;
+    }
+    si (   b.quantitas < ZEPHYRUM
+        && a.quantitas > PECUNIA_QUANTITAS_MAXIMA + b.quantitas)
+    {
+        redde PECUNIA_VITIUM_SUPERFLUXUS;
+    }
+    exitus->quantitas  = a.quantitas - b.quantitas;
+    exitus->moneta     = a.moneta;
+    redde PECUNIA_BENE;
+}
+
+PecuniaVitium
+pecunia_nega (
+     Pecunia  a,
+    Pecunia* exitus)
+{
+    si (a.quantitas == PECUNIA_QUANTITAS_MINIMA)
+    {
+        redde PECUNIA_VITIUM_SUPERFLUXUS;
+    }
+    exitus->quantitas  = -a.quantitas;
+    exitus->moneta     = a.moneta;
+    redde PECUNIA_BENE;
+}
+
+PecuniaVitium
+pecunia_summa (
+     constans Pecunia* a,
+       memoriae_index  n,
+              Pecunia* exitus)
+{
+    memoriae_index i;
+               s64 r = ZEPHYRUM;
+
+    si (a == NIHIL || n == ZEPHYRUM)
+    {
+        redde PECUNIA_VITIUM_FORMA;
+    }
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        si (!pecunia_moneta_aequalis(a[i].moneta, a[ZEPHYRUM].moneta))
+        {
+            redde PECUNIA_VITIUM_MONETAE_DIVERSAE;
+        }
+        si (!_adde_tutum(r, a[i].quantitas, &r))
+        {
+            redde PECUNIA_VITIUM_SUPERFLUXUS;
+        }
+    }
+    exitus->quantitas  = r;
+    exitus->moneta     = a[ZEPHYRUM].moneta;
+    redde PECUNIA_BENE;
+}
+
+PecuniaVitium
+pecunia_compara (
+    Pecunia  a,
+    Pecunia  b,
+        s32* exitus)
+{
+    si (!pecunia_moneta_aequalis(a.moneta, b.moneta))
+    {
+        redde PECUNIA_VITIUM_MONETAE_DIVERSAE;
+    }
+    *exitus = a.quantitas < b.quantitas ? -I
+        : a.quantitas > b.quantitas ? I : ZEPHYRUM;
+    redde PECUNIA_BENE;
+}
+
+s32
+pecunia_signum (
+    Pecunia a)
+{
+    redde a.quantitas < ZEPHYRUM ? -I : a.quantitas > ZEPHYRUM ? I
+        : ZEPHYRUM;
+}
+
+b32
+pecunia_aequalis (
+    Pecunia a,
+    Pecunia b)
+{
+    redde a.quantitas == b.quantitas
+        && pecunia_moneta_aequalis(a.moneta, b.moneta);
+}
