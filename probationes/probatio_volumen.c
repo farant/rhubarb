@@ -6,6 +6,7 @@
 #include "chorda.h"
 #include "filum.h"
 #include "volumen.h"
+#include "scrinium.h"
 #include "credo.h"
 #include "filum.h"
 #include <string.h>
@@ -407,6 +408,75 @@ s32 principale (vacuum)
         CREDO_NON_NIHIL(vetus);
         CREDO_AEQUALIS_I32((i32)xar_numerus(vetus), (i32)4);
 
+        volumen_claudere(vol);
+    }
+
+
+    /* ========================================================
+     * PROBARE: acta generum datorum (historia documenti sui sola) -
+     * ordo seq, post_seq exclusivum, genera exacta (non praefixa),
+     * index acta_genus in plagula
+     * ======================================================== */
+
+    {
+                   Volumen* vol;
+                       Xar* x;
+                  Scrinium* s;
+        ScriniumEnuntiatum* e;
+                       s64  primum;
+        constans character* genera[III];
+        constans character* nulla[I];
+
+        imprimere("\n--- Probans acta_generum_legere ---\n");
+        genera[ZEPHYRUM] = "d/mutatio";
+        genera[I] = "d/ramus";
+        genera[II] = NIHIL;
+        nulla[ZEPHYRUM] = NIHIL;
+        vol = volumen_temporarium(piscina, "probatio_volumen_genera");
+        CREDO_NECESSE_NON_NIHIL(vol);
+        primum = volumen_actum_appendere(vol, "d/mutatio",
+            chorda_ex_literis("a1", piscina));
+        (vacuum)volumen_actum_appendere(vol, "e/mutatio",
+            chorda_ex_literis("alienum", piscina));
+        (vacuum)volumen_actum_appendere(vol, "d/ramus",
+            chorda_ex_literis("r", piscina));
+        (vacuum)volumen_actum_appendere(vol, "d/mutationes",
+            chorda_ex_literis("praefixum", piscina));
+        (vacuum)volumen_actum_appendere(vol, "d/mutatio",
+            chorda_ex_literis("a2", piscina));
+        x = volumen_acta_generum_legere(vol, ZEPHYRUM, genera, piscina);
+        CREDO_NECESSE_NON_NIHIL(x);
+        CREDO_AEQUALIS_I32(xar_numerus(x), III);
+        CREDO_CHORDA_AEQUALIS_LITERIS(((VolumenActum*)xar_obtinere(x,
+            ZEPHYRUM))->datum, "a1");
+        CREDO_CHORDA_AEQUALIS_LITERIS(((VolumenActum*)xar_obtinere(x,
+            I))
+            ->genus, "d/ramus");
+        CREDO_CHORDA_AEQUALIS_LITERIS(((VolumenActum*)xar_obtinere(x,
+            II))
+            ->datum, "a2");
+        CREDO_VERUM(((VolumenActum*)xar_obtinere(x, ZEPHYRUM))->seq
+            < ((VolumenActum*)xar_obtinere(x, I))->seq);
+        /* post_seq exclusivum */
+        x = volumen_acta_generum_legere(vol, primum, genera, piscina);
+        CREDO_AEQUALIS_I32(xar_numerus(x), II);
+        CREDO_CHORDA_AEQUALIS_LITERIS(((VolumenActum*)xar_obtinere(x,
+            ZEPHYRUM))->datum, "r");
+        /* genera nulla: nihil */
+        x = volumen_acta_generum_legere(vol, ZEPHYRUM, nulla, piscina);
+        CREDO_NECESSE_NON_NIHIL(x);
+        CREDO_AEQUALIS_I32(xar_numerus(x), ZEPHYRUM);
+        /* index in plagula (migratio) */
+        s = scrinium_aperire(piscina, volumen_via(vol));
+        CREDO_NECESSE_NON_NIHIL(s);
+        e = scrinium_praeparare(s, "SELECT COUNT(*) FROM sqlite_master"
+            " WHERE type = 'index' AND name = 'acta_genus'");
+        CREDO_NECESSE_NON_NIHIL(e);
+        CREDO_VERUM(scrinium_gradi(e) == SCRINIUM_ORDO);
+        CREDO_AEQUALIS_S64(scrinium_columna_numerus(e, ZEPHYRUM),
+            (s64)I);
+        scrinium_finire(e);
+        scrinium_claudere(s);
         volumen_claudere(vol);
     }
 

@@ -92,20 +92,28 @@ acta_viva (
          s64   ad,
          Xar** coniuncta)
 {
-             Xar* omnia;
-             Xar* viva;
-    VolumenActum* a;
-    VolumenActum* sedes;
-             i32  i;
-             i32  n;
-             i32  k;
-             s64  ab;
-    StmlResultus  res;
-             Xar* notae;
-             b32  pendens;
-             b32* nota;
+                   Xar* omnia;
+                   Xar* viva;
+          VolumenActum* a;
+          VolumenActum* sedes;
+                   i32  i;
+                   i32  n;
+                   i32  k;
+                   s64  ab;
+          StmlResultus  res;
+                   Xar* notae;
+                   b32  pendens;
+                   b32* nota;
+    constans character* genera[IV];
 
-    omnia    = volumen_acta_legere(h->volumen, post, h->piscina);
+    /* acta generum suorum sola (per indicem acta_genus): ceterorum
+     * documentorum et voluminis acta numquam leguntur */
+    genera[ZEPHYRUM]  = h->genus;
+    genera[I]         = h->genus_rami;
+    genera[II]        = h->genus_coniunctionis;
+    genera[III]       = NIHIL;
+    omnia    = volumen_acta_generum_legere(h->volumen, post, genera,
+        h->piscina);
     viva     = xar_creare(h->piscina, (i32)magnitudo(VolumenActum));
     notae    = xar_creare(h->piscina, (i32)magnitudo(b32));
     pendens  = FALSUM;
@@ -473,14 +481,22 @@ historia_aperire (
     /* R5: nota cursoris ultima, nisi actum, ramus aut coniunctio eam
      * secutum est (tum ad finem, ut olim) */
     {
-                  Xar* omnia;
-         VolumenActum* a;
-                  s64  notatus;
-                  i32  i;
-                  i32  k;
-         StmlResultus  res;
+                   Xar* omnia;
+          VolumenActum* a;
+                   s64  notatus;
+                   i32  i;
+                   i32  k;
+          StmlResultus  res;
+    constans character* genera[V];
 
-        omnia    = volumen_acta_legere(volumen, ZEPHYRUM, piscina);
+        genera[ZEPHYRUM]  = h->genus_cursoris;
+        genera[I]         = h->genus;
+        genera[II]        = h->genus_rami;
+        genera[III]       = h->genus_coniunctionis;
+        genera[IV]        = NIHIL;
+        omnia    = volumen_acta_generum_legere(volumen, ZEPHYRUM,
+            genera,
+            piscina);
         notatus  = -I;
         per (i = ZEPHYRUM; i < xar_numerus(omnia); i++)
         {

@@ -39,10 +39,15 @@ interior constans character* constans MIGRATIONES_VOLUMINIS[] = {
     " sigillum TEXT NOT NULL REFERENCES massae(sigillum),"
     " origo TEXT NOT NULL,"
     " momentum TEXT NOT NULL"
-    "   DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')))"
+    "   DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')))",
+
+    /* 2026-10-19: historia documenti acta sua per genus legit
+     * (volumen_acta_generum_legere) - sine indice apertio documenti
+     * acta OMNIA voluminis legebat (XXX milia: ~33 ms) */
+    "CREATE INDEX acta_genus ON acta (genus, seq)"
 };
 
-#define MIGRATIONES_VOLUMINIS_NUMERUS 3
+#define MIGRATIONES_VOLUMINIS_NUMERUS 4
 
 interior Volumen*
 _volumen_struere (
@@ -658,6 +663,77 @@ volumen_acta_legere (
         redde NIHIL;
     }
     scrinium_ligare_numerum(e, 1, post_seq);
+    dum (scrinium_gradi(e) == SCRINIUM_ORDO)
+    {
+        VolumenActum* a = (VolumenActum*)xar_addere(ordo);
+
+        si (a == NIHIL)
+        {
+            scrinium_finire(e);
+            redde NIHIL;
+        }
+        a->seq       = scrinium_columna_numerus(e, 0);
+        a->momentum  = scrinium_columna_textus(e, 1, piscina);
+        a->genus     = scrinium_columna_textus(e, 2, piscina);
+        a->datum     = scrinium_columna_textus(e, 3, piscina);
+    }
+    scrinium_finire(e);
+    redde ordo;
+}
+
+Xar*
+volumen_acta_generum_legere (
+                         Volumen* volumen,
+                             s64  post_seq,
+    constans character* constans* genera,
+                        Piscina* piscina)
+{
+     ScriniumEnuntiatum* e;
+      ChordaAedificator* sql;
+                    Xar* ordo;
+                    i32  n;
+                    i32  i;
+
+    ordo = xar_creare(piscina, (i32)magnitudo(VolumenActum));
+    si (ordo == NIHIL || genera == NIHIL)
+    {
+        redde ordo;
+    }
+    n = ZEPHYRUM;
+    dum (genera[n] != NIHIL)
+    {
+        n++;
+    }
+    si (n == ZEPHYRUM)
+    {
+        redde ordo;
+    }
+    sql = chorda_aedificator_creare(piscina, (memoriae_index)CXXVIII);
+    si (sql == NIHIL)
+    {
+        redde NIHIL;
+    }
+    chorda_aedificator_appendere_literis(sql,
+        "SELECT seq, momentum, genus, datum FROM acta"
+        " WHERE seq > ? AND genus IN (");
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        chorda_aedificator_appendere_literis(sql, i > ZEPHYRUM ? ", ?"
+                                                               : "?");
+    }
+    chorda_aedificator_appendere_literis(sql, ") ORDER BY seq");
+    e = scrinium_praeparare(volumen->scrinium, chorda_ut_cstr(
+        chorda_aedificator_finire(sql), piscina));
+    si (e == NIHIL)
+    {
+        redde NIHIL;
+    }
+    scrinium_ligare_numerum(e, 1, post_seq);
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        scrinium_ligare_textum(e, (integer)(i + II),
+            chorda_ex_literis(genera[i], piscina));
+    }
     dum (scrinium_gradi(e) == SCRINIUM_ORDO)
     {
         VolumenActum* a = (VolumenActum*)xar_addere(ordo);

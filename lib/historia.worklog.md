@@ -140,3 +140,14 @@ replays the log from nothing (same as the old size-mismatch path).
 Test gotcha: if the history ignored the client's seal, the seal would
 be a constant (hash of 0 bytes) and every equality check still passes -
 section XVI asserts the seal CHANGES after undo (plant H1).
+
+## 2026-10-19 — reads only its own act kinds
+
+`acta_viva` (every open, undo, redo) and the cursor scan in
+`historia_aperire` now ask the volume for their own genera only
+(`volumen_acta_generum_legere`: genus, ramus, coniunctio; + cursor
+for the scan) instead of every act in the volume - the C loops
+already ignored the rest, so behaviour is identical; cost per open on
+a real 87 MB volume ~33 ms -> <1 ms. Plants 3 red (ramus,
+coniunctio, cursor missing from the list). Detail:
+lib/volumen.worklog.md.

@@ -199,6 +199,16 @@ volumen_acta_legere (
         s64  post_seq,
     Piscina* piscina);
 
+/* acta generum datorum post seq, ordine seq (genera: tabula
+ * NIHIL-terminata; per indicem acta(genus, seq)) - historia documenti
+ * acta sua sola legit, non volumen totum */
+Xar*
+volumen_acta_generum_legere (
+                         Volumen* volumen,
+                             s64  post_seq,
+    constans character* constans* genera,
+                        Piscina* piscina);
+
 /* plica ad seq: manifestum RECONSTRUCTUM replicando acta plagularum
  * (plagula-condita ponit, plagula-remota tollit) cum seq <= ad_seq;
  * ad_seq <= 0 = omnia (plica praesens - enumerationi aequalis, quod

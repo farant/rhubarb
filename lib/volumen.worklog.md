@@ -135,3 +135,27 @@ sine initializatione explicita.**
 pendens (probatio quae claudere omisit) nomen suum RETINET, et qui in
 /tmp inspicit videt quot cursus reliquerint. Tempus aut fors nomina
 nova semper daret, et reliquiae silentio congererentur.
+
+## 2026-10-19 — acta index (genus, seq) + volumen_acta_generum_legere
+
+Fran: the calendar week view lagged. Measured on a COPY of the live
+volume (~/.rhubarb/paginae-proba.volumen, 87 MB, 30,251 acts, 16.7 MB
+of act text - mostly pictor strokes): opening ANY history document
+cost ~33 ms because `historia` read every act of the volume
+(`volumen_acta_legere(post 0)`) and filtered by genus in C. The week
+view opens seven day books per frame -> 210 ms/frame.
+
+sqlite3 on the copy: full read 33 ms; `genus IN (...)` without index
+6 ms; with `CREATE INDEX acta_genus ON acta (genus, seq)` 0.1 ms.
+
+Fix: migration 4 (the index - existing volumes get it on next open,
+append-only migrations) and `volumen_acta_generum_legere(vol, post,
+genera, p)` (NIHIL-terminated list, `seq > ? AND genus IN (?, ...)
+ORDER BY seq`). After, same copy: week 210 -> 2.7 ms/frame, month
+7.6 -> 2.1 ms, one day book ~30 -> 0.15-0.7 ms. Plants 4 red (index,
+filter, post_seq, order).
+
+Not changed: `volumen_acta_legere` (mensura, silex, mensa still read
+everything - they want everything). `volumen_summa_actorum` is a
+COUNT(*) per open (cheap at 30k rows; MAX(seq) would be the indexed
+form if it ever shows up).
