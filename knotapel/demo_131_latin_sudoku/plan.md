@@ -190,6 +190,33 @@ once per word multiset (it ignores order); P and M filter it per order
 1. **T1:** the world: paradigm table, levels, generator, analyser,
    readers; Part A checks (table, duality, order-independence,
    inclusions, reversal, hand sentences); plants.
+   *T1 done 2026-10-19:* main.c Part A, 35 checks, 17 s full, 0.4 s
+   quick (`D131_CELER=1`, exhaustive passes up to four words).
+   - Paradigms: Bennett == Whitaker on all 70 noun and *bonus* cells;
+     *fortis* in Whitaker's set in all 30, Whitaker's 8 other forms
+     exactly the listed ones (task 0's "80 / 20" was a miscount).
+     Nominal forms per level 47 / 100 / 17 / 10, every L2 / L3 form an
+     L0 form.
+   - Tree table: all 701 trees on n <= 5 (Cayley); two projectivity
+     routes agree with "no non-projective arc"; projective => mild;
+     reversal; projective and mild counts per n pinned from an
+     independent Python count (1, 2, 7, 30, 143 and 1, 2, 9, 64, 569).
+   - Duality at all four levels: the generator (slot by slot) and the
+     analyser (constraints over every multiset of forms with one verb,
+     18.4M bags at L1) give the same positioned analyses, readings
+     included; the analyser never repeats one.
+   - Sizes: pairs 384 / 55,296 / 6,696,960 by length at EVERY level
+     (= task 0; L0 also matches task 0's 25,979 bags and 2,734,201
+     strings). Strings per level: L0 2,734,201, L1 3,176,832, L2
+     296,312, L3 169,760; largest |F|: 18, 6, 156, 156.
+   - Word order: F(s) of every string at every level equals its bag's
+     F carried to that order (6.4M strings).
+   - Hand sentences (7), among them the garden path `bona puella dona
+     amat` (displaced *bona* -> *dona*; R_P settles on *bona* ->
+     *puella*), gone at L1.
+   - 16 plants red (three re-planted: one did not compile, one anchor
+     matched twice, one needed five words - two genitives on one noun -
+     so it runs on the full mode).
 2. **T2:** measures A and B, Q1 and Q2 decided, the Python oracle,
    rule checks; plants.
 3. **T3:** findings.md, claims.md, ledger (N14 stays open for slice
@@ -210,16 +237,18 @@ once per word multiset (it ignores order); P and M filter it per order
   check still reaches them.
 - **Cross-check against INFLECTS.LAT** (AGE X, FREQ A; Whitaker's
   variant 0 = every variant, gender C = masculine or feminine, X =
-  any): the four nouns and *bonus*, 80 cells, are EQUAL to Bennett's
-  forms with macrons stripped. *fortis*, 20 cells: Bennett's form is
-  in Whitaker's set in every cell, and Whitaker adds 8 variants from
+  any): the four nouns and *bonus*, 80 cells [T1: 70 - 4 x 10 + 3 x
+  10; the script said 100 cells in all, misread here], are EQUAL to
+  Bennett's forms with macrons stripped. *fortis*, 20 cells [T1: 30],
+  Bennett's form is in Whitaker's set in every cell, and Whitaker adds
+  8 variants from
   its shared third-declension entries — abl. sg. *-e* and gen. pl.
   *-um* (consonant-stem and comparative patterns; Bennett sec. 67a: an
   adjective like *fortis* has *-i*, *-ium*) and acc. pl. m./f. *-is*
   (Bennett sec. 67a and 69 list *-is* beside *-es* as an alternative).
   **Decision:** Bennett's first-listed forms only; acc. pl. *-is*
   omitted, stated. T1's check: equality on the 80 cells, membership on
-  the 20, the 8 extra variants listed in the demo.
+  the 20 [T1: 70 and 30], the 8 extra variants listed in the demo.
 - **Lexicon: `fortis` is IN.** A third-declension adjective whose
   endings differ from its nouns' (*puella fortis*) and are syncretic in
   their own way (*fortis* nom. or gen. sg. m./f.; *forti* dat. or abl.
