@@ -128,6 +128,17 @@ ranked by how much it bears on KC 47.
   is displaced (58.4.3-4) was made after the run and is graded so.
   The demo's own review is task T4, after these nodes were written.
 
+- **D131 review (T4, 2026-10-19).** The reviewer's own oracle matched
+  every number in 58 (zero mismatches); no rule changed after
+  registration. Marked [falls] with corrected children: 58.4.2 (the
+  pooled reversal is a Simpson's paradox, 58.4.2.1) and
+  58.4.5.obj.1.1 (58.4.5.obj.1.2). Appended: 58.3.1.1.1, 58.3.1.2
+  (Q1's failure a near-tie that flips with length), 58.4.3.1,
+  58.4.4.1, 58.4.5.1. Corrected in place: the header (verb forms,
+  one clause, the review), 58.2's evidence, 58.3.1.1's source, and
+  58.4.5's citation (57.5.4, not 57.5.4.1). No address removed or
+  renumbered.
+
 ## Part I. Definitions
 
 ```text
@@ -1446,10 +1457,11 @@ ranked by how much it bears on KC 47.
     reader reconnect a displaced word, so that a grammar with endings
     can afford crossings? (D131, proposal N14 slice 1; brainstorm
     XIII, XIV. A toy Latin world, exhaustive up to five words: four
-    nouns, two adjectives, four verbs, real endings from Bennett's
-    New Latin Grammar checked against Whitaker's INFLECTS.LAT. Grades:
-    [exact] counts are pinned from D131's independent Python oracle,
-    oracle_partb.py; the demo's own review is T4)
+    nouns, two adjectives, four verb forms of two lemmas, real endings
+    from Bennett's New Latin Grammar checked against Whitaker's
+    INFLECTS.LAT; one clause only. Grades: [exact] counts are pinned
+    from D131's independent Python oracle, oracle_partb.py, and all
+    re-derived by the T4 review's own oracle, zero mismatches)
 58.1. A PAIR is a string with one of its analyses (a head and a
       reading per position); each analysis yields one string per
       morphology level, so the 6,752,640 pairs are the same at every
@@ -1460,8 +1472,10 @@ ranked by how much it bears on KC 47.
       dependent of a non-projective arc (57.1). [definition]
 58.2. In this world every non-projective arc is NP-internal: an
       adjective's or a genitive's, never a verb dependent's. [proved]
-      (the root word dominates every word; D131 checks it on every
-      pair)
+      (the root word dominates every word; D131 counts displaced verb
+      dependents directly on every crossed pair, 0 - since T4. Crossings
+      themselves need not be NP-internal: in "bonum puella dominum
+      amat" the adjective's arc crosses the subject's)
 58.3. Does licensing crossings cost Latin more ambiguity than ideal
       endings would?
 58.3.1. No. Attachment cells open under all analyses but forced under
@@ -1473,8 +1487,19 @@ ranked by how much it bears on KC 47.
 58.3.1.1. The measure is a difference, and syncretism opens cells
           under the projective reading too: open under all analyses
           L0 2,209,476 against L1 1,953,792, under the projective ones
-          1,330,908 against 1,069,056. [exact] (D131 T2 probe with
-          the oracle's functions; the numerators of 58.3.1 are pinned)
+          1,330,908 against 1,069,056. [exact] (D131 Part B; computed
+          and pinned since the T4 fixes, first seen in a T2 probe)
+58.3.1.1.1. But that does not decide the sign: up to four words the
+            same pattern holds (open under all analyses 13,464 against
+            12,288, under the projective ones 5,256 against 4,096) and
+            A(L0) is the larger. [exact] (D131 Part B, quick-mode pins;
+            T4 review M1)
+58.3.1.2. The failure is a near-tie that flips with length: 6,168 of
+          13,631,616 cells (0.045 percentage points) at five words;
+          up to four words A(L1) <= A(L0) holds (8,192 against 8,208)
+          and Q1 holds on every clause. The total ambiguity (open cells
+          under all analyses) is ordered L1 < L0 < L2 < L3 at both
+          lengths. [exact] (D131 Part B; T4 review M1)
 58.4. Do endings protect a nesting-first reader from garden paths on
       crossed sentences?
 58.4.1. Yes, as a whole: R_P misreads L1 57.08%, L0 60.24%, L2 86.38%,
@@ -1483,22 +1508,47 @@ ranked by how much it bears on KC 47.
 58.4.2. But not through the displaced word's own syncretism: at L0 a
         syncretic displaced word gives 45.54% garden paths, unambiguous
         ones 70.63%. Registered Q2 FAILS on that clause; B(L0) < B(L2)
-        holds. [exact] (D131 Part B)
+        holds. [exact] (D131 Part B) [falls: the numbers and the
+        verdict stand, the reading "not through syncretism" does not;
+        see 58.4.2.1]
+58.4.2.1. The pooled reversal is a Simpson's paradox: within each kind
+          of displacement (58.4.3, 58.4.4.1) a syncretic displaced word
+          gives MORE garden paths - adjectives only 7.28% against
+          1.13%, genitives only 77.44% against 74.01%, both 19.79%
+          against 12.83% - but genitive-only pairs, the garden-path-
+          prone kind, are 52.2% of the syncretic side and 95.2% of the
+          unambiguous side. [exact] (D131 Part B, descriptive; T4
+          review M2, three-way split from the T4 fixes)
 58.4.3. Displaced ADJECTIVES are what endings pay for: crossed pairs
         displacing only adjectives (663,552) are misread 0% at L1,
         6.49% at L0 (syncretic 7.28%, unambiguous 1.13%), 35.70% at L2,
         78.86% at L3. [exact] (D131 Part B, descriptive: the split was
         made after the run)
+58.4.3.1. The 0% at L1 is structural to a five-word world: beside an
+          adjective there is room for at most one noun besides the
+          verb's arguments, so no two nouns share case, gender and
+          number. Six words would allow two. [proved] (counting slots;
+          T4 review M6)
 58.4.4. Displaced GENITIVES are not: crossed pairs displacing a
         genitive (3,354,624) are misread 68.38% at L1, 70.87% at L0,
         96.40% at L2, 99.27% at L3; they are 96.4% of Q2's
         "unambiguous" side at L0. [exact] (D131 Part B, descriptive)
+58.4.4.1. Separating the pairs that displace both (245,760; a choice,
+          made in the T4 fixes): genitives only (3,108,864) are misread
+          72.99% at L1, 74.97% at L0, 100% at L2 and L3; both, 10.00%,
+          18.98%, 50.92%, 90.00%. [exact] (D131 Part B, descriptive)
 58.4.5. Agreement says which word a word goes with; a case ending
         alone says only its role. An adjective carries agreement with
         its noun, a genitive carries none, so endings can reconnect a
         displaced adjective and cannot place a displaced genitive.
-        [interpretation] (fits 57.5.4.1: in real Latin the crossing arc
-        is usually a displaced agreeing word)
+        [interpretation] (fits 57.5.4 in verse: there non-projective
+        arcs usually agree, and their crossed projective partners
+        seldom do, 57.5.4.1)
+58.4.5.1. It does not reach D130's prose: under the registered operand
+          most Latin treebanks fail P2 (57.5.1, 57.5.3 [falls]), and the
+          charters' non-projective arcs are mostly verb dependents
+          (57.5.2), which this one-clause world cannot displace (58.2).
+          [interpretation] (T4 review M4)
 58.4.5.obj.1. Objection: the split of 58.4.3-4 was chosen after the
               registered split failed, so it may be the one cut that
               tells the hoped-for story.
@@ -1506,7 +1556,14 @@ ranked by how much it bears on KC 47.
                 NP-internal crossing displaces an adjective or a
                 genitive, nothing else), not chosen among many; but as
                 a prediction it is untested until a new world (other
-                lemmas, six words) is registered against it.
+                lemmas, six words) is registered against it. [falls:
+                overstated; see 58.4.5.obj.1.2]
+58.4.5.obj.1.2. Reply: the two KINDS are forced (58.2), but where
+                pairs that displace both go is a choice, and they
+                behave unlike either (58.4.4.1); the three-way split is
+                reported so no cut is hidden. As a prediction it is
+                untested until a new world (six words) is registered
+                against it. (T4 review M3)
 58.5. Can a nesting-first reader, with any endings, place a displaced
       genitive without statistics or order preference? [open] (slice 2
       of N14: the exact settler, brainstorm XIV)

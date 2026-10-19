@@ -12,7 +12,9 @@ Bennett's tables again (macrons dropped), but
 Usage: python3 -I oracle_partb.py [maxw]   (default 5; main.c's quick
 mode is 4). Prints per level: A = (num, den), the reading-cell version,
 B = (num, den), B over pairs with a syncretic displaced word and with
-unambiguous displaced words, R_M misreads, and per-length rows.
+unambiguous displaced words, R_M misreads, per-length rows, and the
+descriptive splits (what is displaced, mildness, crossing count, the
+open cells behind A).
 """
 import itertools
 import sys
@@ -250,6 +252,17 @@ def measures(heads):
     return MEMO[heads]
 
 
+def crossings(heads):
+    """pairs of arcs that interleave strictly, the root arc (0, root)
+    included"""
+    arcs = [(min(h, d), max(h, d)) for d, h in enumerate(heads, 1)]
+    cnt = 0
+    for (a1, b1), (a2, b2) in itertools.combinations(arcs, 2):
+        if a1 < a2 < b1 < b2 or a2 < a1 < b2 < b1:
+            cnt += 1
+    return cnt
+
+
 def forced(an, sel, n, which):
     cnt = 0
     for i in range(n):
@@ -265,9 +278,13 @@ def main():
         R = readings_of(level)
         bags = {tuple(sorted(form(level, r) for r, _ in t)) for t in abstracts}
         M = dict(a_num=0, a_den=0, ar_num=0, b_num=0, b_den=0, bs_num=0, bs_den=0,
-                 bu_num=0, bu_den=0, bm_num=0, pairs=0,
-                 adj_num=0, adj_den=0, gen_num=0, gen_den=0, oth_num=0, oth_den=0,
-                 adjs_num=0, adjs_den=0, adju_num=0, adju_den=0)
+                 bu_num=0, bu_den=0, bm_num=0, pairs=0, open_f=0, open_p=0, vdisp=0)
+        # what is displaced: adjectives only, genitives only, both; each
+        # with its syncretic / unambiguous split: [num, den, s_num, s_den, u_num, u_den]
+        CLS = {c: [0] * 6 for c in ('adj', 'gen', 'mix')}
+        MILD = {True: [0, 0], False: [0, 0]}     # crossed pairs by mildness: [num, den]
+        CROSS = {c: [0, 0] for c in (1, 2, 3, 4)}  # by crossings (root arc included), 4 = 4+
+        PAIRS = {}
         bylen = {}
         for bag in bags:
             canon = analyses(level, list(bag), R)
@@ -302,7 +319,10 @@ def main():
                 L = bylen.setdefault(n, [0, 0, 0, 0])
                 for k, a in enumerate(an):
                     M['pairs'] += 1
+                    PAIRS[n] = PAIRS.get(n, 0) + 1
                     if inP[k]:
+                        M['open_f'] += n - faF
+                        M['open_p'] += n - faP
                         M['a_num'] += faP - faF
                         M['ar_num'] += frP - frF
                         M['a_den'] += n
@@ -326,22 +346,27 @@ def main():
                         heads = a[0]
                         kinds = [R[s[i]][0][0] for i in range(n)]
                         disp = fl[k][2]
-                        if all(kinds[d - 1] == 'A' for d in disp):
-                            M['adj_den'] += 1
-                            M['adj_num'] += mis
-                            if syn:
-                                M['adjs_den'] += 1
-                                M['adjs_num'] += mis
-                            else:
-                                M['adju_den'] += 1
-                                M['adju_num'] += mis
-                        elif any(kinds[d - 1] == 'N' and kinds[heads[d - 1] - 1] == 'N' for d in disp):
-                            M['gen_den'] += 1
-                            M['gen_num'] += mis
-                        else:
-                            M['oth_den'] += 1
-                            M['oth_num'] += mis
+                        nadj = sum(1 for d in disp if kinds[d - 1] == 'A')
+                        ngen = sum(1 for d in disp if kinds[d - 1] == 'N' and heads[d - 1] != 0
+                                   and kinds[heads[d - 1] - 1] == 'N')
+                        if nadj + ngen != len(disp):
+                            M['vdisp'] += 1
+                        c = 'adj' if ngen == 0 else 'gen' if nadj == 0 else 'mix'
+                        row = CLS[c]
+                        row[0] += mis
+                        row[1] += 1
+                        row[2 if syn else 4] += mis
+                        row[3 if syn else 5] += 1
+                        MILD[inM[k]][0] += mis
+                        MILD[inM[k]][1] += 1
+                        cr = min(crossings(heads), 4)
+                        CROSS[cr][0] += mis
+                        CROSS[cr][1] += 1
         print('level', level, ' '.join('%s=%d' % kv for kv in M.items()))
+        print('  classes', ' '.join('%s=%s' % (c, CLS[c]) for c in ('adj', 'gen', 'mix')))
+        print('  mild', MILD[True], 'not mild', MILD[False])
+        print('  crossings', ' '.join('%d:%s' % (c, CROSS[c]) for c in (1, 2, 3, 4)))
+        print('  pairs by length', sorted(PAIRS.items()))
         for n in sorted(bylen):
             print('  len', n, 'a_num=%d a_den=%d b_num=%d b_den=%d' % tuple(bylen[n]))
 

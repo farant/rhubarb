@@ -25,8 +25,11 @@
  *           pairs misread by R_P, nested first), split by the displaced
  *           word's form; registered Q1 and Q2, the rules on constructed
  *           totals; totals pinned from oracle_partb.py (independent
- *           Python, tree-first). A descriptive split by WHAT is displaced
- *           is printed, not registered.
+ *           Python, tree-first). Descriptive, not registered: B by WHAT is
+ *           displaced (adjectives only / genitives only / both, each by
+ *           form), by mildness and by crossing count; the open cells
+ *           behind A. Tree counts pinned from oracle_trees.py. (T4 review
+ *           fixes, 2026-10-19.)
  *
  * The world (syntax only, no semantics): nouns puella (1st, f), dominus
  * (2nd, m), donum (2nd, n), rex (3rd, m); adjectives bonus (1st/2nd),
@@ -939,6 +942,8 @@ static unsigned char t_proj[MAXW + 1][TCODES];
 static unsigned char t_proj2[MAXW + 1][TCODES];
 static unsigned char t_mild[MAXW + 1][TCODES];
 static unsigned char t_npmask[MAXW + 1][TCODES];
+static unsigned char t_cross[MAXW + 1][TCODES];   /* crossings, root arc
+                                                     included */
 
 static void
 part_trees (void)
@@ -994,6 +999,7 @@ part_trees (void)
                 for (k = 0; k < n; k++)
                     if (arcs[k].non_proiectivus) mask |= 1 << k;
                 t_npmask[n][ix] = (unsigned char)mask;
+                t_cross[n][ix] = (unsigned char)(x.cruces + x.cruces_radicis);
                 nproj += t_proj[n][ix];
                 nmild += t_mild[n][ix];
                 if (t_proj[n][ix] != t_proj2[n][ix]) routes_ok = 0;
@@ -1037,7 +1043,7 @@ part_trees (void)
         "no non-projective arc, on every tree", routes_ok);
     check("projective => mild on every tree", mild_ok);
     check("projective trees per n = 1, 2, 7, 30, 143 and mild trees = 1, 2, "
-        "9, 64, 569 (independent Python count, a pin)", counts_ok);
+        "9, 64, 569 (oracle_trees.py, independent Python; a pin)", counts_ok);
     check("reversal keeps projective and mild and mirrors the non-projective "
         "arcs, on every tree", rev_ok);
     piscina_destruere(scratch);
@@ -1085,8 +1091,8 @@ part_paradigms (void)
                 if (m == 1 && strcmp(out[0], x->form[g][n][c]) == 0) equal++;
             }
     snprintf(msg, sizeof msg,
-        "nouns and bonus: Bennett == Whitaker (AGE X, FREQ A) in %d of %d "
-        "cells", equal, cells);
+        "nouns and bonus: the table (Bennett's, cited) == Whitaker (AGE X, "
+        "FREQ A) in %d of %d cells", equal, cells);
     check(msg, equal == cells && cells == 70);
     for (g = 0; g < NGENDERS; g++)
         for (n = 0; n < NNUMBERS; n++)
@@ -1321,8 +1327,8 @@ part_world (void)
         check("the population of pairs is the same at every level, length by "
             "length", same);
     }
-    check("pairs by length = task 0's count (3: 384, 4: 55,296, 5: 6,696,960; "
-        "T0 Python, a pin)", level_pairs[0][1] == 0 && level_pairs[0][2] == 0
+    check("pairs by length = oracle_partb.py's (3: 384, 4: 55,296, 5: "
+        "6,696,960; = task 0's count; a pin)", level_pairs[0][1] == 0 && level_pairs[0][2] == 0
         && level_pairs[0][3] == 384 && level_pairs[0][4] == 55296
         && (quick || level_pairs[0][5] == 6696960));
 }
@@ -1475,13 +1481,16 @@ typedef struct {
     const char *text;          /* the string at that level (NULL: L1) */
     int         nf, np, nm;
     int         truth_read;    /* truth in R_P(s) */
+    int         truth_read_m;  /* truth in R_M(s) */
     int         attach, reading;   /* forced cells under F */
+    int         attach_p;      /* forced attachment cells under P (-1: P
+                                  empty) */
 } Hand;
 
 static void
 part_hand (void)
 {
-    Hand h[7];
+    Hand h[9];
     int  k, i;
 
     printf("\n--- hand-worked sentences ---\n");
@@ -1495,6 +1504,7 @@ part_hand (void)
     h[0].rd[3] = rd_verb(0);               h[0].head[3] = 0;
     h[0].nf = 1; h[0].np = 0; h[0].nm = 1; h[0].truth_read = 1;
     h[0].attach = 4; h[0].reading = 4;
+    h[0].truth_read_m = 1; h[0].attach_p = -1;
     /* the same words, nested */
     h[1].title = "puella bonum dominum amat (nested)";
     h[1].lv = 0; h[1].n = 4; h[1].text = "puella bonum dominum amat";
@@ -1504,6 +1514,7 @@ part_hand (void)
     h[1].rd[3] = rd_verb(0);               h[1].head[3] = 0;
     h[1].nf = 1; h[1].np = 1; h[1].nm = 1; h[1].truth_read = 1;
     h[1].attach = 4; h[1].reading = 4;
+    h[1].truth_read_m = 1; h[1].attach_p = 4;
     /* bona (n acc pl) displaced: syncretic, a nested misreading exists */
     h[2].title = "bona puella dona amat (bona -> dona, crossed: garden path)";
     h[2].lv = 0; h[2].n = 4; h[2].text = "bona puella dona amat";
@@ -1513,12 +1524,14 @@ part_hand (void)
     h[2].rd[3] = rd_verb(0);               h[2].head[3] = 0;
     h[2].nf = 2; h[2].np = 1; h[2].nm = 2; h[2].truth_read = 0;
     h[2].attach = 3; h[2].reading = 3;
+    h[2].truth_read_m = 1; h[2].attach_p = 4;
     /* the same analysis at L1: the ending says which noun */
     h[3] = h[2];
     h[3].title = "the same analysis at L1 (ideal endings): no garden path";
     h[3].lv = 1; h[3].text = NULL;
     h[3].nf = 1; h[3].np = 0; h[3].nm = 1; h[3].truth_read = 1;
     h[3].attach = 4; h[3].reading = 4;
+    h[3].truth_read_m = 1; h[3].attach_p = -1;
     /* neuter nominative = accusative: readings open, attachments forced */
     h[4].title = "donum donum amat (which donum is the subject?)";
     h[4].lv = 0; h[4].n = 3; h[4].text = "donum donum amat";
@@ -1527,6 +1540,7 @@ part_hand (void)
     h[4].rd[2] = rd_verb(0);               h[4].head[2] = 0;
     h[4].nf = 2; h[4].np = 2; h[4].nm = 2; h[4].truth_read = 1;
     h[4].attach = 3; h[4].reading = 1;
+    h[4].truth_read_m = 1; h[4].attach_p = 3;
     /* case stripped: subject and object trade places */
     h[5].title = "puella dominus amat at L2 (puella dominum amat at L0)";
     h[5].lv = 2; h[5].n = 3; h[5].text = "puella dominus amat";
@@ -1535,14 +1549,40 @@ part_hand (void)
     h[5].rd[2] = rd_verb(0);               h[5].head[2] = 0;
     h[5].nf = 2; h[5].np = 2; h[5].nm = 2; h[5].truth_read = 1;
     h[5].attach = 3; h[5].reading = 1;
+    h[5].truth_read_m = 1; h[5].attach_p = 3;
     h[6] = h[5];
     h[6].title = "puella dominum amat at L0";
     h[6].lv = 0; h[6].text = "puella dominum amat";
     h[6].nf = 1; h[6].np = 1; h[6].nm = 1; h[6].attach = 3; h[6].reading = 3;
+    /* neuter plurals (the registered dona pair): bona's head is open
+     * under F, forced under P - one cell of A */
+    h[7].title = "amant bona dona dona (bona -> first dona; subject and "
+        "object neuter plurals)";
+    h[7].lv = 0; h[7].n = 4; h[7].text = "amant bona dona dona";
+    h[7].rd[0] = rd_verb(1);               h[7].head[0] = 0;
+    h[7].rd[1] = rd_adj(0, NEUT, NOM, PL); h[7].head[1] = 3;
+    h[7].rd[2] = rd_noun(2, NOM, PL);      h[7].head[2] = 1;
+    h[7].rd[3] = rd_noun(2, ACC, PL);      h[7].head[3] = 1;
+    h[7].nf = 4; h[7].np = 2; h[7].nm = 4; h[7].truth_read = 1;
+    h[7].truth_read_m = 1; h[7].attach = 3; h[7].reading = 1;
+    h[7].attach_p = 4;
+    /* two adjectives crossing to two nouns: not well-nested, and the
+     * string has mild alternatives - R_M misreads it too */
+    h[8].title = "amant bona bona dona dona (bona -> dona, bona -> dona, "
+        "interleaved: not mild)";
+    h[8].lv = 0; h[8].n = 5; h[8].text = "amant bona bona dona dona";
+    h[8].rd[0] = rd_verb(1);               h[8].head[0] = 0;
+    h[8].rd[1] = rd_adj(0, NEUT, NOM, PL); h[8].head[1] = 4;
+    h[8].rd[2] = rd_adj(0, NEUT, ACC, PL); h[8].head[2] = 5;
+    h[8].rd[3] = rd_noun(2, NOM, PL);      h[8].head[3] = 1;
+    h[8].rd[4] = rd_noun(2, ACC, PL);      h[8].head[4] = 1;
+    h[8].nf = 8; h[8].np = 2; h[8].nm = 6; h[8].truth_read = 0;
+    h[8].truth_read_m = 0; h[8].attach = 3; h[8].reading = 1;
+    h[8].attach_p = 5;
 
-    for (k = 0; k < 7; k++) {
+    for (k = 0; k < 9; k++) {
         const Hand *x = &h[k];
-        int         str[MAXW], na, t = -1, fa, fr, ok;
+        int         str[MAXW], na, t = -1, fa, fr, ok, fap = -1, frp, rm;
         char        text[200], msg[400];
         Analysis    truth;
         Readers     r;
@@ -1561,13 +1601,17 @@ part_hand (void)
                 t = i;
         read_with(abuf, na, x->n, &r);
         forced_cells(abuf, na, NULL, x->n, &fa, &fr);
+        if (r.np > 0) forced_cells(abuf, na, r.in_p, x->n, &fap, &frp);
+        rm = t >= 0 && (r.nm > 0 ? r.in_m[t] : 1);
         ok = (x->text == NULL || strcmp(text, x->text) == 0) && t >= 0
             && r.nf == x->nf && r.np == x->np && r.nm == x->nm
-            && r.in_rp[t] == x->truth_read && fa == x->attach
-            && fr == x->reading;
+            && r.in_rp[t] == x->truth_read && rm == x->truth_read_m
+            && fa == x->attach && fr == x->reading && fap == x->attach_p;
         snprintf(msg, sizeof msg, "%s: |F| %d, |P| %d, |M| %d, truth %s by "
-            "R_P, forced cells %d attachment / %d reading", x->title, r.nf,
-            r.np, r.nm, t >= 0 && r.in_rp[t] ? "read" : "MISREAD", fa, fr);
+            "R_P and %s by R_M, forced cells under F %d attachment / %d "
+            "reading, under P %d attachment", x->title, r.nf, r.np, r.nm,
+            t >= 0 && r.in_rp[t] ? "read" : "MISREAD", rm ? "read"
+            : "MISREAD", fa, fr, fap);
         check(msg, ok);
     }
 }
@@ -1576,11 +1620,10 @@ part_hand (void)
  * Part B: licensing cost A and garden paths B
  * ================================================================ */
 
-enum { DC_ADJ, DC_GEN, DC_VERB, NDC };   /* what the displaced words are */
+enum { DC_ADJ, DC_GEN, DC_MIX, NDC };    /* what the displaced words are */
 
 static const char *const dc_name[NDC] = {
-    "only adjectives displaced", "a genitive displaced",
-    "verb dependents only"
+    "adjectives only", "genitives only", "both"
 };
 
 typedef struct {
@@ -1592,7 +1635,14 @@ typedef struct {
     s64 len_a_num[MAXW + 1], len_a_den[MAXW + 1];
     s64 len_b_num[MAXW + 1], len_b_den[MAXW + 1];
     s64 cls_num[NDC], cls_den[NDC];      /* descriptive, not registered */
-    s64 adj_s_num, adj_s_den, adj_u_num, adj_u_den;
+    s64 cls_s_num[NDC], cls_s_den[NDC];  /* ... a syncretic displaced word */
+    s64 cls_u_num[NDC], cls_u_den[NDC];  /* ... all unambiguous */
+    s64 vdisp;                           /* crossed pairs displacing a verb
+                                          * dependent (0: 58.2) */
+    s64 mild_num[2], mild_den[2];        /* crossed pairs, [1] = mild */
+    s64 cr_num[5], cr_den[5];            /* by crossings 1..3, [4] = 4+ */
+    s64 open_f, open_p;                  /* projective pairs: open cells
+                                          * under F, under P (A = diff) */
     s64 f_proj, f_cross;                 /* sum of |F(s)| over the pairs */
 } Measures;
 
@@ -1656,10 +1706,12 @@ measure_level (
                     ms->a_den += nb;
                     ms->len_a_num[nb] += fap - faf;
                     ms->len_a_den[nb] += nb;
+                    ms->open_f += nb - faf;
+                    ms->open_p += nb - fap;
                     ms->f_proj += nc;
                 } else {
                     int mis = rdr.np > 0, mask = t_npmask[nb][ix];
-                    int syn = 0, adj_only = 1, gen = 0, cls;
+                    int syn = 0, nadj = 0, ngen = 0, nother = 0, cls, cr;
 
                     ms->b_den++;
                     ms->b_num += mis;
@@ -1672,10 +1724,12 @@ measure_level (
                         if (!(mask & (1 << k))) continue;
                         x = &readings[mapped[a].rd[k]];
                         if (form_nr[lv][str[k]] >= 2) syn = 1;
-                        if (x->kind != K_ADJ) adj_only = 0;
-                        if (x->kind == K_NOUN && readings[mapped[a].rd[
-                            mapped[a].head[k] - 1]].kind == K_NOUN)
-                            gen = 1;
+                        if (x->kind == K_ADJ) nadj++;
+                        else if (x->kind == K_NOUN && mapped[a].head[k] != 0
+                            && readings[mapped[a].rd[mapped[a].head[k] - 1]]
+                            .kind == K_NOUN)
+                            ngen++;
+                        else nother++;
                     }
                     if (syn) {
                         ms->bs_den++;
@@ -1685,18 +1739,22 @@ measure_level (
                         ms->bu_num += mis;
                     }
                     if (!rdr.in_m[a] && rdr.nm > 0) ms->bm_num++;
-                    cls = adj_only ? DC_ADJ : gen ? DC_GEN : DC_VERB;
+                    if (nother > 0) ms->vdisp++;
+                    cls = ngen == 0 ? DC_ADJ : nadj == 0 ? DC_GEN : DC_MIX;
                     ms->cls_den[cls]++;
                     ms->cls_num[cls] += mis;
-                    if (cls == DC_ADJ) {
-                        if (syn) {
-                            ms->adj_s_den++;
-                            ms->adj_s_num += mis;
-                        } else {
-                            ms->adj_u_den++;
-                            ms->adj_u_num += mis;
-                        }
+                    if (syn) {
+                        ms->cls_s_den[cls]++;
+                        ms->cls_s_num[cls] += mis;
+                    } else {
+                        ms->cls_u_den[cls]++;
+                        ms->cls_u_num[cls] += mis;
                     }
+                    ms->mild_den[rdr.in_m[a] ? 1 : 0]++;
+                    ms->mild_num[rdr.in_m[a] ? 1 : 0] += mis;
+                    cr = t_cross[nb][ix] > 4 ? 4 : t_cross[nb][ix];
+                    ms->cr_den[cr]++;
+                    ms->cr_num[cr] += mis;
                 }
             }
         }
@@ -1758,8 +1816,8 @@ rules_check (void)
         q1_rule(1, 2, 4, 4) && !q1_rule(1, 3, 4, 4));
     check("Q1 rule at its thresholds: A1 = A0 holds, A0 = A2 fails (2, 2, 2, "
         "3: every other clause holds), A2 = A3 holds, 2 A0 = A1 + A2 holds, "
-        "2 A0 = A1 + A2 + 1 fails, A1 = A0 + 1 fails",
-        q1_rule(2, 2, 3, 3) && !q1_rule(2, 2, 2, 3)
+        "2 A0 = A1 + A2 + 1 fails, A1 = A0 + 1 fails, A2 > A3 alone fails",
+        q1_rule(2, 2, 3, 3) && !q1_rule(2, 2, 2, 3) && !q1_rule(1, 2, 4, 3)
         && q1_rule(1, 2, 3, 3) && q1_rule(1, 2, 3, 4) && !q1_rule(1, 3, 4, 5)
         && !q1_rule(3, 2, 4, 4));
     check("Q2 rule: (2/4 vs 1/4, 1 < 2) holds; equal shares fail; B0 = B2 "
@@ -1788,18 +1846,51 @@ static const s64 oracle_b[2][NLEVELS][10] = {
       { 11264, 160896, 1024, 14336, 15360, 14336, 15360, 0, 0, 0 } },
 };
 
-/* oracle_partb.py, descriptive split: [quick][level] = only adjectives
- * displaced (num, den), a genitive displaced (num, den), adjectives only
- * with a syncretic displaced word (num, den), unambiguous (num, den) */
-static const s64 oracle_cls[2][NLEVELS][8] = {
-    { { 43088, 663552, 2377264, 3354624, 42134, 578784, 954, 84768 },
-      { 0, 663552, 2293760, 3354624, 0, 0, 0, 663552 },
-      { 236864, 663552, 3234008, 3354624, 236864, 663552, 0, 0 },
-      { 523264, 663552, 3330048, 3354624, 523264, 663552, 0, 0 } },
-    { { 272, 3072, 8448, 12288, 264, 2496, 8, 576 },
-      { 0, 3072, 8192, 12288, 0, 0, 0, 3072 },
-      { 544, 3072, 12288, 12288, 544, 3072, 0, 0 },
-      { 2048, 3072, 12288, 12288, 2048, 3072, 0, 0 } },
+/* oracle_partb.py, descriptive split: [quick][level] = for adjectives
+ * only, genitives only, both: (num, den, syncretic num, den, unambiguous
+ * num, den) */
+static const s64 oracle_cls[2][NLEVELS][18] = {
+    { { 43088, 663552, 42134, 578784, 954, 84768,
+        2330624, 3108864, 673280, 869376, 1657344, 2239488,
+        46640, 245760, 42944, 216960, 3696, 28800 },
+      { 0, 663552, 0, 0, 0, 663552,
+        2269184, 3108864, 0, 0, 2269184, 3108864,
+        24576, 245760, 0, 0, 24576, 245760 },
+      { 236864, 663552, 236864, 663552, 0, 0,
+        3108864, 3108864, 3108864, 3108864, 0, 0,
+        125144, 245760, 125144, 245760, 0, 0 },
+      { 523264, 663552, 523264, 663552, 0, 0,
+        3108864, 3108864, 3108864, 3108864, 0, 0,
+        221184, 245760, 221184, 245760, 0, 0 } },
+    { { 272, 3072, 264, 2496, 8, 576,
+        8448, 12288, 2304, 3072, 6144, 9216, 0, 0, 0, 0, 0, 0 },
+      { 0, 3072, 0, 0, 0, 3072,
+        8192, 12288, 0, 0, 8192, 12288, 0, 0, 0, 0, 0, 0 },
+      { 544, 3072, 544, 3072, 0, 0,
+        12288, 12288, 12288, 12288, 0, 0, 0, 0, 0, 0, 0, 0 },
+      { 2048, 3072, 2048, 3072, 0, 0,
+        12288, 12288, 12288, 12288, 0, 0, 0, 0, 0, 0, 0, 0 } },
+};
+
+/* oracle_partb.py: [quick][level] = open cells under F, under P
+ * (projective pairs); B over mild crossed pairs (num, den), over the
+ * others (num, den); B by crossings 1, 2, 3, 4+ (num, den each) */
+static const s64 oracle_x[2][NLEVELS][14] = {
+    { { 2209476, 1330908, 2264456, 3611648, 155896, 406528,
+        1232342, 1788928, 788644, 1332224, 349528, 691712, 49838, 205312 },
+      { 1953792, 1069056, 2154496, 3611648, 139264, 406528,
+        1185792, 1788928, 743424, 1332224, 323584, 691712, 40960, 205312 },
+      { 9736704, 8743408, 3131120, 3611648, 339752, 406528,
+        1606828, 1788928, 1131080, 1332224, 573400, 691712, 159564, 205312 },
+      { 10017792, 9021440, 3476480, 3611648, 376832, 406528,
+        1739264, 1788928, 1268224, 1332224, 651776, 691712, 194048,
+        205312 } },
+    { { 13464, 5256, 8720, 15360, 0, 0, 6476, 10240, 2244, 5120, 0, 0, 0, 0 },
+      { 12288, 4096, 8192, 15360, 0, 0, 6144, 10240, 2048, 5120, 0, 0, 0, 0 },
+      { 68400, 58640, 12832, 15360, 0, 0, 8600, 10240, 4232, 5120, 0, 0, 0,
+        0 },
+      { 70656, 59392, 14336, 15360, 0, 0, 9728, 10240, 4608, 5120, 0, 0, 0,
+        0 } },
 };
 
 static void
@@ -1825,9 +1916,12 @@ part_measures (void)
         pct(s2, 32, m->ar_num, m->a_den);
         pct(s3, 32, m->b_num, m->b_den);
         pct(s4, 32, m->bm_num, m->b_den);
-        snprintf(f, sizeof f, "%lld.%02lld", (long long)((m->f_proj + m->f_cross)
-            / m->pairs), (long long)(((m->f_proj + m->f_cross) * 100
-            / m->pairs) % 100));
+        {
+            s64 h = ((m->f_proj + m->f_cross) * 200 + m->pairs)
+                / (2 * m->pairs);              /* hundredths, rounded */
+            snprintf(f, sizeof f, "%lld.%02lld", (long long)(h / 100),
+                (long long)(h % 100));
+        }
         printf("  %-17s %10s %10s %10s %10s %10s\n", level_name[lv], s1, s2,
             s3, s4, f);
     }
@@ -1847,21 +1941,42 @@ part_measures (void)
             level_name[lv], s1, (long long)m->bs_den, s2,
             (long long)m->bu_den);
     }
-    printf("\n  B by what is displaced (descriptive, NOT registered)\n");
+    printf("\n  B by what is displaced (descriptive, NOT registered; each "
+        "class split by the displaced words' forms)\n");
+    for (c = 0; c < NDC; c++)
+        for (lv = 0; lv < NLEVELS; lv++) {
+            const Measures *m = &meas[lv];
+
+            pct(s1, 32, m->cls_num[c], m->cls_den[c]);
+            pct(s2, 32, m->cls_s_num[c], m->cls_s_den[c]);
+            pct(s3, 32, m->cls_u_num[c], m->cls_u_den[c]);
+            printf("  %-16s %-17s %8s of %8lld  syncretic %8s of %8lld  "
+                "unambiguous %8s of %8lld\n", dc_name[c], level_name[lv], s1,
+                (long long)m->cls_den[c], s2, (long long)m->cls_s_den[c], s3,
+                (long long)m->cls_u_den[c]);
+        }
+    printf("\n  B by stratum (registered as reported, not predicted): mild / "
+        "not mild; crossings 1, 2, 3, 4+ (root arc included)\n");
     for (lv = 0; lv < NLEVELS; lv++) {
         const Measures *m = &meas[lv];
 
-        printf("  %-17s", level_name[lv]);
-        for (c = 0; c < NDC; c++) {
-            pct(s1, 32, m->cls_num[c], m->cls_den[c]);
-            printf("  %s %s of %lld;", dc_name[c], s1, (long long)m->cls_den[c]);
+        pct(s1, 32, m->mild_num[1], m->mild_den[1]);
+        pct(s2, 32, m->mild_num[0], m->mild_den[0]);
+        printf("  %-17s mild %s of %lld, not mild %s of %lld;", level_name[lv],
+            s1, (long long)m->mild_den[1], s2, (long long)m->mild_den[0]);
+        for (c = 1; c <= 4; c++) {
+            pct(s1, 32, m->cr_num[c], m->cr_den[c]);
+            printf(" %d: %s of %lld", c, s1, (long long)m->cr_den[c]);
         }
-        pct(s1, 32, m->adj_s_num, m->adj_s_den);
-        pct(s2, 32, m->adj_u_num, m->adj_u_den);
-        printf("\n  %17s  adjectives only: syncretic %s of %lld, unambiguous "
-            "%s of %lld\n", "", s1, (long long)m->adj_s_den, s2,
-            (long long)m->adj_u_den);
+        printf("\n");
     }
+    printf("\n  the open cells behind A (projective pairs): open under F, "
+        "under P\n");
+    for (lv = 0; lv < NLEVELS; lv++)
+        printf("  %-17s %lld, %lld (difference %lld = A's numerator)\n",
+            level_name[lv], (long long)meas[lv].open_f,
+            (long long)meas[lv].open_p,
+            (long long)(meas[lv].open_f - meas[lv].open_p));
     printf("\n  by length (A; B)\n");
     for (n = 3; n <= gmaxw; n++) {
         printf("  %d words:", n);
@@ -1905,19 +2020,39 @@ part_measures (void)
             const Measures *m = &meas[lv];
             const s64      *o = oracle_cls[q][lv];
 
-            if (m->cls_num[DC_ADJ] != o[0] || m->cls_den[DC_ADJ] != o[1]
-                || m->cls_num[DC_GEN] != o[2] || m->cls_den[DC_GEN] != o[3]
-                || m->adj_s_num != o[4] || m->adj_s_den != o[5]
-                || m->adj_u_num != o[6] || m->adj_u_den != o[7])
-                ok = 0;
+            for (c = 0; c < NDC; c++)
+                if (m->cls_num[c] != o[6 * c] || m->cls_den[c] != o[6 * c + 1]
+                    || m->cls_s_num[c] != o[6 * c + 2]
+                    || m->cls_s_den[c] != o[6 * c + 3]
+                    || m->cls_u_num[c] != o[6 * c + 4]
+                    || m->cls_u_den[c] != o[6 * c + 5])
+                    ok = 0;
         }
-        check("descriptive split (what is displaced) == oracle_partb.py "
-            "(a pin)", ok);
+        check("descriptive split (adjectives only / genitives only / both, "
+            "each by form) == oracle_partb.py (a pin)", ok);
+        ok = 1;
+        for (lv = 0; lv < NLEVELS; lv++) {
+            const Measures *m = &meas[lv];
+            const s64      *o = oracle_x[q][lv];
+
+            if (m->open_f != o[0] || m->open_p != o[1]
+                || m->mild_num[1] != o[2] || m->mild_den[1] != o[3]
+                || m->mild_num[0] != o[4] || m->mild_den[0] != o[5])
+                ok = 0;
+            for (c = 1; c <= 4; c++)
+                if (m->cr_num[c] != o[4 + 2 * c] || m->cr_den[c] != o[5 + 2 * c])
+                    ok = 0;
+        }
+        check("open cells under F and P, B by mildness and by crossing count "
+            "== oracle_partb.py (a pin)", ok);
         ok = 1;
         for (lv = 0; lv < NLEVELS; lv++)
-            if (meas[lv].cls_den[DC_VERB] != 0) ok = 0;
-        check("no crossed pair displaces only verb dependents (the root word "
-            "dominates every word, so its arcs are never non-projective)", ok);
+            if (meas[lv].vdisp != 0 || meas[lv].open_f - meas[lv].open_p
+                != meas[lv].a_num)
+                ok = 0;
+        check("no crossed pair displaces a verb dependent, counted directly "
+            "(the root word dominates every word); open F - open P == A's "
+            "numerator", ok);
     }
 }
 

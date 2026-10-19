@@ -167,7 +167,9 @@ the verdicts as registered.
   dominum amat`; a neuter `dona` subject / object pair).
 - Totals pinned from an independent Python oracle (brute force over
   all head arrays and readings, its own projectivity test), labelled
-  as oracle constants.
+  as oracle constants. [T4: the oracle as built, oracle_partb.py, is
+  tree-first, head arrays constrained by part of speech, not brute
+  force over all head arrays and readings.]
 - Rule functions checked on hand-computed totals, including totals
   constructed exactly at each threshold (D130 lesson).
 - Plants via `silva.planta`.
@@ -260,8 +262,40 @@ once per word multiset (it ignores order); P and M filter it per order
    objection slot on the post-hoc split) and a Revisions entry; ledger
    note on N14 (open for slice 2); demo-proposals N14 marked; frozen
    with archive.sh (demo-snapshot.c, 13,615 lines, 14 library files,
-   output identical, 118 lines).
+   output identical, 118 lines [T4: 117 by wc -l; archive.sh counts
+   one more, as in D130]).
 4. **T4:** independent review with its own oracle, then fixes.
+   *T4 review 2026-10-19 (recensor-d131):* own oracle (position-first
+   generation, F(s) by grouping generated analyses, no parser), zero
+   number mismatches at four and five words; table == Bennett's text
+   and Whitaker checked mechanically; no rule changed after f7b76ffd;
+   both verdicts follow. H 1, M 8, L 7, N 5, all acted on (findings.md
+   "Review"). Fixes (Fran approved the list):
+   - **H1** findings' disclosure said the four-word numbers "pointed to
+     both failures": false, Q1 HELD up to four words (8,192 / 8,208 /
+     9,760 / 11,264). Corrected in findings; this plan's T2 disclosure
+     was accurate.
+   - **M1** Q1's failure is a near-tie (6,168 cells, 0.045 points) that
+     flips with length; the T2 note's "Mechanism" is compatible with it
+     but does not decide its sign (the four-word open cells show the
+     same pattern with the opposite sign). A by length in findings.
+   - **M2 / M3** the three-way split (adjectives only / genitives only /
+     both) added to main.c and the oracle: within EACH kind a syncretic
+     displaced word gives more garden paths, so Q2's pooled reversal is
+     a Simpson's paradox (the reviewer's within-genitive reversal
+     included the mixed pairs).
+   - **M4-M6** D130 citation and scope, "every crossing NP-internal",
+     the structural 0% at L1: findings and KC 58 corrected.
+   - **M7** open cells under F and P computed and pinned in main.c.
+   - **M8** rule check for A2 > A3 alone, planted.
+   - **L, N** direct count of displaced verb dependents; labels; the
+     tree-count oracle committed (oracle_trees.py); pairs by length
+     sourced from oracle_partb.py; means rounded; two hand sentences
+     (cells under P with the registered neuter pair, an R_M misread);
+     B by mildness and by crossing count (registered reports); this
+     plan's oracle description and line count annotated.
+   - Checks 48 full, 47 quick; 8 new plants red (one re-planted: it did
+     not compile). Snapshot re-frozen.
 
 ## Task 0 findings (2026-10-19)
 
