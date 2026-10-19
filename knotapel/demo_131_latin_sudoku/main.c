@@ -20,7 +20,13 @@
  *           included, both ways), word order cannot change F(s), the
  *           tree table (two projectivity routes, projective => mild,
  *           reversal), sizes against task 0, hand-worked sentences.
- *   Part B  (T2) licensing cost A and garden paths B; Q1, Q2.
+ *   Part B  (T2) licensing cost A (projective pairs: attachment cells
+ *           open under F but forced under P) and garden paths B (crossed
+ *           pairs misread by R_P, nested first), split by the displaced
+ *           word's form; registered Q1 and Q2, the rules on constructed
+ *           totals; totals pinned from oracle_partb.py (independent
+ *           Python, tree-first). A descriptive split by WHAT is displaced
+ *           is printed, not registered.
  *
  * The world (syntax only, no semantics): nouns puella (1st, f), dominus
  * (2nd, m), donum (2nd, n), rex (3rd, m); adjectives bonus (1st/2nd),
@@ -1566,6 +1572,398 @@ part_hand (void)
     }
 }
 
+/* ================================================================
+ * Part B: licensing cost A and garden paths B
+ * ================================================================ */
+
+enum { DC_ADJ, DC_GEN, DC_VERB, NDC };   /* what the displaced words are */
+
+static const char *const dc_name[NDC] = {
+    "only adjectives displaced", "a genitive displaced",
+    "verb dependents only"
+};
+
+typedef struct {
+    s64 pairs;
+    s64 a_num, a_den, ar_num;            /* projective pairs */
+    s64 b_num, b_den;                    /* crossed pairs: misread by R_P */
+    s64 bs_num, bs_den, bu_num, bu_den;  /* displaced word syncretic or not */
+    s64 bm_num;                          /* misread by R_M */
+    s64 len_a_num[MAXW + 1], len_a_den[MAXW + 1];
+    s64 len_b_num[MAXW + 1], len_b_den[MAXW + 1];
+    s64 cls_num[NDC], cls_den[NDC];      /* descriptive, not registered */
+    s64 adj_s_num, adj_s_den, adj_u_num, adj_u_den;
+    s64 f_proj, f_cross;                 /* sum of |F(s)| over the pairs */
+} Measures;
+
+static Measures meas[NLEVELS];
+static Analysis mapped[MAXA];
+static Readers  rdr;
+
+static void
+measure_level (
+    int       lv,
+    Measures *ms)
+{
+    long i = 0;
+
+    memset(ms, 0, sizeof *ms);
+    while (i < an_entries[lv].n) {
+        long     j = i, s;
+        int      bag[MAXW], nb, p, k, a;
+        i64      seen[120];
+        int      nseen = 0, nc;
+        Analysis canon[MAXA];
+
+        while (j < an_entries[lv].n && an_entries[lv].e[j].bag
+            == an_entries[lv].e[i].bag)
+            j++;
+        decode_bag(an_entries[lv].e[i].bag, bag, &nb);
+        nc = (int)(j - i);
+        for (s = i; s < j; s++)
+            decode_key(an_entries[lv].e[s].key, &canon[s - i], nb);
+        for (p = 0; p < nperms[nb]; p++) {
+            const int *sig = perms[nb][p];
+            int        str[MAXW], inv[MAXW], dup = 0, faf, frf, fap = 0, frp = 0;
+            i64        code;
+
+            for (k = 0; k < nb; k++) {
+                str[k] = bag[sig[k]];
+                inv[sig[k]] = k;
+            }
+            code = bag_code(str, nb);
+            for (k = 0; k < nseen; k++)
+                if (seen[k] == code) dup = 1;
+            if (dup) continue;
+            seen[nseen++] = code;
+            for (a = 0; a < nc; a++)
+                for (k = 0; k < nb; k++) {
+                    int h = canon[a].head[k];
+                    mapped[a].head[inv[k]] = h == 0 ? 0 : inv[h - 1] + 1;
+                    mapped[a].rd[inv[k]] = canon[a].rd[k];
+                }
+            read_with(mapped, nc, nb, &rdr);
+            forced_cells(mapped, nc, NULL, nb, &faf, &frf);
+            if (rdr.np > 0)
+                forced_cells(mapped, nc, rdr.in_p, nb, &fap, &frp);
+            for (a = 0; a < nc; a++) {
+                int ix = tree_index(mapped[a].head, nb);
+
+                ms->pairs++;
+                if (rdr.in_p[a]) {
+                    ms->a_num += fap - faf;
+                    ms->ar_num += frp - frf;
+                    ms->a_den += nb;
+                    ms->len_a_num[nb] += fap - faf;
+                    ms->len_a_den[nb] += nb;
+                    ms->f_proj += nc;
+                } else {
+                    int mis = rdr.np > 0, mask = t_npmask[nb][ix];
+                    int syn = 0, adj_only = 1, gen = 0, cls;
+
+                    ms->b_den++;
+                    ms->b_num += mis;
+                    ms->len_b_den[nb]++;
+                    ms->len_b_num[nb] += mis;
+                    ms->f_cross += nc;
+                    for (k = 0; k < nb; k++) {
+                        const Reading *x;
+
+                        if (!(mask & (1 << k))) continue;
+                        x = &readings[mapped[a].rd[k]];
+                        if (form_nr[lv][str[k]] >= 2) syn = 1;
+                        if (x->kind != K_ADJ) adj_only = 0;
+                        if (x->kind == K_NOUN && readings[mapped[a].rd[
+                            mapped[a].head[k] - 1]].kind == K_NOUN)
+                            gen = 1;
+                    }
+                    if (syn) {
+                        ms->bs_den++;
+                        ms->bs_num += mis;
+                    } else {
+                        ms->bu_den++;
+                        ms->bu_num += mis;
+                    }
+                    if (!rdr.in_m[a] && rdr.nm > 0) ms->bm_num++;
+                    cls = adj_only ? DC_ADJ : gen ? DC_GEN : DC_VERB;
+                    ms->cls_den[cls]++;
+                    ms->cls_num[cls] += mis;
+                    if (cls == DC_ADJ) {
+                        if (syn) {
+                            ms->adj_s_den++;
+                            ms->adj_s_num += mis;
+                        } else {
+                            ms->adj_u_den++;
+                            ms->adj_u_num += mis;
+                        }
+                    }
+                }
+            }
+        }
+        i = j;
+    }
+}
+
+/* num / den as a percentage with two decimals, integer arithmetic */
+static void
+pct (
+    char *buf,
+    int   size,
+    s64   num,
+    s64   den)
+{
+    s64 x;
+
+    if (den == 0) {
+        snprintf(buf, (size_t)size, "-");
+        return;
+    }
+    x = (num * 20000 + den) / (2 * den);   /* hundredths of a percent */
+    snprintf(buf, (size_t)size, "%lld.%02lld%%", (long long)(x / 100),
+        (long long)(x % 100));
+}
+
+/* Q1: A(L1) <= A(L0) < A(L2) <= A(L3), and A(L0) - A(L1) <= A(L2) -
+ * A(L0); the four A share one denominator (the projective pairs' cells,
+ * the same at every level), so the rule reads numerators */
+static int
+q1_rule (
+    s64 a1,
+    s64 a0,
+    s64 a2,
+    s64 a3)
+{
+    return a1 <= a0 && a0 < a2 && a2 <= a3 && 2 * a0 <= a1 + a2;
+}
+
+/* Q2: at L0, B over syncretic displaced > B over unambiguous displaced;
+ * and B(L0) < B(L2) (one denominator: the crossed pairs) */
+static int
+q2_rule (
+    s64 bs,
+    s64 bs_den,
+    s64 bu,
+    s64 bu_den,
+    s64 b0,
+    s64 b2)
+{
+    return bs_den > 0 && bu_den > 0 && bs * bu_den > bu * bs_den && b0 < b2;
+}
+
+static void
+rules_check (void)
+{
+    printf("\n--- the registered rules on constructed totals ---\n");
+    check("Q1 rule: (1, 2, 4, 4) holds; (1, 3, 4, 4) fails the second half",
+        q1_rule(1, 2, 4, 4) && !q1_rule(1, 3, 4, 4));
+    check("Q1 rule at its thresholds: A1 = A0 holds, A0 = A2 fails (2, 2, 2, "
+        "3: every other clause holds), A2 = A3 holds, 2 A0 = A1 + A2 holds, "
+        "2 A0 = A1 + A2 + 1 fails, A1 = A0 + 1 fails",
+        q1_rule(2, 2, 3, 3) && !q1_rule(2, 2, 2, 3)
+        && q1_rule(1, 2, 3, 3) && q1_rule(1, 2, 3, 4) && !q1_rule(1, 3, 4, 5)
+        && !q1_rule(3, 2, 4, 4));
+    check("Q2 rule: (2/4 vs 1/4, 1 < 2) holds; equal shares fail; B0 = B2 "
+        "fails; an empty side fails", q2_rule(2, 4, 1, 4, 1, 2)
+        && !q2_rule(1, 2, 2, 4, 1, 2) && !q2_rule(2, 4, 1, 4, 2, 2)
+        && !q2_rule(2, 4, 0, 0, 1, 2));
+    check("Q2 rule at its threshold: 3/7 vs 3/7 written 3/7 and 6/14 fails, "
+        "4/7 vs 6/14 holds", !q2_rule(3, 7, 6, 14, 1, 2)
+        && q2_rule(4, 7, 6, 14, 1, 2));
+}
+
+/* oracle_partb.py: [quick][level] = a_num, a_den, ar_num, b_num, b_den,
+ * bs_num, bs_den, bu_num, bu_den, bm_num */
+static const s64 oracle_b[2][NLEVELS][10] = {
+    { { 878568, 13631616, 79068, 2420352, 4018176, 758358, 1665120,
+        1661994, 2353056, 383068 },
+      { 884736, 13631616, 0, 2293760, 4018176, 0, 0, 2293760, 4018176,
+        376832 },
+      { 993296, 13631616, 37632, 3470872, 4018176, 3470872, 4018176, 0, 0,
+        397112 },
+      { 996352, 13631616, 29696, 3853312, 4018176, 3853312, 4018176, 0, 0,
+        406528 } },
+    { { 8208, 160896, 464, 8720, 15360, 2568, 5568, 6152, 9792, 0 },
+      { 8192, 160896, 0, 8192, 15360, 0, 0, 8192, 15360, 0 },
+      { 9760, 160896, 32, 12832, 15360, 12832, 15360, 0, 0, 0 },
+      { 11264, 160896, 1024, 14336, 15360, 14336, 15360, 0, 0, 0 } },
+};
+
+/* oracle_partb.py, descriptive split: [quick][level] = only adjectives
+ * displaced (num, den), a genitive displaced (num, den), adjectives only
+ * with a syncretic displaced word (num, den), unambiguous (num, den) */
+static const s64 oracle_cls[2][NLEVELS][8] = {
+    { { 43088, 663552, 2377264, 3354624, 42134, 578784, 954, 84768 },
+      { 0, 663552, 2293760, 3354624, 0, 0, 0, 663552 },
+      { 236864, 663552, 3234008, 3354624, 236864, 663552, 0, 0 },
+      { 523264, 663552, 3330048, 3354624, 523264, 663552, 0, 0 } },
+    { { 272, 3072, 8448, 12288, 264, 2496, 8, 576 },
+      { 0, 3072, 8192, 12288, 0, 0, 0, 3072 },
+      { 544, 3072, 12288, 12288, 544, 3072, 0, 0 },
+      { 2048, 3072, 12288, 12288, 2048, 3072, 0, 0 } },
+};
+
+static void
+part_measures (void)
+{
+    int  lv, n, c;
+    char msg[400], s1[32], s2[32], s3[32], s4[32];
+
+    printf("\n--- Part B: licensing cost A and garden paths B ---\n");
+    printf("  A = attachment cells open under F but forced under P, over "
+        "projective pairs,\n      as a share of their cells (every word's, "
+        "the verb's included)\n");
+    printf("  B = crossed pairs misread by R_P (nested first)\n\n");
+    for (lv = 0; lv < NLEVELS; lv++) measure_level(lv, &meas[lv]);
+
+    printf("  %-17s %10s %10s %10s %10s %10s\n", "level", "A", "A reading",
+        "B", "B R_M", "mean |F|");
+    for (lv = 0; lv < NLEVELS; lv++) {
+        const Measures *m = &meas[lv];
+        char            f[32];
+
+        pct(s1, 32, m->a_num, m->a_den);
+        pct(s2, 32, m->ar_num, m->a_den);
+        pct(s3, 32, m->b_num, m->b_den);
+        pct(s4, 32, m->bm_num, m->b_den);
+        snprintf(f, sizeof f, "%lld.%02lld", (long long)((m->f_proj + m->f_cross)
+            / m->pairs), (long long)(((m->f_proj + m->f_cross) * 100
+            / m->pairs) % 100));
+        printf("  %-17s %10s %10s %10s %10s %10s\n", level_name[lv], s1, s2,
+            s3, s4, f);
+    }
+    printf("\n  exact: A = num / %lld (projective pairs' cells), B = num / %lld "
+        "(crossed pairs)\n", (long long)meas[0].a_den, (long long)meas[0].b_den);
+    for (lv = 0; lv < NLEVELS; lv++)
+        printf("  %-17s A %lld, B %lld\n", level_name[lv],
+            (long long)meas[lv].a_num, (long long)meas[lv].b_num);
+
+    printf("\n  B by the displaced word's form (registered split, Q2)\n");
+    for (lv = 0; lv < NLEVELS; lv++) {
+        const Measures *m = &meas[lv];
+
+        pct(s1, 32, m->bs_num, m->bs_den);
+        pct(s2, 32, m->bu_num, m->bu_den);
+        printf("  %-17s syncretic %8s of %8lld   unambiguous %8s of %8lld\n",
+            level_name[lv], s1, (long long)m->bs_den, s2,
+            (long long)m->bu_den);
+    }
+    printf("\n  B by what is displaced (descriptive, NOT registered)\n");
+    for (lv = 0; lv < NLEVELS; lv++) {
+        const Measures *m = &meas[lv];
+
+        printf("  %-17s", level_name[lv]);
+        for (c = 0; c < NDC; c++) {
+            pct(s1, 32, m->cls_num[c], m->cls_den[c]);
+            printf("  %s %s of %lld;", dc_name[c], s1, (long long)m->cls_den[c]);
+        }
+        pct(s1, 32, m->adj_s_num, m->adj_s_den);
+        pct(s2, 32, m->adj_u_num, m->adj_u_den);
+        printf("\n  %17s  adjectives only: syncretic %s of %lld, unambiguous "
+            "%s of %lld\n", "", s1, (long long)m->adj_s_den, s2,
+            (long long)m->adj_u_den);
+    }
+    printf("\n  by length (A; B)\n");
+    for (n = 3; n <= gmaxw; n++) {
+        printf("  %d words:", n);
+        for (lv = 0; lv < NLEVELS; lv++) {
+            pct(s1, 32, meas[lv].len_a_num[n], meas[lv].len_a_den[n]);
+            pct(s2, 32, meas[lv].len_b_num[n], meas[lv].len_b_den[n]);
+            printf("  %s %s; %s", lv == 0 ? "L0" : lv == 1 ? "L1" : lv == 2
+                ? "L2" : "L3", s1, s2);
+        }
+        printf("\n");
+    }
+
+    {
+        int same = 1, q = quick ? 1 : 0, ok = 1;
+
+        for (lv = 1; lv < NLEVELS; lv++)
+            if (meas[lv].a_den != meas[0].a_den
+                || meas[lv].b_den != meas[0].b_den)
+                same = 0;
+        check("A and B have one denominator each at every level (the "
+            "populations do not depend on the endings)", same);
+        for (lv = 0; lv < NLEVELS; lv++) {
+            const Measures *m = &meas[lv];
+            const s64      *o = oracle_b[q][lv];
+
+            if (m->a_num != o[0] || m->a_den != o[1] || m->ar_num != o[2]
+                || m->b_num != o[3] || m->b_den != o[4] || m->bs_num != o[5]
+                || m->bs_den != o[6] || m->bu_num != o[7] || m->bu_den != o[8]
+                || m->bm_num != o[9])
+                ok = 0;
+        }
+        snprintf(msg, sizeof msg, "A, A (reading), B, B split, B (R_M) at "
+            "every level == oracle_partb.py (independent, tree-first; a pin, "
+            "%s)", quick ? "four words" : "five words");
+        check(msg, ok);
+        check("L1 has no syncretic form, so no reading-cell cost and no "
+            "syncretic displaced word", meas[1].ar_num == 0
+            && meas[1].bs_den == 0);
+        ok = 1;
+        for (lv = 0; lv < NLEVELS; lv++) {
+            const Measures *m = &meas[lv];
+            const s64      *o = oracle_cls[q][lv];
+
+            if (m->cls_num[DC_ADJ] != o[0] || m->cls_den[DC_ADJ] != o[1]
+                || m->cls_num[DC_GEN] != o[2] || m->cls_den[DC_GEN] != o[3]
+                || m->adj_s_num != o[4] || m->adj_s_den != o[5]
+                || m->adj_u_num != o[6] || m->adj_u_den != o[7])
+                ok = 0;
+        }
+        check("descriptive split (what is displaced) == oracle_partb.py "
+            "(a pin)", ok);
+        ok = 1;
+        for (lv = 0; lv < NLEVELS; lv++)
+            if (meas[lv].cls_den[DC_VERB] != 0) ok = 0;
+        check("no crossed pair displaces only verb dependents (the root word "
+            "dominates every word, so its arcs are never non-projective)", ok);
+    }
+}
+
+static void
+verdicts (void)
+{
+    const Measures *m0 = &meas[0], *m1 = &meas[1], *m2 = &meas[2],
+                   *m3 = &meas[3];
+    char            s1[32], s2[32];
+    int             q1, q2;
+
+    printf("\n--- verdicts (registered, five words) ---\n");
+    if (quick) {
+        printf("  (quick mode: four words; the registered verdicts are "
+            "decided on five)\n");
+        return;
+    }
+    q1 = q1_rule(m1->a_num, m0->a_num, m2->a_num, m3->a_num);
+    printf("  Q1 (morphology pays): A numerators L1 %lld, L0 %lld, L2 %lld, "
+        "L3 %lld over %lld\n", (long long)m1->a_num, (long long)m0->a_num,
+        (long long)m2->a_num, (long long)m3->a_num, (long long)m0->a_den);
+    printf("      A(L1) <= A(L0): %s; A(L0) < A(L2): %s; A(L2) <= A(L3): %s; "
+        "A(L0) - A(L1) <= A(L2) - A(L0): %s\n",
+        m1->a_num <= m0->a_num ? "yes" : "NO", m0->a_num < m2->a_num ? "yes"
+        : "NO", m2->a_num <= m3->a_num ? "yes" : "NO",
+        2 * m0->a_num <= m1->a_num + m2->a_num ? "yes" : "NO");
+    printf("  Q1 %s\n", q1 ? "HOLDS" : "FAILS");
+    q2 = q2_rule(m0->bs_num, m0->bs_den, m0->bu_num, m0->bu_den, m0->b_num,
+        m2->b_num);
+    pct(s1, 32, m0->bs_num, m0->bs_den);
+    pct(s2, 32, m0->bu_num, m0->bu_den);
+    printf("  Q2 (syncretism makes the garden paths): at L0 B syncretic %s > "
+        "unambiguous %s: %s;\n      B(L0) %lld < B(L2) %lld: %s\n", s1, s2,
+        m0->bs_num * m0->bu_den > m0->bu_num * m0->bs_den ? "yes" : "NO",
+        (long long)m0->b_num, (long long)m2->b_num,
+        m0->b_num < m2->b_num ? "yes" : "NO");
+    printf("  Q2 %s\n", q2 ? "HOLDS" : "FAILS");
+    check("the verdicts re-derived from the oracle's totals agree (Q1 and Q2 "
+        "applied to oracle_partb.py's numbers)",
+        q1 == q1_rule(oracle_b[0][1][0], oracle_b[0][0][0], oracle_b[0][2][0],
+            oracle_b[0][3][0])
+        && q2 == q2_rule(oracle_b[0][0][5], oracle_b[0][0][6],
+            oracle_b[0][0][7], oracle_b[0][0][8], oracle_b[0][0][3],
+            oracle_b[0][2][3]));
+}
+
 int
 main (void)
 {
@@ -1580,6 +1978,9 @@ main (void)
     part_world();
     part_order();
     part_hand();
+    part_measures();
+    rules_check();
+    verdicts();
     printf("\n=== %d pass, %d fail ===\n", n_pass, n_fail);
     return n_fail == 0 ? 0 : 1;
 }

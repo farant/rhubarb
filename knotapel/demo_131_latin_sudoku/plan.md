@@ -219,6 +219,41 @@ once per word multiset (it ignores order); P and M filter it per order
      so it runs on the full mode).
 2. **T2:** measures A and B, Q1 and Q2 decided, the Python oracle,
    rule checks; plants.
+   *T2 done 2026-10-19:* Part B in main.c, 45 checks full (21 s), 44
+   quick. `oracle_partb.py` (independent: tree-first analysis, bags from
+   its own structural enumeration, projectivity by interval yields,
+   displaced words by domination; 2.5 min at five words) pins every
+   total at four and five words. Rules checked on constructed totals at
+   each threshold; a check re-derives both verdicts from the oracle's
+   numbers (wiring). 12 plants red (three re-planted: R_M misreads need
+   five words since every tree up to four is mild; the "A0 = A2" case
+   was not isolated - only A1 = A0 = A2 isolates it; one verdict wiring
+   plant was an equivalent mutant because Q2 already fails on its first
+   clause).
+   **Disclosure:** the four-word oracle output was printed before the
+   five-word run (while testing the oracle). The rules were not touched.
+   **Verdicts (five words): Q1 FAILS, Q2 FAILS**, each on its first
+   clause:
+   - A (licensing cost, numerators over 13,631,616 cells): L1 884,736,
+     L0 878,568, L2 993,296, L3 996,352. A(L1) <= A(L0) is false; the
+     rest holds, including the "real bet" 2 A(L0) <= A(L1) + A(L2).
+     Mechanism (probe, scratch): syncretism leaves cells open under P
+     as well as F (open under F: L0 2,209,476 vs L1 1,953,792; under P:
+     1,330,908 vs 1,069,056), and A is their DIFFERENCE - a marginal
+     cost, smaller when the nested reading is already uncertain.
+   - B (garden paths, of 4,018,176 crossed pairs): L1 57.08%, L0
+     60.24%, L2 86.38%, L3 95.90%. At L0 B is 45.54% with a syncretic
+     displaced word, 70.63% with unambiguous ones: the registered split
+     goes the wrong way. B(L0) < B(L2) holds.
+   - Descriptive (NOT registered): every non-projective arc is NP-
+     internal (an adjective or a genitive; never a verb dependent - a
+     theorem). Crossed pairs that displace ONLY adjectives (663,552):
+     B = 0% at L1, 6.49% at L0 (syncretic 7.28%, unambiguous 1.13%),
+     35.70% at L2, 78.86% at L3. Pairs that displace a genitive
+     (3,354,624): 68.38% at L1, 70.87% L0, 96.40% L2, 99.27% L3 - a
+     genitive can depend on any noun, so its attachment is open whatever
+     the endings. The registered split mixes the two; genitives (mostly
+     unambiguous forms like *regis*) dominate its "unambiguous" side.
 3. **T3:** findings.md, claims.md, ledger (N14 stays open for slice
    2), archive.sh.
 4. **T4:** independent review with its own oracle, then fixes.
