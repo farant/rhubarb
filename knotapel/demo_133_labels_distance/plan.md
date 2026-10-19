@@ -220,6 +220,31 @@ why L3 is the test the findings will lean on.
    stratified test, L1 / L1u / L3, the descriptive excess and
    sensitivities; checks (hand trees, brute-force test, D132
    reproduction); plants.
+   *T1 done 2026-10-19:* main.c, 30 checks full (about 1 s), 26 quick.
+   - The design review's 11 hand sentences reproduce exactly (their
+     values were computed independently with D132's functions); the
+     exact test equals brute force on three small strata; the group's
+     own sum and its complement give the same exact p and mean; E_perm
+     equals the distribution's mean; D132's displaced counts and
+     genitive distance-limited E reproduced exactly; F two ways on every
+     registered arc (5,866 in quick, all treebanks in full).
+   - **Verdicts: L1 FAILS** (pooled p = 0.2086; T > E in four of the five
+     non-LLCT treebanks, ITTB the exception; that clause's chance under
+     the null 0.183), **L1u FAILS** (p = 0.3991), **L3 FAILS** (p =
+     0.6104; T 787 against E 788.80). Displaced adjectives and genitives
+     wait through about the same number of foreign words (mean min(F,
+     10) about 1.4); a unique label does not wait longer. Sensitivities
+     agree (p 0.19 to 0.97; on raw distance adjectives are if anything
+     CLOSER, p 0.97).
+   - Disclosure: the quick mode (CIRCSE, LLCT) was run before the full
+     run, on the same code.
+   - Plants: 9 red. The first round ran a gate script whose demo path
+     still pointed at D132 (a sed that did not match), so every plant
+     "survived"; fixed, re-run, all red. One plant did not compile and
+     was re-planted.
+   - The exact stratified permutation test is general; it stays in the
+     demo as the approved plan says, with a ledger note to promote it to
+     a house library when a second consumer appears.
 2. **T2:** the oracle; pins; rules on constructed totals; plants.
 3. **T3:** findings, claims (beside 59), ledger, archive.
 4. **T4:** independent review, then fixes.
