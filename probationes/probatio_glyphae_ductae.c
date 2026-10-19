@@ -539,7 +539,7 @@ graeca_probare (vacuum)
         0x2082, 0x2083, 0x2084, 0x2085, 0x2086, 0x2087, 0x2088,
         0x2089, 0x221A, 0x221B, 0x226A, 0x226B, 0x2295, 0x2297,
         0x2296, 0x2298, 0x2299, 0x203B, 0x2282, 0x2283,
-        0x2286, 0x2287, ZEPHYRUM };
+        0x2286, 0x2287, 0x25B0, 0x25B1, ZEPHYRUM };
     /* Franus 2026-10-16 (tofu in vico): circulus magnus ut U+25EF,
      * brachia X et + limbum tangunt */
     constans character* circulus_plus[] = {
@@ -572,6 +572,15 @@ graeca_probare (vacuum)
     constans character* continens_aequale[] = {
         ".####.", ".....#", ".....#", ".....#",
         ".####.", "......", ".#####", "......" };
+    /* Franus 2026-10-17 (tofu in vico): parallelogramma (vectes
+     * progressus ▰▰▱): ordines II-V, limbi uno gradu post ordines
+     * duos */
+    constans character* rhombus_plenus[] = {
+        "......", "......", "..####", "..####",
+        ".####.", ".####.", "......", "......" };
+    constans character* rhombus_vacuus[] = {
+        "......", "......", "..####", "..#..#",
+        ".#..#.", ".####.", "......", "......" };
     constans character* circulus_x[] = {
         "..###.", ".#...#", ".##.##", ".#.#.#",
         ".##.##", ".#...#", "..###.", "......" };
@@ -599,6 +608,8 @@ graeca_probare (vacuum)
     CREDO_VERUM(pictura_est(0x2283, continens));
     CREDO_VERUM(pictura_est(0x2286, contentum_aequale));
     CREDO_VERUM(pictura_est(0x2287, continens_aequale));
+    CREDO_VERUM(pictura_est(0x25B0, rhombus_plenus));
+    CREDO_VERUM(pictura_est(0x25B1, rhombus_vacuus));
     omnia = VERUM;
     situs = VERUM;
     per (k = ZEPHYRUM; nova[k]; k++)
@@ -633,7 +644,7 @@ graeca_probare (vacuum)
     }
     CREDO_VERUM(omnia);
     CREDO_VERUM(situs);
-    CREDO_AEQUALIS_I32(k, LXXI);
+    CREDO_AEQUALIS_I32(k, LXXIII);
     /* similia Latinis per fons; vicini non assignati */
     CREDO_FALSUM(glyphae_ductae_est(0x0391));
     CREDO_FALSUM(glyphae_ductae_est(0x03BF));

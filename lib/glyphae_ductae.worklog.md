@@ -377,6 +377,8 @@ d(0x2282, B,'..####','.#....','.#....','.#....','..####',B)                 # �
 d(0x2283, B,'.####.','.....#','.....#','.....#','.####.',B)                 # ⊃ (2026-10-17)
 d(0x2286, '..####','.#....','.#....','.#....','..####',B,'.#####')           # ⊆ (2026-10-17)
 d(0x2287, '.####.','.....#','.....#','.....#','.####.',B,'.#####')           # ⊇ (2026-10-17)
+d(0x25B0, B,B,'..####','..####','.####.','.####.')                          # ▰ (2026-10-17)
+d(0x25B1, B,B,'..####','..#..#','.#..#.','.####.')                          # ▱ (2026-10-17)
 import unicodedata, sys
 out=[]
 for cp in sorted(S):
@@ -419,3 +421,9 @@ Fran saw tofu for ⊂ in vicus; ⊃ drawn with it as the mirror. Five rows
 only implied by the arms starting one column in.
 Then ⊆ ⊇: the same shape lifted to rows 0-4 with a full bar on row 6
 (one empty row between, as in ≤ ≥).
+
+## 2026-10-17 - ▰ ▱ (parallelograms)
+
+Fran saw ▱ as tofu; ▰ drawn with it (the pair makes progress bars,
+▰▰▰▱▱). Four rows (II-V), slanting right: the edges move one column
+left after two rows, so a run of them reads as a bar with gaps.
