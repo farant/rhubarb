@@ -200,6 +200,14 @@ organum_montatio (
      constans Organum* organum,
                chorda  titulus);
 
+/* valor typo campi congruit? (numerus, veritas, nomen, dies, electio
+ * inter optiones; textus quilibet) */
+b32
+organum_valorem_iudicare (
+     constans OrganumCampus* campus,
+                     chorda  valor,
+                    Piscina* piscina);
+
 
 /* ==================================================
  * Generatio

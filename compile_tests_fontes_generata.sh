@@ -245,6 +245,7 @@ declare -a SOURCE_FILES=(
     "lib/scrinium.c"
     "lib/sectio.c"
     "lib/selectio.c"
+    "lib/semita.c"
     "lib/sententia_fissio.c"
     "lib/sententia_paginarium.c"
     "lib/sententiae.c"

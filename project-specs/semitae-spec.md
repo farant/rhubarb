@@ -12,7 +12,8 @@ of URIs.*
 
 *Status: design decided with Fran (§IX). R0 DONE 2026-10-19 (canon
 attributes, loader rules, montationes accessors - lib/organum.worklog.md).
-Next R1 (lib semita).*
+R1 DONE 2026-10-19 (lib/semita.c, lib/semita.worklog.md). Next R2
+(sancti migrates).*
 
 ## I. Doctrine (decided with Fran, 2026-10-19)
 
@@ -392,4 +393,11 @@ accessors, R1.)
   scriba page's line) - entity addressing is the projections' and
   documents' business, not the pane's state.
 - The URI escaping set (§IV) is a first guess; the round-trip tests
-  decide.
+  decide. (R1: every byte outside `A-Z a-z 0-9 - _ . ~` is %XX.)
+- **Found at R1, for Fran:** a route READ from state X and applied to
+  a different state Y does not reproduce X exactly. Reading omits
+  values equal to the default, and "absent" means keep (widget scope),
+  so a widget-scoped field that is at its default in X keeps Y's value.
+  Fine for restoring a fresh pane (it starts at defaults) and for
+  navigation; not a faithful "copy this view onto that pane". If that
+  is ever wanted: a "full" read that writes defaults explicitly.

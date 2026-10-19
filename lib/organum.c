@@ -174,38 +174,40 @@ est_dies (
     redde VERUM;
 }
 
-/* absens typo suo congruit? (electio: inter optiones) */
+/* valor typo campi congruit? (electio: inter optiones) - absens
+ * manifesti et valores semitae (organum_valorem_iudicare) */
 interior b32
-absens_validum (
-    constans OrganumCampus* k,
-                       Xar* optiones,
-                   Piscina* piscina)
+valor_validum (
+     constans OrganumCampus* k,
+                     chorda  valor,
+                        Xar* optiones,
+                    Piscina* piscina)
 {
     i32 i;
 
     si (chorda_aequalis_literis(k->typus, "numerus"))
     {
-        redde est_numerus(k->absens);
+        redde est_numerus(valor);
     }
     si (chorda_aequalis_literis(k->typus, "veritas"))
     {
-        redde chorda_aequalis_literis(k->absens, "verum")
-            || chorda_aequalis_literis(k->absens, "falsum");
+        redde chorda_aequalis_literis(valor, "verum")
+            || chorda_aequalis_literis(valor, "falsum");
     }
     si (chorda_aequalis_literis(k->typus, "nomen"))
     {
-        redde est_nomen(k->absens);
+        redde est_nomen(valor);
     }
     si (chorda_aequalis_literis(k->typus, "dies"))
     {
-        redde est_dies(k->absens);
+        redde est_dies(valor);
     }
     si (chorda_aequalis_literis(k->typus, "electio"))
     {
         per (i = ZEPHYRUM; i < xar_numerus(optiones); i++)
         {
             si (chorda_aequalis(stml_textus_normalizatus(
-                    liberum_ad(optiones, i), piscina), k->absens))
+                    liberum_ad(optiones, i), piscina), valor))
             {
                 redde VERUM;
             }
@@ -351,7 +353,8 @@ legibus_iudicare (
         vitium_addere(vitia, piscina, k->nodus, k->titulus,
             "ambitus solum semitae status (ligatio se non resettit)");
     }
-    si (k->habet_absens && !absens_validum(k, optiones, piscina))
+    si (   k->habet_absens
+        && !valor_validum(k, k->absens, optiones, piscina))
     {
         character buffer[CCLVI];
 
@@ -764,6 +767,20 @@ organum_montatio (
         }
     }
     redde NIHIL;
+}
+
+b32
+organum_valorem_iudicare (
+     constans OrganumCampus* campus,
+                     chorda  valor,
+                    Piscina* piscina)
+{
+    si (!campus)
+    {
+        redde FALSUM;
+    }
+    redde valor_validum(campus, valor, campus->nodus ? liberi(
+        campus->nodus, "optio", piscina) : NIHIL, piscina);
 }
 
 
