@@ -108,7 +108,28 @@ with this plan.
 
 ## Rulings made while executing
 
-(none yet)
+- **R1 (T1)** - the generator's refusal rules (supplement contradicts or
+  repeats list-one, code twice, historic code not in list-three, extra-ISO
+  code in list-three, no source) never fire on real data, so a plant
+  disabling one would be mute against `-probare`. Added
+  `tools/pecunia_monetae_generare.sh -fumus`: six bad supplements in a
+  temp dir, each must be refused with its named reason. Run by hand and
+  as the plant's gate; NOT a registered porta (the real data path is
+  guarded by `generata`: a generator that refuses fails regeneration).
+  Cost if wrong: a later edit to the rules goes unnoticed until someone
+  runs `-fumus`.
+- **R2 (T1)** - HISTORICA rows take their ISO number from list-three
+  (BGN 975); only EXTRA_ISO rows have numerus 0 (spec II.3 wording).
+  The first generator draft wrote 0 for both.
+- **R3 (T1)** - plant "binary search off by one" realised as `infra =
+  medium + II`; the test was widened first so every row is looked up by
+  its own code.
+- **R4 (T1)** - plant restore hazard: `silva.planta` restores within
+  the same second, and aedilis' `struere.sh` (`-nt`, bash 3.2, whole
+  seconds) can keep the PLANTED object. Workaround: the plant gate
+  deletes the binary, and after the plant run the generator source is
+  touched and rebuilt. Parked as ...RN9 (silva.planta should bump
+  mtime or delete the object).
 
 ## Review focus
 

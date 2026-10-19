@@ -301,6 +301,11 @@
     <forma textus="chiralis" casus="nominativus" numerus="singularis" genus="masculinum"/>
     <forma textus="chirales" casus="nominativus" numerus="pluralis" genus="masculinum"/>
   </vocabulum>
+  <vocabulum lemma="solvibilis" lingua="latina" classis="adiectivum" nota="Latina media (solvere, pecuniam reddere): solvibilis, quod in unitatibus monetae minoribus solvi potest (USD 3.46, non 3.4590); sedes include/pecunia.h; WORDS caret">
+    <forma textus="solvibilis" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="solvibile" casus="nominativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="solvibiles" casus="nominativus" numerus="pluralis" genus="masculinum"/>
+  </vocabulum>
   <vocabulum lemma="amphichiralis" lingua="latina" classis="adiectivum" nota="Neolatina (Gk. amphi + cheir): amphichiralis, imagini suae speculari congruens (nodus amphichiralis, e.g. 4_1); sedes include/tabula_nodorum.h; WORDS caret">
     <forma textus="amphichiralis" casus="nominativus" numerus="singularis" genus="masculinum"/>
     <forma textus="amphichirales" casus="nominativus" numerus="pluralis" genus="masculinum"/>

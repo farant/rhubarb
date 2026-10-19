@@ -407,6 +407,25 @@
     <ingressus genus="fasciculus" via="probationes/fixa/unicode/15.1.0/emoji-data.txt"/>
     <exitus via="lib/runae_tabulae.c" provenientia="regeneratio"/>
   </actio>
+  <!-- tabula monetarum (pecunia-plan T1): indices ISO 4217 fixi +
+       supplementum; generator per aedilis structus (xml.h, stml.h),
+       ergo directorium eius vestigium declaratum -->
+  <actio titulus="pecunia_monetae" genus="generator">
+    <mandatum>
+      <verbum! (>./tools/pecunia_monetae_generare.sh
+    </mandatum>
+    <praecondicio actio="aedilis"/>
+    <vestigium via="build/aedilis/pecunia_monetae_generare"/>
+    <ingressus genus="fasciculus" via="tools/pecunia_monetae_generare.sh"/>
+    <ingressus genus="fasciculus" via="tools/pecunia_monetae_generare.c"/>
+    <ingressus genus="fasciculus" via="include/pecunia.h"/>
+    <ingressus genus="fasciculus" via="include/pecunia_monetae.h"/>
+    <ingressus genus="fasciculus" via="probationes/fixa/iso4217/2026-09-17/list-one.xml"/>
+    <ingressus genus="fasciculus" via="probationes/fixa/iso4217/2026-09-17/list-three.xml"/>
+    <ingressus genus="fasciculus" via="probationes/fixa/iso4217/supplementum.stml"/>
+    <ingressus genus="manifestum" via="build/aedilis/pecunia_monetae_generare/manifestum.stml"/>
+    <exitus via="lib/pecunia_monetae.c" provenientia="regeneratio"/>
+  </actio>
   <!-- tabula nodorum: polynomia per laqueus ex codicibus PD extracti
        KnotInfo fixi (tools/tabula_nodorum_extrahere.sh) computata.
        MEMORABILIS (cursores ad gradus T5): lib/tabula_nodorum_data.c
