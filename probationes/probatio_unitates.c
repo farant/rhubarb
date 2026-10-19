@@ -919,6 +919,13 @@ _sectio_interrogationes (
         { "lib/imago.interrogationes.stml",
             "<interrogationes unitas=\"imago\"\n", NIHIL },
         { "tools/x.interrogationes.stml", "<unitas/>\n", NIHIL },
+        /* archivata: nec legitur nec iudicatur (vitia sua, si
+         * legeretur, numerum recusationum augerent) */
+        { "archivum/unitas.stml",
+            "<unitas titulus=\"archivum\" genus=\""
+            SUB "\" vita=\"archivata\" descriptio=\"a\"/>", NIHIL },
+        { "archivum/lib/vetus.interrogationes.stml", NIHIL,
+            INTERROGATIONES_MALAE },
         /* munus declaratio: numquam legitur (STML fractum tacet) */
         { "lib/xar.stml", "<fractum\n", NIHIL },
         { NIHIL, NIHIL, NIHIL }

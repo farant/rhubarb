@@ -170,18 +170,38 @@ def manu_scriptum(via):
     return NOTA_GENERATUM not in open(via).read()
 
 
-ordines = sorted(o for o in cellae if o.startswith('include/'))
+def archivatum(via):
+    """Caput in archivum/ motum (generatio praecedens congelata): ordo
+    inventarii viam veterem 'include/X.h' servat, plagula ipsa sub
+    'archivum/include/X.h' stat."""
+    return (not os.path.exists(os.path.join(radix, via))
+            and os.path.exists(os.path.join(radix, 'archivum', via)))
+
+
+def plagulae_archivi(textus):
+    """'lib/a.c (15)' -> 'archivum/lib/a.c (15)' (fontes cum capite moti)."""
+    return re.sub(r'(^|\s)((?:lib|include)/)', r'\1archivum/\2', textus)
+
+
+omnes = sorted(o for o in cellae if o.startswith('include/'))
+archivati = [o for o in omnes if archivatum(o)]
+ordines = [o for o in omnes if o not in archivati]
 descriptae = 0
 lineae_indicis = []
-for via in ordines:
+lineae_archivi = []
+for via in omnes:
     c = cellae[via]
     nomen = via[len('include/'):-2]
-    glossa = glossa_capitis(via)
+    in_archivo = via in archivati
+    sedes = ('archivum/' + via) if in_archivo else via
+    plagulae = plagulae_archivi(c.get('plagulae', '')) if in_archivo else c.get('plagulae', '')
+    glossa = glossa_capitis(sedes)
     mutatum = c.get('mutatum', '')
     via_folii = os.path.join(dir_folii, nomen + '.html')
     habet_folium = 'descriptio' in c or manu_scriptum(via_folii)
     if 'descriptio' in c:
-        descriptae += 1
+        if not in_archivo:
+            descriptae += 1
         if not manu_scriptum(via_folii):
             open(via_folii, 'w').write('''<!doctype html>
 %(nota)s
@@ -199,7 +219,7 @@ for via in ordines:
 <p class="subtitulus">%(glossa)s</p>
 
 <p>%(descriptio)s</p>
-
+%(archivum)s
 <table>
 <tbody>
 <tr><td>Header</td><td><a href="../../%(via)s"><code>%(via)s</code></a></td></tr>
@@ -214,11 +234,18 @@ page.</p>
 </body>
 </html>
 ''' % {'nota': NOTA_GENERATUM, 'nomen': html.escape(nomen), 'glossa': html.escape(glossa),
-       'descriptio': html.escape(c['descriptio']), 'via': via,
-       'plagulae': plagulae_reddere(c.get('plagulae', ''), '../../'), 'mutatum': html.escape(mutatum),
+       'descriptio': html.escape(c['descriptio']), 'via': sedes,
+       'archivum': ('<p class="nota">Archived: a frozen predecessor in <code>archivum/</code>, kept as\nread-only historical reference. It is not built, tested or formatted;\nsee <a href="../../archivum/CLAUDE.md"><code>archivum/CLAUDE.md</code></a>.</p>\n') if in_archivo else '',
+       'plagulae': plagulae_reddere(plagulae, '../../'), 'mutatum': html.escape(mutatum),
        'grex': ('\n<tr><td>Group</td><td><a href="greges.html#%s">%s</a></td></tr>' % (c['grex'], html.escape(greges.get(c['grex'], {}).get('titulus', c['grex'])))) if c.get('grex') else '',
        'facultates': ('\n<tr><td>Features</td><td><a href="%s">%s</a></td></tr>' % FOLIA_FACULTATUM[nomen]) if nomen in FOLIA_FACULTATUM else ''})
     titulus = ('<a href="%s.html">%s</a>' % (nomen, html.escape(nomen))) if habet_folium else html.escape(nomen)
+    if in_archivo:
+        lineae_archivi.append('<tr%s><td>%s</td><td>%s</td><td>%s</td></tr>' % (
+            ' class="descripta"' if habet_folium else '', titulus,
+            html.escape(glossa) if glossa else '<span class="nota">—</span>',
+            plagulae_reddere(plagulae, '../../')))
+        continue
     lineae_indicis.append((nomen, mutatum.split(' ')[0], '<tr%s><td>%s</td><td>%s</td><td class="nota">%s</td><td>%s</td></tr>' % (
         ' class="descripta"' if habet_folium else '', titulus,
         html.escape(glossa) if glossa else '<span class="nota">— (no gloss in the header)</span>',
@@ -275,13 +302,26 @@ inventory <em>bibliothecae (include)</em>.</p>
 <p class="nota">Click <em>Library</em> or <em>Last change</em> to sort; click again to reverse. %(ad_greges)s</p>
 
 %(lineae)s
-
+%(archivum)s
 </body>
 </html>
 ''' % {'nota': NOTA_GENERATUM, 'n': len(ordines), 'd': descriptae, 'lineae': corpus_tabularum,
+   'archivum': ('''
+<h2 id="archivum">Archived</h2>
+<p>%d headers of earlier generations moved to <code>archivum/include/</code>:
+frozen, read-only historical reference, not built or tested (see
+<a href="../../archivum/CLAUDE.md"><code>archivum/CLAUDE.md</code></a>). Their
+pages stay so that links to them keep working.</p>
+<table class="bibliothecae">
+<thead><tr><th>Library</th><th>Gloss</th><th>Files</th></tr></thead>
+<tbody>
+%s
+</tbody>
+</table>
+''' % (len(lineae_archivi), '\n'.join(lineae_archivi))) if lineae_archivi else '',
    'sine': sum(1 for v in ordines if not glossa_capitis(v)),
    'ad_greges': ('Or see them <a href="greges.html">grouped by area</a>. ' if greges else '') + 'The four apps built from them have <a href="applicationes.html">a page of their own</a>, so do <a href="provinciae.html">the fifteen sub-projects</a> with folders of their own, and <a href="instrumenta.html">the tools</a> that operate them.'})
-print('bibliothecae: %d, descriptae %d' % (len(ordines), descriptae))
+print('bibliothecae: %d, descriptae %d, archivatae %d' % (len(ordines), descriptae, len(archivati)))
 
 
 # greges.html: bibliothecae per gregem, ordine lentis 'ordo', cum introductione

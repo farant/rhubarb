@@ -8,10 +8,11 @@
  * │ vivit - schema suum HAC machina compilat. Munera DUO,         │
  * │ quorum arbor plagularum unum solum ostendit.                  │
  * │                                                               │
- * │ ERGO: lapifex_*.{c,h} archivari aut deleri NON possunt dum    │
- * │ nuntium ea petit, quamvis probationes eius                    │
- * │ (probatio_lapifex_c89_*) munus retiratum solum probent et     │
- * │ ideo seorsum moveri possint.                                  │
+ * │ ERGO: lapifex_generare, _lexere, _parsere archivari aut       │
+ * │ deleri NON possunt dum nuntium ea petit. Quae SOLUM munus     │
+ * │ retiratum serviebant - lapifex_glr, lapifex_c89 (grammatica   │
+ * │ C89) et probationes probatio_lapifex_c89_* - in archivum/     │
+ * │ iam stant (2026-09-02, 2026-10-19).                           │
  * │                                                               │
  * │ Vide project-specs/generationes-praecedentes-archivandae.md   │
  * └──────────────────────────────────────────────────────────────┘

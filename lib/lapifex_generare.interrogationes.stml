@@ -41,7 +41,7 @@
 
   <interrogatio genus="cur">
     <quaestio! (>why is there a separate LALR(1) builder, and when should I use it?
-    <responsum symbolum="lapifex_collectio_lalr_construere lapifex_collectio_construere" via="lib/lapifex_generare.worklog.md lib/lapifex_c89_grammatica.c">The
+    <responsum symbolum="lapifex_collectio_lalr_construere lapifex_collectio_construere" via="lib/lapifex_generare.worklog.md archivum/lib/lapifex_c89_grammatica.c">The
       canonical LR(1) builder makes a separate state for every
       lookahead combination and blew up on the C89 expression grammar
       (95 productions): it ran indefinitely. The LALR(1) builder makes
@@ -93,8 +93,8 @@
 
   <interrogatio genus="possumne">
     <quaestio! (>can I keep one table and parse many inputs with it?
-    <responsum symbolum="lapifex_actiones_quaerere lapifex_goto_quaerere" via="lib/lapifex_c89_grammatica.c lib/lapifex_parsere.c">Yes,
-      lib/lapifex_c89_grammatica.c builds its table once into a static
+    <responsum symbolum="lapifex_actiones_quaerere lapifex_goto_quaerere" via="archivum/lib/lapifex_c89_grammatica.c lib/lapifex_parsere.c">Yes,
+      archivum/lib/lapifex_c89_grammatica.c (now archived) built its table once into a static
       piscina. But every call to lapifex_actiones_quaerere allocates a
       NEW Xar from the grammar's piscina (tabula-&gt;grammatica-&gt;piscina)
       for its result, and the parsers call it once per step, so that

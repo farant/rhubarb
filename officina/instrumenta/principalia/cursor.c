@@ -113,11 +113,6 @@ nomen structura {
 
 hic_manens constans ExclusioStdout exclusiones_stdout[] = {
     /* inventae per captare.sh cursu duplici 2026-07-10 */
-    { "probatio_arbor2_glr.c",      "monstratores DEBUG (ASLR)" },
-    { "probatio_arbor2_scribere.c", "monstratores DEBUG (ASLR)" },
-    { "probatio_arbor2_file_roundtrip.c",
-                                    "monstratores DEBUG (ASLR)" },
-    { "probatio_compound.c",        "monstratores DEBUG (ASLR)" },
     { "probatio_commandi.c",        "purgamentum pre-init impressum" },
     { "probatio_entitas.c",         "UUIDv7 (tempus+fors)" },
     /* inventa per columnam ipsam (cursu duplici latuit - secundum
@@ -799,7 +794,7 @@ principale (
                     perge;
                 }
                 {
-                         character  via_c[CCLVI];
+                         character via_c[CCLVI];
                     MedullaModulus* modulus_c;
                      MedullaLineae* lineae_c = NIHIL;
 
