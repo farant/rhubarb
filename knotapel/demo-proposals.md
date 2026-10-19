@@ -639,3 +639,126 @@ sudoku doctrine on a world small enough to enumerate. It borrows
 oratio's ideas, not its code (oratio is paused); its findings would tell
 N5 what a relaxation can and cannot do before it meets real Latin.
 
+
+## 2026-10-19: after D131 — what endings can and cannot do
+
+### Where these come from
+
+D131 (KC 58) found, descriptively, that endings pay for displaced
+ADJECTIVES and cannot pay for displaced GENITIVES: an adjective repeats
+its head's features (a head label), a genitive carries only its role
+(a type label). Both registered predictions failed, by a near-tie and a
+Simpson's paradox. The conversation that followed (brainstorm section
+XV) asked what trained weights would look like on this task, what
+multi-head attention contributes, and Fran's idea of UMBRAE: slots the
+structure implies but the input does not yet (or never) supply,
+carried forward through the evaluation.
+
+Inherited: exact arithmetic where possible; verdict rules registered
+before the run, each measure walked through three or four hand
+sentences of EVERY kind before registering (D131's lesson: a difference
+measure and a pooled split both misled); stratify by kind before
+pooling; an independent oracle; plants; an independent review.
+
+| | ledger | proposal | depends on | settles or opens |
+|---|---|---|---|---|
+| N15 | …PEYPY4 | real Latin and the displaced genitive | dependentia, conllu, D130's treebanks | how readers recover what endings cannot place; D131's idea against real data |
+| N16 | …JCWDDF | train against the compiled ideal | a new house trainer library; D131's world | size, heads, registers, grokking; does training converge on the ideal? |
+| N17 | …NBF5ZX | umbra width of the toy world | D131 | how many open expectations a reader carries, and how many are findable by content |
+| N18 | …3AHG53 | umbra nodes: pro-drop in the slot library | D131 | empty slots as candidates; how pro-drop changes ambiguity and garden paths |
+
+### N15. Real Latin and the displaced genitive
+
+**Why.** D131 says a displaced genitive cannot be placed by its ending.
+Real Latin displaces genitives anyway: D130's Part C table already
+shows nmod over-represented among per-arc non-projective arcs in five
+of six Latin treebanks (PROIEL 10.2% against 4.5% of all arcs, Perseus
+12.4% / 4.9%, ITTB 11.6% / 6.0%; LLCT the exception). So the plain
+prediction "writers avoid displacing genitives" is already contradicted
+by numbers we have seen, and must not be registered. The live question:
+how is a displaced genitive recoverable?
+
+**Design (to sharpen at planning).**
+- Restrict to nmod arcs whose dependent has Case=Gen; compare displaced
+  (per-arc non-projective) with nested ones, per treebank.
+- Candidate hosts: for a genitive, the nouns in its sentence that a
+  NESTED attachment could reach (an attachment that would make its arc
+  projective). Hypothesis: displaced genitives have FEWER nested
+  alternative hosts than nested ones do (writers displace where the
+  context leaves one candidate), or their true host agrees with
+  something else that disambiguates (e.g. the host carries a displaced
+  adjective too).
+- Nulls: the same counts over random re-attachment, and over adjectives
+  (where agreement should make the host count irrelevant).
+- NOT seen before registering: the Case=Gen split and every candidate-
+  host count. Seen: D130's nmod shares (above), which must be disclosed.
+
+**Register before the run:** the host-count measure, the comparison,
+the strata (treebanks, verse / prose), and the threshold.
+
+### N16. Train against the compiled ideal
+
+**Why.** Brainstorm VII's question (does training converge on a real
+form or an arbitrary one?) needs a world whose ideal is KNOWN. D131's
+world is one: the grammar compiles to a small exact network, and every
+string's true analysis set is enumerated.
+
+**Design.**
+- Compile the ideal by hand (handwired-style or on nervus): embedding
+  to candidate features, one agreement matcher per word pair, counting
+  for the exactly-one constraints. Count its weights and pieces.
+- Train small transformers on the same task (soft targets = the
+  analysis distribution; or R_P's choice), with a sweep of heads (1, 2,
+  4, 8) at fixed parameters, 0 vs k register tokens, and training on
+  10% of the world to watch for grokking.
+- Measure: exact accuracy against the enumeration; probes for the
+  candidate sets; each head against the compiled heads (one relation
+  per head, or superposed?); the agreement head's QK (block-diagonal,
+  rank ~10?); where genitive uncertainty lives; pieces vs regions
+  (D129's lens).
+- **Needs a house trainer library** (plain gradient descent in C89,
+  deterministic float). Substantial; it also serves N10's second half.
+
+**Register before the run:** the head-count knee, the agreement-head
+rank, and the genitive calibration predictions (brainstorm XV).
+
+### N17. Umbra width of the toy world
+
+**Why.** Fran's umbrae: reading left to right, a reader carries the
+slots the structure has promised and not yet filled. In knot terms
+they are open strand ends; projective reading keeps them in stack
+order, a crossing closes one out of order. D131 says agreement makes an
+umbra findable by content; a genitive's is not. How much memory does
+each reader need, and how much of it is content-addressable?
+
+**Design.** Over every pair of D131's world (and each morphology
+level): for each prefix, the open umbrae of the TRUE analysis (words
+whose head has not appeared, and heads whose required dependents have
+not), each marked labelled (an agreement label distinguishes it from
+the other open umbrae) or unlabelled; the maximum width per pair; the
+depth at which an out-of-order umbra is closed. Exact, cheap: D131's
+data, a new measure. Relation to working-memory accounts of reading
+(Gibson, recalled).
+
+**Register before the run:** e.g. "crossed pairs need a content-
+addressable umbra in every case where R_P reads them, and the umbrae
+R_P fails on are unlabelled" - to be walked through hand sentences
+first.
+
+### N18. Umbra nodes: pro-drop in the slot library
+
+**Why.** D131 required an explicit subject. Real Latin drops it: the
+verb's ending carries the subject's person and number. An empty slot
+becomes a CANDIDATE ("is this nominative the subject, or is the subject
+dropped?"), which is Sudoku with "empty" allowed, and the natural place
+to make umbrae explicit.
+
+**Design.** Add an umbra node per verb: an optional subject with
+features from the verb's ending (nominative, the verb's number, gender
+open), present when no overt subject fills the slot. Re-run D131's
+measures at the four levels; count how pro-drop raises ambiguity and
+garden paths, and which crossings it newly licenses or blocks. Six
+words, if the oracle can follow.
+
+**Register before the run:** the direction of the change in A and B,
+per kind of displacement.

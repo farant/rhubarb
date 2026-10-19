@@ -1,7 +1,8 @@
 # The skeleton and the settling — knots, ratios, grammar and weights
 
 *Brainstorm, 2026-10-16, after D129 (sections IX–XI added later the
-same day; sections XIII–XIV on 2026-10-19, after D130). A conversation between Fran and
+same day; sections XIII–XIV on 2026-10-19, after D130; XV after
+D131). A conversation between Fran and
 Claude (Opus 5.5) that started from "what do you think of the last demos"
 and ran through handwired, ratio graphs, grammar compilation, LLMs and
 the nominalist/realist question. Recorded so a later session can pick
@@ -453,6 +454,14 @@ almost any data — world models, scenes, perception.
     temperature drops? (N14; section XIV)
 15. The agreement check compiled into nervus: pieces vs regions of a
     network that categorizes words. (N10 or N14; section XIV)
+16. How do real Latin readers recover a displaced genitive, which
+    endings cannot place? (N15; section XV)
+17. Train against the compiled ideal: size, heads, registers, grokking
+    on the toy Latin world. (N16; section XV)
+18. Umbra width: how many open expectations a reader carries, and how
+    many of them are labelled (findable by content). (N17; section XV)
+19. Umbra nodes in the slot library: pro-drop and empty slots as
+    candidates. (N18; section XV)
 
 ## XIII. What D130 measured, read against these premises
 
@@ -620,6 +629,86 @@ The synthesis below is Claude's; facts from the literature are marked.*
     nervus and count its pieces against its regions — the first time
     nervus categorizes language rather than braids (thread 15).
 
+## XV. After D131: what endings do, what training would find, umbrae
+
+*Added 2026-10-19, after D131 (KC 58). A conversation, not results; the
+numbers cited are D131's and D130's, the rest is reading and guesses,
+with literature marked.*
+
+- **D131 in one line.** Endings pay for displaced ADJECTIVES (garden
+  paths 0% / 6.5% / 35.7% / 78.9% from ideal to bare endings) and not
+  for displaced GENITIVES (73% even with ideal endings, 100% without
+  case). Both registered predictions failed, by a near-tie (Q1) and a
+  Simpson's paradox (Q2); within each kind of displacement the
+  registered direction holds.
+- **Role labels and head labels.** A case ending is a slot-TYPE label
+  (what role: subject, object, possessor); agreement is a HEAD label
+  (which word: it repeats its head's features). Reconnecting a
+  displaced word is a binding problem - finding an instance, not a
+  type - so only head labels pay for crossing. Section IV's picture was
+  right in this precise sense: agreement is a strand's colour, matched
+  at both ends; case is a port type, not a colour.
+- **But real Latin displaces genitives anyway.** D130's printed table
+  (Part C) has nmod OVER-represented among per-arc non-projective arcs
+  in five of six Latin treebanks (PROIEL 10.2% against 4.5% of all
+  arcs, Perseus 12.4% / 4.9%, ITTB 11.6% / 6.0%; LLCT the exception,
+  5.0% / 9.5%). So "writers displace only what morphology can pay for"
+  is already contradicted in its plain form. Either readers recover
+  displaced genitives by other means (meaning, frequency, adjacency
+  habits), or writers displace them only where the context leaves one
+  candidate head. That second reading is testable on the treebanks
+  (N15).
+- **What trained weights would look like** (estimates, unmeasured):
+  compiled by hand, a few thousand mostly-zero weights (embedding to
+  candidate features, one bilinear agreement matcher per word pair, a
+  counting step); a trained transformer of 2-4 layers, width 32-128,
+  ~50k-300k parameters; a plain MLP 300k-1M and murkier. Expected
+  structures: syncretic forms embedded as sums of their readings;
+  agreement heads with block-diagonal QK over case, gender, number
+  (rank ~10); role heads keyed on number and case; genitive heads that
+  fall back on position or stay calibrated-uncertain (D131's result
+  turned into a mechanism); counting by averaging attention. A
+  projectivity detector only if the training distribution prefers
+  nesting (the statistics knob). Precedent: LSTM language models grow
+  sparse "number units" for subject-verb agreement *(recalled: Lakretz
+  et al. 2019)*.
+- **Multi-head attention as typed legs.** One softmax asks one question
+  per layer; several heads ask several at once (*recalled: Vaswani et
+  al. 2017*). In the slot-library picture a word is a node with typed
+  legs (section XI); each head is a leg type with its own matching
+  rule. Prediction for the toy world: about four heads (agreement,
+  role, genitive/position, counting), with a knee in accuracy there at
+  fixed parameters. Trained heads specialise on dependency relations
+  and most are prunable *(recalled: Clark et al. 2019; Michel et al.
+  2019; Voita et al. 2019)*; compiled transformers have one head per
+  "select" *(recalled: Tracr)*.
+- **Umbrae (Fran).** Slot structure implies things not yet present: a
+  verb's missing dative, a dropped subject, the head an early adjective
+  promises. Carried forward iteratively, they are a "background thread"
+  of the evaluation. Names elsewhere: empty categories; predicted items
+  in Earley / left-corner parsing; expectation-based reading cost
+  *(recalled: Levy's surprisal, Gibson's dependency locality)*.
+  - In knot terms an umbra is an OPEN STRAND END: reading left to
+    right holds a tangle with dangling strands. Projective reading
+    keeps umbrae last-in-first-out (the Dyck stack IS the list of
+    umbrae); a crossing closes an umbra out of order, so the reader
+    must FIND an earlier one. Agreement labels make an umbra findable
+    by content; a genitive's umbra has no label - D131 restated.
+  - Mechanism in a transformer: heads alone are not enough. An umbra
+    needs a place (the projecting word's residual stream, or its own
+    position), a filling rule (a "requirements" head per slot type),
+    and a way to register "still empty" - softmax must put its weight
+    somewhere, and trained models park it on a near-empty token
+    *(recalled: attention sinks, Xiao et al. 2023)*: a universal umbra
+    node. Vision transformers repurpose patches as scratch space, and
+    explicit "register" tokens help *(recalled: Darcet et al. 2023)* -
+    registers are umbra nodes by another name. Masked and diffusion
+    models are made of umbrae: every mask is a missing piece inferred
+    from structure.
+- **Proposals from this:** N15 (real readers and the displaced
+  genitive), N16 (train against the compiled ideal), N17 (umbra width
+  of D131's world), N18 (umbra nodes: pro-drop in the slot library).
+
 ## AUDIENDA
 
 Not verified in this repo (all recalled from memory during the
@@ -655,3 +744,9 @@ conversation; check before relying on any):
   ReLU, log-sum-exp to max, sum-product to max-product) are elementary
   and need no source; "logic is the zero-temperature limit of the
   statistics" is a synthesis, not a result.
+- Section XV (2026-10-19): Lakretz et al. (number units), Vaswani et
+  al. (multi-head attention), Clark et al., Michel et al., Voita et al.
+  (head specialisation and pruning), Tracr (one head per select),
+  Levy (surprisal), Gibson (dependency locality), Xiao et al.
+  (attention sinks), Darcet et al. (registers), Power et al. and Nanda
+  et al. (grokking) - all recalled. The size estimates are guesses.
