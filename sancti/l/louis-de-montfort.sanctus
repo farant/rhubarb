@@ -1,0 +1,40 @@
+<sanctus id="louis-de-montfort" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Louis de Montfort</nomen>
+  <nomen lingua="la" principale="verum" fontes="sd">Ludovicus Maria Grignion de Montfort</nomen>
+  <nomen lingua="fr" fontes="ce">Louis-Marie Grignion de Montfort</nomen>
+  <ortus annus="1673" mensis="1" dies="31" locus="Montfort" fontes="ce"/>
+  <obitus annus="1716" mensis="4" dies="28" locus="Saint-Laurent-sur-Sèvre" fontes="ce"/>
+  <beatificatio annus="1888" papa="Leo XIII" fontes="ce"/>
+  <canonizatio modus="formalis" annus="1947" mensis="7" dies="20" papa="Pius XII" fontes="sd"/>
+  <festum calendarium="generale" mensis="4" dies="28" gradus="memoria-ad-libitum" fontes="us"/>
+  <munus fontes="ce us">priest</munus>
+  <munus fontes="ce">missionary</munus>
+  <munus fontes="ce">founder</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Louis-Marie Grignion was born at Montfort on 31 January 1673. From childhood he was devoted to prayer before the Blessed Sacrament; while a day pupil at the Jesuit college at Rennes he joined a society of young men who served the poor and the incurables in the hospitals. At nineteen he walked to Paris to study theology, giving away his money and clothes to the poor on the way and vowing to live thereafter only on alms. Ordained at twenty-seven, he served for a time as a hospital chaplain.</paragraphus>
+    <paragraphus fontes="sd ce">On a pilgrimage to Rome he learned from Pope Clement XI that he was to work not among foreign peoples but for the renewal of Christian life in his own country. In 1705 he found his true vocation in preaching to the people, and he preached missions in countless towns and villages of Brittany and the Vendée, often meeting opposition from the Jansenists, who had him banished from districts and persuaded the authorities that the great calvary which hundreds of peasants had built at Pontchâteau was a fortress, so that the king had it demolished. A year before his death he founded the Sisters of Wisdom and the Company of Mary. He died at Saint-Laurent-sur-Sèvre on 28 April 1716; Leo XIII beatified him in 1888, and Pius XII canonized him on 20 July 1947.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Louis-Marie Grignion de Montfort" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Louis-Marie_Grignion_de_Montfort">
+    <excerptum>Missionary in Brittany and Vendee; born at Montfort, 31 January, 1673; died at Saint Laurent sur Sevre, 28 April, 1716.</excerptum>
+    <excerptum>From his childhood, he was indefatigably devoted to prayer before the Blessed Sacrament, and, when from his twelfth year he was sent as a day pupil to the Jesuit college at Rennes</excerptum>
+    <excerptum>He joined a society of young men who during holidays ministered to the poor and to the incurables in the hospitals</excerptum>
+    <excerptum>At the age of nineteen, he went on foot to Paris to follow the course in theology, gave away on the journey all his money to the poor, exchanged clothing with them, and made a vow to subsist thenceforth only on alms.</excerptum>
+    <excerptum>He was ordained priest at the age of twenty-seven, and for some time fulfilled the duties of chaplain in a hospital. In 1705, when he was thirty-two, he found his true vocation, and thereafter devoted himself to preaching to the people. During seventeen years he preached the Gospel in countless towns and villages.</excerptum>
+    <excerptum>the Jansenists, irritated by his success, secure by their intrigues his banishment form the district, in which he was giving a mission.</excerptum>
+    <excerptum>Grignion's extraordinary influence was especially apparent in the matter of the calvary at Pontchateau.</excerptum>
+    <excerptum>For fifteen months between two and four hundred peasants worked daily without recompense</excerptum>
+    <excerptum>When he announced his determination of building a monumental calvary on a neighbouring hill, the idea was enthusiastically received by the inhabitants.</excerptum>
+    <excerptum>the king commanded that the whole should be demolished, and the land restored to its former condition. The Jansenists had convinced the Governor of Brittany that a fortress capable of affording aid to persons in revolt was being erected</excerptum>
+    <excerptum>A year before his death, Father de Montfort founded two congregations — the Sisters of Wisdom, who were to devote themselves to hospital work and the instruction of poor girls, and the Company of Mary, composed of missionaries.</excerptum>
+    <excerptum>Grignion de Montfort was beatified by Leo XIII in 1888.</excerptum>
+  </fons>
+  <fons id="sd" opus="sedes" locus="Pius XII, homilia in canonizatione, 20 Iulii 1947" url="https://www.vatican.va/content/pius-xii/la/homilies/documents/hf_p-xii_hom_19470720_beato-de-montfort.html">
+    <excerptum>IN SOLLEMNI CANONIZATIONE BEATI LUDOVICI MARIAE GRIGNION DE MONTFORT, CONFESSORIS, IN VATICANA BASILICA PERACTA HOMILIA SANCTISSIMI DOMINI NOSTRI PIO PP. XII* Die XX mensis Iulii, Anno Domini MCMXLVII</excerptum>
+    <excerptum>Beatum Ludovicum Mariam Grignion a Montfort, confessorem, Sanctum esse decernimus et definimus, ac Sanctorum Catalogo adscribimus</excerptum>
+    <excerptum>Cum Ludovicus Maria Grignion de Montfort, quem nuper, Superni Numinis adspirante gratia, sanctitatis honoribus decoravimus, almam hanc Urbem petiisset, ut Beati Petri sepulcrum pientissimo veneraretur animo</excerptum>
+    <excerptum>a Decessore Nostro fel. rec. Clemente XI didicit se non ad exteras gentes, ut optabat, evangelicae veritatis praeconem destinari, sed potius ad christianos mores in patria sua feliciter redintegrandos.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="28 April">
+    <excerptum>Saint Louis Grignion de Montfort, Priest</excerptum>
+  </fons>
+</sanctus>

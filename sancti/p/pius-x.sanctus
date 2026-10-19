@@ -1,0 +1,47 @@
+<sanctus id="pius-x" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Pius X</nomen>
+  <nomen lingua="it" fontes="sp">Pio X</nomen>
+  <nomen lingua="it" fontes="ce">Giuseppe Melchiorre Sarto</nomen>
+  <ortus annus="1835" mensis="6" dies="2" locus="Riese, Province of Treviso" fontes="ce ga"/>
+  <obitus annus="1914" mensis="8" dies="20" fontes="ga"/>
+  <canonizatio modus="formalis" annus="1954" mensis="5" dies="29" papa="Pius XII" fontes="sp"/>
+  <festum calendarium="generale" mensis="8" dies="21" gradus="memoria" fontes="us"/>
+  <munus fontes="us ce ga">pope</munus>
+  <munus fontes="ce ga">bishop</munus>
+  <munus fontes="ce ga">priest</munus>
+  <descriptio>
+    <paragraphus fontes="ce ga">Giuseppe Sarto was born on 2 June 1835 at Riese, in the province of Treviso, into a peasant family; his father was a postman. He studied at the seminary of Padua, was ordained in 1858, and served nine years as chaplain at Tombolo and then as arch-priest of Salzano, where he was known for his generosity to the poor and his self-denial during the cholera. After serving as a canon of Treviso cathedral, episcopal chancellor and spiritual director of the seminary he was named Bishop of Mantua in 1884, and in 1893 Leo XIII made him a cardinal and Patriarch of Venice. He was elected pope on 4 August 1903, an office he hesitated to accept.</paragraphus>
+    <paragraphus fontes="ce ga sp">His motto was to renew all things in Christ. He urged frequent and even daily Communion and, by the decree Quam Singulari of 1910, an early first Communion for children; he issued a motu proprio on sacred music, reorganized the Roman Curia, began the codification of canon law, founded the Pontifical Biblical Institute and issued a catechism for the Diocese of Rome. In 1907 he condemned Modernism in the decree Lamentabili and the encyclical Pascendi. Grieved by the coming of war, he died on 20 August 1914, and Pius XII canonized him on 29 May 1954.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="Pope Pius X" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/Pope_Pius_X">
+    <excerptum>(Giuseppe Melchiorre Sarto). Born 2 June, 1835, at Riese, Province of Treviso, in Venice. His parents were Giovanni Battista Sarto and Margarita (née Sanson); the former, a postman, died in 1852</excerptum>
+    <excerptum>He was ordained in 1858, and for nine years was chaplain at Tombolo</excerptum>
+    <excerptum>In 1867 he was named arch-priest of Salzano</excerptum>
+    <excerptum>consistently with his habitual generosity to the poor; he especially distinguished himself by his abnegation during the cholera.</excerptum>
+    <excerptum>On 10 November, 1884, he was named Bishop of Mantua</excerptum>
+    <excerptum>At the secret consistory of June, 1893, Leo XIII created him a cardinal under the title of San Bernardo alle Terme; and in the public consistory, three days later, he was preconized Patriarch of Venice</excerptum>
+    <excerptum>to receive Holy Communion frequently and, if possible, daily</excerptum>
+    <excerptum>Finally, by the Decree "Quam Singulari" (15 Aug., 1910), he recommended that the first Communion of children should not be deferred too long after they had reached the age of discretion.</excerptum>
+    <excerptum>as pope, he published, 22 November, 1903, a Motu Proprio on sacred music in churches</excerptum>
+    <excerptum>Wherefore, in 1907, he caused the publication of the Decree "Lamentabili"</excerptum>
+    <excerptum>Soon after that, on 8 Sept., 1907, there appeared the famous Encyclical "Pascendi", which expounds and condemns the system of Modernism.</excerptum>
+    <excerptum>He caused a new catechism to be published for the Diocese of Rome.</excerptum>
+  </fons>
+  <fons id="ga" opus="sedes" locus="Benedict XVI, General Audience, 18 August 2010" url="https://www.vatican.va/content/benedict-xvi/en/audiences/2010/documents/hf_ben-xvi_aud_20100818.html">
+    <excerptum>Giuseppe Sarto, that was his name, was born into a peasant family in Riese, Treviso, in 1835. After studying at the Seminary in Padua he was ordained a priest when he was 23 years old.</excerptum>
+    <excerptum>He was first curate in Tombolo, then parish priest at Salzano and then canon of the Cathedral of Treviso with the offices of episcopal chancellor and spiritual director of the Diocesan Seminary.</excerptum>
+    <excerptum>In 1884 he was appointed Bishop of Mantua, and in 1893, Patriarch of Venice. On 4 August 1903, he was elected Pope, a ministry he hesitated to accept since he did not consider himself worthy of such a lofty office.</excerptum>
+    <excerptum>his motto: Instaurare Omnia in Christo, "To renew all things in Christ".</excerptum>
+    <excerptum>From the outset he devoted himself to reorganizing the Roman Curia; he then began work on the Code of Canon Law which was promulgated by his Successor Benedict XV.</excerptum>
+    <excerptum>On 7 May 1909, with his Apostolic Letter Vinea Electa, he founded the Pontifical Biblical Institute. The last months of his life were overshadowed by the impending war.</excerptum>
+    <excerptum>His appeal to Catholics of the world, launched on 2 August 1914 to express the bitter pain of the present hour, was the anguished plea of a father who sees his children taking sides against each other. He died shortly afterwards, on 20 August</excerptum>
+  </fons>
+  <fons id="sp" opus="sedes" locus="Pius XII, address after the canonization of Pius X, 29 May 1954" url="https://www.vatican.va/content/pius-xii/it/speeches/1954/documents/hf_p-xii_spe_19540529_pio-x.html">
+    <excerptum>Nella canonizzazione di San Pio X (29 maggio 1954)</excerptum>
+    <excerptum>DISCORSO DI SUA SANTITÀ PIO PP. XII DOPO IL RITO DI CANONIZZAZIONE DI SAN PIO X</excerptum>
+    <excerptum>per sigillare la mirabile ascesa del suo servo fedele Pio X alla suprema gloria degli altari</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="21 August">
+    <excerptum>Saint Pius X, Pope</excerptum>
+  </fons>
+</sanctus>

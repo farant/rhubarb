@@ -1,0 +1,51 @@
+<sanctus id="thomas-aquinas" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Thomas Aquinas</nomen>
+  <nomen lingua="alia" fontes="mr">Thomas of Aquin</nomen>
+  <ortus annus="1225" circa="verum" locus="Roccasecca, Kingdom of Naples" fontes="ce"/>
+  <obitus annus="1274" mensis="3" dies="7" locus="Fossanova" fontes="ce mr"/>
+  <canonizatio modus="formalis" annus="1323" mensis="7" dies="18" papa="John XXII" fontes="ce"/>
+  <festum calendarium="generale" mensis="1" dies="28" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="3" dies="7" fontes="mr"/>
+  <munus fontes="us ce">priest</munus>
+  <munus fontes="us ce mr">doctor of the Church</munus>
+  <munus fontes="mr ce">religious</munus>
+  <munus fontes="ce">theologian</munus>
+  <munus fontes="ce">philosopher</munus>
+  <patrocinium fontes="ce mr">Catholic universities, colleges and schools</patrocinium>
+  <descriptio>
+    <paragraphus fontes="ce">Thomas was the son of Landulph, Count of Aquino, and was born at Roccasecca in the Kingdom of Naples; the year is given as 1225 or 1227, usually the end of 1225. At five he was sent to the Benedictines of Monte Cassino and about 1236 to the University of Naples. Some time between 1240 and 1243 he took the Dominican habit; his brothers seized him and held him nearly two years at Roccasecca while his family tried to turn him from his vocation. Set at liberty, he went on to study under Albertus Magnus, at Cologne according to most of his biographers, and was ordained priest there, probably in 1250.</paragraphus>
+    <paragraphus fontes="ce">He taught and wrote in Paris and in many Italian cities, declined the archbishopric of Naples, and composed more than sixty works, chief among them the Summa theologica. After a long ecstasy during Mass on 6 December 1273 he wrote no more, saying that all he had written seemed of little value; the Summa stopped at the ninetieth question of its third part. Invited by Gregory X to the Council of Lyons, he set out in January 1274, but his strength failed on the way, and he died at the Cistercian monastery of Fossanova on 7 March 1274.</paragraphus>
+    <paragraphus fontes="ce mr">John XXII canonized him on 18 July 1323, and Pius V proclaimed him a Doctor of the Universal Church in 1567. Leo XIII named him patron of all Catholic universities, colleges and schools. The Martyrology remembers him on 7 March.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="7 March">
+    <excerptum>TN the monastery of Fossanova, near Terracina, St. Thomas of Aquin, confessor and doctor, of the Order of Preachers, illustrious by the nobility of his birth, the sanctity of his life, and his knowledge of theology. Leo XIII. declared him heavenly patron of all Catholic schools.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. Thomas Aquinas" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Thomas_Aquinas">
+    <excerptum>Philosopher, theologian, doctor of the Church (Angelicus Doctor), patron of Catholic universities, colleges, and schools. Born at Rocca Secca in the Kingdom of Naples, 1225 or 1227; died at Fossa Nuova, 7 March, 1274.</excerptum>
+    <excerptum>The end of 1225 is usually assigned as the time of his birth.</excerptum>
+    <excerptum>Landulph, his father, was Count of Aquino</excerptum>
+    <excerptum>At the age of five, according to the custom of the times, he was sent to receive his first training from the Benedictine monks of Monte Cassino.</excerptum>
+    <excerptum>About the year 1236 he was sent to the University of Naples.</excerptum>
+    <excerptum>Some time between 1240 and August, 1243, he received the habit of the Order of St. Dominic</excerptum>
+    <excerptum>Thomas's brothers, who were soldiers under the Emperor Frederick, captured the novice near the town of Aquapendente and confined him in the fortress of San Giovanni at Rocca Secca. Here he was detained nearly two years, his parents, brothers, and sisters endeavouring by various means to destroy his vocation.</excerptum>
+    <excerptum>he was set at liberty, being lowered in a basket into the arms of the Dominicans</excerptum>
+    <excerptum>according to the majority of the saint's biographers, to Cologne, where he arrived in 1244 or 1245, and was placed under Albertus Magnus</excerptum>
+    <excerptum>During his stay in Cologne, probably in 1250, he was raised to the priesthood by Conrad of Hochstaden</excerptum>
+    <excerptum>with tears he begged to be excused from accepting the Archbishopric of Naples, to which he was appointed by Clement IV in 1265.</excerptum>
+    <excerptum>hence we find him successively at Anagni, Rome, Bologna, Orvieto, Viterbo, Perugia, in Paris again, and finally in Naples, always teaching and writing</excerptum>
+    <excerptum>Although St. Thomas lived less than fifty years, he composed more than sixty works</excerptum>
+    <excerptum>his commentaries on that text-book of theology furnished the materials and, in great part, the plan for his chief work, the "Summa theologica".</excerptum>
+    <excerptum>On 6 December, 1273, he laid aside his pen and would write no more. That day he experienced an unusually long ecstasy during Mass</excerptum>
+    <excerptum>The "Summa theologica" had been completed only as far as the ninetieth question of the third part</excerptum>
+    <excerptum>Such secrets have been revealed to me that all I have written now appears to be of little value</excerptum>
+    <excerptum>Gregory X, having convoked a general council, to open at Lyons on 1 May, 1274, invited St. Thomas and St. Bonaventure to take part in the deliberations</excerptum>
+    <excerptum>He tried to obey, setting out on foot in January, 1274, but strength failed him</excerptum>
+    <excerptum>The Cistercian monks of Fossa Nuova pressed him to accept their hospitality, and he was conveyed to their monastery</excerptum>
+    <excerptum>He died on 7 March, 1274. Numerous miracles attested his sanctity, and he was canonized by John XXII, 18 July, 1323.</excerptum>
+    <excerptum>St. Pius V proclaimed St. Thomas a Doctor of the Universal Church in the year 1567.</excerptum>
+    <excerptum>by a Brief dated 4 August, 1880, designated him patron of all Catholic universities, academies, colleges, and schools throughout the world.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="28 January">
+    <excerptum>Saint Thomas Aquinas, Priest and Doctor of the Church</excerptum>
+  </fons>
+</sanctus>

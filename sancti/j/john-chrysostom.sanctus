@@ -1,0 +1,56 @@
+<sanctus id="john-chrysostom" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">John Chrysostom</nomen>
+  <nomen lingua="el" fontes="ce">Chrysostomos</nomen>
+  <ortus annus="347" circa="verum" locus="Antioch" fontes="ce"/>
+  <obitus annus="407" mensis="9" dies="14" locus="Comana in Pontus" fontes="ce mr14"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="9" dies="13" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="1" dies="27" nota="translation of his body to Constantinople; his feast in the 1916 Martyrology" fontes="mr27"/>
+  <festum calendarium="martyrologium" mensis="9" dies="14" fontes="mr14"/>
+  <munus fontes="us mr27 ce">bishop</munus>
+  <munus fontes="us ce">doctor of the Church</munus>
+  <munus fontes="ce">priest</munus>
+  <patrocinium fontes="mr27">sacred orators</patrocinium>
+  <descriptio>
+    <paragraphus fontes="ce">John was born at Antioch about 347, the son of Secundus, an army officer who died soon after, and of Anthusa, who raised him in piety and sent him to the best schools; he attended the lectures of Libanius, the most famous orator of the day and a staunch pagan. About 367 he came under the influence of Bishop Meletius; some three years later he was baptized and made lector, and he then joined a community of ascetics near Antioch under Diodorus. Meletius made him deacon, probably in 381, and Flavian ordained him priest in 386. For twelve years he preached at Antioch, and his book On the Priesthood dates from about this time.</paragraphus>
+    <paragraphus fontes="ce mr14 mr27">On 26 February 398 he was made Bishop of Constantinople. Discontented parties found a leader in Theophilus, Patriarch of Alexandria, and the empress Eudoxia, at first friendly, turned against him. A synod in which his open enemies sat as judges declared him deposed, and on 24 June 404 he was sent into his second exile, to Cucusus in Armenia, though Pope Innocent I took his part. Forced on long marches, he died at Comana in Pontus on 14 September 407 with the words "Glory be to God for all things". His body was brought to Constantinople on 27 January 438. The name Chrysostom, "golden-mouthed", honours his eloquence; he is generally considered the most prominent doctor of the Greek Church, and Pius X named him patron of sacred orators.</paragraphus>
+  </descriptio>
+  <fons id="mr27" opus="mr1916" locus="27 January">
+    <excerptum>At Constantinople, St. John, bishop, who was surnamed Chrysostom, on account of his golden flow of eloquence.</excerptum>
+    <excerptum>His sacred body was brought to Constantinople on this day, in the reign of Theodosius the younger</excerptum>
+    <excerptum>This illustrious preacher of the Word of God Pius X. declared and appointed heavenly patron of sacred orators.</excerptum>
+  </fons>
+  <fons id="mr14" opus="mr1916" locus="14 September">
+    <excerptum>the birthday of St. John Chrysostom, bishop of Constantinople, who was sent into exile through the conspiracy of his enemies, but was recalled by a decree of the Sovereign Pontiff, Innocent I.</excerptum>
+    <excerptum>He died on the way from the ill-treatment he received at the hands of the soldiers who guarded him.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. John Chrysostom" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._John_Chrysostom">
+    <excerptum>(Chrysostomos, "golden-mouthed" so called on account of his eloquence). Doctor of the Church, born at Antioch, c. 347; died at Commana in Pontus, 14 September, 407.</excerptum>
+    <excerptum>is generally considered the most prominent doctor of the Greek Church and the greatest preacher ever heard in a Christian pulpit.</excerptum>
+    <excerptum>His father, Secundus, was an officer of high rank in the Syrian army. On his death soon after the birth of John, Anthusa, his wife</excerptum>
+    <excerptum>She not only instructed her son in piety, but also sent him to the best schools of Antioch</excerptum>
+    <excerptum>Chrysostom followed also those of Libanius, at once the most famous orator of that period and the most tenacious adherent of the declining paganism of Rome.</excerptum>
+    <excerptum>when he met one day (about 367) the bishop Meletius.</excerptum>
+    <excerptum>About three years later he received Holy Baptism and was ordained lector.</excerptum>
+    <excerptum>soon afterwards entered one of the ascetic societies near Antioch, which was under the spiritual direction of Carterius and especially of the famous Diodorus</excerptum>
+    <excerptum>Very probably in the beginning of 381 Meletius made him deacon</excerptum>
+    <excerptum>we may suppose that he composed his most famous book, "On the Priesthood", towards the end of this period (c. 386</excerptum>
+    <excerptum>In the year 386 Chrysostom was ordained priest by Flavian</excerptum>
+    <excerptum>His chief task during the next twelve years was that of preaching</excerptum>
+    <excerptum>ordained Bishop of Constantinople on 26 February, 398</excerptum>
+    <excerptum>the party of malcontents were not really dangerous, unless they could find some prominent and unscrupulous leader. Such a person presented himself sooner than might have been expected. It was the well-known Theophilus, Patriarch of Alexandria.</excerptum>
+    <excerptum>The empress herself was at first most friendly towards the new bishop.</excerptum>
+    <excerptum>Chrysostom's return was in itself a defeat for Eudoxia. When her alarms had gone, her rancour revived.</excerptum>
+    <excerptum>Chrysostom naturally refused to recognize the legality of a synod in which his open enemies were judges.</excerptum>
+    <excerptum>After the third summons Chrysostom, with the consent of the emperor, was declared to be deposed.</excerptum>
+    <excerptum>At last Arcadius signed the decree, and on 24 June, 404, the soldiers conducted Chrysostom a second time into exile.</excerptum>
+    <excerptum>Chrysostom himself was conducted to Cucusus, a secluded and rugged place on the east frontier of Armenia</excerptum>
+    <excerptum>Emperor Honorius and Pope Innocent I endeavoured to summon a new synod</excerptum>
+    <excerptum>He was forced to make long marches, was exposed to the rays of the sun, to the rains and the cold of the nights.</excerptum>
+    <excerptum>Some hours later Chrysostom died. His last words were: Doxa to theo panton eneken (Glory be to God for all things)</excerptum>
+    <excerptum>On 27 January, 438, his body was translated to Constantinople with great pomp</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="13 September">
+    <excerptum>Saint John Chrysostom, Bishop and Doctor of the Church</excerptum>
+  </fons>
+</sanctus>

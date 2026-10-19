@@ -1,0 +1,45 @@
+<sanctus id="josephine-bakhita" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Josephine Bakhita</nomen>
+  <nomen lingua="alia" fontes="vb">Mother Moretta</nomen>
+  <ortus annus="1869" circa="verum" locus="Darfur, Sudan" fontes="ss"/>
+  <obitus annus="1947" mensis="2" dies="8" locus="Schio" fontes="vb"/>
+  <canonizatio modus="formalis" annus="2000" mensis="10" dies="1" papa="John Paul II" fontes="ho ss"/>
+  <festum calendarium="generale" mensis="2" dies="8" gradus="memoria-ad-libitum" fontes="us"/>
+  <munus fontes="us">virgin</munus>
+  <munus fontes="vb ss">religious</munus>
+  <descriptio>
+    <paragraphus fontes="ss vb ho">Bakhita was born around 1869 in Darfur, Sudan; she herself did not know the exact date. As a child she was kidnapped by slave-traders (at nine according to Benedict XVI, at seven according to John Paul II) and was sold several times in the markets of El Obeid and Khartoum. She forgot the name her parents had given her; Bakhita, meaning fortunate, was the name her kidnappers gave her. Beaten till she bled, she bore the scars all her life. In 1882 she was bought for the Italian consul Callisto Legnani, who treated her kindly and, when he had to leave for Italy, let her go with him.</paragraphus>
+    <paragraphus fontes="vb ss">At Genoa she was left with the family of his friend Augusto Michieli. Later entrusted to the Canossian Sisters in Venice, she came to know God there, and on 9 January 1890 she was baptized Josephine. When Mrs Michieli returned from Africa to take her back, she chose to stay with the sisters, and on 8 December 1896 she made her vows with the Canossian Daughters of Charity. For some fifty years she lived in the community at Schio, cooking, sewing and keeping the door. She died at Schio on 8 February 1947 and was canonized by John Paul II on 1 October 2000.</paragraphus>
+  </descriptio>
+  <fons id="vb" opus="sedes" locus="Vatican biography, Josephine Bakhita" url="https://www.vatican.va/news_services/liturgy/saints/ns_lit_doc_20001001_giuseppina-bakhita_en.html">
+    <excerptum>In Schio (Vicenza), where she spent many years of her life, everyone still calls her our Black Mother.</excerptum>
+    <excerptum>Bakhita was not the name she received from her parents at birth.</excerptum>
+    <excerptum>The fright and the terrible experiences she went through made her forget the name she was given by her parents.</excerptum>
+    <excerptum>Bakhita, which means fortunate, was the name given to her by her kidnappers.</excerptum>
+    <excerptum>Sold and resold in the markets of El Obeid and of Khartoum, she experienced the humiliations and sufferings of slavery, both physical and moral.</excerptum>
+    <excerptum>no one used the lash when giving her orders; instead, she was treated in a loving and cordial way.</excerptum>
+    <excerptum>Political situations forced the Consul to leave for Italy. Bakhita asked and obtained permission to go with him and with a friend of his, a certain Mr. Augusto Michieli.</excerptum>
+    <excerptum>On arrival in Genoa, Mr. Legnani, pressured by the request of Mr. Michieli's wife, consented to leave Bakhita with them.</excerptum>
+    <excerptum>Mimmina and Bakhita were entrusted to the Canossian Sisters of the Institute of the Catechumens in Venice.</excerptum>
+    <excerptum>It was there that Bakhita came to know about God</excerptum>
+    <excerptum>Bakhita received the sacraments of Christian initiation and was given the new name, Josephine. It was January 9, 1890.</excerptum>
+    <excerptum>When Mrs. Michieli returned from Africa to take back her daughter and Bakhita, the latter, with unusual firmness and courage, expressed her desire to remain with the Canossian Sisters and to serve that God who had shown her so many proofs of His love.</excerptum>
+    <excerptum>On December 8, 1896 Josephine Bakhita was consecrated forever to God</excerptum>
+    <excerptum>For another 50 years, this humble Daughter of Charity, a true witness of the love of God, lived in the community in Schio, engaged in various services: cooking, sewing, embroidery and attending to the door.</excerptum>
+    <excerptum>Mother Bakhita breathed her last on February 8, 1947 at the Canossian Convent, Schio</excerptum>
+    <excerptum>A crowd quickly gathered at the Convent to have a last look at their «Mother Moretta»</excerptum>
+  </fons>
+  <fons id="ss" opus="sedes" locus="Benedict XVI, Spe salvi 3" url="https://www.vatican.va/content/benedict-xvi/en/encyclicals/documents/hf_ben-xvi_enc_20071130_spe-salvi.html">
+    <excerptum>I am thinking of the African Josephine Bakhita, canonized by Pope John Paul II. She was born around 1869—she herself did not know the precise date—in Darfur in Sudan. At the age of nine, she was kidnapped by slave-traders, beaten till she bled, and sold five times in the slave-markets of Sudan.</excerptum>
+    <excerptum>as a result of this she bore 144 scars throughout her life. Finally, in 1882, she was bought by an Italian merchant for the Italian consul Callisto Legnani, who returned to Italy as the Mahdists advanced.</excerptum>
+    <excerptum>when she was about to be taken back to Sudan, Bakhita refused</excerptum>
+    <excerptum>On 8 December 1896, in Verona, she took her vows in the Congregation of the Canossian Sisters</excerptum>
+  </fons>
+  <fons id="ho" opus="sedes" locus="John Paul II, canonization homily, 1 October 2000" url="https://www.vatican.va/content/john-paul-ii/en/homilies/2000/documents/hf_jp-ii_hom_20001001_canonization.html">
+    <excerptum>1 October 2000, Canonization of Augustine Zhao Rong and 119 companions, Martyrs in China, María Josefa del Corazón de Jesús Sancho de Guerra, Katharine Mary Drexel and Josephine Bakhita</excerptum>
+    <excerptum>Abducted and sold into slavery at the tender age of seven, she suffered much at the hands of cruel masters.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="8 February">
+    <excerptum>Saint Josephine Bakhita, Virgin</excerptum>
+  </fons>
+</sanctus>

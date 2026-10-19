@@ -110,3 +110,20 @@ excerpt found verbatim in its source).
   words, the prose is spelled right.
 - Name trap: latina macros bit twice (`duplex` = double, `principale` =
   main as a field name) - the hook caught the second.
+- 2026-10-19 S1 DONE: workflow wf_1f171011-49e (planner + 14 extractor
+  batches of 16 + 14 reviewers; the first run lost 8 extractors and all
+  reviewers to a network outage on 10-18, resumed from cache). 223
+  records (222 by agents + agnes-of-rome), sancti/sanctorale.tsv joins
+  all 237 celebrations (14 with no saint: feasts of the Lord,
+  dedications, All Saints/Souls, Guardian Angels, days of prayer).
+  Reviewers: 18 sound as written, 204 fixed (typically: a sentence or
+  field whose excerpt did not quite state it - reworded or a supporting
+  excerpt added), 0 rejected. My checks: canon 223/223 clean, 4,368
+  excerpts all found verbatim in the mirror, the library's reference
+  check caught one dangling `fontes="... mr"` (elizabeth-of-portugal,
+  fixed); probatio_sancti_corpus `plena` is now required (marker
+  removed). Cost: ~7M subagent tokens in all (~30k per record).
+- Known limit: the excerpt check looks for an excerpt anywhere in the
+  source, not under the cited day/volume heading - one reviewer checked
+  every Martyrology locus by hand; a locus check is a possible tool
+  improvement before S2.

@@ -1,0 +1,67 @@
+<sanctus id="hildegard-of-bingen" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Hildegard of Bingen</nomen>
+  <nomen lingua="la" principale="verum" fontes="bu">Hildegardis</nomen>
+  <nomen lingua="it" fontes="cs">Ildegarda di Bingen</nomen>
+  <ortus annus="1098" locus="Böckelheim on the Nahe" fontes="ce bu"/>
+  <obitus annus="1179" locus="Rupertsberg near Bingen" fontes="ce"/>
+  <canonizatio modus="aequipollens" annus="2012" mensis="5" dies="10" papa="Benedict XVI" fontes="cs"/>
+  <festum calendarium="generale" mensis="9" dies="17" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="9" dies="17" fontes="mr"/>
+  <munus fontes="us mr">virgin</munus>
+  <munus fontes="bu">abbess</munus>
+  <munus fontes="dl">religious</munus>
+  <munus fontes="us dl">doctor of the Church</munus>
+  <patrocinium fontes="ce">Eibingen</patrocinium>
+  <descriptio>
+    <paragraphus fontes="ce bu cs">Hildegard was born in 1098 of a noble family, at Böckelheim on the Nahe according to the Catholic Encyclopedia, at Bermersheim according to the Dicastery. A sickly child, she was placed at eight with the recluse Jutta on the Disibodenberg, where she learned to read and sing the psalms in Latin, though never to write, and later took the Benedictine habit. When Jutta died in 1136 Hildegard became superior; as the community grew she moved to the Rupertsberg near Bingen with eighteen sisters in 1147 or 1148, and about 1165 founded a house at Eibingen.</paragraphus>
+    <paragraphus fontes="ce">She had visions from early childhood. At about forty she was commanded to make them known; a monk wrote them down, and the bishop and clergy of Mainz judged them to come from God. Her chief work, the Scivias, was begun in 1141 and took ten years. She also wrote on medicine and natural history, composed seventy hymns with melodies, kept a wide correspondence, and travelled widely, once to the emperor Frederick at Ingelheim. In her last year her convent lay under interdict for burying a once-excommunicated young man until she had it lifted. She died on the Rupertsberg in 1179.</paragraphus>
+    <paragraphus fontes="ce cs dl">In 1913 she had no formal canonization, though her name stood in the Roman Martyrology. The Dicastery for the Causes of Saints records an equipollent canonization on 10 May 2012, when Benedict XVI extended her liturgical cult to the universal Church; on 7 October 2012 he declared her a Doctor of the Church.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="17 September">
+    <excerptum>At Bingen, in the diocese of Mayence, St. Hildegarde, virgin.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. Hildegard" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Hildegard">
+    <excerptum>Born at Böckelheim on the Nahe, 1098; died on the Rupertsberg near Bingen, 1179; feast 17 September.</excerptum>
+    <excerptum>Hildegard was a weak and sickly child, and in consequence received but little education at home.</excerptum>
+    <excerptum>At the age of eight she was placed under the care of Jutta, sister of Count Meginhard, who lived as a recluse on the Disenberg (or Disibodenberg</excerptum>
+    <excerptum>She was taught to read and sing the Latin psalms, sufficient for the chanting of the Divine Office, but never learned to write. Eventually she was invested with the habit of St. Benedict and made her religious profession. Jutta died in 1136, and Hildegard was appointed superior.</excerptum>
+    <excerptum>She chose Rupertsberg near Bingen on the left bank of the Rhine</excerptum>
+    <excerptum>she settled in her new home with eighteen sisters in 1147 or 1148</excerptum>
+    <excerptum>Probably in 1165 she founded another convent at Eibingen</excerptum>
+    <excerptum>From her earliest years she was favoured with visions.</excerptum>
+    <excerptum>When about forty years of age Hildegard received a command to publish to the world what she saw and heard.</excerptum>
+    <excerptum>Then a monk was ordered to put in writing whatever she related</excerptum>
+    <excerptum>The writings were submitted to the bishop (Henry, 1145-53) and clergy of Mainz, who pronounced them as coming from God.</excerptum>
+    <excerptum>Many persons of all stations of life wrote to her and received answers, so that her correspondence is quite extensive.</excerptum>
+    <excerptum>Her great love for the Church and its interests caused her to make many journeys</excerptum>
+    <excerptum>on invitation she came to Ingelheim to see Emperor Frederick</excerptum>
+    <excerptum>In the last year of her life Hildegard had to undergo a very severe trial.</excerptum>
+    <excerptum>In the cemetery adjoining her convent a young man was buried who had once been under excommunication.</excerptum>
+    <excerptum>Sentence of interdict was placed on her convent by the chapter of Mainz</excerptum>
+    <excerptum>After much worry and correspondence she succeeded in having the interdict removed.</excerptum>
+    <excerptum>No formal canonization has ever taken place, but her name is in the Roman Martyrology</excerptum>
+    <excerptum>At this occasion the town of Eibingen chose her as patron.</excerptum>
+    <excerptum>the first and greatest work of St. Hildegard is called "Scivias"</excerptum>
+    <excerptum>She began it in 1141 and worked at it for ten years.</excerptum>
+    <excerptum>A collection of seventy hymns and their melodies.</excerptum>
+    <excerptum>It is in five books and treats of the general divisions of created things, of the human body and its ailments, of the causes, symptoms, and treatment of diseases.</excerptum>
+    <excerptum>It consists of nine books treating of plants, elements, trees, stones, fishes, birds, quadrupeds, reptiles, metals</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v09 Sept. 17 St. Hildegardis, V. Abbess">
+    <excerptum>ST. HILDEGARDIS, V. ABBESS. She was born of most noble parentage in 1098, in the county ef Spanheim</excerptum>
+  </fons>
+  <fons id="cs" opus="sedes" locus="Dicastero delle Cause dei Santi, Ildegarda di Bingen" url="https://www.causesanti.va/it/santi-e-beati/ildegarda-di-bingen.html">
+    <excerptum>Ildegarda di Bingen (1098-1179) Canonizzazione: - 10 maggio 2012 - Papa Benedetto XVI - Canonizzazione equipollente</excerptum>
+    <excerptum>Ildegarda è nata nel 1098 a Bermersheim</excerptum>
+    <excerptum>Il 10 maggio 2012 il Santo Padre ha iscritto Ildegarda di Bingen nel Calendario Generale dalla Chiesa e ne ha esteso il culto liturgico alla Chiesa Universale.</excerptum>
+  </fons>
+  <fons id="dl" opus="sedes" locus="Benedict XVI, Apostolic Letter proclaiming Saint Hildegard of Bingen a Doctor of the Universal Church, 7 October 2012" url="https://www.vatican.va/content/benedict-xvi/en/apost_letters/documents/hf_ben-xvi_apl_20121007_ildegarda-bingen.html">
+    <excerptum>APOSTOLIC LETTER Proclaiming Saint Hildegard of Bingen, professed nun of the Order of Saint Benedict, a Doctor of the Universal Church</excerptum>
+    <excerptum>Since this concerned a famous teacher of theology who had been the subject of many authoritative studies, I granted the dispensation from the measures prescribed by article 73 of the Apostolic Constitution Pastor Bonus.</excerptum>
+    <excerptum>I declare Saint John of Avila, diocesan priest, and Saint Hildegard of Bingen, professed nun of the Order of Saint Benedict, to be Doctors of the Universal Church.</excerptum>
+    <excerptum>Given in Rome, at Saint Peter’s, under the ring of the Fisherman, on 7 October 2012</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="17 September">
+    <excerptum>Saint Hildegard of Bingen, Virgin and Doctor of the Church</excerptum>
+  </fons>
+</sanctus>

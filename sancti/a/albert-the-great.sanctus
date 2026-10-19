@@ -1,0 +1,51 @@
+<sanctus id="albert-the-great" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Albert the Great</nomen>
+  <nomen lingua="la" principale="verum" fontes="ce ben">Albertus Magnus</nomen>
+  <ortus annus="1206" circa="verum" locus="Lauingen, Swabia" fontes="ce"/>
+  <obitus annus="1280" mensis="11" dies="15" locus="Cologne" fontes="ce ben"/>
+  <beatificatio annus="1622" papa="Gregory XV" fontes="ce"/>
+  <canonizatio modus="formalis" annus="1931" papa="Pius XI" fontes="ben"/>
+  <festum calendarium="generale" mensis="11" dies="15" gradus="memoria-ad-libitum" fontes="us"/>
+  <munus fontes="us ce ben">bishop</munus>
+  <munus fontes="us ben">doctor of the Church</munus>
+  <munus fontes="ce ben">Dominican</munus>
+  <munus fontes="ce">theologian</munus>
+  <patrocinium fontes="ben">natural sciences</patrocinium>
+  <descriptio>
+    <paragraphus fontes="ce ben">Albert, eldest son of the Count of Bollstädt, was born at Lauingen in Swabia about 1206, though many historians give 1193. He studied at Padua and in 1223 joined the Dominicans, drawn by the preaching of Blessed Jordan of Saxony. He taught theology in several German houses, took his doctorate at Paris, and there counted Thomas Aquinas among his hearers, whose future greatness he foretold; in 1248 he took Thomas with him to the new house of studies at Cologne. He was elected provincial of his order in Germany in 1254, was Bishop of Regensburg from 1260 to 1262, and then returned to teaching at Cologne. He took part in the Council of Lyons in 1274, and in 1277, when there was a move to condemn the writings of Thomas, he went to Paris to defend the memory of his disciple.</paragraphus>
+    <paragraphus fontes="ce ben">He was called the Universal Doctor for a learning that reached every branch of knowledge of his day; he wrote treatises on almost every subject, cultivated the natural sciences from astronomy to zoology, and opened medieval philosophy and theology to Aristotle. He died at Cologne on 15 November 1280. Beatified in 1622, he was canonized in 1931 by Pius XI, who proclaimed him a Doctor of the Church, and Pius XII named him patron of the natural sciences.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="Bl. Albertus Magnus" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/Bl._Albertus_Magnus">
+    <excerptum>Albertus Magnus, Blessed (Albert the Great), scientist, philosopher, and theologian, born c. 1206; d. at Cologne, 15 November, 1280.</excerptum>
+    <excerptum>He is called "the Great", and "Doctor Universalis" (Universal Doctor), in recognition of his extraordinary genius and extensive knowledge, for he was proficient in every branch of learning cultivated in his day</excerptum>
+    <excerptum>Albert, eldest son of the Count of Bollstädt, was born at Lauingen, Swabia, in the year 1205 or 1206, though many historians give it as 1193.</excerptum>
+    <excerptum>As a youth he was sent to pursue his studies at the University of Padua</excerptum>
+    <excerptum>In the year 1223 he joined the Order of St. Dominic, being attracted by the preaching of Blessed Jordan of Saxony</excerptum>
+    <excerptum>After completing his studies he taught theology at Hildesheim, Freiburg (Breisgau), Ratisbon, Strasburg, and Cologne.</excerptum>
+    <excerptum>when, in 1245, he was ordered to repair to Paris.</excerptum>
+    <excerptum>There he received the Doctor's degree in the university which, above all others, was celebrated as a school of theology.</excerptum>
+    <excerptum>he counted amongst his hearers St. Thomas Aquinas, then a silent, thoughtful youth, whose genius he recognized and whose future greatness he foretold.</excerptum>
+    <excerptum>In 1254 Albert was elected Provincial of his Order in Germany.</excerptum>
+    <excerptum>In the year 1260 he was appointed Bishop of Ratisbon.</excerptum>
+    <excerptum>Albert governed the diocese until 1262, when, upon the acceptance of his resignation, he voluntarily resumed the duties of a professor in the Studium at Cologne.</excerptum>
+    <excerptum>Something of his old vigour and spirit returned in 1277 when it was announced that Stephen Tempier and others wished to condemn the writings of St. Thomas</excerptum>
+    <excerptum>he journeyed to Paris to defend the memory of his disciple.</excerptum>
+    <excerptum>should have been able to compose a veritable encyclopedia, containing scientific treatises on almost every subject</excerptum>
+    <excerptum>Albert was assiduous in cultivating the natural sciences; he was an authority on physics, geography, astronomy, mineralogy, chemistry (alchimia), zoölogy, physiology</excerptum>
+    <excerptum>He was beatified by Pope Gregory XV in 1622</excerptum>
+  </fons>
+  <fons id="ben" opus="sedes" locus="Benedict XVI, General Audience of 24 March 2010: Saint Albert the Great" url="https://www.vatican.va/content/benedict-xvi/en/audiences/2010/documents/hf_ben-xvi_aud_20100324.html">
+    <excerptum>In 1248 he was charged with opening a theological studium at Cologne</excerptum>
+    <excerptum>He brought with him from Paris an exceptional student, Thomas Aquinas.</excerptum>
+    <excerptum>From 1260 to 1262, Albert exercised this ministry with unflagging dedication</excerptum>
+    <excerptum>he did his utmost during the Second Council of Lyons, in 1274, summoned by Pope Gregory X</excerptum>
+    <excerptum>He died in his cell at the convent of the Holy Cross, Cologne, in 1280</excerptum>
+    <excerptum>The Church proposed him for the worship of the faithful with his beatification in 1622 and with his canonization in 1931, when Pope Pius XI proclaimed him Doctor of the Church.</excerptum>
+    <excerptum>Pope Pius XII named him the patron of the natural sciences.</excerptum>
+    <excerptum>St Albert the Great opened the door to the complete acceptance in medieval philosophy and theology of Aristotle's philosophy</excerptum>
+    <excerptum>we now turn to Saint Albert, better known as Albertus Magnus, Albert the Great.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="15 November">
+    <excerptum>Saint Albert the Great, Bishop and Doctor of the Church</excerptum>
+  </fons>
+</sanctus>

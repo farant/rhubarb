@@ -8,6 +8,8 @@
 # Usus: ./tools/sancti_fontes_capere.sh            fontes fixi omnes
 #       ./tools/sancti_fontes_capere.sh ce TITULUS  pagina CE 1913 una
 #                                                   (titulus Wikisource)
+#       ./tools/sancti_fontes_capere.sh ce-quaerere PRAEFIXUM
+#                                                   tituli CE congruentes
 # Exitus: 0 sanum · 1 captio fracta · 2 usus pravus
 set -u
 cd "$(dirname "${BASH_SOURCE[0]}")/.." || exit 2
@@ -26,6 +28,15 @@ capere () {   # capere VIA URL - semel; vacuum aut fractum non servatur
     fi
 }
 
+if [ "${1:-}" = "ce-quaerere" ]; then
+    # tituli articulorum CE 1913 praefixo incipientes (Wikisource)
+    [ -n "${2:-}" ] || { echo "usus: $0 ce-quaerere PRAEFIXUM" >&2; exit 2; }
+    curl -sfL -m 60 "https://en.wikisource.org/w/api.php?action=query&list=prefixsearch&pslimit=20&format=json&pssearch=Catholic_Encyclopedia_(1913)/$(python3 -I -c 'import sys,urllib.parse; print(urllib.parse.quote(sys.argv[1]))' "$2")" \
+        | python3 -I -c 'import json,sys
+for x in json.load(sys.stdin)["query"]["prefixsearch"]:
+    print(x["title"].split("/", 1)[1])' || exit 1
+    exit 0
+fi
 if [ "${1:-}" = "ce" ]; then
     [ -n "${2:-}" ] || { echo "usus: $0 ce TITULUS" >&2; exit 2; }
     t="${2// /_}"

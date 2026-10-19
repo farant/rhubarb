@@ -1,0 +1,41 @@
+<sanctus id="turibius-of-mogrovejo" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Turibius of Mogrovejo</nomen>
+  <nomen lingua="es" fontes="ce">Toribio Alfonso Mogrovejo</nomen>
+  <ortus annus="1538" mensis="11" dies="16" locus="Mayorga, León, Spain" fontes="ce bu"/>
+  <obitus annus="1606" mensis="3" dies="23" locus="Sana, Peru" fontes="ce bu"/>
+  <beatificatio annus="1697" papa="Innocent XI" fontes="ce"/>
+  <canonizatio modus="formalis" annus="1726" papa="Benedict XIII" fontes="ce bu"/>
+  <festum calendarium="generale" mensis="3" dies="23" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="3" dies="23" fontes="mr"/>
+  <munus fontes="us ce mr">bishop</munus>
+  <descriptio>
+    <paragraphus fontes="ce bu">Turibius was born in the kingdom of León in 1538, of a noble family. Highly educated, he taught law at Salamanca and held high office under Philip II (Grand Inquisitor according to the Catholic Encyclopedia, chief judge at Granada according to Butler); though a layman, he was then chosen archbishop of Lima. He pleaded his incapacity and the canons that forbid raising laymen to such dignities, but submitted, received holy orders, was consecrated bishop, and reached Peru in 1581.</paragraphus>
+    <paragraphus fontes="ce mr bu">He travelled the immense diocese three times, mostly on foot and often alone, baptizing and confirming nearly half a million people, among them Rose of Lima, Francis Solano and Martin de Porres. He built roads, schools, chapels, hospitals and convents, founded at Lima in 1591 the first seminary in America, and held thirteen diocesan synods and three provincial councils. The Martyrology credits him with spreading faith and church discipline through America. Falling ill on visitation, he died on 23 March 1606 at Sana (Butler: Santa) in Peru. He was beatified by Innocent XI (1697 in the Catholic Encyclopedia, 1679 in Butler) and canonized by Benedict XIII in 1726.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="23 March">
+    <excerptum>At Lima, in Peru, the archbishop St. Turibius, through whose labors faith and</excerptum>
+    <excerptum>astical discipline were diffused through America.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v03 March 23 Saint Alphonsus Turibius, Archbishop of Lima, Confessor">
+    <excerptum>was second son to the lord of Mogrobejo, and born in the kingdom of Leon, on the sixteenth Of November, in 1538.</excerptum>
+    <excerptum>honoured by him with several dignities, and male president or chief judge at Granada.</excerptum>
+    <excerptum>in which he pleaded his incapacity, and other im- pediments, and laid great stress on the canons which forbid laymen to be</excerptum>
+    <excerptum>he received the four minor orders on four successive Sundays</excerptum>
+    <excerptum>in 1606, during the visitation of his diocess, fell sick at Santa, a town one hundred and ten leagues. distant from Lima.</excerptum>
+    <excerptum>He died on the twenty-third of March</excerptum>
+    <excerptum>beatified by Innocent XI. in 1679,“ and solemnly canonized by pope Benedict XIII. in 1726.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. Toribio Alfonso Mogrovejo" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Toribio_Alfonso_Mogrovejo">
+    <excerptum>Archbishop of Lima; b. at Mayorga, León, Spain, 1538; d. near Lima Peru, 23 March 1606. Of noble family and highly educated, he was professor of laws at the University of Salamanca</excerptum>
+    <excerptum>his appointment as Grand Inquisitor of Spain by Philip II and, though not of ecclesiastical rank, to his subsequent selection for the Archbishopric of Peru.</excerptum>
+    <excerptum>He received Holy Orders in 1578 and two years later was consecrated bishop. He arrived at Payta, Peru, 600 miles from Lima, on 24 May, 1581.</excerptum>
+    <excerptum>Three times he traversed the eighteen thousand miles of his diocese, generally on foot, defenceless and often alone</excerptum>
+    <excerptum>baptizing and confirming nearly one half million souls, among them St. Rose of Lima, St. Francis Solano, Blessed Martin of Porres, and Blessed Masias.</excerptum>
+    <excerptum>He built roads, school houses, and chapels innumerable, and many hospitals and convents, and founded the first American Seminary at Lima in 1591. He assembled thirteen diocesan synods and three provincial councils.</excerptum>
+    <excerptum>At Pacasmayo he contracted fever, but continued labouring to the last, arriving at Sana in a dying condition. Dragging himself to the sanctuary he received the Viaticum, expiring shortly after.</excerptum>
+    <excerptum>He was beatified by Innocent XI in 1697 and canonized by Benedict XIII in 1726.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="23 March">
+    <excerptum>Saint Turibius of Mogrovejo, Bishop</excerptum>
+  </fons>
+</sanctus>

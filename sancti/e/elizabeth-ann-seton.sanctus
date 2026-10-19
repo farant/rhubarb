@@ -1,0 +1,38 @@
+<sanctus id="elizabeth-ann-seton" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Elizabeth Ann Seton</nomen>
+  <nomen lingua="en" fontes="sedes">Elizabeth Ann Bayley Seton</nomen>
+  <ortus annus="1774" mensis="8" dies="28" locus="New York City" fontes="ce"/>
+  <obitus annus="1821" mensis="1" dies="4" locus="Emmitsburg, Maryland" fontes="ce"/>
+  <canonizatio modus="formalis" annus="1975" mensis="9" dies="14" papa="Paul VI" fontes="sedes"/>
+  <festum calendarium="usa" mensis="1" dies="4" gradus="memoria" fontes="us"/>
+  <munus fontes="sedes">widow</munus>
+  <munus fontes="us sedes">religious</munus>
+  <munus fontes="ce sedes">foundress</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Elizabeth Ann Bayley was born in New York City on 28 August 1774, of non-Catholic parents of high position. In 1794 she married William Magee Seton of that city. When his health failed they sailed for Italy, where he died at Pisa on 27 December 1803; staying with Catholic families there, she first began to see the beauty of the Catholic faith. Back in New York she was received into the Church on Ash Wednesday, 14 March 1805.</paragraphus>
+    <paragraphus fontes="ce sedes">At the suggestion of Father Dubourg she went to Baltimore in 1808 to open a school for girls; companions joined her, and the community moved to Emmitsburg, Maryland; she and eighteen sisters made their vows on 19 July 1813. A wife, mother and widow, she founded the first religious congregation of women in the United States, the Sisters of Charity of Saint Joseph's, and was its first superior. She died at Emmitsburg on 4 January 1821. Paul VI canonized her on 14 September 1975, calling her the first daughter of the United States to be glorified as a saint.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="Elizabeth Ann Seton" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/Elizabeth_Ann_Seton">
+    <excerptum>Foundress and first superior of the Sisters of Charity in the United States, b. in New York City, 28 Aug., 1774, of non-Catholic parents of high position; d. at Emmitsburg, Maryland, 4 Jan., 1821.</excerptum>
+    <excerptum>She was married on 25 Jan., 1794, in St. Paul's Church, New York, to William Magee Seton, of that city</excerptum>
+    <excerptum>In 1803 Mr. Seton's health required a sea voyage; he started with his wife and eldest daughter for Leghorn</excerptum>
+    <excerptum>until his death at Pisa (27 Dec., 1803)</excerptum>
+    <excerptum>While with these Catholic families and in the churches of Italy Mrs. Seton first began to see the beauty of the Catholic Faith.</excerptum>
+    <excerptum>on Ash Wednesday, 14 March, 1805, she was received into the Church by Father Matthew O'Brien in St. Peter's Church, Barclay St., New York.</excerptum>
+    <excerptum>Father Dubourg, S. S., from St. Mary's Seminary, Baltimore, met her in New York, and suggested opening in Baltimore a school for girls.</excerptum>
+    <excerptum>she and her daughters reached Baltimore on Corpus Christi, 1808.</excerptum>
+    <excerptum>soon other postulants arrived, while the little school had all the pupils it could accommodate.</excerptum>
+    <excerptum>the community was transferred to Emmitsburg to take charge of the new institution.</excerptum>
+    <excerptum>Mother Seton and the eighteen sisters made their vows on 19 July, 1813.</excerptum>
+  </fons>
+  <fons id="sedes" opus="sedes" locus="Paul VI, homily for the canonization, 14 September 1975" url="https://www.vatican.va/content/paul-vi/en/homilies/1975/documents/hf_p-vi_hom_19750914.html">
+    <excerptum>14 September 1975: Canonization of Elisabeth Ann Seton, Foundress of the Congregation of the Sisters of Charity of Saint Joseph's</excerptum>
+    <excerptum>CANONIZATION OF ELISABETH ANN SETON HOMILY OF THE HOLY FATHER PAUL VI 14 September 1975</excerptum>
+    <excerptum>Elizabeth Ann Bayley Seton is a Saint! She is the first daughter of the United States of America to be glorified with this incomparable attribute!</excerptum>
+    <excerptum>Elizabeth Seton was the mother of a family and at the same time the foundress of the first Religious Congregation of women in the United States.</excerptum>
+    <excerptum>her personal and extraordinary contribution as a woman -a wife, a mother, a widow, and a religious.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="4 January">
+    <excerptum>Saint Elizabeth Ann Seton, Religious</excerptum>
+  </fons>
+</sanctus>

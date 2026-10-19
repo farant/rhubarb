@@ -1,0 +1,40 @@
+<sanctus id="bernard-of-clairvaux" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Bernard of Clairvaux</nomen>
+  <ortus annus="1090" locus="Fontaines, near Dijon" fontes="ce"/>
+  <obitus annus="1153" mensis="8" locus="Clairvaux" fontes="ce mr"/>
+  <canonizatio modus="formalis" annus="1174" mensis="1" dies="18" papa="Alexander III" fontes="ce"/>
+  <festum calendarium="generale" mensis="8" dies="20" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="8" dies="20" fontes="mr"/>
+  <munus fontes="us ce mr">abbot</munus>
+  <munus fontes="us ce mr">doctor of the Church</munus>
+  <munus fontes="ce">religious</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Bernard was born in 1090 at Fontaines, near Dijon, to a family of the high nobility of Burgundy. About 1113 he entered the monastery of Cîteaux with thirty young noblemen, and some three years later he was sent at the head of a band of monks to found Clairvaux in the Diocese of Langres, which he named on 25 June 1115. The house grew so fast that it sent out new foundations; his father and all his brothers joined him there. He founded one hundred and sixty-three monasteries across Europe, and by his death they numbered three hundred and forty-three.</paragraphus>
+    <paragraphus fontes="ce mr">He was drawn far beyond the cloister: he was secretary of the Council of Troyes in 1128, judged in favour of Innocent II in the schism of 1130, opposed the teaching of Abelard at the Council of Sens, and at the pope's command preached a new Crusade, whose failure saddened his last years. A disciple of his became pope as Eugenius III, for whom he wrote the Book of Consideration; his writings also include sermons on the Canticle of Canticles. He died at Clairvaux in August 1153 (the Catholic Encyclopedia gives 21 August; the Martyrology keeps him on the 20th). Alexander III canonized him in 1174 and Pius VIII declared him a Doctor of the Church.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Bernard of Clairvaux" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Bernard_of_Clairvaux">
+    <excerptum>Born in 1090, at Fontaines, near Dijon, France; died at Clairvaux, 21 August, 1153.</excerptum>
+    <excerptum>His parents were Tescelin, lord of Fontaines, and Aleth of Montbard, both belonging to the highest nobility of Burgundy.</excerptum>
+    <excerptum>St. Stephen had just succeeded him (1113) as third Abbot of Cîteaux, when Bernard with thirty young noblemen of Burgundy, sought admission into the order.</excerptum>
+    <excerptum>Three years later, St. Stephen sent the young Bernard, at the head of a band of monks, the third to leave Cîteaux, to found a new house at Vallée d'Absinthe, or Valley of Bitterness, in the Diocese of Langres. This Bernard named Claire Vallée, of Clairvaux, on the 25th of June, 1115</excerptum>
+    <excerptum>His father, the aged Tescelin, and all his brothers entered Clairvaux as religious</excerptum>
+    <excerptum>Clairvaux becoming too small for the religious who crowded there, it was necessary to send out bands to found new houses.</excerptum>
+    <excerptum>In the year 1128, Bernard assisted at the Council of Troyes</excerptum>
+    <excerptum>The bishops made Bernard secretary of the council, and charged him with drawing up the synodal statutes.</excerptum>
+    <excerptum>On the death of Honorius II, which occurred on the 14th of February, 1130, a schism broke out in the Church by the election of two popes, Innocent II and Anacletus II.</excerptum>
+    <excerptum>was chosen to judge between the rival popes. He decided in favour of Innocent II</excerptum>
+    <excerptum>Bernard, informed of this by William of St. Thierry, wrote to Abelard who answered in an insulting manner. Bernard then denounced him to the pope who caused a general council to be held at Sens.</excerptum>
+    <excerptum>Bernard saw one of his disciples, Bernard of Pisa, Abbott of Three Fountains, and known thereafter as Eugenius III, raised to the Chair of St. Peter. Bernard sent him, at his own request, various instructions which compose the "Book of Consideration"</excerptum>
+    <excerptum>The pope commissioned Bernard to preach a new Crusade and granted the same indulgences for it which Urban II had accorded to the first.</excerptum>
+    <excerptum>The last years of Bernard's life were saddened by the failure of the Crusade he had preached</excerptum>
+    <excerptum>He wrote at this time his sermons on the "Canticle of Canticles".</excerptum>
+    <excerptum>He founded one hundred and sixty-three monasteries in different parts of Europe; at his death they numbered three hundred and forty-three.</excerptum>
+    <excerptum>He was the first Cistercian monk placed on the calendar of saints and was canonized by Alexander III, 18 January 1174. Pope Pius VIII bestowed on him the title of Doctor of the Church.</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="20 August">
+    <excerptum>the territory of Langres, the demise of St. Bernard, first abbot of Clairvaux, illustrious for virtues, learning, and miracles. He was declared Doctor of the universal church by the Sovereign Pontiff, Pius VIII.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="20 August">
+    <excerptum>Saint Bernard, Abbot and Doctor of the Church</excerptum>
+  </fons>
+</sanctus>

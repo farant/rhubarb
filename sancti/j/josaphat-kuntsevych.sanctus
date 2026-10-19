@@ -1,0 +1,49 @@
+<sanctus id="josaphat-kuntsevych" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Josaphat Kuntsevych</nomen>
+  <nomen lingua="en" fontes="ce">Josaphat Kuncevyc</nomen>
+  <ortus annus="1580" circa="verum" locus="Volodymyr, Volyn" fontes="ce"/>
+  <obitus annus="1623" mensis="11" dies="12" locus="Vitebsk" martyrium="verum" fontes="ce mr12"/>
+  <beatificatio annus="1643" fontes="ce"/>
+  <canonizatio modus="formalis" annus="1867" papa="Pius IX" fontes="ce mr12"/>
+  <festum calendarium="generale" mensis="11" dies="12" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="11" dies="12" nota="his martyrdom" fontes="mr12"/>
+  <festum calendarium="martyrologium" mensis="11" dies="14" nota="festival" fontes="mr14"/>
+  <munus fontes="us ce">bishop</munus>
+  <munus fontes="mr12 ce">archbishop</munus>
+  <munus fontes="us ce mr14">martyr</munus>
+  <munus fontes="ce mr12">Basilian monk</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Josaphat, baptized Johannes, was born at Volodymyr in Volyn in 1580, or 1584 according to some writers. His father, of noble Ruthenian stock, was a merchant and town councillor. As a boy he learned almost the whole Church Slavonic breviary and read it daily. Apprenticed to a merchant at Vilna, he turned down his master's offer of his fortune and his daughter's hand, and in 1604 entered the Basilian monastery of the Trinity at Vilna, where, under Benjamin Rutski, the renewal of Ruthenian religious life began. He was ordained priest in 1609, consecrated Bishop of Vitebsk on 12 November 1617 with the right to succeed to Polotsk, and became archbishop in 1618.</paragraphus>
+    <paragraphus fontes="ce mr12">He served in the years after the Union of Brest of 1596, which divided the Ruthenian Church between those united with Rome and those who remained in schism. He restored churches, gave his clergy a catechism and rules of life, held synods, and preached and heard confessions in fields, hospitals and prisons, while keeping severe fasts. The hatred of his opponents grew, and, refusing a chance to flee, he was killed at Vitebsk on 12 November 1623 by an axe-stroke and a bullet; the Martyrology says he died through hatred of Catholic unity. He was beatified in 1643 and canonized by Pius IX in 1867.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Josaphat Kuncevyc" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Josaphat_Kuncevyc">
+    <excerptum>Martyr, born in the little town of Volodymyr in Lithuania (Volyn) in 1580 or — according to some writers — 1584; died at Vitebsk, Russia, 12 November, 1623.</excerptum>
+    <excerptum>After the Union of Berest' in 1596 the Ruthenian Church was divided into two contending parties — the Uniates and those who persevered in schism — each with its own hierarchy.</excerptum>
+    <excerptum>Although of a noble Ruthenian stock, Josaphat's father had devoted himself to commercial pursuits, and held the office of town-councilor.</excerptum>
+    <excerptum>Johannes was the saint's baptismal name</excerptum>
+    <excerptum>learned almost the entire casoslov (breviary), which from this period he began to read daily.</excerptum>
+    <excerptum>he was apprenticed to the merchant Popovyc at Vilna.</excerptum>
+    <excerptum>Popovyc offered him his entire fortune and his daughter's hand. But Josaphat's love for the religious life never wavered.</excerptum>
+    <excerptum>At the age of twenty-four (1604) he entered the Basilian monastery of the Trinity at Vilna.</excerptum>
+    <excerptum>Benjamin Rutski), under whose direction he advanced in learning and in virtue.</excerptum>
+    <excerptum>under Rutski — who had meanwhile been ordained priest — there began the regeneration of religious life among the Ruthenians.</excerptum>
+    <excerptum>In 1609, after private study under the Jesuit Fabricius, Josaphat was ordained priest.</excerptum>
+    <excerptum>on 12 November, 1617, was reluctantly consecrated Bishop of Vitebsk, with right of succession to the Archbishopric of Polotsk. He became archbishop in 1618.</excerptum>
+    <excerptum>it also witnessed the steady growth of the hatred of the schismatic party. Finally on 12 November, 1623, an axe-stroke and a bullet brought Josaphat his martyr's crown.</excerptum>
+    <excerptum>in 1643 — twenty years after his death — Josaphat was beatified. His canonization took place in 1867.</excerptum>
+    <excerptum>Never eating meat, he fasted much, wore a hair-shirt and an angular chain, slept on the bare floor</excerptum>
+    <excerptum>Not alone in the church did he preach and hear confessions, but likewise in the fields, hospitals, prisons, and even on his journeys.</excerptum>
+    <excerptum>As archbishop he restored the churches; issued a catechism to the clergy with instructions that it should be learned by heart; composed rules for the priestly life</excerptum>
+    <excerptum>assembled synods in various towns in the dioceses</excerptum>
+    <excerptum>He awaited death with a certain yearning, refusing to avail himself of the opportunity of flight afforded him.</excerptum>
+  </fons>
+  <fons id="mr12" opus="mr1916" locus="12 November">
+    <excerptum>At Witebsk, in Poland, the martyrdom of St. Josaphat, of the Order of St. Basil, archbishop of Polotzk, who was cruelly murdered by the schismatics, through hatred of Catholic unity and truth. He was cononized by Pius IX. in 1867.</excerptum>
+  </fons>
+  <fons id="mr14" opus="mr1916" locus="14 November">
+    <excerptum>HE festival of St. Josaphat, bishop and martyr</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="12 November">
+    <excerptum>Saint Josaphat, Bishop and Martyr</excerptum>
+  </fons>
+</sanctus>

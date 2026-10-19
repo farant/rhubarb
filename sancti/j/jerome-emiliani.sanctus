@@ -1,0 +1,50 @@
+<sanctus id="jerome-emiliani" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Jerome Emiliani</nomen>
+  <nomen lingua="alia" fontes="bu">Jerom Aemiliani</nomen>
+  <ortus annus="1481" locus="Venice" fontes="ce bu"/>
+  <obitus annus="1537" mensis="2" dies="8" locus="Somasca" fontes="ce bu"/>
+  <canonizatio modus="formalis" annus="1767" papa="Clement XIII" fontes="ce bu mr2"/>
+  <beatificatio annus="1747" papa="Benedict XIV" fontes="ce bu mr2"/>
+  <festum calendarium="generale" mensis="2" dies="8" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="2" dies="8" nota="dies obitus" fontes="mr"/>
+  <festum calendarium="martyrologium" mensis="7" dies="20" nota="festum" fontes="mr2"/>
+  <munus fontes="mr bu ce">founder</munus>
+  <munus fontes="bu">soldier</munus>
+  <descriptio>
+    <paragraphus fontes="ce bu">Jerome was born at Venice in 1481 to a patrician family, the son of Angelo Emiliani (called Miani), and served as a soldier from his youth. In 1508 he defended Castelnuovo against the League of Cambrai, was taken prisoner and chained in a dungeon, and after a liberation he held to be miraculous he went on pilgrimage to Our Lady of Treviso and hung up his chains before her altar. Returning to Venice, he gave himself to prayer, study and works of charity; the Catholic Encyclopedia says he was ordained priest in 1518.</paragraphus>
+    <paragraphus fontes="ce bu mr">In the plague and famine of 1528 he gathered orphans into a rented house and cared for them at his own cost. He went on to found orphanages at Brescia and Bergamo, a hospital at Verona, and a home for penitent women, and in 1532 founded a religious society with its mother house at Somasca, between Milan and Bergamo. He caught a disease while serving the sick and died at Somasca on 8 February 1537. Paul III approved his community in 1540; Butler says it was then declared a religious order, while the Catholic Encyclopedia says it was raised to that rank later by Pius V. Benedict XIV beatified him in 1747 and Clement XIII canonized him in 1767; the Martyrology keeps his feast on 20 July.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="8 February">
+    <excerptum>Also, St. Jerome 2Emiliani, confessor, founder of the Congregation of Somascha, who slept in the Lord on the 8th of this month. He was numbered among the Saints by Clement XIII., his feast being assigned to the 20th of July.</excerptum>
+  </fons>
+  <fons id="mr2" opus="mr1916" locus="20 July">
+    <excerptum>festival of St. Jerome JEmiliani, confessor, founder of the Congergation of Somascha. Gaining renown for many miracles during his life and after his death, he was inscribed among the beatified by Benedict XIV., and canonized by Clement XIII.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v07 July 20 St. Jerom Aemiliani, C.">
+    <excerptum>He was born at Venice of a patrician family ; and, in the most troublesome times of the republic, served in the troops from his childhood.</excerptum>
+    <excerptum>Whilst he was governor of the new castle in the mountains of Tarviso, he was taken prisoner, cast into a dungeon, and loaded with chains.</excerptum>
+    <excerptum>being delivered by the miraculous protection of the mother of God, arriving at Tarviso, he hung up his chains before an altar</excerptum>
+    <excerptum>returning to Venice devoted himself to the exercises of prayer and all virtues. At that time a famine and a contagious distemper having reduced many families to the greatest distress</excerptum>
+    <excerptum>was particularly moved with compassion for abandoned orphans. These he gathered in a house which he hired, clothed and fed them at his own expense</excerptum>
+    <excerptum>By the advice of St. Cajetan and others, he passed to the continent and erected like hospitals for orphans at Brescia, Bergamo, and other places; and others for_the reception of penitent women.</excerptum>
+    <excerptum>At Somascha on the frontiers of the. Venetian dominions between Bergamo and Milan, he founded a house</excerptum>
+    <excerptum>From this house it took its name</excerptum>
+    <excerptum>The holy founder died at Somascha on</excerptum>
+    <excerptum>the eighth of February 1537, of a contagious distemper which he had caught by attending the sick. He was beatified by Benedict XIV; and canonized by Clement XIII.</excerptum>
+    <excerptum>in 1540, his Congregation was declared a religious Order by Paul ILI.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. Jerome Emiliani" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Jerome_Emiliani">
+    <excerptum>Founder of the Order of Somascha; b. at Venice, 1481; d. at Somascha, 8 Feb., 1537; feast, 20 July; son of Angelo Emiliani (popularly called Miani)</excerptum>
+    <excerptum>joined the army, and in 1508 defended Castelnuovo against the League of Cambray. Taken prisoner and miraculously liberated, he made a pilgrimage to the shrine of Our Lady of Treviso, in fulfillment of a vow.</excerptum>
+    <excerptum>All his spare time was devoted to the study of theology and to works of charity. After his ordination to the priesthood in 1518</excerptum>
+    <excerptum>In the year of plague and famine (1528), he seemed to be everywhere, and showed his zeal especially for the orphans</excerptum>
+    <excerptum>In 1531 he went to Verona and induced the citizens to build a hospital; at Brescia he erected an orphanage, at Bergamo one for boys and another for girls. Here also he founded the first home for fallen women who wished to do penance.</excerptum>
+    <excerptum>in 1532 Jerome founded a religious society, placing the motherhouse at Somascha, a secluded hamlet between Milan and Bergamo.</excerptum>
+    <excerptum>He obtained the approval (1540) of Paul III.</excerptum>
+    <excerptum>St. Pius V raised it to the dignity of a religious order, according to the Rule of St. Augustine</excerptum>
+    <excerptum>contracting a disease at Bergamo, he died at Somascha. He was beautified by Benedict XIV in 1747, and canonized by Clement XIII in 1767.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="8 February">
+    <excerptum>Saint Jerome Emiliani</excerptum>
+  </fons>
+</sanctus>

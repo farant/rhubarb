@@ -1,0 +1,42 @@
+<sanctus id="romuald" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Romuald</nomen>
+  <ortus annus="950" circa="verum" locus="Ravenna" fontes="ce"/>
+  <obitus annus="1027" mensis="6" dies="19" locus="Val-di-Castro" fontes="ce"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="6" dies="19" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="6" dies="19" fontes="mr"/>
+  <festum calendarium="martyrologium" mensis="2" dies="7" fontes="mr2"/>
+  <munus fontes="mr2 us">abbot</munus>
+  <munus fontes="ce mr">hermit</munus>
+  <munus fontes="mr mr2">founder</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Romuald was born at Ravenna, probably about 950; St. Peter Damian, his first biographer, made him one hundred and twenty at his death, which would put his birth about 907, but most modern writers reject this. After a careless youth, at twenty he was horrified when his father killed an enemy in a duel, and he fled to the abbey of Sant'Apollinare in Classe and became a monk. Finding its observance too lax, he went to Venice to live under the hermit Marinus, and about 978 the two built a hermitage beside the monastery of Cuxa in Catalonia, to which the Doge Pietro Orseolo I had fled.</paragraphus>
+    <paragraphus fontes="ce mr">For some thirty years he wandered through Italy founding monasteries and hermitages. On land at Camaldoli, in the diocese of Arezzo, he built five hermit cells, which with the monastery at Fontebuono became the mother house of the Camaldolese Order. He died alone in his cell at Val-di-Castro on 19 June 1027, as he had foretold. The Martyrology praises him for restoring the relaxed monastic discipline of Italy. In 1595 his feast was fixed on 7 February, the day his relics were translated, and extended to the whole Church; the Martyrology names him on both days.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Romuald" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Romuald">
+    <excerptum>Born at Ravenna, probably about 950; died at Val-di-Castro, 19 June, 1027.</excerptum>
+    <excerptum>St. Peter Damian, his first biographer, and almost all the Camaldolese writers assert that St. Romuald's age at his death was one hundred and twenty, and that therefore he was born about 907. This is disputed by most modern writers.</excerptum>
+    <excerptum>In his youth Romuald indulged in the usual thoughtless and even vicious life of the tenth-century noble</excerptum>
+    <excerptum>At the age of twenty, struck with horror because his father had killed an enemy in a duel, he fled to the Abbey of San Apollinare-in-Classe and after some hesitation entered religion.</excerptum>
+    <excerptum>still was not strict enough in its observance to satisfy Romuald.</excerptum>
+    <excerptum>permission to retire to Venice, where he placed himself under the direction of a hermit named Marinus and lived a life of extraordinary severity.</excerptum>
+    <excerptum>About 978, Pietro Orseolo I, Doge of Venice</excerptum>
+    <excerptum>Guarinus, Abbot of San Miguel-de-Cuxa, in Catalonia</excerptum>
+    <excerptum>fled to Cuxa, where he took the habit of St. Benedict, while Romuald and Marinus erected a hermitage close to the monastery.</excerptum>
+    <excerptum>For the next thirty years St. Romuald seems to have wandered about Italy, founding many monasteries and hermitages.</excerptum>
+    <excerptum>whence he moved into the Diocese of Arezzo. Here, according to the legend, a certain Maldolus</excerptum>
+    <excerptum>gave him some land, afterwards known as the Campus Maldoli, or Camaldoli.</excerptum>
+    <excerptum>St. Romuald built on this land five cells for hermits, which, with the monastery at Fontebuono, built two years later, became the famous mother-house of the Camaldolese Order</excerptum>
+    <excerptum>Five years later he returned to Val-di-Castro where he died, as he had prophesied, alone in his cell.</excerptum>
+    <excerptum>In 1595 Clement VII fixed his feast on 7 Feb., the day of the translation of his relics, and extended its celebration to the whole Church.</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="19 June">
+    <excerptum>At Kavenna, St. Rornuald, anchoret, founder of the monks of Carnaldoli, who restored and greatly extended monastic discipline, which was much relaxed in Italy. He is also mentioned on the 7th of February.</excerptum>
+  </fons>
+  <fons id="mr2" opus="mr1916" locus="7 February">
+    <excerptum>holy abbot Komuald, founder of the monks of Camaldoli, whose birthday is the 19th of June.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="19 June">
+    <excerptum>Saint Romuald, Abbot</excerptum>
+  </fons>
+</sanctus>

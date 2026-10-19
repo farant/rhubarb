@@ -1,0 +1,54 @@
+<sanctus id="james-the-greater" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">James the Greater</nomen>
+  <nomen lingua="en" fontes="bu">James the Great</nomen>
+  <nomen lingua="el" fontes="ce">Iakobos</nomen>
+  <obitus annus="44" locus="Jerusalem" martyrium="verum" fontes="ce bu"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="7" dies="25" gradus="festum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="7" dies="25" fontes="mr"/>
+  <munus fontes="us mr ce">apostle</munus>
+  <munus fontes="ce bu">martyr</munus>
+  <descriptio>
+    <paragraphus fontes="ce bu">James, son of Zebedee and Salome and brother of John the Evangelist, was probably the elder of the two; he is called "the Greater" to tell him apart from the Apostle James "the Less". Zebedee was a fisherman of the Lake of Galilee who kept hired men, and James and John were called by Christ from their nets while fishing with their father. With Peter and John he formed the chosen group admitted to the raising of Jairus's daughter, the Transfiguration and the Agony in Gethsemani. Christ named the brothers Boanerges, "sons of thunder", and the Gospels record their fiery zeal, as when they wished to call down fire on the Samaritans who refused to receive Christ. Whether their mother Salome was a sister of the Blessed Virgin, making James a cousin of the Lord, the Catholic Encyclopedia leaves doubtful.</paragraphus>
+    <paragraphus fontes="ce bu mr">James was the first of the apostles to die for Christ: Herod Agrippa I had him killed with the sword at Passover, in A.D. 44 according to the Catholic Encyclopedia (Butler puts it in 43). A tradition from Clement of Alexandria says his accuser was converted and beheaded with him. A tradition holds that he had preached in Spain and that his body was carried to Galicia and later to Compostela, a great place of pilgrimage; the Catholic Encyclopedia notes serious doubts about the preaching and about the relics, though Leo XIII's bull of 1884 supports their authenticity.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. James the Greater" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._James_the_Greater">
+    <excerptum>(Heb. Yakob; Sept. Iakob; N.T. Greek Iakobos; a favourite name among the later Jews).</excerptum>
+    <excerptum>The son of Zebedee (q.v.) and Salome</excerptum>
+    <excerptum>James is styled "the Greater" to distinguish him from the Apostle James "the Less," who was probably shorter of stature.</excerptum>
+    <excerptum>He was the brother of John, the beloved disciple, and probably the elder of the two.</excerptum>
+    <excerptum>Zebedee was a fisherman of the Lake of Galilee, who probably lived in or near Bethsaida</excerptum>
+    <excerptum>had some boatmen or hired men as his usual attendants</excerptum>
+    <excerptum>If this last supposition is right, Salome was a sister of the Blessed Virgin Mary, and James the Greater and John were first cousins of the Lord</excerptum>
+    <excerptum>Thus the relationship of St. James to Jesus remains doubtful.</excerptum>
+    <excerptum>which earned for him and St. John the name of Boanerges, "sons of thunder"</excerptum>
+    <excerptum>where all four with Zebedee and his hired servants were engaged in their ordinary occupation of fishing. The sons of Zebedee "forthwith left their nets and father, and followed him"</excerptum>
+    <excerptum>These three Apostles alone were admitted to be present at the miracle of the raising of Jairus's daughter (Mark, v, 37; Luke, viii, 51), at the Transfiguration (Mark, ix, 1; Matt., xvii, 1; Luke, ix, 28), and the Agony in Gethsemani</excerptum>
+    <excerptum>When the Samaritans refused to receive Christ, James and John said: "Lord, wilt thou that we command fire to come down from heaven, and consume them?"</excerptum>
+    <excerptum>James won the crown of martyrdom fourteen years after this prophecy, A.D. 44.</excerptum>
+    <excerptum>on the occasion of the Passover of A.D. 44, he perpetrated cruelties upon the Church</excerptum>
+    <excerptum>Herod Agrippa I, son of Aristobulus and grandson of Herod the Great</excerptum>
+    <excerptum>"He killed James, the brother of John, with the sword." (Acts 12:1-2).</excerptum>
+    <excerptum>was received from Clement of Alexandria (in the seventh book of his lost "Hypotyposes"), the accuser who led the Apostle to judgment, moved by his confession, became himself a Christian, and they were beheaded together.</excerptum>
+    <excerptum>according to the tradition of the early Church, he had not yet left Jerusalem at this time</excerptum>
+    <excerptum>The tradition asserting that James the Greater preached the Gospel in Spain, and that his body was translated to Compostela</excerptum>
+    <excerptum>According to this tradition St. James the Greater, having preached Christianity in Spain, returned to Judea and was put to death by order of Herod; his body was miraculously translated to Iria Flavia in the northwest of Spain, and later to Compostela</excerptum>
+    <excerptum>became one of the most famous places of pilgrimage in the world.</excerptum>
+    <excerptum>The tradition was not unanimously admitted afterwards, while numerous scholars reject it.</excerptum>
+    <excerptum>The authenticity of the sacred relic of Compostela has been questioned and is still doubted.</excerptum>
+    <excerptum>A strong argument in favour of the authenticity of the sacred relics of Compostela is the Bull of Leo XIII, "Omnipotens Deus," of 1 November, 1884.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v07 July 25 St. James the Great, Apostle">
+    <excerptum>He saw two other brothers, James and John in a ship, with Zebedee their father; mending their nets, and he also called them</excerptum>
+    <excerptum>He gave these two the surname of Boanerges, or Sons of Thunder, probably to denote their active zeal.</excerptum>
+    <excerptum>He was the first among the apostles who had the honour to follow his divine master by martyrdom, which he suffered at Jerusalem</excerptum>
+    <excerptum>and beheaded there a little before Easter in the year 43, about fourteen years after the death of Christ.</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="25 July">
+    <excerptum>JAMES the Apostle, brother of the blessed evangelist John, who was beheaded by Herod Agrippa about the feast of Easter.</excerptum>
+    <excerptum>His sacred bones were on this day carried from Jerusaelm to Spain, and placed in the remote province of Galicia</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="25 July">
+    <excerptum>Saint James, Apostle</excerptum>
+  </fons>
+</sanctus>

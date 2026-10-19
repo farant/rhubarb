@@ -1,0 +1,48 @@
+<sanctus id="camillus-de-lellis" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Camillus de Lellis</nomen>
+  <ortus annus="1550" locus="Bacchianico, Abruzzo" fontes="bu"/>
+  <obitus annus="1614" mensis="7" dies="14" locus="Rome" fontes="bu mr14"/>
+  <beatificatio annus="1742" fontes="bu"/>
+  <canonizatio modus="formalis" annus="1746" papa="Benedict XIV" fontes="bu mr14"/>
+  <festum calendarium="usa" mensis="7" dies="18" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="7" dies="14" fontes="mr14"/>
+  <festum calendarium="martyrologium" mensis="7" dies="18" fontes="mr18"/>
+  <munus fontes="us bu">priest</munus>
+  <munus fontes="mr14">founder</munus>
+  <patrocinium fontes="mr18">hospitals</patrocinium>
+  <patrocinium fontes="mr18">the sick</patrocinium>
+  <descriptio>
+    <paragraphus fontes="bu">Camillus was born in 1550 at Bacchianico in the Abruzzo, in the kingdom of Naples. He lost both parents young, learned only to read and write, and served as a soldier in the Venetian and Neapolitan armies until his company was disbanded in 1574, with a ruinous passion for cards and gaming. Reduced to working on a building of the Capuchin friars, he was converted in February 1575, at twenty-five, by an exhortation from their guardian. A sore on his leg kept him from profession as a Capuchin or Franciscan, so he went to Rome and served the sick at the hospital of St. James for incurables, with Philip Neri as his confessor, and became its director.</paragraphus>
+    <paragraphus fontes="bu mr14 mr18">Ordained priest in 1584, he founded that same year a congregation to serve the sick, the Clerks Regular who minister to the sick; Sixtus V confirmed it in 1586, and its members took a fourth vow to serve the sick, even those with the plague. Two of them died nursing plague-stricken galleys at Naples. He laid down the generalship in 1607 and died at Rome on 14 July 1614. He was beatified in 1742 and canonized by Benedict XIV in 1746; Leo XIII declared him patron of hospitals and the sick.</paragraphus>
+  </descriptio>
+  <fons id="bu" opus="butler1812" locus="v07 Jul. 14 St. Camillus de Lellis, C.">
+    <excerptum>He was born in 1550 at Bacchianico in Abruzzo, in the kingdom of Naples. He lost his mother in his infancy, and six years after his father</excerptum>
+    <excerptum>Camillus having learned only to read and write, entered himself young in the army, and served first in the Venetian, and afterward in the Neapolitan</excerptum>
+    <excerptum>troops, till, in 1574, his company was disbanded. He had contracted so violent a passion for cards and gaming, that he sometimes lost even necessaries.</excerptum>
+    <excerptum>obliged to drive two asses, and to work at a building which belonged to the Capuchin friars.</excerptum>
+    <excerptum>A moving exhortation which the guardian of the Capuchins one day made him, completed his conversion.</excerptum>
+    <excerptum>This happened in February in the year 1575, the twenty-fifth of his age</excerptum>
+    <excerptum>He made an essay of a noviciate both among the Capuchins and the Grey Friars, but could not be admitted to his religious profession among either on account of a running sore in one of his legs</excerptum>
+    <excerptum>he went to Rome, and there served the sick in St. James's hospital of incurables four years with great fervour.</excerptum>
+    <excerptum>making use of St. Philip Neri for his confessarius.</excerptum>
+    <excerptum>after some time appointed him director of the hospital.</excerptum>
+    <excerptum>The saint was ordained priest at Whitsuntide in 1584</excerptum>
+    <excerptum>Before the close of the same year he laid the foundation of his congregation for serving the sick</excerptum>
+    <excerptum>Pope Sixtus V. confirmed this congregation in 1586</excerptum>
+    <excerptum>In 1588 he was invited to Naples, and with twelve companions founded there a new house. Certain galleys having the plague on board were forbid to enter the harbour.</excerptum>
+    <excerptum>went on board, and attended them; on which occasion two of their number died of the pestilence, and were the first martyrs of charity in this holy institute.</excerptum>
+    <excerptum>under the obligation of the four vows of poverty, chastity, obedience, and perpetually serving the sick, even those infected with the plague</excerptum>
+    <excerptum>He laid down the generalship in 1607, that he might be more at leisure to serve the poor.</excerptum>
+    <excerptum>he expired on the fourteenth of July 1614, being sixty-five years one month and twenty days old.</excerptum>
+    <excerptum>they were enshrined after he was béatified in 1742, and in 1746 he was solemnly canonized by Benedict XIV.</excerptum>
+  </fons>
+  <fons id="mr14" opus="mr1916" locus="14 July">
+    <excerptum>At Rome, St. Camillus de Lellis, confessor, founder of the Clerks Regular who minister to the sick. Renowned for virtues and miracles, he was numbered among the saints by the Sovereign Pontiff, Benedict XIV.</excerptum>
+  </fons>
+  <fons id="mr18" opus="mr1916" locus="18 July">
+    <excerptum>HE feast of St. Camillus de Lellis, confessor, founder of the Clerks Regular ministering to the sick, whose birthday is the 14th of July. Leo XIII. declared him Celestial Patron of hospitals and the infirm.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="18 July">
+    <excerptum>Saint Camillus de Lellis, Priest</excerptum>
+  </fons>
+</sanctus>

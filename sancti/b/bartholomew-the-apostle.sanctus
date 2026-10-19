@@ -1,0 +1,34 @@
+<sanctus id="bartholomew-the-apostle" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Bartholomew the Apostle</nomen>
+  <nomen lingua="el" fontes="ce">Bartholomaios</nomen>
+  <obitus locus="Armenia" martyrium="verum" fontes="mr ce"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="8" dies="24" gradus="festum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="8" dies="24" fontes="mr"/>
+  <munus fontes="us ce mr">apostle</munus>
+  <munus fontes="mr">martyr</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Bartholomew was one of the Twelve Apostles, named sixth in the lists of the three Gospels and seventh in Acts. His name means "son of Talmai", which shows at least that he was of Hebrew descent, and outside those lists the New Testament does not mention it. Nothing more is known of him for certain. Many scholars identify him with Nathaniel, whom Philip brought to Jesus in the Gospel of John; the Catholic Encyclopedia finds the argument fairly strong but not conclusive.</paragraphus>
+    <paragraphus fontes="ce mr">According to Eusebius, Pantaenus, preaching in India, was told that the Apostle had been there before him and had left the Gospel of St. Matthew in Hebrew; other traditions send him to Mesopotamia, Persia, Egypt, Armenia and elsewhere. The Martyrology says that after preaching in India he went into Greater Armenia, where he was flayed alive and beheaded by order of King Astyages, and that his body came at last to Rome, to the island in the Tiber. The Catholic Encyclopedia calls the manner of his death uncertain. Because of the tradition that he was flayed, he is often shown in art holding his own skin.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Bartholomew" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Bartholomew">
+    <excerptum>One of the Twelve Apostles, mentioned sixth in the three Gospel lists (Matthew 10:3; Mark 3:18; Luke 6:14), and seventh in the list of Acts (1:13).</excerptum>
+    <excerptum>The name (Bartholomaios) means "son of Talmai" (or Tholmai)</excerptum>
+    <excerptum>It shows, at least, that Bartholomew was of Hebrew descent</excerptum>
+    <excerptum>Outside the instances referred to, no other mention of the name occurs in the New Testament.</excerptum>
+    <excerptum>Nothing further is known of him for certain. Many scholars, however, identify him with Nathaniel</excerptum>
+    <excerptum>the fact shown by St. John that Philip was an old friend of Nathaniel's and brought him to Jesus</excerptum>
+    <excerptum>This chain of circumstantial evidence is ingenious and pretty strong; the weak link is that, after all, Nathaniel may have been another personage</excerptum>
+    <excerptum>Eusebius, who mentions that Pantaenus, the master of Origen, while evangelizing India, was told that the Apostle had preached there before him and had given to his converts the Gospel of St. Matthew written in Hebrew</excerptum>
+    <excerptum>Other traditions represent St. Bartholomew as preaching in Mesopotamia, Persia, Egypt, Armenia, Lycaonia, Phrygia, and on the shores of the Black Sea</excerptum>
+    <excerptum>The manner of his death, said to have occurred at Albanopolis in Armenia, is equally uncertain</excerptum>
+    <excerptum>On account of this latter legend, he is often represented in art (e.g. in Michelangelo's Last Judgment) as flayed and holding in his hand his own skin.</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="24 August">
+    <excerptum>apostle St. Bartholomew, who preached the Gospel of Christ in India. He passed thence into the Greater Armenia, where, after converting many to the faith, he was flayed alive by the barbarians, and beheaded by order of king Astyages, and thus he terminated his martyrdom.</excerptum>
+    <excerptum>His sacred body was first carried to the island of Lipara, then to Benevento, and finally to Rome in the island of the Tiber</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="24 August">
+    <excerptum>Saint Bartholomew, Apostle</excerptum>
+  </fons>
+</sanctus>

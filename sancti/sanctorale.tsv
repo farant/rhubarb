@@ -2,4 +2,240 @@
 # titulus verbatim) -> ids sanctorum (spatiis separati); - = sine sancto
 # (festa Domini, dedicationes). project-specs/sancti-plan.md S1.
 # mensis	dies	titulus	ids
+1	1	Mary, Mother of God	mary-mother-of-god
+1	2	Saints Basil the Great and Gregory Nazianzen	basil-the-great gregory-nazianzen
+1	3	The Most Holy Name of Jesus	-
+1	4	Saint Elizabeth Ann Seton	elizabeth-ann-seton
+1	5	Saint John Neumann	john-neumann
+1	6	Saint Andre Bessette	andre-bessette
+1	7	Saint Raymond of Penyafort	raymond-of-penyafort
+1	13	Saint Hilary	hilary-of-poitiers
+1	17	Saint Anthony	anthony-the-great
+1	20	Saint Fabian	fabian
+1	20	Saint Sebastian	sebastian
 1	21	Saint Agnes	agnes-of-rome
+1	22	Day of Prayer for the Legal Protection of Unborn Children	-
+1	23	Saint Vincent	vincent-of-saragossa
+1	23	Saint Marianne Cope	marianne-cope
+1	24	Saint Francis de Sales	francis-de-sales
+1	25	The Conversion of Saint Paul the Apostle	paul-the-apostle
+1	26	Saints Timothy and Titus	timothy titus
+1	27	Saint Angela Merici	angela-merici
+1	28	Saint Thomas Aquinas	thomas-aquinas
+1	31	Saint John Bosco	john-bosco
+2	2	The Presentation of the Lord	-
+2	3	Saint Blaise	blaise
+2	3	Saint Ansgar	ansgar
+2	5	Saint Agatha	agatha-of-sicily
+2	6	Saint Paul Miki and Companions	paul-miki-and-companions
+2	8	Saint Jerome Emiliani	jerome-emiliani
+2	8	Saint Josephine Bakhita	josephine-bakhita
+2	10	Saint Scholastica	scholastica
+2	11	Our Lady of Lourdes	mary-mother-of-god
+2	14	Saints Cyril and Methodius	cyril-of-thessalonica methodius-of-thessalonica
+2	17	The Seven Holy Founders of the Servite Order	seven-holy-founders-of-the-servite-order
+2	21	Saint Peter Damian	peter-damian
+2	22	The Chair of Saint Peter the Apostle	peter-the-apostle
+2	23	Saint Polycarp	polycarp
+2	27	Saint Gregory of Narek	gregory-of-narek
+3	3	Saint Katharine Drexel	katharine-drexel
+3	4	Saint Casimir	casimir
+3	7	Saints Perpetua and Felicity	perpetua-of-carthage felicity-of-carthage
+3	8	Saint John of God	john-of-god
+3	9	Saint Frances of Rome	frances-of-rome
+3	17	Saint Patrick	patrick
+3	18	Saint Cyril of Jerusalem	cyril-of-jerusalem
+3	19	Saint Joseph, Spouse of the Blessed Virgin Mary	joseph-spouse-of-mary
+3	23	Saint Turibius of Mogrovejo	turibius-of-mogrovejo
+3	25	The Annunciation of the Lord	-
+4	2	Saint Francis of Paola	francis-of-paola
+4	4	Saint Isidore	isidore-of-seville
+4	5	Saint Vincent Ferrer	vincent-ferrer
+4	7	Saint John Baptist de la Salle	john-baptist-de-la-salle
+4	11	Saint Stanislaus	stanislaus-of-krakow
+4	13	Saint Martin I	martin-i
+4	21	Saint Anselm	anselm-of-canterbury
+4	23	Saint George	george
+4	23	Saint Adalbert	adalbert-of-prague
+4	24	Saint Fidelis of Sigmaringen	fidelis-of-sigmaringen
+4	25	Saint Mark the Evangelist	mark-the-evangelist
+4	28	Saint Peter Chanel	peter-chanel
+4	28	Saint Louis Grignion de Montfort	louis-de-montfort
+4	29	Saint Catherine of Siena	catherine-of-siena
+4	30	Saint Pius V	pius-v
+5	1	Saint Joseph the Worker	joseph-spouse-of-mary
+5	2	Saint Athanasius	athanasius-of-alexandria
+5	3	Saints Philip and James, Apostles	philip-the-apostle james-the-less
+5	10	Saint Damien de Veuster	damien-of-molokai
+5	10	Saint John of Avila	john-of-avila
+5	12	Saints Nereus and Achilleus	nereus achilleus
+5	12	Saint Pancras	pancras-of-rome
+5	13	Our Lady of Fatima	mary-mother-of-god
+5	14	Saint Matthias the Apostle	matthias-the-apostle
+5	15	Saint Isidore the Farmer	isidore-the-farmer
+5	18	Saint John I	john-i
+5	20	Saint Bernardine of Siena	bernardine-of-siena
+5	21	Saint Christopher Magallanes and Companions	christopher-magallanes-and-companions
+5	22	Saint Rita of Cascia	rita-of-cascia
+5	25	Saint Bede the Venerable	bede-the-venerable
+5	25	Saint Gregory VII	gregory-vii
+5	25	Saint Mary Magdalene de' Pazzi	mary-magdalene-de-pazzi
+5	26	Saint Philip Neri	philip-neri
+5	27	Saint Augustine of Canterbury	augustine-of-canterbury
+5	29	Saint Paul VI	paul-vi
+5	31	The Visitation of the Blessed Virgin Mary	mary-mother-of-god
+6	1	Saint Justin	justin-martyr
+6	2	Saints Marcellinus and Peter	marcellinus-the-priest peter-the-exorcist
+6	3	Saints Charles Lwanga and Companions	charles-lwanga-and-companions
+6	5	Saint Boniface	boniface
+6	6	Saint Norbert	norbert-of-xanten
+6	9	Saint Ephrem	ephrem-the-syrian
+6	11	Saint Barnabas the Apostle	barnabas
+6	13	Saint Anthony of Padua	anthony-of-padua
+6	19	Saint Romuald	romuald
+6	21	Saint Aloysius Gonzaga	aloysius-gonzaga
+6	22	Saint Paulinus of Nola	paulinus-of-nola
+6	22	Saints John Fisher and Thomas More	john-fisher thomas-more
+6	24	The Nativity of Saint John the Baptist	john-the-baptist
+6	27	Saint Cyril of Alexandria	cyril-of-alexandria
+6	28	Saint Irenaeus	irenaeus-of-lyon
+6	29	Saints Peter and Paul, Apostles	peter-the-apostle paul-the-apostle
+6	30	The First Martyrs of the Holy Roman Church	first-martyrs-of-the-holy-roman-church
+7	1	Saint Junipero Serra	junipero-serra
+7	3	Saint Thomas the Apostle	thomas-the-apostle
+7	4	Independence Day	-
+7	5	Saint Anthony Zaccaria	anthony-zaccaria
+7	5	Saint Elizabeth of Portugal	elizabeth-of-portugal
+7	6	Saint Maria Goretti	maria-goretti
+7	9	Saint Augustine Zhao Rong and Companions	augustine-zhao-rong-and-companions
+7	11	Saint Benedict	benedict-of-nursia
+7	13	Saint Henry	henry-ii
+7	14	Saint Kateri Tekakwitha	kateri-tekakwitha
+7	15	Saint Bonaventure	bonaventure
+7	16	Our Lady of Mount Carmel	mary-mother-of-god
+7	18	Saint Camillus de Lellis	camillus-de-lellis
+7	20	Saint Apollinaris	apollinaris-of-ravenna
+7	21	Saint Lawrence of Brindisi	lawrence-of-brindisi
+7	22	Saint Mary Magdalene	mary-magdalene
+7	23	Saint Bridget	bridget-of-sweden
+7	24	Saint Sharbel Makhluf	sharbel-makhluf
+7	25	Saint James the Apostle	james-the-greater
+7	26	Saints Joachim and Anne	joachim anne
+7	29	Saints Martha, Mary and Lazarus	martha-of-bethany mary-of-bethany lazarus-of-bethany
+7	30	Saint Peter Chrysologus	peter-chrysologus
+7	31	Saint Ignatius of Loyola	ignatius-of-loyola
+8	1	Saint Alphonsus Liguori	alphonsus-liguori
+8	2	Saint Eusebius of Vercelli	eusebius-of-vercelli
+8	2	Saint Peter Julian Eymard	peter-julian-eymard
+8	4	Saint John Vianney	john-vianney
+8	5	The Dedication of the Basilica of Saint Mary Major	-
+8	6	The Transfiguration of the Lord	-
+8	7	Saint Sixtus II and Companions	sixtus-ii-and-companions
+8	7	Saint Cajetan	cajetan
+8	8	Saint Dominic	dominic
+8	9	Saint Teresa Benedicta of the Cross	teresa-benedicta-of-the-cross
+8	10	Saint Lawrence	lawrence-of-rome
+8	11	Saint Clare	clare-of-assisi
+8	12	Saint Jane Frances de Chantal	jane-frances-de-chantal
+8	13	Saints Pontian and Hippolytus	pontian hippolytus-of-rome
+8	14	Saint Maximilian Kolbe	maximilian-kolbe
+8	15	The Assumption of the Blessed Virgin Mary	mary-mother-of-god
+8	16	Saint Stephen of Hungary	stephen-of-hungary
+8	19	Saint John Eudes	john-eudes
+8	20	Saint Bernard	bernard-of-clairvaux
+8	21	Saint Pius X	pius-x
+8	22	The Queenship of the Blessed Virgin Mary	mary-mother-of-god
+8	23	Saint Rose of Lima	rose-of-lima
+8	24	Saint Bartholomew the Apostle	bartholomew-the-apostle
+8	25	Saint Louis	louis-ix
+8	25	Saint Joseph Calasanz	joseph-calasanz
+8	27	Saint Monica	monica
+8	28	Saint Augustine	augustine-of-hippo
+8	29	The Passion of Saint John the Baptist	john-the-baptist
+9	3	Saint Gregory the Great	gregory-the-great
+9	5	Saint Teresa of Calcutta	teresa-of-calcutta
+9	8	The Nativity of the Blessed Virgin Mary	mary-mother-of-god
+9	9	Saint Peter Claver	peter-claver
+9	12	The Most Holy Name of Mary	mary-mother-of-god
+9	13	Saint John Chrysostom	john-chrysostom
+9	14	The Exaltation of the Holy Cross	-
+9	15	Our Lady of Sorrows	mary-mother-of-god
+9	16	Saints Cornelius and Cyprian	cornelius cyprian-of-carthage
+9	17	Saint Robert Bellarmine	robert-bellarmine
+9	17	Saint Hildegard of Bingen	hildegard-of-bingen
+9	19	Saint Januarius	januarius
+9	20	Saints Andrew Kim Tae-gon and Paul Chong Ha-sang and Companions	andrew-kim-tae-gon-and-companions
+9	21	Saint Matthew, Apostle and Evangelist	matthew-the-apostle
+9	23	Saint Pius of Pietrelcina	pio-of-pietrelcina
+9	26	Saints Cosmas and Damian	cosmas damian
+9	27	Saint Vincent de Paul	vincent-de-paul
+9	28	Saint Wenceslaus	wenceslaus
+9	28	Saint Lawrence Ruiz and Companions	lawrence-ruiz-and-companions
+9	29	Saints Michael, Gabriel, and Raphael, Archangels	michael-the-archangel gabriel-the-archangel raphael-the-archangel
+9	30	Saint Jerome	jerome
+10	1	Saint Therese of the Child Jesus	therese-of-lisieux
+10	2	The Holy Guardian Angels	-
+10	4	Saint Francis of Assisi	francis-of-assisi
+10	5	Saint Faustina Kowalska	faustina-kowalska
+10	5	Blessed Francis Xavier Seelos	francis-xavier-seelos
+10	6	Saint Bruno	bruno-of-cologne
+10	6	Blessed Marie Rose Durocher	marie-rose-durocher
+10	7	Our Lady of the Rosary	mary-mother-of-god
+10	9	Saint Denis and Companions	denis-and-companions
+10	9	Saint John Leonardi	john-leonardi
+10	9	Saint John Henry Newman	john-henry-newman
+10	11	Saint John XXIII	john-xxiii
+10	14	Saint Callistus I	callistus-i
+10	15	Saint Teresa of Jesus	teresa-of-avila
+10	16	Saint Hedwig	hedwig-of-silesia
+10	16	Saint Margaret Mary Alacoque	margaret-mary-alacoque
+10	17	Saint Ignatius of Antioch	ignatius-of-antioch
+10	18	Saint Luke the Evangelist	luke-the-evangelist
+10	19	Saints John de Brebeuf and Isaac Jogues and Companions	john-de-brebeuf-and-companions
+10	20	Saint Paul of the Cross	paul-of-the-cross
+10	22	Saint John Paul II	john-paul-ii
+10	23	Saint John of Capistrano	john-of-capistrano
+10	24	Saint Anthony Mary Claret	anthony-mary-claret
+10	28	Saints Simon and Jude, Apostles	simon-the-apostle jude-the-apostle
+11	1	All Saints	-
+11	2	The Commemoration of All the Faithful Departed	-
+11	3	Saint Martin de Porres	martin-de-porres
+11	4	Saint Charles Borromeo	charles-borromeo
+11	9	The Dedication of the Lateran Basilica	-
+11	10	Saint Leo the Great	leo-the-great
+11	11	Saint Martin of Tours	martin-of-tours
+11	12	Saint Josaphat	josaphat-kuntsevych
+11	13	Saint Frances Xavier Cabrini	frances-xavier-cabrini
+11	15	Saint Albert the Great	albert-the-great
+11	16	Saint Margaret of Scotland	margaret-of-scotland
+11	16	Saint Gertrude	gertrude-the-great
+11	17	Saint Elizabeth of Hungary	elizabeth-of-hungary
+11	18	The Dedication of the Basilicas of Saints Peter and Paul	-
+11	18	Saint Rose Philippine Duchesne	rose-philippine-duchesne
+11	21	The Presentation of the Blessed Virgin Mary	mary-mother-of-god
+11	22	Saint Cecilia	cecilia
+11	23	Saint Clement I	clement-i
+11	23	Saint Columban	columban
+11	23	Blessed Miguel Agustin Pro	miguel-pro
+11	24	Saint Andrew Dung-Lac and Companions	andrew-dung-lac-and-companions
+11	25	Saint Catherine of Alexandria	catherine-of-alexandria
+11	30	Saint Andrew the Apostle	andrew-the-apostle
+12	3	Saint Francis Xavier	francis-xavier
+12	4	Saint John Damascene	john-of-damascus
+12	6	Saint Nicholas	nicholas-of-myra
+12	7	Saint Ambrose	ambrose
+12	8	The Immaculate Conception of the Blessed Virgin Mary	mary-mother-of-god
+12	9	Saint Juan Diego	juan-diego
+12	10	Our Lady of Loreto	mary-mother-of-god
+12	11	Saint Damasus I	damasus-i
+12	12	Our Lady of Guadalupe	mary-mother-of-god
+12	13	Saint Lucy	lucy-of-syracuse
+12	14	Saint John of the Cross	john-of-the-cross
+12	21	Saint Peter Canisius	peter-canisius
+12	23	Saint John of Kanty	john-of-kanty
+12	25	The Nativity of the Lord	-
+12	26	Saint Stephen, First Martyr	stephen-the-protomartyr
+12	27	Saint John, Apostle and Evangelist	john-the-apostle
+12	28	The Holy Innocents, Martyrs	holy-innocents
+12	29	Saint Thomas Becket	thomas-becket
+12	31	Saint Sylvester I	sylvester-i

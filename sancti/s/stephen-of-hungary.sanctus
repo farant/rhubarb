@@ -1,0 +1,34 @@
+<sanctus id="stephen-of-hungary" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Stephen of Hungary</nomen>
+  <nomen lingua="alia" fontes="ce">Vaik</nomen>
+  <ortus annus="975" locus="Gran" fontes="ce"/>
+  <obitus annus="1038" mensis="8" dies="15" fontes="ce mr2"/>
+  <canonizatio modus="formalis" annus="1083" fontes="ce"/>
+  <festum calendarium="generale" mensis="8" dies="16" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="9" dies="2" fontes="mr"/>
+  <munus fontes="ce mr">king</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Stephen, the first King of Hungary, was born at Gran in 975, a son of the Hungarian chief Géza. In 985 he was baptized together with his father by St. Adalbert of Prague and changed his pagan name, Vaik, to Stephen. In 995 he married Gisela, sister of the future Emperor St. Henry II, and in 997 he succeeded to the throne. To make Hungary a Christian nation he asked Pope Sylvester II for the royal dignity and the power to set up bishoprics; the pope agreed and sent him a crown, with which he was crowned at Gran on 17 August 1001.</paragraphus>
+    <paragraphus fontes="ce mr mr2">He founded a monastery in Jerusalem and hospices for pilgrims at Rome, Ravenna and Constantinople. His last years were darkened by sickness, by the death of his only son, St. Emeric, in a hunting accident in 1031, and by quarrels and a conspiracy among his nephews over the succession. He died on 15 August 1038, the feast of the Assumption, and was canonized together with Emeric in 1083. The Martyrology keeps his feast on 2 September, by the constitution of Innocent XI, recalling the recapture of Buda.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Stephen (2)" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Stephen_(2)">
+    <excerptum>First King of Hungary, b. at Gran, 975; d. 15 August, 1038. He was a son of the Hungarian chief Géza and was baptized, together with his father, by Archbishop St. Adalbert of Prague in 985, on which occasion he changed his heathen name Vaik (Vojk) into Stephen.</excerptum>
+    <excerptum>In 995 he married Gisela, a sister of Duke Henry of Bavaria, the future Emperor St. Henry II, and in 997 succeeded to the throne of Hungary.</excerptum>
+    <excerptum>In order to make Hungary a Christian nation and to establish himself more firmly as ruler, he sent Abbot Astricus to Rome to petition Pope Sylvester II for the royal dignity and the power to establish episcopal sees.</excerptum>
+    <excerptum>The pope acceded to his wishes and, in addition, presented him with a royal crown with which he was crowned at Gran on 17 August, 1001</excerptum>
+    <excerptum>He founded a monastery in Jerusalem and hospices for pilgrims at Rome, Ravenna, and Constantinople.</excerptum>
+    <excerptum>The last years of his life were embittered by sickness and family troubles. When on 2 September, 1031, his only son, St. Emeric, lost his life on a bear hunt</excerptum>
+    <excerptum>a quarrel arose among his various nephews concerning the right of succession, and some of them even took part in a conspiracy against his life.</excerptum>
+    <excerptum>He was buried beside his son at Stuhlweissenburg, and both were canonized together in 1083.</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="2 September">
+    <excerptum>Alba, in Hungary, St. Stephen, king of Hungary, who, being adorned with divine virtues, was the first to convert the Hungarians to the faith of Christ. He was received into heaven by the Virgin Mother of God, on the day of her Assumption. His feast, nevertheless, is commemorated on</excerptum>
+    <excerptum>this day, according to the Constitution of pope Innocent XI., when the strong fortress of Buda was reconquered through the assistance of the holy king, by the brave Christian army.</excerptum>
+  </fons>
+  <fons id="mr2" opus="mr1916" locus="15 August">
+    <excerptum>At Alba, in Hungary, St. Stephen, king of the Hungarians, whose feast is celebrated on the 2d of September.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="16 August">
+    <excerptum>Saint Stephen of Hungary</excerptum>
+  </fons>
+</sanctus>

@@ -1,0 +1,44 @@
+<sanctus id="martin-i" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Martin I</nomen>
+  <ortus locus="Todi" fontes="ce bu"/>
+  <obitus annus="655" mensis="9" dies="16" locus="Cherson" martyrium="verum" fontes="ce bu"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="4" dies="13" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="11" dies="12" fontes="mr"/>
+  <munus fontes="mr ce">pope</munus>
+  <munus fontes="mr ce">martyr</munus>
+  <descriptio>
+    <paragraphus fontes="ce bu">Martin was born at Todi and, as a deacon of the Roman Church, was sent by Pope Theodore as his representative to Constantinople. He was elected pope in July 649 (5 July is the date usually given, but 21 July may fit better) and was consecrated without waiting for imperial confirmation. In October 649 he held a council in the Lateran of one hundred and five bishops, which rejected the imperial edicts known as the Ecthesis and the Typus, excommunicated Sergius, Pyrrhus, Paul and other leaders of the Monothelite heresy, and defined the Catholic teaching on the two wills of Christ.</paragraphus>
+    <paragraphus fontes="ce mr bu">Emperor Constans II sent the exarch Calliopas, who reached Rome in 653, to bring him to Constantinople. There he was imprisoned and tried before the senate, the real charge being his refusal to sign the Typus; he was then stripped, chained and dragged through the streets. He was sentenced not to death but to exile at Cherson in the Crimea, then suffering famine, and died there on 16 September 655. Most of his relics are said to have been brought to Rome, to San Martino ai Monti. The Latin Church kept his feast on 12 November, the day of that translation; the Greeks honour him on 13 April.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="12 November">
+    <excerptum>birthday of St. Martin, pope and martyr. Because he had convoked a council at Rome, and condemned the heretics Sergius, Paul and Pyrrhus, he was taken prisoner treacherously by order of the heretical emperor Constans, carried to Constantinople and banished to Chersonesus</excerptum>
+    <excerptum>His body was subsequently transferred to Rome, and deposited in the church of the Saints Silvester and Martin.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="Pope St. Martin I" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/Pope_St._Martin_I">
+    <excerptum>Martyr, born at Todi on the Tiber, son of Fabricius; elected Pope at Rome, 21 July, 649, to succeed Theodore I; d at Cherson in the present peninsulas of Krym, 16 Sept., 655</excerptum>
+    <excerptum>5 July is the date commonly given for his election, but 21 July (given by Lobkowitz, "Statistik der Papste" Freiburg, 1905) seems to correspond better with the date of his death and reign</excerptum>
+    <excerptum>his feast is on 12 Nov. The Greeks honor him on 13 April and 15 Sept.</excerptum>
+    <excerptum>He governed the Church at a time when the leaders of the Monothelite heresy, supported by the emperor, were making most strenuous efforts to spread their tenets in the East and West.</excerptum>
+    <excerptum>After his election, Martin had himself consecrated without waiting for the imperial confirmation, and soon called a council in the Lateran at which one hundred and five bishops met.</excerptum>
+    <excerptum>Five sessions were held on 5, 8, 17, 119 and 31 Oct., 649</excerptum>
+    <excerptum>The "Ecthesis" of Heraclius and the "Typus" of Constans II were rejected; nominal excommunication was passed against Sergius, Pyrrus, and Paul of Constantinople, Cyrus of Alexandria and Theodore of Phran in Arabia</excerptum>
+    <excerptum>twenty canons were enacted defining the Catholic doctrine on the two wills of Christ.</excerptum>
+    <excerptum>Constans II thwarted in his plans, sent as exarch Theodore Calliopas with orders to bring Martin to Constantinople. Calliopas arrived in Rome, 15 June, 653</excerptum>
+    <excerptum>Towards evening he was brought to a prison called Prandearia and kept in close and cruel confinement for ninety-three days</excerptum>
+    <excerptum>he was brought before the assembled senate where the imperial treasurer acted as judge.</excerptum>
+    <excerptum>Various political charges were made, but the true and only charge was the pope's refusal to sign the "Typus".</excerptum>
+    <excerptum>he was stripped of nearly all his clothing, loaded with chains, dragged through the streets of the city and then again thrown into the prison of Diomede</excerptum>
+    <excerptum>Constans did not sentence the pope to death, but to exile.</excerptum>
+    <excerptum>Cherson was at the time suffering from a great famine. The venerable pontiff here passed the remaining days of his life.</excerptum>
+    <excerptum>The greater part of his relics are said to have been transferred to Rome, where they repose in the church of San Martino ai Monti.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v11 Nov. 12 S. Martin, Pope, M.">
+    <excerptum>Sr. Martin was a native of Todi in Tuscany, and became renowned in the clergy of Rome for his learning and sanctity. Whilst he was deacon of that church he was sent by pope Theodorus in quality of apocrisiarius or nuncio to Constantinople</excerptum>
+    <excerptum>for he died on the sixteenth of September in 655, having held the holy see six years, one month, and twenty-six days.</excerptum>
+    <excerptum>He is honoured by the Latins, on the twelfth of November, the day of the translation of his relicks to Rome, and by the Greeks on the thirteenth of April</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="13 April">
+    <excerptum>Saint Martin I, Pope and Martyr</excerptum>
+  </fons>
+</sanctus>

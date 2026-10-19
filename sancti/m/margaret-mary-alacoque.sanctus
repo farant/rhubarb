@@ -1,0 +1,43 @@
+<sanctus id="margaret-mary-alacoque" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Margaret Mary Alacoque</nomen>
+  <ortus annus="1647" mensis="7" dies="22" locus="Lhautecour, France" fontes="ce"/>
+  <obitus annus="1690" mensis="10" dies="17" locus="Paray-le-Monial" fontes="ce"/>
+  <beatificatio annus="1864" mensis="9" dies="18" papa="Pius IX" fontes="ce"/>
+  <canonizatio modus="formalis" annus="1920" mensis="5" dies="13" papa="Benedict XV" fontes="cs"/>
+  <festum calendarium="generale" mensis="10" dies="16" gradus="memoria-ad-libitum" fontes="us"/>
+  <munus fontes="us">virgin</munus>
+  <munus fontes="ce">religious</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Margaret Alacoque was born at Lhautecour in France on 22 July 1647. As a child she loved the Blessed Sacrament; after her first communion she practised severe penances in secret until paralysis kept her in bed for four years, and she recovered after vowing herself to religious life. When she was seventeen her mother urged her to settle in the world, and for a time she took part in its pleasures, until a vision of Christ at the scourging reproached her. On 25 May 1671 she entered the Visitation convent at Paray, and she made her final vows in November 1672.</paragraphus>
+    <paragraphus fontes="ce dn ha cs">In the convent she reported that Christ appeared to her often, most remarkably in a series of apparitions from the end of 1673 to June 1675, and entrusted her with spreading devotion to his Sacred Heart: the Holy Hour, Communion on the first Friday of each month, and a feast of the Sacred Heart on the Friday after the octave of Corpus Christi. Her community at first treated her as a visionary, but her obedience and charity won them over; Pius XII names Blessed Claude de la Colombière as her spiritual director. She died at Paray-le-Monial on 17 October 1690. Leo XII declared her Venerable in 1824 and Pius IX beatified her on 18 September 1864; Benedict XV canonized her on 13 May 1920.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Margaret Mary Alacoque" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Margaret_Mary_Alacoque">
+    <excerptum>Religious of the Visitation Order. Apostle of the Devotion to the Sacred Heart of Jesus, born at Lhautecour, France, 22 July, 1647; died at Paray-le-Monial, 17 October, 1690.</excerptum>
+    <excerptum>From early childhood Margaret showed intense love for the Blessed Sacrament</excerptum>
+    <excerptum>After her first communion at the age of nine, she practised in secret severe corporal mortifications, until paralysis confined her to bed for four years.</excerptum>
+    <excerptum>having made a vow to the Blessed Virgin to consecrate herself to religious life, she was instantly restored to perfect health.</excerptum>
+    <excerptum>When Margaret was seventeen, the family property was recovered, and her mother besought her to establish herself in the world.</excerptum>
+    <excerptum>she began to take part in the pleasures of the world. One night upon her return from a ball, she had a vision of Christ as He was during the scourging, reproaching her for infidelity</excerptum>
+    <excerptum>On 25 May, 1671, she entered the Visitation Convent at Paray, where she was subjected to many trials to prove her vocation, and in November, 1672, pronounced her final vows.</excerptum>
+    <excerptum>appeared to her frequently and conversed with her, confiding to her the mission to establish the devotion to His Sacred Heart.</excerptum>
+    <excerptum>These extraordinary occurrences drew upon her the adverse criticism of the community, who treated her as a visionary</excerptum>
+    <excerptum>But her obedience, her humility, and invariable charity towards those who persecuted her, finally prevailed</excerptum>
+    <excerptum>Margaret Mary was inspired by Christ to establish the Holy Hour</excerptum>
+    <excerptum>and to receive holy Communion on the first Friday of every month.</excerptum>
+    <excerptum>He appointed the Friday after the octave of the feast of Corpus Christi as the feast of the Sacred Heart</excerptum>
+    <excerptum>In March, 1824, Leo XII pronounced her Venerable, and on 18 September, 1864, Pius IX declared her Blessed.</excerptum>
+  </fons>
+  <fons id="dn" opus="sedes" locus="Francis, encyclical Dilexit nos, 24 October 2024" url="https://www.vatican.va/content/francesco/en/encyclicals/documents/20241024-enciclica-dilexit-nos.html">
+    <excerptum>Saint Margaret Mary Alacoque reported a remarkable series of apparitions of Christ between the end of December 1673 and June of 1675.</excerptum>
+  </fons>
+  <fons id="ha" opus="sedes" locus="Pius XII, encyclical Haurietis aquas, 15 May 1956, n. 95" url="https://www.vatican.va/content/pius-xii/en/encyclicals/documents/hf_p-xii_enc_15051956_haurietis-aquas.html">
+    <excerptum>St. Margaret Mary Alacoque who, under the spiritual direction of Blessed Claude de la Colombiere who assisted her work</excerptum>
+  </fons>
+  <fons id="cs" opus="sedes" locus="Dicastery for the Causes of Saints, Margherita Maria Alacoque" url="https://www.causesanti.va/it/santi-e-beati/margherita-maria-alacoque.html">
+    <excerptum>Canonizzazione: 13 maggio 1920 Papa Benedetto XV</excerptum>
+    <excerptum>Beatificata da Pio IX nel 1864, viene canonizzata da Benedetto XV nel 1920.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="16 October">
+    <excerptum>Saint Margaret Mary Alacoque, Virgin</excerptum>
+  </fons>
+</sanctus>

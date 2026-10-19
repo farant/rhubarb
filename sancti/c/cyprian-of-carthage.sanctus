@@ -1,0 +1,59 @@
+<sanctus id="cyprian-of-carthage" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Cyprian of Carthage</nomen>
+  <nomen lingua="la" fontes="ce">Thaschus Caecilius Cyprianus</nomen>
+  <obitus annus="258" mensis="9" dies="14" locus="Carthage" martyrium="verum" fontes="ce mr bu"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="9" dies="16" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="9" dies="14" fontes="mr"/>
+  <festum calendarium="martyrologium" mensis="9" dies="16" nota="feast kept with Cornelius" fontes="mr16"/>
+  <munus fontes="us mr ce">bishop</munus>
+  <munus fontes="us mr ce">martyr</munus>
+  <socius ad="cornelius" fontes="us mr16">Cornelius</socius>
+  <descriptio>
+    <paragraphus fontes="ce">Nothing is known of Cyprian's birth or early life. He was a famous orator and pleader at Carthage, a man of wealth, and perhaps past middle life when an aged priest, Caecilianus, converted him. As a catechumen he gave most of his revenues to the poor, and he was probably baptized about 246. Though a recent convert, he was made Bishop of Carthage about 248 or early 249, against his own wish and by the demand of the people.</paragraphus>
+    <paragraphus fontes="ce">When Decius began persecuting in 250, Cyprian went into hiding, judging that to stay would leave the Church without government, and from his retreat encouraged the confessors; at Carthage most of the faithful apostatized. In 251, once bishops who had witnessed the election testified that it was valid, he recognized the newly elected Pope Cornelius against the antipope Novatian. His treatise De Unitate deals chiefly with the unity kept in each diocese by union with the bishop. When plague reached Carthage in 252 he organised care for the sick and burial of the dead. His correspondence survives in eighty-one letters.</paragraphus>
+    <paragraphus fontes="ce mr bu">Under Valerian he was exiled to Curubis in 257. Brought back to Carthage, he refused to sacrifice and was beheaded on 14 September 258, the first Bishop of Carthage to win the martyr's crown; the faithful carried his body by torchlight to the cemetery of Macrobius Candidianus.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="14 September">
+    <excerptum>In Africa, in the time of the emperors Valerian and Gallienus, St. Cyprian, bishop of Carthage, most renowned for holiness and learning.</excerptum>
+    <excerptum>the city, that he consummated his martyrdom by decapitation, after enduring a most painful exile.</excerptum>
+  </fons>
+  <fons id="mr16" opus="mr1916" locus="16 September">
+    <excerptum>Saints Cornelius and Cyprian, pontiffs and martyrs, whose birthday is the 14th of this month.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. Cyprian of Carthage" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Cyprian_of_Carthage">
+    <excerptum>(Thaschus Cæcilius Cyprianus). Bishop and martyr. Of the date of the saint's birth and of his early life nothing is known. At the time of his conversion to Christianity he had, perhaps, passed middle life.</excerptum>
+    <excerptum>He was famous as an orator and pleader, had considerable wealth</excerptum>
+    <excerptum>His conversion was due to an aged priest named Caecilianus</excerptum>
+    <excerptum>While yet a catechumen the saint decided to observe chastity, and he gave most of his revenues to the poor.</excerptum>
+    <excerptum>His baptism probably took place c. 246</excerptum>
+    <excerptum>Cyprian was certainly only a recent convert when he became Bishop of Carthage c. 248 or the beginning of 249</excerptum>
+    <excerptum>He had declined the charge, but was constrained by the people.</excerptum>
+    <excerptum>In January, 250, he published an edict against Christians.</excerptum>
+    <excerptum>about the same time St. Cyprian retired to a safe place of hiding.</excerptum>
+    <excerptum>But to remain at Carthage was to court death, to cause greater danger to others, and to leave the Church without government</excerptum>
+    <excerptum>Form his retreat he encouraged the confessors and wrote eloquent panegyrics on the martyrs.</excerptum>
+    <excerptum>At Carthage the majority apostatized.</excerptum>
+    <excerptum>One of these, announcing the election of a pope, St. Cornelius, was read by Cyprian to the assembly</excerptum>
+    <excerptum>Meantime another message arrived with the news that Novatian, the most eminent among the Roman clergy, had been made pope.</excerptum>
+    <excerptum>who had been present at the election of Cornelius, arrived also, and were able to testify that he had been validly set "in the place of Peter", when as yet there was no other claimant.</excerptum>
+    <excerptum>He sent also copies of his two treatises, "De Unitate" and "De Lapsis"</excerptum>
+    <excerptum>The unity with which St. Cyprian deals is not so much the unity of the whole Church, the necessity of which he rather postulates, as the unity to be kept in each diocese by union with the bishop</excerptum>
+    <excerptum>composed on the occasion of the plague which reached Carthage in 252, when Cyprian, with wonderful energy, raised a staff of workers and a great fund of money for the nursing of the sick and the burial of the dead.</excerptum>
+    <excerptum>The correspondence of Cyprian consists of eighty-one letters.</excerptum>
+    <excerptum>The danger was the signal for a renewal of persecution on the part of the Emperor Valerian.</excerptum>
+    <excerptum>"Can you, then, go into exile at Curubis?" "I go."</excerptum>
+    <excerptum>On 30 August, 257, Cyprian was brought before the Proconsul Paternus</excerptum>
+    <excerptum>On the morning of the 14th a crowd gathered "at the villa of Sextus", by order of the authorities. Cyprian was tried there. He refused to sacrifice</excerptum>
+    <excerptum>the multitude cried, "Let us be beheaded with him!"</excerptum>
+    <excerptum>But at night the brethren bore him with candles and torches, with prayer and great triumph, to the cemetery of Macrobius Candidianus in the suburb of Mapalia. He was the first Bishop of Carthage to obtain the crown of martyrdom.</excerptum>
+    <excerptum>Galerius Maximus, the successor of Paternus, sent for Cyprian back to Carthage</excerptum>
+    <excerptum>In August, 258, Cyprian learned that Pope Sixtus had been put to death</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v09 Sept. 16 St. Cyprian, M. Archbishop of Carthage">
+    <excerptum>A.D. 258. Tascrus Cyprian was a native of Carthage, his father being one of the principal senators of that city.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="16 September">
+    <excerptum>Saints Cornelius, Pope, and Cyprian, Bishop, Martyrs</excerptum>
+  </fons>
+</sanctus>

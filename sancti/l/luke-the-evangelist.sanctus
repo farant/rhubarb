@@ -1,0 +1,44 @@
+<sanctus id="luke-the-evangelist" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Luke the Evangelist</nomen>
+  <nomen lingua="la" principale="verum" fontes="ce">Lucas</nomen>
+  <nomen lingua="la" fontes="ce">Lucanus</nomen>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="10" dies="18" gradus="festum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="10" dies="18" fontes="mr"/>
+  <munus fontes="us mr ce">evangelist</munus>
+  <munus fontes="ce">physician</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Luke, whose name is probably short for Lucanus, is generally held to have been a native of Antioch. He was not a Jew but a Greek, and a physician by profession: St. Paul calls him "the most dear physician". He first appears in the Acts of the Apostles at Troas, where the narrative changes to "we", and he crossed with Paul to Philippi, where he seems to have stayed on as an evangelist. He later went up with Paul to Jerusalem, sailed with him from Caesarea through the storm to Malta and on to Rome, and was with him again in his last imprisonment, when Paul wrote, "Only Luke is with me." He is the author of the third Gospel and of the Acts, and his two books together are about as long as Paul's fourteen epistles.</paragraphus>
+    <paragraphus fontes="ce mr">Little is known of his later life. An ancient prologue to his Gospel says that he was unmarried, wrote the Gospel in Achaia, and died at seventy-four in Bithynia, filled with the Holy Ghost; the Catholic Encyclopedia suspects Bithynia is a copyist's error for Boeotia. Whether he died a martyr is disputed; the Martyrology says he suffered much for the name of Christ. His relics were taken to Constantinople, and the Martyrology adds that they were later conveyed to Padua. He is represented by the ox, because his Gospel opens with the priest Zachary, and the Menology of Basil II (980) and later writers call him a painter.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="Gospel of Saint Luke" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/Gospel_of_Saint_Luke">
+    <excerptum>The name Lucas (Luke) is probably an abbreviation from Lucanus</excerptum>
+    <excerptum>It is generally held that St. Luke was a native of Antioch.</excerptum>
+    <excerptum>St. Luke was not a Jew. He is separated by St. Paul from those of the circumcision (Col. iv, 14), and his style proves that he was a Greek.</excerptum>
+    <excerptum>He was a physician by profession, and St. Paul calls him "the most dear physician" (Col., iv, 14).</excerptum>
+    <excerptum>St. Luke first appears in the Acts at Troas (xvi, 8 sqq.), where he meets St. Paul</excerptum>
+    <excerptum>crossed over with him to Europe as an Evangelist, landing at Neapolis and going on to Philippi</excerptum>
+    <excerptum>(note especially the transition into first person plural at verse 10)</excerptum>
+    <excerptum>When Paul departed from Philippi, Luke was left behind, in all probability to carry on the work of Evangelist.</excerptum>
+    <excerptum>He went up to Jerusalem, was present at the uproar, saw the attack on the Apostle</excerptum>
+    <excerptum>When Paul appealed to Cæsar, Luke and Aristarchus accompanied him from Cæsarea, and were with him during the stormy voyage from Crete to Malta. Thence they went on to Rome</excerptum>
+    <excerptum>He stood beside St. Paul in his last imprisonment</excerptum>
+    <excerptum>Only Luke is with me" (II Tim., iv, 7-11).</excerptum>
+    <excerptum>The author of Acts was a companion of Saint Paul, namely, Saint Luke</excerptum>
+    <excerptum>his two books are about as long as St. Paul's fourteen Epistles</excerptum>
+    <excerptum>It is according to most ancient and constant tradition that after Matthew, Mark wrote his Gospel second and Luke third</excerptum>
+    <excerptum>The Gospel of Luke preceded his Acts of the Apostles</excerptum>
+    <excerptum>practically all that is known about him is contained in the ancient "Prefatio vel Argumentum Lucæ", dating back to Julius Africanus</excerptum>
+    <excerptum>This states that he was unmarried, that he wrote the Gospel, in Achaia, and that he died at the age of seventy-four in Bithynia (probably a copyist's error for Boeotia), filled with the Holy Ghost.</excerptum>
+    <excerptum>As an Evangelist, he must have suffered much for the Faith, but it is controverted whether he actually died a martyr's death.</excerptum>
+    <excerptum>St. Luke its always represented by the calf or ox, the sacrificial animal, because his Gospel begins with the account of Zachary, the priest</excerptum>
+    <excerptum>He is called a painter by Nicephorus Callistus (fourteenth century), and by the Menology of Basil II, A.D. 980.</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="18 October">
+    <excerptum>birthday of blessed Luke, evangelist, who, after having suffered much for the name of Christ, died in Bithynia, filled with the Holy Ghost.</excerptum>
+    <excerptum>His relics were taken to Constantinople, and thence conveyed to Padua.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="18 October">
+    <excerptum>Saint Luke, Evangelist</excerptum>
+  </fons>
+</sanctus>

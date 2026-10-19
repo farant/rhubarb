@@ -1,0 +1,35 @@
+<sanctus id="holy-innocents" versio="1" genus="coetus" status="sanctus">
+  <nomen lingua="en" principale="verum">Holy Innocents</nomen>
+  <nomen lingua="la" principale="verum" fontes="ce">Innocentes</nomen>
+  <obitus locus="Bethlehem" martyrium="verum" fontes="ce mr"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="12" dies="28" gradus="festum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="12" dies="28" fontes="mr"/>
+  <munus fontes="us ce">martyrs</munus>
+  <descriptio>
+    <paragraphus fontes="ce mr">The Holy Innocents are the children of whom St. Matthew writes that Herod, deceived by the wise men, had all the boys of Bethlehem and its borders, two years old and under, put to death. Their number is unknown: the Greek liturgy says 14,000, the Syrians 64,000 and many medieval writers 144,000, while modern authors, noting that Bethlehem was a small town, reduce it to perhaps six to twenty. Josephus does not mention the deed. The day and year cannot be determined, since the chronology of Christ's birth is uncertain.</paragraphus>
+    <paragraphus fontes="ce">The Church venerates them as martyrs, "flowers of the martyrs" and the first buds of the Church, who died not only for Christ but in his stead. The Latin Church instituted their feast not before the end of the fourth century and not later than the end of the fifth; it first appears in the Leonine Sacramentary, about 485. It is kept within the octave of Christmas because they gave their lives for the new-born Saviour: the Latins keep it on 28 December, the Greeks on 29 December.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="Holy Innocents" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/Holy_Innocents">
+    <excerptum>The children mentioned in St. Matthew, ii, 16-18</excerptum>
+    <excerptum>Herod perceiving that he was deluded by the wise men, was exceeding angry; and sending killed all the men children that were in Bethlehem, and in all the borders thereof, from two years old and under</excerptum>
+    <excerptum>The Greek Liturgy asserts that Herod killed 14,000 boys</excerptum>
+    <excerptum>the Syrians speak of 64,000, many medieval authors of 144,000</excerptum>
+    <excerptum>Modern writers reduce the number considerably, since Bethlehem was a rather small town. Knabenbauer brings it down to fifteen or twenty</excerptum>
+    <excerptum>Bisping to ten or twelve (Evang. S. Matt.), Kellner to about six</excerptum>
+    <excerptum>This cruel deed of Herod is not mentioned by the Jewish historian Flavius Josephus</excerptum>
+    <excerptum>It is impossible to determine the day or the year of the death of the Holy Innocents, since the chronology of the birth of Christ and the subsequent Biblical events is most uncertain.</excerptum>
+    <excerptum>The Church venerates these children as martyrs (flores martyrum); they are the first buds of the Church killed by the frost of persecution; they died not only for Christ, but in his stead</excerptum>
+    <excerptum>The Latin Church instituted the feast of the Holy Innocents at a date now unknown, not before the end of the fourth and not later than the end of the fifth century.</excerptum>
+    <excerptum>first found in the Leonine Sacramentary, dating from about 485.</excerptum>
+    <excerptum>The Latins keep it on 28 December, the Greeks on 29 December</excerptum>
+    <excerptum>the feast is kept within the octave of Christmas because the Holy Innocents gave their life for the newborn Saviour.</excerptum>
+    <excerptum>Only the Church of Rome applies the word Innocentes to these children</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="28 December">
+    <excerptum>Bethlehem, of Juda, the birthday of the Holy Innocents, who were massacred for Christ by king Herod.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="28 December">
+    <excerptum>The Holy Innocents, Martyrs</excerptum>
+  </fons>
+</sanctus>

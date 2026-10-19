@@ -1,0 +1,46 @@
+<sanctus id="gertrude-the-great" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Gertrude the Great</nomen>
+  <ortus annus="1256" mensis="1" dies="6" locus="Germany" fontes="ce"/>
+  <obitus annus="1301" mensis="11" dies="17" circa="verum" locus="Helfta, near Eisleben, Saxony" fontes="ce"/>
+  <canonizatio modus="aequipollens" annus="1677" fontes="ce"/>
+  <festum calendarium="generale" mensis="11" dies="16" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="11" dies="15" nota="her festival; the entry refers her birthday to the 17th" fontes="mr15"/>
+  <festum calendarium="martyrologium" mensis="11" dies="17" nota="her death; the entry refers her festival to the 15th" fontes="mr17"/>
+  <munus fontes="us mr17">virgin</munus>
+  <munus fontes="ce">nun</munus>
+  <munus fontes="ce">mystic</munus>
+  <patrocinium fontes="ce">West Indies</patrocinium>
+  <descriptio>
+    <paragraphus fontes="ce">Gertrude was born in Germany on 6 January 1256; nothing is known of her family, not even her parents' names. At five she entered the school of the monastery of Helfta, then governed by the abbess Gertrude of Hackeborn, and was placed in the care of St. Mechtilde, the abbess's sister, with whom she formed a lasting bond. She studied with great ardour. In her twenty-sixth year she received the first of the visions that continued to the end of her life, and she turned from secular learning to the Scriptures, the Fathers and theology: in her biographer's words, from a grammarian she became a theologian. Outwardly her life was that of a simple Benedictine nun.</paragraphus>
+    <paragraphus fontes="ce mr17 mr15 bu">She wrote in Latin; the second book of the Herald of Divine Love and her Exercises survive, and her piety is marked above all by devotion to the Sacred Heart. She died at Helfta on 17 November 1301 or 1302. Her name was entered in the Roman Martyrology only in 1677, when her feast was extended to the whole Church; the 1916 Martyrology keeps her festival on 15 November and names her on the 17th as renowned for her revelations. Butler makes her the abbess and sister of St. Mechtilde, roles the Catholic Encyclopedia gives to Gertrude of Hackeborn. At the King of Spain's request she was declared patroness of the West Indies.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Gertrude the Great" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Gertrude_the_Great">
+    <excerptum>Gertrude the Great, Saint, Benedictine and mystic writer; b. in Germany, January 6, 1256; d. at Helfta, near Eisleben, Saxony, November 17, 1301 or 1302.</excerptum>
+    <excerptum>Nothing is known of her family, not even the name of her parents.</excerptum>
+    <excerptum>When she was but five years of age she entered the alumnate of Helfta. The monastery was at that time governed by the saintly and enlightened Abbess Gertrude of Hackeborn</excerptum>
+    <excerptum>Gertrude was confided to the care of St. Mechtilde, mistress of the alumnate and sister of the Abbess Gertrude.</excerptum>
+    <excerptum>Thus early had been formed between Gertrude and Mechtilde the bond of an intimacy which deepened and strengthened with time</excerptum>
+    <excerptum>Gertrude had devoted herself to study with the greatest ardor. In her twenty-sixth year there was granted her the first of that series of visions of which the wonderful sequence ended only with life.</excerptum>
+    <excerptum>"from being a grammarian became a theologian", abandoning profane studies for the Scriptures, patristic writings, and treatises on theology.</excerptum>
+    <excerptum>Outwardly her life was that of the simple Benedictine nun</excerptum>
+    <excerptum>Those now extant are:—(I) The "Legatus Divinae Pietatis"; (2) The "Exercises of St. Gertrude"</excerptum>
+    <excerptum>The works of St. Gertrude were all written in Latin</excerptum>
+    <excerptum>The "Legatus Divinae Pietatis" (Herald of Divine Love) comprises five books containing the life of St. Gertrude, and recording many of the favors granted her by God. Bk. II alone is the work of the saint</excerptum>
+    <excerptum>The characteristic of St. Gertrude's piety is her devotion to the Sacred Heart</excerptum>
+    <excerptum>It was not till 1677 that the name of Gertrude was inscribed in the Roman Martyrology and her feast was extended to the universal Church</excerptum>
+    <excerptum>In compliance with a petition from the King of Spain she was declared Patroness of the West Indies</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v11 Nov. 15 St. Gertrude, V. Abbess">
+    <excerptum>born at Eisleben, or Islebe, in Upper Saxony, and sister to St. Mechtildes.</excerptum>
+    <excerptum>at thirty was chosen abbess of that house, in 1251</excerptum>
+  </fons>
+  <fons id="mr15" opus="mr1916" locus="15 November">
+    <excerptum>GERTRUDE, virgin, whose birthday is the 17th of this month.</excerptum>
+  </fons>
+  <fons id="mr17" opus="mr1916" locus="17 November">
+    <excerptum>In Germany, St. Gertrude, virgin, of the Order of St. Benedict, who was renowned for the revelations she received. Her festival is celebrated on the 15th of this month.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="16 November">
+    <excerptum>Saint Gertrude, Virgin</excerptum>
+  </fons>
+</sanctus>

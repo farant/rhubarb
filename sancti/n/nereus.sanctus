@@ -1,0 +1,33 @@
+<sanctus id="nereus" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Nereus</nomen>
+  <nomen lingua="la" principale="verum" fontes="mr">Nereus</nomen>
+  <obitus martyrium="verum" fontes="mr ce"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="5" dies="12" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="5" dies="12" fontes="mr"/>
+  <munus fontes="us mr">martyr</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Nereus is a Roman martyr honoured together with Achilleus. Their names stand in the old Roman lists of the fifth century, and their grave was in the Catacomb of Domitilla on the Via Ardeatina, where a church was built over it in the latter part of the fourth century. Among the objects found in its ruins were two pillars carved with the beheading of the two saints; one of them bears the name of Achilleus. A fragment of an inscription composed by Pope Damasus, the oldest historical mention of them, says that they were soldiers who obeyed the tyrant, were suddenly converted, gladly gave up their commission and died as martyrs; it allows no inference about the date.</paragraphus>
+    <paragraphus fontes="ce bu mr">Their later Acts, which the Catholic Encyclopedia judges legendary and of no historical value, make them eunuchs and chamberlains of Flavia Domitilla, banished with her to the island of Pontia and afterwards beheaded at Terracina; Butler, following these Acts, places the beheading under Trajan. The Martyrology adds that, when an ex-consul tried by the rack and fire to force them to sacrifice, they answered that they had been baptized by the Apostle Peter and could not sacrifice to idols. Because they were buried in a very ancient part of the catacomb, the Encyclopedia concludes that they are among the oldest martyrs of the Roman Church.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="12 May">
+    <excerptum>on the Ardeatine road, the holy martyrs Nereus and Achilleus, brothers, who first underwent a long exile for Christ in the island of Pontia with Flavia Domitilla, whose chamberlains they were.</excerptum>
+    <excerptum>Finally, as the ex-consul Minutius Rufus endeavored by using the rack and fire to force them to offer sacrifices, they said, that having been baptized by the blessed Apostle Peter, they could by no means sacrifice to idols. They were beheaded</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="Sts. Nereus and Achilleus, Domitilla and Pancratius" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/Sts._Nereus_and_Achilleus,_Domitilla_and_Pancratius">
+    <excerptum>The old Roman lists, of the fifth century, and which passed over into the Martyrologium Hiernoymianum, contain the names of the two martyrs Nereus and Achilleus, whose grave was in the Catacomb of Domitilla on the Via Ardeatina</excerptum>
+    <excerptum>The church built over the grave of Sts. Nereus and Achilleus in the Via Ardeatina, is of the latter part of the fourth century</excerptum>
+    <excerptum>Amongst the numerous objects found in the ruins were two pillars which had supported the giborium ornamented with sculptures representing the death of the two saints by decapitation; one of these pillars is perfectly preserved, and the name of Achilleus is carved on it.</excerptum>
+    <excerptum>There was also found a large fragment of a marble slab, with an inscription composed by Pope Damasus, the text of which is well-known from an ancient copy. This oldest historical mention of the two saints</excerptum>
+    <excerptum>tells how Nereus and Achilleus as soldiers were obedient to the tyrant, but suddenly being converted to Christianity, joyfully resigned their commission, and did the martyr's death; as to the date of their glorious confession we can make no inference.</excerptum>
+    <excerptum>The acts of these martyrs, legendary even to a romantic degree, have no historical value for their life and death</excerptum>
+    <excerptum>According to these legends Nereus and Achilleus were eunuchs and chamberlains of Flavia Domitilla, a niece of the Emperor Domitian; with the Christian virgin they had been banished to the island of Pontia, and later on beheaded in Terracina.</excerptum>
+    <excerptum>as Nereus and Achilleus were buried in a very ancient part of the catacomb of Domitilla, built as far back as the beginning of the second century, we may conclude that they are among the most ancient martyrs of the Roman Church</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v05 May 12 SS. Nereus and Achilleus, MM.">
+    <excerptum>Try were eunuchs or chamberlains belonging to St. Flavia Domitilla, zealous Christians, and with her were banished by Domitian into a little isle on the coast of Terracina, called Pontia. Their acts say, that they were afterward beheaded at Terracina, under Trajan.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="12 May">
+    <excerptum>Saints Nereus and Achilleus, Martyrs</excerptum>
+  </fons>
+</sanctus>

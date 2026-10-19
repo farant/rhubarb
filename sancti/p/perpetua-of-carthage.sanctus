@@ -1,0 +1,42 @@
+<sanctus id="perpetua-of-carthage" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Perpetua of Carthage</nomen>
+  <nomen lingua="la" principale="verum" fontes="mr">Perpetua</nomen>
+  <nomen lingua="la" fontes="ce bu">Vibia Perpetua</nomen>
+  <obitus annus="203" mensis="3" dies="7" locus="Carthage" martyrium="verum" fontes="ce"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="3" dies="7" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="3" dies="7" fontes="mr"/>
+  <festum calendarium="martyrologium" mensis="3" dies="6" nota="the 1916 Martyrology keeps the feast on 6 March and the birthday on 7 March" fontes="mr"/>
+  <munus fontes="us ce mr">martyr</munus>
+  <descriptio>
+    <paragraphus fontes="ce bu">Vibia Perpetua was a young married woman of noble birth at Carthage, about twenty-two years old according to Butler, with an infant son. Under the edict of Septimius Severus forbidding conversion to Christianity she was arrested as a catechumen together with the slaves Felicitas and Revocatus, Saturninus and Secundulus; Saturus, who declared himself a Christian before the judge, soon joined them. They were baptized before being taken to prison. Her pagan father pleaded with her again and again to renounce her faith, but she refused, and at the trial before the procurator Hilarianus she would not sacrifice for the emperor's safety.</paragraphus>
+    <paragraphus fontes="ce mr">Perpetua herself wrote down the account of her imprisonment and her visions, including a ladder leading to green meadows, which assured her of martyrdom. On 7 March 203 the confessors were led into the amphitheatre at Carthage; the women were exposed to a wild cow, and after giving each other the kiss of peace the martyrs were put to the sword. Their names stand under 7 March in the fourth-century Roman calendar of martyrs, and a basilica was later built over their tomb. The 1916 Martyrology, unlike the Catholic Encyclopedia, places their death at Tuburbum in Mauritania.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="7 March">
+    <excerptum>At Tuburbum, in Mauritania (Barbary), in the reign of the emperor Severus, the birthday of the Saints Perpetua and Felicitas, whose festival is kept on the 6th of this month.</excerptum>
+    <excerptum>With them suffered Revocatus, Saturninus, and Secundulus. This last died in prison ; all the others were delivered to the beasts.</excerptum>
+    <excerptum>fTIHE feast of the holy martyrs Perpetua and Felicitas, who received the glorious crown of martyrdom on the 7th of this month.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v03 March 7 SS. Perpetua and Felicitas, MM.">
+    <excerptum>namely Revocatus and his fellow-slave Felicitas, Saturninus, and Secundulus, and Vibia Perpetua.</excerptum>
+    <excerptum>Perpetua had an infant at her . breast, was of a good family, twenty-two years of age, and married to a person of quality in the city.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="Sts. Felicitas and Perpetua" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/Sts._Felicitas_and_Perpetua">
+    <excerptum>Martyrs, suffered at Carthage, 7 March 203, together with three companions, Revocatus, Saturus, and Saturninus.</excerptum>
+    <excerptum>By a rescript of Septimus Severus (193-211) all imperial subjects were forbidden under severe penalties to become Christians.</excerptum>
+    <excerptum>Vibia Perpetua, a young married lady of noble birth; the slave Felicitas, and her fellow-slave Revocatus, also Saturninus and Secundulus. Soon one Saturus, who deliberately declared himself a Christian before the judge, was also incarcerated.</excerptum>
+    <excerptum>After their arrest, and before they were led away to prison, the five catechumens were baptized.</excerptum>
+    <excerptum>Perpetua's father was a pagan; her mother, however,and two brothers were Christians</excerptum>
+    <excerptum>the attempts of Perpetua's father to induce her to apostatize, the vicissitudes of the martyrs before their execution, the visions of Saturus and Perpetua in their dungeons, were all faithfully committed to writing by the last two</excerptum>
+    <excerptum>Perpetua's father, carrying her child in his arms, approached her again and attempted, for the last time, to induce her to apostatize</excerptum>
+    <excerptum>Her mother brought in her arms to Perpetua her little son, whom she was permitted to nurse and retain in prison with her. A vision, in which she saw herself ascending a ladder leading to green meadows, where a flock of sheep was browsing, assured her of her approaching martyrdom.</excerptum>
+    <excerptum>The next day the trial of the six confessors took place, before the Procurator Hilarianus.</excerptum>
+    <excerptum>She refused to sacrifice to the gods for the safety of the emperor.</excerptum>
+    <excerptum>On 7 March, the five confessors were led into the amphitheatre.</excerptum>
+    <excerptum>a wild cow at the women. Wounded by the wild animals, they gave each other the kiss of peace and were then put to the sword.</excerptum>
+    <excerptum>Thus under 7 March the names of Felicitas and Perpetua are entered in the Philocalian calendar, i.e. the calendar of martyrs venerated publicly in the fourth century at Rome. A magnificent basilica was afterwards erected over their tomb</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="7 March">
+    <excerptum>Saints Perpetua and Felicity, Martyrs</excerptum>
+  </fons>
+</sanctus>

@@ -1,0 +1,42 @@
+<sanctus id="peter-canisius" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Peter Canisius</nomen>
+  <nomen lingua="alia" fontes="sedes">Peter Kanis</nomen>
+  <ortus annus="1521" mensis="5" dies="8" locus="Nijmegen, Netherlands" fontes="ce sedes"/>
+  <obitus annus="1597" locus="Fribourg, Switzerland" fontes="ce sedes"/>
+  <beatificatio annus="1864" papa="Pius IX" fontes="sedes"/>
+  <canonizatio modus="formalis" annus="1925" papa="Pius XI" fontes="sedes"/>
+  <festum calendarium="generale" mensis="12" dies="21" gradus="memoria-ad-libitum" fontes="us"/>
+  <munus fontes="us ce">priest</munus>
+  <munus fontes="ce sedes">religious</munus>
+  <munus fontes="us sedes">doctor of the Church</munus>
+  <descriptio>
+    <paragraphus fontes="ce sedes">Peter Canisius (Kanis) was born at Nijmegen in the Netherlands on 8 May 1521, the son of the town's burgomaster. He studied at Cologne and, after making the Spiritual Exercises under Peter Faber, entered the Society of Jesus at Mainz on 8 May 1543. Ordained priest in 1546, he attended the Council of Trent as theologian of the Cardinal Bishop of Augsburg, and St. Ignatius then sent him to work in Germany, where the Catholic faith seemed to be dying out.</paragraphus>
+    <paragraphus fontes="ce sedes">He taught theology and preached at Ingolstadt, where he became rector of the university; went to the new college in Vienna, whose bishopric he refused; founded the College of Prague; and was the first provincial superior of Upper Germany. His most widely spread writings were his three catechisms, written between 1555 and 1558; in his lifetime his Catechism went through more than two hundred editions in at least twelve languages. In 1580 he went to Fribourg in Switzerland, where he spent his last years preaching and writing. He died there in 1597: the Catholic Encyclopedia gives 21 November, Benedict XVI 21 December.</paragraphus>
+    <paragraphus fontes="sedes">Pius IX beatified him in 1864, Leo XIII called him the "Second Apostle of Germany" in 1897, and Pius XI canonized him and proclaimed him a Doctor of the Church in 1925.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="Bl. Peter Canisius" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/Bl._Peter_Canisius">
+    <excerptum>Born at Nimwegen in the Netherlands, 8 May, 1521; died in Fribourg, 21 November, 1597. His father was the wealthy burgomaster, Jacob Canisius</excerptum>
+    <excerptum>In 1536 Peter was sent to Cologne, where he studied arts, civil law, and theology at the university</excerptum>
+    <excerptum>In 1543 he visited Peter Faber and, having made the "Spiritual Exercises" under his direction, was admitted into the Society of Jesus at Mainz, on 8 May.</excerptum>
+    <excerptum>In 1546 he was admitted to the priesthood</excerptum>
+    <excerptum>he reached Ingolstadt, where he taught theology, catechized, and preached. In 1550 he was elected rector of the university, and in 1552 was sent by Ignatius to the new college in Vienna</excerptum>
+    <excerptum>Ferdinand three times offered him the Bishopric of Vienna, but he refused.</excerptum>
+    <excerptum>In the same year Ignatius appointed him first provincial superior of Upper Germany</excerptum>
+    <excerptum>The last years of his life he devoted to the instruction of converts, to making spiritual addresses to the brothers of the order, to writing and re-editing books.</excerptum>
+    <excerptum>During his lifetime his "Catechism" appeared in more than 200 editions in at least twelve languages.</excerptum>
+  </fons>
+  <fons id="sedes" opus="sedes" locus="Benedict XVI, general audience, 9 February 2011: Saint Peter Canisius" url="https://www.vatican.va/content/benedict-xvi/en/audiences/2011/documents/hf_ben-xvi_aud_20110209.html">
+    <excerptum>Today I want to talk to you about St Peter Kanis, Canisius in the Latin form of his surname</excerptum>
+    <excerptum>He was born on 8 May 1521 in Wijmegen, Holland. His father was Burgomaster of the town.</excerptum>
+    <excerptum>He entered the Society of Jesus on 8 May 1543 in Mainz</excerptum>
+    <excerptum>He was ordained a priest in Cologne. Already the following year, in June 1546, he attended the Council of Trent, as the theologian of Cardinal Otto Truchsess von Waldburg, Bishop of Augsberg</excerptum>
+    <excerptum>St Ignatius assigned him to carry out the apostolate in Germany.</excerptum>
+    <excerptum>at the moment when the Catholic faith in the German-speaking countries seemed to be dying out in the face of the fascination of the Reformation.</excerptum>
+    <excerptum>In 1556 he founded the College of Prague and, until 1569, was the first superior of the Jesuit Province of Upper Germany.</excerptum>
+    <excerptum>In 1580 he withdrew to Fribourg, Switzerland, where he devoted himself entirely to preaching and writing. He died there on 21 December 1597. Bl. Pius IX beatified him in 1864 and in 1897 Pope Leo XIII proclaimed him the “Second Apostle of Germany”. Pope Pius XI canonized him and proclaimed him a Doctor of the Church in 1925.</excerptum>
+    <excerptum>his most widely disseminated writings were the three Catechisms he compiled between 1555 and 1558.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="21 December">
+    <excerptum>Saint Peter Canisius, Priest and Doctor of the Church</excerptum>
+  </fons>
+</sanctus>

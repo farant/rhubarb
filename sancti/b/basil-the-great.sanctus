@@ -1,0 +1,35 @@
+<sanctus id="basil-the-great" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Basil the Great</nomen>
+  <ortus annus="329" circa="verum" fontes="ce"/>
+  <obitus annus="379" mensis="1" dies="1" locus="Caesarea in Cappadocia" fontes="ce mr1"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="1" dies="2" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="1" dies="1" fontes="mr1"/>
+  <festum calendarium="martyrologium" mensis="6" dies="14" fontes="mr2"/>
+  <munus fontes="ce mr2">bishop</munus>
+  <munus fontes="us mr2">doctor of the Church</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Basil was Bishop of Caesarea in Cappadocia and one of the most distinguished Doctors of the Church. He was probably born in 329 and died on 1 January 379. With his friend Gregory of Nazianzus and his brother Gregory of Nyssa he makes up the trio known as the Three Cappadocians. As a boy he was sent to school at Caesarea; later he studied at Constantinople and Athens, where he and Gregory were inseparable companions. To learn the ways of perfection, he visited the monasteries of Egypt, Palestine, Coele-Syria and Mesopotamia and founded a monastery of his own in Pontus, on the banks of the Iris; he came to be called the father of Oriental monasticism.</paragraphus>
+    <paragraphus fontes="ce mr1 mr2">He succeeded to the see of Caesarea in 370, consecrated according to tradition on 14 June. The Martyrology records his death on 1 January but keeps his festival on 14 June, the date of his consecration, praising his learning and wisdom in the time of the emperor Valens and his steady defence of the Church against the Arians and the Macedonians.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Basil the Great" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Basil_the_Great">
+    <excerptum>Bishop of Cæsarea, one of the most distinguished Doctors of the Church, born probably 329; died 1 January, 379.</excerptum>
+    <excerptum>With his friend Gregory of Nazianzus and his brother, Gregory of Nyssa, he makes up the trio known as "The Three Cappadocians"</excerptum>
+    <excerptum>As a boy, he was sent to school at Cæsarea, then "a metropolis of letters"</excerptum>
+    <excerptum>Later, he went to Constantinople, at that time "distinguished for its teachers of philosophy and rhetoric", and thence to Athens. Here he became the inseparable companion of Gregory of Nazianzus</excerptum>
+    <excerptum>To learn the ways of perfection, Basil now visited the monasteries of Egypt, Palestine, Coele-Syria, and Mesopotamia.</excerptum>
+    <excerptum>founded a monastery in his native Pontus, on the banks of the Iris, nearly opposite Annesi.</excerptum>
+    <excerptum>Basil became known as the father of Oriental monasticism, the forerunner of St. Benedict.</excerptum>
+    <excerptum>In 370 Basil succeeded to the See of Cæsarea, being consecrated according to tradition on 14 June.</excerptum>
+  </fons>
+  <fons id="mr1" opus="mr1916" locus="1 January">
+    <excerptum>At Csesarea, in Cappadocia, the demise of St. Basil, bishop, whose festival is kept on the 14th of June, the date of his consecration as bishop.</excerptum>
+  </fons>
+  <fons id="mr2" opus="mr1916" locus="14 June">
+    <excerptum>in Cappadocia, the consecration of St. Basil, bishop and doctor of the Church, who was eminent for learning and wisdom in the time of the emperor Valens.</excerptum>
+    <excerptum>he was a great light in the Church, and defended her with admirable constancy against the Arians and Macedonians.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="2 January">
+    <excerptum>Saints Basil the Great and Gregory Nazianzen, Bishops and Doctors of the Church</excerptum>
+  </fons>
+</sanctus>

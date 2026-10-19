@@ -1,0 +1,33 @@
+<sanctus id="sylvester-i" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Sylvester I</nomen>
+  <nomen lingua="en" fontes="mr">Silvester</nomen>
+  <obitus annus="335" mensis="12" dies="31" locus="Rome" fontes="ce mr"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="12" dies="31" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="12" dies="31" fontes="mr"/>
+  <munus fontes="us ce mr">pope</munus>
+  <descriptio>
+    <paragraphus fontes="ce">The date of Sylvester's birth is unknown. The Liber pontificalis calls him the son of a Roman named Rufinus. He succeeded Miltiades as Bishop of Rome in 314 and held the see for twenty-one years, in the age of Constantine the Great, when the public position of the Church greatly improved; yet little authoritative information about his pontificate survives. He took part in the negotiations over Arianism and the Council of Nicaea and sent legates to that first ecumenical council. In his time Constantine built the great Roman churches, among them the Lateran basilica and baptistery and St. Peter's in the Vatican.</paragraphus>
+    <paragraphus fontes="mr ce">The Martyrology says that he baptized Constantine and confirmed the Council of Nicaea. The Catholic Encyclopedia, however, calls the stories of the emperor's healing and baptism by him, and of the Donation of Constantine, entirely legendary, and finds it uncertain whether he expressly confirmed the council's decrees. He built a church over the Catacomb of Priscilla on the Via Salaria and was buried there. He died in 335; the Catholic Encyclopedia gives 31 December, the day on which the Roman list of bishops' burial days, compiled barely a year after his death, keeps his feast, and which it takes to be the day of his burial.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="Pope St. Sylvester I" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/Pope_St._Sylvester_I">
+    <excerptum>(314-335) Date of birth unknown; d. 31 December, 335. According to the "Liber pontificalis" (ed. Duchesne, I, 170) he was the son of a Roman named Rufinus</excerptum>
+    <excerptum>After the death of Miltiades (Melchiades), Sylvester was made Bishop of Rome and occupied this position twenty-one years. This was the era of Constantine the Great, when the public position of the Church so greatly improved</excerptum>
+    <excerptum>it is consequently to be regretted that there is so little authoritative information concerning Sylvester's pontificate.</excerptum>
+    <excerptum>The accounts given in all these writings concerning the persecution of Sylvester, the healing and baptism of Constantine, the emperor's gift to the pope, the rights granted to the latter, and the council of 275 bishops at Rome, are entirely legendary.</excerptum>
+    <excerptum>The pope, however, took part in the negotiations concerning Arianism and the Council of Nicæa</excerptum>
+    <excerptum>The pontiff also sent legates to the first œcumenical council.</excerptum>
+    <excerptum>Still it is not certain whether Constantine had arranged beforehand with Sylvester concerning the actual convening of the council, nor whether there was an express papal confirmation of the decrees beyond the signatures of the papal legates</excerptum>
+    <excerptum>During Sylvester's pontificate were built the great churches founded at Rome by Constantine, e.g. the basilica and baptistery of the Lateran</excerptum>
+    <excerptum>the Church of St. Peter in the Vatican</excerptum>
+    <excerptum>on the Via Salaria he built a cemeterial church over the Catacomb of Priscilla, the ruins of which have lately been brought to light. In this church he was buried.</excerptum>
+    <excerptum>His feast is given under 31 December in the "Depositio episcoporum", or list of the burial days of the Roman bishops, which was compiled barely a year after his death</excerptum>
+    <excerptum>This day, therefore, is doubtless the day of his burial.</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="31 December">
+    <excerptum>At Rome, the birthday of pope St. Silvester, who baptized the emperor Constantine the Great, and confirmed the Council of Nicaea. After performing many other holy deeds, he rested in peace.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="31 December">
+    <excerptum>Saint Sylvester I, Pope</excerptum>
+  </fons>
+</sanctus>

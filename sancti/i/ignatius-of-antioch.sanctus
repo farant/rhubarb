@@ -1,0 +1,51 @@
+<sanctus id="ignatius-of-antioch" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Ignatius of Antioch</nomen>
+  <nomen lingua="el" fontes="ce">Theophoros</nomen>
+  <ortus annus="50" circa="verum" locus="Syria" fontes="ce"/>
+  <obitus locus="Rome" martyrium="verum" fontes="ce mr"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="10" dies="17" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="2" dies="1" fontes="mr"/>
+  <festum calendarium="martyrologium" mensis="12" dies="17" nota="translation of his relics from Rome to Antioch" fontes="mr2"/>
+  <munus fontes="us mr ce">bishop</munus>
+  <munus fontes="us mr ce">martyr</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Ignatius, also called Theophorus, was born in Syria around the year 50. It is thought very probable that he and his friend Polycarp heard the Apostle John. Counting St. Peter, he was the third bishop of Antioch, succeeding Evodius; some ancient writers say he was appointed by Peter or consecrated by the Apostles themselves. He guided his flock through the persecution of Domitian and longed to complete his discipleship by martyrdom. According to the Acts of his martyrdom, which are ancient but much interpolated, he worked to thwart Trajan's decree that Christians must join in the worship of the gods, was brought before the emperor at Antioch, and was sent in chains to Rome to be thrown to the beasts.</paragraphus>
+    <paragraphus fontes="ce mr mr2">On the journey he was greeted by Christians along the way. From Smyrna, where Polycarp was bishop, he wrote to the churches of Ephesus, Magnesia, Tralles and Rome, and from Troas to Philadelphia, Smyrna and Polycarp: seven letters urging obedience to the bishops, warning against heresy, and asking the Romans not to stand in the way of his martyrdom. He died in the Flavian amphitheatre at Rome, delivered to the lions, at a date between 98 and 117. His relics were carried back to Antioch, a translation the Martyrology commemorates on 17 December, and in 637 were brought to St. Clement's in Rome.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Ignatius of Antioch" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Ignatius_of_Antioch">
+    <excerptum>Also called Theophorus (ho Theophoros); born in Syria, around the year 50; died at Rome between 98 and 117.</excerptum>
+    <excerptum>It is also believed, and with great probability, that, with his friend Polycarp, he was among the auditors of the Apostle St. John.</excerptum>
+    <excerptum>If we include St. Peter, Ignatius was the third Bishop of Antioch and the immediate successor of Evodius</excerptum>
+    <excerptum>is the authority for the statement that St. Peter appointed Ignatius to the See of Antioch.</excerptum>
+    <excerptum>in receiving his episcopal consecration at the hands of the Apostles themselves</excerptum>
+    <excerptum>when the storm of the persecution of Domitian broke in its full fury upon the Christians of Syria, it found their faithful leader prepared and watchful.</excerptum>
+    <excerptum>the one great and ever-present wish of his chivalrous soul was that he might receive the fullness of Christian discipleship through the medium of martyrdom.</excerptum>
+    <excerptum>It is generally admitted, even by those who regarded it as authentic, that this work has been greatly interpolated.</excerptum>
+    <excerptum>It is certainly very ancient and is reputed to have been written by Philo, deacon of Tarsus</excerptum>
+    <excerptum>According to these Acts, in the ninth year of his reign, Trajan, flushed with victory over the Scythians and Dacians</excerptum>
+    <excerptum>He decreed, therefore, that the Christians should unite with their pagan neighbors in the worship of the gods.</excerptum>
+    <excerptum>Ignatius availed himself of all the means within his reach to thwart the purpose of the emperor.</excerptum>
+    <excerptum>He was soon arrested and led before Trajan, who was then sojourning in Antioch.</excerptum>
+    <excerptum>the emperor ordered him to be put in chains and taken to Rome, there to become the food of wild beasts and a spectacle for the people.</excerptum>
+    <excerptum>At several places along the road his fellow-Christians greeted him with words of comfort and reverential homage.</excerptum>
+    <excerptum>From the congregations of Ephesus, Magnesia, and Tralles, deputations came to comfort him. To each of these Christian communities he addressed letters from Smyrna, exhorting them to obedience to their respective bishops, and warning them to avoid the contamination of heresy.</excerptum>
+    <excerptum>While still there he wrote also to the Christians of Rome, begging them to do nothing to deprive him of the opportunity of martyrdom.</excerptum>
+    <excerptum>From Smyrna his captors took him to Troas, from which place he dispatched letters to the Christians of Philadelphia and Smyrna, and to Polycarp.</excerptum>
+    <excerptum>Not long after his arrival in Rome he won his long-coveted crown of martyrdom in the Flavian amphitheater.</excerptum>
+    <excerptum>The relics of the holy martyr were borne back to Antioch</excerptum>
+    <excerptum>In 637 they were translated to St. Clement's at Rome, where they now rest.</excerptum>
+    <excerptum>It was made up of the seven letters written by Ignatius whilst on his way to Rome</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="1 February">
+    <excerptum>birthday of St. Ignatius, bishop and martyr, who governed the church of Antioch, the third after the apostle St. Peter. Being condemned to the beasts in the persecution of Trajan, he was by that emperor sent to Rome in chains</excerptum>
+    <excerptum>and delivered to the lions, which lacerated him with their teeth, and made of him a sacrifice to Christ.</excerptum>
+  </fons>
+  <fons id="mr2" opus="mr1916" locus="17 December">
+    <excerptum>The same day, the translation of St. Ignatius, bishop</excerptum>
+    <excerptum>and martyr, who, the third after the blessed apostle Peter, governed the Church of Antioch. His body was conveyed from Kome, where he had suffered under Trajan, to Antioch</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="17 October">
+    <excerptum>Saint Ignatius of Antioch, Bishop and Martyr</excerptum>
+  </fons>
+</sanctus>

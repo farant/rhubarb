@@ -1,0 +1,43 @@
+<sanctus id="polycarp" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Polycarp</nomen>
+  <ortus annus="69" circa="verum" fontes="ce"/>
+  <obitus annus="155" mensis="2" dies="23" circa="verum" locus="Smyrna" martyrium="verum" fontes="ce mr"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="2" dies="23" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="1" dies="26" fontes="mr"/>
+  <munus fontes="us mr">bishop</munus>
+  <munus fontes="us ce">martyr</munus>
+  <descriptio>
+    <paragraphus fontes="mr bu ce">Polycarp was a disciple of the Apostle John, who made him bishop of Smyrna. He stands as a link with the apostolic age: Irenaeus remembered hearing him as a boy and recalled how Polycarp spoke of his intercourse with John and others who had seen the Lord. He received Ignatius of Antioch as he passed through Smyrna on the way to martyrdom, and wrote an epistle to the Philippians. He travelled to Rome to confer with Pope Anicetus about the date of Easter; the two could not persuade each other, but parted in peace, and Anicetus, as a mark of respect, conceded to Polycarp the celebration of the Eucharist.</paragraphus>
+    <paragraphus fontes="ce mr">His martyrdom is told in a letter of the Church of Smyrna. Urged by the proconsul to curse Christ, he answered that he had served Him eighty-six years and had received no harm. He was condemned to be burned alive; when the fire did not harm him he was stabbed. The letter dates his death to a Saturday, 23 February; the year is most probably 155, though 166 has also been argued.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="26 January">
+    <excerptum>At Smyrna, the birthday of St. Polycarp, a disciple of the Apostle St. John, who consecrated him bishop of that city and Primate of all Asia.</excerptum>
+    <excerptum>he was condemned to the flames. But as he received no injury from them, he was transpierced with a sword, and thus received the crown of martyrdom.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v01 Jan. 26 St. Polycarp, Bishop of Smyrna, M.">
+    <excerptum>was a disciple of the apostles, in particular of St. John the Evangelist, and was constituted by him bishop of Smyrna</excerptum>
+    <excerptum>St. Polycarp kissed with respect the chains of St. Ignatius, who passed by Smyrna on the road to his martyrdom</excerptum>
+    <excerptum>he undertook a Journey of charity to Rome, to confer with pope Anicetus about certain points of discipline, especially about the time of keeping Easter</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. Polycarp" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Polycarp">
+    <excerptum>Francis Joseph Bacchus Martyr (A.D. 69-155).</excerptum>
+    <excerptum>Polycarp comes before us preeminently as a link with the past</excerptum>
+    <excerptum>St. Irenaeus wrote him a letter of remonstrance</excerptum>
+    <excerptum>in which he recalled their common recollections of Polycarp. "These opinions ... Florinus are not of sound judgment ... I saw thee when I was still a boy in Lower Asia in company with Polycarp</excerptum>
+    <excerptum>St. Polycarp's own Epistle to the Philippians</excerptum>
+    <excerptum>For neither could Anicetus persuade Polycarp ... nor Polycarp Anicetus</excerptum>
+    <excerptum>how he would describe his intercourse with John and with the rest who had seen the Lord</excerptum>
+    <excerptum>Anicetus conceded the administration of the Eucharist in the Church to Polycarp, manifestly as a mark of respect. And they parted from each other in peace</excerptum>
+    <excerptum>Polycarp's martyrdom is described in a letter from the Church of Smyrna</excerptum>
+    <excerptum>It was to the proconsul, when he urged him to curse Christ, that Polycarp made his celebrated reply: "Fourscore and six years have I served Him, and he has done me no harm. How then can I curse my King that saved me.</excerptum>
+    <excerptum>It was decided, therefore, to burn him alive.</excerptum>
+    <excerptum>The executioner was ordered to stab him</excerptum>
+    <excerptum>the martyrdom took place on a Saturday which fell on 23 February. Now there are two possible years for this, 155 and 166.</excerptum>
+    <excerptum>Now the probable date of St. Polycarp's martyrdom is February, 155.</excerptum>
+    <excerptum>St. Polycarp wrote his epistle before he had heard of St. Ignatius' martyrdom.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="23 February">
+    <excerptum>Saint Polycarp, Bishop and Martyr</excerptum>
+  </fons>
+</sanctus>

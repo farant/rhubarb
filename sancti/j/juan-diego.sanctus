@@ -1,0 +1,30 @@
+<sanctus id="juan-diego" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Juan Diego</nomen>
+  <nomen lingua="alia" fontes="us sedes">Juan Diego Cuauhtlatoatzin</nomen>
+  <canonizatio modus="formalis" annus="2002" mensis="7" dies="31" papa="John Paul II" fontes="sedes"/>
+  <festum calendarium="generale" mensis="12" dies="9" gradus="memoria-ad-libitum" fontes="us"/>
+  <descriptio>
+    <paragraphus fontes="ce sedes">Juan Diego was an Indian of Mexico, a recent convert. According to the account of Guadalupe given by the Catholic Encyclopedia, which calls the tradition unwavering, the Blessed Virgin appeared to him on Saturday, 9 December 1531, when he was fifty-five years old and hurrying down Tepeyac hill to Mass in Mexico City, and sent him to Bishop Zumárraga to ask that a church be built there. The bishop asked for a sign. On 12 December, while Juan was seeking a priest for his dying uncle Bernardino, she met him again, cured the uncle, and told him to gather roses on the rocks, though it was not their season. When he opened his cloak, his tilma, before the bishop, the roses fell out and the figure of the Virgin was seen on the cloth.</paragraphus>
+    <paragraphus fontes="sedes">Pope John Paul II canonized him on 31 July 2002 in the Basilica of Our Lady of Guadalupe in Mexico City, calling him the first indigenous saint of the American continent and a simple, humble Indian who accepted the Christian message without giving up his indigenous identity. The homily closes by addressing him as "the talking eagle".</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="Shrine of Guadalupe" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/Shrine_of_Guadalupe">
+    <excerptum>Oral and written, Indian and Spanish, the account is unwavering.</excerptum>
+    <excerptum>To a neophyte, fifty five years old, named Juan Diego, who was hurrying down Tepeyac hill to hear Mass in Mexico City, on Saturday, 9 December, 1531, the Blessed Virgin appeared and sent him to Bishop Zumárraga to have a temple built where she stood.</excerptum>
+    <excerptum>he finally bade him ask a sign of the lady who said she was the mother of the true God.</excerptum>
+    <excerptum>Juan was occupied all Monday with Bernardino, an uncle, who seemed dying of fever.</excerptum>
+    <excerptum>at daybreak on Tuesday, 12 December, the grieved nephew was running to the St. James's convent for a priest.</excerptum>
+    <excerptum>Reassuring Juan about his uncle whom at that instant she cured</excerptum>
+    <excerptum>She told him to go up to the rocks and gather roses. He knew it was neither the time nor the place for roses, but he went and found them.</excerptum>
+    <excerptum>As he unfolded his cloak the roses fell out, and he was startled to see the bishop and his attendants kneeling before him: the life size figure of the Virgin Mother, just as he had described her, was glowing on the poor tilma.</excerptum>
+  </fons>
+  <fons id="sedes" opus="sedes" locus="John Paul II, homily for the canonization of Juan Diego Cuauhtlatoatzin, Mexico City, 31 July 2002" url="https://www.vatican.va/content/john-paul-ii/en/homilies/2002/documents/hf_jp-ii_hom_20020731_canonization-mexico.html">
+    <excerptum>CANONIZATION OF JUAN DIEGO CUAUHTLATOATZIN HOMILY OF THE HOLY FATHER JOHN PAUL II Mexico City, Wednesday July 31, 2002</excerptum>
+    <excerptum>a special invitation to us to praise and thank God for the gift of the first indigenous Saint of the American Continent.</excerptum>
+    <excerptum>With deep joy I have come on pilgrimage to this Basilica of Our Lady of Guadalupe, the Marian heart of Mexico and of America, to proclaim the holiness of Juan Diego Cuauhtlatoatzin, the simple, humble Indian</excerptum>
+    <excerptum>In accepting the Christian message without forgoing his indigenous identity, Juan Diego discovered the profound truth of the new humanity</excerptum>
+    <excerptum>Beloved Juan Diego, "the talking eagle"!</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="9 December">
+    <excerptum>Saint Juan Diego Cuauhtlatoatzin</excerptum>
+  </fons>
+</sanctus>

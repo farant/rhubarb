@@ -1,0 +1,42 @@
+<sanctus id="cyril-of-thessalonica" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Cyril of Thessalonica</nomen>
+  <nomen lingua="alia" fontes="ce bu">Constantine</nomen>
+  <ortus annus="827" locus="Thessalonica" fontes="ce bu"/>
+  <obitus annus="869" mensis="2" dies="4" locus="Rome" fontes="ce"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="2" dies="14" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="3" dies="9" fontes="mr"/>
+  <festum calendarium="martyrologium" mensis="7" dies="7" nota="festum ex praecepto Leonis XIII" fontes="mr mr2"/>
+  <munus fontes="us bu">monk</munus>
+  <munus fontes="ce">priest</munus>
+  <munus fontes="ce">missionary</munus>
+  <descriptio>
+    <paragraphus fontes="ce bu">Constantine, later called Cyril, was born at Thessalonica in 827 to a senatorial family and was educated at Constantinople, where his learning earned him the name of the Philosopher. With his brother Methodius he gave up secular honours and became a priest. While the brothers were living in a monastery on the Bosphorus, Cyril was chosen to answer a request of the Khazars for a Christian teacher, and his brother went with him.</paragraphus>
+    <paragraphus fontes="ce bu">When the Moravians asked for a preacher who could teach and celebrate in the Slavonic tongue, the brothers were sent. Cyril invented an alphabet and with Methodius translated the Gospels and liturgical books into Slavonic; they reached Moravia in 863. Summoned to Rome, they were received by Adrian II, who approved the Slavonic liturgy. The sources differ on what followed: the Catholic Encyclopedia says Adrian ordained both brothers bishops, while Butler cites accounts that Cyril took the monastic habit and died before being consecrated. He died in Rome on 4 February 869.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="9 March">
+    <excerptum>In Moravia, the saintly bishops Cyril and Methodius,who brought to the faith of Christ many nations in those regions with their kings. Leo XIII. prescribed that their feast should be celebrated on the seventh of July.</excerptum>
+  </fons>
+  <fons id="mr2" opus="mr1916" locus="7 July">
+    <excerptum>holy bishops Cyril and Methodius, who are mentioned on the 9th of March.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="Sts. Cyril and Methodius" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/Sts._Cyril_and_Methodius">
+    <excerptum>These brothers, the Apostles of the Slavs, were born in Thessalonica, in 827 and 826 respectively. Though belonging to a senatorial family they renounced secular honours and became priests.</excerptum>
+    <excerptum>They were living in a monastery on the Bosphorous, when the Khazars sent to Constantinople for a Christian teacher. Cyril was selected and was accompanied by his brother.</excerptum>
+    <excerptum>The Moravians wished a teacher who could instruct them and conduct Divine service in the Slavonic tongue.</excerptum>
+    <excerptum>In preparation for it Cyril invented an alphabet and, with the help of Methodius, translated the Gospels and the necessary liturgical books into Slavonic. They went to Moravia in 863, and laboured for four and a half years.</excerptum>
+    <excerptum>On this account the brothers were summoned to Rome by Nicholas I, who died, however, before their arrival. His successor, Adrian II, received them kindly.</excerptum>
+    <excerptum>he commended their missionary activity, sanctioned the Slavonic Liturgy, and ordained Cyril and Methodius bishops.</excerptum>
+    <excerptum>Cyril, however, was not to return to Moravia. He died in Rome, 4 Feb., 869.</excerptum>
+    <excerptum>Leo XIII, by his Encyclical &quot;Grande Munus&quot; of 30 September, 1880, extended the feast to the universal Church.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v12 Dec. 22 SS. Cyril and Methodius, CC.">
+    <excerptum>Constantine, who was afterward called Cyril, was born at Thessalonica, of an illustrious senatorian Roman family. He had his education at Constantinople, and by his great progress in learning deserved to be surnamed The Philosopher</excerptum>
+    <excerptum>in the Polish Breviary and other monuments, -it is said that Cyril died a monk, and that only Methodius was conse-</excerptum>
+    <excerptum>that Cyril put on the monastic habit, and died soon after in that city, before he received the episcopal consecration.</excerptum>
+    <excerptum>Cyril and Methodius translated the liturgy into the Sclavonian tongue, and instituted mass to be said in the same.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="14 February">
+    <excerptum>Saints Cyril, Monk, and Methodius, Bishop</excerptum>
+  </fons>
+</sanctus>

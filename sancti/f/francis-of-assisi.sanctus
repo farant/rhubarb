@@ -1,0 +1,53 @@
+<sanctus id="francis-of-assisi" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Francis of Assisi</nomen>
+  <nomen lingua="it" fontes="ce">Francesco</nomen>
+  <ortus annus="1181" circa="verum" locus="Assisi" fontes="ce"/>
+  <obitus annus="1226" mensis="10" dies="3" locus="Assisi" fontes="ce"/>
+  <canonizatio modus="formalis" annus="1228" mensis="7" dies="16" papa="Gregory IX" fontes="ce"/>
+  <festum calendarium="generale" mensis="10" dies="4" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="10" dies="4" fontes="mr"/>
+  <munus fontes="mr ce">founder</munus>
+  <munus fontes="ce">deacon</munus>
+  <patrocinium fontes="pat">merchants</patrocinium>
+  <descriptio>
+    <paragraphus fontes="ce">Francis was born at Assisi in 1181 or 1182; the exact year is uncertain. His father, Pietro Bernardone, was a wealthy cloth merchant, and he was baptized Giovanni, a name his father changed to Francesco. A pleasure-loving youth, at about twenty he was taken prisoner in a skirmish with Perugia and held there more than a year; a later illness at Spoleto turned him back to Assisi in 1205. Crossing the Umbrian plain he dismounted and embraced a leper, and praying before an ancient crucifix in the chapel of St. Damian's he heard a voice bid him repair the Lord's house, which he took literally to mean the ruined church. When his father sought to make him give up his inheritance, Francis, taken before the bishop, stripped off his very clothes and gave them back to his father.</paragraphus>
+    <paragraphus fontes="ce mr">In 1208, hearing at Mass the Gospel of the disciples sent out with neither gold nor silver, he took the words as spoken to himself, and others soon joined him. Innocent III gave verbal sanction to their rule, and the brothers built their huts at the Porziuncola; with Clare he founded the Poor Ladies, and later the Third Order for those living in the world. About the feast of the Exaltation of the Cross in 1224, praying on La Verna, he received the stigmata. He died at Assisi on 3 October 1226, and Gregory IX canonized him on 16 July 1228. The Martyrology notes that his life was written by St. Bonaventure.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="4 October">
+    <excerptum>AT Assisi, in Umbria, the birthday of St. Francis, confessor, founder of the Order of Minorites, whose life, filled with holy deeds and miracles, was</excerptum>
+    <excerptum>.written by St. Bonaventure. — At Corinth, the birth- day of the Saints Crispus and Cams</excerptum>
+  </fons>
+  <fons id="pat" opus="mr1916" locus="Patron Saints of Trade and of Professions">
+    <excerptum>Merchants — St. Francis of Assisi, who before his conversion was a noted merchant: October 4.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. Francis of Assisi" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Francis_of_Assisi">
+    <excerptum>Founder of the Franciscan Order, born at Assisi in Umbria, in 1181 or 1182 — the exact year is uncertain; died there, 3 October, 1226.</excerptum>
+    <excerptum>His father, Pietro Bernardone, was a wealthy Assisian cloth merchant.</excerptum>
+    <excerptum>At baptism the saint received the name of Giovanni, which his father afterwards altered to Francesco</excerptum>
+    <excerptum>No one loved pleasure more than Francis; he had a ready wit, sang merrily, delighted in fine clothes and showy display.</excerptum>
+    <excerptum>When about twenty, Francis went out with the townsmen to fight the Perugians in one of the petty skirmishes so frequent at that time between the rival cities.</excerptum>
+    <excerptum>Francis, being among those taken prisoners, was held captive for more than a year in Perugia.</excerptum>
+    <excerptum>But a second illness arrested his course at Spoleto. There, we are told, Francis had another dream in which the same voice bade him turn back to Assisi. He did so at once. This was in 1205.</excerptum>
+    <excerptum>One day, while crossing the Umbrian plain on horseback, Francis unexpectedly drew near a poor leper.</excerptum>
+    <excerptum>presently controlling his natural aversion he dismounted, embraced the unfortunate man, and gave him all the money he had.</excerptum>
+    <excerptum>whilst Francis was praying before an ancient crucifix in the forsaken wayside chapel of St. Damian's below the town, he heard a voice saying: "Go, Francis, and repair my house, which as you see is falling into ruin." Taking this behest literally, as referring to the ruinous church wherein he knelt</excerptum>
+    <excerptum>sought also to force his son to forego his inheritance. This Francis was only too eager to do</excerptum>
+    <excerptum>Having therefore been taken before the bishop, Francis stripped himself of the very clothes he wore, and gave them to his father</excerptum>
+    <excerptum>On a certain morning in 1208, probably 24 February, Francis was hearing Mass in the chapel of St. Mary of the Angels</excerptum>
+    <excerptum>the Gospel of the day told how the disciples of Christ were to possess neither gold nor silver</excerptum>
+    <excerptum>Francis took these words as if spoken directly to himself</excerptum>
+    <excerptum>The Assisians had already ceased to scoff at Francis; they now paused in wonderment; his example even drew others to him.</excerptum>
+    <excerptum>After this they procured rough habits like that of Francis, and built themselves small huts near his at the Porziuncola.</excerptum>
+    <excerptum>Innocent, moved it is said by a dream in which he beheld the Poor Man of Assisi upholding the tottering Lateran, gave a verbal sanction to the rule submitted by Francis</excerptum>
+    <excerptum>Before leaving Rome they all received the ecclesiastical tonsure, Francis himself being ordained deacon later on.</excerptum>
+    <excerptum>By his advice, Clare, who was then but eighteen, secretly left her father's house</excerptum>
+    <excerptum>which thus became the first monastery of the Second Franciscan Order of Poor Ladies, now known as Poor Clares.</excerptum>
+    <excerptum>Francis devised his Third Order, as it is now called, of the Brothers and Sisters of Penance, which he intended as a sort of middle state between the world and the cloister</excerptum>
+    <excerptum>It was on or about the feast of the Exaltation of the Cross (14 September) while praying on the mountainside, that he beheld the marvellous vision of the seraph, as a sequel of which there appeared on his body the visible marks of the five wounds of the Crucified</excerptum>
+    <excerptum>Early in August, 1224, Francis retired with three companions to "that rugged rock 'twixt Tiber and Arno", as Dante called La Verna</excerptum>
+    <excerptum>Francis was canonized at St. George's by Gregory IX, 16 July, 1228.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="4 October">
+    <excerptum>Saint Francis of Assisi</excerptum>
+  </fons>
+</sanctus>

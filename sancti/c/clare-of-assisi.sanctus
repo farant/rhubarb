@@ -1,0 +1,44 @@
+<sanctus id="clare-of-assisi" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Clare of Assisi</nomen>
+  <ortus annus="1194" mensis="7" dies="16" locus="Assisi" fontes="ce"/>
+  <obitus annus="1253" mensis="8" dies="11" locus="Assisi" fontes="ce"/>
+  <canonizatio modus="formalis" annus="1255" mensis="9" dies="26" papa="Alexander IV" fontes="ce mr"/>
+  <festum calendarium="generale" mensis="8" dies="11" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="8" dies="12" fontes="mr"/>
+  <munus fontes="us mr">virgin</munus>
+  <munus fontes="ce">abbess</munus>
+  <munus fontes="ce">cofoundress</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Clare was born at Assisi in 1194, by the traditional account the eldest daughter of a noble family. Moved at eighteen by the Lenten preaching of St. Francis, she left her father's house secretly on the night of Palm Sunday, 20 March 1212, and at the Porziuncula Francis cut off her hair and clothed her in a rough tunic. Her father tried to bring her home by force but at last left her in peace. Francis settled her and her companions at San Damiano, and so the first community of the Poor Ladies, or Poor Clares, was founded.</paragraphus>
+    <paragraphus fontes="ce mr">Made superior there by Francis in 1215, she ruled San Damiano as abbess until her death, nearly forty years later. She held fast to absolute poverty: Gregory IX granted her the Privilege of Poverty in 1228, and two days before her death Innocent IV confirmed the definitive Rule of the Clares. It is related that when soldiers of Frederick II scaled the convent walls in 1234 she faced them holding the Blessed Sacrament, and they fled; for this she is shown in art with a ciborium. She died on 11 August 1253 and was canonized by Alexander IV in 1255.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Clare of Assisi" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Clare_of_Assisi">
+    <excerptum>Cofoundress of the Order of Poor Ladies, or Clares, and first Abbess of San Damiano; born at Assisi, 16 July, 1194; died there 11 August, 1253. She was the eldest daughter of Favorino Scifi, Count of Sasso-Rosso</excerptum>
+    <excerptum>Such at least is the traditional account.</excerptum>
+    <excerptum>She was eighteen years of age when St. Francis came to preach the Lenten course in the church of San Giorgio at Assisi.</excerptum>
+    <excerptum>The inspired words of the Poverello kindled a flame in the heart of Clare</excerptum>
+    <excerptum>On Palm Sunday Clare, arrayed in all her finery, attended high Mass at the cathedral</excerptum>
+    <excerptum>On the night of the same day she secretly left her father's house, by St. Francis's advice</excerptum>
+    <excerptum>proceeded to the humble chapel of the Porziuncula, where St. Francis and his disciples met her with lights in their hands.</excerptum>
+    <excerptum>Clare then laid aside her rich dress, and St. Francis, having cut off her hair, clothed her in a rough tunic and a thick veil</excerptum>
+    <excerptum>in this way the young heroine vowed herself to the service of Jesus Christ. This was 20 March, 1212.</excerptum>
+    <excerptum>did his utmost to dissuade Clare from her heroic proposals, and even tried to drag her home by force. But Clare held her own with a firmness above her years, and Count Favorino was finally obliged to leave her in peace.</excerptum>
+    <excerptum>were established by St. Francis in a rude dwelling adjoining the poor chapel of San Damiano</excerptum>
+    <excerptum>Thus was founded the first community of the Order of Poor Ladies, or of Poor Clares, as this second order of St. Francis came to be called.</excerptum>
+    <excerptum>in 1228, he came to Assisi for the canonization of St. Francis (having meanwhile ascended the pontifical throne as Gregory IX), he visited St. Clare at San Damiano</excerptum>
+    <excerptum>grant her on 17 September, 1228, the celebrated Privilegium Paupertatis</excerptum>
+    <excerptum>for Innocent IV would fain have given the Clares a new and mitigated rule</excerptum>
+    <excerptum>two days before her death, Innocent, no doubt at the reiterated request of the dying abbess, solemnly confirmed the definitive Rule of the Clares</excerptum>
+    <excerptum>St. Clare, who in 1215 had, much against her will been made superior at San Damiano by St. Francis, continued to rule there as abbess until her death, in 1253, nearly forty years later.</excerptum>
+    <excerptum>When, in 1234, the army of Frederick II was devastating the valley of Spoleto, the soldiers, preparatory to an assault upon Assisi, scaled the walls of San Damiano by night</excerptum>
+    <excerptum>It is related that, as she raised the Blessed Sacrament on high, the soldiers who were about to enter the monastery fell backward as if dazzled, and the others who were ready to follow them took flight.</excerptum>
+    <excerptum>It is with reference to this incident that St. Clare is generally represented in art bearing a ciborium.</excerptum>
+    <excerptum>Two years later, 26 September, 1255, Clare was solemnly canonized by Alexander IV</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="12 August">
+    <excerptum>At Assisi, in Umbria, St. Clare, virgin, the first of the poor women of the Order of Minorites. Being celebrated for holiness of life and miracles, she was placed among holy virgins by Alexander</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="11 August">
+    <excerptum>Saint Clare, Virgin</excerptum>
+  </fons>
+</sanctus>

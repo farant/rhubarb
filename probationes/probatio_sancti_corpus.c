@@ -3,7 +3,7 @@
  * lectoris), iunctura sanctoralis CONSONA (titulus quisque in
  * lib/sanctorale.c die suo; sanctus iunctus festum generale aut usa
  * eodem die habet) et PLENA (celebratio quaeque sanctoralis iuncta -
- * S1 implet; ante S1 fracta exspectata). Excerpta in fontibus: tools/
+ * S1, 2026-10-19). Excerpta in fontibus: tools/
  * sancti_excerpta.py (speculum extra repositorium - non hic). */
 #include "latina.h"
 #include "credo.h"
@@ -159,8 +159,7 @@ _sectio_plena (
 hic_manens constans CredoSectio SECTIONES[] = {
     { "sana", _sectio_sana, NIHIL, NIHIL, NIHIL, NIHIL },
     { "consona", _sectio_consona, NIHIL, NIHIL, NIHIL, NIHIL },
-    { "plena", _sectio_plena, NIHIL, NIHIL, NIHIL,
-      "sancti-plan S1: iunctura sanctoralis nondum plena" },
+    { "plena", _sectio_plena, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

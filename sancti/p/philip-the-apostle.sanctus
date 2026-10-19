@@ -1,0 +1,38 @@
+<sanctus id="philip-the-apostle" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Philip the Apostle</nomen>
+  <ortus locus="Bethsaida" fontes="ce bu"/>
+  <obitus locus="Hierapolis, Asia" martyrium="verum" fontes="mr"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="5" dies="3" gradus="festum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="5" dies="1" fontes="mr"/>
+  <munus fontes="mr ce us">apostle</munus>
+  <munus fontes="mr">martyr</munus>
+  <descriptio>
+    <paragraphus fontes="ce bu">Philip, like Peter and Andrew, was a native of Bethsaida on the Lake of Genesareth and had been among the followers of John the Baptist. The day after Peter's call, Jesus met him and said, "Follow me"; Philip obeyed and soon brought Nathaniel to Him. He stands fifth in all three lists of the Twelve. The Gospel of John shows him at the feeding of the multitude, bringing to Jesus the Gentiles who wished to see Him, and asking, "Lord, shew us the Father", episodes which the Catholic Encyclopedia reads as the portrait of a simple, somewhat shy and sober man.</paragraphus>
+    <paragraphus fontes="mr ce">The Martyrology relates that he preached in Scythia and then went to Hierapolis in Asia, where he was fastened to a cross and stoned. The early tradition about him is uncertain, because it is confused with that of Philip the deacon: Bishop Polycrates of Ephesus, writing about 189-98, says the apostle was buried at Hierapolis with two of his daughters, but many modern historians think the Philip buried there was the deacon. The relics venerated as his were taken to Constantinople and then to the church of the Twelve Apostles in Rome; the Roman Church keeps his feast together with that of James the Less.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="1 May">
+    <excerptum>birthday of the blessed apostles Philip and James. Philip, after having converted nearly all Scythia to the faith of Christ, went to Hierapolis, in Asia, where he was fastened to a cross, overwhelmed with stones, and thus terminated his life gloriously.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. Philip the Apostle" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Philip_the_Apostle">
+    <excerptum>Like the brothers, Peter and Andrew, Philip was a native of Bethsaida on Lake Genesareth (John 1:44). He also was among those surrounding the Baptist</excerptum>
+    <excerptum>On the day after Peter's call, when about to set out for Galilee, Jesus met Philip and called him to the Apostolate with the words, "Follow me". Philip obeyed the call, and a little later brought Nathaniel as a new disciple</excerptum>
+    <excerptum>His name stands in the fifth place in the three lists</excerptum>
+    <excerptum>Before the miraculous feeding of the multitude, Christ turns towards Philip with the question</excerptum>
+    <excerptum>When some heathens in Jerusalem came to Philip and expressed their desire to see Jesus, Philip reported the fact to Andrew and then both brought the news to the Saviour</excerptum>
+    <excerptum>When Philip, after Christ had spoken to His Apostles of knowing and seeing the Father, said to Him: "Lord, shew us the Father, and it is enough for us"</excerptum>
+    <excerptum>These three episodes furnish a consistent character-sketch of Philip as a naïve, somewhat shy, sober-minded man.</excerptum>
+    <excerptum>The second-century tradition concerning him is uncertain, inasmuch as a similar tradition is recorded concerning Philip the Deacon and Evangelist</excerptum>
+    <excerptum>In his letter to St. Victor, written about 189-98, bishop Polycrates of Ephesus mentions among the "great lights"</excerptum>
+    <excerptum>"Philip, one of the Twelve Apostles, who is buried in Hieropolis with his two daughters, who grew old as virgins"</excerptum>
+    <excerptum>it is difficult to decide which of the two, the Apostle or the deacon, was buried in Hieropolis. Many modern historians believe that it was the deacon</excerptum>
+    <excerptum>The remains of the Philip who was interred in Hieropolis were later translated (as those of the Apostle) to Constantinople and thence to the church of the Dodici Apostoli in Rome.</excerptum>
+    <excerptum>The feast of the Apostle is celebrated in the Roman Church on 1 May (together with that of James the Younger)</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v05 May 1 St. Philip, Apostle">
+    <excerptum>Sr. PHILIP was of Bethsaida, in Galilee, and called by our Saviour to follow him the day after St. Peter and St. Andrew.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="3 May">
+    <excerptum>Saints Philip and James, Apostles</excerptum>
+  </fons>
+</sanctus>

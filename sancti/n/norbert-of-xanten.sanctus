@@ -1,0 +1,47 @@
+<sanctus id="norbert-of-xanten" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Norbert of Xanten</nomen>
+  <ortus annus="1080" circa="verum" locus="Xanten" fontes="ce"/>
+  <obitus annus="1134" mensis="6" dies="6" locus="Magdeburg" fontes="ce"/>
+  <canonizatio modus="formalis" annus="1582" papa="Gregory XIII" fontes="ce"/>
+  <festum calendarium="generale" mensis="6" dies="6" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="6" dies="6" fontes="mr"/>
+  <munus fontes="ce">priest</munus>
+  <munus fontes="mr us">bishop</munus>
+  <munus fontes="mr">founder</munus>
+  <patrocinium fontes="ce">Bohemia</patrocinium>
+  <descriptio>
+    <paragraphus fontes="ce">Norbert was born about 1080 at Kanten (Xanten) on the Rhine, of the family of the Counts of Gennep. As a canon of Kanten and almoner at the imperial court he lived for pleasure, until he was thrown from his horse by a thunderbolt during a storm and turned to penance. Ordained priest, he gave his goods to the poor and, with faculties from Pope Gelasius, preached as a barefoot itinerant in France and Belgium.</paragraphus>
+    <paragraphus fontes="ce mr">At the request of the pope and the Bishop of Laon he founded a community at Prémontré, the beginning of the Premonstratensian Order, confirmed by Honorius II in 1126; his preaching at Antwerp against the heresy of Tanchelin earned him the title Apostle of Antwerp. Against his will he was made Archbishop of Magdeburg, where he found Church property usurped and many clergy living scandalously; some of the offenders were converted, others grew more obstinate, and three attempts were made on his life. He supported Pope Innocent II against the antipope Anacletus. He died at Magdeburg on 6 June 1134. The Catholic Encyclopedia says he was canonized by Gregory XIII in 1582; in 1627 his body was moved to Strahov in Prague, and he was proclaimed patron of Bohemia.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Norbert" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Norbert">
+    <excerptum>Born at Kanten on the left bank of the Rhine, near Wesel, c. 1080; died at Magdeburg, 6 June, 1134. His father, Heribert, Count of Gennep</excerptum>
+    <excerptum>Ordained subdeacon, Norbert was appointed to a canonry at Kanten.</excerptum>
+    <excerptum>Henry V, Emperor of Germany, whose almoner he became.</excerptum>
+    <excerptum>Norbert allowed himself to be so carried away by pleasure that nothing short of a miracle of grace could make him lead the life of an earnest cleric.</excerptum>
+    <excerptum>he was overtaken by a storm.</excerptum>
+    <excerptum>A thunderbolt fell at his horse's feet; the frightened animal threw its rider, and for nearly an hour he lay like one dead. Thus humbled, Norbert became a sincere penitent.</excerptum>
+    <excerptum>he presented himself to the Bishop of Cologne, from whose hands he received Holy Orders.</excerptum>
+    <excerptum>he resigned all his ecclesiastical preferments, disposed of his estate, and gave all to the poor</excerptum>
+    <excerptum>Barefooted and begging his bread, he journeyed as far as St. Giles, in Languedoc, to confer with Pope Gelasius</excerptum>
+    <excerptum>Gelasius granted him faculties to preach wherever he judged proper.</excerptum>
+    <excerptum>whose chaplain joined him in his apostolic journeys in France and Belgium.</excerptum>
+    <excerptum>The pope and Bartholomew, Bishop of Laon, requested Norbert to found a religious order in the Diocese of Laon</excerptum>
+    <excerptum>in the Forest of Coucy, about ten miles from Laon, and named Prémontré.</excerptum>
+    <excerptum>combat the infamous heresies which Tanchelin had promulgated, and which had their centre at Antwerp.</excerptum>
+    <excerptum>St. Norbert has been proclaimed the Apostle of Antwerp</excerptum>
+    <excerptum>to obtain its confirmation by the new pope, Honorius II. The Bull of Confirmation is dated 27 February, 1126.</excerptum>
+    <excerptum>The papal legate and Lothair used their authority, and obliged Norbert to accept the vacant see.</excerptum>
+    <excerptum>much property belonging to the Church and the poor had been usurped by powerful men, and that many of the clergy led scandalous lives.</excerptum>
+    <excerptum>He succeeded in converting some of the transgressors, but others only became more obstinate, and three attempts were made on his life. He resisted Pietro di Leoni, who, as antipope, had assumed the name of Anacletus</excerptum>
+    <excerptum>to attach the German Emperor and the German bishops and princes more firmly to the cause of Pope Innocent II.</excerptum>
+    <excerptum>His canonization was by Gregory XIII in 1582</excerptum>
+    <excerptum>On 2 May, 1627, the saint's body was translated from Magdeburg, then in the hands of Protestants, to the Abbey of Strahov, a suburb of Prague in Bohemia.</excerptum>
+    <excerptum>proclaimed St. Norbert the Patron and Protector of Bohemia.</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="6 June">
+    <excerptum>NORBERT, bishop of Magdeburg, founder of the Premonstratensian Order.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="6 June">
+    <excerptum>Saint Norbert, Bishop</excerptum>
+  </fons>
+</sanctus>

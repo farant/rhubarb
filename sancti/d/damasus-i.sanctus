@@ -1,0 +1,34 @@
+<sanctus id="damasus-i" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Damasus I</nomen>
+  <ortus annus="304" circa="verum" fontes="ce"/>
+  <obitus annus="384" mensis="12" dies="11" fontes="ce"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="12" dies="11" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="12" dies="11" fontes="mr"/>
+  <munus fontes="us ce">pope</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Damasus was born about 304, probably at Rome, where he grew up in the service of the church of the martyr St. Laurence; his father Antonius was probably a Spaniard. He was elected pope in October 366 by a large majority, but a faction chose the deacon Ursinus as rival and used violence to install him. The emperor Valentinian recognized Damasus and banished Ursinus. A later charge brought against Damasus at court was rejected by the emperor Gratian and by a Roman synod.</paragraphus>
+    <paragraphus fontes="ce mr">He condemned the heresies of Apollinarianism and Macedonianism in Roman synods of 368 and 369 and sent legates to the Council of Constantinople in 381, which was called against them; the Martyrology also records that he restored Peter of Alexandria to his see. He induced St. Jerome, for a time his secretary, to revise the Latin Bible, and he maintained that the primacy of the Roman Church rested on the words of Christ himself.</paragraphus>
+    <paragraphus fontes="ce mr">Devoted to the Roman martyrs, he restored the catacombs, sought out the martyrs' bodies and wrote verse epitaphs in their honour. He died on 11 December 384.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="Pope St. Damasus I" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/Pope_St._Damasus_I">
+    <excerptum>Born about 304; died 11 December, 384. His father, Antonius, was probably a Spaniard</excerptum>
+    <excerptum>Damasus seems to have been born at Rome; it is certain that he grew up there in the service of the church of the martyr St. Laurence.</excerptum>
+    <excerptum>He was elected pope in October, 366, by a large majority, but a number of over-zealous adherents of the deceased Liberius rejected him, chose the deacon Ursinus (or Ursicinus), had the latter irregularly consecrated, and resorted to much violence and bloodshed</excerptum>
+    <excerptum>Valentinian recognized Damasus and banished (367) Ursinus to Cologne</excerptum>
+    <excerptum>An accusation of adultery was laid against him (378) in the imperial court, but he was exonerated by Emperor Gratian himself</excerptum>
+    <excerptum>and soon after by a Roman synod of forty-four bishops</excerptum>
+    <excerptum>In two Roman synods (368 and 369) he condemned Apollinarianism and Macedonianism; he also sent his legates to the Council of Constantinople (381), convoked against the aforesaid heresies.</excerptum>
+    <excerptum>It was Damasus who induced Saint Jerome to undertake his famous revision of the earlier Latin versions of the Bible</excerptum>
+    <excerptum>St. Jerome was also his confidential secretary for some time</excerptum>
+    <excerptum>the ecclesiastical supremacy of the Roman Church was based, not on the decrees of councils, but on the very words of Jesus Christ</excerptum>
+    <excerptum>His extraordinary devotion to the Roman martyrs is now well known</excerptum>
+    <excerptum>his architectural restoration of the catacombs and the unique artistic characters (Damasan Letters) in which his friend Furius Dionysius Filocalus executed the epitaphs composed by Damasus</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="11 December">
+    <excerptum>St. Damasus, pope and confessor, who condemned the heresiarch Apollinaris, and restored to his see Peter, bishop of Alexandria, who had been driven from it. He also discovered the bodies of many holy martyrs, and wrote verses in their honor.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="11 December">
+    <excerptum>Saint Damasus I, Pope</excerptum>
+  </fons>
+</sanctus>

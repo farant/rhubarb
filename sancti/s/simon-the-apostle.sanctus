@@ -1,0 +1,32 @@
+<sanctus id="simon-the-apostle" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Simon the Apostle</nomen>
+  <nomen lingua="en" fontes="bu">Simon the Zealot</nomen>
+  <obitus locus="Persia" martyrium="verum" fontes="mr bu"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="10" dies="28" gradus="festum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="10" dies="28" fontes="mr"/>
+  <munus fontes="us mr bu">apostle</munus>
+  <munus fontes="mr">martyr</munus>
+  <descriptio>
+    <paragraphus fontes="bu">Simon is surnamed the Cananean and the Zealot, names that set him apart from Simon Peter. Butler explains that the Syro-Chaldaic Cananean means the same as the Greek Zelotes; some held that he belonged to the Jewish party of Zealots before he came to Christ, though Butler notes there is no proof that such a party existed in Christ's time. Beyond his choice by Christ as one of the apostles, the Gospels say nothing more about him.</paragraphus>
+    <paragraphus fontes="mr bu">The Roman Martyrology says that Simon preached the Gospel in Egypt and that he and Jude then went together into Persia, where they converted a great multitude and suffered martyrdom. Butler records the old martyrologies placing his death in Persia, and those who name the manner of it say he was crucified. A story told by Nicephorus Callistus and other later Greeks, that he preached in Africa and then in Britain, Butler judges to have no shadow of probability. St. Peter's on the Vatican and the cathedral of Toulouse were said to hold the chief part of the relics of Simon and Jude.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="28 October">
+    <excerptum>birthday of the blessed apostles Simon the Cananean, and Thaddeus, who is called Jude. Simon preached the Gospel in Egypt, Thaddeus in Mesopotamia. Afterwards, entering Persia together, they converted to Christ a numberless multitude of the inhabitants, and then underwent martyrdom.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v10 Oct. 28 St. Simon, surnamed the Zealot, Apostle">
+    <excerptum>Sr. Simon is surnamed the Cananzan or Canaanite, and the Zealot, to distinguish him from St. Peter</excerptum>
+    <excerptum>But as for the surname of Cananzan, it has in Syro Chaldaic the same signification which the word Zelotes bearsin Greek.</excerptum>
+    <excerptum>Hammond and Grotius think that St. Simon was called the Zealot, before his coming to Christ, because he was one of that particular sect or party among the Jews called Zealots</excerptum>
+    <excerptum>But no proof is offered by which it is made to appear that any such party existed in our Saviour's time</excerptum>
+    <excerptum>No farther mention appears of him in the gospels, than that he was adopted by Christ into the college of the apostles.</excerptum>
+    <excerptum>Nicephorus Calixti, and some other modern Greeks pretend, that after preaching in Mauritania, and other parts of Africa, he sailed into Britain</excerptum>
+    <excerptum>But of this there appears no shadow of probability</excerptum>
+    <excerptum>the Martyrologies of St. Jerom, Bede, Ado, and Usuard place his martyrdom in Persia</excerptum>
+    <excerptum>Those who mention the manner of his death say he was crucified.</excerptum>
+    <excerptum>St. Peter's church on the Vatican at Rome, and the cathedral of Toulouse are said to possess the chief portions of the relicks of SS. Simon and Jude.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="28 October">
+    <excerptum>Saints Simon and Jude, Apostles</excerptum>
+  </fons>
+</sanctus>

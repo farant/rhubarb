@@ -1,0 +1,40 @@
+<sanctus id="apollinaris-of-ravenna" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Apollinaris of Ravenna</nomen>
+  <obitus locus="Ravenna" martyrium="verum" fontes="mr ce"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="7" dies="20" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="7" dies="23" fontes="mr"/>
+  <munus fontes="us mr bu ce">bishop</munus>
+  <munus fontes="us mr">martyr</munus>
+  <descriptio>
+    <paragraphus fontes="mr bu ce">Apollinaris was the first bishop of Ravenna; the Martyrology and the Catholic Encyclopedia say he was made bishop by the apostle Peter. His native place is not certain, though the Encyclopedia thinks it was probably Antioch. According to the Martyrology he endured many tribulations for the faith at Ravenna, preached the Gospel in Emilia and turned many from the worship of idols, and on returning to Ravenna ended his confession of Christ by a glorious martyrdom under Vespasian.</paragraphus>
+    <paragraphus fontes="ce bu">The Catholic Encyclopedia tells of repeated beatings and expulsions and of his being sent to Greece, and says that under Vespasian he was savagely beaten as he left the city, probably at Classis, and lived seven more days. Butler warns that the Acts deserve little regard; citing a sermon of Peter Chrysologus, one of his successors, he thinks Apollinaris was a martyr by the torments he suffered, which he survived at least some days, rather than by being put to death. His episcopate is given as twenty years (Bede, in Butler) or twenty-six (the Encyclopedia). His body lay first at Classis, Ravenna's port, and Pope Honorius built a church in his name at Rome about 630.</paragraphus>
+  </descriptio>
+  <fons id="bu" opus="butler1812" locus="v07 Jul. 23 St. Apollinaris, Martyr, Bishop of Ravenna">
+    <excerptum>was the first bishop of Ravenna. Bede, in his true Martyrology, says that he sat twenty years, and was crowned with martyrdom in the reign of Vespasian.</excerptum>
+    <excerptum>His acts say that he was a disciple of St. Peter, and made by him bishop of Ravenna. Though their authority deserves little regard, this circumstance must be allowed, being agreeable to the © time, and supported by other authorities.</excerptum>
+    <excerptum>St. Peter Chryso- logus, the most illustrious among his successors, has left us a ~sermon in honour of our saint</excerptum>
+    <excerptum>in which he often styles him a martyr; but adds, that though he frequently spilt portions of his blood for the faith, and ardently desired to lay down his life for Christ, yet God preserved him a long time to his church, and did not suffer the persecutors to take away his life.</excerptum>
+    <excerptum>So he seems to have only been a martyr by the torments he endured for Christ, which he survived at least some days.</excerptum>
+    <excerptum>His body lay first at Classis, four miles from Ravenna, still a kind of suburb to that city, and its sea port</excerptum>
+    <excerptum>In the year 549 his relicks were removed into a more secret vault in the same church</excerptum>
+    <excerptum>Pope Honorius built a church under</excerptum>
+    <excerptum>his name in Rome about the year 630.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. Apollinaris (1)" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Apollinaris_(1)">
+    <excerptum>One of the first great martyrs of the church. He was made Bishop of Ravenna by St. Peter himself.</excerptum>
+    <excerptum>He was found half dead on the seashore, and kept in concealment by the Christians, but was captured again and compelled to walk on burning coals and a second time expelled.</excerptum>
+    <excerptum>but after four days he was put on board ship and sent to Greece.</excerptum>
+    <excerptum>By this time Vespasian was Emperor, and he, in answer to the complaints of the pagans, issued a decree of banishment against the Christians.</excerptum>
+    <excerptum>as he was passing out of the gates of the city, was set upon and savagely beaten, probably at Classis, a suburb, but he lived for seven days</excerptum>
+    <excerptum>It is not certain what was his native place, though it was probably Antioch.</excerptum>
+    <excerptum>The precise date of his consecration cannot be ascertained, but he was Bishop of Ravenna for twenty-six years.</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="23 July">
+    <excerptum>birthday of the holy bishop Apollinaris, who was consecrated at Kome by the apostle Peter, and sent to Kavenna, where he endured for the faith of Christ many different tribulations.</excerptum>
+    <excerptum>He after- wards preached the Gospel in JEmilia, where he con- verted many from the worship of idols. Fianlly, re- turning to Kavenna, he terminated his confession of Christ by a glorious martyrdom under the Caesar Vespasian.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="20 July">
+    <excerptum>Saint Apollinaris, Bishop and Martyr</excerptum>
+  </fons>
+</sanctus>

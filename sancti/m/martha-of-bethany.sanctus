@@ -1,0 +1,36 @@
+<sanctus id="martha-of-bethany" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Martha of Bethany</nomen>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="7" dies="29" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="7" dies="29" fontes="mr"/>
+  <munus fontes="bu">disciple</munus>
+  <munus fontes="mr">virgin</munus>
+  <descriptio>
+    <paragraphus fontes="ce bu">Martha appears in the Gospels only in Luke 10 and John 11-12. St. John places her with her sister Mary and her brother Lazarus at Bethany, a small town about two miles from Jerusalem, though St. Luke seems to imply that the family lived for a time in Galilee. Butler thinks she was probably the eldest of the three and had the chief care of the household. Both evangelists show her serving: in Luke she is busy about much serving while Mary sits at the Lord's feet, and hears the words "Martha, Martha, thou art careful and troubled about many things; but one thing is necessary"; in John she serves at the supper at Bethany. St. John also records that Jesus loved Martha, her sister and Lazarus, and shows her growing faith in Christ's divinity, the occasion of the words "I am the resurrection and the life".</paragraphus>
+    <paragraphus fontes="bu mr cel">After the Ascension, according to Butler, she came to Marseilles and ended her life in Provence, where her body was found at Tarascon; the Martyrology commemorates her at Tarascon as the hostess of our Saviour. The Catholic Encyclopedia, however, holds that the tradition bringing the family of Bethany by sea to Provence has no solid foundation.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Martha" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Martha">
+    <excerptum>Mentioned only in Luke 10:38-42; and John 11, 12, sqq.</excerptum>
+    <excerptum>Mary, Martha, and Lazarus are represented by St. John as living at Bethania, but St. Luke would seem to imply that they were, at least at one time, living in Galilee</excerptum>
+    <excerptum>"Jesus loved Martha, and her sister Mary, and Lazarus" (11:5).</excerptum>
+    <excerptum>accords with the picture of her who was "busy about much serving" (Luke 10:40); so also in John 12:2: "They made him a supper there: and Martha served."</excerptum>
+    <excerptum>when he depicts her growing faith in Christ's Divinity (11:20-27), a faith which was the occasion of the words: "I am the resurrection and the life."</excerptum>
+  </fons>
+  <fons id="cel" opus="ce1913" locus="St. Lazarus of Bethany" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Lazarus_of_Bethany">
+    <excerptum>the members of the family at Bethany, the friends of Christ, together with some holy women and others of His disciples, were put out to sea by the Jews hostile to Christianity in a vessel without sails, oars, or helm, and after a miraculous voyage landed in Provence</excerptum>
+    <excerptum>Like the other legends concerning the saints of the Palestinian group, this tradition, which was believed for several centuries and which still finds some advocates, has no solid foundation.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v07 July 29 St. Martha, V.">
+    <excerptum>was sister to Mary and Lazarus, and lived with them at ' Bethania, a small town two miles distant from Jerusalem, a little beyond mount Olivet.</excerptum>
+    <excerptum>he frequented the house of these three holy disciples. Marthaseems to have been the eldest, and to have had the chief care and direction of the household.</excerptum>
+    <excerptum>Mary sat all the while at our Saviour’s feet, feeding her soul with his heavenly doctrine.</excerptum>
+    <excerptum>Martha, Martha, said he, thou art careful and troubled about many things ; but one thing is necessary.</excerptum>
+    <excerptum>After his ascension, she came to Marseilles, and ended her life in Provence, where her body was found at Tarascon, soon after the discovery of that of St. Mary Magdalen.</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="29 July">
+    <excerptum>AT Tarascon, in France, St. Martha, virgin, the hostess of our Saviour, and sister of blessed Mary Magdalen and St. Lazarus.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="29 July">
+    <excerptum>Saints Martha, Mary, and Lazarus</excerptum>
+  </fons>
+</sanctus>

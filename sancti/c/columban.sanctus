@@ -1,0 +1,52 @@
+<sanctus id="columban" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Columban</nomen>
+  <nomen lingua="la" principale="verum" fontes="ce">Columbanus</nomen>
+  <ortus annus="543" locus="West Leinster, Ireland" fontes="ce"/>
+  <obitus annus="615" mensis="11" dies="21" locus="Bobbio, Italy" fontes="ce mr"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="11" dies="23" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="11" dies="21" fontes="mr"/>
+  <munus fontes="us ce mr">abbot</munus>
+  <munus fontes="ce">monk</munus>
+  <munus fontes="ce">missionary</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Columban was born in West Leinster, Ireland, in 543. Resolving to leave the world, he stepped over his mother, who had thrown herself on the threshold to stop him, and studied under Sinell before becoming a monk at Bangor under St. Comgall, where he lived for many years. At about forty he felt called to preach abroad and set out with twelve companions, among them Gall and Attala, reaching France probably in 585. Gontram, King of Burgundy, welcomed him; he settled at Annegray in the Vosges and then founded Luxeuil (590) and Fontaines, for which he wrote a rule based on the customs of Bangor.</paragraphus>
+    <paragraphus fontes="ce mr">After nearly twenty years the Frankish bishops turned against him over his Celtic reckoning of Easter, and he rebuked King Thierry, whose grandmother Brunehault encouraged him in concubinage. Ordered back to Ireland, he was freed when a storm drove his ship ashore, and preached among the Alamanni around Lake Zurich and at Bregenz. In 612 he crossed into Italy, where King Agilulf gave him land at Bobbio; there he founded the abbey in which he died on 21 November 615. The Catholic Encyclopedia judges him impetuous yet loyal to Rome; his disciples are credited with founding over one hundred monasteries.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Columbanus" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Columbanus">
+    <excerptum>Abbot of Luxeuil and Bobbio, born in West Leinster, Ireland, in 543; died at Bobbio, Italy, 21 November, 615.</excerptum>
+    <excerptum>He encountered opposition, especially from his mother, who strove to detain him by casting herself before him on the threshhold of the door. But, conquering the feelings of natures he passed over the prostrate form and left his home forever.</excerptum>
+    <excerptum>His first master was Sinell Abbot of Cluaninis in Lough Erne.</excerptum>
+    <excerptum>He then betook himself to the celebrated monastery of Bangor on the coast of Down, which at that time had for its abbot St. Comgall. There he embraced the monastic state, and for many years led a life conspicuous for fervour, regularity, and learning.</excerptum>
+    <excerptum>At about the age of forty he seemed to hear incessantly the voice of God bidding him preach the Gospel in foreign lands.</excerptum>
+    <excerptum>Columbanus set sail with twelve companions; their names have thus come down to us: St. Attala, Columbanus the Younger, Cummain, Domgal, Eogain, Eunan, St. Gall, Gurgano, Libran, Lua, Sigisbert and Waldoleno</excerptum>
+    <excerptum>and then crossed over to France, where they arrived probably in 585.</excerptum>
+    <excerptum>He and his followers soon made their way to the court of Gontram, King of Burgundy.</excerptum>
+    <excerptum>Gontram gave him a gracious reception, inviting him to remain in his kingdom. The saint complied, and selected for his abode the half-ruined Roman fortress of Annegray in the solitudes of the Vosges Mountains.</excerptum>
+    <excerptum>This foundation of the celebrated Abbey of Luxueil, took place in 590. But these two monasteries did not suffice for the numbers who came, and a third had to be erected at Fontaines.</excerptum>
+    <excerptum>For these flourishing communities he wrote his rule, which embodies the customs of Bangor and other Celtic monasteries.</excerptum>
+    <excerptum>For wellnigh twenty years Columbanus resided in France and during that time observed the unreformed paschal computation.</excerptum>
+    <excerptum>The Frankish bishops were not too well disposed towards this stranger abbot</excerptum>
+    <excerptum>They objected to his Celtic Easter and his exclusion of men as well as women from the precincts of his monasteries.</excerptum>
+    <excerptum>He was completely in the hands of his grandmother, Queen Brunehault (Brunehild).</excerptum>
+    <excerptum>she encouraged Thierry in the practice concubinage in order that there might be no rival queen.</excerptum>
+    <excerptum>On these occasions the saint admonished and rebuked him, but in vain.</excerptum>
+    <excerptum>Thierry and Brunehault sent soldiers to drive him back to Ireland.</excerptum>
+    <excerptum>As soon as they set sail, such a storm arose that ship was driven ashore. The captain would have nothing more to do with these holy men; they were thus free to go where they pleased.</excerptum>
+    <excerptum>he embarked upon the Rhine in order to reach the Suevi and Alamanni, to whom he wished to preach the Gospel.</excerptum>
+    <excerptum>he came to the Lake of Zurich.</excerptum>
+    <excerptum>In despair he resolved to pass on by way of Arbon to Bregenz on Lake Constance</excerptum>
+    <excerptum>On his arrival at Milan in 612, Columbanus met with a kindly welcome from King Agilulf and Queen Theodelinda.</excerptum>
+    <excerptum>so the king gave him a tract of land called Bobbio, between Milan and Genoa, near the River Trebbia</excerptum>
+    <excerptum>At Bobbio the saint repaired the half-ruined church of St. Peter, and erected his celebrated abbey</excerptum>
+    <excerptum>In the cause of God he was impetuous and even head-strong, for by nature he was eager, passionate, and dauntless.</excerptum>
+    <excerptum>there is nothing in his strongest expressions which implies that, in matters of faith, he for a moment doubted Rome's supreme authority.</excerptum>
+    <excerptum>These disciples of Columbanus are accredited with founding over one hundred different monasteries</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="21 November">
+    <excerptum>In the monastery of Bobio, the departure from this life of St. Columban, abbot, who founded many convents and governed a large number of monks.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="23 November">
+    <excerptum>Saint Columban, Abbot</excerptum>
+  </fons>
+</sanctus>

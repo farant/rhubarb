@@ -1,0 +1,54 @@
+<sanctus id="augustine-of-canterbury" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Augustine of Canterbury</nomen>
+  <obitus annus="604" mensis="5" dies="26" locus="Canterbury" fontes="ce mr"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="5" dies="27" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="5" dies="26" fontes="mr"/>
+  <festum calendarium="martyrologium" mensis="5" dies="28" nota="mention: mentioned on the 26th" fontes="mr28"/>
+  <munus fontes="us mr ce">bishop</munus>
+  <munus fontes="ce">archbishop of Canterbury</munus>
+  <munus fontes="ce bu">monk</munus>
+  <munus fontes="ce bu">missionary</munus>
+  <descriptio>
+    <paragraphus fontes="ce bu">Nothing is known of Augustine's birth or youth except that he was probably a Roman and became a monk early in the monastery of St. Andrew that Gregory the Great had founded on the Caelian Hill. When a rumour reached Rome that the pagans of Britain were ready to embrace the faith if preachers could be found, Pope Gregory chose about forty monks and set Augustine, then prior of St. Andrew's, at their head. The party left Rome in June 596; frightened by tales of the islanders, some proposed turning back, and Augustine returned in person to the pope, who encouraged him, sent him back and named him abbot of the missionaries.</paragraphus>
+    <paragraphus fontes="ce bu mr">They landed on the Isle of Thanet, in 597 according to the Catholic Encyclopedia (Butler gives 596), and King Aethelberht of Kent, whose wife Bertha was already a Christian, let them settle in Canterbury and soon asked to be instructed and was baptized. Augustine was consecrated bishop by Virgilius of Arles, more than ten thousand people were baptized at Christmas 597, and he received the pallium in 601, setting up sees at London and Rochester. His meeting with the Celtic bishops at the place called Austin's Oak failed to bring them into agreement on Easter, baptism and the mission. He died on 26 May 604 and was buried outside the walls of Canterbury.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="26 May">
+    <excerptum>At Canterbury, in England, St. Augustine, bishop, who was sent thither with others by the blessed pope Gregory and preached the Gospel of Christ to the English nation. Celebrated for virtues and miracles, he went peacefully to his rest in the Lord.</excerptum>
+  </fons>
+  <fons id="mr28" opus="mr1916" locus="28 May">
+    <excerptum>T Canterbury, in England, St. Augustine, bishop, mentioned on the 26th of this month.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. Augustine of Canterbury" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Augustine_of_Canterbury">
+    <excerptum>First Archbishop of Canterbury, Apostle of the English; date of birth unknown; d. 26 May, 604.</excerptum>
+    <excerptum>Nothing is known of his youth except that he was probably a Roman of the better class, and that early in life he become a monk in the famous monastery of St. Andrew erected by St. Gregory out of his own patrimony on the Cælian Hill.</excerptum>
+    <excerptum>A rumour had reached Rome that the pagan inhabitants of Britain were ready to embrace the Faith in great numbers, if only preachers could be found to instruct them.</excerptum>
+    <excerptum>Out of these he selected a company of about forty and designated Augustine, at that time Prior of St. Andrew's, to be their representative and spokesman.</excerptum>
+    <excerptum>the little company set out upon their long journey in the month of June, 596.</excerptum>
+    <excerptum>Tales of the uncouth islanders to whom they were going chilled their enthusiasm, and some of their number actually proposed that they should draw back.</excerptum>
+    <excerptum>Augustine so far compromised with the waverers that he agreed to return in person to Pope Gregory</excerptum>
+    <excerptum>Pope Gregory, however, raised the drooping spirits of Augustine and sent him back without delay to his faint-hearted brethren</excerptum>
+    <excerptum>Augustine was named abbot of the missionaries</excerptum>
+    <excerptum>In the spring of the following year they were ready to embark.</excerptum>
+    <excerptum>All that we know for certain is that they landed somewhere on the Isle of Thanet</excerptum>
+    <excerptum>Aethelberht became King of Kent in 559 or 560</excerptum>
+    <excerptum>He invited the missionaries to take up their abode in the royal capital of Canterbury</excerptum>
+    <excerptum>He asked to be instructed and his baptism was appointed to take place at Pentecost.</excerptum>
+    <excerptum>Aethelberht's conversion naturally gave a great impetus to the enterprise of Augustine and his companions.</excerptum>
+    <excerptum>He crossed over to Gaul and sought episcopal consecration at the hands of Virgilius, the Metropolitan of Arles.</excerptum>
+    <excerptum>On Christmas Day, 597, more than ten thousand persons were baptized by the first "Archbishop of the English".</excerptum>
+    <excerptum>He had already received the pallium on the return of Peter and Lawrence from Rome in 601.</excerptum>
+    <excerptum>Mellitus became the first English Bishop of London; Justus was appointed to the new see of Rochester</excerptum>
+    <excerptum>exerted himself in Augustine's behalf to bring about a meeting with the Celtic bishops of Southern Britain. The conference took place in Malmesbury, on the borders of Wessex, not far from the Severn, at a spot long described in popular legend as Austin's Oak.</excerptum>
+    <excerptum>He insisted on an unconditional surrender on the Easter controversy; on the mode of administering the Sacrament of Baptism; and on the duty of taking active measures in concert with him for the evangelization of the Saxon conquerors. The Celtic bishops refused to yield</excerptum>
+    <excerptum>He was buried, in true Roman fashion, outside the walls of the Kentish capital</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v05 May 26 Saint Augustine, B. C. Apostle of the English">
+    <excerptum>Augustine, then prior of St.Gregory’s monastery, dedicated to St. Andrew in Rome. Him, therefore, the pope appointed superior of this mission</excerptum>
+    <excerptum>Isle of Thanet, on the east side of Kent in the year 596, being with their interpreters near forty persons.</excerptum>
+    <excerptum>for his queen Bertha, a danghiter of Caribert king of Paris, was a Christian</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="27 May">
+    <excerptum>Saint Augustine of Canterbury, Bishop</excerptum>
+  </fons>
+</sanctus>

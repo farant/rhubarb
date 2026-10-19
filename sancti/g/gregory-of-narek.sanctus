@@ -1,0 +1,30 @@
+<sanctus id="gregory-of-narek" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Gregory of Narek</nomen>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="2" dies="27" gradus="memoria-ad-libitum" fontes="us"/>
+  <munus fontes="us sd">abbot</munus>
+  <munus fontes="sm">monk</munus>
+  <munus fontes="us sm sd">doctor of the Church</munus>
+  <descriptio>
+    <paragraphus fontes="sm">Gregory of Narek was an Armenian monk of the tenth century. Pope Francis, writing to the Armenian people, praised him as the one who knew better than anyone how to express the sentiments of his people, and as an extraordinary interpreter of the human soul. He gave voice to the cry of a sinful and sorrowful humanity that is still open to the hope of God's saving intervention. The Pope quoted his Book of Lamentations and singled out his sense of universal solidarity, shown in his prayer even for those who persecuted him: not to destroy them, but to reform them.</paragraphus>
+    <paragraphus fontes="sm sd">Pope Francis proclaimed him a Doctor of the Church on 12 April 2015, the hundredth anniversary of the Metz Yeghern, the "Great Evil", as Armenians call the massacre of their people a century before. In 2021 a decree of the Congregation for Divine Worship inscribed his celebration, as abbot and doctor, in the General Roman Calendar. The documents used here give no dates for his birth or death.</paragraphus>
+  </descriptio>
+  <fons id="sm" opus="sedes" locus="Message of Pope Francis to the Armenians, 12 April 2015" url="https://www.vatican.va/content/francesco/en/messages/pont-messages/2015/documents/papa-francesco_20150412_messaggio-armeni.html">
+    <excerptum>Message of His Holiness Pope Francis on the 100th anniversary of "Metz Yeghern" and proclamation of St Gregory of Narek as a Doctor of the Church (12 April 2015)</excerptum>
+    <excerptum>A century has passed since that horrific massacre which was a true martyrdom of your people</excerptum>
+    <excerptum>it truly was “Metz Yeghern”, the “Great Evil”, as it is known by Armenians.</excerptum>
+    <excerptum>Saint Gregory of Narek, a monk of the tenth century, knew how to express the sentiments of your people more than anyone.</excerptum>
+    <excerptum>He gave voice to the cry, which became a prayer, of a sinful and sorrowful humanity, oppressed by the anguish of its powerlessness, but illuminated by the splendour of God’s love and open to the hope of his salvific intervention</excerptum>
+    <excerptum>Saint Gregory of Narek, an extraordinary interpreter of the human soul, offers words which are prophetic for us</excerptum>
+    <excerptum>How striking is his sense of universal solidarity!</excerptum>
+    <excerptum>Do not destroy those who persecute me, but reform them</excerptum>
+    <excerptum>Saint Gregory of Narek, Book of Lamentations, XII</excerptum>
+  </fons>
+  <fons id="sd" opus="sedes" locus="Decree of the Congregation for Divine Worship, 25 January 2021" url="https://www.vatican.va/roman_curia/congregations/ccdds/documents/rc_con_ccdds_doc_20210125_decreto-dottori_en.html">
+    <excerptum>DECREE on the Inscription of the Celebrations of Saint Gregory of Narek, Abbot and Doctor of the Church</excerptum>
+    <excerptum>in the General Roman Calendar (25 January 2021)</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="27 February">
+    <excerptum>Saint Gregory of Narek, Abbot and Doctor of the Church</excerptum>
+  </fons>
+</sanctus>
