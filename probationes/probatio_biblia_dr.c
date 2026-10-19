@@ -8,29 +8,17 @@
 #include <string.h>
 
 
-s32 principale(vacuum)
-{
-    Piscina* piscina;
-        b32  praeteritus;
-
-    /* Aperire credo et piscina */
-    piscina = piscina_generare_dynamicum("test_biblia", 4096);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-
     /* ==================================================
      * Probare biblia_obtinere_dr
      * ================================================== */
 
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         constans Biblia* b;
-
-        imprimere("\n--- Probans biblia_obtinere_dr ---\n");
 
         b = biblia_obtinere_dr();
 
@@ -45,17 +33,21 @@ s32 principale(vacuum)
         CREDO_NON_NIHIL(b->textus);
         CREDO_VERUM(b->textus_longitudo > 4000000);  /* circa 4.6MB */
     }
+}
 
 
     /* ==================================================
      * Probare biblia_versus - versus celebres
      * ================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         constans Biblia* b;
                  chorda  v;
-
-        imprimere("\n--- Probans biblia_versus ---\n");
 
         b = biblia_obtinere_dr();
 
@@ -86,17 +78,21 @@ s32 principale(vacuum)
         CREDO_VERUM(v.mensura > ZEPHYRUM);
         CREDO_NON_NIHIL(v.datum);
     }
+}
 
 
     /* ==================================================
      * Probare biblia_versus - casus invalidi
      * ================================================== */
 
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         constans Biblia* b;
                  chorda  v;
-
-        imprimere("\n--- Probans biblia_versus invalidi ---\n");
 
         b = biblia_obtinere_dr();
 
@@ -119,17 +115,21 @@ s32 principale(vacuum)
         v = biblia_versus(NIHIL, LIBER_GENESIS, I, I);
         CREDO_AEQUALIS_I32(v.mensura, ZEPHYRUM);
     }
+}
 
 
     /* ==================================================
      * Probare biblia_nomen_libri
      * ================================================== */
 
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
            constans Biblia* b;
         constans character* titulus;
-
-        imprimere("\n--- Probans biblia_nomen_libri ---\n");
 
         b = biblia_obtinere_dr();
 
@@ -160,17 +160,21 @@ s32 principale(vacuum)
         titulus = biblia_nomen_libri(NIHIL, LIBER_GENESIS);
         CREDO_NIHIL(titulus);
     }
+}
 
 
     /* ==================================================
      * Probare biblia_capitula_in_libro
      * ================================================== */
 
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         constans Biblia* b;
                     i32  capitula;
-
-        imprimere("\n--- Probans biblia_capitula_in_libro ---\n");
 
         b = biblia_obtinere_dr();
 
@@ -197,17 +201,21 @@ s32 principale(vacuum)
         capitula = biblia_capitula_in_libro(NIHIL, LIBER_GENESIS);
         CREDO_AEQUALIS_I32(capitula, ZEPHYRUM);
     }
+}
 
 
     /* ==================================================
      * Probare biblia_versus_in_capitulo
      * ================================================== */
 
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         constans Biblia* b;
                     i32  versus;
-
-        imprimere("\n--- Probans biblia_versus_in_capitulo ---\n");
 
         b = biblia_obtinere_dr();
 
@@ -231,15 +239,19 @@ s32 principale(vacuum)
         versus = biblia_versus_in_capitulo(NIHIL, LIBER_GENESIS, I);
         CREDO_AEQUALIS_I32(versus, ZEPHYRUM);
     }
+}
 
 
     /* ==================================================
      * Probare ordo canonicus Douay-Rheims
      * ================================================== */
 
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
-        imprimere("\n--- Probans ordo canonicus ---\n");
-
         /* Verify book indices are in correct order */
         CREDO_AEQUALIS_I32(LIBER_GENESIS, 0);
         CREDO_AEQUALIS_I32(LIBER_EXODUS, 1);
@@ -254,18 +266,22 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32(LIBER_JOANNES, 49);
         CREDO_AEQUALIS_I32(LIBER_APOCALYPSIS, 72);
     }
+}
 
 
     /* ==================================================
      * Probare libri deuterocanonici
      * ================================================== */
 
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
            constans Biblia* b;
                     chorda  v;
         constans character* titulus;
-
-        imprimere("\n--- Probans libri deuterocanonici ---\n");
 
         b = biblia_obtinere_dr();
 
@@ -315,17 +331,21 @@ s32 principale(vacuum)
         CREDO_VERUM(v.mensura > ZEPHYRUM);
         CREDO_NON_NIHIL(v.datum);
     }
+}
 
 
     /* ==================================================
      * Probare versus specifici (verifica textus exactus)
      * ================================================== */
 
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         constans Biblia* b;
                  chorda  v;
-
-        imprimere("\n--- Probans versus specifici ---\n");
 
         b = biblia_obtinere_dr();
 
@@ -354,17 +374,21 @@ s32 principale(vacuum)
             CREDO_VERUM(gen_1_1.mensura != joh_1_1.mensura);
         }
     }
+}
 
 
     /* ==================================================
      * Probare biblia_invenire_librum
      * ================================================== */
 
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         constans Biblia* b;
                     s32  idx;
-
-        imprimere("\n--- Probans biblia_invenire_librum ---\n");
 
         b = biblia_obtinere_dr();
 
@@ -422,27 +446,30 @@ s32 principale(vacuum)
         idx = biblia_invenire_librum(b, NIHIL);
         CREDO_AEQUALIS_S32(idx, -I);
     }
+}
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "biblia_obtinere_dr", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "biblia_versus", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "biblia_versus invalidi", _sectio_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "biblia_nomen_libri", _sectio_quarta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "biblia_capitula_in_libro", _sectio_quinta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "biblia_versus_in_capitulo", _sectio_sexta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "ordo canonicus", _sectio_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "libri deuterocanonici", _sectio_octava, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "versus specifici", _sectio_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "biblia_invenire_librum", _sectio_decima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    /* ==================================================
-     * Compendium
-     * ================================================== */
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-
-    /* Destructio */
-    credo_claudere();
-    piscina_destruere(piscina);
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("biblia_dr", SECTIONES);
 }

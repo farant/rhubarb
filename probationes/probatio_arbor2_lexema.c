@@ -82,35 +82,25 @@ _obtinere_nova_linea(Xar* spatia)
     redde NIHIL;
 }
 
-s32 principale(vacuum)
+/* ========================================================
+ * PROBARE: NOVA_LINEA in spatia (Phase 2.7)
+ * Newlines now appear in spatia_post of preceding token,
+ * or spatia_ante of following token.
+ * ======================================================== */
+
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-    Piscina* piscina;
+                Piscina* piscina;
     InternamentumChorda* intern;
-    b32 praeteritus;
 
-    /* Aperire credo et piscina */
-    piscina = piscina_generare_dynamicum("probatio_arbor2_lexema", 65536);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    intern = internamentum_creare(piscina);
-    credo_aperire(piscina);
-
-
-    /* ========================================================
-     * PROBARE: NOVA_LINEA in spatia (Phase 2.7)
-     * Newlines now appear in spatia_post of preceding token,
-     * or spatia_ante of following token.
-     * ======================================================== */
-
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Lexator* lex;
         Arbor2Lexema* tok;
-
-        imprimere("\n--- Probans NOVA_LINEA in spatia ---\n");
 
         fons = "int x;\nint y;";
         lex = arbor2_lexator_creare(piscina, intern, fons, (i32)strlen(fons));
@@ -144,18 +134,25 @@ s32 principale(vacuum)
         tok = arbor2_lexema_proximum(lex);
         CREDO_AEQUALIS_I32(tok->genus, ARBOR2_LEXEMA_EOF);
     }
+}
 
+/* ========================================================
+ * PROBARE: Multiple newlines in spatia
+ * ======================================================== */
 
-    /* ========================================================
-     * PROBARE: Multiple newlines in spatia
-     * ======================================================== */
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Lexator* lex;
         Arbor2Lexema* tok;
-
-        imprimere("\n--- Probans newlines multiplices in spatia ---\n");
 
         fons = "a\n\nb";
         lex = arbor2_lexator_creare(piscina, intern, fons, (i32)strlen(fons));
@@ -174,18 +171,25 @@ s32 principale(vacuum)
         tok = arbor2_lexema_proximum(lex);
         CREDO_AEQUALIS_I32(tok->genus, ARBOR2_LEXEMA_EOF);
     }
+}
 
+/* ========================================================
+ * PROBARE: Line continuation (\\\n) - still works
+ * ======================================================== */
 
-    /* ========================================================
-     * PROBARE: Line continuation (\\\n) - still works
-     * ======================================================== */
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Lexator* lex;
         Arbor2Lexema* tok;
-
-        imprimere("\n--- Probans line continuation ---\n");
 
         fons = "int \\\nx;";
         lex = arbor2_lexator_creare(piscina, intern, fons, (i32)strlen(fons));
@@ -206,20 +210,27 @@ s32 principale(vacuum)
         tok = arbor2_lexema_proximum(lex);
         CREDO_AEQUALIS_I32(tok->genus, ARBOR2_LEXEMA_EOF);
     }
+}
 
+/* ========================================================
+ * PROBARE: CONTINUATIO in spatia
+ * ======================================================== */
 
-    /* ========================================================
-     * PROBARE: CONTINUATIO in spatia
-     * ======================================================== */
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Lexator* lex;
         Arbor2Lexema* tok;
         Arbor2Lexema* spatium;
         b32 found_continuation;
-
-        imprimere("\n--- Probans spatia CONTINUATIO ---\n");
 
         /* Test that continuation is captured in spatia (Phase 2.6) */
         fons = "a \\\n b";
@@ -265,19 +276,26 @@ s32 principale(vacuum)
 
         CREDO_AEQUALIS_I32((i32)found_continuation, VERUM);
     }
+}
 
+/* ========================================================
+ * PROBARE: CRLF handling in spatia
+ * ======================================================== */
 
-    /* ========================================================
-     * PROBARE: CRLF handling in spatia
-     * ======================================================== */
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Lexator* lex;
         Arbor2Lexema* tok;
         Arbor2Lexema* nl;
-
-        imprimere("\n--- Probans CRLF handling ---\n");
 
         fons = "a\r\nb";
         lex = arbor2_lexator_creare(piscina, intern, fons, (i32)strlen(fons));
@@ -299,19 +317,26 @@ s32 principale(vacuum)
         tok = arbor2_lexema_proximum(lex);
         CREDO_AEQUALIS_I32(tok->genus, ARBOR2_LEXEMA_IDENTIFICATOR);
     }
+}
 
+/* ========================================================
+ * PROBARE: Preprocessor directive pattern
+ * Now checks for NOVA_LINEA in spatia, not main stream
+ * ======================================================== */
 
-    /* ========================================================
-     * PROBARE: Preprocessor directive pattern
-     * Now checks for NOVA_LINEA in spatia, not main stream
-     * ======================================================== */
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Lexator* lex;
         Arbor2Lexema* tok;
-
-        imprimere("\n--- Probans preprocessor pattern ---\n");
 
         fons = "#define FOO 1\nint x;";
         lex = arbor2_lexator_creare(piscina, intern, fons, (i32)strlen(fons));
@@ -337,20 +362,27 @@ s32 principale(vacuum)
         tok = arbor2_lexema_proximum(lex);
         CREDO_AEQUALIS_I32(tok->genus, ARBOR2_LEXEMA_INT);
     }
+}
 
+/* ========================================================
+ * PROBARE: arbor2_lexema_omnia (Phase 2.7)
+ * NOVA_LINEA no longer in main stream, so fewer tokens
+ * ======================================================== */
 
-    /* ========================================================
-     * PROBARE: arbor2_lexema_omnia (Phase 2.7)
-     * NOVA_LINEA no longer in main stream, so fewer tokens
-     * ======================================================== */
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Lexator* lex;
         Xar* omnia;
         Arbor2Lexema* tok;
-
-        imprimere("\n--- Probans arbor2_lexema_omnia ---\n");
 
         fons = "a\nb";
         lex = arbor2_lexator_creare(piscina, intern, fons, (i32)strlen(fons));
@@ -370,16 +402,19 @@ s32 principale(vacuum)
         tok = *(Arbor2Lexema**)xar_obtinere(omnia, II);
         CREDO_AEQUALIS_I32(tok->genus, ARBOR2_LEXEMA_EOF);
     }
+}
 
+/* ========================================================
+ * PROBARE: arbor2_lexema_genus_nomen
+ * ======================================================== */
 
-    /* ========================================================
-     * PROBARE: arbor2_lexema_genus_nomen
-     * ======================================================== */
-
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         constans character* titulus;
-
-        imprimere("\n--- Probans arbor2_lexema_genus_nomen ---\n");
 
         titulus = arbor2_lexema_genus_nomen(ARBOR2_LEXEMA_NOVA_LINEA);
         CREDO_AEQUALIS_I32((i32)strcmp(titulus, "NOVA_LINEA"), ZEPHYRUM);
@@ -390,18 +425,25 @@ s32 principale(vacuum)
         titulus = arbor2_lexema_genus_nomen(ARBOR2_LEXEMA_EOF);
         CREDO_AEQUALIS_I32((i32)strcmp(titulus, "EOF"), ZEPHYRUM);
     }
+}
 
+/* ========================================================
+ * PROBARE: Leading newlines (BOF case)
+ * ======================================================== */
 
-    /* ========================================================
-     * PROBARE: Leading newlines (BOF case)
-     * ======================================================== */
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         constans character* fons;
         Arbor2Lexator* lex;
         Arbor2Lexema* tok;
-
-        imprimere("\n--- Probans leading newlines ---\n");
 
         fons = "\n\nint x;";
         lex = arbor2_lexator_creare(piscina, intern, fons, (i32)strlen(fons));
@@ -411,23 +453,29 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32(tok->genus, ARBOR2_LEXEMA_INT);
         CREDO_AEQUALIS_I32(_numerare_nova_linea(tok->spatia_ante), II);
     }
+}
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "NOVA_LINEA in spatia", _sectio_prima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "newlines multiplices in spatia", _sectio_secunda, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "line continuation", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "spatia CONTINUATIO", _sectio_quarta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "CRLF handling", _sectio_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "preprocessor pattern", _sectio_sexta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "arbor2_lexema_omnia", _sectio_septima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "arbor2_lexema_genus_nomen", _sectio_octava, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "leading newlines", _sectio_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    /* Compendium */
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-
-    credo_claudere();
-    piscina_destruere(piscina);
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("arbor2_lexema", SECTIONES);
 }

@@ -14,11 +14,15 @@
  * ================================================== */
 
 interior vacuum
-test_creare(Piscina* piscina, InternamentumChorda* intern)
+_sectio_prima (
+    CredoContextus* c)
 {
+                Piscina* piscina;
+    InternamentumChorda* intern;
     ArborPraeparator* pp;
 
-    imprimere("\n--- Creatio ---\n");
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
 
     pp = arbor_praeparator_creare(piscina, intern);
     CREDO_NON_NIHIL(pp);
@@ -31,13 +35,17 @@ test_creare(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-test_definire(Piscina* piscina, InternamentumChorda* intern)
+_sectio_secunda (
+    CredoContextus* c)
 {
+                Piscina* piscina;
+    InternamentumChorda* intern;
     ArborPraeparator* pp;
     chorda* titulus_macro;
     ArborMacroDefinitio* macro;
 
-    imprimere("\n--- Definire Macros ---\n");
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
 
     pp = arbor_praeparator_creare(piscina, intern);
     CREDO_NON_NIHIL(pp);
@@ -87,12 +95,16 @@ test_definire(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-test_undefinire(Piscina* piscina, InternamentumChorda* intern)
+_sectio_tertia (
+    CredoContextus* c)
 {
+                Piscina* piscina;
+    InternamentumChorda* intern;
     ArborPraeparator* pp;
     chorda* titulus_macro;
 
-    imprimere("\n--- Undefinire Macros ---\n");
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
 
     pp = arbor_praeparator_creare(piscina, intern);
     CREDO_NON_NIHIL(pp);
@@ -113,11 +125,15 @@ test_undefinire(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-test_addere_via(Piscina* piscina, InternamentumChorda* intern)
+_sectio_quarta (
+    CredoContextus* c)
 {
+                Piscina* piscina;
+    InternamentumChorda* intern;
     ArborPraeparator* pp;
 
-    imprimere("\n--- Addere Via Include ---\n");
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
 
     pp = arbor_praeparator_creare(piscina, intern);
     CREDO_NON_NIHIL(pp);
@@ -135,8 +151,11 @@ test_addere_via(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-test_processare_simplex(Piscina* piscina, InternamentumChorda* intern)
+_sectio_quinta (
+    CredoContextus* c)
 {
+                Piscina* piscina;
+    InternamentumChorda* intern;
     ArborPraeparator* pp;
     ArborLexator* lexator;
     Xar* lexemata;
@@ -144,7 +163,8 @@ test_processare_simplex(Piscina* piscina, InternamentumChorda* intern)
     constans character* fons;
     i32 num_out;
 
-    imprimere("\n--- Processare Simplex ---\n");
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
 
     pp = arbor_praeparator_creare(piscina, intern);
     CREDO_NON_NIHIL(pp);
@@ -182,8 +202,11 @@ test_processare_simplex(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-test_directivae_saltantur(Piscina* piscina, InternamentumChorda* intern)
+_sectio_sexta (
+    CredoContextus* c)
 {
+                Piscina* piscina;
+    InternamentumChorda* intern;
     ArborPraeparator* pp;
     ArborLexator* lexator;
     Xar* lexemata;
@@ -193,7 +216,8 @@ test_directivae_saltantur(Piscina* piscina, InternamentumChorda* intern)
     i32 num_out;
     b32 invenit_hash;
 
-    imprimere("\n--- Directivae Saltantur ---\n");
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
 
     pp = arbor_praeparator_creare(piscina, intern);
     CREDO_NON_NIHIL(pp);
@@ -244,8 +268,11 @@ test_directivae_saltantur(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-test_parsere_define(Piscina* piscina, InternamentumChorda* intern)
+_sectio_septima (
+    CredoContextus* c)
 {
+                Piscina* piscina;
+    InternamentumChorda* intern;
     ArborPraeparator* pp;
     ArborLexator* lexator;
     Xar* lexemata;
@@ -253,7 +280,8 @@ test_parsere_define(Piscina* piscina, InternamentumChorda* intern)
     ArborMacroDefinitio* macro;
     chorda* titulus;
 
-    imprimere("\n--- Parsere #define ---\n");
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
 
     /* Test 1: Object-like macro simplex */
     {
@@ -399,8 +427,11 @@ test_parsere_define(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-test_conditionales(Piscina* piscina, InternamentumChorda* intern)
+_sectio_octava (
+    CredoContextus* c)
 {
+                Piscina* piscina;
+    InternamentumChorda* intern;
     ArborPraeparator* pp;
     ArborLexator* lexator;
     Xar* lexemata;
@@ -408,7 +439,8 @@ test_conditionales(Piscina* piscina, InternamentumChorda* intern)
     i32 i;
     i32 num_out;
 
-    imprimere("\n--- Conditionales ---\n");
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
 
     /* Test 1: #ifdef verum - emittit codicem */
     {
@@ -651,8 +683,11 @@ test_conditionales(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-test_if_expressions(Piscina* piscina, InternamentumChorda* intern)
+_sectio_nona (
+    CredoContextus* c)
 {
+                Piscina* piscina;
+    InternamentumChorda* intern;
     ArborPraeparator* pp;
     ArborLexator* lexator;
     Xar* lexemata;
@@ -660,7 +695,8 @@ test_if_expressions(Piscina* piscina, InternamentumChorda* intern)
     i32 i;
     i32 num_out;
 
-    imprimere("\n--- If Expressions ---\n");
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
 
     /* Test 1: #if 1 (verum) */
     {
@@ -913,8 +949,11 @@ test_if_expressions(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-test_special_operators(Piscina* piscina, InternamentumChorda* intern)
+_sectio_decima (
+    CredoContextus* c)
 {
+                Piscina* piscina;
+    InternamentumChorda* intern;
     ArborPraeparator* pp;
     ArborLexator* lexator;
     Xar* lexemata;
@@ -922,7 +961,8 @@ test_special_operators(Piscina* piscina, InternamentumChorda* intern)
     i32 i;
     i32 num_out;
 
-    imprimere("\n--- Special Operators ---\n");
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
 
     /* Test 1: Simple function-like macro expansion */
     {
@@ -1027,8 +1067,11 @@ test_special_operators(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-test_macro_expansion(Piscina* piscina, InternamentumChorda* intern)
+_sectio_decima_prima (
+    CredoContextus* c)
 {
+                Piscina* piscina;
+    InternamentumChorda* intern;
     ArborPraeparator* pp;
     ArborLexator* lexator;
     Xar* lexemata;
@@ -1036,7 +1079,8 @@ test_macro_expansion(Piscina* piscina, InternamentumChorda* intern)
     i32 i;
     i32 num_out;
 
-    imprimere("\n--- Macro Expansion ---\n");
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
 
     /* Test 1: Simple object-like macro expansion */
     {
@@ -1254,8 +1298,11 @@ test_macro_expansion(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-test_include(Piscina* piscina, InternamentumChorda* intern)
+_sectio_decima_secunda (
+    CredoContextus* c)
 {
+                Piscina* piscina;
+    InternamentumChorda* intern;
     ArborPraeparator* pp;
     ArborLexator* lexator;
     Xar* lexemata;
@@ -1263,7 +1310,8 @@ test_include(Piscina* piscina, InternamentumChorda* intern)
     i32 num_out;
     i32 i;
 
-    imprimere("\n--- Include ---\n");
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
 
     /* Test 1: Include with quoted path */
     {
@@ -1403,9 +1451,10 @@ test_include(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-test_directiva_nomina(vacuum)
+_sectio_decima_tertia (
+    CredoContextus* c)
 {
-    imprimere("\n--- Nomina Directivarum ---\n");
+    (vacuum)c;
 
     CREDO_AEQUALIS_S32(
         strcmp(arbor_directiva_genus_nomen(ARBOR_DIRECTIVA_INCLUDE), "include"),
@@ -1430,47 +1479,25 @@ test_directiva_nomina(vacuum)
  * Main
  * ================================================== */
 
-s32 principale(vacuum)
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "Creatio", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Definire Macros", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Undefinire Macros", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Addere Via Include", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Processare Simplex", _sectio_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Directivae Saltantur", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Parsere #define", _sectio_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Conditionales", _sectio_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "If Expressions", _sectio_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Special Operators", _sectio_decima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Macro Expansion", _sectio_decima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Include", _sectio_decima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Nomina Directivarum", _sectio_decima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
 {
-    Piscina* piscina;
-    InternamentumChorda* intern;
-    b32 praeteritus;
-
-    piscina = piscina_generare_dynamicum("test_arbor_praeparator", M);
-    intern = internamentum_creare(piscina);
-
-    credo_aperire(piscina);
-
-    imprimere("\n========================================\n");
-    imprimere("PROBATIO ARBOR PRAEPARATOR\n");
-    imprimere("========================================\n");
-
-    test_creare(piscina, intern);
-    test_definire(piscina, intern);
-    test_undefinire(piscina, intern);
-    test_addere_via(piscina, intern);
-    test_processare_simplex(piscina, intern);
-    test_directivae_saltantur(piscina, intern);
-    test_parsere_define(piscina, intern);
-    test_conditionales(piscina, intern);
-    test_if_expressions(piscina, intern);
-    test_special_operators(piscina, intern);
-    test_macro_expansion(piscina, intern);
-    test_include(piscina, intern);
-    test_directiva_nomina();
-
-    imprimere("\n========================================\n");
-    credo_imprimere_compendium();
-    imprimere("========================================\n");
-
-    praeteritus = credo_omnia_praeterierunt();
-
-    credo_claudere();
-    piscina_destruere(piscina);
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    redde I;
+    redde credo_suitam_currere("arbor_praeparator", SECTIONES);
 }

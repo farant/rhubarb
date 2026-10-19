@@ -29,9 +29,14 @@
  * ================================================== */
 
 interior vacuum
-test_keywords(Piscina* piscina, InternamentumChorda* intern)
+_sectio_prima (
+    CredoContextus* c)
 {
-    imprimere("\n--- C89 Keywords ---\n");
+    Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
 
     /* Probare omnia 32 verba clausa */
     TEST_LEXEMA("auto", ARBOR_LEXEMA_AUTO, "auto");
@@ -66,8 +71,6 @@ test_keywords(Piscina* piscina, InternamentumChorda* intern)
     TEST_LEXEMA("void", ARBOR_LEXEMA_VOID, "void");
     TEST_LEXEMA("volatile", ARBOR_LEXEMA_VOLATILE, "volatile");
     TEST_LEXEMA("while", ARBOR_LEXEMA_WHILE, "while");
-
-    imprimere("  Keywords: OK\n");
 }
 
 /* ==================================================
@@ -75,9 +78,14 @@ test_keywords(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-test_identifiers(Piscina* piscina, InternamentumChorda* intern)
+_sectio_secunda (
+    CredoContextus* c)
 {
-    imprimere("\n--- Identifiers ---\n");
+    Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
 
     TEST_LEXEMA("foo", ARBOR_LEXEMA_IDENTIFICATOR, "foo");
     TEST_LEXEMA("_bar", ARBOR_LEXEMA_IDENTIFICATOR, "_bar");
@@ -86,8 +94,6 @@ test_identifiers(Piscina* piscina, InternamentumChorda* intern)
     TEST_LEXEMA("snake_case", ARBOR_LEXEMA_IDENTIFICATOR, "snake_case");
     TEST_LEXEMA("x123", ARBOR_LEXEMA_IDENTIFICATOR, "x123");
     TEST_LEXEMA("CONSTANT", ARBOR_LEXEMA_IDENTIFICATOR, "CONSTANT");
-
-    imprimere("  Identifiers: OK\n");
 }
 
 /* ==================================================
@@ -95,9 +101,14 @@ test_identifiers(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-test_integers(Piscina* piscina, InternamentumChorda* intern)
+_sectio_tertia (
+    CredoContextus* c)
 {
-    imprimere("\n--- Integer Literals ---\n");
+    Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
 
     /* Decimal */
     TEST_LEXEMA("0", ARBOR_LEXEMA_INTEGER, "0");
@@ -119,8 +130,6 @@ test_integers(Piscina* piscina, InternamentumChorda* intern)
     TEST_LEXEMA("123U", ARBOR_LEXEMA_INTEGER, "123U");
     TEST_LEXEMA("123UL", ARBOR_LEXEMA_INTEGER, "123UL");
     TEST_LEXEMA("123LU", ARBOR_LEXEMA_INTEGER, "123LU");
-
-    imprimere("  Integer Literals: OK\n");
 }
 
 /* ==================================================
@@ -128,9 +137,14 @@ test_integers(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-test_floats(Piscina* piscina, InternamentumChorda* intern)
+_sectio_quarta (
+    CredoContextus* c)
 {
-    imprimere("\n--- Float Literals ---\n");
+    Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
 
     TEST_LEXEMA("3.14", ARBOR_LEXEMA_FLOAT_LIT, "3.14");
     TEST_LEXEMA("0.5", ARBOR_LEXEMA_FLOAT_LIT, "0.5");
@@ -141,8 +155,6 @@ test_floats(Piscina* piscina, InternamentumChorda* intern)
     TEST_LEXEMA("3.14f", ARBOR_LEXEMA_FLOAT_LIT, "3.14f");
     TEST_LEXEMA("3.14F", ARBOR_LEXEMA_FLOAT_LIT, "3.14F");
     TEST_LEXEMA("3.14L", ARBOR_LEXEMA_FLOAT_LIT, "3.14L");
-
-    imprimere("  Float Literals: OK\n");
 }
 
 /* ==================================================
@@ -150,9 +162,14 @@ test_floats(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-test_strings(Piscina* piscina, InternamentumChorda* intern)
+_sectio_quinta (
+    CredoContextus* c)
 {
-    imprimere("\n--- String Literals ---\n");
+    Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
 
     TEST_LEXEMA("\"hello\"", ARBOR_LEXEMA_STRING_LIT, "\"hello\"");
     TEST_LEXEMA("\"\"", ARBOR_LEXEMA_STRING_LIT, "\"\"");
@@ -160,8 +177,6 @@ test_strings(Piscina* piscina, InternamentumChorda* intern)
     TEST_LEXEMA("\"escape\\ntest\"", ARBOR_LEXEMA_STRING_LIT, "\"escape\\ntest\"");
     TEST_LEXEMA("\"tab\\there\"", ARBOR_LEXEMA_STRING_LIT, "\"tab\\there\"");
     TEST_LEXEMA("\"quote\\\"inside\"", ARBOR_LEXEMA_STRING_LIT, "\"quote\\\"inside\"");
-
-    imprimere("  String Literals: OK\n");
 }
 
 /* ==================================================
@@ -169,9 +184,14 @@ test_strings(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-test_chars(Piscina* piscina, InternamentumChorda* intern)
+_sectio_sexta (
+    CredoContextus* c)
 {
-    imprimere("\n--- Character Literals ---\n");
+    Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
 
     TEST_LEXEMA("'a'", ARBOR_LEXEMA_CHAR_LIT, "'a'");
     TEST_LEXEMA("'Z'", ARBOR_LEXEMA_CHAR_LIT, "'Z'");
@@ -180,8 +200,6 @@ test_chars(Piscina* piscina, InternamentumChorda* intern)
     TEST_LEXEMA("'\\t'", ARBOR_LEXEMA_CHAR_LIT, "'\\t'");
     TEST_LEXEMA("'\\''", ARBOR_LEXEMA_CHAR_LIT, "'\\''");
     TEST_LEXEMA("'\\\\'", ARBOR_LEXEMA_CHAR_LIT, "'\\\\'");
-
-    imprimere("  Character Literals: OK\n");
 }
 
 /* ==================================================
@@ -189,9 +207,14 @@ test_chars(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-test_operators(Piscina* piscina, InternamentumChorda* intern)
+_sectio_septima (
+    CredoContextus* c)
 {
-    imprimere("\n--- Operators ---\n");
+    Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
 
     /* Arithmetic */
     TEST_LEXEMA("+", ARBOR_LEXEMA_PLUS, "+");
@@ -243,8 +266,6 @@ test_operators(Piscina* piscina, InternamentumChorda* intern)
     /* Member access */
     TEST_LEXEMA(".", ARBOR_LEXEMA_PUNCTUM, ".");
     TEST_LEXEMA("->", ARBOR_LEXEMA_SAGITTA, "->");
-
-    imprimere("  Operators: OK\n");
 }
 
 /* ==================================================
@@ -252,9 +273,14 @@ test_operators(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-test_punctuation(Piscina* piscina, InternamentumChorda* intern)
+_sectio_octava (
+    CredoContextus* c)
 {
-    imprimere("\n--- Punctuation ---\n");
+    Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
 
     TEST_LEXEMA(",", ARBOR_LEXEMA_COMMA, ",");
     TEST_LEXEMA(":", ARBOR_LEXEMA_COLON, ":");
@@ -269,8 +295,6 @@ test_punctuation(Piscina* piscina, InternamentumChorda* intern)
     TEST_LEXEMA("#", ARBOR_LEXEMA_HASH, "#");
     TEST_LEXEMA("##", ARBOR_LEXEMA_HASH_HASH, "##");
     TEST_LEXEMA("...", ARBOR_LEXEMA_ELLIPSIS, "...");
-
-    imprimere("  Punctuation: OK\n");
 }
 
 /* ==================================================
@@ -278,13 +302,17 @@ test_punctuation(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-test_trivia(Piscina* piscina, InternamentumChorda* intern)
+_sectio_nona (
+    CredoContextus* c)
 {
+    Piscina* piscina;
+    InternamentumChorda* intern;
     ArborLexator* lex;
     ArborLexema* tok;
     ArborTrivia* trivia;
 
-    imprimere("\n--- Trivia ---\n");
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
 
     /* Leading whitespace */
     lex = arbor_lexator_creare(piscina, intern, "   int", VI);
@@ -322,7 +350,6 @@ test_trivia(Piscina* piscina, InternamentumChorda* intern)
     CREDO_NON_NIHIL(tok->trivia_post);
     CREDO_AEQUALIS_I32(xar_numerus(tok->trivia_post), II);  /* space + comment */
 
-    imprimere("  Trivia: OK\n");
 }
 
 /* ==================================================
@@ -330,12 +357,16 @@ test_trivia(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-test_positions(Piscina* piscina, InternamentumChorda* intern)
+_sectio_decima (
+    CredoContextus* c)
 {
+    Piscina* piscina;
+    InternamentumChorda* intern;
     ArborLexator* lex;
     ArborLexema* tok;
 
-    imprimere("\n--- Position Tracking ---\n");
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
 
     /* Simple positioning */
     lex = arbor_lexator_creare(piscina, intern, "int x", V);
@@ -357,8 +388,6 @@ test_positions(Piscina* piscina, InternamentumChorda* intern)
     tok = arbor_lexema_proximum(lex);
     CREDO_AEQUALIS_I32(tok->linea, II);
     CREDO_AEQUALIS_I32(tok->columna, I);
-
-    imprimere("  Position Tracking: OK\n");
 }
 
 /* ==================================================
@@ -366,12 +395,16 @@ test_positions(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-test_sequence(Piscina* piscina, InternamentumChorda* intern)
+_sectio_decima_prima (
+    CredoContextus* c)
 {
+    Piscina* piscina;
+    InternamentumChorda* intern;
     ArborLexator* lex;
     ArborLexema* tok;
 
-    imprimere("\n--- Token Sequence ---\n");
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
 
     /* Function declaration */
     lex = arbor_lexator_creare(piscina, intern, "int main(void)", XIV);
@@ -394,8 +427,6 @@ test_sequence(Piscina* piscina, InternamentumChorda* intern)
 
     tok = arbor_lexema_proximum(lex);
     CREDO_AEQUALIS_I32(tok->genus, ARBOR_LEXEMA_EOF);
-
-    imprimere("  Token Sequence: OK\n");
 }
 
 /* ==================================================
@@ -403,13 +434,17 @@ test_sequence(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-test_omnia(Piscina* piscina, InternamentumChorda* intern)
+_sectio_decima_secunda (
+    CredoContextus* c)
 {
+    Piscina* piscina;
+    InternamentumChorda* intern;
     ArborLexator* lex;
     Xar* tokens;
     ArborLexema* tok;
 
-    imprimere("\n--- arbor_lexema_omnia ---\n");
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
 
     lex = arbor_lexator_creare(piscina, intern, "int x = 42;", XI);
     tokens = arbor_lexema_omnia(lex);
@@ -434,8 +469,6 @@ test_omnia(Piscina* piscina, InternamentumChorda* intern)
 
     tok = *(ArborLexema**)xar_obtinere(tokens, V);
     CREDO_AEQUALIS_I32(tok->genus, ARBOR_LEXEMA_EOF);
-
-    imprimere("  arbor_lexema_omnia: OK\n");
 }
 
 /* ==================================================
@@ -443,63 +476,40 @@ test_omnia(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-test_genus_nomen(vacuum)
+_sectio_decima_tertia (
+    CredoContextus* c)
 {
-    imprimere("\n--- arbor_lexema_genus_nomen ---\n");
+    (vacuum)c;
 
     CREDO_AEQUALIS_S32(strcmp(arbor_lexema_genus_nomen(ARBOR_LEXEMA_INT), "INT"), ZEPHYRUM);
     CREDO_AEQUALIS_S32(strcmp(arbor_lexema_genus_nomen(ARBOR_LEXEMA_IDENTIFICATOR), "IDENTIFICATOR"), ZEPHYRUM);
     CREDO_AEQUALIS_S32(strcmp(arbor_lexema_genus_nomen(ARBOR_LEXEMA_PLUS), "PLUS"), ZEPHYRUM);
     CREDO_AEQUALIS_S32(strcmp(arbor_lexema_genus_nomen(ARBOR_LEXEMA_EOF), "EOF"), ZEPHYRUM);
-
-    imprimere("  arbor_lexema_genus_nomen: OK\n");
 }
 
 /* ==================================================
  * Main
  * ================================================== */
 
-s32 principale(vacuum)
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "C89 Keywords", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Identifiers", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Integer Literals", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Float Literals", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "String Literals", _sectio_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Character Literals", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Operators", _sectio_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Punctuation", _sectio_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Trivia", _sectio_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Position Tracking", _sectio_decima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Token Sequence", _sectio_decima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "arbor_lexema_omnia", _sectio_decima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "arbor_lexema_genus_nomen", _sectio_decima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
 {
-    Piscina* piscina;
-    InternamentumChorda* intern;
-    b32 praeteritus;
-
-    piscina = piscina_generare_dynamicum("test_arbor_lexema", M);
-    intern = internamentum_creare(piscina);
-
-    credo_aperire(piscina);
-
-    imprimere("\n========================================\n");
-    imprimere("PROBATIO ARBOR LEXEMA\n");
-    imprimere("========================================\n");
-
-    test_keywords(piscina, intern);
-    test_identifiers(piscina, intern);
-    test_integers(piscina, intern);
-    test_floats(piscina, intern);
-    test_strings(piscina, intern);
-    test_chars(piscina, intern);
-    test_operators(piscina, intern);
-    test_punctuation(piscina, intern);
-    test_trivia(piscina, intern);
-    test_positions(piscina, intern);
-    test_sequence(piscina, intern);
-    test_omnia(piscina, intern);
-    test_genus_nomen();
-
-    imprimere("\n========================================\n");
-    credo_imprimere_compendium();
-    imprimere("========================================\n");
-
-    praeteritus = credo_omnia_praeterierunt();
-
-    credo_claudere();
-    piscina_destruere(piscina);
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    redde I;
+    redde credo_suitam_currere("arbor_lexema", SECTIONES);
 }

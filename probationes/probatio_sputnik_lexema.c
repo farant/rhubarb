@@ -42,8 +42,6 @@ _probare_punctuatio (
                 Piscina* piscina,
     InternamentumChorda* intern)
 {
-    imprimere("\n--- Probatio Punctuatio ---\n");
-
     _probare_lexema_simplex("(", SPUTNIK_LEXEMA_PARENTHESIS_A, piscina,
         intern);
     _probare_lexema_simplex(")", SPUTNIK_LEXEMA_PARENTHESIS_C, piscina,
@@ -76,8 +74,6 @@ _probare_operatores (
                 Piscina* piscina,
     InternamentumChorda* intern)
 {
-    imprimere("\n--- Probatio Operatores ---\n");
-
     /* Arithmetici */
     _probare_lexema_simplex("+", SPUTNIK_LEXEMA_PLUS, piscina, intern);
     _probare_lexema_simplex("-", SPUTNIK_LEXEMA_MINUS, piscina, intern);
@@ -130,8 +126,6 @@ _probare_numeros(Piscina* piscina, InternamentumChorda* intern)
 {
     SputnikLexema lexema;
 
-    imprimere("\n--- Probatio Numeri ---\n");
-
     /* Integer simplex */
     lexema = _legere_primum("42", piscina, intern);
     CREDO_AEQUALIS_I32(lexema.genus, SPUTNIK_LEXEMA_NUMERUS);
@@ -168,8 +162,6 @@ interior vacuum
 _probare_chordas(Piscina* piscina, InternamentumChorda* intern)
 {
     SputnikLexema lexema;
-
-    imprimere("\n--- Probatio Chordae ---\n");
 
     /* Chorda cum quotis duplicibus - nunc sine quotis, cum effugiis processatis */
     lexema = _legere_primum("\"hello\"", piscina, intern);
@@ -208,8 +200,6 @@ interior vacuum
 _probare_identificatores(Piscina* piscina, InternamentumChorda* intern)
 {
     SputnikLexema lexema;
-
-    imprimere("\n--- Probatio Identificatores ---\n");
 
     /* Simplex */
     lexema = _legere_primum("foo", piscina, intern);
@@ -257,8 +247,6 @@ _probare_verba_clausa (
                 Piscina* piscina,
     InternamentumChorda* intern)
 {
-    imprimere("\n--- Probatio Verba Clausa ---\n");
-
     _probare_lexema_simplex("sit", SPUTNIK_LEXEMA_LET, piscina, intern);
     _probare_lexema_simplex("constans", SPUTNIK_LEXEMA_CONST, piscina,
         intern);
@@ -299,8 +287,6 @@ _probare_signa(Piscina* piscina, InternamentumChorda* intern)
 {
     SputnikLexema lexema;
 
-    imprimere("\n--- Probatio Signa ---\n");
-
     /* Signum simplex */
     lexema = _legere_primum("#tag", piscina, intern);
     CREDO_AEQUALIS_I32(lexema.genus, SPUTNIK_LEXEMA_SIGNUM);
@@ -332,8 +318,6 @@ _probare_commenta(Piscina* piscina, InternamentumChorda* intern)
      SputnikLexema  lexema;
     SputnikLexator* lex;
 
-    imprimere("\n--- Probatio Commenta ---\n");
-
     /* Commentum linea */
     lexema = _legere_primum("// this is a comment", piscina, intern);
     CREDO_AEQUALIS_I32(lexema.genus, SPUTNIK_LEXEMA_COMMENTUM);
@@ -363,8 +347,6 @@ _probare_positiones(Piscina* piscina, InternamentumChorda* intern)
 {
      SputnikLexema  lexema;
     SputnikLexator* lex;
-
-    imprimere("\n--- Probatio Positiones ---\n");
 
     /* Linea et columna */
     lex = sputnik_lexator_creare_ex_literis("a\nb\nc", piscina, intern);
@@ -399,8 +381,6 @@ _probare_expressiones(Piscina* piscina, InternamentumChorda* intern)
 {
     SputnikLexatorResultus  resultus;
              SputnikLexema* lexema;
-
-    imprimere("\n--- Probatio Expressiones ---\n");
 
     /* sit x = 42; */
     resultus = sputnik_lexicare_ex_literis("sit x = 42;", piscina,
@@ -464,8 +444,6 @@ _probare_errores(Piscina* piscina, InternamentumChorda* intern)
              SputnikLexema lexema;
     SputnikLexatorResultus resultus;
 
-    imprimere("\n--- Probatio Errores ---\n");
-
     /* Chorda non clausa */
     lexema = _legere_primum("\"unterminated", piscina, intern);
     CREDO_AEQUALIS_I32(lexema.genus, SPUTNIK_LEXEMA_ERROR);
@@ -484,49 +462,141 @@ _probare_errores(Piscina* piscina, InternamentumChorda* intern)
 
 
 /* ==================================================
+ * Sectiones
+ * ================================================== */
+
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    InternamentumChorda* intern;
+
+    intern = internamentum_creare(c->piscina);
+    _probare_punctuatio(c->piscina, intern);
+}
+
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    InternamentumChorda* intern;
+
+    intern = internamentum_creare(c->piscina);
+    _probare_operatores(c->piscina, intern);
+}
+
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    InternamentumChorda* intern;
+
+    intern = internamentum_creare(c->piscina);
+    _probare_numeros(c->piscina, intern);
+}
+
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    InternamentumChorda* intern;
+
+    intern = internamentum_creare(c->piscina);
+    _probare_chordas(c->piscina, intern);
+}
+
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    InternamentumChorda* intern;
+
+    intern = internamentum_creare(c->piscina);
+    _probare_identificatores(c->piscina, intern);
+}
+
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    InternamentumChorda* intern;
+
+    intern = internamentum_creare(c->piscina);
+    _probare_verba_clausa(c->piscina, intern);
+}
+
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    InternamentumChorda* intern;
+
+    intern = internamentum_creare(c->piscina);
+    _probare_signa(c->piscina, intern);
+}
+
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    InternamentumChorda* intern;
+
+    intern = internamentum_creare(c->piscina);
+    _probare_commenta(c->piscina, intern);
+}
+
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+    InternamentumChorda* intern;
+
+    intern = internamentum_creare(c->piscina);
+    _probare_positiones(c->piscina, intern);
+}
+
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+    InternamentumChorda* intern;
+
+    intern = internamentum_creare(c->piscina);
+    _probare_expressiones(c->piscina, intern);
+}
+
+interior vacuum
+_sectio_decima_prima (
+    CredoContextus* c)
+{
+    InternamentumChorda* intern;
+
+    intern = internamentum_creare(c->piscina);
+    _probare_errores(c->piscina, intern);
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "Punctuatio", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Operatores", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Numeri", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Chordae", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Identificatores", _sectio_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Verba Clausa", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Signa", _sectio_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Commenta", _sectio_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Positiones", _sectio_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Expressiones", _sectio_decima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Errores", _sectio_decima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+
+/* ==================================================
  * Principale
  * ================================================== */
 
 s32
 principale (vacuum)
 {
-                Piscina* piscina;
-    InternamentumChorda* intern;
-                    b32  praeteritus;
-
-    piscina = piscina_generare_dynamicum("probatio_sputnik_lexema",
-        IV * MXXIV * IV);
-    intern = internamentum_creare(piscina);
-
-    credo_aperire(piscina);
-
-    imprimere("=== Probationes Sputnik Lexema ===\n");
-
-    _probare_punctuatio(piscina, intern);
-    _probare_operatores(piscina, intern);
-    _probare_numeros(piscina, intern);
-    _probare_chordas(piscina, intern);
-    _probare_identificatores(piscina, intern);
-    _probare_verba_clausa(piscina, intern);
-    _probare_signa(piscina, intern);
-    _probare_commenta(piscina, intern);
-    _probare_positiones(piscina, intern);
-    _probare_expressiones(piscina, intern);
-    _probare_errores(piscina, intern);
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-
-    piscina_destruere(piscina);
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+    redde credo_suitam_currere("sputnik_lexema", SECTIONES);
 }

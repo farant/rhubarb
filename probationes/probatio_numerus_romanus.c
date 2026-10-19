@@ -163,231 +163,229 @@ _aestimare (
 }
 
 
-s32 principale (vacuum)
+/* ==================================================
+ * PROBARE: scribere - canonicum et par cum legere, 1-3999
+ * ================================================== */
+
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-         b32  praeteritus;
-     Piscina* piscina;
-     Piscina* p;
+     Piscina* p = c->piscina;
+         i32  n;
+         b32  omnes = VERUM;
 
-    piscina = piscina_generare_dynamicum("probatio_numerus_romanus",
-                                         IV * MXXIV);
-    p = piscina_generare_dynamicum("probatio_numerus_romanus_ansa",
-                                   LXIV * MXXIV);
-    si (!piscina || !p)
+    CREDO_CHORDA_AEQUALIS_LITERIS(numerus_romanus_scribere(CVI, p),
+                                  "CVI");
+    CREDO_CHORDA_AEQUALIS_LITERIS(numerus_romanus_scribere(XIV, p),
+                                  "XIV");
+    CREDO_CHORDA_AEQUALIS_LITERIS(numerus_romanus_scribere(
+        MMM + CM + XC + IX, p), "MMMCMXCIX");
+    CREDO_CHORDA_AEQUALIS_LITERIS(numerus_romanus_scribere(M + IX,
+        p),
+                                  "MIX");
+    /* nullus numerus Romanus: 0, ultra MMMCMXCIX */
+    CREDO_CHORDA_VACUA(numerus_romanus_scribere(ZEPHYRUM, p));
+    CREDO_CHORDA_VACUA(numerus_romanus_scribere(IV * M, p));
+
+    per (n = I; n <= MMM + CM + XC + IX; n++)
     {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
+        i32 valor = ZEPHYRUM;
 
-
-    /* ==================================================
-     * PROBARE: scribere - canonicum et par cum legere, 1-3999
-     * ================================================== */
-
-    {
-        i32 n;
-        b32 omnes = VERUM;
-
-        imprimere("\n--- Probans scribere (par cum legere) ---\n");
-
-        CREDO_CHORDA_AEQUALIS_LITERIS(numerus_romanus_scribere(CVI, p),
-                                      "CVI");
-        CREDO_CHORDA_AEQUALIS_LITERIS(numerus_romanus_scribere(XIV, p),
-                                      "XIV");
-        CREDO_CHORDA_AEQUALIS_LITERIS(numerus_romanus_scribere(
-            MMM + CM + XC + IX, p), "MMMCMXCIX");
-        CREDO_CHORDA_AEQUALIS_LITERIS(numerus_romanus_scribere(M + IX,
-            p),
-                                      "MIX");
-        /* nullus numerus Romanus: 0, ultra MMMCMXCIX */
-        CREDO_CHORDA_VACUA(numerus_romanus_scribere(ZEPHYRUM, p));
-        CREDO_CHORDA_VACUA(numerus_romanus_scribere(IV * M, p));
-
-        per (n = I; n <= MMM + CM + XC + IX; n++)
+        si (   !numerus_romanus_legere(
+                    numerus_romanus_scribere(n, p), &valor)
+            || valor != n)
         {
-            i32 valor = ZEPHYRUM;
-
-            si (   !numerus_romanus_legere(
-                        numerus_romanus_scribere(n, p), &valor)
-                || valor != n)
-            {
-                imprimere("  par fractum: %u\n", n);
-                omnes = FALSUM;
-                frange;
-            }
-            si (n % C == ZEPHYRUM)
-            {
-                piscina_vacare(p);
-            }
+            imprimere("  par fractum: %u\n", n);
+            omnes = FALSUM;
+            frange;
         }
-        CREDO_VERUM(omnes);
-        piscina_vacare(p);
+        si (n % C == ZEPHYRUM)
+        {
+            piscina_vacare(p);
+        }
     }
+    CREDO_VERUM(omnes);
+    piscina_vacare(p);
+}
 
 
-    /* ==================================================
-     * PROBARE: legere manet strictum (verba Anglica, MMMM)
-     * ================================================== */
+/* ==================================================
+ * PROBARE: legere manet strictum (verba Anglica, MMMM)
+ * ================================================== */
 
-    {
-        imprimere("\n--- Probans legere strictum ---\n");
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* p = c->piscina;
 
-        CREDO_FALSUM(numerus_romanus_legere(chorda_ex_literis("CIVIC",
-            p),
-                                            NIHIL));
-        CREDO_FALSUM(numerus_romanus_legere(chorda_ex_literis("LIVID",
-            p),
-                                            NIHIL));
-        /* ultra classicum: forma 'IV * M' est, non MMMM */
-        CREDO_FALSUM(numerus_romanus_legere(chorda_ex_literis("MMMM",
-            p),
-                                            NIHIL));
-        piscina_vacare(p);
-    }
+    CREDO_FALSUM(numerus_romanus_legere(chorda_ex_literis("CIVIC",
+        p),
+                                        NIHIL));
+    CREDO_FALSUM(numerus_romanus_legere(chorda_ex_literis("LIVID",
+        p),
+                                        NIHIL));
+    /* ultra classicum: forma 'IV * M' est, non MMMM */
+    CREDO_FALSUM(numerus_romanus_legere(chorda_ex_literis("MMMM",
+        p),
+                                        NIHIL));
+    piscina_vacare(p);
+}
 
 
-    /* ==================================================
-     * PROBARE: exprimere - formae canonicae nominatae
-     * ================================================== */
+/* ==================================================
+ * PROBARE: exprimere - formae canonicae nominatae
+ * ================================================== */
 
-    {
-        nomen structura {
-                           i64  n;
-            constans character* forma;
-                           b32  compositum;
-        } Exemplum;
-        /* valores magni ex numeralibus computantur (i64 C89 sine
-         * suffixo litteralis) */
-        Exemplum exempla[XVI];
-             i32 k;
-             i32 numerus = ZEPHYRUM;
-
-        imprimere("\n--- Probans exprimere (formae canonicae) ---\n");
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    Piscina* p = c->piscina;
+    nomen structura {
+                       i64  n;
+        constans character* forma;
+                       b32  compositum;
+    } Exemplum;
+    /* valores magni ex numeralibus computantur (i64 C89 sine
+     * suffixo litteralis) */
+    Exemplum exempla[XVI];
+         i32 k;
+         i32 numerus = ZEPHYRUM;
 
 #define EXEMPLUM(v, f, c) exempla[numerus].n = (v); \
     exempla[numerus].forma = (f); \
     exempla[numerus].compositum = (c); numerus++
 
-        EXEMPLUM((i64)ZEPHYRUM, "ZEPHYRUM", FALSUM);
-        EXEMPLUM((i64)CVI, "CVI", FALSUM);
-        EXEMPLUM((i64)(MMM + CM + XC + IX), "MMMCMXCIX", FALSUM);
-        EXEMPLUM((i64)IV * M, "IV * M", VERUM);
-        EXEMPLUM((i64)IV * MXXIV, "IV * MXXIV", VERUM);
-        EXEMPLUM((i64)(V * M + CCLXXX), "V * M + CCLXXX", VERUM);
-        EXEMPLUM((i64)LXIV * MXXIV, "LXIV * MXXIV", VERUM);
-        /* milia rotunda milia manent (128000 = CXXV * MXXIV quoque) */
-        EXEMPLUM((i64)CXXVIII * M, "CXXVIII * M", VERUM);
-        EXEMPLUM((i64)M * M, "M * M", VERUM);
-        EXEMPLUM((i64)MXXIV * MXXIV, "MXXIV * MXXIV", VERUM);
-        EXEMPLUM((i64)(M + D) * M, "MD * M", VERUM);
-        EXEMPLUM((i64)IV * M * M + (i64)D * M, "IV * M * M + D * M",
-            VERUM);
-        /* int excessum: (i64) ante factorem primum */
-        EXEMPLUM((i64)IV * MXXIV * MXXIV * MXXIV,
-              "(i64)IV * MXXIV * MXXIV * MXXIV", VERUM);
-        EXEMPLUM((i64)V * M * M * M, "(i64)V * M * M * M", VERUM);
-        /* summa binaria intra factorem: parentheses */
-        EXEMPLUM(((i64)IV * M + DI) * MXXIV, "(IV * M + DI) * MXXIV",
-            VERUM);
-        /* idem cum milibus rotundis: 4500 * 1024 = 4608000 -> milia */
-        EXEMPLUM(((i64)IV * M + D) * MXXIV, "IV * M * M + DCVIII * M",
-                 VERUM);
+    EXEMPLUM((i64)ZEPHYRUM, "ZEPHYRUM", FALSUM);
+    EXEMPLUM((i64)CVI, "CVI", FALSUM);
+    EXEMPLUM((i64)(MMM + CM + XC + IX), "MMMCMXCIX", FALSUM);
+    EXEMPLUM((i64)IV * M, "IV * M", VERUM);
+    EXEMPLUM((i64)IV * MXXIV, "IV * MXXIV", VERUM);
+    EXEMPLUM((i64)(V * M + CCLXXX), "V * M + CCLXXX", VERUM);
+    EXEMPLUM((i64)LXIV * MXXIV, "LXIV * MXXIV", VERUM);
+    /* milia rotunda milia manent (128000 = CXXV * MXXIV quoque) */
+    EXEMPLUM((i64)CXXVIII * M, "CXXVIII * M", VERUM);
+    EXEMPLUM((i64)M * M, "M * M", VERUM);
+    EXEMPLUM((i64)MXXIV * MXXIV, "MXXIV * MXXIV", VERUM);
+    EXEMPLUM((i64)(M + D) * M, "MD * M", VERUM);
+    EXEMPLUM((i64)IV * M * M + (i64)D * M, "IV * M * M + D * M",
+        VERUM);
+    /* int excessum: (i64) ante factorem primum */
+    EXEMPLUM((i64)IV * MXXIV * MXXIV * MXXIV,
+          "(i64)IV * MXXIV * MXXIV * MXXIV", VERUM);
+    EXEMPLUM((i64)V * M * M * M, "(i64)V * M * M * M", VERUM);
+    /* summa binaria intra factorem: parentheses */
+    EXEMPLUM(((i64)IV * M + DI) * MXXIV, "(IV * M + DI) * MXXIV",
+        VERUM);
+    /* idem cum milibus rotundis: 4500 * 1024 = 4608000 -> milia */
+    EXEMPLUM(((i64)IV * M + D) * MXXIV, "IV * M * M + DCVIII * M",
+             VERUM);
 #undef EXEMPLUM
 
-        per (k = ZEPHYRUM; k < numerus; k++)
-        {
-               b32 c = !exempla[k].compositum;
-            chorda e = numerus_romanus_exprimere(exempla[k].n, &c, p);
-
-            si (!chorda_aequalis_literis(e, exempla[k].forma))
-            {
-                imprimere("  exspectatum '%s', redditum '%.*s'\n",
-                          exempla[k].forma, (integer)e.mensura,
-                          (constans character*)e.datum);
-            }
-            CREDO_VERUM(chorda_aequalis_literis(e, exempla[k].forma));
-            CREDO_VERUM(c == exempla[k].compositum);
-            CREDO_VERUM(_aestimare(e, exempla[k].n));
-        }
-        piscina_vacare(p);
-    }
-
-
-    /* ==================================================
-     * PROBARE: exprimere - proprietas: aestimatio == n, sine
-     * involutione int (0-LXX milia omnes; multipla MXXIV et M;
-     * seriei pseudo-fortuitae usque ad 2^40)
-     * ================================================== */
-
+    per (k = ZEPHYRUM; k < numerus; k++)
     {
-         i64 n;
-         i64 k;
-        Sors sors;
-         i32 j;
-         b32 omnes = VERUM;
+           b32 c = !exempla[k].compositum;
+        chorda e = numerus_romanus_exprimere(exempla[k].n, &c, p);
 
-        imprimere("\n--- Probans exprimere (aestimatio == n) ---\n");
-
-        per (n = ZEPHYRUM; n <= (i64)LXX * M && omnes; n++)
+        si (!chorda_aequalis_literis(e, exempla[k].forma))
         {
-            si (!_aestimare(numerus_romanus_exprimere(n, NIHIL, p), n))
-            {
-                imprimere("  fractum: %lu\n", (unsigned long)n);
-                omnes = FALSUM;
-            }
-            si (n % (i64)C == ZEPHYRUM)
-            {
-                piscina_vacare(p);
-            }
+            imprimere("  exspectatum '%s', redditum '%.*s'\n",
+                      exempla[k].forma, (integer)e.mensura,
+                      (constans character*)e.datum);
         }
-        per (k = I; k <= (i64)IV * MXXIV && omnes; k++)
-        {
-            i64 duo[II];
-
-            duo[ZEPHYRUM]  = k * (i64)MXXIV;
-            duo[I]         = k * (i64)M * (i64)M;
-            per (j = ZEPHYRUM; j < II; j++)
-            {
-                si (!_aestimare(numerus_romanus_exprimere(duo[j], NIHIL,
-                                                          p), duo[j]))
-                {
-                    imprimere("  fractum: %lu\n",
-                              (unsigned long)duo[j]);
-                    omnes = FALSUM;
-                }
-            }
-            si (k % (i64)C == ZEPHYRUM)
-            {
-                piscina_vacare(p);
-            }
-        }
-        /* series pseudo-fortuita (sors, semen fixum) intra 2^40 */
-        sors_seminare(&sors, (i64)IV * MXXIV, (i64)ZEPHYRUM);
-        per (j = ZEPHYRUM; j < X * M && omnes; j++)
-        {
-            n = (((i64)sors_proximum(&sors) << XXXII)
-                 | (i64)sors_proximum(&sors))
-                & (((i64)I << XL) - (i64)I);
-            si (!_aestimare(numerus_romanus_exprimere(n, NIHIL, p), n))
-            {
-                imprimere("  fractum: %lu\n", (unsigned long)n);
-                omnes = FALSUM;
-            }
-            si (j % C == ZEPHYRUM)
-            {
-                piscina_vacare(p);
-            }
-        }
-        CREDO_VERUM(omnes);
+        CREDO_VERUM(chorda_aequalis_literis(e, exempla[k].forma));
+        CREDO_VERUM(c == exempla[k].compositum);
+        CREDO_VERUM(_aestimare(e, exempla[k].n));
     }
+    piscina_vacare(p);
+}
 
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    credo_claudere();
-    piscina_destruere(p);
-    piscina_destruere(piscina);
+/* ==================================================
+ * PROBARE: exprimere - proprietas: aestimatio == n, sine
+ * involutione int (0-LXX milia omnes; multipla MXXIV et M;
+ * seriei pseudo-fortuitae usque ad 2^40)
+ * ================================================== */
 
-    redde praeteritus ? ZEPHYRUM : I;
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+     Piscina* p = c->piscina;
+         i64  n;
+         i64  k;
+        Sors  sors;
+         i32  j;
+         b32  omnes = VERUM;
+
+    per (n = ZEPHYRUM; n <= (i64)LXX * M && omnes; n++)
+    {
+        si (!_aestimare(numerus_romanus_exprimere(n, NIHIL, p), n))
+        {
+            imprimere("  fractum: %lu\n", (unsigned long)n);
+            omnes = FALSUM;
+        }
+        si (n % (i64)C == ZEPHYRUM)
+        {
+            piscina_vacare(p);
+        }
+    }
+    per (k = I; k <= (i64)IV * MXXIV && omnes; k++)
+    {
+        i64 duo[II];
+
+        duo[ZEPHYRUM]  = k * (i64)MXXIV;
+        duo[I]         = k * (i64)M * (i64)M;
+        per (j = ZEPHYRUM; j < II; j++)
+        {
+            si (!_aestimare(numerus_romanus_exprimere(duo[j], NIHIL,
+                                                      p), duo[j]))
+            {
+                imprimere("  fractum: %lu\n",
+                          (unsigned long)duo[j]);
+                omnes = FALSUM;
+            }
+        }
+        si (k % (i64)C == ZEPHYRUM)
+        {
+            piscina_vacare(p);
+        }
+    }
+    /* series pseudo-fortuita (sors, semen fixum) intra 2^40 */
+    sors_seminare(&sors, (i64)IV * MXXIV, (i64)ZEPHYRUM);
+    per (j = ZEPHYRUM; j < X * M && omnes; j++)
+    {
+        n = (((i64)sors_proximum(&sors) << XXXII)
+             | (i64)sors_proximum(&sors))
+            & (((i64)I << XL) - (i64)I);
+        si (!_aestimare(numerus_romanus_exprimere(n, NIHIL, p), n))
+        {
+            imprimere("  fractum: %lu\n", (unsigned long)n);
+            omnes = FALSUM;
+        }
+        si (j % C == ZEPHYRUM)
+        {
+            piscina_vacare(p);
+        }
+    }
+    CREDO_VERUM(omnes);
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "scribere (par cum legere)", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "legere strictum", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "exprimere (formae canonicae)", _sectio_tertia, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "exprimere (aestimatio == n)", _sectio_quarta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("numerus_romanus", SECTIONES);
 }

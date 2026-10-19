@@ -27,7 +27,21 @@ lit (
     redde chorda_ex_literis(s, piscina);
 }
 
-s32 principale (vacuum)
+/* piscina et intern plagulae: sectionis propria (parare ponit) */
+interior vacuum
+_parare (
+    CredoContextus* c)
+{
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+}
+
+/* SECTIO UNA (credo II): scaena gradibus I-VIII nominatis
+ * (CREDO_GRADUS) - volumen et liber per gradus crescunt, ergo gradus
+ * sectiones liberae esse non possunt */
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
               Volumen* vol;
           ScribaLiber* l;
@@ -39,16 +53,10 @@ s32 principale (vacuum)
                   b32  inventum;
                   i32  k;
 
-    piscina = piscina_generare_dynamicum("probatio_scriba_liber",
-        LXIV * M);
-    si (!piscina)
-    { imprimere("FRACTA: piscina\n"); redde I;
-    }
-    credo_aperire(piscina);
-    intern  = internamentum_creare(piscina);
-    vol     = volumen_temporarium(piscina, "probatio_scriba_liber");
+    (vacuum)c;
+    vol = volumen_temporarium(piscina, "probatio_scriba_liber");
 
-    imprimere("\n--- I: volumen novum - pagina '1' ---\n");
+    CREDO_GRADUS("I: volumen novum - pagina '1'");
     l = scriba_liber_aperire(piscina, intern, vol, XL, XX);
     CREDO_NON_NIHIL(l);
     CREDO_AEQUALIS_I32(scriba_liber_numerus(l), I);
@@ -59,7 +67,7 @@ s32 principale (vacuum)
     CREDO_VERUM(inventum);
     CREDO_CHORDA_CONTINET(index, lit("<pagina nomen=\"1\"/>"));
 
-    imprimere("\n--- II: idem nomen = idem documentum ---\n");
+    CREDO_GRADUS("II: idem nomen = idem documentum");
     d = scriba_liber_pagina(l, lit("1"));
     CREDO_NON_NIHIL(d);
     d2 = scriba_liber_pagina(l, lit("1"));
@@ -67,12 +75,12 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_I32(d ? d->latitudo : ZEPHYRUM, XL);
     CREDO_AEQUALIS_I32(d ? d->altitudo : ZEPHYRUM, XX);
 
-    imprimere("\n--- III: nomen ignotum ---\n");
+    CREDO_GRADUS("III: nomen ignotum");
     CREDO_NIHIL(scriba_liber_pagina(l, lit("nusquam")));
     CREDO_AEQUALIS_S32(scriba_liber_index(l, lit("nusquam")), -I);
     CREDO_AEQUALIS_S32(scriba_liber_index(l, lit("1")), ZEPHYRUM);
 
-    imprimere("\n--- IV: pagina nova, reapertio ---\n");
+    CREDO_GRADUS("IV: pagina nova, reapertio");
     n = scriba_liber_pagina_nova(l);
     CREDO_CHORDA_AEQUALIS_LITERIS(n, "2");
     CREDO_AEQUALIS_I32(scriba_liber_numerus(l), II);
@@ -95,7 +103,7 @@ s32 principale (vacuum)
         && tabula_cellula(scriba_documentum_tabula(d), ZEPHYRUM,
         ZEPHYRUM) == 'q');
 
-    imprimere("\n--- V: nomen novum numquam iteratur ---\n");
+    CREDO_GRADUS("V: nomen novum numquam iteratur");
     CREDO_VERUM(volumen_plagulam_condere(vol, lit("scriba/paginae"),
         lit(
         "<paginae><pagina nomen=\"1\"/>"
@@ -106,7 +114,7 @@ s32 principale (vacuum)
     /* numerus + I = 3 iam adest: proximus */
     CREDO_CHORDA_AEQUALIS_LITERIS(scriba_liber_pagina_nova(l), "4");
 
-    imprimere("\n--- VI: sine limite (decisio XIV) ---\n");
+    CREDO_GRADUS("VI: sine limite (decisio XIV)");
     per (k = ZEPHYRUM; k < CXX; k++)
     {
         (vacuum)scriba_liber_pagina_nova(l);
@@ -115,7 +123,7 @@ s32 principale (vacuum)
     CREDO_NON_NIHIL(scriba_liber_pagina(l, scriba_liber_nomen(l,
         CXXII)));
 
-    imprimere("\n--- VII: pagina nominata (S3c) ---\n");
+    CREDO_GRADUS("VII: pagina nominata (S3c)");
     {
         ScribaDocumentum* d;
 
@@ -144,7 +152,7 @@ s32 principale (vacuum)
         CREDO_NON_NIHIL(scriba_liber_paginam_condere(l, lit("x-1_b")));
     }
 
-    imprimere("\n--- VIII: liber in spatio (A6c, liber diei) ---\n");
+    CREDO_GRADUS("VIII: liber in spatio (A6c, liber diei)");
     {
              ScribaLiber* ld;
         ScribaDocumentum* dd;
@@ -188,9 +196,17 @@ s32 principale (vacuum)
         CREDO_VERUM(dd && tabula_cellula(scriba_documentum_tabula(dd),
             ZEPHYRUM, ZEPHYRUM) != 'z');
     }
-
-    imprimere("\n");
-    credo_imprimere_compendium();
     volumen_claudere(vol);
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "liber paginarum (scenarium I-VIII)", _sectio_prima, _parare,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("scriba_liber", SECTIONES);
 }

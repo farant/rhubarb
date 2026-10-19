@@ -137,7 +137,12 @@ numerare (
     redde n;
 }
 
-s32 principale (vacuum)
+/* scaena gradibus nominatis (CREDO_GRADUS): documentum unum per
+ * gradus crescit (acta, cursor, checkpoints), ergo gradus sectiones
+ * liberae esse non possunt */
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
                 Piscina* piscina;
     InternamentumChorda* intern;
@@ -159,20 +164,15 @@ s32 principale (vacuum)
                     i32  niger;
                     i32  i;
 
-    piscina = piscina_generare_dynamicum("probatio_pictor_documentum",
-        LXIV * M);
-    si (!piscina)
-    { imprimere("FRACTA: piscina\n"); redde I;
-    }
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     thema_initiare();
     /* vacatio: color fundi thematis (Franus 2026-10-09; olim
      * PALETTE_WHITE) */
     fundus  = color_ad_pixelum(thema_color(COLOR_BACKGROUND));
     niger   = color_ad_pixelum(color_ex_palette(PALETTE_BLACK));
 
-    imprimere("\n--- Creatio: proiectio alba, cursor 0 ---\n");
+    CREDO_GRADUS("Creatio: proiectio alba, cursor 0");
     vol = volumen_temporarium(piscina, "probatio_pictor_documentum");
     CREDO_NON_NIHIL(vol);
     doc = pictor_documentum_creare(piscina, intern, vol, "", XXXII, XVI,
@@ -184,7 +184,7 @@ s32 principale (vacuum)
     s1 = pictor_documentum_sigillum_hex(doc, piscina);
     CREDO_AEQUALIS_I32(s1.mensura, LXIV);
 
-    imprimere("\n--- Tres ictus: seqs voluminis, checkpoint II ---\n");
+    CREDO_GRADUS("Tres ictus: seqs voluminis, checkpoint II");
     massae_ante = volumen_summa_massarum(vol);
     q1 = pictor_documentum_actum(doc,
         ictus(piscina, ZEPHYRUM, XXXI, II, PALETTE_BLACK));
@@ -215,10 +215,10 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_I32(hex.mensura, LXIV);
     CREDO_VERUM(volumen_summa_massarum(vol) > massae_ante);
 
-    imprimere("\n--- Gradus VIII: documentum se ipsum verificat ---\n");
+    CREDO_GRADUS("Gradus VIII: documentum se ipsum verificat");
     CREDO_VERUM(pictor_documentum_verificare(doc));
 
-    imprimere("\n--- Revocare: ad q2 ex checkpoint, ad q1, ad 0 ---\n");
+    CREDO_GRADUS("Revocare: ad q2 ex checkpoint, ad q1, ad 0");
     CREDO_VERUM(pictor_documentum_revocare(doc));
     CREDO_AEQUALIS_S64(pictor_documentum_cursor(doc), q2);
     CREDO_AEQUALIS_I32(pixelum(pictor_documentum_proiectio(doc), X,
@@ -235,7 +235,7 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_I32(pixelum(pictor_documentum_proiectio(doc), X, II),
                        fundus);
 
-    imprimere("\n--- Reficere: ad q3, sigillum idem ---\n");
+    CREDO_GRADUS("Reficere: ad q3, sigillum idem");
     CREDO_VERUM(pictor_documentum_reficere(doc));
     CREDO_VERUM(pictor_documentum_reficere(doc));
     CREDO_VERUM(pictor_documentum_reficere(doc));
@@ -244,7 +244,7 @@ s32 principale (vacuum)
     s3 = pictor_documentum_sigillum_hex(doc, piscina);
     CREDO_VERUM(chorda_aequalis(s2, s3));
 
-    imprimere("\n--- Ramus: ictus novus post revocare ---\n");
+    CREDO_GRADUS("Ramus: ictus novus post revocare");
     CREDO_VERUM(pictor_documentum_revocare(doc));
     q4 = pictor_documentum_actum(doc,
         ictus(piscina, ZEPHYRUM, XXXI, XII, PALETTE_BLACK));
@@ -259,7 +259,7 @@ s32 principale (vacuum)
                        niger);
     CREDO_VERUM(pictor_documentum_verificare(doc));
 
-    imprimere("\n--- Aperire idem volumen: proiectio eadem ---\n");
+    CREDO_GRADUS("Aperire idem volumen: proiectio eadem");
     doc2 = pictor_documentum_aperire(piscina, intern, vol, "");
     CREDO_NON_NIHIL(doc2);
     CREDO_AEQUALIS_I32(doc2->latitudo, XXXII);
@@ -269,7 +269,7 @@ s32 principale (vacuum)
     s2 = pictor_documentum_sigillum_hex(doc2, piscina);
     CREDO_VERUM(chorda_aequalis(s1, s2));
 
-    imprimere("\n--- Mensura: CC ictus, tempus per actum ---\n");
+    CREDO_GRADUS("Mensura: CC ictus, tempus per actum");
     {
         s64 t0;
         s64 t1;
@@ -288,8 +288,24 @@ s32 principale (vacuum)
         imprimere("  revocare unum: %ld ms\n", (long)(t1 - t0));
         CREDO_VERUM(t1 >= t0);
     }
+    volumen_claudere(vol);
+}
 
-    imprimere("\n--- Ictus extra tabulam: praeciditur ---\n");
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+                Volumen* vol;
+                    i32  niger;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    thema_initiare();
+    niger  = color_ad_pixelum(color_ex_palette(PALETTE_BLACK));
+    vol    = volumen_temporarium(piscina,
+        "probatio_pictor_documentum");
     {
         PictorDocumentum* d;
           constans Imago* im;
@@ -302,9 +318,8 @@ s32 principale (vacuum)
         si (!credo_omnia_praeterierunt())
         {
             imprimere("  ictus extra tabulam pendet - pixela omissa\n");
-            credo_imprimere_compendium();
             volumen_claudere(vol);
-            redde I;
+            redde;
         }
         d = pictor_documentum_creare(piscina, intern, vol, "extra",
             XXXII, XVI, II);
@@ -340,9 +355,19 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32(numerare(im, XVI, ZEPHYRUM, XVI, XVI, niger),
             ZEPHYRUM);
     }
-
-    imprimere("\n");
-    credo_imprimere_compendium();
     volumen_claudere(vol);
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "acta, checkpoints, revocare, reficere, ramus (scenarium)",
+        _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Ictus extra tabulam: praeciditur", _sectio_secunda, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("pictor_documentum", SECTIONES);
 }

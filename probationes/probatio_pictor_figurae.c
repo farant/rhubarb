@@ -44,7 +44,19 @@ pan_ponere (
     motus->pan.y = III;
 }
 
-s32 principale (vacuum)
+/* fixura suitae: documentum, figurae et mandata semel picta;
+ * sectiones LEGUNT */
+nomen structura {
+     PictorDocumentum* doc;
+              Volumen* vol;
+        PictorFigurae* pf;
+              Mandata* m;
+               chorda  sigillum;
+} Mundus;
+
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
 {
                                  Piscina* piscina;
                      InternamentumChorda* intern;
@@ -53,34 +65,21 @@ s32 principale (vacuum)
                       InsulaRepositorium* repo;
                                    Motus  motus;
                         PictorCompositio  cfg;
-                           PictorFigurae  pf;
+                           PictorFigurae* pf;
                          FiguraRegistrum* reg;
                                Componens* arbor;
                                  Mandata* m;
-                                Mandatum* x;
-                         TabulaPixelorum* t;
-                                   Imago  captura;
-                         SpecimenFructus  sf;
+                                  Mundus* ctx;
                                  Punctum  p;
-                                     i32  i;
-                                     i32  n;
-                                     i32  imagines;
-                                     i32  lineae;
-                                     i32  accentus;
-                                     i32  textus;
-                                  chorda  sigillum;
-                                     i32  niger;
-                                     i32  fundus;
 
-    piscina = piscina_generare_dynamicum("probatio_pictor_figurae",
-        LXIV * M);
-    si (!piscina)
-    { imprimere("FRACTA: piscina\n"); redde I;
-    }
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
+    piscina  = c->piscina;
+    ctx      = (Mundus*)piscina_allocare(piscina, magnitudo(Mundus));
+    memset(ctx, ZEPHYRUM, magnitudo(Mundus));
+    c->datum  = ctx;
+    intern    = internamentum_creare(piscina);
     thema_initiare();
-    vol = volumen_temporarium(piscina, "probatio_pictor_figurae");
+    vol       = volumen_temporarium(piscina, "probatio_pictor_figurae");
+    ctx->vol  = vol;
     doc = pictor_documentum_creare(piscina, intern, vol, "", XL, XXX,
         LXIV);
     /* actum: linea nigra horizontalis y=2, x 0..39 */
@@ -112,27 +111,59 @@ s32 principale (vacuum)
     arbor = pictor_componere(repo, &motus, piscina, intern, &cfg);
     CREDO_NON_NIHIL(arbor);
 
-    imprimere("\n--- Gradus VI: figurae -> mandata ---\n");
-    pf.doc               = doc;
-    pf.cellula_latitudo  = VI;
-    pf.cellula_altitudo  = VIII;
-    reg                  = figura_registrum_creare(piscina);
-    pictor_figurae_registrare(reg, ZEPHYRUM, &pf);
+    /* gradus VI: figurae -> mandata (semel picta; sectiones legunt) */
+    pf = (PictorFigurae*)piscina_allocare(piscina,
+        magnitudo(PictorFigurae));
+    pf->doc               = doc;
+    pf->cellula_latitudo  = VI;
+    pf->cellula_altitudo  = VIII;
+    reg                   = figura_registrum_creare(piscina);
+    pictor_figurae_registrare(reg, ZEPHYRUM, pf);
     m = mandata_creare(piscina, intern);
     pingere(arbor, reg, ZEPHYRUM, m);
-    sigillum  = pictor_documentum_sigillum_hex(doc, piscina);
+    ctx->doc       = doc;
+    ctx->pf        = pf;
+    ctx->m         = m;
+    ctx->sigillum  = pictor_documentum_sigillum_hex(doc, piscina);
+}
+
+interior vacuum
+_suitam_purgare (
+    CredoContextus* c)
+{
+    constans Mundus* ctx = (constans Mundus*)c->datum;
+
+    si (ctx != NIHIL)
+    {
+        volumen_claudere(ctx->vol);
+    }
+}
+
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+     constans Mundus* ctx = (constans Mundus*)c->suita;
+            Mandatum* x;
+                 i32  i;
+                 i32  n;
+                 i32  imagines;
+                 i32  lineae;
+                 i32  accentus;
+                 i32  textus;
+
     imagines  = ZEPHYRUM;
     lineae    = ZEPHYRUM;
     accentus  = ZEPHYRUM;
     textus    = ZEPHYRUM;
-    n         = mandata_numerus(m);
+    n         = mandata_numerus(ctx->m);
     per (i = ZEPHYRUM; i < n; i++)
     {
-        x = mandata_obtinere(m, i);
+        x = mandata_obtinere(ctx->m, i);
         si (x->genus == MANDATUM_IMAGO)
         {
             imagines++;
-            CREDO_VERUM(chorda_aequalis(x->textus, sigillum));
+            CREDO_VERUM(chorda_aequalis(x->textus, ctx->sigillum));
             CREDO_AEQUALIS_S32(x->fines.latitudo, XL);
         }
         /* ictus pendens (P4a): disci I colore vero (palette 0), non
@@ -162,18 +193,35 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_I32(lineae, XI);
     CREDO_AEQUALIS_I32(accentus, ZEPHYRUM);
     CREDO_AEQUALIS_I32(textus, I);
+}
 
-    imprimere("\n--- Fons imaginum: sigillum -> proiectio ---\n");
-    CREDO_VERUM(pictor_imago_fons(sigillum, &pf)
-                == pictor_documentum_proiectio(doc));
-    CREDO_NIHIL(pictor_imago_fons(chorda_ex_literis("alienum", piscina),
-        &pf));
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    constans Mundus* ctx = (constans Mundus*)c->suita;
 
-    imprimere("\n--- Gradus VII: pixela, deinde specimen ---\n");
-    t = tabula_pixelorum_creare_nuda(piscina, LXIV, XLVIII);
+    CREDO_VERUM(pictor_imago_fons(ctx->sigillum, ctx->pf)
+                == pictor_documentum_proiectio(ctx->doc));
+    CREDO_NIHIL(pictor_imago_fons(chorda_ex_literis("alienum",
+        c->piscina), ctx->pf));
+}
+
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+      constans Mundus* ctx = (constans Mundus*)c->suita;
+      TabulaPixelorum* t;
+                Imago  captura;
+      SpecimenFructus  sf;
+                  i32  niger;
+                  i32  fundus;
+
+    t = tabula_pixelorum_creare_nuda(c->piscina, LXIV, XLVIII);
     tabula_pixelorum_vacare(t,
         color_ad_pixelum(thema_color(COLOR_BACKGROUND)));
-    delineare_mandata(m, t, pictor_imago_fons, &pf);
+    delineare_mandata(ctx->m, t, pictor_imago_fons, ctx->pf);
     /* linea documenti y=2 sub pan (-5,3) et margine cellulae (VI,
      * VIII - tabula ad cellulam I, ut folium scribae): schirmo y=13,
      * documentum x 1..40 */
@@ -200,7 +248,7 @@ s32 principale (vacuum)
     captura = imago_ex_tabula(t);
     sf = specimen_iudicare(&captura, "pictor_prima",
         specimen_regula_solita("probationes/pictor/specimina"),
-        piscina);
+        c->piscina);
     si (sf.sententia != SPECIMEN_CONGRUIT)
     {
         imprimere("SPECIMEN %s: %.*s\n",
@@ -208,9 +256,21 @@ s32 principale (vacuum)
                   (int)sf.causa.mensura, sf.causa.datum);
     }
     CREDO_VERUM(sf.sententia == SPECIMEN_CONGRUIT);
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    volumen_claudere(vol);
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "Gradus VI: figurae -> mandata", _sectio_prima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "Fons imaginum: sigillum -> proiectio", _sectio_secunda, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "Gradus VII: pixela, deinde specimen", _sectio_tertia, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("pictor_figurae", SECTIONES,
+        _suitam_parare, _suitam_purgare);
 }

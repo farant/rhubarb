@@ -377,24 +377,20 @@ cmd_v (
     redde VERUM;
 }
 
-s32 principale (vacuum)
+interior vacuum
+_parare (
+    CredoContextus* c)
 {
-              Volumen* vol;
-     PictorApplicatio  app;
-     PictorDocumentum* doc;
-                  i32  fundus;
-
-    piscina = piscina_generare_dynamicum("probatio_pictor_imago",
-        CXXVIII * M);
-    si (!piscina)
-    { imprimere("FRACTA: piscina\n"); redde I;
-    }
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     thema_initiare();
-    fundus = (i32)color_ad_pixelum(thema_color(COLOR_BACKGROUND));
+}
 
-    imprimere("\n--- I: aptare (contain) ---\n");
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         Imago  im;
            i8* ix;
@@ -458,20 +454,32 @@ s32 principale (vacuum)
         CREDO_VERUM(pictor_imaginem_aptare(&im, X, X, piscina, &x, &y,
             &w, &h) == NIHIL);
     }
+}
+
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+              Volumen* vol;
+     PictorApplicatio  app;
+     PictorDocumentum* doc;
+                  i32  fundus;
+
+    (vacuum)c;
+    fundus = (i32)color_ad_pixelum(thema_color(COLOR_BACKGROUND));
 
     vol = volumen_temporarium(piscina, "probatio_pictor_imago");
     CREDO_VERUM(pictor_applicatio_aedificare(&app, piscina, intern, vol,
         CDLXXX, CDLXXX));
     doc = app.doc;
 
-    imprimere("\n--- IV: sine porta, porta vacua - nihil ---\n");
     CREDO_VERUM(cmd_v(&app));
     CREDO_AEQUALIS_I32(pictor_documentum_numerus_stratorum(doc), I);
     app.montatio.actiones_ctx.imago_capere = porta_vacua;
     CREDO_VERUM(cmd_v(&app));
     CREDO_AEQUALIS_I32(pictor_documentum_numerus_stratorum(doc), I);
 
-    imprimere("\n--- II: Cmd+V - stratum novum ---\n");
+    CREDO_GRADUS("II: Cmd+V - stratum novum");
     {
         s32 lat;
         s32 alt;
@@ -579,7 +587,7 @@ s32 principale (vacuum)
         CREDO_VERUM(pixelum(doc, X, y0 + h / II) != fundus);
     }
 
-    imprimere("\n--- II b: Esc abicit, Reditus confirmat ---\n");
+    CREDO_GRADUS("II b: Esc abicit, Reditus confirmat");
     {
         s64 finis;
 
@@ -609,7 +617,7 @@ s32 principale (vacuum)
             "stratum_activum"), "3");
     }
 
-    imprimere("\n--- II c: radere - alterum subter, Optio reponit ---\n");
+    CREDO_GRADUS("II c: radere - alterum subter, Optio reponit");
     {
           PictorGlutinatio  g;
                        s64  finis;
@@ -714,7 +722,7 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32(diversum, ZEPHYRUM);
     }
 
-    imprimere("\n--- III: reapertio ---\n");
+    CREDO_GRADUS("III: reapertio");
     {
         PictorDocumentum* alter;
 
@@ -725,9 +733,19 @@ s32 principale (vacuum)
             * magnitudo(i32)) == ZEPHYRUM);
         CREDO_VERUM(alter && pictor_documentum_verificare(alter));
     }
-
-    imprimere("\n");
-    credo_imprimere_compendium();
     volumen_claudere(vol);
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I: aptare (contain)", _sectio_prima, _parare, NIHIL, NIHIL,
+        NIHIL },
+    { "IV: sine porta, porta vacua - nihil", _sectio_secunda, _parare,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("pictor_imago", SECTIONES);
 }

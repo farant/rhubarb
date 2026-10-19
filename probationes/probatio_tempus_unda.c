@@ -26,26 +26,19 @@ _exspectatus (
     redde sors_f32(&s) * 2.0f - 1.0f;
 }
 
-s32 principale (vacuum)
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-           Piscina* piscina;
-     volatilis f32  nihil_f = 0.0f;
-               f32  extrema[VI];
-               f64  summa       = 0.0;
-               i32  mutationes  = ZEPHYRUM;
-               i32  extra       = ZEPHYRUM;
-               f32  prior;
-               i32  k;
+     volatilis f32 nihil_f = 0.0f;
+               f32 extrema[VI];
+               f64 summa       = 0.0;
+               i32 mutationes  = ZEPHYRUM;
+               i32 extra       = ZEPHYRUM;
+               f32 prior;
+               i32 k;
 
-    piscina = piscina_generare_dynamicum("probatio_tempus_unda", 4096);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-    imprimere("\n--- Probans unda_tumultus super sors ---\n");
+    (vacuum)c;
     /* filum: valor ex sors per formulam documentatam */
     CREDO_VERUM (unda_tumultus(0.5f) == _exspectatus(0.5f));
     CREDO_VERUM (unda_tumultus(3.25f) == _exspectatus(3.25f));
@@ -89,7 +82,16 @@ s32 principale (vacuum)
         CREDO_VERUM (v >= -1.0f && v < 1.0f);
         CREDO_VERUM (v == unda_tumultus(extrema[k]));
     }
+}
 
-    credo_imprimere_compendium();
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "unda_tumultus super sors", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("tempus_unda", SECTIONES);
 }

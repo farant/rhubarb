@@ -96,7 +96,6 @@ _eventus_clavis (
 interior vacuum
 probatio_creare(Speculum* spec)
 {
-    imprimere("  creatio...\n");
     CREDO_NON_NIHIL(spec);
 }
 
@@ -105,7 +104,6 @@ probatio_praebere_duplicatum(Piscina* piscina, Internuntius* inx)
 {
     Speculum* alter;
 
-    imprimere("  duplicatum recusatur...\n");
     alter = speculum_creare(piscina, &capsula_speculi_hospes, inx,
         NIHIL, NIHIL);
     CREDO_NIHIL(alter);
@@ -117,7 +115,6 @@ probatio_obtinere(Internuntius* inx, Captor* missor, Piscina* piscina)
      chorda  petitio;
     Piscina* pv;
 
-    imprimere("  effusio una (speculum_obtinere)...\n");
     pv = piscina_generare_dynamicum("probatio_speculum_pv", 16777216);
     CREDO_NON_NIHIL(pv);
     petitio = chorda_ex_literis(
@@ -148,8 +145,6 @@ probatio_tangere(Speculum* spec, Captor* aestimator)
 {
     Eventus eventus;
         b32 consumptus;
-
-    imprimere("  tangere (Cmd+Shift+D)...\n");
 
     /* clavis sine modificantibus - non consumptus */
     eventus     = _eventus_clavis((i32)'D', 0);
@@ -189,29 +184,20 @@ probatio_tangere(Speculum* spec, Captor* aestimator)
 }
 
 
-/* ========================================================================
- * PRINCIPALE
- * ======================================================================== */
+/* ==================================================
+ * SECTIONES (fixura propria per sectionem: missor, aestimator,
+ * internuntius, speculum)
+ * ================================================== */
 
-s32
-principale (vacuum)
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-         Piscina* piscina;
+         Piscina* piscina = c->piscina;
     Internuntius* inx;
         Speculum* spec;
           Captor  missor;
           Captor  aestimator;
-
-    piscina = piscina_generare_dynamicum("probatio_speculum", 33554432);
-    si (piscina == NIHIL)
-    {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-    imprimere("PROBATIO SPECULUM\n");
-    imprimere("=================\n");
 
     memset(&missor, 0, magnitudo(missor));
     memset(&aestimator, 0, magnitudo(aestimator));
@@ -223,13 +209,101 @@ principale (vacuum)
         _captor_capere, &aestimator);
 
     probatio_creare(spec);
+}
+
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+         Piscina* piscina = c->piscina;
+    Internuntius* inx;
+        Speculum* spec;
+          Captor  missor;
+          Captor  aestimator;
+
+    memset(&missor, 0, magnitudo(missor));
+    memset(&aestimator, 0, magnitudo(aestimator));
+    missor.piscina      = piscina;
+    aestimator.piscina  = piscina;
+
+    inx = internuntius_creare(piscina, _captor_capere, &missor);
+    spec = speculum_creare(piscina, &capsula_speculi_hospes, inx,
+        _captor_capere, &aestimator);
+
     si (spec != NIHIL)
     {
         probatio_praebere_duplicatum(piscina, inx);
+    }
+}
+
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+         Piscina* piscina = c->piscina;
+    Internuntius* inx;
+        Speculum* spec;
+          Captor  missor;
+          Captor  aestimator;
+
+    memset(&missor, 0, magnitudo(missor));
+    memset(&aestimator, 0, magnitudo(aestimator));
+    missor.piscina      = piscina;
+    aestimator.piscina  = piscina;
+
+    inx = internuntius_creare(piscina, _captor_capere, &missor);
+    spec = speculum_creare(piscina, &capsula_speculi_hospes, inx,
+        _captor_capere, &aestimator);
+
+    si (spec != NIHIL)
+    {
         probatio_obtinere(inx, &missor, piscina);
+    }
+}
+
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+         Piscina* piscina = c->piscina;
+    Internuntius* inx;
+        Speculum* spec;
+          Captor  missor;
+          Captor  aestimator;
+
+    memset(&missor, 0, magnitudo(missor));
+    memset(&aestimator, 0, magnitudo(aestimator));
+    missor.piscina      = piscina;
+    aestimator.piscina  = piscina;
+
+    inx = internuntius_creare(piscina, _captor_capere, &missor);
+    spec = speculum_creare(piscina, &capsula_speculi_hospes, inx,
+        _captor_capere, &aestimator);
+
+    si (spec != NIHIL)
+    {
         probatio_tangere(spec, &aestimator);
     }
+}
 
-    credo_imprimere_compendium();
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "creatio", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "duplicatum recusatur", _sectio_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "effusio una (speculum_obtinere)", _sectio_tertia, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "tangere (Cmd+Shift+D)", _sectio_quarta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+
+/* ========================================================================
+ * PRINCIPALE
+ * ======================================================================== */
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("speculum", SECTIONES);
 }

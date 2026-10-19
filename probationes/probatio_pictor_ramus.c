@@ -28,9 +28,6 @@
 #include <stdio.h>
 #include <string.h>
 
-hic_manens Piscina*             piscina;
-hic_manens InternamentumChorda* intern;
-
 interior b32
 valor_est (
                 chorda* a,
@@ -39,8 +36,12 @@ valor_est (
     redde a ? chorda_aequalis_literis(*a, v) : FALSUM;
 }
 
-s32 principale (vacuum)
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
+                 Piscina* piscina;
+     InternamentumChorda* intern;
                  Volumen* vol;
         PictorDocumentum* doc;
       InsulaRepositorium* repo;
@@ -55,13 +56,8 @@ s32 principale (vacuum)
                      Xar* acta;
                   chorda  ultimum;
 
-    piscina = piscina_generare_dynamicum("probatio_pictor_ramus",
-        LXIV * M);
-    si (!piscina)
-    { imprimere("FRACTA: piscina\n"); redde I;
-    }
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     thema_initiare();
     vol = volumen_temporarium(piscina, "probatio_pictor_ramus");
     doc = pictor_documentum_creare(piscina, intern, vol, "p1", XL, XXX,
@@ -105,7 +101,7 @@ s32 principale (vacuum)
     CREDO_NON_NIHIL(d);
     m = manus_ludus_creare(piscina, d);
 
-    imprimere("\n--- I: arbor ex ramo p1 ---\n");
+    CREDO_GRADUS("I: arbor ex ramo p1");
     CREDO_MANUS_LUDUS_EXISTIT(m, "#tabula");
     {
         Componens* t;
@@ -120,7 +116,7 @@ s32 principale (vacuum)
         }
     }
 
-    imprimere("\n--- II: 'p' instrumentum in p1 solo ---\n");
+    CREDO_GRADUS("II: 'p' instrumentum in p1 solo");
     CREDO_VERUM(manus_ludus_clavem(m, 'p', ZEPHYRUM));
     CREDO_VERUM(valor_est(insula_ramus_attributum(&p1,
         "instrumentum"), "penicillus"));
@@ -130,7 +126,7 @@ s32 principale (vacuum)
         "instrumentum"));
     CREDO_FALSUM(insula_mendacium(repo));
 
-    imprimere("\n--- III: ictus colorem e ramo legit ---\n");
+    CREDO_GRADUS("III: ictus colorem e ramo legit");
     via[ZEPHYRUM].x  = V;
     via[ZEPHYRUM].y  = V;
     via[I].x         = XX;
@@ -145,8 +141,17 @@ s32 principale (vacuum)
         ((VolumenActum*)xar_obtinere(acta, xar_numerus(acta)
             - I))->seq);
 
-    imprimere("\n");
-    credo_imprimere_compendium();
     volumen_claudere(vol);
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "pictor in ramo non radicis", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("pictor_ramus", SECTIONES);
 }

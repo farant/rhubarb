@@ -90,32 +90,25 @@ gestum_effundere (
     redde VERUM;
 }
 
-s32 principale (vacuum)
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-                 Piscina* piscina;
      InternamentumChorda* intern;
       InsulaRepositorium* repo;
                    Motus  motus;
                  Punctum  p;
                   chorda* a;
-           GestusLudicer  g;
-                     i32  versio;
 
-    piscina = piscina_generare_dynamicum("probatio_motus", XVI * M);
-    si (!piscina)
-    { imprimere("FRACTA: piscina\n"); redde I;
-    }
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
-    repo = insula_repositorium_creare(piscina, intern,
+    intern = internamentum_creare(c->piscina);
+    repo = insula_repositorium_creare(c->piscina, intern,
         "<insula/>");
     CREDO_NON_NIHIL(repo);
-    motus_initiare(&motus, piscina);
+    motus_initiare(&motus, c->piscina);
     CREDO_VERUM(chorda_vacua(motus.captura));
     CREDO_FALSUM(motus.sordida);
     CREDO_AEQUALIS_I32(motus.zoom, I);
 
-    imprimere("\n--- Mutatio motus NON tangit insulam ---\n");
     mutare_motum(&motus, pan_ponere, NIHIL, M);
     CREDO_AEQUALIS_S32(motus.pan.x, XL);
     CREDO_AEQUALIS_S32(motus.pan.y, XX);
@@ -123,7 +116,7 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_I32(insula_versio(repo), ZEPHYRUM);
     CREDO_NIHIL(insula_attributum(repo, "pan_x"));
 
-    imprimere("\n--- Quies iudicatur ex tempore ---\n");
+    CREDO_GRADUS("Quies iudicatur ex tempore");
     CREDO_FALSUM(motus_quies(&motus, M + CC, CCC));
     CREDO_VERUM(motus_quies(&motus, M + CCC, CCC));
     p.x = I;
@@ -134,7 +127,7 @@ s32 principale (vacuum)
     CREDO_VERUM(motus_quies(&motus, M + D + L, CCC));
     CREDO_AEQUALIS_I32(xar_numerus(motus.ictus_pendens), I);
 
-    imprimere("\n--- Effusio in quiete scribit insulam SEMEL ---\n");
+    CREDO_GRADUS("Effusio in quiete scribit insulam SEMEL");
     CREDO_VERUM(motus_effundere(&motus, repo));
     CREDO_AEQUALIS_I32(insula_versio(repo), I);
     a = insula_attributum(repo, "pan_x");
@@ -152,7 +145,7 @@ s32 principale (vacuum)
     /* ictus pendens effusionem supervivit: insulam NUMQUAM tangit */
     CREDO_AEQUALIS_I32(xar_numerus(motus.ictus_pendens), I);
 
-    imprimere("\n--- Effusio altera SUBSTITUIT, non geminat ---\n");
+    CREDO_GRADUS("Effusio altera SUBSTITUIT, non geminat");
     mutare_motum(&motus, pan_movere, NIHIL, II * M);
     CREDO_VERUM(motus_quies(&motus, III * M, CCC));
     CREDO_VERUM(motus_effundere(&motus, repo));
@@ -166,7 +159,7 @@ s32 principale (vacuum)
     CREDO_VERUM(insula_restituere(repo));
     CREDO_FALSUM(insula_mendacium(repo));
 
-    imprimere("\n--- Pan negativum: coordinatae signatae ---\n");
+    CREDO_GRADUS("Pan negativum: coordinatae signatae");
     mutare_motum(&motus, pan_negare, NIHIL, IV * M);
     CREDO_AEQUALIS_S32(motus.pan.x, -XL);
     CREDO_VERUM(motus_quies(&motus, V * M, CCC));
@@ -177,15 +170,36 @@ s32 principale (vacuum)
     a = insula_attributum(repo, "pan_y");
     CREDO_NON_NIHIL(a);
     CREDO_CHORDA_AEQUALIS_LITERIS(*a, "-10");
+}
 
-    imprimere("\n--- Captura ---\n");
-    motus_captura_ponere(&motus, chorda_ex_literis("tabula", piscina));
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Motus motus;
+
+    motus_initiare(&motus, c->piscina);
+    motus_captura_ponere(&motus, chorda_ex_literis("tabula",
+        c->piscina));
     CREDO_CHORDA_AEQUALIS_LITERIS(motus.captura, "tabula");
     motus_captura_tollere(&motus);
     CREDO_VERUM(chorda_vacua(motus.captura));
+}
 
-    imprimere("\n");
-    imprimere("\n--- S1a: gestus - porta, quies, effusio ---\n");
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+     InternamentumChorda* intern;
+      InsulaRepositorium* repo;
+                   Motus  motus;
+           GestusLudicer  g;
+                     i32  versio;
+
+    intern = internamentum_creare(c->piscina);
+    repo = insula_repositorium_creare(c->piscina, intern,
+        "<insula/>");
+    motus_initiare(&motus, c->piscina);
     memset(&g, ZEPHYRUM, magnitudo(g));
     CREDO_FALSUM(motus_gestus_quies(&motus, X * M));   /* nullus */
     motus_gestum_ponere(&motus, &g, gestum_effundere, NIHIL, M);
@@ -217,7 +231,7 @@ s32 principale (vacuum)
     /* intra actionem vocata: scriptor prior RESTITUITUR (actio post
      * effusionem scribere pergit sub nomine suo) */
     insula_scriptorem_ponere(repo, chorda_ex_literis("pagina.clavis",
-        piscina));
+        c->piscina));
     mutare_gestum(&motus, littera_addere, NIHIL, L * M);
     CREDO_VERUM(motus_gestum_effundere(&motus, repo));
     CREDO_CHORDA_AEQUALIS_LITERIS(g.scriptor, "gestus");
@@ -231,16 +245,28 @@ s32 principale (vacuum)
 
         memset(&r, ZEPHYRUM, magnitudo(r));
         memset(&motus_foci, ZEPHYRUM, magnitudo(motus_foci));
-        r.via = chorda_ex_literis("calendarium:c1", piscina);
+        r.via = chorda_ex_literis("calendarium:c1", c->piscina);
         CREDO_VERUM(motus_ramus_focatus(NIHIL, r));
         motus_foci.spatium = r.via;
         CREDO_VERUM(motus_ramus_focatus(&motus_foci, r));
-        motus_foci.spatium = chorda_ex_literis("scriba:a", piscina);
+        motus_foci.spatium = chorda_ex_literis("scriba:a", c->piscina);
         CREDO_FALSUM(motus_ramus_focatus(&motus_foci, r));
         r.via.mensura = ZEPHYRUM;
         CREDO_VERUM(motus_ramus_focatus(&motus_foci, r));
     }
+}
 
-    credo_imprimere_compendium();
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "Mutatio motus NON tangit insulam", _sectio_prima, NIHIL, NIHIL,
+      NIHIL, NIHIL },
+    { "Captura", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "S1a: gestus - porta, quies, effusio", _sectio_tertia, NIHIL,
+      NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("motus", SECTIONES);
 }

@@ -26,12 +26,12 @@
 #include <stdio.h>
 #include <string.h>
 
-hic_manens Piscina*             piscina;
-hic_manens InternamentumChorda* intern;
-
-/* ramum ramum_parare: canones veri, domini (ephemera) */
+/* ramum ramum_parare: canones veri, domini (ephemera) - piscina et
+ * intern sectionis per argumenta (nullus status in plagula) */
 interior vacuum
 ramum_parare (
+                 Piscina* piscina,
+     InternamentumChorda* intern,
     constans InsulaRamus* ramus)
 {
         Canon* canon;
@@ -76,33 +76,32 @@ valor_est (
     redde a ? chorda_aequalis_literis(*a, v) : FALSUM;
 }
 
-s32 principale (vacuum)
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-               Volumen* vol;
-      ScribaDocumentum* documentum_primum;
-      ScribaDocumentum* documentum_secundum;
-    InsulaRepositorium* repo;
-           InsulaRamus  s1;
-           InsulaRamus  s2;
-        ActioRegistrum* index_primus;
-        ActioRegistrum* index_secundus;
-        ScribaActiones  actiones_primae;
-        ScribaActiones  actiones_secundae;
-      ScribaCompositio  compositio_prima;
-      ScribaCompositio  compositio_secunda;
-           Dispensator* d1;
-           Dispensator* d2;
-            ManusLudus* m1;
-            ManusLudus* m2;
+                Piscina* piscina;
+    InternamentumChorda* intern;
+                Volumen* vol;
+       ScribaDocumentum* documentum_primum;
+       ScribaDocumentum* documentum_secundum;
+     InsulaRepositorium* repo;
+            InsulaRamus  s1;
+            InsulaRamus  s2;
+         ActioRegistrum* index_primus;
+         ActioRegistrum* index_secundus;
+         ScribaActiones  actiones_primae;
+         ScribaActiones  actiones_secundae;
+       ScribaCompositio  compositio_prima;
+       ScribaCompositio  compositio_secunda;
+            Dispensator* d1;
+            Dispensator* d2;
+             ManusLudus* m1;
+             ManusLudus* m2;
 
-    piscina = piscina_generare_dynamicum("probatio_scriba_ramus",
-        LXIV * M);
-    si (!piscina)
-    { imprimere("FRACTA: piscina\n"); redde I;
-    }
-    credo_aperire(piscina);
-    intern  = internamentum_creare(piscina);
-    vol     = volumen_temporarium(piscina, "probatio_scriba_ramus");
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    vol      = volumen_temporarium(piscina, "probatio_scriba_ramus");
     documentum_primum = scriba_documentum_creare(piscina, intern, vol,
         "s1", XVI, VI,
                                     IV);
@@ -117,8 +116,8 @@ s32 principale (vacuum)
     CREDO_NON_NIHIL(repo);
     s1 = insula_ramus(repo, "scriba", "s1");
     s2 = insula_ramus(repo, "scriba", "s2");
-    ramum_parare(&s1);
-    ramum_parare(&s2);
+    ramum_parare(piscina, intern, &s1);
+    ramum_parare(piscina, intern, &s2);
 
     scriba_actiones_initiare(&actiones_primae, documentum_primum,
         piscina);
@@ -150,7 +149,7 @@ s32 principale (vacuum)
     m1 = manus_ludus_creare(piscina, d1);
     m2 = manus_ludus_creare(piscina, d2);
 
-    imprimere("\n--- I: scriptio in s1 - ramus et documentum eius\n");
+    CREDO_GRADUS("I: scriptio in s1 - ramus et documentum eius");
     CREDO_VERUM(manus_ludus_scribere(m1, "isalve"));
     CREDO_VERUM(manus_ludus_clavem(m1, (character)XXVII, ZEPHYRUM));
     CREDO_VERUM(linea_est(scriba_documentum_tabula(documentum_primum),
@@ -192,7 +191,7 @@ s32 principale (vacuum)
         "cursor_columna"));
     CREDO_FALSUM(insula_mendacium(repo));
 
-    imprimere("\n--- II: scriptio in s2 ---\n");
+    CREDO_GRADUS("II: scriptio in s2");
     CREDO_VERUM(manus_ludus_scribere(m2, "imunde"));
     CREDO_VERUM(manus_ludus_clavem(m2, (character)XXVII, ZEPHYRUM));
     CREDO_VERUM(linea_est(scriba_documentum_tabula(documentum_secundum),
@@ -202,7 +201,7 @@ s32 principale (vacuum)
         ZEPHYRUM,
         "salve"));
 
-    imprimere("\n--- III: revocatio independens ---\n");
+    CREDO_GRADUS("III: revocatio independens");
     CREDO_VERUM(manus_ludus_scribere(m1, "u"));
     CREDO_VERUM(linea_est(scriba_documentum_tabula(documentum_primum),
         ZEPHYRUM,
@@ -211,7 +210,7 @@ s32 principale (vacuum)
         ZEPHYRUM,
         "munde"));
 
-    imprimere("\n--- IV: documenta ex volumine reaperta\n");
+    CREDO_GRADUS("IV: documenta ex volumine reaperta");
     {
         ScribaDocumentum* r1;
         ScribaDocumentum* r2;
@@ -229,8 +228,17 @@ s32 principale (vacuum)
     CREDO_VERUM(insula_restituere(repo));
     CREDO_FALSUM(insula_mendacium(repo));
 
-    imprimere("\n");
-    credo_imprimere_compendium();
     volumen_claudere(vol);
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "duae scribae in ramis", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("scriba_ramus", SECTIONES);
 }

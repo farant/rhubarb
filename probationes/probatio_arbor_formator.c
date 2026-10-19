@@ -1992,57 +1992,116 @@ probatio_processare_parse (
 }
 
 /* ===========================================================
- * PRINCIPALE
+ * SECTIONES
  * =========================================================== */
 
-s32
-main (
-    vacuum)
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
                Piscina* piscina;
     InternamentumChorda* intern;
-                    b32  praeteritus;
 
-    imprimere("=== PROBATIO ARBOR FORMATOR ===\n\n");
-
-    piscina = piscina_generare_dynamicum("probatio_formator", LXIV * M);
-    credo_aperire(piscina);
+    piscina = c->piscina;
     CREDO_VERUM(piscina != NIHIL);
 
     intern = internamentum_creare(piscina);
     CREDO_VERUM(intern != NIHIL);
 
-    /* Run tests */
     probatio_optiones_default();
+}
+
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probatio_keyword_conversion();
-    probatio_roman_numerals(piscina);
+}
+
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    probatio_roman_numerals(c->piscina);
+}
+
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+               Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
+    CREDO_GRADUS("probatio_fidelis_simple");
     probatio_fidelis_simple(piscina, intern);
+    CREDO_GRADUS("probatio_fidelis_declaration");
     probatio_fidelis_declaration(piscina, intern);
+    CREDO_GRADUS("probatio_fidelis_control_flow");
     probatio_fidelis_control_flow(piscina, intern);
+    CREDO_GRADUS("probatio_fidelis_struct");
     probatio_fidelis_struct(piscina, intern);
+    CREDO_GRADUS("probatio_fidelis_expressions");
     probatio_fidelis_expressions(piscina, intern);
+    CREDO_GRADUS("probatio_fidelis_roundtrip");
     probatio_fidelis_roundtrip(piscina, intern);
+    CREDO_GRADUS("probatio_fidelis_irregular_whitespace");
     probatio_fidelis_irregular_whitespace(piscina, intern);
+    CREDO_GRADUS("probatio_fidelis_complex_structures");
     probatio_fidelis_complex_structures(piscina, intern);
+    CREDO_GRADUS("probatio_fidelis_tabs_newlines");
     probatio_fidelis_tabs_newlines(piscina, intern);
+}
+
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+               Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
+    CREDO_GRADUS("probatio_roundtrip_fila");
     probatio_roundtrip_fila(piscina, intern);
+    CREDO_GRADUS("probatio_roundtrip_preservare");
     probatio_roundtrip_preservare(piscina, intern);
+    CREDO_GRADUS("probatio_roundtrip_hybrid");
     probatio_roundtrip_hybrid(piscina, intern);
+    CREDO_GRADUS("probatio_processare_parse");
     probatio_processare_parse(piscina, intern);
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
+/* ===========================================================
+ * PRINCIPALE
+ *
+ * Adiutores _credo_roundtrip* solum in fractura asserunt: functiones
+ * roundtrip, irregular_whitespace, complex_structures, tabs_newlines,
+ * fila, preservare, hybrid nihil asserunt cum transeunt - sectio
+ * propria VACUA esset. Ergo gradus sunt sectionum familiae suae.
+ * =========================================================== */
 
-    praeteritus = credo_omnia_praeterierunt();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "probatio_optiones_default", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "probatio_keyword_conversion", _sectio_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "probatio_roman_numerals", _sectio_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "probatio_fidelis_simple", _sectio_quarta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "probatio_roundtrip_fila", _sectio_quinta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    piscina_destruere(piscina);
+s32
+main (
+    vacuum)
+{
+    imprimere("=== PROBATIO ARBOR FORMATOR ===\n\n");
 
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+    redde credo_suitam_currere("arbor_formator", SECTIONES);
 }

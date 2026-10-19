@@ -18,6 +18,23 @@
 
 hic_manens Piscina* piscina;
 
+/* piscina auxiliorum: sectionis propria (parare eam ponit, purgare
+ * vacat) */
+interior vacuum
+_parare (
+    CredoContextus* c)
+{
+    piscina = c->piscina;
+}
+
+interior vacuum
+_purgare (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    piscina = NIHIL;
+}
+
 interior Aemulator*
 creare (
     i32 latitudo,
@@ -147,7 +164,8 @@ capientem_creare (
 
 /* XV: responsa et effectus (B2) quae vectores non exprimunt */
 interior vacuum
-responsa_probare (vacuum)
+_sectio_decima_quarta (
+    CredoContextus* ctx)
 {
                 Aemulator* a;
                     Capta  c;
@@ -157,7 +175,7 @@ responsa_probare (vacuum)
            memoriae_index  usus;
                       i32  i;
 
-    imprimere("\n--- XV: responsa et effectus (B2) ---\n");
+    (vacuum)ctx;
     /* identitas configurata; chordae in creatione copiatae */
     strcpy(identitas, "rhubarb");
     a = capientem_creare(&c, identitas, "7");
@@ -225,7 +243,8 @@ responsa_probare (vacuum)
 
 /* XVI: DECRQCRA (sub vexillo lectio_schirmi) et DECSTR (B4b) */
 interior vacuum
-lectionem_probare (vacuum)
+_sectio_decima_quinta (
+    CredoContextus* ctx)
 {
                 Aemulator* a;
                     Capta  c;
@@ -234,7 +253,7 @@ lectionem_probare (vacuum)
          AemulatorCellula  secunda;
                       i32  i;
 
-    imprimere("\n--- XVI: DECRQCRA et DECSTR (B4b) ---\n");
+    (vacuum)ctx;
     aemulator_configuratio_initiare(&cfg);
     CREDO_FALSUM(cfg.lectio_schirmi);
     memset(&c, ZEPHYRUM, magnitudo(Capta));
@@ -357,7 +376,8 @@ stilus_visus (
 
 /* XVII: historia - paginae, evictio, latitudo, stili (C2) */
 interior vacuum
-historiam_probare (vacuum)
+_sectio_decima_sexta (
+    CredoContextus* ctx)
 {
            Aemulator* a;
     AemulatorCellula  c;
@@ -366,7 +386,7 @@ historiam_probare (vacuum)
            character  b[XXXII];
                  i32  i;
 
-    imprimere("\n--- XVII: historia (C2) ---\n");
+    (vacuum)ctx;
     stilus_nativus(&nativus);
     /* pagina una (latitudo XX: CCLXXIII lineae): DXCVI lineae abeunt
      * -> II paginae recyclatae, L manent (DXLVI..DXCV) */
@@ -485,14 +505,15 @@ historiam_probare (vacuum)
 
 /* XVIII: visus sub evictione et limes plenus (C3) */
 interior vacuum
-visum_probare (vacuum)
+_sectio_decima_septima (
+    CredoContextus* ctx)
 {
          Aemulator* a;
             chorda  v;
     memoriae_index  usus;
                i32  i;
 
-    imprimere("\n--- XVIII: visus et limes plenus (C3) ---\n");
+    (vacuum)ctx;
     /* paginae duae (CCLXXIII lineae): visus in linea 0; pagina eius
      * evicta -> visus ad historiam vetustissimam (273) praeciditur,
      * deinde ibi manet dum lineae novae veniunt (decisio XXI) */
@@ -534,7 +555,8 @@ visum_probare (vacuum)
 
 /* XIX: ED 3 et retractio historiae (C4) */
 interior vacuum
-retrahere_probare (vacuum)
+_sectio_decima_octava (
+    CredoContextus* ctx)
 {
            Aemulator* a;
     AemulatorCellula  c;
@@ -543,7 +565,7 @@ retrahere_probare (vacuum)
       memoriae_index  usus;
                  i32  i;
 
-    imprimere("\n--- XIX: ED 3 et retractio (C4) ---\n");
+    (vacuum)ctx;
     stilus_nativus(&nativus);
     /* stilus et involutio cum linea redeunt. Flavus primum in tabula
      * schirmi (index I) deletus: rubrum in pagina index I, in schirmo
@@ -601,14 +623,15 @@ retrahere_probare (vacuum)
 
 /* XX: lucra parva (D1) quae vectores non exprimunt */
 interior vacuum
-lucra_probare (vacuum)
+_sectio_decima_nona (
+    CredoContextus* ctx)
 {
            Aemulator* a;
     AemulatorCellula  c;
     StilusTerminalis  rubrum_fundus;
     StilusTerminalis  nativus;
 
-    imprimere("\n--- XX: lucra parva (D1) ---\n");
+    (vacuum)ctx;
     stilus_nativus(&nativus);
     /* DECALN: fundus calami servatur, crassum tollitur; calamus manet
      * redactus (Ghostty decaln) */
@@ -640,14 +663,15 @@ lucra_probare (vacuum)
 /* XXI: modi initus (D2) - instantanea aemulator_modi; bita cruda per
  * DECRQM in vectoribus, summaria muris solum hic videntur */
 interior vacuum
-modos_probare (vacuum)
+_sectio_vicesima (
+    CredoContextus* ctx)
 {
              Aemulator* a;
          AemulatorModi  m;
        AemulatorCursor  prope;
        AemulatorCursor  longe;
 
-    imprimere("\n--- XXI: modi initus (D2) ---\n");
+    (vacuum)ctx;
     a = creare(X, V);
     m = aemulator_modi(a);
     CREDO_FALSUM(m.sagittae_applicationis);
@@ -755,14 +779,15 @@ modos_probare (vacuum)
 
 /* XXII: colores (D5) - configuratio hospitis et lectio vivorum */
 interior vacuum
-colores_probare (vacuum)
+_sectio_vicesima_prima (
+    CredoContextus* ctx)
 {
                 Aemulator* a;
     AemulatorConfiguratio  cfg;
                       i32  tabula[CCLVI];
                       i32  i;
 
-    imprimere("\n--- XXII: colores (D5) ---\n");
+    (vacuum)ctx;
     /* ordinarii: tabula xterm, litterae albae, fundus niger, cursor
      * litteras sequitur */
     a = creare(X, V);
@@ -812,25 +837,15 @@ colores_probare (vacuum)
                        0x445566);
 }
 
-s32 principale (vacuum)
+interior vacuum
+_sectio_prima (
+    CredoContextus* ctx)
 {
                 Aemulator* a;
     AemulatorConfiguratio  cfg;
           AemulatorCursor  c;
-                      i32  campanae;
-           memoriae_index  usus;
-           memoriae_index  post;
-                      b32  mutatae;
-                      i32  i;
 
-    piscina = piscina_generare_dynamicum("probatio_aemulator",
-        LXIV * M);
-    si (!piscina)
-    { imprimere("FRACTA: piscina\n"); redde I;
-    }
-    credo_aperire(piscina);
-
-    imprimere("\n--- I: configuratio et limites ---\n");
+    (vacuum)ctx;
     aemulator_configuratio_initiare(&cfg);
     CREDO_AEQUALIS_I32(cfg.latitudo, LXXX);
     CREDO_AEQUALIS_I32(cfg.altitudo, XXIV);
@@ -847,8 +862,15 @@ s32 principale (vacuum)
     CREDO_FALSUM(c.pendens);
     CREDO_VERUM(aemulator_modus(a, VII, VERUM));
     CREDO_FALSUM(aemulator_cellula(a, X, ZEPHYRUM, NIHIL));
+}
 
-    imprimere("\n--- II: UTF-8 scissa et invalida ---\n");
+interior vacuum
+_sectio_secunda (
+    CredoContextus* ctx)
+{
+    Aemulator* a;
+
+    (vacuum)ctx;
     a = creare(X, III);
     scribere(a, "\xE6");
     CREDO_AEQUALIS_I32(aemulator_cursor(a).x, ZEPHYRUM);
@@ -865,14 +887,30 @@ s32 principale (vacuum)
     scribere(a, "\xE6");
     scribere(a, "\x1B[mB");
     CREDO_VERUM(textus_est(a, "\xEF\xBF\xBD" "B"));
+}
 
-    imprimere("\n--- III: series ignotae numerantur ---\n");
+interior vacuum
+_sectio_tertia (
+    CredoContextus* ctx)
+{
+    Aemulator* a;
+
+    (vacuum)ctx;
     a = creare(X, III);
     scribere(a, "\x1B[99n\x1B#3\x1B]777;x\x07" "Z");
     CREDO_AEQUALIS_I32(aemulator_ignota(a), III);
     CREDO_VERUM(textus_est(a, "Z"));
+}
 
-    imprimere("\n--- IV: campana per effectum ---\n");
+interior vacuum
+_sectio_quarta (
+    CredoContextus* ctx)
+{
+                Aemulator* a;
+    AemulatorConfiguratio  cfg;
+                      i32  campanae;
+
+    (vacuum)ctx;
     campanae = ZEPHYRUM;
     aemulator_configuratio_initiare(&cfg);
     cfg.effectus.datum    = &campanae;
@@ -883,15 +921,30 @@ s32 principale (vacuum)
     /* sine effectu: nihil, nulla ruina */
     a = creare(X, III);
     scribere(a, "\x07");
+}
 
-    imprimere("\n--- V: tabulatio ad finem ---\n");
+interior vacuum
+_sectio_quinta (
+    CredoContextus* ctx)
+{
+    Aemulator* a;
+
+    (vacuum)ctx;
     a = creare(X, III);
     scribere(a, "\t\t\tQ");
     CREDO_AEQUALIS_I32(aemulator_cursor(a).x, IX);
     CREDO_VERUM(aemulator_cursor(a).pendens);
     CREDO_VERUM(textus_est(a, "         Q"));
+}
 
-    imprimere("\n--- VI: lata in columna ultima ---\n");
+interior vacuum
+_sectio_sexta (
+    CredoContextus* ctx)
+{
+          Aemulator* a;
+    AemulatorCursor  c;
+
+    (vacuum)ctx;
     a = creare(III, III);
     scribere(a, "ab\xF0\x9F\x98\x80");
     CREDO_VERUM(cellula_est(a, II, ZEPHYRUM, "", AEMULATOR_CAPUT));
@@ -916,14 +969,32 @@ s32 principale (vacuum)
     CREDO_VERUM(cellula_est(a, ZEPHYRUM, ZEPHYRUM, "",
         AEMULATOR_ANGUSTA));
     CREDO_VERUM(textus_est(a, " Y"));
+}
 
-    imprimere("\n--- VII: notae iungentes (graphemata v2) ---\n");
+interior vacuum
+_sectio_septima (
+    CredoContextus* ctx)
+{
+    Aemulator* a;
+
+    (vacuum)ctx;
     a = creare(X, III);
     scribere(a, "o\xCC\x80" "p");
     CREDO_VERUM(textus_est(a, "op"));
     CREDO_AEQUALIS_I32(aemulator_cursor(a).x, II);
+}
 
-    imprimere("\n--- VIII: mutatio magnitudinis ---\n");
+interior vacuum
+_sectio_octava (
+    CredoContextus* ctx)
+{
+          Aemulator* a;
+    AemulatorCursor  c;
+     memoriae_index  usus;
+     memoriae_index  post;
+                b32  mutatae;
+
+    (vacuum)ctx;
     a = creare(X, III);
     scribere(a, "ABCDEFGHIJ");
     CREDO_VERUM(aemulator_cursor(a).pendens);
@@ -973,8 +1044,16 @@ s32 principale (vacuum)
     scribere(a, "a\r\nb\r\nc\r\n");
     CREDO_VERUM(textus_est(a, "b\nc"));
     CREDO_AEQUALIS_I32(aemulator_cursor(a).y, II);
+}
 
-    imprimere("\n--- X: motus et series (A2) ---\n");
+interior vacuum
+_sectio_nona (
+    CredoContextus* ctx)
+{
+          Aemulator* a;
+    AemulatorCursor  c;
+
+    (vacuum)ctx;
     a = creare(X, VI);
     scribere(a, "\x1B[3;5H\x1B[2G");
     c = aemulator_cursor(a);
@@ -1011,8 +1090,15 @@ s32 principale (vacuum)
         CREDO_VERUM(cellula_lecta.stilus.sublinea
             == STILUS_SUBLINEA_UNDULATA);
     }
+}
 
-    imprimere("\n--- XI: deletio super latas ---\n");
+interior vacuum
+_sectio_decima (
+    CredoContextus* ctx)
+{
+    Aemulator* a;
+
+    (vacuum)ctx;
     a = creare(X, III);
     scribere(a, "\xE6\xA9\x8BZ\x1B[1;2H\x1B[K");
     CREDO_VERUM(cellula_est(a, ZEPHYRUM, ZEPHYRUM, "",
@@ -1022,8 +1108,16 @@ s32 principale (vacuum)
     scribere(a, "AB\xE6\xA9\x8BZ\x1B[1;3H\x1B[1K");
     CREDO_VERUM(cellula_est(a, III, ZEPHYRUM, "", AEMULATOR_ANGUSTA));
     CREDO_VERUM(textus_est(a, "    Z"));
+}
 
-    imprimere("\n--- XII: DECSC calamum servat; 1049 limites ---\n");
+interior vacuum
+_sectio_decima_prima (
+    CredoContextus* ctx)
+{
+          Aemulator* a;
+    AemulatorCursor  c;
+
+    (vacuum)ctx;
     a = creare(X, III);
     scribere(a, "\x1B[1m\x1B" "7\x1B[0m\x1B" "8X");
     {
@@ -1053,8 +1147,18 @@ s32 principale (vacuum)
     c = aemulator_cursor(a);
     CREDO_AEQUALIS_I32(c.x, V);
     CREDO_AEQUALIS_I32(c.y, I);
+}
 
-    imprimere("\n--- XIII: stili colliguntur; saturatio ---\n");
+interior vacuum
+_sectio_decima_secunda (
+    CredoContextus* ctx)
+{
+         Aemulator* a;
+    memoriae_index  usus;
+    memoriae_index  post;
+               i32  i;
+
+    (vacuum)ctx;
     a = creare(X, III);
     /* stilus moriturus (rubrum, index I) ante viridem (index II) in
      * schirmo: collectio viridem ad I movet - cellula renumeranda */
@@ -1119,8 +1223,18 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32(cellula_lecta.stilus.color_litterae.valor,
             0x010203);
     }
+}
 
-    imprimere("\n--- XIV: regio et sistae (B1) ---\n");
+interior vacuum
+_sectio_decima_tertia (
+    CredoContextus* ctx)
+{
+         Aemulator* a;
+    memoriae_index  usus;
+    memoriae_index  post;
+               i32  i;
+
+    (vacuum)ctx;
     /* mutatio magnitudinis regionem et sistas ad ordinem reddit */
     a = creare(X, V);
     scribere(a, "\x1B[2;3r\x1B[3g\x1B[1;5H\x1BH");
@@ -1153,17 +1267,18 @@ s32 principale (vacuum)
     }
     post = piscina_summa_usus(piscina);
     CREDO_VERUM(post == usus);
+}
 
-    responsa_probare();
-    lectionem_probare();
-    historiam_probare();
-    visum_probare();
-    retrahere_probare();
-    lucra_probare();
-    modos_probare();
-    colores_probare();
+interior vacuum
+_sectio_vicesima_secunda (
+    CredoContextus* ctx)
+{
+                Aemulator* a;
+    AemulatorConfiguratio  cfg;
+           memoriae_index  usus;
+                      i32  i;
 
-    imprimere("\n--- IX: status constans nihil allocat ---\n");
+    (vacuum)ctx;
     /* historia pagina una (limes I octeti): calefactio lineas in
      * historiam mittit, pagina allocatur; deinde solum recyclatur
      * (decisio XX) */
@@ -1180,8 +1295,58 @@ s32 principale (vacuum)
         scribere(a, "linea \xE6\xA9\x8B volvitur\r\n\x1B[1mX\x07");
     }
     CREDO_VERUM(piscina_summa_usus(piscina) == usus);
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I: configuratio et limites", _sectio_prima, _parare, _purgare,
+        NIHIL, NIHIL },
+    { "II: UTF-8 scissa et invalida", _sectio_secunda, _parare,
+        _purgare, NIHIL, NIHIL },
+    { "III: series ignotae numerantur", _sectio_tertia, _parare,
+        _purgare, NIHIL, NIHIL },
+    { "IV: campana per effectum", _sectio_quarta, _parare, _purgare,
+        NIHIL, NIHIL },
+    { "V: tabulatio ad finem", _sectio_quinta, _parare, _purgare, NIHIL,
+        NIHIL },
+    { "VI: lata in columna ultima", _sectio_sexta, _parare, _purgare,
+        NIHIL, NIHIL },
+    { "VII: notae iungentes (graphemata v2)", _sectio_septima, _parare,
+        _purgare, NIHIL, NIHIL },
+    { "VIII: mutatio magnitudinis", _sectio_octava, _parare, _purgare,
+        NIHIL, NIHIL },
+    { "X: motus et series (A2)", _sectio_nona, _parare, _purgare, NIHIL,
+        NIHIL },
+    { "XI: deletio super latas", _sectio_decima, _parare, _purgare,
+        NIHIL, NIHIL },
+    { "XII: DECSC calamum servat; 1049 limites", _sectio_decima_prima,
+        _parare, _purgare, NIHIL, NIHIL },
+    { "XIII: stili colliguntur; saturatio", _sectio_decima_secunda,
+        _parare, _purgare, NIHIL, NIHIL },
+    { "XIV: regio et sistae (B1)", _sectio_decima_tertia, _parare,
+        _purgare, NIHIL, NIHIL },
+    { "XV: responsa et effectus (B2)", _sectio_decima_quarta, _parare,
+        _purgare, NIHIL, NIHIL },
+    { "XVI: DECRQCRA et DECSTR (B4b)", _sectio_decima_quinta, _parare,
+        _purgare, NIHIL, NIHIL },
+    { "XVII: historia (C2)", _sectio_decima_sexta, _parare, _purgare,
+        NIHIL, NIHIL },
+    { "XVIII: visus et limes plenus (C3)", _sectio_decima_septima,
+        _parare, _purgare, NIHIL, NIHIL },
+    { "XIX: ED 3 et retractio (C4)", _sectio_decima_octava, _parare,
+        _purgare, NIHIL, NIHIL },
+    { "XX: lucra parva (D1)", _sectio_decima_nona, _parare, _purgare,
+        NIHIL, NIHIL },
+    { "XXI: modi initus (D2)", _sectio_vicesima, _parare, _purgare,
+        NIHIL, NIHIL },
+    { "XXII: colores (D5)", _sectio_vicesima_prima, _parare, _purgare,
+        NIHIL, NIHIL },
+    { "IX: status constans nihil allocat", _sectio_vicesima_secunda,
+        _parare, _purgare, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("aemulator", SECTIONES);
 }

@@ -86,28 +86,22 @@ terminalem_invenire(
  * Probationes
  * ================================================ */
 
-s32 principale(vacuum)
+/* ========================================================
+ * PROBARE I: Mappa completudo
+ *
+ * Creare adaptatorem cum GRAMMATICA_PARVA.
+ * Verificare quod genera mappata sunt ad correctos indices.
+ * ======================================================== */
+
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-    b32                  praeteritus;
-    Piscina*             piscina;
+                Piscina* piscina;
     InternamentumChorda* intern;
 
-    piscina = piscina_generare_dynamicum("probatio_arbor2_lapifex", IV * MXXIV);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina non creata\n");
-        redde I;
-    }
-
-    intern = internamentum_creare(piscina);
-    credo_aperire(piscina);
-
-    /* ========================================================
-     * PROBARE I: Mappa completudo
-     *
-     * Creare adaptatorem cum GRAMMATICA_PARVA.
-     * Verificare quod genera mappata sunt ad correctos indices.
-     * ======================================================== */
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         LapifexGrammatica*      grammatica;
         Arbor2LapifexAdaptator* adapt;
@@ -117,8 +111,6 @@ s32 principale(vacuum)
         s32 idx_integer;
         s32 idx_semicolon;
         s32 idx_eof;
-
-        imprimere("\n--- Probans I: Mappa completudo ---\n");
 
         grammatica = grammaticam_parare(piscina, intern, GRAMMATICA_PARVA);
         CREDO_NON_NIHIL(grammatica);
@@ -170,13 +162,24 @@ s32 principale(vacuum)
 
         arbor2_lapifex_mappam_imprimere(adapt);
     }
+}
 
-    /* ========================================================
-     * PROBARE II: Conversio basica
-     *
-     * Lexere "x + 3;" et convertere ad signa.
-     * Verificare 5 signa: ID, PLUS, INTEGER, SEMICOLON, EOF
-     * ======================================================== */
+/* ========================================================
+ * PROBARE II: Conversio basica
+ *
+ * Lexere "x + 3;" et convertere ad signa.
+ * Verificare 5 signa: ID, PLUS, INTEGER, SEMICOLON, EOF
+ * ======================================================== */
+
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         LapifexGrammatica*      grammatica;
         Arbor2LapifexAdaptator* adapt;
@@ -188,8 +191,6 @@ s32 principale(vacuum)
         s32 idx_integer;
         s32 idx_semicolon;
         s32 idx_eof;
-
-        imprimere("\n--- Probans II: Conversio basica ---\n");
 
         grammatica = grammaticam_parare(piscina, intern, GRAMMATICA_PARVA);
         CREDO_NON_NIHIL(grammatica);
@@ -223,13 +224,24 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_S32(fructus.signa[III].terminalis, idx_semicolon);
         CREDO_AEQUALIS_S32(fructus.signa[IV].terminalis, idx_eof);
     }
+}
 
-    /* ========================================================
-     * PROBARE III: Valor preservatio
-     *
-     * Verificare quod valor in signo continet pointer ad
-     * lexema originale cum genere et valore correcto.
-     * ======================================================== */
+/* ========================================================
+ * PROBARE III: Valor preservatio
+ *
+ * Verificare quod valor in signo continet pointer ad
+ * lexema originale cum genere et valore correcto.
+ * ======================================================== */
+
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         LapifexGrammatica*      grammatica;
         Arbor2LapifexAdaptator* adapt;
@@ -237,8 +249,6 @@ s32 principale(vacuum)
         Xar*                    lexemata;
         Arbor2LapifexFructus    fructus;
         Arbor2Lexema*           recuperatum;
-
-        imprimere("\n--- Probans III: Valor preservatio ---\n");
 
         grammatica = grammaticam_parare(piscina, intern, GRAMMATICA_PARVA);
         CREDO_NON_NIHIL(grammatica);
@@ -274,21 +284,30 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32(recuperatum->valor.mensura, I);
         CREDO_VERUM(recuperatum->valor.datum[ZEPHYRUM] == '3');
     }
+}
 
-    /* ========================================================
-     * PROBARE IV: Trivia filtratio
-     *
-     * Lexere "x  +  3 ;" (spatia extra) et verificare quod
-     * trivia filtrantur et output est idem.
-     * ======================================================== */
+/* ========================================================
+ * PROBARE IV: Trivia filtratio
+ *
+ * Lexere "x  +  3 ;" (spatia extra) et verificare quod
+ * trivia filtrantur et output est idem.
+ * ======================================================== */
+
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         LapifexGrammatica*      grammatica;
         Arbor2LapifexAdaptator* adapt;
         Arbor2Lexator*          lexator;
         Xar*                    lexemata;
         Arbor2LapifexFructus    fructus;
-
-        imprimere("\n--- Probans IV: Trivia filtratio ---\n");
 
         grammatica = grammaticam_parare(piscina, intern, GRAMMATICA_PARVA);
         CREDO_NON_NIHIL(grammatica);
@@ -310,20 +329,29 @@ s32 principale(vacuum)
         /* Et aliqua trivia filtrata */
         CREDO_MAIOR_S32(fructus.numerus_ignoratorum, ZEPHYRUM);
     }
+}
 
-    /* ========================================================
-     * PROBARE V: Vacuum input
-     *
-     * Input vacuum (solum EOF) -> unum signum EOF.
-     * ======================================================== */
+/* ========================================================
+ * PROBARE V: Vacuum input
+ *
+ * Input vacuum (solum EOF) -> unum signum EOF.
+ * ======================================================== */
+
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         LapifexGrammatica*      grammatica;
         Arbor2LapifexAdaptator* adapt;
         Arbor2Lexator*          lexator;
         Xar*                    lexemata;
         Arbor2LapifexFructus    fructus;
-
-        imprimere("\n--- Probans V: Vacuum input ---\n");
 
         grammatica = grammaticam_parare(piscina, intern, GRAMMATICA_PARVA);
         CREDO_NON_NIHIL(grammatica);
@@ -342,15 +370,20 @@ s32 principale(vacuum)
         /* Solum EOF signum */
         CREDO_AEQUALIS_S32(fructus.numerus, I);
     }
+}
 
-    /* ========================================================
-     * PROBARE VI: est_trivia functio
-     *
-     * Verificare quod est_trivia correcte classificat genera.
-     * ======================================================== */
+/* ========================================================
+ * PROBARE VI: est_trivia functio
+ *
+ * Verificare quod est_trivia correcte classificat genera.
+ * ======================================================== */
+
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
-        imprimere("\n--- Probans VI: est_trivia ---\n");
-
         /* Trivia */
         CREDO_VERUM(arbor2_lapifex_est_trivia(ARBOR2_LEXEMA_SPATIA));
         CREDO_VERUM(arbor2_lapifex_est_trivia(ARBOR2_LEXEMA_TABULAE));
@@ -369,22 +402,20 @@ s32 principale(vacuum)
         CREDO_FALSUM(arbor2_lapifex_est_trivia(ARBOR2_LEXEMA_EOF));
         CREDO_FALSUM(arbor2_lapifex_est_trivia(ARBOR2_LEXEMA_ASTERISCUS));
     }
+}
 
-    /* ========================================================
-     * Compendium
-     * ======================================================== */
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I: Mappa completudo", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "II: Conversio basica", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "III: Valor preservatio", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "IV: Trivia filtratio", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "V: Vacuum input", _sectio_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "VI: est_trivia", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("arbor2_lapifex", SECTIONES);
 }

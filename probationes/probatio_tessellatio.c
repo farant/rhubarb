@@ -208,36 +208,15 @@ _figura_tituli (
     mandata_textus(m, II, II, c->titulus, ZEPHYRUM, littera);
 }
 
-s32 principale (vacuum)
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-                 Piscina* piscina;
-     InternamentumChorda* intern;
-                 Mandata* m;
-                 Modulus  modulus;
-      TessellatioCellula  cellulae[CLX];
-      TessellatioCellula* c;
-                     i32  coetus;
-                     s32  columnae;
-                     s32  lineae;
                      i32  k;
-      constans character* scaena_a[VIII];
       constans character* nexus[XVI];
-                 Piscina* pixela;
-     ImaginesProbationis  imagines;
-                 Punctum  triangulum[III];
 
-    piscina = piscina_generare_dynamicum("probatio_tessellatio",
-        CCLVI * M);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
+    (vacuum)c;
     thema_initiare();
-
-    imprimere("\n--- I. juncturae -> runae ---\n");
     nexus[0]   = " ";  nexus[1]  = "│"; nexus[2]  = "─"; nexus[3]  =
                                                                  "└";
     nexus[4]   = "│"; nexus[5]  = "│"; nexus[6]  =
@@ -267,8 +246,26 @@ s32 principale (vacuum)
     }
     CREDO_VERUM(tessellatio_mensor(RUNAE_POLITICA_SIMPLEX).genus
         == MODULUS_MENSOR_RUNARUM);
+}
 
-    imprimere("\n--- II. scaena principalis (praedicta) ---\n");
+interior vacuum
+_sectio_secunda (
+    CredoContextus* ctx)
+{
+                 Piscina* piscina;
+     InternamentumChorda* intern;
+                 Mandata* m;
+                 Modulus  modulus;
+      TessellatioCellula  cellulae[CLX];
+      TessellatioCellula* c;
+                     i32  coetus;
+                     s32  columnae;
+                     s32  lineae;
+      constans character* scaena_a[VIII];
+
+    piscina  = ctx->piscina;
+    intern   = internamentum_creare(piscina);
+    thema_initiare();
     modulus = modulus_creare(VI, VIII, CXX, LXIV);
     modulus_extensio_cellularum(&modulus, &columnae, &lineae);
     CREDO_AEQUALIS_S32(columnae, XX);
@@ -332,8 +329,22 @@ s32 principale (vacuum)
     CREDO_VERUM(cellulae[ZEPHYRUM].unitas == NIHIL
         && cellulae[ZEPHYRUM].juncturae == ZEPHYRUM
         && cellulae[ZEPHYRUM].color_fundi == NIGER);
+}
 
-    imprimere("\n--- III. regulae tegendi ---\n");
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+                 Piscina* piscina;
+     InternamentumChorda* intern;
+                 Mandata* m;
+                 Modulus  modulus;
+      TessellatioCellula  cellulae[CLX];
+                     i32  k;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    thema_initiare();
     modulus = modulus_creare(VI, VIII, XXXVI, XVI);       /* 6 x 2 */
     /* unitas super continuationem: dimidium primum spatium fit */
     m = mandata_creare(piscina, intern);
@@ -434,9 +445,24 @@ s32 principale (vacuum)
         anguli[I]         = "──┘│  ";
         CREDO_VERUM(_scaena_congruit(cellulae, VI, II, anguli));
     }
+}
 
-    imprimere("\n--- IV. colores: THEMA, INDEX ---\n");
-    m = mandata_creare(piscina, intern);
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+                 Piscina* piscina;
+     InternamentumChorda* intern;
+                 Mandata* m;
+                 Modulus  modulus;
+      TessellatioCellula  cellulae[CLX];
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    thema_initiare();
+    /* modulus ut in sectione III (6 x 2) */
+    modulus  = modulus_creare(VI, VIII, XXXVI, XVI);
+    m        = mandata_creare(piscina, intern);
     {
         ColorMandati thema_c;
         ColorMandati index_c;
@@ -461,8 +487,23 @@ s32 principale (vacuum)
             ((i32)expect.r << XVI) | ((i32)expect.g << VIII)
                 | expect.b);
     }
+}
 
-    imprimere("\n--- IVb. exemplar in cellulis non pingitur ---\n");
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+                 Piscina* piscina;
+     InternamentumChorda* intern;
+                 Mandata* m;
+                 Modulus  modulus;
+      TessellatioCellula  cellulae[CLX];
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    thema_initiare();
+    /* modulus ut in sectione III (6 x 2) */
+    modulus = modulus_creare(VI, VIII, XXXVI, XVI);
     /* rectangulum plenum, deinde exemplar (indicium foci) super eum:
      * cellulae fundum pleni servant */
     m = mandata_creare(piscina, intern);
@@ -489,8 +530,26 @@ s32 principale (vacuum)
             ((i32)expect.r << XVI) | ((i32)expect.g << VIII)
                 | expect.b);
     }
+}
 
-    imprimere("\n--- V. via pixelorum (T4, praedicta) ---\n");
+interior vacuum
+_sectio_sexta (
+    CredoContextus* ctx)
+{
+                 Piscina* piscina;
+     InternamentumChorda* intern;
+                 Mandata* m;
+                 Modulus  modulus;
+      TessellatioCellula  cellulae[CLX];
+      TessellatioCellula* c;
+                     i32  k;
+                 Piscina* pixela;
+     ImaginesProbationis  imagines;
+                 Punctum  triangulum[III];
+
+    piscina  = ctx->piscina;
+    intern   = internamentum_creare(piscina);
+    thema_initiare();
     pixela       = piscina_generare_dynamicum("tessellatio_pixela",
         IV * M * M);
     imagines.rubrum    = _imago_rubra(piscina, XII, XVI);
@@ -610,8 +669,21 @@ s32 principale (vacuum)
         NIGER,
         _fons, &imagines, NIHIL, cellulae);
     CREDO_AEQUALIS_I32(cellulae[V + I].color_fundi, NIGER);
+}
 
-    imprimere("\n--- VI. textus: margo PROXIMUS (T5b, D5 emendata) ---\n");
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+                 Piscina* piscina;
+     InternamentumChorda* intern;
+                 Mandata* m;
+                 Modulus  modulus;
+      TessellatioCellula  cellulae[CLX];
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    thema_initiare();
     modulus  = modulus_creare(VI, VIII, XXXVI, XVI);       /* 6 x 2 */
     m        = mandata_creare(piscina, intern);
     /* (4,6): pavimentum (0,0), proximum (1,1) - cellula maxime tecta */
@@ -646,8 +718,20 @@ s32 principale (vacuum)
         NIHIL, NIHIL, NIHIL, cellulae);
     CREDO_VERUM(cellulae[ZEPHYRUM].juncturae != ZEPHYRUM);
     CREDO_VERUM(cellulae[VI].juncturae == ZEPHYRUM);
+}
 
-    imprimere("\n--- VII. scaena pictor.arbor (exemplar, praedictum) ---\n");
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+                 Piscina* piscina;
+     InternamentumChorda* intern;
+                 Mandata* m;
+                 Modulus  modulus;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    thema_initiare();
     {
                  chorda  fons;
               character* cstr;
@@ -742,8 +826,30 @@ s32 principale (vacuum)
             "                                      ";
         CREDO_VERUM(_scaena_congruit(grandes, LX, XXX, exspectata));
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I. juncturae -> runae", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "II. scaena principalis (praedicta)", _sectio_secunda, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "III. regulae tegendi", _sectio_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "IV. colores: THEMA, INDEX", _sectio_quarta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "IVb. exemplar in cellulis non pingitur", _sectio_quinta, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "V. via pixelorum (T4, praedicta)", _sectio_sexta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "VI. textus: margo PROXIMUS (T5b, D5 emendata)", _sectio_septima,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "VII. scaena pictor.arbor (exemplar, praedictum)", _sectio_octava,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("tessellatio", SECTIONES);
 }

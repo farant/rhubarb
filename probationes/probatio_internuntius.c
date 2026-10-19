@@ -194,24 +194,20 @@ _effugium_aequale (
             || memcmp(e.datum, exspectatum, m) == ZEPHYRUM);
 }
 
-s32 principale (vacuum)
+/* I-XII seriatim in uno internuntio: numeratores (XI) omnes
+ * vocationes priores numerant, ergo sectio una */
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
                Piscina* piscina;
                Piscina* pv;
         MissorMemoriae  missor;
           Internuntius* inx;
                    s64  basis = C;   /* 100 - datum usoris */
-                   b32  praeteritus;
     constans character* r;
 
-    piscina = piscina_generare_dynamicum("probatio_inx",
-        16777216);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    credo_aperire(piscina);
+    piscina = c->piscina;
 
     missor.piscina  = piscina;
     missor.capta    = xar_creare(piscina, (i32)magnitudo(chorda));
@@ -351,6 +347,16 @@ s32 principale (vacuum)
         "\"argumenta\":{\"vox\":\"post\"}}", pv);
     r = _ultimum(&missor);
     CREDO_VERUM (strstr(r, "\"vox\":\"post\"") != NIHIL);
+    piscina_destruere(pv);
+}
+
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
 
     /* XIII. effugator - aureae byte-exactae */
     CREDO_VERUM (_effugium_aequale(piscina,
@@ -378,15 +384,18 @@ s32 principale (vacuum)
         "\xE2\x80", "\xE2\x80"));
     /* vacua -> vacua */
     CREDO_VERUM (_effugium_aequale(piscina, "", ""));
+}
 
-    piscina_destruere(pv);
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "registrum, vocationes, pulsus, numeratores", _sectio_prima,
+        NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "effugator", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    redde I;
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("internuntius", SECTIONES);
 }

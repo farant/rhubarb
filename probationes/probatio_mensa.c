@@ -31,36 +31,32 @@ _actum (
         chorda_ex_literis(datum, piscina));
 }
 
-s32 principale (vacuum)
+
+/* Volumen recens ad VIA_PROBATIONIS: quaeque sectio suum aperit et
+ * claudit (sectiones ordine liberae, credo v2) */
+
+
+/* ========================================================
+ * PROBARE: volumen_acta_legere - post_seq exclusivum
+ * ======================================================== */
+
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-        b32  praeteritus;
     Piscina* piscina;
     Volumen* vol;
 
-    piscina = piscina_generare_dynamicum("probatio_mensa", 262144);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
+    piscina = c->piscina;
     si (filum_existit(VIA_PROBATIONIS))
     {
         filum_delere(VIA_PROBATIONIS);
     }
     vol = volumen_creare(piscina, VIA_PROBATIONIS);
 
-
-    /* ========================================================
-     * PROBARE: volumen_acta_legere - post_seq exclusivum
-     * ======================================================== */
-
     {
                  Xar* acta;
         VolumenActum* a;
-
-        imprimere("\n--- Probans volumen_acta_legere ---\n");
 
         _actum(vol, "probatio", "{\"n\":1}", piscina);
         _actum(vol, "probatio", "{\"n\":2}", piscina);
@@ -79,18 +75,33 @@ s32 principale (vacuum)
         CREDO_VERUM(a->momentum.mensura > ZEPHYRUM);
     }
 
+    volumen_claudere(vol);
+}
 
-    /* ========================================================
-     * PROBARE: plica - creatum + fusio + deletum + aliena
-     * ======================================================== */
+
+/* ========================================================
+ * PROBARE: plica - creatum + fusio + deletum + aliena
+ * ======================================================== */
+
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    Volumen* vol;
+
+    piscina = c->piscina;
+    si (filum_existit(VIA_PROBATIONIS))
+    {
+        filum_delere(VIA_PROBATIONIS);
+    }
+    vol = volumen_creare(piscina, VIA_PROBATIONIS);
 
     {
               chorda  status;
         JsonResultus  lectum;
            JsonValor* elementa;
            JsonValor* elem;
-
-        imprimere("\n--- Probans plicam mensae ---\n");
 
         _actum(vol, "mensa:creatum",
             "{\"id\":\"scida-a\",\"genus_elementi\":\"scida\","
@@ -142,17 +153,39 @@ s32 principale (vacuum)
         CREDO_NIHIL(elem);
     }
 
+    volumen_claudere(vol);
+}
 
-    /* ========================================================
-     * PROBARE: resurrectio post deletum
-     * ======================================================== */
+
+/* ========================================================
+ * PROBARE: resurrectio post deletum
+ * ======================================================== */
+
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    Volumen* vol;
+
+    piscina = c->piscina;
+    si (filum_existit(VIA_PROBATIONIS))
+    {
+        filum_delere(VIA_PROBATIONIS);
+    }
+    vol = volumen_creare(piscina, VIA_PROBATIONIS);
 
     {
               chorda  status;
         JsonResultus  lectum;
            JsonValor* elem;
 
-        imprimere("\n--- Probans resurrectionem ---\n");
+        /* scida-c creata et deleta (ut in plica supra) - volumen
+         * recens, ergo deletio hic iteratur */
+        _actum(vol, "mensa:creatum",
+            "{\"id\":\"scida-c\",\"x\":1,\"y\":1}", piscina);
+        _actum(vol, "mensa:deletum", "{\"id\":\"scida-c\"}",
+            piscina);
 
         _actum(vol, "mensa:creatum",
             "{\"id\":\"scida-c\",\"x\":7,\"y\":8}", piscina);
@@ -168,25 +201,18 @@ s32 principale (vacuum)
     }
 
     volumen_claudere(vol);
+}
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "volumen_acta_legere", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "plicam mensae", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "resurrectionem", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    /* ========================================================
-     * Compendium
-     * ======================================================== */
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-    credo_claudere();
-    piscina_destruere(piscina);
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("mensa", SECTIONES);
 }

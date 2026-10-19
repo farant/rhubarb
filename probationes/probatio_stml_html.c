@@ -82,29 +82,21 @@ _vertere_catena (
     redde stml_html_vertere(distributio.radix_distributa, piscina);
 }
 
-s32
-principale (
-    vacuum)
+    /* --- (1) LEX SPATII ALBI par. 5.9: spatium sine linea nova =
+     * nodus TEXTUS; cum linea nova = trivia. AMBO 'x y' reddant --- */
+
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
                 Piscina* piscina;
     InternamentumChorda* intern;
 
-    piscina = piscina_generare_dynamicum("probatio_stml_html",
-                                         1048576);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
-
-    /* --- (1) LEX SPATII ALBI par. 5.9: spatium sine linea nova =
-     * nodus TEXTUS; cum linea nova = trivia. AMBO 'x y' reddant --- */
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlHtmlResultus res;
 
-        imprimere("\n--- par. 5.9: spatium album ---\n");
         res = _vertere_litteras(piscina, intern,
             "<r><a>x</a> <b>y</b></r>");
         CREDO_VERUM (res.successus);
@@ -122,14 +114,24 @@ principale (
                 "<!DOCTYPE html>\n<r><a>x</a>\n<b>y</b></r>");
         }
     }
+}
 
     /* --- (2) RELECTIO: oraculum secundum generis alieni -
      * html_lexema emissionem lexat; genus PRAVUM/IMPERFECTUM
      * nullum, et fidelitas lexatoris emissionem reddit --- */
+
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlHtmlResultus res;
 
-        imprimere("\n--- par. 8.3: relectio per html_lexema ---\n");
         res = _vertere_litteras(piscina, intern,
             "<html lang=\"la\"><head><title>T &amp; U</title>"
             "<style!>b { color: #ddd; }</style>"
@@ -174,12 +176,21 @@ principale (
             }
         }
     }
+}
 
     /* --- (3) RECUSATIONES: quaeque vitium suum nominat --- */
+
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlHtmlResultus res;
-
-        imprimere("\n--- par. 5: recusationes ---\n");
 
         res = _vertere_litteras(piscina, intern,
             "<?xml version=\"1.0\"?><r/>");
@@ -281,13 +292,23 @@ principale (
             }
         }
     }
+}
 
     /* --- (4) CLAUSURA per leges HTML: vacua nuda, cetera paria
      * semper - '<div/>' navigatori div APERTUS esset --- */
+
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlHtmlResultus res;
 
-        imprimere("\n--- par. 5.3: clausura ---\n");
         res = _vertere_litteras(piscina, intern,
             "<r><br/><hr/><div/><meta charset=\"utf-8\"/></r>");
         CREDO_VERUM (res.successus);
@@ -299,15 +320,24 @@ principale (
                 "</r>");
         }
     }
+}
 
     /* --- (4b) CONTENTUM CRUDUM FURCATUM (Fran, 2026-09-01):
      * script/style = RAWTEXT, verbatim; tagi ceteri = textus
      * litteralis, evasus. Ianua entium: crudum numquam decoquitur,
      * ergo '&nbsp;' litterale scribi potest --- */
+
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlHtmlResultus res;
-
-        imprimere("\n--- par. 5.5: crudum furcatum ---\n");
 
         res = _vertere_litteras(piscina, intern,
             "<r><pre!>si (a<b && c) { x(); }</pre></r>");
@@ -345,14 +375,23 @@ principale (
                 "<r><script>a<b && c</script></r>");
         }
     }
+}
 
     /* --- (5) ATTRIBUTA: effugium DUPLEX (par. 5.4) - inscripta
      * CRUDA transeunt, elementa attributorum decocta evadunt;
      * sepulcrum omittit; alt="" servatur; booleanum nudum --- */
+
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlHtmlResultus res;
-
-        imprimere("\n--- par. 5.4: attributa ---\n");
 
         /* inscriptum CRUDUM: octeti '&amp;' ut sunt (effugium
          * iteratum '&amp;amp;' esset) */
@@ -398,13 +437,23 @@ principale (
                 "<!DOCTYPE html>\n<r><input disabled></r>");
         }
     }
+}
 
     /* --- (6) CATENA TOTA: templum + distributio + crudum; et
      * SINGULARIA EMITTUNTUR UT SCRIPTA (decretum 2026-09-01) --- */
+
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlHtmlResultus res;
 
-        imprimere("\n--- par. 6: catena macrorum ---\n");
         res = _vertere_catena(piscina, intern,
             "<html><body>"
             "<#@c t=\"@t\"><p>&@t;</p></#>"
@@ -432,14 +481,23 @@ principale (
                 "<html><body>x</body><body>y</body></html>");
         }
     }
+}
 
-    imprimere("\n");
     /* --- fragmentum: liberi elementi sine doctype (B2.2 md) --- */
+
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
             StmlResultus lectum;
         StmlHtmlResultus r;
 
-        imprimere("\n--- vertere_liberos: fragmentum sine doctype ---\n");
         lectum = stml_legere_ex_literis(
             "<radix><p>a <b>x</b></p><br/><pre><code>y\nz\n</code></pre></radix>",
             piscina, intern);
@@ -455,14 +513,24 @@ principale (
         r = stml_html_vertere_liberos(NIHIL, piscina, FALSUM);
         CREDO_VERUM (r.successus && r.html.mensura == ZEPHYRUM);
     }
+}
 
     /* --- crudum: splex octetorum sine tags (decretum B3.1 md); sine
      * '!' CRUDUS_DEEST --- */
+
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
             StmlResultus lectum;
         StmlHtmlResultus r;
 
-        imprimere("\n--- crudum: splex sine tags ---\n");
         lectum = stml_legere_ex_literis(
             "<radix><p>a</p><crudum!><div class=\"x\">&amp; < b</div>\n</crudum><p>c</p></radix>",
             piscina, intern);
@@ -484,14 +552,24 @@ principale (
         CREDO_VERUM (!r.successus
             && r.vitium == STML_HTML_CRUDUS_DEEST);
     }
+}
 
     /* --- litteralis (B3.3 md): arbor genita - '&x;' in textu evaditur
      * (nulla ambiguitas), attributa inscripta evaduntur --- */
+
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
             StmlResultus lectum;
         StmlHtmlResultus r;
 
-        imprimere("\n--- vertere_liberos litteralis ---\n");
         lectum = stml_legere_ex_literis(
             "<radix><p title=\"a &amp; &quot;b&quot;\">x &nbsp; y</p></radix>",
             piscina, intern);
@@ -509,14 +587,34 @@ principale (
                 "<p title=\"a &amp;amp; &amp;quot;b&amp;quot;\">x &amp;nbsp; y</p>");
         }
     }
+}
 
-    credo_imprimere_compendium();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "par. 5.9: spatium album", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "par. 8.3: relectio per html_lexema", _sectio_secunda, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "par. 5: recusationes", _sectio_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "par. 5.3: clausura", _sectio_quarta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "par. 5.5: crudum furcatum", _sectio_quinta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "par. 5.4: attributa", _sectio_sexta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "par. 6: catena macrorum", _sectio_septima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "vertere_liberos: fragmentum sine doctype", _sectio_octava, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "crudum: splex sine tags", _sectio_nona, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "vertere_liberos litteralis", _sectio_decima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    si (credo_omnia_praeterierunt())
-    {
-        credo_claudere();
-        redde ZEPHYRUM;
-    }
-    credo_claudere();
-    redde I;
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("stml_html", SECTIONES);
 }

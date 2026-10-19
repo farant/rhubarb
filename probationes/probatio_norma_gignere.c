@@ -170,13 +170,40 @@ _oraculum (Norma* n, constans character* titulus, Piscina* p)
 }
 
 interior vacuum
-probatio_determinismus_et_stabilitas(Piscina* p)
+_sectio_prima (
+    CredoContextus* c)
 {
-    Norma* a = norma_objectum(p);
-    Norma* b = norma_objectum(p);
-      s64  semen;
+    Piscina* p = c->piscina;
 
-    imprimere("\n--- Probans determinismus et stabilitas ---\n");
+    {
+        /* omnes X causae violabiles ab oraculo exercitae (non solum
+         * "nulla fracta" - quod etiam nihil probatum significare posset) */
+        i32 visae = _oraculum(_schema_simplex(p), "simplex", p)
+                  | _oraculum(_schema_responsi(p), "responsum", p);
+        i32 omnes = ((i32)I << NORMA_CAUSA_GENUS) | ((i32)I
+            << NORMA_CAUSA_DEEST)
+                  | ((i32)I << NORMA_CAUSA_EXTRA) | ((i32)I
+                      << NORMA_CAUSA_MINIMUM)
+                  | ((i32)I << NORMA_CAUSA_MAXIMUM) | ((i32)I
+                      << NORMA_CAUSA_LONGITUDO)
+                  | ((i32)I << NORMA_CAUSA_ELECTIO) | ((i32)I
+                      << NORMA_CAUSA_FORMA)
+                  | ((i32)I << NORMA_CAUSA_VARIATIO) | ((i32)I
+                      << NORMA_CAUSA_DISCRIMEN);
+
+        CREDO_AEQUALIS_I32(visae, omnes);
+    }
+}
+
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* p = c->piscina;
+      Norma* a = norma_objectum(p);
+      Norma* b = norma_objectum(p);
+        s64  semen;
+
     CREDO_CHORDA_AEQUALIS(
         json_scribere(norma_gignere(_schema_simplex(p), NORMA_TYPICA,
         XLII, p).valor, p),
@@ -210,12 +237,13 @@ probatio_determinismus_et_stabilitas(Piscina* p)
 }
 
 interior vacuum
-probatio_functiones(Piscina* p)
+_sectio_tertia (
+    CredoContextus* c)
 {
+         Piscina* p = c->piscina;
            Norma* o = norma_objectum(p);
     NormaGenitum  g;
 
-    imprimere("\n--- Probans functiones gignentes ---\n");
     g = norma_gignere(_schema_simplex(p), NORMA_TYPICA, VII, p);
     CREDO_CHORDA_AEQUALIS_LITERIS(json_ad_chorda(json_objectum_capere(g.valor,
         "origo")),
@@ -233,12 +261,13 @@ probatio_functiones(Piscina* p)
 /* titulus sine functione: generator ordinarius, octetis idem
  * (norma-plan-3 A1) */
 interior vacuum
-probatio_titulus_sine_functione(Piscina* p)
+_sectio_quarta (
+    CredoContextus* c)
 {
-    s64 semen;
-    i32 diversa = 0;
+    Piscina* p = c->piscina;
+        s64  semen;
+        i32  diversa = 0;
 
-    imprimere("\n--- Probans titulum sine functione ---\n");
     per (semen = 0; semen < L; semen++)
     {
         NormaGenitum a = norma_gignere(norma_gignens_titulus(
@@ -255,38 +284,20 @@ probatio_titulus_sine_functione(Piscina* p)
     CREDO_AEQUALIS_I32(diversa, 0);
 }
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "oraculum mutuum", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "determinismus et stabilitas", _sectio_secunda, NIHIL, NIHIL,
+        NIHIL,
+        NIHIL },
+    { "functiones gignentes", _sectio_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "titulum sine functione", _sectio_quarta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
 s32
 principale (vacuum)
 {
-    Piscina* p = piscina_generare_dynamicum("probatio_norma_gignere",
-        M * M);
-        b32 successus;
-
-    credo_aperire(p);
-    {
-        /* omnes X causae violabiles ab oraculo exercitae (non solum
-         * "nulla fracta" - quod etiam nihil probatum significare posset) */
-        i32 visae = _oraculum(_schema_simplex(p), "simplex", p)
-                  | _oraculum(_schema_responsi(p), "responsum", p);
-        i32 omnes = ((i32)I << NORMA_CAUSA_GENUS) | ((i32)I
-            << NORMA_CAUSA_DEEST)
-                  | ((i32)I << NORMA_CAUSA_EXTRA) | ((i32)I
-                      << NORMA_CAUSA_MINIMUM)
-                  | ((i32)I << NORMA_CAUSA_MAXIMUM) | ((i32)I
-                      << NORMA_CAUSA_LONGITUDO)
-                  | ((i32)I << NORMA_CAUSA_ELECTIO) | ((i32)I
-                      << NORMA_CAUSA_FORMA)
-                  | ((i32)I << NORMA_CAUSA_VARIATIO) | ((i32)I
-                      << NORMA_CAUSA_DISCRIMEN);
-
-        CREDO_AEQUALIS_I32(visae, omnes);
-    }
-    probatio_determinismus_et_stabilitas(p);
-    probatio_functiones(p);
-    probatio_titulus_sine_functione(p);
-    credo_imprimere_compendium();
-    successus = credo_omnia_praeterierunt();
-    credo_claudere();
-    piscina_destruere(p);
-    redde successus ? 0 : I;
+    redde credo_suitam_currere("norma_gignere", SECTIONES);
 }

@@ -140,29 +140,20 @@ _continet_literis (
                           chorda_ex_literis(literae, piscina));
 }
 
-s32 principale (vacuum)
-{
-         b32  praeteritus;
-     Piscina* piscina;
-
-    piscina = piscina_generare_dynamicum("probatio_natura_glossae",
-                                         8388608);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
 
     /* ========================================================
      * 0. instrumentum paratur: absens -> struere semel;
      *    stalum -> RECUSARE (mos probatio_natura_canones)
      * ======================================================== */
 
-    {
-        imprimere("\n--- 0. instrumentum ---\n");
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
 
+    piscina = c->piscina;
+    {
         si (!filum_existit("bin/natura_glossae"))
         {
             constans character* struere[II];
@@ -202,16 +193,22 @@ s32 principale (vacuum)
             CREDO_NIHIL (stalum);
         }
     }
+}
 
 
     /* ========================================================
      * I. corpus plenum: copertura tota, porta viret
      * ======================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         ProcessusResultus r;
-
-        imprimere("\n--- I. corpus plenum ---\n");
 
         r = _censum_currere("probationes/exempla/gl_plenum",
                             "-machina", NIHIL, NIHIL, piscina);
@@ -233,6 +230,7 @@ s32 principale (vacuum)
         CREDO_VERUM (r.successus);
         CREDO_AEQUALIS_I32 ((i32)r.codex_exitus, ZEPHYRUM);
     }
+}
 
 
     /* ========================================================
@@ -240,10 +238,15 @@ s32 principale (vacuum)
      *     relatio index operum est, porta sola obstat
      * ======================================================== */
 
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         ProcessusResultus r;
-
-        imprimere("\n--- II. corpus lacunosum ---\n");
 
         r = _censum_currere("probationes/exempla/gl_lacunosum",
                             "-machina", NIHIL, NIHIL, piscina);
@@ -264,16 +267,22 @@ s32 principale (vacuum)
         CREDO_VERUM (r.successus);
         CREDO_AEQUALIS_I32 ((i32)r.codex_exitus, I);
     }
+}
 
 
     /* ========================================================
      * III. -linguae: electio postulata verdictum mutat
      * ======================================================== */
 
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         ProcessusResultus r;
-
-        imprimere("\n--- III. -linguae ---\n");
 
         /* fr sola postulata: gamma caret -> porta rubet */
         r = _censum_currere("probationes/exempla/gl_lacunosum",
@@ -287,16 +296,22 @@ s32 principale (vacuum)
         CREDO_VERUM (r.successus);
         CREDO_AEQUALIS_I32 ((i32)r.codex_exitus, ZEPHYRUM);
     }
+}
 
 
     /* ========================================================
      * IV. exitus II - NIHIL CURSUM numquam sanitas tacita
      * ======================================================== */
 
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         ProcessusResultus r;
-
-        imprimere("\n--- IV. exitus II ---\n");
 
         r = _censum_currere("probationes/exempla/NON_EST",
                             NIHIL, NIHIL, NIHIL, piscina);
@@ -308,17 +323,23 @@ s32 principale (vacuum)
         CREDO_VERUM (r.successus);
         CREDO_AEQUALIS_I32 ((i32)r.codex_exitus, II);
     }
+}
 
 
     /* ========================================================
      * V. pagina html: encyclopaedia et lacunae fusae
      * ======================================================== */
 
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         ProcessusResultus r;
                    chorda pagina;
-
-        imprimere("\n--- V. pagina html ---\n");
 
         r = _censum_currere("probationes/exempla/gl_lacunosum",
                             "-html", "build/probatio_glossae.html",
@@ -357,19 +378,21 @@ s32 principale (vacuum)
         CREDO_VERUM (_continet_literis(pagina, "&lt;eventum",
                                        piscina));
     }
+}
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "0. instrumentum", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "I. corpus plenum", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "II. corpus lacunosum", _sectio_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "III. -linguae", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "IV. exitus II", _sectio_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "V. pagina html", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("natura_glossae", SECTIONES);
 }

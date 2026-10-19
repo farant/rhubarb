@@ -671,91 +671,19 @@ _divergentiam_imprimere (
     }
 }
 
-s32
-principale (
-          s32   argc,
-    character** argv)
+
+/* ==================================================
+ * MODUS IUDICANDI (suita): aurum legere, regenerare,
+ * memcmp. Aurum absens = RUBRUM (porta mortua aliter).
+ * ================================================== */
+
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
     Piscina* piscina;
 
-    piscina = piscina_generare_dynamicum("probatio_stml_aurea",
-                                         4194304);
-    si (piscina == NIHIL)
-    {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-
-
-    /* ==================================================
-     * MODUS GENERANDI: -generare via1 via2 ...
-     * ================================================== */
-
-    si (argc >= II && strcmp(argv[I], "-generare") == ZEPHYRUM)
-    {
-                 chorda aureum;
-                    b32 bene;
-                   FILE* f;
-    constans character** viae;
-                    i32  numerus;
-                    i32  i;
-
-        si (argc < III)
-        {
-            imprimere("usus: probatio_stml_aurea -generare "
-                      "<viae fontium...>\n");
-            redde I;
-        }
-
-        /* argv in tabulam constantem copiare (-Wcast-qual:
-         * character** in constans character** directe verti nequit) */
-        numerus = (i32)(argc - II);
-        viae = (constans character**)piscina_allocare(piscina,
-            (memoriae_index)numerus
-                * (memoriae_index)magnitudo(character*));
-        si (viae == NIHIL)
-        {
-            imprimere("FRACTA: allocatio viarum\n");
-            redde I;
-        }
-        per (i = ZEPHYRUM; i < numerus; i++)
-        {
-            viae[i] = argv[(i32)II + i];
-        }
-
-        bene = _aureum_generare(piscina, viae, numerus, &aureum);
-        si (!bene)
-        {
-            imprimere("FRACTA: generatio aurei\n");
-            redde I;
-        }
-
-        f = lectiones_fopen(AUREUM_VIA, "wb");
-        si (f == NIHIL)
-        {
-            imprimere("FRACTA: scriptio %s (num directorium "
-                      "exsistit?)\n", AUREUM_VIA);
-            redde I;
-        }
-        fwrite(aureum.datum, I, (size_t)aureum.mensura, f);
-        fclose(f);
-
-        imprimere("aurum scriptum: %s (%lu octeti, %lu fontes)\n",
-            AUREUM_VIA,
-            (insignatus longus)aureum.mensura,
-            (insignatus longus)(argc - II));
-        redde ZEPHYRUM;
-    }
-
-
-    /* ==================================================
-     * MODUS IUDICANDI (suita): aurum legere, regenerare,
-     * memcmp. Aurum absens = RUBRUM (porta mortua aliter).
-     * ================================================== */
-
-    credo_aperire(piscina);
-
-    imprimere("\n--- pons aureus: stml_textus_internus ---\n");
+    piscina = c->piscina;
     {
                      chorda   aureum;
                      chorda   novum;
@@ -805,15 +733,89 @@ principale (
             }
         }
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "pons aureus: stml_textus_internus", _sectio_prima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    si (credo_omnia_praeterierunt())
+s32
+principale (
+          s32   argc,
+    character** argv)
+{
+
+
+    /* ==================================================
+     * MODUS GENERANDI: -generare via1 via2 ...
+     * ================================================== */
+
+    si (argc >= II && strcmp(argv[I], "-generare") == ZEPHYRUM)
     {
-        credo_claudere();
+                 chorda aureum;
+                    b32 bene;
+                   FILE* f;
+    constans character** viae;
+                    i32  numerus;
+                    i32  i;
+                Piscina* piscina;
+
+        piscina = piscina_generare_dynamicum("probatio_stml_aurea",
+                                             4194304);
+        si (piscina == NIHIL)
+        {
+            imprimere("FRACTA: piscina\n");
+            redde I;
+        }
+
+        si (argc < III)
+        {
+            imprimere("usus: probatio_stml_aurea -generare "
+                      "<viae fontium...>\n");
+            redde I;
+        }
+
+        /* argv in tabulam constantem copiare (-Wcast-qual:
+         * character** in constans character** directe verti nequit) */
+        numerus = (i32)(argc - II);
+        viae = (constans character**)piscina_allocare(piscina,
+            (memoriae_index)numerus
+                * (memoriae_index)magnitudo(character*));
+        si (viae == NIHIL)
+        {
+            imprimere("FRACTA: allocatio viarum\n");
+            redde I;
+        }
+        per (i = ZEPHYRUM; i < numerus; i++)
+        {
+            viae[i] = argv[(i32)II + i];
+        }
+
+        bene = _aureum_generare(piscina, viae, numerus, &aureum);
+        si (!bene)
+        {
+            imprimere("FRACTA: generatio aurei\n");
+            redde I;
+        }
+
+        f = lectiones_fopen(AUREUM_VIA, "wb");
+        si (f == NIHIL)
+        {
+            imprimere("FRACTA: scriptio %s (num directorium "
+                      "exsistit?)\n", AUREUM_VIA);
+            redde I;
+        }
+        fwrite(aureum.datum, I, (size_t)aureum.mensura, f);
+        fclose(f);
+
+        imprimere("aurum scriptum: %s (%lu octeti, %lu fontes)\n",
+            AUREUM_VIA,
+            (insignatus longus)aureum.mensura,
+            (insignatus longus)(argc - II));
         redde ZEPHYRUM;
     }
-    credo_claudere();
-    redde I;
+
+    redde credo_suitam_currere("stml_aurea", SECTIONES);
 }

@@ -26,9 +26,12 @@ nomen structura {
  * ================================================== */
 
 /* Creare structuram directorii pro probationibus */
-hic_manens b32
-_creare_structuram_probationis (vacuum)
+hic_manens vacuum
+_creare_structuram_probationis (
+    CredoContextus* c)
 {
+    (vacuum)c;
+
     /* Creare directorium principale */
     system("rm -rf /tmp/rhubarb_iter_probatio");
     system("mkdir -p /tmp/rhubarb_iter_probatio");
@@ -45,14 +48,14 @@ _creare_structuram_probationis (vacuum)
     system("echo 'deep file' > /tmp/rhubarb_iter_probatio/sub1/deep/deepfile.txt");
     system("echo 'hidden' > /tmp/rhubarb_iter_probatio/.hidden_file");
     system("echo 'hidden sub' > /tmp/rhubarb_iter_probatio/.hidden_dir/inside.txt");
-
-    redde VERUM;
 }
 
 /* Purgare structuram probationis */
 hic_manens vacuum
-_purgare_structuram_probationis (vacuum)
+_purgare_structuram_probationis (
+    CredoContextus* c)
 {
+    (vacuum)c;
     system("rm -rf /tmp/rhubarb_iter_probatio");
 }
 
@@ -107,34 +110,22 @@ _callback_terminare_post_tres (
  * Probationes
  * ================================================== */
 
-s32 principale(vacuum)
-{
-    Piscina* piscina;
-        b32  praeteritus;
-
-    /* Aperire piscina et credo */
-    piscina = piscina_generare_dynamicum("test_iter_directoria", 8192);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-    /* Creare structuram probationis */
-    _creare_structuram_probationis();
-
 
     /* ==================================================
      * Probare: Iteratio Simplex
      * ================================================== */
 
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
          DirectoriumIterator* iter;
         DirectoriumIntroitus* e;
                          i32  numerus;
-
-        imprimere("\n--- Probans iterationem simplicem ---\n");
 
         iter = directorium_iterator_aperire(VIA_PROBATIONIS, piscina);
         CREDO_NON_NIHIL(iter);
@@ -152,34 +143,46 @@ s32 principale(vacuum)
 
         directorium_iterator_claudere(iter);
     }
+}
 
 
     /* ==================================================
      * Probare: Directorium Non Existens
      * ================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         DirectoriumIterator* iter;
-
-        imprimere("\n--- Probans directorium non existens ---\n");
 
         iter = directorium_iterator_aperire("/non/existens/via",
             piscina);
         CREDO_NIHIL(iter);
     }
+}
 
 
     /* ==================================================
      * Probare: Genera Introituum
      * ================================================== */
 
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
          DirectoriumIterator* iter;
         DirectoriumIntroitus* e;
                          i32  fila;
                          i32  directoria;
-
-        imprimere("\n--- Probans genera introituum ---\n");
 
         iter = directorium_iterator_aperire(VIA_PROBATIONIS, piscina);
         CREDO_NON_NIHIL(iter);
@@ -206,18 +209,24 @@ s32 principale(vacuum)
 
         directorium_iterator_claudere(iter);
     }
+}
 
 
     /* ==================================================
      * Probare: Mensura Fili
      * ================================================== */
 
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
          DirectoriumIterator* iter;
         DirectoriumIntroitus* e;
                          b32  inventum;
-
-        imprimere("\n--- Probans mensuram fili ---\n");
 
         iter = directorium_iterator_aperire(VIA_PROBATIONIS, piscina);
         CREDO_NON_NIHIL(iter);
@@ -236,17 +245,23 @@ s32 principale(vacuum)
         CREDO_VERUM(inventum);
         directorium_iterator_claudere(iter);
     }
+}
 
 
     /* ==================================================
      * Probare: Pattern Matching - *
      * ================================================== */
 
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda titulus;
         chorda exemplar;
-
-        imprimere("\n--- Probans pattern matching (*) ---\n");
 
         titulus = chorda_ex_literis("file.txt", piscina);
 
@@ -262,17 +277,23 @@ s32 principale(vacuum)
         exemplar = chorda_ex_literis("*", piscina);
         CREDO_VERUM(directorium_titulus_congruit(titulus, exemplar));
     }
+}
 
 
     /* ==================================================
      * Probare: Pattern Matching - ?
      * ================================================== */
 
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda titulus;
         chorda exemplar;
-
-        imprimere("\n--- Probans pattern matching (?) ---\n");
 
         titulus = chorda_ex_literis("file.txt", piscina);
 
@@ -285,17 +306,23 @@ s32 principale(vacuum)
         exemplar = chorda_ex_literis("???.txt", piscina);
         CREDO_FALSUM(directorium_titulus_congruit(titulus, exemplar));
     }
+}
 
 
     /* ==================================================
      * Probare: Pattern Matching - Vacua
      * ================================================== */
 
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda titulus;
         chorda exemplar_vacua;
-
-        imprimere("\n--- Probans pattern matching (vacua) ---\n");
 
         titulus = chorda_ex_literis("anything.txt", piscina);
         exemplar_vacua.datum = NIHIL;
@@ -305,31 +332,41 @@ s32 principale(vacuum)
         CREDO_VERUM(directorium_titulus_congruit(titulus,
             exemplar_vacua));
     }
+}
 
 
     /* ==================================================
      * Probare: directorium_existit
      * ================================================== */
 
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
-        imprimere("\n--- Probans directorium_existit ---\n");
-
         CREDO_VERUM(directorium_existit(VIA_PROBATIONIS));
         CREDO_VERUM(directorium_existit("/tmp/rhubarb_iter_probatio/sub1"));
         CREDO_FALSUM(directorium_existit("/tmp/rhubarb_iter_probatio/file1.txt"));
         CREDO_FALSUM(directorium_existit("/non/existens"));
     }
+}
 
 
     /* ==================================================
      * Probare: Ambulator Simplex
      * ================================================== */
 
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         AmbulatorContextus ctx;
                        s32 fructus;
-
-        imprimere("\n--- Probans ambulatorem simplicem ---\n");
 
         ctx.numerus_filorum        = 0;
         ctx.numerus_directoriorum  = 0;
@@ -349,18 +386,24 @@ s32 principale(vacuum)
            7 introitus in radice + 1 in sub1 + 1 in sub1/deep + 1 in .hidden_dir = 10 */
         CREDO_MAIOR_I32(ctx.numerus_totalis, VIII);
     }
+}
 
 
     /* ==================================================
      * Probare: Ambulator cum Filtro - Sine Occultis
      * ================================================== */
 
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         AmbulatorContextus ctx;
         DirectoriumFiltrum filtrum;
                        s32 fructus;
-
-        imprimere("\n--- Probans ambulatorem sine occultis ---\n");
 
         ctx.numerus_filorum        = 0;
         ctx.numerus_directoriorum  = 0;
@@ -383,18 +426,24 @@ s32 principale(vacuum)
            subfile.txt, deep, deepfile.txt = 8 */
         CREDO_AEQUALIS_I32(ctx.numerus_totalis, VIII);
     }
+}
 
 
     /* ==================================================
      * Probare: Ambulator cum Filtro - Pattern
      * ================================================== */
 
+interior vacuum
+_sectio_decima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         AmbulatorContextus ctx;
         DirectoriumFiltrum filtrum;
                        s32 fructus;
-
-        imprimere("\n--- Probans ambulatorem cum pattern *.txt ---\n");
 
         ctx.numerus_filorum        = 0;
         ctx.numerus_directoriorum  = 0;
@@ -418,17 +467,23 @@ s32 principale(vacuum)
            file1.txt, file2.txt, subfile.txt, deepfile.txt + sub1, sub2, deep = 7 */
         CREDO_AEQUALIS_I32(ctx.numerus_totalis, VII);
     }
+}
 
 
     /* ==================================================
      * Probare: Ambulator - Terminatio Praematura
      * ================================================== */
 
+interior vacuum
+_sectio_decima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         i32 numerus;
         s32 fructus;
-
-        imprimere("\n--- Probans terminationem praematuram ---\n");
 
         numerus = 0;
 
@@ -444,18 +499,24 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_S32(fructus, I);
         CREDO_AEQUALIS_I32(numerus, III);
     }
+}
 
 
     /* ==================================================
      * Probare: Ambulator - Profunditas Maxima
      * ================================================== */
 
+interior vacuum
+_sectio_decima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         AmbulatorContextus ctx;
         DirectoriumFiltrum filtrum;
                        s32 fructus;
-
-        imprimere("\n--- Probans profunditatem maximam ---\n");
 
         ctx.numerus_filorum        = 0;
         ctx.numerus_directoriorum  = 0;
@@ -480,20 +541,40 @@ s32 principale(vacuum)
            (deep est directorium in sub1, non recursimus in illud) */
         CREDO_AEQUALIS_I32(ctx.numerus_totalis, VII);
     }
+}
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "iterationem simplicem", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "directorium non existens", _sectio_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "genera introituum", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "mensuram fili", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "pattern matching (*)", _sectio_quinta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "pattern matching (?)", _sectio_sexta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "pattern matching (vacua)", _sectio_septima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "directorium_existit", _sectio_octava, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "ambulatorem simplicem", _sectio_nona, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "ambulatorem sine occultis", _sectio_decima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "ambulatorem cum pattern *.txt", _sectio_decima_prima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "terminationem praematuram", _sectio_decima_secunda, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "profunditatem maximam", _sectio_decima_tertia, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    /* ==================================================
-     * Purgare et Imprimere Compendium
-     * ================================================== */
-
-    _purgare_structuram_probationis();
-
-    credo_imprimere_compendium();
-    /* verdictum ANTE clausuram: sessio clausa = totalis ZEPHYRUM =
-     * NIHIL PROBATUM */
-    praeteritus = credo_omnia_praeterierunt();
-    credo_claudere();
-    piscina_destruere(piscina);
-
-    redde praeteritus ? ZEPHYRUM : I;
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("iter_directoria", SECTIONES,
+        _creare_structuram_probationis,
+        _purgare_structuram_probationis);
 }

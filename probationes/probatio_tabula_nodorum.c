@@ -146,26 +146,19 @@ _compositum_quaerere (
     redde n;
 }
 
-s32 principale (vacuum)
-{
-    piscina = piscina_generare_dynamicum("probatio_tabula_nodorum",
-        1048576);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
 
     /* ==================================================
      * QUAESTIO ET FONS
      * ================================================== */
 
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         constans NodusTabulae* n;
 
-        imprimere("\n--- Probans quaestionem et fontem ---\n");
         /* A002863 usque ad XIII: 1 + 249 + 552 + 2176 + 9988 */
         CREDO_AEQUALIS_I32 (tabula_nodorum_numerus(), XII * M + CMLXVI);
         CREDO_NIHIL (tabula_nodorum_nodus(XII * M + CMLXVI));
@@ -222,12 +215,18 @@ s32 principale (vacuum)
             "cbb0369cb6756e89ed978a7821867c7d")
             != NIHIL);
     }
+}
 
 
     /* ==================================================
      * SYMMETRIA (numeri KnotInfo)
      * ================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         i32 numeri[VI] = { ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM,
             ZEPHYRUM, ZEPHYRUM };
@@ -237,7 +236,6 @@ s32 principale (vacuum)
         i32 k;
         b32 intra = VERUM;
 
-        imprimere("\n--- Probans symmetriam et numeros ---\n");
         per (k = ZEPHYRUM; k < XIV; k++)
         {
             per_transitus[k] = ZEPHYRUM;
@@ -314,12 +312,18 @@ s32 principale (vacuum)
                 && !tabula_nodorum_amphichiralis(tabula_nodorum_quaere(
             "9_42")));
     }
+}
 
 
     /* ==================================================
      * POLYNOMIA: KnotInfo litteris, theoremata, recomputatio
      * ================================================== */
 
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
          TabulaNodorum* t = tabula_nodorum_aperire(piscina);
                    i32  k;
@@ -337,7 +341,6 @@ s32 principale (vacuum)
         constans character* chirales[VI] = { "9_42", "10_48", "10_71",
             "10_91", "10_104", "10_125" };
 
-        imprimere("\n--- Probans polynomia ---\n");
         CREDO_NON_NIHIL (t);
         /* KnotInfo, knotinfo_data_complete.csv 2026.10.5 */
         CREDO_VERUM (polynomium_aequalis(_jones("3_1"),
@@ -442,12 +445,18 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (chirales_omnes, LXXVIII);
         CREDO_VERUM (chirales_noti);
     }
+}
 
 
     /* ==================================================
      * AGNITIO
      * ================================================== */
 
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
          TabulaNodorum* t = tabula_nodorum_aperire(piscina);
                Agnitio  a[XVI];
@@ -461,7 +470,6 @@ s32 principale (vacuum)
             Polynomium productum    = polynomium_nullum();
             Polynomium productum_j  = polynomium_nullum();
 
-        imprimere("\n--- Probans agnitionem ---\n");
         CREDO_NON_NIHIL (t);
 
         /* nodus trivialis solus */
@@ -711,13 +719,36 @@ s32 principale (vacuum)
         CREDO_VERUM (omnes_primi);
         CREDO_VERUM (omnia_specula);
     }
+}
 
-    credo_imprimere_compendium();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "quaestionem et fontem", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "symmetriam et numeros", _sectio_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "polynomia", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "agnitionem", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    /* piscina plagulae (functiones auxiliares eam legunt): una pro
+     * omnibus sectionibus, hic creata et destructa - sectiones eam non
+     * scribunt */
+    piscina = piscina_generare_dynamicum("probatio_tabula_nodorum",
+        1048576);
+    si (!piscina)
     {
-        b32 praeteritus = credo_omnia_praeterierunt();
-
-        credo_claudere();
-        piscina_destruere(piscina);
-        redde praeteritus ? ZEPHYRUM : I;
+        imprimere("FRACTA: piscina_generatio\n");
+        redde I;
     }
+    si (credo_suitam_currere("tabula_nodorum", SECTIONES) != ZEPHYRUM)
+    {
+        piscina_destruere(piscina);
+        redde I;
+    }
+    piscina_destruere(piscina);
+    redde ZEPHYRUM;
 }

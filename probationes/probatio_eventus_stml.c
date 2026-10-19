@@ -24,24 +24,12 @@ addere (
     redde e;
 }
 
-s32 principale (vacuum)
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-                Piscina* piscina;
-    InternamentumChorda* intern;
-                    Xar* index;
-                    Xar* index2;
-                Eventus* e;
-                 chorda  textus;
+    (vacuum)c;
 
-    piscina = piscina_generare_dynamicum("probatio_eventus_stml",
-        XVI * M);
-    si (!piscina)
-    { imprimere("FRACTA: piscina\n"); redde I;
-    }
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
-
-    imprimere("\n--- Probans tituli generum ---\n");
     CREDO_VERUM (eventus_genus_ex_titulo("mus_depressus")
         == EVENTUS_MUS_DEPRESSUS);
     CREDO_VERUM (strcmp(eventus_genus_titulus(EVENTUS_CLAVIS_LIBERATUS),
@@ -52,8 +40,22 @@ s32 principale (vacuum)
     CREDO_VERUM (strcmp(eventus_genus_titulus(EVENTUS_MENU), "menu")
         == ZEPHYRUM);
     CREDO_VERUM (eventus_genus_ex_titulo("menu") == EVENTUS_MENU);
+}
 
-    imprimere("\n--- Probans circuitum ---\n");
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+                    Xar* index;
+                    Xar* index2;
+                Eventus* e;
+                 chorda  textus;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+
     index = xar_creare(piscina, (i32)magnitudo(Eventus));
     e = addere(index, EVENTUS_MUS_DEPRESSUS, M);
     e->datum.mus.x = X;
@@ -88,8 +90,14 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_I32 (e->datum.mutare_magnitudinem.latitudo, CDLXXX);
     e = (Eventus*)xar_obtinere(index2, IV);
     CREDO_VERUM (e->tempus == XL * M * M);
+}
 
-    imprimere("\n--- A2: tituli generum novorum ---\n");
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    (vacuum)c;
+
     CREDO_VERUM (strcmp(eventus_genus_titulus(EVENTUS_TEXTUS), "textus")
         == ZEPHYRUM);
     CREDO_VERUM (eventus_genus_ex_titulo("depositio")
@@ -106,8 +114,14 @@ s32 principale (vacuum)
     CREDO_VERUM (eventus_genus_ex_titulo("tractus") == EVENTUS_TRACTUS);
     CREDO_VERUM (strcmp(eventus_genus_titulus(EVENTUS_TRACTUS_FINIT),
         "tractus_finit") == ZEPHYRUM);
+}
 
-    imprimere("\n--- A2: codices physici (W3C) ---\n");
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    (vacuum)c;
+
     {
         i32 k;
         b32 omnes = VERUM;
@@ -125,10 +139,10 @@ s32 principale (vacuum)
         }
         CREDO_VERUM (omnes);
         CREDO_AEQUALIS_I32 ((i32)EVENTUS_CODICES_NUMERUS, LXXXIV);
-        CREDO_VERUM (strcmp(eventus_codex_titulus(EVENTUS_CODEX_IGNOTUS),
-            "Unidentified") == ZEPHYRUM);
-        CREDO_VERUM (strcmp(eventus_codex_titulus(EVENTUS_CODEX_LITTERAE),
-            "KeyA") == ZEPHYRUM);
+        CREDO_VERUM (strcmp(eventus_codex_titulus(
+            EVENTUS_CODEX_IGNOTUS), "Unidentified") == ZEPHYRUM);
+        CREDO_VERUM (strcmp(eventus_codex_titulus(
+            EVENTUS_CODEX_LITTERAE), "KeyA") == ZEPHYRUM);
         CREDO_VERUM (strcmp(eventus_codex_titulus((EventusCodex)
             (EVENTUS_CODEX_LITTERAE + XXV)), "KeyZ") == ZEPHYRUM);
         CREDO_VERUM (strcmp(eventus_codex_titulus(EVENTUS_CODEX_NUMERI),
@@ -146,8 +160,22 @@ s32 principale (vacuum)
         CREDO_VERUM (eventus_codex_ex_titulo("NonExistent")
             == EVENTUS_CODEX_IGNOTUS);
     }
+}
 
-    imprimere("\n--- A2: circuitus campos novos omnes ---\n");
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+                    Xar* index;
+                    Xar* index2;
+                Eventus* e;
+                 chorda  textus;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+
     {
         EventusExemplum  exempla[III];
           constans char* textus_difficilis =
@@ -287,8 +315,20 @@ s32 principale (vacuum)
         CREDO_VERUM (((Eventus*)xar_obtinere(index2, VII))->genus
             == EVENTUS_RESUMPTIO);
     }
+}
 
-    imprimere("\n--- A2: plagulae veteres - toy.eventus.stml ---\n");
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+                    Xar* index;
+                Eventus* e;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+
     {
         chorda fons;
         chorda rescriptum;
@@ -321,8 +361,20 @@ s32 principale (vacuum)
         }
         CREDO_VERUM (chorda_aequalis(rescriptum, fons));
     }
+}
 
-    imprimere("\n--- A3c: positio extra fenestram (s32) ---\n");
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+                    Xar* index;
+                Eventus* e;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+
     {
         chorda rescriptum;
 
@@ -331,8 +383,10 @@ s32 principale (vacuum)
          * numquam verum reddebat) */
         index = eventus_legere_stml(
             "<eventus_index>"
-            "<eventus genus=\"mus_motus\" tempus=\"1\" x=\"-12\" y=\"-3\"/>"
-            "<eventus genus=\"depositio\" tempus=\"2\" x=\"-7\" y=\"-8\" "
+            "<eventus genus=\"mus_motus\" tempus=\"1\" "
+            "x=\"-12\" y=\"-3\"/>"
+            "<eventus genus=\"depositio\" tempus=\"2\" "
+            "x=\"-7\" y=\"-8\" "
             "viae=\"/a\" numerus=\"1\"/>"
             "</eventus_index>",
             piscina, intern);
@@ -353,9 +407,18 @@ s32 principale (vacuum)
         CREDO_VERUM (chorda_continet(rescriptum,
             chorda_ex_literis("y=\"-8\"", piscina)));
     }
+}
 
-    imprimere("\n");
-    imprimere("\n--- S3b: plagula vetus delta_y -> dy ---\n");
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+
     {
         Xar* vetus = eventus_legere_stml(
             "<eventus_index>"
@@ -374,8 +437,18 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_S32 (((Eventus*)xar_obtinere(vetus, I))
             ->datum.rotula.dy, ZEPHYRUM);
     }
+}
 
-    imprimere("\n--- S3a: plagula vetus 'typus' -> producta ---\n");
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+
     {
         Xar* vetus = eventus_legere_stml(
             "<eventus_index><eventus genus=\"clavis_depressus\" "
@@ -386,8 +459,30 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_S32 (((Eventus*)xar_obtinere(vetus, ZEPHYRUM))
             ->datum.clavis.producta, XXVII);
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "tituli generum", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "circuitum", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "A2: tituli generum novorum", _sectio_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "A2: codices physici (W3C)", _sectio_quarta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "A2: circuitus campos novos omnes", _sectio_quinta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "A2: plagulae veteres - toy.eventus.stml", _sectio_sexta, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "A3c: positio extra fenestram (s32)", _sectio_septima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "S3b: plagula vetus delta_y -> dy", _sectio_octava, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "S3a: plagula vetus 'typus' -> producta", _sectio_nona, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("eventus_stml", SECTIONES);
 }

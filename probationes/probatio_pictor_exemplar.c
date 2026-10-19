@@ -250,7 +250,20 @@ statum_ponere (
     ponere(app, "color_secundus.ponere", "color_secundus", secundus);
 }
 
-s32 principale (vacuum)
+/* purgare: piscina et intern (sectione posita, auxiliis lecta)
+ * reponuntur - status inter sectiones non manet (examen XCII) */
+interior vacuum
+_statum_reponere (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    piscina  = NIHIL;
+    intern   = NIHIL;
+}
+
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
               Volumen* vol;
      PictorApplicatio  app;
@@ -258,13 +271,8 @@ s32 principale (vacuum)
      PictorDocumentum* doc;
                   i32  fundus;
 
-    piscina = piscina_generare_dynamicum("probatio_pictor_exemplar",
-        CXXVIII * M);
-    si (!piscina)
-    { imprimere("FRACTA: piscina\n"); redde I;
-    }
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     thema_initiare();
     vol = volumen_temporarium(piscina, "probatio_pictor_exemplar");
     CREDO_VERUM(pictor_applicatio_aedificare(&app, piscina, intern, vol,
@@ -273,7 +281,7 @@ s32 principale (vacuum)
     doc     = app.doc;
     fundus  = (i32)color_ad_pixelum(thema_color(COLOR_BACKGROUND));
 
-    imprimere("\n--- I: penicillus, secundus nullus ---\n");
+    CREDO_GRADUS("I: penicillus, secundus nullus");
     {
         s32 x;
         i32 mala;
@@ -297,7 +305,7 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32(pixelum(doc, CCLXX, C), palettae(V));
     }
 
-    imprimere("\n--- II: secundus III ---\n");
+    CREDO_GRADUS("II: secundus III");
     {
         s32 x;
         i32 mala;
@@ -317,7 +325,7 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32(pixelum(doc, XL, CXX), fundus);
     }
 
-    imprimere("\n--- III: actum ---\n");
+    CREDO_GRADUS("III: actum");
     {
         chorda a;
 
@@ -335,7 +343,7 @@ s32 principale (vacuum)
             "color_secundus=", piscina)));
     }
 
-    imprimere("\n--- IV: primus nullus, solidus ---\n");
+    CREDO_GRADUS("IV: primus nullus, solidus");
     {
         i32* ante;
 
@@ -347,7 +355,7 @@ s32 principale (vacuum)
             chorda_ex_literis("color=\"-1\"", piscina)));
     }
 
-    imprimere("\n--- V: guttae exemplar sequuntur ---\n");
+    CREDO_GRADUS("V: guttae exemplar sequuntur");
     {
         s32 x;
         s32 y;
@@ -412,7 +420,7 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32(mala, ZEPHYRUM);
     }
 
-    imprimere("\n--- VI: reproiectio eadem ---\n");
+    CREDO_GRADUS("VI: reproiectio eadem");
     {
                      i32* ante;
         PictorDocumentum* alter;
@@ -427,7 +435,7 @@ s32 principale (vacuum)
         }
     }
 
-    imprimere("\n--- VII: quadratum, palette, praevisio ---\n");
+    CREDO_GRADUS("VII: quadratum, palette, praevisio");
     {
         Componens* p;
         Componens* t;
@@ -537,8 +545,17 @@ s32 principale (vacuum)
         mus(app.d, EVENTUS_MUS_LIBERATUS, CCX, CC, VIII * M + XXXII);
     }
 
-    imprimere("\n");
-    credo_imprimere_compendium();
     volumen_claudere(vol);
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "exemplaria in pictore", _sectio_prima, NIHIL, _statum_reponere,
+      NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("pictor_exemplar", SECTIONES);
 }

@@ -1864,205 +1864,588 @@ probans_backspace_jungere_per_verba(vacuum)
  * Main
  * ================================================== */
 
-integer
-principale (vacuum)
+/* piscina communis omnium probationum (g_piscina) = piscina suitae -
+ * ut olim una piscina pro omnibus; sectiones eam legunt, non mutant.
+ * Sectiones quarum assertiones solae in tabula_asserere
+ * (lib/tabula_characterum.c) stant tolerationem ferunt: examen plagulam
+ * alteram non sequitur */
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
 {
-    Piscina* piscina;
-        b32  praeteritus;
+    g_piscina = c->piscina;
+}
 
-    piscina = piscina_generare_dynamicum("test_vim", M);  /* 1MB - pro multis tabulis */
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    g_piscina = piscina;
-    credo_aperire(piscina);
+interior vacuum
+_suitam_purgare (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    g_piscina = NIHIL;
+}
 
-    printf("--- Probans initiare ---\n");
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_initiare();
+}
 
-    printf("--- Probans motus hjkl ---\n");
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_motus_hjkl();
+}
 
-    printf("--- Probans motus limites ---\n");
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_motus_limites();
+}
 
-    printf("--- Probans motus 0 $ ---\n");
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_motus_0_dollar();
+}
 
-    printf("--- Probans motus ^ ---\n");
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_motus_caret();
+}
 
-    printf("--- Probans i inserere ---\n");
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_i_inserere();
+}
 
-    printf("--- Probans a appendo ---\n");
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_a_appendo();
+}
 
-    printf("--- Probans A appendo finis ---\n");
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_A_appendo_finis();
+}
 
-    printf("--- Probans I inserere initium ---\n");
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_I_inserere_initium();
+}
 
-    printf("--- Probans inserere characterem ---\n");
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_inserere_characterem();
+}
 
-    printf("--- Probans cursor wrap ad finem lineae ---\n");
+interior vacuum
+_sectio_decima_prima (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_cursor_wrap_ad_finem_lineae();
+}
 
-    printf("--- Probans inserere in medio ---\n");
+/* <tolera codex="CREDO_SECTIO_SINE_ASSERTIONE" (>in tabula_asserere */
+interior vacuum
+_sectio_decima_secunda (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_inserere_in_medio();
+}
 
-    printf("--- Probans x delere ---\n");
+interior vacuum
+_sectio_decima_tertia (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_x_delere();
+}
 
-    printf("--- Probans dd delere lineam ---\n");
+interior vacuum
+_sectio_decima_quarta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_dd_delere_lineam();
+}
 
-    printf("--- Probans backspace ---\n");
+interior vacuum
+_sectio_decima_quinta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_backspace();
+}
 
-    printf("--- Probans o nova linea infra ---\n");
+interior vacuum
+_sectio_decima_sexta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_o_nova_linea_infra();
+}
 
-    printf("--- Probans O nova linea supra ---\n");
+interior vacuum
+_sectio_decima_septima (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_O_nova_linea_supra();
+}
 
-    printf("--- Probans escape ex inserere ---\n");
+interior vacuum
+_sectio_decima_octava (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_escape_ex_inserere();
+}
 
-    printf("--- Probans escape in normali ---\n");
+interior vacuum
+_sectio_decima_nona (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_escape_in_normali();
+}
 
-    printf("--- Probans w verbum proximum ---\n");
+interior vacuum
+_sectio_vicesima (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_w_verbum_proximum();
+}
 
-    printf("--- Probans b verbum praecedens ---\n");
+interior vacuum
+_sectio_vicesima_prima (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_b_verbum_praecedens();
+}
 
-    printf("--- Probans g initium tabulae ---\n");
+interior vacuum
+_sectio_vicesima_secunda (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_g_initium_tabulae();
+}
 
-    printf("--- Probans G finem tabulae ---\n");
+interior vacuum
+_sectio_vicesima_tertia (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_G_finem_tabulae();
+}
 
-    printf("--- Probans G ad finem buffer ---\n");
+interior vacuum
+_sectio_vicesima_quarta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_G_ad_finem_buffer();
+}
 
-    printf("--- Probans $ in linea vacua ---\n");
+interior vacuum
+_sectio_vicesima_quinta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_dollar_in_linea_vacua();
+}
 
-    printf("--- Probans d$ delere ad finem lineae ---\n");
+/* <tolera codex="CREDO_SECTIO_SINE_ASSERTIONE" (>in tabula_asserere */
+interior vacuum
+_sectio_vicesima_sexta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_d_dollar_delere_ad_finem_lineae();
+}
 
-    printf("--- Probans dG delere ad finem tabulae ---\n");
+/* <tolera codex="CREDO_SECTIO_SINE_ASSERTIONE" (>in tabula_asserere */
+interior vacuum
+_sectio_vicesima_septima (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_dG_delere_ad_finem_tabulae();
+}
 
-    printf("--- Probans >> indent ---\n");
+/* <tolera codex="CREDO_SECTIO_SINE_ASSERTIONE" (>in tabula_asserere */
+interior vacuum
+_sectio_vicesima_octava (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_indent();
+}
 
-    printf("--- Probans << dedent ---\n");
+/* <tolera codex="CREDO_SECTIO_SINE_ASSERTIONE" (>in tabula_asserere */
+interior vacuum
+_sectio_vicesima_nona (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_dedent();
+}
 
-    printf("--- Probans o auto-indent ---\n");
+interior vacuum
+_sectio_tricesima (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_o_auto_indent();
+}
 
-    printf("--- Probans O auto-indent ---\n");
+interior vacuum
+_sectio_tricesima_prima (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_O_auto_indent();
+}
 
-    printf("--- Probans enter auto-indent ---\n");
+interior vacuum
+_sectio_tricesima_secunda (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_enter_auto_indent();
+}
 
-    printf("--- Probans vim dimensiones parvae ---\n");
+interior vacuum
+_sectio_tricesima_tertia (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_vim_dimensiones_parvae();
+}
 
-    printf("--- Probans vim G dimensiones variae ---\n");
+interior vacuum
+_sectio_tricesima_quarta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_vim_G_dimensiones_variae();
+}
 
-    printf("--- Probans vim dd ultima linea ---\n");
+interior vacuum
+_sectio_tricesima_quinta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_vim_dd_ultima_linea();
+}
 
-    /* Test 4 removed - see comment in test section */
-
-    printf("--- Probans enter split line ---\n");
+/* Test 4 removed - see comment in test section */
+interior vacuum
+_sectio_tricesima_sexta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_enter_split_line();
+}
 
-    printf("--- Probans enter split line in medio ---\n");
+interior vacuum
+_sectio_tricesima_septima (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_enter_split_line_in_medio();
+}
 
-    printf("--- Probans enter ad initium lineae ---\n");
+interior vacuum
+_sectio_tricesima_octava (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_enter_ad_initium_lineae();
+}
 
-    printf("--- Probans enter split cum indentatio ---\n");
+interior vacuum
+_sectio_tricesima_nona (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_enter_split_cum_indentatio();
+}
 
-    printf("--- Probans backspace join lines ---\n");
+interior vacuum
+_sectio_quadragesima (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_backspace_join_lines();
+}
 
-    printf("--- Probans backspace join lines cum spatiis ---\n");
+interior vacuum
+_sectio_quadragesima_prima (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_backspace_join_lines_cum_spatiis();
+}
 
-    printf("--- Probans V visual mode ---\n");
+interior vacuum
+_sectio_quadragesima_secunda (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_V_visual_mode();
+}
 
-    printf("--- Probans V indent selectio ---\n");
+interior vacuum
+_sectio_quadragesima_tertia (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_V_indent_selectio();
+}
 
-    printf("--- Probans V dedent selectio ---\n");
+interior vacuum
+_sectio_quadragesima_quarta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_V_dedent_selectio();
+}
 
-    printf("--- Probans dd cut et p paste ---\n");
+interior vacuum
+_sectio_quadragesima_quinta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_dd_cut_et_p_paste();
+}
 
-    printf("--- Probans P paste ante ---\n");
+interior vacuum
+_sectio_quadragesima_sexta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_P_paste_ante();
+}
 
-    printf("--- Probans u undo dd ---\n");
+interior vacuum
+_sectio_quadragesima_septima (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_u_undo_dd();
+}
 
-    printf("--- Probans u undo p ---\n");
+interior vacuum
+_sectio_quadragesima_octava (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_u_undo_p();
+}
 
-    printf("--- Probans V d cut multi ---\n");
+interior vacuum
+_sectio_quadragesima_nona (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_V_d_cut_multi();
+}
 
-    printf("--- Probans V d undo multi ---\n");
+interior vacuum
+_sectio_quinquagesima (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_V_d_undo_multi();
+}
 
-    printf("--- Probans p paste multi ---\n");
+interior vacuum
+_sectio_quinquagesima_prima (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_p_paste_multi();
+}
 
-    printf("--- Probans J jungere lineas ---\n");
+interior vacuum
+_sectio_quinquagesima_secunda (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_J_jungere_lineas();
+}
 
-    printf("--- Probans J per verba ---\n");
+interior vacuum
+_sectio_quinquagesima_tertia (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_J_per_verba();
+}
 
-    printf("--- Probans backspace jungere per verba ---\n");
+interior vacuum
+_sectio_quinquagesima_quarta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_backspace_jungere_per_verba();
+}
 
-    printf("--- Probans yy copiare ---\n");
+interior vacuum
+_sectio_quinquagesima_quinta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_y_lineam_copiare();
+}
 
-    printf("--- Probans V y copiare multi ---\n");
+interior vacuum
+_sectio_quinquagesima_sexta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     probans_V_y_copiare_multi();
 
     printf("\n");
-    credo_imprimere_compendium();
+}
 
-    praeteritus = credo_omnia_praeterierunt();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "initiare", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "motus hjkl", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "motus limites", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "motus 0 $", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "motus ^", _sectio_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "i inserere", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "a appendo", _sectio_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "A appendo finis", _sectio_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "I inserere initium", _sectio_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "inserere characterem", _sectio_decima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "cursor wrap ad finem lineae", _sectio_decima_prima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "inserere in medio", _sectio_decima_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "x delere", _sectio_decima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "dd delere lineam", _sectio_decima_quarta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "backspace", _sectio_decima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "o nova linea infra", _sectio_decima_sexta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "O nova linea supra", _sectio_decima_septima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "escape ex inserere", _sectio_decima_octava, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "escape in normali", _sectio_decima_nona, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "w verbum proximum", _sectio_vicesima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "b verbum praecedens", _sectio_vicesima_prima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "g initium tabulae", _sectio_vicesima_secunda, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "G finem tabulae", _sectio_vicesima_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "G ad finem buffer", _sectio_vicesima_quarta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "$ in linea vacua", _sectio_vicesima_quinta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "d$ delere ad finem lineae", _sectio_vicesima_sexta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "dG delere ad finem tabulae", _sectio_vicesima_septima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { ">> indent", _sectio_vicesima_octava, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "<< dedent", _sectio_vicesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "o auto-indent", _sectio_tricesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "O auto-indent", _sectio_tricesima_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "enter auto-indent", _sectio_tricesima_secunda, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "vim dimensiones parvae", _sectio_tricesima_tertia, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "vim G dimensiones variae", _sectio_tricesima_quarta, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "vim dd ultima linea", _sectio_tricesima_quinta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "enter split line", _sectio_tricesima_sexta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "enter split line in medio", _sectio_tricesima_septima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "enter ad initium lineae", _sectio_tricesima_octava, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "enter split cum indentatio", _sectio_tricesima_nona, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "backspace join lines", _sectio_quadragesima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "backspace join lines cum spatiis", _sectio_quadragesima_prima,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "V visual mode", _sectio_quadragesima_secunda, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "V indent selectio", _sectio_quadragesima_tertia, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "V dedent selectio", _sectio_quadragesima_quarta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "dd cut et p paste", _sectio_quadragesima_quinta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "P paste ante", _sectio_quadragesima_sexta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "u undo dd", _sectio_quadragesima_septima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "u undo p", _sectio_quadragesima_octava, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "V d cut multi", _sectio_quadragesima_nona, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "V d undo multi", _sectio_quinquagesima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "p paste multi", _sectio_quinquagesima_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "J jungere lineas", _sectio_quinquagesima_secunda, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "J per verba", _sectio_quinquagesima_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "backspace jungere per verba", _sectio_quinquagesima_quarta,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "yy copiare", _sectio_quinquagesima_quinta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "V y copiare multi", _sectio_quinquagesima_sexta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    credo_claudere();
-    piscina_destruere(piscina);
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("vim", SECTIONES, _suitam_parare,
+        _suitam_purgare);
 }

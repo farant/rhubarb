@@ -5,27 +5,18 @@
 #include "credo.h"
 #include <stdio.h>
 
-s32 principale(vacuum)
+
+/* ==================================================
+ * Probare utf8_longitudo_byte
+ * ================================================== */
+
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-    Piscina* piscina;
-        b32  praeteritus;
-
-    piscina = piscina_generare_dynamicum("test_utf8", IV * MXXIV);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-
-    /* ==================================================
-     * Probare utf8_longitudo_byte
-     * ================================================== */
+    (vacuum)c;
 
     {
-        imprimere("\n--- Probans utf8_longitudo_byte ---\n");
-
         /* ASCII (0xxxxxxx) -> 1 byte */
         CREDO_AEQUALIS_S32(utf8_longitudo_byte(0x00), I);
         CREDO_AEQUALIS_S32(utf8_longitudo_byte(0x41), I);  /* 'A' */
@@ -51,15 +42,20 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_S32(utf8_longitudo_byte(0xF8), ZEPHYRUM);
         CREDO_AEQUALIS_S32(utf8_longitudo_byte(0xFF), ZEPHYRUM);
     }
+}
 
 
-    /* ==================================================
-     * Probare utf8_est_continuatio
-     * ================================================== */
+/* ==================================================
+ * Probare utf8_est_continuatio
+ * ================================================== */
+
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    (vacuum)c;
 
     {
-        imprimere("\n--- Probans utf8_est_continuatio ---\n");
-
         /* Continuationes (10xxxxxx) */
         CREDO_VERUM(utf8_est_continuatio(0x80));
         CREDO_VERUM(utf8_est_continuatio(0xBF));
@@ -72,19 +68,24 @@ s32 principale(vacuum)
         CREDO_FALSUM(utf8_est_continuatio(0xE0));
         CREDO_FALSUM(utf8_est_continuatio(0xF0));
     }
+}
 
 
-    /* ==================================================
-     * Probare utf8_decodere - ASCII
-     * ================================================== */
+/* ==================================================
+ * Probare utf8_decodere - ASCII
+ * ================================================== */
+
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    (vacuum)c;
 
     {
         constans i8  ascii[]  = { 'H', 'e', 'l', 'l', 'o' };
         constans i8* ptr      = ascii;
         constans i8* finis    = ascii + V;
                 s32  runa;
-
-        imprimere("\n--- Probans utf8_decodere ASCII ---\n");
 
         runa = utf8_decodere(&ptr, finis);
         CREDO_AEQUALIS_S32(runa, 'H');
@@ -103,11 +104,18 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_S32(runa, 'o');
         CREDO_VERUM(ptr == finis);
     }
+}
 
 
-    /* ==================================================
-     * Probare utf8_decodere - 2 bytes (Latin-1 supplement)
-     * ================================================== */
+/* ==================================================
+ * Probare utf8_decodere - 2 bytes (Latin-1 supplement)
+ * ================================================== */
+
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    (vacuum)c;
 
     {
         /* U+00E9 = e-acutum = C3 A9 */
@@ -115,8 +123,6 @@ s32 principale(vacuum)
         constans i8* ptr         = e_acutum;
         constans i8* finis       = e_acutum + II;
                 s32  runa;
-
-        imprimere("\n--- Probans utf8_decodere 2-byte ---\n");
 
         runa = utf8_decodere(&ptr, finis);
         CREDO_AEQUALIS_S32(runa, 0x00E9);  /* e-acutum */
@@ -144,11 +150,18 @@ s32 principale(vacuum)
         runa = utf8_decodere(&ptr, finis);
         CREDO_AEQUALIS_S32(runa, 0x00FC);  /* u-umlaut */
     }
+}
 
 
-    /* ==================================================
-     * Probare utf8_decodere - 3 bytes
-     * ================================================== */
+/* ==================================================
+ * Probare utf8_decodere - 3 bytes
+ * ================================================== */
+
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    (vacuum)c;
 
     {
         /* U+03C0 = pi = CE A0 */
@@ -156,8 +169,6 @@ s32 principale(vacuum)
         constans i8* ptr    = pi;
         constans i8* finis  = pi + II;
                 s32  runa;
-
-        imprimere("\n--- Probans utf8_decodere 3-byte ---\n");
 
         runa = utf8_decodere(&ptr, finis);
         CREDO_AEQUALIS_S32(runa, 0x03A0);  /* Pi maiusculum */
@@ -195,11 +206,18 @@ s32 principale(vacuum)
         runa = utf8_decodere(&ptr, finis);
         CREDO_AEQUALIS_S32(runa, 0x2014);  /* em dash */
     }
+}
 
 
-    /* ==================================================
-     * Probare utf8_decodere - 4 bytes
-     * ================================================== */
+/* ==================================================
+ * Probare utf8_decodere - 4 bytes
+ * ================================================== */
+
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    (vacuum)c;
 
     {
         /* U+1F600 = grinning face = F0 9F 98 80 */
@@ -208,17 +226,22 @@ s32 principale(vacuum)
         constans i8* finis    = emoji + IV;
                 s32  runa;
 
-        imprimere("\n--- Probans utf8_decodere 4-byte ---\n");
-
         runa = utf8_decodere(&ptr, finis);
         CREDO_AEQUALIS_S32(runa, 0x1F600);  /* grinning face */
         CREDO_VERUM(ptr == finis);
     }
+}
 
 
-    /* ==================================================
-     * Probare utf8_decodere - Sequentiae invalidae
-     * ================================================== */
+/* ==================================================
+ * Probare utf8_decodere - Sequentiae invalidae
+ * ================================================== */
+
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    (vacuum)c;
 
     {
         /* Continuatio orphana */
@@ -226,8 +249,6 @@ s32 principale(vacuum)
         constans i8* ptr        = orphana;
         constans i8* finis      = orphana + I;
                 s32  runa;
-
-        imprimere("\n--- Probans utf8_decodere invalidae ---\n");
 
         runa = utf8_decodere(&ptr, finis);
         CREDO_AEQUALIS_S32(runa, -I);
@@ -277,11 +298,18 @@ s32 principale(vacuum)
         runa = utf8_decodere(&ptr, finis);
         CREDO_AEQUALIS_S32(runa, -I);
     }
+}
 
 
-    /* ==================================================
-     * Probare utf8_decodere - Buffer vacuus
-     * ================================================== */
+/* ==================================================
+ * Probare utf8_decodere - Buffer vacuus
+ * ================================================== */
+
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    (vacuum)c;
 
     {
         constans i8  datum[]  = { 'x' };
@@ -289,23 +317,26 @@ s32 principale(vacuum)
         constans i8* finis    = datum;  /* ptr == finis */
                 s32  runa;
 
-        imprimere("\n--- Probans utf8_decodere buffer vacuus ---\n");
-
         runa = utf8_decodere(&ptr, finis);
         CREDO_AEQUALIS_S32(runa, -I);
     }
+}
 
 
-    /* ==================================================
-     * Probare utf8_numerare_runas
-     * ================================================== */
+/* ==================================================
+ * Probare utf8_numerare_runas
+ * ================================================== */
+
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+    (vacuum)c;
 
     {
         /* ASCII solum */
         constans i8 ascii[] = { 'H', 'e', 'l', 'l', 'o' };
                 s32 numerus;
-
-        imprimere("\n--- Probans utf8_numerare_runas ---\n");
 
         numerus = utf8_numerare_runas(ascii, V);
         CREDO_AEQUALIS_S32(numerus, V);
@@ -336,18 +367,23 @@ s32 principale(vacuum)
         numerus = utf8_numerare_runas(NIHIL, ZEPHYRUM);
         CREDO_AEQUALIS_S32(numerus, ZEPHYRUM);
     }
+}
 
 
-    /* ==================================================
-     * Probare utf8_proxima_runa
-     * ================================================== */
+/* ==================================================
+ * Probare utf8_proxima_runa
+ * ================================================== */
+
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+    (vacuum)c;
 
     {
         constans i8 datum[]  = { 'A', 0xC3, 0xA9, 'B' };  /* A + e-acutum + B */
         constans i8* ptr     = datum;
         constans i8* finis   = datum + IV;
-
-        imprimere("\n--- Probans utf8_proxima_runa ---\n");
 
         /* A -> e-acutum */
         ptr = utf8_proxima_runa(ptr, finis);
@@ -361,18 +397,23 @@ s32 principale(vacuum)
         ptr = utf8_proxima_runa(ptr, finis);
         CREDO_VERUM(ptr == finis);
     }
+}
 
 
-    /* ==================================================
-     * Probare utf8_prior_runa
-     * ================================================== */
+/* ==================================================
+ * Probare utf8_prior_runa
+ * ================================================== */
+
+interior vacuum
+_sectio_decima_prima (
+    CredoContextus* c)
+{
+    (vacuum)c;
 
     {
         constans i8 datum[]   = { 'A', 0xC3, 0xA9, 'B' };  /* A + e-acutum + B */
         constans i8* ptr      = datum + IV;  /* Ad finem */
         constans i8* initium  = datum;
-
-        imprimere("\n--- Probans utf8_prior_runa ---\n");
 
         /* finis -> B */
         ptr = utf8_prior_runa(ptr, initium);
@@ -390,11 +431,18 @@ s32 principale(vacuum)
         ptr = utf8_prior_runa(ptr, initium);
         CREDO_VERUM(ptr == initium);
     }
+}
 
 
-    /* ==================================================
-     * Probare textum realem Gutenberg
-     * ================================================== */
+/* ==================================================
+ * Probare textum realem Gutenberg
+ * ================================================== */
+
+interior vacuum
+_sectio_decima_secunda (
+    CredoContextus* c)
+{
+    (vacuum)c;
 
     {
         /* Textus typicus cum smart quotes et dashes */
@@ -414,8 +462,6 @@ s32 principale(vacuum)
         constans i8* finis;
                 s32  runa;
 
-        imprimere("\n--- Probans textum Gutenberg ---\n");
-
         /* Numerare runas */
         numerus = utf8_numerare_runas(gutenberg,
             (s32)magnitudo(gutenberg));
@@ -433,17 +479,22 @@ s32 principale(vacuum)
         runa = utf8_decodere(&ptr, finis);
         CREDO_AEQUALIS_S32(runa, 'H');
     }
+}
 
 
-    /* ==================================================
-     * utf8_codere - par decodere (circuitus integer)
-     * ================================================== */
+/* ==================================================
+ * utf8_codere - par decodere (circuitus integer)
+ * ================================================== */
+
+interior vacuum
+_sectio_decima_tertia (
+    CredoContextus* c)
+{
+    (vacuum)c;
 
     {
                  i8  buffer[4];
         constans i8* ptr;
-
-        imprimere("\n--- Probans codere ---\n");
 
         /* 1 byte: ASCII */
         CREDO_AEQUALIS_S32(utf8_codere('A', buffer), 1);
@@ -485,26 +536,37 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_S32(utf8_codere(0x10000, buffer), 4);
         CREDO_AEQUALIS_S32(utf8_codere(0x10FFFF, buffer), 4);
     }
+}
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "utf8_longitudo_byte", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "utf8_est_continuatio", _sectio_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "utf8_decodere ASCII", _sectio_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "utf8_decodere 2-byte", _sectio_quarta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "utf8_decodere 3-byte", _sectio_quinta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "utf8_decodere 4-byte", _sectio_sexta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "utf8_decodere invalidae", _sectio_septima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "utf8_decodere buffer vacuus", _sectio_octava, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "utf8_numerare_runas", _sectio_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "utf8_proxima_runa", _sectio_decima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "utf8_prior_runa", _sectio_decima_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "textum Gutenberg", _sectio_decima_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "codere", _sectio_decima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    /* ==================================================
-     * Compendium
-     * ================================================== */
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-
-    credo_claudere();
-    piscina_destruere(piscina);
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("utf8", SECTIONES);
 }

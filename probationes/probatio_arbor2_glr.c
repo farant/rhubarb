@@ -543,73 +543,81 @@ _imprimere_arborem(Arbor2Nodus* nodus, i32 profunditas)
  * Tests
  * ================================================== */
 
-s32 principale(vacuum)
-{
-    Piscina* piscina;
-    InternamentumChorda* intern;
-    Arbor2Expansion* expansion;
-    Arbor2GLR* glr;
-    b32 praeteritus;
-
-    /* Aperire credo et piscina */
-    piscina = piscina_generare_dynamicum("probatio_arbor2_glr", 131072);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    intern = internamentum_creare(piscina);
-    credo_aperire(piscina);
-
-    /* Create expansion context (for macro lookahead) */
-    expansion = arbor2_expansion_creare(piscina, intern);
-
-    /* Create GLR parser */
-    glr = arbor2_glr_creare(piscina, intern, expansion);
-
-
     /* ========================================================
      * PROBARE: Table validation
      * ======================================================== */
-
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         b32 tabula_valida;
-        b32 tags_valida;
-        b32 reachability_valida;
-        b32 goto_valida;
-
-        imprimere("\n--- Probans table validation ---\n");
 
         tabula_valida = arbor2_glr_validare_tabulas();
         CREDO_AEQUALIS_I32((i32)tabula_valida, VERUM);
+    }
+}
 
-        imprimere("\n--- Probans tag validation ---\n");
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    {
+        b32 tags_valida;
 
         tags_valida = arbor2_glr_validare_tags();
         CREDO_AEQUALIS_I32((i32)tags_valida, VERUM);
+    }
+}
 
-        imprimere("\n--- Probans reachability ---\n");
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    {
+        b32 reachability_valida;
 
         reachability_valida = arbor2_glr_validare_reachability();
         CREDO_AEQUALIS_I32((i32)reachability_valida, VERUM);
+    }
+}
 
-        imprimere("\n--- Probans GOTO completeness ---\n");
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    {
+        b32 goto_valida;
 
         goto_valida = arbor2_glr_validare_goto_completeness();
         CREDO_VERUM(goto_valida);
         imprimere("  GOTO validation: %s\n", goto_valida ? "VERUM" : "FALSUM (issues above)");
     }
-
+}
 
     /* ========================================================
      * PROBARE: Simple identifier
      * ======================================================== */
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans simple identifier ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "foo");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -629,17 +637,27 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_IDENTIFICATOR);
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: Simple integer
      * ======================================================== */
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans simple integer ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "42");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -658,17 +676,27 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_INTEGER);
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: Binary addition
      * ======================================================== */
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans binary addition: 1 + 2 ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "1 + 2");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -689,20 +717,30 @@ s32 principale(vacuum)
                                (i32)ARBOR2_LEXEMA_PLUS);
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: Precedence - 1 + 2 * 3
      * Should parse as 1 + (2 * 3), not (1 + 2) * 3
      * ======================================================== */
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* radix;
         Arbor2Nodus* dexter;
-
-        imprimere("\n--- Probans precedence: 1 + 2 * 3 ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "1 + 2 * 3");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -739,17 +777,27 @@ s32 principale(vacuum)
             }
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: Parenthesized expression
      * ======================================================== */
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans parenthesized: (1 + 2) ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(1 + 2)");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -774,17 +822,27 @@ s32 principale(vacuum)
             }
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: Subtraction (E9)
      * ======================================================== */
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans subtraction: 5 - 3 ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "5 - 3");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -805,16 +863,27 @@ s32 principale(vacuum)
                                (i32)ARBOR2_LEXEMA_MINUS);
         }
     }
+}
 
     /* ========================================================
      * PROBARE: Division (E9)
      * ======================================================== */
+interior vacuum
+_sectio_decima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans division: 6 / 2 ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "6 / 2");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -835,16 +904,27 @@ s32 principale(vacuum)
                                (i32)ARBOR2_LEXEMA_SOLIDUS);
         }
     }
+}
 
     /* ========================================================
      * PROBARE: Modulo (E9)
      * ======================================================== */
+interior vacuum
+_sectio_decima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans modulo: 7 %% 3 ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "7 % 3");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -865,17 +945,28 @@ s32 principale(vacuum)
                                (i32)ARBOR2_LEXEMA_PERCENTUM);
         }
     }
+}
 
     /* ========================================================
      * PROBARE: Mixed precedence (E9)
      * 1 + 2 * 3 - 4 / 2 should parse as (1 + (2 * 3)) - (4 / 2)
      * ======================================================== */
+interior vacuum
+_sectio_decima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans mixed ops: 10 - 6 / 2 ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "10 - 6 / 2");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -905,17 +996,27 @@ s32 principale(vacuum)
             }
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: Comparison operator < (E9.2)
      * ======================================================== */
+interior vacuum
+_sectio_decima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans comparatio minor: 1 < 2 ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "1 < 2");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -936,16 +1037,27 @@ s32 principale(vacuum)
                                (i32)ARBOR2_LEXEMA_MINOR);
         }
     }
+}
 
     /* ========================================================
      * PROBARE: Comparison operator > (E9.2)
      * ======================================================== */
+interior vacuum
+_sectio_decima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans comparatio maior: 3 > 1 ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "3 > 1");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -966,16 +1078,27 @@ s32 principale(vacuum)
                                (i32)ARBOR2_LEXEMA_MAIOR);
         }
     }
+}
 
     /* ========================================================
      * PROBARE: Comparison operator <= (E9.2)
      * ======================================================== */
+interior vacuum
+_sectio_decima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans comparatio minor_aeq: 2 <= 3 ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "2 <= 3");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -996,16 +1119,27 @@ s32 principale(vacuum)
                                (i32)ARBOR2_LEXEMA_MINOR_AEQ);
         }
     }
+}
 
     /* ========================================================
      * PROBARE: Comparison operator >= (E9.2)
      * ======================================================== */
+interior vacuum
+_sectio_decima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans comparatio maior_aeq: 5 >= 4 ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "5 >= 4");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -1026,16 +1160,27 @@ s32 principale(vacuum)
                                (i32)ARBOR2_LEXEMA_MAIOR_AEQ);
         }
     }
+}
 
     /* ========================================================
      * PROBARE: Equality operator == (E9.2)
      * ======================================================== */
+interior vacuum
+_sectio_decima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans aequalitas: 1 == 1 ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "1 == 1");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -1056,16 +1201,27 @@ s32 principale(vacuum)
                                (i32)ARBOR2_LEXEMA_AEQUALIS);
         }
     }
+}
 
     /* ========================================================
      * PROBARE: Inequality operator != (E9.2)
      * ======================================================== */
+interior vacuum
+_sectio_decima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans non-aequalitas: 1 != 2 ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "1 != 2");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -1086,17 +1242,28 @@ s32 principale(vacuum)
                                (i32)ARBOR2_LEXEMA_NON_AEQUALIS);
         }
     }
+}
 
     /* ========================================================
      * PROBARE: Comparison with expressions: 1 + 2 < 3 + 4 (E9.2)
      * Should parse as (1 + 2) < (3 + 4)
      * ======================================================== */
+interior vacuum
+_sectio_vicesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans comparatio cum expressiis: 1 + 2 < 3 + 4 ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "1 + 2 < 3 + 4");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -1134,17 +1301,28 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* ========================================================
      * PROBARE: Equality with comparisons: 1 < 2 == 3 < 4 (E9.2)
      * Should parse as (1 < 2) == (3 < 4)
      * ======================================================== */
+interior vacuum
+_sectio_vicesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans aequalitas cum comparatiis: 1 < 2 == 3 < 4 ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "1 < 2 == 3 < 4");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -1182,17 +1360,28 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* ========================================================
      * PROBARE: Mixed precedence: 1 + 2 < 3 * 4 (E9.2)
      * Should parse as (1 + 2) < (3 * 4) - multiplication binds tighter
      * ======================================================== */
+interior vacuum
+_sectio_vicesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans praecedentia mixta: 1 + 2 < 3 * 4 ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "1 + 2 < 3 * 4");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -1230,16 +1419,27 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* ========================================================
      * PROBARE: Comparison inside parens: (1 < 2) (E9.2)
      * ======================================================== */
+interior vacuum
+_sectio_vicesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans comparatio in parens: (1 < 2) ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(1 < 2)");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -1265,16 +1465,27 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* ========================================================
      * PROBARE: Nested parens with comparison: ((1 < 2)) (E9.2)
      * ======================================================== */
+interior vacuum
+_sectio_vicesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans parens nidata: ((1 < 2)) ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "((1 < 2))");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -1306,17 +1517,28 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* ========================================================
      * PROBARE: Chained equality: 1 == 2 == 3 (E9.2)
      * Left-associative: ((1 == 2) == 3)
      * ======================================================== */
+interior vacuum
+_sectio_vicesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans aequalitas catena: 1 == 2 == 3 ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "1 == 2 == 3");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -1352,17 +1574,28 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* ========================================================
      * PROBARE: Chained comparison: 1 < 2 < 3 (E9.2)
      * Left-associative: ((1 < 2) < 3)
      * ======================================================== */
+interior vacuum
+_sectio_vicesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans comparatio catena: 1 < 2 < 3 ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "1 < 2 < 3");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -1392,17 +1625,28 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* ========================================================
      * PROBARE: Complex RHS: 1 < 2 * 3 + 4 (E9.2)
      * Precedence: 1 < ((2 * 3) + 4)
      * ======================================================== */
+interior vacuum
+_sectio_vicesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans RHS complexa: 1 < 2 * 3 + 4 ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "1 < 2 * 3 + 4");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -1438,16 +1682,27 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* ========================================================
      * PROBARE: Comparison in if statement (E9.2)
      * ======================================================== */
+interior vacuum
+_sectio_vicesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans comparatio in si: if (x < 10) y; ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "if (x < 10) y;");
         res = arbor2_glr_parsere(glr, tokens);
@@ -1474,16 +1729,27 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* ========================================================
      * PROBARE: Equality in while statement (E9.2)
      * ======================================================== */
+interior vacuum
+_sectio_vicesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans aequalitas in dum: while (a == b) x; ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "while (a == b) x;");
         res = arbor2_glr_parsere(glr, tokens);
@@ -1510,16 +1776,27 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* ========================================================
      * PROBARE: Comparison in for loop condition (E9.2)
      * ======================================================== */
+interior vacuum
+_sectio_tricesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans comparatio in per: for (; i < 10; ) x; ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "for (; i < 10; ) x;");
         res = arbor2_glr_parsere(glr, tokens);
@@ -1546,16 +1823,27 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* ========================================================
      * PROBARE: Left shift operator << (E9.3 - translatio)
      * ======================================================== */
+interior vacuum
+_sectio_tricesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans sinistrum shift: a << 2 ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "a << 2");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -1576,16 +1864,27 @@ s32 principale(vacuum)
                                (i32)ARBOR2_LEXEMA_SINISTRUM);
         }
     }
+}
 
     /* ========================================================
      * PROBARE: Right shift operator >> (E9.3 - translatio)
      * ======================================================== */
+interior vacuum
+_sectio_tricesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans dextrum shift: x >> 3 ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "x >> 3");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -1606,17 +1905,28 @@ s32 principale(vacuum)
                                (i32)ARBOR2_LEXEMA_DEXTRUM);
         }
     }
+}
 
     /* ========================================================
      * PROBARE: Chained shifts: a << b >> c (E9.3)
      * Should parse as (a << b) >> c (left associative)
      * ======================================================== */
+interior vacuum
+_sectio_tricesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans shift catena: a << b >> c ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "a << b >> c");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -1646,17 +1956,28 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* ========================================================
      * PROBARE: Shift with addition: (x + y) << 2 (E9.3)
      * Addition binds tighter, so x + y groups first
      * ======================================================== */
+interior vacuum
+_sectio_tricesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans shift cum additione: x + y << 2 ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "x + y << 2");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -1686,17 +2007,28 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* ========================================================
      * PROBARE: Comparison with shift: a < b << c (E9.3)
      * Shift binds tighter than comparison
      * ======================================================== */
+interior vacuum
+_sectio_tricesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans comparatio cum shift: a < b << c ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "a < b << c");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -1726,16 +2058,27 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* ========================================================
      * PROBARE: Logical AND operator && (E10)
      * ======================================================== */
+interior vacuum
+_sectio_tricesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans coniunctio: a && b ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "a && b");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -1756,16 +2099,27 @@ s32 principale(vacuum)
                                (i32)ARBOR2_LEXEMA_DUAMPERSAND);
         }
     }
+}
 
     /* ========================================================
      * PROBARE: Logical OR operator || (E10)
      * ======================================================== */
+interior vacuum
+_sectio_tricesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans disiunctio: a || b ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "a || b");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -1786,17 +2140,28 @@ s32 principale(vacuum)
                                (i32)ARBOR2_LEXEMA_DUPIPA);
         }
     }
+}
 
     /* ========================================================
      * PROBARE: && has higher precedence than || (E10)
      * a || b && c should parse as a || (b && c)
      * ======================================================== */
+interior vacuum
+_sectio_tricesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans praecedentia: a || b && c ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "a || b && c");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -1826,17 +2191,28 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* ========================================================
      * PROBARE: Chained && is left-associative (E10)
      * a && b && c should parse as (a && b) && c
      * ======================================================== */
+interior vacuum
+_sectio_tricesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans coniunctio catena: a && b && c ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "a && b && c");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -1866,17 +2242,28 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* ========================================================
      * PROBARE: Logical operators with comparisons (E10)
      * a == b && c < d should parse as (a == b) && (c < d)
      * ======================================================== */
+interior vacuum
+_sectio_quadragesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans logica cum comparatiis: a == b && c < d ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "a == b && c < d");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -1914,17 +2301,27 @@ s32 principale(vacuum)
             }
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: Unary dereference
      * ======================================================== */
+interior vacuum
+_sectio_quadragesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans unary dereference: *ptr ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "*ptr");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -1945,17 +2342,27 @@ s32 principale(vacuum)
                                (i32)ARBOR2_LEXEMA_ASTERISCUS);
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: Unary address-of
      * ======================================================== */
+interior vacuum
+_sectio_quadragesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans unary address-of: &x ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "&x");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -1976,17 +2383,27 @@ s32 principale(vacuum)
                                (i32)ARBOR2_LEXEMA_AMPERSAND);
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: Typedef detection API
      * ======================================================== */
+interior vacuum
+_sectio_quadragesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2Token* tok;
-
-        imprimere("\n--- Probans typedef detection API ---\n");
 
         /* Register a typedef */
         arbor2_expansion_addere_typedef(expansion, "MyType");
@@ -2009,18 +2426,28 @@ s32 principale(vacuum)
 
         CREDO_AEQUALIS_I32((i32)arbor2_glr_est_probabiliter_typus(glr, tok), FALSUM);
     }
-
+}
 
     /* ========================================================
      * PROBARE: foo * bar (ambiguous - could be expr or decl)
      * With no typedef info, should produce AMBIGUUS node
      * ======================================================== */
+interior vacuum
+_sectio_quadragesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans foo * bar (ambiguus) ---\n");
 
         /* Reset statistics */
         glr->num_furcae = ZEPHYRUM;
@@ -2057,17 +2484,28 @@ s32 principale(vacuum)
 
         imprimere("  ambigui: %d\n", xar_numerus(res.ambigui));
     }
-
+}
 
     /* ========================================================
      * PROBARE: MyType * ptr (typedef -> declaration only)
      * ======================================================== */
+interior vacuum
+_sectio_quadragesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
+    arbor2_expansion_addere_typedef(expansion, "MyType");
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans MyType * ptr (typedef pruning) ---\n");
 
         /* MyType was already registered as typedef in earlier test */
         /* Reset statistics */
@@ -2096,17 +2534,28 @@ s32 principale(vacuum)
         imprimere("  furcae: %d\n", glr->num_furcae);
         CREDO_AEQUALIS_I32((i32)glr->num_furcae, ZEPHYRUM);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Function declarator: MyType * fn()
      * ======================================================== */
+interior vacuum
+_sectio_quadragesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
+    arbor2_expansion_addere_typedef(expansion, "MyType");
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans function declarator: MyType * fn() ---\n");
 
         /* Reset statistics */
         glr->num_furcae = ZEPHYRUM;
@@ -2141,17 +2590,28 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Function declarator with void: MyType * fn(void)
      * ======================================================== */
+interior vacuum
+_sectio_quadragesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
+    arbor2_expansion_addere_typedef(expansion, "MyType");
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans function declarator: MyType * fn(void) ---\n");
 
         /* Reset statistics */
         glr->num_furcae = ZEPHYRUM;
@@ -2186,16 +2646,28 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
+}
 
     /* ========================================================
      * PROBARE: Single parameter: MyType * fn(int x)
      * ======================================================== */
+interior vacuum
+_sectio_quadragesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
+    arbor2_expansion_addere_typedef(expansion, "MyType");
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans single param: MyType * fn(int x) ---\n");
 
         /* Reset statistics */
         glr->num_furcae = ZEPHYRUM;
@@ -2234,16 +2706,28 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
+}
 
     /* ========================================================
      * PROBARE: Multiple params: MyType * fn(int x, int y)
      * ======================================================== */
+interior vacuum
+_sectio_quadragesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
+    arbor2_expansion_addere_typedef(expansion, "MyType");
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans multi param: MyType * fn(int x, int y) ---\n");
 
         /* Reset statistics */
         glr->num_furcae = ZEPHYRUM;
@@ -2281,16 +2765,28 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
+}
 
     /* ========================================================
      * PROBARE: Pointer param: MyType * fn(int *ptr)
      * ======================================================== */
+interior vacuum
+_sectio_quinquagesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
+    arbor2_expansion_addere_typedef(expansion, "MyType");
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans pointer param: MyType * fn(int *ptr) ---\n");
 
         /* Reset statistics */
         glr->num_furcae = ZEPHYRUM;
@@ -2337,17 +2833,27 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Expression statement: x + 1;
      * ======================================================== */
+interior vacuum
+_sectio_quinquagesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans expression statement: x + 1; ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "x + 1;");
         res = arbor2_glr_parsere(glr, tokens);
@@ -2373,17 +2879,27 @@ s32 principale(vacuum)
             }
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: Empty statement: ;
      * ======================================================== */
+interior vacuum
+_sectio_quinquagesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans empty statement: ; ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, ";");
         res = arbor2_glr_parsere(glr, tokens);
@@ -2402,17 +2918,27 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SENTENTIA_VACUA);
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: Simple statement: 42;
      * ======================================================== */
+interior vacuum
+_sectio_quinquagesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans simple statement: 42; ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "42;");
         res = arbor2_glr_parsere(glr, tokens);
@@ -2436,17 +2962,27 @@ s32 principale(vacuum)
             }
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: Empty compound statement: { }
      * ======================================================== */
+interior vacuum
+_sectio_quinquagesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans empty compound: { } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "{ }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -2471,17 +3007,27 @@ s32 principale(vacuum)
             }
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: Compound with one statement: { x; }
      * ======================================================== */
+interior vacuum
+_sectio_quinquagesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans compound with one stmt: { x; } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "{ x; }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -2505,17 +3051,27 @@ s32 principale(vacuum)
             }
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: Compound with multiple statements: { x; y + 1; }
      * ======================================================== */
+interior vacuum
+_sectio_quinquagesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans compound multi stmt: { x; y + 1; } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "{ x; y + 1; }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -2539,18 +3095,28 @@ s32 principale(vacuum)
             }
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: Nested compound: { { x; } }
      * ======================================================== */
+interior vacuum
+_sectio_quinquagesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* inner;
-
-        imprimere("\n--- Probans nested compound: { { x; } } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "{ { x; } }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -2584,17 +3150,27 @@ s32 principale(vacuum)
             }
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: Simple if statement: if (x) y;
      * ======================================================== */
+interior vacuum
+_sectio_quinquagesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans simple if: if (x) y; ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "if (x) y;");
         res = arbor2_glr_parsere(glr, tokens);
@@ -2617,17 +3193,27 @@ s32 principale(vacuum)
             CREDO_NIHIL(res.radix->datum.conditionale.alternans);
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: If-else statement: if (x) y; else z;
      * ======================================================== */
+interior vacuum
+_sectio_quinquagesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans if-else: if (x) y; else z; ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "if (x) y; else z;");
         res = arbor2_glr_parsere(glr, tokens);
@@ -2650,17 +3236,27 @@ s32 principale(vacuum)
             CREDO_NON_NIHIL(res.radix->datum.conditionale.alternans);
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: If with compound body: if (x) { y; }
      * ======================================================== */
+interior vacuum
+_sectio_sexagesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans if with compound: if (x) { y; } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "if (x) { y; }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -2685,18 +3281,28 @@ s32 principale(vacuum)
             }
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: Subscript in if condition: if (arr[0]) x;
      * Tests state 31 GOTO(POSTFIXUM)
      * ======================================================== */
+interior vacuum
+_sectio_sexagesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans subscript in if condition: if (arr[0]) x; ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "if (arr[0]) x;");
         res = arbor2_glr_parsere(glr, tokens);
@@ -2710,17 +3316,28 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SI);
         }
     }
+}
 
     /* ========================================================
      * PROBARE: Assignment inside if condition: if (x = 1) y;
      * Common C idiom - assignment in condition
      * ======================================================== */
+interior vacuum
+_sectio_sexagesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans assignment in if condition: if (x = 1) y; ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "if (x = 1) y;");
         res = arbor2_glr_parsere(glr, tokens);
@@ -2747,18 +3364,28 @@ s32 principale(vacuum)
             }
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: Assignment inside while condition: while (x = 1) y;
      * Common C idiom - assignment in condition
      * ======================================================== */
+interior vacuum
+_sectio_sexagesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans assignment in while condition: while (x = 1) y; ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "while (x = 1) y;");
         res = arbor2_glr_parsere(glr, tokens);
@@ -2785,18 +3412,28 @@ s32 principale(vacuum)
             }
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: Assignment in for-init: for (a = 1; b; c) d;
      * Common C idiom - assignment in for loop init
      * ======================================================== */
+interior vacuum
+_sectio_sexagesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans assignment in for-init: for (a = 1; b; c) d; ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "for (a = 1; b; c) d;");
         res = arbor2_glr_parsere(glr, tokens);
@@ -2815,18 +3452,28 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_PER);
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: Assignment in do-while: do x; while (a = 1);
      * Common C idiom - assignment in do-while condition
      * ======================================================== */
+interior vacuum
+_sectio_sexagesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans assignment in do-while: do x; while (a = 1); ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "do x; while (a = 1);");
         res = arbor2_glr_parsere(glr, tokens);
@@ -2845,18 +3492,28 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_FAC);
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: Assignment in switch: switch (a = 1) { }
      * Less common but valid C
      * ======================================================== */
+interior vacuum
+_sectio_sexagesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans assignment in switch: switch (a = 1) { } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "switch (a = 1) { }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -2871,19 +3528,29 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
         CREDO_NON_NIHIL(res.radix);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Dangling else: if (a) if (b) c; else d;
      * else should bind to inner if (b), not outer if (a)
      * ======================================================== */
+interior vacuum
+_sectio_sexagesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* inner_if;
-
-        imprimere("\n--- Probans dangling else: if (a) if (b) c; else d; ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "if (a) if (b) c; else d;");
         res = arbor2_glr_parsere(glr, tokens);
@@ -2913,17 +3580,27 @@ s32 principale(vacuum)
             }
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: Simple while statement: while (x) y;
      * ======================================================== */
+interior vacuum
+_sectio_sexagesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans simple while: while (x) y; ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "while (x) y;");
         res = arbor2_glr_parsere(glr, tokens);
@@ -2945,17 +3622,27 @@ s32 principale(vacuum)
             CREDO_NON_NIHIL(res.radix->datum.iteratio.corpus);
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: While with compound body: while (x) { a; b; }
      * ======================================================== */
+interior vacuum
+_sectio_sexagesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans while with compound: while (x) { a; b; } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "while (x) { a; b; }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -2980,17 +3667,27 @@ s32 principale(vacuum)
             }
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: Simple do-while statement: do x; while (y);
      * ======================================================== */
+interior vacuum
+_sectio_septuagesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans simple do-while: do x; while (y); ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "do x; while (y);");
         res = arbor2_glr_parsere(glr, tokens);
@@ -3012,17 +3709,27 @@ s32 principale(vacuum)
             CREDO_NON_NIHIL(res.radix->datum.iteratio.conditio);
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: Do-while with compound body: do { a; b; } while (c);
      * ======================================================== */
+interior vacuum
+_sectio_septuagesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans do-while with compound: do { a; b; } while (c); ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "do { a; b; } while (c);");
         res = arbor2_glr_parsere(glr, tokens);
@@ -3047,18 +3754,28 @@ s32 principale(vacuum)
             }
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: Nested while: while (a) while (b) c;
      * ======================================================== */
+interior vacuum
+_sectio_septuagesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* inner_while;
-
-        imprimere("\n--- Probans nested while: while (a) while (b) c; ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "while (a) while (b) c;");
         res = arbor2_glr_parsere(glr, tokens);
@@ -3086,17 +3803,27 @@ s32 principale(vacuum)
             }
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: Simple for with all expressions: for (i; c; n) x;
      * ======================================================== */
+interior vacuum
+_sectio_septuagesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans simple for: for (i; c; n) x; ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "for (i; c; n) x;");
         res = arbor2_glr_parsere(glr, tokens);
@@ -3120,17 +3847,27 @@ s32 principale(vacuum)
             CREDO_NON_NIHIL(res.radix->datum.circuitus.corpus);
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: For with empty init: for (; c; n) x;
      * ======================================================== */
+interior vacuum
+_sectio_septuagesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans for empty init: for (; c; n) x; ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "for (; c; n) x;");
         res = arbor2_glr_parsere(glr, tokens);
@@ -3154,17 +3891,27 @@ s32 principale(vacuum)
             CREDO_NON_NIHIL(res.radix->datum.circuitus.corpus);
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: For with empty condition: for (i; ; n) x;
      * ======================================================== */
+interior vacuum
+_sectio_septuagesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans for empty condition: for (i; ; n) x; ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "for (i; ; n) x;");
         res = arbor2_glr_parsere(glr, tokens);
@@ -3188,17 +3935,27 @@ s32 principale(vacuum)
             CREDO_NON_NIHIL(res.radix->datum.circuitus.corpus);
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: For with empty increment: for (i; c; ) x;
      * ======================================================== */
+interior vacuum
+_sectio_septuagesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans for empty increment: for (i; c; ) x; ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "for (i; c; ) x;");
         res = arbor2_glr_parsere(glr, tokens);
@@ -3222,17 +3979,27 @@ s32 principale(vacuum)
             CREDO_NON_NIHIL(res.radix->datum.circuitus.corpus);
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: For with all empty (infinite loop): for (;;) x;
      * ======================================================== */
+interior vacuum
+_sectio_septuagesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans for all empty: for (;;) x; ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "for (;;) x;");
         res = arbor2_glr_parsere(glr, tokens);
@@ -3257,17 +4024,27 @@ s32 principale(vacuum)
             CREDO_NON_NIHIL(res.radix->datum.circuitus.corpus);
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: For with compound body: for (i; c; n) { a; b; }
      * ======================================================== */
+interior vacuum
+_sectio_septuagesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans for with compound: for (i; c; n) { a; b; } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "for (i; c; n) { a; b; }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -3292,18 +4069,28 @@ s32 principale(vacuum)
             }
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: Nested for: for (;;) for (;;) x;
      * ======================================================== */
+interior vacuum
+_sectio_septuagesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* inner_for;
-
-        imprimere("\n--- Probans nested for: for (;;) for (;;) x; ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "for (;;) for (;;) x;");
         res = arbor2_glr_parsere(glr, tokens);
@@ -3331,17 +4118,27 @@ s32 principale(vacuum)
             }
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: break statement
      * ======================================================== */
+interior vacuum
+_sectio_octogesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans break statement ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "break;");
         res = arbor2_glr_parsere(glr, tokens);
@@ -3360,17 +4157,27 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_FRANGE);
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: continue statement
      * ======================================================== */
+interior vacuum
+_sectio_octogesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans continue statement ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "continue;");
         res = arbor2_glr_parsere(glr, tokens);
@@ -3389,17 +4196,27 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_PERGE);
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: return statement without value
      * ======================================================== */
+interior vacuum
+_sectio_octogesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans return without value ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "return;");
         res = arbor2_glr_parsere(glr, tokens);
@@ -3419,17 +4236,27 @@ s32 principale(vacuum)
             CREDO_NIHIL(res.radix->datum.reditio.valor);  /* No return value */
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: return statement with value
      * ======================================================== */
+interior vacuum
+_sectio_octogesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans return with value ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "return x;");
         res = arbor2_glr_parsere(glr, tokens);
@@ -3449,17 +4276,27 @@ s32 principale(vacuum)
             CREDO_NON_NIHIL(res.radix->datum.reditio.valor);  /* Has return value */
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: goto statement
      * ======================================================== */
+interior vacuum
+_sectio_octogesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans goto statement ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "goto label;");
         res = arbor2_glr_parsere(glr, tokens);
@@ -3478,17 +4315,27 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SALTA);
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: break inside while loop
      * ======================================================== */
+interior vacuum
+_sectio_octogesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans break inside while ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "while (x) break;");
         res = arbor2_glr_parsere(glr, tokens);
@@ -3512,18 +4359,28 @@ s32 principale(vacuum)
             }
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: return with expression in compound
      * ======================================================== */
+interior vacuum
+_sectio_octogesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Xar* sententiae;
-
-        imprimere("\n--- Probans return in compound ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "{ return x + 1; }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -3550,17 +4407,28 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* ========================================================
      * PROBARE: Labeled statements (Phase C4b)
      * ======================================================== */
-
     /* Simple label */
+interior vacuum
+_sectio_octogesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans simple label: foo: x; ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "foo: x;");
         res = arbor2_glr_parsere(glr, tokens);
@@ -3580,13 +4448,25 @@ s32 principale(vacuum)
             CREDO_NON_NIHIL(res.radix->datum.titulatum.sententia);
         }
     }
+}
 
     /* Label with empty statement */
+interior vacuum
+_sectio_octogesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans label with empty: foo: ; ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "foo: ;");
         res = arbor2_glr_parsere(glr, tokens);
@@ -3606,13 +4486,25 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->datum.titulatum.sententia->genus, (i32)ARBOR2_NODUS_SENTENTIA_VACUA);
         }
     }
+}
 
     /* Nested labels */
+interior vacuum
+_sectio_octogesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans nested labels: foo: bar: x; ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "foo: bar: x;");
         res = arbor2_glr_parsere(glr, tokens);
@@ -3633,13 +4525,25 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->datum.titulatum.sententia->genus, (i32)ARBOR2_NODUS_TITULATUM);
         }
     }
+}
 
     /* Label with compound */
+interior vacuum
+_sectio_nonagesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans label with compound: foo: { x; } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "foo: { x; }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -3659,13 +4563,25 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->datum.titulatum.sententia->genus, (i32)ARBOR2_NODUS_CORPUS);
         }
     }
+}
 
     /* Label with if */
+interior vacuum
+_sectio_nonagesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans label with if: foo: if (x) y; ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "foo: if (x) y;");
         res = arbor2_glr_parsere(glr, tokens);
@@ -3685,14 +4601,26 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->datum.titulatum.sententia->genus, (i32)ARBOR2_NODUS_SI);
         }
     }
+}
 
     /* Label as goto target in compound */
+interior vacuum
+_sectio_nonagesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Xar* sententiae;
-
-        imprimere("\n--- Probans label as goto target: { goto foo; foo: x; } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "{ goto foo; foo: x; }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -3720,18 +4648,28 @@ s32 principale(vacuum)
             }
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: Switch/case/default statements (Phase C4c)
      * ======================================================== */
-
     /* Simple switch with one case */
+interior vacuum
+_sectio_nonagesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans switch with case: switch (x) { case 1: y; } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "switch (x) { case 1: y; }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -3750,13 +4688,25 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_COMMUTATIO);
         }
     }
+}
 
     /* Switch with default */
+interior vacuum
+_sectio_nonagesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans switch with default: switch (x) { default: y; } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "switch (x) { default: y; }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -3775,13 +4725,25 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_COMMUTATIO);
         }
     }
+}
 
     /* Switch with case and break */
+interior vacuum
+_sectio_nonagesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans switch case break: switch (x) { case 1: break; } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "switch (x) { case 1: break; }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -3796,13 +4758,25 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
         CREDO_NON_NIHIL(res.radix);
     }
+}
 
     /* Multiple cases (fall-through) */
+interior vacuum
+_sectio_nonagesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans fall-through: switch (x) { case 1: case 2: y; } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "switch (x) { case 1: case 2: y; }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -3817,13 +4791,25 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
         CREDO_NON_NIHIL(res.radix);
     }
+}
 
     /* Case with expression */
+interior vacuum
+_sectio_nonagesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans case expr: switch (x) { case 1 + 2: y; } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "switch (x) { case 1 + 2: y; }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -3838,17 +4824,28 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
         CREDO_NON_NIHIL(res.radix);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Function definition: MyType fn(void) { }
      * ======================================================== */
+interior vacuum
+_sectio_nonagesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
+    arbor2_expansion_addere_typedef(expansion, "MyType");
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans function definition: MyType fn(void) { } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "MyType fn(void) { }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -3882,17 +4879,28 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Function definition with body: MyType fn(void) { return x; }
      * ======================================================== */
+interior vacuum
+_sectio_nonagesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
+    arbor2_expansion_addere_typedef(expansion, "MyType");
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans function definition: MyType fn(void) { return x; } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "MyType fn(void) { return x; }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -3922,17 +4930,28 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Function with params: MyType foo(int x, int y) { return x; }
      * ======================================================== */
+interior vacuum
+_sectio_centesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
+    arbor2_expansion_addere_typedef(expansion, "MyType");
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans function: MyType foo(int x, int y) { return x; } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "MyType foo(int x, int y) { return x; }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -3967,17 +4986,28 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Pointer return type: MyType * bar(void) { }
      * ======================================================== */
+interior vacuum
+_sectio_centesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
+    arbor2_expansion_addere_typedef(expansion, "MyType");
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans pointer return: MyType * bar(void) { } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "MyType * bar(void) { }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -4008,17 +5038,27 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Qualified return type: const int f() { } (P505)
      * ======================================================== */
+interior vacuum
+_sectio_centesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans qualified return: const int f() { } (P505) ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "const int f() { }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -4053,17 +5093,27 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Qualified return type: volatile int g() { } (P506)
      * ======================================================== */
+interior vacuum
+_sectio_centesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans qualified return: volatile int g() { } (P506) ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "volatile int g() { }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -4098,17 +5148,27 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Basic function: void f() { } - verify tok_const/tok_volatile are NIHIL
      * ======================================================== */
+interior vacuum
+_sectio_centesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans basic return: void f() { } (no qualifier) ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "void f() { }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -4134,17 +5194,27 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Qualified return with char: const char h() { }
      * ======================================================== */
+interior vacuum
+_sectio_centesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans qualified return: const char h() { } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "const char h() { }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -4168,19 +5238,29 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
-
+}
 
     /* ================================================================
      * COMPOUND RETURN TYPE TESTS
      * These test function definitions with compound type specifiers.
      * ================================================================ */
-
     /* Test function with unsigned int return type */
+interior vacuum
+_sectio_centesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans compound return: unsigned int f() { } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "unsigned int f() { }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -4194,13 +5274,25 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DEFINITIO_FUNCTI);
         }
     }
+}
 
     /* Test function with long int return type */
+interior vacuum
+_sectio_centesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans compound return: long int g() { } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "long int g() { }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -4214,13 +5306,25 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DEFINITIO_FUNCTI);
         }
     }
+}
 
     /* Test function with short int return type */
+interior vacuum
+_sectio_centesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans compound return: short int h() { } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "short int h() { }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -4234,13 +5338,25 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DEFINITIO_FUNCTI);
         }
     }
+}
 
     /* Test function with signed int return type */
+interior vacuum
+_sectio_centesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans compound return: signed int s() { } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "signed int s() { }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -4254,13 +5370,25 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DEFINITIO_FUNCTI);
         }
     }
+}
 
     /* Test function with unsigned long return type */
+interior vacuum
+_sectio_centesima_decima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans compound return: unsigned long l() { } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "unsigned long l() { }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -4274,13 +5402,25 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DEFINITIO_FUNCTI);
         }
     }
+}
 
     /* Test function with unsigned return type (implicit int) */
+interior vacuum
+_sectio_centesima_decima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans compound return: unsigned u() { } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "unsigned u() { }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -4294,18 +5434,28 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DEFINITIO_FUNCTI);
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: Struct specifier tests
      * ======================================================== */
-
     /* Test forward reference: struct foo x */
+interior vacuum
+_sectio_centesima_decima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans struct forward ref: struct foo x ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "struct foo x");
         res = arbor2_glr_parsere(glr, tokens);
@@ -4336,13 +5486,25 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
+}
 
     /* Test named struct with single member: struct foo { int x; } */
+interior vacuum
+_sectio_centesima_decima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans struct named: struct foo { int x; } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "struct foo { int x; }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -4369,13 +5531,25 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
+}
 
     /* Test named struct with multiple members */
+interior vacuum
+_sectio_centesima_decima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans struct multi-member: struct foo { int x; int y; } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "struct foo { int x; int y; }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -4400,18 +5574,29 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
+}
 
     /* ================================================================
      * PROBARE: Struct members with various type specifiers
      * These test that all C89 type specifiers work in struct members.
      * ================================================================ */
-
     /* Test struct with float member: struct foo { float f; } */
+interior vacuum
+_sectio_centesima_decima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans struct float member: struct foo { float f; } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "struct foo { float f; }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -4429,13 +5614,25 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Test struct with double member: struct foo { double d; } */
+interior vacuum
+_sectio_centesima_decima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans struct double member: struct foo { double d; } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "struct foo { double d; }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -4445,13 +5642,25 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
         CREDO_NON_NIHIL(res.radix);
     }
+}
 
     /* Test struct with short member: struct foo { short s; } */
+interior vacuum
+_sectio_centesima_decima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans struct short member: struct foo { short s; } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "struct foo { short s; }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -4461,13 +5670,25 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
         CREDO_NON_NIHIL(res.radix);
     }
+}
 
     /* Test struct with long member: struct foo { long l; } */
+interior vacuum
+_sectio_centesima_decima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans struct long member: struct foo { long l; } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "struct foo { long l; }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -4477,13 +5698,25 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
         CREDO_NON_NIHIL(res.radix);
     }
+}
 
     /* Test struct with unsigned member: struct foo { unsigned u; } */
+interior vacuum
+_sectio_centesima_decima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans struct unsigned member: struct foo { unsigned u; } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "struct foo { unsigned u; }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -4493,13 +5726,25 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
         CREDO_NON_NIHIL(res.radix);
     }
+}
 
     /* Test struct with signed member: struct foo { signed s; } */
+interior vacuum
+_sectio_centesima_vicesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans struct signed member: struct foo { signed s; } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "struct foo { signed s; }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -4509,13 +5754,25 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
         CREDO_NON_NIHIL(res.radix);
     }
+}
 
     /* Test struct with mixed type members: struct foo { int x; float f; } */
+interior vacuum
+_sectio_centesima_vicesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans struct mixed members: struct foo { int x; float f; } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "struct foo { int x; float f; }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -4533,18 +5790,29 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* ================================================================
      * COMPOUND TYPE SPECIFIER TESTS
      * These test multi-token type specifiers in struct members.
      * ================================================================ */
-
     /* Test struct with unsigned int member */
+interior vacuum
+_sectio_centesima_vicesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans struct unsigned int: struct foo { unsigned int x; } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "struct foo { unsigned int x; }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -4552,13 +5820,25 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
         CREDO_NON_NIHIL(res.radix);
     }
+}
 
     /* Test struct with long int member */
+interior vacuum
+_sectio_centesima_vicesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans struct long int: struct foo { long int x; } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "struct foo { long int x; }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -4566,13 +5846,25 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
         CREDO_NON_NIHIL(res.radix);
     }
+}
 
     /* Test struct with const int member */
+interior vacuum
+_sectio_centesima_vicesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans struct const int: struct foo { const int x; } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "struct foo { const int x; }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -4580,13 +5872,25 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
         CREDO_NON_NIHIL(res.radix);
     }
+}
 
     /* Test struct with unsigned long member */
+interior vacuum
+_sectio_centesima_vicesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans struct unsigned long: struct foo { unsigned long x; } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "struct foo { unsigned long x; }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -4594,13 +5898,25 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
         CREDO_NON_NIHIL(res.radix);
     }
+}
 
     /* Test struct variable declaration: struct foo { int x; } var */
+interior vacuum
+_sectio_centesima_vicesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans struct var decl: struct foo { int x; } var ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "struct foo { int x; } var");
         res = arbor2_glr_parsere(glr, tokens);
@@ -4628,18 +5944,28 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Bit fields (E4)
      * ======================================================== */
-
     /* Test single named bit field: struct foo { int x : 3; } */
+interior vacuum
+_sectio_centesima_vicesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans bit field: struct foo { int x : 3; } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "struct foo { int x : 3; }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -4678,13 +6004,25 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
+}
 
     /* Test multiple bit fields: struct foo { int x : 3; int y : 5; } */
+interior vacuum
+_sectio_centesima_vicesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans bit fields: struct foo { int x : 3; int y : 5; } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "struct foo { int x : 3; int y : 5; }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -4710,13 +6048,25 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
+}
 
     /* Test anonymous bit field: struct foo { int : 4; } */
+interior vacuum
+_sectio_centesima_vicesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans anonymous bit field: struct foo { int : 4; } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "struct foo { int : 4; }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -4756,13 +6106,25 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
+}
 
     /* Test mixed named and anonymous: struct foo { int x : 3; int : 0; int y : 5; } */
+interior vacuum
+_sectio_centesima_tricesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans mixed bit fields: struct foo { int x : 3; int : 0; int y : 5; } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "struct foo { int x : 3; int : 0; int y : 5; }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -4787,13 +6149,25 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
+}
 
     /* Test expression bit width: struct foo { int x : 1 + 2; } */
+interior vacuum
+_sectio_centesima_tricesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans expression bit field: struct foo { int x : 1 + 2; } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "struct foo { int x : 1 + 2; }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -4834,13 +6208,25 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
+}
 
     /* Test bit field in union: union foo { int x : 3; } */
+interior vacuum
+_sectio_centesima_tricesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans bit field in union: union foo { int x : 3; } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "union foo { int x : 3; }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -4866,18 +6252,28 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Union specifier
      * ======================================================== */
-
     /* Test union forward reference: union foo */
+interior vacuum
+_sectio_centesima_tricesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans union forward ref: union foo ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "union foo");
         res = arbor2_glr_parsere(glr, tokens);
@@ -4902,13 +6298,25 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
+}
 
     /* Test named union with single member: union foo { int x; } */
+interior vacuum
+_sectio_centesima_tricesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans union named: union foo { int x; } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "union foo { int x; }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -4931,13 +6339,25 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
+}
 
     /* Test named union with multiple members: union foo { int x; int y; } */
+interior vacuum
+_sectio_centesima_tricesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans union multi-member: union foo { int x; int y; } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "union foo { int x; int y; }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -4958,13 +6378,25 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
+}
 
     /* Test anonymous union: union { int x; } anon */
+interior vacuum
+_sectio_centesima_tricesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans union anon: union { int x; } anon ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "union { int x; } anon");
         res = arbor2_glr_parsere(glr, tokens);
@@ -4987,18 +6419,28 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Enum specifier (E3)
      * ======================================================== */
-
     /* Test enum forward reference: enum foo */
+interior vacuum
+_sectio_centesima_tricesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans enum forward ref: enum foo ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "enum foo");
         res = arbor2_glr_parsere(glr, tokens);
@@ -5017,13 +6459,25 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
+}
 
     /* Test anonymous enum: enum { A, B, C } */
+interior vacuum
+_sectio_centesima_tricesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans enum anon: enum { A, B, C } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "enum { A, B, C }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -5047,13 +6501,25 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
+}
 
     /* Test named enum: enum foo { A, B, C } */
+interior vacuum
+_sectio_centesima_tricesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans enum named: enum foo { A, B, C } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "enum foo { A, B, C }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -5077,13 +6543,25 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
+}
 
     /* Test enum with values: enum foo { A = 1, B, C = 10 } */
+interior vacuum
+_sectio_centesima_quadragesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans enum with values: enum foo { A = 1, B, C = 10 } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "enum foo { A = 1, B, C = 10 }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -5132,13 +6610,25 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
+}
 
     /* Test enum as type in declaration: enum foo x */
+interior vacuum
+_sectio_centesima_quadragesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans enum decl: enum foo x ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "enum foo x");
         res = arbor2_glr_parsere(glr, tokens);
@@ -5162,13 +6652,25 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
+}
 
     /* Test enum with expression value: enum { A = 1 + 2 } */
+interior vacuum
+_sectio_centesima_quadragesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans enum expr value: enum { A = 1 + 2 } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "enum { A = 1 + 2 }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -5206,13 +6708,25 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
+}
 
     /* Test enum with unary minus: enum { A = -1 } */
+interior vacuum
+_sectio_centesima_quadragesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans enum unary minus: enum { A = -1 } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "enum { A = -1 }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -5226,13 +6740,25 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_ENUM_SPECIFIER);
         }
     }
+}
 
     /* Test enum with unary plus: enum { A = +1 } */
+interior vacuum
+_sectio_centesima_quadragesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans enum unary plus: enum { A = +1 } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "enum { A = +1 }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -5246,13 +6772,25 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_ENUM_SPECIFIER);
         }
     }
+}
 
     /* Test enum with bitwise NOT: enum { A = ~0 } */
+interior vacuum
+_sectio_centesima_quadragesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans enum bitwise NOT: enum { A = ~0 } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "enum { A = ~0 }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -5266,13 +6804,25 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_ENUM_SPECIFIER);
         }
     }
+}
 
     /* Test enum with logical NOT: enum { A = !0 } */
+interior vacuum
+_sectio_centesima_quadragesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans enum logical NOT: enum { A = !0 } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "enum { A = !0 }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -5286,13 +6836,25 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_ENUM_SPECIFIER);
         }
     }
+}
 
     /* Test enum with sizeof: enum { A = sizeof(int) } */
+interior vacuum
+_sectio_centesima_quadragesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans enum sizeof: enum { A = sizeof(int) } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "enum { A = sizeof(int) }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -5306,13 +6868,25 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_ENUM_SPECIFIER);
         }
     }
+}
 
     /* Test enum with char literal: enum { A = 'X' } */
+interior vacuum
+_sectio_centesima_quadragesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans enum char literal: enum { A = 'X' } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "enum { A = 'X' }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -5326,13 +6900,25 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_ENUM_SPECIFIER);
         }
     }
+}
 
     /* Test enum with subsequent enumerator using new expressions: enum { A, B = ~1, C = -2 } */
+interior vacuum
+_sectio_centesima_quadragesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans enum subsequent expr: enum { A, B = ~1, C = -2 } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "enum { A, B = ~1, C = -2 }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -5346,18 +6932,28 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_ENUM_SPECIFIER);
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: Nested type specifiers (Phase E5)
      * ======================================================== */
-
     /* Test nested struct: struct outer { struct inner { int a; } x; } */
+interior vacuum
+_sectio_centesima_quinquagesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans nested struct: struct outer { struct inner { int a; } x; } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "struct outer { struct inner { int a; } x; }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -5396,13 +6992,25 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
+}
 
     /* Test nested enum: struct outer { enum { A, B } status; } */
+interior vacuum
+_sectio_centesima_quinquagesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans nested enum: struct outer { enum { A, B } status; } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "struct outer { enum { A, B } status; }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -5441,13 +7049,25 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
+}
 
     /* Test nested union: struct outer { union { int i; int j; } data; } */
+interior vacuum
+_sectio_centesima_quinquagesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans nested union: struct outer { union { int i; int j; } data; } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "struct outer { union { int i; int j; } data; }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -5487,13 +7107,25 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
+}
 
     /* Test nested pointer: struct outer { struct inner { int a; } *ptr; } */
+interior vacuum
+_sectio_centesima_quinquagesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans nested pointer: struct outer { struct inner { int a; } *ptr; } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "struct outer { struct inner { int a; } *ptr; }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -5530,13 +7162,25 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
+}
 
     /* Test multiple members with nested: struct outer { int x; struct { int a; } nested; int y; } */
+interior vacuum
+_sectio_centesima_quinquagesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans multiple with nested: struct outer { int x; struct { int a; } nested; int y; } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "struct outer { int x; struct { int a; } nested; int y; }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -5570,17 +7214,28 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
+}
 
     /* ========================================================
      * PROBARE: Typedef declarations (P74-P79)
      * ======================================================== */
-
     /* Test simple typedef: typedef int MyInt; */
+interior vacuum
+_sectio_centesima_quinquagesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans typedef simplex: typedef int MyInt; ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "typedef int MyInt;");
         res = arbor2_glr_parsere(glr, tokens);
@@ -5607,13 +7262,25 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
+}
 
     /* Test pointer typedef: typedef int* IntPtr; */
+interior vacuum
+_sectio_centesima_quinquagesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans typedef pointer: typedef int* IntPtr; ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "typedef int* IntPtr;");
         res = arbor2_glr_parsere(glr, tokens);
@@ -5641,13 +7308,25 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
+}
 
     /* Test typedef struct: typedef struct { int x; } Point; */
+interior vacuum
+_sectio_centesima_quinquagesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans typedef struct: typedef struct { int x; } Point; ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "typedef struct { int x; } Point;");
         res = arbor2_glr_parsere(glr, tokens);
@@ -5676,13 +7355,25 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
+}
 
     /* Test typedef struct pointer: typedef struct { int x; } *PointPtr; */
+interior vacuum
+_sectio_centesima_quinquagesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans typedef struct pointer: typedef struct { int x; } *PointPtr; ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "typedef struct { int x; } *PointPtr;");
         res = arbor2_glr_parsere(glr, tokens);
@@ -5716,13 +7407,25 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
+}
 
     /* Test typedef enum: typedef enum { A, B } Status; */
+interior vacuum
+_sectio_centesima_quinquagesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans typedef enum: typedef enum { A, B } Status; ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "typedef enum { A, B } Status;");
         res = arbor2_glr_parsere(glr, tokens);
@@ -5750,13 +7453,25 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
+}
 
     /* Test typedef enum pointer: typedef enum { A, B } *StatusPtr; */
+interior vacuum
+_sectio_centesima_sexagesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans typedef enum pointer: typedef enum { A, B } *StatusPtr; ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "typedef enum { A, B } *StatusPtr;");
         res = arbor2_glr_parsere(glr, tokens);
@@ -5790,13 +7505,25 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
+}
 
     /* Test typedef named struct: typedef struct MyStruct { int x; } MyStruct; */
+interior vacuum
+_sectio_centesima_sexagesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans typedef struct nominatum: typedef struct MyStruct { int x; } MyStruct; ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "typedef struct MyStruct { int x; } MyStruct;");
         res = arbor2_glr_parsere(glr, tokens);
@@ -5826,13 +7553,25 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
+}
 
     /* Test typedef forward ref: typedef struct Foo Foo; */
+interior vacuum
+_sectio_centesima_sexagesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans typedef struct forward: typedef struct Foo Foo; ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "typedef struct Foo Foo;");
         res = arbor2_glr_parsere(glr, tokens);
@@ -5861,7 +7600,7 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Array declarators (Phase E7)
@@ -5869,13 +7608,23 @@ s32 principale(vacuum)
      *
      * Phase E7 state machine complete - array tests enabled.
      */
-
     /* Test fixed size array: int arr[10] */
+interior vacuum
+_sectio_centesima_sexagesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans array fixed: int arr[10] ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "int arr[10]");
         res = arbor2_glr_parsere(glr, tokens);
@@ -5906,13 +7655,25 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
+}
 
     /* Test unsized array: int arr[] */
+interior vacuum
+_sectio_centesima_sexagesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans array unsized: int arr[] ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "int arr[]");
         res = arbor2_glr_parsere(glr, tokens);
@@ -5951,13 +7712,25 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
+}
 
     /* Test multi-dimensional array: int matrix[10][20] */
+interior vacuum
+_sectio_centesima_sexagesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans array multi-dim: int matrix[10][20] ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "int matrix[10][20]");
         res = arbor2_glr_parsere(glr, tokens);
@@ -5988,16 +7761,28 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
+}
 
     /* Test array of pointers: int *arr[10]
      * NOTE: This may produce AMBIGUUS because the grammar doesn't distinguish
      * keywords from identifiers in expression contexts. The declaration
      * interpretation should be present in the ambiguity. */
+interior vacuum
+_sectio_centesima_sexagesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans array of pointers: int *arr[10] ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "int *arr[10]");
         res = arbor2_glr_parsere(glr, tokens);
@@ -6039,14 +7824,26 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
+}
 
     /* E8: Struct member arrays now supported via declarator refactor */
     /* Test struct member array: struct { int arr[5]; } */
+interior vacuum
+_sectio_centesima_sexagesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans struct member array: struct { int arr[5]; } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "struct { int arr[5]; }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -6063,13 +7860,25 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
+}
 
     /* Test struct member pointer array: struct { int *ptrs[5]; } */
+interior vacuum
+_sectio_centesima_sexagesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans struct member ptr array: struct { int *ptrs[5]; } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "struct { int *ptrs[5]; }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -6086,13 +7895,25 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
+}
 
     /* Test struct multi-dimensional array: struct { int matrix[3][4]; } */
+interior vacuum
+_sectio_centesima_sexagesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans struct multi-dim array: struct { int matrix[3][4]; } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "struct { int matrix[3][4]; }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -6109,13 +7930,25 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
+}
 
     /* Test struct multiple array members: struct { int a[5]; int b[10]; } */
+interior vacuum
+_sectio_centesima_septuagesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans struct multi arrays: struct { int a[5]; int b[10]; } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "struct { int a[5]; int b[10]; }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -6132,14 +7965,26 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
+}
 
     /* E8: Typedef arrays now supported via declarator refactor */
     /* Test typedef array: typedef int IntArray[10] */
+interior vacuum
+_sectio_centesima_septuagesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans typedef array: typedef int IntArray[10]; ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "typedef int IntArray[10];");
         res = arbor2_glr_parsere(glr, tokens);
@@ -6166,13 +8011,25 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
+}
 
     /* Test typedef pointer array: typedef int* IntPtrArray[10]; */
+interior vacuum
+_sectio_centesima_septuagesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans typedef pointer array: typedef int* IntPtrArray[10]; ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "typedef int* IntPtrArray[10];");
         res = arbor2_glr_parsere(glr, tokens);
@@ -6189,13 +8046,25 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
+}
 
     /* Test typedef multi-dim array: typedef int Matrix[3][4]; */
+interior vacuum
+_sectio_centesima_septuagesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans typedef multi-dim: typedef int Matrix[3][4]; ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "typedef int Matrix[3][4];");
         res = arbor2_glr_parsere(glr, tokens);
@@ -6212,13 +8081,25 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
+}
 
     /* Test typedef float: typedef float MyFloat; */
+interior vacuum
+_sectio_centesima_septuagesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans typedef float: typedef float MyFloat; ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "typedef float MyFloat;");
         res = arbor2_glr_parsere(glr, tokens);
@@ -6235,13 +8116,25 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
+}
 
     /* Test expression size: int arr[1 + 2] */
+interior vacuum
+_sectio_centesima_septuagesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans array expr size: int arr[1 + 2] ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "int arr[1 + 2]");
         res = arbor2_glr_parsere(glr, tokens);
@@ -6276,17 +8169,28 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
+}
 
     /* ========================================================
      * PROBARE: Nested type member arrays (Phase E8 Part 3)
      * ======================================================== */
-
     /* Test nested struct array: struct { struct Inner items[10]; } */
+interior vacuum
+_sectio_centesima_septuagesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans nested struct array: struct { struct Inner items[10]; } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "struct { struct Inner items[10]; }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -6337,13 +8241,25 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
+}
 
     /* Test nested enum array: struct { enum { A, B } status[5]; } */
+interior vacuum
+_sectio_centesima_septuagesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans nested enum array: struct { enum { A, B } status[5]; } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "struct { enum { A, B } status[5]; }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -6390,13 +8306,25 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
+}
 
     /* Test nested struct pointer array: struct { struct Inner *ptrs[3]; } */
+interior vacuum
+_sectio_centesima_septuagesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans nested struct ptr array: struct { struct Inner *ptrs[3]; } ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "struct { struct Inner *ptrs[3]; }");
         res = arbor2_glr_parsere(glr, tokens);
@@ -6433,17 +8361,27 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Assignment operator - simple a = 1
      * ======================================================== */
+interior vacuum
+_sectio_centesima_septuagesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans assignment: a = 1 ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "a = 1");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -6464,19 +8402,30 @@ s32 principale(vacuum)
                                (i32)ARBOR2_LEXEMA_ASSIGNATIO);
         }
     }
+}
 
     /* ========================================================
      * PROBARE: Assignment right-associativity - a = b = c
      * Should parse as a = (b = c), NOT (a = b) = c
      * ======================================================== */
+interior vacuum
+_sectio_centesima_octogesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* radix;
         Arbor2Nodus* dexter;
-
-        imprimere("\n--- Probans assignment right-associativity: a = b = c ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "a = b = c");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -6510,16 +8459,27 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* ========================================================
      * PROBARE: Compound assignment operators
      * ======================================================== */
+interior vacuum
+_sectio_centesima_octogesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans compound assignments: += -= *= /= ---\n");
 
         /* Test += */
         tokens = _lexare_ad_tokens(piscina, intern, "a += 1");
@@ -6562,16 +8522,27 @@ s32 principale(vacuum)
                                (i32)ARBOR2_LEXEMA_DIV_ASSIGN);
         }
     }
+}
 
     /* ========================================================
      * PROBARE: Bitwise assignment operators
      * ======================================================== */
+interior vacuum
+_sectio_centesima_octogesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans bitwise assignments: &= |= ^= <<= >>= ---\n");
 
         /* Test &= */
         tokens = _lexare_ad_tokens(piscina, intern, "a &= 0xFF");
@@ -6623,16 +8594,27 @@ s32 principale(vacuum)
                                (i32)ARBOR2_LEXEMA_SHR_ASSIGN);
         }
     }
+}
 
     /* ========================================================
      * PROBARE: Comma operator - a, b
      * ======================================================== */
+interior vacuum
+_sectio_centesima_octogesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans comma operator: a, b ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "a, b");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -6653,19 +8635,30 @@ s32 principale(vacuum)
                                (i32)ARBOR2_LEXEMA_COMMA);
         }
     }
+}
 
     /* ========================================================
      * PROBARE: Comma left-associativity - a, b, c
      * Should parse as ((a, b), c)
      * ======================================================== */
+interior vacuum
+_sectio_centesima_octogesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* radix;
         Arbor2Nodus* sinister;
-
-        imprimere("\n--- Probans comma left-associativity: a, b, c ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "a, b, c");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -6699,20 +8692,31 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* ========================================================
      * PROBARE: Assignment / comma precedence - a = 1, b = 2
      * Should parse as (a = 1), (b = 2) - comma binds looser
      * ======================================================== */
+interior vacuum
+_sectio_centesima_octogesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* radix;
         Arbor2Nodus* sinister;
         Arbor2Nodus* dexter;
-
-        imprimere("\n--- Probans assignment/comma precedence: a = 1, b = 2 ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "a = 1, b = 2");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -6756,19 +8760,30 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* ========================================================
      * PROBARE: Assignment below logical OR - a = b || c
      * Should parse as a = (b || c)
      * ======================================================== */
+interior vacuum
+_sectio_centesima_octogesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* radix;
         Arbor2Nodus* dexter;
-
-        imprimere("\n--- Probans assignment precedence: a = b || c ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "a = b || c");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -6802,19 +8817,29 @@ s32 principale(vacuum)
             }
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: Ternary operator - simple
      * a ? 1 : c -> TERNARIUS(a, 1, c)
      * ======================================================== */
+interior vacuum
+_sectio_centesima_octogesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* radix;
-
-        imprimere("\n--- Probans ternary operator: a ? 1 : c ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "a ? 1 : c");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -6860,20 +8885,30 @@ s32 principale(vacuum)
             }
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: Ternary operator - right associativity
      * a ? 1 : b ? 2 : 3 -> a ? 1 : (b ? 2 : 3)
      * ======================================================== */
+interior vacuum
+_sectio_centesima_octogesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* radix;
         Arbor2Nodus* falsum;
-
-        imprimere("\n--- Probans ternary right-associativity: a ? 1 : b ? 2 : 3 ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "a ? 1 : b ? 2 : 3");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -6940,21 +8975,31 @@ s32 principale(vacuum)
             }
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: Ternary with assignment
      * a = x ? 1 : 2 -> a = (x ? 1 : 2)
      * Ternary binds tighter than assignment
      * ======================================================== */
+interior vacuum
+_sectio_centesima_octogesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* radix;
         Arbor2Nodus* dexter;
-
-        imprimere("\n--- Probans ternary/assignment precedence: a = x ? 1 : 2 ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "a = x ? 1 : 2");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -6994,21 +9039,31 @@ s32 principale(vacuum)
             }
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: Ternary with logical OR
      * a || b ? 1 : 2 -> (a || b) ? 1 : 2
      * Logical OR binds tighter than ternary
      * ======================================================== */
+interior vacuum
+_sectio_centesima_nonagesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* radix;
         Arbor2Nodus* conditio;
-
-        imprimere("\n--- Probans ternary/logical-or precedence: a || b ? 1 : 2 ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "a || b ? 1 : 2");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -7056,19 +9111,29 @@ s32 principale(vacuum)
             }
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: Ternary with expressions in branches
      * a ? 1 + 2 : 3 * 4 (use integers to avoid label ambiguity)
      * ======================================================== */
+interior vacuum
+_sectio_centesima_nonagesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* radix;
-
-        imprimere("\n--- Probans ternary with expressions: a ? 1 + 2 : 3 * 4 ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "a ? 1 + 2 : 3 * 4");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -7108,19 +9173,30 @@ s32 principale(vacuum)
             }
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: Unary operators - more tests
      * ======================================================== */
-
     /* Bitwise NOT: ~x */
+interior vacuum
+_sectio_centesima_nonagesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* radix;
 
-        imprimere("\n--- Probans bitwise NOT: ~x ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "~x");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -7134,14 +9210,27 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Logical NOT: !x */
+interior vacuum
+_sectio_centesima_nonagesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* radix;
 
-        imprimere("\n--- Probans logical NOT: !x ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "!x");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -7155,14 +9244,27 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Double NOT: !!x */
+interior vacuum
+_sectio_centesima_nonagesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* radix;
 
-        imprimere("\n--- Probans double NOT: !!x ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "!!x");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -7176,14 +9278,27 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Mixed unary: ~!x */
+interior vacuum
+_sectio_centesima_nonagesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* radix;
 
-        imprimere("\n--- Probans mixed unary: ~!x ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "~!x");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -7201,14 +9316,27 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Unary with binary: ~x + y */
+interior vacuum
+_sectio_centesima_nonagesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* radix;
 
-        imprimere("\n--- Probans unary with binary: ~x + y ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "~x + y");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -7223,14 +9351,27 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Triple unary: ***ptr */
+interior vacuum
+_sectio_centesima_nonagesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* radix;
 
-        imprimere("\n--- Probans triple deref: ***ptr ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "***ptr");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -7248,14 +9389,27 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Address of address: & &x */
+interior vacuum
+_sectio_centesima_nonagesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* radix;
 
-        imprimere("\n--- Probans double address: & &x ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "& &x");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -7269,14 +9423,27 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Deref then address: *&x */
+interior vacuum
+_sectio_centesima_nonagesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* radix;
 
-        imprimere("\n--- Probans deref-address: *&x ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "*&x");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -7294,18 +9461,30 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* ========================================================
      * PROBARE: Unary minus and plus operators
      * ======================================================== */
-
     /* Unary minus: -x */
+interior vacuum
+_sectio_ducentesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* radix;
 
-        imprimere("\n--- Probans unary minus: -x ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "-x");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -7319,14 +9498,27 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Unary plus: +x */
+interior vacuum
+_sectio_ducentesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* radix;
 
-        imprimere("\n--- Probans unary plus: +x ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "+x");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -7340,14 +9532,27 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Unary minus with integer literal: -5 */
+interior vacuum
+_sectio_ducentesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* radix;
 
-        imprimere("\n--- Probans unary minus integer: -5 ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "-5");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -7361,14 +9566,27 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Double negation: - -x (space between) */
+interior vacuum
+_sectio_ducentesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* radix;
 
-        imprimere("\n--- Probans double negation: - -x ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "- -x");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -7382,14 +9600,27 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Unary minus with binary plus: -a + b */
+interior vacuum
+_sectio_ducentesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* radix;
 
-        imprimere("\n--- Probans unary with binary: -a + b ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "-a + b");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -7404,14 +9635,27 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Unary minus after binary: a + -b */
+interior vacuum
+_sectio_ducentesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* radix;
 
-        imprimere("\n--- Probans binary then unary: a + -b ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "a + -b");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -7426,14 +9670,27 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Mixed unary: -!x */
+interior vacuum
+_sectio_ducentesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* radix;
 
-        imprimere("\n--- Probans mixed: -!x ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "-!x");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -7451,14 +9708,27 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Unary minus with multiply: a * -b */
+interior vacuum
+_sectio_ducentesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* radix;
 
-        imprimere("\n--- Probans multiply unary: a * -b ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "a * -b");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -7473,19 +9743,30 @@ s32 principale(vacuum)
             }
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: Bitwise binary operators
      * ======================================================== */
-
     /* Bitwise AND: a & b */
+interior vacuum
+_sectio_ducentesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* radix;
 
-        imprimere("\n--- Probans bitwise AND: a & b ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "a & b");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -7499,14 +9780,27 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Bitwise OR: a | b */
+interior vacuum
+_sectio_ducentesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* radix;
 
-        imprimere("\n--- Probans bitwise OR: a | b ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "a | b");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -7520,14 +9814,27 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Bitwise XOR: a ^ b */
+interior vacuum
+_sectio_ducentesima_decima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* radix;
 
-        imprimere("\n--- Probans bitwise XOR: a ^ b ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "a ^ b");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -7541,14 +9848,27 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Bitwise precedence: a | b ^ c */
+interior vacuum
+_sectio_ducentesima_decima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* radix;
 
-        imprimere("\n--- Probans bitwise precedence: a | b ^ c (| lower than ^) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "a | b ^ c");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -7567,14 +9887,27 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Bitwise precedence: a ^ b & c */
+interior vacuum
+_sectio_ducentesima_decima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* radix;
 
-        imprimere("\n--- Probans bitwise precedence: a ^ b & c (^ lower than &) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "a ^ b & c");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -7593,14 +9926,27 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Bitwise chain: a | b | c */
+interior vacuum
+_sectio_ducentesima_decima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* radix;
 
-        imprimere("\n--- Probans bitwise chain: a | b | c (left-associative) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "a | b | c");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -7619,14 +9965,27 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Bitwise with comparison: a & b == c */
+interior vacuum
+_sectio_ducentesima_decima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* radix;
 
-        imprimere("\n--- Probans bitwise/comparison: a & b == c ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "a & b == c");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -7638,14 +9997,27 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)radix->genus, (i32)ARBOR2_NODUS_BINARIUM);
         }
     }
+}
 
     /* All bitwise: a | b ^ c & d */
+interior vacuum
+_sectio_ducentesima_decima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* radix;
 
-        imprimere("\n--- Probans all bitwise: a | b ^ c & d ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "a | b ^ c & d");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -7660,31 +10032,55 @@ s32 principale(vacuum)
             }
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: Complex nested expressions
      * ======================================================== */
-
     /* Deeply nested parens: (((x))) */
+interior vacuum
+_sectio_ducentesima_decima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans deeply nested parens: (((x))) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "(((x)))");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.radix);
     }
+}
 
     /* Complex arithmetic: (a + b) * (c - d) */
+interior vacuum
+_sectio_ducentesima_decima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* radix;
 
-        imprimere("\n--- Probans complex arithmetic: (a + b) * (c - d) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "(a + b) * (c - d)");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -7698,14 +10094,27 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Mixed precedence: a + b * c - d / e */
+interior vacuum
+_sectio_ducentesima_decima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* radix;
 
-        imprimere("\n--- Probans mixed precedence: a + b * c - d / e ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "a + b * c - d / e");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -7716,14 +10125,27 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)radix->genus, (i32)ARBOR2_NODUS_BINARIUM);
         }
     }
+}
 
     /* Logical with ternary: a && b ? 1 : 2 */
+interior vacuum
+_sectio_ducentesima_decima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* radix;
 
-        imprimere("\n--- Probans logical with ternary: a && b ? 1 : 2 ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "a && b ? 1 : 2");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -7734,14 +10156,27 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)radix->genus, (i32)ARBOR2_NODUS_TERNARIUS);
         }
     }
+}
 
     /* Multiple ternary: a ? b ? 1 : 2 : 3 */
+interior vacuum
+_sectio_ducentesima_vicesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* radix;
 
-        imprimere("\n--- Probans nested ternary in true branch: a ? b ? 1 : 2 : 3 ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "a ? b ? 1 : 2 : 3");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -7756,14 +10191,27 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Unary in expressions: ~a & !b | *c */
+interior vacuum
+_sectio_ducentesima_vicesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* radix;
 
-        imprimere("\n--- Probans unary in expressions: ~a & !b | *c ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "~a & !b | *c");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -7773,14 +10221,27 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)radix->genus, (i32)ARBOR2_NODUS_BINARIUM);
         }
     }
+}
 
     /* Assignment chain: a = b = c = 1 */
+interior vacuum
+_sectio_ducentesima_vicesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* radix;
 
-        imprimere("\n--- Probans assignment chain: a = b = c = 1 ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "a = b = c = 1");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -7795,14 +10256,27 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Comma chain: a, b, c, d */
+interior vacuum
+_sectio_ducentesima_vicesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* radix;
 
-        imprimere("\n--- Probans comma chain: a, b, c, d ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "a, b, c, d");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -7817,14 +10291,27 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Shift with arithmetic: a << 2 + 1 */
+interior vacuum
+_sectio_ducentesima_vicesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* radix;
 
-        imprimere("\n--- Probans shift with arithmetic: a << 2 + 1 ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "a << 2 + 1");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -7835,118 +10322,232 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)radix->genus, (i32)ARBOR2_NODUS_BINARIUM);
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: Control flow edge cases
      * ======================================================== */
-
     /* if-else-if chain */
+interior vacuum
+_sectio_ducentesima_vicesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans if-else-if chain ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "if (a) x; else if (b) y; else z;");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.radix);
     }
+}
 
     /* Deeply nested if: if (a) if (b) if (c) x; */
+interior vacuum
+_sectio_ducentesima_vicesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans deeply nested if ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "if (a) if (b) if (c) x;");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.radix);
     }
+}
 
     /* Nested loops: while (a) for (;;) if (b) break; */
+interior vacuum
+_sectio_ducentesima_vicesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans nested loops with break ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "while (a) for (;;) if (b) break;");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.radix);
     }
+}
 
     /* Complex for loop: for (a = 0; a < 10; a = a + 1) x; */
+interior vacuum
+_sectio_ducentesima_vicesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans complex for loop ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "for (a = 0; a < 10; a = a + 1) x;");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.radix);
     }
+}
 
     /* Switch with fallthrough cases */
+interior vacuum
+_sectio_ducentesima_vicesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans switch with multiple cases ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "switch (x) { case 1: case 2: case 3: y; break; default: z; }");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.radix);
     }
+}
 
     /* do-while with simple condition */
+interior vacuum
+_sectio_ducentesima_tricesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans do-while with simple condition ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "do { x; y; } while (a < b);");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.radix);
     }
+}
 
     /* Multiple statements in compound */
+interior vacuum
+_sectio_ducentesima_tricesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans multiple statements in compound ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "{ a; b; c; d; e; }");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.radix);
     }
+}
 
     /* Nested compound statements */
+interior vacuum
+_sectio_ducentesima_tricesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans nested compound statements ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "{ { { a; } } }");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.radix);
     }
+}
 
     /* ========================================================
      * PROBARE: Declarations in compound statements (C99-style)
      * ======================================================== */
-
     /* Simple declaration in block */
+interior vacuum
+_sectio_ducentesima_tricesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans declaration in block: { int x; } ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "{ int x; }");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -7960,25 +10561,51 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Declaration with initializer in block */
+interior vacuum
+_sectio_ducentesima_tricesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans declaration with init: { int x = 5; } ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "{ int x = 5; }");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.radix);
     }
+}
 
     /* Multiple declarations in block */
+interior vacuum
+_sectio_ducentesima_tricesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans multiple declarations: { int x; int y; } ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "{ int x; int y; }");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -7992,13 +10619,26 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Mixed declarations and statements (C99-style anywhere) */
+interior vacuum
+_sectio_ducentesima_tricesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans mixed decl/stmt: { int x; x = 1; int y; return y; } ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "{ int x; x = 1; int y; return y; }");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -8012,66 +10652,130 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Static declaration in block */
+interior vacuum
+_sectio_ducentesima_tricesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans static in block: { static int x = 0; } ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "{ static int x = 0; }");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.radix);
     }
+}
 
     /* Const declaration in block */
+interior vacuum
+_sectio_ducentesima_tricesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans const in block: { const int x = 42; } ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "{ const int x = 42; }");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.radix);
     }
+}
 
     /* Static const declaration in block */
+interior vacuum
+_sectio_ducentesima_tricesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans static const in block: { static const int x = 1; } ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "{ static const int x = 1; }");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.radix);
     }
+}
 
     /* Return with expression */
+interior vacuum
+_sectio_ducentesima_quadragesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans return with expression ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "return a + b * c;");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.radix);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Combined stress tests
      * ======================================================== */
-
     /* Function with complex body */
+interior vacuum
+_sectio_ducentesima_quadragesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
+    arbor2_expansion_addere_typedef(expansion, "MyType");
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans function with complex body ---\n");
         /* MyType already registered earlier in typedef tests */
         tokens = _lexare_ad_tokens(piscina, intern,
             "MyType foo(int x, int y) { "
@@ -8082,13 +10786,26 @@ s32 principale(vacuum)
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.radix);
     }
+}
 
     /* Struct with complex members */
+interior vacuum
+_sectio_ducentesima_quadragesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans struct with complex members ---\n");
         tokens = _lexare_ad_tokens(piscina, intern,
             "struct Point { "
             "int x; "
@@ -8099,168 +10816,334 @@ s32 principale(vacuum)
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.radix);
     }
+}
 
     /* Expression in for condition */
+interior vacuum
+_sectio_ducentesima_quadragesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans expression in for ---\n");
         tokens = _lexare_ad_tokens(piscina, intern,
             "for (a = 0; a < 10; a = a + 1) x;");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.radix);
     }
+}
 
     /* Comparison in if condition */
+interior vacuum
+_sectio_ducentesima_quadragesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans comparison in if condition ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "if (a < b) x;");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.radix);
     }
+}
 
     /* Assignment in while condition */
+interior vacuum
+_sectio_ducentesima_quadragesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans assignment in while ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "while (x = x + 1) y;");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.radix);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Unary ~ and ! in expression contexts
      * (TAG VALIDATION: tests for missing TILDE/EXCLAMATIO)
      * ======================================================== */
-
     /* State 6: after '(' - tilde in parentheses */
+interior vacuum
+_sectio_ducentesima_quadragesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Arbor2GLRResultus res;
         Xar* tokens;
 
-        imprimere("\n--- Probans (~a) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "(~a)");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.radix);
     }
+}
 
     /* State 7: after unary '*' */
+interior vacuum
+_sectio_ducentesima_quadragesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Arbor2GLRResultus res;
         Xar* tokens;
 
-        imprimere("\n--- Probans *~a ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "*~a");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.radix);
     }
+}
 
     /* State 9: after '+' */
+interior vacuum
+_sectio_ducentesima_quadragesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Arbor2GLRResultus res;
         Xar* tokens;
 
-        imprimere("\n--- Probans a + ~b ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "a + ~b");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.radix);
     }
+}
 
     /* State 10: after '*' (multiplication) */
+interior vacuum
+_sectio_ducentesima_quadragesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Arbor2GLRResultus res;
         Xar* tokens;
 
-        imprimere("\n--- Probans a * !b ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "a * !b");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.radix);
     }
+}
 
     /* State 31: if condition with tilde */
+interior vacuum
+_sectio_ducentesima_quinquagesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Arbor2GLRResultus res;
         Xar* tokens;
 
-        imprimere("\n--- Probans if (~a) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "if (~a) b;");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.radix);
     }
+}
 
     /* State 241: after comparison - tilde after < */
+interior vacuum
+_sectio_ducentesima_quinquagesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Arbor2GLRResultus res;
         Xar* tokens;
 
-        imprimere("\n--- Probans a < ~b ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "a < ~b");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.radix);
     }
+}
 
     /* State 254: after && - tilde */
+interior vacuum
+_sectio_ducentesima_quinquagesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Arbor2GLRResultus res;
         Xar* tokens;
 
-        imprimere("\n--- Probans a && ~b ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "a && ~b");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.radix);
     }
+}
 
     /* State 256: after || - exclamatio */
+interior vacuum
+_sectio_ducentesima_quinquagesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Arbor2GLRResultus res;
         Xar* tokens;
 
-        imprimere("\n--- Probans a || !b ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "a || !b");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.radix);
     }
+}
 
     /* State 265: after << - tilde */
+interior vacuum
+_sectio_ducentesima_quinquagesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Arbor2GLRResultus res;
         Xar* tokens;
 
-        imprimere("\n--- Probans a << ~b ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "a << ~b");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.radix);
     }
+}
 
     /* ========================================================
      * PROBARE: Array subscript expressions
      * ======================================================== */
-
     /* Simple subscript: arr[0] */
+interior vacuum
+_sectio_ducentesima_quinquagesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Arbor2GLRResultus res;
         Xar* tokens;
 
-        imprimere("\n--- Probans arr[0] ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "arr[0]");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -8270,13 +11153,26 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SUBSCRIPTIO);
         }
     }
+}
 
     /* Subscript with identifier index: arr[i] */
+interior vacuum
+_sectio_ducentesima_quinquagesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Arbor2GLRResultus res;
         Xar* tokens;
 
-        imprimere("\n--- Probans arr[i] ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "arr[i]");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -8286,13 +11182,26 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SUBSCRIPTIO);
         }
     }
+}
 
     /* Chained subscripts: arr[i][j] */
+interior vacuum
+_sectio_ducentesima_quinquagesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Arbor2GLRResultus res;
         Xar* tokens;
 
-        imprimere("\n--- Probans arr[i][j] ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "arr[i][j]");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -8308,13 +11217,26 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Subscript in expression: a + b[0] */
+interior vacuum
+_sectio_ducentesima_quinquagesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Arbor2GLRResultus res;
         Xar* tokens;
 
-        imprimere("\n--- Probans a + b[0] ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "a + b[0]");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -8330,15 +11252,28 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Multiply with subscript: a * b[0] - tests state 10 GOTO(POSTFIXUM)
      * Note: This is genuinely ambiguous (could be multiplication or pointer-to-array decl)
      * so we accept either BINARIUM or AMBIGUUS with BINARIUM as one interpretation */
+interior vacuum
+_sectio_ducentesima_quinquagesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Arbor2GLRResultus res;
         Xar* tokens;
 
-        imprimere("\n--- Probans a * b[0] ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "a * b[0]");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -8367,13 +11302,26 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Unary with subscript: *arr[i] - should be *(arr[i]) */
+interior vacuum
+_sectio_ducentesima_sexagesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Arbor2GLRResultus res;
         Xar* tokens;
 
-        imprimere("\n--- Probans *arr[i] ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "*arr[i]");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -8389,13 +11337,26 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Complex expression in subscript index */
+interior vacuum
+_sectio_ducentesima_sexagesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Arbor2GLRResultus res;
         Xar* tokens;
 
-        imprimere("\n--- Probans arr[i + 1] ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "arr[i + 1]");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -8405,17 +11366,29 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SUBSCRIPTIO);
         }
     }
+}
 
     /* ========================================================
      * PROBARE: Function call expressions
      * ======================================================== */
-
     /* Empty function call: foo() */
+interior vacuum
+_sectio_ducentesima_sexagesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Arbor2GLRResultus res;
         Xar* tokens;
 
-        imprimere("\n--- Probans foo() ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "foo()");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -8425,13 +11398,26 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_VOCATIO);
         }
     }
+}
 
     /* Function call with one arg: foo(a) */
+interior vacuum
+_sectio_ducentesima_sexagesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Arbor2GLRResultus res;
         Xar* tokens;
 
-        imprimere("\n--- Probans foo(a) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "foo(a)");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -8441,13 +11427,26 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_VOCATIO);
         }
     }
+}
 
     /* Function call with multiple args: foo(a, b, c) */
+interior vacuum
+_sectio_ducentesima_sexagesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Arbor2GLRResultus res;
         Xar* tokens;
 
-        imprimere("\n--- Probans foo(a, b, c) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "foo(a, b, c)");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -8457,13 +11456,26 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_VOCATIO);
         }
     }
+}
 
     /* Chained: foo()[0] - function call then subscript */
+interior vacuum
+_sectio_ducentesima_sexagesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Arbor2GLRResultus res;
         Xar* tokens;
 
-        imprimere("\n--- Probans foo()[0] ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "foo()[0]");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -8473,13 +11485,26 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SUBSCRIPTIO);
         }
     }
+}
 
     /* Chained: arr[0]() - subscript then function call */
+interior vacuum
+_sectio_ducentesima_sexagesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Arbor2GLRResultus res;
         Xar* tokens;
 
-        imprimere("\n--- Probans arr[0]() ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "arr[0]()");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -8489,13 +11514,26 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_VOCATIO);
         }
     }
+}
 
     /* Function call with expression args: foo(a + b) */
+interior vacuum
+_sectio_ducentesima_sexagesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Arbor2GLRResultus res;
         Xar* tokens;
 
-        imprimere("\n--- Probans foo(a + b) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "foo(a + b)");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -8505,17 +11543,29 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_VOCATIO);
         }
     }
+}
 
     /* ========================================================
      * PROBARE: Member access expressions
      * ======================================================== */
-
     /* Simple member access: s.x */
+interior vacuum
+_sectio_ducentesima_sexagesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Arbor2GLRResultus res;
         Xar* tokens;
 
-        imprimere("\n--- Probans s.x ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "s.x");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -8526,13 +11576,26 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->datum.membrum.est_sagitta, FALSUM);
         }
     }
+}
 
     /* Pointer member access: p->x */
+interior vacuum
+_sectio_ducentesima_sexagesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Arbor2GLRResultus res;
         Xar* tokens;
 
-        imprimere("\n--- Probans p->x ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "p->x");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -8543,13 +11606,26 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->datum.membrum.est_sagitta, VERUM);
         }
     }
+}
 
     /* Chained member access: s.x.y */
+interior vacuum
+_sectio_ducentesima_septuagesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Arbor2GLRResultus res;
         Xar* tokens;
 
-        imprimere("\n--- Probans s.x.y ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "s.x.y");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -8561,13 +11637,26 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->datum.membrum.basis->genus, (i32)ARBOR2_NODUS_MEMBRUM);
         }
     }
+}
 
     /* Chained pointer member: p->x->y */
+interior vacuum
+_sectio_ducentesima_septuagesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Arbor2GLRResultus res;
         Xar* tokens;
 
-        imprimere("\n--- Probans p->x->y ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "p->x->y");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -8578,13 +11667,26 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->datum.membrum.basis->genus, (i32)ARBOR2_NODUS_MEMBRUM);
         }
     }
+}
 
     /* Mixed: subscript then member: arr[0].x */
+interior vacuum
+_sectio_ducentesima_septuagesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Arbor2GLRResultus res;
         Xar* tokens;
 
-        imprimere("\n--- Probans arr[0].x ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "arr[0].x");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -8595,13 +11697,26 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->datum.membrum.basis->genus, (i32)ARBOR2_NODUS_SUBSCRIPTIO);
         }
     }
+}
 
     /* Mixed: call then member: foo().x */
+interior vacuum
+_sectio_ducentesima_septuagesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Arbor2GLRResultus res;
         Xar* tokens;
 
-        imprimere("\n--- Probans foo().x ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "foo().x");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -8612,13 +11727,26 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->datum.membrum.basis->genus, (i32)ARBOR2_NODUS_VOCATIO);
         }
     }
+}
 
     /* Mixed: member then subscript: s.x[0] */
+interior vacuum
+_sectio_ducentesima_septuagesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Arbor2GLRResultus res;
         Xar* tokens;
 
-        imprimere("\n--- Probans s.x[0] ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "s.x[0]");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -8629,13 +11757,26 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->datum.subscriptio.basis->genus, (i32)ARBOR2_NODUS_MEMBRUM);
         }
     }
+}
 
     /* Mixed: member then call: s.x() */
+interior vacuum
+_sectio_ducentesima_septuagesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Arbor2GLRResultus res;
         Xar* tokens;
 
-        imprimere("\n--- Probans s.x() ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "s.x()");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -8646,17 +11787,29 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->datum.vocatio.basis->genus, (i32)ARBOR2_NODUS_MEMBRUM);
         }
     }
+}
 
     /* ========================================================
      * PROBARE: Increment/Decrement operators
      * ======================================================== */
-
     /* Post-increment: x++ */
+interior vacuum
+_sectio_ducentesima_septuagesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Arbor2GLRResultus res;
         Xar* tokens;
 
-        imprimere("\n--- Probans x++ ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "x++");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -8668,13 +11821,26 @@ s32 principale(vacuum)
                               (i32)ARBOR2_LEXEMA_DUPLUS);
         }
     }
+}
 
     /* Post-decrement: x-- */
+interior vacuum
+_sectio_ducentesima_septuagesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Arbor2GLRResultus res;
         Xar* tokens;
 
-        imprimere("\n--- Probans x-- ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "x--");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -8686,13 +11852,26 @@ s32 principale(vacuum)
                               (i32)ARBOR2_LEXEMA_DUMINUS);
         }
     }
+}
 
     /* Pre-increment: ++x */
+interior vacuum
+_sectio_ducentesima_septuagesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Arbor2GLRResultus res;
         Xar* tokens;
 
-        imprimere("\n--- Probans ++x ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "++x");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -8702,13 +11881,26 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_UNARIUM);
         }
     }
+}
 
     /* Pre-decrement: --x */
+interior vacuum
+_sectio_ducentesima_septuagesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Arbor2GLRResultus res;
         Xar* tokens;
 
-        imprimere("\n--- Probans --x ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "--x");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -8718,13 +11910,26 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_UNARIUM);
         }
     }
+}
 
     /* Post-increment on subscript: arr[0]++ */
+interior vacuum
+_sectio_ducentesima_octogesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Arbor2GLRResultus res;
         Xar* tokens;
 
-        imprimere("\n--- Probans arr[0]++ ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "arr[0]++");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -8736,13 +11941,26 @@ s32 principale(vacuum)
                               (i32)ARBOR2_NODUS_SUBSCRIPTIO);
         }
     }
+}
 
     /* Pre-increment on subscript: ++arr[0] */
+interior vacuum
+_sectio_ducentesima_octogesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Arbor2GLRResultus res;
         Xar* tokens;
 
-        imprimere("\n--- Probans ++arr[0] ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "++arr[0]");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -8754,13 +11972,26 @@ s32 principale(vacuum)
                               (i32)ARBOR2_NODUS_SUBSCRIPTIO);
         }
     }
+}
 
     /* Post-increment on member: s.x++ */
+interior vacuum
+_sectio_ducentesima_octogesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Arbor2GLRResultus res;
         Xar* tokens;
 
-        imprimere("\n--- Probans s.x++ ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "s.x++");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -8772,13 +12003,26 @@ s32 principale(vacuum)
                               (i32)ARBOR2_NODUS_MEMBRUM);
         }
     }
+}
 
     /* Post-decrement on ptr member: p->x-- */
+interior vacuum
+_sectio_ducentesima_octogesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Arbor2GLRResultus res;
         Xar* tokens;
 
-        imprimere("\n--- Probans p->x-- ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "p->x--");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -8790,13 +12034,26 @@ s32 principale(vacuum)
                               (i32)ARBOR2_NODUS_MEMBRUM);
         }
     }
+}
 
     /* Mixed: ++x + y-- */
+interior vacuum
+_sectio_ducentesima_octogesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Arbor2GLRResultus res;
         Xar* tokens;
 
-        imprimere("\n--- Probans ++x + y-- ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "++x + y--");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -8810,30 +12067,53 @@ s32 principale(vacuum)
                               (i32)ARBOR2_NODUS_POST_UNARIUM);
         }
     }
+}
 
     /* Chained post: x++++ should fail or parse as (x++)++ */
+interior vacuum
+_sectio_ducentesima_octogesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Arbor2GLRResultus res;
         Xar* tokens;
 
-        imprimere("\n--- Probans x++++ ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "x++++");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         /* This may succeed or fail - just testing it doesn't crash */
         CREDO_VERUM(VERUM);  /* Parser handles it */
         (vacuum)res;  /* Suppress unused warning */
     }
-
+}
 
     /* ========================================================
      * PROBARE: Float literal
      * ======================================================== */
+interior vacuum
+_sectio_ducentesima_octogesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans float literal: 3.14 ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "3.14");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -8852,17 +12132,27 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_FLOAT);
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: Char literal
      * ======================================================== */
+interior vacuum
+_sectio_ducentesima_octogesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans char literal: 'a' ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "'a'");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -8881,17 +12171,27 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CHAR);
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: String literal
      * ======================================================== */
+interior vacuum
+_sectio_ducentesima_octogesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans string literal: \"hello\" ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "\"hello\"");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -8910,17 +12210,27 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_STRING);
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: Float in binary expression
      * ======================================================== */
+interior vacuum
+_sectio_ducentesima_octogesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans float in expression: 3.14 + 2.0 ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "3.14 + 2.0");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -8951,17 +12261,27 @@ s32 principale(vacuum)
             }
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: Char in binary expression
      * ======================================================== */
+interior vacuum
+_sectio_ducentesima_nonagesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans char in expression: 'a' + 'b' ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "'a' + 'b'");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -8992,17 +12312,27 @@ s32 principale(vacuum)
             }
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: Mixed literals in expression
      * ======================================================== */
+interior vacuum
+_sectio_ducentesima_nonagesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans mixed literals: 42 + 3.14 ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "42 + 3.14");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -9033,17 +12363,27 @@ s32 principale(vacuum)
             }
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: sizeof operator
      * ======================================================== */
+interior vacuum
+_sectio_ducentesima_nonagesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans sizeof x ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "sizeof x");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -9056,12 +12396,24 @@ s32 principale(vacuum)
             CREDO_NON_NIHIL(res.radix->datum.sizeof_expr.operandum);
         }
     }
+}
 
+interior vacuum
+_sectio_ducentesima_nonagesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans sizeof(x) ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "sizeof(x)");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -9073,12 +12425,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SIZEOF);
         }
     }
+}
 
+interior vacuum
+_sectio_ducentesima_nonagesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans sizeof(x) + 1 ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "sizeof(x) + 1");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -9096,17 +12460,27 @@ s32 principale(vacuum)
             }
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: type casts
      * ======================================================== */
+interior vacuum
+_sectio_ducentesima_nonagesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (int)x ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(int)x");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -9118,12 +12492,24 @@ s32 principale(vacuum)
             CREDO_NON_NIHIL(res.radix->datum.conversio.expressio);
         }
     }
+}
 
+interior vacuum
+_sectio_ducentesima_nonagesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (char)x ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(char)x");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -9134,12 +12520,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
         }
     }
+}
 
+interior vacuum
+_sectio_ducentesima_nonagesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (int)x + 1 ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(int)x + 1");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -9156,12 +12554,24 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
+interior vacuum
+_sectio_ducentesima_nonagesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (int)(char)x (chained casts) ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(int)(char)x");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -9178,17 +12588,27 @@ s32 principale(vacuum)
             }
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: Pointer casts (Phase 1.1)
      * ======================================================== */
+interior vacuum
+_sectio_ducentesima_nonagesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (int*)x ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(int*)x");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -9207,12 +12627,24 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (char**)argv ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(char**)argv");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -9231,12 +12663,24 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (void*)p ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(void*)p");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -9254,17 +12698,27 @@ s32 principale(vacuum)
             }
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: sizeof(type) (Phase 1.1)
      * ======================================================== */
+interior vacuum
+_sectio_trecentesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans sizeof(int) ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "sizeof(int)");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -9282,12 +12736,24 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans sizeof(int*) ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "sizeof(int*)");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -9306,12 +12772,24 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans sizeof(char**) ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "sizeof(char**)");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -9330,12 +12808,24 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans sizeof(void*) ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "sizeof(void*)");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -9347,17 +12837,27 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->datum.sizeof_expr.est_typus, VERUM);
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: Identifier (typedef) casts - Phase 1.1b
      * ======================================================== */
+interior vacuum
+_sectio_trecentesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (TypeName)x - ID cast ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(TypeName)x");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -9371,12 +12871,24 @@ s32 principale(vacuum)
                         (i32)res.radix->genus == (i32)ARBOR2_NODUS_AMBIGUUS);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (TypeName*)ptr - ID pointer cast ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(TypeName*)ptr");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -9394,12 +12906,24 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (TypeName**)pp - ID double pointer cast ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(TypeName**)pp");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -9417,17 +12941,27 @@ s32 principale(vacuum)
             }
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: struct/union/enum casts (Phase 1.1b Part 2)
      * ======================================================== */
+interior vacuum
+_sectio_trecentesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (struct foo)x - struct cast ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(struct foo)x");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -9438,12 +12972,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_decima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (struct foo*)ptr - struct pointer cast ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(struct foo*)ptr");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -9459,12 +13005,24 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_decima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (struct foo**)pp - struct double pointer cast ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(struct foo**)pp");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -9480,12 +13038,24 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_decima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (union bar)u - union cast ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(union bar)u");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -9496,12 +13066,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_decima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (union bar*)ptr - union pointer cast ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(union bar*)ptr");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -9517,12 +13099,24 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_decima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (enum color)c - enum cast ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(enum color)c");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -9533,12 +13127,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_decima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (enum color*)ptr - enum pointer cast ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(enum color*)ptr");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -9554,16 +13160,27 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* ========================================================
      * PROBARE: sizeof(struct/union/enum) (Phase 1.1b Part 2)
      * ======================================================== */
+interior vacuum
+_sectio_trecentesima_decima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans sizeof(struct foo) ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "sizeof(struct foo)");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -9574,12 +13191,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SIZEOF);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_decima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans sizeof(struct foo*) ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "sizeof(struct foo*)");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -9590,12 +13219,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SIZEOF);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_decima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans sizeof(struct foo**) ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "sizeof(struct foo**)");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -9606,12 +13247,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SIZEOF);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_decima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans sizeof(union bar) ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "sizeof(union bar)");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -9622,12 +13275,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SIZEOF);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_vicesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans sizeof(union bar*) ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "sizeof(union bar*)");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -9638,12 +13303,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SIZEOF);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_vicesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans sizeof(enum color) ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "sizeof(enum color)");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -9654,12 +13331,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SIZEOF);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_vicesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans sizeof(enum color*) ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "sizeof(enum color*)");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -9670,17 +13359,28 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SIZEOF);
         }
     }
+}
 
     /* ========================================================
      * PROBARE: sizeof(type[N]) - array types in sizeof
      * Phase 1.1c
      * ======================================================== */
+interior vacuum
+_sectio_trecentesima_vicesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans sizeof(int[10]) ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "sizeof(int[10])");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -9700,12 +13400,24 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_vicesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans sizeof(char[256]) ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "sizeof(char[256])");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -9717,12 +13429,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->datum.sizeof_expr.est_typus, VERUM);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_vicesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans sizeof(void[1]) ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "sizeof(void[1])");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -9733,12 +13457,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SIZEOF);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_vicesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans sizeof(int[10+5]) with expression ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "sizeof(int[10+5])");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -9761,12 +13497,24 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_vicesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans x = sizeof(int[10]) in assignment ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "x = sizeof(int[10])");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -9782,17 +13530,28 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* ========================================================
      * PROBARE: sizeof(type[N][M]) - multi-dimensional array types
      * Phase 1.1d
      * ======================================================== */
+interior vacuum
+_sectio_trecentesima_vicesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans sizeof(int[10][20]) ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "sizeof(int[10][20])");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -9812,12 +13571,24 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_vicesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans sizeof(char[256][4]) ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "sizeof(char[256][4])");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -9829,12 +13600,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->datum.sizeof_expr.est_typus, VERUM);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_tricesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans sizeof(void[1][1]) ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "sizeof(void[1][1])");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -9845,12 +13628,25 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SIZEOF);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_tricesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
+    arbor2_expansion_addere_typedef(expansion, "MyType");
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans sizeof(MyType[5][10]) with ID ---\n");
 
         /* Note: For ID types, the parser can't distinguish between:
          * - sizeof(variable[index1][index2]) - array subscript expression
@@ -9867,12 +13663,24 @@ s32 principale(vacuum)
             /* Not checking est_typus - parser treats ID as expression */
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_tricesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans sizeof(int[N][M]) with expressions ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "sizeof(int[N][M])");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -9899,12 +13707,24 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_tricesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans x = sizeof(int[10][20]) in assignment ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "x = sizeof(int[10][20])");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -9920,18 +13740,28 @@ s32 principale(vacuum)
             }
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: sizeof(type*[N]) - pointer array types
      * Phase 1.1e
      * ======================================================== */
+interior vacuum
+_sectio_trecentesima_tricesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans sizeof(int*[10]) ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "sizeof(int*[10])");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -9955,12 +13785,24 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_tricesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans sizeof(char*[256]) ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "sizeof(char*[256])");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -9972,12 +13814,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->datum.sizeof_expr.est_typus, VERUM);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_tricesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans sizeof(void*[5]) ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "sizeof(void*[5])");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -9989,12 +13843,25 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->datum.sizeof_expr.est_typus, VERUM);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_tricesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
+    arbor2_expansion_addere_typedef(expansion, "MyType");
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans sizeof(MyType*[20]) with ID ---\n");
 
         /* Note: sizeof(ID*[N]) doesn't work because the ID path in state 388
          * is disabled to avoid ambiguity. The parser can't distinguish between
@@ -10006,12 +13873,24 @@ s32 principale(vacuum)
         /* Expected to fail - ID path disabled */
         CREDO_AEQUALIS_I32((i32)res.successus, FALSUM);
     }
+}
 
+interior vacuum
+_sectio_trecentesima_tricesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans x = sizeof(int*[10]) in assignment ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "x = sizeof(int*[10])");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10027,16 +13906,27 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* ========================================================
      * PROBARE: sizeof with type modifiers
      * ======================================================== */
+interior vacuum
+_sectio_trecentesima_tricesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans sizeof(unsigned int) ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "sizeof(unsigned int)");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10047,12 +13937,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SIZEOF);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_quadragesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans sizeof(signed int) ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "sizeof(signed int)");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10063,12 +13965,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SIZEOF);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_quadragesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans sizeof(long int) ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "sizeof(long int)");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10079,12 +13993,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SIZEOF);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_quadragesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans sizeof(short int) ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "sizeof(short int)");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10095,12 +14021,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SIZEOF);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_quadragesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans sizeof(unsigned char) ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "sizeof(unsigned char)");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10111,12 +14049,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SIZEOF);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_quadragesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans sizeof(signed char) ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "sizeof(signed char)");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10127,12 +14077,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SIZEOF);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_quadragesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans sizeof(unsigned long int) ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "sizeof(unsigned long int)");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10143,12 +14105,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SIZEOF);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_quadragesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans sizeof(unsigned short int) ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "sizeof(unsigned short int)");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10159,12 +14133,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SIZEOF);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_quadragesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans sizeof(signed long int) ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "sizeof(signed long int)");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10175,12 +14161,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SIZEOF);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_quadragesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans sizeof(signed short int) ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "sizeof(signed short int)");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10191,14 +14189,25 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SIZEOF);
         }
     }
+}
 
     /* sizeof implicit int variants */
+interior vacuum
+_sectio_trecentesima_quadragesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans sizeof(unsigned) implicit int ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "sizeof(unsigned)");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10209,12 +14218,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SIZEOF);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_quinquagesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans sizeof(long) implicit int ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "sizeof(long)");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10225,12 +14246,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SIZEOF);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_quinquagesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans sizeof(short) implicit int ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "sizeof(short)");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10241,12 +14274,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SIZEOF);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_quinquagesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans sizeof(unsigned long) implicit int ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "sizeof(unsigned long)");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10257,12 +14302,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SIZEOF);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_quinquagesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans sizeof(unsigned short) implicit int ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "sizeof(unsigned short)");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10273,12 +14330,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SIZEOF);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_quinquagesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans sizeof(signed long) implicit int ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "sizeof(signed long)");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10289,12 +14358,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SIZEOF);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_quinquagesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans sizeof(signed short) implicit int ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "sizeof(signed short)");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10305,16 +14386,27 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SIZEOF);
         }
     }
+}
 
     /* ========================================================
      * PROBARE: Cast with type modifiers
      * ======================================================== */
+interior vacuum
+_sectio_trecentesima_quinquagesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (unsigned int)x ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(unsigned int)x");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10325,12 +14417,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_quinquagesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (signed int)x ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(signed int)x");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10341,12 +14445,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_quinquagesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (long int)x ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(long int)x");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10357,12 +14473,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_quinquagesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (short int)x ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(short int)x");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10373,12 +14501,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_sexagesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (unsigned char)c ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(unsigned char)c");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10389,12 +14529,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_sexagesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (signed char)c ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(signed char)c");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10405,12 +14557,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_sexagesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (unsigned long int)x ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(unsigned long int)x");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10421,12 +14585,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_sexagesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (unsigned short int)x ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(unsigned short int)x");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10437,12 +14613,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_sexagesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (signed long int)x ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(signed long int)x");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10453,12 +14641,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_sexagesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (signed short int)x ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(signed short int)x");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10469,14 +14669,25 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
         }
     }
+}
 
     /* Implicit int casts */
+interior vacuum
+_sectio_trecentesima_sexagesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (unsigned)x implicit int ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(unsigned)x");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10487,12 +14698,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_sexagesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (long)x implicit int ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(long)x");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10503,12 +14726,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_sexagesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (short)x implicit int ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(short)x");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10519,12 +14754,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_sexagesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (unsigned long)x implicit int ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(unsigned long)x");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10535,12 +14782,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_septuagesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (unsigned short)x implicit int ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(unsigned short)x");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10551,12 +14810,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_septuagesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (signed long)x implicit int ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(signed long)x");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10567,12 +14838,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_septuagesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (signed short)x implicit int ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(signed short)x");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10583,18 +14866,28 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
         }
     }
+}
 
     /* ========================================================
      * PROBARE: Pointer casts with type modifiers
      * ======================================================== */
-
     /* Explicit type single pointer casts */
+interior vacuum
+_sectio_trecentesima_septuagesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (unsigned int *)p ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(unsigned int *)p");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10605,12 +14898,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_septuagesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (signed int *)p ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(signed int *)p");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10621,12 +14926,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_septuagesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (unsigned char *)p ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(unsigned char *)p");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10637,12 +14954,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_septuagesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (signed char *)p ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(signed char *)p");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10653,12 +14982,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_septuagesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (long int *)p ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(long int *)p");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10669,12 +15010,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_septuagesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (short int *)p ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(short int *)p");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10685,12 +15038,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_septuagesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (unsigned long int *)p ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(unsigned long int *)p");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10701,12 +15066,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_octogesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (unsigned short int *)p ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(unsigned short int *)p");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10717,12 +15094,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_octogesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (signed long int *)p ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(signed long int *)p");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10733,12 +15122,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_octogesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (signed short int *)p ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(signed short int *)p");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10749,14 +15150,25 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
         }
     }
+}
 
     /* Explicit type double pointer casts */
+interior vacuum
+_sectio_trecentesima_octogesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (unsigned int **)p ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(unsigned int **)p");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10767,12 +15179,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_octogesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (long int **)p ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(long int **)p");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10783,12 +15207,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_octogesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (unsigned char **)p ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(unsigned char **)p");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10799,14 +15235,25 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
         }
     }
+}
 
     /* Implicit int single pointer casts */
+interior vacuum
+_sectio_trecentesima_octogesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (unsigned *)p implicit int ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(unsigned *)p");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10817,12 +15264,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_octogesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (long *)p implicit int ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(long *)p");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10833,12 +15292,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_octogesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (short *)p implicit int ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(short *)p");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10849,12 +15320,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_octogesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (unsigned long *)p implicit int ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(unsigned long *)p");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10865,12 +15348,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_nonagesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (unsigned short *)p implicit int ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(unsigned short *)p");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10881,12 +15376,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_nonagesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (signed long *)p implicit int ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(signed long *)p");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10897,12 +15404,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_nonagesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (signed short *)p implicit int ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(signed short *)p");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10913,14 +15432,25 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
         }
     }
+}
 
     /* Implicit int double pointer casts */
+interior vacuum
+_sectio_trecentesima_nonagesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (unsigned **)p implicit int ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(unsigned **)p");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10931,12 +15461,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_nonagesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (long **)p implicit int ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(long **)p");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10947,12 +15489,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_nonagesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans (unsigned long **)p implicit int ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "(unsigned long **)p");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -10963,17 +15517,27 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: Storage class specifiers
      * ======================================================== */
+interior vacuum
+_sectio_trecentesima_nonagesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans static int x ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "static int x");
         res = arbor2_glr_parsere(glr, tokens);
@@ -10986,12 +15550,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32(res.radix->datum.declaratio.qualifiers, ARBOR2_QUAL_NONE);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_nonagesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans static float f ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "static float f");
         res = arbor2_glr_parsere(glr, tokens);
@@ -11003,12 +15579,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32(res.radix->datum.declaratio.storage_class, ARBOR2_STORAGE_STATIC);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_nonagesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans extern int y ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "extern int y");
         res = arbor2_glr_parsere(glr, tokens);
@@ -11020,12 +15608,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32(res.radix->datum.declaratio.storage_class, ARBOR2_STORAGE_EXTERN);
         }
     }
+}
 
+interior vacuum
+_sectio_trecentesima_nonagesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans const int z ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "const int z");
         res = arbor2_glr_parsere(glr, tokens);
@@ -11038,12 +15638,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32(res.radix->datum.declaratio.qualifiers, ARBOR2_QUAL_CONST);
         }
     }
+}
 
+interior vacuum
+_sectio_quadringentesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans volatile int w ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "volatile int w");
         res = arbor2_glr_parsere(glr, tokens);
@@ -11055,16 +15667,27 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32(res.radix->datum.declaratio.qualifiers, ARBOR2_QUAL_VOLATILE);
         }
     }
+}
 
     /* ========================================================
      * PROBARE: Specifier combinations (Phase 1.4)
      * ======================================================== */
+interior vacuum
+_sectio_quadringentesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans static const int x ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "static const int x");
         res = arbor2_glr_parsere(glr, tokens);
@@ -11077,12 +15700,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32(res.radix->datum.declaratio.qualifiers, ARBOR2_QUAL_CONST);
         }
     }
+}
 
+interior vacuum
+_sectio_quadringentesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans extern const int y ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "extern const int y");
         res = arbor2_glr_parsere(glr, tokens);
@@ -11095,12 +15730,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32(res.radix->datum.declaratio.qualifiers, ARBOR2_QUAL_CONST);
         }
     }
+}
 
+interior vacuum
+_sectio_quadringentesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans const volatile int z ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "const volatile int z");
         res = arbor2_glr_parsere(glr, tokens);
@@ -11113,12 +15760,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32(res.radix->datum.declaratio.qualifiers, ARBOR2_QUAL_CONST | ARBOR2_QUAL_VOLATILE);
         }
     }
+}
 
+interior vacuum
+_sectio_quadringentesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans volatile const int w ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "volatile const int w");
         res = arbor2_glr_parsere(glr, tokens);
@@ -11131,12 +15790,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32(res.radix->datum.declaratio.qualifiers, ARBOR2_QUAL_CONST | ARBOR2_QUAL_VOLATILE);
         }
     }
+}
 
+interior vacuum
+_sectio_quadringentesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans static volatile int sv ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "static volatile int sv");
         res = arbor2_glr_parsere(glr, tokens);
@@ -11149,12 +15820,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32(res.radix->datum.declaratio.qualifiers, ARBOR2_QUAL_VOLATILE);
         }
     }
+}
 
+interior vacuum
+_sectio_quadringentesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans static const int x = 5 ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "static const int x = 5");
         res = arbor2_glr_parsere(glr, tokens);
@@ -11168,12 +15851,24 @@ s32 principale(vacuum)
             CREDO_NON_NIHIL(res.radix->datum.declaratio.initializor);
         }
     }
+}
 
+interior vacuum
+_sectio_quadringentesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans extern const int y = 10 ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "extern const int y = 10");
         res = arbor2_glr_parsere(glr, tokens);
@@ -11187,12 +15882,24 @@ s32 principale(vacuum)
             CREDO_NON_NIHIL(res.radix->datum.declaratio.initializor);
         }
     }
+}
 
+interior vacuum
+_sectio_quadringentesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans static const int *ptr ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "static const int *ptr");
         res = arbor2_glr_parsere(glr, tokens);
@@ -11205,16 +15912,27 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32(res.radix->datum.declaratio.qualifiers, ARBOR2_QUAL_CONST);
         }
     }
+}
 
     /* ========================================================
      * PROBARE: Initializer declarations (Phase 1.2a)
      * ======================================================== */
+interior vacuum
+_sectio_quadringentesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans int x = 5 ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "int x = 5");
         res = arbor2_glr_parsere(glr, tokens);
@@ -11231,12 +15949,24 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
+interior vacuum
+_sectio_quadringentesima_decima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans int y = a + b ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "int y = a + b");
         res = arbor2_glr_parsere(glr, tokens);
@@ -11253,12 +15983,24 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
+interior vacuum
+_sectio_quadringentesima_decima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans int z = x * 2 + 1 ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "int z = x * 2 + 1");
         res = arbor2_glr_parsere(glr, tokens);
@@ -11270,13 +16012,25 @@ s32 principale(vacuum)
             CREDO_NON_NIHIL(res.radix->datum.declaratio.initializor);
         }
     }
+}
 
     /* Storage class/qualifier initializer tests */
+interior vacuum
+_sectio_quadringentesima_decima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans static int s = 10 ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "static int s = 10");
         res = arbor2_glr_parsere(glr, tokens);
@@ -11289,12 +16043,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32(res.radix->datum.declaratio.storage_class, ARBOR2_STORAGE_STATIC);
         }
     }
+}
 
+interior vacuum
+_sectio_quadringentesima_decima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans extern int e = 20 ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "extern int e = 20");
         res = arbor2_glr_parsere(glr, tokens);
@@ -11307,12 +16073,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32(res.radix->datum.declaratio.storage_class, ARBOR2_STORAGE_EXTERN);
         }
     }
+}
 
+interior vacuum
+_sectio_quadringentesima_decima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans register int r = 30 ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "register int r = 30");
         res = arbor2_glr_parsere(glr, tokens);
@@ -11325,12 +16103,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32(res.radix->datum.declaratio.storage_class, ARBOR2_STORAGE_REGISTER);
         }
     }
+}
 
+interior vacuum
+_sectio_quadringentesima_decima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans auto int a = 40 ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "auto int a = 40");
         res = arbor2_glr_parsere(glr, tokens);
@@ -11343,12 +16133,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32(res.radix->datum.declaratio.storage_class, ARBOR2_STORAGE_AUTO);
         }
     }
+}
 
+interior vacuum
+_sectio_quadringentesima_decima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans const int c = 50 ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "const int c = 50");
         res = arbor2_glr_parsere(glr, tokens);
@@ -11361,12 +16163,24 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32(res.radix->datum.declaratio.qualifiers, ARBOR2_QUAL_CONST);
         }
     }
+}
 
+interior vacuum
+_sectio_quadringentesima_decima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans volatile int v = 60 ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "volatile int v = 60");
         res = arbor2_glr_parsere(glr, tokens);
@@ -11379,13 +16193,25 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32(res.radix->datum.declaratio.qualifiers, ARBOR2_QUAL_VOLATILE);
         }
     }
+}
 
     /* Test with expression initializer and storage class */
+interior vacuum
+_sectio_quadringentesima_decima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans static int sum = a + b ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "static int sum = a + b");
         res = arbor2_glr_parsere(glr, tokens);
@@ -11402,17 +16228,28 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* ========================================================
      * PROBARE: Brace initializers (Phase 1.2b)
      * ======================================================== */
-
     /* Basic brace initializer with single value */
+interior vacuum
+_sectio_quadringentesima_decima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans int a[] = {1} ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "int a[] = {1}");
         res = arbor2_glr_parsere(glr, tokens);
@@ -11435,13 +16272,25 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Brace initializer with multiple values */
+interior vacuum
+_sectio_quadringentesima_vicesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans int b[] = {1, 2, 3} ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "int b[] = {1, 2, 3}");
         res = arbor2_glr_parsere(glr, tokens);
@@ -11464,13 +16313,25 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Empty brace initializer */
+interior vacuum
+_sectio_quadringentesima_vicesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans int c[] = {} ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "int c[] = {}");
         res = arbor2_glr_parsere(glr, tokens);
@@ -11493,13 +16354,25 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Trailing comma */
+interior vacuum
+_sectio_quadringentesima_vicesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans int d[] = {1, 2,} ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "int d[] = {1, 2,}");
         res = arbor2_glr_parsere(glr, tokens);
@@ -11521,13 +16394,25 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Nested braces */
+interior vacuum
+_sectio_quadringentesima_vicesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans int m[2][2] = {{1, 2}, {3, 4}} ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "int m[2][2] = {{1, 2}, {3, 4}}");
         res = arbor2_glr_parsere(glr, tokens);
@@ -11564,13 +16449,25 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Static with brace initializer */
+interior vacuum
+_sectio_quadringentesima_vicesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans static int s[] = {10, 20} ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "static int s[] = {10, 20}");
         res = arbor2_glr_parsere(glr, tokens);
@@ -11587,13 +16484,25 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Const with brace initializer */
+interior vacuum
+_sectio_quadringentesima_vicesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans const int c[] = {30, 40} ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "const int c[] = {30, 40}");
         res = arbor2_glr_parsere(glr, tokens);
@@ -11610,13 +16519,25 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Single value in braces (not array) */
+interior vacuum
+_sectio_quadringentesima_vicesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans int x = {5} ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "int x = {5}");
         res = arbor2_glr_parsere(glr, tokens);
@@ -11638,13 +16559,25 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Expression initializers still work */
+interior vacuum
+_sectio_quadringentesima_vicesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans int y = 42 (still works) ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "int y = 42");
         res = arbor2_glr_parsere(glr, tokens);
@@ -11661,19 +16594,29 @@ s32 principale(vacuum)
             }
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: Designated initializers (Phase 1.2c)
      * ======================================================== */
-
     /* Field designator: .x = 1 */
+interior vacuum
+_sectio_quadringentesima_vicesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus** item;
-
-        imprimere("\n--- Probans int x = {.a = 5} ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "int x = {.a = 5}");
         res = arbor2_glr_parsere(glr, tokens);
@@ -11701,13 +16644,25 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Array designator: [5] = 100 */
+interior vacuum
+_sectio_quadringentesima_vicesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans int x = {[5] = 100} ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "int x = {[5] = 100}");
         res = arbor2_glr_parsere(glr, tokens);
@@ -11723,14 +16678,26 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Multiple field designators */
+interior vacuum
+_sectio_quadringentesima_tricesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* init;
-
-        imprimere("\n--- Probans int x = {.a = 1, .b = 2} ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "int x = {.a = 1, .b = 2}");
         res = arbor2_glr_parsere(glr, tokens);
@@ -11746,15 +16713,27 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)xar_numerus(items->datum.lista_separata.elementa), 2);
         }
     }
+}
 
     /* Chained designators: [0].x = 5 */
+interior vacuum
+_sectio_quadringentesima_tricesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* init;
         Arbor2Nodus** item;
-
-        imprimere("\n--- Probans int x = {[0].y = 5} ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "int x = {[0].y = 5}");
         res = arbor2_glr_parsere(glr, tokens);
@@ -11776,14 +16755,26 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Mixed positional and designated */
+interior vacuum
+_sectio_quadringentesima_tricesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* init;
-
-        imprimere("\n--- Probans int x = {1, .b = 2, 3} ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "int x = {1, .b = 2, 3}");
         res = arbor2_glr_parsere(glr, tokens);
@@ -11799,15 +16790,27 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)xar_numerus(items->datum.lista_separata.elementa), 3);
         }
     }
+}
 
     /* Designator with nested brace value */
+interior vacuum
+_sectio_quadringentesima_tricesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* init;
         Arbor2Nodus** item;
-
-        imprimere("\n--- Probans int x = {.a = {1, 2}} ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "int x = {.a = {1, 2}}");
         res = arbor2_glr_parsere(glr, tokens);
@@ -11833,14 +16836,26 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Multiple array designators */
+interior vacuum
+_sectio_quadringentesima_tricesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* init;
-
-        imprimere("\n--- Probans int x = {[0] = 1, [5] = 6} ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "int x = {[0] = 1, [5] = 6}");
         res = arbor2_glr_parsere(glr, tokens);
@@ -11856,15 +16871,27 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)xar_numerus(items->datum.lista_separata.elementa), 2);
         }
     }
+}
 
     /* Multi-dimensional array designator: [0][1] = 5 */
+interior vacuum
+_sectio_quadringentesima_tricesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* init;
         Arbor2Nodus** item;
-
-        imprimere("\n--- Probans int x = {[0][1] = 5} ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "int x = {[0][1] = 5}");
         res = arbor2_glr_parsere(glr, tokens);
@@ -11885,15 +16912,27 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Field chain: .a.b = 5 */
+interior vacuum
+_sectio_quadringentesima_tricesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* init;
         Arbor2Nodus** item;
-
-        imprimere("\n--- Probans int x = {.a.b = 5} ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "int x = {.a.b = 5}");
         res = arbor2_glr_parsere(glr, tokens);
@@ -11914,33 +16953,55 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Designator with trailing comma */
+interior vacuum
+_sectio_quadringentesima_tricesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans int x = {.a = 1,} ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "int x = {.a = 1,}");
         res = arbor2_glr_parsere(glr, tokens);
 
         CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Multi-declarator (comma-separated)
      * ======================================================== */
-
     /* Simple multi-declarator: int x, y */
+interior vacuum
+_sectio_quadringentesima_tricesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* first;
         Arbor2Nodus* second;
-
-        imprimere("\n--- Probans int x, y ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "int x, y");
         res = arbor2_glr_parsere(glr, tokens);
@@ -11966,15 +17027,27 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Multi-declarator with initializers: int x = 1, y = 2 */
+interior vacuum
+_sectio_quadringentesima_tricesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* first;
         Arbor2Nodus* second;
-
-        imprimere("\n--- Probans int x = 1, y = 2 ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "int x = 1, y = 2");
         res = arbor2_glr_parsere(glr, tokens);
@@ -12004,16 +17077,28 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Three declarators: int x, y, z */
+interior vacuum
+_sectio_quadringentesima_quadragesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* first;
         Arbor2Nodus* second;
         Arbor2Nodus* third;
-
-        imprimere("\n--- Probans int x, y, z ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "int x, y, z");
         res = arbor2_glr_parsere(glr, tokens);
@@ -12041,15 +17126,27 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Mixed: int x = 1, y (some with init, some without) */
+interior vacuum
+_sectio_quadringentesima_quadragesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* first;
         Arbor2Nodus* second;
-
-        imprimere("\n--- Probans int x = 1, y ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "int x = 1, y");
         res = arbor2_glr_parsere(glr, tokens);
@@ -12069,15 +17166,27 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Struct type multi-declarator: struct foo x, y */
+interior vacuum
+_sectio_quadringentesima_quadragesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* first;
         Arbor2Nodus* second;
-
-        imprimere("\n--- Probans struct foo x, y ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "struct foo x, y");
         res = arbor2_glr_parsere(glr, tokens);
@@ -12103,15 +17212,27 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Multi-declarator with brace initializers */
+interior vacuum
+_sectio_quadringentesima_quadragesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* first;
         Arbor2Nodus* second;
-
-        imprimere("\n--- Probans int a[] = {1}, b[] = {2} ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "int a[] = {1}, b[] = {2}");
         res = arbor2_glr_parsere(glr, tokens);
@@ -12139,17 +17260,28 @@ s32 principale(vacuum)
             }
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: Translation unit - multiple declarations
      * ======================================================== */
+interior vacuum
+_sectio_quadringentesima_quadragesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Translation unit: two declarations ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "int x; int y;");
         res = arbor2_glr_parsere_translation_unit(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -12161,12 +17293,25 @@ s32 principale(vacuum)
                 xar_numerus(res.radix->datum.translation_unit.declarationes), II);
         }
     }
+}
 
+interior vacuum
+_sectio_quadringentesima_quadragesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Translation unit: three declarations ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "int x; int y; int z;");
         res = arbor2_glr_parsere_translation_unit(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -12178,12 +17323,25 @@ s32 principale(vacuum)
                 xar_numerus(res.radix->datum.translation_unit.declarationes), III);
         }
     }
+}
 
+interior vacuum
+_sectio_quadringentesima_quadragesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Translation unit: declaration with init ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "int x = 5; int y = 10;");
         res = arbor2_glr_parsere_translation_unit(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -12195,12 +17353,25 @@ s32 principale(vacuum)
                 xar_numerus(res.radix->datum.translation_unit.declarationes), II);
         }
     }
+}
 
+interior vacuum
+_sectio_quadringentesima_quadragesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Translation unit: function definition ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "int foo() { return 1; }");
         res = arbor2_glr_parsere_translation_unit(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -12212,12 +17383,25 @@ s32 principale(vacuum)
                 xar_numerus(res.radix->datum.translation_unit.declarationes), I);
         }
     }
+}
 
+interior vacuum
+_sectio_quadringentesima_quadragesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Translation unit: declaration + function ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "int x; int foo() { return x; }");
         res = arbor2_glr_parsere_translation_unit(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -12229,12 +17413,25 @@ s32 principale(vacuum)
                 xar_numerus(res.radix->datum.translation_unit.declarationes), II);
         }
     }
+}
 
+interior vacuum
+_sectio_quadringentesima_quadragesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Translation unit: multiple functions ---\n");
         tokens = _lexare_ad_tokens(piscina, intern,
             "int foo() { return 1; } int bar() { return 2; }");
         res = arbor2_glr_parsere_translation_unit(glr, tokens);
@@ -12247,12 +17444,25 @@ s32 principale(vacuum)
                 xar_numerus(res.radix->datum.translation_unit.declarationes), II);
         }
     }
+}
 
+interior vacuum
+_sectio_quadringentesima_quinquagesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Translation unit: empty input ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "");
         res = arbor2_glr_parsere_translation_unit(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -12264,12 +17474,25 @@ s32 principale(vacuum)
                 xar_numerus(res.radix->datum.translation_unit.declarationes), ZEPHYRUM);
         }
     }
+}
 
+interior vacuum
+_sectio_quadringentesima_quinquagesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Translation unit: function with params ---\n");
         tokens = _lexare_ad_tokens(piscina, intern,
             "int add(int a, int b) { return a + b; }");
         res = arbor2_glr_parsere_translation_unit(glr, tokens);
@@ -12282,20 +17505,33 @@ s32 principale(vacuum)
                 xar_numerus(res.radix->datum.translation_unit.declarationes), I);
         }
     }
+}
 
     /* Function with mixed type params: int and float */
+interior vacuum
+_sectio_quadringentesima_quinquagesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Translation unit: function with int and float params ---\n");
         tokens = _lexare_ad_tokens(piscina, intern,
             "float scale(int x, float factor) { return x * factor; }");
         res = arbor2_glr_parsere_translation_unit(glr, tokens);
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.radix);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Typedef registration post-parse
@@ -12304,8 +17540,16 @@ s32 principale(vacuum)
      * the typedef names should be registered in the expansion context.
      * This enables subsequent declarations using the typedef'd names.
      * ======================================================== */
-
     /* Test: typedef registration - simple typedef */
+interior vacuum
+_sectio_quadringentesima_quinquagesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
@@ -12313,8 +17557,6 @@ s32 principale(vacuum)
         Arbor2Nodus* tu;
         Arbor2Nodus* first_decl;
         unio { constans character* c; i8* m; } u;
-
-        imprimere("\n--- Typedef registration: typedef int Integer; ---\n");
 
         /* Create fresh GLR with clean expansion context for this test */
         {
@@ -12354,15 +17596,23 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Test: pointer typedef registration */
+interior vacuum
+_sectio_quadringentesima_quinquagesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         chorda titulus_ch;
         unio { constans character* c; i8* m; } u;
-
-        imprimere("\n--- Typedef registration: typedef int *IntPtr; ---\n");
 
         {
             Arbor2Expansion* exp_test = arbor2_expansion_creare(piscina, intern);
@@ -12380,15 +17630,23 @@ s32 principale(vacuum)
             CREDO_VERUM(arbor2_expansion_est_typedef(exp_test, titulus_ch));
         }
     }
+}
 
     /* Test: struct typedef registration */
+interior vacuum
+_sectio_quadringentesima_quinquagesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         chorda titulus_ch;
         unio { constans character* c; i8* m; } u;
-
-        imprimere("\n--- Typedef registration: typedef struct { int x; } Point; ---\n");
 
         {
             Arbor2Expansion* exp_test = arbor2_expansion_creare(piscina, intern);
@@ -12413,15 +17671,23 @@ s32 principale(vacuum)
             CREDO_VERUM(arbor2_expansion_est_typedef(exp_test, titulus_ch));
         }
     }
+}
 
     /* Test: enum typedef registration */
+interior vacuum
+_sectio_quadringentesima_quinquagesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         chorda titulus_ch;
         unio { constans character* c; i8* m; } u;
-
-        imprimere("\n--- Typedef registration: typedef enum { RED, GREEN, BLUE } Color; ---\n");
 
         {
             Arbor2Expansion* exp_test = arbor2_expansion_creare(piscina, intern);
@@ -12446,17 +17712,28 @@ s32 principale(vacuum)
             CREDO_VERUM(arbor2_expansion_est_typedef(exp_test, titulus_ch));
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: Type modifiers (Phase 1.4)
      * ======================================================== */
+interior vacuum
+_sectio_quadringentesima_quinquagesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans unsigned int x ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "unsigned int x");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -12465,12 +17742,25 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
         }
     }
+}
 
+interior vacuum
+_sectio_quadringentesima_quinquagesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans long int y ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "long int y");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -12479,12 +17769,25 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
         }
     }
+}
 
+interior vacuum
+_sectio_quadringentesima_quinquagesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans unsigned long z (implicit int) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "unsigned long z");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -12493,12 +17796,25 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
         }
     }
+}
 
+interior vacuum
+_sectio_quadringentesima_sexagesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans short s (implicit int) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "short s");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -12507,12 +17823,25 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
         }
     }
+}
 
+interior vacuum
+_sectio_quadringentesima_sexagesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans signed char c ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "signed char c");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -12521,12 +17850,25 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
         }
     }
+}
 
+interior vacuum
+_sectio_quadringentesima_sexagesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans unsigned short int u ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "unsigned short int u");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -12535,12 +17877,25 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
         }
     }
+}
 
+interior vacuum
+_sectio_quadringentesima_sexagesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans signed long int w ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "signed long int w");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -12549,12 +17904,25 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
         }
     }
+}
 
+interior vacuum
+_sectio_quadringentesima_sexagesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans unsigned char uc ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "unsigned char uc");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
@@ -12563,959 +17931,2014 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
         }
     }
+}
 
     /* ========================================================
      * PROBARE: Phase 1.4b - Storage class + type modifiers
      * ======================================================== */
-
     /* static + type modifiers */
+interior vacuum
+_sectio_quadringentesima_sexagesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans static unsigned int x ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "static unsigned int x");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
+interior vacuum
+_sectio_quadringentesima_sexagesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans static long int y ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "static long int y");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
+interior vacuum
+_sectio_quadringentesima_sexagesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans static unsigned long int z ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "static unsigned long int z");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
+interior vacuum
+_sectio_quadringentesima_sexagesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans static short int s ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "static short int s");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
+interior vacuum
+_sectio_quadringentesima_sexagesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans static signed char c ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "static signed char c");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
+interior vacuum
+_sectio_quadringentesima_septuagesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans static unsigned int u ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "static unsigned int u");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
     /* extern + type modifiers */
+interior vacuum
+_sectio_quadringentesima_septuagesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans extern unsigned int a ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "extern unsigned int a");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
+interior vacuum
+_sectio_quadringentesima_septuagesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans extern long int b ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "extern long int b");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
+interior vacuum
+_sectio_quadringentesima_septuagesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans extern unsigned short int c ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "extern unsigned short int c");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
     /* register + type modifiers */
+interior vacuum
+_sectio_quadringentesima_septuagesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans register short int d ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "register short int d");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
+interior vacuum
+_sectio_quadringentesima_septuagesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans register unsigned long int e ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "register unsigned long int e");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
+interior vacuum
+_sectio_quadringentesima_septuagesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans register signed int f ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "register signed int f");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
     /* auto + type modifiers */
+interior vacuum
+_sectio_quadringentesima_septuagesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans auto signed char g ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "auto signed char g");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
+interior vacuum
+_sectio_quadringentesima_septuagesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans auto long int h ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "auto long int h");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
+interior vacuum
+_sectio_quadringentesima_septuagesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans auto unsigned short int i ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "auto unsigned short int i");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
     /* Complex combinations */
+interior vacuum
+_sectio_quadringentesima_octogesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans static unsigned long int j ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "static unsigned long int j");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
+interior vacuum
+_sectio_quadringentesima_octogesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans extern signed short int k ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "extern signed short int k");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
+interior vacuum
+_sectio_quadringentesima_octogesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans register unsigned char l ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "register unsigned char l");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
+interior vacuum
+_sectio_quadringentesima_octogesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans auto signed long int m ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "auto signed long int m");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
     /* ========================================================
      * PROBARE: Phase 1.4c - Implicit int with storage class + type modifiers
      * ======================================================== */
-
     /* static + implicit int */
+interior vacuum
+_sectio_quadringentesima_octogesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans static unsigned x (implicit int) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "static unsigned x");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
+interior vacuum
+_sectio_quadringentesima_octogesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans static long y (implicit int) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "static long y");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
+interior vacuum
+_sectio_quadringentesima_octogesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans static short z (implicit int) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "static short z");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
+interior vacuum
+_sectio_quadringentesima_octogesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans static signed a (implicit int) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "static signed a");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
+interior vacuum
+_sectio_quadringentesima_octogesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans static unsigned long b (implicit int) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "static unsigned long b");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
     /* extern + implicit int */
+interior vacuum
+_sectio_quadringentesima_octogesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans extern short c (implicit int) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "extern short c");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
+interior vacuum
+_sectio_quadringentesima_nonagesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans extern unsigned long d (implicit int) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "extern unsigned long d");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
     /* register + implicit int */
+interior vacuum
+_sectio_quadringentesima_nonagesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans register signed e (implicit int) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "register signed e");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
+interior vacuum
+_sectio_quadringentesima_nonagesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans register long f (implicit int) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "register long f");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
     /* auto + implicit int */
+interior vacuum
+_sectio_quadringentesima_nonagesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans auto unsigned short g (implicit int) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "auto unsigned short g");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
+interior vacuum
+_sectio_quadringentesima_nonagesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans auto signed long h (implicit int) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "auto signed long h");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
     /* with initializer */
+interior vacuum
+_sectio_quadringentesima_nonagesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans static unsigned i = 5 (implicit int) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "static unsigned i = 5");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
+interior vacuum
+_sectio_quadringentesima_nonagesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans extern long j = 10 (implicit int) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "extern long j = 10");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Phase 1.4d - Pointer qualifiers
      * ======================================================== */
-
     /* int * const p - const pointer to int */
+interior vacuum
+_sectio_quadringentesima_nonagesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans int * const p (pointer qualifier) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "int * const p");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
     /* int * volatile v - volatile pointer to int */
+interior vacuum
+_sectio_quadringentesima_nonagesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans int * volatile v (pointer qualifier) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "int * volatile v");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
     /* int * const volatile cv - const volatile pointer */
+interior vacuum
+_sectio_quadringentesima_nonagesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans int * const volatile cv (pointer qualifier) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "int * const volatile cv");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
     /* int * volatile const vc - volatile const pointer (order variant) */
+interior vacuum
+_sectio_quingentesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans int * volatile const vc (pointer qualifier) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "int * volatile const vc");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
     /* char ** const pp - const pointer to pointer to char */
+interior vacuum
+_sectio_quingentesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans char ** const pp (pointer qualifier) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "char ** const pp");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
     /* int * const * volatile pp - multiple qualified pointers */
+interior vacuum
+_sectio_quingentesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans int * const * volatile pp (multi qualifier) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "int * const * volatile pp");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
     /* const int * const cp - const pointer to const int */
+interior vacuum
+_sectio_quingentesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans const int * const cp (type + pointer qualifier) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "const int * const cp");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Qualifier + type modifier combinations
      * ======================================================== */
-
     /* const unsigned int x */
+interior vacuum
+_sectio_quingentesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans const unsigned int x  ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "const unsigned int x");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
     /* const long int y */
+interior vacuum
+_sectio_quingentesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans const long int y  ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "const long int y");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
     /* const short int z */
+interior vacuum
+_sectio_quingentesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans const short int z  ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "const short int z");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
     /* volatile unsigned int a */
+interior vacuum
+_sectio_quingentesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans volatile unsigned int a  ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "volatile unsigned int a");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
     /* volatile long int b */
+interior vacuum
+_sectio_quingentesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans volatile long int b  ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "volatile long int b");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
     /* const signed char c */
+interior vacuum
+_sectio_quingentesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans const signed char c  ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "const signed char c");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
     /* static const unsigned int d (storage + qualifier + type modifier) */
+interior vacuum
+_sectio_quingentesima_decima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans static const unsigned int d  ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "static const unsigned int d");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
     /* extern volatile long int e (storage + qualifier + type modifier) */
+interior vacuum
+_sectio_quingentesima_decima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans extern volatile long int e  ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "extern volatile long int e");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
-
+}
 
     /* ========================================================
      * PROBARE: void pointer declarations
      * ======================================================== */
-
     /* void *p - pointer to void */
+interior vacuum
+_sectio_quingentesima_decima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans void *p (void pointer) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "void *p");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
     /* void **pp - pointer to pointer to void */
+interior vacuum
+_sectio_quingentesima_decima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans void **pp (void double pointer) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "void **pp");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
     /* void * const vp - const pointer to void */
+interior vacuum
+_sectio_quingentesima_decima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans void * const vp (const void pointer) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "void * const vp");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Floating point types
      * ======================================================== */
-
     /* float f - basic float declaration */
+interior vacuum
+_sectio_quingentesima_decima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans float f (float declaration) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "float f");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
     /* double d - basic double declaration */
+interior vacuum
+_sectio_quingentesima_decima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans double d (double declaration) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "double d");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
     /* long double ld - long double declaration */
+interior vacuum
+_sectio_quingentesima_decima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans long double ld (long double declaration) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "long double ld");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
     /* float *fp - pointer to float */
+interior vacuum
+_sectio_quingentesima_decima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans float *fp (float pointer) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "float *fp");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
     /* double *dp - pointer to double */
+interior vacuum
+_sectio_quingentesima_decima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans double *dp (double pointer) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "double *dp");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
     /* float arr[10] - float array */
+interior vacuum
+_sectio_quingentesima_vicesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans float arr[10] (float array) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "float arr[10]");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
     /* double arr[10] - double array */
+interior vacuum
+_sectio_quingentesima_vicesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans double arr[10] (double array) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "double arr[10]");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Float/Double casts
      * ======================================================== */
-
     /* (float)x - cast to float */
+interior vacuum
+_sectio_quingentesima_vicesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans (float)x (cast to float) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "(float)x");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
     /* (double)x - cast to double */
+interior vacuum
+_sectio_quingentesima_vicesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans (double)x (cast to double) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "(double)x");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
     /* (long double)x - cast to long double */
+interior vacuum
+_sectio_quingentesima_vicesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans (long double)x (cast to long double) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "(long double)x");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
     /* (float *)p - pointer cast to float */
+interior vacuum
+_sectio_quingentesima_vicesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans (float *)p (pointer cast to float) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "(float *)p");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
     /* (double *)p - pointer cast to double */
+interior vacuum
+_sectio_quingentesima_vicesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans (double *)p (pointer cast to double) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "(double *)p");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Float/Double sizeof
      * ======================================================== */
-
     /* sizeof(float) */
+interior vacuum
+_sectio_quingentesima_vicesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans sizeof(float) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "sizeof(float)");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
     /* sizeof(double) */
+interior vacuum
+_sectio_quingentesima_vicesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans sizeof(double) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "sizeof(double)");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
     /* sizeof(long double) */
+interior vacuum
+_sectio_quingentesima_vicesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans sizeof(long double) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "sizeof(long double)");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
     /* sizeof(float *) */
+interior vacuum
+_sectio_quingentesima_tricesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans sizeof(float *) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "sizeof(float *)");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
     /* sizeof(double *) */
+interior vacuum
+_sectio_quingentesima_tricesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans sizeof(double *) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "sizeof(double *)");
         res = arbor2_glr_parsere_expressio(glr, tokens);
         CREDO_VERUM(res.successus);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Function pointers
      * ======================================================== */
-
     /* int (*fp)(void) - function pointer returning int, no params */
+interior vacuum
+_sectio_quingentesima_tricesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans int (*fp)(void) (function pointer) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "int (*fp)(void)");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
     /* int (*fp)(int) - function pointer returning int, int param */
+interior vacuum
+_sectio_quingentesima_tricesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans int (*fp)(int) (function pointer with param) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "int (*fp)(int)");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
     /* int (*fp)(int, int) - function pointer with multiple params */
+interior vacuum
+_sectio_quingentesima_tricesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans int (*fp)(int, int) (function pointer multi params) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "int (*fp)(int, int)");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
     /* void (*fp)(void) - void function pointer */
+interior vacuum
+_sectio_quingentesima_tricesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans void (*fp)(void) (void function pointer) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "void (*fp)(void)");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
     /* int (**fpp)(int) - pointer to function pointer */
+interior vacuum
+_sectio_quingentesima_tricesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans int (**fpp)(int) (pointer to function pointer) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "int (**fpp)(int)");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Array parameters
      * ======================================================== */
-
     /* int fn(int arr[]) - function with array parameter */
+interior vacuum
+_sectio_quingentesima_tricesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans int fn(int arr[]) (array parameter) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "int fn(int arr[])");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
     /* int fn(int arr[10]) - function with sized array parameter */
+interior vacuum
+_sectio_quingentesima_tricesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans int fn(int arr[10]) (sized array parameter) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "int fn(int arr[10])");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
     /* void fn(char *argv[]) - function with pointer array parameter */
+interior vacuum
+_sectio_quingentesima_tricesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans void fn(char *argv[]) (pointer array parameter) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "void fn(char *argv[])");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
     /* ========================================================
      * PROBARE: Variadic functions (ellipsis)
      * ======================================================== */
-
     /* int printf(char *fmt, ...) - variadic function */
+interior vacuum
+_sectio_quingentesima_quadragesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans int printf(char *fmt, ...) (variadic function) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "int printf(char *fmt, ...)");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
     /* int foo(int x, ...) - variadic with int param */
+interior vacuum
+_sectio_quingentesima_quadragesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans int foo(int x, ...) (variadic with int) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "int foo(int x, ...)");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
     /* ========================================================
      * PROBARE: Const qualifier in parameters
      * ======================================================== */
-
     /* int foo(const int x) - const value parameter */
+interior vacuum
+_sectio_quingentesima_quadragesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans int foo(const int x) (const value param) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "int foo(const int x)");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
     /* int foo(const char *s) - const pointer parameter */
+interior vacuum
+_sectio_quingentesima_quadragesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans int foo(const char *s) (const pointer param) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "int foo(const char *s)");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
     /* void bar(int x, const int y) - mixed params with const */
+interior vacuum
+_sectio_quingentesima_quadragesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans void bar(int x, const int y) (mixed const param) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "void bar(int x, const int y)");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
+}
 
     /* int fn(volatile int v) - volatile parameter */
+interior vacuum
+_sectio_quingentesima_quadragesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans int fn(volatile int v) (volatile param) ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "int fn(volatile int v)");
         res = arbor2_glr_parsere(glr, tokens);
         CREDO_VERUM(res.successus);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Table validation
      * ======================================================== */
-
+interior vacuum
+_sectio_quingentesima_quadragesima_sexta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         b32 valida;
 
-        imprimere("\n--- Table validation ---\n");
         valida = arbor2_glr_validare_tabulas();
         CREDO_VERUM(valida);
+    }
+}
 
-        imprimere("\n--- Tag validation ---\n");
+interior vacuum
+_sectio_quingentesima_quadragesima_septima (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    {
+        b32 valida;
+
         valida = arbor2_glr_validare_tags();
         CREDO_VERUM(valida);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Location propagation (Phase 2.1)
      * ======================================================== */
+interior vacuum
+_sectio_quingentesima_quadragesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans location on identifier ---\n");
 
         /* "foo" at column 1 */
         tokens = _lexare_ad_tokens(piscina, intern, "foo");
@@ -13532,13 +19955,25 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32(res.radix->layer_index, ZEPHYRUM);
         }
     }
+}
 
+interior vacuum
+_sectio_quingentesima_quadragesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* radix;
-
-        imprimere("\n--- Probans location on binary expression ---\n");
 
         /* "a + b" - should span columns 1-5 */
         tokens = _lexare_ad_tokens(piscina, intern, "a + b");
@@ -13568,12 +20003,24 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
+interior vacuum
+_sectio_quingentesima_quinquagesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans location on integer literal ---\n");
 
         /* "12345" at column 1, 5 digits */
         tokens = _lexare_ad_tokens(piscina, intern, "12345");
@@ -13588,13 +20035,25 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32(res.radix->columna_finis, VI);  /* 1 + 5 = 6 */
         }
     }
+}
 
+interior vacuum
+_sectio_quingentesima_quinquagesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* radix;
-
-        imprimere("\n--- Probans location on function call ---\n");
 
         /* "foo()" - should span columns 1-5 */
         tokens = _lexare_ad_tokens(piscina, intern, "foo()");
@@ -13610,18 +20069,28 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32(radix->columna_finis, VI);   /* end at ')' = 5 + 1 = 6 */
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: Parent pointer (pater) on binary expression
      * ======================================================== */
+interior vacuum
+_sectio_quingentesima_quinquagesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Arbor2Nodus* radix;
         Arbor2GLRResultus res;
         Xar* tokens;
-
-        imprimere("\n--- Probans pater on binary expression: a + b ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "a + b");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -13644,18 +20113,29 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* ========================================================
      * PROBARE: Parent pointer (pater) on nested expression
      * ======================================================== */
+interior vacuum
+_sectio_quingentesima_quinquagesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Arbor2Nodus* radix;
         Arbor2Nodus* dexter;
         Arbor2GLRResultus res;
         Xar* tokens;
-
-        imprimere("\n--- Probans pater on nested: a + b * c ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "a + b * c");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -13694,17 +20174,28 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* ========================================================
      * PROBARE: Parent pointer (pater) on ternary
      * ======================================================== */
+interior vacuum
+_sectio_quingentesima_quinquagesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Arbor2Nodus* radix;
         Arbor2GLRResultus res;
         Xar* tokens;
-
-        imprimere("\n--- Probans pater on ternary: a ? b : c ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "a ? b : c");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -13729,17 +20220,28 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* ========================================================
      * PROBARE: Parent pointer (pater) on function call
      * ======================================================== */
+interior vacuum
+_sectio_quingentesima_quinquagesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Arbor2Nodus* radix;
         Arbor2GLRResultus res;
         Xar* tokens;
-
-        imprimere("\n--- Probans pater on function call: foo(a) ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "foo(a)");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -13763,17 +20265,28 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* ========================================================
      * PROBARE: Parent pointer (pater) on subscript
      * ======================================================== */
+interior vacuum
+_sectio_quingentesima_quinquagesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Arbor2Nodus* radix;
         Arbor2GLRResultus res;
         Xar* tokens;
-
-        imprimere("\n--- Probans pater on subscript: arr[i] ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "arr[i]");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -13794,16 +20307,27 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* ========================================================
      * PROBARE: Latin type macro disambiguation (Phase 3.2)
      * ======================================================== */
+interior vacuum
+_sectio_quingentesima_quinquagesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Arbor2GLRResultus res;
         Xar* tokens;
-
-        imprimere("\n--- Probans Latin type macro disambiguation ---\n");
 
         /* Register latina.h macros */
         arbor2_includere_latina(expansion);
@@ -13818,16 +20342,27 @@ s32 principale(vacuum)
         CREDO_NON_NIHIL(res.radix);
         CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
     }
+}
 
     /* ========================================================
      * PROBARE: Nested macro resolution (Phase 3.2)
      * ======================================================== */
+interior vacuum
+_sectio_quingentesima_quinquagesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Arbor2GLRResultus res;
         Xar* tokens;
-
-        imprimere("\n--- Probans nested macro resolution ---\n");
 
         /* Add i32 -> integer (which -> int via latina.h) */
         arbor2_expansion_addere_macro(expansion, "i32", "integer", NIHIL);
@@ -13841,18 +20376,25 @@ s32 principale(vacuum)
         CREDO_NON_NIHIL(res.radix);
         CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
     }
+}
 
     /* ========================================================
      * PROBARE: AMBIGUUS identifier tracking (Phase 3.3)
      * ======================================================== */
+interior vacuum
+_sectio_quingentesima_quinquagesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
     {
         Arbor2GLRResultus res;
         Xar* tokens;
         Arbor2Expansion* fresh_exp;
         Arbor2GLR* fresh_glr;
-
-        imprimere("\n--- Probans AMBIGUUS identifier tracking ---\n");
 
         /* Create fresh context without latina.h to get ambiguity */
         fresh_exp = arbor2_expansion_creare(piscina, intern);
@@ -13874,19 +20416,30 @@ s32 principale(vacuum)
             CREDO_VERUM(xar_numerus(res.radix->datum.ambiguus.interpretationes) >= II);
         }
     }
+}
 
     /* ========================================================
      * PROBARE: Error Recovery
      * ======================================================== */
-
     /* Test 1: Single invalid declaration, followed by valid one */
+interior vacuum
+_sectio_quingentesima_sexagesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* tu;
         i32 num_decls;
-
-        imprimere("\n--- Probans error recovery: invalid decl + valid decl ---\n");
 
         /* "int @ x;" is invalid, "int y;" is valid */
         tokens = _lexare_ad_tokens(piscina, intern, "int @ x; int y;");
@@ -13935,15 +20488,27 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Test 2: Multiple consecutive errors */
+interior vacuum
+_sectio_quingentesima_sexagesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* tu;
         i32 num_decls;
-
-        imprimere("\n--- Probans error recovery: multiple errors ---\n");
 
         /* All three are invalid: "@ x;", "@ y;", "@ z;" */
         tokens = _lexare_ad_tokens(piscina, intern, "@ x; @ y; @ z;");
@@ -13975,15 +20540,27 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Test 3: Error followed by valid function */
+interior vacuum
+_sectio_quingentesima_sexagesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* tu;
         i32 num_decls;
-
-        imprimere("\n--- Probans error recovery: error + valid function ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "@ badstuff; int foo() { return 0; }");
         res = arbor2_glr_parsere_translation_unit(glr, tokens);
@@ -14010,13 +20587,25 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Test 4: Errors collection in result */
+interior vacuum
+_sectio_quingentesima_sexagesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Probans error collection in result ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "@ bad;");
         res = arbor2_glr_parsere_translation_unit(glr, tokens);
@@ -14038,27 +20627,36 @@ s32 principale(vacuum)
     /* ========================================================
      * PROBARE: Parser statistics
      * ======================================================== */
-
     {
         imprimere("\n--- Parser statistics ---\n");
         imprimere("  Forks:     %d\n", glr->num_furcae);
         imprimere("  Merges:    %d\n", glr->num_mergae);
         imprimere("  Max front: %d\n", glr->max_frons);
     }
-
+}
 
     /* ========================================================
      * PROBARE: Conditional Compilation (Phase 5)
      * ======================================================== */
-
     /* Test 1: Simple #ifdef/#endif */
+interior vacuum
+_sectio_quingentesima_sexagesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* tu;
         i32 num_decls;
-
-        imprimere("\n--- Probans simple #ifdef/#endif ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern,
             "#ifdef DEBUG\n"
@@ -14097,15 +20695,27 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Test 2: #ifdef/#else/#endif */
+interior vacuum
+_sectio_quingentesima_sexagesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* tu;
         i32 num_decls;
-
-        imprimere("\n--- Probans #ifdef/#else/#endif ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern,
             "#ifdef DEBUG\n"
@@ -14145,15 +20755,27 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Test 3: #ifndef */
+interior vacuum
+_sectio_quingentesima_sexagesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* tu;
         i32 num_decls;
-
-        imprimere("\n--- Probans #ifndef ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern,
             "#ifndef HEADER_H\n"
@@ -14198,15 +20820,27 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Test 4: Multiple independent conditionals */
+interior vacuum
+_sectio_quingentesima_sexagesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* tu;
         i32 num_decls;
-
-        imprimere("\n--- Probans multiple conditionals ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern,
             "#ifdef X\n"
@@ -14239,15 +20873,27 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Test 5: Conditional mixed with regular declarations */
+interior vacuum
+_sectio_quingentesima_sexagesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* tu;
         i32 num_decls;
-
-        imprimere("\n--- Probans conditional mixed with declarations ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern,
             "int before;\n"
@@ -14285,15 +20931,27 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Test 6: Nested conditionals */
+interior vacuum
+_sectio_quingentesima_sexagesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* tu;
         i32 num_decls;
-
-        imprimere("\n--- Probans nested conditionals ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern,
             "#ifdef A\n"
@@ -14339,19 +20997,29 @@ s32 principale(vacuum)
             }
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: Conditional Expression Evaluation (Phase 5b)
      * ======================================================== */
-
     /* Test: #if with simple constant 1 */
+interior vacuum
+_sectio_quingentesima_septuagesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* tu;
-
-        imprimere("\n--- Probans #if 1 ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern,
             "#if 1\n"
@@ -14388,14 +21056,26 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Test: #if with simple constant 0 */
+interior vacuum
+_sectio_quingentesima_septuagesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* tu;
-
-        imprimere("\n--- Probans #if 0 ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern,
             "#if 0\n"
@@ -14427,14 +21107,26 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Test: #if with arithmetic expression */
+interior vacuum
+_sectio_quingentesima_septuagesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* tu;
-
-        imprimere("\n--- Probans #if 1 + 1 ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern,
             "#if 1 + 1\n"
@@ -14466,14 +21158,26 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Test: #if with comparison */
+interior vacuum
+_sectio_quingentesima_septuagesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* tu;
-
-        imprimere("\n--- Probans #if 5 > 3 ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern,
             "#if 5 > 3\n"
@@ -14505,14 +21209,26 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Test: #if with logical AND */
+interior vacuum
+_sectio_quingentesima_septuagesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* tu;
-
-        imprimere("\n--- Probans #if 1 && 1 ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern,
             "#if 1 && 1\n"
@@ -14544,14 +21260,26 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Test: #if with logical NOT */
+interior vacuum
+_sectio_quingentesima_septuagesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* tu;
-
-        imprimere("\n--- Probans #if !0 ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern,
             "#if !0\n"
@@ -14583,14 +21311,26 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Test: #if with defined() - undefined macro */
+interior vacuum
+_sectio_quingentesima_septuagesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* tu;
-
-        imprimere("\n--- Probans #if defined(UNDEFINED) ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern,
             "#if defined(UNDEFINED)\n"
@@ -14622,14 +21362,26 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Test: #if with ternary operator */
+interior vacuum
+_sectio_quingentesima_septuagesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* tu;
-
-        imprimere("\n--- Probans #if 1 ? 5 : 10 ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern,
             "#if 1 ? 5 : 10\n"
@@ -14661,14 +21413,26 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Test: #elif evaluation */
+interior vacuum
+_sectio_quingentesima_septuagesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* tu;
-
-        imprimere("\n--- Probans #if 0 / #elif 1 ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern,
             "#if 0\n"
@@ -14714,16 +21478,24 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Test: #ifdef evaluation with defined macro */
+interior vacuum
+_sectio_quingentesima_septuagesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
     {
         Arbor2Expansion* exp_test;
         Arbor2GLR* glr_test;
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* tu;
-
-        imprimere("\n--- Probans #ifdef with defined macro ---\n");
 
         /* Create expansion context with macro defined */
         exp_test = arbor2_expansion_creare(piscina, intern);
@@ -14761,14 +21533,26 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Test: #ifndef evaluation with undefined macro */
+interior vacuum
+_sectio_quingentesima_octogesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* tu;
-
-        imprimere("\n--- Probans #ifndef with undefined macro ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern,
             "#ifndef UNDEFINED_MACRO\n"
@@ -14801,14 +21585,26 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Test: Complex expression with parentheses */
+interior vacuum
+_sectio_quingentesima_octogesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* tu;
-
-        imprimere("\n--- Probans #if (1 + 2) * 3 == 9 ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern,
             "#if (1 + 2) * 3 == 9\n"
@@ -14840,14 +21636,26 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Test: Bitwise operators */
+interior vacuum
+_sectio_quingentesima_octogesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* tu;
-
-        imprimere("\n--- Probans #if 0xFF & 0x0F ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern,
             "#if 0xFF & 0x0F\n"
@@ -14879,19 +21687,29 @@ s32 principale(vacuum)
             }
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: Branch Parsing (Phase 5.4)
      * ======================================================== */
-
     /* Test: Basic parsed branch - one declaration */
+interior vacuum
+_sectio_quingentesima_octogesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* tu;
-
-        imprimere("\n--- Probans branch parsing: basic ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern,
             "#ifdef DEBUG\n"
@@ -14938,14 +21756,26 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Test: Multiple declarations in branch */
+interior vacuum
+_sectio_quingentesima_octogesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* tu;
-
-        imprimere("\n--- Probans branch parsing: multiple decls ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern,
             "#ifdef DEBUG\n"
@@ -14987,14 +21817,26 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Test: Nested conditional in branch */
+interior vacuum
+_sectio_quingentesima_octogesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* tu;
-
-        imprimere("\n--- Probans branch parsing: nested conditional ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern,
             "#ifdef OUTER\n"
@@ -15049,14 +21891,26 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Test: Empty branch */
+interior vacuum
+_sectio_quingentesima_octogesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* tu;
-
-        imprimere("\n--- Probans branch parsing: empty branch ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern,
             "#ifdef DEBUG\n"
@@ -15115,14 +21969,26 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Test: Declaration after ifdef/else */
+interior vacuum
+_sectio_quingentesima_octogesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+    Arbor2GLR* glr;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+    glr = arbor2_glr_creare(piscina, intern, expansion);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         Arbor2Nodus* tu;
-
-        imprimere("\n--- Probans branch parsing: ifdef with else ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern,
             "#ifdef DEBUG\n"
@@ -15183,7 +22049,7 @@ s32 principale(vacuum)
             }
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: Typedef Edge Cases
@@ -15191,15 +22057,21 @@ s32 principale(vacuum)
      * Comprehensive tests for typedef handling in various contexts:
      * nested typedefs, pointer typedefs, casts, sizeof, etc.
      * ======================================================== */
-
     /* Test: Nested typedef - typedef of typedef */
+interior vacuum
+_sectio_quingentesima_octogesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         chorda titulus_ch;
         unio { constans character* c; i8* m; } u;
-
-        imprimere("\n--- Typedef edge: typedef int A; typedef A B; B x; ---\n");
 
         {
             Arbor2Expansion* exp_test = arbor2_expansion_creare(piscina, intern);
@@ -15234,13 +22106,21 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Test: Pointer typedef usage */
+interior vacuum
+_sectio_quingentesima_octogesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Typedef edge: typedef int *IntPtr; IntPtr p; ---\n");
 
         {
             Arbor2Expansion* exp_test = arbor2_expansion_creare(piscina, intern);
@@ -15262,13 +22142,21 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Test: Double pointer from typedef */
+interior vacuum
+_sectio_quingentesima_nonagesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Typedef edge: typedef int *IntPtr; IntPtr *pp; ---\n");
 
         {
             Arbor2Expansion* exp_test = arbor2_expansion_creare(piscina, intern);
@@ -15290,13 +22178,21 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Test: Typedef in cast expression */
+interior vacuum
+_sectio_quingentesima_nonagesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Typedef edge: typedef int MyInt; int x = (MyInt)42; ---\n");
 
         {
             Arbor2Expansion* exp_test = arbor2_expansion_creare(piscina, intern);
@@ -15318,13 +22214,21 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Test: Typedef in sizeof */
+interior vacuum
+_sectio_quingentesima_nonagesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Typedef edge: typedef int MyInt; int x = sizeof(MyInt); ---\n");
 
         {
             Arbor2Expansion* exp_test = arbor2_expansion_creare(piscina, intern);
@@ -15346,13 +22250,21 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Test: Typedef as function parameter */
+interior vacuum
+_sectio_quingentesima_nonagesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Typedef edge: typedef int A; void f(A x) {} ---\n");
 
         {
             Arbor2Expansion* exp_test = arbor2_expansion_creare(piscina, intern);
@@ -15374,13 +22286,21 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Test: Typedef in struct member */
+interior vacuum
+_sectio_quingentesima_nonagesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Typedef edge: typedef int A; struct S { A x; }; ---\n");
 
         {
             Arbor2Expansion* exp_test = arbor2_expansion_creare(piscina, intern);
@@ -15402,13 +22322,21 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Test: Chained usage - multiple variables */
+interior vacuum
+_sectio_quingentesima_nonagesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Typedef edge: typedef int A; A x, y, z; ---\n");
 
         {
             Arbor2Expansion* exp_test = arbor2_expansion_creare(piscina, intern);
@@ -15430,15 +22358,23 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Test: Array typedef */
+interior vacuum
+_sectio_quingentesima_nonagesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         chorda titulus_ch;
         unio { constans character* c; i8* m; } u;
-
-        imprimere("\n--- Typedef edge: typedef int Arr[10]; Arr a; ---\n");
 
         {
             Arbor2Expansion* exp_test = arbor2_expansion_creare(piscina, intern);
@@ -15466,15 +22402,23 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Test: Function pointer typedef with (void) params */
+interior vacuum
+_sectio_quingentesima_nonagesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         chorda titulus_ch;
         unio { constans character* c; i8* m; } u;
-
-        imprimere("\n--- Typedef edge: typedef int (*FP)(void); ---\n");
 
         {
             Arbor2Expansion* exp_test = arbor2_expansion_creare(piscina, intern);
@@ -15501,15 +22445,23 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Test: Function pointer typedef with empty params () */
+interior vacuum
+_sectio_quingentesima_nonagesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         chorda titulus_ch;
         unio { constans character* c; i8* m; } u;
-
-        imprimere("\n--- Typedef edge: typedef int (*Callback)(); ---\n");
 
         {
             Arbor2Expansion* exp_test = arbor2_expansion_creare(piscina, intern);
@@ -15536,13 +22488,21 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* Test: Function pointer typedef used in subsequent declaration */
+interior vacuum
+_sectio_quingentesima_nonagesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- Typedef edge: typedef int (*FP)(void); FP f; ---\n");
 
         {
             Arbor2Expansion* exp_test = arbor2_expansion_creare(piscina, intern);
@@ -15564,18 +22524,25 @@ s32 principale(vacuum)
             }
         }
     }
+}
 
     /* ================================================================
      * DECLARATOR_CONTEXTUS tests - Grouped declarators (function pointers)
      * These test that PAREN_APERTA is handled after type specifiers
      * ================================================================ */
-
     /* Test: static int (*fp)(void) - storage class + function pointer */
+interior vacuum
+_sectio_sescentesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- DECLARATOR_CONTEXTUS: static int (*fp)(void); ---\n");
 
         {
             Arbor2Expansion* exp_test = arbor2_expansion_creare(piscina, intern);
@@ -15589,13 +22556,21 @@ s32 principale(vacuum)
             CREDO_NON_NIHIL(res.radix);
         }
     }
+}
 
     /* Test: extern int (*callback)() - extern + function pointer */
+interior vacuum
+_sectio_sescentesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- DECLARATOR_CONTEXTUS: extern int (*callback)(); ---\n");
 
         {
             Arbor2Expansion* exp_test = arbor2_expansion_creare(piscina, intern);
@@ -15609,13 +22584,21 @@ s32 principale(vacuum)
             CREDO_NON_NIHIL(res.radix);
         }
     }
+}
 
     /* Test: void func(int (*param)(void)) - function pointer parameter */
+interior vacuum
+_sectio_sescentesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- DECLARATOR_CONTEXTUS: void func(int (*param)(void)) ---\n");
 
         {
             Arbor2Expansion* exp_test = arbor2_expansion_creare(piscina, intern);
@@ -15629,13 +22612,21 @@ s32 principale(vacuum)
             CREDO_NON_NIHIL(res.radix);
         }
     }
+}
 
     /* Test: struct S { int (*fp)(); }; - struct member function pointer */
+interior vacuum
+_sectio_sescentesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- DECLARATOR_CONTEXTUS: struct S { int (*fp)(); }; ---\n");
 
         {
             Arbor2Expansion* exp_test = arbor2_expansion_creare(piscina, intern);
@@ -15649,13 +22640,21 @@ s32 principale(vacuum)
             CREDO_NON_NIHIL(res.radix);
         }
     }
+}
 
     /* Test: int x, (*fp)(); - multi-declarator with function pointer */
+interior vacuum
+_sectio_sescentesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- DECLARATOR_CONTEXTUS: int x, (*fp)(); ---\n");
 
         {
             Arbor2Expansion* exp_test = arbor2_expansion_creare(piscina, intern);
@@ -15669,21 +22668,28 @@ s32 principale(vacuum)
             CREDO_NON_NIHIL(res.radix);
         }
     }
+}
 
     /* ================================================================
      * C89 COMPLIANCE: Empty struct/union rejection tests
      * C89 requires at least one member in struct/union
      * ================================================================ */
-
     /* Test: struct Empty {} - should be rejected (C89 compliance) */
     /* Note: GLR parser has error recovery, so it returns successus=VERUM
      * with errores populated. We check for parse errors being present. */
+interior vacuum
+_sectio_sescentesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         b32 habet_errores;
-
-        imprimere("\n--- C89: empty struct rejection (anonymous) ---\n");
 
         {
             Arbor2Expansion* exp_test = arbor2_expansion_creare(piscina, intern);
@@ -15699,14 +22705,22 @@ s32 principale(vacuum)
                       habet_errores ? "VERUM (correctum)" : "FALSUM (BUG!)");
         }
     }
+}
 
     /* Test: struct Empty {} - named empty struct should be rejected */
+interior vacuum
+_sectio_sescentesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         b32 habet_errores;
-
-        imprimere("\n--- C89: empty struct rejection (named) ---\n");
 
         {
             Arbor2Expansion* exp_test = arbor2_expansion_creare(piscina, intern);
@@ -15722,14 +22736,22 @@ s32 principale(vacuum)
                       habet_errores ? "VERUM (correctum)" : "FALSUM (BUG!)");
         }
     }
+}
 
     /* Test: union Empty {} - empty union should also be rejected */
+interior vacuum
+_sectio_sescentesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         b32 habet_errores;
-
-        imprimere("\n--- C89: empty union rejection (anonymous) ---\n");
 
         {
             Arbor2Expansion* exp_test = arbor2_expansion_creare(piscina, intern);
@@ -15745,14 +22767,22 @@ s32 principale(vacuum)
                       habet_errores ? "VERUM (correctum)" : "FALSUM (BUG!)");
         }
     }
+}
 
     /* Test: union Empty {} - named empty union should be rejected */
+interior vacuum
+_sectio_sescentesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
         b32 habet_errores;
-
-        imprimere("\n--- C89: empty union rejection (named) ---\n");
 
         {
             Arbor2Expansion* exp_test = arbor2_expansion_creare(piscina, intern);
@@ -15768,13 +22798,21 @@ s32 principale(vacuum)
                       habet_errores ? "VERUM (correctum)" : "FALSUM (BUG!)");
         }
     }
+}
 
     /* Test: Non-empty struct still works (regression test) */
+interior vacuum
+_sectio_sescentesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- C89: non-empty struct still accepted ---\n");
 
         {
             Arbor2Expansion* exp_test = arbor2_expansion_creare(piscina, intern);
@@ -15788,13 +22826,21 @@ s32 principale(vacuum)
                       res.successus ? "VERUM (correctum)" : "FALSUM (REGRESSIO!)");
         }
     }
+}
 
     /* Test: Non-empty union still works (regression test) */
+interior vacuum
+_sectio_sescentesima_decima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern = internamentum_creare(piscina);
     {
         Xar* tokens;
         Arbor2GLRResultus res;
-
-        imprimere("\n--- C89: non-empty union still accepted ---\n");
 
         {
             Arbor2Expansion* exp_test = arbor2_expansion_creare(piscina, intern);
@@ -15808,23 +22854,624 @@ s32 principale(vacuum)
                       res.successus ? "VERUM (correctum)" : "FALSUM (REGRESSIO!)");
         }
     }
+}
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "table validation", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "tag validation", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "reachability", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "GOTO completeness", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "simple identifier", _sectio_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "simple integer", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "binary addition: 1 + 2", _sectio_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "precedence: 1 + 2 * 3", _sectio_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "parenthesized: (1 + 2)", _sectio_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "subtraction: 5 - 3", _sectio_decima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "division: 6 / 2", _sectio_decima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "modulo: 7 % 3", _sectio_decima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "mixed ops: 10 - 6 / 2", _sectio_decima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "comparatio minor: 1 < 2", _sectio_decima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "comparatio maior: 3 > 1", _sectio_decima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "comparatio minor_aeq: 2 <= 3", _sectio_decima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "comparatio maior_aeq: 5 >= 4", _sectio_decima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "aequalitas: 1 == 1", _sectio_decima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "non-aequalitas: 1 != 2", _sectio_decima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "comparatio cum expressiis: 1 + 2 < 3 + 4", _sectio_vicesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "aequalitas cum comparatiis: 1 < 2 == 3 < 4", _sectio_vicesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "praecedentia mixta: 1 + 2 < 3 * 4", _sectio_vicesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "comparatio in parens: (1 < 2)", _sectio_vicesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "parens nidata: ((1 < 2))", _sectio_vicesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "aequalitas catena: 1 == 2 == 3", _sectio_vicesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "comparatio catena: 1 < 2 < 3", _sectio_vicesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "RHS complexa: 1 < 2 * 3 + 4", _sectio_vicesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "comparatio in si: if (x < 10) y;", _sectio_vicesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "aequalitas in dum: while (a == b) x;", _sectio_vicesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "comparatio in per: for (; i < 10; ) x;", _sectio_tricesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sinistrum shift: a << 2", _sectio_tricesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "dextrum shift: x >> 3", _sectio_tricesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "shift catena: a << b >> c", _sectio_tricesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "shift cum additione: x + y << 2", _sectio_tricesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "comparatio cum shift: a < b << c", _sectio_tricesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "coniunctio: a && b", _sectio_tricesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "disiunctio: a || b", _sectio_tricesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "praecedentia: a || b && c", _sectio_tricesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "coniunctio catena: a && b && c", _sectio_tricesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "logica cum comparatiis: a == b && c < d", _sectio_quadragesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "unary dereference: *ptr", _sectio_quadragesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "unary address-of: &x", _sectio_quadragesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "typedef detection API", _sectio_quadragesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "foo * bar (ambiguus)", _sectio_quadragesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "MyType * ptr (typedef pruning)", _sectio_quadragesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "function declarator: MyType * fn()", _sectio_quadragesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "function declarator: MyType * fn(void)", _sectio_quadragesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "single param: MyType * fn(int x)", _sectio_quadragesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "multi param: MyType * fn(int x, int y)", _sectio_quadragesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "pointer param: MyType * fn(int *ptr)", _sectio_quinquagesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "expression statement: x + 1;", _sectio_quinquagesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "empty statement: ;", _sectio_quinquagesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "simple statement: 42;", _sectio_quinquagesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "empty compound: { }", _sectio_quinquagesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "compound with one stmt: { x; }", _sectio_quinquagesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "compound multi stmt: { x; y + 1; }", _sectio_quinquagesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "nested compound: { { x; } }", _sectio_quinquagesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "simple if: if (x) y;", _sectio_quinquagesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "if-else: if (x) y; else z;", _sectio_quinquagesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "if with compound: if (x) { y; }", _sectio_sexagesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "subscript in if condition: if (arr[0]) x;", _sectio_sexagesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "assignment in if condition: if (x = 1) y;", _sectio_sexagesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "assignment in while condition: while (x = 1) y;", _sectio_sexagesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "assignment in for-init: for (a = 1; b; c) d;", _sectio_sexagesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "assignment in do-while: do x; while (a = 1);", _sectio_sexagesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "assignment in switch: switch (a = 1) { }", _sectio_sexagesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "dangling else: if (a) if (b) c; else d;", _sectio_sexagesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "simple while: while (x) y;", _sectio_sexagesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "while with compound: while (x) { a; b; }", _sectio_sexagesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "simple do-while: do x; while (y);", _sectio_septuagesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "do-while with compound: do { a; b; } while (c);", _sectio_septuagesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "nested while: while (a) while (b) c;", _sectio_septuagesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "simple for: for (i; c; n) x;", _sectio_septuagesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "for empty init: for (; c; n) x;", _sectio_septuagesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "for empty condition: for (i; ; n) x;", _sectio_septuagesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "for empty increment: for (i; c; ) x;", _sectio_septuagesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "for all empty: for (;;) x;", _sectio_septuagesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "for with compound: for (i; c; n) { a; b; }", _sectio_septuagesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "nested for: for (;;) for (;;) x;", _sectio_septuagesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "break statement", _sectio_octogesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "continue statement", _sectio_octogesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "return without value", _sectio_octogesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "return with value", _sectio_octogesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "goto statement", _sectio_octogesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "break inside while", _sectio_octogesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "return in compound", _sectio_octogesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "simple label: foo: x;", _sectio_octogesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "label with empty: foo: ;", _sectio_octogesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "nested labels: foo: bar: x;", _sectio_octogesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "label with compound: foo: { x; }", _sectio_nonagesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "label with if: foo: if (x) y;", _sectio_nonagesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "label as goto target: { goto foo; foo: x; }", _sectio_nonagesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "switch with case: switch (x) { case 1: y; }", _sectio_nonagesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "switch with default: switch (x) { default: y; }", _sectio_nonagesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "switch case break: switch (x) { case 1: break; }", _sectio_nonagesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "fall-through: switch (x) { case 1: case 2: y; }", _sectio_nonagesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "case expr: switch (x) { case 1 + 2: y; }", _sectio_nonagesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "function definition: MyType fn(void) { }", _sectio_nonagesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "function definition: MyType fn(void) { return x; }", _sectio_nonagesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "function: MyType foo(int x, int y) { return x; }", _sectio_centesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "pointer return: MyType * bar(void) { }", _sectio_centesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "qualified return: const int f() { } (P505)", _sectio_centesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "qualified return: volatile int g() { } (P506)", _sectio_centesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "basic return: void f() { } (no qualifier)", _sectio_centesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "qualified return: const char h() { }", _sectio_centesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "compound return: unsigned int f() { }", _sectio_centesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "compound return: long int g() { }", _sectio_centesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "compound return: short int h() { }", _sectio_centesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "compound return: signed int s() { }", _sectio_centesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "compound return: unsigned long l() { }", _sectio_centesima_decima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "compound return: unsigned u() { }", _sectio_centesima_decima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "struct forward ref: struct foo x", _sectio_centesima_decima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "struct named: struct foo { int x; }", _sectio_centesima_decima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "struct multi-member: struct foo { int x; int y; }", _sectio_centesima_decima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "struct float member: struct foo { float f; }", _sectio_centesima_decima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "struct double member: struct foo { double d; }", _sectio_centesima_decima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "struct short member: struct foo { short s; }", _sectio_centesima_decima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "struct long member: struct foo { long l; }", _sectio_centesima_decima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "struct unsigned member: struct foo { unsigned u; }", _sectio_centesima_decima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "struct signed member: struct foo { signed s; }", _sectio_centesima_vicesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "struct mixed members: struct foo { int x; float f; }", _sectio_centesima_vicesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "struct unsigned int: struct foo { unsigned int x; }", _sectio_centesima_vicesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "struct long int: struct foo { long int x; }", _sectio_centesima_vicesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "struct const int: struct foo { const int x; }", _sectio_centesima_vicesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "struct unsigned long: struct foo { unsigned long x; }", _sectio_centesima_vicesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "struct var decl: struct foo { int x; } var", _sectio_centesima_vicesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "bit field: struct foo { int x : 3; }", _sectio_centesima_vicesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "bit fields: struct foo { int x : 3; int y : 5; }", _sectio_centesima_vicesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "anonymous bit field: struct foo { int : 4; }", _sectio_centesima_vicesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "mixed bit fields: struct foo { int x : 3; int : 0; int y : 5; }", _sectio_centesima_tricesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "expression bit field: struct foo { int x : 1 + 2; }", _sectio_centesima_tricesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "bit field in union: union foo { int x : 3; }", _sectio_centesima_tricesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "union forward ref: union foo", _sectio_centesima_tricesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "union named: union foo { int x; }", _sectio_centesima_tricesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "union multi-member: union foo { int x; int y; }", _sectio_centesima_tricesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "union anon: union { int x; } anon", _sectio_centesima_tricesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "enum forward ref: enum foo", _sectio_centesima_tricesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "enum anon: enum { A, B, C }", _sectio_centesima_tricesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "enum named: enum foo { A, B, C }", _sectio_centesima_tricesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "enum with values: enum foo { A = 1, B, C = 10 }", _sectio_centesima_quadragesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "enum decl: enum foo x", _sectio_centesima_quadragesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "enum expr value: enum { A = 1 + 2 }", _sectio_centesima_quadragesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "enum unary minus: enum { A = -1 }", _sectio_centesima_quadragesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "enum unary plus: enum { A = +1 }", _sectio_centesima_quadragesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "enum bitwise NOT: enum { A = ~0 }", _sectio_centesima_quadragesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "enum logical NOT: enum { A = !0 }", _sectio_centesima_quadragesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "enum sizeof: enum { A = sizeof(int) }", _sectio_centesima_quadragesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "enum char literal: enum { A = 'X' }", _sectio_centesima_quadragesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "enum subsequent expr: enum { A, B = ~1, C = -2 }", _sectio_centesima_quadragesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "nested struct: struct outer { struct inner { int a; } x; }", _sectio_centesima_quinquagesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "nested enum: struct outer { enum { A, B } status; }", _sectio_centesima_quinquagesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "nested union: struct outer { union { int i; int j; } data; }", _sectio_centesima_quinquagesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "nested pointer: struct outer { struct inner { int a; } *ptr; }", _sectio_centesima_quinquagesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "multiple with nested: struct outer { int x; struct { int a; } nested; int y; }", _sectio_centesima_quinquagesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "typedef simplex: typedef int MyInt;", _sectio_centesima_quinquagesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "typedef pointer: typedef int* IntPtr;", _sectio_centesima_quinquagesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "typedef struct: typedef struct { int x; } Point;", _sectio_centesima_quinquagesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "typedef struct pointer: typedef struct { int x; } *PointPtr;", _sectio_centesima_quinquagesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "typedef enum: typedef enum { A, B } Status;", _sectio_centesima_quinquagesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "typedef enum pointer: typedef enum { A, B } *StatusPtr;", _sectio_centesima_sexagesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "typedef struct nominatum: typedef struct MyStruct { int x; } MyStruct;", _sectio_centesima_sexagesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "typedef struct forward: typedef struct Foo Foo;", _sectio_centesima_sexagesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "array fixed: int arr[10]", _sectio_centesima_sexagesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "array unsized: int arr[]", _sectio_centesima_sexagesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "array multi-dim: int matrix[10][20]", _sectio_centesima_sexagesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "array of pointers: int *arr[10]", _sectio_centesima_sexagesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "struct member array: struct { int arr[5]; }", _sectio_centesima_sexagesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "struct member ptr array: struct { int *ptrs[5]; }", _sectio_centesima_sexagesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "struct multi-dim array: struct { int matrix[3][4]; }", _sectio_centesima_sexagesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "struct multi arrays: struct { int a[5]; int b[10]; }", _sectio_centesima_septuagesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "typedef array: typedef int IntArray[10];", _sectio_centesima_septuagesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "typedef pointer array: typedef int* IntPtrArray[10];", _sectio_centesima_septuagesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "typedef multi-dim: typedef int Matrix[3][4];", _sectio_centesima_septuagesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "typedef float: typedef float MyFloat;", _sectio_centesima_septuagesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "array expr size: int arr[1 + 2]", _sectio_centesima_septuagesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "nested struct array: struct { struct Inner items[10]; }", _sectio_centesima_septuagesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "nested enum array: struct { enum { A, B } status[5]; }", _sectio_centesima_septuagesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "nested struct ptr array: struct { struct Inner *ptrs[3]; }", _sectio_centesima_septuagesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "assignment: a = 1", _sectio_centesima_septuagesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "assignment right-associativity: a = b = c", _sectio_centesima_octogesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "compound assignments: += -= *= /=", _sectio_centesima_octogesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "bitwise assignments: &= |= ^= <<= >>=", _sectio_centesima_octogesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "comma operator: a, b", _sectio_centesima_octogesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "comma left-associativity: a, b, c", _sectio_centesima_octogesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "assignment/comma precedence: a = 1, b = 2", _sectio_centesima_octogesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "assignment precedence: a = b || c", _sectio_centesima_octogesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "ternary operator: a ? 1 : c", _sectio_centesima_octogesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "ternary right-associativity: a ? 1 : b ? 2 : 3", _sectio_centesima_octogesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "ternary/assignment precedence: a = x ? 1 : 2", _sectio_centesima_octogesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "ternary/logical-or precedence: a || b ? 1 : 2", _sectio_centesima_nonagesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "ternary with expressions: a ? 1 + 2 : 3 * 4", _sectio_centesima_nonagesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "bitwise NOT: ~x", _sectio_centesima_nonagesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "logical NOT: !x", _sectio_centesima_nonagesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "double NOT: !!x", _sectio_centesima_nonagesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "mixed unary: ~!x", _sectio_centesima_nonagesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "unary with binary: ~x + y", _sectio_centesima_nonagesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "triple deref: ***ptr", _sectio_centesima_nonagesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "double address: & &x", _sectio_centesima_nonagesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "deref-address: *&x", _sectio_centesima_nonagesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "unary minus: -x", _sectio_ducentesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "unary plus: +x", _sectio_ducentesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "unary minus integer: -5", _sectio_ducentesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "double negation: - -x", _sectio_ducentesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "unary with binary: -a + b", _sectio_ducentesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "binary then unary: a + -b", _sectio_ducentesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "mixed: -!x", _sectio_ducentesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "multiply unary: a * -b", _sectio_ducentesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "bitwise AND: a & b", _sectio_ducentesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "bitwise OR: a | b", _sectio_ducentesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "bitwise XOR: a ^ b", _sectio_ducentesima_decima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "bitwise precedence: a | b ^ c (| lower than ^)", _sectio_ducentesima_decima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "bitwise precedence: a ^ b & c (^ lower than &)", _sectio_ducentesima_decima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "bitwise chain: a | b | c (left-associative)", _sectio_ducentesima_decima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "bitwise/comparison: a & b == c", _sectio_ducentesima_decima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "all bitwise: a | b ^ c & d", _sectio_ducentesima_decima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "deeply nested parens: (((x)))", _sectio_ducentesima_decima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "complex arithmetic: (a + b) * (c - d)", _sectio_ducentesima_decima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "mixed precedence: a + b * c - d / e", _sectio_ducentesima_decima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "logical with ternary: a && b ? 1 : 2", _sectio_ducentesima_decima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "nested ternary in true branch: a ? b ? 1 : 2 : 3", _sectio_ducentesima_vicesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "unary in expressions: ~a & !b | *c", _sectio_ducentesima_vicesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "assignment chain: a = b = c = 1", _sectio_ducentesima_vicesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "comma chain: a, b, c, d", _sectio_ducentesima_vicesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "shift with arithmetic: a << 2 + 1", _sectio_ducentesima_vicesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "if-else-if chain", _sectio_ducentesima_vicesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "deeply nested if", _sectio_ducentesima_vicesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "nested loops with break", _sectio_ducentesima_vicesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "complex for loop", _sectio_ducentesima_vicesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "switch with multiple cases", _sectio_ducentesima_vicesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "do-while with simple condition", _sectio_ducentesima_tricesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "multiple statements in compound", _sectio_ducentesima_tricesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "nested compound statements", _sectio_ducentesima_tricesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "declaration in block: { int x; }", _sectio_ducentesima_tricesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "declaration with init: { int x = 5; }", _sectio_ducentesima_tricesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "multiple declarations: { int x; int y; }", _sectio_ducentesima_tricesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "mixed decl/stmt: { int x; x = 1; int y; return y; }", _sectio_ducentesima_tricesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "static in block: { static int x = 0; }", _sectio_ducentesima_tricesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "const in block: { const int x = 42; }", _sectio_ducentesima_tricesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "static const in block: { static const int x = 1; }", _sectio_ducentesima_tricesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "return with expression", _sectio_ducentesima_quadragesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "function with complex body", _sectio_ducentesima_quadragesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "struct with complex members", _sectio_ducentesima_quadragesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "expression in for", _sectio_ducentesima_quadragesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "comparison in if condition", _sectio_ducentesima_quadragesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "assignment in while", _sectio_ducentesima_quadragesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(~a)", _sectio_ducentesima_quadragesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "*~a", _sectio_ducentesima_quadragesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "a + ~b", _sectio_ducentesima_quadragesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "a * !b", _sectio_ducentesima_quadragesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "if (~a)", _sectio_ducentesima_quinquagesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "a < ~b", _sectio_ducentesima_quinquagesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "a && ~b", _sectio_ducentesima_quinquagesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "a || !b", _sectio_ducentesima_quinquagesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "a << ~b", _sectio_ducentesima_quinquagesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "arr[0]", _sectio_ducentesima_quinquagesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "arr[i]", _sectio_ducentesima_quinquagesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "arr[i][j]", _sectio_ducentesima_quinquagesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "a + b[0]", _sectio_ducentesima_quinquagesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "a * b[0]", _sectio_ducentesima_quinquagesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "*arr[i]", _sectio_ducentesima_sexagesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "arr[i + 1]", _sectio_ducentesima_sexagesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "foo()", _sectio_ducentesima_sexagesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "foo(a)", _sectio_ducentesima_sexagesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "foo(a, b, c)", _sectio_ducentesima_sexagesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "foo()[0]", _sectio_ducentesima_sexagesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "arr[0]()", _sectio_ducentesima_sexagesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "foo(a + b)", _sectio_ducentesima_sexagesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "s.x", _sectio_ducentesima_sexagesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "p->x", _sectio_ducentesima_sexagesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "s.x.y", _sectio_ducentesima_septuagesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "p->x->y", _sectio_ducentesima_septuagesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "arr[0].x", _sectio_ducentesima_septuagesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "foo().x", _sectio_ducentesima_septuagesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "s.x[0]", _sectio_ducentesima_septuagesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "s.x()", _sectio_ducentesima_septuagesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "x++", _sectio_ducentesima_septuagesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "x--", _sectio_ducentesima_septuagesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "++x", _sectio_ducentesima_septuagesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "--x", _sectio_ducentesima_septuagesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "arr[0]++", _sectio_ducentesima_octogesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "++arr[0]", _sectio_ducentesima_octogesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "s.x++", _sectio_ducentesima_octogesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "p->x--", _sectio_ducentesima_octogesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "++x + y--", _sectio_ducentesima_octogesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "x++++", _sectio_ducentesima_octogesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "float literal: 3.14", _sectio_ducentesima_octogesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "char literal: 'a'", _sectio_ducentesima_octogesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "string literal: \"hello\"", _sectio_ducentesima_octogesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "float in expression: 3.14 + 2.0", _sectio_ducentesima_octogesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "char in expression: 'a' + 'b'", _sectio_ducentesima_nonagesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "mixed literals: 42 + 3.14", _sectio_ducentesima_nonagesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sizeof x", _sectio_ducentesima_nonagesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sizeof(x)", _sectio_ducentesima_nonagesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sizeof(x) + 1", _sectio_ducentesima_nonagesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(int)x", _sectio_ducentesima_nonagesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(char)x", _sectio_ducentesima_nonagesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(int)x + 1", _sectio_ducentesima_nonagesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(int)(char)x (chained casts)", _sectio_ducentesima_nonagesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(int*)x", _sectio_ducentesima_nonagesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(char**)argv", _sectio_trecentesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(void*)p", _sectio_trecentesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sizeof(int)", _sectio_trecentesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sizeof(int*)", _sectio_trecentesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sizeof(char**)", _sectio_trecentesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sizeof(void*)", _sectio_trecentesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(TypeName)x - ID cast", _sectio_trecentesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(TypeName*)ptr - ID pointer cast", _sectio_trecentesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(TypeName**)pp - ID double pointer cast", _sectio_trecentesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(struct foo)x - struct cast", _sectio_trecentesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(struct foo*)ptr - struct pointer cast", _sectio_trecentesima_decima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(struct foo**)pp - struct double pointer cast", _sectio_trecentesima_decima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(union bar)u - union cast", _sectio_trecentesima_decima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(union bar*)ptr - union pointer cast", _sectio_trecentesima_decima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(enum color)c - enum cast", _sectio_trecentesima_decima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(enum color*)ptr - enum pointer cast", _sectio_trecentesima_decima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sizeof(struct foo)", _sectio_trecentesima_decima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sizeof(struct foo*)", _sectio_trecentesima_decima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sizeof(struct foo**)", _sectio_trecentesima_decima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sizeof(union bar)", _sectio_trecentesima_decima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sizeof(union bar*)", _sectio_trecentesima_vicesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sizeof(enum color)", _sectio_trecentesima_vicesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sizeof(enum color*)", _sectio_trecentesima_vicesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sizeof(int[10])", _sectio_trecentesima_vicesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sizeof(char[256])", _sectio_trecentesima_vicesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sizeof(void[1])", _sectio_trecentesima_vicesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sizeof(int[10+5]) with expression", _sectio_trecentesima_vicesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "x = sizeof(int[10]) in assignment", _sectio_trecentesima_vicesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sizeof(int[10][20])", _sectio_trecentesima_vicesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sizeof(char[256][4])", _sectio_trecentesima_vicesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sizeof(void[1][1])", _sectio_trecentesima_tricesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sizeof(MyType[5][10]) with ID", _sectio_trecentesima_tricesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sizeof(int[N][M]) with expressions", _sectio_trecentesima_tricesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "x = sizeof(int[10][20]) in assignment", _sectio_trecentesima_tricesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sizeof(int*[10])", _sectio_trecentesima_tricesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sizeof(char*[256])", _sectio_trecentesima_tricesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sizeof(void*[5])", _sectio_trecentesima_tricesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sizeof(MyType*[20]) with ID", _sectio_trecentesima_tricesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "x = sizeof(int*[10]) in assignment", _sectio_trecentesima_tricesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sizeof(unsigned int)", _sectio_trecentesima_tricesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sizeof(signed int)", _sectio_trecentesima_quadragesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sizeof(long int)", _sectio_trecentesima_quadragesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sizeof(short int)", _sectio_trecentesima_quadragesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sizeof(unsigned char)", _sectio_trecentesima_quadragesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sizeof(signed char)", _sectio_trecentesima_quadragesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sizeof(unsigned long int)", _sectio_trecentesima_quadragesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sizeof(unsigned short int)", _sectio_trecentesima_quadragesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sizeof(signed long int)", _sectio_trecentesima_quadragesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sizeof(signed short int)", _sectio_trecentesima_quadragesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sizeof(unsigned) implicit int", _sectio_trecentesima_quadragesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sizeof(long) implicit int", _sectio_trecentesima_quinquagesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sizeof(short) implicit int", _sectio_trecentesima_quinquagesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sizeof(unsigned long) implicit int", _sectio_trecentesima_quinquagesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sizeof(unsigned short) implicit int", _sectio_trecentesima_quinquagesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sizeof(signed long) implicit int", _sectio_trecentesima_quinquagesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sizeof(signed short) implicit int", _sectio_trecentesima_quinquagesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(unsigned int)x", _sectio_trecentesima_quinquagesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(signed int)x", _sectio_trecentesima_quinquagesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(long int)x", _sectio_trecentesima_quinquagesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(short int)x", _sectio_trecentesima_quinquagesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(unsigned char)c", _sectio_trecentesima_sexagesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(signed char)c", _sectio_trecentesima_sexagesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(unsigned long int)x", _sectio_trecentesima_sexagesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(unsigned short int)x", _sectio_trecentesima_sexagesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(signed long int)x", _sectio_trecentesima_sexagesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(signed short int)x", _sectio_trecentesima_sexagesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(unsigned)x implicit int", _sectio_trecentesima_sexagesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(long)x implicit int", _sectio_trecentesima_sexagesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(short)x implicit int", _sectio_trecentesima_sexagesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(unsigned long)x implicit int", _sectio_trecentesima_sexagesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(unsigned short)x implicit int", _sectio_trecentesima_septuagesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(signed long)x implicit int", _sectio_trecentesima_septuagesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(signed short)x implicit int", _sectio_trecentesima_septuagesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(unsigned int *)p", _sectio_trecentesima_septuagesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(signed int *)p", _sectio_trecentesima_septuagesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(unsigned char *)p", _sectio_trecentesima_septuagesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(signed char *)p", _sectio_trecentesima_septuagesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(long int *)p", _sectio_trecentesima_septuagesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(short int *)p", _sectio_trecentesima_septuagesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(unsigned long int *)p", _sectio_trecentesima_septuagesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(unsigned short int *)p", _sectio_trecentesima_octogesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(signed long int *)p", _sectio_trecentesima_octogesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(signed short int *)p", _sectio_trecentesima_octogesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(unsigned int **)p", _sectio_trecentesima_octogesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(long int **)p", _sectio_trecentesima_octogesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(unsigned char **)p", _sectio_trecentesima_octogesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(unsigned *)p implicit int", _sectio_trecentesima_octogesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(long *)p implicit int", _sectio_trecentesima_octogesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(short *)p implicit int", _sectio_trecentesima_octogesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(unsigned long *)p implicit int", _sectio_trecentesima_octogesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(unsigned short *)p implicit int", _sectio_trecentesima_nonagesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(signed long *)p implicit int", _sectio_trecentesima_nonagesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(signed short *)p implicit int", _sectio_trecentesima_nonagesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(unsigned **)p implicit int", _sectio_trecentesima_nonagesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(long **)p implicit int", _sectio_trecentesima_nonagesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(unsigned long **)p implicit int", _sectio_trecentesima_nonagesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "static int x", _sectio_trecentesima_nonagesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "static float f", _sectio_trecentesima_nonagesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "extern int y", _sectio_trecentesima_nonagesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "const int z", _sectio_trecentesima_nonagesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "volatile int w", _sectio_quadringentesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "static const int x", _sectio_quadringentesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "extern const int y", _sectio_quadringentesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "const volatile int z", _sectio_quadringentesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "volatile const int w", _sectio_quadringentesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "static volatile int sv", _sectio_quadringentesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "static const int x = 5", _sectio_quadringentesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "extern const int y = 10", _sectio_quadringentesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "static const int *ptr", _sectio_quadringentesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "int x = 5", _sectio_quadringentesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "int y = a + b", _sectio_quadringentesima_decima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "int z = x * 2 + 1", _sectio_quadringentesima_decima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "static int s = 10", _sectio_quadringentesima_decima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "extern int e = 20", _sectio_quadringentesima_decima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "register int r = 30", _sectio_quadringentesima_decima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "auto int a = 40", _sectio_quadringentesima_decima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "const int c = 50", _sectio_quadringentesima_decima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "volatile int v = 60", _sectio_quadringentesima_decima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "static int sum = a + b", _sectio_quadringentesima_decima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "int a[] = {1}", _sectio_quadringentesima_decima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "int b[] = {1, 2, 3}", _sectio_quadringentesima_vicesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "int c[] = {}", _sectio_quadringentesima_vicesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "int d[] = {1, 2,}", _sectio_quadringentesima_vicesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "int m[2][2] = {{1, 2}, {3, 4}}", _sectio_quadringentesima_vicesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "static int s[] = {10, 20}", _sectio_quadringentesima_vicesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "const int c[] = {30, 40}", _sectio_quadringentesima_vicesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "int x = {5}", _sectio_quadringentesima_vicesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "int y = 42 (still works)", _sectio_quadringentesima_vicesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "int x = {.a = 5}", _sectio_quadringentesima_vicesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "int x = {[5] = 100}", _sectio_quadringentesima_vicesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "int x = {.a = 1, .b = 2}", _sectio_quadringentesima_tricesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "int x = {[0].y = 5}", _sectio_quadringentesima_tricesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "int x = {1, .b = 2, 3}", _sectio_quadringentesima_tricesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "int x = {.a = {1, 2}}", _sectio_quadringentesima_tricesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "int x = {[0] = 1, [5] = 6}", _sectio_quadringentesima_tricesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "int x = {[0][1] = 5}", _sectio_quadringentesima_tricesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "int x = {.a.b = 5}", _sectio_quadringentesima_tricesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "int x = {.a = 1,}", _sectio_quadringentesima_tricesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "int x, y", _sectio_quadringentesima_tricesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "int x = 1, y = 2", _sectio_quadringentesima_tricesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "int x, y, z", _sectio_quadringentesima_quadragesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "int x = 1, y", _sectio_quadringentesima_quadragesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "struct foo x, y", _sectio_quadringentesima_quadragesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "int a[] = {1}, b[] = {2}", _sectio_quadringentesima_quadragesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Translation unit: two declarations", _sectio_quadringentesima_quadragesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Translation unit: three declarations", _sectio_quadringentesima_quadragesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Translation unit: declaration with init", _sectio_quadringentesima_quadragesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Translation unit: function definition", _sectio_quadringentesima_quadragesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Translation unit: declaration + function", _sectio_quadringentesima_quadragesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Translation unit: multiple functions", _sectio_quadringentesima_quadragesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Translation unit: empty input", _sectio_quadringentesima_quinquagesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Translation unit: function with params", _sectio_quadringentesima_quinquagesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Translation unit: function with int and float params", _sectio_quadringentesima_quinquagesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Typedef registration: typedef int Integer;", _sectio_quadringentesima_quinquagesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Typedef registration: typedef int *IntPtr;", _sectio_quadringentesima_quinquagesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Typedef registration: typedef struct { int x; } Point;", _sectio_quadringentesima_quinquagesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Typedef registration: typedef enum { RED, GREEN, BLUE } Color;", _sectio_quadringentesima_quinquagesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "unsigned int x", _sectio_quadringentesima_quinquagesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "long int y", _sectio_quadringentesima_quinquagesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "unsigned long z (implicit int)", _sectio_quadringentesima_quinquagesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "short s (implicit int)", _sectio_quadringentesima_sexagesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "signed char c", _sectio_quadringentesima_sexagesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "unsigned short int u", _sectio_quadringentesima_sexagesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "signed long int w", _sectio_quadringentesima_sexagesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "unsigned char uc", _sectio_quadringentesima_sexagesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "static unsigned int x", _sectio_quadringentesima_sexagesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "static long int y", _sectio_quadringentesima_sexagesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "static unsigned long int z", _sectio_quadringentesima_sexagesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "static short int s", _sectio_quadringentesima_sexagesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "static signed char c", _sectio_quadringentesima_sexagesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "static unsigned int u", _sectio_quadringentesima_septuagesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "extern unsigned int a", _sectio_quadringentesima_septuagesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "extern long int b", _sectio_quadringentesima_septuagesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "extern unsigned short int c", _sectio_quadringentesima_septuagesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "register short int d", _sectio_quadringentesima_septuagesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "register unsigned long int e", _sectio_quadringentesima_septuagesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "register signed int f", _sectio_quadringentesima_septuagesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "auto signed char g", _sectio_quadringentesima_septuagesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "auto long int h", _sectio_quadringentesima_septuagesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "auto unsigned short int i", _sectio_quadringentesima_septuagesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "static unsigned long int j", _sectio_quadringentesima_octogesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "extern signed short int k", _sectio_quadringentesima_octogesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "register unsigned char l", _sectio_quadringentesima_octogesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "auto signed long int m", _sectio_quadringentesima_octogesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "static unsigned x (implicit int)", _sectio_quadringentesima_octogesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "static long y (implicit int)", _sectio_quadringentesima_octogesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "static short z (implicit int)", _sectio_quadringentesima_octogesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "static signed a (implicit int)", _sectio_quadringentesima_octogesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "static unsigned long b (implicit int)", _sectio_quadringentesima_octogesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "extern short c (implicit int)", _sectio_quadringentesima_octogesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "extern unsigned long d (implicit int)", _sectio_quadringentesima_nonagesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "register signed e (implicit int)", _sectio_quadringentesima_nonagesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "register long f (implicit int)", _sectio_quadringentesima_nonagesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "auto unsigned short g (implicit int)", _sectio_quadringentesima_nonagesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "auto signed long h (implicit int)", _sectio_quadringentesima_nonagesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "static unsigned i = 5 (implicit int)", _sectio_quadringentesima_nonagesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "extern long j = 10 (implicit int)", _sectio_quadringentesima_nonagesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "int * const p (pointer qualifier)", _sectio_quadringentesima_nonagesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "int * volatile v (pointer qualifier)", _sectio_quadringentesima_nonagesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "int * const volatile cv (pointer qualifier)", _sectio_quadringentesima_nonagesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "int * volatile const vc (pointer qualifier)", _sectio_quingentesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "char ** const pp (pointer qualifier)", _sectio_quingentesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "int * const * volatile pp (multi qualifier)", _sectio_quingentesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "const int * const cp (type + pointer qualifier)", _sectio_quingentesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "const unsigned int x ", _sectio_quingentesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "const long int y ", _sectio_quingentesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "const short int z ", _sectio_quingentesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "volatile unsigned int a ", _sectio_quingentesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "volatile long int b ", _sectio_quingentesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "const signed char c ", _sectio_quingentesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "static const unsigned int d ", _sectio_quingentesima_decima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "extern volatile long int e ", _sectio_quingentesima_decima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "void *p (void pointer)", _sectio_quingentesima_decima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "void **pp (void double pointer)", _sectio_quingentesima_decima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "void * const vp (const void pointer)", _sectio_quingentesima_decima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "float f (float declaration)", _sectio_quingentesima_decima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "double d (double declaration)", _sectio_quingentesima_decima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "long double ld (long double declaration)", _sectio_quingentesima_decima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "float *fp (float pointer)", _sectio_quingentesima_decima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "double *dp (double pointer)", _sectio_quingentesima_decima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "float arr[10] (float array)", _sectio_quingentesima_vicesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "double arr[10] (double array)", _sectio_quingentesima_vicesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(float)x (cast to float)", _sectio_quingentesima_vicesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(double)x (cast to double)", _sectio_quingentesima_vicesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(long double)x (cast to long double)", _sectio_quingentesima_vicesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(float *)p (pointer cast to float)", _sectio_quingentesima_vicesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(double *)p (pointer cast to double)", _sectio_quingentesima_vicesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sizeof(float)", _sectio_quingentesima_vicesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sizeof(double)", _sectio_quingentesima_vicesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sizeof(long double)", _sectio_quingentesima_vicesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sizeof(float *)", _sectio_quingentesima_tricesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sizeof(double *)", _sectio_quingentesima_tricesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "int (*fp)(void) (function pointer)", _sectio_quingentesima_tricesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "int (*fp)(int) (function pointer with param)", _sectio_quingentesima_tricesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "int (*fp)(int, int) (function pointer multi params)", _sectio_quingentesima_tricesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "void (*fp)(void) (void function pointer)", _sectio_quingentesima_tricesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "int (**fpp)(int) (pointer to function pointer)", _sectio_quingentesima_tricesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "int fn(int arr[]) (array parameter)", _sectio_quingentesima_tricesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "int fn(int arr[10]) (sized array parameter)", _sectio_quingentesima_tricesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "void fn(char *argv[]) (pointer array parameter)", _sectio_quingentesima_tricesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "int printf(char *fmt, ...) (variadic function)", _sectio_quingentesima_quadragesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "int foo(int x, ...) (variadic with int)", _sectio_quingentesima_quadragesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "int foo(const int x) (const value param)", _sectio_quingentesima_quadragesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "int foo(const char *s) (const pointer param)", _sectio_quingentesima_quadragesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "void bar(int x, const int y) (mixed const param)", _sectio_quingentesima_quadragesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "int fn(volatile int v) (volatile param)", _sectio_quingentesima_quadragesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Table validation", _sectio_quingentesima_quadragesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Tag validation", _sectio_quingentesima_quadragesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "location on identifier", _sectio_quingentesima_quadragesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "location on binary expression", _sectio_quingentesima_quadragesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "location on integer literal", _sectio_quingentesima_quinquagesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "location on function call", _sectio_quingentesima_quinquagesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "pater on binary expression: a + b", _sectio_quingentesima_quinquagesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "pater on nested: a + b * c", _sectio_quingentesima_quinquagesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "pater on ternary: a ? b : c", _sectio_quingentesima_quinquagesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "pater on function call: foo(a)", _sectio_quingentesima_quinquagesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "pater on subscript: arr[i]", _sectio_quingentesima_quinquagesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Latin type macro disambiguation", _sectio_quingentesima_quinquagesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "nested macro resolution", _sectio_quingentesima_quinquagesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "AMBIGUUS identifier tracking", _sectio_quingentesima_quinquagesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "error recovery: invalid decl + valid decl", _sectio_quingentesima_sexagesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "error recovery: multiple errors", _sectio_quingentesima_sexagesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "error recovery: error + valid function", _sectio_quingentesima_sexagesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "error collection in result", _sectio_quingentesima_sexagesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "simple #ifdef/#endif", _sectio_quingentesima_sexagesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "#ifdef/#else/#endif", _sectio_quingentesima_sexagesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "#ifndef", _sectio_quingentesima_sexagesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "multiple conditionals", _sectio_quingentesima_sexagesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "conditional mixed with declarations", _sectio_quingentesima_sexagesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "nested conditionals", _sectio_quingentesima_sexagesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "#if 1", _sectio_quingentesima_septuagesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "#if 0", _sectio_quingentesima_septuagesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "#if 1 + 1", _sectio_quingentesima_septuagesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "#if 5 > 3", _sectio_quingentesima_septuagesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "#if 1 && 1", _sectio_quingentesima_septuagesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "#if !0", _sectio_quingentesima_septuagesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "#if defined(UNDEFINED)", _sectio_quingentesima_septuagesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "#if 1 ? 5 : 10", _sectio_quingentesima_septuagesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "#if 0 / #elif 1", _sectio_quingentesima_septuagesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "#ifdef with defined macro", _sectio_quingentesima_septuagesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "#ifndef with undefined macro", _sectio_quingentesima_octogesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "#if (1 + 2) * 3 == 9", _sectio_quingentesima_octogesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "#if 0xFF & 0x0F", _sectio_quingentesima_octogesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "branch parsing: basic", _sectio_quingentesima_octogesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "branch parsing: multiple decls", _sectio_quingentesima_octogesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "branch parsing: nested conditional", _sectio_quingentesima_octogesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "branch parsing: empty branch", _sectio_quingentesima_octogesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "branch parsing: ifdef with else", _sectio_quingentesima_octogesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Typedef edge: typedef int A; typedef A B; B x;", _sectio_quingentesima_octogesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Typedef edge: typedef int *IntPtr; IntPtr p;", _sectio_quingentesima_octogesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Typedef edge: typedef int *IntPtr; IntPtr *pp;", _sectio_quingentesima_nonagesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Typedef edge: typedef int MyInt; int x = (MyInt)42;", _sectio_quingentesima_nonagesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Typedef edge: typedef int MyInt; int x = sizeof(MyInt);", _sectio_quingentesima_nonagesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Typedef edge: typedef int A; void f(A x) {}", _sectio_quingentesima_nonagesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Typedef edge: typedef int A; struct S { A x; };", _sectio_quingentesima_nonagesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Typedef edge: typedef int A; A x, y, z;", _sectio_quingentesima_nonagesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Typedef edge: typedef int Arr[10]; Arr a;", _sectio_quingentesima_nonagesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Typedef edge: typedef int (*FP)(void);", _sectio_quingentesima_nonagesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Typedef edge: typedef int (*Callback)();", _sectio_quingentesima_nonagesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Typedef edge: typedef int (*FP)(void); FP f;", _sectio_quingentesima_nonagesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "DECLARATOR_CONTEXTUS: static int (*fp)(void);", _sectio_sescentesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "DECLARATOR_CONTEXTUS: extern int (*callback)();", _sectio_sescentesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "DECLARATOR_CONTEXTUS: void func(int (*param)(void))", _sectio_sescentesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "DECLARATOR_CONTEXTUS: struct S { int (*fp)(); };", _sectio_sescentesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "DECLARATOR_CONTEXTUS: int x, (*fp)();", _sectio_sescentesima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "C89: empty struct rejection (anonymous)", _sectio_sescentesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "C89: empty struct rejection (named)", _sectio_sescentesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "C89: empty union rejection (anonymous)", _sectio_sescentesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "C89: empty union rejection (named)", _sectio_sescentesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "C89: non-empty struct still accepted", _sectio_sescentesima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "C89: non-empty union still accepted", _sectio_sescentesima_decima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    /* Compendium */
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-
-    credo_claudere();
-    piscina_destruere(piscina);
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("arbor2_glr", SECTIONES);
 }
