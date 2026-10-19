@@ -1288,6 +1288,37 @@ _vestigium_capere (
     redde VERUM;
 }
 
+/* PHOTOGRAPHIA PUBLICA (consilium S5c1): arbor (cwd) et directoria
+ * '~/X' data - exsecutor consilii eam ut 'observare' adhibet, eadem
+ * ambulatione ac fabrica (thesaurus, residentes, .git praetermissi) */
+b32
+suturae_photographare (
+    constans Xar*  directoria_extra,
+         Piscina*  piscina,
+             Xar** vestigia_out)
+{
+    Xar* vestigia;
+    i32  i;
+
+    vestigia = xar_creare(piscina, (i32)magnitudo(FabricaVestigium));
+    si (vestigia == NIHIL)
+    {
+        redde FALSUM;
+    }
+    _arborem_photographare(chorda_ex_literis("", piscina), vestigia,
+        piscina);
+    per (i = ZEPHYRUM; directoria_extra != NIHIL
+         && i < xar_numerus(directoria_extra); i++)
+    {
+        _directorium_extra_photographare(
+            *(chorda*)xar_obtinere(directoria_extra, i), vestigia,
+            piscina);
+    }
+    xar_ordinare(vestigia, _vestigia_ordinare);
+    *vestigia_out = vestigia;
+    redde VERUM;
+}
+
 /* directoria '~/...' ex exitibus et vestigiis declaratis */
 interior Xar*
 _directoria_extra_colligere (

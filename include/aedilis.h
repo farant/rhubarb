@@ -236,6 +236,24 @@ aedilis_scriptum_scribere (
                              b32  solitarius,
               constans character* commissum);
 
+/* Idem ad directorium EXITUS datum (EXITUS_DIR, et solitarius
+ * <exitus>/solitarius) pro build/aedilis/<basis>, et thesaurum
+ * OBIECTORUM datum (OBIECTA_DIR) pro build/aedilis/obiecta -
+ * consumptores qui binarium probant neque manifestum basis communis
+ * neque obiecta communia tangere debent (porta instrumentorum,
+ * unitates-codicis U5 b: obiecta provenientiae in thesauro communi ab
+ * installatoribus manu scriptis deleta 'scripsit extra vestigium'
+ * fecerunt). exitus/obiecta NIHIL = ordinarium, octetim. */
+chorda
+aedilis_scriptum_scribere_ad (
+         constans AedilisFructus* fructus,
+    constans AedilisConfiguratio* configuratio,
+                         Piscina* piscina,
+                             b32  solitarius,
+              constans character* commissum,
+              constans character* exitus,
+              constans character* obiecta);
+
 /* CLAVIS THESAURI (circulus commissionis P1): praefixum quod
  * aedilis_silva_creare accipit (hic, non in aedilis_silva: silvam
  * non poscit - sigillum et filum sola). ingressus = digestum actionis

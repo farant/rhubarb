@@ -64,6 +64,7 @@ declare -a SOURCE_FILES=(
     "lib/concha.c"
     "lib/congruentia.c"
     "lib/conservatio.c"
+    "lib/consilium.c"
     "lib/copia_terminalis.c"
     "lib/credo.c"
     "lib/crustula.c"

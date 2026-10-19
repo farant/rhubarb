@@ -1,0 +1,54 @@
+<interrogationes unitas="piscina">
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I free a single allocation from a piscina?
+    <responsum symbolum="piscina_destruere piscina_vacare piscina_notare piscina_reficere">No:
+      a piscina is an arena and frees everything at once.
+      piscina_destruere releases all of it, piscina_vacare keeps the
+      blocks and empties them for reuse, and piscina_notare with
+      piscina_reficere rolls back everything allocated after the
+      mark.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I use temporary scratch memory in a loop without the piscina growing every iteration?
+    <responsum symbolum="piscina_notare piscina_reficere" via="tools/venenum_probare.sh">Take
+      a mark with piscina_notare before the temporaries and call
+      piscina_reficere after. Everything allocated after the mark
+      becomes invalid, but the memory is neither freed nor cleared,
+      so a stale read usually still sees the old values and the bug is
+      silent. Build with -DPISCINA_VENENUM=1 to fill released bytes
+      with 0xA5 (the venenum gate does this).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I handle running out of memory instead of the program exiting?
+    <responsum symbolum="piscina_allocare piscina_conari_allocare piscina_conari_allocare_ordinatum">piscina_allocare
+      is fatal: if no block can be found or created it prints the
+      piscina's name and exits the process. piscina_conari_allocare
+      (and _ordinatum) return NIHIL in the same situation, so the
+      caller can recover.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I put a hard cap on how much memory a piscina uses?
+    <responsum symbolum="piscina_generare_certae_magnitudinis piscina_potesne_allocare piscina_generare_dynamicum">Yes:
+      piscina_generare_certae_magnitudinis makes one buffer that never
+      grows; an allocation that does not fit is fatal through
+      piscina_allocare or NIHIL through piscina_conari_allocare.
+      piscina_potesne_allocare asks first. piscina_generare_dynamicum
+      instead adds blocks (twice the initial size, or the request
+      size plus the initial size when larger).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what alignment does piscina_allocare give, and how do I pack bytes tightly?
+    <responsum symbolum="piscina_allocare piscina_allocare_ordinatum">Eight
+      bytes (PISCINA_ORDINATIO_ORDINARIA), enough for every house type
+      including pointers, i64 and f64, like malloc. For byte-only data
+      such as text, piscina_allocare_ordinatum(piscina, mensura, I)
+      packs with no padding. Before 2026-10-05 the default was one
+      byte, which left wider members misaligned.</responsum>
+  </interrogatio>
+
+</interrogationes>

@@ -47,7 +47,9 @@
 /* symbola capsularum sunt contractus; capita genita numquam
  * includuntur (silva inclusionem citatam cum '..' solvere nequit -
  * regula speculi, nota 01KY0T6T64) */
+/* <aedilis obiectum="build/capsula_corpus_silicis.c"/> */
 externus constans CapsulaEmbed capsula_corpus_silicis;
+/* <aedilis obiectum="build/capsula_facies_briar.c"/> */
 externus constans CapsulaEmbed capsula_facies_briar;
 
 interior character*
