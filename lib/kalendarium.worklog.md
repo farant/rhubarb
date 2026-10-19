@@ -878,3 +878,10 @@ p6d_2026-10-31.png (two birthdays, flipped).
   Local helper `indentationem_communem_tollere`: stml.c has a dedent, but static and
   over one '\n'-joined string; a shared one in chorda.h would owe ~29
   gates for a dozen lines. Plants 3 red.
+- Month view, today (Fran 10-19, picked C of four headless variants:
+  A double accent border, B accent dots, C light solid fill, D dim
+  hatch): COLOR_SUPERFICIES fill inside the cell, drawn before the
+  grid line; the inverted day number, the selection's double border
+  and the out-of-month dotting are untouched. Test `fundus_hodie`
+  (fill on today, not on a neighbour, stays when the selection moves);
+  plants 3 red (no fill, every day, follows the selection).

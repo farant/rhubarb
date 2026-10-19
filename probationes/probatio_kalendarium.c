@@ -3447,6 +3447,55 @@ _probare_hebdomadem (
     CREDO_VERUM(campus_est(x, "visus", "mensis"));
 }
 
+/* hodie in mense: fundus plenus COLOR_SUPERFICIES per cellulam fere
+ * totam (Franus 10-19: "light fill"); dies alius nullus; electio
+ * alibi fundum non movet */
+interior b32
+fundus_hodie (
+    Mandata* md,
+      Fines  f)
+{
+    constans Mandatum* x;
+                  i32  i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        x = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   x->genus          == MANDATUM_RECTANGULUM && x->impletum
+            && color_thematis_est(x->color, COLOR_SUPERFICIES)
+            && intra(x->fines, f)
+            && x->fines.latitudo >= f.latitudo - II
+            && x->fines.altitudo >= f.altitudo - II)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+interior vacuum
+_probare_fundum_hodie (
+    CredoContextus* c)
+{
+     Mundus* x;
+    Mandata* md;
+
+    x = (Mundus*)c->datum;
+    thema_initiare();
+    CREDO_NECESSE(mundum_struere(x, c->piscina, NIHIL));
+    md = reddere(x, c->piscina);
+    CREDO_VERUM(fundus_hodie(md, cellula(x, "2026-10-14", c->piscina)));
+    CREDO_FALSUM(fundus_hodie(md, cellula(x, "2026-10-15",
+        c->piscina)));
+    clavis(x, 'l');
+    clavis(x, 'l');
+    dispensator_recomponere(x->d);
+    md = reddere(x, c->piscina);
+    CREDO_VERUM(fundus_hodie(md, cellula(x, "2026-10-14", c->piscina)));
+    CREDO_FALSUM(fundus_hodie(md, cellula(x, "2026-10-16",
+        c->piscina)));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "natalis_super", _probare_natalis_super, mundum_parare,
       mundum_purgare, NIHIL, NIHIL },
@@ -3525,6 +3574,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         mundum_purgare, NIHIL, NIHIL },
     { "hebdomas", _probare_hebdomadem, mundum_parare, mundum_purgare,
         NIHIL, NIHIL },
+    { "fundus_hodie", _probare_fundum_hodie, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

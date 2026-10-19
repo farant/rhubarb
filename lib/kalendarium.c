@@ -2598,6 +2598,14 @@ cellulam_pingere (
         mandata_rectangulum_exemplar(md, f, figura_color_thematis(
             COLOR_SUPERFICIES), EXEMPLAR_PUNCTA_DISPERSA);
     }
+    /* hodie: fundus plenus levis (Franus 10-19, variatio C ex IV
+     * pictis - margo electae et punctatio alienorum intacti) */
+    si (dies_aequales(dies, hodierna))
+    {
+        rectangulum(md, f.x + I, f.y + I, f.latitudo - I, f.altitudo
+            - I,
+            figura_color_thematis(COLOR_SUPERFICIES), VERUM);
+    }
     rectangulum(md, f.x, f.y, f.latitudo + I, f.altitudo + I,
         figura_color_thematis(COLOR_TEXT_DIM), FALSUM);
     info = NIHIL;
