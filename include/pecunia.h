@@ -216,4 +216,38 @@ pecunia_convertere (
           Piscina* piscina,
           Pecunia* exitus);
 
+
+/* ==================================================
+ * Partitio (summa partium = totum EXACTE)
+ * ================================================== */
+
+nomen enumeratio {
+    PECUNIA_GRANUM_SCALA = ZEPHYRUM,  /* partes in decimillesimis */
+    PECUNIA_GRANUM_UNITAS             /* partes solvibiles */
+} PecuniaGranum;
+
+/* Residuum maximum: pars i = solum(grana * r_i / summa) granorum,
+ * grana reliqua singula partibus residuo maximo, PARIA AD INDICEM
+ * MINOREM. Totum negativum per magnitudinem partitur, signum servat.
+ * GRANUM_UNITAS: totum solvibile esse debet (NON_SOLVIBILIS); rationes
+ * >= 0 cum summa positiva, n > 0 (RATIONES). exitus[n]; intacti in
+ * vitio. Intermedia in Magno (piscina). */
+PecuniaVitium
+pecunia_partiri (
+           Pecunia  totum,
+      constans s64* rationes,
+    memoriae_index  n,
+     PecuniaGranum  granum,
+           Piscina* piscina,
+           Pecunia* exitus);
+
+/* rationibus aequalibus: partes granum unum ad summum differunt */
+PecuniaVitium
+pecunia_dividere (
+           Pecunia  totum,
+    memoriae_index  n,
+     PecuniaGranum  granum,
+           Piscina* piscina,
+           Pecunia* exitus);
+
 #endif /* PECUNIA_H */

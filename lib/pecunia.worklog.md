@@ -122,3 +122,36 @@ negative (q + 0.5 <= -0.5, so q is the one further from zero).
 All 4880 oracle lines agreed on the first run. Plants: PAR made to
 behave like half-up; the s64 negative-floor correction removed;
 VERSUS_NIHIL made SOLUM for negatives - each `oraculum` red.
+
+## 2026-10-19 - T4: splitting
+
+`pecunia_partiri(totum, rationes, n, granum, piscina, exitus)` - largest
+remainder: each part gets `floor(G * r_i / S)` grains (G = grains of the
+total's magnitude, S = sum of ratios, both in `Magnus`, so huge ratios
+like {MAXIMA, MAXIMA} are fine), the leftover grains (always < n) go one
+each to the largest remainders, ties to the LOWER index (the first
+maximum found wins - no sort, O(n * leftover)). A zero ratio has
+remainder 0 and can never win a leftover grain: the leftover equals the
+sum of the fractional parts, so it is smaller than the number of parts
+whose remainder is positive.
+
+**Bug the edge test caught:** splitting MINIMA into ONE part. Its
+magnitude is 2^63, which does not fit in s64, and the first draft
+converted the magnitude part to s64 before restoring the sign. Now the
+sign is restored in `Magnus` and only the signed part is converted; it
+always fits (same sign as the total, never larger in magnitude). All
+parts are computed before any `exitus` is written, so a failure leaves
+the output untouched.
+
+`GRANUM_UNITAS` refuses a total that is not already payable
+(`NON_SOLVIBILIS`): USD 10.0050 cannot become cents that add back up to
+it. With `GRANUM_SCALA` the same total splits to 5.0025 + 5.0025.
+
+`Piscina*` added to both functions (plan P8) - the spec's sketch had
+none.
+
+Property check: 3000 random cases (USD/JPY/KWD/CLF, n 1..12, ratios
+0..1000, both grains): parts sum exactly to the total, never take the
+opposite sign, are payable under UNITAS; equal splits differ by at most
+one grain. Plants: leftover to the last parts, ties to the higher index,
+sign not restored - each red in `exempla`.

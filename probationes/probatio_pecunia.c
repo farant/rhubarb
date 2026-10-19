@@ -5,7 +5,9 @@
  * superfluxus, monetae diversae, exitus intactus, proprietates);
  * rotundatio (T3) contra oraculum decimal Pythonis FIXUM
  * (probationes/fixa/pecunia/rotundatio.txt, sha256 infra; scriptum a
- * tools/pecunia_rotundatio_oraculum.py), solvibilis, cambium. */
+ * tools/pecunia_rotundatio_oraculum.py), solvibilis, cambium;
+ * partitio (T4): residuum maximum, paria ad indicem minorem, summa
+ * EXACTA, granum scalae aut unitatis. */
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"
@@ -653,6 +655,238 @@ _sectio_cambium (CredoContextus* c)
     CREDO_VERUM(memcmp(x.moneta.codex, "KWD", IV) == ZEPHYRUM);
 }
 
+/* partes exspectatae (quantitates) cum moneta totius */
+interior b32
+_partes_sunt (
+      constans Pecunia* partes,
+          constans s64* exspectatae,
+                   s32  n,
+    constans character* codex)
+{
+    s32 i;
+
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        si (   partes[i].quantitas != exspectatae[i]
+            || memcmp(partes[i].moneta.codex, codex, IV) != ZEPHYRUM)
+        {
+            imprimere("  pars %d: %ld pro %ld\n", (integer)i,
+                (longus)partes[i].quantitas, (longus)exspectatae[i]);
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+interior vacuum
+_sectio_exempla (CredoContextus* c)
+{
+    Piscina* p = c->piscina;
+    Pecunia  x[III];
+        s64  e[III];
+        s64  r[II];
+
+    /* USD 10.00 / 3 ad centesimos */
+    CREDO_AEQUALIS_S32((s32)pecunia_dividere(_p(C * M, "USD", p), III,
+        PECUNIA_GRANUM_UNITAS, p, x), (s32)PECUNIA_BENE);
+    e[ZEPHYRUM]  = (s64)(XXXIII * M + CD);
+    e[I]         = (s64)(XXXIII * M + CCC);
+    e[II]        = (s64)(XXXIII * M + CCC);
+    CREDO_VERUM(_partes_sunt(x, e, III, "USD"));
+    /* negativum: magnitudo partitur, signum servatur */
+    CREDO_AEQUALIS_S32((s32)pecunia_dividere(_p(-(s64)(C * M), "USD",
+        p),
+        III, PECUNIA_GRANUM_UNITAS, p, x), (s32)PECUNIA_BENE);
+    e[ZEPHYRUM]  = -e[ZEPHYRUM];
+    e[I]         = -e[I];
+    e[II]        = -e[II];
+    CREDO_VERUM(_partes_sunt(x, e, III, "USD"));
+    /* USD 0.05 rationibus {1, 2}: residua 2/3 contra 1/3 */
+    r[ZEPHYRUM]  = I;
+    r[I]         = II;
+    CREDO_AEQUALIS_S32((s32)pecunia_partiri(_p(D, "USD", p), r, II,
+        PECUNIA_GRANUM_UNITAS, p, x), (s32)PECUNIA_BENE);
+    e[ZEPHYRUM]  = (s64)CC;
+    e[I]         = (s64)CCC;
+    CREDO_VERUM(_partes_sunt(x, e, II, "USD"));
+    /* USD 1.0000 / 3 in decimillesimis */
+    CREDO_AEQUALIS_S32((s32)pecunia_dividere(_p(X * M, "USD", p), III,
+        PECUNIA_GRANUM_SCALA, p, x), (s32)PECUNIA_BENE);
+    e[ZEPHYRUM]  = (s64)MMMCCCXXXIV;
+    e[I]         = (s64)MMMCCCXXXIII;
+    e[II]        = (s64)MMMCCCXXXIII;
+    CREDO_VERUM(_partes_sunt(x, e, III, "USD"));
+    /* JPY 100 / 3 ad yen integros */
+    CREDO_AEQUALIS_S32((s32)pecunia_dividere(_p(M * M, "JPY", p), III,
+        PECUNIA_GRANUM_UNITAS, p, x), (s32)PECUNIA_BENE);
+    e[ZEPHYRUM]  = (s64)(CCCXL * M);
+    e[I]         = (s64)(CCCXXX * M);
+    e[II]        = (s64)(CCCXXX * M);
+    CREDO_VERUM(_partes_sunt(x, e, III, "JPY"));
+    /* rationes ingentes: summa extra s64 in Magno computatur */
+    r[ZEPHYRUM]  = MAXIMA;
+    r[I]         = MAXIMA;
+    CREDO_AEQUALIS_S32((s32)pecunia_partiri(_p(MCCC, "USD", p), r, II,
+        PECUNIA_GRANUM_UNITAS, p, x), (s32)PECUNIA_BENE);
+    e[ZEPHYRUM]  = (s64)DCC;
+    e[I]         = (s64)DC;
+    CREDO_VERUM(_partes_sunt(x, e, II, "USD"));
+}
+
+interior vacuum
+_sectio_degeneres (CredoContextus* c)
+{
+    Piscina* p = c->piscina;
+    Pecunia  x[V];
+    Pecunia  y[II];
+        s64  e[V];
+        s64  r[III];
+        s32  i;
+
+    /* n == 0 */
+    CREDO_AEQUALIS_S32((s32)pecunia_dividere(_p(C, "USD", p), ZEPHYRUM,
+        PECUNIA_GRANUM_UNITAS, p, x), (s32)PECUNIA_VITIUM_RATIONES);
+    /* n == 1: totum */
+    CREDO_AEQUALIS_S32((s32)pecunia_dividere(_p(MINIMA, "CLF", p), I,
+        PECUNIA_GRANUM_SCALA, p, x), (s32)PECUNIA_BENE);
+    CREDO_AEQUALIS_S64(x[ZEPHYRUM].quantitas, MINIMA);
+    /* totum nullum */
+    CREDO_AEQUALIS_S32((s32)pecunia_dividere(_p(ZEPHYRUM, "USD", p),
+        III,
+        PECUNIA_GRANUM_UNITAS, p, x), (s32)PECUNIA_BENE);
+    e[ZEPHYRUM] = e[I] = e[II] = ZEPHYRUM;
+    CREDO_VERUM(_partes_sunt(x, e, III, "USD"));
+    /* plures partes quam grana: USD 0.02 / 5 - paria ad minorem */
+    CREDO_AEQUALIS_S32((s32)pecunia_dividere(_p(CC, "USD", p), V,
+        PECUNIA_GRANUM_UNITAS, p, x), (s32)PECUNIA_BENE);
+    e[ZEPHYRUM]  = e[I] = (s64)C;
+    e[II]        = e[III] = e[IV] = ZEPHYRUM;
+    CREDO_VERUM(_partes_sunt(x, e, V, "USD"));
+    /* ratio nulla numquam granum reliquum accipit */
+    r[ZEPHYRUM]  = ZEPHYRUM;
+    r[I]         = I;
+    r[II]        = I;
+    CREDO_AEQUALIS_S32((s32)pecunia_partiri(_p(CCC, "USD", p), r, III,
+        PECUNIA_GRANUM_UNITAS, p, x), (s32)PECUNIA_BENE);
+    e[ZEPHYRUM]  = ZEPHYRUM;
+    e[I]         = (s64)CC;
+    e[II]        = (s64)C;
+    CREDO_VERUM(_partes_sunt(x, e, III, "USD"));
+
+    /* recusationes: exitus intacti */
+    per (i = ZEPHYRUM; i < II; i++)
+    {
+        y[i] = _signum_intactum();
+    }
+    r[ZEPHYRUM]  = I;
+    r[I]         = -I;
+    CREDO_AEQUALIS_S32((s32)pecunia_partiri(_p(C, "USD", p), r, II,
+        PECUNIA_GRANUM_UNITAS, p, y), (s32)PECUNIA_VITIUM_RATIONES);
+    r[ZEPHYRUM]  = ZEPHYRUM;
+    r[I]         = ZEPHYRUM;
+    CREDO_AEQUALIS_S32((s32)pecunia_partiri(_p(C, "USD", p), r, II,
+        PECUNIA_GRANUM_UNITAS, p, y), (s32)PECUNIA_VITIUM_RATIONES);
+    CREDO_AEQUALIS_S32((s32)pecunia_partiri(_p(C, "USD", p), NIHIL, II,
+        PECUNIA_GRANUM_UNITAS, p, y), (s32)PECUNIA_VITIUM_RATIONES);
+    /* USD 10.0050 ad centesimos: summa partium totum esse non potest */
+    CREDO_AEQUALIS_S32((s32)pecunia_dividere(_p(C * M + L, "USD", p),
+        II,
+        PECUNIA_GRANUM_UNITAS, p, y),
+        (s32)PECUNIA_VITIUM_NON_SOLVIBILIS);
+    CREDO_AEQUALIS_S32((s32)pecunia_dividere(_p(C, "ZZZ", p), II,
+        PECUNIA_GRANUM_UNITAS, p, y),
+        (s32)PECUNIA_VITIUM_MONETA_IGNOTA);
+    CREDO_VERUM(_intactum(y[ZEPHYRUM]) && _intactum(y[I]));
+    /* in scala idem totum licet */
+    CREDO_AEQUALIS_S32((s32)pecunia_dividere(_p(C * M + L, "USD", p),
+        II,
+        PECUNIA_GRANUM_SCALA, p, x), (s32)PECUNIA_BENE);
+    e[ZEPHYRUM]  = (s64)(L * M + XXV);
+    e[I]         = (s64)(L * M + XXV);
+    CREDO_VERUM(_partes_sunt(x, e, II, "USD"));
+}
+
+interior vacuum
+_sectio_partitio_proprietates (CredoContextus* c)
+{
+               Piscina* p = c->piscina;
+                  Sors  s;
+                   s32  k;
+               Pecunia  x[XII];
+                   s64  r[XII];
+    constans character* codices[IV];
+
+    codices[ZEPHYRUM]  = "USD";
+    codices[I]         = "JPY";
+    codices[II]        = "KWD";
+    codices[III]       = "CLF";
+    sors_seminare(&s, (i64)0x5A17, ZEPHYRUM);
+    per (k = ZEPHYRUM; k < MMM; k++)
+    {
+        constans character* codex  = codices[sors_intra(&s, IV)];
+                       s32  n      = (s32)sors_intra(&s, XII) + I;
+             PecuniaGranum  g     = sors_intra(&s, II) == ZEPHYRUM
+                                    ? PECUNIA_GRANUM_SCALA
+                                    : PECUNIA_GRANUM_UNITAS;
+                   Pecunia totum;
+                   Pecunia summa;
+                       s64 quantitas;
+                       s32 i;
+                       s64 maxima = MINIMA;
+                       s64 minima = MAXIMA;
+
+        /* totum in +-10^12 granis, solvibile si granum unitatis */
+        quantitas = (s64)(sors_proximum(&s) % (II * (i64)M * M * M * M
+            + I)) - (s64)M * M * M * M;
+        totum = _p(quantitas, codex, p);
+        si (g == PECUNIA_GRANUM_UNITAS)
+        {
+            CREDO_NECESSE(pecunia_ad_unitatem(totum, PECUNIA_SOLUM,
+                &totum)
+                == PECUNIA_BENE);
+        }
+        per (i = ZEPHYRUM; i < n; i++)
+        {
+            r[i] = (s64)sors_intra(&s, MI);
+        }
+        r[ZEPHYRUM] += I;    /* summa positiva */
+
+        CREDO_NECESSE(pecunia_partiri(totum, r, (memoriae_index)n, g, p,
+            x)
+            == PECUNIA_BENE);
+        CREDO_NECESSE(pecunia_summa(x, (memoriae_index)n, &summa)
+            == PECUNIA_BENE);
+        CREDO_VERUM(pecunia_aequalis(summa, totum));
+        per (i = ZEPHYRUM; i < n; i++)
+        {
+            CREDO_VERUM(x[i].quantitas == ZEPHYRUM
+                || pecunia_signum(x[i]) == pecunia_signum(totum));
+            si (g == PECUNIA_GRANUM_UNITAS)
+            {
+                CREDO_VERUM(pecunia_solvibilis(x[i]));
+            }
+        }
+
+        /* aequaliter: partes differunt granum unum ad summum */
+        CREDO_NECESSE(pecunia_dividere(totum, (memoriae_index)n, g, p,
+            x)
+            == PECUNIA_BENE);
+        CREDO_NECESSE(pecunia_summa(x, (memoriae_index)n, &summa)
+            == PECUNIA_BENE);
+        CREDO_VERUM(pecunia_aequalis(summa, totum));
+        per (i = ZEPHYRUM; i < n; i++)
+        {
+            maxima = x[i].quantitas > maxima ? x[i].quantitas : maxima;
+            minima = x[i].quantitas < minima ? x[i].quantitas : minima;
+        }
+        CREDO_VERUM(maxima - minima <= (g
+            == PECUNIA_GRANUM_SCALA ? (s64)I
+            : (s64)(X * M) / (codex[ZEPHYRUM] == 'J' ? I
+            : codex[ZEPHYRUM] == 'U' ? C : codex[ZEPHYRUM] == 'K' ? M
+            : X * M)));
+    }
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "tabula", _sectio_tabula, NIHIL, NIHIL, NIHIL, NIHIL },
     { "codices", _sectio_codices, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -665,6 +899,10 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "oraculum", _sectio_oraculum, NIHIL, NIHIL, NIHIL, NIHIL },
     { "solvibilis", _sectio_solvibilis, NIHIL, NIHIL, NIHIL, NIHIL },
     { "cambium", _sectio_cambium, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "exempla", _sectio_exempla, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "degeneres", _sectio_degeneres, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "partitio_proprietates", _sectio_partitio_proprietates, NIHIL,
+        NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

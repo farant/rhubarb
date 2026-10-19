@@ -513,3 +513,172 @@ pecunia_convertere (
     *exitus   = r;
     redde PECUNIA_BENE;
 }
+
+
+/* ==================================================
+ * Partitio
+ * ================================================== */
+
+PecuniaVitium
+pecunia_partiri (
+           Pecunia  totum,
+      constans s64* rationes,
+    memoriae_index  n,
+     PecuniaGranum  granum,
+           Piscina* piscina,
+           Pecunia* exitus)
+{
+               s32  exponens = pecunia_moneta_exponens(totum.moneta);
+               s64  magnitudo_grani;
+            Magnus  grana;
+            Magnus  summa_rationum  = magnus_ex_s64(ZEPHYRUM);
+            Magnus  summa_solorum   = magnus_ex_s64(ZEPHYRUM);
+            Magnus* soli;
+            Magnus* residua;
+               b32* donati;
+               s64* quantitates;
+               s64  reliqua;
+               s64  k;
+               b32  negativum = totum.quantitas < ZEPHYRUM;
+    memoriae_index  i;
+
+    si (exponens < ZEPHYRUM)
+    {
+        redde PECUNIA_VITIUM_MONETA_IGNOTA;
+    }
+    si (n == ZEPHYRUM || rationes == NIHIL || piscina == NIHIL)
+    {
+        redde PECUNIA_VITIUM_RATIONES;
+    }
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        si (rationes[i] < ZEPHYRUM)
+        {
+            redde PECUNIA_VITIUM_RATIONES;
+        }
+        summa_rationum = magnus_adde(summa_rationum,
+            magnus_ex_s64(rationes[i]), piscina);
+    }
+    si (magnus_signum(summa_rationum) == ZEPHYRUM)
+    {
+        redde PECUNIA_VITIUM_RATIONES;
+    }
+    magnitudo_grani = granum == PECUNIA_GRANUM_UNITAS
+        ? _factor_unitatis(exponens) : (s64)I;
+    si (totum.quantitas % magnitudo_grani != ZEPHYRUM)
+    {
+        redde PECUNIA_VITIUM_NON_SOLVIBILIS;
+    }
+    /* magnitudo in Magno: |MINIMA| s64 non capit */
+    si (!magnus_divide(magnus_absolutum(magnus_ex_s64(totum.quantitas),
+        piscina), magnus_ex_s64(magnitudo_grani), piscina, &grana,
+        NIHIL))
+    {
+        redde PECUNIA_VITIUM_RATIONES;
+    }
+    soli    = (Magnus*)piscina_allocare(piscina,
+        n * (memoriae_index)magnitudo(Magnus));
+    residua = (Magnus*)piscina_allocare(piscina,
+        n * (memoriae_index)magnitudo(Magnus));
+    donati  = (b32*)piscina_allocare(piscina,
+        n * (memoriae_index)magnitudo(b32));
+    si (soli == NIHIL || residua == NIHIL || donati == NIHIL)
+    {
+        redde PECUNIA_VITIUM_RATIONES;
+    }
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        (vacuum)magnus_divide(magnus_multiplica(grana,
+            magnus_ex_s64(rationes[i]), piscina), summa_rationum,
+            piscina, &soli[i], &residua[i]);
+        summa_solorum  = magnus_adde(summa_solorum, soli[i], piscina);
+        donati[i]      = FALSUM;
+    }
+    /* reliqua < n: summa partium fractarum, quaeque < I */
+    si (!magnus_ad_s64(magnus_subtrahe(grana, summa_solorum, piscina),
+        &reliqua))
+    {
+        redde PECUNIA_VITIUM_RATIONES;
+    }
+    /* singula grana residuo maximo; paria ad indicem minorem (primus
+     * maximus inventus vincit). O(n * reliqua), reliqua < n. */
+    per (k = ZEPHYRUM; k < reliqua; k++)
+    {
+        memoriae_index optimus = n;
+
+        per (i = ZEPHYRUM; i < n; i++)
+        {
+            si (   !donati[i] && (optimus == n
+                || magnus_compara(residua[i], residua[optimus])
+                   > ZEPHYRUM))
+            {
+                optimus = i;
+            }
+        }
+        donati[optimus] = VERUM;
+    }
+    /* signum in Magno restituitur ANTE conversionem: magnitudo partis
+     * unicae ex MINIMA (2^63) s64 non capit, pars signata semper capit
+     * (signum totius, |pars| <= |totum|). Prius omnes computantur,
+     * deinde exitus scribuntur - intacti si quid deficit. */
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        Magnus g = donati[i]
+            ? magnus_adde(soli[i], magnus_ex_s64(I), piscina) : soli[i];
+
+        g = magnus_multiplica(g, magnus_ex_s64(magnitudo_grani),
+            piscina);
+        si (negativum)
+        {
+            g = magnus_nega(g, piscina);
+        }
+        soli[i] = g;
+    }
+    quantitates = (s64*)piscina_allocare(piscina,
+        n * (memoriae_index)magnitudo(s64));
+    si (quantitates == NIHIL)
+    {
+        redde PECUNIA_VITIUM_RATIONES;
+    }
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        si (!magnus_ad_s64(soli[i], &quantitates[i]))
+        {
+            redde PECUNIA_VITIUM_SUPERFLUXUS;   /* numquam accidit */
+        }
+    }
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        exitus[i].quantitas  = quantitates[i];
+        exitus[i].moneta     = totum.moneta;
+    }
+    redde PECUNIA_BENE;
+}
+
+PecuniaVitium
+pecunia_dividere (
+           Pecunia  totum,
+    memoriae_index  n,
+     PecuniaGranum  granum,
+           Piscina* piscina,
+           Pecunia* exitus)
+{
+               s64* rationes;
+    memoriae_index  i;
+
+    si (n == ZEPHYRUM || piscina == NIHIL)
+    {
+        redde PECUNIA_VITIUM_RATIONES;
+    }
+    rationes = (s64*)piscina_allocare(piscina,
+        n * (memoriae_index)magnitudo(s64));
+    si (rationes == NIHIL)
+    {
+        redde PECUNIA_VITIUM_RATIONES;
+    }
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        rationes[i] = I;
+    }
+    redde pecunia_partiri(totum, rationes, n, granum, piscina, exitus);
+}
