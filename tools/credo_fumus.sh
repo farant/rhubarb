@@ -955,6 +955,159 @@ import sys; sys.path.insert(0, 'pythonica'); import silva
 for l in silva.notae_convertibilium(['$T/conv/probationes/probatio_nota.c', 'probationes/probatio_xar.c', 'lib/xar.c']): print(l)" 2>&1)"
 [ "$(printf '%s\n' "$nota" | grep -c 'convertibilis')" -eq 1 ] && printf '%s\n' "$nota" | grep -q 'probatio_nota.c convertibilis (forma A, 2 sectiones)'; credo $? "XIII nota commissionis: convertibilis sola nominata ($(printf '%s' "$nota" | cut -c1-60))"
 
+# XIV (credo III, 2026-10-19): VALORES IN FRACTURA - chordae (aequalis,
+# continet, literis) valores ambos citant (effugia, mensura, NUL intra,
+# fenestra circa differentiam primam pro longis, nulla truncatio tacita),
+# linea 'Differentia:' (octetus primus, speratus/receptus, finis);
+# LITERAE (NIHIL tutum), OCTETI (hex, [octetus diversus]), I32 insignatum
+# >= 2^31, familiae S64/I64 (memoriae_index sine casti), F32, F64
+# RELATIVE (limes nominatus), F64 ULP (-0 == +0, NaN numquam)
+cat > "$T/valores.c" <<'FONS'
+#include "credo.h"
+#include <stdio.h>
+#include <string.h>
+
+interior vacuum _fracturae (CredoContextus* c)
+{
+                chorda  a;
+                chorda  b;
+                chorda  x;
+                chorda  y;
+             character  n1[IV];
+             character  n2[IV];
+             character  longa_r[CCC];
+             character  longa_s[CCC];
+                    i8  o1[XL];
+                    i8  o2[XL];
+                   i32  k;
+     volatilis     f64  zephyrum_f = 0.0;
+                   f64  nan_f;
+
+    a = chorda_ex_literis("salve\tmunde", c->piscina);
+    b = chorda_ex_literis("salve munde", c->piscina);
+    CREDO_CHORDA_AEQUALIS(b, a);
+
+    memcpy(n1, "ab\0c", IV);
+    memcpy(n2, "ab\0d", IV);
+    x.datum = (i8*)n1; x.mensura = IV;
+    y.datum = (i8*)n2; y.mensura = IV;
+    CREDO_CHORDA_AEQUALIS(x, y);
+
+    CREDO_CHORDA_AEQUALIS(chorda_ex_literis("abc", c->piscina),
+        chorda_ex_literis("abcd", c->piscina));
+
+    memset(longa_r, 'x', CCC);
+    memset(longa_s, 'x', CCC);
+    longa_r[CCL] = 'y';
+    x.datum = (i8*)longa_r; x.mensura = CCC;
+    y.datum = (i8*)longa_s; y.mensura = CCC;
+    CREDO_CHORDA_AEQUALIS(x, y);
+
+    CREDO_CHORDA_CONTINET(b, chorda_ex_literis("vale", c->piscina));
+
+    x.datum = (i8*)longa_s; x.mensura = CCC;
+    CREDO_CHORDA_AEQUALIS_LITERIS(x, "xxy");
+
+    CREDO_LITERAE_AEQUALES(NIHIL, "a");
+
+    per (k = ZEPHYRUM; k < XL; k++)
+    {
+        o1[k] = (i8)k;
+        o2[k] = (i8)k;
+    }
+    o2[XX] = (i8)0xff;
+    CREDO_OCTETI_AEQUALES(o1, o2, XL);
+
+    CREDO_AEQUALIS_I32((i32)I << XXXI, I);
+    CREDO_MAIOR_S64((s64)-V, (s64)III);
+    CREDO_AEQUALIS_I64(magnitudo(i64), (i64)IX);
+    CREDO_F64_PROXIMUS(1.0, 1.1, 0.01);
+    CREDO_F32_PROXIMUS(1.0f, 1.5f, 0.25f);
+    CREDO_F64_RELATIVE(1000.0, 1001.0, 0.0001);
+    CREDO_F64_ULP(0.1 + 0.2, 0.3, ZEPHYRUM);
+    nan_f = zephyrum_f / zephyrum_f;
+    CREDO_F64_ULP(nan_f, nan_f, M);
+}
+
+interior vacuum _transeuntes (CredoContextus* c)
+{
+    i8 o1[IV];
+    i8 o2[IV];
+
+    memcpy(o1, "abcd", IV);
+    memcpy(o2, "abcd", IV);
+    CREDO_CHORDA_AEQUALIS(chorda_ex_literis("ab", c->piscina),
+        chorda_ex_literis("ab", c->piscina));
+    CREDO_CHORDA_CONTINET(chorda_ex_literis("salve munde", c->piscina),
+        chorda_ex_literis("mun", c->piscina));
+    CREDO_CHORDA_INCIPIT(chorda_ex_literis("salve", c->piscina),
+        chorda_ex_literis("sal", c->piscina));
+    CREDO_CHORDA_TERMINATUR(chorda_ex_literis("salve", c->piscina),
+        chorda_ex_literis("lve", c->piscina));
+    CREDO_CHORDA_AEQUALIS_LITERIS(chorda_ex_literis("ab", c->piscina), "ab");
+    CREDO_LITERAE_AEQUALES(NIHIL, NIHIL);
+    CREDO_LITERAE_AEQUALES("a", "a");
+    CREDO_OCTETI_AEQUALES(o1, o2, IV);
+    CREDO_INAEQUALITAS_S64((s64)-I, (s64)I);
+    CREDO_MINOR_S64((s64)-V, (s64)III);
+    CREDO_MAIOR_AUT_AEQUALIS_S64((s64)III, (s64)III);
+    CREDO_MINOR_AUT_AEQUALIS_S64((s64)II, (s64)III);
+    CREDO_INAEQUALITAS_I64(magnitudo(i64), (i64)IX);
+    CREDO_MAIOR_I64((i64)X, (i64)IX);
+    CREDO_MINOR_I64((i64)VIII, (i64)IX);
+    CREDO_MAIOR_AUT_AEQUALIS_I64((i64)IX, (i64)IX);
+    CREDO_MINOR_AUT_AEQUALIS_I64((i64)IX, (i64)IX);
+    CREDO_F32_PROXIMUS(1.0f, 1.125f, 0.25f);
+    CREDO_F64_RELATIVE(1e20, 1e20 * (1.0 + 1e-12), 1e-9);
+    CREDO_F64_ULP(0.1 + 0.2, 0.3, I);
+    CREDO_F64_ULP(-0.0, 0.0, ZEPHYRUM);
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "fracturae", _fracturae, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "transeuntes", _transeuntes, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("valores", SECTIONES);
+}
+FONS
+if struere valores.c valores; then
+    CREDO_VERDICTA="$T/valores.tsv" "$T/valores" > "$T/valores.out" 2>&1; rcv=$?
+else
+    rcv=99; cp "$T/valores.err" "$T/valores.out"
+fi
+habet () { grep -qxF -- "$1" "$T/valores.out"; }
+X=$(printf 'x%.0s' $(seq 1 110)); X60=$(printf 'x%.0s' $(seq 1 60)); X49=$(printf 'x%.0s' $(seq 1 49)); X160=$(printf 'x%.0s' $(seq 1 160))
+H1="$(printf '%02x ' $(seq 4 19))[14] $(printf '%02x ' $(seq 21 35) | sed 's/ $//')"
+H2="$(printf '%02x ' $(seq 4 19))[ff] $(printf '%02x ' $(seq 21 35) | sed 's/ $//')"
+[ "$rcv" -eq 1 ] && grep -q "^SECTIO	valores	fracturae	FRACTA	" "$T/valores.tsv" \
+    && grep -q "^SECTIO	valores	transeuntes	TRANSIIT	21	21	" "$T/valores.tsv" \
+    && grep -q '^Fracti:     16$' "$T/valores.out"; credo $? "XIV valores: XVI fracturae nominatae, transeuntes XXI/XXI (rc $rcv)"
+habet '  Speratus: "salve\tmunde" (11 octeti)' && habet '  Receptus: "salve munde" (11 octeti)' \
+    && habet '  Differentia: octetus 5 - speratus '"'"'\t'"'"' 0x09, receptus '"'"' '"'"' 0x20'; credo $? "XIV chorda aequalis: valores ambi effugiti + Differentia octeti V"
+habet '  Speratus: "ab\x00d" (4 octeti)' && habet '  Receptus: "ab\x00c" (4 octeti)'; credo $? "XIV chorda cum NUL intra: per mensuram, \\x00 effugitum"
+habet '  Differentia: octetus 3 - speratus '"'"'d'"'"' 0x64, receptus finit'; credo $? "XIV praefixum: receptus finit nominatur"
+habet "  Speratus: …\"$X\" (300 octeti, fenestra [190, 300))" && habet "  Receptus: …\"${X60}y${X49}\" (300 octeti, fenestra [190, 300))" \
+    && habet '  Differentia: octetus 250 - speratus '"'"'x'"'"' 0x78, receptus '"'"'y'"'"' 0x79'; credo $? "XIV longa: fenestra circa differentiam (CXC-CCC), non truncatio"
+grep -qF ' FRACTA (credo_chorda_continet): b continet chorda_ex_literis("vale", c->piscina) at ' "$T/valores.out" \
+    && habet '  Speratus: "vale" (4 octeti)' && habet '  Receptus: "salve munde" (11 octeti)'; credo $? "XIV continet: fenum ut Receptus, acus ut Speratus"
+habet "  Receptus: \"$X160\"… (300 octeti, fenestra [0, 160))" && habet '  Speratus: "xxy" (3 octeti)' \
+    && habet '  Differentia: octetus 2 - speratus '"'"'y'"'"' 0x79, receptus '"'"'x'"'"' 0x78'; credo $? "XIV aequalis literis: CCC octeti non CCLV truncati - fenestra nominata"
+grep -qF ' FRACTA (credo_literae_aequales): NIHIL == "a" at ' "$T/valores.out" && habet '  Receptus: NIHIL' && habet '  Speratus: "a" (1 octetus)'; credo $? "XIV literae: NIHIL tutum et nominatum"
+habet "  Speratus: …${H2}… (40 octeti, fenestra [4, 36))" && habet "  Receptus: …${H1}… (40 octeti, fenestra [4, 36))" \
+    && habet '  Differentia: octetus 20 - speratus 0xff, receptus 0x14'; credo $? "XIV octeti: hex cum [octeto diverso], Differentia"
+habet '  Receptus: 2147483648' && habet '  Speratus: 1'; credo $? "XIV I32 >= 2^31 insignatum (%u, non negativum)"
+grep -qF ' FRACTA (credo_maior): (s64)-V > (s64)III at ' "$T/valores.out" && habet '  Receptus: -5' && habet '  Speratus: 3'; credo $? "XIV MAIOR_S64 cum signo"
+habet '  Receptus: 8' && habet '  Speratus: 9'; credo $? "XIV AEQUALIS_I64 super magnitudo() sine casti"
+habet '  Differentia: 0.1 (ε 0.01)' && habet '  Differentia: 0.5 (ε 0.25)'; credo $? "XIV F64/F32 PROXIMUS: Differentia nominata"
+habet '  Speratus: 1001 (relative 0.0001)' && habet '  Differentia: |a-b| 1, limes 0.1001'; credo $? "XIV F64 RELATIVE: limes r*max nominatus"
+habet '  Speratus: 0.29999999999999999 (0 ULP)' && habet '  Receptus: 0.30000000000000004' && habet '  Differentia: 1 ULP'; credo $? "XIV F64 ULP: distantia in ULP"
+habet '  Differentia: NaN - numquam aequalis'; credo $? "XIV F64 ULP: NaN numquam aequalis"
+
 echo
 if [ "$fracta" -eq 0 ]; then echo "fumus credo: sanum"; exit 0; fi
 echo "fumus credo: FRACTUM ($fracta)"; exit 1

@@ -617,6 +617,7 @@
   <vocabulum lemma="glr" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
   <vocabulum lemma="xor" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
   <vocabulum lemma="hex" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
+  <vocabulum lemma="ulp" lingua="anglica" classis="ignotum-permissum" nota="unit in the last place (IEEE 754): CREDO_F64_ULP, credo III 2026-10-19"/>
   <vocabulum lemma="utf16" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
   <vocabulum lemma="crc32" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
   <vocabulum lemma="fnv1a" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>

@@ -537,3 +537,33 @@ fork-unsafety.
 - `_credo_arborem_delere` builds child paths with memcpy after the
   existing length check: gcc -O2 under musl/glibc reports
   -Wformat-overflow on the sprintf because it cannot prove the bound.
+
+## 2026-10-19 - credo III slice A: values in failures
+
+Wish 01M5B3DF4Z29 (parent 01M5B3AQ1RXB). Before: CREDO_CHORDA_AEQUALIS,
+_CONTINET, _INCIPIT, _TERMINATUR were thin wrappers over CREDO_VERUM, so a
+failure printed only the expression and an empty Speratus (484 uses);
+CREDO_CHORDA_AEQUALIS_LITERIS copied Receptus into a 256-byte buffer and
+silently cut it at 255; AEQUALIS_I32 / INAEQUALITAS_I32 printed unsigned
+i32 with %d (>= 2^31 showed negative); F64_PROXIMUS never printed the
+difference.
+
+Now: one renderer (`_credo_chordam_reddere`) - by length, quoted, escaped
+(\t \n \r \\ \" and \xNN for bytes < 0x20 and 0x7f; bytes >= 0x80 raw so
+UTF-8 stays readable - the Differentia line carries hex), windowed around
+the first difference when > CLX octets ("fenestra [a, b)"). A third line
+`Differentia:` via `_credo_notare_plenum` (the old `_credo_notare` is a
+wrapper, so manus.c and every other caller are unchanged). New:
+LITERAE_AEQUALES, OCTETI_AEQUALES (hex window, `[ff]` marks the byte),
+full S64 and I64 families, F32_PROXIMUS, F64_RELATIVE, F64_ULP (IEEE
+ordering trick: sign-magnitude -> monotone u64, so -0.0 == +0.0; NaN never).
+
+Gotcha caught by the test: helper macros that stringify (`#a`) must do it
+in the OUTER macro - arguments handed to an inner macro are already
+expanded, so `(s64)-V` printed as `(s64)-5`.
+
+Naming: `CREDO_REDDITIO` (redditio is real Latin but unknown to the lint
+lexicon) renamed `CREDO_ALVEUS_EFFUSIONIS` rather than glossed; `ulp` got
+an `ignotum-permissum` glossary entry (not a word in either corpus).
+Test: tools/credo_fumus.sh stage XIV (red first: rc 99 before the
+macros existed), 16 named failures + 21 passing forms.

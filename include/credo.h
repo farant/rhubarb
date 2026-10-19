@@ -206,6 +206,9 @@ credo_invenire_fractos (
             __LINE__ \
     )
 
+/* NOMEN FALLIT: litteras C (character*) accipit, non chordas - forma
+ * nova CREDO_LITERAE_AEQUALES (NIHIL tuta, valores effugiti). Manet ut
+ * suitae veteres currant. */
 #define CREDO_CHORDAE_AEQUALES(s1, s2) \
     _credo_notare_chorda( \
             "credo_chordae_aequales", \
@@ -221,17 +224,59 @@ credo_invenire_fractos (
  * Macros - Chorda Convenientiae
  * ============================================ */
 
+/* credo III (2026-10-19): valores AMBO in fractura citantur (olim per
+ * CREDO_VERUM: expressio sola). Receptus = primum argumentum, Speratus
+ * = secundum (acus, prefixum, suffixum). Chorda per MENSURAM legitur
+ * (NUL intra licet), effugitur, longa per fenestram circa differentiam
+ * primam ostenditur; aequalitas lineam 'Differentia:' addit. */
+#define CREDO_COMPARATIO_AEQUALIS    0
+#define CREDO_COMPARATIO_CONTINET    1
+#define CREDO_COMPARATIO_INCIPIT     2
+#define CREDO_COMPARATIO_TERMINATUR  3
+
 #define CREDO_CHORDA_AEQUALIS(a, b) \
-    CREDO_VERUM(chorda_aequalis((a), (b)))
+    _credo_notare_chordae( \
+            "credo_chorda_aequalis", \
+            #a " == " #b, \
+            (a), \
+            (b), \
+            CREDO_COMPARATIO_AEQUALIS, \
+            __FILE__, \
+            __LINE__ \
+    )
 
 #define CREDO_CHORDA_CONTINET(fenum, acus) \
-    CREDO_VERUM(chorda_continet((fenum), (acus)))
+    _credo_notare_chordae( \
+            "credo_chorda_continet", \
+            #fenum " continet " #acus, \
+            (fenum), \
+            (acus), \
+            CREDO_COMPARATIO_CONTINET, \
+            __FILE__, \
+            __LINE__ \
+    )
 
 #define CREDO_CHORDA_INCIPIT(s, prefixum) \
-    CREDO_VERUM(chorda_incipit((s), (prefixum)))
+    _credo_notare_chordae( \
+            "credo_chorda_incipit", \
+            #s " incipit " #prefixum, \
+            (s), \
+            (prefixum), \
+            CREDO_COMPARATIO_INCIPIT, \
+            __FILE__, \
+            __LINE__ \
+    )
 
 #define CREDO_CHORDA_TERMINATUR(s, suffixum) \
-    CREDO_VERUM(chorda_terminatur((s), (suffixum)))
+    _credo_notare_chordae( \
+            "credo_chorda_terminatur", \
+            #s " terminatur " #suffixum, \
+            (s), \
+            (suffixum), \
+            CREDO_COMPARATIO_TERMINATUR, \
+            __FILE__, \
+            __LINE__ \
+    )
 
 #define CREDO_CHORDA_AEQUALIS_LITERIS(s, literis) \
     _credo_notare_chorda_literis( \
@@ -362,6 +407,127 @@ credo_invenire_fractos (
             (a), \
             (b), \
             (epsilon), \
+            __FILE__, \
+            __LINE__ \
+    )
+
+
+/* ==================================================
+ * Macros - credo III (2026-10-19)
+ * ================================================== */
+
+/* Litterae C (character*), NIHIL tutae: ambae NIHIL = aequales, una
+ * NIHIL = fracta ('NIHIL' citatum). */
+#define CREDO_LITERAE_AEQUALES(a, b) \
+    _credo_notare_literae( \
+            "credo_literae_aequales", \
+            #a " == " #b, \
+            (a), \
+            (b), \
+            __FILE__, \
+            __LINE__ \
+    )
+
+/* n octeti ut memcmp; fractura offset primae differentiae et
+ * fenestram hex ('[ff]' = octetus diversus) nominat. */
+#define CREDO_OCTETI_AEQUALES(a, b, n) \
+    _credo_notare_octeti( \
+            "credo_octeti_aequales", \
+            #a " == " #b " (" #n " octeti)", \
+            (a), \
+            (b), \
+            (memoriae_index)(n), \
+            __FILE__, \
+            __LINE__ \
+    )
+
+/* Familiae LXIV: S64 cum signo, I64 sine (memoriae_index eiusdem
+ * latitudinis sine casti accipitur). */
+#define CREDO_RELATIO_AEQUALIS            0
+#define CREDO_RELATIO_INAEQUALIS          1
+#define CREDO_RELATIO_MAIOR               2
+#define CREDO_RELATIO_MINOR               3
+#define CREDO_RELATIO_MAIOR_AUT_AEQUALIS  4
+#define CREDO_RELATIO_MINOR_AUT_AEQUALIS  5
+
+/* expressio in macro EXTERIORE stringificatur: argumenta macro
+ * interiori data iam expansa sunt (V -> 5) */
+#define CREDO_S64_INTERNUM(genus, expressio, relatio, a, b) \
+    _credo_notare_s64(genus, expressio, (a), (b), relatio, __FILE__, \
+        __LINE__)
+#define CREDO_I64_INTERNUM(genus, expressio, relatio, a, b) \
+    _credo_notare_i64(genus, expressio, (a), (b), relatio, __FILE__, \
+        __LINE__)
+
+#define CREDO_INAEQUALITAS_S64(a, b) \
+    CREDO_S64_INTERNUM("credo_inaequalitas", #a " != " #b,\
+        CREDO_RELATIO_INAEQUALIS, a, b)
+#define CREDO_MAIOR_S64(a, b) \
+    CREDO_S64_INTERNUM("credo_maior", #a " > " #b,\
+        CREDO_RELATIO_MAIOR, a, b)
+#define CREDO_MINOR_S64(a, b) \
+    CREDO_S64_INTERNUM("credo_minor", #a " < " #b,\
+        CREDO_RELATIO_MINOR, a, b)
+#define CREDO_MAIOR_AUT_AEQUALIS_S64(a, b) \
+    CREDO_S64_INTERNUM("credo_maior_aut_aequalis", #a " >= " #b, \
+        CREDO_RELATIO_MAIOR_AUT_AEQUALIS, a, b)
+#define CREDO_MINOR_AUT_AEQUALIS_S64(a, b) \
+    CREDO_S64_INTERNUM("credo_minor_aut_aequalis", #a " <= " #b, \
+        CREDO_RELATIO_MINOR_AUT_AEQUALIS, a, b)
+
+#define CREDO_AEQUALIS_I64(a, b) \
+    CREDO_I64_INTERNUM("credo_aequalis", #a " == " #b,\
+        CREDO_RELATIO_AEQUALIS, a, b)
+#define CREDO_INAEQUALITAS_I64(a, b) \
+    CREDO_I64_INTERNUM("credo_inaequalitas", #a " != " #b,\
+        CREDO_RELATIO_INAEQUALIS, a, b)
+#define CREDO_MAIOR_I64(a, b) \
+    CREDO_I64_INTERNUM("credo_maior", #a " > " #b,\
+        CREDO_RELATIO_MAIOR, a, b)
+#define CREDO_MINOR_I64(a, b) \
+    CREDO_I64_INTERNUM("credo_minor", #a " < " #b,\
+        CREDO_RELATIO_MINOR, a, b)
+#define CREDO_MAIOR_AUT_AEQUALIS_I64(a, b) \
+    CREDO_I64_INTERNUM("credo_maior_aut_aequalis", #a " >= " #b, \
+        CREDO_RELATIO_MAIOR_AUT_AEQUALIS, a, b)
+#define CREDO_MINOR_AUT_AEQUALIS_I64(a, b) \
+    CREDO_I64_INTERNUM("credo_minor_aut_aequalis", #a " <= " #b, \
+        CREDO_RELATIO_MINOR_AUT_AEQUALIS, a, b)
+
+/* f32: per f64 comparatur (promotio exacta). */
+#define CREDO_F32_PROXIMUS(a, b, epsilon) \
+    _credo_notare_f64_proximus( \
+            "credo_f32_proximus", \
+            #a " ≈ " #b, \
+            (f64)(a), \
+            (f64)(b), \
+            (f64)(epsilon), \
+            __FILE__, \
+            __LINE__ \
+    )
+
+/* |a - b| <= r * max(|a|, |b|): epsilon absolutum pro magnitudinibus
+ * extremis falsum est (gtest, Catch2 Approx). */
+#define CREDO_F64_RELATIVE(a, b, r) \
+    _credo_notare_f64_relative( \
+            "credo_f64_relative", \
+            #a " ≈ " #b, \
+            (a), \
+            (b), \
+            (r), \
+            __FILE__, \
+            __LINE__ \
+    )
+
+/* distantia in numeris repraesentabilibus (ULP) <= n; -0.0 == +0.0,
+ * NaN numquam aequalis (gtest: IV ULP ordinarium). */
+#define CREDO_F64_ULP(a, b, n) \
+    _credo_notare_f64_ulp( \
+            "credo_f64_ulp", \
+            #a " ≈ " #b, \
+            (a), \
+            (b), \
+            (i64)(n), \
             __FILE__, \
             __LINE__ \
     )
@@ -514,6 +680,75 @@ _credo_notare_integrum_minor_aut_aequalis_i32 (
                       constans character* expressio,
                                      i32  valor_primus,
                                      i32  valor_secundus,
+                      constans character* filum,
+                                     s32  versus);
+
+vacuum
+_credo_notare_chordae (
+                      constans character* genus,
+                      constans character* expressio,
+                                  chorda  receptus,
+                                  chorda  speratus,
+                                     s32  comparatio,
+                      constans character* filum,
+                                     s32  versus);
+
+vacuum
+_credo_notare_literae (
+                      constans character* genus,
+                      constans character* expressio,
+                      constans character* receptus,
+                      constans character* speratus,
+                      constans character* filum,
+                                     s32  versus);
+
+vacuum
+_credo_notare_octeti (
+                        constans character* genus,
+                        constans character* expressio,
+                           constans vacuum* receptus,
+                           constans vacuum* speratus,
+                            memoriae_index  mensura,
+                        constans character* filum,
+                                       s32  versus);
+
+vacuum
+_credo_notare_s64 (
+                      constans character* genus,
+                      constans character* expressio,
+                                     s64  valor_primus,
+                                     s64  valor_secundus,
+                                     s32  relatio,
+                      constans character* filum,
+                                     s32  versus);
+
+vacuum
+_credo_notare_i64 (
+                      constans character* genus,
+                      constans character* expressio,
+                                     i64  valor_primus,
+                                     i64  valor_secundus,
+                                     s32  relatio,
+                      constans character* filum,
+                                     s32  versus);
+
+vacuum
+_credo_notare_f64_relative (
+                      constans character* genus,
+                      constans character* expressio,
+                                     f64  valor_primus,
+                                     f64  valor_secundus,
+                                     f64  relativa,
+                      constans character* filum,
+                                     s32  versus);
+
+vacuum
+_credo_notare_f64_ulp (
+                      constans character* genus,
+                      constans character* expressio,
+                                     f64  valor_primus,
+                                     f64  valor_secundus,
+                                     i64  distantia,
                       constans character* filum,
                                      s32  versus);
 

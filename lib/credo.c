@@ -277,12 +277,15 @@ credo_imprimere_compendium (
  * Recordatio Interni
  * ====================================================== */
 
-vacuum
-_credo_notare (
+/* credo III: linea tertia 'Differentia:' (NIHIL = nulla) post
+ * Speratus/Receptus - formae binae priores immutatae manent. */
+interior vacuum
+_credo_notare_plenum (
     constans character* genus,
     constans character* expressio,
     constans character* valor_primus,
     constans character* valor_secundus,
+    constans character* differentia,
     constans character* filum,
                    s32  versus,
                    b32  praeteritus)
@@ -333,12 +336,484 @@ _credo_notare (
         imprimere("  Receptus: %.*s\n",
                   (integer)notatio->valor_primus.mensura,
                   (constans character*)notatio->valor_primus.datum);
+        si (differentia != NIHIL && differentia[ZEPHYRUM] != '\0')
+        {
+            imprimere("  Differentia: %s\n", differentia);
+        }
         /* effluere statim: probatio post fracturam saepe NIHIL
          * dereferens cadit, et per fistulam buffer plenus cum
          * relatione perit - segfault relationem absorbebat
          * (mensuratum 2026-07-31, desideratum 01KYWC5ZNX) */
         (vacuum)fflush(stdout);
     }
+}
+
+vacuum
+_credo_notare (
+    constans character* genus,
+    constans character* expressio,
+    constans character* valor_primus,
+    constans character* valor_secundus,
+    constans character* filum,
+                   s32  versus,
+                   b32  praeteritus)
+{
+    _credo_notare_plenum(genus, expressio, valor_primus, valor_secundus,
+        NIHIL, filum, versus, praeteritus);
+}
+
+
+/* ==================================================
+ * Redditio valorum (credo III, 2026-10-19)
+ *
+ * Chorda per MENSURAM (NUL intra licet), inter "", effugia \t \n \r
+ * \\ \" et \xNN pro moderatoribus (octeti >= 0x80 crudi: UTF-8
+ * legibilis manet; differentia hex in linea sua). Longa (> CLX) per
+ * fenestram circa differentiam primam - numquam truncatio tacita.
+ * ================================================== */
+
+#define CREDO_FENESTRA_CHORDAE     CLX
+#define CREDO_ANTE_CHORDAE         LX
+#define CREDO_FENESTRA_OCTETORUM   XXXII
+#define CREDO_ANTE_OCTETORUM       XVI
+#define CREDO_ALVEUS_EFFUSIONIS             MXXIV
+
+interior vacuum
+_credo_appendere (
+               character* scopus,
+          memoriae_index  capacitas,
+          memoriae_index* positio,
+      constans character* textus)
+{
+    dum (*textus != '\0' && *positio + I < capacitas)
+    {
+        scopus[*positio] = *textus;
+        (*positio)++;
+        textus++;
+    }
+    scopus[*positio] = '\0';
+}
+
+interior vacuum
+_credo_octetum_effugere (
+          character* scopus,
+     memoriae_index  capacitas,
+     memoriae_index* positio,
+                 i8  octetus)
+{
+    character parvus[VIII];
+
+    commutatio (octetus)
+    {
+        casus '\t': strcpy(parvus, "\\t");  frange;
+        casus '\n': strcpy(parvus, "\\n");  frange;
+        casus '\r': strcpy(parvus, "\\r");  frange;
+        casus '\\': strcpy(parvus, "\\\\"); frange;
+        casus '"':  strcpy(parvus, "\\\""); frange;
+        ordinarius:
+            si (octetus < 0x20 || octetus == 0x7f)
+            {
+                sprintf(parvus, "\\x%02x", (insignatus integer)octetus);
+            }
+            alioquin
+            {
+                parvus[ZEPHYRUM]  = (character)octetus;
+                parvus[I]         = '\0';
+            }
+            frange;
+    }
+    _credo_appendere(scopus, capacitas, positio, parvus);
+}
+
+/* index octeti primi diversi (aut mensura brevioris si praefixum) */
+interior i32
+_credo_differentia_prima (
+    chorda a,
+    chorda b)
+{
+    i32 minimum  = a.mensura < b.mensura ? a.mensura : b.mensura;
+    i32 k        = ZEPHYRUM;
+
+    dum (k < minimum && a.datum[k] == b.datum[k])
+    {
+        k++;
+    }
+    redde k;
+}
+
+interior vacuum
+_credo_chordam_reddere (
+          character* scopus,
+     memoriae_index  capacitas,
+             chorda  c,
+                i32  prima)
+{
+    memoriae_index positio  = ZEPHYRUM;
+               i32 initium  = ZEPHYRUM;
+               i32 finis    = c.mensura;
+               i32 k;
+         character numerus[XCVI];
+
+    scopus[ZEPHYRUM] = '\0';
+    si (c.mensura > CREDO_FENESTRA_CHORDAE)
+    {
+        initium = prima > CREDO_ANTE_CHORDAE
+            ? prima - CREDO_ANTE_CHORDAE : ZEPHYRUM;
+        finis = initium + CREDO_FENESTRA_CHORDAE;
+        si (finis > c.mensura)
+        {
+            finis = c.mensura;
+        }
+    }
+    si (initium > ZEPHYRUM)
+    {
+        _credo_appendere(scopus, capacitas, &positio, "…");
+    }
+    _credo_appendere(scopus, capacitas, &positio, "\"");
+    per (k = initium; k < finis; k++)
+    {
+        _credo_octetum_effugere(scopus, capacitas, &positio,
+            c.datum[k]);
+    }
+    _credo_appendere(scopus, capacitas, &positio, "\"");
+    si (finis < c.mensura)
+    {
+        _credo_appendere(scopus, capacitas, &positio, "…");
+    }
+    si (c.mensura <= CREDO_FENESTRA_CHORDAE)
+    {
+        sprintf(numerus, " (%u %s)", c.mensura,
+            c.mensura == I ? "octetus" : "octeti");
+    }
+    alioquin
+    {
+        sprintf(numerus, " (%u octeti, fenestra [%u, %u))", c.mensura,
+            initium, finis);
+    }
+    _credo_appendere(scopus, capacitas, &positio, numerus);
+}
+
+/* "'c' 0xNN" aut "finit" (chorda ante indicem desinit) */
+interior vacuum
+_credo_octetum_citare (
+          character* scopus,
+     memoriae_index  capacitas,
+     memoriae_index* positio,
+             chorda  c,
+                i32  index)
+{
+    character hex[XVI];
+
+    si (index >= c.mensura)
+    {
+        _credo_appendere(scopus, capacitas, positio, "finit");
+        redde;
+    }
+    _credo_appendere(scopus, capacitas, positio, "'");
+    _credo_octetum_effugere(scopus, capacitas, positio, c.datum[index]);
+    sprintf(hex, "' 0x%02x", (insignatus integer)c.datum[index]);
+    _credo_appendere(scopus, capacitas, positio, hex);
+}
+
+/* fractura chordarum: Receptus/Speratus redditi, Differentia (si
+ * differentiam) octeti primi diversi */
+interior vacuum
+_credo_chordas_notare (
+    constans character* genus,
+    constans character* expressio,
+                chorda  receptus,
+                chorda  speratus,
+                   b32  praeteritus,
+                   b32  differentiam,
+    constans character* filum,
+                   s32  versus)
+{
+         character redditus_r[CREDO_ALVEUS_EFFUSIONIS];
+         character redditus_s[CREDO_ALVEUS_EFFUSIONIS];
+         character differentia[CCLVI];
+    memoriae_index positio  = ZEPHYRUM;
+               i32 prima    = ZEPHYRUM;
+         character numerus[XXXII];
+
+    si (praeteritus)
+    {
+        _credo_notare_plenum(genus, expressio, "", "", NIHIL, filum,
+            versus, VERUM);
+        redde;
+    }
+    si (differentiam)
+    {
+        prima = _credo_differentia_prima(receptus, speratus);
+    }
+    _credo_chordam_reddere(redditus_r, CREDO_ALVEUS_EFFUSIONIS,
+        receptus, prima);
+    _credo_chordam_reddere(redditus_s, CREDO_ALVEUS_EFFUSIONIS,
+        speratus, prima);
+    differentia[ZEPHYRUM] = '\0';
+    si (differentiam)
+    {
+        sprintf(numerus, "octetus %u - speratus ", prima);
+        _credo_appendere(differentia, CCLVI, &positio, numerus);
+        _credo_octetum_citare(differentia, CCLVI, &positio, speratus,
+            prima);
+        _credo_appendere(differentia, CCLVI, &positio, ", receptus ");
+        _credo_octetum_citare(differentia, CCLVI, &positio, receptus,
+            prima);
+    }
+    _credo_notare_plenum(genus, expressio, redditus_r, redditus_s,
+        differentiam ? differentia : NIHIL, filum, versus, FALSUM);
+}
+
+vacuum
+_credo_notare_chordae (
+    constans character* genus,
+    constans character* expressio,
+                chorda  receptus,
+                chorda  speratus,
+                   s32  comparatio,
+    constans character* filum,
+                   s32  versus)
+{
+    b32 praeteritus;
+
+    commutatio (comparatio)
+    {
+        casus CREDO_COMPARATIO_CONTINET:
+            praeteritus = chorda_continet(receptus, speratus);
+            frange;
+        casus CREDO_COMPARATIO_INCIPIT:
+            praeteritus = chorda_incipit(receptus, speratus);
+            frange;
+        casus CREDO_COMPARATIO_TERMINATUR:
+            praeteritus = chorda_terminatur(receptus, speratus);
+            frange;
+        ordinarius:
+            praeteritus = chorda_aequalis(receptus, speratus);
+            frange;
+    }
+    _credo_chordas_notare(genus, expressio, receptus, speratus,
+        praeteritus, comparatio == CREDO_COMPARATIO_AEQUALIS, filum,
+        versus);
+}
+
+vacuum
+_credo_notare_literae (
+    constans character* genus,
+    constans character* expressio,
+    constans character* receptus,
+    constans character* speratus,
+    constans character* filum,
+                   s32  versus)
+{
+         character redditus[CREDO_ALVEUS_EFFUSIONIS];
+            chorda c;
+
+    si (receptus == NIHIL || speratus == NIHIL || !_credo_piscina)
+    {
+        si (receptus == speratus)
+        {
+            _credo_notare_plenum(genus, expressio, "", "", NIHIL, filum,
+                versus, VERUM);
+            redde;
+        }
+        redditus[ZEPHYRUM] = '\0';
+        si (_credo_piscina)
+        {
+            c = chorda_ex_literis(receptus
+                != NIHIL ? receptus : speratus,
+                _credo_piscina);
+            _credo_chordam_reddere(redditus, CREDO_ALVEUS_EFFUSIONIS, c,
+                ZEPHYRUM);
+        }
+        _credo_notare_plenum(genus, expressio,
+            receptus == NIHIL ? "NIHIL" : redditus,
+            speratus == NIHIL ? "NIHIL" : redditus,
+            NIHIL, filum, versus, FALSUM);
+        redde;
+    }
+    _credo_chordas_notare(genus, expressio,
+        chorda_ex_literis(receptus, _credo_piscina),
+        chorda_ex_literis(speratus, _credo_piscina),
+        strcmp(receptus, speratus) == ZEPHYRUM, VERUM, filum, versus);
+}
+
+interior vacuum
+_credo_octetos_reddere (
+                  character* scopus,
+             memoriae_index  capacitas,
+                constans i8* datum,
+             memoriae_index  mensura,
+             memoriae_index  prima)
+{
+    memoriae_index positio  = ZEPHYRUM;
+    memoriae_index initium  = ZEPHYRUM;
+    memoriae_index finis    = mensura;
+    memoriae_index k;
+         character parvus[XXXII];
+
+    scopus[ZEPHYRUM] = '\0';
+    si (mensura > CREDO_FENESTRA_OCTETORUM)
+    {
+        initium = prima > CREDO_ANTE_OCTETORUM
+            ? prima - CREDO_ANTE_OCTETORUM : ZEPHYRUM;
+        finis = initium + CREDO_FENESTRA_OCTETORUM;
+        si (finis > mensura)
+        {
+            finis = mensura;
+        }
+    }
+    si (initium > ZEPHYRUM)
+    {
+        _credo_appendere(scopus, capacitas, &positio, "…");
+    }
+    per (k = initium; k < finis; k++)
+    {
+        sprintf(parvus, k == prima ? "%s[%02x]" : "%s%02x",
+            k > initium ? " " : "", (insignatus integer)datum[k]);
+        _credo_appendere(scopus, capacitas, &positio, parvus);
+    }
+    si (finis < mensura)
+    {
+        _credo_appendere(scopus, capacitas, &positio, "…");
+    }
+    si (mensura <= CREDO_FENESTRA_OCTETORUM)
+    {
+        sprintf(parvus, " (%lu %s)", (insignatus longus)mensura,
+            mensura == I ? "octetus" : "octeti");
+        _credo_appendere(scopus, capacitas, &positio, parvus);
+    }
+    alioquin
+    {
+        character nota[XCVI];
+
+        sprintf(nota, " (%lu octeti, fenestra [%lu, %lu))",
+            (insignatus longus)mensura, (insignatus longus)initium,
+            (insignatus longus)finis);
+        _credo_appendere(scopus, capacitas, &positio, nota);
+    }
+}
+
+vacuum
+_credo_notare_octeti (
+    constans character* genus,
+    constans character* expressio,
+       constans vacuum* receptus,
+       constans vacuum* speratus,
+        memoriae_index  mensura,
+    constans character* filum,
+                   s32  versus)
+{
+         constans i8* r      = (constans i8*)receptus;
+         constans i8* s      = (constans i8*)speratus;
+      memoriae_index  prima  = ZEPHYRUM;
+           character  redditus_r[CREDO_ALVEUS_EFFUSIONIS];
+           character  redditus_s[CREDO_ALVEUS_EFFUSIONIS];
+           character  differentia[CXXVIII];
+
+    si (r == NIHIL || s == NIHIL)
+    {
+        _credo_notare_plenum(genus, expressio,
+            r == NIHIL ? "NIHIL" : "(octeti)",
+            s == NIHIL ? "NIHIL" : "(octeti)", NIHIL, filum, versus,
+            r == s || mensura == ZEPHYRUM);
+        redde;
+    }
+    dum (prima < mensura && r[prima] == s[prima])
+    {
+        prima++;
+    }
+    si (prima == mensura)
+    {
+        _credo_notare_plenum(genus, expressio, "", "", NIHIL, filum,
+            versus, VERUM);
+        redde;
+    }
+    _credo_octetos_reddere(redditus_r, CREDO_ALVEUS_EFFUSIONIS, r,
+        mensura,
+        prima);
+    _credo_octetos_reddere(redditus_s, CREDO_ALVEUS_EFFUSIONIS, s,
+        mensura,
+        prima);
+    sprintf(differentia,
+        "octetus %lu - speratus 0x%02x, receptus 0x%02x",
+        (insignatus longus)prima, (insignatus integer)s[prima],
+        (insignatus integer)r[prima]);
+    _credo_notare_plenum(genus, expressio, redditus_r, redditus_s,
+        differentia, filum, versus, FALSUM);
+}
+
+interior b32
+_credo_relatio_s64 (
+    s64 a,
+    s64 b,
+    s32 relatio)
+{
+    commutatio (relatio)
+    {
+        casus CREDO_RELATIO_INAEQUALIS:         redde a != b;
+        casus CREDO_RELATIO_MAIOR:              redde a > b;
+        casus CREDO_RELATIO_MINOR:              redde a < b;
+        casus CREDO_RELATIO_MAIOR_AUT_AEQUALIS: redde a >= b;
+        casus CREDO_RELATIO_MINOR_AUT_AEQUALIS: redde a <= b;
+        ordinarius:                             redde a == b;
+    }
+}
+
+interior b32
+_credo_relatio_i64 (
+    i64 a,
+    i64 b,
+    s32 relatio)
+{
+    commutatio (relatio)
+    {
+        casus CREDO_RELATIO_INAEQUALIS:         redde a != b;
+        casus CREDO_RELATIO_MAIOR:              redde a > b;
+        casus CREDO_RELATIO_MINOR:              redde a < b;
+        casus CREDO_RELATIO_MAIOR_AUT_AEQUALIS: redde a >= b;
+        casus CREDO_RELATIO_MINOR_AUT_AEQUALIS: redde a <= b;
+        ordinarius:                             redde a == b;
+    }
+}
+
+vacuum
+_credo_notare_s64 (
+    constans character* genus,
+    constans character* expressio,
+                   s64  valor_primus,
+                   s64  valor_secundus,
+                   s32  relatio,
+    constans character* filum,
+                   s32  versus)
+{
+    character buffer_primus[64];
+    character buffer_secundus[64];
+
+    snprintf(buffer_primus,   64, "%lld", valor_primus);
+    snprintf(buffer_secundus, 64, "%lld", valor_secundus);
+    _credo_notare(genus, expressio, buffer_primus, buffer_secundus,
+        filum, versus, _credo_relatio_s64(valor_primus, valor_secundus,
+        relatio));
+}
+
+vacuum
+_credo_notare_i64 (
+    constans character* genus,
+    constans character* expressio,
+                   i64  valor_primus,
+                   i64  valor_secundus,
+                   s32  relatio,
+    constans character* filum,
+                   s32  versus)
+{
+    character buffer_primus[64];
+    character buffer_secundus[64];
+
+    snprintf(buffer_primus,   64, "%llu", valor_primus);
+    snprintf(buffer_secundus, 64, "%llu", valor_secundus);
+    _credo_notare(genus, expressio, buffer_primus, buffer_secundus,
+        filum, versus, _credo_relatio_i64(valor_primus, valor_secundus,
+        relatio));
 }
 
 vacuum
@@ -376,8 +851,8 @@ _credo_notare_integrum_i32 (
     character buffer_secundus[64];
           b32 praeteritus;
 
-    snprintf(buffer_primus,   64, "%d", valor_primus);
-    snprintf(buffer_secundus, 64, "%d", valor_secundus);
+    snprintf(buffer_primus,   64, "%u", valor_primus);
+    snprintf(buffer_secundus, 64, "%u", valor_secundus);
 
     praeteritus = (valor_primus == valor_secundus);
 
@@ -442,8 +917,8 @@ _credo_notare_integrum_inaequalitas_i32 (
     character buffer_secundus[64];
           b32 praeteritus;
 
-    snprintf(buffer_primus,   64, "%d", valor_primus);
-    snprintf(buffer_secundus, 64, "%d", valor_secundus);
+    snprintf(buffer_primus,   64, "%u", valor_primus);
+    snprintf(buffer_secundus, 64, "%u", valor_secundus);
 
     praeteritus = (valor_primus != valor_secundus);
 
@@ -482,28 +957,19 @@ _credo_notare_chorda_literis (
     constans character* filum,
                    s32  versus)
 {
-    character buffer_primus[256];
-          b32 praeteritus;
-          i32 len_to_copy;
-
-    /* Transcribere chorda ad buffer pro imprimere */
-    len_to_copy = valor_primus.mensura;
-    si (len_to_copy > 255)
+    /* credo III: olim receptus ad CCLV octetos tacite truncatus -
+     * nunc per redditionem communem (fenestra nominata, Differentia) */
+    si (valor_secundus == NIHIL || !_credo_piscina)
     {
-        len_to_copy = 255;
+        _credo_notare_plenum(genus, expressio, "(chorda)", "NIHIL",
+            NIHIL,
+            filum, versus, FALSUM);
+        redde;
     }
-
-    si (valor_primus.datum && len_to_copy > ZEPHYRUM)
-    {
-        memcpy(buffer_primus, valor_primus.datum,
-            (memoriae_index)len_to_copy);
-    }
-    buffer_primus[len_to_copy] = '\0';
-
-    praeteritus = chorda_aequalis_literis(valor_primus, valor_secundus);
-
-    _credo_notare(genus, expressio, buffer_primus,
-                  valor_secundus, filum, versus, praeteritus);
+    _credo_chordas_notare(genus, expressio, valor_primus,
+        chorda_ex_literis(valor_secundus, _credo_piscina),
+        chorda_aequalis_literis(valor_primus, valor_secundus), VERUM,
+        filum, versus);
 }
 
 vacuum
@@ -694,6 +1160,7 @@ _credo_notare_f64_proximus (
 {
     character buffer_primus[64];
     character buffer_secundus[64];
+    character buffer_differentiae[96];
           b32 praeteritus;
           f64 differentia;
 
@@ -704,8 +1171,95 @@ _credo_notare_f64_proximus (
     differentia = fabs(valor_primus - valor_secundus);
     praeteritus = (differentia <= epsilon);
 
-    _credo_notare(genus, expressio, buffer_primus, buffer_secundus,
-        filum, versus, praeteritus);
+    snprintf(buffer_differentiae, 96, "%g (ε %g)", differentia,
+        epsilon);
+    _credo_notare_plenum(genus, expressio, buffer_primus,
+        buffer_secundus,
+        buffer_differentiae, filum, versus, praeteritus);
+}
+
+vacuum
+_credo_notare_f64_relative (
+    constans character* genus,
+    constans character* expressio,
+                   f64  valor_primus,
+                   f64  valor_secundus,
+                   f64  relativa,
+    constans character* filum,
+                   s32  versus)
+{
+    character buffer_primus[64];
+    character buffer_secundus[96];
+    character buffer_differentiae[96];
+          f64 differentia = fabs(valor_primus - valor_secundus);
+          f64 maximum     = fabs(valor_primus) > fabs(valor_secundus)
+                              ? fabs(valor_primus)
+                              : fabs(valor_secundus);
+          f64 limes       = relativa * maximum;
+
+    snprintf(buffer_primus,   64, "%.17g", valor_primus);
+    snprintf(buffer_secundus, 96, "%.17g (relative %g)", valor_secundus,
+        relativa);
+    snprintf(buffer_differentiae, 96, "|a-b| %g, limes %g", differentia,
+        limes);
+    /* NaN: comparatio falsa, ergo fracta */
+    _credo_notare_plenum(genus, expressio, buffer_primus,
+        buffer_secundus,
+        buffer_differentiae, filum, versus, differentia <= limes);
+}
+
+/* ordo integer duplicium (IEEE 754): signum + magnitudo -> ordo
+ * monotonus, ut differentia ordinum = numerus ULP; -0.0 et +0.0 idem */
+interior i64
+_credo_f64_ordinatum (
+    f64 x)
+{
+    i64 octeti;
+    i64 signum = (i64)I << LXIII;
+
+    memcpy(&octeti, &x, magnitudo(octeti));
+    si (octeti & signum)
+    {
+        redde ~octeti + (i64)I;
+    }
+    redde octeti | signum;
+}
+
+vacuum
+_credo_notare_f64_ulp (
+    constans character* genus,
+    constans character* expressio,
+                   f64  valor_primus,
+                   f64  valor_secundus,
+                   i64  distantia,
+    constans character* filum,
+                   s32  versus)
+{
+    character buffer_primus[64];
+    character buffer_secundus[96];
+    character buffer_differentiae[96];
+          i64 a;
+          i64 b;
+          i64 inter;
+
+    snprintf(buffer_primus,   64, "%.17g", valor_primus);
+    snprintf(buffer_secundus, 96, "%.17g (%llu ULP)", valor_secundus,
+        distantia);
+    si (   valor_primus   != valor_primus
+        || valor_secundus != valor_secundus)
+    {
+        _credo_notare_plenum(genus, expressio, buffer_primus,
+            buffer_secundus, "NaN - numquam aequalis", filum, versus,
+            FALSUM);
+        redde;
+    }
+    a      = _credo_f64_ordinatum(valor_primus);
+    b      = _credo_f64_ordinatum(valor_secundus);
+    inter  = a >= b ? a - b : b - a;
+    snprintf(buffer_differentiae, 96, "%llu ULP", inter);
+    _credo_notare_plenum(genus, expressio, buffer_primus,
+        buffer_secundus,
+        buffer_differentiae, filum, versus, inter <= distantia);
 }
 
 
