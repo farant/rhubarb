@@ -52,7 +52,9 @@ Syntax only, no semantics: "donum puellam amat" is grammatical.
     Vocative and locative are left out (no slot; stated).
 - **Paradigm table:** every form with ALL its readings (case, gender,
   number), copied into the demo, cited to Allen and Greenough, *New
-  Latin Grammar* (1903, public domain; sections checked in task 0) and
+  Latin Grammar* (1903, public domain; sections checked in task 0)
+  [task 0: cited to Bennett's *New Latin Grammar* instead, see Task 0
+  findings] and
   checked entry by entry against Whitaker's `INFLECTS.LAT`
   (`oratio/vocabularium/la/`, FREQ A / AGE X entries) as data.
 - **Slot frames (constraints):**
@@ -178,7 +180,8 @@ once per word multiset (it ignores order); P and M filter it per order
 
 ## Tasks (one per turn, Fran's go-ahead each)
 
-0. **Sources and size:** endings checked against Allen and Greenough
+0. *Done 2026-10-19 (Task 0 findings below).* **Sources and size:**
+   endings checked against Allen and Greenough
    (section numbers) and INFLECTS.LAT; count analyses at 5 and 6
    words; decide the lexicon (with or without `fortis`) and length;
    confirm `dependentia` covers every tree measure (no new house
@@ -192,6 +195,74 @@ once per word multiset (it ignores order); P and M filter it per order
 3. **T3:** findings.md, claims.md, ledger (N14 stays open for slice
    2), archive.sh.
 4. **T4:** independent review with its own oracle, then fixes.
+
+## Task 0 findings (2026-10-19)
+
+- **Source: Bennett, not Allen and Greenough.** The local Gutenberg
+  mirror has Charles E. Bennett, *New Latin Grammar* (1895, 1908, 1918;
+  public domain; Project Gutenberg #15665,
+  `../gutenberg-mirror/1/5/6/6/15665/15665-0.txt`), not Allen and
+  Greenough; a source the repo can open beats one it cannot. Patterns:
+  sec. 20 *porta* (= *puella*), 23 *hortus* and *bellum* (= *dominus*,
+  *donum*), 32 *dux* (= *rex, regis*: guttural mute stems), 63
+  *bonus*, 69 *fortis*, 101 *amat / amant*, 127 *dat / dant*. Whitaker
+  cites Allen and Greenough and Gildersleeve and Lodge, so the cross-
+  check still reaches them.
+- **Cross-check against INFLECTS.LAT** (AGE X, FREQ A; Whitaker's
+  variant 0 = every variant, gender C = masculine or feminine, X =
+  any): the four nouns and *bonus*, 80 cells, are EQUAL to Bennett's
+  forms with macrons stripped. *fortis*, 20 cells: Bennett's form is
+  in Whitaker's set in every cell, and Whitaker adds 8 variants from
+  its shared third-declension entries — abl. sg. *-e* and gen. pl.
+  *-um* (consonant-stem and comparative patterns; Bennett sec. 67a: an
+  adjective like *fortis* has *-i*, *-ium*) and acc. pl. m./f. *-is*
+  (Bennett sec. 67a and 69 list *-is* beside *-es* as an alternative).
+  **Decision:** Bennett's first-listed forms only; acc. pl. *-is*
+  omitted, stated. T1's check: equality on the 80 cells, membership on
+  the 20, the 8 extra variants listed in the demo.
+- **Lexicon: `fortis` is IN.** A third-declension adjective whose
+  endings differ from its nouns' (*puella fortis*) and are syncretic in
+  their own way (*fortis* nom. or gen. sg. m./f.; *forti* dat. or abl.
+  sg.; *fortes* nom. or acc. pl.; *forte* nom. or acc. sg. n.). It costs
+  about 13% more pairs.
+- **The unit.** A PAIR = (string, one of its analyses, heads by
+  position). Each analysis yields exactly one string at each level, so
+  the population of pairs is the SAME at every morphology level: the
+  levels share denominators. Count = sum over word bags of (distinct
+  orderings) x |F(bag)|. A first count of crossed pairs double-counted
+  analyses that differ only by swapping identical tokens (57,504
+  against 55,296 at four words); de-duplicating per bag, readings
+  included, made the two methods agree. T1's generator/analyser
+  duality check must compare positioned analyses WITH readings.
+- **Size (with `fortis`):**
+
+  | words | pairs | projective | not projective |
+  |---|---|---|---|
+  | 3 | 384 | 384 | 0 |
+  | 4 | 55,296 | 39,936 | 15,360 |
+  | 5 | 6,696,960 | 2,694,144 | 4,002,816 |
+  | 6 | 809,533,440 | | |
+
+  (Without `fortis`: 5,966,208 pairs up to five words, 671,299,968 up
+  to six. Largest |F| of a string: 18 at five words, 144 at six.)
+- **Length: FIVE words.** Five already holds 4.0M crossed pairs,
+  including the golden line (adjective, adjective, verb, noun, noun).
+  Six (816M pairs) would run in C if projectivity is looked up per head
+  array, but the independent Python oracle could not cover it
+  exhaustively, and the registered verdicts are to be pinned by one.
+  So "6 if the count allows" resolves to no.
+- **Uniform weighting puts most pairs in crossed orders** (60% at five
+  words), since most orders of five words cross; reported, not a
+  defect — the measures are shares within each stratum.
+- **`dependentia` covers every tree measure:** projective =
+  `dependentia_cruces` (`proiectiva`, root arc included); mild =
+  `dependentia_mensurare` (`gradus_lacunarum <= 1` and
+  `bene_nidificata`); displaced words = `dependentia_arcus`
+  (`non_proiectivus`). At five words there are 5^4 = 625 rooted
+  trees (Cayley), so each is measured once and looked up. No new house
+  library in this slice.
+- Scratch tools (not committed): the Bennett/Whitaker comparison and
+  the size counter, both Python.
 
 ## Slice 2 (not this demo)
 
