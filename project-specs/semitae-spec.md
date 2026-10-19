@@ -10,8 +10,9 @@ views that are siblings, not only parent and child; routes are
 XML/STML by default, with a canonical translation to a URI or a list
 of URIs.*
 
-*Status: design decided with Fran (§IX); §VII header and manifest text
-to be confirmed at R0.*
+*Status: design decided with Fran (§IX). R0 DONE 2026-10-19 (canon
+attributes, loader rules, montationes accessors - lib/organum.worklog.md).
+Next R1 (lib semita).*
 
 ## I. Doctrine (decided with Fran, 2026-10-19)
 

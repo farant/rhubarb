@@ -252,3 +252,22 @@ for free (`gradus`, `conservatio` green before any S8b change). Changes:
   levels share one plagula -> `conservatio` red 14/16.
 dimissio still uses `ramus->id` as its namespace - S8c unifies
 namespace and path.
+
+## 2026-10-19 — semitae R0 (project-specs/semitae-spec.md)
+
+- Campus attributes `semita` (ligatio | status), `ambitus` (ligatio |
+  organum), `historia` (impelle | substitue) in organum.canon (embedded
+  again: tools/organum_canon_infigere.sh -> lib/organum_canon.c) and
+  read into OrganumCampus as enums whose ZERO is the default (NULLA,
+  ORGANUM, SUBSTITUE) - a memset campus is a non-routable one.
+- Loader rules (canon cannot hold them): semita -> vita persistens;
+  ambitus and historia only with semita; ambitus only with semita
+  status (a binding cannot be "reset when the binding changes").
+  Messages follow the existing phrasing ("... postulat vita ...").
+- `<montationes>` finally read: OrganumMontatio {titulus, genus} +
+  organum_numerus_montationum / _montatio_index / _montatio(nomen);
+  duplicate names refused by a new canon unicitas. No manifest
+  declares montationes yet (R4 does the calendar's notes).
+- Plants 10 red. The unicitas line is not planted: it lives in the
+  embedded canon (organum.canon -> lib/organum_canon.c), which the
+  generata gate checks against its source.

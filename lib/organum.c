@@ -14,6 +14,7 @@ structura Organum {
        Xar* ligamina;     /* Xar de OrganumLigamen */
        Xar* actiones;     /* Xar de OrganumActio */
        Xar* portae;       /* Xar de OrganumPorta */
+       Xar* montationes;  /* Xar de OrganumMontatio (semitae R0) */
 };
 
 
@@ -323,6 +324,33 @@ legibus_iudicare (
         vitium_addere(vitia, piscina, k->nodus, k->titulus,
             "optio sine typo electio");
     }
+    /* semitae R0: semita solum persistens; ambitus et historia solum
+     * cum semita; ambitus solum statui (ligatio se ipsam non
+     * resettit) */
+    si (   k->semita != ORGANUM_SEMITA_NULLA
+        && k->vita   != ORGANUM_VITA_PERSISTENS)
+    {
+        vitium_addere(vitia, piscina, k->nodus, k->titulus,
+            "semita postulat vita persistens");
+    }
+    si (   k->semita == ORGANUM_SEMITA_NULLA
+        && stml_attributum_capere(k->nodus, "ambitus"))
+    {
+        vitium_addere(vitia, piscina, k->nodus, k->titulus,
+            "ambitus sine semita");
+    }
+    si (   k->semita == ORGANUM_SEMITA_NULLA
+        && stml_attributum_capere(k->nodus, "historia"))
+    {
+        vitium_addere(vitia, piscina, k->nodus, k->titulus,
+            "historia sine semita");
+    }
+    si (   k->semita == ORGANUM_SEMITA_LIGATIO
+        && stml_attributum_capere(k->nodus, "ambitus"))
+    {
+        vitium_addere(vitia, piscina, k->nodus, k->titulus,
+            "ambitus solum semitae status (ligatio se non resettit)");
+    }
     si (k->habet_absens && !absens_validum(k, optiones, piscina))
     {
         character buffer[CCLVI];
@@ -364,6 +392,16 @@ campum_legere (
     k->aspectus      = attributum(n, "aspectus");
     k->referentia    = attributum(n, "referentia");
     k->orbatus       = attributum(n, "orbatus");
+    k->semita        = attributum_est(n, "semita", "ligatio")
+                     ? ORGANUM_SEMITA_LIGATIO
+                     : attributum_est(n, "semita", "status")
+                     ? ORGANUM_SEMITA_STATUS : ORGANUM_SEMITA_NULLA;
+    k->ambitus       = attributum_est(n, "ambitus", "ligatio")
+                     ? ORGANUM_AMBITUS_LIGATIO
+                     : ORGANUM_AMBITUS_ORGANUM;
+    k->historia      = attributum_est(n, "historia", "impelle")
+                     ? ORGANUM_HISTORIA_IMPELLE
+                     : ORGANUM_HISTORIA_SUBSTITUE;
 }
 
 /* vitia canonis organi in nuntios */
@@ -455,6 +493,8 @@ organum_legere (
     o->ligamina  = xar_creare(piscina, (i32)magnitudo(OrganumLigamen));
     o->actiones  = xar_creare(piscina, (i32)magnitudo(OrganumActio));
     o->portae    = xar_creare(piscina, (i32)magnitudo(OrganumPorta));
+    o->montationes = xar_creare(piscina,
+        (i32)magnitudo(OrganumMontatio));
 
     sectio  = stml_invenire_liberum(radix, "ligamina");
     l       = sectio ? liberi(sectio, "ligamen", piscina) : NIHIL;
@@ -487,6 +527,16 @@ organum_legere (
         a->titulus  = attributum(liberum_ad(l, i), "nomen");
         a->systema = attributum_est(liberum_ad(l, i), "systema",
             "verum");
+    }
+    sectio  = stml_invenire_liberum(radix, "montationes");
+    l       = sectio ? liberi(sectio, "montatio", piscina) : NIHIL;
+    per (i = ZEPHYRUM; l && i < xar_numerus(l); i++)
+    {
+        OrganumMontatio* m;
+
+        m           = (OrganumMontatio*)xar_addere(o->montationes);
+        m->titulus  = attributum(liberum_ad(l, i), "nomen");
+        m->genus    = attributum(liberum_ad(l, i), "genus");
     }
     sectio  = stml_invenire_liberum(radix, "status");
     l       = sectio ? liberi(sectio, "campus", piscina) : NIHIL;
@@ -671,6 +721,49 @@ organum_porta_index (
         redde NIHIL;
     }
     redde (constans OrganumPorta*)xar_obtinere(organum->portae, index);
+}
+
+i32
+organum_numerus_montationum (
+    constans Organum* organum)
+{
+    redde organum ? xar_numerus(organum->montationes) : ZEPHYRUM;
+}
+
+constans OrganumMontatio*
+organum_montatio_index (
+     constans Organum* organum,
+                  i32  index)
+{
+    si (!organum || index >= xar_numerus(organum->montationes))
+    {
+        redde NIHIL;
+    }
+    redde (constans OrganumMontatio*)xar_obtinere(organum->montationes,
+        index);
+}
+
+constans OrganumMontatio*
+organum_montatio (
+     constans Organum* organum,
+               chorda  titulus)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; organum && i < xar_numerus(organum->montationes);
+         i++)
+    {
+        constans OrganumMontatio* m;
+                             Xar* omnes;
+
+        omnes  = organum->montationes;
+        m      = (constans OrganumMontatio*)xar_obtinere(omnes, i);
+        si (chorda_aequalis(m->titulus, titulus))
+        {
+            redde m;
+        }
+    }
+    redde NIHIL;
 }
 
 

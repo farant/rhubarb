@@ -13,6 +13,8 @@
  *   - referentia 'ligamen/genus' -> ligamen declaratum
  *   - absens -> valor typi sui
  *   - <optio> solum sub typo electio, qui unam saltem poscit
+ *   - semita -> vita persistens (semitae-spec R0)
+ *   - ambitus, historia -> semita; ambitus -> semita status
  *
  * Onerator plagulam numquam legit: fons a vocante, basis a vocante
  * addita (organum_basim_addere). */
@@ -51,6 +53,23 @@ nomen enumeratio {
     ORGANUM_SEDES_MOTUS
 } OrganumSedes;
 
+/* semitae (project-specs/semitae-spec.md): pars semitae campus est? */
+nomen enumeratio {
+    ORGANUM_SEMITA_NULLA = ZEPHYRUM,   /* extra semitam (ordinarium) */
+    ORGANUM_SEMITA_LIGATIO,            /* ligatio: entitas, ambitus */
+    ORGANUM_SEMITA_STATUS              /* status optionalis */
+} OrganumSemita;
+
+nomen enumeratio {
+    ORGANUM_AMBITUS_ORGANUM = ZEPHYRUM, /* absens: valor servatur */
+    ORGANUM_AMBITUS_LIGATIO             /* ligatione mutata: absens */
+} OrganumAmbitus;
+
+nomen enumeratio {
+    ORGANUM_HISTORIA_SUBSTITUE = ZEPHYRUM,  /* ordinarium */
+    ORGANUM_HISTORIA_IMPELLE
+} OrganumHistoria;
+
 nomen structura {
              chorda  titulus;
              chorda  typus;        /* "numerus", "electio", ... */
@@ -63,6 +82,9 @@ nomen structura {
              chorda  aspectus;     /* vacua = nullus; "popover" */
              chorda  referentia;   /* "ligamen/genus"; vacua = nulla */
              chorda  orbatus;      /* vacua = nullus */
+      OrganumSemita  semita;       /* absens = NULLA */
+     OrganumAmbitus  ambitus;      /* absens = ORGANUM */
+    OrganumHistoria  historia;     /* absens = SUBSTITUE */
           StmlNodus* nodus;        /* in manifesto (optiones, nota) */
 } OrganumCampus;
 
@@ -81,6 +103,12 @@ nomen structura {
     chorda titulus;
     chorda modus;                 /* "petitio" | "eventus" */
 } OrganumPorta;
+
+/* montatio: organum liberum nomine (elementum semitae, ramus) */
+nomen structura {
+    chorda titulus;     /* nomen montationis */
+    chorda genus;       /* genus organi liberi */
+} OrganumMontatio;
 
 nomen structura Organum Organum;   /* opacum */
 
@@ -156,6 +184,21 @@ constans OrganumPorta*
 organum_porta_index (
      constans Organum* organum,
                   i32  index);
+
+i32
+organum_numerus_montationum (
+    constans Organum* organum);
+
+constans OrganumMontatio*
+organum_montatio_index (
+     constans Organum* organum,
+                  i32  index);
+
+/* NIHIL si nulla */
+constans OrganumMontatio*
+organum_montatio (
+     constans Organum* organum,
+               chorda  titulus);
 
 
 /* ==================================================
