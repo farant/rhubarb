@@ -5,60 +5,57 @@
 #include "credo.h"
 #include <stdio.h>
 
-s32 principale (vacuum)
+
+/* ==================================================
+ * Probare fasti_dies constructor
+ * ================================================== */
+
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-    Piscina* piscina;
-        b32  praeteritus;
-
-    /* Aperire credo et piscina */
-    piscina = piscina_generare_dynamicum("test_fasti", IV * MXXIV);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-
-    /* ==================================================
-     * Probare fasti_dies constructor
-     * ================================================== */
-
+    (vacuum)c;
     {
         Dies d;
-
-        imprimere("\n--- Probans fasti_dies ---\n");
 
         d = fasti_dies(MMXXIV, III, XV);
         CREDO_AEQUALIS_S32(d.annus, MMXXIV);
         CREDO_AEQUALIS_S32(d.mensis, III);
         CREDO_AEQUALIS_S32(d.dies, XV);
     }
+}
 
 
-    /* ==================================================
-     * Probare fasti_hora constructor
-     * ================================================== */
+/* ==================================================
+ * Probare fasti_hora constructor
+ * ================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         Hora h;
-
-        imprimere("\n--- Probans fasti_hora ---\n");
 
         h = fasti_hora(XIV, XXX, XLV);
         CREDO_AEQUALIS_S32(h.hora, XIV);
         CREDO_AEQUALIS_S32(h.minutum, XXX);
         CREDO_AEQUALIS_S32(h.secundum, XLV);
     }
+}
 
 
-    /* ==================================================
-     * Probare fasti_est_bissextilis
-     * ================================================== */
+/* ==================================================
+ * Probare fasti_est_bissextilis
+ * ================================================== */
 
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
-        imprimere("\n--- Probans fasti_est_bissextilis ---\n");
-
         /* 2000 est bissextilis (divisibilis per 400) */
         CREDO_VERUM(fasti_est_bissextilis(MM));
 
@@ -74,15 +71,19 @@ s32 principale (vacuum)
         /* 2024 est bissextilis */
         CREDO_VERUM(fasti_est_bissextilis(MMXXIV));
     }
+}
 
 
-    /* ==================================================
-     * Probare fasti_dies_in_mense
-     * ================================================== */
+/* ==================================================
+ * Probare fasti_dies_in_mense
+ * ================================================== */
 
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
-        imprimere("\n--- Probans fasti_dies_in_mense ---\n");
-
         /* Ianuarius habet 31 dies */
         CREDO_AEQUALIS_S32(fasti_dies_in_mense(I, MMXXIV), XXXI);
 
@@ -103,16 +104,20 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_S32(fasti_dies_in_mense(ZEPHYRUM, MMXXIV),
             ZEPHYRUM);
     }
+}
 
 
-    /* ==================================================
-     * Probare fasti_dies_valida
-     * ================================================== */
+/* ==================================================
+ * Probare fasti_dies_valida
+ * ================================================== */
 
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         Dies d_valida, d_invalida1, d_invalida2, d_invalida3;
-
-        imprimere("\n--- Probans fasti_dies_valida ---\n");
 
         d_valida = fasti_dies(MMXXIV, III, XV);
         CREDO_VERUM(fasti_dies_valida(d_valida));
@@ -135,17 +140,21 @@ s32 principale (vacuum)
         /* 29 Feb 2023 (non-bissextilis) non est valida */
         CREDO_FALSUM(fasti_dies_valida(fasti_dies(MMXXIII, II, XXIX)));
     }
+}
 
 
-    /* ==================================================
-     * Probare fasti_dies_hebdomadis
-     * ================================================== */
+/* ==================================================
+ * Probare fasti_dies_hebdomadis
+ * ================================================== */
 
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         Dies d;
          s32 dh;
-
-        imprimere("\n--- Probans fasti_dies_hebdomadis ---\n");
 
         /* 1 Ianuarii 2024 erat Feria II (Monday) = 1 */
         d   = fasti_dies(MMXXIV, I, I);
@@ -167,17 +176,21 @@ s32 principale (vacuum)
         dh  = fasti_dies_hebdomadis(d);
         CREDO_AEQUALIS_S32(dh, FASTI_FERIA_V);
     }
+}
 
 
-    /* ==================================================
-     * Probare fasti_ad_iulianum et fasti_ex_iuliano
-     * ================================================== */
+/* ==================================================
+ * Probare fasti_ad_iulianum et fasti_ex_iuliano
+ * ================================================== */
 
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         Dies d_orig, d_round;
         s64 jdn;
-
-        imprimere("\n--- Probans conversio Iuliana ---\n");
 
         /* Round-trip probatio */
         d_orig   = fasti_dies(MMXXIV, III, XV);
@@ -206,16 +219,20 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_S32(d_round.mensis, I);
         CREDO_AEQUALIS_S32(d_round.dies, I);
     }
+}
 
 
-    /* ==================================================
-     * Probare fasti_addere_dies
-     * ================================================== */
+/* ==================================================
+ * Probare fasti_addere_dies
+ * ================================================== */
 
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         Dies d, result;
-
-        imprimere("\n--- Probans fasti_addere_dies ---\n");
 
         d = fasti_dies(MMXXIV, I, I);
 
@@ -238,16 +255,20 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_S32(result.mensis, II);
         CREDO_AEQUALIS_S32(result.dies, XXIX); /* 2024 est bissextilis */
     }
+}
 
 
-    /* ==================================================
-     * Probare fasti_addere_menses
-     * ================================================== */
+/* ==================================================
+ * Probare fasti_addere_menses
+ * ================================================== */
 
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         Dies d, result;
-
-        imprimere("\n--- Probans fasti_addere_menses ---\n");
 
         d = fasti_dies(MMXXIV, I, XV);
 
@@ -269,16 +290,20 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_S32(result.mensis, II);
         CREDO_AEQUALIS_S32(result.dies, XXIX); /* Cohibitus ad 29 */
     }
+}
 
 
-    /* ==================================================
-     * Probare fasti_addere_annos
-     * ================================================== */
+/* ==================================================
+ * Probare fasti_addere_annos
+ * ================================================== */
 
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         Dies d, result;
-
-        imprimere("\n--- Probans fasti_addere_annos ---\n");
 
         d       = fasti_dies(MMXX, VI, XV);
         result  = fasti_addere_annos(d, IV);
@@ -293,17 +318,21 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_S32(result.mensis, II);
         CREDO_AEQUALIS_S32(result.dies, XXVIII);
     }
+}
 
 
-    /* ==================================================
-     * Probare fasti_differentia
-     * ================================================== */
+/* ==================================================
+ * Probare fasti_differentia
+ * ================================================== */
 
+interior vacuum
+_sectio_decima_prima (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         Dies d1, d2;
         Intervallum i;
-
-        imprimere("\n--- Probans fasti_differentia ---\n");
 
         d1  = fasti_dies(MMXXIV, I, I);
         d2  = fasti_dies(MMXXIV, I, XXXI);
@@ -318,16 +347,20 @@ s32 principale (vacuum)
         i = fasti_differentia(d1, d1);
         CREDO_AEQUALIS_S64(i.dies_totales, ZEPHYRUM);
     }
+}
 
 
-    /* ==================================================
-     * Probare fasti_comparare et amici
-     * ================================================== */
+/* ==================================================
+ * Probare fasti_comparare et amici
+ * ================================================== */
 
+interior vacuum
+_sectio_decima_secunda (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         Dies d1, d2, d3;
-
-        imprimere("\n--- Probans comparatio ---\n");
 
         d1 = fasti_dies(MMXXIV, I, I);
         d2 = fasti_dies(MMXXIV, VI, XV);
@@ -346,16 +379,20 @@ s32 principale (vacuum)
         CREDO_VERUM(fasti_aequalis(d1, d3));
         CREDO_FALSUM(fasti_aequalis(d1, d2));
     }
+}
 
 
-    /* ==================================================
-     * Probare fasti_inter
-     * ================================================== */
+/* ==================================================
+ * Probare fasti_inter
+ * ================================================== */
 
+interior vacuum
+_sectio_decima_tertia (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         Dies d, ab, ad;
-
-        imprimere("\n--- Probans fasti_inter ---\n");
 
         ab = fasti_dies(MMXXIV, I, I);
         ad = fasti_dies(MMXXIV, XII, XXXI);
@@ -370,16 +407,20 @@ s32 principale (vacuum)
         CREDO_VERUM(fasti_inter(ab, ab, ad));
         CREDO_VERUM(fasti_inter(ad, ab, ad));
     }
+}
 
 
-    /* ==================================================
-     * Probare fasti_computus (Easter)
-     * ================================================== */
+/* ==================================================
+ * Probare fasti_computus (Easter)
+ * ================================================== */
 
+interior vacuum
+_sectio_decima_quarta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         Dies pascha;
-
-        imprimere("\n--- Probans fasti_computus ---\n");
 
         /* Pascha 2024: 31 Martii */
         pascha = fasti_computus(MMXXIV);
@@ -413,236 +454,246 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_S32(fasti_dies_hebdomadis(fasti_computus(MMXXV)),
             FASTI_DOMINICA);
     }
+}
 
 
-    /* ==================================================
-     * Probare fasti_nomen_mensis
-     * ================================================== */
+/* ==================================================
+ * Probare fasti_nomen_mensis
+ * ================================================== */
 
+interior vacuum
+_sectio_decima_quinta (
+    CredoContextus* c)
+{
+    chorda titulus;
+
+    titulus = fasti_nomen_mensis(III, FALSUM, FASTI_LINGUA_LATINA,
+        c->piscina);
+    CREDO_CHORDA_AEQUALIS(titulus, chorda_ex_literis("Martius",
+        c->piscina));
+
+    titulus = fasti_nomen_mensis(III, VERUM, FASTI_LINGUA_LATINA,
+        c->piscina);
+    CREDO_CHORDA_AEQUALIS(titulus, chorda_ex_literis("Mar",
+        c->piscina));
+
+    titulus = fasti_nomen_mensis(III, FALSUM, FASTI_LINGUA_ANGLICA,
+        c->piscina);
+    CREDO_CHORDA_AEQUALIS(titulus, chorda_ex_literis("March",
+        c->piscina));
+
+    titulus = fasti_nomen_mensis(XII, VERUM, FASTI_LINGUA_ANGLICA,
+        c->piscina);
+    CREDO_CHORDA_AEQUALIS(titulus, chorda_ex_literis("Dec",
+        c->piscina));
+}
+
+
+/* ==================================================
+ * Probare fasti_nomen_diei_hebdomadis
+ * ================================================== */
+
+interior vacuum
+_sectio_decima_sexta (
+    CredoContextus* c)
+{
+    chorda titulus;
+
+    titulus = fasti_nomen_diei_hebdomadis(FASTI_DOMINICA, FALSUM,
+        FASTI_LINGUA_LATINA, c->piscina);
+    CREDO_CHORDA_AEQUALIS(titulus, chorda_ex_literis("Dominica",
+        c->piscina));
+
+    titulus = fasti_nomen_diei_hebdomadis(FASTI_FERIA_II, VERUM,
+        FASTI_LINGUA_LATINA, c->piscina);
+    CREDO_CHORDA_AEQUALIS(titulus, chorda_ex_literis("Fer II",
+        c->piscina));
+
+    titulus = fasti_nomen_diei_hebdomadis(FASTI_DOMINICA, FALSUM,
+        FASTI_LINGUA_ANGLICA, c->piscina);
+    CREDO_CHORDA_AEQUALIS(titulus, chorda_ex_literis("Sunday",
+        c->piscina));
+}
+
+
+/* ==================================================
+ * Probare fasti_formare_diem
+ * ================================================== */
+
+interior vacuum
+_sectio_decima_septima (
+    CredoContextus* c)
+{
+      Dies d;
+    chorda s;
+
+    d = fasti_dies(MMXXIV, III, XV);
+
+    s = fasti_formare_diem(d, FASTI_FORMA_ISO, c->piscina);
+    CREDO_CHORDA_AEQUALIS(s, chorda_ex_literis("2024-03-15",
+        c->piscina));
+
+    s = fasti_formare_diem(d, FASTI_FORMA_EUROPAEA, c->piscina);
+    CREDO_CHORDA_AEQUALIS(s, chorda_ex_literis("15/03/2024",
+        c->piscina));
+
+    s = fasti_formare_diem(d, FASTI_FORMA_AMERICANA, c->piscina);
+    CREDO_CHORDA_AEQUALIS(s, chorda_ex_literis("03/15/2024",
+        c->piscina));
+
+    s = fasti_formare_diem(d, FASTI_FORMA_LATINA_BREVIS, c->piscina);
+    CREDO_CHORDA_AEQUALIS(s, chorda_ex_literis("15 Mar 2024",
+        c->piscina));
+
+    s = fasti_formare_diem(d, FASTI_FORMA_LATINA_LONGA, c->piscina);
+    CREDO_CHORDA_AEQUALIS(s, chorda_ex_literis("XV Martii MMXXIV",
+        c->piscina));
+
+    s = fasti_formare_diem(d, FASTI_FORMA_LITURGICA, c->piscina);
+    CREDO_CHORDA_AEQUALIS(s, chorda_ex_literis(
+        "Feria VI, 15 Martii 2024", c->piscina));
+}
+
+
+/* ==================================================
+ * Probare formas Latinas: mensis GENETIVO, numeri Romani
+ *
+ * "XV Martii" = dies quintus decimus Martii (mensis):
+ * nomen mensis in dato genetivum est. Numeri Romani
+ * I..MMMCMXCIX; extra limites cifrae scribuntur.
+ * ================================================== */
+
+interior vacuum
+_sectio_decima_octava (
+    CredoContextus* c)
+{
+    interior constans character* constans CALENDAE[XII] = {
+        "I Ianuarii MMXXVI",   "I Februarii MMXXVI",
+        "I Martii MMXXVI",     "I Aprilis MMXXVI",
+        "I Maii MMXXVI",       "I Iunii MMXXVI",
+        "I Iulii MMXXVI",      "I Augusti MMXXVI",
+        "I Septembris MMXXVI", "I Octobris MMXXVI",
+        "I Novembris MMXXVI",  "I Decembris MMXXVI"
+    };
+    chorda s;
+       s32 m;
+
+    per (m = I; m <= XII; m++)
     {
-        chorda titulus;
-
-        imprimere("\n--- Probans fasti_nomen_mensis ---\n");
-
-        titulus = fasti_nomen_mensis(III, FALSUM, FASTI_LINGUA_LATINA,
-            piscina);
-        CREDO_CHORDA_AEQUALIS(titulus, chorda_ex_literis("Martius",
-            piscina));
-
-        titulus = fasti_nomen_mensis(III, VERUM, FASTI_LINGUA_LATINA,
-            piscina);
-        CREDO_CHORDA_AEQUALIS(titulus, chorda_ex_literis("Mar",
-            piscina));
-
-        titulus = fasti_nomen_mensis(III, FALSUM, FASTI_LINGUA_ANGLICA,
-            piscina);
-        CREDO_CHORDA_AEQUALIS(titulus, chorda_ex_literis("March",
-            piscina));
-
-        titulus = fasti_nomen_mensis(XII, VERUM, FASTI_LINGUA_ANGLICA,
-            piscina);
-        CREDO_CHORDA_AEQUALIS(titulus, chorda_ex_literis("Dec",
-            piscina));
+        s = fasti_formare_diem(fasti_dies(MM + XXVI, m, I),
+            FASTI_FORMA_LATINA_LONGA, c->piscina);
+        CREDO_CHORDA_AEQUALIS(s,
+            chorda_ex_literis(CALENDAE[m - I], c->piscina));
     }
 
+    /* formae subtractivae: CM, XC, IX, IV */
+    s = fasti_formare_diem(fasti_dies(MCMXCIX, XII, XXXI),
+        FASTI_FORMA_LATINA_LONGA, c->piscina);
+    CREDO_CHORDA_AEQUALIS(s,
+        chorda_ex_literis("XXXI Decembris MCMXCIX", c->piscina));
 
-    /* ==================================================
-     * Probare fasti_nomen_diei_hebdomadis
-     * ================================================== */
+    s = fasti_formare_diem(fasti_dies(IV * M - I, VIII, XXIV),
+        FASTI_FORMA_LATINA_LONGA, c->piscina);
+    CREDO_CHORDA_AEQUALIS(s,
+        chorda_ex_literis("XXIV Augusti MMMCMXCIX", c->piscina));
 
-    {
-        chorda titulus;
+    /* longissimus sub IV milibus: 3888 */
+    s = fasti_formare_diem(fasti_dies(IV * M - C - XII, VII, XIX),
+        FASTI_FORMA_LATINA_LONGA, c->piscina);
+    CREDO_CHORDA_AEQUALIS(s,
+        chorda_ex_literis("XIX Iulii MMMDCCCLXXXVIII", c->piscina));
 
-        imprimere("\n--- Probans fasti_nomen_diei_hebdomadis ---\n");
+    /* extra limites: cifrae, non numerus Romanus falsus */
+    s = fasti_formare_diem(fasti_dies(IV * M, I, IX),
+        FASTI_FORMA_LATINA_LONGA, c->piscina);
+    CREDO_CHORDA_AEQUALIS(s,
+        chorda_ex_literis("IX Ianuarii 4000", c->piscina));
 
-        titulus = fasti_nomen_diei_hebdomadis(FASTI_DOMINICA, FALSUM,
-            FASTI_LINGUA_LATINA, piscina);
-        CREDO_CHORDA_AEQUALIS(titulus, chorda_ex_literis("Dominica",
-            piscina));
+    s = fasti_formare_diem(fasti_dies(ZEPHYRUM, IV, XIV),
+        FASTI_FORMA_LATINA_LONGA, c->piscina);
+    CREDO_CHORDA_AEQUALIS(s,
+        chorda_ex_literis("XIV Aprilis 0", c->piscina));
 
-        titulus = fasti_nomen_diei_hebdomadis(FASTI_FERIA_II, VERUM,
-            FASTI_LINGUA_LATINA, piscina);
-        CREDO_CHORDA_AEQUALIS(titulus, chorda_ex_literis("Fer II",
-            piscina));
-
-        titulus = fasti_nomen_diei_hebdomadis(FASTI_DOMINICA, FALSUM,
-            FASTI_LINGUA_ANGLICA, piscina);
-        CREDO_CHORDA_AEQUALIS(titulus, chorda_ex_literis("Sunday",
-            piscina));
-    }
-
-
-    /* ==================================================
-     * Probare fasti_formare_diem
-     * ================================================== */
-
-    {
-          Dies d;
-        chorda s;
-
-        imprimere("\n--- Probans fasti_formare_diem ---\n");
-
-        d = fasti_dies(MMXXIV, III, XV);
-
-        s = fasti_formare_diem(d, FASTI_FORMA_ISO, piscina);
-        CREDO_CHORDA_AEQUALIS(s, chorda_ex_literis("2024-03-15",
-            piscina));
-
-        s = fasti_formare_diem(d, FASTI_FORMA_EUROPAEA, piscina);
-        CREDO_CHORDA_AEQUALIS(s, chorda_ex_literis("15/03/2024",
-            piscina));
-
-        s = fasti_formare_diem(d, FASTI_FORMA_AMERICANA, piscina);
-        CREDO_CHORDA_AEQUALIS(s, chorda_ex_literis("03/15/2024",
-            piscina));
-
-        s = fasti_formare_diem(d, FASTI_FORMA_LATINA_BREVIS, piscina);
-        CREDO_CHORDA_AEQUALIS(s, chorda_ex_literis("15 Mar 2024",
-            piscina));
-
-        s = fasti_formare_diem(d, FASTI_FORMA_LATINA_LONGA, piscina);
-        CREDO_CHORDA_AEQUALIS(s, chorda_ex_literis("XV Martii MMXXIV",
-            piscina));
-
-        s = fasti_formare_diem(d, FASTI_FORMA_LITURGICA, piscina);
-        CREDO_CHORDA_AEQUALIS(s, chorda_ex_literis(
-            "Feria VI, 15 Martii 2024", piscina));
-    }
+    /* forma liturgica: dies et annus cifris, mensis genetivo */
+    s = fasti_formare_diem(fasti_dies(MM + XXVI, IX, XIV),
+        FASTI_FORMA_LITURGICA, c->piscina);
+    CREDO_CHORDA_AEQUALIS(s,
+        chorda_ex_literis("Feria II, 14 Septembris 2026", c->piscina));
+}
 
 
-    /* ==================================================
-     * Probare formas Latinas: mensis GENETIVO, numeri Romani
-     *
-     * "XV Martii" = dies quintus decimus Martii (mensis):
-     * nomen mensis in dato genetivum est. Numeri Romani
-     * I..MMMCMXCIX; extra limites cifrae scribuntur.
-     * ================================================== */
+/* ==================================================
+ * Probare fasti_formare_horam
+ * ================================================== */
 
-    {
-        interior constans character* constans CALENDAE[XII] = {
-            "I Ianuarii MMXXVI",   "I Februarii MMXXVI",
-            "I Martii MMXXVI",     "I Aprilis MMXXVI",
-            "I Maii MMXXVI",       "I Iunii MMXXVI",
-            "I Iulii MMXXVI",      "I Augusti MMXXVI",
-            "I Septembris MMXXVI", "I Octobris MMXXVI",
-            "I Novembris MMXXVI",  "I Decembris MMXXVI"
-        };
-        chorda s;
-           s32 m;
+interior vacuum
+_sectio_decima_nona (
+    CredoContextus* c)
+{
+      Hora h;
+    chorda s;
 
-        imprimere("\n--- Probans formas Latinas ---\n");
+    h = fasti_hora(XIV, XXX, XLV);
 
-        per (m = I; m <= XII; m++)
-        {
-            s = fasti_formare_diem(fasti_dies(MM + XXVI, m, I),
-                FASTI_FORMA_LATINA_LONGA, piscina);
-            CREDO_CHORDA_AEQUALIS(s,
-                chorda_ex_literis(CALENDAE[m - I], piscina));
-        }
+    s = fasti_formare_horam(h, VERUM, VERUM, c->piscina);
+    CREDO_CHORDA_AEQUALIS(s, chorda_ex_literis("14:30:45",
+        c->piscina));
 
-        /* formae subtractivae: CM, XC, IX, IV */
-        s = fasti_formare_diem(fasti_dies(MCMXCIX, XII, XXXI),
-            FASTI_FORMA_LATINA_LONGA, piscina);
-        CREDO_CHORDA_AEQUALIS(s,
-            chorda_ex_literis("XXXI Decembris MCMXCIX", piscina));
+    s = fasti_formare_horam(h, FALSUM, VERUM, c->piscina);
+    CREDO_CHORDA_AEQUALIS(s, chorda_ex_literis("14:30", c->piscina));
 
-        s = fasti_formare_diem(fasti_dies(IV * M - I, VIII, XXIV),
-            FASTI_FORMA_LATINA_LONGA, piscina);
-        CREDO_CHORDA_AEQUALIS(s,
-            chorda_ex_literis("XXIV Augusti MMMCMXCIX", piscina));
+    s = fasti_formare_horam(h, FALSUM, FALSUM, c->piscina);
+    CREDO_CHORDA_AEQUALIS(s, chorda_ex_literis("2:30 PM", c->piscina));
 
-        /* longissimus sub IV milibus: 3888 */
-        s = fasti_formare_diem(fasti_dies(IV * M - C - XII, VII, XIX),
-            FASTI_FORMA_LATINA_LONGA, piscina);
-        CREDO_CHORDA_AEQUALIS(s,
-            chorda_ex_literis("XIX Iulii MMMDCCCLXXXVIII", piscina));
-
-        /* extra limites: cifrae, non numerus Romanus falsus */
-        s = fasti_formare_diem(fasti_dies(IV * M, I, IX),
-            FASTI_FORMA_LATINA_LONGA, piscina);
-        CREDO_CHORDA_AEQUALIS(s,
-            chorda_ex_literis("IX Ianuarii 4000", piscina));
-
-        s = fasti_formare_diem(fasti_dies(ZEPHYRUM, IV, XIV),
-            FASTI_FORMA_LATINA_LONGA, piscina);
-        CREDO_CHORDA_AEQUALIS(s,
-            chorda_ex_literis("XIV Aprilis 0", piscina));
-
-        /* forma liturgica: dies et annus cifris, mensis genetivo */
-        s = fasti_formare_diem(fasti_dies(MM + XXVI, IX, XIV),
-            FASTI_FORMA_LITURGICA, piscina);
-        CREDO_CHORDA_AEQUALIS(s,
-            chorda_ex_literis("Feria II, 14 Septembris 2026", piscina));
-    }
+    h = fasti_hora(ZEPHYRUM, V, ZEPHYRUM);
+    s = fasti_formare_horam(h, FALSUM, FALSUM, c->piscina);
+    CREDO_CHORDA_AEQUALIS(s, chorda_ex_literis("12:05 AM",
+        c->piscina));
+}
 
 
-    /* ==================================================
-     * Probare fasti_formare_horam
-     * ================================================== */
+/* ==================================================
+ * Probare fasti_parsare_iso
+ * ================================================== */
 
-    {
-          Hora h;
-        chorda s;
+interior vacuum
+_sectio_vicesima (
+    CredoContextus* c)
+{
+    chorda s;
+      Dies d;
+       b32 successus;
 
-        imprimere("\n--- Probans fasti_formare_horam ---\n");
+    s          = chorda_ex_literis("2024-03-15", c->piscina);
+    successus  = fasti_parsare_iso(s, &d);
+    CREDO_VERUM(successus);
+    CREDO_AEQUALIS_S32(d.annus, MMXXIV);
+    CREDO_AEQUALIS_S32(d.mensis, III);
+    CREDO_AEQUALIS_S32(d.dies, XV);
 
-        h = fasti_hora(XIV, XXX, XLV);
+    /* Data invalida */
+    s          = chorda_ex_literis("2024-02-31", c->piscina);
+    successus  = fasti_parsare_iso(s, &d);
+    CREDO_FALSUM(successus);
 
-        s = fasti_formare_horam(h, VERUM, VERUM, piscina);
-        CREDO_CHORDA_AEQUALIS(s, chorda_ex_literis("14:30:45",
-            piscina));
-
-        s = fasti_formare_horam(h, FALSUM, VERUM, piscina);
-        CREDO_CHORDA_AEQUALIS(s, chorda_ex_literis("14:30", piscina));
-
-        s = fasti_formare_horam(h, FALSUM, FALSUM, piscina);
-        CREDO_CHORDA_AEQUALIS(s, chorda_ex_literis("2:30 PM", piscina));
-
-        h = fasti_hora(ZEPHYRUM, V, ZEPHYRUM);
-        s = fasti_formare_horam(h, FALSUM, FALSUM, piscina);
-        CREDO_CHORDA_AEQUALIS(s, chorda_ex_literis("12:05 AM",
-            piscina));
-    }
-
-
-    /* ==================================================
-     * Probare fasti_parsare_iso
-     * ================================================== */
-
-    {
-        chorda s;
-          Dies d;
-           b32 successus;
-
-        imprimere("\n--- Probans fasti_parsare_iso ---\n");
-
-        s          = chorda_ex_literis("2024-03-15", piscina);
-        successus  = fasti_parsare_iso(s, &d);
-        CREDO_VERUM(successus);
-        CREDO_AEQUALIS_S32(d.annus, MMXXIV);
-        CREDO_AEQUALIS_S32(d.mensis, III);
-        CREDO_AEQUALIS_S32(d.dies, XV);
-
-        /* Data invalida */
-        s          = chorda_ex_literis("2024-02-31", piscina);
-        successus  = fasti_parsare_iso(s, &d);
-        CREDO_FALSUM(successus);
-
-        /* Forma invalida */
-        s          = chorda_ex_literis("not-a-date", piscina);
-        successus  = fasti_parsare_iso(s, &d);
-        CREDO_FALSUM(successus);
-    }
+    /* Forma invalida */
+    s          = chorda_ex_literis("not-a-date", c->piscina);
+    successus  = fasti_parsare_iso(s, &d);
+    CREDO_FALSUM(successus);
+}
 
 
-    /* ==================================================
-     * Probare fasti_dies_anni
-     * ================================================== */
+/* ==================================================
+ * Probare fasti_dies_anni
+ * ================================================== */
 
+interior vacuum
+_sectio_vicesima_prima (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         Dies d;
-
-        imprimere("\n--- Probans fasti_dies_anni ---\n");
 
         /* 1 Ianuarii = dies 1 */
         d = fasti_dies(MMXXIV, I, I);
@@ -656,15 +707,19 @@ s32 principale (vacuum)
         d = fasti_dies(MMXXIII, XII, XXXI);
         CREDO_AEQUALIS_S32(fasti_dies_anni(d), CCCLXV);
     }
+}
 
 
-    /* ==================================================
-     * Probare fasti_primus_dies_hebdomadis_mensis
-     * ================================================== */
+/* ==================================================
+ * Probare fasti_primus_dies_hebdomadis_mensis
+ * ================================================== */
 
+interior vacuum
+_sectio_vicesima_secunda (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
-        imprimere("\n--- Probans fasti_primus_dies_hebdomadis_mensis ---\n");
-
         /* Ianuarius 2024 incipit Feria II */
         CREDO_AEQUALIS_S32(fasti_primus_dies_hebdomadis_mensis(I,
             MMXXIV), FASTI_FERIA_II);
@@ -673,17 +728,21 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_S32(fasti_primus_dies_hebdomadis_mensis(III,
             MMXXIV), FASTI_FERIA_VI);
     }
+}
 
 
-    /* ==================================================
-     * Probare conversio Unix
-     * ================================================== */
+/* ==================================================
+ * Probare conversio Unix
+ * ================================================== */
 
+interior vacuum
+_sectio_vicesima_tertia (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         DiesHora dh, dh_round;
         s64 timestamp;
-
-        imprimere("\n--- Probans conversio Unix ---\n");
 
         /* Unix epoch */
         dh.dies    = fasti_dies(MCMX + LXX, I, I);
@@ -704,16 +763,20 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_S32(dh_round.hora.minutum, XXX);
         CREDO_AEQUALIS_S32(dh_round.hora.secundum, XLV);
     }
+}
 
 
-    /* ==================================================
-     * Probare fasti_dies_hodie (functio systematis)
-     * ================================================== */
+/* ==================================================
+ * Probare fasti_dies_hodie (functio systematis)
+ * ================================================== */
 
+interior vacuum
+_sectio_vicesima_quarta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         Dies hodie;
-
-        imprimere("\n--- Probans fasti_dies_hodie ---\n");
 
         hodie = fasti_dies_hodie();
 
@@ -724,16 +787,20 @@ s32 principale (vacuum)
         CREDO_VERUM(hodie.annus >= MMXX);
         CREDO_VERUM(hodie.annus < MMC);
     }
+}
 
 
-    /* ==================================================
-     * Probare fasti_suffixum_ordinale
-     * ================================================== */
+/* ==================================================
+ * Probare fasti_suffixum_ordinale
+ * ================================================== */
 
+interior vacuum
+_sectio_vicesima_quinta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         constans character* suff;
-
-        imprimere("\n--- Probans fasti_suffixum_ordinale ---\n");
 
         /* 1st, 2nd, 3rd */
         suff = fasti_suffixum_ordinale(I);
@@ -788,129 +855,176 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_S32(suff[0], 's');
         CREDO_AEQUALIS_S32(suff[1], 't');
     }
+}
 
 
-    /* ==================================================
-     * Probare FASTI_FORMA_ANGLICA_LONGA
-     * ================================================== */
+/* ==================================================
+ * Probare FASTI_FORMA_ANGLICA_LONGA
+ * ================================================== */
 
-    {
-          Dies d;
-        chorda s;
+interior vacuum
+_sectio_vicesima_sexta (
+    CredoContextus* c)
+{
+      Dies d;
+    chorda s;
 
-        imprimere("\n--- Probans FASTI_FORMA_ANGLICA_LONGA ---\n");
+    /* Nativitas Domini - Thursday - December 25th, 2025 AD */
+    d = fasti_dies(MMXXV, XII, XXV);
+    s = fasti_formare_diem(d, FASTI_FORMA_ANGLICA_LONGA, c->piscina);
+    CREDO_CHORDA_AEQUALIS(s,
+        chorda_ex_literis("Thursday - December 25th, 2025 AD",
+        c->piscina));
 
-        /* Nativitas Domini - Thursday - December 25th, 2025 AD */
-        d = fasti_dies(MMXXV, XII, XXV);
-        s = fasti_formare_diem(d, FASTI_FORMA_ANGLICA_LONGA, piscina);
-        CREDO_CHORDA_AEQUALIS(s,
-            chorda_ex_literis("Thursday - December 25th, 2025 AD",
-            piscina));
+    /* 1 Ianuarii 2024 = Monday - January 1st, 2024 AD */
+    d = fasti_dies(MMXXIV, I, I);
+    s = fasti_formare_diem(d, FASTI_FORMA_ANGLICA_LONGA, c->piscina);
+    CREDO_CHORDA_AEQUALIS(s,
+        chorda_ex_literis("Monday - January 1st, 2024 AD",
+        c->piscina));
 
-        /* 1 Ianuarii 2024 = Monday - January 1st, 2024 AD */
-        d = fasti_dies(MMXXIV, I, I);
-        s = fasti_formare_diem(d, FASTI_FORMA_ANGLICA_LONGA, piscina);
-        CREDO_CHORDA_AEQUALIS(s,
-            chorda_ex_literis("Monday - January 1st, 2024 AD",
-            piscina));
+    /* 22 Februarii = "22nd" */
+    d = fasti_dies(MMXXIV, II, XXII);
+    s = fasti_formare_diem(d, FASTI_FORMA_ANGLICA_LONGA, c->piscina);
+    CREDO_CHORDA_AEQUALIS(s,
+        chorda_ex_literis("Thursday - February 22nd, 2024 AD",
+        c->piscina));
 
-        /* 22 Februarii = "22nd" */
-        d = fasti_dies(MMXXIV, II, XXII);
-        s = fasti_formare_diem(d, FASTI_FORMA_ANGLICA_LONGA, piscina);
-        CREDO_CHORDA_AEQUALIS(s,
-            chorda_ex_literis("Thursday - February 22nd, 2024 AD",
-            piscina));
-
-        /* 13 Martii = "13th" (teen exception) */
-        d = fasti_dies(MMXXIV, III, XIII);
-        s = fasti_formare_diem(d, FASTI_FORMA_ANGLICA_LONGA, piscina);
-        CREDO_CHORDA_AEQUALIS(s,
-            chorda_ex_literis("Wednesday - March 13th, 2024 AD",
-            piscina));
-    }
-
-
-    /* ==================================================
-     * Conclusio
-     * ================================================== */
+    /* 13 Martii = "13th" (teen exception) */
+    d = fasti_dies(MMXXIV, III, XIII);
+    s = fasti_formare_diem(d, FASTI_FORMA_ANGLICA_LONGA, c->piscina);
+    CREDO_CHORDA_AEQUALIS(s,
+        chorda_ex_literis("Wednesday - March 13th, 2024 AD",
+        c->piscina));
+}
 
 
-    /* ==================================================
-     * Probare fasti_ad_iso / fasti_ex_iso (instans plenum, UTC)
-     * ================================================== */
+/* ==================================================
+ * Probare fasti_ad_iso / fasti_ex_iso (instans plenum, UTC)
+ * ================================================== */
 
-    imprimere("\n--- Probans fasti_ad_iso / fasti_ex_iso ---\n");
+interior vacuum
+_sectio_vicesima_septima (
+    CredoContextus* c)
+{
+    DiesHora dh;
+    DiesHora reditus;
+      chorda s;
 
-    {
-        DiesHora dh;
-        DiesHora reditus;
-          chorda s;
+    dh.dies  = fasti_dies(2026, 9, 11);
+    dh.hora  = fasti_hora(2, 41, 32);
+    s        = fasti_ad_iso(dh, c->piscina);
+    CREDO_CHORDA_AEQUALIS_LITERIS(s, "2026-09-11T02:41:32Z");
 
-        dh.dies  = fasti_dies(2026, 9, 11);
-        dh.hora  = fasti_hora(2, 41, 32);
-        s        = fasti_ad_iso(dh, piscina);
-        CREDO_CHORDA_AEQUALIS_LITERIS(s, "2026-09-11T02:41:32Z");
+    CREDO_VERUM(fasti_ex_iso(s, &reditus));
+    CREDO_AEQUALIS_S32(reditus.dies.annus, 2026);
+    CREDO_AEQUALIS_S32(reditus.dies.mensis, 9);
+    CREDO_AEQUALIS_S32(reditus.dies.dies, 11);
+    CREDO_AEQUALIS_S32(reditus.hora.hora, 2);
+    CREDO_AEQUALIS_S32(reditus.hora.minutum, 41);
+    CREDO_AEQUALIS_S32(reditus.hora.secundum, 32);
 
-        CREDO_VERUM(fasti_ex_iso(s, &reditus));
-        CREDO_AEQUALIS_S32(reditus.dies.annus, 2026);
-        CREDO_AEQUALIS_S32(reditus.dies.mensis, 9);
-        CREDO_AEQUALIS_S32(reditus.dies.dies, 11);
-        CREDO_AEQUALIS_S32(reditus.hora.hora, 2);
-        CREDO_AEQUALIS_S32(reditus.hora.minutum, 41);
-        CREDO_AEQUALIS_S32(reditus.hora.secundum, 32);
+    /* offsetum ad UTC vertitur */
+    CREDO_VERUM(fasti_ex_iso(
+        chorda_ex_literis("2026-09-11T04:41:32+02:00", c->piscina),
+        &reditus));
+    CREDO_AEQUALIS_S32(reditus.hora.hora, 2);
+    CREDO_AEQUALIS_S32(reditus.dies.dies, 11);
 
-        /* offsetum ad UTC vertitur */
-        CREDO_VERUM(fasti_ex_iso(
-            chorda_ex_literis("2026-09-11T04:41:32+02:00", piscina),
-            &reditus));
-        CREDO_AEQUALIS_S32(reditus.hora.hora, 2);
-        CREDO_AEQUALIS_S32(reditus.dies.dies, 11);
+    /* offsetum trans medium noctis diem quoque mutat */
+    CREDO_VERUM(fasti_ex_iso(
+        chorda_ex_literis("2026-09-11T00:30:00+02:00", c->piscina),
+        &reditus));
+    CREDO_AEQUALIS_S32(reditus.dies.dies, 10);
+    CREDO_AEQUALIS_S32(reditus.hora.hora, 22);
 
-        /* offsetum trans medium noctis diem quoque mutat */
-        CREDO_VERUM(fasti_ex_iso(
-            chorda_ex_literis("2026-09-11T00:30:00+02:00", piscina),
-            &reditus));
-        CREDO_AEQUALIS_S32(reditus.dies.dies, 10);
-        CREDO_AEQUALIS_S32(reditus.hora.hora, 22);
+    /* offsetum negativum in alteram partem */
+    CREDO_VERUM(fasti_ex_iso(
+        chorda_ex_literis("2026-09-11T23:30:00-02:00", c->piscina),
+        &reditus));
+    CREDO_AEQUALIS_S32(reditus.dies.dies, 12);
+    CREDO_AEQUALIS_S32(reditus.hora.hora, 1);
 
-        /* offsetum negativum in alteram partem */
-        CREDO_VERUM(fasti_ex_iso(
-            chorda_ex_literis("2026-09-11T23:30:00-02:00", piscina),
-            &reditus));
-        CREDO_AEQUALIS_S32(reditus.dies.dies, 12);
-        CREDO_AEQUALIS_S32(reditus.hora.hora, 1);
+    /* recusationes nominatae */
+    CREDO_FALSUM(fasti_ex_iso(
+        chorda_ex_literis("2026-09-11", c->piscina), &reditus));
+    CREDO_FALSUM(fasti_ex_iso(
+        chorda_ex_literis("2026-09-11 02:41:32Z", c->piscina),
+        &reditus));
+    CREDO_FALSUM(fasti_ex_iso(
+        chorda_ex_literis("2026-09-11T02:41:32", c->piscina),
+        &reditus));
+    CREDO_FALSUM(fasti_ex_iso(
+        chorda_ex_literis("2026-13-11T02:41:32Z", c->piscina),
+        &reditus));
+    CREDO_FALSUM(fasti_ex_iso(
+        chorda_ex_literis("2026-09-11T25:41:32Z", c->piscina),
+        &reditus));
+    /* fractiones secundorum: v1 RECUSAT nominatim */
+    CREDO_FALSUM(fasti_ex_iso(
+        chorda_ex_literis("2026-09-11T02:41:32.5Z", c->piscina),
+        &reditus));
 
-        /* recusationes nominatae */
-        CREDO_FALSUM(fasti_ex_iso(
-            chorda_ex_literis("2026-09-11", piscina), &reditus));
-        CREDO_FALSUM(fasti_ex_iso(
-            chorda_ex_literis("2026-09-11 02:41:32Z", piscina),
-            &reditus));
-        CREDO_FALSUM(fasti_ex_iso(
-            chorda_ex_literis("2026-09-11T02:41:32", piscina),
-            &reditus));
-        CREDO_FALSUM(fasti_ex_iso(
-            chorda_ex_literis("2026-13-11T02:41:32Z", piscina),
-            &reditus));
-        CREDO_FALSUM(fasti_ex_iso(
-            chorda_ex_literis("2026-09-11T25:41:32Z", piscina),
-            &reditus));
-        /* fractiones secundorum: v1 RECUSAT nominatim */
-        CREDO_FALSUM(fasti_ex_iso(
-            chorda_ex_literis("2026-09-11T02:41:32.5Z", piscina),
-            &reditus));
+    /* ad_iso diem invalidam RECUSAT (chorda vacua) */
+    dh.dies = fasti_dies(2026, 13, 11);
+    CREDO_CHORDA_VACUA(fasti_ad_iso(dh, c->piscina));
+}
 
-        /* ad_iso diem invalidam RECUSAT (chorda vacua) */
-        dh.dies = fasti_dies(2026, 13, 11);
-        CREDO_CHORDA_VACUA(fasti_ad_iso(dh, piscina));
-    }
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "fasti_dies", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "fasti_hora", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "fasti_est_bissextilis", _sectio_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "fasti_dies_in_mense", _sectio_quarta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "fasti_dies_valida", _sectio_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "fasti_dies_hebdomadis", _sectio_sexta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "conversio Iuliana", _sectio_septima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "fasti_addere_dies", _sectio_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "fasti_addere_menses", _sectio_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "fasti_addere_annos", _sectio_decima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "fasti_differentia", _sectio_decima_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "comparatio", _sectio_decima_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "fasti_inter", _sectio_decima_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "fasti_computus", _sectio_decima_quarta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "fasti_nomen_mensis", _sectio_decima_quinta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "fasti_nomen_diei_hebdomadis", _sectio_decima_sexta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "fasti_formare_diem", _sectio_decima_septima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "formas Latinas", _sectio_decima_octava, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "fasti_formare_horam", _sectio_decima_nona, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "fasti_parsare_iso", _sectio_vicesima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "fasti_dies_anni", _sectio_vicesima_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "fasti_primus_dies_hebdomadis_mensis", _sectio_vicesima_secunda,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "conversio Unix", _sectio_vicesima_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "fasti_dies_hodie", _sectio_vicesima_quarta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "fasti_suffixum_ordinale", _sectio_vicesima_quinta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "FASTI_FORMA_ANGLICA_LONGA", _sectio_vicesima_sexta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "fasti_ad_iso / fasti_ex_iso", _sectio_vicesima_septima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    credo_claudere();
-    piscina_destruere(piscina);
-
-    redde (praeteritus) ? ZEPHYRUM : I;
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("fasti", SECTIONES);
 }

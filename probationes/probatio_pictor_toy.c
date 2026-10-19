@@ -14,9 +14,9 @@
 #include <stdio.h>
 #include <string.h>
 
-s32 principale (vacuum)
+interior vacuum
+_sectio_prima (CredoContextus* c)
 {
-                Piscina* piscina;
     InternamentumChorda* intern;
      InsulaRepositorium* repo;
          ActioRegistrum* reg;
@@ -26,33 +26,23 @@ s32 principale (vacuum)
                     Xar* eventus;
                     i32  i;
                     i32  n;
-                 chorda  arbor_textus;
-                 chorda  insulae_textus;
-              Componens* arbor_ante;
                  chorda* a;
 
-    piscina = piscina_generare_dynamicum("probatio_pictor_toy",
-        LXIV * M);
-    si (!piscina)
-    { imprimere("FRACTA: piscina\n"); redde I;
-    }
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
-    repo = insula_repositorium_creare(piscina, intern,
+    intern = internamentum_creare(c->piscina);
+    repo = insula_repositorium_creare(c->piscina, intern,
         "<insula/>");
-    reg = actio_registrum_creare(piscina, intern);
+    reg = actio_registrum_creare(c->piscina, intern);
     memset(&toy, ZEPHYRUM, magnitudo(ToyStatus));
     toy_registrare(reg, &toy);
-    d = dispensator_creare(piscina, intern, repo, reg, toy_componere,
+    d = dispensator_creare(c->piscina, intern, repo, reg, toy_componere,
                            &toy, CCC);
     CREDO_NON_NIHIL(d);
 
-    imprimere("\n--- Gradus V: plagula eventuum -> status ---\n");
     fons = filum_legere_totum("probationes/pictor/toy.eventus.stml",
-                              piscina);
+                              c->piscina);
     CREDO_CHORDA_NON_VACUA(fons);
-    eventus = eventus_legere_stml(chorda_ut_cstr(fons, piscina),
-        piscina,
+    eventus = eventus_legere_stml(chorda_ut_cstr(fons, c->piscina),
+        c->piscina,
                                   intern);
     CREDO_NON_NIHIL(eventus);
     n = xar_numerus(eventus);
@@ -83,27 +73,151 @@ s32 principale (vacuum)
     /* quadrum 0 + unum per eventum SALTEM (limen T5: eventus cum
      * derivatis semel amplius componit) */
     CREDO_VERUM(dispensator_numerus_compositionum(d) >= n + I);
+}
 
-    imprimere("\n--- Gradus III: imago arboris logicae ---\n");
+interior vacuum
+_sectio_secunda (CredoContextus* c)
+{
+    InternamentumChorda* intern;
+     InsulaRepositorium* repo;
+         ActioRegistrum* reg;
+              ToyStatus  toy;
+            Dispensator* d;
+                 chorda  fons;
+                    Xar* eventus;
+                    i32  i;
+                    i32  n;
+                 chorda  arbor_textus;
+
+    /* status post plagulam eventuum in hac sectione refectus
+     * (sectiones statum communem non mutant) */
+    intern = internamentum_creare(c->piscina);
+    repo = insula_repositorium_creare(c->piscina, intern,
+        "<insula/>");
+    reg = actio_registrum_creare(c->piscina, intern);
+    memset(&toy, ZEPHYRUM, magnitudo(ToyStatus));
+    toy_registrare(reg, &toy);
+    d = dispensator_creare(c->piscina, intern, repo, reg, toy_componere,
+                           &toy, CCC);
+    fons = filum_legere_totum("probationes/pictor/toy.eventus.stml",
+                              c->piscina);
+    eventus = eventus_legere_stml(chorda_ut_cstr(fons, c->piscina),
+        c->piscina,
+                                  intern);
+    si (d == NIHIL || eventus == NIHIL)
+    {
+        redde;
+    }
+    n = xar_numerus(eventus);
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        dispensator_tractare(d,
+            (constans Eventus*)xar_obtinere(eventus, i));
+    }
+
     arbor_textus = componens_scribere_stml(dispensator_arbor(d),
-        piscina,
+        c->piscina,
                                            intern, VERUM);
     CREDO_CHORDA_NON_VACUA(arbor_textus);
-    CREDO_VERUM(exemplar_conferre(piscina,
+    CREDO_VERUM(exemplar_conferre(c->piscina,
         "probationes/pictor/toy.arbor.stml", arbor_textus));
+}
 
-    imprimere("\n--- Imago insularum ---\n");
+interior vacuum
+_sectio_tertia (CredoContextus* c)
+{
+    InternamentumChorda* intern;
+     InsulaRepositorium* repo;
+         ActioRegistrum* reg;
+              ToyStatus  toy;
+            Dispensator* d;
+                 chorda  fons;
+                    Xar* eventus;
+                    i32  i;
+                    i32  n;
+                 chorda  insulae_textus;
+
+    /* status post plagulam eventuum in hac sectione refectus
+     * (sectiones statum communem non mutant) */
+    intern = internamentum_creare(c->piscina);
+    repo = insula_repositorium_creare(c->piscina, intern,
+        "<insula/>");
+    reg = actio_registrum_creare(c->piscina, intern);
+    memset(&toy, ZEPHYRUM, magnitudo(ToyStatus));
+    toy_registrare(reg, &toy);
+    d = dispensator_creare(c->piscina, intern, repo, reg, toy_componere,
+                           &toy, CCC);
+    fons = filum_legere_totum("probationes/pictor/toy.eventus.stml",
+                              c->piscina);
+    eventus = eventus_legere_stml(chorda_ut_cstr(fons, c->piscina),
+        c->piscina,
+                                  intern);
+    si (d == NIHIL || eventus == NIHIL)
+    {
+        redde;
+    }
+    n = xar_numerus(eventus);
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        dispensator_tractare(d,
+            (constans Eventus*)xar_obtinere(eventus, i));
+    }
+
     /* C2: insula una */
     insulae_textus = chorda_concatenare(
-        insula_scribere(repo, piscina),
-        chorda_ex_literis("\n", piscina), piscina);
+        insula_scribere(repo, c->piscina),
+        chorda_ex_literis("\n", c->piscina), c->piscina);
     CREDO_CHORDA_NON_VACUA(insulae_textus);
-    CREDO_VERUM(exemplar_conferre(piscina,
+    CREDO_VERUM(exemplar_conferre(c->piscina,
         "probationes/pictor/toy.insulae.stml", insulae_textus));
+}
 
-    imprimere("\n--- Gradus IV: restitutio (L8) ---\n");
+interior vacuum
+_sectio_quarta (CredoContextus* c)
+{
+    InternamentumChorda* intern;
+     InsulaRepositorium* repo;
+         ActioRegistrum* reg;
+              ToyStatus  toy;
+            Dispensator* d;
+                 chorda  fons;
+                    Xar* eventus;
+                    i32  i;
+                    i32  n;
+                 chorda  arbor_textus;
+              Componens* arbor_ante;
+
+    /* status post plagulam eventuum in hac sectione refectus
+     * (sectiones statum communem non mutant) */
+    intern = internamentum_creare(c->piscina);
+    repo = insula_repositorium_creare(c->piscina, intern,
+        "<insula/>");
+    reg = actio_registrum_creare(c->piscina, intern);
+    memset(&toy, ZEPHYRUM, magnitudo(ToyStatus));
+    toy_registrare(reg, &toy);
+    d = dispensator_creare(c->piscina, intern, repo, reg, toy_componere,
+                           &toy, CCC);
+    fons = filum_legere_totum("probationes/pictor/toy.eventus.stml",
+                              c->piscina);
+    eventus = eventus_legere_stml(chorda_ut_cstr(fons, c->piscina),
+        c->piscina,
+                                  intern);
+    si (d == NIHIL || eventus == NIHIL)
+    {
+        redde;
+    }
+    n = xar_numerus(eventus);
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        dispensator_tractare(d,
+            (constans Eventus*)xar_obtinere(eventus, i));
+    }
+    arbor_textus = componens_scribere_stml(dispensator_arbor(d),
+        c->piscina,
+                                           intern, VERUM);
+
     arbor_ante = componens_legere_stml(chorda_ut_cstr(arbor_textus,
-                                       piscina), piscina, intern);
+                                       c->piscina), c->piscina, intern);
     CREDO_NON_NIHIL(arbor_ante);
     CREDO_VERUM(insula_restituere(repo));
     CREDO_FALSUM(insula_mendacium(repo));
@@ -111,8 +225,21 @@ s32 principale (vacuum)
     CREDO_VERUM(componens_aequalis(arbor_ante, dispensator_arbor(d)));
     /* focus restitutionem supervivit */
     CREDO_CHORDA_AEQUALIS_LITERIS(dispensator_focus(d), "tabula");
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "Gradus V: plagula eventuum -> status", _sectio_prima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "Gradus III: imago arboris logicae", _sectio_secunda, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "Imago insularum", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Gradus IV: restitutio (L8)", _sectio_quarta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("probatio_pictor_toy", SECTIONES);
 }
