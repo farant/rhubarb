@@ -87438,7 +87438,8 @@ interior constans ExamenCodexInformatio _codices[] = {
     { "credo: sectio nullam assertionem attingit (VACUA)",
                                                   EXAMEN_VIOLATIO },
     { "credo: c->suita mutatum (sectiones statum suitae legunt, numquam"
-      " mutant)",                               EXAMEN_VIOLATIO },
+      " mutant; internatio in internamentum fixurae sola licet)",
+                                                  EXAMEN_VIOLATIO },
     { "credo: titulus '--- ... ---' manu impressus in sectione (credo"
       " titulum imprimit; gradus = CREDO_GRADUS)", EXAMEN_DOMESTICUM },
     { "vocatio IO cruda extra canalem lectionum (filum) - fabrica"
@@ -94669,6 +94670,11 @@ _professionem_examinare (
  *   - vocationes (93/95): symbolum vocati per nexum semanticae;
  *   - mutatio suitae (94): typus conversionis (explicitae aut
  *     scopo applicatae) - monstrator ad NON constans = mutabile.
+ *     GRADUS PRIMUS SOLUM: membra monstratoria fixurae per
+ *     'constans T*' lectae (o->lista, o->intern) non iudicantur.
+ *     Exceptio decreta (Franus 2026-10-19, include/credo.h):
+ *     internatio in internamentum fixurae licet; regula profundior
+ *     cum ea exceptione = gradus I migrationis subsystematum.
  * Tabula per syntaxin (typus-nominatus CredoSectio): nomen typi est
  * contractus API credo.
  * ================================================== */
@@ -95703,7 +95709,8 @@ _mores_credo_examinare (
                 _credo_nuntium(sem,
                 "credo: c->suita mutatum in %.*s%.*s"
                     " (sectiones statum suitae legunt, numquam mutant;"
-                    " lege per monstratorem constantem)", f->titulus,
+                    " lege per monstratorem constantem; internatio in"
+                    " internamentum fixurae sola licet)", f->titulus,
                     silva_chorda_ex_literis("", sem->piscina)));
         }
         per (j = ZEPHYRUM; j < silva_xar_numerus(f->tituli_impressi); j++)

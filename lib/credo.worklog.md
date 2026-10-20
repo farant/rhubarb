@@ -644,3 +644,31 @@ gave about 1 MiB, presumably because idle uniform pages get compressed.
 The stage instead makes the rise outside the arena directly (64 MiB
 malloc, non-uniform fill, held for the section), which tests what
 matters: under ASan, the rise isn't judged.
+
+## 2026-10-20 — suite fixture: the interning exception, and how deep examen 94 looks
+
+Step 0 of the subsystem migration (01M5B3BT9R71) was to write down Fran's
+10-19 decree (01M5B814PFMY): the suite fixture is read-only except that
+sections may intern into the fixture's own interning table. Interned
+strings are compared by pointer, so a per-section table would silently
+break identity with the fixture's names. Interning is also order-free:
+the same text gives the same chorda whichever section interns it first.
+
+While reading the examen rule I found that code 94 only checks the first
+level. It flags `c->suita` being assigned, or converted (explicitly or
+by scope) to a pointer to non-const. Every fixture suite reads through
+`constans T* o = (constans T*)c->suita;`, and `constans` on the struct
+doesn't reach its pointer members: `o->lista` is still `Xar*`, so
+`xar_addere(o->lista, ...)` compiles and examen says nothing. The
+exception is already in use this way: probatio_natura_canones.c passes
+`ex->intern` from its fixture into canon_* / stml_legere in sections.
+
+Fran chose (a) for now: document the exception (credo.h, examen's
+credo-rules comment, the 94 message and English gloss) and say that 94
+is first-level only. The deeper rule is (b), with the exception built
+in, as part of step 1: track locals that come from c->suita, and flag
+writes through their member chains plus mutable-pointer members passed
+to non-const pointer parameters, unless the callee is internamentum_*.
+Its false-positive rate depends on how const-correct the house APIs are.
+That has to be measured on the root fixture suites before deciding how
+strict to make it.

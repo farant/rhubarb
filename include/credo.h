@@ -876,7 +876,10 @@ nomen structura CredoContextus {
      constans character* titulus;   /* sectio currens */
                  vacuum* suita;     /* (II) datum parare_suitae;
                                      * sectiones LEGUNT, numquam mutant
-                                     * (lint); NIHIL sine fixura */
+                                     * (examen 94) praeter internationem
+                                     * in internamentum fixurae (vide
+                                     * credo_suitam_currere_cum); NIHIL
+                                     * sine fixura */
 } CredoContextus;
 
 nomen vacuum (*CredoFunctio)(CredoContextus* c);
@@ -1004,7 +1007,22 @@ credo_area (
  * (assertio aut NECESSE) -> nulla sectio currit, '(parare suitae)' in
  * plagula notatur, suita FRACTA. NIHIL licet (= credo_suitam_currere).
  * Fixura cara (daemon, applicatio) semel aedificatur; sectiones tamen
- * ordine liberae manent quia statum suitae non mutant. */
+ * ordine liberae manent quia statum suitae non mutant.
+ *
+ * LECTIO SOLA, EXCEPTIO UNA (decretum Frani 2026-10-19): sectiones in
+ * internamentum FIXURAE internare licet (internamentum_* super
+ * tabulam quam parare_suitae creavit). Chordae internatae per
+ * monstratorem comparantur, ergo internamentum proprium sectionis
+ * identitatem cum nominibus fixurae tacite frangeret; et internatio
+ * ordine libera est (textus idem -> chorda eadem, quaecumque sectio
+ * prima internat). Ubi comparatio per contentum fit, internamentum
+ * proprium sectionis (in c->piscina) ordinarium manet. Cetera mutatio
+ * fixurae vetita.
+ * CAUTIO: examen 94 gradum primum solum iudicat (c->suita assignatum
+ * aut ad monstratorem non constantem conversum). Membra monstratoria
+ * fixurae (Xar*, Piscina*, ...) per 'constans T*' lecta mutabilia
+ * manent et examen ea non videt - CREDO_ORDO=mixtus dependentiam
+ * ordinis prodit. */
 s32
 credo_suitam_currere_cum (
       constans character* titulus_suitae,
