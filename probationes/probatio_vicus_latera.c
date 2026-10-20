@@ -268,7 +268,7 @@ s32 principale (vacuum)
     CREDO_VERUM(manus_ludus_premere_ad(m, CCCLX, CC));
     CREDO_VERUM(pictor_documentum_cursor(pm->doc) > ZEPHYRUM);
     /* focus durabilis */
-    index = volumen_plagulam_promere(vol, chorda_ex_literis(
+    index = volumen_praesens_legere(vol, chorda_ex_literis(
         "vicus/latera", piscina), piscina, &inventum);
     CREDO_VERUM(chorda_continet(index, chorda_ex_literis(
         "<tabula id=\"2\" focus=\"dextrum\">", piscina)));

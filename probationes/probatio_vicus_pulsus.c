@@ -409,7 +409,7 @@ s32 principale (vacuum)
         color(COLOR_TEXT)) > ZEPHYRUM);
 
     imprimere("\n--- VI: dispositio durabilis intacta ---\n");
-    index = volumen_plagulam_promere(vol, chorda_ex_literis(
+    index = volumen_praesens_legere(vol, chorda_ex_literis(
         "vicus/latera", piscina), piscina, &inventum);
     CREDO_VERUM(inventum);
     CREDO_FALSUM(chorda_continet(index, chorda_ex_literis("exitus",

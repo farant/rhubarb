@@ -186,6 +186,7 @@ s32 principale (vacuum)
          InsulaRamus  radix;
               chorda  index;
                  b32  inventum;
+                 s64  acta_ante;
 
     piscina = piscina_generare_dynamicum("probatio_vicus", LXIV * M);
     si (!piscina)
@@ -219,7 +220,7 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_I32(stml_numerus_liberorum(insula_radix(v->repo)),
         IV);
     /* dispositio scripta, forma nova (S3c: id cuiusque lateris) */
-    index = volumen_plagulam_promere(vol, lit("vicus/latera"), piscina,
+    index = volumen_praesens_legere(vol, lit("vicus/latera"), piscina,
         &inventum);
     CREDO_VERUM(inventum);
     CREDO_VERUM(chorda_continet(index, lit(
@@ -230,7 +231,14 @@ s32 principale (vacuum)
 
     imprimere("\n--- II: focus et documentum servantur ---\n");
     CREDO_FALSUM(vicus_focum_ponere(v, II));
+    acta_ante = volumen_summa_actorum(vol);
     CREDO_VERUM(vicus_focum_ponere(v, VICUS_DEXTRUM));
+    /* D1: dispositio in praesentia - diarium non crescit */
+    index = volumen_praesens_legere(vol, lit("vicus/latera"), piscina,
+        &inventum);
+    CREDO_VERUM(chorda_continet(index, lit(
+        "<tabula id=\"s1\" focus=\"dextrum\">")));
+    CREDO_AEQUALIS_S64(volumen_summa_actorum(vol), acta_ante);
     CREDO_VERUM(vicus_latus_focatum(v)
         == vicus_latus(vicus_tabula(v, ZEPHYRUM), VICUS_DEXTRUM));
     sm = (ScribaMontatio*)vicus_latus(vicus_tabula(v, ZEPHYRUM),
@@ -328,11 +336,11 @@ s32 principale (vacuum)
     }
 
     imprimere("\n--- V: genus ignotum - latus praeteritum ---\n");
-    CREDO_VERUM(volumen_plagulam_condere(vol, lit("vicus/latera"), lit(
+    CREDO_VERUM(volumen_praesens_ponere(vol, lit("vicus/latera"), lit(
         "<tabulae activa=\"s1\">"
         "<tabula id=\"s1\"><latus genus=\"scriba\"/>"
         "<acervus><latus genus=\"lyra\"/></acervus></tabula>"
-        "</tabulae>"), "probatio"));
+        "</tabulae>")));
     v = vicum_aperire(vol);
     CREDO_AEQUALIS_I32(vicus_numerus_tabularum(v), I);
     CREDO_FALSUM(vicus_latus(vicus_tabula(v, ZEPHYRUM),

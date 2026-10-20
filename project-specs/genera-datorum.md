@@ -374,6 +374,27 @@ Recommendation, in order of how fast they get more expensive:
 7. The `concursus` value per category (§III, §VIII-b), especially for
    documents: rebase, stable element ids, or ask the person?
 
+### Decided (Fran, 2026-10-20 - all recommendations accepted)
+
+1. View state leaves the journal: ALL app state (conservatio and the
+   vicus index) moves to a snapshot store now; the preferences / view
+   split waits for sync.
+2. The decision table stands as working defaults, revisited per row
+   when its capability lands.
+3. Registry home deferred (lean: an embedded STML file) until two or
+   three capabilities exist.
+4. Latin names decided per capability, with its header text.
+5. First pull: the snapshot store.
+6. Act identity and entity ids SOON, before projections.
+7. Document merge deferred; events record their base when act
+   identity lands.
+
+**Slices:** D1 snapshot store -> D2 act identity (HLC + device) -> D3
+entity ids (`moneta_ulid`; old numeric ids stay valid as strings) ->
+R5 projections spec -> D4 derived tables -> D5 full-text -> D6
+category registry; later (on PULL) retention, secret store, S3 +
+outbox + encryption, document merge.
+
 ## X. AUDIENDA
 
 - The act counts (§II) are from ONE volume on one day; the other

@@ -101,7 +101,7 @@ index_continet (
     chorda c;
        b32 inventum;
 
-    c = volumen_plagulam_promere(vol, chorda_ex_literis("vicus/latera",
+    c = volumen_praesens_legere(vol, chorda_ex_literis("vicus/latera",
         piscina), piscina, &inventum);
     redde inventum && chorda_continet(c, chorda_ex_literis(textus,
         piscina));
@@ -384,13 +384,13 @@ s32 principale (vacuum)
 
     imprimere("\n--- XIV: latus cycli imum acervi ---\n");
     vol_imum = volumen_temporarium(piscina, "probatio_vicus_acervus");
-    CREDO_VERUM(volumen_plagulam_condere(vol_imum,
+    CREDO_VERUM(volumen_praesens_ponere(vol_imum,
         chorda_ex_literis("vicus/latera", piscina),
         chorda_ex_literis("<tabulae activa=\"1\"><tabula id=\"1\" "
             "focus=\"sinistrum\"><latus genus=\"scriba\" "
             "id=\"1_sinistrum_scriba\"/><acervus><latus "
             "genus=\"admonitiones\" id=\"1_dextrum_admonitiones\"/>"
-            "</acervus></tabula></tabulae>", piscina), "vicus:latera"));
+            "</acervus></tabula></tabulae>", piscina)));
     CREDO_VERUM(vicus_applicatio_aedificare(&app_imum, piscina, intern,
         vol_imum, CDLXXX, CDLXXX + VICUS_ALTITUDO_TABULARUM));
     v = app_imum.vicus;

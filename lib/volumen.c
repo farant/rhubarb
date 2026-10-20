@@ -44,10 +44,24 @@ interior constans character* constans MIGRATIONES_VOLUMINIS[] = {
     /* 2026-10-19: historia documenti acta sua per genus legit
      * (volumen_acta_generum_legere) - sine indice apertio documenti
      * acta OMNIA voluminis legebat (XXX milia: ~33 ms) */
-    "CREATE INDEX acta_genus ON acta (genus, seq)"
+    "CREATE INDEX acta_genus ON acta (genus, seq)",
+
+    /* 2026-10-20 (genera-datorum D1): status applicationis extra acta */
+    "CREATE TABLE praesentia ("
+    " clavis TEXT PRIMARY KEY,"
+    " valor BLOB NOT NULL,"
+    " momentum TEXT NOT NULL"
+    "   DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')))",
+
+    /* instantanea vetera semel copiantur (plagulae manent: acta
+     * earum veritas historica sunt; non iam renovantur) */
+    "INSERT OR IGNORE INTO praesentia (clavis, valor, momentum)"
+    " SELECT p.via, m.contentum, p.momentum FROM plagulae p"
+    " JOIN massae m ON m.sigillum = p.sigillum"
+    " WHERE p.via LIKE 'status/%' OR p.via = 'vicus/latera'"
 };
 
-#define MIGRATIONES_VOLUMINIS_NUMERUS 4
+#define MIGRATIONES_VOLUMINIS_NUMERUS 6
 
 interior Volumen*
 _volumen_struere (
@@ -575,6 +589,65 @@ volumen_plagulas_enumerare (
     }
     scrinium_finire(e);
     redde ordo;
+}
+
+b32
+volumen_praesens_ponere (
+    Volumen* volumen,
+     chorda  clavis,
+     chorda  valor)
+{
+    ScriniumEnuntiatum* e;
+               integer  gradus;
+
+    /* nec actum nec massa: veritas sine historia */
+    e = scrinium_praeparare(volumen->scrinium,
+        "INSERT INTO praesentia (clavis, valor) VALUES (?, ?)"
+        " ON CONFLICT(clavis) DO UPDATE SET"
+        " valor = excluded.valor,"
+        " momentum = strftime('%Y-%m-%dT%H:%M:%fZ','now')");
+    si (e == NIHIL)
+    {
+        redde FALSUM;
+    }
+    scrinium_ligare_textum(e, 1, clavis);
+    scrinium_ligare_massam(e, 2, valor);
+    gradus = scrinium_gradi(e);
+    scrinium_finire(e);
+    redde gradus == SCRINIUM_FACTUM;
+}
+
+chorda
+volumen_praesens_legere (
+    Volumen* volumen,
+     chorda  clavis,
+    Piscina* piscina,
+        b32* inventum)
+{
+    ScriniumEnuntiatum* e;
+                chorda  vacua;
+                chorda  fructus;
+
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
+    *inventum      = FALSUM;
+
+    e = scrinium_praeparare(volumen->scrinium,
+        "SELECT valor FROM praesentia WHERE clavis = ?");
+    si (e == NIHIL)
+    {
+        redde vacua;
+    }
+    scrinium_ligare_textum(e, 1, clavis);
+    si (scrinium_gradi(e) != SCRINIUM_ORDO)
+    {
+        scrinium_finire(e);
+        redde vacua;
+    }
+    fructus = scrinium_columna_massa(e, 0, piscina);
+    scrinium_finire(e);
+    *inventum = VERUM;
+    redde fructus;
 }
 
 b32

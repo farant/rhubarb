@@ -114,7 +114,7 @@ index_continet (
     chorda c;
        b32 inventum;
 
-    c = volumen_plagulam_promere(vol, chorda_ex_literis("vicus/latera",
+    c = volumen_praesens_legere(vol, chorda_ex_literis("vicus/latera",
         piscina), piscina, &inventum);
     redde inventum && chorda_continet(c, chorda_ex_literis(textus,
         piscina));

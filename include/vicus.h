@@ -5,7 +5,7 @@
  * Vicus (via Romana insularum) repositorium UNUM possidet: radix
  * <vicus> (apps/vicus/organum.stml), liberi = montationes applicationum
  * (rami, canonibus suis iudicati). Volumen UNUM: documenta montationum
- * in spatiis suis (id), dispositio in plagula 'vicus/latera'
+ * in spatiis suis (id), dispositio in praesentia 'vicus/latera'
  * (configuratio, non historia: superscribitur). Vicus nullam
  * applicationem novit: principale genera registrat (titulus ->
  * magnitudo montationis + functio montandi).

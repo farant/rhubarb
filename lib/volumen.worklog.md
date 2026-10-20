@@ -159,3 +159,26 @@ Not changed: `volumen_acta_legere` (mensura, silex, mensa still read
 everything - they want everything). `volumen_summa_actorum` is a
 COUNT(*) per open (cheap at 30k rows; MAX(seq) would be the indexed
 form if it ever shows up).
+
+## 2026-10-20 - praesentia (genera-datorum D1)
+
+App state left the journal. On Fran's real volume 58 % of acts were
+`status/` snapshots and 11 % the vicus layout index, each one a
+`plagula-condita` act + a fresh massa per change. New table
+`praesentia(clavis, valor, momentum)`, last write wins, written by
+`volumen_praesens_ponere` with no act and no massa.
+
+- Migration 5 creates the table; migration 6 copies existing
+  `status/%` and `vicus/latera` plagulae across ONCE (the library now
+  names two app keys in a migration - accepted over a read-fallback
+  that would keep the coupling in code forever). Old plagulae stay:
+  their acts are history, deleting them without an act would make the
+  manifest disagree with replay.
+- Measured with a throwaway probe (60 layout changes in vicus_applicatio):
+  HEAD 69 acts / 41 massae / 60 KB of blobs; now 0 / 0 / 0.
+- Older code opening a migrated volume: scrinium_migrare sees
+  max(versio) >= its count and proceeds; it keeps reading/writing the
+  old plagulae, so its view is frozen at migration time and its writes
+  are invisible to new code. Harmless, but not two-way.
+- Test for migration 6 builds an old-shape volume by running the four
+  original statements through scrinium_migrare itself.

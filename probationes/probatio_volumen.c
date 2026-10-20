@@ -482,6 +482,162 @@ s32 principale (vacuum)
 
 
     /* ========================================================
+     * PROBARE: praesentia (D1) - ponere/legere, scriptor ultimus
+     * vincit, valor vacuus legitimus, NEC acta NEC massae crescunt
+     * ======================================================== */
+
+    {
+        Volumen* vol;
+         chorda  relatum;
+         chorda  vacua;
+            b32  inventum;
+            s64  acta_ante;
+            s64  massae_ante;
+
+        imprimere("\n--- Probans praesentiam ---\n");
+
+        vol = volumen_temporarium(piscina, "probatio_volumen_praesens");
+        CREDO_NECESSE_NON_NIHIL(vol);
+        acta_ante    = volumen_summa_actorum(vol);
+        massae_ante  = volumen_summa_massarum(vol);
+
+        relatum = volumen_praesens_legere(vol,
+            chorda_ex_literis("status/a", piscina), piscina, &inventum);
+        CREDO_FALSUM(inventum);
+
+        CREDO_VERUM(volumen_praesens_ponere(vol,
+            chorda_ex_literis("status/a", piscina),
+            chorda_ex_literis("primum", piscina)));
+        CREDO_VERUM(volumen_praesens_ponere(vol,
+            chorda_ex_literis("status/b", piscina),
+            chorda_ex_literis("alterum", piscina)));
+        CREDO_VERUM(volumen_praesens_ponere(vol,
+            chorda_ex_literis("status/a", piscina),
+            chorda_ex_literis("secundum", piscina)));
+
+        relatum = volumen_praesens_legere(vol,
+            chorda_ex_literis("status/a", piscina), piscina, &inventum);
+        CREDO_VERUM(inventum);
+        CREDO_CHORDA_AEQUALIS_LITERIS(relatum, "secundum");
+        relatum = volumen_praesens_legere(vol,
+            chorda_ex_literis("status/b", piscina), piscina, &inventum);
+        CREDO_VERUM(inventum);
+        CREDO_CHORDA_AEQUALIS_LITERIS(relatum, "alterum");
+
+        /* valor vacuus: inventus, mensura nulla */
+        vacua.datum    = NIHIL;
+        vacua.mensura  = ZEPHYRUM;
+        CREDO_VERUM(volumen_praesens_ponere(vol,
+            chorda_ex_literis("status/vacua", piscina), vacua));
+        relatum = volumen_praesens_legere(vol,
+            chorda_ex_literis("status/vacua", piscina), piscina,
+            &inventum);
+        CREDO_VERUM(inventum);
+        CREDO_AEQUALIS_I32(relatum.mensura, (i32)ZEPHYRUM);
+
+        /* extra acta: diarium et massae intacta, manifestum quoque */
+        CREDO_AEQUALIS_S64(volumen_summa_actorum(vol), acta_ante);
+        CREDO_AEQUALIS_S64(volumen_summa_massarum(vol), massae_ante);
+        CREDO_AEQUALIS_S64(volumen_summa_plagularum(vol), (s64)0);
+        volumen_claudere(vol);
+    }
+
+
+    /* ========================================================
+     * PROBARE: migratio VI - volumen formae veteris (migrationes
+     * I-IV tantum) instantanea status/ et vicus/latera in praesentiam
+     * semel copiat; plagulae aliae non; plagulae ipsae manent
+     * ======================================================== */
+
+    {
+        constans character* via_vetus =
+            "build/probatio_volumen_vetus.db";
+        constans character* constans veteres[IV] = {
+            "CREATE TABLE acta ("
+            " seq INTEGER PRIMARY KEY AUTOINCREMENT,"
+            " momentum TEXT NOT NULL"
+            "   DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),"
+            " genus TEXT NOT NULL,"
+            " datum TEXT NOT NULL)",
+            "CREATE TABLE massae ("
+            " sigillum TEXT PRIMARY KEY,"
+            " contentum BLOB NOT NULL)",
+            "CREATE TABLE plagulae ("
+            " via TEXT PRIMARY KEY,"
+            " sigillum TEXT NOT NULL REFERENCES massae(sigillum),"
+            " origo TEXT NOT NULL,"
+            " momentum TEXT NOT NULL"
+            "   DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')))",
+            "CREATE INDEX acta_genus ON acta (genus, seq)"
+        };
+         Scrinium* s;
+          Volumen* vol;
+           chorda  relatum;
+              b32  inventum;
+
+        imprimere("\n--- Probans migrationem praesentiae ---\n");
+
+        si (filum_existit(via_vetus))
+        {
+            filum_delere(via_vetus);
+        }
+        s = scrinium_aperire(piscina, via_vetus);
+        CREDO_NECESSE_NON_NIHIL(s);
+        CREDO_VERUM(scrinium_migrare(s, veteres, IV));
+        CREDO_VERUM(scrinium_exsequi(s,
+            "INSERT INTO massae (sigillum, contentum) VALUES"
+            " ('s1', 'status-contentum'), ('s2', 'index-laterum'),"
+            " ('s3', 'alienum')"));
+        CREDO_VERUM(scrinium_exsequi(s,
+            "INSERT INTO plagulae (via, sigillum, origo) VALUES"
+            " ('status/x', 's1', 'conservatio'),"
+            " ('vicus/latera', 's2', 'vicus'),"
+            " ('lib/a.c', 's3', 'genita'),"
+            " ('statusque', 's3', 'genita')"));
+        scrinium_claudere(s);
+
+        vol = volumen_aperire(piscina, via_vetus);
+        CREDO_NECESSE_NON_NIHIL(vol);
+        relatum = volumen_praesens_legere(vol,
+            chorda_ex_literis("status/x", piscina), piscina, &inventum);
+        CREDO_VERUM(inventum);
+        CREDO_CHORDA_AEQUALIS_LITERIS(relatum, "status-contentum");
+        relatum = volumen_praesens_legere(vol,
+            chorda_ex_literis("vicus/latera", piscina), piscina,
+            &inventum);
+        CREDO_VERUM(inventum);
+        CREDO_CHORDA_AEQUALIS_LITERIS(relatum, "index-laterum");
+        (vacuum)volumen_praesens_legere(vol,
+            chorda_ex_literis("lib/a.c", piscina), piscina, &inventum);
+        CREDO_FALSUM(inventum);
+        (vacuum)volumen_praesens_legere(vol,
+            chorda_ex_literis("statusque", piscina), piscina,
+            &inventum);
+        CREDO_FALSUM(inventum);
+
+        /* plagula vetus manet (acta eius historia sunt) */
+        relatum = volumen_plagulam_promere(vol,
+            chorda_ex_literis("status/x", piscina), piscina, &inventum);
+        CREDO_VERUM(inventum);
+        CREDO_CHORDA_AEQUALIS_LITERIS(relatum, "status-contentum");
+
+        /* semel: valor novus apertione iterata non obruitur */
+        CREDO_VERUM(volumen_praesens_ponere(vol,
+            chorda_ex_literis("status/x", piscina),
+            chorda_ex_literis("novum", piscina)));
+        volumen_claudere(vol);
+        vol = volumen_aperire(piscina, via_vetus);
+        CREDO_NECESSE_NON_NIHIL(vol);
+        relatum = volumen_praesens_legere(vol,
+            chorda_ex_literis("status/x", piscina), piscina, &inventum);
+        CREDO_VERUM(inventum);
+        CREDO_CHORDA_AEQUALIS_LITERIS(relatum, "novum");
+        volumen_claudere(vol);
+        filum_delere(via_vetus);
+    }
+
+
+    /* ========================================================
      * PROBARE: volumen temporarium (scratch)
      * ======================================================== */
 

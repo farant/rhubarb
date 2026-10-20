@@ -159,6 +159,26 @@ volumen_plagulam_promere (
     Piscina* piscina,
         b32* inventum);
 
+/* PRAESENTIA (genera-datorum D1): status applicationis - clavis ->
+ * valor, scriptor ultimus vincit, EXTRA acta: nec diarium nec massas
+ * auget (paginae-proba 2026-10-20: 58 % actorum erant instantanea
+ * status/, 11 % index vici). Veritas sine historia, non proiectio.
+ * Clientes: conservatio ("status/<clavis>"), vicus ("vicus/latera").
+ * Migratio: plagulae eorum semel copiatae (migratio VI). */
+b32
+volumen_praesens_ponere (
+    Volumen* volumen,
+     chorda  clavis,
+     chorda  valor);
+
+/* valor clavis; *inventum FALSUM si nulla (valor vacuus legitimus) */
+chorda
+volumen_praesens_legere (
+    Volumen* volumen,
+     chorda  clavis,
+    Piscina* piscina,
+        b32* inventum);
+
 /* massam nudam condere (contentum sigillo addressatum, dedup) -
  * massa CONTENTUM est, non eventus: veritas de USU eius in actis
  * vivit (e.g. mensa:creatum cum clave imago). sigillum_hex_exitus

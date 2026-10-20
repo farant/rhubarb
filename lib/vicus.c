@@ -264,9 +264,9 @@ indicem_scribere (
         chorda_aedificator_appendere_literis(a, "</acervus></tabula>");
     }
     chorda_aedificator_appendere_literis(a, "</tabulae>");
-    redde volumen_plagulam_condere(v->volumen,
+    redde volumen_praesens_ponere(v->volumen,
         chorda_ex_literis(clavis_indicis, v->piscina),
-        chorda_aedificator_finire(a), "vicus:latera");
+        chorda_aedificator_finire(a));
 }
 
 /* latus montare (descriptio NIHIL: praeteritur, causa) */
@@ -2045,7 +2045,7 @@ vicus_aperire (
     }
 
     /* dispositio: e volumine aut ordinaria (scribitur) */
-    index = volumen_plagulam_promere(v->volumen,
+    index = volumen_praesens_legere(v->volumen,
         chorda_ex_literis(clavis_indicis, v->piscina), v->piscina,
         &inventum);
     si (!inventum)
