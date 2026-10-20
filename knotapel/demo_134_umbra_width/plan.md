@@ -305,7 +305,7 @@ measures it; a long run goes detached (python double fork + `setsid` +
    demo-proposals.md and the ledger, a ledger question on the genitive
    reversal; times now print only with D134_TEMPORA=1, so the live and
    frozen runs can be byte-identical for archive.sh.*
-4. **T4:** independent review with its own oracle, then fixes.
+4. **T4:** independent review with its own oracle, then fixes. *Done 2026-10-20 (Task 4 notes below).*
 
 ## Design review (consiliarius-d134, 2026-10-20, before any data)
 
@@ -603,3 +603,28 @@ one floor for both tests.
 - **Size and time:** the final full run (every part, five and six
   words) is 1,281 s, peak 245 MB: **118 checks, 0 failures**; the
   six-word measure pass, four levels, about 12 minutes.
+
+## Task 4 notes (2026-10-20)
+
+- **Review (recensor-d134):** its own oracle in C (trees first; F(s) and
+  P(s) by grouping pairs by string) and a brute-force parser for the hand
+  sentences; reproduced every pinned total (1,125 up to five words, 1,125
+  up to four) and counted the six-word population EXHAUSTIVELY - all
+  three verdicts and their inputs agree; the registration unchanged since
+  8be85808; no verdict flips under the other readings (pooled up to six,
+  cycle-free retrieval, U1 on |F| >= 2). H 0, M 2, L 6, N 7. Report:
+  findings.md "Review (T4)".
+- **Fixed in the demo:** the genitive cell decomposed by its interferers
+  (`genitive_cell`, L0 pass) and the |F| >= 2 population's displaced
+  arcs labelled at every level (the L0 pass labels each such pair at all
+  four levels), both pinned from the reviewer's oracle at four, five and
+  six words; U1's doubled term, the keep ratio and the per-direction
+  ratios printed exactly (the T2 notes' 22.82 is 22.81 exactly - a
+  difference of rounded shares). Three plants red.
+- **Fixed in the text:** Result 5 rewritten (a configuration effect of
+  R_P's fallback), Result 7 (reading-dependent five-word U1; exact
+  ratios), Result 2 (the depth theorem), Result 3's ranges, the
+  disclosure of the cycle candidates (dependent first: ancestors of h);
+  KC 61.5.1.1 and 61.8 [falls] with 61.5.1.3 and 61.8.1, appended
+  61.3.2.1 and 61.6.1.2; the ledger question on the genitive reversal
+  closed (answered).

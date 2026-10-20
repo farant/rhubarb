@@ -16,14 +16,17 @@ displaced word misread - a nearer word its endings also fit
 (COMPETITION), or an arriving word that cannot single out its partner
 among the open ones (RETRIEVAL)?**
 
-**Competition, yes; "retrieval adds nothing", no - and not in the
-predicted direction; Latin's endings keep a little under two thirds of
-the ideal's retrieval.** Registered at six words: U2a HOLDS (garden
-paths follow competition; a positive control, partly implied by the
-definitions); U2b FAILS, because interfered genitives are misread LESS
-than retrieved ones (73.83% against 84.13%; at the ideal level too); U1
-FAILS narrowly (Latin keeps 64.5% of the ideal's retrieval advantage
-over case-stripped endings, against two thirds registered). On the way
+**Competition, yes; "retrieval adds nothing", no; Latin's endings keep a
+little under two thirds of the ideal's retrieval.** Registered at six
+words: U2a HOLDS (garden paths follow competition; a positive control,
+partly implied by the definitions); U2b FAILS on the genitive cell,
+where interfered genitives are misread LESS than retrieved ones (73.83%
+against 84.13%) - but the T4 review showed that is a configuration
+effect, not retrieval: set aside the cross-serial genitives stranded
+across the verb, which no reader can misread, and interference RAISES
+misreading (99.04%; Result 5); U1 FAILS narrowly (Latin keeps 64.5% of
+the ideal's retrieval advantage over case-stripped endings, against two
+thirds registered). On the way
 the demo found that one of the plan's "theorems" (covered => competed)
 is false once d's own subtree is excluded from competition: the
 exceptions are reversed dependencies (Result 6).
@@ -84,15 +87,19 @@ banner gives the clang line and commit.
 
 2. **Head-first displacement costs no depth.** In every head-first
    stratum every umbra has depth 0; in the dependent-first and mixed
-   strata 27.6-42.1% of umbrae have depth >= 1. A head-first displaced
-   word is a backward attachment: it closes nothing out of order, so the
-   memory picture never sees it. Exactly half the displaced arcs are
+   strata 27.6-42.1% of umbrae have depth >= 1. A theorem (T4 review):
+   two crossing arcs always include a non-projective one, i.e. a
+   displaced amod or nmod arc; a head-first one of those is a backward
+   attachment, not an umbra; so every crossing of two umbrae involves a
+   DEPENDENT-first displaced arc, and all depth in this world - the
+   root's included - comes from dependent-first displacement. Exactly half the displaced arcs are
    dependent first - a theorem: reversing a string keeps the pair, its
    displaced arcs and their kind, and swaps the two directions.
 3. **Competition makes the garden paths (U2a HOLDS).** In every
    testable stratum, competed pairs are misread far more often than
-   clear ones: +45.19 points for adjectives, +77.26 for genitives,
-   +16.04 to +17.72 for the mixed strata. Expected; partly implied by
+   clear ones: +45.19 points for adjectives only (dependent or head
+   first), +77.26 for genitives only, +17.56 for both kinds, and +17.72
+   and +16.04 for the mixed-direction strata (adjectives, both). Expected; partly implied by
    the definitions (a nearer fitting word is what a projective
    alternative uses); registered so that a failure would be seen, and
    not read as a mechanism.
@@ -104,19 +111,31 @@ banner gives the clang line and commit.
    endings pick out the dangerous quarter. For displaced genitives the two labels nearly coincide
    (82.53% against 82.38%): a genitive's ending names no head, so every
    noun competes (as KC 58.4.4 found for the outcome).
-5. **Retrieval adds something, against interference (U2b FAILS).**
-   Dependent-first strata, within the competition cells. Adjectives,
-   competed: interfered 49.75% of 609,988, retrieved 45.89% of 6,436,919
-   (+3.86, inside the bound). **Genitives, competed: interfered 73.83%
-   of 27,986,240, retrieved 84.13% of 136,687,296 (-10.30): a displaced
-   genitive whose head arrives while another open word could also take
-   it is misread LESS.** The same sign at the ideal level (62.87 against
-   83.02, -20.15), so it is not syncretism. Up to five words
-   (descriptive): adjectives +10.03, both +35.44, genitives -8.05. So
-   retrieval matters with opposite signs by kind; why interference
-   PROTECTS a displaced genitive is open (a guess: the extra open noun is
-   the one a nesting reader would otherwise hang the genitive on, and its
-   being still open - unattached - blocks the projective alternative).
+5. **Retrieval does not "add nothing" (U2b FAILS) - and the genitive
+   reversal is a configuration effect.** Dependent-first strata, within
+   the competition cells. Adjectives, competed: interfered 49.75% of
+   609,988, retrieved 45.89% of 6,436,919 (+3.86, inside the bound).
+   Genitives, competed: interfered 73.83% of 27,986,240, retrieved 84.13%
+   of 136,687,296 (-10.30), the same sign at the ideal level (62.87
+   against 83.02). Up to five words (descriptive): adjectives +10.03,
+   both +35.44, genitives -8.05. **Why interfered genitives look
+   protected (found by the T4 review, now computed and pinned):** split
+   the interfered pairs by their interferers. 7,578,272 have a GENITIVE
+   interferer that no projective alternative uses (neither hanging d on
+   it nor it on h); they are misread 5.95%, because 94.05% of them have
+   NO projective analysis at all - two genitives interleaved
+   cross-serially and stranded across the verb from every noun that could
+   head them (*donorum amat regis puella donum*), so R_P falls back to
+   all analyses and cannot misread. The other 20,407,968 interfered pairs
+   are misread 99.04% - MORE than the retrieved ones (84.13%), the
+   direction interference predicts; where a projective alternative hangs
+   d on an interferer (16,484,368 pairs), always. Up to five words the
+   same: 3.30% of 23,296 against 98.35% of 70,016 (retrieved 82.67%). So
+   the protective sign is a selection effect: an interfering second
+   genitive marks exactly the strings with no projective reading. The
+   guess written in T3 (the open noun is the one a nesting reader would
+   use, and its being unattached blocks the alternative) was wrong in its
+   first clause and right in its second.
 6. **A plan theorem fell: covered => competed.** The review's re-check
    M1 said every misread pair whose P(s) attaches a displaced word to a
    word as near as its head is COMPETED. Both the demo and the oracle
@@ -134,12 +153,18 @@ banner gives the clang line and commit.
 7. **Latin keeps a little under two thirds of the ideal's retrieval (U1
    FAILS).** Over the 193,351,680 displaced adjective arcs of six-word
    crossed pairs, the share RETRIEVED: L1 94.86%, L0 83.45%, L2 62.72%
-   (L3 36.4%). Latin keeps 64.5% of the gap between ideal and
-   case-stripped endings; the rule asked for 66.7% (and a 5-point floor,
-   which holds). By direction the picture splits: dependent first Latin
-   keeps 83.0%, head first 55.5% - when the adjective arrives last, its
-   own syncretism (*bona*, *forti*, *fortis*) is what fails it. Up to
-   five words U1 holds (19.09 against 17.48).
+   (L3 36.4%). Latin keeps 64.51% of the gap between ideal and
+   case-stripped endings (I(L0) - I(L2) = 20.73 points against
+   2 (I(L1) - I(L0)) = 22.81); the rule asked for 66.7% (and a 5-point
+   floor, which holds). By direction the picture splits: dependent first
+   Latin keeps 82.93%, head first 55.45% - when the adjective arrives
+   last, perhaps its own syncretism (*bona*, *forti*, *fortis*) fails it
+   (an interpretation, not decomposed). Up to five words U1 holds (19.09
+   against 17.49) - but only under the reading fixed in T2 (all crossed
+   pairs): on the registered population (L0 |F| >= 2, the same arcs
+   labelled at each level) it fails at both lengths, 15.72 against 27.56
+   up to five words and 19.96 against 25.07 at six (T4 review M2; pinned).
+   The six-word verdict does not depend on the reading.
 8. **Head-first genitives are almost never retrieved.** 3.21% at L0,
    3.71% even at L1: when a genitive arrives after its head, an earlier
    noun nearly always could also take it. Dependent first, 88.37%.
@@ -165,10 +190,11 @@ changed after registration.
 |---|---|---|
 | U2a | every testable stratum B(competed) - B(clear) >= 10 points; >= 3 testable strata | **HOLDS** (8 testable; +16.04 to +77.26) |
 | U2b | dependent-first strata, within COMPETED and within CLEAR: \|B(interfered) - B(retrieved)\| <= 5 points in every counting cell (both groups testable, B(retrieved) in [10%, 90%]); >= 2 counting cells | **FAILS** (2 counting: adjectives +3.86, genitives -10.30) |
-| U1 | adjective arcs: I(L0) - I(L2) >= 2 (I(L1) - I(L0)) and >= 5 points | **FAILS** (20.73 against 22.82) |
+| U1 | adjective arcs: I(L0) - I(L2) >= 2 (I(L1) - I(L0)) and >= 5 points | **FAILS** (20.73 against 22.81) |
 
 Up to five words (descriptive): U2a HOLDS (7 strata), U2b FAILS (3
-counting cells), U1 HOLDS.
+counting cells), U1 HOLDS (on all crossed pairs; on the |F| >= 2
+population it fails, Result 7).
 
 **Disclosure.**
 - Seen before registering: D131's every published five-word number,
@@ -177,8 +203,12 @@ counting cells), U1 HOLDS.
   partly foreseen at five words, not at six.
 - Readings fixed in T2 before any T2 number was printed: "six words" =
   pairs of exactly six words; U1 over all crossed six-word pairs (I(L)
-  involves no misreading); retrieval with d's subtree kept (as
-  registered; Fran left it so in T1), the cycle-free variant beside it.
+  involves no misreading); retrieval with the candidates that would close
+  a cycle kept (head first: words in d's subtree; dependent first: open
+  words that are ancestors of h), as registered (Fran left it so in T1),
+  the cycle-free variant beside it. The T4 review recomputed every
+  verdict under the other readings (pooled up to six words, cycle-free
+  retrieval, U1 on |F| >= 2): none flips.
 - U2a's strata are not independent: competition and B are
   reversal-invariant, so each dependent-first stratum and its head-first
   mirror carry the same numbers. The 8 testable strata are 5 independent
@@ -200,7 +230,7 @@ covering theorem); the demo's own checks found that. Lesson for the next
 review: when a fix changes a definition, re-derive every theorem the
 plan states about it.
 
-## Checks (118 full, 87 quick)
+## Checks (120 full, 88 quick, 88 five-word)
 
 - D131 reproduced: every pinned five-word total, mean |F| exactly; the
   tree table to n = 6 (728 projective, 5,652 mild, pinned from D131's
@@ -228,6 +258,10 @@ plan states about it.
 - The rules on constructed totals at every threshold; the rules' inputs
   on constructed totals; verdicts from the oracle's totals == from the
   demo's (wiring).
+- Since T4, pinned from the reviewer's own oracle (`rec.c`): the genitive
+  cell by its interferers, and the displaced arcs of the |F| >= 2
+  population labelled at every level - up to four, up to five, six
+  words.
 
 ## Plants
 
@@ -244,17 +278,51 @@ All through `silva.planta`, all red.
   routes strictly nearer; |F| >= 3; misread by M; routes from M; blind
   counting any nominal; the cycle never set aside; directions swapped.
   Three needed five words (`D134_QUINQUE=1`).
+- **T4 fixes (3):** the interferer-on-head test reversed; the
+  interferer's relation off by one bit; the |F| >= 2 arcs labelled at L0
+  only.
 
-## Review (T4)
+## Review (T4, 2026-10-20)
 
-To come.
+An independent reviewer (recensor-d134) wrote its own oracle in C,
+`rec.c`: trees first (every rooted tree, then kinds, relations, lemmas
+and numbers assigned top down), F(s) and P(s) by grouping pairs by
+their string in hash tables - no method shared with main.c or the
+Python oracles - and a separate brute-force parser for the hand
+sentences. It reproduced all 1,125 pinned totals up to five words and
+all 1,125 up to four (zero mismatches, first comparison), and counted
+the SIX-WORD population EXHAUSTIVELY (809,533,440 pairs, not a subset):
+every comparable line of the demo's six-word tables (113) and all three
+verdicts with their inputs agree. The registration is byte-identical to
+the approved plan. **No wrong verdict; no H.** M 2, L 6, N 7, all acted
+on:
+
+- **M1:** the genitive reversal (U2b's failing cell) is a configuration
+  effect, not retrieval: Result 5 rewritten, the decomposition computed
+  in the demo and pinned from the reviewer's oracle; the ledger question
+  closed; KC 61.5.1.1 and 61.8 marked [falls] with corrected children.
+- **M2:** the five-word U1 "holds" is reading-dependent (fails on the
+  |F| >= 2 population at both lengths): Result 7 and KC 61.6.1 say so;
+  the |F| >= 2 arc labels computed and pinned.
+- **L1** head-first depth 0 is a theorem (proof in Result 2, KC 61.3.2.1);
+  **L2** the dependent-first cycle candidates are ancestors of h, not
+  d's subtree (disclosure corrected); **L3** the syncretism clause of KC
+  61.6.1.1 is interpretation; **L4** Result 3's ranges; **L5** grades and
+  status lines; **L6** 22.82 / 17.48 / 83.0% / 55.5% were differences of
+  rounded shares: exactly 22.81 / 17.49 / 82.93% / 55.45%, now printed
+  by the demo.
+- **N1-N7:** the rules implemented exactly as registered; KC 61.3.3 and
+  the reversal symmetry of U2a's strata sound; KC 61.7.2 proved; every
+  reversed-route CLEAR pair hangs d on a DIRECT child of d (560,472 of
+  560,472); the four-word subject example; every other number in the
+  findings and KC 61 checked.
 
 ## Not covered
 
-- **Why interference protects a displaced genitive** (Result 5): the
-  guess (an open noun blocks the projective alternative) is untested; a
-  breakdown of the genitive cells by which word interferes would decide
-  it.
+- **Retrieval for a reader that cannot fall back:** under R_P a string
+  with no projective analysis is never misread, which is what made the
+  genitive cell look protected (Result 5); a reader that must choose
+  among crossed analyses would separate retrieval from that fallback.
 - **Real Latin:** everything here is a toy world of one clause, four
   nouns and two adjectives; D133 found real displacement short.
 - **Readers other than R_P:** B is one reader's misreads; umbrae and
@@ -271,9 +339,9 @@ python3 -I knotapel/demo_134_umbra_width/oracle_d134.py 5
 python3 -I knotapel/demo_134_umbra_width/oracle_d134.py 6 sub
 ```
 
-- **Full mode:** about 21 minutes, 245 MB, 118 checks. **Five-word mode**
-  (`D134_QUINQUE=1`): about 30 s, 87 checks. **Quick mode**
-  (`D134_CELER=1`): four words, under a second, 87 checks. Times print
+- **Full mode:** about 21 minutes, 307 MB, 120 checks. **Five-word
+  mode** (`D134_QUINQUE=1`): about 30 s, 88 checks. **Quick mode**
+  (`D134_CELER=1`): four words, under a second, 88 checks. Times print
   with `D134_TEMPORA=1`; the totals in pin order with `D134_VECTOR=1`.
 - **Oracle:** about 6 minutes for five words, 7 for the six-word
   subset (470 MB).

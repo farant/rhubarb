@@ -2894,6 +2894,16 @@ typedef struct {
     s64 width[NSTRATA + 1][MAXW + 2];
     s64 depth[NSTRATA + 1][MAXW + 2];
     s64 utype[3], back;
+    /* T4 (review M2), filled by the L0 pass only: displaced arcs of
+     * crossed pairs with |F(s)| >= 2 AT L0 (the registered population),
+     * labelled at [level][adjective, genitive][dependent first, head
+     * first][arcs, RETRIEVED] */
+    s64 arcs_f2[NLEVELS][2][2][2];
+    /* T4 (review M1), L0 only: the genitive cell (genitives only,
+     * dependent first, COMPETED, |F| >= 2) by [interfered][the
+     * interferers' true relations, bit r - 1][some P analysis hangs d on
+     * an interferer][some hangs an interferer on h][pairs, misread] */
+    s64 gdiag[2][64][2][2][2];
 } Acc;
 
 #define ACC_WORDS ((int)(sizeof(Acc) / sizeof(s64)))
@@ -3036,6 +3046,47 @@ acc_pair (
     }
 }
 
+/* T4 (review M1): a pair of the genitive cell (genitives only,
+ * dependent first, COMPETED; L0, |F| >= 2) keyed by its interferers -
+ * the open dangling words that could also take the arriving head - by
+ * their TRUE relation, and by whether a projective alternative (hp[x] =
+ * the heads x takes across P(s)) hangs d on an interferer or an
+ * interferer on h */
+static void
+genitive_cell (
+    Acc            *A,
+    const Analysis *a,
+    int             n,
+    const Umbrae   *u,
+    const Labels   *lb,
+    const int      *hp,
+    int             misread)
+{
+    int i, k, c = 0, it = 0, roles = 0, pd = 0, px = 0, f[MAXW];
+
+    if (stratum_of(a, lb) != 3) return;
+    for (k = 0; k < n; k++) f[k] = form_of[0][a->rd[k]];
+    for (i = 0; i < lb->nd; i++) {
+        int d = lb->word[i], h = a->head[d - 1];
+
+        c |= lb->competed[i];
+        it |= !lb->retrieved[i];
+        for (k = 0; k < u->nu; k++) {
+            const Umbra *x = &u->u[k];
+
+            if (x->type != U_DANGLING || x->from > h - 1 || x->to <= h - 1
+                || x->to == h || !comp_any[0][f[x->word - 1]][f[h - 1]])
+                continue;
+            roles |= 1 << (relation_of(a, x->word) - 1);
+            if (hp[d] & (1 << x->word)) pd = 1;
+            if (hp[x->word] & (1 << h)) px = 1;
+        }
+    }
+    if (!c) return;
+    A->gdiag[it][roles][pd][px][0]++;
+    A->gdiag[it][roles][pd][px][1] += misread;
+}
+
 /* every pair of lo..hi words at level lv, by that level's own bags (so
  * F(s) and P(s) are the string's own) */
 static void
@@ -3099,6 +3150,26 @@ measure_umbrae (
                 }
                 acc_pair(&acc[lv][nb], &mapped[a], &u, proj, &lb, nc, mis,
                     route);
+                if (lv == 0 && !proj && nc >= 2) {
+                    int lv2, i2;
+
+                    genitive_cell(&acc[lv][nb], &mapped[a], nb, &u, &lb, hp,
+                        mis);
+                    for (lv2 = 0; lv2 < NLEVELS; lv2++) {
+                        Labels lb2;
+
+                        label_arcs(lv2, &mapped[a], nb, t_npmask[nb][ix], &u,
+                            &lb2);
+                        for (i2 = 0; i2 < lb2.nd; i2++) {
+                            s64 *y = acc[lv][nb].arcs_f2[lv2][readings[
+                                mapped[a].rd[lb2.word[i2] - 1]].kind == K_ADJ
+                                ? 0 : 1][lb2.dep_first[i2] ? 0 : 1];
+
+                            y[0]++;
+                            y[1] += lb2.retrieved[i2];
+                        }
+                    }
+                }
                 if (sel[a])
                     acc_pair(&acc_sub[lv], &mapped[a], &u, proj, &lb, nc, mis,
                         route);
@@ -4041,6 +4112,213 @@ measure_checks (
     check(msg, cov_ok);
 }
 
+/* The T4 review's own oracle (recensor-d134, rec.c: trees first, F(s)
+ * and P(s) by grouping pairs by their string; pasted from its output).
+ * The genitive cell (genitives only, dependent first, COMPETED, L0,
+ * |F| >= 2), one row per nonzero key: { interfered, the interferers'
+ * true relations (bit r - 1), some P analysis hangs d on an interferer,
+ * some hangs an interferer on h, pairs, misread }. Up to four words, up
+ * to five, six-word pairs. */
+static const s64 review_gdiag_4[3][6] = {
+    { 0, 0, 0, 0, 5120, 4096 },
+    { 1, 1, 1, 0, 96, 96 },
+    { 1, 1, 1, 1, 32, 32 },
+};
+static const s64 review_gdiag_5[16][6] = {
+    { 0, 0, 0, 0, 1191936, 985408 },
+    { 1, 1, 0, 0, 5280, 4128 },
+    { 1, 1, 0, 1, 2016, 2016 },
+    { 1, 1, 1, 0, 24052, 24052 },
+    { 1, 1, 1, 1, 6668, 6668 },
+    { 1, 4, 0, 0, 776, 776 },
+    { 1, 4, 0, 1, 120, 120 },
+    { 1, 4, 1, 0, 4328, 4328 },
+    { 1, 4, 1, 1, 408, 408 },
+    { 1, 5, 1, 0, 400, 400 },
+    { 1, 5, 1, 1, 112, 112 },
+    { 1, 16, 0, 0, 23296, 768 },
+    { 1, 16, 0, 1, 256, 256 },
+    { 1, 16, 1, 0, 1024, 1024 },
+    { 1, 16, 1, 1, 23552, 23552 },
+    { 1, 17, 1, 1, 1024, 1024 },
+};
+static const s64 review_gdiag_6[28][6] = {
+    { 0, 0, 0, 0, 136687296, 114999482 },
+    { 1, 1, 0, 0, 1003462, 827238 },
+    { 1, 1, 0, 1, 361514, 361514 },
+    { 1, 1, 1, 0, 2739976, 2739976 },
+    { 1, 1, 1, 1, 796232, 796232 },
+    { 1, 4, 0, 0, 188272, 170704 },
+    { 1, 4, 0, 1, 93968, 93968 },
+    { 1, 4, 1, 0, 600994, 600994 },
+    { 1, 4, 1, 1, 173534, 173534 },
+    { 1, 5, 0, 0, 3256, 3256 },
+    { 1, 5, 0, 1, 4424, 4424 },
+    { 1, 5, 1, 0, 64367, 64367 },
+    { 1, 5, 1, 1, 50833, 50833 },
+    { 1, 16, 0, 0, 7559840, 450624 },
+    { 1, 16, 0, 1, 2249440, 2249440 },
+    { 1, 16, 1, 0, 4447104, 4447104 },
+    { 1, 16, 1, 1, 6815488, 6815488 },
+    { 1, 17, 0, 0, 18432, 0 },
+    { 1, 17, 0, 1, 3072, 3072 },
+    { 1, 17, 1, 0, 118656, 118656 },
+    { 1, 17, 1, 1, 545920, 545920 },
+    { 1, 20, 1, 0, 33664, 33664 },
+    { 1, 20, 1, 1, 87168, 87168 },
+    { 1, 21, 1, 0, 2304, 2304 },
+    { 1, 21, 1, 1, 7936, 7936 },
+    { 1, 32, 0, 0, 5624, 2800 },
+    { 1, 32, 0, 1, 10568, 10568 },
+    { 1, 33, 1, 1, 192, 192 },
+};
+
+/* the same oracle: displaced arcs of crossed pairs with |F| >= 2,
+ * [four, five, six][level][adjective, genitive][dependent first, head
+ * first] = { arcs, RETRIEVED } */
+static const s64 review_arcs_f2[3][NLEVELS][2][2][2] = {
+    { /* up to four words */
+      { { { 240, 234 }, { 240, 70 } }, { { 6144, 6016 }, { 6144, 896 } } },
+      { { { 240, 240 }, { 240, 240 } }, { { 6144, 6144 }, { 6144, 1024 } } },
+      { { { 240, 200 }, { 240, 90 } }, { { 6144, 5120 }, { 6144, 0 } } },
+      { { { 240, 200 }, { 240, 40 } }, { { 6144, 5120 }, { 6144, 0 } } },
+    },
+    { /* up to five words */
+      { { { 248424, 228530 }, { 248424, 187558 } }, { { 1923072, 1814208 }, { 1923072, 118144 } } },
+      { { { 248424, 236136 }, { 248424, 248424 } }, { { 1923072, 1873920 }, { 1923072, 136192 } } },
+      { { { 248424, 188408 }, { 248424, 149596 } }, { { 1923072, 1484608 }, { 1923072, 4096 } } },
+      { { { 248424, 188228 }, { 248424, 15432 } }, { { 1923072, 1475584 }, { 1923072, 4096 } } },
+    },
+    { /* six-word pairs */
+      { { { 84991776, 73815074 }, { 84991776, 64920246 } }, { { 409337856, 361743680 }, { 409337856, 13158400 } } },
+      { { { 84991776, 76914464 }, { 84991776, 83130144 } }, { { 409337856, 376438784 }, { 409337856, 15179776 } } },
+      { { { 84991776, 59294646 }, { 84991776, 45503825 } }, { { 409337856, 289893152 }, { 409337856, 1220608 } } },
+      { { { 84991776, 58699264 }, { 84991776, 2699775 } }, { { 409337856, 285265920 }, { 409337856, 1220608 } } },
+    },
+};
+
+/* the demo's genitive cell == the review's rows, and no other key
+ * nonzero */
+static int
+gdiag_matches (
+    const Acc *A,
+    const s64 (*rows)[6],
+    int        nrows)
+{
+    int r, it, ro, pd, px, nonzero = 0;
+
+    for (r = 0; r < nrows; r++) {
+        const s64 *x = rows[r];
+        const s64 *y = A->gdiag[x[0]][x[1]][x[2]][x[3]];
+
+        if (y[0] != x[4] || y[1] != x[5]) return 0;
+    }
+    for (it = 0; it < 2; it++)
+        for (ro = 0; ro < 64; ro++)
+            for (pd = 0; pd < 2; pd++)
+                for (px = 0; px < 2; px++)
+                    nonzero += A->gdiag[it][ro][pd][px][0] != 0;
+    return nonzero == nrows;
+}
+
+static int
+arcs_f2_match (
+    const Acc *const *lv4,
+    int               set)
+{
+    int lv, k, i, j;
+
+    for (lv = 0; lv < NLEVELS; lv++)
+        for (k = 0; k < 2; k++)
+            for (i = 0; i < 2; i++)
+                for (j = 0; j < 2; j++)
+                    if (lv4[0]->arcs_f2[lv][k][i][j]
+                        != review_arcs_f2[set][lv][k][i][j])
+                        return 0;
+    return 1;
+}
+
+/* T4 (review M1): the genitive cell decomposed */
+static void
+print_genitive_cell (
+    const Acc *A)
+{
+    s64  rn = 0, rm = 0, gn = 0, gm = 0, on = 0, om = 0, pn = 0, pm = 0;
+    int  ro, pd, px;
+    char b[48];
+
+    for (ro = 0; ro < 64; ro++)
+        for (pd = 0; pd < 2; pd++)
+            for (px = 0; px < 2; px++) {
+                const s64 *r = A->gdiag[0][ro][pd][px];
+                const s64 *x = A->gdiag[1][ro][pd][px];
+
+                rn += r[0];
+                rm += r[1];
+                if ((ro & (1 << (R_NMOD - 1))) && !pd && !px) {
+                    gn += x[0];
+                    gm += x[1];
+                } else {
+                    on += x[0];
+                    om += x[1];
+                }
+                if (pd) {
+                    pn += x[0];
+                    pm += x[1];
+                }
+            }
+    printf("\n  the genitive cell (genitives only, dependent first, COMPETED; "
+        "L0, |F| >= 2) by its interferers (T4 review M1):\n");
+    bfmt(b, 48, rm, rn);
+    printf("  %-64s %26s\n", "RETRIEVED", b);
+    bfmt(b, 48, gm, gn);
+    printf("  %-64s %26s\n", "INTERFERED by a genitive no projective "
+        "alternative uses", b);
+    bfmt(b, 48, om, on);
+    printf("  %-64s %26s\n", "INTERFERED otherwise", b);
+    bfmt(b, 48, pm, pn);
+    printf("  %-64s %26s\n", "  of which a projective alternative hangs d "
+        "on an interferer", b);
+}
+
+/* U1 in exact terms, by direction, and on the |F| >= 2 population (T4
+ * review M2, L6) */
+static void
+print_u1_more (
+    const Acc *const *lv4,
+    Piscina          *p)
+{
+    s64  r[3], n = 0, rf[3], nf = 0;
+    int  lv, i;
+    char g1[32], g2[32], k[32];
+
+    for (lv = 0; lv < 3; lv++) {
+        r[lv] = lv4[lv]->arcs[0][0][1] + lv4[lv]->arcs[0][1][1];
+        rf[lv] = lv4[0]->arcs_f2[lv][0][0][1] + lv4[0]->arcs_f2[lv][0][1][1];
+    }
+    n = lv4[0]->arcs[0][0][0] + lv4[0]->arcs[0][1][0];
+    nf = lv4[0]->arcs_f2[0][0][0][0] + lv4[0]->arcs_f2[0][0][1][0];
+    gap_fmt(g1, 32, r[0], n, r[2], n, p);
+    gap_fmt(g2, 32, 2 * r[1], n, 2 * r[0], n, p);
+    pct(k, 32, r[0] - r[2], r[1] - r[2]);
+    printf("  U1 exactly: I(L0) - I(L2) %s points, 2 (I(L1) - I(L0)) %s; "
+        "Latin keeps %s of the gap between L1 and L2\n", g1, g2, k);
+    for (i = 0; i < 2; i++) {
+        s64 x0 = lv4[0]->arcs[0][i][1], x1 = lv4[1]->arcs[0][i][1];
+        s64 x2 = lv4[2]->arcs[0][i][1];
+
+        pct(k, 32, x0 - x2, x1 - x2);
+        printf("    %s adjective arcs: Latin keeps %s\n", dir_name[i], k);
+    }
+    gap_fmt(g1, 32, rf[0], nf, rf[2], nf, p);
+    gap_fmt(g2, 32, 2 * rf[1], nf, 2 * rf[0], nf, p);
+    pct(k, 32, rf[0], nf);
+    printf("  U1 read on the |F| >= 2 population (%lld adjective arcs; "
+        "descriptive): I(L0) %s, I(L0) - I(L2) %s against 2 (I(L1) - I(L0)) "
+        "%s - the rule %s\n", (long long)nf, k, g1, g2,
+        verdict_name[u1_rule(rf[0], rf[1], rf[2], nf)]);
+}
+
 static void
 part_measures_five (void)
 {
@@ -4083,6 +4361,14 @@ part_measures_five (void)
     check("the rules applied to the oracle's totals give the same three "
         "answers (wiring)", vc[0] == vo[0] && vc[1] == vo[1]
         && vc[2] == vo[2]);
+    check(quick ? "up to four words: the genitive cell by its interferers, "
+        "and the |F| >= 2 adjective and genitive arc labels, == the T4 "
+        "review's own oracle (rec.c; a pin)" : "up to five words: the "
+        "genitive cell by its interferers, and the |F| >= 2 adjective and "
+        "genitive arc labels, == the T4 review's own oracle (rec.c; a pin)",
+        quick ? gdiag_matches(lv4[0], review_gdiag_4, 3)
+            && arcs_f2_match(lv4, 0)
+        : gdiag_matches(lv4[0], review_gdiag_5, 16) && arcs_f2_match(lv4, 1));
     snprintf(title, sizeof title, "up to %d words", gmaxw);
     print_dist(lv4[0], title);
     for (lv = 0; lv < NLEVELS; lv++) {
@@ -4094,9 +4380,11 @@ part_measures_five (void)
     print_cells(lv4[0], 1, "L0, labels by OWN RELATION");
     print_l0_extra(lv4[0]);
     print_arcs(lv4, title);
+    print_genitive_cell(lv4[0]);
     printf("\n  the registered rules applied at %s - DESCRIPTIVE (registered "
         "at six words):\n", title);
     print_registered(lv4, vc, p);
+    print_u1_more(lv4, p);
     piscina_destruere(p);
 }
 
@@ -4147,8 +4435,14 @@ part_measures_six (
     print_cells(lv4[0], 1, "six words, L0, labels by OWN RELATION");
     print_l0_extra(lv4[0]);
     print_arcs(lv4, "six words");
+    print_genitive_cell(lv4[0]);
+    check("six words: the genitive cell by its interferers, and the "
+        "|F| >= 2 adjective and genitive arc labels, == the T4 review's own "
+        "exhaustive oracle (rec.c; a pin)", gdiag_matches(lv4[0],
+            review_gdiag_6, 28) && arcs_f2_match(lv4, 2));
     printf("\n--- verdicts (registered, six-word pairs, L0, |F| >= 2) ---\n");
     print_registered(lv4, vc, p);
+    print_u1_more(lv4, p);
     printf("\n  (the oracle's subset gives U2a %s, U2b %s, U1 %s - partial, "
         "for wiring only)\n", verdict_name[vs[0]], verdict_name[vs[1]],
         verdict_name[vs[2]]);

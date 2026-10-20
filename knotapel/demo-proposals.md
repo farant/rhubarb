@@ -766,10 +766,12 @@ and two labels on each displaced arc - COMPETITION (a nearer word fits
 it) and RETRIEVAL (the arriving word cannot single out its partner).*
 *D134 done (KC 61): U2a HOLDS - garden paths follow competition (a
 positive control); U2b FAILS - interfered genitives are misread LESS
-(-10.30 points), so retrieval matters, with opposite signs by kind; U1
-FAILS narrowly - Latin keeps 64.5% of the ideal's retrieval over
-case-stripped endings. The umbra stack is shallow (depth at most 3), and
-head-first displacement costs no depth.*
+(-10.30 points), but the T4 review showed it is R_P's fallback on
+strings with no projective analysis (cross-serial genitives stranded
+across the verb); elsewhere interference raises misreading; U1 FAILS
+narrowly - Latin keeps 64.5% of the ideal's retrieval over case-stripped
+endings. The umbra stack is shallow (depth at most 3), and only
+dependent-first displacement deepens it (a theorem).*
 
 ### N18. Umbra nodes: pro-drop in the slot library
 

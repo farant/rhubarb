@@ -175,6 +175,18 @@ ranked by how much it bears on KC 47.
   keeps under two thirds of the ideal's retrieval (U1 fails narrowly).
   The demo's own review is task T4, after these nodes were written.
 
+- **D134 review (T4, 2026-10-20).** The reviewer's own oracle (C,
+  trees first) reproduced every pinned total and counted the six-word
+  population exhaustively; no wrong verdict; no H. Marked [falls] with
+  corrected children: 61.5.1.1 (61.5.1.3: the genitive reversal is R_P's
+  fallback on strings with no projective analysis), 61.8 (61.8.1).
+  Appended: 61.3.2.1 (head-first depth 0 is a theorem), 61.5.1.3,
+  61.6.1.2 (the five-word U1 is reading-dependent), 61.8.1. Corrected in
+  place: the header's grades, 61.3.2 (its grade note), 61.4.1 (the
+  strata named), 61.5.1.2 (answered), 61.6.1 (22.81, 17.49), 61.6.1.1
+  (82.93%, 55.45%; the syncretism clause marked as interpretation). No
+  address removed or renumbered.
+
 ## Part I. Definitions
 
 ```text
@@ -1835,9 +1847,10 @@ ranked by how much it bears on KC 47.
     816,286,080 pairs, every one counted. Grades: [exact] up to five
     words = pinned from D134's independent oracle, oracle_d134.py,
     exhaustive; [exact] at six words = the demo's exhaustive count, of
-    which the oracle re-derives a fixed 1/128 subset of the bags, every
-    number agreeing (partial). Registered verdicts at six words, on the
-    pairs of exactly six words)
+    which the oracle re-derives a fixed 1/128 subset of the bags, and
+    which the T4 review's own oracle (rec.c, trees first) re-derives
+    EXHAUSTIVELY, every compared number agreeing. Registered verdicts at
+    six words, on the pairs of exactly six words)
 61.1. An UMBRA is an arc whose earlier endpoint promised it: DANGLING
       (dependent first), SLOT (head first, relation nsubj, obj or
       iobj), ROOT (opened at boundary 0, closed at the verb). An
@@ -1859,15 +1872,23 @@ ranked by how much it bears on KC 47.
 61.3.2. A head-first displaced word costs no depth: every umbra of a
         pair whose displaced arcs are all head first has depth 0; where
         some arc is dependent first, 27.6-42.1% of umbrae have depth
-        >= 1. [exact] (D134 Part B; whether it is a theorem is not
-        shown)
+        >= 1. [exact] (D134 Part B; a theorem, 61.3.2.1)
+61.3.2.1. Every crossing of two umbrae involves a dependent-first
+          displaced arc, so all depth - the root's included - comes from
+          dependent-first displacement. Two crossing tree arcs (the root
+          arc as (0, verb)) always include one non-projective by the
+          per-arc test; in this world that is an amod or nmod arc
+          (58.2); head first it is a backward attachment, not an umbra;
+          so the crossing umbra is a dangling, dependent-first displaced
+          arc. [proved] (T4 review L1; 0 of 230,068,224 all-head-first
+          six-word pairs has depth >= 1)
 61.3.3. Exactly half the displaced arcs are dependent first. [proved]
         (reversing a string keeps the pair, its displaced arcs and their
         kind, and swaps the directions; checked to six words)
 61.4. Do garden paths follow competition?
 61.4.1. Yes: in every testable stratum competed pairs are misread far
         more often than clear ones, +16.04 to +77.26 points (adjectives
-        only +45.19, genitives only +77.26). Registered U2a HOLDS (8
+        only, dependent or head first, +45.19; genitives only +77.26). Registered U2a HOLDS (8
         testable strata, 5 independent: each dependent-first stratum
         and its head-first mirror carry the same numbers, since
         competition and B are reversal-invariant). [exact] (D134 Part B)
@@ -1894,21 +1915,46 @@ ranked by how much it bears on KC 47.
           same sign at the ideal level (62.87% against 83.02%, -20.15),
           so it is not syncretism; up to five words it is -8.05, while
           adjectives (+10.03) and mixed pairs (+35.44) go the predicted
-          way. [exact] (D134 Part B, descriptive)
+          way. [exact] (D134 Part B, descriptive) [falls: the numbers
+          stand, "protects" does not; see 61.5.1.3]
 61.5.1.2. Why? An untested guess: the extra open noun is the one a
           nesting reader would hang the genitive on, and its being still
-          unattached blocks the projective alternative. [open]
+          unattached blocks the projective alternative. [open] (answered
+          by 61.5.1.3: wrong in its first clause, right in its second)
+61.5.1.3. A configuration effect of R_P's fallback, not retrieval. Of
+          the 27,986,240 interfered genitive pairs, 7,578,272 have a
+          GENITIVE interferer that no projective alternative uses
+          (neither hanging d on it nor it on h): misread 5.95%, because
+          94.05% have no projective analysis at all - genitives
+          interleaved cross-serially and stranded across the verb
+          (donorum amat regis puella donum), where R_P cannot misread.
+          The other 20,407,968 are misread 99.04%, MORE than the
+          retrieved pairs (84.13%), as interference predicts; where a
+          projective alternative hangs d on an interferer (16,484,368),
+          always. Up to five words: 3.30% of 23,296, 98.35% of 70,016,
+          retrieved 82.67%. [exact] (D134 Part B since the T4 fixes,
+          pinned from the T4 review's own oracle; T4 review M1)
 61.6. Do Latin's endings keep most of the ideal's retrieval?
 61.6.1. Not two thirds: over the 193,351,680 displaced adjective arcs of
         six-word crossed pairs, the share RETRIEVED is L1 94.86%, L0
         83.45%, L2 62.72%; Latin keeps 64.5% of the gap between ideal
         and case-stripped. Registered U1 FAILS (20.73 points against
-        the 22.82 required; the 5-point floor holds). Up to five words
-        it holds (19.09 against 17.48). [exact] (D134 Part B)
-61.6.1.1. By direction: dependent first Latin keeps 83.0%, head first
-          55.5% - an adjective arriving after its head fails by its own
-          syncretism. [exact] (D134 Part B, shares; the ratios computed
-          from them)
+        the 22.81 required; the 5-point floor holds). Up to five words
+        it holds (19.09 against 17.49; see 61.6.1.2). [exact] (D134
+        Part B; 22.81 and 17.49 corrected from differences of rounded
+        shares in T4, now printed by the demo)
+61.6.1.1. By direction: dependent first Latin keeps 82.93%, head first
+          55.45%. [exact] (D134 Part B, printed since the T4 fixes;
+          corrected from 83.0% and 55.5%) (an adjective arriving after
+          its head may fail by its own syncretism: [interpretation],
+          not decomposed - T4 review L3)
+61.6.1.2. The five-word "holds" depends on reading U1 over all crossed
+          pairs (fixed in T2, disclosed). Over the registered population
+          (L0 |F| >= 2, the same arcs labelled at each level) U1 fails at
+          both lengths: 15.72 against 27.56 up to five words, 19.96
+          against 25.07 at six. The six-word verdict holds either way.
+          [exact] (D134 Part B since the T4 fixes, pinned from the T4
+          review's own oracle; T4 review M2)
 61.6.2. Head-first genitives are almost never retrieved (3.21% at L0,
         3.71% at L1): some earlier noun nearly always could take them.
         Dependent first, 88.37%. [exact] (D134 Part B)
@@ -1936,5 +1982,14 @@ ranked by how much it bears on KC 47.
 61.8. So in this world garden paths follow competition, and the endings
       matter for adjectives because they decide who competes; retrieval,
       the memory side, matters with opposite signs by kind, and the umbra
-      stack is shallow (depth at most 3). [interpretation]
+      stack is shallow (depth at most 3). [interpretation] [falls:
+      "opposite signs by kind" rests on 61.5.1.1; see 61.8.1]
+61.8.1. So in this world garden paths follow competition, and the endings
+        matter for adjectives because they decide who competes; where a
+        projective alternative exists, interference raises misreading
+        for genitives as for adjectives (61.5.1.3), and the apparent
+        protection is R_P's fallback on strings with none. The umbra
+        stack is shallow (depth at most 3), and only dependent-first
+        displacement deepens it (61.3.2.1). [interpretation] (T4 review
+        M1, L1)
 ```
