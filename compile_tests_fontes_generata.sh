@@ -150,6 +150,7 @@ declare -a SOURCE_FILES=(
     "lib/membrum__elenchi.c"
     "lib/membrum__praecepta.c"
     "lib/membrum__prompta.c"
+    "lib/memoria_processus_macos.c"
     "lib/mensa.c"
     "lib/mensura.c"
     "lib/mensura_quaestio.c"

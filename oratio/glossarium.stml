@@ -1065,6 +1065,7 @@
   <vocabulum lemma="dlopen" lingua="anglica" classis="ignotum-permissum" nota="POSIX dlfcn.h: bibliothecam dynamicam aperire"/>
   <vocabulum lemma="dlsym" lingua="anglica" classis="ignotum-permissum" nota="POSIX dlfcn.h: symbolum titulo quaerere"/>
   <vocabulum lemma="execve" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="POSIX unistd.h: programma cum ambitu explicito exsequi; systema_posix.h 2026-10-05 pro oraculo effectuum (interpositio_macos.c)"/>
+  <vocabulum lemma="proc" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="libproc.h: proc_pid_rusage (usus processus per pid; lib/memoria_processus_macos.c, 2026-10-19)"/>
   <vocabulum lemma="access" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="POSIX unistd.h: accessum plagulae probare; systema_posix.h 2026-10-05 (oraculum effectuum)"/>
 
   <!-- pseudoterminale (aemulator-plan B3, 2026-10-06): nomina POSIX/BSD
