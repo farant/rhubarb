@@ -969,6 +969,12 @@ historiam_gradi (
                locus->semita, v->scheda_semitarum, &vitium))
     {
         l->historia_cursor = (i32)meta;
+        /* semitae R4: latus statum derivatum reconciliat */
+        si (l->facies.semitam_secuta)
+        {
+            (vacuum)l->facies.semitam_secuta(
+                l->facies.semitam_secuta_ctx);
+        }
     }
     redde VERUM;
 }

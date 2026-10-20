@@ -18,6 +18,7 @@
 #include "vicus.h"
 #include "vicus_applicatio.h"
 #include "sancti_visus.h"
+#include "kalendarium.h"
 #include "credo.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -27,6 +28,7 @@ nomen structura {
             Volumen* volumen;
     VicusApplicatio  app;
          ManusLudus* m;
+                i32  vocationes_secutae;   /* semitam_secuta */
 } Mundus;
 
 interior vacuum
@@ -174,7 +176,7 @@ _probare_viam (
     CREDO_VERUM(manus_ludus_clavem(x->m, (character)XXVII, ZEPHYRUM));
     ictus(x, III, ZEPHYRUM);
     CREDO_VERUM(manus_ludus_scribere(x->m,
-        "i$via(calendarium/dies/2026-10-19)"));
+        "i$via(admonitiones)"));
     CREDO_VERUM(manus_ludus_clavem(x->m, (character)XXVII, ZEPHYRUM));
     ictus(x, IV, ZEPHYRUM);
     CREDO_VERUM(manus_ludus_scribere(x->m, "i$via(sancti/nemo)"));
@@ -188,7 +190,7 @@ _probare_viam (
     /* latus sine semitis */
     ictus(x, III, III);
     CREDO_VERUM(nuntius_continet(x,
-        "calendarium: semitas nondum accipit",
+        "admonitiones: semitas nondum accipit",
         c->piscina));
     /* semita mala */
     ictus(x, IV, III);
@@ -262,6 +264,83 @@ _probare_historiam (
     CREDO_AEQUALIS_I32(frons(x)->historia_cursor, I);
 }
 
+/* semitae R4: calendarium per $via; historia (visus impelle, dies
+ * substitue) Ctrl+O restituit; post gradum historiae vicus
+ * facies.semitam_secuta vocat (calendarium: liber notarum) */
+interior b32
+secuta_numerare (
+    vacuum* ctx)
+{
+    ((Mundus*)ctx)->vocationes_secutae++;
+    redde VERUM;
+}
+
+interior b32
+kalendarii_est (
+                 Mundus* x,
+     constans character* titulus,
+     constans character* valor)
+{
+    VicusLatus* l;
+        chorda* a;
+
+    l = frons(x);
+    si (   !l || !l->montata || !chorda_aequalis_literis(l->genus,
+            "calendarium"))
+    {
+        redde FALSUM;
+    }
+    a = insula_ramus_attributum(&((KalendariumMontatio*)l->montatio)
+        ->ramus, titulus);
+    redde a && chorda_aequalis_literis(*a, valor);
+}
+
+interior vacuum
+_probare_calendarium (
+    CredoContextus* c)
+{
+    Mundus* x;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(mundum_struere(x, c));
+    CREDO_VERUM(vicus_acervo_aperire(x->app.vicus, "calendarium",
+        "calendarium/dies/2026-10-19"));
+    (vacuum)vicus_pulsare(x->app.vicus);
+    dispensator_recomponere(x->app.d);
+    (vacuum)vicus_pulsare(x->app.vicus);
+    CREDO_VERUM(kalendarii_est(x, "visus", "dies"));
+    CREDO_VERUM(kalendarii_est(x, "dies_electus", "2026-10-19"));
+    CREDO_AEQUALIS_I32(historia_numerus(x), I);
+    CREDO_VERUM(frons(x)->facies.semitam_secuta
+        == kalendarium_semitam_secuta);
+    frons(x)->facies.semitam_secuta      = secuta_numerare;
+    frons(x)->facies.semitam_secuta_ctx  = x;
+    /* visus mutatus: impelle */
+    CREDO_VERUM(vicus_acervo_mutare(x->app.vicus, "calendarium",
+        "calendarium/mensis/2026-10-19"));
+    (vacuum)vicus_pulsare(x->app.vicus);
+    CREDO_AEQUALIS_I32(historia_numerus(x), II);
+    /* dies mutatus: substitue */
+    CREDO_VERUM(vicus_acervo_mutare(x->app.vicus, "calendarium",
+        "calendarium/mensis/2026-10-25"));
+    (vacuum)vicus_pulsare(x->app.vicus);
+    CREDO_AEQUALIS_I32(historia_numerus(x), II);
+    CREDO_AEQUALIS_I32(x->vocationes_secutae, ZEPHYRUM);
+    /* Ctrl+O: visus diei in XIX; hospes sequitur */
+    clavis(x, 'o', (i32)MOD_IMPERIUM);
+    CREDO_VERUM(kalendarii_est(x, "visus", "dies"));
+    CREDO_VERUM(kalendarii_est(x, "dies_electus", "2026-10-19"));
+    CREDO_AEQUALIS_I32(x->vocationes_secutae, I);
+    /* Ctrl+I: mensis in XXV */
+    clavis(x, 'i', (i32)MOD_IMPERIUM);
+    CREDO_VERUM(kalendarii_est(x, "visus", "mensis"));
+    CREDO_VERUM(kalendarii_est(x, "dies_electus", "2026-10-25"));
+    CREDO_AEQUALIS_I32(x->vocationes_secutae, II);
+    /* in termino: nihil applicatum, hospes non vocatur */
+    clavis(x, 'i', (i32)MOD_IMPERIUM);
+    CREDO_AEQUALIS_I32(x->vocationes_secutae, II);
+}
+
 /* latus sine semitis (scriba) Ctrl+O non capit: historia sanctorum
  * intacta */
 interior vacuum
@@ -296,6 +375,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL, NIHIL },
     { "transitus", _probare_transitum, mundum_parare, mundum_purgare,
         NIHIL, NIHIL },
+    { "calendarium", _probare_calendarium, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

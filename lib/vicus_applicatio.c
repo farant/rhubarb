@@ -1704,6 +1704,11 @@ kalendarium_describere (
     /* A6e: pulsus - indicium paginae notarum */
     f->pulsare      = kalendarii_pulsare;
     f->pulsare_ctx  = m;
+    /* semitae R4: historia lateris et $via; liber notarum diem sequitur
+     * post semitam a vico applicatam */
+    f->ramus               = &m->ramus;
+    f->semitam_secuta      = kalendarium_semitam_secuta;
+    f->semitam_secuta_ctx  = m;
 }
 
 /* nomenclator-plan P2: nomenclator - documentum personarum UNUM per

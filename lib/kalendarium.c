@@ -21,6 +21,7 @@
 #include "scriba_liber.h"
 #include "rubrica.h"
 #include "vim.h"
+#include "semita.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -51,6 +52,7 @@ nomen structura {
                  Volumen* volumen;   /* hebdomas: libri dierum */
                      s32  latitudo_montationis;   /* A6e: 0 = ignota */
                      s32  altitudo_montationis;
+        constans Organum* organum;   /* semitae R4: semita_legere */
 } KalendariumFigurae;
 
 /* A6e: superficies sine superficies_* rami: montationis (si nota),
@@ -3900,6 +3902,9 @@ figuras_registrare (
     {
         redde FALSUM;
     }
+    /* semitae R4: zephyrum - notae.montata (librum_aptare) valida
+     * etiam ante notas_montare (piscina non purgat) */
+    memset(contextus, ZEPHYRUM, magnitudo(KalendariumFigurae));
     contextus->m         = m;
     contextus->liturgia  = calendarium_creare(m->piscina);
     contextus->scheda    = piscina_generare_dynamicum(
@@ -4050,6 +4055,112 @@ kalendarium_gestum_ponere (
     }
 }
 
+/* semitae R4: SemitaOrganum lateris - manifestum suum (liberi
+ * nulli); ctx = KalendariumMontatio* */
+interior constans Organum*
+organa_calendarii (
+     vacuum* ctx,
+     chorda  genus)
+{
+    KalendariumMontatio* m = (KalendariumMontatio*)ctx;
+
+    si (   !m || !m->figurae_ctx
+        || !chorda_aequalis_literis(genus, "calendarium"))
+    {
+        redde NIHIL;
+    }
+    redde ((KalendariumFigurae*)m->figurae_ctx)->organum;
+}
+
+/* argumentum ut semita: URI ("calendarium", "calendarium/...",
+ * "calendarium?...") aut cognomen - "agenda" -> visus agenda,
+ * "YYYY-MM-DD" (P6c) -> visus dies in eo die, "YYYY-MM" -> visus mensis
+ * (dies: hodie si in mense, aliter prima). NIHIL si malum. */
+interior StmlNodus*
+semita_argumenti (
+    KalendariumMontatio* m,
+     constans character* argumentum,
+                 chorda* vitium)
+{
+              StmlNodus* n;
+     constans character* visus;
+     constans character* iso;
+                    i32  l;
+                    s32  annus;
+                    s32  mensis;
+                   Dies  d;
+
+    l = (i32)strlen(argumentum);
+    si (   strncmp(argumentum, "calendarium", XI) == ZEPHYRUM
+        && (l == XI || argumentum[XI] == '/' || argumentum[XI] == '?'))
+    {
+        redde semita_ex_uri(organa_calendarii, m, chorda_ex_literis(
+            argumentum, m->piscina), m->piscina, m->intern, vitium);
+    }
+    iso = NIHIL;
+    si (strcmp(argumentum, "agenda") == ZEPHYRUM)
+    {
+        visus = "agenda";
+    }
+    alioquin si (diem_legere(argumentum, &d))
+    {
+        visus  = "dies";
+        iso    = argumentum;
+    }
+    alioquin si (mensem_legere(argumentum, &annus, &mensis))
+    {
+        visus  = "mensis";
+        iso    = chorda_ut_cstr(fasti_formare_diem(dies_argumenti(m,
+            annus, mensis), FASTI_FORMA_ISO, m->piscina), m->piscina);
+    }
+    alioquin
+    {
+        redde NIHIL;
+    }
+    n = stml_elementum_creare(m->piscina, m->intern, "calendarium");
+    si (   !n
+        || !stml_attributum_addere(n, m->piscina, m->intern, "visus",
+               visus)
+        || (iso && !stml_attributum_addere(n, m->piscina, m->intern,
+               "dies_electus", iso)))
+    {
+        redde NIHIL;
+    }
+    redde n;
+}
+
+/* argumentum ut semita applicare (liber notarum non tangitur: in
+ * montatione charta nondum montata est) */
+interior b32
+argumentum_applicare (
+    KalendariumMontatio* m,
+     constans character* argumentum)
+{
+     StmlNodus* semita;
+        chorda* dies;
+        chorda  vitium;
+          Dies  d;
+
+    si (!m || !argumentum)
+    {
+        redde FALSUM;
+    }
+    semita = semita_argumenti(m, argumentum, &vitium);
+    si (!semita)
+    {
+        redde FALSUM;
+    }
+    /* typus 'dies' formam solam iudicat: dies vera postulatur */
+    dies = stml_attributum_capere(semita, "dies_electus");
+    si (   dies && dies->mensura > ZEPHYRUM
+        && !diem_legere(chorda_ut_cstr(*dies, m->piscina), &d))
+    {
+        redde FALSUM;
+    }
+    redde semita_applicare(organa_calendarii, m, &m->ramus, semita,
+        m->piscina, &vitium);
+}
+
 b32
 kalendarium_montare (
      KalendariumMontatio* m,
@@ -4068,18 +4179,8 @@ kalendarium_montare (
          StatusSystemata* systemata)
 {
     Organum* organum;
-        s32  annus;
-        s32  mensis;
-       Dies  dies_argumenti_plena;
-        b32  ok;
 
     si (!m || !piscina || !intern || !repo)
-    {
-        redde FALSUM;
-    }
-    si (   argumentum && strcmp(argumentum, "agenda") != ZEPHYRUM
-        && !diem_legere(argumentum, &dies_argumenti_plena)
-        && !mensem_legere(argumentum, &annus, &mensis))
     {
         redde FALSUM;
     }
@@ -4110,24 +4211,8 @@ kalendarium_montare (
     {
         redde FALSUM;
     }
-    ok = VERUM;
-    si (argumentum && strcmp(argumentum, "agenda") == ZEPHYRUM)
-    {
-        ok = visum_ponere(m, "agenda");
-    }
-    /* P6c: "YYYY-MM-DD" - visus diei in eo die */
-    alioquin si (   argumentum && diem_legere(argumentum,
-                 &dies_argumenti_plena))
-    {
-        ok = diem_scribere(m, dies_argumenti_plena)
-            && visum_ponere(m, "dies");
-    }
-    alioquin si (argumentum)
-    {
-        ok = diem_scribere(m, dies_argumenti(m, annus, mensis));
-    }
-    /* A6d: notae diei post diem argumenti; A6e: superficies
-     * montationis (vicus superficies_* postea scribit) */
+    /* A6e: superficies montationis (vicus superficies_* postea
+     * scribit); semitae R4: organum ante argumentum (semita) */
     si (m->figurae_ctx)
     {
         ((KalendariumFigurae*)m->figurae_ctx)->latitudo_montationis =
@@ -4136,8 +4221,14 @@ kalendarium_montare (
             (s32)altitudo;
         ((KalendariumFigurae*)m->figurae_ctx)->fontes   = fontes;
         ((KalendariumFigurae*)m->figurae_ctx)->volumen  = volumen;
+        ((KalendariumFigurae*)m->figurae_ctx)->organum  = organum;
     }
-    redde ok && notas_montare(m, volumen, id, systemata);
+    si (argumentum && !argumentum_applicare(m, argumentum))
+    {
+        redde FALSUM;
+    }
+    /* A6d: notae diei post diem argumenti */
+    redde notas_montare(m, volumen, id, systemata);
 }
 
 b32
@@ -4145,29 +4236,21 @@ kalendarium_argumentum_ponere (
     KalendariumMontatio* m,
      constans character* argumentum)
 {
-    s32 annus;
-    s32 mensis;
-   Dies d;
-
-    si (m && argumentum && strcmp(argumentum, "agenda") == ZEPHYRUM)
-    {
-        redde visum_ponere(m, "agenda");
-    }
-    /* P6c: "YYYY-MM-DD" - visus diei in eo die */
-    si (m && diem_legere(argumentum, &d))
-    {
-        si (!diem_scribere(m, d) || !visum_ponere(m, "dies"))
-        {
-            redde FALSUM;
-        }
-        librum_aptare(m, NIHIL);
-        redde VERUM;
-    }
-    si (!m || !mensem_legere(argumentum, &annus, &mensis))
+    si (!argumentum_applicare(m, argumentum))
     {
         redde FALSUM;
     }
-    si (!diem_scribere(m, dies_argumenti(m, annus, mensis)))
+    librum_aptare(m, NIHIL);
+    redde VERUM;
+}
+
+b32
+kalendarium_semitam_secuta (
+    vacuum* ctx)
+{
+    KalendariumMontatio* m = (KalendariumMontatio*)ctx;
+
+    si (!m)
     {
         redde FALSUM;
     }

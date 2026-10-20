@@ -25,6 +25,8 @@
 #include "mandatum.h"
 #include "thema.h"
 #include "exemplaria.h"
+#include "semita.h"
+#include "organum_montatio.h"
 #include "credo.h"
 #include <stdio.h>
 #include <string.h>
@@ -52,6 +54,7 @@ nomen structura {
                       s32  apertum;    /* P6b: referentia reddita */
                       s32  latitudo;   /* A6e: superficies montat. */
                       s32  altitudo;
+         constans Organum* organum;     /* semitae R4: semita_legere */
 } Mundus;
 
 /* montare (sine systematis nisi volumen) et dispensatorem ligare; m in
@@ -2051,9 +2054,10 @@ _probare_argumentum_diei (
     CREDO_FALSUM(kalendarium_argumentum_ponere(&x->m, "2026-1x-02"));
     d = kalendarium_dies_electus(&x->m);
     CREDO_VERUM(d.annus == MMXXVII && d.mensis == III && d.dies == II);
-    /* "YYYY-MM" visum non mutat (mos prior) */
+    /* semitae R4: "YYYY-MM" = calendarium/mensis/<dies> - visus
+     * mensis (mos prior visum non mutabat) */
     CREDO_VERUM(kalendarium_argumentum_ponere(&x->m, "2026-10"));
-    CREDO_VERUM(campus_est(x, "visus", "dies"));
+    CREDO_VERUM(campus_est(x, "visus", "mensis"));
 }
 
 /* P6c: latus in visu mensis - argumentum "YYYY-MM-DD" in visum diei
@@ -2084,6 +2088,166 @@ _probare_argumentum_diei_malum (
 
     x = (Mundus*)c->datum;
     CREDO_FALSUM(mundum_struere(x, c->piscina, "2026-13-01"));
+}
+
+/* semitae R4: organum calendarii pro semita_legere; ctx = Mundus* */
+interior constans Organum*
+organa_calendarii (
+     vacuum* ctx,
+     chorda  genus)
+{
+    redde chorda_aequalis_literis(genus, "calendarium")
+        ? ((Mundus*)ctx)->organum : NIHIL;
+}
+
+/* semita currens lateris ut URI aequat exspectatam? */
+interior b32
+semita_est (
+                 Mundus* x,
+                Piscina* p,
+     constans character* exspectata)
+{
+    chorda uri;
+
+    si (!x->organum)
+    {
+        x->organum = organum_legere_genus(p, x->intern, "calendarium",
+            "probatio");
+    }
+    uri = semita_ad_uri(organa_calendarii, x, semita_legere(
+        organa_calendarii, x, &x->m.ramus, "calendarium", p, x->intern),
+        p);
+    si (!chorda_aequalis_literis(uri, exspectata))
+    {
+        imprimere("semita: '%.*s', exspectata '%s'\n", (int)uri.mensura,
+            (constans character*)uri.datum, exspectata);
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
+/* semitae R4: argumentum = URI semitae aut cognomen ("YYYY-MM",
+ * "YYYY-MM-DD", "agenda"); semita canonica legitur; ligatione mutata
+ * res_electa et pagina resettuntur; mala nihil mutant */
+interior vacuum
+_probare_semitas (
+    CredoContextus* c)
+{
+    Mundus* x;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(mundum_struere(x, c->piscina, NIHIL));
+    /* initium: mensis, hodie - valores absentes omissi */
+    CREDO_VERUM(semita_est(x, c->piscina, "calendarium"));
+    CREDO_VERUM(kalendarium_argumentum_ponere(&x->m,
+        "calendarium/dies/2026-10-19?res_electa=17"));
+    CREDO_VERUM(campus_est(x, "visus", "dies"));
+    CREDO_VERUM(semita_est(x, c->piscina,
+        "calendarium/dies/2026-10-19?res_electa=17"));
+    /* status in eadem ligatione: res_electa servatur */
+    CREDO_VERUM(kalendarium_argumentum_ponere(&x->m,
+        "calendarium/dies/2026-10-19?pagina=2"));
+    CREDO_VERUM(semita_est(x, c->piscina,
+        "calendarium/dies/2026-10-19?res_electa=17&pagina=2"));
+    /* cognomen diei: ligatio mutata - res_electa, pagina absentes */
+    CREDO_VERUM(kalendarium_argumentum_ponere(&x->m, "2026-12-25"));
+    CREDO_VERUM(semita_est(x, c->piscina,
+        "calendarium/dies/2026-12-25"));
+    /* cognomen mensis: visus mensis, dies prima */
+    CREDO_VERUM(kalendarium_argumentum_ponere(&x->m, "2027-03"));
+    CREDO_VERUM(semita_est(x, c->piscina,
+        "calendarium/mensis/2027-03-01"));
+    /* cognomen agendae: dies servatur */
+    CREDO_VERUM(kalendarium_argumentum_ponere(&x->m, "agenda"));
+    CREDO_VERUM(semita_est(x, c->piscina,
+        "calendarium/agenda/2027-03-01"));
+    CREDO_VERUM(kalendarium_argumentum_ponere(&x->m,
+        "calendarium/agenda?rubrica_filtrum=domus"));
+    CREDO_VERUM(semita_est(x, c->piscina,
+        "calendarium/agenda/2027-03-01?rubrica_filtrum=domus"));
+    /* mala: nihil mutatur */
+    CREDO_FALSUM(kalendarium_argumentum_ponere(&x->m,
+        "calendarium/dies/2026-02-30"));
+    CREDO_FALSUM(kalendarium_argumentum_ponere(&x->m,
+        "calendarium/hora"));
+    CREDO_FALSUM(kalendarium_argumentum_ponere(&x->m,
+        "calendarium/dies/2026-10-19?prompta=nova"));
+    CREDO_FALSUM(kalendarium_argumentum_ponere(&x->m, "sancti/index"));
+    CREDO_VERUM(semita_est(x, c->piscina,
+        "calendarium/agenda/2027-03-01?rubrica_filtrum=domus"));
+}
+
+/* semitam applicare ut vicus (historia): scriptura directa, sine
+ * argumento */
+interior b32
+semitam_applicare (
+                 Mundus* x,
+                Piscina* p,
+     constans character* uri)
+{
+     StmlNodus* semita;
+        chorda  vitium;
+
+    si (!x->organum)
+    {
+        x->organum = organum_legere_genus(p, x->intern, "calendarium",
+            "probatio");
+    }
+    semita = semita_ex_uri(organa_calendarii, x, chorda_ex_literis(uri,
+        p), p, x->intern, &vitium);
+    redde semita && semita_applicare(organa_calendarii, x, &x->m.ramus,
+        semita, p, &vitium);
+}
+
+/* semitae R4: semita a vico applicata (historia) diem mutat sine
+ * argumento - liber notarum sequitur solum post
+ * kalendarium_semitam_secuta */
+interior vacuum
+_probare_semitam_secutam (
+    CredoContextus* c)
+{
+               Mundus* x;
+          ScribaLiber* l;
+     ScribaDocumentum* d;
+    TabulaCharacterum  folium;
+
+    x = (Mundus*)c->datum;
+    thema_initiare();
+    x->volumen = volumen_temporarium(c->piscina,
+        "probatio_kalendarium");
+    CREDO_NECESSE_NON_NIHIL(x->volumen);
+    x->documentum = agenda_aperire(c->piscina, x->intern, x->volumen,
+        "agenda", ZEPHYRUM);
+    l = scriba_liber_aperire_in_spatio(c->piscina, x->intern,
+        x->volumen, "dies/2026-10-14", XL, VI);
+    CREDO_NECESSE_NON_NIHIL(l);
+    d = scriba_liber_pagina(l, chorda_ex_literis("1", c->piscina));
+    CREDO_NECESSE_NON_NIHIL(d);
+    tabula_initiare(&folium, c->piscina, d->latitudo, d->altitudo);
+    memcpy(folium.cellulae, scriba_documentum_tabula(d)->cellulae,
+        (memoriae_index)(d->latitudo * d->altitudo));
+    memcpy(&tabula_cellula(&folium, ZEPHYRUM, ZEPHYRUM), "quinque",
+        VII);
+    CREDO_NECESSE(scriba_documentum_committere(d, &folium) > ZEPHYRUM);
+    CREDO_NECESSE(mundum_struere(x, c->piscina, "2026-10-14"));
+    CREDO_VERUM(textus_ullus_continet(reddere(x, c->piscina),
+        "quinque"));
+    /* dies XV per semitam: liber XIV manet donec hospes sequitur */
+    CREDO_NECESSE(semitam_applicare(x, c->piscina,
+        "calendarium/dies/2026-10-15"));
+    CREDO_VERUM(textus_ullus_continet(reddere(x, c->piscina),
+        "quinque"));
+    CREDO_VERUM(kalendarium_semitam_secuta(&x->m));
+    CREDO_FALSUM(textus_ullus_continet(reddere(x, c->piscina),
+        "quinque"));
+    /* XIV redit */
+    CREDO_NECESSE(semitam_applicare(x, c->piscina,
+        "calendarium/dies/2026-10-14"));
+    CREDO_VERUM(kalendarium_semitam_secuta(&x->m));
+    CREDO_VERUM(textus_ullus_continet(reddere(x, c->piscina),
+        "quinque"));
+    /* latus nullum: FALSUM */
+    CREDO_FALSUM(kalendarium_semitam_secuta(NIHIL));
 }
 
 /* P6: fons fictus - Anna Rossi natalis 14 X (MCMLXXXVI), "Festa
@@ -3507,6 +3671,10 @@ hic_manens constans CredoSectio SECTIONES[] = {
         mundum_purgare, NIHIL, NIHIL },
     { "argumentum_diei", _probare_argumentum_diei, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
+    { "semitae", _probare_semitas, mundum_parare, mundum_purgare,
+      NIHIL, NIHIL },
+    { "semita_secuta", _probare_semitam_secutam, mundum_parare,
+      mundum_purgare, NIHIL, NIHIL },
     { "argumentum_diei_malum", _probare_argumentum_diei_malum,
         mundum_parare, mundum_purgare, NIHIL, NIHIL },
     { "argumentum_diei_ex_mense", _probare_argumentum_diei_ex_mense,

@@ -885,3 +885,36 @@ p6d_2026-10-31.png (two birthdays, flipped).
   and the out-of-month dotting are untouched. Test `fundus_hodie`
   (fill on today, not on a neighbour, stays when the selection moves);
   plants 3 red (no fill, every day, follows the selection).
+
+## 2026-10-20 — semitae R4a: the calendar on routes (Fran approved the text 10-19)
+
+- Manifest: `visus` ligatio impelle, `dies_electus` ligatio (stays
+  transient, now typus `dies`), `res_electa` + `pagina` status with
+  ambitus ligatio, `rubrica_filtrum` status. Needed the R0 rule relaxed
+  (organum.c): semita is now refused only on `sedes motus` and
+  `vita probatio` - "restore after restart?" (vita) and "addressable?"
+  (semita) are different questions. Spec principle 6 updated.
+- `kalendarium_argumentum_ponere` = route: URI ("calendarium/...") or
+  alias ("YYYY-MM" -> mensis/<day>, "YYYY-MM-DD" -> dies/<day>,
+  "agenda"). Typus `dies` checks FORM only (est_dies accepts
+  2026-02-30), so the calendar re-checks with diem_legere before apply.
+- Behaviour change (approved): "YYYY-MM" now also switches to month
+  view; before it only moved the day.
+- `kalendarium_semitam_secuta` = facies.semitam_secuta: after vicus
+  applies a history route the notes book follows the day.
+- BUG found by a FLAKY suite, not by the new tests: mount first called
+  kalendarium_argumentum_ponere, whose librum_aptare read
+  `ctx->notae.montata` BEFORE notas_montare - KalendariumFigurae came
+  from piscina_allocare (not zeroed), so garbage sometimes said
+  "mounted" and charta_clavem_ponere ran on a garbage Charta
+  (probatio_vicus_kalendarium exit 139 roughly every other run; two
+  plants reported "porta post reversionem non viridis" because of it).
+  Fix: mount uses `argumentum_applicare` (route only); argumentum_ponere
+  = apply + librum_aptare; the figurae context is now memset to zero.
+  Lesson: "not green after revert" from planta = suspect a flake first;
+  run the binary 10-15 times in a loop and backtrace under lldb
+  (`lldb -b -o run -k "bt 30"`).
+- Embedded manifests: after editing apps/*/organum.stml run
+  `./tools/organa_infigere.sh` (organum_legere_genus reads
+  lib/organa_infixa.c, not the disk) - the first red run said
+  "attributum non in semita: visus" for exactly this reason.

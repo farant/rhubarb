@@ -13,7 +13,9 @@
  *   - referentia 'ligamen/genus' -> ligamen declaratum
  *   - absens -> valor typi sui
  *   - <optio> solum sub typo electio, qui unam saltem poscit
- *   - semita -> vita persistens (semitae-spec R0)
+ *   - semita: non in sede motus, non vita probatio (semitae R4:
+ *     transiens licet - restitutio post initium et semita res
+ *     diversae)
  *   - ambitus, historia -> semita; ambitus -> semita status
  *
  * Onerator plagulam numquam legit: fons a vocante, basis a vocante

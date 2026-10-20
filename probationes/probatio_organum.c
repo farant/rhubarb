@@ -897,12 +897,34 @@ _probare_semitam (
         " semita=\"via\"/>", &vitia));
     CREDO_VERUM(vitia_continent(vitia, "semita", c->piscina));
 
-    /* lex: semita solum vitae persistentis */
+    /* semitae R4: vita transiens licet (restitutio post initium et
+     * semita res diversae) */
+    o = legere_campum(c->piscina, in,
+        "<campus nomen=\"t\" typus=\"dies\" vita=\"transiens\""
+        " semita=\"ligatio\"/>", &vitia);
+    vitia_imprimere(vitia);
+    CREDO_NECESSE_NON_NIHIL(o);
+    k = organum_campus(o, chorda_ex_literis("t", c->piscina));
+    CREDO_VERUM(k->semita == ORGANUM_SEMITA_LIGATIO);
+    CREDO_VERUM(k->vita == ORGANUM_VITA_TRANSIENS);
+
+    /* lex: semita non in sede motus */
     CREDO_NIHIL(legere_campum(c->piscina, in,
-        "<campus nomen=\"t\" typus=\"numerus\" vita=\"transiens\""
+        "<campus nomen=\"m\" typus=\"numerus\" vita=\"transiens\""
+        " rhythmus=\"mobilis\" sedes=\"motus\" semita=\"status\"/>",
+        &vitia));
+    CREDO_VERUM(vitia_continent(vitia, "'m'", c->piscina));
+    CREDO_VERUM(vitia_continent(vitia, "semita in sede motus",
+        c->piscina));
+
+    /* lex: semita non vitae probationis */
+    CREDO_NIHIL(legere_campum(c->piscina, in,
+        "<campus nomen=\"q\" typus=\"numerus\" vita=\"probatio\""
         " semita=\"status\"/>", &vitia));
-    CREDO_VERUM(vitia_continent(vitia, "'t'", c->piscina));
-    CREDO_VERUM(vitia_continent(vitia, "persistens", c->piscina));
+    CREDO_VERUM(vitia_continent(vitia, "'q'", c->piscina));
+    CREDO_VERUM(vitia_continent(vitia,
+        "semita vetita campo probationis",
+        c->piscina));
 
     /* lex: ambitus et historia solum cum semita */
     CREDO_NIHIL(legere_campum(c->piscina, in,

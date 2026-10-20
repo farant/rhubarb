@@ -123,6 +123,11 @@ nomen structura {
     /* semitae R3: ramus lateris (semita.h) - historia lateris et
      * $via; NIHIL = latus sine semitis */
     constans InsulaRamus* ramus;
+    /* semitae R4: post semitam a vico applicatam (historia) - latus
+     * statum derivatum reconciliat (calendarium: liber notarum diei;
+     * pictor: documentum). NIHIL = nihil reconciliandum */
+                 b32  (*semitam_secuta)(vacuum* ctx);
+              vacuum* semitam_secuta_ctx;
 } VicusFacies;
 
 nomen vacuum (*VicusDescriptor)(

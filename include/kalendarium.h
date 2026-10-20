@@ -179,13 +179,22 @@ kalendarium_gestum_ponere (
      Motus* motus,
     vacuum* ctx);
 
-/* argumentum novum (vicus_acervo_mutare): "YYYY-MM" -> dies electa;
- * "YYYY-MM-DD" (P6c) -> visus diei in eo die; "agenda". FALSUM si malum
- * (nihil mutatur). */
+/* argumentum novum (vicus_acervo_mutare; semitae R4): semita
+ * calendarii - URI ("calendarium/dies/2026-10-19") aut cognomen:
+ * "YYYY-MM" -> calendarium/mensis/<dies>, "YYYY-MM-DD" ->
+ * calendarium/dies/<dies>, "agenda" -> calendarium/agenda. FALSUM si
+ * malum (nihil mutatur). */
 b32
 kalendarium_argumentum_ponere (
     KalendariumMontatio* m,
      constans character* argumentum);
+
+/* semitae R4 (facies.semitam_secuta): post semitam a vico applicatam
+ * (historia) liber notarum diem electum sequitur; FALSUM si liber
+ * aptari non potuit */
+b32
+kalendarium_semitam_secuta (
+    vacuum* ctx);
 
 /* dies electa: campus dies_electus, absens = hodie */
 Dies

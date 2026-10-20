@@ -42,10 +42,14 @@ lib/vicus.worklog.md). Next R4 (calendar, nomenclator, pictor).*
    entity comes from its parent (`<ligamen ... a="parens">`, e.g. the
    day's notes follow the calendar's day) cannot be contradicted by a
    route. A child with an independent binding carries its own.
-6. **What is never routable:** entity data (documents), transient
-   state (`vita="transiens"`: prompt text, hover, menus), observed
-   state (ports: time, window size), derived state, and kinetic state
-   in flight. The manifest opts fields IN; the default is out.
+6. **What is never routable:** entity data (documents), ephemeral
+   UI state (prompt text, hover, menus), observed state (ports: time,
+   window size), derived state, and kinetic state in flight. The
+   manifest opts fields IN; the default is out. (R4, 2026-10-19:
+   `vita` answers "restore after restart?", `semita` answers
+   "addressable?" - separate questions. A transient field may be
+   routable: the calendar reopens on today, yet
+   `calendarium/dies/2026-10-19` addresses a day.)
 
 ## II. What exists today (cited)
 
@@ -266,8 +270,9 @@ new - it exists):
 </attributum>
 ```
 
-Loader rules (organum_legere, not canon): `semita` only with
-`vita="persistens"`; `ambitus` and `historia` only with `semita`;
+Loader rules (organum_legere, not canon): `semita` never on
+`sedes="motus"` nor `vita="probatio"` (R4 - was "only persistens" in
+R0); `ambitus` and `historia` only with `semita`;
 `ambitus` only with `semita="status"`.
 
 **Header** `include/semita.h` (new library, lib/semita.c):

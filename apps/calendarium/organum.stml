@@ -22,18 +22,21 @@
 
   <status>
     <campus nomen="visus" typus="electio" vita="persistens"
-            absens="mensis" scriptor="calendarium.agere">
+            absens="mensis" scriptor="calendarium.agere"
+            semita="ligatio" historia="impelle">
       <optio>mensis</optio>
       <optio>hebdomas</optio>
       <optio>dies</optio>
       <optio>annus</optio>
       <optio>agenda</optio>
     </campus>
-    <campus nomen="dies_electus" typus="textus" vita="transiens"
-            scriptor="calendarium.agere"
-            nota="YYYY-MM-DD; absens = hodie"/>
+    <campus nomen="dies_electus" typus="dies" vita="transiens"
+            scriptor="calendarium.agere" semita="ligatio"
+            nota="YYYY-MM-DD; absens = hodie (semita
+                  'calendarium/dies' = dies hodierna semper)"/>
     <campus nomen="res_electa" typus="numerus" vita="transiens"
             scriptor="calendarium.agere"
+            semita="status" ambitus="ligatio"
             nota="id rei electae in visu diei; absens = prima"/>
     <campus nomen="prompta" typus="electio" vita="transiens"
             absens="nulla" scriptor="calendarium.agere">
@@ -52,11 +55,12 @@
     <campus nomen="prompta_cursor" typus="numerus" vita="transiens"
             scriptor="calendarium.agere"/>
     <campus nomen="rubrica_filtrum" typus="textus" vita="persistens"
-            scriptor="calendarium.agere"
+            scriptor="calendarium.agere" semita="status"
             nota="visus agendae: una rubrica (kebab: '-' in typo nomen
                   non licet); absens = omnes"/>
     <campus nomen="pagina" typus="numerus" vita="transiens"
             scriptor="calendarium.agere"
+            semita="status" ambitus="ligatio"
             nota="pagina indicis (visus diei et agendae; 0 = prima);
                   ad 0 redit cum dies aut visus mutatur"/>
     <campus nomen="elenchus" typus="textus" vita="transiens"

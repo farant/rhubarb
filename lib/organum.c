@@ -326,14 +326,21 @@ legibus_iudicare (
         vitium_addere(vitia, piscina, k->nodus, k->titulus,
             "optio sine typo electio");
     }
-    /* semitae R0: semita solum persistens; ambitus et historia solum
-     * cum semita; ambitus solum statui (ligatio se ipsam non
-     * resettit) */
+    /* semitae R4: semita non in sede motus, non vitae probationis
+     * (transiens licet - restitutio post initium et semita res
+     * diversae); R0: ambitus et historia solum cum semita; ambitus
+     * solum statui (ligatio se ipsam non resettit) */
     si (   k->semita != ORGANUM_SEMITA_NULLA
-        && k->vita   != ORGANUM_VITA_PERSISTENS)
+        && k->sedes  == ORGANUM_SEDES_MOTUS)
     {
         vitium_addere(vitia, piscina, k->nodus, k->titulus,
-            "semita postulat vita persistens");
+            "semita in sede motus vetita");
+    }
+    si (   k->semita != ORGANUM_SEMITA_NULLA
+        && k->vita   == ORGANUM_VITA_PROBATIO)
+    {
+        vitium_addere(vitia, piscina, k->nodus, k->titulus,
+            "semita vetita campo probationis");
     }
     si (   k->semita == ORGANUM_SEMITA_NULLA
         && stml_attributum_capere(k->nodus, "ambitus"))
