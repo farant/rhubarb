@@ -168,6 +168,20 @@ with this plan.
   BEFORE responding. Unsupported-version body = official 2026-07-28
   shape (-32022, data.supported/requested). PRM URL from the audience's
   origin.
+- **R12 (T5)** - admissio creates its tables with `CREATE TABLE IF NOT
+  EXISTS` + its own `admissio_versio` row: `scrinium_migrare`'s single
+  `_migrationes` counter is already the volumen's.
+- **R13 (T5)** - names: `AdmissioOptiones.resource` -> `audientia`
+  (R10), `admissio_metadata` -> `admissio_documentum` (lint: real
+  English). Test hook is always compiled (lib defines
+  `ADMISSIO_PROBATIO` before its header), declared only for callers that
+  define it.
+- **R14 (T5)** - registration limit `ADMISSIO_INSCRIPTIONES_PER_MINUTUM`
+  = 20 per IP, checked before parsing, refused ones not stored, 429
+  `too_many_requests`; `client_id` 16 random bytes; token family = grant
+  id; `admissio_concessiones` lists live grants only; `admissio_putare`
+  also purges expired codes and tokens. Loopback = `127.0.0.1` and
+  `localhost` (not `[::1]`).
 
 ## Review focus
 
