@@ -8,32 +8,41 @@
 #include "credo.h"
 #include <stdio.h>
 
-s32 principale (vacuum)
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-    Piscina* piscina;
-        s64  a;
-        s64  b;
-    Eventus  e;
+    s64 a;
+    s64 b;
 
-    piscina = piscina_generare_dynamicum("probatio_fenestra_tempus",
-        IV * M);
-    si (!piscina)
-    { imprimere("FRACTA: piscina\n"); redde I;
-    }
-    credo_aperire(piscina);
-
-    imprimere("\n--- Probans fenestra_tempus_ms ---\n");
+    (vacuum)c;
     a = fenestra_tempus_ms();
     b = fenestra_tempus_ms();
     CREDO_VERUM (a >= ZEPHYRUM);
     CREDO_VERUM (b >= a);
+}
 
-    imprimere("\n--- Probans campum Eventus.tempus ---\n");
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Eventus e;
+
+    (vacuum)c;
     e.genus   = EVENTUS_NIHIL;
     e.tempus  = CCC;
     CREDO_VERUM (e.tempus == CCC);
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "fenestra_tempus_ms", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "campum Eventus.tempus", _sectio_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("fenestra_tempus", SECTIONES);
 }

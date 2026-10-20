@@ -45,32 +45,24 @@ instrumentum_ponere (
                              (constans character*)ctx);
 }
 
-s32 principale (vacuum)
-{
-                Piscina* piscina;
-    InternamentumChorda* intern;
-     InsulaRepositorium* repo;
-                  Motus  motus;
-       PictorCompositio  ctx;
-              Componens* arbor;
-              Componens* arbor2;
-              Componens* c;
-                Punctum  p;
-              character  ignotum[]     = "ignotum";
-              character  penicillus[]  = "penicillus";
+/* fixura suitae: motus (pan, ictus pendens) et compositio semel
+ * paratae; sectiones copias LEGUNT. Repositorium (instrumentum
+ * mutatur) quaeque sectio suum creat. */
+nomen structura {
+               Motus motus;
+    PictorCompositio cfg;
+} Mundus;
 
-    piscina = piscina_generare_dynamicum("probatio_pictor_componentia",
-        LXIV * M);
-    si (!piscina)
-    { imprimere("FRACTA: piscina\n"); redde I;
-    }
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
-    repo = insula_repositorium_creare(piscina, intern,
-        "<pictor latitudo=\"320\" altitudo=\"200\""
-        " instrumentum=\"penicillus\" zoom=\"2\""
-        " focus=\"tabula\"/>");
-    CREDO_NON_NIHIL(repo);
+interior vacuum
+_suitam_parare (
+    CredoContextus* ctx)
+{
+             Piscina* piscina;
+               Motus  motus;
+    PictorCompositio  cfg;
+             Punctum  p;
+
+    piscina = ctx->piscina;
     motus_initiare(&motus, piscina);
     /* ictus pendens = captura tabulae (ut penicillus in pressione):
      * compositor puncta sola tabulae capturae ostendit (L4) */
@@ -82,23 +74,54 @@ s32 principale (vacuum)
     p.x = XII;
     p.y = XXII;
     mutare_motum(&motus, punctum_addere, &p, M + XX);
-    memset(&ctx, ZEPHYRUM, magnitudo(ctx));
-    ctx.fenestra_latitudo  = CCCXX;
-    ctx.fenestra_altitudo  = CCXL;
-    ctx.cellula_latitudo   = VI;
-    ctx.cellula_altitudo   = VIII;
-    ctx.status_lineae      = I;
+    memset(&cfg, ZEPHYRUM, magnitudo(cfg));
+    cfg.fenestra_latitudo = CCCXX;
+    cfg.fenestra_altitudo = CCXL;
+    cfg.cellula_latitudo = VI;
+    cfg.cellula_altitudo = VIII;
+    cfg.status_lineae = I;
+    ctx->datum = piscina_allocare(piscina, magnitudo(Mundus));
+    ((Mundus*)ctx->datum)->motus = motus;
+    ((Mundus*)ctx->datum)->cfg = cfg;
+}
 
-    imprimere("\n--- Actio ex instrumento ---\n");
+interior vacuum
+_sectio_prima (
+    CredoContextus* ctx)
+{
+    Piscina* piscina;
+
+    piscina = ctx->piscina;
     CREDO_VERUM(chorda_aequalis_literis(
         chorda_ex_literis(pictor_actio_instrumenti(
             chorda_ex_literis("penicillus", piscina)), piscina),
         "penicillus.ictus"));
     CREDO_VERUM(pictor_actio_instrumenti(
         chorda_ex_literis("ignotum", piscina))[ZEPHYRUM] == ZEPHYRUM);
+}
 
-    imprimere("\n--- Arbor ---\n");
-    arbor = pictor_componere(repo, &motus, piscina, intern, &ctx);
+interior vacuum
+_sectio_secunda (
+    CredoContextus* ctx)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+     InsulaRepositorium* repo;
+                  Motus  motus;
+       PictorCompositio  cfg;
+              Componens* arbor;
+              Componens* c;
+
+    piscina  = ctx->piscina;
+    intern   = internamentum_creare(piscina);
+    motus    = ((constans Mundus*)ctx->suita)->motus;
+    cfg      = ((constans Mundus*)ctx->suita)->cfg;
+    repo = insula_repositorium_creare(piscina, intern,
+        "<pictor latitudo=\"320\" altitudo=\"200\""
+        " instrumentum=\"penicillus\" zoom=\"2\""
+        " focus=\"tabula\"/>");
+    CREDO_NON_NIHIL(repo);
+    arbor = pictor_componere(repo, &motus, piscina, intern, &cfg);
     CREDO_NON_NIHIL(arbor);
     CREDO_CHORDA_AEQUALIS_LITERIS(arbor->id, "radix");
     CREDO_CHORDA_AEQUALIS_LITERIS(arbor->actio, "instrumentum.eligere");
@@ -139,11 +162,31 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_S32(c->fines.altitudo, VIII);
     CREDO_CHORDA_AEQUALIS_LITERIS(c->titulus, "penicillus");
     CREDO_FALSUM(c->focusabilis);
+}
 
-    imprimere("\n--- Instrumentum ignotum: tabula sine actione; zoom"
-              " absens: scala I ---\n");
+interior vacuum
+_sectio_tertia (
+    CredoContextus* ctx)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+     InsulaRepositorium* repo;
+                  Motus  motus;
+       PictorCompositio  cfg;
+              Componens* arbor2;
+              Componens* c;
+              character  ignotum[]     = "ignotum";
+
+    piscina  = ctx->piscina;
+    intern   = internamentum_creare(piscina);
+    motus    = ((constans Mundus*)ctx->suita)->motus;
+    cfg      = ((constans Mundus*)ctx->suita)->cfg;
+    repo = insula_repositorium_creare(piscina, intern,
+        "<pictor latitudo=\"320\" altitudo=\"200\""
+        " instrumentum=\"penicillus\" zoom=\"2\""
+        " focus=\"tabula\"/>");
     CREDO_VERUM(insula_mutare(repo, instrumentum_ponere, ignotum));
-    arbor2 = pictor_componere(repo, &motus, piscina, intern, &ctx);
+    arbor2 = pictor_componere(repo, &motus, piscina, intern, &cfg);
     c = componens_invenire_per_id(arbor2, chorda_ex_literis("tabula",
                                                             piscina));
     CREDO_VERUM(chorda_vacua(c->actio));
@@ -154,7 +197,7 @@ s32 principale (vacuum)
         InsulaRepositorium* repo2;
         repo2 = insula_repositorium_creare(piscina, intern,
             "<pictor latitudo=\"16\" altitudo=\"8\"/>");
-        arbor2 = pictor_componere(repo2, &motus, piscina, intern, &ctx);
+        arbor2 = pictor_componere(repo2, &motus, piscina, intern, &cfg);
         c = componens_invenire_per_id(arbor2,
                 chorda_ex_literis("prospectus", piscina));
         CREDO_AEQUALIS_I32(c->scala, I);
@@ -162,9 +205,23 @@ s32 principale (vacuum)
                 chorda_ex_literis("status", piscina));
         CREDO_CHORDA_AEQUALIS_LITERIS(c->titulus, "nihil");
     }
+}
 
-    imprimere("\n--- 013 B3: superficies status est - dispositio in"
-              " cellulis ---\n");
+interior vacuum
+_sectio_quarta (
+    CredoContextus* ctx)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+                  Motus  motus;
+       PictorCompositio  cfg;
+              Componens* arbor2;
+              Componens* c;
+
+    piscina  = ctx->piscina;
+    intern   = internamentum_creare(piscina);
+    motus    = ((constans Mundus*)ctx->suita)->motus;
+    cfg      = ((constans Mundus*)ctx->suita)->cfg;
     {
         InsulaRepositorium* repo_superficiei;
         repo_superficiei = insula_repositorium_creare(piscina, intern,
@@ -173,7 +230,7 @@ s32 principale (vacuum)
             " superficies_latitudo=\"480\""
             " superficies_altitudo=\"163\"/>");
         arbor2 = pictor_componere(repo_superficiei, &motus, piscina,
-            intern, &ctx);
+            intern, &cfg);
         /* radix = superficies tota; liberi ad cellulas: CLXIII / VIII
          * = XX lineae (pixela III residua: ora inferior ad superficiem,
          * linea status XI alta), LXXX columnae */
@@ -189,19 +246,61 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_S32(c->fines.altitudo, XIX * VIII);
         CREDO_AEQUALIS_S32(c->fines.latitudo, CDLXXX);
     }
+}
 
-    imprimere("\n--- Puritas et exemplar (gradus III) ---\n");
-    arbor2 = pictor_componere(repo, &motus, piscina, intern, &ctx);
+interior vacuum
+_sectio_quinta (
+    CredoContextus* ctx)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+     InsulaRepositorium* repo;
+                  Motus  motus;
+       PictorCompositio  cfg;
+              Componens* arbor;
+              Componens* arbor2;
+              character  ignotum[]     = "ignotum";
+              character  penicillus[]  = "penicillus";
+
+    piscina  = ctx->piscina;
+    intern   = internamentum_creare(piscina);
+    motus    = ((constans Mundus*)ctx->suita)->motus;
+    cfg      = ((constans Mundus*)ctx->suita)->cfg;
+    repo = insula_repositorium_creare(piscina, intern,
+        "<pictor latitudo=\"320\" altitudo=\"200\""
+        " instrumentum=\"penicillus\" zoom=\"2\""
+        " focus=\"tabula\"/>");
+    /* status sectionum priorum: arbor cum penicillo, deinde
+     * instrumentum ignotum */
+    arbor = pictor_componere(repo, &motus, piscina, intern, &cfg);
+    insula_mutare(repo, instrumentum_ponere, ignotum);
+    arbor2 = pictor_componere(repo, &motus, piscina, intern, &cfg);
     /* instrumentum mutatum: arbor alia */
     CREDO_FALSUM(componens_aequalis(arbor, arbor2));
     CREDO_VERUM(insula_mutare(repo, instrumentum_ponere, penicillus));
-    arbor2 = pictor_componere(repo, &motus, piscina, intern, &ctx);
+    arbor2 = pictor_componere(repo, &motus, piscina, intern, &cfg);
     CREDO_VERUM(componens_aequalis(arbor, arbor2));    /* puritas */
     CREDO_VERUM(exemplar_conferre(piscina,
         "probationes/pictor/pictor.arbor.stml",
         componens_scribere_stml(arbor, piscina, intern, VERUM)));
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "Actio ex instrumento", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "Arbor", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Instrumentum ignotum: tabula sine actione; zoom absens: scala I",
+        _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "013 B3: superficies status est - dispositio in cellulis",
+        _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Puritas et exemplar (gradus III)", _sectio_quinta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("pictor_componentia", SECTIONES,
+        _suitam_parare, NIHIL);
 }

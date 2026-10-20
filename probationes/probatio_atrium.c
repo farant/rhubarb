@@ -30,28 +30,20 @@
 #include <stdio.h>
 #include <string.h>
 
-s32 principale (vacuum)
-{
-        b32  praeteritus;
-    Piscina* piscina;
-
-    piscina = piscina_generare_dynamicum("probatio_atrium", 4096);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
 
     /* ========================================================
      * PROBARE: atrium_nuntium_discernere - casus vacui
      * ======================================================== */
 
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda n;
-
-        imprimere("\n--- Probans discretionem: vacua ---\n");
 
         n.datum    = NIHIL;
         n.mensura  = ZEPHYRUM;
@@ -64,16 +56,22 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 ((i32)atrium_nuntium_discernere(n),
                             (i32)ATRIUM_NUNTIUS_IGNOTUS);
     }
+}
 
 
     /* ========================================================
      * PROBARE: discretio RPC (regula primae litterae)
      * ======================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda n;
-
-        imprimere("\n--- Probans discretionem: RPC ---\n");
 
         n = chorda_ex_literis("{\"methodus\":\"x\"}", piscina);
         CREDO_AEQUALIS_I32 ((i32)atrium_nuntium_discernere(n),
@@ -98,17 +96,23 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 ((i32)atrium_nuntium_discernere(n),
                             (i32)ATRIUM_NUNTIUS_IGNOTUS);
     }
+}
 
 
     /* ========================================================
      * PROBARE: discretio PARATUS - et chorda NON terminata
      * ======================================================== */
 
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda n;
             i8 tabula[XVI];
-
-        imprimere("\n--- Probans discretionem: paratus ---\n");
 
         n = chorda_ex_literis("paratus", piscina);
         CREDO_AEQUALIS_I32 ((i32)atrium_nuntium_discernere(n),
@@ -143,12 +147,18 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 ((i32)atrium_nuntium_discernere(n),
                             (i32)ATRIUM_NUNTIUS_IGNOTUS);
     }
+}
 
 
     /* ========================================================
      * PROBARE: atrium_vexilla_legere
      * ======================================================== */
 
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         AtriumConfiguratio  figura;
                  character  a0[] = "app";
@@ -158,8 +168,6 @@ s32 principale (vacuum)
                  character  a4[] = "-portus";
                  character  a5[] = "8080";
                  character* argv[VI];
-
-        imprimere("\n--- Probans vexilla_legere ---\n");
 
         argv[0] = a0; argv[1] = a1; argv[2]  = a2;
         argv[3]                              = a3; argv[4] =
@@ -180,15 +188,20 @@ s32 principale (vacuum)
         CREDO_VERUM (figura.vivum);
         CREDO_AEQUALIS_I32 (figura.portus, (i32)8080);
     }
+}
 
+
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         AtriumConfiguratio  figura;
                  character  a0[] = "app";
                  character  a1[] = "-portus";
                  character  a2[] = "-5";
                  character* argv[III];
-
-        imprimere("\n--- Probans vexilla_legere: portus pravus ---\n");
 
         argv[0] = a0; argv[1] = a1; argv[2] = a2;
 
@@ -214,7 +227,14 @@ s32 principale (vacuum)
         atrium_vexilla_legere(NIHIL, (integer)III, argv);
         CREDO_VERUM (VERUM);
     }
+}
 
+
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         AtriumConfiguratio  figura;
                  character  a0[] = "app";
@@ -222,8 +242,6 @@ s32 principale (vacuum)
                  character  a2[] = "assets";
                  character  a3[] = "-vivum";
                  character* argv[IV];
-
-        imprimere("\n--- Probans vexilla_legere: -radix ---\n");
 
         argv[0] = a0; argv[1] = a1; argv[2] = a2; argv[3] = a3;
 
@@ -256,6 +274,7 @@ s32 principale (vacuum)
         atrium_vexilla_legere(&figura, (integer)II, argv);
         CREDO_VERUM (figura.capsula_radix == NIHIL);
     }
+}
 
 
     /* ========================================================
@@ -265,13 +284,18 @@ s32 principale (vacuum)
      * possunt. Pactum: NIHIL redditur ET causa NOMINAT.
      * ======================================================== */
 
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         AtriumConfiguratio  figura;
                     Atrium* atrium;
                     chorda  causa;
               CapsulaEmbed  capsula_ficta;
-
-        imprimere("\n--- Probans creare: recusationes ---\n");
 
         memset(&capsula_ficta, 0, magnitudo(capsula_ficta));
 
@@ -322,6 +346,7 @@ s32 principale (vacuum)
         atrium = atrium_creare(piscina, &figura, NIHIL);
         CREDO_NIHIL (atrium);
     }
+}
 
 
     /* ========================================================
@@ -332,9 +357,14 @@ s32 principale (vacuum)
      * quam valor nullus.
      * ======================================================== */
 
-    {
-        imprimere("\n--- Probans accessus super NIHIL ---\n");
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
 
+    piscina = c->piscina;
+    {
         CREDO_NIHIL (atrium_internuntius(NIHIL));
         CREDO_NIHIL (atrium_vitrea(NIHIL));
         CREDO_NIHIL (atrium_fenestra(NIHIL));
@@ -350,23 +380,29 @@ s32 principale (vacuum)
             chorda_ex_literis("window.x=1;", piscina));
         CREDO_VERUM (VERUM);
     }
+}
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "discretionem: vacua", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "discretionem: RPC", _sectio_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "discretionem: paratus", _sectio_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "vexilla_legere", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "vexilla_legere: portus pravus", _sectio_quinta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "vexilla_legere: -radix", _sectio_sexta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "creare: recusationes", _sectio_septima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "accessus super NIHIL", _sectio_octava, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    /* ========================================================
-     * Compendium
-     * ======================================================== */
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("atrium", SECTIONES);
 }

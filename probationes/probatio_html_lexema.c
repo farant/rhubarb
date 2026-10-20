@@ -180,20 +180,13 @@ _imperfecta_numerare (
     redde n;
 }
 
-s32
-principale (vacuum)
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-    Piscina* piscina = piscina_generare_dynamicum(
-        "probatio_html_lexema", 33554432);
+    Piscina* piscina;
 
-    si (piscina == NIHIL)
-    {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-    imprimere("\n--- Vocabularium fundamentale ---\n");
+    piscina = c->piscina;
     {
         interior constans HtmlLexemaGenus exspectata[] = {
             HTML_LEX_TAG_APERTURA, HTML_LEX_SPATIA,
@@ -227,8 +220,15 @@ principale (vacuum)
 
         _seriem_probare(piscina, "<b t=\"a > b\">", exspectata, 6);
     }
+}
 
-    imprimere("\n--- Se-claudentia et decipulae '/' ---\n");
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         interior constans HtmlLexemaGenus exspectata[] = {
             HTML_LEX_TAG_APERTURA, HTML_LEX_TAG_FINIS_SOLUS };
@@ -257,8 +257,15 @@ principale (vacuum)
 
         _seriem_probare(piscina, "<a / b>", exspectata, 6);
     }
+}
 
-    imprimere("\n--- Referentiae characterum ---\n");
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         interior constans HtmlLexemaGenus exspectata[] = {
             HTML_LEX_TEXTUS, HTML_LEX_REFERENTIA, HTML_LEX_TEXTUS,
@@ -268,8 +275,15 @@ principale (vacuum)
         _seriem_probare(piscina, "a &amp; b &#65; &#x41; &nope c",
             exspectata, 7);
     }
+}
 
-    imprimere("\n--- Commentaria ---\n");
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         interior constans HtmlLexemaGenus exspectata[] = {
             HTML_LEX_COMMENTARIUM, HTML_LEX_TEXTUS };
@@ -292,8 +306,15 @@ principale (vacuum)
 
         _seriem_probare(piscina, "<!-- apertum", exspectata, 1);
     }
+}
 
-    imprimere("\n--- Doctype, pravum, CDATA ---\n");
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         interior constans HtmlLexemaGenus exspectata[] = {
             HTML_LEX_DOCTYPE, HTML_LEX_TAG_APERTURA,
@@ -330,9 +351,15 @@ principale (vacuum)
 
         _seriem_probare(piscina, "<![CDATA[apertum", exspectata, 1);
     }
+}
 
-    imprimere("\n--- Textus crudus (script/style/title/textarea) "
-        "---\n");
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         interior constans HtmlLexemaGenus exspectata[] = {
             HTML_LEX_TAG_APERTURA, HTML_LEX_TAG_FINIS,
@@ -460,8 +487,15 @@ principale (vacuum)
         /* plaintext vacuum ad EOF: lexema nullum (progressus) */
         _seriem_probare(piscina, "<plaintext>", plana, 2);
     }
+}
 
-    imprimere("\n--- Margines '<' et truncationes ---\n");
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         interior constans HtmlLexemaGenus exspectata[] = {
             HTML_LEX_TEXTUS };
@@ -494,8 +528,16 @@ principale (vacuum)
 
         _seriem_probare(piscina, "<a t=\"x\ny\">", exspectata, 6);
     }
+}
 
-    imprimere("\n--- Totalitas: NUL et fidelitas marginum ---\n");
+
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         interior constans character truncus[] = { 'a', '\0', 'b' };
 
@@ -523,8 +565,16 @@ principale (vacuum)
                 (i32)strlen(margines[k])));
         }
     }
+}
 
-    imprimere("\n--- Positiones (octeti, 1-basatae) ---\n");
+
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
                Xar* l = _lexare_literis(piscina,
                    "<p>\n<em x=1>");
@@ -545,8 +595,16 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (lx->linea, (i32)2);
         CREDO_AEQUALIS_I32 (lx->columna, (i32)5);
     }
+}
 
-    imprimere("\n--- Fidelitas super corpus (fixa/html) ---\n");
+
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
          DirectoriumIterator* iter;
         DirectoriumIntroitus* e;
@@ -605,12 +663,33 @@ principale (vacuum)
         }
         CREDO_VERUM (probatae >= (i32)3);
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    si (credo_omnia_praeterierunt())
-    {
-        redde ZEPHYRUM;
-    }
-    redde I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "Vocabularium fundamentale", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "Se-claudentia et decipulae '/'", _sectio_secunda, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "Referentiae characterum", _sectio_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "Commentaria", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Doctype, pravum, CDATA", _sectio_quinta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "Textus crudus (script/style/title/textarea)", _sectio_sexta,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Margines '<' et truncationes", _sectio_septima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "Totalitas: NUL et fidelitas marginum", _sectio_octava, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "Positiones (octeti, 1-basatae)", _sectio_nona, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "Fidelitas super corpus (fixa/html)", _sectio_decima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("html_lexema", SECTIONES);
 }

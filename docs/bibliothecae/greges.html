@@ -11,7 +11,7 @@
 
 <p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
 <h1>Bibliothecae per greges</h1>
-<p class="subtitulus">The 264 libraries in include/, in 15 groups</p>
+<p class="subtitulus">The 248 libraries in include/, in 15 groups</p>
 
 <p>The same libraries as the <a href="index.html">table</a>, clustered by
 area, each group with a paragraph on what it is and how its libraries
@@ -24,7 +24,7 @@ bibliothecarum</em>), not in this page.</p>
 <li><a href="#fundamenta">Foundation</a> <span class="nota">(27)</span></li>
 <li><a href="#textus">Text</a> <span class="nota">(15)</span></li>
 <li><a href="#stml">STML and data formats</a> <span class="nota">(15)</span></li>
-<li><a href="#parsatores">Parsers: the C89 lineage</a> <span class="nota">(25)</span></li>
+<li><a href="#parsatores">Parsers: the C89 lineage</a> <span class="nota">(9)</span></li>
 <li><a href="#aedificatio">Build, binaries and tooling</a> <span class="nota">(21)</span></li>
 <li><a href="#acta">Records and storage</a> <span class="nota">(6)</span></li>
 <li><a href="#rete">Network</a> <span class="nota">(11)</span></li>
@@ -123,31 +123,15 @@ bibliothecarum</em>), not in this page.</p>
 </table>
 
 <h2 id="parsatores">IV. Parsers: the C89 lineage</h2>
-<p class="nota">25 libraries, 25 described</p>
-<p>The house parses its own C, and these headers are the generations of that effort: arbor v1 (recursive descent, January 2026), arbor2 (hand-written GLR, to follow several readings where macros and typedefs make C ambiguous), lapifex (a generator of LALR and GLR parsers from grammars), and then silva, the current parser, which lives in its own folder on the materia substrate and is not listed here. silva&#x27;s orientation note says why the lineage is kept in view: &#x27;smoothed-over assumptions quietly shave the maximalist scope. That shaving is how the three previous parsers died.&#x27; The house archives rather than deletes, and one generation turned out not to be retired at all: lapifex is still the engine under nuntium&#x27;s schema compiler, superseded as a C parser while load-bearing as a parser generator. The group also holds sputnik, the first generation&#x27;s small scripting language (lexer, Pratt parser, tree-walking interpreter), and the lexers for CSS, HTML and JavaScript.</p>
+<p class="nota">9 libraries, 9 described</p>
+<p>The house parses its own C, and the headers of that effort came in generations: arbor v1 (recursive descent, January 2026), arbor2 (hand-written GLR, to follow several readings where macros and typedefs make C ambiguous), lapifex (a generator of LALR and GLR parsers from grammars), and then silva, the current parser, which lives in its own folder on the materia substrate and is not listed here. silva&#x27;s orientation note says why the lineage is kept in view: &#x27;smoothed-over assumptions quietly shave the maximalist scope. That shaving is how the three previous parsers died.&#x27; The house archives rather than deletes: arbor v1, arbor2, and the parts of lapifex that only served them (its C89 grammar and its GLR engine) moved to archivum/ on 2026-10-19 as read-only historical reference, and are listed at the foot of the table page. One generation turned out not to be retired at all: lapifex&#x27;s generator, lexer and LR(1) engine stay here because they are the engine under nuntium&#x27;s schema compiler, superseded as a C parser while load-bearing as a parser generator. The group also holds sputnik, the first generation&#x27;s small scripting language (lexer, Pratt parser, tree-walking interpreter), and the lexers for CSS, HTML and JavaScript.</p>
 <table class="bibliothecae">
 <thead><tr><th>Library</th><th>In one sentence <span class="nota">(or the header's own gloss)</span></th></tr></thead>
 <tbody>
-<tr class="descripta"><td><a href="arbor.html">arbor</a></td><td>The convenience front of arbor v1, the house&#x27;s first C parser: one call to read a file (or a buffer) and run the whole pipeline, lex, preprocess, parse, with default …</td></tr>
-<tr class="descripta"><td><a href="arbor2_conditio_evaluare.html">arbor2_conditio_evaluare</a></td><td>Evaluates the constant expressions of #if and #elif: integers, arithmetic, comparison, logical and bitwise operators, the ternary, parentheses, defined(X) and defined X, …</td></tr>
-<tr class="descripta"><td><a href="arbor2_expandere.html">arbor2_expandere</a></td><td>arbor2&#x27;s macro expansion engine: expansion in LAYERS (layer 0 the source tokens, layer N after N expansion passes) over SEGMENTS (ranges where the set of macros does not …</td></tr>
-<tr class="descripta"><td><a href="arbor2_glr.html">arbor2_glr</a></td><td>The core of an earlier generation of the house C89 parser: a generalized LR (GLR) parser that meets C&#x27;s ambiguities (is foo * bar a declaration or a multiplication? a …</td></tr>
-<tr class="descripta"><td><a href="arbor2_lapifex_adaptator.html">arbor2_lapifex_adaptator</a></td><td>The bridge between arbor2&#x27;s lexer and lapifex&#x27;s generated parsers: converts a stream of arbor2 tokens into lapifex symbols, mapping each token kind to the terminal of a …</td></tr>
-<tr class="descripta"><td><a href="arbor2_lexema.html">arbor2_lexema</a></td><td>arbor2&#x27;s C89 lexer, forked from arbor v1&#x27;s: newlines become explicit tokens instead of trivia (the preprocessor is line-oriented, so the parser needs to see them), line …</td></tr>
-<tr class="descripta"><td><a href="arbor2_scribere.html">arbor2_scribere</a></td><td>Writes an arbor2 tree back to source by walking it and emitting every token with its trivia, so parse-then-write reproduces the file exactly; also a single-token emitter …</td></tr>
-<tr class="descripta"><td><a href="arbor2_token.html">arbor2_token</a></td><td>arbor2&#x27;s token, the unit the second-generation parser was built around: every token carries a provenance chain back through macro expansion to the source, always …</td></tr>
-<tr class="descripta"><td><a href="arbor_formator.html">arbor_formator</a></td><td>arbor v1&#x27;s formatter, with two modes: faithful (an exact byte-for-byte round trip, trivia preserved) and formatted (the house style, taken from lib/piscina.c: Allman …</td></tr>
-<tr class="descripta"><td><a href="arbor_index.html">arbor_index</a></td><td>arbor v1&#x27;s project-wide symbol index: add files or folders, build, then find a symbol, its definition and its references across files, with linkage tracked (external, …</td></tr>
-<tr class="descripta"><td><a href="arbor_lexema.html">arbor_lexema</a></td><td>arbor v1&#x27;s C89 lexer: turns source into tokens and keeps the trivia (spaces and comments) before and after each one, so the file can be written back byte for byte, an …</td></tr>
-<tr class="descripta"><td><a href="arbor_praeparator.html">arbor_praeparator</a></td><td>arbor v1&#x27;s C preprocessor: #include, #define, #if and the rest, with full #if expression evaluation, run as a separate pass before parsing.</td></tr>
-<tr class="descripta"><td><a href="arbor_syntaxis.html">arbor_syntaxis</a></td><td>arbor v1&#x27;s parser: a Pratt parser for expressions and recursive descent for statements, building a uniform node (53 kinds, a union for kind-specific data, children in a …</td></tr>
-<tr class="descripta"><td><a href="arbor_typus.html">arbor_typus</a></td><td>arbor v1&#x27;s type resolution, a separate pass after parsing: primitive, composite (pointer, array, function) and aggregate (struct, union, enum) types, typedef resolution, …</td></tr>
 <tr class="descripta"><td><a href="css_lexema.html">css_lexema</a></td><td>A total lexer for CSS (the vocabulary of CSS Syntax Module Level 3), the first of three web-format lexers written under silva&#x27;s contract: TOTAL (any byte sequence lexes; …</td></tr>
 <tr class="descripta"><td><a href="html_lexema.html">html_lexema</a></td><td>A total lexer for HTML, the tractable half of an HTML5 tokenizer, under the same contract as css_lexema (total, byte-faithful, byte positions, trivia as tokens; …</td></tr>
 <tr class="descripta"><td><a href="js_lexema.html">js_lexema</a></td><td>A total lexer for JavaScript under silva&#x27;s contract (total, byte-faithful, byte positions, trivia as tokens, unknown bytes as an IGNOTUM kind).</td></tr>
-<tr class="descripta"><td><a href="lapifex_c89.html">lapifex_c89</a></td><td>C89 as a lapifex grammar: parse an expression, a declaration, a statement or a whole translation unit with the GLR engine, producing arbor2&#x27;s tree nodes.</td></tr>
 <tr class="descripta"><td><a href="lapifex_generare.html">lapifex_generare</a></td><td>lapifex&#x27;s parser generator: reads a grammar written in STML, computes FIRST and FOLLOW sets, and builds the parse table.</td></tr>
-<tr class="descripta"><td><a href="lapifex_glr.html">lapifex_glr</a></td><td>lapifex&#x27;s GLR engine: consumes the same ACTION/GOTO tables but tolerates conflicts, forking at each one and merging in a graph-structured stack (GSS), with bounds on …</td></tr>
 <tr class="descripta"><td><a href="lapifex_lexere.html">lapifex_lexere</a></td><td>The lexer that comes with a lapifex grammar: terminals in the STML grammar carry an &#x27;exemplum&#x27;, either a literal (&#x27;+&#x27;) or one of two scanners ($numerus for [0-9]+, …</td></tr>
 <tr class="descripta"><td><a href="lapifex_parsere.html">lapifex_parsere</a></td><td>lapifex&#x27;s LR(1) parse engine: drives a token stream through the ACTION/GOTO table and builds a semantic value bottom-up through a reduction callback (production index, …</td></tr>
 <tr class="descripta"><td><a href="sputnik_interpres.html">sputnik_interpres</a></td><td>sputnik&#x27;s tree-walking interpreter: values as a tagged union, scopes as a chain of hash tables, a fresh arena per execution, and errors that halt at once.</td></tr>

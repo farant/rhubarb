@@ -19,9 +19,11 @@
  * ================================================== */
 
 interior vacuum
-_probare_literalia(Piscina* piscina, InternamentumChorda* intern)
+_sectio_prima (
+    CredoContextus* c)
 {
-    imprimere("\n--- Probatio Literalia ---\n");
+                Piscina* piscina  = c->piscina;
+    InternamentumChorda* intern   = internamentum_globale();
 
     /* Numerus */
     {
@@ -82,9 +84,11 @@ _probare_literalia(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-_probare_arithmeticam(Piscina* piscina, InternamentumChorda* intern)
+_sectio_secunda (
+    CredoContextus* c)
 {
-    imprimere("\n--- Probatio Arithmetica ---\n");
+                Piscina* piscina  = c->piscina;
+    InternamentumChorda* intern   = internamentum_globale();
 
     /* Additio */
     {
@@ -176,9 +180,11 @@ _probare_arithmeticam(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-_probare_comparationem(Piscina* piscina, InternamentumChorda* intern)
+_sectio_tertia (
+    CredoContextus* c)
 {
-    imprimere("\n--- Probatio Comparatio ---\n");
+                Piscina* piscina  = c->piscina;
+    InternamentumChorda* intern   = internamentum_globale();
 
     /* Minor */
     {
@@ -257,9 +263,11 @@ _probare_comparationem(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-_probare_logicos(Piscina* piscina, InternamentumChorda* intern)
+_sectio_quarta (
+    CredoContextus* c)
 {
-    imprimere("\n--- Probatio Logici ---\n");
+                Piscina* piscina  = c->piscina;
+    InternamentumChorda* intern   = internamentum_globale();
 
     /* Et */
     {
@@ -328,9 +336,11 @@ _probare_logicos(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-_probare_ternariam(Piscina* piscina, InternamentumChorda* intern)
+_sectio_quinta (
+    CredoContextus* c)
 {
-    imprimere("\n--- Probatio Ternaria ---\n");
+                Piscina* piscina  = c->piscina;
+    InternamentumChorda* intern   = internamentum_globale();
 
     {
         SputnikInterpresResultus r;
@@ -362,9 +372,11 @@ _probare_ternariam(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-_probare_variabiles(Piscina* piscina, InternamentumChorda* intern)
+_sectio_sexta (
+    CredoContextus* c)
 {
-    imprimere("\n--- Probatio Variabiles ---\n");
+                Piscina* piscina  = c->piscina;
+    InternamentumChorda* intern   = internamentum_globale();
 
     /* Let */
     {
@@ -422,9 +434,11 @@ _probare_variabiles(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-_probare_control_flow(Piscina* piscina, InternamentumChorda* intern)
+_sectio_septima (
+    CredoContextus* c)
 {
-    imprimere("\n--- Probatio Control Flow ---\n");
+                Piscina* piscina  = c->piscina;
+    InternamentumChorda* intern   = internamentum_globale();
 
     /* If verum */
     {
@@ -499,9 +513,11 @@ _probare_control_flow(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-_probare_frange_perge(Piscina* piscina, InternamentumChorda* intern)
+_sectio_octava (
+    CredoContextus* c)
 {
-    imprimere("\n--- Probatio Frange/Perge ---\n");
+                Piscina* piscina  = c->piscina;
+    InternamentumChorda* intern   = internamentum_globale();
 
     /* Frange in while */
     {
@@ -591,10 +607,11 @@ _probare_frange_perge(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-_probare_incrementum_decrementum(Piscina* piscina,
-    InternamentumChorda* intern)
+_sectio_nona (
+    CredoContextus* c)
 {
-    imprimere("\n--- Probatio Incrementum/Decrementum ---\n");
+                Piscina* piscina  = c->piscina;
+    InternamentumChorda* intern   = internamentum_globale();
 
     /* Increment simplex */
     {
@@ -679,10 +696,11 @@ _probare_incrementum_decrementum(Piscina* piscina,
  * ================================================== */
 
 interior vacuum
-_probare_assignatio_complexa(Piscina* piscina,
-    InternamentumChorda* intern)
+_sectio_decima (
+    CredoContextus* c)
 {
-    imprimere("\n--- Probatio Assignatio Complexa ---\n");
+                Piscina* piscina  = c->piscina;
+    InternamentumChorda* intern   = internamentum_globale();
 
     /* += */
     {
@@ -802,9 +820,11 @@ _probare_assignatio_complexa(Piscina* piscina,
  * ================================================== */
 
 interior vacuum
-_probare_functiones(Piscina* piscina, InternamentumChorda* intern)
+_sectio_decima_prima (
+    CredoContextus* c)
 {
-    imprimere("\n--- Probatio Functiones ---\n");
+                Piscina* piscina  = c->piscina;
+    InternamentumChorda* intern   = internamentum_globale();
 
     /* Functio simplex */
     {
@@ -877,9 +897,11 @@ _probare_functiones(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-_probare_arrays(Piscina* piscina, InternamentumChorda* intern)
+_sectio_decima_secunda (
+    CredoContextus* c)
 {
-    imprimere("\n--- Probatio Arrays ---\n");
+                Piscina* piscina  = c->piscina;
+    InternamentumChorda* intern   = internamentum_globale();
 
     /* Array literalis */
     {
@@ -925,9 +947,11 @@ _probare_arrays(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-_probare_objecta(Piscina* piscina, InternamentumChorda* intern)
+_sectio_decima_tertia (
+    CredoContextus* c)
 {
-    imprimere("\n--- Probatio Objecta ---\n");
+                Piscina* piscina  = c->piscina;
+    InternamentumChorda* intern   = internamentum_globale();
 
     /* Objectum literalis */
     {
@@ -990,9 +1014,11 @@ _probare_objecta(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-_probare_builtins(Piscina* piscina, InternamentumChorda* intern)
+_sectio_decima_quarta (
+    CredoContextus* c)
 {
-    imprimere("\n--- Probatio Built-ins ---\n");
+                Piscina* piscina  = c->piscina;
+    InternamentumChorda* intern   = internamentum_globale();
 
     /* len chorda */
     {
@@ -1066,9 +1092,11 @@ _probare_builtins(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-_probare_pecuniam(Piscina* piscina, InternamentumChorda* intern)
+_sectio_decima_quinta (
+    CredoContextus* c)
 {
-    imprimere("\n--- Probatio Pecunia ---\n");
+                Piscina* piscina  = c->piscina;
+    InternamentumChorda* intern   = internamentum_globale();
 
     /* Pecunia literalis simplex */
     {
@@ -1261,9 +1289,11 @@ _probare_pecuniam(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-_probare_errores(Piscina* piscina, InternamentumChorda* intern)
+_sectio_decima_sexta (
+    CredoContextus* c)
 {
-    imprimere("\n--- Probatio Errores ---\n");
+                Piscina* piscina  = c->piscina;
+    InternamentumChorda* intern   = internamentum_globale();
 
     /* Variabilis non definita */
     {
@@ -1308,9 +1338,11 @@ _probare_errores(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-_probare_complex(Piscina* piscina, InternamentumChorda* intern)
+_sectio_decima_septima (
+    CredoContextus* c)
 {
-    imprimere("\n--- Probatio Complex ---\n");
+                Piscina* piscina  = c->piscina;
+    InternamentumChorda* intern   = internamentum_globale();
 
     /* FizzBuzz-like */
     {
@@ -1370,10 +1402,11 @@ _probare_complex(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-_probare_functiones_sagittas(Piscina* piscina,
-    InternamentumChorda* intern)
+_sectio_decima_octava (
+    CredoContextus* c)
 {
-    imprimere("\n--- Probatio Functiones Sagittae ---\n");
+                Piscina* piscina  = c->piscina;
+    InternamentumChorda* intern   = internamentum_globale();
 
     /* Arrow simplex: x => x * 2 */
     {
@@ -1450,9 +1483,11 @@ _probare_functiones_sagittas(Piscina* piscina,
  * ================================================== */
 
 interior vacuum
-_probare_methodos_xar(Piscina* piscina, InternamentumChorda* intern)
+_sectio_decima_nona (
+    CredoContextus* c)
 {
-    imprimere("\n--- Probatio Methodi Xar ---\n");
+                Piscina* piscina  = c->piscina;
+    InternamentumChorda* intern   = internamentum_globale();
 
     /* push */
     {
@@ -1670,10 +1705,11 @@ _probare_methodos_xar(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-_probare_methodos_callback(Piscina* piscina,
-    InternamentumChorda* intern)
+_sectio_vicesima (
+    CredoContextus* c)
 {
-    imprimere("\n--- Probatio Methodi Callback ---\n");
+                Piscina* piscina  = c->piscina;
+    InternamentumChorda* intern   = internamentum_globale();
 
     /* map - simplex */
     {
@@ -1813,9 +1849,11 @@ _probare_methodos_callback(Piscina* piscina,
  * ================================================== */
 
 interior vacuum
-_probare_methodos_chorda(Piscina* piscina, InternamentumChorda* intern)
+_sectio_vicesima_prima (
+    CredoContextus* c)
 {
-    imprimere("\n--- Probatio Methodi Chorda ---\n");
+                Piscina* piscina  = c->piscina;
+    InternamentumChorda* intern   = internamentum_globale();
 
     /* length */
     {
@@ -1954,9 +1992,11 @@ _probare_methodos_chorda(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-_probare_template_strings(Piscina* piscina, InternamentumChorda* intern)
+_sectio_vicesima_secunda (
+    CredoContextus* c)
 {
-    imprimere("\n--- Probatio Template Strings ---\n");
+                Piscina* piscina  = c->piscina;
+    InternamentumChorda* intern   = internamentum_globale();
 
     /* Template simplex sine interpolatione */
     {
@@ -2167,9 +2207,11 @@ _probare_template_strings(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-_probare_effugia(Piscina* piscina, InternamentumChorda* intern)
+_sectio_vicesima_tertia (
+    CredoContextus* c)
 {
-    imprimere("\n--- Probatio Effugia ---\n");
+                Piscina* piscina  = c->piscina;
+    InternamentumChorda* intern   = internamentum_globale();
 
     /* Newline \n */
     {
@@ -2260,12 +2302,13 @@ _probare_effugia(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-_probare_entitates(Piscina* piscina, InternamentumChorda* intern)
+_sectio_vicesima_quarta (
+    CredoContextus* c)
 {
+                Piscina* piscina  = c->piscina;
+    InternamentumChorda* intern   = internamentum_globale();
            Persistentia* persistentia;
     EntitasRepositorium* repositorium;
-
-    imprimere("\n--- Probatio Entitates ---\n");
 
     /* Creare repositorium in memoria */
     persistentia = persistentia_memoria_creare(piscina);
@@ -2575,64 +2618,43 @@ _probare_entitates(Piscina* piscina, InternamentumChorda* intern)
 }
 
 
-/* ==================================================
- * Main
- * ================================================== */
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "Literalia", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Arithmetica", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Comparatio", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Logici", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Ternaria", _sectio_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Variabiles", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Control Flow", _sectio_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Frange/Perge", _sectio_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Incrementum/Decrementum", _sectio_nona, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "Assignatio Complexa", _sectio_decima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "Functiones", _sectio_decima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Arrays", _sectio_decima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Objecta", _sectio_decima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Built-ins", _sectio_decima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Pecunia", _sectio_decima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Errores", _sectio_decima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Complex", _sectio_decima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Functiones Sagittae", _sectio_decima_octava, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "Methodi Xar", _sectio_decima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Methodi Callback", _sectio_vicesima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "Methodi Chorda", _sectio_vicesima_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "Template Strings", _sectio_vicesima_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "Effugia", _sectio_vicesima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Entitates", _sectio_vicesima_quarta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
 integer
 principale (vacuum)
 {
-                Piscina* piscina;
-    InternamentumChorda* intern;
-                    b32  praeteritus;
-
-    piscina = piscina_generare_dynamicum("probatio_interpres",
-        1024 * 64);
-    /* Usare internamentum globale ut repositorium et interpres
-     * habeant eandem tabula chordae internatae */
-    intern = internamentum_globale();
-
-    credo_aperire(piscina);
-
-    _probare_literalia(piscina, intern);
-    _probare_arithmeticam(piscina, intern);
-    _probare_comparationem(piscina, intern);
-    _probare_logicos(piscina, intern);
-    _probare_ternariam(piscina, intern);
-    _probare_variabiles(piscina, intern);
-    _probare_control_flow(piscina, intern);
-    _probare_frange_perge(piscina, intern);
-    _probare_incrementum_decrementum(piscina, intern);
-    _probare_assignatio_complexa(piscina, intern);
-    _probare_functiones(piscina, intern);
-    _probare_arrays(piscina, intern);
-    _probare_objecta(piscina, intern);
-    _probare_builtins(piscina, intern);
-    _probare_pecuniam(piscina, intern);
-    _probare_errores(piscina, intern);
-    _probare_complex(piscina, intern);
-    _probare_functiones_sagittas(piscina, intern);
-    _probare_methodos_xar(piscina, intern);
-    _probare_methodos_callback(piscina, intern);
-    _probare_methodos_chorda(piscina, intern);
-    _probare_template_strings(piscina, intern);
-    _probare_effugia(piscina, intern);
-    _probare_entitates(piscina, intern);
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-
-    credo_claudere();
-    piscina_destruere(piscina);
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+    redde credo_suitam_currere("sputnik_interpres", SECTIONES);
 }

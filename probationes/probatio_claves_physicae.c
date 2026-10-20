@@ -41,26 +41,16 @@ interior constans Par PARIA[] = {
 };
 #define PARIUM_NUMERUS ((i32)(magnitudo(PARIA) / magnitudo(PARIA[0])))
 
-s32 principale (vacuum)
+/* I. tabula macOS: paria omnia */
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-     Piscina* piscina;
-         i32  k;
-         b32  visum[CXXVIII];
-         b32  omnia_recta    = VERUM;
-         b32  omnes_attacti  = VERUM;
+    i32 k;
+    b32 omnia_recta = VERUM;
 
-    piscina = piscina_generare_dynamicum("probatio_claves_physicae",
-        M * M);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-    imprimere("\n--- I. tabula macOS: paria omnia ---\n");
+    (vacuum)c;
     CREDO_AEQUALIS_I32 (PARIUM_NUMERUS, LXXXIII);
-    memset(visum, ZEPHYRUM, magnitudo(visum));
     per (k = ZEPHYRUM; k < PARIUM_NUMERUS; k++)
     {
         EventusCodex c = claves_codex_ex_macos(PARIA[k].kvk);
@@ -74,14 +64,31 @@ s32 principale (vacuum)
                 PARIA[k].titulus);
             omnia_recta = FALSUM;
         }
+    }
+    CREDO_VERUM (omnia_recta);
+}
+
+/* II. omnis codex attingitur - visum ex tabula PARIA ipsa computatur
+ * (olim a sectione I relictum) */
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    i32 k;
+    b32 visum[CXXVIII];
+    b32 omnes_attacti = VERUM;
+
+    (vacuum)c;
+    memset(visum, ZEPHYRUM, magnitudo(visum));
+    per (k = ZEPHYRUM; k < PARIUM_NUMERUS; k++)
+    {
+        EventusCodex c = claves_codex_ex_macos(PARIA[k].kvk);
+
         si ((i32)c < CXXVIII)
         {
             visum[c] = VERUM;
         }
     }
-    CREDO_VERUM (omnia_recta);
-
-    imprimere("\n--- II. omnis codex attingitur (tabula sine lacuna) ---\n");
     per (k = I; k < (i32)EVENTUS_CODICES_NUMERUS; k++)
     {
         si (!visum[k])
@@ -92,109 +99,145 @@ s32 principale (vacuum)
         }
     }
     CREDO_VERUM (omnes_attacti);
+}
 
-    imprimere("\n--- III. ignoti ---\n");
+/* III. ignoti */
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    (vacuum)c;
     CREDO_VERUM (claves_codex_ex_macos(52) == EVENTUS_CODEX_IGNOTUS);
     CREDO_VERUM (claves_codex_ex_macos(63) == EVENTUS_CODEX_IGNOTUS);
     CREDO_VERUM (claves_codex_ex_macos(200) == EVENTUS_CODEX_IGNOTUS);
     CREDO_VERUM (claves_codex_ex_macos(-I) == EVENTUS_CODEX_IGNOTUS);
+}
 
-    imprimere("\n--- IV. dispositio US basica (B2b) ---\n");
+/* IV. dispositio US basica (B2b) */
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    constans character* signa = "`-=[]\\;',./ ";
+    constans character* tituli[XIV];
+                   i32  j;
+
+    (vacuum)c;
+    tituli[0]  = "Backquote";    tituli[1]  = "Minus";
+    tituli[2]  = "Equal";        tituli[3]  = "BracketLeft";
+    tituli[4]  = "BracketRight"; tituli[5]  = "Backslash";
+    tituli[6]  = "Semicolon";    tituli[7]  = "Quote";
+    tituli[8]  = "Comma";        tituli[9]  = "Period";
+    tituli[10] = "Slash";        tituli[11] = "Space";
+    per (j = ZEPHYRUM; j < XII; j++)
     {
-        constans character* signa = "`-=[]\\;',./ ";
-        constans character* tituli[XIV];
-                       i32  j;
+        CREDO_VERUM (strcmp(eventus_codex_titulus(
+            claves_codex_ex_littera((s32)signa[j])), tituli[j])
+            == ZEPHYRUM);
+    }
+    per (j = ZEPHYRUM; j < XXVI; j++)
+    {
+        CREDO_VERUM (claves_codex_ex_littera((s32)('a' + j))
+            == (EventusCodex)(EVENTUS_CODEX_LITTERAE + j));
+    }
+    per (j = ZEPHYRUM; j < X; j++)
+    {
+        CREDO_VERUM (claves_codex_ex_littera((s32)('0' + j))
+            == (EventusCodex)(EVENTUS_CODEX_NUMERI + j));
+    }
+    /* concordia cum macOS: eadem positio */
+    CREDO_VERUM (claves_codex_ex_littera('q')
+        == claves_codex_ex_macos(XII));
+    CREDO_VERUM (claves_codex_ex_littera(';')
+        == claves_codex_ex_macos(XLI));
+    CREDO_VERUM (claves_codex_ex_littera('A')
+        == EVENTUS_CODEX_IGNOTUS);
+    CREDO_VERUM (claves_codex_ex_littera(0x444)
+        == EVENTUS_CODEX_IGNOTUS);
+}
 
-        tituli[0]  = "Backquote";    tituli[1]  = "Minus";
-        tituli[2]  = "Equal";        tituli[3]  = "BracketLeft";
-        tituli[4]  = "BracketRight"; tituli[5]  = "Backslash";
-        tituli[6]  = "Semicolon";    tituli[7]  = "Quote";
-        tituli[8]  = "Comma";        tituli[9]  = "Period";
-        tituli[10] = "Slash";        tituli[11] = "Space";
-        per (j = ZEPHYRUM; j < XII; j++)
-        {
-            CREDO_VERUM (strcmp(eventus_codex_titulus(
-                claves_codex_ex_littera((s32)signa[j])), tituli[j])
+/* V. kitty: claves functionales */
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+                   s32  numeri[XIII];
+    constans character* tituli[XIII];
+                   i32  j;
+
+    (vacuum)c;
+    numeri[0]  = XXVII;  tituli[0]  = "Escape";
+    numeri[1]  = XIII;   tituli[1]  = "Enter";
+    numeri[2]  = IX;     tituli[2]  = "Tab";
+    numeri[3]  = CXXVII; tituli[3]  = "Backspace";
+    numeri[4]  = 57358;  tituli[4]  = "CapsLock";
+    numeri[5]  = 57441;  tituli[5]  = "ShiftLeft";
+    numeri[6]  = 57447;  tituli[6]  = "ShiftRight";
+    numeri[7]  = 57442;  tituli[7]  = "ControlLeft";
+    numeri[8]  = 57448;  tituli[8]  = "ControlRight";
+    numeri[9]  = 57443;  tituli[9]  = "AltLeft";
+    numeri[10] = 57449;  tituli[10] = "AltRight";
+    numeri[11] = 57444;  tituli[11] = "MetaLeft";
+    numeri[12] = 57450;  tituli[12] = "MetaRight";
+    per (j = ZEPHYRUM; j < XIII; j++)
+    {
+        CREDO_VERUM (strcmp(eventus_codex_titulus(
+            claves_codex_ex_kitty(numeri[j])), tituli[j])
                 == ZEPHYRUM);
-        }
-        per (j = ZEPHYRUM; j < XXVI; j++)
-        {
-            CREDO_VERUM (claves_codex_ex_littera((s32)('a' + j))
-                == (EventusCodex)(EVENTUS_CODEX_LITTERAE + j));
-        }
-        per (j = ZEPHYRUM; j < X; j++)
-        {
-            CREDO_VERUM (claves_codex_ex_littera((s32)('0' + j))
-                == (EventusCodex)(EVENTUS_CODEX_NUMERI + j));
-        }
-        /* concordia cum macOS: eadem positio */
-        CREDO_VERUM (claves_codex_ex_littera('q')
-            == claves_codex_ex_macos(XII));
-        CREDO_VERUM (claves_codex_ex_littera(';')
-            == claves_codex_ex_macos(XLI));
-        CREDO_VERUM (claves_codex_ex_littera('A')
-            == EVENTUS_CODEX_IGNOTUS);
-        CREDO_VERUM (claves_codex_ex_littera(0x444)
-            == EVENTUS_CODEX_IGNOTUS);
     }
+    /* runae, F13, tabula numerica: sine codice */
+    CREDO_VERUM (claves_codex_ex_kitty(XCVII)
+        == EVENTUS_CODEX_IGNOTUS);
+    CREDO_VERUM (claves_codex_ex_kitty(57376)
+        == EVENTUS_CODEX_IGNOTUS);
+    CREDO_VERUM (claves_codex_ex_kitty(57399)
+        == EVENTUS_CODEX_IGNOTUS);
+}
 
-    imprimere("\n--- V. kitty: claves functionales ---\n");
+/* littera ex codice (B6a): inversum */
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    s32 r;
+    i32 inversa = ZEPHYRUM;
+
+    (vacuum)c;
+    per (r = XXXII; r < CXXVII; r++)
     {
-                       s32  numeri[XIII];
-        constans character* tituli[XIII];
-                       i32  j;
+        EventusCodex c = claves_codex_ex_littera(r);
 
-        numeri[0]  = XXVII;  tituli[0]  = "Escape";
-        numeri[1]  = XIII;   tituli[1]  = "Enter";
-        numeri[2]  = IX;     tituli[2]  = "Tab";
-        numeri[3]  = CXXVII; tituli[3]  = "Backspace";
-        numeri[4]  = 57358;  tituli[4]  = "CapsLock";
-        numeri[5]  = 57441;  tituli[5]  = "ShiftLeft";
-        numeri[6]  = 57447;  tituli[6]  = "ShiftRight";
-        numeri[7]  = 57442;  tituli[7]  = "ControlLeft";
-        numeri[8]  = 57448;  tituli[8]  = "ControlRight";
-        numeri[9]  = 57443;  tituli[9]  = "AltLeft";
-        numeri[10] = 57449;  tituli[10] = "AltRight";
-        numeri[11] = 57444;  tituli[11] = "MetaLeft";
-        numeri[12] = 57450;  tituli[12] = "MetaRight";
-        per (j = ZEPHYRUM; j < XIII; j++)
+        si (c != EVENTUS_CODEX_IGNOTUS)
         {
-            CREDO_VERUM (strcmp(eventus_codex_titulus(
-                claves_codex_ex_kitty(numeri[j])), tituli[j])
-                    == ZEPHYRUM);
+            CREDO_AEQUALIS_S32 (claves_littera_ex_codex(c), r);
+            inversa++;
         }
-        /* runae, F13, tabula numerica: sine codice */
-        CREDO_VERUM (claves_codex_ex_kitty(XCVII)
-            == EVENTUS_CODEX_IGNOTUS);
-        CREDO_VERUM (claves_codex_ex_kitty(57376)
-            == EVENTUS_CODEX_IGNOTUS);
-        CREDO_VERUM (claves_codex_ex_kitty(57399)
-            == EVENTUS_CODEX_IGNOTUS);
     }
+    /* a-z, 0-9, XI signa, spatium */
+    CREDO_AEQUALIS_I32 (inversa, XLVIII);
+    CREDO_AEQUALIS_S32 (claves_littera_ex_codex(
+        EVENTUS_CODEX_REDITUS), ZEPHYRUM);
+}
 
-    imprimere("\n");
-    imprimere("\n--- littera ex codice (B6a): inversum ---\n");
-    {
-        s32 r;
-        i32 inversa = ZEPHYRUM;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I. tabula macOS: paria omnia", _sectio_prima, NIHIL, NIHIL,
+        NIHIL,
+        NIHIL },
+    { "II. omnis codex attingitur (tabula sine lacuna)",
+        _sectio_secunda,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "III. ignoti", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "IV. dispositio US basica (B2b)", _sectio_quarta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "V. kitty: claves functionales", _sectio_quinta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "littera ex codice (B6a): inversum", _sectio_sexta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-        per (r = XXXII; r < CXXVII; r++)
-        {
-            EventusCodex c = claves_codex_ex_littera(r);
-
-            si (c != EVENTUS_CODEX_IGNOTUS)
-            {
-                CREDO_AEQUALIS_S32 (claves_littera_ex_codex(c), r);
-                inversa++;
-            }
-        }
-        /* a-z, 0-9, XI signa, spatium */
-        CREDO_AEQUALIS_I32 (inversa, XLVIII);
-        CREDO_AEQUALIS_S32 (claves_littera_ex_codex(
-            EVENTUS_CODEX_REDITUS), ZEPHYRUM);
-    }
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("claves_physicae", SECTIONES);
 }

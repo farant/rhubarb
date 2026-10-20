@@ -71,7 +71,12 @@ numerare (
     (*(i32*)ctx)++;
 }
 
-s32 principale (vacuum)
+/* SECTIO UNA (credo II): scaena gradibus nominatis (CREDO_GRADUS) -
+ * repositorium unum per gradus mutatur (versio, acta, canon, domini),
+ * ergo gradus sectiones liberae esse non possunt */
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
                  Piscina* piscina;
      InternamentumChorda* intern;
@@ -86,15 +91,10 @@ s32 principale (vacuum)
                character  furtivus[]  = "furtivus";
                character  focus_b1[]  = "b1";
 
-    piscina = piscina_generare_dynamicum("probatio_insula",
-        LXIV * M);
-    si (!piscina)
-    { imprimere("FRACTA: piscina\n"); redde I;
-    }
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
 
-    imprimere("\n--- Probans creationem et lectionem ---\n");
+    CREDO_GRADUS("creationem et lectionem");
     /* C2: insula una - olim latitudo/altitudo in arbore durabili */
     repo = insula_repositorium_creare(piscina, intern,
         "<insula latitudo=\"320\" altitudo=\"200\""
@@ -110,7 +110,7 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_I32(insula_versio(repo), ZEPHYRUM);
     CREDO_FALSUM(insula_mendacium(repo));
 
-    imprimere("\n--- Probans portam ---\n");
+    CREDO_GRADUS("portam");
     acta = ZEPHYRUM;
     insula_ponere_actarium(repo, numerare, &acta);
     CREDO_VERUM(insula_mutare(repo, ponere_instrumentum, impletio));
@@ -124,7 +124,7 @@ s32 principale (vacuum)
         xar_numerus(insula_radix(repo)->attributa),
         IV);
 
-    imprimere("\n--- Probans restitutionem HONESTAM ---\n");
+    CREDO_GRADUS("restitutionem HONESTAM");
     CREDO_VERUM(insula_restituere(repo));
     CREDO_FALSUM(insula_mendacium(repo));
     a = insula_attributum(repo, "instrumentum");
@@ -135,8 +135,7 @@ s32 principale (vacuum)
     CREDO_CHORDA_AEQUALIS_LITERIS(*a, "tabula");
     CREDO_AEQUALIS_I32(insula_versio(repo), I);
 
-    imprimere("\n--- Probans scriptorem MENTIENTEM (lex rehydrationis)"
-              " ---\n");
+    CREDO_GRADUS("scriptorem MENTIENTEM (lex rehydrationis)");
     radix = insula_radix(repo);
     /* extra portam: pointer lectionis solae abusus */
     insula_attributum_ponere(radix, piscina, intern, "instrumentum",
@@ -155,7 +154,7 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_I32(insula_versio(repo), I);
     CREDO_AEQUALIS_I32(acta, I);
 
-    imprimere("\n--- Probans canonem: scriptura recusata ---\n");
+    CREDO_GRADUS("canonem: scriptura recusata");
     canon = canon_legere(chorda_ex_literis(
         "<canon dialectus=\"insula\" versio=\"1\">"
         "<elementum nomen=\"insula\" radix=\"verum\">"
@@ -185,7 +184,7 @@ s32 principale (vacuum)
     CREDO_VERUM(insula_restituere(repo));
     CREDO_FALSUM(insula_mendacium(repo));
 
-    imprimere("\n--- Probans dominos: alienus recusatur ---\n");
+    CREDO_GRADUS("dominos: alienus recusatur");
     CREDO_VERUM(insula_dominum_ponere(repo, "focus",
                                       "dispensator"));
     CREDO_FALSUM(insula_dominum_ponere(repo, "", "x"));
@@ -212,7 +211,7 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_I32(insula_versio(repo), IV);
     insula_scriptorem_ponere(repo, chorda_ex_literis("", piscina));
 
-    imprimere("\n--- Probans scribere ---\n");
+    CREDO_GRADUS("scribere");
     /* C2: arbor una - latitudo et instrumentum simul */
     CREDO_CHORDA_CONTINET(
         insula_scribere(repo, piscina),
@@ -220,8 +219,16 @@ s32 principale (vacuum)
     CREDO_CHORDA_CONTINET(
         insula_scribere(repo, piscina),
         chorda_ex_literis("linea", piscina));
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "tria genera, portae unicae, restitutio, mendacium",
+        _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("insula", SECTIONES);
 }

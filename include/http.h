@@ -146,7 +146,8 @@ nomen enumeratio {
     HTTP_PARSE_CAPITA,                 /* Parsing headers */
     HTTP_PARSE_CORPUS,                 /* Parsing body */
     HTTP_PARSE_COMPLETA,               /* Parsing complete */
-    HTTP_PARSE_ERROR                   /* Parse error */
+    HTTP_PARSE_ERROR,                  /* Parse error */
+    HTTP_PARSE_CAPITA_COMPLETA         /* capita_solum: corpus vocantis */
 } HttpParseStatus;
 
 /* Petitio serveri (parsed incoming request) */
@@ -166,6 +167,10 @@ nomen structura {
     b32 keep_alive;       /* Connection: keep-alive */
     b32 chunked;          /* Transfer-Encoding: chunked */
     i32 content_length;   /* Content-Length header value */
+
+    /* corpus in filo temporario (hospitium, corpus magnum); NIHIL =
+     * corpus in memoria (supra) */
+    constans character* corpus_via;
 } HttpPetitioServeri;
 
 /* Parser incrementalis (opaque) */
@@ -174,11 +179,14 @@ nomen structura HttpParser HttpParser;
 /* Limites parseris (0 in creare_cum_limitibus = defalta) */
 #define HTTP_PETITIO_MAXIMA_DEFALTA  (M * M)      /* 1MB petitio tota */
 #define HTTP_URI_MAXIMA_DEFALTA      (VIII * M)   /* 8KB URI */
+/* capita_solum: capita (linea + capita) ultra hoc = 431 */
+#define HTTP_CAPITA_SOLUM_MAXIMA     (LXIV * MXXIV)
 
 /* Resultus parse */
 nomen structura {
                    b32  successus;
                    b32  completa;      /* FALSUM si necesse plus data */
+                   b32  capita_completa;  /* capita_solum: corpus sequitur */
     HttpPetitioServeri* petitio;
              HttpError  error;
                 chorda  error_descriptio;
@@ -420,6 +428,16 @@ http_responsum_serialize_cum_conexione (
               b32  keep_alive,
           Piscina* piscina);
 
+/* Capita SOLA cum Content-Length dato - corpus postea per fontem
+ * mittitur (hospitium-v3-spec II.1, corpora magna per partes).
+ * corpus responsi neglegitur; Connection ut supra */
+chorda
+http_responsum_capita_serialize (
+    HttpResponsum* responsum,
+              b32  keep_alive,
+              i64  longitudo_corporis,
+          Piscina* piscina);
+
 
 /* ========================================================================
  * FUNCTIONES - UTILITAS
@@ -505,6 +523,24 @@ http_parser_est_completa (
 /* Obtinere petitio parsata (post completa) */
 HttpPetitioServeri*
 http_parser_obtinere_petitio (
+    HttpParser* parser);
+
+/* Modus capita_solum: ad lineam vacuam cum Content-Length > 0
+ * parser SISTIT (status HTTP_PARSE_CAPITA_COMPLETA, res.capita_completa
+ * VERUM, completa FALSUM) - corpus vocans ipse legit (hospitium: per
+ * rivum in filum aut parserem multipartitum). Content-Length >
+ * petitio_maxima tamen 413 ante corpus; capita ultra
+ * HTTP_CAPITA_SOLUM_MAXIMA = 431. Post CAPITA_COMPLETA adicere nihil
+ * accipit. */
+vacuum
+http_parser_capita_solum (
+    HttpParser* parser,
+           b32  modus);
+
+/* Octeti corporis iam in buffer parseris post capita (CAPITA_COMPLETA
+ * solum; aliter vacua) - vocans eos primos corpori dat */
+chorda
+http_parser_corpus_initium (
     HttpParser* parser);
 
 /* Reset parser pro nova petitio */

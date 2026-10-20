@@ -307,28 +307,20 @@ _obiectum_invenire (
     redde NIHIL;
 }
 
-s32 principale (vacuum)
-{
-        b32  praeteritus;
-    Piscina* piscina;
-
-    piscina = piscina_generare_dynamicum("probatio_aedilis", 65536);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
 
     /* ========================================================
      * PROBARE: via_normalizare - pinnae resolutionis aedilis
      * ======================================================== */
 
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda v;
-
-        imprimere("\n--- Probans via_normalizare (pinnae) ---\n");
 
         v = via_normalizare(chorda_ex_literis("foo/../bar", piscina),
             piscina);
@@ -350,18 +342,24 @@ s32 principale (vacuum)
             piscina), piscina);
         CREDO_CHORDA_AEQUALIS_LITERIS(v, "/bar");
     }
+}
 
 
     /* ========================================================
      * PROBARE: catena resolutionis (via_iungere + normalizare)
      * ======================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda partes[2];
         chorda iuncta;
         chorda v;
-
-        imprimere("\n--- Probans catenam resolutionis ---\n");
 
         /* includens lib/hospitium.c rogat "via.h" relate ad
          * directorium suum, deinde -I "include" temptatur; forma
@@ -376,20 +374,26 @@ s32 principale (vacuum)
         v = via_normalizare(iuncta, piscina);
         CREDO_CHORDA_AEQUALIS_LITERIS(v, "include/hospitium.h");
     }
+}
 
 
     /* ========================================================
      * PROBARE: stml circuitus - valores attributorum verbatim
      * ======================================================== */
 
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         InternamentumChorda* intern;
                   StmlNodus* obiectum;
                StmlResultus  relectum;
                      chorda  scriptum;
                      chorda* valor;
-
-        imprimere("\n--- Probans stml circuitum attributorum ---\n");
 
         intern = internamentum_creare(piscina);
         CREDO_NON_NIHIL(intern);
@@ -419,20 +423,26 @@ s32 principale (vacuum)
         CREDO_CHORDA_AEQUALIS_LITERIS(*valor,
             "-framework Cocoa -O2 -DGRADUS=3");
     }
+}
 
 
     /* ========================================================
      * PROBARE: characteres asperi in valoribus (verbatim praeter ")
      * ======================================================== */
 
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         InternamentumChorda* intern;
                   StmlNodus* nodus;
                StmlResultus  relectum;
                      chorda  scriptum;
                      chorda* valor;
-
-        imprimere("\n--- Probans characteres asperos ---\n");
 
         intern = internamentum_creare(piscina);
 
@@ -472,12 +482,20 @@ s32 principale (vacuum)
             CREDO_NIHIL(valor);
         }
     }
+}
 
 
     /* ========================================================
      * PROBARE: circuitus manifesti figurati (pulchrum)
      * ======================================================== */
 
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         InternamentumChorda* intern;
                   StmlNodus* radix;
@@ -488,8 +506,6 @@ s32 principale (vacuum)
                      chorda  scriptum;
                      chorda* valor;
                         Xar* filii;
-
-        imprimere("\n--- Probans manifestum figuratum ---\n");
 
         intern = internamentum_creare(piscina);
 
@@ -544,17 +560,23 @@ s32 principale (vacuum)
         CREDO_NON_NIHIL(valor);
         CREDO_CHORDA_AEQUALIS_LITERIS(*valor, "aedilis.stml");
     }
+}
 
 
     /* ========================================================
      * PROBARE: configurationem legere (fixtura aedilis.stml)
      * ======================================================== */
 
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         AedilisConfiguratio* configuratio;
                      chorda  causa;
-
-        imprimere("\n--- Probans configurationem ---\n");
 
         causa.datum    = NIHIL;
         causa.mensura  = ZEPHYRUM;
@@ -590,20 +612,26 @@ s32 principale (vacuum)
             "probationes/fixa/aedilis/abest.stml", &causa));
         CREDO_CHORDA_NON_VACUA(causa);
     }
+}
 
 
     /* ========================================================
      * PROBARE: derivationem (extractor fixturarum, disci verae)
      * ======================================================== */
 
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         AedilisConfiguratio* configuratio;
              AedilisFructus* fructus;
             AedilisObiectum* obiectum;
               AedilisVendor* vendor;
                      chorda  causa;
-
-        imprimere("\n--- Probans derivationem ---\n");
 
         causa.datum    = NIHIL;
         causa.mensura  = ZEPHYRUM;
@@ -745,19 +773,25 @@ s32 principale (vacuum)
         CREDO_NIHIL(_obiectum_invenire(fructus,
             "lib/beta_macos.m"));
     }
+}
 
 
     /* ========================================================
      * PROBARE: cyclus inclusionum = recusatio ordinationis
      * ======================================================== */
 
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         AedilisConfiguratio* configuratio;
              AedilisFructus* fructus;
                         Xar* ordinati;
                      chorda  causa;
-
-        imprimere("\n--- Probans cyclum inclusionum ---\n");
 
         causa.datum    = NIHIL;
         causa.mensura  = ZEPHYRUM;
@@ -784,18 +818,24 @@ s32 principale (vacuum)
         CREDO_CHORDA_CONTINET(causa,
             chorda_ex_literis("cyclus_b.h", piscina));
     }
+}
 
 
     /* ========================================================
      * PROBARE: recusationes (praecisio aut silentium)
      * ======================================================== */
 
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         AedilisConfiguratio* configuratio;
              AedilisFructus* fructus;
                      chorda  causa;
-
-        imprimere("\n--- Probans recusationes ---\n");
 
         causa.datum    = NIHIL;
         causa.mensura  = ZEPHYRUM;
@@ -834,19 +874,25 @@ s32 principale (vacuum)
         CREDO_CHORDA_CONTINET(causa,
             chorda_ex_literis("nusquam_est", piscina));
     }
+}
 
 
     /* ========================================================
      * PROBARE: scripta emissa (contentum; executio in porta)
      * ======================================================== */
 
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         AedilisConfiguratio* configuratio;
              AedilisFructus* fructus;
                      chorda  scriptum;
                      chorda  causa;
-
-        imprimere("\n--- Probans scripta emissa ---\n");
 
         causa.datum    = NIHIL;
         causa.mensura  = ZEPHYRUM;
@@ -902,12 +948,20 @@ s32 principale (vacuum)
         CREDO_FALSUM(chorda_continet(scriptum, chorda_ex_literis(
             "build/aedilis/obiecta\"", piscina)));
     }
+}
 
 
     /* ========================================================
      * PROBARE: manifestum scribere + relegere
      * ======================================================== */
 
+interior vacuum
+_sectio_decima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         AedilisConfiguratio* configuratio;
              AedilisFructus* fructus;
@@ -921,8 +975,6 @@ s32 principale (vacuum)
                      chorda* valor;
                         i32  i;
                         i32  numerus;
-
-        imprimere("\n--- Probans manifestum ---\n");
 
         causa.datum    = NIHIL;
         causa.mensura  = ZEPHYRUM;
@@ -1040,6 +1092,7 @@ s32 principale (vacuum)
             CREDO_VERUM(beta_inventum);
         }
     }
+}
 
 
     /* ==================================================
@@ -1050,13 +1103,18 @@ s32 principale (vacuum)
      * manent (consumptores XII+ ea legunt).
      * ================================================== */
 
+interior vacuum
+_sectio_decima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         AedilisConfiguratio* configuratio;
              AedilisFructus* fructus;
                      chorda  causa;
                      chorda  manifestum;
-
-        imprimere("\n--- Probans citatas inresolutas ---\n");
 
         causa.datum    = NIHIL;
         causa.mensura  = ZEPHYRUM;
@@ -1096,6 +1154,7 @@ s32 principale (vacuum)
         CREDO_FALSUM(chorda_continet(manifestum,
             chorda_ex_literis("inresolutae", piscina)));
     }
+}
 
 
     /* ========================================================
@@ -1103,12 +1162,17 @@ s32 principale (vacuum)
      * promittit clausuram SINE regula nexus (frameworks)
      * ======================================================== */
 
+interior vacuum
+_sectio_decima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         AedilisConfiguratio* configuratio;
              AedilisFructus* fructus;
                      chorda  causa;
-
-        imprimere("\n--- Probans nexum purum ---\n");
 
         causa.datum    = NIHIL;
         causa.mensura  = ZEPHYRUM;
@@ -1185,6 +1249,7 @@ s32 principale (vacuum)
         CREDO_CHORDA_CONTINET(causa,
             chorda_ex_literis("nexus", piscina));
     }
+}
 
 
     /* ==================================================
@@ -1193,12 +1258,18 @@ s32 principale (vacuum)
      * ignotus -> recusatio nominata; sine annotatione vacua
      * ================================================== */
 
+interior vacuum
+_sectio_decima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         AedilisConfiguratio* configuratio;
              AedilisFructus* fructus;
                      chorda  causa;
 
-        imprimere("\n--- Probans facultatem ---\n");
         causa.datum    = NIHIL;
         causa.mensura  = ZEPHYRUM;
         configuratio = aedilis_configurationem_legere(piscina,
@@ -1248,6 +1319,7 @@ s32 principale (vacuum)
         CREDO_CHORDA_CONTINET(causa,
             chorda_ex_literis("facultas_caput.h", piscina));
     }
+}
 
 
     /* ==================================================
@@ -1258,12 +1330,18 @@ s32 principale (vacuum)
      * nominata; sine annotatione vacua
      * ================================================== */
 
+interior vacuum
+_sectio_decima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         AedilisConfiguratio* configuratio;
              AedilisFructus* fructus;
                      chorda  causa;
 
-        imprimere("\n--- Probans instrumentum ---\n");
         causa.datum    = NIHIL;
         causa.mensura  = ZEPHYRUM;
         configuratio = aedilis_configurationem_legere(piscina,
@@ -1331,23 +1409,38 @@ s32 principale (vacuum)
         CREDO_CHORDA_CONTINET(causa,
             chorda_ex_literis("instrumentum_caput.h", piscina));
     }
+}
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "via_normalizare (pinnae)", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "catenam resolutionis", _sectio_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "stml circuitum attributorum", _sectio_tertia, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "characteres asperos", _sectio_quarta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "manifestum figuratum", _sectio_quinta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "configurationem", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "derivationem", _sectio_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "cyclum inclusionum", _sectio_octava, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "recusationes", _sectio_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "scripta emissa", _sectio_decima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "manifestum", _sectio_decima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "citatas inresolutas", _sectio_decima_secunda, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "nexum purum", _sectio_decima_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "facultatem", _sectio_decima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "instrumentum", _sectio_decima_quinta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    /* ========================================================
-     * Compendium
-     * ======================================================== */
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("aedilis", SECTIONES);
 }

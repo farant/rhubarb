@@ -62,13 +62,17 @@ _expressio_ex_sententia (
  * ================================================== */
 
 interior vacuum
-_probare_literalia(Piscina* piscina, InternamentumChorda* intern)
+_sectio_prima (
+    CredoContextus* c)
 {
+                  Piscina* piscina;
+      InternamentumChorda* intern;
     SputnikParserResultus  r;
           SputnikAstNodus* sent;
           SputnikAstNodus* expr;
 
-    imprimere("\n--- Probatio Literalia ---\n");
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
 
     /* Numerus integer */
     {
@@ -150,13 +154,17 @@ _probare_literalia(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-_probare_identificatores(Piscina* piscina, InternamentumChorda* intern)
+_sectio_secunda (
+    CredoContextus* c)
 {
+                  Piscina* piscina;
+      InternamentumChorda* intern;
     SputnikParserResultus  r;
           SputnikAstNodus* sent;
           SputnikAstNodus* expr;
 
-    imprimere("\n--- Probatio Identificatores ---\n");
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
 
     /* Identificator simplex */
     {
@@ -206,16 +214,19 @@ _probare_identificatores(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-_probare_operationes_binariae(Piscina* piscina,
-    InternamentumChorda* intern)
+_sectio_tertia (
+    CredoContextus* c)
 {
+                  Piscina* piscina;
+      InternamentumChorda* intern;
     SputnikParserResultus  r;
           SputnikAstNodus* sent;
           SputnikAstNodus* expr;
           SputnikAstNodus* sin;
           SputnikAstNodus* dex;
 
-    imprimere("\n--- Probatio Operationes Binariae ---\n");
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
 
     /* Additio simplex */
     {
@@ -280,14 +291,18 @@ _probare_operationes_binariae(Piscina* piscina,
  * ================================================== */
 
 interior vacuum
-_probare_praecedentia(Piscina* piscina, InternamentumChorda* intern)
+_sectio_quarta (
+    CredoContextus* c)
 {
+                  Piscina* piscina;
+      InternamentumChorda* intern;
     SputnikParserResultus  r;
           SputnikAstNodus* sent;
           SputnikAstNodus* expr;
           SputnikAstNodus* dex;
 
-    imprimere("\n--- Probatio Praecedentia ---\n");
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
 
     /* 1 + 2 * 3 => 1 + (2 * 3) */
     {
@@ -344,15 +359,18 @@ _probare_praecedentia(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-_probare_operationes_unariae(Piscina* piscina,
-    InternamentumChorda* intern)
+_sectio_quinta (
+    CredoContextus* c)
 {
+                  Piscina* piscina;
+      InternamentumChorda* intern;
     SputnikParserResultus  r;
           SputnikAstNodus* sent;
           SputnikAstNodus* expr;
           SputnikAstNodus* operandus;
 
-    imprimere("\n--- Probatio Operationes Unariae ---\n");
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
 
     /* Negatio */
     {
@@ -385,8 +403,11 @@ _probare_operationes_unariae(Piscina* piscina,
  * ================================================== */
 
 interior vacuum
-_probare_ternaria(Piscina* piscina, InternamentumChorda* intern)
+_sectio_sexta (
+    CredoContextus* c)
 {
+                  Piscina* piscina;
+      InternamentumChorda* intern;
     SputnikParserResultus  r;
           SputnikAstNodus* sent;
           SputnikAstNodus* expr;
@@ -394,7 +415,8 @@ _probare_ternaria(Piscina* piscina, InternamentumChorda* intern)
           SputnikAstNodus* verum_ramus;
           SputnikAstNodus* falsum_ramus;
 
-    imprimere("\n--- Probatio Ternaria ---\n");
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
 
     /* a ? b : c */
     {
@@ -438,13 +460,17 @@ _probare_ternaria(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-_probare_accessus(Piscina* piscina, InternamentumChorda* intern)
+_sectio_septima (
+    CredoContextus* c)
 {
+                  Piscina* piscina;
+      InternamentumChorda* intern;
     SputnikParserResultus  r;
           SputnikAstNodus* sent;
           SputnikAstNodus* expr;
 
-    imprimere("\n--- Probatio Accessus ---\n");
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
 
     /* Accessus membri */
     {
@@ -487,13 +513,17 @@ _probare_accessus(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-_probare_vocatio(Piscina* piscina, InternamentumChorda* intern)
+_sectio_octava (
+    CredoContextus* c)
 {
+                  Piscina* piscina;
+      InternamentumChorda* intern;
     SputnikParserResultus  r;
           SputnikAstNodus* sent;
           SputnikAstNodus* expr;
 
-    imprimere("\n--- Probatio Vocatio ---\n");
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
 
     /* Vocatio sine argumentis */
     {
@@ -538,14 +568,17 @@ _probare_vocatio(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-_probare_literalia_composita(Piscina* piscina,
-    InternamentumChorda* intern)
+_sectio_nona (
+    CredoContextus* c)
 {
+                  Piscina* piscina;
+      InternamentumChorda* intern;
     SputnikParserResultus  r;
           SputnikAstNodus* sent;
           SputnikAstNodus* expr;
 
-    imprimere("\n--- Probatio Literalia Composita ---\n");
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
 
     /* Xar vacuum */
     {
@@ -598,13 +631,17 @@ _probare_literalia_composita(Piscina* piscina,
  * ================================================== */
 
 interior vacuum
-_probare_declarationes(Piscina* piscina, InternamentumChorda* intern)
+_sectio_decima (
+    CredoContextus* c)
 {
+                  Piscina* piscina;
+      InternamentumChorda* intern;
     SputnikParserResultus  r;
           SputnikAstNodus* sent;
           SputnikAstNodus* valor;
 
-    imprimere("\n--- Probatio Declarationes ---\n");
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
 
     /* Sit sine valore */
     {
@@ -646,12 +683,16 @@ _probare_declarationes(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-_probare_control_flow(Piscina* piscina, InternamentumChorda* intern)
+_sectio_decima_prima (
+    CredoContextus* c)
 {
+                  Piscina* piscina;
+      InternamentumChorda* intern;
     SputnikParserResultus  r;
           SputnikAstNodus* sent;
 
-    imprimere("\n--- Probatio Control Flow ---\n");
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
 
     /* Si simplex */
     {
@@ -721,12 +762,16 @@ _probare_control_flow(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-_probare_functiones(Piscina* piscina, InternamentumChorda* intern)
+_sectio_decima_secunda (
+    CredoContextus* c)
 {
+                  Piscina* piscina;
+      InternamentumChorda* intern;
     SputnikParserResultus  r;
           SputnikAstNodus* sent;
 
-    imprimere("\n--- Probatio Functiones ---\n");
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
 
     /* Functio sine parametris */
     {
@@ -761,9 +806,11 @@ _probare_functiones(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-_probare_programma_complexum(Piscina* piscina,
-    InternamentumChorda* intern)
+_sectio_decima_tertia (
+    CredoContextus* c)
 {
+                  Piscina* piscina;
+      InternamentumChorda* intern;
     SputnikParserResultus  r;
        constans character* programma =
            "functio factorial(n) {\n"
@@ -775,7 +822,8 @@ _probare_programma_complexum(Piscina* piscina,
            "\n"
            "sit result = factorial(5);\n";
 
-    imprimere("\n--- Probatio Programma Complexum ---\n");
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
 
     r = sputnik_parsere_ex_literis(programma, piscina, intern);
     CREDO(r.successus);
@@ -792,11 +840,15 @@ _probare_programma_complexum(Piscina* piscina,
  * ================================================== */
 
 interior vacuum
-_probare_errores(Piscina* piscina, InternamentumChorda* intern)
+_sectio_decima_quarta (
+    CredoContextus* c)
 {
-    SputnikParserResultus r;
+                  Piscina* piscina;
+      InternamentumChorda* intern;
+    SputnikParserResultus  r;
 
-    imprimere("\n--- Probatio Errores ---\n");
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
 
     /* Semicolon deest */
     {
@@ -825,51 +877,31 @@ _probare_errores(Piscina* piscina, InternamentumChorda* intern)
  * Principale
  * ================================================== */
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "Literalia", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Identificatores", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Operationes Binariae", _sectio_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "Praecedentia", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Operationes Unariae", _sectio_quinta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "Ternaria", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Accessus", _sectio_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Vocatio", _sectio_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Literalia Composita", _sectio_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Declarationes", _sectio_decima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Control Flow", _sectio_decima_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "Functiones", _sectio_decima_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "Programma Complexum", _sectio_decima_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "Errores", _sectio_decima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
 s32
 principale (vacuum)
 {
-                Piscina* piscina;
-    InternamentumChorda* intern;
-                    b32  praeteritus;
-
-    piscina = piscina_generare_dynamicum("probatio_parser",
-        IV * MXXIV * IV);
-    intern = internamentum_creare(piscina);
-
-    credo_aperire(piscina);
-
-    imprimere("========================================\n");
-    imprimere("PROBATIO SPUTNIK PARSER\n");
-    imprimere("========================================\n");
-
-    _probare_literalia(piscina, intern);
-    _probare_identificatores(piscina, intern);
-    _probare_operationes_binariae(piscina, intern);
-    _probare_praecedentia(piscina, intern);
-    _probare_operationes_unariae(piscina, intern);
-    _probare_ternaria(piscina, intern);
-    _probare_accessus(piscina, intern);
-    _probare_vocatio(piscina, intern);
-    _probare_literalia_composita(piscina, intern);
-    _probare_declarationes(piscina, intern);
-    _probare_control_flow(piscina, intern);
-    _probare_functiones(piscina, intern);
-    _probare_programma_complexum(piscina, intern);
-    _probare_errores(piscina, intern);
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-
-    piscina_destruere(piscina);
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+    redde credo_suitam_currere("sputnik_parser", SECTIONES);
 }

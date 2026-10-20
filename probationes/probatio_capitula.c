@@ -7,13 +7,13 @@
 #include "credo.h"
 #include <stdio.h>
 
-interior Piscina* arena = NIHIL;
-
 interior IndexLibri
 _legere (
+        CredoContextus* c,
     constans character* textus)
 {
-    redde capitula_legere(chorda_ex_literis(textus, arena), arena);
+    redde capitula_legere(chorda_ex_literis(textus, c->piscina),
+        c->piscina);
 }
 
 interior Capitulum*
@@ -24,30 +24,20 @@ _capitulum (
     redde (Capitulum*)xar_obtinere(idx.capitula, positio);
 }
 
-s32 principale (vacuum)
-{
-    b32 praeteritus;
-
-    arena = piscina_generare_dynamicum("probatio_capitula", 65536);
-    si (!arena)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(arena);
-
 
     /* ========================================================
      * PROBARE: index planus, nullae inscriptiones
      * ======================================================== */
 
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
     {
-        IndexLibri idx = _legere(
+        IndexLibri idx = _legere(c,
             "Prooemium\n"
             "De methodo\n"
             "Epilogus\n");
-
-        imprimere("\n--- Probans indicem planum ---\n");
 
         CREDO_AEQUALIS_I32 (xar_numerus(idx.capitula), III);
         CREDO_AEQUALIS_I32 (idx.gradus_maximus, ZEPHYRUM);
@@ -63,20 +53,23 @@ s32 principale (vacuum)
             "Epilogus");
         CREDO_AEQUALIS_I32 (_capitulum(idx, II)->ordo, III);
     }
+}
 
 
     /* ========================================================
      * PROBARE: forma <inscriptio> <separator> <titulus>
      * ======================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
     {
-        IndexLibri idx = _legere(
+        IndexLibri idx = _legere(c,
             "1 - De methodo\n"
             "II - De materia\n"
             "Capitulum 3 : De fine\n"
             "Appendix 4 \xE2\x80\x94 Tabulae\n");
-
-        imprimere("\n--- Probans separatores ---\n");
 
         CREDO_AEQUALIS_I32 (xar_numerus(idx.capitula), IV);
 
@@ -101,21 +94,24 @@ s32 principale (vacuum)
         CREDO_CHORDA_AEQUALIS_LITERIS (_capitulum(idx, III)->titulus,
             "Tabulae");
     }
+}
 
 
     /* ========================================================
      * PROBARE: forma <signum><punctum> <titulus>
      * ======================================================== */
 
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
     {
-        IndexLibri idx = _legere(
+        IndexLibri idx = _legere(c,
             "1. De methodo\n"
             "2) De materia\n"
             "XIV. De fine\n"
             "1.2.3 De sectione\n"
             "I.4 De mixto\n");
-
-        imprimere("\n--- Probans signa numeralia ---\n");
 
         CREDO_AEQUALIS_I32 (xar_numerus(idx.capitula), V);
 
@@ -138,6 +134,7 @@ s32 principale (vacuum)
         CREDO_CHORDA_AEQUALIS_LITERIS (_capitulum(idx, IV)->inscriptio,
             "I.4");
     }
+}
 
 
     /* ========================================================
@@ -146,13 +143,15 @@ s32 principale (vacuum)
      * scriberet, et ancora MENTIENS nasceretur.
      * ======================================================== */
 
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
     {
-        IndexLibri idx = _legere(
+        IndexLibri idx = _legere(c,
             "The Long Road - and What Came After\n"
             "Chapter One\n"
             "I am the walrus\n");
-
-        imprimere("\n--- Probans decipulam subtituli ---\n");
 
         CREDO_AEQUALIS_I32 (xar_numerus(idx.capitula), III);
 
@@ -171,22 +170,25 @@ s32 principale (vacuum)
         CREDO_CHORDA_AEQUALIS_LITERIS (_capitulum(idx, II)->inscriptio,
             "I");
     }
+}
 
 
     /* ========================================================
      * PROBARE: nidificatio - duo spatia, quattuor, tabulus
      * ======================================================== */
 
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
     {
-        IndexLibri idx = _legere(
+        IndexLibri idx = _legere(c,
             "Pars I\n"
             "  1. Prima\n"
             "  2. Secunda\n"
             "Pars II\n"
             "    3. Tertia\n"
             "\t4. Quarta\n");
-
-        imprimere("\n--- Probans nidificationem ---\n");
 
         CREDO_AEQUALIS_I32 (xar_numerus(idx.capitula), VI);
         CREDO_AEQUALIS_I32 (idx.gradus_maximus, I);
@@ -208,21 +210,24 @@ s32 principale (vacuum)
         /* ordo PLANUS est, per gradus continuus */
         CREDO_AEQUALIS_I32 (_capitulum(idx, V)->ordo, VI);
     }
+}
 
 
     /* ========================================================
      * PROBARE: nidificatio profunda + egressus partialis
      * ======================================================== */
 
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
     {
-        IndexLibri idx = _legere(
+        IndexLibri idx = _legere(c,
             "A\n"
             "  B\n"
             "    C\n"
             "  D\n"
             "E\n");
-
-        imprimere("\n--- Probans egressum partialem ---\n");
 
         CREDO_AEQUALIS_I32 (_capitulum(idx, ZEPHYRUM)->gradus,
             ZEPHYRUM);
@@ -232,18 +237,21 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (_capitulum(idx, IV)->gradus, ZEPHYRUM);
         CREDO_AEQUALIS_I32 (idx.gradus_maximus, II);
     }
+}
 
 
     /* ========================================================
      * PROBARE: fines linearum omnium generum
      * ======================================================== */
 
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
     {
-        IndexLibri crlf  = _legere("Unum\r\nDuo\r\nTria");
-        IndexLibri cr    = _legere("Unum\rDuo\rTria");
-        IndexLibri sine  = _legere("Unum\nDuo\nTria");
-
-        imprimere("\n--- Probans fines linearum ---\n");
+        IndexLibri crlf  = _legere(c, "Unum\r\nDuo\r\nTria");
+        IndexLibri cr    = _legere(c, "Unum\rDuo\rTria");
+        IndexLibri sine  = _legere(c, "Unum\nDuo\nTria");
 
         /* linea ULTIMA sine fine legitima est in omnibus tribus */
         CREDO_AEQUALIS_I32 (xar_numerus(crlf.capitula), III);
@@ -255,22 +263,25 @@ s32 principale (vacuum)
         CREDO_CHORDA_AEQUALIS_LITERIS (_capitulum(cr, II)->titulus,
             "Tria");
     }
+}
 
 
     /* ========================================================
      * PROBARE: lineae vacuae et albae
      * ======================================================== */
 
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
     {
-        IndexLibri idx = _legere(
+        IndexLibri idx = _legere(c,
             "Unum\n"
             "\n"
             "   \n"
             "\t\n"
             "  Duo  \n"
             "\n");
-
-        imprimere("\n--- Probans lineas vacuas ---\n");
 
         CREDO_AEQUALIS_I32 (xar_numerus(idx.capitula), II);
 
@@ -285,20 +296,23 @@ s32 principale (vacuum)
         /* numerus lineae FONTIS servatur, non numerus capituli */
         CREDO_AEQUALIS_I32 (_capitulum(idx, I)->linea, V);
     }
+}
 
 
     /* ========================================================
      * PROBARE: casus limitis
      * ======================================================== */
 
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
     {
-        IndexLibri vacuus  = _legere("");
-        IndexLibri albus   = _legere("\n\n   \n");
-        IndexLibri signum  = _legere("1.\n");
-        IndexLibri longa   = _legere(
+        IndexLibri vacuus  = _legere(c, "");
+        IndexLibri albus   = _legere(c, "\n\n   \n");
+        IndexLibri signum  = _legere(c, "1.\n");
+        IndexLibri longa   = _legere(c,
             "Praefatio ad editionem tertiam - De consilio\n");
-
-        imprimere("\n--- Probans casus limitis ---\n");
 
         CREDO_AEQUALIS_I32 (xar_numerus(vacuus.capitula), ZEPHYRUM);
         CREDO_AEQUALIS_I32 (xar_numerus(albus.capitula), ZEPHYRUM);
@@ -316,23 +330,24 @@ s32 principale (vacuum)
             _capitulum(longa, ZEPHYRUM)->titulus,
             "Praefatio ad editionem tertiam - De consilio");
     }
+}
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "indicem planum", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "separatores", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "signa numeralia", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "decipulam subtituli", _sectio_quarta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "nidificationem", _sectio_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "egressum partialem", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "fines linearum", _sectio_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "lineas vacuas", _sectio_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "casus limitis", _sectio_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    /* ========================================================
-     * Compendium
-     * ======================================================== */
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("capitula", SECTIONES);
 }

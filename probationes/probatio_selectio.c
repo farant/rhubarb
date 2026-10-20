@@ -26,24 +26,20 @@ _legere_stml (
     redde resultus.elementum_radix;
 }
 
-s32
-principale (vacuum)
+
+/* ==================================================
+ * PROBATIONES PARSATIONIS
+ * ================================================== */
+
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
                 Piscina* piscina;
     InternamentumChorda* intern;
-                    b32  praeteritus;
 
-    piscina  = piscina_generare_dynamicum("probatio_selectio", 65536);
+    piscina  = c->piscina;
     intern   = internamentum_creare(piscina);
-    credo_aperire(piscina);
-
-
-    /* ==================================================
-     * PROBATIONES PARSATIONIS
-     * ================================================== */
-
-    imprimere("\n--- Probans Selectio Parsing ---\n");
-
     /* Probatio: Parsare selectorem tituli simplicem */
     {
         SelectioResultus  resultus;
@@ -268,14 +264,22 @@ principale (vacuum)
         CREDO_AEQUALIS_I32(resultus.selectio->sequens->combinator,
             COMBINATOR_FRATER_GEN);
     }
+}
 
 
-    /* ==================================================
-     * PROBATIONES CONGRUENTIAE
-     * ================================================== */
+/* ==================================================
+ * PROBATIONES CONGRUENTIAE
+ * ================================================== */
 
-    imprimere("\n--- Probans Selectio Matching ---\n");
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     /* Probatio: Congruere selectorem tituli */
     {
         StmlNodus* root;
@@ -567,16 +571,17 @@ principale (vacuum)
             intern);
         CREDO_NON_NIHIL(found);
     }
+}
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "Selectio Parsing", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Selectio Matching", _sectio_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    /* ==================================================
-     * COMPENDIUM
-     * ================================================== */
-
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    credo_claudere();
-    piscina_destruere(piscina);
-
-    redde praeteritus ? ZEPHYRUM : I;
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("selectio", SECTIONES);
 }

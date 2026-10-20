@@ -1,0 +1,100 @@
+<interrogationes unitas="imago_opus">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I resize an image to an exact width and height?
+    <responsum symbolum="imago_scalare ImagoScalaModus">Call
+      imago_scalare(fons, latitudo, altitudo, modus, piscina). It
+      returns a NEW Imago whose RGBA pixels live in the piscina you
+      pass; the source is not touched. A NIHIL source, NIHIL pixels or
+      a zero dimension give an empty Imago (pixela NIHIL, 0 x 0), so
+      test .pixela before using the result. The source's own size is
+      not checked, so do not pass a source with pixels but a zero
+      width or height. An unknown modus falls back to nearest
+      neighbour.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I choose between PROXIMUS, BILINEARIS and AREA?
+    <responsum symbolum="imago_scalare ImagoScalaModus" via="lib/pictor_documentum.c">Use
+      IMAGO_SCALA_AREA to shrink: it averages every source pixel under
+      each output pixel, weighted by alpha. Bilinear reads only a 2 x 2
+      neighbourhood whatever the scale, so 1024 to 16 would sample 4
+      of 4096 pixels. Use BILINEARIS to enlarge smoothly (it is exact
+      at 1:1) and PROXIMUS for fast or pixel-art scaling.
+      pictor_documentum picks AREA when the new width is smaller,
+      bilinear otherwise.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why is AREA scaling alpha-weighted, and why does a transparent pixel not tint its neighbours?
+    <responsum symbolum="imago_scalare Imago" via="lib/imago_opus.worklog.md include/imago_typus.h">Imago
+      pixels are RGBA and NOT premultiplied. A plain average would let
+      invisible pixels pull their colour into the result (the halo
+      around icon edges). AREA therefore averages alpha by coverage and
+      averages RGB weighted by alpha times coverage, rounding half up:
+      opaque red beside transparent white at 2:1 gives (255, 0, 0,
+      128). A block that is fully transparent comes out as all
+      zeros.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I rely on imago_scalare_ad_limites filling the limit exactly in one dimension?
+    <responsum symbolum="imago_scalare_ad_limites imago_extrahere_et_scalare imago_scalare" via="lib/imago_opus.worklog.md">No.
+      The fit-within ratio is computed in 16-bit fixed point and
+      truncated twice, so the side that should touch the limit is
+      often one pixel short (a 1000 px crop asked for 16 gives 15; a 3
+      x 3 image fitted to 100 x 100 gives 99 x 99), and then the whole
+      image is resampled. It also always scales, enlarging small
+      images too. When the size must be exact, compute it yourself and
+      call imago_scalare, as icones and pictor_documentum do.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I crop an image without resampling it?
+    <responsum symbolum="imago_excidere imago_extrahere_et_scalare" via="lib/specimen.c">Use
+      imago_excidere(fons, x, y, latitudo, altitudo, piscina): it
+      copies the intersection of the region with the source, pixel for
+      pixel, into a new Imago (a 5 x 5 region at (3, 3) of a 4 x 4
+      image gives 1 x 1). A region wholly outside gives an empty
+      Imago. imago_extrahere_et_scalare always runs a resampler over
+      the region (and fits it within limits), which is the reason
+      specimen gives for cropping by hand.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I alpha-blend one image onto another with imago_transcribere?
+    <responsum symbolum="imago_transcribere imago_creare">No:
+      it is a copy, not a composite. Destination pixels are REPLACED,
+      alpha included, even where the source is fully transparent.
+      dx and dy may be negative and every edge is clipped; an image
+      wholly outside changes nothing. It uses memcpy per row, so do not
+      pass the same Imago as source and destination (overlapping rows).
+      Start a canvas with imago_creare, which fills one RGBA
+      colour.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I draw a rectangle outline or a filled rectangle into an Imago?
+    <responsum symbolum="imago_rectangulum">imago_rectangulum(dest,
+      x, y, latitudo, altitudo, crassitudo, r, g, b, a) draws the
+      outline with its thickness INSIDE [x, x + latitudo) x [y, y +
+      altitudo), clipped to the image; x and y may be negative.
+      0 draws nothing. A thickness from half the shorter side (rounded
+      up) up to the shorter side fills it. Never go above the shorter
+      side, whatever the header says: the bands are not clamped to the
+      rectangle, so a thicker value paints outside it (w 4, h 20,
+      thickness 5 paints columns x - 1 and x + 4).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can these functions handle very large images?
+    <responsum symbolum="imago_scalare imago_scalare_ad_limites imago_creare">Only
+      moderately. The AREA path computes in s64, but the nearest and
+      bilinear paths index the source in s32 and wrap near a 23170 x
+      23170 source; buffer sizes are latitudo * altitudo * 4 in i32,
+      which is UNSIGNED and wraps above 4 GB; and the fit-within paths
+      multiply the limit by 65536 in s32, so limits must stay below
+      32768.</responsum>
+  </interrogatio>
+
+</interrogationes>

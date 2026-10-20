@@ -31,9 +31,6 @@
 #include <stdio.h>
 #include <string.h>
 
-hic_manens Piscina*             piscina;
-hic_manens InternamentumChorda* intern;
-
 interior b32
 scribam_montare (
                  vacuum* sedes,
@@ -132,7 +129,8 @@ superficies_est (
 interior Componens*
 liberum (
            Dispensator* d,
-    constans character* id)
+    constans character* id,
+               Piscina* piscina)
 {
     redde componens_invenire_per_id(dispensator_arbor(d),
         chorda_ex_literis(id, piscina));
@@ -189,22 +187,21 @@ numerare (
     redde n;
 }
 
-s32 principale (vacuum)
+interior vacuum
+_sectio_prima (
+    CredoContextus* ctx)
 {
-         Volumen* vol;
-           Vicus* v;
-     Dispensator* d;
-      ManusLudus* m;
-       Componens* c;
-         Punctum  p;
+                Piscina* piscina;
+    InternamentumChorda* intern;
+                Volumen* vol;
+                  Vicus* v;
+            Dispensator* d;
+             ManusLudus* m;
+              Componens* c;
+                Punctum  p;
 
-    piscina = piscina_generare_dynamicum("probatio_vicus_compositio",
-        LXIV * M);
-    si (!piscina)
-    { imprimere("FRACTA: piscina\n"); redde I;
-    }
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
+    piscina  = ctx->piscina;
+    intern   = internamentum_creare(piscina);
     thema_initiare();
     vol = volumen_temporarium(piscina, "probatio_vicus_compositio");
 
@@ -223,7 +220,6 @@ s32 principale (vacuum)
         "<tabula id=\"p1\"><latus genus=\"pictor\"/></tabula>"
         "</tabulae>"));
 
-    imprimere("\n--- I: superficies ramorum post aperire ---\n");
     /* fenestra CDLXXX, linea VIII: latera CCXL x CDLXXII (S2a) */
     CREDO_VERUM(superficies_est(v, "scriba", "s1_sinistrum_scriba",
         "240",
@@ -234,13 +230,13 @@ s32 principale (vacuum)
         "240",
         "472"));
 
-    imprimere("\n--- II: arbor - radix, linea, activa translata ---\n");
+    CREDO_GRADUS("II: arbor - radix, linea, activa translata");
     d = dispensator_creare(piscina, intern, v->repo, vicus_actiones(v),
         vicus_componere, v, CCC);
     m = manus_ludus_creare(piscina, d);
     CREDO_NON_NIHIL(dispensator_arbor(d));
     CREDO_CHORDA_AEQUALIS_LITERIS(dispensator_arbor(d)->id, "vicus");
-    c = liberum(d, "vicus.tabulae");
+    c = liberum(d, "vicus.tabulae", piscina);
     CREDO_NON_NIHIL(c);
     si (c)
     {
@@ -249,7 +245,7 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_S32(c->fines.altitudo, VIII);
     }
     /* linea status scribae in linea ULTIMA fenestrae */
-    c = liberum(d, "status");
+    c = liberum(d, "status", piscina);
     CREDO_NON_NIHIL(c);
     si (c)
     {
@@ -270,9 +266,9 @@ s32 principale (vacuum)
         CREDO_CHORDA_AEQUALIS_LITERIS(c->spatium,
             "pictor:s1_dextrum_pictor");
     }
-    CREDO_NON_NIHIL(liberum(d, "vicus.divisor"));
+    CREDO_NON_NIHIL(liberum(d, "vicus.divisor", piscina));
 
-    imprimere("\n--- III: ictus in coordinatis schirmi ---\n");
+    CREDO_GRADUS("III: ictus in coordinatis schirmi");
     /* y XII = linea marginis scribae (translata); sine translatione
      * pagina esset */
     CREDO_VERUM(manus_ludus_premere_ad(m, XXX, XII));
@@ -281,7 +277,7 @@ s32 principale (vacuum)
     CREDO_VERUM(manus_ludus_premere_ad(m, XXX, XX));
     CREDO_CHORDA_AEQUALIS_LITERIS(dispensator_focus(d), "pagina");
 
-    imprimere("\n--- IV: mutatio magnitudinis - rami sequuntur ---\n");
+    CREDO_GRADUS("IV: mutatio magnitudinis - rami sequuntur");
     {
         Eventus e;
 
@@ -299,7 +295,7 @@ s32 principale (vacuum)
     CREDO_VERUM(superficies_est(v, "pictor", "p1_sinistrum_pictor",
         "150",
         "312"));
-    c = liberum(d, "status");
+    c = liberum(d, "status", piscina);
     CREDO_NON_NIHIL(c);
     si (c)
     {
@@ -310,7 +306,7 @@ s32 principale (vacuum)
     }
     CREDO_FALSUM(insula_mendacium(v->repo));
 
-    imprimere("\n--- V: pixela lineae tabularum ---\n");
+    CREDO_GRADUS("V: pixela lineae tabularum");
     {
              Mandata* md;
      TabulaPixelorum* t;
@@ -342,15 +338,25 @@ s32 principale (vacuum)
             color(COLOR_BACKGROUND));
     }
 
-    imprimere("\n--- VI: commutatio - arbor pictoris ---\n");
+    CREDO_GRADUS("VI: commutatio - arbor pictoris");
     CREDO_VERUM(vicus_activam_ponere(v, "p1"));
     dispensator_recomponere(d);
-    CREDO_NON_NIHIL(liberum(d, "tabula"));
-    CREDO_NON_NIHIL(liberum(d, "vicus.tabulae"));
-    CREDO_NIHIL(liberum(d, "pagina"));
+    CREDO_NON_NIHIL(liberum(d, "tabula", piscina));
+    CREDO_NON_NIHIL(liberum(d, "vicus.tabulae", piscina));
+    CREDO_NIHIL(liberum(d, "pagina", piscina));
 
-    imprimere("\n");
-    credo_imprimere_compendium();
     volumen_claudere(vol);
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I: superficies ramorum post aperire", _sectio_prima, NIHIL,
+        NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("vicus_compositio", SECTIONES);
 }

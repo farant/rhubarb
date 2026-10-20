@@ -1,0 +1,109 @@
+<interrogationes unitas="chorda_aedificator">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I build a string piece by piece when I don't know its final length?
+    <responsum symbolum="chorda_aedificator_creare chorda_aedificator_appendere_literis chorda_aedificator_appendere_chorda chorda_aedificator_appendere_s32 chorda_aedificator_appendere_i32 chorda_aedificator_finire">Create
+      a builder with chorda_aedificator_creare(piscina, capacitas)
+      (capacitas must be above zero or it returns NIHIL), append with
+      the _appendere_ family (_literis for a C string, _chorda for a
+      chorda, _character, _s32, _i32, _f64, _hex_i32, _repetita,
+      _lineam_novam), then chorda_aedificator_finire returns the text
+      as a chorda. The header example calls
+      chorda_aedificator_appendere_integer, which does not exist: use
+      _s32 for signed and _i32 for unsigned numbers (i32 is unsigned
+      in the house types).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I pass the chorda from chorda_aedificator_finire to printf or fopen?
+    <responsum symbolum="chorda_aedificator_finire chorda_ut_cstr chorda_aedificator_spectare">Not
+      directly: like every chorda it carries a length and is NOT
+      NUL-terminated. Print it with "%.*s" and its mensura, or copy it
+      with chorda_ut_cstr(fructus, piscina) to get a C string.
+      chorda_aedificator_spectare has the same shape and points at the
+      same live buffer; the header calls it valid only until the next
+      change to the builder.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what does chorda_aedificator_finire do to the builder, and who owns the result?
+    <responsum symbolum="chorda_aedificator_finire chorda_aedificator_reset chorda_aedificator_truncare chorda_aedificator_destruere">It
+      only returns a chorda pointing at the builder's current buffer;
+      nothing is copied and nothing is destroyed, whatever the header
+      comment says. The bytes belong to the piscina and live until
+      that piscina is destroyed or rolled back. Appending after finire
+      is harmless to the result (new bytes land past its end, or in a
+      new buffer when the builder grows), but chorda_aedificator_reset
+      or _truncare followed by appending writes over the bytes your
+      finished chorda still points at. chorda_aedificator_destruere
+      does nothing.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I write a JSON string value with the builder?
+    <responsum symbolum="chorda_aedificator_appendere_evasus_json chorda_aedificator_appendere_literis_evasus_json chorda_aedificator_appendere_character">Write
+      the quotes yourself with chorda_aedificator_appendere_character
+      and put the body through chorda_aedificator_appendere_evasus_json
+      (or _literis_evasus_json for a C string). It escapes quote,
+      backslash, \n, \r and \t, writes other bytes below 0x20 and DEL
+      as \u00xx (lowercase hex), and copies bytes of 0x80 and above
+      unchanged, so UTF-8 passes through without being checked. An
+      empty input appends nothing and returns VERUM, also for an
+      empty chorda whose datum is NIHIL.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I undo text I appended if I change my mind?
+    <responsum symbolum="chorda_aedificator_longitudo chorda_aedificator_truncare">Save
+      the position with chorda_aedificator_longitudo before writing,
+      and if you don't want the result call
+      chorda_aedificator_truncare with that saved length. truncare only
+      ever shortens (a larger value is ignored) and keeps the capacity;
+      it does not touch the indentation level. The stml writer
+      (lib/stml.c) uses this for optimistic emission.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I indent nested output (pretty printing) with the builder?
+    <responsum symbolum="chorda_aedificator_push_indentationem chorda_aedificator_pop_indentationem chorda_aedificator_indentatio_gradus chorda_aedificator_appendere_indentationem">The
+      builder keeps an indentation level: push_indentationem raises it
+      (capped at M), pop_indentationem lowers it (never below zero),
+      and indentatio_gradus reads it. Nothing is indented
+      automatically. At the start of each line call
+      chorda_aedificator_appendere_indentationem(a,
+      chorda_aedificator_indentatio_gradus(a)), which writes II spaces
+      per level (CHORDA_AEDIFICATOR_INDENTATIO_SPATIA). reset clears
+      the level too.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I rely on the b32 return value of the append functions to catch out-of-memory?
+    <responsum symbolum="chorda_aedificator_appendere_chorda chorda_aedificator_appendere_f64 piscina_allocare piscina_conari_allocare">Not
+      for memory. Creation and growth use piscina_allocare, which
+      exits the process when no memory is left or a fixed-size
+      piscina is full, so FALSUM never means out-of-memory (the
+      builder does not use piscina_conari_allocare). FALSUM does mean
+      bad input: a NIHIL builder or C string, _f64 with decimales
+      above XXX or a value whose printed form is CXXXII bytes or
+      longer, and chorda_aedificator_appendere_chorda on an empty
+      chorda whose datum is NIHIL (what chorda_ex_literis("") returns),
+      even though nothing needed appending.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why does a builder use several times more piscina memory than the final string?
+    <responsum symbolum="chorda_aedificator_creare chorda_aedificator_appendere_evasus_json piscina_notare piscina_reficere chorda_transcribere">A
+      piscina cannot free one allocation, so each growth (the capacity
+      doubles until it fits) allocates a new buffer and leaves the old
+      one behind until the piscina dies: all buffers together come to
+      about twice the final capacity, which is itself up to twice the
+      text. The JSON escapers also allocate scratch from the same
+      piscina and never give it back: six bytes per input byte for
+      strings longer than LXXXIII bytes, plus a copy of every
+      non-empty input in the _literis_ variant. Start with a realistic
+      capacity, or take a piscina_notare mark, build, copy the result
+      into ANOTHER piscina (chorda_transcribere), then piscina_reficere
+      back to the mark.</responsum>
+  </interrogatio>
+
+</interrogationes>

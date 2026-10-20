@@ -171,23 +171,13 @@ _probare_multa (
     CREDO_CHORDA_AEQUALIS_LITERIS (fructus, expectatum);
 }
 
-s32
-principale (vacuum)
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-                b32  praeteritus;
-            Piscina* piscina;
-  ChordaAedificator* aedificator;
+    Piscina* piscina;
 
-    piscina = piscina_generare_dynamicum("probatio_excerptum",
-        1048576);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-    imprimere("\n--- Probans excerptum ---\n");
+    piscina = c->piscina;
 
     /* signum sub charactere uno */
     _probare(piscina, "int x = 1;\n", (s32)IV, (s32)V, I,
@@ -222,8 +212,16 @@ principale (vacuum)
     /* margo crescit cum numero lineae */
     _probare(piscina, "q\n", ZEPHYRUM, (s32)I, (i32)12345,
         "12345 | q\n      | ^\n");
+}
 
-    imprimere("\n--- Latitudo graphematum (runae) ---\n");
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
+
     /* CASUS MENSURATI (desideratum …VRTHANR, 2026-09-17): '広' II
      * columnas tenet - signum sub '=' ad columnam III, non II */
     _probare(piscina, "\xE5\xBA\x83 = x\n", (s32)IV, (s32)V, I,
@@ -250,8 +248,16 @@ principale (vacuum)
     /* initium INTRA graphema (signum componens): signum sub basi */
     _probare(piscina, "e\xCC\x81x\n", (s32)I, (s32)III, I,
         "   1 | e\xCC\x81x\n     | ^\n");
+}
 
-    imprimere("\n--- Fenestra lineae longae ---\n");
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
+
     /* ad limitem IPSUM nihil mutatur: clientes priores (C89, bash,
      * css ordinarium) octetim iidem manere debent */
     _probare_fenestram(piscina, (s32)CLX, (s32)LXXX, FALSUM);
@@ -263,8 +269,16 @@ principale (vacuum)
     _probare_fenestram(piscina, (s32)CD, (s32)V, VERUM);
     /* tractus PROPE FINEM: puncta SINISTRA sola */
     _probare_fenestram(piscina, (s32)CD, (s32)CD - (s32)V, VERUM);
+}
 
-    imprimere("\n--- Sedes multiplices ---\n");
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+              Piscina* piscina;
+    ChordaAedificator* aedificator;
+
+    piscina = c->piscina;
 
     /* IDENTITAS: sedes una sine nota = excerptum_scribere OCTETIM.
      * Comparantur exitus ipsi, non chorda manu scripta - ita scissio
@@ -395,10 +409,20 @@ principale (vacuum)
     /* linea ZEPHYRUM RECUSATUR */
     CREDO_FALSUM (excerptum_scribere(aedificator, "ab", (i32)II,
         ZEPHYRUM, (s32)I, ZEPHYRUM));
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "excerptum", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Latitudo graphematum (runae)", _sectio_secunda, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "Fenestra lineae longae", _sectio_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "Sedes multiplices", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("excerptum", SECTIONES);
 }

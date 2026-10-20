@@ -141,6 +141,8 @@ declare -a RADIX_FONTES=(
     "colloquia"
     "multiplexor"
     "processus_posix"
+    # colloquia-plan T10b: cursus currentes (linea CURRENS)
+    "mensura_quaestio"
     # scriba H2: cauda documenti per historia
     "historia"
     "pictor_figurae"

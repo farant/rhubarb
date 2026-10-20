@@ -34,9 +34,13 @@
   <munus titulus="fixtura"     segmentum="probationes"/>
   <munus titulus="caput"       extensiones=".h"/>
   <munus titulus="fons"        extensiones=".c .m .css"/>
+  <!-- interrogationes ANTE declarationem (.stml): documentatio unitatis
+       ut quaestiones (lib/S.interrogationes.stml, canon
+       interrogationes.canon, spec par. VII - U5b) -->
+  <munus titulus="interrogationes" extensiones=".interrogationes.stml"/>
   <munus titulus="documentum"  extensiones=".md .html"/>
   <munus titulus="declaratio"  extensiones=".stml .canon .genera .census .toml .registrum"/>
-  <munus titulus="scriptum"    extensiones=".sh .py .ts .js"/>
+  <munus titulus="scriptum"    extensiones=".sh .py .ts .js .thistle"/>
 
   <lingua titulus="c89"    extensiones=".c .h"/>
   <lingua titulus="objc"   extensiones=".m"/>
@@ -48,6 +52,9 @@
   <lingua titulus="md"     extensiones=".md"/>
   <lingua titulus="toml"   extensiones=".toml"/>
   <lingua titulus="css"    extensiones=".css"/>
+  <!-- thistle: scripta litterata briar (prosa + STML + regiones <c!>) -
+       non C pro iudicibus C; briar ipse regiones contexit et compilat -->
+  <lingua titulus="thistle" extensiones=".thistle"/>
 
   <!-- iudices: consumptores qui custodiam rogant (U4: unus post alium,
        quisque cum probatione congruentiae contra indicem veterem) -->
@@ -81,15 +88,27 @@
          descriptio="censor latinae: macra latina.h in positione nominis (.claude/hooks/censor-custos.sh)"/>
   <iudex titulus="canon_custos"
          curae="domestica" vitae="viva vetusta"
-         munera="declaratio" provenientiae="manu generatum"
+         munera="declaratio interrogationes" provenientiae="manu generatum"
          linguae="stml"
          descriptio="canon_examen in plagulas .stml/.canon modo scriptas (.claude/hooks/canon-custos.sh)"/>
+
+  <iudex titulus="vexilla_scriptorum"
+         curae="domestica remissa aliena" vitae="viva vetusta"
+         munera="scriptum probatio" provenientiae="manu generatum"
+         linguae="sh"
+         descriptio="ratchet radicum manu (tools/vexilla_fumus.sh VI contra tools/radices_manu.tsv): omne scriptum concha praeter fixturas et archivata (archivum/ congelatum: radices manu suae temporis sunt, numquam tangendae)"/>
 
   <iudex titulus="prosa_anglica"
          curae="domestica remissa" vitae="viva vetusta"
          munera="documentum" provenientiae="manu"
          linguae="md"
          descriptio="lint prosae Anglicae super markdown (oratio vocabula -prosa) - knotapel Anglice scriptum INCLUSUM (remissa), generata et fixturae non"/>
+
+  <iudex titulus="instrumenta"
+         curae="domestica" vitae="viva vetusta"
+         munera="fons scriptum" provenientiae="manu"
+         linguae="c89 thistle"
+         descriptio="porta instrumentorum (unitates-codicis U5 b): omnis introitus programmatis domesticus manu scriptus aedificatur - C per recipe aedilis (--exitus, numquam curritur), thistle per briar -struere et regio probationis per -probatio; fixturae (adversa) non"/>
 
   <bibliothecae capita="include" fontes="lib" probationes="probationes"
                 praefixum="probatio_"
@@ -107,7 +126,6 @@
 
   <!-- familiae: radices quarum bibliothecae RADIX_* unitates liberae
        sunt (tres liberi aut plures, partibus exclusis; census 10-15) -->
-  <familia radix="arbor"/>
   <familia radix="eventus"/>
   <familia radix="fabrica"/>
   <familia radix="fons"/>

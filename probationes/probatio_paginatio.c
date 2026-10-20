@@ -46,26 +46,34 @@ _clavis (
     redde paginatio_clavis_chordae(chorda_ex_literis(s, arena));
 }
 
-s32 principale (vacuum)
+/* arena = piscina sectionis (adiutores supra eam legunt); purgare
+ * reponit ne status inter sectiones maneat */
+interior vacuum
+_parare (
+    CredoContextus* c)
 {
-    b32 praeteritus;
+    arena = c->piscina;
+}
 
-    arena = piscina_generare_dynamicum("probatio_paginatio", 65536);
-    si (!arena)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(arena);
+interior vacuum
+_purgare (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    arena = NIHIL;
+}
 
 
     /* ========================================================
      * PROBARE: numeri Romani - forma subtractiva stricta
      * ======================================================== */
 
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
-        imprimere("\n--- Probans numerus_romanus_legere ---\n");
-
         CREDO_VERUM (_romanus_valet("I"));
         CREDO_VERUM (_romanus_valet("IV"));
         CREDO_VERUM (_romanus_valet("XIV"));
@@ -112,15 +120,19 @@ s32 principale (vacuum)
         CREDO_FALSUM (_romanus_valet("iiii"));
         CREDO_FALSUM (_romanus_valet("did"));
     }
+}
 
 
     /* ========================================================
      * PROBARE: designatio paginae
      * ======================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
-        imprimere("\n--- Probans paginatio_legere ---\n");
-
         CREDO_AEQUALIS_I32 ((i32)_pag("xii").genus,
             (i32)PAGINATIO_ROMANA);
         CREDO_AEQUALIS_I32 (_pag("xii").valor, XII);
@@ -147,6 +159,7 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 ((i32)_pag("   ").genus,
             (i32)PAGINATIO_NULLA);
     }
+}
 
 
     /* ========================================================
@@ -157,9 +170,12 @@ s32 principale (vacuum)
      * ligat.
      * ======================================================== */
 
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
-        imprimere("\n--- Probans paginatio_clavis ---\n");
-
         /* intra seriem Romanam: numerice */
         CREDO_VERUM (_clavis("i") < _clavis("ii"));
         CREDO_VERUM (_clavis("ix") < _clavis("x"));
@@ -182,23 +198,20 @@ s32 principale (vacuum)
         /* casus non mutat ordinem */
         CREDO_VERUM (_clavis("XII") == _clavis("xii"));
     }
+}
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "numerus_romanus_legere", _sectio_prima, _parare, _purgare, NIHIL,
+        NIHIL },
+    { "paginatio_legere", _sectio_secunda, _parare, _purgare, NIHIL,
+        NIHIL },
+    { "paginatio_clavis", _sectio_tertia, _parare, _purgare, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    /* ========================================================
-     * Compendium
-     * ======================================================== */
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("paginatio", SECTIONES);
 }

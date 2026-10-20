@@ -7,7 +7,9 @@
 #include "latina.h"
 #include "mensura_quaestio.h"
 #include "tabula_dispersa.h"
+#include "chorda_aedificator.h"
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -1278,4 +1280,542 @@ cursus_quaerere_lentescentes (
         *(CursusLentescens*)xar_addere(ordines) = tabula[k];
     }
     redde ordines;
+}
+
+
+/* ==================================================
+ * CURRENTES (colloquia T8d)
+ * ================================================== */
+
+/* facta cursus ex mensuris (ordine actorum): custos et debiti
+ * ultimi; ambitus ultimus, iudicata solum POST eum (fabrica in porta
+ * eadem bis vocata - iudices, deinde ceterae - ambitum novum incipit) */
+interior vacuum
+_facta_colligere (
+      constans Xar* mensurae,
+            chorda  id,
+     CursusCurrens* r)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; mensurae != NIHIL && k < xar_numerus(mensurae);
+         k++)
+    {
+        constans Mensura* m = (constans Mensura*)xar_obtinere(mensurae,
+            k);
+
+        si (!chorda_aequalis(m->parens, id))
+        {
+            perge;
+        }
+        si (chorda_aequalis_literis(m->titulus, MENSURA_CUSTOS))
+        {
+            r->custos = (s32)m->valor;
+        }
+        alioquin si (chorda_aequalis_literis(m->titulus,
+                     MENSURA_PORTAE))
+        {
+            r->debiti = (i32)m->valor;
+        }
+        alioquin si (chorda_aequalis_literis(m->titulus,
+                     MENSURA_AMBITUS))
+        {
+            r->ambitus   = (i32)m->valor;
+            r->iudicata  = ZEPHYRUM;
+        }
+        alioquin si (chorda_aequalis_literis(m->titulus,
+                     MENSURA_IUDICATA))
+        {
+            r->iudicata = (i32)m->valor;
+        }
+        alioquin si (   m->titulus.mensura > (i32)(magnitudo(
+                         MENSURA_COLLOQUIUM) - I)
+                     && memcmp(m->titulus.datum, MENSURA_COLLOQUIUM,
+                         magnitudo(MENSURA_COLLOQUIUM) - I) == ZEPHYRUM)
+        {
+            /* colloquium (T9): id post praefixum */
+            r->colloquium.datum    = m->titulus.datum + (magnitudo(
+                MENSURA_COLLOQUIUM) - I);
+            r->colloquium.mensura  = m->titulus.mensura
+                - (i32)(magnitudo(
+                MENSURA_COLLOQUIUM) - I);
+        }
+    }
+}
+
+/* filii FINITI qui consilio numerantur: sub commissione portae
+ * ('porta:'), sub cetero membra acta (nota non IUDICIUM - regenerationes
+ * iudicis membra non sunt) */
+interior vacuum
+_filios_numerare (
+    constans CursusIndex* index,
+         constans Cursus* c,
+           CursusCurrens* r)
+{
+    vacuum* locus = NIHIL;
+       Xar* fratres;
+       b32  commissio;
+       i32  k;
+
+    si (!tabula_dispersa_invenire(index->filii, c->initium.id, &locus))
+    {
+        redde;
+    }
+    fratres = (Xar*)locus;
+    commissio = chorda_aequalis_literis(c->initium.titulus,
+        "commissio");
+    per (k = ZEPHYRUM; k < xar_numerus(fratres); k++)
+    {
+        constans Cursus* f = *(constans Cursus**)xar_obtinere(fratres,
+            k);
+
+        si (f->status == CURSUS_INTERRUPTUS)
+        {
+            perge;
+        }
+        si (commissio
+            ? !chorda_incipit(f->initium.titulus, chorda_ex_literis(
+                "porta:", index->piscina))
+            : chorda_incipit(f->finis.nota,
+            chorda_ex_literis("IUDICIUM",
+                index->piscina)))
+        {
+            perge;
+        }
+        r->perfecti++;
+        si (f->status == CURSUS_FRACTUS)
+        {
+            r->fracti++;
+            /* fracta nominata (T10a): tituli spatiis iuncti */
+            r->fracta = (r->fracta.mensura == ZEPHYRUM)
+                ? f->initium.titulus
+                : chorda_concatenare(chorda_concatenare(r->fracta,
+                    chorda_ex_literis(" ", index->piscina),
+                    index->piscina), f->initium.titulus,
+                    index->piscina);
+        }
+    }
+}
+
+/* historia tituli: V ultimi transeuntes (ordine initii) - minima et
+ * maxima duratio */
+interior vacuum
+_historiam_colligere (
+    constans CursusIndex* index,
+                  chorda  titulus,
+           CursusCurrens* r)
+{
+    s64 initia[V];
+    s64 durationes[V];
+    i32 n = ZEPHYRUM;
+    i32 k;
+    i32 j;
+
+    per (k = ZEPHYRUM; k < xar_numerus(index->cursus); k++)
+    {
+        constans Cursus* h =
+            (constans Cursus*)xar_obtinere(index->cursus,
+            k);
+                    i32 vetustissimus;
+
+        si (   h->status != CURSUS_TRANSIIT
+            || !chorda_aequalis(h->initium.titulus, titulus))
+        {
+            perge;
+        }
+        si (n < (i32)V)
+        {
+            initia[n]      = h->initium.initium;
+            durationes[n]  = h->finis.duratio_ms;
+            n++;
+            perge;
+        }
+        vetustissimus = ZEPHYRUM;
+        per (j = I; j < (i32)V; j++)
+        {
+            si (initia[j] < initia[vetustissimus])
+            {
+                vetustissimus = j;
+            }
+        }
+        si (h->initium.initium > initia[vetustissimus])
+        {
+            initia[vetustissimus]      = h->initium.initium;
+            durationes[vetustissimus]  = h->finis.duratio_ms;
+        }
+    }
+    per (j = ZEPHYRUM; j < n; j++)
+    {
+        si (j == ZEPHYRUM || durationes[j] < r->minima_ms)
+        {
+            r->minima_ms = durationes[j];
+        }
+        si (j == ZEPHYRUM || durationes[j] > r->maxima_ms)
+        {
+            r->maxima_ms = durationes[j];
+        }
+    }
+}
+
+/* ordo initii: ascendens (filii) aut descendens (radices) */
+interior integer
+_initium_ascendens (
+    constans vacuum* a,
+    constans vacuum* b)
+{
+    s64 x = (*(constans Cursus* constans*)a)->initium.initium;
+    s64 y = (*(constans Cursus* constans*)b)->initium.initium;
+
+    redde (x < y) ? -I : (x > y) ? I : ZEPHYRUM;
+}
+
+interior integer
+_initium_descendens (
+    constans vacuum* a,
+    constans vacuum* b)
+{
+    redde -_initium_ascendens(a, b);
+}
+
+interior vacuum
+_currentem_addere (
+    constans CursusIndex* index,
+            constans Xar* mensurae,
+         constans Cursus* c,
+                     i32  profunditas,
+                  chorda  colloquium,
+                     Xar* ordines)
+{
+     CursusCurrens*  r      = (CursusCurrens*)xar_addere(ordines);
+            vacuum*  locus  = NIHIL;
+               Xar*  fratres;
+   constans Cursus** aperti;
+               i32   n;
+               i32   k;
+
+    si (r == NIHIL)
+    {
+        redde;
+    }
+    memset(r, ZEPHYRUM, magnitudo(CursusCurrens));
+    r->cursus       = c;
+    r->profunditas  = profunditas;
+    _facta_colligere(mensurae, c->initium.id, r);
+    /* colloquium radicis filiis hereditatur (T9) */
+    si (r->colloquium.mensura == ZEPHYRUM)
+    {
+        r->colloquium = colloquium;
+    }
+    colloquium = r->colloquium;
+    _filios_numerare(index, c, r);
+    _historiam_colligere(index, c->initium.titulus, r);
+    si (!tabula_dispersa_invenire(index->filii, c->initium.id, &locus))
+    {
+        redde;
+    }
+    fratres  = (Xar*)locus;
+    aperti   = (constans Cursus**)piscina_allocare(index->piscina,
+        (memoriae_index)(xar_numerus(fratres)
+            + I) * magnitudo(Cursus*));
+    si (aperti == NIHIL)
+    {
+        redde;
+    }
+    n = ZEPHYRUM;
+    per (k = ZEPHYRUM; k < xar_numerus(fratres); k++)
+    {
+        constans Cursus* f = *(constans Cursus**)xar_obtinere(fratres,
+            k);
+
+        si (f->status == CURSUS_INTERRUPTUS)
+        {
+            aperti[n++] = f;
+        }
+    }
+    qsort((vacuum*)aperti, (size_t)n, magnitudo(Cursus*),
+        _initium_ascendens);
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        _currentem_addere(index, mensurae, aperti[k], profunditas + I,
+            colloquium, ordines);
+    }
+}
+
+Xar*
+cursus_quaerere_currentes (
+       constans CursusIndex* index,
+               constans Xar* mensurae,
+     constans CursusFiltrum* filtrum,
+                    Piscina* piscina)
+{
+               Xar*  ordines;
+   constans Cursus** radices;
+               i32   n;
+               i32   k;
+
+    si (index == NIHIL || piscina == NIHIL)
+    {
+        redde NIHIL;
+    }
+    ordines  = xar_creare(piscina, (i32)magnitudo(CursusCurrens));
+    radices  = (constans Cursus**)piscina_allocare(piscina,
+        (memoriae_index)(xar_numerus(index->cursus) + I)
+        * magnitudo(Cursus*));
+    si (ordines == NIHIL || radices == NIHIL)
+    {
+        redde NIHIL;
+    }
+    /* radix aperta: parens nullus, ignotus aut non apertus (cursus
+     * filius necatus sub parente finito) */
+    n = ZEPHYRUM;
+    per (k = ZEPHYRUM; k < xar_numerus(index->cursus); k++)
+    {
+        constans Cursus* c =
+            (constans Cursus*)xar_obtinere(index->cursus,
+            k);
+        constans Cursus* parens;
+
+        si (c->status != CURSUS_INTERRUPTUS || !_congruit(c, filtrum))
+        {
+            perge;
+        }
+        parens = (c->initium.parens.mensura > ZEPHYRUM)
+            ? cursus_invenire(index, c->initium.parens) : NIHIL;
+        si (parens != NIHIL && parens->status == CURSUS_INTERRUPTUS)
+        {
+            perge;
+        }
+        radices[n++] = c;
+    }
+    qsort((vacuum*)radices, (size_t)n, magnitudo(Cursus*),
+        _initium_descendens);
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        _currentem_addere(index, mensurae, radices[k], ZEPHYRUM,
+            chorda_ex_literis("", piscina), ordines);
+    }
+    redde ordines;
+}
+
+/* LINEA CURRENTIS (colloquia T10a) */
+
+#define CURRENS_CAMPI XIX
+
+hic_manens constans character* constans VITAE_NOMINA[] = {
+    "vivus", "mortuus", "ignotus"
+};
+
+/* campus sine TAB et linea nova */
+interior b32
+_campus_purus (
+    chorda c)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < c.mensura; k++)
+    {
+        si (   c.datum[k] == '\t' || c.datum[k] == '\n'
+            || c.datum[k] == '\r')
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+interior vacuum
+_campum_addere (
+    ChordaAedificator* a,
+               chorda  c)
+{
+    chorda_aedificator_appendere_character(a, '\t');
+    chorda_aedificator_appendere_chorda(a, c);
+}
+
+interior vacuum
+_numerum_addere (
+    ChordaAedificator* a,
+                  s64  n)
+{
+    character numeri[XXXII];
+
+    sprintf(numeri, "%ld", (longus)n);
+    chorda_aedificator_appendere_character(a, '\t');
+    chorda_aedificator_appendere_literis(a, numeri);
+}
+
+chorda
+cursus_currentem_ad_lineam (
+    constans CursusCurrens* r,
+                CursusVita  vita,
+                   Piscina* piscina)
+{
+    constans CursusInitium* i;
+         ChordaAedificator* a;
+                    chorda  vacua;
+
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
+    si (   r == NIHIL || r->cursus == NIHIL || piscina == NIHIL
+        || (i32)vita < ZEPHYRUM || (i32)vita > (i32)CURSUS_VITA_IGNOTA)
+    {
+        redde vacua;
+    }
+    i = &r->cursus->initium;
+    si (   !_campus_purus(i->id) || !_campus_purus(i->parens)
+        || !_campus_purus(i->titulus) || !_campus_purus(i->arbor)
+        || !_campus_purus(i->ramus) || !_campus_purus(r->colloquium)
+        || !_campus_purus(r->fracta))
+    {
+        redde vacua;
+    }
+    a = chorda_aedificator_creare(piscina, (memoriae_index)CCLVI);
+    si (a == NIHIL)
+    {
+        redde vacua;
+    }
+    chorda_aedificator_appendere_literis(a, "CURRENS");
+    _numerum_addere(a, (s64)r->profunditas);
+    _campum_addere(a, i->id);
+    _campum_addere(a, i->parens);
+    _campum_addere(a, i->titulus);
+    _campum_addere(a, i->arbor);
+    _campum_addere(a, i->ramus);
+    _numerum_addere(a, i->initium);
+    _numerum_addere(a, (s64)r->custos);
+    chorda_aedificator_appendere_character(a, '\t');
+    chorda_aedificator_appendere_literis(a, VITAE_NOMINA[vita]);
+    _numerum_addere(a, (s64)r->perfecti);
+    _numerum_addere(a, (s64)r->fracti);
+    _numerum_addere(a, (s64)r->debiti);
+    _numerum_addere(a, (s64)r->iudicata);
+    _numerum_addere(a, (s64)r->ambitus);
+    _numerum_addere(a, r->minima_ms);
+    _numerum_addere(a, r->maxima_ms);
+    _campum_addere(a, r->colloquium);
+    _campum_addere(a, r->fracta);
+    chorda_aedificator_appendere_character(a, '\n');
+    redde chorda_aedificator_finire(a);
+}
+
+/* numerus integer (signum licet) campi totius; FALSUM si non */
+interior b32
+_numerum_campi (
+    chorda  campus,
+       s64* valor)
+{
+    i32 k          = ZEPHYRUM;
+    b32 negativus  = FALSUM;
+
+    si (campus.mensura > ZEPHYRUM && campus.datum[ZEPHYRUM] == '-')
+    {
+        negativus  = VERUM;
+        k          = I;
+    }
+    si (k >= campus.mensura)
+    {
+        redde FALSUM;
+    }
+    *valor = (s64)ZEPHYRUM;
+    per (; k < campus.mensura; k++)
+    {
+        si (campus.datum[k] < '0' || campus.datum[k] > '9')
+        {
+            redde FALSUM;
+        }
+        *valor = *valor * (s64)X + (s64)(campus.datum[k] - '0');
+    }
+    si (negativus)
+    {
+        *valor = -*valor;
+    }
+    redde VERUM;
+}
+
+b32
+cursus_currentem_ex_linea (
+                 chorda  linea,
+     CursusCurrensLinea* exitus)
+{
+    chorda campi[CURRENS_CAMPI];
+       s64 n[XIX];
+       i32 numerus = ZEPHYRUM;
+       i32 initium = ZEPHYRUM;
+       i32 k;
+
+    si (exitus == NIHIL || linea.datum == NIHIL)
+    {
+        redde FALSUM;
+    }
+    dum (   linea.mensura > ZEPHYRUM
+         && (   linea.datum[linea.mensura - I] == '\n'
+             || linea.datum[linea.mensura - I] == '\r'))
+    {
+        linea.mensura--;
+    }
+    per (k = ZEPHYRUM; k <= linea.mensura; k++)
+    {
+        si (k == linea.mensura || linea.datum[k] == '\t')
+        {
+            si (numerus >= (i32)CURRENS_CAMPI)
+            {
+                redde FALSUM;   /* campi nimii */
+            }
+            campi[numerus].datum    = linea.datum + initium;
+            campi[numerus].mensura  = k - initium;
+            numerus++;
+            initium = k + I;
+        }
+    }
+    si (   numerus != (i32)CURRENS_CAMPI
+        || !chorda_aequalis_literis(campi[ZEPHYRUM], "CURRENS"))
+    {
+        redde FALSUM;
+    }
+    /* numeri: I, VII, VIII, X..XVI */
+    si (   !_numerum_campi(campi[I], &n[I])
+        || !_numerum_campi(campi[VII], &n[VII])
+        || !_numerum_campi(campi[VIII], &n[VIII]))
+    {
+        redde FALSUM;
+    }
+    per (k = X; k <= XVI; k++)
+    {
+        si (!_numerum_campi(campi[k], &n[k]))
+        {
+            redde FALSUM;
+        }
+    }
+    memset(exitus, ZEPHYRUM, magnitudo(CursusCurrensLinea));
+    exitus->vita = CURSUS_VITA_IGNOTA;
+    per (k = ZEPHYRUM; k <= (i32)CURSUS_VITA_IGNOTA; k++)
+    {
+        si (chorda_aequalis_literis(campi[IX], VITAE_NOMINA[k]))
+        {
+            frange;
+        }
+    }
+    si (k > (i32)CURSUS_VITA_IGNOTA)
+    {
+        redde FALSUM;
+    }
+    exitus->vita         = (CursusVita)k;
+    exitus->profunditas  = (i32)n[I];
+    exitus->id           = campi[II];
+    exitus->parens       = campi[III];
+    exitus->titulus      = campi[IV];
+    exitus->arbor        = campi[V];
+    exitus->ramus        = campi[VI];
+    exitus->initium      = n[VII];
+    exitus->custos       = (s32)n[VIII];
+    exitus->perfecti     = (i32)n[X];
+    exitus->fracti       = (i32)n[XI];
+    exitus->debiti       = (i32)n[XII];
+    exitus->iudicata     = (i32)n[XIII];
+    exitus->ambitus      = (i32)n[XIV];
+    exitus->minima_ms    = n[XV];
+    exitus->maxima_ms    = n[XVI];
+    exitus->colloquium   = campi[XVII];
+    exitus->fracta       = campi[XVIII];
+    redde VERUM;
 }

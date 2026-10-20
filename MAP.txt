@@ -215,30 +215,13 @@ LIBRARY DEPENDENCY TIERS  (include/ + lib/ core libraries)
     ┌─────────────────────────────────────────────────────────────┐
     │  TIER 2: DOMAIN-SPECIFIC                                    │
     │                                                             │
-    │  ┌─ ARBOR (C Parser) ──────────────────────────────────┐    │
-    │  │                                                     │    │
-    │  │  arbor_lexema ──► arbor_praeparator ──► arbor_syntaxis   │
-    │  │       │                                      │      │    │
-    │  │       └──────────────────┬────────────────────┘     │    │
-    │  │                          ▼                          │    │
-    │  │    arbor_quaestio    arbor_formator    arbor_index  │    │
-    │  │    arbor_typus            │                         │    │
-    │  │                          ▼                          │    │
-    │  │                   arbor.h (facade)                  │    │
+    │  ┌─ LAPIFEX (parser generator, live for nuntium) ──────┐    │
+    │  │  lapifex_generare ──► lapifex_lexere ──► lapifex_parsere │
+    │  │  (consumer: nuntium_schema)                         │    │
     │  └─────────────────────────────────────────────────────┘    │
-    │                                                             │
-    │  ┌─ ARBOR2 (GLR Parser Framework) ─────────────────────┐    │
-    │  │  arbor2_lexema ──► arbor2_token ──► arbor2_glr      │    │
-    │  │  arbor2_expandere (grammar expansion)               │    │
-    │  │  arbor2_conditio_evaluare   arbor2_scribere (AST→src)│   │
-    │  │  arbor2_lapifex_adaptator (bridge to lapifex)       │    │
-    │  └─────────────────────────────────────────────────────┘    │
-    │                                                             │
-    │  ┌─ LAPIFEX (C89 parser gen) ──── frozen / reference ──┐    │
-    │  │  lapifex_lexere ──► lapifex_parsere                 │    │
-    │  │  lapifex_c89   lapifex_glr   lapifex_generare       │    │
-    │  └─────────────────────────────────────────────────────┘    │
-    │       (all of arbor/arbor2/lapifex superseded by silva/)    │
+    │       arbor v1, arbor2, lapifex_c89 + lapifex_glr:          │
+    │       ARCHIVED 2026-10-19 -> archivum/ (frozen, unbuilt;    │
+    │       see archivum/CLAUDE.md). Superseded by silva/.        │
     │                                                             │
     │  ┌─ SPUTNIK (Custom Language) ─────────────────────────┐    │
     │  │  sputnik_lexema ──► sputnik_parser ──► sputnik_interpres │

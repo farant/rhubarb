@@ -21,8 +21,6 @@
 #define MAXIMA    MXXIV
 #define CUSTOS    0xA5
 
-hic_manens i8 larva[MAXIMA + XVI];
-
 interior i8
 valor_signi (
     character s)
@@ -56,13 +54,14 @@ signum_valoris (
 interior b32
 pictura_est (
                      s32   runa,
-      constans character** pictura)
+      constans character** pictura,
+                      i8*  larva)
 {
     i32 x;
     i32 y;
     b32 bonum;
 
-    memset(larva, CUSTOS, magnitudo(larva));
+    memset(larva, CUSTOS, (MAXIMA + XVI));
     si (!glyphae_ductae_pingere(runa, LAT, ALT, larva))
     {
         imprimere("  U+%04X: non pingitur\n", (unsigned)runa);
@@ -96,7 +95,8 @@ pictura_est (
 }
 
 interior vacuum
-lineas_probare (vacuum)
+lineas_probare (
+    i8* larva)
 {
     constans character* horizontalis[] = {
         "......", "......", "......", "######",
@@ -129,21 +129,21 @@ lineas_probare (vacuum)
         "......", "......", "......", "###...",
         "......", "......", "......", "......" };
 
-    imprimere("\n--- I: lineae (Ghostty linesChar) ---\n");
-    CREDO_VERUM(pictura_est(0x2500, horizontalis));
-    CREDO_VERUM(pictura_est(0x2502, verticalis));
-    CREDO_VERUM(pictura_est(0x250C, angulus));
-    CREDO_VERUM(pictura_est(0x2501, gravis));
-    CREDO_VERUM(pictura_est(0x2503, gravis_verticalis));
-    CREDO_VERUM(pictura_est(0x253C, crux));
-    CREDO_VERUM(pictura_est(0x2550, duplicata));
-    CREDO_VERUM(pictura_est(0x2551, duplex_verticalis));
-    CREDO_VERUM(pictura_est(0x2554, duplex_angulus));
-    CREDO_VERUM(pictura_est(0x2574, dimidia_sinistra));
+    CREDO_VERUM(pictura_est(0x2500, horizontalis, larva));
+    CREDO_VERUM(pictura_est(0x2502, verticalis, larva));
+    CREDO_VERUM(pictura_est(0x250C, angulus, larva));
+    CREDO_VERUM(pictura_est(0x2501, gravis, larva));
+    CREDO_VERUM(pictura_est(0x2503, gravis_verticalis, larva));
+    CREDO_VERUM(pictura_est(0x253C, crux, larva));
+    CREDO_VERUM(pictura_est(0x2550, duplicata, larva));
+    CREDO_VERUM(pictura_est(0x2551, duplex_verticalis, larva));
+    CREDO_VERUM(pictura_est(0x2554, duplex_angulus, larva));
+    CREDO_VERUM(pictura_est(0x2574, dimidia_sinistra, larva));
 }
 
 interior vacuum
-interruptas_probare (vacuum)
+interruptas_probare (
+    i8* larva)
 {
     constans character* tres[] = {
         "......", "......", "......", "#.#.#.",
@@ -163,19 +163,19 @@ interruptas_probare (vacuum)
         "......", "......", "......", "######",
         "......", "......", "......", "......" };
 
-    imprimere("\n--- II: lineolae (Ghostty dash*) ---\n");
-    CREDO_VERUM(pictura_est(0x2504, tres));
-    CREDO_VERUM(pictura_est(0x254C, duae));
-    CREDO_VERUM(pictura_est(0x2506, tres_verticales));
-    CREDO_VERUM(pictura_est(0x250A, quattuor_verticales));
-    CREDO_VERUM(pictura_est(0x2508, plena));
+    CREDO_VERUM(pictura_est(0x2504, tres, larva));
+    CREDO_VERUM(pictura_est(0x254C, duae, larva));
+    CREDO_VERUM(pictura_est(0x2506, tres_verticales, larva));
+    CREDO_VERUM(pictura_est(0x250A, quattuor_verticales, larva));
+    CREDO_VERUM(pictura_est(0x2508, plena, larva));
 }
 
 /* arcus et diagonales: Ghostty cum levigatione pingit, nos sine -
  * picturae oculis inspectae (6x8 et 12x16, D7c) deinde pinnatae; arcus
  * lineas puras in ordine III et columna II tangunt */
 interior vacuum
-arcus_probare (vacuum)
+arcus_probare (
+    i8* larva)
 {
     constans character* arcus_dextrorsum_deorsum[] = {
         "......", "......", "......", "...###",
@@ -190,11 +190,10 @@ arcus_probare (vacuum)
         "#....#", "##..#.", ".#..#.", "..##..",
         "..##..", ".#..#.", "##..#.", "#....#" };
 
-    imprimere("\n--- II b: arcus et diagonales (pinnata oculis) ---\n");
-    CREDO_VERUM(pictura_est(0x256D, arcus_dextrorsum_deorsum));
-    CREDO_VERUM(pictura_est(0x256F, arcus_sinistrorsum_sursum));
-    CREDO_VERUM(pictura_est(0x2571, ascendens));
-    CREDO_VERUM(pictura_est(0x2573, crux_obliqua));
+    CREDO_VERUM(pictura_est(0x256D, arcus_dextrorsum_deorsum, larva));
+    CREDO_VERUM(pictura_est(0x256F, arcus_sinistrorsum_sursum, larva));
+    CREDO_VERUM(pictura_est(0x2571, ascendens, larva));
+    CREDO_VERUM(pictura_est(0x2573, crux_obliqua, larva));
     /* limen strictum: ╳ 12x16 ordo IX "....#..#....", non "####" */
     CREDO_VERUM(glyphae_ductae_pingere(0x2573, XII, XVI, larva));
     CREDO_AEQUALIS_I32((i32)larva[IX * XII + IV], 0xFF);
@@ -204,7 +203,8 @@ arcus_probare (vacuum)
 }
 
 interior vacuum
-quadra_probare (vacuum)
+quadra_probare (
+    i8* larva)
 {
     constans character* superum[] = {
         "######", "######", "######", "######",
@@ -240,22 +240,22 @@ quadra_probare (vacuum)
         "333333", "333333", "333333", "333333",
         "333333", "333333", "333333", "333333" };
 
-    imprimere("\n--- III: elementa quadrata (Ghostty block.zig) ---\n");
-    CREDO_VERUM(pictura_est(0x2580, superum));
-    CREDO_VERUM(pictura_est(0x2584, inferum));
-    CREDO_VERUM(pictura_est(0x258C, sinistrum));
-    CREDO_VERUM(pictura_est(0x2590, dextrum));
-    CREDO_VERUM(pictura_est(0x2581, octava_infima));
-    CREDO_VERUM(pictura_est(0x258F, octava_sinistra));
-    CREDO_VERUM(pictura_est(0x259B, quadrantes));
-    CREDO_VERUM(pictura_est(0x2588, plenum));
-    CREDO_VERUM(pictura_est(0x2591, umbra_levis));
-    CREDO_VERUM(pictura_est(0x2592, umbra_media));
-    CREDO_VERUM(pictura_est(0x2593, umbra_densa));
+    CREDO_VERUM(pictura_est(0x2580, superum, larva));
+    CREDO_VERUM(pictura_est(0x2584, inferum, larva));
+    CREDO_VERUM(pictura_est(0x258C, sinistrum, larva));
+    CREDO_VERUM(pictura_est(0x2590, dextrum, larva));
+    CREDO_VERUM(pictura_est(0x2581, octava_infima, larva));
+    CREDO_VERUM(pictura_est(0x258F, octava_sinistra, larva));
+    CREDO_VERUM(pictura_est(0x259B, quadrantes, larva));
+    CREDO_VERUM(pictura_est(0x2588, plenum, larva));
+    CREDO_VERUM(pictura_est(0x2591, umbra_levis, larva));
+    CREDO_VERUM(pictura_est(0x2592, umbra_media, larva));
+    CREDO_VERUM(pictura_est(0x2593, umbra_densa, larva));
 }
 
 interior vacuum
-puncta_probare (vacuum)
+puncta_probare (
+    i8* larva)
 {
     constans character* omnia[] = {
         ".#..#.", "......", ".#..#.", "......",
@@ -270,22 +270,21 @@ puncta_probare (vacuum)
         "......", "......", "......", "......",
         "......", "......", "......", "......" };
 
-    imprimere("\n--- IV: braille (Ghostty braille.zig) ---\n");
-    CREDO_VERUM(pictura_est(0x28FF, omnia));
-    CREDO_VERUM(pictura_est(0x2801, primum));
-    CREDO_VERUM(pictura_est(0x2880, ultimum));
-    CREDO_VERUM(pictura_est(0x2800, vacuum_));
+    CREDO_VERUM(pictura_est(0x28FF, omnia, larva));
+    CREDO_VERUM(pictura_est(0x2801, primum, larva));
+    CREDO_VERUM(pictura_est(0x2880, ultimum, larva));
+    CREDO_VERUM(pictura_est(0x2800, vacuum_, larva));
 }
 
 /* ambitus: solum U+2500-259F et U+2800-28FF; aliena larvam non
  * tangunt */
 interior vacuum
-ambitum_probare (vacuum)
+ambitum_probare (
+    i8* larva)
 {
     i32 k;
     b32 intacta;
 
-    imprimere("\n--- V: ambitus ---\n");
     CREDO_FALSUM(glyphae_ductae_est(0x24FF));
     CREDO_VERUM(glyphae_ductae_est(0x2500));
     CREDO_VERUM(glyphae_ductae_est(0x257F));
@@ -298,12 +297,12 @@ ambitum_probare (vacuum)
     CREDO_VERUM(glyphae_ductae_est(0x28FF));
     CREDO_FALSUM(glyphae_ductae_est(0x2900));
     CREDO_FALSUM(glyphae_ductae_est('A'));
-    memset(larva, CUSTOS, magnitudo(larva));
+    memset(larva, CUSTOS, (MAXIMA + XVI));
     CREDO_FALSUM(glyphae_ductae_pingere('A', LAT, ALT, larva));
     CREDO_FALSUM(glyphae_ductae_pingere(0x2500, ZEPHYRUM, ALT, larva));
     CREDO_FALSUM(glyphae_ductae_pingere(0x2500, LAT, ZEPHYRUM, larva));
     intacta = VERUM;
-    per (k = ZEPHYRUM; k < (i32)magnitudo(larva); k++)
+    per (k = ZEPHYRUM; k < (i32)(MAXIMA + XVI); k++)
     {
         si (larva[k] != CUSTOS)
         {
@@ -320,7 +319,8 @@ marginem_legere (
     i32  alt,
     b32  verticalis,
     i32  index,
-     i8* exitus)
+     i8* exitus,
+     i8* larva)
 {
     i32 k;
     i32 n;
@@ -340,8 +340,9 @@ marginem_legere (
  * frangitur */
 interior b32
 continuitas (
-    i32 lat,
-    i32 alt)
+    i32  lat,
+    i32  alt,
+     i8* larva)
 {
      i8 formae[IV][IV][LXIV];   /* margo (s d i l), stilus, vector */
      i8 margo[LXIV];
@@ -365,11 +366,14 @@ continuitas (
     {
         (vacuum)glyphae_ductae_pingere(purae_v[s], lat, alt, larva);
         marginem_legere(lat, alt, FALSUM, ZEPHYRUM, formae[ZEPHYRUM][s
-            + I]);
-        marginem_legere(lat, alt, FALSUM, alt - I, formae[II][s + I]);
+            + I], larva);
+        marginem_legere(lat, alt, FALSUM, alt - I, formae[II][s + I],
+            larva);
         (vacuum)glyphae_ductae_pingere(purae_h[s], lat, alt, larva);
-        marginem_legere(lat, alt, VERUM, lat - I, formae[I][s + I]);
-        marginem_legere(lat, alt, VERUM, ZEPHYRUM, formae[III][s + I]);
+        marginem_legere(lat, alt, VERUM, lat - I, formae[I][s + I],
+            larva);
+        marginem_legere(lat, alt, VERUM, ZEPHYRUM, formae[III][s + I],
+            larva);
     }
     bonum = VERUM;
     per (runa = 0x2500; runa < 0x2580; runa++)
@@ -387,7 +391,7 @@ continuitas (
             marginem_legere(lat, alt, m == I || m == III,
                 m == ZEPHYRUM ? ZEPHYRUM
                 : m == I ? lat - I
-                : m == II ? alt - I : ZEPHYRUM, margo);
+                : m == II ? alt - I : ZEPHYRUM, margo, larva);
             inventa = FALSUM;
             per (s = ZEPHYRUM; s < IV; s++)
             {
@@ -412,8 +416,9 @@ continuitas (
 /* nihil extra larvam, quaevis magnitudo (etiam I x I) */
 interior b32
 intra_larvam (
-    i32 lat,
-    i32 alt)
+    i32  lat,
+    i32  alt,
+     i8* larva)
 {
     s32 runa;
     i32 k;
@@ -424,9 +429,9 @@ intra_larvam (
         {
             perge;
         }
-        memset(larva, CUSTOS, magnitudo(larva));
+        memset(larva, CUSTOS, (MAXIMA + XVI));
         (vacuum)glyphae_ductae_pingere(runa, lat, alt, larva);
-        per (k = lat * alt; k < (i32)magnitudo(larva); k++)
+        per (k = lat * alt; k < (i32)(MAXIMA + XVI); k++)
         {
             si (larva[k] != CUSTOS)
             {
@@ -440,25 +445,26 @@ intra_larvam (
 }
 
 interior vacuum
-leges_probare (vacuum)
+leges_probare (
+    i8* larva)
 {
-    imprimere("\n--- VI: leges per tabulam ---\n");
-    CREDO_VERUM(continuitas(VI, VIII));
-    CREDO_VERUM(continuitas(VII, IX));
-    CREDO_VERUM(continuitas(XII, XVI));
-    CREDO_VERUM(continuitas(IX, XX));
-    CREDO_VERUM(continuitas(XX, XL));
-    CREDO_VERUM(intra_larvam(I, I));
-    CREDO_VERUM(intra_larvam(II, III));
-    CREDO_VERUM(intra_larvam(VI, VIII));
-    CREDO_VERUM(intra_larvam(XVII, XXXI));
+    CREDO_VERUM(continuitas(VI, VIII, larva));
+    CREDO_VERUM(continuitas(VII, IX, larva));
+    CREDO_VERUM(continuitas(XII, XVI, larva));
+    CREDO_VERUM(continuitas(IX, XX, larva));
+    CREDO_VERUM(continuitas(XX, XL, larva));
+    CREDO_VERUM(intra_larvam(I, I, larva));
+    CREDO_VERUM(intra_larvam(II, III, larva));
+    CREDO_VERUM(intra_larvam(VI, VIII, larva));
+    CREDO_VERUM(intra_larvam(XVII, XXXI, larva));
 }
 
 /* VII: symbola (v2, census Claude Code): picturae VI x VIII manu
  * ductae, scalatae per proximum; lex: quodque symbolum agnoscitur et
  * aliquid pingit */
 interior vacuum
-symbola_probare (vacuum)
+symbola_probare (
+    i8* larva)
 {
     hic_manens constans s32 symbola[] = {
         0x2013, 0x2014, 0x2022, 0x2026, 0x203A, 0x2190, 0x2191,
@@ -481,9 +487,8 @@ symbola_probare (vacuum)
     b32 omnia;
     b32 pictum;
 
-    imprimere("\n--- VII: symbola (v2) ---\n");
-    CREDO_VERUM(pictura_est(0x2713, nota));
-    CREDO_VERUM(pictura_est(0x23FA, circulus));
+    CREDO_VERUM(pictura_est(0x2713, nota, larva));
+    CREDO_VERUM(pictura_est(0x23FA, circulus, larva));
     /* XII x XVI = II x: pixelum (x, y) = pictura[y / II][x / II] */
     CREDO_VERUM(glyphae_ductae_pingere(0x25CF, XII, XVI, larva));
     CREDO_AEQUALIS_I32((i32)larva[II * XII + IV], 0xFF);
@@ -526,7 +531,8 @@ symbola_probare (vacuum)
  * Latinis dissimilia, numeri supra et infra scripti, radices, >> et
  * <<. Similia (Alpha, omicron) per fons, non hic. */
 interior vacuum
-graeca_probare (vacuum)
+graeca_probare (
+    i8* larva)
 {
     hic_manens constans s32 nova[] = {
         0x00B2, 0x00B3, 0x00B9, 0x0393, 0x0394, 0x0398, 0x039B,
@@ -549,9 +555,8 @@ graeca_probare (vacuum)
     b32 omnia;
     b32 situs;
 
-    imprimere("\n--- VIII: symbola v3 (Graeca, mathematica) ---\n");
-    CREDO_VERUM(pictura_est(0x03C0, pi));
-    CREDO_VERUM(pictura_est(0x00B2, duo_supra));
+    CREDO_VERUM(pictura_est(0x03C0, pi, larva));
+    CREDO_VERUM(pictura_est(0x00B2, duo_supra, larva));
     omnia = VERUM;
     situs = VERUM;
     per (k = ZEPHYRUM; nova[k]; k++)
@@ -596,26 +601,118 @@ graeca_probare (vacuum)
     CREDO_FALSUM(glyphae_ductae_est(0x221C));
 }
 
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    i8 larva[MAXIMA + XVI];
+
+    (vacuum)c;
+    lineas_probare(larva);
+}
+
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    i8 larva[MAXIMA + XVI];
+
+    (vacuum)c;
+    interruptas_probare(larva);
+}
+
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    i8 larva[MAXIMA + XVI];
+
+    (vacuum)c;
+    arcus_probare(larva);
+}
+
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    i8 larva[MAXIMA + XVI];
+
+    (vacuum)c;
+    quadra_probare(larva);
+}
+
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    i8 larva[MAXIMA + XVI];
+
+    (vacuum)c;
+    puncta_probare(larva);
+}
+
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    i8 larva[MAXIMA + XVI];
+
+    (vacuum)c;
+    ambitum_probare(larva);
+}
+
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    i8 larva[MAXIMA + XVI];
+
+    (vacuum)c;
+    leges_probare(larva);
+}
+
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    i8 larva[MAXIMA + XVI];
+
+    (vacuum)c;
+    symbola_probare(larva);
+}
+
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+    i8 larva[MAXIMA + XVI];
+
+    (vacuum)c;
+    graeca_probare(larva);
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I: lineae (Ghostty linesChar)", _sectio_prima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "II: lineolae (Ghostty dash*)", _sectio_secunda, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "II b: arcus et diagonales (pinnata oculis)", _sectio_tertia,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "III: elementa quadrata (Ghostty block.zig)", _sectio_quarta,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "IV: braille (Ghostty braille.zig)", _sectio_quinta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "V: ambitus", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "VI: leges per tabulam", _sectio_septima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "VII: symbola (v2)", _sectio_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "VIII: symbola v3 (Graeca, mathematica)", _sectio_nona, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
 s32
 principale (vacuum)
 {
-    Piscina* piscina;
-
-    piscina = piscina_generare_dynamicum("probatio_glyphae_ductae",
-        MXXIV * LXIV);
-    credo_aperire(piscina);
-
-    lineas_probare();
-    interruptas_probare();
-    arcus_probare();
-    quadra_probare();
-    puncta_probare();
-    ambitum_probare();
-    leges_probare();
-    symbola_probare();
-    graeca_probare();
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+    redde credo_suitam_currere("glyphae_ductae", SECTIONES);
 }

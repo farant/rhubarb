@@ -38,25 +38,18 @@ _omnes_hex (
     redde VERUM;
 }
 
-s32 principale (vacuum)
-{
-        b32  praeteritus;
-    Piscina* piscina;
-
-    piscina = piscina_generare_dynamicum("probatio_machina", M * LXIV);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
 
     /* ========================================================
      * I. Nucleus purus: fontes DIVERSI, identitates DIVERSAE
      * ======================================================== */
 
-    imprimere("\n--- I. Fontes diversi -> identitates diversae ---\n");
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda fons_a, fons_b;
         chorda id_a, id_b, id_a_iterum;
@@ -92,13 +85,20 @@ s32 principale (vacuum)
             CREDO_FALSUM(chorda_aequalis(id_a, id_c));
         }
     }
+}
 
 
     /* ========================================================
      * II. Fons vacuus RECUSATUR
      * ======================================================== */
 
-    imprimere("\n--- II. Fons vacuus ---\n");
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda vacua, exitus;
 
@@ -112,13 +112,20 @@ s32 principale (vacuum)
                      chorda_ex_literis("quidquid", piscina), NIHIL);
         CREDO_AEQUALIS_I32(exitus.mensura, ZEPHYRUM);
     }
+}
 
 
     /* ========================================================
      * III. Identitas huius machinae
      * ======================================================== */
 
-    imprimere("\n--- III. Identitas machinae ---\n");
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda prima, altera;
 
@@ -137,13 +144,20 @@ s32 principale (vacuum)
         imprimere("    identitas: %.*s\n", (integer)prima.mensura,
                   (constans character*)prima.datum);
     }
+}
 
 
     /* ========================================================
      * IV. Nota plena
      * ======================================================== */
 
-    imprimere("\n--- IV. Nota plena ---\n");
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         MachinaNota nota;
 
@@ -169,13 +183,18 @@ s32 principale (vacuum)
                   (constans character*)nota.architectura.datum,
                   nota.nuclei);
     }
+}
 
 
     /* ========================================================
      * V. Piscina absens
      * ======================================================== */
 
-    imprimere("\n--- V. Piscina absens ---\n");
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         MachinaNota nota;
              chorda id;
@@ -186,25 +205,21 @@ s32 principale (vacuum)
         nota = machina_nota(NIHIL);
         CREDO_FALSUM(nota.valida);
     }
+}
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I. Fontes diversi -> identitates diversae", _sectio_prima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "II. Fons vacuus", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "III. Identitas machinae", _sectio_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "IV. Nota plena", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "V. Piscina absens", _sectio_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    /* ========================================================
-     * Compendium
-     * ======================================================== */
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-
-    piscina_destruere(piscina);
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("machina", SECTIONES);
 }

@@ -98,28 +98,19 @@ _continet_literis (
                           chorda_ex_literis(literae, piscina));
 }
 
-s32 principale (vacuum)
-{
-         b32  praeteritus;
-     Piscina* piscina;
-
-    piscina = piscina_generare_dynamicum("probatio_natura_quaesitor",
-                                         8388608);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
 
     /* ========================================================
      * 0. instrumentum paratur
      * ======================================================== */
 
-    {
-        imprimere("\n--- 0. instrumentum ---\n");
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
 
+    piscina = c->piscina;
+    {
         si (!filum_existit("bin/natura"))
         {
             constans character* struere[II];
@@ -137,6 +128,7 @@ s32 principale (vacuum)
         }
         CREDO_VERUM (filum_existit("bin/natura"));
     }
+}
 
 
     /* ========================================================
@@ -147,10 +139,15 @@ s32 principale (vacuum)
      * videbuntur - exacte quod 2026-08-08 accidit.
      * ======================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         ProcessusResultus r;
-
-        imprimere("\n--- I. culpa plantata (species latens) ---\n");
 
         r = _currere("quaere", "mensuratio", NIHIL, piscina);
         CREDO_VERUM (r.successus);
@@ -162,16 +159,22 @@ s32 principale (vacuum)
         CREDO_VERUM (_continet_literis(r.effusio, "fundamentum",
                                        piscina));
     }
+}
 
 
     /* ========================================================
      * II. nomen vere liberum: SENTENTIA contraria
      * ======================================================== */
 
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         ProcessusResultus r;
-
-        imprimere("\n--- II. nomen liberum ---\n");
 
         r = _currere("quaere", "zzz-nomen-quod-non-est", NIHIL,
                      piscina);
@@ -183,16 +186,22 @@ s32 principale (vacuum)
         CREDO_VERUM (!_continet_literis(r.effusio, "OCCUPATUM",
                                         piscina));
     }
+}
 
 
     /* ========================================================
      * III. genus nomine ipso quoque OCCUPATUM nuntiatur
      * ======================================================== */
 
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         ProcessusResultus r;
-
-        imprimere("\n--- III. genus nomine ipso ---\n");
 
         r = _currere("quaere", "praeceptum", NIHIL, piscina);
         CREDO_VERUM (r.successus);
@@ -201,6 +210,7 @@ s32 principale (vacuum)
         CREDO_VERUM (_continet_literis(r.effusio, "iudicium",
                                        piscina));
     }
+}
 
 
     /* ========================================================
@@ -210,10 +220,15 @@ s32 principale (vacuum)
      * in_opere a parente veniunt, ideo [hereditarium].
      * ======================================================== */
 
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         ProcessusResultus r;
-
-        imprimere("\n--- IV. apparatus cum hereditate ---\n");
 
         r = _currere("apparatus", "deceptio", NIHIL, piscina);
         CREDO_VERUM (r.successus);
@@ -228,16 +243,22 @@ s32 principale (vacuum)
             r.effusio, "[a documentatio.defectus_documenti]",
             piscina));
     }
+}
 
 
     /* ========================================================
      * V. maiores trans exemplaria (documentatio -> fabricatio)
      * ======================================================== */
 
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         ProcessusResultus r;
-
-        imprimere("\n--- V. maiores trans exemplaria ---\n");
 
         r = _currere("maiores", "ambulatio_lectoris", NIHIL,
                      piscina);
@@ -247,16 +268,22 @@ s32 principale (vacuum)
         CREDO_VERUM (_continet_literis(r.effusio, "probatio",
                                        piscina));
     }
+}
 
 
     /* ========================================================
      * VI. DISCIPLINA EXITUUM: 2 = NIHIL CURSUM, non salus
      * ======================================================== */
 
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         ProcessusResultus r;
-
-        imprimere("\n--- VI. disciplina exituum ---\n");
 
         /* genus ignotum */
         r = _currere("apparatus", "zzz-genus-nullum", NIHIL,
@@ -272,6 +299,7 @@ s32 principale (vacuum)
         r = _currere("index", "-radix", "/tmp", piscina);
         CREDO_AEQUALIS_I32 ((i32)r.codex_exitus, (i32)II);
     }
+}
 
 
     /* ========================================================
@@ -281,10 +309,15 @@ s32 principale (vacuum)
      * etiam 'tail -1' responsum servat.
      * ======================================================== */
 
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         ProcessusResultus r;
-
-        imprimere("\n--- VII. modus machinae ---\n");
 
         r = _currere("quaere", "mensuratio", "-machina", piscina);
         CREDO_VERUM (r.successus);
@@ -295,6 +328,7 @@ s32 principale (vacuum)
         CREDO_VERUM (_continet_literis(r.effusio, "GENUS\tiudicium",
                                        piscina));
     }
+}
 
 
     /* ========================================================
@@ -305,10 +339,15 @@ s32 principale (vacuum)
      * nomine umbram IMPLET. Sententia binaria hic mentiretur.
      * ======================================================== */
 
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         ProcessusResultus r;
-
-        imprimere("\n--- VIII. umbrae (sententia triplex) ---\n");
 
         r = _currere("quaere", "typus", NIHIL, piscina);
         CREDO_VERUM (r.successus);
@@ -324,6 +363,7 @@ s32 principale (vacuum)
                 chorda_ex_literis("UMBRA [NOMEN IPSUM]", piscina)),
             (i32)I);
     }
+}
 
 
     /* ========================================================
@@ -332,10 +372,15 @@ s32 principale (vacuum)
      * petitum relationis, catena in arbore, species.
      * ======================================================== */
 
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         ProcessusResultus r;
-
-        imprimere("\n--- IX. apparatus dives ---\n");
 
         r = _currere("apparatus", "planta.planta", NIHIL, piscina);
         CREDO_VERUM (r.successus);
@@ -363,6 +408,7 @@ s32 principale (vacuum)
                                        "corporalia.vivens",
                                        piscina));
     }
+}
 
 
     /* ========================================================
@@ -370,10 +416,15 @@ s32 principale (vacuum)
      * plantae species sub sub-generibus sedent, non sub ipsa)
      * ======================================================== */
 
+interior vacuum
+_sectio_decima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         ProcessusResultus r;
-
-        imprimere("\n--- IXb. species enumeratae ---\n");
 
         r = _currere("apparatus", "observatio", NIHIL, piscina);
         CREDO_VERUM (r.successus);
@@ -384,16 +435,22 @@ s32 principale (vacuum)
         CREDO_VERUM (_continet_literis(r.effusio, "testimonium",
                                        piscina));
     }
+}
 
 
     /* ========================================================
      * X. petitum relationis NOMINATUR (non solum nomen relationis)
      * ======================================================== */
 
+interior vacuum
+_sectio_decima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         ProcessusResultus r;
-
-        imprimere("\n--- X. petita relationum ---\n");
 
         r = _currere("apparatus", "ambulatio_lectoris", NIHIL,
                      piscina);
@@ -411,6 +468,7 @@ s32 principale (vacuum)
         CREDO_VERUM (_continet_literis(r.effusio, "[multiplex]",
                                        piscina));
     }
+}
 
 
     /* ========================================================
@@ -420,10 +478,15 @@ s32 principale (vacuum)
      * solum referebatur.
      * ======================================================== */
 
+interior vacuum
+_sectio_decima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         ProcessusResultus r;
-
-        imprimere("\n--- XI. taxinomia nidificata ---\n");
 
         /* species INTRA speciem - arbor porphyriana: isbn_10 GENUS
          * est, parens isbn (nidificatio = parentela generum) */
@@ -442,6 +505,7 @@ s32 principale (vacuum)
         CREDO_VERUM (_continet_literis(r.effusio, "> granny_smith",
                                        piscina));
     }
+}
 
 
     /* ========================================================
@@ -454,10 +518,15 @@ s32 principale (vacuum)
      * quicquam conferre potest.
      * ======================================================== */
 
+interior vacuum
+_sectio_decima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         ProcessusResultus r;
-
-        imprimere("\n--- XII. census et relationes ---\n");
 
         r = _currere("census", "-machina", NIHIL, piscina);
         CREDO_VERUM (r.successus);
@@ -479,6 +548,7 @@ s32 principale (vacuum)
         CREDO_VERUM (_continet_literis(r.effusio, "ambulatio_lectoris",
                                        piscina));
     }
+}
 
 
     /* ========================================================
@@ -487,10 +557,15 @@ s32 principale (vacuum)
      * conversorum (a= solo), TERMINI in apparatu, census.
      * ======================================================== */
 
+interior vacuum
+_sectio_decima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         ProcessusResultus r;
-
-        imprimere("\n--- XIII. necessitudines (quaesitor) ---\n");
 
         /* nomen primarium necessitudinis OCCUPATUM */
         r = _currere4("quaere", "continet_qp", "-radix",
@@ -562,19 +637,42 @@ s32 principale (vacuum)
         CREDO_VERUM (_continet_literis(r.effusio, "dator_qp",
                                        piscina));
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "0. instrumentum", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "I. culpa plantata (species latens)", _sectio_secunda, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "II. nomen liberum", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "III. genus nomine ipso", _sectio_quarta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "IV. apparatus cum hereditate", _sectio_quinta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "V. maiores trans exemplaria", _sectio_sexta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "VI. disciplina exituum", _sectio_septima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "VII. modus machinae", _sectio_octava, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "VIII. umbrae (sententia triplex)", _sectio_nona, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "IX. apparatus dives", _sectio_decima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "IXb. species enumeratae", _sectio_decima_prima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "X. petita relationum", _sectio_decima_secunda, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "XI. taxinomia nidificata", _sectio_decima_tertia, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "XII. census et relationes", _sectio_decima_quarta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "XIII. necessitudines (quaesitor)", _sectio_decima_quinta, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    praeteritus = credo_omnia_praeterierunt();
-    credo_claudere();
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("natura_quaesitor", SECTIONES);
 }

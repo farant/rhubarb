@@ -1,0 +1,191 @@
+<interrogationes unitas="vates">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I send one message to Claude and read the text of the reply?
+    <responsum symbolum="vates_aperire vates_petitio_creare vates_nuntium_addere vates_textum_addere vates_mittere" via="lib/quaestio.c">Open
+      a provider with vates_aperire(piscina, provisor, clavis,
+      &amp;optiones) (provisor anthropic or fictus; an unknown name
+      returns NIHIL and lists the known ones on stderr), build a request
+      with vates_petitio_creare(piscina, exemplar), add a user turn
+      with vates_nuntium_addere(p, VATES_USOR) and
+      vates_textum_addere, then call vates_mittere(v, p, propositum,
+      piscina). r-&gt;bloci is a Xar of VatesBlocus STRUCTS
+      (xar_obtinere gives a VatesBlocus*); collect textus from blocks
+      whose genus is VATES_TEXTUS. Text you add is NOT copied: the
+      chorda must stay valid while the request is in use.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I run a tool-use loop with vates?
+    <responsum symbolum="vates_instrumentum_addere vates_responsum_addere vates_effectum_addere vates_nuntium_addere">Declare
+      tools with vates_instrumentum_addere(p, &amp;instrumentum), a
+      VatesInstrumentum holding titulus, descriptio and a JSON Schema
+      JsonValor (copied by value, so the chordae must outlive p). When r-&gt;causa_finis is
+      VATES_FINIS_INSTRUMENTUM, append the reply with
+      vates_responsum_addere(p, r) (every block, OPACUM included,
+      becomes an assistant turn), then open a VATES_USOR turn and add
+      one vates_effectum_addere(n, id, contentum, erratum) per
+      VATES_INSTRUMENTUM_PETITUM block, using that block's id. Send
+      the same petitio again.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I tell a failed call from a successful one?
+    <responsum symbolum="vates_mittere vates_error_descriptio VatesResponsum">vates_mittere
+      never returns NIHIL (except with a NIHIL piscina): check
+      r-&gt;successus. On failure r-&gt;error says which kind (RETE,
+      TEMPUS, STATUS, PARSE, or LIMES for a local refusal before
+      anything was sent: NIHIL vates or petitio, too many cache
+      points), status_http the HTTP code, and error_genus and
+      error_nuntius carry the provider's own error type (such as
+      overloaded_error) and message; when the error body is not JSON,
+      error_nuntius is its first CCLVI bytes. Only status CC counts as
+      success. vates_error_descriptio names the
+      kind. A refusal is a SUCCESS with causa_finis
+      VATES_FINIS_RECUSATIO; recusatio_categoria holds
+      stop_details.category when the API sends it.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what does vates_mittere retry, and how long can it block?
+    <responsum symbolum="vates_mittere vates_optiones_ordinariae VatesOptiones">Up
+      to conatus_maximi attempts (0 means III). Network errors are
+      always retried, a timeout only on the first attempt (a long call
+      is expensive to repeat), and HTTP 408, 409, 429 and every status
+      from D up. Between attempts it sleeps for the retry-after
+      seconds or mora_iterandi_ms (0 means II s), always capped by
+      mora_iterandi_maxima_ms (0 means LX s); each attempt has
+      tempus_ms (0 means X minutes). For the three durations zero or a
+      negative value means the default, so the sleep cannot be
+      switched off (use I ms).
+      With the defaults one call can block about XXX minutes (III
+      attempts of X minutes) plus the sleeps. r-&gt;usus is summed
+      over all attempts and r-&gt;conatus counts them. The streaming
+      calls retry only before the first delta, and a stream that
+      returned CC is retried only for an overloaded_error or api_error
+      event.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can vates read the API key from the environment for me?
+    <responsum symbolum="vates_aperire vates_anthropic_aperire">No, by
+      design: the caller reads the key and passes its bytes as clavis.
+      Vates copies it once, NUL-terminated, for the x-api-key header,
+      and never writes it to the ledger, the herbarium captures or any
+      error message (a test reads the ledger and every herbarium file
+      back to prove it). The fictus provider ignores the key.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I know what a call cost?
+    <responsum symbolum="vates_mittere VatesPretium VatesUsus">Give
+      VatesOptiones.pretia (a VatesPretium table with micro-dollars per
+      million tokens for input, output, cache read and 5m and 1h cache
+      writes) and pretia_numerus. Prices come from the caller because
+      they change; they are never compiled in. r-&gt;usus.pretium is
+      then the cost in micro-dollars, or -I when the model is not in
+      the table; the model is matched exactly against the name the API
+      returns (r-&gt;exemplar), falling back to the request's
+      exemplar. Set rationarium_via to also append one JSON line per
+      attempt (time, model, purpose, status, tokens, price, latency),
+      written with fsync.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I use prompt caching?
+    <responsum symbolum="vates_systema_addere vates_textum_addere vates_petitio_caudam_signare vates_mittere">Mark
+      a breakpoint with the signum_thesauri argument of
+      vates_systema_addere, or set signum_thesauri on a VatesBlocus
+      returned by vates_textum_addere or vates_effectum_addere;
+      vates_petitio_caudam_signare adds the automatic tail point. The
+      API allows IV breakpoints, so more than IV makes the call fail
+      with VATES_ERROR_LIMES before anything is sent. OPACUM blocks
+      are never marked and are not counted. The request body is
+      byte-deterministic, so an unchanged prefix hits the
+      cache.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I stream the reply as it is generated?
+    <responsum symbolum="vates_mittere_rivum vates_vocare_rivum vates_vocatio_responsum vates_vocationem_abrumpere">vates_mittere_rivum
+      blocks like vates_mittere but calls your VatesRivus with each
+      text delta (cogitatio FALSUM) or thinking delta (VERUM); the
+      chorda is invalid once the callback returns. The final response
+      is the same as the non-streaming one. It retries only before
+      the first delta; a stream that ends without message_stop is
+      VATES_ERROR_RETE, and an error event is VATES_ERROR_STATUS.
+      vates_vocare_rivum does the same on your Reactor without
+      blocking (retry waits are reactor timers); it returns NIHIL only
+      when an argument is NIHIL and reports every failure, LIMES included, through finis; then read
+      vates_vocatio_responsum. finis is meant to run exactly once
+      (vates_vocationem_abrumpere calls it synchronously), but if the
+      reactor has no free timer slot when a retry or the LIMES
+      refusal is scheduled it never runs, and vates_vocatio_finita
+      stays FALSUM.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I test code that calls vates without the network?
+    <responsum symbolum="vates_fictus_aperire vates_fictus_textum vates_fictus_instrumentum vates_fictus_crudum vates_fictus_rivum vates_fictus_petitio vates_vocare_rivum">Open
+      the fictus provider (vates_fictus_aperire, or vates_aperire with
+      provisor fictus), queue replies with vates_fictus_textum,
+      vates_fictus_instrumentum, vates_fictus_crudum (any status and
+      body) or vates_fictus_rivum, then read the exact bodies sent
+      with vates_fictus_petitio. Replies are rendered as real
+      Anthropic JSON and parsed by the real reader. An exhausted queue
+      is a network error (fictus exhaustum), which IS retried: each
+      retry sleeps mora_iterandi_ms (II s when 0) and records one more
+      request, so set conatus_maximi to I or mora_iterandi_ms to I.
+      Fictus only intercepts vates_mittere and vates_mittere_rivum:
+      vates_vocare_rivum calls http_vocare directly, so on a fictus
+      Vates it goes to the real URL.
+      Set sine_herbario too, or any reply the judge finds unusual
+      (non-CC status, unknown field or block) is captured to disk
+      under host fictus.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what is the herbarium, and why do files appear in ~/.rhubarb/herbarium?
+    <responsum symbolum="vates_anthropic_aperire herbarium_sedes_ordinaria" via="lib/vates.worklog.md">Response
+      capture, ON by default: a judge inside the transport saves any
+      response that is not an ordinary 200 (other status, non-JSON
+      body, unknown stop_reason, a field or block the declared schema
+      in lib/vates_responsum.norma does not know) as a specimen before
+      vates reads it; a CC text/event-stream body is not judged
+      yet. The
+      directory is herbarium_via used as given, else
+      $RHUBARB_HERBARIUM or ~/.rhubarb/herbarium plus /host. The host
+      is always that of the built-in API URL (api.anthropic.com), even
+      when VatesOptiones.url points elsewhere; fictus uses host
+      fictus. sine_herbario VERUM turns it off. vates_vocare_rivum
+      bypasses the transport and is never captured.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what is an OPACUM block, and why does vates keep blocks it does not understand?
+    <responsum symbolum="vates_responsum_addere vates_anthropic_corpus">Nothing
+      is thrown away. Every response block keeps its raw JSON in
+      crudum with provisor anthropic; every type other than text and
+      tool_use (thinking with its signature, and any type vates does
+      not know) becomes VATES_OPACUM. When the block goes back in
+      the next request (vates_responsum_addere) an Anthropic block is
+      emitted VERBATIM, so signatures and unmodelled fields survive.
+      The Anthropic request builder omits an OPACUM block whose
+      provisor is not anthropic, as the API itself omits another
+      model's thinking.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I use an API feature or beta header that vates does not model?
+    <responsum symbolum="vates_extra_ponere vates_caput_addere">Yes:
+      vates_extra_ponere(p, provisor, clavis, valor) adds a body field
+      (emitted last, after messages) and vates_caput_addere(p,
+      provisor, titulus, valor) adds a header such as anthropic-beta.
+      Both are tagged with a provider name and applied only by that
+      provider's request builder, so code that sets Anthropic extras
+      runs unchanged, without them, under another provider. The
+      fictus provider uses the Anthropic builder, so it does apply
+      extras and headers tagged anthropic.</responsum>
+  </interrogatio>
+
+</interrogationes>

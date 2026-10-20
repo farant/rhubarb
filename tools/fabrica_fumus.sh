@@ -116,6 +116,12 @@
 #        RECENS - h contra b stalum iudicabatur); arcus DATORUM solum
 #        (k cum praecondicione g, sine ingressu eius = RECENS); post
 #        sanare c RECENS
+#   LX   consilium ante actum (consilium S4): arbor secundaria
+#        institutionem VETAT, principalis non iudicat
+#   LXI  consilium actum (consilium S5c1): 'consilium -agere' occisus
+#        in medio gradu -> '-resumere' actum non iterat; arbor mutata ->
+#        resumptio recusata; scriptura ~/.bin non proposita -> FRACTUM;
+#        gradus sine mandato -> nihil actum
 #
 # Exitus: 0 sanum · 1 fractum · 2 bin/fabrica deest.
 # <porta titulus="fabrica-fumus" gradus="fusio" instrumentum="bin/fabrica" tegit="*/aedificatio.stml aedificatio.canon fabrica.canon tools/fabrica_struere.sh"/>
@@ -1020,6 +1026,106 @@ if [ "$rcs" -eq 0 ] && [ "$rc0" -eq 0 ] && grep -q '^IUDICIUM	RECENS	c	' "$T/lvi
    && [ "$rc2" -eq 0 ] && grep -q '^IUDICIUM	RECENS	d	' "$T/lviii_2" \
    && [ "$rc3" -eq 0 ] && grep -q '^IUDICIUM	RECENS	c	' "$T/lviii_3"; then echo "  LVIII catena iudicii: c FORTASSE supra g, praecondicio non propagat, post sanare RECENS OK"; else echo "  LVIII FRACTUM (sanare rc=$rcs; c ante rc=$rc0, post a rc=$rc1, d rc=$rc2, post sanare rc=$rc3)"; for k in 0 1 2 3; do grep '^IUDICIUM' "$T/lviii_$k" | sed "s/^/      [$k] /"; done; fracta=1; fi
 
+# LIX (colloquia T8c): PROGRESSUS - sub MENSOR_PARENS eiusdem arboris
+# mensurae parenti adhaerentes: fabrica.ambitus et fabrica.undae initio,
+# fabrica.iudicata ultima = ambitus (ultima semper scribitur); radix
+# aliena sine diario expresso (custodia LV) NIHIL progressus
+radix_c
+RP=$(cd "$T/r" && pwd -P)
+(cd "$T/r" && MENSOR_PARENS=fumus-lix MENSOR_SESSIO=sessio-lix MENSOR_ARBOR="$RP" \
+    "$F" probare -vis probationes_t) > "$T/lix.e" 2>&1
+lix_a=$(awk -F'\t' '$3 == "fumus-lix" && $4 == "fabrica.ambitus" { print $5 + 0 }' "$MENSOR_DIARIUM" | tail -1)
+lix_u=$(awk -F'\t' '$3 == "fumus-lix" && $4 == "fabrica.undae" { print $5 + 0 }' "$MENSOR_DIARIUM" | tail -1)
+lix_i=$(awk -F'\t' '$3 == "fumus-lix" && $4 == "fabrica.iudicata" { print $5 + 0 }' "$MENSOR_DIARIUM" | tail -1)
+mkdir -p "$T/domus3/.rhubarb"
+(cd "$T/r" && env -u MENSOR_DIARIUM -u MENSOR_DIURNA HOME="$T/domus3" MENSOR_PARENS=fumus-lix-alienum \
+    MENSOR_ARBOR=/alibi "$F" probare -vis probationes_t) > "$T/lix.e2" 2>&1
+lix_x=$(grep -c 'fabrica\.' "$T/domus3/.rhubarb/mensurae.diarium" 2>/dev/null)
+if [ "${lix_a:-0}" -ge 1 ] && [ "${lix_u:-0}" -ge 1 ] && [ "$lix_i" = "$lix_a" ] && [ "${lix_x:-0}" = "0" ]; then echo "  LIX  progressus: ambitus et undae initio, iudicata ultima = ambitus, radix aliena nihil OK"; else echo "  LIX  FRACTUM (ambitus '${lix_a}', undae '${lix_u}', iudicata ultima '${lix_i}', lineae alienae ${lix_x:-0})"; fracta=1; fi
+
+# LX (consilium S4): CONSILIUM ANTE ACTUM - in arbore secundaria ('.git'
+# plagula) sanatio cuius exitus extra arborem (~) iacet VETATUR ante
+# actum (regula 'arbor_secundaria', exitus 2, nihil scriptum in domo);
+# in arbore principali ('.git' directorium) consilium non iudicatur.
+# HOME temporarium: domus vera numquam tangitur.
+radix '<fabrica titulus="t"><subsystema via="."/></fabrica>'
+printf 'unum\n' > "$T/r/a"
+printf 'mkdir -p "$HOME/.consilium_fumus"; cp a "$HOME/.consilium_fumus/x"\n' > "$T/r/inst.sh"
+printf '<aedificatio>\n  <actio titulus="inst" genus="institutio">\n    <mandatum>\n      <verbum! (>sh\n      <verbum! (>inst.sh\n    </mandatum>\n    <ingressus genus="fasciculus" via="a"/>\n    <exitus via="~/.consilium_fumus/x" provenientia="regeneratio"/>\n  </actio>\n</aedificatio>\n' > "$T/r/aedificatio.stml"
+mkdir -p "$T/domus_lx"
+printf 'gitdir: /nusquam\n' > "$T/r/.git"
+(cd "$T/r" && HOME="$T/domus_lx" "$F" sanare) > "$T/lx_s" 2>&1; rcs=$?
+scriptum_s=0; [ -e "$T/domus_lx/.consilium_fumus/x" ] && scriptum_s=1
+rm -f "$T/r/.git"; mkdir -p "$T/r/.git"
+(cd "$T/r" && HOME="$T/domus_lx" "$F" sanare) > "$T/lx_p" 2>&1; rcp=$?
+if [ "$rcs" -eq 2 ] && [ "$scriptum_s" -eq 0 ] \
+   && grep -q 'VETITUM: inst instituere ~/.consilium_fumus/x <- arbor_secundaria' "$T/lx_s" \
+   && ! grep -q 'arbor_secundaria' "$T/lx_p"; then echo "  LX   consilium ante actum: arbor secundaria institutionem VETAT (nihil actum), principalis non iudicat OK"; else echo "  LX   FRACTUM (secundaria rc=$rcs scriptum $scriptum_s, principalis rc=$rcp)"; sed 's/^/      [s] /' "$T/lx_s" | head -6; sed 's/^/      [p] /' "$T/lx_p" | head -4; fracta=1; fi
+
+# LXI (consilium S5c1): CONSILIUM ACTUM - 'consilium -agere' mandata
+# undis exsequitur, observata, cum diario. Exsecutor in medio gradu B
+# OCCISUS (kill -9 parentis) -> '-resumere': A (actum) non iteratur, B
+# (interruptus) et C aguntur. Arbor mutata (fons sequendus) post actum
+# ultimum -> resumptio recusata (1), nihil actum. Scriptura in ~/.bin
+# non proposita (HOME temporarium) -> FRACTUM nominatum (3). Gradus
+# sine mandato -> 1, nihil actum. Valores attributorum STML CRUDI:
+# '&&' scribitur ut est.
+radix '<fabrica titulus="t"/>'
+(cd "$T/r" && git init -q && printf 'build/\n' > .gitignore && printf 'fons\n' > fons.txt \
+    && git add -A && git -c user.email=f@f -c user.name=f commit -qm initium) > /dev/null 2>&1
+mkdir -p "$T/r/build" "$T/domus_lxi/.bin"
+cat > "$T/r/c.stml" <<'EOF'
+<consilium>
+  <gradus titulus="A">
+    <mandatum><argumentum valor="sh"/><argumentum valor="-c"/><argumentum valor="echo A >> build/cursus; echo a > build/a"/></mandatum>
+    <effectus verbum="scribere" res="build/a" classis="build"/>
+    <effectus verbum="scribere" res="build/cursus" classis="build"/>
+  </gradus>
+  <gradus titulus="B">
+    <mandatum><argumentum valor="sh"/><argumentum valor="-c"/><argumentum valor="echo B >> build/cursus; test -f build/occide && kill -9 $PPID; echo b > build/b"/></mandatum>
+    <effectus verbum="legere" res="build/a" classis="build"/>
+    <effectus verbum="inspicere" res="build/occide" classis="build"/>
+    <effectus verbum="scribere" res="build/b" classis="build"/>
+    <effectus verbum="scribere" res="build/cursus" classis="build"/>
+  </gradus>
+  <gradus titulus="C">
+    <mandatum><argumentum valor="sh"/><argumentum valor="-c"/><argumentum valor="echo C >> build/cursus; cat build/b > build/c"/></mandatum>
+    <effectus verbum="legere" res="build/b" classis="build"/>
+    <effectus verbum="scribere" res="build/c" classis="build"/>
+    <effectus verbum="scribere" res="build/cursus" classis="build"/>
+  </gradus>
+</consilium>
+EOF
+lxi () { (cd "$T/r" && HOME="$T/domus_lxi" "$F" consilium "$@") 2>&1; }
+touch "$T/r/build/occide"
+lxi -agere c.stml > "$T/lxi_1"; rc1=$?
+rm -f "$T/r/build/occide"
+lxi -agere -resumere c.stml > "$T/lxi_2"; rc2=$?
+cursus=$(tr '\n' ' ' < "$T/r/build/cursus")
+# arbor mutata post actum ultimum
+rm -f "$T/r/build/cursus"; touch "$T/r/build/occide"
+lxi -agere c.stml > /dev/null; rm -f "$T/r/build/occide"
+printf 'mutatum\n' >> "$T/r/fons.txt"
+lxi -agere -resumere c.stml > "$T/lxi_3"; rc3=$?
+cursus3=$(tr '\n' ' ' < "$T/r/build/cursus")
+# scriptura ~/.bin non proposita; gradus sine mandato
+cat > "$T/r/e.stml" <<'EOF'
+<consilium>
+  <gradus titulus="X">
+    <mandatum><argumentum valor="sh"/><argumentum valor="-c"/><argumentum valor="echo x > build/x; echo y > $HOME/.bin/x"/></mandatum>
+    <effectus verbum="scribere" res="build/x" classis="build"/>
+  </gradus>
+</consilium>
+EOF
+printf '<consilium>\n  <gradus titulus="nudus">\n    <effectus verbum="scribere" res="build/n" classis="build"/>\n  </gradus>\n</consilium>\n' > "$T/r/s.stml"
+lxi -agere e.stml > "$T/lxi_4"; rc4=$?
+lxi -agere s.stml > "$T/lxi_5"; rc5=$?
+if [ "$rc1" -ne 0 ] && [ "$rc2" -eq 0 ] && [ "$cursus" = "A B B C " ] \
+   && grep -q 'ex actis: actum ante' "$T/lxi_2" \
+   && [ "$rc3" -eq 1 ] && grep -q 'arbor mutata post ultimum actum' "$T/lxi_3" && [ "$cursus3" = "A B " ] \
+   && [ "$rc4" -eq 3 ] && grep -q 'scripsit extra propositum: ~/.bin/x' "$T/lxi_4" \
+   && [ "$rc5" -eq 1 ] && grep -q 'gradus sine mandato' "$T/lxi_5" && [ ! -e "$T/r/build/n" ]; then echo "  LXI  consilium actum: occisus -> resumptio (A non iteratum), arbor mutata recusata, ~/.bin non propositum FRACTUM, sine mandato nihil OK"; else echo "  LXI  FRACTUM (occisus rc=$rc1, resumptio rc=$rc2 cursus '$cursus', arbor mutata rc=$rc3 cursus '$cursus3', extra rc=$rc4, sine mandato rc=$rc5)"; for k in 1 2 3 4 5; do sed "s/^/      [$k] /" "$T/lxi_$k" | head -5; done; fracta=1; fi
+
 if [ "$fracta" -ne 0 ]; then echo "fumus fabricae: FRACTUM"; exit 1; fi
-echo "fumus fabricae: sanum (LVIII/LVIII)"
+echo "fumus fabricae: sanum (LXI/LXI)"
 exit 0

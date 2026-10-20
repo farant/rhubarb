@@ -140,6 +140,25 @@ b32
 processus_transformare (
     constans character* constans* argumenta);
 
+/* VIVUS (colloquia T8): exstatne processus 'pid', et quando coepit?
+ * Per '/bin/ps -o etime= -p PID' (praecisio secundae; nullum sysctl -
+ * exemplar suturae_fila_computare). VERUM si exstat; *initium_ms_out =
+ * momentum initii (ms ab epocha), ZEPHYRUM si legi nequit. pid iterum
+ * datus (fabrica furcat assidue - pid intra horas redit) a vocatore
+ * cognoscitur: initium processus POST initium cursus = alius. */
+b32
+processus_vivus (
+         s32  pid,
+         s64* initium_ms_out,
+     Piscina* piscina);
+
+/* etime 'ps' ([[dd-]hh:]mm:ss) in secundas; FALSUM si deformis.
+ * Purum - pars probabilis sine processu. */
+b32
+processus_aetatem_legere (
+    chorda  textus,
+       s64* secundae_out);
+
 
 /* ========================================================================
  * SEMITA INCREMENTALIS - pro faciebus quae obstare non possunt

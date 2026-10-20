@@ -1,0 +1,215 @@
+<interrogationes unitas="stml_macros">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I load an STML document so templates, queries and anonymous lists are resolved before I read it?
+    <responsum symbolum="stml_legere stml_expandere stml_distribuere" via="project-specs/stml-instrumentum-spec.md tools/stml.c">Run
+      the chain with ONE InternamentumChorda and one piscina:
+      stml_legere, then stml_expandere(resultus.radix, ...), then
+      stml_distribuere(expansio.radix_expansa, ...). Pass the
+      DOCUMENT node (resultus.radix), not elementum_radix, or
+      document-level doctype, processing instructions and comments
+      fall outside the subtree. stml_expandere and stml_distribuere
+      each return a NEW tree and leave their input untouched, so elementum_radix still points
+      into the original tree afterwards and must be found again in
+      the result. tools/stml.c (the stml expandere verb) is the
+      reference caller; spec section 3.1 lists the laws.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I check radix_expansa != NIHIL to know that stml_expandere worked?
+    <responsum symbolum="stml_expandere StmlExpansioResultus">No:
+      test successus. Some vitia are soft. Anything that goes wrong
+      while a reference in a string position (attribute value,
+      interpolated text, an inner call's arguments) is substituted is
+      recorded but does not stop the walk: a subtree argument there is
+      ARGUMENTUM_ARBOREUM (VII), and a failing projection there is
+      PROIECTIO_ABSENS or PROIECTIO_AMBIGUA (XXVII, XXVIII). The
+      literal &amp;@p; stays in place. A relation that no PER and no
+      de= consumed is EXITUS_NON_CONSUMPTUS (XVIII), set by the end
+      guard. In these cases radix_expansa is a non-NIHIL but wrong
+      tree. Hard vitia stop the walk and return radix_expansa NIHIL. Only the first vitium is reported,
+      with linea, fragmentum and loculus filled where they apply
+      (empty chorda otherwise).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why does every template call fail with FRAGMENTUM_IGNOTUM even though the definition is right there?
+    <responsum symbolum="stml_expandere stml_legere internamentum_creare" via="project-specs/stml-instrumentum-spec.md">Most
+      likely stml_expandere got a different InternamentumChorda from
+      the one stml_legere used. Definitions keep the id the parser
+      interned, calls intern the id with the intern you pass, and the
+      two are compared by pointer, so with a second intern no call
+      ever finds its definition. Create one intern before stml_legere
+      and pass it to every stage.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what is the difference between a #f fragment and a #@f template, and why does my call not expand?
+    <responsum symbolum="stml_expandere" via="lib/stml_macros.worklog.md">Only
+      ids that start with @ are templates. &lt;#@f&gt; defines one; it is
+      removed from the expanded tree, and each &lt;&lt;#@f ...&gt;&gt; is
+      replaced by a fresh filled copy of its body (instantiation).
+      &lt;#f&gt; and &lt;&lt;#f&gt;&gt; are content fragments and
+      transclusions: stml_expandere copies them through untouched,
+      because a plain transclusion is an alias (the same object seen
+      twice), not a copy. &lt;&lt;#solus&gt;&gt; with no definition is
+      therefore not an error. Decided 2026-08-26 when arbor's shared
+      lexemes would otherwise have been deleted.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I write a template with parameters and pass it text or a subtree?
+    <responsum symbolum="stml_expandere">Declare
+      each slot as an attribute VALUE starting with @ on the defining
+      tag (the attribute name is ignored: k="@p" declares p), and
+      refer to it in the body as &amp;@p; in text or attribute values:
+      &lt;#@f p="@p"&gt;&lt;a x="&amp;@p;"/&gt;&lt;/#&gt;. Call it inline
+      with &lt;&lt;#@f p="v"&gt;&gt;, or follow the call with block arguments
+      &lt;@p=&gt;...&lt;/&gt;. A block with no children is a tombstone (the
+      slot counts as not passed). A block holding one text child is a
+      scalar, unless that text is exactly &amp;@x; naming a subtree
+      argument of the enclosing template, which passes that subtree
+      on. Any other block is a subtree, which may only stand alone as
+      the whole text &amp;@p; (it is spliced as a fresh copy each
+      time). A subtree in an attribute or mixed text is vitium VII.
+      Every required slot must be filled (IV), no unknown name may be
+      passed (V), and no name twice, inline or block (VIII). Since any
+      value of two or more characters starting with @ is a
+      declaration, a defining tag cannot carry a literal value like
+      "@home" ("@" alone and values starting "@." stay ordinary). The
+      value "@?" declares a required slot named ? that no reference
+      can name.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I leave a template argument out or pass it as an empty string?
+    <responsum symbolum="stml_expandere chorda_internare">Leave
+      it out: declare the slot optional with p="@p?", then omit it or
+      pass the tombstone &lt;@p=/&gt;. Select on it with
+      &lt;COMMUTATIO de="&amp;@p;"&gt; and &lt;CASUS nihil&gt; /
+      &lt;CASUS non-nihil&gt; arms (or est="value"). Using &amp;@p;
+      outside an arm that proves presence is vitium XI. Do NOT pass
+      p="" inline: chorda_internare returns NIHIL for an empty
+      chorda, so the argument has neither value nor subtree. In text
+      or an attribute that dereferences NIHIL and crashes, and
+      against an est arm it reports ARGUMENTUM_ARBOREUM (both seen
+      2026-10-17).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why does calling a template that is defined further down the document fail?
+    <responsum symbolum="stml_expandere" via="lib/stml_macros.worklog.md">Strata:
+      a call can only reach definitions EARLIER in document order, so
+      a later one is FRAGMENTUM_POSTERIUS (II), at document level and
+      inside bodies alike. Termination is then guaranteed by
+      construction, because each nested fill may only use strictly
+      older definitions. Definitions are collected from any depth of
+      the document, inside ordinary elements too, and dropped from the
+      output. A template defined INSIDE another template's body is
+      not collected: calls to it are FRAGMENTUM_IGNOTUM, and each
+      instantiation copies the nested definition verbatim into the
+      output. The one
+      exception is a template calling itself: allowed only when every
+      subtree argument is a strict descendant of the current
+      instantiation's subtree arguments and there is at least one
+      (else RECURSIO_NON_DESCENDENS, XXXI). Mutual recursion is still
+      refused.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I find elements in the document and generate output for each match?
+    <responsum symbolum="stml_expandere" via="project-specs/stml-exemplaria-spec.md">Use
+      an EXEMPLAR to bind a relation and a PER to consume it:
+      &lt;EXEMPLAR output="$a"&gt;&lt;q id="$i"/&gt;&lt;/EXEMPLAR&gt; then
+      &lt;PER congruentia="$a"&gt;&lt;v n="&amp;@i;"/&gt;&lt;/PER&gt;
+      emits one &lt;v&gt; per match at the PER's place. A value written
+      in the pattern is required and an omitted one is free. id="$i"
+      captures a value, a bare $n attribute captures the node, a text
+      child of only $t captures the text, and &lt;*&gt; matches any tag.
+      An EXEMPLAR searches only the content ABOVE it in the document.
+      modus is omnia (the default), unum (exactly one, else XVI),
+      primum or optional. Both commands are consumed and never
+      emitted. They work only at document level: inside a template
+      body they are vitium XIII, except PER de="@n..." over a subtree
+      argument. CATENA, DIRIBITIO and SINE chain, branch on and
+      filter relations.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I see what my EXEMPLAR, CATENA or PER commands actually matched?
+    <responsum symbolum="stml_expandere">Put
+      a bare &lt;INDAGO/&gt; at the top of the document. Every consumed
+      EXEMPLAR, PER, CATENA or DIRIBITIO after it at document level
+      leaves a comment in its place (TRANSPARENTIA does not), for example
+      &lt;!--indago EXEMPLAR $a (radix): ordines 1 (capturae: i)--&gt;,
+      with per-stage row counts for chains and taken arms for
+      DIRIBITIO. The trace is a comment, so matching ignores it, but
+      the output bytes do change. Commands BEFORE the element are
+      not traced. INDAGO with any attribute or a non-comment child is
+      vitium XXIV.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what does stml_distribuere do, and do I need it if I already called stml_expandere?
+    <responsum symbolum="stml_distribuere StmlDistributioResultus" via="project-specs/stml-instrumentum-spec.md">It
+      dissolves list wrappers. A named element whose children (after
+      any leading &lt;@x=&gt; attribute elements) are ALL anonymous
+      fragments becomes one copy of itself per fragment:
+      &lt;nota t="a"&gt;&lt;&gt;lac&lt;/&gt;&lt;&gt;ianuam&lt;/&gt;&lt;/nota&gt; becomes two
+      &lt;nota t="a"&gt; elements. Wrapper attributes and attribute
+      elements are copied into each item, and an item attribute of
+      the same name wins. Mixing anonymous fragments with named children or text is
+      STML_DISTRIBUTIO_MIXTA, with linea of the first offending child
+      and the wrapper's titulus; comments pass through.
+      Any element qualifies, the root included: &lt;r&gt;&lt;&gt;x&lt;/&gt;&lt;/r&gt;
+      becomes &lt;r&gt;x&lt;/r&gt;. Treat it as required: skipping it
+      silently changes how many elements there are.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I use stml_congruere_strictum as a general pattern matcher for STML trees?
+    <responsum symbolum="stml_congruere_strictum StmlCaptura StmlCongruentiaPar xar_truncare">Only
+      for exact shapes. Tag, fragment and raw flags must be equal,
+      and the attribute lists must be equal IN THE SAME ORDER
+      (x="1" y="2" does not match y="2" x="1"). Children must match
+      one to one, except that a template whose only child is the
+      whole text &amp;@k; captures all the candidate's children (at
+      least one) into an StmlCaptura. A repeated slot must capture
+      byte-identical forests. paria (may be NIHIL) gets
+      StmlCongruentiaPar entries as it goes and is not rolled back on
+      failure, so save xar_numerus first and xar_truncare back to it.
+      capturae (must not be NIHIL) is not rolled back either: pass a
+      fresh Xar for each attempt, as silva_arbor.c does.
+      For subset matching (omitted attributes free, children an
+      ordered subsequence), use an EXEMPLAR inside the document
+      instead.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I find which template call produced a node in the expanded tree?
+    <responsum symbolum="StmlExpansioNota stml_expandere">Read
+      tabula_expansionum, a Xar of StmlExpansioNota in splice order.
+      nodus is the first node the call spliced (NIHIL if the body
+      produced nothing), vocatio is the call node
+      in the ORIGINAL tree (keep that tree alive while you use it),
+      fragmentum_id is the interned id and stratum the 1-based nesting
+      depth. PER voca="#@f" adds one entry per row. Calls inside
+      block arguments are recorded before the call that receives
+      them, and their nodus points into the argument's stored subtree,
+      not into radix_expansa: that subtree is cloned at each place it
+      is spliced, so look such a node up through the receiving call's
+      entry instead.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I get a printable name for the vitium in a failed StmlExpansioResultus?
+    <responsum symbolum="StmlExpansioVitium StmlDistributioVitium" via="tools/stml.c include/stml_macros.h">Not
+      from the library: there is no public name function, only the
+      enum (I to XXXI for expansion, MIXTA and MEMORIA for
+      distribution), each value with its comment in the header.
+      tools/stml.c keeps a private switch (_vitium_expansionis_titulus)
+      that prints the name with linea, fragmentum and loculus; copy
+      it, and keep it in step when a vitium is added.</responsum>
+  </interrogatio>
+
+</interrogationes>

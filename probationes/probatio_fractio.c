@@ -340,11 +340,10 @@ interior constans VectorFractionis vectores[] = {
     }
 };
 
-interior Piscina* piscina;
-
 interior Fractio
 _ex (
-    constans character* litterae)
+    constans character* litterae,
+               Piscina* piscina)
 {
     Fractio f = fractio_ex_s64(ZEPHYRUM);
         b32 bene;
@@ -358,7 +357,8 @@ _ex (
 interior b32
 _textus_est (
                 Fractio  f,
-     constans character* litterae)
+     constans character* litterae,
+                Piscina* piscina)
 {
     redde chorda_aequalis_literis(fractio_ad_chordam(f, piscina),
         litterae);
@@ -367,7 +367,8 @@ _textus_est (
 interior b32
 _magnus_textus_est (
                  Magnus  m,
-     constans character* litterae)
+     constans character* litterae,
+                Piscina* piscina)
 {
     redde chorda_aequalis_literis(magnus_ad_chordam(m, piscina),
         litterae);
@@ -376,7 +377,8 @@ _magnus_textus_est (
 /* forma canonica: denominator > 0, mdc 1, nihil = 0/1 */
 interior b32
 _canonica (
-    Fractio f)
+     Fractio  f,
+     Piscina* piscina)
 {
     Magnus n = fractio_numerator(f);
     Magnus d = fractio_denominator(f);
@@ -425,7 +427,8 @@ _digiti (
 
 interior Fractio
 _fortuita (
-    Sors* s)
+       Sors* s,
+    Piscina* piscina)
 {
     character alveus[XC];
           i32 positus  = ZEPHYRUM;
@@ -435,7 +438,7 @@ _fortuita (
     {
         redde _ex(finitimae[sors_intra(s,
             (i32)(magnitudo(finitimae)
-                / magnitudo(finitimae[ZEPHYRUM])))]);
+                / magnitudo(finitimae[ZEPHYRUM])))], piscina);
     }
     si (sors_intra(s, II) == ZEPHYRUM)
     {
@@ -455,9 +458,10 @@ _fortuita (
 /* leges unius casus: VERUM si omnes tenent */
 interior b32
 _casum_probare (
-    Fractio a,
-    Fractio b,
-    Fractio c)
+     Fractio  a,
+     Fractio  b,
+     Fractio  c,
+     Piscina* piscina)
 {
     Fractio t = fractio_ex_s64(ZEPHYRUM);
     Fractio x;
@@ -494,14 +498,15 @@ _casum_probare (
     {
         redde FALSUM;
     }
-    si (!fractio_aequalis(t, fractio_nega(a, piscina)) || !_canonica(t))
+    si (   !fractio_aequalis(t, fractio_nega(a, piscina))
+        || !_canonica(t, piscina))
     {
         redde FALSUM;
     }
 
     /* (a + b) - b = a */
     t = fractio_subtrahe(fractio_adde(a, b, piscina), b, piscina);
-    si (!fractio_aequalis(t, a) || !_canonica(t))
+    si (!fractio_aequalis(t, a) || !_canonica(t, piscina))
     {
         redde FALSUM;
     }
@@ -509,13 +514,14 @@ _casum_probare (
     /* commutatio, distributio */
     x = fractio_multiplica(a, b, piscina);
     y = fractio_multiplica(b, a, piscina);
-    si (!fractio_aequalis(x, y) || !_canonica(x))
+    si (!fractio_aequalis(x, y) || !_canonica(x, piscina))
     {
         redde FALSUM;
     }
     t = fractio_multiplica(a, fractio_adde(b, c, piscina), piscina);
     y = fractio_adde(x, fractio_multiplica(a, c, piscina), piscina);
-    si (!fractio_aequalis(t, y) || !_canonica(t) || !_canonica(y))
+    si (   !fractio_aequalis(t, y) || !_canonica(t, piscina)
+        || !_canonica(y, piscina))
     {
         redde FALSUM;
     }
@@ -534,7 +540,7 @@ _casum_probare (
             && !fractio_inversa(b, piscina, &t);
     }
     (vacuum)fractio_divide(a, b, piscina, &t);
-    si (   !_canonica(t)
+    si (   !_canonica(t, piscina)
         || !fractio_aequalis(fractio_multiplica(t, b, piscina), a))
     {
         redde FALSUM;
@@ -566,38 +572,36 @@ _casum_probare (
     redde VERUM;
 }
 
-s32 principale (vacuum)
-{
-    piscina = piscina_generare_dynamicum("probatio_fractio", 65536);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
 
     /* ==================================================
      * TEXTUS et FORMA CANONICA
      * ================================================== */
 
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         Fractio f;
         Fractio g = fractio_ex_s64(VII);
 
-        imprimere("\n--- Probans textum et formam canonicam ---\n");
-        CREDO_VERUM (_textus_est(_ex("6/4"), "3/2"));
-        CREDO_VERUM (_textus_est(_ex("-6/4"), "-3/2"));
-        CREDO_VERUM (_textus_est(_ex("0/5"), "0"));
-        CREDO_VERUM (_textus_est(_ex("-0/3"), "0"));
-        CREDO_VERUM (_textus_est(_ex("10/5"), "2"));
-        CREDO_VERUM (_textus_est(_ex("5"), "5"));
-        CREDO_VERUM (_textus_est(_ex("-5"), "-5"));
-        CREDO_VERUM (_canonica(_ex("0/5")));
-        CREDO_VERUM (fractio_est_integra(_ex("10/5")));
-        CREDO_FALSUM (fractio_est_integra(_ex("10/4")));
+        CREDO_VERUM (_textus_est(_ex("6/4", piscina), "3/2", piscina));
+        CREDO_VERUM (_textus_est(_ex("-6/4", piscina), "-3/2",
+            piscina));
+        CREDO_VERUM (_textus_est(_ex("0/5", piscina), "0", piscina));
+        CREDO_VERUM (_textus_est(_ex("-0/3", piscina), "0", piscina));
+        CREDO_VERUM (_textus_est(_ex("10/5", piscina), "2", piscina));
+        CREDO_VERUM (_textus_est(_ex("5", piscina), "5", piscina));
+        CREDO_VERUM (_textus_est(_ex("-5", piscina), "-5", piscina));
+        CREDO_VERUM (_canonica(_ex("0/5", piscina), piscina));
+        CREDO_VERUM (fractio_est_integra(_ex("10/5", piscina)));
+        CREDO_FALSUM (fractio_est_integra(_ex("10/4", piscina)));
         CREDO_VERUM (fractio_ex_s64_s64(III, -VI, piscina, &f));
-        CREDO_VERUM (_textus_est(f, "-1/2") && _canonica(f));
+        CREDO_VERUM (_textus_est(f, "-1/2", piscina)
+            && _canonica(f, piscina));
         CREDO_FALSUM (fractio_ex_s64_s64(III, ZEPHYRUM, piscina, &g));
 
         /* malformatae: exitus non tangitur */
@@ -632,17 +636,29 @@ s32 principale (vacuum)
 
         /* aequalitas falsificabilis (recensio 2026-10-05: mutans qui
          * numeratores solos comparabat suitam transibat) */
-        CREDO_FALSUM (fractio_aequalis(_ex("1/2"), _ex("1/3")));
-        CREDO_FALSUM (fractio_aequalis(_ex("1/2"), _ex("2/3")));
-        CREDO_FALSUM (fractio_aequalis(_ex("-1/2"), _ex("1/2")));
-        CREDO_VERUM (fractio_aequalis(_ex("2/4"), _ex("1/2")));
+        CREDO_FALSUM (fractio_aequalis(_ex("1/2", piscina), _ex("1/3",
+            piscina)));
+        CREDO_FALSUM (fractio_aequalis(_ex("1/2", piscina), _ex("2/3",
+            piscina)));
+        CREDO_FALSUM (fractio_aequalis(_ex("-1/2", piscina), _ex("1/2",
+            piscina)));
+        CREDO_VERUM (fractio_aequalis(_ex("2/4", piscina), _ex("1/2",
+            piscina)));
     }
+}
 
 
     /* ==================================================
      * ROTUNDATIO: pavimentum, tectum, ad parem
      * ================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         interior constans character* casus_rotundi[][IV] = {
             /* a, pavimentum, tectum, rotunda */
@@ -662,81 +678,106 @@ s32 principale (vacuum)
         };
         i32 k;
 
-        imprimere("\n--- Probans rotundationem ---\n");
         per (k = ZEPHYRUM; k < (i32)(magnitudo(casus_rotundi)
             / magnitudo(casus_rotundi[ZEPHYRUM])); k++)
         {
-            Fractio f = _ex(casus_rotundi[k][ZEPHYRUM]);
+            Fractio f = _ex(casus_rotundi[k][ZEPHYRUM], piscina);
 
             CREDO_VERUM (_magnus_textus_est(fractio_pavimentum(f,
                 piscina),
-                casus_rotundi[k][I]));
+                casus_rotundi[k][I], piscina));
             CREDO_VERUM (_magnus_textus_est(fractio_tectum(f, piscina),
-                casus_rotundi[k][II]));
+                casus_rotundi[k][II], piscina));
             CREDO_VERUM (_magnus_textus_est(fractio_rotunda(f, piscina),
-                casus_rotundi[k][III]));
+                casus_rotundi[k][III], piscina));
         }
     }
+}
 
 
     /* ==================================================
      * POTENTIA, INVERSA, DIVISIO PER NIHIL
      * ================================================== */
 
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         Fractio f = fractio_ex_s64(IX);
 
-        imprimere("\n--- Probans potentiam et inversam ---\n");
-        CREDO_VERUM (fractio_potentia(_ex("2/3"), -III, piscina, &f));
-        CREDO_VERUM (_textus_est(f, "27/8") && _canonica(f));
-        CREDO_VERUM (fractio_potentia(_ex("-2/3"), III, piscina, &f));
-        CREDO_VERUM (_textus_est(f, "-8/27"));
-        CREDO_VERUM (fractio_potentia(_ex("-1/2"), -I, piscina, &f));
-        CREDO_VERUM (_textus_est(f, "-2") && _canonica(f));
-        CREDO_VERUM (fractio_potentia(_ex("0"), ZEPHYRUM, piscina, &f));
-        CREDO_VERUM (_textus_est(f, "1"));
-        /* exponens imus s32: negatio sine exundatione */
-        CREDO_VERUM (fractio_potentia(_ex("-1"), (s32)0x80000000U,
+        CREDO_VERUM (fractio_potentia(_ex("2/3", piscina), -III,
             piscina, &f));
-        CREDO_VERUM (_textus_est(f, "1"));
+        CREDO_VERUM (_textus_est(f, "27/8", piscina)
+            && _canonica(f, piscina));
+        CREDO_VERUM (fractio_potentia(_ex("-2/3", piscina), III,
+            piscina, &f));
+        CREDO_VERUM (_textus_est(f, "-8/27", piscina));
+        CREDO_VERUM (fractio_potentia(_ex("-1/2", piscina), -I, piscina,
+            &f));
+        CREDO_VERUM (_textus_est(f, "-2", piscina)
+            && _canonica(f, piscina));
+        CREDO_VERUM (fractio_potentia(_ex("0", piscina), ZEPHYRUM,
+            piscina, &f));
+        CREDO_VERUM (_textus_est(f, "1", piscina));
+        /* exponens imus s32: negatio sine exundatione */
+        CREDO_VERUM (fractio_potentia(_ex("-1", piscina),
+            (s32)0x80000000U,
+            piscina, &f));
+        CREDO_VERUM (_textus_est(f, "1", piscina));
 
         f = fractio_ex_s64(IX);
-        CREDO_FALSUM (fractio_potentia(_ex("0"), -I, piscina, &f));
-        CREDO_FALSUM (fractio_inversa(_ex("0"), piscina, &f));
-        CREDO_FALSUM (fractio_divide(_ex("1/2"), _ex("0"), piscina,
+        CREDO_FALSUM (fractio_potentia(_ex("0", piscina), -I, piscina,
             &f));
-        CREDO_VERUM (_textus_est(f, "9"));
-        CREDO_VERUM (fractio_inversa(_ex("-3/7"), piscina, &f));
-        CREDO_VERUM (_textus_est(f, "-7/3") && _canonica(f));
+        CREDO_FALSUM (fractio_inversa(_ex("0", piscina), piscina, &f));
+        CREDO_FALSUM (fractio_divide(_ex("1/2", piscina), _ex("0",
+            piscina), piscina,
+            &f));
+        CREDO_VERUM (_textus_est(f, "9", piscina));
+        CREDO_VERUM (fractio_inversa(_ex("-3/7", piscina), piscina,
+            &f));
+        CREDO_VERUM (_textus_est(f, "-7/3", piscina)
+            && _canonica(f, piscina));
     }
+}
 
 
     /* ==================================================
      * VECTORES PYTHONIS
      * ================================================== */
 
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         i32 k;
         i32 numerus = (i32)(magnitudo(vectores)
             / magnitudo(vectores[ZEPHYRUM]));
 
-        imprimere("\n--- Probans vectores Pythonis (%u) ---\n",
-            numerus);
         per (k = ZEPHYRUM; k < numerus; k++)
         {
             constans VectorFractionis* v = &vectores[k];
-                              Fractio  a = _ex(v->a);
-                              Fractio  b = _ex(v->b);
+                              Fractio  a = _ex(v->a, piscina);
+                              Fractio  b = _ex(v->b, piscina);
                               Fractio  t   =
                                   fractio_ex_s64(ZEPHYRUM);
 
             t = fractio_adde(a, b, piscina);
-            CREDO_VERUM (_textus_est(t, v->summa) && _canonica(t));
+            CREDO_VERUM (_textus_est(t, v->summa, piscina)
+                && _canonica(t, piscina));
             t = fractio_subtrahe(a, b, piscina);
-            CREDO_VERUM (_textus_est(t, v->differentia)
-                && _canonica(t));
+            CREDO_VERUM (_textus_est(t, v->differentia, piscina)
+                && _canonica(t, piscina));
             t = fractio_multiplica(a, b, piscina);
-            CREDO_VERUM (_textus_est(t, v->productum) && _canonica(t));
+            CREDO_VERUM (_textus_est(t, v->productum, piscina)
+                && _canonica(t, piscina));
             /* "-" = divisor nullus in oraculo: refutatio exspectatur */
             si (v->quotiens[ZEPHYRUM] == '-' && v->quotiens[I] == '\0')
             {
@@ -745,41 +786,48 @@ s32 principale (vacuum)
             alioquin
             {
                 CREDO_VERUM (fractio_divide(a, b, piscina, &t));
-                CREDO_VERUM (_textus_est(t, v->quotiens)
-                    && _canonica(t));
+                CREDO_VERUM (_textus_est(t, v->quotiens, piscina)
+                    && _canonica(t, piscina));
             }
             CREDO_VERUM (_magnus_textus_est(fractio_pavimentum(a,
                 piscina),
-                v->pavimentum));
+                v->pavimentum, piscina));
             CREDO_VERUM (_magnus_textus_est(fractio_tectum(a, piscina),
-                v->tectum));
+                v->tectum, piscina));
             CREDO_VERUM (_magnus_textus_est(fractio_rotunda(a, piscina),
-                v->rotunda));
+                v->rotunda, piscina));
             CREDO_AEQUALIS_S32 (fractio_compara(a, b, piscina),
                 v->ordo);
         }
     }
+}
 
 
     /* ==================================================
      * LEGES CORPORIS super fractiones fortuitas
      * ================================================== */
 
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         Sors s;
          i32 k;
          b32 bene          = VERUM;
          i32 casus_primus  = 0xFFFFFFFFU;
 
-        imprimere("\n--- Probans leges corporis (M casus) ---\n");
         sors_seminare(&s, 2026ULL, I);
         per (k = ZEPHYRUM; k < M; k++)
         {
-            Fractio a = _fortuita(&s);
-            Fractio b = _fortuita(&s);
-            Fractio c = _fortuita(&s);
+            Fractio a = _fortuita(&s, piscina);
+            Fractio b = _fortuita(&s, piscina);
+            Fractio c = _fortuita(&s, piscina);
 
-            si (!_casum_probare(a, b, c) && bene)
+            si (!_casum_probare(a, b, c, piscina) && bene)
             {
                 bene          = FALSUM;
                 casus_primus  = k;
@@ -791,13 +839,23 @@ s32 principale (vacuum)
         }
         CREDO_VERUM (bene);
     }
+}
 
-    credo_imprimere_compendium();
-    {
-        b32 praeteritus = credo_omnia_praeterierunt();
 
-        credo_claudere();
-        piscina_destruere(piscina);
-        redde praeteritus ? ZEPHYRUM : I;
-    }
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "textum et formam canonicam", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "rotundationem", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "potentiam et inversam", _sectio_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "vectores Pythonis", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "leges corporis (M casus)", _sectio_quinta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("fractio", SECTIONES);
 }

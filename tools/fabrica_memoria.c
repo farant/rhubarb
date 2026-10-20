@@ -900,6 +900,85 @@ _cursum_legere (
     redde inventum;
 }
 
+/* linea progressus una: mensura parenti adhaerens (mensura.h) */
+interior vacuum
+_progressum_scribere (
+               Memoria* memoria,
+    constans character* parens,
+    constans character* titulus,
+                   i32  valor,
+    constans character* unitas,
+                   s64  nunc)
+{
+                Mensura  m;
+     constans character* sessio = getenv("MENSOR_SESSIO");
+
+    memset(&m, ZEPHYRUM, magnitudo(m));
+    m.sessio    = chorda_ex_literis(sessio != NIHIL ? sessio : "",
+        memoria->piscina);
+    m.id        = mensura_id_novum(memoria->piscina);
+    m.parens    = chorda_ex_literis(parens, memoria->piscina);
+    m.titulus   = chorda_ex_literis(titulus, memoria->piscina);
+    m.valor     = (duplex)valor;
+    m.unitas    = chorda_ex_literis(unitas, memoria->piscina);
+    m.momentum  = nunc;
+    (vacuum)mensura_annotare(mensura_diarium_cursuum(memoria->piscina),
+        &m, memoria->piscina);
+}
+
+/* PROGRESSUS (colloquia T8c): facta progressus ut mensurae cursui
+ * parenti (MENSOR_PARENS: porta) adhaerentes - initio ambitus et
+ * undae, deinde iudicata, strangulata ad lineam unam per secundam (via
+ * seriatim post actionem quamque vocat); ultima (iudicata = ambitus)
+ * semper. Sine cursu parente nihil; radix aliena (fixtura sub porta,
+ * MENSOR_PARENS hereditatum) solum in MENSOR_DIARIUM expressum - ut
+ * annales cursuum (T4), aliter progressus fixturae portam falleret. */
+interior vacuum
+_progressum_notare (
+    vacuum* datum,
+       i32  iudicata,
+       i32  ambitus,
+       i32  unda,
+       i32  undae)
+{
+               Memoria* memoria  = (Memoria*)datum;
+    constans character* parens   = getenv("MENSOR_PARENS");
+    constans character* arbor    = getenv("MENSOR_ARBOR");
+                   s64  nunc;
+
+    si (   parens                  == NIHIL || parens[ZEPHYRUM] == '\0'
+        || getenv("CURSUS_NULLUS") != NIHIL)
+    {
+        redde;
+    }
+    si (   memoria->sutura          != NIHIL
+        && memoria->sutura->radix.mensura > ZEPHYRUM
+        && (   arbor == NIHIL
+            || !chorda_aequalis_literis(memoria->sutura->radix, arbor))
+        && getenv("MENSOR_DIARIUM") == NIHIL)
+    {
+        redde;
+    }
+    nunc = mensura_momentum_nunc();
+    si (iudicata == ZEPHYRUM && unda == ZEPHYRUM)
+    {
+        _progressum_scribere(memoria, parens, MENSURA_AMBITUS, ambitus,
+            "membra", nunc);
+        _progressum_scribere(memoria, parens, MENSURA_UNDAE, undae,
+            "undae", nunc);
+        memoria->progressus_ultimus = nunc;
+        redde;
+    }
+    si (   iudicata < ambitus
+        && nunc - memoria->progressus_ultimus < (s64)M)
+    {
+        redde;
+    }
+    _progressum_scribere(memoria, parens, MENSURA_IUDICATA, iudicata,
+        "membra", nunc);
+    memoria->progressus_ultimus = nunc;
+}
+
 /* MEMORIA VERA in sutura (fabrica-6 H4): datum = memoria, ansae
  * memoriae omnes (cursum_legere solum sanare legit) */
 vacuum
@@ -913,6 +992,7 @@ suturae_memoriam_nectere (
     sutura->inscribere           = _inscribere;
     sutura->cursum_inscribere    = _cursum_inscribere;
     sutura->cursum_legere        = _cursum_legere;
+    sutura->progressum_notare    = _progressum_notare;
     sutura->lectiones_legere     = _lectiones_legere;
     sutura->lectiones_scribere   = _lectiones_scribere;
     sutura->lectiones_ultimae    = suturae_lectiones_ultimae;

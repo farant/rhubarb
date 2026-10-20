@@ -1,0 +1,85 @@
+<interrogationes unitas="pictor_applicatio">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I start the pictor drawing app from a new main, window or terminal?
+    <responsum symbolum="pictor_volumen_aperire pictor_applicatio_aedificare PictorApplicatio" via="apps/pictor/pictor.c apps/pictor/pictor_terminalis.c">Call
+      thema_initiare yourself (glue's job), open the volume with
+      pictor_volumen_aperire(piscina, argc, argv, &amp;fumus) (-fumus =
+      temporary volume, -volumen PATH, default "pictor.volumen"), then
+      pictor_applicatio_aedificare with the surface size in our
+      pixels. Hand app.d, app.figurae and &amp;app.montatio.figurae_ctx
+      to your glue (ludus_fenestra or ludus_tessera).
+      pictor_volumen_aperire returns NIHIL if the volume cannot be
+      opened; pictor_applicatio_aedificare returns FALSUM if any part
+      (repository, mount, dispensator) fails or an argument is NIHIL.
+      The header promises a reason on stderr, but lib/pictor_applicatio.c
+      itself prints one only when the document cannot be opened or
+      created ("pictor: documentum").</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I mount pictor as one pane inside a host repository such as vicus?
+    <responsum symbolum="pictor_montare PictorMontatio" via="lib/vicus_applicatio.c">pictor_montare(m,
+      piscina, intern, volumen, repo, id, latitudo, altitudo,
+      systemata) creates the branch &lt;pictor id&gt; if absent and opens
+      (or creates) the drawing stored in spatium id; id NIHIL mounts
+      at the repository root, which must already be a pictor element.
+      The PictorMontatio holds the contexts its registries point to,
+      so give it a stable address and never copy it. systemata may be
+      NIHIL (tests).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I show a different drawing in a mounted pictor pane, or create a new one?
+    <responsum symbolum="pictor_picturam_ponere pictor_picturam_condere pictor_documenta_enumerare">pictor_picturam_ponere(m,
+      spatium) shows an existing drawing; it returns FALSUM unless the
+      drawing is already in the pane's document table or listed by
+      pictor_documenta_enumerare (manifest origin
+      "pictor:documentum"), so a scriba document is never opened as a
+      canvas. pictor_picturam_condere(m, spatium) creates a blank one
+      at the pane's new-canvas size and shows it; it returns FALSUM if
+      the name is empty or already listed by
+      pictor_documenta_enumerare. Caution (audit 2026-10-18, unfixed):
+      when the pane is a PictorApplicatio's montatio, either call leaves
+      app.doc pointing at the old document, so read app.montatio.doc
+      afterwards.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I keep using PictorApplicatio.doc after the shown drawing changes?
+    <responsum symbolum="PictorApplicatio pictor_picturam_ponere pictor_applicatio_aedificare">No:
+      despite its header comment "= montatio.doc", PictorApplicatio.doc
+      is a copy taken once in pictor_applicatio_aedificare.
+      pictor_picturam_ponere re-points montatio.doc and the doc of the
+      action, figure and composition contexts, but not app.doc, so
+      read app.montatio.doc for the drawing on screen. app.actiones and
+      app.figurae stay valid: a swap changes the contexts, never the
+      registries. The standalone app never swaps by itself (worklog:
+      only vicus panes do).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what size does a new pictor canvas get?
+    <responsum symbolum="pictor_montare pictor_picturam_condere">The
+      surface minus one cell (VI pixels) on each side in width, and
+      minus (III status lines + II) cells of VIII pixels in height, with
+      a floor of LXIV pixels each way. The surface is the latitudo and
+      altitudo given to pictor_montare (kept in
+      montatio.compositio.fenestra_latitudo/altitudo), so a canvas made
+      later by pictor_picturam_condere uses the mount-time size even
+      after the window was resized. A drawing that already exists
+      keeps its own size whatever the pane size.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why does PictorMontatio keep a table of documents by spatium?
+    <responsum symbolum="PictorMontatio pictor_picturam_ponere" via="lib/pictor_applicatio.worklog.md">Each
+      PictorDocumentum is about a megabyte of pixels plus history in
+      the arena, so reopening it on every swap would leak. The table
+      also guarantees one document object per drawing; vicus shares
+      one table across all pictor panes so two panes on the same
+      drawing write one history. The root spatium "" is stored under
+      key "." because tabula_dispersa takes no empty key.</responsum>
+  </interrogatio>
+
+</interrogationes>

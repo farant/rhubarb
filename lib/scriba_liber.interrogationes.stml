@@ -1,0 +1,87 @@
+<interrogationes unitas="scriba_liber">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I open the page book and get the document for one page?
+    <responsum symbolum="scriba_liber_aperire scriba_liber_pagina scriba_liber_nomen">Call
+      scriba_liber_aperire(piscina, intern, volumen, latitudo,
+      altitudo), then scriba_liber_pagina(l, titulus) for a name that
+      is in the book, e.g. scriba_liber_nomen(l, ZEPHYRUM) for the
+      first page. latitudo and altitudo (cells) are used only for
+      pages created from now on. If the volume has no index yet, the
+      book starts with the single page "1" and writes the index.
+      aperire returns NIHIL when the index does not parse as STML, or
+      when it is missing and writing it fails. scriba_liber_pagina
+      returns NIHIL for a name that is not in the book, and also if
+      the document can be neither opened nor created.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why does scriba_liber_pagina return the same ScribaDocumentum every time for a name?
+    <responsum symbolum="scriba_liber_pagina scriba_documentum_aperire scriba_documentum_creare" via="lib/scriba_liber.worklog.md">So
+      that every scriba view of a page shares one object: two
+      documents on one page's history in the same volume would write
+      act logs that diverge. Documents open lazily on the first ask.
+      The page's namespace is opened with scriba_documentum_aperire,
+      and whenever that returns NIHIL (normally: no document yet, but
+      any failure counts) a new one is made there with
+      scriba_documentum_creare. The cache belongs to the ScribaLiber, so open the book ONCE
+      per volume and prefix and share that pointer: a second book on
+      the same index has its own cache and would hand out a second
+      document for the same page. It also keeps its own name list and
+      rewrites the whole index from it, so pages added through one
+      book are dropped from the index when the other one adds a
+      page.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I add a page, numbered or named?
+    <responsum symbolum="scriba_liber_pagina_nova scriba_liber_paginam_condere">scriba_liber_pagina_nova
+      appends a page named with a number, starting at count + 1 and
+      skipping names already used ("1", "3" gives "4"), rewrites the
+      index and returns the new name. It returns an empty chorda and
+      rolls the name back if the index write fails. It adds only the
+      name: the page's document is made on the first
+      scriba_liber_pagina for it.
+      scriba_liber_paginam_condere(l, titulus) returns the document
+      of a named page and appends the page first if it is new. The
+      name must match [a-z0-9_-]+, otherwise it returns NIHIL; it
+      also returns NIHIL when the index write fails or the document
+      can be neither opened nor created. New pages always
+      go at the end: index order is navigation order.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I delete, rename or reorder pages in a book?
+    <responsum symbolum="scriba_liber_pagina_nova scriba_liber_paginam_condere volumen_plagulam_removere">No.
+      The API only adds pages, always at the end. Nothing removes a
+      name from the index or moves one, and the book never calls
+      volumen_plagulam_removere. Changing the order means rewriting
+      the index plagula ('scriba/paginae', or '&lt;prefix&gt;/paginae')
+      yourself and reopening the book.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I keep a separate book, for example one per calendar day?
+    <responsum symbolum="scriba_liber_aperire_in_spatio scriba_liber_aperire">Use
+      scriba_liber_aperire_in_spatio(piscina, intern, volumen,
+      "dies/2026-10-14", latitudo, altitudo). Its index is
+      '&lt;prefix&gt;/paginae' and each page's text lives in
+      '&lt;prefix&gt;/paginae/&lt;name&gt;', apart from the shared vicus book
+      that scriba_liber_aperire opens (index 'scriba/paginae', pages
+      'paginae/&lt;name&gt;'). A NIHIL or empty prefix returns NIHIL.
+      The prefix is used verbatim, so do not end it with '/'.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what do scriba_liber_nomen and scriba_liber_index return for a bad index or unknown name?
+    <responsum symbolum="scriba_liber_nomen scriba_liber_index scriba_liber_numerus">scriba_liber_nomen
+      returns an interned chorda. It is NOT NUL-terminated, and it is
+      empty (datum NIHIL, mensura ZEPHYRUM) when the index is past the
+      end or the book is NIHIL. The index argument is i32, which is
+      unsigned, so a -1 passed in also comes back empty.
+      scriba_liber_index returns s32 -1 for an unknown name. Names
+      are interned on insertion, so the chorda you passed to
+      paginam_condere does not have to outlive the book.</responsum>
+  </interrogatio>
+
+</interrogationes>

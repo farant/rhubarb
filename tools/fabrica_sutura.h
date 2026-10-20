@@ -9,6 +9,9 @@
 /* <aedilis corpus="tools/fabrica_ansae.c"/> */
 /* <aedilis corpus="tools/fabrica_portae.c"/> */
 /* <aedilis corpus="tools/fabrica_unitates.c"/> */
+/* <aedilis corpus="tools/fabrica_interrogationes.c"/> */
+/* <aedilis corpus="tools/fabrica_relatio.c"/> */
+/* <aedilis corpus="tools/fabrica_consilium.c"/> */
 
 #ifndef FABRICA_SUTURA_H
 #define FABRICA_SUTURA_H
@@ -25,6 +28,8 @@
 #include "sigillum.h"
 #include "mensura.h"
 #include "diurna.h"
+#include "unitates.h"
+#include "portae.h"
 
 /* sanare: terminus unus per actum (briar ~3 min, obiecta radicis
  * frigida ~150 s); termini per actionem non in 1b */
@@ -44,6 +49,9 @@ nomen structura {
                       b32  radix_repositorium;
                    Diurna* diurna;          /* corpora actionum (T4) */
                       b32  diurna_temptata;
+                      s64  progressus_ultimus; /* ms lineae progressus
+                                                * ultimae (colloquia T8c,
+                                                * strangulatio) */
 } Memoria;
 
 /* mandata (fabrica.c) */
@@ -110,6 +118,14 @@ chorda
 suturae_ultimae_lineae (
     chorda textus,
        i32 numerus);
+
+/* photographia arboris (cwd) et directoriorum '~/X' (Xar de chorda;
+ * NIHIL licet): FabricaVestigium ordinata per viam (consilium S5c1) */
+b32
+suturae_photographare (
+    constans Xar*  directoria_extra,
+         Piscina*  piscina,
+             Xar** vestigia_out);
 
 /* memoria (fabrica_memoria.c) */
 
@@ -181,12 +197,53 @@ suturae_portae (
     character** argv,
       Piscina*  piscina);
 
+/* bin/fabrica consilium (tools/fabrica_consilium.c, consilium S3b):
+ * documentum consilii iudicatum - exitus 0 licet, 1 non sine iudicio,
+ * 2 usus aut illegibile */
+s32
+suturae_consilium (
+          s32   argc,
+    character** argv,
+      Piscina*  piscina);
+
 /* bin/fabrica quid (tools/fabrica_unitates.c) */
 s32
 suturae_quid (
           s32   argc,
     character** argv,
       Piscina*  piscina);
+
+/* portae relatio (tools/fabrica_relatio.c, unitates-codicis U5 a):
+ * portae per genera unitatum - relatio, exitus 0; 2 tactus aut unitates
+ * deficiunt */
+s32
+suturae_portae_relatio (
+    constans PortaeSutura* sutura,
+             constans Xar* declaratae,
+             constans Xar* operturae,
+             constans Xar* viae,
+                   chorda  tempora,
+                      b32  machina,
+                  Piscina* piscina);
+
+/* quid -interrogationes -quaere/-symbolum (tools/
+ * fabrica_interrogationes.c): textus XOR symbolum; exitus 0 inventa,
+ * 1 nihil congruit, 2 quaestio sine verbis */
+s32
+suturae_interrogationes_quaerere (
+    constans UnitatesInterrogationes* res,
+                  constans character* textus,
+                  constans character* symbolum,
+                                 b32  machina,
+                             Piscina* piscina);
+
+/* quid -interrogationes -html VIA: pagina (docs/faq.html); exitus 0
+ * scripta, 1 vitia interrogationum (nihil scriptum), 2 scribi nequit */
+s32
+suturae_interrogationes_paginam_scribere (
+    constans UnitatesInterrogationes* res,
+                  constans character* via,
+                             Piscina* piscina);
 
 b32
 suturae_in_area_currere (

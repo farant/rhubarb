@@ -1,0 +1,73 @@
+<interrogationes unitas="utf8">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I loop over the codepoints of a chorda?
+    <responsum symbolum="utf8_decodere">Keep
+      a cursor and an end pointer: p = s.datum, finis = s.datum +
+      s.mensura, then while (p &lt; finis) { runa = utf8_decodere(&amp;p,
+      finis); ... }. Inside that loop utf8_decodere always moves the
+      cursor forward, by at least one byte even on bad input, so the
+      loop ends (it moves nothing only when p is NIHIL or already at
+      finis). It returns -1 (an s32) for invalid input; check runa
+      &lt; 0 and decide whether to skip it or draw U+FFFD.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what does utf8_decodere reject, and how far does it skip on an error?
+    <responsum symbolum="utf8_decodere utf8_longitudo_byte">It
+      returns -1 for stray continuation bytes, the lead bytes F8-FF, a
+      sequence cut off by finis, a lead byte not followed by enough
+      continuation bytes, overlong forms (including the C0 and C1
+      leads), surrogates (U+D800-DFFF) and values above U+10FFFF. The
+      skip is not uniform: a bad lead, a truncated sequence or a
+      missing continuation byte advances one byte, but an overlong
+      form, a surrogate or a value too large advances over the whole
+      sequence (II-IV bytes).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I encode a codepoint into UTF-8 bytes?
+    <responsum symbolum="utf8_codere">utf8_codere(runa,
+      buffer) writes one to four bytes and returns how many; give it a
+      buffer of at least IV bytes. It returns 0 and writes nothing for
+      a NIHIL buffer, negative values, surrogates (U+D800-DFFF) and
+      values above U+10FFFF. It does not NUL-terminate.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I use utf8_numerare_runas to work out how wide text is on screen?
+    <responsum symbolum="utf8_numerare_runas runae_latitudo runae_latitudo_textus">No:
+      it counts codepoints, not terminal cells. A CJK character is one
+      codepoint but two cells, and a combining accent is a codepoint of
+      width zero. Use runae_latitudo for one codepoint and
+      runae_latitudo_textus (which walks grapheme clusters under a
+      RunaePolitica) for a run of text; both come from lib/runae.c,
+      built from fixed Unicode tables. Invalid input also counts
+      unevenly, whatever the header says: each step of utf8_decodere
+      counts as one, so a three-byte overlong form counts once but a
+      sequence cut short counts once per byte.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I use utf8_proxima_runa and utf8_decodere interchangeably to step through text?
+    <responsum symbolum="utf8_proxima_runa utf8_decodere utf8_prior_runa">Only
+      on valid UTF-8. utf8_proxima_runa looks at the lead byte alone
+      and jumps its full length without checking the continuation
+      bytes, so on the bytes E2 'A' 'B' it skips straight past both
+      letters, while utf8_decodere returns -1 and advances one byte to
+      'A'. utf8_prior_runa steps back over at most three continuation
+      bytes and validates nothing either. Use utf8_decodere when the
+      input may be broken.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why do the utf8 functions take i8 pointers instead of char?
+    <responsum symbolum="utf8_decodere utf8_longitudo_byte chorda" via="include/latina.h">i8
+      is unsigned char in the house types and chorda.datum is i8*, so
+      bytes 0x80-0xFF compare and shift as positive values and a
+      chorda can be passed in without casts. The whole library is pure
+      functions over a byte range: no allocation, no piscina, nothing
+      outside latina.h, so it is cheap to use anywhere.</responsum>
+  </interrogatio>
+
+</interrogationes>

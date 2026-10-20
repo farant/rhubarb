@@ -190,20 +190,13 @@ _imperfecta_numerare (
     redde n;
 }
 
-s32
-principale (vacuum)
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-    Piscina* piscina = piscina_generare_dynamicum(
-        "probatio_js_lexema", 67108864);
+    Piscina* piscina;
 
-    si (piscina == NIHIL)
-    {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-    imprimere("\n--- Verba et identificatores ---\n");
+    piscina = c->piscina;
     {
         interior constans JsLexemaGenus exspectata[] = {
             JS_LEX_VERBUM, JS_LEX_SPATIA, JS_LEX_IDENTIFICATOR,
@@ -229,8 +222,15 @@ principale (vacuum)
 
         _seriem_probare(piscina, "letx typeofy", exspectata, 3);
     }
+}
 
-    imprimere("\n--- Numeri ---\n");
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         interior constans JsLexemaGenus exspectata[] = {
             JS_LEX_NUMERUS, JS_LEX_SPATIA, JS_LEX_NUMERUS,
@@ -251,8 +251,15 @@ principale (vacuum)
         _seriem_probare(piscina, "1..toString", exspectata, 3);
         _valorem_probare(piscina, "1..toString", (i32)0, "1.");
     }
+}
 
-    imprimere("\n--- Chordae ---\n");
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         interior constans JsLexemaGenus exspectata[] = {
             JS_LEX_CHORDA };
@@ -270,8 +277,15 @@ principale (vacuum)
 
         _seriem_probare(piscina, "'a\nb'", exspectata, 4);
     }
+}
 
-    imprimere("\n--- Regex contra divisionem ---\n");
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         interior constans JsLexemaGenus exspectata[] = {
             JS_LEX_IDENTIFICATOR, JS_LEX_SPATIA,
@@ -378,8 +392,15 @@ principale (vacuum)
 
         _seriem_probare(piscina, "x = /ab\nc", exspectata, 7);
     }
+}
 
-    imprimere("\n--- Formulae (litterae formularum) ---\n");
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         interior constans JsLexemaGenus exspectata[] = {
             JS_LEX_FORMULA_TOTA };
@@ -461,8 +482,15 @@ principale (vacuum)
 
         _seriem_probare(piscina, "`apertum${x", exspectata, 2);
     }
+}
 
-    imprimere("\n--- Commentaria ---\n");
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         interior constans JsLexemaGenus exspectata[] = {
             JS_LEX_COMMENTARIUM };
@@ -488,8 +516,15 @@ principale (vacuum)
 
         _seriem_probare(piscina, "/* ap", exspectata, 1);
     }
+}
 
-    imprimere("\n--- Munch maximus interpunctionis ---\n");
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         interior constans JsLexemaGenus exspectata[] = {
             JS_LEX_IDENTIFICATOR, JS_LEX_SPATIA,
@@ -531,8 +566,15 @@ principale (vacuum)
         _valorem_probare(piscina, "c?.5:d", (i32)1, "?");
         _valorem_probare(piscina, "c?.5:d", (i32)2, ".5");
     }
+}
 
-    imprimere("\n--- Ignota, NUL, fidelitas marginum ---\n");
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         interior constans JsLexemaGenus exspectata[] = {
             JS_LEX_IGNOTUM, JS_LEX_IDENTIFICATOR, JS_LEX_SPATIA,
@@ -567,8 +609,15 @@ principale (vacuum)
                 (i32)strlen(margines[k])));
         }
     }
+}
 
-    imprimere("\n--- Positiones (octeti, 1-basatae) ---\n");
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
              Xar* l = _lexare_literis(piscina, "a\n  bc");
         JsLexema* lx;
@@ -593,8 +642,15 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (lx->linea, (i32)3);
         CREDO_AEQUALIS_I32 (lx->columna, (i32)1);
     }
+}
 
-    imprimere("\n--- Fidelitas super corpus (fixa/js) ---\n");
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
          DirectoriumIterator* iter;
         DirectoriumIntroitus* e;
@@ -653,12 +709,31 @@ principale (vacuum)
         }
         CREDO_VERUM (probatae >= (i32)4);
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    si (credo_omnia_praeterierunt())
-    {
-        redde ZEPHYRUM;
-    }
-    redde I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "Verba et identificatores", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "Numeri", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Chordae", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Regex contra divisionem", _sectio_quarta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "Formulae (litterae formularum)", _sectio_quinta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "Commentaria", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Munch maximus interpunctionis", _sectio_septima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "Ignota, NUL, fidelitas marginum", _sectio_octava, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "Positiones (octeti, 1-basatae)", _sectio_nona, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "Fidelitas super corpus (fixa/js)", _sectio_decima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("js_lexema", SECTIONES);
 }

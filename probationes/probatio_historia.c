@@ -226,7 +226,11 @@ codicis_numeratores_sunt (
     redde VERUM;
 }
 
-s32 principale (vacuum)
+/* scenarium unum: gradus I-X et XV historiam eandem (h, l, vol) ordine
+ * mutant - ergo una sectio cum gradibus nominatis */
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
                 Piscina* piscina;
     InternamentumChorda* intern;
@@ -242,16 +246,12 @@ s32 principale (vacuum)
                     i32  i;
       HistoriaProiectio  mala;
 
-    piscina = piscina_generare_dynamicum("probatio_historia", XVI * M);
-    si (!piscina)
-    { imprimere("FRACTA: piscina\n"); redde I;
-    }
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     memset(&l, ZEPHYRUM, magnitudo(l));
     memset(&l2, ZEPHYRUM, magnitudo(l2));
 
-    imprimere("\n--- I: creare - vacata, cursor 0 ---\n");
+    CREDO_GRADUS("I: creare - vacata, cursor 0");
     vol = volumen_temporarium(piscina, "probatio_historia");
     CREDO_NON_NIHIL(vol);
     l.numeratores[III] = VII;   /* sordes ante vacationem */
@@ -263,7 +263,7 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_S64(volumen_summa_plagularum(vol), ZEPHYRUM);
     CREDO_AEQUALIS_I32(historia_sigillum_hex(h, piscina).mensura, LXIV);
 
-    imprimere("\n--- II: V acta, checkpoints post II et IV viva ---\n");
+    CREDO_GRADUS("II: V acta, checkpoints post II et IV viva");
     per (i = ZEPHYRUM; i < V; i++)
     {
         q[i] = actum(h, piscina, (s32)i);
@@ -282,7 +282,7 @@ s32 principale (vacuum)
             "probatio:checkpoint"));
     }
 
-    imprimere("\n--- III: revocare ex checkpoint, non ex nihilo ---\n");
+    CREDO_GRADUS("III: revocare ex checkpoint, non ex nihilo");
     l.applicationes = ZEPHYRUM;
     CREDO_VERUM(historia_revocare(h));    /* ad q3: checkpoint ipse */
     CREDO_AEQUALIS_S64(historia_cursor(h), q[III]);
@@ -292,7 +292,7 @@ s32 principale (vacuum)
     CREDO_VERUM(numeratores_sunt(&l, "11100000"));
     CREDO_AEQUALIS_I32(l.applicationes, I);
 
-    imprimere("\n--- IV: ramus - actum post revocationem ---\n");
+    CREDO_GRADUS("IV: ramus - actum post revocationem");
     CREDO_VERUM(historia_revocare(h));    /* ad q1 */
     CREDO_AEQUALIS_I32(historia_numerus_vivorum(h), II);
     q[V] = actum(h, piscina, V);
@@ -305,7 +305,7 @@ s32 principale (vacuum)
     CREDO_VERUM(numeratores_sunt(&l, "11000110"));
     CREDO_AEQUALIS_S64(volumen_summa_plagularum(vol), III);
 
-    imprimere("\n--- V: checkpoint MORTUUS numquam basis ---\n");
+    CREDO_GRADUS("V: checkpoint MORTUUS numquam basis");
     s_ante           = historia_sigillum_hex(h, piscina);
     l.applicationes  = ZEPHYRUM;
     CREDO_VERUM(historia_revocare(h));    /* ad q5; q3 mortuus <= ad */
@@ -313,14 +313,14 @@ s32 principale (vacuum)
     CREDO_VERUM(numeratores_sunt(&l, "11000100"));
     CREDO_AEQUALIS_I32(l.applicationes, I);  /* checkpoint q1 + q5 */
 
-    imprimere("\n--- VI: reficere - sigillum idem ---\n");
+    CREDO_GRADUS("VI: reficere - sigillum idem");
     CREDO_VERUM(historia_reficere(h));
     CREDO_AEQUALIS_S64(historia_cursor(h), q[VI]);
     CREDO_VERUM(chorda_aequalis(s_ante, historia_sigillum_hex(h,
         piscina)));
     CREDO_FALSUM(historia_reficere(h));
 
-    imprimere("\n--- VII: verificare - memoria extra machinam ---\n");
+    CREDO_GRADUS("VII: verificare - memoria extra machinam");
     CREDO_VERUM(historia_verificare(h));
     /* sigillum notatum verum manet: reproiectio ei congruit et
      * memoriam tacite reficit (non deprehenditur - lex nominata) */
@@ -328,14 +328,14 @@ s32 principale (vacuum)
     CREDO_VERUM(historia_verificare(h));
     CREDO_VERUM(numeratores_sunt(&l, "11000110"));
 
-    imprimere("\n--- VIII: acta aliena ignorantur ---\n");
+    CREDO_GRADUS("VIII: acta aliena ignorantur");
     CREDO_VERUM(volumen_actum_appendere(vol, "alienum",
         chorda_ex_literis("7", piscina)) > ZEPHYRUM);
     q[VII] = actum(h, piscina, I);
     CREDO_VERUM(numeratores_sunt(&l, "12000110"));
     CREDO_VERUM(historia_verificare(h));
 
-    imprimere("\n--- IX: aperire - status idem ---\n");
+    CREDO_GRADUS("IX: aperire - status idem");
     h2 = historia_aperire(piscina, intern, vol, "", "numerus",
                           "probatio:checkpoint", II, proiectio(&l2));
     CREDO_NON_NIHIL(h2);
@@ -347,7 +347,7 @@ s32 principale (vacuum)
     CREDO_VERUM(chorda_aequalis(historia_sigillum_hex(h, piscina),
                                 historia_sigillum_hex(h2, piscina)));
 
-    imprimere("\n--- X: revocare ad initium ---\n");
+    CREDO_GRADUS("X: revocare ad initium");
     per (i = ZEPHYRUM; i < V; i++)
     {
         CREDO_VERUM(historia_revocare(h));
@@ -356,7 +356,7 @@ s32 principale (vacuum)
     CREDO_VERUM(numeratores_sunt(&l, "00000000"));
     CREDO_FALSUM(historia_revocare(h));
 
-    imprimere("\n--- XI: proiectio discors SIGNATA videtur ---\n");
+    CREDO_GRADUS("XI: proiectio discors SIGNATA videtur");
     {
           Volumen* vol_discors;
           Ludicra  l3;
@@ -378,7 +378,7 @@ s32 principale (vacuum)
         volumen_claudere(vol_discors);
     }
 
-    imprimere("\n--- XII: acta coniuncta - grex unus gradus ---\n");
+    CREDO_GRADUS("XII: acta coniuncta - grex unus gradus");
     {
           Volumen* vol_grex;
           Ludicra  ludicra_grex;
@@ -484,8 +484,8 @@ s32 principale (vacuum)
         volumen_claudere(vol_ramus);
     }
 
-    imprimere("\n--- XIII: spatia nominum - duae historiae, volumen"
-              " unum ---\n");
+    CREDO_GRADUS("XIII: spatia nominum - duae historiae, volumen"
+                 " unum");
     {
           Volumen* vol_duplex;
           Ludicra  ludicra_a;
@@ -576,7 +576,7 @@ s32 principale (vacuum)
         volumen_claudere(vol_duplex);
     }
 
-    imprimere("\n--- XIV: locus revocandi servatur (R5) ---\n");
+    CREDO_GRADUS("XIV: locus revocandi servatur (R5)");
     {
           Volumen* vol_locus;
           Ludicra  ludicra_loci;
@@ -653,7 +653,7 @@ s32 principale (vacuum)
         volumen_claudere(vol_locus);
     }
 
-    imprimere("\n--- XV: argumenta mala ---\n");
+    CREDO_GRADUS("XV: argumenta mala");
     mala            = proiectio(&l);
     mala.applicare  = NIHIL;
     CREDO_NIHIL(historia_creare(piscina, intern, vol, "", "numerus",
@@ -665,7 +665,7 @@ s32 principale (vacuum)
     CREDO_NIHIL(historia_actum(NIHIL, chorda_ex_literis("1", piscina))
                 == ZEPHYRUM ? NIHIL : h);
 
-    imprimere("\n--- XVI: cliens codex (pictor-strata L1) ---\n");
+    CREDO_GRADUS("XVI: cliens codex (pictor-strata L1)");
     {
               Volumen* vc;
              Historia* historia_codicis;
@@ -689,8 +689,7 @@ s32 principale (vacuum)
         CREDO_NON_NIHIL(historia_codicis);
         si (!historia_codicis)
         {
-            credo_imprimere_compendium();
-            redde I;
+            redde;
         }
         (vacuum)actum(historia_codicis, piscina, I);
         (vacuum)actum(historia_codicis, piscina, I);
@@ -783,8 +782,17 @@ s32 principale (vacuum)
         volumen_claudere(vc);
     }
 
-    imprimere("\n");
-    credo_imprimere_compendium();
     volumen_claudere(vol);
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "cauda actorum cum proiectione ludicra", _sectio_prima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("historia", SECTIONES);
 }

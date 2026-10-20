@@ -1,0 +1,83 @@
+<interrogationes unitas="fractio">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I do exact arithmetic with fractions like 1/3?
+    <responsum symbolum="fractio_ex_s64 fractio_ex_s64_s64 fractio_adde fractio_multiplica fractio_divide fractio_ad_chordam">Build
+      integers with fractio_ex_s64 and ratios with
+      fractio_ex_s64_s64(n, d, piscina, &amp;f), which returns FALSUM for
+      a zero denominator. fractio_adde, fractio_subtrahe and
+      fractio_multiplica return the result directly; fractio_divide
+      and fractio_inversa return b32 because the divisor may be zero.
+      Every result is canonical (denominator positive, gcd 1), and
+      fractio_ad_chordam prints "a" or "a/b". Numerator and
+      denominator are Magnus, so nothing overflows and no floating
+      point is used.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I zero-initialize a Fractio with memset or a static declaration and get zero?
+    <responsum symbolum="fractio_ex_s64">No.
+      All-zero bytes make 0/0, not 0, and it propagates silently (0/0
+      plus 1/2 is 0/0), unlike Magnus where zero bytes are a valid
+      zero. Always create values with a fractio_ex_* function or an
+      operation; zero is fractio_ex_s64(0).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I compare two fractions?
+    <responsum symbolum="fractio_aequalis fractio_compara fractio_signum fractio_est_integra">fractio_aequalis
+      compares the parts, which is exact because the form is canonical,
+      and needs no piscina. For order, fractio_compara(a, b, piscina)
+      returns -1, 0 or +1 by cross-multiplying (no division), so it
+      allocates for large values. fractio_signum gives the sign and
+      fractio_est_integra is VERUM when the denominator is 1.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I parse a fraction from text?
+    <responsum symbolum="fractio_ex_chorda">fractio_ex_chorda
+      accepts "a" or "a/b" in decimal, with a '-' allowed only before
+      the numerator and no spaces. Non-canonical input is reduced
+      ("6/4" gives 3/2); "3/-4", "3/0" and malformed text return
+      FALSUM and leave the output untouched.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why does fractio_rotunda round 5/2 to 2 instead of 3?
+    <responsum symbolum="fractio_rotunda fractio_pavimentum fractio_tectum" via="lib/fractio.worklog.md">It
+      rounds halves to the even neighbour (1/2 to 0, 3/2 to 2, 5/2 to
+      2, -1/2 to 0), the IEEE default and what Python's round does.
+      Exact rationals land exactly on halves often, so round-half-up
+      would bias many roundings. For the schoolbook rule combine
+      fractio_pavimentum (floor) and fractio_tectum (ceiling).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I reset the scratch piscina and keep a Fractio computed in it?
+    <responsum symbolum="fractio_transcribe magnus_transcribe">Not
+      without copying. Results may share limbs with their arguments and
+      live in the piscina passed to the operation, so they are valid
+      only while those piscinae live. fractio_transcribe(a, piscina)
+      deep-copies numerator and denominator into the piscina you keep.
+      Small values use magnus's inline fast path and often allocate
+      nothing.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I raise a fraction to a negative power?
+    <responsum symbolum="fractio_potentia fractio_inversa">Yes:
+      fractio_potentia takes a signed exponent and computes a to the
+      minus n as 1 over a to the n. It returns FALSUM only for a zero
+      base with a negative exponent; 0 to the power 0 is 1.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I get the numerator and denominator out as ordinary integers?
+    <responsum symbolum="fractio_numerator fractio_denominator magnus_ad_s64">The
+      fields are private; read them with fractio_numerator and
+      fractio_denominator (always positive), then convert each with
+      magnus_ad_s64, which returns FALSUM when the value does not fit.
+      There is no conversion to a floating-point number.</responsum>
+  </interrogatio>
+
+</interrogationes>

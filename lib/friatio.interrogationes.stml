@@ -1,0 +1,87 @@
+<interrogationes unitas="friatio">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I hash a string key for a hash table?
+    <responsum symbolum="friatio_fnv1a friatio_fnv1a_literis friatio_djb2 tabula_friare_fnv1a">friatio_fnv1a
+      takes a chorda; friatio_fnv1a_literis takes a pointer and an
+      explicit length (it does not look for a NUL, so pass strlen
+      yourself). friatio_djb2 is the other choice. tabula_dispersa
+      already wraps FNV-1a as tabula_friare_fnv1a, so a table needs no
+      hashing of its own. Both are unseeded and the header marks them
+      non-cryptographic, so whoever chooses the keys can force
+      collisions.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I compute a SHA-256 over data that arrives in pieces?
+    <responsum symbolum="sha256_initiare sha256_addere sha256_finire sha256_friare">Call
+      sha256_initiare on a SHA256Contextus, sha256_addere once per
+      piece (any sizes), then sha256_finire to get the 32 raw bytes
+      (SHA256_DIGEST_MENSURA). sha256_friare does all three for one
+      buffer. finire does not reset the context: call initiare again
+      before reusing it. SHA-1 (sha1_*) has the same shape.
+      Caution (audit 2026-10-18, unfixed): sha256_addere and
+      sha1_addere write past the context buffer (heap overflow, SEGV)
+      when a piece of 2^32 - j bytes or more arrives while j = 1..63
+      bytes are already buffered, and an empty piece with a NIHIL
+      pointer (e.g. sha256_friare_chorda or sha1_friare_chorda on the
+      empty chorda {0, NIHIL}) is undefined behavior that UBSan flags,
+      though the digest is correct.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I get a hex string or a constant-time comparison from friatio's SHA-256?
+    <responsum symbolum="sha256_finire sigillum_computare sigillum_hex sigillum_aequale sigillum_hmac">No:
+      friatio only fills a raw i8 digest array, and it has no HMAC.
+      sigillum.h is a second SHA-256 that does: sigillum_computare
+      returns a Sigillum, sigillum_hex writes 64 lowercase hex
+      characters plus a NUL, sigillum_aequale compares in constant
+      time, sigillum_hmac does HMAC-SHA256, and its lengths are
+      memoriae_index (sha256_addere takes an i32 per call). Prefer
+      sigillum where the hash is an identity or guards a
+      secret.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why are there two SHA-256 implementations, friatio and sigillum?
+    <responsum symbolum="sha256_friare sigillum_computare" via="include/sigillum.h">They
+      serve different jobs, as the sigillum.h header explains:
+      friatio hashes to spread keys over a table, while sigillum
+      SEALS, a digest that is a content identity (tabularium entities,
+      CAS) where collision resistance carries the weight. Hence
+      sigillum's Sigillum type, hex output, constant-time
+      sigillum_aequale and HMAC. friatio.h does not point to sigillum,
+      so a new caller has to know it exists.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I use sha1_friare for anything security related?
+    <responsum symbolum="sha1_friare sha1_finire uuidv5_creare">No.
+      The header marks SHA-1 obsolete for security; it is here for
+      legacy checksums and for UUIDv5, which the standard defines
+      with SHA-1 (lib/uuid.c is its consumer). Use SHA-256 for
+      anything new.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I compute a CRC32 incrementally over a stream?
+    <responsum symbolum="crc32_initiare crc32_addere crc32_finire crc32_calculare">crc
+      = crc32_initiare(); then crc = crc32_addere(crc, data, n) for
+      each piece; finally crc32_finire(crc) inverts the bits. Feed
+      addere the running value, never the finished one.
+      crc32_calculare does it in one call. The polynomial is the IEEE
+      one (0xEDB88320, reflected), as in ZIP, PNG and
+      Ethernet.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what type do the friatio functions return, signed or unsigned?
+    <responsum symbolum="friatio_fnv1a crc32_calculare sha256_friare">Unsigned:
+      i32 is unsigned in this house (s32 is the signed one), so the
+      32-bit results wrap with defined arithmetic and print with %u
+      or 0x%08X. Digests are arrays of i8, which is unsigned char. The
+      input bytes are hashed as unsigned too, so results do not depend
+      on whether the platform's char is signed.</responsum>
+  </interrogatio>
+
+</interrogationes>

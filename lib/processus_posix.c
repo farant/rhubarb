@@ -19,13 +19,15 @@
 
 #include <sys/types.h>
 #include <sys/wait.h>
-#include <sys/select.h>
+#include <poll.h>
 #include <sys/time.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <signal.h>
 #include <errno.h>
 #include <string.h>
+#include <stdio.h>
+#include <time.h>
 
 /* ambitus processus (POSIX; in nullo capite declaratus) - infans eum
  * ante exec substituit (ProcessusOptiones.ambitus) */
@@ -94,13 +96,29 @@ structura Processus {
  * FUNCTIONES INTERNAE
  * ======================================================================== */
 
+/* HOROLOGIUM VIGILANS (colloquia T8d0): tempus quo machina VIGILAT -
+ * somno non crescit. gettimeofday (murus) somnum numerabat: operculum
+ * clausum XVII min generatores sub termino DC s in experrectione
+ * necavit (2026-10-16, pmset). Usus omnes differentiae sunt (initium,
+ * terminus, mora_ms) - nullus cum muro comparatur. Darwin:
+ * CLOCK_UPTIME_RAW (CLOCK_MONOTONIC ibi somnum NUMERAT); alibi
+ * CLOCK_MONOTONIC (Linux suspensionem excludit). */
+#ifdef CLOCK_UPTIME_RAW
+#define HOROLOGIUM_VIGILANS CLOCK_UPTIME_RAW
+#else
+#define HOROLOGIUM_VIGILANS CLOCK_MONOTONIC
+#endif
+
 interior i64
 _tempus_ms (vacuum)
 {
-    structura timeval tv;
+    structura timespec t;
 
-    gettimeofday(&tv, NIHIL);
-    redde (i64)tv.tv_sec * (i64)M + (i64)tv.tv_usec / (i64)M;
+    si (clock_gettime(HOROLOGIUM_VIGILANS, &t) != 0)
+    {
+        redde (i64)ZEPHYRUM;
+    }
+    redde (i64)t.tv_sec * (i64)M + (i64)t.tv_nsec / ((i64)M * (i64)M);
 }
 
 /* reliquum termini in ms. Latus effectus: tempus_excessum ponit cum
@@ -311,14 +329,18 @@ _fistulam_haurire (
 
 /* GRADUS UNUS ansae - corpus quod AMBAE semitae communicant.
  *
- * mora_gradus_ms = ZEPHYRUM : select non obstat (pulsus faciei).
- * mora_gradus_ms > ZEPHYRUM : select ad summum tot ms obstat.
+ * mora_gradus_ms = ZEPHYRUM : poll non obstat (pulsus faciei).
+ * mora_gradus_ms > ZEPHYRUM : poll ad summum tot ms obstat.
+ *
+ * poll(), non select(): FD_SET musl intus signa permutat (-Wsign-
+ * conversion sub -Werror), et select FD_SETSIZE (MXXIV) fossas non
+ * excedit - poll neutrum habet (ut reactor). hospitium v3 T9.
  *
  * GRADUS TERMINATUS, NON INFINITUS, etiam in semita obstante: sic
  * vocator inter gradus infantem inspicere potest. Ansa quae in
  * aeternum EOF exspectat nepotem fistulam tenentem numquam videt
  * (vide _perficere). Terminus TOTALIS hic semper custoditur,
- * ergo 'select redidit ZEPHYRUM' significat solum 'nihil in hoc
+ * ergo 'poll redidit ZEPHYRUM' significat solum 'nihil in hoc
  * gradu' - quae ambiguitas prior hic habitabat.
  */
 interior vacuum
@@ -326,33 +348,33 @@ _ansam_pulsare (
     Processus* p,
           i32  mora_gradus_ms)
 {
-               fd_set legendi;
-    structura timeval  mora;
-    structura timeval* mora_ptr  = NIHIL;
-              integer maximus    = -I;
-              integer paratus;
+    structura pollfd  fossae[II];
+              nfds_t numerus   = 0;
+             integer index_ef  = -I;
+             integer index_er  = -I;
+             integer mora_ms;
+             integer paratus;
 
     si (!p->ef_apertus && !p->er_apertus)
     {
         redde;
     }
 
-    FD_ZERO(&legendi);
     si (p->ef_apertus)
     {
-        FD_SET(p->fd_ef, &legendi);
-        si (p->fd_ef > maximus)
-        {
-            maximus = p->fd_ef;
-        }
+        fossae[numerus].fd       = p->fd_ef;
+        fossae[numerus].events   = POLLIN;
+        fossae[numerus].revents  = 0;
+        index_ef                 = (integer)numerus;
+        numerus++;
     }
     si (p->er_apertus)
     {
-        FD_SET(p->fd_er, &legendi);
-        si (p->fd_er > maximus)
-        {
-            maximus = p->fd_er;
-        }
+        fossae[numerus].fd       = p->fd_er;
+        fossae[numerus].events   = POLLIN;
+        fossae[numerus].revents  = 0;
+        index_er                 = (integer)numerus;
+        numerus++;
     }
 
     /* TERMINUS TOTALIS semper primo - vocator tardus processum
@@ -373,14 +395,10 @@ _ansam_pulsare (
         {
             gradus = (i64)reliquum;
         }
-        /* tv_usec est int in Darwin, longus alibi - conversio per
-         * typum campi ipsius, non per typum coniectum */
-        mora.tv_sec   = (time_t)(gradus / (i64)M);
-        mora.tv_usec  = (integer)((gradus % (i64)M) * (i64)M);
-        mora_ptr      = &mora;
+        mora_ms = (integer)gradus;
     }
 
-    paratus = select(maximus + I, &legendi, NIHIL, NIHIL, mora_ptr);
+    paratus = poll(fossae, numerus, mora_ms);
     si (paratus < 0)
     {
         si (errno == EINTR)
@@ -396,11 +414,14 @@ _ansam_pulsare (
         redde;   /* nihil in hoc gradu; terminus supra custoditur */
     }
 
-    si (p->ef_apertus && FD_ISSET(p->fd_ef, &legendi))
+    /* POLLHUP/POLLERR quoque: fistula clausa EOF legendo nuntiat */
+    si (   p->ef_apertus && index_ef >= 0
+        && (fossae[index_ef].revents & (POLLIN | POLLHUP | POLLERR)))
     {
         _fistulam_haurire(p, p->fd_ef, &p->ef_apertus, &p->sac_ef);
     }
-    si (p->er_apertus && FD_ISSET(p->fd_er, &legendi))
+    si (   p->er_apertus && index_er >= 0
+        && (fossae[index_er].revents & (POLLIN | POLLHUP | POLLERR)))
     {
         _fistulam_haurire(p, p->fd_er, &p->er_apertus, &p->sac_er);
     }
@@ -834,7 +855,13 @@ _incipere_cum (
             && chdir(optiones->directorium) != 0)
         {
             e = errno;
-            (vacuum)write(fistula_exec[I], &e, magnitudo(e));
+            {
+                /* infans moriturus: nihil tractandum (vide infra) */
+                ssize_t scripta = write(fistula_exec[I], &e,
+                    magnitudo(e));
+
+                (vacuum)scripta;
+            }
             _exit(CXXVII);
         }
         si (optiones != NIHIL && optiones->ambitus != NIHIL)
@@ -853,7 +880,13 @@ _incipere_cum (
 
         /* exec fefellit: errno per fistulam tertiam */
         e = errno;
-        (vacuum)write(fistula_exec[I], &e, magnitudo(e));
+        {
+            /* valor ad variabilem: glibc _FORTIFY_SOURCE
+             * warn_unused_result, quem (vacuum) sub gcc non tacet */
+            ssize_t scripta = write(fistula_exec[I], &e, magnitudo(e));
+
+            (vacuum)scripta;
+        }
         _exit(CXXVII);
     }
 
@@ -1018,4 +1051,127 @@ processus_transformare (
     u.c = argumenta;
     (vacuum)execvp(argumenta[0], u.m);
     redde FALSUM;   /* exec felix numquam huc redit */
+}
+
+/* numerus cifrarum ab *i (saltem una); FALSUM si nulla cifra */
+interior b32
+_digitos_legere (
+    chorda  c,
+       i32* i,
+       s64* valor)
+{
+    i32 initium = *i;
+
+    *valor = (s64)ZEPHYRUM;
+    dum (*i < c.mensura && c.datum[*i] >= '0' && c.datum[*i] <= '9')
+    {
+        *valor = *valor * (s64)X + (s64)(c.datum[*i] - '0');
+        (*i)++;
+    }
+    redde (*i > initium) ? VERUM : FALSUM;
+}
+
+b32
+processus_aetatem_legere (
+    chorda  textus,
+       s64* secundae_out)
+{
+    s64 partes[III];
+    s64 dies;
+    s64 summa;
+    i32 n;
+    i32 i;
+    i32 k;
+
+    si (secundae_out == NIHIL || textus.datum == NIHIL)
+    {
+        redde FALSUM;
+    }
+    i     = ZEPHYRUM;
+    dies  = (s64)ZEPHYRUM;
+    si (!_digitos_legere(textus, &i, &partes[ZEPHYRUM]))
+    {
+        redde FALSUM;
+    }
+    si (i < textus.mensura && textus.datum[i] == '-')
+    {
+        /* dd- : horae tunc necessariae (ps: dd-hh:mm:ss) */
+        dies = partes[ZEPHYRUM];
+        i++;
+        si (!_digitos_legere(textus, &i, &partes[ZEPHYRUM]))
+        {
+            redde FALSUM;
+        }
+    }
+    n = I;
+    dum (i < textus.mensura && textus.datum[i] == ':')
+    {
+        si (n >= III)
+        {
+            redde FALSUM;
+        }
+        i++;
+        si (!_digitos_legere(textus, &i, &partes[n]))
+        {
+            redde FALSUM;
+        }
+        n++;
+    }
+    si (i != textus.mensura || n < II || (dies > ZEPHYRUM && n != III))
+    {
+        redde FALSUM;
+    }
+    summa = (s64)ZEPHYRUM;
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        summa = summa * (s64)LX + partes[k];
+    }
+    *secundae_out = dies * ((s64)LXXXVI * (s64)M + (s64)CD) + summa;
+    redde VERUM;
+}
+
+b32
+processus_vivus (
+         s32  pid,
+         s64* initium_ms_out,
+     Piscina* piscina)
+{
+    constans character* argumenta[VI];
+             character  numerus[XXIV];
+     ProcessusResultus  r;
+                chorda  aetas;
+                   s64  secundae;
+
+    si (initium_ms_out != NIHIL)
+    {
+        *initium_ms_out = (s64)ZEPHYRUM;
+    }
+    si (pid <= ZEPHYRUM || piscina == NIHIL)
+    {
+        redde FALSUM;
+    }
+    sprintf(numerus, "%d", (integer)pid);
+    argumenta[0]    = "/bin/ps";
+    argumenta[I]    = "-o";
+    argumenta[II]   = "etime=";
+    argumenta[III]  = "-p";
+    argumenta[IV]   = numerus;
+    argumenta[V]    = NIHIL;
+    r               = processus_exsequi(argumenta, V * M, piscina);
+    /* ps: processus absens = exitus I, effusio vacua */
+    si (!r.successus || r.codex_exitus != ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    aetas = chorda_praecidere(r.effusio);
+    si (aetas.mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    si (   initium_ms_out != NIHIL
+        && processus_aetatem_legere(aetas, &secundae))
+    {
+        *initium_ms_out = ((s64)time(NIHIL) - secundae) * (s64)M;
+    }
+    redde VERUM;
 }

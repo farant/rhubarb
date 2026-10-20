@@ -291,30 +291,19 @@ hic_manens constans character* corpus[] = {
     "x\x1b[<0;10;5Mhello\x1b[<0;10;5m"
 };
 
-s32 principale (vacuum)
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-          Piscina* piscina;
-          Piscina* piscina_hostilis;
-     SeriesLector* lx;
-     SeriesLector* lector_hostilis;
-     SeriesLector* li;
-     SeriesLexema  l;
-              i32  k;
-              s32  n;
-              i32  discrepantiae;
+             Piscina* piscina;
+        SeriesLector* lx;
+        SeriesLexema  l;
+                 s32  n;
 
-    piscina = piscina_generare_dynamicum("probatio_series_terminalis",
-        M * M);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-    lx = series_lectorem_creare(piscina);
+    piscina  = c->piscina;
+    lx       = series_lectorem_creare(piscina);
     CREDO_NON_NIHIL (lx);
 
-    imprimere("\n--- I. Ghostty Parser.zig (translata) ---\n");
     /* C1 NON agnita (Franus): 0x9E 0x9C imprimuntur */
     CREDO_VERUM (_videre(lx, piscina, "\x9E\x9C" "a\x19",
         "IMP T=\\x9e\\x9ca | EXS f=\\x19"));
@@ -384,8 +373,19 @@ s32 principale (vacuum)
     CREDO_VERUM (_videre(lx, piscina,
         _repetere("\x1bP6", ";", SERIES_PARAMETRA_MAXIMA,
             "7pdata\x1b\\", piscina), ""));
+}
 
-    imprimere("\n--- II. divergentiae consultae (initus) ---\n");
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+             Piscina* piscina;
+        SeriesLector* lx;
+        SeriesLexema  l;
+
+    piscina  = c->piscina;
+    lx       = series_lectorem_creare(piscina);
+
     {
         constans character* f    = "ab\x1b[A";
                constans i8* ptr  = (constans i8*)f;
@@ -452,8 +452,20 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (l.textus.mensura, SERIES_CHORDA_MAXIMA);
         CREDO_VERUM (l.truncatum);
     }
+}
 
-    imprimere("\n--- III. pendet / evacuare (mora vocantis) ---\n");
+/* ctx (non c): 'c' index casuum intra sectionem est */
+interior vacuum
+_sectio_tertia (
+    CredoContextus* ctx)
+{
+             Piscina* piscina;
+        SeriesLector* lx;
+        SeriesLexema  l;
+
+    piscina  = ctx->piscina;
+    lx       = series_lectorem_creare(piscina);
+
     {
          constans character* casus_fugae[V];
          constans character* exspectata[V];
@@ -502,8 +514,20 @@ s32 principale (vacuum)
             CREDO_FALSUM (series_lector_pendet(lx));
         }
     }
+}
 
-    imprimere("\n--- IV. scissurae omnes ---\n");
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+             Piscina* piscina;
+        SeriesLector* lx;
+                 i32  k;
+                 i32  discrepantiae;
+
+    piscina  = c->piscina;
+    lx       = series_lectorem_creare(piscina);
+
     discrepantiae = ZEPHYRUM;
     per (k = ZEPHYRUM; k < (i32)(magnitudo(corpus)
         / magnitudo(corpus[0]));
@@ -540,8 +564,21 @@ s32 principale (vacuum)
         }
     }
     CREDO_AEQUALIS_I32 (discrepantiae, ZEPHYRUM);
+}
 
-    imprimere("\n--- VI. modus initus (B1b) ---\n");
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+             Piscina* piscina;
+        SeriesLector* lx;
+        SeriesLector* li;
+                 i32  k;
+                 i32  discrepantiae;
+
+    piscina  = c->piscina;
+    lx       = series_lectorem_creare(piscina);
+
     li = series_lectorem_creare(piscina);
     CREDO_NON_NIHIL (li);
     series_lectorem_initus_ponere(li, VERUM);
@@ -608,8 +645,20 @@ s32 principale (vacuum)
         }
     }
     CREDO_AEQUALIS_I32 (discrepantiae, ZEPHYRUM);
+}
 
-    imprimere("\n--- V. initus hostilis: memoria finita ---\n");
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+             Piscina* piscina;
+             Piscina* piscina_hostilis;
+        SeriesLector* lector_hostilis;
+        SeriesLexema  l;
+                 i32  k;
+
+    piscina = c->piscina;
+
     piscina_hostilis = piscina_generare_dynamicum("series_hostilis",
         LXIV * M);
     CREDO_NON_NIHIL (piscina_hostilis);
@@ -675,8 +724,27 @@ s32 principale (vacuum)
         /* nihil post creationem allocatum */
         CREDO_VERUM (piscina_summa_usus(piscina_hostilis) == usus);
     }
+    piscina_destruere(piscina_hostilis);
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I. Ghostty Parser.zig (translata)", _sectio_prima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "II. divergentiae consultae (initus)", _sectio_secunda, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "III. pendet / evacuare (mora vocantis)", _sectio_tertia, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "IV. scissurae omnes", _sectio_quarta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "VI. modus initus (B1b)", _sectio_quinta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "V. initus hostilis: memoria finita", _sectio_sexta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("series_terminalis", SECTIONES);
 }

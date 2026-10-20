@@ -1,0 +1,53 @@
+<interrogationes unitas="exemplaria">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I test whether a pixel of a classic Mac 8x8 pattern is painted?
+    <responsum symbolum="exemplar_punctum exemplar_obtinere">Call
+      exemplar_punctum(id, x, y): it tiles the pattern over the whole
+      plane (x and y are taken modulo VIII with &amp; VII, so negative
+      coordinates wrap too: -1 is column 7) and returns VERUM where the
+      pattern paints. To get the raw rows instead, exemplar_obtinere(id)
+      returns the eight bytes.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what is the bit layout of the eight bytes exemplar_obtinere returns?
+    <responsum symbolum="exemplar_obtinere exemplar_punctum">One
+      byte per row, row 0 first; inside a byte the HIGH bit (0x80) is
+      x 0 and the low bit is x 7. A set bit means painted (the
+      foreground colour). exemplar_punctum reads exactly
+      e[y &amp; VII] &amp; (I &lt;&lt; (VII - (x &amp; VII))).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I pass any number as a pattern id?
+    <responsum symbolum="exemplar_obtinere exemplar_punctum exemplar_internum_t">Yes,
+      it is checked: an id at or above EXEMPLAR_NUMERUS (38 patterns,
+      0 to 37) makes exemplar_obtinere return NIHIL and exemplar_punctum
+      return FALSUM (so a bad id paints nothing rather than crashing).
+      The id is i32, which is unsigned, so there is no negative case.
+      Callers that memcpy the bytes must check for NIHIL first.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>which pattern ids are solid black and plain white?
+    <responsum symbolum="exemplar_internum_t exemplar_obtinere">EXEMPLAR_SOLIDUS
+      (0) has every bit set, so everything is painted; EXEMPLAR_ALBUS
+      (19) has none set. They are not at the two ends of the table:
+      the order follows the classic Mac pattern palette, not
+      darkness.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why is the pattern table its own library instead of living in delineare?
+    <responsum symbolum="exemplar_obtinere exemplar_punctum" via="lib/exemplaria.worklog.md">It
+      was moved verbatim out of lib/delineare.c on 2026-10-09 so the
+      command rasterizers (the vicus focus indicator) could use the
+      same patterns without the legacy painter. delineare still reads
+      it through exemplar_obtinere. Adding a library the legacy painter
+      uses means updating three hand-written or generated build lists
+      (ludus_tessera and tessera compile_probationes.sh,
+      tessera/musivum_fontes_generata.sh).</responsum>
+  </interrogatio>
+
+</interrogationes>

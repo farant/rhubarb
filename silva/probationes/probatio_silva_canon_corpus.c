@@ -365,6 +365,7 @@ principale (vacuum)
     ClausuraeCorporis* clausurae_corporis;
              CanonCensus  census_planus;
              CanonCensus  census_latinus;
+             CanonCensus  census_fixus;
 
     piscina = piscina_generare_dynamicum("canon_corpus",
                                          (memoriae_index)256 * M * M);
@@ -572,6 +573,48 @@ principale (vacuum)
 
 
     /* ============================================================
+     * GRADUS III - fixura congelata (silva/probationes/fixa/
+     * canon_corporis): formae quas corpus vivum non semper fert.
+     * Concatenatio (##) in lib/ solum per arbor/arbor2 stabat; post
+     * archivationem (2026-10-19) lib/ nullam habet et praesentia
+     * 'vidit_pasta' in corpore vivo rubebat de re innoxia - ergo hic,
+     * in initu congelato, asseritur (corpus vivum invariantia sola
+     * fert, quaestio 01M365VXAF).
+     * ============================================================ */
+
+    memset(&census_fixus, 0, magnitudo(CanonCensus));
+    sprintf(via_plagulae,
+        "%s/silva/probationes/fixa/canon_corporis/pasta.c",
+            radix);
+    imprimere("\n--- GRADUS FIXUS: %s ---\n", via_plagulae);
+    {
+        Piscina* opus;
+         chorda  doc;
+
+        opus = piscina_generare_dynamicum("gradus_fixus",
+                                          (memoriae_index)64 * M * M);
+        CREDO_NON_NIHIL (opus);
+        si (opus != NIHIL)
+        {
+            doc = _documentum_gignere(opus, via_plagulae, radix, NIHIL,
+                                      &census_fixus);
+            CREDO_VERUM (doc.mensura > ZEPHYRUM);
+            si (doc.mensura > ZEPHYRUM)
+            {
+                _involucrum_numerare(doc, &census_fixus);
+                _documentum_iudicare(opus, canon, doc, "pasta.c",
+                    intern,
+                    &census_fixus);
+            }
+            piscina_destruere(opus);
+        }
+    }
+    _censum_imprimere("GRADUS FIXUS", &census_fixus);
+    CREDO_AEQUALIS_I32 (census_fixus.vitia_summa, ZEPHYRUM);
+    CREDO_VERUM (census_fixus.vidit_pasta > ZEPHYRUM);
+
+
+    /* ============================================================
      * NUMERI FIXI
      * ============================================================ */
 
@@ -624,7 +667,7 @@ principale (vacuum)
      * ============================================================ */
 
     CREDO_VERUM (census_latinus.vidit_expansio       > ZEPHYRUM);
-    CREDO_VERUM (census_latinus.vidit_pasta          > ZEPHYRUM);
+    /* vidit_pasta: in GRADU FIXO supra (corpus vivum ## non fert) */
     CREDO_VERUM (census_latinus.vidit_stringificatio > ZEPHYRUM);
     CREDO_VERUM (census_latinus.vidit_extentum       > ZEPHYRUM);
     CREDO_VERUM (census_latinus.vidit_conditionalis  > ZEPHYRUM);

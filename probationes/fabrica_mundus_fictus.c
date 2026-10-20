@@ -387,6 +387,28 @@ mundi_cursum_inscribere (
     }
 }
 
+vacuum
+mundi_progressum_notare (
+    vacuum* datum,
+       i32  iudicata,
+       i32  ambitus,
+       i32  unda,
+       i32  undae)
+{
+        DiscusFictus* discus;
+    ProgressusFictus* p;
+
+    discus  = (DiscusFictus*)datum;
+    p       = (ProgressusFictus*)xar_addere(discus->progressus_ficti);
+    si (p != NIHIL)
+    {
+        p->iudicata  = iudicata;
+        p->ambitus   = ambitus;
+        p->unda      = unda;
+        p->undae     = undae;
+    }
+}
+
 /* duratio cursus ULTIMI SANATI aut PRAEPARATI tituli (ut SQL verum) */
 b32
 mundi_cursum_legere (
@@ -698,6 +720,8 @@ mundi_discum_parare (
     discus->vestigia_lectionum  = xar_creare(piscina,
         (i32)magnitudo(VestigiumLectionumFictum));
     discus->vestigia_scripta    = ZEPHYRUM;
+    discus->progressus_ficti    = xar_creare(piscina,
+        (i32)magnitudo(ProgressusFictus));
 
     fabrica_suturam_parare(sutura);
 
@@ -710,6 +734,7 @@ mundi_discum_parare (
     sutura->vestigium_capere   = mundi_vestigium_capere;
     sutura->cursum_inscribere  = mundi_cursum_inscribere;
     sutura->cursum_legere      = mundi_cursum_legere;
+    sutura->progressum_notare  = mundi_progressum_notare;
     sutura->meminisse          = NIHIL;
     sutura->sigilla            = NIHIL;
 }

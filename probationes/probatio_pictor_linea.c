@@ -211,7 +211,28 @@ pendens (
     redde !chorda_vacua(dispensator_motus(app->d)->captura);
 }
 
-s32 principale (vacuum)
+/* piscina et intern = sectionis (adiutores supra eas legunt); purgare
+ * reponit ne status inter sectiones maneat */
+interior vacuum
+_parare (
+    CredoContextus* c)
+{
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+}
+
+interior vacuum
+_purgare (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    piscina  = NIHIL;
+    intern   = NIHIL;
+}
+
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
               Volumen* vol;
      PictorApplicatio  app;
@@ -219,13 +240,7 @@ s32 principale (vacuum)
      PictorDocumentum* doc;
                   i32  atramentum;
 
-    piscina = piscina_generare_dynamicum("probatio_pictor_linea",
-        CXXVIII * M);
-    si (!piscina)
-    { imprimere("FRACTA: piscina\n"); redde I;
-    }
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
+    (vacuum)c;
     thema_initiare();
     vol = volumen_temporarium(piscina, "probatio_pictor_linea");
     CREDO_VERUM(pictor_applicatio_aedificare(&app, piscina, intern, vol,
@@ -234,7 +249,7 @@ s32 principale (vacuum)
     doc         = app.doc;
     atramentum  = palettae(ZEPHYRUM);
 
-    imprimere("\n--- I: 'l' linea ---\n");
+    CREDO_GRADUS("I: 'l' linea");
     CREDO_VERUM(manus_ludus_clavem(m, 'l', ZEPHYRUM));
     CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app, "instrumentum"),
         "linea");
@@ -249,7 +264,7 @@ s32 principale (vacuum)
         "instrumentum:linea:electum");
     CREDO_VERUM(manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));
 
-    imprimere("\n--- II: initium, praevisio, nihil scriptum ---\n");
+    CREDO_GRADUS("II: initium, praevisio, nihil scriptum");
     {
           Mandata* md;
          Mandatum* x;
@@ -286,7 +301,7 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32(ictus_vivi(doc), ZEPHYRUM);
     }
 
-    imprimere("\n--- III: ictus secundus - segmentum ---\n");
+    CREDO_GRADUS("III: ictus secundus - segmentum");
     {
              TabulaPixelorum* oraculum;
          ContextusDelineandi* dc;
@@ -328,7 +343,7 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32(mala, ZEPHYRUM);
     }
 
-    imprimere("\n--- IV: Shift - series ---\n");
+    CREDO_GRADUS("IV: Shift - series");
     premere(app.d, L, CL, MM, ZEPHYRUM);
     movere(app.d, C, CL, MM + C);
     premere(app.d, C, CL, MM + CC, MOD_SHIFT);
@@ -349,7 +364,7 @@ s32 principale (vacuum)
         piscina)));
     CREDO_AEQUALIS_I32(pixelum(doc, C, CLXXV), atramentum);
 
-    imprimere("\n--- V: Esc abicit ---\n");
+    CREDO_GRADUS("V: Esc abicit");
     premere(app.d, CC, L, MMM, ZEPHYRUM);
     movere(app.d, CCL, L, MMM + C);
     CREDO_VERUM(manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));
@@ -359,7 +374,7 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_I32(nodus_arboris(&app, "tabula")->numerus_punctorum,
         ZEPHYRUM);
 
-    imprimere("\n--- VI: ictus extra tabulam abicit ---\n");
+    CREDO_GRADUS("VI: ictus extra tabulam abicit");
     premere(app.d, CC, C, IV * M, ZEPHYRUM);
     CREDO_VERUM(pendens(&app));
     /* quadratum instrumenti in linea status (extra tabulam) */
@@ -368,7 +383,7 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_I32(ictus_vivi(doc), III);
     CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app, "palette"), "");
 
-    imprimere("\n--- VII: latitudo VIII ---\n");
+    CREDO_GRADUS("VII: latitudo VIII");
     ponere(&app, "magnitudo.ponere", "magnitudo_lineae", VIII);
     premere(app.d, CCC, CCC, V * M, ZEPHYRUM);
     premere(app.d, CD, CCCXX, V * M + C, ZEPHYRUM);
@@ -390,7 +405,7 @@ s32 principale (vacuum)
     CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app,
         "magnitudo_lineae"), "16");
 
-    imprimere("\n--- VIII: instrumentum mutatum abicit ---\n");
+    CREDO_GRADUS("VIII: instrumentum mutatum abicit");
     premere(app.d, CC, CCC, VI * M, ZEPHYRUM);
     CREDO_VERUM(pendens(&app));
     CREDO_VERUM(manus_ludus_clavem(m, 'p', ZEPHYRUM));
@@ -399,8 +414,17 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_I32(nodus_arboris(&app, "tabula")->numerus_punctorum,
         ZEPHYRUM);
 
-    imprimere("\n");
-    credo_imprimere_compendium();
     volumen_claudere(vol);
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "instrumentum linea", _sectio_prima, _parare, _purgare, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("pictor_linea", SECTIONES);
 }

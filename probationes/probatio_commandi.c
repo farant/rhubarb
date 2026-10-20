@@ -9,23 +9,20 @@
 #include <stdio.h>
 #include <string.h>
 
-/* Piscina globalis pro probationes */
-hic_manens Piscina* g_piscina = NIHIL;
-
 
 /* ==================================================
  * Test: Tag Detection
  * ================================================== */
 
 hic_manens vacuum
-probans_detectare_tag_simplex(vacuum)
+probans_detectare_tag_simplex(Piscina* piscina)
 {
          Pagina pagina;
     RegioClicca regio;
             b32 invenit;
 
     /* Initiare pagina et inserere textum cum $date */
-    pagina_initiare(&pagina, g_piscina, NIHIL);
+    pagina_initiare(&pagina, piscina, NIHIL);
     pagina_inserere_textum(&pagina, "$date");
 
     /* Click on 'd' (columna 1) - should find $date */
@@ -43,14 +40,14 @@ probans_detectare_tag_simplex(vacuum)
 }
 
 hic_manens vacuum
-probans_detectare_tag_in_medio(vacuum)
+probans_detectare_tag_in_medio(Piscina* piscina)
 {
          Pagina pagina;
     RegioClicca regio;
             b32 invenit;
 
     /* Initiare pagina et inserere textum cum $date in medio */
-    pagina_initiare(&pagina, g_piscina, NIHIL);
+    pagina_initiare(&pagina, piscina, NIHIL);
     pagina_inserere_textum(&pagina, "Click here: $date to insert");
 
     /* Click on 'a' in date (columna 14) */
@@ -65,14 +62,14 @@ probans_detectare_tag_in_medio(vacuum)
 }
 
 hic_manens vacuum
-probans_detectare_non_tag(vacuum)
+probans_detectare_non_tag(Piscina* piscina)
 {
          Pagina pagina;
     RegioClicca regio;
             b32 invenit;
 
     /* Initiare pagina et inserere textum sine tag */
-    pagina_initiare(&pagina, g_piscina, NIHIL);
+    pagina_initiare(&pagina, piscina, NIHIL);
     pagina_inserere_textum(&pagina, "hello world");
 
     /* Click on 'e' in hello - should not find tag */
@@ -92,7 +89,7 @@ probans_detectare_non_tag(vacuum)
  * ================================================== */
 
 hic_manens vacuum
-probans_ponere_cursor(vacuum)
+probans_ponere_cursor(Piscina* piscina)
 {
     Pagina pagina;
 
@@ -104,7 +101,7 @@ probans_ponere_cursor(vacuum)
     printf("  Pre-init garbage: linea=%d, columna=%d\n",
            pagina.vim.cursor_linea, pagina.vim.cursor_columna);
 
-    pagina_initiare(&pagina, g_piscina, NIHIL);
+    pagina_initiare(&pagina, piscina, NIHIL);
 
     printf("  Post pagina_initiare: linea=%d, columna=%d\n",
            pagina.vim.cursor_linea, pagina.vim.cursor_columna);
@@ -120,11 +117,11 @@ probans_ponere_cursor(vacuum)
 }
 
 hic_manens vacuum
-probans_inserere_textum_ad_cursor(vacuum)
+probans_inserere_textum_ad_cursor(Piscina* piscina)
 {
     Pagina pagina;
 
-    pagina_initiare(&pagina, g_piscina, NIHIL);
+    pagina_initiare(&pagina, piscina, NIHIL);
 
     /* Ponere cursor et inserere textum */
     pagina_ponere_cursor(&pagina, ZEPHYRUM, ZEPHYRUM);
@@ -147,13 +144,13 @@ probans_inserere_textum_ad_cursor(vacuum)
 }
 
 hic_manens vacuum
-probans_inserere_post_tag(vacuum)
+probans_inserere_post_tag(Piscina* piscina)
 {
          Pagina pagina;
     RegioClicca regio;
             b32 invenit;
 
-    pagina_initiare(&pagina, g_piscina, NIHIL);
+    pagina_initiare(&pagina, piscina, NIHIL);
     pagina_inserere_textum(&pagina, "$date");
 
     /* Simulare click et obtinere regio */
@@ -186,11 +183,11 @@ probans_inserere_post_tag(vacuum)
  * ================================================== */
 
 hic_manens vacuum
-probans_grid_post_newline(vacuum)
+probans_grid_post_newline(Piscina* piscina)
 {
     Pagina pagina;
 
-    pagina_initiare(&pagina, g_piscina, NIHIL);
+    pagina_initiare(&pagina, piscina, NIHIL);
     printf("  Initial cursor: (%d, %d), mode=%d\n",
            pagina.vim.cursor_linea, pagina.vim.cursor_columna,
            pagina.vim.modo);
@@ -242,12 +239,12 @@ probans_grid_post_newline(vacuum)
 
 
 hic_manens vacuum
-probans_sticky_indentatio(vacuum)
+probans_sticky_indentatio(Piscina* piscina)
 {
     Pagina pagina;
 
     /* Probatio: "         hello\n\n" debet habere indentationem in linea 2 */
-    pagina_initiare(&pagina, g_piscina, NIHIL);
+    pagina_initiare(&pagina, piscina, NIHIL);
 
     /* Inserere 9 spatia */
     pagina_inserere_textum(&pagina, "         ");
@@ -280,13 +277,13 @@ probans_sticky_indentatio(vacuum)
  * ================================================== */
 
 hic_manens vacuum
-probans_tab_inserere(vacuum)
+probans_tab_inserere(Piscina* piscina)
 {
     TabulaCharacterum tabula;
             VimStatus status;
 
     /* Setup: empty grid, insert mode */
-    tabula_initiare(&tabula, g_piscina, TABULA_LATITUDO_DEFALTA,
+    tabula_initiare(&tabula, piscina, TABULA_LATITUDO_DEFALTA,
         TABULA_ALTITUDO_DEFALTA);
     status = vim_initiare(&tabula);
     status = vim_ponere_modum(status, MODO_VIM_INSERERE);
@@ -303,13 +300,13 @@ probans_tab_inserere(vacuum)
 }
 
 hic_manens vacuum
-probans_tab_inserere_ante_textum(vacuum)
+probans_tab_inserere_ante_textum(Piscina* piscina)
 {
     TabulaCharacterum tabula;
             VimStatus status;
 
     /* Setup: "hello" in grid */
-    tabula_ex_literis(&tabula, g_piscina, "hello");
+    tabula_ex_literis(&tabula, piscina, "hello");
     status = vim_initiare(&tabula);
     status = vim_ponere_modum(status, MODO_VIM_INSERERE);
     status = vim_ponere_cursor(status, ZEPHYRUM, ZEPHYRUM);
@@ -330,13 +327,13 @@ probans_tab_inserere_ante_textum(vacuum)
 }
 
 hic_manens vacuum
-probans_backspace_tab(vacuum)
+probans_backspace_tab(Piscina* piscina)
 {
     TabulaCharacterum tabula;
             VimStatus status;
 
     /* Setup: tab + "hi" in grid, cursor after tab */
-    tabula_initiare(&tabula, g_piscina, TABULA_LATITUDO_DEFALTA,
+    tabula_initiare(&tabula, piscina, TABULA_LATITUDO_DEFALTA,
         TABULA_ALTITUDO_DEFALTA);
     tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM) = '\t';
     tabula_cellula(&tabula, ZEPHYRUM, I) = TAB_CONTINUATIO;
@@ -359,13 +356,13 @@ probans_backspace_tab(vacuum)
 }
 
 hic_manens vacuum
-probans_backspace_tab_continuatio(vacuum)
+probans_backspace_tab_continuatio(Piscina* piscina)
 {
     TabulaCharacterum tabula;
             VimStatus status;
 
     /* Setup: "ab" + tab + "cd", cursor on TAB_CONTINUATIO */
-    tabula_initiare(&tabula, g_piscina, TABULA_LATITUDO_DEFALTA,
+    tabula_initiare(&tabula, piscina, TABULA_LATITUDO_DEFALTA,
         TABULA_ALTITUDO_DEFALTA);
     tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM) = 'a';
     tabula_cellula(&tabula, ZEPHYRUM, I) = 'b';
@@ -394,13 +391,13 @@ probans_backspace_tab_continuatio(vacuum)
 }
 
 hic_manens vacuum
-probans_navigatio_h_skip_tab(vacuum)
+probans_navigatio_h_skip_tab(Piscina* piscina)
 {
     TabulaCharacterum tabula;
             VimStatus status;
 
     /* Setup: "a" + tab + "b", cursor at 'b' (column 4) */
-    tabula_initiare(&tabula, g_piscina, TABULA_LATITUDO_DEFALTA,
+    tabula_initiare(&tabula, piscina, TABULA_LATITUDO_DEFALTA,
         TABULA_ALTITUDO_DEFALTA);
     tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM) = 'a';
     tabula_cellula(&tabula, ZEPHYRUM, I) = '\t';
@@ -418,13 +415,13 @@ probans_navigatio_h_skip_tab(vacuum)
 }
 
 hic_manens vacuum
-probans_indentatio_cum_tab(vacuum)
+probans_indentatio_cum_tab(Piscina* piscina)
 {
     TabulaCharacterum tabula;
             VimStatus status;
 
     /* Setup: tab + "hello" (indentation is tab at col 0-1, content at col 2) */
-    tabula_initiare(&tabula, g_piscina, TABULA_LATITUDO_DEFALTA,
+    tabula_initiare(&tabula, piscina, TABULA_LATITUDO_DEFALTA,
         TABULA_ALTITUDO_DEFALTA);
     status = vim_initiare(&tabula);
     status = vim_ponere_modum(status, MODO_VIM_INSERERE);
@@ -463,13 +460,13 @@ probans_indentatio_cum_tab(vacuum)
 }
 
 hic_manens vacuum
-probans_indentatio_mixta(vacuum)
+probans_indentatio_mixta(Piscina* piscina)
 {
     TabulaCharacterum tabula;
             VimStatus status;
 
     /* Setup: tab + 2 spaces + "hello" */
-    tabula_initiare(&tabula, g_piscina, TABULA_LATITUDO_DEFALTA,
+    tabula_initiare(&tabula, piscina, TABULA_LATITUDO_DEFALTA,
         TABULA_ALTITUDO_DEFALTA);
     status = vim_initiare(&tabula);
     status = vim_ponere_modum(status, MODO_VIM_INSERERE);
@@ -513,13 +510,13 @@ probans_indentatio_mixta(vacuum)
 }
 
 hic_manens vacuum
-probans_indentatio_tabs_multiplex(vacuum)
+probans_indentatio_tabs_multiplex(Piscina* piscina)
 {
     TabulaCharacterum tabula;
             VimStatus status;
 
     /* Setup: 2 tabs + "hi" */
-    tabula_initiare(&tabula, g_piscina, TABULA_LATITUDO_DEFALTA,
+    tabula_initiare(&tabula, piscina, TABULA_LATITUDO_DEFALTA,
         TABULA_ALTITUDO_DEFALTA);
     status = vim_initiare(&tabula);
     status = vim_ponere_modum(status, MODO_VIM_INSERERE);
@@ -563,13 +560,13 @@ probans_indentatio_tabs_multiplex(vacuum)
 }
 
 hic_manens vacuum
-probans_indentatio_sticky_tabs_per_lineas_vacuas(vacuum)
+probans_indentatio_sticky_tabs_per_lineas_vacuas(Piscina* piscina)
 {
     TabulaCharacterum tabula;
             VimStatus status;
 
     /* Setup: tab + "hi" */
-    tabula_initiare(&tabula, g_piscina, TABULA_LATITUDO_DEFALTA,
+    tabula_initiare(&tabula, piscina, TABULA_LATITUDO_DEFALTA,
         TABULA_ALTITUDO_DEFALTA);
     status = vim_initiare(&tabula);
     status = vim_ponere_modum(status, MODO_VIM_INSERERE);
@@ -616,7 +613,7 @@ probans_indentatio_sticky_tabs_per_lineas_vacuas(vacuum)
 }
 
 hic_manens vacuum
-probans_indentatio_post_backspace(vacuum)
+probans_indentatio_post_backspace(Piscina* piscina)
 {
     TabulaCharacterum tabula;
             VimStatus status;
@@ -627,7 +624,7 @@ probans_indentatio_post_backspace(vacuum)
      * 3. On blank line, backspace twice to reduce to 2 tabs
      * 4. Press Enter - should have 2 tabs indentation, not 4
      */
-    tabula_initiare(&tabula, g_piscina, TABULA_LATITUDO_DEFALTA,
+    tabula_initiare(&tabula, piscina, TABULA_LATITUDO_DEFALTA,
         TABULA_ALTITUDO_DEFALTA);
     status = vim_initiare(&tabula);
     status = vim_ponere_modum(status, MODO_VIM_INSERERE);
@@ -696,13 +693,13 @@ probans_indentatio_post_backspace(vacuum)
 }
 
 hic_manens vacuum
-probans_navigatio_l_skip_tab(vacuum)
+probans_navigatio_l_skip_tab(Piscina* piscina)
 {
     TabulaCharacterum tabula;
             VimStatus status;
 
     /* Setup: "a" + tab + "b", cursor at '\t' (column 1) */
-    tabula_initiare(&tabula, g_piscina, TABULA_LATITUDO_DEFALTA,
+    tabula_initiare(&tabula, piscina, TABULA_LATITUDO_DEFALTA,
         TABULA_ALTITUDO_DEFALTA);
     tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM) = 'a';
     tabula_cellula(&tabula, ZEPHYRUM, I) = '\t';
@@ -724,92 +721,180 @@ probans_navigatio_l_skip_tab(vacuum)
  * Main
  * ================================================== */
 
-integer
-principale (vacuum)
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-    Piscina* piscina;
-        b32  praeteritus;
+    probans_detectare_tag_simplex(c->piscina);
+}
 
-    piscina = piscina_generare_dynamicum("commandi", M * M);
-    si (!piscina)
-    {
-        printf("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    g_piscina = piscina;
-    credo_aperire(piscina);
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    probans_detectare_tag_in_medio(c->piscina);
+}
 
-    printf("--- Probans detectare tag simplex ---\n");
-    probans_detectare_tag_simplex();
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    probans_detectare_non_tag(c->piscina);
+}
 
-    printf("--- Probans detectare tag in medio ---\n");
-    probans_detectare_tag_in_medio();
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    probans_ponere_cursor(c->piscina);
+}
 
-    printf("--- Probans detectare non tag ---\n");
-    probans_detectare_non_tag();
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    probans_inserere_textum_ad_cursor(c->piscina);
+}
 
-    printf("--- Probans ponere cursor ---\n");
-    probans_ponere_cursor();
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    probans_inserere_post_tag(c->piscina);
+}
 
-    printf("--- Probans inserere textum ad cursor ---\n");
-    probans_inserere_textum_ad_cursor();
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    probans_grid_post_newline(c->piscina);
+}
 
-    printf("--- Probans inserere post tag ---\n");
-    probans_inserere_post_tag();
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    probans_sticky_indentatio(c->piscina);
+}
 
-    printf("--- Probans grid post newline ---\n");
-    probans_grid_post_newline();
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+    probans_tab_inserere(c->piscina);
+}
 
-    printf("--- Probans sticky indentatio ---\n");
-    probans_sticky_indentatio();
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+    probans_tab_inserere_ante_textum(c->piscina);
+}
 
-    printf("--- Probans tab inserere ---\n");
-    probans_tab_inserere();
+interior vacuum
+_sectio_decima_prima (
+    CredoContextus* c)
+{
+    probans_backspace_tab(c->piscina);
+}
 
-    printf("--- Probans tab inserere ante textum ---\n");
-    probans_tab_inserere_ante_textum();
+interior vacuum
+_sectio_decima_secunda (
+    CredoContextus* c)
+{
+    probans_backspace_tab_continuatio(c->piscina);
+}
 
-    printf("--- Probans backspace tab ---\n");
-    probans_backspace_tab();
+interior vacuum
+_sectio_decima_tertia (
+    CredoContextus* c)
+{
+    probans_navigatio_h_skip_tab(c->piscina);
+}
 
-    printf("--- Probans backspace tab continuatio ---\n");
-    probans_backspace_tab_continuatio();
+interior vacuum
+_sectio_decima_quarta (
+    CredoContextus* c)
+{
+    probans_navigatio_l_skip_tab(c->piscina);
+}
 
-    printf("--- Probans navigatio h skip tab ---\n");
-    probans_navigatio_h_skip_tab();
+interior vacuum
+_sectio_decima_quinta (
+    CredoContextus* c)
+{
+    probans_indentatio_cum_tab(c->piscina);
+}
 
-    printf("--- Probans navigatio l skip tab ---\n");
-    probans_navigatio_l_skip_tab();
+interior vacuum
+_sectio_decima_sexta (
+    CredoContextus* c)
+{
+    probans_indentatio_mixta(c->piscina);
+}
 
-    printf("--- Probans indentatio cum tab ---\n");
-    probans_indentatio_cum_tab();
+interior vacuum
+_sectio_decima_septima (
+    CredoContextus* c)
+{
+    probans_indentatio_tabs_multiplex(c->piscina);
+}
 
-    printf("--- Probans indentatio mixta ---\n");
-    probans_indentatio_mixta();
+interior vacuum
+_sectio_decima_octava (
+    CredoContextus* c)
+{
+    probans_indentatio_sticky_tabs_per_lineas_vacuas(c->piscina);
+}
 
-    printf("--- Probans indentatio tabs multiplex ---\n");
-    probans_indentatio_tabs_multiplex();
-
-    printf("--- Probans indentatio sticky tabs per lineas vacuas ---\n");
-    probans_indentatio_sticky_tabs_per_lineas_vacuas();
-
-    printf("--- Probans indentatio post backspace ---\n");
-    probans_indentatio_post_backspace();
+interior vacuum
+_sectio_decima_nona (
+    CredoContextus* c)
+{
+    probans_indentatio_post_backspace(c->piscina);
 
     printf("\n");
-    credo_imprimere_compendium();
+}
 
-    praeteritus = credo_omnia_praeterierunt();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "detectare tag simplex", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "detectare tag in medio", _sectio_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "detectare non tag", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "ponere cursor", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "inserere textum ad cursor", _sectio_quinta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "inserere post tag", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "grid post newline", _sectio_septima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "sticky indentatio", _sectio_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "tab inserere", _sectio_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "tab inserere ante textum", _sectio_decima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "backspace tab", _sectio_decima_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "backspace tab continuatio", _sectio_decima_secunda, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "navigatio h skip tab", _sectio_decima_tertia, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "navigatio l skip tab", _sectio_decima_quarta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "indentatio cum tab", _sectio_decima_quinta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "indentatio mixta", _sectio_decima_sexta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "indentatio tabs multiplex", _sectio_decima_septima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "indentatio sticky tabs per lineas vacuas", _sectio_decima_octava,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "indentatio post backspace", _sectio_decima_nona, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    credo_claudere();
-    piscina_destruere(piscina);
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("commandi", SECTIONES);
 }

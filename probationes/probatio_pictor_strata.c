@@ -22,15 +22,13 @@
 #include <stdio.h>
 #include <string.h>
 
-hic_manens Piscina*             piscina;
-hic_manens InternamentumChorda* intern;
-
 interior b32
 actum (
     PictorDocumentum* doc,
   constans character* stml)
 {
-    redde pictor_documentum_actum(doc, chorda_ex_literis(stml, piscina))
+    redde pictor_documentum_actum(doc, chorda_ex_literis(stml,
+        doc->piscina))
         > ZEPHYRUM;
 }
 
@@ -72,21 +70,20 @@ photographia_eadem (
         == ZEPHYRUM;
 }
 
-s32 principale (vacuum)
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
+             Piscina* piscina;
+ InternamentumChorda* intern;
              Volumen* vol;
     PictorDocumentum* doc;
                  i32  fundus;
                  i32  c0;
                  i32  c3;
 
-    piscina = piscina_generare_dynamicum("probatio_pictor_strata",
-        LXIV * M);
-    si (!piscina)
-    { imprimere("FRACTA: piscina\n"); redde I;
-    }
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     thema_initiare();
     vol = volumen_temporarium(piscina, "probatio_pictor_strata");
     doc = pictor_documentum_creare(piscina, intern, vol, "", XL, XXX,
@@ -94,21 +91,20 @@ s32 principale (vacuum)
     CREDO_NON_NIHIL(doc);
     si (!doc)
     {
-        credo_imprimere_compendium();
-        redde I;
+        volumen_claudere(vol);
+        redde;
     }
     fundus  = (i32)color_ad_pixelum(thema_color(COLOR_BACKGROUND));
     c0      = palettae(ZEPHYRUM);
     c3      = palettae(III);
 
-    imprimere("\n--- I: stratum unum, compositum = fundus ---\n");
     CREDO_AEQUALIS_I32(pictor_documentum_numerus_stratorum(doc), I);
     CREDO_AEQUALIS_S32(id_strati(doc, ZEPHYRUM), I);
     CREDO_VERUM(pictor_documentum_stratum(doc, ZEPHYRUM)
         && pictor_documentum_stratum(doc, ZEPHYRUM)->visibile);
     CREDO_AEQUALIS_I32(pixelum(doc, X, X), fundus);
 
-    imprimere("\n--- II: stratum novum, perspicuitas ---\n");
+    CREDO_GRADUS("II: stratum novum, perspicuitas");
     CREDO_VERUM(actum(doc,
         "<ictus instrumentum=\"penicillus\" color=\"0\""
         " magnitudo=\"1\"><punctum x=\"0\" y=\"2\"/><punctum x=\"39\""
@@ -127,7 +123,7 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_I32(pixelum(doc, V, X), c3);
     CREDO_AEQUALIS_I32(pixelum(doc, X, X), fundus);
 
-    imprimere("\n--- III: occultare, revocare, reficere ---\n");
+    CREDO_GRADUS("III: occultare, revocare, reficere");
     CREDO_VERUM(actum(doc,
         "<stratum actio=\"visibile\" id=\"2\" valor=\"0\"/>"));
     CREDO_AEQUALIS_I32(pixelum(doc, V, II), c0);
@@ -140,7 +136,7 @@ s32 principale (vacuum)
         "<stratum actio=\"visibile\" id=\"2\" valor=\"1\"/>"));
     CREDO_AEQUALIS_I32(pixelum(doc, V, X), c3);
 
-    imprimere("\n--- IV: ordo ---\n");
+    CREDO_GRADUS("IV: ordo");
     CREDO_VERUM(actum(doc, "<stratum actio=\"ordo\" ids=\"2 1\"/>"));
     CREDO_AEQUALIS_S32(id_strati(doc, I), I);
     CREDO_AEQUALIS_I32(pixelum(doc, V, II), c0);
@@ -152,7 +148,7 @@ s32 principale (vacuum)
     CREDO_VERUM(actum(doc, "<stratum actio=\"ordo\" ids=\"1 2\"/>"));
     CREDO_AEQUALIS_I32(pixelum(doc, V, II), c3);
 
-    imprimere("\n--- V: spongia stratum suum solum ---\n");
+    CREDO_GRADUS("V: spongia stratum suum solum");
     /* quadratum XVI centratum (5, 10): y II..XVII in strato 2 */
     CREDO_VERUM(actum(doc, "<ictus instrumentum=\"spongia\""
         " magnitudo=\"1\" stratum=\"2\"><punctum x=\"5\" y=\"10\"/>"
@@ -162,7 +158,7 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_I32(pixelum(doc, V, XX), c3);
     CREDO_AEQUALIS_I32(pixelum(doc, VI, II), c0);
 
-    imprimere("\n--- VI: delere, ultimum numquam ---\n");
+    CREDO_GRADUS("VI: delere, ultimum numquam");
     CREDO_VERUM(actum(doc, "<stratum actio=\"deletum\" id=\"2\"/>"));
     CREDO_AEQUALIS_I32(pictor_documentum_numerus_stratorum(doc), I);
     CREDO_AEQUALIS_I32(pixelum(doc, V, XX), fundus);
@@ -170,7 +166,7 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_I32(pictor_documentum_numerus_stratorum(doc), I);
     CREDO_AEQUALIS_I32(pixelum(doc, V, II), c0);
 
-    imprimere("\n--- VII: XVI maxima ---\n");
+    CREDO_GRADUS("VII: XVI maxima");
     {
         character t[LXIV];
               s32 k;
@@ -186,7 +182,7 @@ s32 principale (vacuum)
             (i32)PICTOR_STRATA_MAXIMA);
     }
 
-    imprimere("\n--- VIII: reapertio per checkpoint codificatum ---\n");
+    CREDO_GRADUS("VIII: reapertio per checkpoint codificatum");
     {
         PictorDocumentum* alter;
                      i32  k;
@@ -257,7 +253,21 @@ s32 principale (vacuum)
         CREDO_VERUM(pictor_documentum_verificare(doc));
     }
 
-    imprimere("\n--- IX: checkpoint vetus recusatur ---\n");
+    volumen_claudere(vol);
+}
+
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+             Piscina* piscina;
+ InternamentumChorda* intern;
+                 i32  c3;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    thema_initiare();
+    c3      = palettae(III);
     {
               Volumen* vv;
      PictorDocumentum* d;
@@ -295,9 +305,18 @@ s32 principale (vacuum)
         }
         volumen_claudere(vv);
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    volumen_claudere(vol);
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I: stratum unum, compositum = fundus", _sectio_prima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "IX: checkpoint vetus recusatur", _sectio_secunda, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("pictor_strata", SECTIONES);
 }

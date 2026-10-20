@@ -21,8 +21,6 @@ probatio_creare(Piscina* piscina)
 {
     MultipartAedificator* aed;
 
-    printf("--- Probans creare ---\n");
-
     aed = multipart_creare(piscina);
     CREDO_NON_NIHIL(aed);
 
@@ -43,8 +41,6 @@ probatio_content_type(Piscina* piscina)
 {
     MultipartAedificator* aed;
                   chorda  ct;
-
-    printf("--- Probans content type ---\n");
 
     aed = multipart_creare(piscina);
     CREDO_NON_NIHIL(aed);
@@ -71,8 +67,6 @@ probatio_textum_simplex(Piscina* piscina)
 {
     MultipartAedificator* aed;
                   chorda  corpus;
-
-    printf("--- Probans textum simplex ---\n");
 
     aed = multipart_creare(piscina);
     CREDO_NON_NIHIL(aed);
@@ -102,8 +96,6 @@ probatio_multiples_campi(Piscina* piscina)
 {
     MultipartAedificator* aed;
                   chorda  corpus;
-
-    printf("--- Probans multiples campi ---\n");
 
     aed = multipart_creare(piscina);
     CREDO_NON_NIHIL(aed);
@@ -137,8 +129,6 @@ probatio_fasciculum(Piscina* piscina)
              constans i8  data[] = {0x01, 0x02, 0x03, 0x04,
                  0x05};
 
-    printf("--- Probans fasciculum ---\n");
-
     aed = multipart_creare(piscina);
     CREDO_NON_NIHIL(aed);
 
@@ -167,8 +157,6 @@ probatio_mixtum(Piscina* piscina)
                   chorda  ct;
              constans i8  audio_data[] =
                  "fake audio data for testing";
-
-    printf("--- Probans mixtum (textum + fasciculum) ---\n");
 
     aed = multipart_creare(piscina);
     CREDO_NON_NIHIL(aed);
@@ -209,8 +197,6 @@ probatio_nullum_argumenta(Piscina* piscina)
                   chorda  ct;
                   chorda  corpus;
 
-    printf("--- Probans nullum argumenta ---\n");
-
     /* Content type cum NIHIL */
     ct = multipart_content_type(NIHIL);
     CREDO_NIHIL(ct.datum);
@@ -250,8 +236,6 @@ probatio_boundary_format(Piscina* piscina)
                      i32  i;
                      b32  invenit_boundary;
                      b32  invenit_closing;
-
-    printf("--- Probans boundary format ---\n");
 
     aed = multipart_creare(piscina);
     CREDO_NON_NIHIL(aed);
@@ -297,40 +281,77 @@ probatio_boundary_format(Piscina* piscina)
  * PRINCIPALE
  * ======================================================================== */
 
-integer
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    probatio_creare(c->piscina);
+}
+
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    probatio_content_type(c->piscina);
+}
+
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    probatio_textum_simplex(c->piscina);
+}
+
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    probatio_multiples_campi(c->piscina);
+}
+
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    probatio_fasciculum(c->piscina);
+}
+
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    probatio_mixtum(c->piscina);
+}
+
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    probatio_nullum_argumenta(c->piscina);
+}
+
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    probatio_boundary_format(c->piscina);
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "creare", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "content type", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "textum simplex", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "multiples campi", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "fasciculum", _sectio_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "mixtum (textum + fasciculum)", _sectio_sexta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "nullum argumenta", _sectio_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "boundary format", _sectio_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
 principale (vacuum)
 {
-    Piscina* piscina;
-        b32  successus;
-
-    printf("\n");
-    printf("========================================\n");
-    printf("PROBATIONES MULTIPART\n");
-    printf("========================================\n");
-    printf("\n");
-
-    piscina = piscina_generare_dynamicum("probatio_multipart",
-        CXXVIII * M);
-    credo_aperire(piscina);
-
-    probatio_creare(piscina);
-    probatio_content_type(piscina);
-    probatio_textum_simplex(piscina);
-    probatio_multiples_campi(piscina);
-    probatio_fasciculum(piscina);
-    probatio_mixtum(piscina);
-    probatio_nullum_argumenta(piscina);
-    probatio_boundary_format(piscina);
-
-    credo_imprimere_compendium();
-
-    printf("========================================\n");
-    printf("\n");
-
-    successus = credo_omnia_praeterierunt();
-
-    credo_claudere();
-    piscina_destruere(piscina);
-
-    redde successus ? 0 : I;
+    redde credo_suitam_currere("multipart", SECTIONES);
 }

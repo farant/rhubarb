@@ -88,6 +88,9 @@ int nanosleep(const struct timespec* petitum,
 typedef int clockid_t;
 #define CLOCK_REALTIME  0
 #define CLOCK_MONOTONIC 6
+/* horologium VIGILANS (colloquia T8d0, lib/processus_posix.c,
+ * tools/mensor.c): Darwin CLOCK_MONOTONIC somnum numerat, hoc non */
+#define CLOCK_UPTIME_RAW 8
 
 int clock_gettime(clockid_t horologium, struct timespec* tempus);
 
@@ -147,6 +150,9 @@ int lstat(const char* via, struct stat* sedes);
  * oraculum effectuum eam interponit (effectus T5, 2026-10-05) */
 int fstatat(int fossa, const char* via, struct stat* sedes,
     int vexilla);
+/* fstat: per fossam iam apertam - via nulla, ergo non canalis
+ * (custodia_secretum_parare, 2026-10-17) */
+int fstat(int fossa, struct stat* sedes);
 
 
 /* ==================================================
@@ -181,6 +187,9 @@ int     pipe(int* fossae);
 ssize_t read(int fossa, void* sedes, size_t mensura);
 ssize_t write(int fossa, const void* datum, size_t mensura);
 int     close(int fossa);
+/* fsync: datum in disco ante reditum (filum_appendere_firmiter,
+ * custodia_secretum_parare) */
+int     fsync(int fossa);
 void    _exit(int status);
 /* <gradus titulus="usleep" genus="obsoletum" pro="nanosleep"/>
  * XSI obsoletum: XPG7 sustulit - sub postulatis strictis glibc/musl
@@ -254,6 +263,8 @@ int WTERMSIG(int status);
 #define O_APPEND   0x0008
 #define O_CREAT    0x0200
 #define O_TRUNC    0x0400
+#define O_EXCL     0x0800
+#define O_NOFOLLOW 0x0100
 #define F_GETFL    3
 #define F_SETFL    4
 #define F_SETFD    2
@@ -551,6 +562,11 @@ struct sigaction {
 #define SIGCHLD  20
 #define SIGTTIN  21
 #define SIGTTOU  22
+/* reactor signa (hospitium v3 T1, 2026-10-16): signa usoris et
+ * restitutio vocationum (valores Darwin, ut ceteri) */
+#define SIGUSR1  30
+#define SIGUSR2  31
+#define SA_RESTART 0x0002
 
 int sigaction(int signum, const struct sigaction* actio,
               struct sigaction* pristina);
@@ -579,6 +595,8 @@ int uname(struct utsname* nomina);
 
 /* <sectio caput="unistd.h"/> unistd.h - identitas processus */
 pid_t getpid(void);
+/* custos cursus (colloquia T8b, tools/mensor.c): vocans incipere */
+pid_t getppid(void);
 
 /* <sectio caput="unistd.h"/> unistd.h - sysconf (Unda 4)
  * Valor _SC_NPROCESSORS_ONLN Darwin LVIII mensuratus; Linux LXXXIV

@@ -23,15 +23,6 @@
 #define LONGUS      100000
 #define CUSTOS  0xDEADBEEFU
 
-interior Piscina* piscina;
-
-interior i32 ordo_a[MAXIMUS + I];
-interior i32 ordo_b[MAXIMUS + I];
-interior i32 exitus_publicus[MAXIMUS + I];
-interior i32 exitus_scalaris[MAXIMUS + I];
-interior i32 exitus_oraculi[MAXIMUS + I];
-interior i32 ordo_longus[LONGUS];
-
 /* modus: 0 casu, 1 omnia 0, 2 omnia p-1, 3 extrema mixta */
 interior vacuum
 _implere (
@@ -76,7 +67,12 @@ interior b32
 _comparare (
     constans character* operatio,
                    i32  p,
-                   i32  numerus)
+                   i32  numerus,
+          constans i32* ordo_a,
+          constans i32* ordo_b,
+          constans i32* exitus_publicus,
+          constans i32* exitus_scalaris,
+          constans i32* exitus_oraculi)
 {
     i32 i;
 
@@ -105,7 +101,9 @@ _comparare (
 
 interior vacuum
 _custodes_ponere (
-    i32 numerus)
+     i32  numerus,
+     i32* exitus_publicus,
+     i32* exitus_scalaris)
 {
     exitus_publicus[numerus] = CUSTOS;
     exitus_scalaris[numerus] = CUSTOS;
@@ -117,7 +115,12 @@ _probare (
     constans AgmenModulus* m,
                       i32  numerus,
                       s32  modus,
-                     Sors* s)
+                     Sors* s,
+                      i32* ordo_a,
+                      i32* ordo_b,
+                      i32* exitus_publicus,
+                      i32* exitus_scalaris,
+                      i32* exitus_oraculi)
 {
     i32 p     = m->p;
     b32 bene  = VERUM;
@@ -128,7 +131,7 @@ _probare (
     _implere(ordo_b, numerus, p, (modus + I) % IV, s);
 
     /* adde */
-    _custodes_ponere(numerus);
+    _custodes_ponere(numerus, exitus_publicus, exitus_scalaris);
     agmen_adde_modulo(ordo_a, ordo_b, exitus_publicus, numerus, m);
     agminis_adde_modulo_scalaris(ordo_a, ordo_b, exitus_scalaris,
         numerus,
@@ -137,10 +140,11 @@ _probare (
     {
         exitus_oraculi[i] = congruentia_adde(ordo_a[i], ordo_b[i], p);
     }
-    bene = bene && _comparare("adde", p, numerus);
+    bene = bene && _comparare("adde", p, numerus, ordo_a, ordo_b,
+        exitus_publicus, exitus_scalaris, exitus_oraculi);
 
     /* subtrahe */
-    _custodes_ponere(numerus);
+    _custodes_ponere(numerus, exitus_publicus, exitus_scalaris);
     agmen_subtrahe_modulo(ordo_a, ordo_b, exitus_publicus, numerus, m);
     agminis_subtrahe_modulo_scalaris(ordo_a, ordo_b, exitus_scalaris,
         numerus, m);
@@ -149,10 +153,11 @@ _probare (
         exitus_oraculi[i] = congruentia_subtrahe(ordo_a[i], ordo_b[i],
             p);
     }
-    bene = bene && _comparare("subtrahe", p, numerus);
+    bene = bene && _comparare("subtrahe", p, numerus, ordo_a, ordo_b,
+        exitus_publicus, exitus_scalaris, exitus_oraculi);
 
     /* multiplica */
-    _custodes_ponere(numerus);
+    _custodes_ponere(numerus, exitus_publicus, exitus_scalaris);
     agmen_multiplica_modulo(ordo_a, ordo_b, exitus_publicus, numerus,
         m);
     agminis_multiplica_modulo_scalaris(ordo_a, ordo_b, exitus_scalaris,
@@ -162,7 +167,8 @@ _probare (
         exitus_oraculi[i] = congruentia_multiplica(ordo_a[i], ordo_b[i],
             p);
     }
-    bene = bene && _comparare("multiplica", p, numerus);
+    bene = bene && _comparare("multiplica", p, numerus, ordo_a, ordo_b,
+        exitus_publicus, exitus_scalaris, exitus_oraculi);
 
     /* in loco: exitus == a, deinde exitus == b (multiplica et subtrahe:
      * ordo argumentorum refert) */
@@ -171,7 +177,7 @@ _probare (
         exitus_publicus[i] = ordo_a[i];
         exitus_scalaris[i] = ordo_b[i];
     }
-    _custodes_ponere(numerus);
+    _custodes_ponere(numerus, exitus_publicus, exitus_scalaris);
     agmen_subtrahe_modulo(exitus_publicus, ordo_b, exitus_publicus,
         numerus, m);
     agmen_multiplica_modulo(ordo_a, exitus_scalaris, exitus_scalaris,
@@ -203,13 +209,15 @@ _probare (
             exitus_oraculi[i]  = congruentia_adde(ordo_b[i],
                 congruentia_multiplica(c, ordo_a[i], p), p);
         }
-        _custodes_ponere(numerus);
+        _custodes_ponere(numerus, exitus_publicus, exitus_scalaris);
         agmen_multiplica_adde_modulo(c, ordo_a, exitus_publicus,
             numerus, m);
         agminis_multiplica_adde_modulo_scalaris(c, ordo_a,
             exitus_scalaris,
             numerus, m);
-        bene = bene && _comparare("multiplica_adde", p, numerus);
+        bene = bene
+            && _comparare("multiplica_adde", p, numerus, ordo_a, ordo_b,
+            exitus_publicus, exitus_scalaris, exitus_oraculi);
     }
 
     /* productum internum */
@@ -237,146 +245,171 @@ _probare (
     redde bene;
 }
 
-s32 principale (vacuum)
+
+/* ==================================================
+ * MODULUS
+ * ================================================== */
+
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-    piscina = piscina_generare_dynamicum("probatio_agmen", 65536);
-    si (!piscina)
+    constans i32 recusati[] = { 0U, 1U, 2U, 4U, 1000000U,
+        0x80000000U,
+        0x80000001U, 0xFFFFFFFFU, 0xFFFFFFFBU };
+    constans i32 accepti[]  = { 3U, 5U, 9U, 65537U, 1000000007U,
+        2147483629U, 2147483645U, 2147483647U };
+    i32 k;
+
+    (vacuum)c;
+    per (k = ZEPHYRUM; k < magnitudo(recusati)
+        / magnitudo(recusati[0]);
+        k++)
     {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
+        AgmenModulus m;
+
+        m.p          = CUSTOS;
+        m.p_inversa  = CUSTOS;
+        m.r2         = CUSTOS;
+        CREDO_FALSUM (agmen_modulus(recusati[k], &m));
+        CREDO_AEQUALIS_I32 (m.p, CUSTOS);
+        CREDO_AEQUALIS_I32 (m.r2, CUSTOS);
     }
-    credo_aperire(piscina);
-
-
-    /* ==================================================
-     * MODULUS
-     * ================================================== */
-
+    per (k = ZEPHYRUM; k < magnitudo(accepti)
+        / magnitudo(accepti[0]);
+        k++)
     {
-        constans i32 recusati[] = { 0U, 1U, 2U, 4U, 1000000U,
-            0x80000000U,
-            0x80000001U, 0xFFFFFFFFU, 0xFFFFFFFBU };
-        constans i32 accepti[]  = { 3U, 5U, 9U, 65537U, 1000000007U,
-            2147483629U, 2147483645U, 2147483647U };
-        i32 k;
+        AgmenModulus m;
+                 i32 p = accepti[k];
 
-        imprimere("\n--- Probans modulum ---\n");
-        per (k = ZEPHYRUM; k < magnitudo(recusati)
-            / magnitudo(recusati[0]);
-            k++)
-        {
-            AgmenModulus m;
-
-            m.p          = CUSTOS;
-            m.p_inversa  = CUSTOS;
-            m.r2         = CUSTOS;
-            CREDO_FALSUM (agmen_modulus(recusati[k], &m));
-            CREDO_AEQUALIS_I32 (m.p, CUSTOS);
-            CREDO_AEQUALIS_I32 (m.r2, CUSTOS);
-        }
-        per (k = ZEPHYRUM; k < magnitudo(accepti)
-            / magnitudo(accepti[0]);
-            k++)
-        {
-            AgmenModulus m;
-                     i32 p = accepti[k];
-
-            CREDO_VERUM (agmen_modulus(p, &m));
-            CREDO_AEQUALIS_I32 (m.p, p);
-            /* p p' = -1 mod 2^32 */
-            CREDO_AEQUALIS_I32 (p * m.p_inversa + I, ZEPHYRUM);
-            /* r2 = 2^64 mod p, per potentiam (algorithmus alius) */
-            CREDO_AEQUALIS_I32 (m.r2, congruentia_potentia(II, LXIV,
-                p));
-        }
-        CREDO_AEQUALIS_I32 (congruentia_primus_infra(0x80000000U),
-            2147483647U);
+        CREDO_VERUM (agmen_modulus(p, &m));
+        CREDO_AEQUALIS_I32 (m.p, p);
+        /* p p' = -1 mod 2^32 */
+        CREDO_AEQUALIS_I32 (p * m.p_inversa + I, ZEPHYRUM);
+        /* r2 = 2^64 mod p, per potentiam (algorithmus alius) */
+        CREDO_AEQUALIS_I32 (m.r2, congruentia_potentia(II, LXIV,
+            p));
     }
+    CREDO_AEQUALIS_I32 (congruentia_primus_infra(0x80000000U),
+        2147483647U);
+}
 
 
-    /* ==================================================
-     * OPERATIONES CONTRA ORACULA
-     * ================================================== */
+/* ==================================================
+ * OPERATIONES CONTRA ORACULA
+ * ================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    constans i32 moduli[] = { 3U, 5U, 7U, 9U, 15U, 65537U,
+        1000000007U,
+        2147483629U, 2147483645U, 2147483647U };
+    constans i32  longitudines_magnae[] = { 64U, 1000U, MAXIMUS };
+            Sors  s;
+             i32  k;
+             b32  bene           = VERUM;
+             i32  casus_probati  = ZEPHYRUM;
+             i32* ordo_a;
+             i32* ordo_b;
+             i32* exitus_publicus;
+             i32* exitus_scalaris;
+             i32* exitus_oraculi;
+
+    ordo_a = (i32*)piscina_allocare(c->piscina,
+        (MAXIMUS + I) * magnitudo(i32));
+    ordo_b = (i32*)piscina_allocare(c->piscina,
+        (MAXIMUS + I) * magnitudo(i32));
+    exitus_publicus = (i32*)piscina_allocare(c->piscina,
+        (MAXIMUS + I) * magnitudo(i32));
+    exitus_scalaris = (i32*)piscina_allocare(c->piscina,
+        (MAXIMUS + I) * magnitudo(i32));
+    exitus_oraculi = (i32*)piscina_allocare(c->piscina,
+        (MAXIMUS + I) * magnitudo(i32));
+    sors_seminare(&s, 2026ULL, III);
+    per (k = ZEPHYRUM; k < magnitudo(moduli) / magnitudo(moduli[0]);
+        k++)
     {
-        constans i32 moduli[] = { 3U, 5U, 7U, 9U, 15U, 65537U,
-            1000000007U,
-            2147483629U, 2147483645U, 2147483647U };
-        constans i32 longitudines_magnae[] = { 64U, 1000U, MAXIMUS };
-                Sors s;
-                 i32 k;
-                 b32 bene           = VERUM;
-                 i32 casus_probati  = ZEPHYRUM;
+        AgmenModulus m;
+                 i32 numerus;
+                 s32 modus;
+                 i32 j;
 
-        imprimere("\n--- Probans operationes contra oracula ---\n");
-        sors_seminare(&s, 2026ULL, III);
-        per (k = ZEPHYRUM; k < magnitudo(moduli) / magnitudo(moduli[0]);
-            k++)
+        CREDO_VERUM (agmen_modulus(moduli[k], &m));
+        per (modus = ZEPHYRUM; modus < IV; modus++)
         {
-            AgmenModulus m;
-                     i32 numerus;
-                     s32 modus;
-                     i32 j;
-
-            CREDO_VERUM (agmen_modulus(moduli[k], &m));
-            per (modus = ZEPHYRUM; modus < IV; modus++)
+            per (numerus = ZEPHYRUM; numerus <= XVII; numerus++)
             {
-                per (numerus = ZEPHYRUM; numerus <= XVII; numerus++)
-                {
-                    bene = bene && _probare(&m, numerus, modus, &s);
-                    casus_probati++;
-                }
-                per (j = ZEPHYRUM; j < III; j++)
-                {
-                    bene = bene
-                        && _probare(&m, longitudines_magnae[j], modus,
-                        &s);
-                    casus_probati++;
-                }
+                bene = bene && _probare(&m, numerus, modus, &s, ordo_a,
+                    ordo_b, exitus_publicus, exitus_scalaris,
+                    exitus_oraculi);
+                casus_probati++;
+            }
+            per (j = ZEPHYRUM; j < III; j++)
+            {
+                bene = bene
+                    && _probare(&m, longitudines_magnae[j], modus,
+                    &s, ordo_a, ordo_b, exitus_publicus,
+                    exitus_scalaris,
+                    exitus_oraculi);
+                casus_probati++;
             }
         }
-        imprimere("  casus: %u\n", casus_probati);
-        CREDO_VERUM (bene);
     }
+    imprimere("  casus: %u\n", casus_probati);
+    CREDO_VERUM (bene);
+}
 
 
-    /* ==================================================
-     * PRODUCTUM INTERNUM LONGUM
-     * ================================================== */
+/* ==================================================
+ * PRODUCTUM INTERNUM LONGUM
+ * ================================================== */
 
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    constans i32  moduli[] = { 3U, 1000000007U, 2147483647U };
+             i32  k;
+             i32* ordo_longus;
+
+    ordo_longus = (i32*)piscina_allocare(c->piscina,
+        LONGUS * magnitudo(i32));
+    per (k = ZEPHYRUM; k < magnitudo(moduli) / magnitudo(moduli[0]);
+        k++)
     {
-        constans i32 moduli[] = { 3U, 1000000007U, 2147483647U };
-                 i32 k;
+        AgmenModulus m;
+                 i32 p = moduli[k];
+                 i32 i;
 
-        imprimere("\n--- Probans productum internum longum ---\n");
-        per (k = ZEPHYRUM; k < magnitudo(moduli) / magnitudo(moduli[0]);
-            k++)
+        CREDO_VERUM (agmen_modulus(p, &m));
+        per (i = ZEPHYRUM; i < LONGUS; i++)
         {
-            AgmenModulus m;
-                     i32 p = moduli[k];
-                     i32 i;
-
-            CREDO_VERUM (agmen_modulus(p, &m));
-            per (i = ZEPHYRUM; i < LONGUS; i++)
-            {
-                ordo_longus[i] = p - I;
-            }
-            /* (p-1)^2 = 1 mod p: summa = numerus mod p */
-            CREDO_AEQUALIS_I32 (agmen_productum_internum_modulo(ordo_longus,
-                ordo_longus, LONGUS, &m), LONGUS % p);
-            CREDO_AEQUALIS_I32 (agminis_productum_internum_modulo_scalaris(
-                ordo_longus, ordo_longus, LONGUS, &m), LONGUS % p);
-            CREDO_AEQUALIS_I32 (agmen_productum_internum_modulo(ordo_longus,
-                ordo_longus, LONGUS - III, &m), (LONGUS - III) % p);
+            ordo_longus[i] = p - I;
         }
+        /* (p-1)^2 = 1 mod p: summa = numerus mod p */
+        CREDO_AEQUALIS_I32 (agmen_productum_internum_modulo(ordo_longus,
+            ordo_longus, LONGUS, &m), LONGUS % p);
+        CREDO_AEQUALIS_I32 (agminis_productum_internum_modulo_scalaris(
+            ordo_longus, ordo_longus, LONGUS, &m), LONGUS % p);
+        CREDO_AEQUALIS_I32 (agmen_productum_internum_modulo(ordo_longus,
+            ordo_longus, LONGUS - III, &m), (LONGUS - III) % p);
     }
+}
 
-    credo_imprimere_compendium();
-    {
-        b32 praeteritus = credo_omnia_praeterierunt();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "modulum", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "operationes contra oracula", _sectio_secunda, NIHIL, NIHIL,
+        NIHIL,
+      NIHIL },
+    { "productum internum longum", _sectio_tertia, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-        credo_claudere();
-        piscina_destruere(piscina);
-        redde praeteritus ? ZEPHYRUM : I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("agmen", SECTIONES);
 }

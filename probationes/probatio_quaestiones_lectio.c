@@ -15,33 +15,23 @@
 #include "filum.h"
 #include <stdio.h>
 
-s32 principale (vacuum)
-{
-                     b32  praeteritus;
-                Piscina*  piscina;
-    InternamentumChorda*  intern;
-
-    piscina = piscina_generare_dynamicum(
-        "probatio_quaestiones_lectio", 262144);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    intern = internamentum_creare(piscina);
-    credo_aperire(piscina);
-
-
     /* ========================================================
      * PROBARE: corpus verum per lectorem generatum
      * ======================================================== */
 
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         chorda         fons;
         chorda         causa;
         QsQuaestiones* bib;
-
-        imprimere("\n--- Probans corpus verum (generatum) ---\n");
 
         fons = filum_legere_totum("silva/quaestiones.stml",
                                   piscina);
@@ -112,17 +102,24 @@ s32 principale (vacuum)
             }
         }
     }
-
+}
 
     /* ========================================================
      * PROBARE: margines - absentia et ignota
      * ======================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         chorda         causa;
         QsQuaestiones* bib;
-
-        imprimere("\n--- Probans margines lectoris ---\n");
 
         /* gradus absens -> ABSENS; selector absens -> NIHIL;
          * elementum ignotum praetermissum (lector folium) */
@@ -152,19 +149,16 @@ s32 principale (vacuum)
         CREDO_NIHIL (bib);
         CREDO_CHORDA_NON_VACUA (causa);
     }
+}
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "corpus verum (generatum)", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "margines lectoris", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("quaestiones_lectio", SECTIONES);
 }

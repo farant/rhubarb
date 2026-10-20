@@ -1,0 +1,61 @@
+<interrogationes unitas="fons">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I turn a Unicode code point into a glyph index for the 6x8 font?
+    <responsum symbolum="fons_codepoint_ad_glypham utf8_decodere tabula_pixelorum_pingere_chordam">Decode
+      the text with utf8_decodere and pass each code point to
+      fons_codepoint_ad_glypham: ASCII and drawn Latin-1 slots map to
+      themselves (U+00AD to its deliberately blank slot), U+00A0
+      becomes a space, curly and low-9 quotes, dashes, the ellipsis and
+      the minus sign become their ASCII look-alikes, the bullet
+      becomes slot 0x07, and Greek capitals that look Latin (and small
+      omicron) become the Latin letter.
+      Everything else, negative input included, is FONS_TOFU (0x7F).
+      tabula_pixelorum_pingere_chordam does all of this for a whole
+      chorda.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I tell in advance whether a character will draw as tofu?
+    <responsum symbolum="fons_est_mappatum fons_codepoint_ad_glypham fons_8x16_codepoint_ad_glypham">For
+      the 6x8 font, yes: fons_est_mappatum is true when the lookup is
+      not FONS_TOFU. Because tofu is slot 0x7F, U+007F itself also
+      reports as unmapped. There is no such predicate for the 8x16
+      font; compare fons_8x16_codepoint_ad_glypham with 0x7F
+      yourself (U+2302 legitimately maps there too).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what are FONS_PARVUS and FONS_TITULI, and how big is a glyph?
+    <responsum symbolum="fons_latitudo fons_altitudo Mandatum tabula_pixelorum_pingere_chordam_fonte">The
+      two font ids a Mandatum.fons field can hold: FONS_PARVUS (0, the
+      6x8 HP 100LX + Alcuin face, the default) and FONS_TITULI (1, the
+      8x16 Nix8810 header face in CP437 order).
+      fons_latitudo and fons_altitudo give the glyph cell in pixels
+      (6x8 or 8x16); any unknown id is treated as FONS_PARVUS.
+      Every glyph has the same advance, tofu included.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why does the 8x16 font need its own code point lookup instead of reusing the 6x8 one?
+    <responsum symbolum="fons_8x16_codepoint_ad_glypham fons_codepoint_ad_glypham" via="lib/fons.worklog.md">The
+      8x16 glyphs stay in native CP437 order, while the 6x8 high slots
+      are a hybrid (Latin-1 at its own code points). So the 8x16
+      lookup inverts the CP437 tables (0x80-0xFF and the 0x01-0x1F
+      dingbats), maps Latin-1 letters CP437 lacks to their base letter
+      (A grave becomes A), applies the same quote and dash
+      substitutions, and returns 0x7F for anything else.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can the small font draw Greek or other non-Latin scripts?
+    <responsum symbolum="fons_codepoint_ad_glypham fons_8x16_codepoint_ad_glypham" via="include/glyphae_ductae.h">Only
+      the Greek letters that look Latin (Alpha, Beta, Epsilon, ... and
+      small omicron) are mapped, to the Latin letter; alpha, pi, Gamma
+      and the rest are tofu in the 6x8 font. The 8x16 font also has
+      the Greek letters CP437 carries (alpha, Gamma, pi, Sigma, ...).
+      The terminal draws other symbols itself through
+      glyphae_ductae.</responsum>
+  </interrogatio>
+
+</interrogationes>

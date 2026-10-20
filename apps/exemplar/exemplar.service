@@ -1,0 +1,31 @@
+# exemplar.service - systemd (hospitium v3 T10; smaragda)
+# installatur a tools/praeparare_hospitem.sh in /etc/systemd/system/
+[Unit]
+Description=exemplar - applicatio probans hospitii v3
+After=network.target
+
+[Service]
+Type=simple
+User=exemplar
+Group=exemplar
+ExecStart=/opt/exemplar/exemplar -data /var/lib/exemplar -portus 3010 -procurator -acta -invitatio-via /var/lib/exemplar/invitatio
+Restart=on-failure
+RestartSec=2
+# SIGTERM -> sistere molliter (X s), deinde volumen clausum
+KillSignal=SIGTERM
+TimeoutStopSec=15
+NoNewPrivileges=true
+ProtectSystem=strict
+ReadWritePaths=/var/lib/exemplar
+PrivateTmp=true
+ProtectHome=true
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+# argon2id: II opera x 19 MiB; servus totus parvus
+MemoryMax=256M
+
+[Install]
+WantedBy=multi-user.target

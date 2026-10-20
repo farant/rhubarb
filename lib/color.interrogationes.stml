@@ -1,0 +1,73 @@
+<interrogationes unitas="color">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I turn a Color into a pixel for a TabulaPixelorum and back?
+    <responsum symbolum="color_ad_pixelum color_ex_pixelum Color">color_ad_pixelum
+      packs it as a &lt;&lt; 24 | b &lt;&lt; 16 | g &lt;&lt; 8 | r (ABGR
+      in the 32-bit word), which on this little-endian machine lies in
+      memory as the bytes R, G, B, A - the same layout as an Imago.
+      color_ex_pixelum unpacks it. A literal written as 0xRRGGBBAA is
+      NOT a pixel: build it with color_ex_rgba and convert.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I blend or fade between two colours?
+    <responsum symbolum="color_interpolate">color_interpolate(a, b, t)
+      with t from 0 (all a) to 256 (all b), applied to all four
+      channels including alpha, in signed integer arithmetic that
+      truncates toward zero. t is not clamped: outside 0..256 the
+      result is cast to i8 and wraps. It mixes the sRGB bytes directly;
+      for a perceptually even mix go through linear light.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why should colour mixing for dithering or gradients happen in linear light?
+    <responsum symbolum="color_octetus_ad_linearem color_srgb_ad_linearem color_linearis_ad_srgb" via="lib/color.worklog.md">sRGB
+      bytes are gamma-encoded: a black and white checkerboard looks like
+      sRGB 188, not 128. Convert bytes with color_octetus_ad_linearem
+      (a 256-entry table filled on first use), average there, and go
+      back with color_linearis_ad_srgb, which returns 0..1 (multiply by
+      255 and round yourself - there is no helper back to a byte). The
+      conversions do not clamp values outside 0..1.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I find which palette colour is perceptually closest to a given colour?
+    <responsum symbolum="color_ad_oklab color_oklab_distantia color_linearis_ad_oklab" via="lib/dithering_exemplaria.c">Convert
+      both to OKLab with color_ad_oklab (sRGB bytes) or
+      color_linearis_ad_oklab (linear floats; negative channels clamp to
+      0) and compare with color_oklab_distantia, a plain Euclidean
+      distance: black to white is about 1.0. Alpha is ignored. The
+      dithering_exemplaria library precomputes palette OKLab values and
+      distances this way.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I round-trip linear RGB through OKLab exactly?
+    <responsum symbolum="color_linearis_ad_oklab color_oklab_ad_linearem" via="lib/color.worklog.md">Not
+      bit-exactly: Ottosson's published 10-digit matrices are not exact
+      inverses, and the round trip errs by up to about 2.6e-7 (tests
+      use 1e-6). That is far below 8-bit precision. color_oklab_ad_linearem
+      does not clamp, so an OKLab point outside the gamut comes back
+      with channels below 0 or above 1.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what does color_ad_cinereum compute?
+    <responsum symbolum="color_ad_cinereum">An
+      ITU-R BT.601 luma from the raw sRGB bytes, in integers: (30 R + 59
+      G + 11 B) / 100, truncated, alpha ignored. It is not a linear-light
+      luminance; for perceptual lightness use the L of
+      color_ad_oklab.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can color_ex_palette read colours from the current theme palette?
+    <responsum symbolum="color_ex_palette thema_palette_aquinas thema_ponere_palette">No:
+      it always reads the fixed Aquinas palette from thema_palette_aquinas
+      (16 entries of 6-bit components, scaled by CCLV / LXIII, alpha
+      CCLV), whatever thema_ponere_palette set. The index is not checked:
+      16 or more reads past the 48-byte table.</responsum>
+  </interrogatio>
+
+</interrogationes>

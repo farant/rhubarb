@@ -51,8 +51,10 @@ _adumbratio (
 }
 
 interior vacuum
-probatio_genera(Piscina* p)
+_sectio_prima (
+    CredoContextus* c)
 {
+    Piscina* p                              = c->piscina;
     constans character* constans integra[]  = { "1", "2", NIHIL };
     constans character* constans mixta[]    = { "1", "2.5", NIHIL };
     constans character* constans cum_nullo[] = { "\"a\"", "null",
@@ -62,7 +64,6 @@ probatio_genera(Piscina* p)
     constans character* constans veritates[] = { "true", "false",
         NIHIL };
 
-    imprimere("\n--- Probans genera ---\n");
     CREDO_CHORDA_AEQUALIS_LITERIS(_adumbratio(integra, p),
         "{\"type\":\"integer\"}");
     CREDO_CHORDA_AEQUALIS_LITERIS(_adumbratio(mixta, p),
@@ -77,8 +78,10 @@ probatio_genera(Piscina* p)
 }
 
 interior vacuum
-probatio_objecta_et_tabulata(Piscina* p)
+_sectio_secunda (
+    CredoContextus* c)
 {
+    Piscina* p = c->piscina;
     constans character* constans objecta[] = {
         "{\"b\":1,\"a\":\"x\",\"u\":{\"x\":1}}",
         "{\"a\":\"y\",\"u\":{\"x\":2,\"y\":\"s\"}}",
@@ -88,7 +91,6 @@ probatio_objecta_et_tabulata(Piscina* p)
          Norma* n;
     NormaVisus  v;
 
-    imprimere("\n--- Probans objecta et tabulata ---\n");
     /* requisitum = in omni instantia; ordo clavium ordinatus; NOTANDUM */
     n = inferentia_normam(_inferentia(objecta, p), p);
     v = norma_visus(n);
@@ -105,8 +107,10 @@ probatio_objecta_et_tabulata(Piscina* p)
 }
 
 interior vacuum
-probatio_formae_et_secreta(Piscina* p)
+_sectio_tertia (
+    CredoContextus* c)
 {
+    Piscina* p = c->piscina;
     constans character* constans dies[] = {
         "\"2026-10-09T01:02:03Z\"", "\"2026-10-09T01:02:04Z\"",
         "\"2026-10-09T01:02:05Z\"", "\"2026-10-09T01:02:06Z\"",
@@ -124,7 +128,6 @@ probatio_formae_et_secreta(Piscina* p)
             NIHIL };
     chorda s;
 
-    imprimere("\n--- Probans formas et secreta ---\n");
     CREDO_CHORDA_AEQUALIS_LITERIS(_adumbratio(dies, p),
         "{\"type\":\"string\",\"format\":\"date-time\"}");
     /* exempla minima V */
@@ -141,11 +144,12 @@ probatio_formae_et_secreta(Piscina* p)
 }
 
 interior vacuum
-probatio_limites(Piscina* p)
+_sectio_quarta (
+    CredoContextus* c)
 {
-    Inferentia* inf = inferentia_creare(p, NIHIL);
+       Piscina* p    = c->piscina;
+    Inferentia* inf  = inferentia_creare(p, NIHIL);
 
-    imprimere("\n--- Probans limites ---\n");
     CREDO_NIHIL(inferentia_normam(inf, p));
     inferentia_addere(inf, NIHIL);
     CREDO_AEQUALIS_I32(inferentia_numerus(inf), 0);
@@ -167,13 +171,14 @@ hic_manens constans character* constans _corpus[] = {
 };
 
 interior vacuum
-probatio_lex_sanitatis(Piscina* p)
+_sectio_quinta (
+    CredoContextus* c)
 {
-    Norma* n = inferentia_normam(_inferentia(_corpus, p), p);
-      i32  i;
-      i32  fracta = 0;
+    Piscina* p = c->piscina;
+      Norma* n = inferentia_normam(_inferentia(_corpus, p), p);
+        i32  i;
+        i32  fracta = 0;
 
-    imprimere("\n--- Lex I: omne exemplum schema suum transit ---\n");
     per (i = 0; _corpus[i]; i++)
     {
         NormaIudicium j = norma_iudicare(n,
@@ -188,8 +193,10 @@ probatio_lex_sanitatis(Piscina* p)
 }
 
 interior vacuum
-probatio_lex_coniunctionis(Piscina* p)
+_sectio_sexta (
+    CredoContextus* c)
 {
+       Piscina* p       = c->piscina;
     Inferentia* totum   = _inferentia(_corpus, p);
     Inferentia* a       = inferentia_creare(p, NIHIL);
     Inferentia* b       = inferentia_creare(p, NIHIL);
@@ -197,7 +204,6 @@ probatio_lex_coniunctionis(Piscina* p)
            i32  i;
            i32  n;
 
-    imprimere("\n--- Lex II: coniunctio et ordo ---\n");
     per (n = 0; _corpus[n]; n++)
     {
     }
@@ -222,8 +228,10 @@ probatio_lex_coniunctionis(Piscina* p)
 /* ---- B1.2: discrimen ---- */
 
 interior vacuum
-probatio_discrimen(Piscina* p)
+_sectio_septima (
+    CredoContextus* c)
 {
+    Piscina* p = c->piscina;
     constans character* constans bloci[] = {
         "{\"type\":\"text\",\"text\":\"a\"}",
         "{\"type\":\"tool_use\",\"id\":\"t1\",\"name\":\"n\",\"input\":{}}",
@@ -255,7 +263,6 @@ probatio_discrimen(Piscina* p)
             NormaVisus  v;
                    i32  i;
 
-    imprimere("\n--- Probans discrimen ---\n");
     n = inferentia_normam(_inferentia(bloci, p), p);
     v = norma_visus(n);
     CREDO_VERUM(v.genus == NORMA_DISCRIMEN);
@@ -519,10 +526,10 @@ _restituere (
 }
 
 interior vacuum
-probatio_lex_restitutionis (
-    Piscina* p)
+_sectio_octava (
+    CredoContextus* c)
 {
-    imprimere("\n--- Lex III: restitutio ex norma_gignere ---\n");
+    Piscina* p = c->piscina;
     _restituere(_schema_responsi(p),
         "responsum (discrimen in tabulato)",
         p);
@@ -533,15 +540,16 @@ probatio_lex_restitutionis (
 /* ---- B1.3: positio tabulae similis, electio et fines rogati, fumus ---- */
 
 interior vacuum
-probatio_tabula_similis(Piscina* p)
+_sectio_nona (
+    CredoContextus* c)
 {
-    Inferentia* inf = inferentia_creare(p, NIHIL);
+       Piscina* p    = c->piscina;
+    Inferentia* inf  = inferentia_creare(p, NIHIL);
      character  exemplum[CXXVIII];
          Norma* n;
     NormaVisus  v;
            i32  i;
 
-    imprimere("\n--- Probans positionem tabulae similem ---\n");
     per (i = 0; i < XL; i++)
     {
         sprintf(exemplum,
@@ -588,8 +596,10 @@ _cum_optionibus (
 }
 
 interior vacuum
-probatio_electio_et_fines(Piscina* p)
+_sectio_decima (
+    CredoContextus* c)
 {
+    Piscina* p = c->piscina;
     constans character* constans causae[] = {
         "\"tool_use\"", "\"end_turn\"", "\"end_turn\"",
             "\"max_tokens\"",
@@ -607,7 +617,6 @@ probatio_electio_et_fines(Piscina* p)
         "\"ab\"", "\"abcdef\"", "\"abc\"", "\"abcd\"", "\"abcde\"",
             NIHIL };
 
-    imprimere("\n--- Probans electionem et fines rogatos ---\n");
     /* electio ordine octetorum; non rogata -> nulla */
     CREDO_CHORDA_AEQUALIS_LITERIS(_cum_optionibus(causae, VERUM, FALSUM,
         p),
@@ -638,10 +647,12 @@ probatio_electio_et_fines(Piscina* p)
 /* lex IV (fumus): specimina vatis commissa (status CC) -> adumbratio
  * sana, scriptor eam scribit */
 interior vacuum
-probatio_fumus_speciminum(Piscina* p)
+_sectio_decima_prima (
+    CredoContextus* c)
 {
-    Xar* sp = herbarium_enumerare(p,
-        "probationes/fixa/vates/herbarium");
+    Piscina* p = c->piscina;
+        Xar* sp = herbarium_enumerare(p,
+            "probationes/fixa/vates/herbarium");
        Inferentia* inf = inferentia_creare(p, NIHIL);
             Norma* n;
     NormaNominata  nn;
@@ -649,7 +660,6 @@ probatio_fumus_speciminum(Piscina* p)
               i32  i;
               i32  usa = 0;
 
-    imprimere("\n--- Lex IV: fumus in speciminibus vatis ---\n");
     per (i = 0; i < xar_numerus(sp); i++)
     {
         HerbariumSpecimen* h = (HerbariumSpecimen*)xar_obtinere(sp, i);
@@ -715,8 +725,10 @@ _testimonium_campi (
 }
 
 interior vacuum
-probatio_testimonia(Piscina* p)
+_sectio_decima_secunda (
+    CredoContextus* c)
 {
+    Piscina* p = c->piscina;
     constans character* constans corpus[] = {
         "{\"a\":1,\"b\":\"x\",\"t\":[1]}",
         "{\"a\":2.5,\"t\":[1,2]}",
@@ -747,7 +759,6 @@ probatio_testimonia(Piscina* p)
                   chorda  causa;
                   chorda  s;
 
-    imprimere("\n--- Probans testimonia ---\n");
     n = inferentia_normam_testatam(_inferentia(corpus, p), p, &t);
     CREDO_CHORDA_AEQUALIS_LITERIS(inferentia_commentarius(n, p, t),
         "3 exempla");
@@ -870,8 +881,10 @@ _numerus_generis (
 }
 
 interior vacuum
-probatio_discrepantia(Piscina* p)
+_sectio_decima_tertia (
+    CredoContextus* c)
 {
+    Piscina* p = c->piscina;
     constans character* constans campi[] = {
         "{\"a\":1,\"b\":\"x\",\"c\":\"y\",\"e\":1,\"a.b\":1}",
         "{\"a\":2.5,\"b\":\"z\",\"n\":null}", NIHIL };
@@ -891,7 +904,6 @@ probatio_discrepantia(Piscina* p)
     Norma* x;
       Xar* r;
 
-    imprimere("\n--- Probans discrepantias ---\n");
     norma_campus(o, "a", norma_integer(p), VERUM);
     norma_campus(o, "b", norma_textus(p), FALSUM);
     norma_campus(o, "c", norma_textus(p), VERUM);
@@ -945,11 +957,12 @@ probatio_discrepantia(Piscina* p)
 
 /* lex: exempla contra adumbrationem suam = nulla discrepantia */
 interior vacuum
-probatio_comparatio_sui(Piscina* p)
+_sectio_decima_quarta (
+    CredoContextus* c)
 {
-    Inferentia* inf = _inferentia(_corpus, p);
+       Piscina* p    = c->piscina;
+    Inferentia* inf  = _inferentia(_corpus, p);
 
-    imprimere("\n--- Lex: exempla contra adumbrationem suam ---\n");
     CREDO_AEQUALIS_I32(xar_numerus(norma_comparare(inferentia_normam(inf,
         p), inf, p)), 0);
 }
@@ -988,17 +1001,18 @@ _violationes (
  * accipit; specimen cum bloco aut campo novo sine schemate renovato
  * hic rubet */
 interior vacuum
-probatio_comparatio_vatis(Piscina* p)
+_sectio_decima_quinta (
+    CredoContextus* c)
 {
-    Xar* sp = herbarium_enumerare(p,
-        "probationes/fixa/vates/herbarium");
+    Piscina* p = c->piscina;
+        Xar* sp = herbarium_enumerare(p,
+            "probationes/fixa/vates/herbarium");
          Inferentia* inf = inferentia_creare(p, NIHIL);
     NormaStmlLectio  l = norma_stml_legere(filum_legere_totum(
         "lib/vates_responsum.norma", p), NIHIL, 0, p);
     Xar* r;
     i32  i;
 
-    imprimere("\n--- Fumus: responsum declaratum contra specimina ---\n");
     CREDO_VERUM(l.successus);
     per (i = 0; i < xar_numerus(sp); i++)
     {
@@ -1016,36 +1030,38 @@ probatio_comparatio_vatis(Piscina* p)
     CREDO_AEQUALIS_I32(_violationes(r), 0);
 }
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "genera", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "objecta et tabulata", _sectio_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "formas et secreta", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "limites", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Lex I: omne exemplum schema suum transit", _sectio_quinta, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "Lex II: coniunctio et ordo", _sectio_sexta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "discrimen", _sectio_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Lex III: restitutio ex norma_gignere", _sectio_octava, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "positionem tabulae similem", _sectio_nona, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "electionem et fines rogatos", _sectio_decima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "Lex IV: fumus in speciminibus vatis", _sectio_decima_prima,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "testimonia", _sectio_decima_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "discrepantias", _sectio_decima_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "Lex: exempla contra adumbrationem suam", _sectio_decima_quarta,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Fumus: responsum declaratum contra specimina",
+        _sectio_decima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
 s32
 principale (vacuum)
 {
-    Piscina* p = piscina_generare_dynamicum("probatio_norma_inferre",
-        M * M);
-        b32 successus;
-
-    credo_aperire(p);
-    probatio_genera(p);
-    probatio_objecta_et_tabulata(p);
-    probatio_formae_et_secreta(p);
-    probatio_limites(p);
-    probatio_lex_sanitatis(p);
-    probatio_lex_coniunctionis(p);
-    /* B1.2 */
-    probatio_discrimen(p);
-    probatio_lex_restitutionis(p);
-    /* B1.3 */
-    probatio_tabula_similis(p);
-    probatio_electio_et_fines(p);
-    probatio_fumus_speciminum(p);
-    /* norma-spec-4 B2.1 */
-    probatio_testimonia(p);
-    /* norma-spec-4 B2.2 */
-    probatio_discrepantia(p);
-    probatio_comparatio_sui(p);
-    probatio_comparatio_vatis(p);
-    credo_imprimere_compendium();
-    successus = credo_omnia_praeterierunt();
-    credo_claudere();
-    piscina_destruere(p);
-    redde successus ? 0 : I;
+    redde credo_suitam_currere("norma_inferre", SECTIONES);
 }

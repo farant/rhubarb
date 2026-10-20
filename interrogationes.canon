@@ -1,0 +1,62 @@
+<!--
+  interrogationes.canon
+  Canon dialecti INTERROGATIONES (lib/S.interrogationes.stml) -
+  documentatio unitatis ut QUAESTIONES quas respondet ("jeopardy
+  style", spec unitates-codicis par. VII). Plagula ad unitatem
+  stemmatis S pertinet (lib/S.<quidvis>.stml, lib/unitates.c).
+
+  CUR quaestiones: forma una omnium, ergo trans centenas unitates
+  concatenatione congregantur (README et documenta API non); per
+  quaestionem quam lector HABET indicantur; responsa ANCORATA
+  (symbolum, via, imperium) iudicari possunt - responsum mortuum
+  (symbolum renominatum aut deletum) porta rubra fit.
+
+  Lingua: quaestio et responsum ANGLICE (lector agens aut Franus
+  quaestionem sic typat); signa et identificatores Latine. Franus
+  2026-10-16: plagula per unitatem, non annotationes in capite.
+
+  genus interrogationis: COPIA APERTA - genus novum = optio una hic
+  (limitatio, dolor exspectantur).
+
+  VERSIO 1 (2026-10-16, quinta, U5b gradus 1).
+-->
+<canon dialectus="interrogationes" versio="1">
+
+  <elementum nomen="interrogationes" radix="verum">
+    <attributum nomen="unitas" genus="nomen" necessarium="verum"
+      nota="titulus unitatis (stemma) - lector cum stemmate plagulae
+            comparat"/>
+    <liberum nomen="interrogatio" minimum="1"/>
+  </elementum>
+
+  <elementum nomen="interrogatio">
+    <attributum nomen="genus" genus="electio" necessarium="verum">
+      <optio>quomodo</optio>
+      <optio>possumne</optio>
+      <optio>cur</optio>
+      <optio>quid</optio>
+    </attributum>
+    <glossa lingua="en">quomodo = how do I (answer: function, command,
+      recipe); possumne = can I (yes/no + limits); cur = why does
+      (decision, worklog); quid = what is (glossary).</glossa>
+    <liberum nomen="quaestio" minimum="1" maximum="1"/>
+    <liberum nomen="responsum" minimum="1" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="quaestio" textus="verum"
+    nota="una linea, forma '&lt;quaestio! (&gt;...' (captio lineae
+          crudae)"/>
+
+  <elementum nomen="responsum" textus="verum"
+    nota="ancora una saltem (symbolum, via, imperium) - porta
+          interrogationum eam cogit, canon co-occurrentiam non dicit">
+    <attributum nomen="symbolum" genus="textus"
+      nota="symbola C spatiis separata; silva/nexus.sh quodque
+            invenire debet"/>
+    <attributum nomen="via"      genus="textus"
+      nota="viae radici relativae spatiis separatae; exsistere debent"/>
+    <attributum nomen="imperium" genus="textus"
+      nota="mandatum crustae (verbum primum = via exsecutabilis)"/>
+  </elementum>
+
+</canon>

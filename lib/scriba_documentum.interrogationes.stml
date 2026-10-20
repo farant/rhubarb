@@ -1,0 +1,108 @@
+<interrogationes unitas="scriba_documentum">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I open a text document from a volumen, or create it if it is not there?
+    <responsum symbolum="scriba_documentum_aperire scriba_documentum_creare volumen_plagulam_condere" via="lib/scriba_applicatio.c">Try
+      scriba_documentum_aperire first; it returns NIHIL when the
+      manifest (key spatium/documentum, or just documentum for an empty
+      spatium) is missing, does not parse, or has a width or height of
+      0 or less (and when the history cannot be opened). Only then call
+      scriba_documentum_creare with the width, height and checkpoint
+      interval (0 means LXIV; a width or height of 0 returns NIHIL). creare does not look for an
+      existing document: it overwrites the manifest and starts a fresh
+      history at cursor 0 while old acts stay in the volumen. It also
+      ignores the result of the manifest write (volumen_plagulam_condere),
+      so a failed write is not reported. lib/scriba_applicatio.c does
+      exactly this aperire-then-creare.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I record an edit so it can be undone?
+    <responsum symbolum="scriba_documentum_committere scriba_documentum_committere_coniunctum scriba_documentum_tabula">Edit
+      your own working TabulaCharacterum (same width and height), then
+      call scriba_documentum_committere with it. The library diffs it
+      against the projection, appends that act and returns its seq; 0
+      means nothing changed or the act was refused. Afterwards the
+      projection equals your sheet. The projection from
+      scriba_documentum_tabula is read-only: never edit it in
+      place. Use scriba_documentum_committere_coniunctum to join the act
+      to the previous one, so a run of typed chunks undoes as one
+      step.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what does a mutatio act contain?
+    <responsum symbolum="scriba_mutatio_computare scriba_mutatio_applicare">The
+      EFFECT of an edit, not the keys: after trimming trailing blank
+      lines from both sheets, the common prefix and suffix are kept and
+      the act says replace deletae lines at linea with the child linea
+      elements (indentatio if set, textus if not all spaces). Because it
+      is computed from before and after, it is exact for any pair of
+      sheets no matter what vim did, and replay never runs vim.
+      scriba_mutatio_computare returns an empty chorda when the sheets
+      are equal or differ in size.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what counts as a blank line in a scriba sheet?
+    <responsum symbolum="scriba_mutatio_computare tabula_initiare" via="lib/scriba_documentum.worklog.md">Every
+      cell a space AND indentation -1, which is what tabula_initiare and
+      line insertion and deletion write. A NUL byte is content (vim can
+      write one into the last column), and so is a line of spaces with
+      indentation 0. Sheets built with
+      tabula_ex_literis_cum_dimensionibus set indentation 0, so every
+      line counts as content and every diff runs to the bottom (see the
+      worklog).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I escape arbitrary bytes into a safe STML attribute value and back?
+    <responsum symbolum="scriba_effugere scriba_solvere" via="lib/nomenclator.c lib/membrum__prompta.c lib/scriba_actiones.c">scriba_effugere
+      writes backslash escapes for backslash, NUL, tab, byte 1, double
+      quote (as \q) and \xHH for every other byte below 0x20 or from
+      0x7F up, so the result never holds a raw quote or control byte.
+      scriba_solvere reverses it into a buffer you provide and returns
+      the length, or -1 on a bad escape or when capacitas is too small.
+      The hex digits must be lowercase: \x7F is rejected (scriba_effugere
+      itself always writes lowercase, so its own output round-trips).
+      Other code reuses this codec: lib/nomenclator.c,
+      lib/membrum__prompta.c and lib/scriba_actiones.c.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can a bad or oversized act damage the sheet?
+    <responsum symbolum="scriba_mutatio_applicare">No.
+      scriba_mutatio_applicare decodes all new lines into scratch first
+      and returns FALSUM with the sheet untouched if the root is not
+      mutatio, a child is not linea, the range runs past the content,
+      a line is wider than the sheet, an escape is bad, or the result
+      would have more lines than the sheet height.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I undo, redo, and check that the projection is not corrupt?
+    <responsum symbolum="scriba_documentum_revocare scriba_documentum_reficere scriba_documentum_verificare scriba_documentum_cursor scriba_documentum_finis">scriba_documentum_revocare
+      and scriba_documentum_reficere move the history cursor (FALSUM at
+      the start or end) and rebuild the projection by replaying from the
+      nearest live checkpoint; each successful move also appends a
+      &lt;cursor ad=&quot;seq&quot;/&gt; note to the volumen, so aperire returns to
+      that place (unless an act followed the note). A new commit after an undo appends a branch first,
+      and the undone acts stay in the volumen as dead acts.
+      scriba_documentum_verificare replays everything from nothing and
+      compares seals. Compare scriba_documentum_cursor with the value
+      you saw last to notice that another view committed, then copy the
+      projection into your working sheet (lib/scriba_applicatio.c does
+      this).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I keep one document open for a long session without the piscina growing?
+    <responsum symbolum="scriba_documentum_committere scriba_mutatio_applicare scriba_documentum_revocare">Not
+      really: every commit computes the diff and every applied act parses
+      STML and allocates scratch in the piscina given at creation, and
+      undo or redo replays acts from the last checkpoint the same way.
+      None of it is released until that piscina is destroyed, so memory
+      grows with the number of edits and undos.</responsum>
+  </interrogatio>
+
+</interrogationes>

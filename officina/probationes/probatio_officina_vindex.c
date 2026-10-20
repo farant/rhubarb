@@ -30,7 +30,12 @@
 #include <string.h>
 #include <dirent.h>
 
-#define VIA_SUITAE    "probationes/probatio_piscina.c"
+/* suita CONGELATA (fixtura, non probationes/ viva): probatio_piscina.c
+ * forma credo v1 (assertiones in main) ut erat ante 028b32af - suita
+ * viva in credo v2 conversa lineam XXXVII in sectionem movit et pausam
+ * in main (tabulata I) delevit. Vindex machinulam probat, non suitam:
+ * initus eius congelari debet (2026-10-19). */
+#define VIA_SUITAE    "officina/probationes/fixa/vindex/probatio_piscina.c"
 #define LINEA_CREDO   37          /* CREDO_AEQUALIS_I32 ((i32)usus, */
 #define LINEA_POST    39          /* piscina_destruere(p); */
 #define CUSTOS_GRADUUM 200000L

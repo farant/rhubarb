@@ -39,7 +39,12 @@ mus (
     redde e;
 }
 
-s32 principale (vacuum)
+/* gradus I-V seriatim in uno dispensatore: II/III notata ex I legunt,
+ * IV/V notatorem post toy pergunt - ergo sectio una cum gradibus
+ * nominatis */
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
                 Piscina* piscina;
     InternamentumChorda* intern;
@@ -57,14 +62,8 @@ s32 principale (vacuum)
                     i32  i;
                 Eventus  e;
 
-    piscina = piscina_generare_dynamicum("probatio_notarius", LXIV * M);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     repo = insula_repositorium_creare(piscina, intern,
         "<insula/>");
     reg = actio_registrum_creare(piscina, intern);
@@ -74,7 +73,7 @@ s32 principale (vacuum)
         &toy, CCC);
     CREDO_NON_NIHIL(d);
 
-    imprimere("\n--- I. toy notatus: omnia eventa, scopi ---\n");
+    CREDO_GRADUS("I. toy notatus: omnia eventa, scopi");
     fons = filum_legere_totum("probationes/pictor/toy.eventus.stml",
         piscina);
     eventus = eventus_legere_stml(chorda_ut_cstr(fons, piscina),
@@ -104,7 +103,7 @@ s32 principale (vacuum)
         == EVENTUS_CLAVIS_DEPRESSUS);
     CREDO_AEQUALIS_I32(notatum(notata, VII)->scopus.mensura, ZEPHYRUM);
 
-    imprimere("\n--- II. sine scopis = plagula manu scripta ---\n");
+    CREDO_GRADUS("II. sine scopis = plagula manu scripta");
     nuda = xar_creare(piscina, (i32)magnitudo(Eventus));
     per (i = ZEPHYRUM; i < xar_numerus(notata); i++)
     {
@@ -113,7 +112,7 @@ s32 principale (vacuum)
     CREDO_VERUM(chorda_aequalis(eventus_scribere_stml(nuda, piscina,
         intern, VERUM), fons));
 
-    imprimere("\n--- III. circuitus plagulae notatae ---\n");
+    CREDO_GRADUS("III. circuitus plagulae notatae");
     scriptum = eventus_notata_scribere_stml(notata, piscina, intern,
         VERUM);
     relecta  = eventus_notata_legere_stml(chorda_ut_cstr(scriptum,
@@ -132,7 +131,7 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_I32(notatum(relecta, ZEPHYRUM)->scopus.mensura,
         ZEPHYRUM);
 
-    imprimere("\n--- IV. captura: scopus captus, locale < 0 ---\n");
+    CREDO_GRADUS("IV. captura: scopus captus, locale < 0");
     xar_vacare(notata);
     e = mus(EVENTUS_MUS_DEPRESSUS, X * M, CXX, L);
     dispensator_tractare(d, &e);
@@ -146,13 +145,21 @@ s32 principale (vacuum)
     e = mus(EVENTUS_MUS_LIBERATUS, X * M + XL, LXV, L);
     dispensator_tractare(d, &e);
 
-    imprimere("\n--- V. notarius tollitur ---\n");
+    CREDO_GRADUS("V. notarius tollitur");
     dispensator_notarium_ponere(d, NIHIL);
     e = mus(EVENTUS_MUS_MOTUS, XX * M, V, V);
     dispensator_tractare(d, &e);
     CREDO_AEQUALIS_I32(xar_numerus(notata), III);
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "notarius dispensatoris", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("notarius", SECTIONES);
 }

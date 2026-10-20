@@ -1,0 +1,99 @@
+<interrogationes unitas="tabellarius">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I write a JSON-RPC server loop over stdin and stdout?
+    <responsum symbolum="tabellarius_lineam_legere tabellarius_nuntium_legere tabellarius_responsum tabellarius_lineam_scribere piscina_generare_dynamicum piscina_destruere" via="gesta/fontes/tabularium.c gesta/instrumenta/fori_principale.c">Make
+      one piscina per message, read a message, classify it, answer,
+      then destroy (or empty) the piscina. For MCP-style line framing:
+      tabellarius_lineam_legere, then tabellarius_nuntium_legere, then
+      tabellarius_responsum or tabellarius_errorem written back with
+      tabellarius_lineam_scribere. For LSP framing use
+      tabellarius_epistulam_legere and tabellarius_epistulam_scribere
+      instead. Every result points into that piscina, so it dies with
+      it. The main loop at the end of gesta/fontes/tabularium.c is a
+      complete line-framed server (piscina_generare_dynamicum per
+      message, piscina_destruere after); fori_principale.c shows the
+      same loop as a proxy that forwards requests instead of
+      answering them.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I tell end of input apart from a bad message?
+    <responsum symbolum="tabellarius_epistulam_legere tabellarius_lineam_legere tabellarius_nuntium_legere">Both
+      readers return an empty chorda and set *fluxus_finitus to VERUM
+      both at EOF and when the stream is corrupt (a header line of 255
+      bytes or more counting its \r, no or a negative Content-Length,
+      short body, body over TABELLARIUS_CORPUS_MAXIMUM, or a last line
+      without a newline; empty lines are skipped, not errors).
+      Either way the framing is lost, so the caller should exit, not
+      try to resync. Test *fluxus_finitus, not the chorda: a
+      Content-Length of 0 also gives an empty body, with
+      *fluxus_finitus FALSUM. A Content-Length value that is not a
+      number is NOT detected: strtol reads it as 0 (or its numeric
+      prefix), the body is taken as empty and the stream silently
+      desyncs. A message that frames correctly but is not valid
+      JSON-RPC comes back from tabellarius_nuntium_legere as
+      TABELLARIUS_PRAVUM (radix NIHIL if the JSON did not parse); answer
+      it with an error.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what are PETITIO, NUNTIATIO, RESPONSUM and PRAVUM?
+    <responsum symbolum="tabellarius_nuntium_legere">The
+      message kinds, judged only by structure (the jsonrpc field is not
+      checked): a string method with an id is a PETITIO (request, must
+      be answered); a string method without an id is a NUNTIATIO
+      (notification, never answered); an id with result or error and no
+      string method is a RESPONSUM; anything else is PRAVUM, including batches
+      (JSON arrays), which this library does not support. A JSON null id
+      still counts as present.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why is the request id kept as a JsonValor instead of a number?
+    <responsum symbolum="tabellarius_nuntium_legere tabellarius_responsum tabellarius_errorem">JSON-RPC
+      allows the id to be an integer or a string, and the reply must
+      carry it back exactly. Converting it would corrupt it (a string id
+      or a big integer), so TabellariusNuntius.id is the parsed JSON
+      node, verbatim, and you pass it straight to tabellarius_responsum
+      or tabellarius_errorem. NIHIL there writes id null.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I send pretty-printed JSON with line framing?
+    <responsum symbolum="tabellarius_lineam_scribere tabellarius_epistulam_scribere">No.
+      With line framing one message is one line, so
+      tabellarius_lineam_scribere refuses a body that contains a raw
+      newline: it prints a complaint to stderr, writes nothing and
+      returns FALSUM (it also returns FALSUM for an empty body). Write
+      compact JSON, which escapes newlines inside strings. LSP framing
+      (tabellarius_epistulam_scribere) has a byte count, so any body is
+      fine there.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can a hostile client make the reader allocate huge amounts of memory?
+    <responsum symbolum="tabellarius_epistulam_legere tabellarius_lineam_legere piscina_allocare">Partly.
+      With LSP framing the Content-Length is checked against
+      TABELLARIUS_CORPUS_MAXIMUM (64 MB) before allocating, but a claim
+      just under the cap is allocated in full from the piscina before
+      any body byte arrives (and piscina_allocare exits the process if
+      that piscina cannot grow). With line framing the cap is checked
+      only after the whole line has been read into memory, so a line
+      that never ends grows without limit.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I send a notification or an error reply?
+    <responsum symbolum="tabellarius_nuntiationem tabellarius_errorem">tabellarius_nuntiationem
+      builds the method plus optional params object (params NIHIL omits
+      the field); tabellarius_errorem builds an error reply from the
+      id, a code and a C string message. Both return the body as a
+      chorda in your piscina (empty if a required argument is NIHIL);
+      frame it yourself with the matching scribere function. Standard
+      codes are TABELLARIUS_ERROR_ANALYSIS (-32700) through
+      TABELLARIUS_ERROR_INTERNUS (-32603), plus the LSP code
+      TABELLARIUS_ERROR_NONDUM_INITIATUM (-32002).</responsum>
+  </interrogatio>
+
+</interrogationes>

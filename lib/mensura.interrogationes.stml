@@ -1,0 +1,136 @@
+<interrogationes unitas="mensura">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I record a measurement during a build without slowing the build down?
+    <responsum symbolum="mensura_annotare mensura_condere mensura_sessionem_novam mensura_id_novum mensura_momentum_nunc">Fill
+      a Mensura (sessio from mensura_sessionem_novam, id from
+      mensura_id_novum, momentum from mensura_momentum_nunc, a
+      titulus, a valor and a unitas such as "secunda") and append it
+      with mensura_annotare: one TSV line in a plain diary file, no
+      sqlite. After the run, mensura_condere moves the whole diary
+      into the volumen in one transaction and then truncates the
+      diary. Caution (audit 2026-10-18, unfixed): a line that
+      volumen_actum_appendere fails to store (e.g. another writer holds
+      the volume past busy_timeout) is counted as malformed, the
+      transaction still commits and the diary is still truncated, so
+      that line is lost while successus is VERUM.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why does mensura write to a diary file first instead of straight into the volumen?
+    <responsum symbolum="mensura_annotare mensura_condere" via="lib/mensura.worklog.md">A
+      sqlite write opens the database and commits a transaction,
+      perhaps ten milliseconds. Across CL files that adds about a
+      second to the very build being measured, and an instrument that
+      changes what it measures gets switched off. Appending a line is
+      nearly free; the fold into the volumen happens once, after the
+      run.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can a measurement title or unit contain a tab or a newline?
+    <responsum symbolum="mensura_ad_lineam mensura_annotare mensura_cursus_initium_ad_lineam">No.
+      mensura_ad_lineam returns an empty chorda (and mensura_annotare
+      FALSUM) when sessio, id, parens, titulus or unitas contains a
+      TAB, LF or CR: a format that lets a field break it corrupts data
+      silently, so it refuses instead of escaping. Run lines are the
+      same, except that argv and nota are escaped (\\ \t \n \r) because
+      a command is data.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I fold a diary with mensura_condere while other processes are still appending to it?
+    <responsum symbolum="mensura_condere" via="tools/mensor.c">Not
+      safely: mensura_condere reads to the end, commits, then
+      truncates the file, with no lock, so a line appended between the
+      last read and the truncation is lost. bin/mensor's run fold
+      (_cursus_condere) avoids this by renaming the diary first and
+      folding the renamed copy (later appenders create a new file;
+      it removes that copy afterwards even when the fold failed);
+      'mensor condere' folds the live measurement diary directly and
+      has the race. Truncation after success is what stops the next
+      fold from counting everything twice.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what does MensuraFructus report after mensura_condere?
+    <responsum symbolum="MensuraFructus mensura_condere">successus,
+      conditae (lines stored, measurement and run lines together) and
+      causa. successus is VERUM even when
+      some lines were malformed or could not be appended: those are
+      skipped and counted in causa ("N lineae malformatae
+      praeteritae"), never silently dropped - but they are gone once
+      the diary is truncated. successus is FALSUM if an argument is
+      NIHIL, the diary cannot be opened (also when it does not exist
+      yet: causa "Diarium aperiri non potest"), or the transaction
+      cannot start or commit; then nothing is truncated. A failed truncation
+      is NOT reported: successus stays VERUM and the next fold stores
+      the same lines again.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can a diary line be arbitrarily long?
+    <responsum symbolum="mensura_condere mensura_cursus_initium_ad_lineam">No.
+      mensura_condere reads lines with fgets into a buffer of IV *
+      MXXIV bytes (MENSURA_LINEA_MAXIMA in lib/mensura.c), so a line
+      with more than IV * MXXIV - I bytes before its newline arrives
+      in pieces; the pieces fail to parse, are counted malformed, and
+      are then truncated away with the rest of the diary. The writers do not
+      enforce this: nota is
+      capped at CURSUS_NOTA_MAXIMA bytes, but argv is not capped at
+      all, so a run started with a very long command line loses its
+      start line at fold time, and mensura_cursus_legere then skips
+      its end line too (an end without a start is dropped).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I record a run with a start, an end and an exit code so killed runs still show up?
+    <responsum symbolum="mensura_cursum_incipere mensura_cursum_finire mensura_cursus_legere CursusStatus">Write
+      a CursusInitium with mensura_cursum_incipere when the run starts
+      and a CursusFinis with the same id with mensura_cursum_finire
+      when it ends; both are appended to the same diary. After
+      mensura_condere, mensura_cursus_legere pairs them by id into a
+      Xar of Cursus in start order: exit 0 is CURSUS_TRANSIIT, any
+      other is CURSUS_FRACTUS, and a start with no end is
+      CURSUS_INTERRUPTUS (killed, hung, or still running). Caution
+      (audit 2026-10-18, unfixed): argv is not length-capped, so a run
+      whose start line exceeds IV * MXXIV - I bytes is split by
+      mensura_condere, counted malformed and truncated away, and its
+      end line is then skipped: the run does not show up at
+      all.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I keep the Mensura that mensura_ex_linea gives me after the line buffer is gone?
+    <responsum symbolum="mensura_ex_linea mensura_cursus_ex_linea">No:
+      its chorda fields point INTO the line you passed (nothing is
+      copied), so keep the line alive or copy the fields. In
+      mensura_cursus_ex_linea only argv and nota are new chordae in
+      the piscina (they are unescaped); the other fields alias the
+      line too. Note that mensura_ex_linea only rejects a valor or
+      momentum field with no leading number: "1.5abc" reads as
+      1.5.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I read stored measurements back out of the volumen?
+    <responsum symbolum="mensura_mensuras_legere mensura_cursus_legere" imperium="bin/mensor quaestio">mensura_mensuras_legere(volumen,
+      praefixum, piscina) returns a Xar of Mensura whose titulus starts
+      with the prefix (an empty prefix gives all), in stored order;
+      NIHIL if the volume cannot be read. It reads every event in the
+      volume each call. For questions about runs (history, failures,
+      trends) use the named queries of bin/mensor quaestio.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why is momentum an s64 and not an unsigned type?
+    <responsum symbolum="mensura_momentum_nunc">The clock is
+      gettimeofday, which is not monotonic: NTP can step it back, so
+      the difference of two readings can be negative. A signed type
+      shows that; an unsigned one would wrap it to a huge positive
+      number and make a branch silently never run. For a run's
+      duration CursusFinis carries duratio_ms from a monotonic
+      clock.</responsum>
+  </interrogatio>
+
+</interrogationes>

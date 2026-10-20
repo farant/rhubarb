@@ -1,0 +1,145 @@
+<interrogationes unitas="unitates">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I find out what a file in the repository is (its unit, custody, lifecycle, role, language)?
+    <responsum symbolum="unitates_legere unitates_quid unitates_sutura_arboris UnitatisResponsum" imperium="bin/fabrica quid lib/xar.c">From
+      the shell: bin/fabrica quid VIA (add -machina for TAB lines).
+      From C: build a sutura with unitates_sutura_arboris(radix,
+      piscina) (git ls-files -co plus disk reads), read the policy and
+      declarations once with unitates_legere, then call unitates_quid
+      per path. Each field of the UnitatisResponsum is a valor plus the
+      causa (the rule that decided it), and responsum.unitas is the
+      innermost unit, with parens links up to the root.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I make my tool skip vendor, fixtures and generated files without a path list?
+    <responsum symbolum="unitates_iudicat unitates_viae_iudicatae" via="unitates.stml tools/iudex_unitatum.sh">Add
+      an iudex line to unitates.stml (titulus, descriptio, and the
+      curae, vitae, munera, provenientiae and linguae it accepts, each
+      a space-separated list of known values), then ask it:
+      unitates_iudicat(u, iudex, via, ...) per path,
+      unitates_viae_iudicatae for a newline-separated list, or
+      tools/iudex_unitatum.sh [-causae] JUDGE from a shell script. A file
+      is judged only if ALL five properties are in the judge's lists; a
+      file with no munus is never judged. Do not add an exclusion regex
+      or path list: the judges replace the nine exclusion lists the
+      spec counted.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I see why unitates_legere returned NIHIL?
+    <responsum symbolum="unitates_legere UnitatesRecusatio">NIHIL
+      is a refusal, never a silent default. Pass causa_out to get every
+      cause at once, one line each in via:linea: form, and
+      recusationes_out (NIHIL is allowed) for the same causes as a Xar
+      of UnitatesRecusatio. Typical causes: unknown attribute or
+      element, a genus that is not citable, an unknown cura, vita or
+      usus, the same title twice in one genus, a family with no
+      library, no root unitas.stml, or unreadable STML.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I free the sutura (or its piscina) after unitates_legere returns?
+    <responsum symbolum="unitates_legere unitates_quid unitates_sutura_arboris" via="lib/unitates.worklog.md">No.
+      The Unitates keeps the UnitatesSutura pointer, because provenance
+      is read lazily: unitates_quid, unitates_iudicat and
+      unitates_interrogationes read files through it later. The sutura
+      and its datum must outlive the Unitates; allocate them in the same
+      piscina, as unitates_sutura_arboris does.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what unit does a file belong to, for example a test or a macos backend?
+    <responsum symbolum="unitates_quid unitates_legere" via="include/unitates.h unitates.stml">The
+      innermost one, and a library beats the directory around it. A
+      library stem S (include/S.h, lib/S.c or lib/S.m exists) claims
+      those files, lib/S.*.md (worklog, phase-log), lib/S.*.stml (such
+      as this file), docs/bibliothecae/S.html and anything under
+      lib/S_assets/. A stem ending in a part (_macos _posix _interna
+      _impl _tabula) belongs to its base library. probationes/probatio_X.c
+      goes to the longest _-prefix of X that names a library or a
+      directory unit (the library wins at equal length), else to the
+      innermost directory unit (when that is the root, the census lists
+      the test under orphani).
+      Everything else goes to the innermost DIR/unitas.stml, and that
+      declaration file itself belongs to the CONTAINING unit.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I mark a file as generated so the formatter and lint treat it that way?
+    <responsum symbolum="unitates_quid unitates_iudicat" via="include/unitates.h">Put
+      GENERATUM in its FIRST line, or in the second line when the first
+      must be a declaration (&lt;?xml or &lt;!doctype). The position is
+      fixed on purpose: a hand-written header that mentions GENERATUM
+      in its prose on line 2 stays manu. A judge that admits both
+      provenances never reads the file at all.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I declare a new directory as a unit (an app, a vendored library, an archive)?
+    <responsum symbolum="unitates_legere" via="unitas.canon apps/vicus/unitas.stml vendor/unitas.stml">Create
+      DIR/unitas.stml with a root unitas element carrying titulus,
+      genus (a natura path that unitates.stml makes citable) and
+      descriptio, plus optional cura, vita, successor and usus; foreign
+      code adds origo children (via, fons, versio, licentia). vita
+      vetusta and successor must come together. Any unknown value is a
+      refusal naming the known ones.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why does a file deep inside archivum count as archived when its own unit declares nothing?
+    <responsum symbolum="unitates_quid UnitatisResponsum" via="include/unitates.h archivum/unitas.stml">Inheritance
+      through the parens chain: vita is the unit's own declaration, else
+      the nearest ancestor that declares one, else viva, and
+      archivum/unitas.stml declares vita archivata. cura works the same
+      way, except that when no unit in the chain DECLARES a cura the
+      default comes from the genus of the innermost unit (genus lines in
+      unitates.stml), not from an ancestor's genus. So a unit inside
+      archivum is archived unless it declares its own vita, and the
+      causa field names the declaration (or genus) that decided.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what decides a file's munus (role), and why is it sometimes empty?
+    <responsum symbolum="unitates_quid" via="unitates.stml">The
+      munus rules in unitates.stml, in order; the FIRST rule whose
+      directory segment and extension both match wins. Extensions are
+      suffix matches on the file name, so .interrogationes.stml works
+      as an extension. If no rule matches, munus is empty with causa
+      nulla regula munus congruit, and no judge will accept the file.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I list units with missing pieces, orphan tests or undeclared directories?
+    <responsum symbolum="unitates_census UnitatesCensus" imperium="bin/fabrica quid -census">unitates_census
+      (or bin/fabrica quid -census) counts every enumerated file per
+      unit and role without reading any file, then checks the policy's
+      exspectatio lines per genus: desunt lists unmet expectations
+      (archived units are skipped), orphani lists root tests matching
+      no unit, indeclarata lists directories with code that fall to the
+      root. It is a report, not a gate.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can unitates_interrogationes tell me that an answer's anchor symbol no longer exists?
+    <responsum symbolum="unitates_interrogationes UnitatesInterrogationes" via="tools/interrogationes_fumus.sh">No:
+      it only reads and checks the form. It never returns NIHIL, reports
+      problems per file in recusationes (wrong root, unitas not the
+      owner, missing or doubled quaestio or responsum, no anchor) and
+      still returns an entry that has a question and an answer. Whether
+      symbolum, via and imperium name real things is judged by the
+      interrogationes gate, tools/interrogationes_fumus.sh.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why are cura, vita, munus and lingua chorda values instead of enums?
+    <responsum symbolum="UnitatisResponsum UnitatesProprietas" via="lib/unitates.worklog.md">They
+      are open sets declared in unitates.stml, so adding a role or a
+      language is a policy edit, not a C change; an unknown value is a
+      refusal listing the known ones. provenientia is the one closed
+      set (manu, generatum), because it is derived from the GENERATUM
+      marker rather than declared.</responsum>
+  </interrogatio>
+
+</interrogationes>

@@ -1,0 +1,109 @@
+<interrogationes unitas="arbor2_lexema">
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I use arbor2_lexema to tokenize C for a new tool?
+    <responsum symbolum="arbor2_lexator_creare" via="project-specs/generationes-praecedentes-archivandae.md silva/CLAUDE.md lib/arbor2_expandere.c lib/lapifex_c89_grammatica.c">You
+      can, but it is a predecessor generation: arbor v1, then arbor2
+      (the hand-written GLR this lexer feeds), then lapifex, then
+      silva, the current C parser with byte-exact round trips and the
+      house tooling around it. Its remaining callers outside its own
+      tests are arbor2_expandere, lapifex_c89_grammatica (lapifex in
+      its retired C89-parser role) and the unbuilt tools/glr_debug.c.
+      New C tooling should go through silva.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I tokenize a C source buffer with arbor2?
+    <responsum symbolum="arbor2_lexator_creare arbor2_lexema_proximum arbor2_lexema_omnia arbor2_lexema_genus_nomen" via="lib/lapifex_c89_grammatica.c">Create
+      a lexer with arbor2_lexator_creare(piscina, intern, fons,
+      mensura), then either pull tokens one at a time with
+      arbor2_lexema_proximum until genus is ARBOR2_LEXEMA_EOF, or call
+      arbor2_lexema_omnia for everything at once. Unlike html_lexare,
+      omnia returns a Xar of Arbor2Lexema POINTERS: read each element
+      as *(Arbor2Lexema**)xar_obtinere(x, i). arbor2_lexema_genus_nomen
+      names a genus for debugging ("IDENTIFICATOR", "SEMICOLON",
+      ...).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>where do whitespace, comments and newlines go?
+    <responsum symbolum="arbor2_lexema_proximum Arbor2Lexema" via="lib/arbor2_lexema.worklog.md">They
+      never appear in the main stream. They become typed Arbor2Lexema
+      tokens (SPATIA, TABULAE, CONTINUATIO, COMMENTUM_CLAUSUM,
+      COMMENTUM_LINEA, NOVA_LINEA) in a token's spatia_ante or
+      spatia_post Xar (Xar of Arbor2Lexema*, NIHIL when empty).
+      Trailing trivia on the same line, up to and including the first
+      newline, goes to spatia_post of the preceding token; everything
+      after that goes to spatia_ante of the next token. The header
+      still says newlines are NOVA_LINEA tokens in the stream, but
+      since Phase 2.7 they live only in spatia.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can the lexer read code written with latina.h keywords?
+    <responsum symbolum="arbor2_lexema_proximum">Yes.
+      The keyword table holds both the C89 keywords and their
+      latina.h spellings, so 'si' lexes as ARBOR2_LEXEMA_IF, 'nomen'
+      as TYPEDEF, 'redde' as RETURN, and 'staticus', 'interior',
+      'hic_manens' and 'universalis' all as STATIC. Other latina.h
+      macros (NIHIL, VERUM, the Roman numerals, imprimere) are plain
+      identifiers. The lexer never produces NOMEN_TYPUS or
+      TYPEDEF_MACRO; typedef names are remapped later by the
+      parser.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what happens when the source contains a character C does not use, like @ or $?
+    <responsum symbolum="arbor2_lexema_omnia arbor2_lexema_proximum">arbor2_lexema_proximum
+      consumes one byte and returns an ARBOR2_LEXEMA_ERROR token. But
+      arbor2_lexema_omnia STOPS at the first ERROR token: for "a @ b"
+      it returns IDENTIFICATOR a and ERROR, with no b and no EOF. Any
+      non-ASCII byte (such as UTF-8 outside a string or comment) does
+      the same. Pull with arbor2_lexema_proximum if you need to keep
+      going past an error.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I free the source buffer once I have the tokens?
+    <responsum symbolum="arbor2_lexator_creare arbor2_lexema_omnia Arbor2Lexema">Yes,
+      after the last token is read: every valor (and every trivia
+      token's valor) is copied into the InternamentumChorda you passed,
+      so it lives as long as that intern's piscina, not the source.
+      The lexer itself keeps pointing into fons, so keep the buffer
+      while you are still calling arbor2_lexema_proximum. valor is a
+      chorda and is not NUL-terminated; byte_offset and longitudo
+      locate the token in the original source.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what number and string forms does the lexer recognize?
+    <responsum symbolum="arbor2_lexema_proximum">Decimal,
+      0x hex and 0-octal integers with U, L, UL, LL, ULL and LU
+      suffixes (either case, LLU too), and decimal floats with a
+      fraction or exponent and an optional f/F/l/L suffix. A float
+      must start with a digit and have a digit after the point: '.5'
+      lexes as PUNCTUM then INTEGER, '1.' as INTEGER then PUNCTUM, and
+      '1.e5' as INTEGER 1, PUNCTUM, IDENTIFICATOR e5 ('1e5' without
+      the point is a FLOAT_LIT). A 0 followed by 0-7 takes the octal
+      path, which never looks for a fraction, so '012.5' is INTEGER
+      012, PUNCTUM, INTEGER 5; a 0 followed by 8 or 9 ends at the 0,
+      so '09' is INTEGER 0 then INTEGER 9. There is no error for these splits. An
+      unterminated string or character
+      literal ends at the newline and is still returned as STRING_LIT
+      or CHAR_LIT, with no error token.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what do linea, columna and standard mean on a token?
+    <responsum symbolum="Arbor2Lexema arbor2_lexema_proximum">linea
+      and columna are 1-based and count bytes; byte_offset is 0-based.
+      A \r\n or a bare \r is one NOVA_LINEA, but only \n advances
+      linea: after a bare \r the next token still reports the same
+      line. One defect: a //
+      comment that lands in spatia_ante (a comment on its own line)
+      includes its newline and advances linea twice, so tokens after
+      it report a line one too high. standard is always
+      ARBOR2_STANDARD_C89 from this lexer, even for // comments.</responsum>
+  </interrogatio>
+
+</interrogationes>

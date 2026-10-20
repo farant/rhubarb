@@ -22,6 +22,15 @@ nomen structura {
               ToyStatus  toy;
 } Sessio;
 
+/* Fixura suitae: sessio A semel notatur (notata, status_a ->
+ * c->suita); sectiones LEGUNT solum, sessiones suas creant. */
+nomen structura {
+    Sessio  a;
+       Xar* eventus;
+       Xar* notata;
+    chorda  status_a;
+} Mundus;
+
 interior vacuum
 sessio_creare (
                  Sessio* s,
@@ -64,57 +73,80 @@ divergentia (
     redde (ManusDivergentia*)xar_obtinere(x, i);
 }
 
-s32 principale (vacuum)
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
 {
                 Piscina* piscina;
     InternamentumChorda* intern;
-                 Sessio  a;
-                 Sessio  b;
+                 Mundus* o;
                  chorda  fons;
-                 chorda  status_a;
-                    Xar* eventus;
-                    Xar* notata;
-                    Xar* div;
                     i32  i;
 
-    piscina = piscina_generare_dynamicum("probatio_iteratio", LXIV * M);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
-
-    imprimere("\n--- A. sessio notata (dispositio ordinaria) ---\n");
-    sessio_creare(&a, piscina, intern, ZEPHYRUM);
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    o        = (Mundus*)piscina_allocare(piscina, magnitudo(Mundus));
+    sessio_creare(&o->a, piscina, intern, ZEPHYRUM);
     fons = filum_legere_totum("probationes/pictor/toy.eventus.stml",
         piscina);
-    eventus = eventus_legere_stml(chorda_ut_cstr(fons, piscina),
+    o->eventus = eventus_legere_stml(chorda_ut_cstr(fons, piscina),
         piscina, intern);
-    CREDO_NON_NIHIL(eventus);
-    notata = xar_creare(piscina, (i32)magnitudo(EventusNotatum));
-    dispensator_notarium_ponere(a.d, notata);
-    per (i = ZEPHYRUM; i < xar_numerus(eventus); i++)
+    o->notata = xar_creare(piscina, (i32)magnitudo(EventusNotatum));
+    dispensator_notarium_ponere(o->a.d, o->notata);
+    per (i = ZEPHYRUM; i < xar_numerus(o->eventus); i++)
     {
-        dispensator_tractare(a.d,
-            (constans Eventus*)xar_obtinere(eventus, i));
+        dispensator_tractare(o->a.d,
+            (constans Eventus*)xar_obtinere(o->eventus, i));
     }
-    status_a = status(&a, piscina);
-    CREDO_NON_NIHIL(insula_attributum(a.repo,
-        "numerus"));
+    o->status_a  = status(&o->a, piscina);
+    c->datum     = o;
+}
 
-    imprimere("\n--- B. semantica, eadem dispositio ---\n");
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    constans Mundus* o = (constans Mundus*)c->suita;
+
+    CREDO_NON_NIHIL(o->eventus);
+    CREDO_NON_NIHIL(insula_attributum(o->a.repo,
+        "numerus"));
+}
+
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+         constans Mundus* o = (constans Mundus*)c->suita;
+                 Piscina* piscina;
+     InternamentumChorda* intern;
+                  Sessio  b;
+                     Xar* div;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     sessio_creare(&b, piscina, intern, ZEPHYRUM);
     div = xar_creare(piscina, (i32)magnitudo(ManusDivergentia));
-    CREDO_AEQUALIS_I32(manus_ludus_iterare(b.m, notata,
+    CREDO_AEQUALIS_I32(manus_ludus_iterare(b.m, o->notata,
         MANUS_ITERATIO_SEMANTICA, div), ZEPHYRUM);
-    CREDO_VERUM(chorda_aequalis(status(&b, piscina), status_a));
+    CREDO_VERUM(chorda_aequalis(status(&b, piscina), o->status_a));
+}
 
-    imprimere("\n--- C. cruda, dispositio mota XV: b1 amissus ---\n");
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+         constans Mundus* o = (constans Mundus*)c->suita;
+                 Piscina* piscina;
+     InternamentumChorda* intern;
+                  Sessio  b;
+                     Xar* div;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     sessio_creare(&b, piscina, intern, XV);
     div = xar_creare(piscina, (i32)magnitudo(ManusDivergentia));
-    CREDO_AEQUALIS_I32(manus_ludus_iterare(b.m, notata,
+    CREDO_AEQUALIS_I32(manus_ludus_iterare(b.m, o->notata,
         MANUS_ITERATIO_CRUDA, div), II);
     CREDO_AEQUALIS_I32(xar_numerus(div), II);
     CREDO_AEQUALIS_I32(divergentia(div, ZEPHYRUM)->index, ZEPHYRUM);
@@ -125,24 +157,66 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_I32(divergentia(div, I)->index, I);
     /* ictus in b1 periit: numerus abest - status differt */
     CREDO_NIHIL(insula_attributum(b.repo, "numerus"));
-    CREDO_FALSUM(chorda_aequalis(status(&b, piscina), status_a));
+    CREDO_FALSUM(chorda_aequalis(status(&b, piscina), o->status_a));
+}
 
-    imprimere("\n--- D. semantica, mota XV: status idem ---\n");
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+         constans Mundus* o = (constans Mundus*)c->suita;
+                 Piscina* piscina;
+     InternamentumChorda* intern;
+                  Sessio  b;
+                     Xar* div;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     sessio_creare(&b, piscina, intern, XV);
     div = xar_creare(piscina, (i32)magnitudo(ManusDivergentia));
     /* divergentiae eaedem NUNTIANTUR (positio cruda b1 non tangit) */
-    CREDO_AEQUALIS_I32(manus_ludus_iterare(b.m, notata,
+    CREDO_AEQUALIS_I32(manus_ludus_iterare(b.m, o->notata,
         MANUS_ITERATIO_SEMANTICA, div), II);
-    CREDO_VERUM(chorda_aequalis(status(&b, piscina), status_a));
+    CREDO_VERUM(chorda_aequalis(status(&b, piscina), o->status_a));
     CREDO_NON_NIHIL(insula_attributum(b.repo,
         "numerus"));
+}
 
-    imprimere("\n--- E. divergentiae NIHIL licet ---\n");
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+         constans Mundus* o = (constans Mundus*)c->suita;
+                 Piscina* piscina;
+     InternamentumChorda* intern;
+                  Sessio  b;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     sessio_creare(&b, piscina, intern, XV);
-    CREDO_AEQUALIS_I32(manus_ludus_iterare(b.m, notata,
+    CREDO_AEQUALIS_I32(manus_ludus_iterare(b.m, o->notata,
         MANUS_ITERATIO_CRUDA, NIHIL), II);
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "A. sessio notata (dispositio ordinaria)", _sectio_prima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "B. semantica, eadem dispositio", _sectio_secunda, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "C. cruda, dispositio mota XV: b1 amissus", _sectio_tertia, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "D. semantica, mota XV: status idem", _sectio_quarta, NIHIL,
+        NIHIL,
+        NIHIL, NIHIL },
+    { "E. divergentiae NIHIL licet", _sectio_quinta, NIHIL, NIHIL,
+        NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("iteratio", SECTIONES,
+        _suitam_parare, NIHIL);
 }

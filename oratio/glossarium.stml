@@ -609,6 +609,14 @@
   <vocabulum lemma="gitdir" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum - git: plagula .git arboris operis"/>
   <vocabulum lemma="sha256" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
   <vocabulum lemma="hmac" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (RFC 2104; sigillum_hmac)"/>
+  <vocabulum lemma="ttl" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (DNS time-to-live; lib/oceanus.c)"/>
+  <vocabulum lemma="csrf" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (cross-site request forgery; lib/custodia.c)"/>
+  <vocabulum lemma="blake2b" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (RFC 7693; lib/blake2b.c)"/>
+  <vocabulum lemma="blake2" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (RFC 7693, familia BLAKE2)"/>
+  <vocabulum lemma="argon2id" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (RFC 9106; lib/argon2id.c)"/>
+  <vocabulum lemma="argon2" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (RFC 9106, familia Argon2)"/>
+  <vocabulum lemma="blamka" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (BlaMka, compressio G Argon2, RFC 9106 par. 3.6)"/>
+  <vocabulum lemma="phc" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (Password Hashing Competition, forma $argon2id$...)"/>
   <vocabulum lemma="stbi" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
   <vocabulum lemma="macho" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
   <vocabulum lemma="sqlite" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
@@ -1004,6 +1012,8 @@
   <vocabulum lemma="gettime" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="clock_gettime time.h (tempus horologii legere); systema_posix.h 2026-10-13 pro tools/mensor.c (analytica T2)"/>
   <vocabulum lemma="realtime" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="CLOCK_REALTIME time.h (horologium muri); systema_posix.h 2026-10-13 pro tools/mensor.c (analytica T2)"/>
   <vocabulum lemma="monotonic" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="CLOCK_MONOTONIC time.h (horologium quod numquam retro it); systema_posix.h 2026-10-13 pro tools/mensor.c (analytica T2)"/>
+  <vocabulum lemma="uptime" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="CLOCK_UPTIME_RAW time.h Darwin (horologium quod somno non crescit); systema_posix.h 2026-10-16 pro lib/processus_posix.c et tools/mensor.c (colloquia T8d0)"/>
+  <vocabulum lemma="getppid" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="getppid unistd.h (pid parentis); systema_posix.h 2026-10-16 pro tools/mensor.c custos cursus (colloquia T8b)"/>
   <vocabulum lemma="rusage" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="struct rusage / RUSAGE_* sys/resource.h (usus subsidiorum processus); systema_posix.h 2026-10-13 pro tools/mensor.c (analytica T2)"/>
   <vocabulum lemma="getrusage" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="getrusage sys/resource.h (usum subsidiorum legere); systema_posix.h 2026-10-13 pro tools/mensor.c (analytica T2)"/>
   <vocabulum lemma="einprogress" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="EINPROGRESS errno.h (connexio non-blocans pergit); systema_posix.h 2026-10-14 pro lib/tcp_posix.c (http-vocatio T3)"/>
@@ -1757,6 +1767,17 @@
     <forma textus="stilizata" tempus="perfectum" vox="passiva" forma-verbi="participium"/>
     <forma textus="stilizatae" tempus="perfectum" vox="passiva" forma-verbi="participium"/>
     <forma textus="stilizatum" tempus="perfectum" vox="passiva" forma-verbi="participium"/>
+  </vocabulum>
+  <vocabulum lemma="multipartitus" lingua="latina" classis="adiectivum" nota="Latina sera (ut bipartitus, tripartitus): multipartitus, in partes multas divisus - multipart/form-data (lib/multipartita.c); WORDS caret">
+    <forma textus="multipartitus" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="multipartita" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="multipartitum" casus="nominativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="multipartiti" casus="genitivus" numerus="singularis" genus="masculinum"/>
+    <forma textus="multipartitae" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="multipartito" casus="ablativus" numerus="singularis" genus="neutrum"/>
+  </vocabulum>
+  <vocabulum lemma="redirigo" lingua="latina" classis="verbum" nota="vox domus (re + dirigere): petitionem alio dirigere (HTTP redirect, colloquium_redirigere); WORDS caret">
+    <forma textus="redirigere" tempus="praesens" modus="infinitivus" vox="activa" forma-verbi="infinitivum"/>
   </vocabulum>
 
 </glossarium>

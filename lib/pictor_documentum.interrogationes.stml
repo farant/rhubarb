@@ -1,0 +1,144 @@
+<interrogationes unitas="pictor_documentum">
+
+  <interrogatio genus="quid">
+    <quaestio! (>what is a pictor document, and where is the picture actually stored?
+    <responsum symbolum="PictorDocumentum pictor_documentum_proiectio historia_actum" via="lib/pictor_documentum.worklog.md include/historia.h">The
+      truth is the append-only log of acts in a volumen (strokes, layer
+      changes, pasted images); the bitmap is a projection rebuilt from
+      the nearest checkpoint plus the live acts after it. The log
+      machinery (branches, checkpoints, cursor, undo, redo, verify) is
+      historia; this library only knows how to paint an act into RGBA
+      layers.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I open an existing drawing, or create one if it does not exist yet?
+    <responsum symbolum="pictor_documentum_aperire pictor_documentum_creare pictor_documenta_enumerare" via="lib/pictor_applicatio.c">Try
+      pictor_documentum_aperire(piscina, intern, volumen, spatium)
+      first; it reads the size from the plagula SPATIUM/documentum (or
+      documentum for an empty spatium) and returns NIHIL if that is
+      missing or gives a zero size. Only then call pictor_documentum_creare with a size
+      and checkpoint interval (0 or less means LXIV): it does not check
+      for an existing document and rewrites the manifest.
+      pictor_documenta_enumerare lists every spatium in a
+      volume.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I record a brush stroke so it is saved and can be undone?
+    <responsum symbolum="pictor_documentum_actum pictor_documentum_revocare pictor_documentum_reficere" via="lib/pictor_actiones.c">Pass
+      the stroke as STML text to pictor_documentum_actum: an ictus
+      element with instrumentum, color (palette index 0-15), magnitudo
+      and optional color_secundus, exemplar, semen and stratum, holding
+      punctum x y [t] children. It appends, paints and checkpoints when
+      due, returning the seq (greater than 0) or 0 if refused.
+      pictor_documentum_revocare and _reficere are undo and redo; a new
+      act after an undo starts a branch, so nothing is ever
+      truncated.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what tools can an ictus use, and how big is each one?
+    <responsum symbolum="pictor_disci_pixelum pictor_lineam_ambulare pictor_gutta">Absent
+      or unknown instrumentum is the brush: a disc of diameter
+      magnitudo at every point of the Bresenham line between points
+      (sizes up to III are full squares). linea is the brush with two
+      points. aspergillum sprays single pixels in a disc of radius
+      PICTOR_ASPERGILLI_RADIUS x magnitudo, PICTOR_GUTTAE_PUNCTO x
+      magnitudo per point plus more for dwell time, seeded by semen so
+      replay is identical. spongia erases a PICTOR_SPONGIAE_LATUS x
+      magnitudo square to transparent and ignores colour and
+      pattern.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can a stroke that goes off the edge of the canvas wrap around or hang?
+    <responsum symbolum="pictor_documentum_actum pictor_lineam_ambulare" via="lib/pictor_documentum.worklog.md">No
+      longer. Point coordinates are signed, and every segment is
+      clipped to the canvas (Cohen-Sutherland in s64, widened by the
+      stamp size) before it is walked, so a drag off the edge stops
+      there. Before 2026-10-08 negative points were cast to the
+      UNSIGNED i32 and a line ran to the opposite edge, or effectively
+      forever.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I add, delete, reorder or hide layers?
+    <responsum symbolum="pictor_documentum_actum pictor_documentum_stratum pictor_documentum_numerus_stratorum PictorStratum">Append
+      stratum acts with pictor_documentum_actum: actio novum id supra,
+      deletum id, ordo ids (bottom first, must be a permutation of
+      every layer), visibile id valor. Layers are named by id, not
+      index; supra unknown or 0 puts the new layer on top. Invalid acts
+      (duplicate id, deleting the last layer, more than
+      PICTOR_STRATA_MAXIMA = XVI layers) are logged but change nothing.
+      Read layers bottom first with pictor_documentum_stratum(doc,
+      index).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why did my stroke get a sequence number but nothing appeared?
+    <responsum symbolum="pictor_documentum_actum PictorStratum">Acts
+      are appended first and painted second, and painting ignores what
+      it cannot apply: an ictus whose stratum id does not exist (absent
+      means layer 1), a colour outside 0-15 (it means leave the pixel
+      untouched), or an act whose root element is not ictus, stratum
+      or imago. A stroke into a hidden layer IS painted but is not
+      composited until the layer is shown. The seq only says the act
+      was logged.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what does pictor_documentum_proiectio return, and does it blend layers?
+    <responsum symbolum="pictor_documentum_proiectio pictor_documentum_sigillum_compositi_hex">The
+      COMPOSITE as an Imago that shares memory with doc->tabula, so it
+      changes with the next act; copy it if you need a snapshot. It is
+      the theme background colour, then each visible layer from the
+      bottom, where any pixel with non-zero alpha replaces the one
+      below: no alpha blending.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why are there two seals, and why can the composite seal change with the theme?
+    <responsum symbolum="pictor_documentum_sigillum_hex pictor_documentum_sigillum_compositi_hex pictor_documentum_verificare" via="lib/pictor_documentum.worklog.md">pictor_documentum_sigillum_hex
+      hashes the document state (layer count, ids, visibility and every
+      layer's pixels); pictor_documentum_verificare replays from nothing
+      and compares it. pictor_documentum_sigillum_compositi_hex hashes
+      the visible pixels, which include the background: that is
+      thema_color(COLOR_BACKGROUND), not stored in the acts, so every
+      drawing renders on today's theme background.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I paste an image into a drawing as a new layer?
+    <responsum symbolum="pictor_imaginem_aptare pictor_documentum_imaginem_inserere">pictor_imaginem_aptare
+      fits the RGBA image inside the canvas keeping the aspect (small
+      images are scaled UP), centres it, dithers it to the 16 Aquinas
+      colours with Atkinson and marks alpha below CXXVIII as 0xFF
+      (transparent). pictor_documentum_imaginem_inserere then stores
+      the deflated indices as a volume massa and logs stratum novum plus
+      imago as one conjoined group (one undo removes both), returning
+      the new layer id (highest id + 1) or 0, which includes a full
+      document of PICTOR_STRATA_MAXIMA layers. Only the first act's
+      result is checked: if the imago act fails to append, the id is
+      still returned. Replay never reruns the dithering. Caution (audit
+      2026-10-18, unfixed): when that imago act fails, the log keeps an
+      empty layer and a dangling coniunctio note, so the user's NEXT
+      unrelated act is conjoined to the layer creation and one undo
+      removes both.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how does a pending paste with an A/B choice work before it is committed?
+    <responsum symbolum="pictor_documentum_glutinationem_parare pictor_documentum_glutinationem_confirmare pictor_documentum_glutinationem_abicere pictor_documentum_glutinationem_radere PictorGlutinatio">pictor_documentum_glutinationem_parare
+      fits the image once and dithers it twice (A Atkinson, B
+      dithering_exemplaria) into doc->glutinatio, OUTSIDE the log: no
+      acts, no undo. A failed parare leaves any earlier pending paste
+      alone. _radere paints a mask that shows the other mode;
+      _confirmare(modus, supra) inserts the mixed result as a layer;
+      _abicere drops it. Caution (audit 2026-10-18, unfixed): if the
+      imago act inside the insert fails to append, _confirmare still
+      gets a non-zero layer id, drops the pending paste and leaves an
+      empty layer instead of the image.</responsum>
+  </interrogatio>
+
+</interrogationes>

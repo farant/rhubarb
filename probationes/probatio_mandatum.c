@@ -17,27 +17,62 @@ color_thema (
     redde c;
 }
 
-s32 principale (vacuum)
+/* Fixura suitae: m (coetus + III liberi, linea) et f semel aedificata
+ * ut in sectione prima; sectiones ea LEGUNT, numquam mutant (quae
+ * mutant copiam suam ex c->piscina faciunt). */
+nomen structura {
+     Mandata* m;
+       Fines  f;
+} Mundus;
+
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+                 Mundus* o;
+                Punctum  puncta[III];
+                    i32  coetus;
+                 chorda  titulus;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    o        = (Mundus*)piscina_allocare(piscina, magnitudo(Mundus));
+    o->m     = mandata_creare(piscina, intern);
+    o->f.x   = X; o->f.y = XX; o->f.latitudo = C; o->f.altitudo = L;
+    titulus = chorda_ex_literis("bottone_servare", piscina);
+    coetus  = mandata_coetus_incipere(o->m, o->f, VERUM, ZEPHYRUM,
+        ZEPHYRUM, I, titulus);
+    mandata_rectangulum(o->m, o->f, color_thema(II), VERUM);
+    puncta[0].x = ZEPHYRUM; puncta[0].y = ZEPHYRUM;
+    puncta[1].x = X;        puncta[1].y = ZEPHYRUM;
+    puncta[2].x = V;        puncta[2].y = V;
+    mandata_polygonum(o->m, puncta, III, color_thema(III), FALSUM);
+    mandata_textus(o->m, XII, XXII, chorda_ex_literis("Servare",
+        piscina),
+        ZEPHYRUM, color_thema(I));
+    mandata_coetus_finire(o->m, coetus);
+    mandata_linea(o->m, puncta[0], puncta[1], I, color_thema(I));
+    c->datum = o;
+}
+
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
                 Piscina* piscina;
     InternamentumChorda* intern;
                 Mandata* m;
-                Mandata* m2;
                   Fines  f;
                 Punctum  puncta[III];
                     i32  coetus;
-                 chorda  textus;
                  chorda  titulus;
                Mandatum* md;
 
-    piscina = piscina_generare_dynamicum("probatio_mandatum", LXIV * M);
-    si (!piscina)
-    { imprimere("FRACTA: piscina\n"); redde I;
-    }
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
 
-    imprimere("\n--- Probans emissionem et spatia coetuum ---\n");
     m = mandata_creare(piscina, intern);
     CREDO_NON_NIHIL (m);
     CREDO_AEQUALIS_I32 (mandata_numerus(m), ZEPHYRUM);
@@ -66,36 +101,86 @@ s32 principale (vacuum)
     md = mandata_obtinere(m, IV);
     CREDO_VERUM (md->genus == MANDATUM_LINEA);
     CREDO_AEQUALIS_I32 (md->magnitudo_arboris, I);
+}
 
-    imprimere("\n--- Probans fines_continet ---\n");
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    constans Mundus* o = (constans Mundus*)c->suita;
+            Punctum  puncta[III];
+
     puncta[0].x = XV; puncta[0].y = XXV;
-    CREDO_VERUM  (fines_continet(f, puncta[0]));
+    CREDO_VERUM  (fines_continet(o->f, puncta[0]));
     puncta[0].x = V;
-    CREDO_FALSUM (fines_continet(f, puncta[0]));
+    CREDO_FALSUM (fines_continet(o->f, puncta[0]));
+}
 
-    imprimere("\n--- Probans scribere/legere STML (circuitus) ---\n");
-    textus = mandata_scribere_stml(m, piscina, VERUM);
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+         constans Mundus* o = (constans Mundus*)c->suita;
+                 Piscina* piscina;
+     InternamentumChorda* intern;
+                 Mandata* m2;
+                  chorda  textus;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+
+    textus = mandata_scribere_stml(o->m, piscina, VERUM);
     CREDO_CHORDA_NON_VACUA (textus);
     m2 = mandata_legere_stml(chorda_ut_cstr(textus, piscina), piscina,
         intern);
     CREDO_NON_NIHIL (m2);
     CREDO_AEQUALIS_I32 (mandata_numerus(m2), V);
-    CREDO_VERUM (mandata_aequalia(m, m2));
+    CREDO_VERUM (mandata_aequalia(o->m, m2));
+}
 
-    imprimere("\n--- Probans inaequalitatem ---\n");
+/* m2 = lectio scripturae m (ut in sectione tertia), copia propria */
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+         constans Mundus* o = (constans Mundus*)c->suita;
+                 Piscina* piscina;
+     InternamentumChorda* intern;
+                 Mandata* m2;
+                  chorda  textus;
+                Mandatum* md;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    textus   = mandata_scribere_stml(o->m, piscina, VERUM);
+    m2      = mandata_legere_stml(chorda_ut_cstr(textus, piscina),
+        piscina,
+        intern);
+
     md           = mandata_obtinere(m2, I);
     md->fines.x  = md->fines.x + I;
-    CREDO_FALSUM (mandata_aequalia(m, m2));
+    CREDO_FALSUM (mandata_aequalia(o->m, m2));
+}
 
-    imprimere("\n--- Probans exemplar (indicium foci) ---\n");
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+         constans Mundus* o = (constans Mundus*)c->suita;
+                 Piscina* piscina;
+     InternamentumChorda* intern;
+                Mandatum* md;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         Mandata* me;
         Mandata* me_lecta;
          chorda  ts;
 
         me = mandata_creare(piscina, intern);
-        mandata_rectangulum_exemplar(me, f, color_thema(II), XXI);
-        mandata_rectangulum(me, f, color_thema(II), VERUM);
+        mandata_rectangulum_exemplar(me, o->f, color_thema(II), XXI);
+        mandata_rectangulum(me, o->f, color_thema(II), VERUM);
         md = mandata_obtinere(me, ZEPHYRUM);
         CREDO_VERUM(md->impletum);
         CREDO_AEQUALIS_I32(md->exemplar, XXI);
@@ -114,12 +199,44 @@ s32 principale (vacuum)
         mandata_obtinere(me_lecta, ZEPHYRUM)->exemplar = XII;
         CREDO_FALSUM(mandata_aequalia(me, me_lecta));
     }
+}
 
-    imprimere("\n--- Probans vacare ---\n");
+/* m suitae non vacatur: copia per scripturam et lectionem */
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+         constans Mundus* o = (constans Mundus*)c->suita;
+                 Piscina* piscina;
+     InternamentumChorda* intern;
+                 Mandata* m;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    m = mandata_legere_stml(chorda_ut_cstr(mandata_scribere_stml(o->m,
+        piscina, VERUM), piscina), piscina, intern);
+
     mandata_vacare(m);
     CREDO_AEQUALIS_I32 (mandata_numerus(m), ZEPHYRUM);
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "emissionem et spatia coetuum", _sectio_prima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "fines_continet", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "scribere/legere STML (circuitus)", _sectio_tertia, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "inaequalitatem", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "exemplar (indicium foci)", _sectio_quinta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "vacare", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("mandatum", SECTIONES,
+        _suitam_parare,
+        NIHIL);
 }

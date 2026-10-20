@@ -238,4 +238,47 @@ unitates_census (
     constans Unitates* unitates,
               Piscina* piscina);
 
+
+/* ==================================================
+ * INTERROGATIONES (U5b): documentatio unitatis ut quaestiones typatae
+ * quas respondet (spec par. VII; canon interrogationes.canon).
+ * Plagulae = viae enumeratae quibus munus 'interrogationes' est
+ * (politica: extensio .interrogationes.stml); possessor = unitas
+ * plagulae (lib/xar.interrogationes.stml -> stemma xar)
+ * ================================================== */
+
+nomen structura {
+    constans Unitas* unitas;     /* possessor plagulae */
+             chorda  via;
+                i32  linea;      /* interrogatio (linea elementi) */
+             chorda  genus;      /* quomodo possumne cur quid ... */
+             chorda  quaestio;   /* lectio FLUXUS (stml_textus_fluxus):
+                                  * formatione stabilis */
+             chorda  responsum;  /* idem */
+                Xar* symbola;    /* chorda; vacuus licet */
+                Xar* viae;       /* chorda; vacuus licet */
+             chorda  imperium;   /* vacuum licet */
+} UnitatisInterrogatio;
+
+nomen structura {
+    Xar* interrogationes;  /* UnitatisInterrogatio, ordine viarum et
+                            * documenti */
+    Xar* recusationes;     /* UnitatesRecusatio: plagula illegibilis,
+                            * radix aliena, 'unitas=' non possessor,
+                            * elementum aut attributum ignotum,
+                            * quaestio/responsum absens aut bis aut
+                            * vacuum, responsum sine ancora. Vacuus =
+                            * omnia sana. Interrogatio cum quaestione
+                            * et responso tamen redditur */
+} UnitatesInterrogationes;
+
+/* Interrogationes omnes arboris per suturam legere. Numquam NIHIL:
+ * vitia per plagulam nominantur, ceterae plagulae leguntur (lectio
+ * pigra - unitates_legere eas non legit). Ancorae hic NON iudicantur
+ * (symbolum exstatne?) - porta interrogationum (U5b gradus 3). */
+UnitatesInterrogationes*
+unitates_interrogationes (
+    constans Unitates* unitates,
+              Piscina* piscina);
+
 #endif /* UNITATES_H */

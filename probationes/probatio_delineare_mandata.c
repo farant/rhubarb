@@ -106,7 +106,34 @@ _textum_conferre (
     }
 }
 
-s32 principale (vacuum)
+/* Fixura suitae: thema semel initiatur (ut olim ante omnia) */
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    thema_initiare();
+}
+
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+                 Piscina* piscina;
+         TabulaPixelorum* t;
+
+    piscina  = c->piscina;
+    t        = tabula_pixelorum_creare_nuda(piscina, LXIV, XLVIII);
+    CREDO_NON_NIHIL(t);
+    CREDO_AEQUALIS_I32(t->latitudo, LXIV);
+    CREDO_AEQUALIS_I32(t->altitudo, XLVIII);
+    tabula_pixelorum_vacare(t, color_ad_pixelum(color_ex_rgb(
+        (i8)ZEPHYRUM, (i8)ZEPHYRUM, (i8)ZEPHYRUM)));
+}
+
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
 {
                  Piscina* piscina;
      InternamentumChorda* intern;
@@ -116,34 +143,13 @@ s32 principale (vacuum)
                  Punctum  a;
                  Punctum  b;
                    Imago  quadrum;
-                   Imago  captura;
                      i32  coetus;
                      i32  i;
-         SpecimenFructus  sf;
                   chorda  provenientia;
-         TabulaPixelorum* u;
-                 Modulus  modulus;
-           ModulusMensor  mensor;
-                     s32  extra;
-                     b32  ultima_columna;
-                     b32  ultima_linea;
-                     i32  c;
-      constans character* textus_probandi[VII];
 
-    piscina = piscina_generare_dynamicum("probatio_delineare_mandata",
-        XVI * M);
-    si (!piscina)
-    { imprimere("FRACTA: piscina\n"); redde I;
-    }
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
-    thema_initiare();
-
-    imprimere("\n--- Tabula nuda ---\n");
-    t = tabula_pixelorum_creare_nuda(piscina, LXIV, XLVIII);
-    CREDO_NON_NIHIL(t);
-    CREDO_AEQUALIS_I32(t->latitudo, LXIV);
-    CREDO_AEQUALIS_I32(t->altitudo, XLVIII);
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    t        = tabula_pixelorum_creare_nuda(piscina, LXIV, XLVIII);
     tabula_pixelorum_vacare(t, color_ad_pixelum(color_ex_rgb(
         (i8)ZEPHYRUM, (i8)ZEPHYRUM, (i8)ZEPHYRUM)));
 
@@ -160,8 +166,8 @@ s32 principale (vacuum)
     }
     quadrum.pixela[III] = ZEPHYRUM;   /* alpha (0,0) = 0 */
 
-    imprimere("\n--- Mandata: rectangulum, linea, imago scalata, textus"
-              " in coetu translato ---\n");
+    /* Mandata: rectangulum, linea, imago scalata, textus in coetu
+     * translato */
     m    = mandata_creare(piscina, intern);
     f.x  = II; f.y = II; f.latitudo = X; f.altitudo = VI;
     mandata_rectangulum(m, f, rgba((i8)ZEPHYRUM, (i8)CCLV,
@@ -190,7 +196,6 @@ s32 principale (vacuum)
 
     delineare_mandata(m, t, fons_probationis, &quadrum);
 
-    imprimere("\n--- Asserta pixelorum (sine exemplari) ---\n");
     /* rectangulum plenum viride: intra (5,5), extra (13,5) */
     CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(t, V, V),
         color_ad_pixelum(color_ex_rgb((i8)ZEPHYRUM, (i8)CCLV,
@@ -241,9 +246,28 @@ s32 principale (vacuum)
         }
         CREDO_VERUM(album);
     }
+}
 
-    imprimere("\n--- Modulus nativus (tessellatio T2) ---\n");
-    modulus = delineare_mandata_modulus(t);
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+                 Piscina* piscina;
+     InternamentumChorda* intern;
+         TabulaPixelorum* t;
+         TabulaPixelorum* u;
+                 Modulus  modulus;
+           ModulusMensor  mensor;
+                     s32  extra;
+                     b32  ultima_columna;
+                     b32  ultima_linea;
+                     i32  i;
+      constans character* textus_probandi[VII];
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    t        = tabula_pixelorum_creare_nuda(piscina, LXIV, XLVIII);
+    modulus  = delineare_mandata_modulus(t);
     CREDO_AEQUALIS_S32(modulus.cellula_latitudo, VI);
     CREDO_AEQUALIS_S32(modulus.cellula_altitudo, VIII);
     CREDO_AEQUALIS_S32(modulus.extensio_latitudo, LXIV);
@@ -260,14 +284,14 @@ s32 principale (vacuum)
     textus_probandi[IV]        = "a\nlonger";
     textus_probandi[V]         = "\xFF";
     textus_probandi[VI]        = "\xC3\xA9t\xC3\xA9";  /* été (Latin-1) */
-    per (c = ZEPHYRUM; c < VII; c++)
+    per (i = ZEPHYRUM; i < VII; i++)
     {
-        _textum_conferre(piscina, intern, u, textus_probandi[c], &extra,
+        _textum_conferre(piscina, intern, u, textus_probandi[i], &extra,
             &ultima_columna, &ultima_linea);
         si (extra != ZEPHYRUM || !ultima_columna || !ultima_linea)
         {
             imprimere("  textus %u: extra %d, ultima columna %d, ultima "
-                "linea %d\n", (insignatus integer)c, (int)extra,
+                "linea %d\n", (insignatus integer)i, (int)extra,
                 (int)ultima_columna, (int)ultima_linea);
         }
         CREDO_AEQUALIS_S32(extra, ZEPHYRUM);
@@ -317,9 +341,76 @@ s32 principale (vacuum)
         }
         CREDO_AEQUALIS_S32(effluentes, ZEPHYRUM);
     }
+}
 
-    imprimere("\n--- Specimen (gradus VII) ---\n");
-    captura = imago_ex_tabula(t);
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+                 Piscina* piscina;
+     InternamentumChorda* intern;
+         TabulaPixelorum* t;
+                 Mandata* m;
+                   Fines  f;
+                 Punctum  a;
+                 Punctum  b;
+                   Imago  quadrum;
+                     i32  coetus;
+                     i32  i;
+                  chorda  provenientia;
+                   Imago  captura;
+         SpecimenFructus  sf;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    t        = tabula_pixelorum_creare_nuda(piscina, LXIV, XLVIII);
+    tabula_pixelorum_vacare(t, color_ad_pixelum(color_ex_rgb(
+        (i8)ZEPHYRUM, (i8)ZEPHYRUM, (i8)ZEPHYRUM)));
+
+    /* quadrum 4x4 ruber, pixelum (0,0) transparens */
+    quadrum.latitudo  = IV;
+    quadrum.altitudo  = IV;
+    quadrum.pixela    = (i8*)piscina_allocare(piscina, LXIV);
+    per (i = ZEPHYRUM; i < XVI; i++)
+    {
+        quadrum.pixela[i * IV]        = (i8)CCLV;
+        quadrum.pixela[i * IV + I]    = ZEPHYRUM;
+        quadrum.pixela[i * IV + II]   = ZEPHYRUM;
+        quadrum.pixela[i * IV + III]  = (i8)CCLV;
+    }
+    quadrum.pixela[III] = ZEPHYRUM;   /* alpha (0,0) = 0 */
+
+    /* Mandata: rectangulum, linea, imago scalata, textus in coetu
+     * translato */
+    m    = mandata_creare(piscina, intern);
+    f.x  = II; f.y = II; f.latitudo = X; f.altitudo = VI;
+    mandata_rectangulum(m, f, rgba((i8)ZEPHYRUM, (i8)CCLV,
+        (i8)ZEPHYRUM),
+                        VERUM);
+    a.x = ZEPHYRUM; a.y = XX; b.x = XX; b.y = XX;
+    mandata_linea(m, a, b, I, rgba((i8)ZEPHYRUM, (i8)ZEPHYRUM,
+        (i8)CCLV));
+    /* coetus: origo (30,10), scala II, sectio ad (30,10,20,20) */
+    f.x = XXX; f.y = X; f.latitudo = XX; f.altitudo = XX;
+    provenientia = chorda_ex_literis("coetus_a", piscina);
+    coetus = mandata_coetus_incipere(m, f, VERUM, ZEPHYRUM, ZEPHYRUM,
+        II,
+                                     provenientia);
+    f.x = ZEPHYRUM; f.y = ZEPHYRUM; f.latitudo = IV; f.altitudo = IV;
+    mandata_imago(m, chorda_ex_literis("quadrum", piscina), f);
+    /* rectangulum extra sectionem: (15,15,10,10) locale -> schirmo
+     * (60,40)..(80,60), praecisum ad 50,30 */
+    f.x = XV; f.y = XV; f.latitudo = X; f.altitudo = X;
+    mandata_rectangulum(m, f, rgba((i8)CCLV, (i8)CCLV, (i8)ZEPHYRUM),
+                        VERUM);
+    mandata_coetus_finire(m, coetus);
+    mandata_textus(m, II, XXX, chorda_ex_literis("Ok", piscina),
+        ZEPHYRUM,
+                   rgba((i8)CCLV, (i8)CCLV, (i8)CCLV));
+
+    delineare_mandata(m, t, fons_probationis, &quadrum);
+
+    captura  = imago_ex_tabula(t);
     CREDO_AEQUALIS_I32(captura.latitudo, LXIV);
     sf = specimen_iudicare(&captura, "mandata_prima",
         specimen_regula_solita("probationes/pictor/specimina"),
@@ -331,8 +422,15 @@ s32 principale (vacuum)
                   (int)sf.causa.mensura, sf.causa.datum);
     }
     CREDO_VERUM(sf.sententia == SPECIMEN_CONGRUIT);
+}
 
-    imprimere("\n--- praecisio, via celeris (park 011) ---\n");
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         /* rectangulum plenum solidum per ordines impletur (terminale
          * park 011): pixela visibilia = rectangulum ^ tabula ^
@@ -364,9 +462,17 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(tp, X, XI),
             niger);
     }
+}
 
-    imprimere("\n--- 013: origo NEGATIVA - primitiva praeciduntur, non"
-              " evanescunt ---\n");
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         TabulaPixelorum* tn = tabula_pixelorum_creare_nuda(piscina, XX,
             XX);
@@ -493,9 +599,17 @@ s32 principale (vacuum)
         }
         CREDO_VERUM(lucet);
     }
+}
 
-    imprimere("\n--- exemplar (indicium foci): tabulae alligatum"
-              " ---\n");
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         TabulaPixelorum* te = tabula_pixelorum_creare_nuda(piscina, XX,
             XX);
@@ -567,8 +681,28 @@ s32 principale (vacuum)
             ZEPHYRUM,
             ZEPHYRUM), fundus);
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "Tabula nuda", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Asserta pixelorum (sine exemplari)", _sectio_secunda, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "Modulus nativus (tessellatio T2)", _sectio_tertia, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "Specimen (gradus VII)", _sectio_quarta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "praecisio, via celeris (park 011)", _sectio_quinta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "013: origo NEGATIVA - primitiva praeciduntur, non evanescunt",
+        _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "exemplar (indicium foci): tabulae alligatum", _sectio_septima,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("delineare_mandata", SECTIONES,
+        _suitam_parare, NIHIL);
 }

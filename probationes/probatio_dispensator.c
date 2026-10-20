@@ -80,7 +80,9 @@ gestum_effundere (
     redde VERUM;
 }
 
-s32 principale (vacuum)
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
                  Piscina* piscina;
      InternamentumChorda* intern;
@@ -95,13 +97,8 @@ s32 principale (vacuum)
                      i32  n0;
                      i32  versio_ictus;
 
-    piscina = piscina_generare_dynamicum("probatio_dispensator",
-        LXIV * M);
-    si (!piscina)
-    { imprimere("FRACTA: piscina\n"); redde I;
-    }
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     repo = insula_repositorium_creare(piscina, intern,
         "<insula/>");
     reg = actio_registrum_creare(piscina, intern);
@@ -117,7 +114,7 @@ s32 principale (vacuum)
     CREDO_VERUM(chorda_vacua(dispensator_focus(d)));
     CREDO_VERUM(chorda_vacua(dispensator_super(d)));
 
-    imprimere("\n--- Ictus in b1: actio, focus, recompositio ---\n");
+    CREDO_GRADUS("Ictus in b1: actio, focus, recompositio");
     n0     = toy.compositiones;
         e  = mus(EVENTUS_MUS_DEPRESSUS, M, XXXV, XX);
     dispensator_tractare(d, &e);
@@ -142,7 +139,7 @@ s32 principale (vacuum)
     e = mus(EVENTUS_MUS_LIBERATUS, M + DC + L, XXXV, XX);
     dispensator_tractare(d, &e);
 
-    imprimere("\n--- Motus super tabulam: super derivatur ---\n");
+    CREDO_GRADUS("Motus super tabulam: super derivatur");
     e = mus(EVENTUS_MUS_MOTUS, M + DCC, CXX, L);
         dispensator_tractare(d, &e);
     CREDO_CHORDA_AEQUALIS_LITERIS(dispensator_super(d), "tabula");
@@ -152,8 +149,8 @@ s32 principale (vacuum)
     CREDO_CHORDA_AEQUALIS_LITERIS(dispensator_super(d), "radix");
     CREDO_AEQUALIS_I32(toy.derivata, IV);        /* exiit, intravit */
 
-    imprimere("\n--- Ictus in tabula: captura, motus, UNA scriptura"
-              " durabilis ---\n");
+    CREDO_GRADUS("Ictus in tabula: captura, motus, UNA scriptura"
+        " durabilis");
     e = mus(EVENTUS_MUS_DEPRESSUS, II * M, CXX, L);
     dispensator_tractare(d, &e);
     versio_ictus = insula_versio(repo);
@@ -181,14 +178,14 @@ s32 principale (vacuum)
     /* ephemera intacta ab ictu */
     CREDO_NIHIL(insula_attributum(repo, "pan_x"));
 
-    imprimere("\n--- Clavis ESC ascendit ad radicem ---\n");
+    CREDO_GRADUS("Clavis ESC ascendit ad radicem");
     e = clavis(II * M + CC, (character)XXVII);
     dispensator_tractare(d, &e);
     a = insula_attributum(repo, "fuga");
     CREDO_NON_NIHIL(a);
     CREDO_CHORDA_AEQUALIS_LITERIS(*a, "verum");
 
-    imprimere("\n--- Tab: focus proximum, involvens ---\n");
+    CREDO_GRADUS("Tab: focus proximum, involvens");
     e = clavis(II * M + CCC, '\t');
     dispensator_tractare(d, &e);
     CREDO_CHORDA_AEQUALIS_LITERIS(dispensator_focus(d), "b1");
@@ -199,7 +196,7 @@ s32 principale (vacuum)
     dispensator_tractare(d, &e);
     CREDO_CHORDA_AEQUALIS_LITERIS(dispensator_focus(d), "b1");
 
-    imprimere("\n--- A5: Tab per clavem logicam, Shift verum ---\n");
+    CREDO_GRADUS("A5: Tab per clavem logicam, Shift verum");
     /* Ctrl+I: characteres '\t' (typus) sed clavis 'I' - focus NON
      * movetur (Tab != Ctrl+I) */
     e                            = clavis(II * M + CD, '\t');
@@ -225,7 +222,7 @@ s32 principale (vacuum)
     dispensator_tractare(d, &e);
     CREDO_CHORDA_AEQUALIS_LITERIS(dispensator_focus(d), "b1");
 
-    imprimere("\n--- Acervus foci ---\n");
+    CREDO_GRADUS("Acervus foci");
     dispensator_focus_impellere(d, chorda_ex_literis("tabula",
         piscina));
     CREDO_CHORDA_AEQUALIS_LITERIS(dispensator_focus(d), "tabula");
@@ -239,7 +236,7 @@ s32 principale (vacuum)
     dispensator_focus_extrahere(d);
     CREDO_CHORDA_AEQUALIS_LITERIS(dispensator_focus(d), "b1");
 
-    imprimere("\n--- Quies: pulsus post CCC ms effundit motus ---\n");
+    CREDO_GRADUS("Quies: pulsus post CCC ms effundit motus");
     dispensator_motus(d)->pan.x                      = VII;
     dispensator_motus(d)->sordida                    = VERUM;
     dispensator_motus(d)->tempus_ultimae_mutationis  = III * M;
@@ -251,14 +248,13 @@ s32 principale (vacuum)
     CREDO_CHORDA_AEQUALIS_LITERIS(*a, "7");
     CREDO_FALSUM(dispensator_motus(d)->sordida);
 
-    imprimere("\n--- Restitutio honesta post omnia; focus"
-              " supervivit ---\n");
+    CREDO_GRADUS("Restitutio honesta post omnia; focus supervivit");
     CREDO_VERUM(insula_restituere(repo));
     CREDO_FALSUM(insula_mendacium(repo));
     CREDO_CHORDA_AEQUALIS_LITERIS(dispensator_focus(d), "b1");
 
-    imprimere("\n--- Superficies (013 B1): magnitudo in ephemera,"
-              " a dispensatore scripta ---\n");
+    CREDO_GRADUS("Superficies (013 B1): magnitudo in ephemera,"
+        " a dispensatore scripta");
     memset(&e, ZEPHYRUM, magnitudo(Eventus));
     e.genus                               = EVENTUS_MUTARE_MAGNITUDINEM;
     e.tempus                              = IV * M;
@@ -301,8 +297,7 @@ s32 principale (vacuum)
     CREDO_VERUM(insula_restituere(repo));
     CREDO_FALSUM(insula_mendacium(repo));
 
-    imprimere("\n");
-    imprimere("\n--- S1a: gestus in quiete propria et in fine ---\n");
+    CREDO_GRADUS("S1a: gestus in quiete propria et in fine");
     memset(&g, ZEPHYRUM, magnitudo(g));
     motus_gestum_ponere(dispensator_motus(d), &g, gestum_effundere,
         NIHIL,
@@ -334,6 +329,16 @@ s32 principale (vacuum)
     }
     CREDO_FALSUM(dispensator_motus(d)->sordida);
 
-    credo_imprimere_compendium();
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "ansa: derivare, destinatio, actio, componere", _sectio_prima,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("dispensator", SECTIONES);
 }

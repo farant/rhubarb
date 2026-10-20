@@ -1,0 +1,105 @@
+<interrogationes unitas="manus_ludus">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I drive a widget from a test, clicking and typing, without a window?
+    <responsum symbolum="manus_ludus_creare manus_ludus_premere manus_ludus_scribere manus_ludus_clavem CREDO_MANUS_LUDUS_FOCUS" via="probationes/probatio_vicus_paginae.c">Create
+      a hand over the app's dispensator with
+      manus_ludus_creare(piscina, d), then call manus_ludus_premere(m,
+      "#id") to click the centre of a component,
+      manus_ludus_scribere(m, "text") to type, and manus_ludus_clavem
+      for one key. Every call is synchronous: the events have been
+      handled by dispensator_tractare when it returns. Assert with
+      CREDO_MANUS_LUDUS_EXISTIT, _ABEST and _FOCUS.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what selectors does manus_ludus understand?
+    <responsum symbolum="manus_ludus_invenire">Four
+      forms over the LOGICAL component tree (never over the drawn
+      mandata): '#id', '[partes=x]', '[actio=x]' and '[titulus=x]'.
+      Matching is exact and depth-first from the root, and the first
+      match wins. Anything else (no '#' or '[', missing ']', another
+      key) is a bad selector: manus_ludus_invenire returns NIHIL and
+      manus_ludus_causa says so. There are no combinators, descendants
+      or wildcards.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what clock does manus_ludus use, and how do I make a timeout or the quiet seat fire?
+    <responsum symbolum="manus_ludus_exspectare manus_ludus_creare dispensator_pulsare">A
+      virtual one: m->tempus starts at M ms and advances by gradus_ms
+      (L = 50 ms) after every mouse event and every key press or
+      release the hand sends (a typed character's text event shares the
+      key-down's time). Besides that only replay moves it, up to the
+      latest recorded event time, so nothing time-based happens on its
+      own. Call
+      manus_ludus_exspectare(m, ms) to advance the clock and pulse the
+      dispensator with dispensator_pulsare; that is what lets the quiet
+      seat flush or a timer fire.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I send arrow keys, function keys or other non-ASCII keys with manus_ludus_clavem?
+    <responsum symbolum="manus_ludus_clavem dispensator_tractare" via="probationes/probatio_vicus_paginae.c">No.
+      manus_ludus_clavem takes a single character, so it can only
+      produce key codes 0 to 255; CLAVIS_SINISTER, CLAVIS_SURSUM,
+      CLAVIS_F1 and the other named keys (256 and up) cannot be
+      expressed. Build the Eventus yourself and pass it to
+      dispensator_tractare, as probatio_vicus_paginae.c does for
+      Ctrl+Shift+arrow; note that such an event does not advance the
+      hand's clock.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can manus_ludus_scribere type non-ASCII UTF-8 text such as an accented letter?
+    <responsum symbolum="manus_ludus_scribere">Not
+      as a real source would. It walks the string BYTE by byte: each
+      byte of 0x20 or above (except 0x7F) gets key-down, a one-byte
+      EVENTUS_TEXTUS committed, then key-up, so a two-byte character is
+      delivered as two one-byte text events, neither valid UTF-8 on its
+      own. Control characters get the key events only, no
+      text.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I drag inside a component with manus_ludus?
+    <responsum symbolum="manus_ludus_trahere manus_ludus_ad_schirmum">manus_ludus_trahere(m,
+      selector, puncta, n): press at puncta[0], motion through the
+      rest, release at the last, all in the component's LOCAL
+      coordinates, all with MUS_SINISTER. It maps each point to the
+      screen with manus_ludus_ad_schirmum, the exact inverse of the
+      targeting transform (fines, then per ancestor scala and
+      translatio). n must be at least I.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I replay a recorded event file and detect that the layout changed under it?
+    <responsum symbolum="manus_ludus_iterare manus_ludus_iterare_per ManusDivergentia">manus_ludus_iterare(m,
+      notata, modus, divergentiae) feeds a Xar of EventusNotatum to the
+      dispensator. MANUS_ITERATIO_CRUDA replays positions as recorded;
+      MANUS_ITERATIO_SEMANTICA re-aims mouse events at their recorded
+      target's id in the CURRENT tree. In both modes a mouse event
+      whose raw position now hits a different component than its
+      recorded scopus is counted (the return value) and, if
+      divergentiae is not NIHIL, recorded as a ManusDivergentia. Only
+      mouse events that carry a recorded scopus are checked or re-aimed;
+      a scopus missing from the current tree falls back to the raw
+      position. Events keep their recorded tempus, and the hand's clock
+      is raised to the latest one. manus_ludus_iterare_per routes each event through a ManusTraditio
+      (e.g. the terminal encoder) instead.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I trust manus_ludus_causa to explain the most recent failure?
+    <responsum symbolum="manus_ludus_causa manus_ludus_premere manus_ludus_invenire manus_ludus_trahere">Not
+      always. causa is never cleared, not even by a success, and
+      manus_ludus_premere writes 'selector nihil invenit' only when
+      causa is still empty, so after an earlier bad selector a later
+      premere that finds nothing keeps reporting the old cause
+      (manus_ludus_trahere, by contrast, overwrites it on every
+      failure). A dispensator with no tree makes manus_ludus_invenire
+      return NIHIL without setting any cause. Use a fresh hand per scenario when you
+      assert on the cause.</responsum>
+  </interrogatio>
+
+</interrogationes>

@@ -30,12 +30,14 @@ _utf8_validum (
 }
 
 interior vacuum
-probatio_determinismus(Piscina* piscina)
+_sectio_prima (
+    CredoContextus* c)
 {
-    Sors a;
-    Sors b;
+    Piscina* piscina;
+       Sors  a;
+       Sors  b;
 
-    imprimere("\n--- Probans determinismus ---\n");
+    piscina = c->piscina;
     sors_seminare(&a, XLII, 0);
     sors_seminare(&b, XLII, 0);
     CREDO_CHORDA_AEQUALIS(fictio_nomen(&a, piscina), fictio_nomen(&b,
@@ -51,15 +53,15 @@ probatio_determinismus(Piscina* piscina)
 }
 
 interior vacuum
-probatio_numeri(Piscina* piscina)
+_sectio_secunda (
+    CredoContextus* c)
 {
     Sors s;
      i32 i;
      b32 imum    = FALSUM;
      b32 summum  = FALSUM;
 
-    (vacuum)piscina;
-    imprimere("\n--- Probans fictio_integer / fictio_numerus ---\n");
+    (vacuum)c;
     sors_seminare(&s, VII, 0);
     per (i = 0; i < M; i++)
     {
@@ -80,13 +82,15 @@ probatio_numeri(Piscina* piscina)
 }
 
 interior vacuum
-probatio_formae(Piscina* piscina)
+_sectio_tertia (
+    CredoContextus* c)
 {
-        Sors s;
-         i32 i;
-    DiesHora dh;
+     Piscina* piscina;
+        Sors  s;
+         i32  i;
+    DiesHora  dh;
 
-    imprimere("\n--- Probans email, uuid, tempus, textus ---\n");
+    piscina = c->piscina;
     sors_seminare(&s, XIII, 0);
     per (i = 0; i < C; i++)
     {
@@ -127,14 +131,16 @@ probatio_formae(Piscina* piscina)
 }
 
 interior vacuum
-probatio_latinus_et_difficilia(Piscina* piscina)
+_sectio_quarta (
+    CredoContextus* c)
 {
-      Sors s;
-    chorda l;
-       i32 i;
-       i32 fines = 0;
+    Piscina* piscina;
+       Sors  s;
+     chorda  l;
+        i32  i;
+        i32  fines = 0;
 
-    imprimere("\n--- Probans corpus Latinum et scrinium difficilium ---\n");
+    piscina = c->piscina;
     sors_seminare(&s, III, 0);
     l = fictio_textus_latinus(&s, III, piscina);
     per (i = 0; i < l.mensura; i++)
@@ -170,21 +176,19 @@ probatio_latinus_et_difficilia(Piscina* piscina)
     }
 }
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "determinismus", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "fictio_integer / fictio_numerus", _sectio_secunda, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "email, uuid, tempus, textus", _sectio_tertia, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "corpus Latinum et scrinium difficilium", _sectio_quarta, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
 s32
 principale (vacuum)
 {
-    Piscina* piscina = piscina_generare_dynamicum("probatio_fictio",
-        M * M);
-        b32 successus;
-
-    credo_aperire(piscina);
-    probatio_determinismus(piscina);
-    probatio_numeri(piscina);
-    probatio_formae(piscina);
-    probatio_latinus_et_difficilia(piscina);
-    credo_imprimere_compendium();
-    successus = credo_omnia_praeterierunt();
-    credo_claudere();
-    piscina_destruere(piscina);
-    redde successus ? 0 : I;
+    redde credo_suitam_currere("fictio", SECTIONES);
 }

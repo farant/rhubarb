@@ -1,0 +1,200 @@
+<interrogationes unitas="http">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I make an HTTPS request and read the response body?
+    <responsum symbolum="http_petitio_creare http_petitio_caput_addere http_petitio_corpus_ponere http_exsequi HttpResultus">Build
+      the request with http_petitio_creare(piscina, HTTP_POST, url)
+      (NIHIL if the URL has no "://"), add headers with
+      http_petitio_caput_addere and a body with
+      http_petitio_corpus_ponere (copied), then call
+      http_exsequi(petitio, piscina). On res.successus, read
+      res.responsum->status and res.responsum->corpus. Host,
+      Content-Length (only when the body is not empty) and
+      "Connection: close" are added for you. An https URL goes through
+      tls.h; anything else is plain TCP. A request holds at most LXIV
+      headers (http_petitio_caput_addere drops further ones silently),
+      and the automatic Host header never carries a non-default
+      port.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I treat res.successus as "the server said 200"?
+    <responsum symbolum="http_exsequi http_error_descriptio HttpError">No.
+      successus means the exchange worked and the response parsed: a
+      404 or 500 still comes back with successus VERUM, so check
+      res.responsum->status yourself. When successus is FALSUM,
+      res.responsum is NIHIL and res.error is the HttpError (CONNEXIO,
+      TIMEOUT, IO, PARSE, URL, REDIRECTIO), with a description in
+      res.error_descriptio; http_error_descriptio names the
+      code.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I pass responsum->corpus.datum to a function that expects a C string?
+    <responsum symbolum="http_exsequi http_exsequi_rivus chorda_ut_cstr">Not
+      safely. Whether a NUL follows the body depends on the path: the
+      Content-Length and read-to-EOF paths of http_exsequi copy it with
+      a trailing NUL, but a chunked body and every body from
+      http_exsequi_rivus are not guaranteed to be terminated, and an
+      empty body has datum NIHIL. Use corpus.mensura, or chorda_ut_cstr when you really
+      need a C string.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I set a timeout on a request?
+    <responsum symbolum="http_petitio_tempus_ponere http_exsequi" via="lib/http.worklog.md">http_petitio_tempus_ponere(petitio,
+      ms) before executing; 0 keeps the default of XXX seconds. It
+      applies to plain TCP and, since 2026-10-07, to TLS as well. On
+      the plain path it becomes SO_RCVTIMEO and SO_SNDTIMEO on the
+      socket after connect, so it bounds each wait for data, not the
+      whole request (a server that trickles bytes never times out),
+      and does not bound DNS or the connect itself. When
+      it expires http_exsequi returns HTTP_ERROR_TIMEOUT and throws away
+      any partial body on purpose: a truncated body presented as success
+      is worse than an honest error. For the same reason a body shorter
+      than its Content-Length, or a chunked body without the final 0
+      chunk, is HTTP_ERROR_IO (RFC 9112 6.3). http_exsequi always sends
+      "Connection: close", reads until the server closes and has no
+      size cap; http_exsequi_rivus stops at the end of the message
+      instead.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I stream a response body as it arrives, for example a model's output?
+    <responsum symbolum="http_exsequi_rivus HttpRivus http_vectura_rivi_exsequi">Call
+      http_exsequi_rivus(petitio, rivus, datum, piscina) with an
+      HttpRivus callback (datum, octeti, n). The callback receives the
+      decoded body bytes (Content-Length, chunked or until close) as
+      they arrive, but ONLY for a 2xx status; the whole body is also
+      collected in responsum->corpus (up to HTTP_LECTOR_CORPUS_MAXIMUM,
+      XVI * M * M bytes; past that the call fails with
+      HTTP_ERROR_PARSE "corpus nimium"). It stops reading as soon as the message is complete
+      instead of waiting for the server to close. Use
+      HttpVecturaRivi and http_vectura_rivi_exsequi where tests must
+      replace the network.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I use http_exsequi_rivus without a callback, as a drop-in for http_exsequi?
+    <responsum symbolum="http_exsequi_rivus http_exsequi http_lector_creare">Yes:
+      pass NIHIL as the rivus and the reader only collects the body
+      into responsum->corpus. The differences: it stops reading at the
+      end of the message (http_exsequi waits for the server to close),
+      it understands chunk extensions ("5;name=value"), which the
+      older chunked decoder in http_exsequi misreads (it copies the
+      extension bytes as data and can then report success with a wrong
+      body), and it caps the body at XVI * M * M bytes where
+      http_exsequi has no cap. Its body is not guaranteed to be
+      NUL-terminated; malformed framing comes back as HTTP_ERROR_PARSE,
+      a body cut short at EOF as HTTP_ERROR_IO.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I parse an HTTP response from bytes I read myself, for example from a reactor callback?
+    <responsum symbolum="http_lector_creare http_lector_adicere http_lector_finire http_lector_responsum http_lector_error">Use
+      the incremental reader, which does no I/O:
+      http_lector_creare(piscina, methodus, rivus, datum), then feed
+      each chunk to http_lector_adicere until it returns
+      HTTP_LECTOR_FINITUS or HTTP_LECTOR_ERROR; chunk boundaries may
+      fall anywhere. Call http_lector_finire at EOF (it finishes a
+      read-until-close body, otherwise reports "corpus truncatum").
+      http_lector_responsum is NIHIL until the headers are complete;
+      http_lector_error gives the reason. Limits: LXIV * M bytes of
+      headers, XVI * M * M bytes of body; bytes after the end of the
+      message are ignored. An interim 1xx response (100 Continue, 103
+      Early Hints) is taken as the final response: the reader finishes
+      on it, so the real response that follows is ignored (http_exsequi
+      likewise reports the first status line it sees).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I rely on http_exsequi_cum_redirectionibus to follow redirects?
+    <responsum symbolum="http_exsequi_cum_redirectionibus http_exsequi">Not
+      yet: it has no test and no caller. It follows only 301, 302, 307
+      and 308 (not 303); it keeps the method on 301 and 302 but drops
+      the body; it copies every original header except Host to the new
+      URL, Authorization included, even to another host; and the new
+      request loses the timeout set with http_petitio_tempus_ponere. A
+      one-character Location such as "/" also makes its absolute-URL
+      scan run past the end of the string, and a relative Location
+      that contains "://" anywhere (say "/login?next=https://x/") is
+      taken as absolute, so the request goes to host x. Handle 3xx
+      yourself with http_exsequi for now.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what URL forms does http_petitio_creare understand?
+    <responsum symbolum="http_petitio_creare http_petitio_visus">scheme://host[:port][/path?query].
+      The scheme is compared case-sensitively: only "https" gets TLS
+      and port 443, every other scheme (including "HTTPS" and "ftp")
+      gets plain TCP on port 80. There is no userinfo, no IPv6 literal
+      and no check that the port is below 65536, and the path is sent
+      as written (no escaping). The host ends only at ':' or '/', so
+      "http://host?q=1" makes "host?q=1" the host: write
+      "http://host/?q=1". http_petitio_visus shows how a URL was
+      split.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I test code that makes HTTP calls without touching the network?
+    <responsum symbolum="HttpVectura http_vectura_ordinaria http_vectura_exsequi http_petitio_visus">Take
+      an HttpVectura {exsequi, datum} instead of calling http_exsequi
+      directly, and send through http_vectura_exsequi. Production
+      passes http_vectura_ordinaria() (which is http_exsequi); a test
+      passes its own exsequi function that inspects the request with
+      http_petitio_visus (method, scheme, host, port, path, body,
+      headers, timeout) and returns a scripted HttpResultus. A vectura
+      whose exsequi is NIHIL gives HTTP_ERROR_CONNEXIO, never a
+      crash. herbarium wraps a vectura the same way.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I parse incoming requests on the server side?
+    <responsum symbolum="http_parser_creare_cum_limitibus http_parser_adicere HttpParseResultus http_parser_reliquiae">Create
+      a parser with http_parser_creare_cum_limitibus(piscina,
+      petitio_maxima, uri_maxima) (0 = M * M and VIII * M bytes) and feed each
+      read to http_parser_adicere. While res.successus is VERUM and
+      res.completa FALSUM, wait for more data; on completa read
+      res.petitio (via, quaestio, capita, corpus, keep_alive). On
+      failure answer with res.status_suggestus: 400 (bad line or
+      version, duplicate Content-Length, Content-Length with
+      Transfer-Encoding), 411 (chunked request bodies are refused), 413,
+      414, 501 (unknown method). Bare LF line ends are accepted.
+      http_parser_reliquiae counts pipelined bytes left over; hospitium
+      closes the connection after answering in that case. Stop feeding
+      after the first failure: a later http_parser_adicere on a failed
+      parser returns successus VERUM and completa FALSUM, and data fed
+      after completa is dropped. Only the first LXIV headers are kept,
+      and the Content-Length, Transfer-Encoding and Connection checks
+      run only on those, so a Content-Length after the 64th header is
+      ignored (no body, no 400).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why does hospitium create a new parser for every request instead of calling http_parser_reset?
+    <responsum symbolum="http_parser_reset http_parser_creare_cum_limitibus piscina_reficere" via="lib/hospitium.c">Its
+      parser lives in the connection's piscina, which is rolled back
+      with piscina_reficere after each request; the parser's buffer and
+      request struct would be dangling after the rollback. Note also
+      that http_parser_reset keeps the limits but empties the buffer,
+      so any pipelined bytes still in it are lost, and the reset reuses
+      the same HttpPetitioServeri, overwriting a request you still
+      hold.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I serialize a response on the server, and who writes Content-Length?
+    <responsum symbolum="http_responsum_serialize_cum_conexione http_responsum_serialize http_status_descriptio">http_responsum_serialize_cum_conexione(responsum,
+      keep_alive, piscina) adds "Connection: keep-alive" or "close";
+      http_responsum_serialize adds no Connection header. Both own the
+      framing: they always write Content-Length (even 0) except for
+      1xx, 204 and 304, and skip any Content-Length or Connection
+      header you put in capita. The reason phrase comes from
+      http_status_descriptio(status), not from
+      responsum->status_descriptio, so an unlisted code (206, 418,
+      ...) goes out as "Unknown". A body you set is written even for
+      1xx, 204 and 304, where no Content-Length frames it, so leave
+      corpus empty for those.</responsum>
+  </interrogatio>
+
+</interrogationes>

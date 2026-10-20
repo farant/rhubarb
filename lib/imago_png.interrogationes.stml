@@ -1,0 +1,84 @@
+<interrogationes unitas="imago_png">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I save an Imago to a PNG file?
+    <responsum symbolum="imago_png_scribere PngFructus">Call
+      imago_png_scribere(imago, via, piscina) with a NUL-terminated
+      path and check successus on the PngFructus it returns. On
+      failure error usually names the cause (for example Imago abest,
+      Imago vacua, Via abest, Plagula aperiri non potest, Scriptio
+      incompleta); it is a chorda, so print it with %.*s, not %s. On
+      success datum and mensura are the bytes that were written, held
+      in the piscina. Only the fwrite count is checked: the result of
+      fclose is ignored, so an error that appears only when the file
+      is flushed at close still reports success.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I get the PNG bytes in memory without touching the filesystem?
+    <responsum symbolum="imago_png_codificare piscina_reficere">imago_png_codificare(imago,
+      piscina) is pure: no file is read or written. The bytes
+      (datum, mensura) are allocated in the piscina and need no
+      freeing; they live until the piscina is destroyed, emptied, or
+      rolled back past them with piscina_reficere. imago_png_scribere is only this call followed by
+      lectiones_fopen, one fwrite and fclose.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I read or decode a PNG with imago_png?
+    <responsum symbolum="imago_caricare_ex_file imago_caricare_ex_memoria">No,
+      it only encodes. Decoding goes through imago_caricare_ex_file
+      or imago_caricare_ex_memoria (lib/imago.c, vendored stb_image).
+      The asymmetry is deliberate: the encoder writes one fixed
+      layout, while a decoder must accept every bit depth, palette,
+      interlace mode and filter type.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what pixel layout does imago_png_codificare expect?
+    <responsum symbolum="imago_png_codificare Imago" via="include/imago_typus.h">An
+      Imago: RGBA, IV bytes per pixel, NOT premultiplied, rows packed
+      with no stride or padding (row y starts at pixela + y *
+      latitudo * IV). There is no RGB or grayscale input; convert to
+      RGBA first. imago_typus.h holds the type alone, so including
+      imago_png.h does not pull in the decoder.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why are the PNG files larger than other encoders produce?
+    <responsum symbolum="imago_png_codificare" via="lib/imago_png.worklog.md">Every
+      row uses filter None, there is one IDAT and no interlacing. The
+      filters PNG offers improve compression, mostly on photographic
+      content; screenshots (flat regions) barely suffer. In exchange
+      the code is small and the output is deterministic: the same
+      image always gives the same bytes, which tests depend on.
+      Adding filters later changes only the implementation, not the
+      interface.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I pass a NIHIL piscina or an empty image to the encoder?
+    <responsum symbolum="imago_png_codificare piscina_allocare">You get successus FALSUM
+      either way. A NIHIL image or NIHIL pixela gives Imago abest, a
+      zero latitudo or altitudo gives Imago vacua. A NIHIL piscina also gives
+      successus FALSUM, but error is EMPTY, because there is nowhere
+      to allocate the message, despite the header's promise that error
+      is always named. The encoder's own buffers come from
+      piscina_allocare, which is fatal on failure, so running out of
+      memory exits the process and the Allocatio fracta messages in
+      the code never appear.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I encode a very large image (tens of thousands of pixels on a side)?
+    <responsum symbolum="imago_png_codificare">Only while the raw
+      scanline buffer, (1 + latitudo * IV) * altitudo bytes, stays
+      well below 4 GiB (the compressed stream and the file size are
+      i32 as well). Every size and offset is computed in i32 (unsigned
+      32 bit) with no overflow check, so a larger image wraps: for
+      32768 x 32769 the buffer comes out about 160 KiB and the row
+      copy writes far past it. There is no refusal for oversized
+      input; check the dimensions yourself before calling.</responsum>
+  </interrogatio>
+
+</interrogationes>

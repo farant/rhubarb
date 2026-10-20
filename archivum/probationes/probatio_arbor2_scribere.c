@@ -1,0 +1,1675 @@
+/* probatio_arbor2_scribere.c - Roundtrip tests for AST serializer */
+#include "latina.h"
+#include "piscina.h"
+#include "internamentum.h"
+#include "credo.h"
+#include "arbor2_lexema.h"
+#include "arbor2_token.h"
+#include "arbor2_expandere.h"
+#include "arbor2_glr.h"
+#include "arbor2_scribere.h"
+#include <stdio.h>
+#include <string.h>
+
+/* ==================================================
+ * Helper Functions
+ * ================================================== */
+
+/* Lexare input string to tokens */
+hic_manens Xar*
+_lexare(Piscina* p, InternamentumChorda* intern, constans character* input)
+{
+    Xar* tokens;
+    Arbor2Lexator* lex;
+    chorda* via;
+    unio { constans character* c; i8* m; } u;
+
+    tokens = xar_creare(p, magnitudo(Arbor2Token*));
+    lex = arbor2_lexator_creare(p, intern, input, (i32)strlen(input));
+
+    u.c = "<test>";
+    via = piscina_allocare(p, magnitudo(chorda));
+    via->datum = u.m;
+    via->mensura = VI;
+
+    /* Phase 2.7: NOVA_LINEA is now in spatia, not main stream.
+     * No need to skip it - it won't appear here anymore. */
+    dum (VERUM)
+    {
+        Arbor2Lexema* l = arbor2_lexema_proximum(lex);
+        Arbor2Token* t;
+        Arbor2Token** slot;
+
+        si (l == NIHIL)
+        {
+            frange;
+        }
+
+        t = arbor2_token_ex_lexema(p, l, via, l->linea, l->columna);
+        slot = xar_addere(tokens);
+        *slot = t;
+
+        si (l->genus == ARBOR2_LEXEMA_EOF)
+        {
+            frange;
+        }
+    }
+
+    redde tokens;
+}
+
+/* Test roundtrip for expression parsing */
+hic_manens b32
+_probare_roundtrip_expressio(Piscina* p, InternamentumChorda* intern,
+                             Arbor2Expansion* expansion,
+                             constans character* input,
+                             constans character* expectatum)
+{
+    Arbor2GLR* glr;
+    Xar* tokens;
+    Arbor2GLRResultus result;
+    chorda* output;
+    b32 aequalis;
+
+    glr = arbor2_glr_creare(p, intern, expansion);
+    tokens = _lexare(p, intern, input);
+    result = arbor2_glr_parsere_expressio(glr, tokens);
+
+    si (!result.successus)
+    {
+        imprimere("  FRACTA: parsing failed for '%s'\n", input);
+        redde FALSUM;
+    }
+
+    output = arbor2_scribere(p, result.radix);
+
+    si (expectatum == NIHIL)
+    {
+        expectatum = input;
+    }
+
+    aequalis = (output->mensura == (i32)strlen(expectatum)) &&
+               (memcmp(output->datum, expectatum, (size_t)output->mensura) == ZEPHYRUM);
+
+    si (!aequalis)
+    {
+        imprimere("  FRACTA: roundtrip mismatch\n");
+        imprimere("    Input:    '%s'\n", input);
+        imprimere("    Expected: '%s'\n", expectatum);
+        imprimere("    Got:      '%.*s'\n", output->mensura, (constans character*)output->datum);
+    }
+
+    redde aequalis;
+}
+
+/* Test roundtrip for full parsing */
+hic_manens b32
+_probare_roundtrip(Piscina* p, InternamentumChorda* intern,
+                   Arbor2Expansion* expansion,
+                   constans character* input,
+                   constans character* expectatum)
+{
+    Arbor2GLR* glr;
+    Xar* tokens;
+    Arbor2GLRResultus result;
+    chorda* output;
+    b32 aequalis;
+
+    glr = arbor2_glr_creare(p, intern, expansion);
+    tokens = _lexare(p, intern, input);
+    result = arbor2_glr_parsere(glr, tokens);
+
+    si (!result.successus)
+    {
+        imprimere("  FRACTA: parsing failed for '%s'\n", input);
+        redde FALSUM;
+    }
+
+    output = arbor2_scribere(p, result.radix);
+
+    si (expectatum == NIHIL)
+    {
+        expectatum = input;
+    }
+
+    aequalis = (output->mensura == (i32)strlen(expectatum)) &&
+               (memcmp(output->datum, expectatum, (size_t)output->mensura) == ZEPHYRUM);
+
+    si (!aequalis)
+    {
+        imprimere("  FRACTA: roundtrip mismatch\n");
+        imprimere("    Input:    '%s'\n", input);
+        imprimere("    Expected: '%s'\n", expectatum);
+        imprimere("    Got:      '%.*s'\n", output->mensura, (constans character*)output->datum);
+    }
+
+    redde aequalis;
+}
+
+/* Test roundtrip for translation unit (top-level declarations) */
+hic_manens b32
+_probare_roundtrip_tu(Piscina* p, InternamentumChorda* intern,
+                      Arbor2Expansion* expansion,
+                      constans character* input,
+                      constans character* expectatum)
+{
+    Arbor2GLR* glr;
+    Xar* tokens;
+    Arbor2GLRResultus result;
+    chorda* output;
+    b32 aequalis;
+
+    glr = arbor2_glr_creare(p, intern, expansion);
+    tokens = _lexare(p, intern, input);
+    result = arbor2_glr_parsere_translation_unit(glr, tokens);
+
+    si (!result.successus)
+    {
+        imprimere("  FRACTA: parsing failed for '%s'\n", input);
+        redde FALSUM;
+    }
+
+    output = arbor2_scribere(p, result.radix);
+
+    si (expectatum == NIHIL)
+    {
+        expectatum = input;
+    }
+
+    aequalis = (output->mensura == (i32)strlen(expectatum)) &&
+               (memcmp(output->datum, expectatum, (size_t)output->mensura) == ZEPHYRUM);
+
+    si (!aequalis)
+    {
+        imprimere("  FRACTA: roundtrip mismatch\n");
+        imprimere("    Input:    '%s'\n", input);
+        imprimere("    Expected: '%s'\n", expectatum);
+        imprimere("    Got:      '%.*s'\n", output->mensura, (constans character*)output->datum);
+    }
+
+    redde aequalis;
+}
+
+/* ==================================================
+ * Main
+ * ================================================== */
+
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    InternamentumChorda* intern;
+    Arbor2Expansion* expansion;
+
+    /* piscina propria (I MB, ut olim), non c->piscina: arbor2_glr nodos
+     * per piscina_allocare (non nullatos) creat et campos quosdam
+     * (commenta_ante) non ponit - c->piscina (CCLVI KB) crescit in
+     * alveos novos quos ASan octetis 0xbe implet, et lectio
+     * campi non positi ruit. Vitium bibliothecae, non probationis;
+     * ergo sectio una cum gradibus (sectiones plures in memoria
+     * reddita ruunt). */
+    (vacuum)c;
+    piscina = piscina_generare_dynamicum("probatio_scribere", 1048576);
+    si (!piscina)
+    {
+        imprimere("FRACTA: piscina_generatio\n");
+        redde;
+    }
+
+    intern = internamentum_creare(piscina);
+    expansion = arbor2_expansion_creare(piscina, intern);
+
+    /* ========================================================
+     * PROBARE: Trivia preservation test
+     * ======================================================== */
+    {
+        CREDO_GRADUS("trivia preservation");
+
+        /* Test whitespace between tokens */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a + b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a  +  b", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Simple expressions
+     * ======================================================== */
+    {
+        CREDO_GRADUS("simple expressions");
+
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "x", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "42", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "3.14", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "'a'", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "\"hello\"", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Binary expressions
+     * Note: a*b, a/b etc are ambiguous (could be declaration)
+     * Testing only non-ambiguous binary expressions here
+     * ======================================================== */
+    {
+        CREDO_GRADUS("binary expressions");
+
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "1+2", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "1-2", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "1*2", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "1/2", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "1%2", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a==b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a!=b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a<b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a>b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a&&b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a||b", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Unary expressions
+     * ======================================================== */
+    {
+        CREDO_GRADUS("unary expressions");
+
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "!x", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "~x", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "++x", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "--x", NIHIL));
+
+        /* Unary minus and plus */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "-x", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "+x", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "-5", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "- -x", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "-a+b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a+-b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "-!x", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a*-b", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Postfix expressions
+     * ======================================================== */
+    {
+        CREDO_GRADUS("postfix expressions");
+
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "x++", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "x--", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a[0]", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a.b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a->b", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Function calls
+     * ======================================================== */
+    {
+        CREDO_GRADUS("function calls");
+
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "f()", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "f(x)", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "f(x,y)", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "f(x,y,z)", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: sizeof expressions
+     * ======================================================== */
+    {
+        CREDO_GRADUS("sizeof expressions");
+
+        /* sizeof expr - works */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "sizeof x", NIHIL));
+
+        /* sizeof(expr) - parens around expression */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "sizeof(x)", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "sizeof (x)", NIHIL));
+
+        /* sizeof(type) - type in parens */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "sizeof(int)", NIHIL));
+
+        /* sizeof(type*) - pointer type */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "sizeof(int*)", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Parenthesized expressions
+     * ======================================================== */
+    {
+        CREDO_GRADUS("parenthesized expressions");
+
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "(x)", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "(1)", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "(a + b)", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "((x))", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Cast expressions
+     * ======================================================== */
+    {
+        CREDO_GRADUS("cast expressions");
+
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "(int)x", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "(int*)p", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "(char**)q", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Ternary expressions
+     * NOTE: Using numeric literals to avoid label ambiguity
+     * (a ? b : c is ambiguous because b: could be a label)
+     * ======================================================== */
+    {
+        CREDO_GRADUS("ternary expressions");
+
+        /* Simple ternary with numbers */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a ? 1 : 2", NIHIL));
+
+        /* Nested ternary (right-associative) */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a ? 1 : b ? 2 : 3", NIHIL));
+
+        /* Ternary with expressions in branches */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a ? 1 + 2 : 3 * 4", NIHIL));
+
+        /* Ternary with logical condition */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a || b ? 1 : 2", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a && b ? 1 : 2", NIHIL));
+
+        /* Ternary in assignment context */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "x = a ? 1 : 2", NIHIL));
+
+        /* Nested in true branch */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a ? b ? 1 : 2 : 3", NIHIL));
+
+        /* Comparison + ternary */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a > b ? 1 : 2", NIHIL));
+
+        /* Equality + ternary */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a == b ? 1 : 2", NIHIL));
+
+        /* Parenthesized ternary */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "(a ? 1 : 2)", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Simple declarations (in block)
+     * Note: Pointer declarations like `int *x` are ambiguous in GLR
+     * ======================================================== */
+    {
+        CREDO_GRADUS("simple declarations");
+
+        CREDO_VERUM(_probare_roundtrip(piscina, intern, expansion, "{int x;}", NIHIL));
+        /* Pointer declarations are ambiguous - skip for now */
+    }
+
+    /* ========================================================
+     * PROBARE: Declarations with initializers (translation unit)
+     * ======================================================== */
+    {
+        CREDO_GRADUS("declarations with initializers");
+
+        /* Simple variable declaration without initializer */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int x;", NIHIL));
+
+        /* Float variable declaration */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "float f;", NIHIL));
+
+        /* Pointer declarations (including ambiguous ones like int *p) */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "void *p;", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int *p;", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "char *s;", NIHIL));
+
+        /* Variable with integer initializer */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int x = 5;", NIHIL));
+
+        /* Variable with expression initializer */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int x = 1 + 2;", NIHIL));
+
+        /* Variable with complex expression */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int x = a * b + c;", NIHIL));
+
+        /* Variable with parenthesized expression */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int x = (1 + 2);", NIHIL));
+
+        /* Variable with identifier initializer */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int x = y;", NIHIL));
+
+        /* Variable with function call initializer */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int x = f();", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int x = f(a, b);", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Simple statements (in block)
+     * ======================================================== */
+    {
+        CREDO_GRADUS("simple statements");
+
+        CREDO_VERUM(_probare_roundtrip(piscina, intern, expansion, "{x;}", NIHIL));
+        CREDO_VERUM(_probare_roundtrip(piscina, intern, expansion, "{x=1;}", NIHIL));
+        CREDO_VERUM(_probare_roundtrip(piscina, intern, expansion, "{return;}", NIHIL));
+        CREDO_VERUM(_probare_roundtrip(piscina, intern, expansion, "{return 0;}", NIHIL));
+        CREDO_VERUM(_probare_roundtrip(piscina, intern, expansion, "{break;}", NIHIL));
+        CREDO_VERUM(_probare_roundtrip(piscina, intern, expansion, "{continue;}", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Control flow (in block)
+     * ======================================================== */
+    {
+        CREDO_GRADUS("control flow");
+
+        CREDO_VERUM(_probare_roundtrip(piscina, intern, expansion, "{if(x)y;}", NIHIL));
+        CREDO_VERUM(_probare_roundtrip(piscina, intern, expansion, "{if(x)y;else z;}", NIHIL));
+        CREDO_VERUM(_probare_roundtrip(piscina, intern, expansion, "{while(x)y;}", NIHIL));
+        CREDO_VERUM(_probare_roundtrip(piscina, intern, expansion, "{do x;while(y);}", NIHIL));
+        CREDO_VERUM(_probare_roundtrip(piscina, intern, expansion, "{for(;;)x;}", NIHIL));
+        CREDO_VERUM(_probare_roundtrip(piscina, intern, expansion, "{for(i=0;i<n;i++)x;}", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Compound statements
+     * ======================================================== */
+    {
+        CREDO_GRADUS("compound statements");
+
+        CREDO_VERUM(_probare_roundtrip(piscina, intern, expansion, "{}", NIHIL));
+        CREDO_VERUM(_probare_roundtrip(piscina, intern, expansion, "{x;}", NIHIL));
+        CREDO_VERUM(_probare_roundtrip(piscina, intern, expansion, "{x;y;}", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Array declarators (translation unit)
+     * ======================================================== */
+    {
+        CREDO_GRADUS("array declarators");
+
+        /* Unsized array */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int arr[];", NIHIL));
+
+        /* Sized array */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int arr[10];", NIHIL));
+
+        /* Array with expression size */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int arr[N];", NIHIL));
+
+        /* Multi-dimensional array */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int arr[10][20];", NIHIL));
+
+        /* Mixed dimensions */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int arr[][10];", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Initializer lists (translation unit)
+     * ======================================================== */
+    {
+        CREDO_GRADUS("initializer lists");
+
+        /* Simple initializer list */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int arr[] = {1, 2, 3};", NIHIL));
+
+        /* Empty initializer list */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int arr[] = {};", NIHIL));
+
+        /* Nested initializer list */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int arr[][2] = {{1, 2}, {3, 4}};", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Enum specifiers (translation unit)
+     * ======================================================== */
+    {
+        CREDO_GRADUS("enum specifiers");
+
+        /* Simple enum */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "enum E { A };", NIHIL));
+
+        /* Multiple enumerators */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "enum E { A, B };", NIHIL));
+
+        /* Enumerator with value */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "enum E { A = 1 };", NIHIL));
+
+        /* Multiple enumerators with values */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "enum E { A = 1, B = 2 };", NIHIL));
+
+        /* Mixed: some with values, some without */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "enum E { A, B = 5, C };", NIHIL));
+
+        /* Anonymous enum */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "enum { A, B };", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Struct/union specifiers (translation unit)
+     * ======================================================== */
+    {
+        CREDO_GRADUS("struct/union specifiers");
+
+        /* Simple struct */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "struct S { int x; };", NIHIL));
+
+        /* Struct with char member */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "struct S { char c; };", NIHIL));
+
+        /* Struct with float member */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "struct S { float f; };", NIHIL));
+
+        /* Struct with double member */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "struct S { double d; };", NIHIL));
+
+        /* Struct with short member */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "struct S { short s; };", NIHIL));
+
+        /* Struct with long member */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "struct S { long l; };", NIHIL));
+
+        /* Struct with unsigned member */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "struct S { unsigned u; };", NIHIL));
+
+        /* Struct with pointer member */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "struct S { int *p; };", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "struct S { void *p; };", NIHIL));
+
+        /* Compound type specifiers in struct members */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "struct S { unsigned int x; };", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "struct S { long int x; };", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "struct S { const int x; };", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "struct S { unsigned long x; };", NIHIL));
+
+        /* Struct with multiple members */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "struct S { int x; int y; };", NIHIL));
+
+        /* Struct with mixed type members */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "struct S { int x; float f; };", NIHIL));
+
+        /* Simple union */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "union U { int x; };", NIHIL));
+
+        /* Union with float member */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "union U { float f; };", NIHIL));
+
+        /* Anonymous struct */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "struct { int x; };", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Function definitions (translation unit)
+     * ======================================================== */
+    {
+        CREDO_GRADUS("function definitions");
+
+        /* Basic function definitions with simple return types */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "void f() { }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int main() { }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "char g() { }", NIHIL));
+
+        /* Function definitions with qualified return types (P505/P506) */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "const int f() { }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "volatile int g() { }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "const char h() { }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "volatile void v() { }", NIHIL));
+
+        /* Function definitions with empty parameters */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int get() { }", NIHIL));
+
+        /* Function definitions with void parameter */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int get(void) { }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "void f(void) { }", NIHIL));
+
+        /* Function definitions with typed parameters */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int add(int a, int b) { }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "void set(int x) { }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "char f(char c) { }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "void g(int a, char b, int c) { }", NIHIL));
+
+        /* Function definitions with body statements */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int f() { return 0; }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int f() { return x + 1; }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "void f() { x = 1; }", NIHIL));
+
+        /* Function definitions with local declarations */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int f() { int x; return x; }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int f() { int x = 0; return x; }", NIHIL));
+
+        /* Qualified return type with body */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "const int f() { return 0; }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "volatile int g() { return x; }", NIHIL));
+
+        /* Qualified return type with empty parameters */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "const int get() { }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "volatile void work() { }", NIHIL));
+
+        /* Compound return type function definitions (P507-P524) */
+        CREDO_GRADUS("compound return type roundtrip");
+
+        /* P507-P510: single modifier + explicit type */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "unsigned int f() { }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "signed int g() { }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "long int h() { }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "short int s() { }", NIHIL));
+
+        /* P511-P514: two modifiers + explicit type */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "unsigned long int ul() { }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "signed long int sl() { }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "unsigned short int us() { }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "signed short int ss() { }", NIHIL));
+
+        /* P515-P517: long long variations */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "long long int ll() { }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "unsigned long long int ull() { }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "signed long long int sll() { }", NIHIL));
+
+        /* P518-P524: implicit int cases */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "unsigned long ul2() { }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "signed long sl2() { }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "unsigned short us2() { }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "signed short ss2() { }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "long long ll2() { }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "unsigned long long ull2() { }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "signed long long sll2() { }", NIHIL));
+
+        /* Compound return type with body */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "unsigned int count() { return 0; }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "long long size() { return x; }", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Newline preservation (Phase 2.7)
+     * These tests verify that newlines are preserved in roundtrip.
+     * NOVA_LINEA is now in spatia, so roundtrip should preserve them.
+     * ======================================================== */
+    {
+        CREDO_GRADUS("newline preservation");
+
+        /* Simple multi-line expression - newline should be preserved */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a +\nb", NIHIL));
+
+        /* Multi-line with spaces */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a + \n  b", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Comment nodes
+     * ======================================================== */
+    {
+        CREDO_GRADUS("comment nodes");
+
+        /* Block comment roundtrip (via trivia) */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "/* comment */ x", NIHIL));
+
+        /* Line comment roundtrip (newline consumed with comment) */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "// comment\nx", NIHIL));
+
+        /* Comment in binary expression */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* mid */ + b", NIHIL));
+
+        /* Multiple comments */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "/* c1 */ /* c2 */ x", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Comment node structure
+     * ======================================================== */
+    {
+        Arbor2GLR* glr;
+        Arbor2Nodus* tu;
+        Arbor2GLRResultus res;
+        Xar* tokens;
+
+        CREDO_GRADUS("comment node genus");
+
+        glr = arbor2_glr_creare(piscina, intern, expansion);
+        tokens = _lexare(piscina, intern, "/* lead */ int x;");
+        res = arbor2_glr_parsere_translation_unit(glr, tokens);
+
+        CREDO_VERUM(res.successus);
+        tu = res.radix;
+        CREDO_NON_NIHIL(tu);
+        CREDO_AEQUALIS_I32(tu->genus, ARBOR2_NODUS_TRANSLATION_UNIT);
+
+        /* First declaration should have commenta_ante populated */
+        si (tu->datum.translation_unit.declarationes != NIHIL &&
+            xar_numerus(tu->datum.translation_unit.declarationes) > ZEPHYRUM)
+        {
+            Arbor2Nodus** decl_ptr = xar_obtinere(
+                tu->datum.translation_unit.declarationes, ZEPHYRUM);
+            Arbor2Nodus* decl = *decl_ptr;
+
+            /* Declaration should have leading comment attached */
+            si (decl->commenta_ante != NIHIL)
+            {
+                i32 num_comments = xar_numerus(decl->commenta_ante);
+                CREDO_AEQUALIS_I32(num_comments, I);
+
+                si (num_comments > ZEPHYRUM)
+                {
+                    Arbor2Nodus** comm_ptr = xar_obtinere(decl->commenta_ante, ZEPHYRUM);
+                    Arbor2Nodus* comm = *comm_ptr;
+
+                    CREDO_AEQUALIS_I32(comm->genus, ARBOR2_NODUS_COMMENTUM);
+                    CREDO_AEQUALIS_I32(comm->datum.commentum.subgenus, ARBOR2_COMMENTUM_CLAUSUM);
+                    imprimere("  Comment text: '%.*s'\n",
+                        (integer)comm->datum.commentum.textus.mensura,
+                        comm->datum.commentum.textus.datum);
+                }
+            }
+            alioquin
+            {
+                imprimere("  Note: commenta_ante not populated (trivia-based roundtrip still works)\n");
+            }
+        }
+    }
+
+    /* ========================================================
+     * PROBARE: Interior comment in binary expression
+     * ======================================================== */
+    {
+        Arbor2GLR* glr;
+        Arbor2GLRResultus res;
+        Xar* tokens;
+
+        CREDO_GRADUS("interior commentum in binarium");
+
+        glr = arbor2_glr_creare(piscina, intern, expansion);
+        tokens = _lexare(piscina, intern, "a + /* mid */ b");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        CREDO_AEQUALIS_I32(res.radix->genus, ARBOR2_NODUS_BINARIUM);
+
+        /* The comment should attach to dexter (b) as commenta_ante */
+        {
+            Arbor2Nodus* dexter = res.radix->datum.binarium.dexter;
+            CREDO_NON_NIHIL(dexter);
+
+            si (dexter->commenta_ante != NIHIL)
+            {
+                i32 num = xar_numerus(dexter->commenta_ante);
+                CREDO_VERUM(num > ZEPHYRUM);
+                imprimere("  Interior comment attached to dexter: %d\n", num);
+            }
+            alioquin
+            {
+                imprimere("  Note: interior comment remains in trivia (roundtrip works)\n");
+            }
+        }
+    }
+
+    /* ========================================================
+     * PROBARE: Interior comment in ternary expression
+     * ======================================================== */
+    {
+        Arbor2GLR* glr;
+        Arbor2GLRResultus res;
+        Xar* tokens;
+
+        CREDO_GRADUS("interior commentum in ternarius");
+
+        glr = arbor2_glr_creare(piscina, intern, expansion);
+        tokens = _lexare(piscina, intern, "c ? /* q */ t : f");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+
+        /* Debug: print actual node type */
+        imprimere("  Parsed node type: %s (%d)\n",
+                  arbor2_nodus_genus_nomen(res.radix->genus),
+                  (i32)res.radix->genus);
+
+        /* Verificare roundtrip */
+        {
+            chorda* output = arbor2_scribere(piscina, res.radix);
+            constans character* input = "c ? /* q */ t : f";
+            imprimere("  Input:  '%s'\n", input);
+            imprimere("  Output: '%.*s'\n", output->mensura, output->datum);
+            CREDO_VERUM(output->mensura == 17);
+            CREDO_VERUM(memcmp(output->datum, input, 17) == ZEPHYRUM);
+        }
+
+        si (res.radix->genus == ARBOR2_NODUS_TERNARIUS)
+        {
+            /* The comment after ? should attach to verum as commenta_ante */
+            Arbor2Nodus* verum = res.radix->datum.ternarius.verum;
+            CREDO_NON_NIHIL(verum);
+
+            si (verum->commenta_ante != NIHIL)
+            {
+                i32 num = xar_numerus(verum->commenta_ante);
+                CREDO_VERUM(num > ZEPHYRUM);
+                imprimere("  Interior comment attached to verum: %d\n", num);
+            }
+            alioquin
+            {
+                imprimere("  Note: interior comment remains in trivia (roundtrip works)\n");
+            }
+        }
+        alioquin
+        {
+            imprimere("  ERRATUM: expectavit TERNARIUS, obtinuit %s\n",
+                      arbor2_nodus_genus_nomen(res.radix->genus));
+            CREDO_VERUM(FALSUM); /* Debet esse TERNARIUS */
+        }
+    }
+
+    /* ========================================================
+     * PROBARE: Interior comment in function call
+     * ======================================================== */
+    {
+        Arbor2GLR* glr;
+        Arbor2GLRResultus res;
+        Xar* tokens;
+
+        CREDO_GRADUS("interior commentum in vocatio");
+
+        glr = arbor2_glr_creare(piscina, intern, expansion);
+        tokens = _lexare(piscina, intern, "f( /* x */ arg)");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        CREDO_AEQUALIS_I32(res.radix->genus, ARBOR2_NODUS_VOCATIO);
+
+        /* Check that roundtrip preserves the comment */
+        {
+            chorda* output = arbor2_scribere(piscina, res.radix);
+            CREDO_VERUM(output->mensura > ZEPHYRUM);
+            imprimere("  Vocatio output: '%.*s'\n", (integer)output->mensura, output->datum);
+        }
+    }
+
+    /* ========================================================
+     * PROBARE: Interior comment roundtrip in binary
+     * ======================================================== */
+    {
+        Arbor2GLR* glr;
+        Arbor2GLRResultus res;
+        Xar* tokens;
+        constans character* fons;
+        chorda* output;
+
+        CREDO_GRADUS("interior commentum roundtrip");
+
+        fons = "x + /* middle */ y";
+        glr = arbor2_glr_creare(piscina, intern, expansion);
+        tokens = _lexare(piscina, intern, fons);
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+
+        /* Serialize back */
+        output = arbor2_scribere(piscina, res.radix);
+        imprimere("  Input:  '%s'\n", fons);
+        imprimere("  Output: '%.*s'\n", (integer)output->mensura, output->datum);
+
+        /* Verify comment is preserved */
+        CREDO_VERUM(output->mensura > ZEPHYRUM);
+        /* The output should contain the comment */
+        {
+            b32 habet_commentum = FALSUM;
+            i32 i;
+            per (i = ZEPHYRUM; i < output->mensura - V; i++)
+            {
+                si (output->datum[i] == '/' && output->datum[i + I] == '*')
+                {
+                    habet_commentum = VERUM;
+                    frange;
+                }
+            }
+            CREDO_VERUM(habet_commentum);
+        }
+    }
+
+    /* ========================================================
+     * PROBARE: Comprehensive interior comment roundtrip tests
+     * ======================================================== */
+    {
+        CREDO_GRADUS("comprehensive interior commenta");
+
+        /* Multiple interior comments in binary */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* c1 */ + /* c2 */ b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* c1 */ + /* c2 */ b /* c3 */ + /* c4 */ c", NIHIL));
+
+        /* Comments around operators */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a/* pre */+b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a+/* post */b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* both */ + /* sides */ b", NIHIL));
+
+        /* Comments in all binary operator types */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* x */ - /* y */ b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* x */ * /* y */ b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* x */ / /* y */ b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* x */ % /* y */ b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* x */ == /* y */ b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* x */ != /* y */ b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* x */ < /* y */ b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* x */ > /* y */ b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* x */ <= /* y */ b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* x */ >= /* y */ b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* x */ && /* y */ b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* x */ || /* y */ b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* x */ & /* y */ b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* x */ | /* y */ b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* x */ ^ /* y */ b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* x */ << /* y */ b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* x */ >> /* y */ b", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Interior comments in function calls
+     * ======================================================== */
+    {
+        CREDO_GRADUS("interior commenta in vocatio");
+
+        /* Comment before first argument */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "f(/* first */ a)", NIHIL));
+
+        /* Comment after argument */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "f(a /* after */)", NIHIL));
+
+        /* Comments between arguments */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "f(a, /* mid */ b)", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "f(a /* c1 */, /* c2 */ b)", NIHIL));
+
+        /* Multiple arguments with comments */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "f(/* a */ a, /* b */ b, /* c */ c)", NIHIL));
+
+        /* Comments in nested calls */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "f(g(/* inner */ x))", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "f(/* outer */ g(/* inner */ x))", NIHIL));
+
+        /* Empty function with comment */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "f(/* empty */)", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Interior comments in subscript expressions
+     * ======================================================== */
+    {
+        CREDO_GRADUS("interior commenta in subscriptio");
+
+        /* Comment inside subscript */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a[/* idx */ i]", NIHIL));
+
+        /* Comment before index */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a[ /* pre */ i]", NIHIL));
+
+        /* Comment after index */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a[i /* post */ ]", NIHIL));
+
+        /* Comments around index expression */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a[/* pre */ i + 1 /* post */]", NIHIL));
+
+        /* Multiple subscripts with comments */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a[/* x */ i][/* y */ j]", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Interior comments in member access
+     * ======================================================== */
+    {
+        CREDO_GRADUS("interior commenta in membrum accessus");
+
+        /* Comment before dot */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* c */ .b", NIHIL));
+
+        /* Comment after dot */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a. /* c */ b", NIHIL));
+
+        /* Comment before arrow */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* c */ ->b", NIHIL));
+
+        /* Comment after arrow */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a-> /* c */ b", NIHIL));
+
+        /* Chained access with comments */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* c1 */ .b /* c2 */ .c", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* c1 */ ->b /* c2 */ ->c", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Interior comments in unary expressions
+     * ======================================================== */
+    {
+        CREDO_GRADUS("interior commenta in unarius");
+
+        /* Comment after unary operator */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "! /* c */ x", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "~ /* c */ x", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "- /* c */ x", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "+ /* c */ x", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "++ /* c */ x", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "-- /* c */ x", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "& /* c */ x", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "* /* c */ p", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Interior comments in cast expressions
+     * ======================================================== */
+    {
+        CREDO_GRADUS("interior commenta in cast");
+
+        /* Comment inside cast parens */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "(/* type */ int)x", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "(int /* after */)x", NIHIL));
+
+        /* Comment after cast */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "(int) /* c */ x", NIHIL));
+
+        /* Pointer cast with comments */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "(int /* c */ *)p", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "(int*) /* c */ p", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Interior comments in sizeof
+     * ======================================================== */
+    {
+        CREDO_GRADUS("interior commenta in sizeof");
+
+        /* Comment after sizeof */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "sizeof /* c */ x", NIHIL));
+
+        /* Comment inside sizeof parens */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "sizeof(/* c */ x)", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "sizeof(x /* c */)", NIHIL));
+
+        /* Comment in sizeof type */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "sizeof(/* type */ int)", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "sizeof(int /* c */)", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Interior comments in parenthesized expressions
+     * ======================================================== */
+    {
+        CREDO_GRADUS("interior commenta in parenthesis");
+
+        /* Comment inside parens */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "(/* c */ x)", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "(x /* c */)", NIHIL));
+
+        /* Comments around expression */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "(/* pre */ a + b /* post */)", NIHIL));
+
+        /* Nested parens with comments */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "((/* inner */ x))", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "(/* outer */ (/* inner */ x))", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Interior comments in ternary expressions
+     * ======================================================== */
+    {
+        CREDO_GRADUS("interior commenta in ternarius");
+
+        /* Comment after condition */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* cond */ ? 1 : 2", NIHIL));
+
+        /* Comment before true branch */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a ? /* true */ 1 : 2", NIHIL));
+
+        /* Comment after true branch */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a ? 1 /* mid */ : 2", NIHIL));
+
+        /* Comment before false branch */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a ? 1 : /* false */ 2", NIHIL));
+
+        /* Multiple comments */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* c1 */ ? /* c2 */ 1 /* c3 */ : /* c4 */ 2", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Interior comments in assignment
+     * ======================================================== */
+    {
+        CREDO_GRADUS("interior commenta in assignatio");
+
+        /* Comment before equals */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "x /* c */ = 1", NIHIL));
+
+        /* Comment after equals */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "x = /* c */ 1", NIHIL));
+
+        /* Comments around compound assignment */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "x /* c */ += 1", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "x += /* c */ 1", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Interior comments in comma expressions
+     * ======================================================== */
+    {
+        CREDO_GRADUS("interior commenta in comma");
+
+        /* Comment between comma elements */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* c */ , b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a, /* c */ b", NIHIL));
+
+        /* Multiple elements with comments */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* c1 */, b /* c2 */, c", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Interior comments in declarations
+     * ======================================================== */
+    {
+        CREDO_GRADUS("interior commenta in declarationes");
+
+        /* Comment between type and name */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "int /* c */ x;", NIHIL));
+
+        /* Comment after name before semicolon */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "int x /* c */;", NIHIL));
+
+        /* Comment before initializer */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "int x /* c */ = 1;", NIHIL));
+
+        /* Comment after equals */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "int x = /* c */ 1;", NIHIL));
+
+        /* Pointer declaration with comment */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "int /* ptr */ *p;", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "int * /* name */ p;", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Multi-declarator declarations (int a, b;)
+     * ======================================================== */
+    {
+        CREDO_GRADUS("multi-declarator declarationes");
+
+        /* Basic multi-declarator */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "int a, b;", NIHIL));
+
+        /* With initializers */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "int a = 1, b = 2;", NIHIL));
+
+        /* Mixed with/without initializers */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "int a, b = 1;", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "int a = 1, b;", NIHIL));
+
+        /* Three declarators */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "int a, b, c;", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "int a = 1, b = 2, c = 3;", NIHIL));
+
+        /* Pointers */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "int *a, *b;", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "int *a, b;", NIHIL));
+
+        /* Spacing around comma */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "int a , b;", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "int a,b;", NIHIL));
+
+        /* With comments */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "int a /* c1 */, b;", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "int a, /* c2 */ b;", NIHIL));
+
+        /* Other types */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "char a, b;", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "float a, b;", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Line comments interior preservation
+     * ======================================================== */
+    {
+        CREDO_GRADUS("line commenta interior");
+
+        /* Line comment in multi-line expression */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a + // mid\nb", NIHIL));
+
+        /* Multiple line comments */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a + // c1\nb + // c2\nc", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Mixed block and line comments
+     * ======================================================== */
+    {
+        CREDO_GRADUS("mixta commenta");
+
+        /* Block then line */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* block */ + // line\nb", NIHIL));
+
+        /* Line then block */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a + // line\n/* block */ b", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Edge case comments
+     * ======================================================== */
+    {
+        CREDO_GRADUS("edge case commenta");
+
+        /* Empty block comment */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /**/ + b", NIHIL));
+
+        /* Comment with only spaces */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /*   */ + b", NIHIL));
+
+        /* Comment with stars */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /***/ + b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /** comment **/ + b", NIHIL));
+
+        /* Empty line comment */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a + //\nb", NIHIL));
+
+        /* Adjacent comments */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* c1 *//* c2 */ + b", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Additional ternary variations
+     * ======================================================== */
+    {
+        CREDO_GRADUS("ternarius variationes");
+
+        /* Basic ternary */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a ? b : c", NIHIL));
+
+        /* Ternary with no spaces */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a?b:c", NIHIL));
+
+        /* Ternary with comparison */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "x > 0 ? a : b", NIHIL));
+
+        /* Nested ternary in true branch */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a ? b ? c : d : e", NIHIL));
+        /* Nested ternary in false branch */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a ? b : c ? d : e", NIHIL));
+
+        /* Ternary in expressions */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "(a ? b : c) + d", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "x + (a ? b : c)", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Chained member access
+     * ======================================================== */
+    {
+        CREDO_GRADUS("concatenatus membrum accessus");
+
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a.b.c", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a->b->c", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a->b.c", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a.b->c", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a->b->c->d", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a.b.c.d.e", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Multiple subscripts
+     * ======================================================== */
+    {
+        CREDO_GRADUS("multiplex subscriptio");
+
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a[0][1]", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a[i][j]", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a[0][1][2]", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a[i + 1][j]", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Mixed member access and subscript
+     * ======================================================== */
+    {
+        CREDO_GRADUS("mixtus membrum et subscriptio");
+
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a.b[0]", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a[0].b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a->b[i]", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a[i]->b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a->b[i].c", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a[i].b->c[j]", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Compound assignment operators
+     * ======================================================== */
+    {
+        CREDO_GRADUS("composita assignatio");
+
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a += b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a -= b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a *= b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a /= b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a %= b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a &= b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a |= b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a ^= b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a <<= b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a >>= b", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Bitwise and shift operators
+     * ======================================================== */
+    {
+        CREDO_GRADUS("bitwise et shift");
+
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a & b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a | b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a ^ b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a << b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a >> b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a | b & c", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a ^ b | c", NIHIL));
+        /* Parenthesized bitwise */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "(a & b) | c", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Irregular whitespace patterns
+     * ======================================================== */
+    {
+        CREDO_GRADUS("irregularis spatium");
+
+        /* Double spaces */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a  +  b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a   *   b", NIHIL));
+
+        /* No spaces */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a+b+c", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a*b*c", NIHIL));
+
+        /* Asymmetric spacing */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a+ b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a +b", NIHIL));
+
+        /* Mixed spacing */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a+b * c-d", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a + b*c + d", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Deeply nested parentheses
+     * ======================================================== */
+    {
+        CREDO_GRADUS("profunde parentheses");
+
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "((a))", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "(((a)))", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "((a + b))", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "(((a + b)))", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "((a + b) * (c + d))", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Complex expressions
+     * ======================================================== */
+    {
+        CREDO_GRADUS("complexus expressiones");
+
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "(a + b) * (c - d)", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a * b + c * d", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "(a + b) * (c - d) / (e + f)", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a && b || c && d", NIHIL));
+        /* Parenthesized logical */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "(a || b) && (c || d)", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a < b && c > d || e == f", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Comma expressions
+     * ======================================================== */
+    {
+        CREDO_GRADUS("comma expressiones");
+
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a, b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a, b, c", NIHIL));
+        /* Parenthesized comma */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "(a, b)", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a = 1, b = 2", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Address-of and dereference
+     * ======================================================== */
+    {
+        CREDO_GRADUS("address et dereference");
+
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "&x", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "*p", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "**pp", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "&a.b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "*p->q", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "&a[0]", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "*a[0]", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Function call variations
+     * ======================================================== */
+    {
+        CREDO_GRADUS("vocatio variationes");
+
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "f(a, b, c, d)", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "f(a + b, c * d)", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "f(g(x))", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "f(g(h(x)))", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a.f()", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "p->f(x)", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a[0](x)", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Preprocessor directives roundtrip
+     * ======================================================== */
+    {
+        CREDO_GRADUS("preprocessor directiva");
+
+        /* #define simple */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "#define MAX 100\n", NIHIL));
+
+        /* #define with expression */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "#define MIN 0\n", NIHIL));
+
+        /* #define empty */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "#define EMPTY\n", NIHIL));
+
+        /* #define function-like macro */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "#define ADD(a, b) a + b\n", NIHIL));
+
+        /* #undef */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "#undef MAX\n", NIHIL));
+
+        /* #pragma */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "#pragma once\n", NIHIL));
+
+        /* #include with angle brackets */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "#include <stdio.h>\n", NIHIL));
+
+        /* #include with quotes */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "#include \"myfile.h\"\n", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Conditional compilation roundtrip
+     * ======================================================== */
+    {
+        CREDO_GRADUS("conditionales directiva");
+
+        /* Simple #ifdef/#endif */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "#ifdef FOO\nint x;\n#endif\n", NIHIL));
+
+        /* #ifndef/#endif */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "#ifndef BAR\nint y;\n#endif\n", NIHIL));
+
+        /* #ifdef/#else/#endif */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "#ifdef FOO\nint x;\n#else\nint y;\n#endif\n", NIHIL));
+
+        /* #if with expression */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "#if 1\nint x;\n#endif\n", NIHIL));
+
+        /* #if with defined() */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "#if defined(FOO)\nint x;\n#endif\n", NIHIL));
+
+        /* #if/#elif/#else/#endif */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "#if 0\nint a;\n#elif 1\nint b;\n#else\nint c;\n#endif\n", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Mixed preprocessor and declarations
+     * ======================================================== */
+    {
+        CREDO_GRADUS("mixta preprocessor et declarationes");
+
+        /* Declaration after #include */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "#include <stdio.h>\nint x;\n", NIHIL));
+
+        /* #define between declarations */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "int a;\n#define MAX 100\nint b;\n", NIHIL));
+
+        /* Conditional with function */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "#ifdef DEBUG\nvoid debug() { }\n#endif\n", NIHIL));
+    }
+
+    piscina_destruere(piscina);
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "roundtrip scriptoris", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("arbor2_scribere", SECTIONES);
+}

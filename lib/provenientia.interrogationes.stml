@@ -1,0 +1,63 @@
+<interrogationes unitas="provenientia">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I make a new house binary answer -provenientia?
+    <responsum symbolum="provenientia_respondere ProvenientiaRelatio" via="tools/stml.c tools/provenientia_scribere.sh">Declare
+      the generated record and link its object through an aedilis
+      annotation, as tools/stml.c does: a comment
+      &lt;aedilis obiectum="build/fabrica/provenientia/T.c"/&gt;,
+      externus constans ProvenientiaRelatio provenientia_T; and as the
+      FIRST statement of principale: si
+      (provenientia_respondere(argc, argv, &amp;provenientia_T)) redde
+      ZEPHYRUM. The installer runs tools/provenientia_scribere.sh T ARTIFICIUM
+      before building, which writes that .c file.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what does the -provenientia report contain and who reads it?
+    <responsum symbolum="provenientia_textus provenientia_respondere" via="tools/fabrica_sutura.c">Four
+      lines: 'provenientia 1', 'artificium X' (e.g. bin/manus),
+      'ingressus H' (the fabrica digest of the inputs of the action
+      that built it) and 'commissum C' (short HEAD hash, with
+      ' SORDIDUM' when the tree had uncommitted changes). bin/fabrica
+      runs the installed binary with -provenientia and compares the
+      digest with the one it computes today: equal means the install is
+      fresh. A non-zero exit or empty output counts as no
+      report.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why is the record passed as an argument instead of the library linking a well-known symbol?
+    <responsum symbolum="provenientia_respondere ProvenientiaRelatio" via="include/provenientia.h">Four
+      installers link build/ objects blindly. If lib/provenientia.c
+      referred to a symbol that only the generated file defines, every
+      binary that links the library without that file would fail to
+      link (fabrica plan 1a T7). So the binary names its own generated
+      record and hands it in.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why must provenientia_respondere be called before anything else in principale?
+    <responsum symbolum="provenientia_respondere" via="tools/fabrica_fumus.sh">bin/fabrica
+      asks from whatever directory it is in, so the answer must not
+      depend on the working directory, configuration or any other
+      setup the tool does. It matches only when -provenientia is the
+      ONE argument (argc == II); it then writes the report to stdout
+      and returns VERUM, and the caller exits 0. In every other case it
+      writes nothing and returns FALSUM. The smoke test checks it from
+      a foreign directory.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can the ingressus field be something other than a 64-character hex digest?
+    <responsum symbolum="ProvenientiaRelatio" via="tools/provenientia_scribere.sh">Yes,
+      despite the header's 'LXIV hex': the generator writes 'ignotum'
+      when bin/fabrica is not built yet (bootstrap), or when 'bin/fabrica
+      digestum' fails and PROVENIENTIA_TOLERANS=1 is set (without that
+      variable a failing digest stops the generator with exit 1).
+      commissum is 'ignotum' outside a git tree. A reader of the report
+      should treat any value that is not 64 hex digits as unknown,
+      never as fresh.</responsum>
+  </interrogatio>
+
+</interrogationes>

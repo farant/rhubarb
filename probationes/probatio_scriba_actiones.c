@@ -142,7 +142,28 @@ effugium (
     (vacuum)manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM);
 }
 
-s32 principale (vacuum)
+/* piscina et intern = sectionis (adiutores supra eas legunt); purgare
+ * reponit ne status inter sectiones maneat */
+interior vacuum
+_parare (
+    CredoContextus* c)
+{
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+}
+
+interior vacuum
+_purgare (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    piscina  = NIHIL;
+    intern   = NIHIL;
+}
+
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
                        Volumen* vol;
               ScribaDocumentum* doc;
@@ -154,13 +175,7 @@ s32 principale (vacuum)
     constans TabulaCharacterum* t;
                            i32  mutationes;
 
-    piscina = piscina_generare_dynamicum("probatio_scriba_actiones",
-        LXIV * M);
-    si (!piscina)
-    { imprimere("FRACTA: piscina\n"); redde I;
-    }
-    credo_aperire(piscina);
-    intern  = internamentum_creare(piscina);
+    (vacuum)c;
     vol     = volumen_temporarium(piscina, "probatio_scriba_actiones");
     doc = scriba_documentum_creare(piscina, intern, vol, "", LAT, ALT,
         IV);
@@ -190,7 +205,7 @@ s32 principale (vacuum)
     m = manus_ludus_creare(piscina, d);
     CREDO_MANUS_LUDUS_FOCUS(m, "pagina");
 
-    imprimere("\n--- I: insertio + Esc = actum unum; littera semel\n");
+    CREDO_GRADUS("I: insertio + Esc = actum unum; littera semel");
     CREDO_VERUM(manus_ludus_scribere(m, "ihello"));
     CREDO_AEQUALIS_I32(acta_generis(vol, "mutatio"), ZEPHYRUM);
     CREDO_VERUM(ephemera_est(repo, "modus", "inserere"));
@@ -220,8 +235,7 @@ s32 principale (vacuum)
     CREDO_FALSUM(textus_habet(insula_scribere(repo,
         piscina), "clavis_praecedens"));
 
-    imprimere("\n--- II: pausa = frusta coniuncta; 'u' insertionem"
-              " totam ---\n");
+    CREDO_GRADUS("II: pausa = frusta coniuncta; 'u' insertionem totam");
     CREDO_VERUM(manus_ludus_scribere(m, "A wor"));
     CREDO_AEQUALIS_I32(acta_generis(vol, "mutatio"), I);   /* nondum */
     manus_ludus_exspectare(m, MCC);
@@ -240,7 +254,7 @@ s32 principale (vacuum)
     CREDO_VERUM(manus_ludus_clavem(m, 'r', MOD_IMPERIUM));
     CREDO_VERUM(linea_est(t, ZEPHYRUM, "hello world"));
 
-    imprimere("\n--- III: dd statim; clavis praecedens, vacuitas\n");
+    CREDO_GRADUS("III: dd statim; clavis praecedens, vacuitas");
     CREDO_VERUM(manus_ludus_scribere(m, "ofoo"));
     effugium(m);
     CREDO_VERUM(linea_est(t, I, "foo"));
@@ -254,7 +268,7 @@ s32 principale (vacuum)
     CREDO_VERUM(linea_est(t, I, ""));
     CREDO_AEQUALIS_I32(acta_generis(vol, "mutatio"), mutationes + I);
 
-    imprimere("\n--- IV: capsa ex dd; g p glutinat ---\n");
+    CREDO_GRADUS("IV: capsa ex dd; g p glutinat");
     /* vim domus 'y' non habet: dd capsam implet */
     CREDO_VERUM(ephemera_est(repo, "capsa", "foo"));
     CREDO_VERUM(ephemera_est(repo, "capsa_lineae", "1"));
@@ -262,7 +276,7 @@ s32 principale (vacuum)
     CREDO_VERUM(linea_est(t, ZEPHYRUM, "hello world"));
     CREDO_VERUM(linea_est(t, I, "foo"));
 
-    imprimere("\n--- V: fd ex tempore eventus; nullum '\\0' ---\n");
+    CREDO_GRADUS("V: fd ex tempore eventus; nullum '\\0'");
     /* 'i' indentationem lineae ponit (status verus, actum honestum);
      * f insertum et per fd deletum: textus idem, nullum '\0' (tabula
      * trahens sinistram '\0' scribit - albatur) */
@@ -297,7 +311,7 @@ s32 principale (vacuum)
     CREDO_VERUM(ephemera_est(repo, "modus", "normalis"));
     CREDO_VERUM(memchr(t->cellulae, '[', (size_t)(LAT * ALT)) == NIHIL);
 
-    imprimere("\n--- VI: finire insertionem apertam servat ---\n");
+    CREDO_GRADUS("VI: finire insertionem apertam servat");
     mutationes = acta_generis(vol, "mutatio");
     CREDO_VERUM(manus_ludus_scribere(m, "Azz"));
     CREDO_AEQUALIS_I32(acta_generis(vol, "mutatio"), mutationes);
@@ -308,13 +322,22 @@ s32 principale (vacuum)
     CREDO_VERUM(memcmp(t->cellulae, sa.laboris.cellulae,
         (size_t)(LAT * ALT)) == ZEPHYRUM);
 
-    imprimere("\n--- VII: insula honesta ---\n");
+    CREDO_GRADUS("VII: insula honesta");
     CREDO_VERUM(insula_restituere(repo));
     CREDO_FALSUM(insula_mendacium(repo));
     CREDO_VERUM(scriba_documentum_verificare(doc));
 
-    imprimere("\n");
-    credo_imprimere_compendium();
     volumen_claudere(vol);
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "pagina.clavis per dispensatorem verum", _sectio_prima, _parare,
+        _purgare, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("scriba_actiones", SECTIONES);
 }

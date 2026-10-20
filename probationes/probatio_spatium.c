@@ -34,10 +34,6 @@ nomen structura {
     i32 petitiones;
 } Ludicra;
 
-hic_manens Ludicra sinistra;
-hic_manens Ludicra dextra;
-hic_manens Ludicra hospes;
-
 hic_manens constans character spatium_a[] = "1.sinistrum.toy";
 hic_manens constans character spatium_b[] = "1.dextrum.toy";
 
@@ -234,12 +230,13 @@ clavis (
 }
 
 interior vacuum
-componentia_probare (vacuum)
+_sectio_prima (
+    CredoContextus* ctx)
 {
     Componens* arbor;
     Componens* c;
 
-    imprimere("\n--- I: componens - spatium et ids ---\n");
+    (vacuum)ctx;
     arbor = componere(NIHIL, NIHIL, piscina, intern, NIHIL);
     CREDO_VERUM(chorda_vacua(componens_spatium(arbor)));
     /* spatium hereditur: pagina sinistra in A */
@@ -289,17 +286,21 @@ componentia_probare (vacuum)
 }
 
 interior vacuum
-actiones_probare (vacuum)
+_sectio_secunda (
+    CredoContextus* c)
 {
-    ActioRegistrum* reg;
-    ActioRegistrum* fa;
-    ActioRegistrum* fb;
-           ActioFn  fn;
-            vacuum* ctx;
-         Componens* arbor;
-               Xar* x;
+            Ludicra  sinistra;
+            Ludicra  dextra;
+            Ludicra  hospes;
+     ActioRegistrum* reg;
+     ActioRegistrum* fa;
+     ActioRegistrum* fb;
+            ActioFn  fn;
+             vacuum* ctx;
+          Componens* arbor;
+                Xar* x;
 
-    imprimere("\n--- II: actiones in spatiis ---\n");
+    (vacuum)c;
     reg  = actio_registrum_creare(piscina, intern);
     fa   = actio_registrum_creare(piscina, intern);
     fb   = actio_registrum_creare(piscina, intern);
@@ -358,16 +359,20 @@ actiones_probare (vacuum)
 }
 
 interior vacuum
-figurae_probare (vacuum)
+_sectio_tertia (
+    CredoContextus* c)
 {
-    FiguraRegistrum* reg;
-    FiguraRegistrum* fa;
-    FiguraRegistrum* fb;
-           FiguraFn  fn;
-             vacuum* ctx;
-            Mandata* m;
+             Ludicra  sinistra;
+             Ludicra  dextra;
+             Ludicra  hospes;
+     FiguraRegistrum* reg;
+     FiguraRegistrum* fa;
+     FiguraRegistrum* fb;
+            FiguraFn  fn;
+              vacuum* ctx;
+             Mandata* m;
 
-    imprimere("\n--- III: figurae in spatiis ---\n");
+    (vacuum)c;
     memset(&sinistra, ZEPHYRUM, magnitudo(Ludicra));
     memset(&dextra, ZEPHYRUM, magnitudo(Ludicra));
     memset(&hospes, ZEPHYRUM, magnitudo(Ludicra));
@@ -408,16 +413,20 @@ figurae_probare (vacuum)
 }
 
 interior vacuum
-dispensatorem_probare (vacuum)
+_sectio_quarta (
+    CredoContextus* c)
 {
-    InsulaRepositorium* repo;
-        ActioRegistrum* reg;
-        ActioRegistrum* fa;
-        ActioRegistrum* fb;
-           Dispensator* d;
-               Eventus  e;
+                Ludicra  sinistra;
+                Ludicra  dextra;
+                Ludicra  hospes;
+     InsulaRepositorium* repo;
+         ActioRegistrum* reg;
+         ActioRegistrum* fa;
+         ActioRegistrum* fb;
+            Dispensator* d;
+                Eventus  e;
 
-    imprimere("\n--- IV: dispensator - focus et actiones ---\n");
+    (vacuum)c;
     memset(&sinistra, ZEPHYRUM, magnitudo(Ludicra));
     memset(&dextra, ZEPHYRUM, magnitudo(Ludicra));
     repo  = insula_repositorium_creare(piscina, intern, "<insula/>");
@@ -467,7 +476,7 @@ dispensatorem_probare (vacuum)
     CREDO_AEQUALIS_I32(dextra.ictus, I);
     CREDO_AEQUALIS_I32(sinistra.ictus, ZEPHYRUM);
 
-    imprimere("\n--- V: Tab intra spatium ---\n");
+    CREDO_GRADUS("V: Tab intra spatium");
     dispensator_motus(d)->spatium = chorda_internata(spatium_a);
     dispensator_focus_ponere(d, chorda_internata("alia"));
     e = clavis(M + CCC, '\t');
@@ -479,7 +488,7 @@ dispensatorem_probare (vacuum)
     CREDO_AEQUALIS_I32(sinistra.claves, II);
     CREDO_AEQUALIS_I32(dextra.claves, I);
 
-    imprimere("\n--- VI: focus et captura extra spatium ---\n");
+    CREDO_GRADUS("VI: focus et captura extra spatium");
     /* 'tertia' solum in B: in spatio A absens -> petitio foci ad
      * radicem HOSPITIS (spatium ""), non ad radicem lateris eiusdem
      * id 'radix' */
@@ -514,19 +523,22 @@ dispensatorem_probare (vacuum)
  * spatio (via absoluta liberi) suum servant, sine spatio parentis
  * accipiunt; via absoluta bis = collisio */
 interior vacuum
-nidificata_probare (vacuum)
+_sectio_quinta (
+    CredoContextus* c)
 {
-     ActioRegistrum* reg;
-     ActioRegistrum* parens;
-     ActioRegistrum* filius;
-    FiguraRegistrum* figurae;
-    FiguraRegistrum* figurae_parentis;
-    FiguraRegistrum* figurae_filii;
-            ActioFn  fn;
-             vacuum* ctx;
-           FiguraFn  ff;
+             Ludicra  sinistra;
+             Ludicra  dextra;
+      ActioRegistrum* reg;
+      ActioRegistrum* parens;
+      ActioRegistrum* filius;
+     FiguraRegistrum* figurae;
+     FiguraRegistrum* figurae_parentis;
+     FiguraRegistrum* figurae_filii;
+             ActioFn  fn;
+              vacuum* ctx;
+            FiguraFn  ff;
 
-    imprimere("\n--- VII: registra nidificata (S8c) ---\n");
+    (vacuum)c;
     reg     = actio_registrum_creare(piscina, intern);
     parens  = actio_registrum_creare(piscina, intern);
     filius  = actio_registrum_creare(piscina, intern);
@@ -574,23 +586,42 @@ nidificata_probare (vacuum)
     CREDO_VERUM(ctx == &dextra);
 }
 
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
+{
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+}
+
+interior vacuum
+_suitam_purgare (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    piscina  = NIHIL;
+    intern   = NIHIL;
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I: componens - spatium et ids", _sectio_prima, NIHIL, NIHIL,
+        NIHIL,
+      NIHIL },
+    { "II: actiones in spatiis", _sectio_secunda, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { "III: figurae in spatiis", _sectio_tertia, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { "IV: dispensator - focus et actiones", _sectio_quarta, NIHIL,
+        NIHIL,
+      NIHIL, NIHIL },
+    { "VII: registra nidificata (S8c)", _sectio_quinta, NIHIL, NIHIL,
+      NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
 s32
 principale (vacuum)
 {
-    piscina = piscina_generare_dynamicum("probatio_spatium", LXIV * M);
-    si (!piscina)
-    { imprimere("FRACTA: piscina\n"); redde I;
-    }
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
-
-    componentia_probare();
-    actiones_probare();
-    figurae_probare();
-    dispensatorem_probare();
-    nidificata_probare();
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+    redde credo_suitam_currere_cum("spatium", SECTIONES, _suitam_parare,
+        _suitam_purgare);
 }

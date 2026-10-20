@@ -102,13 +102,15 @@ _aequat (
     redde VERUM;
 }
 
-/* T2: octeti -> lexema (series_terminalis) -> stilus_applicare */
+/* T2: octeti -> lexema (series_terminalis) -> stilus_applicare;
+ * lector in piscina sectionis (olim piscina hic_manens, numquam
+ * destructa - status inter sectiones) */
 interior s32
 _applicare_octetos (
-              chorda  octeti,
-    StilusTerminalis* st)
+              Piscina* piscina,
+               chorda  octeti,
+     StilusTerminalis* st)
 {
-    hic_manens Piscina* piscina = NIHIL;
           SeriesLector* lector;
           SeriesLexema  l;
            constans i8* p       = octeti.datum;
@@ -116,10 +118,6 @@ _applicare_octetos (
                    s32  ignota  = ZEPHYRUM;
                    b32  ullum   = FALSUM;
 
-    si (piscina == NIHIL)
-    {
-        piscina = piscina_generare_dynamicum("lexemator", M * M);
-    }
     lector = series_lectorem_creare(piscina);
     /* omnes series applicantur (codificatio longa dividitur) */
     dum (   p < finis
@@ -139,7 +137,8 @@ _applicat (
                      i32  ignota,
         StilusTerminalis* st)
 {
-    s32 n = _applicare_octetos(chorda_ex_literis(octeti, piscina), st);
+    s32 n = _applicare_octetos(piscina, chorda_ex_literis(octeti,
+        piscina), st);
 
     si (n != (s32)ignota)
     {
@@ -179,11 +178,17 @@ _reditus (
     ChordaAedificator* a = chorda_aedificator_creare(piscina, LXIV);
 
     stilus_codificare(a, NIHIL, s, STILUS_CODIFICATIO_PLENA);
-    redde (b32)(_applicare_octetos(chorda_aedificator_finire(a), lectus)
+    redde (b32)(_applicare_octetos(piscina,
+        chorda_aedificator_finire(a), lectus)
         == ZEPHYRUM);
 }
 
-s32 principale (vacuum)
+/* gradus I-X seriatim: 'st' a gradu in gradum transit (II legit
+ * nativum I, VI stilum V, IX ex statu priore incipit), ergo sectio una
+ * cum gradibus nominatis */
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
               Piscina* piscina;
      StilusTerminalis  st;
@@ -193,21 +198,14 @@ s32 principale (vacuum)
                   i32  b;
                   i32  discordes = ZEPHYRUM;
 
-    piscina = piscina_generare_dynamicum("probatio_stilus_terminalis",
-        M * M);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    credo_aperire(piscina);
+    piscina = c->piscina;
 
-    imprimere("\n--- I. nativus: reditio nuda ---\n");
+    CREDO_GRADUS("I. nativus: reditio nuda");
     stilus_nativus(&st);
     CREDO_VERUM (_aequat(piscina, NIHIL, &st, STILUS_CODIFICATIO_PLENA,
         "\033[0m"));
 
-    imprimere("\n--- II. subset tesserae: ut _stilum_emittere ---\n");
+    CREDO_GRADUS("II. subset tesserae: ut _stilum_emittere");
     st.ornamenta       = STILUS_CRASSUM | STILUS_CURSIVUM
         | STILUS_INVERSUM
         | STILUS_TRANSFIXUM;
@@ -221,7 +219,7 @@ s32 principale (vacuum)
     CREDO_VERUM (_aequat(piscina, NIHIL, &st, STILUS_CODIFICATIO_CCLVI,
         "\033[0;2;38;5;235;48;5;208m"));
 
-    imprimere("\n--- III. ornamenta omnia, ordine canonico ---\n");
+    CREDO_GRADUS("III. ornamenta omnia, ordine canonico");
     stilus_nativus(&st);
     st.ornamenta = STILUS_CRASSUM | STILUS_OBSCURUM | STILUS_CURSIVUM
         | STILUS_NICTANS | STILUS_INVERSUM | STILUS_INVISIBILE
@@ -230,7 +228,7 @@ s32 principale (vacuum)
     CREDO_VERUM (_aequat(piscina, NIHIL, &st, STILUS_CODIFICATIO_PLENA,
         "\033[0;1;2;3;4;5;7;8;9;53m"));
 
-    imprimere("\n--- III-bis. ultra XXIV parametra: altera ---\n");
+    CREDO_GRADUS("III-bis. ultra XXIV parametra: altera");
     stilus_nativus(&st);
     st.ornamenta = STILUS_CRASSUM | STILUS_OBSCURUM | STILUS_CURSIVUM
         | STILUS_NICTANS | STILUS_INVERSUM | STILUS_INVISIBILE
@@ -243,7 +241,7 @@ s32 principale (vacuum)
         "\033[0;1;2;3;4:5;5;7;8;9;53;38;2;1;2;3;48;2;4;5;6m"
         "\033[58;2;7;8;9m"));
 
-    imprimere("\n--- IV. genera sublineae ---\n");
+    CREDO_GRADUS("IV. genera sublineae");
     stilus_nativus(&st);
     st.sublinea = STILUS_SUBLINEA_DUPLEX;
     CREDO_VERUM (_aequat(piscina, NIHIL, &st, STILUS_CODIFICATIO_PLENA,
@@ -258,7 +256,7 @@ s32 principale (vacuum)
     CREDO_VERUM (_aequat(piscina, NIHIL, &st, STILUS_CODIFICATIO_PLENA,
         "\033[0;4:5m"));
 
-    imprimere("\n--- V. colores: tabula, sublineae, CCLVI ---\n");
+    CREDO_GRADUS("V. colores: tabula, sublineae, CCLVI");
     stilus_nativus(&st);
     st.color_litterae   = _color(STILUS_COLOR_TABULA, V);
     st.color_fundi      = _color(STILUS_COLOR_TABULA, CC);
@@ -270,7 +268,7 @@ s32 principale (vacuum)
     CREDO_VERUM (_aequat(piscina, NIHIL, &st, STILUS_CODIFICATIO_CCLVI,
         "\033[0;4:3;38;5;5;48;5;200;58;5;232m"));
 
-    imprimere("\n--- VI. prior: aequalis nihil, aliter plena ---\n");
+    CREDO_GRADUS("VI. prior: aequalis nihil, aliter plena");
     alius = st;
     CREDO_VERUM (stilus_aequalis(&st, &alius));
     CREDO_VERUM (_aequat(piscina, &alius, &st, STILUS_CODIFICATIO_PLENA,
@@ -280,7 +278,7 @@ s32 principale (vacuum)
     CREDO_VERUM (_aequat(piscina, &alius, &st, STILUS_CODIFICATIO_PLENA,
         "\033[0;4:3;38;5;5;48;5;200;58;2;10;11;12m"));
 
-    imprimere("\n--- VII. tabula CCLVI xterm ---\n");
+    CREDO_GRADUS("VII. tabula CCLVI xterm");
     CREDO_AEQUALIS_I32 (stilus_tabulae_color(ZEPHYRUM), 0x000000);
     CREDO_AEQUALIS_I32 (stilus_tabulae_color(I), 0xCD0000);
     CREDO_AEQUALIS_I32 (stilus_tabulae_color(XII), 0x5C5CFF);
@@ -292,7 +290,7 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_I32 (stilus_tabulae_color(CCLV), 0xEEEEEE);
     CREDO_AEQUALIS_I32 (stilus_tabulae_color(CCLVI), ZEPHYRUM);
 
-    imprimere("\n--- VIII. quantizatio contra _cclvi tesserae ---\n");
+    CREDO_GRADUS("VIII. quantizatio contra _cclvi tesserae");
     CREDO_AEQUALIS_I32 (stilus_quantizare(0x000000), XVI);
     CREDO_AEQUALIS_I32 (stilus_quantizare(0xFF0000), CXCVI);
     CREDO_AEQUALIS_I32 (stilus_quantizare(0x808080), CCXLIV);
@@ -341,7 +339,7 @@ s32 principale (vacuum)
     /* cubus vincit, 115 -> gradus 95 (index I), non 135 */
     CREDO_AEQUALIS_I32 (stilus_quantizare(0x7300FF), LVII);
 
-    imprimere("\n--- IX. decodificatio: vectores Ghostty ---\n");
+    CREDO_GRADUS("IX. decodificatio: vectores Ghostty");
     /* resetum: vacuum aut 0 */
     CREDO_VERUM (_applicat(piscina, "\033[m", ZEPHYRUM, &st));
     CREDO_VERUM (_nativus(&st));
@@ -505,7 +503,7 @@ s32 principale (vacuum)
     CREDO_VERUM (   st.ornamenta == STILUS_CRASSUM
                  && st.sublinea == STILUS_SUBLINEA_NULLA);
 
-    imprimere("\n--- X. reditus: applicare(codificare(s)) == s ---\n");
+    CREDO_GRADUS("X. reditus: applicare(codificare(s)) == s");
     {
         constans StilusColor colores[VI] = {
             { STILUS_COLOR_NATIVUS, 0 }, { STILUS_COLOR_TABULA, 0 },
@@ -556,13 +554,21 @@ s32 principale (vacuum)
         stilus_codificare(a, NIHIL, &s, STILUS_CODIFICATIO_CCLVI);
         c = chorda_aedificator_finire(a);
         stilus_nativus(&lectus);
-        CREDO_AEQUALIS_S32 (_applicare_octetos(c, &lectus), ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (_applicare_octetos(piscina, c, &lectus),
+            ZEPHYRUM);
         CREDO_VERUM (_color_est(lectus.color_litterae,
             STILUS_COLOR_TABULA,
             CXCVI));
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "codex stili", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("stilus_terminalis", SECTIONES);
 }

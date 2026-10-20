@@ -63,27 +63,18 @@ _lineas_numerare (
     redde numerus;
 }
 
-s32 principale (vacuum)
-{
-        b32  praeteritus;
-    Piscina* piscina;
-
-    piscina = piscina_generare_dynamicum("probatio_mensura", M * M);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-    remove(DIARIUM);
-
 
     /* ========================================================
      * I. Circuitus formae: nihil perit
      * ======================================================== */
 
-    imprimere("\n--- I. Circuitus lineae ---\n");
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         Mensura fons, reducta;
         chorda linea;
@@ -103,13 +94,20 @@ s32 principale (vacuum)
         CREDO_F64_PROXIMUS(reducta.valor, fons.valor, 0.000001);
         CREDO_AEQUALIS_S64(reducta.momentum, fons.momentum);
     }
+}
 
 
     /* ========================================================
      * II. Parens vacuus (radix) circuitum superest
      * ======================================================== */
 
-    imprimere("\n--- II. Radix (parens vacuus) ---\n");
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         Mensura fons, reducta;
         chorda linea;
@@ -122,6 +120,7 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32(reducta.parens.mensura, ZEPHYRUM);
         CREDO_VERUM(chorda_aequalis(reducta.titulus, fons.titulus));
     }
+}
 
 
     /* ========================================================
@@ -131,7 +130,13 @@ s32 principale (vacuum)
      * lector campos numeraret et alium sensum inveniret.
      * ======================================================== */
 
-    imprimere("\n--- III. Separator in campo ---\n");
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         Mensura fons;
          chorda linea;
@@ -146,13 +151,20 @@ s32 principale (vacuum)
         linea        = mensura_ad_lineam(&fons, piscina);
         CREDO_AEQUALIS_I32(linea.mensura, ZEPHYRUM);
     }
+}
 
 
     /* ========================================================
      * IV. Lineae malformatae RECUSANTUR
      * ======================================================== */
 
-    imprimere("\n--- IV. Lineae malformatae ---\n");
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         Mensura reducta;
 
@@ -168,6 +180,7 @@ s32 principale (vacuum)
             chorda_ex_literis("a\tb\tc\td\t1.5\tf\tg\th", piscina),
             &reducta, piscina));
     }
+}
 
 
     /* ========================================================
@@ -177,7 +190,13 @@ s32 principale (vacuum)
      * reddens omnes probationes obvias praeteriret.
      * ======================================================== */
 
-    imprimere("\n--- V. Claves ---\n");
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda id_a, id_b, sessio;
 
@@ -190,13 +209,21 @@ s32 principale (vacuum)
         CREDO_FALSUM(chorda_aequalis(id_a, id_b));
         CREDO_VERUM(mensura_momentum_nunc() > (s64)1700000000000);
     }
+}
 
 
     /* ========================================================
      * VI. Diarium APPENDIT (non superscribit)
      * ======================================================== */
 
-    imprimere("\n--- VI. Diarium ---\n");
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
+    remove(DIARIUM);
     {
         Mensura prima, altera;
 
@@ -219,7 +246,7 @@ s32 principale (vacuum)
      * VII. Conditio in volumen + truncatio
      * ======================================================== */
 
-    imprimere("\n--- VII. Conditio ---\n");
+    CREDO_GRADUS("VII. Conditio");
     {
                Volumen* vol;
         MensuraFructus  fructus;
@@ -242,13 +269,20 @@ s32 principale (vacuum)
             volumen_claudere(vol);
         }
     }
+}
 
 
     /* ========================================================
      * VIII. Lineae malformatae NUMERANTUR, non silentur
      * ======================================================== */
 
-    imprimere("\n--- VIII. Malformatae numerantur ---\n");
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
                Volumen* vol;
         MensuraFructus  fructus;
@@ -282,25 +316,27 @@ s32 principale (vacuum)
 
         remove(DIARIUM);
     }
+}
 
 
-    /* ========================================================
-     * Compendium
-     * ======================================================== */
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I. Circuitus lineae", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "II. Radix (parens vacuus)", _sectio_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "III. Separator in campo", _sectio_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "IV. Lineae malformatae", _sectio_quarta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "V. Claves", _sectio_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "VI. Diarium", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "VIII. Malformatae numerantur", _sectio_septima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-
-    piscina_destruere(piscina);
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("mensura", SECTIONES);
 }

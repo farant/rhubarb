@@ -59,6 +59,13 @@ phase that needs it. Header text shown to Fran before coding.*
 | **T6** | tmux re-attach on restore: a terminal remembers its tmux session and vicus re-attaches it. |
 | **T7** | EXPERIMENT (progressive enhancement): Claude Code channels (MCP servers that push messages into a running session) - ask an agent for a status line, deliver a reply into the conversation. Verify the current mechanism against the docs first; a general `canales` library if it pans out. Nothing in T1-T6 depends on it. |
 
+### Follow-ups (Fran)
+
+- **T4f** (2026-10-16): Cmd+` toggles the notifications center (open
+  it, or pop it if it is the open pane). Check first what fenestra
+  delivers: Cmd+` is macOS's "cycle windows" chord, and every Cmd
+  chord also fires its menu equivalent (memory fenestra-cmd-keys).
+
 ### Phase 2 (Fran, 2026-10-15): gate and test progress dashboard
 
 | Phase | Content |
@@ -66,6 +73,65 @@ phase that needs it. Header text shown to Fran before coding.*
 | **T8** | Live runs from mensor's journal: open runs (started, not finished) with their nested children (fabrica actions, suites, credo sections) and status; estimate from history (median of the last N runs of the same gate on this machine); "stage x of y" = children done vs the last run's count. |
 | **T9** | Run -> Claude session: join on cwd/worktree and the hook log (PreToolUse carries the Bash command and TMUX_PANE); fallback: `praeco` exports MENSOR_SESSIO into the session via CLAUDE_ENV_FILE at SessionStart. |
 | **T10** | vicus dashboard: per session, running gates with elapsed / estimated time, stage x/y, failures as they happen; also runs started outside any session (no link). Beside or inside the T5 sessions view. |
+
+### Phase 2 facts (research 2026-10-16, read-only)
+
+1. **Live at the outer level only.** Runs write `initium` at start and
+   `finis` at end (lib/mensura, analytica spec II): commissio, phases,
+   `porta:*`, chassis scripts - an open run = initium without finis.
+   BUT fabrica actions and credo sections (`member#section`) write BOTH
+   lines after the action ends, initium backdated
+   (tools/fabrica_memoria.c). Inside a gate, finished children stream
+   in; the running ones are invisible.
+2. **Two stores.** Lines append to ~/.rhubarb/mensurae.diarium;
+   `mensor curare` (detached) folds it into ~/.rhubarb/mensurae.volumen
+   when it passes 256 KB or daily. A 30-minute commit can be folded
+   mid-run: its initium in the volume, its finis later in the diary.
+   `mensura_cursus_legere` reads the volume only - a live view needs the
+   volume's open runs + a diary follower (as admonitiones follows
+   eventa.jsonl).
+3. **Running vs killed is indistinguishable.** CURSUS_INTERRUPTUS means
+   "no finis (or still running)". The id carries a pid, but for
+   silva.py runs (`mensor cursus incipere` subprocess) it is the
+   short-lived mensor's pid. Needs an owner pid recorded, or a
+   heartbeat.
+4. **Nesting is there.** parens via MENSOR_PARENS: commissio -> porta:X
+   -> fabrica actions -> credo sections. Real commit 1dc057b6: 206 s,
+   generata 83 s (bearssl_amalgama 53 s), radix 74 s.
+5. **Whole-gate medians are useless as estimates.** porta:radix: median
+   81 s, range 23..580 s (n=147) - bimodal by fabrica cache hits
+   ("membra cursa 0/351"). `fabrica sanare -siccum` already computes the
+   plan (N agenda, M fortasse, ~X s from each member's last run). Stage
+   "x of y" needs that plan recorded at the START of a composite - today
+   nothing records it.
+6. **T9 join is direct.** Claude Code exports `CLAUDE_CODE_SESSION_ID`
+   (= the hook's session_id) and TMUX_PANE into Bash commands; a
+   detached commissio inherits them. mensura already reads CLAUDECODE
+   (vocator agens) but records neither. Recording the session id at
+   initium replaces the CLAUDE_ENV_FILE fallback. (Verify it survives
+   the double fork.)
+
+7. **The record format is frozen by sharing.** `mensura_cursus_ex_linea`
+   demands exactly XIV (initium) / XII (finis) fields, and
+   `mensura_condere` DROPS a malformed line and then truncates the
+   diary. Every tree's bin/mensor folds the shared diary - so a new field
+   written by secunda would be silently destroyed by quinta's (or any
+   unmerged tree's) next fold. New facts about a run go in as ordinary
+   MENSURA records (sessio id parens titulus valor unitas momentum,
+   parens = run id), which every binary already accepts.
+8. **Owner pid.** `mensor cursus incipere` (silva.py runs) is a child
+   of the owner: getppid() = the Python process that will write finis.
+   `mensor cursus currere -- cmd` waits for its child: getpid(). No
+   liveness call exists; house precedent (fabrica core count) shells
+   out via processus rather than sysctl(3): `/bin/ps -o etime= -p PID`
+   gives existence + start time (start after the run's initium = pid
+   reused). Builds fork constantly, so pids wrap within hours - the
+   start-time check is needed, not optional.
+9. **fabrica has no up-front plan in a real run.** The wave path
+   (`_sanare_per_undas`, lib/fabrica_sanare.c) judges a wave, runs its
+   stale members, then judges the next; only `-siccum` judges all
+   first (71 s for radix). Known at start: the members in scope and the
+   waves (`fabrica_undas_formare`). Stale counts appear wave by wave.
 
 ## IV. Status
 
@@ -131,10 +197,95 @@ phase that needs it. Header text shown to Fran before coding.*
   native notification (Fran). Backup:
   ~/.claude/settings.json.bak-colloquia-2026-10-16. The binary is an
   AD HOC copy of secunda's bin/praeco (never ~/.bin from a worktree).
-  AFTER the main merge + `bin/fabrica sanare installata`: point the 7
-  hooks at ~/.bin/praeco and delete ~/.rhubarb/colloquia/praeco. Until
-  then a praeco change needs `rm` + `cp` by hand (code-signing note in
-  tools/praeco_struere.sh).
+- T8a 2026-10-16: `processus_vivus` (pid alive + start time via
+  `ps -o etime=`) and the pure `processus_aetatem_legere`. Plants 5/6
+  red; the `pid <= 0` guard is unobservable (`ps -p 0` exits 1 itself)
+  and stays as defence.
+- T8b 2026-10-16: `mensor cursus incipere` / `currere` write a
+  `cursus.custos` measurement (getppid / getpid) beside the run;
+  `mensura_mensuras_legere` reads measurements back by title prefix.
+  Plants: reader 1/2 red (the genus check is redundant - mensura_ex_linea
+  rejects run lines); mensor 3/3 red by hand - silva.planta does not
+  rebuild bin/mensor for the `currit` gate (false "porta muta").
+- T8c 2026-10-16: fabrica `progressum_notare` (FabricaSutura): start
+  (0/N, waves W), after each wave (cumulative), serial path after each
+  member; siccum never. bin/fabrica writes `fabrica.ambitus` /
+  `fabrica.undae` / `fabrica.iudicata` measurements under MENSOR_PARENS
+  (throttled to one line a second, last always; alien root without an
+  explicit diary writes nothing - LV guard). `mensor cursus factum`
+  (new CLI) writes a measurement on the open run in the RUN diary
+  (`mensor addere` defaults to /tmp/mensurae.diarium - wrong file);
+  silva.commissio records `consilium.portae`. The "last line always"
+  rule is unobservable in the fixture (members take > 1 s).
+- FOUND 2026-10-16: the ~1000 s IUDICIUM durations were a CLAMSHELL
+  SLEEP (pmset: 10:45:04-11:01:49 local). lib/processus times and
+  kills by WALL clock (gettimeofday): sleep past 600 s = generator
+  killed on wake. silva uses time.monotonic (pauses in sleep). Fran:
+  fix it (T8d0, processus + mensor on CLOCK_UPTIME_RAW), ship on code
+  review; the real lid-close probe (sleep 60 under a 120 s timeout,
+  lid shut ~3 min, old build red / new green) is OWED.
+- T8d0 2026-10-16: lib/processus_posix.c `_tempus_ms` and tools/mensor.c
+  `_horologium_ms` on HOROLOGIUM_VIGILANS = CLOCK_UPTIME_RAW (Darwin),
+  CLOCK_MONOTONIC elsewhere; every use is a difference. Lexicon
+  (silva/fontes/systema_posix.h) gains CLOCK_UPTIME_RAW 8 (auspex
+  certifies) - before, examen analysed the #else branch - and getppid
+  (examen suspected T8b's call as implicit). Glossary: uptime, getppid.
+  No automated test can sleep the machine: shipped on review (Fran).
+- T8d 2026-10-16: `cursus_quaerere_currentes` (open runs as a tree;
+  owner, gates x/y, members judged after the LATEST scope, finished
+  children - gates under a commit, non-IUDICIUM under a gate - and the
+  last five passing runs' range) and `mensor quaestio currentes`
+  (liveness in the CLI: processus_vivus + born-after-the-run = reused
+  pid; dead roots hidden and counted; pre-T8 roots shown one day;
+  `-machina` CURRENS lines carry a life column for T10). Fumus XVI fakes
+  a reused pid with `cursus factum` (a newer process as owner). Plants:
+  lib 5/5, CLI 3/3.
+- GAP (seen live during T8d's own commit): judge-only gates (generata =
+  `bin/fabrica iudicare`) write no member progress - progressum_notare
+  lives in sanare only. Follow-up for T10: progress in iudicare too.
+- T9 2026-10-16 (Fran: option A): a TOP-LEVEL run started under Claude
+  Code carries a measurement titled `colloquium:<CLAUDE_CODE_SESSION_ID>`
+  (value 1; title = key, like cursus.custos). The variable survives the
+  detached double-fork commit (checked). currentes: CursusCurrens.
+  colloquium (children inherit the root's), `colloquium=<id>` filter,
+  root tag `[colloquium <8>]`, last -machina column. CLAUDE_CODE_SESSION_ID
+  is undocumented - fallback if it vanishes: praeco exports our own
+  variable at SessionStart via CLAUDE_ENV_FILE. Plants 4/4.
+- T10 decisions (Fran 2026-10-16): mensor installed to ~/.bin (like
+  praeco) for vicus to call; runs shown INSIDE $sessions under each
+  session; an "Other runs" group for runs with no session. vicus polls
+  `mensor quaestio currentes -machina` asynchronously (single-threaded
+  UI; the query costs 0.3-0.5 s).
+- T10a 2026-10-16: the CURRENS line is a lib contract
+  (cursus_currentem_ad_lineam / _ex_linea, 19 TAB fields, CursusVita
+  moved from mensor into the lib); CursusCurrens.fracta = failed
+  children's titles (space-joined, IUDICIUM excluded); mensor prints
+  -machina through the lib and lists failures from fracta. Plants 3/3
+  (the separator plant needed a second failed member in the fixture).
+- T10b 2026-10-16: ColloquiorumFons polls `mensor quaestio currentes
+  -machina` in a child process (processus incremental path: never
+  blocks), every 5 s while pulsed, 30 s query timeout; keeps only trees
+  whose root owner is ALIVE (children follow the root); FNV signature ->
+  VERUM on change; a failing mensor keeps the old snapshot.
+  `colloquia_visus_fontem_mensorem_ponere` / `colloquia_visus_cursus`.
+  vicus resolves RHUBARB_MENSOR, then ~/.bin/mensor (untested until the
+  T10c display test). aedificatio: institutio_mensor in installata
+  (installs from MAIN after the merge). Plants 4/4.
+- T10c 2026-10-16 (Fran's look: both joins seen): $sessions shows one
+  line per running root under its session ("commit rhubarb-secunda 1m40s
+  | gates 2/7 | radix 1m10s 120/351 (1m14s-1m36s) | failed: x", failed
+  part in the warning colour); the row grows by one line per run.
+  "Other runs" (g5) = roots whose session is not SHOWN - including a
+  closed session while Closed is hidden (a commit outliving its
+  session must not vanish). Its title and rows are ALBUM_FASCIA, so
+  j/k never select them. colloquia_visus_cursus_textus is the pure,
+  tested piece. Plants 7/7 (two re-planted; the selectability test
+  first passed by fixture coincidence - c4's number = r4's).
+- IN MAIN 2026-10-16 (ff 1dc057b6, fusio_probare green + frigida,
+  installata 23/23). The 7 hooks now call `~/.bin/praeco hamus`
+  (backup ~/.claude/settings.json.bak-praeco-bin-2026-10-16); the ad
+  hoc copy is deleted. A praeco change now ships like any house binary:
+  merge to main, then `bin/fabrica sanare installata` there.
 
 ## V. Hook facts (Claude Code docs, checked 2026-10-15)
 

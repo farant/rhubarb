@@ -531,3 +531,9 @@ notatam)", and the analytics get a fractus `#beta` run. credo fumus II
 with a section after the crash). Opt-in per-section fork isolation
 (full report despite a crash) parked: fork per section + Cocoa
 fork-unsafety.
+
+## 2026-10-17 - Linux -O2 build (hospitium v3 T9)
+
+- `_credo_arborem_delere` builds child paths with memcpy after the
+  existing length check: gcc -O2 under musl/glibc reports
+  -Wformat-overflow on the sprintf because it cannot prove the bound.

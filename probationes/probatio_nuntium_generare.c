@@ -32,24 +32,18 @@ _continet (
     redde FALSUM;
 }
 
-s32 principale(vacuum)
-{
-    Piscina* piscina;
-
-    piscina = piscina_generare_dynamicum("probatio_nuntium_generare",
-        IV * MXXIV);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
 
     /* ========================================================
      * PROBARE I: Generare caput pro nuntio simplice
      * ======================================================== */
 
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans character* fons =
             "nuntium Persona {"
@@ -59,8 +53,6 @@ s32 principale(vacuum)
             "}";
         NuntiumSchemaNodus* radix;
                     chorda  caput;
-
-        imprimere("\n--- Probans I: generare caput simplex ---\n");
 
         radix = nuntium_schema_legere(piscina, fons, (s32)strlen(fons));
         CREDO_NON_NIHIL(radix);
@@ -96,12 +88,20 @@ s32 principale(vacuum)
 
         imprimere("  caput generatum -> OK\n");
     }
+}
 
 
     /* ========================================================
      * PROBARE II: Generare corpus pro nuntio simplice
      * ======================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans character* fons =
             "nuntium Persona {"
@@ -111,8 +111,6 @@ s32 principale(vacuum)
             "}";
         NuntiumSchemaNodus* radix;
                     chorda  corpus;
-
-        imprimere("\n--- Probans II: generare corpus simplex ---\n");
 
         radix = nuntium_schema_legere(piscina, fons, (s32)strlen(fons));
         CREDO_NON_NIHIL(radix);
@@ -145,12 +143,20 @@ s32 principale(vacuum)
 
         imprimere("  corpus generatum -> OK\n");
     }
+}
 
 
     /* ========================================================
      * PROBARE III: Omnia VIII genera camporum
      * ======================================================== */
 
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans character* fons =
             "nuntium Omnia {"
@@ -166,8 +172,6 @@ s32 principale(vacuum)
         NuntiumSchemaNodus* radix;
                     chorda  caput;
                     chorda  corpus;
-
-        imprimere("\n--- Probans III: omnia VIII genera camporum ---\n");
 
         radix = nuntium_schema_legere(piscina, fons, (s32)strlen(fons));
         CREDO_NON_NIHIL(radix);
@@ -210,12 +214,20 @@ s32 principale(vacuum)
 
         imprimere("  VIII genera -> OK\n");
     }
+}
 
 
     /* ========================================================
      * PROBARE IV: Nuntia multiplicia in uno schemate
      * ======================================================== */
 
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans character* fons =
             "nuntium Persona {"
@@ -229,8 +241,6 @@ s32 principale(vacuum)
         NuntiumSchemaNodus* radix;
                     chorda  caput;
                     chorda  corpus;
-
-        imprimere("\n--- Probans IV: nuntia multiplicia ---\n");
 
         radix = nuntium_schema_legere(piscina, fons, (s32)strlen(fons));
         CREDO_NON_NIHIL(radix);
@@ -267,17 +277,23 @@ s32 principale(vacuum)
 
         imprimere("  nuntia multiplicia -> OK\n");
     }
+}
 
 
     /* ========================================================
      * PROBARE V: Input invalidum -> chorda vacua
      * ======================================================== */
 
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda caput;
         chorda corpus;
-
-        imprimere("\n--- Probans V: input invalidum ---\n");
 
         caput = nuntium_schema_generare_caput(piscina, NIHIL, "test.h");
         CREDO_VERUM(caput.mensura == ZEPHYRUM);
@@ -288,12 +304,20 @@ s32 principale(vacuum)
 
         imprimere("  input invalidum -> chorda vacua -> OK\n");
     }
+}
 
 
     /* ========================================================
      * PROBARE VI: Tag numeri in tag constantia
      * ======================================================== */
 
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans character* fons =
             "nuntium Magnum {"
@@ -302,8 +326,6 @@ s32 principale(vacuum)
             "}";
         NuntiumSchemaNodus* radix;
                     chorda  caput;
-
-        imprimere("\n--- Probans VI: tag numeri ---\n");
 
         radix = nuntium_schema_legere(piscina, fons, (s32)strlen(fons));
         CREDO_NON_NIHIL(radix);
@@ -320,12 +342,20 @@ s32 principale(vacuum)
 
         imprimere("  tag numeri -> OK\n");
     }
+}
 
 
     /* ========================================================
      * PROBARE VII: Struct campi in corpore habent nomina originalia
      * ======================================================== */
 
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans character* fons =
             "nuntium Persona {"
@@ -334,8 +364,6 @@ s32 principale(vacuum)
             "}";
         NuntiumSchemaNodus* radix;
                     chorda  corpus;
-
-        imprimere("\n--- Probans VII: nomina camporum originalia in corpore ---\n");
 
         radix = nuntium_schema_legere(piscina, fons, (s32)strlen(fons));
         CREDO_NON_NIHIL(radix);
@@ -355,12 +383,20 @@ s32 principale(vacuum)
 
         imprimere("  nomina originalia -> OK\n");
     }
+}
 
 
     /* ========================================================
      * PROBARE VIII: Caput habet struct cum campis et padding
      * ======================================================== */
 
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans character* fons =
             "nuntium Persona {"
@@ -369,8 +405,6 @@ s32 principale(vacuum)
             "}";
         NuntiumSchemaNodus* radix;
                     chorda  caput;
-
-        imprimere("\n--- Probans VIII: struct campi in capite ---\n");
 
         radix = nuntium_schema_legere(piscina, fons, (s32)strlen(fons));
         CREDO_NON_NIHIL(radix);
@@ -384,12 +418,20 @@ s32 principale(vacuum)
 
         imprimere("  struct campi -> OK\n");
     }
+}
 
 
     /* ========================================================
      * PROBARE IX: Scribere corpus continet null-guard pro chorda
      * ======================================================== */
 
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans character* fons =
             "nuntium Persona {"
@@ -397,8 +439,6 @@ s32 principale(vacuum)
             "}";
         NuntiumSchemaNodus* radix;
                     chorda  corpus;
-
-        imprimere("\n--- Probans IX: null-guard pro chorda in scribere ---\n");
 
         radix = nuntium_schema_legere(piscina, fons, (s32)strlen(fons));
         CREDO_NON_NIHIL(radix);
@@ -411,12 +451,20 @@ s32 principale(vacuum)
 
         imprimere("  null-guard -> OK\n");
     }
+}
 
 
     /* ========================================================
      * PROBARE X: Legere corpus continet memset ad zephyrum
      * ======================================================== */
 
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans character* fons =
             "nuntium Persona {"
@@ -424,8 +472,6 @@ s32 principale(vacuum)
             "}";
         NuntiumSchemaNodus* radix;
                     chorda  corpus;
-
-        imprimere("\n--- Probans X: memset in legere ---\n");
 
         radix = nuntium_schema_legere(piscina, fons, (s32)strlen(fons));
         CREDO_NON_NIHIL(radix);
@@ -439,16 +485,33 @@ s32 principale(vacuum)
 
         imprimere("  memset -> OK\n");
     }
+}
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I: generare caput simplex", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "II: generare corpus simplex", _sectio_secunda, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "III: omnia VIII genera camporum", _sectio_tertia, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "IV: nuntia multiplicia", _sectio_quarta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "V: input invalidum", _sectio_quinta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "VI: tag numeri", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "VII: nomina camporum originalia in corpore", _sectio_septima,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "VIII: struct campi in capite", _sectio_octava, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "IX: null-guard pro chorda in scribere", _sectio_nona, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "X: memset in legere", _sectio_decima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    /* ========================================================
-     * Compendium
-     * ======================================================== */
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    piscina_destruere(piscina);
-
-    redde (credo_omnia_praeterierunt() ? ZEPHYRUM : I);
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("nuntium_generare", SECTIONES);
 }

@@ -69,9 +69,13 @@ _praebitor (
     InternuntiusModus  modus,
                vacuum* datum)
 {
+    /* numeri a sectione creationis ipsa ad initium reponuntur;
+     * ceterae sectiones eos non legunt */
+    /* <tolera codex="CREDO_STATUS_NON_PURGATUS" (>vide supra */
     g_praebitor_vocatus++;
     si (modus == INTERNUNTIUS_MODUS_PUBLICUS)
     {
+        /* <tolera codex="CREDO_STATUS_NON_PURGATUS" (>idem */
         g_modus_publicus_visus++;
     }
     (vacuum)internuntius_praebere(inx, "salve", _salve, datum);
@@ -207,11 +211,12 @@ _servum_creare (
  * ======================================================================== */
 
 interior vacuum
-probatio_creare (Piscina* piscina)
+_sectio_prima (
+    CredoContextus* c)
 {
+         Piscina* piscina = c->piscina;
     VitreaServus* s;
 
-    printf("--- creare: portus auto + praebitor modo PUBLICO ---\n");
     g_praebitor_vocatus     = ZEPHYRUM;
     g_modus_publicus_visus  = ZEPHYRUM;
     s                       = _servum_creare(piscina);
@@ -226,17 +231,18 @@ probatio_creare (Piscina* piscina)
 }
 
 interior vacuum
-probatio_pagina_scriptum_fert (Piscina* piscina)
+_sectio_secunda (
+    CredoContextus* c)
 {
-    VitreaServus* s = _servum_creare(piscina);
-     TcpConnexio* c;
+         Piscina* piscina  = c->piscina;
+    VitreaServus* s        = _servum_creare(piscina);
+     TcpConnexio* cliens;
        character  buffer[16384];
 
-    printf("--- pagina: scriptum pontis post <head> insertum ---\n");
     CREDO_NON_NIHIL(s);
-    c = _cliens_connectere(piscina, vitrea_servus_portus(s));
-    CREDO_NON_NIHIL(c);
-    CREDO_VERUM(_commercium(s, c,
+    cliens = _cliens_connectere(piscina, vitrea_servus_portus(s));
+    CREDO_NON_NIHIL(cliens);
+    CREDO_VERUM(_commercium(s, cliens,
         "GET / HTTP/1.1\r\nHost: x\r\n\r\n", buffer,
         (i32)magnitudo(buffer)) > ZEPHYRUM);
     CREDO_VERUM(strstr(buffer, "HTTP/1.1 200 OK") != NIHIL);
@@ -252,12 +258,13 @@ probatio_pagina_scriptum_fert (Piscina* piscina)
 }
 
 interior vacuum
-probatio_pons_vocatio (Piscina* piscina)
+_sectio_tertia (
+    CredoContextus* c)
 {
-    VitreaServus* s = _servum_creare(piscina);
+         Piscina* piscina  = c->piscina;
+    VitreaServus* s        = _servum_creare(piscina);
        character  buffer[8192];
 
-    printf("--- pons: vocatio -> fructus methodi ---\n");
     CREDO_NON_NIHIL(s);
     CREDO_VERUM(_pons_petere(s, piscina,
         "{\"id\":7,\"methodus\":\"salve\",\"argumenta\":{\"quem\":\"x\"}}",
@@ -273,12 +280,13 @@ probatio_pons_vocatio (Piscina* piscina)
 /* PORTA: methodus modo LOCALI registrata super socket abest.
  * Haec probatio est causa cur modus PARAMETRUM praebitoris est. */
 interior vacuum
-probatio_porta_harnesii (Piscina* piscina)
+_sectio_quarta (
+    CredoContextus* c)
 {
-    VitreaServus* s = _servum_creare(piscina);
+         Piscina* piscina  = c->piscina;
+    VitreaServus* s        = _servum_creare(piscina);
        character  buffer[8192];
 
-    printf("--- porta: methodus harnesii super socket ABEST ---\n");
     CREDO_NON_NIHIL(s);
     CREDO_VERUM(_pons_petere(s, piscina,
         "{\"id\":8,\"methodus\":\"harnesium\",\"argumenta\":{}}",
@@ -290,12 +298,13 @@ probatio_porta_harnesii (Piscina* piscina)
 }
 
 interior vacuum
-probatio_culpae_non_frangunt (Piscina* piscina)
+_sectio_quinta (
+    CredoContextus* c)
 {
-    VitreaServus* s = _servum_creare(piscina);
+         Piscina* piscina  = c->piscina;
+    VitreaServus* s        = _servum_creare(piscina);
        character  buffer[8192];
 
-    printf("--- culpae: JSON fractum -> culpa, servus vivit ---\n");
     CREDO_NON_NIHIL(s);
     CREDO_VERUM(_pons_petere(s, piscina, "{\"ruptum\"", buffer,
         (i32)magnitudo(buffer)) > ZEPHYRUM);
@@ -310,26 +319,27 @@ probatio_culpae_non_frangunt (Piscina* piscina)
 }
 
 interior vacuum
-probatio_assetum_absens (Piscina* piscina)
+_sectio_sexta (
+    CredoContextus* c)
 {
-    VitreaServus* s = _servum_creare(piscina);
-     TcpConnexio* c;
+         Piscina* piscina  = c->piscina;
+    VitreaServus* s        = _servum_creare(piscina);
+     TcpConnexio* cliens;
        character  buffer[8192];
 
-    printf("--- asseta: via extra capsulam -> CDIV ---\n");
     CREDO_NON_NIHIL(s);
-    c = _cliens_connectere(piscina, vitrea_servus_portus(s));
-    CREDO_NON_NIHIL(c);
-    CREDO_VERUM(_commercium(s, c,
+    cliens = _cliens_connectere(piscina, vitrea_servus_portus(s));
+    CREDO_NON_NIHIL(cliens);
+    CREDO_VERUM(_commercium(s, cliens,
         "GET /nusquam.html HTTP/1.1\r\nHost: x\r\n\r\n", buffer,
         (i32)magnitudo(buffer)) > ZEPHYRUM);
     CREDO_VERUM(strstr(buffer, "404") != NIHIL);
 
     /* traversalis non est res: viae ex capsula veniunt, non ex
      * petitione - ergo haec quoque simpliciter absens est */
-    c = _cliens_connectere(piscina, vitrea_servus_portus(s));
-    CREDO_NON_NIHIL(c);
-    CREDO_VERUM(_commercium(s, c,
+    cliens = _cliens_connectere(piscina, vitrea_servus_portus(s));
+    CREDO_NON_NIHIL(cliens);
+    CREDO_VERUM(_commercium(s, cliens,
         "GET /../../etc/passwd HTTP/1.1\r\nHost: x\r\n\r\n", buffer,
         (i32)magnitudo(buffer)) > ZEPHYRUM);
     CREDO_VERUM(strstr(buffer, "root:") == NIHIL);
@@ -371,9 +381,10 @@ _servum_custoditum (
 /* PORTA NATIVITATIS: expositio sine tessera = REFUSIO.
  * Haec probatio est cur porta in strato sedet, non in app. */
 interior vacuum
-probatio_porta_nativitatis (Piscina* piscina)
+_sectio_septima (
+    CredoContextus* c)
 {
-    printf("--- porta nativitatis: expositio sine tessera ---\n");
+    Piscina* piscina = c->piscina;
 
     /* hospes datus, tessera nulla -> NIHIL */
     CREDO_NIHIL(_servum_custoditum(piscina, "127.0.0.1", NIHIL));
@@ -397,30 +408,32 @@ probatio_porta_nativitatis (Piscina* piscina)
 }
 
 interior vacuum
-probatio_custodia (Piscina* piscina)
+_sectio_octava (
+    CredoContextus* c)
 {
+         Piscina* piscina = c->piscina;
     VitreaServus* s = _servum_custoditum(piscina, NIHIL,
         TESSERA_PROBATIONIS);
-    TcpConnexio* c;
+    TcpConnexio* cliens;
       character  buffer[16384];
       character  petitio[2048];
 
-    printf("--- custodia: crustulum, redirectio, CSRF ---\n");
     CREDO_NON_NIHIL(s);
 
     /* sine tessera: CDI */
-    c = _cliens_connectere(piscina, vitrea_servus_portus(s));
-    CREDO_NON_NIHIL(c);
-    CREDO_VERUM(_commercium(s, c, "GET / HTTP/1.1\r\nHost: x\r\n\r\n",
+    cliens = _cliens_connectere(piscina, vitrea_servus_portus(s));
+    CREDO_NON_NIHIL(cliens);
+    CREDO_VERUM(_commercium(s, cliens,
+        "GET / HTTP/1.1\r\nHost: x\r\n\r\n",
         buffer, (i32)magnitudo(buffer)) > ZEPHYRUM);
     CREDO_VERUM(strstr(buffer, "401") != NIHIL);
     /* pagina NON transit */
     CREDO_VERUM(strstr(buffer, "salve vitrea") == NIHIL);
 
     /* tessera falsa: CDI */
-    c = _cliens_connectere(piscina, vitrea_servus_portus(s));
-    CREDO_NON_NIHIL(c);
-    CREDO_VERUM(_commercium(s, c,
+    cliens = _cliens_connectere(piscina, vitrea_servus_portus(s));
+    CREDO_NON_NIHIL(cliens);
+    CREDO_VERUM(_commercium(s, cliens,
         "GET /?clavis=0000000000000000000000000000000000000000"
         "000000000000000000000000 HTTP/1.1\r\nHost: x\r\n\r\n",
         buffer, (i32)magnitudo(buffer)) > ZEPHYRUM);
@@ -429,9 +442,9 @@ probatio_custodia (Piscina* piscina)
     /* tessera vera in URL: CCCII + crustulum + Location */
     sprintf(petitio, "GET /?clavis=%s HTTP/1.1\r\nHost: x\r\n\r\n",
         TESSERA_PROBATIONIS);
-    c = _cliens_connectere(piscina, vitrea_servus_portus(s));
-    CREDO_NON_NIHIL(c);
-    CREDO_VERUM(_commercium(s, c, petitio, buffer,
+    cliens = _cliens_connectere(piscina, vitrea_servus_portus(s));
+    CREDO_NON_NIHIL(cliens);
+    CREDO_VERUM(_commercium(s, cliens, petitio, buffer,
         (i32)magnitudo(buffer)) > ZEPHYRUM);
     CREDO_VERUM(strstr(buffer, "302") != NIHIL);
     CREDO_VERUM(strstr(buffer, "HttpOnly") != NIHIL);
@@ -443,9 +456,9 @@ probatio_custodia (Piscina* piscina)
     /* crustulum validum: pagina transit */
     sprintf(petitio, "GET / HTTP/1.1\r\nHost: x\r\n"
         "Cookie: vitrea=%s\r\n\r\n", TESSERA_PROBATIONIS);
-    c = _cliens_connectere(piscina, vitrea_servus_portus(s));
-    CREDO_NON_NIHIL(c);
-    CREDO_VERUM(_commercium(s, c, petitio, buffer,
+    cliens = _cliens_connectere(piscina, vitrea_servus_portus(s));
+    CREDO_NON_NIHIL(cliens);
+    CREDO_VERUM(_commercium(s, cliens, petitio, buffer,
         (i32)magnitudo(buffer)) > ZEPHYRUM);
     CREDO_VERUM(strstr(buffer, "200 OK") != NIHIL);
     CREDO_VERUM(strstr(buffer, "salve vitrea") != NIHIL);
@@ -471,9 +484,9 @@ probatio_custodia (Piscina* piscina)
      * probavit. Hic eum probamus. */
     sprintf(petitio, "GET / HTTP/1.1\r\nHost: x\r\n"
         "Cookie: vitrea=%s\r\n\r\n", TESSERA_PROBATIONIS);
-    c = _cliens_connectere(piscina, vitrea_servus_portus(s));
-    CREDO_NON_NIHIL(c);
-    CREDO_VERUM(_commercium(s, c, petitio, buffer,
+    cliens = _cliens_connectere(piscina, vitrea_servus_portus(s));
+    CREDO_NON_NIHIL(cliens);
+    CREDO_VERUM(_commercium(s, cliens, petitio, buffer,
         (i32)magnitudo(buffer)) > ZEPHYRUM);
     CREDO_VERUM(strstr(buffer, "X-Vitrea") != NIHIL);
 
@@ -493,40 +506,28 @@ probatio_custodia (Piscina* piscina)
  * PRINCIPALE
  * ======================================================================== */
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "creare: portus auto + praebitor modo PUBLICO", _sectio_prima,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "pagina: scriptum pontis post <head> insertum", _sectio_secunda,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "pons: vocatio -> fructus methodi", _sectio_tertia, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "porta: methodus harnesii super socket ABEST", _sectio_quarta,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "culpae: JSON fractum -> culpa, servus vivit", _sectio_quinta,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "asseta: via extra capsulam -> CDIV", _sectio_sexta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "porta nativitatis: expositio sine tessera", _sectio_septima,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "custodia: crustulum, redirectio, CSRF", _sectio_octava, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
 s32
 principale (vacuum)
 {
-    Piscina* piscina;
-        b32  successus;
-
-    printf("\n");
-    printf("========================================\n");
-    printf("PROBATIONES VITREA_SERVUS\n");
-    printf("========================================\n");
-    printf("\n");
-
-    piscina = piscina_generare_dynamicum("probatio_vitrea_servus",
-        M * M * IV);
-    credo_aperire(piscina);
-
-    probatio_creare(piscina);
-    probatio_pagina_scriptum_fert(piscina);
-    probatio_pons_vocatio(piscina);
-    probatio_porta_harnesii(piscina);
-    probatio_culpae_non_frangunt(piscina);
-    probatio_assetum_absens(piscina);
-    probatio_porta_nativitatis(piscina);
-    probatio_custodia(piscina);
-
-    credo_imprimere_compendium();
-
-    printf("========================================\n");
-    printf("\n");
-
-    successus = credo_omnia_praeterierunt();
-
-    credo_claudere();
-    piscina_destruere(piscina);
-
-    redde successus ? ZEPHYRUM : I;
+    redde credo_suitam_currere("vitrea_servus", SECTIONES);
 }

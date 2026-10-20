@@ -144,20 +144,13 @@ _imperfecta_numerare (
     redde n;
 }
 
-s32
-principale (vacuum)
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-    Piscina* piscina = piscina_generare_dynamicum(
-        "probatio_css_lexema", 33554432);
+    Piscina* piscina;
 
-    si (piscina == NIHIL)
-    {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-    imprimere("\n--- Vocabularium fundamentale ---\n");
+    piscina = c->piscina;
     {
         interior constans CssLexemaGenus exspectata[] = {
             CSS_LEX_IDENTIFICATOR, CSS_LEX_SPATIA,
@@ -181,8 +174,15 @@ principale (vacuum)
         _seriem_probare(piscina, ".x{c:var(--v, #fff)}",
             exspectata, 12);
     }
+}
 
-    imprimere("\n--- Numeri, centesimae, dimensiones ---\n");
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         interior constans CssLexemaGenus exspectata[] = {
             CSS_LEX_NUMERUS, CSS_LEX_SPATIA,
@@ -217,8 +217,15 @@ principale (vacuum)
         _seriem_probare(piscina, "@media (min-width:10em)",
             exspectata, 7);
     }
+}
 
-    imprimere("\n--- Url: quattuor viae ---\n");
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         interior constans CssLexemaGenus exspectata[] = {
             CSS_LEX_URL };
@@ -240,8 +247,15 @@ principale (vacuum)
         _seriem_probare(piscina, "url(mala url)", exspectata, 1);
         _seriem_probare(piscina, "url(aperta", exspectata, 1);
     }
+}
 
-    imprimere("\n--- Chordae: perfectae et imperfectae ---\n");
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         interior constans CssLexemaGenus exspectata[] = {
             CSS_LEX_CHORDA };
@@ -259,8 +273,15 @@ principale (vacuum)
 
         _seriem_probare(piscina, "'a\nb'", exspectata, 4);
     }
+}
 
-    imprimere("\n--- Commentaria et effugia ---\n");
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         interior constans CssLexemaGenus exspectata[] = {
             CSS_LEX_COMMENTARIUM, CSS_LEX_IDENTIFICATOR };
@@ -288,8 +309,15 @@ principale (vacuum)
             CREDO_AEQUALIS_I32 ((i32)lx->valor.mensura, (i32)5);
         }
     }
+}
 
-    imprimere("\n--- Totalitas: NUL et octeti ignoti ---\n");
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         interior constans character truncus[] = { '\0', 1, 'a' };
 
@@ -304,8 +332,15 @@ principale (vacuum)
         }
         CREDO_VERUM (_fidelis(piscina, "", (i32)0));
     }
+}
 
-    imprimere("\n--- Positiones (octeti, 1-basatae) ---\n");
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
               Xar* l = _lexare_literis(piscina, "a\n  bc");
         CssLexema* lx;
@@ -318,8 +353,15 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (lx->linea, (i32)2);
         CREDO_AEQUALIS_I32 (lx->columna, (i32)3);
     }
+}
 
-    imprimere("\n--- Fidelitas super corpus (fixa/css) ---\n");
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
          DirectoriumIterator* iter;
         DirectoriumIntroitus* e;
@@ -378,12 +420,30 @@ principale (vacuum)
         }
         CREDO_VERUM (probatae >= (i32)3);
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    si (credo_omnia_praeterierunt())
-    {
-        redde ZEPHYRUM;
-    }
-    redde I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "Vocabularium fundamentale", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "Numeri, centesimae, dimensiones", _sectio_secunda, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "Url: quattuor viae", _sectio_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "Chordae: perfectae et imperfectae", _sectio_quarta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "Commentaria et effugia", _sectio_quinta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "Totalitas: NUL et octeti ignoti", _sectio_sexta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "Positiones (octeti, 1-basatae)", _sectio_septima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "Fidelitas super corpus (fixa/css)", _sectio_octava, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("css_lexema", SECTIONES);
 }

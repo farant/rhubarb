@@ -613,7 +613,7 @@ try:
 except silva.SilvaError as ex:
     credo('in memoria post 1 editiones; in plagula - lineae' in str(ex), 'ancora ambigua post editionem: lineae in memoria ET in plagula nominatae')
 try:
-    silva.commissio('nihil', ['FAQ.md'], portae=[])
+    silva.commissio('nihil', ['silva/grammatica/c89-formatted.stml'], portae=[])
     credo(False, 'vetita')
 except silva.SilvaError as ex:
     credo('VETITA' in str(ex) and 'Frani' in str(ex) and 'remove' in str(ex), 'commissio: refusio vetitae causam nominat')
@@ -764,7 +764,7 @@ try:
 except silva.SilvaError:
     credo(True, 'porta ignota levat SilvaError')
 try:
-    silva.commissio('nihil', ['FAQ.md'])
+    silva.commissio('nihil', ['silva/grammatica/c89-formatted.stml'])
     credo(False, 'via vetita levat')
 except silva.SilvaError:
     credo(True, 'commissio: via vetita refutata')
@@ -1362,6 +1362,11 @@ try:
     except silva.SilvaError:
         pass
     credo(cursus_n() == 2, 'commissio recepta=False: porta iterum cursa')
+    # consilium (colloquia T8c): commissio portas debitas cursui suo
+    # adhaeret (mensura 'consilium.portae') - diarium crudum ANTE
+    # legere (quod condit)
+    consilia = [l.split('\t') for l in open(os.environ['MENSOR_DIARIUM'])
+                .read().splitlines() if '\tconsilium.portae\t' in l]
     phases = set(l[2] for l in _tempora_lineae() if l[1] == 'phasis')
     credo({'fabrica', 'portae debitae'} <= phases,
           'commissio: phases ante portas temporibus notatae (%s)' % sorted(phases))
@@ -1375,6 +1380,10 @@ try:
     credo(len(com) >= 2 and com[-1][4] == 'fractus'
           and com[-1][14].startswith('SilvaError: ') and com[-1][7] == caput,
           'cursus: commissio notata (fractus, nota = refusio, commissum HEAD)')
+    credo(any(c[2] == com[-1][1] and float(c[4]) == 2 and c[5] == 'portae'
+              for c in consilia) and len(consilia) >= 2,
+          'cursus: consilium.portae commissioni adhaerens (portae II; %r)'
+          % [(c[2], c[4]) for c in consilia])
     credo({'phasis:fabrica', 'phasis:portae debitae', 'porta:ficta-numerans',
            'porta:ficta-rubra2'} <= set(l[3] for l in filii)
           and all(l[11] == 'commissio' for l in filii),
@@ -2449,7 +2458,7 @@ try:
 
     # CAUSAE OMNES SIMUL: via vetita ET opus ignotum responso UNO, ANTE portam ullam
     try:
-        silva.commissio('nihil', ['FAQ.md'], portae=['ficta-quae-non-est'], opus='nusquam')
+        silva.commissio('nihil', ['silva/grammatica/c89-formatted.stml'], portae=['ficta-quae-non-est'], opus='nusquam')
         credo(False, 'commissio cum causis duabus')
     except silva.SilvaError as ex:
         credo('(2 causae)' in str(ex) and 'VETITA' in str(ex) and 'non solvitur' in str(ex),
@@ -3242,7 +3251,11 @@ try:
     except silva.SilvaError as ex:
         err = str(ex)
     vocationes = open(_rg_argv).read().splitlines() if os.path.exists(_rg_argv) else []
-    credo(err is not None and 'STALUM g/gen.c' in err and not any(v.startswith('sanare') for v in vocationes),
+    # consilium S3d: ante recusationem 'sanare -siccum' (LECTIO sola,
+    # producentes quaeruntur) licet; sanatio SCRIBENS nulla
+    credo(err is not None and 'STALUM g/gen.c' in err
+          and not any(v.startswith('sanare') and not v.startswith('sanare -siccum')
+                      for v in vocationes),
           'regeneratio: stalum EXTRA vias commissionis recusatur, non regeneratur', causa=repr((err, vocationes)))
     # iudex sanatus -> regeneratio -> iudex ITERUM stalus (amalgama in
     # clausura iudicis, 2026-10-15): sanatur iterum, pergit
@@ -3411,6 +3424,9 @@ try:
             except Exception:
                 pass
         _ordo = open(_acta_ordinis).read().splitlines() if os.path.exists(_acta_ordinis) else []
+        # consilium S3d: 'sanare -siccum' ante recusationem lectio sola est
+        # (producentes quaeruntur) - ordo ceterorum idem
+        _ordo = [o for o in _ordo if not o.startswith('fabrica sanare -siccum')]
         if _verificare:
             # 'fabrica iudicare' primum = custodia installatorum (…ET4262)
             credo(_ordo == ['fabrica iudicare -machina',
@@ -3631,6 +3647,112 @@ _GREGES_AMBITUS.clear()
 _GREGES_AMBITUS.update(_greges_veri)
 _GREX.update(_grex_verus)
 _grex_claudere()
+
+# CONSILIUM (consilium S3c, S5c2): forma quae binaria stala fecit -
+# consilium sanationis per bin/fabrica VERUM iudicatum: forma FACTUM
+# (iudicatur, non agitur), iudex ipse primus (fabrica_struere), ceteri
+# 'bin/fabrica sanare X'; portae extra consilium; domus in arbore
+# secundaria VETITA, in principali ROGANDA, externa ROGANDA - classis a
+# lectore C inferta, pythonica vias non classificat
+_fb_ficta_consilii = silva.FABRICA_BIN
+silva.FABRICA_BIN = os.path.join(silva.RADIX, 'bin', 'fabrica')
+if os.path.exists(silva.FABRICA_BIN):
+    _t = silva._consilium_formae(['lib/aedilis.c'],
+                                 ['bin/aedilis', 'bin/fabrica'], True)
+    _rc, _o, _v = silva._consilium_iudicare(_t, 'probatio_forma')
+    _undae = dict((x[2], int(x[1])) for x in _o if x[0] == 'UNDA')
+    credo(_rc == 0 and _undae.get('forma') == 1
+          and _undae.get('sana bin/fabrica') == 2
+          and _undae.get('sana bin/aedilis') == 3
+          and 'portae' not in _undae,
+          'consilium formae: forma, iudex ipse, ceteri; portae extra', _o)
+    credo('factum="verum"' in _t
+          and '<argumentum valor="tools/fabrica_struere.sh"/>' in _t
+          and '<argumentum valor="bin/fabrica"/><argumentum valor="sanare"/>'
+              '<argumentum valor="bin/aedilis"/>' in _t,
+          'consilium formae: forma factum, mandata iudicis et sanationis', _t)
+
+    def _sententia(t):
+        _r, _x, _ = silva._consilium_iudicare(t, 'probatio_forma')
+        return _r, [(x[4], x[5]) for x in _x if x[0] == 'IUDICIUM']
+    credo(_sententia(silva._consilium_formae(['lib/aedilis.c'],
+                                             ['~/.bin/aedilis'], True))
+          == (1, [('VETITUM', 'arbor_secundaria')]),
+          'consilium formae: in arbore secundaria domus VETITA')
+    credo(_sententia(silva._consilium_formae(['lib/aedilis.c'],
+                                             ['~/.bin/aedilis'], False))
+          == (1, [('ROGANDUM', 'domus_roganda')]),
+          'consilium formae: in arbore principali domus ROGANDA')
+    credo(_sententia(silva._consilium_formae(['lib/aedilis.c'],
+                                             ['/usr/local/x'], False))
+          == (1, [('ROGANDUM', 'externa_roganda')]),
+          'consilium formae: externa ROGANDA')
+    # S3d, S5c2: producentes - fabrica ficta 'sanare -siccum' facta dat
+    # (SANATIO EXITUS UNDA), 'consilium' ad binarium VERUM transit;
+    # politica (non pythonica) institutionem domus omittit
+    _fb_vera = silva.FABRICA_BIN
+    _facta = ('SANATIO\tAGENDUM\tnatura\t100\tbin/natura_canones stalum\n'
+              'EXITUS\tnatura\tbin/natura_canones\n'
+              'EXITUS\tnatura\tbin/natura_glossae\n'
+              'SANATIO\tAGENDUM\tcanones_cocti\t50\tgenerator fractus\n'
+              'EXITUS\tcanones_cocti\tnatura/cocta/a.canon\n'
+              'SANATIO\tAGENDUM\tinstitue\t5\tdomus\n'
+              'EXITUS\tinstitue\t~/.bin/natura\n'
+              'UNDA\t1\tnatura\nUNDA\t2\tcanones_cocti\nUNDA\t1\tinstitue\n')
+    _ficta_s3d = os.path.join(T, 'fabrica_s3d')
+    with open(_ficta_s3d, 'w') as _f:
+        _f.write('#!/bin/bash\nif [ "$1" = sanare ]; then printf %%s %s; exit 0;'
+                 ' fi\nexec %s "$@"\n' % (repr(_facta).replace('\\t', '\t')
+                                            .replace('\\n', '\n'), _fb_vera))
+    os.chmod(_ficta_s3d, 0o755)
+    _vc_vera = silva.VIAE_COMMISSAE
+    silva.VIAE_COMMISSAE = lambda viae: set(v for v in viae
+                                            if v.startswith('natura/'))
+    silva.FABRICA_BIN = _ficta_s3d
+    _c = silva._consilium_producentium(['natura/cocta/a.canon'])
+    silva.FABRICA_BIN = _fb_vera
+    _cr = silva._consilium_iudicare(_c, 'probatio_producentes') \
+        if _c is not None else (None, [], None)
+    credo(_c is not None and _cr[0] == 0
+          and [x[2] for x in _cr[1] if x[0] == 'UNDA']
+          == ['sana bin/natura_canones']
+          and 'res="bin/natura_glossae"' in _c
+          and '<argumentum valor="sanare"/><argumentum'
+              ' valor="bin/natura_canones"/>' in _c,
+          'consilium producentium: instrumentum sanatur (exitus omnes),'
+          ' regenerator commissorum NON, institutio domus a politica'
+          ' omissa', _c)
+    silva.FABRICA_BIN = _ficta_s3d
+    silva.VIAE_COMMISSAE = lambda viae: set(viae)
+    _c = silva._consilium_producentium(['natura/cocta/a.canon'])
+    silva.FABRICA_BIN = _fb_vera
+    silva.VIAE_COMMISSAE = _vc_vera
+    credo(_c is None, 'consilium producentium: exitus commissi = nullus'
+          ' producens (recusatio antiqua valet)')
+    # S5c2: exsecutio VERA per '-agere' (arbor viva, build/ solum):
+    # scriptura proposita ACTUM, non proposita FRACTUM nominata (3)
+    _d = 'build/consilium/probatio_agere'
+
+    def _doc_agere(scribit, scriptum):
+        return ('<consilium>\n  <gradus titulus="sana %s/x">\n'
+                '    <mandatum><argumentum valor="sh"/><argumentum'
+                ' valor="-c"/><argumentum valor="mkdir -p %s; echo x > %s"/>'
+                '</mandatum>\n    <effectus verbum="scribere" res="%s"/>\n'
+                '  </gradus>\n</consilium>\n' % (_d, _d, scriptum, scribit))
+    _rc, _a, _e, _v = silva._consilium_agere(
+        _doc_agere(_d + '/x', _d + '/x'), 'probatio_agere')
+    credo(_rc == 0 and silva._consilium_acta(_a) == [_d + '/x'],
+          'consilium -agere: scriptura proposita ACTUM', (_rc, _a, _e))
+    _rc, _a, _e, _v = silva._consilium_agere(
+        _doc_agere(_d + '/x', _d + '/y'), 'probatio_agere')
+    credo(_rc == 3 and silva._consilium_acta(_a) == []
+          and 'EXTRA sana %s/x %s/y' % (_d, _d)
+          in silva._consilium_fracturae(_a, _e),
+          'consilium -agere: scriptura non proposita FRACTUM nominata',
+          (_rc, _a, _e))
+else:
+    credo(False, 'consilium formae: bin/fabrica deest (nihil iudicatum)')
+silva.FABRICA_BIN = _fb_ficta_consilii
 
 print()
 if fracta:

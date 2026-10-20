@@ -1,0 +1,129 @@
+<interrogationes unitas="historia">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I give a document undo and redo backed by an append-only log?
+    <responsum symbolum="historia_creare historia_actum historia_revocare historia_reficere HistoriaProiectio" via="lib/scriba_documentum.c">Fill
+      a HistoriaProiectio (memset it first, then memoria + mensura of
+      a fixed-size state you own, plus vacare to reset it and applicare
+      to apply one act, and ctx for both), and call
+      historia_creare(piscina, intern, volumen, spatium, genus,
+      origo_checkpoint, intervallum, proiectio) - scriba passes "" as
+      spatium, "mutatio" as genus and "scriba:checkpoint" as origin. It
+      returns NIHIL if a required argument or hook is missing. Each
+      edit is historia_actum(h, act) with the act as a chorda (it
+      returns the act's seq, or 0 if refused); undo is
+      historia_revocare, redo historia_reficere. The projection memory
+      always shows the state at the cursor.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I reopen a document from an existing volume?
+    <responsum symbolum="historia_aperire historia_creare">Use
+      historia_aperire with the same spatium, genus and projection: it
+      finds the last live act, rebuilds the projection from the newest
+      live checkpoint plus the acts after it, and returns to the last
+      saved undo position. historia_creare is only for a NEW history:
+      it does not read the volume, so on a volume that already holds
+      acts it starts at cursor 0 while the old acts stay live in the
+      log.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what happens to undone acts when I make a new edit after undo?
+    <responsum symbolum="historia_actum historia_reficere historia_finis">The
+      log is never truncated. When the cursor is behind the end,
+      historia_actum first appends a branch marker (ramus ab=cursor),
+      and every act between that seq and the marker becomes dead:
+      replays skip it and historia_reficere can no longer reach it.
+      historia_finis then equals the new act's seq.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I make one undo step cover several acts, like a debounced insert?
+    <responsum symbolum="historia_actum_coniunctum historia_revocare historia_reficere">Append
+      the first act with historia_actum and each later chunk with
+      historia_actum_coniunctum: it writes a coniunctio marker before
+      the act, and revocare and reficere then move over the whole joined
+      group in one step. With no live act before it, a joined act is
+      just a plain act.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can several documents share one volume?
+    <responsum symbolum="historia_creare historia_aperire" via="lib/historia.worklog.md">Yes:
+      give each a different spatium. With spatium s1 the act genus
+      becomes s1/genus, the markers s1/ramus, s1/coniunctio and
+      s1/cursor, and checkpoint keys s1/checkpoint/seq, and each
+      history reads only its own. An empty (or NIHIL) spatium uses the
+      bare names, which is what older volumes contain.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can historia_verificare detect that my code scribbled on the projection memory?
+    <responsum symbolum="historia_verificare historia_sigillum_hex">Only
+      if the scribble was sealed. historia_verificare replays the log
+      from nothing (no checkpoint) and compares the result with the
+      sigillum recorded after the last act. A divergence that a later
+      act or checkpoint sealed is caught. Memory changed AFTER the last
+      seal is not detected: the replay matches the recorded seal and
+      silently overwrites your change.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I keep checkpoints small when my state is not one fixed block?
+    <responsum symbolum="HistoriaProiectio historia_creare" via="lib/historia.worklog.md">Set
+      all three hooks: sigillare (hash your raw canonical state; it runs
+      after every act), codificare (the checkpoint bytes; length 0 skips
+      the checkpoint) and decodificare (restore; FALSUM means unusable,
+      e.g. an old format, and historia replays from nothing). Then
+      memoria may be NIHIL and mensura 0. historia_creare returns NIHIL
+      if only some of the three are set.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what does the intervallum argument control?
+    <responsum symbolum="historia_creare historia_numerus_vivorum">A
+      checkpoint is written when a NEW act (historia_actum or
+      historia_actum_coniunctum) brings the number of live acts to a
+      multiple of intervallum (0 means LXIV); undo and redo never write
+      one. Checkpoints are found by
+      listing the volume's files, not by seq arithmetic, because the
+      volume interleaves its own bookkeeping acts; a checkpoint inside
+      dead (undone and branched-over) history is never used as a
+      base.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why does undo append to the log instead of only moving a cursor?
+    <responsum symbolum="historia_revocare historia_reficere historia_aperire" via="lib/historia.worklog.md">So
+      the undo position survives a reopen (insula-rami-plan R5): undo
+      and redo append a cursor marker, and historia_aperire returns to
+      the last one unless an act, a branch or a join marker came after
+      it. Before this, undo then quit brought the undone text back.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I keep a historia open for a long editing session without its piscina growing?
+    <responsum symbolum="historia_revocare historia_reficere historia_actum">No:
+      everything is allocated from the piscina given to historia_creare
+      or historia_aperire and never released. Every undo and every
+      edit after undo re-reads the volume's acts from seq 0 into that
+      piscina (undo also lists the volume's files to find a
+      checkpoint), and every redo reads the acts after the cursor, so
+      memory grows with log length times the number of undos. Use a
+      piscina whose lifetime is the document's; to reclaim it, reopen
+      with historia_aperire into a fresh piscina.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I get notified when the document changes?
+    <responsum symbolum="historia_observatorem_addere HistoriaObservator historia_actum_coniunctum">Register
+      a callback with historia_observatorem_addere(h, fn, ctx);
+      observers run in the order added after every successful
+      historia_actum, historia_actum_coniunctum, historia_revocare and
+      historia_reficere. A refused
+      act (empty chorda, failed append) and historia_aperire do not call
+      them.</responsum>
+  </interrogatio>
+
+</interrogationes>

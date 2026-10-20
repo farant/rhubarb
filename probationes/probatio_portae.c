@@ -945,6 +945,29 @@ hic_manens constans PlagulaFicta _litterae_debitorum[] = {
     { NIHIL, NIHIL }
 };
 
+/* tactus paris (via, porta), aut NIHIL */
+interior constans PortaeTactus*
+_tactus_par (
+              constans Xar* tactus,
+        constans character* via,
+        constans character* porta)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; tactus != NIHIL && k < xar_numerus(tactus); k++)
+    {
+        constans PortaeTactus* u = (constans PortaeTactus*)xar_obtinere(
+            tactus, k);
+
+        si (   chorda_aequalis_literis(u->via, via)
+            && chorda_aequalis_literis(u->porta, porta))
+        {
+            redde u;
+        }
+    }
+    redde NIHIL;
+}
+
 /* lectio + derivatio + debita viarum (lineis divisae) in mundo dato;
  * *vocatae = clausurae rogatae */
 interior Xar*
@@ -1113,11 +1136,30 @@ _sectio_debita (
         CREDO_NECESSE_NON_NIHIL(t);
         /* exemplar et fons_c eandem rationem dant: semel */
         CREDO_AEQUALIS_I32(xar_numerus(t->rationes), I);
+        /* genera rationum typata (U5): lectio scripti directe */
+        CREDO_AEQUALIS_I32(t->directa,
+            (i32)I << (i32)PORTAE_RATIO_EFFECTUS);
+        CREDO_AEQUALIS_I32(t->clausurae, ZEPHYRUM);
+        t = _tactus_par(debita, "include/credo.h", "credo");
+        CREDO_NECESSE_NON_NIHIL(t);
+        CREDO_AEQUALIS_I32(t->directa, ZEPHYRUM);
+        CREDO_AEQUALIS_I32(t->clausurae,
+            (i32)I << (i32)PORTAE_RATIO_EFFECTUS);
     }
     CREDO_VERUM(chorda_continet(portae_tactus_scribere(debita, intecta,
         VERUM, c->piscina), _ch(c,
         "TANGIT\tinclude/credo.h\tcredo\t0\tinclude/credo.h in clausura"
         " lib/credo.c (lectio (clang) in tools/credo_fumus.sh)\n")));
+    /* tegit annotationis et probatio suitae: genera sua */
+    debita = _debita_mundi(c, _effectus_debitorum, clausurae,
+        "tessera/fixa/f.txt\ntessera/probationes/probatio_a.c\n",
+        &intecta, &vocatae, VERUM);
+    CREDO_NECESSE_NON_NIHIL(debita);
+    CREDO_AEQUALIS_I32(_tactus_par(debita, "tessera/fixa/f.txt",
+        "tessera")->directa, (i32)I << (i32)PORTAE_RATIO_TEGIT);
+    CREDO_AEQUALIS_I32(_tactus_par(debita,
+        "tessera/probationes/probatio_a.c", "tessera")->directa,
+        (i32)I << (i32)PORTAE_RATIO_SUITA);
     /* porta registrata manu (titulus + manu): debitum MANU nomine
      * registri */
     debita = _debita_mundi(c, _effectus_debitorum, clausurae,
@@ -1371,11 +1413,26 @@ _sectio_possessio (
     p = _opertura(o, "aedilis");
     CREDO_NECESSE_NON_NIHIL(p);
     CREDO_AEQUALIS_I32(xar_numerus(p->binaria), I);   /* semel */
-    /* 'currit' expressum valet */
+    /* genera rationum (U5): possessor CURRIT et INSTRUMENTUM */
+    CREDO_AEQUALIS_I32((i32)_exemplar(p->fontes_c,
+        "tools/acies.c")->ratio_genus, (i32)PORTAE_RATIO_CURRIT);
+    CREDO_AEQUALIS_I32((i32)_exemplar(p->binaria,
+        "bin/acies")->ratio_genus, (i32)PORTAE_RATIO_INSTRUMENTUM);
+    CREDO_AEQUALIS_I32((i32)_exemplar(p->exemplaria,
+        "tools/aedilis_porta.sh")->ratio_genus,
+        (i32)PORTAE_RATIO_CURSOR);
+    CREDO_AEQUALIS_I32((i32)_exemplar(_opertura(o, "vates")->fontes_c,
+        "tools/folium.c")->ratio_genus, (i32)PORTAE_RATIO_CURRIT);
+    /* 'currit' expressum valet - instrumentum ALIENUM = infrastructura */
     p = _opertura(o, "credo");
     CREDO_NECESSE_NON_NIHIL(p);
     CREDO_NON_NIHIL(_exemplar(p->fontes_c, "tools/acies.c"));
     CREDO_NON_NIHIL(_exemplar(p->binaria, "bin/acies"));
+    CREDO_AEQUALIS_I32((i32)_exemplar(p->fontes_c,
+        "tools/acies.c")->ratio_genus,
+        (i32)PORTAE_RATIO_CURRIT_ALIENUM);
+    CREDO_AEQUALIS_I32((i32)_exemplar(p->binaria,
+        "bin/acies")->ratio_genus, (i32)PORTAE_RATIO_CURRIT_ALIENUM);
     CREDO_VERUM(chorda_continet(portae_declaratas_scribere(o, NIHIL,
         VERUM,
         c->piscina), _ch(c, "INSTRUMENTUM\taedilis\tbin/acies\n")));

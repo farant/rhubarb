@@ -1,0 +1,150 @@
+<interrogationes unitas="pseudoterminale">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I run a program in a pseudo-terminal and talk to it?
+    <responsum symbolum="pseudoterminale_configuratio_initiare pseudoterminale_posix_creare Pseudoterminale" via="lib/terminale.c">Fill
+      a PseudoterminaleConfiguratio with
+      pseudoterminale_configuratio_initiare, set argumenta (a
+      NIHIL-terminated argv, run through PATH with execvp - no shell),
+      then call pseudoterminale_posix_creare. You get back a
+      Pseudoterminale: a table of function pointers (legere, scribere,
+      amplitudo, finitus, fossa, claudere) that you call with
+      pt-&gt;datum as the first argument, e.g.
+      pt-&gt;legere(pt-&gt;datum, buffer, n, mora_ms). The child gets a
+      new session with the slave as its controlling terminal and as
+      fds 0, 1 and 2, so stdout and stderr arrive mixed on one
+      stream.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I tell "the binary does not exist" apart from a child that exited with 127?
+    <responsum symbolum="pseudoterminale_posix_creare pseudoterminale_error_nomen PseudoterminaleError">pseudoterminale_posix_creare
+      waits on a CLOEXEC pipe until exec either succeeds (the pipe
+      closes) or fails (the child writes the step and errno). A failed
+      chdir or exec returns NIHIL with *error =
+      PSEUDOTERMINALE_ERROR_EXEC and *descriptio such as "exec: No such
+      file or directory"; the half-born child is already reaped. A
+      real program that later exits 127 shows up instead through
+      finitus with codex 127. One gap: if the child's dup2 onto fds
+      0-2 fails it exits 127 without writing to the pipe, so creare
+      succeeds and the failure looks like an ordinary exit 127. Both
+      error and descriptio may be NIHIL; pseudoterminale_error_nomen
+      gives a fixed Latin name for the error code.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can scribere block if the child stops reading its input?
+    <responsum symbolum="pseudoterminale_posix_creare Pseudoterminale">No.
+      The master fd is set O_NONBLOCK, and scribere returns how many
+      bytes the kernel accepted: possibly 0 (EAGAIN), possibly fewer
+      than you asked, -1 only on a real error. The host must keep the
+      rest and send it later. The worklog measured a raw-mode child
+      that never reads at 1022 accepted bytes; a canonical-mode child
+      accepts everything (macOS discards past MAX_INPUT).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I wait for output from the child in my own event loop?
+    <responsum symbolum="Pseudoterminale pseudoterminale_posix_creare">Call
+      pt-&gt;fossa(pt-&gt;datum) to get the master descriptor and put it
+      in your poll set; never read or close it yourself. When it is
+      readable call legere: mora_ms 0 does not wait, a positive value
+      waits that many milliseconds, a negative value waits forever.
+      legere returns the bytes read, 0 when nothing arrived in time
+      (or EINTR/EAGAIN), and -1 when the child closed the slave side
+      (read 0 or EIO). The memoriae bridge returns -1 from fossa,
+      since it has no descriptor.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I find out whether the child exited and with what status?
+    <responsum symbolum="PseudoterminaleExitus Pseudoterminale">Call
+      pt-&gt;finitus(pt-&gt;datum, &amp;exitus): it reaps with waitpid
+      WNOHANG, so it never blocks. It returns FALSUM while the child
+      runs and VERUM once it has exited; later calls return VERUM and
+      the same exitus. exitus.codex is WEXITSTATUS (0 when the child
+      was killed) and exitus.signum is WTERMSIG or 0. If someone else
+      reaped the pid (ECHILD) it still reports VERUM, but the exit is
+      unknown and exitus reads codex 0, signum 0, which looks like a
+      clean exit. exitus may be NIHIL for the posix bridge but not for
+      the memoriae one. There are no signal handlers: the host polls
+      finitus, typically after legere returned -1.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I skip claudere if the child has already exited?
+    <responsum symbolum="Pseudoterminale pseudoterminale_posix_creare">No:
+      claudere must always be called, and only it closes the master
+      fd. It sends SIGHUP to the child's process group and the child
+      (only if not yet reaped, so a reused pid is never signalled),
+      closes the master, polls waitpid for up to XX steps of V ms,
+      then sends SIGKILL and waits. Afterwards there is no zombie and
+      no open fd, even for a child that ignores SIGHUP. It is
+      idempotent.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I set or remove environment variables for the child without losing TERM?
+    <responsum symbolum="pseudoterminale_configuratio_initiare PseudoterminaleConfiguratio" via="lib/terminale.c">cfg.ambitus
+      is a NIHIL-terminated list of changes applied on top of the
+      inherited environment: "NAME=value" sets, a bare "NAME" unsets.
+      The default from pseudoterminale_configuratio_initiare is
+      { "TERM=xterm-256color", "COLORTERM=truecolor" }. Assigning your
+      own array REPLACES that list, so include the TERM and COLORTERM
+      lines yourself if you want them (lib/terminale.c passes its own
+      ambitus_terminalis). A name of CCLV characters or more is
+      silently skipped.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I resize the terminal the child sees?
+    <responsum symbolum="Pseudoterminale PseudoterminaleConfiguratio">Call
+      pt-&gt;amplitudo(pt-&gt;datum, cols, rows, px_w, px_h): it sets
+      TIOCSWINSZ on the master and the kernel sends SIGWINCH to the
+      child. Pixel sizes may be 0 (unknown). It returns FALSUM after
+      claudere, for a size below I, or above 0xFFFF. The starting size
+      comes from cfg.latitudo and cfg.altitudo (LXXX x XXIV by
+      default) and is checked the same way: a bad size makes creare
+      fail with PSEUDOTERMINALE_ERROR_ARGUMENTA.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I test a terminal host without spawning a real process?
+    <responsum symbolum="pseudoterminale_memoriae_creare pseudoterminale_memoriae_captum pseudoterminale_memoriae_amplitudo" via="probationes/probatio_pseudoterminale.c">Use
+      the memoriae bridge, the test seam: pseudoterminale_memoriae_creare
+      takes a canned output that legere returns (then -1), and an exit
+      code that finitus reports once all output has been read.
+      Everything the host writes is captured and visible through
+      pseudoterminale_memoriae_captum (a view, valid until the next
+      scribere); pseudoterminale_memoriae_amplitudo reports the last
+      size set. Because Pseudoterminale is a function table, host
+      code calls both bridges the same way. They are not identical:
+      the memoriae legere ignores mora_ms, its fossa is -1, its tty is
+      NIHIL, its amplitudo has no 0xFFFF limit, and its finitus
+      writes through exitus with no NIHIL check.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what is the tty field of a Pseudoterminale for?
+    <responsum symbolum="Pseudoterminale pseudoterminale_posix_creare" via="lib/terminale.c">It
+      is the slave device name returned by openpty, such as
+      "/dev/ttys011", NUL-terminated and copied into the piscina.
+      It was added for the colloquia plan (T4c) because tmux
+      identifies its clients by tty; lib/terminale.c copies it into
+      the terminal's state. It is NIHIL for the memoriae
+      bridge.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can signals my host ignores or blocks leak into the child program?
+    <responsum symbolum="pseudoterminale_posix_creare" via="lib/pseudoterminale.worklog.md lib/pseudoterminale_posix.c">Partly.
+      A disposition set to SIG_IGN survives exec, so the child resets
+      HUP, INT, QUIT, PIPE, ALRM, TERM, CHLD, TSTP, TTIN, TTOU and
+      WINCH to SIG_DFL before execvp (a host that ignores SIGPIPE does
+      not pass that on). Any other signal the host ignores stays
+      ignored, and the signal MASK is not touched: anything the host
+      blocked with sigprocmask is still blocked in the program running
+      in the terminal.</responsum>
+  </interrogatio>
+
+</interrogationes>

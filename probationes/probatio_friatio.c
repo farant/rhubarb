@@ -7,28 +7,18 @@
 #include <stdio.h>
 #include <string.h>
 
-s32 principale(vacuum)
-{
-    Piscina* piscina;
-        b32  praeteritus;
-
-    /* Aperire piscinam et credonem */
-    piscina = piscina_generare_dynamicum("probatio_friatio",
-        IV * MXXIV);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
 
     /* ==================================================
      * Probare FNV-1a basicum
      * ================================================== */
 
-    imprimere("\n--- Probans friatio_fnv1a ---\n");
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
 
+    piscina = c->piscina;
     {
         chorda ch;
         i32    h1, h2;
@@ -55,14 +45,20 @@ s32 principale(vacuum)
         CREDO_INAEQUALITAS_I32(h1, h2);
         imprimere("  Hash 'world': 0x%08X\n", h2);
     }
+}
 
 
     /* ==================================================
      * Probare FNV-1a literis
      * ================================================== */
 
-    imprimere("\n--- Probans friatio_fnv1a_literis ---\n");
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
 
+    piscina = c->piscina;
     {
         chorda ch;
         i32    h1, h2;
@@ -77,14 +73,20 @@ s32 principale(vacuum)
 
         imprimere("  Hash 'test' (literis): 0x%08X\n", h1);
     }
+}
 
 
     /* ==================================================
      * Probare FNV-1a valores cognitos
      * ================================================== */
 
-    imprimere("\n--- Probans FNV-1a valores cognitos ---\n");
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
 
+    piscina = c->piscina;
     {
         chorda ch;
            i32 h;
@@ -107,14 +109,20 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32(h, (i32)0xbf9cf968);
         imprimere("  'foobar' -> 0x%08X (expected 0xbf9cf968)\n", h);
     }
+}
 
 
     /* ==================================================
      * Probare DJB2 basicum
      * ================================================== */
 
-    imprimere("\n--- Probans friatio_djb2 ---\n");
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
 
+    piscina = c->piscina;
     {
         chorda ch;
         i32    h1, h2;
@@ -135,14 +143,20 @@ s32 principale(vacuum)
         CREDO_INAEQUALITAS_I32(h1, h2);
         imprimere("  Hash 'world': 0x%08X\n", h2);
     }
+}
 
 
     /* ==================================================
      * Probare DJB2 literis
      * ================================================== */
 
-    imprimere("\n--- Probans friatio_djb2_literis ---\n");
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
 
+    piscina = c->piscina;
     {
         chorda ch;
         i32    h1, h2;
@@ -157,14 +171,20 @@ s32 principale(vacuum)
 
         imprimere("  Hash 'test' (literis): 0x%08X\n", h1);
     }
+}
 
 
     /* ==================================================
      * Probare DJB2 valores cognitos
      * ================================================== */
 
-    imprimere("\n--- Probans DJB2 valores cognitos ---\n");
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
 
+    piscina = c->piscina;
     {
         chorda ch;
            i32 h;
@@ -181,14 +201,18 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32(h, (i32)0x0F923099);
         imprimere("  'hello' -> 0x%08X\n", h);
     }
+}
 
 
     /* ==================================================
      * Probare SHA-1 basicum
      * ================================================== */
 
-    imprimere("\n--- Probans sha1_friare ---\n");
-
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
          i8 digest[SHA1_DIGEST_MENSURA];
         i32 i;
@@ -209,14 +233,18 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_S32((i8)digest[II] & 0xFF, 0xa3);
         CREDO_AEQUALIS_S32((i8)digest[III] & 0xFF, 0xee);
     }
+}
 
 
     /* ==================================================
      * Probare SHA-1 test vectors
      * ================================================== */
 
-    imprimere("\n--- Probans SHA-1 test vectors ---\n");
-
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
          i8 digest[SHA1_DIGEST_MENSURA];
         i32 i;
@@ -261,14 +289,18 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_S32((i8)digest[II] & 0xFF, 0x3e);
         CREDO_AEQUALIS_S32((i8)digest[III] & 0xFF, 0x44);
     }
+}
 
 
     /* ==================================================
      * Probare SHA-1 incrementale
      * ================================================== */
 
-    imprimere("\n--- Probans SHA-1 incrementale ---\n");
-
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         SHA1Contextus ctx;
                    i8 digest1[SHA1_DIGEST_MENSURA];
@@ -298,14 +330,20 @@ s32 principale(vacuum)
         }
         imprimere("\n");
     }
+}
 
 
     /* ==================================================
      * Probare sha1_friare_chorda
      * ================================================== */
 
-    imprimere("\n--- Probans sha1_friare_chorda ---\n");
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
 
+    piscina = c->piscina;
     {
         chorda ch;
             i8 digest1[SHA1_DIGEST_MENSURA];
@@ -326,14 +364,20 @@ s32 principale(vacuum)
 
         imprimere("  SHA1 chorda = SHA1 literis: VERUM\n");
     }
+}
 
 
     /* ==================================================
      * Probare comparatio FNV-1a vs DJB2
      * ================================================== */
 
-    imprimere("\n--- Probans comparatio FNV-1a vs DJB2 ---\n");
+interior vacuum
+_sectio_decima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
 
+    piscina = c->piscina;
     {
         chorda ch;
         i32    fnv, djb;
@@ -349,14 +393,18 @@ s32 principale(vacuum)
         imprimere("    FNV-1a: 0x%08X\n", fnv);
         imprimere("    DJB2:   0x%08X\n", djb);
     }
+}
 
 
     /* ==================================================
      * Probare SHA-256 basicum
      * ================================================== */
 
-    imprimere("\n--- Probans sha256_friare ---\n");
-
+interior vacuum
+_sectio_decima_secunda (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
          i8 digest[SHA256_DIGEST_MENSURA];
         i32 i;
@@ -377,14 +425,18 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_S32((i8)digest[II] & 0xFF, 0xc4);
         CREDO_AEQUALIS_S32((i8)digest[III] & 0xFF, 0x42);
     }
+}
 
 
     /* ==================================================
      * Probare SHA-256 test vectors
      * ================================================== */
 
-    imprimere("\n--- Probans SHA-256 test vectors ---\n");
-
+interior vacuum
+_sectio_decima_tertia (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
          i8 digest[SHA256_DIGEST_MENSURA];
         i32 i;
@@ -429,14 +481,18 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_S32((i8)digest[II] & 0xFF, 0x6a);
         CREDO_AEQUALIS_S32((i8)digest[III] & 0xFF, 0x61);
     }
+}
 
 
     /* ==================================================
      * Probare SHA-256 incrementale
      * ================================================== */
 
-    imprimere("\n--- Probans SHA-256 incrementale ---\n");
-
+interior vacuum
+_sectio_decima_quarta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         SHA256Contextus ctx;
                      i8 digest1[SHA256_DIGEST_MENSURA];
@@ -466,14 +522,20 @@ s32 principale(vacuum)
         }
         imprimere("\n");
     }
+}
 
 
     /* ==================================================
      * Probare sha256_friare_chorda
      * ================================================== */
 
-    imprimere("\n--- Probans sha256_friare_chorda ---\n");
+interior vacuum
+_sectio_decima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
 
+    piscina = c->piscina;
     {
         chorda ch;
             i8 digest1[SHA256_DIGEST_MENSURA];
@@ -494,14 +556,18 @@ s32 principale(vacuum)
 
         imprimere("  SHA256 chorda = SHA256 literis: VERUM\n");
     }
+}
 
 
     /* ==================================================
      * Probare CRC32 basicum
      * ================================================== */
 
-    imprimere("\n--- Probans crc32_calculare ---\n");
-
+interior vacuum
+_sectio_decima_sexta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         i32 crc;
 
@@ -516,14 +582,18 @@ s32 principale(vacuum)
             crc);
         CREDO_AEQUALIS_I32(crc, (i32)0xCBF43926);
     }
+}
 
 
     /* ==================================================
      * Probare CRC32 test vectors
      * ================================================== */
 
-    imprimere("\n--- Probans CRC32 test vectors ---\n");
-
+interior vacuum
+_sectio_decima_septima (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         i32 crc;
 
@@ -540,14 +610,18 @@ s32 principale(vacuum)
             crc);
         CREDO_AEQUALIS_I32(crc, (i32)0x414FA339);
     }
+}
 
 
     /* ==================================================
      * Probare CRC32 incrementale
      * ================================================== */
 
-    imprimere("\n--- Probans CRC32 incrementale ---\n");
-
+interior vacuum
+_sectio_decima_octava (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         i32 crc1, crc2;
 
@@ -565,14 +639,20 @@ s32 principale(vacuum)
 
         imprimere("  Incrementale = uno passu: 0x%08X\n", crc1);
     }
+}
 
 
     /* ==================================================
      * Probare crc32_calculare_chorda
      * ================================================== */
 
-    imprimere("\n--- Probans crc32_calculare_chorda ---\n");
+interior vacuum
+_sectio_decima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
 
+    piscina = c->piscina;
     {
         chorda ch;
         i32    crc1, crc2;
@@ -588,27 +668,48 @@ s32 principale(vacuum)
         imprimere("  CRC32 chorda = CRC32 literis: VERUM (0x%08X)\n",
             crc1);
     }
+}
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "friatio_fnv1a", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "friatio_fnv1a_literis", _sectio_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "FNV-1a valores cognitos", _sectio_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "friatio_djb2", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "friatio_djb2_literis", _sectio_quinta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "DJB2 valores cognitos", _sectio_sexta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "sha1_friare", _sectio_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "SHA-1 test vectors", _sectio_octava, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "SHA-1 incrementale", _sectio_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sha1_friare_chorda", _sectio_decima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "comparatio FNV-1a vs DJB2", _sectio_decima_prima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "sha256_friare", _sectio_decima_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "SHA-256 test vectors", _sectio_decima_tertia, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "SHA-256 incrementale", _sectio_decima_quarta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "sha256_friare_chorda", _sectio_decima_quinta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "crc32_calculare", _sectio_decima_sexta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "CRC32 test vectors", _sectio_decima_septima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "CRC32 incrementale", _sectio_decima_octava, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "crc32_calculare_chorda", _sectio_decima_nona, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    /* ==================================================
-     * Compendium
-     * ================================================== */
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-
-    /* Purificatio */
-    credo_claudere();
-    piscina_destruere(piscina);
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("friatio", SECTIONES);
 }

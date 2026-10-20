@@ -1,0 +1,89 @@
+<interrogationes unitas="anulus">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I write an algebra routine once so it works over Z, Q, Laurent polynomials and Z/n?
+    <responsum symbolum="Anulus ANULUS_INTEGRORUM ANULUS_RATIONALIUM ANULUS_POLYNOMIORUM anulus_residuorum">Take
+      a constans Anulus* and treat elements as opaque blocks of
+      anulus-&gt;mensura bytes. Every operation is a function pointer
+      that takes the descriptor first: anulus-&gt;adde(anulus, &amp;a,
+      &amp;b, piscina, &amp;c). The ready rings are ANULUS_INTEGRORUM
+      (elements Magnus), ANULUS_RATIONALIUM (Fractio),
+      ANULUS_POLYNOMIORUM (Polynomium, text letter 't') and
+      anulus_residuorum(n, piscina) for Z/n (elements i32). matrix is
+      written this way.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I call divisor_communis, divide_cum_residuo, compara_normam or signum on any ring?
+    <responsum symbolum="Anulus ANULUS_INTEGRORUM ANULUS_RATIONALIUM">No:
+      they are optional and NIHIL where the ring lacks them, so test
+      the pointer first. The three Euclidean hooks exist only for Z
+      (NIHIL for Q, Z[t,t^-1] and Z/n). signum exists for Z and Q
+      (and ordered extensio fields), NIHIL for Z[t,t^-1], Z/n and
+      cyclotomia. Algorithms that need a missing hook return
+      FALSUM.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I make the ring Z/n, and how are its rings compared?
+    <responsum symbolum="anulus_residuorum">anulus_residuorum(n,
+      piscina) copies a descriptor into the piscina with the modulus
+      in contextus and a title like "Z/7"; it returns NIHIL if n &lt; 2.
+      corpus and integrum are VERUM only when n is prime. Matrices
+      compare rings by POINTER, so two calls with n = 7 give two
+      different rings: create one descriptor per modulus and share
+      it.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I put an unreduced value like 9 into a Z/7 element directly?
+    <responsum symbolum="anulus_residuorum Anulus">Do not: Z/n elements
+      are i32 residues 0 &lt;= x &lt; n and aequalis compares the raw
+      numbers, so a stored 9 is not equal to 2. Build elements with
+      the ring's own operations, or with ex_chorda, which accepts any
+      decimal integer (negative too) and reduces it modulo
+      n.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why does Anulus have an integrum flag separate from corpus?
+    <responsum symbolum="Anulus anulus_residuorum" via="lib/anulus.worklog.md">Bareiss
+      elimination (determinant, rank, kernel) is only sound over an
+      integral domain. Over composite Z/n a zero-divisor pivot gave
+      WRONG answers instead of refusing: [0,3,3; 4,4,5; 5,5,5] over
+      Z/6 came out det 0, truly 3. So matrix_determinans,
+      matrix_gradus and matrix_nucleus refuse when integrum is FALSUM.
+      Z is integrum but not corpus; Z/n is both exactly when n is
+      prime.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I keep a ring element after resetting the scratch piscina it was computed in?
+    <responsum symbolum="Anulus piscina_notare piscina_reficere">Copy
+      it with anulus-&gt;transcribe(anulus, &amp;a, piscina_durabilis,
+      &amp;exitus) before piscina_reficere. transcribe makes a DEEP copy
+      (Magnus limbs, Fractio parts and polynomial arrays are copied),
+      so the value survives losing the source piscina. A plain struct
+      copy would still point into the scratch memory.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can the output of an anulus operation be the same element as an input?
+    <responsum symbolum="Anulus" via="lib/anulus.worklog.md">Yes:
+      the wrappers read the inputs by value before writing the output,
+      so adde(anulus, &amp;x, &amp;y, piscina, &amp;x) is safe and matrix
+      relies on it. When an operation returns FALSUM (division not
+      exact or by zero, polynomial exponent out of range, bad text)
+      the output is left untouched.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what does the parvum hook of an Anulus mean?
+    <responsum symbolum="Anulus">parvum(a) is VERUM when the element
+      lives entirely inside its struct with no external memory: Z when
+      it fits in s64, Q when numerator and denominator both fit,
+      Z[t,t^-1] only for the zero polynomial, Z/n always. Algorithms
+      use it to take a scratch-free fast path.</responsum>
+  </interrogatio>
+
+</interrogationes>

@@ -135,3 +135,24 @@ sine initializatione explicita.**
 pendens (probatio quae claudere omisit) nomen suum RETINET, et qui in
 /tmp inspicit videt quot cursus reliquerint. Tempus aut fors nomina
 nova semper daret, et reliquiae silentio congererentur.
+
+## 2026-10-17 - durable option + streamed massae (hospitium v3 T6)
+
+- `VolumenOptiones.durabilitas_plena` -> `synchronous=FULL` (via
+  `ScriniumOptiones.synchronus_plenus`). Default unchanged (NORMAL under
+  WAL: no corruption, but the last commits can be lost on power loss).
+  PRAGMA synchronous is per CONNECTION, never stored in the file -
+  every open must pass the option.
+- `volumen_massam_condere_ex_filo`: dedup check first (an existing hash
+  never reads the file), then SAVEPOINT + `INSERT ... zeroblob(n)` +
+  64 KB chunks through `ScriniumMassa` + SHA-256 of the bytes written,
+  compared to the hash the caller computed in flight. Any mismatch
+  (hash, size, unreadable file) -> ROLLBACK TO + RELEASE, so it is safe
+  inside a caller's `volumen_transactionem_*`.
+- Reader opens the blob handle PER CHUNK. Not for commit visibility
+  (I first believed an open read statement delays autocommit commits;
+  a plant proved that false), but because a held handle pins a WAL
+  snapshot: TRUNCATE checkpoints fail and the WAL grows for the whole
+  download. Re-opening per 16-64 KB chunk costs microseconds.
+- SQLite blobs cap at ~1 GB (SQLITE_MAX_LENGTH); the API refuses > 2 GB
+  up front, sqlite refuses beyond its own limit.

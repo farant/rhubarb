@@ -9,6 +9,9 @@
  * canonem generatum). Sceletum hic manet quia utraque pars eo
  * eget et neutra eius domina est.
  */
+/* corpus alterum (caput nomen fontis non fert - aedilis per nomen
+ * capitis id non inveniret): */
+/* <aedilis corpus="tools/natura_canones_emissio.c"/> */
 
 #include "latina.h"
 #include "natura.h"

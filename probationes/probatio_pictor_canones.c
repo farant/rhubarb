@@ -58,7 +58,9 @@ ponere_zoom (
     insula_attributum_ponere(radix, p, in, "zoom", "2");
 }
 
-s32 principale (vacuum)
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
                 Piscina* piscina;
     InternamentumChorda* intern;
@@ -66,15 +68,10 @@ s32 principale (vacuum)
      InsulaRepositorium* repo;
               StmlNodus* domini;
 
-    piscina = piscina_generare_dynamicum("probatio_pictor_canones",
-        LXIV * M);
-    si (!piscina)
-    { imprimere("FRACTA: piscina\n"); redde I;
-    }
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
 
-    imprimere("\n--- Canon et domini ex manifesto ---\n");
+    CREDO_GRADUS("Canon et domini ex manifesto");
     canon   = NIHIL;
     domini  = NIHIL;
     CREDO_VERUM(pictor_organum_parare(piscina, intern, &canon,
@@ -83,11 +80,10 @@ s32 principale (vacuum)
     CREDO_NON_NIHIL(domini);
     si (!canon || !domini)
     {
-        credo_imprimere_compendium();
-        redde I;
+        redde;
     }
 
-    imprimere("\n--- Insulae pictoris iudicantur ---\n");
+    CREDO_GRADUS("Insulae pictoris iudicantur");
     repo = insula_repositorium_creare(piscina, intern,
         "<pictor latitudo=\"320\" altitudo=\"200\""
         " instrumentum=\"penicillus\" color_primus=\"0\""
@@ -103,7 +99,7 @@ s32 principale (vacuum)
     /* declarationes mortuae (census IX inventum 7) iam ignotae */
     CREDO_FALSUM(insula_mutare(repo, ponere_paletta, NIHIL));
 
-    imprimere("\n--- Domini leguntur; motus solus zoom scribit ---\n");
+    CREDO_GRADUS("Domini leguntur; motus solus zoom scribit");
     /* XVIII: XIII pictoris (scriptor, insula; S5c palette quoque;
      * glutinatio pendens 2026-10-13, dominus glutinatio.agere) + semen
      * (aspergillum.ictus, in insula usque ad migrationem) + IV basis
@@ -125,8 +121,16 @@ s32 principale (vacuum)
         chorda_ex_literis("palette.aperire", piscina));
     CREDO_VERUM(insula_mutare(repo, ponere_palettam, NIHIL));
     CREDO_VERUM(insula_restituere(repo));
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "canon insularum pictoris et domini ex manifesto", _sectio_prima,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("pictor_canones", SECTIONES);
 }

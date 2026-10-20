@@ -7,32 +7,23 @@
 #include "credo.h"
 #include <stdio.h>
 
-s32 principale(vacuum)
-{
-    Piscina* piscina;
-        b32  praeteritus;
-
-    /* Aperire credo et piscina */
-    piscina = piscina_generare_dynamicum("test_symbola", 1024 * 1024);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
 
     /* ==================================================
 	 * Probare tabula_symbolorum_ex_macho creatio
 	 * ================================================== */
 
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
             constans character* via = "probationes/fixa/simplex";
                          MachO* macho;
               TabulaSymbolorum* tabula;
                            i32  numerus;
-
-        imprimere("\n--- Probans tabula_symbolorum_ex_macho ---\n");
 
         macho = macho_aperire(via, piscina);
         CREDO_NON_NIHIL(macho);
@@ -45,20 +36,26 @@ s32 principale(vacuum)
         imprimere("  Total symbols: %d\n", numerus);
         CREDO_MAIOR_I32(numerus, ZEPHYRUM);
     }
+}
 
 
     /* ==================================================
 	 * Probare tabula_symbolorum_symbolum (index access)
 	 * ================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
             constans character* via = "probationes/fixa/simplex";
                          MachO* macho;
               TabulaSymbolorum* tabula;
                       Symbolum* sym;
                            i32  numerus;
-
-        imprimere("\n--- Probans tabula_symbolorum_symbolum ---\n");
 
         macho = macho_aperire(via, piscina);
         CREDO_NON_NIHIL(macho);
@@ -82,12 +79,20 @@ s32 principale(vacuum)
         sym = tabula_symbolorum_symbolum(tabula, (i32)(ZEPHYRUM - I));
         CREDO_NIHIL(sym);
     }
+}
 
 
     /* ==================================================
 	 * Probare symbolorum_iterator
 	 * ================================================== */
 
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
             constans character* via = "probationes/fixa/simplex";
                          MachO* macho;
@@ -96,8 +101,6 @@ s32 principale(vacuum)
                       Symbolum* sym;
                            i32  numerus_iteratus;
                            i32  numerus_totalis;
-
-        imprimere("\n--- Probans symbolorum_iterator ---\n");
 
         macho = macho_aperire(via, piscina);
         CREDO_NON_NIHIL(macho);
@@ -135,12 +138,20 @@ s32 principale(vacuum)
         /* Verificare iterator finis */
         CREDO_VERUM(symbolorum_iterator_finis(&iter));
     }
+}
 
 
     /* ==================================================
 	 * Probare symbolum_invenire
 	 * ================================================== */
 
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
             constans character* via = "probationes/fixa/simplex";
                          MachO* macho;
@@ -148,8 +159,6 @@ s32 principale(vacuum)
                       Symbolum* main_sym;
                       Symbolum* non_existens;
                         chorda  appellatio;
-
-        imprimere("\n--- Probans symbolum_invenire ---\n");
 
         macho = macho_aperire(via, piscina);
         CREDO_NON_NIHIL(macho);
@@ -175,12 +184,20 @@ s32 principale(vacuum)
             piscina);
         CREDO_NIHIL(non_existens);
     }
+}
 
 
     /* ==================================================
 	 * Probare symbolum attributa
 	 * ================================================== */
 
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
             constans character* via = "probationes/fixa/simplex";
                          MachO* macho;
@@ -191,8 +208,6 @@ s32 principale(vacuum)
                            i32  genus;
                            i32  sect;
                            i32  desc;
-
-        imprimere("\n--- Probans symbolum attributa ---\n");
 
         macho = macho_aperire(via, piscina);
         CREDO_NON_NIHIL(macho);
@@ -227,19 +242,25 @@ s32 principale(vacuum)
         desc = symbolum_descriptor(main_sym);
         imprimere("  Descriptor: 0x%x\n", desc);
     }
+}
 
 
     /* ==================================================
 	 * Probare symbolum_est_* predicates
 	 * ================================================== */
 
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
             constans character* via = "probationes/fixa/simplex";
                          MachO* macho;
               TabulaSymbolorum* tabula;
                       Symbolum* main_sym;
-
-        imprimere("\n--- Probans symbolum_est_* predicates ---\n");
 
         macho = macho_aperire(via, piscina);
         CREDO_NON_NIHIL(macho);
@@ -270,12 +291,20 @@ s32 principale(vacuum)
                   symbolum_est_debug(main_sym) ? "sic" : "non");
         CREDO_FALSUM(symbolum_est_debug(main_sym));
     }
+}
 
 
     /* ==================================================
 	 * Probare cum_functione (plures symbola)
 	 * ================================================== */
 
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
             constans character* via = "probationes/fixa/cum_functione";
                          MachO* macho;
@@ -284,8 +313,6 @@ s32 principale(vacuum)
                       Symbolum* calculare_sym;
                       Symbolum* printf_sym;
                            i32  numerus;
-
-        imprimere("\n--- Probans cum_functione (plures symbola) ---\n");
 
         macho = macho_aperire(via, piscina);
         CREDO_NON_NIHIL(macho);
@@ -317,12 +344,20 @@ s32 principale(vacuum)
         CREDO_VERUM(symbolum_est_indefinitum(printf_sym));
         CREDO_FALSUM(symbolum_est_functio(printf_sym));  /* Indefinitum non est functio */
     }
+}
 
 
     /* ==================================================
 	 * Probare symbola_obtinere_functiones
 	 * ================================================== */
 
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
             constans character*  via = "probationes/fixa/cum_functione";
                          MachO*  macho;
@@ -332,8 +367,6 @@ s32 principale(vacuum)
                            i32   i;
                            b32   invenit_main;
                            b32   invenit_calculare;
-
-        imprimere("\n--- Probans symbola_obtinere_functiones ---\n");
 
         macho = macho_aperire(via, piscina);
         CREDO_NON_NIHIL(macho);
@@ -381,12 +414,20 @@ s32 principale(vacuum)
             CREDO_VERUM(invenit_calculare);
         }
     }
+}
 
 
     /* ==================================================
 	 * Probare symbola_obtinere_externa_indefinita
 	 * ================================================== */
 
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
             constans character*  via = "probationes/fixa/cum_functione";
                          MachO*  macho;
@@ -395,8 +436,6 @@ s32 principale(vacuum)
                            i32   numerus_externa;
                            i32   i;
                            b32   invenit_printf;
-
-        imprimere("\n--- Probans symbola_obtinere_externa_indefinita ---\n");
 
         macho = macho_aperire(via, piscina);
         CREDO_NON_NIHIL(macho);
@@ -437,12 +476,20 @@ s32 principale(vacuum)
             CREDO_VERUM(invenit_printf);
         }
     }
+}
 
 
     /* ==================================================
 	 * Probare symbolum_invenire_per_addressa
 	 * ================================================== */
 
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
             constans character* via = "probationes/fixa/simplex";
                          MachO* macho;
@@ -450,8 +497,6 @@ s32 principale(vacuum)
                       Symbolum* main_sym;
                       Symbolum* found_sym;
                 memoriae_index  addressa;
-
-        imprimere("\n--- Probans symbolum_invenire_per_addressa ---\n");
 
         macho = macho_aperire(via, piscina);
         CREDO_NON_NIHIL(macho);
@@ -480,18 +525,24 @@ s32 principale(vacuum)
             piscina);
         CREDO_NIHIL(found_sym);
     }
+}
 
 
     /* ==================================================
 	 * Probare NIHIL handling
 	 * ================================================== */
 
+interior vacuum
+_sectio_decima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
           TabulaSymbolorum* tabula;
                   Symbolum* sym;
                     chorda  appellatio;
-
-        imprimere("\n--- Probans NIHIL handling ---\n");
 
         /* tabula_symbolorum_ex_macho cum NIHIL */
         tabula = tabula_symbolorum_ex_macho(NIHIL, piscina);
@@ -517,27 +568,35 @@ s32 principale(vacuum)
         CREDO_FALSUM(symbolum_est_indefinitum(NIHIL));
         CREDO_FALSUM(symbolum_est_debug(NIHIL));
     }
+}
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "tabula_symbolorum_ex_macho", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "tabula_symbolorum_symbolum", _sectio_secunda, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "symbolorum_iterator", _sectio_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "symbolum_invenire", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "symbolum attributa", _sectio_quinta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "symbolum_est_* predicates", _sectio_sexta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "cum_functione (plures symbola)", _sectio_septima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "symbola_obtinere_functiones", _sectio_octava, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "symbola_obtinere_externa_indefinita", _sectio_nona, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "symbolum_invenire_per_addressa", _sectio_decima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "NIHIL handling", _sectio_decima_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    /* =================================================
-	 * Compendium
-	 * ================================================== */
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-
-    /* Destructio */
-    credo_claudere();
-    piscina_destruere(piscina);
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("symbola", SECTIONES);
 }

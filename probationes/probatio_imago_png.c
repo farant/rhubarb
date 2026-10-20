@@ -127,26 +127,18 @@ _circuitus (
 
 /* ============================================================ */
 
-s32 principale (vacuum)
-{
-        b32  praeteritus;
-    Piscina* piscina;
-
-    piscina = piscina_generare_dynamicum("probatio_imago_png",
-        M * M * IV);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
 
     /* ========================================================
      * I. Signum et IHDR
      * ======================================================== */
 
-    imprimere("\n--- I. Signum et IHDR ---\n");
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
              Imago fons;
         PngFructus png;
@@ -181,13 +173,20 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32((i32)png.datum[XXVII], ZEPHYRUM);
         CREDO_AEQUALIS_I32((i32)png.datum[XXVIII], ZEPHYRUM);
     }
+}
 
 
     /* ========================================================
      * II. Circuitus per stb_image (oraculum alienum)
      * ======================================================== */
 
-    imprimere("\n--- II. Circuitus: VII x V ---\n");
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
                   Imago fons;
         CollatioFructus collatio;
@@ -201,13 +200,20 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32(collatio.delta_maximum, ZEPHYRUM);
         CREDO_AEQUALIS_I32(collatio.pixela_tota, (i32)(VII * V));
     }
+}
 
 
     /* ========================================================
      * III. Imago minima
      * ======================================================== */
 
-    imprimere("\n--- III. Imago I x I ---\n");
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
                   Imago fons;
         CollatioFructus collatio;
@@ -219,13 +225,20 @@ s32 principale (vacuum)
             (s32)COLLATIO_CONGRUUNT);
         CREDO_AEQUALIS_I32(collatio.pixela_tota, (i32)I);
     }
+}
 
 
     /* ========================================================
      * IV. Alpha servatur (PNG non praemultiplicat)
      * ======================================================== */
 
-    imprimere("\n--- IV. Alpha varia ---\n");
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
                   Imago fons;
            ImagoFructus reductus;
@@ -251,13 +264,20 @@ s32 principale (vacuum)
         /* pixelum (0,0): alpha = ZEPHYRUM ex formula */
         CREDO_AEQUALIS_I32((i32)fons.pixela[III], ZEPHYRUM);
     }
+}
 
 
     /* ========================================================
      * V. Imago maior
      * ======================================================== */
 
-    imprimere("\n--- V. Imago LXIV x XLVIII ---\n");
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
                   Imago fons;
         CollatioFructus collatio;
@@ -270,13 +290,20 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32(collatio.pixela_diversa, ZEPHYRUM);
         CREDO_AEQUALIS_I32(collatio.pixela_tota, (i32)(LXIV * XLVIII));
     }
+}
 
 
     /* ========================================================
      * VI. Emissio DETERMINATA
      * ======================================================== */
 
-    imprimere("\n--- VI. Determinatio ---\n");
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         Imago fons;
         PngFructus prima, altera;
@@ -293,13 +320,20 @@ s32 principale (vacuum)
             (size_t)prima.mensura),
             (s32)ZEPHYRUM);
     }
+}
 
 
     /* ========================================================
      * VII. Culpae NOMINANTUR
      * ======================================================== */
 
-    imprimere("\n--- VII. Culpae ---\n");
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         Imago      fons, vacua;
         PngFructus png;
@@ -328,13 +362,20 @@ s32 principale (vacuum)
         png = imago_png_codificare(&fons, NIHIL);
         CREDO_FALSUM(png.successus);
     }
+}
 
 
     /* ========================================================
      * VIII. Scriptio in plagulam et lectio
      * ======================================================== */
 
-    imprimere("\n--- VIII. Plagula ---\n");
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
                      Imago  fons;
                 PngFructus  png;
@@ -370,6 +411,7 @@ s32 principale (vacuum)
         CREDO_FALSUM(png.successus);
         CREDO_CHORDA_NON_VACUA(png.error);
     }
+}
 
 
     /* ==================================================
@@ -378,7 +420,13 @@ s32 principale (vacuum)
      *     appareant
      * ================================================== */
 
-    imprimere("\n--- IX. Mensurae sine decodificatione ---\n");
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
                      Imago  fons;
                 PngFructus  png;
@@ -412,6 +460,7 @@ s32 principale (vacuum)
             (i32)magnitudo(purgamentum), &latitudo, &altitudo));
         CREDO_AEQUALIS_I32(latitudo, ZEPHYRUM);
     }
+}
 
 
     /* ========================================================
@@ -427,7 +476,13 @@ s32 principale (vacuum)
      * ligant, non solum collocationem bytorum.
      * ======================================================== */
 
-    imprimere("\n--- IX. Summae contra oraculum externum ---\n");
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
              Imago fons;
         PngFructus png;
@@ -458,25 +513,28 @@ s32 principale (vacuum)
         crc_iend = _be32_legere(png.datum + png.mensura - (i32)IV);
         CREDO_AEQUALIS_I32(crc_iend, (i32)0xAE426082u);
     }
+}
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I. Signum et IHDR", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "II. Circuitus: VII x V", _sectio_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "III. Imago I x I", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "IV. Alpha varia", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "V. Imago LXIV x XLVIII", _sectio_quinta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "VI. Determinatio", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "VII. Culpae", _sectio_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "VIII. Plagula", _sectio_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "IX. Mensurae sine decodificatione", _sectio_nona, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "IX. Summae contra oraculum externum", _sectio_decima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    /* ========================================================
-     * Compendium
-     * ======================================================== */
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-
-    piscina_destruere(piscina);
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("imago_png", SECTIONES);
 }

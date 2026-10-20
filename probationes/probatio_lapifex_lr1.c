@@ -86,23 +86,19 @@ follow_habet_terminalem(
     redde FALSUM;
 }
 
-s32 principale(vacuum)
-{
-    Piscina*              piscina;
-    InternamentumChorda*  intern;
-
-    piscina = piscina_generare_dynamicum("probatio_lapifex_lr1", IV * MXXIV);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    intern = internamentum_creare(piscina);
-    credo_aperire(piscina);
-
     /* ========================================================
      * PROBARE: FOLLOW coniuncta - expr
      * ======================================================== */
+
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         LapifexGrammatica* g;
         s32 expr_idx;
@@ -111,8 +107,6 @@ s32 principale(vacuum)
         Xar* follow_expr;
         Xar* follow_term;
         Xar* follow_factor;
-
-        imprimere("\n--- Probans FOLLOW coniuncta ---\n");
 
         g = lapifex_grammaticam_legere(piscina, intern, GRAMMATICA_STML);
         CREDO_NON_NIHIL(g);
@@ -158,17 +152,26 @@ s32 principale(vacuum)
 
         lapifex_follow_imprimere(g);
     }
+}
 
     /* ========================================================
      * PROBARE: Collectio canonica LR(1)
      * ======================================================== */
+
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         LapifexGrammatica* g;
         LapifexCollectio*  collectio;
         i32 num_status;
         i32 num_transitiones;
-
-        imprimere("\n--- Probans collectionem canonicam LR(1) ---\n");
 
         g = lapifex_grammaticam_legere(piscina, intern, GRAMMATICA_STML);
         CREDO_NON_NIHIL(g);
@@ -260,10 +263,21 @@ s32 principale(vacuum)
         /* Imprimere collectionem pro inspectione */
         lapifex_collectio_imprimere(collectio);
     }
+}
 
     /* ========================================================
      * PROBARE: Status 0 continet res correctas
      * ======================================================== */
+
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         LapifexGrammatica* g;
         LapifexCollectio*  collectio;
@@ -271,8 +285,6 @@ s32 principale(vacuum)
         s32 initium_idx;
         b32 habet_initium_res = FALSUM;
         i32 j;
-
-        imprimere("\n--- Probans statum 0 ---\n");
 
         g = lapifex_grammaticam_legere(piscina, intern, GRAMMATICA_STML);
         CREDO_NON_NIHIL(g);
@@ -313,17 +325,26 @@ s32 principale(vacuum)
         imprimere("  Status 0: %d res\n",
             (int)xar_numerus(status_0->res));
     }
+}
 
     /* ========================================================
      * PROBARE: Transitiones ex statu 0
      * ======================================================== */
+
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         LapifexGrammatica* g;
         LapifexCollectio*  collectio;
         i32 num_trans_ex_0 = ZEPHYRUM;
         i32 t;
-
-        imprimere("\n--- Probans transitiones ex statu 0 ---\n");
 
         g = lapifex_grammaticam_legere(piscina, intern, GRAMMATICA_STML);
         CREDO_NON_NIHIL(g);
@@ -349,14 +370,18 @@ s32 principale(vacuum)
         imprimere("  Transitiones ex statu 0: %d\n", (int)num_trans_ex_0);
         CREDO_VERUM(num_trans_ex_0 >= V);
     }
+}
 
-    /* ========================================================
-     * Compendium
-     * ======================================================== */
-    imprimere("\n");
-    credo_imprimere_compendium();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "FOLLOW coniuncta", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "collectionem canonicam LR(1)", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "statum 0", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "transitiones ex statu 0", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    piscina_destruere(piscina);
-
-    redde (credo_omnia_praeterierunt() ? ZEPHYRUM : I);
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("lapifex_lr1", SECTIONES);
 }

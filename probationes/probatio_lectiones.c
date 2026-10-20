@@ -48,24 +48,28 @@ _lineae_integrae (
     redde integrae;
 }
 
-s32 principale (vacuum)
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
     Piscina* piscina;
-     chorda  liber;
-        b32  praeteritus;
 
-    piscina = piscina_generare_dynamicum("probatio_lectiones",
-        1048576);
-    credo_aperire(piscina);
-
-    imprimere("\n--- I. variabilis absens: nihil scribitur ---\n");
+    piscina = c->piscina;
     unsetenv("FABRICA_LECTIONES");
     (vacuum)remove(LIBER);
     (vacuum)filum_legere_totum("probationes/probatio_lectiones.c",
         piscina);
     CREDO_FALSUM(filum_existit(LIBER));
+}
 
-    imprimere("\n--- II. variabilis praesens: L, A, X ---\n");
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+     chorda  liber;
+
+    piscina = c->piscina;
     setenv("FABRICA_LECTIONES", LIBER, I);
     (vacuum)filum_legere_totum("probationes/probatio_lectiones.c",
         piscina);
@@ -81,8 +85,16 @@ s32 principale (vacuum)
         "A\tinclude/nusquam.h\n", piscina)));
     CREDO_VERUM(chorda_continet(liber, chorda_ex_literis(
         "X\tinclude/latina.h\n", piscina)));
+}
 
-    imprimere("\n--- IIb. scriptura (S) et ambitus (E) ---\n");
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+     chorda  liber;
+
+    piscina = c->piscina;
     (vacuum)remove(LIBER);
     /* plagula delenda SINE libro creata: S eius solum ex deletione */
     (vacuum)filum_scribere_literis("build/probatio_lectiones_d.txt",
@@ -104,8 +116,16 @@ s32 principale (vacuum)
         "S\tbuild/probatio_lectiones_d.txt\n", piscina)));
     CREDO_VERUM(chorda_continet(liber, chorda_ex_literis(
         "E\tLECTIONES_PROBATIO\tvalor_fictus\n", piscina)));
+}
 
-    imprimere("\n--- IIc. fopen et stat per librum (plan 5 T5a) ---\n");
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+     chorda  liber;
+
+    piscina = c->piscina;
     (vacuum)remove(LIBER);
     setenv("FABRICA_LECTIONES", LIBER, I);
     {
@@ -151,8 +171,16 @@ s32 principale (vacuum)
     CREDO_VERUM(chorda_continet(liber, chorda_ex_literis(
         "A\tinclude/nusquam_iii.h\n", piscina)));
     (vacuum)remove("build/probatio_lectiones_w.txt");
+}
 
-    imprimere("\n--- III. filii duo paralleli: lineae integrae ---\n");
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+     chorda  liber;
+
+    piscina = c->piscina;
     {
         pid_t filii[II];
           i32 k;
@@ -185,10 +213,24 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32(omnes, M);
         CREDO_AEQUALIS_I32(integrae, M);
     }
+}
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    credo_claudere();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I. variabilis absens: nihil scribitur", _sectio_prima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "II. variabilis praesens: L, A, X", _sectio_secunda, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "IIb. scriptura (S) et ambitus (E)", _sectio_tertia, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "IIc. fopen et stat per librum (plan 5 T5a)", _sectio_quarta,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "III. filii duo paralleli: lineae integrae", _sectio_quinta,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("lectiones", SECTIONES);
 }

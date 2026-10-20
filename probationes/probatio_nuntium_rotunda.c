@@ -19,24 +19,18 @@
 #include "persona_gen.h"
 #include "persona_gen.c"
 
-s32 principale(vacuum)
-{
-    Piscina* piscina;
-
-    piscina = piscina_generare_dynamicum("probatio_nuntium_rotunda",
-        IV * MXXIV);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
 
     /* ========================================================
      * PROBARE I: Scribere et legere — campi basici
      * ======================================================== */
 
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         NuntiumScriptor* scriptor;
           NuntiumLector* lector;
@@ -45,8 +39,6 @@ s32 principale(vacuum)
                  chorda  datum;
                  chorda  id_chorda;
                  chorda  appellatio_chorda;
-
-        imprimere("\n--- Probans I: campi basici rotunda ---\n");
 
         scriptor = nuntium_scriptor_creare(piscina, CCLVI);
         CREDO_NON_NIHIL(scriptor);
@@ -83,20 +75,26 @@ s32 principale(vacuum)
 
         imprimere("  campi basici -> OK\n");
     }
+}
 
 
     /* ========================================================
      * PROBARE II: Campi vacui (nulls)
      * ======================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         NuntiumScriptor* scriptor;
           NuntiumLector* lector;
                 Persona  originale;
                 Persona* lecta;
                  chorda  datum;
-
-        imprimere("\n--- Probans II: campi vacui ---\n");
 
         scriptor = nuntium_scriptor_creare(piscina, CCLVI);
         CREDO_NON_NIHIL(scriptor);
@@ -128,12 +126,20 @@ s32 principale(vacuum)
 
         imprimere("  campi vacui -> OK\n");
     }
+}
 
 
     /* ========================================================
      * PROBARE III: Campi longi
      * ======================================================== */
 
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         NuntiumScriptor* scriptor;
           NuntiumLector* lector;
@@ -145,8 +151,6 @@ s32 principale(vacuum)
               character  buffer_id[CCLVI];
               character  buffer_app[CCLVI];
                     i32  i;
-
-        imprimere("\n--- Probans III: campi longi ---\n");
 
         /* Creare chordas longas */
         per (i = ZEPHYRUM; i < CCLV; i++)
@@ -192,12 +196,20 @@ s32 principale(vacuum)
 
         imprimere("  campi longi -> OK\n");
     }
+}
 
 
     /* ========================================================
      * PROBARE IV: Scribere bis (reuse scriptor cum purgare)
      * ======================================================== */
 
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         NuntiumScriptor* scriptor;
           NuntiumLector* lector;
@@ -211,8 +223,6 @@ s32 principale(vacuum)
                  chorda  id_b;
                  chorda  app_a;
                  chorda  app_b;
-
-        imprimere("\n--- Probans IV: scribere bis cum purgare ---\n");
 
         scriptor = nuntium_scriptor_creare(piscina, CCLVI);
         CREDO_NON_NIHIL(scriptor);
@@ -275,12 +285,20 @@ s32 principale(vacuum)
 
         imprimere("  scribere bis -> OK\n");
     }
+}
 
 
     /* ========================================================
      * PROBARE V: Bytes crudos verificare
      * ======================================================== */
 
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         NuntiumScriptor* scriptor;
           NuntiumLector* lector;
@@ -288,8 +306,6 @@ s32 principale(vacuum)
                 Persona* lecta;
                  chorda  datum;
                  chorda  id_chorda;
-
-        imprimere("\n--- Probans V: bytes crudos verificare ---\n");
 
         scriptor = nuntium_scriptor_creare(piscina, CCLVI);
         CREDO_NON_NIHIL(scriptor);
@@ -323,16 +339,22 @@ s32 principale(vacuum)
 
         imprimere("  bytes crudos -> OK\n");
     }
+}
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I: campi basici rotunda", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "II: campi vacui", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "III: campi longi", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "IV: scribere bis cum purgare", _sectio_quarta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "V: bytes crudos verificare", _sectio_quinta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    /* ========================================================
-     * Compendium
-     * ======================================================== */
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    piscina_destruere(piscina);
-
-    redde (credo_omnia_praeterierunt() ? ZEPHYRUM : I);
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("nuntium_rotunda", SECTIONES);
 }

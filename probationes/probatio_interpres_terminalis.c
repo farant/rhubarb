@@ -339,182 +339,259 @@ _videre (
     redde VERUM;
 }
 
-s32 principale (vacuum)
+/* fixura sectionis: Banca nova per sectionem (lector, interpres,
+ * cauda status ferunt - sectio nulla ab alia pendet) */
+interior vacuum
+_parare (
+    CredoContextus* c)
 {
-    Piscina* piscina;
-      Banca  b;
+    Banca* b;
 
-    piscina =
-        piscina_generare_dynamicum("probatio_interpres_terminalis",
-        M * M);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-    b.piscina  = piscina;
-    b.lector   = series_lectorem_creare(piscina);
-    series_lectorem_initus_ponere(b.lector, VERUM);
-    interpres_initiare(&b.interpres, X, XX);
-    b.cauda = (EventusCauda*)piscina_allocare_ordinatum(piscina,
+    b = (Banca*)piscina_allocare(c->piscina, magnitudo(Banca));
+    b->piscina = c->piscina;
+    b->lector = series_lectorem_creare(b->piscina);
+    series_lectorem_initus_ponere(b->lector, VERUM);
+    interpres_initiare(&b->interpres, X, XX);
+    b->cauda = (EventusCauda*)piscina_allocare_ordinatum(b->piscina,
         magnitudo(EventusCauda), VIII);
-    CREDO_NON_NIHIL (b.cauda);
-    eventus_caudam_initiare(b.cauda);
+    si (b->cauda != NIHIL)
+    {
+        eventus_caudam_initiare(b->cauda);
+    }
+    c->datum = b;
+}
 
-    imprimere("\n--- I. imprimibilia: clavis + textus ---\n");
-    CREDO_VERUM (_videre(&b, "a", FALSUM, "KA:a Ta"));
-    CREDO_VERUM (_videre(&b, "A", FALSUM, "KA:a TA"));    /* sine +S */
-    CREDO_VERUM (_videre(&b, "ab", FALSUM, "KA:a Ta KB:b Tb"));
-    CREDO_VERUM (_videre(&b, "5!", FALSUM, "K5:5 T5 K!:! T!"));
-    CREDO_VERUM (_videre(&b, " ", FALSUM, "Kspc:U+20 T%32"));
-    CREDO_VERUM (_videre(&b, "\xc3\xa9", FALSUM, "K?:U+e9 T%195%169"));
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    Banca* b;
+
+    b = (Banca*)c->datum;
+    CREDO_NON_NIHIL (b->cauda);
+
+    CREDO_VERUM (_videre(b, "a", FALSUM, "KA:a Ta"));
+    CREDO_VERUM (_videre(b, "A", FALSUM, "KA:a TA"));    /* sine +S */
+    CREDO_VERUM (_videre(b, "ab", FALSUM, "KA:a Ta KB:b Tb"));
+    CREDO_VERUM (_videre(b, "5!", FALSUM, "K5:5 T5 K!:! T!"));
+    CREDO_VERUM (_videre(b, " ", FALSUM, "Kspc:U+20 T%32"));
+    CREDO_VERUM (_videre(b, "\xc3\xa9", FALSUM, "K?:U+e9 T%195%169"));
 
     /* B3a: typus = character VERUS (ut fenestra: characters[0]) -
      * proiectio alt+A ab alt+a discernit */
-    CREDO_VERUM (_productam(&b, "\x1b" "A") == 'A');
-    CREDO_VERUM (_productam(&b, "\x1b" "a") == 'a');
-    CREDO_VERUM (_productam(&b, "A") == 'A');
-    CREDO_VERUM (_productam(&b, "?") == '?');
+    CREDO_VERUM (_productam(b, "\x1b" "A") == 'A');
+    CREDO_VERUM (_productam(b, "\x1b" "a") == 'a');
+    CREDO_VERUM (_productam(b, "A") == 'A');
+    CREDO_VERUM (_productam(b, "?") == '?');
     /* kitty: typus = clavis ipsa (minuscula), sub Shift maiuscula
      * (B3a) */
-    CREDO_VERUM (_productam(&b, "\x1b[97u") == 'a');
-    CREDO_VERUM (_productam(&b, "\x1b[97:65;2u") == 'A');
+    CREDO_VERUM (_productam(b, "\x1b[97u") == 'a');
+    CREDO_VERUM (_productam(b, "\x1b[97:65;2u") == 'A');
     /* S3a: alterum + e acutum: producta plena (typus ASCII perdebat) */
-    CREDO_VERUM (_productam(&b, "\x1b\303\251") == 0xE9);
+    CREDO_VERUM (_productam(b, "\x1b\303\251") == 0xE9);
+}
 
-    imprimere("\n--- II. regimina honesta ---\n");
-    CREDO_VERUM (_videre(&b, "\r", FALSUM, "Kret"));
-    CREDO_VERUM (_videre(&b, "\t", FALSUM, "Ktab"));
-    CREDO_VERUM (_videre(&b, "\x7f", FALSUM, "Kbs"));
-    CREDO_VERUM (_videre(&b, "\n", FALSUM, "KJ:j+C"));
-    CREDO_VERUM (_videre(&b, "\x08", FALSUM, "KH:h+C"));
-    CREDO_VERUM (_videre(&b, "\x01\x1a", FALSUM, "KA:a+C KZ:z+C"));
-    CREDO_VERUM (_videre(&b, "\x1c\x1f", FALSUM, "K\\:\\+C K_:_+C"));
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Banca* b;
 
-    imprimere("\n--- III. alterum ---\n");
-    CREDO_VERUM (_videre(&b, "\x1b" "a", FALSUM, "KA:a+A"));
-    CREDO_VERUM (_videre(&b, "\x1b\r", FALSUM, "Kret+A"));
-    CREDO_VERUM (_videre(&b, "\x1b\x7f", FALSUM, "Kbs+A"));
-    CREDO_VERUM (_videre(&b, "\x1b\x01", FALSUM, "KA:a+A+C"));
-    CREDO_VERUM (_videre(&b, "\x1b\xc3\xa9", FALSUM, "K?:U+e9+A"));
-    CREDO_VERUM (_videre(&b, "\x1b ", FALSUM, "Kspc:U+20+A"));
+    b = (Banca*)c->datum;
+    CREDO_VERUM (_videre(b, "\r", FALSUM, "Kret"));
+    CREDO_VERUM (_videre(b, "\t", FALSUM, "Ktab"));
+    CREDO_VERUM (_videre(b, "\x7f", FALSUM, "Kbs"));
+    CREDO_VERUM (_videre(b, "\n", FALSUM, "KJ:j+C"));
+    CREDO_VERUM (_videre(b, "\x08", FALSUM, "KH:h+C"));
+    CREDO_VERUM (_videre(b, "\x01\x1a", FALSUM, "KA:a+C KZ:z+C"));
+    CREDO_VERUM (_videre(b, "\x1c\x1f", FALSUM, "K\\:\\+C K_:_+C"));
+}
+
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    Banca* b;
+
+    b = (Banca*)c->datum;
+    CREDO_VERUM (_videre(b, "\x1b" "a", FALSUM, "KA:a+A"));
+    CREDO_VERUM (_videre(b, "\x1b\r", FALSUM, "Kret+A"));
+    CREDO_VERUM (_videre(b, "\x1b\x7f", FALSUM, "Kbs+A"));
+    CREDO_VERUM (_videre(b, "\x1b\x01", FALSUM, "KA:a+A+C"));
+    CREDO_VERUM (_videre(b, "\x1b\xc3\xa9", FALSUM, "K?:U+e9+A"));
+    CREDO_VERUM (_videre(b, "\x1b ", FALSUM, "Kspc:U+20+A"));
     /* alterum non manet post clavem */
-    CREDO_VERUM (_videre(&b, "\x1b\rx", FALSUM, "Kret+A KX:x Tx"));
-    CREDO_VERUM (_videre(&b, "\x1b", VERUM, "Kesc"));
-    CREDO_VERUM (_videre(&b, "\x1b\x1b", VERUM, "Kesc Kesc"));
-    CREDO_VERUM (_videre(&b, "\x1b[", VERUM, "K[:[+A"));
-    CREDO_VERUM (_videre(&b, "\x1bO", VERUM, "KO:o+A"));
-    CREDO_VERUM (_videre(&b, "\x1b[1;5", VERUM, ""));
+    CREDO_VERUM (_videre(b, "\x1b\rx", FALSUM, "Kret+A KX:x Tx"));
+    CREDO_VERUM (_videre(b, "\x1b", VERUM, "Kesc"));
+    CREDO_VERUM (_videre(b, "\x1b\x1b", VERUM, "Kesc Kesc"));
+    CREDO_VERUM (_videre(b, "\x1b[", VERUM, "K[:[+A"));
+    CREDO_VERUM (_videre(b, "\x1bO", VERUM, "KO:o+A"));
+    CREDO_VERUM (_videre(b, "\x1b[1;5", VERUM, ""));
+}
 
-    imprimere("\n--- IV. claves nominatae (CSI, SS3) ---\n");
-    CREDO_VERUM (_videre(&b, "\x1b[A", FALSUM, "Kup#ArrowUp"));
-    CREDO_VERUM (_videre(&b, "\x1b[1;5A", FALSUM, "Kup+C#ArrowUp"));
-    CREDO_VERUM (_videre(&b, "\x1b[1;2D", FALSUM, "Kleft+S#ArrowLeft"));
-    CREDO_VERUM (_videre(&b, "\x1b[1;9C", FALSUM,
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    Banca* b;
+
+    b = (Banca*)c->datum;
+    CREDO_VERUM (_videre(b, "\x1b[A", FALSUM, "Kup#ArrowUp"));
+    CREDO_VERUM (_videre(b, "\x1b[1;5A", FALSUM, "Kup+C#ArrowUp"));
+    CREDO_VERUM (_videre(b, "\x1b[1;2D", FALSUM, "Kleft+S#ArrowLeft"));
+    CREDO_VERUM (_videre(b, "\x1b[1;9C", FALSUM,
         "Kright+M#ArrowRight"));
-    CREDO_VERUM (_videre(&b, "\x1b[H\x1b[F", FALSUM,
+    CREDO_VERUM (_videre(b, "\x1b[H\x1b[F", FALSUM,
         "Khome#Home Kend#End"));
-    CREDO_VERUM (_videre(&b, "\x1b[5~\x1b[6~", FALSUM,
+    CREDO_VERUM (_videre(b, "\x1b[5~\x1b[6~", FALSUM,
         "Kpgup#PageUp Kpgdn#PageDown"));
-    CREDO_VERUM (_videre(&b, "\x1b[3~", FALSUM, "Kdel#Delete"));
-    CREDO_VERUM (_videre(&b, "\x1b[2~", FALSUM, "K?#Insert"));
-    CREDO_VERUM (_videre(&b, "\x1b[15~", FALSUM, "Kf5#F5"));
-    CREDO_VERUM (_videre(&b, "\x1b[24;3~", FALSUM, "Kf12+A#F12"));
-    CREDO_VERUM (_videre(&b, "\x1b[Z", FALSUM, "Ktab+S#Tab"));
-    CREDO_VERUM (_videre(&b, "\x1bOA\x1bOP", FALSUM,
+    CREDO_VERUM (_videre(b, "\x1b[3~", FALSUM, "Kdel#Delete"));
+    CREDO_VERUM (_videre(b, "\x1b[2~", FALSUM, "K?#Insert"));
+    CREDO_VERUM (_videre(b, "\x1b[15~", FALSUM, "Kf5#F5"));
+    CREDO_VERUM (_videre(b, "\x1b[24;3~", FALSUM, "Kf12+A#F12"));
+    CREDO_VERUM (_videre(b, "\x1b[Z", FALSUM, "Ktab+S#Tab"));
+    CREDO_VERUM (_videre(b, "\x1bOA\x1bOP", FALSUM,
         "Kup#ArrowUp Kf1#F1"));
-    CREDO_VERUM (_videre(&b, "\x1bO2P", FALSUM, "Kf1+S#F1"));
-    CREDO_VERUM (_videre(&b, "\x1b\x1b[A", FALSUM, "Kup+A#ArrowUp"));
+    CREDO_VERUM (_videre(b, "\x1bO2P", FALSUM, "Kf1+S#F1"));
+    CREDO_VERUM (_videre(b, "\x1b\x1b[A", FALSUM, "Kup+A#ArrowUp"));
     /* responsa et glutini termini: nihil */
-    CREDO_VERUM (_videre(&b, "\x1b]11;rgb:0/0/0\x07x", FALSUM,
+    CREDO_VERUM (_videre(b, "\x1b]11;rgb:0/0/0\x07x", FALSUM,
         "KX:x Tx"));
-    CREDO_VERUM (_videre(&b, "\x1b[200~", FALSUM, ""));
-    CREDO_VERUM (_videre(&b, "\x1b[?1;2c", FALSUM, ""));
+    CREDO_VERUM (_videre(b, "\x1b[200~", FALSUM, ""));
+    CREDO_VERUM (_videre(b, "\x1b[?1;2c", FALSUM, ""));
+}
 
-    imprimere("\n--- V. mus SGR: centrum cellulae ---\n");
-    CREDO_VERUM (_videre(&b, "\x1b[<0;3;2M", FALSUM, "DL@25,30"));
-    CREDO_VERUM (_videre(&b, "\x1b[<0;3;2m", FALSUM, "UL@25,30"));
-    CREDO_VERUM (_videre(&b, "\x1b[<2;1;1M", FALSUM, "DR@5,10"));
-    CREDO_VERUM (_videre(&b, "\x1b[<1;1;1M", FALSUM, "DC@5,10"));
-    CREDO_VERUM (_videre(&b, "\x1b[<32;4;2M", FALSUM, "ML@35,30"));
-    CREDO_VERUM (_videre(&b, "\x1b[<35;4;2M", FALSUM, "M0@35,30"));
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    Banca* b;
+
+    b = (Banca*)c->datum;
+    CREDO_VERUM (_videre(b, "\x1b[<0;3;2M", FALSUM, "DL@25,30"));
+    CREDO_VERUM (_videre(b, "\x1b[<0;3;2m", FALSUM, "UL@25,30"));
+    CREDO_VERUM (_videre(b, "\x1b[<2;1;1M", FALSUM, "DR@5,10"));
+    CREDO_VERUM (_videre(b, "\x1b[<1;1;1M", FALSUM, "DC@5,10"));
+    CREDO_VERUM (_videre(b, "\x1b[<32;4;2M", FALSUM, "ML@35,30"));
+    CREDO_VERUM (_videre(b, "\x1b[<35;4;2M", FALSUM, "M0@35,30"));
     /* motus coalitus in cauda (exempla) */
-    CREDO_VERUM (_videre(&b, "\x1b[<35;4;2M\x1b[<35;5;2M", FALSUM,
+    CREDO_VERUM (_videre(b, "\x1b[<35;4;2M\x1b[<35;5;2M", FALSUM,
         "M0@45,30"));
-    CREDO_VERUM (_videre(&b, "\x1b[<64;1;1M", FALSUM, "W0,20g@5,10"));
-    CREDO_VERUM (_videre(&b, "\x1b[<65;1;1M", FALSUM, "W0,-20g@5,10"));
-    CREDO_VERUM (_videre(&b, "\x1b[<66;1;1M", FALSUM, "W20,0g@5,10"));
-    CREDO_VERUM (_videre(&b, "\x1b[<67;1;1M", FALSUM, "W-20,0g@5,10"));
+    CREDO_VERUM (_videre(b, "\x1b[<64;1;1M", FALSUM, "W0,20g@5,10"));
+    CREDO_VERUM (_videre(b, "\x1b[<65;1;1M", FALSUM, "W0,-20g@5,10"));
+    CREDO_VERUM (_videre(b, "\x1b[<66;1;1M", FALSUM, "W20,0g@5,10"));
+    CREDO_VERUM (_videre(b, "\x1b[<67;1;1M", FALSUM, "W-20,0g@5,10"));
     /* B3a: shift+rota cum positione; motus + rota tacite (tessera) */
-    CREDO_VERUM (_videre(&b, "\x1b[<68;11;6M", FALSUM,
+    CREDO_VERUM (_videre(b, "\x1b[<68;11;6M", FALSUM,
         "W0,20g@105,110+S"));
-    CREDO_VERUM (_videre(&b, "\x1b[<96;1;1M\x1b[<97;1;1M", FALSUM, ""));
-    CREDO_VERUM (_videre(&b, "\x1b[<4;1;1M\x1b[<8;1;1M\x1b[<16;1;1M",
+    CREDO_VERUM (_videre(b, "\x1b[<96;1;1M\x1b[<97;1;1M", FALSUM, ""));
+    CREDO_VERUM (_videre(b, "\x1b[<4;1;1M\x1b[<8;1;1M\x1b[<16;1;1M",
         FALSUM, "DL@5,10+S DL@5,10+A DL@5,10+C"));
+}
 
-    imprimere("\n--- VI. focus, glutinum, X10 ---\n");
-    CREDO_VERUM (_videre(&b, "\x1b[I\x1b[O", FALSUM, "F+ F-"));
-    CREDO_AEQUALIS_I32 (interpres_glutinum(&b.interpres,
-        (constans i8*)"hi\nthere", VIII, M, b.cauda), I);
-    CREDO_CHORDA_AEQUALIS_LITERIS (_cauda_reddere(&b), "Phi%10there");
-    CREDO_AEQUALIS_I32 (interpres_x10(&b.interpres, XXXII, XXXIII + II,
-        XXXIII + I, M, b.cauda), I);
-    CREDO_AEQUALIS_I32 (interpres_x10(&b.interpres, XXXII + III,
-        XXXIII + II, XXXIII + I, M, b.cauda), I);
-    CREDO_CHORDA_AEQUALIS_LITERIS (_cauda_reddere(&b),
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    Banca* b;
+
+    b = (Banca*)c->datum;
+    CREDO_VERUM (_videre(b, "\x1b[I\x1b[O", FALSUM, "F+ F-"));
+    CREDO_AEQUALIS_I32 (interpres_glutinum(&b->interpres,
+        (constans i8*)"hi\nthere", VIII, M, b->cauda), I);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_cauda_reddere(b), "Phi%10there");
+    CREDO_AEQUALIS_I32 (interpres_x10(&b->interpres, XXXII, XXXIII + II,
+        XXXIII + I, M, b->cauda), I);
+    CREDO_AEQUALIS_I32 (interpres_x10(&b->interpres, XXXII + III,
+        XXXIII + II, XXXIII + I, M, b->cauda), I);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_cauda_reddere(b),
         "DL@25,30 U0@25,30");
+}
 
-    imprimere("\n--- VI-bis. modifyOtherKeys CSI 27;m;c~ (B6a) ---\n");
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    Banca* b;
+
+    b = (Banca*)c->datum;
     /* codificator legacy Enter/Tab/Escape modificatos sic mittit */
-    CREDO_VERUM (_videre(&b, "\x1b[27;5;13~", FALSUM, "Kret+C"));
-    CREDO_VERUM (_videre(&b, "\x1b[27;2;13~", FALSUM, "Kret+S"));
-    CREDO_VERUM (_videre(&b, "\x1b[27;5;9~", FALSUM, "Ktab+C"));
-    CREDO_VERUM (_videre(&b, "\x1b[27;6;27~", FALSUM, "Kesc+S+C"));
-    CREDO_VERUM (_videre(&b, "\x1b[27;5;127~", FALSUM, "Kbs+C"));
-    CREDO_VERUM (_videre(&b, "\x1b[27;5;97~", FALSUM, "KA:a+C"));
+    CREDO_VERUM (_videre(b, "\x1b[27;5;13~", FALSUM, "Kret+C"));
+    CREDO_VERUM (_videre(b, "\x1b[27;2;13~", FALSUM, "Kret+S"));
+    CREDO_VERUM (_videre(b, "\x1b[27;5;9~", FALSUM, "Ktab+C"));
+    CREDO_VERUM (_videre(b, "\x1b[27;6;27~", FALSUM, "Kesc+S+C"));
+    CREDO_VERUM (_videre(b, "\x1b[27;5;127~", FALSUM, "Kbs+C"));
+    CREDO_VERUM (_videre(b, "\x1b[27;5;97~", FALSUM, "KA:a+C"));
+}
 
-    imprimere("\n--- VII. kitty (B2b): vexilla 1|2|4|8|16 ---\n");
-    interpres_initiare(&b.interpres, X, XX);
-    b.interpres.kitty_vexilla = 0x1F;
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    Banca* b;
+
+    b = (Banca*)c->datum;
+    interpres_initiare(&b->interpres, X, XX);
+    b->interpres.kitty_vexilla = 0x1F;
     /* prima series kitty: facultates discuntur, ante clavem */
-    CREDO_VERUM (_videre(&b, "\x1b[97u", FALSUM, "Fac:LCTM KA:a#KeyA"));
-    CREDO_VERUM (_videre(&b, "\x1b[97u", FALSUM, "KA:a#KeyA"));
-    CREDO_VERUM (_videre(&b, "\x1b[97;;97u", FALSUM, "KA:a#KeyA Ta"));
-    CREDO_VERUM (_videre(&b, "\x1b[97:65;2;65u", FALSUM,
+    CREDO_VERUM (_videre(b, "\x1b[97u", FALSUM, "Fac:LCTM KA:a#KeyA"));
+    CREDO_VERUM (_videre(b, "\x1b[97u", FALSUM, "KA:a#KeyA"));
+    CREDO_VERUM (_videre(b, "\x1b[97;;97u", FALSUM, "KA:a#KeyA Ta"));
+    CREDO_VERUM (_videre(b, "\x1b[97:65;2;65u", FALSUM,
         "KA:a+S#KeyA TA"));
-    CREDO_VERUM (_videre(&b, "\x1b[97;1:2;97u", FALSUM,
+    CREDO_VERUM (_videre(b, "\x1b[97;1:2;97u", FALSUM,
         "K*A:a#KeyA Ta"));
-    CREDO_VERUM (_videre(&b, "\x1b[97;1:3u", FALSUM, "kA:a#KeyA"));
+    CREDO_VERUM (_videre(b, "\x1b[97;1:3u", FALSUM, "kA:a#KeyA"));
     /* Ctrl+I != Tab */
-    CREDO_VERUM (_videre(&b, "\x1b[105;5u", FALSUM, "KI:i+C#KeyI"));
-    CREDO_VERUM (_videre(&b, "\x1b[9u", FALSUM, "Ktab#Tab"));
+    CREDO_VERUM (_videre(b, "\x1b[105;5u", FALSUM, "KI:i+C#KeyI"));
+    CREDO_VERUM (_videre(b, "\x1b[9u", FALSUM, "Ktab#Tab"));
     /* AZERTY 'q' in positione US 'a'; Cyrillica cum textu */
-    CREDO_VERUM (_videre(&b, "\x1b[113::97u", FALSUM, "KQ:q#KeyA"));
-    CREDO_VERUM (_videre(&b, "\x1b[1092::97;1;1092u", FALSUM,
+    CREDO_VERUM (_videre(b, "\x1b[113::97u", FALSUM, "KQ:q#KeyA"));
+    CREDO_VERUM (_videre(b, "\x1b[1092::97;1;1092u", FALSUM,
         "K?:U+444#KeyA T%209%132"));
     /* formae legacy cum genere */
-    CREDO_VERUM (_videre(&b, "\x1b[1;1:3A", FALSUM, "kup#ArrowUp"));
-    CREDO_VERUM (_videre(&b, "\x1b[1;5:2A", FALSUM, "K*up+C#ArrowUp"));
-    CREDO_VERUM (_videre(&b, "\x1b[P\x1b[1;2Q\x1b[13~", FALSUM,
+    CREDO_VERUM (_videre(b, "\x1b[1;1:3A", FALSUM, "kup#ArrowUp"));
+    CREDO_VERUM (_videre(b, "\x1b[1;5:2A", FALSUM, "K*up+C#ArrowUp"));
+    CREDO_VERUM (_videre(b, "\x1b[P\x1b[1;2Q\x1b[13~", FALSUM,
         "Kf1#F1 Kf2+S#F2 Kf3#F3"));
-    CREDO_VERUM (_videre(&b, "\x1b[12;5R", FALSUM, ""));   /* CPR */
-    CREDO_VERUM (_videre(&b, "\x1b[27u\x1b[13u\x1b[127u", FALSUM,
+    CREDO_VERUM (_videre(b, "\x1b[12;5R", FALSUM, ""));   /* CPR */
+    CREDO_VERUM (_videre(b, "\x1b[27u\x1b[13u\x1b[127u", FALSUM,
         "Kesc#Escape Kret#Enter Kbs#Backspace"));
-    CREDO_VERUM (_videre(&b, "\x1b[57441;2u\x1b[57441;1:3u", FALSUM,
+    CREDO_VERUM (_videre(b, "\x1b[57441;2u\x1b[57441;1:3u", FALSUM,
         "Klshift+S#ShiftLeft klshift#ShiftLeft"));
-    CREDO_VERUM (_videre(&b, "\x1b[97;65u", FALSUM, "KA:a+L#KeyA"));
-    CREDO_VERUM (_videre(&b, "\x1b[57400u", FALSUM, "K1:1"));
-    CREDO_VERUM (_videre(&b, "\x1b[?31u", FALSUM, ""));
+    CREDO_VERUM (_videre(b, "\x1b[97;65u", FALSUM, "KA:a+L#KeyA"));
+    CREDO_VERUM (_videre(b, "\x1b[57400u", FALSUM, "K1:1"));
+    CREDO_VERUM (_videre(b, "\x1b[?31u", FALSUM, ""));
     /* legacy post kitty: idem */
-    CREDO_VERUM (_videre(&b, "\x1b[1;5A", FALSUM, "Kup+C#ArrowUp"));
+    CREDO_VERUM (_videre(b, "\x1b[1;5A", FALSUM, "Kup+C#ArrowUp"));
     /* sine ALTERNAE et sine basi: codex nescitur; sine OMNES
      * modificantes textus non narrantur (B4) */
-    interpres_initiare(&b.interpres, X, XX);
-    b.interpres.kitty_vexilla = INTERPRES_KITTY_DISCERNERE;
-    CREDO_VERUM (_videre(&b, "\x1b[97u", FALSUM, "Fac:T KA:a"));
+    interpres_initiare(&b->interpres, X, XX);
+    b->interpres.kitty_vexilla = INTERPRES_KITTY_DISCERNERE;
+    CREDO_VERUM (_videre(b, "\x1b[97u", FALSUM, "Fac:T KA:a"));
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I. imprimibilia: clavis + textus", _sectio_prima, _parare, NIHIL,
+        NIHIL, NIHIL },
+    { "II. regimina honesta", _sectio_secunda, _parare, NIHIL, NIHIL,
+        NIHIL },
+    { "III. alterum", _sectio_tertia, _parare, NIHIL, NIHIL, NIHIL },
+    { "IV. claves nominatae (CSI, SS3)", _sectio_quarta, _parare, NIHIL,
+        NIHIL, NIHIL },
+    { "V. mus SGR: centrum cellulae", _sectio_quinta, _parare, NIHIL,
+        NIHIL, NIHIL },
+    { "VI. focus, glutinum, X10", _sectio_sexta, _parare, NIHIL, NIHIL,
+        NIHIL },
+    { "VI-bis. modifyOtherKeys CSI 27;m;c~ (B6a)", _sectio_septima,
+        _parare, NIHIL, NIHIL, NIHIL },
+    { "VII. kitty (B2b): vexilla 1|2|4|8|16", _sectio_octava, _parare,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("interpres_terminalis", SECTIONES);
 }

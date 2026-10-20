@@ -36,12 +36,11 @@
 #define AURUM_ANTE_STRATA \
     "probationes/fixa/pictor_documentum/aurum_ante_strata.txt"
 
-hic_manens Piscina* piscina_aurei;
-
 /* sigillum gradus in auro vetere ("gradus <g>" ... "  sigillum <h>") */
 interior chorda
 sigillum_vetus (
-    constans character* gradus)
+    constans character* gradus,
+               Piscina* p)
 {
       FILE* f;
  character  linea[CCLVI];
@@ -54,7 +53,7 @@ sigillum_vetus (
     f         = lectiones_fopen(AURUM_ANTE_STRATA, "rb");
     si (!f)
     {
-        redde chorda_ex_literis("", piscina_aurei);
+        redde chorda_ex_literis("", p);
     }
     dum (fgets(linea, (integer)magnitudo(linea), f))
     {
@@ -71,11 +70,11 @@ sigillum_vetus (
             {
                 linea[XI + n - I] = '\0';
             }
-            redde chorda_ex_literis(linea + XI, piscina_aurei);
+            redde chorda_ex_literis(linea + XI, p);
         }
     }
     fclose(f);
-    redde chorda_ex_literis("", piscina_aurei);
+    redde chorda_ex_literis("", p);
 }
 
 /* ictus unus: linea horizontalis (x0..x1, y) magnitudine I */
@@ -136,7 +135,7 @@ status_effundere (
     /* pixela visa = picturae veteris (aurum ante strata) */
     imprimere("  gradus %s: compositum = sigillum vetus\n", gradus);
     CREDO_CHORDA_AEQUALIS(pictor_documentum_sigillum_compositi_hex(doc,
-        p), sigillum_vetus(gradus));
+        p), sigillum_vetus(gradus, p));
 }
 
 /* volumen totum: acta (sine momento), plagulae cum contento */
@@ -209,7 +208,12 @@ aurum_legere (
     redde c;
 }
 
-s32 principale (vacuum)
+/* scaena UNA continua (volumen, documentum, textus aedificatus): gradus
+ * priores statum sequentium faciunt, ergo sectio una cum gradibus
+ * nominatis (CREDO_GRADUS), non sectiones quae ordine liberae essent */
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
                 Piscina* piscina;
     InternamentumChorda* intern;
@@ -223,19 +227,12 @@ s32 principale (vacuum)
                     i32  linea;
                     b32  scribere;
 
-    piscina =
-        piscina_generare_dynamicum("probatio_pictor_documentum_aurum",
-        XVI * M);
-    si (!piscina)
-    { imprimere("FRACTA: piscina\n"); redde I;
-    }
-    credo_aperire(piscina);
-    piscina_aurei  = piscina;
-    intern         = internamentum_creare(piscina);
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     thema_initiare();
     a = chorda_aedificator_creare(piscina, (memoriae_index)(LXIV * M));
 
-    imprimere("\n--- Volumen: V ictus, checkpoints II et IV ---\n");
+    CREDO_GRADUS("Volumen: V ictus, checkpoints II et IV");
     vol = volumen_temporarium(piscina,
         "probatio_pictor_documentum_aurum");
     CREDO_NON_NIHIL(vol);
@@ -250,7 +247,7 @@ s32 principale (vacuum)
     }
     status_effundere(a, "quinque_ictus", doc, piscina);
 
-    imprimere("\n--- Revocare III, ramus, checkpoint post ramum ---\n");
+    CREDO_GRADUS("Revocare III, ramus, checkpoint post ramum");
     per (i = ZEPHYRUM; i < III; i++)
     {
         CREDO_VERUM(pictor_documentum_revocare(doc));
@@ -268,14 +265,14 @@ s32 principale (vacuum)
     status_effundere(a, "refectum", doc, piscina);
     CREDO_VERUM(pictor_documentum_verificare(doc));
 
-    imprimere("\n--- Aperire iterum: status idem ---\n");
+    CREDO_GRADUS("Aperire iterum: status idem");
     doc2 = pictor_documentum_aperire(piscina, intern, vol, "");
     CREDO_NON_NIHIL(doc2);
     status_effundere(a, "apertum", doc2, piscina);
     volumen_effundere(a, vol, piscina);
     textus = chorda_aedificator_spectare(a);
 
-    imprimere("\n--- Aurum: octeti iidem ---\n");
+    CREDO_GRADUS("Aurum: octeti iidem");
     scribere = (b32)(lectiones_ambitus(
         "PICTOR_DOCUMENTUM_AURUM_SCRIBERE") != NIHIL);
     si (scribere)
@@ -310,8 +307,17 @@ s32 principale (vacuum)
     }
     CREDO_VERUM(aurum.datum && chorda_aequalis(aurum, textus));
 
-    imprimere("\n");
-    credo_imprimere_compendium();
     volumen_claudere(vol);
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "Volumen: V ictus, checkpoints II et IV", _sectio_prima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("pictor_documentum_aurum", SECTIONES);
 }
