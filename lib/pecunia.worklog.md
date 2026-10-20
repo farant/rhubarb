@@ -188,3 +188,44 @@ Round trip over 5000 random s64 values (full range, USD and JPY): both
 `ex_textu(ad_textum(x)) == x` and `ex_numero(numerus(x)) == x`. Plants:
 `-0.0000` accepted, a leading zero accepted, the positive bound
 loosened by one (`...5808` would wrap to MINIMA) - each red.
+
+## 2026-10-19 - T6: display and human input
+
+**Display rounds first and never fails.** `pecunia_formare` needs the
+rounded amount in UNITS, not the rounded amount back at scale 4: MAXIMA
+rounded UP to cents is ...477.59, whose scale-4 value (...5900) is out
+of s64, so `pecunia_ad_unitatem` must refuse it - but the display can
+still show it. The rounding step is now `_unitates_rotundatae(q, f,
+modus)` (shared with `ad_unitatem`, which adds the bound check and the
+multiply-back); units always fit (|q| / f + 1). The sign comes from the
+ROUNDED units, so USD -0.0040 shows "USD 0.00" (plan P9).
+
+**Sign placement (plan P6):** with a caller symbol the sign wraps the
+symbol (`-$12.34`, `($12.34)`, post: `-12.34$`); with the code it wraps
+the number only (`USD -12.34`, `USD (12.34)`, post: `-12.34 USD`).
+Default separators are static byte arrays: `","` as a string literal is
+const under -Wwrite-strings, and pointing an `i8*` at it would cast the
+qualifier away.
+
+**Input rules, in order:** trim spaces; accounting parentheses around
+everything; one leading `-`; a marker before (the forma's symbol, or
+three letters + space) or after (symbol, or space + three letters);
+optional spaces; a `-` right before the digits (only if no sign yet -
+`--12`, `-(12)`, `(-12)`, `-$-12` are FORMA); digits with group
+separators only where they belong (first group 1..3 digits, the rest
+exactly 3 - `12,34`, `1,23,456`, `1234,567`, `1,2345` refused); the
+decimal separator + digits. The digits are copied into a bare-decimal
+buffer and read by the same `_quantitatem_legere` as T5, so DECIMALES
+and SUPERFLUXUS come out named the same way. A code that is a real
+currency but not the one given -> MONETAE_DIVERSAE; an unknown code is
+reported as such (IGNOTA), never guessed.
+
+**Two of my own test numerals were wrong** (1,234,567.89 written as
+1234*10^7 + 8900; 1,234.56 as 1234*10^5 + 5600) - Roman-numeral
+arithmetic in tests deserves a python3 one-liner check before the run;
+the implementation was right both times.
+
+Round trip: `ex_ingressu(formare(x)) == ad_unitatem(x, PAR)` for 2000
+random amounts, with the code and with `"$"` + accounting. Plants: group
+check disabled at the end (`12,34` read as 1234), second sign accepted
+(`--12`), display sign from the unrounded value (`USD -0.00`) - each red.

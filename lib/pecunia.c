@@ -426,28 +426,19 @@ pecunia_multiplica (
     redde PECUNIA_BENE;
 }
 
-PecuniaVitium
-pecunia_ad_unitatem (
-         Pecunia  a,
-    PecuniaModus  modus,
-        Pecunia* exitus)
+/* quantitas / factor ad integrum per modum, in s64 (sine piscina):
+ * divisio Euclidea manu - '/' et '%' negativorum C89 incerta, sed
+ * a == q*f + r semper; r < 0 corrigitur. |2r| < 2f <= 20000. Effectus
+ * semper capit (|q| <= |a| / f + 1). */
+interior s64
+_unitates_rotundatae (
+             s64 quantitas,
+             s64 factor,
+    PecuniaModus modus)
 {
-    s32 exponens = pecunia_moneta_exponens(a.moneta);
-    s64 factor;
-    s64 quotiens;
-    s64 residuum;
-    s64 limes;
+    s64 quotiens = quantitas / factor;
+    s64 residuum = quantitas % factor;
 
-    si (exponens < ZEPHYRUM)
-    {
-        redde PECUNIA_VITIUM_MONETA_IGNOTA;
-    }
-    factor = _factor_unitatis(exponens);
-    /* via s64 (sine piscina): divisio Euclidea manu - '/' et '%'
-     * negativorum C89 incerta, sed a == q*f + r semper; r < 0
-     * corrigitur. |2r| < 2f <= 20000: nullus superfluxus. */
-    quotiens = a.quantitas / factor;
-    residuum = a.quantitas % factor;
     si (residuum < ZEPHYRUM)
     {
         quotiens -= I;
@@ -458,15 +449,35 @@ pecunia_ad_unitatem (
             : ZEPHYRUM,
         quotiens < ZEPHYRUM, (quotiens % II) != ZEPHYRUM))
     {
-        quotiens += I;    /* quotiens <= MAXIMA / f: capit */
+        quotiens += I;
     }
-    /* rotundatio sursum prope margines: quotiens * factor extra s64 */
+    redde quotiens;
+}
+
+PecuniaVitium
+pecunia_ad_unitatem (
+         Pecunia  a,
+    PecuniaModus  modus,
+        Pecunia* exitus)
+{
+    s32 exponens = pecunia_moneta_exponens(a.moneta);
+    s64 factor;
+    s64 unitates;
+    s64 limes;
+
+    si (exponens < ZEPHYRUM)
+    {
+        redde PECUNIA_VITIUM_MONETA_IGNOTA;
+    }
+    factor    = _factor_unitatis(exponens);
+    unitates  = _unitates_rotundatae(a.quantitas, factor, modus);
+    /* rotundatio sursum prope margines: unitates * factor extra s64 */
     limes = PECUNIA_QUANTITAS_MAXIMA / factor;
-    si (factor > I && (quotiens > limes || quotiens < -limes))
+    si (factor > I && (unitates > limes || unitates < -limes))
     {
         redde PECUNIA_VITIUM_SUPERFLUXUS;
     }
-    exitus->quantitas  = quotiens * factor;
+    exitus->quantitas  = unitates * factor;
     exitus->moneta     = a.moneta;
     redde PECUNIA_BENE;
 }
@@ -938,6 +949,384 @@ pecunia_ex_numero (
         redde PECUNIA_VITIUM_FORMA;
     }
     v = _quantitatem_legere(textus, ZEPHYRUM, FALSUM, &q);
+    si (v != PECUNIA_BENE)
+    {
+        redde v;
+    }
+    exitus->quantitas  = q;
+    exitus->moneta     = m;
+    redde PECUNIA_BENE;
+}
+
+
+/* ==================================================
+ * Ostensio et ingressus humanus
+ * ================================================== */
+
+/* separatores ordinarii: octeti statici (litterae "," sub
+ * -Wwrite-strings constantes sunt - i8* ex eis qualificationem
+ * abiceret) */
+hic_manens i8 PECUNIA_COMMA[I]  = { ',' };
+hic_manens i8 PECUNIA_PUNCTUM[I] = { '.' };
+
+vacuum
+pecunia_forma_ordinaria (
+    PecuniaForma* forma)
+{
+    forma->plena              = FALSUM;
+    forma->modus              = PECUNIA_PAR;
+    forma->coetus.datum       = PECUNIA_COMMA;
+    forma->coetus.mensura     = I;
+    forma->decimalis.datum    = PECUNIA_PUNCTUM;
+    forma->decimalis.mensura  = I;
+    forma->rationaria         = FALSUM;
+    forma->signum.datum       = NIHIL;
+    forma->signum.mensura     = ZEPHYRUM;
+    forma->nota_post          = FALSUM;
+}
+
+/* numerus ostensus: cifrae integrae cum coetibus, decimalis, cifrae
+ * fractae (decimales numero) - ex amplitudine i64 */
+interior vacuum
+_numerum_ostendere (
+        ChordaAedificator* a,
+                      i64  amplitudo,
+                      s32  decimales,
+    constans PecuniaForma* f)
+{
+          i64 divisor = I;
+          i64 integra;
+          i64 fracta;
+    character cifrae[XXIV];
+          s32 k = ZEPHYRUM;
+          s32 j;
+
+    per (j = ZEPHYRUM; j < decimales; j++)
+    {
+        divisor *= X;
+    }
+    integra  = amplitudo / divisor;
+    fracta   = amplitudo % divisor;
+    fac
+    {
+        cifrae[k++]  = (character)('0' + (s32)(integra % X));
+        integra      /= X;
+    } dum (integra > ZEPHYRUM);
+    per (j = k - I; j >= ZEPHYRUM; j--)
+    {
+        chorda_aedificator_appendere_character(a, cifrae[j]);
+        si (   j > ZEPHYRUM && j % III == ZEPHYRUM
+            && f->coetus.mensura > ZEPHYRUM)
+        {
+            chorda_aedificator_appendere_chorda(a, f->coetus);
+        }
+    }
+    si (decimales > ZEPHYRUM)
+    {
+        chorda_aedificator_appendere_chorda(a, f->decimalis);
+        per (j = decimales - I; j >= ZEPHYRUM; j--)
+        {
+            i64 d = I;
+            s32 e;
+
+            per (e = ZEPHYRUM; e < j; e++)
+            {
+                d *= X;
+            }
+            chorda_aedificator_appendere_character(a,
+                (character)('0' + (s32)(fracta / d % X)));
+        }
+    }
+}
+
+chorda
+pecunia_formare (
+                   Pecunia  a,
+     constans PecuniaForma* forma,
+                   Piscina* piscina)
+{
+     ChordaAedificator* aed;
+                   s32  exponens = pecunia_moneta_exponens(a.moneta);
+                   s32  decimales;
+                   s64  unitates;
+                   i64  amplitudo;
+                   b32  negativum;
+                   b32  symbolum = forma->signum.mensura > ZEPHYRUM;
+
+    si (forma->plena || exponens < ZEPHYRUM)
+    {
+        decimales  = IV;
+        unitates   = a.quantitas;
+    }
+    alioquin
+    {
+        decimales = exponens;
+        unitates  = _unitates_rotundatae(a.quantitas,
+            _factor_unitatis(exponens), forma->modus);
+    }
+    aed        = chorda_aedificator_creare(piscina, XLVIII);
+    negativum  = unitates < ZEPHYRUM;
+    amplitudo  = negativum ? (i64)(-(unitates + I)) + I : (i64)unitates;
+
+    /* codex ante: "USD " extra signum; symbolum intra signum */
+    si (!forma->nota_post && !symbolum)
+    {
+        chorda_aedificator_appendere_literis(aed, a.moneta.codex);
+        chorda_aedificator_appendere_character(aed, ' ');
+    }
+    si (negativum)
+    {
+        chorda_aedificator_appendere_character(aed,
+            forma->rationaria ? '(' : '-');
+    }
+    si (!forma->nota_post && symbolum)
+    {
+        chorda_aedificator_appendere_chorda(aed, forma->signum);
+    }
+    _numerum_ostendere(aed, amplitudo, decimales, forma);
+    si (forma->nota_post && symbolum)
+    {
+        chorda_aedificator_appendere_chorda(aed, forma->signum);
+    }
+    si (negativum && forma->rationaria)
+    {
+        chorda_aedificator_appendere_character(aed, ')');
+    }
+    si (forma->nota_post && !symbolum)
+    {
+        chorda_aedificator_appendere_character(aed, ' ');
+        chorda_aedificator_appendere_literis(aed, a.moneta.codex);
+    }
+    redde chorda_aedificator_finire(aed);
+}
+
+interior b32
+_incipit_cum (
+    chorda t,
+       s32 positio,
+    chorda praefixum)
+{
+    redde praefixum.mensura > ZEPHYRUM
+        && positio + (s32)praefixum.mensura <= (s32)t.mensura
+        && memcmp(t.datum + positio, praefixum.datum,
+                  praefixum.mensura) == ZEPHYRUM;
+}
+
+interior b32
+_littera (
+    i8 c)
+{
+    redde (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z');
+}
+
+/* spatia ASCII extrema [a, b) detrahere */
+interior vacuum
+_spatia_detrahere (
+    chorda  t,
+       s32* a,
+       s32* b)
+{
+    dum (*a < *b && t.datum[*a] == ' ')
+    {
+        (*a)++;
+    }
+    dum (*b > *a && t.datum[*b - I] == ' ')
+    {
+        (*b)--;
+    }
+}
+
+/* codex trium litterarum in [a, a+III): moneta m esse debet */
+interior PecuniaVitium
+_codex_congruit (
+           chorda t,
+              s32 a,
+    PecuniaMoneta m)
+{
+    PecuniaMoneta inventa;
+    PecuniaVitium v = pecunia_moneta_ex_codice(chorda_sectio(t, (i32)a,
+                          (i32)(a + III)), &inventa);
+
+    si (v != PECUNIA_BENE)
+    {
+        redde v;
+    }
+    redde pecunia_moneta_aequalis(inventa, m) ? PECUNIA_BENE
+        : PECUNIA_VITIUM_MONETAE_DIVERSAE;
+}
+
+PecuniaVitium
+pecunia_ex_ingressu (
+                    chorda  textus,
+             PecuniaMoneta  m,
+     constans PecuniaForma* forma,
+                   Pecunia* exitus)
+{
+              s32 a          = ZEPHYRUM;
+              s32 b          = (s32)textus.mensura;
+              b32 negativum  = FALSUM;
+              b32 nota       = FALSUM;
+    PecuniaVitium v;
+        character canonica[LXIV];
+              s32 k = ZEPHYRUM;
+              s32 i;
+              s64 q;
+
+    si (pecunia_moneta_exponens(m) < ZEPHYRUM)
+    {
+        redde PECUNIA_VITIUM_MONETA_IGNOTA;
+    }
+    si (textus.datum == NIHIL)
+    {
+        redde PECUNIA_VITIUM_FORMA;
+    }
+    _spatia_detrahere(textus, &a, &b);
+    /* rationaria: parentheses totum amplectuntur */
+    si (   b - a               >= II && textus.datum[a] == '('
+        && textus.datum[b - I] == ')')
+    {
+        negativum = VERUM;
+        a++;
+        b--;
+        _spatia_detrahere(textus, &a, &b);
+    }
+    si (a < b && textus.datum[a] == '-')
+    {
+        si (negativum)
+        {
+            redde PECUNIA_VITIUM_FORMA;
+        }
+        negativum = VERUM;
+        a++;
+        _spatia_detrahere(textus, &a, &b);
+    }
+    /* nota ante: symbolum formae aut codex + spatium */
+    si (_incipit_cum(textus, a, forma->signum))
+    {
+        a     += (s32)forma->signum.mensura;
+        nota  = VERUM;
+    }
+    alioquin si (   b - a > III && _littera(textus.datum[a])
+                 && _littera(textus.datum[a + I])
+                 && _littera(textus.datum[a + II])
+                 && textus.datum[a + III] == ' ')
+    {
+        v = _codex_congruit(textus, a, m);
+        si (v != PECUNIA_BENE)
+        {
+            redde v;
+        }
+        a     += III;
+        nota  = VERUM;
+    }
+    _spatia_detrahere(textus, &a, &b);
+    /* nota post: symbolum aut spatium + codex */
+    si (   !nota && forma->signum.mensura > ZEPHYRUM
+        && b - (s32)forma->signum.mensura >= a
+        && _incipit_cum(textus, b - (s32)forma->signum.mensura,
+                        forma->signum))
+    {
+        b -= (s32)forma->signum.mensura;
+    }
+    alioquin si (   !nota && b - a > IV && _littera(textus.datum[b - I])
+                 && _littera(textus.datum[b - II])
+                 && _littera(textus.datum[b - III])
+                 && textus.datum[b - IV] == ' ')
+    {
+        v = _codex_congruit(textus, b - III, m);
+        si (v != PECUNIA_BENE)
+        {
+            redde v;
+        }
+        b -= III;
+    }
+    _spatia_detrahere(textus, &a, &b);
+    si (a < b && textus.datum[a] == '-')
+    {
+        si (negativum)
+        {
+            redde PECUNIA_VITIUM_FORMA;
+        }
+        negativum = VERUM;
+        a++;
+    }
+
+    /* numerus: cifrae (cum coetibus in locis veris), decimalis, cifrae
+     * -> forma nuda "-d.d" pro _quantitatem_legere */
+    si (negativum)
+    {
+        canonica[k++] = '-';
+    }
+    {
+        s32 coetus_primus  = ZEPHYRUM;   /* cifrae ante coetum primum */
+        b32 coetus_visus   = FALSUM;
+        s32 in_coetu       = ZEPHYRUM;
+
+        si (a >= b || !_cifra((character)textus.datum[a]))
+        {
+            redde PECUNIA_VITIUM_FORMA;
+        }
+        dum (a < b)
+        {
+            si (_cifra((character)textus.datum[a]))
+            {
+                si (k >= LX)
+                {
+                    redde PECUNIA_VITIUM_SUPERFLUXUS;
+                }
+                canonica[k++] = (character)textus.datum[a];
+                a++;
+                si (coetus_visus)
+                {
+                    in_coetu++;
+                }
+                alioquin
+                {
+                    coetus_primus++;
+                }
+            }
+            alioquin si (_incipit_cum(textus, a, forma->coetus))
+            {
+                /* primus 1..III, ceteri exacte III */
+                si (   (!coetus_visus && coetus_primus > III)
+                    || (coetus_visus && in_coetu != III))
+                {
+                    redde PECUNIA_VITIUM_FORMA;
+                }
+                coetus_visus  = VERUM;
+                in_coetu      = ZEPHYRUM;
+                a             += (s32)forma->coetus.mensura;
+            }
+            alioquin
+            {
+                frange;
+            }
+        }
+        si (coetus_visus && in_coetu != III)
+        {
+            redde PECUNIA_VITIUM_FORMA;
+        }
+    }
+    si (a < b && _incipit_cum(textus, a, forma->decimalis))
+    {
+        a              += (s32)forma->decimalis.mensura;
+        canonica[k++]  = '.';
+        per (i = a; i < b && _cifra((character)textus.datum[i]); i++)
+        {
+            si (k >= LXIII)
+            {
+                redde PECUNIA_VITIUM_DECIMALES;
+            }
+            canonica[k++] = (character)textus.datum[i];
+        }
+        a = i;
+    }
+    si (a != b)
+    {
+        redde PECUNIA_VITIUM_FORMA;
+    }
+    v = _quantitatem_legere(chorda_ex_buffer((i8*)canonica, (i32)k),
+        ZEPHYRUM, FALSUM, &q);
     si (v != PECUNIA_BENE)
     {
         redde v;

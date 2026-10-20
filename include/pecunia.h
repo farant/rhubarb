@@ -286,4 +286,51 @@ pecunia_ex_numero (
     PecuniaMoneta  m,
           Pecunia* exitus);
 
+
+/* ==================================================
+ * Ostensio et ingressus humanus
+ * ================================================== */
+
+/* Forma ostensionis - NUMQUAM in repositorium (forma canonica ibi).
+ * Signum (symbolum) a vocante datur: ISO symbola non definit (CLDR);
+ * vacuum -> codex. Separatores chordae (multi-octeti licent). */
+nomen structura {
+             b32 plena;        /* VERUM: IV decimales; FALSUM: unitas
+                                 * minor monetae */
+    PecuniaModus modus;        /* rotundatio si non plena */
+          chorda coetus;       /* separator coetuum: ","; vacua =
+                                 * nullus */
+          chorda decimalis;    /* "." */
+             b32 rationaria;   /* (12.34) pro -12.34 */
+          chorda signum;       /* "$"; vacua -> codex */
+             b32 nota_post;    /* nota post numerum */
+} PecuniaForma;
+
+/* unitas minor, PAR, ",", ".", '-', codex ante */
+vacuum
+pecunia_forma_ordinaria (
+    PecuniaForma* forma);
+
+/* "USD 1,234.57", "-$12.34", "($12.34)", "12.34 USD", "-12.34$".
+ * Rotundatio PRIUS (unitates rotundatae semper capiunt - numquam
+ * deficit); nihil ostensum numquam signum fert. */
+chorda
+pecunia_formare (
+                   Pecunia  a,
+     constans PecuniaForma* forma,
+                   Piscina* piscina);
+
+/* Ingressus humanus (formae retis, quantitates a Claudio): lenis per
+ * REGULAS - spatia extrema, signum UNUM ('-' ante aut post notam, aut
+ * parentheses), signum formae aut codex (sine casu; alius -> MONETAE_
+ * DIVERSAE), coetus SOLUM in locis veris (primus 1..III cifrae,
+ * ceteri III), decimalis + 1..IV cifrae. "12,34" recusatur: ambiguum
+ * (1234 aut 12.34) - numquam conicitur. */
+PecuniaVitium
+pecunia_ex_ingressu (
+                    chorda  textus,
+             PecuniaMoneta  m,
+     constans PecuniaForma* forma,
+                   Pecunia* exitus);
+
 #endif /* PECUNIA_H */

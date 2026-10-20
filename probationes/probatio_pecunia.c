@@ -8,7 +8,8 @@
  * tools/pecunia_rotundatio_oraculum.py), solvibilis, cambium;
  * partitio (T4): residuum maximum, paria ad indicem minorem, summa
  * EXACTA, granum scalae aut unitatis; forma canonica stricta et
- * numerus nudus (T5), margines s64, circuitus. */
+ * numerus nudus (T5), margines s64, circuitus; forma ostensionis et
+ * ingressus humanus per regulas (T6). */
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"
@@ -1099,6 +1100,242 @@ _sectio_circuitus (CredoContextus* c)
     }
 }
 
+/* forma ordinaria cum signo et rationaria optionalibus */
+interior PecuniaForma
+_forma (
+    constans character* signum,
+                   b32  rationaria,
+               Piscina* p)
+{
+    PecuniaForma f;
+
+    pecunia_forma_ordinaria(&f);
+    f.signum      = _c(signum, p);
+    f.rationaria  = rationaria;
+    redde f;
+}
+
+interior vacuum
+_sectio_formae (
+    CredoContextus* c)
+{
+         Piscina* p = c->piscina;
+    PecuniaForma  f;
+    PecuniaForma  d = _forma("", FALSUM, p);
+    PecuniaForma  s = _forma("$", FALSUM, p);
+         Pecunia  magnus = _p((s64)MCCXXXIV * M * M * X
+                               + (s64)DLXVII * X * M + DCCCXC * X,
+                               "USD", p);   /* 1234567.8900 */
+         Pecunia minus = _p(-(s64)(CXXIII * M + CD), "USD", p);
+
+    _textus_est(pecunia_formare(magnus, &d, p), "USD 1,234,567.89");
+    _textus_est(pecunia_formare(_p((s64)MCCXXXIV * X * M, "JPY", p), &d,
+        p), "JPY 1,234");
+    _textus_est(pecunia_formare(_p(XII * M + CCCXLV, "KWD", p), &d, p),
+        "KWD 1.234");
+    _textus_est(pecunia_formare(minus, &d, p), "USD -12.34");
+    f = _forma("", VERUM, p);
+    _textus_est(pecunia_formare(minus, &f, p), "USD (12.34)");
+    _textus_est(pecunia_formare(magnus, &s, p), "$1,234,567.89");
+    _textus_est(pecunia_formare(minus, &s, p), "-$12.34");
+    f = _forma("$", VERUM, p);
+    _textus_est(pecunia_formare(minus, &f, p), "($12.34)");
+    f            = _forma("", FALSUM, p);
+    f.nota_post  = VERUM;
+    _textus_est(pecunia_formare(_p(CXXIII * M + CD, "USD", p), &f, p),
+        "12.34 USD");
+    _textus_est(pecunia_formare(minus, &f, p), "-12.34 USD");
+    f            = _forma("$", FALSUM, p);
+    f.nota_post  = VERUM;
+    _textus_est(pecunia_formare(_p(CXXIII * M + CD, "USD", p), &f, p),
+        "12.34$");
+    f        = _forma("", FALSUM, p);
+    f.plena  = VERUM;
+    _textus_est(pecunia_formare(_p(CXXIII * M + CD, "USD", p), &f, p),
+        "USD 12.3400");
+    f         = _forma("", FALSUM, p);
+    f.coetus  = _c("", p);
+    _textus_est(pecunia_formare(magnus, &f, p), "USD 1234567.89");
+    f            = _forma("", FALSUM, p);
+    f.coetus     = _c(".", p);
+    f.decimalis  = _c(",", p);
+    _textus_est(pecunia_formare(magnus, &f, p), "USD 1.234.567,89");
+    /* separator multi-octetus: U+202F (spatium angustum) */
+    f         = _forma("", FALSUM, p);
+    f.coetus  = _c("\342\200\257", p);
+    _textus_est(pecunia_formare(magnus, &f, p),
+        "USD 1\342\200\257" "234\342\200\257" "567.89");
+    /* nihil ostensum numquam signum fert (rotundatio ex negativo) */
+    _textus_est(pecunia_formare(_p(-(s64)XL, "USD", p), &d, p),
+        "USD 0.00");
+    _textus_est(pecunia_formare(_p(-(s64)XL, "USD", p), &f, p),
+        "USD 0.00");
+}
+
+interior vacuum
+_sectio_extrema_formae (CredoContextus* c)
+{
+         Piscina* p = c->piscina;
+    PecuniaForma  d = _forma("", FALSUM, p);
+    PecuniaForma  r = _forma("$", VERUM, p);
+    PecuniaForma  f;
+
+    _textus_est(pecunia_formare(_p(MAXIMA, "USD", p), &d, p),
+        "USD 922,337,203,685,477.58");
+    _textus_est(pecunia_formare(_p(MINIMA, "USD", p), &d, p),
+        "USD -922,337,203,685,477.58");
+    _textus_est(pecunia_formare(_p(MINIMA, "USD", p), &r, p),
+        "($922,337,203,685,477.58)");
+    /* TECTUM super MAXIMA: ostensio non deficit (ad_unitatem
+     * superflueret - unitates rotundatae ipsae capiunt) */
+    f        = _forma("", FALSUM, p);
+    f.modus  = PECUNIA_TECTUM;
+    _textus_est(pecunia_formare(_p(MAXIMA, "USD", p), &f, p),
+        "USD 922,337,203,685,477.59");
+    f        = _forma("", FALSUM, p);
+    f.plena  = VERUM;
+    _textus_est(pecunia_formare(_p(MINIMA, "USD", p), &f, p),
+        "USD -922,337,203,685,477.5808");
+    _textus_est(pecunia_formare(_p(MINIMA, "CLF", p), &d, p),
+        "CLF -922,337,203,685,477.5808");
+}
+
+interior vacuum
+_ingressus_est (
+    constans character* textus,
+    constans PecuniaForma* f,
+                   s64  exspectatum,
+              Piscina* p)
+{
+          Pecunia x = _signum_intactum();
+    PecuniaVitium v = pecunia_ex_ingressu(_c(textus, p),
+        _moneta("USD", p), f, &x);
+
+    si (v != PECUNIA_BENE || x.quantitas != exspectatum)
+    {
+        imprimere("  ingressus '%s': vitium %d, %ld\n", textus,
+            (integer)v,
+            (longus)x.quantitas);
+    }
+    CREDO_AEQUALIS_S32((s32)v, (s32)PECUNIA_BENE);
+    CREDO_AEQUALIS_S64(x.quantitas, exspectatum);
+    CREDO_VERUM(memcmp(x.moneta.codex, "USD", IV) == ZEPHYRUM);
+}
+
+interior vacuum
+_ingressus_malus (
+    constans character* textus,
+    constans PecuniaForma* f,
+         PecuniaVitium  exspectatum,
+              Piscina* p)
+{
+          Pecunia x = _signum_intactum();
+    PecuniaVitium v = pecunia_ex_ingressu(_c(textus, p),
+        _moneta("USD", p), f, &x);
+
+    si (v != exspectatum)
+    {
+        imprimere("  ingressus malus '%s': vitium %d pro %d\n", textus,
+            (integer)v, (integer)exspectatum);
+    }
+    CREDO_AEQUALIS_S32((s32)v, (s32)exspectatum);
+    CREDO_VERUM(_intactum(x));
+}
+
+interior vacuum
+_sectio_ingressus (
+    CredoContextus* c)
+{
+         Piscina* p = c->piscina;
+    PecuniaForma  s = _forma("$", FALSUM, p);
+
+    _ingressus_est("12", &s, (s64)(CXX * M), p);
+    _ingressus_est("12.3", &s, (s64)(CXXIII * M), p);
+    _ingressus_est("1,234.56", &s, (s64)MCCXXXIV * X * M + LVI * C, p);
+    _ingressus_est("$1,234.56", &s, (s64)MCCXXXIV * X * M + LVI * C, p);
+    _ingressus_est("  12.34  ", &s, (s64)(CXXIII * M + CD), p);
+    _ingressus_est("USD 12.34", &s, (s64)(CXXIII * M + CD), p);
+    _ingressus_est("12.34 USD", &s, (s64)(CXXIII * M + CD), p);
+    _ingressus_est("usd 12.34", &s, (s64)(CXXIII * M + CD), p);
+    _ingressus_est("$ 12.34", &s, (s64)(CXXIII * M + CD), p);
+    _ingressus_est("12.34$", &s, (s64)(CXXIII * M + CD), p);
+    _ingressus_est("1234567", &s, (s64)MCCXXXIV * M * M * X
+        + DLXVII * M * X, p);
+
+    _ingressus_malus("12,34", &s, PECUNIA_VITIUM_FORMA, p);
+    _ingressus_malus("1,23,456", &s, PECUNIA_VITIUM_FORMA, p);
+    _ingressus_malus("1234,567", &s, PECUNIA_VITIUM_FORMA, p);
+    _ingressus_malus("1,2345", &s, PECUNIA_VITIUM_FORMA, p);
+    _ingressus_malus("12.34567", &s, PECUNIA_VITIUM_DECIMALES, p);
+    _ingressus_malus("1e5", &s, PECUNIA_VITIUM_FORMA, p);
+    _ingressus_malus("12.3.4", &s, PECUNIA_VITIUM_FORMA, p);
+    _ingressus_malus("", &s, PECUNIA_VITIUM_FORMA, p);
+    _ingressus_malus("   ", &s, PECUNIA_VITIUM_FORMA, p);
+    _ingressus_malus("EUR 12", &s, PECUNIA_VITIUM_MONETAE_DIVERSAE, p);
+    _ingressus_malus("USD12", &s, PECUNIA_VITIUM_FORMA, p);
+    _ingressus_malus("12 34", &s, PECUNIA_VITIUM_FORMA, p);
+    _ingressus_malus("922337203685478", &s, PECUNIA_VITIUM_SUPERFLUXUS,
+        p);
+}
+
+interior vacuum
+_sectio_ingressus_signa (
+    CredoContextus* c)
+{
+         Piscina* p      = c->piscina;
+    PecuniaForma  s      = _forma("$", FALSUM, p);
+    PecuniaForma  n      = _forma("", FALSUM, p);
+             s64  minus  = -(s64)(CXXIII * M + CD);
+
+    _ingressus_est("-$12.34", &s, minus, p);
+    _ingressus_est("$-12.34", &s, minus, p);
+    _ingressus_est("($12.34)", &s, minus, p);
+    _ingressus_est("-12.34", &s, minus, p);
+    _ingressus_est("(12.34)", &s, minus, p);
+    _ingressus_est("USD -12.34", &s, minus, p);
+    _ingressus_est("-12.34 USD", &s, minus, p);
+    _ingressus_malus("--12", &s, PECUNIA_VITIUM_FORMA, p);
+    _ingressus_malus("-(12)", &s, PECUNIA_VITIUM_FORMA, p);
+    _ingressus_malus("(-12)", &s, PECUNIA_VITIUM_FORMA, p);
+    _ingressus_malus("-$-12", &s, PECUNIA_VITIUM_FORMA, p);
+    _ingressus_malus("$", &s, PECUNIA_VITIUM_FORMA, p);
+    _ingressus_malus("(12.34", &s, PECUNIA_VITIUM_FORMA, p);
+    _ingressus_malus("12.34-", &s, PECUNIA_VITIUM_FORMA, p);
+    /* signum ignotum formae non licet */
+    _ingressus_malus("$12.34", &n, PECUNIA_VITIUM_FORMA, p);
+    /* separator U+202F si forma eum habet */
+    n.coetus = _c("\342\200\257", p);
+    _ingressus_est("1\342\200\257" "234.56", &n,
+        (s64)MCCXXXIV * X * M + LVI * C, p);
+    _ingressus_malus("1,234.56", &n, PECUNIA_VITIUM_FORMA, p);
+}
+
+interior vacuum
+_sectio_circuitus_formae (CredoContextus* c)
+{
+         Piscina* p = c->piscina;
+    PecuniaForma  formae[II];
+            Sors  s;
+             s32  i;
+
+    formae[ZEPHYRUM]  = _forma("", FALSUM, p);
+    formae[I]         = _forma("$", VERUM, p);
+    sors_seminare(&s, (i64)0xF0A, ZEPHYRUM);
+    per (i = ZEPHYRUM; i < MM; i++)
+    {
+        constans PecuniaForma* f = &formae[i % II];
+                      Pecunia  a = _p(_fortuita(&s), "USD", p);
+                      Pecunia  rotundatum;
+                      Pecunia  lectum;
+
+        CREDO_NECESSE(pecunia_ad_unitatem(a, PECUNIA_PAR, &rotundatum)
+            == PECUNIA_BENE);
+        CREDO_NECESSE(pecunia_ex_ingressu(pecunia_formare(a, f, p),
+            a.moneta, f, &lectum) == PECUNIA_BENE);
+        CREDO_VERUM(pecunia_aequalis(lectum, rotundatum));
+    }
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "tabula", _sectio_tabula, NIHIL, NIHIL, NIHIL, NIHIL },
     { "codices", _sectio_codices, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -1119,6 +1356,14 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "extrema", _sectio_extrema, NIHIL, NIHIL, NIHIL, NIHIL },
     { "numeri", _sectio_numeri, NIHIL, NIHIL, NIHIL, NIHIL },
     { "circuitus", _sectio_circuitus, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "formae", _sectio_formae, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "extrema_formae", _sectio_extrema_formae, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "ingressus", _sectio_ingressus, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "ingressus_signa", _sectio_ingressus_signa, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "circuitus_formae", _sectio_circuitus_formae, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 
