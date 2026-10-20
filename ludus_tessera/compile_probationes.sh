@@ -136,6 +136,7 @@ declare -a RADIX_FONTES=(
     "sancti"
     "sancti_canon"
     "sancti_visus"
+    "semita"
     "quaerere"
     "iter_directoria"
     "via"

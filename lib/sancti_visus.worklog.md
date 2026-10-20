@@ -70,3 +70,27 @@ manifest approved by Fran before code.
   ("2026-01-25") is the documented path (diem_in_calendario).
 - ludus_tessera hand list needed `quaerere` too (sancti.c uses it) -
   the same trap that failed the V1 commit's first gate run.
+
+## 2026-10-19 — semitae R2: the saints pane on routes (Fran approved the text)
+
+- Manifest: `visus`, `sanctus_apertus` = binding (`historia="impelle"`);
+  `ordo` = state; `quaestio` and `pagina_textus` moved transiens ->
+  persistens (routes only carry persistent fields - so the search
+  filter and the record's text page now survive a restart; Fran OK);
+  `pagina_textus` resets with the binding (`ambitus="ligatio"`).
+- `sancti_visus_argumentum_ponere` = build a route (URI as given;
+  "" -> `sancti/index`; a bare id -> `<sancti visus="sanctus"
+  sanctus_apertus="id"/>`), refuse an unknown saint BEFORE writing,
+  `semita_applicare`, then the pane's own follow-ups (not route state):
+  `origo` and `electus = sanctus_apertus`. `$saints(thomas-aquinas)`
+  and the calendar link keep working unchanged.
+- Esc to the list now clears `sanctus_apertus` (electus still remembers
+  the saint), so the list's route is `sancti`, not
+  `sancti/index/thomas-aquinas`.
+- Canonical form note: `visus=index` is the default, so the list's
+  route with a search reads `sancti?ordo=congruentia&quaestio=ines`
+  (the test first expected `sancti/index?...` - the code was right).
+- The pane resolves only its own genus (no children); the shared,
+  cached resolver comes with vicus in R3. ludus_tessera's hand list got
+  `semita` (vicus reaches it through this pane).
+- Plants 6 red.

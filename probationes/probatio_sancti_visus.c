@@ -19,6 +19,8 @@
 #include "thema.h"
 #include "sancti.h"
 #include "sancti_visus.h"
+#include "semita.h"
+#include "organum_montatio.h"
 #include "credo.h"
 #include <stdio.h>
 #include <string.h>
@@ -32,6 +34,7 @@ nomen structura {
             SanctiCorpus* corpus;
        SanctorumMontatio  m;
              Dispensator* d;
+        constans Organum* organum;   /* semitae R2: semita_legere */
 } Mundus;
 
 interior b32
@@ -591,6 +594,96 @@ _sectio_origo (
     CREDO_VERUM(campus_est(w, "visus", "index"));
 }
 
+/* semitae R2: organum sanctorum pro semita_legere; ctx = Mundus* */
+interior constans Organum*
+organa_sanctorum (
+     vacuum* ctx,
+     chorda  genus)
+{
+    redde chorda_aequalis_literis(genus, "sancti")
+        ? ((Mundus*)ctx)->organum : NIHIL;
+}
+
+/* semita currens lateris ut URI */
+interior chorda
+semita_currens (
+     Mundus* w,
+    Piscina* p)
+{
+    si (!w->organum)
+    {
+        w->organum = organum_legere_genus(p, w->intern, "sancti",
+            "probatio");
+    }
+    redde semita_ad_uri(organa_sanctorum, w, semita_legere(
+        organa_sanctorum, w, &w->m.ramus, "sancti", p, w->intern), p);
+}
+
+/* semitae (R2): argumentum = URI semitae aut id nudum (alias) aut
+ * vacuum; semita legitur; ligatio mutata paginam textus resettit;
+ * mala nihil mutant; Esc ad indicem sanctum apertum tollit */
+interior vacuum
+_sectio_semitae (
+    CredoContextus* c)
+{
+    Mundus* w;
+
+    w = mundus(c, CCLVI);
+    CREDO_NECESSE_NON_NIHIL(w);
+    CREDO_CHORDA_AEQUALIS_LITERIS(semita_currens(w, c->piscina),
+        "sancti");
+    /* quaestio et ordo per semitam */
+    CREDO_VERUM(sancti_visus_argumentum_ponere(&w->m,
+        "sancti/index?quaestio=ines&ordo=congruentia"));
+    CREDO_VERUM(campus_est(w, "visus", "index"));
+    CREDO_VERUM(campus_est(w, "quaestio", "ines"));
+    CREDO_VERUM(campus_est(w, "ordo", "congruentia"));
+    CREDO_CHORDA_AEQUALIS_LITERIS(semita_currens(w, c->piscina),
+        "sancti?ordo=congruentia&quaestio=ines");
+    dispensator_recomponere(w->d);
+    CREDO_VERUM(pictum(w, "Agnes of Rome", c->piscina));
+    CREDO_VERUM(!pictum(w, "Thomas Aquinas", c->piscina));
+    /* sanctus cum pagina textus; origo, electus */
+    CREDO_VERUM(sancti_visus_argumentum_ponere(&w->m,
+        "sancti/index?quaestio=&ordo="));
+    CREDO_VERUM(sancti_visus_argumentum_ponere(&w->m,
+        "sancti/sanctus/thomas-aquinas?pagina_textus=2"));
+    CREDO_VERUM(campus_est(w, "visus", "sanctus"));
+    CREDO_VERUM(campus_est(w, "sanctus_apertus", "thomas-aquinas"));
+    CREDO_VERUM(campus_est(w, "pagina_textus", "2"));
+    CREDO_VERUM(campus_est(w, "origo", "argumentum"));
+    CREDO_VERUM(campus_est(w, "electus", "thomas-aquinas"));
+    CREDO_CHORDA_AEQUALIS_LITERIS(semita_currens(w, c->piscina),
+        "sancti/sanctus/thomas-aquinas?pagina_textus=2");
+    /* ligatio mutata (alias id nudum): pagina textus ad absens */
+    CREDO_VERUM(sancti_visus_argumentum_ponere(&w->m, "agnes-of-rome"));
+    CREDO_VERUM(campus_est(w, "sanctus_apertus", "agnes-of-rome"));
+    CREDO_VERUM(campus_est(w, "pagina_textus", NIHIL));
+    CREDO_CHORDA_AEQUALIS_LITERIS(semita_currens(w, c->piscina),
+        "sancti/sanctus/agnes-of-rome");
+    /* mala: nihil mutatum */
+    CREDO_FALSUM(sancti_visus_argumentum_ponere(&w->m,
+        "sancti/sanctus/nemo"));
+    CREDO_FALSUM(sancti_visus_argumentum_ponere(&w->m,
+        "sancti/tabula"));
+    CREDO_FALSUM(sancti_visus_argumentum_ponere(&w->m,
+        "sancti?nemo=1"));
+    CREDO_VERUM(campus_est(w, "sanctus_apertus", "agnes-of-rome"));
+    CREDO_VERUM(campus_est(w, "visus", "sanctus"));
+    /* Esc (origo indicis): ad indicem, sanctus apertus sublatus,
+     * electus manet; semita indicis sine sancto */
+    CREDO_VERUM(sancti_visus_argumentum_ponere(&w->m, ""));
+    dispensator_recomponere(w->d);
+    clavis_nominata(w, CLAVIS_REDITUS, XIII);
+    CREDO_VERUM(campus_est(w, "visus", "sanctus"));
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    CREDO_VERUM(campus_est(w, "visus", "index"));
+    CREDO_VERUM(campus_est(w, "sanctus_apertus", NIHIL));
+    CREDO_VERUM(!campus_est(w, "electus", NIHIL));
+    CREDO_CHORDA_AEQUALIS_LITERIS(semita_currens(w, c->piscina),
+        "sancti");
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "index", _sectio_index, NIHIL, NIHIL, NIHIL, NIHIL },
     { "ordo", _sectio_ordo, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -603,6 +696,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "vivus", _sectio_vivus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "congruentia", _sectio_congruentia, NIHIL, NIHIL, NIHIL, NIHIL },
     { "origo", _sectio_origo, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "semitae", _sectio_semitae, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

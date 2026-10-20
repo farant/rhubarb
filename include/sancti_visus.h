@@ -73,8 +73,12 @@ sancti_visus_componere (
     InternamentumChorda* intern,
                  vacuum* ctx);
 
-/* argumentum lateris: "<id>" sanctum aperit; "" aut NIHIL ad indicem;
- * FALSUM si id ignotum (status non mutatur) */
+/* argumentum lateris: URI semitae ("sancti/sanctus/thomas-aquinas",
+ * "sancti/index?quaestio=x") aut id sancti nudum (alias: -> sancti/
+ * sanctus/<id>) aut vacuum (-> sancti/index). Semita applicatur
+ * (semita.h); sanctus ignotus aut semita mala: FALSUM, nihil mutatum.
+ * Sanctus apertus per argumentum: origo "argumentum" (Esc latus
+ * reddit); electus = sanctus apertus. */
 b32
 sancti_visus_argumentum_ponere (
        SanctorumMontatio* m,

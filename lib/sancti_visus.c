@@ -15,6 +15,8 @@
 #include "fons.h"
 #include "thema.h"
 #include "motus.h"
+#include "semita.h"
+#include "organum_montatio.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -46,9 +48,10 @@ hic_manens constans character* constans menses[XII] = {
     "August", "September", "October", "November", "December"
 };
 
-/* figura: contextus privatus */
+/* figura: contextus privatus; organum manifesti (semitae R2) */
 nomen structura {
     SanctorumMontatio* m;
+     constans Organum* organum;
               Piscina* scheda;
                   s32  latitudo_montationis;
                   s32  altitudo_montationis;
@@ -1263,8 +1266,8 @@ fac_ad_indicem (
     vacuum* ctx)
 {
     ContextusPraecepti* cp = (ContextusPraecepti*)ctx;
-    constans character* tituli[III];
-    constans character* valores[III];
+    constans character* tituli[IV];
+    constans character* valores[IV];
 
     si (chorda_aequalis_literis(_campus(cp->m, "origo"), "argumentum"))
     {
@@ -1279,7 +1282,10 @@ fac_ad_indicem (
         cp->p);
     tituli[II]   = "pagina_textus";
     valores[II]  = "";
-    redde _campos_scribere(cp->m, tituli, valores, III);
+    /* semitae R2: semita indicis sine sancto (electus eum servat) */
+    tituli[III]   = "sanctus_apertus";
+    valores[III]  = "";
+    redde _campos_scribere(cp->m, tituli, valores, IV);
 }
 
 hic_manens constans Praeceptum TABULA_PRAECEPTORUM[] = {
@@ -1786,7 +1792,8 @@ _figuras_registrare (
     {
         redde FALSUM;
     }
-    contextus->m                     = m;
+    contextus->m        = m;
+    contextus->organum  = NIHIL;
     contextus->scheda                = piscina_generare_dynamicum(
         "sancti_scheda", LXIV * M);
     contextus->latitudo_montationis  = (s32)latitudo;
@@ -2075,10 +2082,65 @@ sancti_visus_montare (
     }
     m->actiones  = actio_registrum_creare(piscina, intern);
     m->figurae   = figura_registrum_creare(piscina);
-    redde m->actiones && m->figurae
-        && praecepta_verificare(TABULA_PRAECEPTORUM)
-        && actio_registrare(m->actiones, actio_sanctorum, agere, m)
-        && _figuras_registrare(m, latitudo, altitudo);
+    si (   !m->actiones || !m->figurae
+        || !praecepta_verificare(TABULA_PRAECEPTORUM)
+        || !actio_registrare(m->actiones, actio_sanctorum, agere, m)
+        || !_figuras_registrare(m, latitudo, altitudo))
+    {
+        redde FALSUM;
+    }
+    ((SanctorumFigurae*)m->figurae_ctx)->organum = organum;
+    redde VERUM;
+}
+
+/* SemitaOrganum lateris: manifestum suum (liberi nulli); ctx =
+ * SanctorumMontatio* */
+interior constans Organum*
+_organa (
+     vacuum* ctx,
+     chorda  genus)
+{
+    SanctorumMontatio* m = (SanctorumMontatio*)ctx;
+
+    si (   !m || !m->figurae_ctx
+        || !chorda_aequalis_literis(genus, "sancti"))
+    {
+        redde NIHIL;
+    }
+    redde ((SanctorumFigurae*)m->figurae_ctx)->organum;
+}
+
+/* argumentum ut semita: URI ("sancti/...", "sancti?..."), vacuum =
+ * index, aliter id nudum (alias <sancti visus="sanctus"
+ * sanctus_apertus="id"/>) */
+interior StmlNodus*
+_semita_argumenti (
+     SanctorumMontatio* m,
+    constans character* argumentum,
+                chorda* vitium)
+{
+       StmlNodus* n;
+             i32  l;
+
+    l = (i32)strlen(argumentum);
+    si (   l == ZEPHYRUM
+        || (strncmp(argumentum, "sancti", VI) == ZEPHYRUM
+        && (l == VI || argumentum[VI] == '/' || argumentum[VI] == '?')))
+    {
+        redde semita_ex_uri(_organa, m, chorda_ex_literis(l == ZEPHYRUM
+            ? "sancti/index" : argumentum, m->piscina), m->piscina,
+            m->intern, vitium);
+    }
+    n = stml_elementum_creare(m->piscina, m->intern, "sancti");
+    si (   !n
+        || !stml_attributum_addere(n, m->piscina, m->intern, "visus",
+               "sanctus")
+        || !stml_attributum_addere(n, m->piscina, m->intern,
+               "sanctus_apertus", argumentum))
+    {
+        redde NIHIL;
+    }
+    redde n;
 }
 
 b32
@@ -2086,37 +2148,46 @@ sancti_visus_argumentum_ponere (
        SanctorumMontatio* m,
       constans character* argumentum)
 {
-      constans Sanctus* s;
-    constans character* tituli[V];
-    constans character* valores[V];
+              StmlNodus* semita;
+                 chorda* apertus;
+                 chorda* visus;
+                 chorda  vitium;
+     constans character* tituli[II];
+     constans character* valores[II];
 
     si (!m || !m->corpus)
     {
         redde FALSUM;
     }
-    si (!argumentum || !argumentum[ZEPHYRUM])
-    {
-        tituli[ZEPHYRUM]   = "visus";
-        valores[ZEPHYRUM]  = "index";
-        tituli[I]          = "origo";
-        valores[I]         = "index";
-        redde _campos_scribere(m, tituli, valores, II);
-    }
-    s = sancti_invenire(m->corpus, chorda_ex_literis(argumentum,
-        m->piscina));
-    si (!s)
+    semita = _semita_argumenti(m, argumentum ? argumentum : "",
+        &vitium);
+    si (!semita)
     {
         redde FALSUM;
     }
-    tituli[ZEPHYRUM]   = "visus";
-    valores[ZEPHYRUM]  = "sanctus";
-    tituli[I]          = "sanctus_apertus";
-    valores[I]         = argumentum;
-    tituli[II]         = "electus";
-    valores[II]        = argumentum;
-    tituli[III]        = "pagina_textus";
-    valores[III]       = "";
-    tituli[IV]         = "origo";
-    valores[IV]        = "argumentum";
-    redde _campos_scribere(m, tituli, valores, V);
+    /* sanctus ignotus: recusatur ante scripturam */
+    apertus = stml_attributum_capere(semita, "sanctus_apertus");
+    si (   apertus && apertus->mensura > ZEPHYRUM
+        && !sancti_invenire(m->corpus, *apertus))
+    {
+        redde FALSUM;
+    }
+    si (!semita_applicare(_organa, m, &m->ramus, semita, m->piscina,
+            &vitium))
+    {
+        redde FALSUM;
+    }
+    /* sequelae lateris (non semita): origo, electus = apertus */
+    visus = insula_ramus_attributum(&m->ramus, "visus");
+    si (visus && chorda_aequalis_literis(*visus, "sanctus"))
+    {
+        tituli[ZEPHYRUM]   = "origo";
+        valores[ZEPHYRUM]  = "argumentum";
+        tituli[I]          = "electus";
+        valores[I]         = chorda_ut_cstr(_campus(m,
+            "sanctus_apertus"),
+            m->piscina);
+        redde _campos_scribere(m, tituli, valores, II);
+    }
+    redde _campum_scribere(m, "origo", "index");
 }
